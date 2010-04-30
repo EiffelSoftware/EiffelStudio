@@ -364,7 +364,7 @@ feature {NONE} -- Implementation
 			asc: EB_ARGUMENT_SELECTOR
 		do
 			create asc
-			asc.type_selector.set_initial_types (client_type, supplier_type)
+			asc.type_selector.set_initial_types (client_type, supplier_type, False)
 			asc.type_selector.update_list_strings (True)
 			asc.set_remove_procedure (agent on_argument_removed (asc))
 			argument_list.extend (asc)

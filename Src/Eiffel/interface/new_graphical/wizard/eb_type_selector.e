@@ -91,8 +91,6 @@ feature -- Access
 		local
 			gts: like generic_type_selectors
 			generic_type_name: STRING
---			type_as_class_c: CLASS_C
---			l: LIST [CLASS_I]
 		do
 			Result := selector.text
 			if Result.is_empty or Result.index_of (' ', 1) > 0 then
@@ -103,17 +101,6 @@ feature -- Access
 				if detachable_check_box.is_selected and then detachable_check_box.is_sensitive then
 					Result.prepend ("detachable ")
 				end
---				if expanded_needed then
---					l := Universe.compiled_classes_with_name (Result)
---					if not l.is_empty then
---						type_as_class_c := l.first.compiled_class
---						if not type_as_class_c.is_basic and not type_as_class_c.is_expanded then
---							Result.prepend ("expanded ")
---						end
---					else
---						Result.prepend ("expanded ")
---					end
---				end
 				gts := generic_type_selectors
 				if not gts.is_empty then
 					Result.append (" [")
@@ -238,7 +225,9 @@ feature {NONE} -- Implementation
 						fill_generic_box
 				end
 			end
-			update_detachable_status (s)
+			if not is_used_for_inheritance then
+				update_detachable_status (s)
+			end
 		end
 
 	fill_generic_box
@@ -256,7 +245,7 @@ feature {NONE} -- Implementation
 					end
 					create ts
 					if supplier_type /= Void then
-						ts.set_initial_types (client_type, supplier_type)
+						ts.set_initial_types (client_type, supplier_type, False)
 						ts.update_list_strings (False)
 					end
 
@@ -349,25 +338,36 @@ feature {NONE} -- Implementation
 				"STRING_8",
 				"STRING_32",
 				"like Current",
-				"ARRAYED_LIST [..]",
-				"LINKED_LIST [..]",
-				"HASH_TABLE [..]",
-				"FUNCTION [..]",
-				"PROCEDURE [..]",
+				"LIST [ ... ]",
+				"ARRAYED_LIST [ ... ]",
+				"LINKED_LIST [ ... ]",
+				"HASH_TABLE [ ... ]",
+				"FUNCTION [ ... ]",
+				"PROCEDURE [ ... ]",
 				"POINTER",
-				"TUPLE [..]"
+				"TUPLE [ ... ]"
 			>>
 		end
 
-feature {EB_FEATURE_EDITOR, EB_TYPE_SELECTOR} -- Access
+feature {EB_FEATURE_EDITOR, EB_TYPE_SELECTOR, EB_INHERITANCE_DIALOG} -- Access
 
 	client_type, supplier_type: ES_CLASS
 
-	set_initial_types (a_client_type, a_supplier_type: ES_CLASS)
+	set_initial_types (a_client_type, a_supplier_type: ES_CLASS; a_used_for_inheritance: BOOLEAN)
 		do
 			client_type := a_client_type
 			supplier_type := a_supplier_type
+			if a_used_for_inheritance then
+				is_used_for_inheritance := True
+				selector.wipe_out
+				selector.set_text (a_supplier_type.name)
+				selector.disable_sensitive
+				detachable_check_box.disable_sensitive
+			end
 		end
+
+	is_used_for_inheritance: BOOLEAN
+		-- Is `Current' used for inheritance type selection?
 
 	update_list_strings (a_initial_list: BOOLEAN)
 			-- Update types listed in selector.

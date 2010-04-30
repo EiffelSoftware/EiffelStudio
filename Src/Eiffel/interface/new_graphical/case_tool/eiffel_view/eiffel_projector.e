@@ -17,7 +17,7 @@ inherit
 			update,
 			project_rectangle,
 			full_project,
-			make_with_buffer,
+			make,
 			project,
 			default_cursor,
 			world
@@ -26,16 +26,16 @@ inherit
 	EB_CONSTANTS
 
 create
-	make_with_buffer
+	make
 
 feature {NONE} -- Initialization
 
-	make_with_buffer (a_world: like world; a_drawing_area: EV_DRAWING_AREA)
+	make (a_world: like world; a_drawing_area: EV_DRAWING_AREA)
 			-- Create an EIFFEL_PROJECTOR projecting `a_world' to `a_drawing_area'.
 		local
 			l_figure: EG_FIGURE
 		do
-			Precursor {EV_MODEL_BUFFER_PROJECTOR} (a_world, a_drawing_area)
+			Precursor (a_world, a_drawing_area)
 
 				-- Below, we need to create the corresponding figure instance and
 				-- set it to the local variable `l_figure' so that we can call
@@ -89,13 +89,10 @@ feature -- Display updates
 
 	full_project
 			-- Project entire area.
-		local
-			rectangle: EV_RECTANGLE
 		do
 			if not is_painting_disabled then
 				world.update
-				create rectangle.make (drawable_position.x, drawable_position.y, drawable.width, drawable.height)
-				project_rectangle (rectangle)
+				Precursor
 			end
 		end
 
@@ -113,11 +110,15 @@ feature -- Display updates
 					world.update
 					e := world.invalid_rectangle
 					if e /= Void then
+						e := e.twin
 						u := world.update_rectangle
 						if u /= Void then
 							e.merge (u)
 						end
-						project_rectangle (e)
+						e := area_bounding_box.intersection (e)
+						if e.has_area then
+							project_rectangle (e)
+						end
 					end
 				end
 			end
@@ -128,7 +129,7 @@ feature -- Display updates
 			-- Project area under `u'
 		do
 			if not is_painting_disabled then
-				Precursor {EV_MODEL_BUFFER_PROJECTOR} (u)
+				Precursor (u)
 			end
 		end
 
@@ -137,7 +138,7 @@ feature {NONE} -- Implementation
 	on_paint (x, y, w, h: INTEGER)
 		do
 			if not is_painting_disabled then
-				update_rectangle (create {EV_RECTANGLE}.make (x, y, w, h), x, y)
+				Precursor (x, y, w, h)
 			end
 		end
 
@@ -145,7 +146,7 @@ feature {NONE} -- Implementation
 			-- Flush `u' on `area' at (`a_x', `a_y').
 		do
 			if not is_painting_disabled then
-				Precursor {EV_MODEL_BUFFER_PROJECTOR} (u, a_x, a_y)
+				Precursor (u, a_x, a_y)
 			end
 		end
 
@@ -153,7 +154,7 @@ feature {NONE} -- Implementation
 			-- Update display by drawing the right part of the buffer on `area'.
 		do
 			if not is_painting_disabled then
-				Precursor {EV_MODEL_BUFFER_PROJECTOR}
+				Precursor
 			end
 		end
 
@@ -516,7 +517,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -529,22 +530,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EIFFEL_PROJECTOR

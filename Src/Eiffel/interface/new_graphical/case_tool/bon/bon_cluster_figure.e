@@ -102,6 +102,8 @@ feature {NONE} -- Initialization
 			label_move_handle.disable_rotating
 			set_left (True)
 
+			set_point_position ({EV_MODEL_WORLD}.default_grid_x, {EV_MODEL_WORLD}.default_grid_y)
+
 			number_of_figures := 6
 			is_high_quality := True
 			real_rectangle_border := {REAL_32} 5.0
@@ -217,7 +219,7 @@ feature -- Access
 						l_item ?= l_area.item (i)
 						e_item ?= l_item.model
 					until
-						i > nb or else (e_item = Void or else e_item.is_needed_on_diagram)--l_area.item (i).is_show_requested
+						i > nb or else (l_item.is_show_requested and then (e_item = Void or else e_item.is_needed_on_diagram))
 					loop
 						i := i + 1
 						if i <= nb then
@@ -226,21 +228,27 @@ feature -- Access
 						end
 					end
 					if i <= nb then
-						Result := l_area.item (i).bounding_box
 						from
-							i := i + 1
+							create l_bbox
 						until
 							i > nb
 						loop
 							l_item ?= l_area.item (i)
 							e_item ?= l_item.model
-							if e_item = Void or else e_item.is_needed_on_diagram then --l_area.item (i).is_show_requested then
-								l_bbox := l_area.item (i).bounding_box
-								if l_bbox.height > 0 or else l_bbox.width > 0 then
-									Result.merge (l_bbox)
+							if l_item.is_show_requested and then (e_item = Void or else e_item.is_needed_on_diagram) then
+								l_area [i].update_rectangle_to_bounding_box (l_bbox)
+								if l_bbox.height > 0 and then l_bbox.width > 0 then
+									if Result = Void then
+										Result := l_bbox.twin
+									else
+										Result.merge (l_bbox)
+									end
 								end
 							end
 							i := i + 1
+						end
+						if Result = Void then
+							create Result
 						end
 					else
 						l_border := (real_rectangle_border * 5).truncated_to_integer
@@ -375,7 +383,6 @@ feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 		local
 			l_min_size: like minimum_size
 		do
-
 			if is_shown then
 				l_min_size := minimum_size
 				if user_size /= Void and then not is_iconified then
@@ -426,7 +433,7 @@ feature {EV_MODEL_GROUP} -- Transformation
 				a_transformation.project (p1)
 				create user_size.make (p0.x, p0.y, p1.x - p0.x, p1.y - p0.y)
 			end
-			request_update
+--			request_update --| IEK Performed by Precursor
 		end
 
 feature {EG_LAYOUT} -- Layouting
@@ -774,7 +781,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -250,24 +250,6 @@ feature -- Element change
 			p.set_precise (new_x, new_y)
 		end
 
-	fade_in
-			-- Fade out `Current'.
-		do
-			if uml_class_fill_color /= Void then
-				rectangle.set_background_color (uml_class_fill_color)
-			end
-			is_faded := False
-		end
-
-	fade_out
-			-- Fade in `Current'.
-		do
-			if uml_class_fill_color /= Void then
-				rectangle.set_background_color (faded_color (uml_class_fill_color))
-			end
-			is_faded := True
-		end
-
 feature -- Store/Retrive
 
 	xml_node_name: STRING
@@ -1032,7 +1014,7 @@ invariant
 	border_positive: border >= 0
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

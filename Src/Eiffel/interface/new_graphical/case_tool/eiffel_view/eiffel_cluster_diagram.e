@@ -71,16 +71,16 @@ feature -- Store/Retrive
 	xml_node_name: STRING
 			-- Name of the node returned by `xml_element'.
 		do
-			Result := "EIFFEL_CLUSTER_DIAGRAM"
+			Result := eiffel_cluster_diagram_str
 		end
 
 	xml_element (node: XM_ELEMENT): XM_ELEMENT
 			-- Xml node representing `Current's state.
 		do
-			node.add_attribute ("NAME", xml_namespace, current_view)
-			node.put_last (Xml_routines.xml_node (node, "SUBCLUSTER_DEPTH", model.subcluster_depth.out))
-			node.put_last (Xml_routines.xml_node (node, "SUPERCLUSTER_DEPTH", model.supercluster_depth.out))
-			node.put_last (xml_routines.xml_node (node, "CENTER_CLUSTER_ID", model.center_cluster.cluster_id))
+			node.add_attribute (name_str, xml_namespace, current_view)
+			node.put_last (Xml_routines.xml_node (node, subcluster_depth_str, model.subcluster_depth.out))
+			node.put_last (Xml_routines.xml_node (node, supercluster_depth_str, model.supercluster_depth.out))
+			node.put_last (xml_routines.xml_node (node, center_cluster_id_str, model.center_cluster.cluster_id))
 			Result := Precursor {EIFFEL_WORLD} (node)
 		end
 
@@ -91,9 +91,9 @@ feature -- Store/Retrive
 			esc: ES_CLUSTER
 		do
 			node.forth
-			model.set_subcluster_depth (xml_routines.xml_integer (node, "SUBCLUSTER_DEPTH"))
-			model.set_supercluster_depth (xml_routines.xml_integer (node, "SUPERCLUSTER_DEPTH"))
-			l_cluster_id := xml_routines.xml_string (node, "CENTER_CLUSTER_ID")
+			model.set_subcluster_depth (xml_routines.xml_integer (node, subcluster_depth_str))
+			model.set_supercluster_depth (xml_routines.xml_integer (node, supercluster_depth_str))
+			l_cluster_id := xml_routines.xml_string (node, center_cluster_id_str)
 			Precursor {EIFFEL_WORLD} (node)
 
 			esc := model.cluster_of_id (l_cluster_id)
@@ -589,10 +589,13 @@ feature {EB_CREATE_CLASS_DIAGRAM_COMMAND} -- Element Change
 					new_class := es_cluster.node_of (a_class)
 					if new_class = Void then
 						create new_class.make (a_class)
+
 						es_cluster.extend (new_class)
 						model.add_node_relations (new_class)
 						update_cluster_legend
 						fig ?= figure_from_model (new_class)
+						position_new_class_in_cluster (fig, True)
+
 						fig.request_update
 						remove_links := new_class.needed_links
 						l_array_redo.extend (agent reinclude_class (fig, remove_links, fig.x, fig.y))
@@ -605,6 +608,9 @@ feature {EB_CREATE_CLASS_DIAGRAM_COMMAND} -- Element Change
 						model.add_node_relations (new_class)
 						update_cluster_legend
 						fig ?= figure_from_model (new_class)
+
+						position_new_class_in_cluster (fig, False)
+
 						fig.request_update
 						remove_links := new_class.needed_links
 						l_array_redo.extend (agent reinclude_class (fig, remove_links, fig.x, fig.y))
@@ -642,6 +648,9 @@ feature {EB_CREATE_CLASS_DIAGRAM_COMMAND} -- Element Change
 						model.add_node_relations (new_class)
 						update_cluster_legend
 						fig ?= figure_from_model (new_class)
+
+						position_new_class_in_cluster (fig, False)
+
 						fig.request_update
 						remove_links := new_class.needed_links
 						l_array_redo.extend (agent reinclude_class (fig, remove_links, fig.x, fig.y))
@@ -679,7 +688,101 @@ feature {EB_CREATE_CLASS_DIAGRAM_COMMAND} -- Element Change
 			end
 		end
 
+	position_new_class_in_cluster (fig: EIFFEL_CLASS_FIGURE; position_on_screen_if_possible: BOOLEAN)
+			-- Position `a_class_fig' so that it is positioned in a position suitable for current view.
+		local
+			l_cluster_bounding_box, l_projector_bounding_box, l_insertion_bounding_box, l_class_bounding_box: EV_RECTANGLE
+			l_class_x_offset, l_class_y_offset: INTEGER
+			l_fig_shown: BOOLEAN
+			i: INTEGER
+			l_add_across: BOOLEAN
+		do
+				-- Temporarily hide figure so that is doesn't get taken in to account in the bounding box calculation.
+
+			l_fig_shown := fig.is_show_requested
+			if l_fig_shown then
+				fig.hide
+			end
+			l_cluster_bounding_box := fig.cluster.bounding_box
+			if l_fig_shown then
+				fig.show
+			end
+
+			l_class_bounding_box := fig.bounding_box
+
+			create l_projector_bounding_box.make (context_editor.projector.area_x, context_editor.projector.area_y, context_editor.projector.area.width, context_editor.projector.area.height)
+			l_insertion_bounding_box := l_cluster_bounding_box.intersection (l_projector_bounding_box)
+
+			if not position_on_screen_if_possible or else l_insertion_bounding_box.width = 0 or else l_insertion_bounding_box.height = 0 then
+				l_insertion_bounding_box := l_cluster_bounding_box
+			end
+
+			l_class_x_offset := l_insertion_bounding_box.x + (l_class_bounding_box.width // 2) + new_class_padding
+			l_class_y_offset := l_insertion_bounding_box.y + (l_class_bounding_box.height // 2) + new_class_padding
+
+			-- Update class bounding box with offset
+
+			l_class_bounding_box.set_x (l_class_x_offset)
+			l_class_bounding_box.set_y (l_class_y_offset)
+
+			if l_insertion_bounding_box.intersection (l_class_bounding_box).is_equal (l_class_bounding_box) then
+				-- Class fits in insertion box
+
+			else
+				-- Class will end up resizing diagram as it does not fit.
+			end
+
+			from
+				i := classes.count
+				l_add_across := True
+			until
+				i = 0
+			loop
+				if classes [i] /= Void and then classes [i] /= fig then
+					l_insertion_bounding_box := classes [i].bounding_box
+
+					if l_insertion_bounding_box.intersects (l_class_bounding_box) then
+						-- We are placing on top of an existing class, update insertion box and try again until we find an empty slot
+						if l_add_across then
+							l_class_bounding_box.set_x (l_insertion_bounding_box.x + l_insertion_bounding_box.width)
+							l_class_bounding_box.set_y (l_insertion_bounding_box.y)
+						else
+							l_class_bounding_box.set_x (l_class_x_offset)
+							l_class_bounding_box.set_y (l_insertion_bounding_box.y + l_insertion_bounding_box.height)
+						end
+						l_add_across := not l_add_across
+
+
+						if i > 1 then
+								-- Reset counter so that we iterate all the classes again.
+							i := classes.count + 1
+						else
+							-- We have iterated all of the classes so we exit at this final set position to avoid infinite looping
+						end
+					end
+				end
+				i := i - 1
+			end
+
+			l_class_bounding_box.set_x (l_class_bounding_box.x + (l_class_bounding_box.width // 2) + new_class_padding)
+			l_class_bounding_box.set_y (l_class_bounding_box.y + (l_class_bounding_box.height // 2) + new_class_padding)
+			if world.grid_enabled then
+				l_class_bounding_box.set_x (world.x_to_grid (l_class_bounding_box.x))
+				l_class_bounding_box.set_y (world.y_to_grid (l_class_bounding_box.y))
+			end
+			fig.set_point_position (l_class_bounding_box.x, l_class_bounding_box.y)
+		end
+
 feature {NONE} -- Implementation
+
+	new_class_padding: INTEGER = 20
+		-- Padding between newly inserted classes.
+
+	eiffel_cluster_diagram_str: STRING = "EIFFEL_CLUSTER_DIAGRAM"
+	name_str: STRING = "NAME"
+	subcluster_depth_str: STRING = "SUBCLUSTER_DEPTH"
+	supercluster_depth_str: STRING = "SUPERCLUSTER_DEPTH"
+	center_cluster_id_str: STRING = "CENTER_CLUSTER_ID"
 
 	window_status_bar: EB_DEVELOPMENT_WINDOW_STATUS_BAR
 			-- Status bar of window

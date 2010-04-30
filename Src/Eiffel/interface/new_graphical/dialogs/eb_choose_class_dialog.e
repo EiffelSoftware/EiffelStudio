@@ -93,7 +93,7 @@ feature {NONE} -- Initialization
 			class_name_entry.change_actions.extend (agent on_class_name_entry_changed)
 			create classes_tree.make_for_class_selection (a_context_menu_factory)
 			classes_tree.set_minimum_width (l_layouts.dialog_unit_to_pixels(300))
-			classes_tree.set_minimum_height (l_layouts.dialog_unit_to_pixels(200))
+			classes_tree.set_minimum_height (l_layouts.dialog_unit_to_pixels(300))
 
 			classes_tree.add_double_click_action_to_classes (agent on_class_double_click)
 

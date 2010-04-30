@@ -120,7 +120,7 @@ feature -- Access
 						if source /= Void and target /= Void then
 							if node_name.is_equal (xml_client_supplier_figure_node_name) then
 								if source.has_supplier (target) then
-									create {ES_CLIENT_SUPPLIER_LINK} Result.make (source, target, True)
+									create {ES_CLIENT_SUPPLIER_LINK} Result.make (source, target)
 								end
 							else
 								create {ES_INHERITANCE_LINK} Result.make (source, target, True)

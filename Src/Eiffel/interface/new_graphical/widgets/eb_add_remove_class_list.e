@@ -38,6 +38,7 @@ feature -- Init
 		do
 			group_internal := a_group_callback
 			make_old
+--			text_field.hide
 		end
 
 feature -- Access
@@ -64,32 +65,36 @@ feature {NONE} -- GUI
 
 			extend (list)
 
-			build_text_field (interface_names.l_Entry_colon)
+--			build_text_field (interface_names.l_Entry_colon)
 
-			text_field.change_actions.extend (agent update_button_status)
-			text_field.return_actions.extend (agent add_item_in)
+--			text_field.change_actions.extend (agent update_button_status)
+--			text_field.return_actions.extend (agent add_item_in)
+
+			list.select_actions.extend (agent update_buttons)
+			list.deselect_actions.extend (agent update_buttons)
 
 			create hbox
 			hbox.set_border_width (5)
 			hbox.extend (create {EV_CELL})
 			create add_button.make_with_text (interface_names.b_Add)
-			add_button.select_actions.extend (agent add_item_in)
+			add_button.select_actions.extend (agent add_pressed)
 			add_button.set_minimum_width (80)
 			hbox.extend (add_button)
 			hbox.disable_item_expand (add_button)
-			add_button.disable_sensitive
+--			add_button.disable_sensitive
 
 			hbox.extend (create {EV_CELL})
+
 			create apply_button.make_with_text (interface_names.b_Rename)
-			apply_button.select_actions.extend (agent modify_item_in)
-			apply_button.set_minimum_width (80)
-			hbox.extend (apply_button)
-			hbox.disable_item_expand (apply_button)
-			apply_button.disable_sensitive
+--			apply_button.select_actions.extend (agent modify_pressed)
+--			apply_button.set_minimum_width (80)
+--			hbox.extend (apply_button)
+--			hbox.disable_item_expand (apply_button)
+--			apply_button.disable_sensitive
 
 			hbox.extend (create {EV_CELL})
 			create remove_button.make_with_text (interface_names.b_Remove)
-			remove_button.select_actions.extend (agent remove_item_in)
+			remove_button.select_actions.extend (agent remove_pressed)
 			remove_button.set_minimum_width (80)
 			hbox.extend (remove_button)
 			hbox.disable_item_expand (remove_button)
@@ -98,6 +103,25 @@ feature {NONE} -- GUI
 
 			extend (hbox)
 			disable_item_expand (hbox)
+		end
+
+	add_pressed
+		local
+			list_item: EV_LIST_ITEM
+		do
+			create list_item
+			list.extend (list_item)
+			add_actions.call (Void)
+		end
+
+	remove_pressed
+		local
+			l_item: EV_LIST_ITEM
+		do
+			l_item := list.selected_item
+			if l_item /= Void then
+				list.prune_all (l_item)
+			end
 		end
 
 	build_text_field (t: STRING_GENERAL)
@@ -129,11 +153,54 @@ feature {NONE} -- Implementation
 
 	group_internal: FUNCTION [ANY, TUPLE, CONF_GROUP]
 
+	update_buttons
+			-- Enable or disable sensitivity of `Apply', `Add'
+			-- and `Remove' buttons.
+		local
+--			l_text: STRING_32
+			l_item: detachable EV_LIST_ITEM
+		do
+--			check text_field /= Void end
+			check list /= Void end
+			check add_button /= Void end
+			check apply_button /= Void end
+			check remove_button /= Void end
+--			l_text := text_field.text
+			l_item := list.selected_item
+--			l_text := l_item.text
+
+				-- Update `Add'
+--			if not l_text.is_empty then
+--				add_button.enable_sensitive
+--			else
+--				add_button.disable_sensitive
+--			end
+
+				-- Update `Apply'
+--			if l_item /= Void and not l_text.is_empty then
+--				if not l_text.is_equal (l_item.text) then
+--					apply_button.enable_sensitive
+--				else
+--					apply_button.disable_sensitive
+--				end
+--			else
+--				apply_button.disable_sensitive
+--			end
+
+				-- Update `Remove'
+			if l_item /= Void then
+				remove_button.enable_sensitive
+			else
+				remove_button.disable_sensitive
+			end
+		end
+
+
 invariant
 	invariant_clause: True -- Your invariant here
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -146,21 +213,21 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

@@ -241,7 +241,6 @@ feature -- Status report
 		local
 			grp: detachable EV_MODEL_GROUP
 		do
-			Result := False
 			from
 				start
 			until
@@ -263,41 +262,11 @@ feature -- Status report
 			-- Rectangle that needs erasing.
 			-- `Void' if no change is made.
 		local
-			f: EV_MODEL
 			r: detachable EV_RECTANGLE
 			l_area: like area
 			i, nb: INTEGER
 		do
-			from
-				l_area := area
-				i := 0
-				nb := count - 1
-			until
-				i > nb
-			loop
-				f := l_area.item (i)
-				r := f.invalid_rectangle
-				if r /= Void then
-					if Result = Void then
-						Result := r
-					else
-						Result.merge (r)
-					end
-				end
-				i := i + 1
-			end
-		end
-
-	update_rectangle: detachable EV_RECTANGLE
-			-- Rectangle that needs redrawing.
-			-- `Void' if no change is made.
-		local
-			f: EV_MODEL
-			r: detachable EV_RECTANGLE
-			l_area: like area
-			i, nb: INTEGER
-		do
-			if is_grouped then
+			if not valid then
 				from
 					l_area := area
 					i := 0
@@ -305,19 +274,54 @@ feature -- Status report
 				until
 					i > nb
 				loop
-					f := l_area.item (i)
-					r := f.update_rectangle
-					if r /= Void then
+					r := l_area [i].invalid_rectangle
+					if r /= Void and then r.has_area and then l_area [i].is_show_requested then
 						if Result = Void then
-							Result := r
+							if internal_invalid_rectangle = Void then
+								create internal_invalid_rectangle
+							end
+							Result := internal_invalid_rectangle
+							Result.copy (r)
 						else
 							Result.merge (r)
 						end
 					end
 					i := i + 1
 				end
-			else
-				create Result
+			end
+		end
+
+	update_rectangle: detachable EV_RECTANGLE
+			-- Rectangle that needs redrawing.
+			-- `Void' if no change is made.
+		local
+			r: detachable EV_RECTANGLE
+			l_area: like area
+			i, nb: INTEGER
+		do
+			if not valid and then is_show_requested and then is_grouped then
+				from
+					l_area := area
+					i := 0
+					nb := count - 1
+				until
+					i > nb
+				loop
+					r := l_area [i].update_rectangle
+					if r /= Void then
+						if Result = Void then
+							if last_update_rectangle = Void then
+									-- Reuse `local_update_rectangle'
+								create last_update_rectangle
+							end
+							Result := last_update_rectangle
+							Result.copy (r)
+						else
+							Result.merge (r)
+						end
+					end
+					i := i + 1
+				end
 			end
 		end
 
@@ -717,7 +721,6 @@ feature -- Status settings
 			-- Some property of `Current' has changed.
 		local
 			l_area: like area
-			l_figure: EV_MODEL
 			i, nb: INTEGER
 		do
 			if valid then
@@ -729,9 +732,8 @@ feature -- Status settings
 				until
 					i > nb
 				loop
-					l_figure := l_area.item (i)
-					if l_figure.valid then
-						l_figure.invalidate
+					if l_area [i].valid then
+						l_area [i].invalidate
 					end
 					i := i + 1
 				end
@@ -746,11 +748,11 @@ feature -- Status settings
 			l_area: like area
 			i, nb: INTEGER
 			l_figure: EV_MODEL
+			l_rect: detachable EV_RECTANGLE
 		do
 			if not valid then
-				if count = 0 then
-					create internal_invalid_rectangle
-				else
+				if count > 0 then
+					create l_rect
 					l_area := area
 					from
 						i := 0
@@ -764,8 +766,24 @@ feature -- Status settings
 						end
 						i := i + 1
 					end
+					if world = Current then
+							-- We do not want the origin of the world to be included in the update.
+						l_rect := calculated_bounding_box
+						if l_rect = Void then
+							create l_rect
+						end
+					else
+						update_rectangle_to_bounding_box (l_rect)
+					end
+					if internal_invalid_rectangle /= Void then
+						internal_invalid_rectangle.copy (l_rect)
+					else
+						internal_invalid_rectangle := l_rect
+					end
+				elseif internal_invalid_rectangle /= Void then
+						-- Reset any previous invalid rectangle.
+					internal_invalid_rectangle.move_and_resize (0, 0, 0, 0)
 				end
-				internal_invalid_rectangle := bounding_box
 				valid := True
 			end
 		end
@@ -784,53 +802,31 @@ feature -- Events
 	bounding_box: EV_RECTANGLE
 			-- Smallest orthogonal rectangular area `Current' fits in.
 		local
-			l_area: like area
-			i, nb: INTEGER
-			l_bbox: like bounding_box
 			l_result: detachable EV_RECTANGLE
 		do
-			if attached internal_bounding_box as l_internal_bounding_box then
+			if attached internal_bounding_box as l_internal_bounding_box and then l_internal_bounding_box.has_area then
 				Result := l_internal_bounding_box.twin
 			else
-				if is_grouped then
-					from
-						l_area := area
-						i := 0
-						nb := count - 1
-					until
-						i > nb or else l_area.item (i).is_show_requested
-					loop
-						i := i + 1
-					end
-					if i <= nb then
-						from
-						until
-							i > nb
-						loop
-							if l_area.item (i).is_show_requested then
-								l_bbox := l_area.item (i).bounding_box
-								if l_bbox.height > 0 or else l_bbox.width > 0 then
-									if l_result = Void then
-										l_result := l_bbox
-									else
-										l_result.merge (l_bbox)
-									end
-								end
-							end
-							i := i + 1
-						end
-						if l_result = Void then
-							create l_result
-						end
-					else
-						create l_result
+				l_result := calculated_bounding_box
+				if world = Current then
+						-- If `Current' is the world then we need then we need the origin to be included so that its size is remembered.
+					create Result.make (point_x, point_y, 0, 0)
+					if l_result /= Void then
+						Result.merge (l_result)
 					end
 				else
-					create l_result
+					if l_result /= Void then
+						Result := l_result
+					else
+						create Result
+					end
 				end
-				check l_result /= Void end
-				Result := l_result
-				internal_bounding_box := Result.twin
+
+				if l_result /= Void and then l_result /= Result then
+					internal_bounding_box := l_result
+				else
+					internal_bounding_box := Result.twin
+				end
 			end
 		end
 
@@ -863,6 +859,45 @@ feature {EV_MODEL_GROUP} -- Figure group
 
 feature {NONE} -- Implementation
 
+	calculated_bounding_box: detachable EV_RECTANGLE
+			-- Smallest orthogonal rectangular area `Current' fits in.
+		local
+			l_area: like area
+			i, nb: INTEGER
+			l_bbox: like internal_bounding_box
+		do
+			if is_grouped then
+				from
+					l_area := area
+					i := 0
+					nb := count - 1
+				until
+					i > nb or else l_area.item (i).is_show_requested
+				loop
+					i := i + 1
+				end
+				if i <= nb then
+					from
+						create l_bbox
+					until
+						i > nb
+					loop
+						if l_area.item (i).is_show_requested then
+							l_area [i].update_rectangle_to_bounding_box (l_bbox)
+							if l_bbox.has_area then
+								if Result = Void then
+									Result := l_bbox.twin
+								else
+									Result.merge (l_bbox)
+								end
+							end
+						end
+						i := i + 1
+					end
+				end
+			end
+		end
+
 	current_angle: DOUBLE
 			-- The rotating angle.
 
@@ -881,7 +916,7 @@ feature {NONE} -- Implementation
 			is_center_valid := True
 		end
 
-	initiale_size: INTEGER = 10
+	initiale_size: INTEGER = 5
 			-- Initialize size of `Current'.
 
 	change_group (other: ARRAYED_LIST [EV_MODEL])

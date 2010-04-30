@@ -35,6 +35,9 @@ feature {NONE} -- Initialization
 			widget := a_widget
 			area_x := 0
 			area_y := 0
+
+			project_agent := agent project
+
 			widget.pointer_motion_actions.extend (agent mouse_move)
 			widget.pointer_button_press_actions.extend (agent button_press)
 			widget.pointer_double_press_actions.extend (agent double_press)
@@ -59,6 +62,9 @@ feature {NONE} -- Initialization
 			make_with_drawable_widget (a_world, a_buffer, a_widget)
 			area := a_drawable
 		end
+
+	project_agent: PROCEDURE [like Current, TUPLE]
+		-- Agent used for projection.
 
 feature -- Access
 
@@ -93,12 +99,14 @@ feature -- Element change
 			u: EV_RECTANGLE
 			l_area: like area
 		do
-			l_area := area
-			check l_area /= Void end
-			area_x := a_x
-			area_y := a_y
-			create u.make (0, 0, l_area.width, l_area.height)
-			update_rectangle (u, 0, 0)
+			if buffer_used then
+				l_area := area
+				check l_area /= Void end
+				area_x := a_x
+				area_y := a_y
+				create u.make (0, 0, l_area.width, l_area.height)
+				update_rectangle (u, 0, 0)
+			end
 		end
 
 feature -- Basic operations
@@ -106,7 +114,7 @@ feature -- Basic operations
 	project
 			-- Make a standard projection of world on device.
 		local
-			e, u: detachable EV_RECTANGLE
+			a, e, u: detachable EV_RECTANGLE
 		do
 			if not is_projecting and then attached world as l_world then
 				is_projecting := True
@@ -121,11 +129,19 @@ feature -- Basic operations
 						if u /= Void then
 							e.merge (u)
 						end
-						project_rectangle (e)
+
+						a := area_bounding_box
+						if a /= Void then
+								-- Optimized projection to only project the viewable projection area.
+							e := a.intersection (a)
+						end
+						if e.has_area then
+							project_rectangle (e)
+						end
 					end
 				end
+				is_projecting := False
 			end
-			is_projecting := False
 		end
 
 	project_rectangle (u: EV_RECTANGLE)
@@ -160,10 +176,6 @@ feature -- Basic operations
 					-- Flush `drawable' on `area'.
 				pixmap ?= drawable
 				if pixmap /= Void and then attached area as l_area then
-					u.set_x (area_x)
-					u.set_y (area_y)
-					u.set_width (l_area.width)
-					u.set_height (l_area.height)
 					l_area.draw_sub_pixmap (0, 0, pixmap, u)
 				end
 			end
@@ -171,36 +183,8 @@ feature -- Basic operations
 
 	full_project
 			-- Project entire area.
-		local
-			pixmap: detachable EV_PIXMAP
 		do
-			drawable.set_background_color (world.background_color)
-			drawable.clear_rectangle (0, 0, drawable.width, drawable.height)
-
-			if world.grid_visible then
-				draw_grid
-			end
-
-			if world.is_show_requested then
-				project_figure_group_full (world)
-			end
-			if has_mouse then
-				change_current (figure_on_position (world, last_pointer_x,
-				last_pointer_y))
-			end
-			if world.points_visible then
-				draw_points (world)
-			end
-
-			world.validate
-
-			if buffer_used then
-					-- Flush `drawable' on `area'.
-				pixmap ?= drawable
-				if pixmap /= Void and then attached area as l_area then
-					l_area.draw_pixmap (0, 0, pixmap)
-				end
-			end
+			project_rectangle (drawable_bounding_box)
 		end
 
 	update_rectangle (u: EV_RECTANGLE; a_x, a_y: INTEGER)
@@ -216,6 +200,13 @@ feature -- Basic operations
 				u.set_y (u.y + area_y)
 				l_area.draw_sub_pixmap (a_x, a_y, pixmap, u)
 			end
+		end
+
+	update
+		require
+			buffer_used: buffer_used
+		do
+			update_rectangle (create {EV_RECTANGLE}.make (0, 0, drawable.width, drawable.height), 0, 0)
 		end
 
 	clear_device
@@ -241,50 +232,73 @@ feature {NONE} -- Event implementation
 	figure_on_position (group: EV_MODEL_GROUP; x, y: INTEGER): detachable EV_MODEL
 			-- Figure mouse-cursor is on.
 		local
-			grp: detachable EV_MODEL_GROUP
-			gritem: EV_MODEL
+			gritem: detachable EV_MODEL
 			i: INTEGER
 			found_closed_figure, closed_figure: detachable EV_MODEL_CLOSED
+			l_bbox: EV_RECTANGLE
 		do
 			if world.capture_figure /= Void then
 				Result := world.capture_figure
 			else
-				from
-					group.finish
-					i := group.count
-				until
-					Result /= Void or else i < 1
-				loop
-					gritem := group.i_th (i)
-					grp ?= gritem
-					if grp /= Void and then grp.is_sensitive then
-						if grp.position_on_figure (x, y) then
-							Result := grp
-						else
-							Result := figure_on_position (grp, x, y)
-						end
-					elseif gritem.position_on_figure (x, y) and then gritem.is_sensitive then
-						Result := gritem
-					end
-					closed_figure ?= Result
-					if closed_figure /= Void and then closed_figure.background_color = Void then
-						-- is a not closed_figure under it?
-						Result := Void
-						if found_closed_figure = Void then
-							-- if not take the first closed_figure found.
-							found_closed_figure := closed_figure
+					-- Check if we are on the current figure first
+				if group = world then
+					gritem := current_figure
+					if gritem /= Void and then gritem /= world and then gritem.is_show_requested then
+						l_bbox := gritem.bounding_box
+						if x >= l_bbox.left and then x <= l_bbox.right and then y >= l_bbox.top and then y <= l_bbox.bottom then
+								-- The mouse pointer is definitely inside the model so we find the correct figure.
+							if gritem.position_on_figure (x, y) then
+								Result := gritem
+								closed_figure ?= Result
+								if closed_figure /= Void and then closed_figure.background_color = Void and then attached closed_figure.group as l_group then
+									-- is a not closed_figure under it?
+									Result := figure_on_position (l_group, x, y)
+								end
+							elseif attached {EV_MODEL_GROUP} gritem as grp then
+								Result := figure_on_position (grp, x, y)
+							end
 						end
 					end
-					i := i - 1
 				end
-				if Result = Void and then found_closed_figure /= Void then
-					Result := found_closed_figure
+
+				if Result = Void then
+					from
+						group.finish
+						i := group.count
+					until
+						Result /= Void or else i < 1
+					loop
+						gritem := group.i_th (i)
+						l_bbox := gritem.bounding_box
+						if x >= l_bbox.left and then x <= l_bbox.right and then y >= l_bbox.top and then y <= l_bbox.bottom then
+								-- The mouse pointer is definitely inside the model so we find the correct figure.
+							if gritem.position_on_figure (x, y) then
+								Result := gritem
+							elseif attached {EV_MODEL_GROUP} gritem as grp then
+								Result := figure_on_position (grp, x, y)
+							end
+							if Result /= Void then
+								closed_figure ?= Result
+								if closed_figure /= Void and then closed_figure.background_color = Void then
+									-- is a not closed_figure under it?
+									Result := Void
+									if found_closed_figure = Void then
+										-- if not take the first closed_figure found.
+										found_closed_figure := closed_figure
+									end
+								end
+							end
+						end
+						i := i - 1
+					end
+					if Result = Void and then found_closed_figure /= Void then
+						Result := found_closed_figure
+					end
 				end
 			end
 		end
 
-	button_press (x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE;
-		screen_x, screen_y: INTEGER)
+	button_press (x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)
 			-- Pointer button down happened.
 		local
 			event_fig: detachable EV_MODEL
@@ -508,36 +522,38 @@ feature {NONE} -- Event implementation
 			w_x, w_y: INTEGER
 			action: detachable EV_LITE_ACTION_SEQUENCE [TUPLE]
 		do
-			w_x := x + area_x
-			w_y := y + area_y
-			has_mouse := True
-			last_pointer_x := w_x
-			last_pointer_y := w_y
-			from
-				event_fig := figure_on_position (world, w_x, w_y)
-				change_current (event_fig)
-				if event_fig = Void then
-					event_fig := world
-				end
-			until
-				event_fig = Void
-			loop
-				check event_fig /= Void end
-				action := event_fig.internal_pointer_motion_actions
-				if action /= Void and then event_fig.is_sensitive then
-					action.call ([w_x, w_y, x_tilt, y_tilt, pressure, screen_x, screen_y])
-					if event_fig.are_events_sent_to_group then
-						event_fig := event_fig.group
-					else
-						event_fig := Void
+			if not is_projecting then
+				w_x := x + area_x
+				w_y := y + area_y
+				has_mouse := True
+				last_pointer_x := w_x
+				last_pointer_y := w_y
+				from
+					event_fig := figure_on_position (world, w_x, w_y)
+					change_current (event_fig)
+					if event_fig = Void then
+						event_fig := world
 					end
-				else
-					event_fig := event_fig.group
+				until
+					event_fig = Void
+				loop
+					check event_fig /= Void end
+					action := event_fig.internal_pointer_motion_actions
+					if action /= Void and then event_fig.is_sensitive then
+						action.call ([w_x, w_y, x_tilt, y_tilt, pressure, screen_x, screen_y])
+						p := p or else not event_fig.valid
+						if event_fig.are_events_sent_to_group then
+							event_fig := event_fig.group
+						else
+							event_fig := Void
+						end
+					else
+						event_fig := event_fig.group
+					end
 				end
-				p := True
-			end
-			if p then
-				project
+				if p or else not world.valid then
+					ev_application.do_once_on_idle (project_agent)
+				end
 			end
 		end
 
@@ -598,7 +614,36 @@ feature {NONE} -- Event implementation
 			end
 		end
 
+feature {EV_MODEL_WORLD_CELL} -- Element change
+
+	simulate_mouse_move (ax, ay: INTEGER)
+			-- Let `Current' behave as if pointer was moved to `ax', `ay'
+		do
+			mouse_move (ax, ay, 0, 0, 0, 0, 0)
+		end
+
 feature {NONE} -- Implementation
+
+	drawable_position: EV_COORDINATE
+			-- Position of drawable relative to world.
+			-- Redefined by descendents.
+		do
+			create Result
+		end
+
+	drawable_bounding_box: EV_RECTANGLE
+			-- Bounding box of the projector
+		do
+			create Result.make (drawable_position.x, drawable_position.y, drawable.width, drawable.height)
+		end
+
+	area_bounding_box: detachable EV_RECTANGLE
+			-- Bounding box of the visible area if used.
+		do
+			if attached area as l_area then
+				create Result.make (area_x, area_y, l_area.width, l_area.height)
+			end
+		end
 
 	default_cursor: EV_POINTER_STYLE
 			-- Default cursor on world.

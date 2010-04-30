@@ -334,11 +334,7 @@ feature {NONE} -- Events
 		do
 			l_world := world
 			check l_world /= Void end
-			if ax \\ l_world.grid_x < l_world.grid_x // 2 then
-				Result := ax - ax \\ l_world.grid_x
-			else
-				Result := ax - ax \\ l_world.grid_x + l_world.grid_x
-			end
+			Result := l_world.x_to_grid (ax)
 		end
 
 	snapped_y (ay: INTEGER): INTEGER
@@ -348,11 +344,7 @@ feature {NONE} -- Events
 		do
 			l_world := world
 			check l_world /= Void end
-			if ay \\ l_world.grid_y < l_world.grid_y // 2 then
-				Result := ay - ay \\ l_world.grid_y
-			else
-				Result := ay - ay \\ l_world.grid_y + l_world.grid_y
-			end
+			Result := l_world.y_to_grid (ay)
 		end
 
 	on_start_resizing (ax, ay, b: INTEGER; xt, yt, p: DOUBLE; sx, sy: INTEGER)

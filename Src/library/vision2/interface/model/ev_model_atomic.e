@@ -97,7 +97,7 @@ feature -- Events
 			l_item: EV_COORDINATE
 			grow: INTEGER
 		do
-			if attached internal_bounding_box as l_internal_bounding_box then
+			if attached internal_bounding_box as l_internal_bounding_box and then l_internal_bounding_box.has_area then
 				Result := l_internal_bounding_box.twin
 			else
 				if point_count = 0 then

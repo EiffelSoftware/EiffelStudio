@@ -58,10 +58,17 @@ feature {NONE} -- Initialization
 			-- <Precursor>
 		do
 			create drawing_area
-			create projector.make_with_buffer (world, drawing_area)
+			projector := new_projector
 			create autoscroll.make_with_interval (normal_timeout_interval)
 			create vertical_scrollbar.make_with_value_range (create {INTEGER_INTERVAL}.make (0, 1))
 			create horizontal_scrollbar.make_with_value_range (create {INTEGER_INTERVAL}.make (0, 1))
+		end
+
+	use_buffered_projection: BOOLEAN
+			-- Should a buffered projection be used?
+		do
+				-- By default always True but a drawing area can be used for debugging projection handling.
+			Result := True
 		end
 
 	initialize
@@ -126,7 +133,7 @@ feature -- Access
 	world: EV_MODEL_WORLD
 			-- The world shown in `Current'.
 
-	projector: EV_MODEL_BUFFER_PROJECTOR
+	projector: EV_MODEL_WIDGET_PROJECTOR
 			-- Projector to render `world'.
 
 	drawing_area: EV_DRAWING_AREA
@@ -288,38 +295,6 @@ feature -- Element change
 			projector.full_project
 		end
 
-	cut
-			-- Resize scrollbars such that there is no overhang (crop without scrolling).
-		local
-			bbox: EV_RECTANGLE
-			border: INTEGER
-		do
-			bbox := world.bounding_box
-
-			if bbox.width /= 0 or else bbox.height /= 0 then
-
-				border := world_border + autoscroll_border
-
-				if horizontal_scrollbar.value_range.upper > bbox.right + border - drawing_area.width then
-					is_projection_needed := True
-					horizontal_scrollbar.value_range.resize_exactly (horizontal_scrollbar.value_range.lower, horizontal_scrollbar.value.max (bbox.right + border - drawing_area.width))
-				end
-				if horizontal_scrollbar.value_range.lower < bbox.left - border then
-					is_projection_needed := True
-					horizontal_scrollbar.value_range.resize_exactly (horizontal_scrollbar.value.min (bbox.left - border), horizontal_scrollbar.value_range.upper)
-				end
-
-				if vertical_scrollbar.value_range.upper > bbox.bottom + border - drawing_area.height then
-					is_projection_needed := True
-					vertical_scrollbar.value_range.resize_exactly (vertical_scrollbar.value_range.lower, vertical_scrollbar.value.max (bbox.bottom + border - drawing_area.height))
-				end
-				if vertical_scrollbar.value_range.lower < bbox.top - border then
-					is_projection_needed := True
-					vertical_scrollbar.value_range.resize_exactly (vertical_scrollbar.value.min (bbox.top - border), vertical_scrollbar.value_range.upper)
-				end
-			end
-		end
-
 	fit_to_screen
 			-- Zoom world such that it fits to screen.
 		local
@@ -340,10 +315,83 @@ feature -- Element change
 			end
 		end
 
+	resize_if_necessary
+			-- Resize the scroll bars to fit in world.
+		do
+			resize_if_necessary_internal (world.bounding_box)
+		end
+
 feature {NONE} -- Implementation
 
-	is_projection_needed: BOOLEAN
-			-- Do we need to perform a projection (used for autoscroll timeout)?
+	new_projector: EV_MODEL_WIDGET_PROJECTOR
+			-- Returns a new projector
+			-- Redefined by descendents.
+		do
+			create {EV_MODEL_BUFFER_PROJECTOR} Result.make (world, drawing_area)
+		end
+
+	resize_if_necessary_internal (bbox: EV_RECTANGLE)
+			-- Resize the scroll bars to fit in world.
+		local
+			top, bottom, left, right: INTEGER
+			border: INTEGER
+		do
+			if bbox.width /= 0 or else bbox.height /= 0 then
+				border := world_border + autoscroll_border
+				if bbox.left - border < horizontal_scrollbar.value_range.lower then
+					left := bbox.left - border
+				end
+				if bbox.top - border < vertical_scrollbar.value_range.lower then
+					top := bbox.top - border
+				end
+				if bbox.right + border - drawing_area.width > horizontal_scrollbar.value_range.upper then
+					right := bbox.right + border - drawing_area.width
+				end
+				if bbox.bottom + border - drawing_area.height > vertical_scrollbar.value_range.upper then
+					bottom := bbox.bottom + border - drawing_area.height
+				end
+				if left /= 0 or else right /= 0 then
+					horizontal_scrollbar.value_range.resize_exactly (
+							left.min (horizontal_scrollbar.value_range.lower),
+							right.max (horizontal_scrollbar.value_range.upper))
+				end
+				if top /= 0 or else bottom /= 0 then
+					vertical_scrollbar.value_range.resize_exactly (
+							top.min (vertical_scrollbar.value_range.lower),
+							bottom.max (vertical_scrollbar.value_range.upper))
+				end
+			end
+		end
+
+	cut
+			-- Resize scrollbars such that there is no overhang (crop without scrolling).
+		do
+			cut_internal (world.bounding_box)
+		end
+
+	cut_internal (bbox: EV_RECTANGLE)
+			-- Resize scrollbars such that there is no overhang (crop without scrolling).
+		local
+			border: INTEGER
+		do
+			if bbox.width /= 0 or else bbox.height /= 0 then
+				border := world_border + autoscroll_border
+
+				if horizontal_scrollbar.value_range.upper > bbox.right + border - drawing_area.width then
+					horizontal_scrollbar.value_range.resize_exactly (horizontal_scrollbar.value_range.lower, horizontal_scrollbar.value.max (bbox.right + border - drawing_area.width))
+				end
+				if horizontal_scrollbar.value_range.lower < bbox.left - border then
+					horizontal_scrollbar.value_range.resize_exactly (horizontal_scrollbar.value.min (bbox.left - border), horizontal_scrollbar.value_range.upper)
+				end
+
+				if vertical_scrollbar.value_range.upper > bbox.bottom + border - drawing_area.height then
+					vertical_scrollbar.value_range.resize_exactly (vertical_scrollbar.value_range.lower, vertical_scrollbar.value.max (bbox.bottom + border - drawing_area.height))
+				end
+				if vertical_scrollbar.value_range.lower < bbox.top - border then
+					vertical_scrollbar.value_range.resize_exactly (vertical_scrollbar.value.min (bbox.top - border), vertical_scrollbar.value_range.upper)
+				end
+			end
+		end
 
 	normal_timeout_interval: INTEGER = 1000
 		-- Normal millesecond timeout interval for autoscrolling
@@ -368,12 +416,14 @@ feature {NONE} -- Implementation
 
 	on_autoscroll_time_out
 			-- Enable scroll.
+		local
+			l_bbox: EV_RECTANGLE
 		do
 			if is_resize_enabled then
-					-- Reset projection flag.
-				is_projection_needed := False
-				cut
-				resize_if_necessary
+				autoscroll.actions.block
+				l_bbox := world.bounding_box
+				cut_internal (l_bbox)
+				resize_if_necessary_internal (l_bbox)
 				if is_scroll then
 					scroll_if_necessary
 				elseif autoscroll.interval /= normal_timeout_interval then
@@ -382,16 +432,14 @@ feature {NONE} -- Implementation
 				check
 					world.is_show_requested
 				end
-				if is_projection_needed then
-					projector.project
-				end
+				autoscroll.actions.resume
 			end
 		end
 
 	on_vertical_scroll (new_value: INTEGER)
 			-- `vertical_scrollbar' has been moved by the user.
 		do
-			if projector /= Void and then new_value /= projector.area_y then
+			if projector /= Void then
 				projector.change_area_position (projector.area_x, new_value)
 			end
 		end
@@ -399,7 +447,7 @@ feature {NONE} -- Implementation
 	on_horizontal_scroll (new_value: INTEGER)
 			-- `horizontal_scrollbar' has been moved by the user.
 		do
-			if projector /= Void and then new_value /= projector.area_x then
+			if projector /= Void then
 				projector.change_area_position (new_value, projector.area_y)
 			end
 		end
@@ -461,82 +509,56 @@ feature {NONE} -- Implementation
 			drawing_area.set_pointer_style (default_pixmaps.standard_cursor)
 		end
 
-	resize_if_necessary
-			-- Resize the scroll bars to fit in world.
-		local
-			bbox: EV_RECTANGLE
-			top, bottom, left, right: INTEGER
-			border: INTEGER
-		do
-			bbox := world.bounding_box
-			if bbox.width /= 0 or else bbox.height /= 0 then
-				border := world_border + autoscroll_border
-				if bbox.left - border < horizontal_scrollbar.value_range.lower then
-					left := bbox.left - border
-				end
-				if bbox.top - border < vertical_scrollbar.value_range.lower then
-					top := bbox.top - border
-				end
-				if bbox.right + border - drawing_area.width > horizontal_scrollbar.value_range.upper then
-					right := bbox.right + border - drawing_area.width
-				end
-				if bbox.bottom + border - drawing_area.height > vertical_scrollbar.value_range.upper then
-					bottom := bbox.bottom + border - drawing_area.height
-				end
-				if left /= 0 or else right /= 0 then
-					is_projection_needed := True
-					horizontal_scrollbar.value_range.resize_exactly (
-							left.min (horizontal_scrollbar.value_range.lower),
-							right.max (horizontal_scrollbar.value_range.upper))
-				end
-				if top /= 0 or else bottom /= 0 then
-					is_projection_needed := True
-					vertical_scrollbar.value_range.resize_exactly (
-							top.min (vertical_scrollbar.value_range.lower),
-							bottom.max (vertical_scrollbar.value_range.upper))
-				end
-			end
-		end
-
 	scroll_if_necessary
 			-- Scroll if necessary.
 			-- Do nothing if not `is_autoscroll_enabled'.
 		local
- 			cursor_x, cursor_y, new_value: INTEGER
- 			scrolled: BOOLEAN
+ 			cursor_x, cursor_y, new_hor_value, new_vert_value: INTEGER
+ 			hscrolled, vscrolled: BOOLEAN
  			da_width, da_height: INTEGER
+ 			l_pointer_position: like pointer_position
+ 			l_hor_value_range, l_vert_value_range: INTEGER_INTERVAL
+ 			l_hor_value, l_vert_value: INTEGER
 		do
 			if is_autoscroll_enabled then
-				cursor_x := pointer_position.x
-				world.hide
+				l_pointer_position := pointer_position
+				cursor_x := l_pointer_position.x
 				da_width := drawing_area.width
 				da_height := drawing_area.height
+				l_hor_value_range := horizontal_scrollbar.value_range
+				l_vert_value_range := vertical_scrollbar.value_range
+				l_hor_value := horizontal_scrollbar.value
+				l_vert_value := vertical_scrollbar.value
 				if cursor_x > da_width - autoscroll_border then
-					new_value := horizontal_scrollbar.value_range.upper.min (horizontal_scrollbar.value + (scroll_speed * (cursor_x - (da_width - autoscroll_border))).truncated_to_integer)
-					horizontal_scrollbar.set_value (new_value)
-					scrolled := True
+					new_hor_value := l_hor_value_range.upper.min (l_hor_value + (scroll_speed * (cursor_x - (da_width - autoscroll_border))).truncated_to_integer)
+					hscrolled := True
 				end
 				if cursor_x < autoscroll_border then
-					new_value := (horizontal_scrollbar.value - (scroll_speed * (autoscroll_border - cursor_x)).truncated_to_integer).max (horizontal_scrollbar.value_range.lower)
-					horizontal_scrollbar.set_value (new_value)
-					scrolled := True
+					new_hor_value := (l_hor_value - (scroll_speed * (autoscroll_border - cursor_x)).truncated_to_integer).max (l_hor_value_range.lower)
+					hscrolled := True
 				end
-				cursor_y := pointer_position.y
+				cursor_y := l_pointer_position.y
 				if cursor_y > da_height - autoscroll_border then
-					new_value := vertical_scrollbar.value_range.upper.min (vertical_scrollbar.value + (scroll_speed * (cursor_y - (da_height - autoscroll_border))).truncated_to_integer)
-					vertical_scrollbar.set_value (new_value)
-					scrolled := True
+					new_vert_value := l_vert_value_range.upper.min (l_vert_value + (scroll_speed * (cursor_y - (da_height - autoscroll_border))).truncated_to_integer)
+					vscrolled := True
 				end
 				if cursor_y < autoscroll_border then
-					new_value := (vertical_scrollbar.value - (scroll_speed * (autoscroll_border - cursor_y)).truncated_to_integer).max (vertical_scrollbar.value_range.lower)
-					vertical_scrollbar.set_value (new_value)
-					scrolled := True
+					new_vert_value := (vertical_scrollbar.value - (scroll_speed * (autoscroll_border - cursor_y)).truncated_to_integer).max (l_vert_value_range.lower)
+					vscrolled := True
 				end
-				if scrolled then
-					projector.simulate_mouse_move (cursor_x.max (autoscroll_border // 2).min (drawing_area.width), cursor_y.max (0).min (drawing_area.height - (autoscroll_border // 2)))
+				if hscrolled or else vscrolled then
+					if hscrolled then
+						horizontal_scrollbar.set_value (new_hor_value)
+					end
+					if vscrolled then
+						vertical_scrollbar.set_value (new_vert_value)
+					end
+						-- Scroll on next idle
+					ev_application.do_once_on_idle (agent projector.simulate_mouse_move (cursor_x.max (autoscroll_border // 2).min (da_width), cursor_y.max (0).min (da_height - (autoscroll_border // 2))))
 					autoscroll.set_interval (scroll_timeout_interval)
+				elseif autoscroll.interval /= normal_timeout_interval then
+					autoscroll.set_interval (normal_timeout_interval)
 				end
-				world.show
 			end
 		end
 

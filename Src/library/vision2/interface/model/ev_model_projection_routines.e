@@ -89,13 +89,13 @@ feature {NONE} -- Implementation
 			bbox: detachable EV_RECTANGLE
 			l_tuple: TUPLE [EV_MODEL]
 		do
-			if f.valid or else f.last_update_rectangle = Void then
+			if f.valid or else f.last_update_rectangle = Void or else (attached f.last_update_rectangle as l_rect and then not l_rect.has_area) then
 				bbox := f.bounding_box
 			else
 				bbox := f.last_update_rectangle
 			end
 			check bbox /= Void end
-			if bbox.intersects (rect) then
+			if bbox.has_area and then bbox.intersects (rect) then
 				-- If we paint f we have to add it
 				-- to the invalidate rectangle. That way
 				-- all figures on top of f are

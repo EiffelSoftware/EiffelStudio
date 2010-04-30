@@ -13,6 +13,8 @@ inherit
 	EV_MODEL_WIDGET_PROJECTOR
 		export
 			{NONE} set_drawable
+		undefine
+			drawable_position
 		redefine
 			project_rectangle,
 			buffer_used,
@@ -20,7 +22,8 @@ inherit
 			update_rectangle,
 			full_project,
 			offset_x,
-			offset_y
+			offset_y,
+			update
 		end
 
 	EV_MODEL_BUFFER_MANAGER
@@ -34,9 +37,20 @@ inherit
 		end
 
 create
-	make_with_buffer
+	make, make_with_buffer
 
 feature {NONE} -- Initialization
+
+	make (
+		a_world: like world;
+		a_drawing_area: EV_DRAWING_AREA)
+			-- Create with `a_world' and `a_drawing_area'.
+		require
+			a_world_not_void: a_world /= Void
+			a_drawing_area_not_void: a_drawing_area /= Void
+		do
+			make_with_buffer (a_world, a_drawing_area)
+		end
 
 	make_with_buffer (
 		a_world: like world;
@@ -69,7 +83,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	buffer_scale_factor: REAL_32 = 1.5
+	buffer_scale_factor: REAL_32 = 1.2
 			-- The buffer is `buffer_scale_factor' times bigger than the window.
 
 	offset_x: INTEGER
@@ -114,7 +128,7 @@ feature -- Access
 
 			set_drawable_position (old_drawable_position)
 			drawable := old_drawable
-			full_project
+
 		ensure
 			Result_not_void: Result /= Void
 		rescue
@@ -150,43 +164,36 @@ feature -- Status report
 
 	buffer_used: BOOLEAN = True
 
-feature {EV_MODEL_WORLD_CELL} -- Element change
-
-	simulate_mouse_move (ax, ay: INTEGER)
-			-- Let `Current' behave as if pointer was moved to `ax', `ay'
-		do
-			is_projecting := True
-			mouse_move (ax, ay, 0, 0, 0, 0, 0)
-		end
 
 feature -- Display updates
 
 	full_project
 			-- Project entire area.
-		local
-			rectangle: EV_RECTANGLE
 		do
-			create rectangle.make (drawable_position.x, drawable_position.y, drawable.width, drawable.height)
-			project_rectangle (rectangle)
+			project_rectangle (area_bounding_box)
 		end
 
 	project_rectangle (u: EV_RECTANGLE)
 			-- Project area under `u'
 		local
 			pixmap: detachable EV_PIXMAP
-			u_x, u_y: INTEGER
+			u_x, u_y, u_width, u_height: INTEGER
+			l_rect: EV_RECTANGLE
 		do
 			u_x := u.x
 			u_y := u.y
+			u_width := u.width
+			u_height := u.height
+			create l_rect.make (u_x, u_y, u_width, u_height)
 			drawable.set_background_color (world.background_color)
-			drawable.clear_rectangle (u_x - drawable_position.x, u_y - drawable_position.y, u.width, u.height)
+			drawable.clear_rectangle (u_x - drawable_position.x, u_y - drawable_position.y, u_width, u_height)
 
 			if world.grid_visible then
 				draw_grid
 			end
 
 			if world.is_show_requested then
-				project_figure_group (world, u)
+				project_figure_group (world, l_rect)
 			end
 			if has_mouse then
 				change_current (figure_on_position (world, last_pointer_x,
@@ -200,13 +207,15 @@ feature -- Display updates
 
 			pixmap ?= drawable
 			if pixmap /= Void and then attached area as l_area then
-				u.set_x (u_x - drawable_position.x)
-				u.set_y (u_y - drawable_position.y)
+				l_rect.set_x (u_x - drawable_position.x)
+				l_rect.set_y (u_y - drawable_position.y)
+				l_rect.set_width (u_width)
+				l_rect.set_height (u_height)
 				l_area.draw_sub_pixmap (
 					u_x - area_x,
 					u_y - area_y,
 					pixmap,
-					u
+					l_rect
 				)
 			end
 		end

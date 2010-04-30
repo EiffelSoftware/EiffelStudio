@@ -444,8 +444,10 @@ feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 	update
 			-- Some properties may have changed.
 		local
-			nx, ny: INTEGER
+			nx, ny, l_x, l_y: INTEGER
 			l_model: like model
+			l_point: EV_COORDINATE
+			l_line: EG_POLYLINE_LINK_FIGURE
 		do
 			if attached source as l_source and then attached target as l_target then
 				l_model := model
@@ -480,6 +482,7 @@ feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 	reflexive_radius: INTEGER
 			-- Radius of reflexive link.
 
+
 feature {NONE} -- Implementation
 
 	set_is_selected (an_is_selected: like is_selected)
@@ -494,10 +497,6 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-
-	edge_move_handlers: ARRAYED_LIST [EG_EDGE]
-			-- Move handlers for the edges of the polyline.
-			-- start_point and end_point have no move_handlers.
 
 	edge_moved (a_point: EV_COORDINATE; ax, ay: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)
 			-- `a_point' was moved for `ax', `ay'.
@@ -665,6 +664,12 @@ feature {NONE} -- Implementation
 --			
 --	reflexive_distance: INTEGER
 --			-- Distance from the border of the linkable figure if `is_reflexive'.
+
+feature {EG_FIGURE_WORLD} -- Implementation
+
+	edge_move_handlers: ARRAYED_LIST [EG_EDGE]
+			-- Move handlers for the edges of the polyline.
+			-- start_point and end_point have no move_handlers.
 
 feature {NONE} -- Implementation
 

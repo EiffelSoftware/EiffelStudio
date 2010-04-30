@@ -189,9 +189,7 @@ feature -- Access
 			i, nb: INTEGER
 			l_bbox: like bounding_box
 		do
-			if count <= number_of_figures then
-				create Result
-			else
+			if count > number_of_figures then
 				from
 					l_area := area
 					i := number_of_figures
@@ -202,24 +200,28 @@ feature -- Access
 					i := i + 1
 				end
 				if i <= nb then
-					Result := l_area.item (i).bounding_box
 					from
-						i := i + 1
+						create l_bbox
 					until
 						i > nb
 					loop
 						l_item := l_area.item (i)
 						if l_item.is_show_requested then
-							l_bbox := l_item.bounding_box
-							if l_bbox.height > 0 or else l_bbox.width > 0 then
-								Result.merge (l_bbox)
+							l_item.update_rectangle_to_bounding_box (l_bbox)
+							if l_bbox.height > 0 and then l_bbox.width > 0 then
+								if Result = Void then
+									Result := l_bbox.twin
+								else
+									Result.merge (l_bbox)
+								end
 							end
 						end
 						i := i + 1
 					end
-				else
-					create Result
 				end
+			end
+			if Result = Void then
+				create Result
 			end
 		ensure
 			result_not_void: Result /= Void
@@ -362,7 +364,7 @@ feature {EV_MODEL_GROUP} -- Figure group
 			request_update
 		end
 
-feature {EG_LAYOUT, EG_FIGURE} -- Implementation
+feature {EG_LAYOUT, EG_FIGURE, EG_FIGURE_WORLD} -- Implementation
 
 	internal_links: ARRAYED_LIST [EG_LINK_FIGURE]
 			-- links to other figures.

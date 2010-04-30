@@ -1253,17 +1253,21 @@ feature -- Application change
 
 	activate_execution_replay_recording (b: BOOLEAN)
 			-- Activate or Deactivate execution replay recording
+		require
+			valid_exec_recording_context: rt_extension_available and is_classic_project
 		local
 			r: BOOLEAN
 		do
-			execution_replay_recording_enabled := b
-			if safe_application_is_stopped then
-				if application_status.replay_recording /= b then
-					r := application.activate_execution_replay_recording (b)
-					if b and not r then
-							--| Let's try to stop the recording if possible.
-						r := application.activate_execution_replay_recording (not b)
-						execution_replay_recording_enabled := not b
+			if rt_extension_available and is_classic_project then
+				execution_replay_recording_enabled := b
+				if safe_application_is_stopped then
+					if application_status.replay_recording /= b then
+						r := application.activate_execution_replay_recording (b)
+						if b and not r then
+								--| Let's try to stop the recording if possible.
+							r := application.activate_execution_replay_recording (not b)
+							execution_replay_recording_enabled := not b
+						end
 					end
 				end
 			end

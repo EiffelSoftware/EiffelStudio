@@ -1367,6 +1367,8 @@ feature -- Status setting
 
 	activate_execution_replay_mode (b: BOOLEAN)
 			-- Activate or Deactivate execution replay mode
+		require
+			valid_exec_recording_context: rt_extension_available and is_classic_project
 		local
 			levlim: INTEGER
 			status_changed: BOOLEAN
@@ -2023,10 +2025,13 @@ feature -- Debugging events
 				--| Clean and reset debugging tools
 			reset_tools
 			assertion_checking_handler_cmd.reset
-			activate_execution_replay_mode (False)
-			toggle_exec_replay_mode_cmd.reset
 			if rt_extension_available and is_classic_project then
+				activate_execution_replay_mode (False)
+				toggle_exec_replay_mode_cmd.reset
 				toggle_exec_replay_recording_mode_cmd.enable_sensitive
+			else
+				toggle_exec_replay_mode_cmd.disable_sensitive
+				toggle_exec_replay_recording_mode_cmd.disable_sensitive
 			end
 
 			if was_executing then

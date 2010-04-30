@@ -77,7 +77,7 @@ feature -- Initialization
 			l_interface ?= other_imp.interface
 			check l_interface /= Void end
 
-			old_make (l_interface)
+			assign_interface (l_interface)
 
 				-- Copy the attributes from the dialog to the window
 			copy_from_real_dialog (other_imp)

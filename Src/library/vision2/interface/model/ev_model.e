@@ -679,7 +679,7 @@ feature -- Events
 			ax, ay, w, h: INTEGER
 			l_item: EV_COORDINATE
 		do
-			if attached internal_bounding_box as l_internal_bounding_box then
+			if attached internal_bounding_box as l_internal_bounding_box and then l_internal_bounding_box.has_area then
 				Result := l_internal_bounding_box.twin
 			else
 				if point_count = 0 then
@@ -720,6 +720,19 @@ feature -- Events
 			internal_is_twin: internal_bounding_box /= Result
 		end
 
+	update_rectangle_to_bounding_box (a_bbox: EV_RECTANGLE)
+			-- Update `a_bbox' to match `bounding_box' of `Current'.
+		local
+			l_bbox: like internal_bounding_box
+		do
+			l_bbox := internal_bounding_box
+			if l_bbox = Void or else not l_bbox.has_area then
+				l_bbox := bounding_box
+			end
+				-- Make sure that `a_bbox' is a complete copy of `bounding_box'
+			a_bbox.copy (l_bbox)
+		end
+
 feature --{EV_FIGURE} -- Status settings
 
 	center_invalidate
@@ -741,10 +754,19 @@ feature {EV_MODEL, EV_MODEL_DRAWER} -- Access
 	invalidate
 			-- Some property of `Current' has changed.
 		do
-			valid := False
-			internal_bounding_box := Void
-			if is_in_group and then attached group as l_group then
-				l_group.invalidate
+			if attached internal_bounding_box as l_bbox then
+					-- Reset to a zero size so that calls to `bounding_box' will recalculate.
+				l_bbox.move_and_resize (0, 0, 0, 0)
+			end
+			if attached last_update_rectangle as l_rect then
+				l_rect.move_and_resize (0, 0, 0, 0)
+			end
+
+			if valid then
+				valid := False
+				if is_in_group and then attached group as l_group then
+					l_group.invalidate
+				end
 			end
 		end
 
@@ -753,7 +775,13 @@ feature {EV_MODEL, EV_MODEL_DRAWER} -- Access
 		do
 			if not valid then
 				valid := True
-				internal_invalid_rectangle := bounding_box
+				if internal_invalid_rectangle = Void then
+					create internal_invalid_rectangle
+				end
+				update_rectangle_to_bounding_box (internal_invalid_rectangle)
+				if not is_show_requested then
+					internal_invalid_rectangle.move_and_resize (0, 0, 0, 0)
+				end
 			end
 		end
 
@@ -762,20 +790,29 @@ feature {EV_MODEL, EV_MODEL_DRAWER} -- Access
 		do
 			if not valid then
 				Result := internal_invalid_rectangle
+				if Result /= Void and then not Result.has_area then
+					Result := Void
+				end
 			end
 		end
+
+	internal_invalid_rectangle: detachable EV_RECTANGLE note option: stable attribute end
+			-- Area that needs updating.
 
 	update_rectangle: detachable EV_RECTANGLE
 			-- Area that needs redrawing.
 		do
-			if not valid then
-				Result := bounding_box
-				last_update_rectangle := Result
+			if is_show_requested and then not valid then
+				if last_update_rectangle = Void then
+					create last_update_rectangle
+				end
+				Result := last_update_rectangle
+				update_rectangle_to_bounding_box (Result)
+				if not Result.has_area then
+					Result := Void
+				end
 			end
 		end
-
-	internal_invalid_rectangle: detachable EV_RECTANGLE
-			-- Area that needs updating.
 
 	real_pebble (a_x, a_y: INTEGER): detachable ANY
 			-- Calculated `pebble'.
@@ -792,7 +829,7 @@ feature {EV_MODEL, EV_MODEL_PROJECTOR, EV_MODEL_PROJECTION_ROUTINES} -- Access
 	draw_id: INTEGER
 			-- Used to look up drawing routine.
 
-	last_update_rectangle: detachable EV_RECTANGLE
+	last_update_rectangle: detachable EV_RECTANGLE note option: stable attribute end
 			-- Last calculated bounding box when validate was called.
 
 
@@ -987,7 +1024,7 @@ feature {NONE} -- Implementation
 			center_valid: is_center_valid
 		end
 
-	internal_bounding_box: detachable EV_RECTANGLE
+	internal_bounding_box: detachable EV_RECTANGLE note option: stable attribute end
 			-- Used to speed up bounding box calculation.
 
 invariant

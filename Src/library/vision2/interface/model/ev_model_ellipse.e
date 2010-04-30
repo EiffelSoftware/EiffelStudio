@@ -16,7 +16,7 @@ inherit
 			default_create,
 			bounding_box
 		end
-		
+
 	EV_MODEL_ELLIPTIC
 
 create
@@ -29,22 +29,19 @@ feature -- Events
 	position_on_figure (ax, ay: INTEGER): BOOLEAN
 			-- Is (`ax', `ay') on this figure?
 		local
-			l_point_array: like point_array
-			p0, p1: EV_COORDINATE
-			r1, r2, cx, cy, p0x, p0y: DOUBLE	
+			p0: EV_COORDINATE
+			r1, r2, cx, cy, p0x, p0y: DOUBLE
 		do
-			l_point_array := point_array
-			p0 := l_point_array.item (0)
-			p1 := l_point_array.item (1)
+			p0 := point_array [0]
 			p0x := p0.x_precise
 			p0y := p0.y_precise
-			cx := (p0x + p1.x_precise) / 2
-			cy := (p0y + p1.y_precise) / 2
-			
+			cx := (p0x + point_array [1].x_precise) / 2
+			cy := (p0y + point_array [1].y_precise) / 2
+
 			r1 := (cx - p0x).abs
 			r2 := (cy - p0y).abs
-			
-			Result := point_on_ellipse (ax, ay, cx, cy, r1, r2)	
+
+			Result := point_on_ellipse (ax, ay, cx, cy, r1, r2)
 		end
 
 note

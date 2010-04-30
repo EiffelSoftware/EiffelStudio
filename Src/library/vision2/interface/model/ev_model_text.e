@@ -311,8 +311,11 @@ feature {NONE} -- Implementation
 
 	default_font: EV_IDENTIFIED_FONT
 			-- Font set by `default_create'.
+		local
+			l_font: EV_FONT
 		once
-			Result := font_factory.registered_font (create {EV_FONT})
+			create l_font
+			Result := font_factory.registered_font (l_font)
 			font_factory.register_font (Result)
 		end
 

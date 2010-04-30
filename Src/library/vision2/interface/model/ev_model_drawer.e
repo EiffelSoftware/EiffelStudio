@@ -28,13 +28,13 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	offset_x: INTEGER
-			-- Everyting is drawen offset_x pixels to the right.
+			-- Everyting is drawn offset_x pixels to the right.
 		do
 			Result := 0
 		end
 
 	offset_y: INTEGER
-			-- Everyting is drawen offest_y pixels to bottom.
+			-- Everyting is drawn offset_y pixels to bottom.
 		do
 			Result := 0
 		end

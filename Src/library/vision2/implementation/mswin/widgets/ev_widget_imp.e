@@ -706,6 +706,7 @@ feature {NONE} -- Implementation
 			t: like translate_coordinates
 			track_mouse: WEL_TRACK_MOUSE_EVENT
 			track_mouse_successful: BOOLEAN
+			l_last_coords_updated: BOOLEAN
 		do
 				--| We check the position of the cursor, as when in a pick and
 				--| drop, `cursor_on_widget' is `Void' meaning every time the
@@ -731,32 +732,33 @@ feature {NONE} -- Implementation
 				track_mouse.dispose
 			end
 			t := translate_coordinates (x_pos, y_pos)
-			if (awaiting_movement and is_dockable_source (x_pos, y_pos)) or
-			application_imp.dockable_source /= Void
+			l_last_coords_updated := t.x /= last_x or else t.y /= last_y
+			if l_last_coords_updated then
+					-- Store last_x coords
+				last_x := t.x
+				last_y := t.y
+			end
+			if
+				(awaiting_movement and is_dockable_source (x_pos, y_pos)) or
+				application_imp.dockable_source /= Void
 			then
 				dragable_motion (t.x, t.y, t.screen_x, t.screen_y)
-			elseif (is_transport_enabled and mode_is_drag_and_drop) or
-				(mode_is_pick_and_drop and is_pnd_in_transport) then
+			elseif
+				(is_transport_enabled and mode_is_drag_and_drop) or
+				(mode_is_pick_and_drop and is_pnd_in_transport)
+			then
 					-- Only start a pick and drop if a dock is not currently executing.
 					-- It may have been started by the previous call to `dragable_motion'.
 				pnd_motion (t.x, t.y, t.screen_x, t.screen_y)
 			end
 			if application_imp.pointer_motion_actions_internal /= Void then
-				if t = Void then
-					t := translate_coordinates (x_pos, y_pos)
-				end
-				if last_x /= t.x or last_y /= t.y then
+				if l_last_coords_updated then
 					application_imp.pointer_motion_actions.call ([attached_interface, t.screen_x, t.screen_y])
 				end
 			end
 			if pointer_motion_actions_internal /= Void then
-				if t = Void then
-					t := translate_coordinates (x_pos, y_pos)
-				end
-				if last_x /= t.x or last_y /= t.y then
+				if l_last_coords_updated then
 					pointer_motion_actions.call ([t.x, t.y, 0.0, 0.0, 0.0, t.screen_x, t.screen_y ])
-					last_x := t.x
-					last_y := t.y
 				end
 			end
 		end

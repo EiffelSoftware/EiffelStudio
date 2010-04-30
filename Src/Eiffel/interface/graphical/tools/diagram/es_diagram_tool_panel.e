@@ -1032,9 +1032,11 @@ feature -- Element change
 					layout.set_spacing (default_uml_horizontal_spacing, default_uml_vertical_spacing)
 				else
 					create {BON_CLUSTER_DIAGRAM} l_cluster_view.make (l_cluster_graph, Current)
-					layout.set_spacing (default_uml_horizontal_spacing, default_bon_vertical_spacing)
+					layout.set_spacing (default_bon_horizontal_spacing, default_bon_vertical_spacing)
 				end
-				l_cluster_view.scale (world.scale_factor)
+				if l_cluster_view.scale_factor /= world.scale_factor then
+					l_cluster_view.scale (world.scale_factor)
+				end
 
 				if not world.is_high_quality then
 					l_cluster_view.disable_high_quality
@@ -1391,30 +1393,23 @@ feature {ES_DIAGRAM_TOOL_PANEL, EB_CONTEXT_DIAGRAM_COMMAND, EIFFEL_CLASS_FIGURE}
 			end
 		end
 
-	is_link_client, is_link_conforming_inheritance, is_link_non_conforming_inheritance: BOOLEAN
+	is_link_client: BOOLEAN
+
+	is_link_inheritance: BOOLEAN
+		do
+			Result := not is_link_client
+		end
 
 	on_new_client_click
 			-- The user wants a new client-supplier link.
 		do
 			is_link_client := True
-			is_link_conforming_inheritance := False
-			is_link_non_conforming_inheritance := False
 		end
 
-	on_new_non_conforming_inheritance_click
-			-- The user wants a new client-supplier link.
-		do
-			is_link_client := False
-			is_link_conforming_inheritance := False
-			is_link_non_conforming_inheritance := True
-		end
-
-	on_new_conforming_inheritance_click
+	on_new_inheritance_click
 			-- The user wants a new inheritance link.
 		do
 			is_link_client := False
-			is_link_conforming_inheritance := True
-			is_link_non_conforming_inheritance := False
 		end
 
 feature {EB_DEVELOPMENT_WINDOW_TOOLS, EB_STONE_CHECKER, EB_DEVELOPMENT_WINDOW} -- Context tool
@@ -1980,8 +1975,8 @@ feature {EB_SHOW_LEGEND_COMMAND} -- Implementation
 
 feature -- Implementation
 
-	default_bon_horizontal_spacing: INTEGER = 25
-	default_bon_vertical_spacing: INTEGER = 25
+	default_bon_horizontal_spacing: INTEGER = 40
+	default_bon_vertical_spacing: INTEGER = 40
 	default_uml_horizontal_spacing: INTEGER = 150
 	default_uml_vertical_spacing: INTEGER = 150
 		-- Default spacings used to layout generated figures.

@@ -2815,6 +2815,7 @@ feature {NONE} -- Implementation
 				l_text_formatter_decorator.set_new_line_between_tokens
 				l_as.check_list.process (Current)
 				l_text_formatter_decorator.exdent
+				l_text_formatter_decorator.put_new_line
 			else
 				l_text_formatter_decorator.put_space
 				l_text_formatter_decorator.set_without_tabs

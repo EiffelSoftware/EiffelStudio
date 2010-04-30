@@ -73,6 +73,12 @@ feature -- Access
 
 feature -- Status report
 
+	has_area: BOOLEAN
+			-- Does `Current' have area?
+		do
+			Result := width > 0 and then height > 0
+		end
+
 	upper_left: EV_COORDINATE
 			-- Upper-left corner of `Current'.
 		do
@@ -142,7 +148,7 @@ feature -- Status report
 		require
 			other_not_void: other /= Void
 		do
-			Result := not (left >= other.right or right <= other.left or top >= other.bottom or bottom <= other.top)
+			Result := has_area and then other.has_area and then not (left >= other.right or right <= other.left or top >= other.bottom or bottom <= other.top)
 		end
 
 	intersection (other: like Current): like Current
@@ -352,8 +358,15 @@ feature -- Element change
 			a_width_positive: a_width >= 0
 			a_height_positive: a_height >= 0
 		do
-			move (a_x, a_y)
-			resize (a_width, a_height)
+			x := a_x
+			y := a_y
+			width := a_width
+			height := a_height
+		ensure
+			x_assigned: x = a_x
+			y_assigned: y = a_y
+			width_assigned: width = a_width
+			height_assigned: height = a_height
 		end
 
 feature -- Output

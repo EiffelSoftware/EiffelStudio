@@ -247,11 +247,8 @@ feature {EG_XML_STORABLE} -- Processing
 
 	xml_node (a_parent: XM_ELEMENT; tag_name, content: STRING): XM_ELEMENT
 			-- New node with `s' as content and named `tag_name'.
-		local
-			l_namespace: XM_NAMESPACE
 		do
-			create l_namespace.make_default
-			create Result.make (a_parent, tag_name, l_namespace)
+			create Result.make (a_parent, tag_name, default_namespace)
 			Result.put_last (xml_string_node (Result, content))
 		end
 
@@ -320,6 +317,14 @@ feature -- Deserialization
 			else
 				display_error_message ("File " + a_file_path + " cannot not be open")
 			end
+		end
+
+feature {NONE} -- Implementation
+
+	default_namespace: XM_NAMESPACE
+			-- Default namespace for nodes.
+		once
+			create Result.make_default
 		end
 
 feature {NONE} -- Error management

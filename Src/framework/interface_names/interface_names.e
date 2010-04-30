@@ -470,12 +470,12 @@ feature -- Accelerator, focus label and menu name
 
 	l_diagram_supplier_visibility: STRING_32 do Result := locale.translation("Toggle visibility of supplier links")	end
 
-	l_diagram_add_ancestors: STRING_32 	do Result := locale.translation("Add class ancestors to diagram")	end
-	l_diagram_add_descendents: STRING_32 do Result := locale.translation("Add class descendants to diagram")	end
-	l_diagram_add_suppliers: STRING_32 	do Result := locale.translation("Add class suppliers to diagram")	end
-	l_diagram_add_clients: STRING_32 	do Result := locale.translation("Add class clients to diagram")	end
-	l_diagram_new_class: STRING_32		do Result := locale.translation("Create new class in current cluster and add to diagram") end
-	l_diagram_existing_class: STRING_32		do Result := locale.translation("Add existing class to diagram") end
+	l_diagram_add_ancestors: STRING_32 	do Result := locale.translation("Add class ancestors")	end
+	l_diagram_add_descendents: STRING_32 do Result := locale.translation("Add class descendants")	end
+	l_diagram_add_suppliers: STRING_32 	do Result := locale.translation("Add class suppliers")	end
+	l_diagram_add_clients: STRING_32 	do Result := locale.translation("Add class clients")	end
+	l_diagram_new_class: STRING_32		do Result := locale.translation("Create new class in current cluster") end
+	l_diagram_existing_class: STRING_32		do Result := locale.translation("Add existing class") end
 
 	f_diagram_hide_labels: STRING_32		do Result := locale.translation("Hide labels")	end
 	f_diagram_show_labels: STRING_32		do Result := locale.translation("Show labels")	end
@@ -504,8 +504,7 @@ feature -- Accelerator, focus label and menu name
 	f_diagram_remove: STRING_32			do Result := locale.translation("Hide figure")	end
 	l_diagram_remove: STRING_32			do Result := locale.translation("Delete graphical items")	end
 	f_diagram_create_supplier_links: STRING_32	do Result := locale.translation("Client-Supplier / Feature Creation Mode (Pick from client class and drop on desired supplier class)")	end
-	f_diagram_create_conforming_inheritance_links: STRING_32 do Result := locale.translation("Conforming Inheritance Creation Mode (Pick from child class and drop on desired conforming parent class)")	end
-	f_diagram_create_non_conforming_inheritance_links: STRING_32 do Result := locale.translation("Non-Conforming Inheritance Creation Mode (Pick from child class and drop on desired non-conforming parent class)")	end
+	f_diagram_create_inheritance_links: STRING_32 do Result := locale.translation("Inheritance Creation Mode (Pick from child class and drop on desired parent class)")	end
 	l_diagram_create_links: STRING_32	do Result := locale.translation("Select type of new links")	end
 	f_diagram_new_class: STRING_32		do Result := locale.translation("Add a new class")	end
 	f_diagram_change_header: STRING_32	do Result := locale.translation("Change class name and generics")	end

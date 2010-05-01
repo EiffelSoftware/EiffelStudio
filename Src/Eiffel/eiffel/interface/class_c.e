@@ -2244,8 +2244,9 @@ end
 		require
 			valid_formal_position: is_valid_formal_position (a_formal_position)
 		do
-			Result ?= constrained_types_cache [a_formal_position - 1]
-			if Result = Void then
+			if attached constrained_types_cache [a_formal_position - 1] as r then
+				Result := r
+			else
 				Result := constraints (a_formal_position).constraining_types (Current)
 				constrained_types_cache [a_formal_position - 1] := Result
 			end

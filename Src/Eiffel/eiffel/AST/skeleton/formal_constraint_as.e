@@ -159,8 +159,7 @@ feature -- Status
 				l_type := type_a_generator.evaluate_type_if_possible (l_constraint.type, a_context_class)
 				check l_type_not_void: l_type /= Void end
 				create Result.make (l_type, a_context_class.constraint_renaming (Current).item (1))
-				end
-
+			end
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -716,7 +715,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

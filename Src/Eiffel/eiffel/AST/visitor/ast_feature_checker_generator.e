@@ -3895,7 +3895,7 @@ feature {NONE} -- Implementation
 								compute_routine (l_table, l_feature, not l_feature.type.is_void,l_feature.has_arguments,
 											l_class.class_id, l_target_type, l_feature.type, l_as, l_access, l_target_node)
 							end
-							System.instantiator.dispatch (last_type, context.current_class)
+							instantiator.dispatch (last_type, context.current_class)
 						end
 					end
 				end
@@ -9001,7 +9001,7 @@ feature {NONE} -- Agents
 
 					-- We need to instantiate the closed TUPLE type of the agent otherwise it
 					-- causes eweasel test#agent007 to fail.
-				system.instantiator.dispatch (l_tuple_node.type, context.current_class)
+				instantiator.dispatch (l_tuple_node.type, context.current_class)
 
 					-- Setup l_last_open_positions
 
@@ -9176,7 +9176,7 @@ feature {NONE} -- Agents
 
 				-- We need to instantiate the closed TUPLE type of the agent otherwise it
 				-- causes eweasel test#agent007 to fail.
-			system.instantiator.dispatch (l_tuple_type, context.current_class)
+			instantiator.dispatch (l_tuple_type, context.current_class)
 
 			create l_tuple_node.make (l_closed_args, l_tuple_type, l_tuple_type.create_info)
 

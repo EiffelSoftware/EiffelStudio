@@ -28,14 +28,15 @@ inherit
 			has_expanded,
 			has_formal_generic,
 			instantiation_in,
-			is_attached,
-			is_loose,
 			internal_is_valid_for_class,
+			is_attached,
+			is_class_valid,
+			is_computable_using_ancestors,
+			is_loose,
 			is_type_set,
 			to_other_attachment,
 			to_other_immediate_attachment,
-			to_type_set,
-			is_class_valid
+			to_type_set
 		end
 
 	ARRAYED_LIST [RENAMED_TYPE_A [TYPE_A]]
@@ -1210,6 +1211,17 @@ feature -- Status
 				)
 		end
 
+	is_computable_using_ancestors: BOOLEAN
+			-- <Precursor>
+		do
+			Result := for_all (
+				agent (a_item: RENAMED_TYPE_A [TYPE_A]): BOOLEAN
+					do
+						Result := a_item.is_computable_using_ancestors
+					end
+				)
+		end
+
 feature -- Access
 
 	hash_code: INTEGER
@@ -1597,7 +1609,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

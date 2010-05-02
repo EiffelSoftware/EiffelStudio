@@ -8,8 +8,6 @@ note
 deferred class CREATE_INFO
 
 inherit
-	ANY
-
 	SHARED_BYTE_CONTEXT
 
 	BYTE_CONST
@@ -180,15 +178,12 @@ feature -- Generic conformance
 
 	is_generic: BOOLEAN
 			-- Is generated type generic?
-		local
-			gen_type: GEN_TYPE_A
 		do
-			gen_type ?= type_to_create
-			Result := (gen_type /= Void)
+			Result := attached {GEN_TYPE_A} type_to_create
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

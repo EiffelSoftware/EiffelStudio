@@ -1,0 +1,41 @@
+TEST1: OK
+TEST2: OK
+TEST3: OK
+TEST4: OK
+TEST5: OK
+TEST6: OK
+TEST7: OK
+TEST8: OK
+TEST9: OK
+TEST10: OK
+{A}.like a: A [!A [!B [POINTER], BOOLEAN], INTEGER_8]
+{A}.like a.g: A [!B [POINTER], BOOLEAN]
+{A}.like a.h: INTEGER_8
+{A}.like b.g: INTEGER_8
+{A}.like b.h: A [!B [POINTER], BOOLEAN]
+{A}.a: A [!A [!B [POINTER], BOOLEAN], INTEGER_8]
+{A}.ag: A [!B [POINTER], BOOLEAN]
+{A}.ah: INTEGER_8
+{A}.bg: INTEGER_8
+{A}.bh: A [!B [POINTER], BOOLEAN]
+{A}.like a: A [!A [!B [POINTER], BOOLEAN], INTEGER_8]
+{A}.like a.g: A [!B [POINTER], BOOLEAN]
+{A}.like a.h: INTEGER_8
+{A}.like b.g: INTEGER_8
+{A}.like b.h: A [!B [POINTER], BOOLEAN]
+{A}.a: A [!A [!B [POINTER], BOOLEAN], INTEGER_8]
+{A}.ag: A [!B [POINTER], BOOLEAN]
+{A}.ah: INTEGER_8
+{A}.bg: INTEGER_8
+{A}.bh: A [!B [POINTER], BOOLEAN]
+{B}.like a: A [!A [!B [POINTER], BOOLEAN], INTEGER_8]
+{B}.like a.g: A [!B [POINTER], BOOLEAN]
+{B}.like a.h: INTEGER_8
+{B}.like b.g: INTEGER_8
+{B}.like b.h: A [!B [POINTER], BOOLEAN]
+{B}.a: A [!A [!B [POINTER], BOOLEAN], INTEGER_8]
+{B}.ag: A [!B [POINTER], BOOLEAN]
+{B}.ah: INTEGER_8
+{B}.bg: INTEGER_8
+{B}.bh: A [!B [POINTER], BOOLEAN]
+Execution completed

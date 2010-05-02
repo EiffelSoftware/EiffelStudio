@@ -1,5 +1,5 @@
 note
-	description: "Visitor for BYTE_NODE objects."
+	description: "Visitor for {TYPE_A} objects."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -37,7 +37,7 @@ feature {TYPE_A} -- Helpers
 			end
 		end
 
-feature {TYPE_A}
+feature {TYPE_A} -- Visitor
 
 	process_bits_a (a_type: BITS_A)
 			-- Process `a_type'.

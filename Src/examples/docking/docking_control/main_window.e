@@ -11,9 +11,6 @@ class
 
 inherit
 	EV_TITLED_WINDOW
-		redefine
-			is_in_default_state
-		end
 
 	INTERFACE_NAMES
 		export
@@ -74,15 +71,6 @@ feature {NONE} -- Initialization
 		do
 				-- Build the Docking Manager.
 			create internal_docking_manager.make (docking_container, Current)
-		end
-
-	is_in_default_state: BOOLEAN
-			-- Is the window in its default state
-			-- (as stated in `initialize')
-		do
-			Result := (width = Window_width) and then
-				(height = Window_height) and then
-				(title.is_equal (Window_title))
 		end
 
 feature -- Query

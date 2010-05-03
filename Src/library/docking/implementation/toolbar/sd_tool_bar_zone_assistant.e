@@ -358,7 +358,7 @@ feature -- Command
 				loop
 					l_name := l_data.item.name
 					check not_void: l_name /= Void end
-					if l_name.as_string_32.is_equal (l_separator.name.as_string_32) then
+					if l_name.same_string (l_separator.name) then
 						-- First check if it's a separator
 						l_content.items.extend (l_separator)
 						create l_separator.make
@@ -370,7 +370,7 @@ feature -- Command
 							l_all_items.after or l_item /= Void
 						loop
 							check is_items_name_unique (l_name) end
-							if l_all_items.item.name.as_string_32.is_equal (l_name.as_string_32) then
+							if l_all_items.item.name.same_string_general (l_name) then
 								l_item := l_all_items.item
 								if not l_data.item.displayed then
 									l_item.disable_displayed
@@ -623,7 +623,7 @@ feature -- Query
 			until
 				l_items.after
 			loop
-				Result := not (l_items.item.name ~ a_name.as_string_32)
+				Result := not (l_items.item.name.same_string_general (a_name))
 
 				l_items.forth
 			end
@@ -700,14 +700,14 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

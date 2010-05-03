@@ -134,7 +134,7 @@ feature -- Command
 						end
 					end
 					l_snapshot.back
-					if attached {SD_TOOL_BAR_SEPARATOR} l_snapshot_item then
+					if not l_snapshot.before and attached {SD_TOOL_BAR_SEPARATOR} l_snapshot_item then
 						l_snapshot.back
 					end
 				end
@@ -546,7 +546,7 @@ feature -- Query
 						Result := l_last_result
 					end
 					l_snapshot.back
-					if attached {SD_TOOL_BAR_SEPARATOR} l_snapshot_item then
+					if not l_snapshot.before and attached {SD_TOOL_BAR_SEPARATOR} l_snapshot_item then
 						l_snapshot.back
 					end
 				end

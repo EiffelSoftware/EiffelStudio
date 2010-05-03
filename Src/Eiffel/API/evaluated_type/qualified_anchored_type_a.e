@@ -29,18 +29,21 @@ create
 
 feature -- Initialization and reinitialization
 
-	make (q: like qualifier; c: like chain)
-			-- Creation
+	make (q: like qualifier; c: like chain; w: like class_id)
+			-- Cr
 		require
 			q_attached: attached q
 			c_attached: attached c
 			c_not_empty: c.count > 0
+			valid_w: system.classes.has (w)
 		do
 			qualifier := q
 			chain := c
+			class_id := w
 		ensure
 			qualifier_set: qualifier = q
 			chain_set: chain = c
+			class_id_set: class_id = w
 		end
 
 feature -- Visitor
@@ -59,6 +62,9 @@ feature -- Properties
 
 	chain: SPECIAL [INTEGER_32]
 			-- Feature name IDs of the second part of the type, after the `qualifier'
+
+	class_id: INTEGER
+			-- ID if a class where this type is written
 
 feature -- Status Report
 
@@ -114,7 +120,7 @@ feature -- Generic conformance
 
 	initialize_info (an_info: like shared_create_info)
 		do
-			an_info.make (Current)
+			an_info.make (Current, system.class_of_id (class_id))
 		end
 
 	create_info: CREATE_QUALIFIED
@@ -236,37 +242,34 @@ feature -- Output
 feature -- Primitives
 
 	evaluated_type_in_descendant (a_ancestor, a_descendant: CLASS_C; a_feature: FEATURE_I): QUALIFIED_ANCHORED_TYPE_A
+			-- <Precursor>
 		local
 			i: INTEGER
-			current_chain: like chain
-			written_call_type: TYPE_A
-			current_call_type: TYPE_A
+			c: like chain
+			q: TYPE_A
 		do
 			if a_ancestor /= a_descendant then
 					-- Compute new feature names.
-				create current_chain.make_filled (0, chain.count)
+				create c.make_filled (0, chain.count)
 				from
-					written_call_type := qualifier
-					current_call_type := qualifier.evaluated_type_in_descendant (a_ancestor, a_descendant, a_feature)
-					create Result.make (current_call_type, current_chain)
+					q := qualifier
+					create Result.make (q.evaluated_type_in_descendant (a_ancestor, a_descendant, a_feature), c, a_descendant.class_id)
 				until
 					i >= chain.count
 				loop
 						-- Find a corresponding feature in the current class and in the descendant.
-					if
-						attached written_call_type.associated_class as c and then
-						attached c.feature_table.item_id (chain [i]) as f and then
-						attached current_call_type.associated_class.feature_of_rout_id (f.rout_id_set.first) as g
+					feature_finder.find (chain [i], q, context.written_class)
+					check
+						is_ancestor_feature_found: attached feature_finder.found_feature as f
+						is_descendant_feature_found: attached q.evaluated_type_in_descendant (a_ancestor, a_descendant, a_feature).associated_class.feature_of_rout_id (f.rout_id_set.first) as g
 					then
-							-- Record new feature name.
-						current_chain [i] := g.feature_name_id
-							-- Advance to the next element in both written and current context.
-						current_call_type := g.type
-						written_call_type := f.type
+						c [i] := g.feature_name_id
+						q := f.type.instantiated_in (q)
 					end
 					i := i + 1
 				end
-				Result.set_actual_type (current_call_type)
+					-- `q' holds the type relative to `a_ancestor'.
+				Result.set_actual_type (q.evaluated_type_in_descendant (a_ancestor, a_descendant, a_feature))
 				if has_attached_mark then
 					Result.set_attached_mark
 				elseif has_detachable_mark then
@@ -299,6 +302,16 @@ feature -- Comparison
 					chain ~ o.chain and then
 					has_same_attachment_marks (o)
 			end
+		end
+
+feature {NONE} -- Lookup
+
+	feature_finder: TYPE_A_FEATURE_FINDER
+			-- Lookup facility
+		once
+			create Result
+		ensure
+			feature_finder_attached: Result /= Void
 		end
 
 note

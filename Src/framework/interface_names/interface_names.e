@@ -59,6 +59,8 @@ feature -- Button texts
 	b_Create: STRING_32							do Result := locale.translation("Create")	end
 	b_Create_folder: STRING_32					do Result := locale.translation("Create Folder...")	end
 	b_Delete_command: STRING_32					do Result := locale.translation("Delete")	end
+	b_Unset_command: STRING_32					do Result := locale.translation("Unset")	end
+
 	b_Descendant_time: STRING_32					do Result := locale.translation("Descendant Time")	end
 	b_Execution_parameters: STRING_32			do Result := locale.translation ("Execution Parameters") end
 	b_Discard_assertions: STRING_32				do Result := locale.translation("Discard Assertions")	end

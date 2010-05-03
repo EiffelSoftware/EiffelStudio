@@ -860,7 +860,7 @@ feature -- Grid helpers
 
 	single_selected_row: EV_GRID_ROW
 		require
-			is_single_row_selection_enabled: is_single_row_selection_enabled
+			single_row_selection: is_single_row_selection_enabled or (is_multiple_row_selection_enabled and selected_rows.count <= 1)
 		local
 			l_rows: like selected_rows
 		do

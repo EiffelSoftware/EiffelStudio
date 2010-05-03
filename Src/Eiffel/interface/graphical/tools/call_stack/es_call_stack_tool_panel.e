@@ -39,6 +39,8 @@ inherit
 			{NONE} all
 		end
 
+	EV_SHARED_APPLICATION
+
 	EB_SHARED_DEBUGGER_MANAGER
 
 	EB_FILE_DIALOG_CONSTANTS
@@ -150,7 +152,7 @@ feature {NONE} -- Initialization
 				--| Stack grid
 			create g
 			stack_grid := g
-			g.enable_single_row_selection
+			g.enable_multiple_row_selection
 			g.enable_partial_dynamic_content
 			g.set_dynamic_content_function (agent compute_stack_grid_item)
 			g.enable_border
@@ -1224,6 +1226,75 @@ feature {NONE} -- Export call stack
 			retry
 		end
 
+	copy_call_stack_selection_to_clipboard
+			-- Copy text representation of call stack selection to clipboard
+		local
+			l_output: YANK_STRING_WINDOW
+			retried: BOOLEAN
+			cse: CALL_STACK_ELEMENT
+			s: STRING
+			t: STRING
+			levels: ARRAYED_LIST [INTEGER]
+			tf: DEBUGGER_TEXT_FORMATTER_VISITOR
+			l_sorter: QUICK_SORTER [INTEGER]
+		do
+			if not retried then
+				if debugger_manager.safe_application_is_stopped then
+						--| We generate the call stack.
+					create s.make_empty
+					create l_output.make;
+					if attached stack_grid.selected_rows as l_rows then
+						from
+							l_rows.start
+							create levels.make (l_rows.count)
+						until
+							l_rows.after
+						loop
+							levels.force (level_from_row (l_rows.item))
+							l_rows.forth
+						end
+						create l_sorter.make (create {COMPARABLE_COMPARATOR [INTEGER]})
+						l_sorter.sort (levels)
+						from
+							levels.start
+							tf := Eb_debugger_manager.text_formatter_visitor
+						until
+							levels.after
+						loop
+							cse := stack_data_at (levels.item)
+
+							l_output.add_int (cse.level_in_stack)
+							l_output.add_space
+							tf.append_feature (cse, l_output)
+							tf.append_arguments (cse, l_output)
+							tf.append_locals (cse, l_output)
+
+							t := l_output.stored_output
+							if t /= Void and then not t.is_empty then
+								t.replace_substring_all ("%N", "%N%T")
+								s.append_string ("------")
+								s.append_character ('%N')
+								s.append_string (t)
+								s.append_character ('%N')
+							end
+							l_output.stored_output.wipe_out
+
+							levels.forth
+						end
+					end
+					ev_application.clipboard.set_text (s)
+					l_output.reset_output
+				else
+					ev_application.clipboard.set_text ("")
+				end
+			else
+				ev_application.clipboard.set_text ("")
+			end
+		rescue
+			retried := True
+			retry
+		end
+
 feature {NONE} -- Stack grid implementation
 
 	clean_stack_grid
@@ -1761,6 +1832,12 @@ feature {NONE} -- Grid Implementation
 			end
 		end
 
+	stack_from_row (a_row: EV_GRID_ROW): like stack_data_at
+			-- Call stack associated with `a_row'.
+		do
+			Result := stack_data_at (level_from_row (a_row))
+		end
+
 	level_from_row (a_row: EV_GRID_ROW): INTEGER
 			-- Call stack level related to `a_row'.
 		require
@@ -1940,12 +2017,19 @@ feature {NONE} -- Grid Implementation
 		local
 			l_row: EV_GRID_ROW
 		do
-			if a_key.code = Key_enter then
+			inspect
+				a_key.code
+			when Key_enter then
 				l_row := stack_grid.single_selected_row
 				if l_row /= Void then
 					select_element_by_row (l_row)
 					stack_grid.set_focus
 				end
+			when key_c, key_insert then
+				if ev_application.ctrl_pressed then
+					copy_call_stack_selection_to_clipboard
+				end
+			else
 			end
 		end
 
@@ -1953,7 +2037,11 @@ feature {NONE} -- Grid Implementation
 			-- `a_row' is selected
 		do
 			if execution_replay_activated then
-				replay_to_but.enable_sensitive
+				if stack_grid.selected_rows.count = 1 then
+					replay_to_but.enable_sensitive
+				else
+					replay_to_but.disable_sensitive
+				end
 			end
 		end
 
@@ -2106,7 +2194,7 @@ feature {NONE} -- Implementation, cosmetic
 
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

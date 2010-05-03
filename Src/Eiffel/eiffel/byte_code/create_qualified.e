@@ -15,13 +15,15 @@ inherit
 			generate_cid,
 			generate_cid_array,
 			generate_cid_init,
+			generate_gen_type_conversion,
 			is_explicit,
+			is_generic,
 			make_type_byte_code
 		end
 
-	SHARED_TABLE
 	SHARED_DECLARATIONS
 	SHARED_GENERATION
+	SHARED_TABLE
 
 create {QUALIFIED_ANCHORED_TYPE_A}
 	default_create, make
@@ -31,29 +33,35 @@ create {CREATE_QUALIFIED}
 
 feature {QUALIFIED_ANCHORED_TYPE_A} -- Initialization
 
-	make (t: QUALIFIED_ANCHORED_TYPE_A)
-			-- Initialize Current using `t'.
+	make (t: QUALIFIED_ANCHORED_TYPE_A; c: CLASS_C)
+			-- Initialize Current using `t' written in `c'.
 		require
 			t_attached: attached t
 		local
 			q: TYPE_A
+			f: FEATURE_I
 			i: INTEGER
 			n: INTEGER
-			f: FEATURE_I
 		do
 			i := t.chain.lower
 			q := t.qualifier
-			f := q.associated_class.feature_of_name_id (t.chain [i])
-			make_explicit (q.create_info, q, f)
-			from
-				n := t.chain.upper
-			until
-				i >= n
-			loop
-				i := i + 1
-				q := f.type
-				f := q.associated_class.feature_of_name_id (t.chain [i])
-				make_explicit (twin, q, f)
+			feature_finder.find (t.chain [i], q, c)
+			check attached feature_finder.found_feature as f1 then
+				f := f1
+				make_explicit (q.create_info, q, f)
+				from
+					n := t.chain.upper
+				until
+					i >= n
+				loop
+					i := i + 1
+					q := f.type.instantiated_in (q)
+					feature_finder.find (t.chain [i], q, c)
+					check attached feature_finder.found_feature as fn then
+						f := fn
+						make_explicit (twin, q, f)
+					end
+				end
 			end
 		end
 
@@ -148,7 +156,7 @@ feature -- C code generation
 						buffer.put_natural_32 (a_level)
 					elseif attached {FORMAL_A} l_type as l_formal then
 						buffer.put_string ("eif_gen_param_id(")
-						qualifier_creation.generate_type_id (buffer, final_mode, a_level)
+						qualifier_creation.generate_type_id (buffer, final_mode, a_level + 1)
 						buffer.put_two_character (',', ' ')
 						buffer.put_integer (l_formal.position)
 						buffer.put_character (')')
@@ -171,7 +179,7 @@ feature -- C code generation
 					buffer.put_string (table_name)
 					buffer.put_string ("_gen_type")
 					buffer.put_character (',')
-					qualifier_creation.generate_type_id (buffer, final_mode, a_level)
+					qualifier_creation.generate_type_id (buffer, final_mode, a_level + 1)
 					buffer.put_character (',')
 					buffer.put_type_id (table.min_type_id)
 					buffer.put_character (')')
@@ -179,7 +187,7 @@ feature -- C code generation
 			else
 				if
 					Compilation_modes.is_precompiling or
-					qualifier.associated_class_type (context.context_class_type.type).is_precompiled
+					qualifier.associated_class.is_precompiled
 				then
 					buffer.put_string ("RTWPCTT(")
 					buffer.put_static_type_id (qualifier.static_type_id (context.context_class_type.type))
@@ -196,7 +204,7 @@ feature -- C code generation
 				end
 
 				buffer.put_string ({C_CONST}.comma_space)
-				qualifier_creation.generate_type_id (buffer, final_mode, a_level)
+				qualifier_creation.generate_type_id (buffer, final_mode, a_level + 1)
 				buffer.put_character (')')
 			end
 		end
@@ -244,7 +252,7 @@ feature -- Byte code generation
 		local
 			rout_info: ROUT_INFO
 		do
-			if qualifier.associated_class_type (context.context_class_type.type).is_precompiled then
+			if qualifier.associated_class.is_precompiled then
 				ba.append (Bc_pqlike)
 				qualifier_creation.make_byte_code (ba)
 				ba.append_type_id (qualifier.static_type_id (context.context_class_type.type))
@@ -274,7 +282,14 @@ feature -- Genericity
 			end
 		end
 
-	generate_cid (buffer: GENERATION_BUFFER; final_mode : BOOLEAN)
+	generate_gen_type_conversion (a_level: NATURAL)
+			-- <Precursor>
+		do
+			qualifier_creation.generate_gen_type_conversion (a_level + 1)
+			Precursor (a_level)
+		end
+
+	generate_cid (buffer: GENERATION_BUFFER; final_mode: BOOLEAN)
 		local
 			table: POLY_TABLE [ENTRY]
 			table_name: STRING
@@ -327,7 +342,7 @@ feature -- Genericity
 			else
 				if
 					Compilation_modes.is_precompiling or
-					qualifier.associated_class_type (context.context_class_type.type).is_precompiled
+					qualifier.associated_class.is_precompiled
 				then
 					buffer.put_string ("RTWPCTT(")
 					buffer.put_static_type_id (qualifier.static_type_id (context.context_class_type.type))
@@ -437,7 +452,7 @@ feature -- Genericity
 					buffer.put_string (table_name)
 					buffer.put_string ("_gen_type")
 					buffer.put_character (',')
-					qualifier_creation.generate_type_id (buffer, final_mode, a_level)
+					qualifier_creation.generate_type_id (buffer, final_mode, a_level + 1)
 					buffer.put_character (',')
 					buffer.put_type_id (table.min_type_id)
 					buffer.put_string (");")
@@ -451,7 +466,7 @@ feature -- Genericity
 				buffer.put_integer (idx_cnt.value)
 				if
 					Compilation_modes.is_precompiling or
-					qualifier.associated_class_type (context.context_class_type.type).is_precompiled
+					qualifier.associated_class.is_precompiled
 				then
 					buffer.put_string ("] = RTWPCTT(")
 					buffer.put_static_type_id (qualifier.static_type_id (context.context_class_type.type))
@@ -467,7 +482,7 @@ feature -- Genericity
 					buffer.put_integer (feature_id)
 				end
 				buffer.put_string ({C_CONST}.comma_space)
-				qualifier_creation.generate_type_id (buffer, final_mode, a_level)
+				qualifier_creation.generate_type_id (buffer, final_mode, a_level + 1)
 				buffer.put_two_character (')', ';')
 				dummy := idx_cnt.next
 			end
@@ -477,7 +492,7 @@ feature -- Genericity
 		local
 			rout_info: ROUT_INFO
 		do
-			if qualifier.associated_class_type (context.context_class_type.type).is_precompiled then
+			if qualifier.associated_class.is_precompiled then
 				ba.append_natural_16 ({SHARED_GEN_CONF_LEVEL}.qualified_pfeature_type)
 				qualifier_creation.make_type_byte_code (ba)
 				ba.append_type_id (qualifier.static_type_id (context.context_class_type.type))
@@ -502,6 +517,19 @@ feature -- Genericity
 					Result ?= table.first.type.deep_actual_type
 				end
 			end
+		end
+
+	is_generic: BOOLEAN
+			-- Is generated type generic?
+		do
+			Result := qualifier_creation.is_generic or else Precursor
+		end
+
+feature {NONE} -- Lookup
+
+	feature_finder: TYPE_A_FEATURE_FINDER
+		once
+			create Result
 		end
 
 note

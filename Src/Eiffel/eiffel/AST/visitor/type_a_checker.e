@@ -32,9 +32,7 @@ inherit
 		end
 
 	SHARED_DEGREES
-		export
-			{NONE} all
-		end
+	SHARED_INSTANTIATOR
 
 feature -- Status report
 
@@ -53,6 +51,7 @@ feature -- Status report
 		do
 			like_control.reset
 			associated_type_ast := a_type_as
+			reset_for_unqualified_type
 			a_unevaluated_type.process (Current)
 			Result := last_type
 			last_type := Void
@@ -68,6 +67,7 @@ feature -- Status report
 		do
 			like_control.reset
 			associated_type_ast := a_type_as
+			reset_for_unqualified_type
 			a_unevaluated_type.process (Current)
 			Result := last_type
 			last_type := Void
@@ -85,12 +85,14 @@ feature -- Settings
 		do
 			current_feature := a_feature
 			current_class := a_class
+			current_actual_type := a_class.actual_type
 			current_feature_table := a_class.feature_table
 			suppliers := a_suppliers
 			error_handler := a_error_handler
 		ensure
 			current_feature_set: current_feature = a_feature
 			current_class_set: current_class = a_class
+			current_actual_type_set: attached current_actual_type as t and then t.same_as (a_class.actual_type)
 			current_feature_table_set: current_feature_table = current_class.feature_table
 			suppliers_set: suppliers = a_suppliers
 			error_handler_set: error_handler = a_error_handler
@@ -105,12 +107,14 @@ feature -- Settings
 		do
 			current_feature := a_feature
 			current_class := a_feat_tbl.associated_class
+			current_actual_type := current_class.actual_type
 			current_feature_table := a_feat_tbl
 			suppliers := a_suppliers
 			error_handler := a_error_handler
 		ensure
 			current_feature_set: current_feature = a_feature
 			current_class_set: current_class = a_feat_tbl.associated_class
+			current_actual_type_set: attached current_actual_type as t and then t.same_as (current_class.actual_type)
 			current_feature_table_set: current_feature_table = a_feat_tbl
 			suppliers_set: suppliers = a_suppliers
 			error_handler_set: error_handler = a_error_handler
@@ -132,6 +136,9 @@ feature {NONE} -- Implementation: Access
 
 	current_class: CLASS_C
 			-- Current class where current type is resolved
+
+	current_actual_type: CL_TYPE_A
+			-- Actual type of `current_class'
 
 	suppliers: FEATURE_DEPENDANCE
 			-- Dependances if they need to be recorded.
@@ -498,7 +505,15 @@ feature {TYPE_A} -- Visitors
 	process_formal_a (a_type: FORMAL_A)
 			-- Process `a_type'.
 		do
-			last_type := a_type
+			if last_type = current_actual_type then
+					-- Formal is evaluated relative to current class.
+				last_type := a_type
+			else
+					-- Formal is evaluated relative to other class.
+				check attached last_type.generics as g then
+					last_type := g [a_type.position].to_other_attachment (a_type)
+				end
+			end
 		end
 
 	process_gen_type_a (a_type: GEN_TYPE_A)
@@ -518,6 +533,7 @@ feature {TYPE_A} -- Visitors
 				until
 					i > nb
 				loop
+					reset_for_unqualified_type
 					l_generics.item (i).process (Current)
 					l_has_error := l_has_error or else last_type = Void
 					if not l_has_error then
@@ -548,8 +564,8 @@ feature {TYPE_A} -- Visitors
 	process_like_current (a_type: LIKE_CURRENT)
 			-- Process `a_type'.
 		do
+			a_type.set_actual_type (last_type.conformance_type)
 			last_type := a_type
-			a_type.set_actual_type (current_class.actual_type)
 		end
 
 	process_like_feature (a_type: LIKE_FEATURE)
@@ -776,7 +792,7 @@ feature {TYPE_A} -- Visitors
 			t.qualifier.process (Current)
 			q := last_type
 			if attached q then
-				create r.make (q, t.chain)
+				create r.make (q, t.chain, current_class.class_id)
 				if t.has_attached_mark then
 					r.set_attached_mark
 				elseif t.has_detachable_mark then
@@ -855,6 +871,8 @@ feature {NONE} -- Implementation
 			t.qualifier.process (Current)
 			from
 				q := last_type
+					-- Register intermediate type with instantiator.
+				instantiator.dispatch (q, current_class)
 			until
 				not attached q or else i >= t.chain.count
 			loop
@@ -868,6 +886,8 @@ feature {NONE} -- Implementation
 					if attached q then
 							-- Record supplier for recompilation.
 						degree_4.add_qualified_supplier (f, c, current_class)
+							-- Register intermediate type with instantiator.
+						instantiator.dispatch (q, current_class)
 					end
 				elseif has_error_reporting then
 					create l_veen
@@ -937,6 +957,18 @@ feature {NONE} -- Implementation
 			end
 		end
 
+feature {NONE} -- Modification: qualified types
+
+	reset_for_unqualified_type
+			-- Reset current context to start processing of unqualified type.
+		do
+				-- `last_type' is used to compute other types, e.g. `like Current'.
+				-- For unqualified types it is based on current class.
+			last_type := current_actual_type
+		ensure
+			last_type_set: last_type = current_actual_type
+		end
+
 feature {NONE} -- Implementation
 
 	record_exp_dependance (a_class: CLASS_C)
@@ -959,6 +991,9 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
+
+invariant
+	is_current_actual_type_correct: attached current_class as c implies attached current_actual_type as t and then t.same_as (current_class.actual_type)
 
 note
 	copyright:	"Copyright (c) 1984-2010, Eiffel Software"

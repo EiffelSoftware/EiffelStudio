@@ -94,7 +94,9 @@ feature {NONE} -- Status setting
 			create l_factory
 			create l_cmd.make (100)
 			l_project := test_suite.project_access.project
+			l_cmd.append_character ('"')
 			l_cmd.append_string (l_project.system.application_name (True))
+			l_cmd.append_character ('"')
 			l_cmd.append_character (' ')
 			l_cmd.append_string (a_argument)
 			l_process := l_factory.process_launcher_with_command_line (l_cmd, l_project.lace.directory_name)

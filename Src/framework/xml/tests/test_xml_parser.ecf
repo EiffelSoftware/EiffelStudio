@@ -16,7 +16,7 @@
 	<target name="xml_parser" extends="common">
 		<root class="TEST_XML_PARSER" feature="make"/>
 		<setting name="executable_name" value="test_xml"/>
-		<library name="xml_dom" location="..\dom\xml_dom.ecf" readonly="false">
+		<library name="xml_tree" location="..\tree\xml_tree.ecf" readonly="false">
 			<option>
 				<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 			</option>
@@ -29,7 +29,7 @@
 		<setting name="executable_name" value="test_gobo_xml"/>
 		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel.ecf"/>
 		<library name="gobo_xml" location="$ISE_LIBRARY\library\gobo\gobo_xml.ecf"/>
-		<library name="xml_dom" location="..\dom\xml_dom.ecf" readonly="false">
+		<library name="xml_tree" location="..\tree\xml_tree.ecf" readonly="false">
 			<option>
 				<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 			</option>

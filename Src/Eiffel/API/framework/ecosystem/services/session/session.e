@@ -290,11 +290,11 @@ feature -- Status report
 				l_id := l_internal.dynamic_type (a_value)
 					-- Supporting basic types; {STRING_GENERAL}, reference types inheriting {SESSION_DATA_I} or other type wrapped in a {CELL} (for expanded)
 				Result := l_codes.has (l_id) or else
-					attached {READABLE_STRING_GENERAL} a_value as l_string or else
-					attached {SESSION_DATA_I} a_value as l_session_data or else
-					attached {TUPLE} a_value or else -- TUPLE cannot be used with explict attachment mark (6.1.7.1179)
-					attached {CELL [ANY]} a_value as l_cell or else
-					attached {ARRAY [ANY]} a_value as l_array
+					attached {READABLE_STRING_GENERAL} a_value or else
+					attached {SESSION_DATA_I} a_value or else
+					attached {TUPLE} a_value or else
+					attached {CELL [ANY]} a_value or else
+					attached {ARRAY [ANY]} a_value
 			end
 		end
 

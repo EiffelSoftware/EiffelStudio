@@ -15,13 +15,6 @@ feature -- Access
 
 feature -- Status report
 
-	count: INTEGER
-			-- Length of the stream
-			-- if applicable
-			-- This value might be approximative (due to CRLF...)
-		deferred
-		end
-
 	end_of_input: BOOLEAN
 			-- Has the end of input stream been reached?
 		deferred
@@ -59,23 +52,8 @@ feature -- Basic operation
 	read_character
 			-- Read a character
 			-- and keep it in `last_character'
-		deferred
-		end
-
-	rewind
-			-- Move back
-		deferred
-		end
-
-	start
-			-- Rewind to the start
-			-- if applicable
-		deferred
-		end
-
-	close
-			-- Close the stream
-			-- if applicable
+		require
+			not_end_of_input: not end_of_input
 		deferred
 		end
 

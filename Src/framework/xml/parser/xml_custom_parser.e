@@ -21,7 +21,7 @@ inherit
 		redefine
 			make, reset, report_error,
 			resolve_entity,
-			next_character,
+			internal_read_character,
 			set_checkpoint_position, unset_checkpoint_position, checkpoint_position
 		end
 
@@ -163,27 +163,18 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Query
 
-	next_character: CHARACTER
-			-- Return next character
-			-- move index
-		local
-			buf: like buffer
+	internal_read_character (buf: like buffer): CHARACTER
 		do
-			buf := buffer
-			if not buf.end_of_input then
-				buf.read_character
-				Result := buf.last_character
-				if carriage_return_character_ignored and Result = '%R' then
-					from
-					until
-						Result /= '%R'
-					loop
-						buf.read_character
-						Result := buf.last_character
-					end
+			buf.read_character
+			Result := buf.last_character
+			if carriage_return_character_ignored and Result = '%R' then
+				from
+				until
+					Result /= '%R' or buf.end_of_input
+				loop
+					buf.read_character
+					Result := buf.last_character
 				end
-			else
-				report_error ("no more character")
 			end
 		end
 

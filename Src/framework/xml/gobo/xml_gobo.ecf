@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-6-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-6-0 http://www.eiffel.com/developers/xml/configuration-1-6-0.xsd" name="xml_gobo" uuid="C49BF62B-F5F2-4107-AA86-BC7DE2B48FA7" library_target="xml_gobo">
+	<target name="xml_gobo">
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/EIFGENs$</exclude>
+			<exclude>/CVS$</exclude>
+			<exclude>/.svn$</exclude>
+		</file_rule>
+		<option warning="true" full_class_checking="true" syntax="provisional">
+		</option>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel.ecf"/>
+		<library name="xml_parser" location="..\parser\xml_parser.ecf"/>
+		<library name="xml_tree" location="..\tree\xml_tree.ecf"/>
+		<cluster name="xml_gobo" location=".\" recursive="true">
+			<file_rule>
+				<exclude>/removed$</exclude>
+			</file_rule>
+		</cluster>
+	</target>
+</system>

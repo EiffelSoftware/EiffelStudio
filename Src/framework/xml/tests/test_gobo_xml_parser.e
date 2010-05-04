@@ -20,7 +20,7 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'.
 		local
 			xml_tree: detachable XML_CALLBACKS_TREE
-			xml_resolver: detachable XML_NAMESPACE_RESOLVER
+			xml_resolver: detachable XM_NAMESPACE_RESOLVER
 
 			resolver: detachable XM_NAMESPACE_RESOLVER
 			tree: detachable XM_CALLBACKS_TO_TREE_FILTER
@@ -74,7 +74,7 @@ feature {NONE} -- Initialization
 				print (pos)
 				print ("%N")
 			end
-			
+
 			report_chrono
 
 		end
@@ -120,7 +120,7 @@ feature {NONE} -- Initialization
 				last_error_position := a_parser.position
 			end
 		end
-		
+
 
 note
 	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"

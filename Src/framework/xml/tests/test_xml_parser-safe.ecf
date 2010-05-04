@@ -24,9 +24,9 @@
 		<library name="xml_parser" location="..\parser\xml_parser-safe.ecf" readonly="false"/>
 		<cluster name="test" location=".\"/>
 	</target>
-	<target name="gobo_xml_parser" extends="common">
+	<target name="gobo_xm_parser" extends="common">
 		<root class="TEST_GOBO_XML_PARSER" feature="make"/>
-		<setting name="executable_name" value="test_gobo_xml"/>
+		<setting name="executable_name" value="test_gobo_xm"/>
 		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel-safe.ecf"/>
 		<library name="gobo_xml" location="$ISE_LIBRARY\library\gobo\gobo_xml-safe.ecf"/>
 		<library name="xml_tree" location="..\tree\xml_tree.ecf" readonly="false">

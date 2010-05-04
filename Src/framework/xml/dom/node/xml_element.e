@@ -86,9 +86,9 @@ feature -- Status report
 			a_name_not_void: a_name /= Void
 		local
 			c: CURSOR
-			elts: like elements
+			elts: like nodes
 		do
-			elts := elements
+			elts := nodes
 			c := elts.cursor
 			from
 				elts.start
@@ -113,9 +113,9 @@ feature -- Status report
 			a_name_not_void: a_name /= Void
 		local
 			c: CURSOR
-			elts: like elements
+			elts: like nodes
 		do
-			elts := elements
+			elts := nodes
 			c := elts.cursor
 			from
 				elts.start
@@ -167,9 +167,9 @@ feature -- Access (from XM_COMPOSITE)
 			-- element with the name `a_name'?
 		local
 			c: CURSOR
-			elts: like elements
+			elts: like nodes
 		do
-			elts := elements
+			elts := nodes
 			c := elts.cursor
 			from
 				elts.start
@@ -192,9 +192,9 @@ feature -- Access (from XM_COMPOSITE)
 			-- element with this qualified name ?
 		local
 			c: CURSOR
-			elts: like elements
+			elts: like nodes
 		do
-			elts := elements
+			elts := nodes
 			c := elts.cursor
 			from
 				elts.start
@@ -218,9 +218,9 @@ feature -- Access (from XM_COMPOSITE)
 			-- Return Void if no element with that name is a child of current node.
 		local
 			c: CURSOR
-			elts: like elements
+			elts: like nodes
 		do
-			elts := elements
+			elts := nodes
 			c := elts.cursor
 			from
 				elts.start
@@ -244,9 +244,9 @@ feature -- Access (from XM_COMPOSITE)
 			-- Return Void if no element with that name is a child of current node.
 		local
 			c: CURSOR
-			elts: like elements
+			elts: like nodes
 		do
-			elts := elements
+			elts := nodes
 			c := elts.cursor
 			from
 				elts.start
@@ -273,9 +273,9 @@ feature -- Access
 			a_name_not_void: a_name /= Void
 		local
 			c: CURSOR
-			elts: like elements
+			elts: like nodes
 		do
-			elts := elements
+			elts := nodes
 			c := elts.cursor
 			from
 				elts.start
@@ -304,9 +304,9 @@ feature -- Access
 			a_name_not_void: a_name /= Void
 		local
 			c: CURSOR
-			elts: like elements
+			elts: like nodes
 		do
-			elts := elements
+			elts := nodes
 			c := elts.cursor
 			from
 				elts.start
@@ -335,10 +335,10 @@ feature -- Access
 			-- (Returns a new list object at each call.)
 		local
 			c: CURSOR
-			elts: like elements
+			elts: like nodes
 		do
 			create Result.make
-			elts := elements
+			elts := nodes
 			c := elts.cursor
 			from
 				elts.start
@@ -363,10 +363,10 @@ feature -- Access
 			-- (Create a new list at each call.)
 		local
 			c: CURSOR
-			elts: like elements
+			elts: like nodes
 		do
 			create {LINKED_LIST [XML_ATTRIBUTE]} Result.make
-			elts := elements
+			elts := nodes
 			c := elts.cursor
 			from
 				elts.start
@@ -409,10 +409,10 @@ feature -- Query
 			-- (Create a new list at each call.)
 		local
 			c: CURSOR
-			elts: like elements
+			elts: like nodes
 		do
 			create {LINKED_LIST [XML_CHARACTER_DATA]} Result.make
-			elts := elements
+			elts := nodes
 			c := elts.cursor
 			from
 				elts.start
@@ -523,9 +523,9 @@ feature -- Removal
 		local
 			joint_text_node: XML_CHARACTER_DATA
 			c: CURSOR
-			elts: like elements
+			elts: like nodes
 		do
-			elts := elements
+			elts := nodes
 			c := elts.cursor
 			from
 				elts.start

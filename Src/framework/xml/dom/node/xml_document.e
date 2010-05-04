@@ -43,6 +43,49 @@ feature -- Access
 	root_element: XML_ELEMENT
 			-- Root element of current document
 
+feature -- Access
+
+	element_by_name (a_name: STRING): detachable XML_ELEMENT
+			-- Direct child element with name `a_name';
+			-- If there are more than one element with that name, anyone may be returned.
+			-- Return Void if no element with that name is a child of current node.
+		do
+			if has_element_by_name (a_name) then
+				Result := root_element
+			end
+		ensure then
+			root_element: has_element_by_name (a_name) implies Result = root_element
+		end
+
+	element_by_qualified_name (a_uri: STRING; a_name: STRING): detachable XML_ELEMENT
+			-- Root element, if name matches, Void otherwise.
+		do
+			if has_element_by_qualified_name (a_uri, a_name) then
+				Result := root_element
+			end
+		ensure then
+			root_element: has_element_by_qualified_name (a_uri, a_name) implies Result = root_element
+		end
+
+	has_element_by_name (a_name: STRING): BOOLEAN
+			-- Has current node at least one direct child
+			-- element with the name `a_name'?
+			-- (Namespace is ignored on the root node because the
+			-- root element defines the current namespace.)
+		do
+			Result := same_string (root_element.name, a_name)
+		ensure then
+			definition: Result = same_string (root_element.name, a_name)
+		end
+
+	has_element_by_qualified_name (a_uri: STRING; a_name: STRING): BOOLEAN
+			-- Is this the qualified name of the root element?
+		do
+			Result := root_element.has_qualified_name (a_uri, a_name)
+		ensure then
+			definition: Result = root_element.has_qualified_name (a_uri, a_name)
+		end
+
 feature -- Setting
 
 	set_root_element (an_element: like root_element)
@@ -80,10 +123,10 @@ feature {NONE} -- Implementation
 	remove_previous_root_element
 			-- Remove previous root element from composite:
 		local
-			elts: like elements
+			elts: like nodes
 			c: CURSOR
 		do
-			elts := elements
+			elts := nodes
 			c := elts.cursor
 			from
 				elts.start

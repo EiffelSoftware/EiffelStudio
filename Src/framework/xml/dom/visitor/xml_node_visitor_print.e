@@ -43,7 +43,7 @@ feature -- Processing
 				s.append_string (" (" + ns.uri + ")")
 			end
 			print (offset (e.level) + "element: " + s + "%N")
-			process_nodes (e.elements)
+			process_nodes (e.nodes)
 		end
 
 	process_character_data (c: XML_CHARACTER_DATA)
@@ -63,7 +63,7 @@ feature -- Processing
 			-- Process document `doc'.
 		do
 --			doc.process_children (Current)
-			process_nodes (doc.elements)
+			process_nodes (doc.nodes)
 		end
 
 	process_comment (com: XML_COMMENT)
@@ -75,7 +75,7 @@ feature -- Processing
 	process_attributes (e: XML_ELEMENT)
 			-- Process attributes of element `e'.
 		do
-			process_nodes (e.elements)
+			process_nodes (e.nodes)
 		end
 
 	process_attribute (att: XML_ATTRIBUTE)

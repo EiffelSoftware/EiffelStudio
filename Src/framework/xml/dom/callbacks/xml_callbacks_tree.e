@@ -8,10 +8,8 @@ class
 
 inherit
 	XML_CALLBACKS_FILTER
-		rename
-			make_null as make
 		redefine
-			make,
+			make_null,
 			has_resolved_namespaces,
 			on_start,
 			on_start_tag,
@@ -23,11 +21,11 @@ inherit
 		end
 
 create
-	make
+	make_null
 
 feature {NONE} -- Initialization
 
-	make
+	make_null
 			-- Instanciate current tree builder.
 		do
 			Precursor

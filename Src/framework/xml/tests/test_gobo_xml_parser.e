@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 				resolver.set_forward_xmlns (True)
 				parser.set_callbacks (resolver)
 			when xml_tree_mode, xml_tree_vis_mode then
-				create xml_tree.make
+				create xml_tree.make_null
 				create xml_resolver.set_next (xml_tree)
 				xml_resolver.set_forward_xmlns (True)
 				parser.set_callbacks (xml_resolver)

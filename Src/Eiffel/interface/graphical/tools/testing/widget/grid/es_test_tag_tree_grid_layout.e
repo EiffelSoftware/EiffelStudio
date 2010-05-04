@@ -55,7 +55,7 @@ feature -- Access
 				a_column
 			when 1 then
 					-- Auto resized
-				Result := 0
+				Result := 250
 			when 2 then
 				Result := 200
 			when 3 then

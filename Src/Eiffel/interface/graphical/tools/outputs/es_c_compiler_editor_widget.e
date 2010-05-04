@@ -174,7 +174,6 @@ feature {NONE} -- Query
 		require
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
-			a_stone_attached: a_stone /= Void
 			a_stone_is_filed: attached {FILED_STONE} a_stone
 		local
 			l_class_type: detachable CLASS_TYPE
@@ -539,7 +538,6 @@ feature {NONE} -- Action handlers
 		require
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
-			a_stone_attached: a_stone /= Void
 			a_stone_is_filed: attached {FILED_STONE} a_stone
 		do
 			if attached file_name_from_stone (a_stone) as l_file_name then

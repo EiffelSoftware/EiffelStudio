@@ -79,13 +79,17 @@ feature {NONE} -- Initialization
 	initialize_layout
 			-- <Precursor>
 		local
-			l_auto_size_column: INTEGER
+			i: INTEGER
 		do
 			Precursor
-			l_auto_size_column := layout.auto_size_column
 
-			if l_auto_size_column > 0 then
-				grid.enable_auto_size_best_fit_column (l_auto_size_column)
+			from
+				i := 1
+			until
+				i > grid.column_count
+			loop
+				grid.set_auto_resizing_column (i, True)
+				i := i + 1
 			end
 		end
 
@@ -108,7 +112,7 @@ feature {NONE} -- Factory
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

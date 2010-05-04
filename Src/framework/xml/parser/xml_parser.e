@@ -58,7 +58,7 @@ feature -- Basic operation
 			s: XML_FILE_INPUT_STREAM
 		do
 			create s.make (a_file)
-			s.compute_smart_chunk_size (0x4000)
+			s.compute_smart_chunk_size (a_file.count, 0x4000)
 			s.start
 			parse_from_stream (s)
 			s.close
@@ -123,6 +123,8 @@ feature -- Element change
 	reset
 			-- Reset parser states
 		do
+			last_character := '%U'
+			rewinded_character := '%U'
 			parsing_stopped := False
 			error_position := Void
 		ensure
@@ -230,7 +232,7 @@ feature {NONE} -- Implementation: parse
 					l_callbacks.on_start_tag_finish
 					l_callbacks.on_end_tag (Void, Void, t)
 				else
-					report_error ("unexpected character after closing / in start tag")
+					report_error ("unexpected character '" + character_output (c) + "' after closing / in start tag")
 				end
 			else
 				rewind_character
@@ -256,7 +258,7 @@ feature {NONE} -- Implementation: parse
 								l_callbacks.on_start_tag_finish
 								l_callbacks.on_end_tag (Void, Void, t)
 							else
-								report_error ("unexpected character after closing / in start tag")
+								report_error ("unexpected character '" + character_output (c) + "' after closing / in start tag")
 							end
 						else
 						end
@@ -280,7 +282,7 @@ feature {NONE} -- Implementation: parse
 			if c = '>' then
 				callbacks.on_end_tag (Void, Void, t)
 			else
-				report_error ("unexpected character in end tag")
+				report_error ("unexpected character '" + character_output (c) + "' in end tag")
 			end
 		end
 
@@ -317,7 +319,7 @@ feature {NONE} -- Implementation: parse
 							report_error ("missing version in xml declaration")
 						end
 					else
-						report_error ("unexpected character after closing ? in xml declaration")
+						report_error ("unexpected character '" + character_output (c) + "' after closing ? in xml declaration")
 					end
 				else
 					rewind_character
@@ -352,7 +354,7 @@ feature {NONE} -- Implementation: parse
 										report_error ("missing version in xml declaration")
 									end
 								else
-									report_error ("unexpected character after closing ? in xml declaration")
+									report_error ("unexpected character '" + character_output (c) + "' after closing ? in xml declaration")
 								end
 							else
 							end
@@ -469,16 +471,30 @@ feature {XML_CALLBACKS} -- Error
 
 feature {NONE} -- Query
 
+	last_character: CHARACTER
+			-- Last read character
+
+	rewinded_character: CHARACTER
+			-- Last character put in stack
+
 	current_character: CHARACTER
-			-- Character at current buffer's position
+			-- Current character
 		do
-			Result := buffer.last_character
+			Result := rewinded_character
+			if Result = '%U' then
+				Result := last_character
+			end
+--			Result := buffer.last_character
 		end
 
 	rewind_character
 			-- Rewind by 1 character
+		require
+			rewinded_character_null: rewinded_character = '%U'
 		do
-			buffer.rewind
+			rewinded_character := last_character
+		ensure
+			rewinded_character_valid: rewinded_character /= '%R'
 		end
 
 	next_character: CHARACTER
@@ -487,21 +503,37 @@ feature {NONE} -- Query
 		local
 			buf: like buffer
 		do
-			buf := buffer
-			if not buf.end_of_input then
-				buf.read_character
-				Result := buf.last_character
-				if Result = '%R' then
-					from
-					until
-						Result /= '%R'
-					loop
-						buf.read_character
-						Result := buf.last_character
-					end
+			Result := rewinded_character
+			if Result = '%U' then
+				buf := buffer
+				if not buf.end_of_input then
+					Result := internal_read_character (buf)
+				else
+					report_error ("no more character")
 				end
 			else
-				report_error ("no more character")
+				rewinded_character := '%U'
+			end
+			last_character := Result
+		end
+
+	internal_read_character (buf: like buffer): CHARACTER
+			-- Internal implementation of `next_character'
+			--| always called by `next_character'
+		require
+			buf_attached: buf /= Void
+			buf_not_end_of_input: not buf.end_of_input
+		do
+			buf.read_character
+			Result := buf.last_character
+			if Result = '%R' then
+				from
+				until
+					Result /= '%R' or buf.end_of_input
+				loop
+					buf.read_character
+					Result := buf.last_character
+				end
 			end
 		end
 
@@ -731,7 +763,7 @@ feature {NONE} -- Query
 					report_error ("Attribute without any value are forbidden")
 					Result := [p, n, ""]
 				else -- not l_was_space
-					report_error ("unexpected character in attribute name")
+					report_error ("unexpected character '" + character_output (c) + "' in attribute name")
 				end
 				if Result = Void and not parsing_stopped then
 					check
@@ -753,6 +785,25 @@ feature {NONE} -- Query
 		end
 
 feature {NONE} -- Implementation
+
+	character_output (c: CHARACTER): STRING
+			-- String representation of `c'
+		do
+			inspect c
+			when '%U' then
+				Result := "%%U"
+			when '%T' then
+				Result := "%%T"
+			when '%N' then
+				Result := "%%N"
+			else
+				if c.is_printable then
+					Result := c.out
+				else
+					Result := "char#" + c.code.out
+				end
+			end
+		end
 
 	resolve_entity (s: STRING)
 			-- Resolve `s' as an entity
@@ -862,6 +913,7 @@ feature {NONE} -- Factory
 			n := a.count
 			if n = b.count then
 				from
+					i := 1
 					Result := True
 				until
 					not Result or i > n

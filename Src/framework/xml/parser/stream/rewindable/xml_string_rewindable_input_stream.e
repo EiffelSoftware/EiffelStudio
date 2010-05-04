@@ -1,60 +1,22 @@
 note
-	description: "Summary description for {XML_STRING_INPUT_STREAM}."
+	description: "Summary description for {XML_STRING_REWINDABLE_INPUT_STREAM}."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	XML_STRING_INPUT_STREAM
+	XML_STRING_REWINDABLE_INPUT_STREAM
 
 inherit
-	XML_INPUT_STREAM
+	XML_STRING_INPUT_STREAM
+		redefine
+			start, read_character
+		end
+
+	XML_REWINDABLE_INPUT_STREAM
 
 create
 	make,
 	make_empty
-
-feature {NONE} -- Initialization
-
-	make (a_string: READABLE_STRING_8)
-		do
-			source := a_string
-			count := a_string.count
-		end
-
-	make_empty
-		do
-			make ("")
-		end
-
-feature -- Access
-
-	name: STRING = "STRING"
-			-- Name of current stream
-
-feature -- Status report
-
-	count: INTEGER
-
-	end_of_input: BOOLEAN
-
-	is_open_read: BOOLEAN
-			-- Can items be read from input stream?
-		do
-			Result := True
-		end
-
-feature -- Access
-
-	index: INTEGER
-		do
-			Result := source_index - 1
-		end
-
-	line: INTEGER
-
-	column: INTEGER
-
-	last_character: CHARACTER
 
 feature -- Basic operation
 
@@ -68,6 +30,7 @@ feature -- Basic operation
 
 			if last_character = '%N' then
 				line := line + 1
+				previous_line_count := column
 				column := 0
 			else
 				column := column + 1
@@ -79,26 +42,31 @@ feature -- Basic operation
 
 	start
 		do
-			source_index := 1
-			end_of_input := source_index > count
-			line := 1
-			column := 0
+			Precursor
+			previous_line_count := 0
 		end
 
-	close
+	rewind
 		do
+			source_index := source_index - 1
+			last_character := source.item (source_index)
+			if last_character = '%N' then
+				line := line - 1
+				column := previous_line_count
+				previous_line_count := 0 --| if we rewind more than one line, too bad
+			else
+				column := column - 1
+			end
+			end_of_input := source_index > count
 		end
 
 feature {NONE} -- Implementation
 
-	source_index: INTEGER
+	previous_line_count: INTEGER
+			-- Keep previous line's length
+			-- to set the `column' during `rewind'
 
-	source: STRING
-
-invariant
-	source_attached: source /= Void
-
-note
+;note
 	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

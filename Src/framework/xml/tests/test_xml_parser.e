@@ -32,13 +32,13 @@ feature {NONE} -- Initialization
 			when debug_mode then
 				parser.set_callbacks (create {XML_CALLBACKS_DEBUG})
 			when tree_mode then
-				create tree.make
+				create tree.make_null
 				tree.set_source_parser (parser)
 				create resolver.set_next (tree)
 				resolver.set_forward_xmlns (True)
 				parser.set_callbacks (resolver)
 			when xml_tree_mode, xml_tree_vis_mode then
-				create xml_tree.make
+				create xml_tree.make_null
 				xml_tree.set_source_parser (parser)
 				create resolver.set_next (xml_tree)
 				resolver.set_forward_xmlns (True)

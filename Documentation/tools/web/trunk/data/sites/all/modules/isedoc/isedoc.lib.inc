@@ -218,7 +218,7 @@ function isedoc_pages_referencing_image($a_title) {
 
 function isedoc_pages_referencing_template($a_title) {
 	$l_title_sql = _isedoc_title_sql_in_regexp($a_title);
-	$l_body_filter = 'REGEXP \'[[.left-brace.]][[.left-brace.]][:blank:]*'.$l_title_sql.'[:blank:]*[[.|.]]\'';
+	$l_body_filter = 'REGEXP \'[[.left-brace.]][[.left-brace.]][:blank:]*'.$l_title_sql.'[:blank:]*([[.|.]]|[[.right-brace.]][[.right-brace.]])\'';
         $sql = "SELECT n.nid, n.title, n.vid FROM {node} n INNER JOIN {node_revisions} r ON n.nid = r.nid AND n.vid = r.vid WHERE n.type = 'doc' AND LOWER(r.body) $l_body_filter ";
 	$sql .= " ORDER BY n.nid, n.vid ";
         $res = db_query($sql);

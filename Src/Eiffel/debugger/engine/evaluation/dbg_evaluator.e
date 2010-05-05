@@ -81,6 +81,21 @@ feature -- Access
 	dbg_error_handler: DBG_ERROR_HANDLER
 			-- Debugger's error handler
 
+feature -- Settings
+
+	full_error_message_enabled: BOOLEAN
+			-- Retrieve full error message for exception
+			-- i.e: get the full exception trace which can be time consuming
+			--| Default: False
+
+feature -- Settings change
+
+	set_full_error_message_enabled (b: like full_error_message_enabled)
+			-- Set `full_error_message_enabled' to `b'
+		do
+			full_error_message_enabled := b
+		end
+
 feature {DBG_EXPRESSION_EVALUATOR, DEBUGGER_MANAGER, APPLICATION_EXECUTION} -- Variables
 
 	last_result: DBG_EVALUATED_VALUE
@@ -113,6 +128,23 @@ feature {DBG_EXPRESSION_EVALUATOR} -- Variables preparation
 	reset_error
 		do
 			dbg_error_handler.reset
+		end
+
+feature -- Output
+
+	exception_error_message (e: EXCEPTION_DEBUG_VALUE): STRING
+			-- Exception error message from `e'
+		require
+			e_attached: e /= Void
+		do
+			if full_error_message_enabled then
+					--| Include exception trace which can be slow to retrieve from debuggee
+				Result := e.long_description
+			else
+				Result := e.short_description
+			end
+		ensure
+			result_attached: Result /= Void
 		end
 
 feature -- Access
@@ -368,7 +400,7 @@ feature -- Concrete evaluation
 			if attached debugger_manager.application.object_relative_once_data (f, l_address, c) as l_once_data then
 				if l_once_data.called then
 					if l_once_data.exc /= Void then
-						dbg_error_handler.notify_error_exception (Debugger_names.msg_error_once_evaluation_failed (f.feature_name, l_once_data.exc.long_description))
+						dbg_error_handler.notify_error_exception (Debugger_names.msg_error_once_evaluation_failed (f.feature_name, exception_error_message (l_once_data.exc)))
 					elseif f.has_return_value then
 						res := l_once_data.res
 						if res = Void then

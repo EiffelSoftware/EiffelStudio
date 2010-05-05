@@ -79,6 +79,7 @@ feature -- Button texts
 	b_go_to: STRING_32							do Result := locale.translation ("Go to") end
 	b_Keep_assertions: STRING_32					do Result := locale.translation("Keep Assertions")	end
 	b_eval_keep_assertion_checking: STRING_32	do Result := locale.translation("Keep Assertion Checking")	end
+	b_eval_detailled_error_message: STRING_32	do Result := locale.translation("Full Error Message")	end
 	b_Load_ace: STRING_32						do Result := locale.translation("Load From...")	end
 	b_Move_to_folder: STRING_32					do Result := locale.translation("Move to Folder...")	end
 	b_New_ace: STRING_32							do Result := locale.translation("Reset")	end

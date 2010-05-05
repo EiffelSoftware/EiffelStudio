@@ -121,7 +121,7 @@ feature {NONE} -- Implementation
 											Debugger_names.msg_error_exception_occurred_during_evaluation (
 												f.written_class.name_in_upper,
 												f.feature_name,
-												exc_dv.long_description
+												exception_error_message (exc_dv)
 											)
 										)
 								else

@@ -25,9 +25,6 @@ feature {NONE} -- Initialization
 		do
 			expression := a_exp
 			expression.register_evaluation (Current)
-
-				--| Default
-			assertions_ignored := True
 		end
 
 feature -- Destroy
@@ -163,8 +160,11 @@ feature -- Status report
 
 feature -- Status
 
-	assertions_ignored: BOOLEAN assign set_assertions_ignored
+	assertions_ignored: BOOLEAN
 			-- Assertions ignored during evaluation?
+		do
+			 Result := attached expression as e and then not e.keep_assertion_checking
+		end
 
 	side_effect_forbidden: BOOLEAN assign set_side_effect_forbidden
 			-- Evaluate without any potential side effect?
@@ -176,12 +176,6 @@ feature -- Status setting
 			-- Set `side_effect_forbidden' to `b'
 		do
 			side_effect_forbidden := b
-		end
-
-	set_assertions_ignored (b: BOOLEAN)
-			-- Set `assertions_ignored' to `b'
-		do
-			assertions_ignored := b
 		end
 
 	set_evaluated (b: BOOLEAN)
@@ -364,7 +358,7 @@ invariant
 	expression_attached: expression /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

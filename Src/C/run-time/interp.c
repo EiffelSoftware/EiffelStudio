@@ -5130,7 +5130,6 @@ rt_public void dynamic_eval(int fid_or_offset, int stype_or_origin, int dtype, i
 	EIF_GET_CONTEXT
 	RTED;
 	BODY_INDEX		body_id = 0;		/* Value of selected body ID */
-	unsigned long 	stagval = tagval;	/* Save tag value */
 	unsigned char*	OLD_IC = IC;		/* IC back up */
 	uint32 			pid = 0;			/* Pattern id of the frozen feature */
 	int32 			rout_id = 0;		/* routine id of the requested feature */
@@ -5154,7 +5153,6 @@ rt_public void dynamic_eval(int fid_or_offset, int stype_or_origin, int dtype, i
 		RTLXE;
 		d_data.db_callstack_depth = db_cstack;
 		RTXSC;
-		tagval = stagval;
 		IC = OLD_IC;					/* Restore IC back-up */
 		in_assertion = saved_assertion; /* Corresponds to RTED */
 		npop (nb_pushed);				/* Removed the pushed arguments. */

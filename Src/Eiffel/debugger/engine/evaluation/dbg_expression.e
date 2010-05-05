@@ -202,6 +202,11 @@ feature -- Evaluation: Settings
 			-- Do we keep assertion checking enabled during evaluation ?
 			--| Default: False.
 
+	full_error_message_enabled: BOOLEAN
+			-- Do we keep full detailled error message during evaluation ?
+			-- i.e: retrieve full exception trace which might take time
+			--| Default: False.
+
 feature -- Evaluation: Status report
 
 	error_occurred: BOOLEAN
@@ -216,6 +221,12 @@ feature -- Evaluation: Settings change
 			-- Set `keep_assertion_checking' with `b'
 		do
 			keep_assertion_checking := b
+		end
+
+	set_full_error_message_enabled (b: like full_error_message_enabled)
+			-- Set `full_error_message_enabled' with `b'
+		do
+			full_error_message_enabled := b
 		end
 
 feature -- Evaluation: Access
@@ -406,7 +417,7 @@ invariant
 	valid_context: context.is_coherent
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

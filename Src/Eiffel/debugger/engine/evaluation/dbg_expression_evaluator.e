@@ -185,6 +185,7 @@ feature {DBG_EXPRESSION_EVALUATION} -- Evaluation
 		do
 			initialize_evaluation
 			process_evaluation (keep_assertion_checking)
+			clean_evaluation
 		end
 
 feature {NONE} -- Evaluation		
@@ -194,10 +195,24 @@ feature {NONE} -- Evaluation
 		do
 			reset_error
 			get_dbg_evaluator
+			if attached dbg_evaluator as evl then
+				if attached expression as e then
+					evl.set_full_error_message_enabled (e.full_error_message_enabled)
+				end
+			end
 
 				--| Clean evaluation.
 			final_result := Void
 			potential_side_effect_detected := False
+		end
+
+	clean_evaluation
+			-- Clean Current after expression valuation
+		do
+			if attached dbg_evaluator as evl then
+					-- Reset to default
+				evl.set_full_error_message_enabled (False)
+			end
 		end
 
 	process_evaluation (keep_assertion_checking: BOOLEAN)

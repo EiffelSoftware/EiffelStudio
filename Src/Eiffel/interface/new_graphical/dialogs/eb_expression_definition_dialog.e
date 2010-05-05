@@ -198,6 +198,12 @@ feature {NONE} -- Initialization
 			else
 				keep_assertion_checking_cb.disable_select
 			end
+			if expr.full_error_message_enabled then
+				full_error_message_cb.enable_select
+			else
+				full_error_message_cb.disable_select
+			end
+
 		end
 
 feature {NONE} -- Graphical initialization and changes
@@ -206,7 +212,7 @@ feature {NONE} -- Graphical initialization and changes
 			-- Initialize `Current'.
 		local
 			cnt: EV_VERTICAL_BOX
-			vb: EV_VERTICAL_BOX
+			vb, hvb: EV_VERTICAL_BOX
 			object_box_hb, hb: EV_HORIZONTAL_BOX
 			f: EV_FRAME
 			cn_l: EV_LABEL
@@ -338,10 +344,21 @@ feature {NONE} -- Graphical initialization and changes
 				--| 3) assertion settings
 			create keep_assertion_checking_cb.make_with_text (interface_names.b_eval_keep_assertion_checking)
 			keep_assertion_checking_cb.disable_select
+
+				--| 4) more details in trace settings
+			create full_error_message_cb.make_with_text (interface_names.b_eval_detailled_error_message)
+			full_error_message_cb.disable_select
+
 			create hb
 			hb.extend (create {EV_CELL})
-			hb.extend (keep_assertion_checking_cb)
-			hb.disable_item_expand (keep_assertion_checking_cb)
+			create hvb
+
+			hvb.extend (keep_assertion_checking_cb)
+			hvb.extend (full_error_message_cb)
+
+			hb.extend (hvb)
+			hb.disable_item_expand (hvb)
+
 			cnt.extend (hb)
 			cnt.disable_item_expand (hb)
 
@@ -688,17 +705,18 @@ feature {NONE} -- Event handling
 				end
 				new_expression := modified_expression
 			end
-			if new_expression /= Void then
-				new_expression.set_keep_assertion_checking (keep_assertion_checking_cb.is_selected)
-			end
-			if
-				not do_not_close_dialog
-				and then new_expression /= Void
-				and then not new_expression.syntax_error_occurred
-			then
-				destroy
-				if callback /= Void then
-					callback.call (Void)
+			if attached new_expression as e then
+				e.set_keep_assertion_checking (keep_assertion_checking_cb.is_selected)
+				e.set_full_error_message_enabled (full_error_message_cb.is_selected)
+
+				if
+					not do_not_close_dialog
+					and then not e.syntax_error_occurred
+				then
+					destroy
+					if callback /= Void then
+						callback.call (Void)
+					end
 				end
 			end
 		end
@@ -770,6 +788,10 @@ feature {NONE} -- Widgets
 	keep_assertion_checking_cb: EV_CHECK_BUTTON
 			-- Do we eval with assertion checking on ?
 
+	full_error_message_cb: EV_CHECK_BUTTON
+			-- Do we report detailled error message ?
+			-- i.e: include exception trace (which can be huge to retrieve from debuggee)
+
 	context_box, object_box, class_box: EV_VERTICAL_BOX
 			-- Container for current feature/object address/class zones.
 
@@ -832,7 +854,7 @@ invariant
 	dialog_not_void: dialog /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

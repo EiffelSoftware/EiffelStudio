@@ -135,7 +135,7 @@ feature {NONE} -- Implementation
 				if is_exception then
 					if attached exception_item as exv then
 						exv.set_hector_addr
-						dbg_error_handler.notify_error_exception (Debugger_names.msg_error_exception_occurred_during_evaluation (fi.written_class.name_in_upper, fi.feature_name, exv.long_description))
+						dbg_error_handler.notify_error_exception (Debugger_names.msg_error_exception_occurred_during_evaluation (fi.written_class.name_in_upper, fi.feature_name, exception_error_message (exv)))
 					else
 						dbg_error_handler.notify_error_exception (Debugger_names.msg_error_exception_occurred_during_evaluation (fi.written_class.name_in_upper, fi.feature_name, Void))
 					end
@@ -171,7 +171,7 @@ feature {NONE} -- Implementation
 					res := once_r.once_result (f)
 					if once_r.last_failed then
 						if attached {EXCEPTION_DEBUG_VALUE} res as e then
-							dbg_error_handler.notify_error_exception (Debugger_names.msg_error_once_evaluation_failed (f.feature_name, e.long_description))
+							dbg_error_handler.notify_error_exception (Debugger_names.msg_error_once_evaluation_failed (f.feature_name, exception_error_message (e)))
 						else
 							dbg_error_handler.notify_error_exception (Debugger_names.msg_error_once_evaluation_failed (f.feature_name, "exception occurred"))
 						end

@@ -19,7 +19,8 @@
 	<PREF NAME="debugger.colors.grid_background_color" DESCRIPTION="Background color for the grids of the debugger's tools (default is white)."><COLOR>255;255;255</COLOR></PREF>
 	<PREF NAME="debugger.colors.grid_foreground_color" DESCRIPTION="Foreground color (i.e: text color) for the grids of the debugger's tools (default is black)."><COLOR>0;0;0</COLOR></PREF>
 	<PREF NAME="debugger.colors.row_highlight_background_color" DESCRIPTION="Highlight background color"><COLOR>255;255;170</COLOR></PREF>
-	<PREF NAME="debugger.colors.row_unsensitive_foreground_color" DESCRIPTION="Unsensitive foreground color"><COLOR>150;150;150</COLOR></PREF>
+	<PREF NAME="debugger.colors.row_replayable_background_color" DESCRIPTION="Background color for replayable stack row (c.f execution record and replay feature"><COLOR>205;230;255</COLOR></PREF>
+	<PREF NAME="debugger.colors.unsensitive_foreground_color" DESCRIPTION="Unsensitive foreground color"><COLOR>150;150;150</COLOR></PREF>
 	<PREF NAME="debugger.generating_type_evaluation"  DESCRIPTION="Display the base type of an object if enabled, otherwise just the base class (disabling it might speed up debugging). e.g: might display ARRAY [STRING] if True but will just display ARRAY if False."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="debugger.interrupt_every_N_instructions" DESCRIPTION="Number of instructions that will be executed before interrupting the execution."><INTEGER>1</INTEGER></PREF>
 	<PREF NAME="debugger.classic_debugger.close_dbg_daemon_on_end_of_debugging" DESCRIPTION="Close the Eiffel debugger daemon (classic) after each debug session (recommended)"><BOOLEAN>True</BOOLEAN></PREF>
@@ -147,7 +148,9 @@
 	<PREF NAME="tools.testing_tool.autotest.use_slicing" DESCRIPTION="Should slicing be used for minimizing found failures?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="tools.testing_tool.autotest.html_statistics" DESCRIPTION="Should AutoTest generate HTML statistics?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.dialogs.confirm_always_compile_before_executing" DESCRIPTION="Display confirmation dialog on execution."><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="interface.dialogs.confirm_always_apply_debugger_profiles_before_closing" DESCRIPTION="Display confirmation dialog to apply profile when closing execution parameters dialog."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.dialogs.confirm_apply_debugger_profiles" DESCRIPTION="Display confirmation dialog when applying debugger profiles."><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="interface.dialogs.confirm_reload_execution_profile" DESCRIPTION="When restarting execution, always reload execution profile (if modified)"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.dialogs.confirm_on_exit" DESCRIPTION="Display confirmation dialog on exit."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.dialogs.confirm_replace_all" DESCRIPTION="Display confirmation dialog on replacing all."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.dialogs.confirm_finalize" DESCRIPTION="Display confirmation dialog for C compilation on finalize operation."><BOOLEAN>True</BOOLEAN></PREF>

@@ -240,8 +240,11 @@ feature {NONE} -- Implementation
 
 			pnd_preference := l_manager.new_boolean_preference_value (l_manager, pnd_preference_string, False)
 
-			l_eis_path := eiffel_layout.user_projects_path.out + ";" + eiffel_layout.library_path.out
+			l_eis_path := ""
 			eis_path_preference := l_manager.new_string_preference_value (l_manager, eis_path_preference_string, l_eis_path)
+			if attached eis_path as l_path and then l_path.is_empty then
+				eis_path_preference.set_value (eiffel_layout.user_projects_path.out + ";" + eiffel_layout.library_path.out)
+			end
 		end
 
 	preferences: PREFERENCES
@@ -368,7 +371,7 @@ invariant
 	eis_preference_not_void: eis_path_preference /= Void
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

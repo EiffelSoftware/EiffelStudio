@@ -10,9 +10,12 @@ deferred class
 inherit
 	XML_NODE
 
+	ITERABLE [XML_NODE]
+
 feature -- Initialization
 
 	initialize
+			-- Initialize internal data
 		do
 			create nodes.make (10)
 		end
@@ -21,6 +24,21 @@ feature -- Access
 
 	nodes: ARRAYED_LIST [XML_NODE]
 			-- List of nodes for Current composite.
+
+	new_cursor: XML_COMPOSITE_CURSOR
+		do
+			create Result.make (Current)
+		end
+
+	remove_at_cursor (c: like new_cursor)
+		do
+			c.remove
+		end
+
+	wipe_out
+		do
+			nodes.wipe_out
+		end
 
 	start
 		do
@@ -45,6 +63,11 @@ feature -- Access
 	count: INTEGER
 		do
 			Result := nodes.count
+		end
+
+	first: XML_NODE
+		do
+			Result := nodes.first
 		end
 
 	last: XML_NODE
@@ -152,10 +175,22 @@ feature -- Text
 
 feature -- Element change
 
+	put_last (a_node: XML_NODE)
+		do
+			before_addition (a_node)
+			nodes.extend (a_node)
+		end
+
 	force_last (a_node: XML_NODE)
 		do
 			before_addition (a_node)
 			nodes.force (a_node)
+		end
+
+	force_first (a_node: XML_NODE)
+		do
+			before_addition (a_node)
+			nodes.put_front (a_node)
 		end
 
 feature {NONE} -- Preprocessing

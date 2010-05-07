@@ -3,7 +3,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	TEST_PARSER
 
 inherit
@@ -126,6 +126,7 @@ feature -- Access
 			ht: HASH_TABLE [STRING, INTEGER]
 			s: STRING
 			i: INTEGER
+			dn: DIRECTORY_NAME
 		do
 			create args
 			if args.argument_count > 0 then
@@ -137,6 +138,13 @@ feature -- Access
 				if attached get ("EIFFEL_SRC") as eiffel_src then
 					ht.force (eiffel_src + "\Eiffel\Ace\ec.ecf", 3)
 				end
+				create dn.make_from_string (current_working_directory)
+				dn.extend ("data")
+				ht.force (dn.string, 4)
+
+--				ht.force ("C:\_dev\trunk\Src\framework\xml\tests\data\xmlconf\xmltest\valid\sa\087.xml", 5)
+
+
 				from
 					ht.start
 				until
@@ -200,6 +208,93 @@ feature -- Access
 	stop_chrono
 		do
 			create t2.make_now
+		end
+
+feature -- Test
+
+	test (fn: STRING)
+		local
+			dir: DIRECTORY
+		do
+			create dir.make (fn)
+			if dir.exists then
+				if attached xml_files (fn) as filenames then
+					from
+						filenames.start
+					until
+						filenames.after
+					loop
+						test_entry (filenames.item)
+						filenames.forth
+					end
+				end
+			else
+				test_entry (fn)
+			end
+		end
+
+	test_entry (fn: STRING)
+		local
+			vis: detachable XML_NODE_VISITOR_PRINT
+		do
+			if file_as_string_mode then
+				test_file_content (fn)
+			else
+				test_file (fn)
+			end
+
+			after_test_entry (fn)
+
+			report_chrono
+		end
+
+	after_test_entry (fn: STRING)
+		deferred
+		end
+
+	test_file (fn: STRING)
+		deferred
+		end
+
+	test_file_content (fn: STRING)
+		deferred
+		end
+
+feature -- Files
+
+	xml_files (n: STRING): ARRAYED_LIST [STRING]
+		local
+			d: DIRECTORY
+			fn: FILE_NAME
+		do
+			create d.make (n)
+			if d.exists then
+				create Result.make (10)
+				d.open_read
+				from
+					d.start
+					d.readentry
+				until
+					d.lastentry = Void
+				loop
+					if
+						attached d.lastentry as i and then
+						not i.is_empty and then
+						i.item (1) /= '.'
+					then
+						create fn.make_from_string (n)
+						fn.set_file_name (i)
+						Result.append (xml_files (fn.string))
+					end
+					d.readentry
+				end
+				d.close
+			elseif n.substring (n.count - 3, n.count).same_string_general (".xml") then
+				create Result.make (1)
+				Result.extend (n)
+			else
+				create Result.make (0)
+			end
 		end
 
 feature -- Access

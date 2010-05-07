@@ -17,7 +17,7 @@ class
 	XML_CUSTOM_PARSER
 
 inherit
-	XML_PARSER
+	XML_SIMPLE_PARSER
 		redefine
 			make, reset, report_error,
 			resolve_entity,

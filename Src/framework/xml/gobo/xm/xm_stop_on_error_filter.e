@@ -10,11 +10,11 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class XML_STOP_ON_ERROR_FILTER
+class XM_STOP_ON_ERROR_FILTER
 
 inherit
 
-	XML_CALLBACKS_FILTER
+	XM_CALLBACKS_FILTER
 		redefine
 			on_start,
 			on_finish,
@@ -38,7 +38,7 @@ feature -- Status
 	has_error: BOOLEAN
 			-- Has an error occurred?
 
-	last_error: detachable STRING
+	last_error: STRING
 			-- Error message
 
 feature -- Document
@@ -144,14 +144,4 @@ invariant
 
 	last_error_not_void: has_error implies last_error /= Void
 
-note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
-	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
-	source: "[
-			Eiffel Software
-			5949 Hollister Ave., Goleta, CA 93117 USA
-			Telephone 805-685-1006, Fax 805-685-6869
-			Website http://www.eiffel.com
-			Customer support http://support.eiffel.com
-		]"
 end

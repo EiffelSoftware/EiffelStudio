@@ -10,11 +10,11 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class XML_CALLBACKS_TO_TREE_FILTER
+class XM_CALLBACKS_TO_TREE_FILTER
 
 inherit
 
-	XML_CALLBACKS_FILTER
+	XM_CALLBACKS_FILTER
 		redefine
 			has_resolved_namespaces,
 			on_start,
@@ -33,7 +33,7 @@ create
 
 feature -- Result
 
-	document: XML_DOCUMENT
+	document: XM_DOCUMENT
 			-- Resulting document
 
 feature -- Position table
@@ -44,10 +44,10 @@ feature -- Position table
 			Result := last_position_table /= Void
 		end
 
-	last_position_table: XML_POSITION_TABLE
+	last_position_table: XM_POSITION_TABLE
 			-- Position table
 
-	enable_position_table (a_source: XML_PARSER)
+	enable_position_table (a_source: XM_PARSER)
 			-- Enable position table, store the position
 			-- for each node into 'last_position_table', using the
 			-- positions from the source of the callbacks.
@@ -72,9 +72,8 @@ feature -- Document
 		do
 			create document.make
 			current_element := Void
-
-			create namespace_cache.make (0)
-			namespace_cache.compare_objects
+			
+			create namespace_cache.make_equal (0)
 		end
 
 feature -- Element
@@ -82,12 +81,12 @@ feature -- Element
 	on_start_tag (namespace, ns_prefix, a_name: STRING)
 			-- called whenever the parser findes a start element.
 		local
-			an_element: XML_ELEMENT
+			an_element: XM_ELEMENT
 		do
 			check
 				document_not_void: document /= Void
 			end
-
+				
 			if current_element = Void then
 					-- This is the first element in the document.
 				create an_element.make_root (document, a_name, new_namespace (namespace, ns_prefix))
@@ -108,7 +107,7 @@ feature -- Element
 	on_attribute (namespace, a_prefix, a_name: STRING; a_value: STRING)
 			-- Add attribute.
 		local
-			xml: XML_ATTRIBUTE
+			xml: XM_ATTRIBUTE
 		do
 			check
 				element_not_void: current_element /= Void
@@ -120,15 +119,13 @@ feature -- Element
 	on_content (a_data: STRING)
 			-- Character data
 		local
-			xml: XML_CHARACTER_DATA
+			xml: XM_CHARACTER_DATA
 		do
 			check
 				not_finished: current_element /= Void
 			end
-			if attached current_element as curr then
-				create xml.make_last (curr, a_data)
-				handle_position (xml)
-			end
+			create xml.make_last (current_element, a_data)
+			handle_position (xml)
 		end
 
 	on_end_tag (a_namespace, a_ns_prefix, a_local_part: STRING)
@@ -147,7 +144,7 @@ feature -- Element
 	on_processing_instruction (target, data: STRING)
 			-- Processing instruction.
 		local
-			xml: XML_PROCESSING_INSTRUCTION
+			xml: XM_PROCESSING_INSTRUCTION
 		do
 			if current_element = Void then
 				create xml.make_last_in_document (document, target, data)
@@ -160,7 +157,7 @@ feature -- Element
 	on_comment (com: STRING)
 			-- Processing comment.
 		local
-			xml: XML_COMMENT
+			xml: XM_COMMENT
 		do
 			if current_element = Void then
 				create xml.make_last_in_document (document, com)
@@ -172,37 +169,37 @@ feature -- Element
 
 feature {NONE} -- Implementation
 
-	current_element: XML_ELEMENT
+	current_element: XM_ELEMENT
 			-- Current element
 
 feature {NONE} -- Implementation
 
-	new_namespace (a_uri, a_prefix: STRING): XML_NAMESPACE
+	new_namespace (a_uri, a_prefix: STRING): XM_NAMESPACE
 			-- Create namespace object.
 		do
 			create Result.make (a_prefix, a_uri)
-
+			
 			-- share namespace nodes
 			check cache_initialised: namespace_cache /= Void end
-			-- XML_NAMESPACE is hashable/equal on uri only,
+			-- XM_NAMESPACE is hashable/equal on uri only,
 			-- so we must explicitely check if the cached namespace
 			-- has the same prefix
 			if namespace_cache.has (Result)
-				and then attached namespace_cache.item (Result) as ns and then ns.same_prefix (Result)
+				and then namespace_cache.item (Result).same_prefix (Result)
 			then
-				Result := ns
+				Result := namespace_cache.item (Result)
 			else
-				namespace_cache.force (Result, Result)
+				namespace_cache.force_last (Result)
 			end
 		ensure
 			result_not_void: Result /= Void
 		end
-
-	namespace_cache: HASH_TABLE [XML_NAMESPACE, XML_NAMESPACE]
-
+	
+	namespace_cache: DS_HASH_SET [XM_NAMESPACE]
+	
 feature {NONE} -- Implementation (position)
 
-	handle_position (a_node: XML_NODE)
+	handle_position (a_node: XM_NODE)
 			-- If desired, store position information of
 			-- node `a_node' in position table.
 		require
@@ -213,7 +210,7 @@ feature {NONE} -- Implementation (position)
 			end
 		end
 
-	source_parser: XML_PARSER
+	source_parser: XM_PARSER
 			-- Source parser
 
 feature -- Events mode
@@ -224,14 +221,4 @@ feature -- Events mode
 			Result := True
 		end
 
-note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
-	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
-	source: "[
-			Eiffel Software
-			5949 Hollister Ave., Goleta, CA 93117 USA
-			Telephone 805-685-1006, Fax 805-685-6869
-			Website http://www.eiffel.com
-			Customer support http://support.eiffel.com
-		]"
 end

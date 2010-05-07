@@ -59,6 +59,12 @@ feature -- Access
 	line: INTEGER
 			-- Row of token in stream
 
+	row: like line
+			-- Alias for `line'
+		do
+			Result := line
+		end
+
 feature -- Output
 
 	out: STRING

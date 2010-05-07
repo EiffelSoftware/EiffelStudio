@@ -694,6 +694,8 @@
 	<PREF NAME="shortcuts.editor.customized_insertion_3" DESCRIPTION="Trigger insertion of customized string #3."><SHORTCUT Shift="True">F2</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.editor.expand_all_levels" DESCRIPTION="Trigger expansion of all tree nodes."><SHORTCUT Shift="True">NumPad *</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.editor.expand_tree_node" DESCRIPTION="Trigger expansion of current tree node."><SHORTCUT Ctrl="True">Right</SHORTCUT></PREF>
+	<PREF NAME="shortcuts.editor.maximize_editor_area" DESCRIPTION="Trigger maximization of whole editor area."><SHORTCUT Ctrl="True">M</SHORTCUT></PREF>
+	<PREF NAME="shortcuts.editor.minimize_editor_area" DESCRIPTION="Trigger minimization of whole editor area."><SHORTCUT Ctrl="True" Shift="True">M</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.editor.search_backward" DESCRIPTION="Trigger backward search."><SHORTCUT Shift="True">F3</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.editor.search_forward" DESCRIPTION="Trigger forward search."><SHORTCUT>F3</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.editor.search_selection_forward" DESCRIPTION="Trigger search on current selection and goes to next result."><SHORTCUT Ctrl="True">F3</SHORTCUT></PREF>
@@ -709,7 +711,13 @@
 	<PREF NAME="shortcuts.editor.embed_if_clause" DESCRIPTION="Embed current line in if clause."><SHORTCUT Ctrl="True">I</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.editor.embed_debug_clause" DESCRIPTION="Embed current line in debug clause"><SHORTCUT Ctrl="True">D</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.editor.show_goto_dialog" DESCRIPTION="Show dialog to set current editor cursor line."><SHORTCUT Ctrl="True">G</SHORTCUT></PREF>
-	
+	<PREF NAME="shortcuts.editor.zoom_in" DESCRIPTION="Trigger zoom in editor's font."><SHORTCUT Ctrl="True">=</SHORTCUT></PREF>
+	<PREF NAME="shortcuts.editor.zoom_in_numpad" DESCRIPTION="Trigger zoom in editor's font through numpad keys."><SHORTCUT Ctrl="True">NumPad +</SHORTCUT></PREF>
+	<PREF NAME="shortcuts.editor.zoom_out" DESCRIPTION="Trigger zoom out editor's font."><SHORTCUT Ctrl="True">-</SHORTCUT></PREF>
+	<PREF NAME="shortcuts.editor.zoom_out_numpad" DESCRIPTION="Trigger zoom out editor's font through numpad keys."><SHORTCUT Ctrl="True">NumPad -</SHORTCUT></PREF>
+	<PREF NAME="shortcuts.editor.zoom_reset" DESCRIPTION="Trigger resetting editor's font."><SHORTCUT Ctrl="True">0</SHORTCUT></PREF>
+	<PREF NAME="shortcuts.editor.zoom_reset_numpad" DESCRIPTION="Trigger resetting editor's font through numpad keys."><SHORTCUT Ctrl="True">NumPad 0</SHORTCUT></PREF>
+		
 	<PREF NAME="shortcuts.external_commands.shortcut_0" DESCRIPTION="First external command shortcut."><SHORTCUT Alt="True">0</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.external_commands.shortcut_1" DESCRIPTION="Second external command shortcut."><SHORTCUT Alt="True">1</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.external_commands.shortcut_2" DESCRIPTION="Third external command shortcut."><SHORTCUT Alt="True">2</SHORTCUT></PREF>

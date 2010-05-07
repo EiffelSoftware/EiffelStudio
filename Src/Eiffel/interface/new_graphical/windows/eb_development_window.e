@@ -632,7 +632,7 @@ feature -- Update
 --			tools.class_tool.invalidate
 --			tools.features_relation_tool.invalidate
 			if eiffel_layout.has_diagram then
-					-- Target diagram stone to root cluster if no stone is set.
+					-- Target diagram stone to root class or cluster if no stone is set.
 				if
 					tools.diagram_tool.last_stone = Void and then
 					l_system /= Void and then
@@ -641,7 +641,11 @@ feature -- Update
 					not l_system.root_creators.is_empty
 				then
 					l_root := l_system.root_creators.first
-					tools.diagram_tool.set_stone (create {CLUSTER_STONE}.make (l_root.cluster))
+					if l_root.root_class /= Void and then l_root.root_class.compiled_class /= Void then
+						tools.diagram_tool.set_stone (create {CLASSC_STONE}.make (l_root.root_class.compiled_class))
+					else
+						tools.diagram_tool.set_stone (create {CLUSTER_STONE}.make (l_root.cluster))
+					end
 				end
 			end
 

@@ -10,7 +10,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class XML_POSITION_TABLE
+class XM_POSITION_TABLE
 
 create
 
@@ -26,69 +26,60 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	has (a_node: XML_NODE): BOOLEAN
+	has (a_node: XM_NODE): BOOLEAN
 			-- Is there a position associated with `a_node'?
 		require
 			a_node_not_void: a_node /= Void
 		local
-			lst: like table
-			c: CURSOR
+			a_cursor: DS_LINKED_LIST_CURSOR [DS_PAIR [XM_POSITION, XM_NODE]]
 		do
-			lst := table
-			c := lst.cursor
-			from
-				lst.start
-			until
-				lst.after or Result
-			loop
-				if lst.item.node = a_node then
+			a_cursor := table.new_cursor
+			from a_cursor.start until a_cursor.after loop
+				if a_cursor.item.second = a_node then
 					Result := True
+					a_cursor.go_after -- Jump out of the loop.
 				else
-					lst.forth
+					a_cursor.forth
 				end
 			end
-			lst.go_to (c)
 		end
 
 feature -- Access
 
-	item (a_node: XML_NODE): detachable XML_POSITION
+	item (a_node: XM_NODE): XM_POSITION
 			-- Position associated with `a_node'
 		require
 			a_node_not_void: a_node /= Void
 			has_node: has (a_node)
 		local
-			lst: like table
-			c: CURSOR
+			a_cursor: DS_LINKED_LIST_CURSOR [DS_PAIR [XM_POSITION, XM_NODE]]
 		do
-			lst := table
-			c := lst.cursor
-			from
-				lst.start
-			until
-				lst.after or Result /= Void
-			loop
-				if lst.item.node = a_node then
-					Result := lst.item.position
+			a_cursor := table.new_cursor
+			from a_cursor.start until a_cursor.after loop
+				if a_cursor.item.second = a_node then
+					Result := a_cursor.item.first
+					a_cursor.go_after -- Jump out of the loop.
 				else
-					lst.forth
+					a_cursor.forth
 				end
 			end
-			lst.go_to (c)
 		ensure
 			position_not_void: Result /= Void
 		end
 
 feature -- Element change
 
-	put (a_position: XML_POSITION; a_node: XML_NODE)
+	put (a_position: XM_POSITION; a_node: XM_NODE)
 			-- Associate `a_node' with position `a_position'.
 		require
 			a_position_not_void: a_position /= Void
 			a_node_not_void: a_node /= Void
 			not_has_node: not has (a_node)
+		local
+			a_pair: DS_PAIR [XM_POSITION, XM_NODE]
 		do
-			table.force ([a_position, a_node])
+			create a_pair.make (a_position, a_node)
+			table.put_last (a_pair)
 		ensure
 			has_node: has (a_node)
 			inserted: item (a_node) = a_position
@@ -96,24 +87,14 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	table: LINKED_LIST [TUPLE [position: XML_POSITION; node: XML_NODE]]
+	table: DS_LINKED_LIST [DS_PAIR [XM_POSITION, XM_NODE]]
 			-- List of (node, position) pairs
 
 invariant
 
 	table_not_void: table /= Void
---	no_void_pair: not table.has_void
+	no_void_pair: not table.has_void
 	-- no_void_position: forall p in table, p.first /= Void
 	-- no_void_node: forall p in table, p.second /= Void
 
-note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
-	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
-	source: "[
-			Eiffel Software
-			5949 Hollister Ave., Goleta, CA 93117 USA
-			Telephone 805-685-1006, Fax 805-685-6869
-			Website http://www.eiffel.com
-			Customer support http://support.eiffel.com
-		]"
 end

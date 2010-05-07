@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			not_empty: a_name.count > 0
 		do
 			initialize
-			create root_element.make (a_name, a_ns)
+			create root_element.make (Void, a_name, a_ns)
 			root_element.attach_parent (Current)
 			force_last (root_element)
 		ensure
@@ -151,6 +151,19 @@ feature -- Visitor processing
 		do
 			a_processor.process_document (Current)
 		end
+
+	process_to_events (a_filter: XML_CALLBACKS)
+			-- Traverse the document and issue events
+			-- on event consumer.
+		require
+			a_filter_not_void: a_filter /= Void
+		local
+			a_source: XML_TREE_TO_EVENTS
+		do
+			create a_source.make (a_filter)
+			process (a_source)
+		end
+
 
 invariant
 	root_element_not_void: root_element /= Void

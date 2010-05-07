@@ -33,6 +33,11 @@ feature
 
 		end
 
+	last_error_description: detachable STRING
+		do
+			Result := error_message
+		end
+
 	last_error: INTEGER
 		do
 			if error_occurred then

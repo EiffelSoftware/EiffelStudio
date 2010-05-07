@@ -9,7 +9,7 @@ note
 	revision: "$Revision$"
 
 deferred class
-	XML_PARSER
+	XML_PARSER_I
 
 inherit
 	XML_CALLBACKS_SOURCE
@@ -40,12 +40,6 @@ feature -- Parsing
 
 feature -- Status
 
-	is_correct: BOOLEAN
-			-- Has no error been detected?
-		do
-			Result := not error_occurred
-		end
-
 	error_occurred: BOOLEAN
 			-- Error occurred?
 		deferred
@@ -53,18 +47,11 @@ feature -- Status
 
 feature -- Access
 
-	error_message: detachable STRING
-			-- Error message
-		deferred
-		ensure
-			result_attached_implies_error: Result /= Void implies error_occurred
-		end
-
-	error_position: detachable XML_POSITION
+	error_position: XML_POSITION
 			-- Position when error occurred
 		deferred
 		ensure
-			result_attached_if_error: error_occurred implies Result /= Void
+			result_attached: Result /= Void
 		end
 
 	position: XML_POSITION
@@ -74,21 +61,11 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-feature {XML_CALLBACKS} -- Error
+feature -- Change
 
-	report_error_from_callback (a_msg: STRING)
-			-- Report error from callbacks
-		deferred
-		end
+feature {NONE} -- Implementation
 
-note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
-	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
-	source: "[
-			Eiffel Software
-			5949 Hollister Ave., Goleta, CA 93117 USA
-			Telephone 805-685-1006, Fax 805-685-6869
-			Website http://www.eiffel.com
-			Customer support http://support.eiffel.com
-		]"
+invariant
+--	invariant_clause: True 
+
 end

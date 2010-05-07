@@ -2,7 +2,7 @@ note
 
 	description:
 	
-		"Standard pipe of callbacks filter leading to construction of a tree of XML_NODEs"
+		"Standard pipe of callbacks filter leading to construction of a tree of XM_NODEs"
 	
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2002, Eric Bezault and others"
@@ -10,13 +10,13 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 	
-class XML_TREE_CALLBACKS_PIPE
+class XM_TREE_CALLBACKS_PIPE
 
 inherit
 
 	ANY
 
-	XML_CALLBACKS_FILTER_FACTORY
+	XM_CALLBACKS_FILTER_FACTORY
 		export {NONE} all end
 
 create
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 	make
 			-- Create a new pipe.
 		local
-			a_dummy: XML_CALLBACKS
+			a_dummy: XM_CALLBACKS
 		do
 			start := new_namespace_resolver
 			error := new_stop_on_error
@@ -46,21 +46,21 @@ feature {NONE} -- Initialization
 		
 feature -- Filters (part of the pipe)
 
-	start: XML_CALLBACKS_FILTER
-			-- Starting point for XML_CALLBACKS_SOURCE (e.g. parser)
+	start: XM_CALLBACKS_FILTER
+			-- Starting point for XM_CALLBACKS_SOURCE (e.g. parser)
 
-	error: XML_STOP_ON_ERROR_FILTER
+	error: XM_STOP_ON_ERROR_FILTER
 			-- Error collector
 
-	tree: XML_CALLBACKS_TREE
+	tree: XM_CALLBACKS_TO_TREE_FILTER
 			-- Tree construction
 
-	last: XML_CALLBACKS_FILTER
+	last: XM_CALLBACKS_FILTER
 			-- Last element in the pipe, to which further filters can be added
 
 feature -- Shortcuts
 
-	document: XML_DOCUMENT
+	document: XM_DOCUMENT
 			-- Document (from tree building filter)
 		require
 			not_error: not error.has_error

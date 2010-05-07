@@ -26,16 +26,19 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name; a_ns: like namespace)
+	make (a_parent: like parent; a_name: like name; a_ns: like namespace)
 			-- Create a new child element, without attaching to parent.
 		require
+			a_parent_not_void: a_parent /= Void
 			a_name_not_void: a_name /= Void
 			a_ns_not_void: a_ns /= Void
 		do
+			parent := a_parent
 			name := a_name
 			namespace := a_ns
 			initialize
 		ensure
+			parent_set: parent = a_parent
 			name_set: name = a_name
 			namespace_set: namespace = a_ns
 		end
@@ -429,95 +432,98 @@ feature -- Query
 
 feature -- Element change
 
---	add_unqualified_attribute (a_name: STRING; a_value: STRING) is
---			-- Add an attribute without a specific namespace.
---		require
---			a_name_not_void: a_name /= Void
---			a_name_not_empty: a_name.count > 0
---			a_value_not_void: a_value /= Void
---		do
---			add_attribute (a_name, Default_ns, a_value)
---		ensure
---			attribute_added: has_attribute_by_name (a_name)
---		end
---		
---	add_attribute (a_name: STRING; a_ns: XM_NAMESPACE; a_value: STRING) is
---			-- Add an attribute to current element.
---			-- (at end if last is an attribute, at beginning otherwise)
---		require
---			a_name_not_void: a_name /= Void
---			a_name_not_empty: a_name.count > 0
---			a_ns_not_void: a_ns /= Void
---			a_value_not_void: a_value /= Void
---		local
---			an_attribute: XM_ATTRIBUTE
---			typer: XM_NODE_TYPER
---		do
---			create an_attribute.make (a_name, a_ns, a_value, Current)
---			if count = 0 then
---				force_last (an_attribute)
---			else
---				create typer
---				last.process (typer)
---				if typer.is_attribute then
---					force_last (an_attribute)
---				else
---					force_first (an_attribute)
---				end
---			end
---		ensure
---			attribute_added: has_attribute_by_qualified_name (a_ns.uri, a_name)
---		end		
+	add_unqualified_attribute (a_name: STRING; a_value: STRING)
+			-- Add an attribute without a specific namespace.
+		require
+			a_name_not_empty: a_name /= Void and then a_name.count > 0
+			a_value_not_void: a_value /= Void
+		do
+			add_attribute (a_name, Default_ns, a_value)
+		ensure
+			attribute_added: has_attribute_by_name (a_name)
+		end
+
+	add_attribute (a_name: STRING; a_ns: XML_NAMESPACE; a_value: STRING)
+			-- Add an attribute to current element.
+			-- (at end if last is an attribute, at beginning otherwise)
+		require
+			a_name_not_empty: a_name /= Void and then a_name.count > 0
+			a_ns_not_void: a_ns /= Void
+			a_value_not_void: a_value /= Void
+		local
+			an_attribute: XML_ATTRIBUTE
+		do
+			create an_attribute.make (a_name, a_ns, a_value, Current)
+			if count = 0 then
+				force_last (an_attribute)
+			else
+				if attached {XML_ATTRIBUTE} last then
+					force_last (an_attribute)
+				else
+					force_first (an_attribute)
+				end
+			end
+		ensure
+			attribute_added: has_attribute_by_qualified_name (a_ns.uri, a_name)
+		end
 
 feature -- Removal
 
---	remove_attribute_by_name (a_name: STRING) is
---			-- Remove attribute named `a_name' from current element.
---		require
---			a_name_not_void: a_name /= Void
---			has_attribute: has_attribute_by_name (a_name)
---		local
---			a_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
---			typer: XM_NODE_TYPER
---		do
---			create typer
---			a_cursor := new_cursor
---			from a_cursor.start until a_cursor.after loop
---				a_cursor.item.process (typer)
---				if typer.is_attribute and then
---					attribute_same_name (typer.xml_attribute, a_name)
---				then
---					remove_at_cursor (a_cursor)
---				else
---					a_cursor.forth
---				end
---			end
---		end
+	remove_attribute_by_name (a_name: STRING)
+			-- Remove attribute named `a_name' from current element.
+		require
+			a_name_not_void: a_name /= Void
+			has_attribute: has_attribute_by_name (a_name)
+		local
+			c: CURSOR
+			elts: like nodes
+		do
+			elts := nodes
+			c := elts.cursor
+			from
+				elts.start
+			until
+				elts.after
+			loop
+				if attached {XML_ATTRIBUTE} elts.item as att and then
+					attribute_same_name (att, a_name)
+				then
+					elts.remove
+				else
+					elts.forth
+				end
+			end
+			elts.go_to (c)
+		end
 
---	remove_attribute_by_qualified_name (a_uri: STRING; a_name: STRING) is
---			-- Remove attribute named `a_name' from current element.
---		require
---			a_uri_not_void: a_uri /= Void
---			a_name_not_void: a_name /= Void
---			has_attribute: has_attribute_by_qualified_name (a_uri, a_name)
---		local
---			a_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
---			typer: XM_NODE_TYPER
---		do
---			create typer
---			a_cursor := new_cursor
---			from a_cursor.start until a_cursor.after loop
---				a_cursor.item.process (typer)
---				if typer.is_attribute and then
---					typer.xml_attribute.has_qualified_name (a_uri, a_name)
---				then
---					remove_at_cursor (a_cursor)
---				else
---					a_cursor.forth
---				end
---			end
---		end
---		
+	remove_attribute_by_qualified_name (a_uri: STRING; a_name: STRING)
+			-- Remove attribute named `a_name' from current element.
+		require
+			a_uri_not_void: a_uri /= Void
+			a_name_not_void: a_name /= Void
+			has_attribute: has_attribute_by_qualified_name (a_uri, a_name)
+		local
+			c: CURSOR
+			elts: like nodes
+		do
+			elts := nodes
+			c := elts.cursor
+			from
+				elts.start
+			until
+				elts.after
+			loop
+				if attached {XML_ATTRIBUTE} elts.item as att and then
+					att.has_qualified_name (a_uri, a_name)
+				then
+					elts.remove
+				else
+					elts.forth
+				end
+			end
+			elts.go_to (c)
+		end
+
 	join_text_nodes
 			-- Join sequences of text nodes.
 		local

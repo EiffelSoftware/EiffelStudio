@@ -241,6 +241,9 @@ feature {NONE} -- Basic operations
 						else
 							etest_suite.project_helper.compile
 						end
+						if attached test_suite.new_session ({ETEST_RETRIEVAL}) as l_retrieval then
+							test_suite.launch_session (l_retrieval)
+						end
 					else
 						error_event.publish ([Current, locale.formatted_string (e_file_not_creatable, [l_location, l_filename])])
 					end

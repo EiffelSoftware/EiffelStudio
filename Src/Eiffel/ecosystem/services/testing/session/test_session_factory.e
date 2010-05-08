@@ -17,7 +17,7 @@ feature -- Type
 			Result := {G}
 		end
 
-feature -- Factory
+feature {TEST_SUITE_S} -- Factory
 
 	new_session (a_test_suite: TEST_SUITE_S): G
 			-- Create new session.
@@ -31,7 +31,7 @@ feature -- Factory
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

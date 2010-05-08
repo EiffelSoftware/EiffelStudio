@@ -327,19 +327,6 @@ feature -- Basis operations
 		do
 			if attached common_ancestor as l_class_i then
 				l_plist := progress_list
-
-					-- Add sub clusters to `conf_items' which will be processed next
-				if attached a_cluster.children as l_ht then
-					l_old_count := conf_items.count
-					append_items (l_ht)
-					l_count := conf_items.count
-					if l_count > l_old_count then
-							-- We add one to account for current cluster
-						l_total := l_count - l_old_count
-						l_plist.force ([a_cluster, l_total + 1, l_total])
-					end
-				end
-
 				create sub_task.make (Current, a_cluster, l_class_i)
 				append_output (agent print_cluster (?, a_cluster, False), False)
 			end

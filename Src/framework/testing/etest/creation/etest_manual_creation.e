@@ -135,10 +135,10 @@ feature {NONE} -- Basic operations
 			-- Create test routine in new class
 		do
 			a_file.close
-			render_class_text (a_file.name)
+			render_class_text (a_file.name, a_class_name)
 		end
 
-	render_class_text (a_file_name: STRING)
+	render_class_text (a_file_name: STRING; a_class_name: STRING)
 			-- Render test class text from default template to file.
 			--
 			-- `a_file_name': Name of file to which class text will be rendered.
@@ -162,7 +162,7 @@ feature {NONE} -- Basic operations
 				if (create {RAW_FILE}.make (l_template)).exists then
 					create l_wizard
 					if l_wizard.is_service_available then
-						l_wizard.service.render_template_from_file_to_file (l_template, template_parameters, a_file_name)
+						l_wizard.service.render_template_from_file_to_file (l_template, template_parameters (a_class_name), a_file_name)
 						create l_name.make (class_name.count + test_routine_name.count + 1)
 						l_name.append (class_name)
 						l_name.append_character ('.')
@@ -180,10 +180,10 @@ feature {NONE} -- Basic operations
 			retry
 		end
 
-	template_parameters: DS_HASH_TABLE [STRING, STRING]
+	template_parameters (a_class_name: STRING): DS_HASH_TABLE [STRING, STRING]
 			-- Template parameters for creating actual class text from template file.
 		local
-			l_redefine, l_body, l_indexing, l_name: STRING
+			l_redefine, l_body, l_indexing: STRING
 			l_count: INTEGER
 			l_tags: like tags
 		do
@@ -195,8 +195,7 @@ feature {NONE} -- Basic operations
 					-- Use new syntax
 				Result.force ({EIFFEL_KEYWORD_CONSTANTS}.note_keyword, v_note_keyword)
 			end
-			l_name := class_name
-			Result.force (l_name, v_class_name)
+			Result.force (a_class_name, v_class_name)
 			if False then--configuration.is_system_level_test then
 					-- TODO: switch to system level tests
 				Result.force (system_level_test_ancestor, v_test_set_ancestor)
@@ -245,7 +244,9 @@ feature {NONE} -- Basic operations
 			l_tags := tags
 			if not l_tags.is_empty then
 				create l_indexing.make (100)
-				l_indexing.append ("%T%Tindexing%N%T%T%Ttesting: ")
+				l_indexing.append ("%T%T")
+				l_indexing.append (Result.item (v_note_keyword))
+				l_indexing.append ("%N%T%T%Ttesting: ")
 				from
 					l_tags.start
 				until
@@ -300,7 +301,7 @@ feature {NONE} -- Constants
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

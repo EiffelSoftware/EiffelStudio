@@ -457,13 +457,15 @@ feature {NONE} -- Implementation
 			end
 		end
 
-feature {NONE} -- Factory
+feature {TEST_SUITE_S} -- Factory
 
 	new_session (a_test_suite: TEST_SUITE_S): ETEST_RETRIEVAL
 			-- <Precursor>
 		do
 			create Result.make (Current, a_test_suite)
 		end
+
+feature {NONE} -- Factory
 
 	new_class_map: like class_map
 			-- Create new `class_map'

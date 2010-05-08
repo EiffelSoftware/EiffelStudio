@@ -246,53 +246,29 @@ feature -- Element change
 		local
 			bbox: EV_RECTANGLE
 			border: INTEGER
-			position: DOUBLE
-			new_value: INTEGER
+			l_proportion: REAL_32
 		do
 			bbox := world.bounding_box
-
-			world.hide
 			border := world_border + autoscroll_border
-			position := (horizontal_scrollbar.value - horizontal_scrollbar.value_range.lower) / horizontal_scrollbar.value_range.count
-			check
-				position_in_range: position >=0 and position <= 1.0
-			end
+
+				-- Block scrollbars so that the change can be made in one step.
+			horizontal_scrollbar.change_actions.block
+			vertical_scrollbar.change_actions.block
+
+			l_proportion := horizontal_scrollbar.proportion
 			horizontal_scrollbar.value_range.resize_exactly (bbox.left - border, (bbox.right + border - drawing_area.width).max (bbox.left - border))
-			if horizontal_scrollbar.value < horizontal_scrollbar.value_range.lower then
-				horizontal_scrollbar.set_value (horizontal_scrollbar.value_range.lower)
-				on_horizontal_scroll (horizontal_scrollbar.value_range.lower)
-			elseif horizontal_scrollbar.value > horizontal_scrollbar.value_range.upper then
-				horizontal_scrollbar.set_value (horizontal_scrollbar.value_range.upper)
-				on_horizontal_scroll (horizontal_scrollbar.value_range.upper)
-			else
-				new_value := horizontal_scrollbar.value_range.lower + (position * (horizontal_scrollbar.value_range.count - 1)).rounded
-				check
-					valid_value: horizontal_scrollbar.value_range.has (new_value)
-				end
-				horizontal_scrollbar.set_value (new_value)
-				on_horizontal_scroll (new_value)
-			end
-			position := (vertical_scrollbar.value - vertical_scrollbar.value_range.lower) / vertical_scrollbar.value_range.count
-			check
-				position_in_range: position >=0 and position <= 1.0
-			end
+			horizontal_scrollbar.set_proportion (l_proportion)
+
+			l_proportion := vertical_scrollbar.proportion
 			vertical_scrollbar.value_range.resize_exactly (bbox.top - border, (bbox.bottom + border - drawing_area.height).max (bbox.top - border))
-			if vertical_scrollbar.value < vertical_scrollbar.value_range.lower then
-				vertical_scrollbar.set_value (vertical_scrollbar.value_range.lower)
-				on_vertical_scroll (vertical_scrollbar.value_range.lower)
-			elseif vertical_scrollbar.value > vertical_scrollbar.value_range.upper then
-				vertical_scrollbar.set_value (vertical_scrollbar.value_range.upper)
-				on_vertical_scroll (vertical_scrollbar.value_range.upper)
-			else
-				new_value := vertical_scrollbar.value_range.lower + (position * (vertical_scrollbar.value_range.count - 1)).rounded
-				check
-					valid_value: vertical_scrollbar.value_range.has (new_value)
-				end
-				vertical_scrollbar.set_value (new_value)
-				on_vertical_scroll (new_value)
+			vertical_scrollbar.set_proportion (l_proportion)
+
+			if projector /= Void then
+				projector.change_area_position (horizontal_scrollbar.value, vertical_scrollbar.value)
 			end
-			world.show
-			projector.full_project
+
+			horizontal_scrollbar.change_actions.resume
+			vertical_scrollbar.change_actions.resume
 		end
 
 	fit_to_screen
@@ -301,17 +277,25 @@ feature -- Element change
 			bbox: EV_RECTANGLE
 			new_scale_factor: DOUBLE
 			l_width, l_height: INTEGER
+			l_area_width, l_area_height: INTEGER
 		do
 			bbox := world.bounding_box
-			l_width := (width - autoscroll_border - world_border)
-			l_height := (height - autoscroll_border - world_border)
 			if bbox.width /= 0 and then bbox.height /= 0 then
-				new_scale_factor := (l_width / bbox.width).min (l_height / bbox.height)
+				l_width := bbox.width +  (2 * (autoscroll_border + world_border))
+				l_height := bbox.height + (2 * (autoscroll_border + world_border))
+
+				if projector.area /= Void then
+					l_area_width := projector.area.width
+					l_area_height := projector.area.height
+				else
+					l_area_width := width
+					l_area_height := height
+				end
+
+				new_scale_factor := (l_area_width / l_width).min (l_area_height / l_height)
 				world.scale (new_scale_factor)
+				cut
 				crop
-				vertical_scrollbar.set_value (vertical_scrollbar.value_range.lower + vertical_scrollbar.value_range.count // 2)
-				horizontal_scrollbar.set_value (horizontal_scrollbar.value_range.lower + horizontal_scrollbar.value_range.count // 2)
-				projector.full_project
 			end
 		end
 
@@ -350,15 +334,29 @@ feature {NONE} -- Implementation
 				if bbox.bottom + border - drawing_area.height > vertical_scrollbar.value_range.upper then
 					bottom := bbox.bottom + border - drawing_area.height
 				end
-				if left /= 0 or else right /= 0 then
+				if left /= 0 then
 					horizontal_scrollbar.value_range.resize_exactly (
-							left.min (horizontal_scrollbar.value_range.lower),
-							right.max (horizontal_scrollbar.value_range.upper))
+							left,
+							horizontal_scrollbar.value_range.upper
+						)
 				end
-				if top /= 0 or else bottom /= 0 then
+				if right /= 0 then
+					horizontal_scrollbar.value_range.resize_exactly (
+							horizontal_scrollbar.value_range.lower,
+							right
+						)
+				end
+				if top /= 0 then
 					vertical_scrollbar.value_range.resize_exactly (
-							top.min (vertical_scrollbar.value_range.lower),
-							bottom.max (vertical_scrollbar.value_range.upper))
+							top,
+							vertical_scrollbar.value_range.upper
+						)
+				end
+				if bottom /= 0 then
+					vertical_scrollbar.value_range.resize_exactly (
+							vertical_scrollbar.value_range.lower,
+							bottom
+						)
 				end
 			end
 		end
@@ -420,36 +418,29 @@ feature {NONE} -- Implementation
 			l_bbox: EV_RECTANGLE
 		do
 			if is_resize_enabled then
-				autoscroll.actions.block
-				l_bbox := world.bounding_box
-				cut_internal (l_bbox)
-				resize_if_necessary_internal (l_bbox)
 				if is_scroll then
+					l_bbox := world.bounding_box
+					autoscroll.actions.block
+					cut_internal (l_bbox)
+					resize_if_necessary_internal (l_bbox)
 					scroll_if_necessary
+					autoscroll.actions.resume
 				elseif autoscroll.interval /= normal_timeout_interval then
 					autoscroll.set_interval (normal_timeout_interval)
 				end
-				check
-					world.is_show_requested
-				end
-				autoscroll.actions.resume
 			end
 		end
 
 	on_vertical_scroll (new_value: INTEGER)
 			-- `vertical_scrollbar' has been moved by the user.
 		do
-			if projector /= Void then
-				projector.change_area_position (projector.area_x, new_value)
-			end
+			ev_application.do_once_on_idle (update_projector_to_scrollbar_values_agent)
 		end
 
 	on_horizontal_scroll (new_value: INTEGER)
 			-- `horizontal_scrollbar' has been moved by the user.
 		do
-			if projector /= Void then
-				projector.change_area_position (new_value, projector.area_y)
-			end
+			ev_application.do_once_on_idle (update_projector_to_scrollbar_values_agent)
 		end
 
 	on_resizing (a_x, a_y, a_width, a_height: INTEGER)
@@ -492,8 +483,13 @@ feature {NONE} -- Implementation
 			if is_hand then
 				offset_x := ax - start_x
 				offset_y := ay - start_y
+				horizontal_scrollbar.change_actions.block
+				vertical_scrollbar.change_actions.block
 				horizontal_scrollbar.set_value ((start_horizontal_value - offset_x).max (horizontal_scrollbar.value_range.lower).min (horizontal_scrollbar.value_range.upper))
 				vertical_scrollbar.set_value ((start_vertical_value - offset_y).max (vertical_scrollbar.value_range.lower).min (vertical_scrollbar.value_range.upper))
+				update_projector_to_scrollbar_values
+				horizontal_scrollbar.change_actions.resume
+				vertical_scrollbar.change_actions.resume
 			end
 		end
 
@@ -548,17 +544,34 @@ feature {NONE} -- Implementation
 				end
 				if hscrolled or else vscrolled then
 					if hscrolled then
+						horizontal_scrollbar.change_actions.block
 						horizontal_scrollbar.set_value (new_hor_value)
+						horizontal_scrollbar.change_actions.resume
 					end
 					if vscrolled then
+						vertical_scrollbar.change_actions.block
 						vertical_scrollbar.set_value (new_vert_value)
+						vertical_scrollbar.change_actions.resume
 					end
 						-- Scroll on next idle
+					ev_application.do_once_on_idle (update_projector_to_scrollbar_values_agent)
 					ev_application.do_once_on_idle (agent projector.simulate_mouse_move (cursor_x.max (autoscroll_border // 2).min (da_width), cursor_y.max (0).min (da_height - (autoscroll_border // 2))))
 					autoscroll.set_interval (scroll_timeout_interval)
 				elseif autoscroll.interval /= normal_timeout_interval then
 					autoscroll.set_interval (normal_timeout_interval)
 				end
+			end
+		end
+
+	update_projector_to_scrollbar_values_agent: PROCEDURE [ANY, TUPLE]
+		once
+			Result := agent update_projector_to_scrollbar_values
+		end
+
+	update_projector_to_scrollbar_values
+		do
+			if projector /= Void then
+				projector.change_area_position (horizontal_scrollbar.value, vertical_scrollbar.value)
 			end
 		end
 

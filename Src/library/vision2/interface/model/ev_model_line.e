@@ -194,7 +194,11 @@ feature -- Events
 				if is_end_arrow then
 					Result.merge (end_arrow.bounding_box)
 				end
-				internal_bounding_box := Result.twin
+				if attached internal_bounding_box as l_internal_bounding_box then
+					l_internal_bounding_box.copy (Result)
+				else
+					internal_bounding_box := Result.twin
+				end
 			end
 		end
 

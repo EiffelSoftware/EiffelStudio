@@ -822,8 +822,8 @@ feature -- Events
 					end
 				end
 
-				if l_result /= Void and then l_result /= Result then
-					internal_bounding_box := l_result
+				if attached internal_bounding_box as l_internal_bounding_box then
+					l_internal_bounding_box.copy (Result)
 				else
 					internal_bounding_box := Result.twin
 				end

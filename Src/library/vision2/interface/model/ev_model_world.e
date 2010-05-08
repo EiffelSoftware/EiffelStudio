@@ -87,7 +87,10 @@ feature -- Access
 			offset, half_grid, grid: INTEGER
 		do
 			grid := grid_x
-			offset := center.x \\ grid
+			if is_center_valid then
+				offset := center.x \\ grid
+			end
+
 			half_grid := grid // 2
 			Result := ((a_x + half_grid - offset) // grid) * grid + offset
 		end
@@ -98,7 +101,9 @@ feature -- Access
 			offset, half_grid, grid: INTEGER
 		do
 			grid := grid_y
-			offset := center.y \\ grid
+			if is_center_valid then
+				offset := center.y \\ grid
+			end
 			half_grid := grid // 2
 			Result := ((a_y + half_grid - offset) // grid) * grid + offset
 		end

@@ -375,44 +375,50 @@ feature {ES_DIAGRAM_TOOL_PANEL} -- Synchronization
 			l_status_bar: EB_DEVELOPMENT_WINDOW_STATUS_BAR
 			nr_of_items: INTEGER
 			is_cancelled: BOOLEAN
+			l_retried: BOOLEAN
 		do
-			context_editor.develop_window.window.set_pointer_style (wait_cursor)
-			if not is_cancelled then
-				l_status_bar := context_editor.develop_window.status_bar
+			if not l_retried then
+				context_editor.develop_window.window.set_pointer_style (wait_cursor)
+				if not is_cancelled then
+					l_status_bar := context_editor.develop_window.status_bar
 
-				nr_of_items := 1 + nodes.count + clusters.count + links.count + 1 + 1
-				l_status_bar.reset_progress_bar_with_range (0 |..| nr_of_items)
-				l_status_bar.display_progress_value (0)
-				l_status_bar.display_message (names.l_synchronizing_diagram_tool.as_string_32 + names.l_removing_unneeded_items)
-				remove_unneeded_items
+					nr_of_items := 1 + nodes.count + clusters.count + links.count + 1 + 1
+					l_status_bar.reset_progress_bar_with_range (0 |..| nr_of_items)
+					l_status_bar.display_progress_value (0)
+					l_status_bar.display_message (names.l_synchronizing_diagram_tool.as_string_32 + names.l_removing_unneeded_items)
+					remove_unneeded_items
 
-				l_status_bar.display_progress_value (1)
-				l_status_bar.display_message (names.l_synchronizing_diagram_tool.as_string_32 + names.l_synchronizing_clusters)
-				synchronize_clusters (l_progress_bar)
+					l_status_bar.display_progress_value (1)
+					l_status_bar.display_message (names.l_synchronizing_diagram_tool.as_string_32 + names.l_synchronizing_clusters)
+					synchronize_clusters (l_progress_bar)
 
-				l_status_bar.display_message (names.l_synchronizing_diagram_tool.as_string_32 + names.l_synchronizing_classes)
-				synchronize_classes (l_progress_bar)
+					l_status_bar.display_message (names.l_synchronizing_diagram_tool.as_string_32 + names.l_synchronizing_classes)
+					synchronize_classes (l_progress_bar)
 
-				l_status_bar.display_message (names.l_synchronizing_diagram_tool.as_string_32 + names.l_synchronizing_links)
-				synchronize_links (l_progress_bar)
+					l_status_bar.display_message (names.l_synchronizing_diagram_tool.as_string_32 + names.l_synchronizing_links)
+					synchronize_links (l_progress_bar)
 
-				l_status_bar.display_progress_value (nr_of_items - 1)
-				l_status_bar.display_message (names.l_synchronizing_diagram_tool.as_string_32 + names.l_synchronizing_class_relations)
-				add_classes_relations
+					l_status_bar.display_progress_value (nr_of_items - 1)
+					l_status_bar.display_message (names.l_synchronizing_diagram_tool.as_string_32 + names.l_synchronizing_class_relations)
+					add_classes_relations
 
-				l_status_bar.display_progress_value (nr_of_items)
-				l_status_bar.display_message (names.l_synchronizing_diagram_tool.as_string_32 + names.l_synchronizing_clusters_relations)
-				add_clusters_relations
+					l_status_bar.display_progress_value (nr_of_items)
+					l_status_bar.display_message (names.l_synchronizing_diagram_tool.as_string_32 + names.l_synchronizing_clusters_relations)
+					add_clusters_relations
 
-				l_status_bar.reset
+					l_status_bar.reset
+				end
+				context_editor.develop_window.window.set_pointer_style (standard_cursor)
 			end
-			context_editor.develop_window.window.set_pointer_style (standard_cursor)
 		rescue
-			context_editor.clear_area
-			is_cancelled := True
-			error_handler.error_list.wipe_out
-			l_status_bar.reset
-			retry
+			if not l_retried then
+				l_retried := True
+				context_editor.clear_area
+				is_cancelled := True
+				error_handler.error_list.wipe_out
+				l_status_bar.reset
+				retry
+			end
 		end
 
 feature {EIFFEL_WORLD, EB_CONTEXT_DIAGRAM_COMMAND} -- Insert

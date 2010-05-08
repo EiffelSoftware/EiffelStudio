@@ -1009,15 +1009,23 @@ feature -- Element change
 			new_cluster: ES_CLUSTER
 			f: RAW_FILE
 			was_legend_shown: BOOLEAN
+			l_new_layout: BOOLEAN
 		do
+
+				-- Reset scrollbars
+			world_cell.vertical_scrollbar.change_actions.block
+			world_cell.horizontal_scrollbar.change_actions.block
+			world_cell.vertical_scrollbar.set_value (world_cell.vertical_scrollbar.value_range.lower)
+			world_cell.horizontal_scrollbar.set_value (world_cell.horizontal_scrollbar.value_range.lower)
+			world_cell.vertical_scrollbar.change_actions.resume
+			world_cell.horizontal_scrollbar.change_actions.resume
+
 			history.wipe_out
 			disable_toolbar
 
 			if not cancelled then
 				develop_window.status_bar.reset
 				develop_window.status_bar.display_message (interface_names.l_constructing_diagram_for (a_group.name))
-
-				graph.wipe_out
 
 				world.drop_actions.wipe_out
 				create l_cluster_graph.make (Current)
@@ -1034,9 +1042,7 @@ feature -- Element change
 					create {BON_CLUSTER_DIAGRAM} l_cluster_view.make (l_cluster_graph, Current)
 					layout.set_spacing (default_bon_horizontal_spacing, default_bon_vertical_spacing)
 				end
-				if l_cluster_view.scale_factor /= world.scale_factor then
-					l_cluster_view.scale (world.scale_factor)
-				end
+
 
 				if not world.is_high_quality then
 					l_cluster_view.disable_high_quality
@@ -1083,6 +1089,7 @@ feature -- Element change
 					if cluster_graph.is_empty then
 						cluster_graph.explore_center_cluster
 						layout.layout
+						l_new_layout := True
 					end
 				else
 					cluster_graph.explore_center_cluster
@@ -1094,14 +1101,12 @@ feature -- Element change
 						world.available_views.extend (world.current_view)
 					end
 					layout.layout
+					l_new_layout := True
 				end
 
-				world.show
-				world_cell.enable_resize
-
 				develop_window.status_bar.reset
-				projector.full_project
-				crop_diagram
+
+
 				if world.is_uml then
 					reset_tool_bar_for_uml_cluster_view
 				else
@@ -1112,11 +1117,27 @@ feature -- Element change
 				end
 				reset_view_selector
 				reset_tool_bar_toggles
+
+
+				if l_new_layout then
+						-- Reset zoom value for newly layed out figures.
+					zoom_selector.select_actions.block
+					zoom_selector.show_as_text (100)
+					zoom_selector.select_actions.resume
+				end
+
 				world.figure_change_end_actions.extend (agent on_figure_change_end)
 				world.figure_change_start_actions.extend (agent on_figure_change_start)
 				world.cluster_legend.move_actions.extend (agent on_cluster_legend_move)
 				world.cluster_legend.pin_actions.extend (agent on_cluster_legend_pin)
 				on_cluster_legend_pin
+
+
+				world.show
+				world_cell.enable_resize
+
+				projector.project
+				crop_diagram
 
 				if was_legend_shown then
 					world.show_legend
@@ -1975,8 +1996,8 @@ feature {EB_SHOW_LEGEND_COMMAND} -- Implementation
 
 feature -- Implementation
 
-	default_bon_horizontal_spacing: INTEGER = 40
-	default_bon_vertical_spacing: INTEGER = 40
+	default_bon_horizontal_spacing: INTEGER = 80
+	default_bon_vertical_spacing: INTEGER = 80
 	default_uml_horizontal_spacing: INTEGER = 150
 	default_uml_vertical_spacing: INTEGER = 150
 		-- Default spacings used to layout generated figures.

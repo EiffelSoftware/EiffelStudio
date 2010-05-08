@@ -640,9 +640,6 @@ feature {NONE} -- Implementation (move)
 			if world.is_right_angles then
 				world.apply_right_angles
 			end
-
-			world.context_editor.
-
 			world.context_editor.restart_force_directed
 		end
 

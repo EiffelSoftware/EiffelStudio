@@ -335,7 +335,6 @@ feature {NONE} -- Implementation
 			args_list: like private_arguments
 			arg_types: E_FEATURE_ARGUMENTS
 			arg_names: LIST [STRING]
-			rout: like routine
 			rout_i: like routine_i
 			counter: INTEGER
 			l_names_heap: like Names_heap
@@ -344,25 +343,32 @@ feature {NONE} -- Implementation
 			l_old_class: CLASS_C
 			l_wc: CLASS_C
 			retried: BOOLEAN
+			l_error_mesg: DUMMY_MESSAGE_DEBUG_VALUE
 		do
 			if not retried then
 				debug ("DEBUGGER_TRACE_CALLSTACK")
 					io.put_string (generator + ".initializing_stack: " + routine_name + " from "+ dynamic_class.name +"%N")
 				end
-				if not is_exhausted then
-					args_locs_info := retrieved_locals_and_arguments -- get the values into `args_locs_info'
-					l_args := args_locs_info.args
-					l_locals := args_locs_info.locals
-					if l_args /= Void then
-						set_hector_addr (l_args)
-					end
-					if l_locals /= Void then
-						set_hector_addr (l_locals)
+				if is_melted and is_invariant_call_stack_element then
+					l_args := Void
+					create l_error_mesg.make_with_name ("Warning")
+					l_error_mesg.set_message ("Unable to retrieve locals for melted invariant routine")
+					l_locals := <<l_error_mesg>>
+				else
+					if not is_exhausted then
+						args_locs_info := retrieved_locals_and_arguments -- get the values into `args_locs_info'
+						l_args := args_locs_info.args
+						l_locals := args_locs_info.locals
+						if l_args /= Void then
+							set_hector_addr (l_args)
+						end
+						if l_locals /= Void then
+							set_hector_addr (l_locals)
+						end
 					end
 				end
 				debug ("DEBUGGER_TRACE_CALLSTACK"); io.put_string ("Finished retrieving locals and argument" + "%N"); end
-				rout := routine
-				if rout /= Void then
+				if attached routine as rout then
 					if l_args /= Void then
 						l_index := l_args.lower
 						l_upper := l_args.upper
@@ -618,7 +624,7 @@ invariant
 	valid_level: level_in_stack >= 1
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

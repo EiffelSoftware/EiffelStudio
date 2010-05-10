@@ -606,15 +606,17 @@ feature -- Status report
 
 	is_invariant_feature_name (fn: STRING): BOOLEAN
 			-- Is `fn' an _invariant routine name?
+		require
+			fn_not_empty: fn /= Void and then not fn.is_empty
 		do
-			Result := fn.item (1) = '_' and then fn.is_equal (invariant_routine_name)
+			Result := fn.item (1) = '_' and then fn.same_string (invariant_routine_name)
 		end
 
 	invariant_routine_name: STRING = "_invariant"
 			-- Invariant's feature name
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

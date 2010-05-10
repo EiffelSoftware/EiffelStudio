@@ -26,6 +26,12 @@ feature -- Properties
 	is_eiffel_call_stack_element: BOOLEAN = True
 			-- Is Current an Eiffel Call Stack Element ?
 
+	is_invariant_call_stack_element: BOOLEAN
+		do
+			Result := attached routine_name as n and then not n.is_empty and then
+					is_invariant_feature_name (n)
+		end
+
 	body_index: INTEGER
 			-- body index of the associated routine
 		require
@@ -315,7 +321,7 @@ invariant
 --	valid_level: level_in_stack >= 1
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

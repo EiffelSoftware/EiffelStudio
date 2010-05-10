@@ -103,7 +103,7 @@ feature -- Status report
 
 feature {NONE} -- Helpers
 
-	frozen xml_parser: attached XM_EIFFEL_PARSER
+	frozen xml_parser: XM_EIFFEL_PARSER
 			-- Access to an XML parser
 		once
 			create {XM_EIFFEL_PARSER} Result.make
@@ -527,7 +527,7 @@ feature {NONE} -- Basic operations
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

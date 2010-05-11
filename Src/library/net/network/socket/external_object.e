@@ -11,7 +11,7 @@ inherit
 
 feature -- Initialization
 
-	make_from_external (an_object_ptr: POINTER) is
+	make_from_external (an_object_ptr: POINTER)
 		require
 			an_object_ptr_not_null: an_object_ptr /= default_pointer
 		do
@@ -20,7 +20,7 @@ feature -- Initialization
 
 feature -- Removal
 
-	dispose is
+	dispose
 			-- free external C object.
 		do
 			if object_ptr /= default_pointer then
@@ -36,7 +36,7 @@ feature
 
 feature {NONE} -- externals
 
-	c_free (obj_ptr: POINTER) is
+	c_free (obj_ptr: POINTER)
 		require
 			obj_ptr_not_null: obj_ptr /= default_pointer
 		deferred

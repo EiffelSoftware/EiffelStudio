@@ -22,11 +22,11 @@ feature -- Access
 		deferred
 		end
 
---	host_by_address (an_address: ARRAY [NATURAL_8]): STRING is
+--	host_by_address (an_address: ARRAY [NATURAL_8]): STRING
 --		deferred
 --		end
 
---	is_reachable (addr: INET_ADDRESS; timeout: INTEGER; netif : NETWORK_INTERFACE; ttl: INTEGER): BOOLEAN is
+--	is_reachable (addr: INET_ADDRESS; timeout: INTEGER; netif : NETWORK_INTERFACE; ttl: INTEGER): BOOLEAN
 --		deferred
 --		end
 

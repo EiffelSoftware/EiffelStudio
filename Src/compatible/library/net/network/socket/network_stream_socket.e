@@ -410,7 +410,7 @@ feature {NONE} -- Externals
 			"en_socket_stream_accept"
 		end
 
-	c_sock_name (soc: INTEGER; addr: POINTER; length: INTEGER) is
+	c_sock_name (soc: INTEGER; addr: POINTER; length: INTEGER)
 			-- External c routine that returns the socket name.
 		external
 			"C"

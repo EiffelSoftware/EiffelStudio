@@ -42,6 +42,7 @@ feature {NONE} -- Initialization
 			add_viewer (v, vr)
 			vr := v
 			create {XML_DISPLAY_VIEWER_BOX} v.make (Current, for_tool)
+			v.set_auto_selectable (False)
 			add_viewer (v, vr)
 			create {OBJECT_BROWSER_VIEWER_BOX} v.make (Current, for_tool)
 			add_viewer (v, Void)
@@ -305,7 +306,7 @@ feature -- Change
 				if v /= Void and then v.is_valid_stone (current_object, False) then
 					v.refresh
 				else
-					v := valid_viewer (current_object)
+					v := auto_valid_viewer (current_object)
 					if v /= Void then
 						set_current_viewer (v)
 					else
@@ -358,11 +359,16 @@ feature -- Change
 
 	valid_viewer (st: like current_object): like current_viewer
 		do
-			Result := valid_viewer_from (st, viewers)
+			Result := valid_viewer_from (st, viewers, False)
 		end
 
-	valid_viewer_from (st: like current_object; lst: LIST [like current_viewer]): like current_viewer
-		local
+	auto_valid_viewer (st: like current_object): like current_viewer
+		do
+			Result := valid_viewer_from (st, viewers, True)
+		end
+
+	valid_viewer_from (st: like current_object; lst: LIST [like current_viewer]; auto_selection: BOOLEAN): like current_viewer
+			-- best possible viewer for the stone `st'.
 		do
 			if lst /= Void then
 				from
@@ -370,10 +376,10 @@ feature -- Change
 				until
 					lst.after or Result /= Void
 				loop
-					Result := valid_viewer_from (st, lst.item.subviewers)
+					Result := valid_viewer_from (st, lst.item.subviewers, auto_selection)
 					if Result = Void then
 						Result := lst.item
-						if not Result.is_valid_stone (st, True) then
+						if (auto_selection and then not Result.auto_selectable) or not Result.is_valid_stone (st, True) then
 							Result := Void
 						end
 					end
@@ -463,7 +469,7 @@ invariant
 	valid_stone: has_object implies is_stone_valid (current_object)
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -487,11 +493,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

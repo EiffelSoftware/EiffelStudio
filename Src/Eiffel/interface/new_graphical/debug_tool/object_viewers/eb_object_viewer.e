@@ -22,6 +22,7 @@ feature {NONE} -- Initialization
 	make (m: EB_OBJECT_VIEWERS_MANAGER; a_for_tool: BOOLEAN)
 			-- Instanciate Current
 		do
+			auto_selectable := True
 			is_associated_with_tool := a_for_tool
 			viewers_manager := m
 			create subviewers.make
@@ -39,6 +40,9 @@ feature {EB_OBJECT_VIEWERS_MANAGER} -- Properties
 			-- Sub viewers
 
 feature -- Access
+
+	auto_selectable: BOOLEAN
+			-- Is Current auto selected as viewer for valid stone?
 
 	is_associated_with_tool: BOOLEAN
 			-- Is Current associated with a viewer tool?
@@ -89,6 +93,12 @@ feature -- Contextual widget
 			-- Tool bar widget
 
 feature -- Change
+
+	set_auto_selectable (b: like auto_selectable)
+			-- Set `auto_selectable' to `b'
+		do
+			auto_selectable := b
+		end
 
 	set_title (t: STRING_GENERAL)
 			-- Set title
@@ -196,7 +206,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -220,11 +230,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

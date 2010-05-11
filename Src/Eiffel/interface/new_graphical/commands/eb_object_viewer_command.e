@@ -169,8 +169,10 @@ feature {EB_CONTEXT_MENU_FACTORY} -- Implementation
 	on_stone_dropped (st: OBJECT_STONE)
 			-- An object was dropped on the button, display it.
 		do
-			open_new_dialog
-			last_opened_viewer.set_stone (st)
+			if debugger_manager.application_is_stopped then
+				open_new_dialog
+				last_opened_viewer.set_stone (st)
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -203,7 +205,7 @@ feature {NONE} -- Implementation
 			-- The last viewers that `Current' opened.
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

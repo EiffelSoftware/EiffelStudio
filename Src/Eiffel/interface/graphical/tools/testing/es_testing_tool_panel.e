@@ -823,13 +823,13 @@ feature {NONE} -- Internationalization
 	t_execution: STRING = "Execution"
 	t_creation: STRING = "Creation"
 
-	t_execution_preferences: STRING = "Execution settings"
-	t_creation_preferences: STRING = "Test creation settings"
+	t_execution_preferences: STRING = "Execution Settings"
+	t_creation_preferences: STRING = "Test Creation Settings"
 
 	create_test_text: STRING = "Create new test"
-	create_manual_text: STRING = "Create manual test"
-	generate_test_text: STRING = "Generate tests"
-	extract_test_text: STRING = "Extract tests"
+	create_manual_text: STRING = "Create Manual Test"
+	generate_test_text: STRING = "Generate Tests"
+	extract_test_text: STRING = "Extract Tests"
 
 	generate_all_text: STRING = "Generate tests for open classes"
 	generate_custom_text: STRING = "Generate tests for custom types"

@@ -135,20 +135,20 @@ feature {NONE} -- Initialization
 
 			create timeout_field
 			timeout_field.value_range.resize_exactly (0, {INTEGER_32}.max_value)
-			timeout_field.align_text_right
+			--timeout_field.align_text_right
 
 			create test_count_field
 			test_count_field.value_range.resize_exactly (0, {INTEGER_32}.max_value)
-			test_count_field.align_text_right
+			--test_count_field.align_text_right
 
 			create proxy_time_out
 			proxy_time_out.value_range.resize_exactly (1, {INTEGER_32}.max_value)
-			proxy_time_out.align_text_right
+			--proxy_time_out.align_text_right
 
 			create seed
 			seed.set_minimum_width (dialog_unit_to_pixels (90))
 			seed.value_range.resize_exactly (0, {INTEGER_32}.max_value)
-			seed.align_text_right
+			--seed.align_text_right
 
 			append_option (l_vbox, b_timeout, timeout_field)
 			append_option (l_vbox, b_test_count, test_count_field)

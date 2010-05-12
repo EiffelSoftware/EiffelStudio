@@ -236,10 +236,10 @@ feature {NONE} -- Basic operations
 						if l_file.is_open_write then
 							l_file.close
 						end
-						if l_file.exists and then l_file.count > 0 then
+						if l_cluster /= Void and then l_file.exists and then l_file.count > 0 then
 							etest_suite.project_helper.add_class (l_cluster, path, l_filename, l_class_name)
 						else
-							etest_suite.project_helper.compile
+							etest_suite.project_access.project.system.system.rebuild_configuration
 						end
 						if attached test_suite.new_session ({ETEST_RETRIEVAL}) as l_retrieval then
 							test_suite.launch_session (l_retrieval)

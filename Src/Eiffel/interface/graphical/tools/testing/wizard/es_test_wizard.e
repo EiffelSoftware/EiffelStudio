@@ -18,7 +18,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_composition: like composition; a_window: EV_WINDOW)
+	make (a_composition: like composition; a_window: like window)
 			-- Initialize `Current'.
 			--
 			-- `a_composition': Composition providing pages to `Current'.
@@ -27,11 +27,11 @@ feature {NONE} -- Initialization
 			a_composition_not_attached: not a_composition.is_attached_to_window
 		do
 			composition := a_composition
+			window := a_window
 			initialize_dialog
 			composition.attach_to_window (Current)
 
-			load_page (1)
-			dialog.show_modal_to_window (a_window)
+			launch_wizard
 		ensure
 			recycled: is_recycled
 		end
@@ -85,6 +85,9 @@ feature {NONE} -- Access
 	page_container: EV_BOX
 			-- Box which contains wizard page widget
 
+	window: EV_WINDOW
+			-- Window on which `Current' should be shown
+
 feature -- Status report
 
 	frozen is_recycled: BOOLEAN
@@ -111,6 +114,13 @@ feature -- Basic operations
 		end
 
 feature {NONE} -- Basic operations
+
+	launch_wizard
+			-- Show `dialog' with first wizard page.
+		do
+			load_page (1)
+			dialog.show_modal_to_window (window)
+		end
 
 	load_page (an_index: INTEGER)
 			-- Load wizard page for given index.

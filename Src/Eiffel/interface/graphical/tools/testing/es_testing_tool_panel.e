@@ -397,7 +397,7 @@ feature {NONE} -- Events: test creation
 			if not l_types.is_empty and session_manager.is_service_available then
 				session_manager.service.retrieve (True).set_value (l_types, {TEST_SESSION_CONSTANTS}.temporary_types)
 				if a_launch_wizard then
-					create l_composition.make (locale.translation ("Generate tests"), <<
+					create l_composition.make (locale.translation (generate_test_text), <<
 						create {ES_TEST_GENERATION_WIZARD_PAGE}.make_using_temporary_types,
 						create {ES_TEST_TAGS_WIZARD_PAGE},
 						create {ES_TEST_GENERAL_WIZARD_PAGE} >>)
@@ -422,7 +422,7 @@ feature {NONE} -- Events: test creation
 			l_launch: BOOLEAN
 		do
 			if a_launch_wizard then
-				create l_composition.make (locale.translation ("Generate tests"), <<
+				create l_composition.make (locale.translation (generate_test_text), <<
 					create {ES_TEST_GENERATION_WIZARD_PAGE},
 					create {ES_TEST_TAGS_WIZARD_PAGE},
 					create {ES_TEST_GENERAL_WIZARD_PAGE} >>)
@@ -447,7 +447,7 @@ feature {NONE} -- Events: test creation
 		do
 			if a_launch_wizard then
 				create l_page.make (an_app_status)
-				create l_composition.make (locale.translation ("Extract test"), <<
+				create l_composition.make (locale.translation (extract_test_text), <<
 					l_page,
 					create {ES_TEST_TAGS_WIZARD_PAGE},
 					create {ES_TEST_GENERAL_WIZARD_PAGE} >>)
@@ -466,7 +466,7 @@ feature {NONE} -- Events: test creation
 			l_composition: ES_TEST_WIZARD_COMPOSITION
 			l_wizard: ES_TEST_PREFERENCE_WIZARD
 		do
-			create l_composition.make (locale.translation ("Test creation settings"), <<
+			create l_composition.make (locale.translation (t_creation_preferences), <<
 				create {ES_TEST_GENERAL_WIZARD_PAGE},
 				create {ES_TEST_TAGS_WIZARD_PAGE},
 				create {ES_TEST_MANUAL_WIZARD_PAGE},
@@ -719,7 +719,7 @@ feature {NONE} -- Factory
 			create Result.make (7)
 
 			create creation_button.make
-			creation_button.set_tooltip (locale_formatter.translation ("Create new test"))
+			creation_button.set_tooltip (locale_formatter.translation (create_test_text))
 			creation_button.set_pixmap (test_creation_pixmap)
 			creation_button.set_pixel_buffer (test_creation_pixel_buffer)
 			creation_button.set_menu_function (agent test_creation_menu)
@@ -757,7 +757,7 @@ feature {NONE} -- Factory
 					l_comp: ES_TEST_WIZARD_COMPOSITION
 					l_wizard: ES_TEST_PREFERENCE_WIZARD
 				do
-					create l_comp.make ("Creation settings", <<
+					create l_comp.make (locale.translation (t_execution_preferences), <<
 						create {ES_TEST_EXECUTION_WIZARD_PAGE}>>)
 					create l_wizard.make (l_comp, develop_window.window)
 				end))
@@ -786,16 +786,6 @@ feature {NONE} -- Factory
 			create debug_selected_menu.make_with_text (locale_formatter.translation (m_debug_selected))
 			register_action (debug_selected_menu.select_actions, agent on_run_selected (True))
 			l_menu.extend (debug_selected_menu)
-
-			l_menu.extend (create {EV_MENU_ITEM}.make_with_text_and_action ("Wizard%T...", agent
-				local
-					l_comp: ES_TEST_WIZARD_COMPOSITION
-					l_wizard: ES_TEST_PREFERENCE_WIZARD
-				do
-					create l_comp.make ("Execution settings", <<
-						create {ES_TEST_EXECUTION_WIZARD_PAGE} >>)
-					create l_wizard.make (l_comp, develop_window.window)
-				end))
 
 			debug_button.set_menu (l_menu)
 
@@ -833,8 +823,15 @@ feature {NONE} -- Internationalization
 	t_execution: STRING = "Execution"
 	t_creation: STRING = "Creation"
 
+	t_execution_preferences: STRING = "Execution settings"
+	t_creation_preferences: STRING = "Test creation settings"
+
+	create_test_text: STRING = "Create new test"
 	create_manual_text: STRING = "Create manual test"
-	generate_all_text: STRING = "Generate tests for all open classes"
+	generate_test_text: STRING = "Generate tests"
+	extract_test_text: STRING = "Extract tests"
+
+	generate_all_text: STRING = "Generate tests for open classes"
 	generate_custom_text: STRING = "Generate tests for custom types"
 	extract_text: STRING = "Extract tests from debugger"
 	preferences_text: STRING = "Preferences"

@@ -28,7 +28,7 @@ feature {NONE} -- Factory
 
 feature {NONE} -- Internationalization
 
-	t_title: STRING = "Test extraction"
+	t_title: STRING = "Test Extraction"
 
 note
 	copyright: "Copyright (c) 1984-2010, Eiffel Software"

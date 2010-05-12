@@ -54,8 +54,7 @@ feature {NONE} -- Creation
 			n_non_negative: n >= 0
 		local
 			clever: PRIMES
-			local_content: ARRAY [H]
-			local_deleted_marks: ARRAY [BOOLEAN]
+			default_value: detachable H
 		do
 			key_tester := a_key_tester
 			create clever
@@ -63,12 +62,17 @@ feature {NONE} -- Creation
 			if capacity < 5 then
 				capacity := 5
 			end
-			create local_content.make (0, capacity - 1)
-			create local_deleted_marks.make (0, capacity - 1)
-			content := local_content.area
-			deleted_marks := local_deleted_marks.area
+			create content.make_filled (default_value, capacity)
+			create deleted_marks.make_filled (False, capacity)
+			count := 0
+			control := 0
+			position := 0
+			iteration_position := 0
+			is_map := False
+			found_item := default_value
 		ensure
 			capacity_big_enough: capacity >= n
+			count_set: count = 0
 		end
 
 feature -- Access and queries

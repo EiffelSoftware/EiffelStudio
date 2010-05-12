@@ -3975,7 +3975,7 @@ feature -- Genericity
 							-- class has less generics than before.
 						if
 							not l_formal_type.has_attached_mark and not l_formal_type.has_detachable_mark and
-							l_old.item_for_iteration.written_in = class_id and then
+							l_old.item_for_iteration.origin_class_id = class_id and then
 							l_formals.valid_index (l_formal_type.position)
 						then
 							check

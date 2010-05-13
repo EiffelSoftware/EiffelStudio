@@ -16,7 +16,7 @@ inherit
 			{ANY}
 				start, item_for_iteration, forth, after, put, has_item, cursor, go_to, valid_key, count, content,
 				is_deep_equal, is_equal, standard_is_equal, copy, deep_copy, valid_cursor, deleted_marks, same_type,
-				deep_twin
+				deep_twin, wipe_out
 			{FILTER_LIST} all
 		redefine
 			same_keys
@@ -28,7 +28,7 @@ create
 create {FILTER_LIST}
 	make_with_key_tester
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make
 		do
@@ -75,7 +75,7 @@ feature -- Cleaning
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

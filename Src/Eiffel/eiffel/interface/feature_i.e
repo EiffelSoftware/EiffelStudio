@@ -1851,12 +1851,6 @@ feature -- Byte code computation
 
 feature -- Polymorphism
 
- 	has_entry: BOOLEAN
- 			-- Has feature an associated polymorphic unit ?
- 		do
- 			Result := True
- 		end
-
 	new_poly_table (rout_id: INTEGER): POLY_TABLE [ENTRY]
  			-- New polymorphic table
  		require

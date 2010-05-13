@@ -11,14 +11,11 @@ inherit
 
 	PROCEDURE_I
 		redefine
-			is_deferred, has_entry, to_generate_in, extension,
+			is_deferred, to_generate_in, extension,
 			update_api, transfer_to, transfer_from, access_for_feature
 		end
 
 feature -- Status Report
-
-	has_entry: BOOLEAN = False;
-			-- No polymorphic unit for deferred features
 
 	is_deferred: BOOLEAN
 		do

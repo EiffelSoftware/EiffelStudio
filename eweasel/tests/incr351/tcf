@@ -1,0 +1,25 @@
+test_name inline-agent-invariant-crash
+test_description When an inline agent is used in an invariant and that a certain sequence of compilation is taken, it could cause the compiler to crash when checking the invariant without code regeneration when a supplier of the class has been changed.
+
+define COMMENT ""
+copy_sub	Ace $TEST Ace
+copy_sub	test.e $CLUSTER test.e
+copy_sub	test1.e $CLUSTER test1.e
+
+compile_melted
+compile_result ok
+
+define COMMENT ""
+copy_sub	test.e $CLUSTER test.e
+
+compile_melted
+compile_result ok
+
+define COMMENT "--"
+copy_sub	test1.e $CLUSTER test1.e
+
+compile_melted
+compile_result ok
+
+
+test_end

@@ -20,10 +20,15 @@ feature {NONE} -- Creation
 			create i3
 			i3.put_string ("TEST3: OK")
 			i3.put_new_line
+			create {ARRAYED_LIST [like list.item]} list.make (5)
+			i3.put_string ("TEST4: OK")
+			i3.put_new_line
 		end
 
 feature {NONE} -- Test
 
 	f: detachable COMPARABLE
+
+	list: LIST [TUPLE [TEST, NATURAL_8]]
 
 end

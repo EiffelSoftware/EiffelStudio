@@ -880,6 +880,10 @@ feature -- Third pass: byte code production and type check
 								-- Regenerate all descendants.
 							regenerate_descendants
 						end
+							-- We need to reset the context (see eweasel test#incr351 where it would
+							-- not reset the inline agent counter and thus creating below if `invariant_changed'
+							-- is True a new inline agent with the wrong number).
+						l_ast_context.clear_feature_context
 					end
 					if invariant_changed then
 						if invariant_feature = Void then
@@ -1610,7 +1614,7 @@ feature {NONE} -- Class initialization
 
 					-- We need to get rid of content of `filters' since it may contain
 					-- incorrect data using Formals that are not there anymore.
-				filters.make
+				filters.wipe_out
 			end
 		end
 

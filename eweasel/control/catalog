@@ -896,6 +896,7 @@ test	is-expanded-crash			incr346 tcf fail incrementality
 test	class-removal-crash-freeze		incr347 tcf fail incrementality
 test	melted-agent-creation-crash		incr348 tcf fail incrementality
 test	storable-version-update			incr349 tcf fail incrementality reflection storable
+test	formal-creation-crash			incr350 tcf pass incrementality
 
 
 -- Melting

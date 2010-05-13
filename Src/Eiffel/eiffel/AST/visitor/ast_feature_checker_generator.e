@@ -1878,7 +1878,10 @@ feature {NONE} -- Implementation
 									create l_veen
 									context.init_error (l_veen)
 									l_veen.set_identifier (l_feature_name.name)
-									l_veen.set_parameter_count (l_actual_count)
+									l_veen.set_target_type (l_last_type)
+									if system.il_generation then
+										l_veen.set_parameter_count (l_actual_count)
+									end
 									l_veen.set_location (l_feature_name)
 									error_handler.insert_error (l_veen)
 								end

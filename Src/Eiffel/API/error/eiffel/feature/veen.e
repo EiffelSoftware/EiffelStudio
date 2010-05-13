@@ -21,6 +21,9 @@ feature -- Access
 	parameter_count: INTEGER
 			-- Number of expected arguments.
 
+	target_type: TYPE_A
+			-- Type of target if any.
+
 	code: STRING = "VEEN"
 			-- Error code
 
@@ -47,6 +50,14 @@ feature -- Settings
 			parameter_countt_set: parameter_count = i
 		end
 
+	set_target_type (a_type: like target_type)
+			-- Set `target_type' with `a_type'
+		do
+			target_type := a_type
+		ensure
+			target_type_set: target_type = a_type
+		end
+
 feature -- Output
 
 	build_explain (a_text_formatter: TEXT_FORMATTER)
@@ -56,6 +67,11 @@ feature -- Output
 			a_text_formatter.add ("Identifier: ")
 			a_text_formatter.add (identifier)
 			a_text_formatter.add_new_line
+			if target_type /= Void then
+				a_text_formatter.add ("Target type: ")
+				target_type.append_to (a_text_formatter)
+				a_text_formatter.add_new_line
+			end
 			if is_parameter_count_set then
 				a_text_formatter.add ("Taking ")
 				if parameter_count = 0 then
@@ -76,23 +92,24 @@ feature {NONE} -- Output
 
 	print_single_line_error_message (a_text_formatter: TEXT_FORMATTER)
 			-- Displays single line help in `a_text_formatter'.
-		local
-			l_text: STRING_32
 		do
-			Precursor (a_text_formatter)
-			create l_text.make (50)
-			l_text.append (" `")
-			if attached identifier as l_id then
-				l_text.append (l_id)
+			a_text_formatter.add ("Unknown identifier `")
+			a_text_formatter.add (identifier)
+			a_text_formatter.add_char  ('%'')
+			if target_type /= Void then
+				a_text_formatter.add (" in type ")
+				target_type.append_to (a_text_formatter)
 			end
-			l_text.append ("' taking ")
-			if parameter_count > 0 then
-				l_text.append_integer (parameter_count)
-			else
-				l_text.append ("no")
+			if is_parameter_count_set then
+				a_text_formatter.add (" taking ")
+				if parameter_count > 0 then
+					a_text_formatter.add_int (parameter_count)
+				else
+					a_text_formatter.add ("no")
+				end
+				a_text_formatter.add (" arguments")
 			end
-			l_text.append (" arguments.")
-			a_text_formatter.add (l_text)
+			a_text_formatter.add_char ('.')
 		end
 
 feature {NONE} -- Implementation
@@ -101,7 +118,7 @@ feature {NONE} -- Implementation
 			-- Did we call `set_parameter_count'?
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -114,22 +131,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class VEEN

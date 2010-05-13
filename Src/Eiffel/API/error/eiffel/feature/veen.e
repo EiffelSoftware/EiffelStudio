@@ -96,10 +96,6 @@ feature {NONE} -- Output
 			a_text_formatter.add ("Unknown identifier `")
 			a_text_formatter.add (identifier)
 			a_text_formatter.add_char  ('%'')
-			if target_type /= Void then
-				a_text_formatter.add (" in type ")
-				target_type.append_to (a_text_formatter)
-			end
 			if is_parameter_count_set then
 				a_text_formatter.add (" taking ")
 				if parameter_count > 0 then

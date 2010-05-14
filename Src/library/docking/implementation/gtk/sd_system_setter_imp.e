@@ -34,7 +34,13 @@ feature -- Command
 			-- <Precursor>
 		do
 		end
-
+		
+	is_during_pnd: BOOLEAN
+			-- <Precursor>
+		do
+				Result := False
+		end
+		
 	clear_background_for_theme (a_widget: EV_DRAWING_AREA; a_rect: EV_RECTANGLE)
 			-- <Precursor>
 		do

@@ -448,24 +448,19 @@ feature {NONE} -- Implementation
 	set_label_position_on_line (nearest_start, nearest_end: EV_COORDINATE)
 			-- Set the `label_move_handle' position such that its point is
 			-- on the segment from `nearest_start' to `nearest_end'.
-		local
-			l_point_array: like point_array
-			other_bbox, label_bbox: EV_RECTANGLE
 		do
 			Precursor {EG_POLYLINE_LABEL} (nearest_start, nearest_end)
-
 			if source /= Void and then target /= Void then
-				-- do not intersect with start or target figure
-				l_point_array := point_array
-				other_bbox := source.size
-				label_bbox := label_group.bounding_box
-				if other_bbox.intersects (label_bbox) then
-					set_label_move_handle_position_out_of_intersection (label_bbox, other_bbox, nearest_start, nearest_end)
+					-- do not intersect with start or target figure
+				source.update_rectangle_to_bounding_box (reusable_rectangle_1)
+				label_group.update_rectangle_to_bounding_box (reusable_rectangle_2)
+				if reusable_rectangle_1.intersects (reusable_rectangle_2) then
+					set_label_move_handle_position_out_of_intersection (reusable_rectangle_2, reusable_rectangle_1, nearest_start, nearest_end)
+					label_group.update_rectangle_to_bounding_box (reusable_rectangle_2)
 				end
-				other_bbox := target.size
-				label_bbox := label_group.bounding_box
-				if other_bbox.intersects (label_bbox) then
-					set_label_move_handle_position_out_of_intersection (label_bbox, other_bbox, nearest_end, nearest_start)
+				target.update_rectangle_to_bounding_box (reusable_rectangle_1)
+				if reusable_rectangle_1.intersects (reusable_rectangle_2) then
+					set_label_move_handle_position_out_of_intersection (reusable_rectangle_2, reusable_rectangle_1, nearest_start, nearest_end)
 				end
 			end
 		end
@@ -669,7 +664,7 @@ feature {NONE} -- Implementation
 					txt := sorted_names.item
 					txt.set_point_position (label_group.point_x + 5, cur_y)
 					label_group.extend (txt)
-					cur_y := cur_y + txt.height
+					cur_y := cur_y + ((txt.height * 12) // 10)
 					sorted_names.forth
 				end
 			end
@@ -779,6 +774,20 @@ feature {NONE} -- Implementation
 			name_label.set_foreground_color (bon_client_label_color)
 			set_foreground_color (bon_client_color)
 			set_line_width (bon_client_line_width)
+		end
+
+feature {NONE} -- Implementation
+
+	reusable_rectangle_1: EV_RECTANGLE
+			-- Temporary reusable rectangle used to prevent recreation of objects.
+		once
+			create Result
+		end
+
+	reusable_rectangle_2: EV_RECTANGLE
+		-- Temporary reusable rectangle used to prevent recreation of objects.
+		once
+			create Result
 		end
 
 invariant

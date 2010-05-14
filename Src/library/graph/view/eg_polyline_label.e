@@ -34,11 +34,9 @@ feature {NONE} -- Initialization
 			label_move_handle.extend (label_group)
 			label_move_handle.move_actions.extend (agent on_label_move)
 			label_move_handle.scale_x_actions.extend (agent on_scale)
-			label_move_handle.scale_y_actions.extend (agent on_scale)
+			label_move_handle.scale_y_actions.extend (label_move_handle.scale_x_actions.last)
 
 			set_label_line_start_and_end
-			position_on_line := -10.0
-
 		end
 
 feature -- Status report

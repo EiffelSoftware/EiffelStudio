@@ -68,8 +68,6 @@ feature {NONE} -- Initialization
 			rectangle.hide
 			extend (resizer_bottom_left)
 
---			start_actions.extend (agent set_move_cursor)
---			end_actions.extend (agent set_default_cursor)
 			disable_rotating
 			disable_scaling
 		end

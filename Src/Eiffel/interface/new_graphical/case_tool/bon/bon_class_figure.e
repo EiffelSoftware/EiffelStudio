@@ -762,7 +762,7 @@ feature {NONE} -- Implementation
 			update_radius
 		end
 
-	names_label_scale: REAL_32 = 1.2
+	names_label_scale: REAL_32 = 2.0
 
 	update_radius
 			-- Update `ellipse_radius_1' and `ellipse_radius_2'.
@@ -798,6 +798,9 @@ feature {NONE} -- Implementation
 					h := as_integer (h * names_label_scale)
 				end
 			end
+
+				-- We need to make sure that the width is at least 1.6 times greater than height to maintain the ovalness.
+			w := w.max ((h * 16) // 10)
 
 			r := distance (l_min_size.left, l_min_size.top, l_min_size.left + w / 2, l_min_size.top + h / 2)
 			omega := line_angle (l_min_size.left + w / 2, l_min_size.top + h / 2, l_min_size.left + w, l_min_size.top)

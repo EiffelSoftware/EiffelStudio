@@ -71,20 +71,33 @@ feature {NONE} -- Implementation
 		local
 			bcf: EIFFEL_CLUSTER_FIGURE
 			ew: EIFFEL_WORLD
+			l_max_row_width: INTEGER
+			l_generation_levels: INTEGER
+			l_clusters: ARRAYED_LIST [EG_CLUSTER_FIGURE]
+			l_classes: ARRAYED_LIST [EG_LINKABLE_FIGURE]
 		do
 			ew := world
-			vertical_scaled_spacing := (ew.scale_factor * vertical_spacing).truncated_to_integer
-			horizontal_scaled_spacing := (ew.scale_factor * horizontal_spacing).truncated_to_integer
+			vertical_scaled_spacing := (ew.scale_factor * vertical_spacing).rounded
+			horizontal_scaled_spacing := (ew.scale_factor * horizontal_spacing).rounded
 
 			table.wipe_out
-			set_clusters_and_classes (linkables)
-			if not has_cluster then
-				arrange_by_generation
-				arrange_clients
-			else
-				arrange_by_size
+			create l_clusters.make (linkables.count)
+			create l_classes.make (linkables.count)
+			set_clusters_and_classes (linkables, l_clusters, l_classes)
+
+
+			if l_classes.count > 0 then
+				arrange_by_generation (l_classes)
+				l_generation_levels := generation_levels
+				generation_levels := 0
+				arrange_clients (l_classes)
 			end
-			execute
+
+			if l_clusters.count > 0 then
+				arrange_clusters (l_clusters)
+			end
+			l_max_row_width := maximum_linear_row_width.min (maximum_row_line_width)
+			execute (level, l_generation_levels, l_max_row_width)
 			bcf ?= cluster
 			if bcf /= Void then
 				--Speeeeeeeeed Up
@@ -96,23 +109,17 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	clusters: ARRAYED_LIST [EG_CLUSTER_FIGURE]
-			-- Clusters in linkables currently layouted.
-
-	classes: ARRAYED_LIST [EG_LINKABLE_FIGURE]
-			-- Classes in linkables currently layouted.
-
-	set_clusters_and_classes (linkables: ARRAYED_LIST [EG_LINKABLE_FIGURE])
+	set_clusters_and_classes (linkables: ARRAYED_LIST [EG_LINKABLE_FIGURE]; a_clusters: ARRAYED_LIST [EG_CLUSTER_FIGURE]; a_classes: ARRAYED_LIST [EG_LINKABLE_FIGURE])
 			-- Build list `clusters' and `classes'.
 		require
 			linkables_not_void: linkables /= Void
+			a_classes_not_void: a_classes /= Void
+			a_clusters_not_void: a_clusters /= Void
 		local
 			i, nb: INTEGER
 			cf: EG_CLUSTER_FIGURE
 			l_item: EG_LINKABLE_FIGURE
 		do
-			create clusters.make (linkables.count)
-			create classes.make (linkables.count)
 			from
 				i := 1
 				nb := linkables.count
@@ -123,67 +130,36 @@ feature {NONE} -- Implementation
 				if l_item.is_show_requested then
 					cf ?= l_item
 					if cf /= Void then
-						clusters.extend (cf)
+						a_clusters.extend (cf)
 					else
-						classes.extend (l_item)
+						a_classes.extend (l_item)
 					end
 				end
 				i := i + 1
 			end
-		ensure
-			clusters_not_void: clusters /= Void
-			classes_not_void: classes /= Void
 		end
 
-	has_cluster: BOOLEAN
-			-- Is `clusters' not empty?
+	arrange_clusters (a_clusters: ARRAYED_LIST [EG_CLUSTER_FIGURE])
+			-- Arrange clusters in a row.
 		require
-			clusters_not_void: clusters /= Void
-		do
-			Result := not clusters.is_empty
-		end
-
-	has_classes: BOOLEAN
-			-- Is `classes' not empty?
-		require
-			classes_not_void: classes /= Void
-		do
-			Result := not classes.is_empty
-		end
-
-	arrange_by_size
-			-- Place figures such that space is
-			-- not wasted in the diagram.
+			a_clusters_not_void: a_clusters /= Void
 		local
 			i, nb: INTEGER
+			l_unlinked_row: like row
 		do
-			arrange_by_generation
-			arrange_clients
-
 			from
 				i := 1
-				nb := clusters.count
+				nb := a_clusters.count
+				create l_unlinked_row.make (a_clusters.count)
+				table.extend (l_unlinked_row)
 			until
 				i > nb
 			loop
-				add_linkable_figure (clusters.i_th (i))
+				l_unlinked_row.extend (a_clusters [i])
 				i := i + 1
 			end
 		end
 
-	add_linkable_figure (lf: EG_LINKABLE_FIGURE)
-			-- Add `lf' in any row/column not caring about links.
-		local
-			r: like row
-		do
-			if height > width // 2 then
-				r := smallest_row
-			else
-				create r.make (0)
-				table.extend (r)
-			end
-			r.extend (lf)
-		end
 
 	height: INTEGER
 			-- Vertical dimension in pixels of current placement.
@@ -212,7 +188,7 @@ feature {NONE} -- Implementation
 				until
 					r.after
 				loop
-					if r.item /= Void then
+					if r.item /= Void and then r.item.is_show_requested then
 						Result := Result.max (r.item.height)
 					end
 					r.forth
@@ -220,81 +196,19 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	width: INTEGER
+	maximum_linear_row_width: INTEGER
 			-- Horizontal dimension of widest row.
 		local
-			max_widths: ARRAYED_LIST [INTEGER]
-			i: INTEGER
-		do
-			if has_classes then
-				max_widths := max_x_widths
-				from
-					max_widths.start
-				until
-					max_widths.after
-				loop
-					Result := Result + max_widths.item + horizontal_scaled_spacing
-					max_widths.forth
-				end
-			else
-				from
-					i := 1
-				until
-					i > table.count
-				loop
-					Result := Result.max (row_width (table.i_th (i)))
-					i := i + 1
-				end
-				Result := Result + horizontal_scaled_spacing
-			end
-		end
-
-	max_x_widths: ARRAYED_LIST [INTEGER]
-			-- Array of maximum bubles width to line them up vertically and horizontally.
-			-- | Result is a list from 1 to max column count where each entry is the max width of this column.
-		local
-			r: like row
-			size, max_width, index: INTEGER
-			cf: EG_CLUSTER_FIGURE
-			cur_item: EG_LINKABLE_FIGURE
+			i, nb: INTEGER
 		do
 			from
-				table.start
+				i := 1
+				nb := table.count
 			until
-				table.after
+				i > nb
 			loop
-				if table.item /= Void and then table.item.count > size then
-					size := table.item.count
-				end
-				table.forth
-			end
-
-			create Result.make (size)
-			from
-				index := 1
-			until
-				index > size
-			loop
-				max_width := 0
-				from
-					table.start
-				until
-					table.after
-				loop
-					r := table.item
-					if r /= Void then
-						if index <= r.count then
-							cur_item := r.i_th (index)
-							cf ?= cur_item
-							if cur_item /= Void and then cf = Void and then cur_item.width > max_width then
-								max_width := cur_item.width
-							end
-						end
-					end
-					table.forth
-				end
-				Result.extend (max_width)
-				index := index + 1
+				Result := Result.max (row_width (table [i]))
+				i := i + 1
 			end
 		end
 
@@ -307,78 +221,85 @@ feature {NONE} -- Implementation
 				until
 					r.after
 				loop
-					if r.item /= Void then
+					if r.item /= Void and then r.item.is_show_requested then
 						Result := Result + r.item.width
 					end
 					r.forth
-					if not r.after and then r.item /= Void then
+					if not r.after and then r.item /= Void and then r.item.is_show_requested then
 						Result := Result + horizontal_scaled_spacing
 					end
 				end
 			end
 		end
 
-	smallest_row: like row
-			-- Row with smallest width.
-		local
-			w: INTEGER
-			r: like row
-		do
-			from table.start until table.after loop
-				r := table.item
-				if w = 0 then
-					Result := r
-					w := row_width (r)
-				else
-					if w > row_width (r) then
-						Result := r
-						w := row_width (r)
-					end
-				end
-				table.forth
-			end
-		end
+	generation_levels: INTEGER
+		-- Number of generation levels calculated by `arrange_by_generation'.
 
-	arrange_by_generation
+	arrange_by_generation (a_classes: ARRAYED_LIST [EG_LINKABLE_FIGURE])
 			-- Place class bubbles so that descendants are always below
 			-- their ancestors.
 		local
 			r: like row
 		do
 			from
-				r := first_generation
+				generation_levels := 0
+				r := first_generation (a_classes)
 			until
 				r.is_empty
 			loop
+				generation_levels := generation_levels + 1
 				remove_from_table (r)
 				table.extend (r)
 				r := next_generation (r)
 			end
 		end
 
-	first_generation: like row
+	first_generation (a_classes: ARRAYED_LIST [EG_LINKABLE_FIGURE]) : like row
 			-- Classes in `figure_set' that have no ancestors
 			-- in same cluster but descendants in same cluster.
-		local
-			l_classes: like classes
-			l_item: EG_LINKABLE_FIGURE
 		do
-			l_classes := classes
 			create Result.make (0)
 			from
-				l_classes.start
+				a_classes.start
 			until
-				l_classes.after
+				a_classes.after
 			loop
-				l_item := l_classes.item
-				if
-					not has_ancestor_in_same_cluster (l_item) and then
-					has_descendant_in_same_cluster (l_item)
-				then
-					Result.extend (l_item)
+				if has_descendant_but_no_ancestor_in_same_cluster (a_classes.item) then
+					Result.extend (a_classes.item)
 				end
-				l_classes.forth
+				a_classes.forth
 			end
+		end
+
+	has_descendant_but_no_ancestor_in_same_cluster (linkable: EG_LINKABLE_FIGURE): BOOLEAN
+			-- Does `linkable' have an descendant but no ancestor in the same cluster?
+			-- Used for first generation computation.
+		require
+			linkable_not_void: linkable /= Void
+		local
+			bil: EIFFEL_INHERITANCE_FIGURE
+			l_links: ARRAYED_LIST [EG_LINK_FIGURE]
+			i, nb: INTEGER
+			l_has_ancestor, l_has_descendent: BOOLEAN
+		do
+			from
+				l_links := linkable.links
+				i := 1
+				nb := l_links.count
+			until
+				l_has_ancestor or else i > nb
+			loop
+				bil ?= l_links [i]
+				if bil /= Void then
+					if not l_has_descendent and then bil.descendant /= linkable and then bil.descendant.cluster = linkable.cluster then
+						l_has_descendent := True
+					end
+					l_has_ancestor := bil.ancestor /= linkable and then bil.ancestor.cluster = linkable.cluster
+						-- If we have an ancestor then we can break out of the loop.
+				end
+				i := i + 1
+			end
+			Result := l_has_descendent and then not l_has_ancestor
 		end
 
 	next_generation (r: like row): like row
@@ -403,7 +324,7 @@ feature {NONE} -- Implementation
 				until
 					i > nb
 				loop
-					bil ?= l_links.i_th (i)
+					bil ?= l_links [i]
 					if bil /= Void then
 						descendant := bil.descendant
 						if
@@ -421,60 +342,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	has_ancestor_in_same_cluster (linkable: EG_LINKABLE_FIGURE): BOOLEAN
-			-- Does `linkable' have an ancestor in the same cluster?
-		require
-			linkable_not_void: linkable /= Void
-		local
-			bil: EIFFEL_INHERITANCE_FIGURE
-			l_links: ARRAYED_LIST [EG_LINK_FIGURE]
-			i, nb: INTEGER
-		do
-			Result := False
-			from
-				l_links := linkable.links
-				i := 1
-				nb := l_links.count
-			until
-				Result or else i > nb
-			loop
-				bil ?= l_links.i_th (i)
-				if bil /= Void then
-					if bil.ancestor /= linkable and then bil.ancestor.cluster = linkable.cluster then
-						Result := True
-					end
-				end
-				i := i + 1
-			end
-		end
-
-	has_descendant_in_same_cluster (linkable: EG_LINKABLE_FIGURE): BOOLEAN
-			-- Does `linkable' have an descendant in the same cluster?
-		require
-			linkable_not_void: linkable /= Void
-		local
-			bil: EIFFEL_INHERITANCE_FIGURE
-			l_links: ARRAYED_LIST [EG_LINK_FIGURE]
-			i, nb: INTEGER
-		do
-			Result := False
-			from
-				l_links := linkable.links
-				i := 1
-				nb := l_links.count
-			until
-				Result or else i > nb
-			loop
-				bil ?= l_links.i_th (i)
-				if bil /= Void then
-					if bil.descendant /= linkable and then bil.descendant.cluster = linkable.cluster then
-						Result := True
-					end
-				end
-				i := i + 1
-			end
-		end
-
 	remove_from_table (r: like row)
 			-- Remove any class in `r' if present from `table'.
 		local
@@ -488,29 +355,34 @@ feature {NONE} -- Implementation
 			loop
 				tr := table.item
 				from i := 1 until i > r.count loop
-					tr.prune_all (r.i_th (i))
+					tr.prune_all (r [i])
 					i := i + 1
 				end
 				table.forth
 			end
 		end
 
-	arrange_clients
+	arrange_clients (a_classes: ARRAYED_LIST [EG_LINKABLE_FIGURE])
 			-- Place class bubbles that are linked to diagram classes
 			-- only by client/supplier links.
 		local
-			l: like classes
+			i, nb: INTEGER
+			l_unlinked_row: like row
 		do
-			l := classes
 			from
-				l.start
+				i := 1
+				nb := a_classes.count
 			until
-				l.after
+				i > nb
 			loop
-				if not has (l.item) then
-					add_linkable_figure (l.item)
+				if not has (a_classes [i]) then
+					if l_unlinked_row = Void then
+						create l_unlinked_row.make (1)
+						table.extend (l_unlinked_row)
+					end
+					l_unlinked_row.extend (a_classes [i])
 				end
-				l.forth
+				i := i + 1
 			end
 		end
 
@@ -519,28 +391,30 @@ feature {NONE} -- Implementation
 		require
 			lf_not_void: lf /= Void
 		local
-			r: like row
+			i, nb: INTEGER
+			l_table: like table
 		do
 			from
-				table.start
+				l_table := table
+				i := 1
+				nb := l_table.count
 			until
-				Result or table.after
+				Result or i > nb
 			loop
-				r := table.item
-				Result := r.has (lf)
-				table.forth
+				Result := l_table [i] /= Void and then l_table [i].has (lf)
+				i := i + 1
 			end
 		end
 
-	execute
+	execute (level, a_generation_levels, a_max_width: INTEGER)
 			-- Perform the actual placement.
 		local
 			cur_x, cur_y: INTEGER
-			l_row_height, max_width, i, l_count: INTEGER
+			l_row_max_height, l_remaining_row_width, l_row_item_index, l_row_item_count, i, l_count: INTEGER
 			r: like row
 			l_is_grid_enabled: BOOLEAN
+			l_original_x: INTEGER
 		do
-			max_width := 0
 			l_is_grid_enabled := world.grid_enabled
 			l_count := table.count
 			from
@@ -548,45 +422,51 @@ feature {NONE} -- Implementation
 			until
 				i > l_count
 			loop
-				max_width := max_width.max (row_width (table [i]))
-				i := i + 1
-			end
-			cur_x := horizontal_scaled_spacing // 2
-			cur_y := vertical_scaled_spacing // 2
-			from
-				i := 1
-			until
-				i > l_count
-			loop
 				r := table [i]
 				if r /= Void then
-					cur_x := (max_width // 2) - (row_width (r) // 2) + horizontal_scaled_spacing
-					l_row_height := row_height (r)
-
-					if l_is_grid_enabled then
-						cur_y := world.y_to_grid (cur_y)
+					l_remaining_row_width := row_width (r)
+					if i <= a_generation_levels then
+							-- We only want to center generation level classes.
+						l_original_x := (a_max_width // 2) - (l_remaining_row_width.min (a_max_width) // 2) + horizontal_scaled_spacing
+					else
+						l_original_x := horizontal_scaled_spacing
 					end
+					cur_x := l_original_x
+					cur_y := cur_y + vertical_scaled_spacing
 
 					from
-						r.start
+						l_row_item_index := 1
+						l_row_item_count := r.count
+						l_row_max_height := 0
 					until
-						r.after
+						l_row_item_index > l_row_item_count
 					loop
-						if r.index > 1 then
-							cur_x := cur_x + r.item.width
+						if cur_x > maximum_row_line_width then
+							if i <= a_generation_levels then
+								cur_x := (a_max_width // 2) - (l_remaining_row_width.min (cur_x).min (a_max_width) // 2)
+							else
+								cur_x := l_original_x
+							end
+							cur_y := cur_y + l_row_max_height + vertical_scaled_spacing
+							l_row_max_height := 0
 						end
-						if l_is_grid_enabled then
-							cur_x := world.x_to_grid (cur_x)
+						if r [l_row_item_index].is_show_requested then
+							r [l_row_item_index].set_point_position (cur_x, cur_y)
+							cur_x := cur_x + r [l_row_item_index].width + horizontal_scaled_spacing
+							l_remaining_row_width := l_remaining_row_width - r [l_row_item_index].width - horizontal_scaled_spacing
+							l_row_max_height := r [l_row_item_index].height.max (l_row_max_height)
 						end
-						r.item.set_point_position (cur_x, cur_y)
-						cur_x := cur_x + horizontal_scaled_spacing
-						r.forth
+						l_row_item_index := l_row_item_index + 1
 					end
-					cur_y := cur_y + l_row_height + vertical_scaled_spacing
+					cur_y := cur_y + l_row_max_height
 				end
 				i := i + 1
 			end
 		end
+
+	maximum_row_line_width: INTEGER = 5000
+		-- Maximum width for a generated row line
+		-- Subsequent classes will be placed on the next row.
 
 	center_rows
 			-- Add void elements in `table' in order to center rows.

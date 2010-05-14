@@ -383,15 +383,15 @@ feature -- Element change
 			-- Set position of `point' to (`a_x', `a_y').
 		local
 			a_delta_x, a_delta_y: DOUBLE
-			l_point: EV_COORDINATE
 		do
-			l_point := point_array.item (0)
-			a_delta_x := a_x - l_point.x_precise
-			a_delta_y := a_y - l_point.y_precise
+			a_delta_x := a_x - point_array [0].x_precise
+			a_delta_y := a_y - point_array [0].y_precise
 			if a_delta_x /= 0 or a_delta_y /= 0 then
 				projection_matrix.translate (a_delta_x, a_delta_y)
 				recursive_transform (projection_matrix)
-				center_invalidate
+				if is_center_valid then
+					center_invalidate
+				end
 			end
 		end
 

@@ -49,6 +49,17 @@ feature -- Command
 			Result := l_routine.is_terminal_service
 		end
 
+	is_during_pnd: BOOLEAN
+			-- <Precursor>
+		local
+			l_env: EV_ENVIRONMENT
+		do
+			create l_env
+			if attached {EV_APPLICATION_IMP} l_env.application.implementation as l_imp then
+				Result := attached l_imp.pick_and_drop_source
+			end
+		end
+
 	clear_background_for_theme (a_widget: EV_DRAWING_AREA; a_rect: EV_RECTANGLE)
 			-- <Precursor>
 		do
@@ -56,13 +67,13 @@ feature -- Command
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

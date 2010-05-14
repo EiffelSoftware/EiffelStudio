@@ -88,41 +88,46 @@ feature  -- Agents
 			l_auto_hide_zone: detachable SD_AUTO_HIDE_ZONE
 			l_zones: ARRAYED_LIST [SD_ZONE]
 			l_content: detachable SD_CONTENT
+			l_during_pnd: BOOLEAN
+			l_setter: SD_SYSTEM_SETTER
 		do
-			l_zones := docking_manager.zones.zones.twin
-			from
-				l_zones.start
-			until
-				l_zones.after
-			loop
-				if attached {EV_CONTAINER} l_zones.item as lt_container then
-					if not lt_container.is_destroyed and then (lt_container.has_recursive (a_widget) and not ignore_additional_click) and l_zones.item.content /= docking_manager.zones.place_holder_content then
-						if docking_manager.property.last_focus_content /= l_zones.item.content then
-							docking_manager.property.set_last_focus_content (l_zones.item.content)
-							l_zones.item.on_focus_in (Void)
-							if l_zones.item.content.focus_in_actions /= Void then
-								l_zones.item.content.focus_in_actions.call (Void)
-							end
-						else
-							l_content := docking_manager.property.last_focus_content
-							if l_content /= Void then
-								l_auto_hide_zone ?= l_content.state.zone
-							end
-							if l_auto_hide_zone = Void and not ignore_additional_click then
-								docking_manager.command.remove_auto_hide_zones (True)
-							elseif l_auto_hide_zone /= Void then
-								l_auto_hide_zone.set_focus_color (True)
+			create {SD_SYSTEM_SETTER_IMP} l_setter
+			if not l_setter.is_during_pnd then
+				l_zones := docking_manager.zones.zones.twin
+				from
+					l_zones.start
+				until
+					l_zones.after
+				loop
+					if attached {EV_CONTAINER} l_zones.item as lt_container then
+						if not lt_container.is_destroyed and then (lt_container.has_recursive (a_widget) and not ignore_additional_click) and l_zones.item.content /= docking_manager.zones.place_holder_content then
+							if docking_manager.property.last_focus_content /= l_zones.item.content then
+								docking_manager.property.set_last_focus_content (l_zones.item.content)
+								l_zones.item.on_focus_in (Void)
+								if l_zones.item.content.focus_in_actions /= Void then
+									l_zones.item.content.focus_in_actions.call (Void)
+								end
+							else
+								l_content := docking_manager.property.last_focus_content
+								if l_content /= Void then
+									l_auto_hide_zone ?= l_content.state.zone
+								end
+								if l_auto_hide_zone = Void and not ignore_additional_click then
+									docking_manager.command.remove_auto_hide_zones (True)
+								elseif l_auto_hide_zone /= Void then
+									l_auto_hide_zone.set_focus_color (True)
+								end
 							end
 						end
+					else
+						check not_possible: False end
 					end
-				else
-					check not_possible: False end
+
+					l_zones.forth
 				end
 
-				l_zones.forth
+				ignore_additional_click := False
 			end
-
-			ignore_additional_click := False
 		end
 
 	on_widget_pointer_press_for_upper_zone (a_widget: EV_WIDGET; a_button, a_x, a_y: INTEGER)
@@ -626,7 +631,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

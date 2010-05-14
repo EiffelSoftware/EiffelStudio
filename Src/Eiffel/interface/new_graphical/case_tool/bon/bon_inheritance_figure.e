@@ -77,7 +77,7 @@ feature {NONE} -- Initialization
 
 			retrieve_preferences
 
-			real_arrow_head_size := 10
+			real_arrow_head_size := 12
 			request_update
 		end
 

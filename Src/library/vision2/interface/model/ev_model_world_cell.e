@@ -434,13 +434,13 @@ feature {NONE} -- Implementation
 	on_vertical_scroll (new_value: INTEGER)
 			-- `vertical_scrollbar' has been moved by the user.
 		do
-			ev_application.do_once_on_idle (update_projector_to_scrollbar_values_agent)
+			update_projector_to_scrollbar_values
 		end
 
 	on_horizontal_scroll (new_value: INTEGER)
 			-- `horizontal_scrollbar' has been moved by the user.
 		do
-			ev_application.do_once_on_idle (update_projector_to_scrollbar_values_agent)
+			update_projector_to_scrollbar_values
 		end
 
 	on_resizing (a_x, a_y, a_width, a_height: INTEGER)

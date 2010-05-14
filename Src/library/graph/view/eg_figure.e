@@ -229,7 +229,7 @@ feature {NONE} -- Implementation
 			-- Name was changed in the model.
 		do
 			if (attached model as l_model) and then (attached l_model.name as l_name) then
-				if name_label.text.is_equal ("") and not is_label_shown then
+				if name_label.text.count = 0 and then not is_label_shown then
 					name_label.show
 				end
 				set_name_label_text (l_name)

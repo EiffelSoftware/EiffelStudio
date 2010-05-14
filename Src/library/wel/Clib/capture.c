@@ -112,9 +112,9 @@ LRESULT CALLBACK cwel_mouse_hook_proc(int nCode, WPARAM wParam, LPARAM lParam)
 								/* Do not send all messages when DWM is active as if your
 								 * code involves drawing like in pick and drop it is quite slow to draw
 								 * directly on the desktop. */
-							if (is_desktop_composition_active && Msg == WM_MOUSEMOVE) {
+							if (Msg == WM_MOUSEMOVE) {
 								DWORD new_tick_count = GetTickCount();
-								if (abs(new_tick_count - tick_count) > 150) {
+								if (abs(new_tick_count - tick_count) > 100) {
 									tick_count = new_tick_count;
 									PostMessage(hook_window, Msg, 0, dwMousePos);
 								}

@@ -229,71 +229,39 @@ feature {NONE} -- Event implementation
 	has_mouse: BOOLEAN
 			-- Does canvas have mouse on it?
 
-	figure_on_position (group: EV_MODEL_GROUP; x, y: INTEGER): detachable EV_MODEL
+	figure_on_position (group: EV_MODEL_GROUP; x, y: INTEGER): EV_MODEL
 			-- Figure mouse-cursor is on.
 		local
-			gritem: detachable EV_MODEL
 			i: INTEGER
-			found_closed_figure, closed_figure: detachable EV_MODEL_CLOSED
-			l_bbox: EV_RECTANGLE
+			found_closed_figure: detachable EV_MODEL_CLOSED
 		do
 			if world.capture_figure /= Void then
 				Result := world.capture_figure
 			else
-					-- Check if we are on the current figure first
-				if group = world then
-					gritem := current_figure
-					if gritem /= Void and then gritem /= world and then gritem.is_show_requested then
-						l_bbox := gritem.bounding_box
-						if x >= l_bbox.left and then x <= l_bbox.right and then y >= l_bbox.top and then y <= l_bbox.bottom then
-								-- The mouse pointer is definitely inside the model so we find the correct figure.
-							if gritem.position_on_figure (x, y) then
-								Result := gritem
-								closed_figure ?= Result
-								if closed_figure /= Void and then closed_figure.background_color = Void and then attached closed_figure.group as l_group then
-									-- is a not closed_figure under it?
-									Result := figure_on_position (l_group, x, y)
-								end
-							elseif attached {EV_MODEL_GROUP} gritem as grp then
-								Result := figure_on_position (grp, x, y)
+				from
+					i := group.count
+				until
+					Result /= Void or else i < 1
+				loop
+					if group [i].is_sensitive then
+						if group [i].position_on_figure (x, y) then
+							Result := group [i]
+						elseif attached {EV_MODEL_GROUP} group [i] as grp then
+							Result := figure_on_position (grp, x, y)
+						end
+						if attached {EV_MODEL_CLOSED} Result as closed_figure and then closed_figure.background_color = Void then
+							-- is a not closed_figure under it?
+							Result := Void
+							if found_closed_figure = Void then
+								-- if not take the first closed_figure found.
+								found_closed_figure := closed_figure
 							end
 						end
 					end
+					i := i - 1
 				end
-
-				if Result = Void then
-					from
-						group.finish
-						i := group.count
-					until
-						Result /= Void or else i < 1
-					loop
-						gritem := group.i_th (i)
-						l_bbox := gritem.bounding_box
-						if x >= l_bbox.left and then x <= l_bbox.right and then y >= l_bbox.top and then y <= l_bbox.bottom then
-								-- The mouse pointer is definitely inside the model so we find the correct figure.
-							if gritem.position_on_figure (x, y) then
-								Result := gritem
-							elseif attached {EV_MODEL_GROUP} gritem as grp then
-								Result := figure_on_position (grp, x, y)
-							end
-							if Result /= Void then
-								closed_figure ?= Result
-								if closed_figure /= Void and then closed_figure.background_color = Void then
-									-- is a not closed_figure under it?
-									Result := Void
-									if found_closed_figure = Void then
-										-- if not take the first closed_figure found.
-										found_closed_figure := closed_figure
-									end
-								end
-							end
-						end
-						i := i - 1
-					end
-					if Result = Void and then found_closed_figure /= Void then
-						Result := found_closed_figure
-					end
+				if Result = Void and then found_closed_figure /= Void then
+					Result := found_closed_figure
 				end
 			end
 		end

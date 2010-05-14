@@ -61,10 +61,10 @@ feature -- Access
 			-- Display visual representation of  grid?
 			-- Default: True.
 
-	default_grid_x: INTEGER = 20
+	default_grid_x: INTEGER = 10
 			-- Default horizontal step of grid.
 
-	default_grid_y: INTEGER = 20
+	default_grid_y: INTEGER = 10
 			-- Default vertical step of grid.
 
 	grid_x: INTEGER
@@ -84,28 +84,21 @@ feature -- Access
 	x_to_grid (a_x: INTEGER): INTEGER
 			-- Nearest point on grid to `a_x'.
 		local
-			offset, half_grid, grid: INTEGER
+			half_grid, grid: INTEGER
 		do
 			grid := grid_x
-			if is_center_valid then
-				offset := center.x \\ grid
-			end
-
 			half_grid := grid // 2
-			Result := ((a_x + half_grid - offset) // grid) * grid + offset
+			Result := ((a_x + half_grid) // grid) * grid
 		end
 
 	y_to_grid (a_y: INTEGER): INTEGER
 			-- Nearest point on grid to absolute `a_y'.
 		local
-			offset, half_grid, grid: INTEGER
+			half_grid, grid: INTEGER
 		do
 			grid := grid_y
-			if is_center_valid then
-				offset := center.y \\ grid
-			end
 			half_grid := grid // 2
-			Result := ((a_y + half_grid - offset) // grid) * grid + offset
+			Result := ((a_y + half_grid) // grid) * grid
 		end
 
 feature -- Status report

@@ -1996,8 +1996,8 @@ feature {EB_SHOW_LEGEND_COMMAND} -- Implementation
 
 feature -- Implementation
 
-	default_bon_horizontal_spacing: INTEGER = 80
-	default_bon_vertical_spacing: INTEGER = 80
+	default_bon_horizontal_spacing: INTEGER = 120
+	default_bon_vertical_spacing: INTEGER = 60
 	default_uml_horizontal_spacing: INTEGER = 150
 	default_uml_vertical_spacing: INTEGER = 150
 		-- Default spacings used to layout generated figures.

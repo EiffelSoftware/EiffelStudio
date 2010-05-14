@@ -231,8 +231,7 @@ feature {EB_CONTEXT_DIAGRAM_COMMAND} -- Implementation
 			ci: CLASS_I
 		do
 			if depth > 0 and then a_class.is_compiled then
-					--| FIXME IEK Add non-conforming parents when support is added in the diagram tool.
-				l := a_class.compiled_class.conforming_parents
+				l := a_class.compiled_class.parents
 				if l /= Void then
 					from
 						l.start
@@ -257,8 +256,7 @@ feature {EB_CONTEXT_DIAGRAM_COMMAND} -- Implementation
 			l_status_bar: EB_DEVELOPMENT_WINDOW_STATUS_BAR
 		do
 			if depth > 0 and then a_class.is_compiled then
-				l := a_class.compiled_class.conforming_parents
-					--| FIXME IEK Add non-conforming inheritance support when added to diagram tool.
+				l := a_class.compiled_class.parents
 				if l /= Void then
 					from
 						if progress_bar then
@@ -328,8 +326,7 @@ feature {EB_CONTEXT_DIAGRAM_COMMAND} -- Implementation
 					i > nb
 				loop
 					ci := l.i_th (i).original_class
-						--| FIXME IEK For now we have to check that the class is conforming by checking against 'conforming_parents'.
-					if not ci.group.is_physical_assembly and then a_class.compiled_class.conforming_parents_classes.has (ci.compiled_class) then
+					if not ci.group.is_physical_assembly then
 						add_class (ci)
 						explore_descendants (ci, depth - 1, progress_bar)
 						if progress_bar then
@@ -756,7 +753,7 @@ invariant
 	center_class_Void_implies_empty: center_class = Void implies is_empty
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -769,22 +766,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class ES_CLASS_GRAPH

@@ -414,6 +414,7 @@ feature -- Genericity
 			table_name: STRING
 			rout_info: ROUT_INFO
 			l_type: TYPE_A
+			is_optimized: BOOLEAN
 		do
 			if context.final_mode then
 				table := Eiffel_table.poly_table (routine_id)
@@ -424,66 +425,29 @@ feature -- Genericity
 						-- Create anything - cannot be called anyway
 					dummy := idx_cnt.next
 					dummy := idx_cnt.next
+					is_optimized := True
 				elseif table.has_one_type then
 					l_type := table.first.type.deep_actual_type
-
-					if l_type.has_generics or l_type.is_formal then
+					if l_type.has_generics or else l_type.is_formal then
 						l_type.generate_cid_init (buffer, final_mode, False, idx_cnt, context.context_class_type.type, a_level)
 					else
 						dummy := idx_cnt.next
 					end
-				else
-						-- Attribute is polymorphic
-					table_name := Encoder.type_table_name (routine_id)
-						-- Side effect. This is not nice but
-						-- unavoidable.
-						-- Mark routine id used
-					Eiffel_table.mark_used_for_type (routine_id)
-						-- Remember extern declaration
-					Extern_declarations.add_type_table (table_name)
-					buffer.put_new_line
-					buffer.put_string ("typarr")
-					buffer.put_natural_32 (a_level)
-					buffer.put_character ('[')
-					buffer.put_integer (idx_cnt.value)
-					buffer.put_string ("] = eif_final_id(")
-					buffer.put_string (table_name)
-					buffer.put_character (',')
-					buffer.put_string (table_name)
-					buffer.put_string ("_gen_type")
-					buffer.put_character (',')
-					qualifier_creation.generate_type_id (buffer, final_mode, a_level + 1)
-					buffer.put_character (',')
-					buffer.put_type_id (table.min_type_id)
-					buffer.put_string (");")
-					dummy := idx_cnt.next
+					is_optimized := True
 				end
-			else
+			end
+			if not is_optimized then
+				generate_start (buffer)
+				generate_gen_type_conversion (a_level + 1)
 				buffer.put_new_line
 				buffer.put_string ("typarr")
 				buffer.put_natural_32 (a_level)
 				buffer.put_character ('[')
 				buffer.put_integer (idx_cnt.value)
-				if
-					Compilation_modes.is_precompiling or
-					qualifier.associated_class.is_precompiled
-				then
-					buffer.put_string ("] = RTWPCTT(")
-					buffer.put_static_type_id (qualifier.static_type_id (context.context_class_type.type))
-					buffer.put_string ({C_CONST}.comma_space)
-					rout_info := System.rout_info_table.item (routine_id)
-					buffer.put_class_id (rout_info.origin)
-					buffer.put_string ({C_CONST}.comma_space)
-					buffer.put_integer (rout_info.offset)
-				else
-					buffer.put_string ("] = RTWCTT(")
-					buffer.put_static_type_id (qualifier.static_type_id (context.context_class_type.type))
-					buffer.put_string ({C_CONST}.comma_space)
-					buffer.put_integer (feature_id)
-				end
-				buffer.put_string ({C_CONST}.comma_space)
-				qualifier_creation.generate_type_id (buffer, final_mode, a_level + 1)
-				buffer.put_two_character (')', ';')
+				buffer.put_string ("] = ")
+				generate_type_id (buffer, final_mode, a_level + 1)
+				buffer.put_character (';')
+				generate_end (buffer)
 				dummy := idx_cnt.next
 			end
 		end

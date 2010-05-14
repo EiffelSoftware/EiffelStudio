@@ -196,19 +196,18 @@ feature -- Element change
 			-- Node of `a_class'
 		local
 			l_linkables: like linkables
-			l_node: like node_type
+			i: INTEGER
 		do
-			l_linkables := sub_nodes
+			l_linkables := linkables
 			from
-				linkables.start
+				i := l_linkables.count
 			until
-				linkables.after or Result /= Void
+				i = 0 or Result /= Void
 			loop
-				l_node ?= linkables.item
-				if l_node /= Void and then l_node.class_i = a_class then
+				if attached {like node_type} l_linkables [i] as l_node and then l_node.class_i = a_class then
 					Result := l_node
 				end
-				linkables.forth
+				i := i - 1
 			end
 		end
 
@@ -216,19 +215,18 @@ feature -- Element change
 			--
 		local
 			l_linkables: like linkables
-			l_cluster: ES_CLUSTER
+			i: INTEGER
 		do
-			l_linkables := sub_nodes
+			l_linkables := linkables
 			from
-				linkables.start
+				i := l_linkables.count
 			until
-				linkables.after or Result /= Void
+				i = 0 or Result /= Void
 			loop
-				l_cluster ?= linkables.item
-				if l_cluster /= Void and then l_cluster.group = a_cluster then
+				if attached {like Current} l_linkables [i] as l_cluster and then l_cluster.group = a_cluster then
 					Result := l_cluster
 				end
-				linkables.forth
+				i := i - 1
 			end
 		end
 
@@ -241,7 +239,7 @@ invariant
 	identifier_not_void: group_id /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -254,22 +252,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class ES_CLUSTER

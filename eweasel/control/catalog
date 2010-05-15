@@ -2360,6 +2360,7 @@ test	qat-creation-with-like-current		anchor006 tcf pass anchored_type creation e
 test	qat-creation-with-generic		anchor007 tcf pass anchored_type creation execution formal generic
 test	qat-multi-formal-conformance		anchor008 tcf pass anchored_type multiconstraint formal generic conformance validity
 test	qat-crash-in-local				anchor009 tcf pass anchored_type
+test	qat-crash-in-local-2			anchor010 tcf pass anchored_type
 
 -- .NET specific test
 if DOTNET test expanded-object-conversion	dotnet001	tcf pass dotnet

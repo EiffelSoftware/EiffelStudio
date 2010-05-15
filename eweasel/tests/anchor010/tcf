@@ -1,0 +1,12 @@
+test_name 	 qat-crash-in-local-2
+test_description Using a qat in a local declaration causes the compiler to crash.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	consumer.e $CLUSTER consumer.e
+copy_raw	character_set.e $CLUSTER character_set.e
+
+compile_melted
+compile_result	ok
+
+test_end

@@ -411,8 +411,6 @@ feature -- Genericity
 		local
 			dummy: INTEGER
 			table: POLY_TABLE [ENTRY]
-			table_name: STRING
-			rout_info: ROUT_INFO
 			l_type: TYPE_A
 			is_optimized: BOOLEAN
 		do

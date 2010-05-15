@@ -88,7 +88,6 @@ feature  -- Agents
 			l_auto_hide_zone: detachable SD_AUTO_HIDE_ZONE
 			l_zones: ARRAYED_LIST [SD_ZONE]
 			l_content: detachable SD_CONTENT
-			l_during_pnd: BOOLEAN
 			l_setter: SD_SYSTEM_SETTER
 		do
 			create {SD_SYSTEM_SETTER_IMP} l_setter

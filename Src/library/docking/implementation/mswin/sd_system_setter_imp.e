@@ -51,12 +51,9 @@ feature -- Command
 
 	is_during_pnd: BOOLEAN
 			-- <Precursor>
-		local
-			l_env: EV_ENVIRONMENT
 		do
-			create l_env
-			if attached {EV_APPLICATION_IMP} l_env.application.implementation as l_imp then
-				Result := attached l_imp.pick_and_drop_source
+			if attached {EV_APPLICATION_IMP} ev_application.implementation as l_app_imp then
+				Result := attached l_app_imp.pick_and_drop_source
 			end
 		end
 

@@ -332,7 +332,7 @@ feature {EV_ANY_HANDLER, EV_WEL_CONTROL_CONTAINER_IMP, EV_WIDGET_IMP, WEL_ANY} -
 			Result := dll.exists
 		end
 
-feature {EV_ANY_I, EV_PICK_AND_DROPABLE_IMP, EV_INTERNAL_COMBO_FIELD_IMP} -- Status Report
+feature {EV_ANY_I, EV_ANY_HANDLER, EV_PICK_AND_DROPABLE_IMP, EV_INTERNAL_COMBO_FIELD_IMP} -- Status Report
 
 	pick_and_drop_source: detachable EV_PICK_AND_DROPABLE_IMP
 		-- The current pick and drop source.

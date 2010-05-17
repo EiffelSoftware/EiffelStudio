@@ -27,7 +27,7 @@ inherit
 create
 	make
 
-feature -- Initialization and reinitialization
+feature {NONE} -- Initialization and reinitialization
 
 	make (q: like qualifier; c: like chain; w: like class_id)
 			-- Cr
@@ -114,6 +114,18 @@ feature -- Access
 				end
 				i := i + 1
 			end
+		end
+
+feature -- Modification
+
+	set_qualifier (q: like qualifier)
+			-- Set `qualifier' to `q'.
+		require
+			q_attached: attached q
+		do
+			qualifier := q
+		ensure
+			qualifier_set: qualifier = q
 		end
 
 feature -- Generic conformance

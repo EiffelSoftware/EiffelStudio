@@ -262,7 +262,7 @@ feature {NONE} -- Implementation
 			glab: EV_GRID_LABEL_ITEM
 			r: INTEGER
 		do
-			if cse /= Void and then cse.has_result then
+			if cse /= Void and then cse.has_result and then not cse.is_attribute then
 				glab := parent_grid.folder_label_item (Interface_names.l_result)
 				parent_grid.grid_cell_set_pixmap (glab, pixmaps.icon_pixmaps.folder_features_all_icon)
 				row.set_item (1, glab)

@@ -227,7 +227,7 @@ feature {EIFFEL_CALL_STACK} -- Implementation
 
 feature {NONE} -- Implementation
 
-	retrieved_locals_and_arguments: TUPLE [args: ARRAY [ABSTRACT_DEBUG_VALUE]; locals: ARRAY [ABSTRACT_DEBUG_VALUE]]
+	retrieved_locals_and_arguments: TUPLE [args: detachable ARRAY [ABSTRACT_DEBUG_VALUE]; locals: detachable ARRAY [ABSTRACT_DEBUG_VALUE]]
 		local
 			l_values: ARRAYED_LIST [ABSTRACT_DEBUG_VALUE]
 			l_args, l_locals: ARRAY [ABSTRACT_DEBUG_VALUE]
@@ -318,6 +318,8 @@ feature {NONE} -- Implementation
 			end
 
 			Result := [l_args, l_locals]
+		ensure
+			result_attached: Result /= Void
 		end
 
 	initialize_stack
@@ -356,9 +358,11 @@ feature {NONE} -- Implementation
 					l_locals := <<l_error_mesg>>
 				else
 					if not is_exhausted then
-						args_locs_info := retrieved_locals_and_arguments -- get the values into `args_locs_info'
-						l_args := args_locs_info.args
-						l_locals := args_locs_info.locals
+						if rout_i /= Void and then not rout_i.is_attribute then
+							args_locs_info := retrieved_locals_and_arguments -- get the values into `args_locs_info'							
+							l_args := args_locs_info.args
+							l_locals := args_locs_info.locals
+						end
 						if l_args /= Void then
 							set_hector_addr (l_args)
 						end

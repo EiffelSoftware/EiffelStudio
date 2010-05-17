@@ -73,6 +73,15 @@ feature -- Properties
 		deferred
 		end
 
+	is_attribute: BOOLEAN
+			-- Does the related routine is an attribute?
+		local
+			r: like routine
+		do
+			r := routine
+			Result := r /= Void and then r.is_attribute
+		end
+
 	has_result: BOOLEAN
 			-- Does this routine has a Result ?
 			-- ie: function or once

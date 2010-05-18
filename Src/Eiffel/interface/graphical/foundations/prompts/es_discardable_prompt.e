@@ -65,10 +65,10 @@ feature {NONE} -- Initialization
 			auto_recycle (a_setting)
 			make_prompt (a_text, a_buttons, a_default, a_default_confirm, a_default_cancel)
 		ensure
-			text_set: format_text (a_text).is_equal (text)
+			text_set: format_text (a_text).same_string_general (text)
 			default_button_set: default_button = a_default
 			buttons_set: buttons = a_buttons
-			discard_message_set: a_discard_message.is_equal (discard_message)
+			discard_message_set: a_discard_message.same_string_general (discard_message)
 			setting_set: setting = a_setting
 		end
 
@@ -86,10 +86,10 @@ feature {NONE} -- Initialization
 		do
 			make (a_text, standard_buttons, standard_default_button, standard_default_confirm_button, standard_default_cancel_button, a_discard_message, a_setting)
 		ensure
-			text_set: format_text (a_text).is_equal (text)
+			text_set: format_text (a_text).same_string_general (text)
 			default_button_set: default_button = standard_default_button
 			buttons_set: buttons = standard_buttons
-			discard_message_set: a_discard_message.is_equal (discard_message)
+			discard_message_set: a_discard_message.same_string_general (discard_message)
 			setting_set: setting = a_setting
 		end
 
@@ -110,7 +110,9 @@ feature {NONE} -- User interface initialization
 			l_message := interface_names.l_do_not_show_again.twin
 			if not l_message.is_empty and not discard_message.is_empty then
 				l_message.prune_all_trailing ('.')
-				l_message.append ((" (").as_string_32 + discard_message + ")")
+				l_message.append_string_general (" (")
+				l_message.append (discard_message)
+				l_message.append_string_general (")")
 			end
 			if not l_message.is_empty then
 				create discard_check.make_with_text (l_message)
@@ -238,11 +240,18 @@ feature -- Basic operations
 
 feature {NONE} -- Basic operations
 
-	surpress_future_dialogs
+	discard_future_dialogs
 			-- Sets all the information necessary to discard the dialog in the future
 			-- and use the default settings
 		do
 			setting.set_value (False)
+			setting.commit
+		end
+
+	undiscard_future_dialogs
+			-- Use the default settings
+		do
+			setting.set_value (True)
 			setting.commit
 		end
 
@@ -259,7 +268,9 @@ feature {NONE} -- Action handlers
 			if not is_shown and is_discard_requested and dialog_result = discard_button then
 					-- Set discarded state and perform any other operations.
 					-- Note: only called when dialog is closed using the set discard button
-				surpress_future_dialogs
+				discard_future_dialogs
+			else
+				undiscard_future_dialogs
 			end
 		end
 
@@ -271,7 +282,7 @@ invariant
 	buttons_contains_discard_button: buttons.has (discard_button)
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

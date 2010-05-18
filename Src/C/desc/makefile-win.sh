@@ -6,7 +6,7 @@ RSC= $rc
 ALL : ise_desc.dll 
 
 MTL_PROJ=-nologo -win32 
-CPP_PROJ=-nologo -ML -W3 -GX -O2 -I.. -DWIN32 -D_WINDOWS -D-P -c 
+CPP_PROJ=-nologo -W3 -EHsc -O2 -I.. -DWIN32 -D_WINDOWS -D-P -c 
 
 LINK32=link.exe
 LINK32_FLAGS= kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib	\

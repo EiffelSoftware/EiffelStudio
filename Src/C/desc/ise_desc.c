@@ -53,14 +53,14 @@
 	for (i = ArgCount-1; i >= 0; i--) \
 			{ \
 			j = ArgValues [i];      \
-			__asm   push j  \
+			_asm   push j  \
 			}
 
 #define POP_ALL \
-	__asm add esp, ArgCount \
-	__asm add esp, ArgCount \
-	__asm add esp, ArgCount \
-	__asm add esp, ArgCount         
+	_asm add esp, ArgCount \
+	_asm add esp, ArgCount \
+	_asm add esp, ArgCount \
+	_asm add esp, ArgCount         
 
 __declspec(dllexport) BOOL desc_call_dll32_boolean
 (

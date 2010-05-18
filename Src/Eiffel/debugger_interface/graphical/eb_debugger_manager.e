@@ -2479,7 +2479,7 @@ feature {NONE} -- Implementation
 	enable_ignore_contract_violation_if_possible
 			-- Enable/disable ignore contract violation command base on debuggee statues
 		local
-			l_exception_type, l_short_description: STRING
+			l_exception_type: STRING
 			l_confirm: ES_DISCARDABLE_WARNING_PROMPT
 			l_buttons: ES_DIALOG_BUTTONS
 		do
@@ -2488,7 +2488,6 @@ feature {NONE} -- Implementation
 					-- Dotnet mode
 					-- Have to update exception info with following two lines. Otherwise the value is void
 					l_status.update_on_stopped_state
-					l_short_description := application_status.exception.short_description
 				end
 				l_exception_type := application_status.exception_type_name
 
@@ -2503,12 +2502,18 @@ feature {NONE} -- Implementation
 					ignore_contract_violation.enable_sensitive
 
 					-- Display ignore contract violation dialog
-					if dialog_data.confirm_ignore_contract_violation then
-						create l_buttons
-						create l_confirm.make (ignore_contract_violation.description, l_buttons.yes_no_buttons, l_buttons.no_button, l_buttons.no_button, l_buttons.no_button, interface_names.l_Discard_ignore_contract_violation_dialog, create {ES_BOOLEAN_PREFERENCE_SETTING}.make (dialog_data.confirm_ignore_contract_violation_preference, True))
-						l_confirm.set_button_action (l_confirm.dialog_buttons.yes_button, agent ignore_contract_violation.execute)
-						l_confirm.show_on_active_window
-					end
+					create l_buttons
+					create l_confirm.make (ignore_contract_violation.description, l_buttons.yes_no_cancel_buttons,
+							l_buttons.yes_button, l_buttons.yes_button, l_buttons.yes_button,
+							interface_names.l_Discard_ignore_contract_violation_dialog,
+							create {ES_BOOLEAN_PREFERENCE_SETTING}.make (dialog_data.confirm_ignore_contract_violation_preference, True)
+						)
+					l_confirm.set_button_text (l_buttons.yes_button, "Break")
+					l_confirm.set_button_text (l_buttons.no_button, "Continue")
+					l_confirm.set_button_text (l_buttons.cancel_button, "Ignore")
+					l_confirm.set_button_action (l_confirm.dialog_buttons.no_button, agent debug_run_cmd.execute)
+					l_confirm.set_button_action (l_confirm.dialog_buttons.cancel_button, agent ignore_contract_violation.execute)
+					l_confirm.show_on_active_window
 				else
 					ignore_contract_violation.disable_sensitive
 				end

@@ -106,11 +106,13 @@ feature -- For DATABASE_FORMAT
 			end
 		end
 
-	True_representation: STRING = "'Y'"
+	True_representation: STRING = "1"
 			-- String representation in MySQL for the boolean 'true' value
+			--| Boolean types are actually tinyint(1) or bit(1) so we need 1 here
 
-	False_representation: STRING = "'N'"
+	False_representation: STRING = "0"
 			-- String representation in MySQL for the boolean 'false' value
+			--| Boolean types are actually tinyint(1) or bit(1) so we need 0 here
 
 feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 
@@ -204,13 +206,16 @@ feature -- For database types
 			if field_name.is_equal ("data_type") then
 				if class_name.is_equal (("").generator) then
 					create data_type
-					if r_any.is_equal ("varchar") then
+					if r_any.is_equal ("varchar") or else r_any.is_equal ("char") then
 						data_type.set_item (c_string_type)
 					elseif r_any.is_equal ("double") then
 						data_type.set_item (c_float_type)
-					elseif r_any.is_equal ("int") then
+					elseif
+						r_any.is_equal ("int") or else r_any.is_equal ("bit") or else
+						r_any.is_equal ("tinyint")
+					then
 						data_type.set_item (c_integer_type)
-					elseif r_any.is_equal ("datetime") then
+					elseif r_any.is_equal ("datetime") or else r_any.is_equal ("date") then
 						data_type.set_item (c_date_type)
 					else
 						io.error.putstring ("Unknown data type '")
@@ -347,7 +352,6 @@ feature -- External features
 		local
 			l_db_result: POINTER
 			l_c_string: C_STRING
-			l_descriptor: STRING
 		do
 			if attached descriptors.item (no_descriptor) as l_descriptor then
 				create l_c_string.make (l_descriptor)

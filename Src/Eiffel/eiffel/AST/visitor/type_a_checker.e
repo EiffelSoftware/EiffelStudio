@@ -505,15 +505,7 @@ feature {TYPE_A} -- Visitors
 	process_formal_a (a_type: FORMAL_A)
 			-- Process `a_type'.
 		do
-			if last_type = current_actual_type then
-					-- Formal is evaluated relative to current class.
-				last_type := a_type
-			else
-					-- Formal is evaluated relative to other class.
-				check attached last_type.generics as g then
-					last_type := g [a_type.position].to_other_attachment (a_type)
-				end
-			end
+			last_type := a_type
 		end
 
 	process_gen_type_a (a_type: GEN_TYPE_A)
@@ -564,7 +556,7 @@ feature {TYPE_A} -- Visitors
 	process_like_current (a_type: LIKE_CURRENT)
 			-- Process `a_type'.
 		do
-			a_type.set_actual_type (last_type.conformance_type)
+			a_type.set_actual_type (current_actual_type)
 			last_type := a_type
 		end
 
@@ -786,20 +778,15 @@ feature {TYPE_A} -- Visitors
 	process_unevaluated_qualified_anchored_type (t: UNEVALUATED_QUALIFIED_ANCHORED_TYPE)
 			-- Process `t'.
 		local
-			q: TYPE_A
 			r: QUALIFIED_ANCHORED_TYPE_A
 		do
-			t.qualifier.process (Current)
-			q := last_type
-			if attached q then
-				create r.make (q, t.chain, current_class.class_id)
-				if t.has_attached_mark then
-					r.set_attached_mark
-				elseif t.has_detachable_mark then
-					r.set_detachable_mark
-				end
-				update_qualified_anchored_type (r)
+			create r.make (t.qualifier, t.chain, current_class.class_id)
+			if t.has_attached_mark then
+				r.set_attached_mark
+			elseif t.has_detachable_mark then
+				r.set_detachable_mark
 			end
+			update_qualified_anchored_type (r)
 		end
 
 	process_void_a (a_type: VOID_A)
@@ -869,40 +856,45 @@ feature {NONE} -- Implementation
 			i: INTEGER
 		do
 			t.qualifier.process (Current)
-			from
-				q := last_type
-					-- Register intermediate type with instantiator.
-				instantiator.dispatch (q, current_class)
-			until
-				not attached q or else i >= t.chain.count
-			loop
-				q := q.actual_type
-				if
-					attached q.associated_class as c and then
-					attached c.feature_table.item_id (t.chain [i]) as f
-				then
-					process_anchor (f, t)
-					q := last_type
-					if attached q then
-							-- Record supplier for recompilation.
-						degree_4.add_qualified_supplier (f, c, current_class)
-							-- Register intermediate type with instantiator.
-						instantiator.dispatch (q, current_class)
-					end
-				elseif has_error_reporting then
-					create l_veen
-					l_veen.set_class (current_class)
-					l_veen.set_feature (current_feature)
-					l_veen.set_identifier (system.names.item (t.chain [i]))
-					error_handler.insert_error (l_veen)
-				end
-				i := i + 1
-			end
+			q := last_type
 			if attached q then
-				t.set_actual_type (q.actual_type)
-				last_type := t
-			else
-				last_type := Void
+				t.set_qualifier (q)
+				from
+						-- Register intermediate type with instantiator.
+					instantiator.dispatch (q, current_class)
+				until
+					not attached q or else i >= t.chain.count
+				loop
+					q := q.actual_type
+					if
+						attached q.associated_class as c and then
+						attached c.feature_table.item_id (t.chain [i]) as f
+					then
+						process_anchor (f, t)
+						q := last_type
+						if attached q then
+								-- Record supplier for recompilation.
+							degree_4.add_qualified_supplier (f, c, current_class)
+								-- Register intermediate type with instantiator.
+							instantiator.dispatch (q, current_class)
+						end
+					elseif has_error_reporting then
+						create l_veen
+						l_veen.set_class (current_class)
+						l_veen.set_feature (current_feature)
+						l_veen.set_identifier (system.names.item (t.chain [i]))
+						error_handler.insert_error (l_veen)
+							-- Stop processing of the chain.
+						q := Void
+					end
+					i := i + 1
+				end
+				if attached q then
+					t.set_actual_type (q.actual_type)
+					last_type := t
+				else
+					last_type := Void
+				end
 			end
 		ensure
 			last_type_set: last_type = Void or else last_type = t
@@ -917,6 +909,7 @@ feature {NONE} -- Implementation
 			l_rout_id: INTEGER_32
 			l_like_control: like like_control
 			l_vtat1: VTAT1
+			r: TYPE_A
 		do
 			l_like_control := like_control
 			l_rout_id := f.rout_id_set.first
@@ -932,7 +925,13 @@ feature {NONE} -- Implementation
 			else
 				l_like_control.put_routine_id (l_rout_id)
 					-- Process type referenced by anchor.
-				f.type.process (Current)
+				if last_type = current_actual_type then
+					r := f.type
+				else
+					r := f.type.instantiated_in (last_type)
+				end
+				reset_for_unqualified_type
+				r.process (Current)
 					-- Update anchored type controler
 				l_like_control.remove_routine_id
 				if not attached last_type as a then

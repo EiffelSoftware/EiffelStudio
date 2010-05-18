@@ -358,7 +358,7 @@ feature {NONE} -- Implementation
 					l_locals := <<l_error_mesg>>
 				else
 					if not is_exhausted then
-						if rout_i /= Void and then not rout_i.is_attribute then
+						if attached routine as r and then not r.is_attribute then
 							args_locs_info := retrieved_locals_and_arguments -- get the values into `args_locs_info'							
 							l_args := args_locs_info.args
 							l_locals := args_locs_info.locals

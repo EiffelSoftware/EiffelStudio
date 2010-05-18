@@ -1648,11 +1648,17 @@ rt_public void file_chmod(char *path, int mode)
 rt_public EIF_INTEGER file_tell(FILE *f)
 {
 	/* Current position within file */
+	long res;
 
-	if (f == (FILE *) 0)
+	if (f == (FILE *) 0) {
 		eraise("invalid file pointer", EN_EXT);
+	}
 	
-	return (EIF_INTEGER) ftell(f);
+	res = ftell(f);
+	if (res == -1) {
+		eraise("error occurred", EN_EXT);
+	}
+	return (EIF_INTEGER) res;
 }
 
 rt_public void file_go(FILE *f, EIF_INTEGER pos)
@@ -1778,10 +1784,16 @@ rt_public EIF_INTEGER file_fd(FILE *f)
 {
 	/* Return the associated file descriptor */
 
+	int res;
+
 	if (f == (FILE *) 0)
 		eraise("invalid file pointer", EN_EXT);
 
-	return (EIF_INTEGER) fileno(f);	/* Might be an int */
+	res = fileno(f);
+	if (res == -1) {
+		eraise("error occurred", EN_EXT);
+	}
+	return (EIF_INTEGER) res;	/* Might be an int */
 }
 
 rt_public EIF_REFERENCE file_owner(int uid)

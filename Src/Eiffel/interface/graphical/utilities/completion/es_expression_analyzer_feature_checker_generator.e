@@ -55,7 +55,6 @@ feature -- Basic operations
 		local
 			l_local: LOCAL_INFO
 			l_id: INTEGER
-			l_key: STRING
 		do
 			create l_local
 			l_local.set_position (context.locals.count + 1)

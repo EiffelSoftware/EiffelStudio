@@ -97,7 +97,7 @@ feature -- Veto function
 
 feature {NONE} -- Action handlers
 
-	on_drop (a_stone: detachable STONE)
+	on_drop (a_stone: STONE)
 			-- Drops the stone.
 			--
 			-- `a_stone': The dropped stone.
@@ -117,46 +117,91 @@ feature {NONE} -- Action handlers
 
 feature {NONE} -- Redirects
 
-	drop_class (a_stone: attached CLASSI_STONE)
+	drop_class (a_stone: CLASSI_STONE)
 			-- Redirects a class stone.
 			--
 			-- `a_stone': Stone to redirect the drop actions to.
 		require
 			is_interface_usable: is_interface_usable
+			a_stone_is_valid: a_stone /= Void and then a_stone.is_valid
+		local
+			l_result: BOOLEAN
+		do
+			-- Note: need adding codes for new tools here
+			-- Or we can adding features like `try_find_es_tool_under_pointer', but have to loop all tools to find
+			-- out the ES_TOOL which is not efficient
+			l_result := try_drop_class (a_stone, development_window.shell_tools.tool ({ES_CLASS_TOOL}))
+			if not l_result then
+				l_result := try_drop_class (a_stone, development_window.shell_tools.tool ({ES_DEPENDENCY_TOOL}))
+			end
+		end
+
+	try_drop_class (a_stone: CLASSI_STONE; a_tool: ES_TOOL [EB_TOOL]): BOOLEAN
+			-- Try drop `a_stone' onto `a_tool' if possible
+			-- Result True means dropping stone succeeded
+		require
+			not_void: a_stone /= Void
+			is_interface_usable: is_interface_usable
 			a_stone_is_valid: a_stone.is_valid
 		local
-			l_class_tool: ES_CLASS_TOOL
+			l_env: EV_ENVIRONMENT
+			l_screen: EV_SCREEN
+			l_tool_widget: EV_WIDGET
 		do
-			l_class_tool ?= development_window.shell_tools.tool ({ES_CLASS_TOOL})
-			if l_class_tool /= Void and then l_class_tool.is_interface_usable then
-				if attached {ES_STONABLE_I} l_class_tool as l_stonable then
-					check
-						refactored: False -- Remove check and remove OT else condition.
-					end
-					if l_stonable.is_stone_usable (a_stone) then
-						l_stonable.set_stone_with_query (a_stone)
-						l_class_tool.show (True)
+			if a_tool /= Void and then a_tool.is_interface_usable then
+				create l_screen
+
+				if
+					a_tool.is_tool_instantiated and
+					attached l_screen.widget_at_mouse_pointer as l_widget
+				then
+					-- Now we check if `a_tool' is under mouse pointer now
+					l_tool_widget := a_tool.panel.widget
+					if
+						(l_tool_widget = l_widget) or else
+						(	-- Cannot use {EV_CONTAINER}.has_recursive here because of ES_EDITOR_TOKEN_GRID
+							-- Details please check bug#16737
+							attached {EV_CONTAINER} l_tool_widget as l_container and then
+							is_parent_recursive (l_widget, l_container)
+						)
+					then
+
+						if attached {ES_STONABLE_I} a_tool as l_stonable then
+							check
+								refactored: False -- Remove check and remove OT else condition.
+							end
+							if l_stonable.is_stone_usable (a_stone) then
+								l_stonable.set_stone_with_query (a_stone)
+								a_tool.show (True)
+								Result := True
+							end
+						else
+								-- Tool has not been converted yet!
+							if attached {EB_STONABLE_TOOL} a_tool.panel as l_stonable_tool then
+								l_stonable_tool.set_stone (a_stone)
+								a_tool.show (True)
+								Result := True
+							end
+						end
 					end
 				else
-						-- Tool has not been converted yet!
-					l_class_tool.panel.set_stone (a_stone)
-					l_class_tool.show (True)
+					-- Drop action without a mouse? You are debugging workbench EiffelStudio, or...?
 				end
 			end
 		end
 
-	drop_feature (a_stone: attached FEATURE_STONE)
+	drop_feature (a_stone: FEATURE_STONE)
 			-- Redirects a feature stone.
 			--
 			-- `a_stone': Stone to redirect the drop actions to.
 		require
 			is_interface_usable: is_interface_usable
-			a_stone_is_valid: a_stone.is_valid
-		local
-			l_feature_tool: ES_FEATURE_RELATION_TOOL
+			a_stone_is_valid: a_stone /= Void and then a_stone.is_valid
 		do
-			l_feature_tool ?= development_window.shell_tools.tool ({ES_FEATURE_RELATION_TOOL})
-			if l_feature_tool /= Void and then l_feature_tool.is_interface_usable then
+			if
+				attached {ES_FEATURE_RELATION_TOOL} development_window.shell_tools.tool ({ES_FEATURE_RELATION_TOOL}) as l_feature_tool and then
+				l_feature_tool.is_interface_usable
+			then
 				if attached {ES_STONABLE_I} l_feature_tool as l_stonable then
 					check
 						refactored: False -- Remove check and remove OT else condition.
@@ -173,15 +218,32 @@ feature {NONE} -- Redirects
 			end
 		end
 
-	drop_cluster (a_stone: attached CLUSTER_STONE)
+	drop_cluster (a_stone: CLUSTER_STONE)
 			-- Redirects a cluster stone.
 			--
 			-- `a_stone': Stone to redirect the drop actions to.
 		require
 			is_interface_usable: is_interface_usable
-			a_stone_is_valid: a_stone.is_valid
+			a_stone_is_valid: a_stone /= Void and then a_stone.is_valid
 		do
 			development_window.tools.launch_stone (a_stone)
+		end
+
+	is_parent_recursive (a_child: EV_WIDGET; a_parent: EV_CONTAINER): BOOLEAN
+			-- Sometimes cannot using {EV_CONTAINER}.has_recursive because of SD_MIDDLE_CONTAINER
+			-- So query it reversely
+			-- This feature is checking if `a_parent' is parent of (parent of...) `a_child'
+		require
+			a_child_attached: a_child /= Void
+			a_parent_attached: a_parent /= Void
+		do
+			if attached a_child.parent as l_child_parent then
+				if l_child_parent = a_parent then
+					Result := True
+				else
+					Result := is_parent_recursive (l_child_parent, a_parent)
+				end
+			end
 		end
 
 invariant
@@ -189,7 +251,7 @@ invariant
 	not_development_window_is_recycled: is_interface_usable implies development_window.is_interface_usable
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -144,7 +144,6 @@ feature {NONE} -- Redirects
 			is_interface_usable: is_interface_usable
 			a_stone_is_valid: a_stone.is_valid
 		local
-			l_env: EV_ENVIRONMENT
 			l_screen: EV_SCREEN
 			l_tool_widget: EV_WIDGET
 		do

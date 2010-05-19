@@ -83,10 +83,10 @@ feature {EV_ANY_I} -- Status Setting
 			-- Set `item' insensitive to user actions.
 		do
 			if attached first as l_first then
-				l_first.disable_sensitive
+				l_first.implementation.disable_sensitive
 			end
 			if attached second as l_second then
-				l_second.disable_sensitive
+				l_second.implementation.disable_sensitive
 			end
 			Precursor {EV_CONTAINER_IMP}
 		end

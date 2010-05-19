@@ -1,0 +1,16 @@
+test_name 	 iteration-cursor-two-generics
+test_description Two generics in iteration cursor should not confuse compiler.
+
+copy_raw	description.e $CLUSTER description.e
+copy_raw	readable_description.e $CLUSTER readable_description.e
+copy_raw	readable_normal_simple_list_cursor.e $CLUSTER readable_normal_simple_list_cursor.e
+copy_raw	readable_simple_list.e $CLUSTER readable_simple_list.e
+copy_raw	readable_simple_list_cursor.e $CLUSTER readable_simple_list_cursor.e
+copy_raw	simple_list_cursor.e $CLUSTER simple_list_cursor.e
+copy_raw	test.e $CLUSTER test.e
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result	ok
+
+test_end

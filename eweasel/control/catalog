@@ -77,6 +77,7 @@ test	remove-default-key		table007 tcf pass table
 test	recursive-delete-with-symlinks	directory001 tcf pass directory
 
 test	basic-iterations		iteration001 tcf pass iteration
+test	iteration-cursor-two-generics	iteration002 tcf pass iteration formal generic
 
 -- EiffelNet test
 test	net-out-of-descriptor	net001 tcf pass net

@@ -6928,7 +6928,7 @@ feature {NONE} -- Implementation
 						else
 								-- Evaluate a type of a cursor.
 							iteration_cursor_type := c.actual_type.evaluated_type_in_descendant
-								(i, iteration_cursor_type.associated_class, Void).instantiation_in (iteration_cursor_type, i.class_id)
+								(i, iteration_cursor_type.associated_class, Void).instantiated_in (iteration_cursor_type)
 						end
 						if current_feature.written_in = context.current_class.class_id then
 							Instantiator.dispatch (local_type, context.current_class)

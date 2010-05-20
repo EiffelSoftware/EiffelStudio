@@ -1898,7 +1898,7 @@ feature {NONE} -- Visitors
 				-- There is no feature call:
 			ba.append_boolean (False)
 
-			l_type_type := context.real_type (a_node.type_type)
+			l_type_type := context.descendant_type (a_node.type_type)
 			l_type_creator := l_type_type.create_info
 			l_type_creator.make_byte_code (ba)
 

@@ -840,19 +840,33 @@ static  void    print_instructions (void)
 
 			case BC_CREATE :
 			case BC_CREATE_TYPE:
-				/* Kind of creation */
+				{
+					int is_type_creation = (code == BC_CREATE_TYPE);
 
-					/* Do we need to duplicate top object or is it a BIT type creation? */
-				cval = get_char8(&ip);
+						/* Do we need to duplicate top object or is it a BIT type creation? */
+					cval = get_char8(&ip);
 
-				if (cval == BC_BIT) {
-					fprintf (ofp, " (BC_BIT %d)", get_int32(&ip));
-					break;
-				} else if (cval == (char) 1) {
-					fprintf (ofp," dup_top_object ");
+					if (cval == BC_BIT) {
+						fprintf (ofp, " (BC_BIT %d)", get_int32(&ip));
+						break;
+					} else if (cval == (char) 1) {
+						fprintf (ofp," dup_top_object ");
+					}
+
+					get_creation_type ();
+
+					if (is_type_creation) {
+						if (get_bool(&ip)) {
+								/* Type has an attachment mark */
+							if (get_bool(&ip)) {
+								/* Type is attached. */
+							} else {
+								/* Type is detachable */
+							}
+						} else {
+						}
+					}
 				}
-
-				get_creation_type ();
 				break;
 
 			case BC_SPCREATE:

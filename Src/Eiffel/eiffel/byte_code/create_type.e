@@ -42,7 +42,7 @@ feature -- Update
 			l_type: TYPE_A
 		do
 			l_type := context.descendant_type (type)
-			if l_type /= type and then not l_type.same_as (type) then
+			if l_type /= type then
 				if attached {CREATE_TYPE} l_type.create_info as l_info then
 					Result := l_info
 				else

@@ -24,7 +24,7 @@ feature
 
 			create test2
 			test2.do_something
-			print (test1.f)
+			print (test2.f)
 			print ("%N")
 
 			do_something

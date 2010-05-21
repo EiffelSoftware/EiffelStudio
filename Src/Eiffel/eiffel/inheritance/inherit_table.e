@@ -1361,10 +1361,7 @@ end;
 
 							-- Found a feature of same name and written in the
 							-- same class.
-						check
-							has_body: body_server.server_has (body_index)
-						end
-						old_description := Body_server.server_item (body_index)
+						old_description := fetch_description (body_index)
 						if old_description = Void then
 								-- This should not happen, but if it does.
 							is_the_same := False
@@ -1983,6 +1980,26 @@ feature {NONE} -- Implementation
 				vfav.set_inherited_feature (inherited_features.item_alias_id (f.alias_name_id))
 				Error_handler.insert_error (vfav)
 			end
+		end
+
+	fetch_description (a_body_index: INTEGER): FEATURE_AS
+			-- Fetch previous version of `a_body_index' in `body_server'.
+			--| Currently this does not work all the time due to EIFGENs corruption,
+			--| when this happens, we simply return True. That way we provide a quick
+			--| workaround when it crashes at later degrees by simply telling them
+			--| to resave the class that causes the failure. During debugging we should
+			--| get the exception which would hopefully help us fix that bug.
+		require
+			has_body: body_server.server_has (a_body_index)
+		local
+			retried: BOOLEAN
+		do
+			if not retried then
+				Result := body_server.server_item (a_body_index)
+			end
+		rescue
+			retried := True
+			retry
 		end
 
 feature {NONE} -- Temporary body index

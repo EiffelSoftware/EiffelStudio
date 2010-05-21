@@ -1048,12 +1048,12 @@ rt_public void gst_write(EIF_REFERENCE object, int has_volatile_attributes)
 	if (flags & EO_SPEC) {
 		uint32 count, l_extra_data;
 		count = (uint32) RT_SPECIAL_COUNT(object);
-		if (!egc_has_old_special_semantic) {
-				/* We do not care about element size since it is computed on retrieval. */
-			l_extra_data = (uint32)(RT_SPECIAL_CAPACITY(object));
-		}
 		buffer_write((char *)(&count), sizeof(uint32));
-		buffer_write((char *)(&l_extra_data), sizeof(uint32));
+		if (!egc_has_old_special_semantic) {
+				/* We need to write the capacity with the new semantic. */
+			l_extra_data = (uint32)(RT_SPECIAL_CAPACITY(object));
+			buffer_write((char *)(&l_extra_data), sizeof(uint32));
+		}
 	}
 	/* Write the body of the object */
 	gen_object_write(object, flags, Dftype(object));
@@ -1091,12 +1091,12 @@ rt_public void ist_write(EIF_REFERENCE object, int has_volatile_attributes)
 	if (flags & EO_SPEC) {
 		uint32 count, l_extra_data;
 		count = (uint32) RT_SPECIAL_COUNT(object);
-		if (!egc_has_old_special_semantic) {
-				/* We do not care about element size since it is computed on retrieval. */
-			l_extra_data = (uint32)(RT_SPECIAL_CAPACITY(object));
-		}
 		widr_norm_int(&count);
-		widr_norm_int(&l_extra_data);
+		if (!egc_has_old_special_semantic) {
+				/* We need to write the capacity with the new semantic. */
+			l_extra_data = (uint32)(RT_SPECIAL_CAPACITY(object));
+			widr_norm_int(&l_extra_data);
+		}
 	}
 	/* Write the body of the object */
 	object_write(object, flags, Dftype(object));

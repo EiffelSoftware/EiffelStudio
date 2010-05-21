@@ -142,7 +142,7 @@ feature -- Eiffel source line information
 						buf.put_string ({C_CONST}.comma_space)
 						buf.put_integer (l_offset)
 						buf.put_string ({C_CONST}.comma_space)
-						buf.put_natural_32 (l_sk_type)
+						buf.put_hex_natural_32 (l_sk_type)
 						buf.put_string ({C_CONST}.comma_space)
 						buf.put_integer (l_expanded)
 						buf.put_two_character (')', ';')
@@ -157,7 +157,7 @@ feature -- Eiffel source line information
 						buf.put_string ({C_CONST}.comma_space)
 						buf.put_integer (locb.position)
 						buf.put_string ({C_CONST}.comma_space)
-						buf.put_natural_32 (l_sk_type)
+						buf.put_hex_natural_32 (l_sk_type)
 						buf.put_string ({C_CONST}.comma_space)
 						if locb.type.is_expanded then
 							buf.put_integer (1)
@@ -178,7 +178,7 @@ feature -- Eiffel source line information
 						buf.put_string ({C_CONST}.comma_space)
 						buf.put_integer (0) --| Let's say Result's position = 0
 						buf.put_string ({C_CONST}.comma_space)
-						buf.put_natural_32 (l_sk_type)
+						buf.put_hex_natural_32 (l_sk_type)
 						buf.put_string ({C_CONST}.comma_space)
 						if resb.type.is_expanded then
 							buf.put_integer (1)

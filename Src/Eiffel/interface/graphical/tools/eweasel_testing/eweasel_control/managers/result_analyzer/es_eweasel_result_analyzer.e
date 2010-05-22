@@ -214,9 +214,7 @@ feature {ES_EWEASEL_RESULT_HANDLER} -- Shared cache
 	one_block_cell: CELL [TUPLE [content: STRING_GENERAL; end_index: INTEGER]]
 			-- One eweasel output block of a test case run
 			-- This feature is used by all {EWEASEL_RESULT_HANDLER} during a execution of `prcess_output'
-		note
-			once_status: global
-		once
+		once ("PROCESS")
 			create Result.put (Void)
 		ensure
 			not_void: Result /= Void
@@ -224,9 +222,7 @@ feature {ES_EWEASEL_RESULT_HANDLER} -- Shared cache
 
 	lines_cell: CELL [LIST [STRING_8]]
 			-- Singleton cell used by `lines'
-		note
-			once_status: global
-		once
+		once ("PROCESS")
 			create Result.put (Void)
 		ensure
 			not_void: Result /= Void
@@ -275,9 +271,7 @@ feature {NONE} -- Implementation
 	output_buffer: STRING
 			-- Thread library output buffer
 			-- This is the ONLY multi-thread critical section of testing tool
-		note
-			once_status: global
-		once
+		once ("PROCESS")
 			create Result.make_empty
 		ensure
 			not_void: Result /= Void
@@ -296,9 +290,7 @@ feature {NONE} -- Multi-thread implementation
 
 	mutex: MUTEX
 			-- Mutex used by
-		note
-			once_status: global
-		once
+		once ("PROCESS")
 			create Result.make
 		end
 
@@ -339,7 +331,7 @@ feature {NONE} -- Cache
 			-- Instance holder of `all_result'.
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -363,11 +355,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

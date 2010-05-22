@@ -1722,9 +1722,7 @@ rt_public EIF_REFERENCE grt_nmake(long int objectCount)
 			if (rt_kind_version < GENERAL_STORE_6_4) {
 					/* We read `elm_size' even if we actually don't use it. */
 				buffer_read((char *) &elm_size, sizeof(uint32));
-				capacity = count;
-			} else if (rt_kind_properties & STORE_OLD_SPECIAL_SEMANTIC) {
-					/* New storable format using old special semantic, in this case
+					/* Storable format using old special semantic, in this case
 					 * capacity and count are the same. */
 				capacity = count;
 			} else {
@@ -1919,9 +1917,7 @@ rt_private EIF_REFERENCE rrt_nmake (long int objectCount)
 			if (rt_kind_version < INDEPENDENT_STORE_6_4) {
 					/* We read `elm_size' even if we actually don't use it. */
 				ridr_norm_int (&elm_size);
-				capacity = count;
-			} else if (rt_kind_properties & STORE_OLD_SPECIAL_SEMANTIC) {
-					/* New storable format using old special semantic, in this case
+					/* Storable format using old special semantic, in this case
 					 * capacity and count are the same. */
 				capacity = count;
 			} else {

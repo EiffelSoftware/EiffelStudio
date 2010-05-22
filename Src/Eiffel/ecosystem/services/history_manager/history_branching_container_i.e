@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			A specialized history container that supports history branching.
 		]"
@@ -18,7 +18,7 @@ inherit
 
 feature -- Extension
 
-	put (a_item: !HISTORY_STACK_ITEM_I; a_branch: BOOLEAN)
+	put (a_item: attached HISTORY_STACK_ITEM_I; a_branch: BOOLEAN)
 			--
 		require
 			is_interface_usable: is_interface_usable
@@ -28,14 +28,14 @@ feature -- Extension
 
 feature --
 
-	put_unbranched (a_item: !HISTORY_STACK_ITEM_I)
+	put_unbranched (a_item: attached HISTORY_STACK_ITEM_I)
 			-- <Precursor>
 		do
 			put (a_item, False)
 		end
 
-;indexing
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+;note
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -59,11 +59,11 @@ feature --
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

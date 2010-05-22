@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 
 		]"
@@ -15,7 +15,7 @@ inherit
 
 feature -- Access
 
-	undo_items: !DS_STACK [!HISTORY_STACK_ITEM_I]
+	undo_items: attached DS_STACK [attached HISTORY_STACK_ITEM_I]
 			-- A stack of current undoable history items.
 		require
 			is_interface_usable: is_interface_usable
@@ -24,7 +24,7 @@ feature -- Access
 			result_not_cached: Result /~ undo_items
 		end
 
-	redo_items: !DS_STACK [!HISTORY_STACK_ITEM_I]
+	redo_items: attached DS_STACK [attached HISTORY_STACK_ITEM_I]
 			-- A stack of current redoable history items.
 		require
 			is_interface_usable: is_interface_usable
@@ -57,7 +57,7 @@ feature -- Status report
 
 feature -- Query
 
-	top_undo_items (a_count: NATURAL): !DS_LINEAR [!HISTORY_STACK_ITEM_I]
+	top_undo_items (a_count: NATURAL): attached DS_LINEAR [attached HISTORY_STACK_ITEM_I]
 			-- Retrieves the top undo stack items based on a maximum number of items to retrieve.
 			-- The items will be ordered top-most first.
 			--
@@ -72,7 +72,7 @@ feature -- Query
 			result_count_small_enough: Result.count <= a_count.to_integer_32
 		end
 
-	top_redo_items (a_count: NATURAL): !DS_LINEAR [!HISTORY_STACK_ITEM_I]
+	top_redo_items (a_count: NATURAL): attached DS_LINEAR [attached HISTORY_STACK_ITEM_I]
 			-- Retrieves the top redo stack items based on a maximum number of items to retrieve.
 			-- The items will be ordered top-most first.
 			--
@@ -89,7 +89,7 @@ feature -- Query
 
 feature -- Extension
 
-	put (a_item: !HISTORY_STACK_ITEM_I)
+	put (a_item: attached HISTORY_STACK_ITEM_I)
 			-- Extends the history stack
 		require
 			is_interface_usable: is_interface_usable
@@ -111,7 +111,7 @@ feature -- Basic operations
 		deferred
 		end
 
-	undo_to (a_item: !HISTORY_STACK_ITEM_I)
+	undo_to (a_item: attached HISTORY_STACK_ITEM_I)
 			-- Processes an undo up to and including the given history item.
 			--
 			-- `a_item': Item in the undo history to process undos up to.
@@ -142,8 +142,8 @@ feature -- Basic operations
 			not_can_redo: not can_redo
 		end
 
-;indexing
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+;note
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -167,11 +167,11 @@ feature -- Basic operations
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

@@ -745,11 +745,29 @@ rt_shared void internal_store(char *object)
 #ifdef RECOVERABLE_DEBUG
 			printf ("Storing in new recoverable format\n");
 #endif
-			c = INDEPENDENT_STORE_6_6;
+				/* To help a better transition for the storable changes in 6.6, if the code is compiled
+				 * in compatible mode, then we use the old storable format which does not store the version
+				 * of the class. */
+			if (egc_has_old_special_semantic) {
+					/* As in version 6.5 and 6.4, when we are in compatible mode,
+					 * we generate the previous, format. */
+				c = INDEPENDENT_STORE_6_3;
+			} else {
+				c = INDEPENDENT_STORE_6_6;
+			}
 			rt_kind_version = c;
 		}
 		else {
-			c = GENERAL_STORE_6_6;
+				/* To help a better transition for the storable changes in 6.6, if the code is compiled
+				 * in compatible mode, then we use the old storable format which does not store the version
+				 * of the class. */
+			if (egc_has_old_special_semantic) {
+					/* As in version 6.5 and 6.4, when we are in compatible mode,
+					 * we generate the previous format. */
+				c = GENERAL_STORE_4_0;
+			} else {
+				c = GENERAL_STORE_6_6;
+			}
 			rt_kind_version = c;
 
 				/* Allocate the array to store the sorted attributes */
@@ -781,7 +799,7 @@ printf ("Malloc on sorted_attributes %d %d %lx\n", scount, scount * sizeof(unsig
 
 	/* Write the kind of store */
 	l_failure = (char_write_func(&c, sizeof(char)) < 0);
-	if (!l_failure) {
+	if ((c != INDEPENDENT_STORE_6_3) && (c != GENERAL_STORE_4_0) && (!l_failure)) {
 			/* Then write the storable properties. */
 		l_failure = (char_write_func(&l_store_properties, sizeof(char)) < 0);
 	}
@@ -1046,14 +1064,21 @@ rt_public void gst_write(EIF_REFERENCE object, int has_volatile_attributes)
 #endif
 
 	if (flags & EO_SPEC) {
+#ifdef EIF_ASSERTIONS
+		RT_GET_CONTEXT
+#endif
 		uint32 count, l_extra_data;
 		count = (uint32) RT_SPECIAL_COUNT(object);
-		buffer_write((char *)(&count), sizeof(uint32));
-		if (!egc_has_old_special_semantic) {
+		if (egc_has_old_special_semantic) {
+				/* We do not care about element size since it is computed on retrieval. */
+			CHECK("Proper version", rt_kind_version < GENERAL_STORE_6_4);
+			l_extra_data = (uint32)(RT_SPECIAL_ELEM_SIZE(object));
+		} else {
 				/* We need to write the capacity with the new semantic. */
 			l_extra_data = (uint32)(RT_SPECIAL_CAPACITY(object));
-			buffer_write((char *)(&l_extra_data), sizeof(uint32));
 		}
+		buffer_write((char *)(&count), sizeof(uint32));
+		buffer_write((char *)(&l_extra_data), sizeof(uint32));
 	}
 	/* Write the body of the object */
 	gen_object_write(object, flags, Dftype(object));
@@ -1089,14 +1114,21 @@ rt_public void ist_write(EIF_REFERENCE object, int has_volatile_attributes)
 #endif
 
 	if (flags & EO_SPEC) {
+#ifdef EIF_ASSERTIONS
+		RT_GET_CONTEXT
+#endif
 		uint32 count, l_extra_data;
 		count = (uint32) RT_SPECIAL_COUNT(object);
-		widr_norm_int(&count);
-		if (!egc_has_old_special_semantic) {
+		if (egc_has_old_special_semantic) {
+				/* We do not care about element size since it is computed on retrieval. */
+			CHECK("Proper version", rt_kind_version < INDEPENDENT_STORE_6_4);
+			l_extra_data = (uint32)(RT_SPECIAL_ELEM_SIZE(object));
+		} else {
 				/* We need to write the capacity with the new semantic. */
 			l_extra_data = (uint32)(RT_SPECIAL_CAPACITY(object));
-			widr_norm_int(&l_extra_data);
 		}
+		widr_norm_int(&count);
+		widr_norm_int(&l_extra_data);
 	}
 	/* Write the body of the object */
 	object_write(object, flags, Dftype(object));
@@ -1552,6 +1584,7 @@ rt_public void make_header(EIF_CONTEXT_NOARG)
 	EIF_GET_CONTEXT
 	EIF_TYPE_INDEX i;
 	char *vis_name;			/* Visible name of a class */
+	int l_is_version_required = rt_kind_version >= GENERAL_STORE_6_6;
 	char *l_storable_version;
 	char *s_buffer = NULL;
 	uint32 l_length;
@@ -1650,14 +1683,16 @@ rt_public void make_header(EIF_CONTEXT_NOARG)
 		buffer_write(s_buffer, 1);
 
 			/* Store the version number for the current type. */
-		l_storable_version = System(i).cn_version;
-		if (l_storable_version) {
-			l_length = (uint32) strlen(l_storable_version);
-			buffer_write((char *)&l_length, sizeof(uint32));
-			buffer_write(l_storable_version, l_length);
-		} else {
-			l_length = 0;
-			buffer_write((char *)&l_length, sizeof(uint32));
+		if (l_is_version_required) {
+			l_storable_version = System(i).cn_version;
+			if (l_storable_version) {
+				l_length = (uint32) strlen(l_storable_version);
+				buffer_write((char *)&l_length, sizeof(uint32));
+				buffer_write(l_storable_version, l_length);
+			} else {
+				l_length = 0;
+				buffer_write((char *)&l_length, sizeof(uint32));
+			}
 		}
 	}
 	eif_rt_xfree (s_buffer);
@@ -1881,7 +1916,7 @@ rt_private void widr_type_generics (EIF_TYPE_INDEX dtype)
 	}
 }
 
-rt_private void widr_type (int16 dtype)
+rt_private void widr_type (int16 dtype, int is_version_required)
 {
 	char *class_name = System (dtype).cn_generator;
 	char *l_storable_version = System (dtype).cn_version;
@@ -1900,15 +1935,17 @@ rt_private void widr_type (int16 dtype)
 	widr_multi_int32 (&flags, 1);
 	widr_multi_int16 (&dtype, 1);
 
-	/* Write storable version if any. */
-	if (l_storable_version) {
-		l_length = (uint32) strlen(l_storable_version);
-		REQUIRE("valid l_length", (size_t) l_length == strlen (l_storable_version));
-		widr_multi_uint32 (&l_length, 1);
-		widr_multi_char ((EIF_CHARACTER_8 *) l_storable_version, l_length);
-	} else {
-		l_length = 0;
-		widr_multi_uint32 (&l_length, 1);
+	/* Write storable version if any and requested. */
+	if (is_version_required) {
+		if (l_storable_version) {
+			l_length = (uint32) strlen(l_storable_version);
+			REQUIRE("valid l_length", (size_t) l_length == strlen (l_storable_version));
+			widr_multi_uint32 (&l_length, 1);
+			widr_multi_char ((EIF_CHARACTER_8 *) l_storable_version, l_length);
+		} else {
+			l_length = 0;
+			widr_multi_uint32 (&l_length, 1);
+		}
 	}
 
 	widr_type_generics (dtype);
@@ -1926,6 +1963,7 @@ rt_public void rmake_header(EIF_CONTEXT_NOARG)
 	int16 max_types = scount;	/* Here there is a problem if `scount' is more than 2^16.*/
 	int16 type_count;
 	int16 i;
+	int l_is_version_required = rt_kind_version >= INDEPENDENT_STORE_6_6;
 
 	/* count number of types actually present in objects to be stored */
 	for (type_count=0, i=0; i<scount; i++) {
@@ -1946,7 +1984,7 @@ rt_public void rmake_header(EIF_CONTEXT_NOARG)
 
 	for (i=0; i<scount; i++) {
 		if (account[i])
-			widr_type (i);
+			widr_type (i, l_is_version_required);
 	}
 }
 

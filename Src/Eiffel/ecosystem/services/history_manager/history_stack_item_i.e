@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Abstract inferface for tools/UI where stones can set and synchronized.
 	]"
@@ -28,14 +28,14 @@ inherit
 
 feature -- Access
 
-	description: !READABLE_STRING_32
+	description: attached READABLE_STRING_32
 			-- Friendly description of the stack item.
 		require
 			is_interface_usable: is_interface_usable
 		deferred
 		end
 
-	data: !ANY
+	data: attached ANY
 			-- Stack item data.
 		require
 			is_interface_usable: is_interface_usable
@@ -53,7 +53,7 @@ feature -- Status report
 		deferred
 		end
 
-	is_valid_data (a_data: !ANY): BOOLEAN
+	is_valid_data (a_data: attached ANY): BOOLEAN
 			-- Determines if the supplied data is valid for the Current stack frame.
 		require
 			is_interface_usable: is_interface_usable
@@ -111,8 +111,8 @@ feature {HISTORY_OWNER_I} -- Basic operations
 invariant
 	data_is_valid_data: is_valid_data (data)
 
-;indexing
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+;note
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -136,11 +136,11 @@ invariant
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

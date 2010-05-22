@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			Respresents an owner of history items
 		]"
@@ -15,7 +15,7 @@ inherit
 
 feature -- Status report
 
-	has (a_item: !HISTORY_STACK_ITEM_I): BOOLEAN
+	has (a_item: attached HISTORY_STACK_ITEM_I): BOOLEAN
 			-- Determines if the history owner has a particular item.
 			--
 			-- `a_item': A history item to determine ownership.
@@ -27,8 +27,8 @@ feature -- Status report
 			a_item_is_owned_by_current: a_item.owner = Current
 		end
 
-;indexing
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+;note
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -52,11 +52,11 @@ feature -- Status report
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

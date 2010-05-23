@@ -160,24 +160,28 @@ feature
 			external_b: EXTERNAL_B;
 			l_type: TYPE_A
 		do
-			if is_qualified then
-					-- To fix eweasel test#term155 we remove all anchors from
-					-- calls after the first dot in a call chain.
-				l_type := access_type.context_free_type
+			if extension.is_built_in then
+				Result := Precursor (access_type, static_type, is_qualified)
 			else
-				l_type := access_type
-			end
-			create external_b
-			external_b.init (Current)
-			if static_type /= Void then
-				external_b.set_static_class_type (static_type)
-			end
-			external_b.set_type (l_type)
-			external_b.set_external_name_id (external_name_id)
-			external_b.set_encapsulated (encapsulated)
-			external_b.set_extension (extension)
+				if is_qualified then
+						-- To fix eweasel test#term155 we remove all anchors from
+						-- calls after the first dot in a call chain.
+					l_type := access_type.context_free_type
+				else
+					l_type := access_type
+				end
+				create external_b
+				external_b.init (Current)
+				if static_type /= Void then
+					external_b.set_static_class_type (static_type)
+				end
+				external_b.set_type (l_type)
+				external_b.set_external_name_id (external_name_id)
+				external_b.set_encapsulated (encapsulated)
+				external_b.set_extension (extension)
 
-			Result := external_b
+				Result := external_b
+			end
 		end
 
 	transfer_to (other: like Current)

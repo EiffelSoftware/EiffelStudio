@@ -3808,6 +3808,14 @@ feature -- IL Generation
 				end
 				if a_feature.has_return_value then
 					set_method_return_type (l_method_sig, a_feature.type, current_class_type)
+				else
+					l_method_sig.set_return_type (
+						{MD_SIGNATURE_CONSTANTS}.element_type_void, 0)
+				end
+				if m /= nb then
+						-- Call is not static, but the builtin declaration is, so we need to provide
+						-- Current's type to the routine
+					l_method_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_object, 0)
 				end
 				if nb > 0 then
 					from

@@ -44,6 +44,9 @@ feature {NONE} -- Implementation
 	ignores: HASH_TABLE [SEARCH_TABLE [STRING], STRING]
 			-- Ignored files/targets.
 
+	directory_ignores: SEARCH_TABLE [STRING]
+			-- Ignored directories
+
 	start
 			-- Starts application
 		require
@@ -70,6 +73,7 @@ feature {NONE} -- Implementation
 			l_ini_section: INI_SECTION
 			l_ignored_targets: ARRAYED_LIST [INI_LITERAL]
 			l_ig_target: SEARCH_TABLE [STRING]
+			l_actual_path: STRING
 		do
 			create l_file.make (a_file)
 			if not l_file.exists or else not l_file.is_readable then
@@ -78,6 +82,7 @@ feature {NONE} -- Implementation
 				l_file.open_read
 				create l_ini_loader.make
 				l_ini_loader.read_from_file (l_file, False)
+				l_file.close
 				if not l_ini_loader.successful then
 					l_ini_loader.errors.do_all (agent (a_error: INI_SYNTAX_ERROR)
 						do
@@ -88,24 +93,33 @@ feature {NONE} -- Implementation
 					from
 						l_ignored_files := l_ini_file.sections
 						create ignores.make (l_ignored_files.count)
+						create directory_ignores.make (l_ignored_files.count)
 						l_ignored_files.start
 					until
 						l_ignored_files.after
 					loop
 							-- every section represents one configuration file
 						l_ini_section := l_ignored_files.item
-							-- no literals implies the whole configuration file is ignored, else each literal represents an ignored target
-						from
-							l_ignored_targets := l_ini_section.literals
-							create l_ig_target.make (l_ignored_targets.count)
-							l_ignored_targets.start
-						until
-							l_ignored_targets.after
-						loop
-							l_ig_target.force (l_ignored_targets.item.name)
-							l_ignored_targets.forth
+						l_actual_path := execution_environment.interpreted_string (l_ini_section.label)
+						create l_file.make (l_actual_path)
+						if not l_file.exists then
+							display_error ("Could not read file/path "+l_ini_section.label+"!")
+						elseif l_file.is_directory then
+							directory_ignores.force (l_actual_path.as_lower)
+						else
+								-- no literals implies the whole configuration file is ignored, else each literal represents an ignored target
+							from
+								l_ignored_targets := l_ini_section.literals
+								create l_ig_target.make (l_ignored_targets.count)
+								l_ignored_targets.start
+							until
+								l_ignored_targets.after
+							loop
+								l_ig_target.force (l_ignored_targets.item.name)
+								l_ignored_targets.forth
+							end
+							ignores.force (l_ig_target, l_actual_path)
 						end
-						ignores.force (l_ig_target, execution_environment.interpreted_string (l_ini_section.label).as_lower)
 						l_ignored_files.forth
 					end
 				end
@@ -122,8 +136,9 @@ feature {NONE} -- Implementation
 			create l_dir.make (a_directory)
 			if not l_dir.is_readable then
 				display_error ("Could not read "+a_directory+"!")
-			else
-					-- process config files with an ecf extension
+			elseif directory_ignores = Void or else not directory_ignores.has (a_directory.string.as_lower) then
+					-- Process only if the directory is not excluded.
+					-- 1 - process config files with an ecf extension
 				l_dir.filenames.do_if (
 					agent (a_dir, a_file: STRING)
 						local
@@ -140,7 +155,7 @@ feature {NONE} -- Implementation
 							l_cnt := a_file.count
 							Result := l_cnt > 4 and then a_file.substring (l_cnt-3, l_cnt).is_equal (".ecf")
 						end)
-					-- process subdirs
+					-- 2 - process subdirs
 				l_dir.directory_names.do_all (agent (a_dir, a_subdir: STRING)
 					local
 						l_dirname: DIRECTORY_NAME
@@ -165,17 +180,17 @@ feature {NONE} -- Implementation
 				l_ignored_targets := ignores.item (a_file.string.as_lower)
 			end
 				-- if the file is not listed in the excludes or explicitely lists exlucded targets
-				-- after this, ignores.found_item is set
-			if l_ignored_targets = Void or else not l_ignored_targets.is_empty  then
+			if l_ignored_targets = Void or else not l_ignored_targets.is_empty then
 				create l_loader.make (create {CONF_PARSE_FACTORY})
 				l_loader.retrieve_configuration (a_file)
 				if l_loader.is_error then
 					display_error ("Could not retrieve configuration "+a_file+"!")
 				else
-					l_loader.last_system.compilable_targets.linear_representation.do_if (agent process_target (?, a_dir), agent (a_target: CONF_TARGET; a_ignored_targets: SEARCH_TABLE [STRING]): BOOLEAN
-						do
-							Result := a_ignored_targets = Void or else not a_ignored_targets.has (a_target.name)
-						end (?, l_ignored_targets))
+					across l_loader.last_system.compilable_targets as l_cursor loop
+						if l_ignored_targets = Void or else not l_ignored_targets.has (l_cursor.item.name) then
+							process_target (l_cursor.item, a_dir)
+						end
+					end
 				end
 			end
 	end
@@ -282,6 +297,8 @@ feature {NONE} -- Implementation
 
 			if arguments.is_experiment then
 				l_args.extend ("-experiment")
+			elseif arguments.is_compatible then
+				l_args.extend ("-compat")
 			end
 
 			l_args.extend ("-project_path")
@@ -295,7 +312,7 @@ feature {NONE} -- Implementation
 				create l_info_file.make_create_read_write (l_info_filename)
 				l_info_file.put_string (a_target.system.file_name)
 				l_info_file.close
-				
+
 				l_args.extend (l_dir_name)
 			else
 					-- We always use the directory of the ECF by default
@@ -378,7 +395,7 @@ feature {NONE} -- Error handling
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

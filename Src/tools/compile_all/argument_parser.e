@@ -50,6 +50,7 @@ feature {NONE} -- Access
 			Result.extend (create {ARGUMENT_SWITCH}.make (log_verbose_switch, "Verbose logging of actions?", True, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (ecb_switch, "Use ecb instead of ec?", True, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (experiment_switch, "Use experimental library during compilation?", True, False))
+			Result.extend (create {ARGUMENT_SWITCH}.make (compatible_switch, "Use compatible library during compilation?", True, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (clean_switch, "Clean before compilation?", True, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (c_compile_switch, "Compile generated C code?", True, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (melt_switch, "Melt the project?", True, False))
@@ -115,6 +116,12 @@ feature -- Access
 			Result := has_option (experiment_switch)
 		end
 
+	is_compatible: BOOLEAN
+			-- Use experimental library?
+		once
+			Result := has_option (compatible_switch)
+		end
+
 	is_parse_only: BOOLEAN
 			-- Only parse and check dependencies?
 		once
@@ -162,6 +169,7 @@ feature {NONE} -- Switch names
 	location_switch: STRING = "l"
 	eifgen_switch: STRING = "eifgen"
 	experiment_switch: STRING = "experiment"
+	compatible_switch: STRING = "compat"
 	ignore_switch: STRING = "ignore"
 	log_verbose_switch: STRING = "log_verbose"
 	ecb_switch: STRING = "ecb"
@@ -172,7 +180,7 @@ feature {NONE} -- Switch names
 	finalize_switch: STRING = "finalize";
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -160,7 +160,8 @@ feature
 			external_b: EXTERNAL_B;
 			l_type: TYPE_A
 		do
-			if extension.is_built_in then
+			if extension.is_built_in and static_type = Void then
+					-- Builtins that are accessed via an object call
 				Result := Precursor (access_type, static_type, is_qualified)
 			else
 				if is_qualified then

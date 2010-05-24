@@ -29,8 +29,8 @@ feature{NONE} -- Initialization
 		do
 			create child_process.make
 			create input_buffer.make_empty
-			create exit_mutex
-			create input_mutex
+			create exit_mutex.make
+			create input_mutex.make
 
 			create arguments.make
 			create command_line.make_from_string (a_exec_name)
@@ -72,8 +72,8 @@ feature{NONE} -- Initialization
 		do
 			create child_process.make
 			create input_buffer.make_empty
-			create exit_mutex
-			create input_mutex
+			create exit_mutex.make
+			create input_mutex.make
 
 			create command_line.make_from_string (cmd_line)
 			cmd_arg := separated_words (cmd_line)
@@ -821,7 +821,7 @@ feature{NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

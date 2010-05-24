@@ -107,7 +107,7 @@ feature {NONE} -- Implementation
 	settings_bar: EV_VERTICAL_BOX
 			-- The bar on the left side with the color choosers.
 
-	projector: EV_MODEL_BUFFER_PROJECTOR
+	projector: EV_MODEL_WIDGET_PROJECTOR
 			-- The projector
 
 	world: MULTI_SELECTION_WORLD
@@ -565,9 +565,9 @@ feature {NONE} -- File menu Events
 			l_selected_figures := world.selected_figures.twin
 			world.deselect_all
 
-			if type = 1 then
-				pixmap := projector.world_as_pixmap (5)
-				if projector.is_world_too_large then
+			if type = 1 and then attached {EV_MODEL_BUFFER_PROJECTOR} projector as l_buffer_projector then
+				pixmap := l_buffer_projector.world_as_pixmap (5)
+				if l_buffer_projector.is_world_too_large then
 					create dialog.make_with_text ("Image is too large, not enough video memory")
 					dialog.show_modal_to_window (Current)
 				else

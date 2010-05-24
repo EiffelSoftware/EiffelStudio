@@ -160,8 +160,8 @@ feature
 			external_b: EXTERNAL_B;
 			l_type: TYPE_A
 		do
-			if extension.is_built_in and static_type = Void then
-					-- Builtins that are accessed via an object call
+			if system.il_generation and then extension.is_built_in and static_type = Void then
+					-- Builtins that are accessed via an object call in .NET code generation
 				Result := Precursor (access_type, static_type, is_qualified)
 			else
 				if is_qualified then

@@ -229,7 +229,7 @@ feature {NONE} -- Event implementation
 	has_mouse: BOOLEAN
 			-- Does canvas have mouse on it?
 
-	figure_on_position (group: EV_MODEL_GROUP; x, y: INTEGER): EV_MODEL
+	figure_on_position (group: EV_MODEL_GROUP; x, y: INTEGER): detachable EV_MODEL
 			-- Figure mouse-cursor is on.
 		local
 			i: INTEGER

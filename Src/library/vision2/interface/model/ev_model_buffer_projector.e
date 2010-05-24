@@ -20,7 +20,6 @@ inherit
 			buffer_used,
 			change_area_position,
 			update_rectangle,
-			full_project,
 			offset_x,
 			offset_y,
 			update
@@ -164,14 +163,7 @@ feature -- Status report
 
 	buffer_used: BOOLEAN = True
 
-
 feature -- Display updates
-
-	full_project
-			-- Project entire area.
-		do
-			project_rectangle (area_bounding_box)
-		end
 
 	project_rectangle (u: EV_RECTANGLE)
 			-- Project area under `u'

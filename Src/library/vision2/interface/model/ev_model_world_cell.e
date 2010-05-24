@@ -284,9 +284,9 @@ feature -- Element change
 				l_width := bbox.width +  (2 * (autoscroll_border + world_border))
 				l_height := bbox.height + (2 * (autoscroll_border + world_border))
 
-				if projector.area /= Void then
-					l_area_width := projector.area.width
-					l_area_height := projector.area.height
+				if attached projector.area as l_area then
+					l_area_width := l_area.width
+					l_area_height := l_area.height
 				else
 					l_area_width := width
 					l_area_height := height

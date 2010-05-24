@@ -8,25 +8,30 @@ note
 
 class
 	WORLD_CELL
-	
+
 inherit
 	EV_MODEL_WORLD_CELL
 		redefine
-			projector,
+			new_projector,
 			world
 		end
 
 create
 	make_with_world
-	
+
 feature -- Access
 
-	projector: EG_PROJECTOR
-			-- Projector used to render `world'.
-	
-	world: EG_FIGURE_WORLD;
+	world: EG_FIGURE_WORLD
 			-- World `Current' displays.
-	
+
+feature {NONE} -- Implementation
+
+	new_projector: EV_MODEL_WIDGET_PROJECTOR
+			-- <Precursor>
+		do
+			create {EG_PROJECTOR} Result.make (world, drawing_area)
+		end;
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

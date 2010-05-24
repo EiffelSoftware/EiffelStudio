@@ -9,9 +9,6 @@ note
 class TRANSLATE inherit
 
 	EXT_INTERNAL
-		export
-			{NONE} traversal
-		end;
 
 feature
 

@@ -29,6 +29,8 @@ inherit
 			{NONE} all
 		end
 
+	ANY
+
 create
 	make
 
@@ -138,7 +140,7 @@ feature {NONE} -- Implementation
 			l_source.close
 			Backup.backup_file (l_source)
 		end
-		
+
 	unique_file_name: STRING
 			-- Unique file name for directory `destination_directory'
 		local
@@ -167,7 +169,7 @@ feature {NONE} -- Implementation
 			exists: Result /= Void
 			is_unique: not destination_directory.has_entry (Result)
 		end
-	
+
 	last_index_suffix: INTEGER;
 			-- Last suffix used in `unique_file_name'
 

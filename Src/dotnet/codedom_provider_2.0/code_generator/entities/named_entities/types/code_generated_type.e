@@ -668,7 +668,7 @@ feature -- Code generation
 
 feature -- Comparison
 
-	is_equal (other: CODE_GENERATED_TYPE): BOOLEAN
+	is_equal (other: like Current): BOOLEAN
 			-- Is `other' attached to an object considered
 			-- equal to current object?
 			-- We consider that CodeDom has the same limitation as C# where

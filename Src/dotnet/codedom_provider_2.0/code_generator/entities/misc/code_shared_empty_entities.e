@@ -23,6 +23,7 @@ inherit
 		export
 			{NONE} all
 		end
+	ANY
 
 feature -- Access
 
@@ -55,13 +56,13 @@ feature -- Access
 			l_member_reference.set_initialized
 			Result.add_member (l_member_reference)
 		end
-		
+
 	Empty_member_reference: CODE_MEMBER_REFERENCE
 			-- Empty member reference
 		once
 			Result := Empty_type_reference.member ("empty_", Void)
 		end
-	
+
 	Empty_expression: CODE_EXPRESSION
 			-- Empty expression
 		once

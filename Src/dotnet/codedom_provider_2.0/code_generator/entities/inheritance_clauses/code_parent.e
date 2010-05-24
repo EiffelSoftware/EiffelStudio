@@ -14,9 +14,11 @@ inherit
 			{NONE} all
 		end
 
+	ANY
+
 create
 	make
-	
+
 feature -- Initialization
 
 	make (a_type: like type)
@@ -34,7 +36,7 @@ feature -- Initialization
 			non_void_redefine_clauses: redefine_clauses /= Void
 			non_void_rename_clauses: rename_clauses /= Void
 		end
-		
+
 feature	-- Access
 
 	type: CODE_TYPE_REFERENCE
@@ -58,13 +60,13 @@ feature	-- Access
 			l_has_snippet, l_has_clause: BOOLEAN
 		do
 			create Result.make (250)
-			
+
 			Result.append_character ('%T')
 			Result.append (type.eiffel_name)
 			Result.append (Line_return)
 
 			l_has_snippet := snippet_parent /= Void
-			
+
 			l_has_clause := l_has_snippet and then snippet_parent.renames /= Void
 			if l_has_clause then
 				Result.append (snippet_parent.renames_code)
@@ -75,7 +77,7 @@ feature	-- Access
 			if l_has_clause then
 				Result.append (snippet_parent.exports_code)
 			end
-			
+
 			l_has_clause := l_has_snippet and then snippet_parent.undefines /= Void
 			if l_has_clause then
 				Result.append (snippet_parent.undefines_code)
@@ -93,14 +95,14 @@ feature	-- Access
 				Result.append (snippet_parent.selects_code)
 			end
 
-			if undefine_clauses.count > 0 or redefine_clauses.count > 0 or rename_clauses.count > 0 or 
+			if undefine_clauses.count > 0 or redefine_clauses.count > 0 or rename_clauses.count > 0 or
 				(l_has_snippet and then not snippet_parent.is_empty) then
 				Result.append ("%T%Tend")
 				Result.append (Line_return)
 				Result.append (Line_return)
 			end
 		end
-		
+
 feature -- Status Setting Inheritance Clauses
 
 	add_undefine_clause (a_clause: CODE_UNDEFINE_CLAUSE)
@@ -143,9 +145,9 @@ feature -- Status Setting Inheritance Clauses
 		ensure
 			snippet_parent_set: snippet_parent = a_parent
 		end
-		
+
 feature {NONE} -- Implementation
-	
+
 	clauses_code (a_list: LIST [CODE_INHERITANCE_CLAUSE]; a_generate_keyword: BOOLEAN): STRING
 			-- Code for `a_list'
 			-- Includes inheritance clause keyword iff `a_generate_keyword'
@@ -153,7 +155,7 @@ feature {NONE} -- Implementation
 			non_void_list: a_list /= Void
 		do
 			create Result.make (120)
-					
+
 			from
 				a_list.start
 				if not a_list.after then

@@ -1,4 +1,4 @@
-note 
+note
 	description: "Generate Eiffel code from a given CodeDom tree"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,6 +19,8 @@ inherit
 			{NONE} all
 		end
 
+	ANY
+
 feature {CODE_GENERATOR, CODE_FACTORY, CODE_ARGUMENTS_FACTORY} -- Basic Operations
 
 	generate_compile_unit_from_dom (a_compile_unit: SYSTEM_DLL_CODE_COMPILE_UNIT)
@@ -27,9 +29,9 @@ feature {CODE_GENERATOR, CODE_FACTORY, CODE_ARGUMENTS_FACTORY} -- Basic Operatio
 			non_void_compile_unit: a_compile_unit /= Void
 		local
 			l_snippet_compile_unit: SYSTEM_DLL_CODE_SNIPPET_COMPILE_UNIT
-		do	
+		do
 			l_snippet_compile_unit ?= a_compile_unit
-			if l_snippet_compile_unit /= Void then 
+			if l_snippet_compile_unit /= Void then
 				Eiffel_factory.generate_snippet_compile_unit (l_snippet_compile_unit)
 			else
 				Eiffel_factory.generate_compile_unit (a_compile_unit)
@@ -40,7 +42,7 @@ feature {CODE_GENERATOR, CODE_FACTORY, CODE_ARGUMENTS_FACTORY} -- Basic Operatio
 			-- Call `generate_code_dom_namespace'.
 		require
 			non_void_namespace: a_namespace /= Void
-		do		
+		do
 				-- Create `code_dom_source'.
 			Eiffel_factory.generate_namespace (a_namespace)
 		end
@@ -59,7 +61,7 @@ feature {CODE_GENERATOR, CODE_FACTORY, CODE_ARGUMENTS_FACTORY} -- Basic Operatio
 				Type_factory.generate_type (a_type)
 			end
 		end
-		
+
 	generate_member_from_dom (a_member: SYSTEM_DLL_CODE_TYPE_MEMBER)
 			-- Call `generate_code_dom_member'.
 		require
@@ -120,7 +122,7 @@ feature {CODE_GENERATOR, CODE_FACTORY, CODE_ARGUMENTS_FACTORY} -- Basic Operatio
 				end
 			end
 		end
-		
+
 	generate_statement_from_dom (a_statement: SYSTEM_DLL_CODE_STATEMENT)
 			-- Call `generate_code_dom_statement'.
 		require
@@ -136,7 +138,7 @@ feature {CODE_GENERATOR, CODE_FACTORY, CODE_ARGUMENTS_FACTORY} -- Basic Operatio
 			l_agent ?= Statements_table.item (l_statement_type)
 			l_agent.call ([a_statement])
 		end
-		
+
 	generate_expression_from_dom (an_expression: SYSTEM_DLL_CODE_EXPRESSION)
 			-- Call `generate_code_dom_expression'.
 		require
@@ -152,7 +154,7 @@ feature {CODE_GENERATOR, CODE_FACTORY, CODE_ARGUMENTS_FACTORY} -- Basic Operatio
 			l_agent ?= Expressions_table.item (l_exp_type)
 			l_agent.call ([an_expression])
 		end
-		
+
 	generate_custom_attribute_declaration (an_argument: SYSTEM_DLL_CODE_ATTRIBUTE_DECLARATION)
 			-- Call `initialize_custom_attribute_declaration'.
 		require

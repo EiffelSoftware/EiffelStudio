@@ -9,13 +9,15 @@ inherit
 		export
 			{NONE} all
 		end
-	
+
+	ANY
+
 
 feature -- Access
 
 	precompiled_tag: STRING = "precompile_definition_file"
 			-- Tag defining path to precompiled library
-		
+
 	namespace_tag: STRING = "namespace"
 			-- Tag defining namespace in which type should be generated
 
@@ -36,7 +38,7 @@ feature {NONE} -- Implementation
 			-- Tag handlers
 		once
 			create Result.make (2)
-			
+
 			Result.extend (agent process_precompiled_tag, precompiled_tag)
 			Result.extend (agent process_namespace_tag, namespace_tag)
 		end

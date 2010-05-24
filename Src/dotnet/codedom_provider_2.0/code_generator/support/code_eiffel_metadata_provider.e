@@ -36,6 +36,8 @@ inherit
 			{NONE} all
 		end
 
+	ANY
+
 feature -- Access
 
 	type_eiffel_name (a_type: SYSTEM_TYPE): STRING

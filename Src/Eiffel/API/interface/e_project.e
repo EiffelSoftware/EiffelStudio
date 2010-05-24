@@ -135,11 +135,9 @@ feature -- Initialization
 				a_project_location.create_project_directories
 				set_is_initialized
  				Execution_environment.change_working_directory (project_directory.path)
+				manager.on_project_create
 			end
-			manager.on_project_create
 			Execution_environment.change_working_directory (l_prev_work)
-		ensure
-			initialized: initialized
 		end
 
 	create_dynamic_lib

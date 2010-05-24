@@ -9,14 +9,9 @@
 test_name 	 name-exists-invariant
 test_description The "Hello weasel" program compiles and executes fine with `assertion (all)' and no precompiled cluster.  Then file "string_8.e" is excluded from the kernel cluster.  After the VD23 errors are reported, the exclude clause is removed and compilation completes.  System is re-executed.
 
-if DOTNET define DOTNET_EXCLUDE "<exclude>ise_runtime.e</exclude><exclude>system_string.e</exclude>"
-if not DOTNET define DOTNET_EXCLUDE ""
-
 define		 EXCLUDE ""
 copy_sub 	 Ace $TEST Ace
 copy_raw 	 test.e  $CLUSTER test.e
-copy_raw 	 ise_exception_manager.e  $CLUSTER ise_exception_manager.e
-copy_raw 	 exception.e  $CLUSTER exception.e
 compile_frozen
 compile_result 	 ok
 

@@ -1,4 +1,4 @@
-note
+indexing
 	description: "Project root class"
 
 class

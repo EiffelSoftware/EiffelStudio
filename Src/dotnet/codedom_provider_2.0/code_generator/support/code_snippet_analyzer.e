@@ -18,6 +18,8 @@ inherit
 			{NONE} all
 		end
 
+	ANY
+
 feature -- Basic Operations
 
 	parse (a_snippet: STRING)
@@ -80,19 +82,19 @@ feature -- Basic Operations
 				end
 			end
 		end
-		
+
 feature -- Access
 
 	is_indexing_clause: BOOLEAN
 			-- Was last snippet parsed with `parse' an indexing clause?
-	
+
 	is_inheritance_clause: BOOLEAN
 			-- Was last snippet parsed with `parse' an inheritance clause?
 
 	indexing_clauses: LIST [CODE_INDEXING_CLAUSE]
 			-- Indexing clause last parsed with `parse'
 			-- `Void' if last snippet parsed with `parse' wasn't an indexing clause
-	
+
 invariant
 	valid_indexing_clause: (indexing_clauses /= Void) = is_indexing_clause
 

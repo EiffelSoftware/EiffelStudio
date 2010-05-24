@@ -31,6 +31,8 @@ inherit
 			{NONE} all
 		end
 
+	ANY
+
 create
 	default_create
 

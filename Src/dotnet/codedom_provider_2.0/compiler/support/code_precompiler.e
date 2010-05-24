@@ -1,4 +1,4 @@
-note 
+note
 	description: "Precompiler: takes care of precompiling ace files and maintains%
 						%precompiled libraries cache."
 	legal: "See notice at end of class."
@@ -24,12 +24,14 @@ inherit
 		export
 			{NONE} all
 		end
-	
+
 	CODE_PROJECT_CONTEXT
 		export
 			{NONE} all
 		end
-	
+
+	ANY
+
 create
 	make
 
@@ -60,13 +62,13 @@ feature -- Access
 
 	ace_file_name: STRING
 			-- Ace file name (including path)
-	
+
 	root_directory: STRING
 			-- Directory which includes sub-directory where to perform precompilation
 
 	successful: BOOLEAN
 			-- Was last call to `precompile' successful?
-	
+
 	precompile_path: STRING
 			-- Path to last precompile
 
@@ -188,10 +190,10 @@ feature -- Basic Operations
 							l_exists := {SYSTEM_DIRECTORY}.exists (l_abs_dir)
 						end
 						l_res := {SYSTEM_DIRECTORY}.create_directory (l_abs_dir)
-						
+
 						-- Update compilation directory cache
 						internal_compilation_directory := l_abs_dir
-						
+
 						-- Now precompile in directory `l_abs_dir'
 						l_compiler_path := Compiler_path
 						if l_compiler_path = Void then
@@ -208,7 +210,7 @@ feature -- Basic Operations
 							if l_process.start then
 								l_process.wait_for_exit
 							end
-							
+
 							-- Copy configuration file to precompile folder so that compiler can use '-local' option
 							create l_new_config.make_open_write (configuration_path)
 							l_ace_file.open_read

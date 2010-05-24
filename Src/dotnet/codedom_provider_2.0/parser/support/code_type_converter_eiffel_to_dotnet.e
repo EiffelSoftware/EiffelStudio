@@ -8,7 +8,7 @@ class
 
 inherit
 	CODE_AST_HISTORIC
-	
+
 	CODE_EXECUTION_ENVIRONMENT
 		export
 			{NONE} all
@@ -112,7 +112,7 @@ feature -- Implementation
 				if l_array_type then
 					Result.append ("[]")
 				end
-				
+
 				if Result = Void then
 					-- We must have a user .Net type therefore we return its Eiffel Name as its .Net name
 					Result := an_eiffel_type_name
@@ -145,7 +145,7 @@ feature -- Implementation
 		end
 
 	dotnet_type_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION): STRING
-			-- 
+			--
 		local
 			l_attribute: SYSTEM_DLL_CODE_FIELD_REFERENCE_EXPRESSION
 			l_attribute_name: STRING
@@ -154,7 +154,7 @@ feature -- Implementation
 			l_method_name: STRING
 			l_this_ref_exp: SYSTEM_DLL_CODE_THIS_REFERENCE_EXPRESSION
 			l_ct: CONSUMED_TYPE
-			l_properties: ARRAY [CONSUMED_PROPERTY]
+			l_properties: ARRAYED_LIST [CONSUMED_PROPERTY]
 			l_counter: INTEGER
 		do
 			l_attribute ?= an_expression
@@ -162,14 +162,14 @@ feature -- Implementation
 				create l_attribute_name.make_from_cil (l_attribute.field_name)
 				Result := dotnet_type (l_attribute_name)
 				if Result.item (Result.count - 1).is_equal ('[') and then Result.item (Result.count).is_equal (']') then
-					Result.remove_tail (2)					
+					Result.remove_tail (2)
 				end
 			else
 				l_variable_ref_exp ?= an_expression
 				if l_variable_ref_exp /= Void then
 					Result := Variables.item (l_variable_ref_exp.variable_name)
 					check
-						Result_not_void: Result /= Void	
+						Result_not_void: Result /= Void
 					end
 				end
 				l_property_ref_exp ?= an_expression
@@ -182,31 +182,31 @@ feature -- Implementation
 						create l_method_name.make_from_cil (l_property_ref_exp.property_name)
 						l_properties := l_ct.properties
 						from
-							l_counter := 1
+							l_properties.start
 						until
-							l_counter > l_properties.count
+							l_properties.after
 						loop
 							if
-								l_properties.item (l_counter).getter /= Void and then 
-								l_properties.item (l_counter).getter.dotnet_name.is_equal (l_method_name)
+								l_properties.item.getter /= Void and then
+								l_properties.item.getter.dotnet_name.is_equal (l_method_name)
 							then
-								Result := l_properties.item (l_counter).getter.return_type.name
+								Result := l_properties.item.getter.return_type.name
 							end
-							l_counter := l_counter + 1
+							l_properties.forth
 						end
 					else
 						l_variable_ref_exp ?= an_expression
 						if l_variable_ref_exp /= Void then
 							Result := Variables.item (l_variable_ref_exp.variable_name)
 							check
-								Result_not_void: Result /= Void	
+								Result_not_void: Result /= Void
 							end
 						else
 							Result := Parent
 						end
 					end
 				end
-				
+
 					-- If the expression type is 'This' then we return the type of the parent.
 				l_this_ref_exp ?= an_expression
 				if l_this_ref_exp /= Void then
@@ -223,90 +223,89 @@ feature -- Implementation
 			non_void_type_target: dotnet_type_target_feature /= Void
 			not_empty_type_target: not dotnet_type_target_feature.is_empty
 		local
-			l_counter_2: INTEGER
 			l_ct: CONSUMED_TYPE
-			l_properties: ARRAY [CONSUMED_PROPERTY]
-			l_events: ARRAY [CONSUMED_EVENT]
-			l_fields: ARRAY [CONSUMED_FIELD]
-			l_procedures: ARRAY [CONSUMED_PROCEDURE]
-			l_functions: ARRAY [CONSUMED_FUNCTION]
+			l_properties: ARRAYED_LIST [CONSUMED_PROPERTY]
+			l_events: ARRAYED_LIST [CONSUMED_EVENT]
+			l_fields: ARRAYED_LIST [CONSUMED_FIELD]
+			l_procedures: ARRAYED_LIST [CONSUMED_PROCEDURE]
+			l_functions: ARRAYED_LIST [CONSUMED_FUNCTION]
 			l_eiffel_feature_name: STRING
 		do
 			l_eiffel_feature_name := an_eiffel_feature_name.as_lower
 			l_ct := consumed_type (dotnet_type_target_feature)
 			l_properties := l_ct.properties
 			from
-				l_counter_2 := 1
+				l_properties.start
 			until
-				l_counter_2 > l_properties.count or Result /= Void
+				l_properties.after or Result /= Void
 			loop
-				if l_properties.item (l_counter_2).getter /= Void then
-					if l_properties.item (l_counter_2).getter.eiffel_name.is_equal (l_eiffel_feature_name) then
-						Result := l_properties.item (l_counter_2).dotnet_name
+				if l_properties.item.getter /= Void then
+					if l_properties.item.getter.eiffel_name.is_equal (l_eiffel_feature_name) then
+						Result := l_properties.item.dotnet_name
 					end
 				end
-				if l_properties.item (l_counter_2).setter /= Void then
-					if l_properties.item (l_counter_2).setter.eiffel_name.is_equal (l_eiffel_feature_name) then
-						Result := l_properties.item (l_counter_2).dotnet_name
+				if l_properties.item.setter /= Void then
+					if l_properties.item.setter.eiffel_name.is_equal (l_eiffel_feature_name) then
+						Result := l_properties.item.dotnet_name
 					end
 				end
-				l_counter_2 := l_counter_2 + 1
+				l_properties.forth
 			end
 
 			l_events := l_ct.events
 			from
-				l_counter_2 := 1
+				l_events.start
 			until
-				l_counter_2 > l_events.count or Result /= Void
+				l_events.after or Result /= Void
 			loop
-				if l_events.item (l_counter_2).adder /= Void then
-					if l_events.item (l_counter_2).adder.eiffel_name.is_equal (l_eiffel_feature_name) then
-						Result := l_events.item (l_counter_2).dotnet_name
+				if l_events.item.adder /= Void then
+					if l_events.item.adder.eiffel_name.is_equal (l_eiffel_feature_name) then
+						Result := l_events.item.dotnet_name
 					end
 				end
-				l_counter_2 := l_counter_2 + 1
+				l_events.forth
 			end
 
 			l_fields := l_ct.fields
 			from
-				l_counter_2 := 1
+				l_fields.start
 			until
-				l_counter_2 > l_fields.count or Result /= Void
+				l_fields.after or Result /= Void
 			loop
-				if l_fields.item (l_counter_2) /= Void then
-					if l_fields.item (l_counter_2).eiffel_name.is_equal (l_eiffel_feature_name) then
-						Result := l_fields.item (l_counter_2).dotnet_name
+				if l_fields.item /= Void then
+					if l_fields.item.eiffel_name.is_equal (l_eiffel_feature_name) then
+						Result := l_fields.item.dotnet_name
 					end
 				end
-				l_counter_2 := l_counter_2 + 1
+				l_fields.forth
 			end
 
 			l_functions := l_ct.functions
 			from
-				l_counter_2 := 1
+				l_functions.start
 			until
-				l_counter_2 > l_functions.count or Result /= Void
+				l_functions.after or Result /= Void
 			loop
-				if l_functions.item (l_counter_2) /= Void then
-					if l_functions.item (l_counter_2).eiffel_name.is_equal (l_eiffel_feature_name) then
-						Result := l_functions.item (l_counter_2).dotnet_name
+				if l_functions.item /= Void then
+					if l_functions.item.eiffel_name.is_equal (l_eiffel_feature_name) then
+						Result := l_functions.item.dotnet_name
 					end
 				end
-				l_counter_2 := l_counter_2 + 1
+				l_functions.forth
 			end
 
 			l_procedures := l_ct.procedures
 			from
-				l_counter_2 := 1
+				l_procedures.start
 			until
-				l_counter_2 > l_procedures.count or Result /= Void
+				l_procedures.after or Result /= Void
 			loop
-				if l_procedures.item (l_counter_2) /= Void then
-					if l_procedures.item (l_counter_2).eiffel_name.is_equal (l_eiffel_feature_name) then
-						Result := l_procedures.item (l_counter_2).dotnet_name
+				if l_procedures.item /= Void then
+					if l_procedures.item.eiffel_name.is_equal (l_eiffel_feature_name) then
+						Result := l_procedures.item.dotnet_name
 					end
 				end
-				l_counter_2 := l_counter_2 + 1
+				l_procedures.forth
 			end
 
 			if Result = Void then
@@ -322,34 +321,33 @@ feature -- Implementation
 		require
 			valid_a_dotnet_type_name: a_dotnet_type_name /= Void and then not a_dotnet_type_name.is_empty
 		local
-			l_ca: ARRAY [CONSUMED_ASSEMBLY]
-			l_counter: INTEGER
+			l_ca: ARRAYED_LIST [CONSUMED_ASSEMBLY]
 		do
 			cache_reflection.Types_cache.search (a_dotnet_type_name)
 			if cache_reflection.Types_cache.found_item /= Void then
 				Result ?= cache_reflection.Types_cache.found_item
-			else		
+			else
 				l_ca := cache_reflection.consumed_assemblies
 				from
-					l_counter := 1
+					l_ca.start
 				until
-					l_counter > l_ca.count or Result /= Void
+					l_ca.after or Result /= Void
 				loop
-					Result := consumed_type_from_dotnet_type_name (l_ca.item (l_counter), a_dotnet_type_name)
-					l_counter := l_counter + 1
+					Result := consumed_type_from_dotnet_type_name (l_ca.item, a_dotnet_type_name)
+					l_ca.forth
 				end
-				
+
 				check
 					Type_found: Result /= Void
 				end
-				cache_reflection.Types_cache.put (Result, a_dotnet_type_name)			
+				cache_reflection.Types_cache.put (Result, a_dotnet_type_name)
 			end
 		ensure
 			non_void_consumed_type: Result /= Void
 		end
 
 	consumed_type_from_dotnet_type_name (ca: CONSUMED_ASSEMBLY; dotnet_type_target_feature: STRING): CONSUMED_TYPE
-			-- 
+			--
 		do
 			Result := cache_reflection.consumed_type_from_dotnet_type_name (ca, dotnet_type_target_feature)
 		end
@@ -363,25 +361,20 @@ feature -- Status Setting
 			valid_a_dotnet_type_name: a_dotnet_type_name /= Void and then not a_dotnet_type_name.is_empty
 		local
 			l_ct: CONSUMED_TYPE
-			l_properties: ARRAY [CONSUMED_PROPERTY]
-			l_counter: INTEGER
+			l_properties: ARRAYED_LIST [CONSUMED_PROPERTY]
 			l_eiffel_name: STRING
 		do
 			l_ct := consumed_type (a_dotnet_type_name)
 			l_properties := l_ct.properties
 			l_eiffel_name := an_eiffel_name.as_lower
 			from
-				l_counter := 1
+				l_properties.start
 			until
-				l_counter > l_properties.count or Result
+				l_properties.after or Result
 			loop
-				if 
-					l_properties.item (l_counter).setter /= Void and then 
-					l_properties.item (l_counter).setter.eiffel_name.is_equal (l_eiffel_name)
-				then
-					Result := True
-				end
-				l_counter := l_counter + 1
+				Result := l_properties.item.setter /= Void and then
+					l_properties.item.setter.eiffel_name.is_equal (l_eiffel_name)
+				l_properties.forth
 			end
 		end
 
@@ -392,25 +385,20 @@ feature -- Status Setting
 			valid_a_dotnet_type_name: a_dotnet_type_name /= Void and then not a_dotnet_type_name.is_empty
 		local
 			l_ct: CONSUMED_TYPE
-			l_properties: ARRAY [CONSUMED_PROPERTY]
-			l_counter: INTEGER
+			l_properties: ARRAYED_LIST [CONSUMED_PROPERTY]
 			l_eiffel_name: STRING
 		do
 			l_eiffel_name := an_eiffel_name.as_lower
 			l_ct := consumed_type (a_dotnet_type_name)
 			l_properties := l_ct.properties
 			from
-				l_counter := 1
+				l_properties.start
 			until
-				l_counter > l_properties.count or Result
+				l_properties.after or Result
 			loop
-				if 
-					l_properties.item (l_counter).getter /= Void and then 
-					l_properties.item (l_counter).getter.eiffel_name.is_equal (l_eiffel_name)
-				then
-					Result := True
-				end
-				l_counter := l_counter + 1
+				Result := l_properties.item.getter /= Void and then
+					l_properties.item.getter.eiffel_name.is_equal (l_eiffel_name)
+				l_properties.forth
 			end
 		end
 
@@ -421,28 +409,23 @@ feature -- Status Setting
 			valid_a_dotnet_type_name: a_dotnet_type_name /= Void and then not a_dotnet_type_name.is_empty
 		local
 			l_ct: CONSUMED_TYPE
-			l_events: ARRAY [CONSUMED_EVENT]
-			l_counter: INTEGER
+			l_events: ARRAYED_LIST [CONSUMED_EVENT]
 			l_eiffel_name: STRING
 		do
 			l_eiffel_name := an_eiffel_name.as_lower
 			l_ct := consumed_type (a_dotnet_type_name)
 			l_events := l_ct.events
 			from
-				l_counter := 1
+				l_events.start
 			until
-				l_counter > l_events.count or Result
+				l_events.after or Result
 			loop
-				if 
-					l_events.item (l_counter).adder /= Void and then 
-					l_events.item (l_counter).adder.eiffel_name.is_equal (l_eiffel_name)
-				then
-					Result := True
-				end
-				l_counter := l_counter + 1
+				Result := l_events.item.adder /= Void and then
+					l_events.item.adder.eiffel_name.is_equal (l_eiffel_name)
+				l_events.forth
 			end
 		end
-		
+
 	is_field (an_eiffel_name: STRING; a_dotnet_type_name: STRING): BOOLEAN
 			-- Is `an_eiffel_name' name of field?
 		require
@@ -450,25 +433,20 @@ feature -- Status Setting
 			valid_a_dotnet_type_name: a_dotnet_type_name /= Void and then not a_dotnet_type_name.is_empty
 		local
 			l_ct: CONSUMED_TYPE
-			l_fields: ARRAY [CONSUMED_FIELD]
-			l_counter: INTEGER
+			l_fields: ARRAYED_LIST [CONSUMED_FIELD]
 			l_eiffel_name: STRING
 		do
 			l_eiffel_name := an_eiffel_name.as_lower
 			l_ct := consumed_type (a_dotnet_type_name)
 			l_fields := l_ct.fields
 			from
-				l_counter := 1
+				l_fields.start
 			until
-				l_counter > l_fields.count or Result
+				l_fields.after or Result
 			loop
-				if 
-					l_fields.item (l_counter).eiffel_name /= Void and then 
-					l_fields.item (l_counter).eiffel_name.is_equal (l_eiffel_name)
-				then
-					Result := True
-				end
-				l_counter := l_counter + 1
+				Result := l_fields.item.eiffel_name /= Void and then
+					l_fields.item.eiffel_name.is_equal (l_eiffel_name)
+				l_fields.forth
 			end
 		end
 

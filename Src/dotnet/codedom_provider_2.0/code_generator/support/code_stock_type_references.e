@@ -14,6 +14,8 @@ inherit
 			{NONE} all
 		end
 
+	ANY
+
 feature -- Access
 
 	None_type_reference: CODE_TYPE_REFERENCE
@@ -45,7 +47,7 @@ feature -- Access
 		once
 			Result := Type_reference_factory.type_reference_from_type ({SYSTEM_TYPE}.get_type ("System.Type"))
 		end
-		
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

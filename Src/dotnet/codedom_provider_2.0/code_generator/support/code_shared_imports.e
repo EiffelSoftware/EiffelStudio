@@ -14,6 +14,8 @@ inherit
 			{NONE} all
 		end
 
+	ANY
+
 feature -- Access
 
 	imports: LIST [STRING]
@@ -45,7 +47,7 @@ feature -- Basic Operations
 				search_type (a_name + "Attribute")
 			end
 		end
-		
+
 	search_type (a_name: STRING)
 			-- Search for external type with simple name `a_name' in loaded assemblies and referenced assemblies.
 			-- Set `found_type' and `found' accordingly.
@@ -119,7 +121,7 @@ feature {NONE} -- Implementation
 			found := l_type /= Void
 			found_type := l_type
 		end
-		
+
 invariant
 	attached_imports: imports /= Void
 

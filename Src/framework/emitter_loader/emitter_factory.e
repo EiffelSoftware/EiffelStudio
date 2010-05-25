@@ -10,7 +10,7 @@ class
 
 inherit
 	CLI_COM
-	
+
 	CLR_HOST_FACTORY
 		export
 			{NONE} all
@@ -18,11 +18,11 @@ inherit
 
 feature -- Initialization
 
-	new_emitter (runtime_version: STRING): COM_CACHE_MANAGER
+	new_emitter (runtime_version: STRING): detachable COM_CACHE_MANAGER
 			-- Create a new instance of COM_CACHE_MANAGER.
 		local
 			p: POINTER
-			l_host: CLR_HOST
+			l_host: detachable CLR_HOST
 		do
 			initialize_com
 			l_host := runtime_host (runtime_version)

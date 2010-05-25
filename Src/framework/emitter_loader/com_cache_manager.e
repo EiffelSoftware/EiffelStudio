@@ -65,7 +65,7 @@ feature -- Access
 			success: last_call_success = 0
 		end
 
-	last_error_message: UNI_STRING
+	last_error_message: detachable UNI_STRING
 			-- Last error message of a failed operation
 		require
 			initialized: is_initialized
@@ -117,7 +117,7 @@ feature -- Basic Oprtations
 			success: last_call_success = 0
 		end
 
-	consume_assembly_from_path (a_path: UNI_STRING; a_info_only: BOOLEAN; a_references: UNI_STRING)
+	consume_assembly_from_path (a_path: UNI_STRING; a_info_only: BOOLEAN; a_references: detachable UNI_STRING)
 			-- consume assembly found at 'apath' and all of its dependacies into EAC.
 			-- GAC dependacies will be put into the EAC
 		require

@@ -20,9 +20,12 @@ feature {NONE} -- Initialization
 			a_path_not_empty: not a_path.is_empty
 			a_runtime_version_not_void: a_runtime_version /= Void
 			a_runtime_version_not_empty: not a_runtime_version.is_empty
+		local
+			l_impl: like implementation
 		do
-			implementation := (create {EMITTER_FACTORY}).new_emitter (a_runtime_version)
-			if implementation /= Void then
+			l_impl := (create {EMITTER_FACTORY}).new_emitter (a_runtime_version)
+			if l_impl /= Void then
+				implementation := l_impl
 				implementation.initialize_with_path (create {UNI_STRING}.make (a_path))
 			end
 		end
@@ -36,18 +39,18 @@ feature -- Status report
 
 	is_initialized: BOOLEAN
 			-- Is consumer initialized for given path?
-		require
-			exists: exists
 		do
-			Result := implementation.is_initialized
+			if implementation /= Void then
+				Result := implementation.is_initialized
+			end
 		end
 
 	last_com_code: INTEGER
 			-- Last value of the COM error if any.
-		require
-			exists: exists
 		do
-			Result := implementation.last_call_success
+			if implementation /= Void then
+				Result := implementation.last_call_success
+			end
 		end
 
 feature -- Clean up
@@ -55,7 +58,9 @@ feature -- Clean up
 	unload
 			-- unload all used resources
 		do
-			implementation.unload
+			if implementation /= Void then
+				implementation.unload
+			end
 		end
 
 feature -- XML generation
@@ -67,15 +72,17 @@ feature -- XML generation
 			non_void_path: a_path /= Void
 			non_empty_path: not a_path.is_empty
 		local
-			l_refs: UNI_STRING
+			l_refs: detachable UNI_STRING
 		do
 			if a_references /= Void then
 				create l_refs.make (a_references)
 			end
-			implementation.consume_assembly_from_path (
-				create {UNI_STRING}.make (a_path),
-				a_info_only,
-				l_refs)
+			check implementation /= Void then
+				implementation.consume_assembly_from_path (
+					create {UNI_STRING}.make (a_path),
+					a_info_only,
+					l_refs)
+			end
 		end
 
 	consume_assembly (a_name, a_version, a_culture, a_key: STRING; a_info_only: BOOLEAN)
@@ -92,17 +99,19 @@ feature -- XML generation
 			non_empty_culture: not a_culture.is_empty
 			non_empty_key: not a_key.is_empty
 		do
-			implementation.consume_assembly (
-				create {UNI_STRING}.make (a_name),
-				create {UNI_STRING}.make (a_version),
-				create {UNI_STRING}.make (a_culture),
-				create {UNI_STRING}.make (a_key),
-				a_info_only)
+			check implementation /= Void then
+				implementation.consume_assembly (
+					create {UNI_STRING}.make (a_name),
+					create {UNI_STRING}.make (a_version),
+					create {UNI_STRING}.make (a_culture),
+					create {UNI_STRING}.make (a_key),
+					a_info_only)
+			end
 		end
 
 feature {NONE} -- Implementation
 
-	implementation: COM_CACHE_MANAGER;
+	implementation: detachable COM_CACHE_MANAGER note option: stable attribute end
 			-- Com object to get information about assemblies and emitting them.
 
 note

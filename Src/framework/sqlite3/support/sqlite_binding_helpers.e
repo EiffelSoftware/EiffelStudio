@@ -21,7 +21,7 @@ feature -- Status report
 			Result := not attached a_value or else
 				attached {READABLE_STRING_8} a_value or else
 				attached {SQLITE_BIND_ARG [ANY]} a_value or else
-				attached {MANAGED_POINTER}
+				attached {MANAGED_POINTER} a_value
 
 			if not Result and attached a_value then
 					-- Check scalar types
@@ -133,7 +133,7 @@ feature {NONE} -- Externals
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

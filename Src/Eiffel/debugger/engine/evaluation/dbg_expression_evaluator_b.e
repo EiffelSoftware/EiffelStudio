@@ -528,7 +528,22 @@ feature {BYTE_NODE} -- Visitor
 	process_bin_not_tilde_b (a_node: BIN_NOT_TILDE_B)
 			-- Process `a_node'.
 		do
-			process_binary_b (a_node)
+			process_bin_tilde_b (a_node)
+			if not error_occurred then
+				if attached tmp_result as tmp_res and then tmp_res.has_value then
+					if
+						tmp_res.value.is_type_boolean and then
+						attached tmp_res.value.as_dump_value_basic as bval
+					then
+						create tmp_result.make_with_value (
+								debugger_manager.dump_value_factory.new_boolean_value (
+										not bval.value_boolean,
+										tmp_result.dynamic_class
+									)
+							)
+					end
+				end
+			end
 		end
 
 	process_bin_or_b (a_node: BIN_OR_B)

@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Implementation
 
-	put_message (a_message: STRING)
+	put_message (a_message: STRING_32)
 			-- Display `a_message' to output.
 		do
 			output_window.put_string (a_message)
@@ -40,7 +40,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -20,6 +20,8 @@ inherit
 			{NONE}all
 		end
 
+	ANY
+
 feature -- Access
 
 	assembly: STRING

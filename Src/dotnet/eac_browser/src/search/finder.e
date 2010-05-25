@@ -135,11 +135,11 @@ feature -- Access
 					i := i + 1
 				end
 				if Result = Void then
-					Result := search_in_array (l_type.fields, an_eiffel_feature_name)
+					Result := search_in_arrayed_list (l_type.fields, an_eiffel_feature_name)
 					if Result = Void then
-						Result := search_in_array (l_type.functions, an_eiffel_feature_name)
+						Result := search_in_arrayed_list (l_type.functions, an_eiffel_feature_name)
 						if Result = Void then
-							Result := search_in_array (l_type.procedures, an_eiffel_feature_name)
+							Result := search_in_arrayed_list (l_type.procedures, an_eiffel_feature_name)
 						end
 					end
 				end
@@ -154,7 +154,7 @@ feature -- Access
 
 feature {NONE} --Implementation
 
-	search_in_array (array: ARRAY [CONSUMED_MEMBER]; an_eiffel_feature_name: STRING): STRING
+	search_in_arrayed_list (array: ARRAYED_LIST [CONSUMED_MEMBER]; an_eiffel_feature_name: STRING): STRING
 			-- search `an_eiffel_feature_name' in `array'.
 		require
 			non_void_array: array /= Void
@@ -164,15 +164,17 @@ feature {NONE} --Implementation
 			i: INTEGER
 		do
 			from
-				i := 1
+				i := array.index
+				array.start
 			until
-				i > array.count or Result /= Void
+				array.after or Result /= Void
 			loop
-				if array.item (i).eiffel_name.is_equal (an_eiffel_feature_name) then
-					Result := array.item (i).dotnet_name
+				if array.item.eiffel_name.is_equal (an_eiffel_feature_name) then
+					Result := array.item.dotnet_name
 				end
-				i := i + 1
+				array.forth
 			end
+			array.go_i_th (i)
 		end
 
 feature -- Name

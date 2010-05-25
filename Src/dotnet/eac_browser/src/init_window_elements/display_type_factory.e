@@ -59,7 +59,7 @@ feature -- Access
 
 	lines: ARRAYED_LIST [DISPLAYED_LINE]
 			-- List of line to display.
-			
+
 	type: SPECIFIC_TYPE
 			-- Type to display.
 
@@ -87,7 +87,7 @@ feature {NONE} -- Implementation
 			end
 
 		end
-	
+
 	print_header
 			-- header.
 		local
@@ -110,9 +110,9 @@ feature {NONE} -- Implementation
 			end
 			new_line; new_line
 		end
-		
 
-	print_procedures (array: ARRAY [CONSUMED_PROCEDURE])
+
+	print_procedures (array: ARRAYED_LIST [CONSUMED_PROCEDURE])
 			-- Store signatures procedures contained in `array'.
 		local
 			i: INTEGER
@@ -131,16 +131,16 @@ feature {NONE} -- Implementation
 				i := 1
 				create procedures_list.make
 			until
-				array = Void 
+				array = Void
 				or else i > array.count
 			loop
-				if not array.item (i).is_property_or_event then
-					procedures_list.extend (create {COMPARABLE_CONSUMED_PROCEDURE}.make_with_consumed_procedure (array.item (i)))
+				if not array.i_th (i).is_property_or_event then
+					procedures_list.extend (create {COMPARABLE_CONSUMED_PROCEDURE}.make_with_consumed_procedure (array.i_th (i)))
 				end
-				
+
 				i := i + 1
 			end
-			
+
 			from
 				procedures_list.start
 				create procedures.make (1, procedures_list.count)
@@ -152,7 +152,7 @@ feature {NONE} -- Implementation
 				i := i + 1
 				procedures_list.forth
 			end
-			
+
 			from
 				i := 1
 				procedures.sort
@@ -165,7 +165,7 @@ feature {NONE} -- Implementation
 				else
 					l_line.set_path_icon (Path_icon_protected_procedure)
 				end
-	
+
 				new_line
 				i := i + 1
 			end
@@ -189,7 +189,7 @@ feature {NONE} -- Implementation
 				l_line.set_selected (False)
 			end
 			l_line.entities.extend (create {ENTITY_LINE}.make_with_image_and_color (Tabulation, text_color))
-			
+
 			l_line.entities.extend (create {ENTITY_LINE}.make_with_image_and_color (a_feature.dotnet_name, dotnet_feature_color))
 
 			l_line.entities.extend (create {ENTITY_LINE}.make_with_image_and_color (" : ", text_color))
@@ -203,19 +203,19 @@ feature {NONE} -- Implementation
 				i := 1
 			until
 				a_feature.arguments = Void
-				or else i > a_feature.arguments.count 
+				or else i > a_feature.arguments.count
 			loop
 				if i = 1 then
 					l_line.entities.extend (create {ENTITY_LINE}.make_with_image_and_color (" (", text_color))
 				else
 					l_line.entities.extend (create {ENTITY_LINE}.make_with_image_and_color (", ", text_color))
 				end
-				
+
 --				if l_line.number_pixels >= Max_pixel_per_line then
 --					new_line
 --					l_line.entities.extend (create {ENTITY_LINE}.make_with_image_and_color (New_line_indent, text_color))
 --				end
-	
+
 				output_string := a_feature.arguments.item (i).eiffel_name
 				l_line.entities.extend (create {ENTITY_LINE}.make_with_image_and_color (output_string, argument_color))
 
@@ -229,7 +229,7 @@ feature {NONE} -- Implementation
 					l_line.entities.extend (create {ENTITY_LINE}.make_with_image_and_color ("NATIVE_ARRAY", type_color))
 
 					l_line.entities.extend (create {ENTITY_LINE}.make_with_image_and_color (" [", text_color))
-					
+
 					output_string := eiffel_type_name (type.assembly, l_array_argument.element_type.name)
 					create l_entity.make_with_image_and_color (output_string, type_color)
 					l_entity.set_data (l_array_argument.element_type)
@@ -248,8 +248,8 @@ feature {NONE} -- Implementation
 				l_line.entities.extend (create {ENTITY_LINE}.make_with_image_and_color (")", text_color))
 			end
 		end
-	
-	print_constructors (array: ARRAY [CONSUMED_CONSTRUCTOR])
+
+	print_constructors (array: ARRAYED_LIST [CONSUMED_CONSTRUCTOR])
 			-- Store all signatures constructors contained in `array'.
 		local
 			i, j: INTEGER
@@ -269,35 +269,35 @@ feature {NONE} -- Implementation
 			from
 				i := 1
 			until
-				array = Void 
+				array = Void
 				or else i > array.count
 			loop
-				if feature_selected.is_equal (array.item (i).eiffel_name) then
+				if feature_selected.is_equal (array.i_th (i).eiffel_name) then
 					l_line.set_selected (True)
 				else
 					l_line.set_selected (False)
 				end
 
-				if array.item (i).is_public then
+				if array.i_th (i).is_public then
 					l_line.set_path_icon (Path_icon_constructor)
 				else
 					l_line.set_path_icon (Path_icon_constructor)
 				end
-	
+
 				l_line.entities.extend (create {ENTITY_LINE}.make_with_image_and_color (Tabulation, text_color))
 
 				l_line.set_path_icon (Path_icon_constructor)
 
-				create l_entity.make_with_image_and_color (array.item (i).eiffel_name, eiffel_feature_color)
-				l_entity.set_data (array.item (i))
+				create l_entity.make_with_image_and_color (array.i_th (i).eiffel_name, eiffel_feature_color)
+				l_entity.set_data (array.i_th (i))
 				l_line.entities.extend (l_entity)
 --				l_line.entities.extend (create {ENTITY_LINE}.make_with_image_and_color (array.item (i).eiffel_name, eiffel_feature_color))
 
 				from
 					j := 1
 				until
-					array.item (i).arguments = Void
-					or else j > array.item (i).arguments.count 
+					array.i_th (i).arguments = Void
+					or else j > array.i_th (i).arguments.count
 				loop
 					if j = 1 then
 						l_line.entities.extend (create {ENTITY_LINE}.make_with_image_and_color (" (", text_color))
@@ -305,25 +305,25 @@ feature {NONE} -- Implementation
 						l_line.entities.extend (create {ENTITY_LINE}.make_with_image_and_color (", ", text_color))
 					end
 
-					output_string := array.item (i).arguments.item (j).eiffel_name
+					output_string := array.i_th (i).arguments.item (j).eiffel_name
 					l_line.entities.extend (create {ENTITY_LINE}.make_with_image_and_color (output_string, argument_color))
 
 					l_line.entities.extend (create {ENTITY_LINE}.make_with_image_and_color (": ", text_color))
 
-					l_argument := array.item (i).arguments.item (j).type
+					l_argument := array.i_th (i).arguments.item (j).type
 					l_array_argument := Void
 					l_array_argument ?= l_argument
 						-- Is type argument NATIVE_ARRAY?
 					if l_array_argument /= Void then
 						l_line.entities.extend (create {ENTITY_LINE}.make_with_image_and_color ("NATIVE_ARRAY", type_color))
-						
+
 						l_line.entities.extend (create {ENTITY_LINE}.make_with_image_and_color (" [", text_color))
-						
+
 						output_string := eiffel_type_name (type.assembly, l_array_argument.element_type.name)
 						create l_entity.make_with_image_and_color (output_string, type_color)
 						l_entity.set_data (l_array_argument.element_type)
 						l_line.entities.extend (l_entity)
-						
+
 						l_line.entities.extend (create {ENTITY_LINE}.make_with_image_and_color ("]", text_color))
 					else
 						output_string := eiffel_type_name (type.assembly, l_argument.name)
@@ -337,13 +337,13 @@ feature {NONE} -- Implementation
 					l_line.entities.extend (create {ENTITY_LINE}.make_with_image_and_color (")", text_color))
 				end
 				new_line
-				
+
 				i := i + 1
 			end
 			new_line
 		end
 
-	print_functions (array: ARRAY [CONSUMED_FUNCTION])
+	print_functions (array: ARRAYED_LIST [CONSUMED_FUNCTION])
 			-- Store all signatures functions contained in `array'.
 		local
 			i: INTEGER
@@ -366,11 +366,11 @@ feature {NONE} -- Implementation
 				i := 1
 				create functions_list.make
 			until
-				array = Void 
+				array = Void
 				or else i > array.count
 			loop
-				if not array.item (i).is_property_or_event then
-					functions_list.extend (create {COMPARABLE_CONSUMED_FUNCTION}.make_with_consumed_procedure (array.item (i)))
+				if not array.i_th (i).is_property_or_event then
+					functions_list.extend (create {COMPARABLE_CONSUMED_FUNCTION}.make_with_consumed_procedure (array.i_th (i)))
 				end
 
 				i := i + 1
@@ -388,7 +388,7 @@ feature {NONE} -- Implementation
 				i := i + 1
 				functions_list.forth
 			end
-			
+
 			from
 				i := 1
 				functions.sort
@@ -402,7 +402,7 @@ feature {NONE} -- Implementation
 				else
 					l_line.set_path_icon (Path_icon_protected_function)
 				end
-				
+
 				l_returned_type := functions.item (i).return_type
 				l_array_returned_type := Void
 				l_array_returned_type ?= l_returned_type
@@ -430,11 +430,11 @@ feature {NONE} -- Implementation
 				new_line
 				i := i + 1
 			end
-			
+
 			new_line
 		end
 
-	print_properties (array: ARRAY [CONSUMED_PROPERTY])
+	print_properties (array: ARRAYED_LIST [CONSUMED_PROPERTY])
 			-- Store all signatures properties contained in `array'.
 		local
 			i: INTEGER
@@ -458,10 +458,10 @@ feature {NONE} -- Implementation
 				i := 1
 				create properties_list.make
 			until
-				array = Void 
+				array = Void
 				or else i > array.count
 			loop
-				a_property := array.item (i)
+				a_property := array.i_th (i)
 				if a_property.getter /= Void then
 					properties_list.extend (create {COMPARABLE_CONSUMED_FUNCTION}.make_with_consumed_procedure (a_property.getter))
 				end
@@ -482,7 +482,7 @@ feature {NONE} -- Implementation
 				i := i + 1
 				properties_list.forth
 			end
-			
+
 			from
 				i := 1
 				properties.sort
@@ -490,13 +490,13 @@ feature {NONE} -- Implementation
 				i > properties.count
 			loop
 				print_feature (properties.item (i))
-				
+
 				if properties.item (i).is_public then
 					l_line.set_path_icon (Path_icon_public_property)
 				else
 					l_line.set_path_icon (Path_icon_protected_property)
 				end
-	
+
 				l_returned_type := properties.item (i).return_type
 				l_array_returned_type := Void
 				l_array_returned_type ?= l_returned_type
@@ -505,18 +505,18 @@ feature {NONE} -- Implementation
 						-- Is it a NATIVE_ARRAY?
 					if l_array_returned_type /= Void then
 						l_line.entities.extend (create {ENTITY_LINE}.make_with_image_and_color (": NATIVE_ARRAY", type_color))
-	
+
 						l_line.entities.extend (create {ENTITY_LINE}.make_with_image_and_color (" [", text_color))
-	
+
 						output_string := eiffel_type_name (type.assembly, l_array_returned_type.element_type.name)
 						create l_entity.make_with_image_and_color (output_string, type_color)
 						l_entity.set_data (l_array_returned_type.element_type)
 						l_line.entities.extend (l_entity)
-	
+
 						l_line.entities.extend (create {ENTITY_LINE}.make_with_image_and_color ("]", text_color))
 					else
 						l_line.entities.extend (create {ENTITY_LINE}.make_with_image_and_color (": ", text_color))
-	
+
 						output_string := eiffel_type_name (type.assembly, l_returned_type.name)
 						create l_entity.make_with_image_and_color (output_string, type_color)
 						l_entity.set_data (l_returned_type)
@@ -527,11 +527,11 @@ feature {NONE} -- Implementation
 				new_line
 				i := i + 1
 			end
-			
+
 			new_line
 		end
 
-	print_events (array: ARRAY [CONSUMED_EVENT])
+	print_events (array: ARRAYED_LIST [CONSUMED_EVENT])
 			-- Store all signatures events contained in `array'.
 		local
 			i: INTEGER
@@ -555,20 +555,20 @@ feature {NONE} -- Implementation
 				i := 1
 				create events_list.make
 			until
-				array = Void 
+				array = Void
 				or else i > array.count
 			loop
-				an_event := array.item (i)
+				an_event := array.i_th (i)
 				if an_event.adder /= Void then
-					events_list.extend (create {COMPARABLE_CONSUMED_FUNCTION}.make_with_consumed_procedure (an_event.adder))	
+					events_list.extend (create {COMPARABLE_CONSUMED_FUNCTION}.make_with_consumed_procedure (an_event.adder))
 				end
 				if an_event.remover /= Void then
-					events_list.extend (create {COMPARABLE_CONSUMED_FUNCTION}.make_with_consumed_procedure (an_event.remover))	
+					events_list.extend (create {COMPARABLE_CONSUMED_FUNCTION}.make_with_consumed_procedure (an_event.remover))
 				end
 				if an_event.raiser /= Void then
-					events_list.extend (create {COMPARABLE_CONSUMED_FUNCTION}.make_with_consumed_procedure (an_event.raiser))	
+					events_list.extend (create {COMPARABLE_CONSUMED_FUNCTION}.make_with_consumed_procedure (an_event.raiser))
 				end
-				
+
 				i := i + 1
 			end
 			from
@@ -582,7 +582,7 @@ feature {NONE} -- Implementation
 				i := i + 1
 				events_list.forth
 			end
-			
+
 			from
 				i := 1
 				events.sort
@@ -590,13 +590,13 @@ feature {NONE} -- Implementation
 				i > events.count
 			loop
 				print_feature (events.item (i))
-				
+
 				if events.item (i).is_public then
 					l_line.set_path_icon (Path_icon_public_event)
 				else
 					l_line.set_path_icon (Path_icon_protected_event)
 				end
-	
+
 				l_returned_type := events.item (i).return_type
 				l_array_returned_type := Void
 				l_array_returned_type ?= l_returned_type
@@ -604,18 +604,18 @@ feature {NONE} -- Implementation
 						-- Is it a NATIVE_ARRAY?
 					if l_array_returned_type /= Void then
 						l_line.entities.extend (create {ENTITY_LINE}.make_with_image_and_color (": NATIVE_ARRAY", type_color))
-	
+
 						l_line.entities.extend (create {ENTITY_LINE}.make_with_image_and_color (" [", text_color))
-	
+
 						output_string := eiffel_type_name (type.assembly, l_array_returned_type.element_type.name)
 						create l_entity.make_with_image_and_color (output_string, type_color)
 						l_entity.set_data (l_array_returned_type.element_type)
 						l_line.entities.extend (l_entity)
-	
+
 						l_line.entities.extend (create {ENTITY_LINE}.make_with_image_and_color ("]", text_color))
 					else
 						l_line.entities.extend (create {ENTITY_LINE}.make_with_image_and_color (": ", text_color))
-	
+
 						output_string := eiffel_type_name (type.assembly, l_returned_type.name)
 						create l_entity.make_with_image_and_color (output_string, type_color)
 						l_entity.set_data (l_returned_type)
@@ -626,12 +626,12 @@ feature {NONE} -- Implementation
 				new_line
 				i := i + 1
 			end
-			
+
 			new_line
 		end
 
 
-	print_attributes (array: ARRAY [CONSUMED_FIELD])
+	print_attributes (array: ARRAYED_LIST [CONSUMED_FIELD])
 			-- Store all signatures attributes contained in `array'.
 		local
 			i: INTEGER
@@ -649,10 +649,10 @@ feature {NONE} -- Implementation
 				i := 1
 				create attributes.make (1, array.count)
 			until
-				array = Void 
+				array = Void
 				or else i > array.count
 			loop
-				attributes.put (create {COMPARABLE_CONSUMED_FIELD}.make_with_consumed_field (array.item (i)), i)
+				attributes.put (create {COMPARABLE_CONSUMED_FIELD}.make_with_consumed_field (array.i_th (i)), i)
 
 				i := i + 1
 			end
@@ -685,25 +685,25 @@ feature {NONE} -- Implementation
 				l_entity.set_data (attributes.item (i))
 				l_line.entities.extend (l_entity)
 --				l_line.entities.extend (create {ENTITY_LINE}.make_with_image_and_color (attributes.item (i).eiffel_name, eiffel_feature_color))
-				
+
 				l_returned_type := attributes.item (i).return_type
 				l_array_returned_type := Void
 				l_array_returned_type ?= l_returned_type
 					-- Is it a NATIVE_ARRAY?
 				if l_array_returned_type /= Void then
 					l_line.entities.extend (create {ENTITY_LINE}.make_with_image_and_color (": NATIVE_ARRAY", type_color))
-					
+
 					l_line.entities.extend (create {ENTITY_LINE}.make_with_image_and_color (" [", text_color))
-					
+
 					output_string := eiffel_type_name (type.assembly, l_array_returned_type.element_type.name)
 					create l_entity.make_with_image_and_color (output_string, type_color)
 					l_entity.set_data (l_array_returned_type.element_type)
 					l_line.entities.extend (l_entity)
-					
+
 					l_line.entities.extend (create {ENTITY_LINE}.make_with_image_and_color ("]", text_color))
 				else
 					l_line.entities.extend (create {ENTITY_LINE}.make_with_image_and_color (": ", text_color))
-					
+
 					output_string := eiffel_type_name (type.assembly, l_returned_type.name)
 					create l_entity.make_with_image_and_color (output_string, type_color)
 					l_entity.set_data (l_returned_type)
@@ -714,14 +714,14 @@ feature {NONE} -- Implementation
 					-- Is it a constante?
 				if l_constante_field /= Void then
 					l_line.entities.extend (create {ENTITY_LINE}.make_with_image_and_color (" is ", text_color))
-					
+
 					l_line.entities.extend (create {ENTITY_LINE}.make_with_image_and_color (l_constante_field.value, constant_color))
 				end
-				
+
 				new_line
 				i := i + 1
 			end
-			
+
 			new_line
 		end
 
@@ -733,13 +733,13 @@ feature {NONE} -- Implementation
 			lines.extend (l_line)
 			create l_line.make
 		end
-		
+
 	Tabulation: STRING = "      "
 			-- representation of a tabulation in spaces.
-	
+
 	Max_pixel_per_line: INTEGER = 400
 			-- Number max of char per line.
-	
+
 	New_line_indent: STRING = "                                                            "
 			-- indent when new line but still the same signature.
 

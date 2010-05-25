@@ -63,11 +63,10 @@ feature -- Basic Operations
 			non_void_assembly_of_dotnet_type: assembly_of_dotnet_type /= Void
 			non_void_a_full_dotnet_type_name: a_full_dotnet_type_name /= Void
 		local
-			i: INTEGER
 			ct: CONSUMED_TYPE
 			eac: EAC_BROWSER
 			l_node: EV_COMPARABLE_TREE_ITEM
-			l_entities: ARRAY [CONSUMED_ENTITY]
+			l_entities: ARRAYED_LIST [CONSUMED_ENTITY]
 			l_feature, l_field: CONSUMED_MEMBER
 			l_property: CONSUMED_PROPERTY
 			l_event: CONSUMED_EVENT
@@ -88,40 +87,39 @@ feature -- Basic Operations
 
 			l_entities := ct.entities
 			from
-				i := 1
+				l_entities.start
 				create l_features.make
 				create l_properties.make
 				create l_events.make
 			until
-				i > l_entities.count
+				l_entities.after
 			loop
-				if l_entities.item (i).is_method or l_entities.item (i).is_field then
-					l_feature ?= l_entities.item (i)
+				if l_entities.item.is_method or l_entities.item.is_field then
+					l_feature ?= l_entities.item
 					if l_feature /= Void then
 						l_node := initialize_tree_item_feature (l_feature, a_full_dotnet_type_name)
 						l_features.extend (l_node)
 					end
-				elseif l_entities.item (i).is_property then
-					l_property ?= l_entities.item (i)
+				elseif l_entities.item.is_property then
+					l_property ?= l_entities.item
 					if l_property /= Void then
 						l_node := initialize_tree_item_property (l_property, a_full_dotnet_type_name)
 						l_properties.extend (l_node)
 					end
-				elseif l_entities.item (i).is_field then
-					l_field ?= l_entities.item (i)
+				elseif l_entities.item.is_field then
+					l_field ?= l_entities.item
 					if l_feature /= Void then
 						l_node := initialize_tree_item_feature (l_field, a_full_dotnet_type_name)
 						l_features.extend (l_node)
 					end
-				elseif l_entities.item (i).is_event then
-					l_event ?= l_entities.item (i)
+				elseif l_entities.item.is_event then
+					l_event ?= l_entities.item
 					if l_event /= Void then
 						l_node := initialize_tree_item_event (l_event, a_full_dotnet_type_name)
 						l_events.extend (l_node)
 					end
 				end
-
-				i := i + 1
+				l_entities.forth
 			end
 			right_tree.append (classify_tree_nodes (l_features))
 			right_tree.append (classify_tree_nodes (l_properties))
@@ -136,11 +134,10 @@ feature -- Basic Operations
 			non_void_assembly_of_dotnet_type: assembly_of_dotnet_type /= Void
 			non_void_a_full_dotnet_type_name: a_full_dotnet_type_name /= Void
 		local
-			i: INTEGER
 			ct: CONSUMED_TYPE
 			eac: EAC_BROWSER
 			l_node: EV_COMPARABLE_TREE_ITEM
-			l_inherited_entities: ARRAY [CONSUMED_ENTITY]
+			l_inherited_entities: ARRAYED_LIST [CONSUMED_ENTITY]
 			l_property: CONSUMED_PROPERTY
 			l_event: CONSUMED_EVENT
 			l_feature: CONSUMED_MEMBER
@@ -153,20 +150,20 @@ feature -- Basic Operations
 			ct := eac.consumed_type (assembly_of_dotnet_type, a_full_dotnet_type_name)
 			l_inherited_entities := ct.inherited_entities
 			from
-				i := 1
 				create l_inherited_features.make
+				l_inherited_entities.start
 			until
-				i > l_inherited_entities.count
+				l_inherited_entities.after
 			loop
-				l_feature ?= l_inherited_entities.item (i)
+				l_feature ?= l_inherited_entities.item
 				if l_feature /= Void then
 					l_node := initialize_tree_item_feature (l_feature, a_full_dotnet_type_name)
 				else
-					l_property ?= l_inherited_entities.item (i)
+					l_property ?= l_inherited_entities.item
 					if l_property /= Void then
 						l_node := initialize_tree_item_property (l_property, a_full_dotnet_type_name)
 					else
-						l_event ?= l_inherited_entities.item (i)
+						l_event ?= l_inherited_entities.item
 						if l_event /= Void then
 							l_node := initialize_tree_item_event (l_event, a_full_dotnet_type_name)
 						end
@@ -175,7 +172,7 @@ feature -- Basic Operations
 				if l_node /= Void then
 					l_inherited_features.extend (l_node)
 				end
-				i := i + 1
+				l_inherited_entities.forth
 			end
 			right_tree.append (classify_tree_nodes (l_inherited_features))
 		end
@@ -324,7 +321,6 @@ feature {NONE} -- Implementation
 			-- add double click action on each type_item to be editable.
 		require
 		local
-			i: INTEGER
 			ct: CONSUMED_TYPE
 			eac: EAC_BROWSER
 			l_ico: EV_PIXMAP
@@ -332,25 +328,23 @@ feature {NONE} -- Implementation
 			path: CACHE_PATH
 			l_constructors_node, l_attributes_node, l_features_node, l_properties_node, l_events_node: EV_TREE_ITEM
 			l_constructors_list, l_fields_list, l_procedures_list, l_functions_list, l_properties_list, l_events_list: LINKED_LIST [EV_COMPARABLE_TREE_ITEM]
-			l_procedures: ARRAY [CONSUMED_PROCEDURE]
-			l_functions: ARRAY [CONSUMED_FUNCTION]
 		do
 			right_tree.wipe_out
 			create eac
 			create path
 			ct := eac.consumed_type (an_assembly, a_full_dotnet_type_name)
 			if ct /= Void then
-				from
-					i := 1
-					create l_constructors_list.make
-				until
-					ct.constructors = Void
-					or else i > ct.constructors.count
-				loop
-					l_tree_item := initialize_tree_item_constructor (ct.constructors.i_th (i), a_full_dotnet_type_name)
-
-					l_constructors_list.extend (l_tree_item)
-					i := i + 1
+				create l_constructors_list.make
+				if attached ct.constructors as l_constructors then
+					from
+						l_constructors.start
+					until
+						l_constructors.after
+					loop
+						l_tree_item := initialize_tree_item_constructor (l_constructors.item, a_full_dotnet_type_name)
+						l_constructors_list.extend (l_tree_item)
+						l_constructors.forth
+					end
 				end
 				create l_constructors_node.make_with_text ("Constructors")
 				l_ico := load_icon (Path_icon_constructor)
@@ -360,17 +354,17 @@ feature {NONE} -- Implementation
 				l_constructors_node.append (classify_tree_nodes (l_constructors_list))
 				right_tree.extend (l_constructors_node)
 
-				from
-					i := 1
-					create l_fields_list.make
-				until
-					ct.fields = Void
-					or else i > ct.fields.count
-				loop
-					l_tree_item := initialize_tree_item_feature (ct.fields.i_th (i), a_full_dotnet_type_name)
-
-					l_fields_list.extend (l_tree_item)
-					i := i + 1
+				create l_fields_list.make
+				if attached ct.fields as l_fields then
+					from
+						l_fields.start
+					until
+						l_fields.after
+					loop
+						l_tree_item := initialize_tree_item_feature (l_fields.item, a_full_dotnet_type_name)
+						l_fields_list.extend (l_tree_item)
+						l_fields.forth
+					end
 				end
 				create l_attributes_node.make_with_text ("Attributes")
 				l_ico := load_icon (Path_icon_public_attribute)
@@ -380,20 +374,19 @@ feature {NONE} -- Implementation
 				l_attributes_node.append (classify_tree_nodes (l_fields_list))
 				right_tree.extend (l_attributes_node)
 
-				from
-					i := 1
-					create l_procedures_list.make
-					l_procedures := ct.procedures
-				until
-					ct.procedures = Void
-					or else i > l_procedures.count
-				loop
-					if not l_procedures.item (i).is_property_or_event then
-						l_tree_item := initialize_tree_item_feature (l_procedures.item (i), a_full_dotnet_type_name)
-						l_procedures_list.extend (l_tree_item)
+				create l_procedures_list.make
+				if attached ct.procedures as l_procs then
+					from
+						l_procs.start
+					until
+						l_procs.after
+					loop
+						if not l_procs.item.is_property_or_event then
+							l_tree_item := initialize_tree_item_feature (l_procs.item, a_full_dotnet_type_name)
+							l_procedures_list.extend (l_tree_item)
+						end
+						l_procs.forth
 					end
-
-					i := i + 1
 				end
 				create l_features_node.make_with_text ("Features")
 				l_ico := load_icon (Path_icon_constructor)
@@ -402,20 +395,19 @@ feature {NONE} -- Implementation
 				end
 				l_features_node.append (classify_tree_nodes (l_procedures_list))
 
-				from
-					i := 1
-					create l_functions_list.make
-					l_functions := ct.functions
-				until
-					ct.functions = Void
-					or else i > l_functions.count
-				loop
-					if not l_functions.item (i).is_property_or_event then
-						l_tree_item := initialize_tree_item_feature (l_functions.item (i), a_full_dotnet_type_name)
-						l_functions_list.extend (l_tree_item)
+				create l_functions_list.make
+				if attached ct.functions as l_funcs then
+					from
+						l_funcs.start
+					until
+						l_funcs.after
+					loop
+						if not l_funcs.item.is_property_or_event then
+							l_tree_item := initialize_tree_item_feature (l_funcs.item, a_full_dotnet_type_name)
+							l_functions_list.extend (l_tree_item)
+						end
+						l_funcs.forth
 					end
-
-					i := i + 1
 				end
 				l_ico := load_icon (Path_icon_constructor)
 				if l_ico /= Void then
@@ -424,17 +416,17 @@ feature {NONE} -- Implementation
 				l_features_node.append (classify_tree_nodes (l_functions_list))
 				right_tree.extend (l_features_node)
 
-				from
-					i := 1
-					create l_properties_list.make
-				until
-					ct.properties = Void
-					or else i > ct.properties.count
-				loop
-					l_tree_item := initialize_tree_item_property (ct.properties.i_th (i), a_full_dotnet_type_name)
-
-					l_properties_list.extend (l_tree_item)
-					i := i + 1
+				create l_properties_list.make
+				if attached ct.properties as l_props then
+					from
+						l_props.start
+					until
+						l_props.after
+					loop
+						l_tree_item := initialize_tree_item_property (l_props.item, a_full_dotnet_type_name)
+						l_properties_list.extend (l_tree_item)
+						l_props.forth
+					end
 				end
 				create l_properties_node.make_with_text ("Properties")
 				l_ico := load_icon (Path_icon_public_property)
@@ -444,17 +436,17 @@ feature {NONE} -- Implementation
 				l_properties_node.append (classify_tree_nodes (l_properties_list))
 				right_tree.extend (l_properties_node)
 
-				from
-					i := 1
-					create l_events_list.make
-				until
-					ct.events = Void
-					or else i > ct.events.count
-				loop
-					l_tree_item := initialize_tree_item_event (ct.events.i_th (i), a_full_dotnet_type_name)
-
-					l_events_list.extend (l_tree_item)
-					i := i + 1
+				create l_events_list.make
+				if attached ct.events as l_events then
+					from
+						l_events.start
+					until
+						l_events.after
+					loop
+						l_tree_item := initialize_tree_item_event (l_events.item, a_full_dotnet_type_name)
+						l_events_list.extend (l_tree_item)
+						l_events.forth
+					end
 				end
 				create l_events_node.make_with_text ("Events")
 				l_ico := load_icon (Path_icon_public_event)

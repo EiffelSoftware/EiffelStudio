@@ -1,10 +1,8 @@
 note
 	description : "[
-			Simple XML parser with settings
+			Stoppable XML parser with settings
 				- carriage_return_character_ignored
-				- error_ignored
 				- entity_mapping
-				- allow to stop the parser
 
 			It does not perform any strict verification, and does not handle the encoding.
 			This is really a simple xml parser which might answer basic XML parsing.
@@ -17,12 +15,11 @@ class
 	XML_CUSTOM_PARSER
 
 inherit
-	XML_SIMPLE_PARSER
+	XML_STOPPABLE_PARSER
 		redefine
-			make, reset, report_error,
+			make,
 			resolve_entity,
-			internal_read_character,
-			set_checkpoint_position, unset_checkpoint_position, checkpoint_position
+			internal_read_character
 		end
 
 create
@@ -62,11 +59,6 @@ feature -- Settings
 			-- occurring with dos format with CR+LF as end of line.
 			-- By default: True
 
-	error_ignored: BOOLEAN
-			-- Ignore error?
-			-- If True, do not stop parser on error (no guarantee)
-			-- Default: False			
-
 	entity_mapping: HASH_TABLE [CHARACTER, STRING]
 			-- Entities mapping
 			-- You can provide your own extended mapping with `set_entity_mapping'
@@ -78,73 +70,6 @@ feature -- Settings change
 			-- Set `carriage_return_character_ignored' to `b'
 		do
 			carriage_return_character_ignored := b
-		end
-
-	set_error_ignored (b: BOOLEAN)
-			-- Set `error_ignored' to `b'
-		do
-			error_ignored := b
-		end
-
-feature -- Status change
-
-	request_stop
-			-- Request the parser to stop
-		do
-			stop_requested := True
-			parsing_stopped := True
-		end
-
-feature -- Parsing status
-
-	stop_requested: BOOLEAN
-			-- Requested to stop parsing
-
-feature -- Element change
-
-	reset
-			-- Reset parser states
-		do
-			Precursor
-			stop_requested := False
-		ensure then
-			stop_requested_unset: not stop_requested
-		end
-
-feature {NONE} -- Implementation
-
-	checkpoint_position: detachable XML_POSITION
-		do
-			if checkpoint_position_line > 0 then
-				create Result.make (buffer.name, checkpoint_position_byte_index, checkpoint_position_column, checkpoint_position_line)
-			end
-		end
-
-	checkpoint_position_line: like line
-	checkpoint_position_column: like column
-	checkpoint_position_byte_index: like byte_index
-
-	set_checkpoint_position
-		do
-			checkpoint_position_line := line
-			checkpoint_position_column := column
-			checkpoint_position_byte_index := byte_index
-		end
-
-	unset_checkpoint_position
-		do
-			checkpoint_position_line := 0
-			checkpoint_position_column := 0
-			checkpoint_position_byte_index := 0
-		end
-
-feature {NONE} -- Implementation: parse
-
-	report_error (a_message: STRING)
-			-- Report error with message `a_message'
-		do
-			Precursor (a_message)
-			parsing_stopped := not error_ignored
 		end
 
 feature {NONE} -- Implementation

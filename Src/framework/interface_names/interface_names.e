@@ -119,6 +119,7 @@ feature -- Button texts
 	b_Compile: STRING_32							do Result := locale.translation("Compile")	end
 	b_Launch: STRING_32							do Result := locale.translation("Start")	end
 	b_Restart: STRING_32							do Result := locale.translation("Restart") end
+	b_Break: STRING_32							do Result := locale.translation("Break")	end
 	b_Continue: STRING_32						do Result := locale.translation("Continue")	end
 	b_Finalize: STRING_32						do Result := locale.translation("Finalize")	end
 	b_Freeze: STRING_32							do Result := locale.translation("Freeze")	end
@@ -1771,6 +1772,14 @@ feature -- Label texts
 			a_file_name_not_void: a_file_name /= Void
 		do
 			Result := locale.formatted_string (locale.translation ("$1(not an Eiffel class file)   located in $2"), [a_stone_signature, a_file_name])
+		end
+
+	l_empty_development_window_header (a_system_name, a_target_name: STRING_GENERAL): STRING_32
+		require
+			a_system_name_not_void: a_system_name /= Void
+			a_target_name_not_void: a_target_name /= Void
+		do
+			Result := locale.formatted_string (locale.translation ("$1 - Empty Development Tool"), [l_system_and_target (a_system_name, a_target_name)])
 		end
 
 	l_classi_header (a_system_name, a_target_name, a_group_name, a_sig, a_file_name: STRING_GENERAL): STRING_32

@@ -2508,9 +2508,9 @@ feature {NONE} -- Implementation
 							interface_names.l_Discard_ignore_contract_violation_dialog,
 							create {ES_BOOLEAN_PREFERENCE_SETTING}.make (dialog_data.confirm_ignore_contract_violation_preference, True)
 						)
-					l_confirm.set_button_text (l_buttons.yes_button, "Break")
-					l_confirm.set_button_text (l_buttons.no_button, "Continue")
-					l_confirm.set_button_text (l_buttons.cancel_button, "Ignore")
+					l_confirm.set_button_text (l_buttons.yes_button, interface_names.b_break)
+					l_confirm.set_button_text (l_buttons.no_button, interface_names.b_continue)
+					l_confirm.set_button_text (l_buttons.cancel_button, interface_names.b_ignore)
 					l_confirm.set_button_action (l_confirm.dialog_buttons.no_button, agent debug_run_cmd.execute)
 					l_confirm.set_button_action (l_confirm.dialog_buttons.cancel_button, agent ignore_contract_violation.execute)
 					l_confirm.show_on_active_window

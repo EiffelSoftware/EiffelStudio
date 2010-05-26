@@ -73,6 +73,7 @@ test	replace_key_replace_item	table004 tcf pass table
 test	iteration-with-default-key	table005 tcf pass table iteration
 test	infinite-loop-on-removal-then-addition	table006 tcf pass table
 test	remove-default-key		table007 tcf pass table
+test	current_keys_void_safe	table008 tcf pass table
 
 test	recursive-delete-with-symlinks	directory001 tcf pass directory
 

@@ -5,8 +5,9 @@
 		<root all_classes="true"/>
 		<file_rule>
 			<exclude>EIFGENs</exclude>
-			<exclude>tests</exclude>
 			<exclude>\.svn</exclude>
+			<exclude>/CVS$</exclude>
+			<exclude>tests</exclude>
 			<exclude>examples</exclude>
 		</file_rule>
 		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" syntax="transitional">
@@ -65,10 +66,8 @@
 		<library name="patterns" location="$EIFFEL_SRC\framework\patterns\patterns-safe.ecf" readonly="false"/>
 		<cluster name="sqlite" location=".\" recursive="true">
 			<file_rule>
-				<exclude>/EIFGENs$</exclude>
-				<exclude>/CVS$</exclude>
+				<exclude>/experimental$</exclude>
 				<exclude>/spec$</exclude>
-				<exclude>/.svn$</exclude>
 				<exclude>/Clib$</exclude>
 			</file_rule>
 		</cluster>

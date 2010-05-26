@@ -20,12 +20,14 @@ if equivalent interface exists.
 			<renaming old_name="XML_ELEMENT_NODE" new_name="XM_ELEMENT_NODE"/>
 			<renaming old_name="XML_NAMED_NODE" new_name="XM_NAMED_NODE"/>
 			<renaming old_name="XML_NODE" new_name="XM_NODE"/>
-			<renaming old_name="XML_NODE_VISITOR" new_name="XM_NODE_VISITOR"/>
+			<renaming old_name="XML_TREE_TO_EVENTS" new_name="XM_TREE_TO_EVENTS"/>
+			<renaming old_name="XML_NODE_VISITOR_NULL" new_name="XM_NODE_PROCESSOR"/>
 			<renaming old_name="XML_NODE_VISITOR_NULL" new_name="XM_NODE_VISITOR_NULL"/>
 			<renaming old_name="XML_NODE_VISITOR_PRINT" new_name="XM_NODE_VISITOR_PRINT"/>
 			<renaming old_name="XML_PROCESSING_INSTRUCTION" new_name="XM_PROCESSING_INSTRUCTION"/>
 		</library>
 		<library name="xml_parser" location="$ISE_LIBRARY\framework\xml\parser\xml_parser.ecf">
+			<renaming old_name="XML_PARSER_FACTORY" new_name="XM_PARSER_FACTORY"/>
 			<renaming old_name="XML_CALLBACKS" new_name="XM_CALLBACKS"/>
 			<renaming old_name="XML_CALLBACKS_FILTER" new_name="XM_CALLBACKS_FILTER"/>
 			<renaming old_name="XML_CALLBACKS_NULL" new_name="XM_CALLBACKS_NULL"/>
@@ -33,8 +35,6 @@ if equivalent interface exists.
 			<renaming old_name="XML_FORWARD_CALLBACKS" new_name="XM_FORWARD_CALLBACKS"/>
 			<renaming old_name="XML_NAMESPACE_RESOLVER" new_name="XM_NAMESPACE_RESOLVER"/>
 			<renaming old_name="XML_NAMESPACE_RESOLVER_CONTEXT" new_name="XM_NAMESPACE_RESOLVER_CONTEXT"/>
-			<renaming old_name="XML_POSITION" new_name="XM_POSITION"/>
-			<renaming old_name="XML_MARKUP_CONSTANTS" new_name="XM_MARKUP_CONSTANTS"/>
 		</library>
 		<library name="xml_gobo" location="$ISE_LIBRARY\framework\xml\gobo\xml_gobo.ecf" readonly="false">
 			<renaming old_name="XML_CALLBACKS_FILTER_FACTORY" new_name="XM_CALLBACKS_FILTER_FACTORY"/>

@@ -9,7 +9,7 @@ note
 class XM_EIFFEL_PARSER
 
 inherit
-	XML_CUSTOM_PARSER
+	XML_STOPPABLE_PARSER
 		rename
 			parse_from_stream as parse_from_xml_stream
 		end
@@ -18,15 +18,6 @@ inherit
 
 create
 	make
-
-feature -- Access
-
-	abort
-			-- Abort parsing.
-			-- Do not print error message.
-		do
-			request_stop
-		end
 
 note
 	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"

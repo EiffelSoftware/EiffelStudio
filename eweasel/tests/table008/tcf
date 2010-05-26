@@ -4,11 +4,8 @@ test_description Make sure HASH_TABLE.current_keys is void-safe
 copy_sub 	Ace $TEST Ace
 copy_raw 	test.e $CLUSTER test.e
 
-compile_frozen
+compile_melted
 compile_result ok
-
-c_compile_work
-c_compile_result ok
 
 execute_work NONE exec_output
 execute_result ok

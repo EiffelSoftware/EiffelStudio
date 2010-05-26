@@ -13,7 +13,8 @@ class
 inherit
 	ITERATION_CURSOR [SQLITE_RESULT_ROW]
 		rename
-			make as iteration_make
+			make as iteration_make,
+			cursor_index as index
 		redefine
 			start, forth, after
 		end
@@ -101,9 +102,6 @@ feature -- Access
 			Result := l_result
 		end
 
-	index: INTEGER
-			-- <Precursor>
-
 feature {NONE} -- Access
 
 	last_result: INTEGER
@@ -136,6 +134,7 @@ feature -- Cursor movement
 			l_arg_id: C_STRING
 			l_arg_index: INTEGER
 		do
+			Precursor
 				-- Reset the iternal item
 			internal_item := Void
 
@@ -217,7 +216,7 @@ feature -- Cursor movement
 			l_done: BOOLEAN
 			l_locked: BOOLEAN
 		do
-			index := index + 1
+			Precursor
 
 			l_api := sqlite_api
 			l_stmt := statement.internal_stmt

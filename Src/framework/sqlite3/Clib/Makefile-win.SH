@@ -45,6 +45,8 @@ clean:
 	$(RM) *.$obj
 	$(RM) *.lib
 
+# Lib 
+
 esqlite.lib: $(OBJECTS)
 	$alib_line
 	$(MV) $@ ..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib$(DIR)$@
@@ -57,18 +59,20 @@ ilesqlite.lib: $(IL_OBJECTS)
 	$alib_line
 	$(MV) $@ ..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib$(DIR)$@
 
-sqlite.$obj: sqlite.c
+# Obj
+
+sqlite3.$obj: sqlite3.c
 	$(CC) $(JCFLAGS) $(OUTPUT_CMD)$@ -c $?
 
 #Multithreaded targets.
-MTsqlite.$obj: sqlite.c
+MTsqlite3.$obj: sqlite3.c
 	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $?
 
 #.NET targets.
-ILsqlite.$obj: sqlite.c
+ILsqlite3.$obj: sqlite3.c
 	$(CC) $(JILCFLAGS) $(OUTPUT_CMD)$@ -c $?
 
-#Multithreaded targets.
+# Eiffel lib
 esqlite.$obj: esqlite.c
 	$(CC) $(JCFLAGS) $(OUTPUT_CMD)$@ -c $?
 

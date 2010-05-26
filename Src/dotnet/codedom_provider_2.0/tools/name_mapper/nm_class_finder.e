@@ -155,7 +155,7 @@ feature {NONE} -- Private Access
 	Attribute_access_mutex: MUTEX
 			-- Mutex to access public attribute
 		once
-			create Result
+			create Result.make
 		end
 		
 	type_reference_factory: CODE_TYPE_REFERENCE_FACTORY

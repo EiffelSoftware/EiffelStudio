@@ -39,9 +39,9 @@ indexing
 		create {CA}.make_from_l_4 (-1234567890123456) end,
 		create {CA}.make_from_l_3 (1234567890123456) end,
 		create {CA}.make_from_f_2 (10) end,
-		create {CA}.make_from_f_2 ({DOUBLE} 10.0) end,
 		create {CA}.make_from_d_2 (11) end,
 		create {CA}.make_from_d_2 ({REAL} 11.0) end,
+		create {CA}.make_from_d_2 ({DOUBLE} 10.0) end,
 
 			-- Testing boxed values
 		create {CA}.make_from_o_2 ({INTEGER_8} 1) end,
@@ -83,9 +83,6 @@ indexing
 		create {CA}.make_from_f (Void) end,
 		create {CA}.make_from_f (<< 1.0, 2.0, 3.0 >>) end,
 		create {CA}.make_from_f (<< {REAL} 1.0, {REAL} 2.0, {REAL} 3.0 >>) end,
-		create {CA}.make_from_f (<< {DOUBLE} 1.0, {DOUBLE} 2.0, {DOUBLE} 3.0 >>) end,
-		create {CA}.make_from_f (<< {REAL} 1.0, {REAL} 2.0, {DOUBLE} 3.0 >>) end,
-		create {CA}.make_from_f (<< {DOUBLE} 1.0, {REAL} 2.0, {REAL} 3.0 >>) end,
 		create {CA}.make_from_f (<< 1,  2, 3 >>) end,
 		create {CA}.make_from_f (<< {INTEGER_8} 1, {INTEGER_16} 2, {INTEGER} 3, {INTEGER_64} 4 >>) end,
 		create {CA}.make_from_f (<< {NATURAL_8} 1, {NATURAL_16} 2, {NATURAL_32} 3, {NATURAL_64} 4 >>) end,
@@ -180,9 +177,9 @@ indexing
 		create {CA}.make [["my_short", 32767]] end,
 		create {CA}.make [["my_int", 9]] end,
 		create {CA}.make [["my_float", 10]] end,
-		create {CA}.make [["my_float", {DOUBLE} 10.0]] end,
 		create {CA}.make [["my_double", 11]] end,
 		create {CA}.make [["my_double", {REAL} 11.0]] end,
+		create {CA}.make [["my_double", {DOUBLE} 10.0]] end,
 
 			-- Testing boxed values
 		create {CA}.make [["my_object", {INTEGER_8} 1]] end,
@@ -222,9 +219,6 @@ indexing
 
 		create {CA}.make [["my_float_array", << 1.0, 2.0, 3.0 >>]] end,
 		create {CA}.make [["my_float_array", << {REAL} 1.0, {REAL} 2.0, {REAL} 3.0 >>]] end,
-		create {CA}.make [["my_float_array", << {DOUBLE} 1.0, {DOUBLE} 2.0, {DOUBLE} 3.0 >>]] end,
-		create {CA}.make [["my_float_array", << {REAL} 1.0, {REAL} 2.0, {DOUBLE} 3.0 >>]] end,
-		create {CA}.make [["my_float_array", << {DOUBLE} 1.0, {REAL} 2.0, {REAL} 3.0 >>]] end,
 		create {CA}.make [["my_float_array", << 1,  2, 3 >>]] end,
 		create {CA}.make [["my_float_array", << {INTEGER_8} 1, {INTEGER_16} 2, {INTEGER} 3, {INTEGER_64} 4 >>]] end,
 		create {CA}.make [["my_float_array", << {NATURAL_8} 1, {NATURAL_16} 2, {NATURAL_32} 3, {NATURAL_64} 4 >>]] end,

@@ -384,7 +384,6 @@ feature {NONE} -- xml callbacks
 				--| Process end of tag
 			current_depth := current_depth - 1
 			tags_row_index.remove
-
 		end
 
 	last_content: STRING
@@ -634,18 +633,28 @@ feature {NONE} -- Row management
 			Result := last_row
 		end
 
-	new_parent_row: EV_GRID_ROW
+	new_parent_row (n: INTEGER): EV_GRID_ROW
 		local
+			i: INTEGER
 			p, r: EV_GRID_ROW
 		do
 			if grid.row_count = 0 then
 				grid.insert_new_row (1)
 			else
 				r := last_row
-				p := r.parent_row
-				if p /= Void then
+				from
+					p := r.parent_row
+					i := n + 1
+				until
+					i <= 1 or p = Void
+				loop
 					p := p.parent_row
+					i := i - 1
 				end
+--				p := r.parent_row
+--				if p /= Void then
+--					p := p.parent_row
+--				end
 				if p /= Void then
 					p.insert_subrow (p.subrow_count + 1)
 				else
@@ -665,8 +674,8 @@ feature {NONE} -- Row management
 			elseif current_depth = last_depth then
 				Result := new_row
 			else
-				last_depth := last_depth - 1
-				Result := new_parent_row
+				Result := new_parent_row (last_depth - current_depth)
+				last_depth := current_depth
 			end
 			colorize_row (Result, False)
 		end
@@ -771,7 +780,7 @@ invariant
 	value_font_not_void: value_font /= Void
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

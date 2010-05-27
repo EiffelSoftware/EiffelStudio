@@ -10119,7 +10119,7 @@ feature {NONE} -- Implementation: catcall check
 											-- `A [G]' and descendant is `B [G -> STRING]', and if parent
 											-- type is `A [INTEGER]' then `B [INTEGER]' would not make sense.
 										l_descendant_type.reset_constraint_error_list
-										safe_check_constraints (l_parent_type, l_descendant_type)
+										l_descendant_type.check_constraints (context.current_class, context.current_feature, l_descendant_type.is_expanded)
 										if
 											not l_descendant_type.constraint_error_list.is_empty and then
 											(l_fail_if_constraint_not_met or l_descendant_type.is_expanded)
@@ -10162,26 +10162,6 @@ feature {NONE} -- Implementation: catcall check
 					create Result.make (0)
 				end
 			end
-		end
-
-	safe_check_constraints (a_parent_type, a_type: TYPE_A)
-			--
-		require
-			a_parent_type_not_void: a_parent_type /= Void
-			a_type_not_void: a_type /= Void
-		local
-			retried: BOOLEAN
-		do
-			if not retried then
-				a_type.check_constraints (context.current_class, context.current_feature, a_type.is_expanded)
-			else
-				print ("Failure is with parent " + a_parent_type.dump + "%N")
-				print (" and with type " + a_type.dump + "%N")
-				a_type.constraint_error_list.extend (Void)
-			end
-		rescue
-			retried := True
-			retry
 		end
 
 feature {INSPECT_CONTROL} -- AST modification

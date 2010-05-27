@@ -180,19 +180,22 @@ feature {NONE} -- Constant strings
 	t_info: STRING
 		once
 			create Result.make (500)
-			Result.append (
-				"Eiffel Software%N%
-				%356 Storke Road, Goleta, CA 93117 USA%N%
-				%Telephone: 805-685-1006%N%
-				%Fax: 805-685-6869%N%
-				% %N%
-				%Web Customer Support: http://support.eiffel.com%N%
-				%Visit Eiffel on the Web: http://www.eiffel.com%N"
-			)
+			Result.append ("[
+					Eiffel Software
+					5949 Hollister Ave., Goleta, CA 93117 USA
+					Telephone: 805-685-1006
+					Fax: 805-685-6869
+				]")
+			Result.append_character ('%N')
+			Result.append_character ('%N')
+			Result.append ("[
+					Web Customer Support: http://support.eiffel.com
+					Visit Eiffel on the Web: http://www.eiffel.com
+				]")
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

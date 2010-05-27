@@ -118,7 +118,7 @@ feature {NONE} -- Implementation
 					-- Perform the visiting
 				cl_as.process (visitor)
 				if visitor.print_occurrences > 0 then
-					print ("%"" + fn + "%" : class " + visitor.text (cl_as.class_name) + ": " + visitor.print_occurrences.out + "%N")
+					print ("%"" + fn + "%" : class " + visitor.text (cl_as.class_name) + ": " + visitor.print_occurrences.out + "%N%N")
 				end
 				-- Free our memory.
 				visitor.reset
@@ -148,9 +148,6 @@ feature {NONE} -- File discovering and processing
 			if argument_count < 1 then
 				io.error.put_string ("Specify a eiffel class file.")
 				io.error.put_new_line
---			elseif argument (1).is_case_insensitive_equal ("-r") then
---				l_path := argument (2)
---				process_directory (create {KL_DIRECTORY}.make (l_path))
 			else
 				from
 					i := 1

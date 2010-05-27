@@ -122,8 +122,10 @@ feature -- Status setting
 			-- Set the environment variable `key' to `value'.
 		require
 			key_exists: key /= Void
-			key_meaningful: key.count > 0
+			key_meaningful: not key.is_empty
+			not_key_has_null_character: not key.has ('%U')
 			value_exists: value /= Void
+			not_value_has_null_character: not value.has ('%U')
 		do
 			{ENVIRONMENT}.set_environment_variable (key, value)
 			return_code := 0

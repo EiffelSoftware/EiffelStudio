@@ -1069,13 +1069,9 @@ end
 					old_opo_info_table.after
 				loop
 					opo_info := old_opo_info_table.item_for_iteration
-					print ("CLEANING OLD Once per object info: ")
-					print (opo_info.once_routine.feature_name)
-					print ("%N")
 					opo_info.clean
 					old_opo_info_table.forth
 				end
-				print ("%N")
 			end
 			if l_attribute_count > 0 then
 				from

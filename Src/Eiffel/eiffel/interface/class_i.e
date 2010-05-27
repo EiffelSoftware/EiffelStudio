@@ -245,7 +245,7 @@ feature -- Access
 	is_void_safe_conformance: BOOLEAN
 			-- Should attachment status be taken into account when checking conformance?
 		do
-			Result := options.void_safety.index = {CONF_OPTION}.void_safety_index_all
+			Result := options.void_safety.index /= {CONF_OPTION}.void_safety_index_none
 		end
 
 	is_void_safe_initialization: BOOLEAN
@@ -558,7 +558,7 @@ invariant
 	compiled_class_connection: is_compiled implies compiled_class.original_class = Current
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

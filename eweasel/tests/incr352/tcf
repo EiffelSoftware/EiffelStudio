@@ -1,0 +1,20 @@
+
+test_name	qat-change-remote-anchor-name
+test_description After initial compilation, changing the name of the entity that is used as a remote anchor in a QAT introduces a VEEN error, but the compiler does not detect it.
+
+define ANCHOR "b"
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_sub	test1.e $CLUSTER test1.e
+
+compile_melted
+compile_result ok
+
+define ANCHOR "c"
+copy_sub	test1.e $CLUSTER test1.e
+
+compile_melted
+compile_result	validity_error TEST VEEN
+
+test_end
+

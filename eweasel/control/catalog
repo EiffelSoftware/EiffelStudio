@@ -2368,6 +2368,7 @@ test	qat-multi-formal-conformance		anchor008 tcf pass anchored_type multiconstra
 test	qat-crash-in-local				anchor009 tcf pass anchored_type
 test	qat-crash-in-local-2			anchor010 tcf pass anchored_type
 test	qat-cycle-with-class-name		anchor011 tcf fail anchored_type
+test	qat-anchored-to-generic			anchor012 tcf fail anchored_type
 
 -- .NET specific test
 if DOTNET test expanded-object-conversion	dotnet001	tcf pass dotnet

@@ -1,0 +1,28 @@
+
+test_name	qat-change-remote-anchor-type
+test_description After initial compilation, the type of the entity that is used as a remote anchor in a QAT is changed.  When the system is recompiled, system execution produces incorrect output, acting as if the anchor type was unchanged.
+
+define ANCHOR_TYPE "DOUBLE"
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_sub	test1.e $CLUSTER test1.e
+
+compile_melted
+compile_result ok
+
+execute_work 	NONE 	exec_output1
+execute_result 	ok
+compare		exec_output1 output1
+
+define ANCHOR_TYPE "BOOLEAN"
+copy_sub	test1.e $CLUSTER test1.e
+
+compile_melted
+compile_result	ok
+
+execute_work 	NONE 	exec_output2
+execute_result 	ok
+compare		exec_output2 output2
+
+test_end
+

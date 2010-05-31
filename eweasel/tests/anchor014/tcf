@@ -1,0 +1,13 @@
+
+test_name 	qat-chain-with-missing-feature
+test_description A qat chain that ends with a nonexistent feature crashes the compiler.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test1.e $CLUSTER test1.e
+copy_raw	test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result	validity_error TEST1 VEEN
+
+test_end

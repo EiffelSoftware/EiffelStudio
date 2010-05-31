@@ -78,7 +78,7 @@ feature {NONE} -- Initlization
 
 			internal_top_box.disable_item_expand (internal_tool_bar)
 
-			internal_tab_box.tab_box.pointer_double_press_actions.force_extend (agent on_normal_max_window)
+			internal_tab_box.tab_box.pointer_double_press_actions.extend (agent on_normal_max_window_vision2)
 			init_action
 		end
 
@@ -217,6 +217,14 @@ feature -- Command
 
 feature {NONE}  -- Agents
 
+	on_normal_max_window_vision2 (a_x: INTEGER_32; a_y: INTEGER_32; a_button: INTEGER_32; a_x_tilt: REAL_64; a_y_tilt: REAL_64; a_pressure: REAL_64; a_screen_x: INTEGER_32; a_screen_y: INTEGER_32)
+			-- Handle normal max window action for vision2
+		do
+			if a_button = {EV_POINTER_CONSTANTS}.left then
+				on_normal_max_window
+			end
+		end
+
 	on_normal_max_window
 			-- Handle normal max window
 		do
@@ -232,7 +240,7 @@ feature {NONE}  -- Agents
 	on_tab_area_pointer_press (a_x: INTEGER_32; a_y: INTEGER_32; a_button: INTEGER_32; a_x_tilt: REAL_64; a_y_tilt: REAL_64; a_pressure: REAL_64; a_screen_x: INTEGER_32; a_screen_y: INTEGER_32)
 			-- Handle tab area pointer press actions
 		do
-			if a_button = 1 then
+			if a_button = {EV_POINTER_CONSTANTS}.left then
 				internal_shared.setter.before_enable_capture
 				internal_tab_box.enable_capture
 				is_pointer_pressed := True
@@ -242,7 +250,7 @@ feature {NONE}  -- Agents
 	on_tab_area_pointer_release (a_x: INTEGER_32; a_y: INTEGER_32; a_button: INTEGER_32; a_x_tilt: REAL_64; a_y_tilt: REAL_64; a_pressure: REAL_64; a_screen_x: INTEGER_32; a_screen_y: INTEGER_32)
 			-- Handle tab area pointer release actions
 		do
-			if a_button = 1 then
+			if a_button = {EV_POINTER_CONSTANTS}.left then
 				internal_tab_box.disable_capture
 				internal_shared.setter.after_disable_capture
 				is_pointer_pressed := False
@@ -291,14 +299,14 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

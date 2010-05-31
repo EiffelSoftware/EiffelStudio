@@ -900,6 +900,7 @@ test	melted-agent-creation-crash		incr348 tcf fail incrementality
 test	storable-version-update			incr349 tcf fail incrementality reflection storable
 test	formal-creation-crash			incr350 tcf pass incrementality
 test	inline-agent-invariant-crash	incr351 tcf pass incrementality agents
+test	qat-change-remote-anchor-name		incr352 tcf fail incrementality anchored_types
 
 
 -- Melting

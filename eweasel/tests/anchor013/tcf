@@ -1,0 +1,13 @@
+
+test_name 	qat-formal-generic-in-anchor
+test_description A qat `y: like {TEST1 [G]}.x' in class TEST1 [G], where `x: G' and G is a formal generic parameter crashes the compiler.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test1.e $CLUSTER test1.e
+copy_raw	test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result	ok
+
+test_end

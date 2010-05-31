@@ -1,0 +1,10 @@
+test_name 	qat-cycle-with-class-name
+test_description A qat `a: like {TEST}.a' in class TEST crashes the compiler.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	validity_error TEST VTAT(1)
+
+test_end

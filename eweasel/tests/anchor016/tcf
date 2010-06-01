@@ -1,0 +1,11 @@
+
+test_name 	qat-linked-to-local-anchor
+test_description A remote anchored type that references a feature in another class that is itself anchored locally to a feature causes the compiler to report a VEEN error instead of accepting the classes.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test1.e $CLUSTER test1.e
+compile_melted
+compile_result	ok
+
+test_end

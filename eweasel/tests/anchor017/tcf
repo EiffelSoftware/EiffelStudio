@@ -1,0 +1,11 @@
+
+test_name 	qat-generic-parms-for-nongeneric-class	
+test_description A remote anchored type `like {TEST1 [STRING, DOUBLE]}.x' is accepted when TEST1 is not a generic class
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test1.e $CLUSTER test1.e
+compile_melted
+compile_result	validity_error TEST VTUG(1)
+
+test_end

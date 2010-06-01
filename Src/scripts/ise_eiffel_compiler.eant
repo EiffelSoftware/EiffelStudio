@@ -66,6 +66,7 @@
 		<delete directory="$l_dir_to_clean" if="${tmp_clean_available}=true" />
 		<unset name="l_dir_to_clean" />
 		<unset name="tmp_clean_available" />
+		<echo message="Clean [$a_target] completed." />
 	</target>
 
 	<target name="finalize" depend="init">

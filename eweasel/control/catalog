@@ -2372,6 +2372,7 @@ test	qat-anchored-to-generic			anchor012 tcf fail anchored_type
 test	qat-formal-generic-in-anchor		anchor013 tcf fail anchored_type
 test	qat-chain-with-missing-feature		anchor014 tcf fail anchored_type
 test	qat-adapted-in-crash			anchor015 tcf fail anchored_type
+test	qat-linked-to-local-anchor		anchor016 tcf fail anchored_type
 
 -- .NET specific test
 if DOTNET test expanded-object-conversion	dotnet001	tcf pass dotnet

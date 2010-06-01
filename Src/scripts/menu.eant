@@ -69,15 +69,17 @@
 		<echo message=" 3) Install library"/>
 		<echo message=" 4) Install example"/>
 		<echo message=" 5) Install documentation"/>
+		<echo message=" 6) Update ec's version number"/>
 		<echo message=""/>
 		<echo message=" ====" />
 		<echo message="Q) quit" />
-		<input message=" -> " variable="answer_sub" answer_required="true" validargs="1,2,3,4,5,Q,q" />
+		<input message=" -> " variable="answer_sub" answer_required="true" validargs="1,2,3,4,5,6,Q,q" />
 		<geant if="$answer_sub=1" target="make_delivery_structure" 		/>
 		<geant if="$answer_sub=2" target="install_binaries" 			/>
 		<geant if="$answer_sub=3" target="install_library" 				/>
 		<geant if="$answer_sub=4" target="install_examples" 			/>
 		<geant if="$answer_sub=5" target="install_documentation" 		/>
+		<geant if="$answer_sub=6" target="set_ec_version" 		/>
 	</target>
 
 	<target name="_menu_options" depend="init_options" >

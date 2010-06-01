@@ -12,7 +12,9 @@ inherit
 	LIKE_TYPE_A
 		redefine
 			dispatch_anchors,
+			error_generics,
 			evaluated_type_in_descendant,
+			good_generics,
 			initialize_info,
 			is_explicit,
 			is_syntactically_equal,
@@ -89,6 +91,22 @@ feature -- Access
 					qualifier.same_as (o.qualifier) and then
 					chain ~ o.chain and then
 					has_same_attachment_marks (o)
+			end
+		end
+
+	good_generics: BOOLEAN
+			-- <Precursor>
+		do
+			Result := qualifier.good_generics and then Precursor
+		end
+
+	error_generics: VTUG
+			-- <Precursor>
+		do
+			if qualifier.good_generics then
+				Result := Precursor
+			else
+				Result := qualifier.error_generics
 			end
 		end
 

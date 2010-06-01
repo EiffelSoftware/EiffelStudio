@@ -925,7 +925,7 @@ feature {NONE} -- Implementation
 			else
 				l_like_control.put_routine_id (l_rout_id)
 					-- Process type referenced by anchor.
-				if last_type = current_actual_type then
+				if last_type.same_as (current_actual_type) then
 					r := f.type
 				else
 					r := f.type.instantiated_in (last_type)

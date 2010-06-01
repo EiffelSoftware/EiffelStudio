@@ -519,6 +519,12 @@ feature -- Element change
 				-- Perform a quick melt so that class is correctly added to the system as unreferenced.
 			eiffel_project.quick_melt (True, True, False)
 
+			if attached last_added_class as l_class_i then
+					-- Must set_stone before `synchronize_all', otherwise {EB_DEVELOPMENT_WINDOW}.synchronize
+					-- would switch editor tab to last stone which is not the class just created. see bug#16707
+				window_manager.last_focused_development_window.set_stone (create {CLASSI_STONE}.make (l_class_i))
+			end
+
 				-- Synchronize so that diagram is correctly updated.
 			window_manager.synchronize_all
 		ensure

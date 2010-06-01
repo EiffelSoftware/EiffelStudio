@@ -332,7 +332,7 @@ feature -- Query (Pixel buffer)
 			l_pixcode: NATURAL_8
 			l_overrides: ARRAYED_LIST [CONF_CLASS]
 			l_overrides_valid: BOOLEAN
-			l_pixmap: EV_PIXMAP
+			l_pixel_buffer: EV_PIXEL_BUFFER
 		do
 			l_conf_class := a_class.config_class
 
@@ -388,8 +388,8 @@ feature -- Query (Pixel buffer)
 			end
 
 			check correct_pixcode: class_icon_map.has (l_pixcode) end
-			l_pixmap := class_icon_map.item (l_pixcode)
-			Result := l_pixmap
+			l_pixel_buffer := class_icon_map_pixel_buffer.item (l_pixcode)
+			Result := l_pixel_buffer
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -616,6 +616,51 @@ feature {NONE} -- Access
 			result_attached: Result /= VOid
 		end
 
+	class_icon_map_pixel_buffer: HASH_TABLE [EV_PIXEL_BUFFER, NATURAL_8]
+			-- Class icon map
+		once
+			create Result.make (37)
+			Result.force (pixmaps.icon_pixmaps.class_normal_icon_buffer,							compiled_flag)
+			Result.force (pixmaps.icon_pixmaps.class_readonly_icon_buffer,							compiled_flag | readonly_flag)
+			Result.force (pixmaps.icon_pixmaps.class_frozen_icon_buffer,							compiled_flag | frozen_flag)
+			Result.force (pixmaps.icon_pixmaps.class_frozen_readonly_icon_buffer,					compiled_flag | readonly_flag | frozen_flag)
+			Result.force (pixmaps.icon_pixmaps.class_uncompiled_icon_buffer,						none_flag)
+			Result.force (pixmaps.icon_pixmaps.class_uncompiled_readonly_icon_buffer,				readonly_flag)
+			Result.force (pixmaps.icon_pixmaps.class_deferred_icon_buffer,							compiled_flag | deferred_flag)
+			Result.force (pixmaps.icon_pixmaps.class_deferred_readonly_icon_buffer,				compiled_flag | readonly_flag | deferred_flag)
+			Result.force (pixmaps.icon_pixmaps.class_overriden_normal_icon_buffer,					compiled_flag | overriden_flag)
+			Result.force (pixmaps.icon_pixmaps.class_overriden_readonly_icon_buffer,				compiled_flag | readonly_flag | overriden_flag)
+			Result.force (pixmaps.icon_pixmaps.class_overriden_frozen_icon_buffer,					compiled_flag | frozen_flag | overriden_flag)
+			Result.force (pixmaps.icon_pixmaps.class_overriden_frozen_readonly_icon_buffer,		compiled_flag | frozen_flag | readonly_flag | overriden_flag)
+			Result.force (pixmaps.icon_pixmaps.class_overriden_uncompiled_icon_buffer,				overriden_flag)
+			Result.force (pixmaps.icon_pixmaps.class_overriden_uncompiled_readonly_icon_buffer,	readonly_flag | overriden_flag)
+			Result.force (pixmaps.icon_pixmaps.class_overriden_deferred_icon_buffer,				compiled_flag | deferred_flag | overriden_flag)
+			Result.force (pixmaps.icon_pixmaps.class_overriden_deferred_readonly_icon_buffer,		compiled_flag | readonly_flag | deferred_flag | overriden_flag)
+			Result.force (pixmaps.icon_pixmaps.class_override_normal_icon_buffer,					compiled_flag | overrides_flag)
+			Result.force (pixmaps.icon_pixmaps.class_override_readonly_icon_buffer,				compiled_flag | readonly_flag | overrides_flag)
+			Result.force (pixmaps.icon_pixmaps.class_override_frozen_icon_buffer,					compiled_flag | frozen_flag | overrides_flag)
+			Result.force (pixmaps.icon_pixmaps.class_override_frozen_readonly_icon_buffer,			compiled_flag | frozen_flag | readonly_flag | overrides_flag)
+			Result.force (pixmaps.icon_pixmaps.class_override_uncompiled_icon_buffer,				overrides_flag)
+			Result.force (pixmaps.icon_pixmaps.class_override_uncompiled_readonly_icon_buffer,		readonly_flag | overrides_flag)
+			Result.force (pixmaps.icon_pixmaps.class_override_deferred_icon_buffer,				compiled_flag | deferred_flag | overrides_flag)
+			Result.force (pixmaps.icon_pixmaps.class_override_deferred_readonly_icon_buffer,		compiled_flag | readonly_flag | deferred_flag | overrides_flag)
+
+			Result.force (pixmaps.icon_pixmaps.expanded_normal_icon_buffer,						compiled_flag | expanded_flag)
+			Result.force (pixmaps.icon_pixmaps.expanded_readonly_icon_buffer,						compiled_flag | expanded_flag | readonly_flag)
+			Result.force (pixmaps.icon_pixmaps.expanded_uncompiled_icon_buffer,					expanded_flag)
+			Result.force (pixmaps.icon_pixmaps.expanded_uncompiled_readonly_icon_buffer,			expanded_flag | readonly_flag)
+			Result.force (pixmaps.icon_pixmaps.expanded_overriden_normal_icon_buffer,				compiled_flag | expanded_flag | overriden_flag)
+			Result.force (pixmaps.icon_pixmaps.expanded_overriden_readonly_icon_buffer,			compiled_flag | expanded_flag | readonly_flag | overriden_flag)
+			Result.force (pixmaps.icon_pixmaps.expanded_overriden_uncompiled_icon_buffer,			expanded_flag | overriden_flag)
+			Result.force (pixmaps.icon_pixmaps.expanded_overriden_uncompiled_readonly_icon_buffer,	expanded_flag | readonly_flag | overriden_flag)
+			Result.force (pixmaps.icon_pixmaps.expanded_override_normal_icon_buffer,				compiled_flag | expanded_flag | overrides_flag)
+			Result.force (pixmaps.icon_pixmaps.expanded_override_readonly_icon_buffer,				compiled_flag | expanded_flag | readonly_flag | overrides_flag)
+			Result.force (pixmaps.icon_pixmaps.expanded_override_uncompiled_icon_buffer,			expanded_flag | overrides_flag)
+			Result.force (pixmaps.icon_pixmaps.expanded_override_uncompiled_readonly_icon_buffer,	expanded_flag | readonly_flag | overrides_flag)
+		ensure
+			result_attached: Result /= VOid
+		end
+
 feature {NONE} -- Implementation
 
 	none_flag:  NATURAL_8 = 0x01
@@ -629,7 +674,7 @@ feature {NONE} -- Implementation
 		-- Class icon state flags		
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

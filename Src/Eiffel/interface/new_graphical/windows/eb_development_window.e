@@ -2132,7 +2132,6 @@ feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER, EB_DEVELOPMENT_WINDOW_PART,
 		local
 			l_dialog: EB_GOTO_DIALOG
 			l_bp_dialog: ES_BREAKABLE_INDEX_GOTO_DIALOG
-			i: INTEGER
 		do
 			if
 				attached editors_manager.current_editor as ed and then

@@ -1,0 +1,12 @@
+test_name 	qat-linked-to-formal
+test_description A remote anchored type that involves a formal generic parameter is not properly processed by the compiler and the compiler either crashed or reported a VEEN error.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test1.e $CLUSTER test1.e
+copy_raw	bar.e $CLUSTER bar.e
+
+compile_melted
+compile_result	ok
+
+test_end

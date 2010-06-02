@@ -1,4 +1,3 @@
-
 test_name 	void-assigned-to-object-test-with-create
 test_description Attached statement, with "create ..." expression generates bad C code.
 

@@ -35,12 +35,46 @@ feature {EV_APPLICATION_IMP} -- Implementation
 			-- Handle motion event for `Current'.
 		local
 			l_dockable_source: detachable EV_DOCKABLE_SOURCE_IMP
-			l_call_events: BOOLEAN
+			l_call_events, l_call_motion: BOOLEAN
 			l_current: detachable EV_PICK_AND_DROPABLE_IMP
+			l_orig_x, l_orig_y, l_orig_screen_x, l_orig_screen_y: INTEGER_16
 		do
 			l_call_events := True
+			l_call_motion := True
 			l_current := Current
-			if app_implementation.pick_and_drop_source = l_current then
+
+			l_dockable_source ?= Current
+			if l_dockable_source /= Void then
+				if is_dockable and then (l_dockable_source.awaiting_movement or else app_implementation.docking_source = l_dockable_source) then
+					l_call_motion := False
+					l_dockable_source.dragable_motion (
+						a_motion_tuple.integer_32_item (1),
+						a_motion_tuple.integer_32_item (2),
+						a_motion_tuple.double_item (3),
+						a_motion_tuple.double_item (4),
+						a_motion_tuple.double_item (5),
+						a_motion_tuple.integer_32_item (6),
+						a_motion_tuple.integer_32_item (7)
+					)
+				elseif l_dockable_source.awaiting_movement and then mode_is_drag_and_drop and then app_implementation.pick_and_drop_source = Void then
+					l_orig_x := l_dockable_source.original_x_offset
+					l_orig_y := l_dockable_source.original_y_offset
+					if (l_orig_x - a_motion_tuple.integer_32_item (1)).abs > l_dockable_source.drag_and_drop_starting_movement or
+						(l_orig_y - a_motion_tuple.integer_32_item (2)).abs > l_dockable_source.drag_and_drop_starting_movement then
+							-- Start drag and drop transport, then reset
+							l_orig_screen_x := l_dockable_source.original_screen_x
+							l_orig_screen_y := l_dockable_source.original_screen_y
+							l_call_motion := False
+							l_dockable_source.reset_drag_data
+							start_transport (l_orig_x, l_orig_y, 1, True, 0.0, 0.0, 0.0, l_orig_screen_x, l_orig_screen_y, False)
+					end
+				end
+				if app_implementation.docking_source = l_dockable_source then
+					l_call_events := False
+				end
+			end
+
+			if l_call_motion and then app_implementation.pick_and_drop_source = l_current then
 				execute (
 					a_motion_tuple.integer_32_item (1),
 					a_motion_tuple.integer_32_item (2),
@@ -51,23 +85,6 @@ feature {EV_APPLICATION_IMP} -- Implementation
 					a_motion_tuple.integer_32_item (7)
 				)
 				l_call_events := False
-			elseif is_dockable then
-				l_dockable_source ?= l_current
-				check l_dockable_source /= Void end
-				if l_dockable_source.awaiting_movement or else app_implementation.docking_source = l_dockable_source then
-					l_dockable_source.dragable_motion (
-						a_motion_tuple.integer_32_item (1),
-						a_motion_tuple.integer_32_item (2),
-						a_motion_tuple.double_item (3),
-						a_motion_tuple.double_item (4),
-						a_motion_tuple.double_item (5),
-						a_motion_tuple.integer_32_item (6),
-						a_motion_tuple.integer_32_item (7)
-					)
-				end
-				if app_implementation.docking_source = l_dockable_source then
-					l_call_events := False
-				end
 			end
 			if l_call_events and then attached pointer_motion_actions_internal as l_pointer_motion_actions_internal then
 				l_pointer_motion_actions_internal.call (a_motion_tuple)
@@ -273,25 +290,28 @@ feature -- Implementation
 			l_top_level_window_imp := top_level_window_imp
 			if l_top_level_window_imp /= Void then
 				if not app_imp.is_in_transport then
-					if a_type = {EV_GTK_EXTERNALS}.gdk_button_press_enum and then is_dockable and then a_button = 1 then
+					if a_button = 1 then
 						l_dockable_source ?= Current
-						check l_dockable_source /= Void end
-						l_dockable_source.start_dragable_filter (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
-					elseif (a_type = {EV_GTK_EXTERNALS}.gdk_button_release_enum and then able_to_transport (a_button)) or else ready_for_pnd_menu (a_button, l_press) then
+						if a_type = {EV_GTK_EXTERNALS}.gdk_button_press_enum and then l_dockable_source /= Void and then (is_dockable or else able_to_transport (a_button)) then
+							l_dockable_source.start_dragable_filter (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
+						end
+						if l_dockable_source /= Void and then a_type = {EV_GTK_EXTERNALS}.gdk_button_release_enum then
+								-- Here we make sure that any pending drag and drops or docks are cancelled as transport was never establised.
+							l_dockable_source.end_dragable (a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
+						end
+					elseif (a_type = {EV_GTK_EXTERNALS}.gdk_button_release_enum and then (mode_is_pick_and_drop and then a_button = 3 and then not mode_is_configurable_target_menu)) or else ready_for_pnd_menu (a_button, l_press) then
 						start_transport (a_x, a_y, a_button, l_press, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y, False)
 						l_call_events := pebble = Void
 							-- If a pick and drop has initiated then we dont want button events firing.
 					end
 				else
 					l_current := Current
-					if a_type = {EV_GTK_EXTERNALS}.gdk_button_release_enum and then app_imp.pick_and_drop_source = l_current then
-						end_transport (a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
-					end
 					l_dockable_source ?= l_current
 					if l_dockable_source /= Void and then a_type = {EV_GTK_EXTERNALS}.gdk_button_release_enum then
-						if l_dockable_source.awaiting_movement or else app_imp.docking_source = l_dockable_source then
-							l_dockable_source.end_dragable (a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
-						end
+						l_dockable_source.end_dragable (a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
+					end
+					if a_type = {EV_GTK_EXTERNALS}.gdk_button_release_enum and then app_imp.pick_and_drop_source = l_current then
+						end_transport (a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 					end
 				end
 				if l_call_events then

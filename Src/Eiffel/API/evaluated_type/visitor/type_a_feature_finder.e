@@ -16,9 +16,14 @@ inherit
 			process_multi_formal_a
 		end
 
-	SHARED_AST_CONTEXT
 	SHARED_NAMES_HEAP
-	SHARED_WORKBENCH
+		export
+			{NONE} all
+			{ANY} names_heap
+		end
+
+	SHARED_AST_CONTEXT export {NONE} all end
+	SHARED_WORKBENCH export {NONE} all end
 
 feature -- Status report
 

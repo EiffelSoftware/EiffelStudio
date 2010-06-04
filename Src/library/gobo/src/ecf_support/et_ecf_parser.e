@@ -315,24 +315,28 @@ feature {NONE} -- Implementation
 		do
 			Result := ast_factory.new_cluster (a_cluster.name, a_cluster.location.evaluated_directory, last_system)
 			l_file_rule := a_cluster.active_file_rule (state)
-				-- Perform conversion from SEARCH_TABLE to DS_HASH_SET.
-			create l_excludes.make_equal (l_file_rule.exclude.count)
-			from
-				l_file_rule.exclude.start
-			until
-				l_file_rule.exclude.after
-			loop
-				l_excludes.put (l_file_rule.exclude.item_for_iteration)
-				l_file_rule.exclude.forth
+			if l_file_rule.exclude /= Void then
+					-- Perform conversion from SEARCH_TABLE to DS_HASH_SET.
+				create l_excludes.make_equal (l_file_rule.exclude.count)
+				from
+					l_file_rule.exclude.start
+				until
+					l_file_rule.exclude.after
+				loop
+					l_excludes.put (l_file_rule.exclude.item_for_iteration)
+					l_file_rule.exclude.forth
+				end
 			end
-			create l_includes.make_equal (l_file_rule.include.count)
-			from
-				l_file_rule.include.start
-			until
-				l_file_rule.include.after
-			loop
-				l_includes.put (l_file_rule.include.item_for_iteration)
-				l_file_rule.include.forth
+			if l_file_rule.include /= Void then
+				create l_includes.make_equal (l_file_rule.include.count)
+				from
+					l_file_rule.include.start
+				until
+					l_file_rule.include.after
+				loop
+					l_includes.put (l_file_rule.include.item_for_iteration)
+					l_file_rule.include.forth
+				end
 			end
 			Result.set_file_rules (create {ET_ECF_FILE_RULES}.make (ast_factory.new_file_rule (l_excludes, l_includes)))
 			Result.set_recursive (a_cluster.is_recursive)

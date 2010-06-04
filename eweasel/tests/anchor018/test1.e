@@ -7,7 +7,7 @@ feature
 		local
 			t: like g.foo
 		do
-			create t
+			create t$(CREATION_PROCEDURE)
 			io.put_string (t.generating_type)
 			io.put_new_line
 		end

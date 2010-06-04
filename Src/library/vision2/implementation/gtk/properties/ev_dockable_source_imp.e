@@ -106,24 +106,29 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Implementation
 		a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- Terminate the pick and drop mechanism.
 		do
-			awaiting_movement := False
 			if is_dock_executing then
-
 				if orig_cursor /= Void then
 						-- Restore the cursor style of `Current' if necessary.
 					internal_set_pointer_style (orig_cursor)
-					orig_cursor := Void
 				else
 					internal_set_pointer_style (default_pixmaps.standard_cursor)
 				end
 				disable_capture
 				App_implementation.docking_source := Void
 				complete_dock
-				original_x_offset := -1
-				original_y_offset := -1
-				original_screen_x := -1
-				original_screen_y := -1
 			end
+			reset_drag_data
+		end
+
+	reset_drag_data
+			-- Reset initial drag data.
+		do
+			awaiting_movement := False
+			original_x_offset := -1
+			original_y_offset := -1
+			original_screen_x := -1
+			original_screen_y := -1
+			orig_cursor := Void
 		end
 
 	enable_capture

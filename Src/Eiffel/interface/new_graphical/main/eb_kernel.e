@@ -15,8 +15,6 @@ inherit
 
 	SHARED_COMPILER_PROFILE
 
-	CONF_DEFAULT_OPTION_SETTING
-
 create
 	make
 
@@ -35,9 +33,6 @@ feature {NONE} -- Initialization
 			--prof_setting.stop_profiling
 
 			initialize_from_arguments
-			if is_compatible_mode then
-				set_is_63_compatible (True)
-			end
 
 			if
 				argument_count > 0 and then
@@ -56,7 +51,7 @@ feature {NONE} -- Initialization
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

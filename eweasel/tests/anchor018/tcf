@@ -3,10 +3,18 @@ test_description A remote anchored type that involves a formal generic parameter
 
 copy_sub	Ace $TEST Ace
 copy_raw	test.e $CLUSTER test.e
-copy_raw	test1.e $CLUSTER test1.e
 copy_raw	bar.e $CLUSTER bar.e
 
+define CREATION_PROCEDURE ""
+copy_sub	test1.e $CLUSTER test1.e
+
 compile_melted
+compile_result	validity_error TEST1 VGCC(5)
+
+define CREATION_PROCEDURE ".make_empty"
+copy_sub	test1.e $CLUSTER test1.e
+
+resume_compile
 compile_result	ok
 
 execute_work 	NONE 	exec_output

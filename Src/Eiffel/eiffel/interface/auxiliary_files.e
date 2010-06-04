@@ -30,6 +30,8 @@ inherit
 			{NONE} all
 		end
 
+	INTERNAL_COMPILER_STRING_EXPORTER
+
 create
 	make
 
@@ -382,16 +384,18 @@ feature -- Plug and Makefile file
 	generate_plug
 			-- Generate plug with run-time
 		local
-			any_cl, string_cl, bit_cl, array_cl, rout_cl, exception_manager_cl: CLASS_C
+			any_cl, string_cl, string32_cl, bit_cl, array_cl, rout_cl, exception_manager_cl: CLASS_C
 			arr_type_id, type_id: INTEGER
 			id: INTEGER
 			str_make_feat, set_count_feat: FEATURE_I
 			count_feat, internal_hash_code_feat: ATTRIBUTE_I
+			str32_make_feat, str32_set_count_feat: FEATURE_I
+			str32_count_feat, str32_internal_hash_code_feat: ATTRIBUTE_I
 			creation_feature, correct_mismatch_feat: FEATURE_I
 			feat: FEATURE_I
 			creators: HASH_TABLE [EXPORT_I, STRING]
-			dispose_name, str_make_name, init_name, exp_init_name,
-			set_count_name: STRING
+			dispose_name, str_make_name, str32_make_name, init_name, exp_init_name,
+			set_count_name, str32_set_count_name: STRING
 			arr_make_name, set_rout_disp_name: STRING
 			set_exception_data_name, is_code_ignored_name: STRING
 			last_exception_name, set_last_exception_name: STRING
@@ -448,6 +452,10 @@ feature -- Plug and Makefile file
 			creators := string_cl.creators
 			creators.start
 
+			string32_cl := system.class_of_id (system.string_32_id)
+			creators := string32_cl.creators
+			creators.start
+
 				-- Make ANY declaration
 			any_cl := system.any_class.compiled_class
 			correct_mismatch_feat :=
@@ -481,6 +489,25 @@ feature -- Plug and Makefile file
 					set_count_feat.body_index).string
 				buffer.put_string ("extern void ")
 				buffer.put_string (set_count_name)
+				buffer.put_string ("();%N")
+			end
+
+				-- Make STRING_32 declaration
+			str32_make_feat := string32_cl.feature_table.item_id ({PREDEFINED_NAMES}.make_name_id)
+			str32_make_name := Encoder.feature_name (str32_make_feat.written_class.types.first.type_id,
+				str32_make_feat.body_index).string
+			buffer.put_string ("extern void ")
+			buffer.put_string (str32_make_name)
+			buffer.put_string ("();%N")
+			if final_mode then
+				str32_count_feat ?= string32_cl.feature_table.item_id (Names_heap.count_name_id)
+				str32_internal_hash_code_feat ?= string32_cl.feature_table.item_id (Names_heap.internal_hash_code_name_id)
+			else
+				str32_set_count_feat ?= string32_cl.feature_table.item_id (Names_heap.set_count_name_id)
+				str32_set_count_name := Encoder.feature_name (str32_set_count_feat.written_class.types.first.type_id,
+					str32_set_count_feat.body_index).string
+				buffer.put_string ("extern void ")
+				buffer.put_string (str32_set_count_name)
 				buffer.put_string ("();%N")
 			end
 
@@ -692,6 +719,15 @@ feature -- Plug and Makefile file
 			buffer.put_string (str_make_name)
 			buffer.put_string (";%N")
 
+				-- Pointer on creation feature of class STRING_32
+			if final_mode then
+				buffer.put_string ("%Tegc_str32make = (void (*)(EIF_REFERENCE, EIF_INTEGER)) ")
+			else
+				buffer.put_string ("%Tegc_str32make = (void (*)(EIF_REFERENCE, EIF_TYPED_VALUE)) ")
+			end
+			buffer.put_string (str32_make_name)
+			buffer.put_string (";%N")
+
 				-- Pointer on creation feature of class ARRAY[ANY]
 			if final_mode then
 				buffer.put_string ("%Tegc_arrmake = (void (*)(EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER)) ")
@@ -701,6 +737,7 @@ feature -- Plug and Makefile file
 			buffer.put_string (arr_make_name)
 			buffer.put_string (";%N")
 
+				-- Pointers for STRING functions
 			if final_mode then
 					-- Offset from top of STRING object to access `count' attribute of class STRING
 				buffer.put_string ("%Tegc_str_count_offset = ")
@@ -714,6 +751,23 @@ feature -- Plug and Makefile file
 			else
 				buffer.put_string ("%Tegc_strset = (void (*)(EIF_REFERENCE, EIF_TYPED_VALUE)) ")
 				buffer.put_string (set_count_name)
+				buffer.put_string (";%N")
+			end
+
+				-- Pointers for STRING_32 functions
+			if final_mode then
+					-- Offset from top of STRING_32 object to access `count' attribute of class STRING_32
+				buffer.put_string ("%Tegc_str32_count_offset = ")
+				string32_cl.types.first.skeleton.generate_offset (buffer, str32_count_feat.feature_id, False, True)
+				buffer.put_string (";%N")
+
+					-- Offset from top of STRING_32 object to access `internal_hash_code' attribute of class STRING_32
+				buffer.put_string ("%Tegc_str32_hash_offset = ")
+				string32_cl.types.first.skeleton.generate_offset (buffer, str32_internal_hash_code_feat.feature_id, False, True)
+				buffer.put_string (";%N")
+			else
+				buffer.put_string ("%Tegc_str32set = (void (*)(EIF_REFERENCE, EIF_TYPED_VALUE)) ")
+				buffer.put_string (str32_set_count_name)
 				buffer.put_string (";%N")
 			end
 
@@ -800,6 +854,11 @@ feature -- Plug and Makefile file
 				-- Dynamic type of class STRING
 			buffer.put_string ("%N%Tegc_str_dtype = ")
 			buffer.put_type_id (string_cl.types.first.type_id)
+			buffer.put_string (";%N")
+
+				-- Dynamic type of class STRING_32
+			buffer.put_string ("%N%Tegc_str32_dtype = ")
+			buffer.put_type_id (string32_cl.types.first.type_id)
 			buffer.put_string (";%N")
 
 				-- Dynamic type of class ARRAY[ANY]

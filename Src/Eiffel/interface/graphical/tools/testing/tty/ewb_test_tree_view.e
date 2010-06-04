@@ -159,7 +159,7 @@ feature {TAG_TREE_NODE} -- Basic operations
 			-- <Precursor>
 		do
 			if attached a_node.item (etest_suite.project_access) as l_feature then
-				output_window.add_feature (l_feature, l_feature.name)
+				output_window.add_feature (l_feature, l_feature.name_32)
 			end
 		end
 
@@ -190,7 +190,7 @@ feature {NONE} -- Internationalization
 	h_display_tree: STRING = "Display tests in a tree structure"
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

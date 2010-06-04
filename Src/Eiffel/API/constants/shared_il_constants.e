@@ -68,6 +68,12 @@ feature -- Constants
 	java_language: INTEGER = 2;
 			-- Constants used to determine language of externals
 
+feature -- String type
+
+	string_type_cil: INTEGER = 1
+	string_type_string: INTEGER = 2
+	string_type_string_32: INTEGER = 3
+
 note
 	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

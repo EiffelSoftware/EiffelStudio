@@ -15,6 +15,8 @@ inherit
 			{NONE} all
 		end
 
+	INTERNAL_COMPILER_STRING_EXPORTER
+
 create
 	make
 
@@ -33,22 +35,6 @@ feature -- Initialization
 
 feature -- Settings
 
-	add_routine_table (rout_table: STRING)
-			-- Add one routine table to the current extern declarations.
-		require
-			rout_table_exists: rout_table /= Void
-		do
-			routine_tables.put (rout_table.string)
-		end
-
-	add_attribute_table (attr_table: STRING)
-			-- Add one attribute offset table to the current extern declarations.
-		require
-			attr_table_exists: attr_table /= Void
-		do
-			attribute_tables.put (attr_table.string)
-		end
-
 	add_once (type: TYPE_C; code_index: INTEGER; is_process_relative, is_object_relative: BOOLEAN)
 			-- Add `once_name' to current extern declarations.
 		require
@@ -61,43 +47,6 @@ feature -- Settings
 			then
 				onces_table.put (type, code_index)
 			end
-		end
-
-	add_type_table (type_table: STRING)
-			-- Add one type table to the current extern declarations.
-		require
-			type_table_exists: type_table /= Void
-		do
-			type_tables.put (type_table.string)
-		end
-
-	add_routine (type: TYPE_C; rout_name: STRING)
-			-- Add one routine of name `rout_name' and C type `type`.
-		require
-			rout_name_exists: rout_name /= Void
-			type_exists: type /= Void
-		do
-			routines.put (new_signature (type.c_string, rout_name, Void))
-		end
-
-	add_routine_with_signature (type: STRING; rout_name: STRING; argument_types: ARRAY [STRING])
-			-- Add one routine of name `rout_name' and C type `type' and with argument types
-			-- `arguments_types
-		require
-			type_exists: type /= Void
-			rout_name_exists: rout_name /= Void
-		do
-			routines.put (new_signature (type, rout_name, argument_types))
-		end
-
-	add_wrapper_with_signature (type: STRING; rout_name: STRING; argument_types: ARRAY [STRING])
-			-- Add one routine of name `rout_name' and C type `type' and with argument types
-			-- `arguments_types
-		require
-			type_exists: type /= Void
-			rout_name_exists: rout_name /= Void
-		do
-			wrappers.put (new_signature (type, rout_name, argument_types))
 		end
 
 	wipe_out
@@ -240,6 +189,61 @@ feature -- Settings
 				buffer.put_string ("_gen_type [];")
 				local_type_tables.forth
 			end
+		end
+
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Settings
+
+	add_routine_table (rout_table: STRING)
+			-- Add one routine table to the current extern declarations.
+		require
+			rout_table_exists: rout_table /= Void
+		do
+			routine_tables.put (rout_table.string)
+		end
+
+	add_attribute_table (attr_table: STRING)
+			-- Add one attribute offset table to the current extern declarations.
+		require
+			attr_table_exists: attr_table /= Void
+		do
+			attribute_tables.put (attr_table.string)
+		end
+
+	add_type_table (type_table: STRING)
+			-- Add one type table to the current extern declarations.
+		require
+			type_table_exists: type_table /= Void
+		do
+			type_tables.put (type_table.string)
+		end
+
+	add_routine (type: TYPE_C; rout_name: STRING)
+			-- Add one routine of name `rout_name' and C type `type`.
+		require
+			rout_name_exists: rout_name /= Void
+			type_exists: type /= Void
+		do
+			routines.put (new_signature (type.c_string, rout_name, Void))
+		end
+
+	add_routine_with_signature (type: STRING; rout_name: STRING; argument_types: ARRAY [STRING])
+			-- Add one routine of name `rout_name' and C type `type' and with argument types
+			-- `arguments_types
+		require
+			type_exists: type /= Void
+			rout_name_exists: rout_name /= Void
+		do
+			routines.put (new_signature (type, rout_name, argument_types))
+		end
+
+	add_wrapper_with_signature (type: STRING; rout_name: STRING; argument_types: ARRAY [STRING])
+			-- Add one routine of name `rout_name' and C type `type' and with argument types
+			-- `arguments_types
+		require
+			type_exists: type /= Void
+			rout_name_exists: rout_name /= Void
+		do
+			wrappers.put (new_signature (type, rout_name, argument_types))
 		end
 
 feature {NONE} -- Implementation

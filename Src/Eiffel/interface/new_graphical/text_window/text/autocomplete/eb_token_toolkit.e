@@ -77,7 +77,7 @@ feature -- basic operations
 			Result := a_token.wide_image.as_string_8.is_equal (a_str)
 		end
 
-	token_image_is_same_as_word (token: EDITOR_TOKEN; word: STRING): BOOLEAN
+	token_image_is_same_as_word (token: EDITOR_TOKEN; word: STRING_32): BOOLEAN
 			-- Are the token image (except comments) and the word equal (case has no importance)?
 		require
 			word_not_void: word /= Void
@@ -87,7 +87,7 @@ feature -- basic operations
 			if token /= Void then
 				comment_token ?= token
 				if comment_token = Void then
-					Result := string_32_is_caseless_ascii_string (token.wide_image, word)
+					Result := string_32_is_caseless_equal (token.wide_image, word)
 				end
 			end
 		end
@@ -193,16 +193,36 @@ feature -- basic operations
 			end
 		end
 
-	string_32_is_caseless_ascii_string (a_str_32: STRING_32; a_str: STRING): BOOLEAN
+	string_32_is_caseless_equal (a_str_32: STRING_32; a_str_other: STRING_32): BOOLEAN
 			-- Is `a_str_32' in UTF32 case insensitive equal to `a_str' taken as ISO-8859-1?
 		require
 			a_str_32_not_void: a_str_32 /= Void
-			a_str_not_void: a_str /= Void
+			a_str_other_not_void: a_str_other /= Void
+		local
+			i, nb: INTEGER_32
+			l_char, l_char_2: CHARACTER_32
 		do
-				-- Only codes smaller than 255 are compatible to UTF32.
-				-- If not, we simply return False.
-			if a_str_32.is_valid_as_string_8 then
-				Result := a_str.is_case_insensitive_equal (a_str_32.as_string_8)
+			if a_str_32 = a_str_other then
+				Result := True
+			else
+				nb := a_str_32.count
+				if nb = a_str_other.count then
+					from
+						Result := True
+						i := 1
+					until
+						i > nb or not Result
+					loop
+						l_char := a_str_32.item (i)
+						l_char_2 := a_str_other.item (i)
+						if l_char.is_character_8 and then l_char_2.is_character_8 then
+							Result := l_char.as_lower = l_char_2.as_lower
+						else
+							Result := l_char = l_char_2
+						end
+						i := i + 1
+					end
+				end
 			end
 		end
 
@@ -282,7 +302,7 @@ feature {NONE} -- Constants
 	precursor_word: STRING = "precursor";
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -295,22 +315,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_TOKEN_TOOLKIT

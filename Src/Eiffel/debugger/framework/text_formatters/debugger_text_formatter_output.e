@@ -214,7 +214,7 @@ feature -- Application status
 				c := appstatus.dynamic_class
 				f := appstatus.e_feature
 				if f /= Void then
-					st.add_address (appstatus.object_address.as_string, f.name, c)
+					st.add_address (appstatus.object_address.as_string, f.name_32, c)
 				end
 				st.add_string ("]")
 				st.add_new_line
@@ -844,7 +844,7 @@ feature {NONE} -- Constants
 	Bit_label: STRING = "BIT ";
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

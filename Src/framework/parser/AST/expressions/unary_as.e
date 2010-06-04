@@ -121,6 +121,28 @@ feature -- Roundtrip/Token
 
 feature -- Properties
 
+	prefix_feature_name_32: STRING_32
+			-- Internal name of the prefixed feature
+		do
+			if attached prefix_feature_name as l_name then
+				Result := encoding_converter.utf8_to_utf32 (l_name)
+			end
+		end
+
+	operator_name_32: STRING_32
+		do
+			if attached operator_name as l_name then
+				Result := encoding_converter.utf8_to_utf32 (l_name)
+			end
+		end
+
+	is_minus: BOOLEAN
+			-- Is Current prefix "-"?
+		do
+		end
+
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Properties
+
 	prefix_feature_name: STRING
 			-- Internal name of the prefixed feature
 		do
@@ -129,11 +151,6 @@ feature -- Properties
 
 	operator_name: STRING
 		deferred
-		end
-
-	is_minus: BOOLEAN
-			-- Is Current prefix "-"?
-		do
 		end
 
 feature -- Comparison

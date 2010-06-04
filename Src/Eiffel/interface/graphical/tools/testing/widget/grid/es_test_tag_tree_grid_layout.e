@@ -28,6 +28,8 @@ inherit
 			{NONE} all
 		end
 
+	INTERNAL_COMPILER_STRING_EXPORTER
+
 create
 	make
 
@@ -128,6 +130,7 @@ feature {TAG_TREE_NODE} -- Basic operations
 					attached {CLASS_C} l_test.eiffel_class.compiled_representation as l_classc and then
 					l_classc.has_feature_table
 				then
+						--|FIXME: Unicode should be handled.
 					l_feature := l_classc.feature_with_name (l_test.routine_name)
 				end
 

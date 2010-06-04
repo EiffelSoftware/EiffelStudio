@@ -64,6 +64,11 @@ inherit
 			is_equal
 		end
 
+	INTERNAL_COMPILER_STRING_EXPORTER
+		undefine
+			is_equal
+		end
+
 	SHARED_DEGREES
 		export
 			{NONE} all

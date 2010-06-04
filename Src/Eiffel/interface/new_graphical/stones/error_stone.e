@@ -83,7 +83,7 @@ feature -- Access
 			Result := l_file_name.string
 		end
 
-	stone_signature: STRING do Result := code end
+	stone_signature: STRING_32 do Result := code end
 
 	stone_cursor: EV_POINTER_STYLE
 			-- Cursor associated with Current stone during transport
@@ -100,7 +100,7 @@ feature -- Access
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -45,6 +45,8 @@ inherit
 			{NONE} all
 		end
 
+	INTERNAL_COMPILER_STRING_EXPORTER
+
 create
 	make
 
@@ -153,7 +155,8 @@ feature -- Highlevel element change
 							last_export := l_clause.clients.text (match_list)
 							l_comment := l_clause.comment (match_list)
 							if l_comment /= Void and then not l_comment.is_empty then
-								last_comment := "--" + l_comment.first.content
+									-- |FIXME: Unicode improvement needed.
+								last_comment := "--" + l_comment.first.content_32.as_string_8
 							end
 
 						end
@@ -302,7 +305,7 @@ feature -- Highlevel element change
 
 							if not l_done then
 								create l_parent_modifier.make (l_inherit, match_list)
-								l_parent_modifier.extend ({ERT_PARENT_AS_MODIFIER}.redefine_clause, l_name)
+								l_parent_modifier.extend_32 ({ERT_PARENT_AS_MODIFIER}.redefine_clause, l_name)
 								l_parent_modifier.apply
 							end
 						end
@@ -358,7 +361,7 @@ feature -- Highlevel element change
 							-- => add undefine
 						if l_found and not a_implements.is_case_insensitive_equal (l_inherit.type.class_name.name) then
 							create l_parent_modifier.make (l_inherit, match_list)
-							l_parent_modifier.extend ({ERT_PARENT_AS_MODIFIER}.undefine_clause, a_feature_name)
+							l_parent_modifier.extend_32 ({ERT_PARENT_AS_MODIFIER}.undefine_clause, a_feature_name)
 							l_parent_modifier.apply
 						end
 						l_parents.forth
@@ -374,7 +377,7 @@ feature -- Load/Save file
 		do
 				-- We use `actual_class' because we want the class on which the user
 				-- is working on, not the one that he is overridding.
-			text := class_i.actual_class.text
+			text := class_i.actual_class.text_32
 		end
 
 	save_text
@@ -439,7 +442,7 @@ feature {NONE} -- Implementation
 				end
 
 				create l_wrapper
-				l_wrapper.parse_with_option (l_parser, text.as_attached, l_option, True, Void)
+				l_wrapper.parse_with_option_32 (l_parser, text.as_attached, l_option, True, Void)
 				if not l_wrapper.has_error and then attached {CLASS_AS} l_wrapper.ast_node as l_class and then attached {LEAF_AS_LIST} l_wrapper.ast_match_list as l_match_list then
 					ast := l_class
 					match_list := l_match_list
@@ -480,7 +483,7 @@ invariant
 	associated_to_class: class_i /= void
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

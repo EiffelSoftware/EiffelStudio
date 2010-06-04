@@ -14,6 +14,8 @@ inherit
 
 	COMPILER_EXPORTER
 
+	INTERNAL_COMPILER_STRING_EXPORTER
+
 feature -- Assembler
 
 	normal_to_deferred_feature_as (a_feature_as: FEATURE_AS; a_list: LEAF_AS_LIST): FEATURE_AS
@@ -108,7 +110,7 @@ feature {NONE} -- Implementation
 			l_routine_as: ROUTINE_AS
 		once
 			l_feat_text := "feature feature_name is deferred end"
-			entity_feature_parser.parse_from_string (l_feat_text, Void)
+			entity_feature_parser.parse_from_string_32 (l_feat_text, Void)
 			l_routine_as ?= entity_feature_parser.feature_node.body.content
 			Result := l_routine_as.routine_body
 		ensure
@@ -129,7 +131,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

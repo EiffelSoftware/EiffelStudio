@@ -23,7 +23,7 @@ inherit
 
 feature -- Validation
 
-	validate_feature_name (a_feature_name: STRING)
+	validate_feature_name (a_feature_name: STRING_32)
 			-- Is name a vlaid name for an Eiffel feature?
 			--
 			-- `a_feature_name': Name to be validated.
@@ -31,12 +31,12 @@ feature -- Validation
 			reset
 			if a_feature_name.is_empty then
 				set_error (e_empty_feature_name)
-			elseif not is_valid_feature_name (a_feature_name) then
+			elseif not is_valid_feature_name_32 (a_feature_name) then
 				set_formatted_error (e_invalid_feature_name, [a_feature_name])
 			end
 		end
 
-	validate_new_feature_name (a_feature_name: STRING; a_class: CLASS_I)
+	validate_new_feature_name (a_feature_name: STRING_32; a_class: CLASS_I)
 			-- Is name a valid name for a new feature?
 			--
 			-- `a_feature_name': Name of new Eiffel feature.
@@ -49,7 +49,7 @@ feature -- Validation
 			validate_feature_name (a_feature_name)
 			if is_valid then
 				if a_class.is_compiled and then attached {CLASS_C} a_class.compiled_class as l_classc then
-					if l_classc.feature_named (a_feature_name) /= Void then
+					if l_classc.feature_named_32 (a_feature_name) /= Void then
 						set_formatted_error (e_feature_already_exists, [a_class.name, a_feature_name])
 					end
 				else
@@ -65,7 +65,7 @@ feature -- Validation
 						error_handler.wipe_out
 						if l_ast /= Void then
 							b := True
-							if l_ast.feature_of_name (a_feature_name, False) /= Void then
+							if l_ast.feature_of_name_32 (a_feature_name, False) /= Void then
 								set_formatted_error (e_feature_already_exists, [a_class.name, a_feature_name])
 							end
 						end
@@ -85,7 +85,7 @@ feature {NONE} -- Internationalization
 	e_class_file_not_valid: STRING = "Class file {$1} can not be parsed."
 
 ;note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -109,10 +109,10 @@ feature {NONE} -- Internationalization
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

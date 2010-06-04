@@ -1,40 +1,19 @@
 note
-	description: "Shared encoding converter."
-	status: "See notice at end of class."
-	legal: "See notice at end of class."
+	description: "[
+					This is an exporter for internal strings (UTF-8) in the compiler. 
+					It is not recommended to use internal string directly, unless you
+					know what is happening exactly!
+					Use STRING_32 (UTF-32) APIs instead.
+				]"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	SHARED_ENCODING_CONVERTER
-
-feature -- Access
-
-	encoding_converter: detachable ENCODING_CONVERTER
-			-- Encoding converter
-		do
-			Result := encoding_converter_cell.item
-		end
-
-feature -- Element change
-
-	set_encoding_converter (a_converter: like encoding_converter)
-			-- Set `encoding_converter' with `a_converter'
-		do
-			encoding_converter_cell.put (a_converter)
-		end
-
-feature {NONE} -- Implementation
-
-	encoding_converter_cell: CELL [ENCODING_CONVERTER]
-			-- Cell to hold the converter.
-		once
-			create Result.put (Void)
-		end
+	INTERNAL_COMPILER_STRING_EXPORTER
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
-	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
@@ -57,11 +36,10 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
-
 end

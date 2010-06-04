@@ -364,7 +364,7 @@ feature {NONE} -- Events
 				l_types := a_input.to_string_8
 				l_types.to_upper
 				if not (l_types.has ('!') or l_types.has ('?')) then
-					type_parser.parse_from_string ("type " + l_types, Void)
+					type_parser.parse_from_string_32 ("type " + l_types, Void)
 					error_handler.wipe_out
 					l_type_as := type_parser.type_node
 					if l_type_as /= Void then
@@ -386,7 +386,7 @@ feature {NONE} -- Events
 								l_root_group := l_root.cluster
 								l_root_class := l_root.root_class.compiled_class
 								if l_root_class /= Void then
-									l_root_feature := l_root_class.feature_named (l_root.procedure_name)
+									l_root_feature := l_root_class.feature_named_32 (l_root.procedure_name)
 								end
 							end
 							if l_root_class /= Void and l_root_group /= Void and l_root_feature /= Void then
@@ -544,7 +544,7 @@ feature {NONE} -- Basic operations
 					if type_list.after then
 						l_comp := 1
 					else
-						l_comp := type_list.item_for_iteration.text.as_lower.three_way_comparison (a_type.as_lower)
+						l_comp := string_general_as_lower (type_list.item_for_iteration.text).three_way_comparison (string_general_as_lower (a_type))
 						if l_comp = -1 then
 							type_list.forth
 						end

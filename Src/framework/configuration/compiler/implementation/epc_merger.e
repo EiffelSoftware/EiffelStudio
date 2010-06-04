@@ -14,6 +14,11 @@ inherit
 			default_create
 		end
 
+	INTERNAL_COMPILER_STRING_EXPORTER
+		undefine
+			default_create
+		end
+
 feature {NONE} -- Initialization
 
 	default_create
@@ -262,7 +267,7 @@ feature {NONE} -- Implementation
 				if l_indexes /= Void then
 					l_count := l_indexes.count
 					create l_mod.make (l_indexes, a_match_list)
-					l_mod.set_separator (line_return + "%T")
+					l_mod.set_separator_32 (line_return + "%T")
 					from
 						l_new_indexes.start
 					until
@@ -307,7 +312,7 @@ feature {NONE} -- Implementation
 							l_list := l_creators.i_th (l_index).feature_list
 							if l_list /= Void then
 								create l_mod.make (l_list, a_match_list)
-								l_mod.set_separator (", ")
+								l_mod.set_separator_32 (", ")
 								l_new_list := l_new_creator.feature_list
 								from
 									l_new_list.start
@@ -321,7 +326,7 @@ feature {NONE} -- Implementation
 							end
 						else
 							create l_mod.make (l_creators, a_match_list)
-							l_mod.set_separator (line_return)
+							l_mod.set_separator_32 (line_return)
 							l_mod.append (l_new_creator.text (a_new_match_list))
 							l_mod.apply
 						end
@@ -445,7 +450,7 @@ invariant
 	valid_first_line_pragma: first_line_pragma /= Void implies first_line_pragma.substring (1, 8).is_equal ("--#line ")
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -458,22 +463,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EPC_MERGER

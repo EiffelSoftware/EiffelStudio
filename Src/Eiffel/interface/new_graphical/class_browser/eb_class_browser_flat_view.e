@@ -219,9 +219,9 @@ feature{NONE} -- Sorting
 			row_b_valid: row_b /= Void
 		do
 			if a_order = ascending_order then
-				Result := row_a.e_feature.name < row_b.e_feature.name
+				Result := row_a.e_feature.name_32 < row_b.e_feature.name_32
 			else
-				Result := row_a.e_feature.name > row_b.e_feature.name
+				Result := row_a.e_feature.name_32 > row_b.e_feature.name_32
 			end
 		end
 
@@ -757,7 +757,7 @@ invariant
 	wild_matcher_attached: wild_matcher /= Void
 
 note
-        copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+        copyright:	"Copyright (c) 1984-2010, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"
         copying: "[

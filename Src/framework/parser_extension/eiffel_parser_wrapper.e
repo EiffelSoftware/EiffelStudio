@@ -19,6 +19,10 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_ENCODING_CONVERTER
+
+	INTERNAL_COMPILER_STRING_EXPORTER
+
 feature -- Access
 
 	ast_node: detachable AST_EIFFEL
@@ -59,11 +63,36 @@ feature -- Status report
 
 feature -- Basic operation
 
-	parse (a_parser: attached EIFFEL_PARSER; a_text: attached READABLE_STRING_GENERAL; a_ignore_errors: BOOLEAN; a_context_class: ABSTRACT_CLASS_C)
+	parse_32 (a_parser: attached EIFFEL_PARSER; a_text: attached READABLE_STRING_32; a_ignore_errors: BOOLEAN; a_context_class: ABSTRACT_CLASS_C)
 			-- Performs a parse using an Eiffel parser.
 			--
 			-- `a_parser'       : The Eiffel parser to perform a parse with.
-			-- `a_text'         : The Eiffel text to parse using the supplied parser.
+			-- `a_text'         : The Eiffel text to parse using the supplied parser. In UTF-32.
+			-- `a_ignore_errors': True to remove all errors and warnings from the error handler after a
+			--                    parse has been completed; False to retain them.
+		do
+			parse (a_parser, encoding_converter.utf32_to_utf8 (a_text), a_ignore_errors, a_context_class)
+		end
+
+	parse_with_option_32 (a_parser: attached EIFFEL_PARSER; a_text: attached READABLE_STRING_32; a_options: CONF_OPTION; a_ignore_errors: BOOLEAN; a_context_class: ABSTRACT_CLASS_C)
+			-- Performs a parse using an Eiffel parser.
+			--
+			-- `a_parser'       : The Eiffel parser to perform a parse with.
+			-- `a_text'         : The Eiffel text to parse using the supplied parser. In UTF-32.
+			-- `a_options'      : The configuration options to apply to the parser before parsing.
+			-- `a_ignore_errors': True to remove all errors and warnings from the error handler after a
+			--                    parse has been completed; False to retain them.
+		do
+			parse_with_option (a_parser, encoding_converter.utf32_to_utf8 (a_text), a_options, a_ignore_errors, a_context_class)
+		end
+
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Basic operation
+
+	parse (a_parser: attached EIFFEL_PARSER; a_text: attached READABLE_STRING_8; a_ignore_errors: BOOLEAN; a_context_class: ABSTRACT_CLASS_C)
+			-- Performs a parse using an Eiffel parser.
+			--
+			-- `a_parser'       : The Eiffel parser to perform a parse with.
+			-- `a_text'         : The Eiffel text to parse using the supplied parser. In UTF-8.
 			-- `a_ignore_errors': True to remove all errors and warnings from the error handler after a
 			--                    parse has been completed; False to retain them.
 		local
@@ -99,11 +128,11 @@ feature -- Basic operation
 			error_handler_has_warning_unchanged: error_handler.has_warning = old error_handler.has_warning
 		end
 
-	parse_with_option (a_parser: attached EIFFEL_PARSER; a_text: attached READABLE_STRING_GENERAL; a_options: CONF_OPTION; a_ignore_errors: BOOLEAN; a_context_class: ABSTRACT_CLASS_C)
+	parse_with_option (a_parser: attached EIFFEL_PARSER; a_text: attached READABLE_STRING_8; a_options: CONF_OPTION; a_ignore_errors: BOOLEAN; a_context_class: ABSTRACT_CLASS_C)
 			-- Performs a parse using an Eiffel parser.
 			--
 			-- `a_parser'       : The Eiffel parser to perform a parse with.
-			-- `a_text'         : The Eiffel text to parse using the supplied parser.
+			-- `a_text'         : The Eiffel text to parse using the supplied parser. In UTF-8.
 			-- `a_options'      : The configuration options to apply to the parser before parsing.
 			-- `a_ignore_errors': True to remove all errors and warnings from the error handler after a
 			--                    parse has been completed; False to retain them.
@@ -137,7 +166,7 @@ feature {NONE} -- Basic operations
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

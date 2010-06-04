@@ -862,7 +862,7 @@ feature {NONE} -- Impl filling
 				a_row.insert_subrow (sr)
 				subrow := a_row.subrow (sr)
 
-				create lab.make_with_text (f.name)
+				create lab.make_with_text (f.name_32)
 				lab.set_foreground_color (feature_color)
 				create fs.make (f)
 				lab.set_data (fs)
@@ -913,7 +913,7 @@ feature {NONE} -- Impl filling
 					elseif bpm.is_hidden_breakpoint_set_at (loc) then
 						--| hidden breakpoint .. so keep it hidden ;)
 					else
-						create lab.make_with_text (interface_names.l_error_with_line (f.name, i.out))
+						create lab.make_with_text (interface_names.l_error_with_line (f.name_32, i.out))
 						subrow.insert_subrow (ir)
 						subrow.subrow (ir).set_item (Status_column_index, lab)
 						ir := ir + 1
@@ -1023,7 +1023,7 @@ feature {NONE} -- Dynamic item filling
 		local
 			f: E_FEATURE
 			s: STRING_32
-			t: STRING
+			t: STRING_32
 			cell: EV_GRID_ITEM
 			lab: EV_GRID_LABEL_ITEM
 			bploc_item: ES_GRID_BREAKPOINT_LOCATION_ITEM
@@ -1078,7 +1078,9 @@ feature {NONE} -- Dynamic item filling
 					create lab.make_with_text (interface_names.l_space_error)
 				end
 				debug ("breakpoint")
-					t := bp.routine.associated_class.name_in_upper + "." + bp.routine.name + "#" + bp.breakable_line_number.out
+					t := bp.routine.associated_class.name_in_upper + "."
+					t.append (bp.routine.name_32)
+					t.append ("#" + bp.breakable_line_number.out)
 					if debugger_manager.application_is_executing then
 						if bp.location.is_set_for_application then
 							t.append_string ("Application: set")

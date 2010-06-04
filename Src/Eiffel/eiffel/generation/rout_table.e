@@ -49,6 +49,11 @@ inherit
 			copy, is_equal
 		end
 
+	INTERNAL_COMPILER_STRING_EXPORTER
+		undefine
+			copy, is_equal
+		end
+
 create
 	make
 
@@ -105,6 +110,7 @@ feature -- Status report
 			-- Feature name of the first implemented feature available
 			-- in a static type greater than `type_id' found by last
 			-- call to `goto_implemented (type_id)'.
+			-- ASCII compatible.
 		require
 			--| goto_implemented (type_id) called before
 			is_implemented: is_implemented

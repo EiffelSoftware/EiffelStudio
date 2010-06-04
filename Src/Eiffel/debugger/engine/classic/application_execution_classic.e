@@ -43,6 +43,8 @@ inherit
 
 	VALUE_TYPES
 
+	INTERNAL_COMPILER_STRING_EXPORTER
+
 create {DEBUGGER_MANAGER}
 	make_with_debugger
 

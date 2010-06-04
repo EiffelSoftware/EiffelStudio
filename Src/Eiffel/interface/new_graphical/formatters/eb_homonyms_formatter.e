@@ -130,7 +130,7 @@ feature {NONE} -- Implementation
 	criterion: QL_CRITERION
 			-- Criterion of current formatter
 		do
-			create {QL_FEATURE_NAME_IS_CRI}Result.make_with_setting (associated_feature.name, False, {QL_NAME_CRITERION}.identity_matching_strategy)
+			create {QL_FEATURE_NAME_IS_CRI}Result.make_with_setting (associated_feature.name_32, False, {QL_NAME_CRITERION}.identity_matching_strategy)
 		end
 
 	rebuild_browser
@@ -145,7 +145,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

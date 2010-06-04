@@ -83,7 +83,7 @@ feature -- Query
 			-- Note: The result is unadjusted! To account for ajustement, pass through `modified_data.adjusted_position'.
 			--
 			-- `a_ast': An AST node to retrieve a position for.
-			-- `Result': Original start and end positions for the supplied AST node.
+			-- `Result': Original start and end positions in characters for the supplied AST node.
 		require
 			is_prepared: is_prepared
 			is_ast_available: is_ast_available
@@ -92,12 +92,17 @@ feature -- Query
 			l_data: like modified_data
 			l_first_leaf: LEAF_AS
 			l_last_leaf: LEAF_AS
+			l_mapper: UNICODE_POSITION_MAPPER
+			l_start, l_end: INTEGER
 		do
 			l_data := modified_data
 			l_first_leaf := a_ast.first_token (l_data.ast_match_list)
 			l_last_leaf := a_ast.last_token (l_data.ast_match_list)
 			if attached l_first_leaf and then attached l_last_leaf then
-				Result := [l_first_leaf.start_position, l_last_leaf.end_position]
+				create l_mapper.make (encoding_converter.utf32_to_utf8 (original_text))
+				l_start := l_mapper.next_utf32_pos_from_utf8_pos (l_first_leaf.start_position)
+				l_end := l_mapper.next_utf32_pos_from_utf8_pos (l_last_leaf.end_position)
+				Result := [l_start, l_end]
 			else
 					-- Invalid parser!
 				check False end
@@ -213,7 +218,7 @@ invariant
 	modified_data_attached: attached modified_data
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

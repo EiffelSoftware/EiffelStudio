@@ -22,13 +22,16 @@ inherit
 							formal_position: INTEGER;
 							constraint_position: INTEGER]]
 
+	SHARED_ENCODING_CONVERTER
+		undefine
+			is_equal,
+			copy
+		end
+
 create
 	make
 
 feature -- Access
-
-	feature_name: STRING
-		-- The feature name for which this error report is.
 
 	formal_position: INTEGER
 		-- The position of the formal for which we checked the feature named `feature_name'.
@@ -38,7 +41,12 @@ feature -- Access
 
 	my_list: LIST [like Current]
 
-feature -- Setters
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
+
+	feature_name: STRING
+		-- The feature name for which this error report is.
+
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Setters
 
 	set_data (a_feature_name: STRING; a_formal_position: INTEGER; a_context_class: CLASS_C)
 			-- Set data
@@ -67,6 +75,18 @@ feature -- Status
 			Result := count /= 1
 		end
 
+	has_feature_name: BOOLEAN
+			-- Has `feature_name'?
+		do
+			Result := feature_name /= Void
+		end
+
+	has_context_class: BOOLEAN
+			-- Has `context_class'?
+		do
+			Result := context_class /= Void
+		end
+
 feature -- Command
 
 	append_error_report (a_text_formatter: TEXT_FORMATTER)
@@ -75,16 +95,18 @@ feature -- Command
 			-- `a_text_formatter' is used to append the error report to.
 		require
 			is_really_an_error: is_erroneous
-			feature_name_not_void: feature_name /= Void
-			context_class_not_void: context_class /= Void
+			feature_name_not_void: has_feature_name
+			context_class_not_void: has_context_class
 		local
-			l_output: STRING
+			l_output: STRING_32
 		do
 			if count > 0 then
 					-- Precondition ensures this
 				check count_not_one: count /= 1 end
 				if feature_name /= Void  then
-					l_output := "The feature `" + feature_name + "' occurs in the following set of constraint classes:%N"
+					l_output := "The feature `"
+					l_output.append (encoding_converter.utf8_to_utf32 (feature_name))
+					l_output.append ("' occurs in the following set of constraint classes:%N")
 				else
 					-- This error report might have been computed over a routine id.
 					-- That's why feature_name is Void.
@@ -106,7 +128,7 @@ feature -- Command
 					a_text_formatter.add_space
 					a_text_formatter.add ("from formal")
 					a_text_formatter.add_space
-					a_text_formatter.process_generic_text (context_class.generics.i_th (item.formal_position).name.name)
+					a_text_formatter.process_generic_text (context_class.generics.i_th (item.formal_position).name.name_32)
 					a_text_formatter.add_space
 					a_text_formatter.add ("at constraint position #" + item.constraint_position.out + ".")
 
@@ -116,7 +138,7 @@ feature -- Command
 			else
 				l_output := "The feature `" + feature_name + "' does not occur in any constraint of the following formal:%N"
 				a_text_formatter.add (l_output)
-				a_text_formatter.process_generic_text (context_class.generics.i_th (formal_position).name.name)
+				a_text_formatter.process_generic_text (context_class.generics.i_th (formal_position).name.name_32)
 			end
 		end
 
@@ -128,16 +150,16 @@ feature {NONE} -- Implementation
 			a_text_formatter_not_void: a_text_formatter /= Void
 		do
 			if a_e_feature /= Void then
-				a_text_formatter.process_feature_text(a_e_feature.name, a_e_feature, false)
+				a_text_formatter.process_feature_text(a_e_feature.name_32, a_e_feature, false)
 				a_text_formatter.add_space
 			elseif a_feature_i /= Void then
-				a_text_formatter.add (a_feature_i.feature_name)
+				a_text_formatter.add (a_feature_i.feature_name_32)
 				a_text_formatter.add_space
 			end
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -150,21 +172,21 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

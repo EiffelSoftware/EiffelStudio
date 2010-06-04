@@ -81,6 +81,13 @@ inherit
 			default_create, copy
 		end
 
+	SHARED_LOCALE
+		export
+			{NONE} all
+		undefine
+			default_create, copy
+		end
+
 create
 	make_default
 
@@ -397,7 +404,7 @@ feature {NONE} -- Basic operations
 							l_buffer.append_character ('%N')
 							from l_parents.start until l_parents.after loop
 								l_buffer.append_character ('%T')
-								l_buffer.append (l_parents.item.text.as_upper)
+								l_buffer.append (string_general_as_upper (l_parents.item.text))
 								l_buffer.append ("%N%N")
 								l_parents.forth
 							end
@@ -494,7 +501,7 @@ feature {NONE} -- Implementation
 	class_name: STRING
 			-- Name of the class entered by the user.
 		do
-			Result := class_entry.text.as_upper
+			Result := string_general_as_upper (class_entry.text).as_string_8
 		ensure
 			class_name_not_void: class_name /= Void
 		end
@@ -655,7 +662,7 @@ feature {NONE} -- Implementation
 			fn: STRING
 		do
 			fn := creation_entry.text
-			aok := (create {EIFFEL_SYNTAX_CHECKER}).is_valid_feature_name (fn)
+			aok := (create {EIFFEL_SYNTAX_CHECKER}).is_valid_feature_name_32 (fn)
 			if not aok then
 				prompts.show_error_prompt (Warning_messages.w_invalid_feature_name (fn), Current, Void)
 			end

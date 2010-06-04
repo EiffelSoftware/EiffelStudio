@@ -503,11 +503,11 @@ feature{NONE} -- Implementation
 							l_comments.after
 						loop
 							token_writer.new_line
-							l_comment := l_comments.item.content
-							if l_comment.count > 1 and then l_comment.item (1).is_space then
+							l_comment := l_comments.item.content_32
+							if l_comment.count > 1 and then l_comment.item (1).is_character_8 and then l_comment.item (1).is_space then
 								l_comment.remove (1)
 							end
-							token_writer.add_comment_text (l_comment.out)
+							token_writer.add_comment_text (l_comment)
 							l_tokens.fill (token_writer.last_line.content)
 							l_tokens.extend (create{EDITOR_TOKEN_EOL}.make)
 							l_comments.forth
@@ -537,7 +537,7 @@ feature{NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -73,6 +73,34 @@ extern "C" {
 	*(EIF_INTEGER *) ((EIF_REFERENCE) string + egc_str_hash_offset) = (EIF_INTEGER) hash;
 #endif
 
+/* Macro used to initialize `count' and `internal_hash_code' of STRING_32. Only `count' access
+ * is defined in workbench mode, as only setting hash code makes sense for fast finalized 
+ * executable. */
+#ifdef WORKBENCH
+#define RT_STRING32_MAKE(string,len) \
+	{ \
+		EIF_TYPED_VALUE u; \
+		u.type = SK_INT32; \
+		u.it_i4 = (EIF_INTEGER) (len); \
+		(egc_str32make)((EIF_REFERENCE) (string), u); \
+	}
+#define RT_STRING32_SET_COUNT(string,count) \
+	{ \
+		EIF_TYPED_VALUE u; \
+		u.type = SK_INT32; \
+		u.it_i4 = (EIF_INTEGER) count; \
+		(egc_str32set)((EIF_REFERENCE) string, u); \
+	}
+#define RT_STRING32_SET_HASH_CODE(string, hash)
+#else
+#define RT_STRING32_MAKE(string,len) \
+	(egc_str32make)((EIF_REFERENCE) (string), (len))
+#define RT_STRING32_SET_COUNT(string, count) \
+	*(EIF_INTEGER *) ((EIF_REFERENCE) string + egc_str32_count_offset) = (EIF_INTEGER) count;
+#define RT_STRING32_SET_HASH_CODE(string, hash) \
+	*(EIF_INTEGER *) ((EIF_REFERENCE) string + egc_str32_hash_offset) = (EIF_INTEGER) hash;
+#endif
+
 
 /* Macro used for variable protection when using the ISE GC. */
 /* RT_GC_PROTECT(a)	push `a' into `loc_stack' so that we always have a valid

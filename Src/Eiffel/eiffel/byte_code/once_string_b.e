@@ -16,12 +16,17 @@ inherit
 			is_simple_expr, is_type_fixed, allocates_memory, size
 		end
 
-create
+	SHARED_ENCODING_CONVERTER
+		export
+			{NONE} all
+		end
+
+create {INTERNAL_COMPILER_STRING_EXPORTER}
 	make
 
 feature {NONE} -- Initialization
 
-	make (v: STRING; n: INTEGER)
+	make (v: STRING; a_str32: BOOLEAN; n: INTEGER)
 			-- Create object for `n'-th once manifest string with value `v'.
 		require
 			v_not_void: v /= Void
@@ -29,21 +34,36 @@ feature {NONE} -- Initialization
 		do
 			value := v
 			number := n
+			is_string_32 := a_str32
 		ensure
 			value_set: value = v
 			number_set: number = n
+			is_string_32_set: is_string_32 = a_str32
 		end
 
 feature -- Access
-
-	value: STRING
-			-- Character value
 
 	number: INTEGER
 			-- Ordinal number of once manifest string in routine
 
 	is_dotnet_string: BOOLEAN
 			-- Is current a manifest System.String constant?
+
+	is_string_32: BOOLEAN
+			-- Is current a STRING_32 manifest string?
+
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
+
+	value: STRING
+			-- Character value
+
+	value_32: STRING_32
+			-- Value in UTF-32
+		do
+			if attached value as l_value then
+				Result := encoding_converter.utf8_to_utf32 (l_value)
+			end
+		end
 
 feature -- Status report
 
@@ -66,15 +86,17 @@ feature -- Properties
 		do
 			if is_dotnet_string then
 				Result := system_string_type
-			else
+			elseif not is_string_32 then
 				Result := string_type
+			else
+				Result := string_32_type
 			end
 		end
 
 	enlarged: ONCE_STRING_BL
 			-- Enlarge node
 		do
-			create Result.make (value, number)
+			create Result.make (value, is_string_32, number)
 		end
 
 	used (r: REGISTRABLE): BOOLEAN
@@ -119,6 +141,14 @@ feature {NONE} -- Implementation: types
 			string_type_not_void: Result /= Void
 		end
 
+	string_32_type: CL_TYPE_A
+			-- Type of STRING_32
+		once
+			create Result.make (System.string_32_id)
+		ensure
+			string_type_not_void: Result /= Void
+		end
+
 	system_string_type: CL_TYPE_A
 			-- Type of SYSTEM_STRING
 		require
@@ -142,7 +172,7 @@ invariant
 	value_not_void: value /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -155,22 +185,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

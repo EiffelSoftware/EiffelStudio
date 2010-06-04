@@ -16,7 +16,7 @@ inherit
 			process
 		end
 
-create
+create {INTERNAL_COMPILER_STRING_EXPORTER}
 	initialize
 
 feature {NONE} -- Initialization
@@ -57,6 +57,7 @@ feature -- Properties
 			-- Delimiter used to mark the beginning and end of the
 			-- verbatim string.
 			-- If `empty', no marker was used.
+			-- The marker is ascii compatible.
 
 	is_indentable: BOOLEAN
 			-- Is verbatim string indentable, i.e. can all lines be prepended
@@ -73,7 +74,7 @@ invariant
 	valid_common_columns: not is_indentable implies common_columns = 0
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

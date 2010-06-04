@@ -95,8 +95,8 @@ feature {NONE} -- Initialization
 			make_response_parser (a_system)
 
 				-- You can only do this after the compilation of the interpreter.
-			injected_feature_body_id := l_itp_class.feature_named (feature_name_for_byte_code_injection).real_body_id (l_itp_class.types.first)
-			injected_feature_pattern_id := l_itp_class.feature_named (feature_name_for_byte_code_injection).real_pattern_id (l_itp_class.types.first)
+			injected_feature_body_id := l_itp_class.feature_named_32 (feature_name_for_byte_code_injection).real_body_id (l_itp_class.types.first)
+			injected_feature_pattern_id := l_itp_class.feature_named_32 (feature_name_for_byte_code_injection).real_pattern_id (l_itp_class.types.first)
 
 				-- Setup request printers.
 			create socket_data_printer.make (system, variable_table)
@@ -1032,7 +1032,7 @@ invariant
 
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -228,8 +228,8 @@ end;
 			l_target_feature: FEATURE_I;
 		do
 			l_target_feature := feat_adapter.target_feature
-			if target_class.valid_creation_procedure (l_target_feature.feature_name) then
-				creation_table.put (feat_adapter, l_target_feature.feature_name)
+			if target_class.valid_creation_procedure_32 (l_target_feature.feature_name_32) then
+				creation_table.put (feat_adapter, l_target_feature.feature_name_32)
 			end
 		end;
 
@@ -556,7 +556,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	update_feature_clause_order (array: ARRAY [STRING])
+	update_feature_clause_order (array: ARRAY [STRING_32])
 			-- Update the feature clause order.
 		require
 			valid_array: array /= Void
@@ -565,7 +565,7 @@ feature {NONE} -- Implementation
 			feature_clause_order_table: HASH_TABLE [INTEGER, STRING];
 			default_feature_clause_order: INTEGER;
 			order, i, c: INTEGER;
-			comment: STRING;
+			comment: STRING_32;
 			eif_comments: EIFFEL_COMMENTS
 		do
 			create feature_clause_order_table.make (array.count);
@@ -604,8 +604,10 @@ feature {NONE} -- Implementation
 					if eif_comments = Void or else eif_comments.is_empty then
 						order := default_feature_clause_order
 					else
-						comment := eif_comments.first.content.twin
-						comment.left_adjust; -- Remove leading blanks
+						comment := eif_comments.first.content_32
+						if comment.is_valid_as_string_8 then
+							comment.left_adjust; -- Remove leading blanks
+						end
 						order := feature_clause_order_table.item (comment);
 						if order = 0 then
 								-- Didn't find order - use default
@@ -618,11 +620,11 @@ feature {NONE} -- Implementation
 			end;
 		end;
 
-	feature_clause_order: ARRAY [STRING];
+	feature_clause_order: ARRAY [STRING_32];
 			-- Array of ordered feature clause comments
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -635,22 +637,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class FORMAT_REGISTRATION

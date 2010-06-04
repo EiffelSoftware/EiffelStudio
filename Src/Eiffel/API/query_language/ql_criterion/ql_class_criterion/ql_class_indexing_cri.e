@@ -26,6 +26,9 @@ inherit
 
 	SHARED_EIFFEL_PARSER
 
+		-- Text for direct parsing.
+	INTERNAL_COMPILER_STRING_EXPORTER
+
 feature -- Evaluate
 
 	is_satisfied_by (a_item: QL_CLASS): BOOLEAN
@@ -54,7 +57,7 @@ feature{NONE} -- Implementation
 				if a_item.is_compiled then
 					Result := a_item.class_c.ast
 				else
-					roundtrip_eiffel_parser.parse_from_string (a_item.class_i.text, a_item.class_c)
+					roundtrip_eiffel_parser.parse_class (a_item.class_c)
 					Result := roundtrip_eiffel_parser.root_node
 				end
 			end
@@ -98,7 +101,7 @@ feature {NONE} -- Internal parsers
 			-- Match list of last class parsed by `roundtrip_eiffel_parser'
 
 note
-        copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+        copyright:	"Copyright (c) 1984-2010, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"
         copying: "[

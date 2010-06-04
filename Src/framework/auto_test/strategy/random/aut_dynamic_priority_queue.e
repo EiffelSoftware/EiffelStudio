@@ -19,6 +19,8 @@ inherit
 
 	REFACTORING_HELPER
 
+	INTERNAL_COMPILER_STRING_EXPORTER
+
 create
 
 	make
@@ -347,18 +349,17 @@ feature {NONE} -- Implementation
 		do
 			if
 				a_type.has_associated_class and then
-				a_type.associated_class.creators /= Void and then
-				a_type.associated_class.creators.has (a_feature.feature_name)
+				a_type.associated_class.has_creator_of_name_id (a_feature.feature_name_id)
 			then
-				Result := a_type.associated_class.creators.item (a_feature.feature_name).is_all
+				Result := a_type.associated_class.creator_of_name_id (a_feature.feature_name_id).is_all
 			end
 
 			if a_type.has_associated_class then
 				l_class := a_type.associated_class
 
-				if l_class.creators /= Void and then l_class.creators.has (a_feature.feature_name) then
+				if l_class.has_creator_of_name_id (a_feature.feature_name_id) then
 						-- For normal creators.
-					Result := l_class.creators.item (a_feature.feature_name).is_all
+					Result := l_class.creator_of_name_id (a_feature.feature_name_id).is_all
 
 				elseif l_class.allows_default_creation and then l_class.default_create_feature.feature_name.is_equal (a_feature.feature_name) then
 						-- For default creators.
@@ -438,7 +439,7 @@ invariant
 	tables_valid: are_tables_valid
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -997,7 +997,8 @@ feature {NONE} -- Filling
 					if attached {CONSTANT_I} c.associated_feature_i as ci then
 						cdv := deval.value_from_constant_i (ci)
 						if cdv /= Void then
-							cdv.set_name (flist.item.name)
+								-- |FIXME: Handle Unicode
+							cdv.set_name (flist.item.name_32.as_string_8)
 							csts.extend (cdv)
 						end
 					end
@@ -1113,7 +1114,7 @@ feature {NONE} -- Agent filling
 					a_row.insert_subrow (r)
 					lrow := a_row.subrow (r)
 
-					f := debugger_manager.compiler_data.tuple_class_c.feature_with_name ("object_comparison")
+					f := debugger_manager.compiler_data.tuple_class_c.feature_with_name_32 ("object_comparison")
 					create gf
 					gf.set_pixmap (pixmap_from_e_feature (f))
 					gf.set_overriden_fonts (label_font_table, label_font_height)

@@ -75,6 +75,8 @@ struct bit {
 RT_LNK EIF_REFERENCE makestr_with_hash(register char *s, register size_t len, register int a_hash);
 RT_LNK EIF_REFERENCE makestr_with_hash_as_old(register char *s, register size_t len, register int a_hash);
 RT_LNK EIF_REFERENCE makestr(register char *s, register size_t len);
+RT_LNK EIF_REFERENCE makestr32_with_hash(register char *s, register size_t len, register int a_hash);
+RT_LNK EIF_REFERENCE makestr32_with_hash_as_old(register char *s, register size_t len, register int a_hash);
 RT_LNK EIF_REFERENCE makebit(char *bit, uint16 bit_count);		/* Build an Eiffel bit object */
 extern EIF_REFERENCE striparr(EIF_REFERENCE curr, int dtype, EIF_REFERENCE *items, long int nbr);			/* Build an Eiffel ARRAY[ANY] object for strip*/
 

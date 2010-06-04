@@ -43,6 +43,8 @@ inherit
 			{NONE} all
 		end
 
+	INTERNAL_COMPILER_STRING_EXPORTER
+
 feature -- Visitor
 
 	process (v: BYTE_NODE_VISITOR)
@@ -65,17 +67,6 @@ feature -- Access
 
 	end_location: LOCATION_AS
 			-- Position where `end' keyword is located.
-
-	feature_name: STRING
-			-- Final name of the feature
-		require
-			feature_name_id_set: feature_name_id > 0
-		do
-			Result := Names_heap.item (feature_name_id)
-		ensure
-			Result_not_void: Result /= Void
-			Result_not_empty: not Result.is_empty
-		end
 
 	rout_id: INTEGER
 			-- Routine id of the feature
@@ -117,20 +108,6 @@ feature -- Access
 
 	property_name_id: INTEGER
 			-- Name ID of an associated property (if any)
-
-	property_name: STRING
-			-- Name of an associated property (if any)
-		do
-			if property_name_id > 0 then
-				Result := Names_heap.item (property_name_id)
-			elseif property_name_id /= 0 then
-				Result := once ""
-			end
-		ensure
-			Result_not_void: property_name_id /= 0 implies Result /= Void
-			Result_not_empty: property_name_id > 0 implies not Result.is_empty
-			Result_empty: property_name_id < 0 implies Result.is_empty
-		end
 
 	clear_old_expressions
 			-- Clear old_expressions
@@ -191,6 +168,33 @@ feature -- Access
 	once_manifest_string_count: INTEGER
 			-- Number of once manifest strings in immediate (i.e., not inherited)
 			-- precondition, body, postcondition and rescue clause
+
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
+
+	feature_name: STRING
+			-- Final name of the feature
+		require
+			feature_name_id_set: feature_name_id > 0
+		do
+			Result := Names_heap.item (feature_name_id)
+		ensure
+			Result_not_void: Result /= Void
+			Result_not_empty: not Result.is_empty
+		end
+
+	property_name: STRING
+			-- Name of an associated property (if any)
+		do
+			if property_name_id > 0 then
+				Result := Names_heap.item (property_name_id)
+			elseif property_name_id /= 0 then
+				Result := once ""
+			end
+		ensure
+			Result_not_void: property_name_id /= 0 implies Result /= Void
+			Result_not_empty: property_name_id > 0 implies not Result.is_empty
+			Result_empty: property_name_id < 0 implies Result.is_empty
+		end
 
 feature -- Settings
 

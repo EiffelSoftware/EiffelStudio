@@ -70,7 +70,7 @@ feature{NONE} -- Implementation
 					Result := a_item.class_c.ast
 					match_list := match_list_server.item (a_item.class_c.class_id)
 				else
-					roundtrip_eiffel_parser.parse_from_string (a_item.class_i.text, a_item.class_c)
+					roundtrip_eiffel_parser.parse_class (a_item.class_c)
 					Result := roundtrip_eiffel_parser.root_node
 					match_list := roundtrip_eiffel_parser.match_list
 				end
@@ -83,7 +83,7 @@ feature{NONE} -- Implementation
 		end
 
 note
-        copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+        copyright:	"Copyright (c) 1984-2010, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"
         copying: "[

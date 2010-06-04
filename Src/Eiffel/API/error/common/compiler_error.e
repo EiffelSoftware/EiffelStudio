@@ -303,25 +303,25 @@ feature {NONE} -- Implementation
 			elseif line > 0 then
 				a_text_formatter.add_new_line
 				a_text_formatter.add (once "  ")
-				if previous_line /= Void then
-					if not previous_line.is_empty then
-						previous_line.replace_substring_all (once "%T", once "  ")
+				if attached previous_line_32 as l_p_line then
+					if not l_p_line.is_empty then
+						l_p_line.replace_substring_all (once "%T", once "  ")
 					end
-					a_text_formatter.add (previous_line)
+					a_text_formatter.add (l_p_line)
 					a_text_formatter.add_new_line
 				end
 				a_text_formatter.add (once "->")
-				if not current_line.is_empty then
-					current_line.replace_substring_all (once "%T", once "  ")
+				if attached current_line_32 as l_c_line and then not l_c_line.is_empty then
+					l_c_line.replace_substring_all (once "%T", once "  ")
+					a_text_formatter.add (l_c_line)
 				end
-				a_text_formatter.add (current_line)
 				a_text_formatter.add_new_line
-				if next_line /= Void then
+				if attached next_line_32 as l_n_line then
 					a_text_formatter.add (once "  ")
-					if not next_line.is_empty then
-						next_line.replace_substring_all (once "%T", once "  ")
+					if not l_n_line.is_empty then
+						l_n_line.replace_substring_all (once "%T", once "  ")
 					end
-					a_text_formatter.add (next_line)
+					a_text_formatter.add (l_n_line)
 					a_text_formatter.add_new_line
 				end
 			end
@@ -329,7 +329,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Output
 
-	display_line (a_text_formatter: TEXT_FORMATTER; a_line: STRING)
+	display_line (a_text_formatter: TEXT_FORMATTER; a_line: STRING_32)
 			-- Display `a_line' in `a_text_formatter'. It translates `%T' accordingly to `a_text_formatter' specification
 			-- which is to call `add_indent'.
 		require
@@ -337,7 +337,7 @@ feature {NONE} -- Output
 		local
 			i: INTEGER
 			nb: INTEGER
-			c: CHARACTER
+			c: CHARACTER_32
 		do
 			if a_line /= Void then
 				from
@@ -353,14 +353,14 @@ feature {NONE} -- Output
 						a_text_formatter.add (" ")
 						a_text_formatter.add (" ")
 					else
-						a_text_formatter.add (c.out)
+						a_text_formatter.add (create {STRING_32}.make_filled (c, 1))
 					end
 				end
 				a_text_formatter.add_new_line
 			end
 		end
 
-	display_syntax_line (a_text_formatter: TEXT_FORMATTER; a_line: STRING)
+	display_syntax_line (a_text_formatter: TEXT_FORMATTER; a_line: STRING_32)
 			-- Display `a_line' which does like `display_line' but with an additional
 			-- arrowed line that points out to `column' where syntax issue is located.
 		require
@@ -368,7 +368,7 @@ feature {NONE} -- Output
 			a_line_not_void: a_line /= Void
 		local
 			i, nb: INTEGER
-			c: CHARACTER
+			c: CHARACTER_32
 			position, nb_tab: INTEGER
 		do
 			from
@@ -387,7 +387,7 @@ feature {NONE} -- Output
 						nb_tab := nb_tab + 1
 					end
 				else
-					a_text_formatter.add (c.out)
+					a_text_formatter.add (create {STRING_32}.make_filled (c, 1))
 				end
 			end
 			a_text_formatter.add_new_line
@@ -414,7 +414,7 @@ feature {NONE} -- Output
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

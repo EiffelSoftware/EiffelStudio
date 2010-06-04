@@ -9,7 +9,10 @@ note
 class
 	ERT_EIFFEL_LIST_ITEM_ARGUMENTS
 
-feature -- Access		
+inherit
+	SHARED_ENCODING_CONVERTER
+
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access		
 
 	separator: STRING
 			-- Separator used to separate items.
@@ -28,6 +31,23 @@ feature -- Access
 			-- Trailing text to be added after every prepended/appended item
 
 feature -- Setting
+
+	set_separator_32 (a_separator: STRING_32)
+			-- Set `separator' with `a_separator'.
+			-- If `a_separator' is Void or empty, separators will not be processed.
+			-- `a_separator' is in UTF-32.
+		do
+			if a_separator = Void then
+				create separator.make (0)
+			else
+				separator := encoding_converter.utf32_to_utf8 (a_separator)
+			end
+		ensure
+			separator_set: (a_separator = Void implies separator.is_empty) and
+						   (a_separator /= Void implies separator.is_equal (encoding_converter.utf32_to_utf8 (a_separator)))
+		end
+
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Setting
 
 	set_separator (a_separator: STRING)
 			-- Set `separator' with `a_separator'.
@@ -76,7 +96,7 @@ feature -- Setting
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -89,21 +109,21 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

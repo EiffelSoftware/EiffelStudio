@@ -45,6 +45,8 @@ inherit
 
 	COMPILER_EXPORTER
 
+	INTERNAL_COMPILER_STRING_EXPORTER
+
 feature -- Initialize
 
 	generate (a_ba: BYTE_ARRAY; a_node: BYTE_NODE)
@@ -1620,12 +1622,27 @@ feature {NONE} -- Visitors
 
 	process_once_string_b (a_node: ONCE_STRING_B)
 			-- Process `a_node'.
+		local
+			l_is_str32: BOOLEAN
+			l_value: STRING
+			l_value_32: STRING_32
 		do
+			l_is_str32 := a_node.is_string_32
 			ba.append (bc_once_string)
+			ba.append_boolean (l_is_str32)
 			ba.append_integer (a_node.body_index - 1)
 			ba.append_integer (a_node.number - 1)
-			ba.append_integer (a_node.value.count)
-			ba.append_raw_string (a_node.value)
+			if l_is_str32 then
+				l_value_32 := a_node.value_32
+					-- Bytes to read.
+				ba.append_integer (l_value_32.count * 4)
+				string_32_stream_to_ba (l_value_32, ba)
+			else
+				l_value := a_node.value
+					-- Bytes to read
+				ba.append_integer (l_value.count)
+				ba.append_raw_string (l_value)
+			end
 		end
 
 	process_operand_b (a_node: OPERAND_B)
@@ -1788,10 +1805,29 @@ feature {NONE} -- Visitors
 
 	process_string_b (a_node: STRING_B)
 			-- Process `a_node'.
+		local
+			l_is_str32: BOOLEAN
+			l_value: STRING
+			l_value_32: STRING_32
 		do
+			l_is_str32 := a_node.is_string_32
+			if l_is_str32 then
+				l_value_32 := a_node.value_32
+			else
+				l_value := a_node.value
+			end
+
 			ba.append (Bc_string)
-			ba.append_integer (a_node.value.count)
-			ba.append_raw_string (a_node.value)
+			ba.append_boolean (l_is_str32)
+			if l_is_str32 then
+					-- Bytes to read
+				ba.append_integer (l_value_32.count * 4)
+				string_32_stream_to_ba (l_value_32, ba)
+			else
+					-- Bytes to read
+				ba.append_integer (l_value.count)
+				ba.append_raw_string (l_value)
+			end
 		end
 
 	process_strip_b (a_node: STRIP_B)
@@ -2404,6 +2440,28 @@ feature {NONE} -- Implementation
 						ba.generate_melted_debugger_hook_nested (l_line, l_nested)
 					end
 				end
+			end
+		end
+
+	string_32_stream_to_ba (a_str32_value: STRING_32; a_ba: like ba)
+			-- Write streamed STRING_32 into the byte array.
+		require
+			a_str32_value_not_void: a_str32_value /= Void
+			a_ba_not_void: a_ba /= Void
+		local
+			i: INTEGER_32
+			l_managed_pointer: MANAGED_POINTER
+			l_count: INTEGER
+		do
+			l_count := a_str32_value.count * 4
+			create l_managed_pointer.share_from_pointer (a_str32_value.area.base_address, l_count)
+			from
+				i := 0
+			until
+				i >= l_count
+			loop
+				ba.append_natural_8 (l_managed_pointer.read_natural_8 (i))
+				i := i + 1
 			end
 		end
 

@@ -41,6 +41,8 @@ inherit
 			test
 		end
 
+	INTERNAL_COMPILER_STRING_EXPORTER
+
 feature -- Initialization/Checking
 
 	init_and_check_convert_tables (
@@ -358,9 +360,9 @@ feature -- Initialization/Checking
 							l_feat_not_void: l_feat /= Void
 							has_creation_procedures: l_target_class.creators /= Void
 							has_convert_creation_procedure:
-								l_target_class.creators.has (l_feat.feature_name)
+								l_target_class.has_creator_of_name_id (l_feat.feature_name_id)
 						end
-						l_success := l_target_class.creators.item (l_feat.feature_name).valid_for (
+						l_success := l_target_class.creator_of_name_id (l_feat.feature_name_id).valid_for (
 							a_context_class)
 						if l_success then
 							create {FEATURE_CONVERSION_INFO} last_conversion_info.

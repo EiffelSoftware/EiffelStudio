@@ -307,7 +307,7 @@ feature -- Roundtrip
 					has_error_internal := True
 					l_leaf_list	:= match_list_server.item (current_class.class_id)
 					if l_leaf_list /= Void and then l_as.is_text_available (l_leaf_list) then
-						l_text_formatter_decorator.add (l_as.text (l_leaf_list))
+						l_text_formatter_decorator.add (l_as.text_32 (l_leaf_list))
 					else
 						l_text_formatter_decorator.add ("unable_to_show_inline_agent")
 					end
@@ -375,7 +375,7 @@ feature {NONE} -- Implementation
 
 	process_id_as (l_as: ID_AS)
 		do
-			text_formatter_decorator.process_basic_text (l_as.name)
+			text_formatter_decorator.process_basic_text (l_as.name_32)
 		end
 
 	process_integer_as (l_as: INTEGER_CONSTANT)
@@ -394,7 +394,7 @@ feature {NONE} -- Implementation
 				end
 			end
 			if not expr_type_visiting then
-				l_text_formatter_decorator.process_number_text (l_as.string_value)
+				l_text_formatter_decorator.process_number_text (l_as.string_value_32)
 			end
 			last_type := l_as.manifest_type
 		end
@@ -427,9 +427,9 @@ feature {NONE} -- Implementation
 			if not expr_type_visiting then
 				l_text_formatter_decorator.process_symbol_text (ti_dot)
 				if not has_error_internal then
-					l_text_formatter_decorator.process_feature_text (l_as.feature_name.name, l_feat, False)
+					l_text_formatter_decorator.process_feature_text (l_as.feature_name.name_32, l_feat, False)
 				else
-					l_text_formatter_decorator.process_basic_text (l_as.feature_name.name)
+					l_text_formatter_decorator.process_basic_text (l_as.feature_name.name_32)
 				end
 			end
 			if l_as.parameter_count > 0 then
@@ -614,7 +614,7 @@ feature {NONE} -- Implementation
 		do
 			if not expr_type_visiting then
 				l_text_formatter_decorator := text_formatter_decorator
-				l_text_formatter_decorator.process_string_text (l_as.value.name, Void)
+				l_text_formatter_decorator.process_string_text (l_as.value.name_32, Void)
 				l_text_formatter_decorator.process_string_text ("B", Void)
 			end
 			create {BITS_A} last_type.make (l_as.size)
@@ -650,7 +650,7 @@ feature {NONE} -- Implementation
 	process_char_as (l_as: CHAR_AS)
 		do
 			if not expr_type_visiting then
-				text_formatter_decorator.process_character_text (l_as.string_32_value)
+				text_formatter_decorator.process_character_text (l_as.string_value_32)
 			end
 			last_type := character_type
 		end
@@ -665,7 +665,7 @@ feature {NONE} -- Implementation
 					l_text_formatter_decorator.process_keyword_text (ti_once_keyword, Void)
 					l_text_formatter_decorator.put_space
 				end
-				l_text_formatter_decorator.put_string_item (l_as.string_value)
+				l_text_formatter_decorator.put_string_item (l_as.string_value_32)
 			end
 			last_type := string_type
 		end
@@ -687,8 +687,8 @@ feature {NONE} -- Implementation
 					l_text_formatter_decorator.put_string_item ("{")
 				end
 				l_text_formatter_decorator.put_new_line
-				if not l_as.value.is_empty then
-					append_format_multilined (l_as.value, l_as.is_indentable)
+				if attached l_as.value_32 as l_value and then not l_value.is_empty then
+					append_format_multilined (l_value, l_as.is_indentable)
 				end
 				if l_as.is_indentable then
 					l_text_formatter_decorator.put_string_item ("]")
@@ -735,9 +735,9 @@ feature {NONE} -- Implementation
 					l_feat := current_assigner_feature
 				end
 				if not has_error_internal then
-					l_text_formatter_decorator.process_feature_text (l_feat.name, l_feat, False)
+					l_text_formatter_decorator.process_feature_text (l_feat.name_32, l_feat, False)
 				else
-					l_text_formatter_decorator.process_basic_text (l_as.assigner.name)
+					l_text_formatter_decorator.process_basic_text (l_as.assigner.name_8)
 				end
 			end
 			safe_process (l_as.content)
@@ -835,16 +835,16 @@ feature {NONE} -- Implementation
 				end
 			elseif l_as.is_local then
 				if not expr_type_visiting then
-					l_text_formatter_decorator.process_local_text (l_as.access_name)
+					l_text_formatter_decorator.process_local_text (l_as.access_name_32)
 				end
 			elseif l_as.is_object_test_local then
 				if not expr_type_visiting then
-					l_text_formatter_decorator.process_local_text (l_as.access_name)
+					l_text_formatter_decorator.process_local_text (l_as.access_name_32)
 				end
 			elseif l_as.is_tuple_access then
 				if not expr_type_visiting then
 					l_text_formatter_decorator.process_symbol_text (ti_dot)
-					l_text_formatter_decorator.process_local_text (l_as.access_name)
+					l_text_formatter_decorator.process_local_text (l_as.access_name_32)
 				end
 			else
 				if not has_error_internal then
@@ -947,13 +947,13 @@ feature {NONE} -- Implementation
 						if not has_error_internal then
 							l_feat.append_name (l_text_formatter_decorator)
 						else
-							l_text_formatter_decorator.process_basic_text (l_as.access_name)
+							l_text_formatter_decorator.process_basic_text (l_as.access_name_32)
 						end
 					else
 						if l_as.is_qualified or l_text_formatter_decorator.dot_needed then
 							l_text_formatter_decorator.process_symbol_text (ti_dot)
 						end
-						l_text_formatter_decorator.process_local_text (l_as.access_name)
+						l_text_formatter_decorator.process_local_text (l_as.access_name_32)
 					end
 				end
 			end
@@ -976,12 +976,12 @@ feature {NONE} -- Implementation
 				last_type := current_feature.arguments.i_th (l_as.argument_position)
 			elseif l_as.is_local then
 				if last_type = Void then
-					if locals_for_current_feature.has_key (l_as.access_name) then
+					if locals_for_current_feature.has_key (l_as.access_name_8) then
 						last_type := locals_for_current_feature.found_item
 					end
 				end
 			elseif l_as.is_object_test_local then
-				if object_test_locals_for_current_feature.has_key (l_as.access_name) then
+				if object_test_locals_for_current_feature.has_key (l_as.access_name_8) then
 					last_type := object_test_locals_for_current_feature.found_item
 				end
 			elseif l_as.is_tuple_access then
@@ -1071,7 +1071,7 @@ feature {NONE} -- Implementation
 			l_current_feature := feature_in_class (current_class, current_feature.rout_id_set)
 			if not has_error_internal then
 				if l_as.parent_base_class /= Void then
-					l_parent_class_i := universe.safe_class_named (l_as.parent_base_class.class_name.name, current_class.group)
+					l_parent_class_i := universe.safe_class_named (l_as.parent_base_class.class_name.name_8, current_class.group)
 					if l_parent_class_i /= Void then
 						l_parent_class := l_parent_class_i.compiled_class
 					else
@@ -1099,7 +1099,7 @@ feature {NONE} -- Implementation
 					if not has_error_internal then
 						l_text_formatter_decorator.add_class (l_parent_class.lace_class)
 					else
-						l_text_formatter_decorator.process_basic_text (l_as.parent_base_class.class_name.name)
+						l_text_formatter_decorator.process_basic_text (l_as.parent_base_class.class_name.name_32)
 					end
 					l_text_formatter_decorator.process_symbol_text (ti_r_curly)
 				end
@@ -1509,9 +1509,9 @@ feature {NONE} -- Implementation
 						end
 					l_feat := feature_in_class (current_class, l_feature.rout_id_set)
 					if not has_error_internal then
-						l_text_formatter_decorator.process_feature_text (l_feat.name, l_feat, False)
+						l_text_formatter_decorator.process_feature_text (l_feat.name_32, l_feat, False)
 					else
-						l_text_formatter_decorator.process_basic_text (l_feature.feature_name)
+						l_text_formatter_decorator.process_basic_text (l_feature.feature_name_32)
 					end
 					first_printed := True
 					l_as.id_list.forth
@@ -1549,7 +1549,7 @@ feature {NONE} -- Implementation
 						l_text_formatter_decorator.process_symbol_text (ti_r_curly)
 						l_text_formatter_decorator.process_symbol_text (ti_dot)
 						l_feat := l_type.associated_class.feature_with_rout_id (l_info.routine_id)
-						l_text_formatter_decorator.add_feature (l_feat, l_feat.name)
+						l_text_formatter_decorator.add_feature (l_feat, l_feat.name_32)
 						l_text_formatter_decorator.process_symbol_text (ti_space)
 						l_text_formatter_decorator.process_symbol_text (ti_l_parenthesis)
 						l_as.expr.process (Current)
@@ -1562,7 +1562,7 @@ feature {NONE} -- Implementation
 						if not expr_type_visiting then
 							l_as.expr.process (Current)
 							l_text_formatter_decorator.process_symbol_text (ti_dot)
-							l_text_formatter_decorator.add_feature (l_feat, l_feat.name)
+							l_text_formatter_decorator.add_feature (l_feat, l_feat.name_32)
 						end
 					else
 						set_error_message ("Could not find routine of a given routine ID in an inherited conversion")
@@ -1660,11 +1660,11 @@ feature {NONE} -- Implementation
 				if l_as.is_argument then
 					create {TYPED_POINTER_A} last_type.make_typed (current_feature.arguments.i_th (l_as.argument_position))
 				elseif l_as.is_local then
-					if locals_for_current_feature.has_key (l_as.feature_name.internal_name.name) then
+					if locals_for_current_feature.has_key (l_as.feature_name.internal_name.name_8) then
 						create {TYPED_POINTER_A} last_type.make_typed (locals_for_current_feature.found_item)
 					end
 				elseif l_as.is_object_test_local then
-					if object_test_locals_for_current_feature.has_key (l_as.feature_name.internal_name.name) then
+					if object_test_locals_for_current_feature.has_key (l_as.feature_name.internal_name.name_8) then
 						create {TYPED_POINTER_A} last_type.make_typed (object_test_locals_for_current_feature.found_item)
 					end
 				else
@@ -1681,9 +1681,9 @@ feature {NONE} -- Implementation
 					l_text_formatter_decorator.set_without_tabs
 					l_text_formatter_decorator.process_symbol_text (ti_dollar)
 					if l_feat /= Void then
-						l_text_formatter_decorator.process_feature_text (l_as.feature_name.internal_name.name, l_feat, False)
+						l_text_formatter_decorator.process_feature_text (l_as.feature_name.internal_name.name_32, l_feat, False)
 					else
-						l_text_formatter_decorator.process_local_text (l_as.feature_name.internal_name.name)
+						l_text_formatter_decorator.process_local_text (l_as.feature_name.internal_name.name_32)
 					end
 					l_text_formatter_decorator.commit
 				end
@@ -1717,9 +1717,9 @@ feature {NONE} -- Implementation
 					has_error_internal := True
 				end
 				if not has_error_internal then
-					l_text_formatter_decorator.process_feature_text (l_feat.name, l_feat, False)
+					l_text_formatter_decorator.process_feature_text (l_feat.name_32, l_feat, False)
 				else
-					l_text_formatter_decorator.process_basic_text (l_as.feature_name.name)
+					l_text_formatter_decorator.process_basic_text (l_as.feature_name.name_32)
 				end
 
 				if l_as.operands /= Void then
@@ -1748,7 +1748,7 @@ feature {NONE} -- Implementation
 			l_feat: E_FEATURE
 			l_type: TYPE_A
 			l_last_type: TYPE_A
-			l_name: STRING
+			l_name: STRING_32
 			l_expr_type: TYPE_A
 			l_formal: FORMAL_A
 			l_feature_list: like feature_from_type_set
@@ -1794,13 +1794,13 @@ feature {NONE} -- Implementation
 				if l_feat.is_prefix or l_feat.has_alias_name then
 					if not expr_type_visiting then
 						if l_feat.is_prefix then
-							l_name := l_feat.prefix_symbol
+							l_name := l_feat.prefix_symbol_32
 						else
-							l_name := l_feat.alias_symbol
+							l_name := l_feat.alias_symbol_32
 						end
 						if in_bench_mode then
 							l_text_formatter_decorator.process_operator_text (l_name, l_feat)
-						elseif (l_name @ 1).is_alpha then
+						elseif (l_name @ 1).is_character_8 and then (l_name @ 1).to_character_8.is_alpha then
 							l_text_formatter_decorator.process_keyword_text (l_name, Void)
 						else
 							l_text_formatter_decorator.process_symbol_text (l_name)
@@ -1816,12 +1816,12 @@ feature {NONE} -- Implementation
 					l_as.expr.process (Current)
 					if not expr_type_visiting then
 						l_text_formatter_decorator.process_symbol_text (ti_dot)
-						l_text_formatter_decorator.process_feature_text (l_feat.name, l_feat, False)
+						l_text_formatter_decorator.process_feature_text (l_feat.name_32, l_feat, False)
 					end
 				end
 			else
 				if not expr_type_visiting then
-					l_text_formatter_decorator.process_basic_text (l_as.operator_name)
+					l_text_formatter_decorator.process_basic_text (l_as.operator_name_32)
 					l_text_formatter_decorator.put_space
 				end
 				l_as.expr.process (Current)
@@ -1881,7 +1881,7 @@ feature {NONE} -- Implementation
 	process_binary_as (l_as: BINARY_AS)
 		local
 			l_feat: E_FEATURE
-			l_name: STRING
+			l_name: STRING_32
 			l_formal: FORMAL_A
 					-- Temporary usage only!
 			l_type: TYPE_A
@@ -1965,14 +1965,14 @@ feature {NONE} -- Implementation
 					check l_feat_not_void: l_feat /= Void end
 					if l_feat.is_infix or l_feat.has_alias_name then
 						if l_feat.is_infix then
-							l_name := l_feat.infix_symbol
+							l_name := l_feat.infix_symbol_32
 						else
-							l_name := l_feat.alias_symbol
+							l_name := l_feat.alias_symbol_32
 						end
 						l_text_formatter_decorator.put_space
 						if in_bench_mode then
 							l_text_formatter_decorator.process_operator_text (l_name, l_feat)
-						elseif (l_name @ 1).is_alpha then
+						elseif (l_name @ 1).is_character_8 and then (l_name @ 1).to_character_8.is_alpha then
 							l_text_formatter_decorator.process_keyword_text (l_name, Void)
 						else
 							l_text_formatter_decorator.process_symbol_text (l_name)
@@ -1981,7 +1981,7 @@ feature {NONE} -- Implementation
 						check l_feat_is_not_procedure: not l_feat.is_procedure end
 						l_as.right.process (Current)
 					else
-						l_name := l_feat.name
+						l_name := l_feat.name_32
 						l_text_formatter_decorator.process_symbol_text (ti_dot)
 						l_text_formatter_decorator.process_feature_text (l_name, l_feat, False)
 						l_text_formatter_decorator.put_space
@@ -1991,7 +1991,7 @@ feature {NONE} -- Implementation
 					end
 				else
 					l_text_formatter_decorator.put_space
-					l_text_formatter_decorator.process_basic_text (l_as.op_name.name)
+					l_text_formatter_decorator.process_basic_text (l_as.op_name.name_32)
 					l_text_formatter_decorator.put_space
 					l_as.right.process (Current)
 				end
@@ -2112,7 +2112,7 @@ feature {NONE} -- Implementation
 			if not expr_type_visiting then
 				l_text_formatter_decorator := text_formatter_decorator
 				l_text_formatter_decorator.put_space
-				l_text_formatter_decorator.process_symbol_text (l_as.op_name.name)
+				l_text_formatter_decorator.process_symbol_text (l_as.op_name.name_32)
 				l_text_formatter_decorator.put_space
 			end
 			l_as.right.process (Current)
@@ -2132,7 +2132,7 @@ feature {NONE} -- Implementation
 			if not expr_type_visiting then
 				l_text_formatter_decorator := text_formatter_decorator
 				l_text_formatter_decorator.put_space
-				l_text_formatter_decorator.process_symbol_text (l_as.op_name.name)
+				l_text_formatter_decorator.process_symbol_text (l_as.op_name.name_32)
 				l_text_formatter_decorator.put_space
 			end
 			l_as.right.process (Current)
@@ -2264,7 +2264,7 @@ feature {NONE} -- Implementation
 
 				-- Remember found OT locals.
 			if l_ot_name /= Void and l_ot_type /= Void then
-				object_test_locals_for_current_feature.force (l_ot_type, l_ot_name.name)
+				object_test_locals_for_current_feature.force (l_ot_type, l_ot_name.name_8)
 			end
 			last_type := boolean_type
 		end
@@ -2294,13 +2294,13 @@ feature {NONE} -- Implementation
 			l_text_formatter_decorator.begin
 			l_text_formatter_decorator.set_separator (ti_comma)
 			l_text_formatter_decorator.set_space_between_tokens
-			l_text_formatter_decorator.process_feature_dec_item (l_as.feature_names.first.internal_name.name, True)
+			l_text_formatter_decorator.process_feature_dec_item (l_as.feature_names.first.internal_name.name_32, True)
 			l_text_formatter_decorator.set_separator (ti_comma)
 			l_text_formatter_decorator.set_space_between_tokens
 			l_as.feature_names.process (Current)
 			l_as.body.process (Current)
 			l_text_formatter_decorator.set_without_tabs
-			l_text_formatter_decorator.process_feature_dec_item (l_as.feature_names.first.internal_name.name, False)
+			l_text_formatter_decorator.process_feature_dec_item (l_as.feature_names.first.internal_name.name_32, False)
 			if not l_text_formatter_decorator.is_feature_short then
 				l_text_formatter_decorator.put_new_line
 			end
@@ -2383,9 +2383,9 @@ feature {NONE} -- Implementation
 					l_text_formatter_decorator.set_without_tabs
 					l_text_formatter_decorator.process_symbol_text (ti_double_quote)
 					if processing_formal_dec then
-						l_text_formatter_decorator.process_operator_text (l_as.visual_name, l_feat)
+						l_text_formatter_decorator.process_operator_text (l_as.visual_name_32, l_feat)
 					else
-						l_text_formatter_decorator.process_operator_text (l_feat.extract_symbol_from_infix (l_feat.name), l_feat)
+						l_text_formatter_decorator.process_operator_text (l_feat.extract_symbol_from_infix_32 (l_feat.name_32), l_feat)
 					end
 					l_text_formatter_decorator.process_symbol_text (ti_double_quote)
 				elseif l_is_prefix then
@@ -2394,16 +2394,16 @@ feature {NONE} -- Implementation
 					l_text_formatter_decorator.set_without_tabs
 					l_text_formatter_decorator.process_symbol_text (ti_double_quote)
 					if processing_formal_dec then
-						l_text_formatter_decorator.process_operator_text (l_as.visual_name, l_feat)
+						l_text_formatter_decorator.process_operator_text (l_as.visual_name_32, l_feat)
 					else
-						l_text_formatter_decorator.process_operator_text (l_feat.extract_symbol_from_prefix (l_feat.name), l_feat)
+						l_text_formatter_decorator.process_operator_text (l_feat.extract_symbol_from_prefix_32 (l_feat.name_32), l_feat)
 					end
 					l_text_formatter_decorator.process_symbol_text (ti_double_quote)
 				else
 					if processing_formal_dec then
-						l_text_formatter_decorator.process_feature_text (l_as.visual_name, l_feat, False)
+						l_text_formatter_decorator.process_feature_text (l_as.visual_name_32, l_feat, False)
 					else
-						l_text_formatter_decorator.process_feature_text (l_feat.name, l_feat, False)
+						l_text_formatter_decorator.process_feature_text (l_feat.name_32, l_feat, False)
 					end
 				end
 			else
@@ -2417,9 +2417,9 @@ feature {NONE} -- Implementation
 					l_text_formatter_decorator.set_without_tabs
 					l_text_formatter_decorator.process_symbol_text (ti_double_quote)
 					if not has_error_internal then
-						l_text_formatter_decorator.process_operator_text (l_as.visual_name, l_feat)
+						l_text_formatter_decorator.process_operator_text (l_as.visual_name_32, l_feat)
 					else
-						l_text_formatter_decorator.process_basic_text (l_as.visual_name)
+						l_text_formatter_decorator.process_basic_text (l_as.visual_name_32)
 					end
 					l_text_formatter_decorator.process_symbol_text (ti_double_quote)
 				elseif l_as.is_prefix then
@@ -2428,16 +2428,16 @@ feature {NONE} -- Implementation
 					l_text_formatter_decorator.set_without_tabs
 					l_text_formatter_decorator.process_symbol_text (ti_double_quote)
 					if not has_error_internal then
-						l_text_formatter_decorator.process_operator_text (l_as.visual_name, l_feat)
+						l_text_formatter_decorator.process_operator_text (l_as.visual_name_32, l_feat)
 					else
-						l_text_formatter_decorator.process_basic_text (l_as.visual_name)
+						l_text_formatter_decorator.process_basic_text (l_as.visual_name_32)
 					end
 					l_text_formatter_decorator.process_symbol_text (ti_double_quote)
 				else
 					if not has_error_internal then
-						l_text_formatter_decorator.process_feature_text (l_feat.name, l_feat, False)
+						l_text_formatter_decorator.process_feature_text (l_feat.name_32, l_feat, False)
 					else
-						l_text_formatter_decorator.process_basic_text (l_as.visual_name)
+						l_text_formatter_decorator.process_basic_text (l_as.visual_name_32)
 					end
 				end
 			end
@@ -2458,9 +2458,9 @@ feature {NONE} -- Implementation
 				if current_feature = Void then
 						-- Processing other part of a class, not in a feature.
 					if last_parent /= Void then
-						l_feat := last_parent.feature_with_name (l_as.feature_name.name)
+						l_feat := last_parent.feature_with_name_id (l_as.feature_name.name_id)
 					else
-						l_feat := current_class.feature_with_name (l_as.feature_name.name)
+						l_feat := current_class.feature_with_name_id (l_as.feature_name.name_id)
 							-- Renaming in formal declaration.
 						if processing_formal_dec then
 							if renamed_feature = Void then
@@ -2506,9 +2506,9 @@ feature {NONE} -- Implementation
 						l_text_formatter_decorator.set_without_tabs
 						l_text_formatter_decorator.process_symbol_text (ti_double_quote)
 						if processing_formal_dec then
-							l_text_formatter_decorator.process_operator_text (l_as.visual_name, l_feat)
+							l_text_formatter_decorator.process_operator_text (l_as.visual_name_32, l_feat)
 						else
-							l_text_formatter_decorator.process_operator_text (l_feat.infix_symbol, l_feat)
+							l_text_formatter_decorator.process_operator_text (l_feat.infix_symbol_32, l_feat)
 						end
 						l_text_formatter_decorator.process_symbol_text (ti_double_quote)
 					elseif l_is_prefix then
@@ -2517,16 +2517,16 @@ feature {NONE} -- Implementation
 						l_text_formatter_decorator.set_without_tabs
 						l_text_formatter_decorator.process_symbol_text (ti_double_quote)
 						if processing_formal_dec then
-							l_text_formatter_decorator.process_operator_text (l_as.visual_name, l_feat)
+							l_text_formatter_decorator.process_operator_text (l_as.visual_name_32, l_feat)
 						else
-							l_text_formatter_decorator.process_operator_text (l_feat.prefix_symbol, l_feat)
+							l_text_formatter_decorator.process_operator_text (l_feat.prefix_symbol_32, l_feat)
 						end
 						l_text_formatter_decorator.process_symbol_text (ti_double_quote)
 					else
 						if processing_formal_dec then
-							l_text_formatter_decorator.process_feature_text (l_as.visual_name, l_feat, False)
+							l_text_formatter_decorator.process_feature_text (l_as.visual_name_32, l_feat, False)
 						else
-							l_text_formatter_decorator.process_feature_text (l_feat.name, l_feat, False)
+							l_text_formatter_decorator.process_feature_text (l_feat.name_32, l_feat, False)
 						end
 					end
 				else
@@ -2540,9 +2540,9 @@ feature {NONE} -- Implementation
 						l_text_formatter_decorator.set_without_tabs
 						l_text_formatter_decorator.process_symbol_text (ti_double_quote)
 						if not has_error_internal then
-							l_text_formatter_decorator.process_operator_text (l_as.visual_name, l_feat)
+							l_text_formatter_decorator.process_operator_text (l_as.visual_name_32, l_feat)
 						else
-							l_text_formatter_decorator.process_basic_text (l_as.visual_name)
+							l_text_formatter_decorator.process_basic_text (l_as.visual_name_32)
 						end
 						l_text_formatter_decorator.process_symbol_text (ti_double_quote)
 					elseif l_as.is_prefix then
@@ -2551,21 +2551,21 @@ feature {NONE} -- Implementation
 						l_text_formatter_decorator.set_without_tabs
 						l_text_formatter_decorator.process_symbol_text (ti_double_quote)
 						if not has_error_internal then
-							l_text_formatter_decorator.process_operator_text (l_as.visual_name, l_feat)
+							l_text_formatter_decorator.process_operator_text (l_as.visual_name_32, l_feat)
 						else
-							l_text_formatter_decorator.process_basic_text (l_as.visual_name)
+							l_text_formatter_decorator.process_basic_text (l_as.visual_name_32)
 						end
 						l_text_formatter_decorator.process_symbol_text (ti_double_quote)
 					else
 						if not has_error_internal then
-							l_text_formatter_decorator.process_feature_text (l_feat.name, l_feat, False)
+							l_text_formatter_decorator.process_feature_text (l_feat.name_32, l_feat, False)
 						else
-							l_text_formatter_decorator.process_basic_text (l_as.visual_name)
+							l_text_formatter_decorator.process_basic_text (l_as.visual_name_32)
 						end
 					end
 				end
 			else
-				l_text_formatter_decorator.process_basic_text (l_as.visual_name)
+				l_text_formatter_decorator.process_basic_text (l_as.visual_name_32)
 			end
 		end
 
@@ -2582,9 +2582,9 @@ feature {NONE} -- Implementation
 				if current_feature = Void then
 						-- Processing other part of a class, not in a feature.
 					if last_parent /= Void then
-						l_feat := last_parent.feature_with_name (l_as.feature_name.name)
+						l_feat := last_parent.feature_with_name_id (l_as.feature_name.name_id)
 					else
-						l_feat := current_class.feature_with_name (l_as.feature_name.name)
+						l_feat := current_class.feature_with_name_id (l_as.feature_name.name_id)
 							-- Renaming in formal declaration.
 						if processing_formal_dec then
 							if renamed_feature = Void then
@@ -2608,9 +2608,9 @@ feature {NONE} -- Implementation
 				l_text_formatter_decorator.put_space
 			end
 			if not has_error_internal then
-				l_text_formatter_decorator.process_feature_text (l_feat.name, l_feat, False)
+				l_text_formatter_decorator.process_feature_text (l_feat.name_32, l_feat, False)
 			else
-				l_text_formatter_decorator.process_basic_text (l_as.visual_name)
+				l_text_formatter_decorator.process_basic_text (l_as.visual_name_32)
 			end
 
 			if has_error_internal or else l_feat.has_alias_name then
@@ -2619,9 +2619,9 @@ feature {NONE} -- Implementation
 				l_text_formatter_decorator.put_space
 				l_text_formatter_decorator.process_symbol_text (ti_double_quote)
 				if not has_error_internal then
-					l_text_formatter_decorator.process_operator_text (l_feat.alias_symbol, l_feat)
+					l_text_formatter_decorator.process_operator_text (l_feat.alias_symbol_32, l_feat)
 				else
-					l_text_formatter_decorator.process_basic_text (l_as.alias_name.value)
+					l_text_formatter_decorator.process_basic_text (l_as.alias_name.value_32)
 				end
 				l_text_formatter_decorator.process_symbol_text (ti_double_quote)
 			end
@@ -3197,7 +3197,7 @@ feature {NONE} -- Implementation
 			until
 				l_as.id_list.after
 			loop
-				l_text_formatter_decorator.process_local_text (l_names_heap.item (l_as.id_list.item))
+				l_text_formatter_decorator.process_local_text (l_names_heap.item_32 (l_as.id_list.item))
 				l_as.id_list.forth
 				if not l_as.id_list.after then
 					l_text_formatter_decorator.put_separator
@@ -3213,7 +3213,7 @@ feature {NONE} -- Implementation
 				until
 					l_as.id_list.after
 				loop
-					locals_for_current_feature.put (last_actual_local_type, l_names_heap.item (l_as.id_list.item))
+					locals_for_current_feature.put (last_actual_local_type, l_names_heap.item_32 (l_as.id_list.item))
 					l_as.id_list.forth
 				end
 			end
@@ -3421,7 +3421,7 @@ feature {NONE} -- Implementation
 					end
 					l_text_formatter_decorator.process_keyword_text (ti_like_keyword, Void)
 					l_text_formatter_decorator.add_space
-					l_text_formatter_decorator.process_local_text (l_as.anchor.name)
+					l_text_formatter_decorator.process_local_text (l_as.anchor.name_32)
 				end
 			end
 		end
@@ -3509,7 +3509,7 @@ feature {NONE} -- Implementation
 				l_text_formatter_decorator.put_space
 			end
 			processing_formal_dec := True
-			l_text_formatter_decorator.process_generic_text (l_as.name.name)
+			l_text_formatter_decorator.process_generic_text (l_as.name.name_32)
 			if l_as.has_constraint then
 				l_formal_dec ?= l_as
 				check l_formal_dec_not_void: l_formal_dec /= Void end
@@ -3577,7 +3577,7 @@ feature {NONE} -- Implementation
 					-- in order to make sure that feature lookups are done one the propper class.
 				if l_cl_type_as /= Void then
 					l_tmp_current_class := current_class
-					l_class_c := universe.class_named (l_cl_type_as.class_name.name, l_tmp_current_class.group).compiled_class
+					l_class_c := universe.class_named (l_cl_type_as.class_name.name_8, l_tmp_current_class.group).compiled_class
 					if l_class_c /= Void then
 						set_current_class (l_class_c)
 					else
@@ -3714,7 +3714,7 @@ feature {NONE} -- Implementation
 				not_expr_type_visiting: not expr_type_visiting
 			end
 			if l_as.tag /= Void then
-				l_text_formatter_decorator.process_indexing_tag_text (l_as.tag.name.string)
+				l_text_formatter_decorator.process_indexing_tag_text (l_as.tag.name_32)
 				l_text_formatter_decorator.set_without_tabs
 				l_text_formatter_decorator.process_symbol_text (ti_colon)
 				l_text_formatter_decorator.put_space
@@ -3821,7 +3821,7 @@ feature {NONE} -- Implementation
 			until
 				l_as.clients.after
 			loop
-				temp := l_as.clients.item.name
+				temp := l_as.clients.item.name_8
 				client_classi := universe.safe_class_named (temp, cluster)
 				if client_classi /= Void then
 					l_text_formatter_decorator.put_classi (client_classi)
@@ -4157,7 +4157,7 @@ feature {NONE} -- Implementation: helpers
 			elseif a_type /= Void then
 				check a_type_not_void: a_type /= Void end
 				if not a_type.is_formal then
-					l_feat := a_type.associated_class.feature_with_name (a_feature_name.visual_name)
+					l_feat := a_type.associated_class.feature_with_name_32 (a_feature_name.visual_name_32)
 						-- Renaming situation
 					if l_feat = Void and then a_type.has_renaming then
 						l_name_id := a_type.renaming.renamed (a_feature_name.feature_name.name_id)
@@ -4169,19 +4169,19 @@ feature {NONE} -- Implementation: helpers
 			end
 
 			if l_feat /= Void then
-				text_formatter_decorator.process_feature_text (a_feature_name.visual_name, l_feat, False)
+				text_formatter_decorator.process_feature_text (a_feature_name.visual_name_32, l_feat, False)
 			else
-				text_formatter_decorator.process_local_text (a_feature_name.visual_name)
+				text_formatter_decorator.process_local_text (a_feature_name.visual_name_32)
 			end
 		end
 
-	append_format_multilined (s: STRING; indentable: BOOLEAN)
+	append_format_multilined (s: STRING_32; indentable: BOOLEAN)
 		require
 			string_not_void: s /= Void
 			string_not_empty: not s.is_empty
 			context_not_void: text_formatter_decorator /= Void
 		local
-			sb: STRING
+			sb: STRING_32
 			l: INTEGER
 			n: INTEGER
 			m: INTEGER
@@ -4394,7 +4394,7 @@ feature {NONE} -- Implementation: helpers
 				put_breakable
 			end
 			if l_as.tag /= Void then
-				l_text_formatter_decorator.process_assertion_tag_text (l_as.tag.name.string)
+				l_text_formatter_decorator.process_assertion_tag_text (l_as.tag.name_32)
 				l_text_formatter_decorator.set_without_tabs
 				l_text_formatter_decorator.process_symbol_text (ti_colon)
 				l_text_formatter_decorator.put_space
@@ -4583,7 +4583,7 @@ feature {NONE} -- Implementation: helpers
 				i > l_count
 			loop
 				item := a_list.i_th (i)
-				feat_adapter := creators.item (item.internal_name.name)
+				feat_adapter := creators.item (item.internal_name.name_8)
 				if feat_adapter /= Void then
 					feat_adapter.format (l_text_formatter_decorator)
 					l_text_formatter_decorator.put_new_line

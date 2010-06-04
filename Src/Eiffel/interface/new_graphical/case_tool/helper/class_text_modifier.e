@@ -96,6 +96,13 @@ inherit
 			default_create
 		end
 
+	SHARED_LOCALE
+		export
+			{NONE} all
+		undefine
+			default_create
+		end
+
 create
 	make_with_tool,
 	make
@@ -482,7 +489,7 @@ feature -- Modification (Add/Remove feature)
 								remove_code (name_start_position, name_end_position - 1)
 								reparse
 							else
-								tmp := feat_code.substring_index (l_item.feature_name.name, 1)
+								tmp := feat_code.substring_index (l_item.feature_name.name_8, 1)
 								name_start_position := actual_feature_as.start_position + tmp
 								name_end_position := actual_feature_as.start_position +
 									feat_code.index_of (',', tmp) + 1
@@ -994,7 +1001,7 @@ feature {NONE} -- Implementation
 				end
 				inst_context.set_group (class_i.group)
 				create l_wrapper
-				l_wrapper.parse_with_option (parser, text, class_i.options, True, l_class_c)
+				l_wrapper.parse_with_option_32 (parser, text, class_i.options, True, l_class_c)
 				if attached {CLASS_AS} l_wrapper.ast_node as l_class_as and then attached l_wrapper.ast_match_list then
 					class_as := l_class_as
 					match_list := l_wrapper.ast_match_list
@@ -1097,7 +1104,7 @@ feature {NONE} -- Implementation
 			Result := index_of ('%N', Result) + 1
 		end
 
-	set_position_by_feature_clause (a_export, a_comment: STRING)
+	set_position_by_feature_clause (a_export, a_comment: STRING_32)
 			-- Go to `insertion_position' at feature clause with `a_export' and `a_comment'.
 			-- If it does not exist, add it to the class in the right place.
 			-- `a_comment' will be compared case sensitive.
@@ -1110,13 +1117,14 @@ feature {NONE} -- Implementation
 			not_modified: not is_modified
 		local
 			l: EIFFEL_LIST [FEATURE_CLAUSE_AS]
-			exp, s, c: STRING
+			exp, s: STRING_32
+			c: STRING_32
 			lcs: like leading_clauses
 			l_match_list: LEAF_AS_LIST
 			l_comments: EIFFEL_COMMENTS
 		do
 			l_match_list := match_list
-			exp := a_export.as_lower
+			exp := string_general_as_lower (a_export)
 			insertion_position := 0
 
 				-- Check if specified clause is present.
@@ -1132,9 +1140,9 @@ feature {NONE} -- Implementation
 					if l_comments = Void or else l_comments.is_empty then
 						c := ""
 					else
-						c := l_comments.first.content
+						c := l_comments.first.content_32
 						if not c.is_equal (" ") then
-							c.left_adjust
+							string_general_left_adjust (c)
 						end
 					end
 					c.prune_all_trailing ('%R')
@@ -1161,9 +1169,9 @@ feature {NONE} -- Implementation
 						if l_comments = Void or else l_comments.is_empty then
 							c := ""
 						else
-							c := l_comments.first.content
+							c := l_comments.first.content_32
 							if not c.is_equal (" ") then
-								c.left_adjust
+								string_general_left_adjust (c)
 							end
 						end
 						c.prune_all_trailing ('%R')
@@ -1236,7 +1244,7 @@ feature {NONE} -- Implementation
 --			end
 --		end
 
-	leading_clauses (a_clause: STRING): ARRAYED_LIST [STRING]
+	leading_clauses (a_clause: STRING_32): ARRAYED_LIST [STRING_32]
 			-- Subset of `feature_clause_order' that should appear before `c' in the class text.
 		require
 			a_clause_not_void: a_clause /= Void

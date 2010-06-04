@@ -695,7 +695,7 @@ feature -- Expression evaluation
 			dv: DUMP_VALUE
 		do
 			if is_stopped and cl /= Void then
-				f := cl.feature_named (fname)
+				f := cl.feature_named_32 (fname)
 				if f /= Void then
 					dv := edv
 					if dv = Void and e /= Void then
@@ -722,7 +722,7 @@ feature -- Expression evaluation
 			dv: DUMP_VALUE
 		do
 			if is_stopped and cl /= Void then
-				f := cl.feature_named (fname)
+				f := cl.feature_named_32 (fname)
 				if f /= Void then
 					dv := edv
 					if dv = Void and e /= Void then
@@ -1140,7 +1140,7 @@ feature -- Query
 						i > l_info.upper
 					loop
 						n := l_info[i]
-						f := l_int_cl.feature_named (n)
+						f := l_int_cl.feature_named_32 (n)
 						l_dv := Void
 						if f /= Void then
 							eval.reset
@@ -1184,7 +1184,7 @@ feature -- Query
 					create params.make (1)
 					l_type_value := dbg.dump_value_factory.new_integer_32_value (a_type_id, dbg.compiler_data.integer_32_class_c)
 					params.extend (l_type_value)
-					f := l_int_cl.feature_named ("type_name_of_type")
+					f := l_int_cl.feature_named_32 ("type_name_of_type")
 					if f /= Void then
 						eval.reset
 						eval.evaluate_routine (Void, l_int, l_int_cl, f, params, False)

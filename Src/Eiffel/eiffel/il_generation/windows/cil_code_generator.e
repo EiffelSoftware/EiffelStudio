@@ -92,6 +92,16 @@ inherit
 			{NONE} all
 		end
 
+	INTERNAL_COMPILER_STRING_EXPORTER
+		export
+			{NONE} all
+		end
+
+	SHARED_ENCODING_CONVERTER
+		export
+			{NONE} all
+		end
+
 feature {NONE} -- Initialization
 
 	make
@@ -672,6 +682,7 @@ feature -- Generation Structure
 			helper_emit: MD_EMIT
 			oms_field_cil_token: INTEGER
 			oms_field_eiffel_token: INTEGER
+			oms_32_field_eiffel_token: INTEGER
 			oms_method_token: INTEGER
 			oms_array_type_cil_token: INTEGER
 			oms_array_type_eiffel_token: INTEGER
@@ -688,8 +699,9 @@ feature -- Generation Structure
 
 					-- Define fields and methods to deal with once manifest strings.
 				current_module.define_once_string_tokens
-				oms_field_cil_token := current_module.once_string_field_token (True)
-				oms_field_eiffel_token := current_module.once_string_field_token (False)
+				oms_field_cil_token := current_module.once_string_field_token (string_type_cil)
+				oms_field_eiffel_token := current_module.once_string_field_token (string_type_string)
+				oms_32_field_eiffel_token := current_module.once_string_field_token (string_type_string_32)
 				oms_method_token := current_module.once_string_allocation_routine_token
 
 					-- Generate allocation routine.
@@ -729,6 +741,16 @@ feature -- Generation Structure
 				oms_array_type_eiffel_token := helper_emit.define_type_spec (type_sig)
 				method_body.put_opcode_mdtoken ({MD_OPCODES}.newarr, oms_array_type_eiffel_token)
 				method_body.put_opcode_mdtoken ({MD_OPCODES}.stsfld, oms_field_eiffel_token)
+					-- Create "STRING_32[][]" and assign it to "oms32_eiffel".
+				method_body.put_opcode ({MD_OPCODES}.ldarg_0)
+				put_integer_32_constant (1)
+				method_body.put_opcode ({MD_OPCODES}.add)
+				type_sig.reset
+				type_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_szarray, 0)
+				type_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_class, current_module.actual_class_type_token (string_32_type_id))
+				oms_array_type_eiffel_token := helper_emit.define_type_spec (type_sig)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.newarr, oms_array_type_eiffel_token)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.stsfld, oms_32_field_eiffel_token)
 					-- Create "string[][]" and assign it to "oms_cil".
 					-- Leave "string[][]" at stack top.
 				method_body.put_opcode ({MD_OPCODES}.ldarg_0)
@@ -768,9 +790,27 @@ feature -- Generation Structure
 				method_body.put_opcode ({MD_OPCODES}.ldarg_0)
 				put_integer_32_constant (1)
 				method_body.put_opcode ({MD_OPCODES}.add)
+				type_sig.reset
+				type_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_szarray, 0)
+				type_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_class, current_module.actual_class_type_token (string_type_id))
+				oms_array_type_eiffel_token := helper_emit.define_type_spec (type_sig)
 				method_body.put_opcode_mdtoken ({MD_OPCODES}.newarr, oms_array_type_eiffel_token)
 				method_body.put_opcode ({MD_OPCODES}.dup)
 				method_body.put_opcode_mdtoken ({MD_OPCODES}.stsfld, oms_field_eiffel_token)
+				method_body.put_opcode ({MD_OPCODES}.ldloc_0)
+				method_body.put_static_call (array_copy_method_token, 3, False)
+					-- Reallocate "STRING_32[][]".
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.ldsfld, oms_32_field_eiffel_token)
+				method_body.put_opcode ({MD_OPCODES}.ldarg_0)
+				put_integer_32_constant (1)
+				method_body.put_opcode ({MD_OPCODES}.add)
+				type_sig.reset
+				type_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_szarray, 0)
+				type_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_class, current_module.actual_class_type_token (string_32_type_id))
+				oms_array_type_eiffel_token := helper_emit.define_type_spec (type_sig)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.newarr, oms_array_type_eiffel_token)
+				method_body.put_opcode ({MD_OPCODES}.dup)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.stsfld, oms_32_field_eiffel_token)
 				method_body.put_opcode ({MD_OPCODES}.ldloc_0)
 				method_body.put_static_call (array_copy_method_token, 3, False)
 					-- Leave "string[][]" on stack top.
@@ -778,16 +818,24 @@ feature -- Generation Structure
 
 				mark_label (allocate_for_body_index_label)
 					-- Create array(s) indexed by manifest string number.
+					-- oms_cil
 				method_body.put_opcode ({MD_OPCODES}.ldarg_0)
 				method_body.put_opcode ({MD_OPCODES}.ldarg_1)
 				type_sig.reset
 				type_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_string, 0)
 				method_body.put_opcode_mdtoken ({MD_OPCODES}.newarr, helper_emit.define_type_spec (type_sig))
 				method_body.put_opcode ({MD_OPCODES}.stelem_ref)
+					-- oms_eiffel
 				method_body.put_opcode_mdtoken ({MD_OPCODES}.ldsfld, oms_field_eiffel_token)
 				method_body.put_opcode ({MD_OPCODES}.ldarg_0)
 				method_body.put_opcode ({MD_OPCODES}.ldarg_1)
 				method_body.put_opcode_mdtoken ({MD_OPCODES}.newarr, current_module.actual_class_type_token (string_type_id))
+				method_body.put_opcode ({MD_OPCODES}.stelem_ref)
+					-- oms32_eiffel
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.ldsfld, oms_32_field_eiffel_token)
+				method_body.put_opcode ({MD_OPCODES}.ldarg_0)
+				method_body.put_opcode ({MD_OPCODES}.ldarg_1)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.newarr, current_module.actual_class_type_token (string_32_type_id))
 				method_body.put_opcode ({MD_OPCODES}.stelem_ref)
 					-- Done.
 				generate_return (False)
@@ -5780,7 +5828,7 @@ feature -- Once manifest string manipulation
 				allocate_array_label := create_label
 				done_label := create_label
 					-- Check if the array is already allocated.
-				method_body.put_opcode_mdtoken ({MD_OPCODES}.ldsfld, current_module.once_string_field_token (True))
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.ldsfld, current_module.once_string_field_token (string_type_cil))
 				method_body.put_opcode ({MD_OPCODES}.dup)
 				branch_on_false (allocate_array_label)
 				method_body.put_opcode ({MD_OPCODES}.dup)
@@ -5804,7 +5852,7 @@ feature -- Once manifest string manipulation
 			end
 		end
 
-	generate_once_string (number: INTEGER; value: STRING; is_cil_string: BOOLEAN)
+	generate_once_string (number: INTEGER; value: STRING; type: INTEGER)
 			-- Generate code for once string in a current routine with the given
 			-- `number' and `value' using CIL string type if `is_cil_string' is `True'
 			-- or Eiffel string type otherwise.
@@ -5813,7 +5861,7 @@ feature -- Once manifest string manipulation
 			assign_string_label: IL_LABEL
 			done_label: IL_LABEL
 		do
-			once_string_field_token := current_module.once_string_field_token (is_cil_string)
+			once_string_field_token := current_module.once_string_field_token (type)
 			assign_string_label := create_label
 			done_label := create_label
 				-- Check if the string is already created.
@@ -5835,10 +5883,14 @@ feature -- Once manifest string manipulation
 			method_body.put_opcode ({MD_OPCODES}.ldelem_ref)
 			method_body.put_opcode ({MD_OPCODES}.dup)
 			put_integer_32_constant (number)
-			if is_cil_string then
+			if type = string_type_cil then
 				put_system_string (value)
 			else
-				put_manifest_string (value)
+				if type = string_type_string_32 then
+					put_manifest_string_32 (value)
+				elseif type = string_type_string then
+					put_manifest_string (value)
+				end
 			end
 			method_body.put_opcode ({MD_OPCODES}.stelem_ref)
 			put_integer_32_constant (number)
@@ -6514,12 +6566,44 @@ feature -- Constants generation
 			internal_generate_feature_access (string_implementation_id, string_make_feat_id, 1, False, True)
 		end
 
+	put_manifest_string_32_from_system_string_local (n: INTEGER)
+			-- Create a manifest string by using local at position `n' which
+			-- should be of type SYSTEM_STRING.
+		do
+			create_object (string_32_implementation_id)
+			duplicate_top
+			generate_local (n)
+			internal_generate_feature_access (string_32_implementation_id, string_32_make_feat_id, 1, False, True)
+		end
+
+	put_manifest_string_32 (s: STRING)
+			-- Put `s' on IL stack.
+			-- `s' is in UTF-8
+		do
+			create_object (string_32_implementation_id)
+			duplicate_top
+
+			put_system_string_32 (s)
+			internal_generate_feature_access (string_32_implementation_id, string_32_make_feat_id, 1, False, True)
+		end
+
 	put_system_string (s: STRING)
 			-- Put `System.String' object corresponding to `s' on IL stack.
 		local
 			l_string_token: INTEGER
 		do
 			uni_string.set_string (s)
+			l_string_token := md_emit.define_string (uni_string)
+			method_body.put_string (l_string_token)
+		end
+
+	put_system_string_32 (s: STRING)
+			-- Put `System.String' object corresponding to `s' on IL stack.
+			-- `s' is in UTF-8 encoding.
+		local
+			l_string_token: INTEGER
+		do
+			uni_string.set_string_16 (encoding_converter.utf8_to_utf16 (s))
 			l_string_token := md_emit.define_string (uni_string)
 			method_body.put_string (l_string_token)
 		end
@@ -7213,7 +7297,7 @@ feature -- Line info
 	stop_breakpoints_generation: BOOLEAN
 			-- Should breakpoints not be generated?
 
-feature -- Compilation error handling
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Compilation error handling
 
 	last_error: STRING
 			-- Last exception which occurred during IL generation
@@ -7464,6 +7548,42 @@ feature {CIL_CODE_GENERATOR} -- Implementation: convenience
 				feature_table.item_id ({PREDEFINED_NAMES}.make_from_cil_name_id).feature_id
 		ensure
 			string_make_feat_id_positive: Result > 0
+		end
+
+	string_32_type: TYPE_A
+			-- Type of string object
+		once
+			Result := System.string_32_class.compiled_class.types.first.type
+		end
+
+	string_32_implementation_id: INTEGER
+			-- Type ID of string implementation.
+		once
+			Result := string_32_type.implementation_id (Void)
+		end
+
+	string_32_type_id: INTEGER
+			-- Type of string interface.
+		once
+			Result := string_32_type.static_type_id (Void)
+		end
+
+	string_32_prepend_feat_id: INTEGER
+			-- Feature ID of `make_from_cil' of STRING.
+		once
+			Result := System.string_32_class.compiled_class.
+				feature_table.item ("prepend").feature_id
+		ensure
+			string_32_prepend_feat_id_positive: Result > 0
+		end
+
+	string_32_make_feat_id: INTEGER
+			-- Feature ID of `make_from_cil' of STRING.
+		once
+			Result := System.string_32_class.compiled_class.
+				feature_table.item_id ({PREDEFINED_NAMES}.make_from_cil_name_id).feature_id
+		ensure
+			string_32_make_feat_id_positive: Result > 0
 		end
 
 	any_type: CL_TYPE_A

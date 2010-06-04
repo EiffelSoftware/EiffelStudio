@@ -97,6 +97,7 @@
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="false"/>
 		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf"/>
 		<library name="cli_writer" location="$EIFFEL_SRC\framework\cli_writer\cli_writer.ecf"/>
+		<library name="compiler_encoding" location="$EIFFEL_SRC\framework\compiler_encoding\compiler_encoding.ecf" readonly="false"/>
 		<library name="configuration_compiler" location="$EIFFEL_SRC\framework\configuration\configuration_compiler.ecf"/>
 		<library name="configuration_parser" location="$EIFFEL_SRC\framework\configuration\configuration_parser.ecf"/>
 		<library name="consumer" location="$EIFFEL_SRC\dotnet\consumer\consumer.ecf"/>
@@ -131,9 +132,9 @@
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf"/>
 		<cluster name="compiler" location="$EIFFEL_SRC\Eiffel\eiffel\" recursive="true">
 			<file_rule>
-				<exclude>/com_il_generation$</exclude>
 				<exclude>/docs$</exclude>
 				<exclude>/java_generation/kernel$</exclude>
+				<exclude>/com_il_generation$</exclude>
 			</file_rule>
 			<file_rule>
 				<exclude>/il_generation/windows$</exclude>
@@ -151,9 +152,9 @@
 		<cluster name="compiler_api" location="$EIFFEL_SRC\Eiffel\API\" recursive="true">
 			<file_rule>
 				<exclude>/queries$</exclude>
+				<exclude>/framework$</exclude>
 				<exclude>/query_language$</exclude>
 				<exclude>/profiler$</exclude>
-				<exclude>/framework$</exclude>
 			</file_rule>
 		</cluster>
 	</target>

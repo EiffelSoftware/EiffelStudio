@@ -951,7 +951,7 @@ feature {NONE} -- Action handlers
 			not_is_saving: not is_saving
 		local
 			l_contracts: attached DS_BILINEAR [attached ES_CONTRACT_LINE]
-			l_assertions: attached DS_ARRAYED_LIST [STRING]
+			l_assertions: attached DS_ARRAYED_LIST [STRING_32]
 			l_error: ES_ERROR_PROMPT
 			l_question: ES_QUESTION_WARNING_PROMPT
 			l_check_modifier: ES_CLASS_TEXT_AST_MODIFIER
@@ -1081,9 +1081,9 @@ feature {NONE} -- Action handlers
 				if attached {ES_FEATURE_CONTRACT_EDITOR_CONTEXT} context as l_fc then
 					if l_symbol_table.has_id (feature_name_symbol_id) then
 						l_value := l_symbol_table.item (feature_name_symbol_id)
-						l_value.set_value (l_fc.context_feature.name.as_string_32.as_attached)
+						l_value.set_value (l_fc.context_feature.name_32.as_attached)
 					else
-						create l_value.make (l_fc.context_feature.name.as_string_32.as_attached)
+						create l_value.make (l_fc.context_feature.name_32.as_attached)
 						l_symbol_table.put (l_value, feature_name_symbol_id)
 					end
 				end
@@ -1594,7 +1594,7 @@ invariant
 	contract_editor_attached: (is_initialized and is_interface_usable) implies contract_editor /= Void
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

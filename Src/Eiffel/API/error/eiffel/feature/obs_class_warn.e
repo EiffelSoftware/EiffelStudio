@@ -71,7 +71,7 @@ feature -- Output
 
 	build_explain (a_text_formatter: TEXT_FORMATTER)
 		local
-			m: STRING
+			m: STRING_32
 		do
 			a_text_formatter.add ("Class: ")
 			associated_class.append_name (a_text_formatter)
@@ -85,7 +85,7 @@ feature -- Output
 			obsolete_class.append_name (a_text_formatter)
 			a_text_formatter.add_new_line
 			a_text_formatter.add ("Obsolete message: ")
-			m := obsolete_class.obsolete_message
+			m := obsolete_class.obsolete_message_32
 			if m.has ('%N') then
 					-- Preserve formatting for multi-line message
 				a_text_formatter.add_new_line
@@ -106,11 +106,11 @@ feature {NONE} -- Output
 	print_single_line_error_message_extended (a_text_formatter: TEXT_FORMATTER)
 			-- Displays single line help in `a_text_formatter'.
 		local
-			l_message: STRING_8
+			l_message: STRING_32
 		do
 			a_text_formatter.add (" Use of class ")
 			obsolete_class.append_name (a_text_formatter)
-			l_message := obsolete_class.obsolete_message.twin
+			l_message := obsolete_class.obsolete_message_32
 			if l_message /= Void and then not l_message.is_empty then
 				l_message.replace_substring_all ("%T", "")
 				l_message.replace_substring_all ("%N", " ")
@@ -149,7 +149,7 @@ feature {COMPILER_EXPORTER}
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -162,22 +162,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class OBS_CLASS_WARN

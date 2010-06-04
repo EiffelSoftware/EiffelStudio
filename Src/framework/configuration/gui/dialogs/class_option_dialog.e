@@ -154,9 +154,9 @@ feature {NONE} -- Agents
 	add_class
 			-- Add a new class.
 		local
-			l_name: STRING
+			l_name: STRING_32
 		do
-			l_name := new_class.text.as_upper
+			l_name := string_general_as_upper (new_class.text)
 			if not (l_name.is_empty or (value /= Void and then value.has (l_name))) then
 				if value = Void then
 					create value.make (1)
@@ -275,7 +275,7 @@ invariant
 	elements: is_initialized implies class_list /= Void and new_class /= Void
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -299,10 +299,10 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

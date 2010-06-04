@@ -27,18 +27,25 @@ inherit
 			{NONE} all
 		end
 
-create
+	SHARED_ENCODING_CONVERTER
+		export
+			{NONE} all
+		end
+
+create {INTERNAL_COMPILER_STRING_EXPORTER}
 	make
 
 feature {NONE} -- Initialization
 
-	make (s: STRING; is_dotnet: BOOLEAN)
+	make (s: STRING; a_str32: BOOLEAN; is_dotnet: BOOLEAN)
 			-- Set `string_value' with `s'.
+			-- Set `is_string_32' with `a_str32'
 			-- Set `is_dotnet_string' with `is_dotnet'.
 		require
 			s_not_void: s /= Void
 		do
 			string_value := s
+			is_string_32 := a_str32
 			is_dotnet_string := is_dotnet
 		ensure
 			string_value_set: string_value = s
@@ -59,7 +66,7 @@ feature -- Comparison
 			Result := True
 		end
 
-feature -- Access
+feature {INTERNAL_COMPILER_STRING_EXPORTER, STRING_VALUE_I} -- Access
 
 	string_value: STRING
 			-- Integer constant value
@@ -72,6 +79,9 @@ feature -- Status Report
 	is_string: BOOLEAN = True
 			-- Is the current constant a string one ?
 
+	is_string_32: BOOLEAN
+			-- Is the current constant a STRING_32 one?
+
 	valid_type (t: TYPE_A): BOOLEAN
 			-- Is the current value compatible with `t' ?
 		local
@@ -80,8 +90,11 @@ feature -- Status Report
 			class_type ?= t
 			Result := class_type /= Void and then
 				(class_type.class_id = System.string_8_id or
+				class_type.class_id = System.string_32_id or
 				class_type.class_id = system_string_id)
 		end
+
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
 
 	internal_string_value: STRING
 		do
@@ -98,6 +111,7 @@ feature -- Settings
 			l_cl_type ?= t
 			if l_cl_type /= Void then
 				is_dotnet_string := l_cl_type.class_id = system_string_id
+				is_string_32 := l_cl_type.class_id = string_32_id
 			end
 		end
 
@@ -105,15 +119,41 @@ feature -- Code generation
 
 	generate (buffer: GENERATION_BUFFER)
 			-- Generate value in `buffer'.
+		local
+			buf: GENERATION_BUFFER
+			l_value: like string_value
+			l_value_32: STRING_32
 		do
-			buffer.put_string ({C_CONST}.rtms_ex_h)
-			buffer.put_character ('(')
-			buffer.put_string_literal (string_value)
-			buffer.put_character (',')
-			buffer.put_integer (string_value.count)
-			buffer.put_character (',')
-			buffer.put_integer (string_value.hash_code)
-			buffer.put_character (')')
+				-- RTMS_EX is the macro used to create Eiffel strings from C ones
+				-- RTMS32_EX_H is the macro used to create STRING_32 from C ones
+			buf := buffer
+			l_value := string_value
+			if is_string_32 then
+				buf.put_string ({C_CONST}.rtms32_ex_h)
+			else
+				buf.put_string ({C_CONST}.rtms_ex_h)
+			end
+				-- Convert UTF-8 to UTF-32 and generate UTF-32 bytes directly
+				-- for manifest STRING_32.
+			if is_string_32 then
+				l_value_32 := encoding_converter.utf8_to_utf32 (l_value)
+				l_value := encoding_converter.string_32_to_stream (l_value_32)
+			end
+			buf.put_character ('(')
+			buf.put_string_literal (l_value)
+			buf.put_character(',')
+			if is_string_32 then
+				buf.put_integer(l_value_32.count)
+			else
+				buf.put_integer(l_value.count)
+			end
+			buf.put_character(',')
+			if is_string_32 then
+				buf.put_integer (l_value_32.hash_code)
+			else
+				buf.put_integer (l_value.hash_code)
+			end
+			buf.put_character(')')
 		end
 
 	generate_il
@@ -122,16 +162,40 @@ feature -- Code generation
 			if is_dotnet_string then
 				il_generator.put_system_string (string_value)
 			else
-				il_generator.put_manifest_string (string_value)
+				if is_string_32 then
+					il_generator.put_manifest_string_32 (string_value)
+				else
+					il_generator.put_manifest_string (string_value)
+				end
 			end
 		end
 
 	make_byte_code (ba: BYTE_ARRAY)
 			-- Generate byte code for a string constant value.
+		local
+			l_is_str32: BOOLEAN
+			l_value: STRING
+			l_value_32: STRING_32
 		do
+			l_is_str32 := is_string_32
+			if l_is_str32 then
+				l_value_32 := encoding_converter.utf8_to_utf32 (string_value)
+				l_value := encoding_converter.string_32_to_stream (l_value_32)
+			else
+				l_value := string_value
+			end
+
 			ba.append (Bc_string)
-			ba.append_integer (string_value.count)
-			ba.append_raw_string (string_value)
+			ba.append_boolean (l_is_str32)
+				-- Length of the string instance
+			if l_is_str32 then
+				ba.append_integer (l_value_32.count)
+			else
+				ba.append_integer (l_value.count)
+			end
+				-- Bytes to read
+			ba.append_integer (l_value.count)
+			ba.append_raw_string (l_value)
 		end
 
 	dump: STRING
@@ -160,6 +224,14 @@ feature {NONE} -- Implementation
 				Result := System.system_string_id
 			else
 				Result := -1
+			end
+		end
+
+	string_32_id: INTEGER
+			-- Id of class STRING_32
+		do
+			if System.string_32_class /= Void and then System.string_32_class.is_compiled then
+				Result := System.string_32_id
 			end
 		end
 

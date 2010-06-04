@@ -90,9 +90,11 @@ feature -- Access
 			if attached l_comments then
 				from l_comments.start until l_comments.after loop
 					if attached l_comments.item as l_comment_line then
-						l_text := l_comment_line.content
-						l_text.left_adjust
-						l_text.right_adjust
+						l_text := l_comment_line.content_32
+						if l_text.is_valid_as_string_8 then
+							l_text.left_adjust
+							l_text.right_adjust
+						end
 
 						if not l_text.is_empty then
 							Result.append_string_general (l_text)
@@ -163,7 +165,7 @@ feature {NONE} -- Implementation
 			-- Corresponding class
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

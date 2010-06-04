@@ -15,7 +15,8 @@ create
 
 feature -- Initialisation
 
-	make(a_beginning: INTEGER; an_end: INTEGER )
+	make(a_beginning: INTEGER; an_end: INTEGER)
+			-- UTF-32 char positions.
 		do
 			start := a_beginning
 			stop := an_end
@@ -30,8 +31,10 @@ feature -- Initialisation
 feature -- Access
 
 	start: INTEGER
+			-- UTF-32 char position.
 
 	stop: INTEGER
+			-- UTF-32 char position.
 
 	is_feature: BOOLEAN
 
@@ -39,11 +42,11 @@ feature -- Access
 
 	class_name: STRING
 
-	feature_name: STRING
+	feature_name: STRING_32
 
 feature -- element change
 
-	set_feature (a_class_name, a_feature_name: STRING)
+	set_feature (a_class_name: like class_name; a_feature_name: like feature_name)
 		require
 			valid_class_name: a_class_name /= Void
 			valid_feature_feature_name: a_feature_name /= Void
@@ -54,7 +57,7 @@ feature -- element change
 			is_class := False
 		end
 
-	set_class(a_class_name: STRING)
+	set_class(a_class_name: like class_name)
 		require
 			valid_class_name: a_class_name /= Void
 		do
@@ -81,7 +84,7 @@ invariant
 	class_or_feature: not (is_class and is_feature)
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -105,11 +108,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_CLICKABLE_POSITION

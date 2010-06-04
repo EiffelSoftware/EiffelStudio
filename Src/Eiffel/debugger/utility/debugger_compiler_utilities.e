@@ -34,6 +34,8 @@ inherit
 			{NONE} all
 		end
 
+	INTERNAL_COMPILER_STRING_EXPORTER
+
 feature -- Class c
 
 	exception_class_c: CLASS_C
@@ -97,7 +99,7 @@ feature -- Entry point
 		local
 			f: FEATURE_I
 		do
-			f := any_class_c.feature_named ("is_equal")
+			f := any_class_c.feature_named_32 ("is_equal")
 			Result := fi_version_of_class (f, a_class)
 		end
 
@@ -433,7 +435,8 @@ feature -- Feature access
 			l_class_id, l_feature_id: INTEGER
 			l_class: CLASS_C
 		do
-			l_tokens := a_feat.name.split ('#')
+				-- The feature name doesn't seem to contain Unicode.
+			l_tokens := a_feat.name_32.as_string_8.split ('#')
 			if l_tokens.count /= 5 or else not equal ("fake inline-agent", l_tokens.i_th (1)) then
 				Result := a_feat
 			elseif not l_tokens.i_th (3).is_integer_32 or not l_tokens.i_th (4).is_integer_32 then

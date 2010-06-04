@@ -36,7 +36,7 @@ feature --{NONE} -- Initialization
 			create managed_data.make (2 * (a_length + 1))
 			count := 0
 		end
-	
+
 	make_by_pointer (a_ptr: POINTER)
 			-- Make a copy of unicode string pointed by `a_ptr'.
 		require
@@ -59,7 +59,7 @@ feature --{NONE} -- Initialization
 			create managed_data.make (2 * (a_count + 1))
 			managed_data.item.memory_copy (a_ptr, a_count * 2)
 		end
-	
+
 feature -- Access
 
 	string: STRING
@@ -67,7 +67,7 @@ feature -- Access
 		do
 			Result := string_with_count (length)
 		end
-		
+
 	string_with_count (a_count: INTEGER): STRING
 			-- Retrieve first `a_count' characters of Current to create a new Eiffel string
 		require
@@ -109,11 +109,11 @@ feature -- Status report
 	count: INTEGER
 
 	length: INTEGER
-			-- 
+			--
 		do
 			Result := cwel_string_length (item)
 		end
-		
+
 feature -- Element change
 
 	set_string (a_string: STRING)
@@ -128,9 +128,9 @@ feature -- Element change
 		do
 			nb := a_string.count - 1
 			count := nb + 1
-			
+
 			new_size := 2 * (nb + 2)
-			
+
 			if managed_data.count < new_size  then
 				managed_data.resize (new_size)
 			end
@@ -149,6 +149,39 @@ feature -- Element change
 			managed_data.put_integer_16 (0, (nb + 1) * 2)
 		end
 
+	set_string_16 (a_string: STRING_32)
+			-- Set `string' with `a_string'.
+			-- Put UTF-16 as .NET requires.
+		require
+			a_string_not_void: a_string /= Void
+		local
+			i, nb: INTEGER
+			new_size: INTEGER
+			l_area: SPECIAL [CHARACTER_32]
+			l_c: CHARACTER_32
+		do
+			nb := a_string.count - 1
+			count := nb + 1
+
+			new_size := 2 * (nb + 2)
+
+			if managed_data.count < new_size  then
+				managed_data.resize (new_size)
+			end
+
+			from
+				i := 0
+				l_area := a_string.area
+			until
+				i > nb
+			loop
+				l_c := l_area.item (i)
+				managed_data.put_integer_16 (l_c.code.to_integer_16, i * 2)
+				i := i + 1
+			end
+			managed_data.put_integer_16 (0, (nb + 1) * 2)
+		end
+
 feature {NONE} -- Implementation
 
 	managed_data: MANAGED_POINTER
@@ -159,14 +192,14 @@ feature {NONE} -- Implementation
 			"C macro signature (wchar_t *): EIF_INTEGER use <string.h>"
 		alias
 			"wcslen"
-		end	
-		
+		end
+
 	cwel_byte_size (ptr: POINTER): INTEGER
 		external
 			"C macro signature (char *): EIF_INTEGER use <windows.h>"
 		alias
 			"sizeof"
-		end	
+		end
 
 	cwel_set_size_in_string (ptr: POINTER; n: INTEGER)
 		external
@@ -175,7 +208,7 @@ feature {NONE} -- Implementation
 
 	cwel_multi_byte_to_wide_char (code_page, flags: INTEGER; source: POINTER;
 			source_length: INTEGER; dest: POINTER; dest_size: INTEGER): INTEGER
-		
+
 			-- Given a `source' of a specific `code_page' return associated
 			-- Unicode string in `dest'.
 		external
@@ -187,7 +220,7 @@ feature {NONE} -- Implementation
 	cwel_wide_char_to_multi_byte (code_page, flags: INTEGER; source: POINTER;
 			source_length: INTEGER; dest: POINTER; dest_size: INTEGER;
 			default_char, used_default_char: POINTER): INTEGER
-		
+
 			-- Given a unicode `source' return associated string in `dest'
 			-- using specific `code_page'.
 		external
@@ -201,7 +234,7 @@ invariant
 	count_not_negative: count >= 0
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -214,22 +247,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class UNI_STRING

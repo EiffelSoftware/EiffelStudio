@@ -157,7 +157,8 @@ feature -- Element change
 						-- The value is Void so it should be removed.
 					data.remove (a_id)
 				end
-				if not equal (l_old_value, a_value) then
+					-- To avoid type difference between two versions of data.
+				if l_old_value /~ a_value then
 						-- The two values are considered the same so do not publish the changed event
 					value_changed_event.publish ([Current, a_id])
 					is_dirty := True

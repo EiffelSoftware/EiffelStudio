@@ -53,11 +53,12 @@ feature {NONE} -- Initialization
 			a_feature_not_void: a_feature /= Void
 		local
 			l_s: STRING_32
+			l_name: STRING_32
 		do
 			if a_feature.is_infix then
-				l_s := extract_symbol_from_infix(a_feature.name)
+				l_s := a_feature.infix_symbol_32
 			else
-				l_s := a_feature.name
+				l_s := a_feature.name_32
 			end
 			if a_name /= Void then
 				make_old (a_name)
@@ -84,8 +85,9 @@ feature {NONE} -- Initialization
 			insert_name_internal.append (feature_signature)
 
 			if a_name_is_ambiguated then
-				create full_insert_name_internal.make (associated_feature.name.count + feature_signature.count)
-				full_insert_name_internal.append (associated_feature.name)
+				l_name := associated_feature.name_32
+				create full_insert_name_internal.make (l_name.count + feature_signature.count)
+				full_insert_name_internal.append (l_name)
 				if a_is_upper then
 					full_insert_name_internal.put (full_insert_name_internal.item (1).as_upper, 1)
 				end
@@ -137,9 +139,11 @@ feature -- Access
 			if attached l_comments then
 				from l_comments.start until l_comments.after loop
 					if attached l_comments.item as l_comment_line then
-						l_text := l_comment_line.content
-						l_text.left_adjust
-						l_text.right_adjust
+						l_text := l_comment_line.content_32
+						if l_text.is_valid_as_string_8 then
+							l_text.left_adjust
+							l_text.right_adjust
+						end
 
 						if not l_text.is_empty then
 							Result.append_string_general (l_text)
@@ -305,7 +309,7 @@ invariant
 	associated_feature_not_void: associated_feature /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

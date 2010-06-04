@@ -13,6 +13,10 @@ class
 inherit
 	ES_CONTRACT_SOURCE_I
 
+	SHARED_ENCODING_CONVERTER
+
+	SHARED_LOCALE
+
 create
 	make,
 	make_without_tag,
@@ -155,15 +159,20 @@ feature {NONE} -- Basic operations
 			l_rx: like contract_tag_regex
 			l_tag: attached like tag
 			l_contract: attached like contract
+			l_utf8_str: STRING_8
 		do
 			l_rx := contract_tag_regex
-			l_rx.match (a_string.as_string_8)
+				-- We use UTF-8 strings for regexp matching.
+			l_utf8_str := encoding_converter.utf32_to_utf8 (a_string.as_string_32)
+			l_rx.match (l_utf8_str)
 			if l_rx.has_matched then
 				create l_tag.make_from_string (l_rx.captured_substring (1))
-				create l_contract.make_from_string (a_string.substring (l_rx.captured_end_position (2) + 1, a_string.count))
+				create l_contract.make_from_string (encoding_converter.utf8_to_utf32 (l_utf8_str.substring (l_rx.captured_end_position (2) + 1, l_utf8_str.count)))
 				Result := [l_tag, l_contract]
 			else
-				Result := [Void, a_string.as_string_32.as_attached]
+				l_contract := a_string.twin
+				string_general_left_adjust (l_contract)
+				Result := [Void, l_contract]
 			end
 		ensure
 			not_result_tag_is_empty: Result.tag /= Void implies not Result.tag.is_empty
@@ -260,7 +269,7 @@ invariant
 	not_is_tagless: not tag.is_empty implies not is_tagless
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

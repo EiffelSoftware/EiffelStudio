@@ -21,18 +21,20 @@ feature -- Access
 	arguments: FEAT_ARG
 			-- Arguments type
 
+	obsolete_message_id: INTEGER
+			-- Id of `obsolete_message' in `names_heap' table.
+
+	assert_id_set: ASSERT_ID_SET
+			-- Assertions to which the procedure belongs to
+
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
+
 	obsolete_message: STRING
 			-- Obsolete message
 			-- (Void if Current is not obsolete)
 		do
 			Result := names_heap.item (obsolete_message_id)
 		end
-
-	obsolete_message_id: INTEGER
-			-- Id of `obsolete_message' in `names_heap' table.
-
-	assert_id_set: ASSERT_ID_SET
-			-- Assertions to which the procedure belongs to
 
 feature -- Status report
 
@@ -55,6 +57,16 @@ feature -- Settings
 			arguments_set: arguments = args
 		end
 
+	set_obsolete_message_id (v: like obsolete_message_id)
+			-- Assign `v' to `obsolete_message_id'
+		do
+			obsolete_message_id := v
+		ensure
+			obsolete_message_id_set: obsolete_message_id = v
+		end
+
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Status report
+
 	set_obsolete_message (s: STRING)
 			-- Assign `s' to `obsolete_message'
 		require
@@ -67,14 +79,6 @@ feature -- Settings
 			obsolete_message_id := l_names_heap.found_item
 		ensure
 			obsolete_message_set: equal (obsolete_message, s)
-		end
-
-	set_obsolete_message_id (v: like obsolete_message_id)
-			-- Assign `v' to `obsolete_message_id'
-		do
-			obsolete_message_id := v
-		ensure
-			obsolete_message_id_set: obsolete_message_id = v
 		end
 
 feature -- Initialization
@@ -250,7 +254,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

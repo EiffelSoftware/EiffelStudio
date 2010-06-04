@@ -45,6 +45,11 @@ inherit
 			is_equal, copy
 		end
 
+	INTERNAL_COMPILER_STRING_EXPORTER
+		undefine
+			is_equal, copy
+		end
+
 	SHARED_DEGREES
 		export {NONE}
 			all

@@ -11,6 +11,8 @@ class
 inherit
 	SHARED_WORKBENCH
 
+	SHARED_ENCODING_CONVERTER
+
 feature -- Access names
 
 	last_target_uuid: STRING
@@ -253,7 +255,7 @@ feature -- Access (Feature)
 				if l_class /= Void then
 					l_class_c := l_class.compiled_representation
 					if l_class_c /= Void and then l_class_c.has_feature_table then
-						Result := l_class_c.feature_with_name (l_feature_name)
+						Result := l_class_c.feature_with_name_32 (encoding_converter.utf8_to_utf32 (l_feature_name))
 					end
 				end
 			end
@@ -270,7 +272,7 @@ feature -- Access (Feature)
 			l_class ?= a_feature.associated_class.lace_class
 			Result := id_of_class (l_class)
 			Result.append (name_sep)
-			Result.append (encode (a_feature.name))
+			Result.append (encode (a_feature.name_8))
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -284,7 +286,7 @@ feature -- Access (Feature)
 		do
 			Result := id_of_class (a_class)
 			Result.append (name_sep)
-			Result.append (encode (a_ast.feature_name.name))
+			Result.append (encode (a_ast.feature_name.name_8))
 		end
 
 feature  -- Element Change
@@ -776,7 +778,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

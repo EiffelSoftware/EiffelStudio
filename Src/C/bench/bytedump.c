@@ -1232,6 +1232,7 @@ static  void    print_instructions (void)
 				break;
 			case BC_ONCE_STRING:
 				fprintf (ofp, "index %d, ", get_int32(&ip));
+				fprintf (ofp, "str32 %d, ", get_bool(&ip));
 				fprintf (ofp, "number %d, ", get_int32(&ip));
 				fprintf (ofp, "value \"%s\"", get_string8(&ip, get_int32(&ip)));
 				break;
@@ -1249,6 +1250,7 @@ static  void    print_instructions (void)
 				fprintf (ofp,"%d", 0);
 				break;
 			case  BC_STRING :
+				fprintf (ofp, "str32 %d, ", get_bool(&ip));
 				fprintf (ofp,"\"%s\"", get_string8(&ip, get_int32(&ip)));
 				break;
 			case  BC_BIT :

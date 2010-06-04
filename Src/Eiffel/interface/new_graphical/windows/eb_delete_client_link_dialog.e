@@ -83,7 +83,7 @@ feature -- Access
 			end
 		end
 
-	selected_items: LINKED_LIST [STRING]
+	selected_items: LINKED_LIST [STRING_32]
 			-- Feature names chosen by the user.
 		local
 			tmp: DYNAMIC_LIST [EV_LIST_ITEM]
@@ -102,7 +102,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_strings (a_string_array: INDEXABLE [STRING, INTEGER])
+	set_strings (a_string_array: INDEXABLE [STRING_32, INTEGER])
 			-- Wipe out `feature_list' and re-initialize with an item
 			-- for each of `a_string_array'.
 		do
@@ -137,7 +137,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -150,22 +150,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_DELETE_CLIENT_LINK_DIALOG

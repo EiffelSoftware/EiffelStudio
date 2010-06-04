@@ -38,6 +38,9 @@ inherit
 			{NONE} all
 		end
 
+
+	INTERNAL_COMPILER_STRING_EXPORTER
+
 	DEBUG_OUTPUT
 		export
 			{NONE} all

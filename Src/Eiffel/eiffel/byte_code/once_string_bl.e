@@ -21,6 +21,8 @@ inherit
 			unanalyze
 		end
 
+	SHARED_ENCODING_CONVERTER
+
 create
 	make
 
@@ -55,28 +57,46 @@ feature
 			-- Generate the string.
 		local
 			buf: like buffer
+			l_value_32: STRING_32
 		do
 			if register = Void then
 					-- Remember once manifest string to generate its pre-initialization.
-				context.register_once_manifest_string (value, number)
+				context.register_once_manifest_string (value, is_string_32, number)
 			else
 					-- Generate once manifest string initialization.
 				buf := buffer
 					-- RTCOMS is the macro used to retrieve previously created once manifest strings
 					-- or to create a new one if this is the first acceess to the string
 				buf.put_new_line
-				buf.put_string ("RTCOMS(")
+				if is_string_32 then
+					buf.put_string ("RTCOMS32(")
+				else
+					buf.put_string ("RTCOMS(")
+				end
 				register.print_register
 				buf.put_character (',')
 				buf.put_integer (body_index - 1)
 				buf.put_character (',')
 				buf.put_integer (number - 1)
 				buf.put_character (',')
-				buf.put_string_literal (value)
+				if is_string_32 then
+					l_value_32 := encoding_converter.utf8_to_utf32 (value)
+					buf.put_string_literal (encoding_converter.string_32_to_stream (l_value_32))
+				else
+					buf.put_string_literal (value)
+				end
 				buf.put_character (',')
-				buf.put_integer (value.count)
+				if is_string_32 then
+					buf.put_integer (l_value_32.count)
+				else
+					buf.put_integer (value.count)
+				end
 				buf.put_character(',')
-				buf.put_integer (value.hash_code)
+				if is_string_32 then
+					buf.put_integer (l_value_32.hash_code)
+				else
+					buf.put_integer (value.hash_code)
+				end
 				buf.put_character (')')
 				buf.put_character (';')
 			end
@@ -111,7 +131,7 @@ feature -- Properties
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -124,22 +144,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

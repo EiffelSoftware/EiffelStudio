@@ -28,6 +28,8 @@ inherit
 			check_labels, duplicate_for_instantiation, is_computable_using_ancestors
 		end
 
+	INTERNAL_COMPILER_STRING_EXPORTER
+
 create
 	make
 

@@ -8,6 +8,14 @@ note
 deferred class
 	ERROR
 
+inherit
+	ANY
+
+	SHARED_ENCODING_CONVERTER
+		export
+			{NONE} all
+		end
+
 feature -- Access
 
 	line: INTEGER
@@ -118,43 +126,10 @@ feature -- Setting
 
 feature {ERROR_VISITOR} -- Compute surrounding text around error
 
-	previous_line, current_line, next_line: STRING
-			-- Surrounding lines where error occurs.
-
 	has_source_text: BOOLEAN
 			-- Did we get the source text?
 		do
 			Result := current_line /= Void
-		end
-
-	context_line: STRING
-			-- Like current line but evaluates the surrounding context line if it hasn't
-			-- been determined.
-		local
-			l_count, i: INTEGER
-		do
-			if not has_source_text and then file_name /= Void then
-				initialize_output
-			end
-			Result := current_line
-			if Result /= Void and then not Result.is_empty then
-				from
-					i := 1
-					l_count := Result.count
-				until
-					i > l_count or not Result.item (i).is_space
-				loop
-					i := i + 1
-				end
-
-				if i > 1 then
-					if i < l_count then
-						Result := Result.substring (i, l_count)
-					else
-						create Result.make_empty
-					end
-				end
-			end
 		end
 
 	frozen initialize_output
@@ -190,6 +165,74 @@ feature {ERROR_VISITOR} -- Compute surrounding text around error
 			check current_line_not_void: attached current_line end
 		end
 
+	previous_line_32: detachable STRING_32
+			-- Previous line where error occurs.
+		do
+			if attached previous_line as l_line then
+				Result := encoding_converter.utf8_to_utf32 (l_line)
+			end
+		end
+
+	current_line_32: detachable STRING_32
+			-- Current line where error occurs.
+		do
+			if attached current_line as l_line then
+				Result := encoding_converter.utf8_to_utf32 (l_line)
+			end
+		end
+
+	next_line_32: detachable STRING_32
+			-- Next line where error occurs.
+		do
+			if attached next_line as l_line then
+				Result := encoding_converter.utf8_to_utf32 (l_line)
+			end
+		end
+
+	context_line_32: detachable STRING_32
+			-- Like current line but evaluates the surrounding context line if it hasn't
+			-- been determined.
+		do
+			if attached context_line as l_line then
+				Result := encoding_converter.utf8_to_utf32 (l_line)
+			end
+		end
+
+feature {NONE} -- Compute surrounding text around error
+
+	previous_line, current_line, next_line: STRING
+			-- Surrounding lines where error occurs.
+
+	context_line: STRING
+			-- Like current line but evaluates the surrounding context line if it hasn't
+			-- been determined.
+		local
+			l_count, i: INTEGER
+		do
+			if not has_source_text and then file_name /= Void then
+				initialize_output
+			end
+			Result := current_line
+			if Result /= Void and then not Result.is_empty then
+				from
+					i := 1
+					l_count := Result.count
+				until
+					i > l_count or not Result.item (i).is_space
+				loop
+					i := i + 1
+				end
+
+				if i > 1 then
+					if i < l_count then
+						Result := Result.substring (i, l_count)
+					else
+						create Result.make_empty
+					end
+				end
+			end
+		end
+
 feature -- Visitor
 
 	process (a_visitor: ERROR_VISITOR)
@@ -205,7 +248,7 @@ invariant
 	non_void_help_file_name: help_file_name /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

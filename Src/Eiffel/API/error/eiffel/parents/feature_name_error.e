@@ -16,7 +16,7 @@ inherit
 			trace
 		end
 
-feature -- Properties
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Properties
 
 	feature_name:  STRING
 			-- Feature involved in the error
@@ -32,7 +32,7 @@ feature -- Output
 			a_text_formatter.add_new_line;
 			if feature_name /= Void then
 				a_text_formatter.add ("Feature name: ");
-				a_text_formatter.add (feature_name)
+				a_text_formatter.add (encoding_converter.utf8_to_utf32 (feature_name))
 			else
 				a_text_formatter.add ("Feature: invariant")
 			end;
@@ -43,7 +43,7 @@ feature -- Output
 			end
 		end
 
-feature {COMPILER_EXPORTER} -- Setting
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Setting
 
 	set_feature_name (s: STRING)
 			-- Assign `f' to `feature'.
@@ -52,7 +52,7 @@ feature {COMPILER_EXPORTER} -- Setting
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -65,22 +65,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class FEATURE_NAME_ERROR

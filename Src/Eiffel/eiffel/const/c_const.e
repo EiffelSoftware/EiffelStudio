@@ -47,6 +47,7 @@ feature -- Macros
 	rti64c: STRING = "RTI64C"
 	rtu64c: STRING = "RTU64C"
 	rtms_ex_h: STRING = "RTMS_EX_H"
+	rtms32_ex_h: STRING = "RTMS32_EX_H"
 	dtype: STRING = "Dtype"
 	dftype: STRING = "Dftype"
 

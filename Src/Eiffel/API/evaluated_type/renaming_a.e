@@ -42,6 +42,11 @@ inherit
 			copy, is_equal
 		end
 
+	INTERNAL_COMPILER_STRING_EXPORTER
+		undefine
+			copy, is_equal
+		end
+
 create
 	make
 
@@ -390,12 +395,12 @@ feature {NONE} -- Implementation
 						l_feature := a_class_c.feature_with_name_id (item_for_iteration)
 					end
 					if l_feature /= Void then
-						a_text_formatter.process_feature_text (names_heap.item (item_for_iteration), l_feature, False)
+						a_text_formatter.process_feature_text (names_heap.item_32 (item_for_iteration), l_feature, False)
 					else
-						a_text_formatter.add (names_heap.item (item_for_iteration))
+						a_text_formatter.add (names_heap.item_32 (item_for_iteration))
 					end
 					a_text_formatter.process_keyword_text (l_as_keyword, Void)
-					a_text_formatter.add (names_heap.item (key_for_iteration))
+					a_text_formatter.add (names_heap.item_32 (key_for_iteration))
 					forth
 				end
 				a_text_formatter.process_keyword_text (" end", Void)
@@ -414,7 +419,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

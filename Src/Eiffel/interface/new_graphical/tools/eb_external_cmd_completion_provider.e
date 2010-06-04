@@ -167,7 +167,7 @@ feature{NONE} -- Implementation
 				loop
 					l_feature := l_feature_table.item_for_iteration.e_feature
 					create l_feature_item.make (l_feature, Void, False, is_upper_required (l_feature))
-					l_feature_item.set_insert_name (l_feature.name)
+					l_feature_item.set_insert_name (l_feature.name_32)
 					Result.put (l_feature_item, l_index)
 					l_index := l_index + 1
 					l_feature_table.forth
@@ -356,7 +356,7 @@ invariant
 	factory_attached: factory /= Void
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

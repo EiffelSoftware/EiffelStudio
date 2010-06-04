@@ -4,7 +4,7 @@ note
 	description: "Scanners for Eiffel parsers"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date: 2009-10-21 05:06:43 -0700 (Wed, 21 Oct 2009) $"
+	date: "$Date: 2009-10-21 20:06:43 +0800 (星期三, 21 十月 2009) $"
 	revision: "$Revision: 81206 $"
 
 class EIFFEL_SCANNER
@@ -32,6 +32,18 @@ A		([a-z]|[A-Z])
 X		([a-z]|[A-Z]|[0-9]|_)
 T		[0-9][0-9][0-9]
 U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
+
+-- Following UTF-8 standard: http://tools.ietf.org/html/rfc3629
+-- NON_ASCII: Identical to all code points of Unicode excluding 0 - 127.
+
+UTF8_char	{UTF8_1}|{UTF8_2}|{UTF8_3}|{UTF8_4}
+NON_ASCII	{UTF8_2}|{UTF8_3}|{UTF8_4}
+UTF8_1		[\x00-\x7F]
+UTF8_2		[\xC2-\xDF]{UTF8_tail}
+UTF8_3		\xE0[\xA0-\xBF]{UTF8_tail})|([\xE1-\xEC]({UTF8_tail}{2}))|(\xED[\x80-\x9F]{UTF8_tail})|([\xEE-\xEF]({UTF8_tail}{2})
+UTF8_4		\xF4[\x80-\x8F]({UTF8_tail}{2}))|([\xF1-\xF3]({UTF8_tail}{3}))|(\xF4[\x80-\x8F]({UTF8_tail}{2})
+UTF8_tail	[\x80-\xBF]
+
 
 %%
 
@@ -223,7 +235,8 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 
 -- Free operators
 
-(@|#|\||&)[@#0-9a-zA-Z_!\$&\'\(\)\*\+\,\-\./:;<>=\?\[\\\]\^\`\{\}\|\~]* {
+(@|#|\||&)[@#0-9a-zA-Z_!\$&\'\(\)\*\+\,\-\./:;<>=\?\[\\\]\^\`\{\}\|\~]*		|
+{NON_ASCII}+ {
 				last_token := TE_FREE
 				process_id_as
 			}
@@ -694,7 +707,8 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 
 -- Characters
 
-\'[^%\n']\'	{
+\'[^%\n']\'		|
+\'{NON_ASCII}\'	{
 				ast_factory.set_buffer (roundtrip_token_buffer, Current)
 				last_char_as_value := ast_factory.new_character_as (text_item (2), line, column, position, text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
@@ -827,7 +841,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 			}
 
 
-\'.{0,2}			|
+\'{UTF8_char}{0,2}			|
 \'%\/[0-9]+(\/)?	{
 					-- Unrecognized character.
 					-- (catch-all rules (no backing up))
@@ -894,7 +908,8 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 \"[xX][oO][rR]\"	{
 				process_simple_string_as (TE_STR_XOR)
 			}
-\"(@|#|\||&)[@#0-9a-zA-Z_!\$&\'\(\)\*\+\,\-\./:;<>=\?\[\\\]\^\`\{\}\|\~]*\"	{
+\"(@|#|\||&)[@#0-9a-zA-Z_!\$&\'\(\)\*\+\,\-\./:;<>=\?\[\\\]\^\`\{\}\|\~]*\"		|
+\"{NON_ASCII}+\"	{
 				process_simple_string_as (TE_STR_FREE)
 			}
 \"\"		{
@@ -1140,9 +1155,9 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 				ast_factory.append_two_characters_to_buffer (roundtrip_token_buffer, '%%', '>')
 				token_buffer.append_character ('%>')
 			}
-	%\/[0-9]{1,3}\/	{
+	%\/[0-9]{1,7}\/	{
 				ast_factory.append_text_to_buffer (roundtrip_token_buffer, Current)
-				process_string_character_code (text_substring (3, text_count - 1).to_integer)
+				process_string_character_code (text_substring (3, text_count - 1).to_natural_32)
 			}
 	%[ \t\r\n]+%	{
 					-- This regular expression should actually be: %\n[ \t\r]*%

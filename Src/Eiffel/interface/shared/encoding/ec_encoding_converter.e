@@ -11,6 +11,8 @@ class
 inherit
 	ENCODING_CONVERTER
 
+	ENCODING_HELPER
+
 	EC_ENCODINGS
 		export
 			{NONE} all
@@ -37,6 +39,26 @@ feature -- Access
 			end
 		ensure then
 			internal_detected_encoding_set: internal_detected_encoding = Result
+		end
+
+	utf8_string (a_stream: STRING): STRING
+			-- Detect encoding of `a_stream' and convert it into utf8.
+		local
+			l_encoding: attached like detected_encoding
+		do
+			detect_encoding (a_stream)
+			l_encoding := detected_encoding
+			if l_encoding.is_equal (utf8) then
+					-- It is safe and much faster not to convert for now.
+				Result := a_stream
+			else
+				l_encoding.convert_to (utf8, a_stream)
+				if l_encoding.last_conversion_successful then
+					Result := l_encoding.last_converted_string.as_string_8
+				else
+					Result := a_stream
+				end
+			end
 		end
 
 	utf32_string (a_stream: STRING): STRING_32
@@ -121,7 +143,7 @@ feature {NONE} -- Implementation: Internal cache
 			-- Mutable version of `detected_encoding'.
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

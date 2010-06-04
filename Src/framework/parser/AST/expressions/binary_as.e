@@ -22,6 +22,11 @@ inherit
 			is_equal, copy
 		end
 
+	SHARED_ENCODING_CONVERTER
+		export
+			{NONE} all
+		end
+
 feature {NONE} -- Initialization
 
 	initialize (l: like left; r: like right; o: like operator)
@@ -121,12 +126,23 @@ feature -- Roundtrip/Token
 			Result := right.last_token (a_list)
 		end
 
-feature -- Properties
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Properties
 
-	infix_function_name: STRING
+	infix_function_name: detachable STRING
 			-- Internal name of the infix feature associated to the
 			-- binary expression
 		deferred
+		end
+
+feature -- Properties
+
+	infix_function_name_32: detachable STRING_32
+			-- Internal name of the infix feature associated to the
+			-- binary expression
+		do
+			if attached infix_function_name as l_name then
+				Result := encoding_converter.utf8_to_utf32 (l_name)
+			end
 		end
 
 	op_name: ID_AS

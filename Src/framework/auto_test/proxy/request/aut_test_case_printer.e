@@ -209,7 +209,7 @@ feature -- Basic operations
 				l_root := system.root_creators.first
 				if attached l_root.root_class.compiled_class as l_class then
 					context_class := l_class
-					context_feature := l_class.feature_named (l_root.procedure_name)
+					context_feature := l_class.feature_named_32 (l_root.procedure_name)
 				end
 			end
 
@@ -621,7 +621,7 @@ invariant
 	valid_expression_printer_output_stream: expression_printer.output_stream = output_stream
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

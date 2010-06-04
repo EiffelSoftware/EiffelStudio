@@ -68,7 +68,7 @@ feature -- Removal
 			values := Void
 		end
 
-feature -- Element change
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Element change
 
 	put (f: T; s: STRING)
 			-- Insert `f' in the hash table

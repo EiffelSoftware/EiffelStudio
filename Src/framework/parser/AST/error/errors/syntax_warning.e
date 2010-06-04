@@ -38,8 +38,13 @@ feature {NONE} -- Initialization
 
 feature -- Properties
 
-	warning_message: STRING
+	warning_message_32: STRING_32
 			-- Specify syntax issue message.
+		do
+			if attached warning_message as l_m then
+				Result := encoding_converter.utf8_to_utf32 (l_m)
+			end
+		end
 
 	file_name: STRING
 			-- Path to file where syntax issue happened
@@ -49,6 +54,11 @@ feature -- Properties
 
 	has_associated_file: BOOLEAN = True
 			-- Current is associated to a file/class
+
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Properties
+
+	warning_message: STRING
+			-- Specify syntax issue message.
 
 feature -- Visitor
 
@@ -61,7 +71,7 @@ invariant
 	warning_message_not_void: warning_message /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

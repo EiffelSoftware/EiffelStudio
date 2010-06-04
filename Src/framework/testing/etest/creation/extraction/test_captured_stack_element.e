@@ -80,7 +80,7 @@ feature -- Status report
 			l_class := called_feature.associated_class
 			Result := l_class.creation_feature = called_feature.associated_feature_i
 			if not Result then
-				Result := l_class.creators /= Void and then l_class.creators.has (called_feature.name)
+				Result := l_class.has_creator_named_with (called_feature)
 			end
 		end
 
@@ -102,7 +102,7 @@ feature {TEST_CAPTURER} -- Element change
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

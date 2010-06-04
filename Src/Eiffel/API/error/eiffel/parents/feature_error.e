@@ -18,11 +18,6 @@ feature -- Properties
 	e_feature: E_FEATURE
 			-- Feature involved in the error
 
-	feature_name: STRING
-			-- If e_feature is Void then use feature name
-			-- (if this is Void then feature occurred in
-			-- the invariant)
-
 	written_class: CLASS_C
 			-- Class where the code is originally written.
 			-- (Non-void if it differs from `class_c'.)
@@ -37,6 +32,13 @@ feature -- Properties
 		ensure then
 			file_name_not_void: Result /= Void
 		end
+
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Propertires
+
+	feature_name: STRING
+			-- If e_feature is Void then use feature name
+			-- (if this is Void then feature occurred in
+			-- the invariant)
 
 feature -- Access
 
@@ -87,16 +89,16 @@ feature -- Output
 					if l_feature = Void then
 						l_feature := e_feature
 					end
-					a_text_formatter.add_feature_error (l_feature, e_feature.name, line)
+					a_text_formatter.add_feature_error (l_feature, e_feature.name_32, line)
 				elseif feature_name /= Void then
-					a_text_formatter.add_feature_error (e_feature, feature_name, line)
+					a_text_formatter.add_feature_error (e_feature, encoding_converter.utf8_to_utf32 (feature_name), line)
 				else
 					a_text_formatter.add ("inheritance or invariant clause")
 				end
 			elseif e_feature /= Void then
 				e_feature.append_name (a_text_formatter)
 			elseif feature_name /= Void then
-				a_text_formatter.add (feature_name)
+				a_text_formatter.add (encoding_converter.utf8_to_utf32 (feature_name))
 			else
 				a_text_formatter.add ("inheritance or invariant clause")
 			end
@@ -150,7 +152,7 @@ feature {COMPILER_EXPORTER} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

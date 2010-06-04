@@ -139,7 +139,8 @@ feature -- Query
 					l_search_string.append ("/* {")
 					l_search_string.append (a_feature.written_class.name_in_upper)
 					l_search_string.append ("}.")
-					l_search_string.append (a_feature.name)
+						-- |FIXME: Unicode search.
+					l_search_string.append (a_feature.name_32.as_string_8)
 					l_search_string.append (" */")
 
 					from
@@ -172,7 +173,7 @@ invariant
 	class_type_attached: class_type /= Void
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

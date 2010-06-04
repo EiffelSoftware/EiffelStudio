@@ -285,7 +285,8 @@ feature {NONE} -- Implementation: feature tree
 						if l_comments = Void or else l_comments.is_empty then
 							l_name := " "
 						else
-							l_name := l_comments.first.content
+								-- |FIXME: Unicode Improvement
+							l_name := l_comments.first.content_32.as_string_8
 						end
 						l_name.right_adjust
 					end
@@ -340,8 +341,8 @@ feature {NONE} -- Implementation: feature tree
 			st: FEATURE_STONE
 			fa: FEATURE_AS
 			f_names: EIFFEL_LIST [FEATURE_NAME]
-			f_item_name: STRING
-			l_first_item_name: STRING
+			f_item_name: STRING_32
+			l_first_item_name: STRING_32
 			l_external: BOOLEAN
 		do
 			create Result
@@ -371,12 +372,12 @@ feature {NONE} -- Implementation: feature tree
 					until
 						f_names.after
 					loop
-						f_item_name := f_names.item.internal_name.name
+						f_item_name := f_names.item.internal_name.name_32
 						if l_first_item_name = Void then
 							l_first_item_name := f_item_name
 						end
 						if a_class.has_feature_table then
-							ef := a_class.feature_with_name (f_item_name)
+							ef := a_class.feature_with_name_id (f_names.item.internal_name.name_id)
 							if ef /= Void and then ef.written_in /= a_class.class_id then
 								ef := Void
 							end
@@ -409,12 +410,12 @@ feature {NONE} -- Implementation: feature tree
 			end
 		end
 
-	feature_name (a_ef: E_FEATURE): STRING
+	feature_name (a_ef: E_FEATURE): STRING_32
 			-- Feature name of `a_ef' depending of the signature displayed or not.
 		require
 			a_ef_not_void: a_ef /= Void
 		do
-			Result := a_ef.name.twin
+			Result := a_ef.name_32.twin
 		end
 
 ;note

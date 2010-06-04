@@ -182,6 +182,8 @@ inherit
 			{NONE} all
 		end
 
+	INTERNAL_COMPILER_STRING_EXPORTER
+
 create
 	make, make_for_inline_agent
 
@@ -1081,7 +1083,6 @@ feature {NONE} -- Implementation
 		local
 			l_feat: E_FEATURE
 			l_type: TYPE_A
-			l_name: STRING
 			l_expr_type: TYPE_A
 			l_last_type: TYPE_A
 			l_formal: FORMAL_A
@@ -1115,13 +1116,6 @@ feature {NONE} -- Implementation
 			end
 			if not has_error_internal then
 				if l_feat.is_prefix or l_feat.has_alias_name then
-					if not expr_type_visiting then
-						if l_feat.is_prefix then
-							l_name := l_feat.prefix_symbol
-						else
-							l_name := l_feat.alias_symbol
-						end
-					end
 					l_as.expr.process (Current)
 				elseif l_feat.is_infix then
 					check
@@ -1174,7 +1168,6 @@ feature {NONE} -- Implementation
 	process_binary_as (l_as: BINARY_AS)
 		local
 			l_feat: E_FEATURE
-			l_name: STRING
 			l_formal: FORMAL_A
 			l_type: TYPE_A
 			l_left_type, l_right_type: TYPE_A
@@ -1248,15 +1241,9 @@ feature {NONE} -- Implementation
 				if not has_error_internal then
 					check l_feat_not_void: l_feat /= Void end
 					if l_feat.is_infix or l_feat.has_alias_name then
-						if l_feat.is_infix then
-							l_name := l_feat.infix_symbol
-						else
-							l_name := l_feat.alias_symbol
-						end
 						check l_feat_is_not_procedure: not l_feat.is_procedure end
 						l_as.right.process (Current)
 					else
-						l_name := l_feat.name
 						l_as.right.process (Current)
 					end
 				else

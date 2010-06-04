@@ -30,7 +30,7 @@ feature -- Access
 			create Result.make (64)
 			if l_feature_stone /= Void and then l_feature_stone.is_valid then
 				Result.append (interface_names.string_general_as_lower (interface_names.s_feature_stone))
-				Result.append (l_feature_stone.e_feature.name)
+				Result.append (l_feature_stone.e_feature.name_32)
 			elseif l_class_stone /= Void and then l_class_stone.is_valid then
 				Result.append (interface_names.string_general_as_lower (interface_names.s_class_stone))
 				Result.append (l_class_stone.class_name)
@@ -97,7 +97,7 @@ feature -- Access
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

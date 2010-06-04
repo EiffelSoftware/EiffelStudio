@@ -835,7 +835,7 @@ feature -- change
 					details_class_lb.set_text ("???")
 					details_class_lb.remove_pebble
 				end
-				details_routine_lb.set_text (f.name)
+				details_routine_lb.set_text (f.name_32)
 				details_routine_lb.set_pebble (create {FEATURE_STONE}.make (f))
 				details_index_lb.set_text (i.out)
 			else

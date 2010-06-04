@@ -40,6 +40,8 @@ inherit
 			reset
 		end
 
+	INTERNAL_COMPILER_STRING_EXPORTER
+
 create
 	make
 
@@ -269,7 +271,7 @@ feature -- Basic Operations
 
 feature -- Search
 
-	find_feature_named (a_name: STRING)
+	find_feature_named (a_name: STRING_32)
 			-- Look for a feature named `a_name' in the text.
 			-- If `a_name' is found, `found_feature' is set to True
 			-- and `cursor' is moved to `a_name' position.
@@ -278,7 +280,7 @@ feature -- Search
 		local
 			tok: EDITOR_TOKEN
 			ln: like line
-			low, low2: STRING
+			low, low2: STRING_32
 			feature_stone: FEATURE_STONE
 		do
 			found_feature := False
@@ -286,7 +288,7 @@ feature -- Search
 				disable_selection
 			end
 			if click_tool_enabled then --and then click_tool.is_ready then
-				low := a_name.as_lower
+				low := a_name
 				from
 					ln ?= first_line
 					tok := ln.first_token
@@ -296,11 +298,11 @@ feature -- Search
 					if tok.is_feature_start then
 						feature_stone ?= tok.pebble
 						if feature_stone /= Void then
-							low2 := feature_stone.e_feature.name.as_lower
+							low2 := feature_stone.e_feature.name_32
 						else
-							low2 := tok.wide_image.as_lower
+							low2 := tok.wide_image
 						end
-						found_feature := low2.is_equal (low)
+						found_feature := same_feature_name (low, low2)
 						if found_feature then
 							cursor.set_from_relative_pos (ln, tok, 1, Current)
 						end
@@ -884,8 +886,44 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	same_feature_name (a_name, a_other_name: STRING_32): BOOLEAN
+			-- Are the names represent the same feature?
+			-- Caseless comparison for Unicode under 256.
+		require
+			a_name_not_void: a_name /= Void
+			a_other_name_not_void: a_other_name /= Void
+		local
+			i, nb: INTEGER_32
+			c1, c2: CHARACTER_32
+		do
+			nb := a_other_name.count
+			if nb = a_name.count then
+				from
+					Result := True
+					i := 1
+				until
+					i > nb
+				loop
+					c1 := a_other_name.item (i)
+					c2 := a_name.item (i)
+					if c1.is_character_8 and c2.is_character_8 then
+						if c1.as_lower /= c2.as_lower then
+							Result := False
+							i := nb
+						end
+					else
+						if c1 /= c2 then
+							Result := False
+							i := nb
+						end
+					end
+					i := i + 1
+				end
+			end
+		end
+
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

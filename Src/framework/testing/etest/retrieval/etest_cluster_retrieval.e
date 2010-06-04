@@ -15,6 +15,9 @@ inherit
 
 	SHARED_EIFFEL_PARSER_WRAPPER
 
+		-- In order to get UTF-8 text to parse it directly without conversion.
+	INTERNAL_COMPILER_STRING_EXPORTER
+
 create {ETEST_RETRIEVAL}
 	make
 
@@ -215,7 +218,7 @@ feature {NONE} -- Implementation
 			l_group: CONF_GROUP
 			l_ancestors: LIST [STRING]
 			l_list: ARRAYED_LIST [EIFFEL_CLASS_I]
-			l_text: STRING_32
+			l_text: STRING
 		do
 			l_universe := session.project_access.project.universe
 			l_group := a_class.cluster
@@ -250,7 +253,7 @@ feature {NONE} -- Constants
 			-- Number of classes which are parsed per call to `step'
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

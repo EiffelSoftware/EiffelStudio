@@ -70,7 +70,7 @@ feature -- Access
 	feature_for_byte_code_injection: FEATURE_I
 			-- Feature whose byte-code is to be injected
 		do
-			Result := interpreter_root_class.feature_named (feature_name_for_byte_code_injection)
+			Result := interpreter_root_class.feature_named_32 (feature_name_for_byte_code_injection)
 		ensure
 			result_attached: Result /= Void
 		end
@@ -101,7 +101,7 @@ feature -- Access
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -15,6 +15,13 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_ENCODING_CONVERTER
+		export
+			{NONE} all
+		end
+
+	INTERNAL_COMPILER_STRING_EXPORTER
+
 feature -- Visitor
 
 	process (v: AST_VISITOR)
@@ -270,7 +277,7 @@ feature -- Roundtrip/Text modification
 			end
 		end
 
-feature -- Roundtrip/Text modification
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Roundtrip/Text modification
 
 	prepend_text (a_text: STRING; a_list: LEAF_AS_LIST)
 			-- Prepend `a_text' to current AST node.
@@ -350,6 +357,19 @@ feature -- Roundtrip/Text modification
 
 feature -- Roundtrip/Text
 
+	text_32 (a_list: LEAF_AS_LIST): STRING_32
+			-- Text (with modification, if any, applied) of current AST structure
+		require
+			a_list_not_void: a_list /= Void
+			valid_text_region: is_text_available (a_list)
+		do
+			Result := encoding_converter.utf8_to_utf32 (text (a_list))
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Roundtrip/Text
+
 	original_text (a_list: LEAF_AS_LIST): STRING
 			-- Original text of current AST structure
 		require
@@ -427,7 +447,7 @@ feature {NONE} -- Constants
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

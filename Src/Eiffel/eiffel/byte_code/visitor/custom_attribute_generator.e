@@ -48,6 +48,11 @@ inherit
 			{NONE} all
 		end
 
+	INTERNAL_COMPILER_STRING_EXPORTER
+		export
+			{NONE} all
+		end
+
 feature -- Code generation
 
 	generate (a_ca: CUSTOM_ATTRIBUTE_B; a_owner_token: INTEGER; a_code_generator: CIL_CODE_GENERATOR)
@@ -669,7 +674,7 @@ invariant
 	is_dotnet_compilation: system.il_generation
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

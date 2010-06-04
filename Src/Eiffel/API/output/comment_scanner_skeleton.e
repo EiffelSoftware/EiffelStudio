@@ -1,5 +1,5 @@
 note
-	description: "Scanner skeleton class for COMMENT_SCANNER"
+	description: "Scanner skeleton class for COMMENT_SCANNER, based on UTF-8"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: ""
@@ -19,6 +19,10 @@ inherit
 	SHARED_EIFFEL_PROJECT
 
 	SHARED_TEXT_ITEMS
+
+	INTERNAL_COMPILER_STRING_EXPORTER
+
+	SHARED_ENCODING_CONVERTER
 
 feature {NONE} -- Initialization
 
@@ -104,22 +108,25 @@ feature {NONE} -- Implementation
 	add_email_tokens
 			-- Email address encountered.
 		local
-			l_text : like text
+			l_text : STRING_32
+			l_mailto: STRING_32
 		do
-			l_text := text
+			l_text := encoding_converter.utf8_to_utf32 (text)
+			l_mailto := "mailto:"
+			l_mailto.append (l_text)
 			if for_comment then
-				text_formatter.process_comment_text (l_text, "mailto:" + l_text)
+				text_formatter.process_comment_text (l_text, l_mailto)
 			else
-				text_formatter.process_string_text (l_text, "mailto:" + l_text)
+				text_formatter.process_string_text (l_text, l_mailto)
 			end
 		end
 
 	add_url_tokens
 			-- URL encountered.
 		local
-			l_text : like text
+			l_text : STRING_32
 		do
-			l_text := text
+			l_text := encoding_converter.utf8_to_utf32 (text)
 			if for_comment then
 				text_formatter.process_comment_text (l_text, l_text.twin)
 			else
@@ -130,15 +137,17 @@ feature {NONE} -- Implementation
 	add_dot_feature
 			-- A feature like {CLASS}.feature encountered.
 		local
-			l_text : like text
-			l_feat_name: STRING
+			l_text : STRING_32
+			l_feat_8: STRING_8
+			l_feat_name: STRING_32
 			l_feat: E_FEATURE
 		do
-			l_text := text
-			l_feat_name := l_text.twin
-			l_feat_name.keep_tail (l_text.count - 1)
-			l_feat_name.to_lower
-			l_feat := feature_by_name (l_feat_name)
+			l_feat_8 := text.twin
+			l_text := encoding_converter.utf8_to_utf32 (l_feat_8)
+			l_feat_8.keep_tail (l_feat_8.count - 1)
+			l_feat_8.to_lower
+			l_feat := feature_by_name (l_feat_8)
+			l_feat_name := encoding_converter.utf8_to_utf32 (l_feat_8)
 			if l_feat /= Void then
 				text_formatter.process_symbol_text (ti_dot)
 				text_formatter.process_feature_text (l_feat_name, l_feat, false)
@@ -156,20 +165,20 @@ feature {NONE} -- Implementation
 	add_quote_feature
 			-- A feature like `feature' encountered.
 		local
-			l_text : like text
-			l_feat_name: STRING
+			l_text : STRING_32
+			l_feat_8: STRING
 			l_feat: E_FEATURE
 		do
-			l_text := text
+			l_feat_8 := text
 			check
-				l_text.count >= 2
+				l_feat_8.count >= 2
 			end
-			l_feat_name := l_text
-			l_feat_name := l_text.substring (2, l_text.count - 1)
+			l_text := encoding_converter.utf8_to_utf32 (l_feat_8)
+			l_feat_8 := l_feat_8.substring (2, l_feat_8.count - 1)
 			if current_class /= Void then
 				last_type := current_class.actual_type
 			end
-			l_feat := feature_by_name (l_feat_name.as_lower)
+			l_feat := feature_by_name (l_feat_8.as_lower)
 				-- We try infix and prefix
 			if l_feat = Void then
 				add_text (l_text, True)
@@ -185,11 +194,11 @@ feature {NONE} -- Implementation
 	add_class (a_with_brace: BOOLEAN)
 			-- A class like {CLASS} encountered.
 		local
-			l_text : like text
-			l_class_name: STRING
+			l_text : STRING_32
+			l_class_name: STRING_32
 			l_class: CLASS_I
 		do
-			l_text := text
+			l_text := encoding_converter.utf8_to_utf32 (text)
 			check
 				l_text.count >= 2
 			end
@@ -198,8 +207,10 @@ feature {NONE} -- Implementation
 			else
 				l_class_name := l_text.substring (2, l_text.count - 3)
 			end
-			l_class_name.to_upper
-			l_class := class_by_name (l_class_name)
+			if l_class_name.is_valid_as_string_8 then
+				l_class_name.to_upper
+				l_class := class_by_name (l_class_name)
+			end
 			if l_class /= Void then
 				if a_with_brace then
 					text_formatter.process_symbol_text (ti_l_curly)
@@ -220,14 +231,14 @@ feature {NONE} -- Implementation
 	add_cluster
 			-- A cluster like [cluster] encountered.
 		local
-			l_text : like text
-			l_cluster_name: STRING
+			l_text : STRING_32
+			l_cluster_name: STRING_32
 			l_cluster: CONF_GROUP
-			l_strings: LIST [STRING]
+			l_strings: LIST [STRING_32]
 			l_groups: ARRAYED_LIST [CONF_GROUP]
-			l_str: STRING
+			l_str: STRING_32
 		do
-			l_text := text
+			l_text := encoding_converter.utf8_to_utf32 (text)
 			check
 				l_text.count >= 2
 			end
@@ -272,10 +283,10 @@ feature {NONE} -- Implementation
 	add_normal_text
 			-- Add `text' to `text_formatter'.
 		do
-			add_text (text, False)
+			add_text (encoding_converter.utf8_to_utf32 (text), False)
 		end
 
-	add_text (a_text: STRING; a_basic_comment: BOOLEAN)
+	add_text (a_text: STRING_32; a_basic_comment: BOOLEAN)
 			-- Add `a_text' as normal text.
 		require
 			a_text_not_void: a_text /= Void
@@ -297,7 +308,7 @@ feature {NONE} -- Implementation
 			-- Append token to `text_formatter'
 		do
 			if not buffer_string.is_empty then
-				add_text (buffer_string.twin, False)
+				add_text (encoding_converter.utf8_to_utf32 (buffer_string.twin), False)
 				buffer_string.wipe_out
 			end
 		end
@@ -380,7 +391,7 @@ invariant
 	invariant_clause: True -- Your invariant here
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

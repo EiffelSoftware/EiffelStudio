@@ -404,9 +404,9 @@ feature {NONE} -- Implementation
 
 invariant
 	valid_selection: has_selection implies selection_cursor /= Void
-	cursor_exists: not is_empty implies cursor /= Void
-	selection_cursor_exists: not is_empty implies selection_cursor /= Void
-	no_cursor_when_empty: is_empty implies cursor = Void and then selection_cursor = Void
+	-- cursor_exists: not is_empty implies cursor /= Void
+	-- selection_cursor_exists: not is_empty implies selection_cursor /= Void
+	-- no_cursor_when_empty: is_empty implies cursor = Void and then selection_cursor = Void
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

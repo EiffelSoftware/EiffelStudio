@@ -56,7 +56,7 @@ feature -- Initialization
 
 feature
 
-	set_list (name_list: LIST [STRING]; pixmap_list: LIST [EV_PIXMAP])
+	set_list (name_list: LIST [STRING_32]; pixmap_list: LIST [EV_PIXMAP])
 			-- Fill the choice window with `name_list' using `pixmap_list' if applicable.
 		require
 			valid_args: name_list /= Void
@@ -223,7 +223,7 @@ invariant
 	destroy_actions_not_void: destroy_actions /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

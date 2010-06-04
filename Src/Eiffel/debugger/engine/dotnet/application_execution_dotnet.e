@@ -57,6 +57,8 @@ inherit
 			{NONE} all
 		end
 
+	INTERNAL_COMPILER_STRING_EXPORTER
+
 --	EV_SHARED_APPLICATION
 --		export
 --			{NONE} all
@@ -1161,7 +1163,9 @@ feature {NONE} -- BreakPoints
 			f := loc.routine
 			ln := loc.breakable_line_number
 			debug ("debugger_trace_breakpoint")
-				print ("setBreakpoint (" + a_state.out + ") " + f.name + " index=" + ln.out + "%N")
+				localized_print ("setBreakpoint (" + a_state.out + ") ")
+				localized_print (f.name_32)
+				localized_print (" index=" + ln.out + "%N")
 				display_feature_info (f)
 			end
 

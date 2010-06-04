@@ -50,6 +50,11 @@ inherit
 			is_equal, copy
 		end
 
+	INTERNAL_COMPILER_STRING_EXPORTER
+		undefine
+			is_equal, copy
+		end
+
 create {SYSTEM_I}
 	make
 

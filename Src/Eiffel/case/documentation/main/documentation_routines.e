@@ -17,6 +17,8 @@ inherit
 
 	EC_SHARED_PREFERENCES
 
+	INTERNAL_COMPILER_STRING_EXPORTER
+
 feature -- Status setting
 
 	set_excluded_indexing_items (l: LINEAR [STRING])
@@ -406,7 +408,7 @@ feature -- Routines
 		local
 			ast: INVARIANT_AS
 			invariants: EIFFEL_LIST [TAGGED_AS]
-			s: STRING
+			s: STRING_32
 		do
 			ast := class_c.invariant_ast
 			if ast /= Void then
@@ -420,7 +422,7 @@ feature -- Routines
 						invariants.after
 					loop
 						if invariants.item.tag /= Void then
-							s := invariants.item.tag.name
+							s := invariants.item.tag.name_32
 						end
 						if s /= Void and then not s.is_empty then
 							s := s.twin
@@ -505,22 +507,22 @@ feature -- Routines
 			end
 		end
 
-	feature_tooltip (f: E_FEATURE): STRING
+	feature_tooltip (f: E_FEATURE): STRING_32
 			-- Get a descriptive comment on the origin of `f'.
 		local
 			wc: CLASS_C
 			anc: E_FEATURE
-			real_name: STRING
+			real_name: STRING_32
 		do
 			create Result.make (20)
 			Result.append ("`")
-			Result.append (f.name)
+			Result.append (f.name_32)
 			Result.append ("' ")
 			anc := f.written_feature
 			if anc /= Void then
-				real_name := anc.name
+				real_name := anc.name_32
 			else
-				real_name := f.name
+				real_name := f.name_32
 			end
 			wc := f.written_class
 			if wc = current_class then
@@ -528,7 +530,7 @@ feature -- Routines
 			else
 				Result.append ("was declared in ")
 				Result.append (wc.name_in_upper)
-				if not real_name.is_equal (f.name) then
+				if not real_name.is_equal (f.name_32) then
 					Result.append (" as `")
 					Result.append (real_name)
 					Result.append ("'")
@@ -939,7 +941,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

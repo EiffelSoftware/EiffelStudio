@@ -71,7 +71,7 @@ feature -- Comparison
 			Result := equivalent (value, other.value)
 		end
 
-feature -- Output
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Output
 
 	string_value: STRING
 		do

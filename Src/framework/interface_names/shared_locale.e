@@ -247,16 +247,33 @@ feature -- String
 		end
 
 	string_general_as_lower (a_s: STRING_GENERAL): STRING_GENERAL
+			-- Make all possible char in `a_str' to lower.
+			-- |FIXME: We need real Unicode as lower.
+			-- |For the moment, only ANSII code are concerned.
 		require
-			a_s_not_void: a_s /= Void
+			a_str_not_void: a_s /= Void
 		local
-			l_str: STRING
+			i, nb: INTEGER_32
+			l_result: STRING_32
 		do
-			if a_s.is_valid_as_string_8 then
-				l_str := a_s.as_string_8
+			if attached {STRING_32} a_s as l_str then
+				create l_result.make_from_string (l_str)
+				from
+					i := 1
+					nb := l_str.count
+				until
+					i > nb
+				loop
+					if l_str.item (i).code <= {CHARACTER_8}.max_value then
+						l_result.put (l_str.item (i).to_character_8.as_lower, i)
+					else
+						l_result.put (l_str.item (i), i)
+					end
+					i := i + 1
+				end
+				Result := l_result
+			elseif attached {STRING_8} a_s as l_str then
 				Result := l_str.as_lower
-			else
-				Result := a_s.twin
 			end
 		ensure
 			Result_not_void: Result /= Void
@@ -265,16 +282,33 @@ feature -- String
 		end
 
 	string_general_as_upper (a_s: STRING_GENERAL): STRING_GENERAL
+			-- Make all possible char in `a_str' to upper.
+			-- |FIXME: We need real Unicode as upper.
+			-- |For the moment, only ANSII code are concerned.
 		require
-			a_s_not_void: a_s /= Void
+			a_str_not_void: a_s /= Void
 		local
-			l_str: STRING
+			i, nb: INTEGER_32
+			l_result: STRING_32
 		do
-			if a_s.is_valid_as_string_8 then
-				l_str := a_s.as_string_8
+			if attached {STRING_32} a_s as l_str then
+				create l_result.make_from_string (l_str)
+				from
+					i := 1
+					nb := l_str.count
+				until
+					i > nb
+				loop
+					if l_str.item (i).code <= {CHARACTER_8}.max_value then
+						l_result.put (l_str.item (i).to_character_8.as_upper, i)
+					else
+						l_result.put (l_str.item (i), i)
+					end
+					i := i + 1
+				end
+				Result := l_result
+			elseif attached {STRING_8} a_s as l_str then
 				Result := l_str.as_upper
-			else
-				Result := a_s.twin
 			end
 		ensure
 			Result_not_void: Result /= Void
@@ -290,10 +324,8 @@ feature -- String
 			a_str_not_void: a_str /= Void
 		local
 			i, nb: INTEGER_32
-			l_str: STRING_32
 		do
-			if a_str.is_string_32 then
-				l_str := a_str.as_string_32
+			if attached {STRING_32} a_str as l_str then
 				from
 					i := 1
 					nb := l_str.count
@@ -305,8 +337,8 @@ feature -- String
 				if i > 1 then
 					l_str.keep_tail (nb - i + 1)
 				end
-			else
-				a_str.as_string_8.left_adjust
+			elseif attached {STRING_8} a_str as l_str_8 then
+				l_str_8.left_adjust
 			end
 		end
 
@@ -317,10 +349,8 @@ feature -- String
 			a_str_not_void: a_str /= Void
 		local
 			i, nb: INTEGER_32
-			l_str: STRING_32
 		do
-			if a_str.is_string_32 then
-				l_str := a_str.as_string_32
+			if attached {STRING_32} a_str as l_str then
 				from
 					nb := l_str.count
 					i := nb
@@ -332,34 +362,64 @@ feature -- String
 				if i < nb then
 					l_str.keep_head (i)
 				end
-			else
-				a_str.as_string_8.right_adjust
+			elseif attached {STRING_8} a_str as l_str_8 then
+				l_str_8.right_adjust
 			end
 		end
 
 	is_string_general_lower (a_str: STRING_GENERAL): BOOLEAN
 			-- Is `a_str' in lower case?
+			-- |FIXME: For the moment, only ANSII code are concerned.
+		require
+			a_str_not_void: a_str /= Void
 		local
-			l_str: STRING
+			i, nb: INTEGER_32
 		do
-			if a_str.is_valid_as_string_8 then
-				l_str := a_str.as_string_8
-				Result := l_str.as_lower.is_equal (l_str)
-			else
+			if attached {STRING_32} a_str as l_str then
 				Result := True
+				from
+					i := 1
+					nb := l_str.count
+				until
+					i > nb or not Result
+				loop
+					if l_str.item (i).code <= {CHARACTER_8}.max_value and then
+						l_str.item (i).to_character_8.as_lower /= l_str.item (i).to_character_8
+					then
+						Result := False
+					end
+					i := i + 1
+				end
+			elseif attached {STRING_8} a_str as l_str then
+				Result := l_str.as_upper.is_equal (l_str)
 			end
 		end
 
 	is_string_general_upper (a_str: STRING_GENERAL): BOOLEAN
 			-- Is `a_str' in upper case?
+			-- |FIXME: For the moment, only ANSII code are concerned.
+		require
+			a_str_not_void: a_str /= Void
 		local
-			l_str: STRING
+			i, nb: INTEGER_32
 		do
-			if a_str.is_valid_as_string_8 then
-				l_str := a_str.as_string_8
-				Result := l_str.as_upper.is_equal (l_str)
-			else
+			if attached {STRING_32} a_str as l_str then
 				Result := True
+				from
+					i := 1
+					nb := l_str.count
+				until
+					i > nb or not Result
+				loop
+					if l_str.item (i).code <= {CHARACTER_8}.max_value and then
+						l_str.item (i).to_character_8.as_upper /= l_str.item (i).to_character_8
+					then
+						Result := False
+					end
+					i := i + 1
+				end
+			elseif attached {STRING_8} a_str as l_str then
+				Result := l_str.as_upper.is_equal (l_str)
 			end
 		end
 

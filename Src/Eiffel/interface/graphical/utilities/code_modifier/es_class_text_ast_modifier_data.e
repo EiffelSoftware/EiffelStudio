@@ -82,7 +82,7 @@ feature -- Basic operations
 			check l_options_attached: l_options /= Void end
 
 			l_wrapper := eiffel_parser_wrapper
-			l_wrapper.parse_with_option (l_parser, text, l_options, True, l_current_class)
+			l_wrapper.parse_with_option_32 (l_parser, text, l_options, True, l_current_class)
 			if not l_wrapper.has_error then
 				ast ?= l_wrapper.ast_node
 				check ast_attached: ast /= Void end
@@ -111,7 +111,7 @@ invariant
 	ast_match_list_attached: is_ast_available implies attached ast_match_list
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

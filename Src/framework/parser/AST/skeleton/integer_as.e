@@ -58,6 +58,7 @@ feature {NONE} -- Initialization
 			-- Create a new INTEGER AST node.
 			-- Set `is_initialized' to true if the string denotes a value that is
 			-- within allowed integer bounds. Otherwise set `is_iniialized' to false.
+			-- It is fine to use STRING, since `s' as integer mush be ascii compatible.
 		require
 --			valid_type: a_type /= Void implies (a_type.actual_type.is_integer or a_type.actual_type.is_natural)
 			s_not_void: s /= Void
@@ -74,6 +75,7 @@ feature {NONE} -- Initialization
 			-- and given `sign'.
 			-- Set `is_initialized' to true if the string denotes a value that is
 			-- within allowed integer bounds. Otherwise set `is_initialized' to false.
+			-- It is fine to use STRING, since `s' as integer mush be ascii compatible.
 		require
 --			valid_type: a_type /= Void implies (a_type.actual_type.is_integer or a_type.actual_type.is_natural)
 			valid_sign: ("%U+-").has (sign)
@@ -94,6 +96,7 @@ feature {NONE} -- Initialization
 			-- and given `sign'.
 			-- Set `is_initialized' to true if the string denotes a value that is
 			-- within allowed integer bounds. Otherwise set `is_initialized' to false.
+			-- It is fine to use STRING, since `s' as integer mush be ascii compatible.
 		require
 --			valid_type: a_type /= Void implies (a_type.actual_type.is_integer or a_type.actual_type.is_natural)
 			valid_sign: ("%U+-").has (sign)
@@ -114,6 +117,7 @@ feature {NONE} -- Initialization
 			-- and given `sign'.
 			-- Set `is_initialized' to true if the string denotes a value that is
 			-- within allowed integer bounds. Otherwise set `is_initialized' to false.
+			-- It is fine to use STRING, since `s' as integer mush be ascii compatible.
 		require
 --			valid_type: a_type /= Void implies (a_type.actual_type.is_integer or a_type.actual_type.is_natural)
 			valid_sign: ("%U+-").has (sign)
@@ -177,6 +181,8 @@ feature -- Roundtrip/Text
 
 	number_text (a_match_list: LEAF_AS_LIST): STRING
 			-- Text of the number part (not including `constant_type' and `sign_symbol')
+			-- It is fine to export STRING, since `s' as integer mush be ascii compatible.
+			-- It can be safely converted to STRING_32 directly.
 		require
 			a_match_list_attached: a_match_list /= Void
 		do
@@ -316,7 +322,7 @@ feature -- Comparison
 				types = other.types
 		end
 
-feature -- Output
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Output
 
 	string_value: STRING
 			-- String representation of manifest constant.
@@ -700,7 +706,7 @@ invariant
 	non_negative_natural: (has_natural (8) or has_natural (16) or has_natural (32) or has_natural (64)) implies not has_minus
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -713,22 +719,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

@@ -142,6 +142,53 @@ rt_public uint32 egc_str_hash_offset;
 #endif
 
 /*
+doc:	<attribute name="egc_str32make" return_type="fnptr" export="public">
+doc:		<summary>Address of Eiffel routine STRING_32.make to create Eiffel strings from C.</summary>
+doc:		<thread_safety>Safe as initialized once at the very beginning of an execution.</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<eiffel_classes>STRING_32</eiffel_classes>
+doc:	</attribute>
+*/
+#ifdef WORKBENCH
+rt_public void (*egc_str32make)(EIF_REFERENCE, EIF_TYPED_VALUE);
+#else
+rt_public void (*egc_str32make)(EIF_REFERENCE, EIF_INTEGER);
+#endif
+
+#ifdef WORKBENCH
+/*
+doc:	<attribute name="egc_str32set" return_type="fnptr" export="public">
+doc:		<summary>Address of Eiffel routine STRING_32.set_count to set count of Eiffel strings. Only used in workbench mode as computing the offset is not an easy task as the value might change often (especially when melting STRING_32 class).</summary>
+doc:		<thread_safety>Safe as initialized once at the very beginning of an execution.</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<eiffel_classes>STRING_32</eiffel_classes>
+doc:	</attribute>
+*/
+rt_public void (*egc_str32set)(EIF_REFERENCE, EIF_TYPED_VALUE);
+#else
+
+/*
+doc:	<attribute name="egc_str32_count_offset" return_type="uint32" export="public">
+doc:		<summary>Offset to `count' attribute from top of STRING_32 object. Used to set count of newly created manifest Eiffel strings. Only used in final mode for efficient setting.</summary>
+doc:		<thread_safety>Safe as initialized once at the very beginning of an execution.</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<eiffel_classes>STRING_32</eiffel_classes>
+doc:	</attribute>
+*/
+rt_public uint32 egc_str32_count_offset; 
+
+/*
+doc:	<attribute name="egc_str32_hash_offset" return_type="uint32" export="public">
+doc:		<summary>Offset to `internal_hash_code' attribute from top pf STRING_32 object. Used to set a precomputed hash code of newly created manifest Eiffel strings. Only used in final mode for efficient setting.</summary>
+doc:		<thread_safety>Safe as initialized once at the very beginning of an execution.</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<eiffel_classes>STRING_32</eiffel_classes>
+doc:	</attribute>
+*/
+rt_public uint32 egc_str32_hash_offset; 
+#endif
+
+/*
 doc:	<attribute name="egc_arrmake" return_type="fnptr" export="public">
 doc:		<summary>Address of Eiffel routine ARRAY.make to create Eiffel arrays of ANY from C used for command line arguments.</summary>
 doc:		<thread_safety>Safe as initialized once at the very beginning of an execution.</thread_safety>
@@ -315,6 +362,7 @@ rt_public int egc_has_ieee_semantic = 0;
 
 
 rt_public EIF_TYPE_INDEX egc_str_dtype;
+rt_public EIF_TYPE_INDEX egc_str32_dtype;
 rt_public EIF_TYPE_INDEX egc_arr_dtype;
 rt_public EIF_TYPE_INDEX egc_tup_dtype;
 rt_public int32 egc_disp_rout_id;

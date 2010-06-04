@@ -54,7 +54,7 @@ feature -- Access
 	target: CONF_TARGET
 			-- Target we are representing
 
-	stone_signature: STRING
+	stone_signature: STRING_32
 			-- Short string to describe Current
 			-- (basically the name of the stoned object).
 		do
@@ -110,7 +110,7 @@ feature -- Status report
 			-- Used by metric tool
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

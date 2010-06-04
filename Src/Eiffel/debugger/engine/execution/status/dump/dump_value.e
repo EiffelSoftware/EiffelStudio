@@ -48,6 +48,8 @@ inherit
 			{NONE} all
 		end
 
+	INTERNAL_COMPILER_STRING_EXPORTER
+
 create {DUMP_VALUE_FACTORY}
 	make_empty
 
@@ -546,10 +548,11 @@ feature {DUMP_VALUE} -- string_representation Implementation
 							--| Take name of `area' and `count' from STRING or STRING_32 in descendant version.
 							--| since STRING.area and STRING_32.area are not inherited from STRING_GENERAL
 							--| we have to test the 2 cases : STRING and STRING_32
+							--| FIXME: Handle Uniocode
 						f := sc.feature_with_name (area_name).ancestor_version (dynamic_class)
-						l_area_name := f.name
+						l_area_name := f.name_32.as_string_8
 						f := sc.feature_with_name (count_name).ancestor_version (dynamic_class)
-						l_count_name := f.name
+						l_count_name := f.name_32.as_string_8
 					end
 				end
 			end

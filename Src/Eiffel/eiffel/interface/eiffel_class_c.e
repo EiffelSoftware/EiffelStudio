@@ -314,7 +314,7 @@ feature -- Action
 				end
 				parser.set_is_ignoring_attachment_marks (lace_class.is_void_unsafe)
 				Inst_context.set_group (cluster)
-				parser.parse_class (file, Current)
+				parser.parse_class (Current)
 				if l_error_level = error_handler.error_level then
 					Result := parser.root_node
 					check no_error_implies_not_void: Result /= Void end
@@ -2081,6 +2081,8 @@ feature -- Inline agents
 				Result.enclosing_body_id = a_enclosing_body_id and
 				Result.inline_agent_nr = a_inline_agent_nr
 		end
+
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Inline agents
 
 	api_inline_agent_of_name (n: STRING): E_FEATURE
 			-- API feature for the inline agent named by `n'

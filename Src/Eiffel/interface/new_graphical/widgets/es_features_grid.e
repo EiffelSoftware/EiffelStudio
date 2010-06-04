@@ -220,7 +220,7 @@ feature -- Basic operations
 			l_window.set_feature_locating (False)
 		end
 
-	navigate_to_feature_by_name (a_feature: STRING)
+	navigate_to_feature_by_name (a_feature: STRING_32)
 			-- Navigates to a feature in using a default view.
 			--
 			-- `a_feature': A feature name used to navigate to a feature.
@@ -258,8 +258,7 @@ feature -- Basic operations
 		require
 			a_ast_attached: a_ast /= Void
 		local
-			l_text: STRING_32
-			l_line, l_pos: INTEGER
+			l_line: INTEGER
 			l_window: EB_DEVELOPMENT_WINDOW
 		do
 			check
@@ -267,22 +266,11 @@ feature -- Basic operations
 			end
 			l_window := features_tool.develop_window
 			if attached l_window.editors_manager.current_editor as l_editor then
-				if attached last_class as l_class then
-					l_text := l_class.text
-				end
-				if l_text = Void then
-					l_text := l_editor.wide_text
-				end
-
-				if l_text /= Void and then attached {EB_BASIC_TEXT_FORMATTER} l_window.pos_container as l_formatter then
+				if attached {EB_BASIC_TEXT_FORMATTER} l_window.pos_container as l_formatter then
 						-- Ensure we are in edit mode in the editor.
 
 						-- Fetch line number
-					l_pos := a_ast.start_position
-					if l_pos <= l_text.count then
-						l_text := l_text.substring (1, l_pos)
-					end
-					l_line := l_text.occurrences ('%N')
+					l_line := a_ast.start_location.line
 
 					if not a_focus then
 						l_editor.display_line_at_top_when_ready  (l_line, 0)
@@ -409,7 +397,7 @@ feature -- Tree construction
 			a_class_attached: a_class /= Void
 		local
 			l_row: EV_GRID_ROW
-			cname: STRING
+			cname: STRING_32
 			name: STRING_GENERAL
 			expand_tree: BOOLEAN
 			retried: BOOLEAN
@@ -448,8 +436,10 @@ feature -- Tree construction
 					else
 						l_comments := fcl.item.comment (l_match_list)
 						if l_comments /= Void and then not l_comments.is_empty then
-							cname := l_comments.first.content.twin
-							cname.right_adjust
+							cname := l_comments.first.content_32
+							if cname.is_valid_as_string_8 then
+								cname.right_adjust
+							end
 							name := cname
 						end
 						if name = Void or else name.is_empty then
@@ -485,8 +475,8 @@ feature -- Tree construction
 			a_class_not_void: a_class /= Void
 		local
 			l_row: EV_GRID_ROW
-			cname: STRING
-			name: STRING_GENERAL
+			cname: STRING_32
+			name: STRING_32
 			expand_tree: BOOLEAN
 			retried: BOOLEAN
 			l_dev_win: EB_DEVELOPMENT_WINDOW
@@ -514,10 +504,10 @@ feature -- Tree construction
 					until
 						l_clauses.after
 					loop
-						cname := l_clauses.item.name
+						cname := l_clauses.item.name_32
 						if cname /= Void then
 							cname := cname.twin
-							cname.right_adjust
+							string_general_left_adjust (cname)
 							name := cname
 						end
 						if name = Void or else name.is_empty then
@@ -550,20 +540,20 @@ feature -- Tree construction
 
 feature {NONE} -- Implementation
 
-	feature_name (a_ef: E_FEATURE): STRING
+	feature_name (a_ef: E_FEATURE): STRING_32
 			-- Feature name of `a_ef' depending of the signature displayed or not.
 		require
 			a_ef_not_void: a_ef /= Void
 		local
-			alias_name: STRING
-			assigner_name: STRING
+			alias_name: STRING_32
+			assigner_name: STRING_32
 		do
-			Result := a_ef.name.twin
+			Result := a_ef.name_32.twin
 			if is_alias_enabled and then not a_ef.is_prefix and then not a_ef.is_infix then
-				alias_name := a_ef.alias_name
+				alias_name := a_ef.alias_name_32
 				if alias_name /= Void then
 					Result.append_string (" alias %"")
-					Result.append_string (eiffel_string (extract_alias_name (alias_name)))
+					Result.append_string (eiffel_string_32 (a_ef.alias_symbol_32))
 					Result.append_character ('%"')
 				end
 			end
@@ -574,7 +564,7 @@ feature {NONE} -- Implementation
 				end
 			end
 			if is_assigner_enabled then
-				assigner_name := a_ef.assigner_name
+				assigner_name := a_ef.assigner_name_32
 				if assigner_name /= Void then
 					Result.append_string (" assign ")
 					Result.append_string (assigner_name)
@@ -740,7 +730,8 @@ feature {NONE} -- Event handler
 		local
 			pix: EV_PIXMAP
 			l_parent: PARENT_AS
-			l_parent_cname, l_parent_text: STRING
+			l_parent_cname: STRING
+			l_parent_text: STRING_32
 			l_parent_class_i: detachable CLASS_I
 			l_row: like extended_new_row
 		do
@@ -754,9 +745,13 @@ feature {NONE} -- Event handler
 				a_parent_list.after
 			loop
 				l_parent := a_parent_list.item
-				l_parent_text := l_parent.type.text (a_match_list)
+				l_parent_text := l_parent.type.text_32 (a_match_list)
+				if attached l_parent.type.generics as l_gen then
+					l_parent_text.append_character (' ')
+					l_parent_text.append_string (l_gen.text_32 (a_match_list))
+				end
 
-				l_parent_cname := l_parent.type.class_name.text (a_match_list)
+				l_parent_cname := l_parent.type.class_name.text_32 (a_match_list).as_string_8 -- Class name is ASCII compatible.
 				if Workbench.universe_defined then
 					l_parent_class_i := universe.class_named (l_parent_cname, a_class.group)
 				end
@@ -770,7 +765,7 @@ feature {NONE} -- Event handler
 			result_attached: Result /= Void
 		end
 
-	extended_parent_item_subrow (a_row: EV_GRID_ROW; a_parent: PARENT_AS; a_parent_class_i: detachable CLASS_I; s: STRING; a_class: CLASS_C): EV_GRID_ROW
+	extended_parent_item_subrow (a_row: EV_GRID_ROW; a_parent: PARENT_AS; a_parent_class_i: detachable CLASS_I; s: STRING_GENERAL; a_class: CLASS_C): EV_GRID_ROW
 			-- Build the grid row corresponding to inherit clause
 		require
 			a_parent_attached: a_parent /= Void
@@ -800,8 +795,8 @@ feature {NONE} -- Event handler
 			ef: E_FEATURE
 			fa: FEATURE_AS
 			f_names: EIFFEL_LIST [FEATURE_NAME]
-			f_item_name: STRING
-			l_first_item_name: STRING
+			f_item_name: STRING_32
+			l_first_item_name: STRING_32
 			l_external: BOOLEAN
 			l_export_status: EXPORT_I
 			pix: EV_PIXMAP
@@ -837,12 +832,12 @@ feature {NONE} -- Event handler
 					until
 						f_names.after
 					loop
-						f_item_name := f_names.item.internal_name.name
+						f_item_name := f_names.item.internal_name.name_32
 						if l_first_item_name = Void then
 							l_first_item_name := f_item_name
 						end
 						if a_class.has_feature_table then
-							ef := a_class.feature_with_name (f_item_name)
+							ef := a_class.feature_with_name_id (f_names.item.internal_name.name_id)
 							if ef /= Void and then ef.written_in /= a_class.class_id then
 								ef := Void
 							end
@@ -892,15 +887,15 @@ feature {NONE} -- Event handler
 				else
 					if is_clickable then
 						if a_class.has_feature_table then
-							ef := a_class.feature_with_name (
+							ef := a_class.feature_with_name_32 (
 								fl.item.eiffel_name)
 							if ef = Void then
 									-- Check for infix feature
-								ef := a_class.feature_with_name (
+								ef := a_class.feature_with_name_32 (
 									"infix %"" + fl.item.eiffel_name + "%"")
 								if ef = Void then
 										-- Check for prefix feature
-									ef := a_class.feature_with_name (
+									ef := a_class.feature_with_name_32 (
 										"prefix %"" + fl.item.eiffel_name + "%"")
 								end
 							end
@@ -1051,7 +1046,7 @@ feature {NONE} -- Tree item factory
 			a_row.set_item (1, i)
 		end
 
-	add_tree_item_for_feature_name (a_row: EV_GRID_ROW; ffn: STRING; a_text: STRING_GENERAL; pix: EV_PIXMAP)
+	add_tree_item_for_feature_name (a_row: EV_GRID_ROW; ffn: STRING_32; a_text: STRING_GENERAL; pix: EV_PIXMAP)
 		local
 			lab: EV_GRID_LABEL_ITEM
 		do

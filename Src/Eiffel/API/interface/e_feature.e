@@ -45,6 +45,11 @@ inherit
 			is_equal
 		end
 
+	INTERNAL_COMPILER_STRING_EXPORTER
+		undefine
+			is_equal
+		end
+
 feature -- Initialization
 
 	make (n: like name_id; a: like alias_name; c: like has_convert_mark; i: INTEGER)
@@ -83,14 +88,27 @@ feature -- Properties
 	name_id: INTEGER
 			-- Name id in the names heap.
 
-	name: STRING
+	name_32: STRING_32
 			-- Final name of the feature
+			-- UTF-32 encoding
 		do
-			Result := names_heap.item (name_id)
+			Result := encoding_converter.utf8_to_utf32 (names_heap.item (name_id))
 		end
 
-	alias_name: STRING
+	name_8: STRING_8
+			-- Final name of the feature
+			-- UTF-8 encoding
+		do
+			Result := name
+		end
+
+	alias_name_32: STRING_32
 			-- Alias name of the feature (if any)
+		do
+			if alias_name /= Void then
+				Result := encoding_converter.utf8_to_utf32 (alias_name)
+			end
+		end
 
 	has_convert_mark: BOOLEAN
 			-- Is convert mark specified for an operator alias?
@@ -101,10 +119,12 @@ feature -- Properties
 			Result := alias_name /= Void
 		end
 
-	assigner_name: STRING
+	assigner_name_32: STRING_32
 			-- Name of the assigner procedure (if any)
 		do
-				-- Void by default
+			if attached assigner_name as l_name then
+				Result := encoding_converter.utf8_to_utf32 (l_name)
+			end
 		end
 
 	feature_id: INTEGER;
@@ -142,9 +162,14 @@ feature -- Properties
 	is_prefix: BOOLEAN;
 			-- Is feature a prefixed one ?
 
-	obsolete_message: STRING;
+	obsolete_message_32: STRING_32
 			-- Obsolete message
 			-- (Void if Current is not obsolete)
+		do
+			if attached obsolete_message as l_m then
+				Result := encoding_converter.utf8_to_utf32 (l_m)
+			end
+		end
 
 	is_procedure: BOOLEAN
 			-- Is current feature a procedure ?
@@ -324,6 +349,27 @@ feature -- Properties
 		do
 		end
 
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Properties
+
+	name: STRING
+			-- Final name of the feature
+		do
+			Result := names_heap.item (name_id)
+		end
+
+	assigner_name: STRING
+			-- Name of the assigner procedure (if any)
+		do
+				-- Void by default
+		end
+
+	obsolete_message: STRING;
+			-- Obsolete message
+			-- (Void if Current is not obsolete)
+
+	alias_name: STRING
+			-- Alias name of the feature (if any)
+
 feature -- Access
 
 	written_feature: E_FEATURE
@@ -445,8 +491,8 @@ feature -- Access
 		end
 
 	text (a_text_formatter: TEXT_FORMATTER): BOOLEAN
-			-- Text of the feature.
-			-- Void if unreadable file
+			-- Process text of the feature.
+			-- True if successfully proceed.
 		local
 			class_text: STRING;
 			start_position, end_position: INTEGER;
@@ -591,6 +637,166 @@ feature -- Access
 			Result := name_id
 		end;
 
+	callees_32 (a_flag: NATURAL_16): LINKED_LIST [TUPLE [class_c: CLASS_C; feature_name: STRING_32]]
+			-- Callees of feature in `associated_class'
+			-- from client class `su_class'.
+		require
+			valid_flags: a_flag = 0 or
+				a_flag = {DEPEND_UNIT}.is_in_assignment_flag or
+				a_flag = {DEPEND_UNIT}.is_in_check_flag or
+				a_flag = {DEPEND_UNIT}.is_in_creation_flag or
+				a_flag = {DEPEND_UNIT}.is_in_ensure_flag or
+				a_flag = {DEPEND_UNIT}.is_in_invariant_flag or
+				a_flag = {DEPEND_UNIT}.is_in_require_flag
+		local
+			dep: CLASS_DEPENDANCE
+			fdep: detachable FEATURE_DEPENDANCE
+			l_depend_unit: DEPEND_UNIT
+			l_system: like eiffel_system
+			l_class_c: CLASS_C
+			l_e_feature: E_FEATURE
+		do
+			create Result.make
+			l_system := eiffel_system
+			if Depend_server.has (written_class.class_id) then
+				dep := Depend_server.item (written_class.class_id)
+				fdep := dep.item (body_index)
+					-- It is possible detached when compilation is not finished. See bug#11409.
+				if fdep /= Void then
+					from
+						fdep.start
+					until
+						fdep.after
+					loop
+						l_depend_unit := fdep.item
+						if l_depend_unit.rout_id /= 0 then
+							if a_flag = 0 or else l_depend_unit.internal_flags.bit_xor (a_flag) = 0 then
+								l_class_c := l_system.class_of_id (l_depend_unit.class_id)
+								if l_class_c /= Void then
+									l_e_feature := l_class_c.feature_with_rout_id (l_depend_unit.rout_id)
+										-- We ignore inline agents because what they called are already
+										-- propagated to the enclosing feature.
+									if l_e_feature /= Void and then not l_e_feature.is_inline_agent then
+										Result.extend ([l_class_c, l_e_feature.name_32])
+									end
+								end
+							end
+						end
+						fdep.forth
+					end
+				end
+			end
+			if Result.is_empty then
+				Result := Void
+			end
+		ensure
+			valid_result: Result /= Void implies not Result.is_empty
+		end
+
+	callers_32 (cl_class: CLASS_C; a_flag: NATURAL_16): SORTED_TWO_WAY_LIST [STRING_32]
+			-- Callers for feature from `associated_class'
+			-- to client class `cl_class'
+		require
+			valid_cl_class: associated_class.clients.has (cl_class)
+			valid_flags: a_flag = 0 or
+				a_flag = {DEPEND_UNIT}.is_in_assignment_flag or
+				a_flag = {DEPEND_UNIT}.is_in_check_flag or
+				a_flag = {DEPEND_UNIT}.is_in_creation_flag or
+				a_flag = {DEPEND_UNIT}.is_in_ensure_flag or
+				a_flag = {DEPEND_UNIT}.is_in_invariant_flag or
+				a_flag = {DEPEND_UNIT}.is_in_require_flag
+		local
+			dep: CLASS_DEPENDANCE;
+			fdep: FEATURE_DEPENDANCE;
+			current_d, l_depend_unit: DEPEND_UNIT;
+			l_found: BOOLEAN
+		do
+			create Result.make
+			dep := Depend_server.item (cl_class.class_id)
+				-- No need to set the `flags' here since we do an explicit comparison.
+			create current_d.make (associated_class.class_id,associated_feature_i)
+			from
+				-- Loop through the features of each client
+				-- of current_class.
+				dep.start
+			until
+				dep.after
+			loop
+				fdep := dep.item_for_iteration
+				from
+					l_found := False
+					fdep.start
+				until
+					l_found or fdep.after
+				loop
+					l_depend_unit := fdep.item
+					l_found := l_depend_unit.same_as (current_d) and then
+						l_depend_unit.internal_flags & a_flag = a_flag
+					fdep.forth
+				end
+				if l_found then
+					Result.put_front (fdep.feature_name_32)
+				end
+				dep.forth
+			end
+			if Result.is_empty then
+				Result := Void
+			else
+				Result.sort
+			end
+		ensure
+			valid_result: Result /= Void implies not Result.is_empty
+					and then Result.sorted
+		end
+
+	updated_version: E_FEATURE
+			-- Updated version of feature after a compilation
+			-- (First it checks if the `associated_class' is valid and
+			-- retrieves the feature using `name' from the
+			-- `associated_class' feature table)
+		local
+			class_c: CLASS_C
+		do
+				--| We try first to get the class on which the feature was previously
+				--| defined. In the case, where the class has been removed from the
+				--| system, there is no `associated_class' and we should no go any
+				--| further.
+			class_c := associated_class
+			if
+				class_c /= Void and then class_c.is_valid
+				and then class_c.has_feature_table
+			then
+				Result := class_c.feature_with_name (name)
+			end
+		end
+
+	number_of_breakpoint_slots: INTEGER
+			-- Number of breakpoint slots in the feature (:::)
+			-- It includes the pre/postcondition (inner & herited)
+			-- and the rescue clause.
+		local
+			f: FEATURE_I
+		do
+			f := associated_feature_i
+			if f /= Void then
+				Result := f.number_of_breakpoint_slots
+			end
+		end
+
+	first_breakpoint_slot_index: INTEGER
+			-- Index of the first breakpoin-slot of the body
+			-- Take into account inherited and inner assertions
+		local
+			f: FEATURE_I
+		do
+			f := associated_feature_i
+			if f /= Void then
+				Result := f.first_breakpoint_slot_index
+			end
+		end
+
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
+
 	callees (a_flag: NATURAL_16): LINKED_LIST [TUPLE [class_c: CLASS_C; feature_name: STRING]]
 			-- Callees of feature in `associated_class'
 			-- from client class `su_class'.
@@ -703,52 +909,6 @@ feature -- Access
 					and then Result.sorted
 		end
 
-	updated_version: E_FEATURE
-			-- Updated version of feature after a compilation
-			-- (First it checks if the `associated_class' is valid and
-			-- retrieves the feature using `name' from the
-			-- `associated_class' feature table)
-		local
-			class_c: CLASS_C
-		do
-				--| We try first to get the class on which the feature was previously
-				--| defined. In the case, where the class has been removed from the
-				--| system, there is no `associated_class' and we should no go any
-				--| further.
-			class_c := associated_class
-			if
-				class_c /= Void and then class_c.is_valid
-				and then class_c.has_feature_table
-			then
-				Result := class_c.feature_with_name (name)
-			end
-		end
-
-	number_of_breakpoint_slots: INTEGER
-			-- Number of breakpoint slots in the feature (:::)
-			-- It includes the pre/postcondition (inner & herited)
-			-- and the rescue clause.
-		local
-			f: FEATURE_I
-		do
-			f := associated_feature_i
-			if f /= Void then
-				Result := f.number_of_breakpoint_slots
-			end
-		end
-
-	first_breakpoint_slot_index: INTEGER
-			-- Index of the first breakpoin-slot of the body
-			-- Take into account inherited and inner assertions
-		local
-			f: FEATURE_I
-		do
-			f := associated_feature_i
-			if f /= Void then
-				Result := f.first_breakpoint_slot_index
-			end
-		end
-
 feature -- Comparison
 
 	is_less alias "<" (other: like Current): BOOLEAN
@@ -855,20 +1015,20 @@ feature -- Output
 				a_text_formatter.process_keyword_text (Ti_infix_keyword, Void)
 				a_text_formatter.add_space
 				a_text_formatter.process_symbol_text (Ti_double_quote)
-				a_text_formatter.process_operator_text (extract_symbol_from_infix (name), Current)
+				a_text_formatter.process_operator_text (extract_symbol_from_infix_32 (name_32), Current)
 				a_text_formatter.process_symbol_text (Ti_double_quote)
 			elseif is_prefix then
 				a_text_formatter.process_keyword_text (Ti_prefix_keyword, Void)
 				a_text_formatter.add_space
 				a_text_formatter.process_symbol_text (Ti_double_quote)
-				a_text_formatter.process_operator_text (extract_symbol_from_prefix (name), Current)
+				a_text_formatter.process_operator_text (extract_symbol_from_prefix_32 (name_32), Current)
 				a_text_formatter.process_symbol_text (Ti_double_quote)
 			else
 				l_name := name.as_lower
 				if is_once or else is_constant then
 					l_name.put ((l_name @ 1).upper, 1)
 				end
-				a_text_formatter.add_feature (Current, l_name)
+				a_text_formatter.add_feature (Current, encoding_converter.utf8_to_utf32 (l_name))
 			end
 		end
 
@@ -878,17 +1038,17 @@ feature -- Output
 		require
 			valid_st: a_text_formatter /= Void
 		local
-			a: like alias_name
+			a: like alias_name_32
 		do
 			append_name (a_text_formatter)
 			if not is_infix and then not is_prefix then
-				a := alias_name
+				a := alias_name_32
 				if a /= Void then
 					a_text_formatter.add_space
 					a_text_formatter.process_keyword_text (Ti_alias_keyword, Void)
 					a_text_formatter.add_space
 					a_text_formatter.process_symbol_text (Ti_double_quote)
-					a_text_formatter.process_operator_text (extract_alias_name (a), Current)
+					a_text_formatter.process_operator_text (extract_alias_name_32 (a), Current)
 					a_text_formatter.process_symbol_text (Ti_double_quote)
 				end
 			end
@@ -897,6 +1057,37 @@ feature -- Output
 				a_text_formatter.process_keyword_text (ti_convert_keyword, Void)
 			end
 		end
+
+	infix_symbol_32 : STRING_32
+			--
+		require
+			is_infix: is_infix
+		do
+			Result := encoding_converter.utf8_to_utf32 (extract_symbol_from_infix (name))
+		ensure
+			infix_symbol_not_void: Result /= Void
+		end
+
+	prefix_symbol_32 : STRING_32
+			--
+		require
+			is_infix: is_prefix
+		do
+			Result := encoding_converter.utf8_to_utf32 (extract_symbol_from_prefix (name))
+		ensure
+			prefix_symbol_not_void: Result /= Void
+		end
+
+	alias_symbol_32: STRING_32
+		require
+			is_alias: has_alias_name
+		do
+			Result := encoding_converter.utf8_to_utf32 (extract_alias_name (alias_name))
+		ensure
+			alias_symbol_not_void: Result /= Void
+		end
+
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Output
 
 	infix_symbol : STRING
 			--
@@ -929,12 +1120,12 @@ feature -- Output
 
 feature -- Output
 
-	feature_signature: STRING
+	feature_signature_32: STRING_32
 			-- Signature of Current feature
 		do
-			create Result.make (50)
-			Result.append (name)
-			append_arguments_to (Result)
+			if attached feature_signature as l_s then
+				Result := encoding_converter.utf8_to_utf32 (l_s)
+			end
 		end
 
 	append_arguments_to (s: STRING)
@@ -977,6 +1168,16 @@ feature -- Output
 					not is_constant and then not is_deferred and then not is_unique)
 			end
 		end;
+
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Output
+
+	feature_signature: STRING
+			-- Signature of Current feature
+		do
+			create Result.make (50)
+			Result.append (name)
+			append_arguments_to (Result)
+		end
 
 feature -- Implementation
 

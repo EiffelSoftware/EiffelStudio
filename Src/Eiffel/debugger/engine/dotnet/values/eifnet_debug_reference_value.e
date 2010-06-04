@@ -31,6 +31,11 @@ inherit
 			is_equal
 		end
 
+	INTERNAL_COMPILER_STRING_EXPORTER
+		undefine
+			is_equal
+		end
+
 create {RECV_VALUE, ATTR_REQUEST,CALL_STACK_ELEMENT, DEBUG_VALUE_EXPORTER}
 	make
 
@@ -221,7 +226,7 @@ feature {APPLICATION_EXECUTION} -- Query
 				if l_icd_class /= Void then
 					cl := dynamic_class
 					if cl /= Void then
-						if (attached cl.feature_named (att_name) as f) and then f.is_attribute then
+						if (attached cl.feature_named_32 (att_name) as f) and then f.is_attribute then
 							Result := attribute_value (object_value, l_icd_class, f)
 						end
 					end
@@ -389,25 +394,26 @@ feature -- Once request
 				else
 					l_once_data := l_eifnet_debugger.once_function_data (l_icd_frame, l_class_c, a_feat.associated_feature_i)
 				end
+					--|FIXME: Handle Unicode
 				if l_once_data /= Void then
 					if not l_once_data.called then
-						Result := error_value (a_feat.name , "Not yet called")
+						Result := error_value (a_feat.name_32.as_string_8 , "Not yet called")
 					elseif l_once_data.exc /= Void then
-						Result := exception_value (a_feat.name , "Exception occurred", debug_value_from_icdv (l_once_data.exc, Void))
+						Result := exception_value (a_feat.name_32.as_string_8, "Exception occurred", debug_value_from_icdv (l_once_data.exc, Void))
 					else
 						if l_once_data.res /= Void then
 							Result := debug_value_from_icdv (l_once_data.res, a_feat.type.associated_class)
-							Result.set_name (a_feat.name)
+							Result.set_name (a_feat.name_32.as_string_8)
 						end
 					end
 				else
-					Result := error_value (a_feat.name , "Could not retrieve information")
+					Result := error_value (a_feat.name_32.as_string_8 , "Could not retrieve information")
 				end
 			end
 
 			debug ("DEBUGGER_TRACE")
 				print ("- " + a_feat.written_class.name_in_upper + " ")
-				print (">>" + a_feat.name + " Result /= Void =? " + (Result /= Void).out + "%N")
+				print (">>" + a_feat.name_32.as_string_8 + " Result /= Void =? " + (Result /= Void).out + "%N")
 			end
 		end
 

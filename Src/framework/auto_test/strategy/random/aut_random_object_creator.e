@@ -210,7 +210,7 @@ feature {NONE} -- Steps
 			count := l_exported_creators.count
 			random.forth
 			i := (random.item  \\ count) + 1
-			creation_procedure := class_.feature_named (l_exported_creators.i_th (i))
+			creation_procedure := class_.feature_named_32 (l_exported_creators.i_th (i))
 		ensure
 			has_creation_procedure: creation_procedure /= Void
 		end
@@ -820,7 +820,7 @@ invariant
 	receiver_defined: receiver /= Void implies interpreter.variable_table.is_variable_defined (receiver)
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

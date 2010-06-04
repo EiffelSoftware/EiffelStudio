@@ -54,6 +54,8 @@ inherit
 			{NONE} all
 		end
 
+	INTERNAL_COMPILER_STRING_EXPORTER
+
 create {EIFFEL_CALL_STACK}
 	make
 create {STOPPED_HDLR, APPLICATION_EXECUTION_CLASSIC, APPLICATION_STATUS_CLASSIC}
@@ -107,7 +109,8 @@ feature {NONE} -- Initialization
 		do
 			if fe /= Void then
 				private_routine := fe
-				routine_name := fe.name
+					-- |FIXME: Handle Unicode.
+				routine_name := fe.name_32.as_string_8
 			else
 				routine_name := "Unknown..."
 			end

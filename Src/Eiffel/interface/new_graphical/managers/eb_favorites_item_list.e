@@ -23,26 +23,32 @@ inherit
 			wipe_out
 		end
 
+	SHARED_LOCALE
+		undefine
+			is_equal,
+			copy
+		end
+
 feature -- Access
 
 	parent: EB_FAVORITES_ITEM_LIST
 			-- Parent for Current
 		deferred
 		end
-	
-	name: STRING
+
+	name: STRING_32
 			-- Name for Current.
 		deferred
 		end
 
-	initialize_with_string (a_string: STRING): STRING
+	initialize_with_string (a_string: STRING_32): STRING_32
 			-- [Re]Initialize the favorites from `a_string'.
 		local
-			analyzed_string: STRING
+			analyzed_string: STRING_32
 			index_next_semicolon: INTEGER
 			index_next_bracket: INTEGER
 			index_next_end_bracket: INTEGER
-			item_name: STRING
+			item_name: STRING_32
 			favorites_class: EB_FAVORITES_CLASS
 			min_index: INTEGER
 			favorites_folder: EB_FAVORITES_FOLDER
@@ -71,7 +77,7 @@ feature -- Access
 				if min_index = index_next_semicolon then
 					if min_index = 1 then
 						analyzed_string := analyzed_string.substring (2, analyzed_string.count)
-					else	
+					else
 							-- We have a class name here
 						item_name := analyzed_string.substring (1, min_index - 1)
 						analyzed_string := analyzed_string.substring (min_index, analyzed_string.count)
@@ -83,7 +89,7 @@ feature -- Access
 					item_name := analyzed_string.substring (1, min_index - 1)
 					analyzed_string := analyzed_string.substring (min_index + 1, analyzed_string.count)
 					create favorites_folder.make (item_name, Current)
-					extend (favorites_folder)	
+					extend (favorites_folder)
 					analyzed_string := favorites_folder.initialize_with_string (analyzed_string)
 					analyzed_string := analyzed_string.substring (2, analyzed_string.count)
 				elseif min_index = index_next_end_bracket then
@@ -278,14 +284,14 @@ feature -- Element change
 					loop
 						l_target_fav_class.add_feature (l_fav_class.item.name)
 						l_fav_class.forth
-					end					
+					end
 				end
 
 			else
 				add_class (a_stone.class_name)
 			end
 		end
-		
+
 	add_feature_stone (a_stone: FEATURE_STONE)
 			-- Append a favorite feature defined by `a_stone'.
 		local
@@ -294,7 +300,7 @@ feature -- Element change
 		do
 			l_fav_current ?= Current
 			l_fav_class ?= l_fav_current
-			if 
+			if
 				l_fav_class = Void
 				or else l_fav_class.associated_class_c /= a_stone.e_class
 			then
@@ -304,7 +310,7 @@ feature -- Element change
 				if l_fav_current /= Void and then l_fav_current.is_class then
 					l_fav_class ?= l_fav_current.parent.favorite_by_name (a_stone.class_name)
 					if l_fav_class = Void then
-						create l_fav_class.make (a_stone.class_name, Current)						
+						create l_fav_class.make (a_stone.class_name, Current)
 						l_fav_current.parent.extend (l_fav_class)
 					end
 				else
@@ -313,9 +319,9 @@ feature -- Element change
 				end
 			end
 			if not l_fav_class.contains_name (a_stone.feature_name) then
-				l_fav_class.extend (create {EB_FAVORITES_FEATURE}.make_from_feature_stone (a_stone, l_fav_class))				
+				l_fav_class.extend (create {EB_FAVORITES_FEATURE}.make_from_feature_stone (a_stone, l_fav_class))
 			end
-		end		
+		end
 
 	add_favorite_folder (a_folder: EB_FAVORITES_FOLDER)
 			-- Append a favorite folder defined by `a_folder'.
@@ -323,64 +329,64 @@ feature -- Element change
 			extend (a_folder)
 		end
 
-	add_feature (a_feature_name: STRING)
+	add_feature (a_feature_name: STRING_32)
 			-- Add the class named `a_feature_name' into this folder if no
 			-- item with the same name is already present.
 		do
 			add_item (a_feature_name, False, False, True)
 		end
-		
-	add_class (a_class_name: STRING)
+
+	add_class (a_class_name: STRING_32)
 			-- Add the class named `a_class_name' into this folder if no
 			-- item with the same name is already present.
 		do
 			add_item (a_class_name, False, True, False)
 		end
 
-	add_folder (a_folder_name: STRING)
+	add_folder (a_folder_name: STRING_32)
 			-- Add the folder named `a_folder_name' into this folder if no
 			-- item with the same name is already present.
 		do
 			add_item (a_folder_name, True, False, False)
 		end
-	
-	add_class_to_folder (a_class_name: STRING; a_path: ARRAYED_LIST [STRING])
+
+	add_class_to_folder (a_class_name: STRING_32; a_path: ARRAYED_LIST [STRING])
 			-- Add the class named `class_name' to this favorites if no
 			-- class with the same name is already present.
 			--
-			-- If `a_item' is in the root, `a_path' can be set to an 
+			-- If `a_item' is in the root, `a_path' can be set to an
 			-- empty list or `Void'
 		do
 			add_item_to_folder (a_class_name, a_path, False, True, False)
 		end
-	
-	add_folder_to_folder (a_folder_name: STRING; a_path: ARRAYED_LIST [STRING])
+
+	add_folder_to_folder (a_folder_name: STRING_32; a_path: ARRAYED_LIST [STRING])
 			-- Add the folder named `folder_name' to this favorites if no
 			-- class with the same name is already present.
 			--
-			-- If `a_item' is in the root, `a_path' can be set to an 
+			-- If `a_item' is in the root, `a_path' can be set to an
 			-- empty list or `Void'
 		do
 			add_item_to_folder (a_folder_name, a_path, True, False, False)
 		end
-	
-	remove_feature, remove_class, remove_folder (a_item_name: STRING)
+
+	remove_feature, remove_class, remove_folder (a_item_name: STRING_32)
 			-- Remove the class/folder named `a_item_name' into this folder if it
 			-- exists.
 		local
 			removed_item: EB_FAVORITES_ITEM
 			found: BOOLEAN
-			curr_name: STRING
-			item_name: STRING
+			curr_name: STRING_32
+			item_name: STRING_32
 		do
-			item_name := a_item_name.as_lower
+			item_name := string_general_as_lower (a_item_name)
 
 			from
 				start
 			until
 				after or found
 			loop
-				curr_name := item.name.as_lower
+				curr_name := string_general_as_lower (item.name)
 
 				found := curr_name.is_equal (item_name)
 				removed_item := item
@@ -431,37 +437,37 @@ feature {EB_FAVORITES_ITEM_LIST} -- Observer pattern
 
 feature -- Query
 
-	contains_name (a_name: STRING): BOOLEAN
+	contains_name (a_name: STRING_32): BOOLEAN
 			-- Does Current contains an item with name `a_name'.
 			-- The name comparison is not case-sensitive.
 		do
 			Result := favorite_by_name (a_name) /= Void
 		end
 
-	favorite_by_name (a_name: STRING): EB_FAVORITES_ITEM
+	favorite_by_name (a_name: STRING_32): EB_FAVORITES_ITEM
 			-- Favorite item for name `a_name'.
 		local
-			item_name: STRING
-			curr_name: STRING
+			item_name: STRING_32
+			curr_name: STRING_32
 		do
-			curr_name := a_name.as_lower
+			curr_name := string_general_as_lower (a_name)
 
 			from
 				start
 			until
 				after or Result /= Void
 			loop
-				item_name := item.name.as_lower
+				item_name := string_general_as_lower (item.name)
 				if item_name.is_equal (curr_name) then
 					Result := item
 				end
 				forth
 			end
 		end
-		
+
 feature {EB_FAVORITES_ITEM_LIST} -- Implementation
 
-	add_item_to_folder (a_item_name: STRING; a_path: ARRAYED_LIST [STRING]; is_folder, is_class, is_feature: BOOLEAN)
+	add_item_to_folder (a_item_name: STRING_32; a_path: ARRAYED_LIST [STRING]; is_folder, is_class, is_feature: BOOLEAN)
 			-- Add the item named `item_name' to this favorites if no
 			-- item with the same name is already present.
 			-- The item is a folder is `is_folder' is set, a class otherwise.
@@ -500,31 +506,31 @@ feature {EB_FAVORITES_ITEM_LIST} -- Implementation
 				end
 			end
 		end
-	
-	add_item (a_name: STRING; is_folder, is_class, is_feature: BOOLEAN)
+
+	add_item (a_name: STRING_32; is_folder, is_class, is_feature: BOOLEAN)
 			-- Add a new item to the class. A favorites class if
 			-- `is_folder' is False, a new folder is `is_folder' is
 			-- set to True.
 		local
 			l_class_item: EB_FAVORITES_CLASS
 			added_item: EB_FAVORITES_ITEM
-			added_name: STRING
+			added_name: STRING_32
 		do
 				-- Add a new item
 			if not contains_name (a_name) then
 				if is_folder then
 					create {EB_FAVORITES_FOLDER} added_item.make (a_name, Current)
 				elseif is_class then
-					added_name := a_name.as_upper
+					added_name := string_general_as_upper (a_name)
 					create {EB_FAVORITES_CLASS} added_item.make (added_name, Current)
 				elseif is_feature then
 					l_class_item ?= Current
 					if l_class_item.is_class then
-						added_name := a_name.as_lower
-						if l_class_item.associated_class_c.feature_named (added_name) /= Void then
-							create {EB_FAVORITES_FEATURE} added_item.make_with_class_c (added_name, l_class_item.associated_class_c, l_class_item)							
+						added_name := string_general_as_lower (a_name)
+						if l_class_item.associated_class_c.feature_named_32 (added_name) /= Void then
+							create {EB_FAVORITES_FEATURE} added_item.make_with_class_c (added_name, l_class_item.associated_class_c, l_class_item)
 						end
-					end				
+					end
 				end
 					-- Add the item and send the `added' notification to observers.
 				if added_item /= Void then
@@ -540,26 +546,28 @@ feature {NONE} -- Attributes
 
 feature {EB_FAVORITES_ITEM_LIST, EB_FAVORITES_ITEM} -- Load/Save
 
-	string_representation: STRING
+	string_representation: STRING_32
 			-- String representation for Current.
 		do
-			Result := name+"("
+			Result := name.twin
+			Result.append ("(")
 			from
 				start
 			until
 				after
 			loop
-				Result := Result + item.string_representation
+				Result := Result
+				Result.append (item.string_representation)
 				forth
 				if not after then
-					Result := Result + ";"
+					Result.append (";")
 				end
 			end
-			Result := Result + ")"
+			Result.append (")")
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -572,22 +580,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_FAVORITES_ITEM

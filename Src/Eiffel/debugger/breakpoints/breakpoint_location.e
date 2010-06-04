@@ -86,7 +86,7 @@ feature -- Comparison
 					if routine.is_equal (other.routine) then
 						Result := breakable_line_number < other.breakable_line_number
 					else
-						Result := routine.name < other.routine.name
+						Result := routine.name_32 < other.routine.name_32
 					end
 				else
 					Result := acl.name_in_upper < ocl.name_in_upper
@@ -222,7 +222,7 @@ feature -- Change status
 
 feature -- String representation
 
-	to_string: STRING
+	to_string: STRING_32
 			-- String representation of Current location.
 		local
 			lcl: CLASS_C
@@ -239,7 +239,7 @@ feature -- String representation
 			end
 			Result.append_string ("}.")
 			if routine /= Void then
-				Result.append_string (routine.name)
+				Result.append_string (routine.name_32)
 			else
 				Result.append_string ("???")
 			end
@@ -265,7 +265,7 @@ feature {NONE} -- Private constants
 	Application_breakpoint_not_set: INTEGER = 1
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -18,6 +18,13 @@ inherit
 			default_create, copy
 		end
 
+	SHARED_LOCALE
+		export
+			{NONE} all
+		undefine
+			default_create, copy
+		end
+
 create
 	make
 
@@ -142,11 +149,11 @@ feature {NONE} -- Vision2 events
 		local
 			loclist: LIST [CLASS_I]
 		do
-			selected_class_name := class_name_entry.text.as_upper
+			selected_class_name := string_general_as_upper (class_name_entry.text).as_string_8
 			selected := not selected_class_name.is_empty
 			if selected then -- User typed a class name.
 				if eiffel_universe.target /= Void then
-					loclist := Eiffel_universe.classes_with_name (selected_class_name.as_upper)
+					loclist := Eiffel_universe.classes_with_name (selected_class_name)
 				end
 				if loclist /= Void and then loclist.is_empty then -- No class has such a name.
 					class_name_entry.set_text (Interface_names.l_Unknown_class_name)
@@ -186,18 +193,18 @@ feature {NONE} -- Vision2 events
 		local
 			l_button: EV_BUTTON
 			l_class_i: CLASS_I
-			l_text: STRING
+			l_text: STRING_32
 			l_caret_pos: INTEGER
 		do
 			l_button := dialog_window_buttons.item (default_button)
 			check not_void: l_button /= Void end
 			l_class_i ?= class_name_entry.data
-			l_text := class_name_entry.text.as_upper
+			l_text := string_general_as_upper (class_name_entry.text)
 
 			if l_class_i /= Void then
 				l_button.enable_sensitive
 			else
-				if not l_text.is_empty and then eiffel_universe.classes_with_name (l_text).count = 1 then
+				if not l_text.is_empty and then eiffel_universe.classes_with_name (l_text.as_string_8).count = 1 then
 					l_button.enable_sensitive
 				else
 					l_button.disable_sensitive

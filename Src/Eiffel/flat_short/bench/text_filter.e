@@ -830,9 +830,9 @@ feature -- Text processing
 			path_pre := path_representation (file_separator, a_group.name, a_group, False)
 			set_keyword (kw_File, relative_to_base (path_pre + file_separator + l_class_i.name.as_lower + feat_suffix))
 			if real_feature = Void then
-				l_name := f.name
+				l_name := f.name_32
 			else
-				l_name := real_feature.name
+				l_name := real_feature.name_32
 			end
 			set_keyword (kw_Feature, escaped_text (l_name))
 		end

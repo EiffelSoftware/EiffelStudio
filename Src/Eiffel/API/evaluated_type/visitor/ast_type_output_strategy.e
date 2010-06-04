@@ -86,7 +86,7 @@ feature {TYPE_A} -- Visitors
 			check
 				l_feat_not_void: l_feat /= Void
 			end
-			text_formatter.process_feature_text (l_feat.name, l_feat, False)
+			text_formatter.process_feature_text (l_feat.name_32, l_feat, False)
 		end
 
 	process_boolean_a (a_type: BOOLEAN_A)
@@ -147,9 +147,9 @@ feature {TYPE_A} -- Visitors
 					-- Current feature may be Void.
 					-- If not we check if the feature has a replicated AST, in which case
 					-- we query the written class for type information.
-				text_formatter.process_generic_text (current_feature.written_class.generics.i_th (a_type.position).name.name.as_upper)
+				text_formatter.process_generic_text (current_feature.written_class.generics.i_th (a_type.position).name.name_8.as_upper)
 			else
-				text_formatter.process_generic_text (current_class.generics.i_th (a_type.position).name.name.as_upper)
+				text_formatter.process_generic_text (current_class.generics.i_th (a_type.position).name.name_8.as_upper)
 			end
 		end
 
@@ -358,7 +358,7 @@ feature {TYPE_A} -- Visitors
 					f.append_name (text_formatter)
 					c := f.type.associated_class
 				else
-					text_formatter.process_feature_name_text (names_heap.item (n), c)
+					text_formatter.process_feature_name_text (names_heap.item_32 (n), c)
 				end
 				i := i + 1
 			end
@@ -439,7 +439,7 @@ feature {TYPE_A} -- Visitors
 				i = nb
 			loop
 				text_formatter.process_symbol_text (ti_dot)
-				text_formatter.process_local_text (names_heap.item (a_type.chain.item (i)))
+				text_formatter.process_local_text (names_heap.item_32 (a_type.chain.item (i)))
 				i := i + 1
 			end
 		end

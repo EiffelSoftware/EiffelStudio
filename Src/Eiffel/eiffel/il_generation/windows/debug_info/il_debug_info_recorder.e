@@ -47,6 +47,8 @@ inherit
 			{NONE} all
 		end
 
+	INTERNAL_COMPILER_STRING_EXPORTER
+
 create {SHARED_IL_DEBUG_INFO_RECORDER}
 	make
 

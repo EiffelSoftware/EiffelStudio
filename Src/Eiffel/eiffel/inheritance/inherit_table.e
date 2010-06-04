@@ -95,6 +95,11 @@ inherit
 			copy, is_equal
 		end
 
+	INTERNAL_COMPILER_STRING_EXPORTER
+		undefine
+			copy, is_equal
+		end
+
 	SHARED_DEGREES
 		export
 			{NONE} all

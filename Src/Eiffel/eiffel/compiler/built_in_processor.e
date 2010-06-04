@@ -99,6 +99,8 @@ feature {NONE} -- Implementation
 			l_code_path_neutral, l_code_path_dependent: STRING
 			l_reuse_previous_as: BOOLEAN
 			l_empty_str: STRING
+			l_str: STRING
+			l_count: INTEGER
 		do
 			if not retried then
 				l_empty_str := once ""
@@ -112,9 +114,11 @@ feature {NONE} -- Implementation
 
 				if not l_reuse_previous_as then
 					create l_file.make (l_code_path_neutral)
+					l_count := l_file.count
 					l_file.open_read
 					if not l_file.is_open_read then
 						create l_file.make (l_code_path_dependent)
+						l_count := l_file.count
 						l_file.open_read
 						if not l_file.is_open_read then
 							l_file := Void
@@ -135,7 +139,12 @@ feature {NONE} -- Implementation
 					if attached {CLASS_C} current_class as l_class then
 						set_is_ignoring_attachment_marks (l_class.lace_class.is_void_unsafe)
 					end
-					parse_class (l_file, current_class)
+						-- Built-in classes should be always written in UTF-8 or compatible.
+--					check file_in_utf8 (l_file) end
+					l_file.read_string (l_count)
+					l_str := l_file.last_string
+					parse_from_string (l_str, current_class)
+--					internal_parse_class (l_file, current_class)
 					l_file.close
 					l_class_as := root_node
 				end
@@ -186,7 +195,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

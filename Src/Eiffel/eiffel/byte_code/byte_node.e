@@ -27,6 +27,8 @@ inherit
 
 	SHARED_IL_CODE_GENERATOR
 
+	INTERNAL_COMPILER_STRING_EXPORTER
+
 feature -- Visitor
 
 	process (v: BYTE_NODE_VISITOR)

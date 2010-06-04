@@ -228,7 +228,7 @@ feature -- Incrementality
 					end
 				else
 					check
-						item_for_iteration.feature_name.is_equal (f2.feature_name)
+						item_for_iteration.feature_name_32.is_equal (f2.feature_name_32)
 					end
 					if not item_for_iteration.select_table_equiv (f2) then
 						Result := False

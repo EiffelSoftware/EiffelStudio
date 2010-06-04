@@ -673,14 +673,15 @@ feature {NONE} -- Implementation
 
 	add_indexes (i: EIFFEL_LIST [INDEX_AS]; l: LINKED_LIST [STRING])
 		local
-			t: STRING
+			t: STRING_32
 		do
 			if i /= Void then
 				from i.start until i.after loop
 					if i.item.tag /= Void then
-						t := i.item.tag.name
+						t := i.item.tag.name_32
 					end
-					if t /= Void and then not l.has (t) then
+						--|FIXME: Handle unicode
+					if t /= Void and then not l.has (t.as_string_8) then
 						l.extend (t.twin)
 					end
 					i.forth
@@ -908,22 +909,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_DOCUMENTATION_WIZARD

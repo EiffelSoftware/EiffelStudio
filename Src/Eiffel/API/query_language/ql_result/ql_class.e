@@ -34,6 +34,12 @@ inherit
 			is_equal
 		end
 
+		-- Text for direct parsing.
+	INTERNAL_COMPILER_STRING_EXPORTER
+		undefine
+			is_equal
+		end
+
 create
 	make_with_compiled_flag,
 	make_with_parent,
@@ -336,7 +342,7 @@ feature{NONE} -- Implementation
 			if not l_retried then
 				l_text := class_i.text
 				if l_text /= Void then
-					roundtrip_eiffel_parser.parse_from_string (l_text, class_c)
+					roundtrip_eiffel_parser.parse_class (class_c)
 					Result := roundtrip_eiffel_parser.root_node.original_text (roundtrip_eiffel_parser.match_list)
 				else
 					Result := ""
@@ -356,7 +362,7 @@ invariant
 	parent_valid: parent /= Void implies parent.is_group and parent.is_valid_domain_item
 
 note
-        copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+        copyright:	"Copyright (c) 1984-2010, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"
         copying: "[

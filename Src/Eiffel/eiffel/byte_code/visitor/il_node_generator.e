@@ -59,6 +59,8 @@ inherit
 			{NONE} all
 		end
 
+	INTERNAL_COMPILER_STRING_EXPORTER
+
 feature -- Status report
 
 	is_valid: BOOLEAN
@@ -2797,7 +2799,13 @@ feature {NONE} -- Visitors
 	process_once_string_b (a_node: ONCE_STRING_B)
 			-- Process `a_node'.
 		do
-			il_generator.generate_once_string (a_node.number - 1, a_node.value, a_node.is_dotnet_string)
+			if a_node.is_dotnet_string then
+				il_generator.generate_once_string (a_node.number - 1, a_node.value, string_type_cil)
+			elseif a_node.is_string_32 then
+				il_generator.generate_once_string (a_node.number - 1, a_node.value, string_type_string_32)
+			else
+				il_generator.generate_once_string (a_node.number - 1, a_node.value, string_type_string)
+			end
 		end
 
 	process_operand_b (a_node: OPERAND_B)
@@ -3037,7 +3045,11 @@ feature {NONE} -- Visitors
 			if a_node.is_dotnet_string then
 				il_generator.put_system_string (a_node.value)
 			else
-				il_generator.put_manifest_string (a_node.value)
+				if a_node.is_string_32 then
+					il_generator.put_manifest_string_32 (a_node.value)
+				else
+					il_generator.put_manifest_string (a_node.value)
+				end
 			end
 		end
 

@@ -51,8 +51,6 @@ inherit
 
 	SHARED_BATCH_NAMES
 
-	CONF_DEFAULT_OPTION_SETTING
-
 	SHARED_COMPILER_PROFILE
 		rename
 			reset as reset_compiler_profile
@@ -1262,7 +1260,6 @@ feature -- Update
 				if is_experimental_flag_set then
 					option_error := True
 				else
-					set_is_63_compatible (True)
 					set_compatible_mode
 					is_compatible_flag_set := True
 				end
@@ -1413,7 +1410,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

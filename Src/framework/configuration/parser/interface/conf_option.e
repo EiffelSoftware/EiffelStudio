@@ -23,13 +23,6 @@ inherit
 			is_equal
 		end
 
-	CONF_DEFAULT_OPTION_SETTING
-		redefine
-			copy,
-			default_create,
-			is_equal
-		end
-
 create
 	default_create,
 	make_6_3,
@@ -40,11 +33,7 @@ feature {NONE} -- Creation
 	default_create
 			-- Initialize options to the defaults of the current version.
 		do
-			if is_63_compatible then
-				make_6_3
-			else
-				make_6_4
-			end
+			make_6_4
 		end
 
 	make_6_3
@@ -626,7 +615,7 @@ invariant
 	void_safety_attached: void_safety /= Void
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

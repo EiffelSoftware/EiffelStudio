@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (f_name: STRING; ec: CLASS_C)
+	make (f_name: like feature_name; ec: CLASS_C)
 		require
 			valid_f_name: f_name /= Void
 			ec_attached: ec /= Void
@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 			e_class := ec
 			feature_name := f_name
 			if ec.has_feature_table then
-				e_feature := ec.feature_with_name (f_name)
+				e_feature := ec.feature_with_name_32 (f_name)
 				if e_feature /= Void then
 					e_class := e_feature.written_class
 				end
@@ -46,13 +46,13 @@ feature {NONE} -- Initialization
 
 feature -- Properties
 
-	feature_name: STRING
+	feature_name: STRING_32
 			-- Feature name
 
 	feature_class: CLASS_C
 			-- Class with feature `feature_name'
 
-	stone_signature: STRING
+	stone_signature: STRING_32
 			-- Signature of Current feature
 		do
 			Result := feature_name.twin
@@ -72,7 +72,7 @@ feature -- Update
 					if feature_class.has_feature_table then
 							-- System has been completely compiled and has all its
 							-- feature tables.
-						e_feature := feature_class.feature_with_name (feature_name)
+						e_feature := feature_class.feature_with_name_32 (feature_name)
 						if e_feature /= Void then
 							e_class := e_feature.written_class
 							Precursor {FEATURE_STONE}
@@ -112,7 +112,7 @@ feature -- Dragging
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

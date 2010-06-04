@@ -63,6 +63,14 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_LOCALE
+
+	SHARED_ENCODING_CONVERTER
+
+	EB_TOKEN_TOOLKIT
+
+	INTERNAL_COMPILER_STRING_EXPORTER
+
 create
 	make
 
@@ -499,7 +507,7 @@ feature -- Element change
 			output_line_not_void: output_line /= Void
 		end
 
-	set_feature_text_simply (s: STRING)
+	set_feature_text_simply (s: STRING_32)
 			-- Set feature combo text with `s'.
 		require
 			s_attached: s /= Void
@@ -901,7 +909,7 @@ feature {NONE} -- Execution
 		do
 			if feature_list.valid_index (pos) then
 				current_feature := feature_list.i_th (pos)
-				feature_address.set_text (current_feature.name.as_lower)
+				feature_address.set_text (current_feature.name_32)
 			end
 			feature_list := Void
 			if choosing_class then
@@ -1146,7 +1154,7 @@ feature {NONE} -- Implementation
 		require
 			group_list_not_void: group_list /= Void
 		local
-			cluster_names: ARRAYED_LIST [STRING]
+			cluster_names: ARRAYED_LIST [STRING_32]
 			cluster_pixmaps: ARRAYED_LIST [EV_PIXMAP]
 			clusteri: CONF_GROUP
 			cname: STRING
@@ -1187,7 +1195,7 @@ feature {NONE} -- Implementation
 		require
 			class_list_not_void: class_list /= Void
 		local
-			class_names: ARRAYED_LIST [STRING]
+			class_names: ARRAYED_LIST [STRING_32]
 			class_pixmaps: ARRAYED_LIST [EV_PIXMAP]
 			classi, last_class: CLASS_I
 			cname, last_name: STRING
@@ -1259,7 +1267,7 @@ feature {NONE} -- Implementation
 		require
 			feature_list_not_void: feature_list /= Void
 		local
-			feature_names: ARRAYED_LIST [STRING]
+			feature_names: ARRAYED_LIST [STRING_32]
 			feature_pixmaps: ARRAYED_LIST [EV_PIXMAP]
 		do
 			create feature_names.make (feature_list.count)
@@ -1269,7 +1277,7 @@ feature {NONE} -- Implementation
 			until
 				feature_list.after
 			loop
-				feature_names.extend (feature_list.item.name)
+				feature_names.extend (feature_list.item.name_32)
 				feature_pixmaps.extend (pixmap_from_e_feature (feature_list.item))
 				feature_list.forth
 			end
@@ -1298,7 +1306,7 @@ feature {NONE} -- open new class
 	extract_cluster_from_user_entry
 			-- Process the user entry in `cluster_address' to generate `current_group'.
 		local
-			fname: STRING
+			fname: STRING_32
 			cl: ARRAYED_LIST [CONF_GROUP]
 			matcher: KMP_WILD
 			matching: SORTED_TWO_WAY_LIST [CONF_GROUP]
@@ -1307,15 +1315,16 @@ feature {NONE} -- open new class
 				current_group := Void
 				fname := cluster_address.text
 				if fname /= Void then
-					fname.left_adjust
-					fname.right_adjust
+					string_general_left_adjust (fname)
+					string_general_right_adjust (fname)
 				end
 				if fname = Void or else fname.is_empty then
 					process_cluster
 				else
-					fname.to_lower
+					fname := string_32_to_lower (fname)
 					create matcher.make_empty
-					matcher.set_pattern (fname)
+						--|FIXME: Unicode handling. Not sure matcher accept UTF8
+					matcher.set_pattern (encoding_converter.utf32_to_utf8 (fname))
 					if not matcher.has_wild_cards then
 						if is_general_group_acceptable then
 							current_group := universe.group_of_name (fname)
@@ -1356,7 +1365,7 @@ feature {NONE} -- open new class
 	process_user_entry
 			-- process the user entry
 		local
-			cname: STRING
+			cname: STRING_32
 			sorted_classes: SORTED_TWO_WAY_LIST [CLASS_I]
 			at_pos: INTEGER
 			cluster: CLUSTER_I
@@ -1368,8 +1377,8 @@ feature {NONE} -- open new class
 				class_i := Void
 				cname := class_address.text
 				if cname /= Void then
-					cname.left_adjust
-					cname.right_adjust
+					string_general_left_adjust (cname)
+					string_general_right_adjust (cname)
 				end
 				if cname = Void or else cname.is_empty then
 					if choosing_class then
@@ -1378,9 +1387,9 @@ feature {NONE} -- open new class
 						process_feature_class
 					end
 				else
-					cname.to_upper
+					cname := string_32_to_upper (cname)
 					create matcher.make_empty
-					matcher.set_pattern (cname)
+					matcher.set_pattern (encoding_converter.utf32_to_utf8 (cname))
 					if not matcher.has_wild_cards then
 						at_pos := cname.index_of ('@', 1)
 						if at_pos = cname.count then
@@ -1465,7 +1474,7 @@ feature {NONE} -- open new class
 		require
 			give_a_class_first: current_class /= Void
 		local
-			fname: STRING
+			fname: STRING_32
 			sorted_features: SORTED_TWO_WAY_LIST [E_FEATURE]
 			ft: E_FEATURE_TABLE
 			fl: LIST [E_FEATURE]
@@ -1473,9 +1482,10 @@ feature {NONE} -- open new class
 		do
 			current_feature := Void
 			fname := feature_address.text
+
 			if not fname.is_empty then
-				fname.left_adjust
-				fname.right_adjust
+				string_general_left_adjust (fname)
+				string_general_right_adjust (fname)
 			end
 			if fname = Void or else fname.is_empty then
 				open_new_tab_if_possible
@@ -1485,9 +1495,10 @@ feature {NONE} -- open new class
 					process_feature_feature
 				end
 			else
-				fname.to_lower
+				fname := string_32_to_lower (fname)
 				create matcher.make_empty
-				matcher.set_pattern (fname)
+					--|FIXME: Unicode handling, not sure matcher handles UTF-8.
+				matcher.set_pattern (encoding_converter.utf32_to_utf8 (fname))
 				if not matcher.has_wild_cards then
 					if current_class.has_feature_table then
 						current_feature := get_feature_named (fname)
@@ -1508,6 +1519,7 @@ feature {NONE} -- open new class
 							until
 								ft.after
 							loop
+									--|FIXME: Unicode handling.
 								matcher.set_text (ft.item_for_iteration.name)
 								if matcher.pattern_matches then
 									sorted_features.put_front (ft.item_for_iteration)
@@ -1523,7 +1535,8 @@ feature {NONE} -- open new class
 							until
 								fl.after
 							loop
-								matcher.set_text (fl.item.name)
+									--|FIXME: Unicode handling, not sure matcher handles UTF-8.
+								matcher.set_text (encoding_converter.utf32_to_utf8 (fl.item.name_32))
 								if matcher.pattern_matches then
 									sorted_features.put_front (fl.item)
 								end
@@ -1538,14 +1551,14 @@ feature {NONE} -- open new class
 			end
 		end
 
-	get_feature_named (name: STRING): E_FEATURE
+	get_feature_named (name: STRING_32): E_FEATURE
 			-- Return the feature named `name' of class `current_class'.
 		require
 			class_selected: class_i /= Void
 			valid_class: current_class /= Void
 		do
 			if current_class.has_feature_table then
-				Result := current_class.feature_with_name (name)
+				Result := current_class.feature_with_name_32 (name)
 			end
 		end
 
@@ -2034,8 +2047,8 @@ feature {NONE} -- open new class
 			if not str.is_empty and then not (str.substring_index (interface_names.l_from ("", ""), 1) > 0) then
 				last_caret_position := feature_address.caret_position
 					-- Only perform `left_adjust' so that we can type `infix "X"' in the combo box.
-				str.left_adjust
-				str.to_lower
+				string_general_left_adjust (str)
+				str := string_32_to_lower (str)
 				nb := str.count
 				do_not_complete :=	last_key_was_delete or
 									not enable_feature_complete or
@@ -2059,7 +2072,7 @@ feature {NONE} -- open new class
 					until
 						list.after
 					loop
-						cname := list.item_for_iteration.feature_name
+						cname := list.item_for_iteration.feature_name_32
 						other_area := cname.area
 							-- We first check that other_area and str_area have the same start.
 						if other_area.count >= nb then

@@ -27,6 +27,8 @@ inherit
 
 	SHARED_VISIBLE_LEVEL
 
+	SHARED_ENCODING_CONVERTER
+
 	REFACTORING_HELPER
 
 	CONF_FILE_DATE
@@ -37,6 +39,8 @@ inherit
 		export
 			{NONE}
 		end
+
+	INTERNAL_COMPILER_STRING_EXPORTER
 
 feature -- Access
 
@@ -84,11 +88,6 @@ feature -- Access
 		deferred
 		ensure
 			actual_class_not_void: Result /= Void
-		end
-
-	visible: EQUALITY_TUPLE [TUPLE [class_renamed: STRING; features: EQUALITY_HASH_TABLE [STRING, STRING]]]
-			-- The visible features.
-		deferred
 		end
 
 	path: STRING
@@ -357,6 +356,13 @@ feature -- Access
 			end
 		end
 
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
+
+	visible: EQUALITY_TUPLE [TUPLE [class_renamed: STRING; features: EQUALITY_HASH_TABLE [STRING, STRING]]]
+			-- The visible features.
+		deferred
+		end
+
 feature {NONE} -- Access
 
 	internal_namespace: STRING
@@ -425,7 +431,7 @@ feature -- Status report
 			file_name_not_void: Result /= Void
 		end
 
-	text: STRING_32
+	text_32: STRING_32
 			-- Text of the Current lace file.
 			-- Convert to UTF-32 if possible.
 			-- Void if unreadable file
@@ -463,8 +469,56 @@ feature -- Status report
 			retry
 		end
 
+	text_8: STRING_8
+			-- Text in UTF-8 encoding.
+		require
+			valid_file_name: file_name /= Void
+		do
+			Result := text
+		end
+
 	encoding: detachable ANY
 			-- Encoding of original text.
+
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
+
+	text: STRING
+			-- Text of the Current lace file.
+			-- Convert to UTF-8 if possible.
+			-- Void if unreadable file
+		require
+			valid_file_name: file_name /= Void
+		local
+			a_file: RAW_FILE
+			retried: BOOLEAN
+			l_stream: STRING
+			l_converter: ENCODING_CONVERTER
+		do
+			if not retried then
+				create a_file.make (file_name)
+				if a_file.exists and then a_file.is_readable then
+					a_file.open_read
+					a_file.read_stream (a_file.count)
+					a_file.close
+						-- No need to duplicate `last_string' since
+						-- its owner, the file will not go outside this
+						-- routine and therefore there will be no aliasing.
+					l_stream := a_file.last_string
+					if is_encoding_converter_set then
+						l_converter := encoding_converter
+						Result := l_converter.utf8_string (l_stream)
+						encoding := l_converter.detected_encoding
+					else
+						Result := l_stream
+					end
+				end
+			else
+				Result := Void
+			end
+		rescue
+			retried := True
+			retry
+		end
 
 feature -- Output
 

@@ -433,6 +433,85 @@ rt_public EIF_REFERENCE makestr_with_hash_as_old (register char *s, register siz
 	return string;
 }
 
+rt_public EIF_REFERENCE makestr32_with_hash (register char *s, register size_t len, register int a_hash)
+	/* Makes an Eiffel STRING_32 object from a C string with precomputed hash code value `a_hash'.
+	 * This routine creates the object and returns a pointer to the newly
+	 * allocated string or raises a "No more memory" exception.
+	 */
+{
+	EIF_GET_CONTEXT
+	EIF_REFERENCE string;					/* Were string object is located */
+
+	string = emalloc(egc_str32_dtype);	/* If we return, it succeeded */
+
+	RT_GC_PROTECT(string); /* Protect address in case it moves */
+
+#ifdef WORKBENCH
+	DISCARD_BREAKPOINTS; /* prevent the debugger from stopping in the following 2 functions */
+#endif
+	nstcall = 0;
+	RT_STRING32_MAKE(string, (EIF_INTEGER) len);		/* Call feature `make' in class STRING_32 */
+	RT_STRING32_SET_HASH_CODE(string, a_hash);
+	RT_STRING32_SET_COUNT(string, len);
+#ifdef WORKBENCH
+	UNDISCARD_BREAKPOINTS; /* the debugger can now stop again */
+#endif
+
+	/* Copy C string `s' in special object `area' of the new string
+	 * descriptor `string'. We know the `area' is the very first reference
+	 * of the STRING_32 object, hence the simple de-referencing.
+	 */
+
+	memcpy (*(EIF_REFERENCE *)string, s, len * 4); /* Every STRING_32 character has 4 bytes. */
+	RT_GC_WEAN(string);			/* Remove protection */
+
+	return string;
+}
+
+/*
+doc:	<routine name="makestr32_with_hash_as_old" return_type="EIF_REFERENCE" export="public">
+doc:		<summary>Makes an Eiffel STRING_32 object from a C string with precomputed hash code value `a_hash'. The Eiffel object is allocated as an old object as we know it will last for the complete execution of the system. It is mostly used for once manifest strings so that the GC only mark the object while doing a full collection, not for the small collections.</summary>
+doc:		<param name="s" type="char *">C string used to create the Eiffel string STRING_32.</param>
+doc:		<param name="len" type="size_t">Length of the STRING_32 `s'.</param>
+doc:		<param name="a_hash" type="int">Hashcode of `s'.</param>
+doc:		<return>A newly allocated string with the same content as `s' if successful, otherwise throw an exception.</return>
+doc:		<exception>"No more memory" when it fails</exception>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:	</routine>
+*/
+
+rt_public EIF_REFERENCE makestr32_with_hash_as_old (register char *s, register size_t len, register int a_hash)
+{
+	EIF_GET_CONTEXT
+	EIF_REFERENCE string;					/* Were string object is located */
+
+	string = emalloc_as_old (egc_str32_dtype); /* If we return, it succeeded */
+
+	RT_GC_PROTECT(string); /* Protect address in case it moves */
+
+#ifdef WORKBENCH
+	DISCARD_BREAKPOINTS; /* prevent the debugger from stopping in the following 2 functions */
+#endif
+	nstcall = 0;
+	RT_STRING32_MAKE(string, (EIF_INTEGER) len);		/* Call feature `make' in class STRING_32 */
+	RT_STRING32_SET_HASH_CODE(string, a_hash);
+	RT_STRING32_SET_COUNT(string, len);
+#ifdef WORKBENCH
+	UNDISCARD_BREAKPOINTS; /* the debugger can now stop again */
+#endif
+
+	/* Copy C string `s' in special object `area' of the new string
+	 * descriptor `string'. We know the `area' is the very first reference
+	 * of the STRING_32 object, hence the simple de-referencing.
+	 */
+
+	memcpy (*(EIF_REFERENCE *)string, s, len * 4); /* Every STRING_32 character has 4 bytes. */
+	RT_GC_WEAN(string);			/* Remove protection */
+
+	return string;
+}
+
 /*
  * Invariant checking
  */

@@ -14,7 +14,7 @@ inherit
 
 	ERT_EIFFEL_LIST_ITEM_ARGUMENTS
 
-feature -- Header/footer
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Header/footer
 
 	set_header_text (a_text: STRING)
 			-- Set header text of the EIFFEL_LIST node.
@@ -29,6 +29,28 @@ feature -- Header/footer
 		do
 			footer_text := a_text
 		end
+
+	header_text: STRING
+			-- Header text
+			-- For example, in the following code
+			--
+			-- 		indexing
+			--			description: "demo"
+			--			author: ""
+			--
+			-- "indexing" is header text.
+			-- And there is no footer text here.
+
+	footer_text: STRING
+			-- Footer text		
+			-- For example, in the following code
+			--
+			-- feature {CLASS_A, CLASS_B}
+			--
+			-- "}" is footer text.
+			-- And "{" is header text.
+
+feature -- Header/footer
 
 	set_header_ast (ast: AST_EIFFEL)
 			-- Set `header_ast' with `ast'.
@@ -52,27 +74,7 @@ feature -- Header/footer
 	footer_ast: AST_EIFFEL
 			-- AST node of footer of `eiffel_list'.
 
-	header_text: STRING
-			-- Header text
-			-- For example, in the following code
-			--
-			-- 		indexing
-			--			description: "demo"
-			--			author: ""
-			--
-			-- "indexing" is header text.
-			-- And there is no footer text here.
-
-	footer_text: STRING
-			-- Footer text		
-			-- For example, in the following code
-			--
-			-- feature {CLASS_A, CLASS_B}
-			--
-			-- "}" is footer text.
-			-- And "{" is header text.
-
-feature -- Item modification
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Item modification
 
 	insert_left (item_text: STRING; i: INTEGER)
 			-- Register a left-insertion operation on `i'-th item in `eiffel_list'.
@@ -100,11 +102,6 @@ feature -- Item modification
 		deferred
 		end
 
-	remove (i: INTEGER)
-			-- Register a remove operation on `i'-th item in `eiffel_list'.
-		deferred
-		end
-
 	prepend (item_text: STRING)
 			-- Register a prepend operation on `eiffel_list'.
 			-- e.g. `item_text' will be inserted before the first item.			
@@ -120,6 +117,13 @@ feature -- Item modification
 		require
 			item_text_not_void: item_text /= Void
 			item_text_not_empty: not item_text.is_empty
+		deferred
+		end
+
+feature -- Item modification
+
+	remove (i: INTEGER)
+			-- Register a remove operation on `i'-th item in `eiffel_list'.
 		deferred
 		end
 
@@ -182,7 +186,7 @@ invariant
 	match_list_not_void: match_list /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -195,21 +199,21 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

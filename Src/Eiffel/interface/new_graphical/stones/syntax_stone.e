@@ -67,7 +67,7 @@ feature -- Access
 			Result.append_string (header)
 		end
 
-	stone_signature: STRING
+	stone_signature: STRING_32
 		do
 			Result := code
 		end
@@ -109,7 +109,7 @@ feature -- Access
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -337,6 +337,7 @@ feature {NONE} -- Actions
 			a_class2_has_features: a_class2.has_feature_table
 		local
 			l_features1: COMPUTED_FEATURE_TABLE
+			l_feat_name: STRING_32
 		do
 			from
 				l_features1 := a_class1.feature_table.features
@@ -344,11 +345,12 @@ feature {NONE} -- Actions
 			until
 				l_features1.after
 			loop
-				if a_class2.feature_named (l_features1.item.feature_name) = Void then
+				l_feat_name := l_features1.item.feature_name_32
+				if a_class2.feature_named_32 (l_feat_name) = Void then
 					result_text.append_text ("Only in `")
 					result_text.append_text (a_class1.name)
 					result_text.append_text ("': ")
-					result_text.append_text (l_features1.item.feature_name)
+					result_text.append_text (l_feat_name)
 					result_text.append_text ("%N")
 				end
 				l_features1.forth
@@ -364,6 +366,7 @@ feature {NONE} -- Actions
 			a_class2_has_features: a_class2.has_feature_table
 		local
 			l_features1: COMPUTED_FEATURE_TABLE
+			l_feat_name: STRING_32
 		do
 			from
 				l_features1 := a_class1.feature_table.features
@@ -371,14 +374,15 @@ feature {NONE} -- Actions
 			until
 				l_features1.after
 			loop
+				l_feat_name := l_features1.item.feature_name_32
 				if
-					attached a_class2.feature_named (l_features1.item.feature_name) as l_feat2 and then
+					attached a_class2.feature_named_32 (l_feat_name) as l_feat2 and then
 					not l_features1.item.same_signature (l_feat2)
 				then
 					result_text.append_text ("Different feature in class `")
 					result_text.append_text (a_class1.name)
 					result_text.append_text ("': ")
-					result_text.append_text (l_features1.item.feature_name)
+					result_text.append_text (l_feat_name)
 					result_text.append_text ("%N")
 				end
 				l_features1.forth
@@ -423,7 +427,7 @@ invariant
 	library_2_pref_attached: library_2_pref /= Void
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

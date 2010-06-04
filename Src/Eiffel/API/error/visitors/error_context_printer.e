@@ -75,7 +75,7 @@ feature -- Output
 			end
 		end
 
-	print_context_lace_feature (a_formatter: TEXT_FORMATTER; a_feature_name: STRING; a_class: CLASS_I)
+	print_context_lace_feature (a_formatter: TEXT_FORMATTER; a_feature_name: STRING_32; a_class: CLASS_I)
 			-- Prints a context feature URI, including the class and group name.
 		require
 			a_formatter_attached: a_formatter /= Void
@@ -88,7 +88,7 @@ feature -- Output
 		do
 			if a_class.is_compiled then
 				l_class ?= a_class.compiled_class
-				l_feature := l_class.feature_with_name (a_feature_name)
+				l_feature := l_class.feature_with_name_32 (a_feature_name)
 			end
 			if l_class = Void or else l_feature = Void then
 					-- Use compiled data
@@ -107,7 +107,7 @@ feature -- Output
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -120,22 +120,22 @@ feature -- Output
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

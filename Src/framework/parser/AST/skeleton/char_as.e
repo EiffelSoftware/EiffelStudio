@@ -11,6 +11,8 @@ inherit
 	ATOMIC_AS
 		undefine
 			text
+		redefine
+			string_value_32
 		end
 
 	LEAF_AS
@@ -65,20 +67,22 @@ feature -- Comparison
 
 feature -- Output
 
-	string_value: STRING
-		do
-			Result := string_32_value.as_string_8
-		end
-
-	string_32_value: STRING_32
+	string_value_32: STRING_32
 		do
 			Result := wchar_text (value)
 			Result.precede ('%'')
 			Result.extend ('%'')
 		end
 
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Output
+
+	string_value: STRING
+		do
+			Result := encoding_converter.utf32_to_utf8 (string_value_32)
+		end
+
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

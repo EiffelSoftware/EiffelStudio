@@ -32,6 +32,9 @@ inherit
 			{NONE} all
 		end
 
+		-- In order to get UTF-8 text to parse it directly without conversion.
+	INTERNAL_COMPILER_STRING_EXPORTER
+
 create
 	make
 
@@ -614,7 +617,7 @@ feature {NONE} -- Implementation: AST
 	ast (a_class: EIFFEL_CLASS_I): detachable CLASS_AS
 			-- Retrieve ast for `a_class'
 		local
-			l_text: STRING_32
+			l_text: STRING
 			l_parser: like eiffel_parser
 		do
 --			if a_class.is_compiled then
@@ -646,7 +649,7 @@ invariant
 		attached old_test_map implies attached test_class
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

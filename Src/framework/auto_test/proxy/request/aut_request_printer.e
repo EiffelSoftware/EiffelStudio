@@ -52,9 +52,9 @@ feature {NONE} -- Initialization
 			system := a_system
 			variable_table := a_variable_table
 
-			load_object_feature := interpreter_root_class.feature_named (load_object_feature_name)
-			store_object_feature := interpreter_root_class.feature_named (store_object_feature_name)
-			check_object_invariant_feature := interpreter_root_class.feature_named (check_object_invariant_feature_name)
+			load_object_feature := interpreter_root_class.feature_named_32 (load_object_feature_name)
+			store_object_feature := interpreter_root_class.feature_named_32 (store_object_feature_name)
+			check_object_invariant_feature := interpreter_root_class.feature_named_32 (check_object_invariant_feature_name)
 
 			create expression_type_visitor.make (system, variable_table)
 			create expression_b_visitor.make (system, load_object_feature)
@@ -476,7 +476,7 @@ invariant
 	expression_b_visitor_attached: expression_b_visitor /= Void
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

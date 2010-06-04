@@ -98,7 +98,7 @@ feature -- Execution
 		local
 			indexes: EIFFEL_LIST [INDEX_AS]
 			index_list: EIFFEL_LIST [ATOMIC_AS]
-			index_tag: STRING
+			index_tag_32: STRING_32
 			index: INDEX_AS
 			ast: CLASS_AS
 		do
@@ -112,9 +112,10 @@ feature -- Execution
 						indexes.after
 					loop
 						index := indexes.item
-						index_tag := index.tag.name
+						index_tag_32 := index.tag.name_32
 						if
-							index_tag /= Void and then
+							index_tag_32 /= Void and then
+							attached index_tag_32.as_string_8 as index_tag and then
 							(not index_tag.is_equal ("status") and
 							not index_tag.is_equal ("date") and
 							not index_tag.is_equal ("revision"))
@@ -122,7 +123,7 @@ feature -- Execution
 							a_text_formatter.add_new_line
 							a_text_formatter.add_indent
 							a_text_formatter.add_indent
-							a_text_formatter.add (index_tag)
+							a_text_formatter.add (index_tag_32)
 							a_text_formatter.add (": ")
 							index_list := index.index_list
 							from
@@ -130,7 +131,7 @@ feature -- Execution
 							until
 								index_list.after
 							loop
-								a_text_formatter.add (index_list.item.string_value)
+								a_text_formatter.add (index_list.item.string_value_32)
 								if not index_list.islast then
 									a_text_formatter.add (", ")
 								end
@@ -148,9 +149,10 @@ feature -- Execution
 						indexes.after
 					loop
 						index := indexes.item
-						index_tag := index.tag.name
+						index_tag_32 := index.tag.name_32
 						if
-							index_tag /= Void and then
+							index_tag_32 /= Void and then
+							attached index_tag_32.as_string_8 as index_tag and then
 							(not index_tag.is_equal ("status") and
 							not index_tag.is_equal ("date") and
 							not index_tag.is_equal ("revision"))
@@ -158,7 +160,7 @@ feature -- Execution
 							a_text_formatter.add_new_line
 							a_text_formatter.add_indent
 							a_text_formatter.add_indent
-							a_text_formatter.add (index_tag)
+							a_text_formatter.add (index_tag_32)
 							a_text_formatter.add (": ")
 							index_list := index.index_list
 							from
@@ -166,7 +168,7 @@ feature -- Execution
 							until
 								index_list.after
 							loop
-								a_text_formatter.add (index_list.item.string_value)
+								a_text_formatter.add (index_list.item.string_value_32)
 								if not index_list.islast then
 									a_text_formatter.add (", ")
 								end
@@ -180,7 +182,7 @@ feature -- Execution
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -193,22 +195,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class E_SHOW_INDEXING_CLAUSE

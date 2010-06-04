@@ -140,7 +140,7 @@ feature -- Debug
 			until
 				after
 			loop
-				io.error.put_string (item.content);
+				io.error.put_string (item.content_32);
 				io.error.put_new_line
 				forth
 			end
@@ -148,7 +148,7 @@ feature -- Debug
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -19,6 +19,8 @@ inherit
 
 	REFACTORING_HELPER
 
+	SHARED_ENCODING_CONVERTER
+
 create {SYSTEM_EXPORT, SHARED_NAMES_HEAP}
 	make
 
@@ -34,18 +36,6 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-
-	item (i: INTEGER): STRING
-			-- Access `i'-th element.
-		require
-			valid_index: valid_index (i)
-		do
-			Result := area.item (i)
-		ensure
-			Result_not_void: i > 0 implies Result /= Void
-			Result_void: i = 0 implies Result = Void
-			Result_valid_type: Result /= Void implies Result.same_type (string_type)
-		end
 
 	found_item: INTEGER
 			-- Index of last element inserted by call to `put'.
@@ -73,9 +63,34 @@ feature -- Access
 			valid_result: Result >= 0
 		end
 
+	item_32 (i: INTEGER): STRING_32
+			-- Access `i'-th element in UTF-32.
+		require
+			valid_index: valid_index (i)
+		do
+			Result := encoding_converter.utf8_to_utf32 (item (i))
+		ensure
+			Result_not_void: i > 0 implies Result /= Void
+			Result_void: i = 0 implies Result = Void
+		end
+
 	string_type: STRING = ""
 			-- Manifest string used in precondition to
 			-- ensure that Current only contains STRING instances.
+
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
+
+	item (i: INTEGER): STRING
+			-- Access `i'-th element.
+		require
+			valid_index: valid_index (i)
+		do
+			Result := area.item (i)
+		ensure
+			Result_not_void: i > 0 implies Result /= Void
+			Result_void: i = 0 implies Result = Void
+			Result_valid_type: Result /= Void implies Result.same_type (string_type)
+		end
 
 feature -- Status report
 
@@ -91,7 +106,7 @@ feature -- Status report
 			Result := i >= 0 and then i < top_index
 		end
 
-feature -- Element change
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Element change
 
 	put (s: STRING)
 			-- Insert `s' in Current if not present,
@@ -125,7 +140,7 @@ feature -- Element change
 			elemented_inserted: equal (item (found_item), s)
 		end
 
-feature -- Convenience
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Convenience
 
 	convert_to_string_array (t: ARRAY [INTEGER]): ARRAY [STRING]
 			-- Convert `t' an array of indexes in NAMES_HEAP into an

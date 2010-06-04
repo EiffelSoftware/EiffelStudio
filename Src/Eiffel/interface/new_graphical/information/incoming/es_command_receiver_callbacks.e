@@ -383,7 +383,7 @@ feature {NONE} -- EIS implementation
 			a_feature_string_not_void: a_feature_string /= Void
 		do
 			if attached {CLASS_I} a_class as lt_class and then lt_class.is_compiled then
-				Result := lt_class.compiled_representation.feature_with_name (a_feature_string.as_lower)
+				Result := lt_class.compiled_representation.feature_with_name_32 (a_feature_string.as_lower)
 			end
 		end
 
@@ -716,7 +716,7 @@ feature {NONE} -- Access
 	action: detachable STRING;
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

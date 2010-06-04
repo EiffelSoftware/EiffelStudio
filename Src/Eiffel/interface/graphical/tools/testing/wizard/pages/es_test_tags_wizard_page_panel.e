@@ -218,7 +218,7 @@ feature {NONE} -- Events
 			l_dialog: ES_TEST_WIZARD_FEATURE_DIALOG
 			l_class: detachable CLASS_I
 			l_feature: detachable E_FEATURE
-			l_tag: STRING
+			l_tag: STRING_32
 		do
 			create l_dialog.make_with_window (window_manager.last_focused_development_window)
 			l_dialog.show (composition.window.dialog)
@@ -234,15 +234,15 @@ feature {NONE} -- Events
 						l_tag.append_character ('.')
 						if l_feature.is_prefix then
 							l_tag.append ("prefix_")
-							l_tag.append (l_feature.prefix_symbol)
+							l_tag.append (l_feature.prefix_symbol_32)
 						elseif l_feature.is_infix then
 							l_tag.append ("infix_")
-							l_tag.append (l_feature.infix_symbol)
+							l_tag.append (l_feature.infix_symbol_32)
 						else
-							l_tag.append (l_feature.name)
+							l_tag.append (l_feature.name_32)
 						end
 					end
-					add_tag (l_tag.as_string_32)
+					add_tag (l_tag)
 				end
 			end
 			l_dialog.recycle
@@ -312,7 +312,7 @@ feature {NONE} -- Basic operations
 					if tag_list.after then
 						l_comp := 1
 					else
-						l_comp := tag_list.item_for_iteration.text.as_lower.three_way_comparison (a_tag.as_lower)
+						l_comp := string_general_as_lower (tag_list.item_for_iteration.text).three_way_comparison (string_general_as_lower (a_tag))
 						if l_comp = -1 then
 							tag_list.forth
 						end

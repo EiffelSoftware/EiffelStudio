@@ -32,14 +32,15 @@ feature -- Initialization
 			if current_class_c /= Void and then not Workbench.is_compiling then
 				current_class_i := current_class_c.original_class
 				group := current_class_i.group
-				current_feature_name := feat.name
+				current_feature_name := feat.name_32
+				current_feature_id := feat.name_id
 				is_ready := False
 				if current_class_i /= Void then --and then not current_class_i.date_has_changed then
 					class_c := current_class_c
 					if class_c.has_feature_table then
 						generate_ast (class_c, False)
 						if last_syntax_error = Void and then current_class_as /= Void then
-							current_feature := class_c.feature_with_name (current_feature_name)
+							current_feature := class_c.feature_with_name_id (feat.name_id)
 							if current_feature /= Void then
 								l_feat_as := current_feature.ast
 								current_feature_as := [l_feat_as, l_feat_as.feature_names.first]
@@ -76,7 +77,7 @@ feature -- Basic operation
 			if current_class_i /= Void and then current_class_c /= Void then
 				l_current_class_c := current_class_c
 				if l_current_class_c.has_feature_table then
-					feat := l_current_class_c.feature_with_name (current_feature_name)
+					feat := l_current_class_c.feature_with_name_id (current_feature_id)
 					if feat /= Void then
 						ft := feat.ast
 						feat := Void
@@ -129,7 +130,7 @@ feature -- Analysis preparation
 			token: EDITOR_TOKEN
 			line: EDITOR_LINE
 			feature_name: FEATURE_NAME
-			feature_name_image: STRING
+			feature_name_image: STRING_32
 		do
 			if current_feature_as /= Void then
 				feature_name := current_feature_as.name
@@ -140,7 +141,7 @@ feature -- Analysis preparation
 				elseif feature_name.is_prefix then
 					feature_name_image := "prefix"
 				else
-					feature_name_image := feature_name.internal_name.name
+					feature_name_image := feature_name.internal_name.name_32
 				end
 			else
 				feature_name_image := current_feature_name
@@ -239,10 +240,12 @@ feature -- Implementation
 
 	split_string: BOOLEAN
 
-	current_feature_name: STRING;
+	current_feature_name: STRING_32
+
+	current_feature_id: INTEGER;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -255,22 +258,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_CLICK_FEATURE_TOOL

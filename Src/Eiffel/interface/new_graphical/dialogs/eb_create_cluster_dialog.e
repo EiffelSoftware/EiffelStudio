@@ -73,6 +73,11 @@ inherit
 			default_create, copy
 		end
 
+	SHARED_LOCALE
+		undefine
+			default_create, copy
+		end
+
 create
 	make_default
 
@@ -282,10 +287,10 @@ feature {NONE} -- Implementation
 	original_path: STRING
 			-- The path with environment variables.
 
-	cluster_name: STRING
+	cluster_name: STRING_32
 			-- Name of the cluster entered by the user, in lower case.
 		do
-			Result := cluster_entry.text.as_lower
+			Result := string_general_as_lower (cluster_entry.text)
 		ensure
 			cluster_name_not_void: Result /= Void
 		end
@@ -641,7 +646,7 @@ invariant
 	group_implies_path: group /= Void implies path /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

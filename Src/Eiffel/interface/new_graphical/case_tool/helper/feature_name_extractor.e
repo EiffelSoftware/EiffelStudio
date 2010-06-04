@@ -14,37 +14,35 @@ inherit
 
 feature -- Access
 
-	feature_name (a_feature: FEATURE_AS): STRING
+	feature_name (a_feature: FEATURE_AS): STRING_32
 			-- Return name of `a_feature' (i.e. "feature_name")
 		require
 			a_feature_not_void: a_feature /= Void
 		do
-			Result := a_feature.feature_name.name.twin
+			Result := a_feature.feature_name.name_32.twin
 		ensure
 			Result_not_void: Result /= Void
 		end
 
-	feature_names (a_feature: FEATURE_AS): LIST [STRING]
+	feature_names (a_feature: FEATURE_AS): LIST [STRING_32]
 			-- Return all names of `a_feature'.
 		require
 			a_feature_not_void: a_feature /= Void
 		local
 			l_feature_names: EIFFEL_LIST [FEATURE_NAME]
-			str: STRING
 		do
 			l_feature_names := a_feature.feature_names
-			create {ARRAYED_LIST [STRING]} Result.make (l_feature_names.count)
+			create {ARRAYED_LIST [STRING_32]} Result.make (l_feature_names.count)
 			if l_feature_names.count = 1 then
-				Result.extend (a_feature.feature_name.name.twin)
+				Result.extend (a_feature.feature_name.name_32.twin)
 			else
-				str := l_feature_names.first.visual_name.twin
 				from
 					l_feature_names.start
 					l_feature_names.forth
 				until
 					l_feature_names.after
 				loop
-					Result.extend (l_feature_names.item.visual_name)
+					Result.extend (l_feature_names.item.visual_name_32)
 					l_feature_names.forth
 				end
 			end
@@ -155,7 +153,7 @@ feature {NONE} -- Implementation
 			Result := ""
 			ct ?= a_type
 			if ct /= Void then
-				Result.append (supplier_name (class_i_by_name (ct.class_name.name)))
+				Result.append (supplier_name (class_i_by_name (ct.class_name.name_8)))
 				g := ct.generics
 				if g /= Void then
 					Result.append (" [ ")
@@ -190,7 +188,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -203,22 +201,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class FEATURE_NAME_EXTRACTOR

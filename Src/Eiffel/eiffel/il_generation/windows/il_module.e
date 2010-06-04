@@ -41,6 +41,11 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_IL_CONSTANTS
+		export
+			{NONE} all
+		end
+
 	COMPILER_EXPORTER
 		export
 			{NONE} all
@@ -54,6 +59,8 @@ inherit
 	SHARED_ERROR_HANDLER
 
 	REFACTORING_HELPER
+
+	INTERNAL_COMPILER_STRING_EXPORTER
 
 create {CIL_CODE_GENERATOR}
 	make
@@ -383,19 +390,22 @@ feature {CIL_CODE_GENERATOR} -- Synchronization tokens
 
 feature {CIL_CODE_GENERATOR} -- Once manifest strings: access
 
-	once_string_field_token (is_cil_string: BOOLEAN): INTEGER
+	once_string_field_token (a_type: INTEGER): INTEGER
 			-- Token of a field that is used to store values of once manifest strings
-			-- if CIL type "string" if `is_cil_string' is `true' or of Eiffel type "STRING" otherwise
+			-- `a_type': string_type_cil, string_type_string, string_type_string_32
 		local
 			once_string_field_name: UNI_STRING
 			l_field_sig: like field_sig
 		do
-			if is_cil_string then
+			if a_type = string_type_cil then
 				Result := once_string_field_cil_token
 				once_string_field_name := once_string_field_cil_name
-			else
+			elseif a_type = string_type_string then
 				Result := once_string_field_eiffel_token
 				once_string_field_name := once_string_field_eiffel_name
+			else
+				Result := once_string_32_field_eiffel_token
+				once_string_field_name := once_string_32_field_eiffel_name
 			end
 			if Result = 0 then
 					-- Get token of the field that keeps once manifest strings.
@@ -404,28 +414,38 @@ feature {CIL_CODE_GENERATOR} -- Once manifest strings: access
 				l_field_sig.reset
 				l_field_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_szarray, 0)
 				l_field_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_szarray, 0)
-				if is_cil_string then
+				if a_type = string_type_cil then
 					l_field_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_string, 0)
 				else
-					l_field_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_class,
-						actual_class_type_token (system.string_8_class.compiled_class.types.first.static_type_id))
+					if a_type = string_type_string then
+						l_field_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_class,
+							actual_class_type_token (system.string_8_class.compiled_class.types.first.static_type_id))
+					else
+						l_field_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_class,
+							actual_class_type_token (system.string_32_class.compiled_class.types.first.static_type_id))
+					end
 				end
 					-- Define field token.
 				Result := md_emit.define_member_ref (once_string_field_name, once_string_class_token, l_field_sig)
-				if is_cil_string then
+				if a_type = string_type_cil then
 					once_string_field_cil_token := Result
-				else
+				elseif a_type = string_type_string then
 					once_string_field_eiffel_token := Result
+				else
+					once_string_32_field_eiffel_token := Result
 				end
 			end
 		ensure
 			valid_result: Result /= 0
-			cil_token_defined: is_cil_string implies is_once_string_field_cil_defined
-			eiffel_token_defined: not is_cil_string implies is_once_string_field_eiffel_defined
-			consistent_cil_result: is_cil_string implies Result = once_string_field_cil_token
-			consistent_eiffel_result: not is_cil_string implies Result = once_string_field_eiffel_token
+			cil_token_defined: (a_type = string_type_cil) implies is_once_string_field_cil_defined
+			string_eiffel_token_defined: (a_type = string_type_string) implies is_once_string_field_eiffel_defined
+			string_32_eiffel_token_defined: (a_type = string_type_string_32) implies is_once_string_32_field_eiffel_defined
+			consistent_cil_result: (a_type = string_type_cil) implies Result = once_string_field_cil_token
+			consistent_eiffel_string_result: (a_type = string_type_string) implies Result = once_string_field_eiffel_token
+			consistent_eiffel_string_32_result: (a_type = string_type_string_32) implies Result = once_string_32_field_eiffel_token
 			old_cil_token_preserved: (old is_once_string_field_cil_defined) implies once_string_field_cil_token = old once_string_field_cil_token
-			old_eiffel_token_preserved: (old is_once_string_field_eiffel_defined) implies once_string_field_eiffel_token = old once_string_field_eiffel_token
+			old_eiffel_string_token_preserved: (old is_once_string_field_eiffel_defined) implies once_string_field_eiffel_token = old once_string_field_eiffel_token
+			old_eiffel_string_32_token_preserved: (old is_once_string_32_field_eiffel_defined) implies once_string_32_field_eiffel_token = old once_string_32_field_eiffel_token
 		end
 
 	once_string_allocation_routine_token: INTEGER
@@ -481,6 +501,14 @@ feature {CIL_CODE_GENERATOR} -- Once manifest strings: status report
 			definition: Result implies once_string_field_eiffel_token /= 0
 		end
 
+	is_once_string_32_field_eiffel_defined: BOOLEAN
+			-- Is token of a field that is used to store values of Eiffel once manifest strings (STRING_32) defined?
+		do
+			Result := once_string_32_field_eiffel_token /= 0
+		ensure
+			definition: Result implies once_string_32_field_eiffel_token /= 0
+		end
+
 	is_once_string_allocation_routine_defined: BOOLEAN
 			-- Is token of a routine that allocates array to store once manifest string values defined?
 		do
@@ -528,7 +556,7 @@ feature {CIL_CODE_GENERATOR} -- Once manifest strings: management
 				l_field_sig)
 			define_thread_static_attribute (once_string_field_cil_token)
 
-				-- Emit field for Eiffel strings.
+				-- Emit field for Eiffel strings (STRING_8).
 			l_field_sig.reset
 			l_field_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_szarray, 0)
 			l_field_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_szarray, 0)
@@ -539,6 +567,18 @@ feature {CIL_CODE_GENERATOR} -- Once manifest strings: management
 				{MD_FIELD_ATTRIBUTES}.public | {MD_FIELD_ATTRIBUTES}.static,
 				l_field_sig)
 			define_thread_static_attribute (once_string_field_eiffel_token)
+
+				-- Emit field for Eiffel strings (STRING_32).
+			l_field_sig.reset
+			l_field_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_szarray, 0)
+			l_field_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_szarray, 0)
+			l_field_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_class, actual_class_type_token (system.string_32_class.compiled_class.types.first.static_type_id))
+			once_string_32_field_eiffel_token := md_emit.define_field (
+				once_string_32_field_eiffel_name,
+				helper_class_token,
+				{MD_FIELD_ATTRIBUTES}.public | {MD_FIELD_ATTRIBUTES}.static,
+				l_field_sig)
+			define_thread_static_attribute (once_string_32_field_eiffel_token)
 
 				-- Emit method to allocate storage for strings.
 			l_method_sig := method_sig
@@ -560,6 +600,7 @@ feature {CIL_CODE_GENERATOR} -- Once manifest strings: management
 			helper_class_defined: is_once_string_class_defined
 			once_string_field_cil_defined: is_once_string_field_cil_defined
 			once_string_field_eiffel_defined: is_once_string_field_eiffel_defined
+			once_string_32_field_eiffel_defined: is_once_string_32_field_eiffel_defined
 			once_string_allocation_routine_defined: is_once_string_allocation_routine_defined
 		end
 
@@ -583,6 +624,12 @@ feature {NONE} -- Once manifest strings: names
 			create Result.make ("oms_eiffel")
 		end
 
+	once_string_32_field_eiffel_name: UNI_STRING
+			-- Name of the once manifest string field to store Eiffel strings (STRING_32)
+		once
+			create Result.make ("oms32_eiffel")
+		end
+
 	once_string_allocation_routine_name: UNI_STRING
 			-- Name of the routine that allocates storage for once manifest strings
 		once
@@ -599,11 +646,18 @@ feature {NONE} -- Once manifest strings: tokens
 			-- Token of a field that is used to store values of once manifest strings
 			-- of Eiffel type "STRING" or 0 if it is not computed yet
 
+	once_string_32_field_eiffel_token: INTEGER
+			-- Token of a field that is used to store values of once manifest strings
+			-- of Eiffel type "STRING_32" or 0 if it is not computed yet
+
 	once_string_allocation_routine_token_value: INTEGER
 			-- Token of a routine that performs allocation of arrays for once manifest strings
 
 	once_string_class_token_value: INTEGER
 			-- Token of a run-time helper class that keeps values of once manifest strings
+
+	once_string_32_class_token_value: INTEGER
+			-- Token of a run-time helper class that keeps values of once manifest strings (STRING_32)
 
 	once_string_class_token: INTEGER
 			-- Token of a run-time helper class that keeps values of once manifest strings

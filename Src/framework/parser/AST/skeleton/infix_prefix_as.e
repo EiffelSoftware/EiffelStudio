@@ -84,14 +84,16 @@ feature -- Access
 	alias_name: STRING_AS
 			-- Operator name associated with the feature
 
+	internal_name: ID_AS
+			-- Internal name used by the compiler
+
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
+
 	visual_name: STRING
 			-- Visual name of fix operator
 		do
 			Result := alias_name.value
 		end
-
-	internal_name: ID_AS
-			-- Internal name used by the compiler
 
 feature -- Conveniences
 
@@ -137,7 +139,7 @@ invariant
 	alias_name_not_void: alias_name /= Void
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -97,14 +97,6 @@ feature -- Status report
 	is_feature: BOOLEAN = True
 			-- Does the Current AST represent a feature?
 
-	visual_name: STRING
-			-- Named used in Eiffel code
-		do
-			Result := internal_name.name
-		ensure
-			result_not_void: Result /= Void
-		end
-
 	internal_alias_name_id: INTEGER
 			-- `internal_alias_name' ID in NAMES_HEAP
 		do
@@ -134,6 +126,40 @@ feature -- Status report
 		do
 		end
 
+	is_valid_unary: BOOLEAN
+			-- Is the value of the feature name valid unary operator?
+		do
+			Result := attached alias_name as l_name and then is_valid_unary_operator (l_name.value)
+		end
+
+	is_valid_binary: BOOLEAN
+			-- Is the value of the feature name valid unary operator?
+		do
+			Result := attached alias_name as l_name and then is_valid_binary_operator (l_name.value)
+		end
+
+feature -- Status report
+
+	visual_name_32: STRING_32
+			-- Named used in Eiffel code
+		do
+			if attached visual_name as l_name then
+				Result := encoding_converter.utf8_to_utf32 (l_name)
+			end
+		ensure
+			result_not_void: Result /= Void
+		end
+
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Status report
+
+	visual_name: STRING
+			-- Named used in Eiffel code
+		do
+			Result := internal_name.name
+		ensure
+			result_not_void: Result /= Void
+		end
+
 feature -- Status setting
 
 	set_is_binary
@@ -142,7 +168,7 @@ feature -- Status setting
 			has_alias: alias_name /= Void
 			not_is_bracket: not is_bracket
 			not_is_prefix: not is_prefix
-			is_valid_binary: is_valid_binary_operator (alias_name.value)
+			is_valid_binary: is_valid_binary
 		do
 		ensure
 			is_binary: is_binary
@@ -154,7 +180,7 @@ feature -- Status setting
 			has_alias: alias_name /= Void
 			not_is_bracket: not is_bracket
 			not_is_infix: not is_infix
-			is_valid_unary: is_valid_unary_operator (alias_name.value)
+			is_valid_unary: is_valid_unary
 		do
 		ensure
 			is_unary: is_unary
@@ -202,7 +228,7 @@ invariant
 	consistent_operator_name: (is_bracket or is_binary or is_unary) = (alias_name /= Void)
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -330,7 +330,7 @@ feature {NONE} -- Comment extraction
 			-- `Result': A list of tokens or Void if no comments were found.
 		local
 			l_comments: EIFFEL_COMMENTS
-			l_comment: STRING_8
+			l_comment: STRING_32
 		do
 			l_comments := (create {COMMENT_EXTRACTOR}).feature_comments_ex (a_feature, True)
 			if l_comments /= Void and then not l_comments.is_empty then
@@ -346,7 +346,7 @@ feature {NONE} -- Comment extraction
 					a_token_writer.add_indent
 					a_token_writer.add_indent
 
-					l_comment := l_comments.item.content
+					l_comment := l_comments.item.content_32
 					a_token_writer.add_comment_text ("--")
 					a_token_writer.add_comment_text (l_comment)
 
@@ -437,7 +437,7 @@ feature {NONE} -- Internationalization
 	f_edit_contracts: STRING = "Places the current feature in the contract editor for edition"
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

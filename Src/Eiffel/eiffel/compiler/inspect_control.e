@@ -46,6 +46,11 @@ inherit
 			{NONE} all
 		end
 
+	INTERNAL_COMPILER_STRING_EXPORTER
+		export
+			{NONE} all
+		end
+
 create
 	make
 

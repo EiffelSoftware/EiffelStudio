@@ -77,7 +77,7 @@ feature {NONE} -- Helpers
 
 feature -- Basic operations
 
-	replace_contracts (a_assertions: DS_BILINEAR [STRING])
+	replace_contracts (a_assertions: DS_BILINEAR [STRING_32])
 			-- Replaces the precondition contracts of a feature.
 			--
 			-- `a_assertions': Asssertions to replace contracts with.
@@ -87,7 +87,7 @@ feature -- Basic operations
 			a_assertions_attached: attached a_assertions
 			a_assertions_contains_attached_items: not a_assertions.has (Void)
 		local
-			l_code: STRING
+			l_code: STRING_32
 			l_ws: STRING_32
 			l_pos: INTEGER
 			l_st_builder: CODE_SYMBOL_TABLE_BUILDER
@@ -125,14 +125,12 @@ feature -- Basic operations
 					end
 
 						-- Set value.
-					if attached l_code.as_string_32 as l_code_32 then
-						if l_table.has_id ({CODE_TEMPLATE_ENTITY_NAMES}.selection_token_name) then
-							l_value := l_table.item ({CODE_TEMPLATE_ENTITY_NAMES}.selection_token_name)
-							l_value.set_value (l_code_32)
-						else
-							create l_value.make (l_code_32)
-							l_table.put (l_value, {CODE_TEMPLATE_ENTITY_NAMES}.selection_token_name)
-						end
+					if l_table.has_id ({CODE_TEMPLATE_ENTITY_NAMES}.selection_token_name) then
+						l_value := l_table.item ({CODE_TEMPLATE_ENTITY_NAMES}.selection_token_name)
+						l_value.set_value (l_code)
+					else
+						create l_value.make (l_code)
+						l_table.put (l_value, {CODE_TEMPLATE_ENTITY_NAMES}.selection_token_name)
 					end
 
 						-- Give Current a chance to add additional values.
@@ -165,7 +163,7 @@ feature -- Basic operations
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

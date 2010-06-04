@@ -102,6 +102,21 @@ feature -- Applicability
 
 feature -- Modification Register
 
+	extend_32 (a_clause: INTEGER; a_text: STRING_32)
+			-- Register an item insertion in `a_clause'-th inherit clause.
+			-- `a_text' is text of the item to be inserted at the last position in that inherit clause.
+			-- `a_clause' can be `rename_clause', `export_clause', `undefine_clause', `redefine_clause' or `select_caluse'.
+			-- `a_text' is in UTF-32
+		require
+			a_clause_valid: valid_clause (a_clause)
+			a_text_not_void: a_text /= Void
+			a_text_not_empty: not a_text.is_empty
+		do
+			extend (a_clause, encoding_converter.utf32_to_utf8 (a_text))
+		end
+
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Modification Register
+
 	extend (a_clause: INTEGER; a_text: STRING)
 			-- Register an item insertion in `a_clause'-th inherit clause.
 			-- `a_text' is text of the item to be inserted at the last position in that inherit clause.
@@ -126,6 +141,8 @@ feature -- Modification Register
 		do
 			inherit_clause_modifier.i_th (a_clause).replace (a_text, a_index)
 		end
+
+feature -- Modification Register
 
 	remove (a_clause: INTEGER; a_index: INTEGER)
 			-- Register a removal of `a_index'-th item in `a_clause'-th inherit clause.
@@ -389,7 +406,7 @@ invariant
 	match_list_not_void: match_list /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -402,21 +419,21 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

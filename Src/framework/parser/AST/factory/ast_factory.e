@@ -1,12 +1,15 @@
 note
 
-	description: "AST node factories"
+	description: "AST node factories. Accepts UTF-8 encoding in STRING_8 instances."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class AST_FACTORY
+
+inherit
+	INTERNAL_COMPILER_STRING_EXPORTER
 
 feature -- Buffer operation
 

@@ -26,6 +26,8 @@ inherit
 			{NONE} all
 		end
 
+	INTERNAL_COMPILER_STRING_EXPORTER
+
 feature -- Access
 
 	feature_id: INTEGER
@@ -33,17 +35,6 @@ feature -- Access
 
 	feature_name_id: INTEGER
 			-- Feature name ID of called feature.
-
-	feature_name: STRING
-			-- Feature name called
-		require
-			feature_name_id_set: feature_name_id > 0
-		do
-			Result := Names_heap.item (feature_name_id)
-		ensure
-			result_not_void: Result /= Void
-			result_not_empty: not Result.is_empty
-		end
 
 	routine_id: INTEGER
 			-- Routine ID for the access (used in final mode generation)
@@ -66,6 +57,19 @@ feature -- Access
 		do
 				-- Fallback to default implementation.
 			Result := enlarged
+		end
+
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
+
+	feature_name: STRING
+			-- Feature name called
+		require
+			feature_name_id_set: feature_name_id > 0
+		do
+			Result := Names_heap.item (feature_name_id)
+		ensure
+			result_not_void: Result /= Void
+			result_not_empty: not Result.is_empty
 		end
 
 feature -- Setting

@@ -34,10 +34,6 @@ feature -- Properties
 	has_postcondition: BOOLEAN;
 			-- Is the routine declaring some postcondition ?
 
-	obsolete_message: STRING;
-			-- Obsolete message
-			-- (Void if Current is not obsolete)
-
 	is_deferred: BOOLEAN;
 			-- Is the routine deferred?
 
@@ -63,6 +59,12 @@ feature -- Properties
 
 	enclosing_body_id: INTEGER
 			-- The Body id of the enclosing feature of an inline agent
+
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Properties
+
+	obsolete_message: STRING;
+			-- Obsolete message
+			-- (Void if Current is not obsolete)
 
 feature -- Access
 

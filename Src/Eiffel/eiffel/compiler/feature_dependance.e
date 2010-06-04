@@ -36,6 +36,16 @@ inherit
 			copy, is_equal
 		end
 
+	SHARED_ENCODING_CONVERTER
+		undefine
+			copy, is_equal
+		end
+
+	INTERNAL_COMPILER_STRING_EXPORTER
+		undefine
+			copy, is_equal
+		end
+
 create
 	make
 
@@ -105,12 +115,12 @@ feature -- Access
 			suppliers := new_suppliers
 		end;
 
-	feature_name: STRING
+	feature_name_32: STRING_32
 			-- Final name of the feature
 		require
 			feature_name_id_set: feature_name_id >= 1
 		do
-			Result := Names_heap.item (feature_name_id)
+			Result := encoding_converter.utf8_to_utf32 (feature_name)
 		ensure
 			Result_not_void: Result /= Void
 			Result_not_empty: not Result.is_empty
@@ -127,6 +137,19 @@ feature -- Access
 			feature_name_id := id
 		ensure
 			feature_name_id_set: feature_name_id = id
+		end
+
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
+
+	feature_name: STRING
+			-- Final name of the feature
+		require
+			feature_name_id_set: feature_name_id >= 1
+		do
+			Result := Names_heap.item (feature_name_id)
+		ensure
+			Result_not_void: Result /= Void
+			Result_not_empty: not Result.is_empty
 		end
 
 feature -- Comparison
@@ -194,7 +217,7 @@ feature -- Debug
 		end;
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -301,13 +301,13 @@ feature {DBG_EXPRESSION, DBG_EXPRESSION_EVALUATION, DBG_EXPRESSION_EVALUATOR, AS
 
 	valid_expression (expr: STRING_GENERAL): BOOLEAN
 			-- Is `expr' a valid expression?
+			-- UTF-32 encoding.
 		do
 			Result := expr /= Void and then
-						expr.is_valid_as_string_8 and then
-						(attached expr.to_string_8 as s8) and then
-						not s8.is_empty and then
-						not s8.has ('%R') and then
-						not s8.has ('%N')
+						(attached expr.to_string_32 as l_expr and then
+						not l_expr.is_empty and then
+						not l_expr.has ('%R') and then
+						not l_expr.has ('%N'))
 		end
 
 	analyze_expression
@@ -316,7 +316,7 @@ feature {DBG_EXPRESSION, DBG_EXPRESSION_EVALUATION, DBG_EXPRESSION_EVALUATOR, AS
 			valid_expression: valid_expression (text)
 		local
 			sp: SHARED_EIFFEL_PARSER
-			s8: STRING
+			s8: STRING_32
 			p: EIFFEL_PARSER
 			retried: BOOLEAN
 			en: EXPR_AS
@@ -334,8 +334,9 @@ feature {DBG_EXPRESSION, DBG_EXPRESSION_EVALUATION, DBG_EXPRESSION_EVALUATOR, AS
 					p := sp.expression_parser
 					p.set_syntax_version (p.transitional_64_syntax)
 					check expression_not_void: text /= Void end
-					s8 := text.as_string_8
-					p.parse_from_string (once "check " + s8, context.associated_class)
+					s8 := text.twin
+					s8.prepend (once "check ")
+					p.parse_from_string_32 (s8, context.associated_class)
 					has_syntax_error := p.syntax_error
 					if not has_syntax_error then
 						en := p.expression_node
@@ -408,8 +409,9 @@ feature {NONE} -- Implementation
 
 	is_valid_expression_string (s: STRING_GENERAL): BOOLEAN
 			-- Is a valid expression string ?
+			-- UTF-32 encoding
 		do
-			Result := s /= Void and then s.is_valid_as_string_8
+			Result := s /= Void
 		end
 
 invariant

@@ -204,7 +204,7 @@ feature -- Output
 					creation_name := l_root.procedure_name
 					if root_class.compiled_class /= Void and creation_name /= Void then
 						if root_class.compiled_class.has_feature_table then
-							cr_f := root_class.compiled_class.feature_with_name (creation_name)
+							cr_f := root_class.compiled_class.feature_with_name_32 (creation_name)
 						end
 						if cr_f /= Void then
 							a_formatter.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_colon)

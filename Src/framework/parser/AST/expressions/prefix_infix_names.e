@@ -13,7 +13,12 @@ inherit
 			{NONE} frozen_str, infix_str, prefix_str, quote_str
 		end
 
-feature -- Queries
+	SHARED_ENCODING_CONVERTER
+		export
+			{NONE} all
+		end
+
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Queries
 
 	is_mangled_name (name: STRING): BOOLEAN
 			-- Is `name' a mangled name that does not match an original name?
@@ -54,6 +59,60 @@ feature -- Queries
 		end
 
 feature -- Basic operations
+
+	extract_symbol_from_infix_32 (op: STRING_32): STRING_32
+			-- Get the symbol part from infix qualified operator `op'.
+		require
+			op_not_void: op /= Void
+		do
+			Result := op.substring (Infix_str.count + 1, op.count - Quote_str.count)
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	extract_symbol_from_prefix_32 (op: STRING_32): STRING_32
+			-- Get the symbol part from prefix qualified operator `op'.
+		require
+			op_not_void: op /= Void
+		do
+			Result := op.substring (Prefix_str.count + 1, op.count - Quote_str.count)
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	prefix_feature_name_with_symbol_32 (symbol: STRING_32): STRING_32
+			-- Internal name corresponding to prefix `symbol'.
+		require
+			symbol_not_void: symbol /= Void
+			symbol_not_empty: not symbol.is_empty
+		do
+				-- Allocate enough space for Result
+				-- 9 = count of 'Prefix_str' + 'Quote_str'
+			create Result.make (9 + symbol.count)
+			Result.append (Prefix_str)
+			Result.append (symbol)
+			Result.append (Quote_str)
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	infix_feature_name_with_symbol_32 (symbol: STRING_32): STRING_32
+			-- Internal name corresponding to prefix `symbol'
+		require
+			symbol_not_void: symbol /= Void
+			symbol_not_empty: not symbol.is_empty
+		do
+				-- Allocate enough space for Result
+				-- 8 = count of 'Infix_str' + 'Quote_str'
+			create Result.make (8 + symbol.count)
+			Result.append (Infix_str)
+			Result.append (symbol)
+			Result.append (Quote_str)
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Basic operations
 
 	prefix_feature_name_with_symbol (symbol: STRING): STRING
 			-- Internal name corresponding to prefix `symbol'.
@@ -134,6 +193,33 @@ feature -- Basic operations
 			result_not_void: Result /= Void
 		end
 
+	extract_alias_name_32 (op: STRING_32): STRING_32
+			-- Extract symbol part from alias name encoded as any of the following:
+			--   prefix "..."
+			--   infix "..."
+			--   []
+		require
+			op_not_void: op /= Void
+			op_not_empty: not op.is_empty
+			is_mangled_op: is_mangled_alias_name (op)
+		local
+			c: CHARACTER_32
+		do
+			c := op.item (1)
+			if c = '[' then
+					-- Bracket
+				Result := op
+			elseif c = 'p' then
+					-- Unary (prefix) operator
+				Result := extract_symbol_from_prefix_32 (op)
+			else
+					-- Binary (infix) operator
+				Result := extract_symbol_from_infix_32 (op)
+			end
+		ensure
+			result_not_void: Result /= Void
+		end
+
 feature {NONE} -- Implementation
 
 	syntax_checker: EIFFEL_SYNTAX_CHECKER
@@ -143,7 +229,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -156,22 +242,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- Class PREFIX_INFIX_NAMES

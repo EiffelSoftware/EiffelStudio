@@ -25,11 +25,6 @@ inherit
 
 feature -- Properties
 
-	feature_name: STRING
-			-- Constant name
-			-- [Note that the class id where the constant is written is
-			-- `class_id'.]
-
 	code: STRING = "VQMC"
 			-- Error code
 
@@ -39,12 +34,19 @@ feature -- Properties
 	expected_type: TYPE_A
 			-- Type of declaration of constant.
 
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Properties
+
+	feature_name: STRING
+			-- Constant name
+			-- [Note that the class id where the constant is written is
+			-- `class_id'.]
+
 feature -- Output
 
 	build_explain (a_text_formatter: TEXT_FORMATTER)
 		do
 			a_text_formatter.add ("Constant name: ")
-			a_text_formatter.add (feature_name)
+			a_text_formatter.add (encoding_converter.utf8_to_utf32 (feature_name))
 			a_text_formatter.add_new_line
 			a_text_formatter.add ("Found constant of type: ")
 			constant_type.append_to (a_text_formatter)

@@ -108,9 +108,10 @@ feature -- Miscellaneous
 					end
 
 					creation_name := l_root.procedure_name
+						-- Creation must be ASCII compatible, send to output directly.
 					if root_class.compiled_class /= Void and creation_name /= Void then
 						if root_class.compiled_class.has_feature_table then
-							cr_f := root_class.compiled_class.feature_with_name (creation_name)
+							cr_f := root_class.compiled_class.feature_with_name_32 (creation_name)
 						end
 						if cr_f /= Void then
 							text.process_symbol_text (ti_Colon)

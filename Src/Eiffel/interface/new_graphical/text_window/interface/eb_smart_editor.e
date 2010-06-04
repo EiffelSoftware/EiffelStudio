@@ -1067,8 +1067,8 @@ feature {NONE} -- syntax completion
 		do
 			Result := token.wide_image.twin
 			test := Result
-			is_else := string_32_is_caseless_ascii_string (test, "else")
-			is_then := string_32_is_caseless_ascii_string (test, "then")
+			is_else := string_32_is_caseless_equal (test, "else")
+			is_then := string_32_is_caseless_equal (test, "then")
 			if is_else or is_then then
 				from
 					blnk ?= token.previous
@@ -1082,16 +1082,16 @@ feature {NONE} -- syntax completion
 				if kw /= Void then
 					if is_else then
 						test := kw.wide_image.twin
-						if string_32_is_caseless_ascii_string (test, "or") then
+						if string_32_is_caseless_equal (test, "or") then
 							Result.prepend ("or ")
-						elseif string_32_is_caseless_ascii_string (test, "require") then
+						elseif string_32_is_caseless_equal (test, "require") then
 							Result.prepend ("require ")
 						end
 					elseif is_then then
 						test := kw.wide_image.twin
-						if string_32_is_caseless_ascii_string (test, "and") then
+						if string_32_is_caseless_equal (test, "and") then
 							Result.prepend ("and ")
-						elseif string_32_is_caseless_ascii_string (test, "ensure") then
+						elseif string_32_is_caseless_equal (test, "ensure") then
 							Result.prepend ("ensure ")
 						end
 					end
@@ -1380,7 +1380,7 @@ feature {NONE} -- Code completable implementation
 					until
 						l_line.after or l_end_loop
 					loop
-						if string_32_is_caseless_ascii_string (l_line.item.wide_image, "feature") then
+						if string_32_is_caseless_equal (l_line.item.wide_image, "feature") then
 							l_kt ?= l_line.item
 							if l_kt /= Void then
 								l_end_loop := True
@@ -1412,7 +1412,7 @@ feature {NONE} -- Code completable implementation
 								if l_found_blank then
 										-- We do not need signature after "like feature"
 										-- We do not need feature signature when it is a pointer reference. case: "$  feature"
-									if string_32_is_caseless_ascii_string (l_token.wide_image, "like") or token_equal (l_token, "$") then
+									if string_32_is_caseless_equal (l_token.wide_image, "like") or token_equal (l_token, "$") then
 										l_end_loop := True
 										set_discard_feature_signature (True)
 									else

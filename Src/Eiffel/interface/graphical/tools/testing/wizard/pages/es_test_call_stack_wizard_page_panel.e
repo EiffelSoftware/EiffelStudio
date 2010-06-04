@@ -148,7 +148,7 @@ feature {NONE} -- Query
 						if not (l_feature.is_external or l_feature.is_inline_agent) then
 							Result := l_feature.export_status.is_all or else
 								l_class.creation_feature = l_feature.associated_feature_i or else
-								(l_class.creators /= Void and then l_class.creators.has (l_feature.name))
+								l_class.has_creators and then l_class.has_creator_named_with (l_feature)
 						end
 					end
 				end

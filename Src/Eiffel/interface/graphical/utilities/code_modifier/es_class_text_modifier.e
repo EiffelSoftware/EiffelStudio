@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 			l_editor := active_editor_for_class (a_class)
 			if not is_editor_text_ready (l_editor) then
 					-- There's no open editor, use the class text from disk instead.
-				l_text := a_class.text
+				l_text := a_class.text_32
 				l_encoding ?= a_class.encoding
 			else
 				l_text := l_editor.wide_text
@@ -429,7 +429,7 @@ feature -- Basic operations
 					-- Save only if the text wasn't set in the editor or the editor was not modified before applying the modifications.
 				if (create {RAW_FILE}.make (context_class.file_name)).exists and then original_file_date /= context_class.file_date then
 						-- Need to use merge
-					l_new_text := context_class.text.as_attached
+					l_new_text := context_class.text_32.as_attached
 					l_new_text.prune_all ('%R')
 					l_new_text := merge_text (l_new_text)
 				else
@@ -522,19 +522,19 @@ feature {NONE} -- Basic operations
 			l_patch: STRING
 			l_text: STRING
 		do
-				-- |FIXME: diff library need to support Unicode.
-			l_text := text
+				-- Use UTF-8 encoding to diff.
+			l_text := encoding_converter.utf32_to_utf8 (text)
 			if {PLATFORM}.is_windows and then preferences.misc_data.text_mode_is_windows then
 					-- Remove carriage returns, else the diff will think there are modifications.
 				l_text.replace_substring_all ("%R", "")
 			end
 
 			create l_diff
-			l_diff.set_text (original_text, l_text)
+			l_diff.set_text (encoding_converter.utf32_to_utf8 (original_text), l_text)
 			l_diff.compute_diff
 			l_patch := l_diff.unified
 			if attached l_patch and then not l_patch.is_empty then
-				Result := l_diff.patch (a_current_text, l_patch, False).as_string_32.as_attached
+				Result := encoding_converter.utf8_to_utf32 (l_diff.patch (encoding_converter.utf32_to_utf8 (a_current_text), l_patch, False))
 			end
 
 			if logger.is_service_available then
@@ -639,7 +639,7 @@ feature -- Modifications (positional)
 		do
 			l_data := modified_data
 			l_pos := l_data.adjusted_position (a_pos)
-			l_data.text.insert_string (a_code.as_string_8, l_pos)
+			l_data.text.insert_string (a_code.as_string_32, l_pos)
 			l_data.adjust_position (a_pos, a_code.count)
 			set_is_dirty (True)
 		ensure
@@ -670,7 +670,7 @@ feature -- Modifications (positional)
 			l_data := modified_data
 			l_start_pos := l_data.adjusted_position (a_start_pos)
 			l_end_pos := l_data.adjusted_position (a_end_pos)
-			l_data.text.replace_substring (a_code.as_string_8, l_start_pos, l_end_pos)
+			l_data.text.replace_substring (a_code.as_string_32, l_start_pos, l_end_pos)
 			l_data.adjust_position (a_start_pos, (a_start_pos - a_end_pos - 1) + a_code.count)
 			set_is_dirty (True)
 		ensure
@@ -736,7 +736,7 @@ invariant
 	modified_data_attached: attached modified_data
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

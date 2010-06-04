@@ -25,6 +25,8 @@ inherit
 			{NONE} all
 		end
 
+	INTERNAL_COMPILER_STRING_EXPORTER
+
 feature -- Visitor
 
 	process (v: BYTE_NODE_VISITOR)
@@ -67,17 +69,6 @@ feature -- Attributes for externals
 	external_name_id: INTEGER
 			-- Name ID of C external.
 
-	external_name: STRING
-			-- Name of C external.
-		require
-			external_name_id_set: external_name_id > 0
-		do
-			Result := Names_heap.item (external_name_id)
-		ensure
-			result_not_void: Result /= Void
-			result_not_empty: not Result.is_empty
-		end
-
 	encapsulated: BOOLEAN;
 			-- Has the feature some assertion declared ?
 
@@ -93,6 +84,19 @@ feature -- Attributes for externals
 			not_a_static_call: not is_static_call
 		do
 			Result := static_class_type
+		end
+
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Attributes for externals
+
+	external_name: STRING
+			-- Name of C external.
+		require
+			external_name_id_set: external_name_id > 0
+		do
+			Result := Names_heap.item (external_name_id)
+		ensure
+			result_not_void: Result /= Void
+			result_not_empty: not Result.is_empty
 		end
 
 feature -- Status report

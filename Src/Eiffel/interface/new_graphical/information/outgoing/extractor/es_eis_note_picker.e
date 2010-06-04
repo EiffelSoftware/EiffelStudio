@@ -68,7 +68,7 @@ feature {NONE} -- Implementation
 							others: HASH_TABLE [STRING_32, STRING_32];
 							override: BOOLEAN]
 		do
-			if a_index.tag /= Void and then a_index.tag.name.is_case_insensitive_equal ({ES_EIS_TOKENS}.eis_string) then
+			if a_index.tag /= Void and then a_index.tag.name_8.is_case_insensitive_equal ({ES_EIS_TOKENS}.eis_string) then
 				l_index_list := a_index.index_list
 				l_entry_tuple := [Void, Void, Void, Void, Void, Void, False]
 				create l_others.make (3)
@@ -82,8 +82,9 @@ feature {NONE} -- Implementation
 					l_index_list.after
 				loop
 					l_atomic := l_index_list.item_for_iteration
-					if attached l_atomic.string_value as lt_string then
-						create l_attribute_pair.make_from_string (lt_string.twin)
+					if attached l_atomic.string_value_32 as lt_string then
+							-- |FIXME: Unicode handling.
+						create l_attribute_pair.make_from_string (lt_string.as_string_8)
 						l_attribute_pair.left_adjust
 						l_attribute_pair.right_adjust
 						l_attribute_pair.prune_all_leading ('"')
@@ -304,7 +305,7 @@ feature {NONE} -- Implemetation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

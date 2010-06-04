@@ -31,6 +31,8 @@ inherit
 	SHARED_SERVER
 	COMPILER_EXPORTER
 	REFACTORING_HELPER
+	INTERNAL_COMPILER_STRING_EXPORTER
+	SHARED_ENCODING_CONVERTER
 
 create
 	make, make_from_context
@@ -647,7 +649,7 @@ feature {NONE} -- Access: once manifest strings
 			-- Number of once manifest strings to be allocated for the given routine body index;
 			-- actual for the whole system
 
-	once_manifest_string_table: HASH_TABLE [ARRAY [STRING], INTEGER]
+	once_manifest_string_table: HASH_TABLE [ARRAY [like once_manifest_string_value], INTEGER]
 			-- Once manifest strings to be created for the given routine body index;
 			-- actual for the current class
 
@@ -669,13 +671,13 @@ feature -- Access: once manifest strings
 			non_negative_result: Result >= 0
 		end
 
-	once_manifest_string_value (number: INTEGER): STRING
+	once_manifest_string_value (number: INTEGER): TUPLE [value: STRING; is_string_32: BOOLEAN]
 			-- Value of once manifest string `number' in current routine body
 		require
 			is_static_system_data_safe: is_static_system_data_safe
 			valid_number: number > 0 and then number <= once_manifest_string_count
 		local
-			routine_once_manifest_strings: ARRAY [STRING]
+			routine_once_manifest_strings: ARRAY [TUPLE [value: STRING; is_string_32: BOOLEAN]]
 		do
 			routine_once_manifest_strings := once_manifest_string_table.item (original_body_index)
 			if routine_once_manifest_strings /= Void then
@@ -795,10 +797,11 @@ feature -- Access: once manifest strings
 		local
 			buf: like buffer
 			class_once_manifest_strings: like once_manifest_string_table
-			routine_once_manifest_strings: ARRAY [STRING]
+			routine_once_manifest_strings: ARRAY [like once_manifest_string_value]
 			body_index: like original_body_index
 			i: INTEGER
-			value: STRING
+			value: like once_manifest_string_value
+			value_32: STRING_32
 		do
 			buf := buffer
 			class_once_manifest_strings := once_manifest_string_table
@@ -820,16 +823,33 @@ feature -- Access: once manifest strings
 							-- RTPOMS is the macro used to create and store once manifest string
 							-- provided that it is not created and stored before
 						buf.put_new_line
-						buf.put_string ("RTPOMS(")
+						if value.is_string_32 then
+							buf.put_string ("RTPOMS32(")
+						else
+							buf.put_string ("RTPOMS(")
+						end
 						buf.put_integer (body_index - 1)
 						buf.put_character (',')
 						buf.put_integer (i - 1)
 						buf.put_character (',')
-						buf.put_string_literal (value)
+						if value.is_string_32 then
+							value_32 := encoding_converter.utf8_to_utf32 (value.value)
+							buf.put_string_literal (encoding_converter.string_32_to_stream (value_32))
+						else
+							buf.put_string_literal (value.value)
+						end
 						buf.put_character (',')
-						buf.put_integer (value.count)
+						if value.is_string_32 then
+							buf.put_integer (value_32.count)
+						else
+							buf.put_integer (value.value.count)
+						end
 						buf.put_character(',')
-						buf.put_integer (value.hash_code)
+						if value.is_string_32 then
+							buf.put_integer (value_32.hash_code)
+						else
+							buf.put_integer (value.value.hash_code)
+						end
 						buf.put_character (')')
 						buf.put_character (';')
 					end
@@ -839,7 +859,7 @@ feature -- Access: once manifest strings
 			end
 		end
 
-	register_once_manifest_string (value: STRING; number: INTEGER)
+	register_once_manifest_string (value: STRING; is_string_32: BOOLEAN; number: INTEGER)
 			-- Register that current routine body has once manifest string
 			-- with the given `number' of the given `value'.
 		require
@@ -848,10 +868,11 @@ feature -- Access: once manifest strings
 			valid_number: number > 0 and number <= once_manifest_string_count
 			same_if_registered:
 				once_manifest_string_value (number) /= Void implies
-				once_manifest_string_value (number) = value
+				(once_manifest_string_value (number).value = value and then
+				once_manifest_string_value (number).is_string_32 = is_string_32)
 		local
 			index: like original_body_index
-			routine_once_manifest_strings: ARRAY [STRING]
+			routine_once_manifest_strings: ARRAY [like once_manifest_string_value]
 		do
 			index := original_body_index
 			routine_once_manifest_strings := once_manifest_string_table.item (index)
@@ -859,9 +880,11 @@ feature -- Access: once manifest strings
 				create routine_once_manifest_strings.make (1, once_manifest_string_count)
 				once_manifest_string_table.force (routine_once_manifest_strings, index)
 			end
-			routine_once_manifest_strings.put (value, number)
+			routine_once_manifest_strings.put ([value, is_string_32], number)
 		ensure
-			registered: once_manifest_string_value (number) = value
+			registered: (once_manifest_string_value (number).value = value and then
+						once_manifest_string_value (number).is_string_32 = is_string_32)
+
 		end
 
 feature {NONE} -- Setting: once manifest strings

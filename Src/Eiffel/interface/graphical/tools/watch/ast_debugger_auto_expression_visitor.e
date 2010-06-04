@@ -36,6 +36,8 @@ inherit
 
 	SHARED_SERVER
 
+	INTERNAL_COMPILER_STRING_EXPORTER
+
 feature -- Entry
 
 	process (a_as: FEATURE_AS; cl: CLASS_C)

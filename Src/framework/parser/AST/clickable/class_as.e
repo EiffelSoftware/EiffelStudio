@@ -804,7 +804,7 @@ feature -- Query
 			Result := l_result
 		end
 
-	feature_of_name (a_name: STRING_GENERAL; a_reverse_lookup: BOOLEAN): FEATURE_AS
+	feature_of_name_32 (a_name: STRING_32; a_reverse_lookup: BOOLEAN): FEATURE_AS
 			-- Retrieves the first located feature using the supplied feature name.
 			--
 			-- `a_name': The feature name to retrieve a feature AS node for.
@@ -812,52 +812,8 @@ feature -- Query
 		require
 			a_name_attached: a_name /= Void
 			not_a_name_is_empty: not a_name.is_empty
-		local
-			l_fccursor, l_fcursor: INTEGER
 		do
-			if attached features as l_fclauses then
-				l_fccursor := l_fclauses.index
-				if a_reverse_lookup then
-					l_fclauses.finish
-				else
-					l_fclauses.start
-				end
-
-					-- Iterate the features clauses and feature all features
-				from until l_fclauses.after or Result /= Void loop
-					if attached {FEATURE_CLAUSE_AS} l_fclauses.item as l_fclause and then attached {EIFFEL_LIST [FEATURE_AS]} l_fclause.features as l_features then
-						l_fcursor := l_features.index
-						if a_reverse_lookup then
-							l_features.finish
-						else
-							l_features.start
-						end
-
-							-- Iterate all features and extend the result list
-						from until l_features.after or Result /= Void loop
-							if attached {FEATURE_AS} l_features.item as l_feature2 then --and then l_feature2.is_named (a_name) then
-								if l_feature2.is_named (a_name) then
-										-- Feature located
-									Result := l_feature2
-								end
-
-							end
-							if a_reverse_lookup then
-								l_features.back
-							else
-								l_features.forth
-							end
-						end
-						l_features.go_i_th (l_fcursor)
-					end
-					if a_reverse_lookup then
-						l_fclauses.back
-					else
-						l_fclauses.forth
-					end
-				end
-				l_fclauses.go_i_th (l_fccursor)
-			end
+			Result := feature_of_name (encoding_converter.utf32_to_utf8 (a_name), a_reverse_lookup)
 		end
 
 	feature_of_position (a_line: INTEGER;): FEATURE_AS
@@ -911,6 +867,64 @@ feature -- Query
 					end
 
 					l_fclauses.forth
+				end
+				l_fclauses.go_i_th (l_fccursor)
+			end
+		end
+
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Comparison
+
+	feature_of_name (a_name: STRING; a_reverse_lookup: BOOLEAN): FEATURE_AS
+			-- Retrieves the first located feature using the supplied feature name.
+			--
+			-- `a_name': The feature name to retrieve a feature AS node for.
+			-- `a_reverse_lookup': True to lookup a feature from the end to the beginning.
+		require
+			a_name_attached: a_name /= Void
+			not_a_name_is_empty: not a_name.is_empty
+		local
+			l_fccursor, l_fcursor: INTEGER
+		do
+			if attached features as l_fclauses then
+				l_fccursor := l_fclauses.index
+				if a_reverse_lookup then
+					l_fclauses.finish
+				else
+					l_fclauses.start
+				end
+
+					-- Iterate the features clauses and feature all features
+				from until l_fclauses.after or Result /= Void loop
+					if attached {FEATURE_CLAUSE_AS} l_fclauses.item as l_fclause and then attached {EIFFEL_LIST [FEATURE_AS]} l_fclause.features as l_features then
+						l_fcursor := l_features.index
+						if a_reverse_lookup then
+							l_features.finish
+						else
+							l_features.start
+						end
+
+							-- Iterate all features and extend the result list
+						from until l_features.after or Result /= Void loop
+							if attached {FEATURE_AS} l_features.item as l_feature2 then --and then l_feature2.is_named (a_name) then
+								if l_feature2.is_named (a_name) then
+										-- Feature located
+									Result := l_feature2
+								end
+
+							end
+							if a_reverse_lookup then
+								l_features.back
+							else
+								l_features.forth
+							end
+						end
+						l_features.go_i_th (l_fcursor)
+					end
+					if a_reverse_lookup then
+						l_fclauses.back
+					else
+						l_fclauses.forth
+					end
 				end
 				l_fclauses.go_i_th (l_fccursor)
 			end

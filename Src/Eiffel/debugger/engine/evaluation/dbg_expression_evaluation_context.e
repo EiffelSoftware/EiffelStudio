@@ -15,6 +15,8 @@ inherit
 			{NONE} all
 		end
 
+	INTERNAL_COMPILER_STRING_EXPORTER
+
 create
 	make,
 	make_from_expression_context
@@ -245,11 +247,11 @@ feature {NONE} -- Implementaion
 	Default_context_feature: FEATURE_I
 			-- Default context feature for `context_feature'
 		once
-			Result := System.Any_class.compiled_class.feature_named ("default_create")
+			Result := System.Any_class.compiled_class.feature_named_32 ("default_create")
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

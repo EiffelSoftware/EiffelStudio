@@ -299,7 +299,7 @@ feature {NONE} -- Query
 			l_option := l_context_class.group.options
 			l_parser := entity_declaration_parser
 			l_parser_wrapper := eiffel_parser_wrapper
-			l_parser_wrapper.parse_with_option (l_parser, l_local_string, l_option, True, l_context_class)
+			l_parser_wrapper.parse_with_option_32 (l_parser, l_local_string, l_option, True, l_context_class)
 
 			if l_parser_wrapper.has_error then
 				create l_declarations.make (0)
@@ -321,7 +321,7 @@ feature {NONE} -- Query
 					l_local_string.append_character (':')
 					l_local_string.append (l_string_locals.item_for_iteration)
 
-					l_parser_wrapper.parse_with_option (l_parser, l_local_string, l_option, True, l_context_class)
+					l_parser_wrapper.parse_with_option_32 (l_parser, l_local_string, l_option, True, l_context_class)
 					if not l_parser_wrapper.has_error then
 						l_declarations.extend (l_parser.entity_declaration_node.first)
 					end

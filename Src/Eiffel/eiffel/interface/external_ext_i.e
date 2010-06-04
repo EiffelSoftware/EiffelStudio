@@ -38,6 +38,11 @@ inherit
 			is_equal
 		end
 
+	INTERNAL_COMPILER_STRING_EXPORTER
+		undefine
+			is_equal
+		end
+
 feature -- Status report
 
 	is_il: BOOLEAN
@@ -123,7 +128,7 @@ feature -- Properties
 			-- mode we need to ensure that GC will not be blocked waiting for the
 			-- blocking call to resume.
 
-feature -- Convenience
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Convenience
 
 	alias_name: STRING
 			-- Associated name to `alias_name_id'.

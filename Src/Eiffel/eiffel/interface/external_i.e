@@ -139,12 +139,6 @@ feature
 			Result := True;
 		end;
 
-	external_alias_name: STRING
-			-- External alias name if any.
-		do
-			Result := Names_heap.item (external_alias_name_id)
-		end
-
 	external_name_id: INTEGER
 			-- External_name ID
 		do
@@ -256,6 +250,14 @@ feature
 			else
 				system.removed_log_file.add (class_type, feature_name)
 			end
+		end
+
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
+
+	external_alias_name: STRING
+			-- External alias name if any.
+		do
+			Result := Names_heap.item (external_alias_name_id)
 		end
 
 feature {NONE} -- Api

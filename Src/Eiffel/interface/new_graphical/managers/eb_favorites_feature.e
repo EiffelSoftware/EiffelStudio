@@ -38,7 +38,7 @@ create
 
 feature {NONE} -- Access
 
-	make (a_name: STRING; a_parent: EB_FAVORITES_ITEM_LIST)
+	make (a_name: like name; a_parent: EB_FAVORITES_ITEM_LIST)
 			-- Initialize Current with `name' set to `a_name'.
 		do
 			Precursor {EB_FAVORITES_ITEM} (a_name, a_parent)
@@ -58,7 +58,7 @@ feature {NONE} -- Access
 			make (feature_name, a_parent)
 		end
 
-	make_with_class_c (a_name: STRING; a_class_c: CLASS_C; a_parent: EB_FAVORITES_ITEM_LIST)
+	make_with_class_c (a_name: like name; a_class_c: CLASS_C; a_parent: EB_FAVORITES_ITEM_LIST)
 			-- Generate from the data associated to a feature stone and attach to `a_parent'
 		require
 			parent_non_void: a_parent /= Void
@@ -66,7 +66,7 @@ feature {NONE} -- Access
 			valid_class_c: a_class_c /= Void
 		do
 			class_name := a_class_c.name_in_upper
-			feature_name := a_name.as_lower
+			feature_name := string_general_as_lower (a_name)
 			associated_class_c := a_class_c
 			make (feature_name, a_parent)
 		end
@@ -119,7 +119,7 @@ feature -- Convert
 
 	class_name: STRING
 
-	feature_name: STRING
+	feature_name: STRING_32
 
 	associated_e_feature: E_FEATURE
 			-- E_FEATURE associated with Current, Void if none.
@@ -178,20 +178,20 @@ feature {NONE} -- Implementation
 				end
 			end
 			if associated_class_c /= Void and associated_e_feature = Void then
-				associated_e_feature := associated_class_c.feature_with_name (feature_name)
+				associated_e_feature := associated_class_c.feature_with_name_32 (feature_name)
 			end
 		end
 
 feature {EB_FAVORITES_ITEM_LIST, EB_FAVORITES_ITEM} -- Load/Save
 
-	string_representation: STRING
+	string_representation: STRING_32
 			-- String representation for Current.
 		do
 			Result := name
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

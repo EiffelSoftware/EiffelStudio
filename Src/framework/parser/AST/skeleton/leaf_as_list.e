@@ -35,6 +35,11 @@ inherit
 			out
 		end
 
+	INTERNAL_COMPILER_STRING_EXPORTER
+		undefine
+			out
+		end
+
 create
 	make
 
@@ -344,7 +349,7 @@ feature -- Region validity
 			end
 		end
 
-feature -- Text modification
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Text modification
 
 	prepend_region (a_region: ERT_TOKEN_REGION; a_text: STRING)
 			-- Prepend `a_text' to `a_region'.
@@ -421,7 +426,7 @@ feature -- Text status
 			Result := active_modifier_list.for_all (agent {ERT_REGION_MODIFIER}.is_region_disjoint (a_region))
 		end
 
-feature -- Text
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Text
 
 	original_text (a_region: ERT_TOKEN_REGION): STRING
 			-- Original text of `a_region'
@@ -902,7 +907,7 @@ invariant
 	trunks_not_empty: not trunks.is_empty
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

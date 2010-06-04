@@ -155,6 +155,8 @@ inherit
 
 	EVS_HELPERS
 
+	EB_TOKEN_TOOLKIT
+
 create {EB_DEVELOPMENT_WINDOW_DIRECTOR}
 	make
 
@@ -1729,6 +1731,7 @@ feature {EB_STONE_CHECKER, EB_STONE_FIRST_CHECKER, EB_DEVELOPMENT_WINDOW_PART} -
 			l_feature: E_FEATURE
 			l_names: EIFFEL_LIST [FEATURE_NAME]
 			offset: TUPLE [start_offset: INTEGER; end_offset: INTEGER]
+			l_mapper: UNICODE_POSITION_MAPPER
 		do
 			if not managed_main_formatters.first.selected then
 					-- We are either in clickable mode or looking at a .NET class.
@@ -1738,7 +1741,7 @@ feature {EB_STONE_CHECKER, EB_STONE_FIRST_CHECKER, EB_DEVELOPMENT_WINDOW_PART} -
 				if l_feature = Void then
 					l_feature := feat_as
 				end
-				editors_manager.current_editor.find_feature_named (l_feature.name)
+				editors_manager.current_editor.find_feature_named (l_feature.name_32)
 			else
 				if displayed_class.is_compiled then
 						-- We need to adapt E_FEATURE to the current displayed class
@@ -1755,21 +1758,22 @@ feature {EB_STONE_CHECKER, EB_STONE_FIRST_CHECKER, EB_DEVELOPMENT_WINDOW_PART} -
 				end
 				l_feat_as := l_feature.ast
 				if l_feat_as /= Void then
+					create l_mapper.make (l_feature.written_class.original_class.text_8)
 					from
 						l_names := l_feat_as.feature_names
 						l_names.start
 					until
 						l_names.after or else
-						l_feature.name.is_case_insensitive_equal (l_names.item.internal_name.name)
+						string_32_is_caseless_equal (l_feature.name_32, l_names.item.internal_name.name_32)
 					loop
 						l_names.forth
 					end
 					if not l_names.after then
-						begin_index := l_names.item.start_position
+						begin_index := l_mapper.utf32_pos_from_utf8_pos (l_names.item.start_position)
 					else
 							-- Something wrong happened, the feature does not exist anymore.
 							-- We simply take the position of the first one.
-						begin_index := l_names.start_position
+						begin_index := l_mapper.utf32_pos_from_utf8_pos (l_names.start_position)
 					end
 					offset := relative_location_offset ([begin_index, 0], displayed_class)
 					editors_manager.current_editor.scroll_to_when_ready (begin_index - offset.start_offset)
@@ -1784,16 +1788,18 @@ feature {EB_STONE_CHECKER, EB_STONE_FIRST_CHECKER, EB_DEVELOPMENT_WINDOW_PART} -
 			begin_index, end_index: INTEGER
 			offset: TUPLE [start_offset: INTEGER; end_offset: INTEGER]
 			match_list: LEAF_AS_LIST
+			l_mapper: UNICODE_POSITION_MAPPER
 		do
 			if displayed_class.is_compiled then
 				match_list := system.match_list_server.item (displayed_class.compiled_class.class_id)
 			end
+			create l_mapper.make (displayed_class.text_8)
 			if match_list /= Void then
-				begin_index := a_ast.complete_start_position (match_list)
-				end_index := a_ast.complete_end_position (match_list)
+				begin_index := l_mapper.utf32_pos_from_utf8_pos (a_ast.complete_start_position (match_list))
+				end_index := l_mapper.next_utf32_pos_from_utf8_pos (a_ast.complete_end_position (match_list))
 			else
-				begin_index := a_ast.start_position
-				end_index := a_ast.end_position
+				begin_index := l_mapper.utf32_pos_from_utf8_pos (a_ast.start_position)
+				end_index := l_mapper.next_utf32_pos_from_utf8_pos (a_ast.end_position)
 			end
 			offset := relative_location_offset ([begin_index, end_index], displayed_class)
 			scroll_to_selection ([begin_index - offset.start_offset, end_index - offset.end_offset + 1], a_selected)
@@ -1818,8 +1824,8 @@ feature {EB_STONE_CHECKER, EB_STONE_FIRST_CHECKER, EB_DEVELOPMENT_WINDOW_PART} -
 			a_location_attached: a_location /= Void
 			a_displayed_class_attached: a_displayed_class /= Void
 		local
-			class_text: STRING
-			tmp_text: STRING
+			class_text: STRING_32
+			tmp_text: STRING_32
 			begin_offset: INTEGER
 			end_offset: INTEGER
 			a_start_pos, a_end_pos: INTEGER
@@ -1827,7 +1833,7 @@ feature {EB_STONE_CHECKER, EB_STONE_FIRST_CHECKER, EB_DEVELOPMENT_WINDOW_PART} -
 			a_start_pos := a_location.a_start_pos
 			a_end_pos := a_location.a_end_pos
 
-			class_text := a_displayed_class.text
+			class_text := a_displayed_class.text_32
 			if class_text /= Void then
 				tmp_text := class_text.substring (1, a_start_pos)
 				begin_offset := tmp_text.occurrences('%R')
@@ -1998,21 +2004,21 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER} -- Initliazed by EB_DEVELOPMENT_WINDOW_B
 			-- Send current targeting feature to context tool if possible.
 			-- Used by `send_stone_to_context_cmd'.
 		local
-			l_feature_text: STRING
+			l_feature_text: STRING_32
 			l_class_stone: CLASSI_STONE
 			l_feature_stone: FEATURE_STONE
 			l_class_c: CLASS_C
 			l_feature: E_FEATURE
 		do
 			if address_manager /= Void then
-				l_feature_text := address_manager.feature_address.text.as_string_8
+				l_feature_text := address_manager.feature_address.text
 			end
 			l_class_stone ?= stone
 			if l_class_stone /= Void then
 				l_class_c := l_class_stone.class_i.compiled_representation
 				if l_class_c /= Void then
 					if l_feature_text /= Void and then not l_feature_text.is_empty and then l_class_c.has_feature_table then
-						l_feature := l_class_c.feature_with_name (l_feature_text)
+						l_feature := l_class_c.feature_with_name_32 (l_feature_text)
 					end
 					if l_feature /= Void then
 						create l_feature_stone.make (l_feature)
@@ -2087,13 +2093,13 @@ feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER, EB_DEVELOPMENT_WINDOW_PART,
 			l_commander: ES_FEATURES_TOOL_COMMANDER_I
 		do
 			if a_feature_name /= Void then
-				address_manager.set_feature_text_simply (a_feature_name.internal_name.name)
+				address_manager.set_feature_text_simply (a_feature_name.internal_name.name_32)
 				if class_name /= Void and group /= Void then
 					l_class_i := eiffel_universe.safe_class_named (class_name, group)
 					if l_class_i /= Void and then l_class_i.is_compiled then
 						l_classc := l_class_i.compiled_class
 						if l_classc.has_feature_table then
-							l_efeature := l_classc.feature_with_name (a_feature_name.internal_name.name)
+							l_efeature := l_classc.feature_with_name_id (a_feature_name.internal_name.name_id)
 							if l_efeature /= Void and then l_efeature.written_in /= l_classc.class_id then
 								l_efeature := Void
 							end
@@ -2105,7 +2111,7 @@ feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER, EB_DEVELOPMENT_WINDOW_PART,
 				else
 					l_commander ?= shell_tools.tool ({ES_FEATURES_TOOL})
 					check l_commander_attached: l_commander /= Void end
-					if l_commander /= Void and attached a_feature_name.internal_name.name as l_name then
+					if l_commander /= Void and attached a_feature_name.internal_name.name_32 as l_name then
 						l_commander.select_feature_item_by_name (l_name)
 					end
 				end

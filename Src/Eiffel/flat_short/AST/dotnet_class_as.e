@@ -65,18 +65,18 @@ feature {NONE} -- Initialization
 		do
 
 					-- Initialize all feature category lists.
-			create property_features.make ("Properties", True)
-			create property_setting_features.make ("Property Setting", True)
-			create events_features.make ("Events", True)
-			create access_features.make ("Access", True)
-			create query_features.make ("Query", True)
-			create command_features.make ("Commands", True)
-			create hidden_property_features.make ("Properties", False)
-			create hidden_property_setting_features.make ("Property Setting", False)
-			create hidden_events_features.make ("Events", False)
-			create hidden_access_features.make ("Access", False)
-			create hidden_query_features.make ("Query", False)
-			create hidden_command_features.make ("Commands", False)
+			create property_features.make_32 ("Properties", True)
+			create property_setting_features.make_32 ("Property Setting", True)
+			create events_features.make_32 ("Events", True)
+			create access_features.make_32 ("Access", True)
+			create query_features.make_32 ("Query", True)
+			create command_features.make_32 ("Commands", True)
+			create hidden_property_features.make_32 ("Properties", False)
+			create hidden_property_setting_features.make_32 ("Property Setting", False)
+			create hidden_events_features.make_32 ("Events", False)
+			create hidden_access_features.make_32 ("Access", False)
+			create hidden_query_features.make_32 ("Query", False)
+			create hidden_command_features.make_32 ("Commands", False)
 
 			from
 				entities.start
@@ -107,7 +107,7 @@ feature {NONE} -- Initialization
 						end
 					else
 						if misc_features = Void then
-							create misc_features.make ("Miscellaneous", True)
+							create misc_features.make_32 ("Miscellaneous", True)
 						end
 						misc_features.extend (l_entity)
 					end
@@ -520,7 +520,7 @@ feature {NONE} -- Formatting
 			end
 			a_ctxt.process_comment_text (ti_dashdash, Void)
 			a_ctxt.put_space
-			a_ctxt.put_comment_text (a_header.name)
+			a_ctxt.put_comment_text (a_header.name_32)
 			a_ctxt.put_new_line
 		end
 
@@ -589,7 +589,7 @@ invariant
 	ancestors_not_void: ancestors /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

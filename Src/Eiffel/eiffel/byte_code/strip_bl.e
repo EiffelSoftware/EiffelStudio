@@ -70,6 +70,16 @@ feature
 			buf.put_string (" }");
 		end;
 
+	set_feature_ids (ids: like feature_ids)
+			-- Set feature_ids to `ids'
+		require
+			valid_arg: ids /= Void
+		do
+			feature_ids := ids
+		end;
+
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Generation
+
 	generate_attribute_names_list
 			-- Generate routine ids (from feature ids) as a C list.
 		require
@@ -101,14 +111,6 @@ feature
 				buf.put_string ("static char **items = NULL;")
 			end
 			buf.put_new_line;
-		end;
-
-	set_feature_ids (ids: like feature_ids)
-			-- Set feature_ids to `ids'
-		require
-			valid_arg: ids /= Void
-		do
-			feature_ids := ids
 		end;
 
 invariant

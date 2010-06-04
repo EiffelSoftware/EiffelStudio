@@ -581,7 +581,7 @@ feature {NONE} -- Implementation
 			l_features: LIST [FEATURE_AS]
 			l_item: FEATURE_AS
 			l_feature_names: EIFFEL_LIST [FEATURE_NAME]
-			str: STRING
+			str: STRING_32
 			sorted_names: SORTED_TWO_WAY_LIST [EV_MODEL_TEXT]
 			signature: STRING
 			e_feature: E_FEATURE
@@ -631,7 +631,8 @@ feature {NONE} -- Implementation
 					until
 						l_feature_names.after
 					loop
-						str := l_feature_names.item.visual_name.twin + signature
+						create str.make_from_string (l_feature_names.item.visual_name_32)
+						str.append (signature)
 						create txt.make_with_text (str)
 						txt.set_identified_font (bon_client_label_font)
 						txt.set_foreground_color (bon_client_label_color)

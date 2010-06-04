@@ -67,6 +67,7 @@ feature {NONE} -- Initialize
 			once_line: EV_MODEL_LINE
 			signature: STRING
 			f_names: EIFFEL_LIST [FEATURE_NAME]
+			l_text: STRING_32
 		do
 			default_create
 
@@ -98,7 +99,7 @@ feature {NONE} -- Initialize
 			loop
 				l_feature := l_features.item
 
-				e_feature := a_fs.class_c.feature_with_name (l_feature.feature_name.name)
+				e_feature := a_fs.class_c.feature_with_name_id (l_feature.feature_name.name_id)
 
 				signature := full_signature_compiled (e_feature)
 
@@ -108,7 +109,10 @@ feature {NONE} -- Initialize
 				until
 					f_names.after
 				loop
-					create txt.make_with_text (visibility + f_names.item.visual_name + signature)
+					create l_text.make_from_string (visibility)
+					l_text.append (f_names.item.visual_name_32)
+					l_text.append (signature)
+					create txt.make_with_text (l_text)
 
 					txt.set_pebble (create {FEATURE_STONE}.make (e_feature))
 					txt.set_accept_cursor (cursors.cur_feature)
@@ -128,7 +132,10 @@ feature {NONE} -- Initialize
 			end
 			extend (feature_group)
 
-			section_text.set_text ("+" + features_count.out + section_text.text)
+			create l_text.make_from_string ("+")
+			l_text.append (features_count.out)
+			l_text.append (section_text.text)
+			section_text.set_text (l_text)
 			feature_section := a_fs
 			container := a_container
 			is_expanded := False
@@ -293,7 +300,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

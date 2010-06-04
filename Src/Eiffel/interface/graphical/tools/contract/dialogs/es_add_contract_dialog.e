@@ -80,6 +80,8 @@ feature {NONE} -- Initialization
 			l_vbox.disable_item_expand (l_label)
 
 			create contract_editor.make (development_window)
+				-- Always load text from STRING_32.
+			contract_editor.set_encoding (utf32)
 			auto_recycle (contract_editor)
 			contract_editor.disable_line_numbers
 			contract_editor.disable_has_breakable_slots
@@ -197,7 +199,7 @@ feature {NONE} -- Validation
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
 		do
-			if a_text.is_empty or else contract_tag_name_regex.matches (a_text.as_string_8) then
+			if a_text.is_empty or else contract_tag_name_regex.matches (utf32_to_utf8 (a_text)) then
 				Result := [True, Void]
 			else
 				Result := [False, ("The contract tag name is not a valid Eiffel identifier.").as_string_32]
@@ -229,11 +231,12 @@ feature {NONE} -- Action handler
 			is_initialized: is_initialized
 		local
 			l_error: ES_ERROR_PROMPT
-			l_uc_string: UC_STRING
+			l_str: STRING_32
 		do
 			check not_error_handler_has_error: not error_handler.has_error end
-			create l_uc_string.make_from_utf8 (utf32_to_utf8 (("check ").as_string_32 + contract_editor.wide_text))
-			expression_parser.parse_from_string (l_uc_string, Void)
+			l_str := contract_editor.wide_text
+			l_str.prepend (once "check ")
+			expression_parser.parse_from_string_32 (l_str, Void)
 			if expression_parser.syntax_error then
 				create l_error.make_standard (interface_messages.e_contract_tool_expression_error)
 				l_error.show_on_active_window
@@ -275,7 +278,7 @@ invariant
 	contract_tag_is_valid: contract /= Void implies not contract.contract.is_empty
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

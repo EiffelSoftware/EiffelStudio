@@ -29,6 +29,8 @@ inherit
 			execute
 		end
 
+	INTERNAL_COMPILER_STRING_EXPORTER
+
 feature -- Initialization
 
 	make (cn, fn, filter: STRING)
@@ -102,6 +104,7 @@ feature {NONE} -- Implementation
 		do
 			if feature_name = Void then
 				command_line_io.get_feature_name;
+					--|FIXME: Unicode should be handled.
 				feature_name := command_line_io.last_input;
 			end;
 			if not command_line_io.abort then
@@ -139,7 +142,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

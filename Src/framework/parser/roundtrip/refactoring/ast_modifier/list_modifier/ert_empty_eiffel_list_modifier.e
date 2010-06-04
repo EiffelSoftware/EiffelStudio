@@ -80,7 +80,7 @@ feature -- Applicability
 			applied := True
 		end
 
-feature
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Modifier register
 
 	insert_left (item_text: STRING; i: INTEGER)
 		require else
@@ -114,14 +114,6 @@ feature
 			end
 		end
 
-	remove (i: INTEGER)
-			-- Not applicable.
-		do
-			check
-				not_applicable: False
-			end
-		end
-
 	prepend (item_text: STRING)
 		do
 			insert_left (item_text, 0)
@@ -130,6 +122,16 @@ feature
 	append (item_text: STRING)
 		do
 			insert_right (item_text, 0)
+		end
+
+feature -- Modifier register
+
+	remove (i: INTEGER)
+			-- Not applicable.
+		do
+			check
+				not_applicable: False
+			end
 		end
 
 feature -- Status reporting
@@ -254,7 +256,7 @@ invariant
 	separator_not_void: separator /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -267,21 +269,21 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

@@ -58,8 +58,8 @@ feature -- Element change
 			a_contract_attached: a_contract /= Void
 			not_a_contract_is_empty: not a_contract.is_empty
 		do
-			tag_text.set_text (a_tag.as_string_32.as_attached)
-			contract_editor.load_text (a_contract.as_string_8)
+			tag_text.set_text (a_tag.as_string_32)
+			contract_editor.load_text (a_contract.as_string_32)
 			set_is_dirty (False)
 		ensure
 			not_is_dirty: not is_dirty
@@ -93,7 +93,7 @@ feature {NONE} -- Action handler
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

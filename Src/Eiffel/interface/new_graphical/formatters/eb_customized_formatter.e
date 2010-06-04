@@ -83,13 +83,13 @@ feature -- Access
 			Result := command_name_internal
 		end
 
-	element_name: STRING
+	element_name: STRING_32
 			-- name of associated element in current formatter.
 			-- For exmaple, if a class stone is associated to current, `element_name' would be the class name.
 			-- Void if element is not retrievable.
 		do
 			if stone /= Void and then stone.is_valid then
-				Result := stone.stone_name.as_string_8
+				Result := stone.stone_name.as_string_32
 			end
 		end
 
@@ -602,7 +602,7 @@ invariant
 	menu_name_internal_attached: menu_name_internal /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -141,7 +141,8 @@ feature {NONE} -- Agents
 			-- Ok was pressed.
 		local
 			l_root: CONF_ROOT
-			l_cluster, l_class, l_feature: STRING
+			l_cluster, l_class: STRING
+			l_feature: STRING_32
 			l_checker: EIFFEL_SYNTAX_CHECKER
 		do
 			if all_classes.is_selected then
@@ -149,7 +150,7 @@ feature {NONE} -- Agents
 			else
 				l_cluster := cluster_name.text.to_string_8
 				l_class := class_name.text.to_string_8
-				l_feature := feature_name.text.to_string_8
+				l_feature := feature_name.text
 
 					-- Check validity of l_cluster, l_class and l_feature.
 				create l_checker
@@ -157,7 +158,7 @@ feature {NONE} -- Agents
 					prompts.show_error_prompt (conf_interface_names.root_invalid_cluster, Current, Void)
 				elseif not l_class.is_empty and not l_checker.is_valid_class_type_name (l_class) then
 					prompts.show_error_prompt (conf_interface_names.root_invalid_class, Current, Void)
-				elseif not l_feature.is_empty and not l_checker.is_valid_feature_name (l_feature) then
+				elseif not l_feature.is_empty and not l_checker.is_valid_feature_name_32 (l_feature) then
 					prompts.show_error_prompt (conf_interface_names.root_invalid_feature, Current, Void)
 				else
 					if l_cluster.is_empty then
@@ -167,7 +168,8 @@ feature {NONE} -- Agents
 						l_feature := Void
 					end
 					if not l_class.is_empty then
-						create l_root.make (l_cluster, l_class, l_feature, False)
+							-- |FIXME: Unicode support
+						create l_root.make (l_cluster, l_class, l_feature.as_string_8, False)
 					elseif l_cluster /= Void or l_feature /= Void then
 						prompts.show_error_prompt (conf_interface_names.root_no_class, Current, Void)
 					elseif target.child_targets.is_empty then
@@ -187,7 +189,7 @@ invariant
 	elements: is_initialized implies cluster_name /= Void and class_name /= Void and feature_name /= Void and all_classes /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -200,21 +202,21 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

@@ -35,14 +35,14 @@ feature -- Access
 			Result := Eiffel_universe.cluster_of_name (name)
 		end
 
-	feature_by_name (name: STRING): E_FEATURE
+	feature_by_name_32 (name: STRING_32): E_FEATURE
 			-- Return feature in current class with `name'. `Void' if not in system.
 		local
 			cc: CLASS_C
 		do
 			cc := Eiffel_system.System.current_class
 			if cc /= Void then
-				Result := cc.feature_with_name (name)
+				Result := cc.feature_with_name_32 (name)
 			end
 		end
 
@@ -220,7 +220,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

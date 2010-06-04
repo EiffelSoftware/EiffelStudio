@@ -487,7 +487,7 @@ feature -- Once manifest string manipulation
 		do
 		end
 
-	generate_once_string (number: INTEGER; value: STRING; is_cil_string: BOOLEAN)
+	generate_once_string (number: INTEGER; value: STRING; type: INTEGER)
 			-- Generate code for once string in a current routine with the given
 			-- `number' and `value' using CIL string type if `is_cil_string' is `true'
 			-- or Eiffel string type otherwise.
@@ -707,12 +707,30 @@ feature -- Constants generation
 			-- Put `s' on IL stack.
 		do
 		end
+		
+	put_manifest_string_32_from_system_string_local (n: INTEGER)
+			-- Create a manifest string by using local at position `n' which
+			-- should be of type SYSTEM_STRING.
+		do
+		end
+
+	put_manifest_string_32 (s: STRING)
+			-- Put `s' on IL stack.
+			-- `s' is in UTF-8
+		do
+		end
 
 	put_system_string (s: STRING)
 			-- Put instance of platform String object corresponding to `s' on IL stack.
 		do
 		end
 
+	put_system_string_32 (s: STRING)
+			-- Put `System.String' object corresponding to `s' on IL stack.
+			-- `s' is in UTF-8 encoding.
+		do
+		end
+		
 	put_numeric_integer_constant (type: TYPE_A; i: INTEGER)
 			-- Put `i' as a constant of type `type'.
 		do

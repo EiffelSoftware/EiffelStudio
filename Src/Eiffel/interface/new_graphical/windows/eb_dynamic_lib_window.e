@@ -44,6 +44,11 @@ inherit
 			{NONE} all
 		end
 
+	INTERNAL_COMPILER_STRING_EXPORTER -- For fast UTF-8 name comparison
+		export
+			{NONE} all
+		end
+
 create {EB_WINDOW_MANAGER}
 	make
 
@@ -764,17 +769,17 @@ feature {NONE} -- Implementation: Graphical interface
 				Result.extend (empty_string)
 			end
 			if exp.creation_routine /= Void then
-				Result.extend (exp.creation_routine.name)
+				Result.extend (exp.creation_routine.name_32)
 			else
 				Result.extend (empty_string)
 			end
 			if exp.routine /= Void then
-				Result.extend (exp.routine.name)
+				Result.extend (exp.routine.name_32)
 			else
 				Result.extend (empty_string)
 			end
-			if exp.alias_name /= Void then
-				Result.extend (exp.alias_name)
+			if attached exp.alias_name_32 as l_name then
+				Result.extend (l_name)
 			else
 				Result.extend (empty_string)
 			end
@@ -866,7 +871,7 @@ feature {NONE} -- Implementation: Creation routine selection
 			feature_list_has_several_elements: creation_routine_list.count > 1
 		local
 			choice: EB_CHOICE_DIALOG
-			feature_names: ARRAYED_LIST [STRING]
+			feature_names: ARRAYED_LIST [STRING_32]
 			feature_pixmaps: ARRAYED_LIST [EV_PIXMAP]
 		do
 			create feature_names.make (creation_routine_list.count)
@@ -876,7 +881,7 @@ feature {NONE} -- Implementation: Creation routine selection
 			until
 				creation_routine_list.after
 			loop
-				feature_names.extend (creation_routine_list.item.name)
+				feature_names.extend (creation_routine_list.item.name_32)
 				feature_pixmaps.extend (pixmap_from_e_feature (creation_routine_list.item))
 				creation_routine_list.forth
 			end
@@ -1348,21 +1353,21 @@ feature {NONE} -- Implementation: Properties dialog
 		local
 			cit: EV_LIST_ITEM
 			curcr: STRING
-			crname: STRING
-			curcc: STRING
+			crname: STRING_32
+			curcc: STRING_32
 		do
 			available_creation_routines := valid_creation_routines (modified_exported_feature.compiled_class)
 			class_field.set_text (modified_exported_feature.compiled_class.name)
-			feature_field.set_text (modified_exported_feature.routine.name)
+			feature_field.set_text (modified_exported_feature.routine.name_32)
 			if modified_exported_feature.creation_routine /= Void then
-				curcr := modified_exported_feature.creation_routine.name
+				curcr := modified_exported_feature.creation_routine.name_32
 			end
 			from
 				available_creation_routines.start
 			until
 				available_creation_routines.after
 			loop
-				crname := available_creation_routines.item.name
+				crname := available_creation_routines.item.name_32
 				create cit.make_with_text (crname)
 				creation_combo.extend (cit)
 				if curcr /= Void and then curcr.is_equal (crname) then
@@ -1370,8 +1375,8 @@ feature {NONE} -- Implementation: Properties dialog
 				end
 				available_creation_routines.forth
 			end
-			if modified_exported_feature.alias_name /= Void then
-				alias_field.set_text (modified_exported_feature.alias_name)
+			if attached modified_exported_feature.alias_name_32 as l_name then
+				alias_field.set_text (l_name)
 			end
 			if is_windows then
 				if modified_exported_feature.index > 0 then
@@ -1598,7 +1603,7 @@ feature {NONE} -- Implementation: Properties dialog
 					until
 						available_creation_routines.after
 					loop
-						create cit.make_with_text (available_creation_routines.item.name)
+						create cit.make_with_text (available_creation_routines.item.name_32)
 						creation_combo.extend (cit)
 						available_creation_routines.forth
 					end
@@ -1746,7 +1751,7 @@ feature {NONE} -- Implementation: checks
 		do
 			Result :=	f /= Void and then
 						not f.has_arguments and then
-						cl.valid_creation_procedure (f.name) and then
+						cl.valid_creation_procedure_32 (f.name_32) and then
 						f.is_procedure
 		end
 
@@ -1756,7 +1761,7 @@ feature {NONE} -- Implementation: checks
 			valid_current_class: valid_class (cl)
 		do
 			Result := 	f /= Void and then
-						cl.feature_table.has (f.name) and then
+						cl.feature_table.has_feature_named (f) and then
 						not f.is_attribute and then
 						not f.is_deferred and then
 						not f.is_external
@@ -1801,7 +1806,7 @@ invariant
 	graphical_synchronization_ok: exports_list.count = exports.count
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -1814,22 +1819,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_DYNAMIC_LIB_WINDOW

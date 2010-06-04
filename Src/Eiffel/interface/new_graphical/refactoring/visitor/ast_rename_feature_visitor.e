@@ -35,6 +35,8 @@ inherit
 			{NONE} all
 		end
 
+	INTERNAL_COMPILER_STRING_EXPORTER
+
 create
 	make
 
@@ -214,7 +216,7 @@ feature {NONE} -- Visitor implementation
 							l_parent_features.after
 						loop
 							create l_parent_modifier.make (l_as, match_list)
-							l_parent_modifier.extend ({ERT_PARENT_AS_MODIFIER}.rename_clause, l_parent_features.item_for_iteration+" as "+new_feature_name)
+							l_parent_modifier.extend_32 ({ERT_PARENT_AS_MODIFIER}.rename_clause, l_parent_features.item_for_iteration+" as "+new_feature_name)
 							l_parent_modifier.apply
 							l_parent_features.forth
 						end
@@ -443,7 +445,7 @@ invariant
 	type_a_generator_not_void: type_a_generator /= Void
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

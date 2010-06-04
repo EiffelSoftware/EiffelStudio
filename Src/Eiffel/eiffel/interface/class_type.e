@@ -70,6 +70,8 @@ inherit
 
 	REFACTORING_HELPER
 
+	INTERNAL_COMPILER_STRING_EXPORTER
+
 create
 	make
 

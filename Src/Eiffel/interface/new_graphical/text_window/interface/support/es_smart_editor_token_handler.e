@@ -130,7 +130,7 @@ feature {NONE} -- Query
 				if l_class.has_feature_table then
 					if attached {EDITOR_TOKEN_FEATURE_START} a_token as l_fstart then
 							-- Create contract viewer widget
-						l_feature := l_class.feature_with_name (l_fstart.wide_image)
+						l_feature := l_class.feature_with_name_32 (l_fstart.wide_image)
 						if attached l_feature as l_feat then
 							create l_viewer.make
 								-- Register the close action for the widget
@@ -374,7 +374,7 @@ feature {NONE} -- Action handlers
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

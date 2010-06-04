@@ -226,7 +226,7 @@ feature -- Basic operations: Output
 			a_name_attached: attached a_name
 			not_a_name_is_empty: not a_name.is_empty
 			a_name_is_valid_property_name: is_valid_property_name (a_name)
-			a_value_is_valid_property_value: attached a_value implies is_valid_property_value (a_value)
+--			a_value_is_valid_property_value: attached a_value implies is_valid_property_value (a_value)
 		local
 			l_medium: like medium
 		do

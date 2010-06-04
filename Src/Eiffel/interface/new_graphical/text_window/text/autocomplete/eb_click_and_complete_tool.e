@@ -284,11 +284,13 @@ feature -- Retrieve information from ast
 			l_body_end_position, l_names_end_position: INTEGER
 			l_names: EIFFEL_LIST [FEATURE_NAME]
 			l_feature: FEATURE_AS
+			l_mapper: UNICODE_POSITION_MAPPER
 		do
 			l_feature_clauses := current_class_as.features
 			if l_feature_clauses /= Void then
 				create features_position.make (100)
 				create features_ast.make (100)
+				create l_mapper.make (current_class_i.text_8)
 				from
 					l_feature_clauses.start
 				until
@@ -301,10 +303,12 @@ feature -- Retrieve information from ast
 						l_feature_list.after
 					loop
 						l_feature := l_feature_list.item
-						l_body_end_position := l_feature.end_position
+							-- To optimize position mapping, we try to cache the closest positions in the mapper.
+						l_mapper.fast_utf32_pos_from_utf8_pos (l_feature.start_position).do_nothing
+						l_body_end_position := l_mapper.fast_utf32_pos_from_utf8_pos (l_feature.end_position)
 						from
 							l_names := l_feature.feature_names
-							l_names_end_position := l_names.end_position
+							l_names_end_position := l_mapper.fast_utf32_pos_from_utf8_pos (l_names.end_position)
 							l_is_first_name := True
 							l_names.start
 						until
@@ -313,9 +317,9 @@ feature -- Retrieve information from ast
 							features_ast.extend ([l_feature, l_names.item])
 							if l_is_first_name then
 								l_is_first_name := False
-								features_position.extend ([l_names.item.start_position, l_body_end_position])
+								features_position.extend ([l_mapper.fast_utf32_pos_from_utf8_pos (l_names.item.start_position), l_body_end_position])
 							else
-								features_position.extend ([l_names.item.start_position, l_names_end_position])
+								features_position.extend ([l_mapper.fast_utf32_pos_from_utf8_pos (l_names.item.start_position), l_names_end_position])
 							end
 							l_names.forth
 						end
@@ -355,6 +359,7 @@ feature -- Click list update
 			line: EDITOR_LINE
 			search_indexes: BOOLEAN
 			invariant_assertion_list: EIFFEL_LIST [TAGGED_AS]
+			l_image: STRING_32
 		do
 			reset_setup_lines_variables
 			invariant_index := current_class_as.end_position
@@ -422,7 +427,8 @@ feature -- Click list update
 								-- If a string is written one several lines (more than 2 in fact),
 								-- it will be made of several token, some of which may not be
 								-- string tokens (those like % .... % )
-							if token.wide_image @ token.wide_image.count /= ('%"').to_character_32 then
+							l_image := token.wide_image
+							if not l_image.is_empty and then l_image @ l_image.count /= ('%"').to_character_32 then
 								from
 									if token.next /= Void then
 										pos_in_file := token.length + pos_in_file
@@ -494,6 +500,7 @@ feature {NONE} -- Retrieve information from text
 			-- calculate `invariant_index' and `features_index'
 		local
 			invariant_assertion_list: EIFFEL_LIST [TAGGED_AS]
+			l_mapper: UNICODE_POSITION_MAPPER
 		do
 			invariant_index := current_class_as.end_position
 			if (not current_class_as.has_empty_invariant) and then current_class_as.invariant_part /= Void then
@@ -507,9 +514,14 @@ feature {NONE} -- Retrieve information from text
 					invariant_assertion_list.forth
 				end
 			end
+				-- Before getting the first invariant position, for performance reason
+				-- we do not have to compute character position.
+			create l_mapper.make (current_class_i.text_8)
 			if current_class_as.features /= Void and then features_position.count > 0 then
 				features_index := features_position.i_th (1).start_pos
+				features_index := l_mapper.utf32_pos_from_utf8_pos (features_index)
 			else
+				invariant_index := l_mapper.utf32_pos_from_utf8_pos (invariant_index)
 				features_index := invariant_index
 			end
 		end
@@ -618,7 +630,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

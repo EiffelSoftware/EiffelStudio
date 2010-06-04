@@ -3426,9 +3426,11 @@ rt_private void interpret(int flag, int where)
 			unsigned char *OLD_IC;
 			int32 body_index;	/* routine body index */
 			int32 number;	/* number of the once manifest string in routine body */
-			int32 length;	/* length of once manifest string */
+			int32 length;	/* nubmer of bytes of once manifest string */
+			EIF_BOOLEAN is_string_32;
 
 			stagval = tagval;
+			is_string_32 = EIF_TEST(*IC++);
 			body_index = get_int32(&IC);	/* Get routine body index */
 			number = get_int32(&IC);	/* Get number of the once manifest string in the routine body */
 			length = get_int32(&IC);
@@ -3437,7 +3439,12 @@ rt_private void interpret(int flag, int where)
 			last = iget();
 			last->type = SK_REF;
 			OLD_IC = IC;
-			RTCOMS (last->it_ref, body_index, number, (char *) string, length, 0);
+			if (is_string_32) {
+				RTCOMS32 (last->it_ref, body_index, number, (char *) string, length / 4, 0);
+			}
+			else {
+				RTCOMS (last->it_ref, body_index, number, (char *) string, length, 0);
+			}
 			IC = OLD_IC;
 
 			if (tagval != stagval) {
@@ -3480,9 +3487,12 @@ rt_private void interpret(int flag, int where)
 			EIF_REFERENCE str_obj;			  /* String object created */
 			unsigned long stagval;
 			unsigned char *OLD_IC;
-			int32 length;
+			int32 length;						/* number of bytes of the manifest string */
+			EIF_BOOLEAN is_string_32;
 
 			stagval = tagval;
+
+			is_string_32 = EIF_TEST(*IC++);
 			length = get_int32(&IC);
 			string = get_string8(&IC, length);	/* Get string of specified length. */
 			last = iget();
@@ -3494,7 +3504,13 @@ rt_private void interpret(int flag, int where)
 			 */
 
 			OLD_IC = IC;
-			str_obj = RTMS_EX((char *) string, length);
+			if (is_string_32) {
+				str_obj = RTMS32_EX((char *) string, length / 4);
+			}
+			else {
+				str_obj = RTMS_EX((char *) string, length);
+			}
+
 			IC = OLD_IC;
 
 			last->type = SK_REF;

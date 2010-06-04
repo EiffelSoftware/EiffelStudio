@@ -39,6 +39,8 @@ inherit
 			{NONE} all
 		end
 
+	INTERNAL_COMPILER_STRING_EXPORTER
+
 feature -- Status report
 
 	evaluate_type_if_possible (a_type: TYPE_AS; a_context_class: CLASS_C): TYPE_A

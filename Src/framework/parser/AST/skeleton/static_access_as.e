@@ -124,7 +124,7 @@ feature -- Comparison
 				equivalent (class_type, other.class_type)
 		end
 
-feature {AST_EIFFEL} -- Output
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Output
 
 	string_value: STRING
 			-- Printed value of Current

@@ -35,14 +35,6 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	external_name: STRING
-			-- External name to call
-		do
-			Result := Names_heap.item (external_name_id)
-		ensure
-			external_name_not_void: Result /= Void
-		end
-
 	external_name_id: INTEGER
 			-- Name ID of external.
 
@@ -91,6 +83,16 @@ feature -- Access
 			else
 				create Result.make (1, 0)
 			end
+		end
+
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
+
+	external_name: STRING
+			-- External name to call
+		do
+			Result := Names_heap.item (external_name_id)
+		ensure
+			external_name_not_void: Result /= Void
 		end
 
 feature -- Status report

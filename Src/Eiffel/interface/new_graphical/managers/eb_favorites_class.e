@@ -44,10 +44,10 @@ create {EB_FAVORITES_CLASS}
 
 feature {NONE} -- Access
 
-	make_from_string (a_analyzed_string: STRING; a_parent: EB_FAVORITES_ITEM_LIST)
+	make_from_string (a_analyzed_string: STRING_32; a_parent: EB_FAVORITES_ITEM_LIST)
 			-- Initialize Current with `a_analyzed_string' set to `a_name'.
 		local
-			l_split: LIST [STRING]
+			l_split: LIST [STRING_32]
 		do
 			l_split := a_analyzed_string.split (':')
 			l_split.start
@@ -64,7 +64,7 @@ feature {NONE} -- Access
 			end
 		end
 
-	make (a_name: STRING; a_parent: EB_FAVORITES_ITEM_LIST)
+	make (a_name: like name; a_parent: EB_FAVORITES_ITEM_LIST)
 			-- Initialize Current with `name' set to `a_name'.
 		do
 			Precursor {EB_FAVORITES_FOLDER} (a_name, a_parent)
@@ -176,7 +176,7 @@ feature {NONE} -- Implementation
 
 feature {EB_FAVORITES_ITEM_LIST, EB_FAVORITES_ITEM} -- Load/Save
 
-	string_representation: STRING
+	string_representation: STRING_32
 			-- String representation for Current.
 		do
 			if count = 0 then
@@ -195,7 +195,7 @@ feature {EB_FAVORITES_ITEM_LIST, EB_FAVORITES_ITEM} -- Load/Save
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -208,22 +208,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_FAVORITES_CLASS

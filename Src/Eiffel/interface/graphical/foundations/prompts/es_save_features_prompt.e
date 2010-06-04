@@ -31,6 +31,7 @@ feature {NONE} -- Population
 --			l_generator: like token_generator
 			l_printer: like context_printer
 			l_yank: YANK_STRING_WINDOW
+			l_str: STRING_32
 		do
 --			l_generator := token_generator
 --			l_generator.wipe_out_lines
@@ -41,7 +42,10 @@ feature {NONE} -- Population
 
 			create l_item.make_with_text (l_yank.stored_output)
 			l_item.set_pixmap (pixmap_factory.pixmap_from_e_feature (a_entity))
-			l_item.set_tooltip (a_entity.name + " from " + a_entity.written_class.name_in_upper)
+			l_str := a_entity.name_32.twin
+			l_str.append (" from ")
+			l_str.append (a_entity.written_class.name_in_upper)
+			l_item.set_tooltip (l_str)
 			l_item.set_font (fonts.prompt_text_font)
 			l_item.set_foreground_color (colors.prompt_text_foreground_color)
 			l_item.set_left_border (25)
@@ -57,11 +61,11 @@ feature {NONE} -- Population
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
-			This feature is part of Eiffel Software's Eiffel Development Environment.
+			This file is part of Eiffel Software's Eiffel Development Environment.
 			
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
@@ -70,22 +74,22 @@ feature {NONE} -- Population
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

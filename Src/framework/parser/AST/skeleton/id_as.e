@@ -44,8 +44,17 @@ inherit
 			is_equal
 		end
 
+	SHARED_ENCODING_CONVERTER
+		export
+			{NONE} all
+		redefine
+			is_equal
+		end
+
+create {INTERNAL_COMPILER_STRING_EXPORTER}
+	initialize
+
 create
-	initialize,
 	initialize_from_id
 
 feature {NONE} -- Initialization
@@ -155,6 +164,26 @@ feature -- Access
 
 	name_id: INTEGER
 			-- ID representing the string in the names heap.
+
+	name_32: STRING_32
+			-- Name of this id.
+		do
+			if attached name as l_name then
+				Result := encoding_converter.utf8_to_utf32 (l_name)
+			end
+		end
+
+	name_8: STRING_8
+			-- Name of this id.
+			-- Exposed UTF-8 name.
+			-- This is useful for class name which is ASCII compatible.
+		do
+			Result := name
+		ensure then
+			Result_ok: Result /= Void and then not Result.is_empty
+		end
+
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
 
 	name: STRING
 			-- Name of this id.

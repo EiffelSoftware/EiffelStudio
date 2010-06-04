@@ -3296,16 +3296,11 @@ Default_manifest_string: Non_empty_string
 			{ $$ := $1 }
 	;
 
-Typed_manifest_string: TE_RCURLY Type TE_RCURLY Default_manifest_string
+Typed_manifest_string: Typed Default_manifest_string
 			{
-				fixme (once "We should handle `Type' instead of ignoring it.")
-				$$ := $4
-				if $2 /= Void then
-					$2.set_lcurly_symbol ($1)
-					$2.set_rcurly_symbol ($3)
-				end
+				$$ := $2
 				if $$ /= Void then
-					$$.set_type ($2)
+					$$.set_type ($1)
 				end
 			}
 	;

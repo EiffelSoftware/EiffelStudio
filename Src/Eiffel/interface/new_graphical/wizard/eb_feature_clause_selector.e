@@ -95,9 +95,9 @@ feature {EB_FEATURE_COMPOSITION_WIZARD, EB_FEATURE_EDITOR} -- Implementation
 	fill_comment_field
 			-- Fill `comment_field' with feature clauses in order.
 		local
-			fco: ARRAY [STRING]
+			fco: ARRAY [STRING_32]
 			i: INTEGER
-			s: STRING
+			s: STRING_32
 			li: EV_LIST_ITEM
 		do
 			fco := preferences.flat_short_data.feature_clause_order
@@ -107,7 +107,7 @@ feature {EB_FEATURE_COMPOSITION_WIZARD, EB_FEATURE_EDITOR} -- Implementation
 				i > fco.upper
 			loop
 				s := fco.item (i)
-				if s /= Void and then not s.is_equal (fc_Other) then
+				if s /= Void and then not s.is_equal (fc_Other.as_string_32) then
 					create li.make_with_text (s)
 					comment_field.extend (li)
 				end

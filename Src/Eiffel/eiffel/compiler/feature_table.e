@@ -93,6 +93,16 @@ inherit
 				clear_all, wipe_out, extend
 		end
 
+	INTERNAL_COMPILER_STRING_EXPORTER
+		undefine
+			is_equal, copy
+		end
+
+	SHARED_ENCODING_CONVERTER
+		undefine
+			is_equal, copy
+		end
+
 create
 	make
 
@@ -324,20 +334,6 @@ feature {NONE} -- HASH_TABLE like features
 
 feature -- Access: compatibility
 
-	item (s: STRING): FEATURE_I
-			-- Item of name `s'.
-		require
-			s_not_void: s /= Void
-			s_not_empty: not s.is_empty
-		local
-			id: INTEGER
-		do
-			id := Names_heap.id_of (s)
-			if id > 0 then
-				Result := item_id (id)
-			end
-		end
-
 	overloaded_items (an_id: INTEGER): LIST [FEATURE_I]
 			-- List of features matching overloaded name `s'.
 		require
@@ -358,6 +354,31 @@ feature -- Access: compatibility
 			end
 		ensure
 			overloaded_items_not_void: Result /= Void
+		end
+
+	alias_item_32 (alias_name: STRING_32): FEATURE_I
+			-- Feature with given `alias_name' if any
+		require
+			alias_name_not_void: alias_name /= Void
+			is_mangled_alias_name: is_mangled_alias_name (encoding_converter.utf32_to_utf8 (alias_name))
+		do
+			Result := item_alias_id (names_heap.id_of (encoding_converter.utf32_to_utf8 (alias_name)))
+		end
+
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access: compatibility
+
+	item (s: STRING): FEATURE_I
+			-- Item of name `s'.
+		require
+			s_not_void: s /= Void
+			s_not_empty: not s.is_empty
+		local
+			id: INTEGER
+		do
+			id := Names_heap.id_of (s)
+			if id > 0 then
+				Result := item_id (id)
+			end
 		end
 
 	has (s: STRING): BOOLEAN
@@ -383,8 +404,29 @@ feature -- Access: compatibility
 		require
 			alias_name_not_void: alias_name /= Void
 			is_mangled_alias_name: is_mangled_alias_name (alias_name)
+		local
+			id: INTEGER
 		do
-			Result := item_alias_id (names_heap.id_of (alias_name))
+			id := names_heap.id_of (alias_name)
+			if id > 0 then
+				Result := item_alias_id (id)
+			end
+		end
+
+feature -- Query
+
+	has_feature_named (a_feat: E_FEATURE): BOOLEAN
+			-- Has feature named `a_feat'?
+		do
+			Result := has (a_feat.name)
+		end
+
+	feature_named (a_feat: E_FEATURE): FEATURE_I
+			-- Feature named the same with `a_feat'.
+		require
+			has_feature: has_feature_named (a_feat)
+		do
+			Result := item (a_feat.name)
 		end
 
 feature -- Traversal

@@ -87,7 +87,7 @@ feature -- Properties
 	command_name: STRING_GENERAL
 			-- Command name
 
-	element_name: STRING
+	element_name: STRING_32
 			-- name of associated element in current formatter.
 			-- For exmaple, if a class stone is associated to current, `element_name' would be the class name.
 			-- Void if element is not retrievable.

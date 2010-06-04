@@ -19,6 +19,8 @@ inherit
 			{NONE} all
 		end
 
+	INTERNAL_COMPILER_STRING_EXPORTER
+
 create
 	make
 
@@ -50,7 +52,7 @@ feature -- Output
 	build_explain (a_text_formatter: TEXT_FORMATTER)
 		do
 			a_text_formatter.add ("Loop variable: ")
-			a_text_formatter.add (variable_name)
+			a_text_formatter.add (encoding_converter.utf8_to_utf32 (variable_name))
 			a_text_formatter.add_new_line
 		end
 
@@ -70,7 +72,7 @@ feature {NONE} -- Modification
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

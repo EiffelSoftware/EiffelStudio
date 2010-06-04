@@ -34,6 +34,11 @@ inherit
 	REFACTORING_HELPER
 		export {NONE} all end
 
+	SHARED_ENCODING_CONVERTER
+		export {NONE} all end
+
+	INTERNAL_COMPILER_STRING_EXPORTER
+
 feature {NONE} -- Initialization
 
 	make
@@ -135,8 +140,11 @@ feature -- Access
 	has_syntax_warning: BOOLEAN
 			-- Do we create SYNTAX_WARNING instances for obsolte syntactical constructs?
 
-	Maximum_string_character_code: INTEGER = 0xFF
+	Maximum_string_character_code: NATURAL_32 = 0x10FFFF
 			-- Maximum value for character code inside a string
+			-- According to ISO/IEC 10646, the maximum unicode point is 10FFFF.
+			-- However ISO/IEC 10646 has stated that all future assignments of characters
+			-- will also take place in range 0 - 7FFFFFFF
 
 	Maximum_bit_constant: NATURAL_32 = 0x7FFF
 			-- Maximum value of Constant in Bit_type declaration
@@ -265,7 +273,7 @@ feature {NONE} -- Error handling
 			token_buffer.append_character ('a')
 		end
 
-	report_string_invalid_code_error (a_code: INTEGER)
+	report_string_invalid_code_error (a_code: NATURAL_32)
 			-- Invalid character code after % in manisfest string.
 		do
 			report_one_error (create {STRING_EXTENSION}.make (line, column, filename, ""))
@@ -461,7 +469,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_string_character_code (code: INTEGER)
+	process_string_character_code (code: NATURAL_32)
 			-- Check whether `code' is a valid character code
 			-- in a string and set `last_token' accordingly.
 		require
@@ -472,7 +480,7 @@ feature {NONE} -- Implementation
 				set_start_condition (0)
 				report_string_invalid_code_error (code)
 			else
-				token_buffer.append_character (charconv (code))
+				encoding_converter.append_code_point_to_utf8 (code, token_buffer)
 			end
 		end
 
@@ -634,6 +642,17 @@ feature {NONE} -- Implementation
 			cloned_string_not_void: Result /= Void
 			new_object: Result /= a_string
 			less_memory: Result.capacity <= a_string.capacity
+		end
+
+	char_32_from_source (a_str: STRING): CHARACTER_32
+			-- Convert UTF-8 stream to UTF-32 character.
+		require
+			a_str_not_void: a_str /= Void
+			a_str_valid: encoding_converter.utf8_to_utf32 (a_str).count <= 1
+		do
+			if not a_str.is_empty then
+				Result := encoding_converter.utf8_to_utf32 (a_str).item (1)
+			end
 		end
 
 feature {NONE} -- Constants

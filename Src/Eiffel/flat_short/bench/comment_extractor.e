@@ -38,8 +38,8 @@ feature -- Query
 			l_index: INDEX_AS
 			l_tag: ID_AS
 			l_list: EIFFEL_LIST [ATOMIC_AS]
-			l_text: STRING
-			l_text_lines: LIST [STRING]
+			l_text: STRING_32
+			l_text_lines: LIST [STRING_32]
 			l_stop: BOOLEAN
 		do
 			create Result.make
@@ -56,14 +56,14 @@ feature -- Query
 							l_index := l_indexing.item
 							if attached l_index then
 								l_tag := l_index.tag
-								if attached l_tag and then l_tag.name.is_case_insensitive_equal (once "description") then
+								if attached l_tag and then l_tag.name_8.is_case_insensitive_equal (once "description") then
 									l_list := l_index.index_list
 									if l_list /= Void and then not l_list.is_empty and then attached {STRING_AS} l_list.first as l_comment then
-										l_text := l_comment.value
+										l_text := l_comment.value_32
 										if l_text /= Void and then not l_text.is_empty then
 											l_text_lines := l_text.split ('%N')
 											from l_text_lines.start until l_text_lines.after loop
-												Result.extend (create {EIFFEL_COMMENT_LINE}.make_from_string (l_text_lines.item))
+												Result.extend (create {EIFFEL_COMMENT_LINE}.make_from_string_32 (l_text_lines.item))
 												l_text_lines.forth
 											end
 										end
@@ -100,7 +100,7 @@ feature -- Query
 			l_parent_feature: detachable like find_ancestors_feature
 			l_comments: EIFFEL_COMMENTS
 			l_comment: EIFFEL_COMMENT_LINE
-			l_string: STRING_8
+			l_string: STRING_32
 			l_leaf: LEAF_AS_LIST
 			l_stop: BOOLEAN
 			l_comments_emitted: BOOLEAN
@@ -120,13 +120,14 @@ feature -- Query
 							l_comment := l_comments.item
 							if a_show_impl or else not l_comment.is_implementation then
 									-- Add only actual comments, because implementation comments should not be shown (unless requested)
-								l_string := l_comment.content
+								l_string := l_comment.content_32
 								if not l_string.is_empty and then l_string.occurrences (' ') + l_string.occurrences ('%T') /= l_string.count then
 										-- Non blank comments
 									l_comments_emitted := True
 
 										-- Determine if inherited comments should be used
-									original_comment_reg_ex.match (l_string)
+										-- |FIXME: Unicode Regexp support needed.
+									original_comment_reg_ex.match (l_string.as_string_8)
 									if original_comment_reg_ex.has_matched then
 											-- The comment is actually a inherited comment reference
 										if original_comment_reg_ex.match_count = 3 then
@@ -144,11 +145,11 @@ feature -- Query
 										end
 									else
 											-- Recreate the line to remove all stored position information.
-										Result.extend (create {EIFFEL_COMMENT_LINE}.make_from_string (l_comment.content))
+										Result.extend (create {EIFFEL_COMMENT_LINE}.make_from_other (l_comment, True))
 									end
 								elseif l_comments_emitted then
 										-- Allows blank lines to be included in the comments, only if real comments have been added first.
-									Result.extend (create {EIFFEL_COMMENT_LINE}.make_from_string (""))
+									Result.extend (create {EIFFEL_COMMENT_LINE}.make_from_string_32 (""))
 								end
 							end
 
@@ -175,7 +176,7 @@ feature -- Query
 							Result.before or l_stop
 						loop
 							l_comment := Result.item
-							l_string := l_comment.content
+							l_string := l_comment.content_32
 							if l_string.is_empty or else l_string.occurrences (' ') + l_string.occurrences ('%T') = l_string.count then
 								if Result.isfirst then
 									Result.remove
@@ -276,7 +277,7 @@ feature {NONE} -- Implementation: Query
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

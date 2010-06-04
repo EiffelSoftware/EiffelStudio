@@ -678,7 +678,7 @@ feature{NONE} -- Implementation
 			a_item_attached: a_item /= Void
 			a_item_valid: a_item.is_valid_domain_item
 		do
-			Result := a_item.is_real_feature and then a_item.e_feature.assigner_name /= Void
+			Result := a_item.is_real_feature and then a_item.e_feature.assigner_name_32 /= Void
 		end
 
 	has_comments_agent (a_item: QL_FEATURE): BOOLEAN
@@ -690,7 +690,7 @@ feature{NONE} -- Implementation
 		local
 			l_comments: EIFFEL_COMMENTS
 			l_feature: E_FEATURE
-			l_line: STRING
+			l_line: STRING_32
 		do
 			if a_item.is_real_feature then
 				if a_item.e_feature.is_il_external then
@@ -704,9 +704,11 @@ feature{NONE} -- Implementation
 						until
 							l_comments.after or Result
 						loop
-							l_line := l_comments.item.content
-							l_line.left_adjust
-							l_line.right_adjust
+							l_line := l_comments.item.content_32
+							if l_line.is_valid_as_string_8 then
+								l_line.left_adjust
+								l_line.right_adjust
+							end
 							Result := not l_line.is_empty and then (l_line.count = 1 implies l_line.item (1) /= '|')
 							l_comments.forth
 						end
@@ -815,7 +817,6 @@ feature{NONE} -- Implementation
 			a_item_valid: a_item.is_valid_domain_item
 		local
 			l_class: CLASS_C
-			l_creators: HASH_TABLE [EXPORT_I, STRING]
 		do
 			if a_item.is_real_feature then
 				l_class := a_item.class_c
@@ -823,12 +824,11 @@ feature{NONE} -- Implementation
 					-- is a creation routine, as the quicked way would be to iterate
 					--  through `current_class.creators', but this enables the reuse
 					-- of the existing framework.
-				l_creators := l_class.creators
-				if l_creators = Void then
+				if not l_class.has_creators then
 						-- Simply search for the version of `{ANY}.default_create'.
 					Result := a_item.e_feature.rout_id_set.has (eiffel_system.system.default_create_rout_id)
-				elseif not l_creators.is_empty then
-					Result := l_creators.has (a_item.e_feature.name)
+				else
+					Result := l_class.has_creator_named_with (a_item.e_feature)
 				end
 			end
 		end
@@ -1072,35 +1072,35 @@ feature{NONE} -- Implementation
 		end
 
 note
-        copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+        copyright:	"Copyright (c) 1984-2010, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"
         copying: "[
-                        This file is part of Eiffel Software's Eiffel Development Environment.
-                        
-                        Eiffel Software's Eiffel Development Environment is free
-                        software; you can redistribute it and/or modify it under
-                        the terms of the GNU General Public License as published
-                        by the Free Software Foundation, version 2 of the License
-                        (available at the URL listed under "license" above).
-                        
-                        Eiffel Software's Eiffel Development Environment is
-                        distributed in the hope that it will be useful,	but
-                        WITHOUT ANY WARRANTY; without even the implied warranty
-                        of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-                        See the	GNU General Public License for more details.
-                        
-                        You should have received a copy of the GNU General Public
-                        License along with Eiffel Software's Eiffel Development
-                        Environment; if not, write to the Free Software Foundation,
-                        Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
-                ]"
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
         source: "[
-                         Eiffel Software
-                         356 Storke Road, Goleta, CA 93117 USA
-                         Telephone 805-685-1006, Fax 805-685-6869
-                         Website http://www.eiffel.com
-                         Customer support http://support.eiffel.com
-                ]"
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
 end

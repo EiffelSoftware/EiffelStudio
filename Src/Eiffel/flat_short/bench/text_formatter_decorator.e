@@ -231,7 +231,7 @@ feature -- Properties
 	format_registration: FORMAT_REGISTRATION
 			-- Structure registerd for formatting
 
-	feature_clause_order: ARRAY [STRING]
+	feature_clause_order: ARRAY [STRING_32]
 			-- Array of feature clause comment ordering
 
 	current_class: CLASS_C
@@ -293,10 +293,10 @@ feature -- Access
 			end
 		end
 
-	formal_name (pos: INTEGER): STRING
+	formal_name (pos: INTEGER): STRING_32
 			-- Formal name of class_c generics at position `pos.
 		do
-			Result := current_class.generics.i_th (pos).name.name.as_upper
+			Result := current_class.generics.i_th (pos).name.name_8.as_upper
 		end
 
 	e_feature: E_FEATURE
@@ -708,17 +708,17 @@ feature -- Output
 		require
 			valid_comments: comments /= Void
 		local
-			txt: STRING
+			txt: STRING_32
 		do
 			from
 				comments.start
 			until
 				comments.after
 			loop
-				txt := comments.item.content
+				txt := comments.item.content_32
 				if txt.is_empty or else txt.item (1) /= '|' then
 					process_comment_text (ti_Dashdash, Void)
-					put_comment_text (comments.item.content)
+					put_comment_text (txt)
 					put_new_line
 				end
 				comments.forth
@@ -1150,7 +1150,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

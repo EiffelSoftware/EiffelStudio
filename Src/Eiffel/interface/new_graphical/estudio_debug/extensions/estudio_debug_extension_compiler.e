@@ -11,6 +11,8 @@ class
 inherit
 	ESTUDIO_DEBUG_EXTENSION
 
+	SHARED_LOCALE
+
 create
 	make
 
@@ -24,7 +26,7 @@ feature -- Execution
 			open_debug_class_feature_info (Void, Void)
 		end
 
-	open_debug_class_feature_info (a_cl, a_ft: detachable STRING)
+	open_debug_class_feature_info (a_cl, a_ft: detachable STRING_32)
 		local
 			l_dlg: EV_DIALOG
 			hb: EV_HORIZONTAL_BOX
@@ -49,7 +51,7 @@ feature -- Execution
 			but_action := agent (ai_tf_c, ai_tf_f: EV_TEXT_FIELD; ai_cell: EV_CELL)
 					local
 						sh_sys: SHARED_WORKBENCH
-						c,f: STRING
+						c,f: STRING_32
 						cli: CLASS_I
 						g: ES_GRID
 						l_row,r: EV_GRID_ROW
@@ -69,8 +71,8 @@ feature -- Execution
 						ai_cell.wipe_out
 						ai_cell.extend (g)
 
-						c := ai_tf_c.text.as_upper
-						f := ai_tf_f.text.as_lower
+						c := string_general_as_upper (ai_tf_c.text)
+						f := string_general_as_lower (ai_tf_f.text)
 						ai_tf_c.set_text (c)
 						ai_tf_f.set_text (f)
 						create sh_sys
@@ -141,7 +143,7 @@ feature -- Execution
 										end
 									end
 
-									if not f.is_empty and then attached {FEATURE_I} cl.feature_named (f) as fi then
+									if not f.is_empty and then attached {FEATURE_I} cl.feature_named_32 (f) as fi then
 										debug_class_feature_info_add_feature_i (cl, fi, r, bgcol, False)
 									elseif attached cl.feature_table as ftable then
 										l_row := g.grid_extended_new_subrow (r)
@@ -249,13 +251,13 @@ feature -- Execution
 		do
 			g ?= r.parent
 			l_row := g.grid_extended_new_subrow (r)
-			create {EV_GRID_LABEL_ITEM} gi.make_with_text (fi.feature_name)
+			create {EV_GRID_LABEL_ITEM} gi.make_with_text (fi.feature_name_32)
 			if a_list then
 				gi.set_background_color (bgcol)
-				gi.pointer_double_press_actions.force_extend (agent open_debug_class_feature_info (cl.name, fi.feature_name))
+				gi.pointer_double_press_actions.force_extend (agent open_debug_class_feature_info (cl.name, fi.feature_name_32))
 			end
 			l_row.set_item (1, gi)
-			l_row.set_item (2, create {EV_GRID_LABEL_ITEM}.make_with_text (attached_string(fi.alias_name)))
+			l_row.set_item (2, create {EV_GRID_LABEL_ITEM}.make_with_text (attached_string(fi.alias_name_32)))
 
 			sr := g.grid_extended_new_subrow (l_row)
 			sr.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("feature_id"))
@@ -274,7 +276,7 @@ feature -- Execution
 								l_id := tf.text
 								if l_id.is_integer then
 									if attached {FEATURE_I} ai_cl.feature_of_feature_id (l_id.to_integer) as i_ft then
-										open_debug_class_feature_info (ai_cl.name, i_ft.feature_name)
+										open_debug_class_feature_info (ai_cl.name, i_ft.feature_name_32)
 									end
 								end
 							end

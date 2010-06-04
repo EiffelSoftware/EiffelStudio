@@ -101,14 +101,14 @@ feature -- Element retrival
 			-- feature with that name exists.
 		do
 			if attached a_class.compiled_representation as l_class then
-				if attached l_class.feature_named (a_feature.as_string_8) as l_feature then
+				if attached l_class.feature_named_32 (a_feature.as_string_8) as l_feature then
 					Result := l_feature
 				end
 			end
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

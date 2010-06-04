@@ -57,46 +57,6 @@ feature -- Roundtrip/Token
 
 feature -- Access
 
-	description: STRING
-			-- Description.
-		do
-			Result := string_value (Description_header)
-		end
-
-	assembly_name: ARRAY [STRING]
-			-- Assembly name (for external classes only)
-			-- Name, Version, Culture and Public key in that order
-		local
-			i: INDEX_AS
-			list: EIFFEL_LIST [ATOMIC_AS]
-			a_string: STRING_AS
-		do
-			i := index_as_of_tag_name (Assembly_header)
-
-			if i /= Void then
-				list := i.index_list
-				from
-					list.start
-					create Result.make (1, list.count)
-				until
-					list.after
-				loop
-					a_string ?= list.item
-					if a_string /= Void then
-						Result.put (a_string.value, list.index)
-					end
-					list.forth
-				end
-			end
-		end
-
-	external_name: STRING
-			-- Name of entity holding current indexing clause as seen from
-			-- external world.
-		do
-			Result := string_value (External_header)
-		end
-
 	custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
 			-- Expression representing custom attributes.
 		local
@@ -167,6 +127,69 @@ feature -- Access
 			Result := internal_custom_attributes (Property_metadata_header)
 		end
 
+	has_global_once: BOOLEAN
+			-- Is current once construct used to be a global once in
+			-- multithreaded context?
+		do
+			Result := has_tag_value (once_status_header, global_value)
+		end
+
+	is_stable: BOOLEAN
+			-- Is feature marked as stable?
+			-- (Used to mark stable attributes.)
+		do
+			Result := has_tag_value (option_header, stable_option_value)
+		end
+
+	is_transient: BOOLEAN
+			-- Is feature marked as transient?
+			-- (Used to mark transient attributes, i.e. not stored on disk.)
+		do
+			Result := has_tag_value (option_header, transient_option_value)
+		end
+
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
+
+	description: STRING
+			-- Description.
+		do
+			Result := string_value (Description_header)
+		end
+
+	assembly_name: ARRAY [STRING]
+			-- Assembly name (for external classes only)
+			-- Name, Version, Culture and Public key in that order
+		local
+			i: INDEX_AS
+			list: EIFFEL_LIST [ATOMIC_AS]
+			a_string: STRING_AS
+		do
+			i := index_as_of_tag_name (Assembly_header)
+
+			if i /= Void then
+				list := i.index_list
+				from
+					list.start
+					create Result.make (1, list.count)
+				until
+					list.after
+				loop
+					a_string ?= list.item
+					if a_string /= Void then
+						Result.put (a_string.value, list.index)
+					end
+					list.forth
+				end
+			end
+		end
+
+	external_name: STRING
+			-- Name of entity holding current indexing clause as seen from
+			-- external world.
+		do
+			Result := string_value (External_header)
+		end
+
 	property_name: STRING
 			-- Expression representing custom attributes for a property
 		local
@@ -228,27 +251,6 @@ feature -- Access
 			end
 		end
 
-	has_global_once: BOOLEAN
-			-- Is current once construct used to be a global once in
-			-- multithreaded context?
-		do
-			Result := has_tag_value (once_status_header, global_value)
-		end
-
-	is_stable: BOOLEAN
-			-- Is feature marked as stable?
-			-- (Used to mark stable attributes.)
-		do
-			Result := has_tag_value (option_header, stable_option_value)
-		end
-
-	is_transient: BOOLEAN
-			-- Is feature marked as transient?
-			-- (Used to mark transient attributes, i.e. not stored on disk.)
-		do
-			Result := has_tag_value (option_header, transient_option_value)
-		end
-
 	enum_type: STRING
 			-- Is current once construct used to be a global once in
 			-- multithreaded context?
@@ -277,13 +279,15 @@ feature -- Access
 			end
 		end
 
+feature -- Query
+
 	storable_version: detachable STRING
 			-- Description.
 		do
 			Result := string_value (storable_version_header)
 		end
 
-feature -- Query
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Query
 
 	index_as_of_tag_name (tag: READABLE_STRING_GENERAL): detachable INDEX_AS
 			-- Find INDEX_AS object holding `tag'

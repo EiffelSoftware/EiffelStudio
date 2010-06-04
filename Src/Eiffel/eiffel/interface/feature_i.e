@@ -84,27 +84,29 @@ inherit
 		end
 
 	SHARED_INLINE_AGENT_LOOKUP
+	SHARED_ENCODING_CONVERTER
+	INTERNAL_COMPILER_STRING_EXPORTER
 
 	SHARED_DEGREES
 
 feature -- Access
 
-	feature_name: STRING
+	feature_name_32: STRING_32
 			-- Final name of feature.
 		require
 			feature_name_id_set: feature_name_id > 0
 		do
-			Result := Names_heap.item (feature_name_id)
+			Result := encoding_converter.utf8_to_utf32 (feature_name)
 		ensure
 			feature_name_not_void: Result /= Void
 			feature_name_not_empty: not Result.is_empty
 		end
 
-	alias_name: STRING
+	alias_name_32: STRING_32
 			-- Alias name of feature (if any).
 		do
-			if alias_name_id > 0 then
-				Result := Names_heap.item (alias_name_id)
+			if attached alias_name as l_name then
+				Result := encoding_converter.utf8_to_utf32 (l_name)
 			end
 		end
 
@@ -434,6 +436,7 @@ feature -- Access
 		ensure
 			Result_not_void: Result /= Void
 			Result_not_empty: not Result.is_empty
+			ascii_compatible: Result ~ encoding_converter.utf8_to_utf32 (Result).as_string_8
 		end;
 
 	external_name_id: INTEGER
@@ -484,6 +487,27 @@ feature -- Access
 		-- Is it possible to step into this feature or set breakpoints in it?
 		do
 			Result := not (enclosing_feature.is_invariant or else is_fake_inline_agent)
+		end
+
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
+
+	feature_name: STRING
+			-- Final name of feature.
+		require
+			feature_name_id_set: feature_name_id > 0
+		do
+			Result := Names_heap.item (feature_name_id)
+		ensure
+			feature_name_not_void: Result /= Void
+			feature_name_not_empty: not Result.is_empty
+		end
+
+	alias_name: STRING
+			-- Alias name of feature (if any).
+		do
+			if alias_name_id > 0 then
+				Result := Names_heap.item (alias_name_id)
+			end
 		end
 
 feature -- Comparison
@@ -689,23 +713,6 @@ feature -- Setting
 			-- Assign `i' to `pattern_id'.
 		do
 			pattern_id := i
-		end
-
-	set_feature_name (s: STRING)
-			-- Assign `s' to `feature_name'.
-			-- `set_renamed_name' is needed for C external
-			-- routines that can't be renamed.
-		require
-			s_not_void: s /= Void
-			s_not_empty: not s.is_empty
-		local
-			l_names_heap: like Names_heap
-		do
-			l_names_heap := Names_heap
-			l_names_heap.put (s)
-			feature_name_id := l_names_heap.found_item
-		ensure
-			feature_name_set: equal (feature_name, s)
 		end
 
 	set_feature_name_id (a_id: INTEGER; alias_id: INTEGER)
@@ -1040,6 +1047,25 @@ feature -- Setting
 			set_is_type_evaluation_delayed (v)
 		end
 
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Setting
+
+	set_feature_name (s: STRING)
+			-- Assign `s' to `feature_name'.
+			-- `set_renamed_name' is needed for C external
+			-- routines that can't be renamed.
+		require
+			s_not_void: s /= Void
+			s_not_empty: not s.is_empty
+		local
+			l_names_heap: like Names_heap
+		do
+			l_names_heap := Names_heap
+			l_names_heap.put (s)
+			feature_name_id := l_names_heap.found_item
+		ensure
+			feature_name_set: equal (feature_name, s)
+		end
+
 feature -- Incrementality
 
 	equiv (other: FEATURE_I): BOOLEAN
@@ -1248,13 +1274,6 @@ feature -- Conveniences
 			-- Is Current feature obsolete?
 		do
 			Result := obsolete_message /= Void
-		end
-
-	obsolete_message: STRING
-			-- Obsolete message
-			-- (Void if Current is not obsolete)
-		do
-			-- Do nothing
 		end
 
 	has_arguments: BOOLEAN
@@ -1517,20 +1536,6 @@ feature -- Conveniences
 			Result := feature_flags & has_property_setter_mask = has_property_setter_mask
 		end
 
-	property_name: STRING
-			-- IL property name.
-		do
-			if byte_server.has (body_index) then
-				Result := byte_server.item (body_index).property_name
-			end
-			if Result = Void or else Result.is_empty then
-					-- Explicit property name is not specified
-				Result := il_casing.pascal_casing (system.dotnet_naming_convention, feature_name, {IL_CASING_CONVERSION}.lower_case)
-			end
-		ensure
-			result_attached: Result /= Void
-		end
-
 	type: TYPE_A
 			-- Result type of feature
 		do
@@ -1596,6 +1601,29 @@ feature -- Conveniences
 			Result := System.class_of_id (access_in)
 		ensure
 			written_class_not_void: Result /= Void
+		end
+
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Conveniences
+
+	property_name: STRING
+			-- IL property name.
+		do
+			if byte_server.has (body_index) then
+				Result := byte_server.item (body_index).property_name
+			end
+			if Result = Void or else Result.is_empty then
+					-- Explicit property name is not specified
+				Result := il_casing.pascal_casing (system.dotnet_naming_convention, feature_name, {IL_CASING_CONVERSION}.lower_case)
+			end
+		ensure
+			result_attached: Result /= Void
+		end
+
+	obsolete_message: STRING
+			-- Obsolete message
+			-- (Void if Current is not obsolete)
+		do
+			-- Do nothing
 		end
 
 feature -- Export checking

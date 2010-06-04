@@ -9,12 +9,6 @@ feature -- Access
 	has_unnamed: BOOLEAN
 			-- Are unnamed debug clauses enabled?
 
-	is_debug (tag: STRING): BOOLEAN
-			-- Is the debug compatible with tag `tag' ?
-		do
-			Result := tags /= Void and then tags.has (tag)
-		end
-
 	generate_keys (buffer: GENERATION_BUFFER; id: INTEGER)
 			-- Generate keys C array
 		require
@@ -101,6 +95,14 @@ feature -- Access
 			end
 		end
 
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
+
+	is_debug (tag: STRING): BOOLEAN
+			-- Is the debug compatible with tag `tag' ?
+		do
+			Result := tags /= Void and then tags.has (tag)
+		end
+
 feature {CLASS_I} -- Update
 
 	enable_unnamed
@@ -110,6 +112,8 @@ feature {CLASS_I} -- Update
 		ensure
 			has_unnamed: has_unnamed
 		end
+
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
 
 	enable_tag (a_tag: STRING)
 			-- Enable debug clauses with `a_tag'.

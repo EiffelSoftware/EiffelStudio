@@ -53,6 +53,8 @@ inherit
 			{NONE} all
 		end
 
+	INTERNAL_COMPILER_STRING_EXPORTER
+
 create
 	make
 
@@ -1618,6 +1620,7 @@ feature {NONE} -- Stack grid implementation
 			featlab,glab: EV_GRID_LABEL_ITEM
 			glabp: EV_GRID_PIXMAPS_ON_RIGHT_LABEL_ITEM
 			app_exec: APPLICATION_EXECUTION
+			l_text: STRING_32
 		do
 			check debugger_manager.application_is_executing end
 			app_exec := Debugger_manager.application
@@ -1693,7 +1696,10 @@ feature {NONE} -- Stack grid implementation
 
 						--| Fill columns
 					if l_is_melted or l_has_rescue then
-						create glabp.make_with_text (cse.break_index.out + ": " + l_feature_name)
+						l_text := cse.break_index.out
+						l_text.append (": ")
+						l_text.append (l_feature_name)
+						create glabp.make_with_text (l_text)
 						glabp.set_pixmaps_on_right_count (2)
 						if l_is_melted then
 							glabp.put_pixmap_on_right (pixmaps.mini_pixmaps.callstack_is_melted_icon, 1)
@@ -1704,9 +1710,17 @@ feature {NONE} -- Stack grid implementation
 						glab := glabp
 					else
 						if cse.break_nested_index > 0 then
-							create glab.make_with_text (cse.break_index.out + "." + cse.break_nested_index.out + ": " + l_feature_name)
+							l_text := cse.break_index.out
+							l_text.append (".")
+							l_text.append (cse.break_nested_index.out)
+							l_text.append (": ")
+							l_text.append (l_feature_name)
+							create glab.make_with_text (l_text)
 						else
-							create glab.make_with_text (cse.break_index.out + ": " + l_feature_name)
+							l_text := cse.break_index.out
+							l_text.append (": ")
+							l_text.append (l_feature_name)
+							create glab.make_with_text (l_text)
 						end
 					end
 					if rt_info_avail then

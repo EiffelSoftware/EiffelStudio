@@ -215,10 +215,12 @@ feature {NONE} -- Click ast exploration
 			parents: EIFFEL_LIST [PARENT_AS]
 			class_name: STRING
 			has_parents: BOOLEAN
+			l_mapper: UNICODE_POSITION_MAPPER
 		do
 			if is_ok_for_completion then
 				initialize_context
 				if current_class_i /= Void then
+					create l_mapper.make (current_class_i.text_8)
 					parents := current_class_as.parents
 					has_parents := parents /= Void
 					if has_parents then
@@ -229,17 +231,18 @@ feature {NONE} -- Click ast exploration
 						until
 							parents.after
 						loop
-							inherit_clauses.put (parents.item.start_position, i)
+							inherit_clauses.put (l_mapper.next_utf32_pos_from_utf8_pos (parents.item.start_position), i)
 							parents.forth
 							i := i + 1
 						end
-						inherit_clauses.put (current_class_as.conforming_inherit_clause_insert_position, i)
+						inherit_clauses.put (l_mapper.next_utf32_pos_from_utf8_pos (current_class_as.conforming_inherit_clause_insert_position), i)
 						inherit_clauses.sort
 					end
 					ast_list := current_class_as.click_list
 					if ast_list /= Void then
 						c := ast_list.count
 						create prov_list.make
+						create l_mapper.make (current_class_i.text_8)
 						from
 							pos := 1
 						until
@@ -250,13 +253,14 @@ feature {NONE} -- Click ast exploration
 							if clickable.is_class or else clickable.is_precursor then
 								a_class := clickable_info.associated_eiffel_class (current_class_i, clickable)
 								if a_class /= Void then
-									create clickable_position.make (a_click_ast.start_position, a_click_ast.end_position)
+									create clickable_position.make (l_mapper.next_utf32_pos_from_utf8_pos (a_click_ast.start_position),
+																	l_mapper.next_utf32_pos_from_utf8_pos (a_click_ast.end_position))
 									if clickable.is_class then
-										clickable_position.set_class (clickable.class_name.name)
+										clickable_position.set_class (clickable.class_name.name_8)
 									else
 										l_precursor ?= clickable
 										check l_precursor_not_void: l_precursor /= Void end
-										clickable_position.set_class (l_precursor.parent_base_class.class_name.name)
+										clickable_position.set_class (l_precursor.parent_base_class.class_name.name_8)
 									end
 									prov_list.extend (clickable_position)
 								end
@@ -264,7 +268,7 @@ feature {NONE} -- Click ast exploration
 								f_name ?= clickable
 								class_name := Void
 								if f_name /= Void and has_parents then
-									pos_in_txt := a_click_ast.start_position
+									pos_in_txt := l_mapper.next_utf32_pos_from_utf8_pos (a_click_ast.start_position)
 									if pos_in_txt < inherit_clauses @ i then
 										from
 											j := 1
@@ -287,8 +291,9 @@ feature {NONE} -- Click ast exploration
 								if class_name = Void then
 									class_name := current_class_i.name
 								end
-								create clickable_position.make (a_click_ast.start_position, a_click_ast.end_position)
-								clickable_position.set_feature (class_name, clickable.feature_name.name)
+								create clickable_position.make (l_mapper.next_utf32_pos_from_utf8_pos (a_click_ast.start_position),
+																l_mapper.next_utf32_pos_from_utf8_pos (a_click_ast.end_position))
+								clickable_position.set_feature (class_name, clickable.feature_name.name_32)
 								prov_list.extend (clickable_position)
 							end
 							pos := pos + 1
@@ -389,7 +394,7 @@ feature {NONE}-- Clickable/Editable implementation
 						if click_pos.is_feature then
 							class_i := Universe.safe_class_named (click_pos.class_name, group)
 							if class_i /= Void and then class_i.is_compiled and then class_i.compiled_class.has_feature_table then
-								feat := class_i.compiled_class.feature_with_name (click_pos.feature_name)
+								feat := class_i.compiled_class.feature_with_name_32 (click_pos.feature_name)
 								if feat /= Void then
 									create {FEATURE_STONE} Result.make (feat)
 								end
@@ -470,7 +475,7 @@ feature {NONE} -- Implementation (`type_from')
 			current_class_c_not_void: current_class_c /= Void
 		local
 			exp: LINKED_LIST [EDITOR_TOKEN]
-			name: STRING
+			name: STRING_32
 			par_cnt: INTEGER
 			type: TYPE_A
 			feat: E_FEATURE
@@ -558,7 +563,7 @@ feature {NONE} -- Implementation (`type_from')
 									end
 									written_class := l_precursor_from.associated_class
 									if l_precursor_from.associated_class.has_feature_table then
-										feat := l_precursor_from.associated_class.feature_with_name (current_feature_as.name.internal_name.name)
+										feat := l_precursor_from.associated_class.feature_with_name_id (current_feature_as.name.internal_name.name_id)
 									end
 								end
 							end
@@ -576,7 +581,7 @@ feature {NONE} -- Implementation (`type_from')
 										type_as_associated_class: type.has_associated_class
 									end
 									if type.associated_class.has_feature_table then
-										feat := l_precursor_from.associated_class.feature_with_name (current_feature_as.name.internal_name.name)
+										feat := l_precursor_from.associated_class.feature_with_name_id (current_feature_as.name.internal_name.name_id)
 										written_class := l_precursor_from.associated_class
 									end
 									l_current_class_c_parents.forth
@@ -585,7 +590,7 @@ feature {NONE} -- Implementation (`type_from')
 						end
 					else
 						if l_current_class_c.has_feature_table then
-							feat := l_current_class_c.feature_with_name (name)
+							feat := l_current_class_c.feature_with_name_32 (name)
 						end
 						is_create := create_before_position (current_line, current_token)
 					end
@@ -650,8 +655,7 @@ feature {NONE} -- Implementation (`type_from')
 			until
 				error or else after_searched_token
 			loop
-					-- Safe to use STRING_8 to get type.
-				name := string_32_to_lower (current_token.wide_image).as_string_8
+				name := string_32_to_lower (current_token.wide_image)
 
 				type := internal_type_from_name (name)
 
@@ -699,7 +703,7 @@ feature {NONE} -- Implementation (`type_from')
 			end
 		end
 
-	internal_type_from_name (a_name: STRING): TYPE_A
+	internal_type_from_name (a_name: STRING_32): TYPE_A
 			--
 		require
 			a_name_not_void: a_name /= Void
@@ -717,7 +721,7 @@ feature {NONE} -- Implementation (`type_from')
 					-- The objective is to compute `last_target_type' and to get a `E_FEATURE' instance
 					-- of the feature named `a_name' and store it in `feat'.
 				check last_target_type_not_known: last_target_type = Void end
-				l_feature_state := last_constraints.e_feature_state_by_name (a_name)
+				l_feature_state := last_constraints.e_feature_state_by_name_32 (a_name)
 				if l_feature_state.features_found_count = 0 then
 						-- There's no feature with the name `a_name' in the type set.
 					feat := Void
@@ -751,13 +755,13 @@ feature {NONE} -- Implementation (`type_from')
 							type := l_named_tuple_type.generics.item (l_pos)
 						end
 						if type = Void then
-							feat := l_processed_class.feature_with_name (a_name)
+							feat := l_processed_class.feature_with_name_32 (a_name)
 							if feat /= Void then
 								type := feat.type
 							end
 						end
 					else
-						feat := l_processed_class.feature_with_name (a_name)
+						feat := l_processed_class.feature_with_name_32 (a_name)
 						if feat = Void and then last_was_constrained and then not last_formal.is_single_constraint_without_renaming (current_class_c) then
 								-- Renamed in constaint clause?
 							feat := feature_of_constaint_renamed (last_formal, a_name)
@@ -905,7 +909,7 @@ feature {NONE} -- Implementation (`type_from')
 				loop
 					l_class := l_list.item
 					if l_class.has_feature_table then
-						l_feature := l_class.feature_table.alias_item (bracket_str)
+						l_feature := l_class.feature_table.alias_item_32 (bracket_str)
 						written_class := l_class
 					end
 					l_list.forth
@@ -915,7 +919,7 @@ feature {NONE} -- Implementation (`type_from')
 					has_associated_class: last_target_type.has_associated_class
 				end
 				if last_target_type.associated_class.has_feature_table then
-					l_feature := last_target_type.associated_class.feature_table.alias_item (bracket_str)
+					l_feature := last_target_type.associated_class.feature_table.alias_item_32 (bracket_str)
 					written_class := last_target_type.associated_class
 				end
 			end
@@ -933,7 +937,7 @@ feature {NONE} -- Implementation (`type_from')
 			Result_not_void_implies_processed_class_not_void: Result /= Void implies written_class /= Void
 		end
 
-	feature_of_constaint_renamed (a_formal: FORMAL_A; a_new_name: STRING): E_FEATURE
+	feature_of_constaint_renamed (a_formal: FORMAL_A; a_new_name: STRING_32): E_FEATURE
 			-- Constaint renamed feature of current class.
 		require
 			a_formal_not_void: a_formal /= Void
@@ -944,7 +948,7 @@ feature {NONE} -- Implementation (`type_from')
 			l_renaming: RENAMING_A
 			i, upper, l_new_name_id, l_old_name_id: INTEGER
 		do
-			l_new_name_id := names_heap.id_of (a_new_name)
+			l_new_name_id := names_heap.id_of (encoding_converter.utf32_to_utf8 (a_new_name))
 			l_renames := current_class_c.constraint_renaming (current_class_c.generics.i_th (last_formal.position))
 			from
 				i := l_renames.lower
@@ -1138,7 +1142,7 @@ feature {NONE}-- Implementation
 		local
 			sub_exp: like exp
 			infix_expected: BOOLEAN
-			infix_list: ARRAYED_LIST[STRING]
+			infix_list: ARRAYED_LIST[STRING_32]
 			expression_table: ARRAYED_LIST [LINKED_LIST[EDITOR_TOKEN]]
 			type_list: LINKED_LIST [TYPE_A]
 			par_cnt: INTEGER
@@ -1158,8 +1162,7 @@ feature {NONE}-- Implementation
 						-- the infix must be in our list
 						-- otherwise, we will not analyze this expression
 					if is_known_infix (exp.item) then
-							-- Disallow infix rather than ASCII.
-						infix_list.extend (exp.item.wide_image.as_string_8)
+						infix_list.extend (exp.item.wide_image)
 					else
 						error := True
 					end
@@ -1276,7 +1279,7 @@ feature {NONE}-- Implementation
 			end
 		end
 
-	expression_type (type_list: LINKED_LIST [TYPE_A]; infix_list: ARRAYED_LIST[STRING]): TYPE_A
+	expression_type (type_list: LINKED_LIST [TYPE_A]; infix_list: ARRAYED_LIST[STRING_32]): TYPE_A
 			-- find type of expression represented by the list of operands type `type_list' and list of operators `infix_list'
 		require
 			infix_list_not_void: infix_list /= Void
@@ -1396,10 +1399,9 @@ feature {NONE}-- Implementation
 						end
 					else
 							-- type is Void
-							-- Safe to get feature from STRING_8.
-						name := string_32_to_lower (sub_exp.item.wide_image).as_string_8
+						name := string_32_to_lower (sub_exp.item.wide_image)
 						if l_current_class_c.has_feature_table then
-							processed_feature := l_current_class_c.feature_with_name (name)
+							processed_feature := l_current_class_c.feature_with_name_32 (name)
 						end
 						if processed_feature /= Void then
 							if processed_feature.type /= Void then
@@ -1435,8 +1437,7 @@ feature {NONE}-- Implementation
 						if sub_exp.after then
 							error := True
 						else
-								-- Safe to get feature from STRING_8.
-							name := string_32_to_lower (sub_exp.item.wide_image).as_string_8
+							name := string_32_to_lower (sub_exp.item.wide_image)
 							if type.is_formal then
 								formal ?= type
 								if l_current_class_c.is_valid_formal_position (formal.position) then
@@ -1454,12 +1455,12 @@ feature {NONE}-- Implementation
 									-- a single constrained formal without a renaming (constrained_type has been called).
 								l_processed_class := type.associated_class
 								if l_processed_class /= Void and then l_processed_class.has_feature_table then
-									processed_feature := l_processed_class.feature_with_name (name)
+									processed_feature := l_processed_class.feature_with_name_32 (name)
 								end
 							else
 									-- Maybe we computed a type set?
 								if l_type_set /= Void then
-									processed_feature := l_type_set.e_feature_state_by_name (name).feature_item
+									processed_feature := l_type_set.e_feature_state_by_name_32 (name).feature_item
 								end
 							end
 								-- Set to `Void' as we are in a loop.
@@ -1520,7 +1521,7 @@ feature {NONE}-- Implementation
 						-- Prepend "type" for the type parser.
 					l_type_text.prepend ("type ")
 					create l_wrapper
-					l_wrapper.parse (type_parser, l_type_text, True, current_class_c)
+					l_wrapper.parse_32 (type_parser, l_type_text, True, current_class_c)
 					if not l_wrapper.has_error and attached {TYPE_AS} l_wrapper.ast_node as l_node then
 						Result := type_a_generator.evaluate_type_if_possible (l_node, current_class_c)
 						if attached {UNEVALUATED_LIKE_TYPE} Result and not Result.is_valid then
@@ -1530,10 +1531,9 @@ feature {NONE}-- Implementation
 								if current_token.next /= Void and then current_token.next.next /= Void then
 									l_token := current_token.next.next
 									if l_token.is_text then
-											-- A feature name is safe to compare to STRING_8.
-										image := string_32_to_lower (l_token.wide_image).as_string_8
+										image := string_32_to_lower (l_token.wide_image)
 										if current_class_c /= Void then
-											l_feat := current_class_c.feature_with_name (image)
+											l_feat := current_class_c.feature_with_name_32 (image)
 											if l_feat /= Void then
 												Result := l_feat.type
 											end
@@ -1555,26 +1555,26 @@ feature {NONE}-- Implementation
 
 	found_class: CLASS_C
 
-	type_returned_by_infix (a_type: TYPE_A; a_name: STRING): TYPE_A
+	type_returned_by_infix (a_type: TYPE_A; a_name: STRING_32): TYPE_A
 			-- type returned by operator named `name' applied on type `a_type'
 		require
 			a_type_not_void: a_type /= Void
 			a_name_not_void: a_name /= Void
 			current_class_c_not_void: current_class_c /= Void
 		local
-			name: STRING
+			name: STRING_32
 			feat: E_FEATURE
 			cls_c: CLASS_C
 			formal: FORMAL_A
 		do
-			name := a_name.as_lower
-			if name.is_equal (Equal_sign) or name.is_equal (Different_sign) then
+			name := string_32_to_lower (a_name)
+			if name.as_string_8.is_equal (Equal_sign) or name.as_string_8.is_equal (Different_sign) then
 				Result := boolean_type
 			else
 				cls_c := a_type.associated_class
 				if cls_c /= Void and then cls_c.has_feature_table then
 					written_class := cls_c
-					feat := cls_c.feature_with_name (infix_feature_name_with_symbol (name))
+					feat := cls_c.feature_with_name_32 (infix_feature_name_with_symbol_32 (name))
 					if feat /= Void and then feat.type /= Void then
 						Result := feat.type
 						if Result.is_formal then
@@ -1671,8 +1671,8 @@ feature {NONE}-- Implementation
 					Result := type_of_local_entity_named ({EIFFEL_KEYWORD_CONSTANTS}.result_keyword)
 					if Result = Void then
 							-- Used the compiled information
-						current_feature := l_current_class_c.feature_with_name (
-							current_feature_as.name.internal_name.name)
+						current_feature := l_current_class_c.feature_with_name_id (
+							current_feature_as.name.internal_name.name_id)
 						if current_feature /= Void then
 							Result := current_feature.type
 						end
@@ -1715,7 +1715,8 @@ feature {NONE}-- Implementation
 				until
 					l_gens.after or else end_loop
 				loop
-					if a_str.is_equal (l_gens.item.name.name) then
+						-- Generic is ASCII string.
+					if a_str.is_equal (l_gens.item.name.name_8) then
 						end_loop := True
 						l_des_as := l_gens.item
 						create {FORMAL_A}Result.make (l_des_as.is_reference, l_des_as.is_expanded, l_des_as.position)
@@ -2054,7 +2055,7 @@ feature {NONE} -- Implementation
 				l_current_class_c := current_class_c
 				if l_current_class_c.has_feature_table then
 					if current_feature_as /= Void then
-						Result := l_current_class_c.feature_named (current_feature_as.name.internal_name.name)
+						Result := l_current_class_c.feature_of_name_id (current_feature_as.name.internal_name.name_id)
 					end
 				end
 					-- We hack here to avoid current feature void.
@@ -2063,7 +2064,7 @@ feature {NONE} -- Implementation
 					-- which is after a saved but not compiled feature.
 					-- It 90% works, only fails when we try to find a type that is a like_argument.
 				if Result = Void then
-					Result := l_current_class_c.feature_named ("is_equal")
+					Result := l_current_class_c.feature_named_32 ("is_equal")
 				end
 			end
 		end
@@ -2220,7 +2221,7 @@ invariant
 	current_token_in_current_line: (current_line = Void and current_token = Void) or else (current_line /= Void and then current_line.has_token (current_token))
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

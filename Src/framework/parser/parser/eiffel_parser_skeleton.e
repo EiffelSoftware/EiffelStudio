@@ -29,6 +29,12 @@ inherit
 	SHARED_PARSER_FILE_BUFFER
 		export {NONE} all end
 
+	SHARED_ENCODING_CONVERTER
+		export {ANY} encoding_converter end
+
+	INTERNAL_COMPILER_STRING_EXPORTER
+		export {NONE} all end
+
 feature {NONE} -- Initialization
 
 	make
@@ -218,17 +224,43 @@ feature -- Parsing
 		require
 			a_file_not_void: a_file /= Void
 			a_file_open_read: a_file.is_open_read
+			a_file_is_utf8: encoding_converter.file_in_utf8 (a_file)
 		do
-			parse_class (a_file, Void)
+			internal_parse_class (a_file, Void)
 		end
 
-	parse_class (a_file: KL_BINARY_INPUT_FILE; a_class: ABSTRACT_CLASS_C)
+	parse_class (a_class: ABSTRACT_CLASS_C)
+			-- Parse class `a_class'
+			-- Make result available in appropriate result node.
+			-- An exception is raised if a syntax error is found.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_has_text: a_class.has_text
+		do
+			filename := a_class.file_name
+			parse_from_string (a_class.text, a_class)
+		end
+
+	parse_from_string_32 (a_string: STRING_32; a_class: ABSTRACT_CLASS_C)
+			-- Parse Eiffel class text in `a_string'. `a_string' is in UTF-32.
+			-- Make result available in appropriate result node.
+			-- An exception is raised if a syntax error is found.
+		require
+			a_string_not_void: a_string /= Void
+		do
+			parse_from_string (encoding_converter.utf32_to_utf8 (a_string), a_class)
+		end
+
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Parsing
+
+	internal_parse_class (a_file: KL_BINARY_INPUT_FILE; a_class: ABSTRACT_CLASS_C)
 			-- Parse Eiffel class text from `a_file'.
 			-- Make result available in appropriate result node.
 			-- An exception is raised if a syntax error is found.
 		require
 			a_file_not_void: a_file /= Void
 			a_file_open_read: a_file.is_open_read
+			a_file_has_utf8_content: encoding_converter.file_in_utf8 (a_file)
 		local
 			l_ast_factory: like ast_factory
 			l_input_buffer: YY_FILE_BUFFER

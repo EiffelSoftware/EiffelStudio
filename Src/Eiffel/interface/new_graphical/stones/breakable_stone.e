@@ -105,7 +105,7 @@ feature -- Access
 			-- History name.
 		do
 			Result := locale.translation (e_break_point_in)
-			Result.append_string (routine.name)
+			Result.append_string (routine.name_32)
 		end
 
 	is_storable: BOOLEAN
@@ -114,16 +114,18 @@ feature -- Access
 			Result := False
 		end
 
-	stone_signature: STRING
+	stone_signature: STRING_32
 			-- Stone signature
 		do
-			Result := routine.feature_signature
+			Result := routine.feature_signature_32
 		end
 
 	header: STRING_GENERAL
 			-- Header's string.
 		do
-			Result := "Stop point in " + routine.name + " at line " + index.out
+			Result := "Stop point in "
+			Result.append (routine.name_32)
+			Result.append (" at line " + index.out)
 		end
 
 feature -- Basic operations

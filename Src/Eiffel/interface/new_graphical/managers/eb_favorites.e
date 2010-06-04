@@ -49,10 +49,10 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	make_with_string (a_string: STRING)
+	make_with_string (a_string: STRING_32)
 			-- [Re]Initialize the favorites from `a_string'.
 		local
-			analyzed_string: STRING
+			analyzed_string: STRING_32
 			retried: INTEGER
 		do
 			if retried = 0 then
@@ -206,7 +206,7 @@ feature -- Element change
 			end
 		end
 
-	feature_renamed (a_feat: E_FEATURE; a_new_name: STRING)
+	feature_renamed (a_feat: E_FEATURE; a_new_name: STRING_32)
 			-- Feature has been renamed in the system, from `a'
 		require
 			a_feat_not_void: a_feat /= Void
@@ -227,8 +227,11 @@ feature {NONE} -- Implementation
 			Result := Current
 		end
 
-	name: STRING = "Favorites"
+	name: STRING_32
 			-- Name of the item.
+		once
+			Result := "Favorites"
+		end
 
 	is_initialized: BOOLEAN
 			-- Is the class initialized?
@@ -274,7 +277,7 @@ feature {NONE} -- Implementation
 					if attached conv_f.associated_e_feature as l_feat and then l_feat.is_valid then
 						if attached renamed_feature as l_rf and then l_feat.same_as (l_rf) then
 								-- A feature has been renamed.
-							if attached l_rf.associated_class.feature_with_name (renamed_feature_name) as l_nfeat then
+							if attached l_rf.associated_class.feature_with_name_32 (renamed_feature_name) as l_nfeat then
 								conv_f.set_from_stone (create {FEATURE_STONE}.make (l_nfeat))
 							end
 						end
@@ -290,7 +293,7 @@ feature {NONE} -- Implementation
 			-- Renamed features.
 			-- To be wipe out when refreshed.
 
-	renamed_feature_name: detachable STRING
+	renamed_feature_name: detachable STRING_32
 			-- The name `renamed_feature' has been renamed.
 
 feature {NONE} -- Attributes
@@ -306,7 +309,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

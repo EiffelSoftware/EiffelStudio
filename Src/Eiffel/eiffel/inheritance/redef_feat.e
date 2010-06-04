@@ -157,7 +157,7 @@ feature {NONE} -- Implementation
 			i: INTEGER
 		do
 			io.put_string ("Feature joined or merged: ")
-			io.put_string (new_feat.feature_name)
+			io.put_string (new_feat.feature_name_32)
 			io.put_new_line
 			assert_set := new_feat.assert_id_set
 			if assert_set /= Void then

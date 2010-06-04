@@ -98,6 +98,10 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_ENCODING_CONVERTER
+
+	INTERNAL_COMPILER_STRING_EXPORTER
+
 feature {NONE} -- Initialization
 
 	make (l: like original_class)
@@ -292,9 +296,6 @@ feature -- Access
 			-- Set of class ids of the classes responsible for
 			-- a type check of the current class
 
-	creators: HASH_TABLE [EXPORT_I, STRING]
-			-- Creation procedure names
-
 	creation_feature: FEATURE_I
 			-- Creation feature for expanded types
 
@@ -323,6 +324,42 @@ feature -- Access
 
 	storable_version: detachable STRING
 			-- Version if specified for the current class used for storable to detect mismatches.
+
+	has_creators: BOOLEAN
+			-- Does current class have creators?
+		do
+			Result := attached creators
+		end
+
+	has_creator_named_with (a_feat: E_FEATURE): BOOLEAN
+			-- Has creator with the same name as `a_feat'?
+		require
+			a_feat_not_void: a_feat /= Void
+		do
+			Result := has_creator_of_name_id (a_feat.name_id)
+		end
+
+	has_creator_of_name_id (a_id: INTEGER): BOOLEAN
+			-- Has creator with the same name as `a_feat'?
+		do
+			Result := attached creators as l_creators and then
+						attached names_heap.item (a_id) as l_name and then l_creators.has (l_name)
+		end
+
+	creator_of_name_id (a_id: INTEGER): EXPORT_I
+			-- Creator of name id `a_id'
+		require
+			has_creator_of_name_id: has_creator_of_name_id (a_id)
+		do
+			Result := creators.item (names_heap.item (a_id))
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
+
+	creators: HASH_TABLE [EXPORT_I, STRING]
+			-- Creation procedure names
 
 feature -- Access: Convertibility
 
@@ -1562,6 +1599,8 @@ feature -- Supplier checking
 			end
 		end
 
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Supplier checking
+
 	check_root_class_creators (a_creator: STRING; a_type: CL_TYPE_A)
 			-- Check creation procedures of root class
 			--
@@ -1724,6 +1763,16 @@ feature -- Order relation for inheritance and topological sort
  				end
 			end
 		end
+
+	valid_creation_procedure_32 (fn: STRING_32): BOOLEAN
+			-- Is `fn' a valid creation procedure ?
+		require
+			good_argument: fn /= Void
+		do
+			Result := valid_creation_procedure (encoding_converter.utf32_to_utf8 (fn))
+		end
+
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Order relation for inheritance and topological sort
 
 	valid_creation_procedure (fn: STRING): BOOLEAN
 			-- Is `fn' a valid creation procedure ?
@@ -3016,9 +3065,14 @@ feature -- Properties
 		do
 		end
 
-	obsolete_message: STRING
+	obsolete_message_32: STRING_32
 			-- Obsolete message
 			-- (Void if Current is not obsolete)
+		do
+			if attached obsolete_message as l_m then
+				Result := encoding_converter.utf8_to_utf32 (l_m)
+			end
+		end
 
 	custom_attributes, class_custom_attributes, interface_custom_attributes: BYTE_LIST [BYTE_NODE]
 			-- Associated custom attributes if any.
@@ -3039,19 +3093,6 @@ feature -- Properties
 				Result := private_external_name
 			else
 				Result := name
-			end
-		end
-
-	text: STRING
-			-- Class text
-		require
-			valid_file_name: file_name /= Void
-		local
-			l_text: STRING_32
-		do
-			l_text := lace_class.text
-			if l_text /= Void then
-				Result := l_text.as_string_8
 			end
 		end
 
@@ -3129,6 +3170,18 @@ feature -- Properties
 		ensure
 			constraint_renaming_not_void: Result /= Void
 		end
+
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Properties
+
+	text: detachable STRING
+			-- Class text
+		do
+			Result := lace_class.text
+		end
+
+	obsolete_message: STRING
+			-- Obsolete message
+			-- (Void if Current is not obsolete)
 
 feature {NONE} -- Implementation: Properties
 
@@ -3350,18 +3403,13 @@ feature -- Access
 			end
 		end
 
-	frozen feature_with_name (n: STRING): E_FEATURE
+	frozen feature_with_name_32 (n: STRING_32): E_FEATURE
 			-- Feature whose internal name is `n'
 		require
 			valid_n: n /= Void
 			has_feature_table: has_feature_table
-		local
-			l_id: INTEGER
 		do
-			l_id := names_heap.id_of (n)
-			if l_id > 0 then
-				Result := feature_with_name_id (l_id)
-			end
+			Result := feature_with_name (encoding_converter.utf32_to_utf8 (n))
 		end
 
 	frozen feature_with_rout_id (rout_id: INTEGER): E_FEATURE
@@ -3641,6 +3689,22 @@ feature -- Access
 	is_class_none: BOOLEAN
 			-- Is it class NONE?
 
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
+
+	frozen feature_with_name (n: STRING): E_FEATURE
+			-- Feature whose internal name is `n'
+		require
+			valid_n: n /= Void
+			has_feature_table: has_feature_table
+		local
+			l_id: INTEGER
+		do
+			l_id := names_heap.id_of (n)
+			if l_id > 0 then
+				Result := feature_with_name_id (l_id)
+			end
+		end
+
 feature -- Precompilation Access
 
 	is_precompiled: BOOLEAN
@@ -3669,9 +3733,6 @@ feature -- Server Access
 			-- File name of the class
 		do
 			Result := lace_class.file_name.string
-		ensure
-			file_name_not_void: Result /= Void
-			file_name_is_string: Result.same_type ("")
 		end
 
 	file_is_readable: BOOLEAN
@@ -3847,14 +3908,6 @@ feature {COMPILER_EXPORTER} -- Setting
 			generics_set: generics = g
 		end
 
-	set_obsolete_message (m: like obsolete_message)
-			-- Set `obsolete_message' to `m'.
-		do
-			obsolete_message := m
-		ensure
-			obsolete_message_set: obsolete_message = m
-		end
-
 	set_generic_features (f: like generic_features)
 			-- Set `generic_features' to `f'.
 		require
@@ -3863,6 +3916,16 @@ feature {COMPILER_EXPORTER} -- Setting
 			generic_features := f
 		ensure
 			generic_features_set: generic_features = f
+		end
+
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Setting
+
+	set_obsolete_message (m: like obsolete_message)
+			-- Set `obsolete_message' to `m'.
+		do
+			obsolete_message := m
+		ensure
+			obsolete_message_set: obsolete_message = m
 		end
 
 feature -- Genericity
@@ -4288,6 +4351,16 @@ feature -- Implementation
 	types: TYPE_LIST
 			-- Meta-class types associated to the class: it contains
 			-- only one type if the class is not generic
+
+	feature_named_32 (n: STRING_32): FEATURE_I
+			-- Feature whose internal name is `n'
+		require
+			n_not_void: n /= Void
+		do
+			Result := feature_named (encoding_converter.utf32_to_utf8 (n))
+		end
+
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Querry
 
 	feature_named (n: STRING): FEATURE_I
 			-- Feature whose internal name is `n'

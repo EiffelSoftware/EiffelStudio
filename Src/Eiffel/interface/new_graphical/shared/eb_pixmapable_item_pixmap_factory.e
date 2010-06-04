@@ -111,9 +111,9 @@ feature -- Query (Pixmap)
 		require
 			a_feature_not_void: a_feature /= Void
 		local
-			l_name: STRING
+			l_name: STRING_32
 		do
-			l_name := a_feature.assigner_name
+			l_name := a_feature.assigner_name_32
 			if l_name = Void or else l_name.is_empty then
 				if a_feature.is_attribute then
 					if a_feature.is_obsolete then
@@ -194,7 +194,7 @@ feature -- Query (Pixmap)
 		do
 			a_name := a_feature_as.feature_names.i_th (a_name_pos)
 			a_body := a_feature_as.body
-			l_assinger := a_body.assigner /= Void and then not a_body.assigner.name.is_empty
+			l_assinger := a_body.assigner /= Void and then not a_body.assigner.name_8.is_empty
 			a_routine ?= a_body.content
 			l_is_obsolete := (a_routine /= Void and then a_routine.obsolete_message /= Void)
 			l_is_frozen := a_name.is_frozen
@@ -399,9 +399,9 @@ feature -- Query (Pixel buffer)
 		require
 			a_feature_not_void: a_feature /= Void
 		local
-			l_name: STRING
+			l_name: STRING_32
 		do
-			l_name := a_feature.assigner_name
+			l_name := a_feature.assigner_name_32
 			if l_name = Void or else l_name.is_empty then
 				if a_feature.is_attribute then
 					if a_feature.is_obsolete then
@@ -482,7 +482,7 @@ feature -- Query (Pixel buffer)
 		do
 			a_name := a_feature_as.feature_names.i_th (a_name_pos)
 			a_body := a_feature_as.body
-			l_assinger := a_body.assigner /= Void and then not a_body.assigner.name.is_empty
+			l_assinger := a_body.assigner /= Void and then not a_body.assigner.name_8.is_empty
 			a_routine ?= a_body.content
 			l_is_obsolete := (a_routine /= Void and then a_routine.obsolete_message /= Void)
 			l_is_frozen := a_name.is_frozen

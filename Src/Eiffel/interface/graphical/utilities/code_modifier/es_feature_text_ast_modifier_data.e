@@ -74,7 +74,7 @@ feature -- Basic operations
 			Precursor {ES_CLASS_TEXT_AST_MODIFIER_DATA}
 			l_ast := ast
 			if attached l_ast then
-				ast_feature := l_ast.feature_of_name (associated_feature.name, False)
+				ast_feature := l_ast.feature_of_name_32 (associated_feature.name_32, False)
 			end
 		end
 
@@ -93,7 +93,7 @@ invariant
 	associated_feature_attached: attached associated_feature
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -12,9 +12,9 @@ inherit
 	ATOMIC_AS
 		undefine
 			text
-
 		redefine
-			is_equivalent
+			is_equivalent,
+			string_value_32
 		end
 
 	LEAF_AS
@@ -24,7 +24,7 @@ inherit
 
 	CHARACTER_ROUTINES
 
-create
+create {INTERNAL_COMPILER_STRING_EXPORTER}
 	initialize
 
 feature {NONE} -- Initialization
@@ -54,11 +54,21 @@ feature -- Visitor
 
 feature -- Properties
 
-	value: STRING
-			-- Real string value.
-
 	is_once_string: BOOLEAN
 			-- Is current preceded by `once' keyword?
+
+	value_32: STRING_32
+			-- Real string value in UTF-32
+		do
+			if attached value as l_value then
+				Result := encoding_converter.utf8_to_utf32 (l_value)
+			end
+		end
+
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Properties
+
+	value: STRING
+			-- Real string value.
 
 feature -- Settings
 
@@ -81,6 +91,16 @@ feature -- Comparison
 
 feature -- Output
 
+	string_value_32: STRING_32
+			-- Formatted value.
+		do
+			Result := eiffel_string_32 (value_32)
+			Result.precede ('"')
+			Result.extend ('"')
+		end
+
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Output
+
 	string_value: STRING
 			-- Formatted value.
 		do
@@ -89,7 +109,7 @@ feature -- Output
 			Result.extend ('"')
 		end
 
-feature -- Status setting
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Status setting
 
 	set_value (s: STRING)
 		require
@@ -158,7 +178,7 @@ invariant
 	value_not_void: value /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

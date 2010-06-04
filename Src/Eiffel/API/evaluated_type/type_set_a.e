@@ -72,6 +72,13 @@ inherit
 			is_equal, copy
 		end
 
+	SHARED_ENCODING_CONVERTER
+		export
+			{NONE} all
+		undefine
+			is_equal, copy
+		end
+
 create
 	make, make_filled, make_from_array
 
@@ -357,25 +364,6 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
-	feature_i_state_by_alias_name (an_alias_name: STRING): TUPLE [feature_item: FEATURE_I; class_type_of_feature: CL_TYPE_A; features_found_count: INTEGER;  constraint_position: INTEGER]
-			-- Compute feature state.
-			--
-			-- `an_alias_name': A feature alias for which the state is computed.
-			-- Returns `feature_item' void if the feature cannot be found in the type set.
-			-- If there are multiple features found use `features_found_count' from the result tuple to find out how many.
-			-- Use features from the family `info_about_feature*' to get detailed information.
-		require
-			an_alias_name_not_void: an_alias_name /= Void
-			not_has_formal: not has_formal
-		do
-			Result := feature_i_state_by_alias_name_id (names_heap.id_of (an_alias_name))
-		ensure
-				-- It basically states that if there is exactly one feature you get the result, otherwise feature_item and class_of_feature are void.
-			result_not_void: Result /= Void
-			result_semantic_correct: Result.feature_item = Void implies (Result.class_type_of_feature = Void and Result.features_found_count /= 1)
-			result_semantic_correct: Result.features_found_count > 1  implies (Result.feature_item = Void and Result.class_type_of_feature = Void)
-		end
-
 	feature_i_state_by_alias_name_id (an_alias_name_id: INTEGER): like feature_i_state_by_alias_name
 			-- Compute feature state.
 			--
@@ -473,7 +461,7 @@ feature -- Access
 			feature_i_relation: feature_i_state (a_name).features_found_count = Result.features_found_count
 		end
 
-	e_feature_state_by_name  (a_name: STRING): TUPLE [feature_item: E_FEATURE; class_type_of_feature: CL_TYPE_A; features_found_count: INTEGER; constraint_position: INTEGER]
+	e_feature_state_by_name_32  (a_name: STRING_32): TUPLE [feature_item: E_FEATURE; class_type_of_feature: CL_TYPE_A; features_found_count: INTEGER; constraint_position: INTEGER]
 			-- Compute feature state.	
 			--
 			-- `a_name' is the name of the feature.
@@ -484,9 +472,9 @@ feature -- Access
 			a_name_not_void: a_name /= Void
 			not_has_formal: not has_formal
 		do
-			Result := e_feature_state_by_name_id (names_heap.id_of (a_name))
+			Result := e_feature_state_by_name (encoding_converter.utf32_to_utf8 (a_name))
 		ensure
-			feature_i_relation: feature_i_state_by_name_id (names_heap.id_of (a_name)).features_found_count = Result.features_found_count
+			feature_i_relation: feature_i_state_by_name_id (names_heap.id_of (encoding_converter.utf32_to_utf8 (a_name))).features_found_count = Result.features_found_count
 		end
 
 	e_feature_state_by_name_id (a_name_id: INTEGER): TUPLE [feature_item: E_FEATURE; class_type_of_feature: CL_TYPE_A; features_found_count: INTEGER; constraint_position: INTEGER]
@@ -690,6 +678,44 @@ feature -- Access
 								end
 							end (Result, ?))
 			end
+
+
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
+
+	feature_i_state_by_alias_name (an_alias_name: STRING): TUPLE [feature_item: FEATURE_I; class_type_of_feature: CL_TYPE_A; features_found_count: INTEGER;  constraint_position: INTEGER]
+			-- Compute feature state.
+			--
+			-- `an_alias_name': A feature alias for which the state is computed.
+			-- Returns `feature_item' void if the feature cannot be found in the type set.
+			-- If there are multiple features found use `features_found_count' from the result tuple to find out how many.
+			-- Use features from the family `info_about_feature*' to get detailed information.
+		require
+			an_alias_name_not_void: an_alias_name /= Void
+			not_has_formal: not has_formal
+		do
+			Result := feature_i_state_by_alias_name_id (names_heap.id_of (an_alias_name))
+		ensure
+				-- It basically states that if there is exactly one feature you get the result, otherwise feature_item and class_of_feature are void.
+			result_not_void: Result /= Void
+			result_semantic_correct: Result.feature_item = Void implies (Result.class_type_of_feature = Void and Result.features_found_count /= 1)
+			result_semantic_correct: Result.features_found_count > 1  implies (Result.feature_item = Void and Result.class_type_of_feature = Void)
+		end
+
+	e_feature_state_by_name  (a_name: STRING): TUPLE [feature_item: E_FEATURE; class_type_of_feature: CL_TYPE_A; features_found_count: INTEGER; constraint_position: INTEGER]
+			-- Compute feature state.	
+			--
+			-- `a_name' is the name of the feature.
+			-- Returns `feature_item' void if the feature cannot be found in the type set.
+			-- If there are multiple features found use `features_found_count' from the result tuple to find out how many.
+			-- Use features from the family `info_about_feature*' to get detailed information.
+		require
+			a_name_not_void: a_name /= Void
+			not_has_formal: not has_formal
+		do
+			Result := e_feature_state_by_name_id (names_heap.id_of (a_name))
+		ensure
+			feature_i_relation: feature_i_state_by_name_id (names_heap.id_of (a_name)).features_found_count = Result.features_found_count
+		end
 
 feature -- Access for Error handling
 

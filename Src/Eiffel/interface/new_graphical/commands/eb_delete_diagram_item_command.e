@@ -151,7 +151,7 @@ feature -- Access
 			selected_features: ARRAYED_LIST [FEATURE_AS]
 			cancelled: BOOLEAN
 			dial: EB_DELETE_CLIENT_LINK_DIALOG
-			names: LIST [STRING]
+			names: LIST [STRING_32]
 			l_item: FEATURE_AS
 		do
 			features := a_stone.source.model.features
@@ -361,7 +361,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	item_from_name (a_list: LIST [FEATURE_AS]; a_name: STRING): FEATURE_AS
+	item_from_name (a_list: LIST [FEATURE_AS]; a_name: STRING_32): FEATURE_AS
 			-- Feature with `a_name' in `a_list' or Void if none.
 		require
 			a_list_not_void: a_list /= Void
@@ -372,7 +372,7 @@ feature {NONE} -- Implementation
 			until
 				Result /= Void or else a_list.after
 			loop
-				if a_name.is_equal (a_list.item.feature_name.name) then
+				if a_name.is_equal (a_list.item.feature_name.name_32) then
 					Result := a_list.item
 				end
 				a_list.forth

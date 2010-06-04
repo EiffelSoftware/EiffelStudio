@@ -17,6 +17,8 @@ inherit
 			print_single_line_error_message
 		end
 
+	INTERNAL_COMPILER_STRING_EXPORTER
+
 feature {NONE} -- Creation
 
 	make (c: CLASS_C; f: FEATURE_I)
@@ -84,7 +86,7 @@ feature -- Output
 			a_text_formatter.add_new_line
 			if assigner = Void then
 				a_text_formatter.add ("Assigner mark: ")
-				a_text_formatter.add_feature_name (a_feature.assigner_name, a_feature.written_class)
+				a_text_formatter.add_feature_name (a_feature.assigner_name_32, a_feature.written_class)
 			else
 				a_text_formatter.add ("Assigner feature: ")
 				assigner.append_signature (a_text_formatter)
@@ -95,10 +97,10 @@ feature -- Output
 	trace_primary_context (a_text_formatter: TEXT_FORMATTER)
 			-- Build the primary context string so errors can be navigated to
 		do
-			if 
+			if
 				a_text_formatter /= Void and then
-				attached a_feature as l_feature and then 
-				attached class_c as l_class 
+				attached a_feature as l_feature and then
+				attached class_c as l_class
 			then
 				print_context_feature (a_text_formatter, l_feature, l_class)
 			else
@@ -120,7 +122,7 @@ feature {NONE} -- Output
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -133,22 +135,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

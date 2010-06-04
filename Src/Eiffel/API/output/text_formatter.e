@@ -18,6 +18,8 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_ENCODING_CONVERTER
+
 feature -- Access
 
 	context_group: CONF_GROUP
@@ -494,16 +496,16 @@ feature -- Text operator
 		local
 			l_is_prefix_infix: BOOLEAN
 			l_keyword: STRING
-			l_prefix_infix: STRING
+			l_prefix_infix: STRING_32
 		do
 				-- Prepare prefix/infix text.
 			if e_feature.is_prefix then
 				l_keyword := ti_prefix_keyword
-				l_prefix_infix := e_feature.prefix_symbol
+				l_prefix_infix := e_feature.prefix_symbol_32
 				l_is_prefix_infix := True
 			elseif e_feature.is_infix then
 				l_keyword := ti_infix_keyword
-				l_prefix_infix := e_feature.infix_symbol
+				l_prefix_infix := e_feature.infix_symbol_32
 				l_is_prefix_infix := True
 			end
 
@@ -514,7 +516,7 @@ feature -- Text operator
 				l_prefix_infix.append (ti_quote)
 				process_operator_text (l_prefix_infix, e_feature)
 			else
-				add_feature_name (e_feature.name, e_feature.written_class)
+				add_feature_name (e_feature.name_32, e_feature.written_class)
 			end
 		end
 
@@ -575,8 +577,7 @@ feature {NONE} -- Implementation
 			l_scanner: like comment_scanner
 		do
 			l_scanner := comment_scanner
-				--| FIXME: s.as_string_8 may cause information lose.
-			l_scanner.set_input_buffer (create {YY_BUFFER}.make (s.as_string_8))
+			l_scanner.set_input_buffer (create {YY_BUFFER}.make (encoding_converter.utf32_to_utf8 (s)))
 			l_scanner.set_text_formatter (Current)
 			l_scanner.set_for_comment (for_comment)
 			l_scanner.set_seperate (seperate_comment)
@@ -627,13 +628,14 @@ feature {NONE} -- Implementation
 			l_feature: E_FEATURE
 			l_class_i: CLASS_I
 			l_cluster_i: CLUSTER_I
-			l_text: STRING
+			l_text: STRING_32
 		do
 			if text.is_string_8 then
-				l_text := text.as_string_8
-				l_feature := feature_by_name (l_text)
+				l_text := text.as_string_32
+				l_feature := feature_by_name_32 (l_text)
 				if l_feature = Void then
-					if (create {EIFFEL_SYNTAX_CHECKER}).is_valid_class_name (l_text) and l_text.as_upper.is_equal (l_text) then
+					check l_text_is_valid_string_8: l_text.is_valid_as_string_8 end
+					if (create {EIFFEL_SYNTAX_CHECKER}).is_valid_class_name (l_text.as_string_8) and l_text.as_upper.is_equal (l_text) then
 						l_class_i := class_by_name (l_text)
 					end
 					if l_class_i = Void then

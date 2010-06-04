@@ -45,6 +45,8 @@ inherit
 
 	HASHABLE
 
+	INTERNAL_COMPILER_STRING_EXPORTER
+
 feature -- Visitor
 
 	process (v: TYPE_A_VISITOR)

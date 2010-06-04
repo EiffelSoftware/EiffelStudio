@@ -41,18 +41,6 @@ feature -- Scann
 			match_list_set: not has_syntax_error implies match_list /= Void
 		end
 
-	scan_string (a_string: STRING)
-			-- Scan `a_string'.
-		require
-			a_string_not_void: a_string /= Void
-		do
-			create input_buffer.make (a_string)
-			yy_load_input_buffer
-			scan
-		ensure
-			match_list_set: not has_syntax_error implies match_list /= Void
-		end
-
 	scan
 			-- Scan `input_buffer' until end of file is found
 			-- or an error occurs.
@@ -97,6 +85,21 @@ feature -- Scann
 			end
 		end
 
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Scann
+
+	scan_string (a_string: STRING)
+			-- Scan `a_string'.
+			-- `a_string' is UTF-8 string.
+		require
+			a_string_not_void: a_string /= Void
+		do
+			create input_buffer.make (a_string)
+			yy_load_input_buffer
+			scan
+		ensure
+			match_list_set: not has_syntax_error implies match_list /= Void
+		end
+
 feature -- Status reporting
 
 	has_syntax_error: BOOLEAN
@@ -112,14 +115,14 @@ feature
 			l_as := ast_factory.new_filled_id_as (Current)
 		end
 
-	process_string_character_code (code: INTEGER)
+	process_string_character_code (code: NATURAL_32)
 			-- Check whether `code' is a valid character code
 			-- in a string and set `last_token' accordingly.
 		do
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

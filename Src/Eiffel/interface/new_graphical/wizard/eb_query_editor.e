@@ -57,7 +57,7 @@ feature -- Status report
 	generate_setter_procedure: BOOLEAN
 			-- Should a set-procedure be generated?
 		do
-			Result := syntax_checker.is_valid_feature_name (setter_text.text)
+			Result := syntax_checker.is_valid_feature_name_32 (setter_text.text)
 			--| FIXME IEK We need to check that there is not an existing feature.
 		end
 
@@ -119,7 +119,7 @@ feature {EB_FEATURE_EDITOR} -- Implementation
 			l_feat_name: STRING
 		do
 			l_feat_name := "set_" + feature_name_field.text
-			if syntax_checker.is_valid_feature_name (l_feat_name) then
+			if syntax_checker.is_valid_feature_name_32 (l_feat_name) then
 				setter_text.i_th (2).set_text (l_feat_name)
 			end
 		end
@@ -127,7 +127,7 @@ feature {EB_FEATURE_EDITOR} -- Implementation
 	setter_name_change
 			-- Setter name has changed
 		do
-			if syntax_checker.is_valid_feature_name (setter_text.text) then
+			if syntax_checker.is_valid_feature_name_32 (setter_text.text) then
 				assigner_check_box.enable_sensitive
 			else
 				assigner_check_box.disable_sensitive

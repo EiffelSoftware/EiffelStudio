@@ -122,9 +122,9 @@ feature -- Processing
 				end
 				if a_value.has_source_text then
 					text_formatter.add_new_line
-					display_line (text_formatter, a_value.previous_line)
-					display_syntax_line (text_formatter, a_value.current_line, a_value)
-					display_line (text_formatter, a_value.next_line)
+					display_line (text_formatter, a_value.previous_line_32)
+					display_syntax_line (text_formatter, a_value.current_line_32, a_value)
+					display_line (text_formatter, a_value.next_line_32)
 				else
 					text_formatter.add (" (source code is not available)")
 					text_formatter.add_new_line
@@ -152,6 +152,8 @@ feature -- Processing
 
 	process_syntax_warning (a_value: SYNTAX_WARNING)
 			-- Process object `a_value'.
+		local
+			l_w: STRING_32
 		do
 			if type = normal then
 				a_value.initialize_output
@@ -164,16 +166,17 @@ feature -- Processing
 					text_formatter.add (" in class ")
 					text_formatter.add_class_syntax (a_value, l_class1, l_class1.class_signature)
 				end
-				if not a_value.warning_message.is_empty then
+				l_w := a_value.warning_message_32
+				if not l_w.is_empty then
 					text_formatter.add_new_line
-					text_formatter.add (a_value.warning_message)
+					text_formatter.add (l_w)
 					text_formatter.add_new_line
 				end
 				text_formatter.add_new_line
 				if a_value.has_source_text then
-					display_line (text_formatter, a_value.previous_line)
-					display_syntax_line (text_formatter, a_value.current_line, a_value)
-					display_line (text_formatter, a_value.next_line)
+					display_line (text_formatter, a_value.previous_line_32)
+					display_syntax_line (text_formatter, a_value.current_line_32, a_value)
+					display_line (text_formatter, a_value.next_line_32)
 				else
 					text_formatter.add (" (source code is not available)")
 					text_formatter.add_new_line
@@ -186,7 +189,7 @@ feature -- Processing
 				text_formatter.add (" syntax used at line ")
 				text_formatter.add_int (a_value.line)
 				text_formatter.add (". ")
-				text_formatter.add (a_value.warning_message)
+				text_formatter.add (a_value.warning_message_32)
 			elseif type = context then
 				if attached {CLASS_C} a_value.associated_class as l_class2 then
 					if attached {TEXT_FORMATTER} text_formatter as l_formatter then
@@ -242,9 +245,9 @@ feature -- Processing
 					-- Error happened in a class
 				text_formatter.add_new_line
 				if a_value.has_source_text then
-					display_line (text_formatter, a_value.previous_line)
-					display_syntax_line (text_formatter, a_value.current_line, a_value)
-					display_line (text_formatter, a_value.next_line)
+					display_line (text_formatter, a_value.previous_line_32)
+					display_syntax_line (text_formatter, a_value.current_line_32, a_value)
+					display_line (text_formatter, a_value.next_line_32)
 				else
 					text_formatter.add (" (source code is not available)")
 					text_formatter.add_new_line
@@ -301,7 +304,7 @@ feature {NONE} -- Trace
 
 feature {NONE} -- Line
 
-	display_line (a_text_formatter: TEXT_FORMATTER; a_line: STRING)
+	display_line (a_text_formatter: TEXT_FORMATTER; a_line: STRING_32)
 			-- Display `a_line' in `a_text_formatter'. It translates `%T' accordingly to `a_text_formatter' specification
 			-- which is to call `add_indent'.
 		require
@@ -309,7 +312,7 @@ feature {NONE} -- Line
 		local
 			i: INTEGER
 			nb: INTEGER
-			c: CHARACTER
+			c: CHARACTER_32
 		do
 			if a_line /= Void then
 				from
@@ -325,14 +328,14 @@ feature {NONE} -- Line
 						a_text_formatter.add (" ")
 						a_text_formatter.add (" ")
 					else
-						a_text_formatter.add (c.out)
+						a_text_formatter.add (create {STRING_32}.make_filled (c, 1))
 					end
 				end
 				a_text_formatter.add_new_line
 			end
 		end
 
-	display_syntax_line (a_text_formatter: TEXT_FORMATTER; a_line: STRING; a_error: ERROR)
+	display_syntax_line (a_text_formatter: TEXT_FORMATTER; a_line: STRING_32; a_error: ERROR)
 			-- Display `a_line' which does like `display_line' but with an additional
 			-- arrowed line that points out to `column' where syntax issue is located.
 		require
@@ -341,7 +344,7 @@ feature {NONE} -- Line
 			error_not_void: a_error /= Void
 		local
 			i, nb: INTEGER
-			c: CHARACTER
+			c: CHARACTER_32
 			position, nb_tab: INTEGER
 		do
 			from
@@ -360,7 +363,7 @@ feature {NONE} -- Line
 						nb_tab := nb_tab + 1
 					end
 				else
-					a_text_formatter.add (c.out)
+					a_text_formatter.add (create {STRING_32}.make_filled (c, 1))
 				end
 			end
 			a_text_formatter.add_new_line
@@ -561,32 +564,32 @@ feature {NONE} -- Implementation
 			elseif a_error.line > 0 then
 				a_text_formatter.add_new_line
 				a_text_formatter.add ("  ")
-				if a_error.previous_line /= Void then
-					if not a_error.previous_line.is_empty then
-						a_error.previous_line.replace_substring_all ("%T", "  ")
+				if attached a_error.previous_line_32 as l_line then
+					if not l_line.is_empty then
+						l_line.replace_substring_all ("%T", "  ")
 					end
-					a_text_formatter.add (a_error.previous_line)
+					a_text_formatter.add (l_line)
 					a_text_formatter.add_new_line
 				end
 				a_text_formatter.add ("->")
-				if not a_error.current_line.is_empty then
-					a_error.current_line.replace_substring_all ("%T", "  ")
+				if attached a_error.current_line_32 as l_c_line and then not l_c_line.is_empty then
+					l_c_line.replace_substring_all ("%T", "  ")
+					a_text_formatter.add (l_c_line)
 				end
-				a_text_formatter.add (a_error.current_line)
 				a_text_formatter.add_new_line
-				if a_error.next_line /= Void then
+				if attached a_error.next_line_32 as l_n_line then
 					a_text_formatter.add ("  ")
-					if not a_error.next_line.is_empty then
-						a_error.next_line.replace_substring_all ("%T", "  ")
+					if not l_n_line.is_empty then
+						l_n_line.replace_substring_all ("%T", "  ")
 					end
-					a_text_formatter.add (a_error.next_line)
+					a_text_formatter.add (l_n_line)
 					a_text_formatter.add_new_line
 				end
 			end
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

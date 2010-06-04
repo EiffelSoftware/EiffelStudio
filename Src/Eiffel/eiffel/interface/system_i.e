@@ -79,6 +79,8 @@ inherit
 
 	SHARED_COMPILER_PROFILE
 
+	INTERNAL_COMPILER_STRING_EXPORTER
+
 create
 	make
 
@@ -462,6 +464,7 @@ feature -- Properties
 			end
 
 			local_workbench.change_class (string_8_class)
+			local_workbench.change_class (string_32_class)
 
 			local_workbench.change_class (real_64_class)
 			local_workbench.change_class (real_32_class)
@@ -519,6 +522,7 @@ feature -- Properties
 			character_8_class.compiled_class.record_precompiled_class_in_system
 			character_32_class.compiled_class.record_precompiled_class_in_system
 			string_8_class.compiled_class.record_precompiled_class_in_system
+			string_32_class.compiled_class.record_precompiled_class_in_system
 			special_class.compiled_class.record_precompiled_class_in_system
 			pointer_class.compiled_class.record_precompiled_class_in_system
 			array_class.compiled_class.record_precompiled_class_in_system
@@ -2243,6 +2247,7 @@ end
 			character_8_class.compiled_class.mark_class (marked_classes)
 			character_32_class.compiled_class.mark_class (marked_classes)
 			string_8_class.compiled_class.mark_class (marked_classes)
+			string_32_class.compiled_class.mark_class (marked_classes)
 			special_class.compiled_class.mark_class (marked_classes)
 			pointer_class.compiled_class.mark_class (marked_classes)
 			array_class.compiled_class.mark_class (marked_classes)
@@ -3717,6 +3722,10 @@ feature -- Dead code removal
 
 				-- Protection of feature `make' of class STRING.
 			l_class := string_8_class.compiled_class
+			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.Make_name_id), l_class)
+
+				-- Protection of feature `make' of class STRING_32.
+			l_class := string_32_class.compiled_class
 			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.Make_name_id), l_class)
 
 				-- Protection of feature `make' of class TUPLE
@@ -5659,7 +5668,7 @@ feature {NONE} -- Access: Root creators
 			-- class_name: Class name in which creation procedure is defined
 			-- feature_name: Name of creation procedure
 
-feature -- Status report: Root creators
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Status report: Root creators
 
 	is_explicit_root (a_class_name, a_feature_name: STRING): BOOLEAN
 			-- Has an explicit root been added for given class and feature name.
@@ -5727,7 +5736,7 @@ feature -- Query: Root creators
 					end)
 		end
 
-feature -- Element change: Root creators
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Element change: Root creators
 
 	add_explicit_root (a_cluster_name, a_class_name, a_feature_name: STRING)
 			-- Add an explicit root class
@@ -5827,7 +5836,7 @@ feature {NONE} -- Element change: Root creators
 			l_system_root: SYSTEM_ROOT
 			l_class: detachable CLASS_I
 		do
-			type_parser.parse_from_string ("type " + a_class_name, Void)
+			type_parser.parse_from_string_32 ("type " + a_class_name, Void)
 			l_type_as ?= type_parser.type_node
 
 			if l_type_as = Void then

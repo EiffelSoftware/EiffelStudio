@@ -75,16 +75,16 @@ feature -- Properties
 
 feature -- Access
 
-	feature_name: STRING
+	feature_name: STRING_32
 			-- Feature name of feature
 		do
 			check
 				e_feature_not_void: e_feature /= Void
 			end
-			Result := e_feature.name
+			Result := e_feature.name_32
 		end
 
-	origin_name: STRING
+	origin_name: STRING_32
 			-- Name of the feature in its written class.
 		local
 			f: E_FEATURE
@@ -92,9 +92,9 @@ feature -- Access
 			if e_feature /= Void then
 				f := e_feature.written_feature
 				if f /= Void then
-					Result := f.name
+					Result := f.name_32
 				else
-					Result := e_feature.name
+					Result := e_feature.name_32
 				end
 			else
 				Result := feature_name
@@ -173,13 +173,13 @@ feature -- dragging
 			end
 		end
 
-	stone_signature: STRING
+	stone_signature: STRING_32
 			-- Signature of Current feature
 		do
 			check
 				e_feature_not_void: e_feature /= Void
 			end
-			Result := e_feature.feature_signature
+			Result := e_feature.feature_signature_32
 		end
 
 	header: STRING_GENERAL
@@ -236,12 +236,15 @@ feature -- dragging
 
 	update
 			-- Update current feature stone.
+		local
+			l_mapper: UNICODE_POSITION_MAPPER
 		do
 			if internal_start_position = -1 and then e_feature /= Void then
 					-- Position has not been initialized
 				if not e_feature.is_il_external and then attached {FEATURE_AS} e_feature.ast as l_body_as then
-					internal_start_position := l_body_as.start_position
-					internal_end_position := l_body_as.end_position
+					create l_mapper.make (e_feature.written_class.original_class.text_8)
+					internal_start_position := l_mapper.utf32_pos_from_utf8_pos (l_body_as.start_position)
+					internal_end_position := l_mapper.next_utf32_pos_from_utf8_pos (l_body_as.end_position)
 					internal_start_line_number := l_body_as.start_location.line
 				else
 					internal_start_position := 1
@@ -295,7 +298,7 @@ feature {NONE} -- Implementation
 			-- Line number of `internal_start_position'.
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

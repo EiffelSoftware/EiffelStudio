@@ -69,7 +69,7 @@ feature -- Basic operations
 				root_group := l_root.cluster
 				l_class := l_root.root_class.compiled_class
 				if l_class /= Void then
-					root_feature := l_class.feature_named (l_root.procedure_name)
+					root_feature := l_class.feature_named_32 (l_root.procedure_name)
 					root_class := l_class
 					if root_feature /= Void and root_group /= Void then
 						put_anchor_routine (a_type_list)
@@ -139,7 +139,7 @@ feature {NONE} -- Implementation
 			l_type: detachable STRING
 			i: INTEGER
 		do
-			type_parser.parse_from_string ("type " + a_type, root_class)
+			type_parser.parse_from_string_32 ("type " + a_type, root_class)
 			error_handler.wipe_out
 			if attached {CLASS_TYPE_AS} type_parser.type_node as l_type_as then
 				l_type_a := type_a_generator.evaluate_type_if_possible (l_type_as, root_class)
@@ -206,7 +206,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

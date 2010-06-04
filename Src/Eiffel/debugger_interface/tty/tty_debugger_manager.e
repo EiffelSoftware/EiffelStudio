@@ -27,6 +27,8 @@ inherit
 
 	OUTPUT_ROUTINES
 
+	INTERNAL_COMPILER_STRING_EXPORTER
+
 create
 	make
 
@@ -384,7 +386,9 @@ feature -- Breakpoints management
 				if cc = curr_cc then
 					curr_fe := current_debugging_feature
 					if curr_fe /= Void then
-						io.put_string ("[" + curr_fe.name + "] ")
+						localized_print ("[")
+						localized_print (curr_fe.name_32)
+						localized_print ("] ")
 					end
 				end
 				s := adjusted_answer
@@ -400,6 +404,7 @@ feature -- Breakpoints management
 						localized_print (debugger_names.m_added_breakpoints_in_class (cc.name_in_upper))
 					else
 						if is_valid_feature_name (s) then
+								-- |FIXME: Unicode should be handled
 							fe := cc.feature_with_name (s)
 						end
 						if fe = Void then
@@ -436,7 +441,7 @@ feature -- Breakpoints management
 						end
 						breakpoints_manager.enable_user_breakpoint (fe, i)
 						l_added := True
-						localized_print (debugger_names.m_added_breakpoint_detailed (cc.name_in_upper, fe.name, i.out))
+						localized_print (debugger_names.m_added_breakpoint_detailed (cc.name_in_upper, fe.name_32, i.out))
 					end
 				end
 			end
@@ -696,7 +701,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

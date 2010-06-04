@@ -13,6 +13,8 @@ inherit
 
 	SYNTAX_STRINGS
 
+	SHARED_ENCODING_CONVERTER
+
 feature -- Status report
 
 	is_valid_class_type_name (ct: STRING): BOOLEAN
@@ -39,20 +41,10 @@ feature -- Status report
 			Result := is_valid_config_identifier (cn)
 		end
 
-	is_valid_feature_name (fn: STRING): BOOLEAN
+	is_valid_feature_name_32 (fn: STRING_32): BOOLEAN
 			-- Is `fn' a valid feature name?
 		do
-			Result := fn /= Void and then not keywords.has (fn) and (is_valid_identifier (fn) or
-					-- Is `fn' a prefix operator?
-				((fn.count > Prefix_str.count + 1) and then
-				 ((fn.substring_index_in_bounds (Prefix_str, 1, Prefix_str.count) = 1) and
-				  (fn.item (fn.count) = '%"') and
-				  (is_valid_operator (fn.substring (Prefix_str.count + 1, fn.count - Quote_str.count))))) or
-				  	-- Is `fn' an infix operator?
-				((fn.count > Infix_str.count + 1) and then
-				 ((fn.substring_index_in_bounds (Infix_str, 1, Infix_str.count) = 1) and
-				  (fn.item (fn.count) = '%"') and
-				  (is_valid_operator (fn.substring (Infix_str.count + 1, fn.count - Quote_str.count))))))
+			Result := is_valid_feature_name (encoding_converter.utf32_to_utf8 (fn))
 		end
 
 	is_valid_target_name (tn: STRING): BOOLEAN
@@ -125,17 +117,27 @@ feature -- Status report
 			-- Is `op' a valid free operator name?
 		local
 			i: INTEGER
-			cc: CHARACTER
+			cc: CHARACTER_32
+			l_str32: STRING_32
 		do
-			Result := op /= Void and then not op.is_empty and then free_operators_start.has (op.item (1))
-			from
-				i := 2
-			until
-				not Result or else i > op.count
-			loop
-				cc := op.item (i)
-				Result := cc.is_alpha or cc.is_digit or free_operators_characters.has (cc)
-				i := i + 1
+			if op /= Void and then not op.is_empty then
+				l_str32 := encoding_converter.utf8_to_utf32 (op)
+					-- Allow Unicode codepoint greater than 255.
+				Result := (free_operators_start.has (op.item (1)) or l_str32.item (1).code > 255)
+				from
+					i := 2
+				until
+					not Result or else i > l_str32.count
+				loop
+					cc := l_str32.item (i)
+					Result := (cc.is_character_8 and then
+										cc.to_character_8.is_alpha or
+										cc.to_character_8.is_digit or
+										free_operators_characters.has (cc.to_character_8)
+								) or
+								(not cc.is_character_8)
+					i := i + 1
+				end
 			end
 		ensure then
 			Result implies not basic_operators.has (op);
@@ -180,8 +182,26 @@ feature -- Status report
 			Result := s.is_boolean
 		end
 
+feature {NONE} -- Status report
+
+	is_valid_feature_name (fn: STRING): BOOLEAN
+			-- Is `fn' a valid feature name?
+		do
+			Result := fn /= Void and then not keywords.has (fn) and (is_valid_identifier (fn) or
+					-- Is `fn' a prefix operator?
+				((fn.count > Prefix_str.count + 1) and then
+				 ((fn.substring_index_in_bounds (Prefix_str, 1, Prefix_str.count) = 1) and
+				  (fn.item (fn.count) = '%"') and
+				  (is_valid_operator (fn.substring (Prefix_str.count + 1, fn.count - Quote_str.count))))) or
+				  	-- Is `fn' an infix operator?
+				((fn.count > Infix_str.count + 1) and then
+				 ((fn.substring_index_in_bounds (Infix_str, 1, Infix_str.count) = 1) and
+				  (fn.item (fn.count) = '%"') and
+				  (is_valid_operator (fn.substring (Infix_str.count + 1, fn.count - Quote_str.count))))))
+		end
+
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

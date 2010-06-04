@@ -968,7 +968,7 @@ feature -- Access: session data
 			-- Try to initialize the favorites with the session data.
 		local
 			retried: BOOLEAN
-			l_data: STRING
+			l_data: STRING_32
 		do
 			if not retried then
 				if favorites_storage = Void then

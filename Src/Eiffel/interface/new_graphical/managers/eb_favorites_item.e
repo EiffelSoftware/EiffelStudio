@@ -20,22 +20,27 @@ inherit
 			is_equal
 		end
 
+	SHARED_LOCALE
+		redefine
+			is_equal
+		end
+
 feature {NONE} -- Initialization
 
-	make (a_name: STRING; a_parent: EB_FAVORITES_ITEM_LIST)
+	make (a_name: like name; a_parent: EB_FAVORITES_ITEM_LIST)
 			-- Initialize Current with `name' set to `a_name'.
 		do
 			if is_feature then
-				name := a_name.as_lower
+				name := string_general_as_lower (a_name)
 			else
-				name := a_name.as_upper
+				name := string_general_as_upper (a_name)
 			end
 			parent := a_parent
 		end
 
 feature -- Access
 
-	name: STRING
+	name: STRING_32
 			-- Name of the "favorites" item (class name or folder name)
 			-- or class_name.feature_name
 
@@ -104,13 +109,13 @@ feature -- Interactivity
 
 feature {EB_FAVORITES_ITEM_LIST, EB_FAVORITES_ITEM} -- Load/Save
 
-	string_representation: STRING
+	string_representation: STRING_32
 			-- String representation for Current.
 		deferred
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -34,6 +34,8 @@ inherit
 			{ANY} project_access
 		end
 
+	INTERNAL_COMPILER_STRING_EXPORTER
+
 create
 	make
 

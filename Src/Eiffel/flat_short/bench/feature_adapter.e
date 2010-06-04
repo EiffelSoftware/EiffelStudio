@@ -354,7 +354,7 @@ feature {NONE} -- Implementation
 
 feature {FEATURE_ADAPTER} -- Element change
 
-	add_comment (comment: STRING; is_precompiled: BOOLEAN)
+	add_comment (comment: STRING_32; is_precompiled: BOOLEAN)
 			-- Add `comment' to `comments'.
 		require
 			valid_comment: comment /= Void
@@ -367,7 +367,7 @@ feature {FEATURE_ADAPTER} -- Element change
 				comments.start;
 				comments := comments.duplicate (comments.count)
 			end;
-			comments.extend (create {EIFFEL_COMMENT_LINE}.make_from_string (comment))
+			comments.extend (create {EIFFEL_COMMENT_LINE}.make_from_string_32 (comment))
 		end;
 
 feature {FORMAT_REGISTRATION} -- Element chage
@@ -384,7 +384,7 @@ feature {FORMAT_REGISTRATION} -- Element chage
 		end;
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -131,14 +131,16 @@ feature {NONE} -- Basic operation
 				end
 
 					-- Parse the local declaration block.
-				l_result.left_adjust
-				l_result.right_adjust
+				if l_result.is_valid_as_string_8 then
+					l_result.left_adjust
+					l_result.right_adjust
+				end
 				if not l_result.is_empty then
 						-- Parse local declaration block.
 					l_result.prepend_character ({CHARACTER_32} ' ')
 					l_result.prepend ({EIFFEL_KEYWORD_CONSTANTS}.local_keyword)
 					l_wrapper := eiffel_parser_wrapper
-					l_wrapper.parse_with_option (entity_declaration_parser, l_result, a_info.context_class.group.options, True, a_info.context_class)
+					l_wrapper.parse_with_option_32 (entity_declaration_parser, l_result, a_info.context_class.group.options, True, a_info.context_class)
 					if attached {EIFFEL_LIST [TYPE_DEC_AS]} l_wrapper.ast_node as l_declarations then
 						l_current_frame := a_info.current_frame
 						from l_declarations.start until l_declarations.after loop

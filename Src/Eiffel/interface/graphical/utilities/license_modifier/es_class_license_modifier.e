@@ -13,6 +13,8 @@ class
 inherit
 	ES_CLASS_TEXT_AST_MODIFIER
 
+	INTERNAL_COMPILER_STRING_EXPORTER
+
 create
 	make
 
@@ -162,6 +164,8 @@ feature -- Element change
 			l_options: CONF_OPTION
 			l_indexing_ast: detachable INDEXING_CLAUSE_AS
 			l_match_list: like ast_match_list
+			l_start_position: INTEGER
+			l_new_license: STRING_32
 		do
 			if a_license = Void then
 					-- Remove the license
@@ -170,7 +174,9 @@ feature -- Element change
 					remove_ast_code (l_ast, remove_white_space_trailing)
 				end
 			else
-				if not a_license.as_string_32.is_equal (license) then
+				l_new_license := a_license.as_string_32
+				l_new_license.replace_substring_all ("%R", "")
+				if not l_new_license.is_equal (license) then
 						-- The license is different from the class license, so change it.
 					l_indexing_ast ?= ast_license
 					l_match_list := ast_match_list
@@ -183,14 +189,15 @@ feature -- Element change
 							create l_license.make_from_string (a_license)
 							l_license.append_character ('%N')
 							l_pos := ast_position (l_ast)
-							insert_code (l_pos.start_position, l_license)
+							l_start_position := l_pos.start_position
+							insert_code (l_start_position, l_license)
 
 							l_wrapper := eiffel_parser_wrapper
 							l_parser := validating_parser
 							l_options := context_class.options
 							check l_options_attached: l_options /= Void end
 
-							l_wrapper.parse_with_option (l_parser, text, l_options, True, Void)
+							l_wrapper.parse_with_option_32 (l_parser, text, l_options, True, Void)
 							if l_wrapper.has_error then
 									-- It is quite possible for the license to introduce a syntax error because the last
 									-- feature may be an attribute, in which case we need to inject a ;.
@@ -205,7 +212,7 @@ feature -- Element change
 
 									-- Add ; to license and reapply.
 								l_license.prepend_character (';')
-								insert_code (l_pos.start_position, l_license)
+								insert_code (l_start_position, l_license)
 							end
 						end
 					end
@@ -282,7 +289,7 @@ feature {NONE} -- Status report
 			l_options := context_class.options
 			check l_options_attached: l_options /= Void end
 
-			l_wrapper.parse_with_option (l_parser, a_license, l_options, True, Void)
+			l_wrapper.parse_with_option_32 (l_parser, a_license.as_string_32, l_options, True, Void)
 			if not l_wrapper.has_error then
 				Result := l_wrapper.ast_node /= Void
 			end
@@ -307,9 +314,10 @@ feature {NONE} -- Basic operations: Modifications
 			l_old_index: detachable INDEX_AS
 			l_tag_name: STRING_GENERAL
 			l_atoms: EIFFEL_LIST [ATOMIC_AS]
+			l_mapper: UNICODE_POSITION_MAPPER
 		do
 			l_wrapper := eiffel_parser_wrapper
-			l_wrapper.parse_with_option (round_trip_indexing_parser, a_license, context_class.options, True, Void)
+			l_wrapper.parse_with_option_32 (round_trip_indexing_parser, a_license.as_string_32, context_class.options, True, Void)
 			if not l_wrapper.has_error then
 				l_indexing ?= l_wrapper.ast_node
 				l_match_list := l_wrapper.ast_match_list
@@ -319,9 +327,12 @@ feature {NONE} -- Basic operations: Modifications
 						l_index := l_indexing.item_for_iteration
 						l_tag_name := l_index.tag.name
 						l_old_index := a_ast.index_as_of_tag_name (l_tag_name)
+						create l_mapper.make (encoding_converter.utf32_to_utf8 (text))
 						if l_old_index /= Void then
 							l_atoms := l_old_index.index_list
-							replace_code (l_atoms.complete_start_position (a_match_list), l_atoms.complete_end_position (a_match_list), l_index.index_list.text (l_match_list))
+							replace_code (l_mapper.next_utf32_pos_from_utf8_pos (l_atoms.complete_start_position (a_match_list)),
+										l_mapper.next_utf32_pos_from_utf8_pos (l_atoms.complete_end_position (a_match_list)),
+										l_index.index_list.text (l_match_list))
 						else
 							insert_code (a_ast.complete_end_position (a_match_list) + 1, "%N%T" + l_index.text (l_match_list))
 						end
@@ -366,7 +377,7 @@ feature {NONE} -- Implementation: Internal cache
 			-- Note: Do not use directly!
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

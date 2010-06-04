@@ -72,6 +72,8 @@ inherit
 			{EIFNET_EXPORTER} edv_formatter
 		end
 
+	INTERNAL_COMPILER_STRING_EXPORTER
+
 create
 	make
 
@@ -1792,7 +1794,7 @@ feature {EIFNET_DEBUGGER_EVALUATOR} -- Implementation of ICorDebugFunction retri
 			l_class_c: CLASS_C
 		do
 			l_class_c := ct.associated_class
-			l_feat_i := l_class_c.feature_named (a_f_name)
+			l_feat_i := l_class_c.feature_named_32 (a_f_name)
 			Result := icd_function_by_feature (Void, ct, l_feat_i)
 		end
 
@@ -1843,7 +1845,7 @@ feature -- Specific function evaluation
 		do
 				--| Get STRING info from compilo
 				--| Get token to access `to_cil'
-			l_feat_to_cil := sc.feature_named ("to_cil")
+			l_feat_to_cil := sc.feature_named_32 ("to_cil")
 
 			if l_feat_to_cil /= Void then
 				l_feat_to_cil_token := Il_debug_info_recorder.feature_token_for_non_generic (l_feat_to_cil)

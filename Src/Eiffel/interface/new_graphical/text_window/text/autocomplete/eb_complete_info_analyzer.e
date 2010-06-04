@@ -21,6 +21,8 @@ inherit
 
 	EB_SHARED_WRITER
 
+	INTERNAL_COMPILER_STRING_EXPORTER
+
 feature -- Access
 
 	features_position: ARRAYED_LIST [TUPLE [start_pos: INTEGER; end_pos:INTEGER]]
@@ -409,7 +411,7 @@ feature -- Class names completion
 				until
 					current_class_as.generics.after
 				loop
-					create name_name.make (current_class_as.generics.item.name.name)
+					create name_name.make (current_class_as.generics.item.name.name_32)
 					class_list.put_front (name_name)
 					current_class_as.generics.forth
 				end
@@ -723,7 +725,7 @@ feature {NONE} -- Implementation
 			--| The finder is using AST
 			--| FIXME jfiat [2008/11/28] : this is to fix bug#15080
 		local
-			l_name: attached STRING_32
+			l_name: STRING_32
 			l_type: detachable TYPE_A
 			l_names_heap: NAMES_HEAP
 			l_feature: FEATURE_I
@@ -777,10 +779,9 @@ feature {NONE} -- Implementation
 												until
 													id_list.after
 												loop
-													if attached l_names_heap.item (id_list.item) as s then
-														l_name := s.as_string_32.as_attached
+													if attached l_names_heap.item_32 (id_list.item) as s then
 														l_type := type_a_generator.evaluate_type_if_possible (tda.type, l_class)
-														Result.force (l_type, l_name)
+														Result.force (l_type, s)
 													end
 													id_list.forth
 												end
@@ -798,10 +799,9 @@ feature {NONE} -- Implementation
 								until
 									l_obj_test_locals.after
 								loop
-									if attached l_names_heap.item (l_obj_test_locals.item.name.name_id) as s2 then
-										l_name := s2.as_string_32.as_attached
+									if attached l_names_heap.item_32 (l_obj_test_locals.item.name.name_id) as s2 then
 										l_type := type_a_generator.evaluate_type_if_possible (l_obj_test_locals.item.type, l_class)
-										Result.force (l_type, l_name)
+										Result.force (l_type, s2)
 									end
 									l_obj_test_locals.forth
 								end
@@ -821,7 +821,7 @@ feature {NONE} -- Implementation
 			if not build_overload_list then
 				internal_add_feature (feat)
 			else
-				inserted_feature_table.put (feat, names_heap.id_of (feat.name))
+				inserted_feature_table.put (feat, feat.name_id)
 			end
 		end
 
@@ -934,7 +934,7 @@ feature {NONE} -- Implementation
 							if not l_new_group then
 								l_new_group := True
 									-- Create father NAME node
-								l_father_name := names_heap.item (l_overloaded_names.key_for_iteration)
+								l_father_name := names_heap.item_32 (l_overloaded_names.key_for_iteration)
 								if l_e_feature.type /= Void then
 									create {EB_NAME_WITH_TYPE_FOR_COMPLETION}l_father.make (l_father_name, l_e_feature.type, l_e_feature.associated_feature_i)
 								else
@@ -944,7 +944,7 @@ feature {NONE} -- Implementation
 							end
 								-- Create child node and insert it into father node.
 							create l_feature.make (l_e_feature,
-													names_heap.item (l_overloaded_names.key_for_iteration),
+													names_heap.item_32 (l_overloaded_names.key_for_iteration),
 													True, is_upper_required (l_e_feature))
 							l_father.add_child (l_feature)
 								-- Remove child feature from inserted_feature_table.
@@ -1185,7 +1185,7 @@ feature {NONE} -- Implementation
 			l_cursor: INTEGER
 			l_redefining_cursor: INTEGER
 			l_args_cursor: INTEGER
-			l_name: STRING
+			l_name: STRING_32
 			l_continue: BOOLEAN
 			l_completion_name: EB_PRECURSOR_FOR_COMPLETION
 			l_class_from: ARRAYED_LIST [EDITOR_TOKEN]
@@ -1202,7 +1202,7 @@ feature {NONE} -- Implementation
 			l_parents := a_class.parents
 			if l_parents /= Void and then not l_parents.is_empty then
 				l_cursor := l_parents.index
-				l_name := a_feature.feature_name.name
+				l_name := a_feature.feature_name.name_32
 				from
 					l_parents.start
 				until
@@ -1220,7 +1220,7 @@ feature {NONE} -- Implementation
 								l_redefining.after or l_continue
 							loop
 								l_feat_name := l_redefining.item
-								l_continue := l_feat_name.visual_name.is_case_insensitive_equal (l_name)
+								l_continue := string_32_is_caseless_equal (l_name, l_feat_name.visual_name_32)
 								if l_continue then
 											-- Found a precursor match
 									if l_parent.type /= Void then
@@ -1228,16 +1228,16 @@ feature {NONE} -- Implementation
 										create l_class_from.make (20)
 										l_class_from.extend (create {EDITOR_TOKEN_SPACE}.make (1))
 										l_class_from.extend (create {EDITOR_TOKEN_OPERATOR}.make (ti_l_curly))
-										l_class_name := l_parent.type.class_name.name
+										l_class_name := l_parent.type.class_name.name_8
 										l_class_token := class_token_of_name (l_class_name)
 										l_class_from.extend (l_class_token)
 										l_class_from.extend (create {EDITOR_TOKEN_OPERATOR}.make (ti_r_curly))
 										if current_class_c /= Void then
 											if current_class_c.has_feature_table then
-												l_feature_i := current_class_c.feature_named (a_feature.feature_name.name)
+												l_feature_i := current_class_c.feature_of_name_id (a_feature.feature_name.name_id)
 											end
 											if l_feature_i = Void then
-												l_feature_i := current_class_c.feature_named ("is_equal")
+												l_feature_i := current_class_c.feature_named_32 ("is_equal")
 												check
 													l_feature_i_not_void: l_feature_i /= Void
 												end
@@ -1264,7 +1264,7 @@ feature {NONE} -- Implementation
 																l_type_dec.id_list.after
 															loop
 																l_arg_item := l_type_dec.id_list.item
-																l_args.extend (create {EDITOR_TOKEN_LOCAL}.make (names_heap.item (l_arg_item)))
+																l_args.extend (create {EDITOR_TOKEN_LOCAL}.make (names_heap.item_32 (l_arg_item)))
 																l_args.extend (create {EDITOR_TOKEN_OPERATOR}.make (ti_colon))
 																l_args.extend (create {EDITOR_TOKEN_SPACE}.make (1))
 																l_args.append (l_tokens)
@@ -1358,7 +1358,7 @@ feature {NONE} -- Implementation
 				until
 					l_list.after
 				loop
-					if l_table.has_key (l_list.item.visual_name) then
+					if l_table.has_feature_with_name (l_list.item) then
 						l_feat := l_table.found_item
 						if l_feat.is_exported_to (current_class_c) then
 							add_feature_to_completion_possibilities (l_feat)
@@ -1561,7 +1561,7 @@ feature {NONE} -- Implementation
 						l_features_found_count := l_type_set.e_feature_state_by_name_id (l_new_name_id).features_found_count
 						if l_features_found_count = 1 then
 							if l_new_name_id /= l_name_id then
-								create l_name_for_completion.make (a_feat, names_heap.item (l_new_name_id), False, is_upper_required (a_feat))
+								create l_name_for_completion.make (a_feat, names_heap.item_32 (l_new_name_id), False, is_upper_required (a_feat))
 								insert_in_completion_possibilities (l_name_for_completion)
 							else
 								add_feature_to_completion_possibilities (a_feat)
@@ -1588,7 +1588,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

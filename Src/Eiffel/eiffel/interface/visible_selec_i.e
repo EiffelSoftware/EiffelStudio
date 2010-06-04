@@ -19,15 +19,6 @@ inherit
 
 feature
 
-	visible_features: SEARCH_TABLE [STRING];
-			-- Visible features
-
-	set_visible_features (t: like visible_features)
-			-- Assign `t' to `visible_features'.
-		do
-			visible_features := t;
-		end;
-
 	is_visible (feat: FEATURE_I; class_id: INTEGER): BOOLEAN
 			-- Is feature name `feat_name' visible in context
 			-- of class `class_id'?
@@ -118,8 +109,19 @@ feature
 			end;
 		end;
 
+feature {INTERNAL_COMPILER_STRING_EXPORTER}
+
+	visible_features: SEARCH_TABLE [STRING];
+			-- Visible features
+
+	set_visible_features (t: like visible_features)
+			-- Assign `t' to `visible_features'.
+		do
+			visible_features := t;
+		end;
+
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

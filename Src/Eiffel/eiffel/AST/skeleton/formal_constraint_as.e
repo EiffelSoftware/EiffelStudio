@@ -640,21 +640,21 @@ feature {NONE} -- Implementation
 						l_e_feature := a_constraint_class.feature_with_id (l_old_name)
 					end
 					if l_e_feature /= Void then
-						a_text_formatter.process_feature_text (l_old_name.name, l_e_feature, false)
+						a_text_formatter.process_feature_text (l_old_name.name_32, l_e_feature, false)
 					else
-						a_text_formatter.add (l_old_name.name)
+						a_text_formatter.add (l_old_name.name_32)
 					end
 
 					a_text_formatter.add_space
 					a_text_formatter.process_keyword_text (ti_as_keyword, Void)
 					a_text_formatter.add_space
-					a_text_formatter.add (l_new_name.name)
+					a_text_formatter.add (l_new_name.name_32)
 					if l_alias_name /= Void then
 						a_text_formatter.add_space
 						a_text_formatter.process_keyword_text (ti_alias_keyword, Void)
 						a_text_formatter.add_space
 						a_text_formatter.process_symbol_text (ti_double_quote)
-						a_text_formatter.add (l_alias_name.value)
+						a_text_formatter.add (l_alias_name.value_32)
 						a_text_formatter.process_symbol_text (ti_double_quote)
 					end
 

@@ -21,6 +21,11 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_ENCODING_CONVERTER
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -680,7 +685,7 @@ feature {NONE} -- Population
 			l_row: EV_GRID_ROW
 			l_editor_item: EB_GRID_EDITOR_TOKEN_ITEM
 			l_scanner: detachable like token_scanner
-			l_tagged_text: STRING
+			l_tagged_text: STRING_32
 			l_left_border: INTEGER
 			l_class_c: CLASS_C
 			l_contract_source: attached ES_CONTRACT_SOURCE
@@ -735,7 +740,7 @@ feature {NONE} -- Population
 								ast_match_list_attached: l_mod_contract.modifier.ast_match_list /= Void
 							end
 
-							l_tagged_text := l_tagged.text (l_mod_contract.modifier.ast_match_list)
+							l_tagged_text := l_tagged.text_32 (l_mod_contract.modifier.ast_match_list)
 								-- Because the tagged text is coming from an AST node the initial tabbing is missing.
 							if attached {ES_INVARIANT_CONTRACT_EDITOR_CONTEXT} context as l_inv then
 								l_tagged_text.prepend ("%T")
@@ -744,7 +749,7 @@ feature {NONE} -- Population
 							end
 								-- Call will set row data!
 							check l_row_not_void: l_row /= Void end
-							populate_editable_contract_row (l_tagged_text.as_string_32.as_attached, l_contract_source, l_row)
+							populate_editable_contract_row (l_tagged_text.as_attached, l_contract_source, l_row)
 						else
 								-- Perform formatting with decorator, enabling clickable text.
 							l_class_c := l_mod_contract.modifier.context_class.compiled_class
@@ -760,7 +765,7 @@ feature {NONE} -- Population
 
 							check l_decorator_attached: l_decorator /= Void end
 							l_decorator.format_ast (l_tagged)
-							l_tagged_text := l_tagged.text (l_class_c.match_list_server.item (l_class_c.class_id))
+							l_tagged_text := l_tagged.text_32 (l_class_c.match_list_server.item (l_class_c.class_id))
 
 								-- Add contract item
 							create l_editor_item
@@ -898,7 +903,7 @@ feature {NONE} -- Population
 					context_printer.print_context_feature (l_generator, l_e_feature, l_class_c)
 				else
 						-- Class is not compiled
-					context_printer.print_context_lace_feature (l_generator, l_context.context_feature.name, a_class)
+					context_printer.print_context_lace_feature (l_generator, l_context.context_feature.name_32, a_class)
 				end
 			else
 					-- Keywords
@@ -979,9 +984,9 @@ feature {NONE} -- Population
 				-- Iterate through the lines to build a token list
 			from l_editable_lines.start until l_editable_lines.after loop
 				if l_editable_lines.islast then
-					l_scanner.execute (l_editable_lines.item)
+					l_scanner.execute (encoding_converter.utf32_to_utf8 (l_editable_lines.item))
 				else
-					l_scanner.execute (l_editable_lines.item + "%N")
+					l_scanner.execute (encoding_converter.utf32_to_utf8 (l_editable_lines.item + "%N"))
 				end
 				create l_line.make_from_lexer (l_scanner)
 				l_editor_tokens.append (l_line.content)
@@ -1128,7 +1133,7 @@ feature {NONE} -- Internal implementation cache
 			-- Note: Do not use directly!
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

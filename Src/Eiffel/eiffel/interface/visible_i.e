@@ -12,20 +12,50 @@ inherit
 		rename
 			context as byte_context
 		end
+	INTERNAL_COMPILER_STRING_EXPORTER
 
-feature
-
-	renamings: HASH_TABLE [STRING, STRING];
-			-- Renaming table
+feature -- Query
 
 	is_visible (feat: FEATURE_I; class_id: INTEGER): BOOLEAN
 			-- Is feature name `feat_name' visible in context
 			-- of class `class_id'?
 		do
 			-- Do nothing
+		end
+
+	has_visible: BOOLEAN
+			-- Has the current object some visible features ?
+		do
+			-- Do nothing
+		end
+
+	trace
+		do
+			io.error.put_string (generator)
+		end
+
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
+
+	renamings: HASH_TABLE [STRING, STRING];
+			-- Renaming table
+
+feature -- Element change
+
+	mark_visible (remover: REMOVER; feat_table: FEATURE_TABLE)
+			-- Mark visible features from `feat_table'.
+		do
+			-- Do nothing
 		end;
 
-feature
+	generate_cecil_table (a_class: CLASS_C; generated_wrappers: SEARCH_TABLE [STRING_8])
+			-- Generate cecil table
+		require
+			has_visible;
+			generated_wrappers_attached: generated_wrappers /= Void
+		do
+		end;
+
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Element change
 
 	real_name (feat: FEATURE_I; class_id: INTEGER): STRING
 			-- Real external name for `feat' in context
@@ -47,33 +77,8 @@ feature
 			renamings := t;
 		end;
 
-	mark_visible (remover: REMOVER; feat_table: FEATURE_TABLE)
-			-- Mark visible features from `feat_table'.
-		do
-			-- Do nothing
-		end;
-
-	has_visible: BOOLEAN
-			-- Has the current object some visible features ?
-		do
-			-- Do nothing
-		end;
-
-	generate_cecil_table (a_class: CLASS_C; generated_wrappers: SEARCH_TABLE [STRING_8])
-			-- Generate cecil table
-		require
-			has_visible;
-			generated_wrappers_attached: generated_wrappers /= Void
-		do
-		end;
-
-	trace
-		do
-			io.error.put_string (generator);
-		end;
-
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

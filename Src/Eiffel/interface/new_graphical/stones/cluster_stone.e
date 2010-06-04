@@ -77,7 +77,7 @@ feature -- Access
 	folder_name: STRING
 			-- Subfolder name
 
-	stone_signature: STRING
+	stone_signature: STRING_32
 		do
 			Result := group.name.twin
 		end
@@ -214,7 +214,7 @@ invariant
 	path_not_void: path /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

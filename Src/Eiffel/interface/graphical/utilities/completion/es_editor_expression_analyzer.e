@@ -62,7 +62,7 @@ feature -- Basic operations
 			result_is_valid: Result /= Void implies Result.is_valid
 		end
 
-	expression_type_from_string (a_info: ES_EDITOR_ANALYZER_FEATURE_STATE_INFO; a_expr: READABLE_STRING_8): detachable TYPE_A
+	expression_type_from_string (a_info: ES_EDITOR_ANALYZER_FEATURE_STATE_INFO; a_expr: READABLE_STRING_32): detachable TYPE_A
 			-- Attempts to retrieve an type from an expression in the editor.
 			--
 			-- `a_info': Feature state information populated with source class and feature.
@@ -79,7 +79,7 @@ feature -- Basic operations
 			l_context: AST_CONTEXT
 			l_checker: ES_EXPRESSION_ANALYZER_FEATURE_CHECKER_GENERATOR
 			l_eval_locals: HASH_TABLE [TYPE_A, STRING_32]
-			l_expression: STRING
+			l_expression: STRING_32
 			l_saved: BOOLEAN
 			retried: BOOLEAN
 		do
@@ -97,7 +97,7 @@ feature -- Basic operations
 				create l_wrapper
 				l_class := a_info.context_class
 				l_parser := expression_parser
-				l_wrapper.parse_with_option (l_parser, l_expression, l_class.group.options, True, l_class)
+				l_wrapper.parse_with_option_32 (l_parser, l_expression, l_class.group.options, True, l_class)
 				if not l_wrapper.has_error and then attached {EXPR_AS} l_wrapper.ast_node as l_expr then
 					create l_context.make
 					l_context.initialize (l_class, l_class.actual_type) --, l_class.feature_table)

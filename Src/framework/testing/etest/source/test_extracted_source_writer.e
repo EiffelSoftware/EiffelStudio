@@ -114,25 +114,27 @@ feature {NONE} -- Query
 		local
 			i: INTEGER_32
 			l_custom_symbol: STRING_8
+			l_symbol: STRING
 		do
 			if a_feature.is_prefix then
 				Result := "prefix_"
-				if a_feature.prefix_symbol.is_equal ("+") then
+				if a_feature.prefix_symbol_32.as_string_8.is_equal ("+") then
 					Result.append ("plus")
-				elseif a_feature.prefix_symbol.is_equal ("-") then
+				elseif a_feature.prefix_symbol_32.as_string_8.is_equal ("-") then
 					Result.append ("minus")
 				else
 						-- Replace all non-alpha-numeric characters with valid representations.
 					from
 						create l_custom_symbol.make_empty
+						l_symbol := a_feature.prefix_symbol_32.as_string_8
 						i := 1
 					until
-						i > a_feature.prefix_symbol.count
+						i > l_symbol.count
 					loop
-						if a_feature.prefix_symbol.item (i).is_alpha_numeric then
-							l_custom_symbol.append_character (a_feature.prefix_symbol.item (i))
+						if l_symbol.item (i).is_alpha_numeric then
+							l_custom_symbol.append_character (l_symbol.item (i))
 						else
-							inspect a_feature.prefix_symbol.item (i)
+							inspect l_symbol.item (i)
 							when '#' then
 								l_custom_symbol.append_string ("_symb_number_")
 							when '|' then
@@ -142,7 +144,7 @@ feature {NONE} -- Query
 							when '&' then
 								l_custom_symbol.append_string ("_symb_amp_")
 							else
-								l_custom_symbol.append_string ("_symb_" + a_feature.prefix_symbol.item (i).code.out + "_")
+								l_custom_symbol.append_string ("_symb_" + l_symbol.item (i).code.out + "_")
 							end
 						end
 						i := i + 1
@@ -151,40 +153,42 @@ feature {NONE} -- Query
 				end
 			elseif a_feature.is_infix then
     			Result := "infix_"
-				if a_feature.infix_symbol.is_equal ("+") then
+    			l_symbol := a_feature.infix_symbol_32.as_string_8
+				if l_symbol.is_equal ("+") then
 					Result.append ("plus")
-				elseif a_feature.infix_symbol.is_equal ("-") then
+				elseif l_symbol.is_equal ("-") then
 					Result.append ("minus")
-				elseif a_feature.infix_symbol.is_equal ("*") then
+				elseif l_symbol.is_equal ("*") then
 					Result.append ("multiply")
-				elseif a_feature.infix_symbol.is_equal ("/") then
+				elseif l_symbol.is_equal ("/") then
 					Result.append ("division")
-				elseif a_feature.infix_symbol.is_equal ("<") then
+				elseif l_symbol.is_equal ("<") then
 					Result.append ("less")
-				elseif a_feature.infix_symbol.is_equal (">") then
+				elseif l_symbol.is_equal (">") then
 					Result.append ("greater")
-				elseif a_feature.infix_symbol.is_equal ("<=") then
+				elseif l_symbol.is_equal ("<=") then
 					Result.append ("less_or_equal")
-				elseif a_feature.infix_symbol.is_equal (">=") then
+				elseif l_symbol.is_equal (">=") then
 					Result.append ("greater_or_equal")
-				elseif a_feature.infix_symbol.is_equal ("//") then
+				elseif l_symbol.is_equal ("//") then
 					Result.append ("integer_division")
-				elseif a_feature.infix_symbol.is_equal ("\\") then
+				elseif l_symbol.is_equal ("\\") then
 					Result.append ("modulo")
-				elseif a_feature.infix_symbol.is_equal ("^") then
+				elseif l_symbol.is_equal ("^") then
 					Result.append ("power")
 				else
 						-- Replace all non-alpha-numeric characters with valid representations.
 					from
 						create l_custom_symbol.make_empty
+						l_symbol := a_feature.infix_symbol_32.as_string_8
 						i := 1
 					until
-						i > a_feature.infix_symbol.count
+						i > l_symbol.count
 					loop
-						if a_feature.infix_symbol.item (i).is_alpha_numeric then
-							l_custom_symbol.append_character (a_feature.infix_symbol.item (i))
+						if l_symbol.item (i).is_alpha_numeric then
+							l_custom_symbol.append_character (l_symbol.item (i))
 						else
-							inspect a_feature.infix_symbol.item (i)
+							inspect l_symbol.item (i)
 							when '#' then
 								l_custom_symbol.append_string ("_symb_number_")
 							when '|' then
@@ -202,7 +206,8 @@ feature {NONE} -- Query
 					Result.append (l_custom_symbol)
 				end
 			else
-				create Result.make_from_string (a_feature.name)
+					-- |FIXME: Unicode encoding handling.
+				create Result.make_from_string (a_feature.name_32.as_string_8)
 			end
 		ensure
 			result_not_empty: not Result.is_empty
@@ -287,17 +292,18 @@ feature {TEST_CAPTURER} -- Events
 				stream.indent
 				stream.put_string ("l_result := ")
 				if l_feat.is_prefix then
-					stream.put_string (l_feat.prefix_symbol)
+					stream.put_string (l_feat.prefix_symbol_32.as_string_8)
 					stream.put_line (" an_arg1")
 				elseif l_feat.is_infix then
 					stream.put_string ("an_arg1 ")
-					stream.put_string (l_feat.infix_symbol)
+					stream.put_string (l_feat.infix_symbol_32.as_string_8)
 					stream.put_line (" an_arg2")
 				else
 					stream.put_string ("create {")
 					stream.put_string (a_stack_element.type)
 					stream.put_string ("}.")
-					stream.put_string (l_feat.name)
+						-- |FIXME: Handle encoding
+					stream.put_string (l_feat.name_32.as_string_8)
 					if a_stack_element.operands.count > 0 then
 						stream.put_character ('(')
 						from
@@ -323,7 +329,8 @@ feature {TEST_CAPTURER} -- Events
 				stream.put_string (a_stack_element.type)
 				stream.put_character ('}')
 				stream.put_character ('.')
-				stream.put_string (l_feat.name)
+					-- |FIXME: Unicode encoding
+				stream.put_string (l_feat.name_32.as_string_8)
 			end
 			stream.put_string (", [")
 			from
@@ -527,7 +534,7 @@ feature {NONE} -- Constants
 	extracted_ancestor_name: STRING = "EQA_EXTRACTED_TEST_SET"
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

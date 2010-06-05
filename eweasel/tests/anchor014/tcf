@@ -8,6 +8,6 @@ copy_raw	test1.e $CLUSTER test1.e
 copy_raw	test2.e $CLUSTER test2.e
 
 compile_melted
-compile_result	validity_error TEST1 VEEN
+compile_result	validity_error TEST1 VEEN VEEN
 
 test_end

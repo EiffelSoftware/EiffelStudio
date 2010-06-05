@@ -166,11 +166,10 @@ feature {TYPE_A} -- Helpers
 feature {NONE} -- Implementation
 
 	same_as (other: TYPE_A): BOOLEAN
-			-- Is the current type the same as `other' ?
+			-- <Precursor>
 		do
-			Result :=
-				attached {UNEVALUATED_QUALIFIED_ANCHORED_TYPE} other as o and then
-				is_equivalent (o)
+				-- The precondition of `is_equivalent' specifies that both types should be valid.
+				-- Since this is not a valid type, the result is false.
 		end
 
 	shared_create_info, create_info: CREATE_INFO

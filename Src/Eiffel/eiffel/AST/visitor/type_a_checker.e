@@ -879,7 +879,11 @@ feature {NONE} -- Implementation
 			saved_feature: like current_feature
 			routine_id: SPECIAL [INTEGER]
 			n: INTEGER
+			e: like error_handler.error_level
 		do
+			if attached error_handler as h then
+				e := h.error_level
+			end
 			t.qualifier.process (Current)
 			q := last_type
 			if attached q then
@@ -892,47 +896,57 @@ feature {NONE} -- Implementation
 				until
 					not attached q or else i >= n
 				loop
-					feature_finder.find (t.chain [i], q, current_class)
-					if
-						attached feature_finder.found_feature as f and then
-						attached system.class_of_id (feature_finder.found_site) as c
-					then
-						saved_class := current_class
-						saved_actual_type := current_actual_type
-						saved_feature_table := current_feature_table
-						saved_feature := current_feature
-						current_class := c
-						current_actual_type := c.actual_type
-						current_feature_table := c.feature_table
-						current_feature := f
-						process_anchor (f, t)
-						current_class := saved_class
-						current_actual_type := saved_actual_type
-						current_feature_table := saved_feature_table
-						current_feature := saved_feature
-						if attached last_type as r then
-								-- Evaluate type of `f' in the current context.
-							q := r.instantiated_in (q)
-								-- Record supplier for recompilation.
-							degree_4.add_qualified_supplier (f, c, current_class)
-								-- Register intermediate type with instantiator.
-							instantiator.dispatch (q, current_class)
-								-- Record routine ID that is used to update the type in descendants.
-							routine_id [i] := f.rout_id_set.first
-							if attached suppliers as s then
-									-- There is a dependance between `current_feature' and `f'.
-									-- Record it for the propagation of the recompilations
-								s.extend_depend_unit_with_level (current_class.class_id, f, 0)
-							end
-						end
-					elseif has_error_reporting then
-						create l_veen
-						l_veen.set_class (current_class)
-						l_veen.set_feature (current_feature)
-						l_veen.set_identifier (system.names.item (t.chain [i]))
-						error_handler.insert_error (l_veen)
-							-- Stop processing of the chain.
+					if has_error_reporting then
+							-- Verify that the type is valid in current context
+							-- as it makes no sense to continue processing otherwise.
+						check_type_validity (q, associated_type_ast)
+					end
+					if attached error_handler as h and then h.error_level /= e then
+							-- The type is not valid in current context.
 						q := Void
+					else
+						feature_finder.find (t.chain [i], q, current_class)
+						if
+							attached feature_finder.found_feature as f and then
+							attached system.class_of_id (feature_finder.found_site) as c
+						then
+							saved_class := current_class
+							saved_actual_type := current_actual_type
+							saved_feature_table := current_feature_table
+							saved_feature := current_feature
+							current_class := c
+							current_actual_type := c.actual_type
+							current_feature_table := c.feature_table
+							current_feature := f
+							process_anchor (f, t)
+							current_class := saved_class
+							current_actual_type := saved_actual_type
+							current_feature_table := saved_feature_table
+							current_feature := saved_feature
+							if attached last_type as r then
+									-- Evaluate type of `f' in the current context.
+								q := r.instantiated_in (q)
+									-- Record supplier for recompilation.
+								degree_4.add_qualified_supplier (f, c, current_class)
+									-- Register intermediate type with instantiator.
+								instantiator.dispatch (q, current_class)
+									-- Record routine ID that is used to update the type in descendants.
+								routine_id [i] := f.rout_id_set.first
+								if attached suppliers as s then
+										-- There is a dependance between `current_feature' and `f'.
+										-- Record it for the propagation of the recompilations
+									s.extend_depend_unit_with_level (current_class.class_id, f, 0)
+								end
+							end
+						elseif has_error_reporting then
+							create l_veen
+							l_veen.set_class (current_class)
+							l_veen.set_feature (current_feature)
+							l_veen.set_identifier (system.names.item (t.chain [i]))
+							error_handler.insert_error (l_veen)
+								-- Stop processing of the chain.
+							q := Void
+						end
 					end
 					i := i + 1
 				end

@@ -10,7 +10,6 @@ deferred class
 
 inherit
 	STRING_HANDLER
-		export {NONE} all end
 
 feature -- Conversion
 

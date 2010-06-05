@@ -68,6 +68,11 @@ feature -- Properties
 	class_id: INTEGER
 			-- ID if a class where this type is written
 
+feature {TYPE_A_CHECKER} -- Properties
+
+	routine_id: SPECIAL [INTEGER_32]
+			-- Routine IDs of the second part of the type, after the `qualifier'
+
 feature -- Status Report
 
 	is_explicit: BOOLEAN
@@ -144,6 +149,33 @@ feature -- Modification
 			qualifier := q
 		ensure
 			qualifier_set: qualifier = q
+		end
+
+feature {TYPE_A_CHECKER} -- Modification
+
+	set_chain (n: like chain; c: CLASS_C)
+			-- Set `chain' to the value relative to class `c'.
+		require
+			n_attached: attached n
+			n_same_count: n.count = chain.count
+			c_attached: attached c
+		do
+			chain := n
+			class_id := c.class_id
+		ensure
+			chain_set: chain = n
+			class_id_set: class_id = c.class_id
+		end
+
+	set_routine_id (r: like routine_id)
+			-- Set `routine_id' to `r'.
+		require
+			r_attached: attached r
+			r_same_count: r.count = chain.count
+		do
+			routine_id := r
+		ensure
+			routine_id_set: routine_id = r
 		end
 
 feature -- Generic conformance
@@ -257,8 +289,10 @@ feature -- Output
 				n := names_heap.item (chain [i])
 				if attached f then
 					st.add_feature (f, n)
-				else
+				elseif attached q then
 					st.add_feature_name (n, q)
+				else
+					st.process_feature_name_text (n, Void)
 				end
 				i := i + 1
 			end

@@ -94,6 +94,20 @@ feature {CREATE_QUALIFIED} -- Access
 	routine_id: INTEGER
 			-- Routine ID of the second part of the qualified type
 
+feature {NONE} -- Convenience
+
+	qualifier_class: CLASS_C
+			-- Class, associated with qualifier
+		do
+			Result := context.real_type (qualifier).associated_class
+		end
+
+	qualifier_static_type_id: INTEGER
+			-- Static type ID of `qualifier' class type.
+		do
+			Result := context.real_type (qualifier).static_type_id (Context.context_class_type.type)
+		end
+
 feature -- Update
 
 	updated_info: CREATE_INFO
@@ -105,7 +119,7 @@ feature -- Update
 			c := qualifier_creation.updated_info
 			q := context.descendant_type (qualifier)
 			if c /= qualifier_creation or else q /= qualifier and then not qualifier.same_as (q) then
-				create {CREATE_QUALIFIED} Result.make_explicit (q.create_info, q, q.associated_class.feature_of_rout_id (routine_id))
+				create {CREATE_QUALIFIED} Result.make_explicit (q.create_info, q, context.real_type (q).associated_class.feature_of_rout_id (routine_id))
 			else
 				Result := Current
 			end
@@ -188,10 +202,10 @@ feature -- C code generation
 			else
 				if
 					Compilation_modes.is_precompiling or
-					qualifier.associated_class.is_precompiled
+					qualifier_class.is_precompiled
 				then
 					buffer.put_string ("RTWPCTT(")
-					buffer.put_static_type_id (qualifier.static_type_id (context.context_class_type.type))
+					buffer.put_static_type_id (qualifier_static_type_id)
 					buffer.put_string ({C_CONST}.comma_space)
 					rout_info := System.rout_info_table.item (routine_id)
 					buffer.put_class_id (rout_info.origin)
@@ -199,7 +213,7 @@ feature -- C code generation
 					buffer.put_integer (rout_info.offset)
 				else
 					buffer.put_string ("RTWCTT(")
-					buffer.put_static_type_id (qualifier.static_type_id (context.context_class_type.type))
+					buffer.put_static_type_id (qualifier_static_type_id)
 					buffer.put_string ({C_CONST}.comma_space)
 					buffer.put_integer (feature_id)
 				end
@@ -224,7 +238,7 @@ feature -- IL code generation
 			qualifier_creation.generate_il
 			il_generator.create_type
 
-			target_type := context.real_type (qualifier.associated_class.anchored_features.item
+			target_type := context.real_type (qualifier_class.anchored_features.item
 				(routine_id).type)
 			if target_type.is_expanded then
 					-- Load value of a value type object.
@@ -241,7 +255,7 @@ feature -- IL code generation
 		do
 				-- Create qualifier object.
 			qualifier_creation.generate_il
-			c := qualifier.associated_class_type (context.context_class_type.type).type
+			c := context.real_type (qualifier).associated_class_type (context.context_class_type.type).type
 				-- Generate call to feature that will give the type we want to create.
 			il_generator.generate_type_feature_call_on_type (c.associated_class.anchored_features.item (routine_id), c)
 		end
@@ -253,17 +267,17 @@ feature -- Byte code generation
 		local
 			rout_info: ROUT_INFO
 		do
-			if qualifier.associated_class.is_precompiled then
+			if qualifier_class.is_precompiled then
 				ba.append (Bc_pqlike)
 				qualifier_creation.make_byte_code (ba)
-				ba.append_type_id (qualifier.static_type_id (context.context_class_type.type))
+				ba.append_type_id (qualifier_static_type_id)
 				rout_info := System.rout_info_table.item (routine_id)
 				ba.append_integer (rout_info.origin)
 				ba.append_integer (rout_info.offset)
 			else
 				ba.append (Bc_qlike)
 				qualifier_creation.make_byte_code (ba)
-				ba.append_type_id (qualifier.static_type_id (context.context_class_type.type))
+				ba.append_type_id (qualifier_static_type_id)
 				ba.append_integer (feature_id)
 			end
 		end
@@ -343,10 +357,10 @@ feature -- Genericity
 			else
 				if
 					Compilation_modes.is_precompiling or
-					qualifier.associated_class.is_precompiled
+					qualifier_class.is_precompiled
 				then
 					buffer.put_string ("RTWPCTT(")
-					buffer.put_static_type_id (qualifier.static_type_id (context.context_class_type.type))
+					buffer.put_static_type_id (qualifier_static_type_id)
 					buffer.put_string ({C_CONST}.comma_space)
 					rout_info := System.rout_info_table.item (routine_id)
 					buffer.put_class_id (rout_info.origin)
@@ -354,7 +368,7 @@ feature -- Genericity
 					buffer.put_integer (rout_info.offset)
 				else
 					buffer.put_string ("RTWCTT(")
-					buffer.put_static_type_id (qualifier.static_type_id (context.context_class_type.type))
+					buffer.put_static_type_id (qualifier_static_type_id)
 					buffer.put_string ({C_CONST}.comma_space)
 					buffer.put_integer (feature_id)
 				end
@@ -455,17 +469,17 @@ feature -- Genericity
 		local
 			rout_info: ROUT_INFO
 		do
-			if qualifier.associated_class.is_precompiled then
+			if qualifier_class.is_precompiled then
 				ba.append_natural_16 ({SHARED_GEN_CONF_LEVEL}.qualified_pfeature_type)
 				qualifier_creation.make_type_byte_code (ba)
-				ba.append_type_id (qualifier.static_type_id (context.context_class_type.type))
+				ba.append_type_id (qualifier_static_type_id)
 				rout_info := System.rout_info_table.item (routine_id)
 				ba.append_integer (rout_info.origin)
 				ba.append_integer (rout_info.offset)
 			else
 				ba.append_natural_16 ({SHARED_GEN_CONF_LEVEL}.qualified_feature_type)
 				qualifier_creation.make_type_byte_code (ba)
-				ba.append_type_id (qualifier.static_type_id (context.context_class_type.type))
+				ba.append_type_id (qualifier_static_type_id)
 				ba.append_integer (feature_id)
 			end
 		end

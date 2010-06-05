@@ -155,7 +155,7 @@ feature {TYPE_A} -- Visitor
 			until
 				has_multiple
 			loop
-				find (name_id, c.item, context_class)
+				find (name_id, c.item.type, context_class)
 				if attached found_feature as f then
 					if attached last_feature then
 							-- More than one feature is found.

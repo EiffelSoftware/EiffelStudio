@@ -24,7 +24,7 @@ inherit
 			make, put, extend
 		end
 
-create {INTERNAL_COMPILER_STRING_EXPORTER}
+create {ERT_CLIENT_SET, INTERNAL_COMPILER_STRING_EXPORTER}
 	make
 
 feature{NONE} -- Initialization

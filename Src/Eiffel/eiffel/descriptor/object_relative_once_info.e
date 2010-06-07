@@ -131,6 +131,30 @@ feature -- Access
 
 feature -- Access: attribute
 
+	attribute_of_feature_id (a_feature_id: INTEGER): detachable ATTRIBUTE_I
+			-- Attribute related to `a_feature_id' if exists.
+		do
+			if a_feature_id = called_feature_id then
+				Result := called_attribute_i
+			elseif a_feature_id = exception_feature_id then
+				Result := exception_attribute_i
+			elseif a_feature_id = result_feature_id then
+				Result := result_attribute_i
+			end
+		end
+
+	attribute_of_routine_id	(a_routine_id: INTEGER): detachable ATTRIBUTE_I
+			-- Attribute related to `a_routine_id' if exists.
+		do
+			if a_routine_id = called_routine_id then
+				Result := called_attribute_i
+			elseif a_routine_id = exception_routine_id then
+				Result := exception_attribute_i
+			elseif a_routine_id = result_routine_id then
+				Result := result_attribute_i
+			end
+		end
+
 	called_attribute_i: ATTRIBUTE_I
 			-- ATTRIBUTE_I for extra attribute `called_name'
 
@@ -226,7 +250,7 @@ feature -- Element change
 			l_att_i.set_origin_class_id (once_routine.origin_class_id)
 			l_att_i.set_feature_id (called_feature_id)
 			l_att_i.set_origin_feature_id (called_feature_id)
-			l_att_i.set_feature_name_id (called_name_id, called_name_id)
+			l_att_i.set_feature_name_id (called_name_id, 0)
 			l_att_i.set_is_transient (once_routine.is_transient)
 			l_att_i.set_is_hidden (True)
 
@@ -250,7 +274,7 @@ feature -- Element change
 			l_att_i.set_origin_class_id (once_routine.origin_class_id)
 			l_att_i.set_feature_id (exception_feature_id)
 			l_att_i.set_origin_feature_id (exception_feature_id)
-			l_att_i.set_feature_name_id (exception_name_id, exception_name_id)
+			l_att_i.set_feature_name_id (exception_name_id, 0)
 			l_att_i.set_is_transient (once_routine.is_transient)
 			l_att_i.set_is_hidden (True)
 
@@ -275,7 +299,7 @@ feature -- Element change
 			l_att_i.set_origin_class_id (once_routine.origin_class_id)
 			l_att_i.set_feature_id (result_feature_id)
 			l_att_i.set_origin_feature_id (result_feature_id)
-			l_att_i.set_feature_name_id (result_name_id, result_name_id)
+			l_att_i.set_feature_name_id (result_name_id, 0)
 			l_att_i.set_is_transient (once_routine.is_transient)
 			l_att_i.set_is_hidden (True)
 

@@ -9,6 +9,8 @@ inherit
 
 	KL_SHARED_EXECUTION_ENVIRONMENT
 
+	INTERNAL_COMPILER_STRING_EXPORTER
+
 create
 	make,
 	make_with_filename
@@ -98,10 +100,9 @@ feature {NONE} -- Implementation
 				f.exhausted
 			loop
 				f.read_stream (1024)
-				s.append (f.last_string)
+				s.append_string_general (f.last_string)
 			end
 			f.close
-
 
 			initialize
 				-- Slow parsing to rewrite the class using the new constructs.
@@ -129,7 +130,7 @@ feature {NONE} -- Implementation
 				if attached parser.error_message as m and then not m.is_empty then
 					print (": " + m)
 				end
-				print ("%N")
+				print ("%N%N")
 				parser.reset
 				parser.reset_nodes
 				parser.wipe_out

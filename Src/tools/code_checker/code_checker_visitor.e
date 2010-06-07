@@ -52,13 +52,13 @@ feature -- Process
 
 	print_occurrences: INTEGER
 
-	last_class_name: STRING
+	last_class_name: STRING_32
 
-	last_feature_name: STRING
+	last_feature_name: STRING_32
 
-	text (l_as: AST_EIFFEL): STRING
+	text (l_as: AST_EIFFEL): STRING_32
 		do
-			Result := l_as.text (match_list)
+			Result := l_as.text_32 (match_list)
 		end
 
 	process_class_as (l_as: CLASS_AS)

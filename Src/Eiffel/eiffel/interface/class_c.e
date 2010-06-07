@@ -682,6 +682,36 @@ feature -- Access: object relative once
 			end
 		end
 
+	object_relative_once_attribute_of_feature_id (a_feature_id: INTEGER): detachable ATTRIBUTE_I
+			-- Attribute associated with Current with feature_id `a_feature_id', if any.
+		do
+			if attached object_relative_once_infos as l_infos then
+				from
+					l_infos.start
+				until
+					l_infos.after or Result /= Void
+				loop
+					Result := l_infos.item_for_iteration.attribute_of_feature_id (a_feature_id)
+					l_infos.forth
+				end
+			end
+		end
+
+	object_relative_once_attribute_of_routine_id (a_routine_id: INTEGER): detachable ATTRIBUTE_I
+			-- Attribute associated with Current with feature_id `a_routine_id', if any.
+		do
+			if attached object_relative_once_infos as l_infos then
+				from
+					l_infos.start
+				until
+					l_infos.after or Result /= Void
+				loop
+					Result := l_infos.item_for_iteration.attribute_of_routine_id (a_routine_id)
+					l_infos.forth
+				end
+			end
+		end
+
 feature -- Third pass: byte code production and type check
 
 	record_suppliers (feature_i: FEATURE_I; dependances: CLASS_DEPENDANCE)
@@ -3515,6 +3545,10 @@ feature -- Access
 				then
 					Result := invariant_feature
 				end
+
+				if Result = Void then
+					Result := object_relative_once_attribute_of_routine_id (a_routine_id)
+				end
 			end
 		end
 
@@ -3580,6 +3614,9 @@ feature -- Access
 						l_gen.forth
 					end
 					l_gen.go_to (l_cursor)
+				end
+				if Result = Void then
+					Result := object_relative_once_attribute_of_feature_id (a_feature_id)
 				end
 			end
 		end

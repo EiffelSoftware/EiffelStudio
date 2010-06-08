@@ -316,6 +316,16 @@ feature -- Enumerations.
 			]"
 		end
 
+	curlopt_customrequest: INTEGER
+			-- Declared as CURLOPT_CUSTOMREQUEST
+		external
+			"C inline use <curl/curl.h>"
+		alias
+			"[
+				return CURLOPT_CUSTOMREQUEST
+			]"
+		end
+
 	is_valid (a_integer: INTEGER): BOOLEAN
 			-- If `a_integer' value valid?
 		do
@@ -347,12 +357,13 @@ feature -- Enumerations.
 						a_integer = curlopt_infilesize_large or
 						a_integer = curlopt_proxy or
 						a_integer = curlopt_encoding or
-						a_integer = curlopt_timeout
+						a_integer = curlopt_timeout or
+						a_integer = curlopt_customrequest
 		end
 
 note
 	library:   "cURL: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

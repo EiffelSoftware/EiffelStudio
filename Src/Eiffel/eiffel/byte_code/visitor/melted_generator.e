@@ -1636,7 +1636,7 @@ feature {NONE} -- Visitors
 				l_value_32 := a_node.value_32
 					-- Bytes to read.
 				ba.append_integer (l_value_32.count * 4)
-				string_32_stream_to_ba (l_value_32, ba)
+				ba.append_raw_string_32 (l_value_32)
 			else
 				l_value := a_node.value
 					-- Bytes to read
@@ -1822,7 +1822,7 @@ feature {NONE} -- Visitors
 			if l_is_str32 then
 					-- Bytes to read
 				ba.append_integer (l_value_32.count * 4)
-				string_32_stream_to_ba (l_value_32, ba)
+				ba.append_raw_string_32 (l_value_32)
 			else
 					-- Bytes to read
 				ba.append_integer (l_value.count)
@@ -2440,28 +2440,6 @@ feature {NONE} -- Implementation
 						ba.generate_melted_debugger_hook_nested (l_line, l_nested)
 					end
 				end
-			end
-		end
-
-	string_32_stream_to_ba (a_str32_value: STRING_32; a_ba: like ba)
-			-- Write streamed STRING_32 into the byte array.
-		require
-			a_str32_value_not_void: a_str32_value /= Void
-			a_ba_not_void: a_ba /= Void
-		local
-			i: INTEGER_32
-			l_managed_pointer: MANAGED_POINTER
-			l_count: INTEGER
-		do
-			l_count := a_str32_value.count * 4
-			create l_managed_pointer.share_from_pointer (a_str32_value.area.base_address, l_count)
-			from
-				i := 0
-			until
-				i >= l_count
-			loop
-				ba.append_natural_8 (l_managed_pointer.read_natural_8 (i))
-				i := i + 1
 			end
 		end
 

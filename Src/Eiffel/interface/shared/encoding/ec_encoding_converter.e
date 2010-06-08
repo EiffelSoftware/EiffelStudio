@@ -25,7 +25,7 @@ inherit
 
 feature -- Access
 
-	detected_encoding: attached ENCODING assign set_detected_encoding
+	detected_encoding: ENCODING assign set_detected_encoding
 			-- <Precursor>
 		local
 			l_encoding: detachable like internal_detected_encoding
@@ -38,13 +38,14 @@ feature -- Access
 				internal_detected_encoding := Result
 			end
 		ensure then
+			detected_encoding_not_void: Result /= Void
 			internal_detected_encoding_set: internal_detected_encoding = Result
 		end
 
 	utf8_string (a_stream: STRING): STRING
 			-- Detect encoding of `a_stream' and convert it into utf8.
 		local
-			l_encoding: attached like detected_encoding
+			l_encoding: like detected_encoding
 		do
 			detect_encoding (a_stream)
 			l_encoding := detected_encoding
@@ -64,7 +65,7 @@ feature -- Access
 	utf32_string (a_stream: STRING): STRING_32
 			-- <Precursor>
 		local
-			l_encoding: attached like detected_encoding
+			l_encoding: like detected_encoding
 		do
 			detect_encoding (a_stream)
 			l_encoding := detected_encoding
@@ -84,7 +85,7 @@ feature -- Access
 	utf32_from_iso8259_1 (a_stream: STRING): STRING_32
 			-- <Precursor>
 		local
-			l_encoding: attached like detected_encoding
+			l_encoding: ENCODING
 		do
 			l_encoding := iso_8859_1
 			l_encoding.convert_to (utf32, a_stream)
@@ -108,8 +109,10 @@ feature -- Access
 
 feature -- Element change
 
-	set_detected_encoding (a_encoding: attached like detected_encoding)
+	set_detected_encoding (a_encoding: like detected_encoding)
 			-- Sets the detected encoding
+		require
+			a_encoding_not_void: a_encoding /= Void
 		do
 			internal_detected_encoding := a_encoding
 		ensure
@@ -131,10 +134,12 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	encoding_detector: attached ENCODING_DETECTOR
+	encoding_detector: ENCODING_DETECTOR
 			-- Encoding detector
 		once
 			create {EC_SIMPLE_ENCODING_DETECTOR} Result
+		ensure
+			encoding_detector_not_void: Result /= Void
 		end
 
 feature {NONE} -- Implementation: Internal cache

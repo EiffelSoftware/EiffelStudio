@@ -186,7 +186,7 @@ feature -- Query
 
 feature -- Agents
 
-	on_focus_in (a_content: SD_CONTENT)
+	on_focus_in (a_content: detachable SD_CONTENT)
 			-- Do nothing
 		do
 		end
@@ -214,7 +214,7 @@ feature {NONE} -- Implementation
 
 ;note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -148,7 +148,7 @@ feature {NONE} -- Implementation
 
 feature {SD_AUTO_HIDE_STATE} -- Docking features
 
-	on_focus_in (a_content: SD_CONTENT)
+	on_focus_in (a_content: detachable SD_CONTENT)
 			-- <Precursor>
 		do
 			Precursor {SD_SINGLE_CONTENT_ZONE} (a_content)

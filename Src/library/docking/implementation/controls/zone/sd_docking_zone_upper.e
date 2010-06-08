@@ -52,7 +52,7 @@ feature -- Initlization
 			create {EV_CELL_IMP} implementation_upper_zone.make -- Make void safe compiler happy, not used
 			default_create
 			init
-			
+
 			notebook.set_tab_position ({SD_NOTEBOOK}.tab_top)
 			notebook.normal_max_actions.extend (agent on_normal_max_window)
 			notebook.minimize_actions.extend (agent on_minimize)
@@ -74,7 +74,7 @@ feature -- Initlization
 
 feature -- Redefine
 
-	on_focus_in (a_content: SD_CONTENT)
+	on_focus_in (a_content: detachable SD_CONTENT)
 			-- <Precursor>
 		do
 			Precursor {SD_DOCKING_ZONE} (a_content)

@@ -325,7 +325,7 @@ feature {SD_FLOATING_STATE} -- Internal issues
 
 feature -- Agents for user
 
-	on_focus_in (a_content: SD_CONTENT)
+	on_focus_in (a_content: detachable SD_CONTENT)
 			-- <Precursor>
 		do
 			Precursor {SD_MULTI_CONTENT_ZONE} (a_content)
@@ -482,7 +482,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

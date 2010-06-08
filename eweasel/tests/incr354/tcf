@@ -1,0 +1,19 @@
+
+test_name	qat-none-crash
+test_description Changing the type of an entity from NONE to `like {NONE}.out' and recompiling crashes the compiler with a call on Void target.
+
+define TYPE "NONE"
+copy_sub	Ace $TEST Ace
+copy_sub	test.e $CLUSTER test.e
+
+compile_melted
+compile_result ok
+
+define TYPE "like {NONE}.out"
+copy_sub	test.e $CLUSTER test.e
+
+compile_melted
+compile_result validity_error TEST VEEN
+
+test_end
+

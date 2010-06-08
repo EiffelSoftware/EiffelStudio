@@ -420,18 +420,15 @@ feature -- Element change
 		require
 			good_argument: s /= Void
 		local
-			i: INTEGER_32
-			l_managed_pointer: MANAGED_POINTER
-			l_count: INTEGER
+			i, l_count: INTEGER
 		do
-			l_count := s.count * 4
-			create l_managed_pointer.share_from_pointer (s.area.base_address, l_count)
 			from
-				i := 0
+				l_count := s.count
+				i := 1
 			until
-				i >= l_count
+				i > l_count
 			loop
-				append_natural_8 (l_managed_pointer.read_natural_8 (i))
+				append_character_32 (s [i])
 				i := i + 1
 			end
 			append ('%U')

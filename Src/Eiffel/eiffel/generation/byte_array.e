@@ -326,7 +326,7 @@ feature -- Element change
 		do
 			append_integer_32 (a_offset)
 		end
-		
+
 	append_feature_id (a_id: INTEGER)
 			-- Append feature ID `a_id'.
 		require
@@ -410,6 +410,28 @@ feature -- Element change
 				i > nb
 			loop
 				append (s.item (i))
+				i := i + 1
+			end
+			append ('%U')
+		end
+
+	append_raw_string_32 (s: STRING_32)
+			-- Append string `s'.
+		require
+			good_argument: s /= Void
+		local
+			i: INTEGER_32
+			l_managed_pointer: MANAGED_POINTER
+			l_count: INTEGER
+		do
+			l_count := s.count * 4
+			create l_managed_pointer.share_from_pointer (s.area.base_address, l_count)
+			from
+				i := 0
+			until
+				i >= l_count
+			loop
+				append_natural_8 (l_managed_pointer.read_natural_8 (i))
 				i := i + 1
 			end
 			append ('%U')

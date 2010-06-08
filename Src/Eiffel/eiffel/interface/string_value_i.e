@@ -180,7 +180,6 @@ feature -- Code generation
 			l_is_str32 := is_string_32
 			if l_is_str32 then
 				l_value_32 := encoding_converter.utf8_to_utf32 (string_value)
-				l_value := encoding_converter.string_32_to_stream (l_value_32)
 			else
 				l_value := string_value
 			end
@@ -189,13 +188,14 @@ feature -- Code generation
 			ba.append_boolean (l_is_str32)
 				-- Length of the string instance
 			if l_is_str32 then
-				ba.append_integer (l_value_32.count)
+					-- Bytes to read
+				ba.append_integer (l_value_32.count * 4)
+				ba.append_raw_string_32 (l_value_32)
 			else
+					-- Bytes to read
 				ba.append_integer (l_value.count)
+				ba.append_raw_string (l_value)
 			end
-				-- Bytes to read
-			ba.append_integer (l_value.count)
-			ba.append_raw_string (l_value)
 		end
 
 	dump: STRING

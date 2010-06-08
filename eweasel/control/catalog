@@ -2375,6 +2375,7 @@ test	qat-adapted-in-crash			anchor015 tcf pass anchored_type
 test	qat-linked-to-local-anchor		anchor016 tcf pass anchored_type
 test	qat-generic-parms-for-nongeneric-class	anchor017 tcf pass anchored_type
 test	qat-linked-to-formal			anchor018 tcf pass anchored_type
+test	qat-conformance-type-crash		anchor019 tcf fail anchored_type
 
 -- .NET specific test
 if DOTNET test expanded-object-conversion	dotnet001	tcf pass dotnet

@@ -8,7 +8,7 @@ class WORKER2
 inherit
 	WORKER
 		rename
-			routine as stoat
+			routine as stoat_test
 		end
 
 create

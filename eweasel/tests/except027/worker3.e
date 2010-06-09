@@ -8,7 +8,7 @@ class WORKER3
 inherit
 	WORKER
 		rename
-			routine as ermine
+			routine as ermine_test
 		end
 
 create

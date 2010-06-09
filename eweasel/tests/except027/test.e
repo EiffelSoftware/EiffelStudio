@@ -24,17 +24,17 @@ feature
 			depth := args.item (1).to_integer
 			count := args.item (2).to_integer
 			create list.make (2)
-			list.extend ("stoat")
-			list.extend ("ermine")
-			create worker1.make (depth, count, "weasel", list)
+			list.extend ("stoat_test")
+			list.extend ("ermine_test")
+			create worker1.make (depth, count, "weasel_test", list)
 			create list.make (2)
-			list.extend ("weasel")
-			list.extend ("ermine")
-			create worker2.make (depth, count, "stoat", list)
+			list.extend ("weasel_test")
+			list.extend ("ermine_test")
+			create worker2.make (depth, count, "stoat_test", list)
 			create list.make (2)
-			list.extend ("weasel")
-			list.extend ("stoat")
-			create worker3.make (depth, count, "ermine", list)
+			list.extend ("weasel_test")
+			list.extend ("stoat_test")
+			create worker3.make (depth, count, "ermine_test", list)
 			worker1.launch
 			worker2.launch
 			worker3.launch

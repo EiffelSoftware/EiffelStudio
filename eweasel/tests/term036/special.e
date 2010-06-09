@@ -29,6 +29,7 @@ feature {NONE} -- Initialization
 			area_allocated: count = 0
 		end
 
+
 	frozen make (n: INTEGER) is
 			-- Creates a special object for `n' entries.
 		require
@@ -48,7 +49,6 @@ feature {NONE} -- Initialization
 		ensure
 			area_allocated: count = n
 		end
-
 
 feature -- Access
 
@@ -84,13 +84,33 @@ feature -- Access
 		ensure
 			found_or_not_found: Result = -1 or else (Result >= 0 and then Result < count)
 		end
+		
+	frozen item_address (i: INTEGER): POINTER is
+			-- Address of element at position `i'.
+		require
+			index_big_enough: i >= 0
+			index_small_enough: i < count
+		do
+			Result := $Current
+			Result := Result + i * sp_elem_size ($Current)
+		ensure
+			element_address_not_null: Result /= default_pointer
+		end
 
+	frozen base_address: POINTER is
+			-- Address of element at position `0'.
+		do
+			Result := $Current
+		ensure
+			base_address_not_null: Result /= default_pointer
+		end
+		
 feature -- Measurement
 
 	frozen count, frozen capacity: INTEGER is
 			-- Count of the special area
 		do
-			Result := sp_count ($Current)
+			Result := feature {ISE_RUNTIME}.sp_count ($Current)
 		end
 
 feature -- Status report
@@ -146,7 +166,7 @@ feature -- Status report
 			Result := (0 <= i) and then (i < count)
 		end
 
-	frozen to_array: ARRAY [T]
+	frozen to_array: ARRAY [T] is
 		do
 			create Result.make_from_special (Current)
 		end
@@ -215,16 +235,10 @@ feature -- Removal
 
 feature {NONE} -- Implementation
 
-	frozen sp_count (sp_obj: POINTER): INTEGER is
-			-- Count of the special object
-		external
-			"C | %"eif_plug.h%""
-		end
-
 	frozen spclearall (p: POINTER) is
 			-- Reset all items to default value.
 		external
-			"C | %"eif_copy.h%""
+			"C signature (EIF_REFERENCE) use %"eif_copy.h%""
 		end
 
 	frozen sparycpy (old_area: POINTER; newsize, s, n: INTEGER): SPECIAL [T] is
@@ -232,9 +246,15 @@ feature {NONE} -- Implementation
 			-- from `oldarea'.
 			-- Old items are at position `s' in new area.
 		external
-			"C | %"eif_misc.h%""
+			"C signature (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER, EIF_INTEGER): EIF_REFERENCE use %"eif_misc.h%""
 		alias
 			"arycpy"
+		end
+		
+	frozen sp_elem_size (p: POINTER): INTEGER is
+			-- Size of elements.
+		external
+			"C signature use %"eif_eiffel.h%""
 		end
 
 indexing

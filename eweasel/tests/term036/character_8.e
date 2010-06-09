@@ -15,7 +15,16 @@ create
 	make_from_reference
 
 convert
-	make_from_reference ({CHARACTER_REF})
+	make_from_reference ({CHARACTER_REF}),
+	to_character_32: {CHARACTER_32}
+
+feature -- Conversion
+
+	to_character_32: CHARACTER_32
+			-- Associated character in 32 bit version
+		do
+			Result := item.to_character_32
+		end
 
 indexing
 

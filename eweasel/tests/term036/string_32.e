@@ -51,6 +51,9 @@ create
 	make_from_string,
 	make_from_c
 
+convert
+	as_string_8: {STRING_8}
+
 feature -- Initialization
 
 	make (n: INTEGER) is
@@ -92,13 +95,13 @@ feature -- Initialization
 
 	make_from_string (s: STRING_32) is
 			-- Initialize from the characters of `s'.
-			-- (Useful in proper descendants of class STRING,
+			-- (Useful in proper descendants of class STRING_32,
 			-- to initialize a string-like object from a manifest string.)
 		require
 			string_exists: s /= Void
 		do
 			if Current /= s then
-				area := clone (s.area)
+				area := s.area.twin
 				count := s.count
 			end
 		ensure
@@ -115,7 +118,7 @@ feature -- Initialization
 		do
 			length := str_len (c_string)
 			make_area (length + 1)
-			($area).memory_copy (c_string, length)
+			area.base_address.memory_copy (c_string, length)
 			count := length
 		end
 
@@ -131,7 +134,7 @@ feature -- Initialization
 			if safe_capacity < length then
 				make_area (length + 1)
 			end
-			($area).memory_copy (c_string, length)
+			area.base_address.memory_copy (c_string, length)
 			count := length
 		ensure
 			no_zero_byte: not has ('%/0/')
@@ -155,9 +158,9 @@ feature -- Initialization
 			if safe_capacity < length then
 				make_area (length + 1)
 			end
-				-- Make `$area' the substring of `c_string'
+				-- Make `area' the substring of `c_string'
 				-- from `start_pos' .. `end_pos'.
-			($area).memory_copy (c_string + (start_pos - 1), end_pos - start_pos + 1)
+			area.base_address.memory_copy (c_string + (start_pos - 1), end_pos - start_pos + 1)
 			count := length
 		ensure
 			valid_count: count = end_pos - start_pos + 1
@@ -252,6 +255,7 @@ feature -- Access
 				end
 			end
 		ensure
+			index_of_non_negative: Result >= 0
 			correct_place: Result > 0 implies item (Result) = c
 			-- forall x : start..Result, item (x) /= c
 		end
@@ -274,11 +278,10 @@ feature -- Access
 			loop
 				i := i - 1
 			end
-			if i >= 0 then
-					-- We add +1 due to the area starting at 0 and not at 1.
-				Result := i + 1
-			end
+				-- We add +1 due to the area starting at 0 and not at 1.
+			Result := i + 1
 		ensure
+			last_index_of_non_negative: Result >= 0
 			correct_place: Result > 0 implies item (Result) = c
 			-- forall x : Result..last, item (x) /= c
 		end
@@ -320,7 +323,7 @@ feature -- Access
 		end
 
 	substring_index (other: STRING_32; start_index: INTEGER): INTEGER is
-			-- Index of first occurrence of other at or after start_index; 
+			-- Index of first occurrence of other at or after start_index;
 			-- 0 if none
 		require
 			other_not_void: other /= Void
@@ -343,11 +346,11 @@ feature -- Access
 				not substring (start_index, count).has_substring (other)
 			at_this_index: Result >= start_index implies
 				other.same_string (substring (Result, Result + other.count - 1))
-			none_before: Result > start_index implies 
+			none_before: Result > start_index implies
 				not substring (start_index, Result + other.count - 2).has_substring (other)
 		end
 
-	fuzzy_index (other: STRING; start: INTEGER; fuzz: INTEGER): INTEGER is
+	fuzzy_index (other: STRING_32; start: INTEGER; fuzz: INTEGER): INTEGER is
 			-- Position of first occurrence of `other' at or after `start'
 			-- with 0..`fuzz' mismatches between the string and `other'.
 			-- 0 if there are no fuzzy matches
@@ -503,7 +506,7 @@ feature -- Status report
 	is_integer: BOOLEAN is
 			-- Does `Current' represent an INTEGER?
 		local
-			l_c: WIDE_CHARACTER
+			l_c: CHARACTER
 			l_area: like area
 			i, nb, l_state: INTEGER
 		do
@@ -519,7 +522,7 @@ feature -- Status report
 			until
 				i > nb or l_state > 3
 			loop
-				l_c := l_area.item (i)
+				l_c := l_area.item (i).to_character_8
 				i := i + 1
 				inspect l_state
 				when 0 then
@@ -629,13 +632,13 @@ feature -- Status report
 				--	is within the range that can be represented
 				--	by an instance of type DOUBLE.
 		end
-	
+
 	is_boolean: BOOLEAN is
 			-- Does `Current' represent a BOOLEAN?
 		local
 			s: STRING_32
 		do
-			s := clone (Current)
+			s := twin
 			s.right_adjust
 			s.left_adjust
 			s.to_lower
@@ -662,7 +665,7 @@ feature -- Element change
 
 	copy (other: like Current) is
 			-- Reinitialize by copying the characters of `other'.
-			-- (This is also used by `clone'.)
+			-- (This is also used by `twin'.)
 		local
 			old_area: like area
 		do
@@ -672,9 +675,9 @@ feature -- Element change
 					-- Note: <= is needed as all Eiffel string should have an
 					-- extra character to insert null character at the end.
 				if old_area = Void or else old_area.count <= count then
-					area := standard_clone (area)
+					area := area.standard_twin
 				else
-					($old_area).memory_copy ($area, count)
+					old_area.base_address.memory_copy ($area, count)
 					area := old_area
 				end
 				internal_hash_code := 0
@@ -783,7 +786,7 @@ feature -- Element change
 	fill_with (c: WIDE_CHARACTER) is
 			-- Replace every character with `c'.
 		do
-			($area).memory_set (c.code, count)
+			area.base_address.memory_set (c.code, count)
 			internal_hash_code := 0
 		ensure
 			same_count: (count = old count) and (capacity >= old capacity)
@@ -803,9 +806,12 @@ feature -- Element change
 
 	fill_character (c: WIDE_CHARACTER) is
 			-- Fill with `capacity' characters all equal to `c'.
+		local
+			l_cap: like safe_capacity
 		do
-			($area).memory_set (c.code, safe_capacity)
-			count := safe_capacity
+			l_cap := safe_capacity
+			area.base_address.memory_set (c.code, l_cap)
+			count := l_cap
 			internal_hash_code := 0
 		ensure
 			filled: full
@@ -1007,7 +1013,7 @@ feature -- Element change
 				resize (new_size + additional_space)
 			end
 			s_area := s.area;
-			($area + count).memory_copy ($s_area, s.count)
+			area.item_address (count).memory_copy ($s_area, s.count)
 			count := new_size
 			internal_hash_code := 0
 		ensure
@@ -1019,7 +1025,7 @@ feature -- Element change
 			-- Append a copy of 's' at the end of a copy of Current,
 			-- Then return the Result.
 		require
-			argument_not_void: s /= Void	
+			argument_not_void: s /= Void
 		do
 			create Result.make (count + s.count)
 			Result.append_string (Current)
@@ -1039,8 +1045,52 @@ feature -- Element change
 
 	append_integer (i: INTEGER) is
 			-- Append the string representation of `i' at end.
+		local
+			l_value: INTEGER
+			l_starting_index, l_ending_index: INTEGER
+			l_temp: WIDE_CHARACTER
+			l_area: like area
 		do
-			append (i.out)
+			if i = 0 then
+				append_character ('0')
+			else
+					-- Extract integer value digit by digit from right to left.
+				from
+					l_starting_index := count
+					if i < 0 then
+						append_character ('-')
+						l_starting_index := l_starting_index + 1
+						l_value := -i
+							-- Special case for minimum integer value as negating it
+							-- as no effect.
+						if l_value = feature {INTEGER_REF}.Min_value then
+							append_character ((-(l_value \\ 10) + 48).to_character)
+							l_value := -(l_value // 10)
+						end
+					else
+						l_value := i
+					end
+				until
+					l_value = 0
+				loop
+					append_character (((l_value \\ 10)+ 48).to_character)
+					l_value := l_value // 10
+				end
+
+					-- Now put digits in correct order from left to right.
+				from
+					l_ending_index := count - 1
+					l_area := area
+				until
+					l_starting_index >= l_ending_index
+				loop
+					l_temp := l_area.item (l_starting_index)
+					l_area.put (l_area.item (l_ending_index), l_starting_index)
+					l_area.put (l_temp, l_ending_index)
+					l_ending_index := l_ending_index - 1
+					l_starting_index := l_starting_index + 1
+				end
+			end
 		end
 
 	append_real (r: REAL) is
@@ -1090,11 +1140,11 @@ feature -- Element change
 			insert_string (s, i)
 		ensure
 			inserted: is_equal (old substring (1, i - 1)
-				+ old clone (s) + old substring (i, count))
+				+ old (s.twin) + old substring (i, count))
 		end
-		
+
 	insert_string (s: STRING_32; i: INTEGER) is
-			-- Insert `s' at index `i', shifting characters between ranks 
+			-- Insert `s' at index `i', shifting characters between ranks
 			-- `i' and `count' rightwards.
 		require
 			string_exists: s /= Void
@@ -1113,11 +1163,11 @@ feature -- Element change
 			internal_hash_code := 0
 		ensure
 			inserted: is_equal (old substring (1, i - 1)
-				+ old clone (s) + old substring (i, count))
+				+ old (s.twin) + old substring (i, count))
 		end
 
 	insert_character (c: WIDE_CHARACTER; i: INTEGER) is
-			-- Insert `c' at index `i', shifting characters between ranks 
+			-- Insert `c' at index `i', shifting characters between ranks
 			-- `i' and `count' rightwards.
 		require
 			valid_insertion_index: 1 <= i and i <= count + 1
@@ -1321,10 +1371,40 @@ feature -- Resizing
 
 feature -- Conversion
 
+	as_string_8: STRING_8
+			-- Convert `Current' as a STRING_8. If a code of `Current' is
+			-- node a valid code for a STRING_8 it is replaced with the null
+			-- character.
+		local
+			i, nb: INTEGER
+			l_code: CHARACTER
+		do
+			if attached {STRING_8} Current as l_result then
+				Result := l_result
+			else
+				nb := count
+				create Result.make (nb)
+				Result.set_count (nb)
+				from
+					i := 1
+				until
+					i > nb
+				loop
+					l_code := item (i).to_character_8
+					Result.put (l_code, i)
+					i := i + 1
+				end
+			end
+		ensure
+			as_string_8_not_void: Result /= Void
+			identity: (conforms_to ("") and Result = Current) or (not conforms_to ("") and Result /= Current)
+		end
+
+
 	as_lower: like Current is
 			-- New object with all letters in lower case.
 		do
-			Result := clone (Current)
+			Result := twin
 			Result.to_lower
 		ensure
 			length: Result.count = count
@@ -1336,7 +1416,7 @@ feature -- Conversion
 	as_upper: like Current is
 			-- New object with all letters in upper case
 		do
-			Result := clone (Current)
+			Result := twin
 			Result.to_upper
 		ensure
 			length: Result.count = count
@@ -1407,39 +1487,17 @@ feature -- Conversion
 			internal_hash_code := 0
 		end
 
-	to_lower is
+	to_lower
 			-- Convert to lower case.
-		local
-			i: INTEGER
-			a: like area
 		do
-			from
-				i := count - 1
-				a := area
-			until
-				i < 0
-			loop
-				a.put (a.item (i).lower, i)
-				i := i - 1
-			end
+			to_lower_area (area, 0, count - 1)
 			internal_hash_code := 0
 		end
 
-	to_upper is
+	to_upper
 			-- Convert to upper case.
-		local
-			i: INTEGER
-			a: like area
 		do
-			from
-				i := count - 1
-				a := area
-			until
-				i < 0
-			loop
-				a.put (a.item (i).upper, i)
-				i := i - 1
-			end
+			to_upper_area (area, 0, count - 1)
 			internal_hash_code := 0
 		end
 
@@ -1459,9 +1517,9 @@ feature -- Conversion
 			is_integer: is_integer
 		local
 			l_area: like area
-			l_character: WIDE_CHARACTER
+			l_character: CHARACTER
 			i, nb: INTEGER
-			l_is_negatif: BOOLEAN
+			l_is_negative: BOOLEAN
 		do
 			from
 				l_area := area
@@ -1469,19 +1527,19 @@ feature -- Conversion
 			until
 				i > nb
 			loop
-				l_character := l_area.item (i)
+				l_character := l_area.item (i).to_character_8
 				if l_character.is_digit then
 					Result := (Result * 10) + l_character.code - 48
 				elseif l_character = '-' then
-					l_is_negatif := True
+					l_is_negative := True
 				end
 				i := i + 1
 			end
-			if l_is_negatif then
+			if l_is_negative then
 				Result := - Result
 			end
 		end
-		
+
 	to_real: REAL is
 			-- Real value;
 			-- for example, when applied to "123.0", will yield 123.0
@@ -1509,7 +1567,7 @@ feature -- Conversion
 		local
 			s: STRING_32
 		do
-			s := clone (Current)
+			s := twin
 			s.right_adjust
 			s.left_adjust
 			s.to_lower
@@ -1533,7 +1591,7 @@ feature -- Conversion
 			end
 			Result := temp
 		end
-	
+
 	split (a_separator: WIDE_CHARACTER): LIST [STRING_32] is
 			-- Split on `a_separator'.
 		local
@@ -1570,16 +1628,16 @@ feature -- Conversion
 				end
 			else
 					-- Extend empty string, since Current is empty.
-				l_list.extend ("")	
+				l_list.extend ("")
 			end
 			Result := l_list
-			check 
+			check
 				l_list.count = occurrences (a_separator) + 1
 			end
 		ensure
 			Result /= Void
 		end
-	
+
 	frozen to_c: ANY is
 			-- A reference to a C form of current string.
 			-- Useful only for interfacing with C software.
@@ -1601,7 +1659,7 @@ feature -- Conversion
 			-- Mirror image of string;
 			-- result for "Hello world" is "dlrow olleH".
 		do
-			Result := clone (Current)
+			Result := twin
 			if count > 0 then
 				Result.mirror
 			end
@@ -1638,6 +1696,30 @@ feature -- Conversion
 			-- reversed: For every `i' in 1..`count', `item' (`i') = old `item' (`count'+1-`i')
 		end
 
+feature {NONE} -- Conversion
+
+	to_lower_area (a: like area; start_index, end_index: INTEGER)
+			-- Replace all characters in `a' between `start_index' and `end_index'
+			-- with their lower version when available.
+		require
+			a_not_void: a /= Void
+			start_index_non_negative: start_index >= 0
+			start_index_not_too_big: start_index <= end_index + 1
+			end_index_valid: end_index < a.count
+		do
+		end
+
+	to_upper_area (a: like area; start_index, end_index: INTEGER)
+			-- Replace all characters in `a' between `start_index' and `end_index'
+			-- with their upper version when available.
+		require
+			a_not_void: a /= Void
+			start_index_non_negative: start_index >= 0
+			start_index_not_too_big: start_index <= end_index + 1
+			end_index_valid: end_index < a.count
+		do
+		end
+
 feature -- Duplication
 
 	substring (start_index, end_index: INTEGER): like Current is
@@ -1649,7 +1731,8 @@ feature -- Duplication
 			if (1 <= start_index) and (start_index <= end_index) and (end_index <= count) then
 				create Result.make (end_index - start_index + 1)
 				other_area := Result.area;
-				($other_area).memory_copy ($area + (start_index - 1), end_index - start_index + 1)
+				other_area.base_address.memory_copy (
+					area.item_address (start_index - 1), end_index - start_index + 1)
 				Result.set_count (end_index - start_index + 1)
 			else
 				create Result.make (0)
@@ -1668,7 +1751,7 @@ feature -- Duplication
 			s: STRING_32
 			i: INTEGER
 		do
-			s := clone (Current)
+			s := twin
 			grow (n * count)
 			from
 				i := n
@@ -1682,10 +1765,11 @@ feature -- Duplication
 
 feature -- Output
 
-	out: STRING_32 is
+	out: STRING is
 			-- Printable representation
 		do
-			Result := clone (Current)
+			create Result.make (count)
+			Result.append (Current)
 		end
 
 feature {STRING_HANDLER} -- Implementation
@@ -1734,7 +1818,16 @@ feature {NONE} -- Empty string implementation
 		ensure
 			internal_hash_code_set: internal_hash_code = v
 		end
-		
+
+feature {NONE} -- Transformation
+
+	correct_mismatch is
+			-- Attempt to correct object mismatch during retrieve using `mismatch_information'.
+		do
+			-- Nothing to be done because we only added `internal_hash_code' that will
+			-- be recomputed next time we query `hash_code'.
+		end
+
 feature {STRING_32} -- Implementation
 
 	hashcode (c_string: POINTER; len: INTEGER): INTEGER is
@@ -1792,7 +1885,7 @@ feature {STRING_32} -- Implementation
 		end
 
 	str_strict_cmp (this, other: POINTER; len: INTEGER): INTEGER is
-			-- Compare `this' and `other' C strings 
+			-- Compare `this' and `other' C strings
 			-- for the first `len' characters.
 			-- 0 if equal, < 0 if `this' < `other',
 			-- > 0 if `this' > `other'

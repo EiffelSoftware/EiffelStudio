@@ -425,7 +425,7 @@ feature -- Status setting
 			not_is_expandable: not is_expandable
 		end
 
-	set_background_color (a_color: EV_COLOR)
+	set_background_color (a_color: like background_color)
 			-- Set `background_color' with `a_color'.
 		require
 			not_destroyed: not is_destroyed
@@ -436,7 +436,7 @@ feature -- Status setting
 			background_color_set: background_color = a_color
 		end
 
-	set_foreground_color (a_color: EV_COLOR)
+	set_foreground_color (a_color: like foreground_color)
 			-- Set `foreground_color' with `a_color'.
 		require
 			not_destroyed: not is_destroyed

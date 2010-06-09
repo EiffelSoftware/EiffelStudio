@@ -43,7 +43,7 @@ class STRING_32 inherit
 		redefine
 			copy, is_equal, out
 		end
-		
+
 	MISMATCH_CORRECTOR
 		redefine
 			copy, is_equal, out, correct_mismatch
@@ -55,6 +55,9 @@ create
 	make_filled,
 	make_from_string,
 	make_from_c
+
+convert
+	as_string_8: {STRING_8}
 
 feature -- Initialization
 
@@ -325,7 +328,7 @@ feature -- Access
 		end
 
 	substring_index (other: STRING_32; start_index: INTEGER): INTEGER is
-			-- Index of first occurrence of other at or after start_index; 
+			-- Index of first occurrence of other at or after start_index;
 			-- 0 if none
 		require
 			other_not_void: other /= Void
@@ -348,7 +351,7 @@ feature -- Access
 				not substring (start_index, count).has_substring (other)
 			at_this_index: Result >= start_index implies
 				other.same_string (substring (Result, Result + other.count - 1))
-			none_before: Result > start_index implies 
+			none_before: Result > start_index implies
 				not substring (start_index, Result + other.count - 2).has_substring (other)
 		end
 
@@ -508,7 +511,7 @@ feature -- Status report
 	is_integer: BOOLEAN is
 			-- Does `Current' represent an INTEGER?
 		local
-			l_c: WIDE_CHARACTER
+			l_c: CHARACTER
 			l_area: like area
 			i, nb, l_state: INTEGER
 		do
@@ -524,7 +527,7 @@ feature -- Status report
 			until
 				i > nb or l_state > 3
 			loop
-				l_c := l_area.item (i)
+				l_c := l_area.item (i).to_character_8
 				i := i + 1
 				inspect l_state
 				when 0 then
@@ -634,7 +637,7 @@ feature -- Status report
 				--	is within the range that can be represented
 				--	by an instance of type DOUBLE.
 		end
-	
+
 	is_boolean: BOOLEAN is
 			-- Does `Current' represent a BOOLEAN?
 		local
@@ -1027,7 +1030,7 @@ feature -- Element change
 			-- Append a copy of 's' at the end of a copy of Current,
 			-- Then return the Result.
 		require
-			argument_not_void: s /= Void	
+			argument_not_void: s /= Void
 		do
 			create Result.make (count + s.count)
 			Result.append_string (Current)
@@ -1144,9 +1147,9 @@ feature -- Element change
 			inserted: is_equal (old substring (1, i - 1)
 				+ old (s.twin) + old substring (i, count))
 		end
-		
+
 	insert_string (s: STRING_32; i: INTEGER) is
-			-- Insert `s' at index `i', shifting characters between ranks 
+			-- Insert `s' at index `i', shifting characters between ranks
 			-- `i' and `count' rightwards.
 		require
 			string_exists: s /= Void
@@ -1169,7 +1172,7 @@ feature -- Element change
 		end
 
 	insert_character (c: WIDE_CHARACTER; i: INTEGER) is
-			-- Insert `c' at index `i', shifting characters between ranks 
+			-- Insert `c' at index `i', shifting characters between ranks
 			-- `i' and `count' rightwards.
 		require
 			valid_insertion_index: 1 <= i and i <= count + 1
@@ -1373,6 +1376,36 @@ feature -- Resizing
 
 feature -- Conversion
 
+	as_string_8: STRING_8
+			-- Convert `Current' as a STRING_8. If a code of `Current' is
+			-- node a valid code for a STRING_8 it is replaced with the null
+			-- character.
+		local
+			i, nb: INTEGER
+			l_code: CHARACTER
+		do
+			if attached {STRING_8} Current as l_result then
+				Result := l_result
+			else
+				nb := count
+				create Result.make (nb)
+				Result.set_count (nb)
+				from
+					i := 1
+				until
+					i > nb
+				loop
+					l_code := item (i).to_character_8
+					Result.put (l_code, i)
+					i := i + 1
+				end
+			end
+		ensure
+			as_string_8_not_void: Result /= Void
+			identity: (conforms_to ("") and Result = Current) or (not conforms_to ("") and Result /= Current)
+		end
+
+
 	as_lower: like Current is
 			-- New object with all letters in lower case.
 		do
@@ -1459,39 +1492,17 @@ feature -- Conversion
 			internal_hash_code := 0
 		end
 
-	to_lower is
+	to_lower
 			-- Convert to lower case.
-		local
-			i: INTEGER
-			a: like area
 		do
-			from
-				i := count - 1
-				a := area
-			until
-				i < 0
-			loop
-				a.put (a.item (i).lower, i)
-				i := i - 1
-			end
+			to_lower_area (area, 0, count - 1)
 			internal_hash_code := 0
 		end
 
-	to_upper is
+	to_upper
 			-- Convert to upper case.
-		local
-			i: INTEGER
-			a: like area
 		do
-			from
-				i := count - 1
-				a := area
-			until
-				i < 0
-			loop
-				a.put (a.item (i).upper, i)
-				i := i - 1
-			end
+			to_upper_area (area, 0, count - 1)
 			internal_hash_code := 0
 		end
 
@@ -1511,7 +1522,7 @@ feature -- Conversion
 			is_integer: is_integer
 		local
 			l_area: like area
-			l_character: WIDE_CHARACTER
+			l_character: CHARACTER
 			i, nb: INTEGER
 			l_is_negative: BOOLEAN
 		do
@@ -1521,7 +1532,7 @@ feature -- Conversion
 			until
 				i > nb
 			loop
-				l_character := l_area.item (i)
+				l_character := l_area.item (i).to_character_8
 				if l_character.is_digit then
 					Result := (Result * 10) + l_character.code - 48
 				elseif l_character = '-' then
@@ -1533,7 +1544,7 @@ feature -- Conversion
 				Result := - Result
 			end
 		end
-		
+
 	to_real: REAL is
 			-- Real value;
 			-- for example, when applied to "123.0", will yield 123.0
@@ -1585,7 +1596,7 @@ feature -- Conversion
 			end
 			Result := temp
 		end
-	
+
 	split (a_separator: WIDE_CHARACTER): LIST [STRING_32] is
 			-- Split on `a_separator'.
 		local
@@ -1622,16 +1633,16 @@ feature -- Conversion
 				end
 			else
 					-- Extend empty string, since Current is empty.
-				l_list.extend ("")	
+				l_list.extend ("")
 			end
 			Result := l_list
-			check 
+			check
 				l_list.count = occurrences (a_separator) + 1
 			end
 		ensure
 			Result /= Void
 		end
-	
+
 	frozen to_c: ANY is
 			-- A reference to a C form of current string.
 			-- Useful only for interfacing with C software.
@@ -1688,6 +1699,30 @@ feature -- Conversion
 		ensure
 			same_count: count = old count
 			-- reversed: For every `i' in 1..`count', `item' (`i') = old `item' (`count'+1-`i')
+		end
+
+feature {NONE} -- Conversion
+
+	to_lower_area (a: like area; start_index, end_index: INTEGER)
+			-- Replace all characters in `a' between `start_index' and `end_index'
+			-- with their lower version when available.
+		require
+			a_not_void: a /= Void
+			start_index_non_negative: start_index >= 0
+			start_index_not_too_big: start_index <= end_index + 1
+			end_index_valid: end_index < a.count
+		do
+		end
+
+	to_upper_area (a: like area; start_index, end_index: INTEGER)
+			-- Replace all characters in `a' between `start_index' and `end_index'
+			-- with their upper version when available.
+		require
+			a_not_void: a /= Void
+			start_index_non_negative: start_index >= 0
+			start_index_not_too_big: start_index <= end_index + 1
+			end_index_valid: end_index < a.count
+		do
 		end
 
 feature -- Duplication
@@ -1797,7 +1832,7 @@ feature {NONE} -- Transformation
 			-- Nothing to be done because we only added `internal_hash_code' that will
 			-- be recomputed next time we query `hash_code'.
 		end
-		
+
 feature {STRING_32} -- Implementation
 
 	hashcode (c_string: POINTER; len: INTEGER): INTEGER is
@@ -1855,7 +1890,7 @@ feature {STRING_32} -- Implementation
 		end
 
 	str_strict_cmp (this, other: POINTER; len: INTEGER): INTEGER is
-			-- Compare `this' and `other' C strings 
+			-- Compare `this' and `other' C strings
 			-- for the first `len' characters.
 			-- 0 if equal, < 0 if `this' < `other',
 			-- > 0 if `this' > `other'

@@ -2151,7 +2151,10 @@ feature {NONE} -- Backup implementation
 					l_dir_name.extend (l_over.item.group.target.system.uuid.out)
 					create l_dir.make (l_dir_name)
 					if not l_dir.exists then
+							-- We need to create the directory.
 						l_dir.create_directory
+							-- But also to copy the config files.
+						adapt_and_copy_configuration (l_over.item.group.target.system, workbench.backup_subdirectory)
 					end
 					copy_class (l_over.item, l_dir_name)
 					l_over.forth

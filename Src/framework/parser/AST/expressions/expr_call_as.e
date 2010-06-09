@@ -45,8 +45,12 @@ feature -- Attributes
 
 feature -- Status report
 
-	is_detachable_expression: BOOLEAN = True
+	is_detachable_expression: BOOLEAN
 			-- <Precursor>
+		do
+				-- It is True for all calls but creation expression
+			Result := not attached {CREATION_EXPR_AS} call
+		end
 
 feature -- Roundtrip/Token
 

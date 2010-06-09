@@ -32,7 +32,6 @@ feature -- Processing
 		local
 			l_dir: KL_DIRECTORY
 			l_files: ARRAY [STRING]
-			l_subdirs: ARRAY [STRING]
 			i, cnt: INTEGER
 			l_name: STRING
 			l_path: STRING
@@ -74,8 +73,7 @@ feature -- Processing
 					end
 
 						-- if we check recursive
-					if a_cluster.is_recursive then
-						l_subdirs := l_dir.directory_names
+					if a_cluster.is_recursive and then attached l_dir.directory_names as l_subdirs then
 						from
 							i := 1
 							cnt := l_subdirs.count
@@ -109,7 +107,7 @@ feature -- Processing
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

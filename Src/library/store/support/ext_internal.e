@@ -143,155 +143,6 @@ feature -- Basic operations
 			end
 		end
 
-	switch_mark (obj: ANY)
-			-- Unmark `obj' if marked or mark it if unmarked.
-		require
-			object_not_void: obj /= Void
-		do
-			if is_marked (obj) then
-				unmark (obj)
-			else
-				mark (obj)
-			end
-		end
-
-	unmark_structure (obj: ANY)
-			-- Unmark structure of objects.
-		require
-			object_not_void: obj /= Void
-		local
-			i: INTEGER
-			nbfield: INTEGER
-			type_value: INTEGER
-			field_i: detachable ANY
-		do
-			unmark(obj)
-			from
-				nbfield := field_count (obj)
-				i := 1
-			until
-				i > nbfield
-			loop
-				type_value := field_type (i, obj)
-				if type_value = Reference_type then
-					field_i := field (i, obj)
-					check field_i /= Void end -- implied by i <= nbfield
-					unmark_structure (field_i)
-				end
-				i := i + 1
-			end
-		end
-
-	traversal (object: ANY)
-			-- Traverse the entire object structure starting with root `obj'.
-			-- An object in the Eiffel run-time system includes the following:
-			--    a) Reference objects instance of a class type
-			--    b) Special reference objects allocated to refer to a
-			--              variable size object like STRING and ARRAY
-			--    c) Reference objects created for a generic type instantiated
-			--                      as an expanded type or BITS n
-			-- LIMITATION: Current version excludes objects in the Eiffel
-			-- run-time system where expanded objects are encapsulated within
-			-- other objects
-		require
-			object_not_void: object /= Void
-		local
-			type_value, nb_fields, i: INTEGER
-		do
-			object_init_action (object)
-			from
-				nb_fields := field_count(object)
-				i := 1
-			until
-				i > nb_fields
-			loop
-				type_value := field_type (i, object)
-				if type_value = Reference_type then
-					reference_object_action (i, object)
-				else
-					simple_object_action (type_value, i, object)
-				end
-				i := i + 1
-			end
-			object_finish_action (object)
-		end
-
-	deep_traversal (object: ANY)
-			-- Perform a deep recursive traversal on
-			-- the transitive closure of the object network
-			-- reachable from root `object'.
-		require
-			root_object_non_void: object /= Void
-		local
-			type_value, nb_field, i: INTEGER
-		do
-			mark (object)
-				-- Test if currently traversed object
-				-- is an array.
-			if attached {ARRAY [ANY]} object as one_array then
-				array_traversal (one_array)
-			else
-					-- Perform action to store currently
-					-- traversed object
-					-- (implementation provided by a descendant class).
-				store_action (object)
-				from
-					nb_field := field_count (object)
-					i := 1
-				until
-					i > nb_field
-				loop
-					type_value := field_type (i, object)
-					if type_value = Reference_type then
-						if attached {ANY} field (i, object) as one_field and then
-								not is_marked (one_field) then
-								-- Propagate the traversal to
-								-- referenced objects not traversed yet
-							deep_traversal (one_field)
-						end
-					end
-					i := i + 1
-				end
-			end
-		end
-
-	object_init_action (object: ANY)
-			-- Do nothing.
-			-- (To be redefined in heir.)
-		do
-		end
-
-	reference_object_action (i: INTEGER; object: ANY)
-			-- Do nothing.
-			-- (To be redefined in heir.)
-		do
-		end
-
-	simple_object_action (type, i: INTEGER; object: ANY)
-			-- Do nothing.
-			-- (To be redefined in heir.)
-		do
-		end
-
-	object_finish_action (object: ANY)
-			-- Do nothing.
-			-- (To be redefined in heir.)
-		do
-		end
-
-	store_action (object: ANY)
-			-- Do nothing.
-			-- (To be redefined in heir.)
-		do
-		end
-
-	nb_classes: INTEGER
-			-- Number of dynamic types in current system
-		obsolete
-			"Should not be used. No other equivalent feature is supported."
-		do
-		end
-
 feature {NONE} -- Status report
 
 	is_void (obj: detachable ANY): BOOLEAN
@@ -341,96 +192,86 @@ feature {NONE} -- Status report
 			Result := attached {DATE_TIME} obj
 		end
 
-feature {NONE} -- Basic operations
+feature {NONE} -- Obsolete (Use class INTERNAL instead)
 
-	array_traversal (one_array: ARRAY [ANY])
-			-- Scan though all item elements of `one_array'
-			-- and propagate the deep traversal to those
-			-- that are references to objects.
-		require
-			array_non_void: one_array /= Void
-		local
-			i: INTEGER
-			one_field: ANY
+	switch_mark (obj: ANY)
+		obsolete
+			"Removed. Use {INTERNAL}.mark and {INTERNAL}.unmark instead."
 		do
-			one_field := one_array.area
-			if is_special_any_type (dynamic_type (one_field)) then
-					-- `one_array' is an array of elements
-					-- that are of reference type.
-				from
-					i := one_array.lower
-				until
-					i > one_array.upper
-				loop
-					one_field := one_array.item (i)
-					if one_field /= Void and then not is_marked (one_field) then
-							-- Propagate the traversal to
-							-- the next reference object
-						deep_traversal (one_field)
-					end
-					i := i + 1
-				end
-			else
-					-- `one_array' is an array of elements
-					-- that are NOT of reference type.
-				store_action (one_array)
-			end
 		end
 
-	deep_unmark (object: ANY)
-			-- Unmark all objects reachable from
-			-- the transitive closure of the object network
-			-- reachable from the `object' root.
-		require
-			object_non_void: object /= Void
-		local
-			type_value, nb_field, i: INTEGER
+	unmark_structure (obj: ANY)
+		obsolete
+			"Removed. Previous implementation was not safe. Use {INTERNAL} and a structure to remember%
+			%what needs to be unmarked."
 		do
-			unmark (object)
-			if attached {ARRAY [ANY]} object as one_array then
-				array_unmark (one_array)
-			else
-				from
-					i := 1
-					nb_field := field_count (object)
-				until
-					i > nb_field
-				loop
-					type_value := field_type (i, object)
-					if type_value = Reference_type then
-						if attached {ANY} field (i, object) as one_field and then is_marked (one_field) then
-							deep_unmark (one_field)
-						end
-					end
-					i := i + 1
-				end
-			end
+		end	
+
+	traversal (object: ANY)
+		obsolete
+			"Use {OBJECT_GRAPH_TRAVERSABLE} descendants to get a complete graph of an object."
+		do
+		end
+
+	deep_traversal (object: ANY)
+		obsolete
+			"Use {OBJECT_GRAPH_TRAVERSABLE} descendants to get a complete graph of an object."
+		do
+		end
+
+	object_init_action (object: ANY)
+		obsolete
+			"Not used anymore."
+		do
+		end
+
+	reference_object_action (i: INTEGER; object: ANY)
+		obsolete
+			"Not used anymore."
+		do
+		end
+
+	simple_object_action (type, i: INTEGER; object: ANY)
+		obsolete
+			"Not used anymore."
+		do
+		end
+
+	object_finish_action (object: ANY)
+		obsolete
+			"Not used anymore."
+		do
+		end
+
+	store_action (object: ANY)
+		obsolete
+			"Not used anymore."
+		do
+		end
+
+	nb_classes: INTEGER
+			-- Number of dynamic types in current system
+		obsolete
+			"Should not be used. No other equivalent feature is supported."
+		do
+		end
+
+	array_traversal (one_array: ARRAY [ANY])
+		obsolete
+			"Use {OBJECT_GRAPH_TRAVERSABLE} descendants to get a complete graph of an object."
+		do
 		end
 
 	array_unmark (one_array: ARRAY [ANY])
-			-- Scan though all item elements of `one_array'
-			-- and propagate the unmarking traversal to those
-			-- that are references to objects.
-		require
-			array_non_void: one_array /= Void
-		local
-			i: INTEGER
-			one_field: ANY
+		obsolete
+			"Use {OBJECT_GRAPH_TRAVERSABLE} descendants to get a complete graph of an object."
 		do
-			one_field := one_array.area
-			if is_special_any_type (dynamic_type (one_field)) then
-				from
-					i := one_array.lower
-				until
-					i > one_array.upper
-				loop
-					one_field := one_array.item (i)
-					if one_field /= Void and then is_marked (one_field) then
-						deep_unmark (one_field)
-					end
-					i := i + 1
-				end
-			end
+		end
+
+	deep_unmark (object: ANY)
+		obsolete
+			"Use {OBJECT_GRAPH_TRAVERSABLE} descendants to get a complete graph of an object."
+		do
 		end
 
 note
@@ -443,9 +284,6 @@ note
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
 
 end -- class EXT_INTERNAL
 

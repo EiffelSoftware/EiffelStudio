@@ -2378,6 +2378,7 @@ test	qat-generic-parms-for-nongeneric-class	anchor017 tcf pass anchored_type
 test	qat-linked-to-formal			anchor018 tcf pass anchored_type
 test	qat-conformance-type-crash		anchor019 tcf pass anchored_type
 test	qat-like-current-repetition		anchor020 tcf pass anchored_type
+test	qat-with-renamed-features		anchor021 tcf pass anchored_type renaming
 
 -- .NET specific test
 if DOTNET test expanded-object-conversion	dotnet001	tcf pass dotnet

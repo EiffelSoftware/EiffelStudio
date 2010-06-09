@@ -726,7 +726,7 @@ feature -- Status setting
 			row_visible_when_heights_not_fixed_in_parent: not l_parent.is_row_height_fixed implies virtual_y_position >= l_parent.virtual_y_position and virtual_y_position + height <= l_parent.virtual_y_position + (l_parent.viewable_height).max (height)
 		end
 
-	set_background_color (a_color: EV_COLOR)
+	set_background_color (a_color: like background_color)
 			-- Set `background_color' with `a_color'.
 		require
 			is_parented: parent /= Void
@@ -739,7 +739,7 @@ feature -- Status setting
 			background_color_set: background_color = a_color
 		end
 
-	set_foreground_color (a_color: EV_COLOR)
+	set_foreground_color (a_color: like foreground_color)
 			-- Set `foreground_color' with `a_color'.
 		require
 			is_parented: parent /= Void

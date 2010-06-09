@@ -103,6 +103,11 @@ inherit
 			is_equal, copy
 		end
 
+	SHARED_DEGREES
+		undefine
+			is_equal, copy
+		end
+
 create
 	make
 
@@ -634,6 +639,7 @@ end
 			external_i: EXTERNAL_I
 			propagate_feature: BOOLEAN
 			same_interface, has_same_type: BOOLEAN
+			is_anchor_changed: BOOLEAN
 		do
 				-- Iteration on the features of the current feature
 				-- table.
@@ -650,7 +656,9 @@ end
 				feature_name_id := old_feature_i.feature_name_id
 					-- New feature
 				new_feature_i := other.item_id (feature_name_id)
-				if new_feature_i /= Void then
+				if new_feature_i = Void then
+					is_anchor_changed := True
+				else
 					has_same_type := True
 					same_interface := old_feature_i.same_interface (new_feature_i)
 					if not same_interface then
@@ -665,6 +673,7 @@ end
 							System.request_freeze
 						end
 						has_same_type := old_feature_i.same_class_type (new_feature_i)
+						is_anchor_changed := not has_same_type
 					end
 				end
 					-- First condition, `other' must have the feature
@@ -693,6 +702,8 @@ end
 						)
 				then
 					propagate_feature := True
+					is_anchor_changed := is_anchor_changed or else not
+						old_feature_i.export_status.equiv (new_feature_i.export_status)
 				end
 
 				if old_feature_i.written_in = feat_tbl_id or else old_feature_i.is_replicated_directly then
@@ -727,6 +738,7 @@ debug ("ACTIVITY")
 end
 						removed_features.put (old_feature_i.body_index)
 						propagate_feature := True
+						is_anchor_changed := True
 					end
 				end
 
@@ -761,6 +773,11 @@ debug ("ACTIVITY")
 end
 					melted_propagators.put (depend_unit)
 				end
+				end
+
+				if is_anchor_changed then
+						-- Mark anchor clients for recompilation.
+					degree_4.touch_feature_type (old_feature_i, associated_class)
 				end
 
 				depend_unit := Void

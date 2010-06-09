@@ -15,6 +15,7 @@ feature -- Various names used for registers during code generation.
 	argument_name: STRING = "arg"
 	workbench_argument_name: STRING = "argx"
 	local_name: STRING = "loc"
+	tmp_name: STRING = "t"
 	void_name: STRING = "void"
 	dtype_name: STRING = "dtype"
 	dftype_name: STRING = "dftype"

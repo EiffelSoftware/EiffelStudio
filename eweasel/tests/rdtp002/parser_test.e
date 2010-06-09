@@ -4,6 +4,9 @@ indexing
 class
 	PARSER_TEST
 
+inherit
+	INTERNAL_COMPILER_STRING_EXPORTER
+
 create
 	make
 

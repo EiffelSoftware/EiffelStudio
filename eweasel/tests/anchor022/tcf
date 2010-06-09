@@ -1,5 +1,4 @@
-
-test_name 	 qat-with-redefined-feature
+test_name 	 qat-with-redefined-features
 test_description Qualified anchored types should be correctly processed in descendant when features are redefined.
 
 copy_raw	child.e $CLUSTER child.e

@@ -829,6 +829,7 @@ feature {NONE} -- Qualified suppliers: removal
 		do
 			qualified_suppliers := Void
 			qualified_clients := Void
+			qualified_supplier := Void
 		ensure
 			removed_qualified_suppliers: qualified_suppliers = Void
 			removed_qualified_clients: qualified_clients = Void
@@ -915,9 +916,12 @@ feature -- Qualified suppliers: recompilation
 			q: like qualified_supplier
 		do
 			if attached qualified_clients as t then
+					-- Check if a temporary cell is already allocated.
 				q := qualified_supplier
 				if not attached q then
 					create q.make (f, c)
+						-- Record allocated object for reuse.
+					qualified_supplier := q
 				else
 					q.set (f, c)
 				end
@@ -926,7 +930,10 @@ feature -- Qualified suppliers: recompilation
 					across
 						clients as i
 					loop
-						workbench.add_class_to_recompile (system.class_of_id (i.item).lace_class)
+						if attached system.class_of_id (i.item) as d then
+							d.set_changed2 (True)
+							insert_new_class (d)
+						end
 					end
 				end
 			end

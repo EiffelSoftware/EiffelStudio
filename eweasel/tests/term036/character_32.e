@@ -17,6 +17,28 @@ create
 convert
 	make_from_reference ({WIDE_CHARACTER_REF})
 
+feature -- Conversion
+
+	to_character_8: CHARACTER_8
+			-- Convert current to CHARACTER_8
+		do
+			Result := item.to_character_8
+		end
+
+	as_upper, upper: CHARACTER_32
+			-- Uppercase value of `item'
+			-- Returns `item' if not `is_lower'
+		do
+			Result := to_character_8.upper
+		end
+
+	as_lower, lower: CHARACTER_32
+			-- Lowercase value of `item'
+			-- Returns `item' if not `is_upper'
+		do
+			Result := to_character_8.lower
+		end
+
 indexing
 
 	library: "[

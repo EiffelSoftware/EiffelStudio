@@ -63,9 +63,12 @@ feature
 			-- Check Result
 		local
 			vqui: VQUI
+			e: like error_handler.error_level
 		do
+			e := error_handler.error_level
 			old_check_types (feat_tbl)
 			if
+				e = error_handler.error_level and then
 				feat_tbl.associated_class = written_class
 				and then not type.actual_type.is_integer
 			then

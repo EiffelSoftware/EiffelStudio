@@ -106,21 +106,25 @@ feature -- Settings
 		local
 			actual_type: TYPE_A
 			vqmc: VQMC
+			e: like error_handler.error_level
 		do
+			e := error_handler.error_level
 			Precursor {ENCAPSULATED_I} (feat_tbl)
-				-- Type of constant is always attached.
-			type := type.as_attached_in (feat_tbl.associated_class)
-			actual_type := type.actual_type
-			if value.valid_type (actual_type) then
-				value.set_real_type (actual_type)
-			else
-				create vqmc
-				vqmc.set_class (written_class)
-				vqmc.set_feature_name (feature_name)
-				vqmc.set_constant_type (value)
-				vqmc.set_expected_type (actual_type)
-				vqmc.set_location (body.start_location)
-				Error_handler.insert_error (vqmc)
+			if e = error_handler.error_level then
+					-- Type of constant is always attached.
+				type := type.as_attached_in (feat_tbl.associated_class)
+				actual_type := type.actual_type
+				if value.valid_type (actual_type) then
+					value.set_real_type (actual_type)
+				else
+					create vqmc
+					vqmc.set_class (written_class)
+					vqmc.set_feature_name (feature_name)
+					vqmc.set_constant_type (value)
+					vqmc.set_expected_type (actual_type)
+					vqmc.set_location (body.start_location)
+					Error_handler.insert_error (vqmc)
+				end
 			end
 		end
 

@@ -545,14 +545,12 @@ feature {NONE} -- Basic operation
 			a_libraries_attached: attached a_libraries
 		local
 			l_dir_name: DIRECTORY_NAME
-			l_items: ARRAY [STRING]
 			l_count, i: INTEGER
 			l_lib_file: STRING
 			l_file_name: FILE_NAME
 			l_file_string: STRING
 		do
-			l_items := a_dir.filenames
-			if l_items /= Void then
+			if attached a_dir.filenames as l_items then
 				from
 					i := l_items.lower
 					l_count := l_items.upper
@@ -575,17 +573,16 @@ feature {NONE} -- Basic operation
 					i := i + 1
 				end
 
-				if a_depth = -1 or a_depth > 0 then
+				if (a_depth = -1 or a_depth > 0) and then attached a_dir.directory_names as l_subdirs then
 						-- Perform recursion
-					l_items := a_dir.directory_names
 					from
-						i := l_items.lower
-						l_count := l_items.upper
+						i := l_subdirs.lower
+						l_count := l_subdirs.upper
 					until
 						i > l_count
 					loop
 						create l_dir_name.make_from_string (a_dir.name)
-						l_dir_name.extend (l_items.item (i))
+						l_dir_name.extend (l_subdirs.item (i))
 						if file_system.directory_exists (l_dir_name) then
 							add_configs_in_directory (create {KL_DIRECTORY}.make (l_dir_name), (a_depth - 1).max (-1), a_libraries)
 						end
@@ -646,7 +643,7 @@ feature {NONE} -- Constants
 	location_column: INTEGER = 2
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

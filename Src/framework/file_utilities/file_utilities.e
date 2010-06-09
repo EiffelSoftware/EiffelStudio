@@ -399,7 +399,6 @@ feature {NONE} -- Basic operations
 		local
 			l_dn: STRING
 			l_dir: KL_DIRECTORY
-			l_directories: ARRAY [STRING]
 			l_count, i: INTEGER
 			l_sub_results: attached ARRAYED_LIST [attached STRING]
 			l_path_name: DIRECTORY_NAME
@@ -411,9 +410,8 @@ feature {NONE} -- Basic operations
 			end
 
 			create l_dir.make (l_dn)
-			if l_dir.exists and then l_dir.is_readable then
+			if l_dir.exists and then l_dir.is_readable and then attached l_dir.directory_names as l_directories then
 					-- Scan an include directories
-				l_directories := l_dir.directory_names
 				create Result.make (l_directories.count)
 				from
 					i := l_directories.lower
@@ -469,7 +467,6 @@ feature {NONE} -- Basic operations
 			l_dn: STRING
 			l_dir: KL_DIRECTORY
 			l_files: ARRAY [STRING]
-			l_directories: ARRAY [STRING]
 			l_count, i: INTEGER
 			l_path_name: DIRECTORY_NAME
 		do
@@ -498,9 +495,8 @@ feature {NONE} -- Basic operations
 					i := i + 1
 				end
 
-				if a_levels /= 0 then
+				if a_levels /= 0 and then attached l_dir.directory_names as l_directories then
 						-- Recurse directories
-					l_directories := l_dir.directory_names
 					from
 						i := l_directories.lower
 						l_count := l_directories.upper

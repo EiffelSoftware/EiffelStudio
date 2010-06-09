@@ -15,7 +15,7 @@ inherit
 			is_feature_special, is_unsafe, optimized_byte_node,
 			calls_special_features, size,
 			pre_inlined_code, inlined_byte_code,
-			need_target, is_constant_expression
+			need_target, is_constant_expression, has_call, allocates_memory
 		end
 
 	SHARED_INCLUDE
@@ -110,6 +110,13 @@ feature -- Status report
 			l_ext ?= extension
 			Result := l_ext /= Void
 		end
+
+	has_call: BOOLEAN = True
+			-- <Precursor>
+
+	allocates_memory: BOOLEAN = True
+			-- <Precursor>
+			-- An external is a black box that may allocate Eiffel memory when called.
 
 feature -- Routines for externals
 

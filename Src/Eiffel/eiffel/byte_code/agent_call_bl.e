@@ -13,7 +13,6 @@ inherit
 		rename
 			parent as parent_b, make as make_agent_call
 		undefine
-			allocates_memory,
 			free_register,
 			generate_on,
 			analyze_on,
@@ -25,7 +24,6 @@ inherit
 			basic_register,
 			is_feature_call,
 			analyze,
-			has_call,
 			set_register,
 			register,
 			set_parent,

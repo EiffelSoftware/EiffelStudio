@@ -12,7 +12,7 @@ inherit
 		redefine
 			is_feature, set_parameters,
 			parameters, enlarged, enlarged_on, context_type,
-			is_feature_special,
+			is_feature_special, has_call, allocates_memory,
 			is_unsafe, optimized_byte_node,
 			calls_special_features, is_special_feature,
 			size, pre_inlined_code, inlined_byte_code
@@ -237,6 +237,17 @@ feature -- Access
 				Result ?= byte_node (f, type_i).enlarged
 			end
 		end
+
+feature -- Status report
+
+	has_call: BOOLEAN = True
+			-- <Precursor>
+
+	allocates_memory: BOOLEAN = True
+			-- <Precursor>
+			--| Ideally a feature call does not always allocate memory, but it
+			--| would be quite expensive to compute that information at the moment,
+			--| so we always assume it allocates some.
 
 feature -- Context type
 

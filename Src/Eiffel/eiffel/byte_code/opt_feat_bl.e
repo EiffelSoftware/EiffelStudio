@@ -9,8 +9,8 @@ inherit
 		rename
 			make as make_opt_feat
 		undefine
-			is_polymorphic, free_register, has_call,
-			allocates_memory, has_one_signature,
+			is_polymorphic, free_register,
+			has_one_signature,
 			generate_on, basic_register, generate_access,
 			register, analyze_on, set_register,
 			is_feature_call, generate_special_feature, set_parent,

@@ -31,8 +31,7 @@ feature {NONE} -- Creation
 		require
 			n_positive: n > 0
 		do
-			create managers.make_filled (default_register_manager, n + 1)
-				-- Make managers One-based indexing by adding 1 to required allocation.
+			create managers.make_filled (default_register_manager, n)
 		ensure
 			count_set: count = n
 		end
@@ -42,13 +41,13 @@ feature -- Status report
 	count: INTEGER
 			-- Number of register types
 		do
-			Result := managers.count - 1
+			Result := managers.count
 		end
 
 	needed_registers_by_clevel (clevel: INTEGER): INTEGER
 			-- Number of needed registers for C type level `clevel'
 		require
-			valid_clevel: 0 < clevel and clevel <= count
+			valid_clevel: 0 <= clevel and clevel < count
 		do
 			Result := managers.item (clevel).needed_registers
 		end
@@ -67,7 +66,7 @@ feature -- Duplication
 			from
 				i := m.count
 			until
-				i <= 1
+				i <= 0
 			loop
 				i := i - 1
 				if m [i] /= default_register_manager then
@@ -81,7 +80,7 @@ feature -- Modification
 	clear_all
 			-- Clear current data structure
 		do
-			managers.fill_with (default_register_manager, 0, count)
+			managers.fill_with (default_register_manager, 0, count - 1)
 		end
 
 	get_register (ctype: INTEGER): INTEGER
@@ -126,7 +125,7 @@ invariant
 	managers_attached: managers /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

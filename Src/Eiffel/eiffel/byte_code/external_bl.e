@@ -13,9 +13,9 @@ inherit
 			free_register,
 			generate_parameters_list, generate_access_on_type,
 			basic_register,
-			has_call, current_needed_for_access, set_parent, parent,
+			current_needed_for_access, set_parent, parent,
 			set_register, register, generate_access, generate_on,
-			analyze_on, analyze, generate_end, allocates_memory,
+			analyze_on, analyze, generate_end,
 			is_polymorphic, has_one_signature
 		end;
 
@@ -462,11 +462,6 @@ feature
 			end
 			encapsulated := l_encapsulated
 		end;
-
-	has_call: BOOLEAN = True;
-			-- The expression has at least one call
-
-	allocates_memory: BOOLEAN = True;
 
 feature {NONE} -- Status report
 

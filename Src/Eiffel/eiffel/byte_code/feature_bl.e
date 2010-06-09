@@ -12,10 +12,10 @@ inherit
 		redefine
 			free_register, has_one_signature,
 			is_feature_call, basic_register, generate_parameters_list,
-			generate_access_on_type, is_polymorphic, has_call,
+			generate_access_on_type, is_polymorphic,
 			set_register, register, set_parent, parent, generate_access,
 			generate_on, analyze_on, analyze,
-			allocates_memory, generate_end, set_need_invariant, need_invariant
+			generate_end, set_need_invariant, need_invariant
 		end
 
 	SHARED_DECLARATIONS
@@ -327,7 +327,7 @@ end
 			local_argument_types: ARRAY [STRING]
 			entry: ROUT_ENTRY
 			f: FEATURE_I
-			index: INTEGER
+			l_index: INTEGER
 			l_keep, is_nested: BOOLEAN
 			l_par: NESTED_BL
 			return_type_string: STRING
@@ -413,14 +413,14 @@ end
 					internal_name := rout_table.feature_name
 
 					entry := rout_table.item
-					index := entry.body_index
+					l_index := entry.body_index
 
 					f := system.class_of_id (entry.class_id).feature_of_feature_id (entry.feature_id)
 					if f.is_process_or_thread_relative_once and then context.is_once_call_optimized then
 							-- Routine contracts (require, ensure, invariant) should not be checked
 							-- and value of already called once routine can be retrieved from memory
 						is_direct_once.put (True)
-						context.generate_once_optimized_call_start (type_c, index, is_process_relative, is_object_relative, buf)
+						context.generate_once_optimized_call_start (type_c, l_index, is_process_relative, is_object_relative, buf)
 					end
 
 					local_argument_types := argument_types
@@ -434,7 +434,7 @@ end
 						Extern_declarations.add_routine_with_signature (return_type_string,
 								internal_name, local_argument_types)
 						if f.is_process_or_thread_relative_once and then context.is_once_call_optimized then
-							Extern_declarations.add_once (type_c, index, is_process_relative, is_object_relative)
+							Extern_declarations.add_once (type_c, l_index, is_process_relative, is_object_relative)
 						end
 					end
 				else
@@ -506,11 +506,6 @@ end
 				end
 			end
 		end
-
-	has_call: BOOLEAN = True
-			-- The expression has at least one call
-
-	allocates_memory: BOOLEAN = True
 
 feature {NONE} -- Implementation
 

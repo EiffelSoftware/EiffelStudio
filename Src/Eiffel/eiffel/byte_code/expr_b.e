@@ -171,7 +171,7 @@ feature -- C generation
 		end
 
 	has_call: BOOLEAN
-			-- Does the expression have a call ?
+			-- Does the expression have a call to a routine?
 		do
 		end
 

@@ -43,7 +43,7 @@ class STRING_8 inherit
 		redefine
 			copy, is_equal, out
 		end
-		
+
 	MISMATCH_CORRECTOR
 		redefine
 			copy, is_equal, out, correct_mismatch
@@ -55,6 +55,9 @@ create
 	make_filled,
 	make_from_string,
 	make_from_c
+
+convert
+	as_string_32: {STRING_32}
 
 feature -- Initialization
 
@@ -325,7 +328,7 @@ feature -- Access
 		end
 
 	substring_index (other: STRING; start_index: INTEGER): INTEGER is
-			-- Index of first occurrence of other at or after start_index; 
+			-- Index of first occurrence of other at or after start_index;
 			-- 0 if none
 		require
 			other_not_void: other /= Void
@@ -348,7 +351,7 @@ feature -- Access
 				not substring (start_index, count).has_substring (other)
 			at_this_index: Result >= start_index implies
 				other.same_string (substring (Result, Result + other.count - 1))
-			none_before: Result > start_index implies 
+			none_before: Result > start_index implies
 				not substring (start_index, Result + other.count - 2).has_substring (other)
 		end
 
@@ -634,7 +637,7 @@ feature -- Status report
 				--	is within the range that can be represented
 				--	by an instance of type DOUBLE.
 		end
-	
+
 	is_boolean: BOOLEAN is
 			-- Does `Current' represent a BOOLEAN?
 		local
@@ -1027,7 +1030,7 @@ feature -- Element change
 			-- Append a copy of 's' at the end of a copy of Current,
 			-- Then return the Result.
 		require
-			argument_not_void: s /= Void	
+			argument_not_void: s /= Void
 		do
 			create Result.make (count + s.count)
 			Result.append_string (Current)
@@ -1144,9 +1147,9 @@ feature -- Element change
 			inserted: is_equal (old substring (1, i - 1)
 				+ old (s.twin) + old substring (i, count))
 		end
-		
+
 	insert_string (s: STRING; i: INTEGER) is
-			-- Insert `s' at index `i', shifting characters between ranks 
+			-- Insert `s' at index `i', shifting characters between ranks
 			-- `i' and `count' rightwards.
 		require
 			string_exists: s /= Void
@@ -1169,7 +1172,7 @@ feature -- Element change
 		end
 
 	insert_character (c: CHARACTER; i: INTEGER) is
-			-- Insert `c' at index `i', shifting characters between ranks 
+			-- Insert `c' at index `i', shifting characters between ranks
 			-- `i' and `count' rightwards.
 		require
 			valid_insertion_index: 1 <= i and i <= count + 1
@@ -1373,6 +1376,31 @@ feature -- Resizing
 
 feature -- Conversion
 
+	as_string_32, to_string_32: STRING_32
+			-- Convert `Current' as a STRING_32.
+		local
+			i, nb: INTEGER
+		do
+			if attached {STRING_32} Current as l_result then
+				Result := l_result
+			else
+				nb := count
+				create Result.make (nb)
+				Result.set_count (nb)
+				from
+					i := 1
+				until
+					i > nb
+				loop
+					Result.put (item(i), i)
+					i := i + 1
+				end
+			end
+		ensure
+			as_string_32_not_void: Result /= Void
+			identity: (conforms_to (create {STRING_32}.make_empty) and Result = Current) or (not conforms_to (create {STRING_32}.make_empty) and Result /= Current)
+		end
+
 	as_lower: like Current is
 			-- New object with all letters in lower case.
 		do
@@ -1533,7 +1561,7 @@ feature -- Conversion
 				Result := - Result
 			end
 		end
-		
+
 	to_real: REAL is
 			-- Real value;
 			-- for example, when applied to "123.0", will yield 123.0
@@ -1585,7 +1613,7 @@ feature -- Conversion
 			end
 			Result := temp
 		end
-	
+
 	split (a_separator: CHARACTER): LIST [STRING] is
 			-- Split on `a_separator'.
 		local
@@ -1622,16 +1650,16 @@ feature -- Conversion
 				end
 			else
 					-- Extend empty string, since Current is empty.
-				l_list.extend ("")	
+				l_list.extend ("")
 			end
 			Result := l_list
-			check 
+			check
 				l_list.count = occurrences (a_separator) + 1
 			end
 		ensure
 			Result /= Void
 		end
-	
+
 	frozen to_c: ANY is
 			-- A reference to a C form of current string.
 			-- Useful only for interfacing with C software.
@@ -1797,7 +1825,7 @@ feature {NONE} -- Transformation
 			-- Nothing to be done because we only added `internal_hash_code' that will
 			-- be recomputed next time we query `hash_code'.
 		end
-		
+
 feature {STRING} -- Implementation
 
 	hashcode (c_string: POINTER; len: INTEGER): INTEGER is
@@ -1855,7 +1883,7 @@ feature {STRING} -- Implementation
 		end
 
 	str_strict_cmp (this, other: POINTER; len: INTEGER): INTEGER is
-			-- Compare `this' and `other' C strings 
+			-- Compare `this' and `other' C strings
 			-- for the first `len' characters.
 			-- 0 if equal, < 0 if `this' < `other',
 			-- > 0 if `this' > `other'

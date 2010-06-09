@@ -902,7 +902,7 @@ test	formal-creation-crash			incr350 tcf pass incrementality
 test	inline-agent-invariant-crash	incr351 tcf pass incrementality agents
 test	qat-change-remote-anchor-name		incr352 tcf fail incrementality anchored_types
 test	qat-change-remote-anchor-type		incr353 tcf fail incrementality anchored_types
-test	qat-none-crash				incr354 tcf fail incrementality anchored_types
+test	qat-none-crash				incr354 tcf pass incrementality anchored_types
 
 
 -- Melting
@@ -2376,7 +2376,8 @@ test	qat-adapted-in-crash			anchor015 tcf pass anchored_type
 test	qat-linked-to-local-anchor		anchor016 tcf pass anchored_type
 test	qat-generic-parms-for-nongeneric-class	anchor017 tcf pass anchored_type
 test	qat-linked-to-formal			anchor018 tcf pass anchored_type
-test	qat-conformance-type-crash		anchor019 tcf fail anchored_type
+test	qat-conformance-type-crash		anchor019 tcf pass anchored_type
+test	qat-like-current-repetition		anchor020 tcf pass anchored_type
 
 -- .NET specific test
 if DOTNET test expanded-object-conversion	dotnet001	tcf pass dotnet

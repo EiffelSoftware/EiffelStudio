@@ -1,0 +1,13 @@
+test_name 	 qat-like-current-repetition
+test_description Qualified anchored types anchored twice to features of "like Current" type do not introduce any cycles.
+
+copy_raw	test.e $CLUSTER test.e
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result	ok
+execute_work	NONE exec_output_m
+execute_result	ok
+compare		exec_output_m output
+
+test_end

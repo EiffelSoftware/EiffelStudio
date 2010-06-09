@@ -8,7 +8,7 @@ class WORKER1
 inherit
 	WORKER
 		rename
-			routine as weasel
+			routine as weasel_test
 		end
 
 create

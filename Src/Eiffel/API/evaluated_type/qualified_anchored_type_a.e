@@ -311,13 +311,15 @@ feature -- Primitives
 			i: INTEGER
 			c: like chain
 			q: TYPE_A
+			d: TYPE_A
 		do
 			if a_ancestor /= a_descendant then
 					-- Compute new feature names.
 				create c.make_filled (0, chain.count)
 				from
 					q := qualifier
-					create Result.make (q.evaluated_type_in_descendant (a_ancestor, a_descendant, a_feature), c, a_descendant.class_id)
+					d := q.evaluated_type_in_descendant (a_ancestor, a_descendant, a_feature)
+					create Result.make (d, c, a_descendant.class_id)
 				until
 					i >= chain.count
 				loop
@@ -329,11 +331,13 @@ feature -- Primitives
 					then
 						c [i] := g.feature_name_id
 						q := f.type.instantiated_in (q)
+						d := g.type.instantiated_in (d)
 					end
 					i := i + 1
 				end
 					-- `q' holds the type relative to `a_ancestor'.
-				Result.set_actual_type (q.evaluated_type_in_descendant (a_ancestor, a_descendant, a_feature))
+					-- `d' holds the type relative to `a_descendant'.
+				Result.set_actual_type (d)
 				if has_attached_mark then
 					Result.set_attached_mark
 				elseif has_detachable_mark then

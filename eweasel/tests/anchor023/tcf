@@ -1,8 +1,7 @@
-
 test_name 	 qat-with-non-formal-generic
 test_description A qualified anchored type in a generic class that references the generic class but uses an actual generic in the qualified anchored type instead of a formal generic should work correctly.
 
-copy_raw	parent.e $CLUSTER parent.e
+copy_raw	parent1.e $CLUSTER parent.e
 copy_raw	test.e $CLUSTER test.e
 copy_sub	Ace $TEST Ace
 
@@ -11,6 +10,16 @@ compile_result	ok
 
 execute_work 	NONE 	exec_output1
 execute_result 	ok
-compare		exec_output1 output
+compare		exec_output1 output1
+
+copy_raw	parent2.e $CLUSTER parent.e
+
+compile_melted
+compile_result	ok
+
+execute_work 	NONE 	exec_output2
+execute_result 	ok
+compare		exec_output2 output2
+
 
 test_end

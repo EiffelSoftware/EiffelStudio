@@ -1,0 +1,14 @@
+
+test_name 	qat-in-generic-constraint
+test_description A qualified anchored type used as actual generic in a generic constraint crashes the compiler.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test1.e $CLUSTER test1.e
+copy_raw	test2.e $CLUSTER test2.e
+copy_raw	parent.e $CLUSTER parent.e
+
+compile_melted
+compile_result	validity_error TEST1 VCFG(3)
+
+test_end

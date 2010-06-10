@@ -41,73 +41,20 @@ feature -- Conversion
 		require
 			a_string_not_void: a_string /= Void
 		local
-			l_nat8: NATURAL_8
-			l_code: NATURAL_32
-			i, nb, cnt: INTEGER
+			i, nb: INTEGER
+			l_ref: INTEGER_32_REF
 		do
 			from
 				i := 1
-				cnt := 0
 				nb := a_string.count
 				create Result.make (nb)
-				Result.set_count (nb)
+				create l_ref
 			until
 				i > nb
 			loop
-				l_nat8 := a_string.code (i).to_natural_8
-				cnt := cnt + 1
-				if l_nat8 <= 127 then
-						-- Form 0xxxxxxx.
-					Result.put (l_nat8.to_character_8, cnt)
-
-				elseif (l_nat8 & 0xE0) = 0xC0 then
-						-- Form 110xxxxx 10xxxxxx.
-					l_code := (l_nat8 & 0x1F).to_natural_32 |<< 6
-					i := i + 1
-					l_nat8 := a_string.code (i).to_natural_8
-					l_code := l_code | (l_nat8 & 0x3F).to_natural_32
-					Result.put (l_code.to_character_32, cnt)
-
-				elseif (l_nat8 & 0xF0) = 0xE0 then
-					-- Form 1110xxxx 10xxxxxx 10xxxxxx.
-					l_code := (l_nat8 & 0x0F).to_natural_32 |<< 12
-					l_nat8 := a_string.code (i + 1).to_natural_8
-					l_code := l_code | ((l_nat8 & 0x3F).to_natural_32 |<< 6)
-					l_nat8 := a_string.code (i + 2).to_natural_8
-					l_code := l_code | (l_nat8 & 0x3F).to_natural_32
-					Result.put (l_code.to_character_32, cnt)
-					i := i + 2
-
-				elseif (l_nat8 & 0xF8) = 0xF0 then
-					-- Form 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx.
-					l_code := (l_nat8 & 0x07).to_natural_32 |<< 18
-					l_nat8 := a_string.code (i + 1).to_natural_8
-					l_code := l_code | ((l_nat8 & 0x3F).to_natural_32 |<< 12)
-					l_nat8 := a_string.code (i + 2).to_natural_8
-					l_code := l_code | ((l_nat8 & 0x3F).to_natural_32 |<< 6)
-					l_nat8 := a_string.code (i + 3).to_natural_8
-					l_code := l_code | (l_nat8 & 0x3F).to_natural_32
-					Result.put (l_code.to_character_32, cnt)
-					i := i + 3
-
-				elseif (l_nat8 & 0xFC) = 0xF8 then
-					-- Starts with 111110xx
-					-- This seems to be a 5 bytes character,
-					-- but UTF-8 is restricted to 4, then substitute with a space
-					Result.put (' ', cnt)
-					i := i + 4
-
-				else
-					-- Starts with 1111110x
-					-- This seems to be a 6 bytes character,
-					-- but UTF-8 is restricted to 4, then substitute with a space
-					Result.put (' ', cnt)
-					i := i + 5
-
-				end
-				i := i + 1
+				Result.append_character (read_character_from_utf8 (i, l_ref, a_string))
+				i := i + l_ref.item
 			end
-			Result.set_count (cnt)
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -206,6 +153,81 @@ feature -- Conversion
 								((a_code > 127 and a_code <= 0x7FF) implies a_string.count = old a_string.count + 2) and
 								((a_code > 0x7FF and a_code <= 0xFFFF) implies a_string.count = old a_string.count + 3) and
 								((a_code > 0xFFFF and a_code <= 0x10FFFF) implies a_string.count = old a_string.count + 4)
+		end
+
+	read_character_from_utf8 (a_position: INTEGER; a_read_bytes: detachable INTEGER_32_REF; a_string: STRING_8): CHARACTER_32
+			-- Read a Unicode character from UTF-8 string.
+			-- `a_string' is in UTF-8.
+			-- `a_position' is the starting byte point of a character.
+			-- `a_read_bytes' is the number of bytes read.
+		require
+			a_string_not_void: a_string /= Void
+			a_position_in_range: a_position > 0 and a_position <= a_string.count
+			a_position_valid: a_string.code (a_position).to_natural_8 <= 127 or
+								(a_string.code (a_position).to_natural_8 & 0xE0) = 0xC0 or
+								(a_string.code (a_position).to_natural_8 & 0xF0) = 0xE0 or
+								(a_string.code (a_position).to_natural_8 & 0xF8) = 0xF0 or
+								(a_string.code (a_position).to_natural_8 & 0xFC) = 0xF8 or
+								(a_string.code (a_position).to_natural_8 & 0xFE) = 0xFC
+		local
+			l_pos: INTEGER
+			l_nat8: NATURAL_8
+			l_code: NATURAL_32
+		do
+			l_pos := a_position
+			l_nat8 := a_string.code (l_pos).to_natural_8
+			if l_nat8 <= 127 then
+					-- Form 0xxxxxxx.
+				Result := l_nat8.to_character_32
+
+			elseif (l_nat8 & 0xE0) = 0xC0 then
+					-- Form 110xxxxx 10xxxxxx.
+				l_code := (l_nat8 & 0x1F).to_natural_32 |<< 6
+				l_pos := l_pos + 1
+				l_nat8 := a_string.code (l_pos).to_natural_8
+				l_code := l_code | (l_nat8 & 0x3F).to_natural_32
+				Result := l_code.to_character_32
+
+			elseif (l_nat8 & 0xF0) = 0xE0 then
+				-- Form 1110xxxx 10xxxxxx 10xxxxxx.
+				l_code := (l_nat8 & 0x0F).to_natural_32 |<< 12
+				l_nat8 := a_string.code (l_pos + 1).to_natural_8
+				l_code := l_code | ((l_nat8 & 0x3F).to_natural_32 |<< 6)
+				l_nat8 := a_string.code (l_pos + 2).to_natural_8
+				l_code := l_code | (l_nat8 & 0x3F).to_natural_32
+				Result := l_code.to_character_32
+				l_pos := l_pos + 2
+
+			elseif (l_nat8 & 0xF8) = 0xF0 then
+				-- Form 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx.
+				l_code := (l_nat8 & 0x07).to_natural_32 |<< 18
+				l_nat8 := a_string.code (l_pos + 1).to_natural_8
+				l_code := l_code | ((l_nat8 & 0x3F).to_natural_32 |<< 12)
+				l_nat8 := a_string.code (l_pos + 2).to_natural_8
+				l_code := l_code | ((l_nat8 & 0x3F).to_natural_32 |<< 6)
+				l_nat8 := a_string.code (l_pos + 3).to_natural_8
+				l_code := l_code | (l_nat8 & 0x3F).to_natural_32
+				Result := l_code.to_character_32
+				l_pos := l_pos + 3
+
+			elseif (l_nat8 & 0xFC) = 0xF8 then
+				-- Starts with 111110xx
+				-- This seems to be a 5 bytes character,
+				-- but UTF-8 is restricted to 4, then substitute with a space
+				Result := ' '
+				l_pos := l_pos + 4
+
+			else
+				-- Starts with 1111110x
+				-- This seems to be a 6 bytes character,
+				-- but UTF-8 is restricted to 4, then substitute with a space
+				Result := ' '
+				l_pos := l_pos + 5
+
+			end
+			if a_read_bytes /= Void then
+				a_read_bytes.set_item (l_pos - a_position + 1)
+			end
 		end
 
 feature -- Validate

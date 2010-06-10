@@ -651,7 +651,7 @@ feature {NONE} -- Implementation
 			a_str_valid: encoding_converter.utf8_to_utf32 (a_str).count <= 1
 		do
 			if not a_str.is_empty then
-				Result := encoding_converter.utf8_to_utf32 (a_str).item (1)
+				Result := encoding_converter.read_character_from_utf8 (1, Void, a_str)
 			end
 		end
 

@@ -358,6 +358,7 @@ feature -- Enumerations.
 						a_integer = curlopt_proxy or
 						a_integer = curlopt_encoding or
 						a_integer = curlopt_timeout or
+						a_integer = curlopt_userpwd or
 						a_integer = curlopt_customrequest
 		end
 

@@ -224,7 +224,10 @@ feature -- Parsing
 		require
 			a_file_not_void: a_file /= Void
 			a_file_open_read: a_file.is_open_read
-			a_file_is_utf8: encoding_converter.file_in_utf8 (a_file)
+				-- |FIXME: The following precondition changes the status of an object.
+				-- |FIXME: Comment the following line until a good solution is found.
+			-- a_file_has_utf8_content: encoding_converter.file_in_utf8 (a_file)
+
 		do
 			internal_parse_class (a_file, Void)
 		end

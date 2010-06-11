@@ -46,7 +46,7 @@ feature {NONE} -- Basic operations
 			l_as.class_name.process (Current)
 			name_start_position := l_as.click_ast.start_position
 			name_end_position := l_as.click_ast.end_position
-			inherited_class_name := l_as.class_name.name + Class_implementation_extension
+			inherited_class_name := l_as.class_name.name_8 + Class_implementation_extension
 			parents := l_as.parents
 				-- We must find the correct inherited class, so that if a user inherits
 				-- from other classes, we will not change them.
@@ -55,7 +55,7 @@ feature {NONE} -- Basic operations
 			until
 				parents.off or parent_as /= Void
 			loop
-				if inherited_class_name.is_equal (parents.item.type.class_name.name) then
+				if inherited_class_name.is_equal (parents.item.type.class_name.name_8) then
 					parent_as := parents.item
 				end
 				parents.forth

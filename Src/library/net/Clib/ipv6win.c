@@ -1,6 +1,6 @@
 #include "ipv6.h"
 
-#ifdef __MINGW32__
+#if defined(__MINGW32__) && !defined(__MINGW64__)
 #define s6_words	_s6_words
 #define s6_bytes	_s6_bytes
 #endif

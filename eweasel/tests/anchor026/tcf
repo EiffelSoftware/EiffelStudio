@@ -1,0 +1,12 @@
+
+test_name 	qat-with-missing-actual-generic
+test_description A qualified anchored type used as actual generic but which is missing an actual generic crashes the compiler.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test1.e $CLUSTER test1.e
+
+compile_melted
+compile_result	validity_error TEST1 VTUG(2)
+
+test_end

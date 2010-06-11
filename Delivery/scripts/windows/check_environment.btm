@@ -15,7 +15,7 @@ iff not defined NO_COMPILE then
 		echo FINALIZED_DIR not defined. Cannot continue
 		CANCEL
 	endiff
-	iff not defined WIN64 .AND. not exist %ISE_EIFFEL\gcc\%ISE_PLATFORM\mingw\bin\gcc.exe then
+	iff not exist %ISE_EIFFEL\gcc\%ISE_PLATFORM\mingw\bin\gcc.exe then
 		echo Cannot find a version of MinGW under ISE_EIFFEL. Cannot continue
 		CANCEL
 	endiff

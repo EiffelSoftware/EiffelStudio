@@ -2384,6 +2384,7 @@ test	qat-with-redefined-features		anchor022 tcf pass anchored_type system-validi
 test	qat-with-non-formal-generic		anchor023 tcf pass anchored_type
 test	qat-in-generic-constraint		anchor024 tcf pass anchored_type
 test	qat-renamed-constraint			anchor025 tcf pass anchored_type formal generic
+test	qat-with-missing-actual-generic		anchor026 tcf pass anchored_type
 
 -- .NET specific test
 if DOTNET test expanded-object-conversion	dotnet001	tcf pass dotnet

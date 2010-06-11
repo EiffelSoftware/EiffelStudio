@@ -1,0 +1,8 @@
+Compatibility Notice:  ** No leading underscore **
+------------------------------------------------------------------------
+Unlike the other builds from mingw-w64 up to 2010-04-27, these new win64
+targetting toolchains do *not* prepend an undersocore to the symbols and
+follows the MSVC x64 convention.  Therefore, any of the link libraries
+from previous toolchains are incompatible with the ones created by these
+new builds.
+

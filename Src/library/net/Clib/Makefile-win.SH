@@ -11,7 +11,8 @@ JILCFLAGS = $(CFLAGS) $ccflags $optimize -DEIF_IL_DLL
 LN = copy
 MV = $mv
 RM = $del
-MKDIR_TARGET = $mkdir_target
+MAKE = $make
+MKDIR = $mkdir
 OBJECTS = network.$obj network_r.$obj hostname.$obj syncpoll.$obj storable.$obj ipv6.$obj ipv6win.$obj
 MT_OBJECTS = MTnetwork.$obj MTnetwork_r.$obj MThostname.$obj MTsyncpoll.$obj MTstorable.$obj MTipv6.$obj MTipv6win.$obj
 IL_OBJECTS = ILnetwork.$obj ILnetwork_r.$obj ILhostname.$obj ILsyncpoll.$obj ILstorable.$obj ILipv6.$obj ILipv6win.$obj
@@ -19,24 +20,11 @@ IL_OBJECTS = ILnetwork.$obj ILnetwork_r.$obj ILhostname.$obj ILsyncpoll.$obj ILs
 .c.$obj:
 	$(CC) -c $(JCFLAGS) $<
 
-all:: lib_dir $output_libraries clean
+all:: $output_libraries
+	$(MAKE) clean
 
 standard:: net.lib ilnet.lib
 mtstandard:: mtnet.lib
-
-..$(DIR)spec:
-	$(MKDIR_TARGET)
-
-..$(DIR)spec$(DIR)$(ISE_C_COMPILER): ..$(DIR)spec
-	$(MKDIR_TARGET)
-
-..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM): ..$(DIR)spec$(DIR)$(ISE_C_COMPILER)
-	$(MKDIR_TARGET)
-
-..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib: ..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)
-	$(MKDIR_TARGET)
-
-lib_dir: ..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib
 
 clean:
 	$(RM) *.$obj
@@ -45,14 +33,17 @@ clean:
 
 net.lib: $(OBJECTS)
 	$alib_line
+	$(MKDIR) ..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib
 	$(MV) $@ ..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib$(DIR)$@
 
 mtnet.lib: $(MT_OBJECTS)
 	$alib_line
+	$(MKDIR) ..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib
 	$(MV) $@ ..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib$(DIR)$@
 
 ilnet.lib: $(IL_OBJECTS)
 	$alib_line
+	$(MKDIR) ..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib
 	$(MV) $@ ..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib$(DIR)$@
 
 

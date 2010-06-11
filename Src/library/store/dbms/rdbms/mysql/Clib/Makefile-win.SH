@@ -11,28 +11,17 @@ JILCFLAGS = $(CFLAGS) $mtccflags $optimize -DEIF_IL_DLL
 LN = copy
 MV = $mv
 RM = $del
-MKDIR_TARGET = $mkdir_target
+MAKE = $make
+MKDIR = $mkdir
 OBJECTS = eif_mysql.$obj
 
 .c.$obj:
 	$(CC) -c $(JCFLAGS) $<
 
-all:: lib_dir standard clean
+all:: standard
+	$(MAKE) clean
+
 standard:: mysql_store.lib
-
-..$(DIR)..$(DIR)..$(DIR)..$(DIR)spec:
-	$(MKDIR_TARGET)
-
-..$(DIR)..$(DIR)..$(DIR)..$(DIR)spec$(DIR)$(ISE_C_COMPILER): ..$(DIR)..$(DIR)..$(DIR)..$(DIR)spec
-	$(MKDIR_TARGET)
-
-..$(DIR)..$(DIR)..$(DIR)..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM): ..$(DIR)..$(DIR)..$(DIR)..$(DIR)spec$(DIR)$(ISE_C_COMPILER)
-	$(MKDIR_TARGET)
-
-..$(DIR)..$(DIR)..$(DIR)..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib: ..$(DIR)..$(DIR)..$(DIR)..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)
-	$(MKDIR_TARGET)
-
-lib_dir: ..$(DIR)..$(DIR)..$(DIR)..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib
 
 clean:
 	$(RM) *.$obj
@@ -41,4 +30,5 @@ clean:
 
 mysql_store.lib: $(OBJECTS)
 	$alib_line
+	$(MKDIR) ..$(DIR)..$(DIR)..$(DIR)..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib
 	$(MV) $@ ..$(DIR)..$(DIR)..$(DIR)..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib$(DIR)$@

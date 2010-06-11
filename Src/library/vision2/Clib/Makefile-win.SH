@@ -12,7 +12,8 @@ JILCFLAGS = $(CFLAGS) $mtccflags $optimize -DEIF_IL_DLL
 LN = copy
 MV = $mv
 RM = $del
-MKDIR_TARGET = $mkdir_target
+MAKE = $make
+MKDIR = $mkdir
 LINK = $link32
 DLL_FLAGS = $dll_flags
 DLL_LIBS = $dll_libs
@@ -23,24 +24,11 @@ IL_OBJECTS = ILload_pixmap.$obj
 .c.$obj:
 	$(CC) -c $(JCFLAGS) $<
 
-all:: lib_dir $output_libraries clean
+all:: $output_libraries
+	$(MAKE) clean
 
 standard:: vision2.lib ilvision2.lib
 mtstandard:: mtvision2.lib
-
-..$(DIR)spec:
-	$(MKDIR_TARGET)
-
-..$(DIR)spec$(DIR)$(ISE_C_COMPILER): ..$(DIR)spec
-	$(MKDIR_TARGET)
-
-..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM): ..$(DIR)spec$(DIR)$(ISE_C_COMPILER)
-	$(MKDIR_TARGET)
-
-..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib: ..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)
-	$(MKDIR_TARGET)
-
-lib_dir: ..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib 
 
 clean:
 	$(RM) *.$obj
@@ -48,19 +36,23 @@ clean:
 
 vision2.lib: $(OBJECTS)
 	$alib_line
+	$(MKDIR) ..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib
 	$(MV) $@ ..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib$(DIR)$@
 
 mtvision2.lib: $(MT_OBJECTS)
 	$alib_line
+	$(MKDIR) ..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib
 	$(MV) $@ ..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib$(DIR)$@
 
 ilvision2.lib: $(IL_OBJECTS)
 	$alib_line
+	$(MKDIR) ..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib
 	$(MV) $@ ..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib$(DIR)$@
 
 
 vision2_hook.dll: vision2_hook.$obj
 	$(LINK) $(DLL_FLAGS) $? $(DLL_LIBS)
+	$(MKDIR) ..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)dll
 	$(MV) $@ ..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)dll$(DIR)$@
 
 #Multithreaded targets.

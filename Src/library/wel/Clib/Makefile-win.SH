@@ -11,7 +11,8 @@ JILCFLAGS = $(CFLAGS) $ccflags $optimize -DEIF_IL_DLL
 LN = copy
 MV = $mv
 RM = $del
-MKDIR_TARGET = $mkdir_target
+MAKE = $make
+MKDIR = $mkdir
 LINK = $link32
 DLL_FLAGS = $dll_flags
 DLL_LIBS = $dll_libs
@@ -27,46 +28,32 @@ IL_OBJECTS = ILdisptchr.$obj ILenumfont.$obj ILenum_child_windows.$obj ILestream
 .c.$obj:
 	$(CC) -c $(JCFLAGS) $<
 
-all:: lib_dir $output_libraries clean
+all:: $output_libraries
+	$(MAKE) clean
 
 standard:: wel.lib ilwel.lib
 mtstandard:: mtwel.lib
 
-..$(DIR)spec:
-	$(MKDIR_TARGET)
-
-..$(DIR)spec$(DIR)$(ISE_C_COMPILER): ..$(DIR)spec
-	$(MKDIR_TARGET)
-
-..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM): ..$(DIR)spec$(DIR)$(ISE_C_COMPILER)
-	$(MKDIR_TARGET)
-
-..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib: ..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)
-	$(MKDIR_TARGET)
-
-..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)dll: ..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)
-	$(MKDIR_TARGET)
-
-lib_dir: ..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib ..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)dll
-
 clean:
 	$(RM) *.$obj
 	$(RM) *.lib
-	$(RM) *.dll
 	$(RM) *.BAK
 	$(RM) *.tds
 	$(RM) *.exp
 
 wel.lib: $(OBJECTS)
 	$alib_line
+	$(MKDIR) ..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib
 	$(MV) $@ ..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib$(DIR)$@
 
 mtwel.lib: $(MT_OBJECTS)
 	$alib_line
+	$(MKDIR) ..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib
 	$(MV) $@ ..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib$(DIR)$@
 
 ilwel.lib: $(IL_OBJECTS)
 	$alib_line
+	$(MKDIR) ..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib
 	$(MV) $@ ..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib$(DIR)$@
 
 

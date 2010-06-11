@@ -1,0 +1,16 @@
+test_name 	 qat-renamed-constraint
+test_description Qualified anchored types can refer to the features renamed in the constraint of a formal generic.
+
+copy_raw	a.e $CLUSTER a.e
+copy_raw	b.e $CLUSTER b.e
+copy_raw	x.e $CLUSTER x.e
+copy_raw	test.e $CLUSTER test.e
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result	ok
+execute_work	NONE exec_output_m
+execute_result	ok
+compare		exec_output_m output
+
+test_end

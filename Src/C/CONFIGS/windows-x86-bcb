@@ -5,7 +5,7 @@ borlandecdbgd='ecdbgd'
 make='"$compiler_path\bin\make.exe"'
 del='del'
 mv='copy'
-mkdir_target='if not exist $@ mkdir $@'
+mkdir='mkdir -p'
 dir_sep='\\'
 #
 output_exe_cmd='-e'

@@ -206,8 +206,9 @@ feature {NONE} -- Types which should not occur
 		do
 				-- This type is not a formal but may have generics.
 				-- Anchored types are prohibited in formal generic declarations according to VTGC.
-				-- Do nothing.
+				-- Record suppliers of the qualifier part.
 				-- An error will be thrown later.
+			l_as.qualifier.process (Current)
 		end
 
 	process_type_dec_as (l_as: TYPE_DEC_AS)

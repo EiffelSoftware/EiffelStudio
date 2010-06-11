@@ -5,7 +5,7 @@ microsoftecdbgd='ecdbgd'
 make='nmake -nologo'
 del='-del'
 mv='copy'
-mkdir_target='if not exist $@ mkdir $@'
+mkdir='mkdir -p'
 dir_sep='\ '
 #
 output_exe_cmd='-Fe'

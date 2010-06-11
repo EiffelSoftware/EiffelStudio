@@ -2,10 +2,10 @@
 # This is the configuration file for MinGW
 #
 mingwecdbgd='ecdbgd'
-make='"$make_path/bin/make"'
+make='"$make_path/bin/make" -j $(NUMBER_OF_PROCESSORS)'
 del='"$make_path/bin/rm" -f'
 mv='"$make_path/bin/cp" -f'
-mkdir_target='if [ ! -d $@ ]; then "$make_path/bin/mkdir" $@; fi'
+mkdir='"$make_path/bin/mkdir" -p'
 dir_sep='/'
 #
 output_exe_cmd='-o'

@@ -19,6 +19,20 @@ iff not defined WIN64 then
 	call configure win32 g dll >>& %INSTALL_LOG
 	cd %EIFFEL_SRC
 	copy C\run-time\LIB\*dll* %STUDIO_DIR\studio\spec\%ISE_PLATFORM\lib\mingw
+else
+	remtrace Compile a run-time for MinGW
+	cdd %EIFFEL_SRC\C
+	call configure clean >>& %INSTALL_LOG
+	call configure win64 g >>& %INSTALL_LOG
+	cd %EIFFEL_SRC
+	copy C\run-time\LIB\*.a %STUDIO_DIR\studio\spec\%ISE_PLATFORM\lib\mingw
+
+	remtrace Compile a dynamic run-time for MinGW
+	cdd %EIFFEL_SRC\C
+	call configure clean >>& %INSTALL_LOG
+	call configure win64 g dll >>& %INSTALL_LOG
+	cd %EIFFEL_SRC
+	copy C\run-time\LIB\*dll* %STUDIO_DIR\studio\spec\%ISE_PLATFORM\lib\mingw
 endiff
 
 remtrace Compile a dynamic run-time for Microsoft
@@ -69,6 +83,7 @@ iff not defined WIN64 then
 	copy %EIFFEL_SRC\C\CONFIGS\windows-x86-mingw %STUDIO_DIR\studio\config\%ISE_PLATFORM\mingw\config.sh
 else
 	copy %EIFFEL_SRC\C\CONFIGS\windows-x86-64-msc %STUDIO_DIR\studio\config\%ISE_PLATFORM\msc\config.sh
+	copy %EIFFEL_SRC\C\CONFIGS\windows-x86-64-mingw %STUDIO_DIR\studio\config\%ISE_PLATFORM\mingw\config.sh
 endiff
 
 remtrace Copy the MSYS part

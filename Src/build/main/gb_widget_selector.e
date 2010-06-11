@@ -802,10 +802,12 @@ feature {GB_COMMAND_NAME_CHANGE} -- Implementation
 			l_eiffel_parser: EIFFEL_PARSER
 			l_class_as: CLASS_AS
 			l_visitor: NAME_CHANGE_VISITOR
-			file: RAW_FILE
+			file: KL_BINARY_INPUT_FILE
+			output_file: RAW_FILE
 			file_contents: STRING
 			character_difference: INTEGER
 			directory_path: ARRAYED_LIST [STRING]
+			i, nb: INTEGER
 		do
 			directory_object ?= object.widget_selector_item.parent
 			file_name := generated_path
@@ -839,11 +841,13 @@ feature {GB_COMMAND_NAME_CHANGE} -- Implementation
 					-- name.
 				create file.make (interface_file_name.string)
 				if file.exists then
+					nb := file.count
+					create file_contents.make_filled ('%U', nb)
 					file.open_read
-					file.read_stream (file.count)
+					i := file.read_to_string (file_contents, 1, nb)
+					check fully_read: i = file.count end
 					file.close
-					file_contents := file.last_string
-					parse_eiffel_class (l_eiffel_parser, file_contents)
+					parse_eiffel_class (l_eiffel_parser, file)
 					l_class_as := l_eiffel_parser.root_node
 					if l_class_as /= Void then
 						create l_visitor
@@ -860,9 +864,10 @@ feature {GB_COMMAND_NAME_CHANGE} -- Implementation
 						replace_final_class_name_comment (file_contents, old_name.as_upper, new_name.as_upper)
 
 							-- Open the file, and write the contents back.
-						file.open_write
-						file.put_string (file_contents)
-						file.close
+						create output_file.make (interface_file_name.string)
+						output_file.open_write
+						output_file.put_string (file_contents)
+						output_file.close
 					else
 						-- FIXME: we should handled syntactically invalid class.						
 					end
@@ -876,11 +881,13 @@ feature {GB_COMMAND_NAME_CHANGE} -- Implementation
 					-- name.
 				create file.make (implementation_file_name.string)
 				if file.exists then
+					nb := file.count
+					create file_contents.make_filled ('%U', nb)
 					file.open_read
-					file.read_stream (file.count)
+					i := file.read_to_string (file_contents, 1, nb)
+					check fully_read: i = file.count end
 					file.close
-					file_contents := file.last_string
-					parse_eiffel_class (l_eiffel_parser, file_contents)
+					parse_eiffel_Class (l_eiffel_parser, file)
 					l_class_as := l_eiffel_parser.root_node
 					if l_class_as /= Void then
 						create l_visitor
@@ -890,9 +897,10 @@ feature {GB_COMMAND_NAME_CHANGE} -- Implementation
 
 							-- Now replace the class name at end after comment.
 						replace_final_class_name_comment (file_contents, (old_name + Class_implementation_extension).as_upper, (new_name + Class_implementation_extension).as_upper)
-						file.open_write
-						file.put_string (file_contents)
-						file.close
+						create output_file.make (implementation_file_name.string)
+						output_file.open_write
+						output_file.put_string (file_contents)
+						output_file.close
 					else
 						-- FIXME: we should handled syntactically invalid class.
 					end
@@ -900,26 +908,33 @@ feature {GB_COMMAND_NAME_CHANGE} -- Implementation
 			end
 		end
 
-	parse_eiffel_class (a_parser: EIFFEL_PARSER; a_buffer: STRING)
+	parse_eiffel_class (a_parser: EIFFEL_PARSER; a_file: KL_BINARY_INPUT_FILE)
 			-- Using a parser, parse our code using different parser mode, to ensure that we can
 			-- indeed convert any kind of Eiffel classes.
 		require
 			a_parser_not_void: a_parser /= Void
-			a_buffer_not_void: a_buffer /= Void
+			a_file_not_void: a_file /= Void
+			a_file_closed: a_file.is_closed
 		do
 				-- First we do it using the old conventions.
 			a_parser.set_syntax_version ({EIFFEL_PARSER}.obsolete_64_syntax)
-			a_parser.parse_from_string (a_buffer, Void)
+			a_file.open_read
+			a_parser.parse (a_file)
+			a_file.close
 			if error_handler.has_error then
 				error_handler.wipe_out
 					-- There was an error, let's try to see if the code is using transitional syntax.
 				a_parser.set_syntax_version ({EIFFEL_PARSER}.transitional_64_syntax)
-				a_parser.parse_from_string (a_buffer, Void)
+				a_file.open_read
+				a_parser.parse (a_file)
+				a_file.close
 				if error_handler.has_error then
 					error_handler.wipe_out
 						-- Still an error, let's try to see if the code is strictly ECMA compliant.
 					a_parser.set_syntax_version ({EIFFEL_PARSER}.ecma_syntax)
-					a_parser.parse_from_string (a_buffer, Void)
+					a_file.open_read
+					a_parser.parse (a_file)
+					a_file.close
 				end
 			end
 		end

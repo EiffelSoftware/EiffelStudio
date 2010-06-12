@@ -164,14 +164,13 @@ exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/eweasel/control eweasel/control
 fullrf %STUDIO_DIR\eweasel\INSTALL
 
 remtrace MinGW files
-cdd %INSTALL_DIR
-exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/free_add_ons/gcc gcc
-
 cdd %STUDIO_DIR
-remtrace Create documentation directory
-md docs
+safe_md gcc
+cd gcc
+exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/free_add_ons/gcc/%ISE_PLATFORM% %ISE_PLATFORM%
 
 remtrace Create directories
+cdd %STUDIO_DIR
 safe_md %STUDIO_DIR\studio\spec
 safe_md %STUDIO_DIR\studio\spec\%ISE_PLATFORM
 safe_md %STUDIO_DIR\esbuilder\spec

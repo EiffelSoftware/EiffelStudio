@@ -84,9 +84,7 @@
 					</RegistryKey>
 				</RegistryKey>
 			</Component>
-			<?ifndef x64?>
-				<Directory Id="Dir.gcc" Name="gcc"/>
-			<?endif?>
+			<Directory Id="Dir.gcc" Name="gcc"/>
 			<Directory Id="Dir.Core.examples" Name="examples"/>
 			<Directory Id="Dir.Core.library" Name="library"/>
 			<Directory Id="Dir.Core.compatible" Name="compatible"/>
@@ -252,11 +250,9 @@
 				<ComponentGroupRef Id="gdiplus"/>
 			</Feature>
 
-			<?ifndef x64?>
 			<Feature Id="gcc_feature" Title="gcc" TypicalDefault="install" Display="hidden" Level="1" >
 				<ComponentGroupRef Id="gcc"/>
 			</Feature>
-			<?endif?>
 		</Feature>
 		<!-- END FEATURES -->
 

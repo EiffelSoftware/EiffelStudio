@@ -33,13 +33,13 @@ WXS = \
 build: $(WXS)
 
 studio_gcc.wxs:
-	$(HALLOW) $(HALLOW_FLAGS) "$(INSTALL_DIR)\gcc" -dr:"Dir.gcc" -g:"gcc" -r -n:"gcc." > $@.tmp
+	$(HALLOW) $(HALLOW_FLAGS) "$(INSTALL_DIR)\EiffelStudio\gcc" -dr:"Dir.gcc" -g:"gcc" -r -n:"gcc." > $@.tmp
 	move $@.tmp $@
 
 studio_core.wxs:
 	$(HALLOW) $(HALLOW_FLAGS) "$(INSTALL_DIR)\EiffelStudio" -dr:"INSTALLDIR" \
 		-de:"\\EiffelStudio\\library$$" -de:"\\EiffelStudio\\examples$$" \
-		-de:"\\EiffelStudio\\compatible$$" \
+		-de:"\\EiffelStudio\\compatible$$" \ -de:"\\EiffelStudio\\gcc$$" \
 		-de:"\\EiffelStudio\\experimental$$" \
 		-fe:"\\EiffelStudio\\studio\\spec\\w.*\\estudio.exe$$" \
 		-fe:"\\EiffelStudio\\esbuilder\\spec\\w.*\\esbuilder.exe$$" \

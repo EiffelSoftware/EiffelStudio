@@ -162,6 +162,21 @@ feature -- Test routines
 			assert ("Expected merge", l_text.same_string_general (text_merge_dual))
 		end
 
+	test_compute_lcs_with_equal_src_and_dst
+		note
+			testing: "covers/{DIFF}.compute_lcs"
+		local
+			l_src, l_dst: ARRAY [STRING]
+			l_diff: DIFF [STRING]
+			i: INTEGER
+		do
+			create l_src.make_filled (create {STRING}.make_empty, 0, 1)
+			l_dst := l_src.deep_twin
+			create l_diff
+			l_diff.set (l_src, l_dst)
+			l_diff.compute_diff
+		end
+
 feature {NONE} -- Constants
 
 	text: attached STRING =
@@ -184,7 +199,7 @@ feature {NONE} -- Constants
 		%Inserted line 3"
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

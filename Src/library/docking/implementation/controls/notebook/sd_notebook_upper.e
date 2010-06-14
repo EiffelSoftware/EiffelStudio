@@ -128,6 +128,12 @@ feature -- Query
 			Result := internal_minimize_button.state = {SD_TOOL_BAR_ITEM_STATE}.hot
 		end
 
+	is_normal_max_button_enabled: BOOLEAN
+			-- If maximize/restore button enabled?
+		do
+			Result := internal_normal_max_button.is_sensitive
+		end
+
 feature -- Command
 
 	set_mini_tool_bar (a_widget: EV_WIDGET)
@@ -193,6 +199,20 @@ feature -- Command
 				end
 				internal_minimize_button.set_tooltip (internal_shared.interface_names.tooltip_mini_toolbar_restore)
 			end
+		end
+
+	enable_maximize_minimize_buttons
+			-- Enable maximize and minimize buttons in tool bar
+		do
+			internal_normal_max_button.enable_sensitive
+			internal_minimize_button.enable_sensitive
+		end
+
+	disable_maximize_minimize_buttons
+			-- Disable maximize and minimize buttons in tool bar
+		do
+			internal_normal_max_button.disable_sensitive
+			internal_minimize_button.disable_sensitive
 		end
 
 	extend (a_content: SD_CONTENT)

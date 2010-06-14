@@ -327,6 +327,22 @@ feature -- Command
 			l_notebook.set_show_minimized (is_minimized)
 		end
 
+	enable_maximize_minimize_buttons
+			-- Enable maximize and minimize buttons in notebook
+		do
+			if attached {SD_NOTEBOOK_UPPER} internal_notebook as l_notebook then
+				l_notebook.enable_maximize_minimize_buttons
+			end
+		end
+
+	disable_maximize_minimize_buttons
+			-- Disable maximize and minimize buttons in notebook
+		do
+			if attached {SD_NOTEBOOK_UPPER} internal_notebook as l_notebook then
+				l_notebook.disable_maximize_minimize_buttons
+			end
+		end
+
 feature -- Query
 
 	spliter_size (a_spliter: EV_SPLIT_AREA; a_zone_size: INTEGER): INTEGER

@@ -10,6 +10,7 @@ feature
 
 	foo: B
 		do
+			create Result
 		end
 
 end

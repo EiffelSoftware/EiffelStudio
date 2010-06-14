@@ -8,8 +8,10 @@ feature
 	make
 		do
 			create baz
+			create quux
 		end
 
 	baz: like {G}.bar
+	quux: like {G}.bat
 
 end

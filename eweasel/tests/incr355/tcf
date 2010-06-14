@@ -1,0 +1,15 @@
+
+test_name 	resume-vlec-eat-memory
+test_description Resuming from a VLEC error detected during degree 3 causes the compiler to eventually run out of memory.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result 	validity_error TEST2 VLEC
+
+resume_compile
+compile_result 	validity_error TEST2 VLEC
+
+test_end

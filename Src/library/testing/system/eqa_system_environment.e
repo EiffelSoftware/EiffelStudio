@@ -63,7 +63,7 @@ feature {NONE} -- Initialization
 			test_suffix := l_suffix
 		end
 
-feature -- Query
+feature -- Access
 
 	test_set: EQA_SYSTEM_TEST_SET
 			-- Current test set
@@ -82,6 +82,20 @@ feature -- Query
 			-- Directory suffix for `test_set'
 			--
 			-- Note: this should be unique for all tests, so each test has its private testing directory
+
+	executable_name: READABLE_STRING_8
+			-- Executable for launching the system under test.
+		local
+			l_exec_env: EXECUTION_ENVIRONMENT
+			l_cmd: detachable STRING
+		do
+			l_cmd := get (executable_env)
+			if l_cmd = Void then
+				create l_exec_env
+				l_cmd := l_exec_env.command_line.argument (0)
+			end
+			Result := substitute_recursive (l_cmd)
+		end
 
 feature -- Command
 
@@ -208,6 +222,11 @@ feature -- Command
 			Result := get (a_var)
 		end
 
+feature -- Constants
+
+	executable_env: STRING = "EQA_EXECUTABLE"
+			-- Name of environment variable holding executable name
+
 feature {NONE} -- Constants
 
 	source_env: STRING = "EQA_SOURCE"
@@ -258,7 +277,7 @@ invariant
 	test_suffix_not_empty: not test_suffix.is_empty
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

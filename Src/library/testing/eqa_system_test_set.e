@@ -19,7 +19,7 @@ inherit
 			on_clean_frozen
 		end
 
-feature {EQA_SYSTEM_EXECUTION, EQA_ACCESS} -- Access
+feature {EQA_EXECUTION, EQA_ACCESS} -- Access
 
 	file_system: EQA_FILE_SYSTEM
 			-- File system for creating directories and files

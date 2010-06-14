@@ -14,57 +14,124 @@ class
 	EQA_EW_EIFFEL_COMPILATION
 
 create
-	make
+	make_and_launch
 
 feature {NONE} -- Creation method
 
-	make (a_cmd: STRING; a_args: LIST [STRING]; a_save: STRING; a_test_set: EQA_EW_SYSTEM_TEST_SET)
+	make_and_launch (a_args: LIST [STRING]; a_save: STRING; a_test_set: EQA_EW_SYSTEM_TEST_SET)
 			-- Start a new Eiffel compilation process to
-			-- run command `a_cmd' with arguments `a_args'.
+			-- run command system with arguments `a_args'.
 			-- Write all output from the new process to
 			-- file `a_save'.
 		require
-			command_not_void: a_cmd /= Void
 			arguments_not_void: a_args /= Void
 			save_name_not_void: a_save /= Void
 			not_void: attached a_test_set
 		local
-			l_args: ARRAY [STRING]
-			l_processor: EQA_EW_COMPILATION_OUTPUT_PROCESSOR
+			l_output_dir: detachable STRING
+			l_output: EQA_SYSTEM_PATH
 		do
-			a_test_set.environment.put (a_cmd, "EQA_EXECUTABLE") -- How to get {EQA_SYSTEM_EXECUTION}.executable_env ?
+			create output_processor.make
+
+			l_output_dir := a_test_set.environment.value ({EQA_EW_PREDEFINED_VARIABLES}.Output_dir_name)
+			check l_output_dir /= Void end
+			l_output_dir := "output"
+			if a_save.is_empty then
+				create l_output.make (<< l_output_dir, a_test_set.e_compile_output_name >>)
+			else
+				create l_output.make (<< l_output_dir, a_save >>)
+			end
+
+			create execution.make (a_test_set.environment)
+			execution.set_output_path (l_output)
+			execution.set_output_processor (output_processor)
 
 			from
-				create l_args.make (0, a_args.count - 1)
 				a_args.start
 			until
 				a_args.after
 			loop
-				l_args.put (a_args.item, a_args.index - 1)
-
+				execution.add_argument (a_args.item_for_iteration)
 				a_args.forth
 			end
 
-			savefile_name := a_save
-
-			create l_processor.make (a_test_set)
-			a_test_set.set_output_processor (l_processor)
-			a_test_set.set_output_path (a_save)
-
-			a_test_set.run_system (l_args)
-
-			l_processor.write_output_to_file
-			a_test_set.set_e_compilation_result (l_processor.compilation_result)
+			execution.launch
+			run
 		end
+
+feature -- Access
+
+	last_result: EQA_EW_EIFFEL_COMPILATION_RESULT
+			-- Last compilation result
+		do
+			Result := output_processor.current_result
+		end
+
+feature {NONE} -- Access
+
+	execution: EQA_SYSTEM_EXECUTION
+			-- Execution for launching compiler executable
+
+	output_processor: EQA_EW_COMPILATION_OUTPUT_PROCESSOR
+			-- Output processor handling output of `execution'
 
 feature -- Query
 
 	suspended: BOOLEAN
 			-- Is process suspended awaiting user input?
+		do
+			Result := output_processor.current_result.compilation_paused
+		ensure
+			result_implies_launched: Result implies execution.is_launched
+		end
 
-	savefile_name: STRING
-			-- Name of file to which output read from process
-			-- is written, if not Void
+feature -- Basic operations
+
+	resume
+			-- Resume currently suspended compilation
+		require
+			suspended: suspended
+		do
+			output_processor.reset_result
+			execution.put_string ("%N")
+			run
+		end
+
+	abort
+			-- Abort currently suspended compilation
+		require
+			suspended: suspended
+		local
+			l_precompile: BOOLEAN
+		do
+			l_precompile := last_result.missing_precompile
+			output_processor.reset_result
+			if l_precompile then
+				execution.put_string ("n%N")
+			else
+				execution.put_string ("q%N")
+			end
+			execution.process_output_until_exit
+		end
+
+feature {NONE} -- Implementation
+
+	run
+			-- Process compilation output until execution is finished or suspended.
+		require
+			launched: execution.is_launched
+		do
+			from until
+				execution.has_exited or suspended
+			loop
+				execution.process_output
+			end
+		ensure
+			exited_or_suspended: execution.has_exited or suspended
+		end
+
+invariant
+	output_processor_attached_to_execution: execution.output_processor = output_processor
 
 ;note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"

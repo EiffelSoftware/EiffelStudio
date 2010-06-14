@@ -38,8 +38,8 @@ feature -- Command
 				failure_explanation := "compilation not suspended"
 			else
 				a_test.set_e_compile_start_time (os.current_time_in_seconds)
---				l_compilation.resume -- FIXME: not implemented, add `resume' to {EQA_EW_SYSTEM_TEST_SET}?
---				a_test.set_e_compilation_result (l_compilation.next_compile_result)
+				l_compilation.resume
+				a_test.set_e_compilation_result (l_compilation.last_result)
 				execute_ok := True
 			end
 		end

@@ -111,9 +111,8 @@ feature -- Command
 			end
 
 			if not execute_ok then
-				l_failure_explanation := failure_explanation
-				check attached l_failure_explanation end -- Implied by previous if clauses
-				assert.assert (l_failure_explanation, False)
+				print (failure_explanation)
+				a_test.assert ("Unexpected compilation result", False)
 			end
 		end
 

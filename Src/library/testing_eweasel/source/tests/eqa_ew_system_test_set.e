@@ -65,11 +65,9 @@ feature {NONE} -- Initialization
 --			a_env.put ("/usr/local/Eiffel65/studio/spec/linux-x86/bin/ec", "EQA_EXECUTABLE")
 			a_env.put ( a_env.substitute_recursive ("$ISE_EIFFEL/precomp/spec/$ISE_PLATFORM/base.ecf"), "PRECOMPILED_BASE")
 			a_env.put (a_env.substitute_recursive  ("$ISE_EIFFEL/precomp/spec/$ISE_PLATFORM/base-mt.ecf"), "PRECOMPILED_BASE_MT")
-			a_env.put (a_env.substitute_recursive ("$ISE_EIFFEL/experimental/precomp/spec/$ISE_PLATFORM/base-safe.ecf"), "PRECOMPILED_BASE_SAFE")
+			a_env.put (a_env.substitute_recursive ("$ISE_EIFFEL/precomp/spec/$ISE_PLATFORM/base-safe.ecf"), "PRECOMPILED_BASE_SAFE")
 
 			a_env.put ("", "EWEASEL_DOTNET_SETTING")
-
-			a_env.put ("/usr/local/Eiffel65/studio/spec/linux-x86/bin/ec", {EQA_EW_PREDEFINED_VARIABLES}.compile_command_name) -- FIXME: This environment value is used by old eweasel, should be removed?
 
 			a_env.set_source_directory (a_env.substitute_recursive ("$EWEASEL/tests"))
 
@@ -100,6 +98,7 @@ feature {NONE} -- Initialization
 			-- Copy from $EWEASEL\control\unix_platform
 
 			a_env.put (l_util.file_path (<<"$ISE_EIFFEL", "studio", "spec", "$ISE_PLATFORM", "bin", "ec">>), {EQA_EW_PREDEFINED_VARIABLES}.Compile_command_name)
+			a_env.put (l_util.file_path (<<"$ISE_EIFFEL", "studio", "spec", "$ISE_PLATFORM", "bin", "ec">>), {EQA_SYSTEM_ENVIRONMENT}.executable_env)
 			a_env.put (l_util.file_path (<<"$EWEASEL", "bin", "eiffel_freeze">>), {EQA_EW_PREDEFINED_VARIABLES}.Freeze_command_name)
 			a_env.put (l_util.file_path (<<"$EWEASEL", "bin", "eiffel_execute">>), {EQA_EW_PREDEFINED_VARIABLES}.Execute_command_name)
 		end
@@ -326,7 +325,6 @@ feature {EQA_EW_EIFFEL_COMPILATION, EQA_EW_SYSTEM_EXECUTION, EQA_EW_C_COMPILATIO
 			l_execution := current_execution
 			check attached l_execution end -- Implied by postcondition of `prepare_system_if_needed'
 			l_execution.set_output_processor (a_processor)
-			l_execution.set_error_processor (a_processor)
 		end
 
 	prepare_system_if_needed

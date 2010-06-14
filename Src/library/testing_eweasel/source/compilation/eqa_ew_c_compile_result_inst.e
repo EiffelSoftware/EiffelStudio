@@ -60,8 +60,8 @@ feature -- Command
 			-- Set `execute_ok' to indicate whether successful.
 		local
 			l_cr: detachable EQA_EW_C_COMPILATION_RESULT
-			l_failure_explanation: like failure_explanation
 			l_expected_compile_result: like expected_compile_result
+			l_failure_explanation: like failure_explanation
 		do
 			l_cr := a_test.c_compilation_result
 			if l_cr = Void then
@@ -87,9 +87,8 @@ feature -- Command
 			end
 
 			if not execute_ok then
-				l_failure_explanation := failure_explanation
-				check attached l_failure_explanation end -- Implied by previous if clause
-				assert.assert (l_failure_explanation, execute_ok)
+				print (failure_explanation)
+				a_test.assert ("Unexpected C compilation result", False)
 			end
 		end
 

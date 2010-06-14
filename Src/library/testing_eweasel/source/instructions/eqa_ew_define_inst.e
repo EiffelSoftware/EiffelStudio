@@ -39,15 +39,15 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_arguments: STRING)
+	make (a_test_set: EQA_EW_SYSTEM_TEST_SET; a_arguments: STRING)
 			-- Creation method
 		require
 			not_void: attached a_arguments and then not a_arguments.is_empty
 		do
-			inst_initialize (a_arguments)
+			inst_initialize (a_test_set, a_arguments)
 		end
 
-	inst_initialize (a_line: STRING)
+	inst_initialize (a_test_set: EQA_EW_SYSTEM_TEST_SET; a_line: STRING)
 			-- Initialize instruction from `a_line'.  Set
 			-- `init_ok' to indicate whether
 			-- initialization was successful.
@@ -99,9 +99,8 @@ feature {NONE} -- Initialization
 			end
 
 			if not init_ok then
-				l_failure_explanation := failure_explanation
-				check attached l_failure_explanation end -- Implied by previous if clause
-				assert.assert (l_failure_explanation, False)
+				print (failure_explanation)
+				a_test_set.assert ("Invalid define instruction", False)
 			end
 		end
 

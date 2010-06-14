@@ -16,20 +16,19 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_line: STRING)
+	make (a_test_set: EQA_EW_SYSTEM_TEST_SET; a_line: STRING)
 			-- Creation method
 		do
-			inst_initialize (a_line)
+			inst_initialize (a_test_set, a_line)
 		end
 
-	inst_initialize (a_line: STRING)
+	inst_initialize (a_test_set: EQA_EW_SYSTEM_TEST_SET; a_line: STRING)
 			-- Initialize instruction from `a_line'.  Set
 			-- `init_ok' to indicate whether
 			-- initialization was successful.
 		local
 			l_args: LIST [STRING]
 			l_arguments: like arguments
-			l_failure_explanation: like failure_explanation
 		do
 			l_args := string_util.broken_into_words (a_line)
 			if l_args.count < 2 then
@@ -59,9 +58,8 @@ feature {NONE} -- Initialization
 				init_ok := True
 			end
 			if not init_ok then
-				l_failure_explanation := failure_explanation
-				check attached l_failure_explanation end -- Implied by previous if clause
-				assert.assert (l_failure_explanation, False)
+				print (failure_explanation)
+				a_test_set.assert ("Invalid execute instruction", False)
 			end
 		end
 
@@ -82,7 +80,7 @@ feature -- Command
 		local
 			l_prog, l_savefile: STRING
 			l_execute_cmd, l_source_dir_name, l_infile, l_outfile: detachable STRING
-			l_exec_error, l_exec_dir, l_output_dir, l_failure_explanation: detachable STRING
+			l_exec_error, l_exec_dir, l_output_dir: detachable STRING
 			l_prog_file, l_input_file: RAW_FILE
 			l_execution: EQA_EW_SYSTEM_EXECUTION
 			l_file_system: EQA_FILE_SYSTEM
@@ -147,9 +145,8 @@ feature -- Command
 			end
 
 			if not execute_ok then
-				l_failure_explanation := failure_explanation
-				check attached l_failure_explanation end -- Implied by previous if clauses
-				assert.assert (l_failure_explanation, execute_ok)
+				print (failure_explanation)
+				a_test.assert ("Execution failure", execute_ok)
 			end
 		end
 

@@ -33,20 +33,25 @@ feature {NONE} -- Intialization
 			directory_not_void: a_dir /= Void
 			save_name_not_void: a_savef /= Void
 		local
-			l_real_args: ARRAYED_LIST [STRING]
+			l_execution: EQA_EXECUTION
 			l_processor: EQA_EW_EXECUTION_OUTPUT_PROCESSOR
 			l_path: EQA_SYSTEM_PATH
 		do
-			a_test_set.environment.put (a_execute_cmd, "EQA_EXECUTABLE") -- How to get {EQA_SYSTEM_EXECUTION}.executable_env ?
+			create l_execution.make (a_test_set.environment, a_execute_cmd)
 
-			create l_real_args.make (a_args.count + 2)
-			l_real_args.extend (a_dir)
-			l_real_args.extend (a_prog)
-			l_real_args.finish
-			l_real_args.merge_right (a_args)
+			l_execution.add_argument (a_dir)
+			l_execution.add_argument (a_prog)
+			from
+				a_args.start
+			until
+				a_args.after
+			loop
+				l_execution.add_argument (a_args.item_for_iteration)
+				a_args.forth
+			end
 
 			create l_processor.make (a_test_set, a_savef)
-
+			l_execution.set_output_processor (l_processor)
 
 			-- When {EQA_SYSTEM_EXECUTION}.launch, Testing library would open and write `set_output_path'
 			-- FIXME: what is following `set_output_path' really used for...?
@@ -57,11 +62,10 @@ feature {NONE} -- Intialization
 --				a_test_set.set_output_path (a_test_set.execution_output_name)
 				create l_path.make (<<a_test_set.execution_output_name>>)
 			end
-			a_test_set.prepare_system (l_path)
-			a_test_set.set_output_processor (l_processor)
+			l_execution.set_output_path (l_path)
 
-			a_test_set.run_system (l_real_args.to_array)
-
+			l_execution.launch
+			l_execution.process_output_until_exit
 			l_processor.write_output_to_file
 			a_test_set.set_execution_result (l_processor.execution_result)
 		end

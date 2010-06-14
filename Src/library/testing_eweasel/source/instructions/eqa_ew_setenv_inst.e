@@ -30,20 +30,19 @@ create
 
 feature {NONE} -- Intialization
 
-	make (a_line: STRING)
+	make (a_test_set: EQA_EW_SYSTEM_TEST_SET; a_line: STRING)
 			-- Creation method
 		do
-			inst_initialize (a_line)
+			inst_initialize (a_test_set, a_line)
 		end
 
-	inst_initialize (a_line: STRING)
+	inst_initialize (a_test_set: EQA_EW_SYSTEM_TEST_SET; a_line: STRING)
 			-- Initialize instruction from `a_line'.  Set
 			-- `init_ok' to indicate whether
 			-- initialization was successful.
 		local
 			l_args: LIST [STRING]
 			l_count, l_pos: INTEGER
-			l_failure_explanation: like failure_explanation
 			l_value: like value
 		do
 			l_args := string_util.broken_into_words (a_line)
@@ -52,14 +51,10 @@ feature {NONE} -- Intialization
 				failure_explanation := "argument count must be at least 2"
 				init_ok := False
 			elseif l_args.first.has ('%/0/') then
-				create l_failure_explanation.make (0)
-				failure_explanation := l_failure_explanation
-				l_failure_explanation.append ("environment variable name contains null character")
+				failure_explanation := "environment variable name contains null character"
 				init_ok := False
 			elseif l_args.i_th (2).has ('%/0/') then
-				create l_failure_explanation.make (0)
-				failure_explanation := l_failure_explanation
-				l_failure_explanation.append ("environment variable value contains null character")
+				failure_explanation := "environment variable value contains null character"
 				init_ok := False
 			elseif l_count = 2 then
 				variable := l_args.i_th (1)
@@ -89,9 +84,9 @@ feature {NONE} -- Intialization
 			end
 
 			if not init_ok then
-				l_failure_explanation := failure_explanation
-				check attached l_failure_explanation end -- Implied by previous if clause
-				assert.assert (l_failure_explanation, False)
+				print (failure_explanation)
+				a_test_set.assert ("Invalid setenv instruction", False)
+
 			end
 		end
 

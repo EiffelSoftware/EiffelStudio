@@ -23,42 +23,25 @@ create
 
 feature {NONE} -- Initializatin
 
-	make (a_test_set: EQA_EW_SYSTEM_TEST_SET)
-			-- Creation method
-		require
-			not_void: attached a_test_set
+	make
+			-- Initialize `Current' with empty result.
 		do
 			initialize_buffer
-			test_set := a_test_set
-			create cached_whole_file.make_empty
-		ensure
-			set: test_set = a_test_set
-		end
-
-feature -- Command
-
-	write_output_to_file
-			-- Write `cached_whole_file' to output file
-		local
-			l_file: PLAIN_TEXT_FILE
-			l_path: EQA_EW_STRING_UTILITIES
-			l_output_value: detachable STRING
-		do
-			create l_path
-			l_output_value := test_set.environment.value ({EQA_EW_PREDEFINED_VARIABLES}.Output_dir_name)
-			check attached l_output_value end -- FIXME: Implied by...environment must be prepare before testing?
-			create l_file.make (l_path.file_path (<<l_output_value, test_set.e_compile_output_name>>))
-			l_file.open_read_append
-
-			l_file.put_string (cached_whole_file)
-
-			l_file.close
+			reset_result
 		end
 
 feature -- Query
 
-	compilation_result: detachable EQA_EW_EIFFEL_COMPILATION_RESULT
-			-- Compilation result
+	current_result: EQA_EW_EIFFEL_COMPILATION_RESULT
+			-- Current compilation result obtained from processing output
+
+feature {EQA_EW_EIFFEL_COMPILATION} -- Baseic operations
+
+	reset_result
+			-- Reset `current_result' with a default result.
+		do
+			create current_result
+		end
 
 feature {NONE} -- Implementation
 
@@ -69,27 +52,11 @@ feature {NONE} -- Implementation
 
 	on_new_line
 			-- <Precursor>
-		local
-			l_result: like compilation_result
 		do
-			if not attached compilation_result then
-				create compilation_result
-			end
-			l_result := compilation_result
-			check attached l_result end -- Implied by previous if clause
-			l_result.update (buffer.twin)
-			-- Write to output file
-
-			cached_whole_file.append (buffer.twin + "%N")
+			current_result.update (buffer)
 		end
 
-	test_set: EQA_EW_SYSTEM_TEST_SET
-			-- System level test set current managed
-
-	cached_whole_file: STRING
-			-- Cached whole output file
-
-;note
+note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

@@ -23,18 +23,16 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_sys_name: STRING)
+	make (a_test_set: EQA_EW_SYSTEM_TEST_SET; a_sys_name: STRING)
 			-- Creation method
 		do
-			inst_initialize (a_sys_name)
+			inst_initialize (a_test_set, a_sys_name)
 		end
 
-	inst_initialize (sys: STRING)
+	inst_initialize (a_test_set: EQA_EW_SYSTEM_TEST_SET; sys: STRING)
 			-- Initialize instruction from `sys'.
 			-- Set `init_ok' to indicate whether initialization
 			-- was successful.
-		local
-			l_failure_explanation: like failure_explanation
 		do
 			if sys.count = 0 or string_util.first_white_position (sys) > 0 then
 				init_ok := False
@@ -45,9 +43,8 @@ feature {NONE} -- Initialization
 			end
 
 			if not init_ok then
-				l_failure_explanation := failure_explanation
-				check attached l_failure_explanation end -- Implied by previous if clause
-				assert.assert (l_failure_explanation, False)
+				print (failure_explanation)
+				a_test_set.assert ("Invalid system instruction", False)
 			end
 		end
 

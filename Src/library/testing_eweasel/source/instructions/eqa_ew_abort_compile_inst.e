@@ -18,7 +18,7 @@ inherit
 	EQA_EW_TEST_INSTRUCTION
 
 	EQA_ACCESS
-	
+
 create
 	make
 
@@ -64,7 +64,7 @@ feature -- Command
 				execute_ok := False
 				failure_explanation := "compilation not suspended"
 			else
---				l_compilation.abort -- FIXME: not implemented, add `abort' to {EQA_EW_SYSTEM_TEST_SET}?
+				l_compilation.abort
 				l_dir := a_test.environment.target_directory
 				check attached l_dir end -- Implied by environment values have been set before executing tests
 				l_dir := string_util.file_path (<<l_dir, {EQA_EW_EIFFEL_TEST_CONSTANTS}.Eiffel_gen_directory>>)

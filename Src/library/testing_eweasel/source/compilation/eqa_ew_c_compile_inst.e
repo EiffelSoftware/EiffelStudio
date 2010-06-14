@@ -48,7 +48,7 @@ feature -- Command
 			-- Set `execute_ok' to indicate whether successful.
 		local
 			l_save: STRING
-			l_freeze_cmd, l_exec_error, l_dir, l_output_dir, l_failure_explanation: detachable STRING
+			l_freeze_cmd, l_exec_error, l_dir, l_output_dir: detachable STRING
 			l_max_c_processes: INTEGER
 			l_compilation: EQA_EW_C_COMPILATION
 			l_file_system: EQA_FILE_SYSTEM
@@ -81,9 +81,8 @@ feature -- Command
 			end
 
 			if not execute_ok then
-				l_failure_explanation := failure_explanation
-				check attached l_failure_explanation end -- Implied by previous if clauses
-				assert.assert (l_failure_explanation, execute_ok)
+				print (failure_explanation)
+				a_test.assert ("C compilation failure", False)
 			end
 		end
 

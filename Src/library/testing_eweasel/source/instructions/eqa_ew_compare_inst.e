@@ -19,7 +19,7 @@ inherit
 	EQA_EW_TEST_INSTRUCTION
 
 	EQA_ACCESS
-	
+
 create
 	make
 
@@ -45,7 +45,6 @@ feature -- Command
 			l_act_name, l_exp_name: STRING
 			l_actual, l_expected: RAW_FILE
 			l_output_dir: detachable STRING
-			l_failure_explanation: like failure_explanation
 		do
 			execute_ok := False
 			l_output_dir := a_test.environment.value ({EQA_EW_PREDEFINED_VARIABLES}.Output_dir_name)
@@ -71,14 +70,10 @@ feature -- Command
 			end
 
 			if not execute_ok then
-				l_failure_explanation := failure_explanation
-				check attached l_failure_explanation end -- Implied by previous if clause
-				assert.assert (l_failure_explanation, execute_ok)
+				print (failure_explanation)
+				a_test.assert ("comparison failed", False)
 			end
 		end
-
-	init_ok: BOOLEAN
-			-- Was last call to `initialize' successful?
 
 	execute_ok: BOOLEAN
 			-- Was last call to `execute' successful?

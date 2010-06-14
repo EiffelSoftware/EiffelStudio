@@ -30,12 +30,11 @@ feature -- Command
 			-- <Precursor>
 		local
 			l_name: STRING
-			l_compile_cmd, l_exec_error: detachable STRING
+			l_exec_error: detachable STRING
 			l_compilation: detachable EQA_EW_EIFFEL_COMPILATION
 			l_curr_dir: STRING
 			l_test_dir: detachable STRING
 			l_file_system: EQA_FILE_SYSTEM
-			l_failure_explanation: like failure_explanation
 		do
 			-- Work around a bug in Eiffel 4.2 (can't start
 			-- es4 on existing project unless project directory
@@ -46,11 +45,8 @@ feature -- Command
 
 			l_compilation := a_test.e_compilation
 			if l_compilation = Void or else not l_compilation.suspended then
-				l_compile_cmd := a_test.environment.value ({EQA_EW_PREDEFINED_VARIABLES}.Compile_command_name)
-				check attached l_compile_cmd end -- Implied by environment values have been set before executing test cases
-				l_compile_cmd := a_test.environment.substitute_recursive (l_compile_cmd)
 				create l_file_system.make (a_test.environment)
-				l_exec_error := l_file_system.executable_file_exists (l_compile_cmd)
+				l_exec_error := l_file_system.executable_file_exists (a_test.environment.executable_name)
 				if l_exec_error = Void then
 					a_test.increment_e_compile_count
 					a_test.set_e_compile_start_time (os.current_time_in_seconds)
@@ -59,20 +55,21 @@ feature -- Command
 					else
 						l_name := a_test.e_compile_output_name
 					end
-					create l_compilation.make (l_compile_cmd, compiler_arguments (a_test, a_test.environment), l_name, a_test)
+					create l_compilation.make_and_launch (compiler_arguments (a_test, a_test.environment), l_name, a_test)
 					a_test.set_e_compilation (l_compilation)
+					a_test.set_e_compilation_result (l_compilation.last_result)
 
 					execute_ok := True
 				else
 					failure_explanation := l_exec_error
 					execute_ok := False
-					assert.assert (l_exec_error, False)
+					print (failure_explanation)
+					a_test.assert ("Compilation failed", False)
 				end
 			else
-				assert.assert ("suspended compilation in progress", False)
-				l_failure_explanation := "suspended compilation in progress"
-				failure_explanation := l_failure_explanation
-				assert.assert (l_failure_explanation, False)
+				failure_explanation := "suspended compilation in progress"
+				print (failure_explanation)
+				a_test.assert ("Invalid compile instruction", False)
 			end
 			change_working_directory (l_curr_dir)
 		end
@@ -109,6 +106,7 @@ feature {NONE} -- Query
 			l_ecf_name := a_test.ecf_name
 			check attached l_ecf_name end -- Implied by `init_env' is called before each test run
 			Result.extend (string_util.file_path (<<l_test_dir,l_ecf_name>>))
+		--	Result.extend ("-stop")
 		end
 
 	compilation_options: LIST [STRING]

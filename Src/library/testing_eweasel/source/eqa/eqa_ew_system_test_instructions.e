@@ -84,7 +84,7 @@ feature -- Command
 			end
 
 			l_value := test_set.environment.substitute (l_value)
-			create l_inst.make (a_name + " " + l_value)
+			create l_inst.make (test_set, a_name + " " + l_value)
 			l_inst.execute (test_set)
 		end
 
@@ -114,7 +114,7 @@ feature -- Command
 				l_count := l_count + 1
 			end
 			l_path := test_set.environment.substitute (l_path)
-			create l_inst.make (a_name + " " + l_path)
+			create l_inst.make (test_set, a_name + " " + l_path)
 			l_inst.execute (test_set)
 		end
 
@@ -146,7 +146,7 @@ feature -- Command
 			l_path := l_path + " " + a_file_name
 			l_path := test_set.environment.substitute (l_path)
 
-			create l_inst.make (a_name + " " + l_path)
+			create l_inst.make (test_set, a_name + " " + l_path)
 			l_inst.execute (test_set)
 		end
 
@@ -344,7 +344,7 @@ feature -- Command
 				l_temp := l_temp + " " + a_args
 			end
 
-			create l_inst.make (l_temp)
+			create l_inst.make (test_set, l_temp)
 			l_inst.execute (test_set)
 		end
 
@@ -363,7 +363,7 @@ feature -- Command
 				l_temp := l_temp + " " + a_args
 			end
 
-			create l_inst.make (l_temp)
+			create l_inst.make (test_set, l_temp)
 			l_inst.execute (test_set)
 		end
 
@@ -528,7 +528,7 @@ feature -- Command
 		local
 			l_inst: EQA_EW_SETENV_INST
 		do
-			create l_inst.make (a_name + " " + a_value)
+			create l_inst.make (test_set, a_name + " " + a_value)
 			l_inst.execute (test_set)
 		end
 
@@ -546,7 +546,7 @@ feature -- Command
 		do
 			l_system_name := test_set.environment.substitute (a_system_name)
 
-			create l_inst.make (l_system_name)
+			create l_inst.make (test_set, l_system_name)
 			l_inst.execute (test_set)
 		end
 

@@ -70,7 +70,6 @@ feature -- Commannd
 			l_before_date, l_after_date: INTEGER
 			l_orig_date, l_final_date: INTEGER
 			l_file_system: EQA_FILE_SYSTEM
-			l_error: STRING
 			l_source_dir: detachable STRING
 		do
 			dest_directory := test_set.environment.substitute_recursive (dest_directory)
@@ -120,41 +119,39 @@ feature -- Commannd
 					if l_final_date <= l_orig_date then
 						-- Work around possible Linux bug
 						if l_after_date <= l_orig_date then
-							l_error := "ERROR: After date " + l_after_date.out + " not greater than original date " + l_orig_date.out
-							assert.assert (l_error, False)
+							failure_explanation := "ERROR: After date " + l_after_date.out + " not greater than original date " + l_orig_date.out
+							print (failure_explanation)
+							a_test.assert (exception_tag, False)
 						else
 							l_dest.set_date (l_after_date)
 							l_final_date := l_dest.date
 							if l_final_date /= l_after_date then
-								l_error := "ERROR: failed to set dest modification date to " + l_after_date.out
-								assert.assert (l_error, False)
+								failure_explanation := "ERROR: failed to set dest modification date to " + l_after_date.out
+								print (failure_explanation)
+								a_test.assert (exception_tag, False)
 							end
 						end
 					end
 
-					check_dates (test_set.e_compile_start_time, l_orig_date, l_final_date, l_before_date, l_after_date, l_dest_name)
+					check_dates (test_set, test_set.e_compile_start_time, l_orig_date, l_final_date, l_before_date, l_after_date, l_dest_name)
 
 					test_set.unset_copy_wait
 				end
 				execute_ok := True
 			elseif not l_src.exists then
-				l_error := "source file not found"
-				failure_explanation := l_error
-				assert.assert (l_error, False)
+				failure_explanation := "source file not found"
 			elseif not l_src.is_plain then
-				l_error := "source file not a plain file"
-				failure_explanation := l_error
-				assert.assert (l_error, False)
+				failure_explanation := "source file not a plain file"
 			elseif not l_dir.exists then
-				l_error := "destination directory not found"
-				failure_explanation := l_error
-				assert.assert (l_error, False)
+				failure_explanation := "destination directory not found"
 			elseif not l_dir.is_directory then
-				l_error := "destination directory not a directory"
-				failure_explanation := l_error
-				assert.assert (l_error, False)
+				failure_explanation := "destination directory not a directory"
 			end
 
+			if not execute_ok then
+				print (failure_explanation)
+				a_test.assert (exception_tag, False)
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -194,7 +191,7 @@ feature {NONE} -- Implementation
 			Result := test_set.environment.get ({EQA_EW_PREDEFINED_VARIABLES}.Eweasel_fast_name) /= Void
 		end
 
-	check_dates (a_start_date, a_orig_date, a_final_date, a_before_date, a_after_date: INTEGER a_fname: STRING)
+	check_dates (a_test: EQA_EW_SYSTEM_TEST_SET; a_start_date, a_orig_date, a_final_date, a_before_date, a_after_date: INTEGER a_fname: STRING)
 			-- Check if date correct
 		local
 			l_error: STRING
@@ -202,7 +199,8 @@ feature {NONE} -- Implementation
 			if a_final_date <= a_orig_date then
 				l_error := "ERROR: final date " + a_final_date.out + " not greater than original date " + a_orig_date.out + " for file " + a_fname
 				l_error.append ("Compile start = " + a_start_date.out + " Before = " + a_before_date.out + " After = " + a_after_date.out)
-				assert.assert (l_error, False)
+				print (l_error)
+				a_test.assert (exception_tag, False)
 			end
 		end
 
@@ -214,6 +212,11 @@ feature {NONE} -- Implementation
 
 	source_file: STRING
 			-- Name of source file (always in source directory)
+
+feature {NONE} -- Constants
+
+	exception_tag: STRING = "Invalid file copy"
+			-- Tag for an exception thrown in `Current'
 
 ;note
 	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"

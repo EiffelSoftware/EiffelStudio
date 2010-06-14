@@ -194,7 +194,7 @@ feature {NONE} -- Implementation
 			end
 
 				-- build hashtable which maps the contents in dst to their lines
-			create hash_dst.make (end_dst - start_dst)
+			create hash_dst.make ((end_dst - start_dst).max (0))
 			from
 				i := start_dst
 			until
@@ -315,7 +315,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

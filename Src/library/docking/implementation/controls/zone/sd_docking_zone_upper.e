@@ -171,6 +171,14 @@ feature -- Redefine
 			end
 		end
 
+feature -- Query
+
+	is_normal_max_enabled: BOOLEAN
+			-- If normal max zone mechnism enabled?
+		do
+			Result := notebook.is_normal_max_button_enabled
+		end
+
 feature {SD_DOCKING_STATE} -- Query
 
 	notebook: SD_NOTEBOOK_UPPER
@@ -185,13 +193,16 @@ feature {NONE} -- Implementation
 		end
 
 	on_normal_max_window
+			-- <Precursor>
 		do
-			-- We need to remove the minimized state when either
-			-- selecting `restore' or `maximize'.
-			if is_minimized then
-				recover_normal_size_from_minimize
+			if is_normal_max_enabled then
+				-- We need to remove the minimized state when either
+				-- selecting `restore' or `maximize'.
+				if is_minimized then
+					recover_normal_size_from_minimize
+				end
+				Precursor
 			end
-			Precursor
 		end
 
 invariant

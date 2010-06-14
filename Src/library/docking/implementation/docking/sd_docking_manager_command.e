@@ -465,6 +465,12 @@ feature -- Commands
 					l_editor_area.extend (l_editor_parent)
 
 					docking_manager.command.resize (True)
+					if attached {SD_UPPER_ZONE} l_editor_parent as l_only_one_editor_zone then
+						-- Only one editor zone in whole editor area, disable maximize/minimize icon in the tab bar
+						-- Otherwise, end user would be confused
+						-- See bug#16834
+						l_only_one_editor_zone.disable_maximize_minimize_buttons
+					end
 				end
 			end
 		end
@@ -491,6 +497,13 @@ feature -- Commands
 				l_main_area.extend (l_orignal_whole_item)
 
 				docking_manager.command.resize (True)
+				if attached {SD_UPPER_ZONE} l_orignal_editor_parent.item as l_only_one_editor_zone then
+					-- Only one editor zone in whole editor area, disable maximize/minimize icon in the tab bar
+					-- Otherwise, end user would be confused
+					-- See bug#16834
+					l_only_one_editor_zone.enable_maximize_minimize_buttons
+				end
+
 				l_main_area.restore_spliter_position (l_orignal_whole_item, generating_type + ".maximize_editor_area")
 
 				orignal_editor_parent := Void

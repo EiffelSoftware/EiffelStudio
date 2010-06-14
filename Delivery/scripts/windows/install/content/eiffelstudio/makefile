@@ -39,7 +39,7 @@ studio_gcc.wxs:
 studio_core.wxs:
 	$(HALLOW) $(HALLOW_FLAGS) "$(INSTALL_DIR)\EiffelStudio" -dr:"INSTALLDIR" \
 		-de:"\\EiffelStudio\\library$$" -de:"\\EiffelStudio\\examples$$" \
-		-de:"\\EiffelStudio\\compatible$$" \ -de:"\\EiffelStudio\\gcc$$" \
+		-de:"\\EiffelStudio\\compatible$$" -de:"\\EiffelStudio\\gcc$$" \
 		-de:"\\EiffelStudio\\experimental$$" \
 		-fe:"\\EiffelStudio\\studio\\spec\\w.*\\estudio.exe$$" \
 		-fe:"\\EiffelStudio\\esbuilder\\spec\\w.*\\esbuilder.exe$$" \

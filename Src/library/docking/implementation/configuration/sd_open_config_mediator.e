@@ -77,8 +77,11 @@ feature -- Open inner container data.
 					internal_docking_manager.command.lock_update (Void, True)
 
 					cleaner.clean_up_all_editors
+					check not l_top_parent.full end
+					if not l_top_parent.full then
+						open_inner_container_data (l_data, l_top_parent)
+					end
 
-					open_inner_container_data (l_data, l_top_parent)
 					if attached {EV_SPLIT_AREA} l_top_parent as l_split_area then
 						if l_split_area.first /= Void then
 							if attached {EV_SPLIT_AREA} l_split_area.first as l_split_area_2 then
@@ -206,6 +209,8 @@ feature {NONE} -- Implementation
 			l_called: BOOLEAN
 			l_retried: BOOLEAN
 			l_cmd: SD_DOCKING_MANAGER_COMMAND
+			l_inner_container_main: EV_CONTAINER
+			l_tool_bar_data: ARRAYED_LIST [SD_TOOL_BAR_DATA]
 		do
 			found_place_holder_already := False
 			internal_docking_manager.property.set_is_opening_config (True)
@@ -238,10 +243,16 @@ feature {NONE} -- Implementation
 						internal_docking_manager.tool_bar_manager.unlock
 					end
 
-					open_tool_bar_data (l_config_data.tool_bar_data)
+					l_tool_bar_data := l_config_data.tool_bar_data
+					if l_tool_bar_data.count >= 4 then
+						open_tool_bar_data (l_tool_bar_data)
+					end
 
-					check not internal_docking_manager.query.inner_container_main.full end
-					open_all_inner_containers_data (l_config_data)
+					l_inner_container_main := internal_docking_manager.query.inner_container_main
+					check not l_inner_container_main.full end
+					if not l_inner_container_main.full then
+						open_all_inner_containers_data (l_config_data)
+					end
 
 					-- Restore auto hide zone.
 					open_auto_hide_panel_data (l_config_data.auto_hide_panels_data)
@@ -404,6 +415,7 @@ feature {NONE} -- Implementation
 			l_data_item: SD_INNER_CONTAINER_DATA
 			l_floating_state: SD_FLOATING_STATE
 			l_multi_dock_area: SD_MULTI_DOCK_AREA
+			l_inner_container_main, l_inner_container: EV_CONTAINER
 		do
 			l_data := a_config_data.inner_container_data
 			from
@@ -414,7 +426,11 @@ feature {NONE} -- Implementation
 				l_data_item := l_data.item
 				if l_data.index = 1 then
 					if l_data_item /= Void then
-						open_inner_container_data (l_data_item, internal_docking_manager.query.inner_container_main)
+						l_inner_container_main := internal_docking_manager.query.inner_container_main
+						check not l_inner_container_main.full end
+						if not l_inner_container_main.full then
+							open_inner_container_data (l_data_item, l_inner_container_main)
+						end
 					end
 					l_multi_dock_area := internal_docking_manager.query.inner_container_main
 				else
@@ -422,7 +438,12 @@ feature {NONE} -- Implementation
 					l_floating_state.set_last_floating_height (l_data_item.height)
 					l_floating_state.set_last_floating_width (l_data_item.width)
 					l_floating_state.set_size (l_data_item.width, l_data_item.height)
-					open_inner_container_data (l_data_item, l_floating_state.inner_container)
+					l_inner_container := l_floating_state.inner_container
+					check not l_inner_container.full end
+					if not l_inner_container.full then
+						open_inner_container_data (l_data_item, l_inner_container)
+					end
+
 					l_multi_dock_area := l_floating_state.inner_container
 					internal_docking_manager.inner_containers.extend (l_multi_dock_area)
 				end
@@ -523,13 +544,19 @@ feature {NONE} -- Implementation
 				a_container.extend (l_temp_spliter)
 				-- Go on recurisve
 				if attached a_config_data.children_left as l_left_data then
-					open_inner_container_data (l_left_data, l_temp_spliter)
+					check not l_temp_spliter.full end
+					if not l_temp_spliter.full then
+						open_inner_container_data (l_left_data, l_temp_spliter)
+					end
 				else
 					check False end -- Implied by basic design of {SD_INNER_CONTAINER_DATA} and it's split area data
 				end
 
 				if attached a_config_data.children_right as l_right_data then
-					open_inner_container_data (l_right_data, l_temp_spliter)
+					check not l_temp_spliter.full end
+					if not l_temp_spliter.full then
+						open_inner_container_data (l_right_data, l_temp_spliter)
+					end
 				else
 					check a_config_data.children_right /= Void  end
 				end

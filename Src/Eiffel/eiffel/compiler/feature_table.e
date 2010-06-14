@@ -91,6 +91,8 @@ inherit
 		export
 			{NONE}
 				clear_all, wipe_out, extend
+		redefine
+			cursor, valid_cursor, go_to
 		end
 
 	INTERNAL_COMPILER_STRING_EXPORTER
@@ -304,6 +306,36 @@ feature -- HASH_TABLE like feature
 				end
 			end
 		end
+
+	cursor: CURSOR
+			-- <Precursor>
+		do
+			if attached feature_table as l_feat_tbl then
+				Result := l_feat_tbl.cursor
+			else
+				Result := Precursor
+			end
+		end
+
+	valid_cursor (c: CURSOR): BOOLEAN
+			-- <Precursor>
+		do
+			if attached feature_table as l_feat_tbl then
+				Result := l_feat_tbl.valid_cursor (c)
+			else
+				Result := Precursor (c)
+			end
+		end
+
+     go_to (c: CURSOR)
+ 			-- <Precursor>
+          do
+             if attached feature_table as l_feat_tbl then
+                 l_feat_tbl.go_to (c)
+             else
+                 Precursor (c)
+             end
+         end
 
 feature {NONE} -- HASH_TABLE like features
 

@@ -1,5 +1,5 @@
 note
-	description: "A content which has client prgrammer's widgets managed by docking library."
+	description: "A content which has client programmer's widgets managed by docking library."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -76,16 +76,20 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	user_widget: attached like internal_user_widget
+	user_widget: EV_WIDGET
 			-- Client programmer's widget
 		require
 			set: is_user_widget_set
 		local
-			l_result: detachable like user_widget
+			l_result: like internal_user_widget
 		do
 			l_result := internal_user_widget
-			check l_result /= Void end -- Implied by precondition `set'
-			Result := l_result
+			check 
+				-- Implied by precondition `set'
+				l_result /= Void
+			then
+				Result := l_result
+			end
 		ensure
 			not_void: Result /= Void
 			result_valid: Result = internal_user_widget
@@ -214,23 +218,14 @@ feature -- Access
 	state_value: INTEGER
 			-- Current state.
 			-- Note, it's possible result is {SD_ENUMERATION}.auto_hide, but `is_visible' return False. See bug#13339.
-		local
-			l_void: detachable SD_STATE_VOID
-			l_docking: detachable SD_DOCKING_STATE
-			l_tab: detachable SD_TAB_STATE
-			l_auto_hide: detachable SD_AUTO_HIDE_STATE
 		do
-			l_void ?= state
-			l_docking ?= state
-			l_tab ?= state
-			l_auto_hide ?= state
-			if l_void /= Void then
+			if attached {SD_STATE_VOID} state then
 				Result := {SD_ENUMERATION}.state_void
-			elseif l_docking /= Void then
+			elseif attached {SD_DOCKING_STATE} state then
 				Result := {SD_ENUMERATION}.docking
-			elseif l_tab /= Void then
+			elseif attached {SD_TAB_STATE} state then
 				Result := {SD_ENUMERATION}.tab
-			elseif l_auto_hide /= Void then
+			elseif attached {SD_AUTO_HIDE_STATE} state then
 				Result := {SD_ENUMERATION}.auto_hide
 			end
 		ensure
@@ -426,7 +421,7 @@ feature -- Set Position
 			if attached a_relative.state.zone as l_target_zone then
 				state.change_zone_split_area (l_target_zone, a_direction)
 			else
-				check False end -- Implied by precondition `a_relative_zone_not_void'
+				check a_relative_zone_not_void: False end -- Implied by precondition `a_relative_zone_not_void'
 			end
 
 			if not l_old_is_visible then
@@ -502,20 +497,15 @@ feature -- Set Position
 			manager_has_a_content: manager_has_content (a_content)
 			target_content_zone_parent_exist: target_content_zone_parent_exist (a_content)
 			not_destroyed: not is_destroyed
-		local
-			l_tab_zone: detachable SD_TAB_ZONE
-			l_docking_zone: detachable SD_DOCKING_ZONE
 		do
 			set_visible (True)
-			l_tab_zone ?= a_content.state.zone
-			l_docking_zone ?= a_content.state.zone
-			if l_tab_zone /= Void then
+			if attached {SD_TAB_ZONE} a_content.state.zone as l_tab_zone then
 				if not a_left then
 				 	state.move_to_tab_zone (l_tab_zone, l_tab_zone.count + 1)
 				 else
 				 	state.move_to_tab_zone (l_tab_zone, 1)
 				end
-			elseif l_docking_zone /= Void then
+			elseif attached {SD_DOCKING_ZONE} a_content.state.zone as l_docking_zone then
 				state.move_to_docking_zone (l_docking_zone, a_left)
 			else
 				-- `a_content' is auto hide state, zone is void
@@ -564,16 +554,14 @@ feature -- Actions
 
 	focus_in_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when keyboard focus is gained
-		local
-			l_actions: like internal_focus_in_actions
 		do
 			if not is_ignore_actions then
-				l_actions := internal_focus_in_actions
-				if l_actions = Void then
-					create l_actions
-					internal_focus_in_actions := l_actions
+				if attached internal_focus_in_actions as l_actions then
+					Result := l_actions
+				else
+					create Result 
+					internal_focus_in_actions := Result
 				end
-				Result := l_actions
 			else
 				create Result
 			end
@@ -583,16 +571,14 @@ feature -- Actions
 
 	focus_out_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when keyboard focus is lost
-		local
-			l_actions: like internal_focus_out_actions
 		do
 			if not is_ignore_actions then
-				l_actions := internal_focus_out_actions
-				if l_actions = Void then
-					create l_actions
-					internal_focus_out_actions := l_actions
+				if attached internal_focus_out_actions as l_actions then
+					Result := l_actions
+				else
+					create Result 
+					internal_focus_out_actions := Result
 				end
-				Result := l_actions
 			else
 				create Result
 			end
@@ -602,16 +588,14 @@ feature -- Actions
 
 	close_request_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to perfrom when close requested
-		local
-			l_actions: like internal_close_request_actions
 		do
 			if not is_ignore_actions then
-				l_actions := internal_close_request_actions
-				if l_actions = Void then
-					create l_actions
-					internal_close_request_actions := l_actions
+				if attached internal_close_request_actions as l_actions then
+					Result := l_actions
+				else
+					create Result 
+					internal_close_request_actions := Result
 				end
-				Result := l_actions
 			else
 				create Result
 			end
@@ -621,16 +605,14 @@ feature -- Actions
 
 	drop_actions: EV_PND_ACTION_SEQUENCE
 			-- Drop actions to performed when user drop a pebble on notebook tab
-		local
-			l_actions: like internal_drop_actions
 		do
 			if not is_ignore_actions then
-				l_actions := internal_drop_actions
-				if l_actions = Void then
-					create l_actions
-					internal_drop_actions := l_actions
+				if attached internal_drop_actions as l_actions then
+					Result := l_actions
+				else
+					create Result 
+					internal_drop_actions := Result
 				end
-				Result := l_actions
 			else
 				create Result
 			end
@@ -640,16 +622,14 @@ feature -- Actions
 
 	show_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to perform when `user_widget' is shown
-		local
-			l_actions: like internal_show_actions
 		do
 			if not is_ignore_actions then
-				l_actions := internal_show_actions
-				if l_actions = Void then
-					create l_actions
-					internal_show_actions := l_actions
+				if attached internal_show_actions as l_actions then
+					Result := l_actions
+				else
+					create Result 
+					internal_show_actions := Result
 				end
-				Result := l_actions
 			else
 				create Result
 			end
@@ -660,16 +640,14 @@ feature -- Actions
 	tab_bar_right_blank_area_double_click_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to perform when user double click on notebook tab bar right side blank area
 			-- Only work for up-side notebook tab bar
-		local
-			l_actions: like internal_tab_bar_right_blank_area_double_click_actions
 		do
 			if not is_ignore_actions then
-				l_actions := internal_tab_bar_right_blank_area_double_click_actions
-				if not attached l_actions then
-					create l_actions
-					internal_tab_bar_right_blank_area_double_click_actions := l_actions
+				if attached internal_tab_bar_right_blank_area_double_click_actions as l_actions then
+					Result := l_actions
+				else
+					create Result 
+					internal_tab_bar_right_blank_area_double_click_actions := Result
 				end
-				Result := l_actions
 			else
 				create Result
 			end
@@ -846,24 +824,24 @@ feature -- States report
 	is_user_widget_set: BOOLEAN
 			-- If `internal_user_widget' has been set?
 		do
-			Result := attached internal_user_widget
+			Result := internal_user_widget /= Void
 		end
 
 	is_state_set: BOOLEAN
 			-- If `internal_state' has been set?
 		do
-			Result := attached internal_state
+			Result := internal_state /= Void
 		end
 
 	is_content_zone_set (a_content: SD_CONTENT): BOOLEAN
 			-- If `a_content' has a relative {SD_ZONE} object?
 		do
-			Result := attached a_content.state.zone
+			Result := a_content.state.zone /= Void
 		end
 
 feature {SD_ACCESS} -- State
 
-	state: attached like internal_state
+	state: SD_STATE
 			-- Current state
 		require
 			set: is_state_set
@@ -871,8 +849,12 @@ feature {SD_ACCESS} -- State
 			l_result: like internal_state
 		do
 			l_result := internal_state
-			check l_result /= Void end -- Implied by precondition `set'
-			Result := l_result
+			check 
+				-- Implied by precondition `set'
+				l_result /= Void 
+			then
+				Result := l_result
+			end
 		ensure
 			not_void: Result /= Void
 		end
@@ -888,7 +870,7 @@ feature {SD_DOCKING_MANAGER_AGENTS, SD_DOCKING_MANAGER_ZONES}
 			if a_docking_manager = Void and is_docking_manager_attached then
 				internal_clear_docking_manager_property
 			end
-			precursor {SD_DOCKING_MANAGER_HOLDER} (a_docking_manager)
+			Precursor {SD_DOCKING_MANAGER_HOLDER} (a_docking_manager)
 			l_state_void ?= state
 			if l_state_void /= Void then
 				l_state_void.set_docking_manager (docking_manager)
@@ -905,7 +887,7 @@ feature {SD_STATE} -- implementation
 			end
 		end
 
-	internal_state: detachable SD_STATE
+	internal_state: detachable like state
 			-- SD_STATE instacne, which will be changed base on different states
 
 feature {SD_STATE, SD_DOCKING_MANAGER, SD_TAB_STATE_ASSISTANT, SD_OPEN_CONFIG_MEDIATOR} -- Change the SD_STATE base on the states
@@ -951,7 +933,7 @@ feature {NONE}  -- Implemention
 			Result := is_docking_manager_attached and then docking_manager.is_closing_all
 		end
 
-	internal_user_widget: detachable EV_WIDGET
+	internal_user_widget: detachable like user_widget
 			-- Client programmer's widget
 
 	internal_unique_title: STRING_32
@@ -1015,10 +997,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end

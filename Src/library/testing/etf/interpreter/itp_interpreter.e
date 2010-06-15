@@ -118,7 +118,7 @@ feature -- Status report
 	should_quit: BOOLEAN
 			-- Should main loop quit?
 
-	is_request_type_valid (a_type: NATURAL_32): BOOLEAN is
+	is_request_type_valid (a_type: NATURAL_32): BOOLEAN
 			-- Is `a_type' a valid request type?
 		do
 			Result :=
@@ -223,7 +223,7 @@ feature {NONE} -- Handlers
 			send_response_to_socket
 		end
 
-	refresh_last_response_flag is
+	refresh_last_response_flag
 			-- Refresh the value of `last_response_flag' according to current status.
 		do
 			if has_error then
@@ -610,7 +610,7 @@ feature{NONE} -- Invariant checking
 			-- Is the class invariant violated when `check_invariant' is invoked
 			-- the last time?
 
-	check_invariant (o: detachable ANY) is
+	check_invariant (o: detachable ANY)
 			-- Check if the class invariant `o' is satisfied.
 			-- If not satisfied, set `is_last_invariant_violated' to True
 			-- and raise the exception.
@@ -632,7 +632,7 @@ invariant
 	socket_attached: socket /= Void
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

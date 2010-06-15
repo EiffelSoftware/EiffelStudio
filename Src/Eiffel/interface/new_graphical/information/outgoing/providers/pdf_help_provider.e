@@ -39,7 +39,7 @@ feature -- Basic operations
 			-- <precursor>
 		local
 			l_file_type: BOOLEAN
-			l_str: attached STRING
+			l_str: STRING
 		do
 			if attached {HELP_SECTION_EIS_ENTRY} a_section as lt_section then
 				if attached lt_section.entry as lt_entry and then lt_entry.source /= Void and then attached lt_entry.source.as_string_8.twin as lt_src then
@@ -73,8 +73,11 @@ feature -- Basic operations
 			end
 		end
 
-	append_acrobat_url_arguments (a_string: attached STRING; a_entry: attached EIS_ENTRY)
+	append_acrobat_url_arguments (a_string: STRING; a_entry: EIS_ENTRY)
 			-- Append acrobat url arguments to `a_string'.
+		require
+			a_string_not_void: a_string /= Void
+			a_entry_not_void: a_entry /= Void
 		local
 			l_args: detachable STRING
 		do
@@ -85,8 +88,11 @@ feature -- Basic operations
 			end
 		end
 
-	append_acrobat_command_arguments (a_string: attached STRING; a_entry: attached EIS_ENTRY)
+	append_acrobat_command_arguments (a_string: STRING; a_entry: EIS_ENTRY)
 			-- Append acrobat command arguments to `a_string'.
+		require
+			a_string_not_void: a_string /= Void
+			a_entry_not_void: a_entry /= Void
 		local
 			l_args: detachable STRING
 		do
@@ -99,8 +105,10 @@ feature -- Basic operations
 			end
 		end
 
-	pdf_arguments_from_entry (a_entry: attached EIS_ENTRY): detachable STRING
+	pdf_arguments_from_entry (a_entry: EIS_ENTRY): detachable STRING
 			-- PDF arguments from `a_entry'
+		require
+			a_entry_not_void: a_entry /= Void
 		local
 			l_result: STRING
 			l_found: BOOLEAN
@@ -130,16 +138,22 @@ feature -- Basic operations
 			end
 		end
 
-	quoted_string (a_string: attached STRING): attached STRING
+	quoted_string (a_string: STRING): STRING
 			-- Quoted string of `a_string'
+		require
+			a_string_not_void: a_string /= Void
 		do
 			create Result.make_from_string (a_string)
 			Result.prepend ("%"")
 			Result.append ("%"")
+		ensure
+			Result_not_void: Result /= Void
 		end
 
-	launch_command (a_command: attached STRING_8)
-			-- Launches a command
+	launch_command (a_command: STRING_8)
+			-- Launches a commdand
+		require
+			a_command_not_void: a_command /= Void
 		do
 			if attached (create {PROCESS_FACTORY}).process_launcher (a_command, Void, Void) as l_process then
 				l_process.set_hidden (True)
@@ -170,7 +184,7 @@ feature {NONE} -- Constants
 	acrobat_nameddest: STRING = "nameddest";
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

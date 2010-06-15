@@ -13,11 +13,17 @@ inherit
 
 	CONF_ACCESS
 
+	SHARED_LOCALE
+
+	INTERNAL_COMPILER_STRING_EXPORTER
+
+	SHARED_ENCODING_CONVERTER
+
 feature {NONE} -- Implementation
 
-	fill_from_key_value (a_key: attached STRING;
-						a_value: attached STRING;
-						a_eis_tuple: attached TUPLE [
+	fill_from_key_value (a_key: STRING_32;
+						a_value: STRING_32;
+						a_eis_tuple: TUPLE [
 											name: STRING_32;
 											protocol: STRING_32;
 											source: STRING_32;
@@ -28,6 +34,9 @@ feature {NONE} -- Implementation
 			-- Fill `a_eis_tuple' from `a_key' and `a_value'.
 			-- There is still problem of the attached type for tuples.
 		require
+			a_key_not_void: a_key /= Void
+			a_value_not_void: a_value /= Void
+			a_eis_tuple_not_void: a_eis_tuple /= Void
 			tags_not_void: a_eis_tuple.tags /= Void
 			others_not_void: a_eis_tuple.others /= Void
 		do
@@ -50,16 +59,18 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	eis_entry_from_index (a_index: attached INDEX_AS; a_eis_id: detachable STRING): detachable EIS_ENTRY
+	eis_entry_from_index (a_index: INDEX_AS; a_eis_id: detachable STRING): detachable EIS_ENTRY
 			-- EIS entry from `a_clause'
+		require
+			a_index_not_void: a_index /= Void
 		local
 			l_index_list: EIFFEL_LIST [ATOMIC_AS]
 			l_atomic: ATOMIC_AS
-			l_attribute_pair: attached STRING
-			l_others: attached HASH_TABLE [STRING_32, STRING_32]
-			l_tags: attached ARRAYED_LIST [STRING_32]
+			l_attribute_pair: STRING
+			l_others: HASH_TABLE [STRING_32, STRING_32]
+			l_tags: ARRAYED_LIST [STRING_32]
 
-			l_entry_tuple: attached TUPLE [
+			l_entry_tuple: TUPLE [
 							name: STRING_32;
 							protocol: STRING_32;
 							source: STRING_32;
@@ -82,15 +93,15 @@ feature {NONE} -- Implementation
 					l_index_list.after
 				loop
 					l_atomic := l_index_list.item_for_iteration
-					if attached l_atomic.string_value_32 as lt_string then
-							-- |FIXME: Unicode handling.
-						create l_attribute_pair.make_from_string (lt_string.as_string_8)
-						l_attribute_pair.left_adjust
-						l_attribute_pair.right_adjust
+						-- Parse UTF-8 string
+					if attached {STRING_AS} l_atomic as lt_str_as and then attached lt_str_as.value as lt_string then
+						create l_attribute_pair.make_from_string (lt_string)
+						string_general_left_adjust (l_attribute_pair)
+						string_general_right_adjust (l_attribute_pair)
 						l_attribute_pair.prune_all_leading ('"')
 						l_attribute_pair.prune_all_trailing ('"')
-						l_attribute_pair.left_adjust
-						l_attribute_pair.right_adjust
+						string_general_left_adjust (l_attribute_pair)
+						string_general_right_adjust (l_attribute_pair)
 						if attribute_regex_matcher.matches (l_attribute_pair) then
 							if
 								attached attribute_regex_matcher.captured_substring (1) as lt_key and then
@@ -100,7 +111,7 @@ feature {NONE} -- Implementation
 								lt_key.right_adjust
 								lt_value.left_adjust
 								lt_value.right_adjust
-								fill_from_key_value (lt_key, lt_value, l_entry_tuple)
+								fill_from_key_value (encoding_converter.utf8_to_utf32 (lt_key) , encoding_converter.utf8_to_utf32 (lt_value) , l_entry_tuple)
 							end
 						else
 								-- Don't recognize the attribute
@@ -122,13 +133,15 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	eis_entry_from_conf_note (a_note: CONF_NOTE_ELEMENT; l_id: attached STRING): detachable EIS_ENTRY
+	eis_entry_from_conf_note (a_note: CONF_NOTE_ELEMENT; l_id: STRING): detachable EIS_ENTRY
 			-- EIS entry from conf note element.
+		require
+			l_id_not_void: l_id /= Void
 		local
 			l_attributes: HASH_TABLE [STRING, STRING]
-			l_others: attached HASH_TABLE [STRING_32, STRING_32]
-			l_tags: attached ARRAYED_LIST [STRING_32]
-			l_entry_tuple: attached TUPLE [
+			l_others: HASH_TABLE [STRING_32, STRING_32]
+			l_tags: ARRAYED_LIST [STRING_32]
+			l_entry_tuple: TUPLE [
 							name: STRING_32;
 							protocol: STRING_32;
 							source: STRING_32;
@@ -136,6 +149,7 @@ feature {NONE} -- Implementation
 							id: STRING;
 							others: HASH_TABLE [STRING_32, STRING_32];
 							override: BOOLEAN]
+
 		do
 			if a_note /= Void then
 				l_attributes := a_note.attributes
@@ -178,69 +192,69 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	parse_tags (a_tag_string: attached STRING): attached ARRAYED_LIST [STRING_32]
+	parse_tags (a_tag_string: STRING_32): ARRAYED_LIST [STRING_32]
 			-- Parse `a_tag_string' into an array.
 			-- tag string should be in the form of "tag1, tag2, tag3"
+		require
+			a_tag_string_not_void: a_tag_string /= Void
 		do
-			if attached a_tag_string.as_string_32 as lt_tag_string then
-				if attached {ARRAYED_LIST [STRING_32]} lt_tag_string.split ({ES_EIS_TOKENS}.tag_seperator) as lt_splitted then
-					lt_splitted.do_all (
-							agent (aa_string: STRING_32)
-								do
-									check aa_string_not_void: aa_string /= Void end
-									aa_string.left_adjust
-									aa_string.right_adjust
-								end)
-					Result := lt_splitted
-						-- Empty string is not needed.
-					if Result.count = 1 and then Result.i_th (1).count = 0 then
-						Result.wipe_out
-					end
-				else
-					create Result.make (0)
+			if attached {ARRAYED_LIST [STRING_32]} a_tag_string.split ({ES_EIS_TOKENS}.tag_seperator) as lt_splitted then
+				lt_splitted.do_all (
+						agent (aa_string: STRING_32)
+							do
+								check aa_string_not_void: aa_string /= Void end
+								string_general_left_adjust (aa_string)
+								string_general_right_adjust (aa_string)
+							end)
+				Result := lt_splitted
+					-- Empty string is not needed.
+				if Result.count = 1 and then Result.i_th (1).count = 0 then
+					Result.wipe_out
 				end
 			else
 				create Result.make (0)
 			end
+		ensure
+			Result_not_void: Result /= Void
 		end
 
-	parse_others (a_others_string: attached STRING_32): attached HASH_TABLE [STRING_32, STRING_32]
+	parse_others (a_others_string: STRING_32): HASH_TABLE [STRING_32, STRING_32]
 			-- Parse `a_others_string' into an array.
 			-- others string should be in the form of
 			-- "other1=value1, other2=value2, other3=value3"
 			-- Or ""other1=value1", other2=value2, "other3=value3""
+		require
+			a_others_string_not_void: a_others_string /= Void
 		do
-			if attached a_others_string as lt_tag_string then
-				if attached {ARRAYED_LIST [STRING_32]} lt_tag_string.split ({ES_EIS_TOKENS}.attribute_seperator) as lt_splitted then
-					create Result.make (1)
-					lt_splitted.do_all (
-							agent (aa_string: attached STRING_32; a_result: attached HASH_TABLE [STRING_32, STRING_32])
-								do
-									aa_string.left_adjust
-									aa_string.right_adjust
-									aa_string.prune_all_leading ('"')
-									aa_string.prune_all_trailing ('"')
-									aa_string.left_adjust
-									aa_string.right_adjust
-									if attribute_regex_matcher.matches (aa_string) then
-										if
-											attached attribute_regex_matcher.captured_substring (1) as lt_key and then
-											attached attribute_regex_matcher.captured_substring (2) as lt_value
-										then
-											lt_key.left_adjust
-											lt_key.right_adjust
-											lt_value.left_adjust
-											lt_value.right_adjust
-											a_result.force (lt_value.as_string_32, lt_key.as_string_32)
-										end
+			if attached {ARRAYED_LIST [STRING_32]} a_others_string.split ({ES_EIS_TOKENS}.attribute_seperator) as lt_splitted then
+				create Result.make (1)
+				lt_splitted.do_all (
+						agent (aa_string: STRING_32; a_result: HASH_TABLE [STRING_32, STRING_32])
+							do
+								string_general_left_adjust (aa_string)
+								string_general_right_adjust (aa_string)
+								aa_string.prune_all_leading ('"')
+								aa_string.prune_all_trailing ('"')
+								string_general_left_adjust (aa_string)
+								string_general_right_adjust (aa_string)
+								if attribute_regex_matcher.matches (encoding_converter.utf32_to_utf8 (aa_string)) then
+									if
+										attached attribute_regex_matcher.captured_substring (1) as lt_key and then
+										attached attribute_regex_matcher.captured_substring (2) as lt_value
+									then
+										lt_key.left_adjust
+										lt_key.right_adjust
+										lt_value.left_adjust
+										lt_value.right_adjust
+										a_result.force (encoding_converter.utf8_to_utf32 (lt_value), encoding_converter.utf8_to_utf32 (lt_key))
 									end
-								end (?, Result))
-				else
-					create Result.make (0)
-				end
+								end
+							end (?, Result))
 			else
 				create Result.make (0)
 			end
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 	auto_entry (a_target: CONF_TARGET): detachable TUPLE [enabled: BOOLEAN; src: STRING_32]

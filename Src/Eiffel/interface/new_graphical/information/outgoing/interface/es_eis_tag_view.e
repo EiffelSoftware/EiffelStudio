@@ -20,9 +20,11 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_tag: attached STRING_32; a_eis_grid: attached ES_EIS_ENTRY_GRID)
+	make (a_tag: STRING_32; a_eis_grid: ES_EIS_ENTRY_GRID)
 			-- Initialized with `a_conf_notable' and `a_eis_grid'.
 		require
+			a_tag_not_void: a_tag /= Void
+			a_eis_grid_not_void: a_eis_grid /= Void
 			a_eis_grid_not_destroyed: not a_eis_grid.is_destroyed
 		do
 			tag := a_tag
@@ -31,14 +33,14 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	new_extractor: attached ES_EIS_EXTRACTOR
+	new_extractor: ES_EIS_EXTRACTOR
 			-- Create extractor
 		do
 			create {ES_EIS_TAG_EXTRACTOR}Result.make (tag)
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

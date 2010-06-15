@@ -327,7 +327,7 @@ feature {NONE} -- Basic operations: Modifications
 						l_index := l_indexing.item_for_iteration
 						l_tag_name := l_index.tag.name
 						l_old_index := a_ast.index_as_of_tag_name (l_tag_name)
-						create l_mapper.make (encoding_converter.utf32_to_utf8 (text))
+						create l_mapper.make (ec_encoding_converter.utf32_to_utf8 (text))
 						if l_old_index /= Void then
 							l_atoms := l_old_index.index_list
 							replace_code (l_mapper.next_utf32_pos_from_utf8_pos (l_atoms.complete_start_position (a_match_list)),

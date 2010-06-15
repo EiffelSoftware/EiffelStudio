@@ -29,9 +29,12 @@ feature {NONE} -- Initialization
 
 feature {EIS_STORAGE} -- Element change
 
-	register_entry (a_entry: attached H; a_id: attached G): BOOLEAN
+	register_entry (a_entry: H; a_id: G): BOOLEAN
 			-- Retrister an entry
 			-- Return True if an entry is really registered.
+		require
+			a_entry_not_void: a_entry /= Void
+			a_id_not_void: a_id /= Void
 		local
 			l_entries: like entries
 			l_entry_list: SEARCH_TABLE [H]
@@ -53,9 +56,12 @@ feature {EIS_STORAGE} -- Element change
 			end
 		end
 
-	deregister_entry (a_entry: attached H; a_id: attached G): BOOLEAN
+	deregister_entry (a_entry: H; a_id: G): BOOLEAN
 			-- Deretrister an entry
 			-- Return True if an entry is really deregistered.
+		require
+			a_entry_not_void: a_entry /= Void
+			a_id_not_void: a_id /= Void
 		local
 			l_entries: like entries
 			l_entry_list: SEARCH_TABLE [H]
@@ -74,22 +80,29 @@ feature {EIS_STORAGE} -- Element change
 			end
 		end
 
-	register_entries_of_id (a_entries: attached SEARCH_TABLE [H]; a_id: attached G)
+	register_entries_of_id (a_entries: SEARCH_TABLE [H]; a_id: G)
 			-- Deregister entries of `a_id'.
+		require
+			a_entries_not_void: a_entries /= Void
+			a_id_not_void: a_id /= Void
 		do
 			entries.force (a_entries, a_id)
 		end
 
-	deregister_entries_of_id (a_id: attached G)
+	deregister_entries_of_id (a_id: G)
 			-- Deregister entries of `a_id'.
+		require
+			a_id_not_void: a_id /= Void
 		do
 			if attached entries as lt_entries then
 				lt_entries.remove (a_id)
 			end
 		end
 
-	register_component (a_id: attached G)
+	register_component (a_id: G)
 			-- Register `a_id' with no entry.
+		require
+			a_id_not_void: a_id /= Void
 		do
 			if attached entries as lt_entries then
 				lt_entries.force (create {SEARCH_TABLE [H]}.make (0), a_id)
@@ -98,10 +111,12 @@ feature {EIS_STORAGE} -- Element change
 
 feature -- Access
 
-	entries_of_id (a_id: attached G): detachable SEARCH_TABLE [H]
+	entries_of_id (a_id: G): detachable SEARCH_TABLE [H]
 			-- EIS entries of `a_id'
 			-- Do not change directly.
 			-- Only for querying.
+		require
+			a_id_not_void: a_id /= Void
 		do
 			if attached entries as lt_entries then
 				lt_entries.search (a_id)
@@ -120,7 +135,7 @@ invariant
 	entries_not_void: entries /= Void
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -144,11 +159,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

@@ -10,8 +10,10 @@ deferred class
 
 feature -- Element Change
 
-	add_observer (a_observer: attached PROGRESS_OBSERVER)
+	add_observer (a_observer: PROGRESS_OBSERVER)
 			-- Add observer to be managed
+		require
+			a_observer_not_void: a_observer /= Void
 		do
 			if progress_observers = Void then
 				create progress_observers.make (1)
@@ -19,8 +21,10 @@ feature -- Element Change
 			progress_observers.extend (a_observer)
 		end
 
-	remove_observer (a_observer: attached PROGRESS_OBSERVER)
+	remove_observer (a_observer: PROGRESS_OBSERVER)
 			-- Add observer to be managed
+		require
+			a_observer_not_void: a_observer /= Void
 		do
 			if progress_observers /= Void and then not progress_observers.is_empty then
 				progress_observers.prune_all (a_observer)
@@ -131,7 +135,7 @@ feature {NONE} -- Observers
 			-- Total amount of the progress.
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

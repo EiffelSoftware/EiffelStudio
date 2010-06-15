@@ -423,6 +423,40 @@ feature -- String
 			end
 		end
 
+	string_32_is_caseless_equal (a_str_32: STRING_32; a_str_other: STRING_32): BOOLEAN
+			-- Is `a_str_32' in UTF32 case insensitive equal to `a_str_other'?
+			-- |FIXME: For the moment, only ANSII code are concerned.
+		require
+			a_str_32_not_void: a_str_32 /= Void
+			a_str_other_not_void: a_str_other /= Void
+		local
+			i, nb: INTEGER_32
+			l_char, l_char_2: CHARACTER_32
+		do
+			if a_str_32 = a_str_other then
+				Result := True
+			else
+				nb := a_str_32.count
+				if nb = a_str_other.count then
+					from
+						Result := True
+						i := 1
+					until
+						i > nb or not Result
+					loop
+						l_char := a_str_32.item (i)
+						l_char_2 := a_str_other.item (i)
+						if l_char.is_character_8 and then l_char_2.is_character_8 then
+							Result := l_char.as_lower = l_char_2.as_lower
+						else
+							Result := l_char = l_char_2
+						end
+						i := i + 1
+					end
+				end
+			end
+		end
+
 note
 	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

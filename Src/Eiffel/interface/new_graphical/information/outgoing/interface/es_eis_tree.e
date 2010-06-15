@@ -41,10 +41,11 @@ create
 
 feature {NONE} -- Initialization
 
-	make_eis_tree (a_context_menu_factory: EB_CONTEXT_MENU_FACTORY; a_widget: attached ES_EIS_TOOL_WIDGET)
+	make_eis_tree (a_context_menu_factory: EB_CONTEXT_MENU_FACTORY; a_widget: ES_EIS_TOOL_WIDGET)
 			-- Initialization
 		require
 			a_context_menu_factory_not_void: a_context_menu_factory /= Void
+			a_widget_not_void: a_widget /= Void
 		do
 			create managed_tags.make
 			managed_tags.compare_objects
@@ -252,7 +253,7 @@ feature {NONE} -- Component view factory
 			l_item := a_item
 			if l_item /= Void then
 				if attached {ES_EIS_ENTRY_GRID} eis_tool_widget.entry_list as lt_grid and then lt_grid.is_usable then
-					if attached {ES_EIS_TREE_TAG_ITEM} l_item as lt_item and then attached lt_item.text.as_string_32 as lt_string then
+					if attached {ES_EIS_TREE_TAG_ITEM} l_item as lt_item and then attached lt_item.text as lt_string then
 						if tag_header.first = lt_item then
 								-- Empty string indicates to view entries without tag.
 							create {ES_EIS_TAG_VIEW}Result.make (create {STRING_32}.make_empty, lt_grid)
@@ -279,7 +280,7 @@ feature {NONE} -- Component view factory
 
 feature {NONE} -- EIS observer
 
-	on_tag_added (a_tag: attached STRING_32)
+	on_tag_added (a_tag: STRING_32)
 			-- <precursor>
 		local
 			l_node: ES_EIS_TREE_TAG_ITEM
@@ -297,7 +298,7 @@ feature {NONE} -- EIS observer
 			end
 		end
 
-	on_tag_removed (a_tag: attached STRING_32)
+	on_tag_removed (a_tag: STRING_32)
 			-- <precursor>
 		do
 			managed_tags.start
@@ -329,17 +330,19 @@ feature {NONE} -- Access
 
 	affected_header: EB_CLASSES_TREE_HEADER_ITEM;
 
-	eis_tool_widget: attached ES_EIS_TOOL_WIDGET;
+	eis_tool_widget: ES_EIS_TOOL_WIDGET;
 			-- The tool widget
 
-	managed_tags: attached SORTED_TWO_WAY_LIST [STRING_32];
+	managed_tags: SORTED_TWO_WAY_LIST [STRING_32];
 			-- Sorted tags. Do not change directly out of EIS observer.
 
 invariant
+	eis_tool_widget_not_void: eis_tool_widget /= Void
+	managed_tags_not_void: managed_tags /= Void
 	only_first_item_is_off_mapping: (tag_header /= Void and not is_recycled) implies managed_tags.count = tag_header.count - 1
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

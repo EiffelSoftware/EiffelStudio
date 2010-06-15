@@ -40,9 +40,11 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_conf_notable: attached CONF_NOTABLE; a_eis_grid: attached ES_EIS_ENTRY_GRID)
+	make (a_conf_notable: CONF_NOTABLE; a_eis_grid: ES_EIS_ENTRY_GRID)
 			-- Initialized with `a_conf_notable' and `a_eis_grid'.
 		require
+			a_conf_notable_not_void: a_conf_notable /= Void
+			a_eis_grid_not_void: a_eis_grid /= Void
 			a_eis_grid_not_destroyed: not a_eis_grid.is_destroyed
 			a_notable_is_valid: valid_notable (a_conf_notable)
 		do
@@ -54,8 +56,10 @@ feature {NONE} -- Initialization
 
 feature -- Querry
 
-	valid_notable (a_notable: attached CONF_NOTABLE): BOOLEAN
+	valid_notable (a_notable: CONF_NOTABLE): BOOLEAN
 			-- Is `a_notable' a supported component?
+		require
+			a_notable_not_void: a_notable /= Void
 		do
 			Result := attached {CONF_TARGET} a_notable as lt_target or else attached {CONF_CLUSTER} a_notable as lt_cluster
 		end
@@ -71,9 +75,9 @@ feature -- Operation
 	create_new_entry
 			-- Create new EIS entry in `a_conf_notable'.
 		local
-			l_entry: attached EIS_ENTRY
+			l_entry: EIS_ENTRY
 			l_added: BOOLEAN
-			l_system: detachable CONF_SYSTEM
+			l_system: CONF_SYSTEM
 			l_date: INTEGER
 		do
 			if component_editable then
@@ -178,9 +182,13 @@ feature {NONE} -- Conf modification
 			last_entry_modified := a_system.store_successful
 		end
 
-	modify_entry_in_conf (a_old_entry, a_new_entry: attached EIS_ENTRY; a_conf: CONF_NOTABLE; a_system: attached CONF_SYSTEM)
+	modify_entry_in_conf (a_old_entry, a_new_entry: EIS_ENTRY; a_conf: CONF_NOTABLE; a_system: CONF_SYSTEM)
 			-- Modify `a_old_entry' into `a_new_entry' in `a_conf'
 		require
+			a_old_entry_not_void: a_old_entry /= Void
+			a_new_entry_not_void: a_new_entry /= Void
+			a_conf_not_void: a_conf /= Void
+			a_system_not_void: a_system /= Void
 			a_old_entry_editable: entry_editable (a_old_entry, False)
 		local
 			l_notes: CONF_NOTE_ELEMENT
@@ -212,9 +220,12 @@ feature {NONE} -- Conf modification
 			end
 		end
 
-	remove_entry (a_entry: attached EIS_ENTRY; a_conf_notable: attached CONF_NOTABLE; a_system: attached CONF_SYSTEM)
+	remove_entry (a_entry: EIS_ENTRY; a_conf_notable: CONF_NOTABLE; a_system: CONF_SYSTEM)
 			-- Remove `a_entry' from `a_conf_notable' and save in `a_system'
 		require
+			a_entry_not_void: a_entry /= Void
+			a_conf_notable: a_conf_notable /= Void
+			a_system_not_void: a_system /= Void
 			a_entry_editable: entry_editable (a_entry, False)
 		local
 			l_notes: CONF_NOTE_ELEMENT
@@ -241,7 +252,7 @@ feature {NONE} -- Conf modification
 			end
 		end
 
-	entry_editable (a_entry: attached EIS_ENTRY; a_use_cache: BOOLEAN): BOOLEAN
+	entry_editable (a_entry: EIS_ENTRY; a_use_cache: BOOLEAN): BOOLEAN
 			-- If `a_entry' is editable through current view?
 		local
 			l_type: NATURAL
@@ -291,7 +302,7 @@ feature {NONE} -- Callbacks
 			-- On name changed
 			-- We modify neither the referenced EIS entry when the modification is done.
 		local
-			l_new_entry: attached EIS_ENTRY
+			l_new_entry: EIS_ENTRY
 		do
 			if attached {EIS_ENTRY} a_item.row.data as lt_entry and then attached a_item.text as lt_name then
 				if lt_entry.name /= Void and then lt_name.is_equal (lt_entry.name) then
@@ -320,7 +331,7 @@ feature {NONE} -- Callbacks
 			-- On protocol changed
 			-- We modify neither the referenced EIS entry when the modification is done.
 		local
-			l_new_entry: attached EIS_ENTRY
+			l_new_entry: EIS_ENTRY
 		do
 			if attached {EIS_ENTRY} a_item.row.data as lt_entry and then attached a_item.text as lt_protocol then
 				if lt_entry.protocol /= Void and then lt_protocol.is_equal (lt_entry.protocol) then
@@ -349,7 +360,7 @@ feature {NONE} -- Callbacks
 			-- On source changed
 			-- We modify neither the referenced EIS entry when the modification is done.
 		local
-			l_new_entry: attached EIS_ENTRY
+			l_new_entry: EIS_ENTRY
 		do
 			if attached {EIS_ENTRY} a_item.row.data as lt_entry and then attached a_item.text as lt_source then
 				if lt_entry.source /= Void and then lt_source.is_equal (lt_entry.source) then
@@ -378,13 +389,12 @@ feature {NONE} -- Callbacks
 			-- On tags changed
 			-- We modify neither the referenced EIS entry when the modification is done.
 		local
-			l_new_entry: attached EIS_ENTRY
-			l_tags: attached ARRAYED_LIST [STRING_32]
+			l_new_entry: EIS_ENTRY
+			l_tags: ARRAYED_LIST [STRING_32]
 		do
 			if attached {EIS_ENTRY} a_item.row.data as lt_entry and then attached a_item.text as lt_tags then
-					 -- |FIXME: Bad conversion, should not convert to string_8.
-				if attached lt_tags.as_string_8 as lt_tags_str_8 then
-					l_tags := parse_tags (lt_tags_str_8)
+				if attached lt_tags as lt_tags_str then
+					l_tags := parse_tags (lt_tags_str)
 					l_tags.compare_objects
 				end
 				if lt_entry.tags /= Void and then lt_entry.tags.is_equal (l_tags) then
@@ -451,8 +461,10 @@ feature {NONE} -- Callbacks
 
 feature {NONE} -- Implementation
 
-	system_of_conf_notable (a_notable: attached CONF_NOTABLE): detachable CONF_SYSTEM
-			-- Get system from `a_notable'
+	system_of_conf_notable (a_notable: CONF_NOTABLE): detachable CONF_SYSTEM
+			-- Get system from `a_notable'.
+		require
+			a_notable_not_void: a_notable /= Void
 		do
 			if attached {CONF_TARGET} a_notable as lt_target then
 				Result := lt_target.system
@@ -463,13 +475,13 @@ feature {NONE} -- Implementation
 			valid_a_notable_implies_not_void: valid_notable (a_notable) implies Result /= Void
 		end
 
-	new_extractor: attached ES_EIS_EXTRACTOR
+	new_extractor: ES_EIS_EXTRACTOR
 			-- Create extractor
 		do
 			create {ES_EIS_CONF_EXTRACTOR}Result.make (conf_notable, True)
 		end
 
-	background_color_of_entry (a_entry: attached EIS_ENTRY): EV_COLOR
+	background_color_of_entry (a_entry: EIS_ENTRY): EV_COLOR
 			-- Background color of `a_entry'
 		do
 			if
@@ -482,7 +494,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	component_id: attached STRING
+	component_id: STRING
 			-- Component ID
 		do
 			if internal_component_id = Void then
@@ -494,6 +506,8 @@ feature {NONE} -- Implementation
 					Result := lt_id1
 				end
 			end
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 	computed_component_id: detachable STRING
@@ -515,7 +529,7 @@ invariant
 	conf_notable_is_valid: valid_notable (conf_notable)
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

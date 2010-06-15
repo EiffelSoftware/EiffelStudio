@@ -29,8 +29,10 @@ create
 
 feature {NONE} -- Initialzation
 
-	make (a_entry: attached EIS_ENTRY)
+	make (a_entry: EIS_ENTRY)
 			-- Initialization
+		require
+			a_entry_not_void: a_entry /= Void
 		do
 			entry := a_entry
 			if attached a_entry.source as l_source then
@@ -51,7 +53,7 @@ feature -- Querry
 
 feature -- Access
 
-	help_context_id:STRING
+	help_context_id: STRING
 			-- <precursor>
 
 	help_context_section: detachable HELP_CONTEXT_SECTION_I
@@ -64,7 +66,7 @@ feature -- Access
 			Result := eis_output.last_output_code
 		end
 
-	help_provider: attached UUID
+	help_provider: UUID
 			-- <precursor>
 		do
 			Result := help_provider_from_protocol (entry.protocol)
@@ -72,15 +74,16 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	entry: attached EIS_ENTRY;
+	entry: EIS_ENTRY;
 			-- The entry
 
 invariant
+	entry_attached: entry /= Void
 	help_context_id_attached: help_context_id /= Void
 	not_help_context_id_is_empty: not help_context_id.is_empty
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

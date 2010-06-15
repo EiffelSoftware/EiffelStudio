@@ -31,10 +31,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	tag: attached STRING_32
+	tag: STRING_32
 			-- The tag to extract
 
-	eis_full_entries: attached SEARCH_TABLE [EIS_ENTRY]
+	eis_full_entries: SEARCH_TABLE [EIS_ENTRY]
 			-- EIS entries including all flat entries from all associated component
 		do
 			Result := eis_entries
@@ -49,14 +49,17 @@ feature {NONE} -- Implementation
 			-- other extractors.
 		do
 			if storage.tag_server.entries.has (tag) then
-				eis_entries := storage.tag_server.entries.item (tag).as_attached
+				eis_entries := storage.tag_server.entries.item (tag)
 			else
 				create eis_entries.make (0)
 			end
 		end
 
+invariant
+	tag_not_void: tag /= Void
+
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -80,11 +83,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

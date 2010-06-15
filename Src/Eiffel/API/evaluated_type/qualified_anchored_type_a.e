@@ -11,6 +11,7 @@ class
 inherit
 	LIKE_TYPE_A
 		redefine
+			description,
 			dispatch_anchors,
 			error_generics,
 			evaluated_type_in_descendant,
@@ -18,6 +19,7 @@ inherit
 			initialize_info,
 			is_explicit,
 			is_syntactically_equal,
+			skeleton_adapted_in,
 			update_dependance
 		end
 
@@ -86,7 +88,7 @@ feature -- Status Report
 			end
 		end
 
-feature -- Access
+feature -- Comparison
 
 	same_as (other: TYPE_A): BOOLEAN
 			-- Is the current type the same as `other' ?
@@ -98,6 +100,37 @@ feature -- Access
 					has_same_attachment_marks (o)
 			end
 		end
+
+feature -- Code generation
+
+	description: ATTR_DESC
+			-- Descritpion of type for skeletons.
+		local
+			gen_desc: GENERIC_DESC
+		do
+			if qualifier.is_loose then
+				create gen_desc
+				gen_desc.set_type_i (Current)
+				Result := gen_desc
+			else
+				Result := Precursor
+			end
+		end
+
+	skeleton_adapted_in (class_type: CLASS_TYPE): QUALIFIED_ANCHORED_TYPE_A
+			-- <Precursor>
+		local
+			q: TYPE_A
+		do
+			Result := Current
+			q := qualifier.skeleton_adapted_in (class_type)
+			if q /= qualifier then
+				Result := duplicate
+				Result.set_qualifier (q)
+			end
+		end
+
+feature -- Type checking
 
 	good_generics: BOOLEAN
 			-- <Precursor>

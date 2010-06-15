@@ -38,7 +38,7 @@ compile_result ok
 c_compile_final
 c_compile_result ok
 
-execute_work 	NONE 	exec_output3
+execute_final 	NONE 	exec_output3
 execute_result 	ok
 compare		exec_output3 output
 
@@ -51,7 +51,7 @@ compile_result ok
 c_compile_final
 c_compile_result ok
 
-execute_work 	NONE 	exec_output4
+execute_final 	NONE 	exec_output4
 execute_result 	ok
 compare		exec_output4 output
 

@@ -41,4 +41,12 @@ execute_work	NONE	exec_output5 16777215
 execute_result	ok
 compare exec_output5 output
 
+execute_work	NONE	exec_output6 16777207
+execute_result	ok
+compare exec_output6 output
+
+execute_work	NONE	exec_output7 16777212
+execute_result	ok
+compare exec_output7 output
+
 test_end

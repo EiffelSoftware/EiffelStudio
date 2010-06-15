@@ -393,6 +393,8 @@ feature -- Command
 
 	open_tools_config (a_file: STRING_GENERAL): BOOLEAN
 			-- Save tools contents config
+			-- When editor area available, open all tools' layout except all editor area panels'
+			-- It means, when no editor area avaliable, open_tools_config doesn't make sense
 			-- Note: If window is minimized, EV_SPLIT_AREA split bar position can't be restored correctly
 			-- See bug#14309
 		require
@@ -828,14 +830,14 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

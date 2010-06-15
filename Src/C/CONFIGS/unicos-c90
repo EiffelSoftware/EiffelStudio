@@ -13,6 +13,7 @@ if [ -n "$CFLAGS" ]; then
 else
 	ccflags='-h stdc'
 fi
+objcflags='-ObjC'
 mtccflags='-h stdc -DEIF_THREADS -DEIF_POSIX_THREADS'
 
 libs='-lnsl -lm'

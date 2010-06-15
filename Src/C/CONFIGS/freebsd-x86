@@ -191,6 +191,7 @@ eif_arch='EIF_ARCH_X86'
 Mcc='Mcc'
 d_tls='define'
 #Check value for next 2
+objcflags='-ObjC'
 mtccflags="$ccflags -DEIF_THREADS -DEIF_POSIX_THREADS"
 mtcppflags="$cppflags -DEIF_THREADS -DEIF_POSIX_THREADS"
 optimize="-O3"

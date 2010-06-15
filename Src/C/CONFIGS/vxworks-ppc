@@ -190,6 +190,7 @@ eif_arch='EIF_ARCH_PPC'
 Mcc='Mcc'
 d_tls='undef'
 #Check value for next 2
+objcflags='-ObjC'
 mtccflags="$ccflags -DEIF_THREADS"
 mtcppflags="$cppflags -DEIF_THREADS"
 optimize="-O3"

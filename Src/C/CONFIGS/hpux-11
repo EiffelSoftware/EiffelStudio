@@ -28,6 +28,7 @@ if [ -n "$CPPFLAGS" ]; then
 else
 	cppflags='-D_HPUX_SOURCE'
 fi
+objcflags='-ObjC'
 mtccflags='-DEIF_THREADS -D_HPUX_SOURCE -DEIF_POSIX_THREADS'
 sharedccflags='-fPIC'
 libs='-lnsl -lm'

@@ -15,6 +15,7 @@ resource_compiler='"$compiler_path\bin\brc32.exe"'
 #
 obj='obj'
 lib='lib'
+objcflags='-ObjC'
 #
 # Standard runtime
 #-----------------

@@ -48,6 +48,7 @@ if [ -n "$CFLAGS" ]; then
 else
 	ccflags='-ansi -Wall -Wno-comment -Wno-unused -Wno-trigraphs -I$(VXWORKS)/target/h -DVXSIM -DBIG_ENDIAN -DCPU=SIMHPPA -DVXWORKS -DEIF_THREADS -nostdinc -fno-builtin'
 fi
+objcflags='-ObjC'
 mtccflags='-ansi -Wall -Wno-comment -Wno-unused -Wno-trigraphs -I$(VXWORKS)/target/h -DVXSIM -DBIG_ENDIAN -DCPU=SIMHPPA -DVXWORKS -DEIF_THREADS -nostdinc -fno-builtin'
 
 if [ -n "$CPPFLAGS" ]; then

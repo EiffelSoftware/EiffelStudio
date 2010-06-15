@@ -190,6 +190,7 @@ eif_arch='EIF_ARCH_SPARC_64'
 Mcc='Mcc'
 d_tls='define'
 #Check value for next 2
+objcflags='-ObjC'
 mtccflags="$ccflags -D_REENTRANT -DEIF_THREADS -DSOLARIS_THREADS"
 mtcppflags="$cppflags -D_REENTRANT -DEIF_THREADS -DSOLARIS_THREADS"
 optimize='-xO2 -xstrconst'

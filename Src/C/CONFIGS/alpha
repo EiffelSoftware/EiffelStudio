@@ -45,6 +45,7 @@ if [ -n "$CFLAGS" ]; then
 else
 	ccflags=' -std -DEIF_ALPHA -D__LANGUAGE_C__'
 fi
+objcflags='-ObjC'
 sharedccflags=' -std -DEIF_ALPHA -D__LANGUAGE_C__'
 mtccflags=' -std -DEIF_ALPHA -DEIF_THREADS -DEIF_POSIX_THREADS -pthread -D__LANGUAGE_C__'
 mtsharedccflags=' -std -DEIF_ALPHA -DEIF_THREADS -DEIF_POSIX_THREADS -pthread -D__LANGUAGE_C__'

@@ -52,6 +52,7 @@ else
 		-DVXWORKS -DEIF_THREADS -I$(VXWORKS)/target/h'
 fi
 
+objcflags='-ObjC'
 mtccflags=$ccflags
 
 if [ -n "$CPPFLAGS" ]; then

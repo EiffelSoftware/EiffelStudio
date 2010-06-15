@@ -203,6 +203,7 @@ byteorder=''
 cc=''
 gccversion=''
 ccflags=''
+objcflags=''
 rt_version=''
 rt_include=''
 rt_lib=''
@@ -6701,6 +6702,7 @@ eif_arch=''
 Mcc='$Mcc'
 d_tls='$d_tls'
 #Check value for next 2
+objcflags='-ObjC'
 mtccflags="\$ccflags -DEIF_THREADS -DEIF_POSIX_THREADS"
 mtcppflags="\$cppflags -DEIF_THREADS -DEIF_POSIX_THREADS"
 optimize="$optimize \$binary_format \$platform_arch"

@@ -202,7 +202,7 @@ feature -- Query
 			-- There are add/prune actions registered in the list.
 
 	has_content (a_content: SD_CONTENT): BOOLEAN
-			-- If contents has a_content?
+			-- If Current's `contents' has `a_content'?
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -210,7 +210,7 @@ feature -- Query
 		end
 
 	tool_bar_manager: SD_TOOL_BAR_MANAGER
-			-- Manager control all tool bars
+			-- Manager that control all tool bars
 
 	tab_drop_actions: detachable SD_PND_ACTION_SEQUENCE note option: stable attribute end
 			-- Drop action when drop on a blank tab area
@@ -237,8 +237,8 @@ feature -- Query
 
 	main_area_drop_action: EV_PND_ACTION_SEQUENCE
 			-- Main area (editor area) drop acitons
-			-- This actions will be called if there is no editor zone and end user drop
-			-- a stone to the void editor area
+			-- This actions will be called if there is no editor at all and end user drop
+			-- a stone to blank editor area (grey by default)
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -298,7 +298,7 @@ feature -- Query
 		end
 
 	is_config_data_valid (a_file_name: STRING): BOOLEAN
-			 -- Is config data located at `a_file_name' valid?
+			 -- Is config data in `a_file_name' valid?
 		local
 			l_data: detachable SD_CONFIG_DATA
 			l_file: RAW_FILE
@@ -320,7 +320,7 @@ feature -- Query
 feature -- Command
 
 	save_data (a_file: STRING_GENERAL): BOOLEAN
-			-- Save current docking config data
+			-- Save current docking config data (including tools' data and editors' data) into `a_file'
 		require
 			a_file_not_void: a_file /= Void
 			not_destroyed: not is_destroyed
@@ -332,7 +332,7 @@ feature -- Command
 		end
 
 	save_editors_data (a_file: STRING_GENERAL): BOOLEAN
-			-- Save main window editor config
+			-- Save main window's editor layout configuration data into `a_file'
 		require
 			not_void: a_file /= Void
 			not_destroyed: not is_destroyed
@@ -344,7 +344,7 @@ feature -- Command
 		end
 
 	save_tools_data (a_file: STRING_GENERAL): BOOLEAN
-			-- Save tools config
+			-- Save tools' layout configuration data into `a_file'
 		require
 			not_void: a_file /= Void
 			not_destroyed: not is_destroyed
@@ -356,7 +356,7 @@ feature -- Command
 		end
 
 	save_tools_data_with_name (a_file: STRING_GENERAL; a_name: STRING_GENERAL): BOOLEAN
-			-- Save tools config
+			-- Save tools' layout configuration data into a file named `a_file' and store `a_name' into the data
 		require
 			not_void: a_file /= Void
 			not_destroyed: not is_destroyed
@@ -368,7 +368,7 @@ feature -- Command
 		end
 
 	open_config (a_file: STRING_GENERAL): BOOLEAN
-			-- Open a docking config from a_named_file
+			-- Open all docking layout configuration data previously stored in `a_file'
 		require
 			a_file_not_void: a_file /= Void
 			a_file_readable: is_file_readable (a_file)
@@ -381,7 +381,7 @@ feature -- Command
 		end
 
 	open_editors_config (a_file: STRING_GENERAL)
-			-- Open main window editor config
+			-- Open main window editors' layout configuration data previously stored in `a_file'
 		require
 			not_destroyed: not is_destroyed
 		local
@@ -392,7 +392,7 @@ feature -- Command
 		end
 
 	open_tools_config (a_file: STRING_GENERAL): BOOLEAN
-			-- Save tools contents config
+			-- Open tool type contents' layout configuration data previously stored in `a_file'
 			-- When editor area available, open all tools' layout except all editor area panels'
 			-- It means, when no editor area avaliable, open_tools_config doesn't make sense
 			-- Note: If window is minimized, EV_SPLIT_AREA split bar position can't be restored correctly
@@ -407,7 +407,7 @@ feature -- Command
 		end
 
 	open_maximized_tool_config (a_file: STRING_GENERAL)
-			-- Open maximized tool config data
+			-- Open tool's maximization statues configuration data previously stored in `a_file'
 		require
 			not_destroyed: not is_destroyed
 		local
@@ -418,7 +418,7 @@ feature -- Command
 		end
 
 	open_tool_bar_item_config (a_file: STRING_GENERAL)
-			-- Open maximized tool config data
+			-- Open tool bar items' layout configuration data previously stored in `a_file'
 		require
 			not_destroyed: not is_destroyed
 		local
@@ -430,6 +430,7 @@ feature -- Command
 
 	set_main_area_background_color (a_color: EV_COLOR)
 			-- Set main area (editors' area) background color
+			-- It will be displayed when no editor available
 		require
 			a_color_not_void: a_color /= Void
 			not_destroyed: not is_destroyed
@@ -441,7 +442,7 @@ feature -- Command
 		end
 
 	update_mini_tool_bar_size (a_content: SD_CONTENT)
-			-- After mini tool bar widget size changes, update mini tool bar size to best
+			-- After mini tool bar widget's size changed, update mini tool bar's size to best
 			-- fit new size of mini tool bar widget
 			-- `a_content' can be void if not known
 		require
@@ -460,6 +461,8 @@ feature -- Command
 
 	close_editor_place_holder
 			-- Close editors place holder zone
+			-- Editor place holder means the blank editor area (grey by default) in main window
+			-- when no editor available
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -508,6 +511,8 @@ feature -- Command
 
 	maximize_editor_area
 			-- Maximize whole editor area
+			-- Editor area means all editors' area especially for
+			-- the area when editors are docked side by side in split areas
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -524,6 +529,8 @@ feature -- Command
 
 	minimize_editor_area
 			-- Minimize whole editor area
+			-- The whole editor area will be minimized to a small button
+			-- If end user clicked the small button, the editor area will be restored
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -540,6 +547,8 @@ feature -- Command
 
 	minimize_editors
 			-- Minimize all editors
+			-- Not same as `minimize_editor_area', it actually let all editors
+			-- minimize separately
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -596,6 +605,7 @@ feature -- Command
 
 	destroy
 			-- Destroy all underline objects
+			-- Free all memory if possible
 		local
 			l_contents: ARRAYED_LIST [SD_CONTENT]
 			l_floating_zones: ARRAYED_LIST [SD_FLOATING_ZONE]
@@ -676,7 +686,7 @@ feature -- Command
 feature -- Contract support
 
 	is_file_readable (a_file_name: STRING_GENERAL): BOOLEAN
-			-- Does `a_file_name' exist?
+			-- Does `a_file_name' exist and readable?
 		local
 			l_file: RAW_FILE
 		do
@@ -685,7 +695,7 @@ feature -- Contract support
 		end
 
 	window_valid (a_window: EV_WINDOW): BOOLEAN
-			-- Is `a_window' already managed?
+			-- Is `a_window' already managed by one docking manager?
 		local
 			l_list: ARRAYED_LIST [SD_DOCKING_MANAGER]
 		do
@@ -706,7 +716,7 @@ feature -- Contract support
 		end
 
 	container_valid (a_container: EV_CONTAINER; a_window: EV_WINDOW): BOOLEAN
-			-- Is `a_container' in `a_window' or `a_container' in `a_window'?
+			-- Is `a_container' resides in `a_window' or `a_container' resides in `a_window'?
 		do
 			Result := a_window.has_recursive (a_container) or a_container = a_window
 		end
@@ -714,42 +724,42 @@ feature -- Contract support
 feature {SD_DEBUG_ACCESS, SD_ACCESS} -- Library internals querys
 
 	query: SD_DOCKING_MANAGER_QUERY
-			-- Manager helper Current for querys
+			-- Manager helpe Current for querys features
 
 	property: SD_DOCKING_MANAGER_PROPERTY
-			-- Manager helper Current for properties
+			-- Manager helpe Current for properties features
 
 	command: SD_DOCKING_MANAGER_COMMAND
-			-- Manager helper Current for commands
+			-- Manager helpe Current for commands features
 
 	agents: SD_DOCKING_MANAGER_AGENTS
-			-- Manager help Current for agents
+			-- Manager help Current for agents features
 
 	zones: SD_DOCKING_MANAGER_ZONES
-			-- Manager help Current for zones issues
+			-- Manager help Current for zones issues features
 
 feature {SD_ACCESS} -- Library internal attributes
 
 	tool_bar_container: SD_TOOL_BAR_CONTAINER
-			-- Container for tool bars on four sides
+			-- Container for tool bars on four sides of main window
 
 	main_window: EV_WINDOW
-			-- Client programmer's main window
+			-- Client programmer's and docking manager's main window
 
 	fixed_area: EV_FIXED
-			-- EV_FIXED for DOCKING_MANAGER manage widgets
+			-- EV_FIXED for DOCKING_MANAGER to manage widgets
 
 	top_container: EV_CONTAINER
-			-- Topest level container. It contains EV_VIWEPORT which contains fixed_area.	
+			-- Topest level container. It contains EV_VIWEPORT which contains fixed_area	
 
 	inner_containers: ARRAYED_SET [SD_MULTI_DOCK_AREA]
-			-- All containers
+			-- All containers, including main windows' and all floating windows'
 
 	main_container: SD_MAIN_CONTAINER
-			-- Container has four tab stub areas in four side and main area in center
+			-- Container in main window which has four tab stub areas in four side and a main area for docking widgets in center
 
 	is_closing_all: BOOLEAN
-			-- If Current closing all contents now
+			-- Is Current closing all contents now?
 
 feature {SD_DOCKING_MANAGER_AGENTS, SD_DOCKING_MANAGER_QUERY, SD_DOCKING_MANAGER_COMMAND} -- Implementation
 

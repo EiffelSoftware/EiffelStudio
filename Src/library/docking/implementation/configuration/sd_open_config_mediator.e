@@ -17,7 +17,7 @@ create
 feature {NONE} -- Initialization
 
 	make (a_docking_manager: SD_DOCKING_MANAGER)
-			-- Creation method.
+			-- Creation method
 		require
 			a_docking_manager_not_void: a_docking_manager /= Void
 		do
@@ -31,10 +31,10 @@ feature {NONE} -- Initialization
 			set: internal_docking_manager = a_docking_manager
 		end
 
-feature -- Open inner container data.
+feature -- Open inner container data
 
 	open_config (a_file: STRING_GENERAL): BOOLEAN
-			-- Open all docking library data from `a_file'.
+			-- Open all docking library data from `a_file'
 		require
 			a_file_not_void: a_file /= Void
 		local
@@ -51,7 +51,7 @@ feature -- Open inner container data.
 		end
 
 	open_editors_config (a_file: STRING_GENERAL)
-			-- Open main window eidtor config data.
+			-- Open main window eidtor config data
 		require
 			not_void: a_file /= Void
 		local

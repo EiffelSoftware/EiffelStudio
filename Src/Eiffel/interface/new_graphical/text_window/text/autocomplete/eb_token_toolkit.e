@@ -194,7 +194,8 @@ feature -- basic operations
 		end
 
 	string_32_is_caseless_equal (a_str_32: STRING_32; a_str_other: STRING_32): BOOLEAN
-			-- Is `a_str_32' in UTF32 case insensitive equal to `a_str' taken as ISO-8859-1?
+			-- Is `a_str_32' in UTF32 case insensitive equal to `a_str_other'?
+			-- Only test case sensitivity for ASCII characters.
 		require
 			a_str_32_not_void: a_str_32 /= Void
 			a_str_other_not_void: a_str_other /= Void

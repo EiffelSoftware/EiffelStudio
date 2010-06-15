@@ -99,7 +99,7 @@ feature -- Query
 			l_first_leaf := a_ast.first_token (l_data.ast_match_list)
 			l_last_leaf := a_ast.last_token (l_data.ast_match_list)
 			if attached l_first_leaf and then attached l_last_leaf then
-				create l_mapper.make (encoding_converter.utf32_to_utf8 (original_text))
+				create l_mapper.make (ec_encoding_converter.utf32_to_utf8 (original_text))
 				l_start := l_mapper.next_utf32_pos_from_utf8_pos (l_first_leaf.start_position)
 				l_end := l_mapper.next_utf32_pos_from_utf8_pos (l_last_leaf.end_position)
 				Result := [l_start, l_end]

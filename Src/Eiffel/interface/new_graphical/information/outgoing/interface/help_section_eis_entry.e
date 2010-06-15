@@ -48,11 +48,14 @@ feature -- Access
 			end
 		end
 
-	entry: attached EIS_ENTRY;
+	entry: EIS_ENTRY;
 			-- The EIS entry
 
+invariant
+	entry_not_void: entry /= Void
+
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

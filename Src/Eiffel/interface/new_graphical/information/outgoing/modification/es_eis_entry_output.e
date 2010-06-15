@@ -13,10 +13,14 @@ inherit
 
 	CONF_ACCESS
 
+	SHARED_ENCODING_CONVERTER
+
 feature -- Operation
 
-	process (a_entry: attached EIS_ENTRY)
+	process (a_entry: EIS_ENTRY)
 			-- Start process `a_entry'
+		require
+			a_entry_not_void: a_entry /= Void
 		local
 			l_output: STRING_32
 			l_comma_needed: BOOLEAN
@@ -25,7 +29,7 @@ feature -- Operation
 				create l_output.make_from_string ({ES_EIS_TOKENS}.eis_string)
 				l_output.append (": ")
 				if a_entry.name /= Void then
-					l_output.append (quoted_string ({ES_EIS_TOKENS}.name_string + {ES_EIS_TOKENS}.value_assignment + a_entry.name))
+					l_output.append (quoted_string ({ES_EIS_TOKENS}.name_string.as_string_32 + {ES_EIS_TOKENS}.value_assignment + a_entry.name))
 					l_comma_needed := True
 				end
 				if a_entry.protocol /= Void then
@@ -33,7 +37,7 @@ feature -- Operation
 						l_output.append_character ({ES_EIS_TOKENS}.attribute_seperator)
 						l_output.append_character ({ES_EIS_TOKENS}.space)
 					end
-					l_output.append (quoted_string ({ES_EIS_TOKENS}.protocol_string + {ES_EIS_TOKENS}.value_assignment + a_entry.protocol))
+					l_output.append (quoted_string ({ES_EIS_TOKENS}.protocol_string.as_string_32 + {ES_EIS_TOKENS}.value_assignment + a_entry.protocol))
 					l_comma_needed := True
 				end
 				if a_entry.source /= Void then
@@ -41,7 +45,7 @@ feature -- Operation
 						l_output.append_character ({ES_EIS_TOKENS}.attribute_seperator)
 						l_output.append_character ({ES_EIS_TOKENS}.space)
 					end
-					l_output.append (quoted_string ({ES_EIS_TOKENS}.source_string + {ES_EIS_TOKENS}.value_assignment + a_entry.source))
+					l_output.append (quoted_string ({ES_EIS_TOKENS}.source_string.as_string_32 + {ES_EIS_TOKENS}.value_assignment + a_entry.source))
 					l_comma_needed := True
 				end
 				if a_entry.tags /= Void and then not a_entry.tags.is_empty then
@@ -49,7 +53,7 @@ feature -- Operation
 						l_output.append_character ({ES_EIS_TOKENS}.attribute_seperator)
 						l_output.append_character ({ES_EIS_TOKENS}.space)
 					end
-					l_output.append (quoted_string ({ES_EIS_TOKENS}.tag_string + {ES_EIS_TOKENS}.value_assignment + tags_as_code (a_entry)))
+					l_output.append (quoted_string ({ES_EIS_TOKENS}.tag_string.as_string_32 + {ES_EIS_TOKENS}.value_assignment + tags_as_code (a_entry)))
 					l_comma_needed := True
 				end
 
@@ -58,7 +62,7 @@ feature -- Operation
 						l_output.append_character ({ES_EIS_TOKENS}.attribute_seperator)
 						l_output.append_character ({ES_EIS_TOKENS}.space)
 					end
-					l_output.append (quoted_string ({ES_EIS_TOKENS}.override_string + {ES_EIS_TOKENS}.value_assignment + {ES_EIS_TOKENS}.true_string))
+					l_output.append (quoted_string ({ES_EIS_TOKENS}.override_string.as_string_32 + {ES_EIS_TOKENS}.value_assignment + {ES_EIS_TOKENS}.true_string))
 					l_comma_needed := True
 				end
 
@@ -90,8 +94,7 @@ feature -- Operation
 						lt_others.after
 					loop
 						if not lt_others.key_for_iteration.is_empty then
-								--|FIXME: Bad conversion to STRING_8
-							last_output_conf.add_attribute (lt_others.key_for_iteration, lt_others.item_for_iteration)
+							last_output_conf.add_attribute (encoding_converter.utf32_to_utf8 (lt_others.key_for_iteration), encoding_converter.utf32_to_utf8 (lt_others.item_for_iteration))
 						end
 						lt_others.forth
 					end
@@ -126,9 +129,11 @@ feature -- Access
 	last_output_conf: CONF_NOTE_ELEMENT
 			-- Last output of conf note.
 
-	tags_as_code (a_entry: attached EIS_ENTRY): attached STRING_32
+	tags_as_code (a_entry: EIS_ENTRY): STRING_32
 			-- Tags as a string of code.
 			-- Unquoted
+		require
+			a_entry_not_void: a_entry /= Void
 		local
 			l_found: BOOLEAN
 		do
@@ -153,11 +158,15 @@ feature -- Access
 			if not l_found then
 				create Result.make_empty
 			end
+		ensure
+			Result_not_void: Result /= Void
 		end
 
-	others_as_code (a_entry: attached EIS_ENTRY): attached STRING_32
+	others_as_code (a_entry: EIS_ENTRY): STRING_32
 			-- Others as string of code.
 			-- Quoted
+		require
+			a_entry_not_void: a_entry /= Void
 		local
 			l_attr: STRING_32
 			i, l_count: INTEGER
@@ -191,11 +200,13 @@ feature -- Access
 			if not l_found then
 			 	create Result.make_empty
 			end
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 feature {NONE} -- Implementation
 
-	quoted_string (a_string: STRING_32): attached STRING_32
+	quoted_string (a_string: STRING_32): STRING_32
 			-- Quoted `a_string'
 		require
 			a_string_not_void: a_string /= Void
@@ -203,11 +214,13 @@ feature {NONE} -- Implementation
 			create Result.make_from_string (a_string)
 			Result.prepend_character ('%"')
 			Result.append_character ('%"')
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

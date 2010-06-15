@@ -35,9 +35,11 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_class: attached CLASS_I; a_eis_grid: attached ES_EIS_ENTRY_GRID)
+	make (a_class: CLASS_I; a_eis_grid: ES_EIS_ENTRY_GRID)
 			-- Initialized with `a_conf_notable' and `a_eis_grid'.
 		require
+			a_class_not_void: a_class /= Void
+			a_eis_grid_not_void: a_eis_grid /= Void
 			a_eis_grid_not_destroyed: not a_eis_grid.is_destroyed
 		do
 			class_i := a_class
@@ -140,7 +142,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Access
 
-	entry_editable (a_entry: attached EIS_ENTRY; a_use_cache: BOOLEAN): BOOLEAN
+	entry_editable (a_entry: EIS_ENTRY; a_use_cache: BOOLEAN): BOOLEAN
 			-- If `a_entry' is editable through current view?
 		local
 			l_type: NATURAL
@@ -190,9 +192,12 @@ feature {NONE} -- Access
 
 feature {NONE} -- Class modification
 
-	modify_entry_in_feature (a_old_entry, a_new_entry: attached EIS_ENTRY; a_feature: attached E_FEATURE)
+	modify_entry_in_feature (a_old_entry, a_new_entry: EIS_ENTRY; a_feature: E_FEATURE)
 			-- Modify `a_old_entry' with `a_new_entry' in `a_feature'.
 		require
+			a_old_entry_not_void: a_old_entry /= Void
+			a_new_entry_not_void: a_new_entry /= Void
+			a_feature_not_void: a_feature /= Void
 			a_old_entry_editable: entry_editable (a_old_entry, False)
 		local
 			l_feature_modifier: ES_EIS_FEATURE_MODIFIER
@@ -207,9 +212,12 @@ feature {NONE} -- Class modification
 			end
 		end
 
-	modify_entry_in_class (a_old_entry, a_new_entry: attached EIS_ENTRY; a_class: attached CLASS_I)
+	modify_entry_in_class (a_old_entry, a_new_entry: EIS_ENTRY; a_class: CLASS_I)
 			-- Modify `a_old_entry' with `a_new_entry' in `a_class'.
 		require
+			a_old_entry_not_void: a_old_entry /= Void
+			a_new_entry_not_void: a_new_entry /= Void
+			a_class_not_void: a_class /= Void
 			a_old_entry_editable: entry_editable (a_old_entry, False)
 		local
 			l_class_modifier: ES_EIS_CLASS_MODIFIER
@@ -224,9 +232,10 @@ feature {NONE} -- Class modification
 			end
 		end
 
-	remove_entry (a_entry: attached EIS_ENTRY)
+	remove_entry (a_entry: EIS_ENTRY)
 			-- Remove entry in component.
 		require
+			a_entry_not_void: a_entry /= Void
 			a_entry_editable: entry_editable (a_entry, False)
 		do
 			if attached {E_FEATURE} id_solution.feature_of_id (a_entry.id) as lt_feature then
@@ -238,9 +247,11 @@ feature {NONE} -- Class modification
 			end
 		end
 
-	remove_entry_in_feature (a_entry: attached EIS_ENTRY; a_feature: attached E_FEATURE)
+	remove_entry_in_feature (a_entry: EIS_ENTRY; a_feature: E_FEATURE)
 			-- Remove entry in feature.
 		require
+			a_entry_not_void: a_entry /= Void
+			a_feature_not_void: a_feature /= Void
 			a_entry_editable: entry_editable (a_entry, False)
 		local
 			l_feature_modifier: ES_EIS_FEATURE_MODIFIER
@@ -255,9 +266,11 @@ feature {NONE} -- Class modification
 			end
 		end
 
-	remove_entry_in_class (a_entry: attached EIS_ENTRY; a_class: attached CLASS_I)
+	remove_entry_in_class (a_entry: EIS_ENTRY; a_class: CLASS_I)
 			-- Remove entry in class.
 		require
+			a_entry_not_void: a_entry /= Void
+			a_class_not_void: a_class /= Void
 			a_entry_editable: entry_editable (a_entry, False)
 		local
 			l_class_modifier: ES_EIS_CLASS_MODIFIER
@@ -272,8 +285,11 @@ feature {NONE} -- Class modification
 			end
 		end
 
-	write_entry_in_feature (a_entry: attached EIS_ENTRY; a_feature: attached E_FEATURE)
+	write_entry_in_feature (a_entry: EIS_ENTRY; a_feature: E_FEATURE)
 			-- Write entry in feature.
+		require
+			a_entry_not_void: a_entry /= Void
+			a_feature_not_void: a_feature /= Void
 		local
 			l_feature_modifier: ES_EIS_FEATURE_MODIFIER
 		do
@@ -291,8 +307,11 @@ feature {NONE} -- Class modification
 			end
 		end
 
-	write_entry_in_class (a_entry: attached EIS_ENTRY; a_class: attached CLASS_I)
+	write_entry_in_class (a_entry: EIS_ENTRY; a_class: CLASS_I)
 			-- Write entry in class.
+		require
+			a_entry_not_void: a_entry /= Void
+			a_class_not_void: a_class /= Void
 		local
 			l_class_modifier: ES_EIS_CLASS_MODIFIER
 		do
@@ -312,7 +331,7 @@ feature {NONE} -- Class modification
 
 feature {NONE} -- Location token
 
-	class_editor_token_for_location (a_item: CLASS_I; a_editable: BOOLEAN): attached ES_GRID_LIST_ITEM
+	class_editor_token_for_location (a_item: CLASS_I; a_editable: BOOLEAN): ES_GRID_LIST_ITEM
 			-- Create editor token for loaction accordingly.
 		do
 			if a_editable and a_item.is_compiled then
@@ -322,7 +341,7 @@ feature {NONE} -- Location token
 			end
 		end
 
-	feature_editor_token_for_location (a_item: E_FEATURE; a_name: STRING; a_editable: BOOLEAN): attached ES_GRID_LIST_ITEM
+	feature_editor_token_for_location (a_item: E_FEATURE; a_name: STRING; a_editable: BOOLEAN): ES_GRID_LIST_ITEM
 			-- Create editor token item for loaction accordingly.
 		do
 			if a_editable and a_item /= Void then
@@ -332,13 +351,13 @@ feature {NONE} -- Location token
 			end
 		end
 
-	class_feature_editor_token_for_location (a_item: ANY; a_editable: BOOLEAN): attached ES_GRID_LIST_ITEM
+	class_feature_editor_token_for_location (a_item: ANY; a_editable: BOOLEAN): ES_GRID_LIST_ITEM
 			-- Create editor token item for loaction accordingly.
 		local
-			l_editable_item: attached EB_GRID_LISTABLE_CHOICE_ITEM
+			l_editable_item: EB_GRID_LISTABLE_CHOICE_ITEM
 			l_line: EIFFEL_EDITOR_LINE
 			l_list: ARRAYED_LIST [EB_GRID_LISTABLE_CHOICE_ITEM_ITEM]
-			l_item_item: attached EB_GRID_LISTABLE_CHOICE_ITEM_ITEM
+			l_item_item: EB_GRID_LISTABLE_CHOICE_ITEM_ITEM
 			l_e_com: EB_GRID_EDITOR_TOKEN_COMPONENT
 			l_classc: CLASS_C
 			l_written_in_features: LIST [E_FEATURE]
@@ -396,9 +415,11 @@ feature {NONE} -- Location token
 			else
 				create Result
 			end
+		ensure
+			Result_not_void: Result /= Void
 		end
 
-	override_item_from_eis_entry (a_entry: attached EIS_ENTRY; a_editable: BOOLEAN): attached EV_GRID_ITEM
+	override_item_from_eis_entry (a_entry: EIS_ENTRY; a_editable: BOOLEAN): EV_GRID_ITEM
 			-- Grid item of override from an EIS entry.
 		local
 			l_type: NATURAL_32
@@ -429,13 +450,13 @@ feature {NONE} -- Location token
 
 feature {NONE} -- Implementation
 
-	new_extractor: attached ES_EIS_EXTRACTOR
+	new_extractor: ES_EIS_EXTRACTOR
 			-- Create extractor
 		do
 			create {ES_EIS_CLASS_EXTRACTOR}Result.make (class_i, True)
 		end
 
-	background_color_of_entry (a_entry: attached EIS_ENTRY): EV_COLOR
+	background_color_of_entry (a_entry: EIS_ENTRY): EV_COLOR
 			-- Background color of `a_entry'
 		do
 			if
@@ -448,7 +469,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	component_id: attached STRING
+	component_id: STRING
 			-- Component ID
 		do
 			if internal_component_id = Void then
@@ -460,6 +481,8 @@ feature {NONE} -- Implementation
 					Result := lt_id1
 				end
 			end
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 	computed_component_id: detachable STRING
@@ -551,7 +574,7 @@ feature {NONE} -- Callbacks
 			-- On name changed
 			-- We modify neither the referenced EIS entry when the modification is done.
 		local
-			l_new_entry: attached EIS_ENTRY
+			l_new_entry: EIS_ENTRY
 			l_done: BOOLEAN
 		do
 			if attached {EIS_ENTRY} a_item.row.data as lt_entry and then attached a_item.text as lt_name then
@@ -589,7 +612,7 @@ feature {NONE} -- Callbacks
 			-- On protocol changed
 			-- We modify neither the referenced EIS entry when the modification is done.
 		local
-			l_new_entry: attached EIS_ENTRY
+			l_new_entry: EIS_ENTRY
 			l_done: BOOLEAN
 		do
 			if attached {EIS_ENTRY} a_item.row.data as lt_entry and then attached a_item.text as lt_protocol then
@@ -627,7 +650,7 @@ feature {NONE} -- Callbacks
 			-- On source changed
 			-- We modify neither the referenced EIS entry when the modification is done.
 		local
-			l_new_entry: attached EIS_ENTRY
+			l_new_entry: EIS_ENTRY
 			l_done: BOOLEAN
 		do
 			if attached {EIS_ENTRY} a_item.row.data as lt_entry and then attached a_item.text as lt_source then
@@ -665,14 +688,14 @@ feature {NONE} -- Callbacks
 			-- On tags changed
 			-- We modify neither the referenced EIS entry when the modification is done.
 		local
-			l_new_entry: attached EIS_ENTRY
-			l_tags: attached ARRAYED_LIST [STRING_32]
+			l_new_entry: EIS_ENTRY
+			l_tags: ARRAYED_LIST [STRING_32]
 			l_done: BOOLEAN
 		do
 			if attached {EIS_ENTRY} a_item.row.data as lt_entry and then attached a_item.text as lt_tags then
 					 -- |FIXME: Bad conversion, should not convert to string_8.
-				if attached lt_tags.as_string_8 as lt_tags_str_8 then
-					l_tags := parse_tags (lt_tags_str_8)
+				if attached lt_tags as lt_tags_str then
+					l_tags := parse_tags (lt_tags_str)
 					l_tags.compare_objects
 				end
 				if lt_entry.tags /= Void and then lt_entry.tags.is_equal (l_tags) then
@@ -734,8 +757,8 @@ feature {NONE} -- Callbacks
 			-- On others changed
 			-- We modify neither the referenced EIS entry when the modification is done.
 		local
-			l_new_entry: attached EIS_ENTRY
-			l_others: attached HASH_TABLE [STRING_32, STRING_32]
+			l_new_entry: EIS_ENTRY
+			l_others: HASH_TABLE [STRING_32, STRING_32]
 			l_done: BOOLEAN
 		do
 			if attached {EIS_ENTRY} a_item.row.data as lt_entry and then attached a_item.text as lt_others then
@@ -788,7 +811,7 @@ feature {NONE} -- Callbacks
 			l_class_modifier: ES_EIS_CLASS_MODIFIER
 			l_feature_modifier: ES_EIS_FEATURE_MODIFIER
 			l_grid_item: EB_GRID_LISTABLE_CHOICE_ITEM_ITEM
-			l_eis_entry: attached EIS_ENTRY
+			l_eis_entry: EIS_ENTRY
 		do
 			if attached {EIS_ENTRY} a_grid_item.row.data as lt_entry then
 				l_eis_entry := lt_entry
@@ -857,7 +880,7 @@ feature {NONE} -- Callbacks
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

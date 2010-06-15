@@ -18,11 +18,11 @@ inherit
 
 feature -- Access
 
-	eis_entries: attached SEARCH_TABLE [EIS_ENTRY]
+	eis_entries: SEARCH_TABLE [EIS_ENTRY]
 			-- EIS entries
 			-- Only physical appearances of current component
 
-	eis_full_entries: attached SEARCH_TABLE [EIS_ENTRY]
+	eis_full_entries: SEARCH_TABLE [EIS_ENTRY]
 			-- EIS entries including all flat entries from all associated component
 		deferred
 		end
@@ -32,8 +32,12 @@ feature -- Status report
 	force_extracting: BOOLEAN;
 			-- Force extracting?
 
+invariant
+	eis_entries_not_void: eis_entries /= Void
+	eis_full_entries_not_void: eis_full_entries /= Void
+
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

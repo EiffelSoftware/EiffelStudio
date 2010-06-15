@@ -10,7 +10,7 @@ class
 
 feature {NONE} -- Access
 
-	help_provider_from_protocol (a_protocol: detachable STRING_32): attached UUID
+	help_provider_from_protocol (a_protocol: detachable STRING_32): UUID
 			-- Helper provider from `a_protocol'
 		do
 			if a_protocol /= Void and then not a_protocol.is_empty then
@@ -22,9 +22,11 @@ feature {NONE} -- Access
 			else
 				Result := (create {HELP_PROVIDER_KINDS}).eis_default
 			end
+		ensure
+			Result_not_void: Result /= Void
 		end
 
-	providers: attached HASH_TABLE [UUID, STRING_32]
+	providers: HASH_TABLE [UUID, STRING_32]
 			-- Provider mappings.
 			-- String in lower.
 		local
@@ -34,10 +36,12 @@ feature {NONE} -- Access
 			create Result.make (2)
 			Result.force (l_provider.pdf, "pdf")
 			Result.force (l_provider.doc, "doc")
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

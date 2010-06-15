@@ -199,7 +199,7 @@ feature {NONE} -- Initialization
 			l_tree.select_actions.extend (agent on_tree_selected)
 			tree := l_tree
 			l_vbox.extend (l_tree)
-			l_tree.set_minimum_width (Layout_constants.dialog_unit_to_pixels(200))
+			l_tree.set_minimum_width (Layout_constants.dialog_unit_to_pixels (200))
 			l_tree.refresh
 
 --			create l_hbox
@@ -443,7 +443,7 @@ invariant
 	panel_not_void: panel /= Void
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

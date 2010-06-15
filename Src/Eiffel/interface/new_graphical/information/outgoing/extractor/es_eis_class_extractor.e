@@ -122,6 +122,7 @@ feature {NONE} -- Access
 
 	location: INTEGER
 			-- Location in the text where including EIS entries are calculated
+			-- UTF-8 byte position.
 
 	eis_class_id: detachable STRING
 			-- Class ID for EIS entry.

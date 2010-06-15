@@ -55,10 +55,10 @@ feature {NONE} -- Initialization
 
 				-- Set detected encoding
 			if attached l_encoding then
-				encoding_converter.detected_encoding := l_encoding
+				ec_encoding_converter.detected_encoding := l_encoding
 			else
 					-- No encoding detected, use default.
-				encoding_converter.detected_encoding := (create {EC_ENCODINGS}).default_encoding
+				ec_encoding_converter.detected_encoding := (create {EC_ENCODINGS}).default_encoding
 			end
 
 			if l_text = Void then
@@ -284,7 +284,7 @@ feature {NONE} -- Helpers
 			result_attached: attached Result
 		end
 
-	encoding_converter: EC_ENCODING_CONVERTER
+	ec_encoding_converter: EC_ENCODING_CONVERTER
 			-- Access to the encoding coverter for unicode conversions.
 		once
 			create Result
@@ -442,7 +442,7 @@ feature -- Basic operations
 
 						-- Save directly to disk.
 					create l_save
-					l_save.save (context_class.file_name, l_new_text, encoding_converter.detected_encoding)
+					l_save.save (context_class.file_name, l_new_text, ec_encoding_converter.detected_encoding)
 					from l_editors.start until l_editors.after loop
 						l_editor := l_editors.item
 						l_editor.continue_editing
@@ -523,18 +523,18 @@ feature {NONE} -- Basic operations
 			l_text: STRING
 		do
 				-- Use UTF-8 encoding to diff.
-			l_text := encoding_converter.utf32_to_utf8 (text)
+			l_text := ec_encoding_converter.utf32_to_utf8 (text)
 			if {PLATFORM}.is_windows and then preferences.misc_data.text_mode_is_windows then
 					-- Remove carriage returns, else the diff will think there are modifications.
 				l_text.replace_substring_all ("%R", "")
 			end
 
 			create l_diff
-			l_diff.set_text (encoding_converter.utf32_to_utf8 (original_text), l_text)
+			l_diff.set_text (ec_encoding_converter.utf32_to_utf8 (original_text), l_text)
 			l_diff.compute_diff
 			l_patch := l_diff.unified
 			if attached l_patch and then not l_patch.is_empty then
-				Result := encoding_converter.utf8_to_utf32 (l_diff.patch (encoding_converter.utf32_to_utf8 (a_current_text), l_patch, False))
+				Result := ec_encoding_converter.utf8_to_utf32 (l_diff.patch (ec_encoding_converter.utf32_to_utf8 (a_current_text), l_patch, False))
 			end
 
 			if logger.is_service_available then

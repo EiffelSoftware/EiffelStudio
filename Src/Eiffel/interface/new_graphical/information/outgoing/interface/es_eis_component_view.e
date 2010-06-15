@@ -382,9 +382,11 @@ feature {NONE} -- Initialization
 									(not new_entry_possible implies eis_grid.row_count = extracted_entries.count)
 		end
 
-	new_extractor: attached ES_EIS_EXTRACTOR
+	new_extractor: ES_EIS_EXTRACTOR
 			-- Create extractor
 		deferred
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 feature {NONE} -- Events
@@ -546,17 +548,19 @@ feature {NONE} -- Item callbacks
 
 feature {ES_EIS_COMPONENT_VIEW} -- Access
 
-	component: attached G
+	component: G
 			-- The focusing component
 
-	background_color_of_entry (a_entry: attached EIS_ENTRY): EV_COLOR
+	background_color_of_entry (a_entry: EIS_ENTRY): EV_COLOR
 			-- Background color of `a_entry'
+		require
+			a_entry_not_void: a_entry /= Void
 		do
 		end
 
 feature {NONE} -- Access
 
-	eis_grid: attached ES_EIS_ENTRY_GRID
+	eis_grid: ES_EIS_ENTRY_GRID
 			-- Grid to display EIS entries
 
 	extracted_entries: DS_ARRAYED_LIST [EIS_ENTRY]
@@ -655,18 +659,22 @@ feature {NONE} -- Validation
 			end
 		end
 
-	entry_editable (a_entry: attached EIS_ENTRY; a_use_cache: BOOLEAN): BOOLEAN
+	entry_editable (a_entry: EIS_ENTRY; a_use_cache: BOOLEAN): BOOLEAN
 			-- If `a_entry' is editable through current view?
+		require
+			a_entry_not_void: a_entry /= Void
 		do
 		end
 
 feature {NONE} -- Grid items
 
-	name_item_from_eis_entry (a_entry: attached EIS_ENTRY; a_editable: BOOLEAN): attached EV_GRID_ITEM
+	name_item_from_eis_entry (a_entry: EIS_ENTRY; a_editable: BOOLEAN): EV_GRID_ITEM
 			-- Grid item of name from an EIS entry.
+		require
+			a_entry_not_void: a_entry /= Void
 		local
 			l_name: STRING_32
-			l_editable_item: attached EV_GRID_EDITABLE_ITEM
+			l_editable_item: EV_GRID_EDITABLE_ITEM
 		do
 			l_name := a_entry.name
 			if l_name = Void then
@@ -681,10 +689,14 @@ feature {NONE} -- Grid items
 			else
 				create {EV_GRID_LABEL_ITEM}Result.make_with_text (l_name)
 			end
+		ensure
+			Result_not_void: Result /= Void
 		end
 
-	protocol_item_from_eis_entry (a_entry: attached EIS_ENTRY; a_editable: BOOLEAN): attached EV_GRID_ITEM
+	protocol_item_from_eis_entry (a_entry: EIS_ENTRY; a_editable: BOOLEAN): EV_GRID_ITEM
 			-- Grid item of protocol from an EIS entry.
+		require
+			a_entry_not_void: a_entry /= Void
 		local
 			l_protocol: STRING_32
 			l_editable_item: attached EV_GRID_EDITABLE_ITEM
@@ -702,13 +714,17 @@ feature {NONE} -- Grid items
 			else
 				create {EV_GRID_LABEL_ITEM}Result.make_with_text (l_protocol)
 			end
+		ensure
+			Result_not_void: Result /= Void
 		end
 
-	source_item_from_eis_entry (a_entry: attached EIS_ENTRY; a_editable: BOOLEAN): attached EV_GRID_ITEM
+	source_item_from_eis_entry (a_entry: EIS_ENTRY; a_editable: BOOLEAN): EV_GRID_ITEM
 			-- Grid item of source from an EIS entry.
+		require
+			a_entry_not_void: a_entry /= Void
 		local
 			l_source: STRING_32
-			l_editable_item: attached EV_GRID_EDITABLE_ITEM
+			l_editable_item: EV_GRID_EDITABLE_ITEM
 		do
 			l_source := a_entry.source
 			if l_source = Void then
@@ -723,13 +739,17 @@ feature {NONE} -- Grid items
 			else
 				create {EV_GRID_LABEL_ITEM}Result.make_with_text (l_source)
 			end
+		ensure
+			Result_not_void: Result /= Void
 		end
 
-	tags_item_from_eis_entry (a_entry: attached EIS_ENTRY; a_editable: BOOLEAN): attached EV_GRID_ITEM
+	tags_item_from_eis_entry (a_entry: EIS_ENTRY; a_editable: BOOLEAN): EV_GRID_ITEM
 			-- Grid item of tags from an EIS entry.
+		require
+			a_entry_not_void: a_entry /= Void
 		local
 			l_tags: STRING_32
-			l_editable_item: attached EV_GRID_EDITABLE_ITEM
+			l_editable_item: EV_GRID_EDITABLE_ITEM
 		do
 			l_tags := eis_output.tags_as_code (a_entry)
 			if a_editable then
@@ -741,19 +761,27 @@ feature {NONE} -- Grid items
 			else
 				create {EV_GRID_LABEL_ITEM}Result.make_with_text (l_tags)
 			end
+		ensure
+			Result_not_void: Result /= Void
 		end
 
-	override_item_from_eis_entry (a_entry: attached EIS_ENTRY; a_editable: BOOLEAN): attached EV_GRID_ITEM
+	override_item_from_eis_entry (a_entry: EIS_ENTRY; a_editable: BOOLEAN): EV_GRID_ITEM
 			-- Grid item of override from an EIS entry.
+		require
+			a_entry_not_void: a_entry /= Void
 		do
 			create {EV_GRID_LABEL_ITEM} Result.make_with_text ("-")
+		ensure
+			Result_not_void: Result /= Void
 		end
 
-	others_item_from_eis_entry (a_entry: attached EIS_ENTRY; a_editable: BOOLEAN): attached EV_GRID_ITEM
+	others_item_from_eis_entry (a_entry: EIS_ENTRY; a_editable: BOOLEAN): EV_GRID_ITEM
 			-- Grid item of others from an EIS entry.
+		require
+			a_entry_not_void: a_entry /= Void
 		local
-			l_others: attached STRING_32
-			l_editable_item: attached EV_GRID_EDITABLE_ITEM
+			l_others: STRING_32
+			l_editable_item: EV_GRID_EDITABLE_ITEM
 		do
 			l_others := eis_output.others_as_code (a_entry)
 			if a_editable then
@@ -765,10 +793,14 @@ feature {NONE} -- Grid items
 			else
 				create {EV_GRID_LABEL_ITEM}Result.make_with_text (l_others)
 			end
+		ensure
+			Result_not_void: Result /= Void
 		end
 
-	location_item_from_eis_entry (a_entry: attached EIS_ENTRY; a_editable: BOOLEAN): attached EV_GRID_ITEM
+	location_item_from_eis_entry (a_entry: EIS_ENTRY; a_editable: BOOLEAN): EV_GRID_ITEM
 			-- Grid item of location from an EIS entry
+		require
+			a_entry_not_void: a_entry /= Void
 		local
 			l_type: NATURAL
 			l_target: CONF_TARGET
@@ -806,9 +838,11 @@ feature {NONE} -- Grid items
 			else
 				create {EV_GRID_LABEL_ITEM}Result
 			end
+		ensure
+			Result_not_void: Result /= Void
 		end
 
-	new_listable_item: attached EB_GRID_LISTABLE_CHOICE_ITEM
+	new_listable_item: EB_GRID_LISTABLE_CHOICE_ITEM
 			-- New listable item
 		do
 			create Result
@@ -816,16 +850,18 @@ feature {NONE} -- Grid items
 			Result.set_left_border (1)
 			Result.set_bottom_border (1)
 			Result.set_border_line_color (eis_grid.separator_color)
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 feature {NONE} -- Location token
 
-	target_editor_token_for_location (a_item: CONF_TARGET): attached ES_GRID_LIST_ITEM
+	target_editor_token_for_location (a_item: CONF_TARGET): ES_GRID_LIST_ITEM
 			-- Create editor token for loaction accordingly.
 		local
 			l_editable_item: EB_GRID_LISTABLE_CHOICE_ITEM
 			l_line: EIFFEL_EDITOR_LINE
-			l_item_item: attached EB_GRID_LISTABLE_CHOICE_ITEM_ITEM
+			l_item_item: EB_GRID_LISTABLE_CHOICE_ITEM_ITEM
 			l_e_com: EB_GRID_EDITOR_TOKEN_COMPONENT
 		do
 			if a_item /= Void then
@@ -843,14 +879,16 @@ feature {NONE} -- Location token
 			else
 				create Result
 			end
+		ensure
+			Result_not_void: Result /= Void
 		end
 
-	group_editor_token_for_location (a_item: CONF_GROUP): attached ES_GRID_LIST_ITEM
+	group_editor_token_for_location (a_item: CONF_GROUP): ES_GRID_LIST_ITEM
 			-- Create editor token for loaction accordingly.
 		local
 			l_editable_item: EB_GRID_LISTABLE_CHOICE_ITEM
 			l_line: EIFFEL_EDITOR_LINE
-			l_item_item: attached EB_GRID_LISTABLE_CHOICE_ITEM_ITEM
+			l_item_item: EB_GRID_LISTABLE_CHOICE_ITEM_ITEM
 			l_e_com: EB_GRID_EDITOR_TOKEN_COMPONENT
 		do
 			if a_item /= Void then
@@ -868,14 +906,16 @@ feature {NONE} -- Location token
 			else
 				create Result
 			end
+		ensure
+			Result_not_void: Result /= Void
 		end
 
-	folder_editor_token_for_location (a_item: EB_FOLDER): attached ES_GRID_LIST_ITEM
+	folder_editor_token_for_location (a_item: EB_FOLDER): ES_GRID_LIST_ITEM
 			-- Create editor token for loaction accordingly.
 		local
 			l_editable_item: EB_GRID_LISTABLE_CHOICE_ITEM
 			l_line: EIFFEL_EDITOR_LINE
-			l_item_item: attached EB_GRID_LISTABLE_CHOICE_ITEM_ITEM
+			l_item_item: EB_GRID_LISTABLE_CHOICE_ITEM_ITEM
 			l_e_com: EB_GRID_EDITOR_TOKEN_COMPONENT
 		do
 			if a_item /= Void then
@@ -893,14 +933,16 @@ feature {NONE} -- Location token
 			else
 				create Result
 			end
+		ensure
+			Result_not_void: Result /= Void
 		end
 
-	class_editor_token_for_location (a_item: CLASS_I; a_editable: BOOLEAN): attached ES_GRID_LIST_ITEM
+	class_editor_token_for_location (a_item: CLASS_I; a_editable: BOOLEAN): ES_GRID_LIST_ITEM
 			-- Create editor token for loaction accordingly.
 		local
-			l_editable_item: attached EB_GRID_LISTABLE_CHOICE_ITEM
+			l_editable_item: EB_GRID_LISTABLE_CHOICE_ITEM
 			l_line: EIFFEL_EDITOR_LINE
-			l_item_item: attached EB_GRID_LISTABLE_CHOICE_ITEM_ITEM
+			l_item_item: EB_GRID_LISTABLE_CHOICE_ITEM_ITEM
 			l_e_com: EB_GRID_EDITOR_TOKEN_COMPONENT
 		do
 			if a_item /= Void then
@@ -918,16 +960,18 @@ feature {NONE} -- Location token
 			else
 				create Result
 			end
+		ensure
+			Result_not_void: Result /= Void
 		end
 
-	feature_editor_token_for_location (a_item: E_FEATURE; a_name: STRING; a_editable: BOOLEAN): attached ES_GRID_LIST_ITEM
+	feature_editor_token_for_location (a_item: E_FEATURE; a_name: STRING; a_editable: BOOLEAN): ES_GRID_LIST_ITEM
 			-- Create editor token for loaction accordingly.
 		require
 			a_item_void_implies_a_name_not_void: a_item = Void implies a_name /= Void
 		local
-			l_editable_item: attached EB_GRID_LISTABLE_CHOICE_ITEM
+			l_editable_item: EB_GRID_LISTABLE_CHOICE_ITEM
 			l_line: EIFFEL_EDITOR_LINE
-			l_item_item: attached EB_GRID_LISTABLE_CHOICE_ITEM_ITEM
+			l_item_item: EB_GRID_LISTABLE_CHOICE_ITEM_ITEM
 			l_e_com: EB_GRID_EDITOR_TOKEN_COMPONENT
 			l_component: ES_GRID_PIXMAP_COMPONENT
 		do
@@ -940,7 +984,7 @@ feature {NONE} -- Location token
 			if a_item /= Void then
 				token_writer.add_sectioned_feature_name (a_item)
 			else
-				token_writer.process_basic_text (a_name)
+				token_writer.process_basic_text (encoding_converter.utf8_to_utf32 (a_name))
 			end
 			l_editable_item := new_listable_item
 			l_line := token_writer.last_line
@@ -953,45 +997,57 @@ feature {NONE} -- Location token
 			else
 				create Result
 			end
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 feature {NONE} -- Pixmap component
 
-	target_pixmap_component: attached ES_GRID_PIXMAP_COMPONENT
+	target_pixmap_component: ES_GRID_PIXMAP_COMPONENT
 			-- Target pixmap component
 		do
 			create Result.make (pixmaps.icon_pixmaps.folder_target_icon)
+		ensure
+			Result_not_void: Result /= Void
 		end
 
-	group_pixmap_component (a_group: CONF_GROUP): attached ES_GRID_PIXMAP_COMPONENT
+	group_pixmap_component (a_group: CONF_GROUP): ES_GRID_PIXMAP_COMPONENT
 			-- Group pixmap component
 		require
 			a_group_not_void: a_group /= Void
 		do
 			create Result.make (icon_factory.pixmap_from_group (a_group))
+		ensure
+			Result_not_void: Result /= Void
 		end
 
-	folder_pixmap_component: attached ES_GRID_PIXMAP_COMPONENT
+	folder_pixmap_component: ES_GRID_PIXMAP_COMPONENT
 			-- Folder pixmap component
 		do
 			create Result.make (pixmaps.icon_pixmaps.folder_blank_icon)
+		ensure
+			Result_not_void: Result /= Void
 		end
 
-	class_pixmap_component (a_class: CLASS_I): attached ES_GRID_PIXMAP_COMPONENT
+	class_pixmap_component (a_class: CLASS_I): ES_GRID_PIXMAP_COMPONENT
 			-- Class pixmap component
 		do
 			create Result.make (icon_factory.pixmap_from_class_i (a_class))
+		ensure
+			Result_not_void: Result /= Void
 		end
 
-	feature_pixmap_component (a_feature: E_FEATURE): attached ES_GRID_PIXMAP_COMPONENT
+	feature_pixmap_component (a_feature: E_FEATURE): ES_GRID_PIXMAP_COMPONENT
 			-- Feature pixmap component
 		require
 			a_feature_not_void: a_feature /= Void
 		do
 			create Result.make (icon_factory.pixmap_from_e_feature (a_feature))
+		ensure
+			Result_not_void: Result /= Void
 		end
 
-	uncompiled_feature_pixmap_component: attached ES_GRID_PIXMAP_COMPONENT
+	uncompiled_feature_pixmap_component: ES_GRID_PIXMAP_COMPONENT
 			-- Uncompiled feature pixmap component
 		do
 			create Result.make (pixmaps.icon_pixmaps.feature_obsolete_routine_icon)
@@ -999,9 +1055,9 @@ feature {NONE} -- Pixmap component
 
 feature {NONE} -- Session IDs
 
-	eis_entry_grid_sorting_column_session_id: attached STRING_8 = "com.eiffel.eis_tool.entry_grid_sorting_column"
+	eis_entry_grid_sorting_column_session_id: STRING_8 = "com.eiffel.eis_tool.entry_grid_sorting_column"
 
-	eis_entry_grid_sorting_order_session_id: attached STRING_8 = "com.eiffel.eis_tool.entry_grid_sorting_order"
+	eis_entry_grid_sorting_order_session_id: STRING_8 = "com.eiffel.eis_tool.entry_grid_sorting_order"
 
 feature {NONE} -- Column constants
 
@@ -1014,8 +1070,12 @@ feature {NONE} -- Column constants
 	column_others: INTEGER = 7
 	numbers_of_column: INTEGER = 7;
 
+invariant
+	component_not_void: component /= Void
+	eis_grid_not_void: eis_grid /= Void
+
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

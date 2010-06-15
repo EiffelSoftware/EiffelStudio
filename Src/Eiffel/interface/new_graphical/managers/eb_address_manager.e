@@ -67,8 +67,6 @@ inherit
 
 	SHARED_ENCODING_CONVERTER
 
-	EB_TOKEN_TOOLKIT
-
 	INTERNAL_COMPILER_STRING_EXPORTER
 
 create
@@ -1321,7 +1319,7 @@ feature {NONE} -- open new class
 				if fname = Void or else fname.is_empty then
 					process_cluster
 				else
-					fname := string_32_to_lower (fname)
+					fname := string_general_as_lower (fname)
 					create matcher.make_empty
 						--|FIXME: Unicode handling. Not sure matcher accept UTF8
 					matcher.set_pattern (encoding_converter.utf32_to_utf8 (fname))
@@ -1387,7 +1385,7 @@ feature {NONE} -- open new class
 						process_feature_class
 					end
 				else
-					cname := string_32_to_upper (cname)
+					cname := string_general_as_upper (cname)
 					create matcher.make_empty
 					matcher.set_pattern (encoding_converter.utf32_to_utf8 (cname))
 					if not matcher.has_wild_cards then
@@ -1495,7 +1493,7 @@ feature {NONE} -- open new class
 					process_feature_feature
 				end
 			else
-				fname := string_32_to_lower (fname)
+				fname := string_general_as_lower (fname)
 				create matcher.make_empty
 					--|FIXME: Unicode handling, not sure matcher handles UTF-8.
 				matcher.set_pattern (encoding_converter.utf32_to_utf8 (fname))
@@ -2048,7 +2046,7 @@ feature {NONE} -- open new class
 				last_caret_position := feature_address.caret_position
 					-- Only perform `left_adjust' so that we can type `infix "X"' in the combo box.
 				string_general_left_adjust (str)
-				str := string_32_to_lower (str)
+				str := string_general_as_lower (str)
 				nb := str.count
 				do_not_complete :=	last_key_was_delete or
 									not enable_feature_complete or

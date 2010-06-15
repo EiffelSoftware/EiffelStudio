@@ -13,7 +13,7 @@ copy_sub 	 Ace $TEST Ace
 copy_raw	 test.e $CLUSTER test.e
 copy_raw	 test1.e $CLUSTER test1.e
 compile_melted
-compile_result 	validity_error TEST VTCG
+compile_result 	validity_error TEST VTCG; TEST1 VTGC(3)
 -- VTGD(2)
 	
 test_end

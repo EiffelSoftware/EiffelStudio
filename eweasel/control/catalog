@@ -915,13 +915,13 @@ test	ref-actual-expanded-formal	melt004  tcf pass melting
 test	real-const-arith-to-double	melt005  tcf pass melting
 
 test	multiple-unary-free-ops		melt006  tcf pass melting
-test	chained-assertion-melt		melt007  tcf pass melting
+test	chained-assertion-melt		melt007  tcf pass melting assertion
 test	melted-putreal-wrong		melt008  tcf pass melting
 test	invariant-melt-panic		melt009  tcf pass melting
 test	weird-sprintf-melt-panic	melt010  tcf pass melting manual
 test	manifest-array-int-double	melt011  tcf pass melting
 test	raise-exception-call-self	melt012  tcf fail melting
-test	invalid-assertion-level		melt013  tcf pass melting
+test	invalid-assertion-level		melt013  tcf pass melting assertion
 test	creation-proc-modify-target	melt014  tcf pass melting
 test	nested-expanded-creation	melt015  tcf pass melting
 test	chg-external-to-internal	melt016  tcf pass melting
@@ -1226,7 +1226,7 @@ test	arrayed-list-clone-not-equal	exec052  tcf pass execution
 test	root-no-class-invariant		exec053  tcf pass execution
 test	integer-ref-gt-integer		exec054  tcf pass execution
 test	expanded-generic-like-current	exec055  tcf pass execution
-test	skip-deferred-feat-assertions	exec056  tcf fail execution
+test	skip-deferred-feat-assertions	exec056  tcf fail execution assertion
 test	array-of-expanded-insert-fails	exec057  tcf pass execution
 test	once-bit-type-result		exec058  tcf fail execution
 test	bit-function-explicit-creation	exec059  tcf pass execution
@@ -1254,7 +1254,7 @@ test	diff-bit-constants-deep-equal	exec080  tcf fail execution
 test	print-null-get-nothing		exec081  tcf pass execution
 test	cloned-int-passed-to-double	exec082  tcf pass execution
 test	deep-clone-bit			exec083  tcf fail execution
-test	retry-forget-in-assertion	exec084  tcf pass execution
+test	retry-forget-in-assertion	exec084  tcf pass execution assertion
 test	rescue-show-exception-meaning	exec085  tcf pass execution
 test	long-short-bits-not-equal	exec086  tcf pass execution
 test	clone-integer-boolean-character	exec087  tcf pass execution
@@ -1364,7 +1364,7 @@ test	once-in-generic-class		exec190  tcf pass execution multithreaded
 test	once-with-exception		exec191  tcf pass execution multithreaded
 test	system-return-code		exec192 tcf pass execution
 test	catch-stack-overflow		exec193 tcf pass execution
-test	thread-assertion-monitoring	exec194 tcf pass execution multithreaded
+test	thread-assertion-monitoring	exec194 tcf pass execution multithreaded assertion
 test	last-exception-after-call	exec195 tcf pass execution
 test	inspect-on-character-interval	exec196 tcf pass execution
 test	basic-type-conversion	exec197	tcf pass execution
@@ -1403,15 +1403,15 @@ test	double-clone				exec229 tcf pass execution
 test	infix-power-taking-double	exec230 tcf pass execution
 test	insert-expanded-in-list-of-any	exec231 tcf pass execution
 test	modification-of-basic-variable	exec232 tcf pass execution
-test	assertion-inline-agents-with-locals exec233 tcf pass execution
+test	assertion-inline-agents-with-locals exec233 tcf pass execution assertion
 test	inlined-array exec234 tcf pass execution
 test	inline-agents-and-generics exec235 tcf pass execution
 test 	inline-agents-reordering exec236 tcf pass execution
 test	inline-agent-manifest-expr exec237 tcf pass execution
-test	name-renaming-with-inline-agent-assertion exec238 tcf pass execution
+test	name-renaming-with-inline-agent-assertion exec238 tcf pass execution assertion
 test	correct-vpir-violation exec239 tcf pass execution
 test	inline-agent-of-generic-type exec240 tcf pass execution
-test	agent-in-inherited-assertion exec241 tcf pass execution
+test	agent-in-inherited-assertion exec241 tcf pass execution assertion
 test	deferred-inline-agent exec242 tcf pass execution
 test 	external-inline-agent exec243 tcf pass execution
 test	invariant-encapsulated-inline-agents exec244 tcf pass execution
@@ -1495,8 +1495,9 @@ test	check-instruction-smoke-test	exec321 tcf pass execution check instruction e
 test	ieee-arithmetic					exec322 tcf pass execution ieee
 test	eiffel-ieee-comparison			exec323 tcf pass execution ieee
 test	do-nothing-optimization			exec324 tcf pass execution
-test	assertion-incorrect-type		exec325 tcf pass execution
+test	assertion-incorrect-type		exec325 tcf pass execution assertion
 test	ieee-min-max-values				exec326 tcf pass execution ieee
+test	assertion-reset-with-check		exec327 tcf fail execution assertion manual
 
 -- Once specific
 

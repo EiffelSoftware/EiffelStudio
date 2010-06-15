@@ -7,7 +7,7 @@ create
 feature
 
 	make
-		do
+		local
 			d: REAL_64
 			r: REAL_32
 			P: MANAGED_POINTER

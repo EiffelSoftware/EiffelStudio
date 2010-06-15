@@ -93,9 +93,15 @@ feature -- Search
 			context_class := c
 			t.process (Current)
 		ensure
-			same_name: attached found_feature as f implies f.feature_name_id = n
-			valid_site: attached found_feature as f implies system.classes.has (found_site)
-			feature_from_class: attached found_feature as f implies attached system.class_of_id (found_site) as s and then s.feature_of_name_id (n) ~ f
+			same_name:
+				attached found_feature as f implies
+				(f.feature_name_id = n or else True) -- Feature can be renamed in formal constraints
+			valid_site:
+				attached found_feature as f implies system.classes.has (found_site)
+			feature_from_class:
+				attached found_feature as f implies
+				attached system.class_of_id (found_site) as s and then
+				(s.feature_of_name_id (n) ~ f or else True) -- Feature can be renamed in formal constraints
 		end
 
 feature {TYPE_A} -- Visitor
@@ -148,13 +154,22 @@ feature {TYPE_A} -- Visitor
 			last_feature: detachable FEATURE_I
 			last_site: INTEGER
 			has_multiple: BOOLEAN
+			renamed_type: RENAMED_TYPE_A [TYPE_A]
+			saved_name_id: like name_id
 		do
 			across
 				context_class.constrained_types (t.position) as c
 			until
 				has_multiple
 			loop
-				find (name_id, c.item.type, context_class)
+				renamed_type := c.item
+				saved_name_id := name_id
+				if attached renamed_type.renaming as n then
+						-- Take renaming in formal generic constraints into account.
+					name_id := n.renamed (name_id)
+				end
+				find (name_id, renamed_type.type, context_class)
+				name_id := saved_name_id
 				if attached found_feature as f then
 					if attached last_feature then
 							-- More than one feature is found.

@@ -1,0 +1,35 @@
+
+test_name 	default-on-expanded-string
+test_description A call to `default' on an entity of type TEST2, where TEST2 is an expanded class that inherits from STRING, causes a seg fault when a frozen system is executed.  If invariants are monitored, the result is infinite recursion instead.
+
+define		ASSERTION "False"
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test2.e $CLUSTER test2.e
+compile_melted
+compile_result 	ok
+
+execute_work 	NONE 	exec_output_m
+execute_result 	ok
+compare		exec_output_m output
+
+compile_frozen
+compile_result 	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work 	NONE 	exec_output_w
+execute_result 	ok
+compare		exec_output_w output
+
+define		ASSERTION "True"
+copy_sub 	Ace $TEST Ace
+compile_melted
+compile_result 	ok
+
+execute_work 	NONE 	exec_output_all
+execute_result 	ok
+compare		exec_output_all output
+
+test_end

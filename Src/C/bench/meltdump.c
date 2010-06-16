@@ -580,8 +580,10 @@ static  void    analyze_routids (void)
 			fprintf (mfp, "\n");
 		}
 
-		if (rids != (long *) 0)
+		if (rids != (long *) 0) {
 			free ((char *) rids);
+			rids = NULL;
+		}
 	}
 
 	print_line ();

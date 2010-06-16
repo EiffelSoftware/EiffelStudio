@@ -1498,6 +1498,7 @@ test	do-nothing-optimization			exec324 tcf pass execution
 test	assertion-incorrect-type		exec325 tcf pass execution assertion
 test	ieee-min-max-values				exec326 tcf pass execution ieee
 test	assertion-reset-with-check		exec327 tcf fail execution assertion manual
+test	default-on-expanded-string		exec328 tcf fail execution expanded manual
 
 -- Once specific
 

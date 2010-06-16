@@ -5683,8 +5683,10 @@ rt_private EIF_TYPE_INDEX get_next_compound_id (EIF_REFERENCE Current)
 				short stype;
 				int32 origin, ooffset;
 				EIF_TYPE_INDEX dftype;
-
-				dftype = get_next_compound_id(Current);
+				EIF_TYPE_INDEX dtype;
+				
+				dtype = get_int16(&IC);
+				dftype = get_compound_id(Current, dtype);
 				stype = get_int16(&IC);			/* Get static type of caller */
 				origin = get_int32(&IC);			/* Get the origin class id */
 				ooffset = get_int32(&IC);			/* Get the offset in origin */
@@ -5696,8 +5698,10 @@ rt_private EIF_TYPE_INDEX get_next_compound_id (EIF_REFERENCE Current)
 				short code;
 				long  offset;
 				EIF_TYPE_INDEX dftype;
-
-				dftype = get_next_compound_id(Current);
+				EIF_TYPE_INDEX dtype;
+				
+				dtype = get_int16(&IC);
+				dftype = get_compound_id(Current, dtype);
 				code = get_int16(&IC);		/* Get the static type first */
 				offset = get_int32(&IC);	/* Get the feature id of the anchor */
 				result = RTWCTT(code, offset, dftype);

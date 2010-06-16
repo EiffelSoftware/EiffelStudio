@@ -471,14 +471,14 @@ feature -- Genericity
 		do
 			if qualifier_class.is_precompiled then
 				ba.append_natural_16 ({SHARED_GEN_CONF_LEVEL}.qualified_pfeature_type)
-				qualifier_creation.make_type_byte_code (ba)
+				qualifier.make_full_type_byte_code (ba, context.context_class_type.type)
 				ba.append_type_id (qualifier_static_type_id)
 				rout_info := System.rout_info_table.item (routine_id)
 				ba.append_integer (rout_info.origin)
 				ba.append_integer (rout_info.offset)
 			else
 				ba.append_natural_16 ({SHARED_GEN_CONF_LEVEL}.qualified_feature_type)
-				qualifier_creation.make_type_byte_code (ba)
+				qualifier.make_full_type_byte_code (ba, context.context_class_type.type)
 				ba.append_type_id (qualifier_static_type_id)
 				ba.append_integer (feature_id)
 			end

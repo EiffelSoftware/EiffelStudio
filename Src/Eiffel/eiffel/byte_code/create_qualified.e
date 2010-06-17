@@ -164,7 +164,7 @@ feature -- C code generation
 					buffer.put_integer (0)
 				elseif table.has_one_type then
 						-- There is a table, but with only one type
-					l_type := table.first.type.deep_actual_type
+					l_type := table.first.type.instantiated_in (qualifier).deep_actual_type
 
 					if l_type.has_generics then
 						buffer.put_string ("typres")
@@ -291,7 +291,8 @@ feature -- Genericity
 		do
 			if context.final_mode then
 				table := Eiffel_table.poly_table (routine_id)
-				Result := table.has_one_type and then table.first.type.deep_actual_type.is_explicit
+				Result := table.has_one_type and then
+					table.first.type.instantiated_in (qualifier).deep_actual_type.is_explicit
 			else
 				Result := False
 			end
@@ -300,8 +301,13 @@ feature -- Genericity
 	generate_gen_type_conversion (a_level: NATURAL)
 			-- <Precursor>
 		do
-			qualifier_creation.generate_gen_type_conversion (a_level + 1)
-			Precursor (a_level)
+			if attached type_to_create then
+					-- The type does not depend on the qualifier.
+				Precursor (a_level)
+			else
+					-- The type is computed using qualifier.
+				qualifier_creation.generate_gen_type_conversion (a_level + 1)
+			end
 		end
 
 	generate_cid (buffer: GENERATION_BUFFER; final_mode: BOOLEAN)
@@ -324,7 +330,7 @@ feature -- Genericity
 					buffer.put_character (',')
 				elseif table.has_one_type then
 						-- There is a table, but with only one type
-					l_type := table.first.type.deep_actual_type
+					l_type := table.first.type.instantiated_in (qualifier).deep_actual_type
 
 					if l_type.has_generics or l_type.is_formal then
 						l_type.generate_cid (buffer, final_mode, False, context.context_class_type.type)
@@ -401,7 +407,7 @@ feature -- Genericity
 					dummy := idx_cnt.next
 				elseif table.has_one_type then
 						-- There is a table, but with only one type
-					l_type := table.first.type.deep_actual_type
+					l_type := table.first.type.instantiated_in (qualifier).deep_actual_type
 
 					if l_type.has_generics or l_type.is_formal then
 						l_type.generate_cid_array (buffer,
@@ -440,7 +446,7 @@ feature -- Genericity
 					dummy := idx_cnt.next
 					is_optimized := True
 				elseif table.has_one_type then
-					l_type := table.first.type.deep_actual_type
+					l_type := table.first.type.instantiated_in (qualifier).deep_actual_type
 					if l_type.has_generics or else l_type.is_formal then
 						l_type.generate_cid_init (buffer, final_mode, False, idx_cnt, context.context_class_type.type, a_level)
 					else
@@ -491,7 +497,7 @@ feature -- Genericity
 			if context.final_mode then
 				table := Eiffel_table.poly_table (routine_id)
 				if table.has_one_type then
-					Result ?= table.first.type.deep_actual_type
+					Result ?= table.first.type.instantiated_in (qualifier).deep_actual_type
 				end
 			end
 		end

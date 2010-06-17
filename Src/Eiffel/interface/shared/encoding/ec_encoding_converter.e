@@ -11,8 +11,6 @@ class
 inherit
 	ENCODING_CONVERTER
 
-	ENCODING_HELPER
-
 	EC_ENCODINGS
 		export
 			{NONE} all

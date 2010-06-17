@@ -2476,12 +2476,31 @@ feature {NONE} -- Implementation
 			Result := misc_shortcut_data.shortcuts.item ("show_watch_tool")
 		end
 
+	display_ignore_contract_violation_dialog
+			--
+		local
+			l_confirm: ES_DISCARDABLE_WARNING_PROMPT
+			l_buttons: ES_DIALOG_BUTTONS
+		do
+			create l_buttons
+			create l_confirm.make (ignore_contract_violation.description, l_buttons.yes_no_cancel_buttons,
+					l_buttons.yes_button, l_buttons.yes_button, l_buttons.yes_button,
+					interface_names.l_Discard_ignore_contract_violation_dialog,
+					create {ES_BOOLEAN_PREFERENCE_SETTING}.make (dialog_data.confirm_ignore_contract_violation_preference, True)
+				)
+			l_confirm.set_button_text (l_buttons.yes_button, interface_names.b_break)
+			l_confirm.set_button_text (l_buttons.no_button, interface_names.b_continue)
+			l_confirm.set_button_text (l_buttons.cancel_button, interface_names.b_ignore)
+			l_confirm.set_button_action (l_confirm.dialog_buttons.no_button, agent debug_run_cmd.execute)
+			l_confirm.set_button_action (l_confirm.dialog_buttons.cancel_button, agent ignore_contract_violation.execute)
+			l_confirm.show_on_active_window
+		end
+
 	enable_ignore_contract_violation_if_possible
 			-- Enable/disable ignore contract violation command base on debuggee statues
 		local
 			l_exception_type: STRING
-			l_confirm: ES_DISCARDABLE_WARNING_PROMPT
-			l_buttons: ES_DIALOG_BUTTONS
+			l_env: EV_ENVIRONMENT
 		do
 			if application_status.exception_occurred then
 				if attached {APPLICATION_STATUS_DOTNET} application_status as l_status then
@@ -2502,18 +2521,8 @@ feature {NONE} -- Implementation
 					ignore_contract_violation.enable_sensitive
 
 					-- Display ignore contract violation dialog
-					create l_buttons
-					create l_confirm.make (ignore_contract_violation.description, l_buttons.yes_no_cancel_buttons,
-							l_buttons.yes_button, l_buttons.yes_button, l_buttons.yes_button,
-							interface_names.l_Discard_ignore_contract_violation_dialog,
-							create {ES_BOOLEAN_PREFERENCE_SETTING}.make (dialog_data.confirm_ignore_contract_violation_preference, True)
-						)
-					l_confirm.set_button_text (l_buttons.yes_button, interface_names.b_break)
-					l_confirm.set_button_text (l_buttons.no_button, interface_names.b_continue)
-					l_confirm.set_button_text (l_buttons.cancel_button, interface_names.b_ignore)
-					l_confirm.set_button_action (l_confirm.dialog_buttons.no_button, agent debug_run_cmd.execute)
-					l_confirm.set_button_action (l_confirm.dialog_buttons.cancel_button, agent ignore_contract_violation.execute)
-					l_confirm.show_on_active_window
+					create l_env
+					l_env.application.do_once_on_idle (agent display_ignore_contract_violation_dialog)
 				else
 					ignore_contract_violation.disable_sensitive
 				end

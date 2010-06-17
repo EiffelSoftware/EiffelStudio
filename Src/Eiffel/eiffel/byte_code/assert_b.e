@@ -96,15 +96,19 @@ feature -- Line number setting
 
 				-- Generate the recording of the assertion
 			buf.put_new_line
+			buf.put_string ("RTCT")
+			if context.assertion_type = in_guard then
+				buf.put_character ('0')
+			end
+			buf.put_character ('(')
 			if tag /= Void then
-				buf.put_string ("RTCT(")
 				buf.put_character ('"')
 				buf.put_string (tag)
 				buf.put_character ('"')
-				buf.put_string ({C_CONST}.comma_space)
 			else
-				buf.put_string ("RTCS(")
+				buf.put_string ("NULL")
 			end
+			buf.put_string ({C_CONST}.comma_space)
 			generate_assertion_code (context.assertion_type)
 			buf.put_two_character (')', ';')
 				-- Now evaluate the expression
@@ -130,7 +134,11 @@ feature -- Line number setting
 		do
 			buf.indent
 			buf.put_new_line
-			buf.put_string ("RTCK;")
+			buf.put_string ("RTCK")
+			if context.assertion_type = in_guard then
+				buf.put_character ('0')
+			end
+			buf.put_character (';')
 			buf.exdent
 		end
 
@@ -139,7 +147,11 @@ feature -- Line number setting
 		do
 			buf.indent
 			buf.put_new_line
-			buf.put_string ("RTCF;")
+			buf.put_string ("RTCF")
+			if context.assertion_type = in_guard then
+				buf.put_character ('0')
+			end
+			buf.put_character (';')
 			buf.exdent
 		end
 

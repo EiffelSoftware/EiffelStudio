@@ -85,7 +85,7 @@ feature -- Code generation
 		do
 			generate_line_info
 			if attached check_list as c then
-				context.set_assertion_type (In_check)
+				context.set_assertion_type (In_guard)
 				c.generate
 				context.set_assertion_type (0)
 			end
@@ -162,7 +162,7 @@ feature -- Inlining
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

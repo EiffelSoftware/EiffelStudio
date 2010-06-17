@@ -14,13 +14,16 @@ feature -- Access
 	In_check: INTEGER = 3
 			-- Assertion is a check
 
-	In_loop_invariant: INTEGER = 4
+	In_guard: INTEGER = 4
+			-- Assertion is a guard
+
+	In_loop_invariant: INTEGER = 5
 			-- Assertion in a loop
 
-	In_loop_variant: INTEGER = 5
+	In_loop_variant: INTEGER = 6
 			-- Variant in a loop
 
-	In_invariant: INTEGER = 6
+	In_invariant: INTEGER = 7
 			-- Class invariant
 
 	buffer: GENERATION_BUFFER
@@ -38,7 +41,7 @@ feature -- Code generation
 				buffer.put_string ({C_CONST}.ex_pre)
 			when In_postcondition then
 				buffer.put_string ({C_CONST}.ex_post)
-			when In_check then
+			when In_check, In_guard then
 				buffer.put_string ({C_CONST}.ex_check)
 			when In_loop_invariant then
 				buffer.put_string ({C_CONST}.ex_linv)

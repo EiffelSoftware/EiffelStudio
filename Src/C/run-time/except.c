@@ -597,8 +597,6 @@ rt_public void exinv(char *tag, char *object)
 		return;								/* May be ignored */
 	}
 
-	in_assertion = ~0;
-
 	vector->ex_type = EX_CINV;		/* Class invariant checking */
 	vector->ex_name = tag;			/* The associated assertion tag */
 	vector->ex_oid = object;		/* The value of Current (object ID) */
@@ -631,8 +629,6 @@ rt_public void exasrt(char *tag, int type)
 	}
 	/* Copy from enclosing vector. Reset if `top' is empty */
 	memcpy (vector, top, sizeof(struct ex_vect)); 
-
-	in_assertion = ~0;
 
 	/* The ex_where field for EX_PRE is set only during backtracking */
 

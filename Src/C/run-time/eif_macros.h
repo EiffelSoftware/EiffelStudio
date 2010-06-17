@@ -950,26 +950,31 @@ RT_LNK void eif_exit_eiffel_code(void);
 
 /* Macros for assertion checking:
  *  RTCT(t,x) next assertion has tag 't' and is of type 'x'
- *  RTCS(x) new stack frame of type 'x'
  *  RTCK signals successful end of last assertion check
  *  RTJB goto body 
  *  RTCF signals failure during last assertion check
  *  RTTE tests assertion 
  *	RTIT(t,x) next invariant assertion has tag 't' and is of type 'x'
- *	RTIS(x) new stack invariant frame of type 'x'
  *  RTVR(x,y) check if call of feature 'y' on 'x' is done on a void reference
  */
-#define RTCT(t,x) exasrt(MTC t, x)
-#define RTCS(x) exasrt(MTC (EIF_REFERENCE) 0, x)
-#define RTCK in_assertion = 0; expop(&eif_stack);
-#define RTCF in_assertion = 0; eviol();
-#define RTIT(t,x) exinv(MTC t, x)
-#define RTIS(x) exinv(MTC (EIF_REFERENCE) 0, x)
+#define RTCT0(t,x) exasrt(t, x)
+#define RTIT0(t,x) exinv(t, x)
+#define RTCK0 expop(&eif_stack)
+#define RTCF0 eviol()
+
+#define RTCT(t,x) RTCT0(t,x); in_assertion = ~0
+#define RTIT(t,x) RTIT0(t,x); in_assertion = ~0
+#define RTCK in_assertion = 0; RTCK0
+#define RTCF in_assertion = 0; RTCF0
 #define RTTE(x,y) if (!(x)) goto y 
 #define RTJB goto body
 #ifdef WORKBENCH
 #define RTVR(x,y) if ((x) == (EIF_REFERENCE) 0) eraise(y, EN_VOID)
 #endif
+
+/* Obsolete for backward compatibility */
+#define RTCS(x) RTCT(NULL,x)
+#define RTIS(x) RTIT(NULL,x)
 
 
 

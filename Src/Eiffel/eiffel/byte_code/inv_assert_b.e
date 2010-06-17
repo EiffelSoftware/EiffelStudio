@@ -42,15 +42,15 @@ feature
 			buf := buffer
 				-- Generate the recording of the assertion
 			buf.put_new_line
+			buf.put_string ("RTIT(")
 			if tag /= Void then
-				buf.put_string ("RTIT(")
 				buf.put_character ('"')
 				buf.put_string (tag)
 				buf.put_character ('"')
-				buf.put_string ({C_CONST}.comma_space)
 			else
-				buf.put_string ("RTIS(")
+				buf.put_string ("NULL")
 			end
+			buf.put_string ({C_CONST}.comma_space)
 			context.Current_register.print_register
 			buf.put_two_character (')', ';')
 				-- Now evaluate the expression

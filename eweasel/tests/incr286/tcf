@@ -1,5 +1,5 @@
 test_name change-export-create-generic-contraint-error-ignored
-test_description When specifying the export clause of the create of a type involved in constrainted generic. The VTCG is not catched, unless recompiling from scratch.
+test_description When specifying the export clause of the create of a type involved in constrained generic, the VTCG is not caught unless recompiling from scratch.
 
 define	FOO_BAR_EXPORT_CLAUSE	"FOO_FACTORY"
 copy_sub 	Ace $TEST Ace

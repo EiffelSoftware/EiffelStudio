@@ -1,5 +1,5 @@
 test_name 	svalid-conversion-forget
-test_description Some code is compiled using a conversion, then we change the signature of the routine so that the conversion is not needed. However the compiler reports a VUAR(2) error when non should have been reported.
+test_description Some code is compiled using a conversion, then we change the signature of the routine so that the conversion is not needed. However the compiler reports a VUAR(2) error when none should have been reported.
 copy_sub 	Ace $TEST Ace
 copy_raw	a.e $CLUSTER a.e
 copy_raw	b.e $CLUSTER b.e

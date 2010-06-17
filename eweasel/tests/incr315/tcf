@@ -7,7 +7,7 @@
 -- This is a test control file
 
 test_name 	 add-remove-expanded-mark-generic-class
-test_description After initial compilation, a generic lcass is changed so that it is also expanded.  When the compiler reports VDRD(6) and VDRD(2) errors, the expanded mark is removed and compilation resumed.  The compiler then crashes with a call on Void target in {GEN_TYPE_A}.static_type_id.
+test_description After initial compilation, a generic class is changed so that it is also expanded.  When the compiler reports VDRD(6) and VDRD(2) errors, the expanded mark is removed and compilation resumed.  The compiler then crashes with a call on Void target in {GEN_TYPE_A}.static_type_id.
 
 
 define		EXPANDED ""

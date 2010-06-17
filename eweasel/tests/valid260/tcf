@@ -1,6 +1,6 @@
 
 test_name 	manifest_char_type
-test_description Demostrate an bad expression ({ARRAY [STRING]} 'w') the compiler accepts.
+test_description Demostrate a bad expression ({ARRAY [STRING]} 'w') the compiler accepts.
 
 copy_sub Ace $TEST Ace
 copy_raw test.e $CLUSTER test.e

@@ -1,5 +1,5 @@
 test_name	 conversion_without_binary_operator
-test_description Convertion of target is done without checking that binary operator actually exists. This should be rejected per ECMA specification 
+test_description Conversion of target is done without checking that binary operator actually exists. This should be rejected per ECMA specification 
 
 copy_sub Ace $TEST Ace
 copy_raw a.e	$CLUSTER a.e

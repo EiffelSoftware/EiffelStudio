@@ -236,7 +236,7 @@ feature -- Access
 	Bc_pqlike:			CHARACTER = '%/162/';
 
 		-- Unused opcode
-	Bc_notused_163:		CHARACTER = '%/163/';
+	Bc_guard:			CHARACTER = '%/163/';
 	Bc_notused_164:		CHARACTER = '%/164/';
 	Bc_notused_165:		CHARACTER = '%/165/';
 	Bc_notused_166:		CHARACTER = '%/166/';

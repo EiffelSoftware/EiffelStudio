@@ -2057,7 +2057,7 @@ feature {NONE} -- Visitors
 			end
 			if attached a_node.check_list as c then
 					-- Generate assertions.
-				context.set_assertion_type ({ASSERT_TYPE}.in_check)
+				context.set_assertion_type ({ASSERT_TYPE}.in_guard)
 				c.process (Current)
 				context.set_assertion_type (0)
 			end

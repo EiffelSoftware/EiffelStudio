@@ -6293,7 +6293,7 @@ feature -- Assertions
 				assert_type
 			when In_postcondition then
 				type_assert := {EXCEP_CONST}.postcondition
-			when In_check then
+			when In_check, in_guard then
 				type_assert := {EXCEP_CONST}.check_instruction
 			when In_loop_invariant then
 				type_assert := {EXCEP_CONST}.loop_invariant
@@ -6305,8 +6305,12 @@ feature -- Assertions
 
 			l_label := method_body.define_label
 			method_body.put_opcode_label ({MD_OPCODES}.Brtrue, l_label)
-			put_boolean_constant (False)
-			generate_set_assertion_status
+				-- Before raising the assertion violation we reset `in_assertion' but only
+				-- when it is not a guard because guard do not use `in_assertion'.
+			if assert_type /= in_guard then
+				put_boolean_constant (False)
+				generate_set_assertion_status
+			end
 
 			generate_raise_exception (type_assert, tag)
 

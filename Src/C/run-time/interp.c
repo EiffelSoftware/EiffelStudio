@@ -1845,35 +1845,41 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_ASSERT\n");
 #endif
-		switch (*IC++) {
-		case BC_PRE: 	assert_type = EX_PRE; break;
-		case BC_PST:	assert_type = EX_POST; break;
-		case BC_CHK:	assert_type = EX_CHECK; break;
-		case BC_LINV:	assert_type = EX_LINV; break;
-		case BC_LVAR:	assert_type = EX_VAR; break;
-		case BC_INV:	assert_type = (where ? EX_CINV : EX_INVC); break;
-		default:
-			eif_panic(MTC "invalid assertion code");
-			/* NOTREADCHED */
-		}
-		switch (*IC++) {
-		case BC_TAG:				/* Assertion tag */
-			string = get_string8(&IC, -1);
-			if ((assert_type == EX_CINV) || (assert_type == EX_INVC))
+		{
+			int l_is_guard = 0;
+			switch (*IC++) {
+			case BC_PRE: 	assert_type = EX_PRE; break;
+			case BC_PST:	assert_type = EX_POST; break;
+			case BC_CHK:	assert_type = EX_CHECK; break;
+			case BC_GUARD:	assert_type = EX_CHECK; l_is_guard = 1; break;
+			case BC_LINV:	assert_type = EX_LINV; break;
+			case BC_LVAR:	assert_type = EX_VAR; break;
+			case BC_INV:	assert_type = (where ? EX_CINV : EX_INVC); break;
+			default:
+				eif_panic(MTC "invalid assertion code");
+				/* NOTREADCHED */
+			}
+			switch (*IC++) {
+			case BC_TAG:				/* Assertion tag */
+				string = get_string8(&IC, -1);
+				break;
+			case BC_NOTAG:
+				string = NULL;
+				break;
+			default:
+				string = NULL;
+				eif_panic(MTC "invalid tag opcode");
+				/* NOTREADCHED */
+			}
+			if ((assert_type == EX_CINV) || (assert_type == EX_INVC)) {
 				RTIT((char *) string, icurrent->it_ref);
-			else
-				RTCT((char *) string, assert_type);
-			break;
-		case BC_NOTAG:				/* No assertion tag */
-			if ((assert_type == EX_CINV) || (assert_type == EX_INVC))
-				RTIS(icurrent->it_ref);
-			else
-				RTCS (assert_type);
-			break;
-		case BC_NOT_REC: break;		/* Do not record assertion */
-		default:
-			eif_panic(MTC "invalid tag opcode");
-			/* NOTREADCHED */
+			} else {
+				if (l_is_guard) {
+					RTCT0((char *) string, assert_type);
+				} else {
+					RTCT((char *) string, assert_type);
+				}
+			}
 		}
 		break;
 
@@ -1887,11 +1893,19 @@ rt_private void interpret(int flag, int where)
 		code = (int) opop()->it_char;	/* Get the assertion
 										 * boolean result
 										 */
-		if (code) {
-			RTCK;				/* Assertion success */
-		}
-		else {
-			RTCF;				/* Assertion failure */
+		if (*IC++) {
+				/* If we are not handling a guard, we can reset `in_assertion'. */
+			if (code) {
+				RTCK;				/* Assertion success */
+			} else {
+				RTCF;				/* Assertion failure */
+			} 
+		} else {
+			if (code) {
+				RTCK0;				/* Assertion success */
+			} else {
+				RTCF0;				/* Assertion failure */
+			} 
 		}
 		break;
 

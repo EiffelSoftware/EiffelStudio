@@ -653,6 +653,9 @@ static  void    print_instructions (void)
 					fprintf (ofp," : \"%s\"", get_string8(&ip, -1));
 				break;
 			case  BC_END_ASSERT :
+				if (!get_bool(&ip)) {
+					fprintf (ofp," guard");
+				}
 				break;
 			case  BC_CHECK :
 				/* If not enabled jump to 'offset' */

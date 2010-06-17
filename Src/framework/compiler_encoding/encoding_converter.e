@@ -11,6 +11,8 @@ deferred class
 inherit
 	STRING_HANDLER
 
+	PLATFORM
+
 feature -- Conversion
 
 	utf8_string (a_stream: STRING): STRING

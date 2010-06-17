@@ -29,7 +29,38 @@ feature -- Conversion
 			-- Byte stream of `a_string'.
 		require
 			a_str_attached: a_str /= Void
-		deferred
+		local
+			i: INTEGER_32
+			l_code: NATURAL_32
+			l_count: INTEGER
+			l_is_little_endian: BOOLEAN
+		do
+			l_count := a_str.count
+			if l_count > 0 then
+				create Result.make (l_count * 4)
+				from
+					i := 1
+					l_is_little_endian := is_little_endian
+				until
+					i > l_count
+				loop
+					l_code := a_str.item (i).natural_32_code
+					if l_is_little_endian then
+						Result.append_code (l_code & 0x000000FF)
+						Result.append_code (l_code & 0x0000FF00 |>> 8)
+						Result.append_code (l_code & 0x00FF0000 |>> 16)
+						Result.append_code (l_code & 0xFF000000 |>> 24)
+					else
+						Result.append_code (l_code & 0xFF000000 |>> 24)
+						Result.append_code (l_code & 0x00FF0000 |>> 16)
+						Result.append_code (l_code & 0x0000FF00 |>> 8)
+						Result.append_code (l_code & 0x000000FF)
+					end
+					i := i + 1
+				end
+			else
+				create Result.make_empty
+			end
 		ensure
 			string_32_to_stream_attached: Result /= Void
 		end

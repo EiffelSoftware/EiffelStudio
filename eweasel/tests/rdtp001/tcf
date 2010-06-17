@@ -1,5 +1,5 @@
 test_name 	roundtrip-test
-test_description Tests for a bunch of eiffel classes, wether the round trip works or not
+test_description Tests for a bunch of eiffel classes, whether the round trip works or not
 
 
 copy_sub	Ace $TEST Ace

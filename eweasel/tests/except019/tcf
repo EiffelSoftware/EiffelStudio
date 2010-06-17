@@ -1,5 +1,5 @@
 test_name 	 memory_leak_when_retried
-test_description Reveals a C memory leak when `loc_stack' has not been allocated before Eiffel call but allocated in the call, rescue at that level resets the stack, hence losses the allocated chunk of memory.
+test_description Reveals a C memory leak when `loc_stack' has not been allocated before Eiffel call but allocated in the call, rescue at that level resets the stack, hence looses the allocated chunk of memory.
 
 copy_sub 	 Ace $TEST Ace
 copy_raw 	 test.e  $CLUSTER test.e

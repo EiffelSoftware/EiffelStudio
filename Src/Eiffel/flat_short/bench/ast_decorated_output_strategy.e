@@ -672,27 +672,56 @@ feature {NONE} -- Implementation
 		local
 			l_text_formatter_decorator: like text_formatter_decorator
 		do
+			l_text_formatter_decorator := text_formatter_decorator
 			if not expr_type_visiting then
-				l_text_formatter_decorator := text_formatter_decorator
 				if l_as.is_once_string then
 					l_text_formatter_decorator.process_keyword_text (ti_once_keyword, Void)
 					l_text_formatter_decorator.put_space
 				end
+			end
+
+			if attached l_as.type as l_type then
+				if not expr_type_visiting then
+					l_text_formatter_decorator.process_symbol_text (ti_l_curly)
+				end
+				l_type.process (Current)
+				if not expr_type_visiting then
+					l_text_formatter_decorator.process_symbol_text (ti_r_curly)
+				end
+			else
+				last_type := string_type
+			end
+
+			if not expr_type_visiting then
 				l_text_formatter_decorator.put_string_item (l_as.string_value_32)
 			end
-			last_type := string_type
 		end
 
 	process_verbatim_string_as (l_as: VERBATIM_STRING_AS)
 		local
 			l_text_formatter_decorator: like text_formatter_decorator
 		do
+			l_text_formatter_decorator := text_formatter_decorator
 			if not expr_type_visiting then
-				l_text_formatter_decorator := text_formatter_decorator
 				if l_as.is_once_string then
 					l_text_formatter_decorator.process_keyword_text (ti_once_keyword, Void)
 					l_text_formatter_decorator.put_space
 				end
+			end
+
+			if attached l_as.type as l_type then
+				if not expr_type_visiting then
+					l_text_formatter_decorator.process_symbol_text (ti_l_curly)
+				end
+				l_type.process (Current)
+				if not expr_type_visiting then
+					l_text_formatter_decorator.process_symbol_text (ti_r_curly)
+				end
+			else
+				last_type := string_type
+			end
+
+			if not expr_type_visiting then
 				l_text_formatter_decorator.put_string_item ("%"" + l_as.verbatim_marker)
 				if l_as.is_indentable then
 					l_text_formatter_decorator.put_string_item ("[")
@@ -710,7 +739,6 @@ feature {NONE} -- Implementation
 				end
 				l_text_formatter_decorator.process_string_text (l_as.verbatim_marker + "%"", Void)
 			end
-			last_type := string_type
 		end
 
 	process_body_as (l_as: BODY_AS)

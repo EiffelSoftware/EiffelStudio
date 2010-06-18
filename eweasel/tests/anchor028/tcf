@@ -1,0 +1,12 @@
+
+test_name 	qat-actual-generic-anchored-to-generic
+test_description A qualified anchored type used as actual generic that is indirectly anchored to a feature of a generic class does not cause any cycles.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test1.e $CLUSTER test1.e
+
+compile_melted
+compile_result	ok
+
+test_end

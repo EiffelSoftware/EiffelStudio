@@ -12,19 +12,19 @@ compile_melted output
 compile_result validity_error A VVOK(1)
 
 copy_raw 	a2.e $CLUSTER a.e
-compile_melted
+resume_compile
 compile_result validity_error A VVOK(1)
 
 copy_raw 	a4.e $CLUSTER a.e
-compile_melted
+resume_compile
 compile_result validity_error A VVOK(1)
 
 copy_raw 	a5.e $CLUSTER a.e
-compile_melted
+resume_compile
 compile_result validity_error A VVOK(2)
 
 copy_raw 	a6.e $CLUSTER a.e
-compile_melted
+resume_compile
 compile_result validity_error A VVOK(2)
 
 

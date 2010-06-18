@@ -735,7 +735,7 @@ feature {NONE} -- Implementation
 					l_feat := current_assigner_feature
 				end
 				if not has_error_internal then
-					l_text_formatter_decorator.process_feature_text (l_feat.name_32, l_feat, False)
+					l_feat.append_name (l_text_formatter_decorator)
 				else
 					l_text_formatter_decorator.process_basic_text (l_as.assigner.name_8)
 				end
@@ -1509,7 +1509,7 @@ feature {NONE} -- Implementation
 						end
 					l_feat := feature_in_class (current_class, l_feature.rout_id_set)
 					if not has_error_internal then
-						l_text_formatter_decorator.process_feature_text (l_feat.name_32, l_feat, False)
+						l_feat.append_name (l_text_formatter_decorator)
 					else
 						l_text_formatter_decorator.process_basic_text (l_feature.feature_name_32)
 					end
@@ -1549,7 +1549,7 @@ feature {NONE} -- Implementation
 						l_text_formatter_decorator.process_symbol_text (ti_r_curly)
 						l_text_formatter_decorator.process_symbol_text (ti_dot)
 						l_feat := l_type.associated_class.feature_with_rout_id (l_info.routine_id)
-						l_text_formatter_decorator.add_feature (l_feat, l_feat.name_32)
+						l_feat.append_name (l_text_formatter_decorator)
 						l_text_formatter_decorator.process_symbol_text (ti_space)
 						l_text_formatter_decorator.process_symbol_text (ti_l_parenthesis)
 						l_as.expr.process (Current)
@@ -1562,7 +1562,7 @@ feature {NONE} -- Implementation
 						if not expr_type_visiting then
 							l_as.expr.process (Current)
 							l_text_formatter_decorator.process_symbol_text (ti_dot)
-							l_text_formatter_decorator.add_feature (l_feat, l_feat.name_32)
+							l_feat.append_name (l_text_formatter_decorator)
 						end
 					else
 						set_error_message ("Could not find routine of a given routine ID in an inherited conversion")
@@ -1717,7 +1717,7 @@ feature {NONE} -- Implementation
 					has_error_internal := True
 				end
 				if not has_error_internal then
-					l_text_formatter_decorator.process_feature_text (l_feat.name_32, l_feat, False)
+					l_feat.append_name (l_text_formatter_decorator)
 				else
 					l_text_formatter_decorator.process_basic_text (l_as.feature_name.name_32)
 				end
@@ -1816,7 +1816,7 @@ feature {NONE} -- Implementation
 					l_as.expr.process (Current)
 					if not expr_type_visiting then
 						l_text_formatter_decorator.process_symbol_text (ti_dot)
-						l_text_formatter_decorator.process_feature_text (l_feat.name_32, l_feat, False)
+						l_feat.append_name (l_text_formatter_decorator)
 					end
 				end
 			else
@@ -1981,9 +1981,8 @@ feature {NONE} -- Implementation
 						check l_feat_is_not_procedure: not l_feat.is_procedure end
 						l_as.right.process (Current)
 					else
-						l_name := l_feat.name_32
 						l_text_formatter_decorator.process_symbol_text (ti_dot)
-						l_text_formatter_decorator.process_feature_text (l_name, l_feat, False)
+						l_feat.append_name (l_text_formatter_decorator)
 						l_text_formatter_decorator.put_space
 						l_text_formatter_decorator.process_symbol_text (ti_l_parenthesis)
 						l_as.right.process (Current)
@@ -2403,7 +2402,7 @@ feature {NONE} -- Implementation
 					if processing_formal_dec then
 						l_text_formatter_decorator.process_feature_text (l_as.visual_name_32, l_feat, False)
 					else
-						l_text_formatter_decorator.process_feature_text (l_feat.name_32, l_feat, False)
+						l_feat.append_name (l_text_formatter_decorator)
 					end
 				end
 			else
@@ -2435,7 +2434,7 @@ feature {NONE} -- Implementation
 					l_text_formatter_decorator.process_symbol_text (ti_double_quote)
 				else
 					if not has_error_internal then
-						l_text_formatter_decorator.process_feature_text (l_feat.name_32, l_feat, False)
+						l_feat.append_name (l_text_formatter_decorator)
 					else
 						l_text_formatter_decorator.process_basic_text (l_as.visual_name_32)
 					end
@@ -2526,7 +2525,7 @@ feature {NONE} -- Implementation
 						if processing_formal_dec then
 							l_text_formatter_decorator.process_feature_text (l_as.visual_name_32, l_feat, False)
 						else
-							l_text_formatter_decorator.process_feature_text (l_feat.name_32, l_feat, False)
+							l_feat.append_name (l_text_formatter_decorator)
 						end
 					end
 				else
@@ -2558,7 +2557,7 @@ feature {NONE} -- Implementation
 						l_text_formatter_decorator.process_symbol_text (ti_double_quote)
 					else
 						if not has_error_internal then
-							l_text_formatter_decorator.process_feature_text (l_feat.name_32, l_feat, False)
+							l_feat.append_name (l_text_formatter_decorator)
 						else
 							l_text_formatter_decorator.process_basic_text (l_as.visual_name_32)
 						end
@@ -2608,7 +2607,7 @@ feature {NONE} -- Implementation
 				l_text_formatter_decorator.put_space
 			end
 			if not has_error_internal then
-				l_text_formatter_decorator.process_feature_text (l_feat.name_32, l_feat, False)
+				l_feat.append_name (l_text_formatter_decorator)
 			else
 				l_text_formatter_decorator.process_basic_text (l_as.visual_name_32)
 			end

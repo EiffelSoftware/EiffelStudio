@@ -11,7 +11,7 @@ copy_raw 	a2.e $CLUSTER a.e
 compile_melted output
 compile_result validity_error A VVOK(1)
 
-copy_raw 	a2.e $CLUSTER a.e
+copy_raw 	a3.e $CLUSTER a.e
 resume_compile
 compile_result validity_error A VVOK(1)
 

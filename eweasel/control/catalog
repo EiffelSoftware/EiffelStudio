@@ -1134,6 +1134,7 @@ test	finalize-object-test-side-effects	final086 tcf pass finalizing
 test	finalize-inline-merged-routine	final087 tcf fail finalizing
 test	finalize-inline-check-void-target	final088 tcf fail finalizing
 test	finalize-qat-object-test		final089 tcf fail finalizing anchored_type
+test	finalize-attached-dcr-missing	final090 tcf pass finalizing
 
 -- Runtime
 test	gc-tracking-001					runtime001	tcf pass runtime

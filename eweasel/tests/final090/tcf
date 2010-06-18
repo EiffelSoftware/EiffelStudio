@@ -1,0 +1,10 @@
+test_name 	finalize-attached-dcr-missing
+test_description Finalizing a system with an object test involving a routine that is only used in an object test is not properly marked by the dead code removal.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+
+compile_final
+compile_result 	ok
+
+test_end

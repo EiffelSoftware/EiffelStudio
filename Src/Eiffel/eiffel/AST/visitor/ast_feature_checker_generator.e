@@ -6252,9 +6252,7 @@ feature {NONE} -- Implementation
 			s := context.scope
 			if attached l_as.check_list as l then
 					-- Type check assertions.
-				set_is_checking_check (True)
 				process_eiffel_list_with_matcher (l, create {AST_SCOPE_ASSERTION}.make (context), Void)
-				set_is_checking_check (False)
 				if l_needs_byte_node then
 					a ?= last_byte_node
 				end

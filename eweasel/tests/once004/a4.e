@@ -8,7 +8,7 @@ create
 
 feature
 	
-	make is
+	make
 		local
 			i: INTEGER
 			n: like o_numeric

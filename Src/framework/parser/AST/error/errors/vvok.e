@@ -1,43 +1,38 @@
 note
-	description: "Validity error."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
 
-deferred class
-	VALIDITY_ERROR
+	description:
+		"Invalid Once key."
+	legal: "See notice at end of class."
+	status: "See notice at end of class.";
+	date: "$Date$";
+	revision: "$Revision $"
+
+class VVOK
 
 inherit
-	ERROR
-
-feature {NONE} -- Initialization
-
-	make (l, c: INTEGER; f: like file_name; error_message: STRING)
-			-- Create a new SYNTAX_ERROR.
-		require
-			f_not_void: f /= Void
-		do
-			set_position (l, c)
-			file_name := f
-		ensure
-			line_set: line = l
-			column_set: column = c
-			file_name_set: file_name = f
+	VALIDITY_ERROR
+		redefine
+			process,
+			has_associated_file
 		end
+
+create
+	make
 
 feature -- Properties
 
-	file_name: STRING
-			-- Path to file where syntax issue happened
+	code: STRING = "VVOK"
+			-- Error code	
 
-	syntax_message: STRING
-			-- Specific syntax message.
-			-- (By default, it is empty)
+feature -- Status report
+
+	has_associated_file: BOOLEAN = True
+
+feature -- Visitor
+
+	process (a_visitor: ERROR_VISITOR)
 		do
-			Result := ""
-		ensure
-			non_void_result: Result /= Void
+			a_visitor.process_vvok (Current)
 		end
 
 note

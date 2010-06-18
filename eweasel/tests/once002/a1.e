@@ -5,7 +5,7 @@ create
 
 feature
 	
-	make is
+	make
 		local
 			retried: INTEGER
 			l_exception: EXCEPTION
@@ -36,7 +36,7 @@ feature
 			retry
 		end
 
-	f: STRING is
+	f: STRING
 		local
 			l_exception: CHECK_VIOLATION
 		once ("OBJECT")
@@ -55,7 +55,7 @@ feature
 			end
 		end
 		
-	g is
+	g
 		local
 			s: STRING
 		do
@@ -64,7 +64,7 @@ feature
 			print ("In g rescue%N")
 		end
 		
-	rescued_call is
+	rescued_call
 		local
 			s: STRING
 			retried: BOOLEAN
@@ -77,7 +77,7 @@ feature
 			retry
 		end
 		
-	print_exception (a_ex: EXCEPTION) is
+	print_exception (a_ex: EXCEPTION)
 			--
 		do
 			print (a_ex.recipient_name + "%N")

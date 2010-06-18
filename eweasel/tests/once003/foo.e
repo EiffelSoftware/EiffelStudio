@@ -4,7 +4,7 @@ class
 
 feature -- Access
 
-	f: STRING is
+	f: STRING
 		local
 			l_exception: CHECK_VIOLATION
 		once ("OBJECT")

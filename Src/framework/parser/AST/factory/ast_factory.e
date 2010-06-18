@@ -308,8 +308,33 @@ feature -- Access for Errors
 			end
 			check l_identifier_not_void: l_identifier /= Void end
 
-			Result := create {SYNTAX_ERROR}.make (a_line, a_column, a_filename, "Errog VTGC1: Anchored types is are not allowed as a constraint:%N  %"like " + l_identifier + "%"")
+			Result := create {SYNTAX_ERROR}.make (a_line, a_column, a_filename, "Error VTGC1: Anchored types is are not allowed as a constraint:%N  %"like " + l_identifier + "%"")
 		end
+
+	new_vvok1_error (a_line: INTEGER; a_column: INTEGER; a_filename: STRING; a_once_as: FEATURE_AS): ERROR
+			-- New VVOK1 error.
+		require
+			a_once_as_not_void: a_once_as /= Void
+		local
+			l_identifier: STRING
+		do
+			l_identifier := a_once_as.text (match_list)
+			check l_identifier_not_void: l_identifier /= Void end
+			Result := create {SYNTAX_ERROR}.make (a_line, a_column, a_filename, "Error VVOK1: Conflict in once's keys of routine %"" + l_identifier + "%"")
+		end
+
+	new_vvok2_error (a_line: INTEGER; a_column: INTEGER; a_filename: STRING; a_once_as: FEATURE_AS): ERROR
+			-- New VVOK2 error.
+		require
+			a_once_as_not_void: a_once_as /= Void
+		local
+			l_identifier: STRING
+		do
+			l_identifier := a_once_as.text (match_list)
+			check l_identifier_not_void: l_identifier /= Void end
+			Result := create {SYNTAX_ERROR}.make (a_line, a_column, a_filename, "Error VVOK2: Unsupported once key in routine %""+ l_identifier +"%"%N(only %"PROCESS%", %"THREAD%", %"OBJECT%" are supported for now).")
+		end
+
 
 feature -- Value AST creation
 

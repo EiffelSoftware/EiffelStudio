@@ -1501,6 +1501,7 @@ test	assertion-incorrect-type		exec325 tcf pass execution assertion
 test	ieee-min-max-values				exec326 tcf pass execution ieee
 test	assertion-reset-with-check		exec327 tcf pass execution assertion
 test	default-on-expanded-string		exec328 tcf fail execution expanded manual
+test	ieee-abs-minus-zero				exec329 tcf pass execution ieee
 
 -- Once specific
 

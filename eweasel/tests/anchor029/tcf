@@ -1,0 +1,11 @@
+
+test_name 	qat-with-invalid-actual-generic
+test_description A qualified anchored type with an actual generic parameter that does not meet the generic constraint should be correctly detected
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	validity_error TEST VTCG
+
+test_end

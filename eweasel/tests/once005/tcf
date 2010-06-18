@@ -1,0 +1,31 @@
+test_name 	once-key-validity
+test_description check the validity of once's key(s)
+
+copy_sub 	Ace $TEST Ace
+
+copy_raw 	a1.e $CLUSTER a.e
+compile_melted
+compile_result 	ok
+
+copy_raw 	a2.e $CLUSTER a.e
+compile_melted output
+compile_result validity_error A VVOK(1)
+
+copy_raw 	a2.e $CLUSTER a.e
+compile_melted
+compile_result validity_error A VVOK(1)
+
+copy_raw 	a4.e $CLUSTER a.e
+compile_melted
+compile_result validity_error A VVOK(1)
+
+copy_raw 	a5.e $CLUSTER a.e
+compile_melted
+compile_result validity_error A VVOK(2)
+
+copy_raw 	a6.e $CLUSTER a.e
+compile_melted
+compile_result validity_error A VVOK(2)
+
+
+test_end

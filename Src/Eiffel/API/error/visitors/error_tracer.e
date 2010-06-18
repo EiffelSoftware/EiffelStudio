@@ -257,6 +257,39 @@ feature -- Processing
 			end
 		end
 
+	process_vvok (a_value: VVOK)
+			-- Process object `a_value'.
+		do
+			if type = normal then
+				print_error_message (text_formatter, a_value)
+				a_value.initialize_output
+				if attached {CLASS_C} a_value.associated_class as l_class then
+					text_formatter.add ("Class: ")
+					text_formatter.add_class_syntax (a_value, l_class, l_class.class_signature)
+					text_formatter.add_new_line
+				elseif a_value.file_name /= Void then
+						-- `current_class' May be void at degree 6 when parsing partial classes
+					text_formatter.add ("Error in file ")
+					text_formatter.add (a_value.file_name)
+					text_formatter.add_new_line
+				end
+				text_formatter.add ("Line: ")
+				text_formatter.add_int (a_value.line)
+					-- Error happened in a class
+				text_formatter.add_new_line
+				if a_value.has_source_text then
+					display_line (text_formatter, a_value.previous_line_32)
+					display_syntax_line (text_formatter, a_value.current_line_32, a_value)
+					display_line (text_formatter, a_value.next_line_32)
+				else
+					text_formatter.add (" (source code is not available)")
+					text_formatter.add_new_line
+				end
+			else
+				process_error (a_value)
+			end
+		end
+
 feature {NONE} -- Type of display
 
 	type: INTEGER

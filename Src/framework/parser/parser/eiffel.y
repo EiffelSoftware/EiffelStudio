@@ -731,7 +731,13 @@ Feature_declaration: Add_counter New_feature_list Remove_counter Declaration_bod
 					attached l_feature_as.once_as as l_once_as
 				then
 					if l_once_as.has_key_conflict ($$) then
-						report_one_error (create {SYNTAX_ERROR}.make (token_line (l_once_as), token_column (l_once_as), filename, once "Conflict in once's keys"))
+						report_one_error (ast_factory.new_vvok1_error (token_line (l_once_as), token_column (l_once_as), filename, $$))
+					elseif l_once_as.has_invalid_key ($$) then
+						if attached l_once_as.invalid_key ($$) as l_once_invalid_key then
+							report_one_error (ast_factory.new_vvok2_error (token_line (l_once_invalid_key), token_column (l_once_invalid_key), filename, $$))
+						else
+							report_one_error (ast_factory.new_vvok2_error (token_line (l_once_as), token_column (l_once_as), filename, $$))
+						end
 					end
 				end
 

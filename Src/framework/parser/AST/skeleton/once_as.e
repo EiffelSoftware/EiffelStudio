@@ -90,6 +90,58 @@ feature -- Properties
 
 feature -- Status report
 
+	has_invalid_key (a_feature_as: FEATURE_AS): BOOLEAN
+			-- Current once uses a non supported key?	
+		local
+			s: STRING
+		do
+			if attached keys as l_keys then
+				from
+					l_keys.start
+				until
+					l_keys.after or Result
+				loop
+					s := l_keys.item.value
+					if
+						s.is_case_insensitive_equal (once_key_process)
+						or s.is_case_insensitive_equal (once_key_thread)
+						or s.is_case_insensitive_equal (once_key_object)
+					then
+						l_keys.forth
+					else
+						Result := True --| Invalid key found
+					end
+				end
+			end
+		end
+
+	invalid_key (a_feature_as: FEATURE_AS): detachable STRING_AS
+			-- Current once uses a non supported key?	
+		require
+			has_invalid_key: has_invalid_key (a_feature_as)
+		local
+			s: STRING
+		do
+			if attached keys as l_keys then
+				from
+					l_keys.start
+				until
+					l_keys.after or Result /= Void
+				loop
+					s := l_keys.item.value
+					if
+						s.is_case_insensitive_equal (once_key_process)
+						or s.is_case_insensitive_equal (once_key_thread)
+						or s.is_case_insensitive_equal (once_key_object)
+					then
+						l_keys.forth
+					else
+						Result := l_keys.item --| Invalid key found
+					end
+				end
+			end
+		end
+
 	has_key_conflict (a_feature_as: FEATURE_AS): BOOLEAN
 			-- Current once presents a conflict in keys and indexing?
 		local
@@ -97,12 +149,12 @@ feature -- Status report
 			l_keys: like keys
 		do
 			l_keys := keys
-			is_p := has_key_inside ("PROCESS", l_keys)
+			is_p := has_key_inside (once_key_process, l_keys)
 					or (attached a_feature_as.indexes as l_indexes and then l_indexes.has_global_once)
-			is_t := has_key_inside ("THREAD", l_keys)
-			is_o := has_key_inside ("OBJECT", l_keys)
+			is_t := has_key_inside (once_key_thread, l_keys)
+			is_o := has_key_inside (once_key_object, l_keys)
 
-			Result := (is_p and is_t) or (is_p and is_o) or (is_p and is_t)
+			Result := (is_p and is_t) or (is_p and is_o) or (is_o and is_t)
 		end
 
 	has_key_inside (a_key: READABLE_STRING_8; a_keys: like keys): BOOLEAN
@@ -131,18 +183,18 @@ feature -- Status report
 
 	has_key_process (a_feature_as: FEATURE_AS): BOOLEAN
 		do
-			Result := has_key (once "PROCESS")
+			Result := has_key (once_key_process)
 					or (attached a_feature_as.indexes as l_indexes and then l_indexes.has_global_once)
 		end
 
 	has_key_thread: BOOLEAN
 		do
-			Result := has_key (once "THREAD")
+			Result := has_key (once_key_thread)
 		end
 
 	has_key_object: BOOLEAN
 		do
-			Result := has_key (once "OBJECT")
+			Result := has_key (once_key_object)
 		end
 
 feature -- Roundtrip/Token
@@ -179,7 +231,13 @@ feature -- Comparison
 			Result := Precursor (other) and equivalent (internal_keys, other.internal_keys)
 		end
 
-note
+feature {NONE} -- Constants
+
+	once_key_process: STRING = "PROCESS"
+	once_key_thread: STRING = "THREAD"
+	once_key_object: STRING = "OBJECT"
+
+;note
 	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

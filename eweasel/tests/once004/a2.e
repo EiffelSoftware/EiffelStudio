@@ -5,7 +5,7 @@ create
 
 feature
 	
-	make is
+	make
 		local
 			i: INTEGER
 			n: like f_numeric

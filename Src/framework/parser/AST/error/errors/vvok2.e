@@ -1,49 +1,31 @@
 note
-	description: "Validity error."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	description: "Summary description for {VVOK2}."
+	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
-	VALIDITY_ERROR
+class
+	VVOK2
 
 inherit
-	ERROR
-
-feature {NONE} -- Initialization
-
-	make (l, c: INTEGER; f: like file_name; error_message: STRING)
-			-- Create a new SYNTAX_ERROR.
-		require
-			f_not_void: f /= Void
-		do
-			set_position (l, c)
-			file_name := f
-		ensure
-			line_set: line = l
-			column_set: column = c
-			file_name_set: file_name = f
+	VVOK
+		redefine
+			subcode
 		end
+
+create
+	make
 
 feature -- Properties
 
-	file_name: STRING
-			-- Path to file where syntax issue happened
+	subcode: INTEGER = 2
+			-- Subcode of error. `0' if none.
 
-	syntax_message: STRING
-			-- Specific syntax message.
-			-- (By default, it is empty)
-		do
-			Result := ""
-		ensure
-			non_void_result: Result /= Void
-		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -71,5 +53,4 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
 end

@@ -1,0 +1,2 @@
+Error: unsupported once's key
+What to do: for now, only the following once's keys are supported: "PROCESS", "THREAD" and "OBJECT"

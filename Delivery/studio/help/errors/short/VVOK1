@@ -1,0 +1,2 @@
+Error: conflict in once's keys (or also with note once_status)
+What to do: make sure to use new syntax once ("PROCESS"), or once ("THREAD") or once ("OBJECT"). And do not combine those 3 semantics.

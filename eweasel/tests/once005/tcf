@@ -15,10 +15,6 @@ copy_raw 	a2.e $CLUSTER a.e
 resume_compile
 compile_result validity_error A VVOK(1)
 
-copy_raw 	a4.e $CLUSTER a.e
-resume_compile
-compile_result validity_error A VVOK(1)
-
 copy_raw 	a5.e $CLUSTER a.e
 resume_compile
 compile_result validity_error A VVOK(2)

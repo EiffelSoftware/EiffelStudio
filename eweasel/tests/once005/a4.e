@@ -12,9 +12,10 @@ feature
 feature -- Conflict
 
 	o_process_thread: STRING
-		note
-			once_status: "global"
+		indexing
+			once_status: global
 		once ("THREAD")
+			Result := "o_process_thread"
 		end
 
 end

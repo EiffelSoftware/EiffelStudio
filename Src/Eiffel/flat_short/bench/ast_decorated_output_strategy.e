@@ -648,11 +648,24 @@ feature {NONE} -- Implementation
 		end
 
 	process_char_as (l_as: CHAR_AS)
+		local
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
-			if not expr_type_visiting then
-				text_formatter_decorator.process_character_text (l_as.string_value_32)
+			l_text_formatter_decorator := text_formatter_decorator
+			if attached l_as.type as l_type then
+				if not expr_type_visiting then
+					l_text_formatter_decorator.process_symbol_text (ti_l_curly)
+				end
+				l_type.process (Current)
+				if not expr_type_visiting then
+					l_text_formatter_decorator.process_symbol_text (ti_r_curly)
+				end
+			else
+				last_type := character_type
 			end
-			last_type := character_type
+			if not expr_type_visiting then
+				l_text_formatter_decorator.process_character_text (l_as.string_value_32)
+			end
 		end
 
 	process_string_as (l_as: STRING_AS)

@@ -29,7 +29,6 @@ feature {NONE} -- Initialization
 	make (a_parent: like parent; a_name: like name; a_ns: like namespace)
 			-- Create a new child element, without attaching to parent.
 		require
-			a_parent_not_void: a_parent /= Void
 			a_name_not_void: a_name /= Void
 			a_ns_not_void: a_ns /= Void
 		do

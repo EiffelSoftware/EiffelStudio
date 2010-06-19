@@ -904,6 +904,7 @@ test	qat-change-remote-anchor-name		incr352 tcf fail incrementality anchored_typ
 test	qat-change-remote-anchor-type		incr353 tcf fail incrementality anchored_type
 test	qat-none-crash				incr354 tcf pass incrementality anchored_type
 test	resume-vlec-eat-memory			incr355	tcf fail incrementality expanded manual
+test	qat-is-expanded-crash			incr356 tcf fail incrementality anchored_type
 
 
 -- Melting

@@ -1,0 +1,19 @@
+
+test_name	qat-is-expanded-crash
+test_description Changing a feature type from TEST4 to `like Current' in a system that uses qualified anchored types crashes the compiler in {CL_TYPE_A}.is_expanded in degree 4.
+
+define		ATTRIBUTE_TYPE "TEST4"
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test2.e $CLUSTER test2.e
+copy_raw 	test4.e $CLUSTER test4.e
+copy_sub 	test3.e $CLUSTER test3.e
+compile_melted
+compile_result 	ok
+
+define		ATTRIBUTE_TYPE "like Current"
+copy_sub 	test3.e $CLUSTER test3.e
+compile_melted
+compile_result 	ok
+
+test_end

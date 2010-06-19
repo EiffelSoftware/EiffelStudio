@@ -2396,6 +2396,7 @@ test	qat-with-expanded-type			anchor027 tcf fail anchored_type expanded
 test	qat-actual-generic-anchored-to-generic	anchor028 tcf fail anchored_type
 test	qat-with-invalid-actual-generic		anchor029 tcf fail anchored_type
 test	qat-with-expanded-deferred		anchor030 tcf pass anchored_type
+test	qat-on-generic-in-descendant		anchor031 tcf fail anchored_type
 
 -- .NET specific test
 if DOTNET test expanded-object-conversion	dotnet001	tcf pass dotnet

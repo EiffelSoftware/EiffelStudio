@@ -1,0 +1,13 @@
+
+test_name 	qat-with-expanded-deferred
+test_description A qualified anchored type with an expanded type based on a deferred class should be a VTEC(1) error
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test2.e $CLUSTER test2.e
+copy_raw	test3.e $CLUSTER test3.e
+
+compile_melted
+compile_result	validity_error TEST2 VTEC(1)
+
+test_end

@@ -1,0 +1,13 @@
+
+test_name 	expanded-indirect-like-current
+test_description An expanded class with an attribute of a generic type that uses `like value' as actual generic where `value: like Current' crashes the compiler.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result 	ok
+
+test_end
+

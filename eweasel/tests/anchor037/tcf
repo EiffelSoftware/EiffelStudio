@@ -1,0 +1,14 @@
+
+test_name 	qat-adapted-in-crash-2
+test_description A set of classes using qualified anchored types crashes the compiler in {FORMAL_A}.adapted_in.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test2.e $CLUSTER test2.e
+copy_raw	test3.e $CLUSTER test3.e
+
+compile_melted
+compile_result	ok
+
+test_end
+

@@ -1,0 +1,13 @@
+
+test_name 	qat-skeleton-adapted-in-crash		
+test_description A constrained generic class with a complex qualified anchored type crashes the compiler in {FORMAL_A}.skeleton_adapted_in.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result	validity_error TEST2 VGCC(1)
+
+test_end
+

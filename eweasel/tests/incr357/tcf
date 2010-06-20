@@ -1,0 +1,24 @@
+
+test_name	change-expanded-anchor-type
+test_description Changing the type of an attribute used as an anchor in an actual generic parameter from INTEGER to INTEGER_64 and recompiling crashes the compiler.
+
+define		ATTRIBUTE_TYPE "INTEGER"
+copy_sub 	Ace $TEST Ace
+copy_sub 	test.e $CLUSTER test.e
+compile_melted
+compile_result 	ok
+
+execute_work 	NONE 	exec_output1
+execute_result 	ok
+compare		exec_output1 output1
+
+define		ATTRIBUTE_TYPE "INTEGER_64"
+copy_sub 	test.e $CLUSTER test.e
+compile_melted
+compile_result 	ok
+
+execute_work 	NONE 	exec_output1
+execute_result 	ok
+compare		exec_output1 output2
+
+test_end

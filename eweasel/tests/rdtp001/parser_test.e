@@ -241,12 +241,6 @@ feature -- Encoding converter
 			Result := a_stream
 		end
 
-	string_32_to_stream (a_str: STRING_32): STRING
-			-- Byte stream of `a_string'.
-		do
-			Result := a_str.as_string_8
-		end
-		
 	utf32_string (a_stream: STRING): STRING_32
 			-- Detect encoding of `a_stream' and convert it into utf32.
 		do

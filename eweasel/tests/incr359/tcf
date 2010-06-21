@@ -1,0 +1,18 @@
+
+test_name	qat-is-expanded-crash-3			
+test_description Changing a type and recompiling in a system that uses qualified anchored types crashes the compiler in {CL_TYPE_A}.is_expanded in degree 1.
+
+define		ATTRIBUTE_TYPE "TEST3 [NATURAL_8]"
+copy_sub 	Ace $TEST Ace
+copy_sub 	test.e $CLUSTER test.e
+copy_raw 	test2.e $CLUSTER test2.e
+copy_raw 	test3.e $CLUSTER test3.e
+compile_melted
+compile_result 	ok
+
+define		ATTRIBUTE_TYPE "TEST2 [NATURAL_8, BOOLEAN]"
+copy_sub 	test.e $CLUSTER test.e
+compile_melted
+compile_result 	ok
+
+test_end

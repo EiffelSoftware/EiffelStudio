@@ -907,6 +907,7 @@ test	resume-vlec-eat-memory			incr355	tcf fail incrementality expanded manual
 test	qat-is-expanded-crash			incr356 tcf fail incrementality anchored_type
 test	change-expanded-anchor-type		incr357 tcf fail incrementality anchored_type
 test	qat-is-expanded-crash-2			incr358 tcf fail incrementality anchored_type
+test	qat-is-expanded-crash-3			incr359 tcf fail incrementality anchored_type
 
 
 -- Melting

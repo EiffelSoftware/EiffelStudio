@@ -1,0 +1,25 @@
+
+test_name	bogus-vtcg-2
+test_description A sequence of changes cause the compiler to report a bogus VTCG error
+
+define		PARENT_GENERICS "G, H"
+define		QAT_GENERICS "G, H"
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test2.e $CLUSTER test2.e
+copy_sub 	test3.e $CLUSTER test3.e
+compile_melted
+compile_result 	ok
+
+define		PARENT_GENERICS "H, I"
+copy_sub 	test3.e $CLUSTER test3.e
+compile_melted
+compile_result 	validity_error TEST3 VDRD(2)
+
+define		PARENT_GENERICS "H, H"
+define		QAT_GENERICS "H, H"
+copy_sub 	test3.e $CLUSTER test3.e
+resume_compile
+compile_result 	ok
+
+test_end

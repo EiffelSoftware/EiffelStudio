@@ -2406,6 +2406,7 @@ test	qat-abstract-creation-crash		anchor034 tcf fail anchored_type
 test	qat-skeleton-adapted-in-crash		anchor035 tcf fail anchored_type
 test	qat-constraints-if-possible-crash	anchor036 tcf fail anchored_type
 test	qat-adapted-in-crash-2			anchor037 tcf fail anchored_type
+test	qat-hash-code-crash			anchor038 tcf fail anchored_type
 
 -- .NET specific test
 if DOTNET test expanded-object-conversion	dotnet001	tcf pass dotnet

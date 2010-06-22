@@ -141,8 +141,8 @@ feature {NONE} -- Implementation
 					r := base_arguments.argument_count + 1
 					i := 1
 					n := l_flags.count
-					create Result.make (r, r + 5)
 					create s.make_empty
+					create Result.make_filled (s.string, r, r + 5)
 				until
 					i > n
 				loop

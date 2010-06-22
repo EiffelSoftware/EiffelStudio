@@ -296,7 +296,7 @@ feature -- Primitives
 			t: like Current
 		do
 			t := twin
-			t.set_actual_type (actual_type.instantiated_in (class_type))
+			t.set_actual_type (actual_type.instantiated_in (class_type).actual_type)
 			Result := t
 		end
 

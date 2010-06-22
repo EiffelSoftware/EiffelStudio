@@ -246,6 +246,10 @@ feature -- Access
 	Bc_tuple:				CHARACTER = '%/168/'
 	Bc_ptuple:				CHARACTER = '%/169/';
 
+		-- Unicode
+	Bc_string32:		CHARACTER = '%/170/';
+	Bc_once_string32:	CHARACTER = '%/171/';
+
 note
 	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

@@ -1,0 +1,17 @@
+
+test_name 	 qat-invalid-vgcc
+test_description Compiler reports an incorrect VGCC(3) error on `create {like a} a' in descendant class on qualified anchored type with actual generic `like b' where b is `like Current'
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	parent.e $CLUSTER parent.e
+copy_raw	grand_parent.e $CLUSTER grand_parent.e
+
+compile_melted
+compile_result	ok
+
+execute_work	NONE exec_output_m
+execute_result	ok
+compare		exec_output_m output
+
+test_end

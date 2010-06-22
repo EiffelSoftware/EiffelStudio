@@ -1,0 +1,18 @@
+
+test_name 	 qat-constrained-type-in-crash
+test_description System that uses qualified anchored types crashes compiler in {BYTE_CONTEXT}.constrained_type_in.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test1.e $CLUSTER test1.e
+copy_raw	test2.e $CLUSTER test2.e
+copy_raw	test3.e $CLUSTER test3.e
+
+compile_melted
+compile_result	ok
+
+execute_work	NONE exec_output_m
+execute_result	ok
+compare		exec_output_m output
+
+test_end

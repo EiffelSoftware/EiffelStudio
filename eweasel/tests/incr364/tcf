@@ -1,0 +1,16 @@
+
+test_name	qat-resume-veen-compiler-error
+test_description After a VEEN error is reported in a system with qualified anchored types, resuming compilation with no changes causes a crash with a compiler error.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+copy_raw 	parent.e $CLUSTER parent.e
+copy_raw 	grand_parent.e $CLUSTER grand_parent.e
+compile_melted
+compile_result 	validity_error PARENT VEEN
+
+resume_compile
+compile_result 	validity_error PARENT VEEN
+
+test_end

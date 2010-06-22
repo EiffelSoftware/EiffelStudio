@@ -912,6 +912,7 @@ test	bogus-vtcg-2				incr360 tcf fail incrementality generic anchored_type
 test	formal-entry-crash			incr361 tcf fail incrementality generic anchored_type
 test	qat-nonexistent-veen			incr362 tcf fail incrementality generic anchored_type
 test	qat-static-type-id-crash		incr363 tcf fail incrementality generic anchored_type
+test	qat-resume-veen-compiler-error		incr364 tcf fail incrementality generic anchored_type
 
 
 -- Melting

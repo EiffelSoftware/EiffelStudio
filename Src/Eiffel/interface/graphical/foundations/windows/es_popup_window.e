@@ -593,7 +593,7 @@ feature {NONE} -- Action handlers
 
 			popup_window.refresh_now
 
-				-- Hook up to application pointer mtion actions
+				-- Hook up to application pointer motion actions
 			register_action (ev_application.pointer_motion_actions, agent on_application_pointer_motion)
 		end
 

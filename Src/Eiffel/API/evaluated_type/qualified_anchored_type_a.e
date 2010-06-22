@@ -3,7 +3,7 @@ note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 class
 	QUALIFIED_ANCHORED_TYPE_A
@@ -17,6 +17,7 @@ inherit
 			evaluated_type_in_descendant,
 			good_generics,
 			initialize_info,
+			instantiated_in,
 			is_explicit,
 			is_syntactically_equal,
 			skeleton_adapted_in,
@@ -337,6 +338,17 @@ feature -- Output
 		end
 
 feature -- Primitives
+
+	instantiated_in (class_type: TYPE_A): TYPE_A
+			-- <Precursor>
+		local
+			t: like Current
+		do
+			t := twin
+			t.set_actual_type (actual_type.instantiated_in (class_type).actual_type)
+			t.set_qualifier (qualifier.instantiated_in (class_type))
+			Result := t
+		end
 
 	evaluated_type_in_descendant (a_ancestor, a_descendant: CLASS_C; a_feature: FEATURE_I): QUALIFIED_ANCHORED_TYPE_A
 			-- <Precursor>

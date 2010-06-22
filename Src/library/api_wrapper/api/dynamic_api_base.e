@@ -166,7 +166,6 @@ feature -- Query
 					-- Add the cache.
 					-- Note: If the above raises and exception then this code will not be executed.
 					--       This is safe because we want the exception to be raised everytime.
-				check l_api_table_attached: attached l_api_table end
 				l_api_table.put (Result, create {STRING_8}.make_from_string (a_api_name))
 			end
 		ensure

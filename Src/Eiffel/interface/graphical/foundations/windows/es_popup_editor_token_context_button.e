@@ -22,7 +22,8 @@ inherit
 			on_popup_widget_hidden,
 			on_before_show,
 			active_border_color,
-			border_color
+			border_color,
+			is_pointer_sensitive
 		end
 
 create
@@ -246,6 +247,12 @@ feature -- Query
 			-- `Result': True if the editor token is applicable; False otherwise.
 		do
 			Result := not a_token.is_fake and not a_token.is_blank
+		end
+
+	is_pointer_sensitive: BOOLEAN
+			-- <Precursor>
+		do
+			Result := True
 		end
 
 feature {NONE} -- Query
@@ -567,7 +574,7 @@ invariant
 	not_is_beam_indicator: is_token_hidden_on_popup_widget_shown implies not is_beam_indicator
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -591,11 +598,11 @@ invariant
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

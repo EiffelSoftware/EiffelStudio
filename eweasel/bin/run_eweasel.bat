@@ -13,13 +13,14 @@ rem Cleaning test directory
 rd /q /s %EWEASEL_OUTPUT%
 mkdir %EWEASEL_OUTPUT%
 
-rem Performing single threaded precompilation
+rem Performing non-void safe threaded precompilations
 cd /d %ISE_EIFFEL%\precomp\spec\%ISE_PLATFORM%
-%ISE_EIFFEL%\studio\spec\%ISE_PLATFORM%\bin\ec.exe -config base.ecf -precompile -c_compile -local %2
-%ISE_EIFFEL%\studio\spec\%ISE_PLATFORM%\bin\ec.exe -config base-safe.ecf -precompile -c_compile -local %2
+%ISE_EIFFEL%\studio\spec\%ISE_PLATFORM%\bin\ec.exe -config base.ecf -precompile -c_compile %2
+%ISE_EIFFEL%\studio\spec\%ISE_PLATFORM%\bin\ec.exe -config base-mt.ecf -precompile -c_compile %2
 
-rem Performing multithreaded precompilation
-%ISE_EIFFEL%\studio\spec\%ISE_PLATFORM%\bin\ec.exe -config base-mt.ecf -precompile -c_compile -local %2
+rem Performing void-safe precompilation
+cd /d %ISE_EIFFEL%\precomp\spec\%ISE_PLATFORM%
+%ISE_EIFFEL%\studio\spec\%ISE_PLATFORM%\bin\ec.exe -config base-safe.ecf -precompile -c_compile %2
 
 rem Launch EiffelWeasel tests
 cd /d %TMP_PATH%

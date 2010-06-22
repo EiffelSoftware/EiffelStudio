@@ -1,0 +1,19 @@
+
+test_name	formal-entry-crash
+test_description A sequence of changes causes the compiler to crash in {FORMAL_ENTRY}.entry.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test2.e $CLUSTER test2.e
+copy_raw 	test3.e $CLUSTER test3.e
+compile_frozen
+compile_result 	validity_error TEST3 VTCG
+
+copy_raw 	test2_rev2.e $CLUSTER test2.e
+resume_compile
+compile_result 	ok
+
+c_compile_work
+c_compile_result ok
+
+test_end

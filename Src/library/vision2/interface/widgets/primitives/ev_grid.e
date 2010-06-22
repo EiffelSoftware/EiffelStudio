@@ -649,7 +649,7 @@ feature -- Access
 			Result := implementation.is_horizontal_overscroll_enabled
 		end
 
-	dynamic_content_function: detachable FUNCTION [ANY, TUPLE [INTEGER, INTEGER], EV_GRID_ITEM]
+	dynamic_content_function: detachable FUNCTION [ANY, TUPLE [col: INTEGER; row: INTEGER], EV_GRID_ITEM]
 			-- Function which computes the item that resides in a particular position of the
 			-- grid while `is_content_partially_dynamic'.
 		require

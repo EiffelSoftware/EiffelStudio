@@ -1,0 +1,29 @@
+
+test_name	qat-static-type-id-crash
+test_description A sequence of changes that do not introduce any validity errors crashes the compiler in degree 2 in {GEN_TYPE_A}.static_type_id.
+
+define		ATTRIBUTE_TYPE "TEST3 [like Current]"
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+copy_raw 	test3.e $CLUSTER test3.e
+copy_raw 	parent.e $CLUSTER parent.e
+copy_sub 	grand_parent.e $CLUSTER grand_parent.e
+compile_melted
+compile_result 	ok
+
+define		ATTRIBUTE_TYPE "INTEGER_8"
+copy_sub 	grand_parent.e $CLUSTER grand_parent.e
+compile_melted
+compile_result 	ok
+
+define		ATTRIBUTE_TYPE "INTEGER_64"
+copy_sub 	grand_parent.e $CLUSTER grand_parent.e
+compile_melted
+compile_result 	ok
+
+execute_work 	NONE 	exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+test_end

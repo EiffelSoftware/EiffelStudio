@@ -1628,8 +1628,11 @@ feature {NONE} -- Visitors
 			l_value_32: STRING_32
 		do
 			l_is_str32 := a_node.is_string_32
-			ba.append (bc_once_string)
-			ba.append_boolean (l_is_str32)
+			if l_is_str32 then
+				ba.append (bc_once_string32)
+			else
+				ba.append (bc_once_string)
+			end
 			ba.append_integer (a_node.body_index - 1)
 			ba.append_integer (a_node.number - 1)
 			if l_is_str32 then
@@ -1806,24 +1809,18 @@ feature {NONE} -- Visitors
 	process_string_b (a_node: STRING_B)
 			-- Process `a_node'.
 		local
-			l_is_str32: BOOLEAN
 			l_value: STRING
 			l_value_32: STRING_32
 		do
-			l_is_str32 := a_node.is_string_32
-			if l_is_str32 then
+			if a_node.is_string_32 then
+				ba.append (Bc_string32)
 				l_value_32 := a_node.value_32
-			else
-				l_value := a_node.value
-			end
-
-			ba.append (Bc_string)
-			ba.append_boolean (l_is_str32)
-			if l_is_str32 then
 					-- Bytes to read
 				ba.append_integer (l_value_32.count * 4)
 				ba.append_raw_string_32 (l_value_32)
 			else
+				ba.append (Bc_string)
+				l_value := a_node.value
 					-- Bytes to read
 				ba.append_integer (l_value.count)
 				ba.append_raw_string (l_value)

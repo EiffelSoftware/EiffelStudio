@@ -173,25 +173,18 @@ feature -- Code generation
 	make_byte_code (ba: BYTE_ARRAY)
 			-- Generate byte code for a string constant value.
 		local
-			l_is_str32: BOOLEAN
 			l_value: STRING
 			l_value_32: STRING_32
 		do
-			l_is_str32 := is_string_32
-			if l_is_str32 then
+			if is_string_32 then
+				ba.append (Bc_string32)
 				l_value_32 := encoding_converter.utf8_to_utf32 (string_value)
-			else
-				l_value := string_value
-			end
-
-			ba.append (Bc_string)
-			ba.append_boolean (l_is_str32)
-				-- Length of the string instance
-			if l_is_str32 then
 					-- Bytes to read
 				ba.append_integer (l_value_32.count * 4)
 				ba.append_raw_string_32 (l_value_32)
 			else
+				ba.append (Bc_string)
+				l_value := string_value
 					-- Bytes to read
 				ba.append_integer (l_value.count)
 				ba.append_raw_string (l_value)

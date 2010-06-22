@@ -284,7 +284,11 @@ extern struct opstack op_stack;               /* Operational stack */
 #define BC_TUPLE	(unsigned char) 168
 #define BC_PTUPLE	(unsigned char) 169
 
-#define MAX_CODE                169    /* Maximum legal byte code */
+/* Unicode*/
+#define BC_STRING32	(unsigned char) 170
+#define BC_ONCE_STRING32	(unsigned char) 171
+
+#define MAX_CODE                171    /* Maximum legal byte code */
 
 
 	/* Structure to get and set variable value in the debugger */

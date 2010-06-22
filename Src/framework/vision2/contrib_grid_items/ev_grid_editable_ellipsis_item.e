@@ -12,7 +12,7 @@ deferred class
 inherit
 	EV_GRID_EDITABLE_ITEM
 		redefine
-			initialize,
+			create_interface_objects,
 			activate_action,
 			initialize_actions,
 			deactivate,
@@ -33,8 +33,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize
-			-- Initialize.
+	create_interface_objects
 		do
 			create ellipsis_actions
 			create change_actions
@@ -48,7 +47,8 @@ feature -- Status
 		require
 			is_activated
 		do
-			Result := text_field.has_focus or button.has_focus
+			Result := (attached text_field as tf and then tf.has_focus)
+					or (attached button as but and then but.has_focus)
 		end
 
 	is_activated: BOOLEAN
@@ -59,11 +59,11 @@ feature -- Status
 
 feature -- Access
 
-	button: EV_WIDGET
+	button: detachable EV_WIDGET
 			-- Ellipsis button used to edit `Current' on activate.
 			-- Void when `Current' isn't beeing activated.
 
-	popup_window: EV_POPUP_WINDOW
+	popup_window: detachable EV_POPUP_WINDOW
 			-- Popup window used on activate.
 			-- Void when `Current' isn't beeing activated.
 
@@ -101,14 +101,19 @@ feature {NONE} -- Implementation
 	initialize_actions
 			-- Setup the action sequences when the item is shown.
 		do
-			text_field.return_actions.extend (agent return_pressed)
-			text_field.focus_out_actions.extend (agent focus_lost)
-			button.focus_out_actions.extend (agent focus_lost)
-			button.pointer_button_release_actions.force_extend (agent call_ellipsis_actions)
+			check
+				attached text_field as tf
+				and attached button as but
+			then
+				tf.return_actions.extend (agent return_pressed)
+				tf.focus_out_actions.extend (agent focus_lost)
+				but.focus_out_actions.extend (agent focus_lost)
+				but.pointer_button_release_actions.force_extend (agent call_ellipsis_actions)
 
-			text_field.set_focus
+				tf.set_focus
+				tf.key_press_actions.extend (agent handle_key)
+			end
 			user_cancelled_activation := False
-			text_field.key_press_actions.extend (agent handle_key)
 		end
 
 	focus_lost
@@ -128,32 +133,33 @@ feature {NONE} -- Implementation
 			-- Activate action.
 		local
 			hb: EV_HORIZONTAL_BOX
-			p: EV_PIXMAP
-			cl: EV_CELL
 			d: EV_DRAWING_AREA
 			bgcolor,fgcolor: EV_COLOR
+			l_sep_color: detachable EV_COLOR
+			tf: like text_field
 		do
 			popup_window := a_popup_window
 			if is_text_editing then
-				create text_field
-				text_field.implementation.hide_border
+				create tf
+				text_field := tf
+				tf.implementation.hide_border
 				if attached font as ft then
-					text_field.set_font (ft)
+					tf.set_font (ft)
 				end
 
 				if not is_text_editing then
-					text_field.disable_edit
+					tf.disable_edit
 				end
 
-				text_field.set_text (text)
+				tf.set_text (text)
 				bgcolor := implementation.displayed_background_color
 				fgcolor := implementation.displayed_foreground_color
-				text_field.set_background_color (bgcolor)
+				tf.set_background_color (bgcolor)
 				a_popup_window.set_background_color (bgcolor)
-				text_field.set_foreground_color (fgcolor)
+				tf.set_foreground_color (fgcolor)
 
 				create hb
-				hb.extend (text_field)
+				hb.extend (tf)
 
 					--| ellipsis button
 				create d
@@ -162,15 +168,21 @@ feature {NONE} -- Implementation
 				hb.extend (d)
 				hb.disable_item_expand (d)
 				d.expose_actions.extend (agent draw_ellipsis (d, ?, ?, ?, ?))
-				d.pointer_enter_actions.extend (agent (ai_d: EV_DRAWING_AREA; ai_col: EV_COLOR)
+				if attached parent as l_parent_grid then
+					l_sep_color := l_parent_grid.separator_color
+				end
+
+				d.pointer_enter_actions.extend (agent (ai_d: EV_DRAWING_AREA; ai_col: detachable EV_COLOR)
 						local
 							old_c: EV_COLOR
 						do
-							old_c := ai_d.foreground_color
-							ai_d.set_foreground_color (ai_col)
-							ai_d.draw_rectangle (0, 0, ai_d.width, ai_d.height)
-							ai_d.set_foreground_color (old_c)
-						end(d, parent.separator_color))
+							if ai_col /= Void then
+								old_c := ai_d.foreground_color
+								ai_d.set_foreground_color (ai_col)
+								ai_d.draw_rectangle (0, 0, ai_d.width, ai_d.height)
+								ai_d.set_foreground_color (old_c)
+							end
+						end(d, l_sep_color))
 				d.pointer_leave_actions.extend (agent (ai_d: EV_DRAWING_AREA; ai_col: EV_COLOR)
 						local
 							old_c: EV_COLOR
@@ -188,6 +200,7 @@ feature {NONE} -- Implementation
 				a_popup_window.show_actions.extend_kamikaze (agent initialize_actions)
 				is_activated := True
 			else
+				is_activated := True
 				call_ellipsis_actions
 			end
 		ensure then
@@ -231,14 +244,14 @@ feature {NONE} -- Implementation
 			is_activated: is_activated
 		do
 			inside_outter_edition := True
-			if text_field /= Void then
-				text_field.disable_sensitive
+			if attached text_field as tf then
+				tf.disable_sensitive
 			end
-			if button /= Void then
-				button.disable_sensitive
+			if attached button as but then
+				but.disable_sensitive
 			end
-			if popup_window /= Void then
-				popup_window.hide
+			if attached popup_window as w then
+				w.hide
 			end
 		end
 

@@ -35,16 +35,16 @@ feature -- Status
 
 feature -- Access
 
-	dialog_title: STRING_GENERAL
+	dialog_title: detachable STRING_GENERAL
 			-- Dialog's title
 
-	ok_button_string: STRING_GENERAL
+	ok_button_string: detachable STRING_GENERAL
 			-- [OK] button's text.
 
-	reset_button_string: STRING_GENERAL
+	reset_button_string: detachable STRING_GENERAL
 			-- [Reset] button's text.
 
-	cancel_button_string: STRING_GENERAL
+	cancel_button_string: detachable STRING_GENERAL
 			-- [Cancel] button's text.
 
 feature -- Change
@@ -89,19 +89,17 @@ feature {NONE} -- Agents
 			-- Show text editor.
 		require
 			parented: is_parented
-			parent_window: parent_window (parent) /= Void
-			activated: is_activated
+			parent_window: attached parent as rl_parent and then parent_window (rl_parent) /= Void
+			activated: is_text_editing implies is_activated
 		local
-			l_parent: EV_WINDOW
-
 			l_dial: EV_DIALOG
 			vb: EV_VERTICAL_BOX
 			hb: EV_HORIZONTAL_BOX
 			l_txt: EV_TEXT
 			l_but_valid, l_but_cancel, l_but_reset: EV_BUTTON
 
-			t: STRING_GENERAL
-			l_dialog_title, l_ok_button_string, l_reset_button_string, l_cancel_button_string: STRING_GENERAL
+			t: detachable STRING_GENERAL
+			l_dialog_title, l_ok_button_string, l_reset_button_string, l_cancel_button_string: detachable STRING_GENERAL
 		do
 				--| Texts
 			l_dialog_title := dialog_title
@@ -121,8 +119,6 @@ feature {NONE} -- Agents
 				l_cancel_button_string := "Cancel"
 			end
 
-				--| Parent's window	
-			l_parent := parent_window (parent)
 				-- Build dialog
 			create l_dial
 			create vb
@@ -139,8 +135,8 @@ feature {NONE} -- Agents
 			hb.extend (l_but_reset)
 			hb.extend (l_but_cancel)
 
-			if text_field /= Void then
-				t := text_field.text
+			if attached text_field as tf then
+				t := tf.text
 			else
 				t := text
 			end
@@ -153,10 +149,19 @@ feature {NONE} -- Agents
 			l_dial.set_default_cancel_button (l_but_cancel)
 			l_dial.set_size (300, 200)
 			enter_outter_edition
-			l_dial.show_modal_to_window (l_parent)
+
+				--| Parent's window	
+			if
+				attached parent as l_parent_grid and then
+				attached parent_window (l_parent_grid) as l_parent
+			then
+				l_dial.show_modal_to_window (l_parent)
+			else
+				l_dial.show
+			end
 			leave_outter_edition
-			if text_field /= Void then
-				text_field.set_focus
+			if attached text_field as tf then
+				tf.set_focus
 			end
 		end
 
@@ -169,8 +174,8 @@ feature {NONE} -- Agents
 			if not is_multiline_string then
 				t32.replace_substring_all ("%N", "")
 			end
-			if text_field /= Void then
-				text_field.set_text (t32)
+			if attached text_field as tf then
+				tf.set_text (t32)
 			else
 				set_text (t32)
 			end
@@ -180,14 +185,12 @@ feature {NONE} -- Agents
 
 	dialog_reset (a_win: EV_WINDOW; a_txt: EV_TEXT)
 			-- Reset button clicked
-		local
-			t: STRING_GENERAL
 		do
-			t ?= a_txt.data
-			if t = Void then
-				t := text
+			if attached {STRING_GENERAL} a_txt.data as t then
+				a_txt.set_text (t)
+			else
+				a_txt.set_text (text)
 			end
-			a_txt.set_text (t)
 		end
 
 	dialog_cancel (a_win: EV_WINDOW; a_txt: EV_TEXT)

@@ -909,6 +909,7 @@ test	change-expanded-anchor-type		incr357 tcf fail incrementality anchored_type
 test	qat-is-expanded-crash-2			incr358 tcf fail incrementality anchored_type
 test	qat-is-expanded-crash-3			incr359 tcf fail incrementality anchored_type
 test	bogus-vtcg-2				incr360 tcf fail incrementality generic anchored_type
+test	formal-entry-crash			incr361 tcf fail incrementality generic anchored_type
 
 
 -- Melting

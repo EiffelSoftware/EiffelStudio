@@ -78,7 +78,9 @@ feature -- Basic operations
 			l_result: BOOLEAN
 		do
 			l_result := (c_dlclose (a_hnd) = 0)
-			check library_freed: l_result end
+			check 
+				library_freed: l_result 
+			end
 		end
 
 feature {NONE} -- Externals

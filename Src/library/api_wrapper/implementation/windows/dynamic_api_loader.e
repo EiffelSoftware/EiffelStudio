@@ -72,7 +72,9 @@ feature -- Basic operations
 			l_result: BOOLEAN
 		do
 			l_result := c_free_library (a_hnd)
-			check library_freed: l_result end
+			check 
+				library_freed: l_result 
+			end
 		end
 
 feature {NONE} -- Externals

@@ -259,7 +259,7 @@ feature -- Properties
 	replayed_break_nested_index: INTEGER
 			-- Replayed breakable slot nested index	
 
-	calls: ARRAY [like Current] assign set_calls
+	calls: ARRAY [detachable like Current] assign set_calls
 			-- Calls from Current
 
 	calls_count: INTEGER

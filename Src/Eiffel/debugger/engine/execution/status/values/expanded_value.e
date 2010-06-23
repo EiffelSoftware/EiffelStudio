@@ -117,8 +117,8 @@ feature {NONE} -- Implementation
 		local
 			l_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE]
 		do
-			if address /= Void and then not address.is_void then
-				address := keep_object_as_hector_address (address)
+			if attached address as add and then not add.is_void then
+				address := keep_object_as_hector_address (add)
 			end
 			from
 				l_cursor := attributes.new_cursor

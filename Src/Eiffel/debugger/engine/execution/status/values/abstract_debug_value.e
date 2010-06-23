@@ -193,6 +193,8 @@ feature {DUMP_VALUE, CALL_STACK_ELEMENT, DBG_EVALUATOR, ABSTRACT_DEBUG_VALUE, IP
 			-- Convert the physical addresses received from the application
 			-- to hector addresses. (should be called only once just after
 			-- all the information has been received from the application.)
+		require
+			is_classic: debugger_manager.is_classic_project
 		do
 		end
 

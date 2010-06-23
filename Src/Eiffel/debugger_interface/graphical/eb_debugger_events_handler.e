@@ -71,10 +71,15 @@ feature -- Change
 			implementation := Void
 		end
 
-	add_idle_action (v: PROCEDURE [ANY, TUPLE])
-			-- Extend `idle_actions' with `v'.
+	add_idle_action (v: PROCEDURE [ANY, TUPLE]; is_kamikazee: BOOLEAN)
+			-- Add `a_idle_actions' to idle_actions if not already present.
+			-- Thread safe
 		do
-			ev_application.add_idle_action (v)
+			if is_kamikazee then
+				ev_application.add_idle_action_kamikaze (v)
+			else
+				ev_application.add_idle_action (v)
+			end
 		end
 
 	remove_idle_action (v: PROCEDURE [ANY, TUPLE])
@@ -88,7 +93,7 @@ feature {NONE} -- Implementation
 	implementation: EB_DEBUGGER_EVENTS_HANDLER_IMP ;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -101,22 +106,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

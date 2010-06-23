@@ -290,16 +290,23 @@ feature {NONE} -- Action handlers
 			--       Be sure to check `is_in_stone_synchronization' to determine if a stone has change through an explicit
 			--       setting or through compile synchronization.
 		local
-			l_class: CLASS_C
+			l_class: detachable CLASS_C
 			l_tree: like features_tree
 			l_class_ast: CLASS_AS
 			l_container: EV_CONTAINER
 		do
 			l_tree := features_tree
 
-			if attached {CLASSC_STONE} stone as l_class_stone then
-				l_class := l_class_stone.e_class
-
+			if attached {CLASSC_STONE} stone as l_classc_stone then
+				l_class := l_classc_stone.e_class
+			elseif attached {CLASSI_STONE} stone as l_classi_stone then
+				if attached l_classi_stone.class_i as l_classi then
+					if l_classi.is_compiled then
+						l_class := l_classi.compiled_class
+					end
+				end
+			end
+			if l_class /= Void then
 				if l_class /= current_compiled_class or is_in_stone_synchronization then
 						-- Removes the tree from the parent to perform off-screen drawing.
 					l_container := l_tree.parent

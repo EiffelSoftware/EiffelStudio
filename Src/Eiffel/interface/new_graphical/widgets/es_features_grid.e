@@ -633,7 +633,13 @@ feature {NONE} -- Event handler
 					if attached {E_FEATURE} d as ef  then
 						create {FEATURE_STONE} Result.make (ef)
 					elseif attached {CLASS_I} d as ci then
-						create {CLASSI_STONE} Result.make (ci)
+						if ci.is_compiled then
+							create {CLASSC_STONE} Result.make (ci.compiled_class)
+						else
+							create {CLASSI_STONE} Result.make (ci)
+						end
+					elseif attached {CLASS_C} d as cl then
+						create {CLASSC_STONE} Result.make (cl)
 					end
 				end
 			end

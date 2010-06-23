@@ -484,12 +484,15 @@ feature {NONE} -- Query
 			not_a_name_is_empty: not a_name.is_empty
 			has_parsed: has_parsed
 			has_option_a_name: has_option (a_name)
-		local
-			l_result: like internal_option_of_name
 		do
-			l_result := internal_option_of_name (a_name)
-			check l_result_attached: l_result /= Void end
-			Result := l_result
+			if attached internal_option_of_name (a_name) as l_result then
+				Result := l_result
+			else
+				check
+					result_attached: False
+				end
+				Result := switch_of_name (a_name).new_option
+			end
 		end
 
 	options_of_name (a_name: READABLE_STRING_8): LIST [ARGUMENT_OPTION]
@@ -530,7 +533,9 @@ feature {NONE} -- Query
 				end
 				l_options.go_to (l_cursor)
 			else
-				check False end
+				check
+					option_values_not_empty: False
+				end
 				create l_result.make (0)
 			end
 			Result := l_result
@@ -568,7 +573,8 @@ feature {NONE} -- Query
 							end
 						ensure
 							ia_list_has_a_path: ia_option.has_value implies ia_list.has (ia_option.value)
-						end (l_result, ?))
+						end (l_result, ?)
+					)
 				end
 			else
 				create l_result.make (0)
@@ -806,7 +812,6 @@ feature {NONE} -- Parsing
 						l_last_switch_unattached: not l_use_separated implies l_last_switch = Void
 					end
 					l_arg := l_args[i]
-					check l_arg_attached: l_arg /= Void end
 					if not l_stop_processing and then not l_arg.is_empty and then l_arg.count > 1 and then l_prefixes.has (l_arg.item (1)) then
 						if l_arg.count > 2 and then l_prefixes.has (l_arg.item (2)) then
 							l_option := l_arg.substring (3, l_arg.count)
@@ -908,12 +913,15 @@ feature {NONE} -- Parsing
 									l_switches.go_to (l_cursor)
 
 									if l_match then
-										check l_switch_attached: l_switch /= Void end
-										if l_value /= Void and then not l_value.is_empty and then attached {ARGUMENT_VALUE_SWITCH} l_match_switch as l_value_switch then
-											internal_option_values.extend (l_value_switch.new_value_option (l_value))
+										if l_switch /= Void then
+											if l_value /= Void and then not l_value.is_empty and then attached {ARGUMENT_VALUE_SWITCH} l_match_switch as l_value_switch then
+												internal_option_values.extend (l_value_switch.new_value_option (l_value))
+											else
+													-- Create user option
+												internal_option_values.extend (l_switch.new_option)
+											end
 										else
-												-- Create user option
-											internal_option_values.extend (l_switch.new_option)
+											check l_switch_attached: False end
 										end
 										if l_use_separated then
 											l_last_switch := l_switch
@@ -1126,7 +1134,6 @@ feature {NONE} -- Validation
 			not_option_values_is_empty: not option_values.is_empty
 		local
 			l_dependencies: like switch_dependencies
-			l_switches: detachable ARRAY [ARGUMENT_SWITCH]
 			l_switch: ARGUMENT_SWITCH
 			l_options: like option_values
 			l_option: ARGUMENT_SWITCH
@@ -1140,21 +1147,23 @@ feature {NONE} -- Validation
 			from l_options.start until l_options.after loop
 				l_option := l_options.item.switch
 				if l_dependencies.has (l_option) then
-					l_switches := l_dependencies [l_option]
-					check l_switches_attached: l_switches /= Void end
-					from
-						i := l_switches.lower
-						l_upper := l_switches.upper
-					until
-						i > l_upper
-					loop
-						l_switch := l_switches [i]
-						if not l_switch.optional then
-							if not l_switch.is_special and then not has_option (l_switch.id) then
-								add_template_error (e_missing_switch_dependency_error, [l_option.name, l_switch.name])
+					if attached l_dependencies [l_option] as l_switches then
+						from
+							i := l_switches.lower
+							l_upper := l_switches.upper
+						until
+							i > l_upper
+						loop
+							l_switch := l_switches [i]
+							if not l_switch.optional then
+								if not l_switch.is_special and then not has_option (l_switch.id) then
+									add_template_error (e_missing_switch_dependency_error, [l_option.name, l_switch.name])
+								end
 							end
+							i := i + 1
 						end
-						i := i + 1
+					else
+						check l_dependencies_has_l_option: True end
 					end
 				end
 				l_options.forth
@@ -1248,7 +1257,9 @@ feature {NONE} -- Validation
 					l_groups.forth
 				end
 				l_groups.go_to (l_cursor)
-				check matching_counts: Result.count = l_groups.count end
+				check
+					matching_counts: Result.count = l_groups.count
+				end
 			else
 				create Result.make (0)
 			end
@@ -1287,7 +1298,9 @@ feature {NONE} -- Validation
 							l_switch := l_appurtenances[i]
 							if not l_group_switches.has (l_switch) then
 								l_group_switches.extend (l_switch)
-								check not_l_group_switches_after: not l_group_switches.after end
+								check
+									not_l_group_switches_after: not l_group_switches.after
+								end
 							end
 							i := i + 1
 						end
@@ -1536,7 +1549,6 @@ feature {NONE} -- Output
 				else
 					l_arg_name := l_def_prefix.out + l_switch.long_name
 				end
-				check l_arg_name_attached: l_arg_name /= Void end
 				if l_max_len > l_arg_name.count then
 					create l_name.make_filled (' ', l_max_len - l_arg_name.count)
 				else
@@ -1714,7 +1726,6 @@ feature {NONE} -- Usage
 			a_src_group_contains_attached_items: assertions.sequence_contains_attached_items (a_src_group)
 		local
 			l_dependencies: like switch_dependencies
-			l_dependent_switches: detachable ARRAY [ARGUMENT_SWITCH]
 			l_dependent_list: ARRAYED_LIST [ARGUMENT_SWITCH]
 			l_use_separated: like is_using_separated_switch_values
 			l_verbose: BOOLEAN
@@ -1774,28 +1785,33 @@ feature {NONE} -- Usage
 								end
 							end
 								-- Add appurenances switches
-							if l_dependencies /= Void and then l_dependencies.has (l_switch) then
-								l_dependent_switches := l_dependencies [l_switch]
-								check l_dependent_switches_attached: l_dependent_switches /= Void end
-								if not l_dependent_switches.is_empty then
-									create l_dependent_list.make (l_dependent_switches.count)
-									from
-										i := 1
-										l_upper := l_dependent_switches.upper
-									until
-										i > l_upper
-									loop
-										if attached l_dependent_switches.item (i) as l_dependency then
-											l_dependent_list.extend (l_dependency)
+							if
+								l_dependencies /= Void and then
+								l_dependencies.has (l_switch)
+							then
+								if attached l_dependencies [l_switch] as l_dependent_switches then
+									if not l_dependent_switches.is_empty then
+										create l_dependent_list.make (l_dependent_switches.count)
+										from
+											i := 1
+											l_upper := l_dependent_switches.upper
+										until
+											i > l_upper
+										loop
+											if attached l_dependent_switches.item (i) as l_dependency then
+												l_dependent_list.extend (l_dependency)
+											end
+											i := i + 1
 										end
-										i := i + 1
-									end
 
-									l_cfg := command_option_group_configuration (l_dependent_list, False, False, False, a_src_group)
-									if not l_cfg.is_empty then
-										Result.append_character (' ')
-										Result.append (l_cfg)
+										l_cfg := command_option_group_configuration (l_dependent_list, False, False, False, a_src_group)
+										if not l_cfg.is_empty then
+											Result.append_character (' ')
+											Result.append (l_cfg)
+										end
 									end
+								else
+									check l_dependencies_has_l_switch: False end
 								end
 							end
 							if l_switch.allow_multiple then
@@ -2191,7 +2207,7 @@ invariant
 	is_successful_means_has_parsed: is_successful implies has_parsed
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

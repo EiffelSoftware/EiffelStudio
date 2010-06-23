@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 			l_arg: detachable READABLE_STRING_GENERAL
 			i: INTEGER
 		do
-			create l_args.make (1, a_arguments.count)
+			create l_args.make_filled ("", 1, a_arguments.count)
 			from
 				i := 1
 				a_arguments.start
@@ -46,7 +46,6 @@ feature {NONE} -- Initialization
 				a_arguments.after
 			loop
 				l_arg := a_arguments.item
-				check l_arg_attached: l_arg /= Void end
 				l_args.put (l_arg.as_string_8, i)
 				i := i + 1
 			end
@@ -75,7 +74,7 @@ feature {NONE} -- Initialization
 			l_upper: INTEGER
 			i, j: INTEGER
 		do
-			create l_args.make (1, a_arguments.count)
+			create l_args.make_filled ("", 1, a_arguments.count)
 			from
 				i := a_arguments.lower
 				l_upper := a_arguments.upper
@@ -83,7 +82,6 @@ feature {NONE} -- Initialization
 				i > l_upper
 			loop
 				l_arg := a_arguments[i + j]
-				check l_arg_attached: l_arg /= Void end
 				j := j + 1
 				l_args.put (l_arg.as_string_8, j)
 			end

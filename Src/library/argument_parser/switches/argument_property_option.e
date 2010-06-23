@@ -93,7 +93,9 @@ feature {NONE} -- Basic operations
 						l_pval := l_value.substring (l_pos + 1, l_count)
 					end
 				else
-					check l_pos_is_zero: l_pos = 0 end
+					check 
+						l_pos_is_zero: l_pos = 0 
+					end
 					l_pval := l_value.twin
 				end
 			end

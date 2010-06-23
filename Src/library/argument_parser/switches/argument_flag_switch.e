@@ -170,7 +170,9 @@ feature {ARGUMENT_BASE_PARSER} -- Factory Functions
 				i > l_count
 			loop
 				c := a_value.item (i)
-				check c_is_printable: c.is_printable end
+				check 
+					c_is_printable: c.is_printable 
+				end
 				l_flags.extend (c)
 				i := i + 1
 			end

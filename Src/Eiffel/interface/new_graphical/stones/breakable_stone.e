@@ -261,23 +261,23 @@ feature -- operation on breakpoint
 			-- New breakpoint dialog.
 		local
 			l_last_dialogs: like last_dialogs
-			l_bp: like associated_user_breakpoint
+			l_dlg: ES_BREAKPOINT_DIALOG
  		do
 				--| Do not open two bp dialog for the same breakpoint location
 				--| otherwise we'll end up with conflict
- 			l_bp := associated_user_breakpoint
- 			if l_bp /= Void then
+ 			if attached breakpoint_location as l_loc then
 	 			from
 	 				l_last_dialogs := last_dialogs
 	 				l_last_dialogs.start
 	 			until
 	 				l_last_dialogs.after or Result /= Void
 	 			loop
+	 				l_dlg := l_last_dialogs.item
 	 				if
-	 					attached l_last_dialogs.item.associated_breakpoint as bp
-	 					and then bp.same_breakpoint_key (l_bp)
+	 					attached l_dlg.associated_breakpoint_location as bp_loc
+	 					and then bp_loc ~ l_loc
 	 				then
-	 					Result := l_last_dialogs.item
+	 					Result := l_dlg
 	 				end
 	 				l_last_dialogs.forth
 	 			end

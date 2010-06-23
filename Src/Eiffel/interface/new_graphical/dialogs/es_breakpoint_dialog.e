@@ -159,14 +159,20 @@ feature -- Properties
 	breakpoint_index: INTEGER
 			-- Associated Breakpoint's breakable index.
 
+	associated_breakpoint_location: BREAKPOINT_LOCATION
+			-- Associated Breakpoint.
+		do
+			if attached debugger_manager.breakpoints_manager as bm then
+				Result := bm.breakpoint_location (breakpoint_routine, breakpoint_index, False)
+			end
+		end
+
 	associated_breakpoint: BREAKPOINT
 			-- Associated Breakpoint.
 		local
-			bm: BREAKPOINTS_MANAGER
 			loc: BREAKPOINT_LOCATION
 		do
-			bm := debugger_manager.breakpoints_manager
-			if bm /= Void then
+			if attached debugger_manager.breakpoints_manager as bm then
 				loc := bm.breakpoint_location (breakpoint_routine, breakpoint_index, False)
 				if bm.is_user_breakpoint_set_at (loc) then -- user bp
 					Result := bm.user_breakpoint_at (loc)

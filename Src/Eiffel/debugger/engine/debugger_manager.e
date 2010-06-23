@@ -769,6 +769,42 @@ feature -- Parameters
 
 feature -- Exception handling
 
+	display_ignore_contract_violation_dialog
+			-- Display message to Break/Continue or Ignore contract violation
+		do
+			--| not yet implemented
+		end
+
+	enable_ignore_contract_violation_if_possible
+			-- Enable/disable ignore contract violation command base on debuggee statues
+		do
+			if attached application_status as l_status and then l_status.exception_occurred then
+				if is_dotnet_project then
+					-- Have to update exception info with following two lines. Otherwise the value is void
+					l_status.update_on_stopped_state
+				end
+				if
+					attached l_status.exception_type_name as n and then
+					(
+						n.same_string (({CHECK_VIOLATION}).out) or else
+						n.same_string (({PRECONDITION_VIOLATION}).out) or else
+						n.same_string (({POSTCONDITION_VIOLATION}).out) or else
+						n.same_string (({INVARIANT_VIOLATION}).out) or else
+						n.same_string (({VARIANT_VIOLATION}).out) or else
+						n.same_string (({LOOP_INVARIANT_VIOLATION}).out)
+					)
+				then
+					-- Display ignore contract violation dialog
+					add_on_stopped_action (agent (dm: DEBUGGER_MANAGER)
+							do
+								dm.display_ignore_contract_violation_dialog
+							end
+							, True
+						)
+				end
+			end
+		end
+
 	process_exception: BOOLEAN
 			-- Exception catched ?
 		require
@@ -837,11 +873,18 @@ feature -- Events/Timers helpers
 			Result := events_handler.new_timer
 		end
 
+	do_once_on_idle (v: PROCEDURE [ANY, TUPLE])
+		require
+			events_handler_not_void: events_handler /= Void
+		do
+			events_handler.add_idle_action (v, True)
+		end
+
 	add_idle_action (v: PROCEDURE [ANY, TUPLE])
 		require
 			events_handler_not_void: events_handler /= Void
 		do
-			events_handler.add_idle_action (v)
+			events_handler.add_idle_action (v, False)
 		end
 
 	remove_idle_action (v: PROCEDURE [ANY, TUPLE])
@@ -923,10 +966,10 @@ feature -- Settings
 
 feature -- Access
 
-	application_status: APPLICATION_STATUS
+	application_status: detachable APPLICATION_STATUS
 		do
-			if application /= Void then
-				Result := application.status
+			if attached application as app then
+				Result := app.status
 			end
 		end
 
@@ -1648,7 +1691,7 @@ feature -- One time action
 		end
 
 	add_on_update_action (p: PROCEDURE [ANY, TUPLE [DEBUGGER_MANAGER]]; is_kamikaze: BOOLEAN)
-			-- Add `p' to `stopped_actions' with `p'.
+			-- Add `p' to `update_actions' with `p'.
 		require
 			p_not_void: p /= Void
 		do

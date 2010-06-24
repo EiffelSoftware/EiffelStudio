@@ -230,6 +230,7 @@ test	external-with-invalid-use	syntax057 tcf pass syntax
 test	bracket-expression-on-manifest-type	syntax058 tcf pass syntax bracket_expression
 test	across-loop-syntax		syntax059 tcf pass syntax loop variant invariant across iteration
 test	object-test-expression	syntax060 tcf pass syntax object_test
+test	constrained-generic-without-type	syntax061 tcf fail syntax formal generic
 
 
 -- Validity tests

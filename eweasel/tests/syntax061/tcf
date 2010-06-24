@@ -1,0 +1,12 @@
+
+test_name 	constrained-generic-without-type
+test_description Verify that a constrained generic must be followed by a type.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result	syntax_error TEST2 2
+
+test_end

@@ -20,7 +20,7 @@ feature {NONE} -- Initialization
 			resolver: detachable XML_NAMESPACE_RESOLVER
 			tree: detachable XML_CALLBACKS_TREE
 		do
-			create {XML_CUSTOM_PARSER} parser.make
+			create {XML_LITE_CUSTOM_PARSER} parser.make
 
 			get_parser_mode
 

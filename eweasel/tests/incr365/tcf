@@ -1,0 +1,25 @@
+
+test_name	renamed-type-crash			
+test_description A sequence of changes crashes the compiler with a seg fault in {RENAMED_TYPE_A}.make.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+copy_raw 	test2.e $CLUSTER test2.e
+copy_raw 	test3.e $CLUSTER test3.e
+compile_melted
+compile_result 	ok
+
+copy_raw 	test1_rev2.e $CLUSTER test1.e
+copy_raw 	test2_rev2.e $CLUSTER test2.e
+copy_raw 	test3_rev2.e $CLUSTER test3.e
+compile_melted
+compile_result 	validity_error TEST3 VTCG
+
+copy_raw 	test_rev2.e $CLUSTER test.e
+copy_raw 	test2_rev3.e $CLUSTER test2.e
+copy_raw 	test3_rev3.e $CLUSTER test3.e
+resume_compile
+compile_result 	validity_error TEST2 VTUG(2) ; TEST VTCG VTCG VTCG VTCG VTCG VTCG 
+
+test_end

@@ -237,8 +237,14 @@ feature -- Duplication
 			-- Array made of items of current array within
 			-- bounds `start_pos' and `end_pos'.
 		do
-			create Result.make (start_pos, end_pos)
-			Result.subcopy (Current, start_pos, end_pos, start_pos)
+			if start_pos <= end_pos then
+				create Result.make (start_pos, end_pos)
+					-- Only copy elements if needed.
+				Result.subcopy (Current, start_pos, end_pos, start_pos)
+			else
+					-- make empty
+				create Result.make (start_pos, end_pos)
+			end
 		end
 
 note

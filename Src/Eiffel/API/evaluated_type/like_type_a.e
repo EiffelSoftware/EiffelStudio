@@ -254,6 +254,10 @@ feature -- Primitives
 	set_actual_type (a: TYPE_A)
 			-- Assign `a' to `actual_type'.
 		do
+				-- Remove any previously recorded actual type first
+				-- since it can be used to compute attachment properties
+				-- and give wrong results.
+			actual_type := Void
 			actual_type := a.to_other_immediate_attachment (Current)
 		end
 

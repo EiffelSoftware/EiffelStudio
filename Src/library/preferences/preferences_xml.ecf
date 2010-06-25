@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="preferences_xml" uuid="B453E790-C89E-45DC-BA9C-E00E4C4BE87A" library_target="preferences_xml">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-6-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-6-0 http://www.eiffel.com/developers/xml/configuration-1-6-0.xsd" name="preferences_xml" uuid="B453E790-C89E-45DC-BA9C-E00E4C4BE87A" library_target="preferences_xml">
 	<target name="preferences_xml">
 		<description>Preferences library.
       Copyright (c) 1984-2006, Eiffel Software and others.
@@ -18,14 +18,14 @@
 				<custom name="batch_preferences" excluded_value="true"/>
 			</condition>
 		</library>
-		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel.ecf"/>
-		<library name="gobo_xml" location="$ISE_LIBRARY\library\gobo\gobo_xml.ecf"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf">
 			<condition>
 				<custom name="batch_preferences" excluded_value="true"/>
 			</condition>
 		</library>
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf"/>
+		<library name="xml_tree" location="$ISE_LIBRARY\library\text\parser\xml\tree\xml_tree.ecf"/>
+		<library name="xml_parser" location="$ISE_LIBRARY\library\text\parser\xml\parser\xml_parser.ecf"/>
 		<cluster name="interface" location="interface\" recursive="true">
 			<condition>
 				<custom name="batch_preferences" excluded_value="true"/>
@@ -40,9 +40,9 @@
 			<option namespace="Preferences.Interface">
 			</option>
 			<file_rule>
+				<exclude>/shortcut_management$</exclude>
 				<exclude>/graphical$</exclude>
 				<exclude>/build_project$</exclude>
-				<exclude>/shortcut_management$</exclude>
 			</file_rule>
 		</cluster>
 		<cluster name="preference" location="preference\" recursive="true">
@@ -73,10 +73,10 @@
 				<exclude>/registry_implementation$</exclude>
 			</file_rule>
 			<file_rule>
+				<exclude>/registry$</exclude>
 				<condition>
 					<platform excluded_value="windows"/>
 				</condition>
-				<exclude>/registry$</exclude>
 			</file_rule>
 		</cluster>
 	</target>

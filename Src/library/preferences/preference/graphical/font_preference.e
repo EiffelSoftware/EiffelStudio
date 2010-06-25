@@ -111,7 +111,9 @@ feature {NONE} -- Implementation
 				create l_value.make_with_values (family, weight, shape, height)
 				internal_value := l_value
 				l_value.set_height_in_points (height)
-				l_value.preferred_families.extend (face)
+				if attached face as l_face then
+					l_value.preferred_families.extend (l_face)
+				end
 				set_value (l_value)
 			else
 				create internal_value

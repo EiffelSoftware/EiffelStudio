@@ -50,7 +50,7 @@ class
 inherit
 	ANY
 
-	XM_CALLBACKS_FILTER_FACTORY
+	XML_CALLBACKS_FILTER_FACTORY
 		export
 			{NONE} all
 		end
@@ -447,23 +447,21 @@ feature {NONE} -- Implementation
 			default_file_name_not_void: a_default_file_name /= Void
 			default_file_name_not_empty: not a_default_file_name.is_empty
 		local
-			parser: XM_EIFFEL_PARSER
-			l_file: KL_TEXT_INPUT_FILE
-			l_tree_pipe: XM_TREE_CALLBACKS_PIPE
-			l_concat_filter: XM_CONTENT_CONCATENATOR
-			xml_data: detachable XM_ELEMENT
-			l_document: detachable XM_DOCUMENT
+			parser: XML_LITE_STOPPABLE_PARSER
+			l_file: PLAIN_TEXT_FILE
+			l_tree: XML_CALLBACKS_TREE
+			xml_data: detachable XML_ELEMENT
+			l_document: detachable XML_DOCUMENT
 			has_error: BOOLEAN
 		do
 			create parser.make
-			create l_tree_pipe.make
-			create l_concat_filter.make_null
-			parser.set_callbacks (standard_callbacks_pipe (<<l_concat_filter, l_tree_pipe.start>>))
+			create l_tree.make_null
+			parser.set_callbacks (l_tree)
 
 			create l_file.make (a_default_file_name)
 			l_file.open_read
 			if l_file.is_open_read then
-				parser.parse_from_stream (l_file)
+				parser.parse_from_file (l_file)
 				l_file.close
 		  	else
 		  		has_error := True
@@ -471,23 +469,23 @@ feature {NONE} -- Implementation
 
     		if has_error then
     			error_message := "%"" + a_default_file_name + "%" does not exist."
-    		elseif l_tree_pipe.error.has_error then
+    		elseif parser.error_occurred then
     			error_message := a_default_file_name + "is not a valid preference file%N"
     		else
-    			l_document := l_tree_pipe.document
-    			check l_document /= Void end -- implied by `not l_tree_pipe.error.has_error'
+    			l_document := l_tree.document
+    			check l_document /= Void end -- implied by `not parser.error_occurred'
     			xml_data := l_document.root_element
     			load_default_attributes (xml_data)
     		end
 		end
 
-	load_default_attributes (xml_elem: XM_ELEMENT)
+	load_default_attributes (xml_elem: XML_ELEMENT)
 			-- Load of data from `xml_elem'.
 		require
 			element_not_void: xml_elem /= Void
 		local
-			node, sub_node: detachable XM_ELEMENT
-			l_attribute: detachable XM_ATTRIBUTE
+			node, sub_node: detachable XML_ELEMENT
+			l_attribute: detachable XML_ATTRIBUTE
 			pref_name,
 			pref_description,
 			pref_value,
@@ -505,8 +503,8 @@ feature {NONE} -- Implementation
 					node ?= xml_elem.item_for_iteration
 					if node /= Void then
 						if node.name.is_equal (once "PREF") then
-							if node.elements /= Void and then not node.elements.is_empty then
-								sub_node := node.elements.item (1)
+							if attached node.elements as elts and then not elts.is_empty then
+								sub_node := elts.i_th (1)
 							end
 
 								-- Found preference

@@ -18,8 +18,8 @@
 				<custom name="batch_preferences" excluded_value="true"/>
 			</condition>
 		</library>
-		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel-safe.ecf"/>
-		<library name="gobo_xml" location="$ISE_LIBRARY\library\gobo\gobo_xml-safe.ecf"/>
+		<library name="xml_tree" location="$ISE_LIBRARY\library\text\parser\xml\tree\xml_tree-safe.ecf"/>
+		<library name="xml_parser" location="$ISE_LIBRARY\library\text\parser\xml\parser\xml_parser-safe.ecf"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2-safe.ecf">
 			<condition>
 				<custom name="batch_preferences" excluded_value="true"/>

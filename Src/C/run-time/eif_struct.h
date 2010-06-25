@@ -128,6 +128,7 @@ struct cnode {
 #define SK_UINT32	0x38000000			/* Simple unsigned integer 32 type */
 #define SK_UINT64	0x3c000000			/* Simple unsigned integer 64 type */
 #define SK_POINTER	0x40000000			/* Simple pointer type */
+#define SK_STRING32 0x44000000		/* STRING_32 type / Use for debugging only */
 #define SK_BMASK	0x00007fff			/* Bits number (coded on 15 bits) */
 #define SK_SIMPLE	0x7c000000			/* Mask to test for simple type */
 #define SK_REF		0xf8000000			/* Mask to test for reference type */

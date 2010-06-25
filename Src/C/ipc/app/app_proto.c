@@ -1554,6 +1554,9 @@ rt_private unsigned char smodify_attr(char *object, long attr_number, EIF_TYPED_
 			case SK_STRING:
 				*(char **)object = RTMS(new_value->it_ref);
 				break;
+			case SK_STRING32:
+				*(char **)object = RTMS32(new_value->it_ref);
+				break;
 			default: /* Object reference */
 				o_ref = (char *) ((char **)object + attr_number);
 

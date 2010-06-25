@@ -373,6 +373,19 @@ rt_public void send_string_value(char* string)
 	send_dmpitem_request(&item);
 }
 
+/* send a STRING_32 to the application */
+rt_public void send_string_32_value(char* string)
+{
+	EIF_TYPED_VALUE item;
+
+	/* fill in the item to send */
+	item.type = SK_STRING32;
+	item.it_ref = string;
+
+	/* send the request */
+	send_dmpitem_request(&item);
+}
+
 /* send a bit value to the application */
 rt_public void send_bit_value(char *value)
 {

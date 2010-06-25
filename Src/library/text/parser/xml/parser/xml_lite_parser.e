@@ -199,18 +199,6 @@ feature {NONE} -- Implementation: parse
 					inspect c
 					when '?' then
 						parse_processing_instruction
---						c := next_character
---						inspect c
---						when 'p' then
---							rewind_character
---							parse_processing_instruction
---						when 'x' then
---							rewind_character
---							parse_declaration
---						else
---								--Maybe skip to next  ?> ?
---							report_error ("syntax error <?" + c.out)
---						end
 					when '/' then
 						parse_end_tag
 					when '!' then

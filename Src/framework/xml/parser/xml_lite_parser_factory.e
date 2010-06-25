@@ -5,7 +5,7 @@ note
 	revision    : "$Revision$"
 
 class
-	XML_SIMPLE_PARSER_FACTORY
+	XML_LITE_PARSER_FACTORY
 
 inherit
 	XML_PARSER_FACTORY
@@ -17,7 +17,7 @@ feature -- Status report
 
 feature -- Access
 
-	new_parser: XML_SIMPLE_PARSER
+	new_parser: XML_LITE_PARSER
 			-- New XML parser
 		do
 			create Result.make

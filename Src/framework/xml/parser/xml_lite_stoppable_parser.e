@@ -12,10 +12,10 @@ note
 	revision: "$Revision$"
 
 class
-	XML_STOPPABLE_PARSER
+	XML_LITE_STOPPABLE_PARSER
 
 inherit
-	XML_SIMPLE_PARSER
+	XML_LITE_PARSER
 		redefine
 			reset, report_error,
 			set_checkpoint_position, unset_checkpoint_position, checkpoint_position

@@ -51,7 +51,24 @@ feature -- Status
 		deferred
 		end
 
+	last_error: INTEGER
+			-- Last error's code
+			-- See {XML_ERROR_CODES}.
+		do
+			if error_occurred then
+				Result := {XML_ERROR_CODES}.Xml_err_unknown
+			else
+				Result := {XML_ERROR_CODES}.Xml_err_none
+			end
+		end
+
 feature -- Access
+
+	last_error_description: detachable STRING
+			-- Last error message
+		do
+			Result := error_message
+		end
 
 	error_message: detachable STRING
 			-- Error message

@@ -9,14 +9,14 @@ note
 		]"
 	warning: "[
 					<!DOCTYPE ..> is parsed but not used
-					<!ENTITY ..> are not supported
+					<!ENTITY ..> are not supported yet
 			]"
 	author: "Jocelyn Fiat"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	XML_SIMPLE_PARSER
+	XML_LITE_PARSER
 
 inherit
 	XML_PARSER

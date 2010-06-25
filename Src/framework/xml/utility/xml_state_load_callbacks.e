@@ -69,7 +69,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	xml_parser: XML_STOPPABLE_PARSER
+	xml_parser: XML_LITE_STOPPABLE_PARSER
 			-- The XML parser used to in conjunction with Current
 
 	last_error_message: STRING_32

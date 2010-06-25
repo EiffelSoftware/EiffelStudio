@@ -1,23 +1,18 @@
 note
-	description : "[
-			Eiffel XML parser to replace Gobo's XM_EIFFEL_PARSER
-
-		]"
+	description: "XML Error code constants"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class XM_EIFFEL_PARSER
+class
+	XML_ERROR_CODES
 
-inherit
-	XML_LITE_STOPPABLE_PARSER
-		rename
-			parse_from_stream as parse_from_xml_stream
-		end
+feature -- Constants
 
-	XM_PARSER
+	Xml_err_none: INTEGER = 0
+			-- No error occurred
 
-create
-	make
+	Xml_err_unknown: INTEGER = 1
+			-- An unknown error occurred
 
 note
 	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
@@ -29,4 +24,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

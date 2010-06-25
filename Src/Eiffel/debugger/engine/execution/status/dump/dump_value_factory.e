@@ -258,6 +258,18 @@ feature -- Access
 			Result_attached: Result /= Void
 		end
 
+	new_manifest_string_32_value  (value: STRING; dtype: CLASS_C): DUMP_VALUE
+			-- make a string item initialized to `value'
+		require
+			value_attached: value /= Void
+		do
+			create Result.make_empty (debugger_manager)
+			Result.set_manifest_string_32_value (value, dtype)
+			init_value (Result)
+		ensure
+			Result_attached: Result /= Void
+		end
+
 	new_exception_value  (value: EXCEPTION_DEBUG_VALUE): DUMP_VALUE
 		do
 			create Result.make_empty (debugger_manager)
@@ -319,7 +331,7 @@ invariant
 	debugger_manager_not_void: debugger_manager /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -2455,6 +2455,7 @@ rt_public int rt_dbg_set_stack_value (uint32 stack_depth, uint32 loc_type, uint3
 		case SK_REAL64: *(EIF_REAL_64 *)(ip.address) = new_value->it_real64; break;
 		case SK_POINTER: *(EIF_POINTER *)(ip.address) = new_value->it_ptr; break;
 		case SK_STRING: *(EIF_REFERENCE *)(ip.address) = RTMS(new_value->it_ref); break;
+		case SK_STRING32: *(EIF_REFERENCE *)(ip.address) = RTMS32(new_value->it_ref); break;
 		case SK_VOID:
 			(ip.value.type) = SK_VOID;
 			*(EIF_REFERENCE *)(ip.address) = (EIF_REFERENCE) 0;

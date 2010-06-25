@@ -61,6 +61,7 @@ extern void send_bool_value(EIF_BOOLEAN value);
 extern void send_ref_value(EIF_REFERENCE value);
 extern void send_ptr_value(EIF_POINTER value);
 extern void send_string_value(char* string);
+extern void send_string_32_value(char* string);
 extern void send_bit_value(char *value);
 
 extern void ewb_send_ack_ok(void);

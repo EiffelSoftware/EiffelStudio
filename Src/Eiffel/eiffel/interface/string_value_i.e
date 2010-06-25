@@ -13,7 +13,7 @@ inherit
 		rename
 			string_value as internal_string_value
 		redefine
-			is_string, append_signature, is_propagation_equivalent,
+			is_string, is_string_32, append_signature, is_propagation_equivalent,
 			internal_string_value, set_real_type
 		end
 

@@ -1311,10 +1311,17 @@ feature {BYTE_NODE} -- Visitor
 		local
 			dv: DUMP_VALUE
 		do
-			dv := Debugger_manager.Dump_value_factory.new_manifest_string_value (
-						a_node.value,
-						debugger_manager.compiler_data.string_8_class_c
-					)
+			if a_node.is_string_32 then
+				dv := Debugger_manager.Dump_value_factory.new_manifest_string_32_value (
+							a_node.value,
+							debugger_manager.compiler_data.string_32_class_c
+						)
+			else
+				dv := Debugger_manager.Dump_value_factory.new_manifest_string_value (
+							a_node.value,
+							debugger_manager.compiler_data.string_8_class_c
+						)
+			end
 			if dv /= Void then
 				create tmp_result.make_with_value (dv)
 			end
@@ -1679,6 +1686,12 @@ feature {NONE} -- Visitor: implementation
 						l_cl := comp_data.string_8_class_c
 					end
 					dv := d_fact.new_manifest_string_value (l_string.string_value, l_cl)
+				elseif a_value_i.is_string_32 then
+					l_string ?= a_value_i
+					if l_cl = Void then
+						l_cl := comp_data.string_32_class_c
+					end
+					dv := d_fact.new_manifest_string_32_value (l_string.string_value, l_cl)
 				elseif a_value_i.is_boolean then
 					if l_cl = Void then
 						l_cl := comp_data.boolean_class_c

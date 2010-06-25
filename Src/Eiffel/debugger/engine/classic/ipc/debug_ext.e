@@ -135,6 +135,12 @@ feature
 			"C"
 		end
 
+	send_string_32_value (value: POINTER)
+			-- value is the address of a C string
+		external
+			"C"
+		end
+
 	send_ref_value (value: POINTER)
 			-- value is the address of the object
 		external
@@ -403,7 +409,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

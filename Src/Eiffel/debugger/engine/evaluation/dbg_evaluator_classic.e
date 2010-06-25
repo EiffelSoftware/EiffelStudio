@@ -308,8 +308,13 @@ feature -- Query
 		local
 			dv: DUMP_VALUE
 		do
-			if a_target.is_type_manifest_string then
+			if a_target.is_type_manifest_string_8 then
 				dv := a_target.manifest_string_to_dump_value_object
+				if dv /= Void then
+					Result := dv.address
+				end
+			elseif a_target.is_type_manifest_string_32 then
+				dv := a_target.manifest_string_32_to_dump_value_object
 				if dv /= Void then
 					Result := dv.address
 				end

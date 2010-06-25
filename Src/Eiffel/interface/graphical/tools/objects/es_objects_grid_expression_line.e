@@ -29,6 +29,11 @@ inherit
 			refresh
 		end
 
+	SHARED_LOCALE
+		export
+			{NONE} all
+		end
+
 create
 	make_with_expression_evaluation
 
@@ -404,7 +409,7 @@ feature -- Graphical changes
 			a_item /= Void
 			expression_evaluation_attached: expression_evaluation /= Void
 		local
-			new_text: STRING
+			new_text: STRING_32
 			r: EV_GRID_ROW
 			evl: like expression_evaluation
 			exp: like expression
@@ -413,7 +418,7 @@ feature -- Graphical changes
 
 			new_text := a_item.text
 			if new_text /= Void then
-				new_text.left_adjust
+				string_general_left_adjust (new_text)
 				evl := expression_evaluation
 				exp := evl.expression
 				if exp.is_context_object then
@@ -657,7 +662,7 @@ feature -- Graphical changes
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

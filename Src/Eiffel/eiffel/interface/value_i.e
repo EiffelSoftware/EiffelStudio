@@ -87,6 +87,12 @@ feature -- Status report
 			-- Do nothing
 		end
 
+	is_string_32: BOOLEAN
+			-- Is the constant a string constant ?
+		do
+			-- Do nothing
+		end
+
 	is_bit: BOOLEAN
 			-- Is the constant a bit constant ?
 		do

@@ -30,19 +30,7 @@ feature
 
 	set_string_mode_mixed
 		do
-
-		end
-
-	last_error_description: detachable STRING
-		do
-			Result := error_message
-		end
-
-	last_error: INTEGER
-		do
-			if error_occurred then
-				Result := 1
-			end
+			check not_supported: False end
 		end
 
 note

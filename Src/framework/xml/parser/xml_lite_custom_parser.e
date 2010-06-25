@@ -12,10 +12,10 @@ note
 	revision: "$Revision$"
 
 class
-	XML_CUSTOM_PARSER
+	XML_LITE_CUSTOM_PARSER
 
 inherit
-	XML_STOPPABLE_PARSER
+	XML_LITE_STOPPABLE_PARSER
 		redefine
 			make,
 			resolve_entity,

@@ -12,8 +12,8 @@
 			<assertions precondition="true" postcondition="true" check="true" invariant="true"/>
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<library name="xml_tree" location="..\tree\xml_tree-safe.ecf" readonly="false" />
-		<library name="xml_parser" location="..\parser\xml_parser-safe.ecf" readonly="false" />
+		<library name="xml_tree" location="$ISE_LIBRARY\library\text\parser\xml\tree\xml_tree-safe.ecf" readonly="false" />
+		<library name="xml_parser" location="$ISE_LIBRARY\library\text\parser\xml\parser\xml_parser-safe.ecf" readonly="false" />
 		<cluster name="utility" location=".\"/>
 	</target>
 </system>

@@ -157,8 +157,8 @@ feature -- Comparison
 			-- Does table contain the same information as `other'?
 		local
 			i, table_size: INTEGER
-			current_key: H
-			local_content: SPECIAL [H]
+			current_key: detachable H
+			local_content: like content
 		do
 			if Current = other then
 				Result := True
@@ -171,7 +171,7 @@ feature -- Comparison
 					i >= table_size or not Result
 				loop
 					current_key := local_content.item (i)
-					if valid_key (current_key) then
+					if current_key /= Void and then valid_key (current_key) then
 						Result := other.has (current_key)
 					end
 					i := i + 1
@@ -292,10 +292,10 @@ feature -- Insertion, deletion
 		require
 			other_not_void: other /= Void
 		local
-			local_other, local_current, new_content: SPECIAL[H]
+			local_other, local_current, new_content: like content
 			new: like Current
 			i, my_size, other_size: INTEGER
-			current_key: H
+			current_key: detachable H
 		do
 			if other.count /= 0 then
 				local_other := other.content
@@ -310,7 +310,7 @@ feature -- Insertion, deletion
 						i >= my_size
 					loop
 						current_key := local_current.item(i)
-						if valid_key (current_key) then
+						if current_key /= Void and then valid_key (current_key) then
 							new.put (current_key)
 						end
 						i := i + 1
@@ -325,7 +325,7 @@ feature -- Insertion, deletion
 					i >= other_size
 				loop
 					current_key := local_other.item(i)
-					if valid_key (current_key) then
+					if current_key /= Void and then valid_key (current_key) then
 						put (current_key)
 					end
 					i := i + 1
@@ -342,9 +342,8 @@ feature -- Resizing
 			n_greater_than_count: n >= count
 		local
 			i, table_size: INTEGER
-			current_key: H
 			other: like Current
-			local_content: SPECIAL [H]
+			local_content: like content
 		do
 			if (content.count * Size_threshold <= 100 * n) then
 				from
@@ -354,8 +353,7 @@ feature -- Resizing
 				until
 					i >= table_size
 				loop
-					current_key := local_content.item (i)
-					if valid_key (current_key) then
+					if attached local_content.item (i) as current_key and then valid_key (current_key) then
 						other.put (current_key)
 					end
 					i := i + 1
@@ -402,7 +400,6 @@ feature -- Conversion
 		local
 			i, table_size: INTEGER
 			l_content: like content
-			l_item: H
 		do
 			from
 				l_content := content
@@ -411,8 +408,7 @@ feature -- Conversion
 			until
 				i > table_size
 			loop
-				l_item := l_content.item (i)
-				if valid_key (l_item) then
+				if attached l_content.item (i) as l_item and then valid_key (l_item) then
 					Result.extend (l_item)
 				end
 				i := i + 1
@@ -440,7 +436,7 @@ feature {NONE} -- Internal features
 			first_deleted_position, visited_count: INTEGER
 			old_key, default_key: detachable H
 			stop: BOOLEAN
-			local_content: SPECIAL [H]
+			local_content: like content
 			local_deleted_marks: SPECIAL [BOOLEAN]
 		do
 				-- Per precondition
@@ -508,7 +504,7 @@ feature {NONE} -- Internal features
 
 feature -- Assertion check
 
-	valid_key (k: H): BOOLEAN
+	valid_key (k: detachable H): BOOLEAN
 			-- Is `k' a valid key?
 		local
 			l_default_key: detachable H
@@ -562,7 +558,7 @@ feature {SEARCH_TABLE}
 	deleted_marks: SPECIAL [BOOLEAN]
 			-- Deleted marks
 
-	content: SPECIAL [H]
+	content: SPECIAL [detachable H]
 			-- Content
 
 feature -- Iteration
@@ -578,7 +574,7 @@ feature -- Iteration
 			-- Iteration
 		local
 			stop: BOOLEAN
-			local_content: SPECIAL [H]
+			local_content: like content
 			pos_for_iter, table_size: INTEGER
 		do
 			from
@@ -605,7 +601,9 @@ feature -- Iteration
 		require
 			not_off: not after
 		do
-			Result := content.item (iteration_position)
+			check attached content.item (iteration_position) as l_item then
+				Result := l_item
+			end
 		end
 
 	cursor: INTEGER

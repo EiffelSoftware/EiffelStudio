@@ -94,11 +94,21 @@ feature -- Comparison
 	same_as (other: TYPE_A): BOOLEAN
 			-- Is the current type the same as `other' ?
 		do
-			if attached {QUALIFIED_ANCHORED_TYPE_A} other as o then
-				Result :=
-					qualifier.same_as (o.qualifier) and then
-					chain ~ o.chain and then
-					has_same_attachment_marks (o)
+			if
+				attached {QUALIFIED_ANCHORED_TYPE_A} other as o and then
+				qualifier.same_as (o.qualifier) and then
+				chain ~ o.chain and then
+				has_same_attachment_marks (o)
+			then
+				if attached actual_type as a then
+					Result :=
+						is_valid and then
+						o.is_valid and then
+						attached o.actual_type as oa and then
+						a.same_as (oa)
+				else
+					Result := not attached o.actual_type
+				end
 			end
 		end
 

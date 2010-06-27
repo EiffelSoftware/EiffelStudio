@@ -43,7 +43,7 @@ feature -- Access
 			Result := internal_pebble_positioning_enabled
 		end
 
-	configurable_target_menu_handler: detachable PROCEDURE [ANY, TUPLE [menu: EV_MENU; target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; source: EV_PICK_AND_DROPABLE; source_pebble: ANY]]
+	configurable_target_menu_handler: detachable PROCEDURE [ANY, TUPLE [menu: EV_MENU; target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; source: EV_PICK_AND_DROPABLE; source_pebble: detachable ANY]]
 
 	accept_cursor: detachable EV_POINTER_STYLE
 			-- Accept cursor set by user.

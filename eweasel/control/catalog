@@ -915,6 +915,7 @@ test	qat-nonexistent-veen			incr362 tcf fail incrementality generic anchored_typ
 test	qat-static-type-id-crash		incr363 tcf fail incrementality generic anchored_type
 test	qat-resume-veen-compiler-error		incr364 tcf fail incrementality generic anchored_type
 test	renamed-type-crash			incr365 tcf fail incrementality generic
+test	once-per-object-add-descendant		incr366 tcf fail incrementality once
 
 
 -- Melting

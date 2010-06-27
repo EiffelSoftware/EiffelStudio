@@ -1,0 +1,24 @@
+
+test_name	once-per-object-add-descendant		
+test_description After initial compilation, a descendant of a class with a once-per-object is added and the system is re-melted.  System execution then crashes with a seg fault.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+compile_melted
+compile_result 	ok
+
+execute_work 	NONE 	exec_output1
+execute_result 	ok
+compare		exec_output1 output1
+
+copy_raw 	test_rev2.e $CLUSTER test.e
+copy_raw 	test2.e $CLUSTER test2.e
+compile_melted
+compile_result 	ok
+
+execute_work 	NONE 	exec_output2
+execute_result 	ok
+compare		exec_output2 output2
+
+test_end

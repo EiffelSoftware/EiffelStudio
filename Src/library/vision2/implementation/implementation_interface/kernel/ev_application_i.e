@@ -650,7 +650,7 @@ feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 			pnd_pointer_y := a_pnd_pointer_y
 		end
 
-	create_target_menu (a_x, a_y, a_screen_x, a_screen_y: INTEGER; a_pnd_source: EV_PICK_AND_DROPABLE; a_pebble: ANY; a_configure_agent: detachable PROCEDURE [ANY, TUPLE]; a_menu_only: BOOLEAN)
+	create_target_menu (a_x, a_y, a_screen_x, a_screen_y: INTEGER; a_pnd_source: EV_PICK_AND_DROPABLE; a_pebble: detachable ANY; a_configure_agent: detachable PROCEDURE [ANY, TUPLE]; a_menu_only: BOOLEAN)
 			-- Menu of targets that accept `a_pebble'.
 		local
 			cur: CURSOR
@@ -669,6 +669,7 @@ feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 			l_menu: EV_MENU
 			l_menu_count: INTEGER
 			l_has_targets: BOOLEAN
+			l_pebble: detachable ANY
 		do
 			targets := pnd_targets
 			create l_menu
@@ -695,7 +696,7 @@ feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 				pnd_trg ?= trg
 				if trg /= Void and then (pnd_trg = Void or else not pnd_trg.is_destroyed) then
 					if
-						trg.drop_actions.accepts_pebble (a_pebble)
+						attached a_pebble as l_p and then trg.drop_actions.accepts_pebble (l_p)
 					then
 						sensitive ?= trg
 						if not (sensitive /= Void and then (not sensitive.is_destroyed and then not sensitive.is_sensitive)) then
@@ -706,7 +707,7 @@ feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 								l_configurable_item_added := True
 							end
 							if attached trg.target_data_function as l_target_data_function then
-								l_item_data := l_target_data_function.item ([a_pebble])
+								l_item_data := l_target_data_function.item ([l_p])
 							end
 							if l_item_data /= Void then
 								l_item_data.set_target (trg)
@@ -743,7 +744,11 @@ feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 
 				l_menu_count := l_menu.count
 				if attached a_pnd_source.configurable_target_menu_handler as l_menu_handler then
-					l_menu_handler.call ([l_menu, l_arrayed_list, a_pnd_source, a_pebble])
+					l_pebble := a_pebble
+						-- Implied by l_has_targets.
+					check l_pebble /= Void then
+						l_menu_handler.call ([l_menu, l_arrayed_list, a_pnd_source, l_pebble])
+					end
 				else
 					from
 						l_arrayed_list.start
@@ -751,7 +756,11 @@ feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 						l_arrayed_list.after
 					loop
 						if attached l_arrayed_list.item.target as l_target  then
-							l_menu.extend (create {EV_MENU_ITEM}.make_with_text_and_action (l_arrayed_list.item.name, agent (l_target.drop_actions).call ([a_pebble])))
+							l_pebble := a_pebble
+								-- Implied by l_has_targets.
+							check l_pebble /= Void then
+								l_menu.extend (create {EV_MENU_ITEM}.make_with_text_and_action (l_arrayed_list.item.name, agent (l_target.drop_actions).call ([l_pebble])))
+							end
 						end
 						l_arrayed_list.forth
 					end

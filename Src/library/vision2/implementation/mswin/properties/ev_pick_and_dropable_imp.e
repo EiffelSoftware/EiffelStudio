@@ -199,8 +199,8 @@ feature {EV_ANY_I} -- Implementation
 					if (mode_is_target_menu or mode_is_configurable_target_menu) and a_button = 3 then
 						if l_pebble /= Void and then mode_is_configurable_target_menu then
 							l_configure_agent := agent real_start_transport (l_pebble, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
-							application_imp.create_target_menu (a_x, a_y, a_screen_x, a_screen_y, attached_interface, l_pebble, l_configure_agent, a_menu_only)
 						end
+						application_imp.create_target_menu (a_x, a_y, a_screen_x, a_screen_y, attached_interface, l_pebble, l_configure_agent, a_menu_only)
 					elseif l_pebble /= Void and then mode_is_pick_and_drop and a_button = 3 then
 							real_start_transport (l_pebble, a_x, a_y, a_button, a_x_tilt,
 								a_y_tilt, a_pressure, a_screen_x, a_screen_y)

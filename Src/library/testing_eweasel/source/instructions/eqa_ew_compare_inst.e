@@ -41,7 +41,8 @@ feature -- Command
 			-- Set `execute_ok' to indicate whether successful.
 		local
 			l_act_name, l_exp_name: STRING
-			l_actual, l_expected: RAW_FILE
+			l_actual, l_expected: PLAIN_TEXT_FILE
+			l_diff: like equal_files
 		do
 			execute_ok := False
 			l_act_name := a_test.file_system.build_path_from_key ({EQA_EXECUTION}.output_path_key, << actual_output_file >>)
@@ -50,9 +51,11 @@ feature -- Command
 			create l_expected.make (l_exp_name)
 			if (l_actual.exists and then l_actual.is_plain) and
 			   (l_expected.exists and then l_expected.is_plain) then
-				execute_ok := equal_files (l_actual, l_expected)
-				if not execute_ok then
-					failure_explanation := "files being compared do not have identical contents"
+			   	l_diff := equal_files (l_actual, l_expected)
+				if l_diff.is_empty then
+					execute_ok := True
+				else
+					failure_explanation := "files being compared do not have identical contents:%N%N" + l_diff
 				end
 			elseif not l_actual.exists then
 				failure_explanation := "file with actual output not found"
@@ -76,58 +79,45 @@ feature -- Command
 
 feature {NONE}  -- Implementation
 
-	equal_files (a_file1: RAW_FILE; a_file2: RAW_FILE): BOOLEAN
-			-- Do `a_file1' and `a_file2' have identical contents?
+	equal_files (a_file1: PLAIN_TEXT_FILE; a_file2: PLAIN_TEXT_FILE): STRING
+			-- Differences between content of `a_file1' and `a_file2', empty if files are equal.
 		require
 			source_not_void: a_file1 /= Void
 			destination_not_void: a_file2 /= Void
 		local
-			l_diff: EQA_DIFF_UTILITY
+			l_diff: DIFF_TEXT
 			l_src, l_dst: ARRAY [STRING_GENERAL]
 		do
-			create l_diff.make
+			create l_diff
 
-			l_src := file_content (a_file1)
-			l_dst := file_content (a_file2)
+			l_diff.set_text (file_content (a_file1), file_content (a_file2))
 
-			l_diff.compare (l_src, l_src)
-
-			Result := not (attached l_diff.differing_lines) -- Note: we can use {EQA_DIFF_UTILITY} to show more infomation
+			l_diff.compute_diff
+			Result := l_diff.unified
 		end
 
 feature {NONE} -- Implementation
 
-	file_content (a_file: RAW_FILE): ARRAY [STRING]
+	file_content (a_file: PLAIN_TEXT_FILE): STRING
 			-- Content of `a_file'
 		require
 			not_empty: attached a_file
 		local
 			l_arrayed_list: ARRAYED_LIST [STRING]
 		do
-			create l_arrayed_list.make (50)
+			create Result.make (a_file.count)
 			if a_file.exists then
 				from
 					a_file.open_read
 					a_file.start
 				until
-					a_file.after
+					a_file.after or not a_file.readable
 				loop
 					a_file.read_line
-
-					l_arrayed_list.extend (a_file.last_string)
+					Result.append (a_file.last_string)
+					Result.append_character ('%N')
 				end
-			end
-
-			-- Cannot use `to_array' since, the result lower would be 1 but not 0 which is not acceptable by DIFF.compare
-			create Result.make (0, l_arrayed_list.count - 1)
-			from
-				l_arrayed_list.start
-			until
-				l_arrayed_list.after
-			loop
-				Result.put (l_arrayed_list.item, l_arrayed_list.index - 1)
-
-				l_arrayed_list.forth
+				a_file.close
 			end
 		ensure
 			not_void: attached Result

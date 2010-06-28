@@ -1,0 +1,13 @@
+
+test_name 	bogus-vevi-expanded-formal-generic		
+test_description A generic class whose formal is constrained by an expanded type and that has an attribute of the formal generic type should be valid but the compiler reports a VEVI error when compiled in void-safe mode.
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+copy_raw test1.e $CLUSTER test1.e
+copy_raw test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result ok
+
+test_end

@@ -105,15 +105,24 @@ feature -- Access
 
 	same_as (other: TYPE_A): BOOLEAN
 			-- Is the current type the same as `other' ?
-		local
-			other_like_feat: LIKE_FEATURE
 		do
-			other_like_feat ?= other
-			if other_like_feat /= Void then
-				Result :=
-					other_like_feat.routine_id = routine_id and then
-					other_like_feat.feature_id = feature_id and then
-					has_same_attachment_marks (other_like_feat)
+			if
+				attached {LIKE_FEATURE} other as o and then
+				o.routine_id = routine_id and then
+				o.feature_id = feature_id and then
+				has_same_attachment_marks (o)
+			then
+					-- Compare computed actual types as otherwise they may be left
+					-- from the previous compilation in an invalid state.
+				if attached actual_type as a then
+					Result :=
+						is_valid and then
+						o.is_valid and then
+						attached o.actual_type as oa and then
+						a.same_as (oa)
+				else
+					Result := not attached o.actual_type
+				end
 			end
 		end
 

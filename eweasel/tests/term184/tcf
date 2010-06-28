@@ -1,0 +1,17 @@
+
+test_name 	create-generic-with-rename
+test_description A generic class that inherits a routine that creates an entity of a formal generic type via a renamed creation procedure crashes the compiler in {AST_FEATURE_CHECKER_GENERATOR}.process_call.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+copy_raw 	test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result 	ok
+
+execute_work 	NONE 	exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+test_end

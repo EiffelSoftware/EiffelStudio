@@ -1702,6 +1702,7 @@ test	infix-prefix-alias-compatibility-crash	term180 tcf pass termination
 test	create-constrained-generic-crash-2	term181	tcf fail termination
 test	expanded-indirect-like-current		term182	tcf fail termination expanded anchored_type
 test	expanded-indirect-like-current-2	term183	tcf fail termination expanded anchored_type
+test	create-generic-with-rename		term184	tcf fail termination generic
 
 -- Config
 

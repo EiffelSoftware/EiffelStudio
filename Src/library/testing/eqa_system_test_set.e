@@ -19,91 +19,47 @@ inherit
 			on_clean_frozen
 		end
 
-feature {EQA_EXECUTION, EQA_ACCESS} -- Access
-
-	file_system: EQA_FILE_SYSTEM
-			-- File system for creating directories and files
-		require
-			prepared: is_prepared
-		local
-			l_file_system: detachable EQA_FILE_SYSTEM
-			l_env: like environment
-			l_platform: PLATFORM
-		do
-			l_file_system := file_system_cache
-			if l_file_system = Void then
-				create l_platform
-				l_env := environment
-				create l_file_system.make (l_env)
-				file_system_cache := l_file_system
-			end
-			Result := l_file_system
-		end
-
-	environment: EQA_SYSTEM_ENVIRONMENT
-			-- Environment specifying source/target directory for `Current'.
-		require
-			prepared: is_prepared
-		local
-			l_env: detachable like environment_cache
-		do
-			l_env := environment_cache
-			if l_env = Void then
-				create l_env.make (Current)
-				environment_cache := l_env
-			end
-			Result := l_env
-		end
-
 feature {NONE} -- Access: execution
 
 	current_execution: detachable EQA_SYSTEM_EXECUTION
-
-feature {NONE} -- Access: caching
-
-	file_system_cache: detachable like file_system
-			-- Cache for `file_system'
-
-	environment_cache: detachable like environment
-			-- Cache for `environment'
 
 feature {NONE} -- Query
 
 	compare_output (a_output: READABLE_STRING_8)
 		require
-			current_execution_attached: current_execution /= Void
-			current_execution_exited: attached current_execution as l_exec_exited and then
-				l_exec_exited.is_launched and then l_exec_exited.has_exited
-			current_execution_stored_output: attached current_execution as l_exec_out and then
-				l_exec_out.output_path /= Void
-		local
-			l_path: detachable EQA_SYSTEM_PATH
-			l_execution: like current_execution
+--			current_execution_attached: current_execution /= Void
+--			current_execution_exited: attached current_execution as l_exec_exited and then
+--				l_exec_exited.is_launched and then l_exec_exited.has_exited
+--			current_execution_stored_output: attached current_execution as l_exec_out and then
+--				l_exec_out.output_path /= Void
+--		local
+--			l_path: detachable EQA_SYSTEM_PATH
+--			l_execution: like current_execution
 		do
-			l_execution := current_execution
-			check l_execution /= Void end
-			l_path := l_execution.output_path
-			check l_path /= Void end
-			assert ("identical_output", file_system.has_same_content_as_string (l_path, a_output))
+--			l_execution := current_execution
+--			check l_execution /= Void end
+--			l_path := l_execution.output_path
+--			check l_path /= Void end
+--			assert ("identical_output", file_system.has_same_content_as_string (l_path, a_output))
 		end
 
 	compare_output_with_file (a_output_path: EQA_SYSTEM_PATH)
 		require
-			current_execution_attached: current_execution /= Void
-			current_execution_exited: attached current_execution as l_exec_exited and then
-				l_exec_exited.is_launched and then l_exec_exited.has_exited
-			current_execution_stored_output: attached current_execution as l_exec_out and then
-				l_exec_out.output_path /= Void
-			a_output_path_not_empty: not a_output_path.is_empty
-		local
-			l_path: detachable EQA_SYSTEM_PATH
-			l_execution: like current_execution
+--			current_execution_attached: current_execution /= Void
+--			current_execution_exited: attached current_execution as l_exec_exited and then
+--				l_exec_exited.is_launched and then l_exec_exited.has_exited
+--			current_execution_stored_output: attached current_execution as l_exec_out and then
+--				l_exec_out.output_path /= Void
+--			a_output_path_not_empty: not a_output_path.is_empty
+--		local
+--			l_path: detachable EQA_SYSTEM_PATH
+--			l_execution: like current_execution
 		do
-			l_execution := current_execution
-			check l_execution /= Void end
-			l_path := l_execution.output_path
-			check l_path /= Void end
-			assert ("identical_output", file_system.has_same_content_as_path (l_path, a_output_path))
+--			l_execution := current_execution
+--			check l_execution /= Void end
+--			l_path := l_execution.output_path
+--			check l_path /= Void end
+--			assert ("identical_output", file_system.has_same_content_as_path (l_path, a_output_path))
 		end
 
 feature {NONE} -- Basic operations
@@ -115,17 +71,17 @@ feature {NONE} -- Basic operations
 		local
 			l_exec: like current_execution
 		do
-			create l_exec.make (environment)
+			create l_exec.make (Current)
 			l_exec.set_output_path (a_output_path)
 			current_execution := l_exec
 		ensure
-			current_execution_attached: current_execution /= Void
-			current_execution_uses_environment: attached current_execution as l_exec_e and then
-				l_exec_e.environment = environment
-			current_execution_not_launched: attached current_execution as l_exec_nl and then
-				not l_exec_nl.is_launched
-			current_execution_uses_valid_output: attached current_execution as l_exec_o and then
-				l_exec_o.output_path ~ old a_output_path
+--			current_execution_attached: current_execution /= Void
+--			current_execution_uses_environment: attached current_execution as l_exec_e and then
+--				l_exec_e.environment = environment
+--			current_execution_not_launched: attached current_execution as l_exec_nl and then
+--				not l_exec_nl.is_launched
+--			current_execution_uses_valid_output: attached current_execution as l_exec_o and then
+--				l_exec_o.output_path ~ old a_output_path
 		end
 
 	run_system (a_args: ARRAY [STRING])
@@ -151,9 +107,9 @@ feature {NONE} -- Basic operations
 				-- Safety assignments to satisfy postcondition
 			current_execution := l_exec
 		ensure
-			current_execution_unchanged: current_execution = old current_execution
-			current_execution_exited: attached current_execution as l_exec_exited and then
-				l_exec_exited.is_launched and then l_exec_exited.has_exited
+--			current_execution_unchanged: current_execution = old current_execution
+--			current_execution_exited: attached current_execution as l_exec_exited and then
+--				l_exec_exited.is_launched and then l_exec_exited.has_exited
 		end
 
 feature {NONE} -- Events
@@ -174,12 +130,8 @@ feature {NONE} -- Events
 
 				-- TODO: delete testing directory if test succeeded
 
-			file_system_cache := Void
-			environment_cache := Void
 			current_execution := Void
 		ensure then
-			environment_cache_detached: environment_cache = Void
-			file_system_cache_detached: file_system_cache = Void
 			current_execution_detached: current_execution = Void
 		end
 
@@ -192,14 +144,12 @@ feature {NONE} -- Events
 
 	on_clean
 			-- Called when `on_prepare_clean' is called.
-		require
-			prepared: is_prepared
 		do
 		end
 
-invariant
-	environment_cache_valid: attached {like environment} environment_cache as l_env implies l_env.test_set = Current
-	file_system_cache_valid: attached {like file_system} file_system_cache as l_fs implies l_fs.environment = environment
+feature -- Constants
+
+	source_path_key: STRING = "SOURCE_PATH"
 
 note
 	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"

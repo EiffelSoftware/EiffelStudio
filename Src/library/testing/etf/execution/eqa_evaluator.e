@@ -20,11 +20,6 @@ inherit
 			{NONE} all
 		end
 
-	EQA_EVALUATION_INFO
-		export
-			{NONE} all
-		end
-
 	EQA_EXTERNALS
 		export
 			{NONE} all
@@ -56,7 +51,6 @@ feature {NONE} -- Initialization
 			port := l_args.argument (1).to_integer
 			byte_code_feature_body_id := l_args.argument (2).to_integer
 			byte_code_feature_pattern_id := l_args.argument (3).to_integer
-			set_test_directory (l_args.argument (4))
 		ensure
 			port_initialized: port > 0
 			body_id_initialized: byte_code_feature_body_id > 0
@@ -72,8 +66,11 @@ feature {NONE} -- Initialization
 			l_evaluator: like execute_test
 			l_done: BOOLEAN
 			l_name, l_byte_code: detachable STRING
+			l_environment: EQA_ENVIRONMENT
 		do
-			from until
+			from
+				create l_environment
+			until
 				l_done
 			loop
 				if attached {TUPLE [byte_code, name: detachable STRING]} socket.retrieved as l_retrieved then
@@ -89,11 +86,14 @@ feature {NONE} -- Initialization
 						-- TODO: initialize working directory and environment variables for system level testing
 					l_name := l_retrieved.name
 					check l_name /= Void end
-					set_test_name (l_name)
+					l_environment.put (l_name, {EQA_TEST_SET}.test_name_key)
+					l_environment.put ((create {EXECUTION_ENVIRONMENT}).command_line.argument (4), {EQA_TEST_SET}.execution_directory_key)
 
 					l_evaluator := execute_test
 					socket.put_boolean (True)
 					socket.independent_store (l_evaluator.last_result)
+
+					l_environment.reset
 				else
 						-- If we retrieved something unexpected, we close the socket and terminate.
 					if not socket.is_closed then
@@ -138,7 +138,7 @@ feature {NONE} -- Execution
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

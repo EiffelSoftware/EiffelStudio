@@ -28,28 +28,21 @@ feature {NONE} -- Initialization
 			not_void: attached a_test_set
 		local
 			l_execution: EQA_EXECUTION
-			l_processor: EQA_EW_C_COMPILATION_OUTPUT_PROCESSOR
-			l_path: EQA_SYSTEM_PATH
+			l_processor: EQA_EW_OUTPUT_PROCESSOR [EQA_EW_C_COMPILATION_RESULT]
 		do
-			--a_test_set.environment.put (a_freeze_cmd, "EQA_EXECUTABLE") -- How to get {EQA_SYSTEM_EXECUTION}.executable_env ?
-
-			create l_execution.make (a_test_set.environment, a_freeze_cmd)
+			create l_execution.make (a_test_set, a_freeze_cmd)
 			l_execution.add_argument (a_dir)
-
 			if a_max_procs > 0 then
 				l_execution.add_argument ("-nproc")
 				l_execution.add_argument (a_max_procs.out)
 			end
 
-			create l_processor.make (a_test_set)
-			l_execution.set_output_path (l_path)
-			create l_path.make (<<a_test_set.c_compile_output_name>>)
+			create l_processor.make
 			l_execution.set_output_processor (l_processor)
-
+			l_execution.set_output_path (<< a_test_set.c_compile_output_name >>)
 			l_execution.launch
 			l_execution.process_output_until_exit
-			--l_processor.write_output_to_file
-			a_test_set.set_c_compilation_result (l_processor.compilation_result)
+			a_test_set.set_c_compilation_result (l_processor.current_result)
 		end
 
 note

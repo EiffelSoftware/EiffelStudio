@@ -10,6 +10,9 @@ note
 
 class EQA_EW_C_COMPILATION_RESULT
 
+inherit
+	EQA_EW_RESULT
+
 feature -- Properties
 
 	failure: BOOLEAN
@@ -43,7 +46,7 @@ feature -- Update
 			compilations_completed := a_b
 		end
 
-	update (a_line: STRING)
+	update (a_line: READABLE_STRING_8)
 			-- Update `Current' to reflect the presence of
 			-- `a_line' as next line in C compilation process output.
 		local

@@ -51,11 +51,8 @@ feature {NONE} -- Initialization
 				init_ok := False
 			else
 				variable := l_args.first
-				value := make_dir_value (l_args)
+				value := make_dir_value (l_args, a_test_set.file_system)
 				init_ok := True
-			end
-			if init_ok then
---				init_environment.define (variable, value)
 			end
 
 			if not init_ok then
@@ -78,7 +75,7 @@ feature -- Command
 			l_val := value
 			check attached l_val end -- Implied by `init_ok' is True, otherwise assertion would be violated in `inst_initialize'
 
-			a_test.environment.put (l_var, l_val)
+			a_test.environment.put (l_val, l_var)
 		end
 
 feature -- Query
@@ -97,7 +94,7 @@ feature {NONE} -- Implementation
 	value: detachable STRING
 			-- Value to be given to environment value
 
-	make_dir_value (a_args: LIST [STRING]): STRING
+	make_dir_value (a_args: LIST [STRING]; l_file_system: EQA_FILE_SYSTEM): STRING
 			-- Directory name derived from arguments of `a_args'
 		do
 			from
@@ -109,7 +106,7 @@ feature {NONE} -- Implementation
 			until
 				a_args.after
 			loop
-				Result := string_util.file_path (<<Result, a_args.item>>)
+				Result := l_file_system.build_path (Result, << a_args.item >>)
 				a_args.forth
 			end
 		end

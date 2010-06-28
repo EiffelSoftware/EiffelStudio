@@ -78,62 +78,32 @@ feature -- Command
 			-- instructions of `a_test'.
 			-- Set `execute_ok' to indicate whether successful.
 		local
-			l_prog, l_savefile: STRING
-			l_execute_cmd, l_source_dir_name, l_infile, l_outfile: detachable STRING
-			l_exec_error, l_exec_dir, l_output_dir: detachable STRING
-			l_prog_file, l_input_file: RAW_FILE
+			l_prog, l_outfile, l_exec_dir, l_execute_cmd: READABLE_STRING_8
+			l_exec_error: detachable STRING
 			l_execution: EQA_EW_SYSTEM_EXECUTION
 			l_file_system: EQA_FILE_SYSTEM
 			l_arguments: like arguments
 		do
-			l_execute_cmd := a_test.environment.value ({EQA_EW_PREDEFINED_VARIABLES}.Execute_command_name)
-			check attached l_execute_cmd end -- Implied by environment values have been set before executing test cases
+			l_execute_cmd := a_test.environment.get_attached ({EQA_EW_PREDEFINED_VARIABLES}.Execute_command_name, a_test)
 			l_execute_cmd := a_test.environment.substitute (l_execute_cmd)
-			create l_file_system.make (a_test.environment)
+			l_file_system := a_test.file_system
 			l_exec_error := l_file_system.executable_file_exists (l_execute_cmd)
 			if l_exec_error = Void then
 				a_test.increment_execution_count
-				l_exec_dir := a_test.environment.value (execution_dir_name)
-				check attached l_exec_dir end -- Implied by environment values have been set before executing test cases
---				create l_path.make (<<l_exec_dir, a_test.system_name>>)
-				l_prog := string_util.file_path (<<l_exec_dir, "test">>) -- FIXME: who set the name `test'?
-				if attached input_file_name as l_input_file_name then
-					l_source_dir_name := a_test.environment.source_directory
-					check attached l_source_dir_name end -- Implied by environment values have been set before executing test cases
-					l_infile := string_util.file_path (<<l_source_dir_name,l_input_file_name >>)
-				else
-					l_infile := Void
-				end
-				l_outfile := Void	-- Pipe output back to parent
+				l_exec_dir := l_file_system.build_path_from_key (execution_dir_name, Void)
+				l_prog := a_test.file_system.build_path (l_exec_dir, << "test" >>)
 				if attached output_file_name as l_output_file_name and then not l_output_file_name.is_empty then
-					l_savefile := l_output_file_name
+					l_outfile := l_output_file_name
 				else
-					l_savefile := a_test.execution_output_name
+					l_outfile := a_test.execution_output_name
 				end
 
-				l_output_dir := a_test.environment.value ({EQA_EW_PREDEFINED_VARIABLES}.Output_dir_name)
-				check attached l_output_dir end -- Implied by environment values have been set before executing test cases
-				l_savefile := string_util.file_path (<<l_output_dir, l_savefile>>)
-
-				create l_prog_file.make (l_prog)
 				l_exec_error := l_file_system.executable_file_exists (l_prog)
 				if l_exec_error = Void then
 					execute_ok := True
-					if l_infile /= Void then
-						create l_input_file.make (l_infile)
-						if not l_input_file.exists then
-							failure_explanation := "input file not found"
-							execute_ok := False
-						elseif not l_input_file.is_plain then
-							failure_explanation := "input file not a plain file"
-							execute_ok := False
-						end
-					end
-					if execute_ok then
-						l_arguments := arguments
-						check attached l_arguments end -- Implied by `init_ok' is True, otherwise assertion would be violated in `inst_initialize'
-						create l_execution.make (l_prog, l_arguments, l_execute_cmd, l_exec_dir, l_infile, l_outfile, l_savefile, a_test)
-					end
+					l_arguments := arguments
+					check attached l_arguments end -- Implied by `init_ok' is True, otherwise assertion would be violated in `inst_initialize'
+					create l_execution.make (l_prog, l_arguments, l_execute_cmd, l_exec_dir, input_file_name, l_outfile, a_test)
 				else
 					failure_explanation := l_exec_error
 					execute_ok := False

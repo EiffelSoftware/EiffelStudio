@@ -1,9 +1,10 @@
 note
-	description: "[
+	description:
+		"[
 					Ancestor class for all copy instructions
 					
 					For old version, please check {EW_COPY_INST}
-																						]"
+		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "Eiffel test"
@@ -65,39 +66,38 @@ feature -- Commannd
 			-- instructions of `test'.
 			-- Set `execute_ok' to indicate whether successful.
 		local
+			l_src_name: READABLE_STRING_8
 			l_dest_name: STRING
 			l_src, l_dir, l_dest: like new_file
 			l_before_date, l_after_date: INTEGER
 			l_orig_date, l_final_date: INTEGER
-			l_file_system: EQA_FILE_SYSTEM
-			l_source_dir: detachable STRING
 		do
 			dest_directory := test_set.environment.substitute_recursive (dest_directory)
 			source_file := test_set.environment.substitute_recursive (source_file)
 
 			execute_ok := False
 
-			l_source_dir := test_set.environment.source_directory
-			check attached l_source_dir end -- Implied by environment values have been set before executing test cases
-			l_dest_name := string_util.file_path (<<l_source_dir,source_file>>)
-
-			create l_file_system.make (test_set.environment)
-
-			l_src := new_file (l_dest_name)
+			if use_source_environment_variable then
+				l_src_name := test_set.file_system.build_source_path (<< source_file >>)
+			else
+				l_src_name := source_file
+			end
+			l_dest_name := test_set.file_system.build_path (dest_directory, << dest_file >>)
+			l_src := new_file (l_src_name)
 			ensure_dir_exists (dest_directory)
 			l_dir := new_file (dest_directory)
 
 			if (l_src.exists and then l_src.is_plain) and
 			   (l_dir.exists and then l_dir.is_directory) then
 
-				l_dest := new_file (string_util.file_path (<<dest_directory, dest_file>>))
+				l_dest := new_file (l_dest_name)
 				if l_dest.exists then
 					l_orig_date := l_dest.date
 				else
 					l_orig_date := 0
 				end
 				if is_fast then
-					l_file_system.copy_file (l_src, test_set.environment, l_dest, substitute)
+					copy_file (l_src, l_dest)
 					if l_orig_date /= 0 then
 						l_dest.set_date (l_orig_date + 1)
 					end
@@ -112,7 +112,7 @@ feature -- Commannd
 
 					l_after_date := os.current_time_in_seconds
 
-					l_file_system.copy_file (l_src, test_set.environment, l_dest, substitute)
+					copy_file (l_src, l_dest)
 
 					l_final_date := l_dest.date
 
@@ -185,6 +185,46 @@ feature {NONE} -- Implementation
 			retry
 		end
 
+	copy_file (src: like new_file; dest: like new_file)
+			-- Append lines of file `src', with environment
+			-- variables substituted according to `env' (but
+			-- only if `substitute' is true) to
+			-- file `dest'.
+		require
+			source_not_void: src /= Void;
+			destination_not_void: dest /= Void;
+			source_is_closed: src.is_closed;
+			destination_is_closed: dest.is_closed;
+		local
+			line: STRING;
+			l_env: EQA_ENVIRONMENT
+		do
+			from
+				l_env := test_set.environment
+				src.open_read;
+				dest.open_write;
+			until
+					-- src.readable is required or else src.read_line will throw an exception
+				src.end_of_file or not src.readable
+			loop
+				src.read_line;
+				if substitute then
+					line := l_env.substitute (src.last_string);
+				else
+					line := src.last_string;
+				end;
+				if not src.end_of_file then
+					dest.put_string (line);
+					dest.new_line;
+				elseif not line.is_empty then
+					dest.put_string (line);
+				end
+			end;
+			src.close;
+			dest.flush;
+			dest.close;
+		end;
+
 	is_fast: BOOLEAN
 			-- Should "speed" mode be used?
 		do
@@ -212,6 +252,12 @@ feature {NONE} -- Implementation
 
 	source_file: STRING
 			-- Name of source file (always in source directory)
+
+	use_source_environment_variable: BOOLEAN
+			-- Do we use `source_dir_name' for copy?
+		do
+			Result := True
+		end
 
 feature {NONE} -- Constants
 

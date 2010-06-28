@@ -39,6 +39,9 @@ note
 
 class EQA_EW_EXECUTION_RESULT
 
+inherit
+	EQA_EW_RESULT
+
 feature -- Properties
 
 	execution_failure: BOOLEAN
@@ -100,7 +103,7 @@ feature -- Modification
 
 feature -- Update
 
-	update (a_line: STRING)
+	update (a_line: READABLE_STRING_8)
 			-- Update `Current' to reflect the presence of
 			-- `a_line' as next line in execution output.
 		local

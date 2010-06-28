@@ -18,32 +18,20 @@ create
 
 feature {NONE} -- Creation method
 
-	make_and_launch (a_args: LIST [STRING]; a_save: STRING; a_test_set: EQA_EW_SYSTEM_TEST_SET)
+	make_and_launch (a_args: LIST [STRING]; an_output_file_name: STRING; a_test_set: EQA_EW_SYSTEM_TEST_SET)
 			-- Start a new Eiffel compilation process to
 			-- run command system with arguments `a_args'.
 			-- Write all output from the new process to
-			-- file `a_save'.
+			-- file `an_output_file_name'.
 		require
 			arguments_not_void: a_args /= Void
-			save_name_not_void: a_save /= Void
-			not_void: attached a_test_set
-		local
-			l_output_dir: detachable STRING
-			l_output: EQA_SYSTEM_PATH
+			an_output_file_name_attached: an_output_file_name /= Void
+			an_output_file_name_not_empty: not an_output_file_name.is_empty
+			a_test_set_attached: a_test_set /= Void
 		do
 			create output_processor.make
-
-			l_output_dir := a_test_set.environment.value ({EQA_EW_PREDEFINED_VARIABLES}.Output_dir_name)
-			check l_output_dir /= Void end
-			l_output_dir := "output"
-			if a_save.is_empty then
-				create l_output.make (<< l_output_dir, a_test_set.e_compile_output_name >>)
-			else
-				create l_output.make (<< l_output_dir, a_save >>)
-			end
-
-			create execution.make (a_test_set.environment)
-			execution.set_output_path (l_output)
+			create execution.make (a_test_set)
+			execution.set_output_path (<< an_output_file_name >>)
 			execution.set_output_processor (output_processor)
 
 			from
@@ -72,7 +60,7 @@ feature {NONE} -- Access
 	execution: EQA_SYSTEM_EXECUTION
 			-- Execution for launching compiler executable
 
-	output_processor: EQA_EW_COMPILATION_OUTPUT_PROCESSOR
+	output_processor: EQA_EW_OUTPUT_PROCESSOR [EQA_EW_EIFFEL_COMPILATION_RESULT]
 			-- Output processor handling output of `execution'
 
 feature -- Query

@@ -18,8 +18,6 @@ class EQA_EW_COMPARE_INST
 inherit
 	EQA_EW_TEST_INSTRUCTION
 
-	EQA_ACCESS
-
 create
 	make
 
@@ -44,13 +42,10 @@ feature -- Command
 		local
 			l_act_name, l_exp_name: STRING
 			l_actual, l_expected: RAW_FILE
-			l_output_dir: detachable STRING
 		do
 			execute_ok := False
-			l_output_dir := a_test.environment.value ({EQA_EW_PREDEFINED_VARIABLES}.Output_dir_name)
-			check attached l_output_dir end -- Implied by environment values have been set before executing test cases
-			l_act_name := string_util.file_path (<<l_output_dir, actual_output_file>>)
-			l_exp_name := string_util.file_path (<<a_test.file_system.environment.source_directory, expected_output_file>>)
+			l_act_name := a_test.file_system.build_path_from_key ({EQA_EXECUTION}.output_path_key, << actual_output_file >>)
+			l_exp_name := a_test.file_system.build_source_path (<< expected_output_file >>)
 			create l_actual.make (l_act_name)
 			create l_expected.make (l_exp_name)
 			if (l_actual.exists and then l_actual.is_plain) and

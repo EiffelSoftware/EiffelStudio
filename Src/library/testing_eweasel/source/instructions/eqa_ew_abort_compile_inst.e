@@ -17,8 +17,6 @@ class EQA_EW_ABORT_COMPILE_INST
 inherit
 	EQA_EW_TEST_INSTRUCTION
 
-	EQA_ACCESS
-
 create
 	make
 
@@ -54,7 +52,7 @@ feature -- Command
 			-- Set `execute_ok' to indicate whether successful.
 		local
 			l_compilation: detachable EQA_EW_EIFFEL_COMPILATION
-			l_dir: detachable STRING
+			l_path: READABLE_STRING_8
 		do
 			l_compilation := a_test.e_compilation
 			if l_compilation = Void then
@@ -65,10 +63,8 @@ feature -- Command
 				failure_explanation := "compilation not suspended"
 			else
 				l_compilation.abort
-				l_dir := a_test.environment.target_directory
-				check attached l_dir end -- Implied by environment values have been set before executing tests
-				l_dir := string_util.file_path (<<l_dir, {EQA_EW_EIFFEL_TEST_CONSTANTS}.Eiffel_gen_directory>>)
-				a_test.file_system.delete_directory_tree (l_dir)
+				l_path := a_test.file_system.build_target_path (<< {EQA_EW_EIFFEL_TEST_CONSTANTS}.Eiffel_gen_directory >>)
+				a_test.file_system.delete_directory_tree (l_path)
 				execute_ok := True
 			end
 		end

@@ -13,6 +13,9 @@ note
 class
 	EQA_EW_EIFFEL_COMPILATION_RESULT
 
+inherit
+	EQA_EW_RESULT
+
 feature -- Query
 
 	had_panic: BOOLEAN
@@ -131,7 +134,7 @@ feature -- Query
 
 feature -- Command
 
-	update (a_line: STRING)
+	update (a_line: READABLE_STRING_8)
 			-- Update `Current' to reflect the presence of
 			-- `a_line' as next line in compiler output.
 		local
@@ -167,10 +170,11 @@ feature -- Command
 				if exception_tag = Void then
 					create exception_tag.make(0)
 				end
-				a_line.keep_tail(a_line.count - {EQA_EW_EIFFEL_COMPILER_CONSTANTS}.Exception_prefix.count)
+				l_s.keep_tail(a_line.count - {EQA_EW_EIFFEL_COMPILER_CONSTANTS}.Exception_prefix.count)
 				l_exception_tag := exception_tag
 				check attached l_exception_tag end -- Implied by previous if clause
-				l_exception_tag.copy (a_line)
+				l_exception_tag.wipe_out
+				l_exception_tag.append (l_s)
 			elseif string_util.is_prefix ({EQA_EW_EIFFEL_COMPILER_CONSTANTS}.Exception_occurred_prefix, a_line) then
 				had_exception := True
 				if exception_tag = Void then
@@ -179,8 +183,8 @@ feature -- Command
 				l_exception_tag := exception_tag
 				check attached l_exception_tag end -- Implied by previous if clause
 				if l_exception_tag.count = 0 then
-					a_line.keep_tail (a_line.count - {EQA_EW_EIFFEL_COMPILER_CONSTANTS}.Exception_occurred_prefix.count)
-					l_exception_tag.copy (a_line)
+					l_s.keep_tail (a_line.count - {EQA_EW_EIFFEL_COMPILER_CONSTANTS}.Exception_occurred_prefix.count)
+					l_exception_tag.append (l_s)
 				end
 			elseif string_util.is_prefix ({EQA_EW_EIFFEL_COMPILER_CONSTANTS}.Failure_prefix, a_line) then
 				execution_failure := True

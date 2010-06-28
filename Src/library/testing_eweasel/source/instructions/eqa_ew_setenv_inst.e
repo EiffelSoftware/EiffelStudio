@@ -103,8 +103,8 @@ feature -- Command
 			l_val := value
 			check attached l_val end -- Implied by `init_ok' is True, otherwise assertion would be violated in `inst_initialize'
 
-			a_test.environment.put (l_val, l_var)
-			if a_test.environment.return_code = 0 then
+			environment.put (l_val, l_var)
+			if environment.return_code = 0 then
 				execute_ok := True
 			else
 				execute_ok := False
@@ -127,6 +127,12 @@ feature {NONE} -- Implementation
 
 	value: detachable STRING
 			-- Value to be given to environment variable
+
+	environment: EXECUTION_ENVIRONMENT
+			-- Execution environment needed to set variables
+		once
+			create Result
+		end
 
 ;note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"

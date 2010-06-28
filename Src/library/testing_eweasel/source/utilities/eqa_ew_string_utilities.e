@@ -278,36 +278,6 @@ feature -- String list routines
 			result_exists: Result /= Void
 		end
 
-feature -- Query
-
-	file_path (a_array: ARRAY [STRING]): STRING
-			-- Convert `a_array' to system specific file path string
-		require
-			not_void: attached a_array
-		local
-			l_os: OPERATING_ENVIRONMENT
-			l_count: INTEGER
-		do
-			create Result.make_empty
-			if a_array.count > 0 then
-				from
-					create l_os
-					l_count := a_array.lower
-				until
-					l_count > a_array.upper
-				loop
-					if l_count > a_array.lower then
-						Result.append_character (l_os.directory_separator)
-					end
-					Result.append (a_array.item (l_count))
-
-					l_count := l_count + 1
-				end
-			end
-		ensure
-			not_void: Result /= Void
-		end
-
 ;note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

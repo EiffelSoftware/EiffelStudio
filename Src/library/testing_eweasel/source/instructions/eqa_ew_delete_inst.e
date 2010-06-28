@@ -53,7 +53,7 @@ feature -- Command
 
 			del_directory := test.environment.substitute (del_directory)
 
-			del_name := string_util.file_path (<<del_directory,	del_file>>)
+			del_name := test.file_system.build_path (del_directory, << del_file >>)
 			create dir.make (del_directory)
 			create file.make (del_name)
 			if (dir.exists and then dir.is_directory) and

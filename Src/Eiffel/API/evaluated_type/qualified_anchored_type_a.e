@@ -100,6 +100,8 @@ feature -- Comparison
 				chain ~ o.chain and then
 				has_same_attachment_marks (o)
 			then
+					-- Compare computed actual types as otherwise they may be left
+					-- from the previous compilation in an invalid state.
 				if attached actual_type as a then
 					Result :=
 						is_valid and then

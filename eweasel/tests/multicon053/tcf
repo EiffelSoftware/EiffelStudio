@@ -1,0 +1,12 @@
+
+test_name 	 multi-constraint-constrained-twice-2
+test_description A formal is constrained twice by the same class (ANY) and has creation constraint `default_create'.  The compiler should report VTGC(3) error since renaming `default_create' in one of the constraints fixes the problem, but instead reports VGCC(1) and VTCG.
+
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test2.e $CLUSTER test2.e
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result	validity_error TEST2 VTGC(3)
+
+test_end

@@ -1914,6 +1914,17 @@ feature -- Constants generation
 		do
 		end
 
+	put_manifest_string_32_from_system_string_local (n: INTEGER)
+			-- Create a manifest string by using local at position `n' which
+			-- should be of type SYSTEM_STRING.
+		do
+		end
+
+	put_manifest_string_32 (s: STRING)
+			-- Put `s' on IL stack.
+		do
+		end
+
 	put_system_string (s: STRING)
 			-- Put instance of platform String object corresponding to `s' on IL stack.
 		do
@@ -1923,6 +1934,12 @@ feature -- Constants generation
 				print ("%"")
 			end
 			current_method.code.append_push_manifest_string (s)
+		end
+
+	put_system_string_32 (s: STRING)
+			-- Put `System.String' object corresponding to `s' on IL stack.
+			-- `s' is in UTF-8 encoding.
+		do
 		end
 
 	put_numeric_integer_constant (type: TYPE_A; i: INTEGER)

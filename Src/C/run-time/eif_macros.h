@@ -1207,6 +1207,7 @@ RT_LNK void eif_exit_eiffel_code(void);
 #define	RTMS_EX_H(s,c,h)	makestr_with_hash(s,c,h)
 #define RTMS_EX_O(s,c,h)	makestr_with_hash_as_old(s,c,h)
 
+#define	RTMS32(s)		makestr32_with_hash(s,strlen(s),0)
 #define	RTMS32_EX(s,c)	makestr32_with_hash(s,c,0)
 #define	RTMS32_EX_H(s,c,h)	makestr32_with_hash(s,c,h)
 #define RTMS32_EX_O(s,c,h)	makestr32_with_hash_as_old(s,c,h)

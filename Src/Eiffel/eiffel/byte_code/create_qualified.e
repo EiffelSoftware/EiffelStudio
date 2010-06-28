@@ -49,7 +49,7 @@ feature {QUALIFIED_ANCHORED_TYPE_A} -- Initialization
 			feature_finder.find (t.chain [i], q, c)
 			check attached feature_finder.found_feature as f1 then
 				f := f1
-				make_explicit (q.create_info, q, f)
+				make_explicit (q.create_info, q, feature_finder.found_site, f)
 				from
 					n := t.chain.upper
 				until
@@ -60,7 +60,7 @@ feature {QUALIFIED_ANCHORED_TYPE_A} -- Initialization
 					feature_finder.find (t.chain [i], q, c)
 					check attached feature_finder.found_feature as fn then
 						f := fn
-						make_explicit (twin, q, f)
+						make_explicit (twin, q, feature_finder.found_site, f)
 					end
 				end
 			end
@@ -68,14 +68,16 @@ feature {QUALIFIED_ANCHORED_TYPE_A} -- Initialization
 
 feature {CREATE_QUALIFIED} -- Creation
 
-	make_explicit (c: CREATE_INFO; q: TYPE_A; f: FEATURE_I)
+	make_explicit (c: CREATE_INFO; q: TYPE_A; i: like {CLASS_C}.class_id; f: FEATURE_I)
 		require
 			c_attached: attached c
 			q_attached: attached q
+			i_valid: attached system.class_of_id (i)
 			f_attached: attached f
 		do
 			qualifier_creation := c
 			qualifier := q
+			qualifier_class_id := i
 			feature_id := f.feature_id
 			routine_id := f.rout_id_set.first
 		end
@@ -88,6 +90,9 @@ feature {CREATE_QUALIFIED} -- Access
 	qualifier: TYPE_A
 			-- First part of the qualified type
 
+	qualifier_class_id: INTEGER
+			-- Class corresponding to a qualifier type
+
 	feature_id: INTEGER
 			-- Routine ID of the second part of the qualified type
 
@@ -99,7 +104,7 @@ feature {NONE} -- Convenience
 	qualifier_class: CLASS_C
 			-- Class, associated with qualifier
 		do
-			Result := context.real_type (qualifier).associated_class
+			Result := system.class_of_id (qualifier_class_id)
 		end
 
 	qualifier_static_type_id: INTEGER
@@ -115,11 +120,13 @@ feature -- Update
 		local
 			c: CREATE_INFO
 			q: TYPE_A
+			a: CLASS_C
 		do
 			c := qualifier_creation.updated_info
 			q := context.descendant_type (qualifier)
 			if c /= qualifier_creation or else q /= qualifier and then not qualifier.same_as (q) then
-				create {CREATE_QUALIFIED} Result.make_explicit (q.create_info, q, context.real_type (q).associated_class.feature_of_rout_id (routine_id))
+				a := context.real_type (q).associated_class
+				create {CREATE_QUALIFIED} Result.make_explicit (q.create_info, q, a.class_id, a.feature_of_rout_id (routine_id))
 			else
 				Result := Current
 			end

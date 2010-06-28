@@ -789,7 +789,7 @@ feature -- Action
 				value_string_c := value_string.as_string_8.to_c
 				send_string_value ($value_string_c)
 			when type_manifest_string_32 then
-				value_string_c := encoding_converter.utf8_to_utf32 (value_string)
+				value_string_c := encoding_converter.utf8_to_utf32 (value_string).to_c
 					-- Send UTF-32 directly.
 				send_string_32_value ($value_string_c)
 			when Type_object, Type_expanded_object then

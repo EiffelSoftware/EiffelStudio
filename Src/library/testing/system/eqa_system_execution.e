@@ -21,18 +21,23 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_environment: like environment)
+	make (a_test_set: like test_set)
 			-- Initialize `Current'.
 			--
-			-- `an_environment': Environment for current system test.
+			-- `a_test_set': Test set for which `Current' will be used.
 		require
-			an_environment_attached: an_environment /= Void
+			a_test_set_attached: a_test_set /= Void
 		local
 			l_cmd: like command
 		do
-			l_cmd := an_environment.executable_name
-			make_execution (an_environment, l_cmd)
+			l_cmd := a_test_set.environment.get (system_executable_key)
+			make_execution (a_test_set, l_cmd)
 		end
+
+feature -- Constants
+
+	system_executable_key: STRING = "EQA_SYSTEM_EXECUTABLE"
+			-- Key for system executable setting
 
 note
 	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"

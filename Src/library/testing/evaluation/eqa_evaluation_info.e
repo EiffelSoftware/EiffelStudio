@@ -9,6 +9,9 @@ note
 class
 	EQA_EVALUATION_INFO
 
+obsolete
+	"Use {EQA_ENVIRONMENT} instead"
+
 feature -- Access
 
 	test_name: IMMUTABLE_STRING_8
@@ -89,7 +92,7 @@ feature {EQA_TEST_EVALUATOR} -- Element change
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

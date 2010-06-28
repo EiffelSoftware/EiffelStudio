@@ -20,19 +20,34 @@ feature {NONE} -- Initialization
 	frozen default_create
 			-- <Precursor>
 		local
-			l_info: EQA_EVALUATION_INFO
-			l_directory_name: DIRECTORY_NAME
-			l_directory: DIRECTORY
+			l_exec_env: EXECUTION_ENVIRONMENT
+			l_name, l_exec_dir: READABLE_STRING_8
+			l_directory: detachable DIRECTORY
+			l_target_path, l_exec_path: detachable READABLE_STRING_8
 		do
-			create l_info
-			create l_directory_name.make_from_string (l_info.test_directory)
+			create environment
+			create file_system.make (Current)
 
-			l_directory_name.extend (l_info.test_name)
-			create l_directory.make (l_directory_name)
+			create l_exec_env
+			l_name := environment.get_attached ({EQA_TEST_SET}.test_name_key, Current)
+
+			if attached environment.get ({EQA_TEST_SET}.target_path_key) as l_target then
+				l_target_path := l_target
+			else
+				if attached environment.get ({EQA_TEST_SET}.execution_directory_key) as l_exec then
+					l_exec_dir := l_exec
+				else
+					l_exec_dir := l_exec_env.current_working_directory
+				end
+				l_target_path := file_system.build_path (l_exec_dir, << l_name >>)
+				environment.put (l_target_path, {EQA_TEST_SET}.target_path_key)
+			end
+
+			create l_directory.make (l_target_path)
 			assert ("testing_directory_already_exists", not l_directory.exists)
 			l_directory.recursive_create_dir
 			assert ("testing_directory_created", l_directory.exists)
-			(create {EXECUTION_ENVIRONMENT}).change_working_directory (l_directory_name)
+			l_exec_env.change_working_directory (l_target_path)
 
 			on_prepare
 		ensure then
@@ -57,6 +72,12 @@ feature -- Access
 		ensure
 			asserter_attached: Result /= Void
 		end
+
+	file_system: EQA_FILE_SYSTEM
+			-- File system for creating directories and files
+
+	environment: EQA_ENVIRONMENT
+			-- Environment containing global settings
 
 feature -- Access
 
@@ -147,8 +168,6 @@ feature {NONE} -- Events
 
 	on_clean
 			-- Called before `clean' performs any cleaning up.
-		require
-			prepared: is_prepared
 		do
 		end
 
@@ -157,7 +176,26 @@ feature {NONE} -- Implementation
 	internal_asserter: detachable like asserter
 			-- Once per object storage for `asserter'.
 
-;note
+
+feature -- Constants
+
+	test_name_key: STRING = "TEST_NAME"
+			-- Key for test name setting in {EQA_ENVIRONMENT}
+			--
+			-- The test name is a string unique to each test wich can be used a file/directory name.
+
+	execution_directory_key: STRING = "EXECUTION_DIRECTORY"
+			-- Key for execution directory setting in {EQA_ENVIRONMENT}
+			--
+			-- The execution directory is where the test specific working directories are created.
+
+	target_path_key: STRING = "TARGET_PATH"
+			-- Key for path in which test of `Current' is executed
+
+invariant
+	file_system_valid: file_system.test_set = Current
+
+note
 	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -17,8 +17,6 @@ class EQA_EW_CLEANUP_INST
 inherit
 	EQA_EW_TEST_INSTRUCTION
 
-	EQA_ACCESS
-	
 create
 	make
 
@@ -54,8 +52,7 @@ feature -- Command
 			-- Set `execute_ok' to indicate whether successful.
 		local
 			l_compilation: detachable EQA_EW_EIFFEL_COMPILATION
-			l_dir: detachable STRING
-			l_eif_dir: STRING
+			l_path: READABLE_STRING_8
 		do
 			l_compilation := a_test.e_compilation
 			if l_compilation = Void then
@@ -65,11 +62,11 @@ feature -- Command
 				execute_ok := False
 				failure_explanation := "suspended compilation - use `abort_compile' instead"
 			else
-				l_dir := a_test.environment.target_directory
-				check attached l_dir end -- Implied by enviroment values have been set before testing
-				l_eif_dir := string_util.file_path (<<l_dir, {EQA_EW_EIFFEL_TEST_CONSTANTS}.Eiffel_gen_directory>>)
-				a_test.file_system.delete_directory_tree (l_eif_dir)
-				delete_project_files (l_dir)
+
+				l_path := a_test.file_system.build_target_path (<< {EQA_EW_EIFFEL_TEST_CONSTANTS}.Eiffel_gen_directory >>)
+				a_test.file_system.delete_directory_tree (l_path)
+				delete_project_files (a_test.file_system.build_target_path (Void), a_test.file_system)
+
 				execute_ok := True
 			end
 		end
@@ -84,7 +81,7 @@ feature -- Query
 
 feature {NONE} -- Implementation
 
-	delete_project_files (a_dir_name: STRING)
+	delete_project_files (a_dir_name: STRING; a_file_system: EQA_FILE_SYSTEM)
 			-- Delete all Eiffel project files (.epr files)
 			-- found in directory `a_dir_name'
 		local
@@ -106,7 +103,7 @@ feature {NONE} -- Implementation
 				l_name := l_dir_entries.item.twin
 				l_name.keep_tail (l_len)
 				if l_name.is_equal (l_ext) then
-					create l_f.make (string_util.file_path (<<a_dir_name, l_dir_entries.item>>))
+					create l_f.make (a_file_system.build_path (a_dir_name, << l_dir_entries.item >>))
 					l_f.delete
 				end
 				l_dir_entries.forth

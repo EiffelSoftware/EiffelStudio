@@ -33,7 +33,6 @@ feature -- Command
 			l_exec_error: detachable STRING
 			l_compilation: detachable EQA_EW_EIFFEL_COMPILATION
 			l_curr_dir: STRING
-			l_test_dir: detachable STRING
 			l_file_system: EQA_FILE_SYSTEM
 		do
 			-- Work around a bug in Eiffel 4.2 (can't start
@@ -41,12 +40,12 @@ feature -- Command
 			-- is current directory
 
 			l_curr_dir := current_working_directory
-			l_test_dir := a_test.environment.target_directory
+--			l_test_dir := a_test.environment.target_directory -- FIXME: use file system to build target directory
 
 			l_compilation := a_test.e_compilation
 			if l_compilation = Void or else not l_compilation.suspended then
-				create l_file_system.make (a_test.environment)
-				l_exec_error := l_file_system.executable_file_exists (a_test.environment.executable_name)
+				l_file_system := a_test.file_system
+--				l_exec_error := l_file_system.executable_file_exists (a_test.environment.executable_name) -- FIXME: use env to retrieve executable name
 				if l_exec_error = Void then
 					a_test.increment_e_compile_count
 					a_test.set_e_compile_start_time (os.current_time_in_seconds)
@@ -55,7 +54,7 @@ feature -- Command
 					else
 						l_name := a_test.e_compile_output_name
 					end
-					create l_compilation.make_and_launch (compiler_arguments (a_test, a_test.environment), l_name, a_test)
+					create l_compilation.make_and_launch (compiler_arguments (a_test), l_name, a_test)
 					a_test.set_e_compilation (l_compilation)
 					a_test.set_e_compilation_result (l_compilation.last_result)
 
@@ -76,10 +75,11 @@ feature -- Command
 
 feature {NONE} -- Query
 
-	compiler_arguments (a_test: EQA_EW_SYSTEM_TEST_SET; a_env: EQA_SYSTEM_ENVIRONMENT): LINKED_LIST [STRING]
+	compiler_arguments (a_test: EQA_EW_SYSTEM_TEST_SET): LINKED_LIST [STRING]
 			-- The arguments to the compiler for test `test'.
 		local
-			l_test_dir, l_ecf_name: detachable STRING
+			l_test_dir: READABLE_STRING_8
+			l_ecf_name: detachable STRING
 		do
 			create Result.make
 			from
@@ -94,19 +94,17 @@ feature {NONE} -- Query
 				-- working directory, which does not work
 				-- with multithreaded code
 			Result.extend ("-project_path")
-			l_test_dir := a_test.environment.target_directory
-			check attached l_test_dir end -- Implied by environment values have been set before executing test cases			
+
+			l_test_dir := a_test.file_system.build_target_path (Void)
 			Result.extend (l_test_dir)
 				-- Ignore user file for testing
 			Result.extend ("-local")
 				-- Path to configuration file
 			Result.extend ("-config")
-			l_test_dir := a_env.value ({EQA_EW_PREDEFINED_VARIABLES}.Test_dir_name)
-			check attached l_test_dir end -- Implied by environment values have been set before executing test cases
 			l_ecf_name := a_test.ecf_name
 			check attached l_ecf_name end -- Implied by `init_env' is called before each test run
-			Result.extend (string_util.file_path (<<l_test_dir,l_ecf_name>>))
-		--	Result.extend ("-stop")
+			Result.extend (a_test.file_system.build_path (l_test_dir, << l_ecf_name >>))
+
 		end
 
 	compilation_options: LIST [STRING]

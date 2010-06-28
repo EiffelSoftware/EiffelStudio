@@ -15,12 +15,9 @@ class
 
 inherit
 	EQA_SYSTEM_TEST_SET
-		export
-			{EQA_EW_TEST_INSTRUCTION, EQA_EW_EIFFEL_COMPILATION, EQA_EW_C_COMPILATION, EQA_EW_SYSTEM_EXECUTION,
-			EQA_SYSTEM_OUTPUT_PROCESSOR, EQA_EW_SYSTEM_TEST_INSTRUCTIONS} environment
-			{EQA_EW_EIFFEL_COMPILATION, EQA_EW_SYSTEM_EXECUTION, EQA_EW_C_COMPILATION} run_system
-			{EQA_EW_C_COMPILATION, EQA_EW_SYSTEM_EXECUTION} prepare_system
-			{ANY} current_execution
+		redefine
+			on_prepare,
+			on_clean
 		end
 
 	EQA_EW_OS_ACCESS
@@ -39,97 +36,163 @@ inherit
 
 feature {NONE} -- Initialization
 
+	on_prepare
+			-- <Precursor>
+		local
+			l_vars: ARRAY [STRING]
+			i: INTEGER
+			l_env: like environment
+			l_exec_env: EXECUTION_ENVIRONMENT
+			l_test_name, l_ise_platform, l_path: READABLE_STRING_8
+			l_ew_test_name: STRING
+		do
+
+			ecf_name := "Ace"
+
+			l_env := environment
+
+				-- Make regular Eiffel environment variables available in `environment'
+			from
+				create l_exec_env
+				l_vars := << "ISE_EIFFEL", "ISE_PLATFORM", "ISE_C_COMPILER", "ISE_LIBRARY", "EWEASEL" >>
+				i := l_vars.lower
+			until
+				i > l_vars.upper
+			loop
+				if attached l_exec_env.get (l_vars[i]) as l_env_var then
+					l_env.put (l_env_var, l_vars[i])
+				end
+				i := i + 1
+			end
+
+			l_ise_platform := l_env.get_not_empty ("ISE_PLATFORM", Current)
+
+			l_path := file_system.build_path_from_key ("ISE_EIFFEL", << "precomp", "spec", l_ise_platform, "base.ecf" >>)
+			l_env.put (l_path, "PRECOMPILED_BASE")
+			l_path := file_system.build_path_from_key ("ISE_EIFFEL", << "precomp", "spec", l_ise_platform, "base-mt.ecf" >>)
+			l_env.put (l_path, "PRECOMPILED_BASE_MT")
+			l_path := file_system.build_path_from_key ("ISE_EIFFEL", << "precomp", "spec", l_ise_platform, "base-safe.ecf" >>)
+			l_env.put (l_path, "PRECOMPILED_BASE_SAFE")
+
+			l_path := file_system.build_path_from_key ("ISE_EIFFEL", << "studio", "spec", l_ise_platform, "bin", "ec" >>)
+			l_env.put (l_path, {EQA_SYSTEM_EXECUTION}.system_executable_key)
+			l_env.put (l_path, {EQA_EW_PREDEFINED_VARIABLES}.Compile_command_name)
+
+			l_path := file_system.build_path_from_key ("EWEASEL", << "bin", "eiffel_freeze" >>)
+			l_env.put (l_path, {EQA_EW_PREDEFINED_VARIABLES}.Freeze_command_name)
+			l_path := file_system.build_path_from_key ("EWEASEL", << "bin", "eiffel_execute" >>)
+			l_env.put (l_path, {EQA_EW_PREDEFINED_VARIABLES}.Execute_command_name)
+
+				-- Platform specifics?
+			l_env.put ("UNIX", "EWEASEL_PLATFORM")
+			l_env.put ("1", "UNIX")
+			l_env.put ("unix", "PLATFORM_TYPE")
+			l_env.put ("", "EWEASEL_DOTNET_SETTING")
+			l_env.put ("<cluster name=%"kernel%" location=%"$ISE_LIBRARY\library\base\elks\kernel%"/><cluster name=%"exceptions%" location=%"$ISE_LIBRARY\library\base\ise\kernel\exceptions%"/><cluster name=%"elks_exceptions%" location=%"$ISE_LIBRARY\library\base\elks\kernel\exceptions%"/>", "KERNEL_CLASSIC")
+			l_env.put ("", "KERNEL_DOTNET")
+			l_env.put ("", "KERNEL_DOTNET_NO_EXCEPTION")
+			l_env.put ("", "EWEASEL_DOTNET_SETTING")
+			l_env.put ("", "SUPPORT_DOTNET")
+
+			l_env.put (file_system.build_path_from_key ("ISE_LIBRARY", << "library", "base", "elks" >>), "BASE")
+			l_env.put (file_system.build_path_from_key ("ISE_LIBRARY", <<"library", "base", "ise">>), "BASE_ISE")
+			l_env.put (file_system.build_path_from_key ("BASE", << "kernel" >>), "KERNEL")
+			l_env.put (file_system.build_path_from_key ("BASE", << "kernel", "exceptions" >>), "EXCEPTIONS")
+			l_env.put (file_system.build_path_from_key ("BASE_ISE", << "kernel", "exceptions" >>), "EXCEPTIONS_ISE")
+			l_env.put (file_system.build_path_from_key ("BASE", << "kernel", "exceptions" >>), "EXCEPTIONS_ELKS")
+			l_env.put (file_system.build_path_from_key ("BASE", << "refactoring" >>), "REFACTORING")
+			l_env.put (file_system.build_path_from_key ("BASE_ISE", << "serialization" >>), "SERIALIZATION")
+			l_env.put (file_system.build_path_from_key ("BASE", << "support" >>), "SUPPORT")
+			l_env.put (file_system.build_path_from_key ("BASE", << "structures", "access" >>), "ACCESS")
+			l_env.put (file_system.build_path_from_key ("BASE", << "structures", "cursors" >>), "CURSORS")
+			l_env.put (file_system.build_path_from_key ("BASE", << "structures", "cursor_tree" >>), "CURSOR_TREE")
+			l_env.put (file_system.build_path_from_key ("BASE", << "structures", "dispenser" >>), "DISPENSER")
+			l_env.put (file_system.build_path_from_key ("BASE", << "structures", "iteration" >>), "ITERATION")
+			l_env.put (file_system.build_path_from_key ("BASE", << "structures", "list" >>), "LIST")
+			l_env.put (file_system.build_path_from_key ("BASE", << "structures", "obsolete" >>), "OBSOLETE")
+			l_env.put (file_system.build_path_from_key ("BASE", << "structures", "set" >>), "SET")
+			l_env.put (file_system.build_path_from_key ("BASE", << "structures", "set", "strategies" >>), "STRATEGY")
+			l_env.put (file_system.build_path_from_key ("BASE", << "structures", "sort" >>), "SORT")
+			l_env.put (file_system.build_path_from_key ("BASE", << "structures", "storage" >>), "STORAGE")
+			l_env.put (file_system.build_path_from_key ("BASE", << "structures", "table" >>), "TABLE")
+			l_env.put (file_system.build_path_from_key ("BASE", << "structures", "traversing" >>), "TRAVERSING")
+			l_env.put (file_system.build_path_from_key ("BASE", << "structures", "tree" >>), "TREE")
+			l_env.put (file_system.build_path_from_key ("ISE_LIBRARY", << "library", "thread" >>), "THREAD")
+			-- EiffelTime directories
+			l_env.put (file_system.build_path_from_key ("ISE_LIBRARY", << "library", "time" >>), "TIME")
+			l_env.put (file_system.build_path_from_key ("TIME", << "format">>), "TIME_FORMAT")
+			l_env.put (file_system.build_path_from_key ("TIME", << "format", "english" >>), "TIME_ENGLISH")
+			l_env.put (file_system.build_path_from_key ("TIME", << "format", "german" >>), "TIME_GERMAN")
+			-- EiffelStore directories
+			l_env.put (file_system.build_path_from_key ("ISE_LIBRARY", << "library", "store" >>), "STORE")
+			l_env.put (file_system.build_path_from_key ("STORE", << "date_and_time" >>), "DATE_TIME")
+			l_env.put (file_system.build_path_from_key ("STORE", << "dbms", "rdbms", "oracle" >>), "RDBMS_ORACLE")
+			l_env.put (file_system.build_path_from_key ("STORE", << "dbms", "rdbms", "support" >>), "RDBMS_SUPPORT")
+			l_env.put (file_system.build_path_from_key ("STORE", << "dbms", "support" >>), "DBMS_SUPPORT")
+			l_env.put (file_system.build_path_from_key ("STORE", << "interface" >>), "STORE_INTERFACE")
+			l_env.put (file_system.build_path_from_key ("STORE", << "support" >>), "STORE_SUPPORT")
+
+
+				-- Note: the following is a workaround to obtain the former Eweasel test name from the current one
+				--       e.g. TEST_ATTACH.test_001  --> attach001
+			l_test_name := l_env.get_attached (test_name_key, Current)
+			assert("valid_test_name_format", l_test_name.starts_with ("TEST_") and l_test_name.has_substring (".test_"))
+			create l_ew_test_name.make_from_string (l_test_name)
+			l_ew_test_name.remove_head (5)
+			l_ew_test_name.replace_substring_all (".test_", "")
+			l_ew_test_name.to_lower
+
+				-- Now we can initialize the source/target directories
+			l_path := file_system.build_path_from_key ("EWEASEL", << "tests", l_ew_test_name >>)
+			l_env.put (l_path, {EQA_SYSTEM_TEST_SET}.source_path_key)
+
+			associate ({EQA_EW_PREDEFINED_VARIABLES}.Test_dir_name, Void)
+
+			associate ({EQA_EW_PREDEFINED_VARIABLES}.Cluster_dir_name, << "clusters" >>)
+
+			associate ({EQA_SYSTEM_EXECUTION}.output_path_key, << "output" >>)
+			associate ({EQA_EW_PREDEFINED_VARIABLES}.Output_dir_name, << "output" >>)
+
+			l_path := file_system.build_target_path (
+				<< {EQA_EW_EIFFEL_TEST_CONSTANTS}.Eiffel_gen_directory,
+				   {EQA_EW_EIFFEL_TEST_CONSTANTS}.Default_system_name,
+				   {EQA_EW_EIFFEL_TEST_CONSTANTS}.Work_c_code_directory >>)
+			l_env.put (l_path, {EQA_EW_PREDEFINED_VARIABLES}.Work_execution_dir_name)
+
+			l_path := file_system.build_target_path (
+				<< {EQA_EW_EIFFEL_TEST_CONSTANTS}.Eiffel_gen_directory,
+				   {EQA_EW_EIFFEL_TEST_CONSTANTS}.Default_system_name,
+				   {EQA_EW_EIFFEL_TEST_CONSTANTS}.Final_c_code_directory >>)
+			l_env.put (l_path, {EQA_EW_PREDEFINED_VARIABLES}.Final_execution_dir_name)
+
+
+		end
+
+	associate (a_key: READABLE_STRING_8; a_path: detachable EQA_SYSTEM_PATH)
+			-- Define target directory for `a_path' in environment under `a_key' and make sure
+			-- directory exists.
+			--
+			-- Note: this might be something we want in {EQA_FILE_SYSTEM}
+		require
+			a_key_attached: a_key /= Void
+			a_key_not_empty: not a_key.is_empty
+		local
+			l_path: READABLE_STRING_8
+			l_dir: DIRECTORY
+		do
+			l_path := file_system.build_target_path (a_path)
+			create l_dir.make (l_path)
+			if not l_dir.exists then
+				l_dir.recursive_create_dir
+			end
+			environment.put (l_path, a_key)
+		end
+
+
 	init (a_test_dir_name: STRING)
 			-- Same as `init_env', initialize with `environment'
 		do
-			init_env (environment, a_test_dir_name)
-		end
 
-	init_env (a_env: EQA_SYSTEM_ENVIRONMENT; a_test_dir_name: STRING)
-			-- Initial environment environment in which to
-			-- execute `test'.  The result may be safely
-			-- modified by the caller.
-			-- Modified base on {EW_EQA_WINDOWS_SETUP}.initial_environment
-		require
-			test_not_void: a_env /= Void
-		local
-			l_test_dir, l_gen_dir, l_exec_dir: STRING
-			l_info: EQA_EVALUATION_INFO
-			l_util: EQA_EW_STRING_UTILITIES
-		do
-			ecf_name := "Ace"
-			create l_info
-
-			-- How to get {EQA_SYSTEM_EXECUTION}.executable_env ?
-			-- Following environment vairable would be set by {EQA_EW_EIFFEL_COMPILATION}.make
---			a_env.put ("/usr/local/Eiffel65/studio/spec/linux-x86/bin/ec", "EQA_EXECUTABLE")
-			a_env.put ( a_env.substitute_recursive ("$ISE_EIFFEL/precomp/spec/$ISE_PLATFORM/base.ecf"), "PRECOMPILED_BASE")
-			a_env.put (a_env.substitute_recursive  ("$ISE_EIFFEL/precomp/spec/$ISE_PLATFORM/base-mt.ecf"), "PRECOMPILED_BASE_MT")
-			a_env.put (a_env.substitute_recursive ("$ISE_EIFFEL/precomp/spec/$ISE_PLATFORM/base-safe.ecf"), "PRECOMPILED_BASE_SAFE")
-
-			a_env.put ("", "EWEASEL_DOTNET_SETTING")
-
-			a_env.set_source_directory (a_env.substitute_recursive ("$EWEASEL/tests"))
-
-			create l_util
-			-- l_test_dir := file_system.build_source_path (l_source_dir_name) -- Cannot use {EQA_FILE_SYSTEM}.build_source_path since it adding additional string to path
-			l_test_dir := l_util.file_path (<<a_env.source_directory, a_test_dir_name>>)
-
-			associate (a_env, {EQA_EW_PREDEFINED_VARIABLES}.source_dir_name, l_test_dir)
-			a_env.set_source_directory (l_test_dir) -- Update {EQA_FILE_SYSTEM}.source_directory
-
-			-- FIXME: Cannot use `a_env.target_directory', since by default, {EQA_SYSTEM_ENVIRONMENT}.target_directory is "/temp" ?
-
-			l_test_dir := l_util.file_path (<<a_env.current_working_directory>>)
-			associate (a_env, {EQA_EW_PREDEFINED_VARIABLES}.Test_dir_name, l_test_dir)
-			a_env.set_target_directory (l_test_dir)
-
-			associate (a_env, {EQA_EW_PREDEFINED_VARIABLES}.Cluster_dir_name, full_directory_name (l_test_dir, "clusters"))
-			associate (a_env, {EQA_EW_PREDEFINED_VARIABLES}.Output_dir_name, full_directory_name (l_test_dir, "output"))
-
-			-- fixme ("set correct directory depending on used target")
-			l_gen_dir := full_directory_name (l_test_dir, {EQA_EW_EIFFEL_TEST_CONSTANTS}.Eiffel_gen_directory)
-			l_gen_dir := full_directory_name (l_gen_dir, {EQA_EW_EIFFEL_TEST_CONSTANTS}.Default_system_name)
-			l_exec_dir := full_directory_name (l_gen_dir, {EQA_EW_EIFFEL_TEST_CONSTANTS}.Work_c_code_directory)
-			a_env.put (l_exec_dir, {EQA_EW_PREDEFINED_VARIABLES}.Work_execution_dir_name)
-			l_exec_dir := full_directory_name (l_gen_dir, {EQA_EW_EIFFEL_TEST_CONSTANTS}.Final_c_code_directory)
-			a_env.put (l_exec_dir, {EQA_EW_PREDEFINED_VARIABLES}.Final_execution_dir_name)
-
-			-- Copy from $EWEASEL\control\unix_platform
-
-			a_env.put (l_util.file_path (<<"$ISE_EIFFEL", "studio", "spec", "$ISE_PLATFORM", "bin", "ec">>), {EQA_EW_PREDEFINED_VARIABLES}.Compile_command_name)
-			a_env.put (l_util.file_path (<<"$ISE_EIFFEL", "studio", "spec", "$ISE_PLATFORM", "bin", "ec">>), {EQA_SYSTEM_ENVIRONMENT}.executable_env)
-			a_env.put (l_util.file_path (<<"$EWEASEL", "bin", "eiffel_freeze">>), {EQA_EW_PREDEFINED_VARIABLES}.Freeze_command_name)
-			a_env.put (l_util.file_path (<<"$EWEASEL", "bin", "eiffel_execute">>), {EQA_EW_PREDEFINED_VARIABLES}.Execute_command_name)
-		end
-
-	associate (a_env: EQA_SYSTEM_ENVIRONMENT; a_var, a_dir: STRING)
-			-- Define an environment variable `a_var' in the
-			-- environment `a_env' to have
-			-- value `a_dir', which must be a directory name.
-			-- Create the directory `a_dir' if it does not exist.
-		require
-			environment_not_void: a_env /= Void
-			var_name_not_void: a_var /= Void
-			directory_not_void: a_dir /= Void
-		local
-			l_d: DIRECTORY
-		do
-			a_env.put (a_dir, a_var)
-			create l_d.make (a_dir)
-			if not l_d.exists then
-				l_d.create_dir
-			end
-		end
-
-	full_directory_name (a_path_1, a_path_2:STRING): STRING
-			-- Full name of subdirectory `subdir' of directory
-			-- `dir_name'
-		local
-			l_path: EQA_EW_STRING_UTILITIES
-		do
-			create l_path
-			Result := l_path.file_path (<<a_path_1, a_path_2>>)
 		end
 
 feature -- Query
@@ -209,7 +272,7 @@ feature -- Query
 	has_env (a_key: STRING): BOOLEAN
 			-- If `a_key' has associate value in `environment'
 		do
-			Result := attached environment.value (a_key)
+			Result := attached environment.get (a_key)
 		end
 
 feature -- Command
@@ -338,6 +401,18 @@ feature {EQA_EW_EIFFEL_COMPILATION, EQA_EW_SYSTEM_EXECUTION, EQA_EW_C_COMPILATIO
 			end
 		ensure
 			created: attached current_execution
+		end
+
+feature {NONE} -- Clean up
+
+	on_clean
+			-- <Precursor>
+		do
+			if attached e_compilation as l_compilation then
+				if l_compilation.suspended then
+					l_compilation.abort
+				end
+			end
 		end
 
 feature {NONE} -- Implementation

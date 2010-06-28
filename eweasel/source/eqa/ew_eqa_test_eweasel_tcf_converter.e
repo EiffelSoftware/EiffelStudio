@@ -532,6 +532,7 @@ feature {NONE} -- Implementation
 						l_array := l_array + l_list.item + " "
 						l_list.forth
 					end
+					decorate_quote (l_array, False)
 					Result := "execute_final (%"" + l_list.i_th (1) + "%", %"" + l_list.i_th (2) + "%", %"" + l_array + "%")"
 				end
 			elseif l_keyword.is_equal (execute_result_keyword) then
@@ -555,7 +556,7 @@ feature {NONE} -- Implementation
 						l_array := l_array + l_list.item + " "
 						l_list.forth
 					end
-
+					decorate_quote (l_array, False)
 					Result := "execute_work (%"" + l_list.i_th (1) + "%", %"" + l_list.i_th (2) + "%", %"" + l_array + "%")"
 				end
 			elseif l_keyword.is_equal (exit_compile_keyword) then
@@ -569,7 +570,7 @@ feature {NONE} -- Implementation
 				if l_list.first.is_equal ("not") then
 					l_arg.remove_substring (1, l_list.i_th (1).count + l_list.i_th (2).count + 2)
 					l_arg.left_adjust
-					decorate_quote (l_arg, True)
+					--decorate_quote (l_arg, True)
 
 					Result := "if not has_env (%"" + l_list.i_th (2) + "%") then"
 					-- Recursive convert
@@ -580,7 +581,7 @@ feature {NONE} -- Implementation
 				else
 					l_arg.remove_substring (1, l_list.i_th (1).count + 1)
 					l_arg.left_adjust
-					decorate_quote (l_arg, True)
+					--decorate_quote (l_arg, True)
 
 					Result := "if has_env (%"" + l_list.i_th (1) + "%") then"
 					-- Recursive convert

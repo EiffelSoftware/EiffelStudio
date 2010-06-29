@@ -227,8 +227,6 @@ feature{NONE} -- Initialization
 			check not_void: cmd_lst.choices /= Void end
 			register_action (cmd_lst.choices.focus_in_actions, agent on_focus_in_completion_window)
 
-			stone_director.bind (cmd_lst, Current)
-
 			edit_cmd_detail_btn.set_pixmap (stock_pixmaps.general_add_icon)
 			edit_cmd_detail_btn.set_pixel_buffer (stock_pixmaps.general_add_icon_buffer)
 			edit_cmd_detail_btn.select_actions.extend (agent on_edit_command_detail)
@@ -885,7 +883,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

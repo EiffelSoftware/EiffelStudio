@@ -2365,6 +2365,7 @@ test	stable-attribute-in-rescue				attach070 tcf pass void_safe validity stable 
 test	self-init-attribute-non-void-safe			attach071 tcf fail attached_types self_init void_safe
 test	default-create-missing-check			attach072 tcf pass attached_types void_safe
 test	bogus-vevi-expanded-formal-generic		attach073 tcf fail attached_types void_safe
+test	vevi-on-once-per-object-routine			attach074 tcf fail attached_types void_safeA once
 
 -- Tests for conformance in general
 test	basic-conformance		conform001 tcf pass conformance

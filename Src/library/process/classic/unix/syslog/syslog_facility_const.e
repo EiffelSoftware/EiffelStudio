@@ -14,7 +14,7 @@ feature {NONE} -- Constants
 		external
 			"C inline use <syslog.h>"
 		alias
-			"LOG_KERN"
+			"return LOG_KERN;"
 		end
 
 	Log_user: INTEGER
@@ -22,7 +22,7 @@ feature {NONE} -- Constants
 		external
 			"C inline use <syslog.h>"
 		alias
-			"LOG_USER"
+			"return LOG_USER;"
 		end
 
 	Log_mail: INTEGER
@@ -30,7 +30,7 @@ feature {NONE} -- Constants
 		external
 			"C inline use <syslog.h>"
 		alias
-			"LOG_MAIL"
+			"return LOG_MAIL;"
 		end
 
 	Log_daemon: INTEGER
@@ -38,7 +38,7 @@ feature {NONE} -- Constants
 		external
 			"C inline use <syslog.h>"
 		alias
-			"LOG_DAEMON"
+			"return LOG_DAEMON;"
 		end
 
 	Log_auth: INTEGER
@@ -46,7 +46,7 @@ feature {NONE} -- Constants
 		external
 			"C inline use <syslog.h>"
 		alias
-			"LOG_AUTH"
+			"return LOG_AUTH;"
 		end
 
 	Log_syslog: INTEGER
@@ -54,7 +54,7 @@ feature {NONE} -- Constants
 		external
 			"C inline use <syslog.h>"
 		alias
-			"LOG_SYSLOG"
+			"return LOG_SYSLOG;"
 		end
 
 	Log_lpr: INTEGER
@@ -62,7 +62,7 @@ feature {NONE} -- Constants
 		external
 			"C inline use <syslog.h>"
 		alias
-			"LOG_LPR"
+			"return LOG_LPR;"
 		end
 
 	Log_news: INTEGER
@@ -70,7 +70,7 @@ feature {NONE} -- Constants
 		external
 			"C inline use <syslog.h>"
 		alias
-			"LOG_NEWS"
+			"return LOG_NEWS;"
 		end
 
 	Log_uucp: INTEGER
@@ -78,7 +78,7 @@ feature {NONE} -- Constants
 		external
 			"C inline use <syslog.h>"
 		alias
-			"LOG_UUCP"
+			"return LOG_UUCP;"
 		end
 
 	Log_cron: INTEGER
@@ -86,7 +86,7 @@ feature {NONE} -- Constants
 		external
 			"C inline use <syslog.h>"
 		alias
-			"LOG_CRON"
+			"return LOG_CRON;"
 		end
 
 	Log_authpriv: INTEGER
@@ -94,7 +94,7 @@ feature {NONE} -- Constants
 		external
 			"C inline use <syslog.h>"
 		alias
-			"LOG_AUTHPRIV"
+			"return LOG_AUTHPRIV;"
 		end
 
 	Log_ftp: INTEGER
@@ -102,7 +102,7 @@ feature {NONE} -- Constants
 		external
 			"C inline use <syslog.h>"
 		alias
-			"LOG_FTP"
+			"return LOG_FTP;"
 		end
 
 	Log_local0: INTEGER
@@ -110,7 +110,7 @@ feature {NONE} -- Constants
 		external
 			"C inline use <syslog.h>"
 		alias
-			"LOG_LOCAL0"
+			"return LOG_LOCAL0;"
 		end
 
 	Log_local1: INTEGER
@@ -118,7 +118,7 @@ feature {NONE} -- Constants
 		external
 			"C inline use <syslog.h>"
 		alias
-			"LOG_LOCAL1"
+			"return LOG_LOCAL1;"
 		end
 
 	Log_local2: INTEGER
@@ -126,7 +126,7 @@ feature {NONE} -- Constants
 		external
 			"C inline use <syslog.h>"
 		alias
-			"LOG_LOCAL2"
+			"return LOG_LOCAL2;"
 		end
 
 	Log_local3: INTEGER
@@ -134,7 +134,7 @@ feature {NONE} -- Constants
 		external
 			"C inline use <syslog.h>"
 		alias
-			"LOG_LOCAL3"
+			"return LOG_LOCAL3;"
 		end
 
 	Log_local4: INTEGER
@@ -142,7 +142,7 @@ feature {NONE} -- Constants
 		external
 			"C inline use <syslog.h>"
 		alias
-			"LOG_LOCAL4"
+			"return LOG_LOCAL4;"
 		end
 
 	Log_local5: INTEGER
@@ -150,7 +150,7 @@ feature {NONE} -- Constants
 		external
 			"C inline use <syslog.h>"
 		alias
-			"LOG_LOCAL5"
+			"return LOG_LOCAL5;"
 		end
 
 	Log_local6: INTEGER
@@ -158,7 +158,7 @@ feature {NONE} -- Constants
 		external
 			"C inline use <syslog.h>"
 		alias
-			"LOG_LOCAL6"
+			"return LOG_LOCAL6;"
 		end
 
 	Log_local7: INTEGER
@@ -166,7 +166,7 @@ feature {NONE} -- Constants
 		external
 			"C inline use <syslog.h>"
 		alias
-			"LOG_LOCAL7"
+			"return LOG_LOCAL7;"
 		end
 
 note

@@ -168,60 +168,69 @@ feature {NONE} -- Implementation
 			pref_value: detachable STRING
 			l_root_element: XML_ELEMENT
 			t_preference, t_name, t_value: STRING
+			l_retried: BOOLEAN
 		do
-			create parser.make
-			create l_tree.make_null
-			parser.set_callbacks (l_tree)
+			if not l_retried then
+				create parser.make
+				create l_tree.make_null
+				parser.set_callbacks (l_tree)
 
-			create l_file.make (location)
-			l_file.open_read
-			if l_file.is_open_read then
-				parser.parse_from_file (l_file)
-				l_file.close
-	    		if not parser.error_occurred and then
-	    			(attached l_tree.document as l_xml_structure) -- should be implied by `not has_error'
-	    		then
-	    			xml_structure := l_xml_structure
-	    			from
-	    				t_preference := "PREFERENCE"
-	    				t_name := "NAME"
-	    				t_value := "VALUE"
+				create l_file.make (location)
+				l_file.open_read
+				if l_file.is_open_read then
+					parser.parse_from_file (l_file)
+					l_file.close
+		    		if not parser.error_occurred and then
+		    			(attached l_tree.document as l_xml_structure) -- should be implied by `not has_error'
+		    		then
+		    			xml_structure := l_xml_structure
+		    			from
+		    				t_preference := "PREFERENCE"
+		    				t_name := "NAME"
+		    				t_value := "VALUE"
 
-	    				l_root_element := l_xml_structure.root_element
-						l_root_element.start
-					until
-						l_root_element.after
-					loop
-						if attached {XML_ELEMENT} l_root_element.item_for_iteration as node then
-							if node.name ~ t_preference then
-									-- Found preference
-								l_attrib := node.attribute_by_name (t_name)
-								if l_attrib /= Void then
-									pref_name := l_attrib.value
-									l_attrib := node.attribute_by_name (t_value)
+		    				l_root_element := l_xml_structure.root_element
+							l_root_element.start
+						until
+							l_root_element.after
+						loop
+							if attached {XML_ELEMENT} l_root_element.item_for_iteration as node then
+								if node.name ~ t_preference then
+										-- Found preference
+									l_attrib := node.attribute_by_name (t_name)
 									if l_attrib /= Void then
-										pref_value := l_attrib.value
+										pref_name := l_attrib.value
+										l_attrib := node.attribute_by_name (t_value)
+										if l_attrib /= Void then
+											pref_value := l_attrib.value
+										end
+										if pref_value = Void then
+											check xml_contain_value: False end
+											create pref_value.make_empty
+										end
+										session_values.put (pref_value, pref_name)
 									end
-									if pref_value = Void then
-										check xml_contain_value: False end
-										create pref_value.make_empty
-									end
-									session_values.put (pref_value, pref_name)
 								end
 							end
+							l_root_element.forth
 						end
-						l_root_element.forth
-					end
+					else
+						debug ("refactor_fixme")
+							fixme ("Add code to let callers know that XML file was invalid")
+						end
+		    		end
 				else
 					debug ("refactor_fixme")
-						fixme ("Add code to let callers know that XML file was invalid")
+						fixme ("Add code to let callers that we could not open preference file")
 					end
-	    		end
-			else
-				debug ("refactor_fixme")
-					fixme ("Add code to let callers that we could not open preference file")
 				end
 			end
+		rescue
+			l_retried := True
+			if not l_file.is_closed then
+				l_file.close
+			end
+			retry
 		end
 
 	escape_xml (a_string: STRING): STRING

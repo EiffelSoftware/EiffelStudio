@@ -1525,6 +1525,7 @@ test once-key-validity				once005 tcf pass once validity
 test once-per-object-called-via-precursor	once006 tcf fail once
 test once-per-object-with-inheritance		once007 tcf fail once
 test once-per-object-finalized-crash		once008 tcf fail once
+test once-per-object-effect-deferred		once009 tcf fail once
 
 -- Compiler termination (exception trace, panic, etc.)
 

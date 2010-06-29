@@ -14,7 +14,7 @@ feature {NONE} -- Constants
 		external
 			"C inline use <syslog.h>"
 		alias
-			"return LOG_KERN;"
+			"LOG_KERN"
 		end
 
 	Log_user: INTEGER
@@ -22,7 +22,7 @@ feature {NONE} -- Constants
 		external
 			"C inline use <syslog.h>"
 		alias
-			"return LOG_USER;"
+			"LOG_USER"
 		end
 
 	Log_mail: INTEGER
@@ -30,7 +30,7 @@ feature {NONE} -- Constants
 		external
 			"C inline use <syslog.h>"
 		alias
-			"return LOG_MAIL;"
+			"LOG_MAIL"
 		end
 
 	Log_daemon: INTEGER
@@ -38,7 +38,7 @@ feature {NONE} -- Constants
 		external
 			"C inline use <syslog.h>"
 		alias
-			"return LOG_DAEMON;"
+			"LOG_DAEMON"
 		end
 
 	Log_auth: INTEGER
@@ -46,7 +46,7 @@ feature {NONE} -- Constants
 		external
 			"C inline use <syslog.h>"
 		alias
-			"return LOG_AUTH;"
+			"LOG_AUTH"
 		end
 
 	Log_syslog: INTEGER
@@ -54,7 +54,7 @@ feature {NONE} -- Constants
 		external
 			"C inline use <syslog.h>"
 		alias
-			"return LOG_SYSLOG;"
+			"LOG_SYSLOG"
 		end
 
 	Log_lpr: INTEGER
@@ -62,7 +62,7 @@ feature {NONE} -- Constants
 		external
 			"C inline use <syslog.h>"
 		alias
-			"return LOG_LPR;"
+			"LOG_LPR"
 		end
 
 	Log_news: INTEGER
@@ -70,7 +70,7 @@ feature {NONE} -- Constants
 		external
 			"C inline use <syslog.h>"
 		alias
-			"return LOG_NEWS;"
+			"LOG_NEWS"
 		end
 
 	Log_uucp: INTEGER
@@ -78,7 +78,7 @@ feature {NONE} -- Constants
 		external
 			"C inline use <syslog.h>"
 		alias
-			"return LOG_UUCP;"
+			"LOG_UUCP"
 		end
 
 	Log_cron: INTEGER
@@ -86,7 +86,7 @@ feature {NONE} -- Constants
 		external
 			"C inline use <syslog.h>"
 		alias
-			"return LOG_CRON;"
+			"LOG_CRON"
 		end
 
 	Log_authpriv: INTEGER
@@ -94,7 +94,7 @@ feature {NONE} -- Constants
 		external
 			"C inline use <syslog.h>"
 		alias
-			"return LOG_AUTHPRIV;"
+			"LOG_AUTHPRIV"
 		end
 
 	Log_ftp: INTEGER
@@ -102,7 +102,7 @@ feature {NONE} -- Constants
 		external
 			"C inline use <syslog.h>"
 		alias
-			"return LOG_FTP;"
+			"LOG_FTP"
 		end
 
 	Log_local0: INTEGER
@@ -110,7 +110,7 @@ feature {NONE} -- Constants
 		external
 			"C inline use <syslog.h>"
 		alias
-			"return LOG_LOCAL0;"
+			"LOG_LOCAL0"
 		end
 
 	Log_local1: INTEGER
@@ -118,7 +118,7 @@ feature {NONE} -- Constants
 		external
 			"C inline use <syslog.h>"
 		alias
-			"return LOG_LOCAL1;"
+			"LOG_LOCAL1"
 		end
 
 	Log_local2: INTEGER
@@ -126,7 +126,7 @@ feature {NONE} -- Constants
 		external
 			"C inline use <syslog.h>"
 		alias
-			"return LOG_LOCAL2;"
+			"LOG_LOCAL2"
 		end
 
 	Log_local3: INTEGER
@@ -134,7 +134,7 @@ feature {NONE} -- Constants
 		external
 			"C inline use <syslog.h>"
 		alias
-			"return LOG_LOCAL3;"
+			"LOG_LOCAL3"
 		end
 
 	Log_local4: INTEGER
@@ -142,7 +142,7 @@ feature {NONE} -- Constants
 		external
 			"C inline use <syslog.h>"
 		alias
-			"return LOG_LOCAL4;"
+			"LOG_LOCAL4"
 		end
 
 	Log_local5: INTEGER
@@ -150,7 +150,7 @@ feature {NONE} -- Constants
 		external
 			"C inline use <syslog.h>"
 		alias
-			"return LOG_LOCAL5;"
+			"LOG_LOCAL5"
 		end
 
 	Log_local6: INTEGER
@@ -158,7 +158,7 @@ feature {NONE} -- Constants
 		external
 			"C inline use <syslog.h>"
 		alias
-			"return LOG_LOCAL6;"
+			"LOG_LOCAL6"
 		end
 
 	Log_local7: INTEGER
@@ -166,18 +166,18 @@ feature {NONE} -- Constants
 		external
 			"C inline use <syslog.h>"
 		alias
-			"return LOG_LOCAL7;"
+			"LOG_LOCAL7"
 		end
 
 note
-	copyright:	"Copyright (c) 2010, ITPassion Ltd, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source:		"[
-					ITPassion Ltd.
-					5 Anstice Close, Chiswick, Middlesex, W4 2RJ, UK
-					Telephone 44-800-678-3248 Fax 44-208-742-3468
-					Website http://www.itpassion.com
-					Customer support https://powerdesk.itpassion.com
-				]"
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
 end

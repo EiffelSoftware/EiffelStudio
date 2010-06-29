@@ -41,7 +41,8 @@ inherit
 		redefine
 			update_for_pick_and_drop,
 			initialize,
-			destroy
+			destroy,
+			set_background_color
 		end
 
 	SD_WIDGETS_LISTS
@@ -245,6 +246,22 @@ feature -- Command
 			clear_content
 			prune_tool_bar (Current)
 			Precursor {SD_DRAWING_AREA}
+		end
+
+	set_background_color (a_color: like background_color)
+			-- <Precursor>
+		local
+			l_old_background: detachable like background_color
+		do
+			if is_displayed then
+				l_old_background := background_color.twin
+			end
+
+			Precursor (a_color)
+
+			if l_old_background /= void and then not l_old_background.is_equal (background_color) then
+				clear_and_redraw
+			end
 		end
 
 feature {SD_TOOL_BAR_TITLE_BAR, SD_TITLE_BAR} -- Special setting

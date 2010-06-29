@@ -85,15 +85,19 @@ feature {NONE}  -- Implementation
 			source_not_void: a_file1 /= Void
 			destination_not_void: a_file2 /= Void
 		local
+			l_c1, l_c2: like file_content
 			l_diff: DIFF_TEXT
-			l_src, l_dst: ARRAY [STRING_GENERAL]
 		do
-			create l_diff
-
-			l_diff.set_text (file_content (a_file1), file_content (a_file2))
-
-			l_diff.compute_diff
-			Result := l_diff.unified
+			l_c1 := file_content (a_file1)
+			l_c2 := file_content (a_file2)
+			if l_c1.same_string (l_c2) then
+				create Result.make_empty
+			else
+				create l_diff
+				l_diff.set_text (l_c1, l_c2)
+				l_diff.compute_diff
+				Result := l_diff.unified
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -102,8 +106,6 @@ feature {NONE} -- Implementation
 			-- Content of `a_file'
 		require
 			not_empty: attached a_file
-		local
-			l_arrayed_list: ARRAYED_LIST [STRING]
 		do
 			create Result.make (a_file.count)
 			if a_file.exists then

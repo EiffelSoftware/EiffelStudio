@@ -5,7 +5,7 @@ borlandecdbgd='ecdbgd'
 make='"$compiler_path\bin\make.exe"'
 del='del'
 mv='copy'
-mkdir='mkdir -p'
+mkdir='"$(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\bin\mkdir.bat"'
 dir_sep='\\'
 #
 output_exe_cmd='-e'

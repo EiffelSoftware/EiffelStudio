@@ -83,7 +83,7 @@ feature {NONE} -- Externals
 		external
 			"C inline use <syslog.h>"
 		alias
-			"syslog($priority, (const char *) $format);"
+			"syslog($priority, %"%%s%", (const char *) $format);"
 		end
 
 note

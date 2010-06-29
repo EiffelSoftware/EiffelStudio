@@ -14,7 +14,7 @@ feature {NONE} -- Constants
 		external
 			"C [macro <syslog.h>]"
 		alias
-			"return LOG_EMERG;"
+			"LOG_EMERG"
 		end
 
 	Log_alert: INTEGER
@@ -22,7 +22,7 @@ feature {NONE} -- Constants
 		external
 			"C [macro <syslog.h>]"
 		alias
-			"return LOG_ALERT;"
+			"LOG_ALERT"
 		end
 
 	Log_crit: INTEGER
@@ -30,7 +30,7 @@ feature {NONE} -- Constants
 		external
 			"C [macro <syslog.h>]"
 		alias
-			"return LOG_CRIT;"
+			"LOG_CRIT"
 		end
 
 	Log_err: INTEGER
@@ -38,7 +38,7 @@ feature {NONE} -- Constants
 		external
 			"C [macro <syslog.h>]"
 		alias
-			"return LOG_ERR;"
+			"LOG_ERR"
 		end
 
 	Log_warning: INTEGER
@@ -46,7 +46,7 @@ feature {NONE} -- Constants
 		external
 			"C [macro <syslog.h>]"
 		alias
-			"return LOG_WARNING;"
+			"LOG_WARNING"
 		end
 
 	Log_notice: INTEGER
@@ -54,7 +54,7 @@ feature {NONE} -- Constants
 		external
 			"C [macro <syslog.h>]"
 		alias
-			"return LOG_NOTICE;"
+			"LOG_NOTICE"
 		end
 
 	Log_info: INTEGER
@@ -62,7 +62,7 @@ feature {NONE} -- Constants
 		external
 			"C [macro <syslog.h>]"
 		alias
-			"return LOG_INFO;"
+			"LOG_INFO"
 		end
 
 	Log_debug: INTEGER
@@ -70,18 +70,18 @@ feature {NONE} -- Constants
 		external
 			"C [macro <syslog.h>]"
 		alias
-			"return LOG_DEBUG;"
+			"LOG_DEBUG"
 		end
 
 note
-	copyright:	"Copyright (c) 2010, ITPassion Ltd, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source:		"[
-					ITPassion Ltd.
-					5 Anstice Close, Chiswick, Middlesex, W4 2RJ, UK
-					Telephone 44-800-678-3248 Fax 44-208-742-3468
-					Website http://www.itpassion.com
-					Customer support https://powerdesk.itpassion.com
-				]"
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
 end

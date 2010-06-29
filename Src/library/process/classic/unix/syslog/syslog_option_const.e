@@ -14,7 +14,7 @@ feature {NONE} -- Constants
 		external
 			"C [macro <syslog.h>]"
 		alias
-			"return LOG_PID;"
+			"LOG_PID"
 		end
 
 	Log_cons: INTEGER
@@ -22,7 +22,7 @@ feature {NONE} -- Constants
 		external
 			"C [macro <syslog.h>]"
 		alias
-			"return LOG_CONS;"
+			"LOG_CONS"
 		end
 
 	Log_odelay: INTEGER
@@ -30,7 +30,7 @@ feature {NONE} -- Constants
 		external
 			"C [macro <syslog.h>]"
 		alias
-			"return LOG_ODELAY;"
+			"LOG_ODELAY"
 		end
 
 	Log_ndelay: INTEGER
@@ -38,7 +38,7 @@ feature {NONE} -- Constants
 		external
 			"C [macro <syslog.h>]"
 		alias
-			"return LOG_NDELAY;"
+			"LOG_NDELAY"
 		end
 
 	Log_nowait: INTEGER
@@ -46,7 +46,7 @@ feature {NONE} -- Constants
 		external
 			"C [macro <syslog.h>]"
 		alias
-			"return LOG_NOWAIT;"
+			"LOG_NOWAIT"
 		end
 
 	Log_perror: INTEGER
@@ -54,19 +54,18 @@ feature {NONE} -- Constants
 		external
 			"C [macro <syslog.h>]"
 		alias
-			"return LOG_PERROR;"
+			"LOG_PERROR"
 		end
 
 note
-	copyright:	"Copyright (c) 2010, ITPassion Ltd, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 %
-				%(see http://www.eiffel.com/licensing/forum.txt)"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source:		"[
-					ITPassion Ltd.
-					5 Anstice Close, Chiswick, Middlesex, W4 2RJ, UK
-					Telephone 44-800-678-3248 Fax 44-208-742-3468
-					Website http://www.itpassion.com
-					Customer support https://powerdesk.itpassion.com
-				]"
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
 end

@@ -58,6 +58,16 @@ feature {NONE} -- Initialization
 			position_set: position = i
 		end
 
+feature -- Modification
+
+	set_is_expanded
+			-- Mark the type as being expanded.
+		do
+			is_expanded := True
+		ensure
+			is_expanded: is_expanded
+		end
+
 feature -- Visitor
 
 	process (v: TYPE_A_VISITOR)
@@ -553,7 +563,7 @@ feature -- Access
 	skeleton_adapted_in (class_type: CLASS_TYPE): TYPE_A
 			-- <Precursor>
 		do
-			Result := class_type.type.generics.item (position)	
+			Result := class_type.type.generics.item (position)
 				-- We optimize the type only if it is a basic type which is not a TYPED_POINTER.
 			if not Result.is_basic or Result.is_typed_pointer then
 				Result := Current
@@ -601,7 +611,7 @@ feature -- Access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

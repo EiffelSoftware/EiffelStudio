@@ -206,7 +206,20 @@ feature {NONE} -- Visitor implementation
 						i <= 0
 					loop
 						t := l [i].type
-						if t.has_detachable_mark then
+						if
+							attached {CLASS_TYPE_AS} t as ct and then
+							(ct.is_expanded or else
+							attached universe.class_named (ct.class_name.name, current_class.group) as ci and then
+							ci.is_compiled and then
+							attached ci.compiled_class as c and then
+							c.is_expanded)
+						then
+								-- The actual type should be expanded.
+							f.set_is_attached
+							f.set_is_expanded
+							types_todo.wipe_out
+							l.finish
+						elseif t.has_detachable_mark then
 								-- Skip the detachable constraint because it does not allow to see
 								-- if the formal is always attached or not.
 						elseif t.has_attached_mark then

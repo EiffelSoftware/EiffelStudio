@@ -12,49 +12,49 @@ feature {NONE} -- Constants
 	Log_pid: INTEGER
 			-- Log the pid with each message
 		external
-			"C [macro <syslog.h>]"
+			"C inline use <syslog.h>"
 		alias
-			"LOG_PID"
+			"return LOG_PID;"
 		end
 
 	Log_cons: INTEGER
 			-- Log on the console if errors in sending
 		external
-			"C [macro <syslog.h>]"
+			"C inline use <syslog.h>"
 		alias
-			"LOG_CONS"
+			"return LOG_CONS;"
 		end
 
 	Log_odelay: INTEGER
 			-- Delay open until first call to `sys_log' (default)
 		external
-			"C [macro <syslog.h>]"
+			"C inline use <syslog.h>"
 		alias
-			"LOG_ODELAY"
+			"return LOG_ODELAY;"
 		end
 
 	Log_ndelay: INTEGER
 			-- Don't delay open
 		external
-			"C [macro <syslog.h>]"
+			"C inline use <syslog.h>"
 		alias
-			"LOG_NDELAY"
+			"return LOG_NDELAY;"
 		end
 
 	Log_nowait: INTEGER
 			-- Don't wait for console forks: DEPRECATED
 		external
-			"C [macro <syslog.h>]"
+			"C inline use <syslog.h>"
 		alias
-			"LOG_NOWAIT"
+			"return LOG_NOWAIT;"
 		end
 
 	Log_perror: INTEGER
 			-- Log to stderr as well
 		external
-			"C [macro <syslog.h>]"
+			"C inline use <syslog.h>"
 		alias
-			"LOG_PERROR"
+			"return LOG_PERROR;"
 		end
 
 note

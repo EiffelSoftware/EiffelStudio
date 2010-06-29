@@ -12,65 +12,65 @@ feature {NONE} -- Constants
 	Log_emerg: INTEGER
 			-- System is unusable
 		external
-			"C [macro <syslog.h>]"
+			"C inline use <syslog.h>"
 		alias
-			"LOG_EMERG"
+			"return LOG_EMERG;"
 		end
 
 	Log_alert: INTEGER
 			-- Action must be taken immediately
 		external
-			"C [macro <syslog.h>]"
+			"C inline use <syslog.h>"
 		alias
-			"LOG_ALERT"
+			"return LOG_ALERT;"
 		end
 
 	Log_crit: INTEGER
 			-- Critical conditions
 		external
-			"C [macro <syslog.h>]"
+			"C inline use <syslog.h>"
 		alias
-			"LOG_CRIT"
+			"return LOG_CRIT;"
 		end
 
 	Log_err: INTEGER
 			-- Error conditions
 		external
-			"C [macro <syslog.h>]"
+			"C inline use <syslog.h>"
 		alias
-			"LOG_ERR"
+			"return LOG_ERR;"
 		end
 
 	Log_warning: INTEGER
 			-- Warning conditions
 		external
-			"C [macro <syslog.h>]"
+			"C inline use <syslog.h>"
 		alias
-			"LOG_WARNING"
+			"return LOG_WARNING;"
 		end
 
 	Log_notice: INTEGER
 			-- Normal but significant condition
 		external
-			"C [macro <syslog.h>]"
+			"C inline use <syslog.h>"
 		alias
-			"LOG_NOTICE"
+			"return LOG_NOTICE;"
 		end
 
 	Log_info: INTEGER
 			-- Informational
 		external
-			"C [macro <syslog.h>]"
+			"C inline use <syslog.h>"
 		alias
-			"LOG_INFO"
+			"return LOG_INFO;"
 		end
 
 	Log_debug: INTEGER
 			-- Debug-level messages
 		external
-			"C [macro <syslog.h>]"
+			"C inline use <syslog.h>"
 		alias
-			"LOG_DEBUG"
+			"return LOG_DEBUG;"
 		end
 
 note

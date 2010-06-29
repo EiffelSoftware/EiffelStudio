@@ -2366,6 +2366,7 @@ test	self-init-attribute-non-void-safe			attach071 tcf fail attached_types self_
 test	default-create-missing-check			attach072 tcf pass attached_types void_safe
 test	bogus-vevi-expanded-formal-generic		attach073 tcf fail attached_types void_safe
 test	vevi-on-once-per-object-routine			attach074 tcf fail attached_types void_safeA once
+test	once-per-object-creation-procedure		attach075 tcf fail attached_types void_safeA once
 
 -- Tests for conformance in general
 test	basic-conformance		conform001 tcf pass conformance

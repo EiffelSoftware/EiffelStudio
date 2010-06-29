@@ -1,0 +1,11 @@
+
+test_name 	once-per-object-creation-procedure
+test_description A void-safe system with a class that has a creation procedure that is once-per-object causes the compiler to incorrectly report a VEVI error on an attribute of an attached type in that class, even though the creation procedure initializes the attribute to a non-Void value
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+
+compile_melted
+compile_result ok
+
+test_end

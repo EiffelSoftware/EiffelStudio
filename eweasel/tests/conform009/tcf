@@ -1,0 +1,20 @@
+test_name 	 expanded-formal-conformance
+test_description Expanded formal generic can still conform to a reference formal.
+
+copy_raw	child_1.e $CLUSTER child_1.e
+copy_raw	child_2.e $CLUSTER child_2.e
+copy_raw	child_3.e $CLUSTER child_3.e
+copy_raw	child_4.e $CLUSTER child_4.e
+copy_raw	child_5.e $CLUSTER child_5.e
+copy_raw	child_6.e $CLUSTER child_6.e
+copy_raw	parent.e $CLUSTER parent.e
+copy_raw	test.e $CLUSTER test.e
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result	ok
+execute_work	NONE exec_output_m
+execute_result	ok
+compare		exec_output_m output
+
+test_end

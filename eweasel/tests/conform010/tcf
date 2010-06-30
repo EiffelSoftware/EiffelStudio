@@ -1,0 +1,14 @@
+test_name 	 formal-constraint-conformance
+test_description One formal can conform to the other if it is listed in its constraint.
+
+copy_raw	foo.e $CLUSTER foo.e
+copy_raw	test.e $CLUSTER test.e
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result	ok
+execute_work	NONE exec_output_m
+execute_result	ok
+compare		exec_output_m output
+
+test_end

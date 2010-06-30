@@ -2378,7 +2378,8 @@ test	reverse-assignment-on-attached-target-broken	conform005 tcf pass conformanc
 test	manifest-tuple-type-conformance	conform006 tcf pass conformance
 test	attached-agent-procedure-conformance	conform007 tcf fail conformance attached_types
 test	attached-formal-creation	conform008 tcf pass conformance attached_types
-
+test	expanded-formal-conformance	conform009 tcf pass conformance expanded formal generic validity constraint
+test	formal-constraint-conformance	conform010 tcf pass conformance formal generic validity constraint
 
 -- Test for Reflection
 test	basic-type-internal				reflection001 tcf pass reflection
@@ -2415,7 +2416,7 @@ test	qat-with-non-formal-generic		anchor023 tcf pass anchored_type
 test	qat-in-generic-constraint		anchor024 tcf pass anchored_type
 test	qat-renamed-constraint			anchor025 tcf pass anchored_type formal generic
 test	qat-with-missing-actual-generic		anchor026 tcf pass anchored_type
-test	qat-with-expanded-type			anchor027 tcf fail anchored_type expanded
+test	qat-with-expanded-type			anchor027 tcf pass anchored_type expanded creation
 test	qat-actual-generic-anchored-to-generic	anchor028 tcf fail anchored_type
 test	qat-with-invalid-actual-generic		anchor029 tcf fail anchored_type
 test	qat-with-expanded-deferred		anchor030 tcf pass anchored_type

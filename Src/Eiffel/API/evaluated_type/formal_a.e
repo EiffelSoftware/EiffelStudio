@@ -488,15 +488,10 @@ feature -- Access
 				end
 			end
 			if not Result then
-					-- We do not treat the case `is_expanded' as if it is an
-					-- expanded then it does not conform to anything but itself
-					-- so this is automatically taken care by `same_as' above.
-				if not is_expanded then
-						-- Check conformance of constrained generic type to `other'.
-						-- Get the actual type for the formal generic parameter
-					l_constraints := a_context_class.constraints_if_possible (position)
-					Result := l_constraints.constraining_types (a_context_class).to_other_attachment (Current).conform_to_type (a_context_class, other)
-				end
+					-- Check conformance of constrained generic type to `other'.
+					-- Get the actual type for the formal generic parameter
+				l_constraints := a_context_class.constraints_if_possible (position)
+				Result := l_constraints.constraining_types (a_context_class).to_other_attachment (Current).conform_to_type (a_context_class, other)
 			end
 		end
 

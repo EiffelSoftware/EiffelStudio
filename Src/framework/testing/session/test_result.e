@@ -1,6 +1,6 @@
 note
 	description: "[
-		Class that provides basic operations for {TEST_RESULT_I} implementations.	
+		Class that provides basic operations for {TEST_RESULT_I} implementations.
 	]"
 	author: ""
 	date: "$Date$"
@@ -23,31 +23,27 @@ feature {NONE} -- Basic operations
 			a_formatter_attached: a_formatter /= Void
 		local
 			l_newline: CHARACTER_32
-			l_pos, l_previous: INTEGER
+			l_count, l_pos, l_previous: INTEGER
 		do
 			l_newline := '%N'
-			l_pos := a_string.index_of (l_newline, 1)
-			if l_pos > 0 then
-				from
-					l_previous := 1
-				until
-					l_previous > a_string.count
-				loop
-					if l_previous > 1 then
+			l_count := a_string.count
+			from
+				l_previous := 1
+			until
+				l_previous > l_count
+			loop
+				l_pos := a_string.index_of ('%N', l_previous)
+				a_formatter.add_indents (a_indent.to_integer_32)
+				if l_pos = 0 then
+					a_formatter.process_string_text (a_string.substring (l_previous, l_count), Void)
+					l_previous := l_count + 1
+				else
+					a_formatter.process_string_text (a_string.substring (l_previous, l_pos - 1), Void)
+					if l_pos < l_count then
 						a_formatter.add_new_line
 					end
-					a_formatter.add_indents (a_indent.to_integer_32)
-					if l_pos = 0 then
-						print_multiline_string (a_string.substring (l_previous, a_string.count), a_formatter, a_indent)
-						l_previous := a_string.count + 1
-					else
-						print_multiline_string (a_string.substring (l_previous, l_pos - 1), a_formatter, a_indent)
-						l_previous := l_pos + 1
-						l_pos := a_string.index_of (l_newline, l_previous)
-					end
+					l_previous := l_pos + 1
 				end
-			else
-				a_formatter.process_string_text (a_string, Void)
 			end
 		end
 

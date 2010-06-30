@@ -365,12 +365,12 @@ feature -- Implementation
 					end
 
 				end (l_pebble, a_x, a_y, a_screen_x, a_screen_y)
+			end
 
-				if ready_for_pnd_menu (a_button, a_press) then
-					app_implementation.create_target_menu (a_x, a_y, a_screen_x, a_screen_y, pebble_source, l_pebble, l_configure_agent, a_menu_only)
-				elseif l_configure_agent /= Void then
-					l_configure_agent.call (Void)
-				end
+			if ready_for_pnd_menu (a_button, a_press) then
+				app_implementation.create_target_menu (a_x, a_y, a_screen_x, a_screen_y, pebble_source, l_pebble, l_configure_agent, a_menu_only)
+			elseif l_configure_agent /= Void then
+				l_configure_agent.call (Void)
 			end
 		end
 

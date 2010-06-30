@@ -15,7 +15,7 @@ inherit
 
 	IPC_SHARED
 
-feature
+feature -- Communication
 
 	send_rqst_0 (code: INTEGER)
 		external
@@ -56,6 +56,8 @@ feature
 		do
 			send_rqst_3 (code, info1, info2, integer_to_pointer (info3))
 		end
+
+feature -- Basic value transfert
 
 	send_integer_8_value (value: INTEGER_8)
 		external
@@ -129,17 +131,21 @@ feature
 			"C"
 		end
 
-	send_string_value (value: POINTER)
+feature -- String representation transfert
+
+	send_string_value (value: POINTER; a_size: INTEGER)
 			-- value is the address of a C string
 		external
 			"C"
 		end
 
-	send_string_32_value (value: POINTER)
+	send_string_32_value (value: POINTER; a_size: INTEGER)
 			-- value is the address of a C string
 		external
 			"C"
 		end
+
+feature -- Object (Reference) transfert
 
 	send_ref_value (value: POINTER)
 			-- value is the address of the object
@@ -147,28 +153,17 @@ feature
 			"C signature (EIF_REFERENCE)"
 		end
 
---	send_ref_value (value: POINTER)
---			-- value is the address of the object
---		external
---			"C inline"
---		alias
---			"send_ref_value ((EIF_REFERENCE) $value)"
---		end
-
 	send_ref_offset_value (value: POINTER; a_offset: INTEGER)
-			-- value is the address of the object
+			-- value is the address of the object at the offset `a_offset'
+			-- used for expanded value
 		do
 			send_rqst_3 (Rqst_dumped_with_offset, 0, a_offset, value)
 		end
 
-	send_ack_ok
-		external
-			"C"
-		alias
-			"ewb_send_ack_ok"
-		end;
+feature -- Text transfert to daemon
 
 	send_string_content (s: STRING_GENERAL)
+			-- Used by the debugger to send the text `s' to the daemon  (ecdbgd)
 		local
 			c_string: C_STRING
 		do
@@ -177,12 +172,25 @@ feature
 		end
 
 	send_string_content_with_size (s: STRING_GENERAL; a_size: INTEGER)
+			-- Used by the debugger to send the text `s' to the daemon  (ecdbgd)
+			-- with size `a_size'
+			--| Indeed it might contain '%U' character,
+			--| for instance when sending the environment string which has a specific structure	
 		local
 			c_string: C_STRING
 		do
 			create c_string.make (s)
 			c_send_sized_str (c_string.item, a_size)
 		end
+
+feature {APPLICATION_EXECUTION} -- IPC communication implementation
+
+	send_ack_ok
+		external
+			"C"
+		alias
+			"ewb_send_ack_ok"
+		end;
 
 	recv_ack: BOOLEAN
 		external

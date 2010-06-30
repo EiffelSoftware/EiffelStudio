@@ -48,7 +48,7 @@ extern void stop_timer(void);			/* Stops the timer */
 #endif
 
 /* forward definitions */
-rt_private void send_dmpitem_request(EIF_TYPED_VALUE *ip);
+rt_private void send_dmpitem_request(EIF_TYPED_VALUE *ip, int a_info);
 
 rt_public void send_rqst_0 (long int code)
 {
@@ -134,7 +134,7 @@ rt_public void send_rqst_4 (long int code, long int info1, long int info2, rt_ui
 	ewb_send_packet(ewb_sp, &rqst);
 }
 
-rt_private void send_dmpitem_request(EIF_TYPED_VALUE *ip)
+rt_private void send_dmpitem_request(EIF_TYPED_VALUE *ip, int a_info)
 {
 	Request rqst;
 
@@ -147,6 +147,7 @@ rt_private void send_dmpitem_request(EIF_TYPED_VALUE *ip)
 	rqst.rq_type = DUMPED;
 	rqst.rq_dump.dmp_type = DMP_ITEM;
 	rqst.rq_dump.dmp_item = ip;
+	rqst.rq_dump.dmp_info = a_info;
 
 	/* send the request */
 	ewb_send_packet(ewb_sp, &rqst);
@@ -162,7 +163,7 @@ rt_public void send_integer_8_value(EIF_INTEGER_8 value)
 	item.it_int8 = value;
 
 	/* send the request */
-	send_dmpitem_request(&item);
+	send_dmpitem_request(&item, 0);
 }
 
 /* send an integer value to the application */
@@ -175,7 +176,7 @@ rt_public void send_integer_16_value(EIF_INTEGER_16 value)
 	item.it_int16 = value;
 
 	/* send the request */
-	send_dmpitem_request(&item);
+	send_dmpitem_request(&item, 0);
 }
 
 /* send an integer value to the application */
@@ -188,7 +189,7 @@ rt_public void send_integer_32_value(EIF_INTEGER_32 value)
 	item.it_int32 = value;
 
 	/* send the request */
-	send_dmpitem_request(&item);
+	send_dmpitem_request(&item, 0);
 }
 
 /* send an integer_64 value to the application */
@@ -201,7 +202,7 @@ rt_public void send_integer_64_value(EIF_INTEGER_64 value)
 	item.it_int64 = value;
 
 	/* send the request */
-	send_dmpitem_request(&item);
+	send_dmpitem_request(&item, 0);
 }
 
 /* send an natural_8 value to the application */
@@ -214,7 +215,7 @@ rt_public void send_natural_8_value(EIF_NATURAL_8 value)
 	item.it_uint8 = value;
 
 	/* send the request */
-	send_dmpitem_request(&item);
+	send_dmpitem_request(&item, 0);
 }
 
 /* send an natural value to the application */
@@ -227,7 +228,7 @@ rt_public void send_natural_16_value(EIF_NATURAL_16 value)
 	item.it_uint16 = value;
 
 	/* send the request */
-	send_dmpitem_request(&item);
+	send_dmpitem_request(&item, 0);
 }
 
 /* send an natural value to the application */
@@ -240,7 +241,7 @@ rt_public void send_natural_32_value(EIF_NATURAL_32 value)
 	item.it_uint32 = value;
 
 	/* send the request */
-	send_dmpitem_request(&item);
+	send_dmpitem_request(&item, 0);
 }
 
 /* send an natural_64 value to the application */
@@ -253,7 +254,7 @@ rt_public void send_natural_64_value(EIF_NATURAL_64 value)
 	item.it_uint64 = value;
 
 	/* send the request */
-	send_dmpitem_request(&item);
+	send_dmpitem_request(&item, 0);
 }
 
 /* send a real 32 value to the application */
@@ -266,7 +267,7 @@ rt_public void send_real_32_value(EIF_REAL_32 value)
 	item.it_real32 = value;
 
 	/* send the request */
-	send_dmpitem_request(&item);
+	send_dmpitem_request(&item, 0);
 }
 
 /* send a real 64 value to the application */
@@ -279,7 +280,7 @@ rt_public void send_real_64_value(EIF_REAL_64 value)
 	item.it_real64 = value;
 
 	/* send the request */
-	send_dmpitem_request(&item);
+	send_dmpitem_request(&item, 0);
 }
 
 /* send a char value to the application */
@@ -292,7 +293,7 @@ rt_public void send_char_8_value(EIF_CHARACTER_8 value)
 	item.it_char = value;
 
 	/* send the request */
-	send_dmpitem_request(&item);
+	send_dmpitem_request(&item, 0);
 }
 
 /* send a wchar value to the application */
@@ -305,7 +306,7 @@ rt_public void send_char_32_value(EIF_CHARACTER_32 value)
 	item.it_wchar = value;
 
 	/* send the request */
-	send_dmpitem_request(&item);
+	send_dmpitem_request(&item, 0);
 }
 
 /* send a boolean value to the application */
@@ -318,7 +319,7 @@ rt_public void send_bool_value(EIF_BOOLEAN value)
 	item.it_char = value;
 
 	/* send the request */
-	send_dmpitem_request(&item);
+	send_dmpitem_request(&item, 0);
 }
 
 /* send a reference value to the application */
@@ -331,7 +332,7 @@ rt_public void send_ref_value(EIF_REFERENCE value)
 	item.it_ref = value;
 
 	/* send the request */
-	send_dmpitem_request(&item);
+	send_dmpitem_request(&item, 0);
 }
 
 /* send a reference+offset value to the application */
@@ -344,7 +345,7 @@ rt_public void send_ref_offset_value(EIF_REFERENCE value, EIF_NATURAL_32 a_offse
 	item.it_ref = value;
 
 	/* send the request */
-	send_dmpitem_request(&item);
+	send_dmpitem_request(&item, 0);
 }
 
 /* send a pointer value to the application */
@@ -357,11 +358,11 @@ rt_public void send_ptr_value(EIF_POINTER value)
 	item.it_ptr = value;
 
 	/* send the request */
-	send_dmpitem_request(&item);
+	send_dmpitem_request(&item, 0);
 }
 
 /* send a string to the application */
-rt_public void send_string_value(char* string)
+rt_public void send_string_value(char* string, int a_size)
 {
 	EIF_TYPED_VALUE item;
 
@@ -370,11 +371,11 @@ rt_public void send_string_value(char* string)
 	item.it_ref = string;
 
 	/* send the request */
-	send_dmpitem_request(&item);
+	send_dmpitem_request(&item, a_size);
 }
 
 /* send a STRING_32 to the application */
-rt_public void send_string_32_value(char* string)
+rt_public void send_string_32_value(char* string, int a_size)
 {
 	EIF_TYPED_VALUE item;
 
@@ -383,7 +384,7 @@ rt_public void send_string_32_value(char* string)
 	item.it_ref = string;
 
 	/* send the request */
-	send_dmpitem_request(&item);
+	send_dmpitem_request(&item, a_size);
 }
 
 /* send a bit value to the application */
@@ -396,7 +397,7 @@ rt_public void send_bit_value(char *value)
 	item.it_bit = value;
 
 	/* send the request */
-	send_dmpitem_request(&item);
+	send_dmpitem_request(&item, 0);
 }
 
 rt_public void ewb_send_ack_ok(void)

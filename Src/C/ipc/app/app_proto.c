@@ -126,7 +126,7 @@ rt_private unsigned char modify_attr(EIF_REFERENCE object, long attr_number, EIF
 rt_private void modify_object_attribute(rt_int_ptr arg_addr, long arg_attr_number, EIF_TYPED_VALUE *new_value);
 
 /* Dynamic function evaluation */
-rt_private void opush_dmpitem(EIF_TYPED_VALUE *item);
+rt_private void opush_dmpitem(EIF_TYPED_VALUE *item, int a_info);
 rt_private void opush_ref_offset_item(rt_int_ptr a_addr, int a_offset);
 rt_private EIF_TYPED_VALUE *previous_otop = NULL;
 rt_private rt_uint_ptr nb_pushed = 0;
@@ -302,7 +302,7 @@ static int curr_modify = NO_CURRMODIF;
 				modify_object_attribute(0,0,rqst->rq_dump.dmp_item);
 				break;
 			default: /* arguments for a forthcoming dynamic feature evalution */
-				opush_dmpitem(rqst->rq_dump.dmp_item);
+				opush_dmpitem(rqst->rq_dump.dmp_item, rqst->rq_dump.dmp_info);
 				break;
 		}
 		curr_modify = NO_CURRMODIF;
@@ -1669,7 +1669,7 @@ rt_private unsigned char modify_attr(EIF_REFERENCE object, long attr_number, EIF
 	return 0;
 }
 
-rt_private void opush_dmpitem(EIF_TYPED_VALUE *item)
+rt_private void opush_dmpitem(EIF_TYPED_VALUE *item, int a_info)
 {
 	switch (item->type & SK_HEAD) {
 		case SK_REF:
@@ -1678,7 +1678,10 @@ rt_private void opush_dmpitem(EIF_TYPED_VALUE *item)
 			}
 			break;
 		case SK_STRING:
-			item->it_ref = RTMS(item->it_ref);
+			item->it_ref = RTMS_EX(item->it_ref, (size_t) a_info);
+			break;
+		case SK_STRING32:
+			item->it_ref = RTMS32_EX(item->it_ref, (size_t) a_info);
 			break;
 		default:
 			/* do nothing. leave the item as it is */

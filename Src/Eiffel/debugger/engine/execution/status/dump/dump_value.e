@@ -782,16 +782,20 @@ feature -- Action
 			is_classic_system
 		local
 			value_string_c: ANY
+			s8: STRING_8
+			s32: STRING_32
 		do
 			last_classic_send_value_succeed := True
 			inspect (type)
 			when Type_manifest_string then
-				value_string_c := value_string.as_string_8.to_c
-				send_string_value ($value_string_c)
+				s8 := value_string.as_string_8
+				value_string_c := s8.to_c
+				send_string_value ($value_string_c, s8.count)
 			when type_manifest_string_32 then
-				value_string_c := encoding_converter.utf8_to_utf32 (value_string).to_c
+				s32 := encoding_converter.utf8_to_utf32 (value_string)
+				value_string_c := s32.to_c
 					-- Send UTF-32 directly.
-				send_string_32_value ($value_string_c)
+				send_string_32_value ($value_string_c, s32.count)
 			when Type_object, Type_expanded_object then
 				if attached value_address as add then
 					if add.has_offset then

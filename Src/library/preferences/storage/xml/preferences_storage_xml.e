@@ -279,10 +279,14 @@ feature {NONE} -- Implementation
 		do
 			if not retried then
 				a_file.open_read
+			elseif not a_file.is_closed then
+				a_file.close
 			end
 		rescue
-			retried := True
-			retry
+			if not retried then
+				retried := True
+				retry
+			end
 		end
 
 	safe_open_write (a_file: FILE)
@@ -295,10 +299,14 @@ feature {NONE} -- Implementation
 		do
 			if not retried then
 				a_file.open_write
+			elseif not a_file.is_closed then
+				a_file.close
 			end
 		rescue
-			retried := True
-			retry
+			if not retried then
+				retried := True
+				retry
+			end
 		end
 
 feature {NONE} -- XML markup and entities constants

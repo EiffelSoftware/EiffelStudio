@@ -170,13 +170,13 @@ feature {NONE} -- Implementation
 			t_preference, t_name, t_value: STRING
 			l_retried: BOOLEAN
 		do
-			if not l_retried then
-				create parser.make
-				create l_tree.make_null
-				parser.set_callbacks (l_tree)
+			create parser.make
+			create l_tree.make_null
+			parser.set_callbacks (l_tree)
 
-				create l_file.make (location)
-				l_file.open_read
+			create l_file.make (location)
+			if l_file.exists and then l_file.is_readable then
+				safe_open_read (l_file)
 				if l_file.is_open_read then
 					parser.parse_from_file (l_file)
 					l_file.close
@@ -224,13 +224,11 @@ feature {NONE} -- Implementation
 						fixme ("Add code to let callers that we could not open preference file")
 					end
 				end
+			else
+				debug ("refactor_fixme")
+					fixme ("Add code to let callers that preference file can not be read")
+				end
 			end
-		rescue
-			l_retried := True
-			if not l_file.is_closed then
-				l_file.close
-			end
-			retry
 		end
 
 	escape_xml (a_string: STRING): STRING
@@ -271,8 +269,24 @@ feature {NONE} -- Implementation
 			Result.append_character (quot_char)
 		end
 
+	safe_open_read (a_file: FILE)
+			-- Safely open `a_file' with read mode.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_closed: a_file.is_closed
+		local
+			retried: BOOLEAN
+		do
+			if not retried then
+				a_file.open_read
+			end
+		rescue
+			retried := True
+			retry
+		end
+
 	safe_open_write (a_file: FILE)
-			-- Safely open `a_file'.
+			-- Safely open `a_file' with write mode.
 		require
 			a_file_not_void: a_file /= Void
 			a_file_closed: a_file.is_closed
@@ -304,7 +318,7 @@ invariant
 	has_xml_structure: xml_structure /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

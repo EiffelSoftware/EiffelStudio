@@ -145,6 +145,7 @@ feature {NONE} -- Initialization
 				-- Now we can initialize the source/target directories
 			l_path := file_system.build_path_from_key ("EWEASEL", << "tests", l_ew_test_name >>)
 			l_env.put (l_path, {EQA_SYSTEM_TEST_SET}.source_path_key)
+			l_env.put (l_path, {EQA_EW_PREDEFINED_VARIABLES}.source_dir_name)
 
 			associate ({EQA_EW_PREDEFINED_VARIABLES}.Test_dir_name, Void)
 

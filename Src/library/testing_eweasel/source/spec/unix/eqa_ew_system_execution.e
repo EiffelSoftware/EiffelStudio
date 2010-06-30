@@ -45,7 +45,7 @@ feature {NONE} -- Intialization
 			until
 				a_args.after
 			loop
-				l_execution.add_argument (a_args.item_for_iteration)
+				l_execution.add_argument (a_test_set.environment.substitute (a_args.item_for_iteration))
 				a_args.forth
 			end
 

@@ -69,7 +69,7 @@ feature -- Command
 
 			if not execute_ok then
 				print (failure_explanation)
-				a_test.assert ("comparison failed", False)
+				a_test.assert ("Comparison failed", False)
 			end
 		end
 

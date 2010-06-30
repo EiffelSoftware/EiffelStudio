@@ -24,6 +24,14 @@ feature -- Access: Execution
 	concurrent_executors_default: NATURAL = 4
 			-- Number of executors running concurrently when executing tests in the background (global)	
 
+	keep_failing: STRING = "com.eiffel.autotest.keep_failing"
+	keep_failing_default: BOOLEAN = False
+	keep_unresolved: STRING = "com.eiffel.autotest.keep_unresolved"
+	keep_unresolved_default: BOOLEAN = False
+	keep_passing: STRING = "com.eiffel.autotest.keep_passing"
+	keep_passing_default: BOOLEAN = False
+			-- Setting for keeping directory/files of tests which fail/unresolve/pass
+
 feature -- Access: Creation
 
 	cluster_name: STRING = "com.eiffel.autotest.cluster"

@@ -54,7 +54,6 @@ feature {NONE} -- Initialization
 			an_etest_suite_attached: an_etest_suite /= Void
 		local
 			l_service: SERVICE_CONSUMER [SESSION_MANAGER_S]
-			l_session: SESSION_I
 		do
 			test_execution := an_execution
 			etest_suite := an_etest_suite
@@ -64,13 +63,18 @@ feature {NONE} -- Initialization
 			tasks := empty_tasks
 			create byte_code_factory
 			create l_service
-			max_controller_count := 1
-			if l_service.is_service_available then
-				l_session := l_service.service.retrieve (False)
-				if attached {NATURAL} l_session.value ("com.eiffel.autotest.concurrent_executors") as l_count then
-					max_controller_count := l_count.as_integer_32
-				end
+			if
+				l_service.is_service_available and then
+				attached l_service.service.retrieve (False) as l_session and then
+				attached {NATURAL} l_session.value_or_default ({TEST_SESSION_CONSTANTS}.concurrent_executors,
+					{TEST_SESSION_CONSTANTS}.concurrent_executors_default) as l_count
+			then
+				max_controller_count := l_count
+			else
+				max_controller_count := {TEST_SESSION_CONSTANTS}.concurrent_executors_default
 			end
+
+			create start_time.make_now
 		ensure
 			test_execution_set: test_execution = an_execution
 			etest_suite_set: etest_suite = an_etest_suite
@@ -103,7 +107,7 @@ feature {NONE} -- Access
 	idle_controllers: ARRAYED_LIST [like new_controller]
 			-- Controllers not running any test
 
-	controller_count: INTEGER
+	controller_count: NATURAL
 			-- Number of controllers that can be launched in current session
 		do
 			if test_execution.is_debugging then
@@ -115,7 +119,7 @@ feature {NONE} -- Access
 			result_valid: Result > 0
 		end
 
-	max_controller_count: INTEGER
+	max_controller_count: NATURAL
 			-- Maximum number of controllers the can be launched in parallel
 
 	byte_code_factory: ETEST_EVALUATOR_BYTE_CODE_FACTORY
@@ -131,12 +135,15 @@ feature {NONE} -- Access
 			Result.extend (testing_directory_name)
 		end
 
+	start_time: DATE_TIME
+			-- Time at which `Current' was created
+
 feature -- Status report
 
 	is_available: BOOLEAN
 			-- <Precursor>
 		do
-			Result := occupied_controllers.count < controller_count
+			Result := occupied_controllers.count < controller_count.as_integer_32
 		end
 
 	is_running_test (a_test: TEST_I): BOOLEAN
@@ -306,7 +313,6 @@ feature {NONE} -- Status setting
 			if not l_controller.is_running then
 				create {TEST_UNRESOLVED_RESULT} l_result.make (e_evaluator_launch_tag, e_evaluator_launch_details, e_evaluator_launch_details, [l_test.name])
 			else
-				delete_directory_safe (l_test)
 				if l_controller.has_result then
 					create {ETEST_RESULT} l_result.make (l_controller.test_result)
 				else
@@ -317,6 +323,7 @@ feature {NONE} -- Status setting
 						create {TEST_UNRESOLVED_RESULT} l_result.make (e_evaluator_died_tag, e_evaluator_died_details, e_evaluator_died_details + "%N%N$3", [l_test.name, l_controller.last_exit_code, l_last_output])
 					end
 				end
+				remove_testing_directory (l_test, l_result)
 			end
 
 				-- Remove controller from `occupied_controllers'
@@ -349,7 +356,7 @@ feature {NONE} -- Status setting
 	cancel
 			-- <Precursor>
 		do
-				-- Since `cancel' is only called from {ETEST_EXECUTION} when compiling started, wo do not
+				-- Since `cancel' is only called from {ETEST_EXECUTION} when compiling started, we do not
 				-- completely abort testing. Instead we only stop the controllers, ensure `has_next_step' is
 				-- False and relaunch them when `start' is called after compilation is done.
 			occupied_controllers.do_all (
@@ -359,7 +366,7 @@ feature {NONE} -- Status setting
 					do
 						a_task_data.task.reset
 						if attached a_task_data.test as l_test then
-							delete_directory_safe (l_test)
+							remove_testing_directory (l_test, Void)
 						end
 					end)
 			tasks := empty_tasks
@@ -408,20 +415,63 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	delete_directory_safe (a_test: ETEST)
+	remove_testing_directory (a_test: ETEST; a_result: detachable TEST_RESULT_I)
 			-- Remove directory.
 			--
 			-- `a_test': Test for which working directory should be removed.
 		require
 			a_test_attached: a_test /= Void
 		local
-			l_retried: BOOLEAN
-			l_directory: like testing_directory
+			l_retried, l_keep, l_default: BOOLEAN
+			l_testing_dir, l_target_dir: like testing_directory
+			l_service: SERVICE_CONSUMER [SESSION_MANAGER_S]
+			l_session: SESSION_I
+			l_key: STRING
+			l_dir: DIRECTORY
 		do
 			if not l_retried then
-				l_directory := testing_directory
-				l_directory.extend (a_test.name)
-				(create {DIRECTORY}.make (l_directory)).recursive_delete
+				create l_service
+				if l_service.is_service_available and a_result /= Void then
+					l_session := l_service.service.retrieve (False)
+					if a_result.is_fail then
+						l_key := {TEST_SESSION_CONSTANTS}.keep_failing
+						l_default := {TEST_SESSION_CONSTANTS}.keep_failing_default
+					elseif a_result.is_pass then
+						l_key := {TEST_SESSION_CONSTANTS}.keep_passing
+						l_default := {TEST_SESSION_CONSTANTS}.keep_passing_default
+					else
+						l_key := {TEST_SESSION_CONSTANTS}.keep_unresolved
+						l_default := {TEST_SESSION_CONSTANTS}.keep_unresolved_default
+					end
+					if attached {BOOLEAN} l_session.value (l_key) as l_value then
+						l_keep := l_value
+					else
+						l_keep := l_default
+					end
+				else
+					l_keep := False
+				end
+
+				l_testing_dir := testing_directory
+				l_testing_dir.extend (a_test.name)
+				if l_keep then
+					l_target_dir := testing_directory
+					l_target_dir.extend (start_time.formatted_out (file_name_format_string))
+					create l_dir.make (l_target_dir)
+					if not l_dir.exists then
+						l_dir.recursive_create_dir
+					end
+					l_target_dir.extend (a_test.name)
+					if l_dir.exists then
+						create l_dir.make (l_testing_dir)
+						l_dir.change_name (l_target_dir)
+					end
+				else
+					create l_dir.make (l_testing_dir)
+					if l_dir.exists then
+						l_dir.recursive_delete
+					end
+				end
 			end
 		rescue
 			l_retried := True
@@ -476,6 +526,8 @@ feature {NONE} -- Constants
 
 	isolate_prefix: STRING = "execution/isolated"
 	testing_directory_name: STRING = "execution"
+
+	file_name_format_string: STRING = "yyyy-[0]mm-[0]dd hh-[0]mi-[0]ss"
 
 feature {NONE} -- Internationalization
 

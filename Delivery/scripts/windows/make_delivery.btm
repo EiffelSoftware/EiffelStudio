@@ -79,6 +79,7 @@ fullrd studio\help\defaults\unix
 fullrd studio\spec\unix
 cdd %STUDIO_DIR\studio\spec
 move windows\compile_library.bat %ISE_PLATFORM\bin\
+move windows\mkdir.bat %ISE_PLATFORM\bin\
 iff "windows"=="%ISE_PLATFORM" then
 	fullrd win64
 else

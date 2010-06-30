@@ -66,6 +66,29 @@ feature -- Parsing
 			s.close
 		end
 
+	parse_from_filename (a_filename: STRING)
+			-- Parse from file named `a_filename'
+		local
+			f: detachable PLAIN_TEXT_FILE
+			retried: BOOLEAN
+		do
+			if not retried then
+				create f.make (a_filename)
+				if f.exists and f.is_readable then
+					f.open_read
+					parse_from_file (f)
+					f.close
+				else
+					report_error ("Unable to open the file %"" + a_filename + "%".")
+				end
+			else
+				report_error ("Error when trying to open the file %"" + a_filename + "%".")
+				if f /= Void and then not f.is_closed then
+					f.close
+				end
+			end
+		end
+
 feature -- Access
 
 	callbacks: XML_CALLBACKS

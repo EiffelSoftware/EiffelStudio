@@ -103,13 +103,14 @@ doc:	<routine name="idr_string" return_type="bool_t" export="private">
 doc:		<summary>Serialize a string. Dynamic allocation for data storage is done when deserializing if the address of the string is NULL. There is a big difference with the pending XDR routines, since maxlen may be left to 0 to avoid string length limitations. The serialization will fail if the buffer limits are reached. If the size given is strictly less than 0, then the absolute value gives the maximum string length, and the string will be truncated if it is longer than that. Strings are serialized by first emitting the length as an size_t, then the characters from the string itself, with the trailing null byte omitted.</summary>
 doc:		<param name="idrs" type="IDR *">IDR structure managing the stream.</param>
 doc:		<param name="sp" type="char **">Pointer to area where string address is stored.</param>
+doc:		<param name="a_len" type="int">String lenght, is 0 use strlen (issue with unicode!).</param>
 doc:		<param name="maxlen" type="int">Maximum length, 0 = no limit.</param>
 doc:		<return>TRUE if successful, FALSE otherwise.</return>
 doc:		<thread_safety>Safe</thread_safety>
 doc:	</routine>
 */
 
-rt_private bool_t idr_string(IDR *idrs, char **sp, int maxlen)
+rt_private bool_t idr_string(IDR *idrs, char **sp, int a_len, int maxlen)
 {
 	size_t len = 0;		/* String length */
 	char *string;	/* Allocated string pointer */
@@ -119,27 +120,38 @@ rt_private bool_t idr_string(IDR *idrs, char **sp, int maxlen)
 		if (!string) {
 			return FALSE;
 		}
-		len = strlen(string);
-		if ((maxlen > 0) && (len > (size_t) maxlen))
-			return FALSE;
+		if (a_len > 0) {
+			len = (size_t) a_len;
+		} else {
+			len = strlen(string);
+		}
 
-		if ((maxlen < 0) && (len > (size_t) -maxlen))
+		if ((maxlen > 0) && (len > (size_t) maxlen)) {
+			return FALSE;
+		}
+
+		if ((maxlen < 0) && (len > (size_t) -maxlen)) {
 			len = (size_t) -maxlen;				/* Truncate string if too long */
+		}
 
-		if (!idr_size_t(idrs, &len))		/* Emit string length */
+		if (!idr_size_t(idrs, &len)) {		/* Emit string length */
 			return FALSE;
+		}
 
 		CHK_SIZE(idrs, len);			/* Make sure there is enough room */
 		memcpy (idrs->i_ptr, string, len + 1);
 	} else {
-		if (!idr_size_t(idrs, &len))		/* Get string length */
+		if (!idr_size_t(idrs, &len)) {		/* Get string length */
 			return FALSE;
+		}
 
-		if ((maxlen > 0) && (len > (size_t) maxlen))
+		if ((maxlen > 0) && (len > (size_t) maxlen)) {
 			return FALSE;
+		}
 
-		if ((maxlen < 0) && (len > (size_t) -maxlen))
+		if ((maxlen < 0) && (len > (size_t) -maxlen)) {
 			return FALSE;
+		}
 
 		string = *sp;
 		if (!string) {

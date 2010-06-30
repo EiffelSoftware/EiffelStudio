@@ -56,6 +56,7 @@ struct once {					/* A once object */
 /* Structure returned by dumps */
 struct dump {
 	int dmp_type;					/* Union discriminent */
+	int dmp_info;					/* optional info such as manifest string size */
 	union {
 		EIF_TYPED_VALUE *dmpu_item;	/* Operational stack cell */
 		struct ex_vect *dmpu_vect;	/* Exception vector */

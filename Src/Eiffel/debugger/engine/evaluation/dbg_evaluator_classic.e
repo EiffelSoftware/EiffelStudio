@@ -205,7 +205,7 @@ feature {NONE} -- Implementation
 		do
 			send_rqst_1 (Rqst_new_instance, a_type_i.associated_class_type (Void).type_id - 1)
 			create c_string.make (a_type_i.name)
-			send_string_value (c_string.item)
+			send_string_value (c_string.item, c_string.count)
 			b := recv_ack
 			reset_recv_value
 			if b then

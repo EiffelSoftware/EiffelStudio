@@ -54,7 +54,7 @@ rt_private bool_t idr_Acknlge(IDR *idrs, void *ext);
 rt_private bool_t idr_Where(IDR *idrs, void *ext);
 rt_private bool_t idr_Stop(IDR *idrs, void *ext);
 rt_private bool_t idr_Dumped(IDR *idrs, void *ext);
-rt_private bool_t idr_Item (IDR *idrs, EIF_TYPED_VALUE *ext);
+rt_private bool_t idr_Item (IDR *idrs, EIF_TYPED_VALUE *ext, Dump *dum);
 rt_private bool_t idr_Notif(IDR *idrs, void *ext);
 rt_private bool_t idr_void(IDR *idrs, void *ext);
 
@@ -172,7 +172,7 @@ rt_private bool_t idr_Where(IDR *idrs, void *ext)
 		buf[0]='\0';
 		whe->wh_name = buf;
 	}
-	result = idr_string(idrs, &whe->wh_name, -MAX_FEATURE_LEN);
+	result = idr_string(idrs, &whe->wh_name, 0, -MAX_FEATURE_LEN);
 	result = result && idr_rt_uint_ptr(idrs, &whe->wh_obj);
 	result = result && idr_int(idrs, &whe->wh_origin);
 	result = result && idr_int(idrs, &whe->wh_type);
@@ -238,14 +238,14 @@ rt_private bool_t idr_Dumped (IDR *idrs, void *ext)
 		case EX_RETY:
 		case EX_CALL:
 			return idr_eif_reference (idrs, &exv->exu.exur.exur_id)
-				&& idr_string (idrs, &exv->exu.exur.exur_rout, -MAX_FEATURE_LEN)
+				&& idr_string (idrs, &exv->exu.exur.exur_rout, 0, -MAX_FEATURE_LEN)
 				&& idr_type_index (idrs, &exv -> exu.exur.exur_orig)
 				&& idr_type_index (idrs, &exv -> exu.exur.exur_dtype)
 				&& idr_int (idrs, &exv->ex_linenum)
 				&& idr_int (idrs, &exv->ex_bpnested);
 		default:
-			return idr_string (idrs, &exv->exu.exua.exua_name, -MAX_STRLEN)
-				&& idr_string (idrs, &exv->exu.exua.exua_where, -MAX_STRLEN)
+			return idr_string (idrs, &exv->exu.exua.exua_name, 0, -MAX_STRLEN)
+				&& idr_string (idrs, &exv->exu.exua.exua_where, 0, -MAX_STRLEN)
 				&& idr_type_index (idrs, &exv->exu.exua.exua_from)
 				&& idr_eif_reference (idrs, &exv->exu.exua.exua_oid);
 		}
@@ -265,7 +265,7 @@ rt_private bool_t idr_Dumped (IDR *idrs, void *ext)
 		if (!exi) {
 			return FALSE; /* lack of memory. Abort */
 		}
-		return idr_Item (idrs, exi);
+		return idr_Item (idrs, exi, dum);
 	case DMP_OBJ:
 		return 1;
 	case DMP_VOID:
@@ -275,10 +275,13 @@ rt_private bool_t idr_Dumped (IDR *idrs, void *ext)
 }
 
 
-rt_private bool_t idr_Item (IDR *idrs, EIF_TYPED_VALUE *ext)
+rt_private bool_t idr_Item (IDR *idrs, EIF_TYPED_VALUE *ext, Dump *dum)
 {
 	if (idrs->i_op == IDR_ENCODE) {
 		memcpy (idrs->i_ptr, &ext->type, sizeof(EIF_INTEGER_32));
+		idrs->i_ptr += sizeof(EIF_INTEGER_32);
+
+		memcpy (idrs->i_ptr, &dum->dmp_info, sizeof(EIF_INTEGER_32));
 		idrs->i_ptr += sizeof(EIF_INTEGER_32);
 
 		switch (ext -> type & SK_HEAD) {
@@ -338,12 +341,17 @@ rt_private bool_t idr_Item (IDR *idrs, EIF_TYPED_VALUE *ext)
 		case SK_BIT:
 			return idr_eif_reference (idrs, (&ext->it_bit));
 		case SK_STRING:
-			return idr_string (idrs, &ext->it_ref, 0); /* 0 = no limit */
+			return idr_string (idrs, &ext->it_ref, dum->dmp_info, 0); /* 0 = no limit */
+		case SK_STRING32:
+			return idr_string (idrs, &ext->it_ref, dum->dmp_info, 0); /* 0 = no limit */
 		default:
 			return idr_eif_reference (idrs, &ext->it_ref);
 		}
 	} else {
 		memcpy (&ext->type, idrs->i_ptr, sizeof(EIF_INTEGER_32));
+		idrs->i_ptr += sizeof(EIF_INTEGER_32);
+
+		memcpy (&dum->dmp_info, idrs->i_ptr, sizeof(EIF_INTEGER_32));
 		idrs->i_ptr += sizeof(EIF_INTEGER_32);
 
 		switch (ext -> type & SK_HEAD) {
@@ -403,7 +411,9 @@ rt_private bool_t idr_Item (IDR *idrs, EIF_TYPED_VALUE *ext)
 		case SK_BIT:
 			return idr_eif_reference (idrs, &ext->it_bit);
 		case SK_STRING:
-			return idr_string (idrs, &ext->it_ref, 0); /* 0 = no limit */
+			return idr_string (idrs, &ext->it_ref, dum->dmp_info, 0); /* 0 = no limit */
+		case SK_STRING32:
+			return idr_string (idrs, &ext->it_ref, dum->dmp_info, 0); /* 0 = no limit */
 		default:
 			return idr_eif_reference (idrs, &ext->it_ref);
 		}

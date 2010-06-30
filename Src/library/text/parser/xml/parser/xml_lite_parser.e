@@ -87,6 +87,11 @@ feature -- Parsing
 					f.close
 				end
 			end
+		rescue
+			if not retried then
+				retried := True
+				retry
+			end
 		end
 
 feature -- Access

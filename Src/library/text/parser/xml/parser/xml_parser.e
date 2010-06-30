@@ -38,6 +38,13 @@ feature -- Parsing
 		deferred
 		end
 
+	parse_from_filename (a_filename: STRING)
+			-- Parse from file named `a_filename'
+		require
+			a_filename_valid: a_filename /= Void and then not a_filename.is_empty
+		deferred
+		end
+
 feature -- Status
 
 	is_correct: BOOLEAN

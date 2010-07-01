@@ -978,7 +978,7 @@ rt_public void eif_set_discard_pointer_values (EIF_BOOLEAN state)
 }
 
 
-rt_private EIF_REFERENCE eif_unsafe_portable_retrieve(int (*char_read_function)(char *, int))
+rt_private EIF_REFERENCE eif_unsafe_portable_retrieve(char rt_type, int (*char_read_function)(char *, int))
 {
 	/* Retrieve object store in file `filename' */
 
@@ -986,26 +986,11 @@ rt_private EIF_REFERENCE eif_unsafe_portable_retrieve(int (*char_read_function)(
 	EIF_GET_CONTEXT
 	EIF_REFERENCE retrieved = NULL;
 	EIF_OBJECT retrieved_i = NULL;
-	char rt_type = (char) 0;
 	EIF_BOOLEAN recoverable_tables = EIF_FALSE;
 	char l_store_properties = 0;
 
-#if EIF_OS == EIF_OS_ALPHA
-		/* The conversion from a FILE pointer to a file descriptor
-		 * does not keep the position correctly in the stream, one has
-		 * to call `fflush' to ensure the validity of the position in
-		 * the stream.
-		 */
-	fflush (NULL);
-#endif
-
 	/* Reset nb_recorded */
 	nb_recorded = 0;
-
-	/* Read the kind of stored hierachy */
-	if (char_read_function(&rt_type, sizeof (char)) < (int) sizeof (char)) {
-		eise_io("Retrieve: unable to read type of storable.");
-	}
 
 	/* set rt_kind depending on the type to be retrieved */
 
@@ -1137,32 +1122,52 @@ rt_private EIF_REFERENCE eif_unsafe_portable_retrieve(int (*char_read_function)(
 
 rt_public EIF_REFERENCE portable_retrieve(int (*char_read_function)(char *, int))
 {
-#ifdef ISE_GC
-	RT_GET_CONTEXT
-	EIF_GET_CONTEXT
+	char rt_type = (char) 0;
 	EIF_REFERENCE result = NULL;
-	jmp_buf exenv;
 
-		/* It makes performance of retrieval bad in a MT system as only one can occurs
-		 * and blocks all other threads, but I don't see yet a way to achieve that without
-		 * simple mutexes and dead locks.
-		 * The code is also protected in case we get a retrieval exception so that we can
-		 * free the mutex. */
-	GC_THREAD_PROTECT(eif_synchronize_gc(rt_globals));
-
-	excatch(&exenv);	/* Record pseudo execution vector */
-	if (setjmp(exenv)) {
-		GC_THREAD_PROTECT(eif_unsynchronize_gc(rt_globals));
-		ereturn(MTC_NOARG);				/* Propagate exception */
-	} else {
-		result = eif_unsafe_portable_retrieve(char_read_function);
-		GC_THREAD_PROTECT(eif_unsynchronize_gc(rt_globals));
-	}
-	expop(&eif_stack);
-	return result;
-#else
-	return eif_unsafe_portable_retrieve(char_read_function);
+#if EIF_OS == EIF_OS_ALPHA
+		/* The conversion from a FILE pointer to a file descriptor
+		 * does not keep the position correctly in the stream, one has
+		 * to call `fflush' to ensure the validity of the position in
+		 * the stream.
+		 */
+	fflush (NULL);
 #endif
+
+	/* Read the kind of stored hierachy:
+	 * We can safely do it outside the protection that way when reading on socket, it does
+	 * not block all the running threads if nothing has been read yet. */
+	if (char_read_function(&rt_type, sizeof (char)) < (int) sizeof (char)) {
+		eise_io("Retrieve: unable to read type of storable.");
+	}
+
+#ifdef ISE_GC
+	{
+		RT_GET_CONTEXT
+		EIF_GET_CONTEXT
+		jmp_buf exenv;
+
+			/* It makes performance of retrieval bad in a MT system as only one can occurs
+			 * and blocks all other threads, but I don't see yet a way to achieve that without
+			 * simple mutexes and dead locks.
+			 * The code is also protected in case we get a retrieval exception so that we can
+			 * free the mutex. */
+		GC_THREAD_PROTECT(eif_synchronize_gc(rt_globals));
+
+		excatch(&exenv);	/* Record pseudo execution vector */
+		if (setjmp(exenv)) {
+			GC_THREAD_PROTECT(eif_unsynchronize_gc(rt_globals));
+			ereturn(MTC_NOARG);				/* Propagate exception */
+		} else {
+			result = eif_unsafe_portable_retrieve(rt_type, char_read_function);
+			GC_THREAD_PROTECT(eif_unsynchronize_gc(rt_globals));
+		}
+		expop(&eif_stack);
+	}
+#else
+	result = eif_unsafe_portable_retrieve(rt_type, char_read_function);
+#endif
+	return result;
 }
 
 rt_shared EIF_REFERENCE ise_compiler_retrieve (EIF_INTEGER f_desc, EIF_INTEGER a_pos, size_t (*retrieve_function) (void))

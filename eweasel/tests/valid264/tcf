@@ -1,0 +1,12 @@
+
+test_name	 generic-rename-with-alias
+test_description A feature that is renamed in a formal generic constraint and that is given an alias that matches the alias of another feature that is not renamed should be a VTGC(2) error.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+copy_raw 	test2.e $CLUSTER test2.e
+compile_melted
+compile_result 	validity_error TEST1 VTGC(2)
+
+test_end

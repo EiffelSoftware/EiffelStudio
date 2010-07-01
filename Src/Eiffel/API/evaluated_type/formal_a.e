@@ -158,7 +158,7 @@ feature -- IL code generation
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN
+	is_equivalent (other: FORMAL_A): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := position = other.position and then

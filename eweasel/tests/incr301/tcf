@@ -23,11 +23,11 @@ compile_result validity_error TEST2 VJAR
 copy_raw test2_rev3.e $CLUSTER test2.e
 
 resume_compile
-compile_result validity_error TEST2 VEVI
+compile_result ok
 
 copy_raw test2_rev4.e $CLUSTER test2.e
 
-resume_compile
+compile_frozen
 compile_result syntax_error TEST2 14
 
 copy_raw test2_rev5.e $CLUSTER test2.e

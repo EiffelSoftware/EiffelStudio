@@ -1,0 +1,17 @@
+
+test_name 	svalid-generic-rename-with-alias
+test_description A constrained formal generic has a rename clause that renames a feature to one with an alias and the class includes a call to that alias.  The code compiles fine but the compiler reports an incorrect VWOE error in a descendant class when full_class_checking is enabled.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+copy_raw 	test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result	ok
+
+execute_work 	NONE 	exec_output
+execute_result 	ok
+compare		exec_output output
+
+test_end

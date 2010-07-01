@@ -2047,6 +2047,12 @@ feature {NONE} -- open new class
 					-- Only perform `left_adjust' so that we can type `infix "X"' in the combo box.
 				string_general_left_adjust (str)
 				str := string_general_as_lower (str)
+					-- Replace spaces and dashes with underscores.
+					-- For backwards compatibility: restrict to non-operator features
+				if not str.starts_with ("infix") and then not str.starts_with ("prefix") then
+					str.replace_substring_all (" ", "_")
+					str.replace_substring_all ("-", "_")
+				end
 				nb := str.count
 				do_not_complete :=	last_key_was_delete or
 									not enable_feature_complete or

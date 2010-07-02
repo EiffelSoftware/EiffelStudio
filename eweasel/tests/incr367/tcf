@@ -1,0 +1,39 @@
+
+test_name	change-constraint-rename-crash
+test_description A sequence of changes involving the rename clause of a generic constraint crashes the compiler with a seg fault in {RENAMED_TYPE_A}.make
+
+define		CONSTRAINT "{TEST2 rename default_create as weasel end} create weasel end"
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+copy_raw 	test2.e $CLUSTER test2.e
+copy_raw 	test3.e $CLUSTER test3.e
+copy_sub 	test4.e $CLUSTER test4.e
+compile_melted
+compile_result 	ok
+
+define		CONSTRAINT "{TEST2 rename default_create as weasel end, TEST3 rename default_create as stoat end} create weasel end"
+copy_sub 	test4.e $CLUSTER test4.e
+compile_melted
+compile_result 	validity_error TEST VTCG
+
+copy_sub 	test4.e $CLUSTER test4.e
+resume_compile
+compile_result 	validity_error TEST VTCG
+
+define		CONSTRAINT "{TEST2 rename default_create as weasel end} end create weasel end"
+copy_sub 	test4.e $CLUSTER test4.e
+resume_compile
+compile_result 	syntax_error TEST4 2
+
+define		CONSTRAINT "{TEST2 rename default_create as weasel end} create weasel end"
+copy_sub 	test4.e $CLUSTER test4.e
+resume_compile
+compile_result 	ok
+
+execute_work 	NONE 	exec_output_m
+execute_result 	ok
+compare		exec_output_m output
+
+
+test_end

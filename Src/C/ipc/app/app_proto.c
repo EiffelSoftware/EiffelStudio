@@ -1681,7 +1681,7 @@ rt_private void opush_dmpitem(EIF_TYPED_VALUE *item, int a_info)
 			item->it_ref = RTMS_EX(item->it_ref, (size_t) a_info);
 			break;
 		case SK_STRING32:
-			item->it_ref = RTMS32_EX(item->it_ref, (size_t) a_info);
+			item->it_ref = RTMS32_EX(item->it_ref, (size_t) a_info / sizeof (EIF_CHARACTER_32));
 			break;
 		default:
 			/* do nothing. leave the item as it is */

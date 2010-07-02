@@ -10,7 +10,7 @@ feature {NONE} -- Creation
 		local
 			f: FIXED_LIST [INTEGER]
 		do
-			create f.make (3)
+			create f.make (10)
 			report_list_state (f, 1)
 			f.extend (0)
 			report_list_state (f, 2)
@@ -27,6 +27,17 @@ feature {NONE} -- Creation
 			f.finish
 			f.remove
 			report_list_state (f, 7)
+
+			f.extend (0)
+			f.extend (1)
+			f := f.twin
+			if not f.extendible or f.count = f.capacity then
+				print ("Wrong! It should be extendible%N")
+			end
+			f := f.deep_twin
+			if not f.extendible or f.count = f.capacity then
+				print ("Wrong! It should be extendible%N")
+			end
 		end
 
 feature {NONE} -- Output

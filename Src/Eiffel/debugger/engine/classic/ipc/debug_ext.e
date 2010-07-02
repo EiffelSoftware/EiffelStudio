@@ -134,13 +134,15 @@ feature -- Basic value transfert
 feature -- String representation transfert
 
 	send_string_value (value: POINTER; a_size: INTEGER)
-			-- value is the address of a C string
+			-- `value' is the address of a C string
+			-- `a_size' is the number of bytes.
 		external
 			"C"
 		end
 
 	send_string_32_value (value: POINTER; a_size: INTEGER)
-			-- value is the address of a C string
+			-- `value' is the address of a C string
+			-- `a_size' is the number of bytes.
 		external
 			"C"
 		end

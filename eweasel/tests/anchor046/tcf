@@ -1,0 +1,16 @@
+
+test_name 	qat-instantiated-in-crash-2
+test_description A set of classes using qualified anchored types crashes the compiler in {FORMAL_A}.instantiated_in
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test1.e $CLUSTER test1.e
+copy_raw	test2.e $CLUSTER test2.e
+copy_raw	test3.e $CLUSTER test3.e
+copy_raw	test4.e $CLUSTER test4.e
+
+compile_melted
+compile_result	ok
+
+test_end
+

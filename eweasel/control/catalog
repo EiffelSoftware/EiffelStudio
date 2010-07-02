@@ -2435,6 +2435,7 @@ test	qat-finalized-wrong-type		anchor040 tcf fail anchored_type
 test	qat-constrained-type-in-crash		anchor041 tcf fail anchored_type
 test	qat-same-generic-derivation-crash	anchor042 tcf fail anchored_type
 test	qat-invalid-vgcc			anchor043 tcf fail anchored_type
+test	qat-evaluated-type-in-descendant-crash	anchor044 tcf fail anchored_type
 
 -- .NET specific test
 if DOTNET test expanded-object-conversion	dotnet001	tcf pass dotnet

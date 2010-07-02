@@ -795,7 +795,7 @@ feature -- Action
 				s32 := encoding_converter.utf8_to_utf32 (value_string)
 				value_string_c := s32.to_c
 					-- Send UTF-32 directly.
-				send_string_32_value ($value_string_c, s32.count * character_32_size)
+				send_string_32_value ($value_string_c, s32.count * {PLATFORM}.character_32_bytes)
 			when Type_object, Type_expanded_object then
 				if attached value_address as add then
 					if add.has_offset then
@@ -1137,14 +1137,6 @@ feature {NONE} -- Private Constants
 			create Result
 		ensure
 			character_routines_not_void: Result /= Void
-		end
-
-	character_32_size: INTEGER
-			-- Size of CHARACTER_32
-		external
-			"C inline"
-		alias
-			"return sizeof (EIF_CHARACTER_32);"
 		end
 
 note

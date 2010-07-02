@@ -2233,9 +2233,9 @@ feature {NONE} -- Implementation
 				if is_byte_node_enabled then
 					if l_as.is_once_string then
 						once_manifest_string_index := once_manifest_string_index + 1
-						create {ONCE_STRING_B} last_byte_node.make (l_as.value, t /= string_type, once_manifest_string_index)
+						create {ONCE_STRING_B} last_byte_node.make (l_as.value, not t.same_as (string_type), once_manifest_string_index)
 					else
-						create {STRING_B} last_byte_node.make (l_as.value, t /= string_type)
+						create {STRING_B} last_byte_node.make (l_as.value, not t.same_as (string_type))
 					end
 				end
 			end

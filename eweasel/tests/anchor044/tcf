@@ -1,0 +1,29 @@
+
+test_name 	 qat-evaluated-type-in-descendant-crash
+test_description Creation of a local with qualified anchored type `like {G}.default' in a generic class with formal generic G that has a generic descendant crashes the compiler in {QUALIFIED_ANCHORED_TYPE_A}.evaluated_type_in_descendant.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test2.e $CLUSTER test2.e
+copy_raw	test3.e $CLUSTER test3.e
+copy_raw	parent.e $CLUSTER parent.e
+copy_raw	child.e $CLUSTER child.e
+
+compile_melted
+compile_result	ok
+
+execute_work	NONE exec_output_m
+execute_result	ok
+compare		exec_output_m output
+
+compile_frozen
+compile_result	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work	NONE exec_output_w
+execute_result	ok
+compare		exec_output_w output
+
+test_end

@@ -2440,6 +2440,7 @@ test	qat-evaluated-type-in-descendant-crash	anchor044 tcf fail anchored_type
 test	qat-invalid-veen-in-generic-descendant	anchor045 tcf fail anchored_type
 test	qat-instantiated-in-crash-2		anchor046 tcf fail anchored_type formal generic
 test	qat-constrained-types-crash		anchor047 tcf fail anchored_type formal generic
+test	qat-conformance-type-crash-2		anchor048 tcf fail anchored_type formal generic
 
 -- .NET specific test
 if DOTNET test expanded-object-conversion	dotnet001	tcf pass dotnet

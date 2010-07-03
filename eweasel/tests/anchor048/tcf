@@ -1,0 +1,15 @@
+
+test_name 	qat-conformance-type-crash-2		
+test_description A set of classes using qualified anchored types crashes the compiler in {UNEVALUATED_QUALIFIED_ANCHORED_TYPE}.conformance_type
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test1.e $CLUSTER test1.e
+copy_raw	test2.e $CLUSTER test2.e
+copy_raw	test3.e $CLUSTER test3.e
+
+compile_melted
+compile_result	validity_error TEST? V???
+
+test_end
+

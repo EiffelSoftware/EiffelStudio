@@ -6,6 +6,6 @@ copy_raw 	test.e $CLUSTER test.e
 copy_raw 	as_scalar.e $CLUSTER as_scalar.e
 
 compile_melted
-compile_result ok
+compile_result syntax_error AS_SCALAR 3
 
 test_end

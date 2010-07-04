@@ -11,7 +11,7 @@ inherit
 		rename
 			initialize as class_type_initialize
 		redefine
-			process, generics, last_token, dump
+			has_anchor, process, generics, last_token, dump
 		end
 
 create
@@ -31,6 +31,16 @@ feature {NONE} -- Initialization
 		ensure
 			class_name_set: class_name.name.is_equal (n.name)
 			internal_generics_set: internal_generics = g
+		end
+
+feature -- Status
+
+	has_anchor: BOOLEAN
+			-- <Precursor>
+		do
+			if attached generics as g then
+				Result := g.there_exists (agent {TYPE_AS}.has_anchor)
+			end
 		end
 
 feature -- Visitor

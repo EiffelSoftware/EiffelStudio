@@ -345,22 +345,14 @@ feature -- Access
 
 feature -- Access for Errors
 
-	new_vtgc1_error (a_line, a_column: INTEGER_32; a_filename: STRING_8;  a_id: ID_AS; a_current: CURRENT_AS): VTGC1
-			-- Create new VTGC1 error.
-		local
-			l_location: LOCATION_AS
+	new_vtgc1_error (a_line: INTEGER; a_column: INTEGER; a_filename: STRING; a_type: TYPE_AS): VTGC1
+			-- <Precursor>
 		do
-			if a_id /= Void then
-				l_location := a_id
-			elseif a_current /= Void then
-				l_location := a_current
-			end
-			check l_location_not_void: l_location /= Void end
 			create Result
 			if attached {CLASS_C} parser.current_class as l_class_c then
 				Result.set_class (l_class_c)
 			end
-			Result.set_location (l_location)
+			Result.set_location (a_type.start_location)
 		end
 
 	new_vvok1_error (a_line, a_column: INTEGER_32; a_filename: STRING_8; a_once_as: FEATURE_AS): VVOK1

@@ -2037,14 +2037,15 @@ Single_constraint:
 
 Constraint_type:
 		Class_or_tuple_type
-			{ $$ := $1 }
-	|	TE_LIKE Identifier_as_lower
 			{
-				report_one_error (ast_factory.new_vtgc1_error (token_line ($1), token_column ($1), filename, $2, Void))
+				$$ := $1
+				if attached $1 as t and then t.has_anchor then
+					report_one_error (ast_factory.new_vtgc1_error (token_line ($1), token_column ($1), filename, $1))
+				end
 			}
-	|	TE_LIKE TE_CURRENT
+	|	Anchored_type
 			{
-				report_one_error (ast_factory.new_vtgc1_error (token_line ($1), token_column ($1), filename, Void, $2))
+				report_one_error (ast_factory.new_vtgc1_error (token_line ($1), token_column ($1), filename, $1))
 			}
 	;
 

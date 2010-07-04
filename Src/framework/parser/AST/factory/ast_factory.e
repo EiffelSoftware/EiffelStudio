@@ -294,21 +294,12 @@ feature -- Access
 
 feature -- Access for Errors
 
-	new_vtgc1_error (a_line: INTEGER; a_column: INTEGER; a_filename: STRING; a_id: ID_AS; a_current: CURRENT_AS): ERROR
+	new_vtgc1_error (a_line: INTEGER; a_column: INTEGER; a_filename: STRING; a_type: TYPE_AS): ERROR
 			-- New vtgc1 error.
 		require
-			a_id_or_a_current_not_void: a_id /= Void xor a_current /= Void
-		local
-			l_identifier: STRING
+			a_type_attached: attached a_type
 		do
-			if a_id /=Void then
-				l_identifier := a_id.name
-			elseif a_current /= Void then
-				l_identifier := "Current"
-			end
-			check l_identifier_not_void: l_identifier /= Void end
-
-			Result := create {SYNTAX_ERROR}.make (a_line, a_column, a_filename, "Error VTGC1: Anchored types is are not allowed as a constraint:%N  %"like " + l_identifier + "%"")
+			Result := create {SYNTAX_ERROR}.make (a_line, a_column, a_filename, "Errog VTGC1: Anchored types is are not allowed as a constraint:%N  %"" + a_type.dump + "%"")
 		end
 
 	new_vvok1_error (a_line: INTEGER; a_column: INTEGER; a_filename: STRING; a_once_as: FEATURE_AS): ERROR

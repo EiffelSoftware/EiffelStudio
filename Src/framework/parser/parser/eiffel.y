@@ -212,7 +212,7 @@ create
 %type <CONSTRAINT_LIST_AS> Multiple_constraint_list
 %type <CONSTRAINING_TYPE_AS> Single_constraint
 
-%expect 344
+%expect 364
 
 %%
 
@@ -2024,9 +2024,8 @@ Constraint: -- Empty
 			}
 	;
 
-Single_constraint: -- Empty
-			-- { $$ := Void }
-	| Constraint_type {is_constraint_renaming := True} Rename  {is_constraint_renaming := False}  TE_END
+Single_constraint:
+	Constraint_type {is_constraint_renaming := True} Rename  {is_constraint_renaming := False}  TE_END
 			{
 				$$ := ast_factory.new_constraining_type ($1, $3, $5)
 			}

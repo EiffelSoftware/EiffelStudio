@@ -9,6 +9,6 @@ copy_raw	test2.e $CLUSTER test2.e
 copy_raw	parent.e $CLUSTER parent.e
 
 compile_melted
-compile_result	validity_error TEST1 VCFG(3)
+compile_result	validity_error TEST1 VTGC(1)
 
 test_end

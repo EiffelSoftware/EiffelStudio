@@ -11,7 +11,7 @@ class
 inherit
 	TYPE_AS
 		redefine
-			first_token, last_token
+			first_token, has_anchor, last_token
 		end
 
 create
@@ -58,6 +58,11 @@ feature {NONE} -- Initialization
 			name_set: chain.last = f
 			separator_set: attached d implies attached chain.separator_list as s and then s.last = d.index
 		end
+
+feature -- Status
+
+	has_anchor: BOOLEAN = True
+			-- <Precursor>
 
 feature -- Modification
 

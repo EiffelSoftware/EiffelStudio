@@ -131,6 +131,12 @@ feature -- Status
 	has_new_attachment_mark_syntax: BOOLEAN
 			-- Does Current using `attached' and `detached_keyword'?
 
+	has_anchor: BOOLEAN
+			-- Does this type involve an anchor?
+		do
+				-- False by default.
+		end
+
 feature -- Modification
 
 	set_attachment_mark (m: LEAF_AS; a: like has_attached_mark; d: like has_detachable_mark)
@@ -159,7 +165,7 @@ feature -- Output
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -9,7 +9,7 @@ copy_raw	test2.e $CLUSTER test2.e
 copy_raw	test3.e $CLUSTER test3.e
 
 compile_melted
-compile_result	validity_error TEST? V???
+compile_result	validity_error TEST1 VTGC(1)
 
 test_end
 

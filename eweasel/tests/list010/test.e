@@ -38,6 +38,9 @@ feature {NONE} -- Creation
 			if not f.extendible or f.count = f.capacity then
 				print ("Wrong! It should be extendible%N")
 			end
+
+			f.extend (2)
+			f.extend (3)
 		end
 
 feature {NONE} -- Output

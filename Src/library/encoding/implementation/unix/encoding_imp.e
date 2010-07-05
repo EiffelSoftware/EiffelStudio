@@ -44,19 +44,23 @@ feature -- String encoding convertion
 				l_big_endian := is_big_endian_code_page (a_from_code_page) or else (not is_little_endian and not is_little_endian_code_page (a_from_code_page))
 				if is_four_byte_code_page (a_from_code_page) then
 					l_string_32 := a_from_string.twin
-					if (l_big_endian xor is_little_endian) then
-						l_string_32.precede (byte_order_mark)
-					else
-						l_string_32.precede (byte_order_mark_32_reverse)
+					if not descriptor_cache.converted (a_from_code_page, a_to_code_page) then
+						if (l_big_endian xor is_little_endian) then
+							l_string_32.precede (byte_order_mark)
+						else
+							l_string_32.precede (byte_order_mark_32_reverse)
+						end
 					end
 					l_managed_pointer := string_32_to_pointer (l_string_32)
 					l_count := (l_string_32.count) * 4
 				elseif is_two_byte_code_page (a_from_code_page) then
 					l_string_32 := a_from_string.twin
-					if (l_big_endian xor is_little_endian) then
-						l_string_32.precede (byte_order_mark)
-					else
-						l_string_32.precede (byte_order_mark_16_reverse)
+					if not descriptor_cache.converted (a_from_code_page, a_to_code_page) then
+						if (l_big_endian xor is_little_endian) then
+							l_string_32.precede (byte_order_mark)
+						else
+							l_string_32.precede (byte_order_mark_16_reverse)
+						end
 					end
 					l_managed_pointer := wide_string_to_pointer (l_string_32)
 					l_count := (l_string_32.count) * 2
@@ -256,6 +260,7 @@ feature {NONE} -- Implementation
 			check found: descriptor_cache.found end
 			l_cd := descriptor_cache.found_item
 			Result := c_iconv (l_cd, a_str, a_size, a_out_count, a_b)
+			descriptor_cache.record_converted_pair (a_from_code_page, a_to_code_page)
 		end
 
 	is_codeset_convertable (a_from_code_page, a_to_code_page: STRING; a_error: TYPED_POINTER [INTEGER]): BOOLEAN

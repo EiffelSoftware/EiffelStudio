@@ -129,6 +129,28 @@ feature -- Zones managements
 			end
 		end
 
+	contents_in_same_zone (a_content: SD_CONTENT): detachable ARRAYED_LIST [SD_CONTENT]
+			-- Get all contents in same zone
+			-- Result maybe void if not appliable
+		require
+			not_void: a_content /= Void
+		local
+			l_zone: SD_ZONE
+		do
+			l_zone := zone_by_content (a_content)
+			if l_zone /= Void then
+				if attached {SD_MULTI_CONTENT_ZONE} l_zone as l_multi_zone then
+					Result := l_multi_zone.contents
+				elseif attached {SD_SINGLE_CONTENT_ZONE} l_zone as l_single_zone then
+					create Result.make (1)
+					Result.extend (l_single_zone.content)
+				end
+			end
+
+		ensure
+			valid: (attached Result as le_result) implies le_result.has (a_content)
+		end
+
 	has_zone (a_zone: SD_ZONE): BOOLEAN
 			-- If the main container has zone?
 		do

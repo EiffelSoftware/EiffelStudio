@@ -547,45 +547,6 @@ feature -- Window Properties
 			Result := pixmaps.icon_pixmaps.general_dialog_icon
 		end
 
-	close_focusing_content
-			-- Close focusing content.
-		local
-			l_content: SD_CONTENT
-			l_tools: DS_ARRAYED_LIST_CURSOR [ES_TOOL [EB_TOOL]]
-			l_tool: ES_TOOL [EB_TOOL]
-			l_active_tool: ES_TOOL [EB_TOOL]
-			l_comb: EV_COMBO_BOX
-			l_is_comb: BOOLEAN
-		do
-			l_content := docking_manager.focused_content
-			if l_content /= Void then
-				l_tools := shell_tools.all_requested_tools.new_cursor
-				from l_tools.start until l_tools.after or l_active_tool /= Void loop
-					l_tool := l_tools.item
-					if l_tool.is_tool_instantiated and not l_tool.is_recycled then
-						if l_tool.content = l_content then
-						 	l_active_tool := l_tool
-						end
-					end
-					l_tools.forth
-				end
-				l_tools.go_after
-
-				l_comb ?= ev_application.focused_widget
-				l_is_comb := l_comb /= Void
-				if l_active_tool /= Void and then (l_active_tool.has_focus or not l_is_comb) then
-					l_active_tool.close
-				else
-					if editors_manager.current_editor /= Void and then
-						editors_manager.current_editor.docking_content = l_content and then
-						(editors_manager.current_editor.has_focus or not l_is_comb)
-					then
-						editors_manager.close_editor (editors_manager.current_editor)
-					end
-				end
-			end
-		end
-
 feature -- Update
 
 	synchronize
@@ -819,6 +780,7 @@ feature -- Stone process
 		local
 			l_toolbarable_commands: ARRAYED_LIST [EB_TOOLBARABLE_COMMAND]
 			l_simple_cmds: ARRAYED_LIST [EB_SIMPLE_SHORTCUT_COMMAND]
+			l_focus_commands: ARRAYED_LIST [EB_CLOSE_PANEL_COMMAND]
 			l_main_formatter: ARRAYED_LIST [EB_CLASS_TEXT_FORMATTER]
 			l_editor_commands: ARRAYED_LIST [EB_GRAPHICAL_COMMAND]
 		do
@@ -857,6 +819,17 @@ feature -- Stone process
 			loop
 				l_simple_cmds.item.update (window)
 				l_simple_cmds.forth
+			end
+
+				-- Update focus related commands
+			l_focus_commands := commands.focus_commands
+			from
+				l_focus_commands.start
+			until
+				l_focus_commands.after
+			loop
+				l_focus_commands.item.update (window)
+				l_focus_commands.forth
 			end
 
 				-- Update main formatters shortcuts and interfaces

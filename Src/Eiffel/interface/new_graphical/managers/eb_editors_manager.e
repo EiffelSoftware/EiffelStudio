@@ -131,6 +131,41 @@ feature -- Access
 			end
 		end
 
+	editor_with_content (a_content: SD_CONTENT): detachable like current_editor
+			-- Editor corresponding to `a_content' if exists
+		local
+			l_editors: like editors
+			l_item: like current_editor
+		do
+			from
+				l_editors := editors
+				l_editors.start
+			until
+				l_editors.after or Result /= Void
+			loop
+				l_item := l_editors.item
+				if l_item.docking_content = a_content then
+					Result := l_item
+				end
+				l_editors.forth
+			end
+
+			if Result = Void then
+				from
+					l_editors := fake_editors
+					l_editors.start
+				until
+					l_editors.after or Result /= Void
+				loop
+					l_item := l_editors.item
+					if l_item.docking_content = a_content then
+						Result := l_item
+					end
+					l_editors.forth
+				end
+			end
+		end
+
 	editor_with_stone (a_stone: STONE) : like current_editor
 			-- Editor that has `a_stone', or editing the same path file.
 		local
@@ -1246,6 +1281,46 @@ feature {NONE} -- Agents
 			end
 		end
 
+	on_editor_focus_in (a_content: SD_CONTENT)
+			-- Handle docking content focus in actions
+		local
+			l_item: EB_CLOSE_PANEL_COMMAND
+			l_commands: ARRAYED_LIST [EB_CLOSE_PANEL_COMMAND]
+		do
+			from
+				l_commands := development_window.commands.focus_commands
+				l_commands.start
+			until
+				l_commands.after
+			loop
+				l_item := l_commands.item
+				l_item.set_current_focused_content (a_content)
+				l_item.enable_sensitive
+
+				l_commands.forth
+			end
+		end
+
+	on_editor_focus_out (a_content: SD_CONTENT)
+			-- Handle docking content focus out actions
+		local
+			l_item: EB_CLOSE_PANEL_COMMAND
+			l_commands: ARRAYED_LIST [EB_CLOSE_PANEL_COMMAND]
+		do
+			from
+				l_commands := development_window.commands.focus_commands
+				l_commands.start
+			until
+				l_commands.after
+			loop
+				l_item := l_commands.item
+				l_item.set_current_focused_content (void)
+				l_item.disable_sensitive
+
+				l_commands.forth
+			end
+		end
+
 	on_fake_focus (a_editor: like current_editor)
 			-- Handle `focus_in_actions' of fake editors.
 		local
@@ -1533,6 +1608,8 @@ feature {NONE} -- Implementation
 
 			docking_manager.contents.extend (Result)
 			register_action (Result.focus_in_actions, agent on_focus (a_editor))
+			register_action (Result.focus_in_actions, agent on_editor_focus_in (Result))
+			register_action (Result.focus_out_actions, agent on_editor_focus_out (Result))
 			register_action (Result.close_request_actions, agent on_close (a_editor))
 			register_action (Result.tab_bar_right_blank_area_double_click_actions, agent on_tab_bar_right_blank_area_double_click (Result))
 			Result.set_type ({SD_ENUMERATION}.editor)
@@ -1568,6 +1645,8 @@ feature {NONE} -- Implementation
 
 				-- When fake editor first time showing, we change it to a real one.
 			register_action (Result.focus_in_actions, agent on_fake_focus (last_created_editor))
+			register_action (Result.focus_in_actions, agent on_editor_focus_in (Result))
+			register_action (Result.focus_out_actions, agent on_editor_focus_out (Result))
 			register_action (Result.show_actions, agent on_show (last_created_editor))
 			register_action (Result.tab_bar_right_blank_area_double_click_actions, agent on_tab_bar_right_blank_area_double_click (Result))
 			Result.close_request_actions.extend (agent on_close (last_created_editor))
@@ -1596,6 +1675,7 @@ feature {NONE} -- Implementation
 
 			a_content.focus_in_actions.wipe_out
 			register_action (a_content.focus_in_actions, agent on_focus (a_editor))
+			register_action (a_content.focus_in_actions, agent on_editor_focus_in (a_content))
 			-- There are fake content close request actions which should be removed first.
 			a_content.close_request_actions.wipe_out
 			register_action (a_content.close_request_actions, agent on_close (a_editor))

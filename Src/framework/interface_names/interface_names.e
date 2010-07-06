@@ -412,7 +412,13 @@ feature -- Accelerator, focus label and menu name
 			Result := locale.formatted_string (locale.translation("Copy of $1"), [a_string])
 		end
 	m_Close: STRING_32					do Result := locale.translation("&Close Window")	end
+	m_Close_all: STRING_32				do Result := locale.translation ("Close All") end
+	m_Close_all_but_this: STRING_32		do Result := locale.translation ("Close All But This") end
+	m_Close_all_but_unsaved: STRING_32	do Result := locale.translation ("Close All But Unsaved") end
+	m_Close_all_empty_tabs: STRING_32	do Result := locale.translation ("Close All Empty Tabs") end
 	m_Close_short: STRING_32				do Result := locale.translation("&Close")	end
+	m_Close_tab: STRING_32				do Result := locale.translation ("Close") end
+
 	f_Create_new_cluster: STRING_32		do Result := locale.translation("Add a cluster")	end
 	f_Create_new_library: STRING_32		do Result := locale.translation("Add a library")	end
 	f_Create_new_assembly: STRING_32		do Result := locale.translation("Add an assembly")	end

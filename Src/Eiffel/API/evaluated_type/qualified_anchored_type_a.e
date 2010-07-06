@@ -18,6 +18,7 @@ inherit
 			good_generics,
 			initialize_info,
 			instantiated_in,
+			instantiation_in,
 			is_explicit,
 			is_syntactically_equal,
 			skeleton_adapted_in,
@@ -362,6 +363,17 @@ feature -- Primitives
 			Result := t
 		end
 
+	instantiation_in (type: TYPE_A; written_id: INTEGER): TYPE_A
+			-- <Precursor>
+		local
+			t: like Current
+		do
+			t := twin
+			t.set_actual_type (actual_type.instantiation_in (type, written_id))
+			t.set_qualifier (qualifier.instantiation_in (type, written_id))
+			Result := t
+		end
+
 	evaluated_type_in_descendant (a_ancestor, a_descendant: CLASS_C; a_feature: FEATURE_I): QUALIFIED_ANCHORED_TYPE_A
 			-- <Precursor>
 		local
@@ -381,7 +393,7 @@ feature -- Primitives
 					i >= chain.count
 				loop
 						-- Find a corresponding feature in the current class and in the descendant.
-					feature_finder.find (chain [i], q, context.written_class)
+					feature_finder.find (chain [i], q, a_ancestor)
 					check
 						is_ancestor_feature_found: attached feature_finder.found_feature as f
 						is_descendant_feature_found: attached q.evaluated_type_in_descendant (a_ancestor, a_descendant, a_feature).associated_class.feature_of_rout_id (f.rout_id_set.first) as g

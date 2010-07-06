@@ -2262,6 +2262,7 @@ test	multi-constraint-alias							multicon051 tcf pass multiconstraint system-va
 test	multi-constraint-light-roundtrip				multicon052 tcf pass multiconstraint
 test	multi-constraint-constrained-twice-2			multicon053 tcf fail multiconstraint
 test	multi-constraint-constrained-by-self			multicon054 tcf fail multiconstraint
+test	multi-constraint-make-byte-code-crash			multicon055 tcf fail multiconstraint
 
 -- tests for expanded types
 test	expanded-array-attached-reference-array			expanded001 tcf pass expanded

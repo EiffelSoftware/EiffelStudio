@@ -1,0 +1,12 @@
+
+test_name 	 multi-constraint-make-byte-code-crash
+test_description A formal that is constrained by itself and by another class causes the compiler to not detect a VTCG error and then crash in {CREATE_QUALIFIED}.make_byte_code.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test1.e $CLUSTER test1.e
+
+compile_melted
+compile_result	validity_error TEST VTCG
+
+test_end

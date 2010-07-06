@@ -153,6 +153,22 @@ feature -- Comparison
 			end
 		end
 
+	intersect (other: like Current): BOOLEAN
+			-- Current intersect with `other' ?
+		local
+			i, n: INTEGER
+		do
+			from
+				i := 1
+				n := count
+			until
+				i > n or Result
+			loop
+				Result := other.has (item (i))
+				i := i + 1
+			end
+		end
+
 feature -- Duplication
 
 	copy (other: like Current)

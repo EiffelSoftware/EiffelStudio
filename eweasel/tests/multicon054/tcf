@@ -1,0 +1,28 @@
+
+test_name 	 multi-constraint-constrained-by-self			
+test_description A formal that is constrained by itself and by another class causes the compiler to report an incorrect VTMC(1) error if the formal is first in its list of constraining types and if this is a void-safe system
+
+define		CONSTRAINT "{TEST2, G}"
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_sub	test1.e $CLUSTER test1.e
+copy_raw	test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result	ok
+
+execute_work 	NONE 	exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+define		CONSTRAINT "{G, TEST2}"
+copy_sub	test1.e $CLUSTER test1.e
+
+compile_melted
+compile_result	ok
+
+execute_work 	NONE 	exec_output2
+execute_result 	ok
+compare		exec_output2 output
+
+test_end

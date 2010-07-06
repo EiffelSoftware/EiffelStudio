@@ -517,12 +517,6 @@ rt_shared void eif_gen_conf_init (EIF_TYPE_INDEX max_dtype)
 		}
 	}
 
-	/* Initialize `cid_array' */
-
-	cid_array [0] = 1;  /* count */
-	cid_array [1] = 0;  /* id */
-	cid_array [2] = TERMINATOR; /* Terminator */
-
 		/* Initialize `non_generic_type_names' for root thread now that `eif_first_gen_id' is
 		 * properly computed. Indeed the first call to `eif_gen_conf_thread_init' is done
 		 * before `eif_first_gen_id' is initialized and therefore does not allocate anything
@@ -540,6 +534,12 @@ doc:	</routine>
 */
 rt_shared void eif_gen_conf_thread_init (void) {
 	RT_GET_CONTEXT
+
+	/* Initialize `cid_array' */
+	cid_array [0] = 1;  /* count */
+	cid_array [1] = 0;  /* id */
+	cid_array [2] = TERMINATOR; /* Terminator */
+
 	if (eif_first_gen_id > 0) {
 		non_generic_type_names = (char **) eif_rt_xcalloc (eif_first_gen_id, sizeof (char *));
 	}

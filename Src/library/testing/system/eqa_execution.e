@@ -283,7 +283,7 @@ feature -- Basic operations
 			l_status := process
 			check l_status /= Void end
 			l_status.redirect_output
-			if l_status.has_exited then
+			if not l_status.is_running then
 				cleanup_process
 			end
 		end
@@ -299,7 +299,7 @@ feature -- Basic operations
 			l_status := process
 			check l_status /= Void end
 			from until
-				l_status.has_exited
+				not l_status.is_running
 			loop
 				l_status.redirect_output
 			end
@@ -342,7 +342,7 @@ feature -- Element change
 			arguments.force (create {STRING}.make_from_string (a_argument))
 		ensure
 			arguments_count_increased: arguments.count = old arguments.count + 1
-			a_argument_last: arguments.last ~ a_argument
+			a_argument_last: arguments.last.same_string (a_argument)
 		end
 
 feature {NONE} -- Implementation
@@ -367,7 +367,7 @@ feature {NONE} -- Implementation
 		require
 			launched: is_launched
 			not_has_exited: not has_exited
-			process_exited: attached process as l_proc and then l_proc.has_exited
+			process_exited: attached process as l_proc and then not l_proc.is_running
 		local
 			l_process: like process
 		do

@@ -914,11 +914,16 @@ feature {NONE} -- Implementation
 							saved_actual_type := current_actual_type
 							saved_feature_table := current_feature_table
 							saved_feature := current_feature
-							current_class := c
-							current_actual_type := c.actual_type
-							current_feature_table := c.feature_table
-							current_feature := f
-							process_anchor (f, t)
+							current_class := f.written_class
+							current_actual_type := current_class.actual_type
+							current_feature_table := current_class.feature_table
+							current_feature := current_class.feature_of_rout_id_set (f.rout_id_set)
+							process_anchor (current_feature, t)
+							if attached last_type as r and then current_class /= c then
+									-- `r' references a type, relative to parent.
+									-- Let's make it relative to current class.
+								last_type := r.instantiation_in (c.actual_type, f.written_in)
+							end
 							current_class := saved_class
 							current_actual_type := saved_actual_type
 							current_feature_table := saved_feature_table
@@ -998,11 +1003,16 @@ feature {NONE} -- Implementation
 						saved_actual_type := current_actual_type
 						saved_feature_table := current_feature_table
 						saved_feature := current_feature
-						current_class := c
-						current_actual_type := c.actual_type
-						current_feature_table := c.feature_table
-						current_feature := f
-						process_anchor (f, t)
+						current_class := f.written_class
+						current_actual_type := current_class.actual_type
+						current_feature_table := current_class.feature_table
+						current_feature := current_class.feature_of_rout_id_set (f.rout_id_set)
+						process_anchor (current_feature, t)
+						if attached last_type as r and then current_class /= c then
+								-- `r' references a type, relative to parent.
+								-- Let's make it relative to current class.
+							last_type := r.instantiation_in (c.actual_type, f.written_in)
+						end
 						current_class := saved_class
 						current_actual_type := saved_actual_type
 						current_feature_table := saved_feature_table

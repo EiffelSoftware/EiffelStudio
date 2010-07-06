@@ -138,6 +138,21 @@ feature -- Query
 	run_to_this_point_command: ES_EXEC_RUN_TO_THIS_POINT_CMD
 			-- Command to run to the cursor's location
 
+	close_current_panel_command: EB_CLOSE_CURRENT_PANEL_COMMAND
+			-- 	Command to close current focused (tab) editor/tool
+
+	close_all_tab_command: EB_CLOSE_ALL_TAB_COMMAND
+			-- Command to close all tabs in same notebook
+
+	close_all_but_current_command: EB_CLOSE_ALL_BUT_CURRENT_COMMAND
+			-- Command to close all tabs except current focused one
+
+	close_all_but_unsaved_command: EB_CLOSE_ALL_BUT_UNSAVED_COMMAND
+			-- Command to close all unsaved tab editors
+
+	close_all_empty_tab_command: EB_CLOSE_ALL_EMPTY_TAB_COMMAND
+			-- Command to close all empty tabs in current notebook
+
 	editor_font_zoom_in_command: EB_EDITOR_FONT_ZOOM_IN_COMMAND
 			-- Command that increase editor font
 
@@ -183,22 +198,25 @@ feature -- Query
 feature -- Commands
 
 	toolbarable_commands: ARRAYED_LIST [EB_TOOLBARABLE_COMMAND]
-			-- All commands that can be put in a toolbar.
+			-- All commands that can be put in a toolbar
 
 --	show_tool_commands: HASH_TABLE [EB_SHOW_TOOL_COMMAND, EB_TOOL]
---			-- Commands to show/hide a tool.
+--			-- Commands to show/hide a tool
 
 	show_shell_tool_commands: HASH_TABLE [ES_SHOW_TOOL_COMMAND, ES_TOOL [EB_TOOL]]
-			-- Commands to show/hide a tool.
+			-- Commands to show/hide a tool
 
 	editor_commands: ARRAYED_LIST [EB_GRAPHICAL_COMMAND]
-			-- Commands independent on the editor.
+			-- Commands independent on the editor
+
+	focus_commands: ARRAYED_LIST [EB_CLOSE_PANEL_COMMAND]
+			-- Commands related with focus in/out actions
 
 	show_toolbar_commands: HASH_TABLE [EB_SHOW_TOOLBAR_COMMAND, SD_TOOL_BAR_CONTENT]
-			-- Commands to show/hide a toolbar.
+			-- Commands to show/hide a toolbar
 
 	simple_shortcut_commands: ARRAYED_LIST [EB_SIMPLE_SHORTCUT_COMMAND]
-			-- Simple shortcut commands.
+			-- Simple shortcut commands
 
 feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER, EB_DEVELOPMENT_WINDOW} -- Settings
 
@@ -404,6 +422,14 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -
 			set: editor_commands = a_commands
 		end
 
+	set_focus_commands (a_commands: like focus_commands)
+			-- Set `focus_commands'
+		do
+			focus_commands := a_commands
+		ensure
+			set: focus_commands = a_commands
+		end
+
 	set_reset_layout_command (a_cmd: like reset_layout_command)
 			-- Set `reset_layout_command'
 		do
@@ -522,6 +548,46 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -
 			run_to_this_point_command := a_cmd
 		ensure
 			set: run_to_this_point_command = a_cmd
+		end
+
+	set_close_current_panel_command (a_cmd: like close_current_panel_command)
+			-- Set `close_current_panel_command'
+		do
+			close_current_panel_command := a_cmd
+		ensure
+			set: close_current_panel_command = a_cmd
+		end
+
+	set_close_all_tab_command (a_cmd: like close_all_tab_command)
+			-- Set `close_all_tab_command'
+		do
+			close_all_tab_command := a_cmd
+		ensure
+			set: close_all_tab_command = a_cmd
+		end
+
+	set_close_all_but_current_command (a_cmd: like close_all_but_current_command)
+			-- Set `close_all_but_current_command'
+		do
+			close_all_but_current_command := a_cmd
+		ensure
+			set: close_all_but_current_command = a_cmd
+		end
+
+	set_close_all_but_unsaved_command (a_cmd: like close_all_but_unsaved_command)
+			-- Set `close_all_but_unsaved_command'
+		do
+			close_all_but_unsaved_command := a_cmd
+		ensure
+			set: close_all_but_unsaved_command = a_cmd
+		end
+
+	set_close_all_empty_tab_command (a_cmd: like close_all_empty_tab_command)
+			-- Set `close_all_empty_tab_command'
+		do
+			close_all_empty_tab_command := a_cmd
+		ensure
+			set: close_all_empty_tab_command = a_cmd
 		end
 
 	set_editor_font_zoom_in_command (a_cmd: like editor_font_zoom_in_command)
@@ -735,6 +801,19 @@ feature -- Recycle
 			end
 			editor_commands := Void
 
+			from
+				focus_commands.start
+			until
+				focus_commands.after
+			loop
+				l_recyclable ?= focus_commands.item
+				if l_recyclable /= Void then
+					l_recyclable.recycle
+				end
+				focus_commands.forth
+			end
+			focus_commands := Void
+
 			c_finalized_compilation_cmd := Void
 			c_finalized_compilation_cmd := Void
 			new_class_cmd := Void
@@ -755,7 +834,7 @@ feature -- Recycle
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

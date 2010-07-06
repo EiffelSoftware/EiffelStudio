@@ -41,7 +41,7 @@ feature {NONE} -- Access
 			-- <Precursor>
 
 feature -- Icons
-	
+
 	frozen expanded_normal_icon: EV_PIXMAP
 			-- Access to 'normal' pixmap.
 		require
@@ -4762,6 +4762,38 @@ feature -- Icons
 			priority_low_icon_buffer_attached: Result /= Void
 		end
 
+	frozen tab_close_icon: EV_PIXMAP
+			-- Access to 'close' pixmap.
+		require
+			has_named_icon: has_named_icon (tab_close_name)
+		once
+			Result := named_icon (tab_close_name)
+		end
+
+	frozen tab_close_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'close' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (tab_close_name)
+		once
+			Result := named_icon_buffer (tab_close_name)
+		end
+
+	frozen tab_close_all_icon: EV_PIXMAP
+			-- Access to 'close all' pixmap.
+		require
+			has_named_icon: has_named_icon (tab_close_all_name)
+		once
+			Result := named_icon (tab_close_all_name)
+		end
+
+	frozen tab_close_all_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'close all' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (tab_close_all_name)
+		once
+			Result := named_icon_buffer (tab_close_all_name)
+		end
+
 	frozen view_previous_icon: EV_PIXMAP
 			-- Access to 'previous' pixmap.
 		require
@@ -8363,7 +8395,7 @@ feature -- Icons
 		end
 
 feature -- Icons: Animations
-	
+
 	frozen compile_animation_anim: ARRAY [EV_PIXMAP]
 			-- Access to 'compile_animation' pixmap animation items.
 		once
@@ -8660,6 +8692,8 @@ feature -- Constants: Icon names
 	errors_and_warnings_expand_errors_name: STRING = "errors and warnings expand errors"
 	priority_high_name: STRING = "priority high"
 	priority_low_name: STRING = "priority low"
+	tab_close_name: STRING = "tab close"
+	tab_close_all_name: STRING = "tab close all"
 	view_previous_name: STRING = "view previous"
 	view_next_name: STRING = "view next"
 	view_editor_name: STRING = "view editor"
@@ -9082,6 +9116,8 @@ feature {NONE} -- Basic operations
 			a_table.put ([{NATURAL_8} 27, {NATURAL_8} 11], errors_and_warnings_expand_errors_name)
 			a_table.put ([{NATURAL_8} 28, {NATURAL_8} 11], priority_high_name)
 			a_table.put ([{NATURAL_8} 29, {NATURAL_8} 11], priority_low_name)
+			a_table.put ([{NATURAL_8} 30, {NATURAL_8} 11], tab_close_name)
+			a_table.put ([{NATURAL_8} 31, {NATURAL_8} 11], tab_close_all_name)
 			a_table.put ([{NATURAL_8} 1, {NATURAL_8} 12], view_previous_name)
 			a_table.put ([{NATURAL_8} 2, {NATURAL_8} 12], view_next_name)
 			a_table.put ([{NATURAL_8} 3, {NATURAL_8} 12], view_editor_name)
@@ -9265,7 +9301,7 @@ feature {NONE} -- Basic operations
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

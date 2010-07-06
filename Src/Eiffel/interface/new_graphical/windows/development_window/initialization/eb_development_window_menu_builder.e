@@ -1215,9 +1215,23 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 		end
 
 	build_window_menu
-			-- Create and build `edit_menu'
+			-- Create and build `window_menu'
+		local
+			l_menu: EB_WINDOW_MANAGER_MENU
+			l_menu_sep: EV_MENU_SEPARATOR
 		do
-			develop_window.menus.set_window_menu (develop_window.window_manager.new_menu)
+			l_menu := develop_window.window_manager.new_menu
+
+			l_menu.extend (develop_window.commands.close_current_panel_command.new_menu_item)
+			l_menu.extend (develop_window.commands.close_all_tab_command.new_menu_item)
+			l_menu.extend (develop_window.commands.close_all_but_current_command.new_menu_item)
+			l_menu.extend (develop_window.commands.close_all_empty_tab_command.new_menu_item)
+			l_menu.extend (develop_window.commands.close_all_but_unsaved_command.new_menu_item)
+
+			create l_menu_sep
+			l_menu.extend (l_menu_sep)
+
+			develop_window.menus.set_window_menu (l_menu)
 			auto_recycle (develop_window.menus.window_menu)
 		ensure
 			window_menu_created: is_window_menu_created
@@ -1609,7 +1623,7 @@ feature -- Docking library menu items
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

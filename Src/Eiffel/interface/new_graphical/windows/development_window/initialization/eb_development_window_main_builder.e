@@ -144,6 +144,7 @@ feature -- Command
 --			l_show_tool_commands: HASH_TABLE [EB_SHOW_TOOL_COMMAND, EB_TOOL]
 			l_show_toolbar_commands: HASH_TABLE [EB_SHOW_TOOLBAR_COMMAND, SD_TOOL_BAR_CONTENT]
 			l_editor_commands: ARRAYED_LIST [EB_GRAPHICAL_COMMAND]
+			l_focus_commands: ARRAYED_LIST [EB_CLOSE_PANEL_COMMAND]
 			l_simple_shortcut_commands: ARRAYED_LIST [EB_SIMPLE_SHORTCUT_COMMAND]
 
 			l_reset_command: EB_RESET_LAYOUT_COMMAND
@@ -154,6 +155,12 @@ feature -- Command
 			l_lock_editor_docking_command: EB_LOCK_EDITOR_DOCKING_COMMAND
 			l_minimize_editors_command: EB_MINIMIZE_EDITORS_COMMAND
 			l_restore_editors_command: EB_RESTORE_EDITORS_COMMAND
+
+			l_close_current_panel_command: EB_CLOSE_CURRENT_PANEL_COMMAND
+			l_close_all_tabs_command: EB_CLOSE_ALL_TAB_COMMAND
+			l_close_all_but_current_command: EB_CLOSE_ALL_BUT_CURRENT_COMMAND
+			l_close_all_empty_tab_command: EB_CLOSE_ALL_EMPTY_TAB_COMMAND
+			l_close_all_but_unsaved_command: EB_CLOSE_ALL_BUT_UNSAVED_COMMAND
 
 			l_editor_font_zoom_in_command: EB_EDITOR_FONT_ZOOM_IN_COMMAND
 			l_editor_font_zoom_in_numpad_command: ES_EDITOR_FONT_ZOOM_IN_NUMPAD_COMMAND
@@ -335,6 +342,9 @@ feature -- Command
 			l_dev_commands.set_show_toolbar_commands (l_show_toolbar_commands)
 			create l_editor_commands.make (10)
 			l_dev_commands.set_editor_commands (l_editor_commands)
+			create l_focus_commands.make (5)
+			l_dev_commands.set_focus_commands (l_focus_commands)
+
 			l_dev_commands.set_show_shell_tool_commands (create {HASH_TABLE [ES_SHOW_TOOL_COMMAND, ES_TOOL [EB_TOOL]]}.make (1))
 
 			l_dev_commands.new_feature_cmd.disable_sensitive
@@ -365,6 +375,21 @@ feature -- Command
 			l_dev_commands.set_enable_disable_bp_here_command (create {ES_TOGGLE_BREAKPOINT_HERE_CMD}.make_enable_disable (develop_window))
 			l_dev_commands.set_run_to_this_point_command (create {ES_EXEC_RUN_TO_THIS_POINT_CMD}.make (develop_window))
 
+			create l_close_current_panel_command.make (develop_window)
+			l_dev_commands.set_close_current_panel_command (l_close_current_panel_command)
+			l_dev_commands.focus_commands.extend (l_close_current_panel_command)
+			create l_close_all_tabs_command
+			l_dev_commands.set_close_all_tab_command (l_close_all_tabs_command)
+			l_dev_commands.focus_commands.extend (l_close_all_tabs_command)
+			create l_close_all_but_current_command
+			l_dev_commands.set_close_all_but_current_command (l_close_all_but_current_command)
+			l_dev_commands.focus_commands.extend (l_close_all_but_current_command)
+			create l_close_all_empty_tab_command
+			l_dev_commands.set_close_all_empty_tab_command (l_close_all_empty_tab_command)
+			l_dev_commands.focus_commands.extend (l_close_all_empty_tab_command)
+			create l_close_all_but_unsaved_command
+			l_dev_commands.set_close_all_but_unsaved_command (l_close_all_but_unsaved_command)
+			l_dev_commands.focus_commands.extend (l_close_all_but_unsaved_command)
 
 			create l_editor_font_zoom_in_command.make (develop_window)
 			l_dev_commands.set_editor_font_zoom_in_command (l_editor_font_zoom_in_command)
@@ -406,7 +431,6 @@ feature -- Command
 			setup_history_back_and_forth_commands
 
 			setup_focus_editor_accelerators
-			build_close_content_accelerator
 			setup_class_address_accelerators
 		end
 
@@ -1117,22 +1141,6 @@ feature{NONE} -- Implementation
 			develop_window.window.accelerators.extend (l_redo_accelerator)
 		end
 
-	build_close_content_accelerator
-			-- Build content close accelerator.
-		local
-			l_acc: EV_ACCELERATOR
-			l_shortcut: SHORTCUT_PREFERENCE
-			l_cmd: EB_SIMPLE_SHORTCUT_COMMAND
-		do
-			l_shortcut := develop_window.preferences.misc_shortcut_data.shortcuts.item ("close_focusing_docking_tool_or_editor")
-			create l_acc.make_with_key_combination (l_shortcut.key, l_shortcut.is_alt, l_shortcut.is_ctrl, l_shortcut.is_shift)
-			l_acc.actions.extend (agent develop_window.close_focusing_content)
-
-			create l_cmd.make (l_acc)
-			l_cmd.set_referred_shortcut (l_shortcut)
-			develop_window.commands.simple_shortcut_commands.extend (l_cmd)
-		end
-
 	setup_editor_close_action
 			-- Setup editor commands in editors manager.
 			-- so that they are correctly disable when there is no editor open.
@@ -1173,7 +1181,7 @@ feature{NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

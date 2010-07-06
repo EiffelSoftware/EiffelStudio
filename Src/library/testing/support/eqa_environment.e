@@ -94,7 +94,7 @@ feature -- Status setting
 			end
 			table.force (a_value, a_key)
 		ensure
-			set: a_value ~ get (a_key)
+			set: attached get (a_key) as l_value and then l_value.same_string(a_value)
 		end
 
 feature {EQA_EVALUATOR} -- Status setting

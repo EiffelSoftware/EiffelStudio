@@ -86,18 +86,10 @@ feature {NONE} -- Access: io redirection
 
 feature {EQA_EXECUTION} -- Status report
 
-	is_launched: BOOLEAN
-			-- Has `Current' been launched yet?
+	is_running: BOOLEAN
+			-- Is `Current' running an actual process?
 		do
 			Result := process /= Void
-		end
-
-	has_exited: BOOLEAN
-			-- Has `process' exited yet?
-		require
-			launched: is_launched
-		do
-			Result := process = Void
 		end
 
 feature {NONE} -- Status report
@@ -116,7 +108,7 @@ feature {EQA_EXECUTION} -- Status setting
 			a_exec_attached: a_exec /= Void
 			a_arg_list_attached: a_arg_list /= Void
 			a_dir_attached: a_dir /= Void
-			not_launched: not is_launched
+			not_running: not is_running
 		local
 			l_factory: PROCESS_FACTORY
 			l_process: like process
@@ -155,8 +147,7 @@ feature {EQA_EXECUTION} -- Basic operations
 			-- Note: this routine has preconditions since it is only meant to be called from the main thread
 		require
 			a_input_attached: a_input /= Void
-			launched: is_launched
-			not_exited: not has_exited
+			running: is_running
 		local
 			l_input: STRING
 			l_process: like process
@@ -176,8 +167,7 @@ feature {EQA_EXECUTION} -- Basic operations
 			--
 			-- Note: this routine has preconditions since it is only meant to be called from the main thread
 		require
-			launched: is_launched
-			not_exited: not has_exited
+			running: is_running
 		local
 			l_output: like next_output
 			l_processor: like output_processor
@@ -292,8 +282,7 @@ feature {NONE} -- Basic operations
 	cleanup_redirection
 			-- Flush buffers which potentially contain redirected output and close any remaining open files.
 		require
-			launched: is_launched
-			not_exited: not has_exited
+			running: is_running
 			finished: is_finished
 		local
 			l_output_proc, l_error_proc: like output_processor

@@ -3982,6 +3982,14 @@ enter_body:
 				offset = RTWA(once_p_obj_info.class_id, once_p_obj_info.called, icur_dtype);
 			}
 			*(EIF_BOOLEAN *)(icurrent->it_ref + offset) = EIF_TRUE;
+
+				/* Init exception storage */
+			if (once_p_obj_info.is_precompiled) {
+				offset = RTWPA(once_p_obj_info.class_id, once_p_obj_info.except, icur_dtype);
+			} else {
+				offset = RTWA(once_p_obj_info.class_id, once_p_obj_info.except, icur_dtype);
+			}
+			*(EIF_REFERENCE *)(icurrent->it_ref + offset) = (EIF_REFERENCE)0;
 			
 				/* Record execution vector to catch exception. */
 			exvecto = extre ();

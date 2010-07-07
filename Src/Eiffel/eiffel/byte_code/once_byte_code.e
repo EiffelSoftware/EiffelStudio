@@ -163,11 +163,13 @@ feature {NONE} -- C code generation: implementation
 						a_result_attrib.generate_attribute_access (context.class_type, buf, {C_CONST}.current_name)
 						buf.put_string_and_new_line (" = (" + c_type_name + ") " + a_result_name + ";")
 					else
-						buf.put_string_and_new_line ("RTAR(" + {C_CONST}.current_name +  {C_CONST}.comma_space + a_result_name)
+						buf.put_string ("RTAR(" + {C_CONST}.current_name +  {C_CONST}.comma_space + a_result_name)
 						buf.put_two_character (')', ';')
+						buf.put_new_line
 						a_result_attrib.generate_attribute_access (context.class_type, buf, {C_CONST}.current_name)
-						buf.put_string_and_new_line (" = (" + c_type_name + ") RTCCL(" + a_result_name)
+						buf.put_string (" = (" + c_type_name + ") RTCCL(" + a_result_name)
 						buf.put_two_character (')', ';')
+						buf.put_new_line
 					end
 				end
 			end
@@ -370,10 +372,18 @@ feature -- C code generation
 				l_att_i := context.associated_class.object_relative_once_info (rout_id).called_attribute_i
 				buf.put_new_line
 				buf.put_string ("if (!EIF_TEST(")
-				l_att_i.generate_attribute_access (context.class_type, buf, {C_CONST}.current_name) --context.current_register.register_name)
-				buf.put_string_and_new_line (")) {")
-				l_att_i.generate_attribute_access (context.class_type, buf, {C_CONST}.current_name) --context.current_register.register_name)
+				l_att_i.generate_attribute_access (context.class_type, buf, {C_CONST}.current_name)
+				buf.put_string (")) {")
+				buf.indent
+				buf.put_new_line
+				l_att_i.generate_attribute_access (context.class_type, buf, {C_CONST}.current_name)
 				buf.put_string_and_new_line (" = EIF_TRUE;")
+
+					--| Init exception storage
+				l_att_i := context.associated_class.object_relative_once_info (rout_id).exception_attribute_i
+				l_att_i.generate_attribute_access (context.class_type, buf, {C_CONST}.current_name)
+				buf.put_string_and_new_line (" = (EIF_REFERENCE)0;")
+
 				buf.put_string_and_new_line ("RTO_TRY")
 			else
 				if context.workbench_mode then

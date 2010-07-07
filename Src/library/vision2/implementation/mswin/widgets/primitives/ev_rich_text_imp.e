@@ -309,6 +309,12 @@ feature -- Status report
 			Result := internal_selected_character_format
 		end
 
+	reusable_character_format: EV_CHARACTER_FORMAT
+			-- Reusable character format for querying `Current'.
+		once
+			create Result
+		end
+
 	internal_selected_character_format: EV_CHARACTER_FORMAT
 			-- Implementation for `selected_character_format'. No preconditions permit
 			-- calling even when there is no selection as required by some implementation
@@ -316,10 +322,11 @@ feature -- Status report
 		local
 			char_imp: detachable EV_CHARACTER_FORMAT_IMP
 		do
-			create Result
+			Result := reusable_character_format
 			char_imp ?= Result.implementation
 			check char_imp /= Void end
 			{WEL_API}.send_message (wel_item, em_getcharformat, to_wparam (1), char_imp.item)
+			Result := Result.twin
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -329,14 +336,11 @@ feature -- Status report
 			-- calling even when there is no selection as required by some implementation
 			-- features.
 		local
-			char_format: EV_CHARACTER_FORMAT
 			l_result: detachable EV_CHARACTER_FORMAT_IMP
 		do
-			create char_format
-			l_result ?= char_format.implementation
+			l_result ?= internal_selected_character_format.implementation
 			check l_result /= Void end
 			Result := l_result
-			{WEL_API}.send_message (wel_item, em_getcharformat, to_wparam (1), Result.item)
 		ensure
 			result_not_void: Result /= Void
 		end

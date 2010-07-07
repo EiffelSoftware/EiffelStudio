@@ -193,11 +193,17 @@ feature {AST_EIFFEL} -- Visitor: routine body
 
 	process_once_as (a: ONCE_AS)
 		do
-				-- Attributes set by a once feature are not initialized,
-				-- because the next call to it will not execute the body.
-			attribute_initialization.keeper.enter_realm
-			Precursor (a)
-			attribute_initialization.keeper.leave_optional_realm
+			if a.has_key_object then
+					-- Since this is once-per-object and a creation of the object is processed,
+					-- it should be safe to process the routine as normal one.
+				Precursor (a)
+			else
+					-- Attributes set by a once feature are not initialized,
+					-- because the next call to it will not execute the body.
+				attribute_initialization.keeper.enter_realm
+				Precursor (a)
+				attribute_initialization.keeper.leave_optional_realm
+			end
 		end
 
 feature {AST_EIFFEL} -- Visitor: access to features

@@ -1,0 +1,26 @@
+
+test_name 	 qat-c-compile-failure
+test_description A generic class TEST1 [G] with a function whose return type is `ARRAY [like {TEST1 [like {G}.out]}.default]' compiles fine but system execution fails with a seg fault.  Freezing or finalizing generates C code that won't compile.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test1.e $CLUSTER test1.e
+
+compile_melted
+compile_result	ok
+
+execute_work	NONE exec_output_m
+execute_result	ok
+compare		exec_output_m output
+
+compile_frozen
+compile_result	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work	NONE exec_output_w
+execute_result	ok
+compare		exec_output_w output
+
+test_end

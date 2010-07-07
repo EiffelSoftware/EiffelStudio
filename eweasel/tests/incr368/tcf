@@ -1,0 +1,84 @@
+
+test_name	qat-change-parent-actual-generic	
+test_description Changing the actual generic parameter in an inheritance clause for a class that is used in a qualified anchored type and recompiling causes incorrect execution output or a seg fault.
+
+define		ACTUAL_GENERIC "G"
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+copy_sub 	test2.e $CLUSTER test2.e
+compile_melted
+compile_result 	ok
+
+execute_work 	NONE 	exec_output_1
+execute_result 	ok
+compare		exec_output_1 output_generic
+
+compile_frozen
+compile_result 	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work 	NONE 	exec_output_2
+execute_result 	ok
+compare		exec_output_2 output_generic
+
+define		ACTUAL_GENERIC "NUMERIC"
+copy_sub 	test2.e $CLUSTER test2.e
+compile_melted
+compile_result 	ok
+
+execute_work 	NONE 	exec_output_3
+execute_result 	ok
+compare		exec_output_3 output_numeric
+
+compile_frozen
+compile_result 	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work 	NONE 	exec_output_4
+execute_result 	ok
+compare		exec_output_4 output_numeric
+
+cleanup_compile
+
+compile_melted
+compile_result 	ok
+
+execute_work 	NONE 	exec_output_5
+execute_result 	ok
+compare		exec_output_5 output_numeric
+
+compile_frozen
+compile_result 	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work 	NONE 	exec_output_6
+execute_result 	ok
+compare		exec_output_6 output_numeric
+
+define		ACTUAL_GENERIC "G"
+copy_sub 	test2.e $CLUSTER test2.e
+compile_melted
+compile_result 	ok
+
+execute_work 	NONE 	exec_output_7
+execute_result 	ok
+compare		exec_output_7 output_generic
+
+compile_frozen
+compile_result 	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work 	NONE 	exec_output_8
+execute_result 	ok
+compare		exec_output_8 output_generic
+
+test_end

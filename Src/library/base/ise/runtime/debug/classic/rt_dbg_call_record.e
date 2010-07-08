@@ -544,7 +544,7 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 				if vals.count > 1 then
 					from
 						create ot.make (10)
-						create ort.make (1, ot.capacity - 1)
+						create ort.make_filled (Void, 1, ot.capacity - 1)
 						vals.start
 					until
 						vals.after

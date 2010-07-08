@@ -87,7 +87,7 @@ feature -- Access
 					Result := "Void"
 				end
 			when {INTERNAL}.expanded_type then
-				check value_attached: value /= Void end
+				check expanded_value_attached: value /= Void end
 				if v /= Void then
 					Result := ($v).out
 				else
@@ -97,7 +97,7 @@ feature -- Access
 				if v /= Void then
 					Result := v.out
 				else
-					check False end
+					check should_not_be_void: False end
 					create Result.make_empty
 				end
 			end

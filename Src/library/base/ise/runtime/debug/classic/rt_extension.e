@@ -107,7 +107,7 @@ feature -- Notification
 			-- Cached argument to use less temporary objects
 		once
 				--| Make sure, the id are contigus, and in this range !
-			create Result.make (Op_enter_feature, Op_rt_assign_local)
+			create Result.make_filled (Void, Op_enter_feature, Op_rt_assign_local)
 		ensure
 			result_attached: Result /= Void
 		end

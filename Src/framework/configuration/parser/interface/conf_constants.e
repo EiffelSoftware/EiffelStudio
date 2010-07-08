@@ -9,7 +9,7 @@ class
 	CONF_CONSTANTS
 
 inherit
-	XM_MARKUP_CONSTANTS
+	XML_MARKUP_CONSTANTS
 
 feature -- Platforms
 

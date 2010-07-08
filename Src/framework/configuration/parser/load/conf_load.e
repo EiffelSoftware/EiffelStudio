@@ -127,11 +127,10 @@ feature {NONE} -- Implementation
 			a_file_ok: a_file /= Void
 			a_callback_not_void: a_callback /= Void
 		local
-			l_file: KL_TEXT_INPUT_FILE
-			l_test_file: PLAIN_TEXT_FILE
-			l_parser: XM_PARSER
-			l_ns_cb: XM_NAMESPACE_RESOLVER
-			l_pos: XM_POSITION
+			l_file: PLAIN_TEXT_FILE
+			l_parser: XML_PARSER
+			l_ns_cb: XML_NAMESPACE_RESOLVER
+			l_pos: XML_POSITION
 			l_retried: BOOLEAN
 		do
 			if not l_retried then
@@ -141,28 +140,34 @@ feature {NONE} -- Implementation
 					is_error := True
 					last_error := create {CONF_ERROR_FILE}.make (a_file)
 				else
-					create {XM_EIFFEL_PARSER} l_parser.make
+					create {XML_LITE_STOPPABLE_PARSER} l_parser.make
 
 					create l_ns_cb.set_next (a_callback)
 					l_parser.set_callbacks (l_ns_cb)
 
 					create l_file.make (a_file)
-					create l_test_file.make (a_file)
-					l_file.open_read
-					if not l_file.is_open_read or else not l_test_file.is_plain then
+					if l_file.exists and then l_file.is_readable then
+						l_file.open_read
+					end
+					if not l_file.is_open_read or else not l_file.is_plain then
 						is_error := True
 						last_error := create {CONF_ERROR_FILE}.make (a_file)
 					else
-						l_parser.parse_from_stream (l_file)
+						l_parser.parse_from_file (l_file)
 						l_file.close
 					end
 				end
 			else
 					-- In case it is an internal error (Call on Void target, or others...)
 					-- we need to properly handle this.
-				if a_callback.is_error then
+				if l_parser.error_occurred then
+					l_pos := l_parser.error_position
+					a_callback.last_error.set_position (l_pos.source_name, l_pos.row, l_pos.column)
+					a_callback.last_error.set_xml_parse_mode
+				elseif a_callback.is_error then
 					l_pos := l_parser.position
 					a_callback.last_error.set_position (l_pos.source_name, l_pos.row, l_pos.column)
+					a_callback.last_error.set_xml_parse_mode
 				else
 						-- Since no error was retrieved it means that we had an internal
 						-- failure. Create an internal error instead.
@@ -181,7 +186,7 @@ invariant
 	factory_not_void: factory /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -194,21 +199,21 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

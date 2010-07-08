@@ -108,6 +108,7 @@ feature -- Basic operation
 			if l_ast = Void then
 				create l_error
 				l_error.set_position (a_file, l_parser.line, l_parser.column)
+				l_error.set_ace_parse_mode
 				set_error (l_error)
 			else
 				last_system := factory.new_system_generate_uuid (mask_special_characters_config (l_ast.system_name.as_lower))
@@ -923,7 +924,7 @@ invariant
 	extension_name_not_empty: not extension_name.is_empty
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

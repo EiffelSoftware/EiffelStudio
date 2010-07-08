@@ -710,7 +710,9 @@ feature {NONE} -- Implementation: parse
 			s.append_character ('(')
 			s.append_string ("position=")
 			s.append_string (p.out)
-			print (s + "%N")
+			debug ("xml_parser")
+				print (s + "%N")
+			end
 
 			if error_position = Void then
 					-- record only first error's position

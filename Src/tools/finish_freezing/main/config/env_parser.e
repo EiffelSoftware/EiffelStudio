@@ -254,7 +254,7 @@ feature {NONE} -- Basic operations
 			end
 			Result.append (" > ")
 			Result.append (a_out)
-			Result.append ("|| CANCEL 1%NSET > ")
+			Result.append ("|| EXIT 1%NSET > ")
 			Result.append (a_out)
 		ensure
 			result_attached: Result /= Void
@@ -371,7 +371,7 @@ invariant
 	batch_options_attached: batch_options /= Void
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

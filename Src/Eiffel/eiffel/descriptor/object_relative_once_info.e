@@ -51,8 +51,9 @@ feature {NONE} -- Initialization
 			a_once_attached: a_once /= Void
 		do
 			once_routine := a_once
-			once_routine_id := a_once.rout_id_set.first
-			result_type_a := a_once.type
+			once_routine_rout_id_set := a_once.rout_id_set
+			once_routine_id := once_routine_rout_id_set.first
+			result_type_a := a_once.type.as_detachable_type
 			has_result := result_type_a /= Void and then not result_type_a.is_void
 		end
 
@@ -64,7 +65,7 @@ feature -- Basic operations
 			a_once_attached: a_once /= Void
 		do
 			if
-				a_once.rout_id_set.first = once_routine_id and then
+				a_once.rout_id_set.intersect (once_routine_rout_id_set) and then
 				a_once.same_interface (once_routine)
 			then
 				debug ("ONCE_PER_OBJECT")
@@ -114,6 +115,9 @@ feature -- Access
 
 	once_routine: ONCE_PROC_I
 			-- Associated once routine.
+
+	once_routine_rout_id_set: ROUT_ID_SET
+			-- Associated once rout id set
 
 	once_routine_id: INTEGER
 			-- Routine id of the associated ONCE_PROC_I
@@ -333,7 +337,7 @@ feature -- Access: exception
 	exception_type_a: TYPE_A
 			-- Type of `exception_name' extra attribute	
 		do
-			Result := system.exception_class.compiled_class.actual_type
+			Result := system.exception_class.compiled_class.actual_type.as_detachable_type
 		end
 
 	exception_feature_id: INTEGER assign set_exception_feature_id

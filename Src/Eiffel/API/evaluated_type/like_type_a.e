@@ -46,7 +46,7 @@ inherit
 			set_detachable_mark,
 			set_is_implicitly_attached,
 			unset_is_implicitly_attached,
-			description,
+			description, description_with_detachable_type,
 			c_type,
 			generics,
 			generated_id,
@@ -242,6 +242,11 @@ feature -- Access
 	description: ATTR_DESC
 		do
 			Result := actual_type.description
+		end
+
+	description_with_detachable_type: ATTR_DESC
+		do
+			Result := actual_type.description_with_detachable_type
 		end
 
 	c_type: TYPE_C

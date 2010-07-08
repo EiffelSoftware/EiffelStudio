@@ -12,7 +12,8 @@ inherit
 		redefine
 			is_expanded, is_reference, is_separate, valid_generic, is_ephemeral,
 			duplicate, meta_type, same_as, good_generics, error_generics,
-			has_expanded, internal_is_valid_for_class, convert_to, description,
+			has_expanded, internal_is_valid_for_class, convert_to,
+			description, description_with_detachable_type,
 			is_full_named_type, is_external, is_enum, is_conformant_to,
 			hash_code, sk_value, is_optimized_as_frozen, generated_id,
 			generate_cecil_value, element_type, adapted_in,
@@ -241,6 +242,19 @@ feature -- Access
 			if is_expanded then
 				create exp
 				exp.set_type_i (Current)
+				Result := exp
+			else
+				Result := Precursor
+			end
+		end
+
+	description_with_detachable_type: ATTR_DESC
+		local
+			exp: EXPANDED_DESC
+		do
+			if is_expanded then
+				create exp
+				exp.set_type_i (as_detachable_type)
 				Result := exp
 			else
 				Result := Precursor

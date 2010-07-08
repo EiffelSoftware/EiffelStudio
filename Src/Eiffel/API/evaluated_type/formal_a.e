@@ -29,7 +29,7 @@ inherit
 			is_expanded,
 			is_initialization_required,
 			internal_is_valid_for_class,
-			description,
+			description, description_with_detachable_type,
 			generated_id,
 			generate_cid, generate_cid_array, generate_cid_init,
 			make_type_byte_code,
@@ -178,6 +178,13 @@ feature -- Access
 		do
 			create Result
 			Result.set_type_i (Current)
+		end
+
+	description_with_detachable_type: GENERIC_DESC
+			-- Descritpion of type for skeletons.
+		do
+			create Result
+			Result.set_type_i (as_detachable_type)
 		end
 
 	constrained_type (a_context_class: CLASS_C): TYPE_A

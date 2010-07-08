@@ -889,6 +889,12 @@ feature -- Attachment properties
 			result_attached: Result /= Void
 		end
 
+	as_detachable_type: like Current
+			-- detachable type
+		do
+			Result := Current
+		end
+
 	as_attachment_mark_free: like Current
 			-- Same as Current but without any attachment mark
 		do
@@ -1022,12 +1028,23 @@ feature -- Access
 		end
 
 	description: ATTR_DESC
-			-- Descritpion of type for skeletons
+			-- Description of type for skeletons
 		local
 			l_ref: REFERENCE_DESC
 		do
 			create l_ref
 			l_ref.set_type_i (Current)
+			Result := l_ref
+		end
+
+	description_with_detachable_type: ATTR_DESC
+			-- Description of type for skeletons
+			-- but with detachable type if possible
+		local
+			l_ref: REFERENCE_DESC
+		do
+			create l_ref
+			l_ref.set_type_i (as_detachable_type)
 			Result := l_ref
 		end
 

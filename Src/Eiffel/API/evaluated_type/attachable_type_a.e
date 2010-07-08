@@ -13,6 +13,7 @@ inherit
 			as_attached_type,
 			as_implicitly_attached,
 			as_implicitly_detachable,
+			as_detachable_type,
 			as_attachment_mark_free,
 			is_attached,
 			is_implicitly_attached,
@@ -49,7 +50,7 @@ feature -- Status report
 	is_implicitly_attached: BOOLEAN
 			-- Is type (implicitly) attached?
 		do
-			Result := (attachment_bits & (is_attached_mask | is_implicitly_attached_mask) /= 0) or else is_expanded
+			Result := (attachment_bits & (is_attached_mask | is_implicitly_attached_mask) /= {NATURAL_8} 0) or else is_expanded
 		end
 
 feature -- Modification
@@ -149,6 +150,17 @@ feature -- Duplication
 			end
 		end
 
+	as_detachable_type: like Current
+			-- detachable type
+		do
+			if not has_detachable_mark then
+				Result := duplicate
+				Result.set_detachable_mark
+			else
+				Result := Current
+			end
+		end
+
 	as_attachment_mark_free: like Current
 			-- Same as Current but without any attachment mark
 		local
@@ -229,7 +241,7 @@ feature {NONE} -- Attachment properties
 			-- Mask in `attachment_bits' that tells whether the type is implicitly attached
 
 note
-	copyright:	"Copyright (c) 2007-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -242,22 +254,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

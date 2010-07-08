@@ -24,6 +24,7 @@ inherit
 			as_attached_type,
 			as_implicitly_attached,
 			as_implicitly_detachable,
+			as_detachable_type,
 			formal_instantiation_in,
 			has_expanded,
 			has_formal_generic,
@@ -1519,6 +1520,30 @@ feature -- Attachment properties
 					r.set_type (t.as_implicitly_detachable)
 					Result [i] := r
 				end
+				i := i - 1
+			end
+		end
+
+	as_detachable_type: like Current
+			-- detachable type
+		local
+			i: INTEGER
+			r: RENAMED_TYPE_A [TYPE_A]
+			t: TYPE_A
+		do
+			Result := Precursor
+			from
+				i := count
+			until
+				i <= 0
+			loop
+				r := Result [i]
+				t := r.type
+--				if r.has_detachable_mark then
+					r := r.duplicate
+					r.set_type (t.as_detachable_type)
+					Result [i] := r
+--				end
 				i := i - 1
 			end
 		end

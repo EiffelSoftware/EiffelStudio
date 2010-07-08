@@ -23,6 +23,10 @@
 :: For more information about delayed expansion type: SET /? from the command line
 :: --------------------------------------------------------------------------------------------
 
+:: Even if the first argument is not used anymore as it used to be the case in previous revisions
+:: of this batch file, we need to ignore it otherwise it messes up the processing below
+SHIFT
+
 :: --------------------------------------------------------------------------------------------
 :: Set the default value for target and current CPU based on processor architecture.
 :: --------------------------------------------------------------------------------------------

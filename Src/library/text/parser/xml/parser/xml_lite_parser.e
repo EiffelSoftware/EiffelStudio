@@ -130,6 +130,16 @@ feature -- Status
 			-- Position when error occurred
 
 	position: XML_POSITION
+			-- Logical position
+		do
+			if attached checkpoint_position as p then
+				Result := p
+			else
+				Result := buffer_position
+			end
+		end
+
+	buffer_position: XML_POSITION
 			-- XML position in buffer
 		do
 			create Result.make (buffer.name, byte_index, column, line)
@@ -690,12 +700,8 @@ feature {NONE} -- Implementation: parse
 			s: STRING
 			p: like position
 		do
-			if attached checkpoint_position as checkpoint then
-				p := checkpoint
-				unset_checkpoint_position
-			else
-				p := position
-			end
+			p := position
+			unset_checkpoint_position
 
 			error_message := a_message.string
 

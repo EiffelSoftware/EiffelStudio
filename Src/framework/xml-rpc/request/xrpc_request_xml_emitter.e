@@ -47,7 +47,7 @@ feature -- Processing operations
 			append_indents (l_buffer)
 			l_buffer.append (a_name)
 			append_closing_tag ({XRPC_CONSTANTS}.method_name_name, l_buffer, True)
-			if attached a_args and not a_args.is_empty then
+			if a_args /= Void and then not a_args.is_empty then
 				append_opening_tag ({XRPC_CONSTANTS}.params_name, l_buffer, True)
 				from
 					i := a_args.lower

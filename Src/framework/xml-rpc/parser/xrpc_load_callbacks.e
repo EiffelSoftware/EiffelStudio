@@ -11,7 +11,7 @@ class
 	XRPC_LOAD_CALLBACKS
 
 inherit
-	XM_STATE_LOAD_CALLBACKS
+	XML_STATE_LOAD_CALLBACKS
 		redefine
 			initialize,
 			reset
@@ -25,19 +25,19 @@ feature {NONE} -- Initialization
 	initialize
 			-- <Precursor>
 		do
-			create currrent_parameters.make_default
-			create current_value_stack.make_default
+			create current_parameters.make (10)
+			create current_value_stack.make
 		end
 
 feature -- Access
 
-	frozen parameters: DS_LINEAR [XRPC_VALUE]
+	frozen parameters: CHAIN [XRPC_VALUE]
 			-- List of parameters, if any.
 		require
 			not_has_error: not has_error
 			has_parameters: has_parameters
 		do
-			Result := currrent_parameters
+			Result := current_parameters
 		ensure
 			result_attached: attached Result
 		end
@@ -54,7 +54,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	frozen currrent_parameters: DS_ARRAYED_LIST [XRPC_VALUE]
+	frozen current_parameters: ARRAYED_LIST [XRPC_VALUE]
 			-- Mutable list of parameter values.
 
 	frozen current_value: XRPC_VALUE
@@ -71,7 +71,7 @@ feature {NONE} -- Access
 			result_attached: attached Result
 		end
 
-	current_value_stack: DS_LINKED_STACK [XRPC_VALUE]
+	current_value_stack: LINKED_STACK [XRPC_VALUE]
 			-- Stack of processed values, allowing for a object tree to be created for complex types.
 
 feature -- Status report
@@ -90,13 +90,13 @@ feature {NONE} -- Basic operations
 			-- <Precursor>
 		do
 			current_value_stack.wipe_out
-			currrent_parameters.wipe_out
+			current_parameters.wipe_out
 			has_parameters := False
 			Precursor
 		ensure then
 			not_has_parameters: not has_parameters
 			current_value_stack_is_empty: current_value_stack.is_empty
-			currrent_parameters_is_empyt: currrent_parameters.is_empty
+			currrent_parameters_is_empyt: current_parameters.is_empty
 		end
 
 feature {NONE} -- Process
@@ -117,7 +117,9 @@ feature {NONE} -- Process
 				end
 			when t_member then
 					-- Just for sanity!
-				check current_value_is_struct: attached {XRPC_STRUCT} current_value end
+				check
+					current_value_is_struct: attached {XRPC_STRUCT} current_value
+				end
 			when t_param then
 					-- Just for sanity!
 				check has_parameters: has_parameters end
@@ -170,7 +172,7 @@ feature {NONE} -- Process
 			when t_param then
 					-- End of parameter, add to list
 				check has_single_value_only: current_value_stack.count = 1 end
-				currrent_parameters.force_last (current_value)
+				current_parameters.force (current_value)
 
 					-- Pop the stack
 				current_value_stack.remove
@@ -199,8 +201,18 @@ feature {NONE} -- Process
 				if attached {XRPC_MUTABLE_ARRAY} l_current_value as l_array then
 						-- Add the newly generated item to the array
 					l_array.extend (a_value)
+					if attached {XRPC_STRUCT} a_value then
+						current_value_stack.put (a_value)
+					elseif attached {XRPC_ARRAY} a_value then
+						current_value_stack.put (a_value)
+					end
 				elseif attached {XRPC_MEMBER} l_current_value as l_member then
 					l_member.value := a_value
+					if attached {XRPC_STRUCT} a_value then
+						current_value_stack.put (a_value)
+					elseif attached {XRPC_ARRAY} a_value then
+						current_value_stack.put (a_value)
+					end
 				else
 					current_value_stack.put (a_value)
 				end
@@ -231,29 +243,29 @@ feature {NONE} -- Process
 
 feature {NONE} -- State transistions
 
-	new_tag_state_transitions: DS_HASH_TABLE [DS_HASH_TABLE [NATURAL_8, STRING], NATURAL_8]
+	new_tag_state_transitions: HASH_TABLE [HASH_TABLE [NATURAL_8, STRING], NATURAL_8]
 			-- <Precursor>
 		local
-			l_table: DS_HASH_TABLE [NATURAL_8, STRING]
+			l_table: HASH_TABLE [NATURAL_8, STRING]
 		do
 			create Result.make (8)
 
 			create l_table.make (2)
 			l_table.put (t_params, {XRPC_CONSTANTS}.params_name)
 			l_table.put (t_value, {XRPC_CONSTANTS}.value_name)
-			Result.put_last (l_table, t_none)
+			Result.force (l_table, t_none)
 
 				-- params
 				-- => param
 			create l_table.make (1)
 			l_table.put (t_param, {XRPC_CONSTANTS}.param_name)
-			Result.put_last (l_table, t_params)
+			Result.force (l_table, t_params)
 
 				-- param
 				-- => value
 			create l_table.make (1)
 			l_table.put (t_value, {XRPC_CONSTANTS}.value_name)
-			Result.put_last (l_table, t_param)
+			Result.force (l_table, t_param)
 
 				-- value
 				-- => array
@@ -275,25 +287,25 @@ feature {NONE} -- State transistions
 			l_table.put (t_int, {XRPC_CONSTANTS}.int_name)
 			l_table.put (t_string, {XRPC_CONSTANTS}.string_name)
 			l_table.put (t_struct, {XRPC_CONSTANTS}.struct_name)
-			Result.put_last (l_table, t_value)
+			Result.force (l_table, t_value)
 
 				-- array
 				-- => data
 			create l_table.make (1)
 			l_table.put (t_data, {XRPC_CONSTANTS}.data_name)
-			Result.put_last (l_table, t_array)
+			Result.force (l_table, t_array)
 
 				-- data
 				-- => value
 			create l_table.make (1)
 			l_table.put (t_value, {XRPC_CONSTANTS}.value_name)
-			Result.put_last (l_table, t_data)
+			Result.force (l_table, t_data)
 
 				-- struct
 				-- => member
 			create l_table.make (1)
 			l_table.put (t_member, {XRPC_CONSTANTS}.member_name)
-			Result.put_last (l_table, t_struct)
+			Result.force (l_table, t_struct)
 
 				-- member
 				-- => name
@@ -301,10 +313,10 @@ feature {NONE} -- State transistions
 			create l_table.make (2)
 			l_table.put (t_name, {XRPC_CONSTANTS}.name_name)
 			l_table.put (t_value, {XRPC_CONSTANTS}.value_name)
-			Result.put_last (l_table, t_member)
+			Result.force (l_table, t_member)
 		end
 
-	new_attribute_states: detachable DS_HASH_TABLE [DS_HASH_TABLE [NATURAL_8, STRING], NATURAL_8]
+	new_attribute_states: detachable HASH_TABLE [HASH_TABLE [NATURAL_8, STRING], NATURAL_8]
 			-- <Precursor>
 		do
 		end
@@ -328,8 +340,8 @@ feature {NONE} -- Constants: States
 	t_value: NATURAL_8 = 0xF
 
 invariant
-	current_value_stack_attached: attached current_value_stack
-	currrent_parameters_attached: attached currrent_parameters
+	current_value_stack_attached: current_value_stack /= Void
+	currrent_parameters_attached: current_parameters /= Void
 	t_i4_and_t_int_synonymous: t_i4 = t_int
 
 ;note

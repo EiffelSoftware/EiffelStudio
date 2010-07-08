@@ -78,16 +78,6 @@ feature -- Status report
 			delegates_has_a_delegate: Result implies delegates.has (a_delegate)
 		end
 
-feature {NONE} -- Helpers
-
-	internal: INTERNAL
-			-- Shared access to {INTERNAL}.
-		once
-			create Result
-		ensure
-			result_attached: attached Result
-		end
-
 feature -- Query
 
 	delegate_for_method (a_name: READABLE_STRING_8): detachable TUPLE [delegate: XRPC_DELEGATE; name: READABLE_STRING_8]
@@ -109,9 +99,9 @@ feature -- Query
 			l_cursor := l_delegates.cursor
 
 				-- Search in the global (no) namespace first.
-			from l_delegates.start until l_delegates.after or attached Result loop
+			from l_delegates.start until l_delegates.after or Result /= Void loop
 				if attached l_delegates.item as l_delegate then
-					if not attached l_delegate.namespace and then l_delegate.has_method (a_name) then
+					if l_delegate.namespace = Void and then l_delegate.has_method (a_name) then
 						Result := [l_delegate, a_name]
 					end
 				end
@@ -119,12 +109,12 @@ feature -- Query
 			end
 
 				-- Next try delegates with set namespaces.
-			if not attached Result then
+			if Result = Void then
 				l_parts := utilities.split_method_name (a_name)
 				l_namespace := l_parts.namespace
 				l_name := l_parts.name
-				if attached l_namespace then
-					from l_delegates.start until l_delegates.after or attached Result loop
+				if l_namespace /= Void then
+					from l_delegates.start until l_delegates.after or Result /= Void loop
 						if attached l_delegates.item as l_delegate then
 							if
 								attached l_delegate.namespace as l_other_namespace and then
@@ -152,36 +142,36 @@ feature {NONE} -- Query: Marshalling
 			-- `a_args': The argument object to marshal.
 			-- `Result': A {TUPLE} containing the marshalled arguments for use with the supplied routine.
 		require
-			a_agent_attached: attached a_agent
-			a_agent_target_attached: attached a_agent.target
-			a_args_attached: attached a_args
+			a_agent_attached: a_agent /= Void
+			a_agent_target_attached: a_agent.target /= Void
+			a_args_attached: a_args /= Void
 			a_args_big_enough: a_args.count >= a_agent.open_count
 		local
-			l_internal: like internal
-			l_tuple_id: INTEGER
-			l_arg_id: INTEGER
+			l_agent_type: TYPE [detachable ROUTINE [ANY, TUPLE]]
+			l_tuple_type: TYPE [detachable ANY]
+			l_arg_type: TYPE [detachable ANY]
 			l_value: XRPC_VALUE
 			l_result: detachable TUPLE
 			i, nb: INTEGER
 		do
+			l_agent_type := a_agent.generating_type
 				-- Fetch argument tuple type information.
-			l_internal := internal
-			l_tuple_id := l_internal.generic_dynamic_type (a_agent, 2)
+			l_tuple_type := l_agent_type.generic_parameter_type (2)
 
 				-- Create a new tuple base on the tuple type id.
-			if attached {TUPLE} l_internal.new_instance_of (l_tuple_id) as l_tuple then
+			if attached {TUPLE} internal.new_instance_of (l_tuple_type.type_id) as l_tuple then
 				l_result := l_tuple
 			end
 			check l_result_attached: attached l_result end
 			Result := l_result
 
 				-- Set the result tuple arguments
-			nb := l_internal.generic_count_of_type (l_tuple_id)
+			nb := l_tuple_type.generic_parameter_count
 			from i := 1 until i > nb loop
-				l_arg_id := l_internal.generic_dynamic_type_of_type (l_tuple_id, i)
+				l_arg_type := l_tuple_type.generic_parameter_type (i)
 				l_value := a_args[i]
 				if l_value.is_valid then -- and then is_compatible_type (l_arg_id, l_value) then
-					if attached marshaller.marshal_to (l_arg_id, l_value) as l_marshalled_value then
+					if attached marshaller.marshal_to (l_arg_type, l_value) as l_marshalled_value then
 						check valid_value: Result.valid_type_for_index (l_marshalled_value, i) end
 						Result.put (l_marshalled_value, i)
 					else
@@ -202,9 +192,9 @@ feature -- Extension
 			--
 			-- `a_delegate': The delegate object to extend the server with.
 		require
-			a_delegate_attached: attached a_delegate
+			a_delegate_attached: a_delegate /= Void
 			not_has_a_delegate: not has (a_delegate)
-			a_delegate_unassociated: not attached a_delegate.dispatcher
+			a_delegate_unassociated: a_delegate.dispatcher = Void
 		do
 			delegates.extend (a_delegate)
 			a_delegate.dispatcher := Current
@@ -220,14 +210,14 @@ feature -- Extension
 			--
 			-- `a_delegate': The delegate object to remove from the server.
 		require
-			a_delegate_attached: attached a_delegate
+			a_delegate_attached: a_delegate /= Void
 			has_a_delegate: has (a_delegate)
 		do
 			delegates.prune (a_delegate)
 			a_delegate.dispatcher := Void
 		ensure
 			not_has_a_delegate: not has (a_delegate)
-			a_delegate_dispatcher_unset: not attached a_delegate.dispatcher
+			a_delegate_dispatcher_unset: a_delegate.dispatcher = Void
 		end
 
 feature -- Basic operations
@@ -241,7 +231,7 @@ feature -- Basic operations
 			-- `Result': A response of making the call. This could be a fault object {XRPC_FAULT_RESPONSE}
 			--           in the event or an error or execption.
 		require
-			a_name_attached: attached a_name
+			a_name_attached: a_name /= Void
 			not_a_name_is_empty: not a_name.is_empty
 			--a_args_contains_valid_values: attached a_args implies a_args.for_all (agent {XRPC_VALUE}.is_valid)
 		local
@@ -251,7 +241,7 @@ feature -- Basic operations
 		do
 			if not retried then
 				l_info := delegate_for_method (a_name)
-				if attached l_info then
+				if l_info /= Void then
 					l_delegate := l_info.delegate
 					if l_delegate.has_method (l_info.name) then
 						Result := call_internal (l_delegate, l_info.name, a_args)
@@ -291,8 +281,8 @@ feature {NONE} -- Basic operations
 			-- `Result': A response of making the call. This could be a fault object {XRPC_FAULT_RESPONSE}
 			--           in the event or an error or execption.
 		require
-			a_delegate_attached: attached a_delegate
-			a_name_attached: attached a_name
+			a_delegate_attached: a_delegate /= Void
+			a_name_attached: a_name /= Void
 			not_a_name_is_empty: not a_name.is_empty
 			a_delegate_has_method_a_name: a_delegate.has_method (a_name)
 			--a_args_contains_valid_values: attached a_args implies a_args.for_all (agent {XRPC_VALUE}.is_valid)
@@ -303,28 +293,28 @@ feature {NONE} -- Basic operations
 		do
 			l_agent := a_delegate[a_name]
 			if
-				(attached a_args and then l_agent.open_count = a_args.count) or else
-				(not attached a_args and then l_agent.open_count = 0)
+				(a_args /= Void and then l_agent.open_count = a_args.count) or else
+				(a_args =  Void and then l_agent.open_count = 0)
 			then
 					-- There might be arguments/return type, so check the agent routine argument types/return type
 					-- can be marshalled before attempting to make the call.
 				if marshaller.is_marshallable_routine (l_agent) then
-					if not attached a_args or else a_args.is_empty then
+					if a_args = Void or else a_args.is_empty then
 						a_delegate.on_before_call (a_name, Void)
 						if attached {FUNCTION [ANY, TUPLE, ANY]} l_agent as l_function then
 								-- Make call with no arguments.
 							l_result := l_function.item (Void)
-							if attached l_result then
+							if l_result /= Void then
 								Result := response_factory.new_response_from_value (l_result)
 							end
 						else
 								-- Make call with no arguments and no result.
 							l_agent.call (Void)
-							check result_detached: not attached Result end
+							check result_detached: Result = Void end
 						end
 						a_delegate.on_after_call (a_name, Void, Result)
 					else
-						check a_args_attached: attached a_args end
+						check a_args_attached: a_args /= Void end
 
 						l_open_args := marshal_routine_arguments (l_agent, a_args)
 						if l_agent.valid_operands (l_open_args) then
@@ -338,7 +328,7 @@ feature {NONE} -- Basic operations
 							else
 									-- Make call with arguments and no result.
 								l_agent.call (l_open_args)
-								check result_detached: not attached Result end
+								check result_detached: Result = Void end
 							end
 							a_delegate.on_after_call (a_name, l_open_args, Result)
 						end
@@ -348,7 +338,7 @@ feature {NONE} -- Basic operations
 					Result := response_factory.new_response_from_error_code ({XRPC_ERROR_CODES}.e_code_method_invalid)
 				end
 			else
-				if not attached a_args or else l_agent.open_count > a_args.count then
+				if a_args = Void or else l_agent.open_count > a_args.count then
 						-- Not enough arguments in RPC
 					Result := response_factory.new_response_from_error_code ({XRPC_ERROR_CODES}.e_code_method_too_few_arguments)
 				else
@@ -369,8 +359,8 @@ feature {NONE} -- Constants
 		end
 
 invariant
-	built_ins_attached: attached built_ins
-	delegates_attached: attached delegates
+	built_ins_attached: built_ins /= Void
+	delegates_attached: delegates /= Void
 	has_built_ins: has (built_ins)
 
 ;note

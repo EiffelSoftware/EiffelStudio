@@ -88,13 +88,15 @@ feature {NONE} -- Element change
 			--
 			-- `a_array': The array to initialize from.
 		require
-			a_array_attached: attached a_array
+			a_array_attached: a_array /= Void
 			not_a_array_is_empty: not a_array.is_empty
 		local
 			l_array: like internal_array
 			i, i_lower, i_upper: INTEGER
 		do
-			create l_array.make (1, a_array.count)
+				-- Precondition not_a_array_is_empty implies first element exists
+				-- Using `make_filled' for Void-safety reason
+			create l_array.make_filled (a_array [a_array.lower], 1, a_array.count)
 			from
 				i := 0
 				i_lower := a_array.lower
@@ -148,10 +150,15 @@ feature -- Conversion
 			l_array: like internal_array
 		do
 			l_array := internal_array
-			create Result.make (1, l_array.count)
-			Result.copy (l_array)
+			if l_array.is_empty then
+				create Result.make_empty (1)
+			else
+					-- using `make_filled with first item' for Void-safety reason
+				create Result.make_filled (l_array [l_array.lower], 1, l_array.count)
+				Result.copy (l_array)
+			end
 		ensure
-			result_attached: attached Result
+			result_attached: Result /= Void
 			result_lower_is_default: Result.lower = 1
 			result_same_count: Result.count.as_natural_32 = count
 		end

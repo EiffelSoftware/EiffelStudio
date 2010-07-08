@@ -27,7 +27,7 @@ inherit
 
 feature {NONE} -- Access
 
-	parser: XM_EIFFEL_PARSER
+	parser: XML_STOPPABLE_PARSER
 			-- Parser used to parse XML-RPC requests.
 		once
 			create Result.make
@@ -86,7 +86,7 @@ feature -- Basic operations
 		local
 			l_parser: like parser
 			l_name: STRING
-			l_params: detachable DS_LINEAR [XRPC_VALUE]
+			l_params: detachable CHAIN [XRPC_VALUE]
 			retried: BOOLEAN
 		do
 			if not retried then
@@ -127,7 +127,7 @@ feature -- Basic operations
 
 feature {NONE} -- Basic operations
 
-	dispatch_call (a_dispatcher: XRPC_SERVER_DISPATCHER; a_name: READABLE_STRING_8; a_params: detachable DS_LINEAR [XRPC_VALUE]): detachable XRPC_RESPONSE
+	dispatch_call (a_dispatcher: XRPC_SERVER_DISPATCHER; a_name: READABLE_STRING_8; a_params: detachable CHAIN [XRPC_VALUE]): detachable XRPC_RESPONSE
 			-- Dispatches a call to a server and traps any other erronous conditions prior to execution.
 			---
 			-- `a_dispatcher': The dispatch server to perform the call on.

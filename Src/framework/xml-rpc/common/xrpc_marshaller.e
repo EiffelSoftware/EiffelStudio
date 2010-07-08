@@ -27,7 +27,7 @@ inherit
 
 feature -- Status report
 
-	is_marshallable_type (a_type: INTEGER): BOOLEAN
+	is_marshallable_type (a_type: TYPE [detachable ANY]): BOOLEAN
 			-- Determines if a type can be marshalled.
 			-- Note: This is typically used for XML-RPC method argument type validation. For method result
 			--       types use `is_marshallable_result_type'.
@@ -44,7 +44,7 @@ feature -- Status report
 				is_struct (a_type)
 		end
 
-	is_marshallable_result_type (a_type: INTEGER): BOOLEAN
+	is_marshallable_result_type (a_type: TYPE [detachable ANY]): BOOLEAN
 			-- Determines if a function result type can be marshalled.
 			-- Note: This is typically used for XML-RPC method result type validation. For method arguments
 			--       types use `is_marshallable_type'.
@@ -52,10 +52,10 @@ feature -- Status report
 			-- `a_type': A type identifier of a method result type.
 			-- `Result': True if the type is marshallable; False otherwise.
 		do
-			Result := is_marshallable_type (a_type) or else a_type = xrpc_response_type_id
+			Result := is_marshallable_type (a_type) or else a_type = xrpc_response_type
 		ensure
 			is_marshallable_type: Result implies
-				(is_marshallable_type (a_type) or else a_type = xrpc_response_type_id)
+				(is_marshallable_type (a_type) or else a_type = xrpc_response_type)
 		end
 
 	is_marshallable_routine (a_routine: ROUTINE [ANY, TUPLE]): BOOLEAN
@@ -67,30 +67,28 @@ feature -- Status report
 		require
 			a_routine_attached: attached a_routine
 		local
-			l_internal: like internal
-			l_tuple_id: INTEGER
-			l_type_id: INTEGER
+			l_tuple: TYPE [detachable ANY]
+			l_type: TYPE [detachable ANY]
 			i, i_count: INTEGER
 		do
 				-- Routines cannot have an open target because custom Eiffel objects cannot be marshalled.
 			Result := attached a_routine.target
 			if Result then
-				l_internal := internal
 				if a_routine.open_count > 0 then
 						-- Check argument tuple types
-					l_tuple_id := l_internal.generic_dynamic_type (a_routine, 2)
-					i_count := l_internal.generic_count_of_type (l_tuple_id)
+					l_tuple := a_routine.generating_type.generic_parameter_type (2)
+					i_count := l_tuple.generic_parameter_count
 					from i := 1 until i > i_count or not Result loop
-						l_type_id := l_internal.generic_dynamic_type_of_type (l_tuple_id, i)
-						Result := is_marshallable_type (l_type_id)
+						l_type := l_tuple.generic_parameter_type (i)
+						Result := is_marshallable_type (l_type)
 						i := i + 1
 					end
 				end
 
 				if Result and then attached {FUNCTION [ANY, TUPLE, ANY]} a_routine as l_function then
 						-- Check result type
-					l_type_id := l_internal.generic_dynamic_type (l_function, 3)
-					Result := is_marshallable_result_type (l_type_id)
+					l_type := l_function.generating_type.generic_parameter_type (3)
+					Result := is_marshallable_result_type (l_type)
 				end
 			end
 		ensure
@@ -103,23 +101,23 @@ feature -- Status report
 			-- `a_routine': An object to validate for marshalling.
 			-- `Result': True if the object is marshallable; False otherwise.
 		require
-			a_object_attached: attached a_object
+			a_object_attached: a_object /= Void
 		local
-			l_type_id: INTEGER
+			t: TYPE [detachable ANY]
 		do
-			l_type_id := internal.dynamic_type (a_object)
-			Result := is_array_conform_from (l_type_id) or else
-				--is_array_conform_to (l_type_id) or else
-				is_boolean (l_type_id) or else
-				is_double (l_type_id) or else
-				is_integer (l_type_id) or else
-				is_string (l_type_id) or else
-				is_struct (l_type_id)
+			t := a_object.generating_type
+			Result := is_array_conform_from (t) or else
+				--is_array_conform_to (t) or else
+				is_boolean (t) or else
+				is_double (t) or else
+				is_integer (t) or else
+				is_string (t) or else
+				is_struct (t)
 		end
 
 feature -- Basic operations: To Eiffel
 
-	marshal_to (a_type: INTEGER; a_value: XRPC_VALUE): detachable ANY
+	marshal_to (a_type: TYPE [detachable ANY]; a_value: XRPC_VALUE): detachable ANY
 			-- Marshals an XML-RPC value object into an object of the supplied type.
 			-- If any incompatibilities are found and exception of {XRPC_MARSHAL_EXCEPTION} will be rasied.
 			--
@@ -139,49 +137,49 @@ feature -- Basic operations: To Eiffel
 					Result := marshal_to_array (a_type, l_value)
 				else
 						-- Error: Incompatible type.
-					create l_exception.make (xrpc_array_type_id, a_type)
+					create l_exception.make (xrpc_array_type, a_type)
 				end
 			when {XRPC_TYPE}.boolean then
 				if is_boolean (a_type) and then attached {XRPC_BOOLEAN} a_value as l_value then
 					Result := marshal_to_boolean (a_type, l_value)
 				else
 						-- Error: Incompatible type.
-					create l_exception.make (xrpc_boolean_type_id, a_type)
+					create l_exception.make (xrpc_boolean_type, a_type)
 				end
 			when {XRPC_TYPE}.double then
 				if is_double (a_type) and then attached {XRPC_DOUBLE} a_value as l_value then
 					Result := marshal_to_double (a_type, l_value)
 				else
 						-- Error: Incompatible type.
-					create l_exception.make (xrpc_double_type_id, a_type)
+					create l_exception.make (xrpc_double_type, a_type)
 				end
 			when {XRPC_TYPE}.integer then
 				if is_integer (a_type) and then attached {XRPC_INTEGER} a_value as l_value then
 					Result := marshal_to_integer (a_type, l_value)
 				else
 						-- Error: Incompatible type.
-					create l_exception.make (xrpc_integer_type_id, a_type)
+					create l_exception.make (xrpc_integer_type, a_type)
 				end
 			when {XRPC_TYPE}.string then
 				if is_string (a_type) and then attached {XRPC_STRING} a_value as l_value then
 					Result := marshal_to_string (a_type, l_value)
 				else
 						-- Error: Incompatible type.
-					create l_exception.make (xrpc_string_type_id, a_type)
+					create l_exception.make (xrpc_string_type, a_type)
 				end
 			when {XRPC_TYPE}.struct then
 				if is_struct (a_type) and then attached {XRPC_STRUCT} a_value as l_value then
 					Result := marshal_to_struct (a_type, l_value)
 				else
 						-- Error: Incompatible type.
-					create l_exception.make (xrpc_struct_type_id, a_type)
+					create l_exception.make (xrpc_struct_type, a_type)
 				end
 			else
-				if internal.dynamic_type (a_value) = a_type then
+				if a_value.generating_type = a_type then
 					Result := a_value
 				else
 						-- Error: Incompatbile type.
-					create l_exception.make (internal.dynamic_type (a_value), a_type)
+					create l_exception.make (a_value.generating_type, a_type)
 				end
 			end
 
@@ -191,7 +189,7 @@ feature -- Basic operations: To Eiffel
 			end
 		end
 
-	marshal_to_array (a_type: INTEGER; a_value: XRPC_ARRAY): ANY
+	marshal_to_array (a_type: TYPE [detachable ANY]; a_value: XRPC_ARRAY): detachable ANY
 			-- Marshals an XML-RPC value to an array object.
 			-- If any incompatibilities are found and exception of {XRPC_MARSHAL_EXCEPTION} will be rasied.
 			--
@@ -203,70 +201,74 @@ feature -- Basic operations: To Eiffel
 			a_value_attached: attached a_value
 			a_value_is_valid: a_value.is_valid
 		local
-			l_internal: like internal
-			l_generic_type_id: INTEGER
+			l_generic_type: TYPE [detachable ANY]
 			l_value: XRPC_VALUE
-			l_value_type_id: INTEGER
+			l_value_type: TYPE [detachable ANY]
 			l_array: detachable ARRAY [detachable ANY]
 			l_default: detachable ANY
 			i, i_count: NATURAL
 			l_exception: XRPC_MARSHAL_TYPE_EXCEPTION
 		do
-			l_internal := internal
-			if l_internal.type_conforms_to (xrpc_array_type_id, a_type) then
+			if xrpc_array_type.conforms_to (a_type) then
 					-- No marshalling needed.
 				Result := a_value
-			elseif l_internal.generic_count_of_type (a_type) = 1 then
+			elseif a_type.generic_parameter_count = 1 then
 					-- Determine the array generic parameter
-				l_generic_type_id := l_internal.generic_dynamic_type_of_type (a_type, 1)
-				if is_marshallable_type (l_generic_type_id) then
-					Result := l_internal.new_instance_of (a_type)
-					if attached {ARRAY[ANY]} Result as l_result  then
+				l_generic_type := a_type.generic_parameter_type (1)
+				if is_marshallable_type (l_generic_type) then
+					if a_type.has_default then
+						Result := a_type.default
+					else
+						Result := a_type.default_detachable_value
+					end
+
+					if attached {ARRAY [ANY]} Result as l_result  then
 						l_array := l_result
 					end
 					check l_array_attached: attached l_array end
-					l_default := l_internal.new_instance_of (l_generic_type_id)
+					if l_generic_type.has_default then
+						l_default := l_generic_type.default
+					else
+						l_default := l_generic_type.default_detachable_value
+					end
 
 					i := 1
 					i_count := a_value.count
 					l_array.make_filled (l_default, i.as_integer_32, i_count.as_integer_32)
 					from until i > i_count loop
 							-- Marshalling will raise an exception if the types to not conform.
-						l_value_type_id := l_generic_type_id
-						if l_value_type_id = any_type_id then
+						l_value_type := l_generic_type
+						l_value := a_value[i]
+						if l_value_type = any_type then
 								-- ARRAY [ANY] was used, but we need to marshal to a known type.
 								-- Use the type of the XML-RPC value object to determine the best type.
-							l_value := a_value[i]
 							inspect l_value.type.item
 							when {XRPC_TYPE}.array then
-								l_value_type_id := array_any_type_id
+								l_value_type := array_any_type
 							when {XRPC_TYPE}.boolean then
-								l_value_type_id := boolean_type_id
+								l_value_type := boolean_type
 							when {XRPC_TYPE}.double then
-								l_value_type_id := real_64_type_id
+								l_value_type := real_64_type
 							when {XRPC_TYPE}.integer then
-								l_value_type_id := integer_32_type_id
+								l_value_type := integer_32_type
 							when {XRPC_TYPE}.string then
-								l_value_type_id := string_8_type_id
+								l_value_type := string_8_type
 							else
 								check unsupported_type: False end
 							end
 						end
-
-						l_array.put (marshal_to (l_value_type_id, l_value), i.as_integer_32)
+						l_array.put (marshal_to (l_value_type, l_value), i.as_integer_32)
 						i := i + 1
 					end
 				else
 						-- Error: Incompatbile type.
-					create l_exception.make (xrpc_array_type_id, a_type)
+					create l_exception.make (xrpc_array_type, a_type)
 					l_exception.raise
 				end
 			end
-		ensure
-			result_attached: attached Result
 		end
 
-	marshal_to_boolean (a_type: INTEGER; a_value: XRPC_BOOLEAN): ANY
+	marshal_to_boolean (a_type: TYPE [detachable ANY]; a_value: XRPC_BOOLEAN): BOOLEAN
 			-- Marshals an XML-RPC value to an boolean object.
 			-- If any incompatibilities are found and exception of {XRPC_MARSHAL_EXCEPTION} will be rasied.
 			--
@@ -278,7 +280,7 @@ feature -- Basic operations: To Eiffel
 			a_value_attached: attached a_value
 			a_value_is_valid: a_value.is_valid
 		do
-			if a_type = xrpc_boolean_type_id then
+			if a_type = xrpc_boolean_type then
 					-- No marshalling needed.
 				Result := a_value
 			else
@@ -288,7 +290,7 @@ feature -- Basic operations: To Eiffel
 			result_attached: attached Result
 		end
 
-	marshal_to_double (a_type: INTEGER; a_value: XRPC_DOUBLE): ANY
+	marshal_to_double (a_type: TYPE [detachable ANY]; a_value: XRPC_DOUBLE): ANY
 			-- Marshals an XML-RPC value to an double object.
 			-- If any incompatibilities are found and exception of {XRPC_MARSHAL_EXCEPTION} will be rasied.
 			--
@@ -302,12 +304,12 @@ feature -- Basic operations: To Eiffel
 		local
 			l_double: REAL_64
 		do
-			if a_type = xrpc_double_type_id then
+			if a_type = xrpc_double_type then
 					-- No marshalling needed.
 				Result := a_value
 			else
 				l_double := a_value.value
-				if a_type = real_32_type_id then
+				if a_type = real_32_type then
 					Result := l_double.truncated_to_real
 				else
 					Result := l_double
@@ -317,7 +319,7 @@ feature -- Basic operations: To Eiffel
 			result_attached: attached Result
 		end
 
-	marshal_to_integer (a_type: INTEGER; a_value: XRPC_INTEGER): ANY
+	marshal_to_integer (a_type: TYPE [detachable ANY]; a_value: XRPC_INTEGER): ANY
 			-- Marshals an XML-RPC value to an integer object.
 			-- If any incompatibilities are found and exception of {XRPC_MARSHAL_EXCEPTION} will be rasied.
 			--
@@ -332,14 +334,14 @@ feature -- Basic operations: To Eiffel
 			l_integer: INTEGER_32
 			l_exception: detachable XRPC_MARSHAL_EXCEPTION
 		do
-			if a_type = xrpc_integer_type_id then
+			if a_type = xrpc_integer_type then
 					-- No marshalling needed.
 				Result := a_value
 			else
 				l_integer := a_value.value
-				if a_type = integer_32_type_id then
+				if a_type = integer_32_type then
 					Result := l_integer
-				elseif a_type = integer_16_type_id then
+				elseif a_type = integer_16_type then
 					if l_integer <= {INTEGER_16}.max_value then
 						Result := l_integer.as_integer_16
 					else
@@ -347,7 +349,7 @@ feature -- Basic operations: To Eiffel
 						create {XRPC_OVERFLOW_EXCEPTION} l_exception.make ({INTEGER_16}.max_value.out)
 						Result := {INTEGER_16}0
 					end
-				elseif a_type = integer_8_type_id then
+				elseif a_type = integer_8_type then
 					if l_integer <= {INTEGER_8}.max_value then
 						Result := l_integer.as_integer_8
 					else
@@ -357,9 +359,9 @@ feature -- Basic operations: To Eiffel
 					end
 				else
 					if l_integer >= 0 then
-						if a_type = natural_32_type_id then
+						if a_type = natural_32_type then
 							Result := l_integer.as_natural_32
-						elseif a_type = natural_16_type_id then
+						elseif a_type = natural_16_type then
 							if l_integer <= {NATURAL_16}.max_value then
 								Result := l_integer.as_natural_16
 							else
@@ -367,7 +369,7 @@ feature -- Basic operations: To Eiffel
 								create {XRPC_OVERFLOW_EXCEPTION} l_exception.make ({NATURAL_16}.max_value.out)
 								Result := {NATURAL_16}0
 							end
-						elseif a_type = natural_8_type_id then
+						elseif a_type = natural_8_type then
 							if l_integer <= {NATURAL_8}.max_value then
 								Result := l_integer.as_natural_8
 							else
@@ -396,7 +398,7 @@ feature -- Basic operations: To Eiffel
 			result_attached: attached Result
 		end
 
-	marshal_to_string (a_type: INTEGER; a_value: XRPC_STRING): ANY
+	marshal_to_string (a_type: TYPE [detachable ANY]; a_value: XRPC_STRING): ANY
 			-- Marshals an XML-RPC value to an string object.
 			--
 			-- `a_type': The string type to marshal to.
@@ -409,25 +411,25 @@ feature -- Basic operations: To Eiffel
 		local
 			l_string: STRING
 		do
-			if a_type = xrpc_string_type_id then
+			if a_type = xrpc_string_type then
 					-- No marshalling needed.
 				Result := a_value
 			else
 				l_string := a_value.value
 				if
-					a_type = string_8_type_id or
-					a_type = readable_string_8_type_id or
-					a_type = readable_string_general_type_id
+					a_type = string_8_type or
+					a_type = readable_string_8_type or
+					a_type = readable_string_general_type
 				then
 					Result := l_string
 				elseif
-					a_type = string_32_type_id or
-					a_type = readable_string_32_type_id
+					a_type = string_32_type or
+					a_type = readable_string_32_type
 				then
 					Result := l_string.as_string_32
-				elseif a_type = immutable_string_8_type_id then
+				elseif a_type = immutable_string_8_type then
 					create {IMMUTABLE_STRING_8} Result.make_from_string (l_string)
-				elseif a_type = immutable_string_8_type_id then
+				elseif a_type = immutable_string_8_type then
 					create {IMMUTABLE_STRING_32} Result.make_from_string_8 (l_string)
 				else
 						-- Unknown string
@@ -439,7 +441,7 @@ feature -- Basic operations: To Eiffel
 			result_attached: attached Result
 		end
 
-	marshal_to_struct (a_type: INTEGER; a_value: XRPC_STRUCT): ANY
+	marshal_to_struct (a_type: TYPE [detachable ANY]; a_value: XRPC_STRUCT): ANY
 			-- Marshals an XML-RPC value to an string object.
 			--
 			-- `a_type': The struct type to marshal to.
@@ -450,7 +452,7 @@ feature -- Basic operations: To Eiffel
 			a_value_attached: attached a_value
 			a_value_is_valid: a_value.is_valid
 		do
-			if a_type = xrpc_string_type_id then
+			if a_type = xrpc_string_type then
 					-- No marshalling needed.
 				Result := a_value
 			else
@@ -470,13 +472,13 @@ feature -- Basic operations: From Eiffel
 			a_value_attached: attached a_value
 			a_value_is_marshallable_object: is_marshallable_object (a_value)
 		local
-			l_type: INTEGER
+			l_type: TYPE [detachable ANY]
 		do
 			if attached {XRPC_VALUE} a_value as l_result then
 					-- No marshalling needed
 				Result := l_result
 			else
-				l_type := internal.dynamic_type (a_value)
+				l_type := a_value.generating_type
 				if is_array_conform_from (l_type) then
 					Result := marshal_from_array (a_value)
 				elseif is_boolean (l_type) then
@@ -510,9 +512,9 @@ feature -- Basic operations: From Eiffel
 			i, i_upper: INTEGER
 			l_exception: XRPC_MARSHAL_TYPE_EXCEPTION
 		do
-			check a_value_is_array: is_array_conform_from (internal.dynamic_type (a_value)) end
+			check a_value_is_array: is_array_conform_from (a_value.generating_type) end
 
-			if internal.dynamic_type (a_value) = xrpc_array_type_id and then attached {XRPC_ARRAY} a_value as l_result then
+			if a_value.generating_type = xrpc_array_type and then attached {XRPC_ARRAY} a_value as l_result then
 					-- No marshalling needed.
 				Result := l_result
 			else
@@ -527,7 +529,7 @@ feature -- Basic operations: From Eiffel
 						if attached l_array[i] as l_item and then is_marshallable_object (l_item) then
 							l_mutable_array.extend (marshal_from (l_item))
 						else
-							create l_exception.make (internal.dynamic_type (l_array[i]), 0)
+							create l_exception.make (l_array[i].generating_type, Void)
 							l_exception.raise
 						end
 						i := i + 1
@@ -541,7 +543,7 @@ feature -- Basic operations: From Eiffel
 		ensure
 			result_attached: attached Result
 			result_is_valid: Result.is_valid
-			result_is_array: is_array_conform_to (internal.dynamic_type (Result))
+			result_is_array: is_array_conform_to (Result.generating_type)
 		end
 
 	marshal_from_boolean (a_value: ANY): XRPC_BOOLEAN
@@ -553,9 +555,9 @@ feature -- Basic operations: From Eiffel
 			a_value_attached: attached a_value
 			a_value_is_marshallable_object: is_marshallable_object (a_value)
 		do
-			check a_value_is_boolean: is_boolean (internal.dynamic_type (a_value)) end
+			check a_value_is_boolean: is_boolean (a_value.generating_type) end
 
-			if internal.dynamic_type (a_value) = xrpc_boolean_type_id and then attached {XRPC_BOOLEAN} a_value as l_result then
+			if a_value.generating_type = xrpc_boolean_type and then attached {XRPC_BOOLEAN} a_value as l_result then
 					-- No marshalling needed.
 				Result := l_result
 			else
@@ -569,7 +571,7 @@ feature -- Basic operations: From Eiffel
 		ensure
 			result_attached: attached Result
 			result_is_valid: Result.is_valid
-			result_is_boolean: is_boolean (internal.dynamic_type (Result))
+			result_is_boolean: is_boolean (Result.generating_type)
 		end
 
 	marshal_from_double (a_value: ANY): XRPC_DOUBLE
@@ -581,9 +583,9 @@ feature -- Basic operations: From Eiffel
 			a_value_attached: attached a_value
 			a_value_is_marshallable_object: is_marshallable_object (a_value)
 		do
-			check a_value_is_double: is_double (internal.dynamic_type (a_value)) end
+			check a_value_is_double: is_double (a_value.generating_type) end
 
-			if internal.dynamic_type (a_value) = xrpc_double_type_id and then attached {XRPC_DOUBLE} a_value as l_result then
+			if a_value.generating_type = xrpc_double_type and then attached {XRPC_DOUBLE} a_value as l_result then
 					-- No marshalling needed.
 				Result := l_result
 			else
@@ -599,7 +601,7 @@ feature -- Basic operations: From Eiffel
 		ensure
 			result_attached: attached Result
 			result_is_valid: Result.is_valid
-			result_is_boolean: is_boolean (internal.dynamic_type (Result))
+			result_is_boolean: is_boolean (Result.generating_type)
 		end
 
 	marshal_from_integer (a_value: ANY): XRPC_INTEGER
@@ -611,17 +613,17 @@ feature -- Basic operations: From Eiffel
 			a_value_attached: attached a_value
 			a_value_is_marshallable_object: is_marshallable_object (a_value)
 		local
-			l_type: INTEGER
+			l_type: TYPE [detachable ANY]
 			l_exception: detachable XRPC_MARSHAL_EXCEPTION
 		do
-			check a_value_is_integer: is_integer (internal.dynamic_type (a_value)) end
+			check a_value_is_integer: is_integer (a_value.generating_type) end
 
-			l_type := internal.dynamic_type (a_value)
-			if l_type = xrpc_integer_type_id and then attached {XRPC_INTEGER} a_value as l_result then
+			l_type := a_value.generating_type
+			if l_type = xrpc_integer_type and then attached {XRPC_INTEGER} a_value as l_result then
 					-- No marshalling needed.
 				Result := l_result
 			else
-				if l_type = integer_64_type_id then
+				if l_type = integer_64_type then
 					if attached {INTEGER_64_REF} a_value as l_int then
 						if l_int.item <= {INTEGER_32}.max_value then
 							if l_int.item >= {INTEGER_32}.min_value then
@@ -641,7 +643,7 @@ feature -- Basic operations: From Eiffel
 						create Result.make (0)
 					end
 
-				elseif l_type = integer_32_type_id then
+				elseif l_type = integer_32_type then
 					if attached {INTEGER_32_REF} a_value as l_int then
 						create Result.make (l_int.item)
 					else
@@ -649,7 +651,7 @@ feature -- Basic operations: From Eiffel
 						create Result.make (0)
 					end
 
-				elseif l_type = integer_16_type_id then
+				elseif l_type = integer_16_type then
 					if attached {INTEGER_16_REF} a_value as l_int then
 						create Result.make (l_int.item)
 					else
@@ -657,7 +659,7 @@ feature -- Basic operations: From Eiffel
 						create Result.make (0)
 					end
 
-				elseif l_type = integer_8_type_id then
+				elseif l_type = integer_8_type then
 					if attached {INTEGER_8_REF} a_value as l_int then
 						create Result.make (l_int.item)
 					else
@@ -665,7 +667,7 @@ feature -- Basic operations: From Eiffel
 						create Result.make (0)
 					end
 
-				elseif l_type = natural_64_type_id then
+				elseif l_type = natural_64_type then
 					if attached {NATURAL_64_REF} a_value as l_natural then
 						if l_natural.item <= {INTEGER_32}.max_value.as_natural_64 then
 							create Result.make (l_natural.item.as_integer_32)
@@ -679,7 +681,7 @@ feature -- Basic operations: From Eiffel
 						create Result.make (0)
 					end
 
-				elseif l_type = natural_32_type_id then
+				elseif l_type = natural_32_type then
 					if attached {NATURAL_32_REF} a_value as l_natural then
 						if l_natural.item <= {INTEGER_32}.max_value.as_natural_32 then
 							create Result.make (l_natural.item.as_integer_32)
@@ -693,7 +695,7 @@ feature -- Basic operations: From Eiffel
 						create Result.make (0)
 					end
 
-				elseif l_type = natural_16_type_id then
+				elseif l_type = natural_16_type then
 					if attached {NATURAL_16_REF} a_value as l_natural then
 						create Result.make (l_natural.item.as_integer_32)
 					else
@@ -701,7 +703,7 @@ feature -- Basic operations: From Eiffel
 						create Result.make (0)
 					end
 
-				elseif l_type = natural_8_type_id then
+				elseif l_type = natural_8_type then
 					if attached {NATURAL_8_REF} a_value as l_natural then
 						create Result.make (l_natural.item.as_integer_32)
 					else
@@ -717,7 +719,7 @@ feature -- Basic operations: From Eiffel
 		ensure
 			result_attached: attached Result
 			result_is_valid: Result.is_valid
-			result_is_integer: is_integer (internal.dynamic_type (Result))
+			result_is_integer: is_integer (Result.generating_type)
 		end
 
 	marshal_from_string (a_value: ANY): XRPC_STRING
@@ -729,9 +731,9 @@ feature -- Basic operations: From Eiffel
 			a_value_attached: attached a_value
 			a_value_is_marshallable_object: is_marshallable_object (a_value)
 		do
-			check a_value_is_string: is_string (internal.dynamic_type (a_value)) end
+			check a_value_is_string: is_string (a_value.generating_type) end
 
-			if internal.dynamic_type (a_value) = xrpc_string_type_id and then attached {XRPC_STRING} a_value as l_result then
+			if a_value.generating_type = xrpc_string_type and then attached {XRPC_STRING} a_value as l_result then
 					-- No marshalling needed.
 				Result := l_result
 			else
@@ -747,7 +749,7 @@ feature -- Basic operations: From Eiffel
 		ensure
 			result_attached: attached Result
 			result_is_valid: Result.is_valid
-			result_is_string: is_string (internal.dynamic_type (Result))
+			result_is_string: is_string (Result.generating_type)
 		end
 
 	marshal_from_struct (a_value: ANY): XRPC_STRUCT
@@ -759,9 +761,9 @@ feature -- Basic operations: From Eiffel
 			a_value_attached: attached a_value
 			a_value_is_marshallable_object: is_marshallable_object (a_value)
 		do
-			check a_value_is_struct: is_struct (internal.dynamic_type (a_value)) end
+			check a_value_is_struct: is_struct (a_value.generating_type) end
 
-			if internal.dynamic_type (a_value) = xrpc_struct_type_id and then attached {XRPC_STRUCT} a_value as l_result then
+			if a_value.generating_type = xrpc_struct_type and then attached {XRPC_STRUCT} a_value as l_result then
 					-- No marshalling needed.
 				Result := l_result
 			else
@@ -771,7 +773,7 @@ feature -- Basic operations: From Eiffel
 		ensure
 			result_attached: attached Result
 			result_is_valid: Result.is_valid
-			result_is_struct: is_struct (internal.dynamic_type (Result))
+			result_is_struct: is_struct (Result.generating_type)
 		end
 
 ;note

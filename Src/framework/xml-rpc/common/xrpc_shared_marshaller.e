@@ -17,7 +17,7 @@ feature {NONE} -- Access
 		once
 			create Result
 		ensure
-			result_attached: attached Result
+			result_attached: Result /= Void
 		end
 
 ;note

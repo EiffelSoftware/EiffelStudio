@@ -1,6 +1,6 @@
 note
 	description: "[
-		An XML-RPC proxy for server communcation.
+		An XML-RPC proxy for server communication.
 		Clients should make all calls through a proxy or a specialized descendent.
 	]"
 	legal: "See notice at end of class."
@@ -67,13 +67,13 @@ feature -- Status report
 
 feature {NONE} -- Helpers
 
-	parser: XM_EIFFEL_PARSER
+	parser: XML_LITE_STOPPABLE_PARSER
 			-- Parser used to parse XML-RPC requests.
 		once
 			create Result.make
 			Result.set_callbacks (create {XRPC_RESPONSE_LOAD_CALLBACKS}.make (Result))
 		ensure
-			result_attached: attached Result
+			result_attached: Result /= Void
 			result_callbacks_set: attached {XRPC_RESPONSE_LOAD_CALLBACKS} Result.callbacks
 		end
 
@@ -82,7 +82,7 @@ feature {NONE} -- Helpers
 		once
 			create Result.make
 		ensure
-			result_attached: attached Result
+			result_attached: Result /= Void
 		end
 
 feature -- Basic operations
@@ -95,7 +95,7 @@ feature -- Basic operations
 			-- `Result': A response object or Void if no error occurred and the method does not return any value.
 		require
 			not_is_processing_request: not is_processing_request
-			a_name_attached: attached a_name
+			a_name_attached: a_name /= Void
 			not_a_name_is_empty: not a_name.is_empty
 			--a_args_contains_valid_items: attached a_args implies is_valid_arguments (a_args)
 		local
@@ -103,7 +103,7 @@ feature -- Basic operations
 			l_args: detachable ARRAY [XRPC_VALUE]
 			i, i_upper: INTEGER
 		do
-			if attached a_args and not a_args.is_empty then
+			if a_args /= Void and then not a_args.is_empty then
 					-- Marsal the arguments to XML-RPC arguments
 				l_marshaller := marshaller
 				create l_args.make_filled (create {XRPC_DEFAULT_VALUE}, 1, a_args.count)
@@ -134,14 +134,14 @@ feature {NONE} -- Basic operations
 			-- `Result': A response object or Void if no error occurred and the method does not return any value.
 		require
 			not_is_processing_request: not is_processing_request
-			a_name_attached: attached a_name
+			a_name_attached: a_name /= Void
 			not_a_name_is_empty: not a_name.is_empty
 			not_a_args_is_empty: attached a_args implies not a_args.is_empty
 			a_args_is_one_based: attached a_args implies a_args.lower = 1
 		local
 			l_parser: like parser
 			l_emitter: like xml_emitter
-			l_protocol: XRPC_PROTOCOL
+			l_protocol: detachable XRPC_PROTOCOL
 			l_response: STRING
 			retried: BOOLEAN
 		do
@@ -199,7 +199,7 @@ feature {NONE} -- Basic operations
 			end
 		rescue
 			retried := True
-			if attached l_protocol and then l_protocol.is_open then
+			if l_protocol /= Void and then l_protocol.is_open then
 				l_protocol.close
 			end
 			retry
@@ -213,9 +213,9 @@ feature {NONE} -- Actions handlers
 			-- `a_name': The name of the method to be called.
 			-- `a_args': Arguments that will be passed to the method on the server.
 		require
-			a_name_attached: attached a_name
+			a_name_attached: a_name /= Void
 			not_a_name_is_empty: not a_name.is_empty
-			not_a_args_is_empty: not a_args.is_empty
+			not_a_args_is_empty: a_args /= Void implies not a_args.is_empty
 		do
 		end
 
@@ -228,7 +228,7 @@ feature {NONE} -- Actions handlers
 		require
 			a_name_attached: attached a_name
 			not_a_name_is_empty: not a_name.is_empty
-			not_a_args_is_empty: attached a_args implies not a_args.is_empty
+			not_a_args_is_empty: a_args /= Void implies not a_args.is_empty
 		do
 		end
 

@@ -42,7 +42,7 @@ feature -- Basic operations
 			if attached internal_before_execute_actions as l_actions then
 				l_actions.call ([Current, a_arguments])
 			end
-			execute_internal (a_arguments)
+			Result := execute_internal (a_arguments)
 			if attached internal_before_execute_actions as l_actions then
 				l_actions.call ([Current, a_arguments])
 			end
@@ -83,6 +83,11 @@ feature -- Actions
 
 feature {NONE} -- Action handlers
 
+	execute_internal (a_arguments: ARRAY [XRPC_VALUE]): XRPC_RESPONSE
+		do
+			create {XRPC_FAULT_RESPONSE} Result.make (-1, "Not Yet Implemented")
+		end
+
 	on_before_execute
 		require
 			not_is_executing: not is_executing
@@ -95,6 +100,11 @@ feature {NONE} -- Action handlers
 		do
 		end
 
+feature {NONE} -- Implementation
+
+	internal_before_execute_actions: detachable like before_execute_actions
+
+	internal_after_execute_actions: detachable like after_executed_actions
 
 
 ;note

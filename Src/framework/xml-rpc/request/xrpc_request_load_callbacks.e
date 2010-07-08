@@ -69,17 +69,17 @@ feature {NONE} -- Process
 
 feature {NONE} -- Factory
 
-	new_tag_state_transitions: DS_HASH_TABLE [DS_HASH_TABLE [NATURAL_8, STRING], NATURAL_8]
+	new_tag_state_transitions: HASH_TABLE [HASH_TABLE [NATURAL_8, STRING], NATURAL_8]
 			-- <Precursor>
 		local
-			l_table: DS_HASH_TABLE [NATURAL_8, STRING]
+			l_table: HASH_TABLE [NATURAL_8, STRING]
 		do
 			Result := Precursor
 
 				-- Override the initial state
 			create l_table.make (1)
 			l_table.put (t_method_call, {XRPC_CONSTANTS}.method_call_name)
-			Result.force_last (l_table, t_none)
+			Result.force (l_table, t_none)
 
 				-- methodCall
 				-- => methodName
@@ -87,7 +87,7 @@ feature {NONE} -- Factory
 			create l_table.make (3)
 			l_table.put (t_method_name, {XRPC_CONSTANTS}.method_name_name)
 			l_table.put (t_params, {XRPC_CONSTANTS}.params_name)
-			Result.force_last (l_table, t_method_call)
+			Result.force (l_table, t_method_call)
 		end
 
 feature {NONE} -- Constants: States

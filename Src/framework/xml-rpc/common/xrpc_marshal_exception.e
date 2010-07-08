@@ -22,7 +22,7 @@ inherit
 
 feature -- Query
 
-	type_simple_name (a_type: INTEGER): STRING
+	type_simple_name (a_type: detachable TYPE [detachable ANY]): STRING
 			-- Retrieves a simple type name (for interop) of the type.
 			--
 			-- `a_type': A type identifier.
@@ -30,7 +30,7 @@ feature -- Query
 		local
 			l_sub_type: like type_simple_name
 		do
-			if a_type > 0 then
+			if a_type /= Void then
 				if is_boolean (a_type) then
 					Result := "boolean"
 				elseif is_double (a_type) then
@@ -40,13 +40,13 @@ feature -- Query
 				elseif is_string (a_type) then
 					Result := "string"
 				elseif is_array_conform_from (a_type) or is_array_conform_to (a_type) then
-					if a_type = array_any_type_id or a_type = xrpc_array_type_id then
+					if a_type = array_any_type or a_type = xrpc_array_type then
 						Result := "array"
 					else
-						if internal.generic_count_of_type (a_type) = 1 then
-							l_sub_type := type_simple_name (internal.generic_dynamic_type_of_type (a_type, 1))
+						if a_type.generic_parameter_count = 1 then
+							l_sub_type := type_simple_name (a_type.generic_parameter_type (1))
 						else
-							l_sub_type := type_simple_name (-1)
+							l_sub_type := type_simple_name (Void)
 						end
 						create Result.make (8 + l_sub_type.count)
 						Result.append ("array (")

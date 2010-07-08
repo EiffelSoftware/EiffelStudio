@@ -33,7 +33,7 @@ feature -- Access
 
 	response: detachable XRPC_RESPONSE
 			-- Response generated from last parse.
-			-- If the parse was unsuccessful then a response will be available, indicating the error.
+			-- If parse was unsuccessful then response will be available, indicating the error.
 
 feature {NONE} -- Status report
 
@@ -68,7 +68,7 @@ feature {NONE} -- Process
 					Precursor (a_state)
 				end
 			when t_param then
-				if has_parameters and then currrent_parameters.count = 1 then
+				if has_parameters and then current_parameters.count = 1 then
 					on_report_xml_error (e_schema_error)
 				else
 					Precursor (a_state)
@@ -130,10 +130,10 @@ feature {NONE} -- Process
 
 feature {NONE} -- State transistions
 
-	new_tag_state_transitions: DS_HASH_TABLE [DS_HASH_TABLE [NATURAL_8, STRING], NATURAL_8]
+	new_tag_state_transitions: HASH_TABLE [HASH_TABLE [NATURAL_8, STRING], NATURAL_8]
 			-- <Precursor>
 		local
-			l_table: DS_HASH_TABLE [NATURAL_8, STRING]
+			l_table: HASH_TABLE [NATURAL_8, STRING]
 		do
 			Result := Precursor.twin
 
@@ -148,13 +148,13 @@ feature {NONE} -- State transistions
 			create l_table.make (3)
 			l_table.put (t_params, {XRPC_CONSTANTS}.params_name)
 			l_table.put (t_fault, {XRPC_CONSTANTS}.fault_name)
-			Result.force_last (l_table, t_method_response)
+			Result.force (l_table, t_method_response)
 
 				-- fault
 				-- => value
 			create l_table.make (1)
 			l_table.put (t_value, {XRPC_CONSTANTS}.value_name)
-			Result.force_last (l_table, t_fault)
+			Result.force (l_table, t_fault)
 		end
 
 feature {NONE} -- Constants: States

@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_from: INTEGER; a_to: INTEGER)
+	make (a_from, a_to: detachable TYPE [detachable ANY])
 			-- Initialize an exception using the attempted marshalled type ids.
 			--
 			-- `a_from': Source object type id.

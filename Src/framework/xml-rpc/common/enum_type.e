@@ -69,7 +69,7 @@ feature -- Access
 				check not_internal_items_table_has_l_id: not internal_items_table.has (l_id) end
 				l_items := members
 				l_count := l_items.count
-				create Result.make (1, l_count)
+				create Result.make_filled (Current, 1, l_count)
 
 				l_assert := {ISE_RUNTIME}.check_assert (False)
 				from i := 1 until i > l_count loop
@@ -85,7 +85,7 @@ feature -- Access
 				internal_items_table.force (Result, l_id)
 			end
 		ensure
-			result_attached: attached Result
+			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty
 			internal_items_table_has_current: internal_items_table.has (
 				(create {INTERNAL}).dynamic_type (Current))

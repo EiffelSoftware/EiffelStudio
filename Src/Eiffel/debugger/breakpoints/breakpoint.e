@@ -178,7 +178,7 @@ feature -- Tags access
 		do
 			ts := tags
 			if tags /= Void and then not tags.is_empty then
-				create Result.make (1, tags.count)
+				create Result.make_filled ("", 1, tags.count)
 				from
 					ts.start
 					i := 1

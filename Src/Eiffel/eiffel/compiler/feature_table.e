@@ -1003,6 +1003,7 @@ end
 			opo_info: OBJECT_RELATIVE_ONCE_INFO
 			opo_reused: BOOLEAN
 			l_ancestor_once_info: detachable OBJECT_RELATIVE_ONCE_INFO
+			l_cl_type_a: detachable CL_TYPE_A
 		do
 			l_associated_class := associated_class
 			check l_associated_class_attached: l_associated_class /= Void end
@@ -1044,13 +1045,11 @@ end
 								-- we need to clean previous extra attributes
 								opo_info.reuse (l_once_i)
 								opo_reused := opo_info.is_set
-								check is_set: opo_info.is_set end
 							else
 								create opo_info.make (l_once_i)
 								check is_not_set: not opo_info.is_set end
 							end
 							opo_info_table.force (opo_info, rid)
-
 
 							l_written_class := l_once_i.written_class
 
@@ -1099,10 +1098,14 @@ end
 								attached system.exception_class as l_exception_class
 								and then l_exception_class.is_compiled
 							then
-								ref_desc.set_type_i (create {CL_TYPE_A}.make (system.exception_class_id))
+								create l_cl_type_a.make (system.exception_class_id)
+								l_cl_type_a.set_detachable_mark
+								ref_desc.set_type_i (l_cl_type_a)
 							else
 								ref_desc.set_type_i (system.any_type)
+								check exception_class_available: False end
 							end
+
 							desc := ref_desc
 							desc.set_attribute_name_id (opo_info.exception_name_id)
 							desc.set_feature_id (opo_info.exception_feature_id)
@@ -1125,7 +1128,7 @@ end
 									opo_info.set_result_name_id (names_heap.found_item)
 								end
 
-								desc := l_once_i.type.description
+								desc := l_once_i.type.description_with_detachable_type
 								desc.set_attribute_name_id (opo_info.result_name_id)
 								desc.set_feature_id (opo_info.result_feature_id)
 								desc.set_rout_id (opo_info.result_routine_id)

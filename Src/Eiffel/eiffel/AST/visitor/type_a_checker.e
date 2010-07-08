@@ -994,10 +994,10 @@ feature {NONE} -- Implementation
 				until
 					not attached q or else i >= n
 				loop
-						-- TODO: support MC generics
+					feature_finder.find_by_routine_id (t.routine_id [i], q, current_class)
 					if
-						attached q.associated_class as c and then
-						attached c.feature_of_rout_id (t.routine_id [i]) as f
+						attached feature_finder.found_feature as f and then
+						attached system.class_of_id (feature_finder.found_site) as c
 					then
 						saved_class := current_class
 						saved_actual_type := current_actual_type

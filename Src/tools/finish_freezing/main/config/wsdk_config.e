@@ -24,6 +24,7 @@ feature -- Access
 	wsdk_60: STRING = "WSDK60"
 	wsdk_61: STRING = "WSDK61"
 	wsdk_70: STRING = "WSDK70"
+	wsdk_71: STRING = "WSDK71"
 			-- Constants defining the various supported SDKs
 
 feature {NONE} -- Access
@@ -42,6 +43,8 @@ feature {NONE} -- Access
 					l_result.append ("\windows_sdk_v6.1.bat")
 				elseif code.is_equal (wsdk_70) then
 					l_result.append ("\windows_sdk_v7.0.bat")
+				elseif code.is_equal (wsdk_71) then
+					l_result.append ("\windows_sdk_v7.1.bat")
 				else
 						-- We will use the default batch file.
 					l_result := Void
@@ -98,7 +101,7 @@ feature {NONE} -- Access
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

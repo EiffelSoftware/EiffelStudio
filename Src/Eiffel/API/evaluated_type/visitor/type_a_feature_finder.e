@@ -68,17 +68,61 @@ feature -- Access
 	found_site: INTEGER
 			-- Class ID on which `found_feature' is called
 
+	has_multiple: BOOLEAN
+			-- Were multiple call sites found?
+
 feature {NONE} -- Context
 
 	context_class: CLASS_C
 			-- Class in which search is performed
 
-	name_id: INTEGER
-			-- Name ID of the feature being searched
+	feature_in_class: FUNCTION [TYPE_A_FEATURE_FINDER, TUPLE [CLASS_C], detachable FEATURE_I]
+			-- Lookup procedure for {CL_TYPE_A}
+
+	find_in_renamed_type_a: PROCEDURE [TYPE_A_FEATURE_FINDER, TUPLE [RENAMED_TYPE_A [TYPE_A]]]
+			-- Lookup procedure for {RENAMED_TYPE_A}
+
+feature {NONE} -- Search by name
+
+	feature_in_class_by_name (n: like {FEATURE_I}.feature_name_id; c: CLASS_C): detachable FEATURE_I
+			-- Feature of name `n' in class `c' if present.
+		require
+			valid_n: names_heap.has (n)
+			c_attached: attached c
+		do
+			Result := c.feature_of_name_id (n)
+		end
+
+	find_in_renamed_type_a_by_name (n: like {FEATURE_I}.feature_name_id; t: RENAMED_TYPE_A [TYPE_A])
+		require
+			valid_n: names_heap.has (n)
+			t_attached: attached t
+		local
+			name_id: like {FEATURE_I}.feature_name_id
+			saved_feature_in_class: like feature_in_class
+			saved_find_in_renamed_type_a: like find_in_renamed_type_a
+		do
+				-- Save search routines that use an old name before using the new one.
+			saved_feature_in_class := feature_in_class
+			saved_find_in_renamed_type_a := find_in_renamed_type_a
+			if attached t.renaming as renaming then
+					-- Take renaming in formal generic constraints into account.
+				name_id := renaming.renamed (n)
+				if name_id /= n then
+					feature_in_class := agent feature_in_class_by_name (name_id, ?)
+					find_in_renamed_type_a := agent find_in_renamed_type_a_by_name (name_id, ?)
+				end
+			end
+				-- Search using the new name.
+			t.type.process (Current)
+				-- Restore search routines that use an old name.
+			find_in_renamed_type_a := saved_find_in_renamed_type_a
+			feature_in_class := saved_feature_in_class
+		end
 
 feature -- Search
 
-	find (n: INTEGER; t: TYPE_A; c: CLASS_C)
+	find (n: like {FEATURE_I}.feature_name_id; t: TYPE_A; c: CLASS_C)
 			-- Find feature of name ID `n' called on type `t' and make it available in `found_feature'
 			-- assuming that the code is written in `c'.
 		require
@@ -89,9 +133,15 @@ feature -- Search
 		do
 			found_feature := Void
 			found_site := 0
-			name_id := n
 			context_class := c
+			feature_in_class := agent feature_in_class_by_name (n, ?)
+			find_in_renamed_type_a := agent find_in_renamed_type_a_by_name (n, ?)
 			t.process (Current)
+			if has_multiple then
+					-- More than one feature is found.
+				found_feature := Void
+				found_site := 0
+			end
 		ensure
 			same_name:
 				attached found_feature as f implies
@@ -102,6 +152,45 @@ feature -- Search
 				attached found_feature as f implies
 				attached system.class_of_id (found_site) as s and then
 				(s.feature_of_name_id (n) ~ f or else True) -- Feature can be renamed in formal constraints
+		end
+
+	find_by_routine_id (r: INTEGER; t: TYPE_A; c: CLASS_C)
+			-- Find feature of routine ID `r' called on type `t' and make it available in `found_feature'
+			-- assuming that the code is written in `c'.
+		require
+			valid_r: r > 0 -- and then system.routine_id_counter.is_feature_routine_id (r)
+			attached_t: attached t
+			attached_c: attached c
+			valid_t: is_type_valid_for_class (t, c)
+		do
+			found_feature := Void
+			found_site := 0
+			context_class := c
+			feature_in_class := agent (f: INTEGER; s: CLASS_C): detachable FEATURE_I
+				require
+					valid_f: f > 0 -- and then system.routine_id_counter.is_feature_routine_id (f)
+					s_attached: attached s
+				do
+					Result := s.feature_of_rout_id (f)
+				end
+				(r, ?)
+			find_in_renamed_type_a := agent (renamed_type: RENAMED_TYPE_A [TYPE_A])
+				require
+					renamed_type_attached: attached renamed_type
+				do
+					renamed_type.type.process (Current)
+				end
+			t.process (Current)
+		ensure
+			same_name:
+				attached found_feature as f implies
+				(f.rout_id_set.has (r))
+			valid_site:
+				attached found_feature as f implies system.classes.has (found_site)
+			feature_from_class:
+				attached found_feature as f implies
+				attached system.class_of_id (found_site) as s and then
+				(s.feature_of_rout_id (r) ~ f)
 		end
 
 feature {TYPE_A} -- Visitor
@@ -135,7 +224,7 @@ feature {TYPE_A} -- Visitor
 		do
 			if
 				attached t.associated_class as c and then
-				attached c.feature_of_name_id (name_id) as f
+				attached feature_in_class.item ([c]) as f
 			then
 				found_site := c.class_id
 				found_feature := f
@@ -153,34 +242,15 @@ feature {TYPE_A} -- Visitor
 		local
 			last_feature: detachable FEATURE_I
 			last_site: INTEGER
-			has_multiple: BOOLEAN
-			renamed_type: RENAMED_TYPE_A [TYPE_A]
-			saved_name_id: like name_id
 		do
 			across
 				context_class.constrained_types (t.position) as c
-			until
-				has_multiple
 			loop
-				renamed_type := c.item
-				saved_name_id := name_id
-				if attached renamed_type.renaming as n then
-						-- Take renaming in formal generic constraints into account.
-					name_id := n.renamed (name_id)
-				end
-				find (name_id, renamed_type.type, context_class)
-				name_id := saved_name_id
+				find_in_renamed_type_a.call ([c.item])
 				if attached found_feature as f then
-					if attached last_feature then
-							-- More than one feature is found.
-						last_feature := Void
-						last_site := 0
-						has_multiple := True
-					else
-							-- Record found data for future use.
-						last_feature := found_feature
-						last_site := found_site
-					end
+						-- Record found data for future use.
+					last_feature := found_feature
+					last_site := found_site
 				end
 			end
 			found_feature := last_feature

@@ -11,7 +11,7 @@ class
 inherit
 	LIKE_TYPE_A
 		redefine
-			description,
+			description, description_with_detachable_type,
 			dispatch_anchors,
 			error_generics,
 			evaluated_type_in_descendant,
@@ -125,6 +125,20 @@ feature -- Code generation
 			if qualifier.is_loose then
 				create gen_desc
 				gen_desc.set_type_i (Current)
+				Result := gen_desc
+			else
+				Result := Precursor
+			end
+		end
+
+	description_with_detachable_type: ATTR_DESC
+			-- Descritpion of type for skeletons.
+		local
+			gen_desc: GENERIC_DESC
+		do
+			if qualifier.is_loose then
+				create gen_desc
+				gen_desc.set_type_i (as_detachable_type)
 				Result := gen_desc
 			else
 				Result := Precursor

@@ -34,7 +34,7 @@ inherit
 	GEN_TYPE_A
 		undefine
 			meta_type, is_basic,
-			description, instantiated_description,
+			description, instantiated_description, description_with_detachable_type,
 			generate_cecil_value, sk_value, element_type, cl_make
 		redefine
 			is_typed_pointer, c_type, associated_class, process, reference_type,

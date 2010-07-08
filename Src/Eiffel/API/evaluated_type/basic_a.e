@@ -15,7 +15,8 @@ inherit
 		redefine
 			instantiation_of,
 			meta_type, is_basic, reference_type,
-			good_generics, internal_is_valid_for_class, error_generics, description,
+			good_generics, internal_is_valid_for_class, error_generics,
+			description, description_with_detachable_type,
 			generic_il_type_name, hash_code, internal_generic_derivation, generic_derivation,
 			internal_same_generic_derivation_as, generate_cecil_value,
 			sk_value, element_type, make
@@ -66,6 +67,12 @@ feature -- Access
 		end
 
 	description: ATTR_DESC
+			-- Type description for skeleton
+		do
+			Result := c_type.new_attribute_description
+		end
+
+	description_with_detachable_type: ATTR_DESC
 			-- Type description for skeleton
 		do
 			Result := c_type.new_attribute_description

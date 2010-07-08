@@ -9,7 +9,7 @@ class
 	CONF_LOAD_CALLBACKS
 
 inherit
-	XM_CALLBACKS_NULL
+	XML_CALLBACKS_NULL
 		redefine
 			on_error,
 			on_finish,
@@ -71,6 +71,7 @@ feature -- Setting
 		do
 			create l_error
 			l_error.set_message ({CONF_INTERFACE_NAMES}.e_internal_parse_error)
+			l_error.set_xml_parse_mode
 			is_error := True
 			last_error := l_error
 		end
@@ -197,7 +198,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

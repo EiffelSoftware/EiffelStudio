@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 	make_empty
 			-- Creates a new, empty XML-RPC array.
 		do
-			create internal_array.make (1, 0)
+			create internal_array.make_empty (1)
 		end
 
 	make_from_array (a_array: ARRAY [XRPC_VALUE])

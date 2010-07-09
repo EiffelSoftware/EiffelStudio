@@ -41,6 +41,5 @@
 		<library name="fmwk_utilities" location="..\utilities\utilities.ecf"/>
 
 		<cluster name="fmwk_vision2" location=".\" recursive="true"/>
-		</cluster>
 	</target>
 </system>

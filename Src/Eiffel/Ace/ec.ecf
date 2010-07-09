@@ -26,15 +26,8 @@
 		<library name="emitter_loader" location="$EIFFEL_SRC\framework\emitter_loader\emitter_loader.ecf" readonly="false" use_application_options="true"/>
 		<library name="encoding" location="$ISE_LIBRARY\library\encoding\encoding.ecf" readonly="false"/>
 		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf" readonly="false" use_application_options="true"/>
-		<library name="framework" location="$EIFFEL_SRC\framework\framework.ecf" readonly="false">
-			<class_option class="ELLIPSIS_PROPERTY">
-				<warning name="once_in_generic" enabled="false"/>
-			</class_option>
-			<class_option class="CHOICE_PROPERTY">
-				<warning name="once_in_generic" enabled="false"/>
-			</class_option>
-		</library>
 		<library name="framework_patterns" location="$EIFFEL_SRC\framework\patterns\patterns.ecf" readonly="false" use_application_options="true"/>
+		<library name="fmwk_utilities" location="$EIFFEL_SRC\framework\utilities\utilities.ecf"/>
 		<library name="gobo_regexp" location="$ISE_LIBRARY\library\gobo\gobo_regexp.ecf"/>
 		<library name="i18n" location="$ISE_LIBRARY\library\i18n\i18n.ecf" readonly="false"/>
 		<library name="interface_names" location="$EIFFEL_SRC\framework\interface_names\interface_names.ecf" readonly="false"/>
@@ -164,6 +157,14 @@
 		<library name="fast_ini" location="$EIFFEL_SRC\framework\file_formats\fast_ini\fast_ini.ecf" readonly="false"/>
 		<library name="file_utilities" location="$EIFFEL_SRC\framework\file_utilities\file_utilities.ecf" readonly="false" use_application_options="true"/>
 		<library name="framework_text" location="$EIFFEL_SRC\framework\base\text\text.ecf" readonly="false" use_application_options="true"/>
+		<library name="framework_vision2" location="$EIFFEL_SRC\framework\vision2\vision2.ecf" readonly="false">
+			<class_option class="ELLIPSIS_PROPERTY">
+				<warning name="once_in_generic" enabled="false"/>
+			</class_option>
+			<class_option class="CHOICE_PROPERTY">
+				<warning name="once_in_generic" enabled="false"/>
+			</class_option>
+		</library>
 		<library name="gobo_extension" location="$ISE_LIBRARY\library\gobo_extension\gobo_extension.ecf" readonly="false"/>
 		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel.ecf"/>
 		<library name="gobo_lexical" location="$ISE_LIBRARY\library\gobo\gobo_lexical.ecf"/>

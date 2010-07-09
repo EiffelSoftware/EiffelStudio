@@ -1,0 +1,40 @@
+test_name	store-bounded-queues-stacks
+test_description Test that storing old queues or old stacks works even though the data structure is different in the new revision.
+
+define_directory EIFGEN $TEST EIFGENs
+define_directory TARGET $EIFGEN test
+define_directory WCODE $TARGET W_code
+
+copy_sub 	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+copy_bin	bounded_queue_1 $WCODE bounded_queue_1
+copy_bin	bounded_queue_2 $WCODE bounded_queue_2
+copy_bin	bounded_queue_3 $WCODE bounded_queue_3
+copy_bin	bounded_queue_4 $WCODE bounded_queue_4
+copy_bin	bounded_queue_5 $WCODE bounded_queue_5
+copy_bin	arrayed_queue_1 $WCODE arrayed_queue_1
+copy_bin	arrayed_queue_2 $WCODE arrayed_queue_2
+copy_bin	arrayed_queue_3 $WCODE arrayed_queue_3
+copy_bin	arrayed_queue_4 $WCODE arrayed_queue_4
+copy_bin	arrayed_queue_5 $WCODE arrayed_queue_5
+
+copy_bin	bounded_stack_1 $WCODE bounded_stack_1
+copy_bin	bounded_stack_2 $WCODE bounded_stack_2
+copy_bin	bounded_stack_3 $WCODE bounded_stack_3
+copy_bin	bounded_stack_4 $WCODE bounded_stack_4
+copy_bin	bounded_stack_5 $WCODE bounded_stack_5
+copy_bin	arrayed_stack_1 $WCODE arrayed_stack_1
+copy_bin	arrayed_stack_2 $WCODE arrayed_stack_2
+copy_bin	arrayed_stack_3 $WCODE arrayed_stack_3
+copy_bin	arrayed_stack_4 $WCODE arrayed_stack_4
+copy_bin	arrayed_stack_5 $WCODE arrayed_stack_5
+
+execute_work	NONE exec_output
+execute_result	ok
+compare		exec_output output
+
+test_end

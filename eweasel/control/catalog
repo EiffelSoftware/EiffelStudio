@@ -1869,6 +1869,7 @@ test	storable-formats-63-2		store029 tcf pass storable
 test	store-retrieve-transient-attributes	store030 tcf pass storable
 test	store-retrieve-with-version	store031 tcf pass storable
 test	store-in-different-thread	store032 tcf pass storable multithreaded
+test	store-bounded-queues-stacks	store033 tcf pass storable
 
 -- Flat, short, flatshort tests
 

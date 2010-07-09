@@ -450,7 +450,6 @@ rt_public int eif_gen_conf (EIF_TYPE_INDEX source_type, EIF_TYPE_INDEX target_ty
 
 rt_shared void eif_gen_conf_init (EIF_TYPE_INDEX max_dtype)
 {
-	RT_GET_CONTEXT
 	EIF_TYPE_INDEX dt;
 	char   *cname;
 	struct eif_par_types **pt;

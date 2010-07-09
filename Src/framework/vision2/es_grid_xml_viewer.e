@@ -10,7 +10,7 @@ class
 	ES_GRID_XML_VIEWER
 
 inherit
-	XM_CALLBACKS
+	XML_CALLBACKS
 
 create
 	make
@@ -107,11 +107,8 @@ feature -- Loading
 			grid.set_row_count_to (0)
 			create f.make (fn)
 			if f.exists and f.is_readable then
-				create st.make (fn)
 				build_xml_parser
-				st.open_read
-				xml_parser.parse_from_stream (st)
-				st.close
+				xml_parser.parse_from_filename (fn)
 			end
 			update_columns
 		end
@@ -131,17 +128,17 @@ feature -- Loading
 
 feature {NONE} -- Xml parser implementation
 
-	xml_parser: XM_PARSER
+	xml_parser: XML_PARSER
 			-- XML parser.
 
 	build_xml_parser
 			-- Build `xml_parser'
 		local
-			l_fact: XM_EIFFEL_PARSER_FACTORY
+			l_fact: XML_LITE_PARSER_FACTORY
 		do
 			if xml_parser = Void then
 				create l_fact
-				xml_parser := l_fact.new_eiffel_parser
+				xml_parser := l_fact.new_lite_parser
 				xml_parser.set_callbacks (Current)
 			end
 		ensure

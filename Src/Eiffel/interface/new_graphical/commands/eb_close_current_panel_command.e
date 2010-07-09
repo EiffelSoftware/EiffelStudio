@@ -53,8 +53,6 @@ feature -- Query
 
 	new_menu_item: EB_COMMAND_MENU_ITEM
 			-- <Precursor>
-		local
-			l_text: STRING_32
 		do
 			Result := Precursor
 			Result.set_pixmap (pixmaps.icon_pixmaps.tab_close_icon)

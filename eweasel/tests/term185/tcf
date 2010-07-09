@@ -1,0 +1,15 @@
+test_name 	 generic-derivation-constraint
+test_description When a particualr generic derivation is listed only in a formal generic constraint, it should not cause the compiler to crash because no such generic derivation is created in the system.
+
+copy_raw	a.e $CLUSTER a.e
+copy_raw	b.e $CLUSTER b.e
+copy_raw	test.e $CLUSTER test.e
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result	ok
+execute_work	NONE exec_output_m
+execute_result	ok
+compare		exec_output_m output
+
+test_end

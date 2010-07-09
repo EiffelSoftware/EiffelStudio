@@ -20,7 +20,9 @@
 		<library name="ecosystem" location="$EIFFEL_SRC\Eiffel\ecosystem\ecosystem.ecf" readonly="false" use_application_options="true"/>
 		<library name="eiffel_identifier" location="$EIFFEL_SRC\framework\eiffel_identifier\eiffel_identifier.ecf" readonly="false" use_application_options="true"/>
 		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf" readonly="false" use_application_options="true"/>
-		<library name="framework" location="$EIFFEL_SRC\framework\framework.ecf" readonly="false">
+		<library name="fmwk_utilities" location="$EIFFEL_SRC\framework\utilities\utilities.ecf"/>
+		<library name="framework_patterns" location="$EIFFEL_SRC\framework\patterns\patterns.ecf" readonly="false" use_application_options="true"/>
+		<library name="framework_vision2" location="$EIFFEL_SRC\framework\vision2\vision2.ecf">
 			<class_option class="ELLIPSIS_PROPERTY">
 				<warning name="once_in_generic" enabled="false"/>
 			</class_option>
@@ -28,7 +30,6 @@
 				<warning name="once_in_generic" enabled="false"/>
 			</class_option>
 		</library>
-		<library name="framework_patterns" location="$EIFFEL_SRC\framework\patterns\patterns.ecf" readonly="false" use_application_options="true"/>
 		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel.ecf" readonly="true"/>
 		<library name="gobo_structure" location="$ISE_LIBRARY\library\gobo\gobo_structure.ecf" readonly="true"/>
 		<library name="interface_names" location="$EIFFEL_SRC\framework\interface_names\interface_names.ecf" readonly="false"/>

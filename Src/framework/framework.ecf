@@ -46,11 +46,11 @@
 				<platform value="windows"/>
 			</condition>
 		</library>
-		<cluster name="fmwk_vision2" location=".\vision2\" recursive="true">
+		<library name="fmwk_vision2" location=".\vision2\vision2.ecf">
 			<condition>
 				<custom name="batch_framework" excluded_value="true"/>
 			</condition>
-		</cluster>
-		<cluster name="utilities" location=".\utilities\" recursive="true"/>
+		</library>
+		<library name="fmwk_utilities" location=".\utilities\utilities.ecf"/>
 	</target>
 </system>

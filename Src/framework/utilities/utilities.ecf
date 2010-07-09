@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="framework_utilities" uuid="DE526F11-9195-4300-9B05-3543AC2CB050" library_target="framework_utilities">
+	<target name="framework_utilities">
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/.svn$</exclude>
+		</file_rule>
+		<file_rule>
+			<exclude>/unix$</exclude>
+			<exclude>/gtk$</exclude>
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</file_rule>
+		<file_rule>
+			<exclude>/mswin$</exclude>
+			<exclude>/windows$</exclude>
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</file_rule>
+		<option>
+			<assertions precondition="true"/>
+		</option>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf"/>
+		<library name="gobo_extension" location="$ISE_LIBRARY\library\gobo_extension\gobo_extension.ecf"/>
+		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel.ecf"/>
+		<library name="gobo_regexp" location="$ISE_LIBRARY\library\gobo\gobo_regexp.ecf"/>
+		<library name="gobo_structure" location="$ISE_LIBRARY\library\gobo\gobo_structure.ecf"/>
+		<library name="kmp_matcher" location="$ISE_LIBRARY\library\text\regexp\kmp_matcher\kmp_matcher.ecf"/>
+		<cluster name="utilities" location=".\" recursive="true"/>
+	</target>
+</system>

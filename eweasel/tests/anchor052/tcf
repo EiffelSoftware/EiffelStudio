@@ -1,0 +1,13 @@
+
+test_name 	 qat-anchored-to-redefined-descendant	
+test_description A feature that is of a qualified anchored type that is anchored to a descendant of itself, where the type of the descendant feature is not anchored is reported to violate VTAT(1).
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test1.e $CLUSTER test1.e
+copy_raw	test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result	ok
+
+test_end

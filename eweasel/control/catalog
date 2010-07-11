@@ -920,6 +920,7 @@ test	renamed-type-crash			incr365 tcf fail incrementality generic
 test	once-per-object-add-descendant		incr366 tcf fail incrementality once
 test	change-constraint-rename-crash		incr367 tcf fail incrementality generic anchored_type
 test	qat-change-parent-actual-generic	incr368 tcf fail incrementality generic anchored_type
+test	qat-veen-instead-of-vtat		incr369 tcf fail incrementality anchored_type
 
 
 -- Melting

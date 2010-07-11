@@ -1,0 +1,16 @@
+
+test_name	qat-veen-instead-of-vtat
+test_description Removing a rename clause and a feature and recompiling causes the compiler to report a VEEN error when it should report VTAT(1).
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+copy_raw 	test2.e $CLUSTER test2.e
+compile_melted
+compile_result 	ok
+
+copy_raw 	test2_rev2.e $CLUSTER test2.e
+compile_melted
+compile_result 	validity_error TEST1 VTAT(1)
+
+test_end

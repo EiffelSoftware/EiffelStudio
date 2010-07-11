@@ -1024,6 +1024,7 @@ test	bad-melted-infix		melt096  tcf pass execution melting
 test	new-type-type-melted	melt097  tcf pass execution melting
 test	melted-type-of-generic	melt098  tcf pass execution melting reflection
 test	melted-tuple-expression-order melt099 tcf pass execution melting tuple
+test	melted-creation-constrained-generic melt100 tcf fail execution melting generic
 
 -- Freezing
 

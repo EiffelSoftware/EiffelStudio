@@ -2454,6 +2454,7 @@ test	qat-process-formal-as-crash		anchor049 tcf fail anchored_type formal generi
 test	qat-invalid-vffd			anchor050 tcf fail anchored_type
 test	qat-c-compile-failure			anchor051 tcf fail anchored_type generic
 test	qat-anchored-to-redefined-descendant	anchor052 tcf fail anchored_type
+test	qat-inlining-bug			anchor053 tcf fail anchored_type generic
 
 -- .NET specific test
 if DOTNET test expanded-object-conversion	dotnet001	tcf pass dotnet

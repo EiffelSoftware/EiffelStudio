@@ -244,7 +244,7 @@ feature {TYPE_A} -- Visitor
 			last_site: INTEGER
 		do
 			across
-				context_class.constrained_types (t.position) as c
+				context_class.constraints (t.position) as c
 			loop
 				find_in_renamed_type_a.call ([c.item])
 				if attached found_feature as f then

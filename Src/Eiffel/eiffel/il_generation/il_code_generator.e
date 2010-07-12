@@ -649,8 +649,9 @@ feature -- Once manifest string manipulation
 
 	generate_once_string (number: INTEGER; value: STRING; type: INTEGER)
 			-- Generate code for once string in a current routine with the given
-			-- `number' and `value' using CIL string type if `is_cil_string' is `true'
-			-- or Eiffel string type otherwise.
+			-- `number' and `value' using CIL string type if `type' is `string_type_cil',
+			-- STRING_8 if `type' is `string_type_string' or STRING_32 if `type' is 
+			-- string_type_string_32.
 		require
 			valid_number: number >= 0
 			non_void_value: value /= Void

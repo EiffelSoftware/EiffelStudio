@@ -1,4 +1,4 @@
-Error: A constraint cannot be expressed by an anchord type (like).
+Error: A constraint cannot be expressed by an anchored type (like).
 What to do: You have written something like
    EXAMPLE[G -> like name_of_feature] which is not allowed.
    Replace the constraint to solve the error.

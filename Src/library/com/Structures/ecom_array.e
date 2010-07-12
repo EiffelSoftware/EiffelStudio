@@ -21,6 +21,7 @@ inherit
 	ARRAY [G]
 		rename
 			make as array_make,
+			make_empty as array_make_empty,
 			item as array_item,
 			put as array_put,
 			force as array_force,

@@ -892,7 +892,7 @@ feature {NONE} -- Implementation
 				create routine_id.make_filled (0, n)
 				from
 						-- Register intermediate type with instantiator.
-					instantiator.dispatch (q, current_class)
+					instantiator.dispatch (q.conformance_type, current_class)
 				until
 					not attached q or else i >= n
 				loop
@@ -934,7 +934,7 @@ feature {NONE} -- Implementation
 									-- Record supplier for recompilation.
 								degree_4.add_qualified_supplier (f, c, current_class)
 									-- Register intermediate type with instantiator.
-								instantiator.dispatch (q, current_class)
+								instantiator.dispatch (q.conformance_type, current_class)
 									-- Record routine ID that is used to update the type in descendants.
 								routine_id [i] := f.rout_id_set.first
 								if attached suppliers as s then
@@ -990,7 +990,7 @@ feature {NONE} -- Implementation
 				create name.make_filled (0, n)
 				from
 						-- Register intermediate type with instantiator.
-					instantiator.dispatch (q, current_class)
+					instantiator.dispatch (q.conformance_type, current_class)
 				until
 					not attached q or else i >= n
 				loop
@@ -1023,7 +1023,7 @@ feature {NONE} -- Implementation
 								-- Record supplier for recompilation.
 							degree_4.add_qualified_supplier (f, c, current_class)
 								-- Register intermediate type with instantiator.
-							instantiator.dispatch (q, current_class)
+							instantiator.dispatch (q.conformance_type, current_class)
 								-- Save name of the routine.
 							name [i] := f.feature_name_id
 							if attached suppliers as s then

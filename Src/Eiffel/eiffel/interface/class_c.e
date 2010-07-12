@@ -2366,6 +2366,23 @@ end
 				l_instantiator.dispatch (parent_type, Current)
 				i := i + 1
 			end
+				-- Ensure all constraint types are registered
+				-- as they are expected to be registered at code generation time (see test#term185).
+			if attached generics as l then
+				from
+					i := l.count
+				until
+					i <= 0
+				loop
+					constrained_types (i).do_all (
+						agent (t: RENAMED_TYPE_A [TYPE_A])
+							do
+								instantiator.dispatch (t.type, Current)
+							end
+					)
+					i := i - 1
+				end
+			end
 		end
 
 	init_types

@@ -173,7 +173,7 @@ feature {NONE} -- Basic operations
 								Result := l_callbacks.response
 
 									-- There should always be a response, even if there was a parse error.
-								check result_attached: attached Result end
+								check result_attached: Result /= Void end
 							else
 									-- For some reason, the right callbacks are not being used.
 								Result := response_factory.new_response_from_error_code ({XRPC_ERROR_CODES}.e_code_internal_error)
@@ -185,9 +185,9 @@ feature {NONE} -- Basic operations
 					end
 					l_protocol.close
 				end
-				if l_protocol.error and not attached Result then
+				if l_protocol.error and Result = Void then
 						-- The connection failed for some reason, report it.
-					Result := response_factory.new_response_from_error_code ({XRPC_ERROR_CODES}.e_code_connection_mask & l_protocol.error_code)
+					Result := response_factory.new_response_from_error_code ({XRPC_ERROR_CODES}.e_code_connection_mask + l_protocol.error_code)
 				end
 			else
 					-- Unexpected failure, report it.

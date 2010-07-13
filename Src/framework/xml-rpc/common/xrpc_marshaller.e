@@ -65,14 +65,14 @@ feature -- Status report
 			-- `a_routine': A procedure/function agent to validate for marshalling.
 			-- `Result': True if the routine is marshallable; False otherwise.
 		require
-			a_routine_attached: attached a_routine
+			a_routine_attached: a_routine /= Void
 		local
 			l_tuple: TYPE [detachable ANY]
 			l_type: TYPE [detachable ANY]
 			i, i_count: INTEGER
 		do
 				-- Routines cannot have an open target because custom Eiffel objects cannot be marshalled.
-			Result := attached a_routine.target
+			Result := a_routine.target /= Void
 			if Result then
 				if a_routine.open_count > 0 then
 						-- Check argument tuple types
@@ -92,7 +92,7 @@ feature -- Status report
 				end
 			end
 		ensure
-			a_routine_target_attached: Result implies attached a_routine.target
+			a_routine_target_attached: Result implies a_routine.target /= Void
 		end
 
 	is_marshallable_object (a_object: ANY): BOOLEAN
@@ -126,7 +126,7 @@ feature -- Basic operations: To Eiffel
 			-- `Result': A marshalled value or Void if nothing could be marshalled.
 		require
 			a_type_is_marshallable_type: is_marshallable_type (a_type)
-			a_value_attached: attached a_value
+			a_value_attached: a_value /= Void
 			a_value_is_valid: a_value.is_valid
 		local
 			l_exception: detachable XRPC_MARSHAL_TYPE_EXCEPTION
@@ -183,7 +183,7 @@ feature -- Basic operations: To Eiffel
 				end
 			end
 
-			if attached l_exception then
+			if l_exception /= Void then
 					-- There was a problem, raise an exception.
 				l_exception.raise
 			end
@@ -198,7 +198,7 @@ feature -- Basic operations: To Eiffel
 			-- `Result': A marshalled array or Void if nothing could be marshalled.
 		require
 			a_type_is_array: is_array_conform_to (a_type)
-			a_value_attached: attached a_value
+			a_value_attached: a_value /= Void
 			a_value_is_valid: a_value.is_valid
 		local
 			l_generic_type: TYPE [detachable ANY]
@@ -225,7 +225,7 @@ feature -- Basic operations: To Eiffel
 					if attached {ARRAY [ANY]} Result as l_result  then
 						l_array := l_result
 					end
-					check l_array_attached: attached l_array end
+					check l_array_attached: l_array /= Void end
 					if l_generic_type.has_default then
 						l_default := l_generic_type.default
 					else
@@ -277,7 +277,7 @@ feature -- Basic operations: To Eiffel
 			-- `Result': A marshalled boolean.
 		require
 			a_type_is_boolean: is_boolean (a_type)
-			a_value_attached: attached a_value
+			a_value_attached: a_value /= Void
 			a_value_is_valid: a_value.is_valid
 		do
 			if a_type = xrpc_boolean_type then
@@ -287,7 +287,7 @@ feature -- Basic operations: To Eiffel
 				Result := a_value.value
 			end
 		ensure
-			result_attached: attached Result
+			result_set: Result = a_value.value
 		end
 
 	marshal_to_double (a_type: TYPE [detachable ANY]; a_value: XRPC_DOUBLE): ANY
@@ -299,7 +299,7 @@ feature -- Basic operations: To Eiffel
 			-- `Result': A marshalled double.
 		require
 			a_type_is_double: is_double (a_type)
-			a_value_attached: attached a_value
+			a_value_attached: a_value /= Void
 			a_value_is_valid: a_value.is_valid
 		local
 			l_double: REAL_64
@@ -316,7 +316,7 @@ feature -- Basic operations: To Eiffel
 				end
 			end
 		ensure
-			result_attached: attached Result
+			result_attached: Result /= Void
 		end
 
 	marshal_to_integer (a_type: TYPE [detachable ANY]; a_value: XRPC_INTEGER): ANY
@@ -328,7 +328,7 @@ feature -- Basic operations: To Eiffel
 			-- `Result': A marshalled integer.
 		require
 			a_type_is_integer: is_integer (a_type)
-			a_value_attached: attached a_value
+			a_value_attached: a_value /= Void
 			a_value_is_valid: a_value.is_valid
 		local
 			l_integer: INTEGER_32
@@ -389,13 +389,13 @@ feature -- Basic operations: To Eiffel
 					end
 				end
 
-				if attached l_exception then
+				if l_exception /= Void then
 						-- There was a problem, raise an exception.
 					l_exception.raise
 				end
 			end
 		ensure
-			result_attached: attached Result
+			result_attached: Result /= Void
 		end
 
 	marshal_to_string (a_type: TYPE [detachable ANY]; a_value: XRPC_STRING): ANY
@@ -406,7 +406,7 @@ feature -- Basic operations: To Eiffel
 			-- `Result': A marshalled string.
 		require
 			a_type_is_string: is_string (a_type)
-			a_value_attached: attached a_value
+			a_value_attached: a_value /= Void
 			a_value_is_valid: a_value.is_valid
 		local
 			l_string: STRING
@@ -438,7 +438,7 @@ feature -- Basic operations: To Eiffel
 				end
 			end
 		ensure
-			result_attached: attached Result
+			result_attached: Result /= Void
 		end
 
 	marshal_to_struct (a_type: TYPE [detachable ANY]; a_value: XRPC_STRUCT): ANY
@@ -449,7 +449,7 @@ feature -- Basic operations: To Eiffel
 			-- `Result': A marshalled struct.
 		require
 			a_type_is_struct: is_struct (a_type)
-			a_value_attached: attached a_value
+			a_value_attached: a_value /= Void
 			a_value_is_valid: a_value.is_valid
 		do
 			if a_type = xrpc_string_type then
@@ -461,7 +461,7 @@ feature -- Basic operations: To Eiffel
 				create {XRPC_STRUCT}Result.make
 			end
 		ensure
-			result_attached: attached Result
+			result_attached: Result /= Void
 		end
 
 feature -- Basic operations: From Eiffel
@@ -469,7 +469,7 @@ feature -- Basic operations: From Eiffel
 	marshal_from (a_value: ANY): XRPC_VALUE
 			-- Marshals an XML-RPC value object into an object of the supplied type.
 		require
-			a_value_attached: attached a_value
+			a_value_attached: a_value /= Void
 			a_value_is_marshallable_object: is_marshallable_object (a_value)
 		local
 			l_type: TYPE [detachable ANY]
@@ -505,7 +505,7 @@ feature -- Basic operations: From Eiffel
 			-- `a_value': A array to marshal.
 			-- `Result': A marshaled XML-RPC array object.
 		require
-			a_value_attached: attached a_value
+			a_value_attached: a_value /= Void
 			a_value_is_marshallable_object: is_marshallable_object (a_value)
 		local
 			l_mutable_array: XRPC_MUTABLE_ARRAY
@@ -541,9 +541,9 @@ feature -- Basic operations: From Eiffel
 				Result := l_mutable_array
 			end
 		ensure
-			result_attached: attached Result
+			result_attached: Result /= Void
 			result_is_valid: Result.is_valid
-			result_is_array: is_array_conform_to (Result.generating_type)
+			result_is_array: is_array_conform_from (Result.generating_type)
 		end
 
 	marshal_from_boolean (a_value: ANY): XRPC_BOOLEAN
@@ -552,7 +552,7 @@ feature -- Basic operations: From Eiffel
 			-- `a_value': A Boolean value to marshal.
 			-- `Result': A marshaled XML-RPC Boolean object.
 		require
-			a_value_attached: attached a_value
+			a_value_attached: a_value /= Void
 			a_value_is_marshallable_object: is_marshallable_object (a_value)
 		do
 			check a_value_is_boolean: is_boolean (a_value.generating_type) end
@@ -569,7 +569,7 @@ feature -- Basic operations: From Eiffel
 				end
 			end
 		ensure
-			result_attached: attached Result
+			result_attached: Result /= Void
 			result_is_valid: Result.is_valid
 			result_is_boolean: is_boolean (Result.generating_type)
 		end
@@ -580,7 +580,7 @@ feature -- Basic operations: From Eiffel
 			-- `a_value': A real value to marshal.
 			-- `Result': A marshaled XML-RPC double object.
 		require
-			a_value_attached: attached a_value
+			a_value_attached: a_value /= Void
 			a_value_is_marshallable_object: is_marshallable_object (a_value)
 		do
 			check a_value_is_double: is_double (a_value.generating_type) end
@@ -599,7 +599,7 @@ feature -- Basic operations: From Eiffel
 				end
 			end
 		ensure
-			result_attached: attached Result
+			result_attached: Result /= Void
 			result_is_valid: Result.is_valid
 			result_is_boolean: is_boolean (Result.generating_type)
 		end
@@ -610,7 +610,7 @@ feature -- Basic operations: From Eiffel
 			-- `a_value': An integer or nautral value to marshal.
 			-- `Result': A marshaled XML-RPC integer object.
 		require
-			a_value_attached: attached a_value
+			a_value_attached: a_value /= Void
 			a_value_is_marshallable_object: is_marshallable_object (a_value)
 		local
 			l_type: TYPE [detachable ANY]
@@ -717,7 +717,7 @@ feature -- Basic operations: From Eiffel
 				end
 			end
 		ensure
-			result_attached: attached Result
+			result_attached: Result /= Void
 			result_is_valid: Result.is_valid
 			result_is_integer: is_integer (Result.generating_type)
 		end
@@ -728,7 +728,7 @@ feature -- Basic operations: From Eiffel
 			-- `a_value': A string value to marshal.
 			-- `Result': A marshaled XML-RPC string object.
 		require
-			a_value_attached: attached a_value
+			a_value_attached: a_value /= Void
 			a_value_is_marshallable_object: is_marshallable_object (a_value)
 		do
 			check a_value_is_string: is_string (a_value.generating_type) end
@@ -747,7 +747,7 @@ feature -- Basic operations: From Eiffel
 				end
 			end
 		ensure
-			result_attached: attached Result
+			result_attached: Result /= Void
 			result_is_valid: Result.is_valid
 			result_is_string: is_string (Result.generating_type)
 		end
@@ -758,7 +758,7 @@ feature -- Basic operations: From Eiffel
 			-- `a_value': A struct value to marshal.
 			-- `Result': A marshaled XML-RPC struct object.
 		require
-			a_value_attached: attached a_value
+			a_value_attached: a_value /= Void
 			a_value_is_marshallable_object: is_marshallable_object (a_value)
 		do
 			check a_value_is_struct: is_struct (a_value.generating_type) end
@@ -771,7 +771,7 @@ feature -- Basic operations: From Eiffel
 				create Result.make
 			end
 		ensure
-			result_attached: attached Result
+			result_attached: Result /= Void
 			result_is_valid: Result.is_valid
 			result_is_struct: is_struct (Result.generating_type)
 		end

@@ -59,7 +59,7 @@ feature -- Document
 			-- Initialize document variables.
 		do
 			reset
-			next.on_start
+			Precursor
 		end
 
 feature -- Forwarding policy
@@ -122,10 +122,8 @@ feature -- Element
 		local
 			error_msg: STRING
 			l_element_prefix: like element_prefix
-			l_element_local_part: like element_local_part
 		do
-			l_element_local_part := element_local_part
-			if l_element_local_part /= Void then
+			if attached element_local_part as l_element_local_part then
 				l_element_prefix := element_prefix
 				if l_element_prefix /= Void and then has_prefix (l_element_prefix) then
 					if context.has (l_element_prefix) then
@@ -143,23 +141,22 @@ feature -- Element
 					end
 				else
 					next.on_start_tag (context.resolve_default,
-							element_prefix, l_element_local_part)
+							l_element_prefix, l_element_local_part)
 					on_delayed_attributes
 				end
 			else
-				check should_not_occur: False end
+				check local_part_attached: False end
 			end
-
-			next.on_start_tag_finish
+			Precursor
 		end
 
 	on_end_tag (a_namespace: detachable STRING; a_prefix: detachable STRING; a_local_part: STRING)
 			-- Process end tag.
 		do
 			if a_prefix /= Void and then has_prefix (a_prefix) then
-				next.on_end_tag (context.resolve (a_prefix), a_prefix, a_local_part)
+				Precursor (context.resolve (a_prefix), a_prefix, a_local_part)
 			else
-				next.on_end_tag (context.resolve_default, a_prefix, a_local_part)
+				Precursor (context.resolve_default, a_prefix, a_local_part)
 			end
 			context.pop
 		end
@@ -169,29 +166,29 @@ feature {NONE} -- Attribute events
 	on_delayed_attributes
 			-- Resolve attributes.
 		local
-			l_prefix: like element_prefix
+			l_att_prefix: detachable STRING
 		do
 			from
 			until
 				attributes_is_empty
 			loop
-				l_prefix := element_prefix
-				if l_prefix /= Void and then has_prefix (l_prefix) then
+				l_att_prefix := attributes_prefix.item
+				if l_att_prefix /= Void and then has_prefix (l_att_prefix) then
 					-- Resolve the attribute's prefix if it has any.
-					if context.has (l_prefix) then
-						next.on_attribute (context.resolve (l_prefix),
-							l_prefix, attributes_local_part.item,
+					if context.has (l_att_prefix) then
+						next.on_attribute (context.resolve (l_att_prefix),
+							l_att_prefix, attributes_local_part.item,
 							attributes_value.item)
-					elseif is_xml (l_prefix) then
+					elseif is_xml (l_att_prefix) then
 							-- xml: prefix has implicit namespace
 						next.on_attribute (Xml_prefix_namespace,
-							l_prefix,
+							l_att_prefix,
 							attributes_local_part.item,
 							attributes_value.item)
-					elseif is_xmlns (l_prefix) then
+					elseif is_xmlns (l_att_prefix) then
 							-- xmlns: prefix has implicit namespace
 						next.on_attribute (Xmlns_namespace,
-							l_prefix,
+							l_att_prefix,
 							attributes_local_part.item,
 							attributes_value.item)
 					else
@@ -199,7 +196,7 @@ feature {NONE} -- Attribute events
 					end
 				else
 					next.on_attribute (Unprefixed_attribute_namespace,
-						attributes_prefix.item, attributes_local_part.item,
+						l_att_prefix, attributes_local_part.item,
 						attributes_value.item)
 				end
 					-- Forth:
@@ -293,7 +290,7 @@ feature {NONE} -- Error
 	same_string (a,b: STRING): BOOLEAN
 			-- Are `a' and `b' the same string?
 		do
-			Result := a ~ b
+			Result := a.same_string (b)
 		end
 
 note

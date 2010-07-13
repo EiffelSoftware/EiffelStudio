@@ -16,7 +16,7 @@ feature {NONE} -- Initialize
 	make
 			-- Prepare for recording anchors.
 		do
-			create routine_ids.make (10)
+			create features.make (10)
 			create arguments.make (10)
 		end
 
@@ -28,20 +28,22 @@ feature -- Status report
 			Result := arguments.has (a_position)
 		end
 
-	has_routine_id (a_routine_id: INTEGER): BOOLEAN
-			-- Does current have an anchor on `a_routine_id'?
+	has_feature (f: FEATURE_I): BOOLEAN
+			-- Does current have an anchor involving `f'?
+		require
+			f_attached: attached f
 		do
-			Result := routine_ids.has (a_routine_id)
+			Result := features.has (f.feature_id + ({INTEGER_64} 0 + f.written_in) |<< 32)
 		end
 
 feature -- Element change
 
-	put_routine_id (a_routine_id: INTEGER)
-			-- Insert an anchor based on `a_routine_id'.
+	put_feature (f: FEATURE_I)
+			-- Insert an anchor based on `f'.
 		do
-			routine_ids.extend (a_routine_id)
+			features.extend (f.feature_id + ({INTEGER_64} 0 + f.written_in) |<< 32)
 		ensure
-			has_routine_id: has_routine_id (a_routine_id)
+			has_feature: has_feature (f)
 		end
 
 	put_argument (a_position: INTEGER)
@@ -54,10 +56,10 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_routine_id
-			-- Remove last recorded routine id.
+	remove_feature
+			-- Remove last recorded feature.
 		do
-			routine_ids.remove
+			features.remove
 		end
 
 	remove_argument
@@ -69,7 +71,7 @@ feature -- Removal
 	reset
 			-- Remove any previously recorded anchors.
 		do
-			routine_ids.wipe_out
+			features.wipe_out
 			arguments.wipe_out
 		end
 
@@ -78,12 +80,12 @@ feature {NONE} -- implementation
 	arguments: ARRAYED_STACK [INTEGER]
 			-- Used arguments
 
-	routine_ids: ARRAYED_STACK [INTEGER]
+	features: ARRAYED_STACK [INTEGER_64]
 			-- Used features
 
 invariant
 	arguments_not_void: arguments /= Void
-	routine_ids_not_void: routine_ids /= Void
+	routine_ids_not_void: features /= Void
 
 note
 	copyright:	"Copyright (c) 1984-2010, Eiffel Software"

@@ -27,7 +27,17 @@ inherit
 			default_create, is_equal, copy
 		end
 
+create
+	default_create, make_for_inheritance
+
 feature {NONE} -- Initialization
+
+	make_for_inheritance
+			-- Initialize for use with inheritance dialog.
+		do
+			is_used_for_inheritance := True
+			default_create
+		end
 
 	initialize
 			-- Fill for test purposes.
@@ -326,27 +336,60 @@ feature {NONE} -- Implementation
 	initial_strings: ARRAY [STRING]
 			-- Initial list items.
 			--| FIXME Get favorites, previously entered names, etc.
-		once
-			Result := <<
-				"ANY",
-				"BOOLEAN",
-				"CHARACTER_8",
-				"NATURAL_32",
-				"INTEGER_32",
-				"REAL_32",
-				"REAL_64",
-				"STRING_8",
-				"STRING_32",
-				"like Current",
-				"LIST [ ... ]",
-				"ARRAYED_LIST [ ... ]",
-				"LINKED_LIST [ ... ]",
-				"HASH_TABLE [ ... ]",
-				"FUNCTION [ ... ]",
-				"PROCEDURE [ ... ]",
-				"POINTER",
-				"TUPLE [ ... ]"
-			>>
+		do
+			if is_used_for_inheritance then
+					-- List suitable ancestor types (ie: not expanded or TUPLE).
+				Result := <<
+					"ANY",
+					"ARRAYED_LIST [ ... ]",
+					"ARRAYED_STACK [ ... ]",
+					"LINKED_LIST [ ... ]",
+					"HASH_TABLE [ ... ]",
+					"CELL [ ... ]",
+					"ARRAY [ ... ]",
+					"LIST [ ... ]",
+					"SET [ ... ]",
+					"TRAVERSABLE [ ... ]",
+					"LINEAR [ ... ]",
+					"BILINEAR [ ... ]",
+					"BINARY_TREE [ ... ]",
+					"COMPARABLE [ ... ]",
+					"INDEXABLE [ ... ]",
+					"IDENTIFIED",
+					"DISPOSABLE",
+					"INTERNAL",
+					"MEMORY_STRUCTURE",
+					"DEBUG_OUTPUT"
+				>>
+			else
+					-- List types suitable for general use.
+				Result := <<
+					"ANY",
+					"like Current",
+					"BOOLEAN",
+					"CHARACTER_8",
+					"CHARACTER_32",
+					"NATURAL_32",
+					"INTEGER_32",
+					"REAL_32",
+					"REAL_64",
+					"STRING_8",
+					"STRING_32",
+					"LIST [ ... ]",
+					"SET [ ... ]",
+					"CELL [ ... ]",
+					"ARRAYED_LIST [ ... ]",
+					"LINKED_LIST [ ... ]",
+					"FIXED_LIST [ ... ]",
+					"HASH_TABLE [ ... ]",
+					"BINARY_SEARCH_TREE [ ... ]",
+					"FUNCTION [ ... ]",
+					"PROCEDURE [ ... ]",
+					"MANAGED_POINTER [ ... ]",
+					"POINTER",
+					"TUPLE [ ... ]"
+				>>
+			end
 		end
 
 feature {EB_FEATURE_EDITOR, EB_TYPE_SELECTOR, EB_INHERITANCE_DIALOG} -- Access

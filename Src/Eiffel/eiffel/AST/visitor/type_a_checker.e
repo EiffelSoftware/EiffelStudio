@@ -1061,13 +1061,11 @@ feature {NONE} -- Implementation
 		require
 			f_attached: attached f
 		local
-			l_rout_id: INTEGER_32
 			l_like_control: like like_control
 			l_vtat1: VTAT1
 		do
 			l_like_control := like_control
-			l_rout_id := f.rout_id_set.first
-			if l_like_control.has_routine_id (l_rout_id) then
+			if l_like_control.has_feature (f) then
 					-- Error because of cycle
 				last_type := Void
 				if has_error_reporting then
@@ -1077,11 +1075,11 @@ feature {NONE} -- Implementation
 					error_handler.insert_error (l_vtat1)
 				end
 			else
-				l_like_control.put_routine_id (l_rout_id)
+				l_like_control.put_feature (f)
 					-- Process type referenced by anchor.
 				f.type.process (Current)
 					-- Update anchored type controler
-				l_like_control.remove_routine_id
+				l_like_control.remove_feature
 				if not attached last_type as a then
 						-- Nothing to be done, error if any was already reported.
 				elseif a.is_void then

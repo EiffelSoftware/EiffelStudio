@@ -5459,7 +5459,7 @@ feature -- Once management
 			name := feature_i.feature_name
 			if feature_i.is_object_relative_once then
 				cl_token := current_class_token
-				l_once_info := current_class.object_relative_once_info (feature_i.rout_id_set.first)
+				l_once_info := current_class.object_relative_once_info_of_rout_id_set (feature_i.rout_id_set)
 				check has_obj_relative_once_info: l_once_info /= Void end
 
 				uni_string.set_string (l_once_info.called_name)
@@ -5576,7 +5576,7 @@ feature -- Once management
 			set_once_generation (True)
 			if byte_context.current_feature.is_object_relative_once then
 				set_object_relative_once_generation (True)
-				l_once_info := current_class.object_relative_once_info (byte_context.current_feature.rout_id_set.first)
+				l_once_info := current_class.object_relative_once_info_of_rout_id_set (byte_context.current_feature.rout_id_set)
 			else
 				set_object_relative_once_generation (False)
 			end
@@ -5645,7 +5645,7 @@ feature -- Once management
 		do
 
 			if byte_context.current_feature.is_object_relative_once then
-				l_once_info := current_class.object_relative_once_info (byte_context.current_feature.rout_id_set.first)
+				l_once_info := current_class.object_relative_once_info_of_rout_id_set (byte_context.current_feature.rout_id_set)
 			end
 				-- Close try block and start fault block
 				--       }

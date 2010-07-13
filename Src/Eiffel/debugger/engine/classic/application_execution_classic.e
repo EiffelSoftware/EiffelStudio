@@ -345,7 +345,7 @@ feature {NONE} -- Assertion change Implementation
 
 feature {NONE} -- Assertion violation processing		
 
-	impl_ignore_current_assertion_violation (a_boolean: BOOLEAN) 
+	impl_ignore_current_assertion_violation (a_boolean: BOOLEAN)
 			-- <Precursor>
 		do
 			ewb_request.send_rqst_1 (Rqst_ignore_assertion_violation, a_boolean.to_integer)
@@ -453,7 +453,7 @@ feature -- Query
 			l_res: ABSTRACT_DEBUG_VALUE
 			lst: DEBUG_VALUE_LIST
 		do
-			l_info := a_cl.object_relative_once_info (a_feat.rout_id_set.first)
+			l_info := a_cl.object_relative_once_info_of_rout_id_set (a_feat.rout_id_set)
 			lst := debugger_manager.object_manager.attributes_at_address (a_addr, 0, 0)
 			dv := lst.named_value (l_info.called_attribute_i.feature_name)
 			if

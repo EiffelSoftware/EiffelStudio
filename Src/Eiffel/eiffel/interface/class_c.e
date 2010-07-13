@@ -674,6 +674,26 @@ feature -- Access: object relative once
 	object_relative_once_infos: detachable HASH_TABLE [OBJECT_RELATIVE_ONCE_INFO, INTEGER]
 			-- List of info about object relative onces associated with Current
 
+	object_relative_once_info_of_rout_id_set (a_rout_id_set: ROUT_ID_SET): detachable OBJECT_RELATIVE_ONCE_INFO
+			-- Info about object relative once associated with Current and an item of `a_rout_id_set'
+		require
+			a_rout_id_set_not_void: a_rout_id_set /= Void
+		local
+			i, nb: INTEGER_32
+		do
+			if attached object_relative_once_infos as l_infos then
+				from
+					i := 1
+					nb := a_rout_id_set.count
+				until
+					i > nb or Result /= Void
+				loop
+					Result := l_infos.item (a_rout_id_set.item (i))
+					i := i + 1
+				end
+			end
+		end
+
 	object_relative_once_info (a_once_routine_id: INTEGER): detachable OBJECT_RELATIVE_ONCE_INFO
 			-- Info about object relative once associated with Current and `a_once_routine_id'
 		do
@@ -3576,7 +3596,7 @@ feature -- Access
 		end
 
 	feature_of_rout_id_set (rout_id_set: ROUT_ID_SET): FEATURE_I
-			-- Feature with routine ID `rout_id'.
+			-- Feature with routine ID in `rout_id_set'.
 		require
 			rout_id_set_not_void: rout_id_set /= Void
 			has_feature_table: has_feature_table

@@ -13,6 +13,8 @@ class
 inherit
 	XRPC_VALUE
 
+	DEBUG_OUTPUT
+
 create
 	make,
 	make_with_value
@@ -89,6 +91,14 @@ feature -- Status report
 			value_is_valid: Result implies value.is_valid
 		end
 
+feature -- Status report
+
+	debug_output: STRING
+			-- String that should be displayed in debugger to represent `Current'.
+		do
+			create Result.make_from_string ("name=" + name)
+		end
+
 feature -- Basic operations: Visitor
 
 	visit (a_visitor: XRPC_VISITOR)
@@ -98,7 +108,7 @@ feature -- Basic operations: Visitor
 		end
 
 invariant
-	name_attached: attached name
+	name_attached: name /= Void
 
 ;note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

@@ -1037,7 +1037,9 @@ end
 							opo_reused := False
 							if old_opo_info_table /= Void then
 								opo_info := object_relative_once_info_of_rout_id_set (old_opo_info_table, l_once_i.rout_id_set)
-								old_opo_info_table.remove (opo_info.once_routine_id)
+								if opo_info /= Void then
+									old_opo_info_table.remove (opo_info.once_routine_id)
+								end
 							end
 							if opo_info /= Void then
 								-- we need to clean previous extra attributes

@@ -128,7 +128,7 @@ feature -- Status
 					else
 						Result := -1
 					end
-				else
+				elseif has_poly_table (rout_id) then
 						-- First time, the information for <`rout_id',`class_type_id'> is requested
 					entry := poly_table (rout_id)
 
@@ -174,6 +174,9 @@ feature -- Status
 							Result := -1
 						end
 					end
+				else
+						--| Note: it might occurs with object relative once
+					Result := -1
 				end
 			end
 		end

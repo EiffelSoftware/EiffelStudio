@@ -997,7 +997,6 @@ end
 			ref_desc: REFERENCE_DESC
 			l_ext: IL_EXTENSION_I
 			l_opo_counter, l_opo_count: INTEGER
-			rid: INTEGER
 			l_attribute_counter, l_attribute_count: INTEGER
 			opo_info_table, old_opo_info_table: detachable HASH_TABLE [OBJECT_RELATIVE_ONCE_INFO, INTEGER]
 			opo_info: OBJECT_RELATIVE_ONCE_INFO
@@ -1034,29 +1033,29 @@ end
 						if attached {ONCE_PROC_I} feature_i as l_once_i then
 							check once_is_object_relative: l_once_i.is_object_relative end
 
-							rid := l_once_i.rout_id_set.first
 							opo_info := Void
 							opo_reused := False
 							if old_opo_info_table /= Void then
-								opo_info := old_opo_info_table.item (rid)
-								old_opo_info_table.remove (rid)
+								opo_info := object_relative_once_info_of_rout_id_set (old_opo_info_table, l_once_i.rout_id_set)
+								old_opo_info_table.remove (opo_info.once_routine_id)
 							end
 							if opo_info /= Void then
 								-- we need to clean previous extra attributes
 								opo_info.reuse (l_once_i)
 								opo_reused := opo_info.is_set
+								opo_info_table.force (opo_info, opo_info.once_routine_id)
 							else
 								create opo_info.make (l_once_i)
 								check is_not_set: not opo_info.is_set end
+								opo_info_table.force (opo_info, l_once_i.rout_id_set.first)
 							end
-							opo_info_table.force (opo_info, rid)
 
 							l_written_class := l_once_i.written_class
 
 							l_ancestor_once_info := Void
 							if l_written_class /= associated_class then
 									--| Reuse ancestor's routine ids.
-								l_ancestor_once_info := l_written_class.object_relative_once_info (opo_info.once_routine_id)
+								l_ancestor_once_info := l_written_class.object_relative_once_info_of_rout_id_set (opo_info.once_routine_rout_id_set)
 								check l_ancestor_once_info_attached: l_ancestor_once_info /= Void end
 							end
 
@@ -1400,6 +1399,26 @@ end
 					list.extend (feat)
 				end
 				forth
+			end
+		end
+
+feature {NONE} -- Implementation: object relative once
+
+	object_relative_once_info_of_rout_id_set (a_table: HASH_TABLE [OBJECT_RELATIVE_ONCE_INFO, INTEGER]; a_rout_id_set: ROUT_ID_SET): detachable OBJECT_RELATIVE_ONCE_INFO
+			-- Object relative once info related to `a_rout_id_set'
+		require
+			a_rout_id_set_not_void: a_rout_id_set /= Void
+		local
+			i, nb: INTEGER
+		do
+			from
+				i := 1
+				nb := a_rout_id_set.count
+			until
+				i > nb or Result /= Void
+			loop
+				Result := a_table.item (a_rout_id_set.item (i))
+				i := i + 1
 			end
 		end
 

@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 			create feature_editor_frame
 			vb.extend (feature_editor_frame)
 
-			create type_selector
+			create type_selector.make_for_inheritance
 			feature_editor_frame.extend (type_selector)
 
 			create hb

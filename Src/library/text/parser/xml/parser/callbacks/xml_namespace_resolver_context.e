@@ -107,6 +107,7 @@ feature -- Access
 			a_prefix_not_void: a_prefix /= Void
 		local
 			a_cursor: LINKED_LIST_ITERATION_CURSOR [HASH_TABLE [STRING, STRING]]
+			result_found: BOOLEAN
 		do
 			Result := Default_namespace
 
@@ -114,13 +115,14 @@ feature -- Access
 			from
 				a_cursor.start
 			until
-				a_cursor.after or Result /= Void
+				a_cursor.after or result_found
 			loop
 				if
 					a_cursor.item.has (a_prefix) and then
 					attached a_cursor.item.item (a_prefix) as v
 				then
 					Result := v
+					result_found := True
 				else
 					a_cursor.forth
 				end
@@ -143,6 +145,7 @@ feature -- Stack
 			if context.count > 0 then
 				context.finish
 				context.remove
+				context.finish
 			end
 		end
 

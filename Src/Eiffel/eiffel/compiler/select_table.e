@@ -182,20 +182,23 @@ feature -- Final mode
 				end
 			end
 
-			if attached a_class.object_relative_once_infos as l_obj_once_infos then
+			if
+				attached a_class.object_relative_once_infos as l_obj_once_infos and then
+				attached l_obj_once_infos.new_cursor as l_once_infos_cursor
+			then
 				from
-					l_obj_once_infos.start
+					l_once_infos_cursor.start
 				until
-					l_obj_once_infos.after
+					l_once_infos_cursor.after
 				loop
-					if attached l_obj_once_infos.item_for_iteration as l_once_info then
+					if attached l_once_infos_cursor.item as l_once_info then
 						add_feature_unit (a_class.class_id, l_once_info.called_attribute_i)
 						add_feature_unit (a_class.class_id, l_once_info.exception_attribute_i)
 						if l_once_info.has_result then
 							add_feature_unit (a_class.class_id, l_once_info.result_attribute_i)
 						end
 					end
-					l_obj_once_infos.forth
+					l_once_infos_cursor.forth
 				end
 			end
 		end
@@ -319,19 +322,22 @@ feature -- Generation
 				end
 			end
 
-			if attached c.object_relative_once_infos as l_once_infos then
+			if
+				attached c.object_relative_once_infos as l_once_infos and then
+				attached l_once_infos.new_cursor as l_once_infos_cursor
+			then
 				from
-					l_once_infos.start
+					l_once_infos_cursor.start
 				until
-					l_once_infos.after
+					l_once_infos_cursor.after
 				loop
-					l_once_info := l_once_infos.item_for_iteration
+					l_once_info := l_once_infos_cursor.item
 					Result.put (l_once_info.called_routine_id, l_once_info.called_attribute_i)
 					Result.put (l_once_info.exception_routine_id, l_once_info.exception_attribute_i)
 					if l_once_info.has_result then
 						Result.put (l_once_info.result_routine_id, l_once_info.result_attribute_i)
 					end
-					l_once_infos.forth
+					l_once_infos_cursor.forth
 				end
 			end
 		end

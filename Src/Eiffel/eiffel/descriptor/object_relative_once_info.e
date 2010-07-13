@@ -93,15 +93,21 @@ feature -- Debug
 		do
 			l_once ?= f
 			if l_once /= Void then
-				print ("Once per object (fid:" + l_once.feature_id.out + " rid:"+ once_routine_id.out +"): " + l_once.written_class.name_in_upper + "." + l_once.feature_name)
+				print ("Once per object (fid:" + l_once.feature_id.out
+						+ " rid:" + once_routine_id.out
+						+ "): " + l_once.written_class.name_in_upper
+						+ "<" + l_once.written_in.out + ">"
+						+ "." + l_once.feature_name)
 			end
 			if a_msg /= Void then
 				print (" -- " + a_msg)
 			end
 			print ("%N")
-			print ("%T- called: fid=" + called_feature_id.out + " rid=" + called_routine_id.out + "%N")
-			print ("%T- except: fid=" + exception_feature_id.out + " rid=" + exception_routine_id.out + "%N")
-			print ("%T- result: fid=" + result_feature_id.out + " rid=" + result_routine_id.out + "%N")
+			print ("%T- called: fid=" + called_feature_id.out + " rid=" + called_routine_id.out + " bid=" + called_body_index.out +"%N")
+			print ("%T- except: fid=" + exception_feature_id.out + " rid=" + exception_routine_id.out + " bid=" + exception_body_index.out + "%N")
+			if has_result then
+				print ("%T- result: fid=" + result_feature_id.out + " rid=" + result_routine_id.out + " bid=" + result_body_index.out + "%N")
+			end
 		end
 
 feature -- Access
@@ -247,9 +253,11 @@ feature -- Element change
 		local
 			l_id_set: ROUT_ID_SET
 			l_att_i: ATTRIBUTE_I
+			l_feat_depend: FEATURE_DEPENDANCE
 		do
 			create l_att_i.make
 			l_att_i.set_type (called_type_a, 0)
+			l_att_i.set_body_index (called_body_index)
 			l_att_i.set_written_in (once_routine.written_in)
 			l_att_i.set_origin_class_id (once_routine.origin_class_id)
 			l_att_i.set_feature_id (called_feature_id)
@@ -257,6 +265,10 @@ feature -- Element change
 			l_att_i.set_feature_name_id (called_name_id, 0)
 			l_att_i.set_is_transient (once_routine.is_transient)
 			l_att_i.set_is_hidden (True)
+
+			create l_feat_depend.make
+			l_feat_depend.set_feature_name_id (called_name_id)
+			once_routine.record_suppliers (l_feat_depend)
 
 			create l_id_set.make
 			l_id_set.extend (called_routine_id)
@@ -271,9 +283,11 @@ feature -- Element change
 		local
 			l_id_set: ROUT_ID_SET
 			l_att_i: ATTRIBUTE_I
+			l_feat_depend: FEATURE_DEPENDANCE
 		do
 			create l_att_i.make
 			l_att_i.set_type (exception_type_a, 0)
+			l_att_i.set_body_index (exception_body_index)
 			l_att_i.set_written_in (once_routine.written_in)
 			l_att_i.set_origin_class_id (once_routine.origin_class_id)
 			l_att_i.set_feature_id (exception_feature_id)
@@ -281,6 +295,10 @@ feature -- Element change
 			l_att_i.set_feature_name_id (exception_name_id, 0)
 			l_att_i.set_is_transient (once_routine.is_transient)
 			l_att_i.set_is_hidden (True)
+
+			create l_feat_depend.make
+			l_feat_depend.set_feature_name_id (exception_name_id)
+			once_routine.record_suppliers (l_feat_depend)
 
 			create l_id_set.make
 			l_id_set.extend (exception_routine_id)
@@ -296,9 +314,11 @@ feature -- Element change
 		local
 			l_id_set: ROUT_ID_SET
 			l_att_i: ATTRIBUTE_I
+			l_feat_depend: FEATURE_DEPENDANCE
 		do
 			create l_att_i.make
 			l_att_i.set_type (result_type_a, 0)
+			l_att_i.set_body_index (result_body_index)
 			l_att_i.set_written_in (once_routine.written_in)
 			l_att_i.set_origin_class_id (once_routine.origin_class_id)
 			l_att_i.set_feature_id (result_feature_id)
@@ -306,6 +326,11 @@ feature -- Element change
 			l_att_i.set_feature_name_id (result_name_id, 0)
 			l_att_i.set_is_transient (once_routine.is_transient)
 			l_att_i.set_is_hidden (True)
+
+			create l_feat_depend.make
+			l_feat_depend.set_feature_name_id (result_name_id)
+			once_routine.record_suppliers (l_feat_depend)
+
 
 			create l_id_set.make
 			l_id_set.extend (result_routine_id)
@@ -323,6 +348,9 @@ feature -- Access: called
 			Result := system.boolean_class.compiled_class.actual_type
 		end
 
+	called_body_index: INTEGER assign set_called_body_index
+			-- body_index of extra attribute: called
+
 	called_feature_id: INTEGER assign set_called_feature_id
 			-- feature id of extra attribute: called
 
@@ -339,6 +367,9 @@ feature -- Access: exception
 		do
 			Result := system.exception_class.compiled_class.actual_type.as_detachable_type
 		end
+
+	exception_body_index: INTEGER assign set_exception_body_index
+			-- body_index of extra attribute: exception
 
 	exception_feature_id: INTEGER assign set_exception_feature_id
 			-- feature id of extra attribute: exception	
@@ -358,6 +389,9 @@ feature -- Access: result
 	result_type_a: TYPE_A
 			-- Type of `result_name' extra attribute	
 
+	result_body_index: INTEGER assign set_result_body_index
+			-- body_index of extra attribute: result
+
 	result_feature_id: INTEGER assign set_result_feature_id
 			-- feature id of extra attribute: result	
 
@@ -368,6 +402,14 @@ feature -- Access: result
 			-- feature name id of extra attribute: result
 
 feature -- Element changes
+
+	set_called_body_index (a_bi: INTEGER)
+			-- Set body index related to called attribute
+		require
+			valid_bi: a_bi > 0
+		do
+			called_body_index := a_bi
+		end
 
 	set_called_feature_id (a_id: INTEGER)
 			-- Set feature id related to called attribute
@@ -393,6 +435,14 @@ feature -- Element changes
 			called_name_id := a_id
 		end
 
+	set_exception_body_index (a_bi: INTEGER)
+			-- Set body index related to exception attribute
+		require
+			valid_bi: a_bi > 0
+		do
+			exception_body_index := a_bi
+		end
+
 	set_exception_feature_id (a_id: INTEGER)
 			-- Set feature id related to exception attribute	
 		require
@@ -416,6 +466,15 @@ feature -- Element changes
 			valid_id: a_id > 0
 		do
 			exception_name_id := a_id
+		end
+
+
+	set_result_body_index (a_bi: INTEGER)
+			-- Set body index related to result attribute
+		require
+			valid_bi: a_bi > 0
+		do
+			result_body_index := a_bi
 		end
 
 	set_result_feature_id (a_id: INTEGER)

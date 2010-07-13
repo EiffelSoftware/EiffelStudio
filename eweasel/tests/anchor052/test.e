@@ -5,6 +5,7 @@ create
 feature
 	make 
 		do
+			create x
 		end 
     
         x: TEST1

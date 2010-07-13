@@ -405,9 +405,9 @@ feature -- Element Change
 			end
 		end
 
-	generate_attribute_access (class_type: CLASS_TYPE; buffer: GENERATION_BUFFER; cur: STRING)
+	generate_hidden_attribute_access, generate_attribute_access (class_type: CLASS_TYPE; buffer: GENERATION_BUFFER; cur: STRING)
 			-- Generates attribute access.
-			-- [Redecalaration of a function into an attribute]
+			-- [Redeclaration of a function into an attribute]
 		local
 			result_type: TYPE_A
 			table_name: STRING

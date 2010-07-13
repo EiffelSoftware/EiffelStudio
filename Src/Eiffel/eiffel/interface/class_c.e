@@ -685,14 +685,17 @@ feature -- Access: object relative once
 	object_relative_once_attribute_of_feature_id (a_feature_id: INTEGER): detachable ATTRIBUTE_I
 			-- Attribute associated with Current with feature_id `a_feature_id', if any.
 		do
-			if attached object_relative_once_infos as l_infos then
+			if
+				attached object_relative_once_infos as l_infos and then
+				attached l_infos.new_cursor as c
+			then
 				from
-					l_infos.start
+					c.start
 				until
-					l_infos.after or Result /= Void
+					c.after or Result /= Void
 				loop
-					Result := l_infos.item_for_iteration.attribute_of_feature_id (a_feature_id)
-					l_infos.forth
+					Result := c.item.attribute_of_feature_id (a_feature_id)
+					c.forth
 				end
 			end
 		end
@@ -700,14 +703,17 @@ feature -- Access: object relative once
 	object_relative_once_attribute_of_routine_id (a_routine_id: INTEGER): detachable ATTRIBUTE_I
 			-- Attribute associated with Current with feature_id `a_routine_id', if any.
 		do
-			if attached object_relative_once_infos as l_infos then
+			if
+				attached object_relative_once_infos as l_infos and then
+				attached l_infos.new_cursor as c
+			then
 				from
-					l_infos.start
+					c.start
 				until
-					l_infos.after or Result /= Void
+					c.after or Result /= Void
 				loop
-					Result := l_infos.item_for_iteration.attribute_of_routine_id (a_routine_id)
-					l_infos.forth
+					Result := c.item.attribute_of_routine_id (a_routine_id)
+					c.forth
 				end
 			end
 		end

@@ -1065,8 +1065,10 @@ end
 								opo_info.set_called_feature_id (l_associated_class.feature_id_counter.next)
 								if l_ancestor_once_info /= Void then
 									opo_info.set_called_routine_id (l_ancestor_once_info.called_routine_id)
+									opo_info.set_called_body_index (l_ancestor_once_info.called_body_index)
 								else
-									opo_info.set_called_routine_id (l_associated_class.routine_id_counter.next_rout_id)
+									opo_info.set_called_routine_id (l_associated_class.routine_id_counter.next_attr_id)
+									opo_info.set_called_body_index (system.body_index_counter.next_id)
 								end
 								names_heap.put ("_" + l_once_i.feature_name + "__called")
 								opo_info.set_called_name_id (names_heap.found_item)
@@ -1086,8 +1088,10 @@ end
 								opo_info.set_exception_feature_id (l_associated_class.feature_id_counter.next)
 								if l_ancestor_once_info /= Void then
 									opo_info.set_exception_routine_id (l_ancestor_once_info.exception_routine_id)
+									opo_info.set_exception_body_index (l_ancestor_once_info.exception_body_index)
 								else
-									opo_info.set_exception_routine_id (l_associated_class.routine_id_counter.next_rout_id)
+									opo_info.set_exception_routine_id (l_associated_class.routine_id_counter.next_attr_id)
+									opo_info.set_exception_body_index (system.body_index_counter.next_id)
 								end
 								names_heap.put ("_" + l_once_i.feature_name + "__exception")
 								opo_info.set_exception_name_id (names_heap.found_item)
@@ -1121,8 +1125,10 @@ end
 									opo_info.set_result_feature_id (l_associated_class.feature_id_counter.next)
 									if l_ancestor_once_info /= Void then
 										opo_info.set_result_routine_id (l_ancestor_once_info.result_routine_id)
+										opo_info.set_result_body_index (l_ancestor_once_info.result_body_index)
 									else
-										opo_info.set_result_routine_id (l_associated_class.routine_id_counter.next_rout_id)
+										opo_info.set_result_routine_id (l_associated_class.routine_id_counter.next_attr_id)
+										opo_info.set_result_body_index (system.body_index_counter.next_id)
 									end
 									names_heap.put ("_" + l_once_i.feature_name + "__result")
 									opo_info.set_result_name_id (names_heap.found_item)
@@ -1140,7 +1146,7 @@ end
 							end
 
 							debug ("ONCE_PER_OBJECT")
-								opo_info.debug_output_info (l_once_i, "from " + l_associated_class.name_in_upper)
+								opo_info.debug_output_info (l_once_i, "from " + l_associated_class.name_in_upper + "<"+ l_associated_class.class_id.out +">")
 							end
 
 							opo_info.update
@@ -1350,20 +1356,23 @@ end
 					l_feature_table.forth
 				end
 			end
-			if attached associated_class.object_relative_once_infos as l_once_infos then
+			if
+				attached associated_class.object_relative_once_infos as l_once_infos and then
+				attached l_once_infos.new_cursor as c
+			then
 				from
-					l_once_infos.start
+					c.start
 				until
-					l_once_infos.after
+					c.after
 				loop
-					if attached l_once_infos.item_for_iteration as l_once_info then
+					if attached c.item as l_once_info then
 						Result.put (l_once_info.called_attribute_i, l_once_info.called_feature_id)
 						Result.put (l_once_info.exception_attribute_i, l_once_info.exception_feature_id)
 						if l_once_info.has_result then
 							Result.put (l_once_info.result_attribute_i, l_once_info.result_feature_id)
 						end
 					end
-					l_once_infos.forth
+					c.forth
 				end
 			end
 		end

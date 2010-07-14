@@ -4761,7 +4761,7 @@ feature {NONE} -- Implementation
 				end
 
 				if l_is_multi_constraint then
-					l_type_set := l_formal.constrained_types (l_context_current_class)
+					l_type_set := l_formal.constraints (l_context_current_class)
 					l_result_tuple := l_type_set.feature_i_state_by_alias_name (bracket_str)
 					if l_result_tuple.features_found_count > 1 then
 						error_handler.insert_error (new_vtmc_error (create {ID_AS}.initialize (bracket_str),

@@ -389,13 +389,6 @@ feature -- C code generation
 				buf.put_new_line
 				l_att_i.generate_hidden_attribute_access (context.class_type, buf, {C_CONST}.current_name)
 				buf.put_string (" = EIF_TRUE;")
-
-					--| Init exception storage
-					--| Note: we should not have to initialize that here ...?
-				buf.put_new_line
-				l_att_i := context.associated_class.object_relative_once_info (rout_id).exception_attribute_i
-				l_att_i.generate_hidden_attribute_access (context.class_type, buf, {C_CONST}.current_name)
-				buf.put_string (" = (EIF_REFERENCE)0;")
 				buf.put_new_line
 				buf.put_string ("RTO_TRY")
 			else

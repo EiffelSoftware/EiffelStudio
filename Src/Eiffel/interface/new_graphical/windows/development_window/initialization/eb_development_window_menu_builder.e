@@ -40,7 +40,6 @@ feature -- Command
 			-- Build the `Debug' menu through the debugger_manager.
 		local
 			l_debug_menu: EV_MENU
-			l_new_menu_item: EV_MENU_ITEM
 		do
 			develop_window.menus.set_debug_menu (develop_window.Eb_debugger_manager.new_debug_menu (develop_window))
 			l_debug_menu := develop_window.menus.debug_menu
@@ -55,29 +54,9 @@ feature -- Command
 				l_debug_menu.forth
 			end
 
-				--| Breakpoint here menu items
-			l_debug_menu.put_front (create {EV_MENU_SEPARATOR})
-			l_new_menu_item := develop_window.commands.enable_remove_bp_here_command.new_menu_item
-			l_debug_menu.put_front (l_new_menu_item)
-			auto_recycle (l_new_menu_item)
-
-			l_new_menu_item := develop_window.commands.enable_disable_bp_here_command.new_menu_item
-			l_debug_menu.put_front (l_new_menu_item)
-			auto_recycle (l_new_menu_item)
-
-			l_new_menu_item := develop_window.commands.edit_bp_here_command.new_menu_item
-			l_debug_menu.put_front (l_new_menu_item)
-			auto_recycle (l_new_menu_item)
-
-			l_new_menu_item := develop_window.commands.run_to_this_point_command.new_menu_item
-			l_debug_menu.put_front (l_new_menu_item)
-			auto_recycle (l_new_menu_item)
-
 				--| Debugging tools menu
-			l_debug_menu.put_front (create {EV_MENU_SEPARATOR})
 			develop_window.menus.set_debugging_tools_menu (develop_window.Eb_debugger_manager.new_debugging_tools_menu)
 			l_debug_menu.put_front (develop_window.menus.debugging_tools_menu)
-
 
 				-- Comment because menu will be updated by `develop_window.refresh_all_commands'
 			-- develop_window.menus.update_debug_menu

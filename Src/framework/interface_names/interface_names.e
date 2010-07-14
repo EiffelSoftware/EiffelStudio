@@ -764,6 +764,7 @@ feature -- Accelerator, focus label and menu name
 	l_group_stone_name: STRING_32 do Result := locale.translation ("Group stone") end
 	l_target_stone_name: STRING_32 do Result := locale.translation ("Target stone") end
 
+	m_execution_record_and_replay: STRING_32 		do Result := locale.translation("Record/Replay Execution")	end
 	m_Activate_execution_recording: STRING_32 		do Result := locale.translation("Activate Execution Recording")	end
 	m_Deactivate_execution_recording: STRING_32 		do Result := locale.translation("Deactivate Execution Recording")	end
 	m_Activate_execution_replay_mode: STRING_32 		do Result := locale.translation("Activate Replay Mode")	end
@@ -875,6 +876,8 @@ feature -- Toggles
 feature -- Menu mnenomics
 
 	m_Add_exported_feature: STRING_32	do Result := locale.translation("&Add...")	end
+	m_Bkpt_operations: STRING_32		do Result := locale.translation("Breakpoint Operations")	end
+	m_Bkpt_management: STRING_32		do Result := locale.translation("Breakpoint Management")	end
 	m_Bkpt_info: STRING_32				do Result := locale.translation("Brea&kpoint Information")	end
 	m_Class_info: STRING_32				do Result := locale.translation("Cla&ss Views")	end
 	m_Check_exports: STRING_32			do Result := locale.translation("Chec&k Export Clauses")	end

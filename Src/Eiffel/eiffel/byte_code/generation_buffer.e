@@ -402,15 +402,6 @@ feature -- Automatically indented output
 			new_count: count = old count + s.count
 		end
 
-	put_string_and_new_line (s: STRING)
-			-- Write string `s' and append a new line.
-		require
-			s_not_void: s /= Void
-		do
-			put_string (s)
-			put_new_line
-		end
-
 	put_string_array (a: ARRAY [STRING])
 			-- Write elements of array `a'
 		require

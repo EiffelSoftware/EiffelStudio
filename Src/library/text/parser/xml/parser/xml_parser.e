@@ -34,7 +34,7 @@ feature -- Parsing
 			-- Parse from file `a_file'
 		require
 			a_file_attached: a_file /= Void
-			a_file_readable: a_file.is_open_read and then a_file.readable
+			a_file_is_readable: a_file.is_open_read and then a_file.is_readable
 		deferred
 		end
 

@@ -602,30 +602,21 @@ feature -- tools management
 			end
 		end
 
-	new_debug_menu (a_recycler: EB_RECYCLABLE): EV_MENU
+	new_debug_menu (dev_window: detachable EB_DEVELOPMENT_WINDOW): EV_MENU
 			-- Generate a menu that can be displayed in development windows.
 		require
-			a_recycler_not_void: a_recycler /= Void
+			dev_window_not_void: dev_window /= Void
 			--| commands_initialized: toolbarable_commands /= Void
 		local
+			a_recycler: EB_RECYCLABLE
 			sep: EV_MENU_SEPARATOR
 			l_item: EB_COMMAND_MENU_ITEM
+			m: EV_MENU
 		do
+			a_recycler := dev_window
 			create Result.make_with_text (Interface_names.m_Debug)
 
-			l_item := clear_bkpt.new_menu_item
-			Result.extend (l_item)
-			a_recycler.auto_recycle (l_item)
-
-			l_item := disable_bkpt.new_menu_item
-			Result.extend (l_item)
-			a_recycler.auto_recycle (l_item)
-
-			l_item := enable_bkpt.new_menu_item
-			Result.extend (l_item)
-			a_recycler.auto_recycle (l_item)
-
-			l_item := bkpt_info_cmd.new_menu_item
+			l_item := force_debug_mode_cmd.new_menu_item
 			Result.extend (l_item)
 			a_recycler.auto_recycle (l_item)
 
@@ -633,9 +624,73 @@ feature -- tools management
 			create sep
 			Result.extend (sep)
 
+				--| Execution parameters
 			l_item := options_cmd.new_menu_item
 			Result.extend (l_item)
 			a_recycler.auto_recycle (l_item)
+
+				--| Exception handler
+			l_item := exception_handler_cmd.new_menu_item
+			Result.extend (l_item)
+			a_recycler.auto_recycle (l_item)
+
+				--| Overflow prevention
+			l_item := set_critical_stack_depth_cmd.new_menu_item
+			Result.extend (l_item)
+			a_recycler.auto_recycle (l_item)
+
+				-- Separator.
+			create sep
+			Result.extend (sep)
+
+			l_item := assertion_checking_handler_cmd.new_menu_item
+			Result.extend (l_item)
+			a_recycler.auto_recycle (l_item)
+
+				-- Separator.
+			create sep
+			Result.extend (sep)
+
+				--| Breakpoints management
+			create m.make_with_text (interface_names.m_Bkpt_management)
+			Result.extend (m)
+			a_recycler.auto_recycle (m)
+
+			l_item := bkpt_info_cmd.new_menu_item
+			m.extend (l_item)
+			a_recycler.auto_recycle (l_item)
+
+			l_item := clear_bkpt.new_menu_item
+			m.extend (l_item)
+			a_recycler.auto_recycle (l_item)
+
+			l_item := disable_bkpt.new_menu_item
+			m.extend (l_item)
+			a_recycler.auto_recycle (l_item)
+
+			l_item := enable_bkpt.new_menu_item
+			m.extend (l_item)
+			a_recycler.auto_recycle (l_item)
+
+			if dev_window /= Void then
+					--| Breakpoint here menu items
+				create m.make_with_text (interface_names.m_Bkpt_operations)
+				Result.extend (m)
+
+				l_item := dev_window.commands.edit_bp_here_command.new_menu_item
+				m.extend (l_item)
+				a_recycler.auto_recycle (l_item)
+
+
+				l_item := dev_window.commands.enable_disable_bp_here_command.new_menu_item
+				m.extend (l_item)
+				a_recycler.auto_recycle (l_item)
+
+				l_item := dev_window.commands.enable_remove_bp_here_command.new_menu_item
+				m.extend (l_item)
+				a_recycler.auto_recycle (l_item)
+			end
+
 
 				-- Separator.
 			create sep
@@ -673,6 +728,12 @@ feature -- tools management
 			create sep
 			Result.extend (sep)
 
+			if dev_window /= Void then
+				l_item := dev_window.commands.run_to_this_point_command.new_menu_item
+				Result.extend (l_item)
+				a_recycler.auto_recycle (l_item)
+			end
+
 			l_item := step_cmd.new_menu_item
 			Result.extend (l_item)
 			a_recycler.auto_recycle (l_item)
@@ -705,54 +766,33 @@ feature -- tools management
 			create sep
 			Result.extend (sep)
 
+			--| Execution Record/Replay
+
+			create m.make_with_text (interface_names.m_execution_record_and_replay)
+			Result.extend (m)
+
 			l_item := toggle_exec_replay_recording_mode_cmd.new_menu_item
-			Result.extend (l_item)
+			m.extend (l_item)
 			a_recycler.auto_recycle (l_item)
 
 			l_item := toggle_exec_replay_mode_cmd.new_menu_item
-			Result.extend (l_item)
+			m.extend (l_item)
 			a_recycler.auto_recycle (l_item)
 
 			l_item := exec_replay_back_cmd.new_menu_item
-			Result.extend (l_item)
+			m.extend (l_item)
 			a_recycler.auto_recycle (l_item)
 
 			l_item := exec_replay_forth_cmd.new_menu_item
-			Result.extend (l_item)
+			m.extend (l_item)
 			a_recycler.auto_recycle (l_item)
 
 			l_item := exec_replay_right_cmd.new_menu_item
-			Result.extend (l_item)
+			m.extend (l_item)
 			a_recycler.auto_recycle (l_item)
 
 			l_item := exec_replay_left_cmd.new_menu_item
-			Result.extend (l_item)
-			a_recycler.auto_recycle (l_item)
-
-				-- Separator.
-			create sep
-			Result.extend (sep)
-
-			l_item := set_critical_stack_depth_cmd.new_menu_item
-			Result.extend (l_item)
-			a_recycler.auto_recycle (l_item)
-
-				-- Separator.
-			create sep
-			Result.extend (sep)
-			l_item := exception_handler_cmd.new_menu_item
-			Result.extend (l_item)
-			a_recycler.auto_recycle (l_item)
-
-				-- Separator.
-			create sep
-			Result.extend (sep)
-			l_item := assertion_checking_handler_cmd.new_menu_item
-			Result.extend (l_item)
-			a_recycler.auto_recycle (l_item)
-
-			l_item := force_debug_mode_cmd.new_menu_item
-			Result.extend (l_item)
+			m.extend (l_item)
 			a_recycler.auto_recycle (l_item)
 
 --| FIXME XR: TODO: Add:

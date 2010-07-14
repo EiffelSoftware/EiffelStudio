@@ -85,8 +85,20 @@ feature -- Basic operation
 				last_error := l_callback.last_error
 			elseif not is_error then
 				last_system := l_callback.last_system
-				last_system.set_file_name (a_file)
-				last_system.set_file_date
+				if last_system = Void then
+					l_callback.set_internal_error
+					is_error := True
+					is_invalid_xml := l_callback.is_invalid_xml
+					if attached l_callback.last_error as err then
+						last_error := err
+						err.set_message ("Tag %"system%" not found")
+					else
+						last_error := Void
+					end
+				else
+					last_system.set_file_name (a_file)
+					last_system.set_file_date
+				end
 			end
 		ensure
 			no_error_implies_last_system_not_void: not is_error implies last_system /= Void

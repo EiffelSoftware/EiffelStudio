@@ -465,14 +465,12 @@ feature -- C code generation
 		do
 				-- See `generate_once_prologue' for details
 			buf := context.buffer
-			buf.put_new_line
 			if is_object_relative_once then
 				context.add_dt_current
-				buf.put_new_line
-
 				l_obj_once_info := context.associated_class.object_relative_once_info (rout_id)
 					-- Save result if any
 				if l_obj_once_info.has_result then
+					buf.put_new_line
 					generate_object_relative_once_result_assignment ("Result", l_obj_once_info.result_attribute_i)
 				end
 
@@ -527,6 +525,7 @@ feature -- C code generation
 				buf.put_new_line
 				buf.put_string ("}")
 			else
+				buf.put_new_line
 				if context.workbench_mode then
 					if is_process_relative_once then
 						buf.put_string ("RTOQE;")

@@ -210,6 +210,7 @@ feature {NONE} -- Implementation: parse
 			l_in_tag: BOOLEAN
 			buf: like buffer
 			l_callbacks: like callbacks
+--			l_in_root_tag: BOOLEAN
 		do
 			reset
 			buf := buffer
@@ -231,6 +232,9 @@ feature {NONE} -- Implementation: parse
 							l_content.wipe_out
 						end
 					else
+						if not is_blank (l_content) then
+							report_unexpected_content (l_content)
+						end
 						l_content.wipe_out
 					end
 					c := next_character
@@ -725,6 +729,12 @@ feature {NONE} -- Implementation: parse
 			error_occurred: error_occurred
 		end
 
+	report_unexpected_content (a_content: STRING)
+			-- Report unexpected content `a_content'
+		do
+			report_error ("Unexpected content (not well-formed XML)")
+		end
+
 feature {NONE} -- Doctype
 
 	register_doctype (s: STRING)
@@ -1197,6 +1207,24 @@ feature {NONE} -- Implementation
 		end
 
 feature {NONE} -- Factory
+
+	is_blank (s: STRING): BOOLEAN
+			-- Is `s' containing only blank character?
+			-- i.e: ' ', '%T', '%N', '%R'
+		local
+			i, n: INTEGER
+		do
+			from
+				Result := True
+				i := 1
+				n := s.count
+			until
+				i > n or not Result
+			loop
+				Result := s.item (i).is_space
+				i := i + 1
+			end
+		end
 
 	case_insensitive_same_string (a,b: STRING): BOOLEAN
 			-- `a' and `b' are the same string regardless of casing?

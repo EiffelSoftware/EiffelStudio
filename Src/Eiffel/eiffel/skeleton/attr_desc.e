@@ -196,11 +196,11 @@ feature -- Code generation
 			buffer_not_void: buffer /= Void
 			has_type: type_i /= Void
 		do
-			buffer.put_string ("static EIF_TYPE_INDEX g_atype")
+			buffer.put_string (once "static EIF_TYPE_INDEX g_atype")
 			buffer.put_integer (a_class_type.type_id)
 			buffer.put_character ('_')
 			buffer.put_integer (idx)
-			buffer.put_string (" [] = {0,")
+			buffer.put_string (once " [] = {0,")
 				-- In order to generate proper type description for current entry we need to
 				-- evaluate `type_i' in the context of `current_type' from BYTE_CONTEXT, otherwise
 				-- it is possible that we would not find the associated class type of `l_type'
@@ -208,7 +208,7 @@ feature -- Code generation
 				-- storable).
 			type_i.generate_cid (buffer, is_final_mode, False, a_class_type.type)
 			buffer.put_hex_natural_16 ({SHARED_GEN_CONF_LEVEL}.terminator_type)
-			buffer.put_string ("};%N")
+			buffer.put_three_character ('}', ';', '%N')
 		end
 
 	instantiation_in (class_type: CLASS_TYPE): ATTR_DESC

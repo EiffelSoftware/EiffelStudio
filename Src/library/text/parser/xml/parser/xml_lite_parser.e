@@ -210,11 +210,12 @@ feature {NONE} -- Implementation: parse
 			l_in_tag: BOOLEAN
 			buf: like buffer
 			l_callbacks: like callbacks
---			l_in_root_tag: BOOLEAN
+			l_ignore_non_printable_char: BOOLEAN
 		do
 			reset
 			buf := buffer
 			l_callbacks := callbacks
+			l_ignore_non_printable_char := True
 
 			l_callbacks.on_start
 			from
@@ -232,6 +233,7 @@ feature {NONE} -- Implementation: parse
 							l_content.wipe_out
 						end
 					else
+						l_ignore_non_printable_char := False
 						if not is_blank (l_content) then
 							report_unexpected_content (l_content)
 						end
@@ -266,10 +268,14 @@ feature {NONE} -- Implementation: parse
 				when '&' then
 					l_content.append_string (next_entity)
 				else
---| Should we ignore non printable character?					
---					if c.is_printable then
+					--| Ignore non printable character on top of XML document.
+					if
+						l_in_tag
+						or else c.is_printable
+						or else not l_ignore_non_printable_char
+					then
 						l_content.append_character (c)
---					end
+					end
 				end
 			end
 			l_callbacks.on_finish

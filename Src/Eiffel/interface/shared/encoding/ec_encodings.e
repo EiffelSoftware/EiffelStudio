@@ -13,26 +13,14 @@ inherit
 
 feature -- Access
 
-	default_encoding: attached ENCODING
+	default_encoding: ENCODING
 			-- Default encoding reading/writing from file.
 		do
 				-- |FIXME: must support old iso_8859_1 text.
 			-- Result := iso_8859_1
 			Result := utf8
-		end
-
-feature {NONE} -- Implementation
-
-	iso_8859_1: attached ENCODING
-			-- Encoding ISO-8859-1 encoding.
-			-- TODO: This encoding should be eventually integrated
-			-- into encoding library.
-		once
-			if {PLATFORM}.is_windows then
-				create Result.make ("28591") -- Code page on Windows
-			else
-				create Result.make ("ISO-8859-1") -- Name on Unix (iconv).
-			end
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 note

@@ -50,6 +50,16 @@ feature -- Access
 			utf32_not_void: Result /= Void
 		end
 
+	iso_8859_1: ENCODING
+			-- ISO-8859-1 encoding.
+		once
+			if {PLATFORM}.is_windows then
+				create Result.make ("28591") -- Code page on Windows
+			else
+				create Result.make ("ISO-8859-1") -- Name on Unix (iconv).
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	system_encodings_i: SYSTEM_ENCODINGS_I
@@ -60,14 +70,14 @@ feature {NONE} -- Implementation
 
 note
 	library:   "Encoding: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

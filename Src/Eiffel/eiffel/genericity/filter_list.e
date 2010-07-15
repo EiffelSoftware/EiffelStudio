@@ -48,7 +48,6 @@ feature -- Cleaning
 			-- Clean the list of all the removed classes
 		local
 			i, nb: INTEGER
-			l_item: CL_TYPE_A
 			l_default: CL_TYPE_A
 			local_content: like content
 		do
@@ -64,8 +63,7 @@ feature -- Cleaning
 			until
 				i >= nb
 			loop
-				l_item := local_content.item (i)
-				if valid_key (l_item) and then not l_item.is_valid then
+				if valid_key (local_content [i]) and then not local_content [i].is_valid then
 					local_content.put (l_default, i)
 					deleted_marks.put (True, i)
 					count := count - 1

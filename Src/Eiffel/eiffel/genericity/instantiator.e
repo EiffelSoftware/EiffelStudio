@@ -111,8 +111,6 @@ feature -- Attributes
 	process
 			-- Process the list in order to find new class types
 		local
-			data: like item
-			a_class: CLASS_C;
 			class_array: ARRAY [CLASS_C];
 			i, nb: INTEGER
 		do
@@ -120,9 +118,8 @@ feature -- Attributes
 			class_array := System.classes
 			nb := Class_counter.count
 			from i := 1 until i > nb loop
-				a_class := class_array.item (i)
-				if a_class /= Void then
-					a_class.types.clean
+				if class_array [i] /= Void then
+					class_array [i].types.clean
 				end
 				i := i + 1
 			end
@@ -150,8 +147,7 @@ feature -- Attributes
 			until
 				after
 			loop
-				data := item_for_iteration
-				data.associated_class.update_types (data);
+				item_for_iteration.associated_class.update_types (item_for_iteration);
 				forth
 			end;
 			derivations.wipe_out;
@@ -339,7 +335,7 @@ feature {STRIP_B, SYSTEM_I, AUXILIARY_FILES}
 		end;
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -7,6 +7,8 @@ class
 	LOCALIZED_PRINTER
 
 inherit
+	ANY
+
 	SYSTEM_ENCODINGS
 		export
 			{NONE} all

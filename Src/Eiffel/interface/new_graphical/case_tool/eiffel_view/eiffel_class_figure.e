@@ -152,9 +152,9 @@ feature {EG_FIGURE_WORLD} -- Element change
 				if a_link.source.cluster /= Void and then a_link.target.cluster /= Void then
 					if a_link.model.source.cluster = a_link.model.target.cluster then
 						l_cluster := a_link.source.cluster
-					elseif a_link.model.source.cluster.flat_linkables.has (a_link.model.target) then
+					elseif a_link.model.source.cluster.has_recursive (a_link.model.target) then
 						l_cluster := a_link.source.cluster
-					elseif a_link.model.target.cluster.flat_linkables.has (a_link.model.source) then
+					elseif a_link.model.target.cluster.has_recursive (a_link.model.source) then
 						l_cluster := a_link.target.cluster
 					end
 					if l_cluster /= Void then

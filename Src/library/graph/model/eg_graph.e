@@ -212,7 +212,7 @@ feature -- Element change
 			cluster_remove_actions.call ([a_cluster])
 		ensure
 			not_has_a_cluster: not has_cluster (a_cluster)
-			removed_from_cluster: attached (old (a_cluster.cluster)) as le_cluster implies not le_cluster.flat_linkables.has (a_cluster)
+			removed_from_cluster: attached (old (a_cluster.cluster)) as le_cluster implies not le_cluster.has_recursive (a_cluster)
 		end
 
 	wipe_out

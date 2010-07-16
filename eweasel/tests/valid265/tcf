@@ -1,0 +1,10 @@
+
+test_name	 variant-with-anchored-type
+test_description A loop variant whose type is an anchored type that is anchored to a feature of type INTEGER should be accepted but the compiler reports a VAVE error.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+compile_melted
+compile_result 	ok
+
+test_end

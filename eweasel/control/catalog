@@ -922,6 +922,7 @@ test	change-constraint-rename-crash		incr367 tcf fail incrementality generic anc
 test	qat-change-parent-actual-generic	incr368 tcf fail incrementality generic anchored_type
 test	qat-veen-instead-of-vtat		incr369 tcf fail incrementality anchored_type
 test	qat-constrained-type-in-crash-2		incr370 tcf fail incrementality anchored_type
+test	rename-routine-error				incr371 tcf fail incrementality
 
 
 -- Melting

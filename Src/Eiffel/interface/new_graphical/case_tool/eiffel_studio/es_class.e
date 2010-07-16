@@ -394,13 +394,14 @@ feature -- Element change
 			l_class: CLASS_I
 			i: EIFFEL_LIST [INDEX_AS]
 			s: STRING
-			f: LIST [E_FEATURE]
+			written_in_feature_list: LIST [E_FEATURE]
 			l: EIFFEL_LIST [PARENT_AS]
 			is_properties_changed: BOOLEAN
 			b: BOOLEAN
 			l_persistent_str: STRING
 			l_feature_clause_list: like feature_clause_list
 			l_is_retried: BOOLEAN
+			l_class_ast: CLASS_AS
 		do
 			if not l_is_retried then
 				l_persistent_str := "persistent"
@@ -421,11 +422,12 @@ feature -- Element change
 							end))
 					c := class_c
 					if c /= Void then
-						if c.has_ast then
-							if c.ast.generics_as_string = Void or else c.ast.generics_as_string.is_empty then
+						l_class_ast := c.ast
+						if l_class_ast /= Void then
+							if l_class_ast.generics_as_string = Void or else l_class_ast.generics_as_string.is_empty then
 								set_generics (Void)
 							else
-								set_generics (c.ast.generics_as_string)
+								set_generics (l_class_ast.generics_as_string)
 							end
 						end
 						b := c.is_deferred
@@ -445,15 +447,15 @@ feature -- Element change
 						end
 						-- is_interfaced
 						if c.has_feature_table then
-							f := c.written_in_features
+							written_in_feature_list := c.written_in_features
 							from
-								f.start
+								written_in_feature_list.start
 								b := False
 							until
-								b or f.after
+								b or written_in_feature_list.after
 							loop
-								b := f.item.is_external
-								f.forth
+								b := written_in_feature_list.item.is_external
+								written_in_feature_list.forth
 							end
 							if b /= is_interfaced then
 								is_interfaced := b
@@ -466,8 +468,8 @@ feature -- Element change
 						if st /= Void then
 							b := c.conform_to (storable_class)
 						end
-						if not b and then c.has_ast then
-							i := c.ast.top_indexes
+						if not b and then l_class_ast /= Void then
+							i := l_class_ast.top_indexes
 							if i /= Void then
 								from
 									i.start
@@ -481,7 +483,7 @@ feature -- Element change
 									i.forth
 								end
 							end
-							i := c.ast.bottom_indexes
+							i := l_class_ast.bottom_indexes
 							if i /= Void then
 								from
 									i.start
@@ -503,8 +505,8 @@ feature -- Element change
 						-- is_effective
 						if not c.is_deferred then
 							b := False
-							if c.has_ast then
-								l := c.ast.parents
+							if l_class_ast /= Void then
+								l := l_class_ast.parents
 								if l /= Void then
 									from
 										l.start
@@ -524,8 +526,8 @@ feature -- Element change
 							is_properties_changed := True
 						end
 						-- features
-						if class_c.has_ast then
-							l_feature_clause_list := class_c.ast.features
+						if l_class_ast /= Void then
+							l_feature_clause_list := l_class_ast.features
 						end
 						if l_feature_clause_list = Void then
 							create l_feature_clause_list.make (0)
@@ -541,8 +543,9 @@ feature -- Element change
 						is_compiled := b
 						is_properties_changed := True
 					end
-					if class_i.is_compiled then
-						build_queries
+					if written_in_feature_list /= Void then
+							-- We reuse the list attained further up in the routine.
+						build_queries (written_in_feature_list)
 						if cluster /= Void then
 							if cluster.group /= class_i.group then
 								cluster.prune_all (Current)
@@ -576,11 +579,10 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	build_queries
+	build_queries (l_written_in_feature_list: LIST [E_FEATURE])
 			-- Fill `queries' with all written features of the class
 			-- that have a return type.
 		local
-			f: LIST [E_FEATURE]
 			ef: E_FEATURE
 			old_suppliers: like suppliers
 			old_queries: like queries
@@ -594,14 +596,13 @@ feature {NONE} -- Implementation
 			if not suppliers.is_empty then
 				suppliers.wipe_out
 			end
-			if class_i.is_compiled and class_i.compiled_class.has_feature_table then
-				f := class_i.compiled_class.written_in_features
+			if l_written_in_feature_list /= Void then
 				from
-					f.start
+					l_written_in_feature_list.start
 				until
-					f.after
+					l_written_in_feature_list.after
 				loop
-					ef := f.item
+					ef := l_written_in_feature_list.item
 					if ef.type /= Void and then ef.type.has_associated_class then
 						if ef.ast /= Void then
 							queries.extend (ef.ast)
@@ -611,7 +612,7 @@ feature {NONE} -- Implementation
 							end
 						end
 					end
-					f.forth
+					l_written_in_feature_list.forth
 				end
 			end
 			is_queries_changed := not old_suppliers.is_equal (suppliers) or else not old_queries.is_equal (queries)

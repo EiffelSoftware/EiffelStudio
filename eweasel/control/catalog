@@ -1713,6 +1713,7 @@ test	expanded-indirect-like-current		term182	tcf fail termination expanded ancho
 test	expanded-indirect-like-current-2	term183	tcf fail termination expanded anchored_type
 test	create-generic-with-rename		term184	tcf fail termination generic
 test	generic-derivation-constraint		term185 tcf pass termination formal generic constraint
+test	across-keyword-as-feature-name		term186 tcf fail termination 
 
 -- Config
 

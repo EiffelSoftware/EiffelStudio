@@ -1,0 +1,11 @@
+
+test_name 	 across-keyword-as-feature-name
+test_description A class with a feature named `across' crashes the compiler.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	syntax_error TEST 10
+
+test_end

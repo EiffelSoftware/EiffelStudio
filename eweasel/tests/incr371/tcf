@@ -1,0 +1,25 @@
+test_name	rename-routine-error
+test_description Changing the name of a routine while introducing an error, fixing the error should compile successfully but crashed with a precondition violation.
+
+define		NAME "f"
+define		EXPRESSION "a.out"
+copy_sub 	Ace $TEST Ace
+copy_sub 	test.e $CLUSTER test.e
+
+compile_melted
+compile_result 	ok
+
+define		NAME "g"
+define		EXPRESSION "a"
+copy_sub 	test.e $CLUSTER test.e
+
+compile_melted
+compile_result 	validity_error TEST VUAR(2)
+
+define		EXPRESSION "a.out"
+copy_sub 	test.e $CLUSTER test.e
+
+resume_compile
+compile_result 	ok
+
+test_end

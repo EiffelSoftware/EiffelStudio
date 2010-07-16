@@ -499,6 +499,7 @@ test	inherited-generic-agent-argument	valid261 tcf pass validity formal generic 
 test	conversion_without_binary_operator	valid262 tcf pass validity
 test	manifest-real-to-real-32-conformance	valid263 tcf pass validity ieee
 test	generic-rename-with-alias		valid264 tcf fail validity generic rename
+test	variant-with-anchored-type		valid265 tcf fail validity
 
 -- Multiple error reporting tests
 test	multi-error-degree-4	multierr001 tcf pass multi-errors

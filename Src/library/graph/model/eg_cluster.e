@@ -30,6 +30,25 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	has_recursive (a_linkable: EG_LINKABLE): BOOLEAN
+		local
+			l_linkables: SPECIAL [EG_LINKABLE]
+			i, nb: INTEGER
+		do
+			from
+				l_linkables := linkables.area
+				nb := linkables.count
+			until
+				Result or else i = nb
+			loop
+				Result := l_linkables [i] = a_linkable
+				if not Result and then attached {EG_CLUSTER} l_linkables [i] as l_cluster then
+					Result := l_cluster.has_recursive (a_linkable)
+				end
+				i := i + 1
+			end
+		end
+
 	flat_linkables: like linkables
 			-- Return all linkables containing in `Current'
 			-- including all linkables containing in sub clusters.
@@ -75,23 +94,33 @@ feature -- Access
 
 	sub_nodes: ARRAYED_LIST [like node_type]
 			-- Nodes (top level) of Current.
-		local
-			l_node: detachable like node_type
 		do
 			create Result.make (10)
-			from
-				linkables.start
-			until
-				linkables.after
-			loop
-				l_node ?= linkables.item
-				if l_node /= Void then
-					Result.extend (l_node)
-				end
-				linkables.forth
-			end
+			add_subnodes_to_list (Result, False)
 		ensure
 			result_not_void: Result /= Void
+		end
+
+	add_subnodes_to_list (a_subnodes_list: ARRAYED_LIST [like node_type]; a_recursive: BOOLEAN)
+			-- Add subnodes of `Current' to `a_subnodes_list'
+		local
+			l_linkables: SPECIAL [EG_LINKABLE]
+			i, nb: INTEGER
+		do
+			l_linkables := linkables.area
+			from
+				nb := linkables.count
+			until
+				i = nb
+			loop
+				if attached {like node_type} l_linkables [i] as l_node then
+					a_subnodes_list.extend (l_node)
+				end
+				if a_recursive and then attached {like Current} l_linkables [i] as l_cluster then
+					l_cluster.add_subnodes_to_list (a_subnodes_list, True)
+				end
+				i := i + 1
+			end
 		end
 
 	sub_nodes_recursive: ARRAYED_LIST [like node_type]
@@ -99,16 +128,8 @@ feature -- Access
 		local
 			l_sub_clusters: like sub_clusters
 		do
-			Result := sub_nodes
-			l_sub_clusters := sub_clusters
-			from
-				l_sub_clusters.start
-			until
-				l_sub_clusters.after
-			loop
-				Result.merge_right (l_sub_clusters.item.sub_nodes_recursive)
-				l_sub_clusters.forth
-			end
+			create Result.make (20)
+			add_subnodes_to_list (Result, True)
 		ensure
 			result_not_void: Result /= Void
 		end

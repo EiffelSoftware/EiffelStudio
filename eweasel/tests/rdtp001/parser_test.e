@@ -230,49 +230,5 @@ feature {NONE}
 			-- Factory being used for parsing.
 
 	light_factory: AST_ROUNDTRIP_LIGHT_FACTORY
-	
-feature -- Encoding converter
-
-	utf8_string (a_stream: STRING): STRING
-			-- Detect encoding of `a_stream' and convert it into utf8.
-			-- Detection is not 100% reliable. Use other conversion methods when
-			-- encodings are known.
-		do
-			Result := a_stream
-		end
-
-	utf32_string (a_stream: STRING): STRING_32
-			-- Detect encoding of `a_stream' and convert it into utf32.
-		do
-			Result := a_stream.as_string_32
-		end
-
-	localized_print (a_str: STRING_GENERAL)
-			-- Print `a_str' as localized encoding.
-			-- `a_str' is taken as a UTF-32 string.
-		do
-		end
-
-	localized_print_error (a_str: STRING_GENERAL)
-			-- Print an error, `a_str', as localized encoding.
-			-- `a_str' is taken as a UTF-32 string.
-		do
-		end
-
-	utf32_to_file_encoding (a_str: STRING_32): STRING
-			-- Convert utf32 to file encoding (utf8 as default)
-		do
-			Result := a_str.as_string_8
-		end
-
-	detected_encoding: detachable ANY
-			-- Detected encoding
-		do
-		end
-
-	detect_encoding (a_str: detachable STRING_GENERAL)
-			-- Detect encoding of `a_str'
-		do
-		end
 		
 end -- class PARSER_TEST

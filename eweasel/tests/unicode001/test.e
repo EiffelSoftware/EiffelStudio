@@ -1,4 +1,4 @@
-note
+﻿note
 	test: "测试"
 	test: "Test 测试 Test"
 

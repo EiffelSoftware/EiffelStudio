@@ -1409,8 +1409,8 @@ RT_LNK void eif_exit_eiffel_code(void);
  * This is done by RTLT
  *
  */
-#define RTTR(x,y,z)	start_trace(x,y,z)					/* Print message "entering..." */
-#define RTXT(x,y,z)	stop_trace(x,y,z)					/* Print message "leaving..." */
+#define RTTR(x,y,z,w)	start_trace(x,y,z,w)			/* Print message "entering..." */
+#define RTXT(x,y,z,w)	stop_trace(x,y,z,w)				/* Print message "leaving..." */
 #define RTPR(x,y,z)	start_profile(x,y,z)				/* Start measurement of feature */
 #define RTXP		stop_profile()						/* Stop measurement of feature */
 #define RTLT		int EIF_VOLATILE current_call_level	/* Declare local trave variable */

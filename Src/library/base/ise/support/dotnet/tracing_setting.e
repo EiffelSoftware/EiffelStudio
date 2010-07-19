@@ -18,10 +18,7 @@ feature -- Status report
 			-- Is tracing currently enabled?
 		require
 			valid_platform: not {PLATFORM}.is_dotnet
-		external
-			"C inline use %"eif_eiffel.h%""
-		alias
-			"return eif_is_tracing_enabled();"
+		do
 		end
 
 feature -- Status setting
@@ -30,20 +27,14 @@ feature -- Status setting
 			-- Start tracing.
 		require
 			valid_platform: not {PLATFORM}.is_dotnet
-		external
-			"C inline use %"eif_eiffel.h%""
-		alias
-			"eif_enable_tracing();"
+		do
 		end
 
 	disable_tracing
 			-- Stop tracing
 		require
 			valid_platform: not {PLATFORM}.is_dotnet
-		external
-			"C inline use %"eif_eiffel.h%""
-		alias
-			"eif_disable_tracing();"
+		do
 		end
 
 note

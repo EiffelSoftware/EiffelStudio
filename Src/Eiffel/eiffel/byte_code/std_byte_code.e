@@ -206,9 +206,12 @@ feature -- Analyzis
 				l_context.mark_current_used
 			end
 			if trace_enabled then
-					-- For RTTR and RTXT
+					-- For RTTR
 				l_context.add_dt_current
+				l_context.add_dftype_current
+					-- For RTXT
 				l_context.add_dt_current
+				l_context.add_dftype_current
 			end
 			if profile_enabled then
 					-- For RTPR and RTXP
@@ -1329,7 +1332,7 @@ end
 			-- Generate the "start of profile" macro
 		do
 			if profile_enabled then
-				generate_option_macro ("RTPR")
+				generate_option_macro ("RTPR", False)
 			end
 		end
 
@@ -1349,7 +1352,7 @@ end
 			-- Generate the "start of trace" macro
 		do
 			if trace_enabled then
-				generate_option_macro ("RTTR")
+				generate_option_macro ("RTTR", True)
 			end
 		end
 
@@ -1357,13 +1360,13 @@ end
 			-- Generate the "end of trace" macro
 		do
 			if trace_enabled then
-				generate_option_macro ("RTXT")
+				generate_option_macro ("RTXT", True)
 			end
 		end
 
-	generate_option_macro (macro_name: STRING)
+	generate_option_macro (macro_name: STRING; has_dftype: BOOLEAN)
 			-- Generate an option macro call will the feature name, the feature origin
-			-- and the "dynamic type" of `Current' as arguments
+			-- and the "dynamic type" of `Current' as arguments and its full dynamic type if requested.
 		require
 			dtype_added: context.dt_current > 1
 		local
@@ -1377,7 +1380,11 @@ end
 			buf.put_string ({C_CONST}.comma_space)
 			feature_origin (buf)
 			buf.put_string ({C_CONST}.comma_space)
-			buf.put_string (" dtype")
+			buf.put_string ({C_CONST}.dtype_name)
+			if has_dftype then
+				buf.put_string ({C_CONST}.comma_space)
+				buf.put_string ({C_CONST}.dftype_name)
+			end
 			buf.put_two_character (')', ';')
 		end
 

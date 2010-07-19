@@ -49,7 +49,7 @@ doc:<file name="option.c" header="eif_option.h" version="$Id$" summary="Option q
 #include "rt_lmalloc.h"
 #include "rt_garcol.h"
 #include "rt_malloc.h"
-#include "eif_macros.h"
+#include "rt_macros.h"
 #include "rt_err_msg.h"
 #include "rt_except.h"
 #include "rt_timer.h"
@@ -204,6 +204,25 @@ rt_shared	EIF_CS_TYPE *eif_trace_mutex = (EIF_CS_TYPE *) 0;
 
 #endif
 
+/*
+doc:	<attribute name="eif_tracing_handler" return_type="EIF_OBJECT" export="private">
+doc:		<summary>Current handler for processing any trace. If not set, we use the default runtime handler</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Write access synchronized in `eif_set_tracer'.</synchronization>
+doc:	</attribute>
+*/
+rt_private EIF_OBJECT eif_tracing_handler = NULL;
+
+/*
+doc:	<attribute name="eif_tracing_routine" return_type="fnptr" export="private">
+doc:		<summary>Current handler for processing any trace. If not set, we use the default runtime handler</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Write access synchronized in `eif_set_tracer'.</synchronization>
+doc:	</attribute>
+*/
+rt_private void (*eif_tracing_routine)(EIF_REFERENCE, EIF_INTEGER, EIF_POINTER, EIF_POINTER, EIF_INTEGER, EIF_BOOLEAN) = NULL;
+
+
 /* Convenient macros to convert units to nanoseconds. */
 #define NB_NANO_IN_ONE_SECOND	RTU64C(1000000000)
 #define NB_NANO_IN_ONE_MILLI	RTU64C(1000000)
@@ -356,7 +375,7 @@ rt_public void check_options(EIF_CONTEXT struct eif_opt *opt, EIF_TYPE_INDEX dty
 		CHECK("vector not null", vector);
 
 			/* User wants tracing. */
-		start_trace(vector->ex_rout, vector->ex_orig, dtype);
+		start_trace(vector->ex_rout, vector->ex_orig, dtype, Dftype(vector->ex_id));
 	}
 
 	if (opt->profile_level) {
@@ -394,7 +413,7 @@ rt_public void check_options_stop(EIF_CONTEXT_NOARG)
 
 	if (opt.trace_level) {
 			/* User wants tracing. */
-		stop_trace(vector->ex_rout, vector->ex_orig, dtype);
+		stop_trace(vector->ex_rout, vector->ex_orig, dtype, Dftype(vector->ex_id));
 	}
 
 	if (opt.profile_level) {
@@ -670,7 +689,41 @@ rt_public void eif_disable_tracing (void)
 	eif_trace_disabled = 1;
 }
 
-rt_public void start_trace(char *name, EIF_TYPE_INDEX origin, EIF_TYPE_INDEX dtype)
+/*
+doc:	<routine name="eif_set_tracer" export="public">
+doc:		<summary>Disable tracing for current thread.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None required</synchronization>
+doc:	</routine>
+*/
+rt_public void eif_set_tracer (EIF_REFERENCE obj, EIF_POINTER fnptr) 
+{
+	RT_GET_CONTEXT
+
+		/* We have to stop all threads otherwise we would have to put a mutex
+		 * in the tracing mechanism and that would slow down things too much. It 
+		 * should not be too bad since we are calling this routine usually only
+		 * once and at the beginning of a program. */
+	GC_THREAD_PROTECT(eif_synchronize_gc(rt_globals));
+
+		/* If there was a handler before, we remove it. */
+	if (eif_tracing_handler) {
+		(void) eif_wean(eif_tracing_handler);
+		eif_tracing_handler = NULL;
+	}
+		/* Add new handler and its routine if not NULL. */
+	if (obj && fnptr) {
+		eif_tracing_handler = eif_protect (obj);
+		eif_tracing_routine = FUNCTION_CAST (void, (EIF_REFERENCE, EIF_INTEGER, EIF_POINTER, EIF_POINTER, EIF_INTEGER, EIF_BOOLEAN)) fnptr;
+	} else {
+		eif_tracing_handler = NULL;
+		eif_tracing_routine = NULL;
+	}
+
+	GC_THREAD_PROTECT(eif_unsynchronize_gc(rt_globals));
+}
+
+rt_public void start_trace(char *name, EIF_TYPE_INDEX origin, EIF_TYPE_INDEX dtype, EIF_TYPE_INDEX dftype)
            				/* The routine name */
            				/* The origin of the routine */
           				/* The class in which the routine is defined */
@@ -685,7 +738,13 @@ rt_public void start_trace(char *name, EIF_TYPE_INDEX origin, EIF_TYPE_INDEX dty
 	int i;				/* Counter needed for loops */
 
 	if (!eif_trace_disabled) {
-		if (trace_call_level != 0 && last_dtype != -1) {
+		if (eif_tracing_handler && eif_access(eif_tracing_handler)) {
+				/* We have to disable tracing as otherwise we would have a stack overflow quickly. */
+			eif_trace_disabled = 1;
+			eif_tracing_routine (eif_access(eif_tracing_handler), dftype, Classname(origin), name,
+				trace_call_level, EIF_TRUE);
+			eif_trace_disabled = 0;
+		} else if (trace_call_level != 0 && last_dtype != -1) {
 			EIF_TRACE_LOCK;
 			print_err_msg(stderr, "\n");
 #ifdef EIF_THREADS
@@ -709,7 +768,7 @@ rt_public void start_trace(char *name, EIF_TYPE_INDEX origin, EIF_TYPE_INDEX dty
 	}
 }
 
-rt_public void stop_trace(char *name, EIF_TYPE_INDEX origin, EIF_TYPE_INDEX dtype)
+rt_public void stop_trace(char *name, EIF_TYPE_INDEX origin, EIF_TYPE_INDEX dtype, EIF_TYPE_INDEX dftype)
            				/* The routine name */
            				/* The origin of the routine */
           				/* The class in which the routine is defined */
@@ -720,30 +779,40 @@ rt_public void stop_trace(char *name, EIF_TYPE_INDEX origin, EIF_TYPE_INDEX dtyp
 	EIF_GET_CONTEXT
 	int i;				/* Counter needed for loops */
 
-	trace_call_level--;		/* Decrease the call_level */
+	if (!eif_trace_disabled) {
+		trace_call_level--;		/* Decrease the call_level */
 
-	EIF_TRACE_LOCK;
-	print_err_msg(stderr, "\n");
+		if (eif_tracing_handler && eif_access(eif_tracing_handler)) {
+				/* We have to disable tracing as otherwise we would have a stack overflow quickly. */
+			eif_trace_disabled = 1;
+			eif_tracing_routine (eif_access(eif_tracing_handler), dftype, Classname(origin), name,
+				trace_call_level, EIF_FALSE);
+			eif_trace_disabled = 0;
+		} else {
+			EIF_TRACE_LOCK;
+			print_err_msg(stderr, "\n");
 #ifdef EIF_THREADS
-		print_err_msg(stderr, "Thread ID 0x%016" EIF_POINTER_DISPLAY ":", (rt_uint_ptr) eif_thr_context->thread_id);
+				print_err_msg(stderr, "Thread ID 0x%016" EIF_POINTER_DISPLAY ":", (rt_uint_ptr) eif_thr_context->thread_id);
 #endif
 
-	for (i = 0; i < trace_call_level; i++)
-		print_err_msg(stderr, "|  ");		/* Print preceding spaces */
+			for (i = 0; i < trace_call_level; i++)
+				print_err_msg(stderr, "|  ");		/* Print preceding spaces */
 
-	if ((strcmp(last_name, name) == 0) && (last_dtype == dtype) && (last_origin == origin)) {
-		print_err_msg(stderr, "---");
-		last_dtype = -1;
-	} else {
-		print_err_msg(stderr, "<<<");
+			if ((strcmp(last_name, name) == 0) && (last_dtype == dtype) && (last_origin == origin)) {
+				print_err_msg(stderr, "---");
+				last_dtype = -1;
+			} else {
+				print_err_msg(stderr, "<<<");
+			}
+
+			print_err_msg(stderr, " %s from %s", name, Classname(dtype));		/* Standard message for leaving features */
+
+			if (dtype != origin)	/* Check if it is inherited... */
+				print_err_msg(stderr, " (%s)", Classname(origin));
+
+			EIF_TRACE_UNLOCK;
+		}
 	}
-
-	print_err_msg(stderr, " %s from %s", name, Classname(dtype));		/* Standard message for leaving features */
-
-	if (dtype != origin)	/* Check if it is inherited... */
-		print_err_msg(stderr, " (%s)", Classname(origin));
-
-	EIF_TRACE_UNLOCK;
 }
 
 struct prof_info* prof_stack_pop(void)

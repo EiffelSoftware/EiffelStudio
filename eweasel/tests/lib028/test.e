@@ -49,19 +49,6 @@ feature
 			Result.append_code (0x9F)
 		end
 		
-	iso_8859_1: !ENCODING
-			-- Encoding ISO-8859-1 encoding.
-			-- TODO: This encoding should be eventually integrated
-			-- into encoding library.
-			-- (export status {NONE})
-		once
-			if {PLATFORM}.is_windows then
-				create Result.make ("28591")
-			else
-				create Result.make ("ISO-8859-1")
-			end
-		end
-		
 	test_convert (a_from_encoding, a_to_encoding: ENCODING; a_str, a_expected_str: STRING_GENERAL) is
 		local
 			l_result: BOOLEAN

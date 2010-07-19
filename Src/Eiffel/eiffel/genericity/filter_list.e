@@ -39,7 +39,14 @@ feature -- Comparison
 
 	same_keys (a_search_key, a_key: CL_TYPE_A): BOOLEAN
 		do
-			Result := a_search_key.same_as (a_key)
+			if not a_search_key.is_valid then
+					-- We do not care if both keys are invalid:
+					-- they will be removed sometime anyway.
+				Result := not a_key.is_valid
+			elseif a_key.is_valid then
+					-- Both keys are valid, it's safe to compare them.
+				Result := a_search_key.same_as (a_key)
+			end
 		end
 
 feature -- Cleaning

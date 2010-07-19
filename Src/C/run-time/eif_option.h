@@ -95,8 +95,8 @@ RT_LNK struct stack *prof_stack;		/* Stack that maintains profile information */
 RT_LNK void check_options(struct eif_opt *opt, EIF_TYPE_INDEX dtype);			/* Dispatches to start_profile and start_trace */
 RT_LNK void check_options_stop(void);		/* Dispatches to stop_profile and stop_trace */
 
-RT_LNK void start_trace(char *name, EIF_TYPE_INDEX origin, EIF_TYPE_INDEX dtype);			/* Prints entering feature ... */
-RT_LNK void stop_trace(char *name, EIF_TYPE_INDEX origin, EIF_TYPE_INDEX dtype);			/* Prints leaving feature ... */
+RT_LNK void start_trace(char *name, EIF_TYPE_INDEX origin, EIF_TYPE_INDEX dtype, EIF_TYPE_INDEX dftype);			/* Prints entering feature ... */
+RT_LNK void stop_trace(char *name, EIF_TYPE_INDEX origin, EIF_TYPE_INDEX dtype, EIF_TYPE_INDEX dftype);			/* Prints leaving feature ... */
 
 RT_LNK void initprf(void);				/* Generates table for profiling */
 
@@ -112,6 +112,7 @@ RT_LNK void prof_stack_rewind(char **old_top);		/* Stops all timer counts in
 RT_LNK EIF_BOOLEAN eif_is_tracing_enabled(void);
 RT_LNK void eif_enable_tracing(void);
 RT_LNK void eif_disable_tracing(void);
+RT_LNK void eif_set_tracer(EIF_REFERENCE obj, EIF_POINTER fnptr);
 
 #ifdef __cplusplus
 }

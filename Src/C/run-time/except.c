@@ -4113,6 +4113,7 @@ rt_public void init_emnger (void)
 {
 	RT_GET_CONTEXT
 	EIF_INTEGER pf_status = egc_prof_enabled;
+	EIF_BOOLEAN tr_status = eif_is_tracing_enabled();
 	
 		/* No need to create the global instance, when it has already been created by one thread. */
 	if (!except_mnger){	
@@ -4128,9 +4129,14 @@ rt_public void init_emnger (void)
 #ifndef ENABLE_STEP_THROUGH
 	DISCARD_BREAKPOINTS; /* prevent the debugger from stopping in the following functions */
 #endif
-	egc_prof_enabled = 0; /* Disable profiling to be save. */
+	eif_disable_tracing(); /* Disable tracing to not clobber the output. */
+	egc_prof_enabled = 0; /* Disable profiling to be safe. */
 	(egc_init_exception_manager)(except_mnger);
 	egc_prof_enabled = pf_status; /* Resume profiling status. */
+	if (!tr_status) {
+			/* Resume tracing if it was previously enabled. */
+		eif_enable_tracing();
+	}
 #ifndef ENABLE_STEP_THROUGH
 	UNDISCARD_BREAKPOINTS; /* prevent the debugger from stopping in the following functions */
 #endif

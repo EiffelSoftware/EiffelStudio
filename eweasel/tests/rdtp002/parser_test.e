@@ -25,7 +25,7 @@ feature
 			l_input_file.close
 
 			create l_parser.make_with_factory (create {AST_ROUNDTRIP_FACTORY})
-			l_parser.parse_from_string (l_input_file.last_string, Void)
+			l_parser.parse_class_from_string (l_input_file.last_string, Void, Void)
 			if l_parser.root_node /= Void and then l_parser.match_list /= Void then
 				if l_input_file.last_string.is_equal (l_parser.match_list.out) then
 					io.put_string ("OK%N")

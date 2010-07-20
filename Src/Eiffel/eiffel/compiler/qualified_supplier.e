@@ -11,14 +11,6 @@ class
 inherit
 	HASHABLE
 
---	SHARED_WORKBENCH
---		export
---			{ANY}
---				system
---			{NONE}
---				all
---		end
-
 create
 	make
 
@@ -29,11 +21,6 @@ feature {NONE} -- Creation
 		require
 			attached_f: attached f
 			attached_c: attached c
---			valid_f: f > 0
---			valid_c: c > 0
---			has_c: attached system.class_of_id (c) as cl
-			initialized_c: c.has_feature_table
-			has_f: attached c.feature_of_name_id (f.feature_name_id)
 		do
 			set (f, c)
 		ensure
@@ -47,7 +34,7 @@ feature -- Access
 			-- ID of the supplier class with feature identified by `feature_name_id'
 
 	feature_name_id: INTEGER_32
-			-- ID of the supplier feature from the class identified by `class_is'
+			-- ID of the supplier feature from the class identified by `class_id'
 
 	hash_code: INTEGER_32
 			-- <Precursor>
@@ -61,11 +48,6 @@ feature -- Modification
 		require
 			attached_f: attached f
 			attached_c: attached c
---			valid_f: f > 0
---			valid_c: c > 0
---			has_c: attached system.class_of_id (c) as cl
-			initialized_c: c.has_feature_table
-			has_f: attached c.feature_of_name_id (f.feature_name_id)
 		do
 			class_id := c.class_id
 			feature_name_id := f.feature_name_id

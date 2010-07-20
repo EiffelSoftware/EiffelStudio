@@ -905,11 +905,11 @@ feature {NONE} -- Qualified suppliers: optimization
 feature -- Qualified suppliers: recompilation
 
 	touch_feature_type (f: FEATURE_I; c: CLASS_C)
-			-- Register that the type of feature `f' from class `c' is changed.
+			-- Register that the type of feature `f' from class `c' is changed
+			-- or the feature is completely removed.
 		require
 			f_attached: attached f
 			c_attached: attached c
-			valid_f: attached c.feature_of_name_id (f.feature_name_id)
 		local
 			q: like qualified_supplier
 		do

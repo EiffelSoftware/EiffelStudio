@@ -40,6 +40,11 @@ inherit
 			{NONE}
 		end
 
+	SHARED_ENCODING_CONVERTER
+		export
+			{NONE}
+		end
+
 	INTERNAL_COMPILER_STRING_EXPORTER
 
 feature -- Access
@@ -453,10 +458,11 @@ feature -- Status report
 						-- its owner, the file will not go outside this
 						-- routine and therefore there will be no aliasing.
 					l_stream := a_file.last_string
-					l_converter := (create {SHARED_ENCODING_CONVERTER}).encoding_converter
+					l_converter := encoding_converter
 					if l_converter /= Void then
-						Result := l_converter.utf32_string (l_stream)
+						Result := l_converter.utf32_string (l_stream, Current)
 						encoding := l_converter.detected_encoding
+						bom := l_converter.last_bom
 					else
 						Result := l_stream
 					end
@@ -479,6 +485,9 @@ feature -- Status report
 
 	encoding: detachable ANY
 			-- Encoding of original text.
+
+	bom: detachable STRING_8
+			-- Bom of original text.
 
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
 
@@ -506,8 +515,9 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
 					l_stream := a_file.last_string
 					if is_encoding_converter_set then
 						l_converter := encoding_converter
-						Result := l_converter.utf8_string (l_stream)
+						Result := l_converter.utf8_string (l_stream, Current)
 						encoding := l_converter.detected_encoding
+						bom := l_converter.last_bom
 					else
 						Result := l_stream
 					end

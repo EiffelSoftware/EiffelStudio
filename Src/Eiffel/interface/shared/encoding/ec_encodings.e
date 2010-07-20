@@ -16,9 +16,7 @@ feature -- Access
 	default_encoding: ENCODING
 			-- Default encoding reading/writing from file.
 		do
-				-- |FIXME: must support old iso_8859_1 text.
-			-- Result := iso_8859_1
-			Result := utf8
+			Result := iso_8859_1
 		ensure
 			Result_not_void: Result /= Void
 		end

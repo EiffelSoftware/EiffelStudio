@@ -77,7 +77,7 @@ feature -- Execution
 					compileok
 				then
 
-					save (target.file_name, target.text, target.encoding)
+					save (target.file_name, target.text, target.encoding, target.bom)
 					if last_saving_success then
 						target.set_last_saving_date (last_saving_date)
 						target.on_text_saved
@@ -152,7 +152,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

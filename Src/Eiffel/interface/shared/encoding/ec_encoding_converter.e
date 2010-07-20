@@ -1,5 +1,13 @@
 note
-	description: "Used in EiffelStudio to detect/convert text among encodings."
+	description: "[
+					Interface of EiffelStudio encoding converter with encoding detection.
+
+					Encoding detection priority:
+					1. If `a_encoding' is attached, use it as the encoding of `a_file'
+					2. Detect BOM from `a_file', use the detected encoding.
+					3. Use the encoding specified in the context of `a_class' (.ecf)
+					4. Default to ASCII (ISO-8859-1) encoding.
+				]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -10,140 +18,26 @@ class
 
 inherit
 	ENCODING_CONVERTER
+		redefine
+			encoding_from_class
+		end
 
 	EC_ENCODINGS
 		export
 			{NONE} all
-		end
-
-	SHARED_LOCALE
-		export
-			{NONE} all
+		undefine
+			default_create
 		end
 
 feature -- Access
 
-	detected_encoding: ENCODING assign set_detected_encoding
-			-- <Precursor>
-		local
-			l_encoding: detachable like internal_detected_encoding
+	encoding_from_class (a_class: ANY): ENCODING
+			-- Read encoding from .ecf of `a_class'.
 		do
-			l_encoding := internal_detected_encoding
-			if l_encoding /= Void then
-				Result := l_encoding
-			else
-				Result := default_encoding
-				internal_detected_encoding := Result
-			end
-		ensure then
-			detected_encoding_not_void: Result /= Void
-			internal_detected_encoding_set: internal_detected_encoding = Result
-		end
-
-	utf8_string (a_stream: STRING): STRING
-			-- Detect encoding of `a_stream' and convert it into utf8.
-		local
-			l_encoding: like detected_encoding
-		do
-			detect_encoding (a_stream)
-			l_encoding := detected_encoding
-			if l_encoding.is_equal (utf8) then
-					-- It is safe and much faster not to convert for now.
-				Result := a_stream
-			else
-				l_encoding.convert_to (utf8, a_stream)
-				if l_encoding.last_conversion_successful then
-					Result := l_encoding.last_converted_string.as_string_8
-				else
-					Result := a_stream
-				end
+			if attached {CLASS_I} a_class as l_class then
+				-- Read encoding from .ecf
 			end
 		end
-
-	utf32_string (a_stream: STRING): STRING_32
-			-- <Precursor>
-		local
-			l_encoding: like detected_encoding
-		do
-			detect_encoding (a_stream)
-			l_encoding := detected_encoding
-			if l_encoding.is_equal (iso_8859_1) then
-					-- It is safe and much faster not to convert for now.
-				Result := a_stream.as_string_32
-			else
-				l_encoding.convert_to (utf32, a_stream)
-				if l_encoding.last_conversion_successful then
-					Result := l_encoding.last_converted_string.as_string_32
-				else
-					Result := a_stream.as_string_32
-				end
-			end
-		end
-
-	utf32_from_iso8259_1 (a_stream: STRING): STRING_32
-			-- <Precursor>
-		local
-			l_encoding: ENCODING
-		do
-			l_encoding := iso_8859_1
-			l_encoding.convert_to (utf32, a_stream)
-			if l_encoding.last_conversion_successful then
-				Result := l_encoding.last_converted_string.as_string_32
-			else
-				Result := a_stream.as_string_32
-			end
-		end
-
-	utf32_to_file_encoding (a_str: STRING_32): STRING
-			-- <precursor>
-		do
-			utf32.convert_to (utf8, a_str)
-			if utf32.last_conversion_successful then
-				Result := utf32.last_converted_stream
-			else
-				Result := a_str.as_string_8
-			end
-		end
-
-feature -- Element change
-
-	set_detected_encoding (a_encoding: like detected_encoding)
-			-- Sets the detected encoding
-		require
-			a_encoding_not_void: a_encoding /= Void
-		do
-			internal_detected_encoding := a_encoding
-		ensure
-			detected_encoding_set: detected_encoding = a_encoding
-		end
-
-feature -- Basic operations
-
-	detect_encoding (a_str: detachable STRING_GENERAL)
-			-- <Precursor>
-		do
-			encoding_detector.detect (a_str)
-			if encoding_detector.last_detection_successful then
-				internal_detected_encoding := encoding_detector.detected_encoding
-			else
-				create internal_detected_encoding.make ({CODE_PAGE_CONSTANTS}.utf8)
-			end
-		end
-
-feature {NONE} -- Implementation
-
-	encoding_detector: ENCODING_DETECTOR
-			-- Encoding detector
-		once
-			create {EC_SIMPLE_ENCODING_DETECTOR} Result
-		ensure
-			encoding_detector_not_void: Result /= Void
-		end
-
-feature {NONE} -- Implementation: Internal cache
-
-	internal_detected_encoding: detachable like detected_encoding
-			-- Mutable version of `detected_encoding'.
 
 ;note
 	copyright:	"Copyright (c) 1984-2010, Eiffel Software"

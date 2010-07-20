@@ -104,7 +104,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Basic operation
 			--                    parse has been completed; False to retain them.
 		require
 			a_parser_attached: a_parser /= Void
-			a_text_attached: a_text /= Void		
+			a_text_attached: a_text /= Void
 		local
 			retried: BOOLEAN
 			l_level: NATURAL_32
@@ -119,7 +119,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Basic operation
 				end
 
 					-- Perform parse
-				a_parser.parse_from_string (a_text.as_string_8, a_context_class)
+				a_parser.parse_from_utf8_string (a_text.as_string_8, a_context_class)
 
 				has_error := error_handler.error_level /= l_level
 				if a_ignore_errors then

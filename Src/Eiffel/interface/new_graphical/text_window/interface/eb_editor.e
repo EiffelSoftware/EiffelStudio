@@ -70,6 +70,13 @@ inherit
 			default_create
 		end
 
+	SHARED_ENCODING_CONVERTER
+		export
+			{NONE} all
+		undefine
+			default_create
+		end
+
 create
 	make
 
@@ -139,6 +146,9 @@ feature -- Access
 	docking_content: SD_CONTENT
 			-- Docking content.
 
+	bom: detachable STRING
+			-- Bom if detected.
+
 feature -- Docking
 
 	set_docking_content (a_content: SD_CONTENT)
@@ -173,14 +183,28 @@ feature -- Text Loading
   	   	do
   	   		reset
 
+				-- Reset encoding.
+			set_encoding (Void)
+			bom := Void
 			create l_filename.make_from_string (a_filename)
 			create l_file.make (l_filename)
 				-- Set `load_file_error' if the file does not exist.
 			if l_file.exists then
 				load_file_error := False
+
+					-- Setup encoding
+				if attached {CLASSI_STONE} stone as l_class_stone then
+					l_file.open_read
+					l_file.read_stream (4)
+					if attached encoding_converter.encoding_from_string_of_class (l_file.last_string, l_class_stone.class_i) as l_enc then
+						set_encoding (l_enc)
+						bom := encoding_converter.last_bom
+					end
+				end
 			else
 				load_file_error := True
 			end
+
 			Precursor (l_filename)
 				-- The following code is broken. See bug#13171 and bug#13082. For the 6.0 release,
 				-- we are simply disabling this code and never load the backup (see the above two lines)
@@ -211,6 +235,8 @@ feature -- Text Loading
 			l_d_class : DOCUMENT_CLASS
 			l_scanner: EDITOR_EIFFEL_SCANNER
 			l_stone: CLASSI_STONE
+			l_s8: STRING_8
+			l_s: STRING_GENERAL
 		do
 			l_d_class := get_class_from_type (once "e")
 			set_current_document_class (l_d_class)
@@ -221,7 +247,17 @@ feature -- Text Loading
 					l_scanner.set_current_class (l_stone.class_i.config_class)
 				end
 			end
-			Precursor {EDITABLE_TEXT_PANEL} (s)
+				-- Remove the BOM before parsing in the editor.
+				-- Otherwise, positions from the compiler parser does not match those from the editor scanner.
+			l_s := s
+			if bom /= Void and then s.count >= bom.count then
+				if s.substring (1, bom.count) ~ bom then
+					l_s8 := s.as_string_8
+					l_s8.remove_head (bom.count)
+					l_s := l_s8
+				end
+			end
+			Precursor {EDITABLE_TEXT_PANEL} (l_s)
 		end
 
 	check_document_modifications_and_reload
@@ -354,7 +390,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

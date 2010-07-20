@@ -27,13 +27,12 @@ create
 
 feature -- Scann
 
-	scan_file (a_file: KI_CHARACTER_INPUT_STREAM)
+	scan_file (a_file: KL_BINARY_INPUT_FILE)
 			-- Scan `a_file'.
 		require
 			a_file_not_void: a_file /= Void
 		do
-			File_buffer.set_file (a_file)
-			input_buffer := File_buffer
+			input_buffer := encoding_converter.input_buffer_from_file (a_file, Void)
 			yy_load_input_buffer
 			filename := a_file.name
 			scan

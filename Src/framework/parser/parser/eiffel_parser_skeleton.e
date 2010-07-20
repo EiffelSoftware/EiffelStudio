@@ -215,64 +215,106 @@ feature -- Status report
 	is_ignoring_attachment_marks: BOOLEAN
 			-- Are we simply ignoring attachment marks while parsing?
 
-feature -- Parsing
+feature -- Parsing (Unknown encoding)
 
 	parse (a_file: KL_BINARY_INPUT_FILE)
 			-- Parse Eiffel class text from `a_file'.
 			-- Make result available in appropriate result node.
 			-- An exception is raised if a syntax error is found.
+			--
+			-- Encoding detection priority:
+			-- 1. Detect BOM from `a_file', use the detected encoding.
+			-- 2. Default to ASCII (ISO-8859-1) encoding.
 		require
 			a_file_not_void: a_file /= Void
 			a_file_open_read: a_file.is_open_read
-				-- |FIXME: The following precondition changes the status of an object.
-				-- |FIXME: Comment the following line until a good solution is found.
-			-- a_file_has_utf8_content: encoding_converter.file_in_utf8 (a_file)
-
 		do
-			internal_parse_class (a_file, Void)
+			parse_class_from_file (a_file, Void, Void)
 		end
 
 	parse_class (a_class: ABSTRACT_CLASS_C)
 			-- Parse class `a_class'
 			-- Make result available in appropriate result node.
 			-- An exception is raised if a syntax error is found.
+			--
+			-- Encoding detection priority:
+			-- 1. Detect BOM from text of `a_class', use the detected encoding.
+			-- 2. Use the encoding specified in the context of `a_class' (.ecf)
+			-- 3. Default to ASCII (ISO-8859-1) encoding.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_has_text: a_class.has_text
 		do
 			filename := a_class.file_name
-			parse_from_string (a_class.text, a_class)
+			parse_from_utf8_string (a_class.text, a_class)
 		end
 
-	parse_from_string_32 (a_string: STRING_32; a_class: ABSTRACT_CLASS_C)
-			-- Parse Eiffel class text in `a_string'. `a_string' is in UTF-32.
+	parse_class_from_string (a_string: STRING; a_class: detachable ABSTRACT_CLASS_C; a_encoding: detachable ENCODING)
+			-- Parse Eiffel class text from `a_string'.
 			-- Make result available in appropriate result node.
 			-- An exception is raised if a syntax error is found.
+			--
+			-- Encoding detection priority:
+			-- 1. If `a_encoding' is attached, use it as the encoding of `a_file'
+			-- 2. Detect BOM from `a_string', use the detected encoding.
+			-- 3. Use the encoding specified in the context of `a_class' (.ecf)
+			-- 4. Default to ASCII (ISO-8859-1) encoding.
 		require
 			a_string_not_void: a_string /= Void
+		local
+			l_ast_factory: like ast_factory
+			l_input_buffer: YY_BUFFER
 		do
-			parse_from_string (encoding_converter.utf32_to_utf8 (a_string), a_class)
+			reset_nodes
+
+			if attached a_encoding then
+				l_input_buffer := encoding_converter.input_buffer_from_string_of_encoding (a_string, a_encoding)
+			else
+				l_input_buffer := encoding_converter.input_buffer_from_string (a_string, a_class)
+			end
+			input_buffer := l_input_buffer
+
+				-- Abstracted from 'yy_load_input_buffer' to reuse local
+			yy_set_content (l_input_buffer.content)
+			yy_end := l_input_buffer.index
+			yy_start := yy_end
+			yy_line := l_input_buffer.line
+			yy_column := l_input_buffer.column
+			yy_position := l_input_buffer.position
+
+			l_ast_factory := ast_factory
+			l_ast_factory.create_match_list (initial_match_list_size)
+			current_class := a_class
+			yyparse
+			match_list := l_ast_factory.match_list
+			reset
+		rescue
+			reset
 		end
 
-feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Parsing
-
-	internal_parse_class (a_file: KL_BINARY_INPUT_FILE; a_class: ABSTRACT_CLASS_C)
+	parse_class_from_file (a_file: KL_BINARY_INPUT_FILE; a_class: detachable ABSTRACT_CLASS_C; a_encoding: detachable ENCODING)
 			-- Parse Eiffel class text from `a_file'.
 			-- Make result available in appropriate result node.
 			-- An exception is raised if a syntax error is found.
+			--
+			-- Encoding detection priority:
+			-- 1. If `a_encoding' is attached, use it as the encoding of `a_file'
+			-- 2. Detect BOM from `a_file', use the detected encoding.
+			-- 3. Use the encoding specified in the context of `a_class' (.ecf)
+			-- 4. Default to ASCII (ISO-8859-1) encoding.
 		require
 			a_file_not_void: a_file /= Void
 			a_file_open_read: a_file.is_open_read
-				-- |FIXME: The following precondition changes the status of an object.
-				-- |FIXME: Comment the following line until a good solution is found.
-			-- a_file_has_utf8_content: encoding_converter.file_in_utf8 (a_file)
 		local
 			l_ast_factory: like ast_factory
-			l_input_buffer: YY_FILE_BUFFER
+			l_input_buffer: YY_BUFFER
 		do
 			reset_nodes
-			l_input_buffer := File_buffer
-			l_input_buffer.set_file (a_file)
+			if attached a_encoding then
+				l_input_buffer := encoding_converter.input_buffer_from_file_of_encoding (a_file, a_encoding)
+			else
+				l_input_buffer := encoding_converter.input_buffer_from_file (a_file, a_class)
+			end
 			input_buffer := l_input_buffer
 
 				-- Abstracted from 'yy_load_input_buffer' to reuse local.
@@ -294,8 +336,43 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Parsing
 			reset
 		end
 
-	parse_from_string (a_string: STRING; a_class: ABSTRACT_CLASS_C)
-			-- Parse Eiffel class text in `a_string'.
+feature -- Parsing (Known encoding)
+
+	parse_from_ascii_string (a_string: STRING; a_class: ABSTRACT_CLASS_C)
+			-- Parse Eiffel class text in ASCII (ISO-8859-1) `a_string'.
+			-- Make result available in appropriate result node.
+			-- An exception is raised if a syntax error is found.
+		require
+			a_string_not_void: a_string /= Void
+		local
+			l_ast_factory: like ast_factory
+			l_input_buffer: YY_BUFFER
+		do
+			reset_nodes
+
+			l_input_buffer := encoding_converter.input_buffer_from_ascii_string (a_string)
+			input_buffer := l_input_buffer
+
+				-- Abstracted from 'yy_load_input_buffer' to reuse local
+			yy_set_content (l_input_buffer.content)
+			yy_end := l_input_buffer.index
+			yy_start := yy_end
+			yy_line := l_input_buffer.line
+			yy_column := l_input_buffer.column
+			yy_position := l_input_buffer.position
+
+			l_ast_factory := ast_factory
+			l_ast_factory.create_match_list (initial_match_list_size)
+			current_class := a_class
+			yyparse
+			match_list := l_ast_factory.match_list
+			reset
+		rescue
+			reset
+		end
+
+	parse_from_utf8_string (a_string: STRING; a_class: ABSTRACT_CLASS_C)
+			-- Parse Eiffel class text in UTF-8 `a_string'.
 			-- Make result available in appropriate result node.
 			-- An exception is raised if a syntax error is found.
 		require
@@ -325,6 +402,16 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Parsing
 			reset
 		rescue
 			reset
+		end
+
+	parse_from_string_32 (a_string: STRING_32; a_class: detachable ABSTRACT_CLASS_C)
+			-- Parse Eiffel class text in `a_string'. `a_string' is in UTF-32.
+			-- Make result available in appropriate result node.
+			-- An exception is raised if a syntax error is found.
+		require
+			a_string_not_void: a_string /= Void
+		do
+			parse_from_utf8_string (encoding_converter.utf32_to_utf8 (a_string), a_class)
 		end
 
 feature -- Access: result nodes

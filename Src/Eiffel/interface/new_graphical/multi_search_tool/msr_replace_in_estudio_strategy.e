@@ -180,7 +180,7 @@ feature {NONE} -- Implementation
 			class_i ?= a_item.data
 			if class_i /= Void then
 				l_encoding ?= class_i.encoding
-				save (class_i.file_name.out, a_item.source_text, l_encoding)
+				save (class_i.file_name.out, a_item.source_text, l_encoding, class_i.bom)
 					-- Notify Eiffel Studio.
 				workbench.change_class (class_i)
 				workbench.set_changed
@@ -272,7 +272,7 @@ feature {NONE} -- Implementation
 			-- Search tool
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

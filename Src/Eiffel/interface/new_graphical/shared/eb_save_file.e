@@ -65,7 +65,7 @@ feature -- Basic operations
 
 		end
 
-	save (a_file_name: STRING; a_text: STRING_GENERAL; a_encoding: ENCODING)
+	save (a_file_name: STRING; a_text: STRING_GENERAL; a_encoding: ENCODING; a_bom: detachable STRING_8)
 			-- Save `a_text' into `a_file_name'. Creates file if it doesn't already exist.
 			-- `a_text' should be in UTF-32 encoding.
 		require
@@ -124,7 +124,10 @@ feature -- Basic operations
 						if preferences.misc_data.text_mode_is_windows then
 							l_text.replace_substring_all ("%N", "%R%N")
 						end
-
+							-- Save with BOM if any.
+						if attached a_bom as l_bom then
+							tmp_file.put_string (l_bom)
+						end
 						tmp_file.put_string (convert_to_stream (l_text, a_encoding))
 					end
 					tmp_file.close
@@ -156,7 +159,7 @@ feature -- Basic operations
 					new_file.close
 				end
 				prompts.show_error_prompt (warning_messages.w_Not_creatable_choose_to_save (new_file.name), Void, Void)
-				file_save_as (a_text, a_encoding)
+				file_save_as (a_text, a_encoding, a_bom)
 				last_saving_success := False
 			end
 		rescue
@@ -227,7 +230,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	file_save_as (a_text: STRING_GENERAL; a_encoding: ENCODING)
+	file_save_as (a_text: STRING_GENERAL; a_encoding: ENCODING; a_bom: detachable STRING_8)
 			-- Save `a_text' in a file.
 		local
 			fsd: EB_FILE_SAVE_DIALOG
@@ -238,20 +241,20 @@ feature {NONE} -- Implementation
 				l_pref.set_value (eiffel_layout.user_projects_path)
 			end
 			create fsd.make_with_preference (l_pref)
-			fsd.save_actions.extend (agent save_file_with_file_name (fsd, a_text, a_encoding))
+			fsd.save_actions.extend (agent save_file_with_file_name (fsd, a_text, a_encoding, a_bom))
 			fsd.show_modal_to_window (window_manager.last_focused_development_window.window)
 		end
 
-	save_file_with_file_name (a_fsd: EB_FILE_SAVE_DIALOG; a_text: STRING_GENERAL; a_encoding: ENCODING)
+	save_file_with_file_name (a_fsd: EB_FILE_SAVE_DIALOG; a_text: STRING_GENERAL; a_encoding: ENCODING; a_bom: detachable STRING_8)
 		local
 			l_save_file: EB_SAVE_FILE
 		do
 			create l_save_file
-			l_save_file.save (a_fsd.file_name, a_text, a_encoding)
+			l_save_file.save (a_fsd.file_name, a_text, a_encoding, a_bom)
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -264,22 +267,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

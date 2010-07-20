@@ -1,70 +1,259 @@
 note
-	description: "Interface of encoding converter with encoding detection."
+	description: "[
+					Interface of encoding converter with encoding detection.
+					
+					Encoding detection priority:
+					1. If `a_encoding' is attached, use it as the encoding of `a_file'
+					2. Detect BOM from `a_file', use the detected encoding.
+					4. Default to ASCII (ISO-8859-1) encoding.
+				]"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
+class
 	ENCODING_CONVERTER
 
 inherit
+	ANY
+		undefine
+			default_create
+		end
+
 	STRING_HANDLER
+		export
+			{NONE} all
+		undefine
+			default_create
+		end
 
 	PLATFORM
+		export
+			{NONE} all
+		undefine
+			default_create
+		end
+
+	SYSTEM_ENCODINGS
+		export
+			{NONE} all
+		undefine
+			default_create
+		end
+
+	LOCALIZED_PRINTER
+		undefine
+			default_create
+		end
+
+feature {NONE} -- Initialization
+
+	default_create
+			-- <precursor>
+		do
+			Precursor {ANY}
+			create string_buffer.make (50000)
+		end
+
+feature -- Buffer
+
+	input_buffer_from_file (a_file: KL_BINARY_INPUT_FILE; a_class: detachable ANY): detachable YY_BUFFER
+			-- Fetch the input buffer according to the content of `a_file'.
+			--
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_read: a_file.is_open_read
+		local
+			l_buffer: ENCODING_DETECTION_FILE_BUFFER
+			l_ascii_buffer: ASCII_UTF8_CONVERSION_FILE_BUFFER
+			l_string: STRING
+		do
+			detected_encoding := Void
+			l_buffer := detection_buffer
+			l_buffer.set_file (a_file)
+			l_buffer.detect_file
+			if l_buffer.last_detection_successful then
+				if l_buffer.detected_encoding.is_equal (utf8) then
+					Result := l_buffer
+				else
+					-- Report unknown encoding error.
+				end
+			else
+					-- Get encoding from `a_class', if not found, use ASCII encoding.
+				if attached a_class and then attached encoding_from_class (a_class) as l_encoding then
+					l_string := string_buffer
+					l_string.wipe_out
+					l_string.append_string (l_buffer.content.to_text)
+					a_file.read_string (a_file.count)
+					l_string.append (a_file.last_string)
+					l_encoding.convert_to (utf8, l_string)
+					if l_encoding.last_conversion_successful then
+						create Result.make (l_encoding.last_converted_stream)
+						detected_encoding := l_encoding
+					else
+						-- Report unsupported encoding error.
+					end
+				else
+					l_ascii_buffer := ascii_to_utf8_file_buffer
+					l_ascii_buffer.make_from_file_buffer (l_buffer)
+					Result := l_ascii_buffer
+					detected_encoding := iso_8859_1
+				end
+			end
+		ensure
+			buffer_attached: Result /= Void
+		end
+
+	input_buffer_from_file_of_encoding (a_file: KL_BINARY_INPUT_FILE; a_encoding: ENCODING): detachable YY_BUFFER
+			-- Fetch the input buffer according to the content of `a_file'.
+			--
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_read: a_file.is_open_read
+			a_encoding_not_void: a_encoding /= Void
+		do
+			a_file.read_string (a_file.count)
+			a_encoding.convert_to (utf8, a_file.last_string)
+			if a_encoding.last_conversion_successful then
+				create Result.make (a_encoding.last_converted_stream)
+			else
+				-- Report unsupported encoding error.
+			end
+			detected_encoding := a_encoding
+		ensure
+			buffer_attached: Result /= Void
+		end
+
+	input_buffer_from_ascii_string (a_string: STRING_8): YY_BUFFER
+			-- input buffer from ASCII string.
+			--
+		require
+			a_string_not_void: a_string /= Void
+		do
+			create Result.make (a_string)
+			detected_encoding := iso_8859_1
+		ensure
+			buffer_attached: Result /= Void
+			detected_encoding_attached: detected_encoding /= Void
+		end
+
+	input_buffer_from_string_of_encoding (a_string: STRING_8; a_encoding: ENCODING): detachable YY_BUFFER
+		require
+			a_string_not_void: a_string /= Void
+		do
+			detected_encoding := Void
+			a_encoding.convert_to (utf8, a_string)
+			if a_encoding.last_conversion_successful then
+				create Result.make (a_encoding.last_converted_stream)
+				detected_encoding := a_encoding
+			end
+		end
+
+	input_buffer_from_string (a_string: STRING_8; a_class: detachable ANY): YY_BUFFER
+		require
+			a_string_not_void: a_string /= Void
+		local
+			l_encoding: detachable ENCODING
+		do
+			detected_encoding := Void
+			bom_detector.detect (a_string)
+			if bom_detector.last_detection_successful then
+				l_encoding := bom_detector.detected_encoding
+			elseif a_class /= Void and then attached encoding_from_class (a_class) as l_enc then
+				l_encoding := l_enc
+			else
+				l_encoding := iso_8859_1
+			end
+			l_encoding.convert_to (utf8, a_string)
+			if l_encoding.last_conversion_successful then
+				create Result.make (l_encoding.last_converted_stream)
+				detected_encoding := l_encoding
+			end
+		end
 
 feature -- Conversion
 
-	utf8_string (a_stream: STRING): STRING
+	utf8_string (a_stream: STRING; a_class: detachable ANY): STRING
 			-- Detect encoding of `a_stream' and convert it into utf8.
 			-- Detection is not 100% reliable. Use other conversion methods when
 			-- encodings are known.
 		require
 			a_stream_attached: a_stream /= Void
-		deferred
+		do
+			bom_detector.detect (a_stream)
+			last_bom := Void
+			if bom_detector.last_detection_successful then
+				Result := a_stream.substring (bom_detector.last_bom_count + 1, a_stream.count)
+				detected_encoding := bom_detector.detected_encoding
+				last_bom := bom_detector.last_bom
+			elseif attached a_class as l_class and then attached encoding_from_class (l_class) as l_encoding then
+				l_encoding.convert_to (utf8, a_stream)
+				if l_encoding.last_conversion_successful then
+					Result := l_encoding.last_converted_stream
+				else
+					-- Report unsupported encoding error.
+				end
+				detected_encoding := l_encoding
+			else
+					-- Default to ASCII
+				iso_8859_1.convert_to (utf8, a_stream)
+				if iso_8859_1.last_conversion_successful then
+					Result := iso_8859_1.last_converted_stream
+				else
+					Result := a_stream
+				end
+				detected_encoding := iso_8859_1
+			end
 		ensure
 			utf32_string_attached: Result /= Void
 			detected_encoding_attached: detected_encoding /= Void
 		end
 
-	string_32_to_stream (a_str: STRING_32): STRING
-			-- Byte stream of `a_string'.
+	utf32_string (a_stream: STRING; a_class: detachable ANY): STRING_32
+			-- Detect encoding of `a_stream' and convert it into utf32.
 		require
-			a_str_attached: a_str /= Void
-		local
-			i: INTEGER_32
-			l_code: NATURAL_32
-			l_count: INTEGER
-			l_is_little_endian: BOOLEAN
+			a_stream_attached: a_stream /= Void
 		do
-			l_count := a_str.count
-			if l_count > 0 then
-				create Result.make (l_count * 4)
-				from
-					i := 1
-					l_is_little_endian := is_little_endian
-				until
-					i > l_count
-				loop
-					l_code := a_str.item (i).natural_32_code
-					if l_is_little_endian then
-						Result.append_code (l_code & 0x000000FF)
-						Result.append_code (l_code & 0x0000FF00 |>> 8)
-						Result.append_code (l_code & 0x00FF0000 |>> 16)
-						Result.append_code (l_code & 0xFF000000 |>> 24)
+			bom_detector.detect (a_stream)
+			last_bom := Void
+			if bom_detector.last_detection_successful then
+				Result := a_stream.substring (bom_detector.last_bom_count + 1, a_stream.count)
+				detected_encoding := bom_detector.detected_encoding
+				last_bom := bom_detector.last_bom
+			elseif attached a_class as l_class and then attached encoding_from_class (l_class) as l_encoding then
+				l_encoding.convert_to (utf32, a_stream)
+				if l_encoding.last_conversion_successful then
+					Result := l_encoding.last_converted_string.as_string_32
+				else
+						-- Try converting to utf8 first, as some OS does not support utf32.
+					l_encoding.convert_to (utf8, a_stream)
+					if l_encoding.last_conversion_successful then
+						Result := utf8_to_utf32 (l_encoding.last_converted_stream)
 					else
-						Result.append_code (l_code & 0xFF000000 |>> 24)
-						Result.append_code (l_code & 0x00FF0000 |>> 16)
-						Result.append_code (l_code & 0x0000FF00 |>> 8)
-						Result.append_code (l_code & 0x000000FF)
+						-- Report unsupported encoding error.
 					end
-					i := i + 1
 				end
+				detected_encoding := l_encoding
 			else
-				create Result.make_empty
+					-- Default to ASCII
+				iso_8859_1.convert_to (utf32, a_stream)
+				if iso_8859_1.last_conversion_successful then
+					Result := iso_8859_1.last_converted_string
+				else
+						-- Try converting to utf8 as some OS does not support UTF-32 conversion.
+					iso_8859_1.convert_to (utf8, a_stream)
+					if iso_8859_1.last_conversion_successful then
+						Result := utf8_to_utf32 (iso_8859_1.last_converted_stream)
+					else
+						Result := a_stream.as_string_32
+					end
+				end
+				detected_encoding := iso_8859_1
 			end
 		ensure
-			string_32_to_stream_attached: Result /= Void
+			utf32_string_attached: Result /= Void
+			detected_encoding_attached: detected_encoding /= Void
 		end
 
 feature -- Conversion
@@ -263,17 +452,17 @@ feature -- Conversion
 			end
 		end
 
-feature -- Validate
-
-	file_in_utf8 (a_file: KL_BINARY_INPUT_FILE): BOOLEAN
-			-- Is content of `a_file' in valid UTF-8 string?
+	utf32_to_file_encoding (a_str: STRING_32): STRING
+			-- Convert utf32 to file encoding (utf8 as default)
 		require
-			a_file_not_void: a_file /= Void
-			a_file_open_read: a_file.is_open_read
+			a_str_attached: a_str /= Void
 		do
-			a_file.read_string (a_file.count)
-			Result := is_valid_utf8 (a_file.last_string)
+			Result := utf32_to_utf8 (a_str)
+		ensure
+			utf32_to_console_encoding_attached: Result /= Void
 		end
+
+feature -- Validate
 
 	is_valid_utf8 (a_string: STRING): BOOLEAN
 			-- Is `a_string' valid UTF-8 string?
@@ -315,52 +504,117 @@ feature -- Validate
 			end
 		end
 
-	utf32_string (a_stream: STRING): STRING_32
-			-- Detect encoding of `a_stream' and convert it into utf32.
-		require
-			a_stream_attached: a_stream /= Void
-		deferred
-		ensure
-			utf32_string_attached: Result /= Void
-			detected_encoding_attached: detected_encoding /= Void
-		end
-
-	localized_print (a_str: STRING_GENERAL)
-			-- Print `a_str' as localized encoding.
-			-- `a_str' is taken as a UTF-32 string.
-		deferred
-		end
-
-	localized_print_error (a_str: STRING_GENERAL)
-			-- Print an error, `a_str', as localized encoding.
-			-- `a_str' is taken as a UTF-32 string.
-		deferred
-		end
-
-	utf32_to_file_encoding (a_str: STRING_32): STRING
-			-- Convert utf32 to file encoding (utf8 as default)
+	string_32_to_stream (a_str: STRING_32): STRING
+			-- Byte stream of `a_string'.
 		require
 			a_str_attached: a_str /= Void
-		deferred
+		local
+			i: INTEGER_32
+			l_code: NATURAL_32
+			l_count: INTEGER
+			l_is_little_endian: BOOLEAN
+		do
+			l_count := a_str.count
+			if l_count > 0 then
+				create Result.make (l_count * 4)
+				from
+					i := 1
+					l_is_little_endian := is_little_endian
+				until
+					i > l_count
+				loop
+					l_code := a_str.item (i).natural_32_code
+					if l_is_little_endian then
+						Result.append_code (l_code & 0x000000FF)
+						Result.append_code (l_code & 0x0000FF00 |>> 8)
+						Result.append_code (l_code & 0x00FF0000 |>> 16)
+						Result.append_code (l_code & 0xFF000000 |>> 24)
+					else
+						Result.append_code (l_code & 0xFF000000 |>> 24)
+						Result.append_code (l_code & 0x00FF0000 |>> 16)
+						Result.append_code (l_code & 0x0000FF00 |>> 8)
+						Result.append_code (l_code & 0x000000FF)
+					end
+					i := i + 1
+				end
+			else
+				create Result.make_empty
+			end
 		ensure
-			utf32_to_console_encoding_attached: Result /= Void
+			string_32_to_stream_attached: Result /= Void
 		end
 
 feature -- Detection
 
-	detected_encoding: detachable ANY
-			-- Detected encoding
-		deferred
+	encoding_from_string_of_class (a_string: STRING_8; a_class: detachable ANY): detachable ENCODING
+			-- Encoding detected from `a_string' of `a_class'.
+		do
+			last_bom := Void
+			Bom_detector.detect (a_string)
+			if Bom_detector.last_detection_successful then
+				Result := bom_detector.detected_encoding
+				last_bom := bom_detector.last_bom
+			elseif attached a_class as l_c and then attached encoding_from_class (a_class) as l_encoding then
+				Result := l_encoding
+			else
+				Result := iso_8859_1
+			end
 		end
 
-	detect_encoding (a_str: detachable STRING_GENERAL)
-			-- Detect encoding of `a_str'
+	last_bom: detachable STRING_8
+			-- Last bom read from `encoding_from_string_of_class'
+
+	detected_encoding: detachable ENCODING assign set_detected_encoding
+			-- Detected encoding
+
+feature -- Element Change
+
+	set_detected_encoding (a_encoding: like detected_encoding)
+			-- Sets the detected encoding
 		require
-			a_str_not_void: a_str /= Void
-		deferred
+			a_encoding_not_void: a_encoding /= Void
+		do
+			detected_encoding := a_encoding
 		ensure
-			detected_encoding_attached: detected_encoding /= Void
+			detected_encoding_set: detected_encoding = a_encoding
 		end
+
+feature {NONE} -- Implementation
+
+	encoding_from_class (a_class: ANY): detachable ENCODING
+			-- Read encoding from `a_class'.
+		do
+		end
+
+feature {NONE} -- Buffers
+
+	string_buffer: STRING
+			-- String buffer
+
+	bom_detector: BOM_ENCODING_DETECTOR
+			-- Bom detector
+		once
+			create Result
+		end
+
+	Ascii_to_utf8_File_buffer: ASCII_UTF8_CONVERSION_FILE_BUFFER
+			-- On the fly ASCII UTF-8 conversion buffer.
+		once
+			create Result.make_with_size ((create {KL_STANDARD_FILES}).input, 50000)
+		ensure
+			file_buffer_not_void: Result /= Void
+		end
+
+	detection_buffer: ENCODING_DETECTION_FILE_BUFFER
+			-- Buffer for encoding detection
+		once
+			create Result.make_with_size ((create {KL_STANDARD_FILES}).input, 50000)
+		ensure
+			file_buffer_not_void: Result /= Void
+		end
+
+invariant
+	string_buffer_not_void: string_buffer /= Void
 
 note
 	copyright: "Copyright (c) 1984-2010, Eiffel Software"

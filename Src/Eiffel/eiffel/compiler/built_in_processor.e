@@ -139,12 +139,10 @@ feature {NONE} -- Implementation
 					if attached {CLASS_C} current_class as l_class then
 						set_is_ignoring_attachment_marks (l_class.lace_class.is_void_unsafe)
 					end
-						-- Built-in classes should be always written in UTF-8 or compatible.
---					check file_in_utf8 (l_file) end
 					l_file.read_string (l_count)
 					l_str := l_file.last_string
-					parse_from_string (l_str, current_class)
---					internal_parse_class (l_file, current_class)
+						-- No need to put the class, it seems that encoding by built-in classes have no need to be controlled by .ecf.
+					parse_class_from_string (l_str, Void, Void)
 					l_file.close
 					l_class_as := root_node
 				end

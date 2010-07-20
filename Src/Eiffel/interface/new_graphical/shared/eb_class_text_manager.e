@@ -128,7 +128,7 @@ feature -- Element change
 			end
 			if not in_tool then
 				l_encoding ?= a_class.encoding
-				save (a_class.file_name, a_text, l_encoding)
+				save (a_class.file_name, a_text, l_encoding, a_class.bom)
 			end
 		end
 

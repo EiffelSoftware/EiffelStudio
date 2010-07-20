@@ -541,6 +541,14 @@ feature -- Window Properties
 			end
 		end
 
+	bom: detachable STRING_8
+			-- Bom if needed by `encoding'.
+		do
+			if editors_manager.current_editor /= Void then
+				Result := editors_manager.current_editor.bom
+			end
+		end
+
 	pixmap: EV_PIXMAP
 			-- Pixmap representing Current window.
 		do

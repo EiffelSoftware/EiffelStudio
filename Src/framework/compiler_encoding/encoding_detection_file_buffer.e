@@ -1,55 +1,62 @@
 note
-	description: "Shared encoding converter."
-	status: "See notice at end of class."
-	legal: "See notice at end of class."
+	description: "[
+					Buffer to detect file encoding according to leading characters. 
+					Characters read rather than BOM will be maitained and able be
+					reused by other buffers.
+				]"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	SHARED_ENCODING_CONVERTER
+	ENCODING_DETECTION_FILE_BUFFER
 
-feature -- Access
+inherit
+	YY_FILE_BUFFER
 
-	encoding_converter: ENCODING_CONVERTER
-			-- Encoding converter
+	STRING_HANDLER
+
+	BOM_ENCODING_DETECTOR
+
+create
+	make_with_size
+
+feature -- Detection
+
+	detect_file
+			-- Detect the encoding in file, and make the buffer ready for parsing.
+		local
+			l_lead: STRING_8
+			buff: like content
+			l_file: like file
+			l_count: INTEGER
 		do
-			if attached encoding_converter_cell.item as l_converter then
-				Result := l_converter
-			else
-				create Result
-				set_encoding_converter (Result)
+			if not end_of_file then
+				l_file := file
+				compact_left
+					-- A BOM has at most 4 bytes.
+				create l_lead.make (4)
+				l_lead.set_count (4)
+				l_count := l_file.read_to_string (l_lead, 1, 4)
+				if l_count > 0 then
+					l_lead.set_count (l_count)
+					detect (l_lead)
+					buff := content
+					if last_detection_successful then
+						buff.fill_from_string (l_lead.substring (last_bom_count + 1, l_lead.count), 1)
+						count := count + l_lead.count - last_bom_count
+					else
+						buff.fill_from_string (l_lead, 1)
+						count := count + l_lead.count
+					end
+					buff.put (End_of_buffer_character, count + 1)
+					buff.put (End_of_buffer_character, count + 2)
+				end
 			end
-		end
-
-feature -- Query
-
-	is_encoding_converter_set: BOOLEAN
-			-- Is encoding converter set?
-		do
-			Result := attached encoding_converter_cell.item
-		end
-
-feature -- Element change
-
-	set_encoding_converter (a_converter: like encoding_converter)
-			-- Set `encoding_converter' with `a_converter'
-		do
-			encoding_converter_cell.put (a_converter)
-		ensure
-			set: encoding_converter_cell.item = a_converter
-		end
-
-feature {NONE} -- Implementation
-
-	encoding_converter_cell: CELL [detachable ENCODING_CONVERTER]
-			-- Cell to hold the converter.
-		once
-			create Result.put (Void)
 		end
 
 note
 	copyright: "Copyright (c) 1984-2010, Eiffel Software"
-	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
@@ -78,5 +85,4 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
 end

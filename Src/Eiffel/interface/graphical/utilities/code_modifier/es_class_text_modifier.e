@@ -39,6 +39,7 @@ feature {NONE} -- Initialization
 			l_editor: like active_editor_for_class
 			l_text: detachable STRING_32
 			l_encoding: ENCODING
+			l_bom: detachable STRING_8
 		do
 			context_class := a_class
 
@@ -48,17 +49,19 @@ feature {NONE} -- Initialization
 					-- There's no open editor, use the class text from disk instead.
 				l_text := a_class.text_32
 				l_encoding ?= a_class.encoding
+				l_bom := a_class.bom
 			else
 				l_text := l_editor.wide_text
 				l_encoding := l_editor.encoding
+				l_bom := l_editor.bom
 			end
 
 				-- Set detected encoding
 			if attached l_encoding then
-				ec_encoding_converter.detected_encoding := l_encoding
+				original_encoding := l_encoding
 			else
 					-- No encoding detected, use default.
-				ec_encoding_converter.detected_encoding := (create {EC_ENCODINGS}).default_encoding
+				original_encoding := (create {EC_ENCODINGS}).default_encoding
 			end
 
 			if l_text = Void then
@@ -80,6 +83,12 @@ feature -- Access
 
 	context_class: CLASS_I
 			-- Context class.
+
+	original_encoding: ENCODING
+			-- Encoding of original text
+
+	original_bom: detachable STRING_8
+			-- Bom of original text if exists
 
 	text: STRING_32
 			-- Modified class text, valid only when prepared.
@@ -442,7 +451,7 @@ feature -- Basic operations
 
 						-- Save directly to disk.
 					create l_save
-					l_save.save (context_class.file_name, l_new_text, ec_encoding_converter.detected_encoding)
+					l_save.save (context_class.file_name, l_new_text, original_encoding, original_bom)
 					from l_editors.start until l_editors.after loop
 						l_editor := l_editors.item
 						l_editor.continue_editing

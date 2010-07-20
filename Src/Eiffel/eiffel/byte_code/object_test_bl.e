@@ -62,11 +62,11 @@ feature -- C code generation
 			else
 				create {REGISTER} register.make (target.c_type)
 			end
-			context.init_propagation;
+			context.init_propagation
 				-- We won't attempt a propagation of the target if the
 				-- target is a reference and the source is a basic type
 				-- or an expanded.
-			if not target_type.is_none and then not target_type.is_expanded and then source_type.is_expanded then
+			if not target_type.is_expanded and then source_type.is_expanded then
 				expression.propagate (No_register)
 				register_for_metamorphosis := True
 				create {REGISTER} register.make (target.c_type)

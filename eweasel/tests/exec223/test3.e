@@ -179,7 +179,7 @@ feature -- Initialization
 			a_int: I_SORTABLE_ARRAY [INTEGER]
 			a_string: I_SORTABLE_ARRAY [STRING]
 		do
-			create a_int.make (1, 5)
+			create a_int.make_filled (0, 1, 5)
 			a_int.put (3, 1)
 			a_int.put (1, 2)
 			a_int.put (20, 3)
@@ -188,7 +188,7 @@ feature -- Initialization
 			a_int.sort
 			a_int.do_all (agent (item: INTEGER) do print (item.out + "%N") end)
 			io.new_line
-			create a_string.make (1, 4)
+			create a_string.make_filled ("", 1, 4)
 			a_string. put("wow", 1)
 			a_string. put("aba", 2)
 			a_string. put("dudu", 3)

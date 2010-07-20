@@ -11,7 +11,7 @@ feature {NONE} -- Creation
 			a: ARRAY[EXPANDED_NAME]
 			n: EXPANDED_NAME
 		do 
-			create a.make(1, 0)
+			create a.make_empty
 			a.compare_objects
 			n.set ("Blake")
 			a.force (n, 1)

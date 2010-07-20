@@ -57,7 +57,7 @@ feature {NONE} -- Test
 		do
 			dic ?= obj
 			if dic /= Void then
-				create a.make (1, 3)
+				create a.make_filled ("", 1, 3)
 				from
 					dic.start
 				until

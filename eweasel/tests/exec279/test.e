@@ -14,7 +14,7 @@ feature {NONE} -- Creation
 			a: ARRAY [POINTER]
 			b: SPECIAL [POINTER]
 		do
-			create a.make (1, 1)
+			create a.make_filled (default_pointer, 1, 1)
 			b := a.area
 			one := $b
 			two := b.base_address

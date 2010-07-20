@@ -14,9 +14,9 @@ feature
 		i: INTEGER
 		t1, t2: TIME
 	do
-		create array1.make(1, size)
-		create array2.make(1, size)
-		create array3.make(1, size)
+		create array1.make_filled (Void, 1, size)
+		create array2.make_filled (Void, 1, size)
+		create array3.make_filled (Void, 1, size)
 
 		from
 			i := 1

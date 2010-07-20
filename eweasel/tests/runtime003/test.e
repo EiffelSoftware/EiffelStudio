@@ -9,8 +9,9 @@ feature {NONE} -- Creation
 			-- Run test.
 		local
 			i: INTEGER
+			b: B
 		do
-			create test_array.make (0, 1000)
+			create test_array.make_filled (b, 0, 1000)
 			from
 				i := 1000000
 			until

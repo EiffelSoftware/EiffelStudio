@@ -30,7 +30,7 @@ feature
 					io.putint (k); io.new_line;
 				end;
 				count := r.item \\ item_count;
-				!!a.make (1, count);
+				create a.make_filled (0, 1, count);
 				k := k + 1;
 				r.forth;
 			end

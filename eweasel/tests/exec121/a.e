@@ -8,7 +8,7 @@ feature
 
 	f is
 		do
-			!! a.make (1, 6)
+			create a.make_filled (Void, 1, 6)
 			print ("Type of a is: ")
 			print (a.generating_type)
 			io.new_line

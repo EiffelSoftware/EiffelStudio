@@ -21,7 +21,7 @@ feature
 			
 			create r.make
 			create ai.make (1, 10)
-			create a.make (1, 10)
+			create a.make_filled ("", 1, 10)
 
 			from i := ai.lower until i > ai.upper loop
 				ai.put ((i*2).out, i)

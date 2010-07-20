@@ -15,7 +15,7 @@ feature
 			k, count: INTEGER;
 		do
 			count := args.item (1).to_integer;
-			!!p.make (1, count);
+			!!p.make_filled (default_pointer, 1, count);
 			from
 				k := 1;
 			until

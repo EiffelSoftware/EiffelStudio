@@ -35,7 +35,7 @@ feature {NONE} -- Creation
 		do
 				-- Create common structures
 			create mutex.make
-			create succeeded_tests.make (1, 0)
+			create succeeded_tests.make_empty
 				-- Start threads
 			from
 				i := thread_count

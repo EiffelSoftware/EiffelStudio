@@ -62,7 +62,7 @@ feature
 			"eif_rt_xcalloc"
 		end
 		
-	compound_object (count: INTEGER): ARRAY [ANY] is
+	compound_object (count: INTEGER): ARRAY [detachable ANY] is
 		require
 			multiple_copies: count > 1
 		local
@@ -70,7 +70,7 @@ feature
 			obj: STRING
 		do
 			from
-				create {ARRAY [STRING]} Result.make (1, count)
+				create {ARRAY [detachable STRING]} Result.make_filled (Void, 1, count)
 				i := 1
 			until
 				i > count

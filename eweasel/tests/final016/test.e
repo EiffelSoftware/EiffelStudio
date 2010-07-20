@@ -15,8 +15,7 @@ feature
 			k: INTEGER
 			array: ARRAY [STRING]
 		do
-			!!the_keys.make (1, 1);
-			the_keys.put ("weasel", 1)
+			create the_keys.make_filled ("weasel", 1, 1);
 			array := current_keys;
 			from
 				k := array.lower
@@ -35,13 +34,13 @@ feature
 			from  
 				k := 1;
 		  		count := the_keys.count;
-		  		!!Result.make (1, count);
-	    		until 
+		  		create Result.make_filled ("", 1, count);
+	   		until 
 				k > count
-	    		loop  
+	   		loop  
 				Result.put (the_keys.item (k), k)
 		  		k := k + 1
-	    		end
+	   		end
 		end;
 	
 	the_keys: ARRAY [STRING]

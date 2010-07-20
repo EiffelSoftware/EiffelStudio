@@ -11,7 +11,7 @@ feature
 			create x.make (1)
 			print (x.generating_type); 
 			io.new_line
-			print ((create {ARRAY [G]}.make (1, 2)).generating_type); 
+			print ((create {ARRAY [G]}.make_empty).generating_type); 
 			io.new_line
 		end
 

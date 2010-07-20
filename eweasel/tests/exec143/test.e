@@ -13,7 +13,7 @@ feature
 			a: ARRAY [ANY]
 			int: INTERNAL
 		do
-			create a.make (1, 1)
+			create a.make_filled (Void, 1, 1)
 			create int
 			io.put_boolean (int.is_special_any_type (int.dynamic_type (a.area)))
 			io.new_line

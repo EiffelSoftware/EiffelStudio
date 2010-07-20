@@ -20,7 +20,7 @@ feature -- Initialization
 
 			i: INTEGER
 		do
-			create array.make (1, 4);
+			create array.make_filled (0.0, 1, 4);
 			from i := 1 until i > 4
 			loop
 				array.put(42+i, i)

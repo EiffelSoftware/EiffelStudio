@@ -9,16 +9,16 @@ create
 
 feature
 
-	make is
+	make
 		local
 			i: INTEGER
 			s: STRING
 			t1: TUPLE [x: INTEGER; string: STRING]
 			t2: TUPLE [x, y, z: INTEGER]
-			arr: ARRAY [STRING]
+			arr: ARRAY [detachable STRING]
 		do
 				-- Fill the scavenge zone
-			create arr.make (1, 250000)
+			create arr.make_filled (Void, 1, 250000)
 			from
 				i := 1
 			until
@@ -30,9 +30,9 @@ feature
 
 			collection_off
 
-			create array1.make (1, size)
-			create array2.make (1, size)
-			create array3.make (1, size)
+			create array1.make_filled (Void, 1, size)
+			create array2.make_filled (Void, 1, size)
+			create array3.make_filled (Void, 1, size)
 
 
 			s := "My beautiful string"
@@ -124,7 +124,7 @@ feature
 
 		end
 
-	size: INTEGER is 100000
+	size: INTEGER = 100000
 
 	array1: ARRAY [ANY]
 	array2, array3: ARRAY [TUPLE [x: INTEGER; string: STRING]]

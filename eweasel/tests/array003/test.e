@@ -12,7 +12,7 @@ feature {NONE} -- Initialization
 		local
 			a: ARRAY [ANY]
 		do
-			create a.make (1, 1)
+			create a.make_filled (Void, 1, 1)
 			a.put (Void, 1)
 			a.compare_objects
 			if a.has (Void) then

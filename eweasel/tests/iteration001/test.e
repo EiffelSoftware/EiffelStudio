@@ -236,7 +236,7 @@ feature -- Containers
 
 	new_array: ARRAY [STRING]
 		once
-			create Result.make (1, 0)
+			create Result.make_empty
 			Result.force ("1", 1)
 			Result.force ("2", 2)
 			Result.force ("3", 3)
@@ -320,7 +320,7 @@ feature -- Containers
 	
 	new_empty_array: ARRAY [STRING]
 		once
-			create Result.make (1, 0)
+			create Result.make_empty
 		end
 
 	new_empty_special: SPECIAL [STRING]

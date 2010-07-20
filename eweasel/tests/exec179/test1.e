@@ -4,13 +4,13 @@
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
 
-class TEST1 [G, ARRAY_TYPE -> ARRAY[G] create make end]
+class TEST1 [G, ARRAY_TYPE -> ARRAY[G] create make_empty end]
 
 feature
 
 	new_array: ARRAY_TYPE is
 		do
-			create Result.make (1, 3)
+			create Result.make_empty
 		end
 		
 end

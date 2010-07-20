@@ -14,7 +14,7 @@ feature
 			k, count: INTEGER
 		do
 			count := args.item (1).to_integer;
-			!!weasel.make (1, count);
+			!!weasel.make_filled (wimp, 1, count);
 			from
 				k := weasel.lower;
 			until

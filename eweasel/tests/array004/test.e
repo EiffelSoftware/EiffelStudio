@@ -10,7 +10,7 @@ feature {NONE} -- Initialization
 		local
 			a: ARRAY [ANY]
 		do
-			create a.make (1, 3)
+			create a.make_filled (Void, 1, 3)
 			a.compare_objects; test (a)
 			a.put (a, 1);      test (a)
 			a.put (a, 2);      test (a)

@@ -12,7 +12,7 @@ feature
 
 	make is
 		do
-			!!a.make (1, 1);
+			create a.make_filled (0, 1, 1);
 			a.put (47, 1);
 		ensure
 			valid_array: $ENTITY .item (1) = 47;

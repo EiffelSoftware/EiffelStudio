@@ -16,6 +16,7 @@ inherit
 
 create
 	make,
+	make_filled,
 	make_from_array
 
 feature -- Access
@@ -244,8 +245,10 @@ feature -- Duplication
 			-- bounds `start_pos' and `end_pos'.
 		do
 			Result := (agent (start_pos, end_pos: INTEGER): I_SORTABLE_ARRAY [G]
+				local
+					l_g: G
 				do
-					create Result.make (start_pos, end_pos)
+					create Result.make_filled (l_g, start_pos, end_pos)
 					Result.subcopy (Current, start_pos, end_pos, start_pos)
 				end).item ( [a_start_pos, a_end_pos])
 		end

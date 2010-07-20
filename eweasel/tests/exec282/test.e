@@ -7,7 +7,8 @@ feature
 	 make
 		local
 			a: ARRAY [B [STRING]]
+			b: B [STRING]
 		do
-			create a.make (1, 10)
+			create a.make_filled (b, 1, 10)
 		end
 end

@@ -113,19 +113,21 @@ feature -- Initialization
 			l_content: ARRAY [G]
 			l_keys: ARRAY [H]
 			l_deleted_marks: ARRAY [BOOLEAN]
+			l_g: G
+			l_h: H
 		do
 			create clever
 			capacity := n.Max (Minimum_capacity)
 			capacity := (capacity * 100) // Initial_occupation + 1
 			capacity := clever.higher_prime (capacity)
-			create l_content.make (0, capacity)
+			create l_content.make_filled (l_g, 0, capacity)
 			content := l_content.area
-			create l_keys.make (0, capacity)
+			create l_keys.make_filled (l_h, 0, capacity)
 			keys := l_keys.area
 					-- Position `capacity' ignored by hash sequences,
 					-- used to store value for default key.
 
-			create l_deleted_marks.make (0, capacity - 1)
+			create l_deleted_marks.make_filled (False, 0, capacity - 1)
 			deleted_marks := l_deleted_marks.area
 			iteration_position := capacity + 1
 		ensure
@@ -257,10 +259,11 @@ feature -- Access
 		local
 			j: INTEGER
 			old_iteration_position: INTEGER
+			l_h: H
 		do
 			old_iteration_position := iteration_position
 			from
-				create Result.make (1, count)
+				create Result.make_filled (l_h, 1, count)
 				start
 			until
 				off

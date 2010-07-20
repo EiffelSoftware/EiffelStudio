@@ -34,22 +34,22 @@ feature
 		local
 			z: ARRAY [like Current]
 		do
-			y := create {ARRAY [like Current]}.make (1, 10)
+			y := create {ARRAY [like Current]}.make_filled (Current, 1, 10)
 			io.put_string (y.generating_type)
 			io.new_line
 
-			io.put_string ((create {ARRAY [like Current]}.make (1, 10)).generating_type)
+			io.put_string ((create {ARRAY [like Current]}.make_filled (Current, 1, 10)).generating_type)
 			io.new_line
 
-			create y.make (1, 10)
+			create y.make_filled (Current, 1, 10)
 			io.put_string (y.generating_type)
 			io.new_line
 
-			z := create {ARRAY [like Current]}.make (1, 10)
+			z := create {ARRAY [like Current]}.make_filled (Current, 1, 10)
 			io.put_string (z.generating_type)
 			io.new_line
 			
-			create z.make (1, 10)
+			create z.make_filled (Current, 1, 10)
 			io.put_string (z.generating_type); 
 			io.new_line
 		end

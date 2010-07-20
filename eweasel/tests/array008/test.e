@@ -12,7 +12,7 @@ feature {NONE} -- Creation
 			i, j: INTEGER
 		do
 				-- Check proper initialization
-			create a.make (2, 3)
+			create a.make_filled (Void, 2, 3)
 			a.initialize ("1")
 			print_matrix (a)
 
@@ -84,7 +84,7 @@ feature {NONE} -- Creation
 
 
 				-- Check that force works properly
-			create b.make (4, 8)
+			create b.make_filled (Void, 4, 8)
 			b.force (8, 6, 3)
 		end
 

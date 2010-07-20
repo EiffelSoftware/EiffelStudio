@@ -16,7 +16,7 @@ feature
 	set_i (l_i: INTEGER) is 
 		do 
 			i := l_i 
-			create test.make (1, 5)
+			create test.make_filled (c, 1, 5)
 		end
 
 	to_reference: ANY is

@@ -10,7 +10,7 @@ feature {NONE} -- Creation
 		local
 			i: INTEGER
 		do
-			create a.make (1, 1)
+			create a.make_filled (Void, 1, 1)
 			i := 1
 			a [1] := create {CELL [STRING]}.put (Void)
 			(a [1]).put ("Test OK")

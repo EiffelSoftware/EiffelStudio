@@ -12,8 +12,9 @@ feature
 	make is
 		local
 			x: ARRAY [BIT 32]
+			b: BIT 32
 		do
-			!!x.make (1, 3);
+			create x.make_filled (b, 1, 3);
 			io.putstring ("Printing item 1%N");
 			print (x.item (1)); io.new_line;
 			io.putstring ("Done%N");

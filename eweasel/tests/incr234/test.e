@@ -13,8 +13,9 @@ feature
 	make is
 		local
 			x: ARRAY [TEST1]
+			c: TEST1
 		do
-			create x.make (1, 1)
+			create x.make_filled (c, 1, 1)
 			print (x.all_default); io.new_line
 		end
 

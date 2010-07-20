@@ -18,9 +18,9 @@ feature
 		local
 			s: ARRAY [STRING]
 		do
-			create s.make (1, 0)
+			create s.make_empty
 			p.call (Void)
-			print ((agent s.make (?, 2)).generating_type); io.new_line
+			print ((agent s.make_filled (?, ?, 2)).generating_type); io.new_line
   		end
 	
 	weasel is
@@ -29,5 +29,5 @@ feature
   		end
 	
 invariant
-	agent {ARRAY [STRING]}.make /= Void
+	agent {ARRAY [STRING]}.make_empty /= Void
 end

@@ -16,7 +16,7 @@ feature
 			count := args.item (1).to_integer;
 			size := args.item (2).to_integer;
 			interval := 1;
-			!!a.make (1, count);
+			create a.make_filled ("", 1, count);
 			
 			from
 				k := 1;

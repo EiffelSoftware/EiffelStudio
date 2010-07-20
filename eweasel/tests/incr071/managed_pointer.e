@@ -311,7 +311,7 @@ feature -- Access: Platform specific
 			i: INTEGER
 		do
 			from
-				create Result.make (1, a_count)
+				create Result.make_filled (0, 1, a_count)
 			until
 				i >= a_count
 			loop

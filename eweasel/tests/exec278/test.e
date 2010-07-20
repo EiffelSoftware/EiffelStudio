@@ -11,7 +11,7 @@ feature {NONE} -- Creation
 			aa: ARRAY [A]
 			a: A
 		do
-			create aa.make (1, 2)
+			create aa.make_filled (a, 1, 2)
 			a := aa.item (1).default.default
 			io.put_new_line
 		end

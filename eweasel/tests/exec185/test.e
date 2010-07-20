@@ -10,10 +10,12 @@ create
 feature
 	
 	make is
-	     do
-	     	create x.make (1, 10)
-		print (x.count); io.new_line
- 	     end
+		local
+			t2: TEST2
+		do
+			create x.make_filled (t2, 1, 10)
+			print (x.count); io.new_line
+ 		end
 
 	x: ARRAY [TEST2]
 	

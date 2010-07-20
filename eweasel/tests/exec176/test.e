@@ -64,7 +64,7 @@ feature
 
 	i: ARRAY [STRING] is
 		do
-			create Result.make (0, 1)
+			create Result.make_filled ("", 0, 1)
 		end
 
 end

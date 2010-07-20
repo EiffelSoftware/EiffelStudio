@@ -12,7 +12,7 @@ feature
 		local
 			d: ARRAY [like c]
 		do
-			create d.make (1, 2)
+			create d.make_filled (c, 1, 2)
 			print ((<< c >>).generating_type); io.new_line
 			try (d);
 			try (<< c >>);

@@ -10,7 +10,7 @@ feature {NONE} -- Initialization
 		local
 			a: ARRAY2 [INTEGER]
 		do
-			create a.make (1, 3)
+			create a.make_filled (0, 1, 3)
 			a.initialize (345)
 			a.wipe_out
 		end

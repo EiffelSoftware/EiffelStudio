@@ -68,10 +68,12 @@ feature -- Initialization
 			-- (`n' may be zero for empty list.)
 		require
 			valid_number_of_items: n >= 0
+		local
+			l_default: G
 		do
 			index := 0
 			set_count (0)
-			array_make (1, n)
+			array_make_filled (l_default, 1, n)
 		ensure
 			correct_position: before
 			is_empty: is_empty
@@ -83,10 +85,12 @@ feature -- Initialization
 			-- This list will be full.
 		require
 			valid_number_of_items: n >= 0
+		local
+			l_default: G
 		do
 			index := 0
 			set_count (n)
-			array_make (1, n)
+			array_make_filled (l_default, 1, n)
 		ensure
 			correct_position: before
 			filled: full

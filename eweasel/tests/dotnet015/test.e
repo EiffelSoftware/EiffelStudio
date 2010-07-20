@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 
 				-- Would trigger an exception before fixing bug in INTERNAL/runtime.
 			create l_int
-			create arr.make (1, 1)
+			create arr.make_filled (Void, 1, 1)
 			i := l_int.dynamic_type (arr)
 
 				-- Would trigger an exception before fixing bug in INTERNAL/runtime.

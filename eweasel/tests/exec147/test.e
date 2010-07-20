@@ -18,7 +18,7 @@ feature
 			l_any := <<l_class_a, l_class_a>>
 			l_titi.default_create
 			create l_tata
-			create l_toto.make (1, 5)
+			create l_toto.make_filled (l_class_a, 1, 5)
 			print (l_toto.area.item (3).a_value)
 			io.new_line;
 			l_toto.force (l_class_a, 10)

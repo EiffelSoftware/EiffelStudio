@@ -17,7 +17,7 @@ feature
 			-- collection_off;
 			count := args.item (1).to_integer;
 			from
-				!!a.make (1, count);
+				create a.make_filled (b, 1, count);
 				k := 1;
 			until
 				k > count

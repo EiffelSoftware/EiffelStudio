@@ -80,7 +80,7 @@ feature -- Access
 		do
 				-- All odd numbers except 1 are candidates
 			from
-				create Result.make (1, n)
+				create Result.make_filled (False, 1, n)
 				i := 3
 			until
 				i > n

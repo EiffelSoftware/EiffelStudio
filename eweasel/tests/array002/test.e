@@ -20,7 +20,7 @@ feature {NONE} -- Initialization
 			aq: ARRAYED_QUEUE [STRING]
 			i: INTEGER
 		do
-			create a.make (Start, Start + Items - 1)
+			create a.make_filled (Void, Start, Start + Items - 1)
 			from
 				i := Start
 			until
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 				i := i + 1
 			end
 			Io.put_string ("ARRAY... OK%N")
-			create a2.make (Items, 1)
+			create a2.make_filled ("", Items, 1)
 			from
 				i := 1
 			until

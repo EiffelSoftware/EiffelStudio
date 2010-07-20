@@ -10,7 +10,7 @@ create
 feature
 	make is
 		do
-			create y.make (1, 1)
+			create y.make_empty
 			print (y.generating_type); io.new_line
 		end
 			

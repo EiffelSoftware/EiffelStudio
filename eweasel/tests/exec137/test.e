@@ -13,8 +13,8 @@ feature
 			a, b: ARRAY [X]
 			x1, x2: X
 		do
-			create a.make (1, 2)
-			create b.make (1, 2)
+			create a.make_filled (x1, 1, 2)
+			create b.make_filled (x2, 1, 2)
 			a.put (x1, 1)
 			b.put (x2, 1)
 			print (deep_equal (a, b)); io.new_line

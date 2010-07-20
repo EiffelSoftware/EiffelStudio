@@ -16,10 +16,11 @@ feature
 	default_create is
 		local
 			-- gc: expanded MEMORY;
+			t2: expanded TEST2
 		do
 			-- gc.collection_off;
 			io.putstring ("Starting TEST1 creation proc%N");
-			make (1, 100000);
+			make_filled (t2, 1, 100000);
 			io.putstring ("Leaving TEST1 creation proc%N");
 		end
 end

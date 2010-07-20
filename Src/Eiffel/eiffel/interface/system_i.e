@@ -3442,6 +3442,8 @@ feature {NONE} -- Implementation
 						supplier := eif_class.syntactical_clients.item
 						related_classes.extend (supplier)
 						supplier.suppliers.remove_class (eif_class)
+							-- Clean associated filters that may include the class being removed.
+						supplier.filters.clean
 						eif_class.syntactical_clients.forth
 						finished := False
 					end
@@ -3449,6 +3451,8 @@ feature {NONE} -- Implementation
 						supplier := eif_class.clients.item
 						related_classes.extend (supplier)
 						supplier.suppliers.remove_class (eif_class)
+							-- Clean associated filters that may include the class being removed.
+						supplier.filters.clean
 						eif_class.clients.forth
 						finished := False
 					end

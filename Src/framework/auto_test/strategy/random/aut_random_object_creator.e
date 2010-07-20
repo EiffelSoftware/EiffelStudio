@@ -330,14 +330,25 @@ feature {NONE} -- Steps
 			when 4 then
 				create last_constant.make (2.0)
 			when 5 then
-				create last_constant.make (3.14159265358979323846)
+					-- Pi constant.
+				create last_constant.make ({DOUBLE_MATH}.pi)
 			when 6 then
-				create last_constant.make (-2.7182818284590452354)
+					-- Minus Pi constant.
+				create last_constant.make ({DOUBLE_MATH}.pi)
 			when 7 then
-				create last_constant.make (1.7976931348623157e+308)
+					-- Euler constant,
+				create last_constant.make ({DOUBLE_MATH}.euler)
 			when 8 then
-				create last_constant.make (2.2250738585072014e-308)
+					-- Minus Euler constant.
+				create last_constant.make (- {DOUBLE_MATH}.euler)
 			when 9 then
+					-- Maximum positive value for REAL_64.
+				create last_constant.make ({REAL_64}.max_value)
+			when 10 then
+					-- Minimum positive value for REAL_64.
+				create last_constant.make (2.2250738585072014e-308)
+			when 11 then
+					-- Machine epsilon for REAL_64.
 				create last_constant.make (2.2204460492503131e-16)
 			else
 				check
@@ -792,10 +803,13 @@ feature {NONE} -- Steps
 			when 6 then
 				create last_constant.make ((100.0).truncated_to_real)
 			when 7 then
-				create last_constant.make ((3.40282e+38).truncated_to_real)
+					-- Maximum positive value for REAL_32.
+				create last_constant.make ({REAL_32}.max_value)
 			when 8 then
-				create last_constant.make ((1.17549e-38).truncated_to_real)
+					-- Lowest minimum positive value for REAL_32.
+				create last_constant.make ((1.1754944e-38).truncated_to_real)
 			when 9 then
+					-- Machine epsilon for REAL_32
 				create last_constant.make ((1.19209e-07).truncated_to_real)
 			else
 				check

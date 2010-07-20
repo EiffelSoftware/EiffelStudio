@@ -39,14 +39,7 @@ feature -- Comparison
 
 	same_keys (a_search_key, a_key: CL_TYPE_A): BOOLEAN
 		do
-			if not a_search_key.is_valid then
-					-- We do not care if both keys are invalid:
-					-- they will be removed sometime anyway.
-				Result := not a_key.is_valid
-			elseif a_key.is_valid then
-					-- Both keys are valid, it's safe to compare them.
-				Result := a_search_key.same_as (a_key)
-			end
+			Result := a_search_key.same_as (a_key)
 		end
 
 feature -- Cleaning
@@ -55,7 +48,7 @@ feature -- Cleaning
 			-- Clean the list of all the removed classes
 		local
 			i, nb: INTEGER
-			l_default: CL_TYPE_A
+			l_default: detachable CL_TYPE_A
 			local_content: like content
 		do
 				-- Note: we cannot search items in the table because they might be

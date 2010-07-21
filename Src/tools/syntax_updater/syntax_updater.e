@@ -240,17 +240,17 @@ feature {NONE} -- Implementation
 		do
 				-- First we do it using the old conventions.
 			a_parser.set_syntax_version ({EIFFEL_PARSER}.obsolete_64_syntax)
-			a_parser.parse_from_string (a_buffer, Void)
+			a_parser.parse_class_from_string (a_buffer, Void, Void)
 			if error_handler.has_error then
 				error_handler.wipe_out
 					-- There was an error, let's try to see if the code is using transitional syntax.
 				a_parser.set_syntax_version ({EIFFEL_PARSER}.transitional_64_syntax)
-				a_parser.parse_from_string (a_buffer, Void)
+				a_parser.parse_class_from_string (a_buffer, Void, Void)
 				if error_handler.has_error then
 					error_handler.wipe_out
 						-- Still an error, let's try to see if the code is strictly ECMA compliant.
 					a_parser.set_syntax_version ({EIFFEL_PARSER}.ecma_syntax)
-					a_parser.parse_from_string (a_buffer, Void)
+					a_parser.parse_class_from_string (a_buffer, Void, Void)
 				end
 			end
 		end

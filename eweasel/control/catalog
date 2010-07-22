@@ -2277,6 +2277,7 @@ test	multi-constraint-constrained-twice-2			multicon053 tcf fail multiconstraint
 test	multi-constraint-constrained-by-self			multicon054 tcf fail multiconstraint
 test	multi-constraint-make-byte-code-crash			multicon055 tcf fail multiconstraint
 test	multi-constraint-static-access				multicon056 tcf fail multiconstraint
+test	multi-constraint-static-access-2			multicon057 tcf fail multiconstraint
 
 -- tests for expanded types
 test	expanded-array-attached-reference-array			expanded001 tcf pass expanded

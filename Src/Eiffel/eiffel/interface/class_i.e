@@ -483,7 +483,7 @@ feature -- Status report
 			Result := text
 		end
 
-	encoding: detachable ANY
+	encoding: detachable ENCODING
 			-- Encoding of original text.
 
 	bom: detachable STRING_8

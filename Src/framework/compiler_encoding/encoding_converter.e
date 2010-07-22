@@ -60,7 +60,7 @@ feature -- Buffer
 
 	input_buffer_from_file (a_file: KL_BINARY_INPUT_FILE; a_class: detachable ANY): detachable YY_BUFFER
 			-- Fetch the input buffer according to the content of `a_file'.
-			--
+			-- Set `detected_encoding' and `last_bom' accordingly.
 		require
 			a_file_not_void: a_file /= Void
 			a_file_open_read: a_file.is_open_read
@@ -70,10 +70,12 @@ feature -- Buffer
 			l_string: STRING
 		do
 			detected_encoding := Void
+			last_bom := Void
 			l_buffer := detection_buffer
 			l_buffer.set_file (a_file)
 			l_buffer.detect_file
 			if l_buffer.last_detection_successful then
+				last_bom := l_buffer.last_bom
 				if l_buffer.detected_encoding.is_equal (utf8) then
 					Result := l_buffer
 				else
@@ -107,7 +109,7 @@ feature -- Buffer
 
 	input_buffer_from_file_of_encoding (a_file: KL_BINARY_INPUT_FILE; a_encoding: ENCODING): detachable YY_BUFFER
 			-- Fetch the input buffer according to the content of `a_file'.
-			--
+			-- Set `detected_encoding' and `last_bom' accordingly.
 		require
 			a_file_not_void: a_file /= Void
 			a_file_open_read: a_file.is_open_read
@@ -121,18 +123,19 @@ feature -- Buffer
 				-- Report unsupported encoding error.
 			end
 			detected_encoding := a_encoding
+			last_bom := Void
 		ensure
 			buffer_attached: Result /= Void
 		end
 
 	input_buffer_from_ascii_string (a_string: STRING_8): YY_BUFFER
 			-- input buffer from ASCII string.
-			--
 		require
 			a_string_not_void: a_string /= Void
 		do
 			create Result.make (a_string)
 			detected_encoding := iso_8859_1
+			last_bom := Void
 		ensure
 			buffer_attached: Result /= Void
 			detected_encoding_attached: detected_encoding /= Void
@@ -142,12 +145,12 @@ feature -- Buffer
 		require
 			a_string_not_void: a_string /= Void
 		do
-			detected_encoding := Void
 			a_encoding.convert_to (utf8, a_string)
 			if a_encoding.last_conversion_successful then
 				create Result.make (a_encoding.last_converted_stream)
-				detected_encoding := a_encoding
 			end
+			detected_encoding := a_encoding
+			last_bom := Void
 		end
 
 	input_buffer_from_string (a_string: STRING_8; a_class: detachable ANY): YY_BUFFER
@@ -155,21 +158,28 @@ feature -- Buffer
 			a_string_not_void: a_string /= Void
 		local
 			l_encoding: detachable ENCODING
+			l_string: STRING
 		do
 			detected_encoding := Void
+			last_bom := Void
 			bom_detector.detect (a_string)
 			if bom_detector.last_detection_successful then
 				l_encoding := bom_detector.detected_encoding
+				last_bom := bom_detector.last_bom
 			elseif a_class /= Void and then attached encoding_from_class (a_class) as l_enc then
 				l_encoding := l_enc
 			else
 				l_encoding := iso_8859_1
 			end
-			l_encoding.convert_to (utf8, a_string)
+			l_string := a_string
+			if attached last_bom as l_bom and then not l_bom.is_empty then
+				l_string := l_string.substring (l_bom.count + 1, l_string.count)
+			end
+			l_encoding.convert_to (utf8, l_string)
 			if l_encoding.last_conversion_successful then
 				create Result.make (l_encoding.last_converted_stream)
-				detected_encoding := l_encoding
 			end
+			detected_encoding := l_encoding
 		end
 
 feature -- Conversion

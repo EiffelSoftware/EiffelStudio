@@ -10,6 +10,9 @@ inherit
 	KL_SHARED_EXECUTION_ENVIRONMENT
 	
 	ENCODING_CONVERTER
+		rename
+			make as make_encoding
+		end
 	
 	SHARED_ENCODING_CONVERTER
 
@@ -22,6 +25,7 @@ feature {NONE} -- Initialization
 
 	make is
 		do
+			make_encoding
 			set_encoding_converter (Current)
 			test_roundtrip := False
 
@@ -137,7 +141,7 @@ feature {NONE} -- Implementation
 				a_scanner.scan_string (a_buffer)
 			end
 			a_parser.set_syntax_version ({EIFFEL_PARSER}.obsolete_64_syntax)
-			a_parser.parse_from_string (a_buffer, Void)
+			a_parser.parse_class_from_string (a_buffer, Void, Void)
 			if a_parser.error_handler.has_error then
 					-- There was an error, let's try to see if the code is using transitional syntax.
 				if a_scanner /= Void then
@@ -145,7 +149,7 @@ feature {NONE} -- Implementation
 					a_scanner.scan_string (a_buffer)
 				end
 				a_parser.set_syntax_version ({EIFFEL_PARSER}.transitional_64_syntax)
-				a_parser.parse_from_string (a_buffer, Void)
+				a_parser.parse_class_from_string (a_buffer, Void, Void)
 				if a_parser.error_handler.has_error then
 						-- Still an error, let's try to see if the code is already using `attribute'.
 					if a_scanner /= Void then
@@ -153,7 +157,7 @@ feature {NONE} -- Implementation
 						a_scanner.scan_string (a_buffer)
 					end
 					a_parser.set_syntax_version ({EIFFEL_PARSER}.ecma_syntax)
-					a_parser.parse_from_string (a_buffer, Void)
+					a_parser.parse_class_from_string (a_buffer, Void, Void)
 				end
 			end
 		end

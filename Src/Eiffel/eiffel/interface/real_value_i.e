@@ -18,28 +18,18 @@ inherit
 		end
 
 create
-	make_real_64, make_real_32
+	make
 
 feature {NONE} -- Initialization
 
-	make_real_64 (d: like real_64_value)
+	make (d: like real_64_value; a_is_real_64: like is_real_64)
 			-- Create instance of current with `real_64_value' set to `d'.
 		do
 			real_64_value := d
 			is_real_64 := True
 		ensure
 			real_64_value_set: real_64_value = d
-			is_real_64: is_real_64
-		end
-
-	make_real_32 (r: like real_32_value)
-			-- Create instance of current with `real_32_value' set to `r'.
-		do
-			real_32_value := r
-			is_real_64 := False
-		ensure
-			real_32_value_set: real_32_value = r
-			not_is_real_64: not is_real_64
+			is_real_64: is_real_64 = a_is_real_64
 		end
 
 feature -- Comparison
@@ -48,17 +38,19 @@ feature -- Comparison
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := (is_real_64 = other.is_real_64) and
-				(real_64_value = other.real_64_value) and
-				(real_32_value = other.real_32_value)
+				(real_64_value = other.real_64_value)
 		end
 
 feature -- Access
 
-	real_64_value: DOUBLE
+	real_64_value: REAL_64
 			-- Double value.
 
-	real_32_value: REAL
+	real_32_value: REAL_32
 			-- Real value.
+		do
+			Result := real_64_value.truncated_to_real
+		end
 
 feature -- Status report
 
@@ -89,15 +81,6 @@ feature -- Settings
 		do
 			l_is_real_64 := is_real_64
 			if t.is_real_64 /= l_is_real_64 then
-				if l_is_real_64 then
-						-- Convert `real_64_value' to `real_32_value'.
-					real_32_value := real_64_value.truncated_to_real
-					real_64_value := 0.0
-				else
-						-- Convert `real_32_value' to `real_64_value'.
-					real_64_value := real_32_value
-					real_32_value := {REAL_32} 0.0
-				end
 				is_real_64 := not l_is_real_64
 			end
 		end
@@ -107,11 +90,7 @@ feature -- Unary operators
 	unary_minus: VALUE_I
 			-- Apply `-' operator to Current.
 		do
-			if is_real_64 then
-				create {REAL_VALUE_I} Result.make_real_64 (-real_64_value)
-			else
-				create {REAL_VALUE_I} Result.make_real_32 (-real_32_value)
-			end
+			create {REAL_VALUE_I} Result.make (-real_64_value, is_real_64)
 		end
 
 feature -- Code generation
@@ -122,11 +101,7 @@ feature -- Code generation
 			l_val: STRING
 			l_nb, l_pos: INTEGER
 		do
-			if is_real_64 then
-				l_val := real_64_value.out
-			else
-				l_val := real_32_value.out
-			end
+			l_val := real_64_value.out
 			l_nb := l_val.count
 				-- Special trick when current locale decimal separator
 				-- is the coma (See bug#5659)
@@ -175,18 +150,14 @@ feature -- Output
 	dump: STRING
 			-- Textual representation of `real_64_value'.
 		do
-			if is_real_64 then
-				Result := real_64_value.out
-			else
-				Result := real_32_value.out
-			end
+			Result := real_64_value.out
 		end
 
 invariant
 	is_real_64_or_real_32: is_real_64 = not is_real_32
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

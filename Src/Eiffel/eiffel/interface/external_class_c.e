@@ -1504,7 +1504,7 @@ feature {NONE} -- Implementation
 					n - i + 1
 				end
 				($l_real64).memory_copy ($l_int64, 8)
-				create {REAL_VALUE_I} l_value.make_real_64 (l_real64)
+				create {REAL_VALUE_I} l_value.make (l_real64, True)
 			elseif a_external_type.is_real_32 then
 					-- Read hexadecimal representation in little-endian byte order
 				from
@@ -1532,7 +1532,7 @@ feature {NONE} -- Implementation
 					n - i + 1
 				end
 				($l_real32).memory_copy ($l_int32, 4)
-				create {REAL_VALUE_I} l_value.make_real_32 (l_real32)
+				create {REAL_VALUE_I} l_value.make (l_real32, False)
 			elseif a_external_type.is_integer or a_external_type.is_enum then
 				if a_value.item (1) = '-' then
 					l_val := a_value.substring (2, a_value.count)

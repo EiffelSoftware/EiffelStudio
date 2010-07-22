@@ -296,7 +296,7 @@ feature {NONE} -- Helpers
 	ec_encoding_converter: EC_ENCODING_CONVERTER
 			-- Access to the encoding coverter for unicode conversions.
 		once
-			create Result
+			create Result.make
 		ensure
 			result_attached: attached Result
 		end

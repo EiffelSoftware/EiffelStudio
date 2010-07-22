@@ -29,6 +29,9 @@ inherit
 			default_create
 		end
 
+create
+	make
+
 feature -- Access
 
 	encoding_from_class (a_class: ANY): ENCODING

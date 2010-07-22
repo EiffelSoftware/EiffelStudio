@@ -16,7 +16,7 @@ feature -- Access
 			if attached encoding_converter_cell.item as l_converter then
 				Result := l_converter
 			else
-				create Result
+				create Result.make
 				set_encoding_converter (Result)
 			end
 		end

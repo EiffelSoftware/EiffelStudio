@@ -926,6 +926,7 @@ test	qat-constrained-type-in-crash-2		incr370 tcf fail incrementality anchored_t
 test	rename-routine-error			incr371 tcf fail incrementality
 test	qat-finalize-panic-cascade		incr372 tcf fail incrementality
 test	finalize-feature-name-crash		incr373 tcf fail incrementality
+test	static-type-id-crash			incr374 tcf fail incrementality
 
 
 -- Melting

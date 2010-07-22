@@ -1,0 +1,30 @@
+
+test_name 	 static-type-id-crash
+test_description After initial compilation where compiler reports a VTCG a parent class is changed from expanded to non-expanded and a child class is changed from non-expanded to expanded.  The compiler then crashes in degree -1 in {GEN_TYPE_A}.static_type_id.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+copy_raw 	test2.e $CLUSTER test2.e
+define		EXPANDED "expanded"
+copy_sub 	test3.e $CLUSTER test3.e
+define		EXPANDED ""
+copy_sub 	test4.e $CLUSTER test4.e
+compile_frozen
+compile_result 	validity_error TEST1 VTCG
+
+define		EXPANDED ""
+copy_sub 	test3.e $CLUSTER test3.e
+define		EXPANDED "expanded"
+copy_sub 	test4.e $CLUSTER test4.e
+resume_compile
+compile_result 	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work 	NONE 	exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+test_end

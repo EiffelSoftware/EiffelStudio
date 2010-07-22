@@ -17,42 +17,32 @@ class
 
 inherit
 	ANY
-		undefine
-			default_create
-		end
 
 	STRING_HANDLER
 		export
 			{NONE} all
-		undefine
-			default_create
 		end
 
 	PLATFORM
 		export
 			{NONE} all
-		undefine
-			default_create
 		end
 
 	SYSTEM_ENCODINGS
 		export
 			{NONE} all
-		undefine
-			default_create
 		end
 
 	LOCALIZED_PRINTER
-		undefine
-			default_create
-		end
+
+create
+	make
 
 feature {NONE} -- Initialization
 
-	default_create
+	make
 			-- <precursor>
 		do
-			Precursor {ANY}
 			create string_buffer.make (50000)
 		end
 

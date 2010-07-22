@@ -62,11 +62,7 @@ feature -- Evaluation
 	evaluate: VALUE_I
 			-- Evaluation of Current.
 		do
-			if real_size = 64 then
-				create {REAL_VALUE_I} Result.make_real_64 (value.to_double)
-			else
-				create {REAL_VALUE_I} Result.make_real_32 (value.to_real)
-			end
+			create {REAL_VALUE_I} Result.make (value.to_double, real_size = 64)
 		end
 
 feature -- Status report

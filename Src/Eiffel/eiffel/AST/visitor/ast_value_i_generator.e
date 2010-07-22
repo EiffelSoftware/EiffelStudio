@@ -81,15 +81,11 @@ feature {NONE} -- Implementation
 				-- When no type is present it is REAL_64, otherwise it is the type of
 				-- the specified type.
 			if a_real.constant_type = Void then
-				create {REAL_VALUE_I} last_value.make_real_64 (a_real.value.to_double)
+				create {REAL_VALUE_I} last_value.make (a_real.value.to_double, True)
 			else
 				l_type := type_a_generator.evaluate_type (a_real.constant_type, current_class)
-				if l_type.is_real_64 then
-					create {REAL_VALUE_I} last_value.make_real_64 (a_real.value.to_double)
-				else
-					check is_real_32: l_type.is_real_32 end
-					create {REAL_VALUE_I} last_value.make_real_32 (a_real.value.to_real)
-				end
+				check is_real_32_or_64: l_type.is_real_32 xor l_type.is_real_64 end
+				create {REAL_VALUE_I} last_value.make (a_real.value.to_double, l_type.is_real_64)
 			end
 		end
 

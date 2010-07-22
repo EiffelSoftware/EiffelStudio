@@ -288,17 +288,9 @@ feature {BYTE_NODE} -- Visitors
 				l_real ?= l_value
 				check l_real_not_void: l_real /= Void end
 				if target_type.is_real_32 then
-					if l_value.is_real_32 then
-						ca_blob.put_real_32 (l_real.real_32_value)
-					else
-						ca_blob.put_real_32 (l_real.real_64_value.truncated_to_real)
-					end
+					ca_blob.put_real_32 (l_real.real_32_value)
 				elseif target_type.is_real_64 then
-					if l_value.is_real_32 then
-						ca_blob.put_real_64 (l_real.real_32_value)
-					else
-						ca_blob.put_real_64 (l_real.real_64_value)
-					end
+					ca_blob.put_real_64 (l_real.real_64_value)
 				else
 						-- Case where target is System.object.
 					check is_target_object end

@@ -3246,10 +3246,24 @@ feature -- Properties
 
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Properties
 
-	text: detachable STRING
+	text: detachable STRING_8
 			-- Class text
 		do
 			Result := lace_class.text
+		end
+
+feature -- Access: Encoding
+
+	encoding: detachable ENCODING
+			-- Encoding detected when reading `text'
+		do
+			Result := lace_class.encoding
+		end
+
+	bom: detachable STRING
+			-- Bom of the encoding detected when reading `text'
+		do
+			Result := lace_class.bom
 		end
 
 	obsolete_message: STRING

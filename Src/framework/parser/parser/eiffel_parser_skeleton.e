@@ -35,6 +35,12 @@ inherit
 	INTERNAL_COMPILER_STRING_EXPORTER
 		export {NONE} all end
 
+	SYSTEM_ENCODINGS
+		export {NONE} all end
+
+	BOM_CONSTANTS
+		export {NONE} all end
+
 feature {NONE} -- Initialization
 
 	make
@@ -247,6 +253,8 @@ feature -- Parsing (Unknown encoding)
 		do
 			filename := a_class.file_name
 			parse_from_utf8_string (a_class.text, a_class)
+			detected_encoding := a_class.encoding
+			detected_bom := a_class.bom
 		end
 
 	parse_class_from_string (a_string: STRING; a_class: detachable ABSTRACT_CLASS_C; a_encoding: detachable ENCODING)
@@ -269,8 +277,12 @@ feature -- Parsing (Unknown encoding)
 
 			if attached a_encoding then
 				l_input_buffer := encoding_converter.input_buffer_from_string_of_encoding (a_string, a_encoding)
+				detected_encoding := a_encoding
+				detected_bom := Void
 			else
 				l_input_buffer := encoding_converter.input_buffer_from_string (a_string, a_class)
+				detected_encoding := encoding_converter.detected_encoding
+				detected_bom := encoding_converter.last_bom
 			end
 			input_buffer := l_input_buffer
 
@@ -312,8 +324,12 @@ feature -- Parsing (Unknown encoding)
 			reset_nodes
 			if attached a_encoding then
 				l_input_buffer := encoding_converter.input_buffer_from_file_of_encoding (a_file, a_encoding)
+				detected_encoding := a_encoding
+				detected_bom := Void
 			else
 				l_input_buffer := encoding_converter.input_buffer_from_file (a_file, a_class)
+				detected_encoding := encoding_converter.detected_encoding
+				detected_bom := encoding_converter.last_bom
 			end
 			input_buffer := l_input_buffer
 
@@ -352,6 +368,8 @@ feature -- Parsing (Known encoding)
 
 			l_input_buffer := encoding_converter.input_buffer_from_ascii_string (a_string)
 			input_buffer := l_input_buffer
+			detected_encoding := encoding_converter.detected_encoding
+			detected_bom := encoding_converter.last_bom
 
 				-- Abstracted from 'yy_load_input_buffer' to reuse local
 			yy_set_content (l_input_buffer.content)
@@ -386,6 +404,9 @@ feature -- Parsing (Known encoding)
 			create l_input_buffer.make (a_string)
 			input_buffer := l_input_buffer
 
+			detected_encoding := utf8
+			detected_bom := Void
+
 				-- Abstracted from 'yy_load_input_buffer' to reuse local
 			yy_set_content (l_input_buffer.content)
 			yy_end := l_input_buffer.index
@@ -412,6 +433,8 @@ feature -- Parsing (Known encoding)
 			a_string_not_void: a_string /= Void
 		do
 			parse_from_utf8_string (encoding_converter.utf32_to_utf8 (a_string), a_class)
+			detected_encoding := utf32
+			detected_bom := Void
 		end
 
 feature -- Access: result nodes
@@ -471,6 +494,14 @@ feature -- Access
 
 	feature_clause_end_position: INTEGER
 			-- End of a feature clause
+
+feature -- Access: Encoding
+
+	detected_encoding: detachable ENCODING
+			-- Encoding detected by last parsing
+
+	detected_bom: detachable STRING
+			-- Bom of the encoding detected by last parsing
 
 feature -- Removal
 

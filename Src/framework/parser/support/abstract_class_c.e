@@ -31,10 +31,22 @@ feature -- Access
 			Result := attached text
 		end
 
-feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Text
+feature -- Text
 
-	text: detachable STRING
+	text: detachable STRING_8
 			-- Text in UTF-8
+		deferred
+		end
+
+feature -- Access: Encoding
+
+	encoding: detachable ENCODING
+			-- Encoding detected when reading `text'
+		deferred
+		end
+
+	bom: detachable STRING
+			-- Bom of the encoding detected when reading `text'
 		deferred
 		end
 

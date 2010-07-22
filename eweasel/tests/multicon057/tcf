@@ -1,5 +1,5 @@
 
-test_name 	 multi-constraint-static-access-
+test_name 	 multi-constraint-static-access-2
 test_description A formal G that is constrained by two classes and which has static feature calls on G to constant attributes crashes the compiler in degree 2.
 
 copy_sub	Ace $TEST Ace

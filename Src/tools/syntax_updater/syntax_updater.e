@@ -17,7 +17,7 @@ inherit
 
 	KL_SHARED_EXECUTION_ENVIRONMENT
 
-	INTERNAL_COMPILER_STRING_EXPORTER
+	SYSTEM_ENCODINGS
 
 create
 	make
@@ -148,6 +148,7 @@ feature {NONE} -- Implementation
 			count, nb: INTEGER
 			l_text: STRING
 			l_generate_output: BOOLEAN
+			l_converted: BOOLEAN
 		do
 			if file_name.substring (file_name.count - 1, file_name.count).is_case_insensitive_equal (".e") then
 				create file.make (file_name)
@@ -163,7 +164,7 @@ feature {NONE} -- Implementation
 					file.close
 						-- Fast parsing using our `fast_factory' to detect old constructs.
 					fast_factory.reset
-					parse_eiffel_class (fast_parser, string_buffer)
+					parse_eiffel_class (fast_parser, string_buffer, False)
 					if error_handler.has_error then
 							-- We ignore syntax errors since we want to test roundtrip parsing
 							-- on valid Eiffel classes.
@@ -175,7 +176,7 @@ feature {NONE} -- Implementation
 						error_handler.wipe_out
 					elseif fast_factory.has_obsolete_constructs then
 							-- Slow parsing to rewrite the class using the new constructs.
-						parse_eiffel_class (parser, string_buffer)
+						parse_eiffel_class (parser, string_buffer, False)
 						check no_error: not error_handler.has_error end
 
 						visitor.setup (parser.root_node, parser.match_list, True, True)
@@ -186,7 +187,7 @@ feature {NONE} -- Implementation
 						visitor.process_ast_node (visitor.parsed_class)
 						if visitor.is_updated then
 							l_text := visitor.text
-							parse_eiffel_class (fast_parser, l_text)
+							parse_eiffel_class (fast_parser, l_text, True)
 							if error_handler.has_error then
 									-- We ignore syntax errors since we want to test roundtrip parsing
 									-- on valid Eiffel classes.
@@ -206,9 +207,22 @@ feature {NONE} -- Implementation
 								l_generate_output := True
 							end
 							if l_generate_output then
+								if attached original_encoding as l_encoding then
+									utf8.convert_to (l_encoding, l_text)
+									if utf8.last_conversion_successful then
+										l_text := utf8.last_converted_stream
+										l_converted := True
+									else
+										io.error.put_string ("Encoding conversion failed: UTF-8 to " + l_encoding.code_page)
+										io.error.put_new_line
+									end
+								end
 								create outfile.make (file_name)
 								outfile.open_write
 								if outfile.is_open_write then
+									if l_converted and then attached original_bom as l_bom then
+										outfile.put_string (l_bom)
+									end
 									outfile.put_string (l_text)
 									outfile.close
 									if has_option (verbose_switch) then
@@ -231,29 +245,53 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	parse_eiffel_class (a_parser: EIFFEL_PARSER; a_buffer: STRING)
+	parse_eiffel_class (a_parser: EIFFEL_PARSER; a_buffer: STRING; a_verification: BOOLEAN)
 			-- Using a parser, parse our code using different parser mode, to ensure that we can
 			-- indeed convert any kind of Eiffel classes.
+			-- `a_verification' indicates that `a_buffer' was read in UTF-8 from the roundtrip parser.
+			-- Otherwise `a_buffer' is in unknown encoding.
 		require
 			a_parser_not_void: a_parser /= Void
 			a_buffer_not_void: a_buffer /= Void
 		do
 				-- First we do it using the old conventions.
 			a_parser.set_syntax_version ({EIFFEL_PARSER}.obsolete_64_syntax)
-			a_parser.parse_class_from_string (a_buffer, Void, Void)
+			if not a_verification then
+				a_parser.parse_class_from_string (a_buffer, Void, Void)
+				original_encoding := a_parser.detected_encoding
+				original_bom := a_parser.detected_bom
+			else
+				a_parser.parse_from_utf8_string (a_buffer, Void)
+			end
 			if error_handler.has_error then
 				error_handler.wipe_out
 					-- There was an error, let's try to see if the code is using transitional syntax.
 				a_parser.set_syntax_version ({EIFFEL_PARSER}.transitional_64_syntax)
-				a_parser.parse_class_from_string (a_buffer, Void, Void)
+				if not a_verification then
+					a_parser.parse_class_from_string (a_buffer, Void, Void)
+				else
+					a_parser.parse_from_utf8_string (a_buffer, Void)
+				end
 				if error_handler.has_error then
 					error_handler.wipe_out
 						-- Still an error, let's try to see if the code is strictly ECMA compliant.
 					a_parser.set_syntax_version ({EIFFEL_PARSER}.ecma_syntax)
-					a_parser.parse_class_from_string (a_buffer, Void, Void)
+					if not a_verification then
+						a_parser.parse_class_from_string (a_buffer, Void, Void)
+					else
+						a_parser.parse_from_utf8_string (a_buffer, Void)
+					end
 				end
 			end
 		end
+
+feature {NONE} -- Encoding
+
+	original_encoding: detachable ENCODING
+			-- Encoding detected by last parsing
+
+	original_bom: detachable STRING
+			-- Bom of the encoding detected by last parsing
 
 feature {NONE}
 

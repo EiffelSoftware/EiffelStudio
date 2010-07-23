@@ -161,7 +161,7 @@ feature -- C code generation
 			-- for some descendants, it is not enough to just to a cast to EIF_REAL_64.
 		do
 			if size = 64 then
-				shared_include_queue.put ({PREDEFINED_NAMES}.eif_helpers_header_name_id)
+				shared_include_queue_put ({PREDEFINED_NAMES}.eif_helpers_header_name_id)
 				buffer.put_string ("eif_uint64_to_real64 (")
 			else
 				buffer.put_string ("(EIF_REAL_64) (")
@@ -173,7 +173,7 @@ feature -- C code generation
 			-- for some descendants, it is not enough to just to a cast to EIF_REAL_32.
 		do
 			if size = 64 then
-				shared_include_queue.put ({PREDEFINED_NAMES}.eif_helpers_header_name_id)
+				shared_include_queue_put ({PREDEFINED_NAMES}.eif_helpers_header_name_id)
 				buffer.put_string ("eif_uint64_to_real32 (")
 			else
 				buffer.put_string ("(EIF_REAL_32) (")

@@ -193,7 +193,7 @@ feature -- C code generation
 
 			if gen_param.is_bit and not a_make_filled then
 					-- Initialize array of bits with default values
-				shared_include_queue.put (Names_heap.eif_plug_header_name_id)
+				shared_include_queue_put (Names_heap.eif_plug_header_name_id)
 				l_bit ?= gen_param
 				buffer.put_new_line
 				buffer.put_character ('{')

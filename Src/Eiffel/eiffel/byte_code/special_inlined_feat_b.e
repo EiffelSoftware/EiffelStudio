@@ -408,7 +408,7 @@ feature {NONE} -- Implementation
 			buf.put_character (';')
 
 				-- Add `eif_helpers.h' for C compilation where `eif_max_int32' function is declared.
-			shared_include_queue.put ({PREDEFINED_NAMES}.eif_helpers_header_name_id)
+			shared_include_queue_put ({PREDEFINED_NAMES}.eif_helpers_header_name_id)
 			buf.put_new_line
 			buf.put_string("RT_SPECIAL_COUNT(");
 			gen_reg.print_register
@@ -502,7 +502,7 @@ feature {NONE} -- Implementation
 			end
 
 				-- Add `eif_helpers.h' for C compilation where `eif_max_int32' function is declared.
-			shared_include_queue.put ({PREDEFINED_NAMES}.eif_helpers_header_name_id)
+			shared_include_queue_put ({PREDEFINED_NAMES}.eif_helpers_header_name_id)
 			buf.put_new_line
 			buf.put_string("RT_SPECIAL_COUNT(");
 			gen_reg.print_register

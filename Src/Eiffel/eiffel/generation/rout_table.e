@@ -294,26 +294,6 @@ feature {POLY_TABLE} -- Special data
 
 feature {NONE} -- Implementation
 
-	add_header_files (include_list: ARRAY [INTEGER])
-			-- Add `include_list' in header files of the `erout' files.
-		require
-			include_list_not_void: include_list /= Void
-		local
-			queue: like shared_include_queue
-			i, nb: INTEGER
-		do
-			from
-				i := include_list.lower
-				nb := include_list.upper
-				queue := shared_include_queue
-			until
-				i > nb
-			loop
-				queue.put (include_list.item (i))
-				i := i + 1
-			end
-		end
-
 	internal_generate (buffer: GENERATION_BUFFER; an_offset, a_table_size, a_min, a_max: INTEGER)
 			-- Generate current routine table starting from index `a_min' to `a_max'.
 		require

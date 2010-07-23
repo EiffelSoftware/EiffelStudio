@@ -267,14 +267,14 @@ feature -- C special code generation
 				target.print_register
 				buffer.put_character (')')
 					-- Add `<math.h>' for C declaration of `ceil'.
-				shared_include_queue.put ({PREDEFINED_NAMES}.math_header_name_id)
+				shared_include_queue_put ({PREDEFINED_NAMES}.math_header_name_id)
 			when floor_real_type then
 				basic_type.c_type.generate_cast (buffer)
 				buffer.put_string ("floor ((double)")
 				target.print_register
 				buffer.put_character (')')
 					-- Add `<math.h>' for C declaration of `floor'.
-				shared_include_queue.put ({PREDEFINED_NAMES}.math_header_name_id)
+				shared_include_queue_put ({PREDEFINED_NAMES}.math_header_name_id)
 
 			when is_nan_type, is_negative_infinity_type, is_positive_infinity_type then
 				buffer.put_four_character ('e', 'i', 'f', '_')
@@ -292,7 +292,7 @@ feature -- C special code generation
 				target.print_register
 				buffer.put_character (')')
 					-- Add `eif_helpers.h' for C declaration of `floor'.
-				shared_include_queue.put ({PREDEFINED_NAMES}.eif_helpers_header_name_id)
+				shared_include_queue_put ({PREDEFINED_NAMES}.eif_helpers_header_name_id)
 
 			when nan_type, negative_infinity_type, positive_infinity_type then
 				buffer.put_four_character ('e', 'i', 'f', '_')
@@ -307,7 +307,7 @@ feature -- C special code generation
 				when positive_infinity_type then buffer.put_string ("positive_infinity")
 				end
 					-- Add `eif_helpers.h' for C declaration of `floor'.
-				shared_include_queue.put ({PREDEFINED_NAMES}.eif_helpers_header_name_id)
+				shared_include_queue_put ({PREDEFINED_NAMES}.eif_helpers_header_name_id)
 
 			when offset_type then
 				generate_offset (buffer, type_of (basic_type), target, parameter)
@@ -653,7 +653,7 @@ feature {NONE} -- C code generation
 			buffer.put_character (')')
 
 				-- Add `ctype.h' for C compilation where `tolower' and `toupper' are declared.
-			shared_include_queue.put ({PREDEFINED_NAMES}.ctype_header_name_id)
+			shared_include_queue_put ({PREDEFINED_NAMES}.ctype_header_name_id)
 		end
 
 	generate_is_digit (buffer: GENERATION_BUFFER;
@@ -671,7 +671,7 @@ feature {NONE} -- C code generation
 			buffer.put_character (')')
 
 				-- Add `ctype.h' for C compilation where `isdigit' is declared.
-			shared_include_queue.put ({PREDEFINED_NAMES}.ctype_header_name_id)
+			shared_include_queue_put ({PREDEFINED_NAMES}.ctype_header_name_id)
 		end
 
 	generate_is_space (buffer: GENERATION_BUFFER;
@@ -689,7 +689,7 @@ feature {NONE} -- C code generation
 			buffer.put_character (')')
 
 				-- Add `ctype.h' for C compilation where `isspace' is declared.
-			shared_include_queue.put ({PREDEFINED_NAMES}.ctype_header_name_id)
+			shared_include_queue_put ({PREDEFINED_NAMES}.ctype_header_name_id)
 		end
 
 	generate_equal (buffer: GENERATION_BUFFER; target: REGISTRABLE; parameter: PARAMETER_BL)
@@ -753,7 +753,7 @@ feature {NONE} -- C code generation
 				buffer.put_string (" ? makestr (%"True%", 4) : makestr (%"False%", 5))")
 
 					-- Add `eif_plug.h' for C compilation where `makestr' is -- declared
-				shared_include_queue.put ({PREDEFINED_NAMES}.eif_plug_header_name_id)
+				shared_include_queue_put ({PREDEFINED_NAMES}.eif_plug_header_name_id)
 			else
 				inspect
 					type_of_basic
@@ -787,7 +787,7 @@ feature {NONE} -- C code generation
 				buffer.put_character (')')
 
 					-- Add `eif_out.h' for C compilation where all output functions are declared.
-				shared_include_queue.put ({PREDEFINED_NAMES}.eif_out_header_name_id)
+				shared_include_queue_put ({PREDEFINED_NAMES}.eif_out_header_name_id)
 			end
 		end
 
@@ -898,7 +898,7 @@ feature {NONE} -- C code generation
 			buffer.put_character (')')
 
 				-- Add `eif_helpers.h' for C compilation where all bit functions are declared.
-			shared_include_queue.put ({PREDEFINED_NAMES}.eif_helpers_header_name_id)
+			shared_include_queue_put ({PREDEFINED_NAMES}.eif_helpers_header_name_id)
 		end
 
 	generate_min (buffer: GENERATION_BUFFER; type_of_basic: INTEGER; target: REGISTRABLE; parameter: PARAMETER_BL)
@@ -941,7 +941,7 @@ feature {NONE} -- C code generation
 			buffer.put_character (')')
 
 				-- Add `eif_helpers.h' for C compilation where all bit functions are declared.
-			shared_include_queue.put ({PREDEFINED_NAMES}.eif_helpers_header_name_id)
+			shared_include_queue_put ({PREDEFINED_NAMES}.eif_helpers_header_name_id)
 		end
 
 	generate_three_way_comparison (buffer: GENERATION_BUFFER; type_of_basic: INTEGER; target: REGISTRABLE; parameter: PARAMETER_BL)
@@ -984,7 +984,7 @@ feature {NONE} -- C code generation
 			buffer.put_character (')')
 
 				-- Add `eif_helpers.h' for C compilation where all bit functions are declared.
-			shared_include_queue.put ({PREDEFINED_NAMES}.eif_helpers_header_name_id)
+			shared_include_queue_put ({PREDEFINED_NAMES}.eif_helpers_header_name_id)
 		end
 
 	generate_abs (buffer: GENERATION_BUFFER; type_of_basic: INTEGER; target: REGISTRABLE)
@@ -1018,7 +1018,7 @@ feature {NONE} -- C code generation
 			buffer.put_character (')')
 
 				-- Add `eif_helpers.h' for C compilation where all bit functions are declared.
-			shared_include_queue.put ({PREDEFINED_NAMES}.eif_helpers_header_name_id)
+			shared_include_queue_put ({PREDEFINED_NAMES}.eif_helpers_header_name_id)
 		end
 
 	generate_memory_routine (buffer: GENERATION_BUFFER; f_type: INTEGER; target: REGISTRABLE; parameters: BYTE_LIST [PARAMETER_B])
@@ -1035,7 +1035,7 @@ feature {NONE} -- C code generation
 		local
 			parameter: PARAMETER_BL
 		do
-			shared_include_queue.put ({PREDEFINED_NAMES}.string_header_name_id)
+			shared_include_queue_put ({PREDEFINED_NAMES}.string_header_name_id)
 
 			inspect
 				f_type
@@ -1125,7 +1125,7 @@ feature {NONE} -- C code generation
 			buffer.put_character (')')
 
 				-- Add `eif_misc.h' for C compilation where all bit functions are declared.
-			shared_include_queue.put ({PREDEFINED_NAMES}.eif_misc_header_name_id)
+			shared_include_queue_put ({PREDEFINED_NAMES}.eif_misc_header_name_id)
 		end
 
 	generate_set_bit (buffer: GENERATION_BUFFER; target: REGISTRABLE; parameters: BYTE_LIST [PARAMETER_B])
@@ -1152,7 +1152,7 @@ feature {NONE} -- C code generation
 			buffer.put_character (')')
 
 				-- Add `eif_misc.h' for C compilation where all bit functions are declared.
-			shared_include_queue.put ({PREDEFINED_NAMES}.eif_misc_header_name_id)
+			shared_include_queue_put ({PREDEFINED_NAMES}.eif_misc_header_name_id)
 		end
 
 	generate_set_bit_with_mask (buffer: GENERATION_BUFFER; target: REGISTRABLE; parameters: BYTE_LIST [PARAMETER_B])
@@ -1177,7 +1177,7 @@ feature {NONE} -- C code generation
 			buffer.put_character (')')
 
 				-- Add `eif_misc.h' for C compilation where all bit functions are declared.
-			shared_include_queue.put ({PREDEFINED_NAMES}.eif_misc_header_name_id)
+			shared_include_queue_put ({PREDEFINED_NAMES}.eif_misc_header_name_id)
 		end
 
 	generate_zero (buffer: GENERATION_BUFFER; type_of_basic: INTEGER)

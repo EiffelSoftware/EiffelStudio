@@ -296,7 +296,7 @@ feature -- C code generation
 			type.c_type.generate_cast (buf)
 			if is_real_comparison then
 					-- Add "eif_helpers.h" for C declaration of the various comparison routine.
-				shared_include_queue.put ({PREDEFINED_NAMES}.eif_helpers_header_name_id)
+				shared_include_queue_put ({PREDEFINED_NAMES}.eif_helpers_header_name_id)
 				generate_real_comparison_routine_name (buf)
 				buf.put_two_character (' ', '(')
 				left.print_register

@@ -879,7 +879,7 @@ feature -- Generation
 			end
 
 				-- clean the list of shared include files
-			shared_include_queue.wipe_out
+			shared_include_queue_wipe_out
 		end
 
 	generate_feature (f: FEATURE_I; buffer, header_buffer: GENERATION_BUFFER)

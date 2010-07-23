@@ -64,25 +64,42 @@ feature -- Settings
 			-- Generate header files in `buffer'.
 		require
 			buffer_exists: buffer /= Void
-			shared_include_queue_not_void: shared_include_queue /= Void
 		local
-			queue: like shared_include_queue
+			l_queue: like shared_include_queue
 			l_names_heap: like Names_heap
+			l_list: ARRAYED_LIST [INTEGER]
+			l_table: like shared_unicity_of_includes
+			l_header_id: INTEGER
 		do
-			queue := shared_include_queue
-			if not queue.is_empty then
+			l_queue := shared_include_queue
+			if not l_queue.is_empty then
 				l_names_heap := Names_heap
+				l_table := shared_unicity_of_includes
+				l_table.wipe_out
 				from
-					queue.start
+					l_queue.start
 				until
-					queue.after
+					l_queue.after
 				loop
-					buffer.put_new_line
-					buffer.put_string ("#include ")
-					buffer.put_string (l_names_heap.item (queue.item_for_iteration))
-					queue.forth
+					from
+						l_list := l_queue.item_for_iteration
+						l_list.start
+					until
+						l_list.after
+					loop
+						l_header_id := l_list.item
+						l_table.search (l_header_id)
+						if not l_table.found then
+							l_table.put (l_header_id)
+							buffer.put_new_line
+							buffer.put_string ("#include ")
+							buffer.put_string (l_names_heap.item (l_header_id))
+						end
+						l_list.forth
+					end
+					l_queue.forth
 				end
-				queue.wipe_out
+				l_queue.wipe_out
 			end
 		end
 

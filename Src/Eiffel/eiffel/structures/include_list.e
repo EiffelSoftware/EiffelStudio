@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {INCLUDE_LIST}."
+	description: "List of INTEGERs which is HASHABLE. The hash_code is based on the first element."
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 

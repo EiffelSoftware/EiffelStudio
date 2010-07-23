@@ -542,6 +542,7 @@ test	svalid-inherited-agent-with-formal-switch	svalid025 tcf pass system-validit
 test	svalid-redefined-precursor-not-checked	svalid026 tcf fail system-validity
 test	svalid-conversion-forget		svalid027 tcf fail system-validity conversion
 test	svalid-generic-rename-with-alias	svalid028 tcf fail system-validity generic rename
+test	svalid-inherited-renamed-prefix		svalid029 tcf fail system-validity rename
 
 -- Catcall tests
 test	simple-catcall				catcall001 tcf pass catcall

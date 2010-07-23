@@ -584,14 +584,26 @@ feature {NONE} -- IL code generation
 			-- Generate hash-code for current basic type at top of evaluation stack.
 		require
 			type_not_void: type /= Void
+		local
+			l_else_label, l_end_label: IL_LABEL
 		do
 			inspect
 				type_of (type)
 			when boolean_type_id then
-					-- Remove top of type (i.e. boolean value)
-					-- and put `1' instead.
-				il_generator.pop
+					-- We generate the code below
+					-- if Current then
+					--	Result := 1
+					-- else
+					--	Result := 0
+					-- end
+				l_else_label := il_generator.create_label
+				l_end_label := il_generator.create_label
+				il_generator.branch_on_true (l_else_label)
+				il_generator.put_integer_32_constant (0)
+				il_generator.branch_to (l_end_label)
+				il_generator.mark_label (l_else_label)
 				il_generator.put_integer_32_constant (1)
+				il_generator.mark_label (l_end_label)
 
 			else
 					-- Convert type on stack to an integer and applies

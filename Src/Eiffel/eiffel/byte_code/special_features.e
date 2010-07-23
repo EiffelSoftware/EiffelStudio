@@ -801,7 +801,9 @@ feature {NONE} -- C code generation
 			inspect
 				type_of_basic
 			when boolean_type_id then
-				buffer.put_string ("1L")
+				buffer.put_character ('(')
+				target.print_register
+				buffer.put_string (" ? 1L : 0L)")
 			when character_type_id then
 				buffer.put_string ("(EIF_INTEGER_32) (")
 				target.print_register

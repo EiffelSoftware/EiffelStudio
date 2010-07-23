@@ -1,15 +1,24 @@
 test_name	 inherited-binary-with-generic
 test_description Type of a binary expression should be correctly computed in inherited code.
 
+define EXPORT	"{NONE}"
 copy_sub 	Ace $TEST Ace
 copy_raw 	test.e $CLUSTER test.e
 copy_raw 	a.e $CLUSTER a.e
-copy_raw 	b.e $CLUSTER b.e
-copy_raw 	c.e $CLUSTER c.e
+copy_sub 	b.e $CLUSTER b.e
+copy_sub 	c.e $CLUSTER c.e
 copy_raw 	d.e $CLUSTER d.e
 
 compile_melted
+compile_result	validity_error TEST VUEX(2)
+
+define EXPORT	""
+copy_sub 	b.e $CLUSTER b.e
+copy_sub	c.e	$CLUSTER c.e
+
+resume_compile
 compile_result	ok
+
 execute_work	NONE exec_output
 execute_result	ok
 compare		exec_output output

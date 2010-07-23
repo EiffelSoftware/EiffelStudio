@@ -6,7 +6,7 @@ inherit
 			h
 		end
 
-feature {NONE} -- Test
+feature $EXPORT -- Test
 
 	h (a: I; b: J)
 		do

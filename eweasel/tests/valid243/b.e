@@ -13,6 +13,8 @@ feature {NONE} -- Test
 		do
 		end
 
+feature $EXPORT -- Test
+
 	t (a: H): BOOLEAN
 		do
 			Result := True

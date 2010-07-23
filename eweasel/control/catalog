@@ -1161,6 +1161,7 @@ test	finalize-inline-check-void-target	final088 tcf fail finalizing
 test	finalize-qat-object-test		final089 tcf fail finalizing anchored_type
 test	finalize-attached-dcr-missing	final090 tcf pass finalizing
 test	finalize-inline-same-generic-derivation-crash	final091 tcf fail finalizing
+test	finalize-c-code-redeclared-identifier	final092 tcf fail finalizing
 
 -- Runtime
 test	gc-tracking-001					runtime001	tcf pass runtime

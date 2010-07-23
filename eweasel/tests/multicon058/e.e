@@ -1,0 +1,4 @@
+class
+	E
+
+end

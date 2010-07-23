@@ -1,0 +1,22 @@
+test_name	 inherited-unary-with-generic
+test_description Type of a unary expression should be correctly computed in inherited code instead of reporting a wrong VWOE error.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	a.e $CLUSTER a.e
+copy_raw 	b.e $CLUSTER b.e
+copy_raw 	c.e $CLUSTER c.e
+copy_raw 	d.e $CLUSTER d.e
+copy_raw 	e.e $CLUSTER e.e
+copy_raw 	f.e $CLUSTER f.e
+
+
+compile_melted
+compile_result	ok
+
+execute_work	NONE exec_output
+execute_result	ok
+compare		exec_output output
+
+
+test_end

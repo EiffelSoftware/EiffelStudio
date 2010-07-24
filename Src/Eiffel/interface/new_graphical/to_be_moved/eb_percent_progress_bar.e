@@ -81,7 +81,7 @@ feature -- Element change
 		local
 			l_upper, l_value, l_new_value: INTEGER
 		do
-			l_upper := range.upper
+			l_upper := range.upper.max (1)
 			l_value := (value * 100) // l_upper
 			l_new_value := (a_value * 100) // l_upper
 

@@ -70,6 +70,16 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Properties
 	value: STRING
 			-- Real string value.
 
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Roundtrip/Text
+
+	string_text (a_match_list: LEAF_AS_LIST): STRING
+			-- Text of the string part (not including the type)
+		require
+			a_match_list_attached: a_match_list /= Void
+		do
+			Result := a_match_list.text (create {ERT_TOKEN_REGION}.make (index, index))
+		end
+
 feature -- Settings
 
 	set_is_once_string (v: like is_once_string)

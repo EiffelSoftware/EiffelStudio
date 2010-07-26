@@ -156,13 +156,13 @@ feature -- Roundtrip: process leaf
 	process_string_as (l_as: STRING_AS)
 		do
 			Precursor (l_as)
-			put_string (l_as)
+			context.add_string (l_as.string_text (match_list))
 		end
 
 	process_verbatim_string_as (l_as: VERBATIM_STRING_AS)
 		do
 			Precursor (l_as)
-			put_string (l_as)
+			context.add_string (l_as.string_text (match_list))
 		end
 
 	process_current_as (l_as: CURRENT_AS)

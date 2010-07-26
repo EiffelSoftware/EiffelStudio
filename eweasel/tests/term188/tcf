@@ -1,0 +1,17 @@
+
+test_name 	 static-access-on-generic-in-inspect
+test_description A static access on a formal generic that occurs in a when clause of an inspect instruction crashes the compiler in degree 3 in {INSPECT_CONTROL}.process_static_access_as.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test1.e $CLUSTER test1.e
+copy_raw	test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result	ok
+
+execute_work	NONE exec_output_m
+execute_result	ok
+compare		exec_output_m output
+
+test_end

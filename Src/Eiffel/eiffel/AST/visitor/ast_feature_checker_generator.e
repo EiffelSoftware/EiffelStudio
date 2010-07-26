@@ -3930,6 +3930,7 @@ feature {NONE} -- Implementation
 			l_as_not_void: l_as /= Void
 		local
 			l_prefix_feature: FEATURE_I
+			l_feature_type, l_last_feature_type: TYPE_A
 			l_prefix_feature_type, l_last_constrained: TYPE_A
 			l_last_class: CLASS_C
 			l_depend_unit: DEPEND_UNIT
@@ -3946,10 +3947,13 @@ feature {NONE} -- Implementation
 			l_formal: FORMAL_A
 			l_is_multi_constrained: BOOLEAN
 			l_type_set: TYPE_SET_A
+			l_result: LIST [TUPLE [feature_i: FEATURE_I; cl_type: RENAMED_TYPE_A [TYPE_A]]]
+			l_result_item: TUPLE [feature_i: FEATURE_I; cl_type: RENAMED_TYPE_A [TYPE_A]]
 			l_result_tuple: TUPLE[feature_item: FEATURE_I; class_type_of_feature: CL_TYPE_A; features_found_count: INTEGER]
 			l_context_current_class: CLASS_C
 			l_error_level: NATURAL_32
 			l_vtmc_error: VTMC
+			l_vtmc4: VTMC4
 		do
 			l_needs_byte_node := is_byte_node_enabled
 
@@ -3980,31 +3984,88 @@ feature {NONE} -- Implementation
 				if not last_type.is_attached and then is_void_safe_call (l_context_current_class) then
 					error_handler.insert_error (create {VUTA2}.make (context, last_type, l_as.operator_location))
 				end
-				if l_is_multi_constrained then
-					l_type_set := last_type.actual_type.to_type_set.constraining_types (l_context_current_class)
-					l_result_tuple := l_type_set.feature_i_state_by_alias_name (l_as.prefix_feature_name)
-					if l_result_tuple.features_found_count > 1 then
-						l_vtmc_error := new_vtmc_error (create {ID_AS}.initialize (l_as.prefix_feature_name),
-								l_formal.position, l_context_current_class, True)
-						l_vtmc_error.set_location (l_as.operator_location)
-						error_handler.insert_error (l_vtmc_error)
-					elseif l_result_tuple.features_found_count = 1 then
-						l_prefix_feature := l_result_tuple.feature_item
-						l_last_constrained := l_result_tuple.class_type_of_feature
-						l_last_class := l_last_constrained.associated_class
-						last_calls_target_type := l_last_constrained
-					end
-				else
-					check l_last_constrained /= Void end
-					if  l_last_constrained.is_none then
-							-- If we have a formal constrained to NONE it should already be checked earlier.
+
+				if not l_is_multi_constrained then
+					check has_constrained: l_last_constrained /= Void end
+						-- Check if target is not of type NONE
+					if l_last_constrained.is_none then
 						create l_vuex.make_for_none (l_as.prefix_feature_name)
 						context.init_error (l_vuex)
 						l_vuex.set_location (l_as.expr.end_location)
 						error_handler.insert_error (l_vuex)
+					end
+				end
+
+				if error_level = l_error_level then
+					if is_inherited then
+						if l_is_multi_constrained then
+								-- This code here is very similar to `process_access_feat_as'.
+								-- Note: We do not need to protect against TUPLE access here since
+								-- named tuples are not allowed in multiple-constraint.
+								-- We need to iterate through the type set to find the routine of ID													
+							l_type_set := context.current_class.constraints (l_formal.position)
+							l_type_set := l_type_set.constraining_types (context.current_class)
+							l_result := l_type_set.feature_i_list_by_rout_id (l_as.routine_ids.first)
+							check at_least_one_feature_found: l_result.count > 0 end
+									-- As we inherited this feature there's the possiblity that now,
+							from
+								l_result.start
+							until
+								l_result.after or l_vtmc4 /= Void or last_alias_error /= Void
+							loop
+								l_result_item := l_result.item
+								l_prefix_feature := l_result_item.feature_i
+								l_last_constrained := l_result_item.cl_type.type
+								l_last_class := l_last_constrained.associated_class
+								check_prefix_feature (l_prefix_feature, l_last_class)
+								l_result.forth
+									-- We inherited this feature.
+								if last_alias_error = Void then
+									l_feature_type := l_prefix_feature.type
+									l_feature_type := l_prefix_feature.type.formal_instantiation_in
+										(last_type.as_implicitly_detachable,
+										l_last_constrained.as_implicitly_detachable,
+										l_last_class.class_id).actual_type
+									if 	l_last_feature_type = Void then
+										l_last_feature_type := l_feature_type
+									elseif not l_last_feature_type.same_as (l_feature_type) then
+											-- The two features have redefined their return type differently.
+											-- We don't allow this: Add an error, but continue checking as this only an additional
+											-- check and does not break anything else.
+											-- Note: If `like Current' is the type of the feature this is ok, as the type is adapted to the formal.
+										create l_vtmc4
+										l_vtmc4.set_class (context.current_class)
+										l_vtmc4.set_written_class (system.class_of_id (l_as.class_id))
+										l_vtmc4.set_feature (context.current_feature)
+										l_vtmc4.set_location (l_as.start_location)
+										l_vtmc4.set_feature_info (l_result)
+										error_handler.insert_error (l_vtmc4)
+									end
+								end
+							end
+						else
+							l_last_class := l_last_constrained.associated_class
+							l_prefix_feature := l_last_class.feature_of_rout_id (l_as.routine_ids.first)
+						end
 					else
-						l_last_class := l_last_constrained.associated_class
-						l_prefix_feature := l_last_class.feature_table.alias_item (l_as.prefix_feature_name)
+						if l_is_multi_constrained then
+							l_type_set := last_type.actual_type.to_type_set.constraining_types (l_context_current_class)
+							l_result_tuple := l_type_set.feature_i_state_by_alias_name (l_as.prefix_feature_name)
+							if l_result_tuple.features_found_count > 1 then
+								l_vtmc_error := new_vtmc_error (create {ID_AS}.initialize (l_as.prefix_feature_name),
+										l_formal.position, l_context_current_class, True)
+								l_vtmc_error.set_location (l_as.operator_location)
+								error_handler.insert_error (l_vtmc_error)
+							elseif l_result_tuple.features_found_count = 1 then
+								l_prefix_feature := l_result_tuple.feature_item
+								l_last_constrained := l_result_tuple.class_type_of_feature
+								l_last_class := l_last_constrained.associated_class
+								last_calls_target_type := l_last_constrained
+							end
+						else
+							l_last_class := l_last_constrained.associated_class
+							l_prefix_feature := l_last_class.feature_table.alias_item (l_as.prefix_feature_name)
+						end
 					end
 				end
 
@@ -4027,95 +4088,79 @@ feature {NONE} -- Implementation
 							set_routine_ids (l_prefix_feature.rout_id_set, l_as)
 						end
 
-							-- Export validity
-						if not (context.is_ignoring_export or l_prefix_feature.is_exported_for (l_last_class)) then
-							create l_vuex
-							context.init_error (l_vuex)
-							l_vuex.set_static_class (l_last_class)
-							l_vuex.set_exported_feature (l_prefix_feature)
-							l_vuex.set_location (l_as.operator_location)
-							error_handler.insert_error (l_vuex)
+							-- Validate the feature used as prefix operator.
+						check_prefix_feature (l_prefix_feature, l_last_class)
+
+						if last_alias_error /= Void then
+							last_alias_error.set_location (l_as.operator_location)
+							error_handler.insert_error (last_alias_error)
 						else
+								-- Suppliers update
+							if not is_inherited then
+								create l_depend_unit.make_with_level (l_last_class.class_id, l_prefix_feature, depend_unit_level)
+								context.supplier_ids.extend (l_depend_unit)
+							end
 
-							if
-								not System.do_not_check_vape and then is_checking_precondition and then
-								not current_feature.export_status.is_subset (l_prefix_feature.export_status)
-							then
-									-- In precondition and checking for vape
-								create l_vape
-								context.init_error (l_vape)
-								l_vape.set_exported_feature (current_feature)
-								l_vape.set_location (l_as.operator_location)
-								error_handler.insert_error (l_vape)
+								-- Assumes here that a prefix feature has no argument
+								-- Update the type stack; instantiate the result of the
+								-- refixed feature
+							l_prefix_feature_type := l_prefix_feature.type
+							if l_last_constrained.is_bit and then l_prefix_feature_type.is_like_current then
+									-- For feature prefix "not" of symbolic class BIT_REF.
+								l_prefix_feature_type := l_last_constrained
 							else
-
-									-- Suppliers update
-								if not is_inherited then
-									create l_depend_unit.make_with_level (l_last_class.class_id, l_prefix_feature, depend_unit_level)
-									context.supplier_ids.extend (l_depend_unit)
-								end
-
-									-- Assumes here that a prefix feature has no argument
-									-- Update the type stack; instantiate the result of the
-									-- refixed feature
-								l_prefix_feature_type := l_prefix_feature.type
-								if l_last_constrained.is_bit and then l_prefix_feature_type.is_like_current then
-										-- For feature prefix "not" of symbolic class BIT_REF.
-									l_prefix_feature_type := l_last_constrained
-								else
-									if l_as.is_minus then
-											-- Let's say if it is a special case the negation of a positive
-											-- value in which case we maintain the type of the expression.
-											-- E.g. -127 is of type INTEGER_8, not of type INTEGER
-											--      -128 is of type INTEGER_16, since 128 is an INTEGER_16
-											--      -511 is of type INTEGER_16, not of type INTEGER
-											--
-											-- FIXME: Manu 02/06/2004: we do not attempt here to ensure
-											-- that `-128' is of type INTEGER_8. We will have to wait for ETL3
-											-- to tell us what we need to do. The current behavior preserve
-											-- compatibility with older version of Eiffel (5.4 and earlier).
-										l_manifest ?= l_last_constrained
-										l_value ?= l_as.expr
-										if l_value /= Void and l_manifest /= Void then
-											l_prefix_feature_type := l_last_constrained
-										else
-												-- Usual case
-											l_prefix_feature_type := l_prefix_feature_type.formal_instantiation_in
-															(last_type.as_implicitly_detachable, l_last_constrained.as_implicitly_detachable, l_last_class.class_id).actual_type
-										end
+								if l_as.is_minus then
+										-- Let's say if it is a special case the negation of a positive
+										-- value in which case we maintain the type of the expression.
+										-- E.g. -127 is of type INTEGER_8, not of type INTEGER
+										--      -128 is of type INTEGER_16, since 128 is an INTEGER_16
+										--      -511 is of type INTEGER_16, not of type INTEGER
+										--
+										-- FIXME: Manu 02/06/2004: we do not attempt here to ensure
+										-- that `-128' is of type INTEGER_8. We will have to wait for ETL3
+										-- to tell us what we need to do. The current behavior preserve
+										-- compatibility with older version of Eiffel (5.4 and earlier).
+									l_manifest ?= l_last_constrained
+									l_value ?= l_as.expr
+									if l_value /= Void and l_manifest /= Void then
+										l_prefix_feature_type := l_last_constrained
 									else
 											-- Usual case
 										l_prefix_feature_type := l_prefix_feature_type.formal_instantiation_in
 														(last_type.as_implicitly_detachable, l_last_constrained.as_implicitly_detachable, l_last_class.class_id).actual_type
 									end
+								else
+										-- Usual case
+									l_prefix_feature_type := l_prefix_feature_type.formal_instantiation_in
+													(last_type.as_implicitly_detachable, l_last_constrained.as_implicitly_detachable, l_last_class.class_id).actual_type
 								end
-								if l_is_assigner_call then
-									process_assigner_command (last_type, l_last_constrained, l_prefix_feature)
-								end
-
-								if l_needs_byte_node then
-									l_access := l_prefix_feature.access (l_prefix_feature_type, True)
-										-- If we have something like `a.f' where `a' is predefined
-										-- and `f' is a constant then we simply generate a byte
-										-- node that will be the constant only. Otherwise if `a' is
-										-- not predefined and `f' is a constant, we generate the
-										-- complete evaluation `a.f'. However during generation,
-										-- we will do an optimization by hardwiring value of constant.
-									if l_is_multi_constrained then
-										l_access.set_multi_constraint_static (last_calls_target_type)
-									end
-									if not (l_access.is_constant and l_expr.is_predefined) then
-										l_unary := byte_anchor.unary_node (l_as)
-										l_unary.set_expr (l_expr)
-										l_unary.init (l_access)
-										last_byte_node := l_unary
-									else
-										last_byte_node := l_access
-									end
-								end
-
-								last_type := l_prefix_feature_type
 							end
+							if l_is_assigner_call then
+								process_assigner_command (last_type, l_last_constrained, l_prefix_feature)
+							end
+
+							if l_needs_byte_node then
+								l_access := l_prefix_feature.access (l_prefix_feature_type, True)
+									-- If we have something like `a.f' where `a' is predefined
+									-- and `f' is a constant then we simply generate a byte
+									-- node that will be the constant only. Otherwise if `a' is
+									-- not predefined and `f' is a constant, we generate the
+									-- complete evaluation `a.f'. However during generation,
+									-- we will do an optimization by hardwiring value of constant.
+								if l_is_multi_constrained then
+									l_access.set_multi_constraint_static (last_calls_target_type)
+								end
+								if not (l_access.is_constant and l_expr.is_predefined) then
+									l_unary := byte_anchor.unary_node (l_as)
+									l_unary.set_expr (l_expr)
+									l_unary.init (l_access)
+									last_byte_node := l_unary
+								else
+									last_byte_node := l_access
+								end
+							end
+
+							last_type := l_prefix_feature_type
 						end
 					end
 				end
@@ -4214,9 +4259,9 @@ feature {NONE} -- Implementation
 		local
 			l_infix_type: TYPE_A
 			l_left_type, l_right_type: TYPE_A
+			l_feature_type, l_last_feature_type: TYPE_A
 			l_right_constrained, l_left_constrained: TYPE_A
 			l_target_type: TYPE_A
-			l_formal: FORMAL_A
 			l_left_id: INTEGER
 			l_depend_unit: DEPEND_UNIT
 			l_vuex: VUEX
@@ -4234,6 +4279,10 @@ feature {NONE} -- Implementation
 			l_error_level: NATURAL_32
 			l_arg_types: ARRAY [TYPE_A]
 			l_parameters: EIFFEL_LIST [EXPR_AS]
+			l_result: LIST [TUPLE [feature_i: FEATURE_I; cl_type: RENAMED_TYPE_A [TYPE_A]]]
+			l_result_item: TUPLE [feature_i: FEATURE_I; cl_type: RENAMED_TYPE_A [TYPE_A]]
+			l_type_set: TYPE_SET_A
+			l_vtmc4: VTMC4
 		do
 			l_needs_byte_node := is_byte_node_enabled
 			l_context_current_class := context.current_class
@@ -4248,8 +4297,7 @@ feature {NONE} -- Implementation
 			l_as.left.process (Current)
 			if last_type /= Void then
 				l_left_type := last_type.actual_type
-				if l_left_type.is_formal then
-					l_formal ?= l_left_type
+				if l_left_type.is_formal and then attached {FORMAL_A} l_left_type as l_formal then
 					if l_formal.is_multi_constrained (l_context_current_class) then
 						l_is_left_multi_constrained := True
 					else
@@ -4286,8 +4334,7 @@ feature {NONE} -- Implementation
 							context.set_scope (s)
 						end
 						l_right_type := last_type.actual_type
-						if l_right_type.is_formal then
-							l_formal ?= l_right_type
+						if l_right_type.is_formal and then attached {FORMAL_A} l_right_type as l_formal then
 							if l_formal.is_multi_constrained (l_context_current_class) then
 								l_is_right_multi_constrained := True
 							else
@@ -4304,15 +4351,59 @@ feature {NONE} -- Implementation
 							-- Conformance: take care of constrained genericity and
 							-- of the balancing rule for the simple numeric types
 						if is_inherited then
-							if l_is_left_multi_constrained then
-									-- FIXME: We ought to do better for inherited multiconstraints.
-								l_class := system.class_of_id (l_as.class_id)
+							if l_is_left_multi_constrained and then attached {FORMAL_A} l_left_type as l_formal then
+									-- This code here is very similar to `process_access_feat_as'.
+									-- Note: We do not need to protect against TUPLE access here since
+									-- named tuples are not allowed in multiple-constraint.
+									-- We need to iterate through the type set to find the routine of ID													
+								l_type_set := context.current_class.constraints (l_formal.position)
+								l_type_set := l_type_set.constraining_types (context.current_class)
+								l_result := l_type_set.feature_i_list_by_rout_id (l_as.routine_ids.first)
+								check at_least_one_feature_found: l_result.count > 0 end
+										-- As we inherited this feature there's the possiblity that now,
+								from
+									l_result.start
+								until
+									l_result.after or l_vtmc4 /= Void or l_error /= Void
+								loop
+									l_result_item := l_result.item
+									last_alias_feature := l_result_item.feature_i
+									l_left_constrained := l_result_item.cl_type.type
+									l_class := l_left_constrained.associated_class
+									check_infix_feature (last_alias_feature, l_class, l_as.infix_function_name, l_left_type, l_left_constrained, l_right_type)
+									l_error := last_alias_error
+									l_result.forth
+										-- We inherited this feature.
+									if l_error = Void then
+										l_feature_type := last_alias_feature.type
+										l_feature_type := l_feature_type.formal_instantiation_in (l_left_type.as_implicitly_detachable, l_left_constrained.as_implicitly_detachable, l_class.class_id)
+										if l_feature_type.has_like_argument then
+											l_feature_type := l_feature_type.actual_argument_type (<<l_right_type>>)
+										end
+										l_feature_type := l_feature_type.actual_type
+										if 	l_last_feature_type = Void then
+											l_last_feature_type := l_feature_type
+										elseif not l_last_feature_type.same_as (l_feature_type) then
+												-- The two features have redefined their return type differently.
+												-- We don't allow this: Add an error, but continue checking as this only an additional
+												-- check and does not break anything else.
+												-- Note: If `like Current' is the type of the feature this is ok, as the type is adapted to the formal.
+											create l_vtmc4
+											l_vtmc4.set_class (context.current_class)
+											l_vtmc4.set_written_class (system.class_of_id (l_as.class_id))
+											l_vtmc4.set_feature (context.current_feature)
+											l_vtmc4.set_location (l_as.start_location)
+											l_vtmc4.set_feature_info (l_result)
+											error_handler.insert_error (l_vtmc4)
+										end
+									end
+								end
 							else
 								l_class := l_left_constrained.associated_class
+								last_alias_feature := l_class.feature_of_rout_id (l_as.routine_ids.first)
+								check_infix_feature (last_alias_feature, l_class, l_as.infix_function_name, l_left_type, l_left_constrained, l_right_type)
+								l_error := last_alias_error
 							end
-							last_infix_feature := l_class.feature_of_rout_id (l_as.routine_ids.first)
-							check_infix_feature (last_infix_feature, l_class, l_as.infix_function_name, l_left_type, l_left_constrained, l_right_type)
-							l_error := last_infix_error
 						else
 							if is_infix_valid (l_left_type, l_right_type, l_as.infix_function_name) then
 								check last_calls_target_type /= Void end
@@ -4321,7 +4412,7 @@ feature {NONE} -- Implementation
 								end
 
 							else
-								l_error := last_infix_error
+								l_error := last_alias_error
 								if not is_inherited and then l_left_type.convert_to (context.current_class, l_right_type.deep_actual_type) then
 									l_target_conv_info := context.last_conversion_info
 									if is_infix_valid (l_right_type, l_right_type, l_as.infix_function_name) then
@@ -4335,7 +4426,7 @@ feature {NONE} -- Implementation
 							end
 						end
 
-						check no_error_implies_feature: l_error = Void implies last_infix_feature /= Void end
+						check no_error_implies_feature: l_error = Void implies last_alias_feature /= Void end
 
 						if l_error /= Void then
 								-- Raise error here
@@ -4365,8 +4456,8 @@ feature {NONE} -- Implementation
 									l_left_expr := l_target_conv_info.byte_node (l_left_expr)
 								end
 							else
-									l_left_id := l_left_constrained.associated_class.class_id
-									l_target_type := l_left_type
+								l_left_id := l_left_constrained.associated_class.class_id
+								l_target_type := l_left_type
 							end
 
 							if not l_target_type.is_attached and then is_void_safe_call (l_context_current_class) then
@@ -4375,14 +4466,14 @@ feature {NONE} -- Implementation
 
 							if not is_inherited then
 									-- Set type informations
-								set_routine_ids (last_infix_feature.rout_id_set, l_as)
+								set_routine_ids (last_alias_feature.rout_id_set, l_as)
 								l_as.set_class_id (l_left_id)
 								if context.current_class.is_cat_call_detection then
 									create l_arg_types.make (1, 1)
 									l_arg_types.put (l_right_type, 1)
 									create l_parameters.make (1)
 									l_parameters.extend (l_as.right)
-									check_cat_call (l_target_type, last_infix_feature, l_arg_types, l_as.left.start_location, l_parameters)
+									check_cat_call (l_target_type, last_alias_feature, l_arg_types, l_as.left.start_location, l_parameters)
 								end
 							end
 
@@ -4400,13 +4491,13 @@ feature {NONE} -- Implementation
 
 								-- Suppliers update
 							if not is_inherited then
-								create l_depend_unit.make_with_level (l_left_id, last_infix_feature, depend_unit_level)
+								create l_depend_unit.make_with_level (l_left_id, last_alias_feature, depend_unit_level)
 								context.supplier_ids.extend (l_depend_unit)
 							end
 
 								-- Update the type stack: instantiate result type of the
 								-- infixed feature
-							l_infix_type := last_infix_feature.type
+							l_infix_type := last_alias_feature.type
 							if
 								l_target_type.is_bit and then l_right_constrained.is_bit and then
 								l_infix_type.is_like_current
@@ -4424,7 +4515,7 @@ feature {NONE} -- Implementation
 							end
 
 							if l_is_assigner_call then
-								process_assigner_command (l_target_type, l_left_constrained, last_infix_feature)
+								process_assigner_command (l_target_type, l_left_constrained, last_alias_feature)
 							end
 
 							if l_needs_byte_node then
@@ -4432,7 +4523,7 @@ feature {NONE} -- Implementation
 								l_binary.set_left (l_left_expr)
 								l_binary.set_right (l_right_expr)
 
-								l_call_access ?= last_infix_feature.access (l_infix_type, True)
+								l_call_access ?= last_alias_feature.access (l_infix_type, True)
 									-- If we have a multi constrained formal we need to set the selected constrained type on which the call is done.
 								if l_is_left_multi_constrained then
 									l_call_access.set_multi_constraint_static (l_left_constrained.conformance_type)
@@ -4450,8 +4541,8 @@ feature {NONE} -- Implementation
 			if error_level /= l_error_level then
 				reset_types
 			end
-			last_infix_error := Void
-			last_infix_feature := Void
+			last_alias_error := Void
+			last_alias_feature := Void
 			last_infix_arg_type := Void
 			last_infix_argument_conversion_info := Void
 		end
@@ -8145,24 +8236,24 @@ feature {NONE} -- Implementation
 					end
 
 					l_vwoe.set_op_name (a_name)
-					last_infix_error := l_vwoe
+					last_alias_error := l_vwoe
 				else
 						-- Export validity
-					last_infix_feature := l_infix
+					last_alias_feature := l_infix
 					check_infix_feature (l_infix, l_class, a_name, a_left_type, l_last_constrained, a_right_type)
 				end
 			else
-				last_infix_error := l_vtmc_error
+				last_alias_error := l_vtmc_error
 			end
-			if last_infix_error /= Void then
-				last_infix_feature := Void
+			if last_alias_error /= Void then
+				last_alias_feature := Void
 				last_infix_arg_type := Void
 				last_infix_argument_conversion_info := Void
 			else
 				Result := True
 			end
 		ensure
-			last_calls_target_type_computed: last_infix_error = Void implies last_calls_target_type /= Void
+			last_calls_target_type_computed: last_alias_error = Void implies last_calls_target_type /= Void
 		end
 
 	check_infix_feature (a_feature: FEATURE_I; a_context_class: CLASS_C; a_name: STRING; a_left_type, a_left_constrained, a_right_type: TYPE_A)
@@ -8185,7 +8276,7 @@ feature {NONE} -- Implementation
 				context.init_error (l_vuex)
 				l_vuex.set_static_class (a_context_class)
 				l_vuex.set_exported_feature (a_feature)
-				last_infix_error := l_vuex
+				last_alias_error := l_vuex
 			else
 				if
 					not System.do_not_check_vape and then is_checking_precondition and then
@@ -8195,7 +8286,7 @@ feature {NONE} -- Implementation
 					create l_vape
 					context.init_error (l_vape)
 					l_vape.set_exported_feature (current_feature)
-					last_infix_error := l_vape
+					last_alias_error := l_vape
 				else
 						-- Conformance initialization
 						-- Argument conformance: infix feature must have one argument
@@ -8207,7 +8298,7 @@ feature {NONE} -- Implementation
 						if not is_inherited and then a_right_type.convert_to (context.current_class, l_arg_type.deep_actual_type) then
 							last_infix_argument_conversion_info := context.last_conversion_info
 							last_infix_arg_type := l_arg_type
-							last_infix_error := Void
+							last_alias_error := Void
 						else
 								-- No conformance on argument of infix
 							create l_vwoe1
@@ -8216,20 +8307,51 @@ feature {NONE} -- Implementation
 							l_vwoe1.set_op_name (a_name)
 							l_vwoe1.set_formal_type (l_arg_type)
 							l_vwoe1.set_actual_type (a_right_type)
-							last_infix_error := l_vwoe1
+							last_alias_error := l_vwoe1
 							last_infix_argument_conversion_info := Void
 						end
 					else
 						last_infix_arg_type := l_arg_type
-						last_infix_error := Void
+						last_alias_error := Void
 						last_infix_argument_conversion_info := Void
 					end
 				end
 			end
 		end
 
-	last_infix_error: ERROR
-	last_infix_feature: FEATURE_I
+	check_prefix_feature (a_feature: FEATURE_I; a_context_class: CLASS_C)
+				-- Check validity of `a_feature' for a prefix call.
+		require
+			a_feature_attached: a_feature /= Void
+			a_context_class_attached: a_context_class /= Void
+		local
+			l_vuex: VUEX
+			l_vape: VAPE
+		do
+			if not (context.is_ignoring_export or a_feature.is_exported_for (a_context_class)) then
+				create l_vuex
+				context.init_error (l_vuex)
+				l_vuex.set_static_class (a_context_class)
+				l_vuex.set_exported_feature (a_feature)
+				last_alias_error := l_vuex
+			else
+				if
+					not System.do_not_check_vape and then is_checking_precondition and then
+					not current_feature.export_status.is_subset (a_feature.export_status)
+				then
+						-- In precondition and checking for vape
+					create l_vape
+					context.init_error (l_vape)
+					l_vape.set_exported_feature (current_feature)
+					last_alias_error := l_vape
+				else
+					last_alias_error := Void
+				end
+			end
+		end
+
+	last_alias_error: ERROR
+	last_alias_feature: FEATURE_I
 	last_infix_arg_type: TYPE_A
 	last_infix_argument_conversion_info: CONVERSION_INFO
 			-- Helpers to perform type check and byte_node generation.

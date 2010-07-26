@@ -258,6 +258,12 @@ feature -- Context type
 				Result := Precursor {CALL_ACCESS_B}
 			else
 				Result := Context.real_type (precursor_type)
+				if Result.is_multi_constrained then
+					check
+						has_multi_constraint_static: has_multi_constraint_static
+					end
+					Result := context.real_type (multi_constraint_static)
+				end
 			end
 		end
 

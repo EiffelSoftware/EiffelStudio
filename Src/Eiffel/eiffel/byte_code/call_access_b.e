@@ -204,13 +204,21 @@ feature -- Byte code generation
 			rout_info: ROUT_INFO
 			buf: GENERATION_BUFFER
 			cl_type_i: CL_TYPE_A
+			l_type: TYPE_A
 			return_type: TYPE_C
 		do
 			is_nested := not is_first
 			buf := buffer
 
 			if precursor_type /= Void then
-				cl_type_i ?= context.real_type (precursor_type)
+				l_type := context.real_type (precursor_type)
+				if l_type.is_multi_constrained then
+					check
+						has_multi_constraint_static: has_multi_constraint_static
+					end
+					l_type := context.real_type (multi_constraint_static)
+				end
+				cl_type_i ?= l_type
 				check
 					cl_type_i_attached: cl_type_i /= Void
 				end

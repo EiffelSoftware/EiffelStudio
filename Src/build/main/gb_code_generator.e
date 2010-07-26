@@ -513,10 +513,10 @@ feature {NONE} -- Implementation
 						else
 							l_string := integer_constant.value_as_string
 						end
-						generated_constants_string := generated_constants_string + Indent_less_two + integer_constant.name + ": INTEGER is" +
+						generated_constants_string := generated_constants_string + Indent_less_two + integer_constant.name + ": INTEGER" +
 							indent + "-- `Result' is INTEGER constant named `" + integer_constant.name + "'." +
 							indent_less_one + "do" + indent + "Result := " + integer_constant.name + "_cell.item" + Indent_less_one + "end" + "%N" +
-							indent_less_two + integer_constant.name + "_cell" + ": CELL [INTEGER] is" + indent + "--`Result' is once access to a cell holding vale of `" + integer_constant.name + "'." +
+							indent_less_two + integer_constant.name + "_cell" + ": CELL [INTEGER]" + indent + "--`Result' is once access to a cell holding vale of `" + integer_constant.name + "'." +
 							indent_less_one + "once" + indent + "create Result.put (" + l_string + ")" + indent_less_one + "end" + "%N"
 					end
 					string_constant ?= constant
@@ -530,24 +530,24 @@ feature {NONE} -- Implementation
 						else
 							l_string := "%"" + escape_special_characters (string_constant.value_as_string) + "%""
 						end
-						generated_constants_string := generated_constants_string + Indent_less_two + string_constant.name + ": STRING is" +
-							indent + "-- `Result' is STRING constant named `" + string_constant.name + "'." +
+						generated_constants_string := generated_constants_string + Indent_less_two + string_constant.name + ": STRING_32" +
+							indent + "-- `Result' is STRING_32 constant named `" + string_constant.name + "'." +
 							indent_less_one + "do" + indent + "Result := " + string_constant.name + "_cell.item" + Indent_less_one + "end" + "%N" +
-							indent_less_two + string_constant.name + "_cell" + ": CELL [STRING] is" + indent + "--`Result' is once access to a cell holding vale of `" + string_constant.name + "'." +
+							indent_less_two + string_constant.name + "_cell" + ": CELL [STRING_32]" + indent + "--`Result' is once access to a cell holding vale of `" + string_constant.name + "'." +
 							indent_less_one + "once" + indent + "create Result.put (" + l_string + ")" + indent_less_one + "end" + "%N"
 					end
 					pixmap_constant ?= constant
 					if pixmap_constant /= Void then
 						if pixmap_constant.is_absolute then
-							generated_constants_string := generated_constants_string + Indent_less_two + pixmap_constant.name + ": EV_PIXMAP is" + Indent_less_one +
+							generated_constants_string := generated_constants_string + Indent_less_two + pixmap_constant.name + ": EV_PIXMAP" + Indent_less_one +
 							"once" + Indent + "Result := " + pixmap_constant.name + "_cell.item" + indent_less_one + "end" + "%N" +
-							indent_less_two + pixmap_constant.name + "_cell" + ": CELL [EV_PIXMAP] is" + indent + "--`Result' is once access to a cell holding vale of `" + pixmap_constant.name + "'." +
+							indent_less_two + pixmap_constant.name + "_cell" + ": CELL [EV_PIXMAP]" + indent + "--`Result' is once access to a cell holding vale of `" + pixmap_constant.name + "'." +
 							indent_less_one + "once" + indent + "create Result.put (create {EV_PIXMAP})" + Indent + "Result.item.set_with_named_file (%"" + pixmap_constant.value + "%")" + Indent_less_one + "end" + "%N"
 						else
-							generated_constants_string := generated_constants_string + Indent_less_two + pixmap_constant.name + ": EV_PIXMAP is" +
+							generated_constants_string := generated_constants_string + Indent_less_two + pixmap_constant.name + ": EV_PIXMAP" +
 							indent + "-- `Result' is EV_PIXMAP constant named `" + pixmap_constant.name + "'." + Indent_less_one +
 							"do" + Indent + "Result := " + pixmap_constant.name + "_cell.item" + indent_less_one + "end" + "%N" +
-							indent_less_two + pixmap_constant.name + "_cell" + ": CELL [EV_PIXMAP] is" + indent + "--`Result' is once access to a cell holding vale of `" + pixmap_constant.name + "'." +
+							indent_less_two + pixmap_constant.name + "_cell" + ": CELL [EV_PIXMAP]" + indent + "--`Result' is once access to a cell holding vale of `" + pixmap_constant.name + "'." +
 							Indent_less_one + "local" + indent + "a_file_name: FILE_NAME" + indent_less_one + "once" + Indent + "create Result.put (create {EV_PIXMAP})" + indent +
 							"create a_file_name.make_from_string (" + pixmap_constant.directory + ")" + Indent + "a_file_name.set_file_name (%"" + pixmap_constant.filename +"%")" +
 							indent + "set_with_named_file (Result.item, a_file_name)" + Indent_less_one + "end" + "%N"
@@ -555,26 +555,26 @@ feature {NONE} -- Implementation
 					end
 					directory_constant ?= constant
 					if directory_constant/= Void then
-						generated_constants_string := generated_constants_string + Indent_less_two + directory_constant.name + ": STRING is" +
+						generated_constants_string := generated_constants_string + Indent_less_two + directory_constant.name + ": STRING" +
 							indent + "-- `Result' is DIRECTORY constant named `" + directory_constant.name + "'." +
 							indent_less_one + "do" + indent + "Result := " + directory_constant.name + "_cell.item" + Indent_less_one + "end" + "%N" +
-							indent_less_two + directory_constant.name + "_cell" + ": CELL [STRING] is" + indent + "--`Result' is once access to a cell holding vale of `" + directory_constant.name + "'." +
+							indent_less_two + directory_constant.name + "_cell" + ": CELL [STRING]" + indent + "--`Result' is once access to a cell holding vale of `" + directory_constant.name + "'." +
 							indent_less_one + "once" + indent + "create Result.put (%"" + directory_constant.value_as_string + "%")" + Indent_less_one + "end" + "%N"
 					end
 					color_constant ?= constant
 					if color_constant /= Void then
-						generated_constants_string := generated_constants_string + Indent_less_two + color_constant.name + ": EV_COLOR is" +
+						generated_constants_string := generated_constants_string + Indent_less_two + color_constant.name + ": EV_COLOR" +
 							indent + "-- `Result' is EV_COLOR constant named `" + color_constant.name + "'." +
 							indent_less_one + "do" + indent + "Result := " + color_constant.name + "_cell.item" + Indent_less_one + "end" + "%N" +
-							indent_less_two + color_constant.name + "_cell" + ": CELL [EV_COLOR] is" + indent + "--`Result' is once access to a cell holding vale of `" + color_constant.name + "'." +
+							indent_less_two + color_constant.name + "_cell" + ": CELL [EV_COLOR]" + indent + "--`Result' is once access to a cell holding vale of `" + color_constant.name + "'." +
 							indent_less_one + "once" + indent + "create Result.put (create {EV_COLOR}.make_with_8_bit_rgb (" + color_constant.value.red_8_bit.out + ", " + color_constant.value.green_8_bit.out + ", " + color_constant.value.blue_8_bit.out + "))" + indent_less_one + "end" + "%N"
 					end
 					font_constant ?= constant
 					if font_constant /= Void then
-							generated_constants_string := generated_constants_string + Indent_less_two + font_constant.name + ": EV_FONT is" +
+							generated_constants_string := generated_constants_string + Indent_less_two + font_constant.name + ": EV_FONT" +
 							indent + "-- `Result' is EV_FONT constant named `" + font_constant.name + "'." +
 							indent_less_one + "do" + indent + "Result := " + font_constant.name + "_cell.item" + Indent_less_one + "end" + "%N" +
-							indent_less_two + font_constant.name + "_cell" + ": CELL [EV_FONT] is" + indent + "--`Result' is once access to a cell holding vale of `" + font_constant.name + "'." +
+							indent_less_two + font_constant.name + "_cell" + ": CELL [EV_FONT]" + indent + "--`Result' is once access to a cell holding vale of `" + font_constant.name + "'." +
 							indent_less_one + "once" +	indent + "create Result.put (create {EV_FONT})" + Indent +
 							"Result.item.set_family ({EV_FONT_CONSTANTS}."
 

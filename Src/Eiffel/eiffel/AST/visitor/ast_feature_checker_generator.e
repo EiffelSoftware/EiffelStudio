@@ -3936,7 +3936,6 @@ feature {NONE} -- Implementation
 			l_depend_unit: DEPEND_UNIT
 			l_vwoe: VWOE
 			l_vuex: VUEX
-			l_vape: VAPE
 			l_manifest: MANIFEST_INTEGER_A
 			l_value: ATOMIC_AS
 			l_needs_byte_node: BOOLEAN

@@ -1,0 +1,11 @@
+
+test_name	config-invalid-root-type
+test_description An invalid root type, such as a generic class with not enough actual generic parameters, should be detected and reported as an error.
+
+copy_sub 	Ace $TEST Ace
+copy_raw	test.e $CLUSTER	test.e
+
+compile_melted
+compile_result	validity_error NONE V???
+
+test_end

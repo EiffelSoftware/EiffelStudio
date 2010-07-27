@@ -181,7 +181,7 @@ feature {NONE} -- Status report
 			l_retried: BOOLEAN
 		do
 			if not l_retried then
-				if not a_code_page.is_case_insensitive_equal (utf8) then
+				if not a_code_page.is_case_insensitive_equal ({CODE_PAGE_CONSTANTS}.utf8) then
 					Result := c_codeset_valid (a_code_page, $l_error)
 					if l_error /= 0 then
 						conversion_exception (l_error).raise

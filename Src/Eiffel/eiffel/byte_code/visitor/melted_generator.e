@@ -759,6 +759,7 @@ feature {NONE} -- Visitors
 			l_expr_address_b: EXPR_ADDRESS_B
 			l_nb_expr_address: INTEGER
 			l_pos, r_id: INTEGER
+			l_type: TYPE_A
 			l_cl_type: CL_TYPE_A
 			l_is_in_creation_call: like is_in_creation_call
 			l_rout_info: ROUT_INFO
@@ -823,7 +824,15 @@ feature {NONE} -- Visitors
 
 			if a_node.is_static_call then
 				ba.append (bc_current)
-				l_cl_type ?= context.real_type (a_node.static_class_type)
+				l_type := context.real_type (a_node.static_class_type)
+				if l_type.is_multi_constrained then
+					check
+						has_multi_constraint_static: a_node.has_multi_constraint_static
+					end
+					l_type := Context.real_type (a_node.multi_constraint_static)
+				end
+				l_cl_type ?= l_type
+				check has_class_type: l_cl_type /= Void end
 				if l_cl_type.associated_class.is_precompiled then
 					r_id := a_node.routine_id
 					l_rout_info := System.rout_info_table.item (r_id)
@@ -2394,12 +2403,17 @@ feature {NONE} -- Implementation
 	make_precursor_byte_code (a_node: CALL_ACCESS_B)
 			-- Generate precursor byte code if needed.
 		local
-			l_cl_type: CL_TYPE_A
+			l_type: TYPE_A
 		do
 			if a_node.precursor_type /= Void then
-				l_cl_type ?= context.real_type (a_node.precursor_type)
-				check l_cl_type_not_void: l_cl_type /= Void end
-				ba.append_short_integer (l_cl_type.static_type_id (context.context_class_type.type) - 1)
+				l_type := context.real_type (a_node.precursor_type)
+				if l_type.is_multi_constrained then
+					check
+						has_multi_constraint_static: a_node.has_multi_constraint_static
+					end
+					l_type := context.real_type (a_node.multi_constraint_static)
+				end
+				ba.append_short_integer (l_type.static_type_id (context.context_class_type.type) - 1)
 			else
 				ba.append_short_integer (-1)
 			end

@@ -84,15 +84,14 @@ feature -- Scann
 			end
 		end
 
-feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Scann
-
 	scan_string (a_string: STRING)
 			-- Scan `a_string'.
-			-- `a_string' is UTF-8 string.
+			-- Encoding is detected according to BOM.
+			-- Otherwise defaults to ASCII.
 		require
 			a_string_not_void: a_string /= Void
 		do
-			create input_buffer.make (a_string)
+			input_buffer := encoding_converter.input_buffer_from_string (a_string, Void)
 			yy_load_input_buffer
 			scan
 		ensure

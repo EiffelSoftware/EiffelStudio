@@ -8,12 +8,12 @@ inherit
 	ARGUMENTS
 
 	KL_SHARED_EXECUTION_ENVIRONMENT
-	
+
 	ENCODING_CONVERTER
 		rename
 			make as make_encoding
 		end
-	
+
 	SHARED_ENCODING_CONVERTER
 
 	INTERNAL_COMPILER_STRING_EXPORTER
@@ -26,7 +26,6 @@ feature {NONE} -- Initialization
 	make is
 		do
 			make_encoding
-			set_encoding_converter (Current)
 			test_roundtrip := False
 
 			create {AST_NULL_FACTORY} factory
@@ -99,13 +98,13 @@ feature {NONE} -- Implementation
 					elseif test_roundtrip or test_roundtrip_scanner then
 						if test_roundtrip then
 							output := generated_text (parser.root_node, parser.match_list)
-							res := file.last_string.is_equal (output)
+							res := compare_output (parser, file.last_string, output)
 						else
 							res := True
 						end
 						if res and test_roundtrip_scanner then
 							output := generated_text (parser.root_node, scanner.match_list)
-							res := file.last_string.is_equal (output)
+							res := compare_output (parser, file.last_string, output)
 						end
 						if not res then
 							create file_system
@@ -135,6 +134,7 @@ feature {NONE} -- Implementation
 			a_parser_not_void: a_parser /= Void
 			a_buffer_not_void: a_buffer /= Void
 		do
+			a_parser.error_handler.wipe_out
 				-- First we do it using the old conventions.
 			if a_scanner /= Void then
 				a_scanner.set_syntax_version ({EIFFEL_PARSER}.obsolete_64_syntax)
@@ -143,6 +143,7 @@ feature {NONE} -- Implementation
 			a_parser.set_syntax_version ({EIFFEL_PARSER}.obsolete_64_syntax)
 			a_parser.parse_class_from_string (a_buffer, Void, Void)
 			if a_parser.error_handler.has_error then
+				a_parser.error_handler.wipe_out
 					-- There was an error, let's try to see if the code is using transitional syntax.
 				if a_scanner /= Void then
 					a_scanner.set_syntax_version ({EIFFEL_PARSER}.transitional_64_syntax)
@@ -151,6 +152,7 @@ feature {NONE} -- Implementation
 				a_parser.set_syntax_version ({EIFFEL_PARSER}.transitional_64_syntax)
 				a_parser.parse_class_from_string (a_buffer, Void, Void)
 				if a_parser.error_handler.has_error then
+					a_parser.error_handler.wipe_out
 						-- Still an error, let's try to see if the code is already using `attribute'.
 					if a_scanner /= Void then
 						a_scanner.set_syntax_version ({EIFFEL_PARSER}.ecma_syntax)
@@ -223,6 +225,29 @@ feature {NONE} -- Implementation
 
 feature {NONE}
 
+	compare_output (a_parser: EIFFEL_PARSER; a_str_from_file, a_output: STRING): BOOLEAN
+			-- Compare the content from `a_str_from_file' with `a_output'
+			-- Convert `a_str_from_file' to UTF-8 before hand according to last parsing result.
+		require
+			a_parser_not_void: a_parser /= Void
+			a_str_from_file_not_void: a_str_from_file /= Void
+			a_output_not_void: a_output /= Void
+		local
+			l_s: STRING
+		do
+			create l_s.make_from_string (a_str_from_file)
+			if attached a_parser.detected_bom as l_bom then
+				l_s := l_s.substring (l_bom.count + 1, l_s.count)
+			end
+			if attached a_parser.detected_encoding as l_encoding then
+				l_encoding.convert_to (utf8, l_s)
+				if l_encoding.last_conversion_successful then
+					l_s := l_encoding.last_converted_stream
+				end
+			end
+			Result := l_s.is_equal (a_output)
+		end
+
 	error_count: INTEGER
 
 	test_roundtrip: BOOLEAN
@@ -234,5 +259,5 @@ feature {NONE}
 			-- Factory being used for parsing.
 
 	light_factory: AST_ROUNDTRIP_LIGHT_FACTORY
-		
+
 end -- class PARSER_TEST

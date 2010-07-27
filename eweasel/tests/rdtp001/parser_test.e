@@ -98,13 +98,13 @@ feature {NONE} -- Implementation
 					elseif test_roundtrip or test_roundtrip_scanner then
 						if test_roundtrip then
 							output := generated_text (parser.root_node, parser.match_list)
-							res := compare_output (parser, file.last_string, output)
+							res := compare_output (file.last_string, output)
 						else
 							res := True
 						end
 						if res and test_roundtrip_scanner then
 							output := generated_text (parser.root_node, scanner.match_list)
-							res := compare_output (parser, file.last_string, output)
+							res := compare_output (file.last_string, output)
 						end
 						if not res then
 							create file_system
@@ -225,26 +225,16 @@ feature {NONE} -- Implementation
 
 feature {NONE}
 
-	compare_output (a_parser: EIFFEL_PARSER; a_str_from_file, a_output: STRING): BOOLEAN
+	compare_output (a_str_from_file, a_output: STRING): BOOLEAN
 			-- Compare the content from `a_str_from_file' with `a_output'
 			-- Convert `a_str_from_file' to UTF-8 before hand according to last parsing result.
 		require
-			a_parser_not_void: a_parser /= Void
 			a_str_from_file_not_void: a_str_from_file /= Void
 			a_output_not_void: a_output /= Void
 		local
 			l_s: STRING
 		do
-			create l_s.make_from_string (a_str_from_file)
-			if attached a_parser.detected_bom as l_bom then
-				l_s := l_s.substring (l_bom.count + 1, l_s.count)
-			end
-			if attached a_parser.detected_encoding as l_encoding then
-				l_encoding.convert_to (utf8, l_s)
-				if l_encoding.last_conversion_successful then
-					l_s := l_encoding.last_converted_stream
-				end
-			end
+			l_s := encoding_converter.utf8_string (a_str_from_file, Void)
 			Result := l_s.is_equal (a_output)
 		end
 

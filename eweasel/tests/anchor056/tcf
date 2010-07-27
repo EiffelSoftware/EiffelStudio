@@ -1,0 +1,13 @@
+
+test_name 	qat-generic-constrained-by-self
+test_description A generic class with a qualified anchored type that references the formal generic, where the formal generic is constrained by itself, causes the compiler to use more and more memory, presumably due to infinite recursion.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test1.e $CLUSTER test1.e
+
+compile_melted
+compile_result	ok
+
+test_end
+

@@ -2286,6 +2286,7 @@ test	multi-constraint-make-byte-code-crash			multicon055 tcf fail multiconstrain
 test	multi-constraint-static-access				multicon056 tcf fail multiconstraint
 test	multi-constraint-static-access-2			multicon057 tcf fail multiconstraint
 test	inherited-unary-with-generic				multicon058 tcf pass multiconstraint formal
+test	multi-constraint-real-type-in-crash			multicon059 tcf fail multiconstraint formal
 
 -- tests for expanded types
 test	expanded-array-attached-reference-array			expanded001 tcf pass expanded

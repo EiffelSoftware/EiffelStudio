@@ -10,6 +10,9 @@ class
 
 inherit
 	<INHERITED_CLASS_NAME>
+		redefine
+			create_interface_objects
+		end
 
 <CREATION>
 
@@ -22,6 +25,16 @@ feature {NONE} -- Initialization
 			-- (due to regeneration of implementation class)
 			-- can be added here.
 		do
+		end
+
+	create_interface_objects
+			-- <Precursor>
+		do
+				-- Initialize before calling Precursor all the attached attributes
+				-- from the current class.
+
+				-- Proceed with vision2 objects creation.
+			Precursor
 		end
 
 feature {NONE} -- Implementation

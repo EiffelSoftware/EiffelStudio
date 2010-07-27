@@ -1,4 +1,3 @@
-
 test_name 	 multi-constraint-static-access-2
 test_description A formal G that is constrained by two classes and which has static feature calls on G to constant attributes crashes the compiler in degree 2.
 
@@ -11,8 +10,30 @@ copy_raw	test4.e $CLUSTER test4.e
 compile_melted
 compile_result	ok
 
-execute_work 	NONE 	exec_output
+execute_work 	NONE 	exec_output_1
 execute_result 	ok
-compare		exec_output output
+compare		exec_output_1 output1
+
+copy_raw	test3_rev1.e $CLUSTER test3.e
+copy_raw	test2_rev1.e $CLUSTER test2.e
+
+compile_frozen
+compile_result ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work 	NONE 	exec_output_2
+execute_result 	ok
+compare		exec_output_2 output1
+
+copy_raw	test2_rev2.e $CLUSTER test2.e
+
+compile_melted
+compile_result	ok
+
+execute_work 	NONE 	exec_output_3
+execute_result 	ok
+compare		exec_output_3 output2
 
 test_end

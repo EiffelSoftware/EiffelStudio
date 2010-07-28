@@ -1,0 +1,17 @@
+
+test_name 	 rout-entry-crash
+test_description After the compiler reports a VLEC the expanded mark is removed from a generic class and compilation is resumed.  The compiler then crashes in {ROUT_ENTRY}.entry.
+
+define		EXPANDED "expanded"
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_sub 	test1.e $CLUSTER test1.e
+compile_melted
+compile_result 	validity_error TEST1 VLEC
+
+define		EXPANDED ""
+copy_sub 	test1.e $CLUSTER test1.e
+resume_compile
+compile_result 	ok
+
+test_end

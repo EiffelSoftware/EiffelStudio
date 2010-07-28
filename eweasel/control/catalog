@@ -1748,6 +1748,7 @@ test	config-nonstandard-source-extension	config017 tcf pass config
 test	config-keyword-root-class		config018 tcf fail config
 test	config-invalid-root-type		config019 tcf fail config
 test	config-invalid-actual-generic		config020 tcf fail config
+test	config-undetected-vlec			config021 tcf fail config
 
 -- Lace
 

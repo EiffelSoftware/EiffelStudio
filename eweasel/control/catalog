@@ -1751,6 +1751,7 @@ test	config-invalid-root-type		config019 tcf fail config
 test	config-invalid-actual-generic		config020 tcf fail config
 test	config-undetected-vlec			config021 tcf fail config
 test	config-invalid-vsrt2			config022 tcf fail config
+test	config-generic-root-type-extra-chars	config023 tcf fail config
 
 -- Lace
 

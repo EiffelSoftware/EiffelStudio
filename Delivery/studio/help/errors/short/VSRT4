@@ -1,0 +1,3 @@
+Configuration error: System's root type does not match constraints of the root base class.
+What to do: Make sure that the type actual generic parameters match the specification
+  from the root base class.

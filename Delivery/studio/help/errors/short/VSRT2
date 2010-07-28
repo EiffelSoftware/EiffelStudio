@@ -1,4 +1,4 @@
-Configuration error: The root type specified is invalid. 
+Configuration error: System's root type specified is invalid. 
 What to do: This error usually occurs if one uses complex cluster/library
 structures and possibly a generic root type. Ensure that all classes needed by
 the root type are accessible through the root cluster.

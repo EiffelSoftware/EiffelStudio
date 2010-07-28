@@ -6,6 +6,11 @@ copy_sub 	Ace $TEST Ace
 copy_raw	test.e $CLUSTER	test.e
 
 compile_melted
-compile_result	validity_error NONE V???
+compile_result	validity_error NONE VSRT(4)
+
+copy_sub 	Ace_rev1 $TEST Ace
+
+compile_melted
+compile_result	validity_error NONE VSRT(2)
 
 test_end

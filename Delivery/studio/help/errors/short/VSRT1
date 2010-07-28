@@ -1,2 +1,2 @@
-Configuration error: system's root is not a stand-alone type.
+Configuration error: System's root is not a stand-alone type.
 What to do: Make sure that the root type does not contain any formal generics or anchored types.

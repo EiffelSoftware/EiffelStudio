@@ -1,0 +1,17 @@
+
+test_name	config-invalid-vsrt2			
+test_description A generic root type which uses as actual generic a class in the root cluster, where the class is not mentioned directly in the root class, causes the compiler to report an incorrect VSRT(2) error.
+
+copy_sub 	Ace $TEST Ace
+copy_raw	test.e $CLUSTER	test.e
+copy_raw	test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result	ok
+
+execute_work 	NONE 	exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+
+test_end

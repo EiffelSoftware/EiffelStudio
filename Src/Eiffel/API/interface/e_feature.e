@@ -78,8 +78,12 @@ feature -- Status report
 		do
 			cl_id := associated_class_id
 			if eiffel_system.valid_class_id (cl_id) and then eiffel_system.class_of_id (cl_id) /= Void then
-				cl_id := written_in
-				Result := eiffel_system.valid_class_id (cl_id) and then eiffel_system.class_of_id (cl_id) /= Void
+				if cl_id /= written_in then
+					cl_id := written_in
+					Result := eiffel_system.valid_class_id (cl_id) and then eiffel_system.class_of_id (cl_id) /= Void
+				else
+					Result := True
+				end
 			end
 		end
 

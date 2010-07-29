@@ -2,15 +2,35 @@
 test_name	config-invalid-actual-generic		
 test_description An root type which is invalid because an actual generic parameter does not meet the generic constraint should be detected and reported as an error.
 
+define ROOT_TYPE "TEST [DOUBLE]"
 copy_sub 	Ace $TEST Ace
 copy_raw	test.e $CLUSTER	test.e
 
 compile_melted
 compile_result	validity_error NONE VSRT(4)
 
-copy_sub 	Ace_rev1 $TEST Ace
+define ROOT_TYPE "TEST [G]"
+copy_sub 	Ace $TEST Ace
 
 resume_compile
 compile_result	validity_error NONE VSRT(2)
+
+define ROOT_TYPE "TEST [UNKNOWN_TYPE]"
+copy_sub 	Ace $TEST Ace
+
+resume_compile
+compile_result	validity_error NONE VSRT(1)
+
+define ROOT_TYPE "TEST [STRING, STRING]"
+copy_sub 	Ace $TEST Ace
+
+resume_compile
+compile_result	validity_error NONE VSRT(4)
+
+define ROOT_TYPE "TEST [STRING]"
+copy_sub 	Ace $TEST Ace
+
+resume_compile
+compile_result	ok
 
 test_end

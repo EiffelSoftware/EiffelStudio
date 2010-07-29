@@ -241,6 +241,19 @@ feature -- Automatically indented output
 			l_buffer.append_character (d)
 		end
 
+	put_five_character (a, b, c, d, e: CHARACTER)
+			-- Write char `a', `b', `c', `d' and `e' assuming no calls to `put_new_line' were done prior to this call.
+		local
+			l_buffer: like current_buffer
+		do
+			l_buffer := current_buffer
+			l_buffer.append_character (a)
+			l_buffer.append_character (b)
+			l_buffer.append_character (c)
+			l_buffer.append_character (d)
+			l_buffer.append_character (e)
+		end
+
 	put_integer (i: INTEGER)
 			-- Write int `i'.
 		do

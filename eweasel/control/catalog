@@ -929,6 +929,7 @@ test	qat-finalize-panic-cascade		incr372 tcf fail incrementality
 test	finalize-feature-name-crash		incr373 tcf fail incrementality
 test	static-type-id-crash			incr374 tcf fail incrementality
 test	rout-entry-crash			incr375 tcf fail incrementality
+test	finalize-once-per-object-wrong		incr376 tcf fail incrementality
 
 
 -- Melting

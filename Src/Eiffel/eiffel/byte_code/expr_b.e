@@ -53,13 +53,15 @@ feature -- Evaluation
 feature -- Il code generation
 
 	is_fast_as_local: BOOLEAN
-			-- Is expression calculation as fast as loading a local?
+			-- Is expression calculation as fast as loading a local and does not allocate memory?
 			-- In other words: does it make sense to store a result of the expression
 			-- in a temporary local variable for multiple uses or is it equivalent
 			-- in performance to "recalculating" the expression every time?
 			-- (In the latter case it's better to avoid creating a temporary
 			-- variable to reduce stack memory footprint and register pressure.)
 		do
+		ensure
+			no_memory_allocated: Result implies not allocates_memory
 		end
 
 feature -- Status report

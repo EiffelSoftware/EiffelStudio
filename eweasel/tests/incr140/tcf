@@ -7,7 +7,7 @@
 -- This is a test control file
 
 test_name 	 add-remove-root-generic
-test_description After initial compilation, a constrained generic parameter [G -> STRING] is added to the root class.  When the compiler detects the VSRT(1) error, the generic parameter is removed.  The compiler then dies.
+test_description After initial compilation, a constrained generic parameter [G -> STRING] is added to the root class.  When the compiler detects the VSRT(4) error, the generic parameter is removed.  The compiler then dies.
 
 copy_sub 	 Ace $TEST Ace
 define		 GENERICS ""
@@ -18,7 +18,7 @@ compile_result 	 ok
 define		 GENERICS "[G]"
 copy_sub 	 test.e  $CLUSTER test.e
 compile_melted
-compile_result 	 validity_error TEST VSRT(1)
+compile_result 	 validity_error NONE VSRT(4)
 
 define		 GENERICS ""
 copy_sub 	 test.e  $CLUSTER test.e
@@ -28,7 +28,7 @@ compile_result 	 ok
 define		 GENERICS "[G -> STRING]"
 copy_sub 	 test.e  $CLUSTER test.e
 compile_melted
-compile_result 	 validity_error TEST VSRT(1)
+compile_result 	 validity_error NONE VSRT(4)
 
 define		 GENERICS ""
 copy_sub 	 test.e  $CLUSTER test.e

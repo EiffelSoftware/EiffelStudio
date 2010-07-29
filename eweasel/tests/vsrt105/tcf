@@ -7,7 +7,7 @@
 -- This is a test control file
 
 test_name 	 validity-vsrt1-new-root
-test_description Violate validity constraint VSRT1 by changing the name of the root class in the Ace to a generic class
+test_description Violate validity constraint VSRT(4) by changing the name of the root class in the Ace to a generic class
 define		 ROOT_CLASS TEST
 copy_sub 	 Ace $TEST Ace
 copy_sub 	 test.e  $CLUSTER test.e
@@ -18,6 +18,6 @@ define		 ROOT_CLASS TEST1
 copy_sub 	 Ace $TEST Ace
 copy_sub 	 test1.e  $CLUSTER test1.e
 compile_melted
-compile_result 	 validity_error TEST1 VSRT(1)
+compile_result 	 validity_error NONE VSRT(4)
 
 test_end

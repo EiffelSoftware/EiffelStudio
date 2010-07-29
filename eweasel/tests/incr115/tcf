@@ -7,7 +7,7 @@
 -- This is a test control file
 
 test_name 	 new-root-cluster-bogus-vscn
-test_description After initial compilation, the Ace is changed to indicate a new root class, which happens to be generic.  The compiler detects the VSRT(1) error.  But when the Ace is changed to indicate a new (and newly added) root cluster with a valid root class the compiler reports a bogus VSCN error.
+test_description After initial compilation, the Ace is changed to indicate a new root class, which happens to be generic.  The compiler detects the VSRT(4) error.  But when the Ace is changed to indicate a new (and newly added) root cluster with a valid root class the compiler reports a bogus VSCN error.
 
 define		 ROOT_CLASS "TEST1"
 define		 ROOT_CLUSTER "root_cluster"
@@ -28,7 +28,7 @@ define		 ROOT_CLASS "TEST"
 copy_sub 	 Ace $TEST Ace
 
 compile_melted
-compile_result 	 validity_error TEST VSRT(1)
+compile_result 	 validity_error NONE VSRT(4)
 
 define		 ROOT_CLUSTER "other_cluster"
 define		 PRE ""

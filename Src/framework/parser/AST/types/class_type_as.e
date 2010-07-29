@@ -134,6 +134,20 @@ feature -- Comparison
 				has_detachable_mark = other.has_detachable_mark
 		end
 
+feature -- Output
+
+	dump: STRING
+			-- Dumped string
+		do
+			create Result.make (class_name.name.count)
+			if has_attached_mark then
+				Result.append_character ('!')
+			elseif has_detachable_mark then
+				Result.append_character ('?')
+			end
+			Result.append (class_name.name)
+		end
+
 feature {AST_FACTORY, COMPILER_EXPORTER} -- Conveniences
 
 	set_is_expanded (i: like is_expanded; s_as: like expanded_keyword)
@@ -164,18 +178,6 @@ feature {AST_FACTORY, COMPILER_EXPORTER} -- Conveniences
 			-- Assign `s' to `class_name'.
 		do
 			class_name := s
-		end
-
-	dump: STRING
-			-- Dumped string
-		do
-			create Result.make (class_name.name.count)
-			if has_attached_mark then
-				Result.append_character ('!')
-			elseif has_detachable_mark then
-				Result.append_character ('?')
-			end
-			Result.append (class_name.name)
 		end
 
 note

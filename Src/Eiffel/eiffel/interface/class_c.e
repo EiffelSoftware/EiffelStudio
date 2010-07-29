@@ -1640,24 +1640,9 @@ feature -- Parent checking
 			types_empty: not has_types
 		end
 
-feature -- Supplier checking
-
-	check_that_root_class_is_not_deferred
-		-- Check non-genericity of root class
-		local
-			l_vsrt3: VSRT3
-		do
-			if is_deferred then
-				create l_vsrt3
-				l_vsrt3.set_class (Current)
-				Error_handler.insert_error (l_vsrt3)
-				Error_handler.checksum
-			end
-		end
-
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Supplier checking
 
-	check_root_class_creators (a_creator: STRING; a_type: CL_TYPE_A)
+	check_root_class_creators (a_creator: STRING; a_type: TYPE_A)
 			-- Check creation procedures of root class
 			--
 			-- Note: if `a_creator' is empty and default_create is a valid creation procedure in `Current',

@@ -38,7 +38,7 @@ feature -- Access
 	is_defined: BOOLEAN
 			-- Is the error fully defined?
 		do
-			Result := is_class_defined and then
+			Result := Precursor and then
 				type /= Void and then
 				base_class /= Void
 		ensure then
@@ -53,8 +53,10 @@ feature -- Output
 			if e_feature /= Void then
 				a_text_formatter.add ("In feature: ");
 				e_feature.append_name (a_text_formatter);
-			else
+			elseif is_class_defined then
 				a_text_formatter.add ("In inheritance clause");
+			else
+				a_text_formatter.add ("In Eiffel Configuration File")
 			end;
 			a_text_formatter.add_new_line;
 			if entity_name /= Void then

@@ -39,7 +39,6 @@ feature -- Access
 			-- Is the error fully defined?
 		do
 			Result := is_class_defined and then
-				is_feature_defined and then
 				op_name /= Void and then
 				(other_class /= Void or other_type_set /= Void)
 		end;

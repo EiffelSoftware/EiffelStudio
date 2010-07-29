@@ -872,8 +872,12 @@ feature -- Primitives
 					-- The feature listed in the creation constraint have
 					-- not been declared in the constraint class.			
 				create l_vtcg7
-				l_vtcg7.set_location (a_location_as)
-				l_vtcg7.set_class (a_context_class)
+				if a_location_as /= Void then
+					l_vtcg7.set_location (a_location_as)
+				end
+				if a_context_class /= Void then
+					l_vtcg7.set_class (a_context_class)
+				end
 				l_vtcg7.set_error_list (constraint_error_list)
 				l_vtcg7.set_parent_type (Current)
 				if a_context_feature /= Void then

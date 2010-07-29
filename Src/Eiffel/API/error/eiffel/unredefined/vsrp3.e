@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Creation
 
-	make (c: CLASS_C; t: CL_TYPE_A; p: FEATURE_I)
+	make (c: CLASS_C; t: like root_type; p: FEATURE_I)
 		require
 			c_attached: c /= Void
 			t_attached: t /= Void
@@ -42,7 +42,7 @@ feature -- Properties
 	subcode: INTEGER = 3
 			-- Sub code of error
 
-	root_type: CL_TYPE_A
+	root_type: TYPE_A
 			-- Root type involved in the error
 
 	creation_procedure: E_FEATURE
@@ -83,7 +83,7 @@ feature -- Output
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

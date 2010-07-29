@@ -38,7 +38,7 @@ feature -- Access
 	procedure_name: STRING
 			-- Name of root creation procedure in `root_class'
 
-	class_type: CL_TYPE_A
+	class_type: TYPE_A
 			-- Corresponding type of `root_class'
 		require
 			type_set: is_class_type_set

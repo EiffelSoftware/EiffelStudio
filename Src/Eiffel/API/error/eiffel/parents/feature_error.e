@@ -10,7 +10,7 @@ deferred class FEATURE_ERROR
 inherit
 	EIFFEL_ERROR
 		redefine
-			trace, is_defined, file_name, trace_primary_context
+			trace, file_name, trace_primary_context
 		end
 
 feature -- Properties
@@ -40,25 +40,6 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Propertires
 			-- (if this is Void then feature occurred in
 			-- the invariant)
 
-feature -- Access
-
-	is_defined: BOOLEAN
-			-- Is the error fully defined?
-		do
-			Result := is_class_defined and then
-				is_feature_defined
-		ensure then
-			is_feature_defined: Result implies is_feature_defined
-		end
-
-	is_feature_defined: BOOLEAN
-			-- Is the feature defined for error?
-		do
-			Result := True
-		ensure
-			always_true: Result
-		end
-
 feature -- Output
 
 	trace (a_text_formatter: TEXT_FORMATTER)
@@ -67,20 +48,24 @@ feature -- Output
 			l_group: CONF_GROUP
 			l_feature: like e_feature
 		do
-			l_group := a_text_formatter.context_group
-			a_text_formatter.set_context_group (class_c.group)
 			print_error_message (a_text_formatter)
-			a_text_formatter.add ("Class: ")
-			class_c.append_signature (a_text_formatter, False)
-			a_text_formatter.add_new_line
-				-- Display source class only if different.
-			if written_class /= Void and then class_c /= written_class then
-				a_text_formatter.add ("Source class: ")
-				written_class.append_signature (a_text_formatter, False)
+			if is_class_defined then
+				l_group := a_text_formatter.context_group
+				a_text_formatter.set_context_group (class_c.group)
+				a_text_formatter.add ("Class: ")
+				class_c.append_signature (a_text_formatter, False)
 				a_text_formatter.add_new_line
+
+					-- Display source class only if different.
+				if written_class /= Void and then class_c /= written_class then
+					a_text_formatter.add ("Source class: ")
+					written_class.append_signature (a_text_formatter, False)
+					a_text_formatter.add_new_line
+				end
 			end
+
 			a_text_formatter.add ("Feature: ")
-			if line > 0 then
+			if is_class_defined and then line > 0 then
 				if e_feature /= Void then
 						-- Take the feature from source class if different
 					if written_class /= Void and then class_c /= written_class then
@@ -99,12 +84,14 @@ feature -- Output
 				e_feature.append_name (a_text_formatter)
 			elseif feature_name /= Void then
 				a_text_formatter.add (encoding_converter.utf8_to_utf32 (feature_name))
-			else
+			elseif is_class_defined then
 				a_text_formatter.add ("inheritance or invariant clause")
+			else
+				a_text_formatter.add ("Eiffel Configuration File")
 			end
 			a_text_formatter.add_new_line
 			build_explain (a_text_formatter)
-			if line > 0 then
+			if is_class_defined and line > 0 then
 				if written_class = Void then
 					print_context_of_error (class_c, a_text_formatter)
 				else

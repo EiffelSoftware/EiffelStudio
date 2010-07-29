@@ -6,8 +6,7 @@
 
 $DEFERRED
 class TEST
-creation 
-	make
+$CREATION 
 feature 
 	make is
 		do

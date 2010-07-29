@@ -11,6 +11,7 @@ test_description A sequence of changes where a VSRT(3) error is added and then r
 
 copy_sub 	 Ace $TEST Ace
 define		 DEFERRED ""
+define		 CREATION "creation make"
 define		 ATTRIBUTE "a: TEST1 [like Current]"
 define		 GENERICS "[G]"
 copy_sub 	 test.e  $CLUSTER test.e
@@ -29,11 +30,13 @@ resume_compile
 compile_result 	 validity_error TEST VEEN
 
 define		 DEFERRED "deferred"
+define		 CREATION ""
 copy_sub 	 test.e  $CLUSTER test.e
 resume_compile
-compile_result 	 validity_error TEST VSRT(3)
+compile_result 	 validity_error NONE VSRT(3)
 
 define		 DEFERRED ""
+define		 CREATION "creation make"
 copy_sub 	 test.e  $CLUSTER test.e
 resume_compile
 compile_result 	 validity_error TEST VEEN

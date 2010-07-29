@@ -1728,6 +1728,7 @@ test	generic-derivation-constraint		term185 tcf pass termination formal generic 
 test	across-keyword-as-feature-name		term186 tcf fail termination 
 test	chained-generic-constraints		term187 tcf fail termination formal generic constraint
 test	static-access-on-generic-in-inspect	term188 tcf fail termination formal generic
+test	vmfn-reporting-crash				term189 tcf fail termination validity
 
 -- Config
 

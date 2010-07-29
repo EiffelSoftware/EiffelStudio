@@ -19,13 +19,20 @@ define ROOT_TYPE "TEST [UNKNOWN_TYPE]"
 copy_sub 	Ace $TEST Ace
 
 resume_compile
-compile_result	validity_error NONE VSRT(1)
+compile_result	validity_error NONE VSRT(2)
 
 define ROOT_TYPE "TEST [STRING, STRING]"
 copy_sub 	Ace $TEST Ace
 
 resume_compile
 compile_result	validity_error NONE VSRT(4)
+
+define ROOT_TYPE "TEST [like default_pointer]"
+copy_sub 	Ace $TEST Ace
+
+resume_compile
+compile_result	validity_error NONE VD00
+
 
 define ROOT_TYPE "TEST [STRING]"
 copy_sub 	Ace $TEST Ace

@@ -1,0 +1,12 @@
+test_name 	 vmfn-reporting-crash
+test_description When a system has a VMFN error instead of reporting it, it crashes.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test1.e $CLUSTER test1.e
+copy_raw	test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result	validity_error TEST VMFN
+
+test_end

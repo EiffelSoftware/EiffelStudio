@@ -12,6 +12,6 @@ copy_sub 	 Ace $TEST Ace
 
 copy_raw 	 test.e  $CLUSTER test.e
 compile_melted
-compile_result 	 validity_error TEST VSRT(3)
+compile_result 	 validity_error NONE VSRT(3)
 
 test_end

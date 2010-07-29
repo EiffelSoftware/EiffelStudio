@@ -15,7 +15,7 @@ copy_raw test.e $CLUSTER test.e
 define	GENERIC "TYPE_NOT_IN_SYSTEM"
 	copy_sub Ace $TEST Ace
 	compile_melted
-	compile_result validity_error TEST VSRT(2)
+	compile_result validity_error NONE VSRT(2)
 
 define	GENERIC "INTEGER"
 	copy_sub Ace $TEST Ace

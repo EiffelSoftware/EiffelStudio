@@ -12,7 +12,7 @@ test_description Add 2nd formal generic parameter of the same name to root class
 copy_sub 	Ace $TEST Ace
 copy_raw 	test.e $CLUSTER test.e
 compile_melted
-compile_result 	validity_error TEST VSRT(1)
+compile_result 	validity_error NONE VSRT(4)
 
 copy_raw 	test_rev1.e $CLUSTER test.e
 resume_compile

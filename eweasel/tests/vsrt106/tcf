@@ -7,9 +7,9 @@
 -- This is a test control file
 
 test_name 	 validity-vsrt1-zero-generics
-test_description Violate validity constraint VSRT1 with root class with brackets after class name, but no generic parameters inside them
+test_description Violate validity constraint VSRT(4) with root class with brackets after class name, but no generic parameters inside them
 copy_sub 	 Ace $TEST Ace
 copy_raw 	 test.e  $CLUSTER test.e
 compile_melted
-compile_result 	 validity_error TEST VSRT(1)
+compile_result 	 validity_error NONE VSRT(4)
 test_end

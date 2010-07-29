@@ -1,0 +1,28 @@
+
+test_name 	 finalize-once-per-object-wrong
+test_description After initial compilation a once-per-object routine is added and it calls another once-per-object routine via `precursor'.  Finalizing them yields a system whose execution produces the wrong output.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+copy_raw 	test2.e $CLUSTER test2.e
+copy_raw 	test4.e $CLUSTER test4.e
+compile_frozen
+compile_result 	ok
+
+c_compile_work
+c_compile_result ok
+
+copy_raw 	test2_rev2.e $CLUSTER test2.e
+copy_raw 	test4_rev2.e $CLUSTER test4.e
+compile_final
+compile_result 	ok
+
+c_compile_final
+c_compile_result 	ok
+
+execute_final 	NONE 	exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+test_end

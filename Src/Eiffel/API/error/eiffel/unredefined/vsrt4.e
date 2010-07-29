@@ -1,50 +1,77 @@
 note
-
-	description:
-		"Base class of any type ond which the root type dependes must be in the scope of the root cluster."
+	description: "[
+		Root type is syntactically valid but it is not
+		semantically valid (not the correct number of actual generic parameters,
+		not meeting the constraint on actual generic paramater).
+		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
-	revision: "$Revision $"
+	revision: "$Revision: $"
 
 class VSRT4
 
 inherit
-
-	EIFFEL_ERROR
+	VSRT
 		redefine
 			subcode, build_explain
 		end;
 
-feature -- Properties
+feature -- Access
 
-	code: STRING = "VSRT";
-			-- Error code
-
-	subcode: INTEGER = 4;
+	subcode: INTEGER = 4
 			-- Sub code of error
 
-	root_type: CL_TYPE_A;
-			-- Root type involved in the error
+	error_list: LINKED_LIST [CONSTRAINT_INFO]
+			-- Error description list
+
+	any_class: CLASS_C
+			-- Using ANY to type check the type.
 
 feature	-- Output
 
 	build_explain (a_text_formatter: TEXT_FORMATTER)
 		do
-			a_text_formatter.add ("Root type: ")
-			root_type.append_to  (a_text_formatter)
-			a_text_formatter.add_new_line
+			Precursor (a_text_formatter)
+			if error_list = Void then
+					-- Case when it is an error on the number of actual generic
+					-- parameters not matching the base class specification
+				a_text_formatter.add ("Base class: ")
+				root_type.associated_class.append_signature (a_text_formatter, False)
+				a_text_formatter.add_new_line
+			else
+					-- Display errors in the context of class ANY.
+				from
+					error_list.start
+				until
+					error_list.after
+				loop
+					error_list.item.build_explain (a_text_formatter, any_class)
+					error_list.forth
+				end
+			end
 		end
 
 feature {COMPILER_EXPORTER}
 
-	set_root_type (a_root_type: like root_type)
-			-- Assign `a_root_type' to `root_type'.
+	set_error_list (list: like error_list)
+			-- Set `list' to `error_list'
 		require
-			a_valid_root_type: a_root_type /= Void
+			list_exists: list /= Void
 		do
-			root_type := a_root_type;
-		end;
+			error_list := list
+		ensure
+			error_list: error_list = list
+		end
+
+	set_any_class (a_class: CLASS_C)
+		require
+			a_class_not_void: a_class /= Void
+		do
+			any_class := a_class
+		ensure
+			any_class_set: any_class = a_class
+		end
 
 note
 	copyright:	"Copyright (c) 1984-2010, Eiffel Software"

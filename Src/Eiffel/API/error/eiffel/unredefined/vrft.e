@@ -28,7 +28,6 @@ feature -- Access
 			-- Is the error fully defined?
 		do
 			Result := is_class_defined and then
-				is_feature_defined and then
 				other_feature /= Void
 		ensure then
 			valid_other_feature: Result implies other_feature /= Void

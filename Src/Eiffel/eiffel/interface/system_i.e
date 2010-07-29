@@ -1715,10 +1715,8 @@ feature -- Recompilation
 		require
 			valid_options: (a_generate_code implies a_system_check) and then (a_system_check implies a_syntax_analysis)
 		local
-			l_root_c: CLASS_C
 			d1, d2: DATE_TIME
 			l_il_env: IL_ENVIRONMENT
-			cs: CURSOR
 		do
 			debug ("timing")
 					-- Enable time accounting to get some precise GC statistics.
@@ -1818,21 +1816,6 @@ end
 						not Compilation_modes.is_precompiling and
 						not Lace.compile_all_classes
 					then
-							-- Check root class is not deferred
-						cs := root_creators.cursor
-						from
-							root_creators.start
-						until
-							root_creators.after
-						loop
-							check
-								root_compiled: root_creators.item_for_iteration.root_class.is_compiled
-							end
-							l_root_c := root_creators.item_for_iteration.root_class.compiled_class
-							l_root_c.check_that_root_class_is_not_deferred
-							root_creators.forth
-						end
-						root_creators.go_to (cs)
 						current_class := Void
 							-- Remove useless classes i.e classes without
 							-- syntactical clients
@@ -2606,7 +2589,7 @@ end
 					l_ba.character_array.store (melted_file)
 
 					write_int (file_pointer, l_rcoffset)
-					if l_root_ft.has_arguments then
+					if l_root_ft /= Void and then l_root_ft.has_arguments then
 						write_int (file_pointer, 1)
 					else
 						write_int (file_pointer, 0)
@@ -5649,7 +5632,7 @@ feature -- Access: Root creators
 			--       existing code relying on a single root will continue to work.
 			--       Additional root creation procedures can be added through `add_explicit_root'.
 
-	root_type: CL_TYPE_A
+	root_type: TYPE_A
 			--
 		do
 			Result := root_creators.first.class_type
@@ -5690,11 +5673,11 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Status report: Root creators
 
 feature -- Query: Root creators
 
-	root_class_type (a_root_type: CL_TYPE_A): CLASS_TYPE
+	root_class_type (a_root_type: TYPE_A): CLASS_TYPE
 			-- CLASS_TYPE of root type
 		require
 			root_type_exists: root_creators.there_exists (
-				agent (a_root: SYSTEM_ROOT; a_type: CL_TYPE_A): BOOLEAN
+				agent (a_root: SYSTEM_ROOT; a_type: TYPE_A): BOOLEAN
 					do
 						Result := a_root.class_type = a_type
 					end (?, a_root_type))
@@ -5917,12 +5900,15 @@ feature {NONE} -- Element change: Root creators
 	compute_root_type
 			-- Computes the root type
 		local
-			l_type: CL_TYPE_A
+			l_type: TYPE_A
 			l_root: SYSTEM_ROOT
 			l_vsrt1: VSRT1
 			l_vsrt2: VSRT2
+			l_vsrt3: VSRT3
+			l_vsrt4: VSRT4
 			l_vd20: VD20
 			cs: CURSOR
+			l_error_level: NATURAL_32
 		do
 			from
 				cs := root_creators.cursor
@@ -5931,28 +5917,56 @@ feature {NONE} -- Element change: Root creators
 				root_creators.after
 			loop
 				l_root := root_creators.item_for_iteration
+				l_error_level := error_handler.error_level
 				if not l_root.root_class.is_compiled then
 						-- Class is not part of the system.
 					create l_vd20
 					l_vd20.set_class_name (l_root.root_class.name.as_upper)
 					Error_handler.insert_error (l_vd20)
 				else
-					l_type ?= type_a_generator.evaluate_type_if_possible (l_root.class_type_as, l_root.root_class.compiled_class)
-					if l_type = Void or else l_type.is_loose then
+					l_type := type_a_generator.evaluate_type_if_possible (l_root.class_type_as, l_root.root_class.compiled_class)
+					if l_type = Void then
 							-- Throw an error: type is not valid.
 						create l_vsrt2
-						l_vsrt2.set_class (l_root.root_class.compiled_class)
-						l_vsrt2.set_root_type_name (l_root.root_class.name)
+						l_vsrt2.set_root_type_as (l_root.class_type_as)
 						l_vsrt2.set_group_name (l_root.root_class.group.name)
 						Error_handler.insert_error (l_vsrt2)
+					elseif l_type.is_loose then
+						create l_vsrt1
+						l_vsrt1.set_root_type (l_type)
+						error_handler.insert_error (l_vsrt1)
+					elseif l_type.associated_class.is_deferred then
+						create l_vsrt3
+						l_vsrt3.set_root_type (l_type)
+						error_handler.insert_error (l_vsrt3)
+					elseif not l_type.good_generics then
+						create l_vsrt4
+						l_vsrt4.set_root_type (l_type)
+						error_handler.insert_error (l_vsrt4)
 					else
-						l_root.set_class_type (l_type)
-						if not l_type.has_generics and l_type.associated_class.is_generic then
-							create l_vsrt1
-							l_vsrt1.set_class (l_type.associated_class)
-							l_vsrt1.set_root_type (l_type)
-							Error_handler.insert_error (l_vsrt1)
-						else
+						if attached {GEN_TYPE_A} l_type as l_gen_type then
+								-- Check constrained genericity validity rule
+							l_gen_type.reset_constraint_error_list
+								-- Check creation readiness because root type have to be creation ready.
+								-- This is done in the context of ANY and not of `l_type.associated_class'
+								-- as otherwise we could accept `TEST [G]' if done in the context of the
+								-- generic class declared as `class TEST [G]'.
+							l_gen_type.check_constraints (any_class.compiled_class, Void, True)
+							if l_gen_type.constraint_error_list /= Void and then not l_gen_type.constraint_error_list.is_empty then
+								create l_vsrt4
+								l_vsrt4.set_root_type (l_gen_type)
+								l_vsrt4.set_any_class (any_class.compiled_class)
+								l_vsrt4.set_error_list (l_gen_type.constraint_error_list)
+								error_handler.insert_error (l_vsrt4)
+							else
+									-- We need to check named tuple labels. This fixes eweasel test#tuple012.
+								l_type.check_labels (l_type.associated_class, Void)
+							end
+						end
+
+						if error_handler.error_level = l_error_level then
+							l_root.set_class_type (l_type)
+
 							if not Compilation_modes.is_precompiling and not Lace.compile_all_classes then
 									-- `root_class_c' cannot be used here as `root_type.associated_class' might be changed
 								l_root.class_type.associated_class.check_root_class_creators (l_root.procedure_name, l_root.class_type)

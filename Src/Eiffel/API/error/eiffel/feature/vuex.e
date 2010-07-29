@@ -52,7 +52,7 @@ feature -- Access
 	is_defined: BOOLEAN
 			-- Is the error fully defined?
 		do
-			Result := is_class_defined and then is_feature_defined and then
+			Result := is_class_defined and then
 				(is_target_none or else (static_class /= Void and then
 				exported_feature /= Void))
 		ensure then

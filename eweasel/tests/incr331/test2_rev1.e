@@ -1,4 +1,3 @@
-
 class TEST2
 feature
 	try

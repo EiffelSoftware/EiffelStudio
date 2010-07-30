@@ -16,6 +16,10 @@ compile_result 	validity_warning TEST VD80
 
 copy_raw 	test4_rev1.e $CLUSTER test4.e
 compile_quick_melted
+compile_result 	syntax_error TEST 1
+
+abort_compile
+compile_melted
 compile_result 	validity_error NONE VD71
 
 test_end

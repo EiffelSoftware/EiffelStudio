@@ -1,4 +1,3 @@
-
 class TEST
 inherit
 	TEST1 [DOUBLE]

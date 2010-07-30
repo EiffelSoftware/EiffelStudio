@@ -1,4 +1,3 @@
-
 deferred class TEST1 [G -> NUMERIC]
 inherit
 	TEST2

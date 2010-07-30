@@ -1,0 +1,15 @@
+
+test_name 	 retry-missing-library-file
+test_description After compiler reports a VD00 for a missing library file, resuming compilation crashes the compiler in {CONF_FIND_CLASS_VISITOR}.retrieve_recursively.
+
+copy_sub 	Ace $TEST Ace
+compile_quick_melted
+compile_result 	validity_error NONE VD00
+
+resume_compile
+compile_result 	validity_error NONE VD00
+
+resume_compile
+compile_result 	validity_error NONE VD00
+
+test_end

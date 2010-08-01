@@ -89,7 +89,7 @@ feature -- Access
 	removed_classes_from_override: SEARCH_TABLE [CONF_CLASS]
 			-- The list of removed classes from override clusters.
 
-	partly_removed_classes: ARRAYED_LIST [EQUALITY_TUPLE [TUPLE [conf_class: CONF_CLASS; system: CONF_SYSTEM]]]
+	partly_removed_classes: ARRAYED_LIST [TUPLE [conf_class: CONF_CLASS; system: CONF_SYSTEM]]
 			-- The list of classes that have been removed from a certain system only.
 			-- (if a library that is still used somewhere else has been removed)
 
@@ -864,11 +864,11 @@ feature {NONE} -- Implementation
 							if l_library.library_target /= Void and then all_libraries.has (l_library.library_target.system.uuid) then
 								l_done := True
 								if l_library.classes_set then
-									l_library.classes.linear_representation.do_if (agent (a_class: CONF_CLASS)
-										do
-											partly_removed_classes.force ([a_class, current_system])
+									across l_library.classes as l_item loop
+										if l_item.item.is_compiled then
+											partly_removed_classes.force ([l_item.item, current_system])
 										end
-									, agent {CONF_CLASS}.is_compiled)
+									end
 								end
 							end
 						end
@@ -1100,7 +1100,7 @@ invariant
 	last_warnings_not_void: last_warnings /= Void
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

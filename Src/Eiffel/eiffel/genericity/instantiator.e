@@ -118,8 +118,8 @@ feature -- Attributes
 			class_array := System.classes
 			nb := Class_counter.count
 			from i := 1 until i > nb loop
-				if class_array [i] /= Void then
-					class_array [i].types.clean
+				if attached class_array [i] as l_class then
+					l_class.types.clean
 				end
 				i := i + 1
 			end
@@ -140,7 +140,7 @@ feature -- Attributes
 			check_procedure_class
 
 				-- Remove the obsolete types
-			clean;
+			clean (system.any_class.compiled_class)
 
 			from
 				start

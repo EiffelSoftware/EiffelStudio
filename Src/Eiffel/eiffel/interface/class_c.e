@@ -2590,7 +2590,7 @@ end
 				-- Propagation along the filters since we have a new type
 				-- Clean the filters. Some of the filters can be obsolete
 				-- if the base class has been removed from the system
-			class_filters.clean
+			class_filters.clean (Current)
 			l_system := system
 			from
 				class_filters.start
@@ -2632,7 +2632,7 @@ feature {CLASS_C} -- Incrementality
 				-- Propagation along the filters since we have a new type
 				-- Clean the filters. Some of the filters can be obsolete
 				-- if the base class has been removed from the system
-			class_filters.clean
+			class_filters.clean (Current)
 			from
 				class_filters.start
 				l_system := system
@@ -3995,6 +3995,14 @@ feature {COMPILER_EXPORTER} -- Setting
 			generic_features := f
 		ensure
 			generic_features_set: generic_features = f
+		end
+
+	set_need_new_parents (v: like need_new_parents)
+			-- Set `need_new_parents' with `v'.
+		do
+			need_new_parents := v
+		ensure
+			need_new_parents_set: need_new_parents = v
 		end
 
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Setting

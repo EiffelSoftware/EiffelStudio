@@ -159,6 +159,7 @@ feature -- Processing
 					info_array.forth
 				else
 					info_array.remove (info_array.key_for_iteration)
+					remove (info)
 				end
 			end
 		end
@@ -193,6 +194,8 @@ feature -- Element change
 			else
 				last_pattern_id := other_info.pattern_id
 			end
+		ensure
+			inserted: has_pattern_of_id (last_pattern_id)
 		end
 
 	insert_c_pattern (a_c_pattern: C_PATTERN)
@@ -320,7 +323,7 @@ invariant
 	info_array_exists: info_array /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

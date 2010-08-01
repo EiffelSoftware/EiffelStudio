@@ -1022,7 +1022,8 @@ end
 				l_classes.after
 			loop
 				l_conf_class := l_classes.item_for_iteration
-					-- FIXME: Patrickr 03/14/2006 for now the compiler can't deal with changed external or precompiled classes
+					-- FIXME: Patrickr 03/14/2006 for now the compiler can't deal with changed
+					-- external or precompiled classes
 				if not l_conf_class.is_class_assembly then
 					l_class_i ?= l_conf_class
 					check l_class_i_not_void: l_class_i /= Void end
@@ -1182,7 +1183,7 @@ end
 			end
 		end
 
-	recheck_partly_removed (a_classes: ARRAYED_LIST [EQUALITY_TUPLE [TUPLE [conf_class: CONF_CLASS; system: CONF_SYSTEM]]] )
+	recheck_partly_removed (a_classes: ARRAYED_LIST [TUPLE [conf_class: CONF_CLASS; system: CONF_SYSTEM]])
 			-- Recheck clients of classes that have been removed from one place but still exists in another.
 		require
 			a_classes_not_void: a_classes /= Void
@@ -1197,8 +1198,8 @@ end
 			until
 				a_classes.after
 			loop
-				l_system := a_classes.item.item.system
-				l_class_i ?= a_classes.item.item.conf_class
+				l_system := a_classes.item.system
+				l_class_i ?= a_classes.item.conf_class
 				check
 					correct_class: l_class_i /= Void and then l_class_i.is_compiled
 				end
@@ -1871,7 +1872,7 @@ end
 
 						-- We need to clean `instantiator' of all the types that do not make sense
 						-- anymore (see eweasel test#incr282).
-					instantiator.clean
+					instantiator.clean (any_class.compiled_class)
 
 						-- Inheritance analysis: `Degree_4' is sorted by class
 						-- topological ids so the parent come first the heirs after.
@@ -3426,7 +3427,7 @@ feature {NONE} -- Implementation
 						related_classes.extend (supplier)
 						supplier.suppliers.remove_class (eif_class)
 							-- Clean associated filters that may include the class being removed.
-						supplier.filters.clean
+						supplier.filters.clean (supplier)
 						eif_class.syntactical_clients.forth
 						finished := False
 					end
@@ -3435,7 +3436,7 @@ feature {NONE} -- Implementation
 						related_classes.extend (supplier)
 						supplier.suppliers.remove_class (eif_class)
 							-- Clean associated filters that may include the class being removed.
-						supplier.filters.clean
+						supplier.filters.clean (supplier)
 						eif_class.clients.forth
 						finished := False
 					end

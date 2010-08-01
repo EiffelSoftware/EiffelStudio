@@ -44,12 +44,13 @@ feature -- Comparison
 
 feature -- Cleaning
 
-	clean
+	clean (a_class: CLASS_C)
 			-- Clean the list of all the removed classes
 		local
 			i, nb: INTEGER
 			l_default: detachable CL_TYPE_A
 			local_content: like content
+			l_is_valid: BOOLEAN
 		do
 				-- Note: we cannot search items in the table because they might be
 				-- inconsistent and `is_equal' won't work (see eweasel test#incr234).
@@ -63,10 +64,18 @@ feature -- Cleaning
 			until
 				i >= nb
 			loop
-				if valid_key (local_content [i]) and then not local_content [i].is_valid then
-					local_content.put (l_default, i)
-					deleted_marks.put (True, i)
-					count := count - 1
+				if attached local_content [i] as l_type then
+					l_is_valid := l_type.is_valid
+					if l_is_valid and l_type.generics /= Void then
+						l_type.reset_constraint_error_list
+						l_type.check_constraints (a_class, Void, False)
+						l_is_valid := l_type.constraint_error_list.is_empty
+					end
+					if not l_is_valid then
+						local_content.put (l_default, i)
+						deleted_marks.put (True, i)
+						count := count - 1
+					end
 				end
 				i := i + 1
 			end

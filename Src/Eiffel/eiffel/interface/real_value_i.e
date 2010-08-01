@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 			-- Create instance of current with `real_64_value' set to `d'.
 		do
 			real_64_value := d
-			is_real_64 := True
+			is_real_64 := a_is_real_64
 		ensure
 			real_64_value_set: real_64_value = d
 			is_real_64: is_real_64 = a_is_real_64

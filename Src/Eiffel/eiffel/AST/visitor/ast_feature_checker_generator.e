@@ -5167,8 +5167,10 @@ feature {NONE} -- Implementation
 			l_vncb: VNCB
 			l_warning_count: INTEGER
 			l_reinitialized_variable: like last_reinitialized_variable
+			l_error_level: NATURAL_32
 		do
 			break_point_slot_count := break_point_slot_count + 1
+			l_error_level := error_handler.error_level
 
 				-- Init type stack
 			reset_for_unqualified_call_checking
@@ -5251,7 +5253,8 @@ feature {NONE} -- Implementation
 					end
 				end
 
-				if is_byte_node_enabled then
+				if l_error_level = error_handler.error_level and is_byte_node_enabled then
+						-- Only create BYTE code if there is no error.
 					create l_assign
 					l_assign.set_target (l_target_node)
 					l_assign.set_line_number (l_as.target.start_location.line)
@@ -9381,8 +9384,8 @@ feature {NONE} -- Agents
 	init_inline_agent_feature (a_feat, a_real_feat: FEATURE_I; a_current_class, a_written_class: EIFFEL_CLASS_C): FEATURE_I
 			-- a_feat may just be a fake wrapper to a_real_feat (for agents on attributes).
 		require
-			a_feat /= Void
-			a_feat.is_attribute implies a_real_feat /= Void
+			a_feat_not_void: a_feat /= Void
+			a_feat_valid: a_feat.is_attribute implies a_real_feat /= Void
 		local
 			l_new_rout_id_set: ROUT_ID_SET
 			l_cur_class: EIFFEL_CLASS_C

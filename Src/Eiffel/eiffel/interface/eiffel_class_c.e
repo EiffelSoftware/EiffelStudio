@@ -437,7 +437,7 @@ feature -- Action
 				end
 
 					-- Clean the filters, i.e. remove all the obsolete types
-				filters.clean
+				filters.clean (Current)
 			end
 		rescue
 			if Rescue_status.is_error_exception then
@@ -541,6 +541,7 @@ feature -- Third pass: byte code production and type check
 				-- Invariant
 			invar_clause: INVARIANT_AS
 			invariant_changed: BOOLEAN
+			invariant_removed: BOOLEAN
 
 			old_invariant_body_index: INTEGER
 			body_index: INTEGER
@@ -834,7 +835,8 @@ feature -- Third pass: byte code production and type check
 					if f_suppliers /= Void then
 						new_suppliers.remove_occurrence (f_suppliers)
 					end
-					invariant_feature := Void
+						-- Mark invariant to be reset at the end when no error has occurred
+					invariant_removed := True
 				else
 					invariant_changed := propagators.invariant_changed
 					if not (invariant_changed or else f_suppliers = Void) then
@@ -1007,6 +1009,10 @@ feature -- Third pass: byte code production and type check
 				l_ast_context.clear_feature_context
 				tmp_ast_server.cache.wipe_out
 				internal_inline_agent_table := old_inline_agent_table
+			elseif invariant_removed then
+					-- No error occurred and class was compiled successfully, we can
+					-- remove the invariant. This fixes eweasel test#incr345.
+				invariant_feature := Void
 			end
 		rescue
 			if Rescue_status.is_error_exception then
@@ -1515,6 +1521,12 @@ feature {NONE} -- Class initialization
 								-- The ast is in the temporary server
 								-- so Degree 4 can be done the same way
 							Degree_5.insert_changed_class (l_class)
+						end
+						if changed_expanded then
+								-- We do not know if `l_class' is using the current class
+								-- as a parent, but we have to reset it even just to be sure.
+								-- This fixes eweasel test#incr315.
+							l_class.set_need_new_parents (True)
 						end
 							-- We need to recompile the features because their code might still
 							-- contain reference to the type and because it switched from

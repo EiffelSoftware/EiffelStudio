@@ -170,6 +170,13 @@ feature -- Access
 				system.class_type_of_id (type_id) = Current and then
 				type.is_valid and then
 				type.is_valid_generic_derivation
+			if Result and type.generics /= Void then
+					-- Check constrained genericity validity rule
+				type.reset_constraint_error_list
+					-- Check the constraint to ensure it makes sense
+				type.check_constraints (associated_class, Void, False)
+				Result := type.constraint_error_list.is_empty
+			end
 		end
 
 	is_modifiable: BOOLEAN

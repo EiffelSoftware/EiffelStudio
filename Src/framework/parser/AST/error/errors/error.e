@@ -161,8 +161,6 @@ feature {ERROR_VISITOR} -- Compute surrounding text around error
 				current_line := l_file.last_string
 			end
 			next_line := l_file.peek_read_line (l_line + 1)
-
-			check current_line_not_void: attached current_line end
 		end
 
 	previous_line_32: detachable STRING_32

@@ -9,7 +9,7 @@ copy_raw	test2.e $CLUSTER test2.e
 copy_raw	test3.e $CLUSTER test3.e
 
 compile_melted
-compile_result	validity_error TEST3 VMFN
+compile_result	validity_error TEST3 VMFN ; TEST1 VEEN ; TEST2 VEEN
 
 test_end
 

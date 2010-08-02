@@ -48,7 +48,7 @@ feature -- Element change
 			not_has: not shallow_has (a_prefix)
 			context_not_empty: not is_context_empty
 		do
-			context.last.force (a_namespace, a_prefix)
+			context.first.force (a_namespace, a_prefix)
 		end
 
 feature -- Status report
@@ -67,7 +67,7 @@ feature -- Status report
 		require
 			a_prefix_not_void: a_prefix /= Void
 		do
-			Result := context.count > 0 and then context.last.has (a_prefix)
+			Result := context.count > 0 and then context.first.has (a_prefix)
 		end
 
 	has (a_prefix: STRING): BOOLEAN
@@ -75,18 +75,18 @@ feature -- Status report
 		require
 			a_prefix_not_void: a_prefix /= Void
 		local
-			a_cursor: LINKED_LIST_ITERATION_CURSOR [HASH_TABLE [STRING, STRING]]
+			c: LINKED_LIST_ITERATION_CURSOR [HASH_TABLE [STRING, STRING]]
 		do
-			a_cursor := context.new_cursor.reversed
+			c := context.new_cursor
 			from
-				a_cursor.start
+				c.start
 			until
-				a_cursor.after or Result
+				c.after or Result
 			loop
-				if a_cursor.item.has (a_prefix) then
+				if c.item.has (a_prefix) then
 					Result := True
 				else
-					a_cursor.forth
+					c.forth
 				end
 			end
 		end
@@ -106,25 +106,26 @@ feature -- Access
 		require
 			a_prefix_not_void: a_prefix /= Void
 		local
-			a_cursor: LINKED_LIST_ITERATION_CURSOR [HASH_TABLE [STRING, STRING]]
+			c: LINKED_LIST_ITERATION_CURSOR [HASH_TABLE [STRING, STRING]]
+			i: HASH_TABLE [STRING, STRING]
 			result_found: BOOLEAN
 		do
 			Result := Default_namespace
 
-			a_cursor := context.new_cursor.reversed
+			c := context.new_cursor
 			from
-				a_cursor.start
+				c.start
 			until
-				a_cursor.after or result_found
+				c.after or result_found
 			loop
+				i := c.item
 				if
-					a_cursor.item.has (a_prefix) and then
-					attached a_cursor.item.item (a_prefix) as v
+					i.has (a_prefix) and then attached i.item (a_prefix) as v
 				then
 					Result := v
 					result_found := True
 				else
-					a_cursor.forth
+					c.forth
 				end
 			end
 		ensure
@@ -136,16 +137,15 @@ feature -- Stack
 	push
 			-- Push element context.
 		do
-			context.force (new_string_string_table)
+			context.put_front (new_string_string_table)
 		end
 
 	pop
 			-- Pop element context.
 		do
 			if context.count > 0 then
-				context.finish
+				context.start
 				context.remove
-				context.finish
 			end
 		end
 

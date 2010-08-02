@@ -8,6 +8,10 @@ class
 
 inherit
 	HASHABLE
+		redefine
+			is_equal,
+			out
+		end
 
 create
 
@@ -47,24 +51,45 @@ feature -- Access
 
 feature -- Status report
 
+	is_equal (other: like Current): BOOLEAN
+		local
+			u, v: like uri
+		do
+			u := uri
+			v := other.uri
+			Result := (u = v) or else u.same_string (v)
+		end
+
 	hash_code: INTEGER
 			-- Hash code of URI
 		do
 			Result := uri.hash_code
 		end
 
+	out: STRING
+			-- Out
+		do
+			Result := uri
+		end
+
 feature -- Status report
 
 	same_prefix (other: XML_NAMESPACE): BOOLEAN
 			-- Same
+		local
+			p,q: like ns_prefix
 		do
-			Result := is_equal (other) and then
-				((ns_prefix = other.ns_prefix) or else
-					((ns_prefix /= Void and other.ns_prefix /= Void) and then ns_prefix ~ other.ns_prefix))
+			if is_equal (other) then
+				p := ns_prefix
+				q := other.ns_prefix
+				Result := (p = q) or else (
+							(p /= Void and q /= Void) and then p.same_string (q)
+						)
+			end
 		ensure
 			equal: Result implies is_equal (other)
 			same_prefix: Result implies
-				(ns_prefix = other.ns_prefix or else (ns_prefix ~ other.ns_prefix))
+				((ns_prefix = other.ns_prefix) or else (ns_prefix ~ other.ns_prefix))
 		end
 
 	has_prefix: BOOLEAN

@@ -221,9 +221,10 @@ feature {NONE} -- Implementation
 			-- XML_NAMESPACE is hashable/equal on uri only,
 			-- so we must explicitely check if the cached namespace
 			-- has the same prefix
+			namespace_cache.search (Result)
 			if
-				namespace_cache.has (Result) and then
-				attached namespace_cache.item (Result) as cached_prefix and then
+				namespace_cache.found and then
+				attached namespace_cache.found_item as cached_prefix and then
 				cached_prefix.same_prefix (Result)
 			then
 				Result := cached_prefix

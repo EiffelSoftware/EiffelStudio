@@ -86,7 +86,7 @@ LSRC = malloc.c garcol.c local.c except.c store.c retrieve.c \
 	hector.c cecil.c bits.c file.c dir.c misc.c \
 	error.c umain.c memory.c memory_analyzer.c argv.c boolstr.c search.c \
 	run_idr.c path_name.c object_id.c eif_threads.c eif_project.c\
-	eif_rw_lock.c gen_conf.c eif_type_id.c rout_obj.c \
+	posix_threads.c gen_conf.c eif_type_id.c rout_obj.c \
 	option.c compress.c console.c
 
 #OTHER = main.c except.c
@@ -142,7 +142,7 @@ WOBJ =		    \
 	object_id.obj_wk \
 	eif_threads.obj_wk \
 	eif_project.obj_wk \
-	eif_rw_lock.obj_wk \
+	posix_threads.obj_wk \
 	gen_conf.obj_wk \
 	eif_type_id.obj_wk \
 	rout_obj.obj_wk \
@@ -192,7 +192,7 @@ LOBJ = \
 	object_id.obj \
 	eif_threads.obj \
 	eif_project.obj \
-	eif_rw_lock.obj \
+	posix_threads.obj \
 	gen_conf.obj \
 	eif_type_id.obj \
 	rout_obj.obj \
@@ -250,7 +250,7 @@ EOBJ = \
 	wobject_id.obj \
 	weif_threads.obj \
 	weif_project.obj \
-	weif_rw_lock.obj \
+	wposix_threads.obj \
 	wgen_conf.obj \
 	weif_type_id.obj \
 	wrout_obj.obj \
@@ -299,7 +299,7 @@ MT_LOBJ = \
 	MTobject_id.obj \
 	MTeif_threads.obj \
 	MTeif_project.obj \
-	MTeif_rw_lock.obj \
+	MTposix_threads.obj \
 	MTgen_conf.obj \
 	MTeif_type_id.obj \
 	MTrout_obj.obj \

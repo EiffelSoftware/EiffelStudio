@@ -576,7 +576,7 @@ feature {TYPE_A} -- Helpers
 				--| Ideally we could also check that if Current base class is expanded
 				--| then it has the class_declaration_mark properly set, but it does not
 				--| currently work when processing TYPED_POINTER which is currently interpreted
-			Result := l_class /= Void and then l_class.generics = Void and then
+			Result := l_class /= Void and then l_class.is_valid and then l_class.generics = Void and then
 				(l_class.is_expanded = (class_declaration_mark = expanded_mark))
 		end
 

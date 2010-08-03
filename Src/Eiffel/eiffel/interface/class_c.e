@@ -1853,8 +1853,13 @@ feature -- Propagation
 					io.error.put_string (class_i.name)
 					io.error.put_new_line
 				end
-				workbench.add_class_to_recompile (class_i)
-				class_i.set_changed (True)
+					-- Can only recompile a class if it is valid.
+					-- This fixes eweasel test#fixed119 and test#fixed120
+					-- when running with assertions.
+				if class_i.is_valid then
+					workbench.add_class_to_recompile (class_i)
+					class_i.set_changed (True)
+				end
 				l_syntactical_clients.forth
 			end
 		end

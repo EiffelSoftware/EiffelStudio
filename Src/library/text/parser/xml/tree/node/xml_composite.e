@@ -220,7 +220,7 @@ feature {XML_NODE} -- Removal
 			lst: like nodes
 			c: CURSOR
 		do
-			-- we do DS_LIST.delete by hand, because
+			-- we do LIST.delete by hand, because
 			-- it takes a descendant type, while we don't
 			-- really need to know the subtype for object
 			-- equality.

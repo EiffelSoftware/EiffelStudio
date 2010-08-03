@@ -20,6 +20,6 @@ copy_raw 	test_rev2.e $CLUSTER test.e
 copy_raw 	test2_rev3.e $CLUSTER test2.e
 copy_raw 	test3_rev3.e $CLUSTER test3.e
 resume_compile
-compile_result 	validity_error TEST2 VTUG(2) ; TEST VTCG VTCG VTCG VTCG VTCG VTCG 
+compile_result 	ok
 
 test_end

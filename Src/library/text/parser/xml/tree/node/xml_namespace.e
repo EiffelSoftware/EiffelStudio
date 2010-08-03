@@ -55,9 +55,13 @@ feature -- Status report
 		local
 			u, v: like uri
 		do
-			u := uri
-			v := other.uri
-			Result := (u = v) or else u.same_string (v)
+			if other = Current then
+				Result := True
+			else
+				u := uri
+				v := other.uri
+				Result := (u = v) or else u.same_string (v)
+			end
 		end
 
 	hash_code: INTEGER

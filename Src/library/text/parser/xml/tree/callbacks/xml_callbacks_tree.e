@@ -31,6 +31,7 @@ feature {NONE} -- Initialization
 			Precursor
 			create document.make
 			create namespace_cache.make (0)
+			create default_namespace.make_default
 		end
 
 feature -- Element change
@@ -177,6 +178,9 @@ feature {NONE} -- Formatter
 
 feature {NONE} -- Implementation
 
+	default_namespace: XML_NAMESPACE
+			-- Default namespace
+
 	current_element: detachable XML_ELEMENT
 			-- Current element
 
@@ -210,26 +214,30 @@ feature {NONE} -- Implementation
 		do
 			if a_uri /= Void then
 				create Result.make (a_prefix, a_uri)
-			else
+			elseif a_prefix /= Void then
 				--| Should not occur since `has_resolved_namespaces' is True
 				create Result.make (a_prefix, "")
+			else
+					-- We have no set uri or prefix so we use the `default_namespace'.				
+				Result := default_namespace
 			end
 
-
-			-- share namespace nodes
-			check cache_initialised: namespace_cache /= Void end
-			-- XML_NAMESPACE is hashable/equal on uri only,
-			-- so we must explicitely check if the cached namespace
-			-- has the same prefix
-			namespace_cache.search (Result)
-			if
-				namespace_cache.found and then
-				attached namespace_cache.found_item as cached_prefix and then
-				cached_prefix.same_prefix (Result)
-			then
-				Result := cached_prefix
-			else
-				namespace_cache.force (Result, Result)
+			if Result /= default_namespace then
+				-- share namespace nodes
+				check cache_initialised: namespace_cache /= Void end
+				-- XML_NAMESPACE is hashable/equal on uri only,
+				-- so we must explicitely check if the cached namespace
+				-- has the same prefix
+				namespace_cache.search (Result)
+				if
+					namespace_cache.found and then
+					attached namespace_cache.found_item as cached_prefix and then
+					cached_prefix.same_prefix (Result)
+				then
+					Result := cached_prefix
+				else
+					namespace_cache.force (Result, Result)
+				end
 			end
 		ensure
 			result_not_void: Result /= Void

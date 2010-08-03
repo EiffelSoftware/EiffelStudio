@@ -1,6 +1,5 @@
 note
-	description : "Objects that ..."
-	author      : "$Author$"
+	description : "External iteration cursor used by `across...loop...end'."
 	date        : "$Date$"
 	revision    : "$Revision$"
 
@@ -10,7 +9,7 @@ class
 inherit
 	ITERATION_CURSOR [XML_NODE]
 		redefine
-			make, target
+			make, target, start, forth
 		end
 
 create
@@ -22,7 +21,8 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'.
 		do
 			Precursor (s)
-			nodes := s.nodes
+			internal_cursor := s.nodes.new_cursor
+			cursor_index := internal_cursor.cursor_index
 		end
 
 feature -- Access
@@ -30,20 +30,53 @@ feature -- Access
 	item: XML_NODE
 			-- Item at current cursor position
 		do
-			Result := nodes.item
+			Result := internal_cursor.item
 		end
 
 feature -- Cursor movement
 
-	remove
+	start
+			-- <Precursor>
 		do
-			nodes.remove
+			internal_cursor.start
+			cursor_index := internal_cursor.cursor_index
+			is_set := True
+		end
+
+	forth
+			-- <Precursor>
+		do
+			internal_cursor.forth
+			cursor_index := internal_cursor.cursor_index
+		end
+
+	remove
+			-- Remove `item' pointed at by `Current' from `target'.
+		local
+			l_nodes: LIST [XML_NODE]
+			c: CURSOR
+		do
+			l_nodes := target.nodes
+				--| `{XML_COMPOSITE}.before_addition' ensures a node has a single parent
+				--| and is contained only once.
+				--| thus it is safe to call prune_all
+			c := l_nodes.cursor
+			l_nodes.prune_all (item)
+			if l_nodes.valid_cursor (c) then
+				l_nodes.go_to (c)
+			end
 		end
 
 	go_after
+			-- Set `Current' to be `after'.	
 		do
-			nodes.finish
-			nodes.forth
+			from
+			until
+				internal_cursor.after
+			loop
+				internal_cursor.forth
+			end
+			cursor_index := internal_cursor.cursor_index
 		end
 
 feature -- Status report
@@ -51,20 +84,19 @@ feature -- Status report
 	after: BOOLEAN
 			-- Is there no valid cursor position to the right of cursor?
 		do
-			Result := nodes.after
+			Result := internal_cursor.after
 		end
 
 feature {NONE} -- Implementation
 
-	nodes: LIST [XML_NODE]
-			-- Associated nodes list
+	internal_cursor: INDEXABLE_ITERATION_CURSOR [XML_NODE]
+		-- Node cursor that `Current' forwards calls to.			
 
 	target: XML_COMPOSITE
 			-- Associated structure used for iteration
 
 invariant
-	nodes_attached: nodes /= Void
-	nodes_from_target: target.nodes = nodes
+	target_attached: target /= Void
 
 note
 	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"

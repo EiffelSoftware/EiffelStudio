@@ -1410,6 +1410,13 @@ end;
 								is_the_same := old_feature_i.is_unique and then
 									unique_feature.same_value (old_feature_i)
 							end;
+								-- If they seems the same, let's have a look at the previous signature
+								-- as maybe it is not valid anymore in which case it clearly is not the
+								-- same routine. Or let's check they really have the same signature.
+								-- This fixes eweasel test#incr347.
+							if is_the_same and old_feature_i.is_valid then
+								is_the_same := not Result.is_type_evaluation_delayed and then old_feature_i.same_signature (Result)
+							end
 						end;
 
 							-- If old representation written in the class,

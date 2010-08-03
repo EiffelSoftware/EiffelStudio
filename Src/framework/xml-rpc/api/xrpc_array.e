@@ -26,7 +26,8 @@ feature {NONE} -- Initialization
 	make_empty
 			-- Creates a new, empty XML-RPC array.
 		do
-			create internal_array.make_empty (1)
+			create internal_array.make_empty
+			internal_array.rebase (1)
 		end
 
 	make_from_array (a_array: ARRAY [XRPC_VALUE])
@@ -151,7 +152,8 @@ feature -- Conversion
 		do
 			l_array := internal_array
 			if l_array.is_empty then
-				create Result.make_empty (1)
+				create Result.make_empty
+				Result.rebase (1)
 			else
 					-- using `make_filled with first item' for Void-safety reason
 				create Result.make_filled (l_array [l_array.lower], 1, l_array.count)

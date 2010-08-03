@@ -558,11 +558,19 @@ feature -- Third pass: byte code production and type check
 				-- Initialization for actual types evaluation
 			Inst_context.set_group (cluster)
 
-				-- For a changed class, the supplier list has to be updated
-			dependances := depend_server.item (class_id)
+				-- For a changed class, the supplier list has to be updated.
+				-- We use `disk_item' because new dependencies are not stored if there is a
+				-- compilation error, so all the modification we make to `dependances' are
+				-- reused as is when recompiling. This fixes the `consistency' precondition of
+				-- {SUPPLIER_LIST}.remove_occurrence and eweasel test#incr109.
+				-- We look first in TMP_DEPEND_SERVER to address test#incr308 and test#fixed066.
+			dependances := tmp_depend_server.item (class_id)
 			if dependances = Void then
-				create dependances.make (changed_features.count)
-				dependances.set_class_id (class_id)
+				dependances := depend_server.disk_item (class_id)
+				if dependances = Void then
+					create dependances.make (changed_features.count)
+					dependances.set_class_id (class_id)
+				end
 			end
 
 			if changed then
@@ -987,7 +995,7 @@ feature -- Third pass: byte code production and type check
 					if new_suppliers /= Void then
 							-- Write new dependances in the dependances temporary
 							-- server
-						Tmp_depend_server.put (dependances)
+						tmp_depend_server.put (dependances)
 
 							-- Update the client/supplier relations for the current
 							-- class

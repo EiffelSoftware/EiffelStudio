@@ -73,25 +73,19 @@ feature {NONE} -- Implementation
 	debug_mutex: MUTEX
 			-- Mutex to control access to output facilities
 			-- when debugging threaded eweasel
-		note
-            		once_status: global
-		once
+		once ("PROCESS")
 			create Result.make
 		end
 
 	thread_table: HASH_TABLE [INTEGER, POINTER]
 			-- Thread numbers indexed by thread pointer
-		note
-            		once_status: global
-		once
+		once ("PROCESS")
 			create Result.make (100)
 		end
 
 	thread_count_cell: CELL [INTEGER]
 			-- Cell with next available thread number
-		note
-            		once_status: global
-		once
+		once ("PROCESS")
 			create Result.put (0)
 		end
 

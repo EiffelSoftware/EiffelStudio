@@ -76,13 +76,17 @@ feature -- Visit nodes
 	process_library (a_library: CONF_LIBRARY)
 			-- Visit `a_library'.
 		do
-			retrieve_recursively (a_library.library_target)
+			if attached a_library.library_target as l_library_target then
+				retrieve_recursively (l_library_target)
+			end
 		end
 
 	process_precompile (a_precompile: CONF_PRECOMPILE)
 			-- Visit `a_precompile'.
 		do
-			retrieve_recursively (a_precompile.library_target)
+			if attached a_precompile.library_target as l_library_target then
+				retrieve_recursively (l_library_target)
+			end
 		end
 
 	process_cluster (a_cluster: CONF_CLUSTER)
@@ -112,9 +116,11 @@ feature {NONE} -- Implementation
 		local
 			l_class: CLASS_I
 		do
-			l_class ?= a_group.classes.item (name)
-			if l_class /= Void then
-				found_classes.force (l_class)
+			if a_group.classes_set then
+				l_class ?= a_group.classes.item (name)
+				if l_class /= Void then
+					found_classes.force (l_class)
+				end
 			end
 		end
 

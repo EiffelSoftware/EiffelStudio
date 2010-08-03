@@ -348,6 +348,9 @@ feature -- Generation
 									-- maybe its an inline agent
 								l_feature := l_class.eiffel_class_c.inline_agent_of_id (feature_id)
 							end
+							if l_feature /= Void and then l_feature.is_attribute then
+								l_feature := Void
+							end
 							if l_feature = Void then
 									-- Remove invalid entry or feature which has been converted
 									-- from a routine to an attribute.

@@ -637,7 +637,7 @@ feature {TYPE_A} -- Helpers
 			l_generics := generics
 			nb := l_generics.count
 			if
-				l_class /= Void and then
+				l_class /= Void and then l_class.is_valid and then
 				(l_class.is_expanded = (class_declaration_mark = expanded_mark)) and then
 				((l_class.generics /= Void and then l_class.generics.count = nb) or is_tuple)
 			then
@@ -1596,7 +1596,7 @@ feature -- Primitives
 								else
 									add_future_checking (a_type_context,
 										agent delayed_creation_constraint_check (a_type_context, a_context_feature,
-										l_generic_parameter, l_constraints, l_formal_dec_as, i, l_formal_generic_parameter))
+										l_generic_parameter, l_constraints, i, l_formal_generic_parameter))
 								end
 							else
 									-- We do not have a creation constraint, so stop checking for it.
@@ -1648,22 +1648,28 @@ feature -- Primitives
 			a_context_feature: FEATURE_I;
 			to_check: TYPE_A
 			constraint_type: TYPE_SET_A
-			formal_dec_as: FORMAL_CONSTRAINT_AS
 			i: INTEGER;
 			formal_type: FORMAL_A)
 				-- Check that declaration of generic class is conform to
 				-- defined creation constraint in delayed mode.
 		require
-			formal_dec_as_not_void: formal_dec_as /= Void
-			creation_constraint_exists: formal_dec_as.has_creation_constraint
 			to_check_is_formal_implies_formal_type_not_void: to_check.conformance_type.is_formal implies formal_type /= Void
+		local
+			l_formal_dec_as: FORMAL_CONSTRAINT_AS
 		do
 			reset_constraint_error_list
 				-- Some delay checks involves classes that are not in the system anymore,
 				-- in that case there is nothing to check.
-			if is_valid and then context_class.is_valid and then to_check /= Void and then to_check.is_valid then
-				creation_constraint_check (formal_dec_as, constraint_type, context_class, to_check, i, formal_type)
-				generate_error_from_creation_constraint_list (context_class, a_context_feature, formal_dec_as.start_location )
+			if
+				is_valid and then context_class.is_valid and then to_check /= Void and then to_check.is_valid and then
+				associated_class.generics.valid_index (i)
+			then
+				l_formal_dec_as ?= associated_class.generics.i_th (i)
+				check l_formal_dec_as_not_void: l_formal_dec_as /= Void end
+				if l_formal_dec_as.has_creation_constraint then
+					creation_constraint_check (l_formal_dec_as, constraint_type, context_class, to_check, i, formal_type)
+					generate_error_from_creation_constraint_list (context_class, a_context_feature, l_formal_dec_as.start_location )
+				end
 			end
 		end
 

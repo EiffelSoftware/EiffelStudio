@@ -12,8 +12,6 @@ feature -- Access
 
 	output: EW_EWEASEL_OUTPUT_CONTROL
 			-- Output interface
-		note
-			once_status: global 
 		do
 			Result := output_cell.item
 		end
@@ -34,9 +32,7 @@ feature {NONE} -- Implementation
 
 	output_cell: CELL [EW_EWEASEL_OUTPUT_CONTROL]
 			-- Output cell
-		note
-			once_status: global 
-		once
+		once ("PROCESS")
 			create Result.put (Void)
 		end
 

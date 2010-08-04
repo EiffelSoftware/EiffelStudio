@@ -1213,7 +1213,7 @@ feature {NONE} -- Implementation
 						-- Value cannot change from a precompile or in a compiled system
 					if l_b /= system.total_order_on_reals and then (a_target.precompile /= Void or workbench.has_compilation_started) then
 						if not is_force_new_target then
-							create vd83.make (s_multithreaded, system.has_multithreaded.out.as_lower, l_s)
+							create vd83.make (s_total_order_on_reals, system.total_order_on_reals.out.as_lower, l_s)
 							Error_handler.insert_warning (vd83)
 						end
 					else

@@ -113,13 +113,8 @@ Setup check complete and your configuration seems ok.
 		<exec executable="${EIFFEL_SRC}\C\shell\bin\sh.exe --version > NUL:" accept_errors="true" exit_code_variable="sh_in_runtime" 
 			unless="${sh_in_path}=0" />
 		<echo message="  -> sh found in runtime subfolders, exit code: $sh_in_runtime, ok" if="${sh_in_runtime}=0" />
-		<set name="sh_in_path" value="sh_in_runtime" if="${sh_in_runtime}" />
+		<set name="sh_in_path" value="$sh_in_runtime" if="${sh_in_runtime}" />
 		<unset name="sh_in_runtime" />
-		<exec executable="bash --version > NUL:" accept_errors="true" exit_code_variable="bash_in_path" 
-			unless="${sh_in_path}=0" />
-		<echo message="  -> bash found in runtime subfolders, exit code: $bash_in_path, ok" if="${bash_in_path}=0" />
-		<set name="sh_in_path" value="bash_in_path" if="${bash_in_path}" />
-		<unset name="bash_in_path" />
 
 		<echo message="===============================================================================" unless="${sh_in_path}=0" />
 		<echo message="ERROR: unable to find either sh, C\shell\bin\sh.exe, or bash in PATH, exit code: $sh_in_path." unless="${sh_in_path}=0" />

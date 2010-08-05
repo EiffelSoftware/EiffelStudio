@@ -889,7 +889,7 @@ end
 
 				-- Result is declared only if needed. For onces, it is
 				-- accessed via a key allowing us to have them per thread.
-			if (not result_type.is_void) and then (wkb_mode or else context.result_used) then
+			if (not result_type.is_void) and then (wkb_mode or else context.result_used or else is_object_relative_once) then
 				generate_result_declaration (has_rescue and then not wkb_mode)
 			end
 

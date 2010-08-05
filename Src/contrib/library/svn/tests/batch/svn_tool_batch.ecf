@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-6-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-6-0 http://www.eiffel.com/developers/xml/configuration-1-6-0.xsd" name="svn_tool" uuid="D1028558-6962-4936-8B1C-F90A9C9CD12D">
+	<target name="common">
+		<file_rule>
+			<exclude>/EIFGENs$</exclude>
+			<exclude>/.svn$</exclude>
+		</file_rule>
+		<option trace="false" profile="false" debug="true" warning="true" syntax="provisional">
+			<debug name="svn_engine" enabled="true"/>
+			<assertions precondition="true"/>
+		</option>
+		<setting name="multithreaded" value="True"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf"/>
+		<library name="esvn" location="..\svn.ecf"/>
+		<library name="gobo_argument" location="$ISE_LIBRARY\library\gobo\gobo_argument.ecf"/>
+		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel.ecf"/>
+		<library name="gobo_regexp" location="$ISE_LIBRARY\library\gobo\gobo_regexp.ecf"/>
+		<library name="gobo_structure" location="$ISE_LIBRARY\library\gobo\gobo_structure.ecf"/>
+		<library name="gobo_time" location="$ISE_LIBRARY\library\gobo\gobo_time.ecf"/>
+		<library name="gobo_utility" location="$ISE_LIBRARY\library\gobo\gobo_utility.ecf"/>
+		<library name="preferences" location="$ISE_LIBRARY\library\preferences\preferences_xml.ecf"/>
+		<library name="process" location="$ISE_LIBRARY\library\process\process.ecf"/>
+		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf"/>
+		<cluster name="tests" location=".\" recursive="true"/>
+	</target>
+	<target name="batch" extends="common">
+		<root class="SVN_TOOL_BATCH" feature="make"/>
+		<option debug="true">
+			<debug name="svn_engine" enabled="true"/>
+		</option>
+		<setting name="console_application" value="true"/>
+		<setting name="executable_name" value="svntb"/>
+		<variable name="batch_preferences" value="true"/>
+	</target>
+</system>

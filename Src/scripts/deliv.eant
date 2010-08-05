@@ -264,8 +264,12 @@
 		<geant target="copy_full_tree" arguments="$_TARGET_DELIV_DIR/studio/config/windows,$_TARGET_DELIV_DIR/studio/config/$ISE_PLATFORM" if="${ISE_PLATFORM}=win64" />
 
 		<setenv name="EWEASEL" value="$EIFFEL_SRC${path_separator}..${path_separator}eweasel" />
-		<exec executable="move ec${exe} ecg${exe}" dir="$_TARGET_DELIV_DIR/studio/spec/$ISE_PLATFORM/bin" />
-		<exec executable="copy ecb${exe} ec${exe}" dir="$_TARGET_DELIV_DIR/studio/spec/$ISE_PLATFORM/bin" />
+		<exec executable="move ec${exe} ecg${exe}" dir="$_TARGET_DELIV_DIR/studio/spec/$ISE_PLATFORM/bin" if="$is_windows" />
+		<exec executable="mv ec${exe} ecg${exe}" dir="$_TARGET_DELIV_DIR/studio/spec/$ISE_PLATFORM/bin" unless="$is_windows" />
+
+		<exec executable="copy ecb${exe} ec${exe}" dir="$_TARGET_DELIV_DIR/studio/spec/$ISE_PLATFORM/bin" if="$is_windows" />
+		<exec executable="cp ecb${exe} ec${exe}" dir="$_TARGET_DELIV_DIR/studio/spec/$ISE_PLATFORM/bin" unless="$is_windows" />
+
 		<replace file="$EWEASEL/compilation/install_eweasel.bat" token="gvim.exe" replace="gvim.bat" flags="g" if="$is_windows" />
 		<exec executable="install_eweasel.bat" dir="$EWEASEL/compilation" 
 			accept_errors="true" exit_code_variable="no_return_code" if="$is_windows"/>

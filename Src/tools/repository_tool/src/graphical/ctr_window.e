@@ -994,6 +994,7 @@ feature {CTR_TOOL} -- Catalog
 				end
 				logs_tool.reset
 				a_repodata.load_logs
+				update_catalog_row (r)
 				logs_tool.update_current_repository (a_repodata, a_log_filter)
 				info_tool.update_current_repository (a_repodata)
 			else

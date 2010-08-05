@@ -268,7 +268,7 @@
 		<exec executable="copy ecb${exe} ec${exe}" dir="$_TARGET_DELIV_DIR/studio/spec/$ISE_PLATFORM/bin" />
 		<replace file="$EWEASEL/compilation/install_eweasel.bat" token="gvim.exe" replace="gvim.bat" flags="g" if="$is_windows" />
 		<exec executable="install_eweasel.bat" dir="$EWEASEL/compilation" 
-			accept_errors="true" exit_code_variable="no_return_code" />
+			accept_errors="true" exit_code_variable="no_return_code" if="$is_windows"/>
 		<global name="_TARGET_DELIV_DIR" value="${old_TARGET_DELIV_DIR}" />
 	</target>
 

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-6-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-6-0 http://www.eiffel.com/developers/xml/configuration-1-6-0.xsd" name="test_svn" uuid="4A9FB811-4F47-4A9B-ACB8-4E1F39AEC875">
+	<target name="test_svn">
+		<root class="TEST_SVN" feature="make"/>
+		<file_rule>
+			<exclude>/EIFGENs$</exclude>
+			<exclude>/.svn$</exclude>
+		</file_rule>
+		<option trace="false" profile="false" debug="true" warning="true" syntax="provisional">
+			<debug name="svn_engine" enabled="true"/>
+			<assertions precondition="true"/>
+		</option>
+		<setting name="console_application" value="true"/>
+		<setting name="executable_name" value="test_svn"/>
+		<setting name="multithreaded" value="True"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf"/>
+		<library name="svn" location="..\..\svn.ecf" readonly="false"/>
+		<library name="process" location="$ISE_LIBRARY\library\process\process.ecf"/>
+		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf"/>
+		<cluster name="tests" location=".\" recursive="true"/>
+	</target>
+</system>

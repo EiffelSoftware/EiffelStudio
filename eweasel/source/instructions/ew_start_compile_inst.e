@@ -94,6 +94,10 @@ feature {NONE} -- Implementation
 				-- Path to configuration file
 			Result.extend ("-config")
 			Result.extend (os.full_file_name (env.value (Test_dir_name), test.ace_name))
+			if test.target_name /= Void then
+				Result.extend ("-target")
+				Result.extend (test.target_name)
+			end
 		end;
 
 

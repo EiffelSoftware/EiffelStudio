@@ -34,6 +34,8 @@ feature
 			Result.put (t, System_keyword);
 			create {EW_ACE_INST} t;
 			Result.put (t, Ace_keyword);
+			create {EW_CONFIG_INST} t
+			Result.put (t, config_keyword);
 			create {EW_DEFINE_INST} t;
 			Result.put (t, Define_keyword);
 			create {EW_UNDEFINE_INST} t;

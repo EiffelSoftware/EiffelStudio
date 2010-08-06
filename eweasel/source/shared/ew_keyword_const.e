@@ -10,6 +10,7 @@ feature -- Properties
 
 	Abort_compile_keyword: 		STRING = "abort_compile"
 	Ace_keyword: 			STRING = "ace"
+	Config_keyword: 			STRING = "config"
 	C_compile_final_keyword: 	STRING = "c_compile_final"
 	C_compile_result_keyword: 	STRING = "c_compile_result"
 	C_compile_work_keyword: 	STRING = "c_compile_work"

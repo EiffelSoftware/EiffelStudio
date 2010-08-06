@@ -152,6 +152,9 @@ feature -- Test properties
 	ace_name: STRING;
 			-- Name of Ace file for Eiffel compilations.
 
+	target_name: STRING
+			-- Name of target of current project config file
+
 	cpu_limit: INTEGER;
 			-- CPU limit in seconds of spawned processes.
 			-- Zero means no limit.
@@ -234,6 +237,14 @@ feature {EW_TEST_INSTRUCTION} -- Set test properties
 		do
 			ace_name := name;
 		end;
+
+	set_target_name (a_target: STRING)
+			-- Set `target_name' with `a_target'
+		do
+			target_name := a_target
+		ensure
+			set: target_name = a_target
+		end
 
 	set_cpu_limit (limit: INTEGER)
 		do

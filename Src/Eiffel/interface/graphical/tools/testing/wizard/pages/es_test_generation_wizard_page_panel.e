@@ -350,14 +350,7 @@ feature {NONE} -- Events
 		local
 			l_types: STRING
 			l_system: SYSTEM_I
-			l_root: detachable SYSTEM_ROOT
-			l_root_group: detachable CONF_GROUP
-			l_root_class, l_class: detachable CLASS_C
-			l_root_feature: detachable FEATURE_I
-			l_type_as: detachable TYPE_AS
-			l_type_a: detachable TYPE_A
-			i: INTEGER
-			l_level: NATURAL
+			l_error: like validate_type
 		do
 			Result := [True, Void]
 			if not a_input.is_empty then
@@ -366,75 +359,23 @@ feature {NONE} -- Events
 				if not (l_types.has ('!') or l_types.has ('?')) then
 					type_parser.parse_from_string_32 ("type " + l_types, Void)
 					error_handler.wipe_out
-					l_type_as := type_parser.type_node
-					if l_type_as /= Void then
+					if attached type_parser.type_node as l_type_as then
 						if test_suite.is_service_available then
 							l_system := etest_suite.project_access.project.system.system
-							if not l_system.root_creators.is_empty then
-								from
-									l_system.root_creators.start
-								until
-									l_system.root_creators.off
-								loop
-									l_root := l_system.root_creators.item_for_iteration
-									if l_root.cluster.is_internal then
-										l_system.root_creators.go_i_th (0)
-									else
-										l_system.root_creators.forth
-									end
-								end
-								l_root_group := l_root.cluster
-								l_root_class := l_root.root_class.compiled_class
-								if l_root_class /= Void then
-									l_root_feature := l_root_class.feature_named_32 (l_root.procedure_name)
-								end
+
+							from
+								l_system.root_creators.start
+								l_error := e_unable_to_check_compiled_classes
+							until
+								l_system.root_creators.off or l_error = Void
+							loop
+								l_error := validate_type (l_type_as, l_system.root_creators.item_for_iteration)
+								l_system.root_creators.forth
 							end
-							if l_root_class /= Void and l_root_group /= Void and l_root_feature /= Void then
-								if attached {CLASS_TYPE_AS} l_type_as as l_class_type then
-									l_type_a := type_a_generator.evaluate_type_if_possible (l_type_as, l_root_class)
-									if l_type_a /= Void and l_class_type.generics = Void then
-										l_class := l_type_a.associated_class
-										check l_class /= Void end
-										if l_class.is_expanded then
-											Result.valid := False
-											Result.error := locale_formatter.translation (e_no_expanded_types)
-										elseif l_class.is_generic then
-											from
-												i := 1
-											until
-												not l_class.is_valid_formal_position (i) or not Result.valid
-											loop
-												if l_class.generics [i].is_multi_constrained (l_class.generics) then
-													Result.valid := False
-													Result.error := locale_formatter.formatted_translation (e_multiple_constrains_not_supported, [l_types])
-												elseif l_class.constrained_type (i).has_formal_generic then
-													Result.valid := False
-													Result.error := locale_formatter.formatted_translation (e_recursive_generics_not_supported, [l_types])
-												end
-												i := i + 1
-											end
-										end
-									elseif l_type_a /= Void then
-										l_level := error_handler.error_level
-										type_a_checker.init_for_checking (l_root_feature, l_root_class, Void, error_handler)
-										l_type_a := type_a_checker.check_and_solved (l_type_a, l_type_as)
-										type_a_checker.check_type_validity (l_type_a, l_type_as)
-										if error_handler.error_level /= l_level then
-											Result.valid := False
-											Result.error := locale_formatter.formatted_translation (e_type_contains_invalid_generic, [l_types])
-											l_type_a := Void
-											error_handler.wipe_out
-										end
-									end
-									if l_type_a = Void and Result.valid then
-										Result.valid := False
-										Result.error := locale_formatter.formatted_translation (e_type_unkown, [l_types])
-									end
-								else
-									Result := [False, locale_formatter.formatted_translation (e_invalid_type_definition, [l_types])]
-								end
-							else
-								Result := [False, locale_formatter.translation (e_unable_to_check_compiled_classes)]
+
+							if l_error /= Void then
+								Result.valid := False
+								Result.error := locale_formatter.formatted_translation (l_error, [l_types])
 							end
 						else
 							Result := [False, locale_formatter.translation (e_service_not_available)]
@@ -575,6 +516,62 @@ feature {NONE} -- Basic operations
 			a_parent.disable_item_expand (l_hbox)
 		end
 
+	validate_type (a_type_as: TYPE_AS; a_root: SYSTEM_ROOT): detachable STRING
+			-- Validate type `a_type_as' as seen from `a_root'.
+		local
+			l_class: detachable CLASS_C
+			l_type_a: detachable TYPE_A
+			i: INTEGER
+			l_level: NATURAL
+		do
+			if
+				attached a_root.cluster as l_root_group and then
+				attached a_root.root_class.compiled_class as l_root_class and then
+				attached l_root_class.feature_named_32 (a_root.procedure_name) as l_root_feature
+			then
+				if attached {CLASS_TYPE_AS} a_type_as as l_class_type then
+					l_type_a := type_a_generator.evaluate_type_if_possible (a_type_as, l_root_class)
+					if l_type_a /= Void and l_class_type.generics = Void then
+						l_class := l_type_a.associated_class
+						check l_class /= Void end
+						if l_class.is_expanded then
+							Result := e_no_expanded_types
+						elseif l_class.is_generic then
+							from
+								i := 1
+							until
+								not l_class.is_valid_formal_position (i) or Result /= Void
+							loop
+								if l_class.generics [i].is_multi_constrained (l_class.generics) then
+									Result := e_multiple_constrains_not_supported
+								elseif l_class.constrained_type (i).has_formal_generic then
+									Result := e_recursive_generics_not_supported
+								end
+								i := i + 1
+							end
+						end
+					elseif l_type_a /= Void then
+						l_level := error_handler.error_level
+						type_a_checker.init_for_checking (l_root_feature, l_root_class, Void, error_handler)
+						l_type_a := type_a_checker.check_and_solved (l_type_a, a_type_as)
+						type_a_checker.check_type_validity (l_type_a, a_type_as)
+						if error_handler.error_level /= l_level then
+							Result := e_type_contains_invalid_generic
+							l_type_a := Void
+							error_handler.wipe_out
+						end
+					end
+					if l_type_a = Void and Result = Void then
+						Result := e_type_unkown
+					end
+				else
+					Result := e_invalid_type_definition
+				end
+			else
+				Result := e_unable_to_check_compiled_classes
+			end
+		end
+
 feature {NONE} -- Constants
 
 	b_add_type: STRING = "+"
@@ -598,11 +595,11 @@ feature {NONE} -- Internationalization
 	e_no_valid_type_name: STRING = "$1 is not a valid type name"
 	e_unable_to_check_compiled_classes: STRING = "Unable to check if types or valid, please recompile and start again"
 	e_class_not_compiled: STRING = "$1 is not a compiled type"
-	e_attachment_marks_not_supported: STRING = "Attachment marks are not supported"
+	e_attachment_marks_not_supported: STRING = "Attachment marks in type name are not supported"
 	e_no_expanded_types: STRING = "AutoTest is not able to test expanded types"
-	e_invalid_type_definition: STRING = "$1 is not a valid type definition AutoTest can use"
-	e_type_unkown: STRING = "$1 contains uncompiled types"
-	e_type_contains_invalid_generic: STRING = "$1 contains invalid generic parameters"
+	e_invalid_type_definition: STRING = "$1 is not a valid type expression for AutoTest"
+	e_type_unkown: STRING = "Expression%N%N$1%N%Ncontains uncompiled type names"
+	e_type_contains_invalid_generic: STRING = "Expression%N%N$1%N%Ncontains invalid generic parameters"
 	e_multiple_constrains_not_supported: STRING = "Type $1 can not be tested since it contains open generic parameters with multiple constraints. Please be more specific."
 	e_recursive_generics_not_supported: STRING = "Type $1 can not be used for testing since it contains open recursive generic parameters. Please be more specific."
 

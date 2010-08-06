@@ -161,33 +161,38 @@ feature -- Element change
 				end
 
 				if attached rsvnlog.svn_revision.paths as l_changes and then l_changes.count > 0 then
-					g.insert_new_row (g.row_count + 1)
-					g.insert_new_row (g.row_count + 1)
-					l_row := g.row (g.row_count)
-					if l_changes.count = 1 then
-						l_row.set_item (cst_info_title_col, create {EV_GRID_LABEL_ITEM}.make_with_text ("1 node changed"))
-					else
+--					g.insert_new_row (g.row_count + 1)
+					l_row := Void
+					if l_changes.count > 1 then
+						g.insert_new_row (g.row_count + 1)
+						l_row := g.row (g.row_count)
+
 						l_row.set_item (cst_info_title_col, create {EV_GRID_LABEL_ITEM}.make_with_text (l_changes.count.out + " nodes changed"))
+						l_row.set_item (cst_info_value_col, create {EV_GRID_LABEL_ITEM}.make_with_text (rsvnlog.svn_revision.common_parent_path + " ..."))
+						l_row.expand_actions.extend (agent do changes_expanded := True end)
+						l_row.collapse_actions.extend (agent do changes_expanded := False end)
 					end
-					l_row.set_item (cst_info_value_col, create {EV_GRID_LABEL_ITEM}.make_with_text (rsvnlog.svn_revision.common_parent_path + " ..."))
-					l_row.expand_actions.extend (agent do changes_expanded := True end)
-					l_row.collapse_actions.extend (agent do changes_expanded := False end)
 
 					across
 						l_changes as l_paths
 					loop
-						g.insert_new_row_parented (g.row_count + 1, l_row)
+						if l_row /= Void then
+							g.insert_new_row_parented (g.row_count + 1, l_row)
+						else
+							g.insert_new_row (g.row_count + 1)
+						end
+
 						l_subrow := g.row (g.row_count)
 						l_subrow.set_item (cst_info_title_col, create {EV_GRID_LABEL_ITEM}.make_with_text (l_paths.item.action))
 						l_subrow.set_item (cst_info_value_col, create {EV_GRID_LABEL_ITEM}.make_with_text (l_paths.item.path))
 					end
-					if l_row.is_expandable and changes_expanded then
+					if l_row /= Void and then l_row.is_expandable and changes_expanded then
 						l_row.expand
 					end
 				end
 
 
-				g.insert_new_row (g.row_count + 1)
+--				g.insert_new_row (g.row_count + 1)
 				g.insert_new_row (g.row_count + 1)
 				l_row := g.row (g.row_count)
 --				l_row.set_item (cst_info_title_col, create {EV_GRID_LABEL_ITEM}.make_with_text ("Diff"))
@@ -202,9 +207,14 @@ feature -- Element change
 					l_row.set_item (cst_info_value_col, glab)
 				end
 
-				g.column (cst_info_title_col).resize_to_content
-				g.column (cst_info_title_col).set_width (g.column (cst_info_title_col).width + 5)
-				g.column (cst_info_value_col).resize_to_content
+				if g.column_count >= cst_info_title_col then
+					g.column (cst_info_title_col).resize_to_content
+--					g.column (cst_info_title_col).set_width (g.column (cst_info_title_col).width + 5)
+				end
+				if g.column_count >= cst_info_value_col then
+					g.column (cst_info_value_col).resize_to_content
+					g.column (cst_info_value_col).set_width (g.column (cst_info_value_col).width + 5)
+				end
 			elseif attached {REPOSITORY_SVN_DATA} current_repository as rsvnrepo then
 				cst_info_title_col := 1
 				cst_info_value_col := 2
@@ -260,9 +270,13 @@ feature -- Element change
 						l_row.set_item (cst_info_value_col, create {EV_GRID_LABEL_ITEM}.make_with_text (l_url))
 					end
 
-					g.column (cst_info_title_col).resize_to_content
-					g.column (cst_info_title_col).set_width (g.column (1).width + 5)
-					g.column (cst_info_value_col).resize_to_content
+					if g.column_count >= cst_info_title_col then
+						g.column (cst_info_title_col).resize_to_content
+						g.column (cst_info_title_col).set_width (g.column (cst_info_title_col).width + 5)
+					end
+					if g.column_count >= cst_info_value_col then
+						g.column (cst_info_value_col).resize_to_content
+					end
 				end
 			end
 		end

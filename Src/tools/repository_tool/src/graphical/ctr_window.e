@@ -213,8 +213,8 @@ feature -- Layout
 		do
 			if attached docking_manager as dm then
 				catalog_content.set_top ({SD_ENUMERATION}.top)
-				logs_tool.sd_content.set_top ({SD_ENUMERATION}.bottom)
-				info_tool.sd_content.set_relative (catalog_content, {SD_ENUMERATION}.right)
+				logs_tool.sd_content.set_top ({SD_ENUMERATION}.right)
+				info_tool.sd_content.set_relative (logs_tool.sd_content, {SD_ENUMERATION}.bottom)
 				if not catalog_content.is_visible then
 					catalog_content.show
 				end
@@ -231,7 +231,7 @@ feature -- Layout
 					do
 						ac0.set_split_proportion ({REAL_32} 0.3)
 						ac1.set_split_proportion ({REAL_32} 0.3)
-						ac2.set_split_proportion ({REAL_32} 0.3)
+						ac2.set_split_proportion ({REAL_32} 0.7)
 					end (catalog_content, logs_tool.sd_content, info_tool.sd_content)
 				)
 		ensure

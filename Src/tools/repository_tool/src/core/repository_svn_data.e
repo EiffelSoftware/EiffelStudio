@@ -288,7 +288,8 @@ feature {REPOSITORY_SVN_LOG} -- Implementation
 	loaded_log (a_id: STRING): detachable like log_from_revision
 		local
 			f: RAW_FILE
-			l_line: STRING
+			l_line,s: STRING
+			n,p: INTEGER
 			l_message: detachable STRING
 			e: detachable SVN_REVISION_INFO
 			r: INTEGER
@@ -322,9 +323,31 @@ feature {REPOSITORY_SVN_LOG} -- Implementation
 						e.set_author (l_line.string)
 					elseif l_line.starts_with ("parent=") then
 --						l_line.remove_head (7)
-					elseif l_line.starts_with ("path[]=") then
-						l_line.remove_head (7)
-						e.add_path (l_line.string, "", "")
+					elseif l_line.starts_with ("path[]") then
+						p := l_line.index_of ('=', 1)
+						if p > 0 then
+							s := l_line.substring (6, p - 1)
+							n := s.occurrences (',')
+							if n = 1 then
+								-- path[],A=
+								e.add_path (l_line.substring (p + 1, l_line.count), "", s.substring (2, s.count))
+							elseif n = 2 then
+								-- path[],K,A=
+								inspect s.item (2)
+								when 'D', 'd' then
+									e.add_dir_path (l_line.substring (p + 1, l_line.count), s.substring (4, s.count))
+								when 'F', 'f' then
+									e.add_file_path (l_line.substring (p + 1, l_line.count), s.substring (4, s.count))
+								else
+									e.add_path (l_line.substring (p + 1, l_line.count), s.substring (2,2), s.substring (4, s.count))
+								end
+							else
+								e.add_path (l_line.substring (p + 1, l_line.count), "", "")
+							end
+						else
+							check invalid_line: False end
+							print ("Invalid log line: " + l_line + "%N")
+						end
 					elseif l_line.starts_with ("message=") then
 						l_line.remove_head (8)
 						l_message := l_line.string
@@ -356,7 +379,20 @@ feature {REPOSITORY_SVN_LOG} -- Implementation
 					until
 						l_paths.after
 					loop
-						f.put_string ("path[]=" + l_paths.item.path + "%N")
+						f.put_string ("path[],")
+						f.put_string (l_paths.item.kind.out + l_paths.item.path + l_paths.item.path + "%N")
+
+						inspect
+							l_paths.item.kind
+						when {SVN_CONSTANTS}.kind_dir then
+							f.put_string ("D,")
+						when {SVN_CONSTANTS}.kind_file then
+							f.put_string ("F,")
+						else
+						end
+						f.put_string (l_paths.item.action)
+						f.put_character ('=')
+						f.put_string (l_paths.item.path + "%N")
 						l_paths.forth
 					end
 				end

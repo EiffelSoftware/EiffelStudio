@@ -65,38 +65,40 @@ feature -- Element change
 	update
 		local
 			g: like grid
-			l_row, l_subrow: EV_GRID_ROW
+			l_row, l_subrow: detachable EV_GRID_ROW
 			glab: EV_GRID_LABEL_ITEM
 			grtxt: EV_GRID_RICH_LABEL_ITEM
 --			gcb: EV_GRID_CHECKABLE_LABEL_ITEM
 --			gtxt: EV_GRID_TEXT_ITEM
 			md: like smart_log_message
 			repo: REPOSITORY_DATA
+			cst_info_title_col: INTEGER
+			cst_info_value_col: INTEGER
+			n: INTEGER
 		do
 			g := grid
 			g.wipe_out
 			if attached {REPOSITORY_SVN_LOG} current_log as rsvnlog then
+				cst_info_title_col := 2
+				cst_info_value_col := 1 -- 2
+
 				g.insert_new_row (g.row_count + 1)
 				l_row := g.row (g.row_count)
-				l_row.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("Info"))
+--				l_row.set_item (cst_info_title_col, create {EV_GRID_LABEL_ITEM}.make_with_text ("Info"))
 				create grtxt--.make_with_text ("revision " + rsvnlog.id + " by " + rsvnlog.author + " (" + rsvnlog.date + ")")
 				grtxt.add_formatted_text ("revision ", Void, Void)
 				grtxt.add_formatted_text (rsvnlog.id, info_highlight_fgcolor, font_bold)
 				grtxt.add_formatted_text (" by ", Void, Void)
 				grtxt.add_formatted_text (rsvnlog.author, info_highlight_fgcolor, font_bold)
 				grtxt.add_formatted_text (" (" + rsvnlog.date + ")", Void, font_comment)
-
-
-				l_row.set_item (2, grtxt)
+				l_row.set_item (cst_info_value_col, grtxt)
 
 				g.insert_new_row (g.row_count + 1)
 				l_row := g.row (g.row_count)
-				create glab.make_with_text ("Message")
-				glab.align_text_top
-
-				l_row.set_item (1, glab)
+--				create glab.make_with_text ("Message")
+--				glab.align_text_top
+--				l_row.set_item (cst_info_title_col, glab)
 				repo := rsvnlog.parent
-
 				md  := smart_log_message (rsvnlog, repo.tokens_keys)
 				create glab.make_with_text (md.message)
 				glab.set_foreground_color (info_highlight_fgcolor)
@@ -105,125 +107,69 @@ feature -- Element change
 				glab.set_top_border (3)
 				glab.set_bottom_border (5)
 --				glab.pointer_double_press_actions.extend (agent )
-				l_row.set_item (2, glab)
+				l_row.set_item (cst_info_value_col, glab)
+
 				if attached glab.font as ft then
 					l_row.set_height (ft.string_size (glab.text).height + glab.bottom_border + glab.top_border)
 				end
 
---				if
---					repo.has_issue_url and then
---					attached md.matches.item ("bug") as l_issues
---				then
---					from
---						l_issues.start
---					until
---						l_issues.after
---					loop
---						if attached repo.issue_url (l_issues.item) as l_url then
---							g.insert_new_row_parented (g.row_count + 1, l_row)
---							l_subrow := g.row (g.row_count)
---							l_subrow.set_item (1, create {EV_GRID_ITEM})
---							create glab.make_with_text ("bug #" + l_issues.item + ": " + l_url)
---							glab.set_data (l_url)
---							glab.pointer_double_press_actions.force_extend (agent open_url (l_url))
---							l_subrow.set_item (2, glab)
---						end
---						l_issues.forth
---					end
---					if l_row.is_expandable then
---						l_row.expand
---					end
---				end
-
 				if attached repo.tokens as l_tokens and then l_tokens.count > 0 then
-					across
-						l_tokens as tok
-					loop
+					across l_tokens as tok loop
 						if attached md.matches.item (tok.item.key) as lst then
-							from
-								lst.start
-							until
-								lst.after
-							loop
-								if attached repo.token_url (tok.key, lst.item) as l_url then
-									g.insert_new_row_parented (g.row_count + 1, l_row)
-									l_subrow := g.row (g.row_count)
-									l_subrow.set_item (1, create {EV_GRID_ITEM})
-									create glab.make_with_text (tok.item.key + " #" + lst.item + ": " + l_url)
-									glab.set_data (l_url)
-									glab.pointer_double_press_actions.force_extend (agent open_url (l_url))
-									l_subrow.set_item (2, glab)
+							n := n + lst.count
+						end
+					end
+					if n > 0 then
+						if n > 1 then
+							g.insert_new_row (g.row_count + 1)
+							l_row := g.row (g.row_count)
+							l_row.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text (n.out + "references"))
+						else
+							l_row := Void
+						end
+
+						across
+							l_tokens as tok
+						loop
+							if attached md.matches.item (tok.item.key) as lst then
+								from
+									lst.start
+								until
+									lst.after
+								loop
+									if attached repo.token_url (tok.key, lst.item) as l_url then
+										if l_row /= Void then
+											g.insert_new_row_parented (g.row_count + 1, l_row)
+										else
+											g.insert_new_row (g.row_count + 1)
+										end
+										l_subrow := g.row (g.row_count)
+--										l_subrow.set_item (cst_info_title_col, create {EV_GRID_ITEM})
+										create glab.make_with_text (tok.item.key + " #" + lst.item + ": " + l_url)
+										glab.set_data (l_url)
+										glab.pointer_double_press_actions.force_extend (agent open_url (l_url))
+										l_subrow.set_item (cst_info_value_col, glab)
+									end
+									lst.forth
 								end
-								lst.forth
-							end
-							if l_row.is_expandable then
-								l_row.expand
+								if l_row /= Void and then l_row.is_expandable then
+									l_row.expand
+								end
 							end
 						end
 					end
 				end
-
---				if
-----					attached rsvnlog.parent as repo and then
---					repo.has_test_url and then
---					attached md.matches.item ("test") as l_tests
---				then
---					from
---						l_tests.start
---					until
---						l_tests.after
---					loop
---						if attached repo.test_url (l_tests.item) as l_url then
---							g.insert_new_row_parented (g.row_count + 1, l_row)
---							l_subrow := g.row (g.row_count)
---							l_subrow.set_item (1, create {EV_GRID_ITEM})
---							create glab.make_with_text ("test #" + l_tests.item + ": " + l_url)
---							glab.set_data (l_url)
---							glab.pointer_double_press_actions.force_extend (agent open_url (l_url))
---							l_subrow.set_item (2, glab)
---						end
---						l_tests.forth
---					end
---					if l_row.is_expandable then
---						l_row.expand
---					end
---				end
---				if
-----					attached rsvnlog.parent as repo and then
---					repo.has_test_url and then
---					attached md.matches.item ("incr") as l_tests
---				then
---					from
---						l_tests.start
---					until
---						l_tests.after
---					loop
---						if attached repo.test_url (l_tests.item) as l_url then
---							g.insert_new_row_parented (g.row_count + 1, l_row)
---							l_subrow := g.row (g.row_count)
---							l_subrow.set_item (1, create {EV_GRID_ITEM})
---							create glab.make_with_text ("incr #" + l_tests.item + ": " + l_url)
---							glab.set_data (l_url)
---							glab.pointer_double_press_actions.force_extend (agent open_url (l_url))
---							l_subrow.set_item (2, glab)
---						end
---						l_tests.forth
---					end
---					if l_row.is_expandable then
---						l_row.expand
---					end
---				end
 
 				if attached rsvnlog.svn_revision.paths as l_changes and then l_changes.count > 0 then
 					g.insert_new_row (g.row_count + 1)
 					g.insert_new_row (g.row_count + 1)
 					l_row := g.row (g.row_count)
 					if l_changes.count = 1 then
-						l_row.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("1 node changed"))
+						l_row.set_item (cst_info_title_col, create {EV_GRID_LABEL_ITEM}.make_with_text ("1 node changed"))
 					else
-						l_row.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text (l_changes.count.out + " nodes changed"))
+						l_row.set_item (cst_info_title_col, create {EV_GRID_LABEL_ITEM}.make_with_text (l_changes.count.out + " nodes changed"))
 					end
-					l_row.set_item (2, create {EV_GRID_LABEL_ITEM}.make_with_text (rsvnlog.svn_revision.common_parent_path + " ..."))
+					l_row.set_item (cst_info_value_col, create {EV_GRID_LABEL_ITEM}.make_with_text (rsvnlog.svn_revision.common_parent_path + " ..."))
 					l_row.expand_actions.extend (agent do changes_expanded := True end)
 					l_row.collapse_actions.extend (agent do changes_expanded := False end)
 
@@ -232,8 +178,8 @@ feature -- Element change
 					loop
 						g.insert_new_row_parented (g.row_count + 1, l_row)
 						l_subrow := g.row (g.row_count)
-						l_subrow.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text (l_paths.item.action))
-						l_subrow.set_item (2, create {EV_GRID_LABEL_ITEM}.make_with_text (l_paths.item.path))
+						l_subrow.set_item (cst_info_title_col, create {EV_GRID_LABEL_ITEM}.make_with_text (l_paths.item.action))
+						l_subrow.set_item (cst_info_value_col, create {EV_GRID_LABEL_ITEM}.make_with_text (l_paths.item.path))
 					end
 					if l_row.is_expandable and changes_expanded then
 						l_row.expand
@@ -244,114 +190,82 @@ feature -- Element change
 				g.insert_new_row (g.row_count + 1)
 				g.insert_new_row (g.row_count + 1)
 				l_row := g.row (g.row_count)
-				l_row.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("Diff"))
+--				l_row.set_item (cst_info_title_col, create {EV_GRID_LABEL_ITEM}.make_with_text ("Diff"))
 
 				if rsvnlog.has_diff then
 					create glab.make_with_text ("Double click to SHOW diff")
 					glab.pointer_double_press_actions.force_extend (agent popup_diff (rsvnlog))
-					l_row.set_item (2, glab)
+					l_row.set_item (cst_info_value_col, glab)
 				else
 					create glab.make_with_text ("Double click to GET diff")
 					glab.pointer_double_press_actions.force_extend (agent show_info_diff)
-					l_row.set_item (2, glab)
+					l_row.set_item (cst_info_value_col, glab)
 				end
 
---				if rsvnlog.parent.review_enabled then
---					g.insert_new_row (g.row_count + 1)
---					l_row := g.row (g.row_count)
---					l_row.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("Review"))
---					l_row.set_item (2, create {EV_GRID_LABEL_ITEM}.make_with_text ("???"))
-
---					g.insert_new_row_parented (g.row_count + 1, l_row)
---					l_subrow := g.row (g.row_count)
---					l_subrow.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("Accept"))
---					create gcb.make_with_text ("approve commit")
---					l_subrow.set_item (2, gcb)
-
---					g.insert_new_row_parented (g.row_count + 1, l_row)
---					l_subrow := g.row (g.row_count)
---					l_subrow.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("Deny"))
---					create gcb.make_with_text ("disapprove commit")
---					l_subrow.set_item (2, gcb)
-
-
---					g.insert_new_row_parented (g.row_count + 1, l_row)
---					l_subrow := g.row (g.row_count)
---					l_subrow.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("Note"))
---					create gtxt.make_with_text ("")
---					gtxt.enable_multiline_string
---					gtxt.enable_text_editing
---					gtxt.pointer_double_press_actions.force_extend (agent gtxt.activate)
---					l_subrow.set_item (2, gtxt)
-
---					g.insert_new_row_parented (g.row_count + 1, l_row)
---					l_subrow := g.row (g.row_count)
---					l_subrow.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("Reset"))
---					l_subrow.set_item (2, create {EV_GRID_LABEL_ITEM}.make_with_text ("Submit"))
---				end
-
-				g.column (1).resize_to_content
-				g.column (1).set_width (g.column (1).width + 5)
-				g.column (2).resize_to_content
+				g.column (cst_info_title_col).resize_to_content
+				g.column (cst_info_title_col).set_width (g.column (cst_info_title_col).width + 5)
+				g.column (cst_info_value_col).resize_to_content
 			elseif attached {REPOSITORY_SVN_DATA} current_repository as rsvnrepo then
+				cst_info_title_col := 1
+				cst_info_value_col := 2
+
 				if attached rsvnrepo.info as rinfo then
 					g.insert_new_row (g.row_count + 1)
 					l_row := g.row (g.row_count)
-					l_row.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("Revision"))
-					l_row.set_item (2, create {EV_GRID_LABEL_ITEM}.make_with_text (rinfo.revision.out))
+					l_row.set_item (cst_info_title_col, create {EV_GRID_LABEL_ITEM}.make_with_text ("Revision"))
+					l_row.set_item (cst_info_value_col, create {EV_GRID_LABEL_ITEM}.make_with_text (rinfo.revision.out))
 
 					g.insert_new_row (g.row_count + 1)
 					l_row := g.row (g.row_count)
-					l_row.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("Localisation"))
-					l_row.set_item (2, create {EV_GRID_LABEL_ITEM}.make_with_text (rinfo.localisation))
+					l_row.set_item (cst_info_title_col, create {EV_GRID_LABEL_ITEM}.make_with_text ("Localisation"))
+					l_row.set_item (cst_info_value_col, create {EV_GRID_LABEL_ITEM}.make_with_text (rinfo.localisation))
 
 					if attached rinfo.last_changed_rev as l_rev then
 						g.insert_new_row (g.row_count + 1)
 						l_row := g.row (g.row_count)
-						l_row.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("Last rev"))
-						l_row.set_item (2, create {EV_GRID_LABEL_ITEM}.make_with_text (l_rev.out))
+						l_row.set_item (cst_info_title_col, create {EV_GRID_LABEL_ITEM}.make_with_text ("Last rev"))
+						l_row.set_item (cst_info_value_col, create {EV_GRID_LABEL_ITEM}.make_with_text (l_rev.out))
 					end
 					if attached rinfo.last_changed_author as l_author then
 						g.insert_new_row (g.row_count + 1)
 						l_row := g.row (g.row_count)
-						l_row.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("Last author"))
-						l_row.set_item (2, create {EV_GRID_LABEL_ITEM}.make_with_text (l_author))
+						l_row.set_item (cst_info_title_col, create {EV_GRID_LABEL_ITEM}.make_with_text ("Last author"))
+						l_row.set_item (cst_info_value_col, create {EV_GRID_LABEL_ITEM}.make_with_text (l_author))
 					end
 					if attached rinfo.last_changed_date as l_date then
 						g.insert_new_row (g.row_count + 1)
 						l_row := g.row (g.row_count)
-						l_row.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("Last Date"))
-						l_row.set_item (2, create {EV_GRID_LABEL_ITEM}.make_with_text (l_date))
+						l_row.set_item (cst_info_title_col, create {EV_GRID_LABEL_ITEM}.make_with_text ("Last Date"))
+						l_row.set_item (cst_info_value_col, create {EV_GRID_LABEL_ITEM}.make_with_text (l_date))
 					end
 
 					if attached rinfo.repository_root as l_root then
 						g.insert_new_row (g.row_count + 1)
 						l_row := g.row (g.row_count)
-						l_row.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("Repo Root"))
-						l_row.set_item (2, create {EV_GRID_LABEL_ITEM}.make_with_text (l_root))
+						l_row.set_item (cst_info_title_col, create {EV_GRID_LABEL_ITEM}.make_with_text ("Repo Root"))
+						l_row.set_item (cst_info_value_col, create {EV_GRID_LABEL_ITEM}.make_with_text (l_root))
 					end
 
 					if attached rinfo.repository_uuid as l_uuid then
 						g.insert_new_row (g.row_count + 1)
 						l_row := g.row (g.row_count)
-						l_row.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("Repo UUID"))
-						l_row.set_item (2, create {EV_GRID_LABEL_ITEM}.make_with_text (l_uuid))
+						l_row.set_item (cst_info_title_col, create {EV_GRID_LABEL_ITEM}.make_with_text ("Repo UUID"))
+						l_row.set_item (cst_info_value_col, create {EV_GRID_LABEL_ITEM}.make_with_text (l_uuid))
 					end
 
 					if attached rinfo.url as l_url then
 						g.insert_new_row (g.row_count + 1)
 						l_row := g.row (g.row_count)
-						l_row.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("Url"))
-						l_row.set_item (2, create {EV_GRID_LABEL_ITEM}.make_with_text (l_url))
+						l_row.set_item (cst_info_title_col, create {EV_GRID_LABEL_ITEM}.make_with_text ("Url"))
+						l_row.set_item (cst_info_value_col, create {EV_GRID_LABEL_ITEM}.make_with_text (l_url))
 					end
 
-					g.column (1).resize_to_content
-					g.column (1).set_width (g.column (1).width + 5)
-					g.column (2).resize_to_content
+					g.column (cst_info_title_col).resize_to_content
+					g.column (cst_info_title_col).set_width (g.column (1).width + 5)
+					g.column (cst_info_value_col).resize_to_content
 				end
 			end
 		end
-
 
 	update_current_log (v: like current_log)
 		do
@@ -395,7 +309,9 @@ feature {NONE} -- Smart log message
 						t := smart_pattern_computation (mesg, k)
 						mesg := t.mesg
 						lst := t.lst
-						l_matches.force (lst, k)
+						if lst /= Void and then lst.count > 0 then
+							l_matches.force (lst, k)
+						end
 					end
 					i := i + 1
 				end
@@ -456,7 +372,7 @@ feature {NONE} -- Implementation
 							e := e + 1
 						end
 						if not s.is_empty then
-							mesg.append_string (m.substring (p, e))
+							mesg.append_string (m.substring (p, e.min (n)))
 							lst.force (s)
 							p := e + 1
 						else

@@ -335,11 +335,11 @@ feature {REPOSITORY_SVN_LOG} -- Implementation
 								-- path[],K,A=
 								inspect s.item (2)
 								when 'D', 'd' then
-									e.add_dir_path (l_line.substring (p + 1, l_line.count), s.substring (4, s.count))
+									e.add_dir_path (l_line.substring (p + 1, l_line.count), s.substring (5, s.count))
 								when 'F', 'f' then
-									e.add_file_path (l_line.substring (p + 1, l_line.count), s.substring (4, s.count))
+									e.add_file_path (l_line.substring (p + 1, l_line.count), s.substring (5, s.count))
 								else
-									e.add_path (l_line.substring (p + 1, l_line.count), s.substring (2,2), s.substring (4, s.count))
+									e.add_path (l_line.substring (p + 1, l_line.count), s.substring (2,2), s.substring (5, s.count))
 								end
 							else
 								e.add_path (l_line.substring (p + 1, l_line.count), "", "")
@@ -380,8 +380,6 @@ feature {REPOSITORY_SVN_LOG} -- Implementation
 						l_paths.after
 					loop
 						f.put_string ("path[],")
-						f.put_string (l_paths.item.kind.out + l_paths.item.path + l_paths.item.path + "%N")
-
 						inspect
 							l_paths.item.kind
 						when {SVN_CONSTANTS}.kind_dir then

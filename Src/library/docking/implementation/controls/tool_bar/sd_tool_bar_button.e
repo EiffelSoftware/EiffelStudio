@@ -45,6 +45,7 @@ feature -- Properties
 			if l_tool_bar /= Void then
 				l_tool_bar.update_size
 			end
+			refresh
 		ensure
 			set: a_text /= Void implies (attached text as le_text and then le_text ~ (a_text.as_string_32))
 		end
@@ -441,7 +442,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

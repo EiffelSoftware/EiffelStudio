@@ -73,6 +73,9 @@ feature {NONE}  -- Initlization
 			create internal_border_for_tab_area.make
 			create {EV_HORIZONTAL_BOX} internal_border_box
 			create internal_cell
+			-- Make sure tab bar shown when not enough height
+			-- See bug#16786
+			internal_cell.set_minimum_height (0)
 
 			default_create
 

@@ -556,7 +556,7 @@ feature -- Commands
 			end
 
 				-- Insertion in the pass controlers
-			Degree_5.insert_changed_class (class_to_recompile)
+			Degree_5.insert_class (class_to_recompile)
 			Degree_4.insert_new_class (class_to_recompile)
 			Degree_3.insert_new_class (class_to_recompile)
 			Degree_2.insert_new_class (class_to_recompile)

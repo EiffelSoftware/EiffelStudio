@@ -4002,14 +4002,6 @@ feature {COMPILER_EXPORTER} -- Setting
 			generic_features_set: generic_features = f
 		end
 
-	set_need_new_parents (v: like need_new_parents)
-			-- Set `need_new_parents' with `v'.
-		do
-			need_new_parents := v
-		ensure
-			need_new_parents_set: need_new_parents = v
-		end
-
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Setting
 
 	set_obsolete_message (m: like obsolete_message)

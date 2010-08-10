@@ -67,7 +67,7 @@ feature -- Element Change
 				if interactive then
 					file.read_character
 					if not file.end_of_input then
-						put_character (file.last_character, buff).do_nothing
+						put_character (file.last_character, buff)
 						filled := True
 					else
 						filled := False
@@ -83,7 +83,8 @@ feature -- Element Change
 					loop
 						file.read_character
 						if not file.end_of_input then
-							i := i + put_character (file.last_character, buff)
+							put_character (file.last_character, buff)
+							i := i + last_number_of_bytes_put
 						else
 							nb2 := i - pos - nb
 							i := end_pos + 1
@@ -107,7 +108,7 @@ feature -- Element Change
 			end
 		end
 
-	put_character (a_char: CHARACTER; a_buff: like content): INTEGER
+	put_character (a_char: CHARACTER; a_buff: like content)
 			-- Put `a_char' into `a_buff'.
 			-- Return the number of bytes put into `a_buff'
 		require
@@ -121,18 +122,22 @@ feature -- Element Change
 				if iso_8859_1.last_conversion_successful then
 					a_buff.fill_from_string (iso_8859_1.last_converted_stream, count)
 					count := count + iso_8859_1.last_converted_stream.count - 1
-					Result := iso_8859_1.last_converted_stream.count
+					last_number_of_bytes_put := iso_8859_1.last_converted_stream.count
 				else
 						-- FIXME: We should raise a waring at least.
 					a_buff.put (a_char, count)
-					Result := 1
+					last_number_of_bytes_put := 1
 				end
 			else
 					-- UTF8 compatible
 				a_buff.put (a_char, count)
-				Result := 1
+				last_number_of_bytes_put := 1
 			end
 		end
+
+feature -- Query
+
+	last_number_of_bytes_put: INTEGER
 
 feature {NONE} -- Buffer
 

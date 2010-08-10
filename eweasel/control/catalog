@@ -126,6 +126,7 @@ test	exception_cause				except037 tcf pass exception
 -- Unicode
 test unicode_manifest_string_char_and_constants unicode001 tcf pass unicode
 test unicode_free_operator unicode002 tcf pass unicode
+test big_extended_ascii_src unicode003 tcf pass unicode
 
 -- Non Conforming Inheritance
 test basic-non-conforming-inheritance			noncon001 tcf pass non-conforming

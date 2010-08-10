@@ -1528,13 +1528,14 @@ feature {NONE} -- Class initialization
 							l_class.set_changed (True)
 								-- The ast is in the temporary server
 								-- so Degree 4 can be done the same way
-							Degree_5.insert_changed_class (l_class)
+							Degree_5.insert_class (l_class)
 						end
 						if changed_expanded then
 								-- We do not know if `l_class' is using the current class
 								-- as a parent, but we have to reset it even just to be sure.
-								-- This fixes eweasel test#incr315.
-							l_class.set_need_new_parents (True)
+								-- This fixes eweasel test#incr315 and test#incr361.
+							l_class.set_changed (True)
+							degree_5.insert_class (l_class)
 						end
 							-- We need to recompile the features because their code might still
 							-- contain reference to the type and because it switched from

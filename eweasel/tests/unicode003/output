@@ -1,0 +1,22 @@
+Manifest CHARACTER_32: True
+CHARACTER_8 vs Unicode: True
+CHARACTER_32 vs ASCII: True
+CHARACTER_32 vs Unicode: True
+CHARACTER_8 vs ASCII: True
+CHARACTER_32 constant type: CHARACTER_32
+CHARACTER_8 constant type: CHARACTER_8
+Manifest Unicode char type: CHARACTER_32
+Manifest ASCII char type: CHARACTER_8
+CHARACTER_8 typed Unicode character type: CHARACTER_8
+CHARACTER_32 ASCII character type: CHARACTER_32
+CHARACTER_32 typed Unicode character type: CHARACTER_32
+CHARACTER_8 typed ASCII character type: CHARACTER_8
+STRING_32 constants test 1: True
+STRING_32 constants test 2: True
+STRING_32 constants test 3: True
+STRING_32 constants test 4: True
+STRING_32 constants test 5: True
+STRING_8 constants test 1: True
+STRING_8 constants test 2: True
+STRING_8 constants test 3: True
+Execution completed

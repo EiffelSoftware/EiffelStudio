@@ -167,6 +167,16 @@ feature -- Element change
 			paths.force ([a_path, string_to_kind (a_kind), a_action])
 		end
 
+	add_dir_path (a_path: STRING; a_action: STRING)
+		do
+			paths.force ([a_path, Kind_file, a_action])
+		end
+
+	add_file_path (a_path: STRING; a_action: STRING)
+		do
+			paths.force ([a_path, Kind_file, a_action])
+		end
+
 note
 	copyright: "Copyright (c) 2003-2010, Jocelyn Fiat"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

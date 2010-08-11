@@ -1,0 +1,12 @@
+test_name	 vtcg7-precondition-violation
+test_description When generating a VTCG7 error we cause a precondition violation in the compiler.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+copy_raw	typed_preference.e $CLUSTER typed_preference.e
+
+compile_melted
+compile_result 	validity_error TEST VTCG
+
+test_end

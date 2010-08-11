@@ -127,7 +127,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	attached_string (s: detachable STRING): STRING
+	attached_string (s: detachable STRING_GENERAL): STRING_GENERAL
 		do
 			if s = Void then
 				Result := ""

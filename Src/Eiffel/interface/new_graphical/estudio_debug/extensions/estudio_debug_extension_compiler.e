@@ -26,7 +26,7 @@ feature -- Execution
 			open_debug_class_feature_info (Void, Void)
 		end
 
-	open_debug_class_feature_info (a_cl, a_ft: detachable STRING_32)
+	open_debug_class_feature_info (a_cl, a_ft: detachable STRING_GENERAL)
 		local
 			l_dlg: EV_DIALOG
 			hb: EV_HORIZONTAL_BOX
@@ -174,8 +174,23 @@ feature -- Execution
 											end
 											ftable.forth
 										end
-
 									end
+
+									if attached cl.skeleton as skel then
+										l_row := g.grid_extended_new_subrow (r)
+										l_row.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("Skeleton"))
+										from
+											skel.start
+										until
+											skel.after
+										loop
+											if attached skel.item_for_iteration as attr_desc then
+												debug_class_feature_info_add_attr_desc (cl, attr_desc, l_row, bgcol, True)
+											end
+											skel.forth
+										end
+									end
+
 									if r.is_expandable then
 										r.expand
 									end
@@ -337,6 +352,50 @@ feature -- Execution
 				gi.set_background_color (bgcol)
 				sr.set_item (2, gi)
 			end
+			if not a_list and then l_row.is_expandable then
+				l_row.expand
+			end
+		end
+
+	debug_class_feature_info_add_attr_desc (cl: CLASS_C; attr_desc: ATTR_DESC; r: EV_GRID_ROW; bgcol: EV_COLOR; a_list: BOOLEAN)
+		local
+			l_row,sr: EV_GRID_ROW
+			g: ES_GRID
+			gi: EV_GRID_LABEL_ITEM
+			gei: EV_GRID_EDITABLE_ITEM
+			f,s: STRING
+		do
+			g ?= r.parent
+			l_row := g.grid_extended_new_subrow (r)
+			create {EV_GRID_LABEL_ITEM} gi.make_with_text (attr_desc.attribute_name)
+			l_row.set_item (1, gi)
+			if attached attr_desc.type_i as t then
+				l_row.set_item (2, create {EV_GRID_LABEL_ITEM}.make_with_text (t.name))
+			end
+
+			if attr_desc.is_hidden then
+				sr := g.grid_extended_new_subrow (l_row)
+				sr.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("HIDDEN"))
+				create gi.make_with_text ("YES")
+				sr.set_item (2, gi)
+			end
+
+
+			sr := g.grid_extended_new_subrow (l_row)
+			sr.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("feature_id"))
+			create gi.make_with_text (attr_desc.feature_id.out)
+			sr.set_item (2, gi)
+
+			sr := g.grid_extended_new_subrow (l_row)
+			sr.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("rout_id"))
+			create gi.make_with_text (attr_desc.rout_id.out)
+			sr.set_item (2, gi)
+
+			sr := g.grid_extended_new_subrow (l_row)
+			sr.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("attribute_name_id"))
+			create gi.make_with_text (attr_desc.attribute_name_id.out)
+			sr.set_item (2, gi)
+
 			if not a_list and then l_row.is_expandable then
 				l_row.expand
 			end

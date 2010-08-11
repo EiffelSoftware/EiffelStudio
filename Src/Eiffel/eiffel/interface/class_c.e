@@ -671,26 +671,16 @@ feature -- Access: object relative once
 			object_relative_once_infos := Void
 		end
 
-	object_relative_once_infos: detachable HASH_TABLE [OBJECT_RELATIVE_ONCE_INFO, INTEGER]
+	object_relative_once_infos: detachable OBJECT_RELATIVE_ONCE_INFO_TABLE
 			-- List of info about object relative onces associated with Current
 
 	object_relative_once_info_of_rout_id_set (a_rout_id_set: ROUT_ID_SET): detachable OBJECT_RELATIVE_ONCE_INFO
 			-- Info about object relative once associated with Current and an item of `a_rout_id_set'
 		require
 			a_rout_id_set_not_void: a_rout_id_set /= Void
-		local
-			i, nb: INTEGER_32
 		do
 			if attached object_relative_once_infos as l_infos then
-				from
-					i := 1
-					nb := a_rout_id_set.count
-				until
-					i > nb or Result /= Void
-				loop
-					Result := l_infos.item (a_rout_id_set.item (i))
-					i := i + 1
-				end
+				Result := l_infos.item_of_rout_id_set (a_rout_id_set)
 			end
 		end
 
@@ -698,43 +688,23 @@ feature -- Access: object relative once
 			-- Info about object relative once associated with Current and `a_once_routine_id'
 		do
 			if attached object_relative_once_infos as l_infos then
-				Result := l_infos.item (a_once_routine_id)
+				Result := l_infos.item_of_rout_id (a_once_routine_id)
 			end
 		end
 
 	object_relative_once_attribute_of_feature_id (a_feature_id: INTEGER): detachable ATTRIBUTE_I
 			-- Attribute associated with Current with feature_id `a_feature_id', if any.
 		do
-			if
-				attached object_relative_once_infos as l_infos and then
-				attached l_infos.new_cursor as c
-			then
-				from
-					c.start
-				until
-					c.after or Result /= Void
-				loop
-					Result := c.item.attribute_of_feature_id (a_feature_id)
-					c.forth
-				end
+			if attached object_relative_once_infos as l_infos then
+				Result := l_infos.attribute_of_feature_id (a_feature_id)
 			end
 		end
 
 	object_relative_once_attribute_of_routine_id (a_routine_id: INTEGER): detachable ATTRIBUTE_I
 			-- Attribute associated with Current with feature_id `a_routine_id', if any.
 		do
-			if
-				attached object_relative_once_infos as l_infos and then
-				attached l_infos.new_cursor as c
-			then
-				from
-					c.start
-				until
-					c.after or Result /= Void
-				loop
-					Result := c.item.attribute_of_routine_id (a_routine_id)
-					c.forth
-				end
+			if attached object_relative_once_infos as l_infos then
+				Result := l_infos.attribute_of_routine_id (a_routine_id)
 			end
 		end
 

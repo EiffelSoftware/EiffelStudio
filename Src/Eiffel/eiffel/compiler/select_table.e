@@ -322,6 +322,8 @@ feature -- Generation
 				end
 			end
 
+				-- Added entries for the object relative onces.
+				-- for current and inherited onces per object.
 			if
 				attached c.object_relative_once_infos as l_once_infos and then
 				attached l_once_infos.new_cursor as l_once_infos_cursor

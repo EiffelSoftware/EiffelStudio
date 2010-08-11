@@ -1003,6 +1003,9 @@ feature {NONE} -- WEL Implementation
 
 			if item_is_pnd_source_at_entry = item_is_pnd_source then
 				pnd_press (x_pos, y_pos, button, pt.x, pt.y)
+				if motion_action = ev_pnd_execute then
+					disable_default_processing
+				end
 			end
 
 			if not press_actions_called and call_press_event then

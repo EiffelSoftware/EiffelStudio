@@ -332,8 +332,7 @@ feature {EV_LIST_ITEM_IMP} -- Implementation
 			pt := client_to_screen (x_pos, y_pos)
 			if pre_drop_it /= Void and not transport_executing
 				and not item_is_in_pnd then
-				if pre_drop_it.pointer_button_press_actions_internal
-					/= Void then
+				if pre_drop_it.pointer_button_press_actions_internal /= Void then
 					pre_drop_it.pointer_button_press_actions_internal.call(
 						[x_pos,y_pos - pre_drop_it.relative_y, button, 0.0,
 						0.0, 0.0, pt.x, pt.y])
@@ -358,6 +357,9 @@ feature {EV_LIST_ITEM_IMP} -- Implementation
 
 			if item_is_pnd_source_at_entry = item_is_pnd_source then
 				pnd_press (x_pos, y_pos, button, pt.x, pt.y)
+				if motion_action = ev_pnd_execute then
+					disable_default_processing
+				end
 			end
 
 			if not press_actions_called and call_press_event then

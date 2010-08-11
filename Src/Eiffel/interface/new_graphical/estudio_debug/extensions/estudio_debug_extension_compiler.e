@@ -362,24 +362,18 @@ feature -- Execution
 			l_row,sr: EV_GRID_ROW
 			g: ES_GRID
 			gi: EV_GRID_LABEL_ITEM
-			gei: EV_GRID_EDITABLE_ITEM
-			f,s: STRING
 		do
 			g ?= r.parent
 			l_row := g.grid_extended_new_subrow (r)
-			create {EV_GRID_LABEL_ITEM} gi.make_with_text (attr_desc.attribute_name)
+			if attr_desc.is_hidden then
+				create {EV_GRID_LABEL_ITEM} gi.make_with_text (attr_desc.attribute_name + " (HIDDEN)")
+			else
+				create {EV_GRID_LABEL_ITEM} gi.make_with_text (attr_desc.attribute_name)
+			end
 			l_row.set_item (1, gi)
 			if attached attr_desc.type_i as t then
 				l_row.set_item (2, create {EV_GRID_LABEL_ITEM}.make_with_text (t.name))
 			end
-
-			if attr_desc.is_hidden then
-				sr := g.grid_extended_new_subrow (l_row)
-				sr.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("HIDDEN"))
-				create gi.make_with_text ("YES")
-				sr.set_item (2, gi)
-			end
-
 
 			sr := g.grid_extended_new_subrow (l_row)
 			sr.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("feature_id"))

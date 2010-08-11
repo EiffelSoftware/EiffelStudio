@@ -64,7 +64,7 @@ feature -- Basic operations
 		require
 			a_once_attached: a_once /= Void
 		do
-			if
+			if 
 				a_once.rout_id_set.intersect (once_routine_rout_id_set) and then
 				a_once.same_interface (once_routine)
 			then
@@ -95,6 +95,7 @@ feature -- Debug
 			if l_once /= Void then
 				print ("Once per object (fid:" + l_once.feature_id.out
 						+ " rid:" + once_routine_id.out
+						+ " bid:" + l_once.body_index.out
 						+ "): " + l_once.written_class.name_in_upper
 						+ "<" + l_once.written_in.out + ">"
 						+ "." + l_once.feature_name)
@@ -403,6 +404,61 @@ feature -- Access: result
 
 feature -- Element changes
 
+	create_called_name_id
+			-- Set the associated `called_name_id' name id.
+		local
+			n: STRING
+		do
+			create n.make (10)
+			n.append_character ('_')
+			n.append_integer (once_routine.body_index)
+			n.append_character ('_')
+			n.append_string (once_routine.feature_name)
+			n.append_string ("__called")
+			names_heap.put (n)
+			set_called_name_id (names_heap.found_item)
+		ensure
+			called_name_id_set: called_name_id > 0 and then called_name /= Void
+		end
+
+	create_exception_name_id
+			-- Set the associated `exception_name_id'.	
+		local
+			n: STRING
+		do
+			create n.make (10)
+			n.append_character ('_')
+			n.append_integer (once_routine.body_index)
+			n.append_character ('_')
+			n.append_string (once_routine.feature_name)
+			n.append_string ("__exception")
+			names_heap.put (n)
+			set_exception_name_id (names_heap.found_item)
+		ensure
+			exception_name_id_set: exception_name_id > 0 and then exception_name /= Void
+		end
+
+	create_result_name_id
+			-- Set the associated `result_name_id' name id.	
+		require
+			has_result: has_result
+		local
+			n: STRING
+		do
+			create n.make (10)
+			n.append_character ('_')
+			n.append_integer (once_routine.body_index)
+			n.append_character ('_')
+			n.append_string (once_routine.feature_name)
+			n.append_string ("__result")
+			names_heap.put (n)
+			set_result_name_id (names_heap.found_item)
+		ensure
+			result_name_id_set: result_name_id > 0 and then result_name /= Void
+		end
+
+feature -- Element changes
+
 	set_called_body_index (a_bi: INTEGER)
 			-- Set body index related to called attribute
 		require
@@ -458,7 +514,6 @@ feature -- Element changes
 		do
 			exception_routine_id := a_id
 		end
-
 
 	set_exception_name_id (a_id: INTEGER)
 			-- Set feature name id related to exception attribute	

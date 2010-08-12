@@ -175,6 +175,12 @@ feature -- Query
 		deferred
 		end
 
+	fetch_range_of_logs (a_from, a_to: INTEGER)
+			-- fetch logs from repository
+			-- from `a_from' to `a_to'
+		deferred
+		end
+
 	fetch_logs
 			-- fetch logs from repository
 		deferred

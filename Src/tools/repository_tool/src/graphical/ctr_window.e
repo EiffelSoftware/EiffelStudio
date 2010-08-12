@@ -664,12 +664,61 @@ feature -- Check/Update/Refresh
 
 	check_repository (a_repo: REPOSITORY_DATA)
 		do
-			if attached {REPOSITORY_SVN_DATA} a_repo as rsvndata then
-				if not rsvndata.is_asynchronious_fetching then
-					ev_application.do_once_on_idle (agent add_asynchronious_svn_task (rsvndata))
-				end
+			if ev_application.ctrl_pressed then
+				gui_check_repository (a_repo)
 			else
-				ev_application.do_once_on_idle (agent a_repo.fetch_logs)
+				if attached {REPOSITORY_SVN_DATA} a_repo as rsvndata then
+					if not rsvndata.is_asynchronious_fetching then
+						ev_application.do_once_on_idle (agent add_asynchronious_svn_task (rsvndata))
+					end
+				else
+					ev_application.do_once_on_idle (agent a_repo.fetch_logs)
+				end
+			end
+		end
+
+	gui_check_repository (a_repo: REPOSITORY_DATA)
+		local
+			dlg: EV_DIALOG
+			hb: EV_HORIZONTAL_BOX
+			tf1,tf2: EV_TEXT_FIELD
+			but: EV_BUTTON
+		do
+			if attached {REPOSITORY_SVN_DATA} a_repo as rsvndata then
+				create dlg.make_with_title ("Fetch svn logs from to")
+				create hb
+				dlg.extend (hb)
+				create tf1.make_with_text (rsvndata.revision_first_known.out)
+				create tf2.make_with_text (rsvndata.revision_last_known.out)
+				hb.extend (tf1)
+				hb.extend (tf2)
+				create but.make_with_text_and_action ("Close", agent dlg.destroy)
+				dlg.set_default_cancel_button (but)
+
+				create but.make_with_text_and_action ("Fetch", agent (ia_dlg: EV_DIALOG; ia_t1, ia_t2: EV_TEXTABLE; ia_repo: REPOSITORY_DATA)
+						local
+							r1,r2: INTEGER
+							s: STRING_8
+						do
+							s := ia_t1.text.as_string_8
+							if s.is_integer then
+								r1 := s.to_integer
+							end
+							s := ia_t2.text.as_string_8
+							if s.is_integer then
+								r2 := s.to_integer
+							end
+							if r2 > r1 then
+								set_busy
+								ia_repo.fetch_range_of_logs (r1, r2)
+								unset_busy
+							end
+							ia_dlg.destroy
+						end(dlg, tf1, tf2, rsvndata)
+					)
+				hb.extend (but)
+				hb.disable_item_expand (but)
+				dlg.show_modal_to_window (Current)
 			end
 		end
 

@@ -146,7 +146,14 @@ feature -- Access
 	fetch_logs
 		do
 			load_logs
-			internal_fetch_logs (repository, revision_last_known)
+			internal_fetch_logs (repository, revision_last_known, 0)
+			import_fetched_logs
+		end
+
+	fetch_range_of_logs (a_from, a_to: INTEGER)
+		do
+			load_logs
+			internal_fetch_logs (repository, a_from, a_to)
 			import_fetched_logs
 		end
 
@@ -171,7 +178,7 @@ feature -- Access
 			create th.make (agent (ia_mut: MUTEX; ia_repo: like repository; ia_last_known_rev: INTEGER_32)
 				do
 					ia_mut.lock
-					internal_fetch_logs (ia_repo, ia_last_known_rev)
+					internal_fetch_logs (ia_repo, ia_last_known_rev, 0)
 					ia_mut.unlock
 				end (l_fetch_mutex, create {like repository}.make_from_repository (repository), revision_last_known))
 			th.launch
@@ -255,12 +262,16 @@ feature {NONE} -- Implementation
 
 	fetched_info: like repository.info
 
-	internal_fetch_logs (a_repo: like repository; a_last_fetched_rev: INTEGER)
+	internal_fetch_logs (a_repo: like repository; a_from_rev, a_to_rev: INTEGER)
 		do
 			if attached a_repo.info as repo_info then
 				fetched_info := repo_info
-				if a_last_fetched_rev > 0 then
-					fetched_logs := a_repo.logs (True, a_last_fetched_rev, repo_info.last_changed_rev, 0)
+				if a_from_rev > 0 then
+					if a_to_rev > a_from_rev then
+						fetched_logs := a_repo.logs (True, a_from_rev, repo_info.last_changed_rev, 0)
+					else
+						fetched_logs := a_repo.logs (True, a_from_rev, a_to_rev, 0)
+					end
 				else
 					fetched_logs := a_repo.logs (True, 0, 0, 100)
 				end
@@ -376,7 +387,12 @@ feature {REPOSITORY_SVN_LOG} -- Implementation
 		do
 			ensure_data_folder_exists
 			create f.make (svn_log_data_filename (id_of (r)))
-			if not f.exists then
+			if not f.exists or else f.is_writable then
+				debug ("scm")
+					if f.exists then
+						print ("Log for rev#" + r.revision.out + " already fetched%N")
+					end
+				end
 				f.create_read_write
 				f.put_string ("revision=" + r.revision.out + "%N")
 				f.put_string ("date=" + r.date + "%N")

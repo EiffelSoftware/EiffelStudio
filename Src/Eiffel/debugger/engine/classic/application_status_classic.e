@@ -28,6 +28,7 @@ feature {APPLICATION_STATUS_EXPORTER} -- Initialization
 			-- Set the various attributes identifying current
 			-- position in source code.
 		require
+			n_not_empty: not n.is_empty
 			add_attached: add /= Void
 		local
 			ccs: EIFFEL_CALL_STACK_CLASSIC
@@ -51,9 +52,11 @@ feature {APPLICATION_STATUS_EXPORTER} -- Initialization
 					-- Compute feature (E_FEATURE)
 					--|Note: the application sends us the original name.
 
-				f := feature_from_runtime_data (dynamic_class, origin_class, n)
-				if f /= Void then
-					body_index := f.body_index
+				if origin_class /= Void then
+					f := feature_from_runtime_data (dynamic_class, origin_class, n)
+					if f /= Void then
+						body_index := f.body_index
+					end
 				end
 				e_feature := f
 
@@ -141,7 +144,7 @@ feature -- Threads related access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

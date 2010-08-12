@@ -20,6 +20,7 @@ inherit
 			instantiated_in,
 			instantiation_in,
 			is_explicit,
+			is_standalone,
 			is_syntactically_equal,
 			skeleton_adapted_in,
 			update_dependance
@@ -78,6 +79,15 @@ feature {TYPE_A_CHECKER} -- Properties
 			-- Routine IDs of the second part of the type, after the `qualifier'
 
 feature -- Status Report
+
+	is_standalone: BOOLEAN
+			-- <Precursor>
+		do
+				-- If qualifier type depends on the actual type of the object,
+				-- qualified anchored type depends on the dynamic type,
+				-- otherwise it is stand-alone.
+			Result := qualifier.is_standalone
+		end
 
 	is_explicit: BOOLEAN
 			-- Is type fixed at compile time without anchors or formals?

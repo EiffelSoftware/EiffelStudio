@@ -138,7 +138,7 @@ feature {NONE} -- Events
 				loop
 					l_row := g.row (r)
 
-					if attached {REPOSITORY_DATA} l_row.data as rdata then
+					if l_row.parent_row = Void and attached repository_from_row (l_row) as rdata then
 						rdata.save_unread_logs
 					end
 					r := r + 1
@@ -383,6 +383,16 @@ feature -- Storage
 --											v.left_adjust; v.right_adjust
 
 											repo.add_filter_to (k, create {REPOSITORY_LOG_MESSAGE_FILTER}.make (v))
+										elseif s3.same_string ("read") then
+											if repo.filter (k) = Void then
+												repo.add_filter (k, k)
+											end
+											v.left_adjust; v.right_adjust
+											v.to_lower
+											repo.add_filter_to (k, create {REPOSITORY_LOG_READ_STATUS_FILTER}.make_read (
+															v.same_string ("yes") or v.same_string ("true")
+														)
+													)
 										else
 											k := s2
 											if repo.filter (k) = Void then
@@ -607,7 +617,15 @@ feature -- Check/Update/Refresh
 		do
 			g := catalog_grid
 			l_rows := g.selected_rows
-			if l_rows.count > 0 then
+			if l_rows.count = 1 then
+				r := l_rows.first
+				if attached r.parent_row_root as pr then
+					r := pr
+				end
+				if attached repository_from_row (r) as d then
+					check_repository (d)
+				end
+			elseif l_rows.count > 0 then
 				across
 					l_rows as c
 				loop
@@ -615,7 +633,7 @@ feature -- Check/Update/Refresh
 					if attached r.parent_row_root as pr then
 						r := pr
 					end
-					if attached {REPOSITORY_DATA} r.data as d then
+					if attached repository_from_row (r) as d then
 						check_repository (d)
 					end
 				end
@@ -627,18 +645,20 @@ feature -- Check/Update/Refresh
 	check_all_repositories
 		local
 			g: like catalog_grid
-			r: INTEGER
+			r: EV_GRID_ROW
+			i: INTEGER
 		do
 			g := catalog_grid
 			from
-				r := 1
+				i := 1
 			until
-				r > g.row_count
+				i > g.row_count
 			loop
-				if attached {REPOSITORY_DATA} g.row (r).data as d then
+				r := g.row (i)
+				if r.parent_row = Void and attached repository_from_row (r) as d then
 					check_repository (d)
 				end
-				r := r + 1
+				i := i + 1
 			end
 		end
 
@@ -747,6 +767,30 @@ feature {NONE} -- Asynchronious operation
 		end
 
 feature {CTR_TOOL} -- Catalog
+
+	catalog_repository_view_row (a_repo_view: detachable REPOSITORY_DATA_VIEW): detachable EV_GRID_ROW
+		local
+			g: like catalog_grid
+			r,l_count: INTEGER
+		do
+			if a_repo_view /= Void then
+				g := catalog_grid
+				l_count := g.row_count
+				if l_count > 0 then
+					from
+						r := 1
+					until
+						r > l_count or Result /= Void
+					loop
+						Result := g.row (r)
+						if Result.data /= a_repo_view then
+							Result := Void
+							r := r + 1
+						end
+					end
+				end
+			end
+		end
 
 	catalog_repository_row (a_repo: detachable REPOSITORY_DATA): detachable EV_GRID_ROW
 		local
@@ -867,7 +911,12 @@ feature {CTR_TOOL} -- Catalog
 								create glab.make_with_text ("Filter: " + f.to_string)
 								l_subrow.set_item (2, glab)
 							end
-							l_subrow.set_data (fcursor.item.filter)
+							if repo_data /= Void then
+								l_subrow.set_data (new_repository_view (repo_data, fcursor.item.filter))
+							else
+								check should_not_occurs: False end
+								l_subrow.set_data (fcursor.item.filter)
+							end
 						end
 					end
 					if repo_data /= Void and then repo_data.unread_log_count > 0 then
@@ -902,10 +951,18 @@ feature {CTR_TOOL} -- Catalog
 		end
 
 	update_catalog_row (a_row: EV_GRID_ROW)
+		do
+			ev_application.add_idle_action_kamikaze (agent delayed_update_catalog_row (a_row))
+		end
+
+	delayed_update_catalog_row (a_row: EV_GRID_ROW)
 		local
 			n: INTEGER
 		do
-			if attached {REPOSITORY_DATA} a_row.data as rdata then
+			if
+				a_row /= Void and then a_row.parent /= Void and then
+				attached repository_from_row (a_row) as rdata
+			then
 				if a_row.count > cst_repo_name_column then
 					if attached {EV_GRID_LABEL_ITEM} a_row.item (cst_repo_name_column) as glab then
 						if attached {STRING_GENERAL} glab.data as l_name then
@@ -929,7 +986,7 @@ feature {CTR_TOOL} -- Catalog
 		local
 			i, n: INTEGER
 		do
-			if attached {REPOSITORY_LOG_FILTER} a_row.data as rfilter then
+			if attached repository_filter_from_row (a_row) as rfilter then
 				if a_row.count > 0 then
 					if attached {EV_GRID_LABEL_ITEM} a_row.item (1) as glab then
 						if attached {STRING_GENERAL} glab.data as l_name then
@@ -960,58 +1017,215 @@ feature {CTR_TOOL} -- Catalog
 
 	on_catalog_row_unselected (r: EV_GRID_ROW)
 		do
+			on_catalog_selection_changed
 		end
 
 	on_catalog_row_selected	(r: EV_GRID_ROW)
 		do
-			if catalog_grid.selected_rows.count <= 1 then
-				if attached {REPOSITORY_LOG_FILTER} r.data as rfilter then
-					if
-						attached r.parent_row_root as l_row and then
-						attached {REPOSITORY_DATA} l_row.data as rdata
-					then
-						select_repository (r, rdata, rfilter)
-					end
-				elseif attached {REPOSITORY_DATA} r.data as rdata then
-					select_repository (r, rdata, Void)
-				end
-			else
+			on_catalog_selection_changed
+		end
 
+	on_catalog_selection_changed
+		local
+			lst: ARRAYED_LIST [like new_row_repository_details]
+		do
+			if attached catalog_grid.selected_rows as l_rows then
+--				if l_rows.count <= 1 then
+--					if attached row_repository_details (r) as d then
+--						select_repository (d.row, d.repo, d.filter)
+--					end
+--				else -- if False then
+					create lst.make (l_rows.count)
+					from
+						l_rows.start
+					until
+						l_rows.after
+					loop
+						if attached row_repository_details (l_rows.item) as l_details then
+							lst.force (l_details)
+						end
+						l_rows.forth
+					end
+					select_repositories (lst)
+--				end
 			end
 		end
 
-	select_repository (r: EV_GRID_ROW; a_repodata: REPOSITORY_DATA; a_log_filter: detachable REPOSITORY_LOG_FILTER)
-		local
-			l_repo: detachable REPOSITORY_DATA
+	new_row_repository_details (a_row: EV_GRID_ROW; a_view: REPOSITORY_DATA_VIEW): TUPLE [row: EV_GRID_ROW; view: REPOSITORY_DATA_VIEW]
 		do
-			l_repo := logs_tool.current_repository
-			if attached catalog_repository_row (l_repo) as l_row then
-				mark_repository_unselected (l_row)
+			Result := [a_row, a_view]
+		end
+
+	new_repository_view (a_repo: REPOSITORY_DATA; a_filter: detachable REPOSITORY_LOG_FILTER): REPOSITORY_DATA_VIEW
+		do
+			create Result.make_with_filter (a_repo, a_filter)
+		end
+
+	row_repository_details (r: EV_GRID_ROW): detachable like new_row_repository_details
+		local
+			sr: INTEGER
+			g_or: REPOSITORY_LOG_GROUP_OR_FILTER
+		do
+			if attached repository_view_from_row (r) as rview then
+				if rview.filter = Void then
+					if r.subrow_count > 0 then
+						from
+							create g_or.make (r.subrow_count)
+							sr := 1
+						until
+							sr > r.subrow_count
+						loop
+							if
+								attached row_repository_details (r.subrow (sr)) as sub and then
+								attached sub.view as subv and then
+								attached subv.filter as subvf
+							then
+								g_or.add_filter (subvf)
+							end
+							sr := sr + 1
+						end
+						if g_or.count > 0 then
+							rview.set_filter (g_or)
+						end
+					end
+				end
+				Result := new_row_repository_details (r, rview)
+			elseif attached repository_filter_from_row (r) as rfilter then
+				if
+					attached r.parent_row_root as l_row and then
+					attached repository_from_row (l_row) as rdata
+				then
+					Result := new_row_repository_details (r, new_repository_view (rdata, rfilter))
+				end
+			elseif attached repository_from_row (r) as rdata then
+				Result := new_row_repository_details (r, new_repository_view (rdata, Void))
 			end
-			if l_repo /= a_repodata then
-				if l_repo /= Void then
-					l_repo.save_unread_logs
+		end
+
+	select_repositories (a_lst: LIST [like new_row_repository_details])
+		local
+			l_view: detachable REPOSITORY_DATA_VIEW
+			l_old_views: LIST [REPOSITORY_DATA_VIEW]
+			l_unselected_views: ARRAYED_LIST [REPOSITORY_DATA_VIEW]
+			l_new_views: ARRAYED_LIST [REPOSITORY_DATA_VIEW]
+		do
+			l_old_views := logs_tool.current_views
+			from
+				create l_unselected_views.make (l_old_views.count)
+				l_unselected_views.fill (l_old_views)
+				create l_new_views.make (a_lst.count)
+				a_lst.start
+			until
+				a_lst.after
+			loop
+				if attached a_lst.item as l_details then
+					l_view := l_details.view
+					l_new_views.force (l_view)
+					if l_old_views.has (l_view) then
+						l_unselected_views.prune_all (l_view)
+					end
+				end
+				a_lst.forth
+			end
+			from
+				l_unselected_views.start
+			until
+				l_unselected_views.after
+			loop
+				if attached catalog_repository_view_row (l_unselected_views.item) as l_row then
+					mark_repository_unselected (l_row)
+				elseif attached catalog_repository_row (l_unselected_views.item.repo) as l_row then
+					mark_repository_unselected (l_row)
+				end
+				l_unselected_views.forth
+			end
+
+			if not logs_tool.same_views (l_old_views, l_new_views) then
+				from
+					l_old_views.start
+				until
+					l_old_views.after
+				loop
+					l_old_views.item.repo.save_unread_logs
+					l_old_views.forth
 				end
 				logs_tool.reset
-				a_repodata.load_logs
-				update_catalog_row (r)
-				logs_tool.update_current_repository (a_repodata, a_log_filter)
-				info_tool.update_current_repository (a_repodata)
+				from
+					l_new_views.start
+				until
+					l_new_views.after
+				loop
+					if not l_old_views.has (l_new_views.item) then
+						l_new_views.item.repo.load_logs
+					end
+					l_new_views.forth
+				end
+				from
+					a_lst.start
+				until
+					a_lst.after
+				loop
+					update_catalog_row (a_lst.item.row)
+					a_lst.forth
+				end
+				logs_tool.update_current_repositories (l_new_views)
+				info_tool.update_current_repository (Void)
 			else
-				logs_tool.update_current_repository (a_repodata, a_log_filter)
+				logs_tool.update_current_repositories (l_new_views)
 			end
-			mark_repository_selected (r)
-			check
-				catalog_repository_row (a_repodata) = r or
-				catalog_repository_row (a_repodata) = r.parent_row_root
+			from
+				a_lst.start
+			until
+				a_lst.after
+			loop
+				mark_repository_selected (a_lst.item.row)
+				if
+					attached {REPOSITORY_SVN_DATA} a_lst.item.view.repo as rsvndata  and then
+					not rsvndata.is_asynchronious_fetching
+				then
+					unset_background_color (a_lst.item.row)
+				end
+				a_lst.forth
 			end
-			if
-				attached {REPOSITORY_SVN_DATA} a_repodata as rsvndata  and then
-				not rsvndata.is_asynchronious_fetching
-			then
-				unset_background_color (r)
-			end
+
+--			check
+--				catalog_repository_row (a_repodata) = r or
+--				catalog_repository_row (a_repodata) = r.parent_row_root
+--			end
 		end
+
+--	select_repository (r: EV_GRID_ROW; a_repodata: REPOSITORY_DATA; a_log_filter: detachable REPOSITORY_LOG_FILTER)
+--		local
+--			l_repo: detachable REPOSITORY_DATA
+--		do
+--			l_repo := logs_tool.current_repository
+--			if attached catalog_repository_row (l_repo) as l_row then
+--				mark_repository_unselected (l_row)
+--			end
+--			if l_repo /= a_repodata then
+--				if l_repo /= Void then
+--					l_repo.save_unread_logs
+--				end
+--				logs_tool.reset
+--				a_repodata.load_logs
+--				update_catalog_row (r)
+--				logs_tool.update_current_repository (a_repodata, a_log_filter)
+--				info_tool.update_current_repository (a_repodata)
+--			else
+--				logs_tool.update_current_repository (a_repodata, a_log_filter)
+--			end
+--			mark_repository_selected (r)
+--			check
+--				catalog_repository_row (a_repodata) = r or
+--				catalog_repository_row (a_repodata) = r.parent_row_root
+--			end
+--			if
+--				attached {REPOSITORY_SVN_DATA} a_repodata as rsvndata  and then
+--				not rsvndata.is_asynchronious_fetching
+--			then
+--				unset_background_color (r)
+--			end
+--		end
 
 feature {CTR_TOOL} -- Diff
 
@@ -1116,7 +1330,7 @@ feature {NONE} -- Implementation
 			mtb.extend (tbbut)
 
 			create tbbut.make
-			tbbut.set_pixmap (icons.new_custom_text_small_toolbar_button_icon ("Config"))
+			tbbut.set_pixmap (icons.new_text_small_toolbar_button_standard_icon ("Config"))
 			tbbut.select_actions.extend (agent edit_configuration)
 			mtb.extend (tbbut)
 
@@ -1245,6 +1459,31 @@ feature {NONE} -- Implementation
 		end
 
 feature {NONE} -- Implementation / Constants
+
+	repository_from_row (a_row: EV_GRID_ROW): detachable REPOSITORY_DATA
+		do
+			if attached {REPOSITORY_DATA} a_row.data as d then
+				Result := d
+--			elseif repository_view_from_row (a_row) as v then
+--				Result := v.repo
+			end
+		end
+
+	repository_view_from_row (a_row: EV_GRID_ROW): detachable REPOSITORY_DATA_VIEW
+		do
+			if attached {REPOSITORY_DATA_VIEW} a_row.data as v then
+				Result := v
+			end
+		end
+
+	repository_filter_from_row (a_row: EV_GRID_ROW): detachable REPOSITORY_LOG_FILTER
+		do
+			if attached {REPOSITORY_LOG_FILTER} a_row.data as f then
+				Result := f
+			elseif attached repository_view_from_row (a_row) as v then
+				Result := v.filter
+			end
+		end
 
 	mark_repository_selected (r: EV_GRID_ROW)
 		do

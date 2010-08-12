@@ -24,8 +24,7 @@ feature {NONE} -- Initialization
 
 	make (a_name: STRING)
 		do
-			create {ARRAYED_LIST [like current_repositories.item]} current_repositories.make (1)
-			create filters.make (1)
+			create {ARRAYED_LIST [like current_views.item]} current_views.make (1)
 			Precursor (a_name)
 		end
 
@@ -35,6 +34,7 @@ feature {NONE} -- Initialization
 			c: like sd_content
 			mtb: SD_TOOL_BAR
 			tbbut: SD_TOOL_BAR_BUTTON
+			tbtoggbut: SD_TOOL_BAR_TOGGLE_BUTTON
 		do
 			create g
 			grid := g
@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 			g.column (cst_log_column).set_title ("message")
 			g.column (cst_date_column).set_title ("date")
 			c.set_short_title ("Logs ...")
-			c.set_long_title ("Repository Logs ...")
+			c.set_long_title ("Logs ...")
 			g.enable_selection_on_single_button_click
 --			g.disable_selection_on_click
 			g.pointer_button_press_item_actions.extend (agent on_item_pointer_pressed)
@@ -64,19 +64,41 @@ feature {NONE} -- Initialization
 			g.row_select_actions.extend (agent on_log_row_selected)
 			g.pointer_double_press_item_actions.extend (agent on_log_item_double_clicked)
 			create mtb.make
+
+			create tbtoggbut.make
+			tbtoggbut.set_pixmap (icons.new_text_small_toolbar_button_standard_icon ("Hide-Read"))
+			tbtoggbut.select_actions.extend (agent (ai_togg: SD_TOOL_BAR_TOGGLE_BUTTON)
+					do
+						if ai_togg.is_selected then
+							add_filter (unread_filter)
+						else
+							remove_filter (unread_filter)
+						end
+					end(tbtoggbut))
+			mtb.extend (tbtoggbut)
+
+			create tbbut.make
+			tbbut.set_pixmap (icons.new_mark_all_read_small_toolbar_button_icon)
+			tbbut.select_actions.extend (agent mark_all_read_logs)
+			mtb.extend (tbbut)
+
+			mtb.extend (create {SD_TOOL_BAR_SEPARATOR}.make)
+
 			create tbbut.make
 			tbbut.set_pixmap (icons.new_check_small_toolbar_button_icon)
 			tbbut.select_actions.extend (agent check_current_repositories)
 			mtb.extend (tbbut)
 
-			create tbbut.make
-			tbbut.set_pixmap (icons.new_remove_small_toolbar_button_icon)
-			tbbut.select_actions.extend (agent delete_selected_row_logs)
-			mtb.extend (tbbut)
+			mtb.extend (create {SD_TOOL_BAR_SEPARATOR}.make)
 
 			create tbbut.make
 			tbbut.set_pixmap (icons.new_archive_small_toolbar_button_icon)
 			tbbut.select_actions.extend (agent archive_selected_row_logs)
+			mtb.extend (tbbut)
+
+			create tbbut.make
+			tbbut.set_pixmap (icons.new_remove_small_toolbar_button_icon)
+			tbbut.select_actions.extend (agent delete_selected_row_logs)
 			mtb.extend (tbbut)
 
 			mtb.compute_minimum_size
@@ -87,31 +109,67 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	filter: detachable REPOSITORY_LOG_FILTER
-		do
-			if attached current_repository as cur then
-				Result := filters.item (cur)
-			end
-		end
-
-	filters: HASH_TABLE [detachable REPOSITORY_LOG_FILTER, REPOSITORY_DATA]
-
 	current_log: detachable REPOSITORY_LOG
 
 	current_repository: detachable REPOSITORY_DATA
 		do
-			if current_repositories.count > 0 then
-				Result := current_repositories.first
+			if current_views.count > 0 then
+				Result := current_views.first.repo
 			end
 		end
 
 	current_repositories: LIST [REPOSITORY_DATA]
+		do
+			Result := repositories_from_views (current_views)
+		end
+
+	current_views: LIST [REPOSITORY_DATA_VIEW]
+
+	filter: detachable REPOSITORY_LOG_FILTER
 
 	review_enabled: BOOLEAN
 
 	grid: EV_GRID
 
 feature -- Element change
+
+	add_filter (f: REPOSITORY_LOG_FILTER)
+		local
+			o_filter: like filter
+			grp: REPOSITORY_LOG_GROUP_FILTER
+		do
+			o_filter := filter
+			if o_filter = Void then
+				filter := f
+			elseif attached {REPOSITORY_LOG_GROUP_FILTER} o_filter as g then
+				g.add_filter (f)
+			else
+				create grp.make (2)
+				grp.add_filter (o_filter)
+				grp.add_filter (f)
+				filter := f
+			end
+			if o_filter /= filter then
+				custom_update (False)
+			end
+		end
+
+	remove_filter (f: REPOSITORY_LOG_FILTER)
+		local
+			o_filter: like filter
+		do
+			o_filter := filter
+			if o_filter = Void then
+				-- do nothing
+			elseif attached {REPOSITORY_LOG_GROUP_FILTER} o_filter as g then
+				g.remove_filter (f)
+			elseif o_filter = f then
+				filter := Void
+			end
+			if o_filter /= filter then
+				custom_update (False)
+			end
+		end
 
 	review_bar: detachable CTR_LOGS_REVIEW_BOX
 
@@ -159,10 +217,14 @@ feature -- Element change
 	custom_update (a_reload: BOOLEAN)
 		local
 			g: like grid
-			l_row: EV_GRID_ROW
 			l_sorted_logs: ARRAYED_LIST [REPOSITORY_LOG]
 			l_sorter: like log_sorter
-			l_filter: like filter
+			l_filter: detachable REPOSITORY_LOG_FILTER
+			lst: like current_views
+			n,r: INTEGER
+			rdata: REPOSITORY_DATA
+			plst: ARRAYED_LIST [REPOSITORY_DATA]
+			prev: detachable REPOSITORY_LOG
 		do
 			if review_enabled then
 				show_review_bar
@@ -171,52 +233,110 @@ feature -- Element change
 			end
 			g := grid
 			g.set_row_count_to (0)
-			if attached current_repository as rdata then
-				if a_reload then
-					rdata.load_logs
-				end
-				if attached rdata.logs as l_logs then
-					create l_sorted_logs.make (l_logs.count)
-					l_filter := filter
-					debug
-						create {REPOSITORY_LOG_PATH_FILTER} l_filter.make ("/trunk/Src/C")
-						create {REPOSITORY_LOG_AUTHOR_FILTER} l_filter.make ("jfiat")
-					end
-
-					across
-						l_logs as c
-					loop
-						if l_filter /= Void then
-							if l_filter.matched (c.item) then
-								l_sorted_logs.force (c.item)
-							end
-						else
-							l_sorted_logs.force (c.item)
+			lst := current_views
+			if lst.count > 0 then
+				create plst.make (lst.count)
+				from lst.start until lst.after loop
+					rdata := lst.item.repo
+					if not plst.has (rdata) then
+						plst.force (rdata)
+						if a_reload then
+							rdata.load_logs
+						end
+						if attached rdata.logs as l_logs then
+							n := n + l_logs.count
 						end
 					end
-					l_sorter := log_sorter
-					l_sorter.reverse_sort (l_sorted_logs)
-					across
-						l_sorted_logs as c
-					loop
-						if attached c.item as l_log then
-							g.insert_new_row (g.row_count + 1)
-							l_row := g.row (g.row_count)
-							l_row.set_data (l_log)
+					lst.forth
+				end
+				if n > 0 then
+					create l_sorted_logs.make (n)
+					from lst.start until lst.after loop
+						rdata := lst.item.repo
+						if attached rdata.logs as l_logs then
+							l_filter := lst.item.filter
+--							debug
+--								create {REPOSITORY_LOG_PATH_FILTER} l_filter.make ("/trunk/Src/C")
+--								create {REPOSITORY_LOG_AUTHOR_FILTER} l_filter.make ("jfiat")
+--							end
+
+							across
+								l_logs as c
+							loop
+								n := n - 1
+								if l_filter /= Void then
+									if l_filter.matched (c.item) then
+										l_sorted_logs.force (c.item)
+									end
+								else
+									l_sorted_logs.force (c.item)
+								end
+							end
+						end
+						lst.forth
+					end
+					check n = 0 end
+					if l_sorted_logs.count > 0 then
+						l_sorter := log_sorter
+						l_sorter.reverse_sort (l_sorted_logs)
+						l_filter := filter
+						from l_sorted_logs.start until l_sorted_logs.after loop
+							if attached l_sorted_logs.item as l_log then
+								if l_log = prev then --| remove duplicates
+									l_sorted_logs.remove
+								else
+									if l_filter /= Void then
+										if l_filter.matched (l_log) then
+											l_sorted_logs.forth
+										else
+											l_sorted_logs.remove
+										end
+									else
+										l_sorted_logs.forth
+									end
+								end
+								prev := l_log
+							else
+								l_sorted_logs.remove
+							end
+						end
+						n := l_sorted_logs.count
+						if n > 0 then
+							g.insert_new_rows (n, 1)
+
+							from
+								r := 1
+								l_sorted_logs.start
+							until
+								l_sorted_logs.after
+							loop
+								if attached l_sorted_logs.item as l_log then
+--									g.insert_new_row (g.row_count + 1)
+--									l_row := g.row (g.row_count)
+									g.row (r).set_data (l_log)
+									r := r + 1
+								end
+								l_sorted_logs.forth
+							end
 						end
 					end
 				end
 			end
+			sd_content.set_long_title (grid.row_count.out + " logs")
 		end
 
 	reset
 		do
 			current_log := Void
+			if attached repository_colors as h then
+				h.wipe_out
+			end
+			filter := Void
 		end
 
-	same_repositories (r1, r2: like current_repositories): BOOLEAN
+	same_views (r1, r2: like current_views): BOOLEAN
 		local
-			bak: like current_repositories
+			bak: like current_views
 		do
 			bak := r1
 			Result := r2.count = bak.count
@@ -233,40 +353,27 @@ feature -- Element change
 			end
 		end
 
-	update_current_repositories (a_repos: like current_repositories)
-		do
-			if not same_repositories (current_repositories, a_repos) then
-				current_repositories.wipe_out
-				current_repositories.fill (a_repos)
-				current_log := Void
-				review_enabled := False --a_repo /= Void and then a_repo.review_enabled
-				update
-			end
-		end
-
-	update_current_repository (a_repo: like current_repository; a_log_filter: like filter)
+	update_current_repositories (a_data: like current_views)
 		local
 			update_needed: BOOLEAN
 		do
-			if current_repository /= a_repo then
+			if not same_views (current_views, a_data) then
 				update_needed := True
-				current_repositories.wipe_out
-				filters.wipe_out
-				if a_repo /= Void then
-					current_repositories.extend (a_repo)
+				current_views.wipe_out
+				if a_data.count > 0 then
+					current_views.fill (a_data)
 				end
---				current_repository := a_repo
 				current_log := Void
 			end
-			review_enabled := a_repo /= Void and then a_repo.review_enabled
-			if a_repo /= Void and a_log_filter /= filter then
-				filters.force (a_log_filter, a_repo)
-				if update_needed then
-					update
-				else
-					custom_update (False)
-				end
-			elseif update_needed then
+			if
+				attached repositories_from_views (a_data) as crepos and then
+				crepos.count = 1
+			then
+				review_enabled := crepos.first.review_enabled
+			else
+				review_enabled := False --a_repo /= Void and then a_repo.review_enabled
+			end
+			if update_needed then
 				update
 			end
 		end
@@ -274,11 +381,11 @@ feature -- Element change
 	check_current_repositories
 		do
 			if attached ctr_window as w then
-				if attached current_repositories as rlst then
+				if attached current_views as rlst and then rlst.count > 0 then
 					across
 						rlst as c
 					loop
-						w.check_repository (c.item)
+						w.check_repository (c.item.repo)
 					end
 				end
 			end
@@ -316,6 +423,23 @@ feature -- Basic operations
 		end
 
 feature {CTR_WINDOW} -- Implementation
+
+	repositories_from_views (a_data: like current_views): LIST [REPOSITORY_DATA]
+		do
+			create {ARRAYED_LIST [REPOSITORY_DATA]} Result.make (a_data.count)
+			if a_data.count > 0 then
+				from
+					a_data.start
+				until
+					a_data.after
+				loop
+					if not Result.has (a_data.item.repo) then
+						Result.force (a_data.item.repo)
+					end
+					a_data.forth
+				end
+			end
+		end
 
 	request_update_logs_layout
 		local
@@ -410,6 +534,12 @@ feature {CTR_WINDOW} -- Implementation
 			a_row.set_item (cst_log_column, glab)
 			a_row.set_item (cst_author_column, create {EV_GRID_LABEL_ITEM}.make_with_text (a_log.author))
 			a_row.set_item (cst_date_column, create {EV_GRID_LABEL_ITEM}.make_with_text (a_log.date))
+
+			if current_views.count > 1 then
+				a_row.set_foreground_color (repository_color (a_log.parent))
+			else
+				a_row.set_foreground_color (Void)
+			end
 
 			if a_log.unread then
 				mark_log_unread (a_row)
@@ -720,6 +850,46 @@ feature {CTR_WINDOW} -- Implementation
 			end
 		end
 
+	mark_all_read_logs
+		local
+			g: like grid
+			r,n: INTEGER
+			w: like ctr_window
+			plst: detachable ARRAYED_LIST [REPOSITORY_DATA]
+		do
+			g := grid
+			n := g.row_count
+			if n > 0 then
+				w := ctr_window
+				if w /= Void then
+					create plst.make (repositories_from_views (current_views).count)
+				end
+				from
+					r := 1
+				until
+					r > n
+				loop
+					if attached {REPOSITORY_LOG} g.row (r).data as l_log then
+						if l_log.unread then
+							l_log.mark_read
+							mark_log_read (g.row (r))
+							if plst /= Void and then not plst.has (l_log.parent) then
+								plst.force (l_log.parent)
+							end
+						end
+					end
+					r := r + 1
+				end
+				if w /= Void and plst /= Void and then plst.count > 0 then
+					across
+						plst as c
+					loop
+						w.update_catalog_row_by_data (c.item)
+					end
+				end
+			end
+		end
+
 	update_info_tool
 		do
 			if attached ctr_window as w then
@@ -784,16 +954,18 @@ feature {CTR_WINDOW} -- Implementation
 			ft: EV_FONT
 		do
 			n := a_row.count
-			ft := font_unread_log
-			from
-				c := 1
-			until
-				c > n
-			loop
-				if attached {EV_GRID_LABEL_ITEM} a_row.item (c) as l_lab then
-					l_lab.set_font (ft)
+			if n > 0 then
+				ft := font_unread_log
+				from
+					c := 1
+				until
+					c > n
+				loop
+					if attached {EV_GRID_LABEL_ITEM} a_row.item (c) as l_lab then
+						l_lab.set_font (ft)
+					end
+					c := c + 1
 				end
-				c := c + 1
 			end
 		end
 
@@ -803,20 +975,56 @@ feature {CTR_WINDOW} -- Implementation
 			ft: EV_FONT
 		do
 			n := a_row.count
-			ft := font_read_log
-			from
-				c := 1
-			until
-				c > n
-			loop
-				if attached {EV_GRID_LABEL_ITEM} a_row.item (c) as l_lab then
-					l_lab.set_font (ft)
+			if n > 0 then
+				ft := font_read_log
+				from
+					c := 1
+				until
+					c > n
+				loop
+					if attached {EV_GRID_LABEL_ITEM} a_row.item (c) as l_lab then
+						l_lab.set_font (ft)
+					end
+					c := c + 1
 				end
-				c := c + 1
 			end
 		end
 
+	repository_color (a_data: REPOSITORY_DATA): detachable EV_COLOR
+		require
+			current_views.count > 1
+		local
+			h: like repository_colors
+		do
+			h := repository_colors
+			if h = Void then
+				create h.make (current_views.count)
+				repository_colors := h
+			end
+			if h.has_key (a_data) then
+				Result := h.found_item
+			else
+				inspect
+					h.count
+				when 1 then	Result := colors.blue
+				when 2 then	Result := colors.red
+				when 3 then	Result := colors.green
+				when 4 then	Result := colors.magenta
+				when 5 then	Result := colors.cyan
+				else        Result := colors.black
+				end
+				h.force (Result, a_data)
+			end
+		end
+
+	repository_colors: detachable HASH_TABLE [EV_COLOR, REPOSITORY_DATA]
+
 feature {NONE} -- Constants
+
+	unread_filter: REPOSITORY_LOG_READ_STATUS_FILTER
+		once
+			create Result.make_read (False)
+		end
 
 	cst_revision_column: INTEGER = 1
 	cst_date_column: INTEGER = 2

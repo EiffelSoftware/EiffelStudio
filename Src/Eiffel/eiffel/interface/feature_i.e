@@ -2178,16 +2178,6 @@ feature -- Signature checking
 		do
 			l_class := feat_table.associated_class
 			context.set_current_feature (Current)
-				-- Not that the checks is only done for real `onces'. Constants
-				-- have their checks done through VQMC.
-			if type.has_like and then (is_once and not is_constant) then
-					-- We have an anchored type.
-					-- Check if the feature is not a once feature
-				create vffd7
-				vffd7.set_class (written_class)
-				vffd7.set_feature_name (feature_name)
-				Error_handler.insert_error (vffd7)
-			end
 				-- Process an actual type for the feature interpret
 				-- anchored types.
 			type_a_checker.init_with_feature_table (Current, feat_table, Void, error_handler)
@@ -2198,7 +2188,7 @@ feature -- Signature checking
 					-- Instantitate the feature type in the context of the
 					-- actual type of the class associated to `feat_table'.
 
-				if (is_once and not is_constant) and then solved_type.has_formal_generic then
+				if (is_once and not is_constant) and then not solved_type.is_standalone then
 						-- A once function cannot have a type with formal generics
 					create vffd7
 					vffd7.set_class (written_class)

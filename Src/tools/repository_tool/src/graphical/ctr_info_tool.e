@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 			mtb.extend (tbbut)
 
 			create tbbut.make
-			tbbut.set_pixmap (icons.new_custom_text_small_toolbar_button_icon ("Open Data Folder"))
+			tbbut.set_pixmap (icons.new_text_small_toolbar_button_standard_icon ("Open Data Folder"))
 			tbbut.select_actions.extend (agent open_data_folder)
 			mtb.extend (tbbut)
 

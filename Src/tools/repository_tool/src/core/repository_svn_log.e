@@ -58,7 +58,11 @@ feature -- Status report
 
 	is_less alias "<" (other: like Current): BOOLEAN
 		do
-			Result := svn_revision < other.svn_revision
+			if parent = other.parent then
+				Result := svn_revision < other.svn_revision
+			else
+				Result := date < other.date
+			end
 		end
 
 end

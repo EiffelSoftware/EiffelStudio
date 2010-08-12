@@ -24,11 +24,37 @@ feature -- Access
 
 	filters: ARRAYED_LIST [REPOSITORY_LOG_FILTER]
 
+	count: INTEGER
+		do
+			Result := filters.count
+		end
+
 feature -- Element changes
 
 	add_filter (f: REPOSITORY_LOG_FILTER)
 		do
 			filters.force (f)
+		end
+
+	remove_filter (f: REPOSITORY_LOG_FILTER)
+		local
+			lst: like filters
+		do
+			from
+				lst := filters
+				lst.start
+			until
+				lst.after
+			loop
+				if lst.item = f then
+					lst.remove
+				else
+					if attached {REPOSITORY_LOG_GROUP_FILTER} lst.item as g then
+						g.remove_filter (f)
+					end
+					lst.forth
+				end
+			end
 		end
 
 feature -- Status report

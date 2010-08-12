@@ -50,7 +50,9 @@ feature -- Access
 
 	logs: detachable HASH_TABLE [like log_from_revision, STRING]
 
-	last_known_revision: INTEGER
+	revision_last_known: INTEGER
+
+	revision_first_known: INTEGER
 
 	info: detachable SVN_REPOSITORY_INFO
 
@@ -97,6 +99,7 @@ feature -- Access
 	load_logs
 		local
 			l_last_known_rev: INTEGER
+			l_first_known_rev: INTEGER
 			l_logs: like logs
 			d: DIRECTORY
 			r: INTEGER
@@ -121,6 +124,11 @@ feature -- Access
 						r := s.to_integer
 						l_id := r.out
 						l_last_known_rev := l_last_known_rev.max (r)
+						if l_first_known_rev = 0 then
+							l_first_known_rev := r
+						else
+							l_first_known_rev := l_first_known_rev.min (r)
+						end
 						if not l_logs.has (l_id) and attached loaded_log (l_id) as e then
 							l_logs.put (e, l_id)
 						end
@@ -129,7 +137,8 @@ feature -- Access
 				end
 				d.close
 			end
-			last_known_revision := l_last_known_rev
+			revision_last_known := l_last_known_rev
+			revision_first_known := l_first_known_rev
 		ensure then
 			logs_attached: logs /= Void
 		end
@@ -137,7 +146,7 @@ feature -- Access
 	fetch_logs
 		do
 			load_logs
-			internal_fetch_logs (repository, last_known_revision)
+			internal_fetch_logs (repository, revision_last_known)
 			import_fetched_logs
 		end
 
@@ -164,7 +173,7 @@ feature -- Access
 					ia_mut.lock
 					internal_fetch_logs (ia_repo, ia_last_known_rev)
 					ia_mut.unlock
-				end (l_fetch_mutex, create {like repository}.make_from_repository (repository), last_known_revision))
+				end (l_fetch_mutex, create {like repository}.make_from_repository (repository), revision_last_known))
 			th.launch
 		end
 

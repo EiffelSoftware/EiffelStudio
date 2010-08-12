@@ -156,7 +156,11 @@ feature -- Properties
 		do
 			Result := private_routine
 			if Result = Void then
-				Result := feature_from_runtime_data (dynamic_class, written_class, routine_name)
+				if not routine_name.is_empty then
+					if written_class /= Void then
+						Result := feature_from_runtime_data (dynamic_class, written_class, routine_name)
+					end
+				end
 				private_routine := Result
 			end
 		end

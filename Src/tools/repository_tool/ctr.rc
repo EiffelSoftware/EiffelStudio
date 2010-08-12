@@ -1,0 +1,53 @@
+#define Application_icon	1
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+Application_icon	ICON	DISCARDABLE	"ctr.ico"
+
+// It should be 
+// CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "ec.exe.manifest"
+// but on older version of VC or older version of the Platform SDK they
+// are not defined.
+1 24 "ctr.exe.manifest"
+
+#include <windows.h>
+
+#define VER_FILEVERSION             1,0,0,0
+#define VER_FILEVERSION_STR         "1.0.0.0\0"
+
+#define VER_PRODUCTVERSION          1,0,0,0
+#define VER_PRODUCTVERSION_STR      "1.0\0"
+
+#ifndef DEBUG
+#define VER_DEBUG                   0
+#else
+#define VER_DEBUG                   VS_FF_DEBUG
+#endif
+
+VS_VERSION_INFO VERSIONINFO
+FILEVERSION    	VER_FILEVERSION
+PRODUCTVERSION 	VER_PRODUCTVERSION
+FILEFLAGSMASK  	VS_FFI_FILEFLAGSMASK
+FILEFLAGS      	1
+FILEOS         	VOS__WINDOWS32
+FILETYPE       	VFT_DLL
+FILESUBTYPE    	VFT2_UNKNOWN
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904E4"
+        BEGIN
+            VALUE "CompanyName",      "Eiffel Software - a division of ISE"
+            VALUE "FileDescription",  "Repository Tool 1.0"
+            VALUE "FileVersion",      "1.0"
+            VALUE "InternalName",     ""
+            VALUE "LegalCopyright",   "Eiffel Software. All rights reserved."
+            VALUE "LegalTrademarks1", ""
+            VALUE "LegalTrademarks2", ""
+            VALUE "OriginalFilename", ""
+            VALUE "ProductName",      "Repository Tool 1.0"
+            VALUE "ProductVersion",   "1.0"
+        END
+    END
+END
+

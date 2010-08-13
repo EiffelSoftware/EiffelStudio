@@ -165,17 +165,38 @@ feature -- Access
 
 	is_valid: BOOLEAN
 			-- Is current type still valid for current system?
+		local
+			l_type: TYPE_A
+			i, nb: INTEGER
+			l_generics: ARRAY [TYPE_A]
 		do
 			Result := associated_class /= Void and then
 				system.class_type_of_id (type_id) = Current and then
 				type.is_valid and then
 				type.is_valid_generic_derivation
-			if Result and type.generics /= Void then
-					-- Check constrained genericity validity rule
-				type.reset_constraint_error_list
-					-- Check the constraint to ensure it makes sense
-				type.check_constraints (associated_class, Void, False)
-				Result := type.constraint_error_list.is_empty
+			if Result and then attached {GEN_TYPE_A} type as l_gen_type then
+					-- Check constrained genericity validity rule.
+					-- We cannot apply it directly to `type' because of the formal we use
+					-- to denote the reference version of the generic derivation.
+					-- This fixes eweasel test#incr378.
+				from
+					l_generics := l_gen_type.generics
+					i := l_generics.lower
+					nb := l_generics.upper
+				until
+					i > nb or else not Result
+				loop
+					l_type := l_generics.item (i)
+					if not l_type.is_formal then
+							-- Not a formal thus the generic derivation for an expanded.
+						check is_expanded: l_type.is_expanded end
+						l_gen_type.reset_constraint_error_list
+							-- Check the constraint to ensure it makes sense
+						l_gen_type.check_one_constraint (associated_class, Void, False, i)
+						Result := l_gen_type.constraint_error_list.is_empty
+					end
+					i := i + 1
+				end
 			end
 		end
 

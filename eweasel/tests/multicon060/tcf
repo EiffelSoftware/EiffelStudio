@@ -1,5 +1,5 @@
 test_name	 saving-multiconstraint-generic-class-crash
-test_description When modifying a generic expanded class that has some multiple constraint, the generated code using it would crash. This test also used to show a precondition violation in the compiler.
+test_description When modifying a generic expanded class that has some multiple constraint, the generated code using it would crash or the C code would not compile. This test also used to show a precondition violation in the compiler.
 
 define STATUS "expanded"
 copy_sub 	Ace $TEST Ace
@@ -17,6 +17,7 @@ execute_work	NONE	exec_output1
 execute_result	ok
 compare		exec_output1 output
 
+-- We remove the expanded status, this removes the various generic derivation we were using
 define STATUS ""
 copy_sub	test2.e $CLUSTER test2.e
 
@@ -37,6 +38,7 @@ execute_work	NONE	exec_output3
 execute_result	ok
 compare		exec_output3 output
 
+-- We add the expanded status back, again this removes the previous generic derivation we were using
 define STATUS "expanded"
 copy_sub	test2.e $CLUSTER test2.e
 
@@ -47,14 +49,55 @@ execute_work	NONE	exec_output4
 execute_result	ok
 compare		exec_output4 output
 
+-- We touch the class, it should preserve the existing generic derivation
+copy_sub	test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result ok
+
+execute_work	NONE	exec_output5
+execute_result	ok
+compare		exec_output5 output
+
 compile_frozen
 compile_result	ok
 
 c_compile_work
 c_compile_result	ok
 
-execute_work	NONE	exec_output5
+execute_work	NONE	exec_output6
 execute_result	ok
-compare		exec_output5 output
+compare		exec_output6 output
+
+-- We touch the class, it should preserve the existing generic derivation
+copy_sub	test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result ok
+
+execute_work	NONE	exec_output7
+execute_result	ok
+compare		exec_output7 output
+
+-- We touch the class, it should preserve the existing generic derivation
+copy_sub	test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result ok
+
+execute_work	NONE	exec_output7
+execute_result	ok
+compare		exec_output7 output
+
+compile_frozen
+compile_result	ok
+
+c_compile_work
+c_compile_result	ok
+
+execute_work	NONE	exec_output8
+execute_result	ok
+compare		exec_output8 output
+
 
 test_end

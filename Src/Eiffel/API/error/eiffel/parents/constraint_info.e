@@ -99,14 +99,22 @@ feature {COMPILER_EXPORTER} -- Setting
 
 	set_actual_type_set (t: TYPE_SET_A)
 			-- Assign `t' to `type1'.
+		require
+			t_not_void: t /= Void
 		do
 			actual_type_set := t
+		ensure
+			actual_type_set_set: actual_type_set = t
 		end
 
 	set_constraint_types (t: TYPE_SET_A)
 			-- Assign `t' to `type2'.
+		require
+			t_not_void: t /= Void
 		do
 			c_type := t
+		ensure
+			c_type_set: c_type = t
 		end
 
 	set_type (t: GEN_TYPE_A)

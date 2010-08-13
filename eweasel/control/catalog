@@ -2300,6 +2300,7 @@ test	multi-constraint-static-access-2			multicon057 tcf fail multiconstraint
 test	inherited-unary-with-generic				multicon058 tcf pass multiconstraint formal
 test	multi-constraint-real-type-in-crash			multicon059 tcf fail multiconstraint formal
 test	saving-multiconstraint-generic-class-crash	multicon060 tcf pass multiconstraint formal incrementality
+test	 expanded-generic-with-multiconstraint		multicon061 tcf pass multiconstraint formal execution
 
 -- tests for expanded types
 test	expanded-array-attached-reference-array			expanded001 tcf pass expanded

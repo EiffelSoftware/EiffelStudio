@@ -90,8 +90,8 @@ feature -- Basic operations
 			s.append ("%Nfeature -- Access%N%N")
 
 			s1 := "feature -- Settings%N%N"
-			s3 := "feature -- Initialization%N%N%Tmake is%N%T%Tdo%N"
-			s4 := "feature -- Output%N%N%Tout: STRING is%N%T%Tdo%N%T%T%TResult := %"%"%N"
+			s3 := "feature -- Initialization%N%N%Tmake%N%T%Tdo%N"
+			s4 := "feature -- Output%N%N%Tout: STRING%N%T%Tdo%N%T%T%TResult := %"%"%N"
 
 			from
 				table.start
@@ -135,7 +135,7 @@ feature -- Basic operations
 
 				s4.append("%T%T%TResult.append (" + col_name + ".out + %"%%N%")%N")
 
-				s1.append(s2+") is%N%T%T%T-- Set the value of "+col_name)
+				s1.append(s2+")%N%T%T%T-- Set the value of "+col_name)
 				s1.append("%N%T%Trequire")
 				s1.append("%N%T%T%Tvalue_exists: a_"+col_name+" /= Void")
 				s1.append("%N%T%Tdo")

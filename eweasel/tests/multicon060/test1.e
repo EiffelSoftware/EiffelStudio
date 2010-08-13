@@ -9,4 +9,6 @@ feature
 			io.put_new_line
 		end
 
+	item: G
+
 end

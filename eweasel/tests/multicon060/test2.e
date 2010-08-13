@@ -20,4 +20,8 @@ feature
 
 		end
 
+	do_something
+		do
+		end
+
 end

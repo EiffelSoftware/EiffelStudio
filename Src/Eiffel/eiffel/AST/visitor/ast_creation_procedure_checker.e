@@ -222,6 +222,7 @@ feature {AST_EIFFEL} -- Visitor: access to features
 		local
 			f: FEATURE_I
 		do
+			safe_process (a.internal_parameters)
 			if not is_qualified and then not a.is_local and then not a.is_argument then
 				f := written_class.feature_of_name_id (a.feature_name.name_id)
 				if f /= Void then
@@ -244,7 +245,6 @@ feature {AST_EIFFEL} -- Visitor: access to features
 					end
 				end
 			end
-			safe_process (a.internal_parameters)
 		end
 
 	process_precursor_as (a: PRECURSOR_AS)

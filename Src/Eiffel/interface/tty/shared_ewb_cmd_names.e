@@ -11,7 +11,7 @@ class SHARED_EWB_CMD_NAMES
 
 feature {NONE}
 
-	ace_cmd_name: STRING = "config"
+	ace_cmd_name: STRING = "ace"
 
 	add_subquery_cmd_name: STRING = "add"
 
@@ -209,7 +209,7 @@ feature {NONE}
 	gc_stats_cmd_name: STRING = "gc_stats";
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -32,8 +32,6 @@ feature {NONE}
 
 	c_compile_help: STRING_GENERAL do Result := locale.translation ("launch C compilation if needed") end
 
-	config_help: STRING_GENERAL do Result := locale.translation ("specify the config file") end
-
 	callers_help: STRING_GENERAL do Result := locale.translation ("show the callers of a feature") end
 
 	callees_help: STRING_GENERAL do Result := locale.translation ("show the callees of a feature") end
@@ -55,6 +53,8 @@ feature {NONE}
 	compat_help: STRING_GENERAL do Result := locale.translation ("enable pre-attached type compatibility") end
 
 	compile_help: STRING_GENERAL do Result := locale.translation ("compile or run the system") end
+
+	config_help: STRING_GENERAL do Result := locale.translation ("specify the configuration (ECF) file") end
 
 	Convert_profile_help: STRING_GENERAL do Result := locale.translation ("convert profiler output files") end
 
@@ -221,7 +221,7 @@ feature {NONE}
 	gc_stats_help: STRING_GENERAL do Result := locale.translation ("Show GC statistics") end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

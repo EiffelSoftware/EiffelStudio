@@ -53,7 +53,7 @@ feature {NONE} -- Access
 
 			if l_result = Void then
 					-- Default to using one found in SDK, typically happens for
-					-- library consumers that are used in install application or are used
+					-- library consumers that   are used in install application or are used
 					-- with no product install base
 				create l_result.make (256)
 				l_result.append (install_path)
@@ -66,11 +66,19 @@ feature {NONE} -- Access
 			-- <Precursor>
 		do
 			create Result.make (10)
-			if attached {FINISH_FREEZING_EIFFEL_LAYOUT} eiffel_layout as l_layout then
-					-- Need to do the same check as in `batch_file_name' to ensure we do
-					-- not pass the install path as an argument when we are using the config library
-					-- in an environment that has no install-base (like an installation program)
-				Result.append ("%"" + install_path + "%" ")
+
+			if attached {FINISH_FREEZING_EIFFEL_LAYOUT} eiffel_layout as l_layout and then l_layout.is_valid_environment then
+				if
+					code.is_equal (wsdk_60) or
+					code.is_equal (wsdk_61) or
+					code.is_equal (wsdk_70) or
+					code.is_equal (wsdk_71)
+				then
+						-- Need to do the same check as in `batch_file_name' to ensure we do
+						-- not pass the install path as an argument when we are using the config library
+						-- in an environment that has no install-base (like an installation program)
+					Result.append ("%"" + install_path + "%" ")
+				end
 			end
 			Result.append ("/Release ")
 			if use_32bit then

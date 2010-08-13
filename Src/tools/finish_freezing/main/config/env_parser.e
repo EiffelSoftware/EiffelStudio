@@ -254,7 +254,7 @@ feature {NONE} -- Basic operations
 			end
 			Result.append (" > ")
 			Result.append (a_out)
-			Result.append ("|| EXIT 1%NSET > ")
+			Result.append ("%NSET > ")
 			Result.append (a_out)
 		ensure
 			result_attached: Result /= Void

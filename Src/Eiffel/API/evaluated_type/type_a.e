@@ -1529,6 +1529,11 @@ feature {NONE} -- Implementation
 			constraint_info.set_type (gen_type)
 			constraint_info.set_actual_type_set (l_current_type_set)
 			constraint_info.set_formal_number (position)
+				-- This is necessary to instantiate the constraint in the context of `gen_type'
+				-- as the constraint may involve some formal generic parameters that do not exist
+				-- in the context of the class which triggerred the error.
+				-- This fixes eweasel test#valid266.
+			l_constraint_type_set := l_constraint_type_set.instantiated_in (gen_type)
 			constraint_info.set_constraint_types (l_constraint_type_set)
 			constraint_info.set_unmatched_creation_constraints (a_unmatched_creation_constraints)
 			constraint_error_list.extend (constraint_info)

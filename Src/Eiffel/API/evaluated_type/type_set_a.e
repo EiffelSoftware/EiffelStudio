@@ -29,6 +29,7 @@ inherit
 			has_expanded,
 			has_formal_generic,
 			instantiation_in,
+			instantiated_in,
 			internal_is_valid_for_class,
 			is_attached,
 			is_class_valid,
@@ -114,14 +115,12 @@ feature -- Access
 			end
 		end
 
-	instantiation_in (a_type: TYPE_A; a_written_id: INTEGER_32): TYPE_A
-			--
+	instantiation_in (a_type: TYPE_A; a_written_id: INTEGER_32): TYPE_SET_A
 		local
 			l_instantiated_type: TYPE_A
 			l_item_type: TYPE_A
-			l_type_set: TYPE_SET_A
 		do
-			create l_type_set.make (count)
+			create Result.make (count)
 			from
 				start
 			until
@@ -130,11 +129,37 @@ feature -- Access
 				l_item_type := item.type
 				l_instantiated_type := l_item_type.instantiation_in (a_type, a_written_id)
 				if l_instantiated_type /= Void then
-					l_type_set.extend (create {RENAMED_TYPE_A [TYPE_A]}.make (l_instantiated_type, item.renaming))
+					Result.extend (create {RENAMED_TYPE_A [TYPE_A]}.make (l_instantiated_type, item.renaming))
 				end
 				forth
 			end
-			Result := l_type_set
+		end
+
+	instantiated_in (class_type: TYPE_A): TYPE_SET_A
+		local
+			l_instantiated_type, l_item_type: TYPE_A
+			i: INTEGER
+		do
+			from
+				start
+				i := lower
+			until
+				after
+			loop
+				l_item_type := item.type
+				l_instantiated_type := l_item_type.instantiated_in (class_type)
+				if l_instantiated_type /= l_item_type then
+					if Result = Void then
+						Result := twin
+					end
+					Result.put_i_th (create {RENAMED_TYPE_A [TYPE_A]}.make (l_instantiated_type, item.renaming), i)
+				end
+				i := i + 1
+				forth
+			end
+			if Result = Void then
+				Result := Current
+			end
 		end
 
 	feature_i_state (a_name: ID_AS): TUPLE [feature_item: FEATURE_I; class_type_of_feature: CL_TYPE_A;  features_found_count: INTEGER]

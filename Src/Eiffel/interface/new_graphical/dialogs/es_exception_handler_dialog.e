@@ -120,16 +120,11 @@ feature {NONE} -- User interface initialization
 			button_del.select_actions.extend (agent on_del)
 			handling_checkbox.select_actions.extend (agent on_handling_changed)
 
-			button_reset_filters := dialog_window_buttons.item (dialog_buttons.reset_button)
-			button_reset_filters.disable_sensitive
-
 			button_close := dialog_window_buttons.item (dialog_buttons.cancel_button)
 
-			set_button_text (dialog_buttons.reset_button, interface_names.b_reset)
-			set_button_text (dialog_buttons.ok_button, interface_names.b_apply)
-			set_button_text (dialog_buttons.cancel_button, interface_names.b_close)
+			set_button_text (dialog_buttons.ok_button, interface_names.b_ok)
+			set_button_text (dialog_buttons.cancel_button, interface_names.b_cancel)
 
-			set_button_action_before_close (dialog_buttons.reset_button, agent on_reset)
 			set_button_action_before_close (dialog_buttons.ok_button, agent on_apply)
 			set_button_action_before_close (dialog_buttons.cancel_button, agent on_close)
 		end
@@ -143,9 +138,6 @@ feature -- Properties
 			-- Associated exception handler
 
 feature -- Widgets
-
-	button_reset_filters: EV_BUTTON
-			-- Dialog's button for Reset.
 
 	button_close: EV_BUTTON
 			-- Dialog's button for Close.
@@ -500,12 +492,6 @@ feature {NONE} -- events
 			end
 		end
 
-	reset_filters
-		do
-			exception_handler.wipe_out
-			update
-		end
-
 	on_del
 		local
 			r: INTEGER
@@ -530,20 +516,10 @@ feature {NONE} -- events
 			add_row_from_data ([{DBG_EXCEPTION_HANDLER}.role_disabled, tf_pattern.text.to_string_8])
 		end
 
-	on_reset
-			-- Called by `select_actions' of `reset_button'.	
-		do
-			reset_filters
---			update
-			veto_close
-		end
-
 	on_apply
 			-- Called by `select_actions' of `ok_button'.
 		do
 			apply_changes
-			update
-			veto_close
 		end
 
 	on_close
@@ -558,13 +534,11 @@ feature {NONE} -- events
 				main_frame.enable_sensitive
 				grid.set_default_colors
 				button_ignore_external_exception.enable_sensitive
-				button_reset_filters.enable_sensitive
 			else
 				main_frame.disable_sensitive
 				grid.set_background_color ((create {EV_STOCK_COLORS}).Color_read_only)
 				grid.set_foreground_color ((create {EV_STOCK_COLORS}).Color_3d_shadow )
 				button_ignore_external_exception.disable_sensitive
-				button_reset_filters.disable_sensitive
 			end
 		end
 
@@ -602,14 +576,14 @@ feature -- Access
 	title: STRING_32
 			-- The dialog's title
 		do
-			Result := "Exceptions handler"
+			Result := interface_names.m_dbg_exception_handler
 		end
 
 	buttons: DS_SET [INTEGER]
 			-- Set of button id's for dialog
 			-- Note: Use {ES_DIALOG_BUTTONS} or `dialog_buttons' to determine the id's correspondance.
 		once
-			Result := dialog_buttons.reset_ok_cancel_buttons
+			Result := dialog_buttons.ok_cancel_buttons
 		end
 
 	default_button: INTEGER
@@ -627,11 +601,11 @@ feature -- Access
 	default_confirm_button: INTEGER
 			-- The dialog's default confirm button
 		once
-			Result := dialog_buttons.reset_button
+			Result := dialog_buttons.ok_button
 		end
 
 note
-	copyright: "Copyright (c) 1984-2007, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -655,11 +629,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

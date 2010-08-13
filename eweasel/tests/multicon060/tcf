@@ -1,5 +1,5 @@
 test_name	 saving-multiconstraint-generic-class-crash
-test_description When modifying a generic expanded class that has some multiple constraint, the generated code using it would crash.
+test_description When modifying a generic expanded class that has some multiple constraint, the generated code using it would crash. This test also used to show a precondition violation in the compiler.
 
 define STATUS "expanded"
 copy_sub 	Ace $TEST Ace

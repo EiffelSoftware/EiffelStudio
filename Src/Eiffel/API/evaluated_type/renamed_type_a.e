@@ -22,7 +22,8 @@ inherit
 		redefine
 			renaming, is_renamed_type, has_renaming, instantiated_in,
 			instantiation_in, has_associated_class, formal_instantiation_in,
-			to_type_set, conformance_type, actual_type, is_computable_using_ancestors
+			to_type_set, conformance_type, actual_type, is_computable_using_ancestors,
+			same_as
 		end
 
 create
@@ -145,6 +146,12 @@ feature -- Comparison
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := type.is_equivalent (other.type)
+		end
+
+	same_as (other: TYPE_A): BOOLEAN
+			-- <Precursor>
+		do
+			Result := attached {like Current} other as l_other and then type.same_as (l_other.type)
 		end
 
 feature -- Visitor

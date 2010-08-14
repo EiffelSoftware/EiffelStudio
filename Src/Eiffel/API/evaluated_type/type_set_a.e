@@ -14,7 +14,6 @@ class
 	TYPE_SET_A
 
 inherit
-
 	TYPE_A
 		rename
 			conform_to as conform_to_type
@@ -38,12 +37,16 @@ inherit
 			is_type_set,
 			to_other_attachment,
 			to_other_immediate_attachment,
-			to_type_set
+			to_type_set,
+			same_as,
+			generated_id
 		end
 
 	ARRAYED_LIST [RENAMED_TYPE_A [TYPE_A]]
 		rename
 			duplicate as list_duplicate
+		redefine
+			make
 		end
 
 	COMPILER_EXPORTER
@@ -82,7 +85,16 @@ inherit
 		end
 
 create
-	make, make_filled, make_from_array
+	make
+
+feature {NONE} -- Initialization
+
+	make (n: INTEGER_32)
+			-- <Precursor>
+		do
+			Precursor (n)
+			compare_objects
+		end
 
 feature -- Commands
 
@@ -1077,7 +1089,24 @@ feature -- Comparison
 			s1.copy (Current)
 			create s2.make (other.count)
 			s2.copy (other)
+		end
 
+	same_as (other: TYPE_A): BOOLEAN
+			-- <Precursor>
+		do
+			if attached {like Current} other as l_other_set and then l_other_set.count = count then
+				from
+					start
+					l_other_set.start
+					Result := True
+				until
+					after or else not Result
+				loop
+					Result := item.type.same_as (l_other_set.item.type)
+					forth
+					l_other_set.forth
+				end
+			end
 		end
 
 feature -- Output
@@ -1086,24 +1115,24 @@ feature -- Output
 			-- Append `Current' to `text'.
 			-- `c' is used to retreive the generic type or argument name as string.	
 		do
-				check first /= Void  end
-				if count > 1 then
-					a_text_formatter.add ("{" )
-				end
-				first.type.ext_append_to (a_text_formatter,c)
-				from
-					start
-					forth
-				until
-					after
-				loop
-						a_text_formatter.add ("," )
-					item.type.ext_append_to (a_text_formatter,c)
-					forth
-				end
-				if count > 1 then
-					a_text_formatter.add ("}" )
-				end
+			check first /= Void  end
+			if count > 1 then
+				a_text_formatter.add ("{" )
+			end
+			first.type.ext_append_to (a_text_formatter,c)
+			from
+				start
+				forth
+			until
+				after
+			loop
+				a_text_formatter.add ("," )
+				item.type.ext_append_to (a_text_formatter,c)
+				forth
+			end
+			if count > 1 then
+				a_text_formatter.add ("}" )
+			end
 		end
 
 	dump: STRING
@@ -1129,6 +1158,18 @@ feature -- Output
 				Result.append ("}" )
 			end
 		end
+
+feature -- Generic conformance
+
+	generated_id (final_mode: BOOLEAN; a_context_type: TYPE_A): NATURAL_16
+			-- Id of a `like xxx'.
+		do
+			Result := {SHARED_GEN_CONF_LEVEL}.none_type
+			check
+				generated_id_not_implemented: False
+			end
+		end
+
 
 feature -- Status
 
@@ -1276,9 +1317,26 @@ feature -- Status
 
 feature -- Access
 
-	hash_code: INTEGER
+	hash_code: INTEGER_32
+			-- Hash code value.
+		local
+			l_rotate, l_bytes, i: INTEGER_32
 		do
 			Result := {SHARED_HASH_CODE}.other_code
+			from
+				start
+				i := count
+			until
+				after
+			loop
+				l_rotate := item.hash_code
+				l_bytes := 4 * (1 + i \\ 8)
+				l_rotate := (l_rotate |<< l_bytes) | (l_rotate |>> (32 - l_bytes))
+				Result := Result.bit_xor (item.hash_code)
+				i := i - 1
+				forth
+			end
+			Result := Result.hash_code
 		end
 
 	expanded_representative: RENAMED_TYPE_A [TYPE_A]

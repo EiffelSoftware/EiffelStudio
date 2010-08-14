@@ -779,7 +779,7 @@ feature {TYPE_A} -- Helpers
 							-- the constraint instead. If the constraint is a multi-constraint
 							-- we put ANY for now.
 						if associated_class.generics.i_th (i).is_multi_constrained (associated_class.generics) then
-							l_new_generics.put (system.any_type, i)
+							l_new_generics.put (associated_class.constrained_types (i), i)
 						else
 							l_new_generics.put (associated_class.constrained_type (i), i)
 						end

@@ -201,13 +201,11 @@ feature -- Checking
 		local
 			i, nb: INTEGER
 			l_area: SPECIAL [TYPE_A]
-			l_check: BOOLEAN
 			l_type: TYPE_A
 		do
 			from
 				l_area := area
 				nb := count
-				l_check := a_context_class.class_id = a_feature.written_in
 			until
 				i = nb
 			loop

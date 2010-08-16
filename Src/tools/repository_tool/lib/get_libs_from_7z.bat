@@ -1,5 +1,5 @@
-wget http://eapml.googlecode.com/files/eapml.7z
-7z x eapml.7z
+wget http://github.com/clemahieu/eapml/zipball/master -O eapml.zip
+7z x eapml.zip
 
-wget http://eiffel-encryption-library.googlecode.com/files/eel.7z
-7z x eel.7z
+wget http://github.com/clemahieu/eel/zipball/master -O eel.zip
+7z x eel.zip

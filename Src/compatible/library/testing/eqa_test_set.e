@@ -139,7 +139,7 @@ feature -- Basic operations
 feature {NONE} -- Events
 
 	on_prepare
-			-- Called after `prepare' has performed all initialization.
+			-- Called after all initializations in `default_create'.
 		do
 		ensure
 			prepared: is_prepared

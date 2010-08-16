@@ -15,7 +15,11 @@ To download the 3rd party libs
     wget http://github.com/clemahieu/eel/zipball/master -O eel.zip
     7z x eel.7z
 
-3) - download the package from http://github.com/clemahieu/eel
+3) using experimental svn bridge from github.com
+	svn co http://svn.github.com/clemahieu/eapml.git eapml
+	svn co http://svn.github.com/clemahieu/eel.git eel
+
+4) - download the package from http://github.com/clemahieu/eel
      and put it under eel
    - download the package from http://github.com/clemahieu/eapml
      and put it under eapml

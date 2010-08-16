@@ -241,7 +241,9 @@ feature -- Initialization
 				-- a rich text implementation object and they may be created independently.
 
 			create child_cell
-			set_rich_text (Current)
+			--| Equivalent of `set_rich_text (Current)', but flattened for void-safety reason
+			clear_structures
+			rich_text := Current
 
 			Precursor {EV_TEXT_IMP}
 			enable_all_notifications

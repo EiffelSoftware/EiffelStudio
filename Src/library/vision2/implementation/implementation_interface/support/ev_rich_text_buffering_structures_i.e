@@ -33,8 +33,8 @@ feature -- Status Setting
 		require
 			a_rich_text_not_void: a_rich_text /= Void
 		do
-			rich_text := a_rich_text
 			clear_structures
+			rich_text := a_rich_text
 		end
 
 	clear_structures

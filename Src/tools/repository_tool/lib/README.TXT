@@ -1,22 +1,22 @@
 To download the 3rd party libs
 
 3 solutions
-1) using mercurial (hg) visit http://mercurial.selenic.com/
+1) using git
 
-    hg clone https://eapml.googlecode.com/hg/ eapml
-    hg clone https://eiffel-encryption-library.googlecode.com/hg/ eel
+    git clone http://github.com/clemahieu/eapml.git eapml
+    git clone http://github.com/clemahieu/eel.git eel
 
 
 2) downloading using wget, and unzipping using 7z (7zip)
 
-    wget http://eapml.googlecode.com/files/eapml.7z
-    7z x eapml.7z
+    wget http://github.com/clemahieu/eapml/zipball/master -O eapml.zip
+    7z x eapml.zip
 
-    wget http://eiffel-encryption-library.googlecode.com/files/eel.7z
+    wget http://github.com/clemahieu/eel/zipball/master -O eel.zip
     7z x eel.7z
 
-3) - download the package from http://code.google.com/p/eiffel-encryption-library/
+3) - download the package from http://github.com/clemahieu/eel
      and put it under eel
-   - download the package from http://code.google.com/p/eapml/
+   - download the package from http://github.com/clemahieu/eapml
      and put it under eapml
 

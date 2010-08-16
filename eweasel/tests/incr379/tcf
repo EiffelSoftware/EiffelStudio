@@ -1,0 +1,17 @@
+
+test_name	 change-target-inheritance
+test_description Changing the config file so that the target extends another target and recompiling crashes the compiler.
+
+config		Ace test
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+copy_sub 	Ace_rev2 $TEST Ace
+
+compile_melted
+compile_result ok
+
+test_end

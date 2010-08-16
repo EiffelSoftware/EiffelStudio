@@ -100,9 +100,8 @@ feature -- Settings
 			error_handler_set: error_handler = a_error_handler
 		end
 
-	init_with_feature_table (a_feature: FEATURE_I; a_feat_tbl: FEATURE_TABLE; a_suppliers: FEATURE_DEPENDANCE; a_error_handler: ERROR_HANDLER)
-			-- Initialize Current with `a_feature', `a_feat_tbl' and `suppliers'.
-			-- `suppliers' will be updated if not Void.
+	init_with_feature_table (a_feature: FEATURE_I; a_feat_tbl: FEATURE_TABLE; a_error_handler: ERROR_HANDLER)
+			-- Initialize Current to start type checking of the given feature within the given feature table.
 		require
 			a_feature_not_void: a_feature /= Void
 			a_feat_tbl_not_void: a_feat_tbl /= Void
@@ -111,14 +110,14 @@ feature -- Settings
 			current_class := a_feat_tbl.associated_class
 			current_actual_type := current_class.actual_type
 			current_feature_table := a_feat_tbl
-			suppliers := a_suppliers
+			suppliers := Void
 			error_handler := a_error_handler
 		ensure
 			current_feature_set: current_feature = a_feature
 			current_class_set: current_class = a_feat_tbl.associated_class
 			current_actual_type_set: attached current_actual_type as t and then t.same_as (current_class.actual_type)
 			current_feature_table_set: current_feature_table = a_feat_tbl
-			suppliers_set: suppliers = a_suppliers
+			suppliers_set: suppliers = Void
 			error_handler_set: error_handler = a_error_handler
 		end
 

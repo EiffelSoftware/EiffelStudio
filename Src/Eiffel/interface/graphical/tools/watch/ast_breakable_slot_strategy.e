@@ -2555,7 +2555,7 @@ feature {NONE} -- Implementation: helpers
 				-- not have any anchors or bit symbols in `a_type'.
 				if source_feature /= Void then
 						-- Perform simple update of TYPE_A in context of `source_class'.
-					type_a_checker.init_with_feature_table (source_feature, source_class.feature_table, Void, Void)
+					type_a_checker.init_with_feature_table (source_feature, source_class.feature_table, Void)
 					l_type := type_a_checker.solved (l_type, a_type)
 
 					if source_class /= current_class then

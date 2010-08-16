@@ -2180,7 +2180,7 @@ feature -- Signature checking
 			context.set_current_feature (Current)
 				-- Process an actual type for the feature interpret
 				-- anchored types.
-			type_a_checker.init_with_feature_table (Current, feat_table, Void, error_handler)
+			type_a_checker.init_with_feature_table (Current, feat_table, error_handler)
 			solved_type := type_a_checker.check_and_solved (type, Void)
 
 			if solved_type /= Void then
@@ -2254,7 +2254,7 @@ feature -- Signature checking
 					-- We only need to check the features that are actually defined in the current class
 					-- as inherited features should already have been checked.
 				type_a_checker.init_with_feature_table (
-					Current, a_context_class.feature_table, Void, error_handler)
+					Current, a_context_class.feature_table, error_handler)
 				if not l_type.is_void then
 					type_a_checker.check_type_validity (l_type, Void)
 				end

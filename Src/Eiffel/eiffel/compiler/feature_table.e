@@ -1121,6 +1121,9 @@ end
 					l_associated_class.create_object_relative_once_infos (l_ancestors_once_infos.count)
 					opo_info_table := l_associated_class.object_relative_once_infos
 				end
+				debug ("once_per_object")
+					print ("FEATURE_TABLE.skeleton <" + l_associated_class.name_in_upper + ">: ancestors o.p.o count = " + l_ancestors_once_infos.count.out + "%N")
+				end
 				from
 					l_ancestors_once_infos.start
 				until
@@ -1195,8 +1198,6 @@ end
 			)
 		local
 			desc: ATTR_DESC
-			ref_desc: REFERENCE_DESC
-			l_cl_type_a: detachable CL_TYPE_A
 		do
 				--| called?
 			if not opo_reused then
@@ -1209,16 +1210,15 @@ end
 					opo_info.set_called_body_index (system.body_index_counter.next_id)
 				end
 				opo_info.create_called_name_id
+				opo_info.get_called_attr_desc
+				desc := opo_info.called_attr_desc
+				if a_ancestor_once_info = Void then
+					system.rout_info_table.put (desc.rout_id, a_associated_class)
+				end
+			else
+				desc := opo_info.called_attr_desc
 			end
-
-			create {BOOLEAN_DESC} desc
-			desc.set_attribute_name_id (opo_info.called_name_id)
-			desc.set_feature_id (opo_info.called_feature_id)
-			desc.set_rout_id (opo_info.called_routine_id)
-			desc.set_is_transient (opo_info.is_transient)
-			desc.set_is_hidden (True)
 			a_skeleton.extend (desc)
-			system.rout_info_table.put (desc.rout_id, a_associated_class)
 
 				--| Exception?
 			if not opo_reused then
@@ -1231,29 +1231,15 @@ end
 					opo_info.set_exception_body_index (system.body_index_counter.next_id)
 				end
 				opo_info.create_exception_name_id
-			end
-
-			create ref_desc
-			if
-				attached system.exception_class as l_exception_class
-				and then l_exception_class.is_compiled
-			then
-				create l_cl_type_a.make (system.exception_class_id)
-				l_cl_type_a.set_detachable_mark
-				ref_desc.set_type_i (l_cl_type_a)
+				opo_info.get_exception_attr_desc
+				desc := opo_info.exception_attr_desc
+				if a_ancestor_once_info = Void then
+					system.rout_info_table.put (desc.rout_id, a_associated_class)
+				end
 			else
-				ref_desc.set_type_i (system.any_type)
-				check exception_class_available: False end
+				desc := opo_info.exception_attr_desc
 			end
-
-			desc := ref_desc
-			desc.set_attribute_name_id (opo_info.exception_name_id)
-			desc.set_feature_id (opo_info.exception_feature_id)
-			desc.set_rout_id (opo_info.exception_routine_id)
-			desc.set_is_transient (opo_info.is_transient)
-			desc.set_is_hidden (True)
 			a_skeleton.extend (desc)
-			system.rout_info_table.put (desc.rout_id, a_associated_class)
 
 				--| Result?
 			if opo_info.has_result then
@@ -1267,23 +1253,20 @@ end
 						opo_info.set_result_body_index (system.body_index_counter.next_id)
 					end
 					opo_info.create_result_name_id
+					opo_info.get_result_attr_desc
+					desc := opo_info.result_attr_desc
+					if a_ancestor_once_info = Void then
+						system.rout_info_table.put (desc.rout_id, a_associated_class)
+					end
+				else
+					desc := opo_info.result_attr_desc
 				end
-
-				desc := a_once_i.type.description_with_detachable_type
-				desc.set_attribute_name_id (opo_info.result_name_id)
-				desc.set_feature_id (opo_info.result_feature_id)
-				desc.set_rout_id (opo_info.result_routine_id)
-				desc.set_is_transient (opo_info.is_transient)
-				desc.set_is_hidden (True)
 				a_skeleton.extend (desc)
-
-				system.rout_info_table.put (desc.rout_id, a_associated_class)
 			end
 			opo_info.update
 			debug ("ONCE_PER_OBJECT")
 				opo_info.debug_output_info (a_once_i, "from " + a_associated_class.name_in_upper + "<" + a_associated_class.class_id.out +">")
 			end
-
 		end
 
 	empty_skeleton: GENERIC_SKELETON

@@ -178,7 +178,7 @@ feature -- Checking
 				l_names_heap := Names_heap
 				nb := count
 				associated_class := feat_table.associated_class
-				type_a_checker.init_with_feature_table (f, feat_table, Void, error_handler)
+				type_a_checker.init_with_feature_table (f, feat_table, error_handler)
 			until
 				i = nb
 			loop

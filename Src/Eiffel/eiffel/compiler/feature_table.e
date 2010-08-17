@@ -1206,6 +1206,7 @@ end
 			)
 		local
 			desc: ATTR_DESC
+			l_is_redefined: BOOLEAN
 		do
 			l_is_redefined := a_ancestor_once_info /= Void and a_once_i.written_class = a_associated_class
 				--| called?

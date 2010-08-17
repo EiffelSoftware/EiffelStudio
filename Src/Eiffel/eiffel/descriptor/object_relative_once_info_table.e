@@ -1,5 +1,10 @@
 note
-	description: "Summary description for {OBJECT_RELATIVE_ONCE_INFO_TABLE}."
+	description: "[
+			Table containing the info for once per object
+			in the list, for each routine_id, we find first information of immediate onces,
+			then inherited onces
+			This is important, so that inherited does not overwrite immediate onces
+		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -10,55 +15,160 @@ class
 	OBJECT_RELATIVE_ONCE_INFO_TABLE
 
 inherit
-	HASH_TABLE [OBJECT_RELATIVE_ONCE_INFO, INTEGER]
+	ARRAYED_LIST [detachable OBJECT_RELATIVE_ONCE_INFO]
 
 create
 	make
 
+feature -- Access
+
+	has_info_by_routine_id (a_rid: INTEGER): BOOLEAN
+		local
+			c: like cursor
+		do
+			c := cursor
+			from
+				start
+			until
+				after or Result
+			loop
+				if item.once_routine_id = a_rid then
+					Result := True
+				else
+					forth
+				end
+			end
+			go_to (c)
+		end
+
 feature -- Element change
+
+	replace_or_add_by_routine_id (a_info: like item; a_rid: INTEGER)
+			-- Replace entry associated for routine_id `a_rid' if it exists
+			-- otherwise add `a_info' and associate it to `a_rid'
+		local
+			c: like cursor
+			done: BOOLEAN
+		do
+			c := cursor
+			from
+				start
+			until
+				after
+			loop
+				if item.once_routine_id = a_rid then
+					replace (a_info)
+					done := True
+				end
+				forth
+			end
+			if not done then
+				force (a_info)
+			end
+			go_to (c)
+		ensure
+			has_info_by_routine_id: has_info_by_routine_id (a_rid)
+			a_info_set: item_of_rout_id (a_rid) = a_info
+		end
+
+	add_by_routine_id (a_info: like item; a_rid: INTEGER)
+			-- Add `a_info' and associate it to `a_rid'
+		local
+			c: like cursor
+			done: BOOLEAN
+		do
+			c := cursor
+			from
+				start
+			until
+				after or done
+			loop
+				if item.once_routine_id = a_rid then
+					put_right (a_info)
+					done := True
+				end
+				forth
+			end
+			if not done then
+				force (a_info)
+			end
+			go_to (c)
+		ensure
+			has_info_by_routine_id: has_info_by_routine_id (a_rid)
+		end
+
+	merge (other: OBJECT_RELATIVE_ONCE_INFO_TABLE)
+			-- Merge Current with other
+		do
+			append (other)
+		end
 
 	remove_item_of_rout_id_set (a_rout_id_set: ROUT_ID_SET)
 			-- Info about object relative once associated with Current and an item of `a_rout_id_set'
 		require
 			a_rout_id_set_not_void: a_rout_id_set /= Void
 		local
-			i, nb: INTEGER_32
+			c: like cursor
 		do
+			c := cursor
 			from
-				i := 1
-				nb := a_rout_id_set.count
+				start
 			until
-				i > nb
+				after
 			loop
-				remove (a_rout_id_set.item (i))
-				i := i + 1
+				if item.once_routine_rout_id_set.same_as (a_rout_id_set) then
+					remove
+				else
+					forth
+				end
+			end
+			if valid_cursor (c) then
+				go_to (c)
 			end
 		end
 
 feature -- Access
 
-	item_of_rout_id (a_once_routine_id: INTEGER): detachable OBJECT_RELATIVE_ONCE_INFO
+	item_of_rout_id (rid: INTEGER): like item
 			-- Info about object relative once associated with Current and `a_once_routine_id'
+		local
+			c: like cursor
 		do
-			Result := item (a_once_routine_id)
+			c := cursor
+			from
+				start
+			until
+				after or Result /= Void
+			loop
+				Result := item
+				if Result.once_routine_id /= rid then
+					Result := Void
+				end
+				forth
+			end
+			go_to (c)
 		end
 
-	item_of_rout_id_set (a_rout_id_set: ROUT_ID_SET): detachable OBJECT_RELATIVE_ONCE_INFO
+	item_of_rout_id_set (a_rout_id_set: ROUT_ID_SET): like item
 			-- Info about object relative once associated with Current and an item of `a_rout_id_set'
 		require
 			a_rout_id_set_not_void: a_rout_id_set /= Void
 		local
-			i, nb: INTEGER_32
+			c: CURSOR
 		do
+			c := cursor
 			from
-				i := 1
-				nb := a_rout_id_set.count
+				start
 			until
-				i > nb or Result /= Void
+				after or Result /= Void
 			loop
-				Result := item (a_rout_id_set.item (i))
-				i := i + 1
+				if item.once_routine_rout_id_set.intersect (a_rout_id_set) then
+					Result := item
+				else
+					forth
+				end
 			end
+			go_to (c)
 		end
 
 	attribute_of_feature_id (a_feature_id: INTEGER): detachable ATTRIBUTE_I
@@ -72,7 +182,7 @@ feature -- Access
 			until
 				after or Result /= Void
 			loop
-				Result := item_for_iteration.attribute_of_feature_id (a_feature_id)
+				Result := item.attribute_of_feature_id (a_feature_id)
 				forth
 			end
 			go_to (c)
@@ -89,7 +199,7 @@ feature -- Access
 			until
 				after or Result /= Void
 			loop
-				Result := item_for_iteration.attribute_of_routine_id (a_routine_id)
+				Result := item.attribute_of_routine_id (a_routine_id)
 				forth
 			end
 			go_to (c)

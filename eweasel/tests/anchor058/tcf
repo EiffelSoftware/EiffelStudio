@@ -1,0 +1,18 @@
+
+test_name 	qat-invalid-vffd-2
+test_description A class with a once feature whose type does not involve any formal generics or any anchors to local features, such as `like {TEST2 [like {ANY}.out]}.value', should be allowed but the compiler reports a VFFD(7) error
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test1.e $CLUSTER test1.e
+copy_raw	test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result	ok
+
+execute_work 	NONE 	exec_output
+execute_result 	ok
+compare		exec_output output
+
+test_end
+

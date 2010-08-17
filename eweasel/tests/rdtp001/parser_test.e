@@ -29,19 +29,29 @@ feature {NONE} -- Initialization
 			test_roundtrip := False
 
 			create {AST_NULL_FACTORY} factory
+			create parser.make_with_factory (factory)
+			parser.set_il_parser
 			execute
 
 			create {AST_ROUNDTRIP_LIGHT_FACTORY} factory
+			create parser.make_with_factory (factory)
+			parser.set_il_parser
 			execute
 
 			test_roundtrip_scanner := True
-			create light_factory
 			create {AST_ROUNDTRIP_SCANNER_FACTORY} factory
+			create scanner.make_with_factory (factory)
+			create light_factory
+			create parser.make_with_factory (light_factory)
+			parser.set_il_parser
 			execute
 			test_roundtrip_scanner := False
 
 			test_roundtrip := True
+			scanner := Void
 			create {AST_ROUNDTRIP_FACTORY} factory
+			create parser.make_with_factory (factory)
+			parser.set_il_parser
 			execute
 		end
 
@@ -63,8 +73,6 @@ feature {NONE} -- Implementation
 
 	test_parse (file_name: STRING) is
 		local
-			parser: STANDALONE_EIFFEL_PARSER
-			scanner: EIFFEL_ROUNDTRIP_SCANNER
 			file: KL_BINARY_INPUT_FILE
 			fault: KL_BINARY_OUTPUT_FILE
 			count: INTEGER
@@ -74,16 +82,7 @@ feature {NONE} -- Implementation
 			fn: STRING
 		do
 			if equal (file_name.substring (file_name.count - 1, file_name.count), ".e") then
-				if test_roundtrip_scanner then
-					create scanner.make_with_factory (factory)
-				end
-				if test_roundtrip_scanner then
-					create parser.make_with_factory (light_factory)
-				else
-					create parser.make_with_factory (factory)
-				end
 					-- Set for `IL' parsing since it accepts more classes.
-				parser.set_il_parser
 				create file.make (file_name)
 				count := file.count
 				file.open_read
@@ -249,5 +248,9 @@ feature {NONE}
 			-- Factory being used for parsing.
 
 	light_factory: AST_ROUNDTRIP_LIGHT_FACTORY
+
+	parser: STANDALONE_EIFFEL_PARSER
+	
+	scanner: EIFFEL_ROUNDTRIP_SCANNER
 
 end -- class PARSER_TEST

@@ -935,6 +935,7 @@ test	finalize-once-per-object-wrong		incr376 tcf fail incrementality
 test	retry-missing-library-file		incr377 tcf fail incrementality
 test	saving-generic-class-crash		incr378 tcf pass incrementality
 test	change-target-inheritance		incr379 tcf fail incrementality
+test	config-remove-root-element		incr380 tcf fail incrementality
 
 
 -- Melting

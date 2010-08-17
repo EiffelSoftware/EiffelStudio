@@ -218,14 +218,14 @@ feature {NONE} -- Visitor implementation
 							f.set_is_attached
 							f.set_is_expanded
 							types_todo.wipe_out
-							l.finish
+								-- Terminate iteration.
+							i := 1
 						elseif t.has_detachable_mark then
 								-- Skip the detachable constraint because it does not allow to see
 								-- if the formal is always attached or not.
 						elseif t.has_attached_mark then
 							f.set_is_attached
 							types_todo.wipe_out
-							l.finish
 						elseif attached {FORMAL_AS} t as ff then
 								-- Record new formal generic for processing (if not done yet).
 							if not types_done.has (ff.position) and then not types_todo.has (ff.position) then
@@ -243,7 +243,6 @@ feature {NONE} -- Visitor implementation
 								-- Let's use the `current_class' default attachment settings.
 							f.set_is_attached
 							types_todo.wipe_out
-							l.finish
 						end
 						i := i - 1
 					end

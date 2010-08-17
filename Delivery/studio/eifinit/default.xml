@@ -783,6 +783,7 @@
 	<PREF NAME="shortcuts.debug.step_out_of_routine" DESCRIPTION="Shortcut to step out of a routine."><SHORTCUT Shift="True">F11</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.debug.run" DESCRIPTION="Shortcut to run debugged application."><SHORTCUT>F5</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.debug.run_ignore_breakpoints" DESCRIPTION="Shortcut to run debugged application ignoring breakpoints."><SHORTCUT Ctrl="True">F5</SHORTCUT></PREF>
+	<PREF NAME="shortcuts.debug.ignore_contract_violation" DESCRIPTION="Shortcut to ignore current contract violation."><SHORTCUT Ctrl="True">F6</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.debug.pause_application" DESCRIPTION="Shortcut to pause debugged application."><SHORTCUT Ctrl="True" Shift="True">F5</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.debug.stop_application" DESCRIPTION="Shortcut to stop debugged application."><SHORTCUT Shift="True">F5</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.debug.run_workbench_outside" DESCRIPTION="Shortcut to run workbench application outside EiffelStudio."><SHORTCUT Ctrl="True" Alt="True">F5</SHORTCUT></PREF>

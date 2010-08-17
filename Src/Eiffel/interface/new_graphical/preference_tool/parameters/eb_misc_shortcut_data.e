@@ -246,6 +246,7 @@ feature {NONE} -- Modifiable shortcuts
 			l_hash.put ([False, False, True, key_strings.item (key_f11).twin.as_string_8], "step_out_of_routine")
 			l_hash.put ([False, False, False, key_strings.item (key_f5).twin.as_string_8], "run")
 			l_hash.put ([False, True, False, key_strings.item (key_f5).twin.as_string_8], "run_ignore_breakpoints")
+			l_hash.put ([False, True, False, key_strings.item (Key_f6 ).twin.as_string_8], "ignore_contract_violation")
 			l_hash.put ([False, True, True, key_strings.item (key_f5).twin.as_string_8], "pause_application")
 			l_hash.put ([False, False, True, key_strings.item (key_f5).twin.as_string_8], "stop_application")
 			l_hash.put ([True, True, False, key_strings.item (key_f5).twin.as_string_8], "run_workbench_outside")

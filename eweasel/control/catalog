@@ -2494,6 +2494,7 @@ test	qat-instantiated-in-crash-3		anchor054 tcf fail anchored_type formal generi
 test	qat-static-type-id-crash-2		anchor055 tcf fail anchored_type formal generic
 test	qat-generic-constrained-by-self		anchor056 tcf fail anchored_type formal generic manual
 test	qat-multi-constraint-type		anchor057 tcf fail anchored_type multiconstraint formal generic renaming creation
+test	qat-invalid-vffd-2			anchor058 tcf fail anchored_type
 
 -- .NET specific test
 if DOTNET test expanded-object-conversion	dotnet001	tcf pass dotnet

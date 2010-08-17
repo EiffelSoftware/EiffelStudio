@@ -18,6 +18,11 @@ inherit
 			{NONE} all
 		end
 
+	EB_SHARED_PREFERENCES
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -25,7 +30,13 @@ feature {NONE} -- Initialization
 
 	make
 			-- Creation method
+		local
+			l_shortcut: SHORTCUT_PREFERENCE
 		do
+			l_shortcut := preferences.misc_shortcut_data.shortcuts.item ("ignore_contract_violation")
+			create accelerator.make_with_key_combination (l_shortcut.key, l_shortcut.is_ctrl, l_shortcut.is_alt, l_shortcut.is_shift)
+			set_referred_shortcut (l_shortcut)
+			accelerator.actions.extend (agent execute)
 		end
 
 feature -- Access
@@ -68,12 +79,14 @@ feature -- Execution
 	execute
 			-- <Precursor>
 		do
-			if attached {EB_DEBUGGER_MANAGER} debugger_manager as l_debugger then
-				if attached l_debugger.application as l_app  then
-					-- Set ignore current contract violation flag first
-					l_app.ignore_current_assertion_violation
-					-- Resume debuggee execution
-					l_debugger.debug_run_cmd.execute
+			if is_sensitive then
+				if attached {EB_DEBUGGER_MANAGER} debugger_manager as l_debugger then
+					if attached l_debugger.application as l_app  then
+						-- Set ignore current contract violation flag first
+						l_app.ignore_current_assertion_violation
+						-- Resume debuggee execution
+						l_debugger.debug_run_cmd.execute
+					end
 				end
 			end
 		end

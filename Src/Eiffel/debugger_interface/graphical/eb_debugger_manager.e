@@ -1316,6 +1316,7 @@ feature -- Change
 			restart_cmd.update (w)
 			no_stop_cmd.update (w)
 			ignore_breakpoints_cmd.update (w)
+			ignore_contract_violation.update (w)
 			toggle_exec_replay_recording_mode_cmd.update (w)
 
 			from

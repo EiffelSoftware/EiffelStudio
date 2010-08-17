@@ -1,0 +1,15 @@
+
+test_name	 config-remove-root-element		
+test_description Removing the <root> element from the config file after the compiler reports a VD27 error and resuming compilation crashes the compiler.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	validity_error NONE VD27
+
+copy_sub 	Ace_rev2 $TEST Ace
+resume_compile
+compile_result 	validity_error NONE V???
+
+test_end

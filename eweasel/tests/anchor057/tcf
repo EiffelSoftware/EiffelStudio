@@ -1,0 +1,18 @@
+test_name 	 qat-multi-constraint-type
+test_description A qualified multi-constraint type with renamings should be accepted.
+
+copy_sub	Ace $TEST Ace
+copy_raw	child.e $CLUSTER child.e
+copy_raw	parent1.e $CLUSTER parent1.e
+copy_raw	parent2.e $CLUSTER parent2.e
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result	ok
+
+execute_work	NONE exec_output_m
+execute_result	ok
+compare		exec_output_m output
+
+test_end

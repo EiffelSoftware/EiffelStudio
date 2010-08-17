@@ -110,10 +110,13 @@ feature -- Command
 			webkit.stop_loading
 		end
 
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
+	interface: detachable EV_WEB_BROWSER note option: stable attribute end
+			-- <Precursor>
+
 feature {NONE} -- Implementation
 
-	interface: EV_WEB_BROWSER
-			-- <Precursor>
 
 	webkit: EV_WEBKIT_WEB_VIEW
 			-- WebkitGTK object

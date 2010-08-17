@@ -82,6 +82,10 @@ feature {NONE} -- Context
 	find_in_renamed_type_a: PROCEDURE [TYPE_A_FEATURE_FINDER, TUPLE [RENAMED_TYPE_A [TYPE_A]]]
 			-- Lookup procedure for {RENAMED_TYPE_A}
 
+	formal_generics: detachable ARRAYED_LIST [FORMAL_A]
+			-- List of processed formal generics to avoid infinite recursion
+			-- when formal generic constraints are recursive
+
 feature {NONE} -- Search by name
 
 	feature_in_class_by_name (n: like {FEATURE_I}.feature_name_id; c: CLASS_C): detachable FEATURE_I
@@ -134,6 +138,7 @@ feature -- Search
 			found_feature := Void
 			found_site := 0
 			context_class := c
+			formal_generics := Void
 			feature_in_class := agent feature_in_class_by_name (n, ?)
 			find_in_renamed_type_a := agent find_in_renamed_type_a_by_name (n, ?)
 			t.process (Current)
@@ -166,6 +171,7 @@ feature -- Search
 			found_feature := Void
 			found_site := 0
 			context_class := c
+			formal_generics := Void
 			feature_in_class := agent (f: INTEGER; s: CLASS_C): detachable FEATURE_I
 				require
 					valid_f: f > 0 -- and then system.routine_id_counter.is_feature_routine_id (f)
@@ -242,19 +248,32 @@ feature {TYPE_A} -- Visitor
 		local
 			last_feature: detachable FEATURE_I
 			last_site: INTEGER
+			g: like formal_generics
 		do
-			across
-				context_class.constraints (t.position) as c
-			loop
-				find_in_renamed_type_a.call ([c.item])
-				if attached found_feature as f then
-						-- Record found data for future use.
-					last_feature := found_feature
-					last_site := found_site
-				end
+			g := formal_generics
+			if not attached g then
+				create g.make (1)
+				g.compare_objects
+				formal_generics := g
 			end
-			found_feature := last_feature
-			found_site := last_site
+			if not g.has (t) then
+				g.extend (t)
+				across
+					context_class.constraints (t.position) as c
+				loop
+					find_in_renamed_type_a.call ([c.item])
+					if attached found_feature as f then
+							-- Record found data for future use.
+						last_feature := found_feature
+						last_site := found_site
+					end
+				end
+				found_feature := last_feature
+				found_site := last_site
+			end
+		ensure then
+			t_registered: attached formal_generics as f and then f.has (t)
+			formal_generics_persistent: old attached formal_generics implies old formal_generics = formal_generics
 		end
 
 	process_gen_type_a (t: GEN_TYPE_A)

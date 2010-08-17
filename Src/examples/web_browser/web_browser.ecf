@@ -25,10 +25,10 @@
 				<platform value="unix"/>
 			</condition>
 		</external_object>
-		<precompile name="vision2_pre" location="$ISE_PRECOMP\vision2-safe.ecf"/>
+		<precompile name="vision2-pre" location="$ISE_PRECOMP\vision2-safe.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2-safe.ecf"/>
-		<library name="web_browser" location="$ISE_LIBRARY\library\web_browser\web_browser-safe.ecf"/>
+		<library name="web_browser" location="$ISE_LIBRARY\library\web_browser\web_browser-safe.ecf"/> 
 		<cluster name="root_cluster" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/EIFGENs$</exclude>

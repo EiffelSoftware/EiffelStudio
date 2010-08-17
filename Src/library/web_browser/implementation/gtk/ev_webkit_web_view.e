@@ -138,7 +138,7 @@ feature -- Query
 			check webkit_web_view_get_copy_target_list_not_implemented: False end
 		end
 
-	get_custom_encoding: STRING_32
+	get_custom_encoding: detachable STRING_32
 			-- Returns the current encoding of the WebKitWebView, not the default-encoding of WebKitWebSettings.
 			--
 			-- Returns: a string containing the current custom encoding for web_view, or NULL if there's none set.
@@ -175,7 +175,7 @@ feature -- Query
 			end
 		end
 
-	get_encoding: STRING_32
+	get_encoding: detachable STRING_32
 			-- Returns the default encoding of the WebKitWebView.
 			--
 			-- Returns: the default encoding
@@ -279,7 +279,7 @@ feature -- Query
 			check webkit_web_view_get_settings_not_implemented: False end
 		end
 
-	get_title: STRING_32
+	get_title: detachable STRING_32
 			-- Returns the web_view's document title
 			--
 			-- Returns: the title of web_view
@@ -314,7 +314,7 @@ feature -- Query
 			end
 		end
 
-	get_uri: STRING_32
+	get_uri: detachable STRING_32
 			-- Returns the current URI of the contents displayed by the web_view
 			--
 			-- Returns: the URI of web_view
@@ -334,7 +334,7 @@ feature -- Query
 			end
 		end
 
-	get_zoom_level: REAL
+	get_zoom_level: REAL_64
 			-- Returns the zoom level of web_view, i.e. the factor by which elements in the page are scaled with
 			-- respect to their original size. If the "full-content-zoom" property is set to FALSE (the default)
 			-- the zoom level changes the text size, or if TRUE, scales all elements in the page.

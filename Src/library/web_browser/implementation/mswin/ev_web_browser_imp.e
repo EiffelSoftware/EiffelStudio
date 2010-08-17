@@ -102,10 +102,10 @@ feature {NONE} -- Initialization
 	make
 			-- Create `Current' with interface `an_interface'
 		do
-			Precursor
 			register_class
 			internal_window_make (default_parent, "", default_style, 0, 0, 0, 0, 0, default_pointer)
 			initialize
+			Precursor
 		end
 
 	old_make (an_interface: like interface)
@@ -122,16 +122,20 @@ feature {EV_WEB_BROWSER} -- Initialization
 			-- Initialize `Current'
 		local
 			l_ole_ie_hwnd: POINTER
+			l_ole_window: like ole_ie_window
 		do
-			-- We must create a HWND for OLE IE object and can't share with current `wel_item', otherwise `window_process_message' will not be called
-			create ole_ie_window.make (Current, "IE OLE")
-			l_ole_ie_hwnd := ole_ie_window.item
-
 			create ole_ie
 			-- FIXME: how to check if OLE already initialized? And when to un-initialize?
 			ole_ie.ole_initialize
 
-			ole_ie_window.set_parent (Current)
+			initialize_sizeable
+
+			-- We must create a HWND for OLE IE object and can't share with current `wel_item', otherwise `window_process_message' will not be called
+			create l_ole_window.make (Current, "IE OLE")
+			ole_ie_window := l_ole_window
+			l_ole_ie_hwnd := l_ole_window.item
+
+			l_ole_window.set_parent (Current)
 			ole_ie.embed_ie (l_ole_ie_hwnd)
 		end
 
@@ -168,7 +172,7 @@ feature {NONE} -- Window class register
 			end
 		end
 
-	wnd_class: WEL_WND_CLASS;
+	wnd_class: WEL_WND_CLASS
 		-- Associated windows class of current window.	
 
 	class_style: INTEGER
@@ -275,12 +279,14 @@ feature -- Command
 			-- <Precursor>
 		do
 			Precursor {EV_PRIMITIVE_IMP}
-			ole_ie.unembed_ie (ole_ie_window.item)
+			if attached ole_ie_window as l_ole_window then
+				ole_ie.unembed_ie (l_ole_window.item)
+			end
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
-	interface: EV_WEB_BROWSER
+	interface: detachable EV_WEB_BROWSER note option: stable attribute end
 			-- Vision2 widget interface
 
 feature {NONE} -- Implementation
@@ -288,17 +294,17 @@ feature {NONE} -- Implementation
 	ole_ie: EV_OLE_IE
 			-- ActiveX ole Internet Explorer object
 
-	ole_ie_window: WEL_CONTROL_WINDOW
+	ole_ie_window: detachable WEL_CONTROL_WINDOW
 		-- WEL window for containing OLE IE
 
 	on_size (size_type, a_width, a_height: INTEGER_32)
 			-- Handle OLE IE resize actions
 		do
 			Precursor {EV_PRIMITIVE_IMP}(size_type, a_width, a_height)
-			if is_displayed and then ole_ie_window /= Void then
+			if is_displayed and then attached ole_ie_window as l_ole_window then
 
 				-- We must resize both `ole_ie_window' and `ole_ie_window.item'
-				ole_ie_window.resize (a_width, a_height)
+				l_ole_window.resize (a_width, a_height)
 				ole_ie.resize_browser (a_width, a_height)
 			end
 		end

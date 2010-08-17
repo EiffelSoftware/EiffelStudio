@@ -10,6 +10,8 @@ Most codes bases on Jeff Glatt's source codes:
 http://www.codeproject.com/KB/COM/cwebpage.aspx
 */
 
+#define GWL_USERDATA (-21)
+
 #include <windows.h>
 #include <exdisp.h>		// Defines of stuff like IWebBrowser2. This is an include file with Visual C 6 and above
 #include <mshtml.h>		// Defines of stuff like IHTMLDocument2. This is an include file with Visual C 6 and above

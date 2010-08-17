@@ -20,7 +20,7 @@ inherit
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
-	interface: EV_WEB_BROWSER
+	interface: detachable EV_WEB_BROWSER note option: stable attribute end
 			-- <Precursor>
 
 feature -- Command

@@ -22,17 +22,19 @@ feature {NONE} -- Initialization
 	make_and_launch
 			-- Create `Current', build and display `main_window',
 			-- then launch the application.
+		local
+			l_win: like main_window
 		do
 			default_create
-			create main_window.make
-
-			main_window.show
+			create l_win.make
+			main_window := l_win
+			l_win.show
 			launch
 		end
 
 feature {NONE} -- Implementation
 
-	main_window: MAIN_WINDOW
+	main_window: detachable MAIN_WINDOW
 		-- Main window of `Current'
 
 ;note

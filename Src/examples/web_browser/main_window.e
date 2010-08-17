@@ -21,10 +21,24 @@ feature {NONE} -- Initialization
 	make
 			-- Creation method
 		do
+			create_objects
+--			build_initialize
+
 			default_create
-			build_initialize
 		end
 
+	create_objects
+			-- Create objects
+		do
+			create back_button.make_with_text ("Back")
+			create forth_button.make_with_text ("Forth")
+			create refresh_button.make_with_text ("Refresh")
+			create stop_button.make_with_text ("Stop")
+			create url_text_field.make_with_text ("http://www.eiffel.com")
+			create go_button.make_with_text ("Go")
+
+			create web_browser
+		end
 	user_initialization
 			-- Called by `initialize'.
 			-- Any custom user initialization that
@@ -44,43 +58,36 @@ feature {NONE} -- Initialization
 			l_vertical_box.extend (l_hor_box)
 			l_vertical_box.disable_item_expand (l_hor_box)
 
-			create back_button.make_with_text ("Back")
 			back_button.select_actions.force_extend (agent on_back_button_action)
 			l_hor_box.extend (back_button)
 			l_hor_box.disable_item_expand (back_button)
 
-			create forth_button.make_with_text ("Forth")
 			forth_button.select_actions.force_extend (agent on_forth_button_action)
 			l_hor_box.extend (forth_button)
 			l_hor_box.disable_item_expand (forth_button)
 
-			create refresh_button.make_with_text ("Refresh")
 			refresh_button.select_actions.force_extend (agent on_refresh_button_action)
 			l_hor_box.extend (refresh_button)
 			l_hor_box.disable_item_expand (refresh_button)
 
-			create stop_button.make_with_text ("Stop")
 			stop_button.select_actions.force_extend (agent on_stop_button_action)
 			l_hor_box.extend (stop_button)
 			l_hor_box.disable_item_expand (stop_button)
 
-			create url_text_field.make_with_text ("http://www.eiffel.com")
 			l_hor_box.extend (url_text_field)
 
-			create go_button.make_with_text ("Go")
 			go_button.select_actions.force_extend (agent on_go_button_action)
 			l_hor_box.extend (go_button)
 			l_hor_box.disable_item_expand (go_button)
 
 			----------------------------------
-			create web_browser
 			l_vertical_box.extend (web_browser)
 
 		end
 
 feature {NONE} -- Implementation
 
-	go_button, back_button, forth_button, home_button, search_button, stop_button, refresh_button: EV_BUTTON
+	go_button, back_button, forth_button, stop_button, refresh_button: EV_BUTTON
 			-- Buttons
 
 	url_text_field: EV_TEXT_FIELD

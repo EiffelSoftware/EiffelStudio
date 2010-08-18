@@ -1,0 +1,26 @@
+
+test_name	descriptor-list-put-crash
+test_description A change causes the compiler to crash in degree 1 with a call on Void target in {DESC_LIST}.put.
+
+define		ROUTINE_MARK "deferred"
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_sub 	test1.e $CLUSTER test1.e
+compile_frozen
+compile_result 	ok
+
+c_compile_work
+c_compile_result ok
+
+define		ROUTINE_MARK "do"
+copy_sub 	Ace $TEST Ace
+copy_raw 	test_rev2.e $CLUSTER test.e
+copy_sub 	test1.e $CLUSTER test1.e
+compile_melted
+compile_result 	ok
+
+execute_work 	NONE 	exec_output
+execute_result 	ok
+compare		exec_output output
+
+test_end

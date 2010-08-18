@@ -10,7 +10,7 @@ class UNIQUE_I
 inherit
 	CONSTANT_I
 		redefine
-			is_unique, is_once, is_object_relative_once, check_types, equiv, value,
+			is_unique, is_once, is_object_relative_once, do_check_types, equiv, value,
 			replicated, unselected, new_api_feature, selected
 		end
 
@@ -59,16 +59,17 @@ feature
 			Result := value.is_equal (other_unique.value)
 		end
 
-	check_types (feat_tbl: FEATURE_TABLE)
+	do_check_types (feat_tbl: FEATURE_TABLE; is_delayed: BOOLEAN)
 			-- Check Result
 		local
 			vqui: VQUI
 			e: like error_handler.error_level
 		do
 			e := error_handler.error_level
-			old_check_types (feat_tbl)
+			old_do_check_types (feat_tbl, is_delayed)
 			if
 				e = error_handler.error_level and then
+				not is_type_evaluation_delayed and then
 				feat_tbl.associated_class = written_class
 				and then not type.actual_type.is_integer
 			then

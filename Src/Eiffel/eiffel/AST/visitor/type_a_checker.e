@@ -76,6 +76,9 @@ feature -- Status report
 			associated_type_ast := Void
 		end
 
+	is_delayed: BOOLEAN
+			-- May type evaluation be delayed?
+
 feature -- Settings
 
 	init_for_checking (a_feature: FEATURE_I; a_class: CLASS_C; a_suppliers: FEATURE_DEPENDANCE; a_error_handler: ERROR_HANDLER)
@@ -91,6 +94,7 @@ feature -- Settings
 			current_feature_table := a_class.feature_table
 			suppliers := a_suppliers
 			error_handler := a_error_handler
+			set_is_delayed (False)
 		ensure
 			current_feature_set: current_feature = a_feature
 			current_class_set: current_class = a_class
@@ -98,6 +102,7 @@ feature -- Settings
 			current_feature_table_set: current_feature_table = current_class.feature_table
 			suppliers_set: suppliers = a_suppliers
 			error_handler_set: error_handler = a_error_handler
+			not_is_delayed: not is_delayed
 		end
 
 	init_with_feature_table (a_feature: FEATURE_I; a_feat_tbl: FEATURE_TABLE; a_error_handler: ERROR_HANDLER)
@@ -112,6 +117,7 @@ feature -- Settings
 			current_feature_table := a_feat_tbl
 			suppliers := Void
 			error_handler := a_error_handler
+			set_is_delayed (False)
 		ensure
 			current_feature_set: current_feature = a_feature
 			current_class_set: current_class = a_feat_tbl.associated_class
@@ -119,6 +125,15 @@ feature -- Settings
 			current_feature_table_set: current_feature_table = a_feat_tbl
 			suppliers_set: suppliers = Void
 			error_handler_set: error_handler = a_error_handler
+			not_is_delayed: not is_delayed
+		end
+
+	set_is_delayed (value: BOOLEAN)
+			-- Set `is_delayed' to `value'.
+		do
+			is_delayed := value
+		ensure
+			is_delayed_set: is_delayed = value
 		end
 
 feature {NONE} -- Implementation: Access
@@ -884,7 +899,11 @@ feature {NONE} -- Implementation
 				e := h.error_level
 			end
 			t.qualifier.process (Current)
-			q := last_type
+			if is_delayed then
+				last_type := Void
+			else
+				q := last_type
+			end
 			if attached q then
 				t.set_qualifier (q)
 				n := t.chain.count
@@ -900,7 +919,9 @@ feature {NONE} -- Implementation
 							-- as it makes no sense to continue processing otherwise.
 						check_type_validity (q, associated_type_ast)
 					end
-					if attached error_handler as h and then h.error_level /= e then
+					if
+						attached error_handler as h and then h.error_level /= e
+					then
 							-- The type is not valid in current context.
 						q := Void
 					else
@@ -982,7 +1003,11 @@ feature {NONE} -- Implementation
 			n: INTEGER
 		do
 			t.qualifier.process (Current)
-			q := last_type
+			if is_delayed then
+				last_type := Void
+			else
+				q := last_type
+			end
 			if attached q then
 				t.set_qualifier (q)
 				n := t.chain.count

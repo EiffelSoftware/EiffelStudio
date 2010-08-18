@@ -10,8 +10,12 @@
 			<debug name="svn_engine" enabled="true"/>
 			<assertions precondition="true"/>
 		</option>
+		<variable name="eapml_limb_type" value="natural_32"/>
+		<variable name="eapml_scan_type" value="vc"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension-safe.ecf"/>
+		<library name="eapml" location=".\lib\eapml\eapml-safe.ecf"/>
+		<library name="encryption" location=".\lib\eel\eel-safe.ecf"/>
 		<library name="process" location="$ISE_LIBRARY\library\process\process-safe.ecf"/>
 		<library name="svn" location="$EIFFEL_SRC\contrib\library\svn\svn-safe.ecf" readonly="false">
 			<option debug="false">
@@ -19,15 +23,11 @@
 			</option>
 		</library>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread-safe.ecf"/>
-		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid-safe.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time-safe.ecf"/>
+		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid-safe.ecf"/>
 		<library name="xml_parser" location="$ISE_LIBRARY\library\text\parser\xml\parser\xml_parser-safe.ecf" readonly="false"/>
-		<library name="xml_tree" location="$ISE_LIBRARY\library\text\parser\xml\tree\xml_tree-safe.ecf" readonly="false"/>
 		<library name="xml_rpc" location="$EIFFEL_SRC\framework\xml-rpc\xml-rpc-safe.ecf" readonly="false"/>
-		<variable name="eapml_limb_type" value="natural_32"/>
-		<variable name="eapml_scan_type" value="vc"/>
-		<library name="eapml" location=".\lib\eapml\eapml-safe.ecf"/>
-		<library name="encryption" location=".\lib\eel\eel-safe.ecf"/>
+		<library name="xml_tree" location="$ISE_LIBRARY\library\text\parser\xml\tree\xml_tree-safe.ecf" readonly="false"/>
 		<cluster name="ctr_core" location=".\src\core\" recursive="true"/>
 		<cluster name="ctr_remote" location=".\src\remote\" recursive="true"/>
 	</target>
@@ -48,12 +48,14 @@
 				<assertions precondition="true" postcondition="true" check="true" supplier_precondition="true"/>
 			</option>
 		</library>
-		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2-safe.ecf"/>
-		<library name="vision2_extension" location="$ISE_LIBRARY\library\vision2_extension\vision2_extension-safe.ecf"/>
 		<library name="matcher" location="$ISE_LIBRARY\library\text\regexp\kmp_matcher\kmp_matcher-safe.ecf"/>
-
-		<cluster name="fmwk_vision2_grid" location="$EIFFEL_SRC\framework\vision2\contrib_grid_items\" recursive="true"/>
+		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2-safe.ecf" readonly="false"/>
+		<library name="vision2_extension" location="$ISE_LIBRARY\library\vision2_extension\vision2_extension-safe.ecf"/>
 		<cluster name="fmwk_vision2_action" location="$EIFFEL_SRC\framework\vision2\action\" recursive="true"/>
+		<cluster name="fmwk_vision2_grid" location="$EIFFEL_SRC\framework\vision2\contrib_grid_items\" recursive="true"/>
 		<cluster name="graphical" location=".\src\graphical\" recursive="true"/>
+	</target>
+	<target name="repository_tool_unix" extends="repository_tool">
+		<variable name="eapml_scan_type" value="gcc"/>
 	</target>
 </system>

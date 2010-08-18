@@ -268,9 +268,9 @@ feature {NONE} -- Implementation
 				fetched_info := repo_info
 				if a_from_rev > 0 then
 					if a_to_rev > a_from_rev then
-						fetched_logs := a_repo.logs (True, a_from_rev, repo_info.last_changed_rev, 0)
-					else
 						fetched_logs := a_repo.logs (True, a_from_rev, a_to_rev, 0)
+					else
+						fetched_logs := a_repo.logs (True, a_from_rev, repo_info.last_changed_rev, 0)
 					end
 				else
 					fetched_logs := a_repo.logs (True, 0, 0, 100)

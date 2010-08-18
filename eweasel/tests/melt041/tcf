@@ -14,7 +14,7 @@ copy_raw 	test.e $CLUSTER test.e
 compile_melted
 
 -- Test cannot complete as compiler reports VTBT for large constants in BIT type
-compile_result	validity_error TEST VTBT VTBT
+compile_result	validity_error TEST VTBT VTBT VTBT VTBT
 test_end
 
 compile_result 	ok

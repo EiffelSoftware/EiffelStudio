@@ -1,0 +1,22 @@
+
+test_name	 remove-base-library-add-back
+test_description Removing the base library from the config file after the compiler reports an error in degree 4 then adding the library back and correcting the degree 4 error causes the compiler to report nonexistent VGCP(4) errors on basic classes.
+
+define		RETURN_TYPE "like weasel"
+copy_sub 	Ace $TEST Ace
+copy_sub 	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	validity_error TEST VFFD(7)
+
+define		RETURN_TYPE "STRING"
+copy_sub 	Ace_rev2 $TEST Ace
+copy_sub 	test.e $CLUSTER test.e
+resume_compile
+compile_result 	validity_error NONE VD23 VD23 VD23 VD23 VD23 VD23 VD23 VD23 VD23 VD23 VD23 VD23 VD23 VD23 VD23 VD23 VD23 VD23 VD23 VD23 VD23 VD23 VD23 VD23 VD23 VD23 VD23 VD23 VD23 VD23 VD23 VD23 VD23 VD23 VD23 VD23 VD23 VD23 VD23 VD23 VD23 VD23 VD23
+
+copy_sub 	Ace $TEST Ace
+resume_compile
+compile_result 	ok
+
+test_end

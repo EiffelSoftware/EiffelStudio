@@ -16,11 +16,13 @@ inherit
 			error_generics,
 			evaluated_type_in_descendant,
 			good_generics,
+			has_formal_generic,
+			has_like,
 			initialize_info,
 			instantiated_in,
 			instantiation_in,
 			is_explicit,
-			is_standalone,
+			is_loose,
 			is_syntactically_equal,
 			skeleton_adapted_in,
 			update_dependance
@@ -80,13 +82,13 @@ feature {TYPE_A_CHECKER} -- Properties
 
 feature -- Status Report
 
-	is_standalone: BOOLEAN
+	is_loose: BOOLEAN
 			-- <Precursor>
 		do
 				-- If qualifier type depends on the actual type of the object,
 				-- qualified anchored type depends on the dynamic type,
 				-- otherwise it is stand-alone.
-			Result := qualifier.is_standalone
+			Result := qualifier.is_loose
 		end
 
 	is_explicit: BOOLEAN
@@ -98,6 +100,18 @@ feature -- Status Report
 			else
 				Result := False
 			end
+		end
+
+	has_formal_generic: BOOLEAN
+			-- <Precursor>
+		do
+			Result := qualifier.has_formal_generic
+		end
+
+	has_like: BOOLEAN
+			-- <Precursor>
+		do
+			Result := qualifier.has_like
 		end
 
 feature -- Comparison

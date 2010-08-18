@@ -97,8 +97,11 @@ feature -- Status report
 			Result := actual_type /= Void and then actual_type.has_associated_class_type (a_context_type)
 		end
 
-	has_like: BOOLEAN = True
-			-- Does the type have anchored type in its definition ?
+	has_like: BOOLEAN
+			-- Does the type have anchored type in its definition?
+		do
+			Result := True
+		end
 
 	has_like_current: BOOLEAN
 			-- <Precursor>
@@ -114,8 +117,12 @@ feature -- Status report
 	is_like: BOOLEAN = True
 			-- Is the type anchored one ?
 
-	is_loose: BOOLEAN = True
+	is_loose: BOOLEAN
 			-- Does type depend on formal generic parameters and/or anchors?
+		do
+				-- True for anchored types by default.
+			Result := True
+		end
 
 	is_explicit: BOOLEAN
 		do

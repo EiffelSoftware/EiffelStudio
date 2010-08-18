@@ -24,8 +24,7 @@ inherit
 			maximum_interval_value, minimum_interval_value, is_optimized_as_frozen,
 			is_generated_as_single_type, heaviest, instantiation_in, adapted_in,
 			hash_code, internal_generic_derivation, internal_same_generic_derivation_as,
-			is_class_valid, skeleton_adapted_in, good_generics, has_like_current, is_type_set,
-			is_computable_using_ancestors
+			is_class_valid, skeleton_adapted_in, good_generics, has_like_current, is_type_set
 		end
 
 feature -- Visitor
@@ -158,9 +157,6 @@ feature -- Properties
 
 	good_generics: BOOLEAN = True
 			--| A current type always has the right number of generic parameter.
-
-	is_computable_using_ancestors: BOOLEAN = True
-			-- <Precursor>
 
 feature -- Access
 

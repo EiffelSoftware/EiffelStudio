@@ -30,7 +30,6 @@ inherit
 			is_explicit,
 			is_attached,
 			is_basic,
-			is_computable_using_ancestors,
 			is_expanded,
 			is_ephemeral,
 			is_external,
@@ -204,13 +203,6 @@ feature -- Status report
 				-- We override the `type' set above since it is `actual_type'
 				-- and we want to see the anchor instead.
 			Result.set_type (Current)
-		end
-
-	is_computable_using_ancestors: BOOLEAN
-			-- <Precursor>
-		do
-				-- False here.
-				-- Should be redefined in `{LIKE_CURRENT}'.
 		end
 
 feature -- Access

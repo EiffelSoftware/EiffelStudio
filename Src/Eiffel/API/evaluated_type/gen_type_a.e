@@ -25,7 +25,7 @@ inherit
 			generate_gen_type_il, adapted_in, internal_generic_derivation,
 			internal_same_generic_derivation_as, is_class_valid,
 			is_valid_generic_derivation, skeleton_adapted_in, dispatch_anchors,
-			check_labels, duplicate_for_instantiation, is_computable_using_ancestors
+			check_labels, duplicate_for_instantiation
 		end
 
 	INTERNAL_COMPILER_STRING_EXPORTER
@@ -285,26 +285,6 @@ feature -- Status Report
 					i := i + 1
 				end
 			end
-		end
-
-	is_computable_using_ancestors: BOOLEAN
-			-- <Precursor>
-		local
-			i: INTEGER
-			g: like generics
-		do
-			Result := True
-			from
-				g := generics
-				i := g.count
-			until
-				i <= 0 or else not g [i].is_computable_using_ancestors
-			loop
-				i := i - 1
-			variant
-				i
-			end
-			Result := i = 0
 		end
 
 feature -- Output

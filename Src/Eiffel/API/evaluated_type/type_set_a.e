@@ -32,7 +32,6 @@ inherit
 			internal_is_valid_for_class,
 			is_attached,
 			is_class_valid,
-			is_computable_using_ancestors,
 			is_loose,
 			is_type_set,
 			to_other_attachment,
@@ -1300,17 +1299,6 @@ feature -- Status
 				agent (a_item: RENAMED_TYPE_A [TYPE_A]): BOOLEAN
 					do
 						Result := a_item.type.is_attached
-					end
-				)
-		end
-
-	is_computable_using_ancestors: BOOLEAN
-			-- <Precursor>
-		do
-			Result := for_all (
-				agent (a_item: RENAMED_TYPE_A [TYPE_A]): BOOLEAN
-					do
-						Result := a_item.is_computable_using_ancestors
 					end
 				)
 		end

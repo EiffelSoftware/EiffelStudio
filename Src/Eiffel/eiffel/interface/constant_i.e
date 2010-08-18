@@ -10,7 +10,7 @@ class CONSTANT_I
 inherit
 	ENCAPSULATED_I
 		rename
-			check_types as old_check_types,
+			do_check_types as old_do_check_types,
 			equiv as basic_equiv
 		redefine
 			assigner_name_id, transfer_to, transfer_from, access_for_feature, melt, generate,
@@ -21,12 +21,12 @@ inherit
 
 	ENCAPSULATED_I
 		redefine
-			assigner_name_id, transfer_to, transfer_from, check_types, access_for_feature, equiv,
+			assigner_name_id, transfer_to, transfer_from, do_check_types, access_for_feature, equiv,
 			melt, generate, is_once, redefinable, is_constant,
 			set_type, type, generate_il, to_generate_in,
 			new_rout_entry, extension
 		select
-			check_types, equiv
+			do_check_types, equiv
 		end
 
 	SHARED_TYPE_I
@@ -101,16 +101,16 @@ feature -- Settings
 			extension_set: extension = an_extension
 		end
 
-	check_types (feat_tbl: FEATURE_TABLE)
-			-- Check Result and argument types
+	do_check_types (feat_tbl: FEATURE_TABLE; is_delayed: BOOLEAN)
+			-- <Precursor>
 		local
 			actual_type: TYPE_A
 			vqmc: VQMC
 			e: like error_handler.error_level
 		do
 			e := error_handler.error_level
-			Precursor {ENCAPSULATED_I} (feat_tbl)
-			if e = error_handler.error_level then
+			Precursor {ENCAPSULATED_I} (feat_tbl, is_delayed)
+			if e = error_handler.error_level and then not is_type_evaluation_delayed then
 					-- Type of constant is always attached.
 				type := type.as_attached_in (feat_tbl.associated_class)
 				actual_type := type.actual_type

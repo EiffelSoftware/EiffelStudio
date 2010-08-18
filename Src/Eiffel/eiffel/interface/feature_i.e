@@ -1028,25 +1028,6 @@ feature -- Setting
 			feature_flags := feature_flags.set_bit_with_mask (v, is_type_evaluation_delayed_mask)
 		end
 
-	calculate_is_type_evaluation_delayed
-			-- Calculate `is_type_evaluation_delayed'.
-		local
-			v: BOOLEAN
-		do
-			v := not type.is_computable_using_ancestors
-			if not v and then attached arguments as a then
-				from
-					a.start
-				until
-					v or else a.after
-				loop
-					v := not a.item.is_computable_using_ancestors
-					a.forth
-				end
-			end
-			set_is_type_evaluation_delayed (v)
-		end
-
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Setting
 
 	set_feature_name (s: STRING)
@@ -2140,7 +2121,7 @@ feature -- Signature checking
 			t_attached: attached t
 			is_context_initialized_for_t: context.current_class = t.associated_class
 		do
-			calculate_is_type_evaluation_delayed
+			do_check_types (t, True)
 			if is_type_evaluation_delayed then
 				tmp_feature_server.delay (Current)
 				degree_4.put_action (
@@ -2153,37 +2134,43 @@ feature -- Signature checking
 							end
 						end
 				)
-			else
-				check_types (t)
 			end
 		end
 
-	check_types (feat_table: FEATURE_TABLE)
+feature {NONE} -- Signature checking
+
+	do_check_types (feat_table: FEATURE_TABLE; is_delayed: BOOLEAN)
 			-- Check type and arguments types. The objective is
 			-- to deal with anchored types and genericity. All anchored
 			-- types are interpreted here and generic parameter
-			-- instantiated if possible.
+			-- instantiated if possible. `is_delayed' tells if type
+			-- checking may be delayed because not all feature tables
+			-- are computed.
 			-- Make sure that `context' is already initialized for `feat_table' before calling.
 		require
 			feat_table_attached: attached feat_table
 			is_context_initialized_for_feat_table:
 				context.current_class = feat_table.associated_class
 		local
-			solved_type: TYPE_A
 			vffd5: VFFD5
 			vffd6: VFFD6
 			vffd7: VFFD7
 			l_class: CLASS_C
 			l_error_level: NATURAL_32
+			is_immediate: BOOLEAN
+			l_area: SPECIAL [TYPE_A]
+			nb, i: INTEGER
 		do
 			l_class := feat_table.associated_class
 			context.set_current_feature (Current)
 				-- Process an actual type for the feature interpret
 				-- anchored types.
 			type_a_checker.init_with_feature_table (Current, feat_table, error_handler)
-			solved_type := type_a_checker.check_and_solved (type, Void)
+			type_a_checker.set_is_delayed (is_delayed)
+			set_is_type_evaluation_delayed (False)
 
-			if solved_type /= Void then
+			l_error_level := error_handler.error_level
+			if attached type_a_checker.check_and_solved (type, Void) as solved_type then
 				set_type (solved_type, assigner_name_id)
 					-- Instantitate the feature type in the context of the
 					-- actual type of the class associated to `feat_table'.
@@ -2220,18 +2207,51 @@ feature -- Signature checking
 				end
 
 				if l_class.class_id = written_in then
+					is_immediate := True
 					type_a_checker.check_type_validity (solved_type, Void)
 					solved_type.check_for_obsolete_class (l_class, Current)
 				end
-				if arguments /= Void then
-						-- Check types of arguments
+			elseif is_delayed then
+				set_is_type_evaluation_delayed (l_error_level = error_handler.error_level)
+			end
+			if attached arguments as a then
+					-- Check types of arguments.
+				from
+					l_area := a.area
+					nb := a.count
+				until
+					i = nb
+				loop
+						-- Process type of an argument.
 					l_error_level := error_handler.error_level
-					arguments.check_types (feat_table, Current)
-					if l_class.class_id = written_in and then l_error_level = error_handler.error_level then
-						arguments.check_type_validity (l_class, Current, type_a_checker, True)
+					if attached type_a_checker.check_and_solved (l_area.item (i), Void) as t then
+						l_area.put (t, i)
+						if is_immediate then
+							type_a_checker.check_type_validity (t, Void)
+							t.check_for_obsolete_class (l_class, Current)
+						end
+					elseif is_delayed then
+						set_is_type_evaluation_delayed (l_error_level = error_handler.error_level)
 					end
+					i := i + 1
 				end
 			end
+		end
+
+feature -- Signature checking
+
+	check_types (feat_table: FEATURE_TABLE)
+			-- Check type and arguments types. The objective is
+			-- to deal with anchored types and genericity. All anchored
+			-- types are interpreted here and generic parameter
+			-- instantiated if possible.
+			-- Make sure that `context' is already initialized for `feat_table' before calling.
+		require
+			feat_table_attached: attached feat_table
+			is_context_initialized_for_feat_table:
+				context.current_class = feat_table.associated_class
+		do
+			do_check_types (feat_table, False)
 		end
 
 	check_type_validity (a_context_class: CLASS_C)

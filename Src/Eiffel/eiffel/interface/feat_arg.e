@@ -160,37 +160,6 @@ feature -- Element change
 
 feature -- Checking
 
-	check_types (feat_table: FEATURE_TABLE; f: FEATURE_I)
-			-- Check like types in arguments and instantiate arguments
-		require
-			good_argument: not (feat_table = Void or f = Void)
-		local
-			solved_type: TYPE_A
-			associated_class: CLASS_C
-			i, nb: INTEGER
-			l_area: SPECIAL [TYPE_A]
-			a_area: like argument_names
-			l_names_heap: like Names_heap
-		do
-			from
-				a_area := argument_names
-				l_area := area
-				l_names_heap := Names_heap
-				nb := count
-				associated_class := feat_table.associated_class
-				type_a_checker.init_with_feature_table (f, feat_table, error_handler)
-			until
-				i = nb
-			loop
-					-- Process anchored type for argument types
-				solved_type := type_a_checker.check_and_solved (l_area.item (i), Void)
-				if solved_type /= Void then
-					l_area.put (solved_type, i)
-				end
-				i := i + 1
-			end
-		end
-
 	check_type_validity (a_context_class: CLASS_C; a_feature: FEATURE_I; a_checker: TYPE_A_CHECKER; a_check_for_obsolete: BOOLEAN)
 			-- Check like types in arguments and instantiate arguments
 		require

@@ -515,6 +515,7 @@ feature {INHERIT_TABLE} -- Propagation
 			real_pass2, do_pass2: BOOLEAN
 			do_pass3: BOOLEAN
 			chg3a: BOOLEAN
+			is_skeleton_required: BOOLEAN
 		do
 			debug ("ACTIVITY")
 				io.error.put_string ("=============== DEGREE_4.propagate ===============%N")
@@ -606,8 +607,15 @@ feature {INHERIT_TABLE} -- Propagation
 				end
 
 					-- Generate skeleton and update seeds of generic attributes
-
 					-- Set the attribute skeleton of `a_class'
+				is_skeleton_required := True
+					-- Instantiate generic parameter in context of current class.
+				a_class.update_generic_features
+			end
+			if is_skeleton_required or else not attached a_class.skeleton then
+					-- New skeleton is set when
+					-- a) the old one is changed
+					-- b) the new one is not generated yet
 				degree_4.put_action (
 					agent (c: CLASS_C; t: FEATURE_TABLE)
 						do
@@ -615,9 +623,6 @@ feature {INHERIT_TABLE} -- Propagation
 						end
 					(a_class, resulting_table)
 				)
-
-					-- Instantiate generic parameter in context of current class.
-				a_class.update_generic_features
 			end
 		end
 

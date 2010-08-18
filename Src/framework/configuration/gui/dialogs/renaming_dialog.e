@@ -107,7 +107,10 @@ feature {NONE} -- Agents
 			end
 			if grid.row_count > 0 then
 				check has_the_first_column: grid.column_count > 1 end
-				if attached {STRING_PROPERTY} grid.item (Old_name_column, grid.row_count) as l_item then
+				if 
+					attached {STRING_PROPERTY} grid.item (Old_name_column, grid.row_count) as l_item and then
+					l_item.is_parented
+				then
 					l_item.activate
 				end
 			end
@@ -156,7 +159,10 @@ feature {NONE} -- Agents
 		do
 			if a_key.code = {EV_KEY_CONSTANTS}.Key_tab then
 				if a_column = old_name_column then
-					if attached grid.item (new_name_column, a_row) as l_item then
+					if
+						attached grid.item (new_name_column, a_row) as l_item and then
+						l_item.is_parented
+					then
 						l_item.activate
 					end
 				else
@@ -173,12 +179,35 @@ feature {NONE} -- Implementation
 			an_old_key_ok: value /= Void and then value.has (an_old_key)
 		local
 			l_string: STRING_32
+			n, r: INTEGER
 		do
 			l_string := conf_interface_names.string_general_as_upper (a_new_key)
 			if a_new_key /= Void and then not a_new_key.is_empty and then not value.has (l_string) then
 				value.replace_key (l_string, an_old_key)
 			end
-			refresh
+			if grid.row_count > 0 and grid.column_count >= Old_name_column then
+				from
+					r := 1
+					n := grid.row_count
+				until
+					r > n
+				loop
+					if attached {STRING_PROPERTY} grid.row (r).item (Old_name_column) as sp then
+						if sp.text.same_string (a_new_key) then
+							sp.change_value_actions.wipe_out
+							sp.set_value (l_string)
+							sp.change_value_actions.extend (agent update_key (l_string, ?))
+
+
+							if attached {STRING_PROPERTY} grid.row (r).item (New_name_column) as spv then
+								spv.change_value_actions.wipe_out
+								spv.change_value_actions.extend (agent update_value (l_string, ?))
+							end
+						end
+					end
+					r := r + 1
+				end
+			end
 		end
 
 	update_value (a_key, a_new_value: STRING_32)
@@ -258,7 +287,7 @@ invariant
 	elements: is_initialized implies grid /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

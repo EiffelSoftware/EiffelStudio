@@ -177,6 +177,7 @@ extern "C" {
 
 /* TYPE class */
 #define eif_builtin_TYPE_has_default(obj)					eif_gen_has_default(eif_gen_param_id(Dftype(obj), 1))
+#define eif_builtin_TYPE_is_expanded(obj)					eif_gen_is_expanded(eif_gen_param_id(Dftype(obj), 1))
 #define eif_builtin_TYPE_type_id(obj)						eif_gen_param_id(Dftype(obj), 1)
 #define eif_builtin_TYPE_runtime_name(obj)					eif_gen_typename_of_type(eif_gen_param_id(Dftype(obj), 1))
 #define eif_builtin_TYPE_generic_parameter_type(obj,i)		RTLNTY(eif_gen_param_id(eif_gen_param_id(Dftype(obj), 1), i))

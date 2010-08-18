@@ -68,6 +68,7 @@ rt_public EIF_TYPE_INDEX eif_non_attached_type (EIF_TYPE_INDEX dftype);
 rt_public EIF_TYPE_INDEX eif_attached_type (EIF_TYPE_INDEX dftype);
 rt_public EIF_BOOLEAN eif_is_attached_type (EIF_TYPE_INDEX dftype);
 rt_public EIF_BOOLEAN eif_gen_has_default (EIF_TYPE_INDEX dftype);
+rt_public EIF_BOOLEAN eif_gen_is_expanded (EIF_TYPE_INDEX dftype);
 
 
 /* TUPLEs */

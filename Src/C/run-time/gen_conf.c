@@ -2201,6 +2201,25 @@ rt_public EIF_BOOLEAN eif_gen_has_default (EIF_TYPE_INDEX dftype)
 	return EIF_TEST(!gdp || !RT_IS_ATTACHED_TYPE(gdp->annotation) || gdp->is_expanded); 
 }
 
+/*------------------------------------------------------------------*/
+/* Compute if `dftype' has a default value, i.e. detachable         */
+/* reference type or expanded type.                                 */
+/*------------------------------------------------------------------*/
+
+rt_public EIF_BOOLEAN eif_gen_is_expanded (EIF_TYPE_INDEX dftype)
+{
+	EIF_GEN_DER *gdp = eif_derivations [dftype];
+	if (gdp) {
+		return EIF_TEST(gdp->is_expanded);
+	} else {
+			/* It is not a generic derivation, we can avoid the conversion dftype -> dtype. */
+		CHECK("Same as dtype", eif_cid_map[dftype] == dftype);
+		return EIF_TEST(EIF_IS_EXPANDED_TYPE(System(dftype)));
+	}
+
+	return EIF_TEST(gdp && gdp->is_expanded); 
+}
+
 
 /*------------------------------------------------------------------*/
 /* Compute the associated detachable type of `dftype' if any,       */

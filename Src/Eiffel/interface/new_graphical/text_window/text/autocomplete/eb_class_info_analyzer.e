@@ -219,8 +219,8 @@ feature {NONE} -- Click ast exploration
 		do
 			if is_ok_for_completion then
 				initialize_context
-				if current_class_i /= Void then
-					create l_mapper.make (current_class_i.text_8)
+				if current_class_i /= Void and attached current_class_i.text_8 as l_text then
+					create l_mapper.make (l_text)
 					parents := current_class_as.parents
 					has_parents := parents /= Void
 					if has_parents then
@@ -242,7 +242,7 @@ feature {NONE} -- Click ast exploration
 					if ast_list /= Void then
 						c := ast_list.count
 						create prov_list.make
-						create l_mapper.make (current_class_i.text_8)
+						create l_mapper.make (l_text)
 						from
 							pos := 1
 						until

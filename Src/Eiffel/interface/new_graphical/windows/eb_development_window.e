@@ -1738,8 +1738,9 @@ feature {EB_STONE_CHECKER, EB_STONE_FIRST_CHECKER, EB_DEVELOPMENT_WINDOW_PART} -
 					l_feature := feat_as
 				end
 				l_feat_as := l_feature.ast
-				if l_feat_as /= Void then
-					create l_mapper.make (l_feature.written_class.original_class.text_8)
+					-- Do nothing if the class has been deleted.
+				if l_feat_as /= Void and then attached l_feature.written_class.original_class.text_8 as l_text then
+					create l_mapper.make (l_text)
 					from
 						l_names := l_feat_as.feature_names
 						l_names.start
@@ -1771,19 +1772,22 @@ feature {EB_STONE_CHECKER, EB_STONE_FIRST_CHECKER, EB_DEVELOPMENT_WINDOW_PART} -
 			match_list: LEAF_AS_LIST
 			l_mapper: UNICODE_POSITION_MAPPER
 		do
-			if displayed_class.is_compiled then
-				match_list := system.match_list_server.item (displayed_class.compiled_class.class_id)
+				-- Do nothing is the class has been deleted.
+			if attached displayed_class.text_8 as l_text then
+				if displayed_class.is_compiled then
+					match_list := system.match_list_server.item (displayed_class.compiled_class.class_id)
+				end
+				create l_mapper.make (l_text)
+				if match_list /= Void then
+					begin_index := l_mapper.utf32_pos_from_utf8_pos (a_ast.complete_start_position (match_list))
+					end_index := l_mapper.next_utf32_pos_from_utf8_pos (a_ast.complete_end_position (match_list))
+				else
+					begin_index := l_mapper.utf32_pos_from_utf8_pos (a_ast.start_position)
+					end_index := l_mapper.next_utf32_pos_from_utf8_pos (a_ast.end_position)
+				end
+				offset := relative_location_offset ([begin_index, end_index], displayed_class)
+				scroll_to_selection ([begin_index - offset.start_offset, end_index - offset.end_offset + 1], a_selected)
 			end
-			create l_mapper.make (displayed_class.text_8)
-			if match_list /= Void then
-				begin_index := l_mapper.utf32_pos_from_utf8_pos (a_ast.complete_start_position (match_list))
-				end_index := l_mapper.next_utf32_pos_from_utf8_pos (a_ast.complete_end_position (match_list))
-			else
-				begin_index := l_mapper.utf32_pos_from_utf8_pos (a_ast.start_position)
-				end_index := l_mapper.next_utf32_pos_from_utf8_pos (a_ast.end_position)
-			end
-			offset := relative_location_offset ([begin_index, end_index], displayed_class)
-			scroll_to_selection ([begin_index - offset.start_offset, end_index - offset.end_offset + 1], a_selected)
 		end
 
 	scroll_to_selection (a_selection: TUPLE [pos_start, pos_end: INTEGER]; a_selected: BOOLEAN)

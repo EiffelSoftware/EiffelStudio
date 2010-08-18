@@ -287,10 +287,10 @@ feature -- Retrieve information from ast
 			l_mapper: UNICODE_POSITION_MAPPER
 		do
 			l_feature_clauses := current_class_as.features
-			if l_feature_clauses /= Void then
+			if l_feature_clauses /= Void and then attached current_class_i.text_8 as l_text then
 				create features_position.make (100)
 				create features_ast.make (100)
-				create l_mapper.make (current_class_i.text_8)
+				create l_mapper.make (l_text)
 				from
 					l_feature_clauses.start
 				until
@@ -516,13 +516,21 @@ feature {NONE} -- Retrieve information from text
 			end
 				-- Before getting the first invariant position, for performance reason
 				-- we do not have to compute character position.
-			create l_mapper.make (current_class_i.text_8)
-			if current_class_as.features /= Void and then features_position.count > 0 then
-				features_index := features_position.i_th (1).start_pos
-				features_index := l_mapper.utf32_pos_from_utf8_pos (features_index)
+			if attached current_class_i.text_8 as l_text then
+				create l_mapper.make (current_class_i.text_8)
+				if current_class_as.features /= Void and then features_position.count > 0 then
+					features_index := features_position.i_th (1).start_pos
+					features_index := l_mapper.utf32_pos_from_utf8_pos (features_index)
+				else
+					invariant_index := l_mapper.utf32_pos_from_utf8_pos (invariant_index)
+					features_index := invariant_index
+				end
 			else
-				invariant_index := l_mapper.utf32_pos_from_utf8_pos (invariant_index)
-				features_index := invariant_index
+				if current_class_as.features /= Void and then features_position.count > 0 then
+					features_index := features_position.i_th (1).start_pos
+				else
+					features_index := invariant_index
+				end
 			end
 		end
 

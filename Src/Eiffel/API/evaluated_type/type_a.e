@@ -691,13 +691,6 @@ feature -- Properties
 			Result := not is_loose
 		end
 
-	is_computable_using_ancestors: BOOLEAN
-			-- Can type be computed using the type information of ancestor classes only?
-			-- (If yes, the type can be solved immediately if ancestor classes are processed already.)
-		do
-			Result := True
-		end
-
 feature -- Comparison
 
 	frozen is_safe_equivalent (other: TYPE_A): BOOLEAN

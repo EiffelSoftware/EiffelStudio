@@ -22,7 +22,7 @@ inherit
 		redefine
 			renaming, is_renamed_type, has_renaming, instantiated_in,
 			instantiation_in, has_associated_class, formal_instantiation_in,
-			to_type_set, conformance_type, actual_type, is_computable_using_ancestors,
+			to_type_set, conformance_type, actual_type,
 			same_as
 		end
 
@@ -180,12 +180,6 @@ feature -- Status
 	is_renamed_type: BOOLEAN = True
 		-- Is current an instance of RENAMED_TYPE_A [TYPE_A]?
 		-- An renamed type has the ability to carry a feature renaming.
-
-	is_computable_using_ancestors: BOOLEAN
-			-- <Precursor>
-		do
-			Result := type.is_computable_using_ancestors
-		end
 
 feature -- Output
 

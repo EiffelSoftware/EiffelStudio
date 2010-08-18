@@ -51,9 +51,28 @@
 		<library name="matcher" location="$ISE_LIBRARY\library\text\regexp\kmp_matcher\kmp_matcher-safe.ecf"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2-safe.ecf" readonly="false"/>
 		<library name="vision2_extension" location="$ISE_LIBRARY\library\vision2_extension\vision2_extension-safe.ecf"/>
+		<library name="wel" location="$ISE_LIBRARY\library\wel\wel-safe.ecf" readonly="false">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</library>
 		<cluster name="fmwk_vision2_action" location="$EIFFEL_SRC\framework\vision2\action\" recursive="true"/>
 		<cluster name="fmwk_vision2_grid" location="$EIFFEL_SRC\framework\vision2\contrib_grid_items\" recursive="true"/>
-		<cluster name="graphical" location=".\src\graphical\" recursive="true"/>
+		<cluster name="graphical" location=".\src\graphical\" recursive="true">
+			<file_rule>
+				<exclude>/spec/mswin$</exclude>
+				<condition>
+					<platform excluded_value="windows"/>
+				</condition>
+			</file_rule>
+			<file_rule>
+				<exclude>/spec/other$</exclude>
+				<condition>
+					<platform value="windows"/>
+				</condition>
+			</file_rule>
+
+		</cluster>
 	</target>
 	<target name="repository_tool_unix" extends="repository_tool">
 		<variable name="eapml_scan_type" value="gcc"/>

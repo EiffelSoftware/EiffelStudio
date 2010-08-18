@@ -1337,15 +1337,20 @@ feature {NONE} -- Implementation, Close event
 
 			if attached question_dialog.selected_button as b and then b.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_ok) then
 					-- Destroy the window
-				on_quit
-				destroy;
+				quit
+			end
+		end
 
-					-- End the application
-					--| TODO: Remove this line if you don't want the application
-					--|       to end when the first window is closed..
-				if attached (create {EV_ENVIRONMENT}).application as app then
-					app.destroy
-				end
+	frozen quit
+		do
+			on_quit
+			destroy
+
+				-- End the application
+				--| TODO: Remove this line if you don't want the application
+				--|       to end when the first window is closed..
+			if attached (create {EV_ENVIRONMENT}).application as app then
+				app.destroy
 			end
 		end
 

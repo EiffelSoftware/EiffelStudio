@@ -938,6 +938,7 @@ test	change-target-inheritance		incr379 tcf fail incrementality
 test	config-remove-root-element		incr380 tcf fail incrementality
 test	remove-base-library-add-back		incr381 tcf fail incrementality
 test	disk-item-io-error			incr382 tcf fail incrementality
+test	compiler-panic				incr383 tcf fail incrementality
 
 
 -- Melting

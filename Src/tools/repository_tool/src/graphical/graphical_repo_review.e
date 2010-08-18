@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	first_window: detachable CTR_WINDOW
+	first_window: detachable CTR_APPLICATION
 			-- Main window.
 
 ;note

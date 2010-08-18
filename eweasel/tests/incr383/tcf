@@ -1,0 +1,39 @@
+
+test_name	compiler-panic
+test_description A sequence of changes causes the compiler to crash in degree 3 with a run-time panic.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+copy_raw 	test3.e $CLUSTER test3.e
+compile_melted
+compile_result 	ok
+
+copy_raw 	test_rev2.e $CLUSTER test.e
+copy_raw 	test1_rev4.e $CLUSTER test1.e
+compile_melted
+compile_result 	validity_warning TEST1 VWEQ
+
+copy_raw 	test1_rev5.e $CLUSTER test1.e
+compile_melted
+compile_result 	ok
+
+copy_raw 	test1_rev6.e $CLUSTER test1.e
+compile_melted
+compile_result 	ok
+
+copy_raw 	test1_rev7.e $CLUSTER test1.e
+copy_raw 	test3_rev2.e $CLUSTER test3.e
+compile_melted
+compile_result 	validity_error TEST VTCG
+
+copy_raw 	test_rev3.e $CLUSTER test.e
+resume_compile
+compile_result 	validity_error TEST1 VEEN VEEN VWEQ
+
+copy_raw 	test_rev4.e $CLUSTER test.e
+copy_raw 	test1_rev8.e $CLUSTER test1.e
+resume_compile
+compile_result 	ok
+
+test_end

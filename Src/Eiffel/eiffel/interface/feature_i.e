@@ -2175,8 +2175,12 @@ feature {NONE} -- Signature checking
 					-- Instantitate the feature type in the context of the
 					-- actual type of the class associated to `feat_table'.
 
-				if (is_once and not is_constant) and then not solved_type.is_standalone then
-						-- A once function cannot have a type with formal generics
+				if
+					(is_once and then not is_object_relative_once and not is_constant) and then
+					not solved_type.is_standalone
+				then
+						-- A (non-object-relative) once function cannot have a type with formal generics
+						-- and/or (flexible) anchors.
 					create vffd7
 					vffd7.set_class (written_class)
 					vffd7.set_feature_name (feature_name)

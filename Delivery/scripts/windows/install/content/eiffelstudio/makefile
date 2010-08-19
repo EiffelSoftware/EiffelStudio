@@ -24,7 +24,9 @@ WXS = \
 	studio_core.wxs \
 	studio_examples.wxs \
 	studio_libraries.wxs \
+	studio_gobo.wxs \
 	studio_compatible.wxs \
+	studio_gobo_compatible.wxs \
 	studio_gdiplus.wxs \
 	studio_ent_ec.wxs \
 	studio_gpl_ec.wxs
@@ -53,12 +55,25 @@ studio_examples.wxs:
 
 studio_libraries.wxs:
 	$(HALLOW) $(HALLOW_FLAGS) "$(INSTALL_DIR)\EiffelStudio\library" \
-		-dr:"Dir.Core.library" -g:"Core.library" -r -n:"Core.library." > $@.tmp
+		-dr:"Dir.Core.library" -de:"\\EiffelStudio\\library\\gobo$$" \
+		-g:"Core.library" -r -n:"Core.library." > $@.tmp
+	move $@.tmp $@
+
+studio_gobo.wxs:
+	$(HALLOW) $(HALLOW_FLAGS) "$(INSTALL_DIR)\EiffelStudio\library\gobo" \
+		-dr:"Dir.Core.library.gobo" -g:"Core.library.gobo" -r -n:"Core.library.gobo." > $@.tmp
 	move $@.tmp $@
 
 studio_compatible.wxs:
-	$(HALLOW) $(HALLOW_FLAGS) "$(INSTALL_DIR)\EiffelStudio\compatible" \
-		-dr:"Dir.Core.compatible" -g:"Core.compatible" -r -n:"Core.compatible." > $@.tmp
+	$(HALLOW) $(HALLOW_FLAGS) "$(INSTALL_DIR)\EiffelStudio\compatible\library" \
+		-dr:"Dir.Core.compatible.library" -de:"\\EiffelStudio\\compatible\\library\\gobo$$" \
+		-g:"Core.compatible" -r -n:"Core.compatible." > $@.tmp
+	move $@.tmp $@
+
+studio_gobo_compatible.wxs:
+	$(HALLOW) $(HALLOW_FLAGS) "$(INSTALL_DIR)\EiffelStudio\compatible\library\gobo" \
+		-dr:"Dir.Core.compatible.library.gobo" -g:"Core.compatible.library.gobo" \
+		-r -n:"Core.compatible.library.gobo." > $@.tmp
 	move $@.tmp $@
 
 studio_gdiplus.wxs:

@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
 	<?include ..\..\includes\Preprocessors.wxi?>
 	<?ifdef EiffelStudio?>
 
@@ -86,14 +86,32 @@
 			</Component>
 			<Directory Id="Dir.gcc" Name="gcc"/>
 			<Directory Id="Dir.Core.examples" Name="examples"/>
-			<Directory Id="Dir.Core.library" Name="library"/>
-			<Directory Id="Dir.Core.compatible" Name="compatible"/>
+			<Directory Id="Dir.Core.library" Name="library">
+				<Directory Id="Dir.Core.library.gobo" Name="gobo"/>
+			</Directory>
+			<Directory Id="Dir.Core.compatible" Name="compatible">
+				<Directory Id="Dir.Core.compatible.library" Name="library">
+					<Directory Id="Dir.Core.compatible.library.gobo" Name="gobo"/>
+				</Directory>
+			</Directory>
+		</DirectoryRef>
+
+		<DirectoryRef Id="TARGETDIR">
+			<Directory Id="DesktopFolder" Name="." />
+			<Directory Id="ProgramMenuFolder" Name=".">
+				<Directory Id="EiffelStudio" Name="$(var.Product) $(var.ProductVersion) ($(var.Platform))">
+					<Directory Id="EiffelStudio.Documentation" Name="Documentation"/>
+					<Directory Id="EiffelStudio.Tools" Name="Tools"/>
+				</Directory>
+			</Directory>
+			<Directory Id="PersonalFolder" Name="PersonalFolder">
+				<Directory Id="EIFFELUSERDIR" Name="Eiffel $(var.ProductVersion) User Files"/>
+			</Directory>
 		</DirectoryRef>
 
 		<!-- PROGIDS -->
 		<DirectoryRef Id="Dir.Core.esbuilder.spec.$(var.IsePlatform).bin" >
 			<Component Id="Comp.Core.esbuilder.spec.$(var.IsePlatform).bin.esbuilder.exe" Guid="BA8812BD-C38D-44AA-9FE9-A85DBB4CF493" Win64="$(var.IsWin64)">
-				<!-- Wix needs an absolute path to the file, so we use the INSTALL_DIR environment variable which is set when building the MSI -->
 				<File Id="Core.esbuilder.spec.$(var.IsePlatform).bin.esbuilder.exe" Name="esbuilder.exe" DiskId="1" Source="$(env.INSTALL_DIR)\EiffelStudio\esbuilder\spec\$(var.IsePlatform)\bin\esbuilder.exe"/>
 				<ProgId Id="build.project" Description="EiffelBuild project" Icon="Core.esbuilder.spec.$(var.IsePlatform).bin.esbuilder.exe" IconIndex="0" >
 					<Extension Id="bpr">
@@ -105,7 +123,6 @@
 		</DirectoryRef>
 		<DirectoryRef Id="Dir.Core.studio.spec.$(var.IsePlatform).bin" >
 			<Component Id="Comp.Core.studio.spec.$(var.IsePlatform).bin.estudio.exe" Guid="4AECBDF8-9061-4260-A4C1-A54F0E163A3F" Win64="$(var.IsWin64)">
-				<!-- Wix needs an absolute path to the file, so we use the INSTALL_DIR environment variable which is set when building the MSI -->
 				<File Id="Core.studio.spec.$(var.IsePlatform).bin.estudio.exe" Name="estudio.exe" DiskId="1" Source="$(env.INSTALL_DIR)\EiffelStudio\studio\spec\$(var.IsePlatform)\bin\estudio.exe"/>
 				<ProgId Id="estudio_ecf.project" Description="EiffelStudio project" Icon="Core.studio.spec.$(var.IsePlatform).bin.estudio.exe" IconIndex="1" >
 					<Extension Id="ecf">
@@ -126,89 +143,76 @@
 		</DirectoryRef>
 		<!-- END PROGIDS -->
 
-		<DirectoryRef Id="TARGETDIR">
-			<Directory Id="DesktopFolder" Name="." />
-			<Directory Id="ProgramMenuFolder" Name=".">
-				<Directory Id="EiffelStudio" Name="$(var.Product) $(var.ProductVersion) ($(var.Platform))">
-					<!-- Shortcuts and file association -->
-					<Component Id="Comp.studio_shortcuts" Guid="FD521BF7-9521-4808-8F85-DAACEBEF291D" Win64="$(var.IsWin64)">
-						<RegistryKey Id="Reg.Dummy.1" Root="HKCU" Key="Software\ISE\$(var.ProductKey)\Install" Action="createAndRemoveOnUninstall"/>
-						<CreateFolder />
-						<RemoveFolder Id="EiffelStudio" On="uninstall" Directory="EiffelStudio"/>
-						<Shortcut Id="esbuilder.exe" Directory="EiffelStudio" Name="EiffelBuild"
-							Description="GUI Builder using EiffelVision2" Show="normal"
-							Target="[INSTALLDIR]esbuilder\spec\$(var.IsePlatform)\bin\esbuilder.exe"
-							/>
-						<Shortcut Id="estudio.exe" Directory="EiffelStudio" Name="$(var.Product) $(var.ProductVersion)"
-							Description="EiffelStudio development environment" Show="normal"
-							Target="[INSTALLDIR]studio\spec\$(var.IsePlatform)\bin\estudio.exe"
-							/>
-						<Shortcut Id="estudio.exe1" Directory="EiffelStudio" Name="$(var.Product) $(var.ProductVersion) (Compatible mode)"
-							Description="EiffelStudio development environment using compatibility facilities of EiffelStudio" Show="normal"
-							Target="[INSTALLDIR]studio\spec\$(var.IsePlatform)\bin\estudio.exe"
-							Arguments="-compat"
-							/>
-						<Shortcut Id="estudio.exe2" Directory="DesktopFolder" Name="$(var.Product) $(var.ProductVersion) ($(var.Platform))"
-							Description="EiffelStudio development environment" Show="normal"
-							Target="[INSTALLDIR]studio\spec\$(var.IsePlatform)\bin\estudio.exe"
-							/>
-						<Shortcut Id="esvars.bat" Directory="EiffelStudio" Name="$(var.Product) $(var.ProductVersion) Command Prompt"
-							Description="EiffelStudio Command Prompt" Show="normal"
-							Target="[%ComSpec]"
-							Arguments="/k &quot;[INSTALLDIR]studio\config\$(var.IsePlatform)\esvars.bat&quot;"
-							/>
-					</Component>
-					<Directory Id="EiffelStudio.Documentation" Name="Documentation">
-						<Component Id="Comp.studio_shortcuts.documentation" Guid="1EA184EF-4B61-4664-8959-44BCE2773F0D" Win64="$(var.IsWin64)">
-							<RegistryKey Id="Reg.Dummy.2" Root="HKCU" Key="Software\ISE\$(var.ProductKey)\Install" Action="createAndRemoveOnUninstall"/>
-							<CreateFolder />
-							<RemoveFolder Id="EiffelStudio.Documentation" On="uninstall" Directory="EiffelStudio.Documentation"/>
-							<Shortcut Id="eiffel.chm1" Directory="EiffelStudio.Documentation" Name="Eiffel Developer Help Center"
-								Description="Main documentation, covering Eiffel, ISE libraries and ISE tools" Show="normal"
-								Target="[INSTALLDIR]docs\eiffel.chm"
-								/>
-							<Shortcut Id="ResourceBench_Documentation" Directory="EiffelStudio.Documentation" Name="ResourceBench Documentation" Show="normal"
-								Target="[SHORTCUTPATH]" Arguments="mk:@MSITStore:[INSTALLDIR]docs\eiffel.chm::/tools/resource_bench/index.html"
-								/>
-							<Shortcut Id="EiffelCOM_Wizard" Directory="EiffelStudio.Documentation" Name="EiffelCOM Wizard Documentation" Show="normal"
-								Target="[SHORTCUTPATH]" Arguments="mk:@MSITStore:[INSTALLDIR]docs\eiffel.chm::/tools/wizards/com/index.html"
-								/>
-							<Shortcut Id="vision2_demo.exe" Directory="EiffelStudio.Documentation" Name="EiffelVision2 Demo"
-								Description="EiffelVision2 overview presentation" Show="normal"
-								Target="[INSTALLDIR]vision2_demo\spec\$(var.IsePlatform)\bin\vision2_demo.exe"
-								/>
-						</Component>
-					</Directory>
-					<Directory Id="EiffelStudio.Tools" Name="Tools">
-						<Component Id="Comp.studio_shortcuts.tools" Guid="06E072A5-E6FE-4742-9A1D-69E6FA8295A6" Win64="$(var.IsWin64)">
-							<RegistryKey Id="Reg.Dummy.3" Root="HKCU" Key="Software\ISE\$(var.ProductKey)\Install" Action="createAndRemoveOnUninstall"/>
-							<CreateFolder />
-							<RemoveFolder Id="EiffelStudio.Tools" On="uninstall" Directory="EiffelStudio.Tools"/>
-							<Shortcut Id="com_wizard.exe" Directory="EiffelStudio.Tools" Name="EiffelCOM Wizard" 
-								Description="A wizard that helps you use and create COM components with Eiffel" Show="normal"
-								Target="[INSTALLDIR]wizards\com\com_wizard_launcher.exe"
-								/>
-							<Shortcut Id="he2.exe" Directory="EiffelStudio.Tools" Name="C constants to Eiffel class generator"
-								Description="A tool to extract constant definitions into Eiffel classes" Show="normal"
-								Target="[INSTALLDIR]studio\spec\$(var.IsePlatform)\bin\h2e.exe"
-								/>
-							<Shortcut Id="rb.exe" Directory="EiffelStudio.Tools" Name="ResourceBench"
-								Description="A tool to convert .rc files into WEL classes" Show="normal"
-								Target="[INSTALLDIR]rb\bin\rb.exe"
-								/>
-						</Component>
-					</Directory>
-				</Directory>
-			</Directory>
-			<Directory Id="PersonalFolder" Name="PersonalFolder">
-				<Directory Id="EIFFELUSERDIR" Name="Eiffel $(var.ProductVersion) User Files">
-					<Component Id="Comp.eiffel_user_files" Guid="F939A51A-1A59-4E7B-AF9A-70D45110F87C" Win64="$(var.IsWin64)">
-						<RegistryKey Id="Reg.Dummy.4" Root="HKCU" Key="Software\ISE\$(var.ProductKey)\Install" Action="createAndRemoveOnUninstall"/>
-						<CreateFolder />
-						<RemoveFolder Id="EIFFELUSERDIR" On="uninstall" Directory="EIFFELUSERDIR"/>
-					</Component>
-				</Directory>
-			</Directory>
+		<!-- Shortcuts and file association -->
+		<DirectoryRef Id="EiffelStudio">
+			<Component Id="Comp.studio_shortcuts" Guid="FD521BF7-9521-4808-8F85-DAACEBEF291D" Win64="$(var.IsWin64)">
+				<Shortcut Id="esbuilder.exe" Name="EiffelBuild"
+					Description="GUI Builder using EiffelVision2" Show="normal"
+					Target="[INSTALLDIR]esbuilder\spec\$(var.IsePlatform)\bin\esbuilder.exe"
+					/>
+				<Shortcut Id="estudio.exe" Name="$(var.Product) $(var.ProductVersion)"
+					Description="EiffelStudio development environment" Show="normal"
+					Target="[INSTALLDIR]studio\spec\$(var.IsePlatform)\bin\estudio.exe"
+					/>
+				<Shortcut Id="estudio.exe1" Name="$(var.Product) $(var.ProductVersion) (Compatible mode)"
+					Description="EiffelStudio development environment using compatibility facilities of EiffelStudio" Show="normal"
+					Target="[INSTALLDIR]studio\spec\$(var.IsePlatform)\bin\estudio.exe"
+					Arguments="-compat"
+					/>
+				<Shortcut Id="esvars.bat" Name="$(var.Product) $(var.ProductVersion) Command Prompt"
+					Description="EiffelStudio Command Prompt" Show="normal"
+					Target="[%ComSpec]"
+					Arguments="/k &quot;[INSTALLDIR]studio\config\$(var.IsePlatform)\esvars.bat&quot;"
+					/>
+				<RemoveFolder Id="EiffelStudio" On="uninstall"/>
+				<RegistryValue Root="HKCU" Key="Software\ISE\$(var.ProductKey)\Install" Type="integer" Name="Shortcuts" Value="1" KeyPath="yes" /> 
+			</Component>
+			<Component Id="Comp.studio.shortcuts.removal" Guid="06D07F69-C2D1-42c5-A7D0-FA47632D8F48" Win64="$(var.IsWin64)">
+				<Shortcut Id="UninstallProduct" Name="Uninstall $(var.Product)"
+					Description="Uninstalls $(var.Product)" Show="normal"
+					Target="[System64Folder]msiexec.exe"
+					Arguments="/x [ProductCode]"
+					/>
+				<RemoveFolder Id="RemoveShorcutFolder" On="uninstall" />
+				<RegistryValue Root="HKCU" Key="Software\ISE\$(var.ProductKey)\Install" Type="integer" Name="Shortcuts" Value="1" KeyPath="yes" /> 
+			</Component>
+		</DirectoryRef>
+		<DirectoryRef Id="EiffelStudio.Documentation">
+			<Component Id="Comp.studio_shortcuts.documentation" Guid="1EA184EF-4B61-4664-8959-44BCE2773F0D" Win64="$(var.IsWin64)">
+				<util:InternetShortcut Id="EiffelStudio.Documentation.General" Name="Eiffel Developer Help Center" Target="http://docs.eiffel.com/"/>
+				<util:InternetShortcut Id="EiffelStudio.Documentation.COM" Name="EiffelCOM Wizard Documentation" Target="http://docs.eiffel.com/book/platform-specifics/eiffelcom-wizard"/>
+				<util:InternetShortcut Id="EiffelStudio.Documentation.ResourceBench" Name="ResourceBench Documentation" Target="http://docs.eiffel.com/book/platform-specifics/resourcebench"/>
+				<Shortcut Id="vision2_demo.exe" Name="EiffelVision2 Demo"
+					Description="EiffelVision2 overview presentation" Show="normal"
+					Target="[INSTALLDIR]vision2_demo\spec\$(var.IsePlatform)\bin\vision2_demo.exe"
+					/>
+				<RemoveFolder Id="EiffelStudio.Documentation" On="uninstall" />
+				<RegistryValue Root="HKCU" Key="Software\ISE\$(var.ProductKey)\Install" Type="integer" Name="Docs" Value="1" KeyPath="yes" /> 
+			</Component>
+		</DirectoryRef>
+		<DirectoryRef Id="EiffelStudio.Tools">
+			<Component Id="Comp.studio_shortcuts.tools" Guid="06E072A5-E6FE-4742-9A1D-69E6FA8295A6" Win64="$(var.IsWin64)">
+				<Shortcut Id="com_wizard.exe" Name="EiffelCOM Wizard" 
+					Description="A wizard that helps you use and create COM components with Eiffel" Show="normal"
+					Target="[INSTALLDIR]wizards\com\com_wizard_launcher.exe"
+					/>
+				<Shortcut Id="he2.exe" Name="C constants to Eiffel class generator"
+					Description="A tool to extract constant definitions into Eiffel classes" Show="normal"
+					Target="[INSTALLDIR]studio\spec\$(var.IsePlatform)\bin\h2e.exe"
+					/>
+				<Shortcut Id="rb.exe" Name="ResourceBench"
+					Description="A tool to convert .rc files into WEL classes" Show="normal"
+					Target="[INSTALLDIR]rb\bin\rb.exe"
+					/>
+				<RemoveFolder Id="EiffelStudio.Tools" On="uninstall"/>
+				<RegistryValue Root="HKCU" Key="Software\ISE\$(var.ProductKey)\Install" Type="integer" Name="Tools" Value="1" KeyPath="yes" /> 
+			</Component>
+		</DirectoryRef>
+		<DirectoryRef Id="EIFFELUSERDIR">
+			<Component Id="Comp.eiffel_user_files" Guid="F939A51A-1A59-4E7B-AF9A-70D45110F87C" Win64="$(var.IsWin64)">
+				<RemoveFolder Id="EIFFELUSERDIR" On="uninstall"/>
+				<RegistryValue Root="HKCU" Key="Software\ISE\$(var.ProductKey)\Install" Type="integer" Name="UserFiles" Value="1" KeyPath="yes" /> 
+			</Component>
 		</DirectoryRef>
 		<!-- END PACKAGE CONTENT -->
 
@@ -241,8 +245,16 @@
 				<ComponentGroupRef Id="Core.library"/>
 			</Feature>
 
+			<Feature Id="Gobo_feature" Title="Gobo" TypicalDefault="install" Level="1" Display="hidden">
+				<ComponentGroupRef Id="Core.library.gobo"/>
+			</Feature>
+
 			<Feature Id="Compatible_feature" Title="Compatible" TypicalDefault="install" Level="1" Display="hidden">
-				<ComponentGroupRef Id="Core.compatible"/>
+				<ComponentGroupRef Id="Core.compatible.library"/>
+			</Feature>
+
+			<Feature Id="Gobo_compatible_feature" Title="Gobo Compatible" TypicalDefault="install" Level="1" Display="hidden">
+				<ComponentGroupRef Id="Core.compatible.library.gobo"/>
 			</Feature>
 
 			<Feature Id="gdiplus_feature" Title="GDI+" TypicalDefault="install" Level="1" Display="hidden">
@@ -253,6 +265,11 @@
 			<Feature Id="gcc_feature" Title="gcc" TypicalDefault="install" Display="hidden" Level="1" >
 				<ComponentGroupRef Id="gcc"/>
 			</Feature>
+
+			<Feature Id="UninstallShortcut" Title="Uninstall Shortcut Feature" Level="1">
+				<ComponentRef Id="Comp.studio.shortcuts.removal" />
+			</Feature>
+
 		</Feature>
 		<!-- END FEATURES -->
 

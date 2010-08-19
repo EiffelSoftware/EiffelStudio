@@ -579,6 +579,7 @@ rt_private void interpret(int flag, int where)
 	int volatile current_trace_level = 0;	/* Saved call level for trace, only needed when routine is retried */
 	char ** volatile saved_prof_top = NULL;	/* Saved top of `prof_stack' */
 	long volatile once_key = 0;				/* Index in once table */
+	uint32 volatile once_end_break_index = 0;				/* Index in once table */
 	int  volatile is_once = 0;				/* Is it a once routine? */
 	int  volatile is_process_or_thread_relative_once = 0;	/* Is it a process or thread relative once routine? */
 	int  volatile is_object_relative_once = 0;				/* Is it a object relative once routine? */
@@ -605,6 +606,7 @@ rt_private void interpret(int flag, int where)
 		is_once  = 1;
 		is_process_or_thread_relative_once = 1;
 		once_key = get_int32(&IC);
+		once_end_break_index = get_uint32(&IC);
 		break;
 #ifdef EIF_THREADS
 	case ONCE_MARK_PROCESS_RELATIVE:
@@ -612,6 +614,7 @@ rt_private void interpret(int flag, int where)
 		is_process_or_thread_relative_once = 1;
 		is_process_once = 1;
 		once_key = get_int32(&IC);
+		once_end_break_index = get_uint32(&IC);
 		break;
 #endif
 	case ONCE_MARK_OBJECT_RELATIVE:
@@ -628,7 +631,7 @@ rt_private void interpret(int flag, int where)
 			once_p_obj_info.except = get_feature_id(&IC);
 			once_p_obj_info.result = get_feature_id(&IC);
 		}
-		once_p_obj_info.result_type = get_type_id(&IC);
+		once_end_break_index = get_uint32(&IC);
 		break;
 	case ONCE_MARK_ATTRIBUTE:
 		create_result = 0;
@@ -3817,6 +3820,9 @@ enter_body:
 
 			/* Check if once routine was executed earlier. */
 		if (was_executed) {
+
+			dstop(dtop()->dc_exec,once_end_break_index);	/* Debugger hook , dtop->dc_exec returns the current execution vector */
+
 				/* Yes, it was executed.      */
 			if (is_process_or_thread_relative_once) {
 #ifdef EIF_THREADS
@@ -3936,7 +3942,9 @@ enter_body:
 			EIF_REFERENCE except_ref = NULL;
 				/* Yes, it was executed.      */
 
-				/* Ckeck if it failed or not. */
+			dstop(dtop()->dc_exec,once_end_break_index);	/* Debugger hook , dtop->dc_exec returns the current execution vector */
+
+				/* Check if it failed or not. */
 			if (once_p_obj_info.is_precompiled) {
 				offset = RTWPA(once_p_obj_info.class_id, once_p_obj_info.except, icur_dtype);
 			} else {

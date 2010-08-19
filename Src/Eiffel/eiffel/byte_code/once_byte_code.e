@@ -107,14 +107,12 @@ feature -- Byte code generation
 					else
 						ba.append_feature_id (l_obj_once_info.result_feature_id) -- result feature id
 					end
-					ba.append_type_id (l_obj_once_info.result_type_a.type_id (context.current_type)) -- result: attribute meta type id
 				else
 					if cl.is_precompiled then
 						ba.append_offset (0)
 					else
 						ba.append_feature_id (0)
 					end
-					ba.append_type_id (1)
 				end
 			else
 					-- The once mark	
@@ -125,6 +123,13 @@ feature -- Byte code generation
 				end
 					-- Record routine body index
 				ba.append_integer_32 (body_index)
+			end
+			if is_once then
+				if attached context.current_feature as f then
+					ba.append_integer (f.number_of_breakpoint_slots)
+				else
+					ba.append_integer (1)
+				end
 			end
 		end
 

@@ -463,10 +463,16 @@ feature -- Roundtrip: leaf_as
 			-- New KEYWORD AST node
 		require
 			a_scn_not_void: a_scn /= Void
-			valid_code: a_code = {EIFFEL_TOKENS}.te_attached or
+			valid_code:
+				a_code = {EIFFEL_TOKENS}.te_across or
+				a_code = {EIFFEL_TOKENS}.te_assign or
+				a_code = {EIFFEL_TOKENS}.te_attached or
 				a_code = {EIFFEL_TOKENS}.te_attribute or
 				a_code = {EIFFEL_TOKENS}.te_detachable or
-				a_code = {EIFFEL_TOKENS}.te_assign
+				a_code = {EIFFEL_TOKENS}.te_indexing or
+				a_code = {EIFFEL_TOKENS}.te_is or
+				a_code = {EIFFEL_TOKENS}.te_note or
+				a_code = {EIFFEL_TOKENS}.te_some
 		do
 			Result := [new_keyword_as (a_code, a_scn), new_filled_id_as (a_scn), a_scn.line, a_scn.column, a_scn.filename]
 		end

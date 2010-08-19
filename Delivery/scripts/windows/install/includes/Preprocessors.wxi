@@ -18,7 +18,7 @@
     <?else?>
       <?define PrgFiles = "ProgramFilesFolder" ?>
       <?define MsiVersion = "200" ?>
-      <?define MsiPlatform = "Intel" ?>
+      <?define MsiPlatform = "x86" ?>
     <?endif?>
 
     <!-- PRODUCT SPECIFIC -->

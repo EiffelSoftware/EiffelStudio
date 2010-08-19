@@ -13,7 +13,7 @@
     <!-- PACKAGE -->
     <Package Id="*" Keywords="Installer" Description="$(var.ProductDescription)"
 			Comments="$(var.ProductName) is a registered trademark of Eiffel Software" Manufacturer="Eiffel Software Inc."
-			InstallerVersion="$(var.MsiVersion)" Platforms="$(var.MsiPlatform)" Languages="1033" Compressed="yes" InstallPrivileges="elevated"
+			InstallerVersion="$(var.MsiVersion)" Platform="$(var.MsiPlatform)" Languages="1033" Compressed="yes" InstallPrivileges="elevated"
       SummaryCodepage="1252"/>
     
     <EnsureTable Id="ControlCondition"/>

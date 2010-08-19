@@ -544,11 +544,6 @@ Header_mark: Frozen_mark External_mark
 				is_expanded := True
 				expanded_keyword := $2
 			}
-	|	Frozen_mark TE_SEPARATE External_mark
-			{
-				is_separate := True
-				separate_keyword := $2
-			}
 	;
 
 Frozen_mark: -- Empty

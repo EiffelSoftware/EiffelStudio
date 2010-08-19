@@ -519,7 +519,7 @@ debug ("GELEX")
 end
 
 				if syntax_version = provisional_syntax then
-					last_keyword_as_value := ast_factory.new_keyword_as (TE_ACROSS, Current)
+					last_keyword_id_value := ast_factory.new_keyword_id_as (TE_ACROSS, Current)
 					last_token := TE_ACROSS
 				else
 					process_id_as
@@ -930,7 +930,7 @@ end
 					process_id_as
 					last_token := TE_ID
 				else
-					last_keyword_as_value := ast_factory.new_keyword_as (TE_INDEXING, Current)
+					last_keyword_id_value := ast_factory.new_keyword_id_as (TE_INDEXING, Current)
 					last_token := TE_INDEXING
 					if has_syntax_warning and then syntax_version /= obsolete_64_syntax then
 						report_one_warning (
@@ -996,7 +996,7 @@ end
 					process_id_as
 					last_token := TE_ID
 				else
-					last_keyword_as_value := ast_factory.new_keyword_as (TE_IS, Current)
+					last_keyword_id_value := ast_factory.new_keyword_id_as (TE_IS, Current)
 					last_token := TE_IS
 					if has_syntax_warning and then syntax_version /= obsolete_64_syntax then
 						report_one_warning (
@@ -1059,7 +1059,7 @@ debug ("GELEX")
 end
 
 				if syntax_version /= obsolete_64_syntax then
-					last_keyword_as_value := ast_factory.new_keyword_as (TE_NOTE, Current)
+					last_keyword_id_value := ast_factory.new_keyword_id_as (TE_NOTE, Current)
 					last_token := TE_NOTE
 				else
 					process_id_as
@@ -1300,7 +1300,7 @@ debug ("GELEX")
 end
 
 				if syntax_version = provisional_syntax then
-					last_keyword_as_value := ast_factory.new_keyword_as (TE_SOME, Current)
+					last_keyword_id_value := ast_factory.new_keyword_id_as (TE_SOME, Current)
 					last_token := TE_SOME
 				else
 					process_id_as

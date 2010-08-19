@@ -1009,11 +1009,6 @@ end
 			check l_associated_class_attached: l_associated_class /= Void end
 			l_attribute_count := attribute_count
 			l_opo_count := once_per_object_count
-			if l_attribute_count + l_opo_count > 0 then
-				create Result.make (l_attribute_count + l_opo_count * 3)
-			else
-				Result := empty_skeleton
-			end
 
 				--| Once per object entries
 			if attached l_associated_class.parents_classes as l_ancestors then
@@ -1043,10 +1038,18 @@ end
 				end
 			end
 
+			if l_attribute_count + l_opo_count + n > 0 then
+				create Result.make (l_attribute_count + (l_opo_count.max (n)) * 3)
+			else
+				Result := empty_skeleton
+			end
+
+
 			opo_info_table := l_associated_class.object_relative_once_infos
 			if opo_info_table /= Void then
 				old_opo_info_table := opo_info_table
 				l_associated_class.reset_object_relative_once_infos
+				opo_info_table := Void
 			end
 			if l_opo_count > 0 then
 				l_associated_class.create_object_relative_once_infos (l_opo_count)
@@ -1133,17 +1136,31 @@ end
 					l_ancestor_once_info := l_infos_cursor.item
 
 					if attached l_ancestor_once_info.once_routine as l_once_i then
-						create opo_info.make (l_once_i)
-						opo_info_table.add_by_routine_id (opo_info, l_ancestor_once_info.once_routine_id)
-						opo_reused := False
 
+						opo_info := Void
+						opo_reused := False
+						if old_opo_info_table /= Void then
+							opo_info := old_opo_info_table.item_of_rout_id_set (l_once_i.rout_id_set)
+							if opo_info /= Void then
+								old_opo_info_table.remove_item_of_rout_id_set (opo_info.once_routine_rout_id_set)
+							end
+						end
+						if opo_info /= Void then
+							-- we need to clean previous extra attributes
+							opo_info.reuse (l_once_i)
+							opo_reused := opo_info.is_set
+							opo_info_table.add_by_routine_id (opo_info, opo_info.once_routine_id)
+						else
+							create opo_info.make (l_once_i)
+							check is_not_set: not opo_info.is_set end
+							opo_info_table.add_by_routine_id (opo_info, l_ancestor_once_info.once_routine_id)
+						end
 						add_object_relative_once_to_skeleton (Result, l_associated_class, l_once_i, opo_info, opo_reused, l_ancestor_once_info)
 					end
 
 					l_infos_cursor.forth
 				end
 			end
-
 			if old_opo_info_table /= Void and then old_opo_info_table.count > 0 then
 				l_infos_cursor := old_opo_info_table.new_cursor
 				from
@@ -1156,6 +1173,7 @@ end
 					l_infos_cursor.forth
 				end
 			end
+
 			debug ("once_per_object")
 				opo_info_table := l_associated_class.object_relative_once_infos
 				if opo_info_table /= Void then
@@ -1194,6 +1212,8 @@ end
 					end
 				end
 			end
+		ensure
+			empty_skeleton_empty: empty_skeleton.is_empty
 		end
 
 	add_object_relative_once_to_skeleton (

@@ -438,8 +438,9 @@ static  void    print_byte_code (void)
 	EIF_NATURAL_8   once_mark;
 	BODY_INDEX	once_key;
 	EIF_BOOLEAN once_is_precomp;
-	EIF_INTEGER_16 once_class_id, once_result_type;
+	EIF_INTEGER_16 once_class_id;
 	EIF_INTEGER_32 once_called, once_except, once_result;
+	uint32 once_end_break_index;				/* Index in once table */
 
 	ip = body;
 
@@ -450,7 +451,7 @@ static  void    print_byte_code (void)
 	once_called = 0;
 	once_except = 0;
 	once_result = 0;
-	once_result_type = 0;
+	once_end_break_index = 0;
 
 	switch (once_mark)
 	{
@@ -464,7 +465,7 @@ static  void    print_byte_code (void)
 		once_called = get_feature_id(&ip); 		/* called */
 		once_except = get_feature_id(&ip);		/* except */
 		once_result = get_feature_id(&ip); 		/* result */
-		once_result_type = get_type_id(&ip);	/* result type */
+		once_end_break_index = get_uint32(&ip);		/* break index of end statement */
 		break;
 	}
 
@@ -493,7 +494,7 @@ static  void    print_byte_code (void)
 		fprintf (ofp,"Once routine : process-relative (%u)\n", once_key);
 		break;
 	case ONCE_MARK_OBJECT_RELATIVE:
-		fprintf (ofp,"Once routine : object-relative (%u, %u, %u, %u,%u,%u)\n", once_is_precomp, once_class_id, once_called, once_except, once_result, once_result_type);
+		fprintf (ofp,"Once routine : object-relative (%u, %u, %u, %u,%u,%u)\n", once_is_precomp, once_class_id, once_called, once_except, once_result, once_end_break_index);
 		break;
 	case ONCE_MARK_ATTRIBUTE:
 		fprintf (ofp,"Attribute\n");

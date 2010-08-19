@@ -17,6 +17,11 @@ class
 inherit
 	ARRAYED_LIST [detachable OBJECT_RELATIVE_ONCE_INFO]
 
+	DEBUG_OUTPUT
+		undefine
+			is_equal, copy
+		end
+
 create
 	make
 
@@ -39,6 +44,22 @@ feature -- Access
 				end
 			end
 			go_to (c)
+		end
+
+feature -- Status report
+
+	debug_output: STRING
+			-- String that should be displayed in debugger to represent `Current'.
+		do
+			Result := "count=" + count.out
+			if count > 0 then
+				across
+					Current as c
+				loop
+					Result.append_string (" ")
+					Result.append_string (c.item.debug_output)
+				end
+			end
 		end
 
 feature -- Element change

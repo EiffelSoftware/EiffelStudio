@@ -40,6 +40,8 @@ inherit
 
 	INTERNAL_COMPILER_STRING_EXPORTER
 
+	DEBUG_OUTPUT
+
 create
 	make
 
@@ -69,23 +71,24 @@ feature -- Basic operations
 				a_once.same_interface (once_routine)
 			then
 				debug ("ONCE_PER_OBJECT")
-					print (generator + ".reuse: KEEP")
+					print (generator + ".reuse [" + a_once.feature_name + "]: KEEP%N")
 					debug_output_info (once_routine, "Reused identifiers ...")
 				end
 			else
 				clean
 				make (a_once)
 				debug ("ONCE_PER_OBJECT")
-					print (generator + ".reuse: REUSED")
+					print (generator + ".reuse [" + a_once.feature_name + "]: REUSED")
 				end
-			end
-			debug ("ONCE_PER_OBJECT")
-				print (" => " + a_once.feature_name)
-				print ("%N")
 			end
 		end
 
-feature -- Debug
+feature -- Status report
+
+	debug_output: STRING
+		do
+			Result := once_routine.feature_name + ":" + once_routine_id.out
+		end
 
 	debug_output_info (f: FEATURE_I; a_msg: detachable STRING)
 			-- Print debug information related to object relative once's info
@@ -228,6 +231,7 @@ feature -- Element change
 		do
 			debug ("ONCE_PER_OBJECT")
 				print (generator + ".clean: "+ once_routine.feature_name + "%N")
+				debug_output_info (once_routine, "Cleaning")
 			end
 			system.rout_info_table.remove (called_routine_id)
 			called_attribute_i := Void

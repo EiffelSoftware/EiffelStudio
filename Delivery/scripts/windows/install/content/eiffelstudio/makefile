@@ -2,7 +2,7 @@ HALLOW = %INIT_DIR%\install\bin\hallow.exe
 HALLOW_FLAGS = -nologo -de:"\.svn$$" -x64 -c:"EiffelStudio"
 HALLOW_FLAGS_X86 = $(HALLOW_FLAGS) -c:"x86"
 HALLOW_FLAGS_X64 = $(HALLOW_FLAGS) -c:"x64"
-MSBUILD = msbuild.exe
+MSBUILD = C:\Windows\Microsoft.NET\Framework\v2.0.50727\msbuild.exe
 MSBUILD_FLAGS = /nologo /verbosity:quiet 
 
 ###################################################################
@@ -99,16 +99,16 @@ studio_gpl_ec.wxs:
 ###################################################################
 
 enterprise_x86: $(WXS)
-	$(MSBUILD) $(MSBUILD_FLAGS) /p:Configuration=studio_ent_x86 ..\..\package.sln
+	$(MSBUILD) $(MSBUILD_FLAGS) /p:Configuration=studio_ent_x86 /p:Platform=x86 ..\..\package.sln
 
 gpl_x86: $(WXS)
-	$(MSBUILD) $(MSBUILD_FLAGS) /p:Configuration=studio_gpl_x86 ..\..\package.sln
+	$(MSBUILD) $(MSBUILD_FLAGS) /p:Configuration=studio_gpl_x86 /p:Platform=x86 ..\..\package.sln
 
 enterprise_x64: $(WXS)
-	$(MSBUILD) $(MSBUILD_FLAGS) /p:Configuration=studio_ent_x64 ..\..\package.sln
+	$(MSBUILD) $(MSBUILD_FLAGS) /p:Configuration=studio_ent_x64 /p:Platform=x64 ..\..\package.sln
 
 gpl_x64: $(WXS)
-	$(MSBUILD) $(MSBUILD_FLAGS) /p:Configuration=studio_gpl_x64 ..\..\package.sln
+	$(MSBUILD) $(MSBUILD_FLAGS) /p:Configuration=studio_gpl_x64 /p:Platform=x64 ..\..\package.sln
 
 
 ###################################################################

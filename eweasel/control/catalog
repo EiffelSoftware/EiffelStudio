@@ -1544,6 +1544,7 @@ test	ieee-min-max-values				exec326 tcf pass execution ieee
 test	assertion-reset-with-check		exec327 tcf pass execution assertion
 test	default-on-expanded-string		exec328 tcf fail execution expanded manual
 test	ieee-abs-minus-zero				exec329 tcf pass execution ieee
+test	catcall-in-expanded-class-invariant	exec330 tcf fail execution catcall
 
 -- Once specific
 

@@ -52,6 +52,7 @@ feature -- Processing
 			l_system: like system
 			l_error_handler: like error_handler
 			l_class_counter: CLASS_COUNTER
+			l_testing_suppliers: detachable SEARCH_TABLE [CLASS_C]
 		do
 			l_degree_output := Degree_output
 			l_degree_output.put_start_degree (Degree_number, count)
@@ -66,6 +67,16 @@ feature -- Processing
 				-- than classes to process.
 			from
 				l_class_counter := l_system.class_counter
+
+					-- In case we have no classes to process, we must add possible test classes here.
+				if
+					count <= nb_errors and
+					l_testing_suppliers = Void and
+					l_system.test_system.is_testing_enabled
+				then
+					l_system.test_system.add_possible_testing_classes
+					l_testing_suppliers := system.test_system.suppliers
+				end
 			until
 				count <= nb_errors
 			loop
@@ -95,8 +106,25 @@ feature -- Processing
 							l_class.remove_from_degree_5
 							count := count - 1
 						end
+
+							-- Once we have called {TEST_SYSTEM_I}.post_process_degree_5, we add
+							-- every processed class to the supplier table
+						if l_testing_suppliers /= Void then
+							l_testing_suppliers.force (l_class)
+						end
 					end
 					i := i + 1
+				end
+
+					-- At the end of a regular Degree 5, we check whether {TEST_SYSTEM_I}
+					-- wants to add additional classes for parsing
+				if
+					count <= nb_errors and
+					l_testing_suppliers = Void and
+					l_system.test_system.is_testing_enabled
+				then
+					l_system.test_system.add_possible_testing_classes
+					l_testing_suppliers := system.test_system.suppliers
 				end
 			end
 			l_error_handler.checksum

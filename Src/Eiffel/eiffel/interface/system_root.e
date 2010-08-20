@@ -84,6 +84,12 @@ feature -- Status report
 			Result := internal_class_type_as /= Void
 		end
 
+	is_explicit: BOOLEAN
+			-- Has `Current' been added through {SYSTEM_I}.add_explicit_root?
+			--
+			-- Note: explicit roots are not part of the configuration and therefore
+			--       should not be compiled into the finalized system.
+
 feature -- Status setting
 
 	set_class_type (a_type: like class_type)
@@ -102,9 +108,48 @@ feature -- Status setting
 			class_type_as_set: is_class_type_as_set and then class_type_as = a_type
 		end
 
+	set_explicit
+			-- Set `is_explicit' to True.
+		do
+			is_explicit := True
+		ensure
+			explicit: is_explicit
+		end
+
 invariant
 	root_class_attached: root_class /= Void
 	not_an_override: root_class.config_class.overrides = Void or else root_class.config_class.overrides.is_empty
 	procedure_name_attached: procedure_name /= Void
 
+note
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

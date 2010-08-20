@@ -190,6 +190,16 @@ extern "C" {
 #define eif_builtin_WEL_IDENTIFIED_eif_current_object_id(object)	eif_reference_id(object)
 #define eif_builtin_WEL_IDENTIFIED_eif_is_object_id_of_current(object,id) EIF_TEST(eif_id_object(id) == object)
 
+/* EQA_EXTERNALS class */
+#ifdef WORKBENCH
+#define eif_builtin_EQA_EXTERNALS_invoke_routine(obj, body_id)		eif_invoke_test_routine(obj,body_id)
+#define eif_builtin_EQA_EXTERNALS_override_byte_code_of_body(body_id, pattern_id, byte_code, length)	eif_override_byte_code_of_body((int) body_id, (int) pattern_id, (unsigned char *) byte_code, (int)length)
+#else
+#define eif_builtin_EQA_EXTERNALS_invoke_routine(obj, body_id)
+#define eif_builtin_EQA_EXTERNALS_override_byte_code_of_body(body_id, pattern_id, byte_code, length)
+#endif
+
+
 #ifdef __cplusplus
 }
 #endif

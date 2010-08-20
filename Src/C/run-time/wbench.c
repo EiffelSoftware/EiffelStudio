@@ -702,6 +702,27 @@ rt_public void create_desc(void)
 	eif_rt_xfree((char *) mdesc_tab);
 }
 
+
+rt_public void eif_invoke_test_routine (EIF_REFERENCE obj, int body_id)
+{
+
+	EIF_GET_CONTEXT
+
+	EIF_REFERENCE_FUNCTION rout;
+
+	nstcall = 1;                                            /* Invariant check on */
+
+        if (egc_frozen [body_id])
+                rout = egc_frozen[body_id];                      /* Frozen feature */
+        else {
+                IC = melt[body_id];
+                rout = pattern[MPatId(body_id)].toi;
+        }
+	
+	(FUNCTION_CAST(void, (EIF_REFERENCE)) rout)(obj);
+}
+
+
 #endif
 
 /*

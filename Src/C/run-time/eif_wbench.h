@@ -71,6 +71,8 @@ RT_LNK void create_desc(void);				/* Call structure creation */
 RT_LNK char desc_fill;					/* Is it an actual insertion or do we 
 										 * wish to compute the size ? */
 
+RT_LNK void eif_invoke_test_routine (EIF_REFERENCE obj, int body_id);
+
 #define IDSC(x,y,z) put_desc(x,y,z)		/* Descriptor initialization */
 #define IMDSC(x,y,z) put_mdesc(x,y,z)	/* Melted descriptor initialization */
 

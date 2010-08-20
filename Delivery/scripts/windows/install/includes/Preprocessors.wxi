@@ -5,10 +5,8 @@
 
     <?ifdef x64?>
       <?define IsWin64  = "yes"?>
-      <?define Platform = "x64" ?>
     <?else?>
       <?define IsWin64  = "no"?>
-      <?define Platform = "x86" ?>
     <?endif?>
 
     <?ifdef x64?>   

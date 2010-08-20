@@ -241,9 +241,7 @@ feature {NONE} -- Basic operations
 						else
 							etest_suite.project_access.project.system.system.rebuild_configuration
 						end
-						if attached test_suite.new_session ({ETEST_RETRIEVAL}) as l_retrieval then
-							test_suite.launch_session (l_retrieval)
-						end
+							-- TODO: add new (uncompiled) tests to {ETEST_SUITE}
 					else
 						error_event.publish ([Current, locale.formatted_string (e_file_not_creatable, [l_location, l_filename])])
 					end

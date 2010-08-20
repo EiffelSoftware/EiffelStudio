@@ -12,8 +12,7 @@ class
 inherit
 	ES_DOCKABLE_STONABLE_TOOL_PANEL [EV_VERTICAL_BOX]
 		redefine
-			on_after_initialized,
-			internal_recycle
+			on_after_initialized
 		end
 
 	ES_TOOL_ICONS_PROVIDER_I [ES_TESTING_TOOL_ICONS]
@@ -32,11 +31,6 @@ inherit
 		redefine
 			on_session_launched,
 			on_session_finished
-		end
-
-	SESSION_EVENT_OBSERVER
-		redefine
-			on_session_value_changed
 		end
 
 	ES_HELP_CONTEXT
@@ -135,21 +129,6 @@ feature {NONE} -- Initialization: widget status
 				end
 			end
 
-			if session_manager.is_service_available then
-				window_session_data.session_connection.connect_events (Current)
-				if
-					attached {BOOLEAN} window_session_data.value_or_default ({TEST_SESSION_CONSTANTS}.auto_retrieve,
-						{TEST_SESSION_CONSTANTS}.auto_retrieve_default) as l_bool
-				then
-					if l_bool then
-						auto_retrieve_menu.enable_select
-						if not etest_suite.is_auto_retrieving then
-							etest_suite.set_auto_retrieve (True)
-						end
-					end
-				end
-			end
-
 			update_selection_state
 			update_running_state
 
@@ -212,9 +191,6 @@ feature {NONE} -- Access: buttons
 	stop_button: SD_TOOL_BAR_BUTTON
 			-- Button for stopping any current test execution
 
-	retrieve_button: SD_TOOL_BAR_DUAL_POPUP_BUTTON
-			-- Button for retrieving tests
-
 feature {NONE} -- Access: menus
 
 	run_all_menu,
@@ -229,9 +205,6 @@ feature {NONE} -- Access: menus
 	debug_selected_menu,
 	debug_filtered_menu: EV_MENU_ITEM
 			-- Menu items for debugging tests
-
-	auto_retrieve_menu: EV_CHECK_MENU_ITEM
-			-- Menu item for turning on/off automatic test retrieval
 
 feature {NONE} -- Access: test creation
 
@@ -588,32 +561,6 @@ feature {NONE} -- Events: test execution
 					end)
 		end
 
-	on_retrieve
-			-- Called when `retrieve_button' is pressed.
-		do
-			perform_with_test_suite (
-				agent (a_test_suite: TEST_SUITE_S)
-					do
-						if attached a_test_suite.new_session ({ETEST_RETRIEVAL}) as l_retrieval then
-							a_test_suite.launch_session (l_retrieval)
-						end
-					end)
-		end
-
-	on_change_auto_retrieve
-			-- Called when user changes `auto_retrieve' selection.
-		local
-			l_auto_retrieve: BOOLEAN
-		do
-			l_auto_retrieve := auto_retrieve_menu.is_selected
-			if etest_suite.is_auto_retrieving /= l_auto_retrieve then
-				etest_suite.set_auto_retrieve (l_auto_retrieve)
-			end
-			if session_manager.is_service_available then
-				window_session_data.set_value (l_auto_retrieve, {TEST_SESSION_CONSTANTS}.auto_retrieve)
-			end
-		end
-
 feature {TEST_SUITE_S} -- Events: test suite
 
 	on_session_launched (a_test_suite: TEST_SUITE_S; a_session: TEST_SESSION_I)
@@ -625,9 +572,6 @@ feature {TEST_SUITE_S} -- Events: test suite
 	on_session_finished (a_test_suite: TEST_SUITE_S; a_session: TEST_SESSION_I)
 			-- <Precursor>
 		do
-			if attached {ETEST_RETRIEVAL} a_session then
-				retrieve_button.enable_sensitive
-			end
 			update_running_state
 		end
 
@@ -670,36 +614,6 @@ feature {NONE} -- Events: tree view
 				debug_selected_menu.enable_sensitive
 				run_button.set_tooltip (locale_formatter.translation (tt_run_selected))
 				debug_button.set_tooltip (locale_formatter.translation (tt_debug_selected))
-			end
-		end
-
-feature {SESSION_I} -- Events: session
-
-	on_session_value_changed (a_session: SESSION_I; a_id: STRING_8)
-			-- <Precursor>
-		do
-			if a_id.same_string ({TEST_SESSION_CONSTANTS}.auto_retrieve) then
-				if attached {BOOLEAN} a_session.value (a_id) as l_bool and then l_bool then
-					auto_retrieve_menu.enable_select
-				else
-					auto_retrieve_menu.disable_select
-				end
-			end
-		end
-
-feature {NONE} -- Clean up
-
-	internal_recycle
-			-- <Precursor>
-		local
-			l_connection: EVENT_CONNECTION_I [SESSION_EVENT_OBSERVER, SESSION_I]
-		do
-			Precursor
-			if session_manager.is_service_available then
-				l_connection := window_session_data.session_connection
-				if l_connection.is_connected (Current) then
-					l_connection.disconnect_events (Current)
-				end
 			end
 		end
 
@@ -798,23 +712,6 @@ feature {NONE} -- Factory
 			stop_button.set_pixmap (stock_pixmaps.debug_stop_icon)
 			register_action (stop_button.select_actions, agent on_stop)
 			Result.force_last (stop_button)
-
-			Result.force_last (create {SD_TOOL_BAR_SEPARATOR}.make)
-
-				-- Create retrieve button
-			create retrieve_button.make
-			retrieve_button.set_tooltip (locale_formatter.translation (f_retrieve_button))
-			retrieve_button.set_pixel_buffer (stock_pixmaps.general_refresh_icon_buffer)
-			retrieve_button.set_pixmap (stock_pixmaps.general_refresh_icon)
-			register_action (retrieve_button.select_actions, agent on_retrieve)
-
-			create l_menu
-			create auto_retrieve_menu.make_with_text (locale_formatter.translation (m_auto_retrieve))
-			register_action (auto_retrieve_menu.select_actions, agent on_change_auto_retrieve)
-			l_menu.extend (auto_retrieve_menu)
-			retrieve_button.set_menu (l_menu)
-
-			Result.force_last (retrieve_button)
 		end
 
 feature {NONE} -- Internationalization
@@ -839,7 +736,6 @@ feature {NONE} -- Internationalization
 	f_run_button: STRING = "Run all tests in background"
 	f_debug_button: STRING = "Debug all tests in EiffelStudio"
 	f_stop_button: STRING = "Stop all test related tasks"
-	f_retrieve_button: STRING = "Refresh test suite"
 
 	m_run_all: STRING = "Run all"
 	m_run_failing: STRING = "Run failing"
@@ -853,7 +749,6 @@ feature {NONE} -- Internationalization
 	m_debug_selected: STRING = "Debug selected"
 	tt_debug_filtered: STRING = "Debug filtered tests"
 	tt_debug_selected: STRING = "Run selected tests"
-	m_auto_retrieve: STRING = "Refresh after compilation"
 
 note
 	copyright: "Copyright (c) 1984-2010, Eiffel Software"

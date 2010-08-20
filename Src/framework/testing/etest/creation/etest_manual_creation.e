@@ -292,7 +292,7 @@ feature {NONE} -- Constants
 
 	test_set_ancestor: STRING
 		do
-			Result := {ETEST_CONSTANTS}.eqa_test_set_name
+			Result := {TEST_SYSTEM_I}.eqa_test_set_name
 		end
 
 	system_level_test_ancestor: STRING

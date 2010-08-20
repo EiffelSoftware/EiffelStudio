@@ -139,18 +139,12 @@ feature {NONE} -- Status report
 
 feature -- Status setting
 
-	launch_test (a_request: TUPLE; an_evaluator_class: EIFFEL_CLASS_C; an_evaluator_feature: FEATURE_I)
+	launch_test (a_request: TUPLE)
 			-- Launch test through given evaluator class and feature.
 			--
 			-- `a_request': Evaluator request containing byte code for calling test routine.
-			-- `an_evaluator_class': CLASS_C instance of EQA_EVALUATOR_ROOT.
-			-- `an_evaluator_feature': Instance of root feature in EQA_EVALUATOR_ROOT.
 		require
 			a_request_attached: a_request /= Void
-			an_evaluator_class_attached: an_evaluator_class /= Void
-			an_evaluator_feature_attached: an_evaluator_feature /= Void
-			an_evaluator_class_valid: an_evaluator_class.types.count = 1
-			an_evaluator_feature_valid: an_evaluator_feature.valid_body_id
 			not_has_next_step: not has_next_step
 		local
 			l_connection: like connection
@@ -164,17 +158,13 @@ feature -- Status setting
 				internal_connection := l_connection
 				create l_args.make (100)
 				l_args.append_integer (l_connection.current_port)
-				l_args.append_character (' ')
-				l_args.append_integer (an_evaluator_feature.real_body_id (an_evaluator_class.types.first) - 1)
-				l_args.append_character (' ')
-				l_args.append_integer (an_evaluator_feature.real_pattern_id (an_evaluator_class.types.first))
 				l_args.append (" %"")
 				l_args.append_string (testing_directory)
 				l_args.append_character ('"')
 				l_args.append (" -eif_root ")
-				l_args.append ({ETEST_CONSTANTS}.eqa_evaluator_root)
+				l_args.append ({TEST_SYSTEM_I}.eqa_evaluator_name)
 				l_args.append_character ('.')
-				l_args.append ({ETEST_CONSTANTS}.eqa_evaluator_creator)
+				l_args.append ({TEST_SYSTEM_I}.eqa_evaluator_creator)
 				start_evaluator (l_args)
 			end
 			connection.send_request (a_request)

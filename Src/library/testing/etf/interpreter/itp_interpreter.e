@@ -7,7 +7,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class ITP_INTERPRETER
+class ITP_INTERPRETER
 
 inherit
 	ANY
@@ -30,6 +30,11 @@ inherit
 		export
 			{NONE} all
 		end
+
+	EQA_EXTERNALS
+
+create
+	execute
 
 feature {NONE} -- Initialization
 
@@ -194,6 +199,7 @@ feature {NONE} -- Handlers
 			last_request_is_execute_request: last_request_type = execute_request_flag
 		local
 			l_bcode: detachable STRING
+			l_cstring: C_STRING
 		do
 			if attached {TUPLE [l_byte_code: detachable STRING; l_data: detachable ANY]} last_request as l_last_request then
 				l_bcode := l_last_request.l_byte_code
@@ -203,10 +209,11 @@ feature {NONE} -- Handlers
 				else
 					log_message ("report_execute_request start%N")
 						-- Inject received byte-code into byte-code array of Current process.
-					eif_override_byte_code_of_body (
+					create l_cstring.make (l_bcode)
+					override_byte_code_of_body (
 						byte_code_feature_body_id,
 						byte_code_feature_pattern_id,
-						pointer_for_byte_code (l_bcode),
+						l_cstring.item,
 						l_bcode.count)
 
 						-- Run the feature with newly injected byte-code.
@@ -518,30 +525,6 @@ feature {NONE} -- Byte code
 			retry
 		end
 
-	pointer_for_byte_code (a_byte_code_string: STRING): POINTER
-			-- pointer representation for `a_byte_code_string'
-		require
-			a_byte_code_string_attached: a_byte_code_string /= Void
-		local
-			l_managed_ptr: MANAGED_POINTER
-			l_count: INTEGER
-			i: INTEGER
-		do
-			l_count := a_byte_code_string.count
-			create l_managed_ptr.make (l_count)
-			from
-				i := 1
-			until
-				i > l_count
-			loop
-				l_managed_ptr.put_character (a_byte_code_string.item (i), i - 1)
-				i := i + 1
-			end
-			Result := l_managed_ptr.item
-		ensure
-			result_attached: Result /= default_pointer
-		end
-
 	execute_byte_code
 			-- Execute test case
 			-- The test case will be written as byte-code.
@@ -561,22 +544,6 @@ feature {NONE} -- Byte code
 			-- Object in `store' at position `a_index'.
 		do
 			Result := store.variable_value (a_index)
-		end
-
-	eif_override_byte_code_of_body (a_body_id: INTEGER; a_pattern_id: INTEGER; a_byte_code: POINTER; a_length: INTEGER)
-			-- Store `a_byte_code' of `a_length' byte long for feature with `a_body_id'.
-		require
-			a_body_id_not_negative: a_body_id >= 0
-			a_byte_code_attached: a_byte_code /= default_pointer
-			a_length_positive: a_length > 0
-		external
-			"C inline use %"eif_interp.h%""
-		alias
-			"[
-#ifdef WORKBENCH
-			eif_override_byte_code_of_body ((int) $a_body_id, (int) $a_pattern_id, (unsigned char *) $a_byte_code, (int) $a_length);
-#endif
-			]"
 		end
 
 	main_loop

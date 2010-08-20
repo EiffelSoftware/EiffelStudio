@@ -201,7 +201,7 @@ feature {NONE} -- Implementation
 			a_class_attached: a_class /= Void
 		do
 			if is_descendant (a_class, False) then
-				session.etest_suite.synchronize_test_class (a_class)
+			--	session.etest_suite.synchronize_test_class (a_class)
 			end
 		end
 

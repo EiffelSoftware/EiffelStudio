@@ -2,9 +2,8 @@ note
 	description: "[
 		Test suite containing Eiffel tests which are added to {TEST_SUITE_S}.
 		
-		Whenever the project is successfully done compiling an {ETEST_RETRIEVAL} is launched to find all
-		test classes in the system. For every test class the test routines are parsed and synchronized
-		with {TEST_SUTIE_S}.
+		Whenever the project is successfully done compiling every test class is parsed and synchronized
+		with {TEST_SUITE_S}.
 		
 		Note: this is not a descendant of {TEST_SUITE_S}. Instead it contains the necessary structures
 		      for updating Eiffel tests after a compilation.
@@ -17,13 +16,6 @@ class
 	ETEST_SUITE
 
 inherit
-	TEST_SUITE_OBSERVER
-		redefine
-			on_session_finished
-		end
-
-	TEST_SESSION_FACTORY [ETEST_RETRIEVAL]
-
 	KL_SHARED_FILE_SYSTEM
 		export
 			{NONE} all
@@ -58,23 +50,11 @@ feature {NONE} -- Initialization
 			l_project_loaded := project_access.is_initialized
 
 			l_manager := project_access.project.manager
-			l_manager.compile_start_agents.extend (agent force_test_class_compilation)
-			l_manager.compile_stop_agents.extend (agent on_auto_retrieve)
+			l_manager.compile_stop_agents.extend (agent retrieve_tests)
 			if not l_project_loaded then
 				l_manager.load_agents.extend_kamikaze (agent retrieve_tests)
-			end
-			l_manager.close_agents.extend (agent on_project_close)
-
-			if test_suite.is_service_available then
-				l_test_suite := test_suite.service
-				if l_test_suite.is_interface_usable then
-					l_test_suite.test_suite_connection.connect_events (Current)
-					l_test_suite.register_factory (Current)
-
-					if l_project_loaded then
-						l_test_suite.launch_session (new_session (l_test_suite))
-					end
-				end
+			else
+				retrieve_tests
 			end
 		ensure
 			project_helper_set: project_helper = a_project_helper
@@ -96,7 +76,7 @@ feature -- Access
 		do
 			l_cache := library_cache
 			if l_cache = Void and project_access.is_initialized then
-				create l_uuid.make_from_string ({ETEST_CONSTANTS}.testing_library_uuid)
+				create l_uuid.make_from_string ({TEST_SYSTEM_I}.testing_library_uuid_code)
 				l_universe := project_access.project.system.universe
 				l_lib_list := l_universe.library_of_uuid (l_uuid, False)
 				if not l_lib_list.is_empty then
@@ -133,9 +113,6 @@ feature {NONE} -- Access: tests
 			-- key: Class name
 			-- values: {ETEST_CLASS} instance containing test routines for corresponding class
 
-	retrieval: detachable ETEST_RETRIEVAL
-			-- Session for retrieving Eiffel test classes
-
 	old_class_map: detachable like class_map
 			-- Old instance of `class_map', only used when retrieving new classes
 
@@ -162,15 +139,10 @@ feature {TEST_SESSION_I, ETEST_EXECUTOR, ETEST_COMPILATION_EXECUTOR} -- Status r
 			Result := etest_session_count > 0
 		end
 
-feature -- Status report
-
-	is_auto_retrieving: BOOLEAN
-			-- Shoul tests be automatically retrieved after each compilation?
-
 feature {NONE} -- Status report
 
 	is_retrieving: BOOLEAN
-			-- Is `Current' updating it's information through an {ETEST_RETRIEVAL}?
+			-- Is `Current' updating it's test classes in `class_map'?
 		do
 			Result := old_class_map /= Void
 		ensure
@@ -179,33 +151,6 @@ feature {NONE} -- Status report
 
 	has_class_map_changed: BOOLEAN
 			-- Have keys of `class_map' changed since last call to `force_test_class_compilation'
-
-feature -- Status setting
-
-	set_auto_retrieve (an_auto_retrieve: like is_auto_retrieving)
-			-- Set `is_auto_retrieving' to given value.
-			--
-			-- `an_auto_retrieve': New value for `is_auto_retreiving'.
-		do
-			is_auto_retrieving := an_auto_retrieve
-		ensure
-			set: is_auto_retrieving = an_auto_retrieve
-		end
-
-feature {ETEST_RETRIEVAL} -- Status setting
-
-	start_retrieval (a_retrieval: like new_session)
-			-- Set given retrieval as current running retrieval.
-		require
-			a_retrieval_attached: a_retrieval /= Void
-			a_retrieval_usable: a_retrieval.is_interface_usable
-		do
-			library_cache := Void
-			stop_retrieval
-			retrieval := a_retrieval
-			old_class_map := class_map
-			class_map := new_class_map
-		end
 
 feature {TEST_SESSION_I, ETEST_EXECUTOR, ETEST_COMPILATION_EXECUTOR} -- Status setting
 
@@ -225,7 +170,7 @@ feature {TEST_SESSION_I, ETEST_EXECUTOR, ETEST_COMPILATION_EXECUTOR} -- Status s
 			etest_session_count := etest_session_count - 1
 		end
 
-feature {ETEST_CLUSTER_RETRIEVAL} -- Basic operations
+feature {NONE} -- Basic operations
 
 	synchronize_test_class (a_class: EIFFEL_CLASS_I)
 			-- Synchronize `class_map' with given class and add/remove tests from {TEST_SUITE_S}. If we are
@@ -281,75 +226,39 @@ feature {ETEST_CLUSTER_RETRIEVAL} -- Basic operations
 			end
 		end
 
-feature {TEST_SUITE_S} -- Events: test suite
-
-	on_session_finished (a_test_suite: TEST_SUITE_S; a_session: TEST_SESSION_I)
-			-- <Precursor>
-		do
-			if a_session = retrieval then
-				finalize_retrieval (True)
-			end
-		end
-
-feature {NONE} -- Events: project
-
-	on_auto_retrieve
-			-- Called when project is loaded or done compiling.
-		do
-			if is_auto_retrieving then
-				retrieve_tests
-			end
-		end
-
-	on_project_close
-			-- Called when the Eiffel project is closed.
-		do
-			if project_access.is_initialized then
-				write_evaluator_root_class (create {ARRAYED_LIST [EIFFEL_CLASS_I]}.make (0), False)
-			end
-		end
-
 feature -- Element change
 
 	retrieve_tests
 			-- Called when Eiffel project has finished compilation
 		local
+			l_test_system: TEST_SYSTEM_I
+			l_classes: SEARCH_TABLE [CLASS_C]
+
 			l_project: E_PROJECT
 			l_test_suite: TEST_SUITE_S
-			l_retrieval: like retrieval
 		do
-				-- Wipe out caches
-			library_cache := Void
+			l_test_system := project_access.project.system.system.test_system
 
-			stop_retrieval
+			old_class_map := class_map
+			class_map := new_class_map
 
-			if test_suite.is_service_available and project_access.is_initialized and then project_access.project.successful then
-				l_test_suite := test_suite.service
-				if l_test_suite.is_interface_usable then
-					create l_retrieval.make (Current, l_test_suite)
-					l_test_suite.launch_session (l_retrieval)
+			if l_test_system.is_testing_enabled then
+				l_classes := l_test_system.test_set_descendants
+				from
+					l_classes.start
+				until
+					l_classes.after
+				loop
+					if attached {EIFFEL_CLASS_I} l_classes.item_for_iteration.original_class as l_eclassi then
+						synchronize_test_class (l_eclassi)
+					end
+					l_classes.forth
 				end
 			end
+			finalize_retrieval (True)
 		end
 
 feature {NONE} -- Implementation
-
-	stop_retrieval
-			-- Stop and finalize any current retrieval.
-		local
-			l_retrieval: like retrieval
-		do
-			if is_retrieving then
-				l_retrieval := retrieval
-				check l_retrieval /= Void end
-				if l_retrieval.has_next_step then
-					l_retrieval.cancel
-				end
-				finalize_retrieval (False)
-			end
-		ensure
-			not_retrieving: not is_retrieving
-		end
 
 	finalize_retrieval (a_remove: BOOLEAN)
 			-- Finalize current retrieval by cleaning up remaining classes `old_class_map'.
@@ -379,93 +288,88 @@ feature {NONE} -- Implementation
 				l_old_map.forth
 			end
 			old_class_map := Void
-			retrieval := Void
 		ensure
 			not_retrieving: not is_retrieving
 		end
 
-	force_test_class_compilation
-			-- If test classes have changed since last time `udpate_root_class' has been called, write
-			-- new class referencing all test classes and register it as root clas in system.
-		local
-			l_class_map: like class_map
-			l_list: ARRAYED_LIST [EIFFEL_CLASS_I]
-			l_class: EIFFEL_CLASS_I
-		do
-			stop_retrieval
-			if (is_etest_session_running or has_class_map_changed) and project_access.is_initialized then
-				has_class_map_changed := False
-				l_class_map := class_map
-				create l_list.make (l_class_map.count)
-				from
-					l_class_map.start
-				until
-					l_class_map.after
-				loop
-					l_class := l_class_map.item_for_iteration.eiffel_class
-					if file_system.file_exists (l_class.file_name) then
-						l_list.force (l_class)
-					end
-					l_class_map.forth
-				end
-				write_evaluator_root_class (l_list, True)
-			end
-		end
 
-	write_evaluator_root_class (a_list: LIST [EIFFEL_CLASS_I]; a_create: BOOLEAN)
-			-- Write anchor root class with classes in given list.
-			--
-			-- `a_list': A list containing class names to be referenced in root class.
-			-- `a_create': True if creation of root class should be forced, otherwise it is only created
-			--             if the file already existed.
-		require
-			a_list_attached: a_list /= Void
-			project_initialized: project_access.is_initialized
-		local
-			l_class_writer: ETEST_EVALUATOR_ROOT_WRITER
-			l_dir_name: DIRECTORY_NAME
-			l_file_name: FILE_NAME
-			l_file: KL_TEXT_OUTPUT_FILE
-			l_system: SYSTEM_I
-		do
-			create l_class_writer
-			l_system := project_access.project.system.system
-			l_dir_name := l_system.project_location.eifgens_cluster_path
-			create l_file_name.make_from_string (l_dir_name)
-			l_file_name.extend (l_class_writer.class_name.as_lower)
-			l_file_name.add_extension ("e")
-			create l_file.make (l_file_name)
-			if l_file.exists then
-				l_file.open_write
-			elseif a_create then
-				if not file_system.directory_exists (l_dir_name) then
-					file_system.recursive_create_directory (l_dir_name)
-				end
-				l_file.open_write
-				l_system.force_rebuild
-			end
-			if l_file.is_open_write then
-				l_class_writer.write_source (l_file, a_list)
-				l_file.close
-				if l_system.is_explicit_root (l_class_writer.class_name, l_class_writer.root_feature_name) then
-					if a_list.is_empty then
-						l_system.remove_explicit_root (l_class_writer.class_name, l_class_writer.root_feature_name)
-					end
-				else
-					if not a_list.is_empty then
-						l_system.add_explicit_root (Void, l_class_writer.class_name, l_class_writer.root_feature_name)
-					end
-				end
-			end
-		end
 
-feature {TEST_SUITE_S} -- Factory
+-- Not necessary soon...
 
-	new_session (a_test_suite: TEST_SUITE_S): ETEST_RETRIEVAL
-			-- <Precursor>
-		do
-			create Result.make (Current, a_test_suite)
-		end
+
+--	force_test_class_compilation
+--			-- If test classes have changed since last time `udpate_root_class' has been called, write
+--			-- new class referencing all test classes and register it as root clas in system.
+--		local
+--			l_class_map: like class_map
+--			l_list: ARRAYED_LIST [EIFFEL_CLASS_I]
+--			l_class: EIFFEL_CLASS_I
+--		do
+--			if (is_etest_session_running or has_class_map_changed) and project_access.is_initialized then
+--				has_class_map_changed := False
+--				l_class_map := class_map
+--				create l_list.make (l_class_map.count)
+--				from
+--					l_class_map.start
+--				until
+--					l_class_map.after
+--				loop
+--					l_class := l_class_map.item_for_iteration.eiffel_class
+--					if file_system.file_exists (l_class.file_name) then
+--						l_list.force (l_class)
+--					end
+--					l_class_map.forth
+--				end
+--				write_evaluator_root_class (l_list, True)
+--			end
+--		end
+
+--	write_evaluator_root_class (a_list: LIST [EIFFEL_CLASS_I]; a_create: BOOLEAN)
+--			-- Write anchor root class with classes in given list.
+--			--
+--			-- `a_list': A list containing class names to be referenced in root class.
+--			-- `a_create': True if creation of root class should be forced, otherwise it is only created
+--			--             if the file already existed.
+--		require
+--			a_list_attached: a_list /= Void
+--			project_initialized: project_access.is_initialized
+--		local
+--			l_class_writer: ETEST_EVALUATOR_ROOT_WRITER
+--			l_dir_name: DIRECTORY_NAME
+--			l_file_name: FILE_NAME
+--			l_file: KL_TEXT_OUTPUT_FILE
+--			l_system: SYSTEM_I
+--		do
+--			create l_class_writer
+--			l_system := project_access.project.system.system
+--			l_dir_name := l_system.project_location.eifgens_cluster_path
+--			create l_file_name.make_from_string (l_dir_name)
+--			l_file_name.extend (l_class_writer.class_name.as_lower)
+--			l_file_name.add_extension ("e")
+--			create l_file.make (l_file_name)
+--			if l_file.exists then
+--				l_file.open_write
+--			elseif a_create then
+--				if not file_system.directory_exists (l_dir_name) then
+--					file_system.recursive_create_directory (l_dir_name)
+--				end
+--				l_file.open_write
+--				l_system.force_rebuild
+--			end
+--			if l_file.is_open_write then
+--				l_class_writer.write_source (l_file, a_list)
+--				l_file.close
+--				if l_system.is_explicit_root (l_class_writer.class_name, l_class_writer.root_feature_name) then
+--					if a_list.is_empty then
+--						l_system.remove_explicit_root (l_class_writer.class_name, l_class_writer.root_feature_name)
+--					end
+--				else
+--					if not a_list.is_empty then
+--						l_system.add_explicit_root (Void, l_class_writer.class_name, l_class_writer.root_feature_name)
+--					end
+--				end
+--			end
+--		end
 
 feature {NONE} -- Factory
 
@@ -474,9 +378,6 @@ feature {NONE} -- Factory
 		do
 			create Result.make (10)
 		end
-
-invariant
-	retrieval_attached_equals_old_class_map_attached: (retrieval /= Void) = (old_class_map /= Void)
 
 note
 	copyright: "Copyright (c) 1984-2010, Eiffel Software"

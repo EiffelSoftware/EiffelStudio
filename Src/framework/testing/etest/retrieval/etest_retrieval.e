@@ -164,7 +164,6 @@ feature {TEST_SUITE_S} -- Status report
 		local
 			l_formatter: TEXT_FORMATTER
 		do
-			etest_suite.start_retrieval (Current)
 			append_output (agent (a_formatter: TEXT_FORMATTER)
 				do
 					a_formatter.process_basic_text ("Synchronizing test suite with project")
@@ -172,7 +171,7 @@ feature {TEST_SUITE_S} -- Status report
 					a_formatter.add_new_line
 				end, True)
 			if project_access.is_initialized and then attached project_access.project.universe.target as l_target then
-				if attached etest_suite.library_class ({ETEST_CONSTANTS}.eqa_test_set_name) as l_class then
+				if attached etest_suite.library_class ({TEST_SYSTEM_I}.eqa_test_set_name) as l_class then
 					common_ancestor := l_class
 					append_output (agent (a_formatter: TEXT_FORMATTER)
 						do

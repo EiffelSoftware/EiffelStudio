@@ -249,7 +249,6 @@ feature -- Basic operations
 			not_launched: not is_launched
 		local
 			l_process: like process
-			l_output_file_name, l_error_file_name, l_input_file_name: like output_file_name
 			l_output_file, l_error_file, l_input_file: detachable PLAIN_TEXT_FILE
 		do
 			if attached output_file_name as l_name then

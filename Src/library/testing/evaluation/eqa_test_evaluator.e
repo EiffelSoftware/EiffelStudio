@@ -2,7 +2,7 @@ note
 	description: "[
 			Objects that are able to run tests in a protected environment and provide information whether
 			the test has failed or succeeded.
-			
+
 			Note: Evaluator is not able to recover from all exceptions. Tests causing seg-faults or out-of-
 			      memory exceptions might put evaluator in an unstable state.
 		]"
@@ -14,43 +14,15 @@ class
 	EQA_TEST_EVALUATOR [G -> EQA_TEST_SET create default_create end]
 
 inherit
-	ANY
 
 	EXECUTION_ENVIRONMENT
-		export
-			{NONE} all
-		end
 
 	EXCEPTIONS
 		rename
 			class_name as exception_class_name
-		export
-			{NONE} all
-		end
-
-	INTERNAL
-		export
-			{NONE} all
-		end
-
-feature -- Access
-
-	last_result: EQA_PARTIAL_RESULT
-			-- Result last produced by `execute'
-		local
-			l_cache: like last_result_cache
-		do
-			l_cache := last_result_cache
-			check l_cache /= Void end
-			Result := l_cache
-		ensure
-			result_equals_cache: Result = last_result_cache
 		end
 
 feature {NONE} -- Access
-
-	last_result_cache: detachable like last_result
-			-- Cache for `last_result'
 
 	buffer: EQA_TEST_OUTPUT_BUFFER
 			-- Buffer for recording output
@@ -58,24 +30,9 @@ feature {NONE} -- Access
 			create Result.make (2048)
 		end
 
-feature -- Status report
-
-	has_result: BOOLEAN
-			-- Has `execute' been called yet?
-		do
-			Result := last_result_cache /= Void
-		ensure
-			result_implies_cache_attached: Result implies last_result_cache /= Void
-		end
-
-feature {NONE} -- Status report
-
-	last_invocation_response: detachable EQA_TEST_INVOCATION_RESPONSE
-			-- Response last produced by `safe_execute'
-
 feature -- Execution
 
-	frozen execute (a_routine: PROCEDURE [ANY, TUPLE [G]])
+	frozen execute (a_routine: PROCEDURE [ANY, TUPLE [EQA_TEST_SET]]): EQA_PARTIAL_RESULT
 			-- Run full test sequence for given test set and test procedure. This includes invoking `set_up'
 			-- on the {TEST_SET} instance, then calling the procedure providing the test set as an operand
 			-- and finally invoking `tear_down' on the test set.
@@ -86,40 +43,39 @@ feature -- Execution
 			--       procedure, `tear_down' still gets invoked. If both the test procedure and `tear_down'
 			--       raise an exception only the test procedure exception will be stored.
 			--
-			-- `a_routine': Agent to which calls test routine.
-		require
-			a_routine_attached: a_routine /= Void
-			--a_routine_valid: a_routine.valid_operands ([create {G}])
+			-- `a_routine': Agent which invokes actual test routine.
 		local
 			l_start_date: DATE_TIME
-			l_creator: FUNCTION [like Current, TUPLE, G]
-			l_prepare, l_test, l_clean: like last_invocation_response
-			l_test_set: detachable G
-			l_basic_test_set: EQA_TEST_SET
+			l_creator: FUNCTION [like Current, TUPLE, EQA_TEST_SET]
+			l_prepare, l_test, l_clean: like execute_test_stage
 			l_old: detachable PLAIN_TEXT_FILE
 			l_old_work_dir: STRING
+			l_operands: TUPLE [EQA_TEST_SET]
 		do
 			l_old_work_dir := current_working_directory
-			create l_start_date.make_now
 			l_old := io.default_output
 			io.set_file_default (buffer)
-			l_creator := agent: G do Result := create {G} end
-			safe_execute (l_creator)
-			l_prepare := last_invocation_response
-			check l_prepare /= Void end
-			if l_prepare.is_exceptional then
-				create last_result_cache.make (l_start_date, l_prepare, buffered_output)
+			l_creator := agent: G do create Result end
+			create l_start_date.make_now
+
+				-- Call {EQA_TEST_SET}.default_create
+			l_prepare := execute_test_stage (l_creator)
+			if not l_prepare.is_exceptional and then attached l_creator.last_result as l_test_set then
+
+					-- Call test routine
+				l_operands := a_routine.empty_operands
+				check
+					valid_operand_count: l_operands.count = 1
+					valid_operand: l_operands.valid_type_for_index (l_test_set, 1)
+				end
+				l_operands.put (l_test_set, 1)
+				l_test := execute_test_stage (agent a_routine.call (l_operands))
+
+					-- Call {EQA_TEST_SET}.clean
+				l_clean := execute_test_stage (agent l_test_set.clean (l_test.is_exceptional))
+				create {EQA_RESULT} Result.make (l_start_date, l_prepare, l_test, l_clean, buffer.formatted_content)
 			else
-				l_test_set := l_creator.last_result
-				check l_test_set /= Void end
-				safe_execute (agent a_routine.call ([l_test_set]))
-				l_test := last_invocation_response
-				check l_test /= Void end
-				l_basic_test_set := l_test_set
-				safe_execute (agent l_basic_test_set.clean (l_test.is_exceptional))
-				l_clean := last_invocation_response
-				check l_clean /= Void end
-				create {EQA_RESULT} last_result_cache.make (l_start_date, l_prepare, l_test, l_clean, buffered_output)
+				create Result.make (l_start_date, l_prepare, buffer.formatted_content)
 			end
 			if l_old = Void then
 				io.set_output_default
@@ -129,55 +85,37 @@ feature -- Execution
 			change_working_directory (l_old_work_dir)
 			buffer.wipe_out
 		ensure
-			has_result: has_result
+			result_attached: Result /= Void
 		end
 
 feature {NONE} -- Implementation
 
-	safe_execute (a_procedure: ROUTINE [ANY, TUPLE])
-			-- Execute `procedure' in a protected way.
+	execute_test_stage (a_procedure: ROUTINE [ANY, TUPLE]): EQA_TEST_INVOCATION_RESPONSE
+			-- Execute one stage of a test execution and return the corresponding invocation response.
+			--
+			-- `a_procedure': Procedure to call.
+			-- `Result': Invocation response describing the outcome of calling `a_procedure'.
 		require
 			a_procedure_attached: a_procedure /= Void
+			a_procedure_expects_not_operands: a_procedure.valid_operands (Void)
 		local
-			l_retry: BOOLEAN
-			l_excpt: detachable EXCEPTION
-			l_texcpt: EQA_TEST_INVOCATION_EXCEPTION
+			l_response: detachable like execute_test_stage
+			l_iexcept: EQA_TEST_INVOCATION_EXCEPTION
 			l_test_set_name: STRING
 		do
-			if not l_retry then
+			if l_response = Void then
 				a_procedure.call (Void)
-				create last_invocation_response.make
+				create l_response.make
 			end
-		ensure
-			last_invocation_response_attached: last_invocation_response /= Void
+			Result := l_response
 		rescue
-			l_retry := True
-			l_excpt := exception_manager.last_exception
-			check l_excpt /= Void end
-			l_test_set_name := class_name_of_type (generic_dynamic_type (Current, 1))
-			create l_texcpt.make (l_excpt, l_test_set_name, Void)
-			create last_invocation_response.make_exceptional (l_texcpt)
+			check attached exception_manager.last_exception as l_exception then
+				l_test_set_name := ({G}).out
+				create l_iexcept.make (l_exception, l_test_set_name, Void)
+				create l_response.make_exceptional (l_iexcept)
+			end
 			retry
 		end
-
-	buffered_output: STRING
-			-- Output buffered by `buffer'
-			--
-			-- Note: if output was truncated, add string indicating so.
-		do
-			if buffer.is_truncated then
-				create Result.make (buffer.buffer_size + 100)
-				Result.append (buffer.leading_content)
-				Result.append (m_truncated)
-				Result.append (buffer.closing_content)
-			else
-				Result := buffer.content
-			end
-		end
-
-feature {NONE} -- Constants
-
-	m_truncated: STRING = "%N%N---------------------------%NTruncated section%N---------------------------%N%N"
 
 note
 	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"

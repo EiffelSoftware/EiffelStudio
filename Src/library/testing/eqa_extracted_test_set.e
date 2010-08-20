@@ -263,7 +263,7 @@ feature {NONE} -- Object initialization
 			l_type: TYPE [ANY]
 			l_cache: like object_cache
 		do
-			create l_cache.make (context.lower, context.upper)
+			create l_cache.make_filled (create {ANY}, context.lower, context.upper)
 			object_cache := l_cache
 				-- Create instance for each object in `context'
 			from
@@ -757,7 +757,7 @@ feature {NONE} -- Constants
 	dynamic_string_32_type: INTEGER once Result := ({STRING_32}).type_id end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

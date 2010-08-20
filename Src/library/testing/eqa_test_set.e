@@ -56,8 +56,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	frozen asserter: EQA_ASSERTIONS
+	frozen asserter: like new_asserter
 			-- Assertions used to raise an exception to report unexpected behaviour.
+			--
+			-- Note: to extend or modify the asserter, redefine `new_asserter'.
 		do
 			if attached internal_asserter as l_asserter then
 				Result := l_asserter
@@ -69,8 +71,10 @@ feature -- Access
 			asserter_attached: Result /= Void
 		end
 
-	frozen file_system: EQA_FILE_SYSTEM
+	frozen file_system: like new_file_system
 			-- File system for creating directories and files
+			--
+			-- Note: to extend or modify the file system, redefine `new_file_system'.
 		do
 			if attached internal_file_system as l_file_system then
 				Result := l_file_system

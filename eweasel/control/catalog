@@ -1558,6 +1558,7 @@ test once-per-object-finalized-crash		once008 tcf pass once
 test once-per-object-effect-deferred		once009 tcf pass once
 test once-per-object-empty-body			once010 tcf pass once
 test once-per-object-anchored-or-generic	once011 tcf pass once
+test once-per-object-returning-expanded		once012 tcf fail once
 
 -- Compiler termination (exception trace, panic, etc.)
 

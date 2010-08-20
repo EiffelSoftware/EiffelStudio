@@ -24,30 +24,21 @@ create {ETEST_CLASS_SYNCHRONIZER}
 
 feature {NONE} -- Initialization
 
-	make (a_name: like routine_name; a_class: like eiffel_class; a_test_suite: like etest_suite)
+	make (a_name: like routine_name; a_test_class: like test_class)
 			-- Initialize `Current'
 			--
-			-- `a_name': name of test routine
-			-- `a_class': Class in which `Current' is defined
-			-- `a_test_suite': Test suite which retrieved `Current'.
+			-- `a_name': Name of test routine.
+			-- `a_test_class': Test class instance to which `Current' belongs.
 		require
 			a_name_attached: a_name /= Void
-			a_class_attached: a_class /= Void
-		local
-			l_name: STRING
+			a_test_class_attached: a_test_class /= Void
 		do
 			routine_name := a_name
-			eiffel_class := a_class
-			etest_suite := a_test_suite
-			create l_name.make (class_name.count + routine_name.count + 1)
-			l_name.append (class_name)
-			l_name.append_character ('.')
-			l_name.append (routine_name.as_string_8)
-			create name.make_from_string (l_name)
+			test_class := a_test_class
+			name := new_name
 		ensure
-			name_set: routine_name = a_name
-			eiffel_class_set: eiffel_class = a_class
-			etest_suite_set: etest_suite = a_test_suite
+			routine_name_set: routine_name.same_string (a_name)
+			a_test_class_set: test_class = a_test_class
 		end
 
 feature -- Access
@@ -57,6 +48,9 @@ feature -- Access
 
 	eiffel_class: EIFFEL_CLASS_I
 			-- Class in which test is defined
+		do
+			Result := test_class.eiffel_class
+		end
 
 	routine_name: STRING
 			-- <Precursor>
@@ -75,8 +69,14 @@ feature -- Access
 
 feature {NONE} -- Access
 
+	test_class: ETEST_CLASS
+			-- Test class instance to which `Current' belongs
+
 	etest_suite: ETEST_SUITE
 			-- Test suite which retrieved `Current'
+		do
+			Result := test_class.test_suite
+		end
 
 feature -- Basic operations
 
@@ -103,13 +103,19 @@ feature {TEST_EXECUTION_I} -- Factory
 
 feature {NONE} -- Implementation
 
+	new_name: like name
+			-- Create `name' attribute from attributes in `Current'.
+		do
+			create Result.make_from_string (class_name + "." + routine_name)
+		end
+
 	safe_dispose (a_explicit: BOOLEAN)
 			-- <Precursor>
 		do
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

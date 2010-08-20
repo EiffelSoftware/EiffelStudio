@@ -9,27 +9,24 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
+frozen class
 	EQA_EVALUATOR
 
 inherit
-	ANY
 
-	EXCEPTIONS
-		export
-			{NONE} all
-		end
+	EXECUTION_ENVIRONMENT
+
+	INTERNAL
 
 	EQA_EXTERNALS
-		export
-			{NONE} all
-		end
+
+create
+	make
 
 feature {NONE} -- Initialization
 
-	launch
+	make
 			-- Initialize `Current'
-
 		local
 			l_socket: like socket
 		do
@@ -45,15 +42,13 @@ feature {NONE} -- Initialization
 	parse_arguments
 			-- Initialize `Current' according to command line arguments.
 		local
-			l_args: ARGUMENTS
+			l_args: like command_line
 		do
-			l_args := (create {EXECUTION_ENVIRONMENT}).command_line
+			l_args := command_line
 			port := l_args.argument (1).to_integer
-			byte_code_feature_body_id := l_args.argument (2).to_integer
-			byte_code_feature_pattern_id := l_args.argument (3).to_integer
+			execution_directory := l_args.argument (2)
 		ensure
 			port_initialized: port > 0
-			body_id_initialized: byte_code_feature_body_id > 0
 		end
 
 	main_loop
@@ -63,9 +58,8 @@ feature {NONE} -- Initialization
 			socket_connected: socket.is_connected
 			socket_open_write: socket.is_open_write
 		local
-			l_evaluator: like execute_test
+			l_result: like execute_test
 			l_done: BOOLEAN
-			l_name, l_byte_code: detachable STRING
 			l_environment: EQA_ENVIRONMENT
 		do
 			from
@@ -73,25 +67,17 @@ feature {NONE} -- Initialization
 			until
 				l_done
 			loop
-				if attached {TUPLE [byte_code, name: detachable STRING]} socket.retrieved as l_retrieved then
-					l_byte_code := l_retrieved.byte_code
-					check byte_code_attached: l_byte_code /= Void end
-
-						-- Replace byte code
-					eif_override_byte_code_of_body (
-						byte_code_feature_body_id,
-						byte_code_feature_pattern_id,
-						pointer_for_byte_code (l_byte_code), l_byte_code.count)
-
+				if
+					attached {TUPLE [test_name, class_name: detachable STRING_8; body_id: INTEGER_32]} socket.retrieved as l_retrieved and then
+					attached l_retrieved.test_name as l_test_name and then attached l_retrieved.class_name as l_class_name
+				then
 						-- TODO: initialize working directory and environment variables for system level testing
-					l_name := l_retrieved.name
-					check l_name /= Void end
-					l_environment.put (l_name, {EQA_TEST_SET}.test_name_key)
-					l_environment.put ((create {EXECUTION_ENVIRONMENT}).command_line.argument (4), {EQA_TEST_SET}.execution_directory_key)
+					l_environment.put (l_test_name, {EQA_TEST_SET}.test_name_key)
+					l_environment.put (execution_directory, {EQA_TEST_SET}.execution_directory_key)
 
-					l_evaluator := execute_test
+					l_result := execute_test (l_class_name, l_retrieved.body_id)
 					socket.put_boolean (True)
-					socket.independent_store (l_evaluator.last_result)
+					socket.independent_store (l_result)
 
 					l_environment.reset
 				else
@@ -108,16 +94,12 @@ feature {NONE} -- Initialization
 			end
 		end
 
-feature {NONE} -- Access
+feature {NONE} -- Access: Connection
 
 	port: INTEGER
 			-- Port number executor is listening to
-
-	byte_code_feature_body_id: INTEGER
-			-- ID for feature whose byte-code is to be injected
-
-	byte_code_feature_pattern_id: INTEGER
-			-- Pattern ID for feature whose byte-code is to be injected
+			--
+			-- Note: command linne arg #1
 
 	socket: NETWORK_STREAM_SOCKET
 			-- Socket used to communicate to executor
@@ -125,16 +107,28 @@ feature {NONE} -- Access
 	is_stream_invalid: BOOLEAN
 			-- Could stream not be initialized or was it closed early?
 
+feature {NONE} -- Access: Test execution
+
+	execution_directory: STRING
+			-- Test execution directory
+			--
+			-- Note: command line arg #3
+
 feature {NONE} -- Execution
 
-	execute_test: EQA_TEST_EVALUATOR [EQA_TEST_SET]
-			-- Run current test and return evaluator containing result.
-			--
-			-- Note: this routine's byte code will be replaced for every test execution.
-		deferred
-		ensure
-			result_attached: Result /= Void
-			result_executed: Result.has_result
+	execute_test (a_name: STRING; a_rout_id: INTEGER): EQA_PARTIAL_RESULT
+			-- Execute test routine in test class.
+		local
+			l_type: like dynamic_type_from_string
+			l_result: detachable like execute_test
+		do
+			l_type := dynamic_type_from_string ("EQA_TEST_EVALUATOR [" + a_name.as_upper + "]")
+			if attached {EQA_TEST_EVALUATOR [EQA_TEST_SET]} new_instance_of (l_type) as l_eval then
+				l_result := l_eval.execute (agent invoke_routine (?, a_rout_id))
+			else
+				check bad: l_result /= Void end
+			end
+			Result := l_result
 		end
 
 note

@@ -244,7 +244,6 @@ feature {NONE} -- Basic operations
 		local
 			l_output_proc, l_error_proc: like output_processor
 			l_output_file, l_error_file, l_input_file: like output_file
-			l_error_to_output: BOOLEAN
 		do
 			l_output_proc := output_processor
 			l_output_file := output_file

@@ -36,8 +36,12 @@ feature {NONE} -- Initialization
 		do
 			test_execution := a_test_execution
 			etest_suite := a_test_suite
-			create {ETEST_MELT_TASK} sub_task.make (etest_suite)
 			create executor_task.make (test_execution, etest_suite)
+			if launch_initial_compilation then
+				create {ETEST_MELT_TASK} sub_task.make (etest_suite)
+			else
+				sub_task := executor_task
+			end
 		ensure
 			test_execution_set: test_execution = a_test_execution
 			test_suite_set: etest_suite = a_test_suite
@@ -83,6 +87,14 @@ feature -- Status report
 			-- <Precursor>
 		do
 			Result := executor_task.is_running_test (a_test)
+		end
+
+feature {NONE} -- Status report
+
+	launch_initial_compilation: BOOLEAN
+			-- Should an initial compilation be launched before executing any tests?
+		do
+			Result := False
 		end
 
 feature -- Status setting

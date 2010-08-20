@@ -127,10 +127,6 @@ feature -- Access: Creation (Extraction)
 			-- Number of stack frames extracted by default (global)
 feature -- Access: Tool
 
-	auto_retrieve: STRING = "com.eiffel.testing_tool.auto_retrieve"
-	auto_retrieve_default: BOOLEAN = False
-			-- Auto retrieve ID for session manager
-
 	launch_wizard: STRING = "com.eiffel.testing_tool.launch_wizard"
 	launch_wizard_default: BOOLEAN = True
 			-- Should wizard always be shown before launching a test creation?

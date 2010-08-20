@@ -22,7 +22,7 @@ feature -- Access
 			l_class: CLASS_I
 		do
 			interpreter_root_class_cell.put (Void)
-			if attached {CONF_CLUSTER} system.eifgens_cluster as l_cluster then
+			if attached {CONF_CLUSTER} system.test_system.eifgens_cluster as l_cluster then
 				l_class := system.universe.class_named (interpreter_root_class_name, l_cluster)
 				if l_class /= Void and then l_class.is_compiled then
 					interpreter_root_class_cell.put (l_class.compiled_class)

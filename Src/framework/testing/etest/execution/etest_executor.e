@@ -24,11 +24,6 @@ inherit
 			cancel
 		end
 
-	ETEST_EVALUATOR_BYTE_CODE_FACTORY
-		export
-			{NONE} all
-		end
-
 	AST_TYPE_A_GENERATOR
 		export
 			{NONE}
@@ -61,7 +56,6 @@ feature {NONE} -- Initialization
 			create empty_tasks.make (0)
 			create occupied_controllers.make (10)
 			tasks := empty_tasks
-			create byte_code_factory
 			create l_service
 			if
 				l_service.is_service_available and then
@@ -121,9 +115,6 @@ feature {NONE} -- Access
 
 	max_controller_count: NATURAL
 			-- Maximum number of controllers the can be launched in parallel
-
-	byte_code_factory: ETEST_EVALUATOR_BYTE_CODE_FACTORY
-			-- Factory for creating byte code instructions
 
 	testing_directory: DIRECTORY_NAME
 			-- Directory in which tests should be executed
@@ -232,46 +223,25 @@ feature {NONE} -- Status setting
 			-- `a_task_data': Task data of controller to be launched.
 		require
 			a_task_data_attached: a_task_data /= Void
-			a_task_data_has_test: a_task_data.test /= Void
 		local
-			l_test: detachable ETEST
-			l_byte_code: STRING
-			l_generics: TYPE_LIST_AS
-			l_type: GENERIC_CLASS_TYPE_AS
+			l_body_id: INTEGER_32
 			l_tag_tree: TAG_TREE [TEST_I]
 			l_isolated: BOOLEAN
 			l_controller: like new_controller
 		do
-			l_test := a_task_data.test
-			check l_test /= Void end
-			a_task_data.isolated := False
-			if
-				attached l_test.eiffel_class.compiled_representation as l_test_class and then
-				attached l_test_class.feature_named (l_test.routine_name) as l_test_routine
-			then
-				create l_generics.make (1)
-				l_generics.force (create {CLASS_TYPE_AS}.initialize (create {ID_AS}.initialize(l_test_class.name)))
-				create l_type.initialize (create {ID_AS}.initialize ({ETEST_CONSTANTS}.eqa_test_evaluator), l_generics)
-
-					-- Check if all required evaluator classes/types/features are compiled
+			check attached a_task_data.test as l_test then
+				a_task_data.isolated := False
 				if
-					attached etest_suite.project_access.class_from_name ({ETEST_CONSTANTS}.eqa_evaluator_root, Void) as l_evaluator_class and then
-					attached {EIFFEL_CLASS_C} l_evaluator_class.compiled_representation as l_evaluator and then
-					not l_evaluator.types.is_empty and then
-					attached l_evaluator.feature_named ({ETEST_CONSTANTS}.eqa_evaluator_routine) as l_evaluator_routine and then
-					l_evaluator_routine.valid_body_id and then
-					attached l_test.eiffel_class.is_compiled and then
-					attached evaluate_type_if_possible (l_type, l_evaluator) as l_evaluator_type
+					attached l_test.eiffel_class.compiled_representation as l_test_class and then
+					not l_test_class.is_generic and then
+					attached l_test_class.feature_named (l_test.routine_name) as l_test_routine
 				then
-						-- Create byte code
-					l_byte_code := byte_code_factory.execute_test_code (l_test, l_evaluator, l_evaluator_routine)
+					l_body_id := l_test_routine.real_body_id (l_test_class.types.first) - 1
 
-						-- Set breakpoint if debugging
 					if test_execution.is_debugging then
 						set_breakpoint (a_task_data, l_test_routine)
 					end
 
-						-- Pass byte code to available controller
 					l_controller := a_task_data.task
 					if l_controller.is_running then
 						l_tag_tree := test_execution.test_suite.tag_tree
@@ -284,12 +254,10 @@ feature {NONE} -- Status setting
 							a_task_data.isolated := True
 						end
 					end
-					l_controller.launch_test ([l_byte_code, l_test.name.as_string_8], l_evaluator, l_evaluator_routine)
+					l_controller.launch_test ([l_test.name.to_string_8, l_test_class.name.to_string_8, l_body_id])
 				else
-					test_execution.report_result (l_test, create {TEST_UNRESOLVED_RESULT}.make (e_no_bytecode_tag, e_no_bytecode_details, e_no_bytecode_details, [l_test.name]))
+					test_execution.report_result (l_test, create {TEST_UNRESOLVED_RESULT}.make (e_test_not_compiled_tag, e_test_not_compiled_details, e_test_not_compiled_details, [l_test.name, l_test.class_name]))
 				end
-			else
-				test_execution.report_result (l_test, create {TEST_UNRESOLVED_RESULT}.make (e_test_not_compiled_tag, e_test_not_compiled_details, e_test_not_compiled_details, [l_test.name, l_test.class_name]))
 			end
 		end
 

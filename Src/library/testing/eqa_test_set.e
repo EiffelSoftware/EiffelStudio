@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	frozen asserter: like new_asserter
+	asserter: like new_asserter
 			-- Assertions used to raise an exception to report unexpected behaviour.
 			--
 			-- Note: to extend or modify the asserter, redefine `new_asserter'.
@@ -71,7 +71,7 @@ feature -- Access
 			asserter_attached: Result /= Void
 		end
 
-	frozen file_system: like new_file_system
+	file_system: like new_file_system
 			-- File system for creating directories and files
 			--
 			-- Note: to extend or modify the file system, redefine `new_file_system'.

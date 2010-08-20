@@ -107,7 +107,7 @@ feature -- Processing
 							count := count - 1
 						end
 
-							-- Once we have called {TEST_SYSTEM_I}.post_process_degree_5, we add
+							-- Once we have called {TEST_SYSTEM_I}.add_possible_testing_classes, we add
 							-- every processed class to the supplier table
 						if l_testing_suppliers /= Void then
 							l_testing_suppliers.force (l_class)

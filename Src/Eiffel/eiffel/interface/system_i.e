@@ -1861,7 +1861,8 @@ end
 					end
 				end -- if a_system_check
 
-					-- Search system for descendants of {EQA_TEST_SET} and insert them in `l_cache'
+					-- Remove any classes which have previously been added by {TEST_SYSTEM_I}
+					-- and are not needed for testing
 				if test_system.is_testing_enabled then
 					test_system.remove_unused_classes
 				end
@@ -4045,6 +4046,9 @@ feature -- Generation
 				loop
 						-- Types of the class
 					a_class := class_list.item (i)
+
+						-- The following check is needed as `class_list' can contain Void items after Degree 4
+						-- when {TEST_SYSTEM_I} removed unused classes.
 					if a_class /= Void then
 						types := a_class.types
 						l_class_is_finalized := not a_class.is_precompiled or else a_class.is_in_system
@@ -5181,6 +5185,8 @@ feature -- Pattern table generation
 					root_creators.after
 				loop
 					l_root := root_creators.item_for_iteration
+
+						-- In a final systems explicit roots are no longer present
 					if not l_root.procedure_name.is_empty and not l_root.is_explicit then
 						l_root_type := root_class_type (l_root.class_type)
 						l_root_cl := l_root_type.associated_class
@@ -5814,6 +5820,7 @@ feature {NONE} -- Element change: Root creators
 			-- `a_class_name': Name of class in which creation procedure is declared.
 			-- `a_feature_name': Name of creation procedure (if Eempty, it will be replaced with the name
 			--                   of the default create feature of the corresponding class.
+			-- `a_explicit': True if root is read from `explicit_root', False if it represents CONF_ROOT.
 		require
 			universe_not_void: universe /= Void
 			target_not_void: universe.target /= Void

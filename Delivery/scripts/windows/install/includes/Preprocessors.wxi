@@ -31,8 +31,12 @@
       <?endif?>
       <?ifdef x64?>
         <?define ProductGuid = "4C57016C-3B4D-4d42-84C1-E5F82F0B0947" ?>
+		<?define RegistriesGuid = "07BA878D-56CF-46b7-B35B-8D867623855C" ?>
+		<?define ShortcutsGuid = "3BA612B9-4D41-4145-83D8-EB696BE9320D" ?>
       <?else?>
         <?define ProductGuid = "E4DD63EB-8D88-435f-B971-621E2738E478" ?>
+		<?define RegistriesGuid = "658F5BC2-DA92-4af3-A7F3-22B2108FDB73" ?>
+		<?define ShortcutsGuid = "BDA545AF-B201-4fe8-A74E-91FEEC0899AB" ?>
       <?endif?>
       <?define UpgradeGuid = "819BEBD3-BC0E-43b4-B34B-5867310648CF" ?>
       <?define Product = "EiffelStudio" ?>

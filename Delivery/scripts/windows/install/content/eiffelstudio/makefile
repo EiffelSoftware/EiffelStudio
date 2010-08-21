@@ -67,7 +67,7 @@ studio_gobo.wxs:
 studio_compatible.wxs:
 	$(HALLOW) $(HALLOW_FLAGS) "$(INSTALL_DIR)\EiffelStudio\compatible\library" \
 		-dr:"Dir.Core.compatible.library" -de:"\\EiffelStudio\\compatible\\library\\gobo$$" \
-		-g:"Core.compatible" -r -n:"Core.compatible." > $@.tmp
+		-g:"Core.compatible.library" -r -n:"Core.compatible." > $@.tmp
 	move $@.tmp $@
 
 studio_gobo_compatible.wxs:

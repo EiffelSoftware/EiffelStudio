@@ -271,7 +271,7 @@ feature {NONE} -- Visitor implementation
 						count := l_generics.count
 						create l_actual_generic.make (1, count)
 						l_type := l_class_c.partial_actual_type (l_actual_generic, l_as.is_expanded,
-							l_as.is_separate)
+							l_as.has_separate_mark)
 					until
 						i > count or l_has_error
 					loop
@@ -287,7 +287,7 @@ feature {NONE} -- Visitor implementation
 						last_type := l_type
 					end
 				else
-					l_type := l_class_c.partial_actual_type (Void, l_as.is_expanded, l_as.is_separate)
+					l_type := l_class_c.partial_actual_type (Void, l_as.is_expanded, l_as.has_separate_mark)
 					last_type := l_type
 				end
 				if l_type /= Void then

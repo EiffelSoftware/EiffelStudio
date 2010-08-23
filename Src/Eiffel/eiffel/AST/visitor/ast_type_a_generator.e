@@ -125,6 +125,9 @@ feature {NONE} -- Visitor implementation
 			elseif l_as.has_detachable_mark then
 				t.set_detachable_mark
 			end
+			if l_as.has_separate_mark then
+				t.set_separate_mark
+			end
 			last_type := t
 		end
 
@@ -138,6 +141,9 @@ feature {NONE} -- Visitor implementation
 				l_cur.set_attached_mark
 			elseif l_as.has_detachable_mark then
 				l_cur.set_detachable_mark
+			end
+			if l_as.has_separate_mark then
+				l_cur.set_separate_mark
 			end
 			last_type := l_cur
 		end
@@ -166,6 +172,9 @@ feature {NONE} -- Visitor implementation
 					t.set_attached_mark
 				elseif l_as.has_detachable_mark then
 					t.set_detachable_mark
+				end
+				if l_as.has_separate_mark then
+					t.set_separate_mark
 				end
 				last_type := t
 			end
@@ -248,6 +257,9 @@ feature {NONE} -- Visitor implementation
 					end
 				end
 			end
+			if l_as.has_separate_mark then
+				f.set_separate_mark
+			end
 		end
 
 	process_class_type_as (l_as: CLASS_TYPE_AS)
@@ -314,6 +326,9 @@ feature {NONE} -- Visitor implementation
 						end
 						l_type.set_is_attached
 					end
+					if l_as.has_separate_mark then
+						l_type.set_separate_mark
+					end
 				end
 			else
 				check failure_enabled: is_failure_enabled end
@@ -379,6 +394,9 @@ feature {NONE} -- Visitor implementation
 							l_type.set_detachable_mark
 						elseif current_class.lace_class.is_attached_by_default then
 							l_type.set_is_attached
+						end
+						if l_as.has_separate_mark then
+							l_type.set_separate_mark
 						end
 					end
 					last_type := l_type

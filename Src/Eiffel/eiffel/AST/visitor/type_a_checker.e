@@ -767,22 +767,14 @@ feature {TYPE_A} -- Visitors
 			if l_anchor_feature /= Void then
 					-- Create instance of LIKE_FEATURE
 				create l_like_feature.make (l_anchor_feature, current_class.class_id)
-				if a_type.has_attached_mark then
-					l_like_feature.set_attached_mark
-				elseif a_type.has_detachable_mark then
-					l_like_feature.set_detachable_mark
-				end
+				l_like_feature.set_marks_from (a_type)
 				update_like_feature (l_anchor_feature, l_like_feature)
 			else
 				l_argument_position := current_feature.argument_position (a_type.anchor_name_id)
 				if l_argument_position /= 0 then
 					create l_like_argument
 					l_like_argument.set_position (l_argument_position)
-					if a_type.has_attached_mark then
-						l_like_argument.set_attached_mark
-					elseif a_type.has_detachable_mark then
-						l_like_argument.set_detachable_mark
-					end
+					l_like_argument.set_marks_from (a_type)
 					update_like_argument (current_feature, l_like_argument)
 				else
 					last_type := Void
@@ -806,11 +798,7 @@ feature {TYPE_A} -- Visitors
 			r: QUALIFIED_ANCHORED_TYPE_A
 		do
 			create r.make (t.qualifier, t.chain, current_class.class_id)
-			if t.has_attached_mark then
-				r.set_attached_mark
-			elseif t.has_detachable_mark then
-				r.set_detachable_mark
-			end
+			r.set_marks_from (t)
 			update_immediate_qualified_anchored_type (r)
 		end
 

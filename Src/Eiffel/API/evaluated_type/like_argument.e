@@ -39,8 +39,7 @@ feature -- Comparison
 		do
 			Result := position = other.position and then
 				equivalent (actual_type, other.actual_type) and then
-				has_attached_mark = other.has_attached_mark and then
-				has_detachable_mark = other.has_detachable_mark
+				has_same_marks (other)
 		end
 
 feature -- Access
@@ -53,7 +52,7 @@ feature -- Access
 			other_like_arg ?= other
 			if other_like_arg /= Void then
 				Result := other_like_arg.position = position and then
-					has_same_attachment_marks (other_like_arg)
+					has_same_marks (other_like_arg)
 			end
 		end
 
@@ -96,11 +95,7 @@ feature -- Output
 			actual_dump := actual_type.dump
 			create Result.make (16 + actual_dump.count)
 			Result.append_character ('[')
-			if has_attached_mark then
-				Result.append_character ('!')
-			elseif has_detachable_mark then
-				Result.append_character ('?')
-			end
+			dump_marks (Result)
 			Result.append ("like arg#")
 			Result.append_integer (position)
 			Result.append ("] ")
@@ -110,13 +105,7 @@ feature -- Output
 	ext_append_to (st: TEXT_FORMATTER; c: CLASS_C)
 		do
 			st.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_L_bracket)
-			if has_attached_mark then
-				st.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_attached_keyword, Void)
-				st.add_space
-			elseif has_detachable_mark then
-				st.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_detachable_keyword, Void)
-				st.add_space
-			end
+			ext_append_marks (st)
 			st.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_Like_keyword, Void)
 			st.add_space
 			--Martins 2/6/2007: this code here does not work anymore because of switch from E_FAETURE to CLASS_C
@@ -166,7 +155,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -179,22 +168,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class LIKE_ARGUMENT

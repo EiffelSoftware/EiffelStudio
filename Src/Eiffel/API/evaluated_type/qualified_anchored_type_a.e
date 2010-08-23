@@ -123,7 +123,7 @@ feature -- Comparison
 				attached {QUALIFIED_ANCHORED_TYPE_A} other as o and then
 				qualifier.same_as (o.qualifier) and then
 				chain ~ o.chain and then
-				has_same_attachment_marks (o)
+				has_same_marks (o)
 			then
 					-- Compare computed actual types as otherwise they may be left
 					-- from the previous compilation in an invalid state.
@@ -318,11 +318,7 @@ feature -- Output
 			s := actual_type.dump
 			create Result.make (20 + s.count)
 			Result.append_character ('[')
-			if has_attached_mark then
-				Result.append_character ('!')
-			elseif has_detachable_mark then
-				Result.append_character ('?')
-			end
+			dump_marks (Result)
 			Result.append ("like {")
 			Result.append (qualifier.dump)
 			Result.append ("}")
@@ -348,13 +344,7 @@ feature -- Output
 			f: detachable E_FEATURE
 		do
 			st.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_l_bracket)
-			if has_attached_mark then
-				st.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_attached_keyword, Void)
-				st.add_space
-			elseif has_detachable_mark then
-				st.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_detachable_keyword, Void)
-				st.add_space
-			end
+			ext_append_marks (st)
 			st.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_like_keyword, Void)
 			st.add_space
 			st.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_l_curly)
@@ -445,11 +435,7 @@ feature -- Primitives
 					-- `q' holds the type relative to `a_ancestor'.
 					-- `d' holds the type relative to `a_descendant'.
 				Result.set_actual_type (d)
-				if has_attached_mark then
-					Result.set_attached_mark
-				elseif has_detachable_mark then
-					Result.set_detachable_mark
-				end
+				Result.set_marks_from (Current)
 			else
 				Result := Current
 			end
@@ -463,7 +449,7 @@ feature -- Comparison
 			Result :=
 				equivalent (qualifier, other.qualifier) and then
 				chain ~ other.chain and then
-				has_same_attachment_marks (other)
+				has_same_marks (other)
 		end
 
 	is_syntactically_equal (other: TYPE_A): BOOLEAN
@@ -475,7 +461,7 @@ feature -- Comparison
 				Result :=
 					qualifier.is_syntactically_equal (o.qualifier) and then
 					chain ~ o.chain and then
-					has_same_attachment_marks (o)
+					has_same_marks (o)
 			end
 		end
 

@@ -151,7 +151,7 @@ feature -- Properties
 		do
 			if other.is_like_current then
 				l ?= other
-				Result := has_same_attachment_marks (l)
+				Result := has_same_marks (l)
 			end
 		end
 
@@ -228,11 +228,7 @@ feature -- Output
 			actual_dump := conformance_type.dump
 			create Result.make (17 + actual_dump.count)
 			Result.append_character ('[')
-			if has_attached_mark then
-				Result.append_character ('!')
-			elseif has_detachable_mark then
-				Result.append_character ('?')
-			end
+			dump_marks (Result)
 			Result.append ("like Current] ")
 			Result.append (actual_dump)
 		end
@@ -240,13 +236,7 @@ feature -- Output
 	ext_append_to (st: TEXT_FORMATTER; c: CLASS_C)
 		do
 			st.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_L_bracket)
-			if has_attached_mark then
-				st.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_attached_keyword, Void)
-				st.add_space
-			elseif has_detachable_mark then
-				st.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_detachable_keyword, Void)
-				st.add_space
-			end
+			ext_append_marks (st)
 			st.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_Like_keyword, Void)
 			st.add_space
 			st.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_Current, Void)

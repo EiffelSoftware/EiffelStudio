@@ -110,7 +110,7 @@ feature -- Access
 				attached {LIKE_FEATURE} other as o and then
 				o.routine_id = routine_id and then
 				o.feature_id = feature_id and then
-				has_same_attachment_marks (o)
+				has_same_marks (o)
 			then
 					-- Compare computed actual types as otherwise they may be left
 					-- from the previous compilation in an invalid state.
@@ -174,11 +174,7 @@ feature -- Output
 			s := actual_type.dump
 			create Result.make (20 + s.count)
 			Result.append_character ('[')
-			if has_attached_mark then
-				Result.append_character ('!')
-			elseif has_detachable_mark then
-				Result.append_character ('?')
-			end
+			dump_marks (Result)
 			Result.append ("like " + feature_name +"] ")
 			Result.append (s)
 		end
@@ -190,13 +186,7 @@ feature -- Output
 		do
 			ec := Eiffel_system.class_of_id (class_id)
 			st.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_l_bracket)
-			if has_attached_mark then
-				st.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_attached_keyword, Void)
-				st.add_space
-			elseif has_detachable_mark then
-				st.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_detachable_keyword, Void)
-				st.add_space
-			end
+			ext_append_marks (st)
 			st.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_like_keyword, Void)
 			st.add_space
 			if ec.has_feature_table then
@@ -225,11 +215,7 @@ feature -- Primitives
 				check l_anchor_not_void: l_anchor /= Void end
 				create Result.make (l_anchor, a_descendant.class_id)
 				Result.set_actual_type (l_anchor.type.actual_type)
-				if has_attached_mark then
-					Result.set_attached_mark
-				elseif has_detachable_mark then
-					Result.set_detachable_mark
-				end
+				Result.set_marks_from (Current)
 			else
 				Result := Current
 			end
@@ -245,8 +231,7 @@ feature -- Comparison
 				feature_id = other.feature_id and then
 				equivalent (actual_type, other.actual_type) and then
 				feature_name_id = other.feature_name_id and then
-				other.has_attached_mark = has_attached_mark and then
-				other.has_detachable_mark = has_detachable_mark
+				has_same_marks (other)
 		end
 
 	is_syntactically_equal (other: TYPE_A): BOOLEAN
@@ -255,7 +240,7 @@ feature -- Comparison
 			if attached {like Current} other then
 				Result := same_as (other)
 			elseif attached {UNEVALUATED_LIKE_TYPE} other as o then
-				Result := feature_name_id = o.anchor_name_id and then has_same_attachment_marks (o)
+				Result := feature_name_id = o.anchor_name_id and then has_same_marks (o)
 			end
 		end
 

@@ -72,8 +72,8 @@ feature -- Access
 feature {SYSTEM_I, DEGREE_5} -- Access
 
 	suppliers: SEARCH_TABLE [CLASS_C]
-			-- Classes which have been added in Degree 5 and might represent descendants of {EQA_TEST_SET} or their
-			-- suppliers. After Degree 4 this table is empty.
+			-- During Degree 5 and 4 this table contains classes which might represent test classes (or serve as their
+			-- suppliers). After Degree 4 only real {EQA_TEST_SET} descendants and their suppliers remain.
 		require
 			testing_enabled: is_testing_enabled
 		do
@@ -148,9 +148,7 @@ feature {SYSTEM_I} -- Basic operations
 				-- Set `suppliers_cache' accordingly as it will define from now on
 				-- whether testing is enabled or not
 			if l_enable_testing then
-				if attached suppliers_cache as l_cache then
-					create suppliers_cache.make (l_cache.count)
-				else
+				if not attached suppliers_cache then
 					create suppliers_cache.make (0)
 				end
 			else
@@ -162,6 +160,40 @@ feature {SYSTEM_I} -- Basic operations
 			adopt_eifgens_cluster (a_target, l_path)
 		end
 
+	mark_suppliers (a_mark_table: SEARCH_TABLE [INTEGER])
+			-- Mark all classes in `suppliers' in given table. If there are classes in `suppliers' which
+			-- are already marked, remove them as they are referenced by the system.
+			--
+			-- `a_mark_table': Table in which `suppliers' should be marked.
+		local
+			l_suppliers, l_new_suppliers: like suppliers
+			l_class: CLASS_C
+		do
+			from
+				l_suppliers := suppliers
+				create l_new_suppliers.make (l_suppliers.count)
+				l_suppliers.start
+			until
+				l_suppliers.after
+			loop
+				l_class := l_suppliers.item_for_iteration
+				if not a_mark_table.has (l_class.class_id) then
+					l_new_suppliers.force (l_class)
+				end
+				l_suppliers.forth
+			end
+
+			from
+				suppliers_cache := l_new_suppliers
+				l_new_suppliers.start
+			until
+				l_new_suppliers.after
+			loop
+				l_new_suppliers.item_for_iteration.mark_class (a_mark_table)
+				l_new_suppliers.forth
+			end
+		end
+
 	remove_unused_classes
 			-- Remove classes from `suppliers' and from system if they do not serve as
 			-- suppliers for descendants of {EQA_TEST_SET}.
@@ -171,7 +203,7 @@ feature {SYSTEM_I} -- Basic operations
 			l_marked_classes: SEARCH_TABLE [INTEGER]
 			l_descandants: like test_set_descendants
 			l_system: like system
-			l_suppliers: like suppliers
+			l_suppliers, l_new_suppliers: like suppliers
 			l_class: CLASS_C
 		do
 			create l_marked_classes.make ({SYSTEM_I}.system_chunk)
@@ -193,19 +225,20 @@ feature {SYSTEM_I} -- Basic operations
 				l_suppliers := suppliers
 				l_system := system
 				l_suppliers.start
+				create l_new_suppliers.make (l_suppliers.count)
 			until
 				l_suppliers.after
 			loop
 				l_class := l_suppliers.item_for_iteration
 				if not l_marked_classes.has (l_class.class_id) then
 					l_system.remove_class (l_class)
+				else
+					l_new_suppliers.force (l_class)
 				end
 				l_suppliers.forth
 			end
 			l_system.process_removed_classes
-			l_suppliers.wipe_out
-		ensure
-			suppliers_empty: suppliers.is_empty
+			suppliers_cache := l_new_suppliers
 		end
 
 feature {DEGREE_5} -- Basic operations

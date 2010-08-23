@@ -2267,15 +2267,7 @@ end
 
 				-- Mark classes possibly needed for testing
 			if test_system.is_testing_enabled then
-				from
-					l_testing_classes := test_system.suppliers
-					l_testing_classes.start
-				until
-					l_testing_classes.after
-				loop
-					l_testing_classes.item_for_iteration.mark_class (marked_classes)
-					l_testing_classes.forth
-				end
+				test_system.mark_suppliers (marked_classes)
 			end
 
 				-- Remove all the classes that cannot be reached if they are

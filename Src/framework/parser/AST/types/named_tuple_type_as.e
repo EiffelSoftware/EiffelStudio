@@ -158,8 +158,7 @@ feature -- Comparison
 		do
 			Result := equivalent (class_name, other.class_name) and then
 				equivalent (parameters, other.parameters) and then
-				has_attached_mark = other.has_attached_mark and then
-				has_detachable_mark = other.has_detachable_mark
+				has_same_marks (other)
 		end
 
 feature {AST_FACTORY, COMPILER_EXPORTER} -- Conveniences
@@ -177,11 +176,7 @@ feature {AST_FACTORY, COMPILER_EXPORTER} -- Conveniences
 			l_generics: like generics
 		do
 			create Result.make (class_name.name.count + 4)
-			if has_attached_mark then
-				Result.append_character ('!')
-			elseif has_detachable_mark then
-				Result.append_character ('?')
-			end
+			dump_marks (Result)
 			Result.append (class_name.name)
 			from
 				l_generics := generics

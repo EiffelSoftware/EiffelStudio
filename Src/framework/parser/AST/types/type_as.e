@@ -156,6 +156,19 @@ feature -- Status
 				-- False by default.
 		end
 
+feature -- Comparison
+
+	has_same_marks (other: TYPE_AS): BOOLEAN
+			-- Are type marks of `Current' and `other' the same?
+		require
+			other_attached: attached other
+		do
+			Result :=
+				other.has_attached_mark = has_attached_mark and then
+				other.has_detachable_mark = has_detachable_mark and then
+				other.has_separate_mark = has_separate_mark
+		end
+
 feature -- Modification
 
 	set_attachment_mark (m: LEAF_AS; a: like has_attached_mark; d: like has_detachable_mark)
@@ -194,6 +207,21 @@ feature -- Output
 	dump: STRING
 			-- Dumped trace
 		deferred
+		end
+
+	dump_marks (s: STRING)
+			-- Append attachment and separate marks (if any) to `s'.
+		require
+			s_attached: attached s
+		do
+			if has_attached_mark then
+				s.append_character ('!')
+			elseif has_detachable_mark then
+				s.append_character ('?')
+			end
+			if has_separate_mark then
+				s.append_string ("separate ")
+			end
 		end
 
 note

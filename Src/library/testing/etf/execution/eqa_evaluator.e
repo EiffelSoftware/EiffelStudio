@@ -122,13 +122,15 @@ feature {NONE} -- Execution
 			l_type: like dynamic_type_from_string
 			l_result: detachable like execute_test
 		do
-			l_type := dynamic_type_from_string ("EQA_TEST_EVALUATOR [" + a_name.as_upper + "]")
+			l_type := dynamic_type_from_string ("EQA_TEST_EVALUATOR [attached " + a_name.as_upper + "]")
 			if attached {EQA_TEST_EVALUATOR [EQA_TEST_SET]} new_instance_of (l_type) as l_eval then
 				l_result := l_eval.execute (agent invoke_routine (?, a_rout_id))
 			else
 				check bad: l_result /= Void end
 			end
 			Result := l_result
+		ensure
+			result_attached: Result /= Void
 		end
 
 note

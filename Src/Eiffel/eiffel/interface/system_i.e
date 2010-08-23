@@ -2171,7 +2171,6 @@ end
 			class_array: ARRAY [CLASS_C]
 			i, nb: INTEGER
 			marked_classes: SEARCH_TABLE [INTEGER]
-			l_testing_classes: SEARCH_TABLE [CLASS_C]
 		do
 				-- First mark all the classes that can be reached
 				-- from the root class

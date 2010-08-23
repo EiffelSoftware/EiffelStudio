@@ -106,21 +106,12 @@ feature {TYPE_A} -- Visitors
 		local
 			l_class: CLASS_C
 		do
-			if a_type.has_attached_mark then
-				text_formatter.process_keyword_text (ti_attached_keyword, Void)
-				text_formatter.add_space
-			elseif a_type.has_detachable_mark then
-				text_formatter.process_keyword_text (ti_detachable_keyword, Void)
-				text_formatter.add_space
-			end
+			process_attachable_type_a (a_type)
 			if a_type.has_expanded_mark then
 				text_formatter.process_keyword_text (ti_expanded_keyword, Void)
 				text_formatter.add_space
 			elseif a_type.has_reference_mark then
 				text_formatter.process_keyword_text (ti_reference_keyword, Void)
-				text_formatter.add_space
-			elseif a_type.has_separate_mark then
-				text_formatter.process_keyword_text (ti_separate_keyword, Void)
 				text_formatter.add_space
 			end
 			l_class := a_type.associated_class
@@ -136,13 +127,7 @@ feature {TYPE_A} -- Visitors
 	process_formal_a (a_type: FORMAL_A)
 			-- Process `a_type'.
 		do
-			if a_type.has_attached_mark then
-				text_formatter.process_keyword_text (ti_attached_keyword, Void)
-				text_formatter.add_space
-			elseif a_type.has_detachable_mark then
-				text_formatter.process_keyword_text (ti_detachable_keyword, Void)
-				text_formatter.add_space
-			end
+			process_attachable_type_a (a_type)
 			if current_feature /= Void and then current_feature.has_replicated_ast then
 					-- Current feature may be Void.
 					-- If not we check if the feature has a replicated AST, in which case
@@ -189,13 +174,7 @@ feature {TYPE_A} -- Visitors
 	process_like_argument (a_type: LIKE_ARGUMENT)
 			-- Process `a_type'.
 		do
-			if a_type.has_attached_mark then
-				text_formatter.process_keyword_text (ti_attached_keyword, Void)
-				text_formatter.add_space
-			elseif a_type.has_detachable_mark then
-				text_formatter.process_keyword_text (ti_detachable_keyword, Void)
-				text_formatter.add_space
-			end
+			process_attachable_type_a (a_type)
 			text_formatter.process_keyword_text (ti_like_keyword, Void)
 			text_formatter.add_space
 			if current_feature /= Void and then current_feature.argument_count <= a_type.position then
@@ -209,13 +188,7 @@ feature {TYPE_A} -- Visitors
 	process_like_current (a_type: LIKE_CURRENT)
 			-- Process `a_type'.
 		do
-			if a_type.has_attached_mark then
-				text_formatter.process_keyword_text (ti_attached_keyword, Void)
-				text_formatter.add_space
-			elseif a_type.has_detachable_mark then
-				text_formatter.process_keyword_text (ti_detachable_keyword, Void)
-				text_formatter.add_space
-			end
+			process_attachable_type_a (a_type)
 			text_formatter.process_keyword_text (ti_like_keyword, Void)
 			text_formatter.add_space
 			text_formatter.process_keyword_text (ti_current, Void)
@@ -226,13 +199,7 @@ feature {TYPE_A} -- Visitors
 		local
 			l_feat: E_FEATURE
 		do
-			if a_type.has_attached_mark then
-				text_formatter.process_keyword_text (ti_attached_keyword, Void)
-				text_formatter.add_space
-			elseif a_type.has_detachable_mark then
-				text_formatter.process_keyword_text (ti_detachable_keyword, Void)
-				text_formatter.add_space
-			end
+			process_attachable_type_a (a_type)
 			text_formatter.process_keyword_text (ti_like_keyword, Void)
 			text_formatter.add_space
 			l_feat := current_class.feature_with_rout_id (a_type.routine_id)
@@ -265,10 +232,6 @@ feature {TYPE_A} -- Visitors
 		local
 			i, count: INTEGER
 		do
-			if a_type.is_separate then
-				text_formatter.process_symbol_text (ti_separate_keyword)
-				text_formatter.add_space
-			end
 			process_cl_type_a (a_type)
 				-- TUPLE may have zero generic parameters
 			count := a_type.generics.count
@@ -331,13 +294,7 @@ feature {TYPE_A} -- Visitors
 			n: INTEGER_32
 			i: INTEGER
 		do
-			if a_type.has_attached_mark then
-				text_formatter.process_keyword_text (ti_attached_keyword, Void)
-				text_formatter.add_space
-			elseif a_type.has_detachable_mark then
-				text_formatter.process_keyword_text (ti_detachable_keyword, Void)
-				text_formatter.add_space
-			end
+			process_attachable_type_a (a_type)
 			if a_type.qualifier.is_like then
 				a_type.qualifier.process (Current)
 			else
@@ -406,6 +363,7 @@ feature {TYPE_A} -- Visitors
 	process_unevaluated_like_type (a_type: UNEVALUATED_LIKE_TYPE)
 			-- Process `a_type'.
 		do
+			process_attachable_type_a (a_type)
 			text_formatter.process_keyword_text (ti_like_keyword, Void)
 			text_formatter.add_space
 			text_formatter.process_local_text (a_type.anchor)
@@ -416,13 +374,7 @@ feature {TYPE_A} -- Visitors
 		local
 			i, nb: INTEGER
 		do
-			if a_type.has_attached_mark then
-				text_formatter.process_keyword_text (ti_attached_keyword, Void)
-				text_formatter.add_space
-			elseif a_type.has_detachable_mark then
-				text_formatter.process_keyword_text (ti_detachable_keyword, Void)
-				text_formatter.add_space
-			end
+			process_attachable_type_a (a_type)
 			if a_type.qualifier.is_like then
 				a_type.qualifier.process (Current)
 			else
@@ -448,6 +400,26 @@ feature {TYPE_A} -- Visitors
 			-- Process `a_type'.
 		do
 			text_formatter.process_keyword_text (ti_void, Void)
+		end
+
+feature {NONE} -- Generic visitors
+
+	process_attachable_type_a (t: ATTACHABLE_TYPE_A)
+			-- Output marks leading marks of `t'.
+		require
+			t_attached: attached t
+		do
+			if t.has_attached_mark then
+				text_formatter.process_keyword_text (ti_attached_keyword, Void)
+				text_formatter.add_space
+			elseif t.has_detachable_mark then
+				text_formatter.process_keyword_text (ti_detachable_keyword, Void)
+				text_formatter.add_space
+			end
+			if t.has_separate_mark then
+				text_formatter.process_keyword_text (ti_separate_keyword, Void)
+				text_formatter.add_space
+			end
 		end
 
 note

@@ -165,6 +165,8 @@ feature {SYSTEM_I} -- Basic operations
 			-- are already marked, remove them as they are referenced by the system.
 			--
 			-- `a_mark_table': Table in which `suppliers' should be marked.
+		require
+			testing_enabled: is_testing_enabled
 		local
 			l_suppliers, l_new_suppliers: like suppliers
 			l_class: CLASS_C

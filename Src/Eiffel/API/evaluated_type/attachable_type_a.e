@@ -17,6 +17,7 @@ inherit
 			as_attachment_mark_free,
 			is_attached,
 			is_implicitly_attached,
+			is_separate,
 			to_other_attachment,
 			to_other_immediate_attachment
 		end
@@ -53,10 +54,19 @@ feature -- Status report
 			Result := (attachment_bits & (is_attached_mask | is_implicitly_attached_mask) /= {NATURAL_8} 0) or else is_expanded
 		end
 
+	has_separate_mark: BOOLEAN
+			-- Is type explicitly marked as separate?
+
+	is_separate: BOOLEAN
+			-- <Precursor>
+		do
+			Result := has_separate_mark and then not is_expanded
+		end
+
 feature -- Modification
 
 	set_attached_mark
-			-- Mark class type declaration as having an explicit attached mark.
+			-- Mark type declaration as having an explicit attached mark.
 		do
 			attachment_bits := has_attached_mark_mask | is_attached_mask
 		ensure then
@@ -65,7 +75,7 @@ feature -- Modification
 		end
 
 	set_detachable_mark
-			-- Set class type declaration as having an explicit detachable mark.
+			-- Mark type declaration as having an explicit detachable mark.
 		do
 			attachment_bits := has_detachable_mark_mask
 		ensure then
@@ -104,16 +114,38 @@ feature -- Modification
 			not_is_implicitly_attached: not is_implicitly_attached
 		end
 
+	set_separate_mark
+			-- Mark type declaration as having an explicit separate mark.
+		do
+			has_separate_mark := True
+		end
+
+	set_marks_from (other: ATTACHABLE_TYPE_A)
+			-- Set attachment marks as they are set in `other'.
+		require
+			other_attached: attached other
+		do
+			if other.has_attached_mark then
+				set_attached_mark
+			elseif other.has_detachable_mark then
+				set_detachable_mark
+			end
+			if other.has_separate_mark then
+				set_separate_mark
+			end
+		end
+
 feature -- Comparison
 
-	has_same_attachment_marks (other: ATTACHABLE_TYPE_A): BOOLEAN
-			-- Are attachment marks of `Current' and `other' the same?
+	has_same_marks (other: ATTACHABLE_TYPE_A): BOOLEAN
+			-- Are type marks of `Current' and `other' the same?
 		require
 			other_attached: other /= Void
 		do
 			Result :=
 				has_attached_mark = other.has_attached_mark and then
-				has_detachable_mark = other.has_detachable_mark
+				has_detachable_mark = other.has_detachable_mark and then
+				has_separate_mark = other.has_separate_mark
 		end
 
 feature -- Duplication
@@ -237,8 +269,44 @@ feature {NONE} -- Attachment properties
 	is_attached_mask: NATURAL_8 = 4
 			-- Mask in `attachment_bits' that tells whether the type is attached
 
-	is_implicitly_attached_mask: NATURAL_8 = 8;
+	is_implicitly_attached_mask: NATURAL_8 = 8
 			-- Mask in `attachment_bits' that tells whether the type is implicitly attached
+
+feature {NONE} -- Output
+
+	dump_marks (s: STRING)
+			-- Append leading type marks to `s'.
+		require
+			s_attached: attached s
+		do
+			if has_attached_mark then
+				s.append_character ('!')
+			elseif has_detachable_mark then
+				s.append_character ('?')
+			end
+			if has_separate_mark then
+				s.append ({SHARED_TEXT_ITEMS}.ti_separate_keyword)
+				s.append_character (' ')
+			end
+		end
+
+	ext_append_marks (f: TEXT_FORMATTER)
+			-- Append leading type marks using formatter `t'.
+		require
+			f_attached: attached f
+		do
+			if has_attached_mark then
+				f.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_attached_keyword, Void)
+				f.add_space
+			elseif has_detachable_mark then
+				f.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_detachable_keyword, Void)
+				f.add_space
+			end
+			if has_separate_mark then
+				f.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_separate_keyword, Void)
+				f.add_space
+			end
+		end
 
 note
 	copyright:	"Copyright (c) 1984-2010, Eiffel Software"

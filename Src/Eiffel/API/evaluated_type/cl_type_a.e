@@ -10,7 +10,7 @@ class CL_TYPE_A
 inherit
 	NAMED_TYPE_A
 		redefine
-			is_expanded, is_reference, is_separate, valid_generic, is_ephemeral,
+			is_expanded, is_reference, valid_generic, is_ephemeral,
 			duplicate, meta_type, same_as, good_generics, error_generics,
 			has_expanded, internal_is_valid_for_class, convert_to,
 			description, description_with_detachable_type,
@@ -84,14 +84,6 @@ feature -- Properties
 			definition: Result = (declaration_mark = reference_mark)
 		end
 
-	has_separate_mark: BOOLEAN
-			-- Is class type explicitly marked as reference?
-		do
-			Result := declaration_mark = separate_mark
-		ensure
-			definition: Result = (declaration_mark = separate_mark)
-		end
-
 	has_actual (a_type: TYPE_A): BOOLEAN
 			-- Is `a_type' an actual parameter of Current?
 		require
@@ -128,12 +120,6 @@ feature -- Properties
 			-- Is the type a reference type?
 		do
 			Result := has_reference_mark or else (has_no_mark and then not associated_class.is_expanded)
-		end
-
-	is_separate: BOOLEAN
-			-- Is the type separate?
-		do
-			Result := has_separate_mark
 		end
 
 	is_full_named_type: BOOLEAN
@@ -193,8 +179,7 @@ feature -- Comparison
 			other_class_type ?= other
 			Result := other_class_type /= Void and then class_id = other_class_type.class_id
 						and then is_expanded = other_class_type.is_expanded
-						and then is_separate = other_class_type.is_separate
-						and then has_same_attachment_marks (other_class_type)
+						and then has_same_marks (other_class_type)
 		end
 
 feature -- Access
@@ -310,21 +295,12 @@ feature -- Output
 
 	ext_append_to (st: TEXT_FORMATTER; c: CLASS_C)
 		do
-			if has_attached_mark then
-				st.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_attached_keyword, Void)
-				st.add_space
-			elseif has_detachable_mark then
-				st.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_detachable_keyword, Void)
-				st.add_space
-			end
+			ext_append_marks (st)
 			if has_expanded_mark then
 				st.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_expanded_keyword, Void)
 				st.add_space
 			elseif has_reference_mark then
 				st.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_reference_keyword, Void)
-				st.add_space
-			elseif has_separate_mark then
-				st.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_separate_keyword, Void)
 				st.add_space
 			end
 			associated_class.append_name (st)
@@ -345,19 +321,12 @@ feature -- Output
 				n := n + 10
 			end
 			create Result.make (n)
-			if has_attached_mark then
-				Result.append_character ('!')
-			elseif has_detachable_mark then
-				Result.append_character ('?')
-			end
+			dump_marks (Result)
 			if has_expanded_mark then
 				Result.append ({SHARED_TEXT_ITEMS}.ti_expanded_keyword)
 				Result.append_character (' ')
 			elseif has_reference_mark then
 				Result.append ({SHARED_TEXT_ITEMS}.ti_reference_keyword)
-				Result.append_character (' ')
-			elseif has_separate_mark then
-				Result.append ({SHARED_TEXT_ITEMS}.ti_separate_keyword)
 				Result.append_character (' ')
 			end
 			Result.append (class_name)
@@ -631,14 +600,6 @@ feature {COMPILER_EXPORTER} -- Settings
 			declaration_mark := reference_mark
 		ensure
 			has_reference_mark: has_reference_mark
-		end
-
-	set_separate_mark
-			-- Set class type declaration as separate.
-		do
-			declaration_mark := separate_mark
-		ensure
-			has_separate_mark: has_separate_mark
 		end
 
 feature {COMPILER_EXPORTER} -- Conformance
@@ -962,7 +923,7 @@ feature {CL_TYPE_A, TUPLE_CLASS_B, CIL_CODE_GENERATOR} --Class type declaration 
 		require
 			valid_declaration_mark:
 				mark = no_mark or mark = expanded_mark or
-				mark = reference_mark or mark = separate_mark
+				mark = reference_mark
 		do
 			declaration_mark := mark
 		ensure
@@ -978,14 +939,11 @@ feature {CL_TYPE_A, TUPLE_CLASS_B, CIL_CODE_GENERATOR} --Class type declaration 
 	reference_mark: NATURAL_8 = 2
 			-- Reference declaration mark
 
-	separate_mark: NATURAL_8 = 3
-			-- Separate declaration mark
-
 invariant
 	class_id_positive: class_id > 0
 	valid_declaration_mark:
 		declaration_mark = no_mark or declaration_mark = expanded_mark or
-		declaration_mark = reference_mark or declaration_mark = separate_mark
+		declaration_mark = reference_mark
 	valid_class_declaration_mark:
 		class_declaration_mark = no_mark or class_declaration_mark = expanded_mark
 

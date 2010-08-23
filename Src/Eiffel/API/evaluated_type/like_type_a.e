@@ -38,6 +38,7 @@ inherit
 			is_loose,
 			is_none,
 			is_reference,
+			is_separate,
 			is_type_set,
 			internal_is_valid_for_class,
 			meta_type,
@@ -157,6 +158,12 @@ feature -- Status report
 			-- <Precursor>
 		do
 			Result := attached actual_type as a and then a.is_ephemeral
+		end
+
+	is_separate: BOOLEAN
+			-- Is current actual type a separate one?
+		do
+			Result := Precursor or else conformance_type.is_separate
 		end
 
 	is_none: BOOLEAN

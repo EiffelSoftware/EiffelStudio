@@ -119,8 +119,7 @@ feature -- Comparison
 				other_gen_type /= Void
 				and then other_gen_type.class_id = class_id
 				and then is_expanded = other_gen_type.is_expanded
-				and then is_separate = other_gen_type.is_separate
-				and then has_same_attachment_marks (other_gen_type)
+				and then has_same_marks (other_gen_type)
 			then
 				from
 					i := 1

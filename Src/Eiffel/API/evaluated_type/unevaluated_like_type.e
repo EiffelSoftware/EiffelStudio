@@ -79,8 +79,7 @@ feature -- Comparison
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := anchor_name_id = other.anchor_name_id and then
-				has_attached_mark = other.has_attached_mark and then
-				has_detachable_mark = other.has_detachable_mark
+				has_same_marks (other)
 		end
 
 	is_syntactically_equal (other: TYPE_A): BOOLEAN
@@ -89,7 +88,7 @@ feature -- Comparison
 			if attached {like Current} other then
 				Result := same_as (other)
 			elseif attached {LIKE_FEATURE} other as o then
-				Result := anchor_name_id = o.feature_name_id and then has_same_attachment_marks (o)
+				Result := anchor_name_id = o.feature_name_id and then has_same_marks (o)
 			end
 		end
 
@@ -98,13 +97,7 @@ feature -- Output
 	ext_append_to (st: TEXT_FORMATTER; c: CLASS_C)
 			-- Append Current type to `st'.
 		do
-			if has_attached_mark then
-				st.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_attached_keyword, Void)
-				st.add_space
-			elseif has_detachable_mark then
-				st.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_detachable_keyword, Void)
-				st.add_space
-			end
+			ext_append_marks (st)
 			st.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_Like_keyword, Void)
 			st.add_space
 			st.add (anchor)
@@ -113,11 +106,7 @@ feature -- Output
 	dump: STRING
 		do
 			create Result.make_empty
-			if has_attached_mark then
-				Result.append_character ('!')
-			elseif has_detachable_mark then
-				Result.append_character ('?')
-			end
+			dump_marks (Result)
 			Result.append ("like ")
 			Result.append (anchor)
 		end
@@ -139,7 +128,7 @@ feature {NONE} -- Implementation
 			o ?= other
 			Result := o /= Void	and then
 				anchor_name_id = o.anchor_name_id and then
-				has_same_attachment_marks (o)
+				has_same_marks (o)
 		end
 
 	shared_create_info, create_info: CREATE_INFO

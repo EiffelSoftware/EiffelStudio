@@ -12,30 +12,35 @@ inherit
 		rename
 			is_multi_constrained as has_multi_constrained
 		redefine
-			is_formal, is_explicit,
-			instantiation_in,
-			has_formal_generic,
-			is_loose,
-			formal_instantiation_in,
-			instantiated_in,
 			adapted_in,
-			skeleton_adapted_in,
-			evaluated_type_in_descendant,
-			same_as,
-			is_full_named_type,
-			convert_to,
+			annotation_flags,
 			check_const_gen_conformance,
-			is_reference,
-			is_expanded,
-			is_initialization_required,
-			internal_is_valid_for_class,
-			description, description_with_detachable_type,
+			convert_to,
+			description,
+			description_with_detachable_type,
+			evaluated_type_in_descendant,
+			formal_instantiation_in,
 			generated_id,
-			generate_cid, generate_cid_array, generate_cid_init,
-			make_type_byte_code,
+			generate_cid,
+			generate_cid_array,
+			generate_cid_init,
 			generate_gen_type_il,
 			generic_il_type_name,
-			annotation_flags
+			has_formal_generic,
+			instantiated_in,
+			instantiation_in,
+			internal_is_valid_for_class,
+			is_expanded,
+			is_explicit,
+			is_formal,
+			is_full_named_type,
+			is_initialization_required,
+			is_loose,
+			is_reference,
+			is_separate,
+			make_type_byte_code,
+			same_as,
+			skeleton_adapted_in
 		end
 
 	REFACTORING_HELPER
@@ -66,6 +71,14 @@ feature -- Modification
 			is_expanded := True
 		ensure
 			is_expanded: is_expanded
+		end
+
+	set_is_separate
+			-- Mark the type as being separate.
+		do
+			is_separate := True
+		ensure
+			is_separate: is_separate
 		end
 
 feature -- Visitor
@@ -106,6 +119,9 @@ feature -- Property
 
 	is_expanded: BOOLEAN
 			-- Is current constrained to be always an expanded?
+
+	is_separate: BOOLEAN
+			-- Is current constrained to be always separate?
 
 	is_single_constraint_without_renaming (a_context_class: CLASS_C): BOOLEAN
 			-- Is current type a formal type which is single constrained and the constraint has not a feature renaming?			
@@ -163,7 +179,8 @@ feature -- Comparison
 		do
 			Result := position = other.position and then
 				is_reference = other.is_reference and then
-				is_expanded = other.is_expanded
+				is_expanded = other.is_expanded and then
+				is_separate = other.is_separate
 		end
 
 feature -- Access
@@ -286,7 +303,7 @@ feature -- Access
 			other_formal ?= other
 			if other_formal /= Void then
 				Result := is_equivalent (other_formal) and then
-					has_same_attachment_marks (other_formal)
+					has_same_marks (other_formal)
 			end
 		end
 
@@ -382,6 +399,7 @@ feature -- Output
 			-- Dumped trace
 		do
 			create Result.make (3)
+			dump_marks (Result)
 			Result.append ("G#")
 			Result.append_integer (position)
 		end
@@ -391,13 +409,7 @@ feature -- Output
 			s: STRING
 			l_class: CLASS_AS
 		do
-			if has_attached_mark then
-				st.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_attached_keyword, Void)
-				st.add_space
-			elseif has_detachable_mark then
-				st.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_detachable_keyword, Void)
-				st.add_space
-			end
+			ext_append_marks (st)
 			if c /= Void then
 				l_class := c.ast
 				if l_class.generics /= Void and then l_class.generics.valid_index (position) then

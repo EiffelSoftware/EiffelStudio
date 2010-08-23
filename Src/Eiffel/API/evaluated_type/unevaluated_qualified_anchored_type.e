@@ -84,7 +84,7 @@ feature -- Comparison
 			Result :=
 				equivalent (qualifier, other.qualifier) and then
 				chain ~ other.chain and then
-				has_same_attachment_marks (other)
+				has_same_marks (other)
 		end
 
 	is_syntactically_equal (other: TYPE_A): BOOLEAN
@@ -96,7 +96,7 @@ feature -- Comparison
 				Result :=
 					qualifier.is_syntactically_equal (o.qualifier) and then
 					chain ~ o.chain and then
-					has_same_attachment_marks (o)
+					has_same_marks (o)
 			end
 		end
 
@@ -107,13 +107,7 @@ feature -- Output
 		local
 			i: INTEGER
 		do
-			if has_attached_mark then
-				st.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_attached_keyword, Void)
-				st.add_space
-			elseif has_detachable_mark then
-				st.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_detachable_keyword, Void)
-				st.add_space
-			end
+			ext_append_marks (st)
 			if qualifier.is_like then
 				qualifier.ext_append_to (st, c)
 			else
@@ -138,11 +132,7 @@ feature -- Output
 			i: INTEGER
 		do
 			create Result.make_empty
-			if has_attached_mark then
-				Result.append_character ('!')
-			elseif has_detachable_mark then
-				Result.append_character ('?')
-			end
+			dump_marks (Result)
 			Result.append ("like {")
 			Result.append_string (qualifier.dump)
 			Result.append_character ('}')

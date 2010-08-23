@@ -19,6 +19,9 @@ feature -- Roundtrip
 	attachment_mark_index: INTEGER
 			-- Index of attachment symbol (if any)
 
+	separate_mark_index: INTEGER
+			-- Index of separate symbol (if any)
+
 	lcurly_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS
 			-- Left curly symbol(s) associated with this structure if any.
 		require
@@ -72,6 +75,19 @@ feature -- Roundtrip
 			end
 		end
 
+	separate_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
+			-- Separate keyword (if any)
+		require
+			a_list_attached: attached a_list
+		local
+			i: INTEGER
+		do
+			i := separate_mark_index
+			if a_list.valid_index (i) and then attached {KEYWORD_AS} a_list.i_th (i) as k then
+				Result := k
+			end
+		end
+
 feature -- Settings
 
 	set_lcurly_symbol (s_as: SYMBOL_AS)
@@ -98,17 +114,17 @@ feature -- Roundtrip/Token
 
 	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
-			if a_list /= Void and then lcurly_symbol_index /= 0 then
-				Result := lcurly_symbol (a_list)
-			else
-				if has_new_attachment_mark_syntax then
-					if a_list /= Void and then attachment_mark_index /= 0 then
+			if attached a_list then
+				if lcurly_symbol_index /= 0 then
+					Result := lcurly_symbol (a_list)
+				elseif attachment_mark_index /= 0 then
+					if has_new_attachment_mark_syntax then
 						Result := attachment_keyword (a_list)
-					end
-				else
-					if a_list /= Void and then attachment_mark_index /= 0 then
+					else
 						Result := attachment_mark (a_list)
 					end
+				elseif separate_mark_index /= 0 then
+					Result := separate_keyword (a_list)
 				end
 			end
 		end
@@ -130,6 +146,9 @@ feature -- Status
 
 	has_new_attachment_mark_syntax: BOOLEAN
 			-- Does Current using `attached' and `detached_keyword'?
+
+	has_separate_mark: BOOLEAN
+			-- Is attached mark specified?
 
 	has_anchor: BOOLEAN
 			-- Does this type involve an anchor?
@@ -155,6 +174,19 @@ feature -- Modification
 			attachment_mark_set: (m = Void implies attachment_mark_index = 0) and then (m /= Void implies attachment_mark_index = m.index)
 			has_attached_mark_set: has_attached_mark = a
 			has_detachable_mark_set: has_detachable_mark = d
+		end
+
+	set_separate_mark (m: LEAF_AS)
+		do
+			if m = Void then
+				separate_mark_index := 0
+			else
+				separate_mark_index := m.index
+			end
+			has_separate_mark := True
+		ensure
+			separate_mark_set: (m = Void implies separate_mark_index = 0) and then (m /= Void implies separate_mark_index = m.index)
+			has_separate_mark_set: has_separate_mark
 		end
 
 feature -- Output

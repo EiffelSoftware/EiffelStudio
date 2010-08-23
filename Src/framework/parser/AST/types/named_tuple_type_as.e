@@ -48,24 +48,6 @@ feature -- Visitor
 			v.process_named_tuple_type_as (Current)
 		end
 
-feature -- Roundtrip
-
-	separate_keyword_index: INTEGER
-			-- Index of keyword "separate" associated with this structure.	
-
-	separate_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
-			-- Keyword "separate" associated with this structure.	
-		require
-			a_list_not_void: a_list /= Void
-		local
-			i: INTEGER
-		do
-			i := separate_keyword_index
-			if a_list.valid_index (i) then
-				Result ?= a_list.i_th (i)
-			end
-		end
-
 feature -- Status
 
 	has_anchor: BOOLEAN
@@ -97,9 +79,6 @@ feature -- Attributes
 
 	is_class: BOOLEAN = True
 			-- Does the Current AST represent a class?
-
-	is_separate: BOOLEAN
-			-- Is current type used with `separate' keyword?
 
 feature -- Status report
 
@@ -160,11 +139,7 @@ feature -- Roundtrip/Token
 		do
 			Result := Precursor (a_list)
 			if Result = Void then
-				if a_list /= Void and separate_keyword_index /= 0 then
-					Result := separate_keyword (a_list)
-				else
-					Result := class_name.first_token (a_list)
-				end
+				Result := class_name.first_token (a_list)
 			end
 		end
 
@@ -188,18 +163,6 @@ feature -- Comparison
 		end
 
 feature {AST_FACTORY, COMPILER_EXPORTER} -- Conveniences
-
-	set_is_separate (i: like is_separate; s_as: like separate_keyword)
-			-- Set `is_separate' to `i'.
-		do
-			is_separate := i
-			if s_as /= Void then
-				separate_keyword_index := s_as.index
-			end
-		ensure
-			is_separate_set: is_separate = i
-			separate_keyword_set: s_as /= Void implies separate_keyword_index = s_as.index
-		end
 
 	set_class_name (s: like class_name)
 			-- Assign `s' to `class_name'.

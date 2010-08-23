@@ -97,8 +97,7 @@ feature -- Comparison
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := equivalent (anchor, other.anchor) and then
-				has_attached_mark = other.has_attached_mark and then
-				has_detachable_mark = other.has_detachable_mark
+				has_same_marks (other)
 		end
 
 feature -- Output
@@ -107,11 +106,7 @@ feature -- Output
 			-- Dump string
 		do
 			create Result.make (7 + anchor.name.count)
-			if has_attached_mark then
-				Result.append_character ('!')
-			elseif has_detachable_mark then
-				Result.append_character ('?')
-			end
+			dump_marks (Result)
 			Result.append ("like ")
 			Result.append (anchor.name)
 		end

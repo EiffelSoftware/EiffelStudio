@@ -148,8 +148,7 @@ feature -- Comparison
 			Result :=
 				equivalent (qualifier, other.qualifier) and then
 				equivalent (chain, other.chain) and then
-				has_attached_mark = other.has_attached_mark and then
-				has_detachable_mark = other.has_detachable_mark
+				has_same_marks (other)
 		end
 
 feature -- Output
@@ -158,11 +157,7 @@ feature -- Output
 			-- Dump string
 		do
 			create Result.make (8)
-			if has_attached_mark then
-				Result.append_character ('!')
-			elseif has_detachable_mark then
-				Result.append_character ('?')
-			end
+			dump_marks (Result)
 			if attached {LIKE_CUR_AS} qualifier as q then
 				Result.append_string (q.dump)
 			elseif attached {LIKE_ID_AS} qualifier as q then

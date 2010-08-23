@@ -72,8 +72,7 @@ feature -- Comparison
 	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
-			Result := has_attached_mark = other.has_attached_mark and then
-				has_detachable_mark = other.has_detachable_mark
+			Result := has_same_marks (other)
 		end
 
 feature -- Roundtrip/Token
@@ -103,13 +102,9 @@ feature -- Output
 	dump: STRING
 			-- Dump trace
 		do
-			if has_attached_mark then
-				Result := "!like Current"
-			elseif has_detachable_mark then
-				Result := "?like Current"
-			else
-				Result := "like Current"
-			end
+			create Result.make (12)
+			dump_marks (Result)
+			Result.append_string ("like Current")
 		end
 
 invariant

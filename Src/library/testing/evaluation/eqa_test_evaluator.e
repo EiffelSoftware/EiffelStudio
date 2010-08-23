@@ -14,13 +14,14 @@ class
 	EQA_TEST_EVALUATOR [G -> EQA_TEST_SET create default_create end]
 
 inherit
-
 	EXECUTION_ENVIRONMENT
 
 	EXCEPTIONS
 		rename
 			class_name as exception_class_name
 		end
+
+	INTERNAL
 
 feature {NONE} -- Access
 
@@ -110,7 +111,7 @@ feature {NONE} -- Implementation
 			Result := l_response
 		rescue
 			check attached exception_manager.last_exception as l_exception then
-				l_test_set_name := ({G}).out
+				l_test_set_name := class_name_of_type(({G}).type_id)
 				create l_iexcept.make (l_exception, l_test_set_name, Void)
 				create l_response.make_exceptional (l_iexcept)
 			end

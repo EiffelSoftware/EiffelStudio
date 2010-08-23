@@ -3459,6 +3459,10 @@ feature {NONE} -- Implementation
 						l_text_formatter_decorator.process_keyword_text (ti_detachable_keyword, Void)
 						l_text_formatter_decorator.add_space
 					end
+					if l_as.has_separate_mark then
+						l_text_formatter_decorator.process_keyword_text (ti_separate_keyword, Void)
+						l_text_formatter_decorator.add_space
+					end
 					l_text_formatter_decorator.process_keyword_text (ti_like_keyword, Void)
 					l_text_formatter_decorator.add_space
 					l_text_formatter_decorator.process_local_text (l_as.anchor.name_32)
@@ -3503,6 +3507,12 @@ feature {NONE} -- Implementation
 						l_text_formatter_decorator.process_keyword_text (ti_detachable_keyword, Void)
 						l_text_formatter_decorator.add_space
 							-- The type is of the form "detachable like {T}.something"
+						is_implicit := False
+					end
+					if l_as.has_separate_mark then
+						l_text_formatter_decorator.process_keyword_text (ti_separate_keyword, Void)
+						l_text_formatter_decorator.add_space
+							-- The type is of the form "separate like {T}.something"
 						is_implicit := False
 					end
 					if is_implicit then

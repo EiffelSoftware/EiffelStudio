@@ -109,11 +109,6 @@ feature {NONE} -- Implementation
 							-- in expanded creation and therefore we should discard
 							-- them from the test.
 						attr ?= class_type.associated_class.feature_of_rout_id (attr_desc.rout_id)
---						if attr = Void then
---							check class_type.associated_class.feature_table.feature_of_rout_id (attr_desc.rout_id) = Void end
---							attr := class_type.associated_class.feature_of_rout_id (attr_desc.rout_id)
-
---						end
 						check
 							has_attribute: attr /= Void
 						end

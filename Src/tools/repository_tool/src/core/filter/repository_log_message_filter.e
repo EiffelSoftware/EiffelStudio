@@ -24,6 +24,13 @@ feature -- Access
 
 	message: STRING
 
+feature -- Element change
+
+	set_message (v: like message)
+		do
+			message := v
+		end
+
 feature -- Status report
 
 	matched (a_log: REPOSITORY_LOG): BOOLEAN

@@ -50,22 +50,22 @@ feature -- Access
 
 	info: detachable SVN_REPOSITORY_INFO
 		do
-			Result := engine.repository_info (location)
+			Result := engine.repository_info (location, options)
 		end
 
 	statuses (is_verbose, is_recursive, is_remote: BOOLEAN): detachable LIST [SVN_STATUS_INFO]
 		do
-			Result := engine.statuses (location, is_verbose, is_recursive, is_remote)
+			Result := engine.statuses (location, is_verbose, is_recursive, is_remote, options)
 		end
 
 	logs (is_verbose: BOOLEAN; a_start, a_end: INTEGER; a_limit: INTEGER): detachable LIST [SVN_REVISION_INFO]
 		do
-			Result := engine.logs (location, is_verbose, a_start, a_end, a_limit)
+			Result := engine.logs (location, is_verbose, a_start, a_end, a_limit, options)
 		end
 
 	revision_diff (a_rev: SVN_REVISION_INFO): detachable STRING
 		do
-			Result := engine.diff (location, a_rev.revision, 0)
+			Result := engine.diff (location, a_rev.revision, 0, options)
 		end
 
 feature -- Element change
@@ -76,6 +76,14 @@ feature -- Element change
 		end
 
 feature -- Implementation
+
+	options: SVN_ENGINE_OPTIONS
+		do
+			create Result
+			Result.set_username (username)
+			Result.set_password (password)
+
+		end
 
 	engine: SVN_ENGINE
 

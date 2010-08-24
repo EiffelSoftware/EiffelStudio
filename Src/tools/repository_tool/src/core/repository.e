@@ -33,6 +33,10 @@ feature -- Access
 		deferred
 		end
 
+	username: detachable STRING
+
+	password: detachable STRING
+
 	review_enabled: BOOLEAN
 
 	review_variables: detachable HASH_TABLE [STRING, STRING]
@@ -58,29 +62,6 @@ feature -- Access
 		do
 			Result := [a_name, Void]
 		end
-
---	default_filters: like filters
---		local
-----			f: REPOSITORY_LOG_FILTER
---			fauthor: REPOSITORY_LOG_AUTHOR_FILTER
---			fpath: REPOSITORY_LOG_PATH_FILTER
-----			fmessage: REPOSITORY_LOG_MESSAGE_FILTER
---			fgroup: REPOSITORY_LOG_GROUP_FILTER
---		do
---			if location.same_string ("https://svn.eiffel.com/eiffelstudio/trunk") then
---				create Result.make (3)
---				create fauthor.make ("jfiat")
---				Result.force (["By jfiat", fauthor], "jfiat")
-
---				create fpath.make ("/trunk/Src/C")
---				Result.force (["Run-time", fpath], "runtime")
-
---				create fgroup.make (2)
---				fgroup.add_filter (fauthor)
---				fgroup.add_filter (fpath)
---				Result.force (["Run-time by jfiat", fgroup], "runtime.jfiat")
---			end
---		end
 
 	add_filter (a_key: STRING; a_name: STRING)
 		local
@@ -232,26 +213,6 @@ feature -- Access
 			end
 		end
 
---	issue_url_pattern: detachable STRING
---		do
---			Result := token_url_pattern ("issue")
---		end
-
---	issue_url (s: STRING): detachable STRING
---		do
---			Result := token_url ("issue", s)
---		end
-
---	test_url_pattern: detachable STRING
---		do
---			Result := token_url_pattern ("test")
---		end
-
---	test_url (s: STRING): detachable STRING
---		do
---			Result := token_url ("test", s)
---		end
-
 feature -- Element change
 
 	set_location (v: like location)
@@ -265,6 +226,16 @@ feature -- Element change
 	set_uuid (u: like uuid)
 		do
 			uuid := u
+		end
+
+	set_username (u: like username)
+		do
+			username := u
+		end
+
+	set_password (p: like password)
+		do
+			password := p
 		end
 
 	add_review_variable (v: STRING; k: STRING)

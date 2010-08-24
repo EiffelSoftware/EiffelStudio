@@ -2412,6 +2412,9 @@ feature -- Mapping between Eiffel compiler and generated tokens
 				il_code_generator.define_feature_reference (a_type_id, a_feature_id,
 					False, False, False)
 				Result := table_token (internal_attributes, a_type_id, a_feature_id)
+				if Result = 0 then
+					Result := table_token (internal_features, a_type_id, a_feature_id)
+				end
 			end
 		ensure
 			valid_result: Result /= 0

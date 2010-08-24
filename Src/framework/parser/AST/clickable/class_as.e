@@ -500,7 +500,7 @@ feature -- Attributes
 				Result := invariant_part.end_location.final_position + 1
 			elseif bottom_indexes /= Void then
 					-- We don't have access to the 'note' keyword so we use the 'feature_clause_insert_position' to add a new invariant.
-				Result := feature_clause_insert_position -- bottom_indexes.first.start_position
+				Result := feature_clause_insert_position
 			else
 				Result := end_keyword.position
 			end

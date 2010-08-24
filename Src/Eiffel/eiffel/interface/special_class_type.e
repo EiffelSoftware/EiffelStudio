@@ -199,7 +199,7 @@ feature -- C code generation
 				buffer.put_character ('{')
 				buffer.indent
 				buffer.put_new_line
-				buffer.put_string ("EIF_INTEGER i;")
+				buffer.put_string ("EIF_INTEGER_32 i;")
 				buffer.put_new_line
 				buffer.put_string ("for (i = 0; i < ")
 				nb_register.print_immediate_register
@@ -242,6 +242,10 @@ feature -- C code generation
 					-- Generate built-in feature `extend' of class SPECIAL
 				generate_extend (feat, buffer)
 
+			when {PREDEFINED_NAMES}.force_name_id then
+					-- Generate built-in feature `force' of class SPECIAL
+				generate_force (feat, buffer)
+
 			when {PREDEFINED_NAMES}.put_default_name_id then
 					-- Generate built-in feature `put_default' of class SPECIAL
 				generate_put_default (feat, buffer)
@@ -270,6 +274,13 @@ feature -- C code generation
 					Precursor {CLASS_TYPE} (feat, buffer, header_buffer)
 				else
 					generate_clear_all (feat, buffer)
+				end
+
+			when {PREDEFINED_NAMES}.fill_with_name_id then
+				if first_generic.is_true_expanded then
+					Precursor {CLASS_TYPE} (feat, buffer, header_buffer)
+				else
+					generate_fill_with (feat, buffer)
 				end
 
 			else
@@ -314,7 +325,7 @@ feature {NONE} -- C code generation
 
 			if final_mode then
 				value_type_name := type_c.c_string
-				index_type_name := "EIF_INTEGER"
+				index_type_name := "EIF_INTEGER_32"
 				value_arg_name := "arg1"
 				index_arg_name := "arg2"
 			else
@@ -426,7 +437,189 @@ feature {NONE} -- C code generation
 					-- Generate generic wrapper.
 				buffer.generate_function_signature ("void", encoded_name + "2", True,
 					l_byte_context.header_buffer, <<"Current", "arg1", "arg2">>,
-					<<"EIF_REFERENCE", "EIF_REFERENCE", "EIF_INTEGER">>)
+					<<"EIF_REFERENCE", "EIF_REFERENCE", "EIF_INTEGER_32">>)
+				buffer.generate_block_open
+				buffer.put_new_line
+				if l_param_is_expanded or else type_c.level = c_ref or else associated_class.assertion_level.is_precondition then
+					buffer.put_string (encoded_name)
+					buffer.put_string (" (Current, ")
+					if gen_param.is_basic then
+						buffer.put_character ('*')
+						gen_param.c_type.generate_access_cast (buffer)
+					end
+					buffer.put_string ("arg1, arg2);")
+				else
+					buffer.put_string ("*(")
+					type_c.generate_access_cast (buffer)
+					buffer.put_string (" Current + arg2) = ")
+					if gen_param.is_basic then
+						buffer.put_character ('*')
+						gen_param.c_type.generate_access_cast (buffer)
+					end
+					buffer.put_string ("arg1;")
+				end
+				buffer.generate_block_close
+					-- Separation for formatting
+				buffer.put_new_line
+			end
+
+			l_byte_context.clear_feature_data
+		end
+
+	generate_force (feat: FEATURE_I; buffer: GENERATION_BUFFER)
+			-- Generates built-in feature `put' of class SPECIAL
+		require
+			good_argument: buffer /= Void
+			feat_exists: feat /= Void
+			consistency: feat.feature_name_id = {PREDEFINED_NAMES}.force_name_id
+		local
+			gen_param: TYPE_A
+			l_exp_class_type: CLASS_TYPE
+			l_param_is_expanded: BOOLEAN
+			type_c: TYPE_C
+			final_mode: BOOLEAN
+			encoded_name: STRING
+			value_type_name: STRING
+			index_type_name: STRING
+			value_arg_name: STRING
+			index_arg_name: STRING
+			l_byte_context: like byte_context
+			l_arg: ARGUMENT_BL
+		do
+			l_byte_context := byte_context
+			gen_param := first_generic
+			l_param_is_expanded := gen_param.is_true_expanded
+			type_c := gen_param.c_type
+
+			feat.generate_header (Current, buffer)
+			encoded_name := Encoder.feature_name (type_id, feat.body_index)
+
+			System.used_features_log_file.add (Current, "force", encoded_name)
+
+			final_mode := l_byte_context.final_mode
+
+			if final_mode then
+				value_type_name := type_c.c_string
+				index_type_name := "EIF_INTEGER_32"
+				value_arg_name := "arg1"
+				index_arg_name := "arg2"
+			else
+				value_type_name := "EIF_TYPED_VALUE"
+				index_type_name := "EIF_TYPED_VALUE"
+				value_arg_name := "arg1x"
+				index_arg_name := "arg2x"
+			end
+
+			buffer.generate_function_signature ("void", encoded_name, True,
+				l_byte_context.header_buffer, <<"Current", value_arg_name, index_arg_name>>,
+				<<"EIF_REFERENCE", value_type_name, index_type_name>>)
+
+			buffer.generate_block_open
+			buffer.put_gtcx
+
+			buffer.put_new_line
+			buffer.put_string ("EIF_INTEGER_32 arg3 = RT_SPECIAL_COUNT(Current);")
+
+			if not final_mode then
+				if not type_c.is_reference then
+					buffer.put_new_line
+					buffer.put_string ("if (arg1x.type == SK_REF) arg1x.")
+					type_c.generate_typed_field (buffer)
+					buffer.put_string (" = * ")
+					type_c.generate_access_cast (buffer)
+					buffer.put_string ("arg1x.it_r;")
+				end
+				buffer.put_new_line
+				buffer.put_string ("if (arg2x.type == SK_REF) arg2x.it_i4 = * (EIF_INTEGER_32 *) arg2x.it_r;")
+				buffer.put_new_line_only
+				buffer.put_string ("#define arg1 arg1x.")
+				type_c.generate_typed_field (buffer)
+				buffer.put_new_line_only
+				buffer.put_string ("#define arg2 arg2x.it_i4")
+			end
+
+			if not final_mode and then l_param_is_expanded then
+				buffer.put_new_line
+				buffer.put_string ("if (arg1 == NULL) RTEC(EN_VEXP);")
+			end
+
+			if not final_mode or else system.check_for_catcall_at_runtime then
+				if gen_param.c_type.is_reference then
+					byte_context.set_byte_code (byte_server.disk_item (feat.body_index))
+					byte_context.set_current_feature (feat)
+					if l_param_is_expanded then
+							-- Minor hack because expanded arguments are generated with a `e' prefix
+							-- but for SPECIAL we use without the prefix because the generation is done
+							-- manually.
+						buffer.put_new_line_only
+						buffer.put_string ("#define earg1 arg1")
+					end
+					byte_context.set_has_feature_name_stored (False)
+					create l_arg
+					l_arg.set_position (1)
+					byte_context.generate_catcall_check (l_arg, create {FORMAL_A}.make (False, False, 1), 1, False)
+					if l_param_is_expanded then
+						buffer.put_new_line_only
+						buffer.put_string ("#undef earg1")
+					end
+				end
+			end
+
+			generate_force_precondition (buffer, final_mode, "arg2", "arg3")
+
+				-- Increment count if we are extending.
+			buffer.put_new_line
+			buffer.put_string ("if (arg2 == arg3) { RT_SPECIAL_COUNT(Current) = arg3 + 1; }")
+
+			if l_param_is_expanded then
+				if final_mode then
+					l_exp_class_type := gen_param.associated_class_type (Void)
+					buffer.put_new_line
+					if l_exp_class_type.skeleton.has_references then
+							-- Optimization: size is known at compile time
+						buffer.put_string ("ecopy(arg1, Current + OVERHEAD + (rt_uint_ptr) arg2 * (rt_uint_ptr) (");
+						l_exp_class_type.skeleton.generate_size (buffer, True)
+						buffer.put_string (" + OVERHEAD));")
+					else
+							-- No references, do a simple `memcpy'.
+						buffer.put_new_line
+						buffer.put_string ("memcpy(Current + (rt_uint_ptr) arg2 * (rt_uint_ptr) ")
+						l_exp_class_type.skeleton.generate_size (buffer, True)
+						buffer.put_string (", arg1, ")
+						l_exp_class_type.skeleton.generate_size (buffer, True)
+						buffer.put_string (");")
+					end
+				else
+					buffer.put_new_line
+					buffer.put_string ("ecopy(arg1, Current + OVERHEAD + (rt_uint_ptr) arg2 * %
+						%RT_SPECIAL_ELEM_SIZE(Current));")
+				end
+			else
+				buffer.put_new_line
+				buffer.put_string ("*(")
+				type_c.generate_access_cast (buffer)
+				buffer.put_string (" Current + arg2) = arg1;")
+				if type_c.level = c_ref then
+					buffer.put_new_line
+					buffer.put_string ("RTAR(Current, arg1);%N")
+				end
+			end
+
+			buffer.generate_block_close
+			if not final_mode then
+				buffer.put_new_line_only
+				buffer.put_string ("#undef arg1")
+				buffer.put_new_line_only
+				buffer.put_string ("#undef arg2")
+			end
+				-- Separation for formatting
+			buffer.put_new_line
+
+			if final_mode then
+					-- Generate generic wrapper.
+				buffer.generate_function_signature ("void", encoded_name + "2", True,
+					l_byte_context.header_buffer, <<"Current", "arg1", "arg2">>,
+					<<"EIF_REFERENCE", "EIF_REFERENCE", "EIF_INTEGER_32">>)
 				buffer.generate_block_open
 				buffer.put_new_line
 				if l_param_is_expanded or else type_c.level = c_ref or else associated_class.assertion_level.is_precondition then
@@ -501,7 +694,7 @@ feature {NONE} -- C code generation
 			buffer.put_gtcx
 
 			buffer.put_new_line
-			buffer.put_string ("EIF_INTEGER arg2 = RT_SPECIAL_COUNT(Current)++;")
+			buffer.put_string ("EIF_INTEGER_32 arg2 = RT_SPECIAL_COUNT(Current)++;")
 
 			if not final_mode then
 				buffer.put_new_line
@@ -609,7 +802,7 @@ feature {NONE} -- C code generation
 					end
 					buffer.put_string ("arg1);")
 				else
-					buffer.put_string ("EIF_INTEGER arg2 = RT_SPECIAL_COUNT(Current)++;")
+					buffer.put_string ("EIF_INTEGER_32 arg2 = RT_SPECIAL_COUNT(Current)++;")
 					buffer.put_new_line
 					buffer.put_string ("*(")
 					type_c.generate_access_cast (buffer)
@@ -658,7 +851,7 @@ feature {NONE} -- C code generation
 			final_mode := l_byte_context.final_mode
 
 			if final_mode then
-				index_type_name := "EIF_INTEGER"
+				index_type_name := "EIF_INTEGER_32"
 				index_arg_name := "arg1"
 			else
 				index_type_name := "EIF_TYPED_VALUE"
@@ -796,7 +989,7 @@ feature {NONE} -- C code generation
 			if final_mode then
 				result_type_name := type_c.c_string
 				arg_name := "arg1"
-				arg_type_name := "EIF_INTEGER"
+				arg_type_name := "EIF_INTEGER_32"
 			else
 				result_type_name := "EIF_TYPED_VALUE"
 				arg_name := "arg1x"
@@ -904,7 +1097,7 @@ feature {NONE} -- C code generation
 					-- Generate generic wrapper.
 				buffer.generate_function_signature ("EIF_REFERENCE", encoded_name + "1", True,
 					Byte_context.header_buffer, <<"Current", "arg1">>,
-					<<"EIF_REFERENCE", "EIF_INTEGER">>)
+					<<"EIF_REFERENCE", "EIF_INTEGER_32">>)
 				buffer.generate_block_open
 				basic_i ?= gen_param
 				buffer.put_new_line
@@ -979,7 +1172,7 @@ feature {NONE} -- C code generation
 				index_arg_name := "arg1x"
 			else
 				result_type_name := result_type.c_type.c_string
-				index_type_name := "EIF_INTEGER"
+				index_type_name := "EIF_INTEGER_32"
 				index_arg_name := "arg1"
 			end
 
@@ -1144,6 +1337,187 @@ feature {NONE} -- C code generation
 			byte_context.clear_feature_data
 		end
 
+	generate_fill_with (feat: FEATURE_I; buffer: GENERATION_BUFFER)
+			-- Generate `fill_with' from SPECIAL without using Eiffel code but a tight C loop.
+		require
+			good_argument: buffer /= Void;
+			feat_exists: feat /= Void;
+			consistency: feat.feature_name_id = {PREDEFINED_NAMES}.fill_with_name_id
+			not_is_expanded_with_side_effect: not first_generic.is_true_expanded
+		local
+			gen_param: TYPE_A
+			type_c: TYPE_C
+			final_mode: BOOLEAN
+			encoded_name: STRING
+			value_type_name: STRING
+			index_type_name: STRING
+			value_arg_name: STRING
+			start_index_name, end_index_name: STRING
+			l_byte_context: like byte_context
+			l_arg: ARGUMENT_BL
+		do
+			l_byte_context := byte_context
+			gen_param := first_generic
+			type_c := gen_param.c_type
+
+			feat.generate_header (Current, buffer)
+			encoded_name := Encoder.feature_name (type_id, feat.body_index)
+
+			System.used_features_log_file.add (Current, "fill_with", encoded_name)
+
+			final_mode := l_byte_context.final_mode
+
+			if final_mode then
+				value_type_name := type_c.c_string
+				index_type_name := "EIF_INTEGER_32"
+				value_arg_name := "arg1"
+				start_index_name := "arg2"
+				end_index_name := "arg3"
+			else
+				value_type_name := "EIF_TYPED_VALUE"
+				index_type_name := value_type_name
+				value_arg_name := "arg1x"
+				start_index_name := "arg2x"
+				end_index_name := "arg3x"
+			end
+
+				-- Add `eif_helpers.h' for C declaration of `eif_max_int32'.
+			shared_include_queue_put ({PREDEFINED_NAMES}.eif_helpers_header_name_id)
+
+			buffer.generate_function_signature ("void", encoded_name, True,
+				l_byte_context.header_buffer, <<"Current", value_arg_name, start_index_name, end_index_name>>,
+				<<"EIF_REFERENCE", value_type_name, index_type_name, index_type_name>>)
+
+			buffer.generate_block_open
+			buffer.put_gtcx
+
+			buffer.put_new_line
+			buffer.put_string ("EIF_INTEGER_32 i;")
+
+			if not final_mode then
+				if not type_c.is_reference then
+					buffer.put_new_line
+					buffer.put_string ("if (arg1x.type == SK_REF) arg1x.")
+					type_c.generate_typed_field (buffer)
+					buffer.put_string (" = * ")
+					type_c.generate_access_cast (buffer)
+					buffer.put_string ("arg1x.it_r;")
+				end
+				buffer.put_new_line
+				buffer.put_string ("if (arg2x.type == SK_REF) arg2x.it_i4 = * (EIF_INTEGER_32 *) arg2x.it_r;")
+				buffer.put_new_line_only
+				buffer.put_string ("#define arg1 arg1x.")
+				type_c.generate_typed_field (buffer)
+				buffer.put_new_line_only
+				buffer.put_string ("#define arg2 arg2x.it_i4")
+				buffer.put_new_line_only
+				buffer.put_string ("#define arg3 arg3x.it_i4")
+			end
+
+			if not final_mode or else system.check_for_catcall_at_runtime then
+				if type_c.is_reference then
+					byte_context.set_byte_code (byte_server.disk_item (feat.body_index))
+					byte_context.set_current_feature (feat)
+					byte_context.set_has_feature_name_stored (False)
+					create l_arg
+					l_arg.set_position (1)
+					byte_context.generate_catcall_check (l_arg, create {FORMAL_A}.make (False, False, 1), 1, False)
+				end
+			end
+
+			generate_fill_with_precondition (buffer, final_mode, "arg2", "arg3")
+
+				-- Generate filling of SPECIAL
+				-- for (i = arg2, i < arg3, i++) {
+				--	Current [i] = arg1;
+				-- }
+			buffer.put_new_line
+			buffer.put_string ("for (i = arg2; i <= arg3; i++) {")
+			buffer.indent
+			buffer.put_new_line
+			buffer.put_string ("*(")
+			type_c.generate_access_cast (buffer)
+			buffer.put_string (" Current + i) = arg1;")
+			buffer.exdent
+			buffer.put_new_line
+			buffer.put_character ('}')
+
+				-- We need to remember Current if it is old and arg1 is new.
+			if type_c.level = c_ref then
+				buffer.put_new_line
+				buffer.put_string ("RTAR(Current, arg1);")
+			end
+
+				-- Update count.
+			buffer.put_new_line
+			buffer.put_string ("RT_SPECIAL_COUNT(Current) = eif_max_int32(RT_SPECIAL_COUNT(Current), arg3 + 1);")
+
+			buffer.generate_block_close
+			if not final_mode then
+				buffer.put_new_line_only
+				buffer.put_string ("#undef arg1")
+				buffer.put_new_line_only
+				buffer.put_string ("#undef arg2")
+				buffer.put_new_line_only
+				buffer.put_string ("#undef arg3")
+			end
+				-- Separation for formatting
+			buffer.put_new_line
+
+			if final_mode then
+					-- Generate generic wrapper.
+				buffer.generate_function_signature ("void", encoded_name + "2", True,
+					l_byte_context.header_buffer, <<"Current", "arg1", "arg2", "arg3">>,
+					<<"EIF_REFERENCE", "EIF_REFERENCE", "EIF_INTEGER_32", "EIF_INTEGER_32">>)
+				buffer.generate_block_open
+				buffer.put_new_line
+				if associated_class.assertion_level.is_precondition then
+					buffer.put_string (encoded_name)
+					buffer.put_string (" (Current, ")
+					if gen_param.is_basic then
+						buffer.put_character ('*')
+						type_c.generate_access_cast (buffer)
+					end
+					buffer.put_string ("arg1, arg2, arg3);")
+				else
+					buffer.put_string ("EIF_INTEGER_32 i;")
+					buffer.put_new_line
+					type_c.generate (buffer)
+					buffer.put_string (" arg1x = ")
+					if gen_param.is_basic then
+						buffer.put_character ('*')
+						type_c.generate_access_cast (buffer)
+					end
+					buffer.put_string ("arg1;")
+
+					buffer.put_new_line
+					buffer.put_string ("for (i = arg2; i < arg3; i++) {")
+					buffer.put_new_line
+					buffer.indent
+					buffer.put_string ("*(")
+					type_c.generate_access_cast (buffer)
+					buffer.put_string (" Current + i) = arg1x;")
+					buffer.exdent
+					buffer.put_new_line
+					buffer.put_character ('}')
+
+						-- We need to remember Current if it is old and arg1 is new.
+					if type_c.level = c_ref then
+						buffer.put_new_line
+						buffer.put_string ("RTAR(Current, arg1);")
+					end
+
+						-- Update count.
+					buffer.put_string ("RT_SPECIAL_COUNT(Current) = eif_max_int32(RT_SPECIAL_COUNT(Current), arg3 + 1);")
+				end
+				buffer.generate_block_close
+					-- Separation for formatting
+				buffer.put_new_line
+			end
+
+			l_byte_context.clear_feature_data
+		end
+
 	generate_precondition (buffer: GENERATION_BUFFER; final_mode: BOOLEAN; arg_name: STRING)
 			-- Generate precondition for `item', `put' and `item_address' where index
 			-- is stored in `arg_name'.
@@ -1152,14 +1526,87 @@ feature {NONE} -- C code generation
 			arg_name_not_void: arg_name /= Void
 		do
 			if not final_mode or else associated_class.assertion_level.is_precondition then
+					-- First we check that `arg_name >= 0'.
 				buffer.put_new_line
 				buffer.put_string ("if (")
 				buffer.put_string (arg_name)
-				buffer.put_string ("< 0) {%N%T%Teraise (%"index_large_enough%", EN_RT_CHECK);%N%T}");
+				buffer.put_string (" < 0) {%N%T%Teraise (%"index_large_enough%", EN_RT_CHECK);%N%T}")
+					-- Then we check that `arg_name < count'				
 				buffer.put_new_line
 				buffer.put_string ("if (")
 				buffer.put_string (arg_name)
-				buffer.put_string (">= RT_SPECIAL_COUNT(Current)) {%N%T%Teraise (%"index_small_enough%", EN_RT_CHECK);%N%T}");
+				buffer.put_string (" >= RT_SPECIAL_COUNT(Current)) {%N%T%Teraise (%"index_small_enough%", EN_RT_CHECK);%N%T}")
+			end
+		end
+
+	generate_force_precondition (buffer: GENERATION_BUFFER; final_mode: BOOLEAN; arg_name, count_name: STRING)
+			-- Generate precondition for `force' where index is stored in `arg_name' and count in `count_name'.
+		require
+			buffer_not_void: buffer /= Void
+			arg_name_not_void: arg_name /= Void
+		do
+			if not final_mode or else associated_class.assertion_level.is_precondition then
+					-- First we check that `arg_name >= 0'.
+				buffer.put_new_line
+				buffer.put_string ("if (")
+				buffer.put_string (arg_name)
+				buffer.put_string (" < 0) {%N%T%Teraise (%"index_large_enough%", EN_RT_CHECK);%N%T}")
+				buffer.put_new_line
+					-- Then we check that `arg_name <= count'
+				buffer.put_string ("if (")
+				buffer.put_string (arg_name)
+				buffer.put_three_character (' ', '>', ' ')
+				buffer.put_string (count_name)
+				buffer.put_string (") {%N%T%Teraise (%"index_small_enough%", EN_RT_CHECK);%N%T}")
+					-- Finaly we check `arg_name = count implies count < capacity' by simply checking
+					-- that `count < capacity' as it is just a tiny bit slower and provides the same guarantee.
+				buffer.put_new_line
+				buffer.put_string ("if ((")
+				buffer.put_string (arg_name)
+				buffer.put_four_character (' ', '=', '=', ' ')
+				buffer.put_string (count_name)
+				buffer.put_string (") && (")
+				buffer.put_string (count_name)
+				buffer.put_string (" >= RT_SPECIAL_CAPACITY(Current))) {")
+				buffer.put_string ("%N%T%Teraise (%"not_full%", EN_RT_CHECK);%N%T}")
+			end
+		end
+
+	generate_fill_with_precondition (buffer: GENERATION_BUFFER; final_mode: BOOLEAN; start_index, end_index: STRING)
+			-- Generate precondition for `fill_with' where indexes are stored in `start_index' and `end_index'.
+		require
+			buffer_not_void: buffer /= Void
+			start_index_not_void: start_index /= Void
+			end_index_not_void: end_index /= Void
+		do
+			if not final_mode or else associated_class.assertion_level.is_precondition then
+					-- First we check that `start_index >= 0'.
+				buffer.put_new_line
+				buffer.put_string ("if (")
+				buffer.put_string (start_index)
+				buffer.put_string (" < 0) {%N%T%Teraise (%"start_index_non_negative%", EN_RT_CHECK);%N%T}")
+					-- Then we check that `start_index <= count'
+				buffer.put_new_line
+				buffer.put_string ("if (")
+				buffer.put_string (start_index)
+				buffer.put_three_character (' ', '>', ' ')
+				buffer.put_string ("RT_SPECIAL_CAPACITY(Current)) {")
+				buffer.put_string ("%N%T%Teraise (%"start_index_in_bound%", EN_RT_CHECK);%N%T}")
+					-- Then we check `start_index <= end_index + 1'
+				buffer.put_new_line
+				buffer.put_string ("if (")
+				buffer.put_string (start_index)
+				buffer.put_four_character (' ', '>', ' ', '(')
+				buffer.put_string (end_index)
+				buffer.put_string (" + 1)) {")
+				buffer.put_string ("%N%T%Teraise (%"start_index_not_too_big%", EN_RT_CHECK);%N%T}")
+				-- Finally we check that `end_index < capacity'
+				buffer.put_new_line
+				buffer.put_string ("if (")
+				buffer.put_string (end_index)
+				buffer.put_four_character (' ', '>', '=', ' ')
+				buffer.put_string ("RT_SPECIAL_CAPACITY(Current)) {")
+				buffer.put_string ("%N%T%Teraise (%"end_index_valid%", EN_RT_CHECK);%N%T}")
 			end
 		end
 

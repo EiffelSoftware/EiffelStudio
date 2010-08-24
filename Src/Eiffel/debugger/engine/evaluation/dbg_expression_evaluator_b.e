@@ -641,6 +641,11 @@ feature {BYTE_NODE} -- Visitor
 			dbg_error_handler.notify_error_not_supported (a_node)
 		end
 
+	process_hidden_b (a_node: HIDDEN_B)
+			-- Process `a_node'.
+		do
+		end
+
 	process_case_b (a_node: CASE_B)
 			-- Process `a_node'.
 		do

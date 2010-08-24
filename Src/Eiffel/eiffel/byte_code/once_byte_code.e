@@ -135,61 +135,6 @@ feature -- Byte code generation
 
 feature {NONE} -- C code generation: implementation
 
-	generate_object_relative_once_result_assignment (a_result_name: STRING; a_result_attrib: ATTRIBUTE_I)
-			-- Generate Result assignment related to once per object
-		require
-			is_object_relative_once: is_object_relative_once
-			a_result_name_not_void: a_result_name /= Void
-			a_result_attrib_not_void: a_result_attrib /= Void
-		local
-			type_i: TYPE_A
-			c_type_name: STRING
-			buf: like buffer
-			is_basic_type: BOOLEAN
-		do
-			buf := buffer
-				-- Use "EIF_POINTER" C type for TYPED_POINTER and CECIL type name for other types
-			type_i := real_type (result_type)
-			if not type_i.is_void then
-				if type_i.is_typed_pointer then
-					c_type_name := "EIF_POINTER"
-				else
-					c_type_name := type_i.c_type.c_string
-				end
-				if type_i.c_type.is_reference then
-						-- Reference result type
-				else
-						-- Basic result type
-					is_basic_type := True
-				end
-				if context.workbench_mode or else context.result_used then
-					context.add_dt_current
-					if is_basic_type then
-						a_result_attrib.generate_hidden_attribute_access (context.class_type, buf, {C_CONST}.current_name)
-						buf.put_three_character (' ', '=' , '(')
-						buf.put_string (c_type_name)
-						buf.put_two_character (')', ' ')
-						buf.put_string (a_result_name)
-						buf.put_character (';')
-					else
-						buf.put_string ("RTAR(")
-						buf.put_string ({C_CONST}.current_name)
-						buf.put_two_character (',', ' ')
-						buf.put_string (a_result_name)
-						buf.put_two_character (')', ';')
-						buf.put_new_line
-						a_result_attrib.generate_hidden_attribute_access (context.class_type, buf, {C_CONST}.current_name)
-						buf.put_three_character (' ', '=' , '(')
-						buf.put_string (c_type_name)
-						buf.put_string (") RTCCL(")
-						buf.put_string (a_result_name)
-						buf.put_two_character (')', ';')
-						buf.put_new_line
-					end
-				end
-			end
-		end
-
 	generate_object_relative_once_result_definition (macro: STRING)
 			-- Generate definition of once data using `result_macro_prefix' to define Result and
 			-- `data_macro_prefix' to initialize associated variables (if required).
@@ -466,11 +411,7 @@ feature -- C code generation
 			if is_object_relative_once then
 				context.add_dt_current
 				l_obj_once_info := context.associated_class.object_relative_once_info (rout_id)
-					-- Save result if any
-				if l_obj_once_info.has_result then
-					buf.put_new_line
-					generate_object_relative_once_result_assignment ("Result", l_obj_once_info.result_attribute_i)
-				end
+				-- If needed, save result if any: now this is done in ONCE_FUNC_I.prepare_object_relative_once
 
 					-- Catch exception
 				buf.put_new_line

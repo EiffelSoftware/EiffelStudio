@@ -221,6 +221,8 @@ feature -- Constants
 	nan_name_id: INTEGER = 208
 	negative_infinity_name_id: INTEGER = 209
 	positive_infinity_name_id: INTEGER = 210
+	force_name_id: INTEGER = 211
+	fill_with_name_id: INTEGER = 212
 
 feature -- Classification
 

@@ -392,6 +392,8 @@ feature {NONE} -- Implementation: access
 			put ("nan") check found_item = nan_name_id end
 			put ("negative_infinity") check found_item = negative_infinity_name_id end
 			put ("positive_infinity") check found_item = positive_infinity_name_id end
+			put ("force") check found_item = force_name_id end
+			put ("fill_with") check found_item = fill_with_name_id end
 		end
 
 invariant

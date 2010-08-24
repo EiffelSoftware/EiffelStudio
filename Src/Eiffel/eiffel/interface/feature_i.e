@@ -3223,6 +3223,8 @@ feature -- C code generation
 					l_byte_code := byte_server.disk_item (tmp_body_index)
 				end
 
+				prepare_object_relative_once (l_byte_code)
+
 					-- `generate' from BYTE_CODE will log the feature name
 					-- and encoded name in `used_features_log_file' from SYSTEM_I
 				generate_header (class_type, buffer)
@@ -3262,6 +3264,15 @@ feature -- C code generation
 			buffer.put_two_character ('}', '.')
 			buffer.put_string (feature_name)
 			buffer.put_string (" */")
+		end
+
+feature -- Object relative once
+
+	prepare_object_relative_once (a_byte_code: BYTE_CODE)
+			-- Prepare byte_code for object relative once if needed
+		require
+			a_byte_code_attached: a_byte_code /= Void
+		do
 		end
 
 feature -- Debug purpose

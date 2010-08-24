@@ -1419,6 +1419,14 @@ feature {NONE} -- Visitors
 			end
 		end
 
+	process_hidden_b (a_node: HIDDEN_B)
+			-- Process `a_node'.
+		do
+			context.enter_hidden_code
+			a_node.process (Current)
+			context.exit_hidden_code
+		end
+
 	process_case_b (a_node: CASE_B)
 			-- Process `a_node'.
 		do

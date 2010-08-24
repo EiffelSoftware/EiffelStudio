@@ -533,6 +533,14 @@ feature {NONE} -- Visitors
 			end
 		end
 
+	process_hidden_b (a_node: HIDDEN_B)
+			-- Process `a_node'.
+		do
+			if attached a_node.node as l_node then
+				l_node.process (Current)
+			end
+		end
+
 	process_case_b (a_node: CASE_B)
 			-- Process `a_node'.
 		local

@@ -301,6 +301,14 @@ feature {BYTE_NODE} -- Visitors
 			postorder_process (a_node)
 		end
 
+	process_hidden_b (a_node: HIDDEN_B)
+			-- Process `a_node'
+		do
+			preorder_process (a_node)
+			safe_process (a_node.node)
+			postorder_process (a_node)
+		end
+
 	process_case_b (a_node: CASE_B)
 			-- Process `a_node'.
 		do
@@ -801,7 +809,7 @@ feature {BYTE_NODE} -- Visitors
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

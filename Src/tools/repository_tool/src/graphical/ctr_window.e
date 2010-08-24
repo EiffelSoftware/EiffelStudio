@@ -314,6 +314,11 @@ feature -- Storage
 							elseif s.substring (1, p -1).same_string ("location") then
 								v.left_adjust; v.right_adjust
 								repo.set_location (v)
+							elseif s.substring (1, p -1).same_string ("username") then
+								v.left_adjust; v.right_adjust
+								repo.set_username (v)
+							elseif s.substring (1, p -1).same_string ("password") then
+								repo.set_password (v)
 							elseif s.substring (1, 6).same_string ("review") then
 								s2 := s.substring (7, p - 1)
 								s2.to_lower
@@ -464,6 +469,13 @@ feature -- Storage
 					Result.append_string ("[" + t + ":" + n + "]%N")
 					Result.append_string ("uuid=" + c.item.uuid.out + "%N")
 					Result.append_string ("location=" + c.item.location + "%N")
+					if attached c.item.username as u then
+						Result.append_string ("username=" + u.out + "%N")
+					end
+					if attached c.item.password as p then
+						Result.append_string ("password=" + p.out + "%N")
+					end
+
 					if c.item.review_enabled then
 						Result.append_string ("review=on%N")
 					end

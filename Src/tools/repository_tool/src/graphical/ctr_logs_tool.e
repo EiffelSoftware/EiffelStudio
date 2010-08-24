@@ -171,44 +171,6 @@ feature -- Element change
 			end
 		end
 
-	review_bar: detachable CTR_LOGS_REVIEW_BOX
-
-	update_review_bar
-		do
-			if attached review_bar as r then
-				r.update_current_log (current_log)
-			end
-		end
-
-	build_review_bar
-		local
-			box: like review_bar
-		do
-			create box.make (Current)
-			review_bar := box
-
-			container.put_front (box.widget)
-			container.disable_item_expand (box.widget)
-		end
-
-	show_review_bar
-		do
-			if review_bar = Void then
-				build_review_bar
-			end
-			if attached review_bar as b then
-				b.reset
-				b.show
-			end
-		end
-
-	hide_review_bar
-		do
-			if attached review_bar as b then
-				b.hide
-			end
-		end
-
 	update
 		do
 			custom_update (True)
@@ -332,6 +294,7 @@ feature -- Element change
 				h.wipe_out
 			end
 			filter := Void
+			hide_search_bar
 		end
 
 	same_views (r1, r2: like current_views): BOOLEAN
@@ -388,6 +351,95 @@ feature -- Element change
 						w.check_repository (c.item.repo)
 					end
 				end
+			end
+		end
+
+feature -- Search
+
+	search_bar: detachable CTR_LOGS_SEARCH_BOX
+
+	build_search_bar
+		local
+			box: like search_bar
+		do
+			create box.make (Current)
+			search_bar := box
+
+			container.extend (box.widget)
+			container.disable_item_expand (box.widget)
+		end
+
+	show_search_bar
+		do
+			if search_bar = Void then
+				build_search_bar
+			end
+			if attached search_bar as b then
+				if not b.shown then
+					b.reset
+				end
+				b.show
+			end
+		end
+
+	hide_search_bar
+		do
+			if attached search_bar as b then
+				b.hide
+			end
+			filter := Void
+		end
+
+--	toggle_search_bar
+--		do
+--			if attached search_bar as b then
+--				if b.shown then
+--					hide_search_bar
+--				else
+--					show_search_bar
+--				end
+--			else
+--				show_search_bar
+--			end
+--		end
+
+feature -- Review		
+
+	review_bar: detachable CTR_LOGS_REVIEW_BOX
+
+	update_review_bar
+		do
+			if attached review_bar as r then
+				r.update_current_log (current_log)
+			end
+		end
+
+	build_review_bar
+		local
+			box: like review_bar
+		do
+			create box.make (Current)
+			review_bar := box
+
+			container.put_front (box.widget)
+			container.disable_item_expand (box.widget)
+		end
+
+	show_review_bar
+		do
+			if review_bar = Void then
+				build_review_bar
+			end
+			if attached review_bar as b then
+				b.reset
+				b.show
+			end
+		end
+
+	hide_review_bar
+		do
+			if attached review_bar as b then
+				b.hide
 			end
 		end
 
@@ -608,6 +660,10 @@ feature {CTR_WINDOW} -- Implementation
 			when {EV_KEY_CONSTANTS}.key_a then
 				if ev_application.ctrl_pressed then
 					select_all_rows
+				end
+			when {EV_KEY_CONSTANTS}.key_f then
+				if ev_application.ctrl_pressed then
+					show_search_bar
 				end
 			when {EV_KEY_CONSTANTS}.key_insert then
 				toggle_read_status_on_selected_row_logs

@@ -38,19 +38,19 @@ feature -- Element change
 
 feature -- Status report
 
-	statuses (a_path: STRING; is_verbose, is_recursive, is_remote: BOOLEAN): detachable LIST [SVN_STATUS_INFO]
+	statuses (a_path: STRING; is_verbose, is_recursive, is_remote: BOOLEAN; a_options: detachable SVN_ENGINE_OPTIONS): detachable LIST [SVN_STATUS_INFO]
 		do
-			Result := impl_statuses (Void, a_path, is_verbose, is_recursive, is_remote)
+			Result := impl_statuses (Void, a_path, is_verbose, is_recursive, is_remote, a_options)
 		end
 
-	list_of_nodes_from (a_path: STRING; is_verbose, is_recursive, is_remote: BOOLEAN): detachable LIST [SVN_STATUS_INFO]
+	list_of_nodes_from (a_path: STRING; is_verbose, is_recursive, is_remote: BOOLEAN; a_options: detachable SVN_ENGINE_OPTIONS): detachable LIST [SVN_STATUS_INFO]
 		obsolete
 			"use statuses"
 		do
-			Result := statuses (a_path, is_verbose, is_recursive, is_remote)
+			Result := statuses (a_path, is_verbose, is_recursive, is_remote, a_options)
 		end
 
-	repository_info (a_location: STRING): detachable SVN_REPOSITORY_INFO
+	repository_info (a_location: STRING; a_options: detachable SVN_ENGINE_OPTIONS): detachable SVN_REPOSITORY_INFO
 		local
 			s: detachable STRING
 			cmd: STRING
@@ -61,6 +61,7 @@ feature -- Status report
 			end
 
 			create cmd.make_from_string (svn_executable_path)
+			cmd.append_string (option_to_command_line_flags (a_options))
 			cmd.append_string (" --xml info ")
 			cmd.append_string (a_location)
 
@@ -91,7 +92,7 @@ feature -- Status report
 			end
 		end
 
-	diff (a_location: STRING; a_start, a_end: INTEGER): detachable STRING
+	diff (a_location: STRING; a_start, a_end: INTEGER; a_options: detachable SVN_ENGINE_OPTIONS): detachable STRING
 		local
 			s: detachable STRING
 			cmd: STRING
@@ -101,6 +102,7 @@ feature -- Status report
 			end
 
 			create cmd.make_from_string (svn_executable_path)
+			cmd.append_string (option_to_command_line_flags (a_options))
 			cmd.append_string (" diff ")
 			cmd.append_string (a_location)
 
@@ -139,7 +141,7 @@ feature -- Status report
 			end
 		end
 
-	logs (a_location: STRING; is_verbose: BOOLEAN; a_start, a_end: INTEGER; a_limit: INTEGER): detachable LIST [SVN_REVISION_INFO]
+	logs (a_location: STRING; is_verbose: BOOLEAN; a_start, a_end: INTEGER; a_limit: INTEGER; a_options: detachable SVN_ENGINE_OPTIONS): detachable LIST [SVN_REVISION_INFO]
 		local
 			s: detachable STRING
 			cmd: STRING
@@ -150,6 +152,7 @@ feature -- Status report
 			end
 
 			create cmd.make_from_string (svn_executable_path)
+			cmd.append_string (option_to_command_line_flags (a_options))
 			if is_verbose then
 				cmd.append_string (" -v ")
 			end
@@ -194,9 +197,25 @@ feature -- Status report
 
 feature {NONE} -- impl
 
+	option_to_command_line_flags (a_options: detachable SVN_ENGINE_OPTIONS): STRING
+		do
+			create Result.make_empty
+			if a_options /= Void then
+				if attached a_options.username as u then
+					Result.append_string (" --username " + u)
+				end
+				if attached a_options.password as p then
+					Result.append_string (" --password " + p)
+				end
+				if not a_options.auth_cached then
+					Result.append_string (" --no-auth-cache " )
+				end
+			end
+		end
+
 	svn_xml_manager: detachable SVN_XML_MANAGER
 
-	impl_statuses (a_prefix_path: detachable STRING; a_path: STRING; is_verbose, is_recursive, is_remote: BOOLEAN): detachable ARRAYED_LIST [SVN_STATUS_INFO]
+	impl_statuses (a_prefix_path: detachable STRING; a_path: STRING; is_verbose, is_recursive, is_remote: BOOLEAN; a_options: detachable SVN_ENGINE_OPTIONS): detachable ARRAYED_LIST [SVN_STATUS_INFO]
 		local
 			s: detachable STRING
 			cmd: STRING
@@ -209,6 +228,7 @@ feature {NONE} -- impl
 			end
 
 			create cmd.make_from_string (svn_executable_path)
+			cmd.append_string (option_to_command_line_flags (a_options))
 			if not is_recursive then
 				cmd.append_string (" -N ")
 			end
@@ -262,7 +282,7 @@ feature {NONE} -- impl
 								debug ("SVN_ENGINE")
 									print ("Explore [" + info.absolute_path + "] %N")
 								end
-								lst2 := impl_statuses (info.display_path, info.absolute_path.string, is_verbose, is_recursive, is_remote)
+								lst2 := impl_statuses (info.display_path, info.absolute_path.string, is_verbose, is_recursive, is_remote, a_options)
 								if lst2 /= Void and then lst2.count > 0 then
 									lst.append (lst2)
 								end

@@ -26,8 +26,8 @@
 		<library name="emitter_loader" location="$EIFFEL_SRC\framework\emitter_loader\emitter_loader.ecf" readonly="false" use_application_options="true"/>
 		<library name="encoding" location="$ISE_LIBRARY\library\encoding\encoding.ecf" readonly="false"/>
 		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf" readonly="false" use_application_options="true"/>
-		<library name="framework_patterns" location="$EIFFEL_SRC\framework\patterns\patterns.ecf" readonly="false" use_application_options="true"/>
 		<library name="fmwk_utilities" location="$EIFFEL_SRC\framework\utilities\utilities.ecf"/>
+		<library name="framework_patterns" location="$EIFFEL_SRC\framework\patterns\patterns.ecf" readonly="false" use_application_options="true"/>
 		<library name="gobo_regexp" location="$ISE_LIBRARY\library\gobo\gobo_regexp.ecf"/>
 		<library name="i18n" location="$ISE_LIBRARY\library\i18n\i18n.ecf" readonly="false"/>
 		<library name="interface_names" location="$EIFFEL_SRC\framework\interface_names\interface_names.ecf" readonly="false"/>
@@ -232,9 +232,9 @@
 		<cluster name="interface" location="$EIFFEL_SRC\Eiffel\interface\" recursive="true">
 			<file_rule>
 				<exclude>/preferences$</exclude>
-				<exclude>/overrides$</exclude>
-				<exclude>/lite$</exclude>
 				<exclude>^/tty$</exclude>
+				<exclude>/lite$</exclude>
+				<exclude>/overrides$</exclude>
 			</file_rule>
 			<file_rule>
 				<exclude>/mswin$</exclude>
@@ -279,5 +279,11 @@
 	</target>
 	<target name="compile_all_batch" extends="batch">
 		<root all_classes="true"/>
+	</target>
+	<target name="compile_all_batch_unix" extends="compile_all_batch">
+		<setting name="platform" value="unix"/>
+	</target>
+	<target name="compile_all_bench_unix" extends="compile_all_bench">
+		<setting name="platform" value="unix"/>
 	</target>
 </system>

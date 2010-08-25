@@ -454,11 +454,11 @@ rt_private void root_class_updt (void)
 
 	l_rcount = wint32();
 	if (l_rcount > egc_rcount) {
-		free (egc_rlist);
-		free (egc_rcorigin);
-		free (egc_rcdt);
-		free (egc_rcoffset);
-		free (egc_rcarg);
+		eif_free (egc_rlist);
+		eif_free (egc_rcorigin);
+		eif_free (egc_rcdt);
+		eif_free (egc_rcoffset);
+		eif_free (egc_rcarg);
 		SAFE_EIF_MALLOC (egc_rlist, char*, l_rcount);
 		SAFE_EIF_MALLOC (egc_rcorigin, int32, l_rcount);
 		SAFE_EIF_MALLOC (egc_rcdt, int32, l_rcount);

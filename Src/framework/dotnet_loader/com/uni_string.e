@@ -76,9 +76,13 @@ feature -- Access
 		local
 			u_string: UNI_STRING
 			nb: INTEGER
+			l_ansi_code_page: INTEGER
 		do
 			create u_string.make_empty (a_count)
-			nb := cwel_wide_char_to_multi_byte ({WEL_CP_CONSTANTS}.Cp_acp, 0, item,
+				-- This is hard coded to compile on all platforms. Originally defined as 
+				-- {WEL_CP_CONSTANTS}.Cp_acp.
+			l_ansi_code_page := 0
+			nb := cwel_wide_char_to_multi_byte (l_ansi_code_page, 0, item,
 				a_count, u_string.item, u_string.capacity, default_pointer, default_pointer)
 			create Result.make (a_count + 1)
 			Result.from_c_substring (u_string.item, 1, a_count)

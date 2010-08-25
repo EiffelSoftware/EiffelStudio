@@ -20,6 +20,6 @@ compile_result 	validity_error NONE VD71
 define		CLASS "class TEST1 [G -> TEST2 [TEST3 [INTEGER], INTEGER, REAL]] end"
 copy_sub 	test1.e $CLUSTER test1.e
 resume_compile
-compile_result 	validity_error TEST VTUG(1)
+compile_result 	validity_error TEST1 VTUG(2)
 
 test_end

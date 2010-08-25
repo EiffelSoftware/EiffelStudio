@@ -25,18 +25,17 @@
 		<cluster name="cli_writer" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/sample$</exclude>
+				<exclude>/Clib$</exclude>
+				<exclude>/spec$</exclude>
 			</file_rule>
 			<file_rule>
-				<exclude>/md_strong_name\.e$</exclude>
-				<exclude>/md_public_key\.e$</exclude>
-				<exclude>/system_assembly_list_builder\.e$</exclude>
+				<exclude>/implementation/windows$</exclude>
 				<condition>
 					<platform excluded_value="windows"/>
 				</condition>
 			</file_rule>
 			<file_rule>
-				<exclude>/Clib$</exclude>
-				<exclude>/spec$</exclude>
+				<exclude>/implementation/unix$</exclude>
 				<condition>
 					<platform value="windows"/>
 				</condition>

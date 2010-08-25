@@ -1,0 +1,25 @@
+
+test_name	conform-to-precondition-violation
+test_description A sequence of changes causes a workbench compiler to crash with violation of precondition `other_is_valid' of {GEN_TYPE_A}.conform_to.
+
+define		CLASS "class TEST1 [G -> TEST2 [TEST3 [INTEGER], INTEGER]] end"
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_sub 	test1.e $CLUSTER test1.e
+copy_raw 	test2.e $CLUSTER test2.e
+copy_raw 	test3.e $CLUSTER test3.e
+
+compile_melted
+compile_result 	ok
+
+define		CLASS ""
+copy_sub 	test1.e $CLUSTER test1.e
+compile_melted
+compile_result 	validity_error NONE VD71
+
+define		CLASS "class TEST1 [G -> TEST2 [TEST3 [INTEGER], INTEGER, REAL]] end"
+copy_sub 	test1.e $CLUSTER test1.e
+resume_compile
+compile_result 	validity_error TEST VTUG(1)
+
+test_end

@@ -186,6 +186,7 @@ feature -- Initialization
 			is_separate := False
 			deferred_keyword := Void
 			expanded_keyword := Void
+			external_keyword := Void
 			frozen_keyword := Void
 			separate_keyword := Void
 		end

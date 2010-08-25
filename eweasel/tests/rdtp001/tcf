@@ -15,6 +15,7 @@ copy_raw	test_agent.e $CLUSTER test_agent.e
 copy_raw	es_testing_tool.e $CLUSTER es_testing_tool.e
 copy_raw	characters.e $CLUSTER characters.e
 copy_raw	test_utf8.e $CLUSTER test_utf8.e
+copy_raw	test_external.e $CLUSTER test_external.e
 
 compile_final_keep
 compile_result ok

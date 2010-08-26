@@ -1,0 +1,23 @@
+
+test_name	disk-item-io-error-2
+test_description Another sequence of changes that causes the compiler to crash in degree 3 with an I/O error in {BODY_SERVER}.disk_item.
+
+copy_sub 	Ace $TEST Ace
+copy_sub 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+compile_melted
+compile_result 	ok
+
+copy_raw 	test1_rev2.e $CLUSTER test1.e
+compile_melted
+compile_result 	ok
+
+copy_raw 	test1_rev3.e $CLUSTER test1.e
+compile_melted
+compile_result 	ok
+
+copy_raw 	test1_rev4.e $CLUSTER test1.e
+compile_melted
+compile_result 	ok
+
+test_end

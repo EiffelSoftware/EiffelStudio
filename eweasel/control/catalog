@@ -943,6 +943,7 @@ test	compiler-panic				incr383 tcf fail incrementality
 test	descriptor-list-put-crash		incr384 tcf pass incrementality
 test	deep-twin-agent-infinite-loop		incr385 tcf fail incrementality manual
 test	conform-to-precondition-violation	incr386 tcf fail incrementality
+test	disk-item-io-error-2			incr387 tcf fail incrementality
 
 
 -- Melting

@@ -1838,7 +1838,9 @@ feature -- Byte code computation
 			byte_code: BYTE_CODE
 			melted_feature: MELT_FEATURE
 		do
-			byte_code := Byte_server.item (body_index)
+			byte_code := Byte_server.disk_item (body_index)
+
+			prepare_object_relative_once (byte_code)
 
 			byte_context.set_byte_code (byte_code)
 			byte_context.set_current_feature (Current)

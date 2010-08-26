@@ -337,9 +337,6 @@ feature -- C code generation
 				buf.put_string (")) {")
 				buf.indent
 				buf.put_new_line
-				l_att_i.generate_hidden_attribute_access (context.class_type, buf, {C_CONST}.current_name)
-				buf.put_string (" = EIF_TRUE;")
-				buf.put_new_line
 				buf.put_string ("RTO_TRY")
 			else
 				if context.workbench_mode then

@@ -1443,7 +1443,15 @@ rt_private void interpret(int flag, int where)
 					*(OResult->result.EIF_REFERENCE_result) = last->it_ref;
 					break;
 				}
+			} else if (is_object_relative_once) {
+				if (once_p_obj_info.is_precompiled) {
+					offset = RTWPA(once_p_obj_info.class_id, once_p_obj_info.result, icur_dtype);
+				} else {
+					offset = RTWA(once_p_obj_info.class_id, once_p_obj_info.result, icur_dtype);
+				}
+				put_once_per_object_result (icurrent, offset, rtype, iresult);
 			}
+			
 		}
 		break;
 
@@ -3956,7 +3964,7 @@ enter_body:
 			}
 
 			if (once_p_obj_info.result > 0) {
-				/* if has returning value, retrieve once result. */
+					/* if has returning value, retrieve once result. */
 				if (once_p_obj_info.is_precompiled) {
 					offset = RTWPA(once_p_obj_info.class_id, once_p_obj_info.result, icur_dtype);
 				} else {
@@ -3983,22 +3991,6 @@ enter_body:
 				/* Declare variables for exception handling. */
 			struct ex_vect * exvecto;
 
-				/* Mark once routine as executed. */
-			if (once_p_obj_info.is_precompiled) {
-				offset = RTWPA(once_p_obj_info.class_id, once_p_obj_info.called, icur_dtype);
-			} else {
-				offset = RTWA(once_p_obj_info.class_id, once_p_obj_info.called, icur_dtype);
-			}
-			*(EIF_BOOLEAN *)(icurrent->it_ref + offset) = EIF_TRUE;
-
-				/* Init exception storage */
-			if (once_p_obj_info.is_precompiled) {
-				offset = RTWPA(once_p_obj_info.class_id, once_p_obj_info.except, icur_dtype);
-			} else {
-				offset = RTWA(once_p_obj_info.class_id, once_p_obj_info.except, icur_dtype);
-			}
-			*(EIF_REFERENCE *)(icurrent->it_ref + offset) = (EIF_REFERENCE)0;
-			
 				/* Record execution vector to catch exception. */
 			exvecto = extre ();
 				/* Set catch address. */
@@ -6020,10 +6012,13 @@ rt_private void put_once_per_object_result (EIF_TYPED_VALUE *curr, long offset, 
 	case SK_REAL32:  *(EIF_REAL_32*)(curr->it_ref + offset) = ptr->it_real32; break;
 	case SK_REAL64:  *(EIF_REAL_64*)(curr->it_ref + offset) = ptr->it_real64; break;
 	case SK_POINTER: *(EIF_POINTER*)(curr->it_ref + offset) = ptr->it_ptr;    break;
-	case SK_BIT:
 	case SK_EXP:
+		eif_std_ref_copy(ptr->it_ref, curr->it_ref + offset);
+		break;
+	case SK_BIT:
 	case SK_REF:
-					 *(EIF_REFERENCE*)(curr->it_ref + offset) = ptr->it_ptr;    break;
+		 *(EIF_REFERENCE*)(curr->it_ref + offset) = ptr->it_ref;    
+		 break;
 	}
 }
 
@@ -6047,8 +6042,10 @@ rt_private void get_once_per_object_result (EIF_TYPED_VALUE *curr, long offset, 
 	case SK_REAL32:  ptr->it_real32 = *(EIF_REAL_32*)(curr->it_ref + offset); ; break;
 	case SK_REAL64:  ptr->it_real64 = *(EIF_REAL_64*)(curr->it_ref + offset); ; break;
 	case SK_POINTER: ptr->it_ptr    = *(EIF_POINTER*)(curr->it_ref + offset); ; break;
-	case SK_BIT:
 	case SK_EXP:
+		ptr->it_ref = curr->it_ref + offset;
+		break;
+	case SK_BIT:
 	case SK_REF:
 		ptr->it_ref = *(EIF_REFERENCE*)(curr->it_ref + offset);
 		break;

@@ -19,7 +19,8 @@ inherit
 			transfer_from,
 			unselected,
 			update_api,
-			selected
+			selected,
+			prepare_object_relative_once
 		end
 
 feature -- Status report
@@ -124,6 +125,67 @@ feature -- Adaptation
 			transfer_to (unselect)
 			unselect.set_access_in (in)
 			Result := unselect
+		end
+
+feature -- Object relative once
+
+	prepare_object_relative_once (a_byte_code: BYTE_CODE)
+		local
+			l_result_assign_b: ASSIGN_B
+			l_result_attr_b: ATTRIBUTE_B
+			l_called_assign_b: ASSIGN_B
+			l_called_attr_b: ATTRIBUTE_B
+			l_compound, l_new_compound: BYTE_LIST [BYTE_NODE]
+			n: INTEGER
+		do
+			if
+				is_object_relative and then
+				attached written_class.object_relative_once_info_of_rout_id_set (rout_id_set) as l_obj_once_info
+			then
+				if attached {STD_BYTE_CODE} a_byte_code as bc then
+					create l_called_attr_b.make (l_obj_once_info.called_attribute_i)
+					l_called_attr_b.set_type (l_obj_once_info.called_type_a)
+					l_called_attr_b.set_is_attachment
+					create l_called_assign_b
+					l_called_assign_b.set_target (l_called_attr_b)
+					l_called_assign_b.set_source (create {BOOL_CONST_B}.make (True))
+
+					create l_result_attr_b.make (l_obj_once_info.result_attribute_i)
+					l_result_attr_b.set_type (a_byte_code.real_type (l_obj_once_info.result_type_a))
+					l_result_attr_b.set_is_attachment
+					create l_result_assign_b
+					l_result_assign_b.set_target (l_result_attr_b)
+					l_result_assign_b.set_source (create {RESULT_B})
+					l_compound := a_byte_code.compound
+
+					n := 1
+					if has_return_value then
+						n := n + 1
+					end
+
+					if l_compound /= Void then
+						create l_new_compound.make (l_compound.count + n)
+					else
+						create l_new_compound.make (n)
+					end
+					l_new_compound.extend (create {HIDDEN_B}.make (l_called_assign_b))
+					if l_compound /= Void and then l_compound.count > 0 then
+						from
+							l_compound.start
+						until
+							l_compound.after
+						loop
+							l_new_compound.extend (l_compound.item)
+							l_compound.forth
+						end
+					end
+					if has_return_value then
+						l_new_compound.extend (create {HIDDEN_B}.make (l_result_assign_b))
+					end
+
+					bc.set_compound (l_new_compound)
+				end
+			end
 		end
 
 feature {NONE} -- Implementation

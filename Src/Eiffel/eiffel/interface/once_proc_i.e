@@ -143,6 +143,9 @@ feature -- Object relative once
 				attached written_class.object_relative_once_info_of_rout_id_set (rout_id_set) as l_obj_once_info
 			then
 				if attached {STD_BYTE_CODE} a_byte_code as bc then
+					l_compound := a_byte_code.compound
+					n := 1
+
 					create l_called_attr_b.make (l_obj_once_info.called_attribute_i)
 					l_called_attr_b.set_type (l_obj_once_info.called_type_a)
 					l_called_attr_b.set_is_attachment
@@ -150,16 +153,14 @@ feature -- Object relative once
 					l_called_assign_b.set_target (l_called_attr_b)
 					l_called_assign_b.set_source (create {BOOL_CONST_B}.make (True))
 
-					create l_result_attr_b.make (l_obj_once_info.result_attribute_i)
-					l_result_attr_b.set_type (a_byte_code.real_type (l_obj_once_info.result_type_a))
-					l_result_attr_b.set_is_attachment
-					create l_result_assign_b
-					l_result_assign_b.set_target (l_result_attr_b)
-					l_result_assign_b.set_source (create {RESULT_B})
-					l_compound := a_byte_code.compound
-
-					n := 1
 					if has_return_value then
+						create l_result_attr_b.make (l_obj_once_info.result_attribute_i)
+						l_result_attr_b.set_type (a_byte_code.real_type (l_obj_once_info.result_type_a))
+						l_result_attr_b.set_is_attachment
+						create l_result_assign_b
+						l_result_assign_b.set_target (l_result_attr_b)
+						l_result_assign_b.set_source (create {RESULT_B})
+
 						n := n + 1
 					end
 

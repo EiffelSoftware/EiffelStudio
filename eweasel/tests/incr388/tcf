@@ -1,0 +1,33 @@
+
+test_name 	 static-type-id-crash-2
+test_description After initial compilation, changing to expanded the class that is used as actual generic for the root class and recompiling crashes the compiler with a call on Void target in {GEN_TYPE_A}.static_type_id
+
+define		EXPANDED ""
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_sub 	test1.e $CLUSTER test1.e
+copy_raw 	test2.e $CLUSTER test2.e
+copy_raw 	test3.e $CLUSTER test3.e
+compile_frozen
+compile_result 	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work 	NONE 	exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+define		EXPANDED "expanded"
+copy_sub 	test1.e $CLUSTER test1.e
+compile_frozen
+compile_result 	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work 	NONE 	exec_output2
+execute_result 	ok
+compare		exec_output2 output
+
+test_end

@@ -200,6 +200,7 @@ feature -- Text Loading
 						set_encoding (l_enc)
 						bom := encoding_converter.last_bom
 					end
+					l_file.close
 				end
 			else
 				load_file_error := True

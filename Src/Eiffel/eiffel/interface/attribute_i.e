@@ -347,7 +347,7 @@ feature -- Element Change
 				if is_initialization_required then
 					buffer.put_new_line
 					buffer.put_string ("if (!")
-					generate_attribute_access (class_type, buffer, {C_CONST}.current_name)
+					generate_attribute_access (class_type, buffer)
 					buffer.put_string (") {")
 					buffer.indent
 					if not result_type.is_attached then
@@ -363,7 +363,7 @@ feature -- Element Change
 					end
 					if has_body then
 						buffer.put_new_line
-						generate_attribute_access (class_type, buffer, {C_CONST}.current_name)
+						generate_attribute_access (class_type, buffer)
 						buffer.put_string (" = (")
 						buffer.put_string (internal_name)
 						buffer.put_string ("_body (")
@@ -391,7 +391,7 @@ feature -- Element Change
 					buffer.put_string ("return ")
 				end
 
-				generate_attribute_access (class_type, buffer, {C_CONST}.current_name)
+				generate_attribute_access (class_type, buffer)
 				buffer.put_character (';')
 				buffer.put_new_line
 
@@ -407,7 +407,7 @@ feature -- Element Change
 			end
 		end
 
-	generate_hidden_attribute_access, generate_attribute_access (class_type: CLASS_TYPE; buffer: GENERATION_BUFFER; cur: STRING)
+	generate_hidden_attribute_access, generate_attribute_access (class_type: CLASS_TYPE; buffer: GENERATION_BUFFER)
 			-- Generates attribute access.
 			-- [Redeclaration of a function into an attribute]
 		local
@@ -427,7 +427,7 @@ feature -- Element Change
 				-- already good.
 			end
 			buffer.put_character ('(')
-			buffer.put_string (cur);
+			byte_context.current_register.print_register
 			rout_id := rout_id_set.first
 			if byte_context.final_mode then
 				array_index := Eiffel_table.is_polymorphic (rout_id, class_type.type, class_type, False)
@@ -439,14 +439,7 @@ feature -- Element Change
 					buffer.put_three_character (' ', '+', ' ')
 					buffer.put_string (table_name)
 					buffer.put_character ('[')
-					if cur = {C_CONST}.current_name then
-						byte_context.generate_current_dtype
-					else
-						buffer.put_string ("Dtype(")
-						buffer.put_string (cur)
-						buffer.put_character (')')
-					end
-
+					byte_context.generate_current_dtype
 					buffer.put_three_character (' ', '-', ' ')
 					buffer.put_integer (array_index)
 					buffer.put_character (']')
@@ -471,13 +464,7 @@ feature -- Element Change
 				buffer.put_character (',')
 				buffer.put_integer (rout_info.offset)
 				buffer.put_two_character (',', ' ')
-				if cur = {C_CONST}.current_name then
-					byte_context.generate_current_dtype
-				else
-					buffer.put_string ("Dtype(")
-					buffer.put_string (cur)
-					buffer.put_character (')')
-				end
+				byte_context.generate_current_dtype
 				buffer.put_character (')')
 			else
 				buffer.put_string (" + RTWA(")
@@ -485,13 +472,7 @@ feature -- Element Change
 				buffer.put_character (',')
 				buffer.put_integer (feature_id)
 				buffer.put_two_character (',', ' ')
-				if cur = {C_CONST}.current_name then
-					byte_context.generate_current_dtype
-				else
-					buffer.put_string ("Dtype(")
-					buffer.put_string (cur)
-					buffer.put_character (')')
-				end
+				byte_context.generate_current_dtype
 				buffer.put_character (')')
 			end;
 			buffer.put_character(')')

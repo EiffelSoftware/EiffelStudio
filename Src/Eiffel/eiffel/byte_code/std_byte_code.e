@@ -100,6 +100,13 @@ feature -- Analyzis
 			end
 			l_context.set_assertion_type (0)
 
+				--| Check if this is a object relative once, since the generated code is using dtype more than once
+				--| See ONCE_BYTE_CODE.generate_once_prologue and generate_once_epilogue
+			if is_object_relative_once then
+				context.add_dt_current
+				context.add_dt_current
+			end
+
 				-- Local variables should be recorded because their types
 				-- are used to evaluate types of object test locals.
 			setup_local_variables (False)
@@ -118,6 +125,7 @@ feature -- Analyzis
 
 				-- Check if we need GC hooks for current body.
 			l_context.compute_need_gc_hooks (keep_assertions)
+
 
 				-- Analyze arguments
 			analyze_arguments
@@ -880,12 +888,6 @@ end
 
 				-- Generate temporary locals under the control of the GC
 			context.generate_temporary_ref_variables
-
-			if is_object_relative_once then
-					-- We need at least twice the dtype
-				context.add_dt_current
-				context.add_dt_current
-			end
 
 				-- Result is declared only if needed. For onces, it is
 				-- accessed via a key allowing us to have them per thread.

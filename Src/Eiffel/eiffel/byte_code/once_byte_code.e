@@ -298,9 +298,7 @@ feature -- C code generation
 			buf: like buffer
 		do
 			buf := buffer
-			if is_object_relative_once then
-				context.add_dt_current
-			else
+			if not is_object_relative_once then
 				if context.workbench_mode then
 					if is_process_relative_once then
 						generate_once_result_definition ("RTOQR", "RTOQD")
@@ -329,7 +327,6 @@ feature -- C code generation
 		do
 			buf := buffer
 			if is_object_relative_once then
-				context.add_dt_current
 				l_att_i := context.associated_class.object_relative_once_info (rout_id).called_attribute_i
 				buf.put_new_line
 				buf.put_string ("if (!EIF_TEST(")
@@ -406,7 +403,6 @@ feature -- C code generation
 				-- See `generate_once_prologue' for details
 			buf := context.buffer
 			if is_object_relative_once then
-				context.add_dt_current
 				l_obj_once_info := context.associated_class.object_relative_once_info (rout_id)
 				-- If needed, save result if any: now this is done in ONCE_FUNC_I.prepare_object_relative_once
 
@@ -415,14 +411,14 @@ feature -- C code generation
 				buf.put_string ("RTO_EXCEPT")
 					-- Record exception for future use
 				buf.put_new_line
-				l_obj_once_info.exception_attribute_i.generate_hidden_attribute_access (context.class_type, buf, {C_CONST}.current_name) --context.current_register.register_name)
+				l_obj_once_info.exception_attribute_i.generate_hidden_attribute_access (context.class_type, buf, {C_CONST}.current_name)
 				buf.put_string (" = RTLA;")
 				buf.put_new_line
 				buf.put_string ("RTO_END_EXCEPT")
 				buf.put_new_line
 				buf.put_string ({C_CONST}.if_conditional)
 				buf.put_two_character (' ', '(')
-				l_obj_once_info.exception_attribute_i.generate_hidden_attribute_access (context.class_type, buf, {C_CONST}.current_name) --context.current_register.register_name)
+				l_obj_once_info.exception_attribute_i.generate_hidden_attribute_access (context.class_type, buf, {C_CONST}.current_name)
 				buf.put_string (" != NULL) {")
 				buf.indent
 				buf.put_new_line
@@ -440,12 +436,12 @@ feature -- C code generation
 					-- Raise the saved exception if any
 				buf.put_string ({C_CONST}.if_conditional)
 				buf.put_two_character (' ', '(')
-				l_obj_once_info.exception_attribute_i.generate_hidden_attribute_access (context.class_type, buf, {C_CONST}.current_name) --context.current_register.register_name)
+				l_obj_once_info.exception_attribute_i.generate_hidden_attribute_access (context.class_type, buf, {C_CONST}.current_name)
 				buf.put_string (" != NULL) {")
 				buf.indent
 				buf.put_new_line
 				buf.put_string ("oraise (")
-				l_obj_once_info.exception_attribute_i.generate_hidden_attribute_access (context.class_type, buf, {C_CONST}.current_name) --context.current_register.register_name)					
+				l_obj_once_info.exception_attribute_i.generate_hidden_attribute_access (context.class_type, buf, {C_CONST}.current_name)
 				buf.put_two_character (')', ';')
 				buf.exdent
 				buf.put_new_line
@@ -454,7 +450,7 @@ feature -- C code generation
 						-- Return save result if any
 					buf.put_new_line
 					buf.put_string ("Result = ")
-					l_obj_once_info.result_attribute_i.generate_hidden_attribute_access (context.class_type, buf, {C_CONST}.current_name) --context.current_register.register_name)
+					l_obj_once_info.result_attribute_i.generate_hidden_attribute_access (context.class_type, buf, {C_CONST}.current_name)
 					buf.put_character (';')
 				end
 				buf.exdent

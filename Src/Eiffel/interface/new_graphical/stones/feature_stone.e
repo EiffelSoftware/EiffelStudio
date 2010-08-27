@@ -45,7 +45,9 @@ feature {NONE} -- Initialization
 			else
 				l_feature := a_feature
 			end
-			class_stone_make (l_feature.written_class)
+			if attached l_feature.written_class as wc then
+				class_stone_make (wc)
+			end
 			e_feature := l_feature
 			internal_start_position := -1
 			internal_end_position := -1

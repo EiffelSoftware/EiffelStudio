@@ -14,6 +14,7 @@ inherit
 		redefine
 			adapted_in,
 			annotation_flags,
+			as_non_separate,
 			check_const_gen_conformance,
 			convert_to,
 			description,
@@ -40,6 +41,7 @@ inherit
 			is_separate,
 			make_type_byte_code,
 			same_as,
+			set_separate_mark,
 			skeleton_adapted_in
 		end
 
@@ -79,6 +81,31 @@ feature -- Modification
 			is_separate := True
 		ensure
 			is_separate: is_separate
+		end
+
+	reset_is_separate
+			-- Mark the type as being non-separate.
+		do
+			reset_separate_mark
+			is_separate := False
+		ensure
+			is_non_separate: not is_separate
+		end
+
+	set_separate_mark
+			-- <Precursor>
+		do
+			Precursor
+			set_is_separate
+		end
+
+feature -- Duplication
+
+	as_non_separate: like Current
+			-- <Precursor>
+		do
+			Result := duplicate
+			Result.reset_is_separate
 		end
 
 feature -- Visitor

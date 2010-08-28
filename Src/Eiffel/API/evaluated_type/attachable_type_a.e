@@ -19,7 +19,8 @@ inherit
 			is_implicitly_attached,
 			is_separate,
 			to_other_attachment,
-			to_other_immediate_attachment
+			to_other_immediate_attachment,
+			to_other_separateness
 		end
 
 feature -- Status report
@@ -118,6 +119,12 @@ feature -- Modification
 			-- Mark type declaration as having an explicit separate mark.
 		do
 			has_separate_mark := True
+		end
+
+	reset_separate_mark
+			-- Mark type declaration as having no separate mark.
+		do
+			has_separate_mark := False
 		end
 
 	set_marks_from (other: ATTACHABLE_TYPE_A)
@@ -255,6 +262,44 @@ feature -- Duplication
 			end
 		end
 
+	to_other_separateness (other: ATTACHABLE_TYPE_A): like Current
+			-- Current type to which attachment status of `other' is applied
+		do
+			Result := Current
+			if other /= Result then
+				if not other.is_separate then
+					if is_separate then
+						Result := as_non_separate
+					end
+				elseif other.has_separate_mark then
+					if not is_expanded and then not has_detachable_mark then
+						Result := duplicate
+						Result.set_separate_mark
+					end
+				elseif not is_separate then
+					Result := as_separate
+				end
+			end
+		end
+
+	as_separate: like Current
+			-- Separate version of this type
+		require
+			not_separate: not is_separate
+		do
+			Result := duplicate
+			Result.set_separate_mark
+		end
+
+	as_non_separate: like Current
+			-- Non-separate version of this type
+		require
+			is_separate: is_separate
+		do
+			Result := duplicate
+			Result.reset_separate_mark
+		end
+
 feature {NONE} -- Attachment properties
 
 	attachment_bits: NATURAL_8
@@ -307,6 +352,10 @@ feature {NONE} -- Output
 				f.add_space
 			end
 		end
+
+invariant
+	expanded_consistency: is_expanded implies not is_separate
+	separate_mark_consistency: not is_expanded implies (has_separate_mark implies is_separate)
 
 note
 	copyright:	"Copyright (c) 1984-2010, Eiffel Software"

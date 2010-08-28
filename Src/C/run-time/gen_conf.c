@@ -500,7 +500,7 @@ rt_shared void eif_gen_conf_init (EIF_TYPE_INDEX max_dtype)
 
 	for (dt = 0, pt = eif_par_table2; dt <= eif_par_table2_size; ++dt, ++pt)
 	{
-		if (*pt == (struct eif_par_types *)0)
+		if ((*pt == (struct eif_par_types *)0) || EIF_IS_SEPARATE_TYPE (System((*pt)->dtype)))
 			continue;
 
 		cname = System((*pt)->dtype).cn_generator;

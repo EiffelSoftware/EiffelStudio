@@ -1567,9 +1567,30 @@ feature {NONE} -- Class initialization
 
 			set_generics (gens)
 
-			if gens /= Void then
+			if gens = Void then
+				create {CL_TYPE_A} internal_actual_type.make (class_id)
+			else
 					-- Check generic parameter declaration rule
 				check_generics
+				if attached (create {TYPE_LIST_AS}.make (gens.count)) as g then
+					from
+						gens.start
+					until
+						gens.after
+					loop
+						g.extend (gens.item_for_iteration.formal)
+						gens.forth
+					end
+					internal_actual_type := type_a_generator.evaluate_class_type (
+						create {GENERIC_CLASS_TYPE_AS}.initialize (ast_b.class_name, g),
+						Current
+					)
+				end
+			end
+			if lace_class.is_attached_by_default then
+				internal_actual_type.set_is_attached
+			else
+				internal_actual_type.set_is_implicitly_attached
 			end
 
 			if not is_first_compilation then

@@ -2114,38 +2114,12 @@ feature -- Actual class type
 
 	actual_type: CL_TYPE_A
 			-- Actual type of the class
-		local
-			i, nb: INTEGER
-			actual_generic: ARRAY [TYPE_A]
-			formal: FORMAL_A
-			l_formal_dec: FORMAL_CONSTRAINT_AS
 		do
-			if generics = Void then
-				create Result.make (class_id)
-			else
-				from
-					i := 1
-					nb := generics.count
-					create actual_generic.make (1, nb)
-					create {GEN_TYPE_A} Result.make (class_id, actual_generic)
-				until
-					i > nb
-				loop
-					l_formal_dec ?= generics.i_th (i)
-					check l_formal_dec_not_void: l_formal_dec /= Void end
-					create formal.make (l_formal_dec.is_reference, l_formal_dec.is_expanded, i)
-					actual_generic.put (formal, i)
-					i := i + 1
-				end
-			end
-			if lace_class.is_attached_by_default then
-				Result.set_is_attached
-			else
-				Result.set_is_implicitly_attached
-			end
-		ensure
-			actual_type_not_void: Result /= Void
+			Result := internal_actual_type
 		end
+
+	internal_actual_type: like actual_type
+			-- Computed actual type of the class
 
 feature {TYPE_AS, AST_TYPE_A_GENERATOR, AST_FEATURE_CHECKER_GENERATOR} -- Actual class type
 

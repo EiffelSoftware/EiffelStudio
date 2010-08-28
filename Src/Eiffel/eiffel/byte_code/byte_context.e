@@ -1196,11 +1196,15 @@ feature -- Access
 				formal_position := formal.position
 				Result := a_context_type.generics.item (formal_position)
 				if Result.is_formal then
+					formal ?= Result
+					check formal_not_void: formal /= Void end
 					if formal.is_multi_constrained (a_context_type.associated_class) then
 						create {MULTI_FORMAL_A} Result.make (True, formal.is_expanded, formal.position)
 					else
 						Result := a_context_type.associated_class.constrained_type (formal_position)
 					end
+						-- Preserve attachment and separateness status of the context actual parameter.
+					Result := Result.to_other_attachment (formal).to_other_separateness (formal)
 				end
 			end
 		ensure

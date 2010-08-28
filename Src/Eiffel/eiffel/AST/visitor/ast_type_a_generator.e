@@ -184,32 +184,62 @@ feature {NONE} -- Visitor implementation
 		local
 			f: FORMAL_A
 			types_done: LINKED_LIST [INTEGER]
-			types_todo: LINKED_LIST [INTEGER]
+			todo_attached: LINKED_LIST [INTEGER]
+			todo_separate: LINKED_LIST [INTEGER]
 			l: CONSTRAINT_LIST_AS
 			t: TYPE_AS
 			i: INTEGER
+			j: INTEGER
+			s: BOOLEAN
 		do
 			create f.make (l_as.is_reference, l_as.is_expanded, l_as.position)
 			last_type := f
+				-- The formal generic is separate by default.
+			s := True
 			if l_as.has_attached_mark then
 				f.set_attached_mark
 				check f.is_attached end
 			elseif l_as.has_detachable_mark then
 				f.set_detachable_mark
-			elseif current_class.generics [l_as.position].constraints /= Void then
-					-- Check attachment status of constraints.
+			end
+			if l_as.has_separate_mark then
+				f.set_separate_mark
+			end
+			if current_class.generics [l_as.position].constraints /= Void then
+					-- Check attachment and separateness status of constraints.
+					-- The loop iterates over all constraints recursively.
+					-- The condition to terminate it for attachment status is to
+					-- find an expanded type, since than the type is known to be
+					-- attached, but the initialization is not required.
+					-- The condition to terminate for separate status is to
+					-- find a non-separate constraint since then the formal
+					-- is not separate.
 				from
 					create types_done.make
-					create types_todo.make
-					types_todo.extend (l_as.position)
+					create todo_attached.make
+					create todo_separate.make
+					todo_attached.extend (l_as.position)
+					todo_separate.extend (l_as.position)
 				until
-					types_todo.is_empty
+					todo_attached.is_empty and then todo_separate.is_empty
 				loop
 					from
-						types_todo.start
-						l := current_class.generics [types_todo.item_for_iteration].constraints
-						types_done.extend (types_todo.item_for_iteration)
-						types_todo.remove
+						if not todo_attached.is_empty then
+							todo_attached.start
+							j := todo_attached.item_for_iteration
+							todo_attached.remove
+								-- Remove this item from `todo_separate'.
+							todo_separate.search (j)
+							if not todo_separate.exhausted then
+								todo_separate.remove
+							end
+						else
+							todo_separate.start
+							j := todo_separate.item_for_iteration
+							todo_separate.remove
+						end
+						l := current_class.generics [j].constraints
+						types_done.extend (j)
 						i := l.count
 					until
 						i <= 0
@@ -226,39 +256,71 @@ feature {NONE} -- Visitor implementation
 								-- The actual type should be expanded.
 							f.set_is_attached
 							f.set_is_expanded
-							types_todo.wipe_out
+							todo_attached.wipe_out
+								-- The generic is not separate.
+							s := False
+							todo_separate.wipe_out
 								-- Terminate iteration.
 							i := 1
-						elseif t.has_detachable_mark then
-								-- Skip the detachable constraint because it does not allow to see
-								-- if the formal is always attached or not.
-						elseif t.has_attached_mark then
-							f.set_is_attached
-							types_todo.wipe_out
 						elseif attached {FORMAL_AS} t as ff then
 								-- Record new formal generic for processing (if not done yet).
-							if not types_done.has (ff.position) and then not types_todo.has (ff.position) then
-									-- This is new formal generic type.
+							if not types_done.has (ff.position) then
+									-- This is a new formal generic type.
 								if current_class.generics [ff.position].constraints = Void then
-										-- Formal generic without constraints does not provide attachment status.
+										-- Formal generic without constraints does not provide attachment status
+										-- not specifies non-separate status.
 									types_done.extend (ff.position)
 								else
-										-- The contraints have to be checked.
-									types_todo.extend (ff.position)
+									if t.has_detachable_mark then
+											-- Skip the detachable type because it does not allow to see
+											-- if the formal is always attached or not.
+									else
+										if t.has_attached_mark then
+											f.set_is_attached
+										end
+										if not todo_attached.has (ff.position) then
+												-- The contraints have to be checked.
+											todo_attached.extend (ff.position)
+										end
+									end
+									if s then
+											-- The formal is still considered separate.
+										if t.has_separate_mark then
+												-- Skip separate type because it does not allow to see
+												-- if the formal is always non-separate.
+										elseif not todo_separate.has (ff.position) then
+												-- The contraints have to be checked.
+											todo_separate.extend (ff.position)
+										end
+									end
 								end
 							end
-						elseif current_class.lace_class.is_attached_by_default then
-								-- The type must be a class type without any attachment marks.
-								-- Let's use the `current_class' default attachment settings.
-							f.set_is_attached
-							types_todo.wipe_out
+						else
+								-- The type must be a class type.
+							if t.has_detachable_mark then
+									-- Skip the detachable constraint because it does not allow to see
+									-- if the formal is always attached or not.
+							elseif
+								t.has_attached_mark or else
+								current_class.lace_class.is_attached_by_default
+							then
+									-- The type must be a class type with an attached mark
+									-- or without any attachment marks. Let's use the `current_class'
+									-- default attachment settings in the latter case.
+								f.set_is_attached
+							end
+							if not t.has_separate_mark then
+									-- The generic is not separate.
+								s := False
+								todo_separate.wipe_out
+							end
 						end
 						i := i - 1
 					end
 				end
 			end
-			if l_as.has_separate_mark then
-				f.set_separate_mark
+			if s then
+				f.set_is_separate
 			end
 		end
 

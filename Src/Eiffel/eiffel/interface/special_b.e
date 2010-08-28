@@ -291,6 +291,7 @@ feature {NONE} -- Implementation
 			f: FORMAL_A
 		do
 			create f.make (False, False, 1)
+			f.set_is_separate
 			create args.make (2)
 			args.extend (f)
 			args.extend (Integer_type)
@@ -312,6 +313,7 @@ feature {NONE} -- Implementation
 			create Result
 			Result.set_arguments (args)
 			create f.make (False, False, 1)
+			f.set_is_separate
 			Result.set_type (f, 0)
 			Result.set_feature_name_id (Names_heap.item_name_id, 0)
 		ensure
@@ -322,9 +324,12 @@ feature {NONE} -- Implementation
 			-- Required signature for feature `to_array' of class SPECIAL
 		local
 			l_gen_type: GEN_TYPE_A
+			f: FORMAL_A
 		do
+			create f.make (False, False, 1)
+			f.set_is_separate
 			create Result
-			create l_gen_type.make (system.array_id, << create {FORMAL_A}.make (False, False, 1) >>)
+			create l_gen_type.make (system.array_id, << f >>)
 			if not lace_class.is_void_unsafe then
 				l_gen_type.set_is_attached
 			end
@@ -341,6 +346,7 @@ feature {NONE} -- Implementation
 			f: FORMAL_A
 		do
 			create f.make (False, False, 1)
+			f.set_is_separate
 			create args.make (2)
 			args.extend (f)
 			args.extend (Integer_type)

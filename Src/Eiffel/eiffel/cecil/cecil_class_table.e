@@ -140,6 +140,7 @@ feature {NONE} -- C code generation
 			l_keys: like keys
 			l_is_generic: BOOLEAN
 			cl_name: STRING
+			t: CLASS_TYPE
 		do
 			l_values := values
 			l_keys := keys
@@ -271,17 +272,18 @@ feature {NONE} -- C code generation
 							-- Although it is a loop, only one iteration of it will produce
 							-- an ID because we are in a non generic class and it can only
 							-- have at most 2 types: a non-expanded one and an expanded one.
+						debug ("fixme")
+							fixme ("Process separate types.")
+						end
 						from
 							l_types := l_class.types
 							l_types.start
 						until
 							l_types.after
 						loop
-							if
-								(for_expanded and l_types.item.is_expanded) or
-								(not for_expanded and not l_types.item.is_expanded)
-							then
-								buffer.put_type_id (l_types.item.type_id)
+							t := l_types.item
+							if not t.is_separate and then for_expanded = t.is_expanded then
+								buffer.put_type_id (t.type_id)
 							end
 							l_types.forth
 						end
@@ -322,6 +324,7 @@ feature {NONE} -- Byte code generation
 			l_keys: like keys
 			l_values: like values
 			l_is_generic: BOOLEAN
+			t: CLASS_TYPE
 		do
 			l_values := values
 			l_keys := keys
@@ -366,16 +369,17 @@ feature {NONE} -- Byte code generation
 							-- Although it is a loop, only one iteration of it will produce
 							-- an ID because we are in a non generic class and it can only
 							-- have at most 2 types: a non-expanded one and an expanded one.
+						debug ("fixme")
+							fixme ("Process separate types.")
+						end
 						from
 							l_types := l_class.types
 							l_types.start
 						until
 							l_types.after
 						loop
-							if
-								(for_expanded and l_types.item.is_expanded) or
-								(not for_expanded and not l_types.item.is_expanded)
-							then
+							t := l_types.item
+							if not t.is_separate and then t.is_expanded = for_expanded then
 								ba.append_short_integer (l_types.item.type_id - 1)
 							end
 							l_types.forth
@@ -392,10 +396,7 @@ feature {NONE} -- Byte code generation
 						until
 							l_types.after
 						loop
-							if
-								(for_expanded and l_types.item.is_expanded) or
-								(not for_expanded and not l_types.item.is_expanded)
-							then
+							if l_types.item.is_expanded = for_expanded then
 								nb_types := nb_types + 1
 							end
 							l_types.forth
@@ -412,10 +413,7 @@ feature {NONE} -- Byte code generation
 						until
 							l_types.after
 						loop
-							if
-								(for_expanded and l_types.item.is_expanded) or
-								(not for_expanded and not l_types.item.is_expanded)
-							then
+							if l_types.item.is_expanded = for_expanded then
 								if l_is_generic then
 									gen_type ?= l_types.item.type
 									check

@@ -917,6 +917,16 @@ feature -- Attachment properties
 			result_attached: Result /= Void
 		end
 
+	to_other_separateness (other: ATTACHABLE_TYPE_A): like Current
+			-- Current type to which separateness status of `other' is applied
+		require
+			other_attached: other /= Void
+		do
+			Result := Current
+		ensure
+			result_attached: Result /= Void
+		end
+
 feature -- Output
 
 	frozen append_to (a_text_formatter: TEXT_FORMATTER)

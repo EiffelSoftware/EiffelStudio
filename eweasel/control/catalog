@@ -1752,6 +1752,7 @@ test	chained-generic-constraints		term187 tcf fail termination formal generic co
 test	static-access-on-generic-in-inspect	term188 tcf fail termination formal generic
 test	vmfn-reporting-crash				term189 tcf fail termination validity
 test	conform-to-type-precondition-violation	term190 tcf fail termination validity
+test	generated-id-assertion-violation	term191 tcf fail termination multiconstraint expanded
 
 -- Config
 

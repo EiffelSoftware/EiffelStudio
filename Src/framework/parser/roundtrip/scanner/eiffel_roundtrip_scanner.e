@@ -98,6 +98,18 @@ feature -- Scann
 			match_list_set: not has_syntax_error implies match_list /= Void
 		end
 
+	scan_utf8_string (a_string: STRING_8)
+			-- Scan `a_string' in UTF-8.
+		require
+			a_string_not_void: a_string /= Void
+		do
+			create input_buffer.make (a_string)
+			yy_load_input_buffer
+			scan
+		ensure
+			match_list_set: not has_syntax_error implies match_list /= Void
+		end
+
 feature -- Status reporting
 
 	has_syntax_error: BOOLEAN

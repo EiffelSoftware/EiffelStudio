@@ -2114,12 +2114,43 @@ feature -- Actual class type
 
 	actual_type: CL_TYPE_A
 			-- Actual type of the class
+
+feature {NONE} -- Initialization
+
+	initialize_actual_type
+			-- Initialize `actual_type'.
+		local
+			a: CL_TYPE_A
+			t: ARRAY [TYPE_A]
 		do
-			Result := internal_actual_type
+			if not attached generics as g then
+				create {CL_TYPE_A} a.make (class_id)
+			else
+				create t.make_empty
+				across
+					g as c
+				loop
+					t.force (type_a_generator.evaluate_type (c.item.formal, Current), t.upper + 1)
+				end
+				create {GEN_TYPE_A} a.make (class_id, t)
+			end
+			if lace_class.is_attached_by_default then
+				a.set_is_attached
+			else
+				a.set_is_implicitly_attached
+			end
+			actual_type := a
 		end
 
-	internal_actual_type: like actual_type
-			-- Computed actual type of the class
+	create_generic_type (g: ARRAY [TYPE_A]): GEN_TYPE_A
+			-- Create generic type with actual generics `g' for the current class.
+		require
+			g_attached: attached g
+		do
+			create {GEN_TYPE_A} Result.make (class_id, g)
+		ensure
+			result_attached: attached Result
+		end
 
 feature {TYPE_AS, AST_TYPE_A_GENERATOR, AST_FEATURE_CHECKER_GENERATOR} -- Actual class type
 
@@ -3292,6 +3323,7 @@ feature {CLASS_I} -- Settings
 			cl_different_from_current_lace_class: cl /= original_class
 		do
 			original_class := cl
+			initialize_actual_type
 		ensure
 			original_class_set: original_class = cl
 		end

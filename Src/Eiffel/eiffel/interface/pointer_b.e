@@ -12,7 +12,7 @@ inherit
 		rename
 			make as basic_make
 		redefine
-			actual_type, partial_actual_type, constraint_actual_type,
+			initialize_actual_type, partial_actual_type, constraint_actual_type,
 			is_typed_pointer, check_validity
 		end
 
@@ -33,21 +33,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	actual_type: BASIC_A
-			-- Actual double type
-		local
-			l_formal: FORMAL_A
-		do
-			if is_typed_pointer then
-				create l_formal.make (False, False, 1)
-				l_formal.set_is_separate
-				create {TYPED_POINTER_A} Result.make_typed (l_formal)
-			else
-				Result := Pointer_type
-			end
-		end
-
-	constraint_actual_type: BASIC_A
+	constraint_actual_type: CL_TYPE_A
 			-- Actual double type
 		do
 			if generics = Void then
@@ -63,6 +49,19 @@ feature -- Access
 
 	is_typed_pointer: BOOLEAN
 			-- Is current representing TYPED_POINTER?
+
+feature {NONE} -- Initialization
+
+	initialize_actual_type
+			-- <Precursor>
+		do
+			if is_typed_pointer and then attached generics as g and then g.count = 1 then
+				create {TYPED_POINTER_A} actual_type.make_typed
+					(type_a_generator.evaluate_type (g.first.formal, Current))
+			else
+				actual_type := Pointer_type
+			end
+		end
 
 feature {CLASS_TYPE_AS} -- Actual class type
 

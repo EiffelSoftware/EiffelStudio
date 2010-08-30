@@ -10,7 +10,7 @@ class NATIVE_ARRAY_B
 inherit
 	EIFFEL_CLASS_C
 		redefine
-			check_validity, new_type, is_native_array, partial_actual_type, actual_type, constraint_actual_type
+			check_validity, new_type, is_native_array, partial_actual_type, create_generic_type, constraint_actual_type
 		end
 
 	SPECIAL_CONST
@@ -133,39 +133,6 @@ feature -- Generic derivation
 
 feature -- Actual class type
 
-	actual_type: CL_TYPE_A
-			-- Actual type of the class
-		local
-			i, nb: INTEGER
-			actual_generic: ARRAY [TYPE_A]
-			formal: FORMAL_A
-			l_formal_dec: FORMAL_DEC_AS
-		do
-			if generics = Void then
-				create Result.make (class_id)
-			else
-				from
-					i := 1
-					nb := generics.count
-					create actual_generic.make (1, nb)
-					create {NATIVE_ARRAY_TYPE_A} Result.make (class_id, actual_generic)
-				until
-					i > nb
-				loop
-					l_formal_dec := generics.i_th (i)
-					create formal.make (l_formal_dec.is_reference, l_formal_dec.is_expanded, i)
-					actual_generic.put (formal, i)
-					i := i + 1
-				end
-			end
-				-- Note that NATIVE_ARRAY is not expanded by default
-			if lace_class.is_attached_by_default then
-				Result.set_is_attached
-			else
-				Result.set_is_implicitly_attached
-			end
-		end
-
 	constraint_actual_type: CL_TYPE_A
 			-- Actual type of the class
 		local
@@ -188,6 +155,14 @@ feature -- Actual class type
 				end
 			end
 				-- Note that NATIVE_ARRAY is not expanded by default
+		end
+
+feature {NONE} -- Initialization
+
+	create_generic_type (g: ARRAY [TYPE_A]): GEN_TYPE_A
+			-- <Precursor>
+		do
+			create {NATIVE_ARRAY_TYPE_A} Result.make (class_id, g)
 		end
 
 feature {CLASS_TYPE_AS} -- Actual class type
@@ -317,7 +292,7 @@ feature {NONE}
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -330,22 +305,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- end of NATIVE_ARRAY_B

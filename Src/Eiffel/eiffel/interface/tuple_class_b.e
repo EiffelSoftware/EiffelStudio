@@ -11,7 +11,8 @@ class
 inherit
 	EIFFEL_CLASS_C
 		redefine
-			actual_type,
+			create_generic_type,
+			initialize_actual_type,
 			is_tuple,
 			partial_actual_type
 		end
@@ -24,36 +25,26 @@ feature -- Status report
 	is_tuple: BOOLEAN = True
 			-- Current class is TUPLE.
 
-feature -- Actual class type
+feature {NONE} -- Initialization
 
-	actual_type: TUPLE_TYPE_A
-			-- Actual type of the class
-		local
-			i, count: INTEGER
-			actual_generic: ARRAY [FORMAL_A]
-			formal: FORMAL_A
+	initialize_actual_type
 		do
 			if generics /= Void then
-				from
-					i := 1
-					count := generics.count
-					create actual_generic.make (1, count)
-				until
-					i > count
-				loop
-					create formal.make (False, False, 1)
-					actual_generic.put (formal, i)
-					i := i + 1
+				Precursor
+			else
+				create {TUPLE_TYPE_A} actual_type.make (class_id, <<>>)
+				if lace_class.is_attached_by_default then
+					actual_type.set_is_attached
+				else
+					actual_type.set_is_implicitly_attached
 				end
-			else
-				create actual_generic.make (1, 0)
 			end
-			create Result.make (class_id, actual_generic)
-			if lace_class.is_attached_by_default then
-				Result.set_is_attached
-			else
-				Result.set_is_implicitly_attached
-			end
+		end
+
+	create_generic_type (g: ARRAY [TYPE_A]): GEN_TYPE_A
+			-- <Precursor>
+		do
+			create {TUPLE_TYPE_A} Result.make (class_id, g)
 		end
 
 feature {CLASS_TYPE_AS} -- Actual class type
@@ -85,7 +76,7 @@ invariant
 	types_has_only_one_element: types /= Void implies types.count <= 1
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -98,22 +89,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

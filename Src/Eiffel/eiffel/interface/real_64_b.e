@@ -1,26 +1,26 @@
 note
+	description: "Internal representation of class REAL_64."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
--- Internal representation of class DOUBLE
 
 class REAL_64_B
 
 inherit
 	CLASS_B
 		redefine
-			actual_type
+			initialize_actual_type
 		end
 
 create
 	make
 
-feature
+feature {NONE} -- Initialization
 
-	actual_type: REAL_A
-			-- Actual double type
-		once
-			Result := Real_64_type
-		end;
+	initialize_actual_type
+			-- <Precursor>
+		do
+			actual_type := real_64_type
+		end
 
 note
 	copyright:	"Copyright (c) 1984-2010, Eiffel Software"

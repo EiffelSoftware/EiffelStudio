@@ -1,0 +1,33 @@
+
+test_name	constant-suppliers-crash
+test_description A sequence of changes crashes the compiler with a call on Void target in {CONSTANT_I}.suppliers.
+
+define		EXPANDED ""
+define		FEATURE "ermine: INTEGER = 47"
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_sub 	test1.e $CLUSTER test1.e
+copy_raw 	test2.e $CLUSTER test2.e
+copy_raw 	testx.e $CLUSTER testx.e
+
+compile_melted
+compile_result 	ok
+
+define		FEATURE ""
+copy_sub 	test1.e $CLUSTER test1.e
+compile_melted
+compile_result 	validity_error TESTX VEEN
+
+define		EXPANDED "expanded "
+define		FEATURE "ermine: INTEGER = 47"
+copy_sub 	test1.e $CLUSTER test1.e
+resume_compile
+compile_result 	validity_error TEST1 VLEC
+
+define		EXPANDED ""
+copy_sub 	test1.e $CLUSTER test1.e
+resume_compile
+compile_result 	ok
+
+test_end
+

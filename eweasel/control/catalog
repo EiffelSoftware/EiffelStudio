@@ -947,6 +947,7 @@ test	disk-item-io-error-2			incr387 tcf fail incrementality
 test	static-type-id-crash-2			incr388 tcf fail incrementality
 test	remove-occurrence-precondition-violation	incr389 tcf fail incrementality
 test	constant-suppliers-crash		incr390 tcf fail incrementality
+test	rout-entry-crash-2			incr391 tcf fail incrementality
 
 
 -- Melting

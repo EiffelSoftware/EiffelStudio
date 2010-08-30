@@ -73,7 +73,7 @@ feature -- Access
 						else
 							l_scanner.set_syntax_version ({EIFFEL_SCANNER}.ecma_syntax)
 						end
-						l_scanner.scan_string (l_class.text)
+						l_scanner.scan_utf8_string (l_text)
 						Result := l_scanner.match_list
 						Result.set_class_id (an_id)
 						Result.set_generated (l_class.lace_class.date)

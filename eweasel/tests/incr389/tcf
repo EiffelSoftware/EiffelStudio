@@ -1,0 +1,33 @@
+
+test_name	remove-occurrence-precondition-violation	
+test_description A sequence of changes causes an assertion-enabled compiler to crash with violation of precondition `consistency' of {SUPPLIER_LIST}.remove_occurrence.
+
+define		FEATURE "ermine: like {TEST1}.default.out.count = 13"
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_sub 	test1.e $CLUSTER test1.e
+copy_raw 	test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result 	ok
+
+define		FEATURE "ermine: like {TEST1}.default.out = 13"
+copy_sub 	test1.e $CLUSTER test1.e
+compile_melted
+compile_result 	validity_error TEST1 VQMC
+
+define		FEATURE "ermine: like {TEST1}.default.out do end"
+copy_sub 	test1.e $CLUSTER test1.e
+resume_compile
+compile_result 	validity_error TEST2 VSTA(2)
+
+define		FEATURE "ermine: like {TEST1}.default.out.count = 13"
+copy_sub 	test1.e $CLUSTER test1.e
+resume_compile
+compile_result 	ok
+
+execute_work 	NONE 	exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+test_end

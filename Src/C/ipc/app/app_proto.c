@@ -216,6 +216,7 @@ static int curr_modify = NO_CURRMODIF;
 	case CHANGE_THREAD:					/* Thread id used to precise current thread in debugger */
 #ifdef EIF_THREADS
 		dthread_id = (EIF_THR_TYPE) arg_3_p;
+		REGISTER_DBG_THREAD_ID(dthread_id);
 #else
 		dthread_id = (rt_uint_ptr) arg_3_p;
 #endif

@@ -12,7 +12,7 @@ inherit
 	APPLICATION_EXECUTION
 		redefine
 			status,
-			send_breakpoints_for_stepping,
+			send_execution_information,
 			is_valid_and_known_object_address,
 			can_not_launch_system_message,
 			recycle,
@@ -1098,10 +1098,9 @@ feature {NONE} -- Stepping
 
 feature -- Breakpoints controller
 
-	send_breakpoints_for_stepping (a_execution_mode: INTEGER; ign_bp: BOOLEAN)
-			-- Send breakpoints for step operation
-			-- called by `send_breakpoints'
-			-- DO NOT CALL DIRECTLY
+	send_execution_information (a_execution_mode: INTEGER; ign_bp: BOOLEAN)
+			-- <Precursor/>
+			-- insert a breakpoint on entry point if stepping.
 		local
 			l_entry_fi: FEATURE_I
 			bpm: BREAKPOINTS_MANAGER
@@ -1113,13 +1112,18 @@ feature -- Breakpoints controller
 				debug ("debugger_trace_stepping")
 					print ("Let's add a breakpoint at the entry point of the system%N")
 				end
-				l_entry_fi := Il_debug_info_recorder.entry_point_feature_i
-				if l_entry_fi /= Void then
-					bpm := debugger_manager.breakpoints_manager
-					bp := bpm.new_hidden_breakpoint (bpm.breakpoint_location (l_entry_fi.e_feature, 1, True))
-					bpm.add_breakpoint (bp)
-					update_breakpoints
-					bpm.delete_breakpoint (bp)
+				inspect a_execution_mode
+				when {EXEC_MODES}.Run then
+					-- do nothing
+				else
+					l_entry_fi := Il_debug_info_recorder.entry_point_feature_i
+					if l_entry_fi /= Void then
+						bpm := debugger_manager.breakpoints_manager
+						bp := bpm.new_hidden_breakpoint (bpm.breakpoint_location (l_entry_fi.e_feature, 1, True))
+						bpm.add_breakpoint (bp)
+						update_breakpoints
+						bpm.delete_breakpoint (bp)
+					end
 				end
 			end
 		end

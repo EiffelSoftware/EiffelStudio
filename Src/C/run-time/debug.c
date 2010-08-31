@@ -178,6 +178,15 @@ rt_private struct dbglobalinfo d_globaldata = {
 };
 
 #ifdef EIF_THREADS
+
+/*
+doc:	<attribute name="dbg_thread_id" return_type="EIF_THR_TYPE *" export="private">
+doc:		<summary>Current thread id used for stepping into/next/out... (stay on the same thread while stepping in MT app).</summary>
+doc:		<thread_safety>fairly Safe</thread_safety>
+doc:	</attribute>
+*/
+rt_shared EIF_THR_TYPE dbg_thread_id = (EIF_THR_TYPE) 0;
+
 /*
 doc:	<attribute name="db_mutex" return_type="EIF_CS_TYPE *" export="private">
 doc:		<summary>Ensure that only one thread is stopped at a time in EiffelStudio debugger.</summary>
@@ -313,6 +322,9 @@ rt_shared int already_warned;
 rt_shared void debug_initialize(void) /* Initialize debug information (breakpoints ...) */
 {
 	dbreak_create_table();			/* create the structure used to store breakpoints information */
+#ifdef EIF_THREADS
+	REGISTER_DBG_THREAD_ID((EIF_THR_TYPE) 0);
+#endif
 }
 
 /*
@@ -593,12 +605,15 @@ rt_public void dstop(struct ex_vect *exvect, uint32 break_index)
 					previous_break_index = break_index;
 					stopped = 1;
 				}
-				else if
+				else if (
 					(d_data.db_stepinto_mode /* test stepinto flag */
 					|| d_data.db_callstack_depth < d_data.db_callstack_depth_stop) /* test the stack depth */
+#ifdef EIF_THREADS							
+						&& IS_REGISTERED_DBG_THREAD_ID(eif_thr_context->thread_id) /* Stay in the same thread when stepping */
+#endif
+					)
 				{
 					d_data.db_stepinto_mode = 0;		/* remove the stepinto flag if it was not already cleared */
-					d_data.db_callstack_depth_stop = 0;	/* remove the stack stop if it was activated */
 					safe_dbreak(PG_STEP);				/* Stop the application because we stepped */
 
 					/* update previous value for next call (if it's a nested call) */
@@ -606,6 +621,8 @@ rt_public void dstop(struct ex_vect *exvect, uint32 break_index)
 					previous_break_index = break_index;
 					stopped = 1;
 				}
+
+				/* Stack overflow detection support */
 				if (already_warned) {
 					if (d_data.db_callstack_depth < critical_stack_depth) {
 						already_warned = 0;
@@ -622,14 +639,17 @@ rt_public void dstop(struct ex_vect *exvect, uint32 break_index)
 					previous_break_index = break_index;
 					stopped = 1;
 				}
-				if (is_dbreak_set(bodyid, break_index) && !stopped) /* test the presence of a breakpoint */
+
+				/* Breakpoint detection support */
+				if (!stopped && is_dbreak_set(bodyid, break_index)) /* test the presence of a breakpoint */
 				{
 					d_data.db_stepinto_mode = 0;		/* remove the stepinto flag if it was not already cleared */
-	/* The debuggee does not always stop on breakpoint (conditional bp)
-	 * then we should not reset `db_callstack_depth_stop' value !!
-	 *
-	 * 				d_data.db_callstack_depth_stop = 0;
-	 */
+					/* The debuggee does not always stop on breakpoint (conditional bp)
+					 * then we should not reset `db_callstack_depth_stop' value !!
+					 *
+					 *   d_data.db_callstack_depth_stop = 0;
+					 */
+
 					safe_dbreak(PG_BREAK);
 						/* update previous value for next call (if it's a nested call) */
 					previous_bodyid = bodyid;
@@ -666,14 +686,18 @@ rt_public void dstop_nested(struct ex_vect *exvect, uint32 break_index, uint32 n
 
 				if (previous_bodyid == bodyid && previous_break_index == break_index) {
 					/* We are in a middle of a qualified call, then ignore stop */
-				} else {
-					if (d_data.db_stepinto_mode || d_data.db_callstack_depth < d_data.db_callstack_depth_stop) {
-							/* IF: (test stepinto flag) or (test the stack depth) */
-						d_data.db_stepinto_mode = 0;		/* remove the stepinto flag if it was not
-															   already cleared 							 */
-						d_data.db_callstack_depth_stop = 0;	/* remove the stack stop if it was activated */
-						safe_dbreak(PG_STEP);		 		/* stop the application */
-					}
+				} else  if (
+						(d_data.db_stepinto_mode || d_data.db_callstack_depth < d_data.db_callstack_depth_stop) 
+#ifdef EIF_THREADS							
+						&& IS_REGISTERED_DBG_THREAD_ID(eif_thr_context->thread_id) /* Stay in the same thread when stepping */
+#endif
+					   ) 
+				{
+						/* IF: (test stepinto flag) or (test the stack depth) */
+					d_data.db_stepinto_mode = 0;		/* remove the stepinto flag if it was not
+														   already cleared 							 */
+					d_data.db_callstack_depth_stop = 0;	/* remove the stack stop if it was activated */
+					safe_dbreak(PG_STEP);		 		/* stop the application */
 				}
 
 				/* we don't test the other case: breakpoint & interruption to avoid
@@ -749,6 +773,10 @@ rt_shared void safe_dbreak (int why)
 	RT_GET_CONTEXT
 	REQUIRE("is debugging", debug_mode);
 
+#ifdef EIF_THREADS
+	REGISTER_DBG_THREAD_ID(eif_thr_context->thread_id);
+#endif
+
 #ifdef ISE_GC
 #ifdef NEVER
 	GC_THREAD_PROTECT(eif_synchronize_gc(rt_globals));
@@ -817,6 +845,9 @@ rt_public void dsetbreak(BODY_INDEX body_id, int offset, int what)
 					if 0 : step next
 					if -1 : step out
 				*/
+			break;
+		case DT_SET_RUN:
+			d_data.db_callstack_depth_stop = 0;
 			break;
 		#ifdef MAY_PANIC
 		default:

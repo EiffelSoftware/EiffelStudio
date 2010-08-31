@@ -49,7 +49,7 @@ feature -- Update
 
 feature {APPLICATION_EXECUTION} -- Breakpoints update
 
-	send_breakpoints_for_stepping (app: APPLICATION_EXECUTION; a_execution_mode: INTEGER)
+	send_execution_information (app: APPLICATION_EXECUTION; a_execution_mode: INTEGER)
 			-- Send breakpoints for step operation
 			-- called by `{APPLICATION_EXECUTION_CLASSIC}.send_breakpoints'
 			-- DO NOT CALL DIRECTLY
@@ -62,11 +62,14 @@ feature {APPLICATION_EXECUTION} -- Breakpoints update
 				--| the same than the current one for step_by_step
 				--| and equal to current on minus 1 for Out_of_routine
 
-			if app.is_running and then app.status.current_call_stack /= Void then
+			if app.is_running then -- and then app.status.current_call_stack /= Void then
 				debug("debugger_trace_breakpoint")
 					print ("curr_callstack_depth=" + app.status.current_call_stack.stack_depth.out + "%N")
 				end
 				inspect a_execution_mode
+				when {EXEC_MODES}.Run then
+						-- reset the stack depth, to avoid stopping at unwanted location
+					send_rqst_3_integer (Rqst_break, 0, Break_set_run, 0) -- useless body_id set to zero
 				when {EXEC_MODES}.Step_next then
 						-- set a stack breakpoint, set on the current stack depth plus one
 						-- (in run-time, the break is 'exec_stack < stack_bp', so we have to add 1 for step by step)
@@ -80,9 +83,13 @@ feature {APPLICATION_EXECUTION} -- Breakpoints update
 					send_rqst_3_integer (Rqst_break, 0, Break_set_stepinto,	0) -- useless body_id, and offset set to zero
 				end
 			else
-				-- the user has pushed on the step-xyz button to launch the application.
-				-- let's stop at the beginning (even for step-out .. which is disabled anyway)
-				send_rqst_3_integer (Rqst_break, 0, Break_set_stepinto,	0) -- useless body_id, and offset set to zero
+				inspect a_execution_mode
+				when {EXEC_MODES}.Run then
+				else
+					-- the user has pushed on the step-xyz button to launch the application.
+					-- let's stop at the beginning (even for step-out .. which is disabled anyway)
+					send_rqst_3_integer (Rqst_break, 0, Break_set_stepinto,	0) -- useless body_id, and offset set to zero
+				end
 			end
 		end
 
@@ -128,7 +135,7 @@ feature {APPLICATION_EXECUTION} -- Breakpoints update
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -141,22 +148,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

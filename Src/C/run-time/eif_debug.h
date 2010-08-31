@@ -62,6 +62,7 @@ RT_LNK struct dbinfo d_data;	/* Global debugger information */
 #define DT_REMOVE		1	/* Remove breakpoint (breakpoint is an user one)  - eiffel side: Break_remove from IPC_SHARED */
 #define DT_SET_STACK	2	/* Activate a stack breakpoint - eiffel side: Break_set_stack_depth from IPC_SHARED */
 #define DT_SET_STEPINTO	3	/* Activate the stepinto mode  - eiffel side: Break_set_stepinto from IPC_SHARED */
+#define DT_SET_RUN		4	/* Activate the run mode  - eiffel side: Break_set_run from IPC_SHARED */
 
 /* Commands for local variable modifying */
 #define DLT_ARGUMENT	0	/* DLT=DebugLocalType, the type is an argument of a function */

@@ -768,7 +768,8 @@ rt_private EIF_REFERENCE matching (void (*action_fnptr) (EIF_REFERENCE, EIF_REFE
 	}
 
 #ifdef ISE_GC
-	match_simple_stack (&hec_saved, action_fnptr);
+	match_simple_stack (&eif_hec_saved, action_fnptr);
+	match_simple_stack (&eif_weak_references, action_fnptr);
 #endif
 
 #ifndef EIF_THREADS

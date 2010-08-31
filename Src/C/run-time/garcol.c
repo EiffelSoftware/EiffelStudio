@@ -683,6 +683,7 @@ rt_private void mark_array(EIF_REFERENCE *arr, rt_uint_ptr arr_count, MARKER mar
 #if ! defined CUSTOM || defined NEED_OBJECT_ID_H
 rt_private void update_object_id_stack(void); /* Update the object id stack */
 #endif
+rt_private void update_weak_references(void);
 /* Storage compation reclaimer */
 rt_public void plsc(void);					/* Storage compaction reclaimer entry */
 rt_private int partial_scavenging(void);	/* The partial scavenging algorithm */
@@ -1524,7 +1525,7 @@ rt_private void internal_marking(MARKER marking, int moving)
 	 * have been kept by the C side. Those objects are alive, of course.
 	 */
 	mark_simple_stack(&hec_stack, marking, moving);
-	mark_simple_stack(&hec_saved, marking, moving);
+	mark_simple_stack(&eif_hec_saved, marking, moving);
 
 #ifdef WORKBENCH
 	/* The operational stack of the interpreter holds some references which
@@ -1561,7 +1562,7 @@ rt_private void internal_marking(MARKER marking, int moving)
 
 	for (i = 0; i < hec_stack_list.count; i++)
 		mark_simple_stack(hec_stack_list.threads.sstack[i], marking, moving);
-	mark_simple_stack(&hec_saved, marking, moving);
+	mark_simple_stack(&eif_hec_saved, marking, moving);
 
 #ifdef WORKBENCH
 	for (i = 0; i < opstack_list.count; i++)
@@ -1582,10 +1583,10 @@ rt_private void internal_marking(MARKER marking, int moving)
 
 #endif /* EIF_THREADS */
 
-#if ! defined CUSTOM || defined NEED_OBJECT_ID_H
-	/* process overflow_stack_set */
+		/* process overflow_stack_set */
 	mark_overflow_stack(marking, moving);
 
+#if ! defined CUSTOM || defined NEED_OBJECT_ID_H
 	/* The object id stacks record the objects referenced by an identifier. Those objects
 	 * are not necessarily alive. Thus only an update after a move is needed.
 	 */
@@ -1744,6 +1745,64 @@ rt_private void update_object_id_stack(void)
 	}
 }
 #endif /* !CUSTOM || NEED_OBJECT_ID_H */
+
+/*
+doc:	<routine name="update_weak_references" export="private">
+doc:		<summary>Loop over the `eif_weak_references' stack and update objects after a move. No marking is done just the update.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Called during GC cycle.</synchronization>
+doc:	</routine>
+*/
+rt_private void update_weak_references(void)
+{
+	/* Loop over the specified stack to update the objects after a move.
+	 * Stack holds direct references to objects.
+	 * No marking is done, just the update, i.e. the objects are not roots
+	 * for the GC.
+	 */
+
+	struct stack *stk = &eif_weak_references;
+
+	EIF_REFERENCE *object;		/* For looping over subsidiary roots */
+	rt_uint_ptr roots;			/* Number of roots in each chunk */
+	struct stchunk *s;			/* To walk through each stack's chunk */
+	int done = 0;				/* Top of stack not reached yet */
+	char moving;				/* May GC move objects around? */
+	union overhead *zone;
+
+	if (stk->st_top == (EIF_REFERENCE *) 0)	/* Stack is not created yet */
+		return;
+
+	moving = rt_g_data.status;				/* Garbage collector's state */
+
+	for (s = stk->st_hd; s && !done; s = s->sk_next) {
+		object = s->sk_arena;					/* Start of stack */
+		if (s != stk->st_cur)					/* Before current pos? */
+			roots = s->sk_end - object;			/* The whole chunk */
+		else {
+			roots = stk->st_top - object;		/* Stop at the top */
+			done = 1;							/* Reached end of stack */
+		}
+
+		for (; roots > 0; roots--, object++) {
+			if (*object) {
+				zone = HEADER(*object);
+				if (moving) {					/* Object may move? */
+					if (zone->ov_size & B_FWD) {
+							/* If the object has moved, update the stack */
+						*object = zone->ov_fwd;
+					} else if (!(zone->ov_flags & EO_MARK)) {
+							/* Object is not alive anymore since it was not marked. */
+						*object = NULL;
+					}
+				} else if (!(zone->ov_flags & EO_MARK)) {
+						/* Object is not alive anymore since it was not marked. */
+					*object = NULL;
+				}
+			}
+		}
+	}
+}
 
 rt_private void mark_stack(struct stack *stk, MARKER marker, int move)
 									/* The stack which is to be marked */
@@ -2628,8 +2687,17 @@ rt_private void full_update(void)
 	 * proper job.
 	 */
 
+		/* Must be done before anything else as it relies on EO_MARK to find out if objects are
+		 * dead or not. */
+	update_weak_references();
+
+		/* Then we proceed with `moved_set'. */
 	update_moved_set();
-	update_rem_set();		/* Must be done after moved set (for GC_FAST) */
+
+		/* Processing of `rem_set; has to be done after `moved_set' (for GC_FAST). */
+	update_rem_set();
+
+		/* Finally the memory set (objects in the scavenge zone that have `dispose'. */
 	update_memory_set ();
 }
 #endif /* ISE_GC */

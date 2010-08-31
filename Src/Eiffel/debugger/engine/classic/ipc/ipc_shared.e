@@ -67,6 +67,7 @@ feature {NONE} -- Resume
 	Break_remove: INTEGER				= 1 -- Remove user breakpoint ( <=> DT_REMOVE in run-time )
 	Break_set_stack_depth: INTEGER		= 2 -- Activate stepinto mode ( <=> DT_SET_STACKBP in run-time )
 	Break_set_stepinto: INTEGER			= 3 -- Activate stepinto mode ( <=> DT_SET_STEPINTO in run-time )
+	Break_set_run: INTEGER				= 4 -- Activate Run mode 	  ( <=> DT_SET_RUN in run-time )	
 
 feature {NONE} -- Inspection constants
 

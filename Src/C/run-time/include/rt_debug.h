@@ -51,6 +51,10 @@ extern struct dbstack db_stack;		/* Calling context stack */
 extern void dnotify_create_thread(EIF_THR_TYPE); 
 extern void dnotify_exit_thread(EIF_THR_TYPE); 
 extern void dbstack_reset(struct dbstack *stk);
+
+extern EIF_THR_TYPE dbg_thread_id;		/* Current Thread identifier for debugging session. */
+#define REGISTER_DBG_THREAD_ID(t)	dbg_thread_id = t
+#define IS_REGISTERED_DBG_THREAD_ID(t)	(dbg_thread_id == 0 || dbg_thread_id == t)
 #endif
 extern void dcatcall(int a_arg_position, EIF_TYPE_INDEX a_expected_dftype, EIF_TYPE_INDEX a_actual_dftype);
 extern void c_opstack_reset(struct c_opstack *stk);

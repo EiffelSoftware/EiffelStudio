@@ -317,26 +317,7 @@ feature -- Execution
 			bpm.update -- remove breakpoint that are now useless.
 
 					--| Execution with breakpoints |--
-			inspect execution_mode
-			when {EXEC_MODES}.Run then
-				if ignoring_breakpoints then
-						-- remove all breakpoints set by the application.
-						-- without changing their status under bench				
-					debug("debugger_trace_breakpoint")
-						print ("Ignoring breakpoints.%N")
-					end
-					send_no_breakpoints
-				else
-					update_breakpoints
-				end
-			when {EXEC_MODES}.step_into,
-			 	 {EXEC_MODES}.Step_next,
-			 	 {EXEC_MODES}.step_out
-			then
-				send_breakpoints_for_stepping (execution_mode, ignoring_breakpoints)
-			else
-				-- Unknown execution mode. Do nothing.
-			end
+			send_execution_information (execution_mode, ignoring_breakpoints)
 			bpm.reset_breakpoints_changed
 		end
 
@@ -886,8 +867,10 @@ feature {NONE} -- Breakpoints implementation
 			end
 		end
 
-	send_breakpoints_for_stepping (a_execution_mode: INTEGER; ign_bp: BOOLEAN)
-			-- Send breakpoints for step operation
+	send_execution_information (a_execution_mode: INTEGER; ign_bp: BOOLEAN)
+			-- Send execution information
+			-- mainly breakpoints for step operation
+			-- and various call stack values
 			-- called by `send_breakpoints'
 			-- DO NOT CALL DIRECTLY
 		do

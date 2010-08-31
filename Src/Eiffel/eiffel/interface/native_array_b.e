@@ -227,14 +227,12 @@ feature {NONE}
 			-- Required signature for feature `item' of class NATIVE_ARRAY.
 		local
 			args: FEAT_ARG
-			f: FORMAL_A
 		do
 			create args.make (1)
 			args.extend (Integer_type)
 			create Result
 			Result.set_arguments (args)
-			create f.make (False, False, 1)
-			Result.set_type (f, 0)
+			Result.set_type (actual_type.generics [1], 0)
 			Result.set_feature_name_id ({PREDEFINED_NAMES}.item_name_id, 0)
 		ensure
 			item_signature_not_void: Result /= Void
@@ -244,14 +242,12 @@ feature {NONE}
 			-- Required signature for feature `infix "@"' of class NATIVE_ARRAY.
 		local
 			args: FEAT_ARG
-			f: FORMAL_A
 		do
 			create args.make (1)
 			args.extend (Integer_type)
 			create Result
 			Result.set_arguments (args)
-			create f.make (False, False, 1)
-			Result.set_type (f, 0)
+			Result.set_type (actual_type.generics [1], 0)
 			Result.set_feature_name_id ({PREDEFINED_NAMES}.at_name_id, 0)
 		ensure
 			item_signature_not_void: Result /= Void
@@ -261,14 +257,12 @@ feature {NONE}
 			-- Required signature for feature `infix "@"' of class NATIVE_ARRAY.
 		local
 			args: FEAT_ARG
-			f: FORMAL_A
 		do
 			create args.make (1)
 			args.extend (Integer_type)
 			create Result
 			Result.set_arguments (args)
-			create f.make (False, False, 1)
-			Result.set_type (f, 0)
+			Result.set_type (actual_type.generics [1], 0)
 			Result.set_feature_name_id ({PREDEFINED_NAMES}.infix_at_name_id, 0)
 		ensure
 			item_signature_not_void: Result /= Void
@@ -278,12 +272,10 @@ feature {NONE}
 			-- Required signature for feature `put' of class NATIVE_ARRAY.
 		local
 			args: FEAT_ARG
-			f: FORMAL_A
 		do
-			create f.make (False, False, 1)
 			create args.make (2)
 			args.extend (Integer_type)
-			args.extend (f)
+			args.extend (actual_type.generics [1])
 			create Result
 			Result.set_arguments (args)
 			Result.set_feature_name_id ({PREDEFINED_NAMES}.put_name_id, 0)

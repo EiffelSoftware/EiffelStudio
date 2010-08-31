@@ -949,6 +949,7 @@ test	remove-occurrence-precondition-violation	incr389 tcf fail incrementality
 test	constant-suppliers-crash		incr390 tcf fail incrementality
 test	rout-entry-crash-2			incr391 tcf fail incrementality
 test	is-less-equal-postcondition-violation	incr392 tcf fail incrementality
+test	once-per-object-change-body		incr393 tcf fail incrementality
 
 
 -- Melting

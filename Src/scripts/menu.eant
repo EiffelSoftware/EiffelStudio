@@ -29,17 +29,20 @@
 		<echo message=" ====" />
 		<echo message=" 8) individual operations" />
 		<echo message=" ====" />
+		<echo message=" f) copy install into delivery" />
+		<echo message=" s) quick delivery (=f+del[ec,ecb]+2" />
 		<echo message=" w) install_eweasel" />
 		<echo message=" ====" />
 		<echo message=" o) Options" />
 		<echo message=" H) Help" />
 		<echo message=" Q) quit" />
 		<local name="answer" />
-		<input message=" -> " variable="answer" answer_required="true" validargs="1,2,3,4,5,6,7,8,w,h,H,o,Q,q" />
+		<input message=" -> " variable="answer" answer_required="true" validargs="1,2,3,4,5,6,7,8,f,s,w,h,H,o,Q,q" />
 		<set name="answer" value="o" if="$answer=O" />
 		<set name="answer" value="h" if="$answer=H" />
 		<set name="answer" value="q" if="$answer=Q" />
 		<set name="answer" value="w" if="$answer=W" />
+		<set name="answer" value="f" if="$answer=F" />
 
 		<geant if="$answer=1" target="_menu_clean" 				/>
 		<geant if="$answer=2" target="build_delivery" 			/>
@@ -52,6 +55,9 @@
 		<geant if="$answer=7" target="install_minimal_delivery"	/>
 
 		<geant if="$answer=8" target="_menu_sub"				/>
+
+		<geant if="$answer=f" target="copy_ise_eiffel_to_delivery"	/>
+		<geant if="$answer=s" target="quick_delivery"	/>
 
 		<geant if="$answer=w" target="install_eweasel"			/>
 

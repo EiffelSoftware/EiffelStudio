@@ -219,6 +219,41 @@
 		<geant target="_log" arguments="--------------------------------------------------" />
 	</target>
 
+	<target name="copy_ise_eiffel_to_delivery" depend="init_deliv" >
+		<!-- copy executable from ISE_EIFFEL, to avoid recompiling everything -->
+		<geant target="copy_exec_file_if_missing" arguments="${ISE_EIFFEL}/studio/spec/${ISE_PLATFORM}/bin,${_BINARY_DIR},ec${exe}" />
+		<geant target="copy_exec_file_if_missing" arguments="${ISE_EIFFEL}/studio/spec/${ISE_PLATFORM}/bin,${_BINARY_DIR},ecb${exe}" />
+		<geant target="copy_exec_file_if_missing" arguments="${ISE_EIFFEL}/studio/spec/${ISE_PLATFORM}/bin,${_BINARY_DIR},emake${exe}" />
+		<geant target="copy_exec_file_if_missing" arguments="${ISE_EIFFEL}/studio/spec/${ISE_PLATFORM}/bin,${_BINARY_DIR},estudio${exe}" />
+		<geant target="copy_exec_file_if_missing" arguments="${ISE_EIFFEL}/studio/spec/${ISE_PLATFORM}/bin,${_BINARY_DIR},finish_freezing${exe}" />
+		<geant target="copy_exec_file_if_missing" arguments="${ISE_EIFFEL}/studio/spec/${ISE_PLATFORM}/bin,${_BINARY_DIR},h2e${exe}" />
+		<geant target="copy_exec_file_if_missing" arguments="${ISE_EIFFEL}/studio/spec/${ISE_PLATFORM}/bin,${_BINARY_DIR},quick_finalize${exe}" />
+		<geant target="copy_exec_file_if_missing" arguments="${ISE_EIFFEL}/esbuilder/spec/${ISE_PLATFORM}/bin,${_BINARY_DIR},esbuilder${exe}" />
+
+		<geant target="copy_exec_file_if_missing" arguments="${ISE_EIFFEL}/library/gobo/spec/${ISE_PLATFORM}/bin,${_BINARY_DIR}/gobo,geant${exe}" />
+		<geant target="copy_exec_file_if_missing" arguments="${ISE_EIFFEL}/library/gobo/spec/${ISE_PLATFORM}/bin,${_BINARY_DIR}/gobo,gec${exe}" />
+		<geant target="copy_exec_file_if_missing" arguments="${ISE_EIFFEL}/library/gobo/spec/${ISE_PLATFORM}/bin,${_BINARY_DIR}/gobo,gelex${exe}" />
+		<geant target="copy_exec_file_if_missing" arguments="${ISE_EIFFEL}/library/gobo/spec/${ISE_PLATFORM}/bin,${_BINARY_DIR}/gobo,gelint${exe}" />
+		<geant target="copy_exec_file_if_missing" arguments="${ISE_EIFFEL}/library/gobo/spec/${ISE_PLATFORM}/bin,${_BINARY_DIR}/gobo,gepp${exe}" />
+		<geant target="copy_exec_file_if_missing" arguments="${ISE_EIFFEL}/library/gobo/spec/${ISE_PLATFORM}/bin,${_BINARY_DIR}/gobo,getest${exe}" />
+		<geant target="copy_exec_file_if_missing" arguments="${ISE_EIFFEL}/library/gobo/spec/${ISE_PLATFORM}/bin,${_BINARY_DIR}/gobo,gexace${exe}" />
+		<geant target="copy_exec_file_if_missing" arguments="${ISE_EIFFEL}/library/gobo/spec/${ISE_PLATFORM}/bin,${_BINARY_DIR}/gobo,gexslt${exe}" />
+		<geant target="copy_exec_file_if_missing" arguments="${ISE_EIFFEL}/library/gobo/spec/${ISE_PLATFORM}/bin,${_BINARY_DIR}/gobo,geyacc${exe}" />
+
+		<mkdir directory="${_BINARY_DIR}/wizards" />
+		<echo to_file="${_BINARY_DIR}/wizards_compiled" message="compiled" />
+		<mkdir directory="${_BINARY_DIR}/gobo" />
+
+	</target>
+
+	<target name="quick_delivery" depend="init_deliv" >
+		<!-- copy executable from ISE_EIFFEL, remove ec and ecb, and make delivery -->
+		<geant target="copy_ise_eiffel_to_delivery" />
+		<geant target="safe_delete" arguments="${_BINARY_DIR},ecb${exe}" />
+		<geant target="safe_delete" arguments="${_BINARY_DIR},ec${exe}" />
+		<geant target="build_delivery" />
+	</target>
+
 	<target name="build_delivery" depend="init_deliv" >
 		<!-- Main target to build the whole delivery -->
 		<geant target="_log" arguments="Building EiffelStudio Delivery ..." />

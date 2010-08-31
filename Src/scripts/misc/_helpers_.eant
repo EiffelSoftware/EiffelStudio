@@ -23,6 +23,16 @@
 		<unset name="no_return_code" />
 	</target>
 
+	<target name="safe_delete" >
+		<!-- Note: arguments can safely use '/' as path_separator -->
+		<argument name="a_from_dir" />
+		<argument name="a_name" />
+
+		<available resource="${a_from_dir}" variable="tmp_available"/>
+		<available dir="${a_from_dir}" resource="${a_name}" variable="tmp_available" if="${tmp_available}=true" />
+		<delete file="${a_name}" dir="$a_from_dir" if="${tmp_available}=true"/>
+	</target>
+
 	<target name="copy_file" >
 		<!-- Note: arguments can safely use '/' as path_separator -->
 		<argument name="a_from_dir" />
@@ -36,6 +46,17 @@
 		<argument name="a_to_dir" />
 		<argument name="a_name" />
 		<geant target="copy_file_as" arguments="$a_from_dir,$a_to_dir,$a_name,$a_name,true" />
+	</target>
+	<target name="copy_exec_file_if_missing" >
+		<!-- Note: arguments can safely use '/' as path_separator -->
+		<argument name="a_from_dir" />
+		<argument name="a_to_dir" />
+		<argument name="a_name" />
+		<available resource="${a_to_dir}${path_separator}${a_name}" variable="tmp_found_target"/>
+		<geant target="copy_file_as" arguments="$a_from_dir,$a_to_dir,$a_name,$a_name,true" if="${tmp_found_target}=false"/>
+		<geant target="_log" arguments="- Copying file ${a_name} to [${a_to_dir}/${a_name}]" if="${tmp_found_target}=false"/>
+		<geant target="_log" arguments="- File already exists [${a_to_dir}/${a_name}]" if="${tmp_found_target}=true"/>
+		<unset name="tmp_found_target" />
 	</target>
 
 	<target name="copy_file_as" >

@@ -1,0 +1,16 @@
+
+test_name 	 skeleton-adapted-in-crash
+test_description A generic class with a once-per-object function whose return type is the formal generic and which is redefined in a descendant crashes the compiler with a call on Void target in {FORMAL_A}.skeleton_adapted_in.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test1.e $CLUSTER test1.e
+
+compile_melted
+compile_result	ok
+
+execute_work 	NONE 	exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+test_end

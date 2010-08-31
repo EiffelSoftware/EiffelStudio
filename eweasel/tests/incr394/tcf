@@ -1,0 +1,36 @@
+
+test_name	add-vsrt4-to-expanded-then-remove
+test_description Adding a VSRT(4) error to an expanded root class and then removing it causes generation of C code that won't compile due to an "improper member use" error.
+
+define		GENERICS ""
+copy_sub 	Ace $TEST Ace
+copy_sub 	test.e $CLUSTER test.e
+
+compile_frozen
+compile_result 	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work 	NONE 	exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+define		GENERICS "[G]"
+copy_sub 	test.e $CLUSTER test.e
+compile_frozen
+compile_result 	validity_error NONE VSRT(4)
+
+define		GENERICS ""
+copy_sub 	test.e $CLUSTER test.e
+resume_compile
+
+c_compile_work
+c_compile_result ok
+
+execute_work 	NONE 	exec_output2
+execute_result 	ok
+compare		exec_output2 output
+
+test_end
+

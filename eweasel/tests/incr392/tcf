@@ -1,0 +1,27 @@
+
+test_name	is-less-equal-postcondition-violation	
+test_description Changing a once function that is a redefinition of a once-per-object function to be once-per-object causes an assertion-enabled compiler to crash with violation of postcondition `definition' of {BOOLEAN_DESC}.is_less_equal.
+
+define		ROUTINE_MARK "once"
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_sub 	test3.e $CLUSTER test3.e
+copy_raw 	test4.e $CLUSTER test4.e
+
+compile_melted
+compile_result 	ok
+
+execute_work 	NONE 	exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+define		ROUTINE_MARK "once ("OBJECT")"
+copy_sub 	test3.e $CLUSTER test3.e
+compile_melted
+compile_result 	ok
+
+execute_work 	NONE 	exec_output2
+execute_result 	ok
+compare		exec_output2 output
+
+test_end

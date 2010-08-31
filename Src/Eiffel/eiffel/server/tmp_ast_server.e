@@ -204,32 +204,6 @@ feature -- Body element change
 			has: body_has (a_body_index)
 		end
 
-	body_replace (an_old_body_index, a_new_body_index: INTEGER)
-			-- Replace the id of the body with `an_old_body_index' with `a_new_body_index'.
-		require
-			an_old_body_index_positive: an_old_body_index >= 0
-			a_new_body_index_positive: a_new_body_index >= 0
-		local
-			body: FEATURE_AS
-			body_disk: READ_INFO
-		do
-			body_storage.search (an_old_body_index)
-			if body_storage.found then
-				body := body_storage.found_item
-				body_storage.remove (an_old_body_index)
-				body_storage.force (body, a_new_body_index)
-			end
-			body_info.search (an_old_body_index)
-			if body_info.found then
-				body_disk := body_info.found_item
-				body_info.remove (an_old_body_index)
-				body_info.force (body_disk, a_new_body_index)
-			end
-		ensure
-			not_has_old: not body_has (an_old_body_index)
-			has_new: body_has (a_new_body_index)
-		end
-
 	desactive (a_body_index: INTEGER)
 			-- Put `a_body_index' in `useless_body_indexes'.
 		require

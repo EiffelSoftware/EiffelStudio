@@ -1436,6 +1436,10 @@ feature {NONE} -- Implementation
 					end
 					if l_result.is_compiled then
 						l_class := l_result.compiled_class
+						debug
+							to_implement ("Initialize actual_type only once to avoid multiple object creation.")
+						end
+						l_class.initialize_actual_type
 						Result := l_class.actual_type
 					end
 				end

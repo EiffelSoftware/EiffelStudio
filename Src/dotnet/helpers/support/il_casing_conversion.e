@@ -151,8 +151,9 @@ feature -- Naming convention
 			result_not_void: Result /= Void
 		end
 
-	type_name (a_namespace, a_prefix, a_name: STRING; is_dotnet_naming: BOOLEAN): STRING
-			-- Name of type `a_name' with prefix `a_prefix' in namespace `a_namespce' that follows
+	type_name (a_namespace, a_prefix: STRING; is_separate: BOOLEAN; a_name: STRING; is_dotnet_naming: BOOLEAN): STRING
+			-- Name of type `a_name' that may be separate if `is_separate' is `True'
+			-- with prefix `a_prefix' in namespace `a_namespce' that follows
 			-- CIL naming rules according to `is_dotnet_naming'.
 		require
 			a_prefix_not_empty_if_not_void: a_prefix /= Void implies not a_prefix.is_empty
@@ -169,6 +170,9 @@ feature -- Naming convention
 			if a_prefix /= Void then
 				Result.append_string (a_prefix)
 				Result.append_character ('.')
+			end
+			if is_separate then
+				Result.append_string ("separate.")
 			end
 			Result.append_string (pascal_casing (is_dotnet_naming, a_name, upper_case))
 		end

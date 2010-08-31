@@ -487,7 +487,7 @@ feature {NONE} -- IL code generation
 				-- what our casing conversion routines require to perform
 				-- a good job.
 			Result.to_lower
-			Result := il_casing.type_name (associated_class.original_class.actual_namespace, a_prefix, Result, System.dotnet_naming_convention)
+			Result := il_casing.type_name (associated_class.original_class.actual_namespace, a_prefix, is_separate, Result, System.dotnet_naming_convention)
 		ensure
 			internal_il_type_name_not_void: Result /= Void
 			internal_il_type_name_not_empty: not Result.is_empty

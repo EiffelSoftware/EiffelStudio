@@ -2115,7 +2115,7 @@ feature -- Actual class type
 	actual_type: CL_TYPE_A
 			-- Actual type of the class
 
-feature {NONE} -- Initialization
+feature {EXTERNAL_CLASS_C} -- Initialization
 
 	initialize_actual_type
 			-- Initialize `actual_type'.
@@ -2132,7 +2132,7 @@ feature {NONE} -- Initialization
 				loop
 					t.force (type_a_generator.evaluate_type (c.item.formal, Current), t.upper + 1)
 				end
-				create {GEN_TYPE_A} a.make (class_id, t)
+				a := create_generic_type (t)
 			end
 			if lace_class.is_attached_by_default then
 				a.set_is_attached
@@ -3276,7 +3276,7 @@ feature -- IL code generation
 				class_name := name.as_lower
 				use_dotnet_naming := System.dotnet_naming_convention
 			end
-			Result := il_casing.type_name (namespace, data_prefix, class_name, use_dotnet_naming)
+			Result := il_casing.type_name (namespace, data_prefix, False, class_name, use_dotnet_naming)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -3289,7 +3289,7 @@ feature -- IL code generation
 		do
 			is_dotnet_naming := System.dotnet_naming_convention
 			precompiled_namespace := original_class.actual_namespace.twin
-			precompiled_class_name := il_casing.type_name (Void, Void, name.as_lower, is_dotnet_naming)
+			precompiled_class_name := il_casing.type_name (Void, Void, False, name.as_lower, is_dotnet_naming)
 		end
 
 	is_dotnet_naming: BOOLEAN

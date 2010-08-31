@@ -309,7 +309,7 @@ feature -- Access
 		require
 			is_precompiled: is_precompiled
 		do
-			Result := il_casing.type_name (internal_namespace, a_prefix, internal_type_name, is_dotnet_name)
+			Result := il_casing.type_name (internal_namespace, a_prefix, is_separate, internal_type_name, is_dotnet_name)
 		end
 
 	conformance_table: PACKED_BOOLEANS

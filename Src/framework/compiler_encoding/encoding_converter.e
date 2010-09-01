@@ -218,7 +218,7 @@ feature -- Conversion
 			bom_detector.detect (a_stream)
 			last_bom := Void
 			if bom_detector.last_detection_successful then
-				Result := a_stream.substring (bom_detector.last_bom_count + 1, a_stream.count)
+				Result := utf8_to_utf32 (a_stream.substring (bom_detector.last_bom_count + 1, a_stream.count))
 				detected_encoding := bom_detector.detected_encoding
 				last_bom := bom_detector.last_bom
 			elseif attached a_class as l_class and then attached encoding_from_class (l_class) as l_encoding then

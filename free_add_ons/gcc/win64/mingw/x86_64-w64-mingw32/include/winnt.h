@@ -33,19 +33,19 @@ extern "C" {
 #define UNALIGNED64
 #endif
 
-#if !defined(I_X86_) && !defined(_IA64_) && !defined(_AMD64_) && (defined(_X86_) && !defined(__x86_64))
-#define I_X86_
-#endif
-
-#if !defined(I_X86_) && !defined(_IA64_) && !defined(_AMD64_) && defined(__x86_64)
+#if defined(__x86_64) && \
+  !(defined(_X86_) || defined(__i386__) || defined(_IA64_))
+#if !defined(_AMD64_)
 #define _AMD64_
 #endif
+#endif /* _AMD64_ */
 
-#if !defined(I_X86_) && !(defined(_X86_) && !defined(__x86_64)) && !defined(_AMD64_) && defined(__ia64__)
+#if defined(__ia64__) && \
+  !(defined(_X86_) || defined(__x86_64) || defined(_AMD64_))
 #if !defined(_IA64_)
 #define _IA64_
 #endif
-#endif
+#endif /* _IA64_ */
 
 
 #ifdef _WIN64
@@ -75,7 +75,11 @@ extern "C" {
 #define PROBE_ALIGNMENT(_s) TYPE_ALIGNMENT(DWORD)
 #endif
 
-#define C_ASSERT(e) typedef char __C_ASSERT__[(e)?1:-1]
+#if defined(_MSC_VER)
+# define C_ASSERT(e) typedef char __C_ASSERT__[(e)?1:-1]
+#else
+# define C_ASSERT(e) extern void __C_ASSERT__(int [(e)?1:-1])
+#endif
 
 #include <basetsd.h>
 
@@ -94,7 +98,7 @@ extern "C" {
 #endif
 
 #ifndef SYSTEM_CACHE_ALIGNMENT_SIZE
-#if defined(_AMD64_) || defined(I_X86_)
+#if defined(_AMD64_) || defined(_X86_)
 #define SYSTEM_CACHE_ALIGNMENT_SIZE 64
 #else
 #define SYSTEM_CACHE_ALIGNMENT_SIZE 128
@@ -169,7 +173,7 @@ extern "C" {
   typedef CONST CHAR *LPCSTR,*PCSTR;
   typedef PCSTR *PZPCSTR;
 
-#ifdef UNICODE
+#if defined(UNICODE)
 #ifndef _TCHAR_DEFINED
 #define _TCHAR_DEFINED
   typedef WCHAR TCHAR, *PTCHAR;
@@ -468,6 +472,7 @@ typedef DWORD LCID;
 #define VER_SUITE_SECURITY_APPLIANCE 0x00001000
 #define VER_SUITE_STORAGE_SERVER 0x00002000
 #define VER_SUITE_COMPUTE_SERVER 0x00004000
+#define VER_SUITE_WH_SERVER 0x00008000
 
 #define PRODUCT_UNDEFINED                         0x0
 
@@ -496,6 +501,51 @@ typedef DWORD LCID;
 #define PRODUCT_STORAGE_ENTERPRISE_SERVER         0x17
 #define PRODUCT_SERVER_FOR_SMALLBUSINESS          0x18
 #define PRODUCT_SMALLBUSINESS_SERVER_PREMIUM      0x19
+#define PRODUCT_HOME_PREMIUM_N                    0x1a
+#define PRODUCT_ENTERPRISE_N                      0x1b
+#define PRODUCT_ULTIMATE_N                        0x1c
+#define PRODUCT_WEB_SERVER_CORE                   0x1d
+#define PRODUCT_MEDIUMBUSINESS_SERVER_MANAGEMENT  0x1e
+#define PRODUCT_MEDIUMBUSINESS_SERVER_SECURITY    0x1f
+#define PRODUCT_MEDIUMBUSINESS_SERVER_MESSAGING   0x20
+#define PRODUCT_SERVER_FOUNDATION                 0x21
+#define PRODUCT_HOME_PREMIUM_SERVER               0x22
+#define PRODUCT_SERVER_FOR_SMALLBUSINESS_V        0x23
+#define PRODUCT_STANDARD_SERVER_V                 0x24
+#define PRODUCT_DATACENTER_SERVER_V               0x25
+#define PRODUCT_ENTERPRISE_SERVER_V               0x26
+#define PRODUCT_DATACENTER_SERVER_CORE_V          0x27
+#define PRODUCT_STANDARD_SERVER_CORE_V            0x28
+#define PRODUCT_ENTERPRISE_SERVER_CORE_V          0x29
+#define PRODUCT_HYPERV                            0x2a
+#define PRODUCT_STORAGE_EXPRESS_SERVER_CORE       0x2b
+#define PRODUCT_STORAGE_STANDARD_SERVER_CORE      0x2c
+#define PRODUCT_STORAGE_WORKGROUP_SERVER_CORE     0x2d
+#define PRODUCT_STORAGE_ENTERPRISE_SERVER_CORE    0x2e
+#define PRODUCT_STARTER_N                         0x2f
+#define PRODUCT_PROFESSIONAL                      0x30
+#define PRODUCT_PROFESSIONAL_N                    0x31
+#define PRODUCT_SB_SOLUTION_SERVER                0x32
+#define PRODUCT_SERVER_FOR_SB_SOLUTIONS           0x33
+#define PRODUCT_STANDARD_SERVER_SOLUTIONS         0x34
+#define PRODUCT_STANDARD_SERVER_SOLUTIONS_CORE    0x35
+#define PRODUCT_SB_SOLUTION_SERVER_EM             0x36
+#define PRODUCT_SERVER_FOR_SB_SOLUTIONS_EM        0x37
+#define PRODUCT_SOLUTION_EMBEDDEDSERVER           0x38
+#define PRODUCT_SOLUTION_EMBEDDEDSERVER_CORE      0x39
+#define PRODUCT_ESSENTIALBUSINESS_SERVER_MGMT     0x3B
+#define PRODUCT_ESSENTIALBUSINESS_SERVER_ADDL     0x3C
+#define PRODUCT_ESSENTIALBUSINESS_SERVER_MGMTSVC  0x3D
+#define PRODUCT_ESSENTIALBUSINESS_SERVER_ADDLSVC  0x3E
+#define PRODUCT_SMALLBUSINESS_SERVER_PREMIUM_CORE 0x3f
+#define PRODUCT_CLUSTER_SERVER_V                  0x40
+#define PRODUCT_EMBEDDED                          0x41
+#define PRODUCT_STARTER_E                         0x42
+#define PRODUCT_HOME_BASIC_E                      0x43
+#define PRODUCT_HOME_PREMIUM_E                    0x44
+#define PRODUCT_PROFESSIONAL_E                    0x45
+#define PRODUCT_ENTERPRISE_E                      0x46
+#define PRODUCT_ULTIMATE_E                        0x47
 
 #define PRODUCT_UNLICENSED                        0xabcdabcd
 
@@ -1662,8 +1712,10 @@ typedef DWORD LCID;
 
 #endif /* end of _AMD64_ */
 
-#ifdef I_X86_
-#if(defined(_X86_) && !defined(__x86_64)) && !defined(RC_INVOKED)
+
+#ifdef _X86_
+
+#if defined(__i386__) && !defined(__x86_64) && !defined(RC_INVOKED)
 #ifdef __cplusplus
   extern "C" {
 #endif
@@ -1736,9 +1788,9 @@ typedef DWORD LCID;
 #ifdef __cplusplus
   }
 #endif
-#endif /* (defined(_X86_) && !defined(__x86_64)) && !defined(RC_INVOKED) */
+#endif /* defined(__i386__) && !defined(__x86_64) && !defined(RC_INVOKED) */
 
-#if(defined(_X86_) && !defined(__x86_64))
+#if defined(__i386__) && !defined(__x86_64)
 
 #define YieldProcessor() __asm__ __volatile__("rep; nop");
 
@@ -1794,7 +1846,7 @@ typedef DWORD LCID;
     return ret;
   }
 #endif /* !__CRT__NO_INLINE */
-#endif /* (defined(_X86_) && !defined(__x86_64)) */
+#endif /* defined(__i386__) && !defined(__x86_64) */
 
 #define EXCEPTION_READ_FAULT 0
 #define EXCEPTION_WRITE_FAULT 1
@@ -1866,7 +1918,7 @@ typedef DWORD LCID;
 
     typedef CONTEXT *PCONTEXT;
 
-#endif /* end of I_X86_ */
+#endif /* end of _X86_ */
 
 #ifndef _LDT_ENTRY_DEFINED
 #define _LDT_ENTRY_DEFINED
@@ -3085,7 +3137,7 @@ typedef DWORD LCID;
       DWORD64 Self;
     } NT_TIB64,*PNT_TIB64;
 
-#if !defined(I_X86_) && !defined(_IA64_) && !defined(_AMD64_)
+#if !defined(_X86_) && !defined(_IA64_) && !defined(_AMD64_)
 #define WX86
 #endif
 
@@ -3418,6 +3470,7 @@ typedef DWORD LCID;
 #define SECTION_MAP_EXECUTE_EXPLICIT 0x0020
 
 #define SECTION_ALL_ACCESS (STANDARD_RIGHTS_REQUIRED|SECTION_QUERY| SECTION_MAP_WRITE | SECTION_MAP_READ | SECTION_MAP_EXECUTE | SECTION_EXTEND_SIZE)
+
 #define PAGE_NOACCESS 0x01
 #define PAGE_READONLY 0x02
 #define PAGE_READWRITE 0x04

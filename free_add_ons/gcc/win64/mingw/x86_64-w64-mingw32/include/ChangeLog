@@ -1,3 +1,195 @@
+2010-07-08  Ozkan Sezer  <sezeroz@gmail.com>
+
+	* evntcons.h: New. Merge from experimental/vista_7_headers.
+	* evntprov.h: New. Merge from experimental/vista_7_headers.
+	* evntrace.h: Merge from experimental/vista_7_headers.
+	* ktmtypes.h: New. Merge from experimental/vista_7_headers.
+	* windows.h: Include ktmtypes.h (from experimental/vista_7_headers.)
+
+2010-07-06  Ozkan Sezer  <sezeroz@gmail.com>
+
+	* ntddndis.h: Added a few endif comments.
+	(NDIS_PHYSICAL_MEDIUM): Add NdisPhysicalMediumInfiniband,
+	NdisPhysicalMediumWiMax,NdisPhysicalMediumUWB, NdisPhysicalMedium802_3,
+	NdisPhysicalMedium802_5,NdisPhysicalMediumIrda,NdisPhysicalMediumWiredWAN,
+	NdisPhysicalMediumWiredCoWan and NdisPhysicalMediumOther among the
+	enumerated values, from ddk_test version.
+	(NDIS_802_11_NETWORK_TYPE): Add Ndis802_11Automode among the enumerated
+	values, from ddk_test version.
+	(NDIS_OBJECT_HEADER): Added from experimental vista_7_headers.
+	* ntddscsi.h: Added a few endif comments.
+	(DD_SCSI_DEVICE_NAME_U): Added from ddk_test version.
+
+2010-06-28  Ozkan Sezer  <sezeroz@gmail.com>
+
+	* ks.h: Add many data types, prototypes, etc. for DDK based on MSDN
+	information. Restricted parts of the header starting from KSOBJECT_BAG
+	typedef down to the IID_IKsDeviceFunctions GUID definition only to the
+	DDK.
+
+2010-06-28  Ozkan Sezer  <sezeroz@gmail.com>
+
+	Backports from the trunk:
+
+	2010-06-27  Jacek Caban  <jacek@codeweavers.com> (rev. 2661)
+	* winnt.h: Fixed C_ASSERT macro.
+	2010-06-28  Ozkan Sezer  <sezeroz@gmail.com> (rev. 2678)
+	* strsafe.h: Apply the same C_ASSERT macro fix in winnt.h.
+
+2010-06-27  Ozkan Sezer  <sezeroz@gmail.com>
+
+	* ks.h (KSATTRIBUTE_LIST): Added for DDK.
+
+2010-06-27  Ozkan Sezer  <sezeroz@gmail.com>
+
+	* ks.h (KSEVENTDATA): Added EventObject, SemaphoreObject, Dpc, WorkItem
+	and KsWorkItem to the union. Added flag macros KSEVENTF_EVENT_OBJECT,
+	KSEVENTF_SEMAPHORE_OBJECT, KSEVENTF_DPC, KSEVENTF_WORKITEM and
+	KSEVENTF_KSWORKITEM for DDK. See the KSEVENTDATA Structure msdn page at
+	http://msdn.microsoft.com/en-us/library/ff561750(VS.85).aspx, also see
+	the r/os version of ks.h for reference.
+
+2010-06-27  Ozkan Sezer  <sezeroz@gmail.com>
+
+	* ks.h: Add forward declarations of KSDEVICE, KSDEVICE_DESCRIPTOR,
+	KSDEVICE_DISPATCH, KSFILTER, KSFILTERFACTORY, KSFILTER_DESCRIPTOR,
+	KSFILTER_DISPATCH, KSPIN, KSPIN_DESCRIPTOR_EX, KSPIN_DISPATCH,
+	KSCLOCK_DISPATCH, KSALLOCATOR_DISPATCH, KSNODE_DESCRIPTOR,
+	KSSTREAM_POINTER, KSSTREAM_POINTER_OFFSET, KSMAPPING, KSPROCESSPIN,
+	KSPROCESSPIN_INDEXENTRY structtures and their *P... variants for the
+	DDK.
+
+2010-06-27  Ozkan Sezer  <sezeroz@gmail.com>
+
+	* ks.h (KSPROPERTY_CLOCK_FUNCTIONTABLE): Add to KSPROPERTY_CLOCK for DDK.
+	(see http://msdn.microsoft.com/en-us/library/ff564466(v=VS.85).aspx)
+
+2010-06-27  Ozkan Sezer  <sezeroz@gmail.com>
+
+	* ks.h (KSALLOCATOR_FRAMING): Use POOL_TYPE as the type for
+	PoolType member if _NTDDK_ is defined, because the POOL_TYPE
+	enum is provided by the ddk.
+
+2010-06-27  Ozkan Sezer  <sezeroz@gmail.com>
+
+	* ks.h (_KS_ANON_STRUCT): New helper macro for adding names to
+	structs accroding to _KS_NO_ANONYMOUS_STRUCTURES_ being defined.
+	(KSIDENTIFIER): Use _KS_ANON_STRUCT().
+	(KSPROPERTY_BOUNDS_LONG): Likewise.
+	(KSPROPERTY_BOUNDS_LONGLONG): Likewise.
+
+2010-06-25  Ozkan Sezer  <sezeroz@gmail.com>
+
+	* ks.h, ksmedia.h, ksproxy.h, ksuuids.h: Re-format.
+
+2010-06-24  Ozkan Sezer  <sezeroz@gmail.com>
+
+	Backport from the trunk: (VER_SUITE_WH_SERVER and PRODUCT_* parts
+	of rev. 1970)
+	2010-03-03  Roland Schwingel  <roland.schwingel@onevision.com>
+	* include/winnt.h: Add a lot of missing definitions from MSDN.
+
+2010-06-23  Doug Semler  <dougsemler@gmail.com>
+
+	* GL/gl.h: Use APIENTRY instead of WINAPI.
+	* GL/glaux.h: Likewise.
+	* GL/glu.h: Likewise.
+
+2010-06-23  Ozkan Sezer  <sezeroz@gmail.com>
+
+	* mmsystem.h (MAKEFOURCC): Added ifdef guards.
+
+2010-06-22  Ozkan Sezer  <sezeroz@gmail.com>
+
+	Backport from the trunk:
+
+	2010-06-19  Jonathan Yong  <jon_y@sourceforge.net> (rev. 2579)
+	Improve DUMMYUNIONNAME and DUMMYSTRUCTNAME defines to allow
+	additional names:
+	* _mingw.h (DUMMYUNIONNAMEX): New macro.
+
+2010-06-17  Ozkan Sezer  <sezeroz@gmail.com>
+
+	Backport from the trunk:
+
+	2010-06-17  Kai Tietz  <kai.tietz@onevision.com>  (rev. 2567)
+	* intrin.h: Make sure that _mm_shuffle_ps function does not get
+	confused by a define.
+
+2010-06-17  Ozkan Sezer  <sezeroz@gmail.com>
+
+	Backport from the trunk:
+
+	2010-06-12  Ozkan Sezer  <sezeroz@gmail.com>  (revs. 2497-2498)
+	Kill definitions of I_X86_ macro and adjust places it was used:
+	* windows.h: Remove I_X86_ definition. Adjust and tweak _AMD64_
+	and _IA64_ macro definitions to use _X86_ and/or __i386__.
+	* winnt.h: Likewise as in windows.h. Replace checks against I_X86_
+	by checks against _X86_. Replace checks against _X86_ which were
+	already under I_X86_ ifdefs by checks against __i386__.
+	* mapidbg.h: Replace checks against I_X86_ by checks against _X86_.
+	* mapiutil.h: Likewise.
+	* mapival.h: Likewise.
+	* netmon.h: Likewise.
+	* sec_api/stralign_s.h: Likewise.
+	* stralign.h: Likewise.
+	* tapi3if.h: Likewise.
+	* uastrfnc.h: Likewise.
+	* vdmdbg.h: Likewise.
+	* wabutil.h: Likewise.
+	* winbase.h: Likewise.
+
+2010-06-16  Doug Semler  <dougsemler@gmail.com>
+
+	* profile.h: Rename _mcount to _mcount_private to make it obvious.
+	  Declare public _mcount here.
+
+2010-06-15  Ozkan Sezer  <sezeroz@gmail.com>
+
+	* _bsd_types.h: Moved out of the mingw_inc subdirectory. Changed its
+	include guard to _BSDTYPES_DEFINED.
+	* af_irda.h: Adjusted for _bsdtypes.h.
+	* inaddr.h: Likewise.
+	* in6addr.h: Likewise.
+	* mingw_inc/_ip_types.h: Likewise.
+	* winsock.h: Likewise.
+	* winsock2.h: Likewise.
+
+2010-06-14  Ozkan Sezer  <sezeroz@gmail.com>
+
+	Back-merge from the trunk:
+
+	2010-06-12  Kai Tietz  <kai.tietz@onevision.com>
+	* _mingw_mac.h (__MINGW_STRING_AW): New helper macro.
+
+2010-06-14  Ozkan Sezer  <sezeroz@gmail.com>
+
+	* ks.h, ksmedia.h, ksproxy.h: Added #endif comments.
+	* ks.h (DEFINE_KSPIN_INTERFACE_ITEM): Renamed macro argument
+	INTERFACE to _interFace.
+
+2010-06-12  Ozkan Sezer  <sezeroz@gmail.com>
+
+	* stdio.h: Backport from the trunk: also check whether __CRT__NO_INLINE
+	is defined before defining inlines for getwchar() and putwchar().
+
+2010-06-12  Ozkan Sezer  <sezeroz@gmail.com>
+
+	* commctrl.h, excpt.h, http.h, process.h, stdio.h, winbase.h, winnt.h:
+	Minor spelling, formatting and whitespace changes from the trunk.
+	* winternl.h: Likewise and the following tidy-ups from the trunk:
+	(POBJECT_ATTRIBUTES): Move to typedef of struct OBJECT_ATTRIBUTES and
+	remove the extra typedef.
+	(PROCESS_BASIC_INFORMATION): Move to typedef of struct
+	PROCESS_BASIC_INFORMATION and remove the extra typedef.
+	(FILE_INFORMATION_CLASS): Move before struct _IO_STATUS_BLOCK.
+	(PFILE_INFORMATION_CLASS): Define along with FILE_INFORMATION_CLASS.
+
+2010-06-09  Ozkan Sezer  <sezeroz@gmail.com>
+
+	* sdkddkver.h: Sync'ed with ReactOS version to add new macros
+	_WIN32_WINNT_WIN7, _WIN32_IE_IE80, _WIN32_IE_WIN7 and NTDDI_WIN7.
+
 2010-05-28  Ozkan Sezer  <sezeroz@gmail.com>
 
 	* mstcpip.h: Added missing include guard.

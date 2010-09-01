@@ -40,6 +40,12 @@ extern "C" {
 
 #include <guiddef.h>
 
+  typedef struct _NDIS_OBJECT_HEADER {
+    UCHAR  Type;
+    UCHAR  Revision;
+    USHORT Size;
+  } NDIS_OBJECT_HEADER, *PNDIS_OBJECT_HEADER;
+
 #define OID_GEN_SUPPORTED_LIST 0x00010101
 #define OID_GEN_HARDWARE_STATUS 0x00010102
 #define OID_GEN_MEDIA_SUPPORTED 0x00010103
@@ -623,7 +629,7 @@ extern "C" {
   } NDIS_802_11_AUTHENTICATION_REQUEST,*PNDIS_802_11_AUTHENTICATION_REQUEST;
 
   typedef enum _NDIS_802_11_NETWORK_TYPE {
-    Ndis802_11FH,Ndis802_11DS,Ndis802_11OFDM5,Ndis802_11OFDM24,Ndis802_11NetworkTypeMax
+    Ndis802_11FH,Ndis802_11DS,Ndis802_11OFDM5,Ndis802_11OFDM24,Ndis802_11Automode,Ndis802_11NetworkTypeMax
   } NDIS_802_11_NETWORK_TYPE,*PNDIS_802_11_NETWORK_TYPE;
 
   typedef struct _NDIS_802_11_NETWORK_TYPE_LIST {
@@ -1075,7 +1081,9 @@ extern "C" {
   typedef enum _NDIS_PHYSICAL_MEDIUM {
     NdisPhysicalMediumUnspecified,NdisPhysicalMediumWirelessLan,NdisPhysicalMediumCableModem,NdisPhysicalMediumPhoneLine,
     NdisPhysicalMediumPowerLine,NdisPhysicalMediumDSL,NdisPhysicalMediumFibreChannel,NdisPhysicalMedium1394,NdisPhysicalMediumWirelessWan,
-    NdisPhysicalMediumNative802_11,NdisPhysicalMediumBluetooth,NdisPhysicalMediumMax
+    NdisPhysicalMediumNative802_11,NdisPhysicalMediumBluetooth,NdisPhysicalMediumInfiniband,NdisPhysicalMediumWiMax,NdisPhysicalMediumUWB,
+    NdisPhysicalMedium802_3,NdisPhysicalMedium802_5,NdisPhysicalMediumIrda,NdisPhysicalMediumWiredWAN,NdisPhysicalMediumWiredCoWan,
+    NdisPhysicalMediumOther,NdisPhysicalMediumMax
   } NDIS_PHYSICAL_MEDIUM,*PNDIS_PHYSICAL_MEDIUM;
 
 #define NDIS_PROTOCOL_ID_DEFAULT 0x00
@@ -1628,7 +1636,7 @@ extern "C" {
     ULONG Length;
     WW_MBX_CHANNEL_PAIR ChannelPair[1];
   } WW_MBX_TEMPDEFAULTLIST,*WW_PMBX_TEMPDEFAULTLIST;
-#endif
+#endif /* WIRELESS_WAN */
 
   typedef struct _BPC_FILETIME {
     ULONG dwLowDateTime;
@@ -1868,4 +1876,6 @@ extern "C" {
 #define NDIS_MINIPORT_SENDS_PACKET_ARRAY 0x08000000
 #define NDIS_MINIPORT_FILTER_IM 0x10000000
 #define NDIS_MINIPORT_SHORT_PACKETS_ARE_PADDED 0x20000000
-#endif
+
+#endif /* _NTDDNDIS_ */
+

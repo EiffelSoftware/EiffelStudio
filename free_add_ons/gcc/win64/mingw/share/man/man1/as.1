@@ -132,7 +132,7 @@
 .\" ========================================================================
 .\"
 .IX Title "AS 1"
-.TH AS 1 "2010-06-05" "binutils-2.20.51" "GNU Development Tools"
+.TH AS 1 "2010-07-11" "binutils-2.20.51" "GNU Development Tools"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -644,8 +644,12 @@ is not used in assembler.
 .IP "\fB\-mfdpic\fR" 4
 .IX Item "-mfdpic"
 Assemble for the \s-1FDPIC\s0 \s-1ABI\s0.
-.IP "\fB\-mno\-fdpic/\-mnopic\fR" 4
-.IX Item "-mno-fdpic/-mnopic"
+.IP "\fB\-mno\-fdpic\fR" 4
+.IX Item "-mno-fdpic"
+.PD 0
+.IP "\fB\-mnopic\fR" 4
+.IX Item "-mnopic"
+.PD
 Disable \-mfdpic.
 .PP
 See the info pages for documentation of the CRIS-specific options.
@@ -1262,8 +1266,8 @@ Treat undocumented Z80 instructions that do not work on R800 as errors.
 \&\fIgcc\fR\|(1), \fIld\fR\|(1), and the Info entries for \fIbinutils\fR and \fIld\fR.
 .SH "COPYRIGHT"
 .IX Header "COPYRIGHT"
-Copyright (c) 1991, 92, 93, 94, 95, 96, 97, 98, 99, 2000, 2001, 2002,
-2006, 2007, 2008, 2009, 2010 Free Software Foundation, Inc.
+Copyright (c) 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,
+2000, 2001, 2002, 2006, 2007, 2008, 2009, 2010 Free Software Foundation, Inc.
 .PP
 Permission is granted to copy, distribute and/or modify this document
 under the terms of the \s-1GNU\s0 Free Documentation License, Version 1.3

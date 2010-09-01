@@ -193,7 +193,7 @@ extern "C" {
   WINBASEAPI PVOID WINAPI EncodeSystemPointer(PVOID Ptr);
   WINBASEAPI PVOID WINAPI DecodeSystemPointer(PVOID Ptr);
 
-#ifdef I_X86_
+#ifdef _X86_
   typedef PLDT_ENTRY LPLDT_ENTRY;
 #else
   typedef LPVOID LPLDT_ENTRY;
@@ -2962,7 +2962,7 @@ extern "C" {
   WINBASEAPI WINBOOL WINAPI GetNumaNodeProcessorMask(UCHAR Node,PULONGLONG ProcessorMask);
   WINBASEAPI WINBOOL WINAPI GetNumaAvailableMemoryNode(UCHAR Node,PULONGLONG AvailableBytes);
 
-  /* New Windows 7.0 API.  */
+  /* New Windows Vista API.  */
 
 #define SYMBOLIC_LINK_FLAG_FILE		0x0
 #define SYMBOLIC_LINK_FLAG_DIRECTORY	0x1

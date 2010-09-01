@@ -1,0 +1,34 @@
+
+test_name	same-generic-derivation-as-crash	
+test_description Changing a root class from expanded to non-expanded and recompiling crashes the compiler with violation of precondition `other_derived' of {GEN_TYPE_A}.same_generic_derivation_as
+
+define		EXPANDED "expanded"
+copy_sub 	Ace $TEST Ace
+copy_sub 	test.e $CLUSTER test.e
+copy_raw 	test2.e $CLUSTER test2.e
+
+compile_frozen
+compile_result 	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work 	NONE 	exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+define		EXPANDED ""
+copy_sub 	test.e $CLUSTER test.e
+
+compile_frozen
+compile_result 	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work 	NONE 	exec_output2
+execute_result 	ok
+compare		exec_output2 output
+
+test_end
+

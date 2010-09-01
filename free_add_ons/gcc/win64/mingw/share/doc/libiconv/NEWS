@@ -1,3 +1,5 @@
+* Fixed a bug in the conversion to wchar_t.
+
 New in 1.13:
 * The library and the iconv program now understand platform dependent aliases,
   for better compatibility with the platform's own iconv_open function.

@@ -5,8 +5,8 @@ This file documents the GNU `make' utility, which determines
 automatically which pieces of a large program need to be recompiled,
 and issues the commands to recompile them.
 
-   This is Edition 0.70, last updated 12 November 2009, of `The GNU
-Make Manual', for GNU `make' version 3.81.90.
+   This is Edition 0.70, last updated 6 July 2010, of `The GNU Make
+Manual', for GNU `make' version 3.81.90.
 
    Copyright (C) 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996,
 1997, 1998, 1999, 2000, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009
@@ -39,8 +39,8 @@ This file documents the GNU `make' utility, which determines
 automatically which pieces of a large program need to be recompiled,
 and issues the commands to recompile them.
 
-   This is Edition 0.70, last updated 12 November 2009, of `The GNU
-Make Manual', for GNU `make' version 3.81.90.
+   This is Edition 0.70, last updated 6 July 2010, of `The GNU Make
+Manual', for GNU `make' version 3.81.90.
 
    Copyright (C) 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996,
 1997, 1998, 1999, 2000, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009
@@ -2436,6 +2436,19 @@ Certain names have special meanings if they appear as targets.
      parallel (unless its makefile also contains this target).  Any
      prerequisites on this target are ignored.
 
+`.POSIX'
+     If `.POSIX' is mentioned as a target, then the makefile will be
+     parsed and run in POSIX-conforming mode.  This does _not_ mean
+     that only POSIX-conforming makefiles will be accepted: all advanced
+     GNU `make' features are still available.  Rather, this target
+     causes `make' to behave as required by POSIX in those areas where
+     `make''s default behavior differs.
+
+     In particular, if this target is mentioned then recipes will be
+     invoked as if the shell had been passed the `-e' flag: the first
+     failing command in a recipe will cause the recipe to fail
+     immediately.
+
    Any defined implicit rule suffix also counts as a special target if
 it appears as a target, and so does the concatenation of two suffixes,
 such as `.c.o'.  These targets are suffix rules, an obsolete way of
@@ -3109,7 +3122,9 @@ File: make.info,  Node: Choosing the Shell,  Prev: Execution,  Up: Execution
 
 The program used as the shell is taken from the variable `SHELL'.  If
 this variable is not set in your makefile, the program `/bin/sh' is
-used as the shell.
+used as the shell.  The argument(s) passed to the shell are taken from
+the variable `.SHELLFLAGS'.  The default value of `.SHELLFLAGS' is `-c'
+normally, or `-ec' in POSIX-conforming mode.
 
    Unlike most variables, the variable `SHELL' is never set from the
 environment.  This is because the `SHELL' environment variable is used

@@ -12,7 +12,7 @@ Foundation, Inc.  Contributed by Cygnus Solutions.  Written by John
 Gilmore.  Second Edition by Stan Shebs.
 
    Permission is granted to copy, distribute and/or modify this document
-under the terms of the GNU Free Documentation License, Version 1.1 or
+under the terms of the GNU Free Documentation License, Version 1.3 or
 any later version published by the Free Software Foundation; with no
 Invariant Sections, with no Front-Cover Texts, and with no Back-Cover
 Texts.  A copy of the license is included in the section entitled "GNU
@@ -26,7 +26,7 @@ Foundation, Inc.  Contributed by Cygnus Solutions.  Written by John
 Gilmore.  Second Edition by Stan Shebs.
 
    Permission is granted to copy, distribute and/or modify this document
-under the terms of the GNU Free Documentation License, Version 1.1 or
+under the terms of the GNU Free Documentation License, Version 1.3 or
 any later version published by the Free Software Foundation; with no
 Invariant Sections, with no Front-Cover Texts, and with no Back-Cover
 Texts.  A copy of the license is included in the section entitled "GNU
@@ -5693,8 +5693,13 @@ code detected a user error, recovered from it and issued a `warning' or
 the code failed to correctly recover from the user error and issued an
 `internal_error'._
 
-16.4.9 File Names
------------------
+16.4.9 Command Names
+--------------------
+
+GDB U/I commands are written `foo-bar', not `foo_bar'.
+
+16.4.10 File Names
+------------------
 
 Any file used when building the core of GDB must be in lower case.  Any
 file used when building the core of GDB must be 8.3 unique.  These
@@ -5722,7 +5727,7 @@ GDB and GDBSERVER.
 
    For other files `-' is used as the separator.
 
-16.4.10 Include Files
+16.4.11 Include Files
 ---------------------
 
 A `.c' file should include `defs.h' first.
@@ -5755,7 +5760,7 @@ instead of an include.
      header body
      #endif
 
-16.4.11 Clean Design and Portable Implementation
+16.4.12 Clean Design and Portable Implementation
 ------------------------------------------------
 
 In addition to getting the syntax right, there's the little question of
@@ -7481,10 +7486,10 @@ File: gdbint.info,  Node: GNU Free Documentation License,  Next: Index,  Prev: G
 Appendix B GNU Free Documentation License
 *****************************************
 
-                      Version 1.2, November 2002
+                     Version 1.3, 3 November 2008
 
-     Copyright (C) 2000,2001,2002 Free Software Foundation, Inc.
-     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+     Copyright (C) 2000, 2001, 2002, 2007, 2008 Free Software Foundation, Inc.
+     `http://fsf.org/'
 
      Everyone is permitted to copy and distribute verbatim copies
      of this license document, but changing it is not allowed.
@@ -7585,6 +7590,9 @@ Appendix B GNU Free Documentation License
      works in formats which do not have any title page as such, "Title
      Page" means the text near the most prominent appearance of the
      work's title, preceding the beginning of the body of the text.
+
+     The "publisher" means any person or entity that distributes copies
+     of the Document to the public.
 
      A section "Entitled XYZ" means a named subunit of the Document
      whose title either is precisely XYZ or contains XYZ in parentheses
@@ -7851,12 +7859,29 @@ Appendix B GNU Free Documentation License
   9. TERMINATION
 
      You may not copy, modify, sublicense, or distribute the Document
-     except as expressly provided for under this License.  Any other
-     attempt to copy, modify, sublicense or distribute the Document is
-     void, and will automatically terminate your rights under this
-     License.  However, parties who have received copies, or rights,
-     from you under this License will not have their licenses
-     terminated so long as such parties remain in full compliance.
+     except as expressly provided under this License.  Any attempt
+     otherwise to copy, modify, sublicense, or distribute it is void,
+     and will automatically terminate your rights under this License.
+
+     However, if you cease all violation of this License, then your
+     license from a particular copyright holder is reinstated (a)
+     provisionally, unless and until the copyright holder explicitly
+     and finally terminates your license, and (b) permanently, if the
+     copyright holder fails to notify you of the violation by some
+     reasonable means prior to 60 days after the cessation.
+
+     Moreover, your license from a particular copyright holder is
+     reinstated permanently if the copyright holder notifies you of the
+     violation by some reasonable means, this is the first time you have
+     received notice of violation of this License (for any work) from
+     that copyright holder, and you cure the violation prior to 30 days
+     after your receipt of the notice.
+
+     Termination of your rights under this section does not terminate
+     the licenses of parties who have received copies or rights from
+     you under this License.  If your rights have been terminated and
+     not permanently reinstated, receipt of a copy of some or all of
+     the same material does not give you any rights to use it.
 
  10. FUTURE REVISIONS OF THIS LICENSE
 
@@ -7874,10 +7899,44 @@ Appendix B GNU Free Documentation License
      published (not as a draft) by the Free Software Foundation.  If
      the Document does not specify a version number of this License,
      you may choose any version ever published (not as a draft) by the
-     Free Software Foundation.
+     Free Software Foundation.  If the Document specifies that a proxy
+     can decide which future versions of this License can be used, that
+     proxy's public statement of acceptance of a version permanently
+     authorizes you to choose that version for the Document.
 
-B.1 ADDENDUM: How to use this License for your documents
-========================================================
+ 11. RELICENSING
+
+     "Massive Multiauthor Collaboration Site" (or "MMC Site") means any
+     World Wide Web server that publishes copyrightable works and also
+     provides prominent facilities for anybody to edit those works.  A
+     public wiki that anybody can edit is an example of such a server.
+     A "Massive Multiauthor Collaboration" (or "MMC") contained in the
+     site means any set of copyrightable works thus published on the MMC
+     site.
+
+     "CC-BY-SA" means the Creative Commons Attribution-Share Alike 3.0
+     license published by Creative Commons Corporation, a not-for-profit
+     corporation with a principal place of business in San Francisco,
+     California, as well as future copyleft versions of that license
+     published by that same organization.
+
+     "Incorporate" means to publish or republish a Document, in whole or
+     in part, as part of another Document.
+
+     An MMC is "eligible for relicensing" if it is licensed under this
+     License, and if all works that were first published under this
+     License somewhere other than this MMC, and subsequently
+     incorporated in whole or in part into the MMC, (1) had no cover
+     texts or invariant sections, and (2) were thus incorporated prior
+     to November 1, 2008.
+
+     The operator of an MMC Site may republish an MMC contained in the
+     site under CC-BY-SA on the same site at any time before August 1,
+     2009, provided the MMC is eligible for relicensing.
+
+
+ADDENDUM: How to use this License for your documents
+====================================================
 
 To use this License in a document you have written, include a copy of
 the License in the document and put the following copyright and license
@@ -7885,7 +7944,7 @@ notices just after the title page:
 
        Copyright (C)  YEAR  YOUR NAME.
        Permission is granted to copy, distribute and/or modify this document
-       under the terms of the GNU Free Documentation License, Version 1.2
+       under the terms of the GNU Free Documentation License, Version 1.3
        or any later version published by the Free Software Foundation;
        with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
        Texts.  A copy of the license is included in the section entitled ``GNU
@@ -7962,7 +8021,7 @@ Index
                                                               (line   6)
 * architecture_changed:                  GDB Observers.       (line 160)
 * Array Containers:                      Support Libraries.   (line 131)
-* assumptions about targets:             Coding.              (line 514)
+* assumptions about targets:             Coding.              (line 519)
 * base of a frame:                       Frame Handling Terminology.
                                                               (line  28)
 * BFD library:                           Support Libraries.   (line   9)
@@ -8028,9 +8087,9 @@ Index
 * DEPRECATED_IBM6000_TARGET:             Defining Other Architecture Features.
                                                               (line 242)
 * deprecating commands:                  User Interface.      (line  32)
-* design:                                Coding.              (line 509)
+* design:                                Coding.              (line 514)
 * DEV_TTY:                               Host Definition.     (line  96)
-* DIRNAME_SEPARATOR:                     Coding.              (line 579)
+* DIRNAME_SEPARATOR:                     Coding.              (line 584)
 * DISABLE_UNSETTABLE_BREAK:              Defining Other Architecture Features.
                                                               (line 211)
 * discard_cleanups:                      Coding.              (line  39)
@@ -8054,11 +8113,9 @@ Index
 * expression parser:                     Language Support.    (line  21)
 * extract_typed_address:                 Pointers and Addresses.
                                                               (line  52)
-* FDL, GNU Free Documentation License:   GNU Free Documentation License.
-                                                              (line   6)
 * field output functions:                User Interface.      (line 254)
-* file names, portability:               Coding.              (line 547)
-* FILENAME_CMP:                          Coding.              (line 573)
+* file names, portability:               Coding.              (line 552)
+* FILENAME_CMP:                          Coding.              (line 578)
 * find_pc_function:                      Symbol Handling.     (line 136)
 * find_pc_line:                          Symbol Handling.     (line 136)
 * find_sym_fns:                          Symbol Handling.     (line  32)
@@ -8323,7 +8380,7 @@ Index
 * hardware breakpoints:                  Algorithms.          (line 158)
 * hardware watchpoints:                  Algorithms.          (line 280)
 * HAVE_CONTINUABLE_WATCHPOINT:           Algorithms.          (line 402)
-* HAVE_DOS_BASED_FILE_SYSTEM:            Coding.              (line 556)
+* HAVE_DOS_BASED_FILE_SYSTEM:            Coding.              (line 561)
 * HAVE_STEPPABLE_WATCHPOINT:             Algorithms.          (line 386)
 * host:                                  Overall Structure.   (line  50)
 * host, adding:                          Host Definition.     (line  13)
@@ -8354,8 +8411,8 @@ Index
 * insert or remove hardware breakpoint:  Algorithms.          (line 234)
 * insert or remove hardware watchpoint:  Algorithms.          (line 347)
 * insert or remove software breakpoint:  Algorithms.          (line 211)
-* IS_ABSOLUTE_PATH:                      Coding.              (line 567)
-* IS_DIR_SEPARATOR:                      Coding.              (line 562)
+* IS_ABSOLUTE_PATH:                      Coding.              (line 572)
+* IS_DIR_SEPARATOR:                      Coding.              (line 567)
 * ISATTY:                                Host Definition.     (line  99)
 * item output functions:                 User Interface.      (line 254)
 * language parser:                       Language Support.    (line  25)
@@ -8414,8 +8471,8 @@ Index
 * per-architecture module data:          Coding.              (line 100)
 * pointer representation:                Pointers and Addresses.
                                                               (line   6)
-* portability:                           Coding.              (line 530)
-* portable file name handling:           Coding.              (line 547)
+* portability:                           Coding.              (line 535)
+* portable file name handling:           Coding.              (line 552)
 * porting to new machines:               Porting GDB.         (line   6)
 * prefixify_subexp:                      Language Support.    (line  58)
 * PREVIOUS frame:                        Frame Handling Terminology.
@@ -8514,7 +8571,7 @@ Index
                                                               (line  12)
 * SKIP_SOLIB_RESOLVER:                   Defining Other Architecture Features.
                                                               (line 267)
-* SLASH_STRING:                          Coding.              (line 584)
+* SLASH_STRING:                          Coding.              (line 589)
 * sniffing:                              Frame Handling Terminology.
                                                               (line  46)
 * software breakpoints:                  Algorithms.          (line 184)
@@ -8573,7 +8630,7 @@ Index
 * SYMBOL_RELOADING_DEFAULT:              Defining Other Architecture Features.
                                                               (line 454)
 * symtabs:                               Symbol Handling.     (line 104)
-* system dependencies:                   Coding.              (line 534)
+* system dependencies:                   Coding.              (line 539)
 * table output functions:                User Interface.      (line 131)
 * target:                                Overall Structure.   (line  50)
 * target architecture definition:        Target Architecture Definition.
@@ -8742,19 +8799,19 @@ Node: Existing Targets205547
 Node: Native Debugging208062
 Node: Support Libraries211890
 Node: Coding223405
-Node: Porting GDB248414
-Node: Versions and Branches250283
-Ref: Tags256239
-Ref: experimental branch tags256570
-Node: Start of New Year Procedure257302
-Node: Releasing GDB259108
-Node: Testsuite277340
-Ref: Testsuite-Footnote-1289205
-Node: Hints289323
-Node: Getting Started289645
-Node: Debugging GDB293810
-Node: GDB Observers298899
-Node: GNU Free Documentation License307207
-Node: Index329651
+Node: Porting GDB248515
+Node: Versions and Branches250384
+Ref: Tags256340
+Ref: experimental branch tags256671
+Node: Start of New Year Procedure257403
+Node: Releasing GDB259209
+Node: Testsuite277441
+Ref: Testsuite-Footnote-1289306
+Node: Hints289424
+Node: Getting Started289746
+Node: Debugging GDB293911
+Node: GDB Observers299000
+Node: GNU Free Documentation License307308
+Node: Index332475
 
 End Tag Table

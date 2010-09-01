@@ -5,8 +5,8 @@ This file documents the GNU `make' utility, which determines
 automatically which pieces of a large program need to be recompiled,
 and issues the commands to recompile them.
 
-   This is Edition 0.70, last updated 12 November 2009, of `The GNU
-Make Manual', for GNU `make' version 3.81.90.
+   This is Edition 0.70, last updated 6 July 2010, of `The GNU Make
+Manual', for GNU `make' version 3.81.90.
 
    Copyright (C) 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996,
 1997, 1998, 1999, 2000, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009
@@ -1539,8 +1539,8 @@ or `bash', or POSIX features not widely supported in traditional Bourne
    The `configure' script and the Makefile rules for building and
 installation should not use any utilities directly except these:
 
-     awk cat cmp cp diff echo egrep expr false grep install-info
-     ln ls mkdir mv pwd rm rmdir sed sleep sort tar test touch tr true
+     awk cat cmp cp diff echo egrep expr false grep install-info ln ls
+     mkdir mv printf pwd rm rmdir sed sleep sort tar test touch tr true
 
    Compression programs such as `gzip' can be used in the `dist' rule.
 
@@ -1661,7 +1661,7 @@ command, with the final argument being a directory, as in:
 
 File: make.info,  Node: DESTDIR,  Next: Directory Variables,  Prev: Command Variables,  Up: Makefile Conventions
 
-14.4 `DESTDIR': support for staged installs
+14.4 `DESTDIR': Support for Staged Installs
 ===========================================
 
 `DESTDIR' is a variable prepended to each installed target file, like
@@ -1726,6 +1726,9 @@ should be appropriate for these variables on the system they are being
 installed onto: use the default settings specified here so that all GNU
 packages behave identically, allowing the installer to achieve any
 desired layout.
+
+   All installation directories, and their parent directories, should be
+created (if necessary) before they are installed into.
 
    These first two variables set the root for the installation.  All the
 other installation directories should be subdirectories of one of these
@@ -2080,23 +2083,28 @@ All GNU programs should have the following targets in their Makefiles:
      the `install-info' program if it is present.  `install-info' is a
      program that edits the Info `dir' file to add or update the menu
      entry for the given Info file; it is part of the Texinfo package.
-     Here is a sample rule to install an Info file:
 
-          $(DESTDIR)$(infodir)/foo.info: foo.info
-                  $(POST_INSTALL)
-          # There may be a newer info file in . than in srcdir.
-                  -if test -f foo.info; then d=.; \
-                   else d=$(srcdir); fi; \
-                  $(INSTALL_DATA) $$d/foo.info $(DESTDIR)$@; \
+     Here is a sample rule to install an Info file that also tries to
+     handle some additional situations, such as `install-info' not
+     being present.
+
+          do-install-info: foo.info installdirs
+                  $(NORMAL_INSTALL)
+          # Prefer an info file in . to one in srcdir.
+                  if test -f foo.info; then d=.; \
+                   else d="$(srcdir)"; fi; \
+                  $(INSTALL_DATA) $$d/foo.info \
+                    "$(DESTDIR)$(infodir)/foo.info"
           # Run install-info only if it exists.
           # Use `if' instead of just prepending `-' to the
           # line so we notice real errors from install-info.
-          # We use `$(SHELL) -c' because some shells do not
+          # Use `$(SHELL) -c' because some shells do not
           # fail gracefully when there is an unknown command.
+                  $(POST_INSTALL)
                   if $(SHELL) -c 'install-info --version' \
                      >/dev/null 2>&1; then \
-                    install-info --dir-file=$(DESTDIR)$(infodir)/dir \
-                                 $(DESTDIR)$(infodir)/foo.info; \
+                    install-info --dir-file="$(DESTDIR)$(infodir)/dir" \
+                                 "$(DESTDIR)$(infodir)/foo.info"; \
                   else true; fi
 
      When writing the `install' target, you must classify all the
@@ -2310,7 +2318,7 @@ programs in which they are useful.
      It's useful to add a target named `installdirs' to create the
      directories where files are installed, and their parent
      directories.  There is a script called `mkinstalldirs' which is
-     convenient for this; you can find it in the Texinfo package.  You
+     convenient for this; you can find it in the Gnulib package.  You
      can use a rule like this:
 
           # Make sure all installation directories (e.g. $(bindir))
@@ -2320,7 +2328,7 @@ programs in which they are useful.
                                           $(libdir) $(infodir) \
                                           $(mandir)
 
-     or, if you wish to support `DESTDIR',
+     or, if you wish to support `DESTDIR' (strongly encouraged),
 
           # Make sure all installation directories (e.g. $(bindir))
           # actually exist by making them if necessary.
@@ -3890,6 +3898,7 @@ Index of Concepts
 * .S:                                    Catalogue of Rules.  (line  82)
 * .s:                                    Catalogue of Rules.  (line  79)
 * .sh:                                   Catalogue of Rules.  (line 180)
+* .SHELLFLAGS, value of:                 Choosing the Shell.  (line   6)
 * .sym:                                  Catalogue of Rules.  (line  74)
 * .tex:                                  Catalogue of Rules.  (line 151)
 * .texi:                                 Catalogue of Rules.  (line 158)
@@ -4007,6 +4016,7 @@ Index of Concepts
 * deletion of target files <1>:          Interrupts.          (line   6)
 * deletion of target files:              Errors.              (line  64)
 * directive:                             Makefile Contents.   (line  28)
+* directories, creating installation:    Directory Variables. (line  20)
 * directories, printing them:            -w Option.           (line   6)
 * directories, updating archive symbol:  Archive Symbols.     (line   6)
 * directory part:                        File Name Functions. (line  17)
@@ -4024,7 +4034,7 @@ Index of Concepts
 * dollar sign ($), in rules:             Rule Syntax.         (line  33)
 * dollar sign ($), in variable name:     Computed Names.      (line   6)
 * dollar sign ($), in variable reference: Reference.          (line   6)
-* DOS, choosing a shell in:              Choosing the Shell.  (line  36)
+* DOS, choosing a shell in:              Choosing the Shell.  (line  38)
 * double-colon rules:                    Double-Colon.        (line   6)
 * duplicate words, removing:             Text Functions.      (line 155)
 * E2BIG:                                 Options/Recursion.   (line  57)
@@ -4035,7 +4045,7 @@ Index of Concepts
 * empty targets:                         Empty Targets.       (line   6)
 * environment:                           Environment.         (line   6)
 * environment, and recursion:            Variables/Recursion. (line   6)
-* environment, SHELL in:                 Choosing the Shell.  (line  10)
+* environment, SHELL in:                 Choosing the Shell.  (line  12)
 * error, stopping on:                    Make Control Functions.
                                                               (line  11)
 * errors (in recipes):                   Errors.              (line   6)
@@ -4135,6 +4145,7 @@ Index of Concepts
 * inheritance, suppressing:              Suppressing Inheritance.
                                                               (line   6)
 * install (standard target):             Goals.               (line  92)
+* installation directories, creating:    Directory Variables. (line  20)
 * installations, staged:                 DESTDIR.             (line   6)
 * intermediate files:                    Chained Rules.       (line  16)
 * intermediate files, preserving:        Chained Rules.       (line  46)
@@ -4249,6 +4260,7 @@ Index of Concepts
 * pitfalls of wildcards:                 Wildcard Pitfall.    (line   6)
 * portability:                           Features.            (line   6)
 * POSIX:                                 Overview.            (line  13)
+* POSIX-conforming mode, setting:        Special Targets.     (line 137)
 * POSIX.2:                               Options/Recursion.   (line  60)
 * post-installation commands:            Install Command Categories.
                                                               (line   6)
@@ -4424,8 +4436,8 @@ Index of Concepts
 * shell, choosing the:                   Choosing the Shell.  (line   6)
 * SHELL, exported value:                 Variables/Recursion. (line  23)
 * SHELL, import from environment:        Environment.         (line  37)
-* shell, in DOS and Windows:             Choosing the Shell.  (line  36)
-* SHELL, MS-DOS specifics:               Choosing the Shell.  (line  42)
+* shell, in DOS and Windows:             Choosing the Shell.  (line  38)
+* SHELL, MS-DOS specifics:               Choosing the Shell.  (line  44)
 * SHELL, value of:                       Choosing the Shell.  (line   6)
 * signal:                                Interrupts.          (line   6)
 * silent operation:                      Echoing.             (line   6)
@@ -4582,7 +4594,7 @@ Index of Concepts
 * wildcard, in include:                  Include.             (line  13)
 * wildcards and MS-DOS/MS-Windows backslashes: Wildcard Pitfall.
                                                               (line  31)
-* Windows, choosing a shell in:          Choosing the Shell.  (line  36)
+* Windows, choosing a shell in:          Choosing the Shell.  (line  38)
 * word, selecting a:                     Text Functions.      (line 159)
 * words, extracting first:               Text Functions.      (line 184)
 * words, extracting last:                Text Functions.      (line 197)
@@ -4664,12 +4676,14 @@ Index of Functions, Variables, & Directives
 * .NOTPARALLEL:                          Special Targets.     (line 129)
 * .PHONY <1>:                            Special Targets.     (line   8)
 * .PHONY:                                Phony Targets.       (line  22)
-* .POSIX:                                Options/Recursion.   (line  60)
+* .POSIX <1>:                            Options/Recursion.   (line  60)
+* .POSIX:                                Special Targets.     (line 136)
 * .PRECIOUS <1>:                         Interrupts.          (line  22)
 * .PRECIOUS:                             Special Targets.     (line  28)
 * .SECONDARY:                            Special Targets.     (line  48)
 * .SECONDEXPANSION <1>:                  Special Targets.     (line  57)
 * .SECONDEXPANSION:                      Secondary Expansion. (line   6)
+* .SHELLFLAGS:                           Choosing the Shell.  (line   6)
 * .SILENT <1>:                           Echoing.             (line  24)
 * .SILENT:                               Special Targets.     (line 111)
 * .SUFFIXES <1>:                         Suffix Rules.        (line  61)
@@ -4700,13 +4714,13 @@ Index of Functions, Variables, & Directives
 * AS:                                    Implicit Variables.  (line  43)
 * ASFLAGS:                               Implicit Variables.  (line 116)
 * basename:                              File Name Functions. (line  57)
-* bindir:                                Directory Variables. (line  54)
+* bindir:                                Directory Variables. (line  57)
 * call:                                  Call Function.       (line   6)
 * CC:                                    Implicit Variables.  (line  46)
 * CFLAGS:                                Implicit Variables.  (line 120)
 * CO:                                    Implicit Variables.  (line  66)
 * COFLAGS:                               Implicit Variables.  (line 126)
-* COMSPEC:                               Choosing the Shell.  (line  39)
+* COMSPEC:                               Choosing the Shell.  (line  41)
 * CPP:                                   Implicit Variables.  (line  52)
 * CPPFLAGS:                              Implicit Variables.  (line 129)
 * CTANGLE:                               Implicit Variables.  (line 103)
@@ -4723,7 +4737,7 @@ Index of Functions, Variables, & Directives
 * error:                                 Make Control Functions.
                                                               (line  11)
 * eval:                                  Eval Function.       (line   6)
-* exec_prefix:                           Directory Variables. (line  36)
+* exec_prefix:                           Directory Variables. (line  39)
 * export:                                Variables/Recursion. (line  40)
 * FC:                                    Implicit Variables.  (line  56)
 * FFLAGS:                                Implicit Variables.  (line 133)
@@ -4751,7 +4765,7 @@ Index of Functions, Variables, & Directives
 * LDFLAGS:                               Implicit Variables.  (line 139)
 * LEX:                                   Implicit Variables.  (line  72)
 * LFLAGS:                                Implicit Variables.  (line 143)
-* libexecdir:                            Directory Variables. (line  67)
+* libexecdir:                            Directory Variables. (line  70)
 * LINT:                                  Implicit Variables.  (line  80)
 * LINTFLAGS:                             Implicit Variables.  (line 155)
 * M2C:                                   Implicit Variables.  (line  60)
@@ -4773,7 +4787,7 @@ Index of Functions, Variables, & Directives
 * MAKELEVEL:                             Variables/Recursion. (line 115)
 * MAKEOVERRIDES:                         Options/Recursion.   (line  49)
 * MAKESHELL (MS-DOS alternative to SHELL): Choosing the Shell.
-                                                              (line  25)
+                                                              (line  27)
 * MFLAGS:                                Options/Recursion.   (line  65)
 * notdir:                                File Name Functions. (line  27)
 * or:                                    Conditional Functions.
@@ -4785,13 +4799,13 @@ Index of Functions, Variables, & Directives
 * patsubst:                              Substitution Refs.   (line  28)
 * PC:                                    Implicit Variables.  (line  63)
 * PFLAGS:                                Implicit Variables.  (line 149)
-* prefix:                                Directory Variables. (line  26)
+* prefix:                                Directory Variables. (line  29)
 * private:                               Suppressing Inheritance.
                                                               (line   6)
 * realpath:                              File Name Functions. (line 114)
 * RFLAGS:                                Implicit Variables.  (line 152)
 * RM:                                    Implicit Variables.  (line 106)
-* sbindir:                               Directory Variables. (line  60)
+* sbindir:                               Directory Variables. (line  63)
 * shell:                                 Shell Function.      (line   6)
 * SHELL:                                 Choosing the Shell.  (line   6)
 * SHELL (recipe execution):              Execution.           (line   6)

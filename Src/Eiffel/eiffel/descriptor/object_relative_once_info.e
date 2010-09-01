@@ -233,20 +233,17 @@ feature -- Element change
 				print (generator + ".clean: "+ once_routine.feature_name + "%N")
 				debug_output_info (once_routine, "Cleaning")
 			end
-			system.rout_info_table.remove (called_routine_id)
 			called_attribute_i := Void
 			called_attr_desc := Void
 			called_feature_id := 0
 			called_routine_id := 0
 
-			system.rout_info_table.remove (exception_routine_id)
 			exception_attribute_i := Void
 			exception_attr_desc := Void
 			exception_feature_id := 0
 			exception_routine_id := 0
 
 			if has_result then
-				system.rout_info_table.remove (result_routine_id)
 				result_attribute_i := Void
 				result_attr_desc := Void
 				result_feature_id := 0

@@ -219,7 +219,7 @@ feature {NONE} -- Click ast exploration
 		do
 			if is_ok_for_completion then
 				initialize_context
-				if current_class_i /= Void and attached current_class_i.text_8 as l_text then
+				if attached content.text_loaded as l_text then
 					create l_mapper.make (l_text)
 					parents := current_class_as.parents
 					has_parents := parents /= Void

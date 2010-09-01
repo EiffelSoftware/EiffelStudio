@@ -516,8 +516,8 @@ feature {NONE} -- Retrieve information from text
 			end
 				-- Before getting the first invariant position, for performance reason
 				-- we do not have to compute character position.
-			if attached current_class_i.text_8 as l_text then
-				create l_mapper.make (current_class_i.text_8)
+			if attached content.text_loaded as l_text then
+				create l_mapper.make (l_text)
 				if current_class_as.features /= Void and then features_position.count > 0 then
 					features_index := features_position.i_th (1).start_pos
 					features_index := l_mapper.utf32_pos_from_utf8_pos (features_index)

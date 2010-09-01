@@ -41,6 +41,9 @@ feature {NONE} -- Initialization
 			create makefile.make ("Makefile")
 			create makefile_sh.make ("Makefile.SH")
 			create appl.make_empty
+			create missing_options.make (2)
+			missing_options.compare_objects
+
 			force_32bit := a_force_32bit
 
 			processor_count := a_processor_count
@@ -1484,6 +1487,9 @@ feature {NONE} -- Implementation
 			 create Result
 		end
 
+	missing_options: ARRAYED_LIST [STRING]
+			-- Options that cannot be found anywhere
+
 	search_and_replace (line: STRING)
 			-- search words starting with $ and replace with option or env variable
 		local
@@ -1529,7 +1535,8 @@ feature {NONE} -- Implementation
 					wordstart := wordstart + replacement.count - 2
 				elseif word.substring(1,18).is_equal("external_makefiles") then
 					-- $EXTERNAL_MAKEFILES must not be replaced.
-				else
+				elseif not missing_options.has (word) then
+					missing_options.extend (word)
 					io.error.put_string ("WARNING: Option '")
 					io.error.put_string (word)
 					io.error.put_string ("' was found in neither CONFIG.EIF nor registry.")

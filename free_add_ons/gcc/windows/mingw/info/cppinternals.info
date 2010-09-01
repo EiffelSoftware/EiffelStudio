@@ -1,14 +1,15 @@
-This is doc/cppinternals.info, produced by makeinfo version 4.2 from
-../../gcc/gcc/doc/cppinternals.texi.
+This is doc/cppinternals.info, produced by makeinfo version 4.13 from
+../../gcc44-svn/gcc/doc/cppinternals.texi.
 
-INFO-DIR-SECTION Programming
+INFO-DIR-SECTION Software development
 START-INFO-DIR-ENTRY
 * Cpplib: (cppinternals).      Cpplib internals.
 END-INFO-DIR-ENTRY
 
    This file documents the internals of the GNU C Preprocessor.
 
-   Copyright 2000, 2001, 2002, 2004 Free Software Foundation, Inc.
+   Copyright 2000, 2001, 2002, 2004, 2005, 2006, 2007 Free Software
+Foundation, Inc.
 
    Permission is granted to make and distribute verbatim copies of this
 manual provided the copyright notice and this permission notice are
@@ -26,17 +27,18 @@ versions.
 
 File: cppinternals.info,  Node: Top,  Next: Conventions,  Up: (dir)
 
+The GNU C Preprocessor Internals
+********************************
 
+1 Cpplib--the GNU C Preprocessor
+********************************
 
-Cpplib--the GNU C Preprocessor
-******************************
-
-   The GNU C preprocessor in GCC 3.x has been completely rewritten.  It
-is now implemented as a library, "cpplib", so it can be easily shared
-between a stand-alone preprocessor, and a preprocessor integrated with
-the C, C++ and Objective-C front ends.  It is also available for use by
-other programs, though this is not recommended as its exposed interface
-has not yet reached a point of reasonable stability.
+The GNU C preprocessor is implemented as a library, "cpplib", so it can
+be easily shared between a stand-alone preprocessor, and a preprocessor
+integrated with the C, C++ and Objective-C front ends.  It is also
+available for use by other programs, though this is not recommended as
+its exposed interface has not yet reached a point of reasonable
+stability.
 
    The library has been written to be re-entrant, so that it can be used
 to preprocess many files simultaneously if necessary.  It has also been
@@ -60,7 +62,7 @@ implemented the way they have.
 * Line Numbering::      Tracking location within files.
 * Guard Macros::        Optimizing header files with guard macros.
 * Files::               File handling.
-* Index::               Index.
+* Concept Index::       Index.
 
 
 File: cppinternals.info,  Node: Conventions,  Next: Lexer,  Prev: Top,  Up: Top
@@ -68,12 +70,12 @@ File: cppinternals.info,  Node: Conventions,  Next: Lexer,  Prev: Top,  Up: Top
 Conventions
 ***********
 
-   cpplib has two interfaces--one is exposed internally only, and the
+cpplib has two interfaces--one is exposed internally only, and the
 other is for both internal and external use.
 
    The convention is that functions and types that are exposed to
 multiple files internally are prefixed with `_cpp_', and are to be
-found in the file `cpphash.h'.  Functions and types exposed to external
+found in the file `internal.h'.  Functions and types exposed to external
 clients are in `cpplib.h', and prefixed with `cpp_'.  For historical
 reasons this is no longer quite true, but we should strive to stick to
 it.
@@ -94,9 +96,9 @@ The Lexer
 Overview
 ========
 
-   The lexer is contained in the file `cpplex.c'.  It is a hand-coded
-lexer, and not implemented as a state machine.  It can understand C, C++
-and Objective-C source code, and has been extended to allow reasonably
+The lexer is contained in the file `lex.c'.  It is a hand-coded lexer,
+and not implemented as a state machine.  It can understand C, C++ and
+Objective-C source code, and has been extended to allow reasonably
 successful preprocessing of assembly language.  The lexer does not make
 an initial pass to strip out trigraphs and escaped newlines, but handles
 them as they are encountered in a single pass of the input file.  It
@@ -113,10 +115,10 @@ generating diagnostics, and for emitting the preprocessed output.
 Lexing a token
 ==============
 
-   Lexing of an individual token is handled by `_cpp_lex_direct' and
-its subroutines.  In its current form the code is quite complicated,
-with read ahead characters and such-like, since it strives to not step
-back in the character stream in preparation for handling non-ASCII file
+Lexing of an individual token is handled by `_cpp_lex_direct' and its
+subroutines.  In its current form the code is quite complicated, with
+read ahead characters and such-like, since it strives to not step back
+in the character stream in preparation for handling non-ASCII file
 encodings.  The current plan is to convert any such files to UTF-8
 before processing them.  This complexity is therefore unnecessary and
 will be removed, so I'll not discuss it further here.
@@ -277,7 +279,7 @@ program calls cpp_destroy, probably at the end of the translation unit.
 Lexing a line
 =============
 
-   When the preprocessor was changed to return pointers to tokens, one
+When the preprocessor was changed to return pointers to tokens, one
 feature I wanted was some sort of guarantee regarding how long a
 returned pointer remains valid.  This is important to the stand-alone
 preprocessor, the future direction of the C family front ends, and even
@@ -365,12 +367,12 @@ File: cppinternals.info,  Node: Hash Nodes,  Next: Macro Expansion,  Prev: Lexer
 Hash Nodes
 **********
 
-   When cpplib encounters an "identifier", it generates a hash code for
-it and stores it in the hash table.  By "identifier" we mean tokens
-with type `CPP_NAME'; this includes identifiers in the usual C sense,
-as well as keywords, directive names, macro names and so on.  For
-example, all of `pragma', `int', `foo' and `__GNUC__' are identifiers
-and hashed when lexed.
+When cpplib encounters an "identifier", it generates a hash code for it
+and stores it in the hash table.  By "identifier" we mean tokens with
+type `CPP_NAME'; this includes identifiers in the usual C sense, as
+well as keywords, directive names, macro names and so on.  For example,
+all of `pragma', `int', `foo' and `__GNUC__' are identifiers and hashed
+when lexed.
 
    Each node in the hash table contain various information about the
 identifier it represents.  For example, its length and type.  At any one
@@ -426,10 +428,9 @@ File: cppinternals.info,  Node: Macro Expansion,  Next: Token Spacing,  Prev: Ha
 Macro Expansion Algorithm
 *************************
 
-   Macro expansion is a tricky operation, fraught with nasty corner
-cases and situations that render what you thought was a nifty way to
-optimize the preprocessor's expansion algorithm wrong in quite subtle
-ways.
+Macro expansion is a tricky operation, fraught with nasty corner cases
+and situations that render what you thought was a nifty way to optimize
+the preprocessor's expansion algorithm wrong in quite subtle ways.
 
    I strongly recommend you have a good grasp of how the C and C++
 standards require macros to be expanded before diving into this
@@ -440,8 +441,8 @@ pasting are supposed to work, damage to your sanity can quickly result.
 Internal representation of macros
 =================================
 
-   The preprocessor stores macro expansions in tokenized form.  This
-saves repeated lexing passes during expansion, at the cost of a small
+The preprocessor stores macro expansions in tokenized form.  This saves
+repeated lexing passes during expansion, at the cost of a small
 increase in memory consumption on average.  The tokens are stored
 contiguously in memory, so a pointer to the first one and a token count
 is all you need to get the replacement list of a macro.
@@ -461,9 +462,9 @@ changed.
 Macro expansion overview
 ========================
 
-   The preprocessor maintains a "context stack", implemented as a
-linked list of `cpp_context' structures, which together represent the
-macro expansion state at any one time.  The `struct cpp_reader' member
+The preprocessor maintains a "context stack", implemented as a linked
+list of `cpp_context' structures, which together represent the macro
+expansion state at any one time.  The `struct cpp_reader' member
 variable `context' points to the current top of this stack.  The top
 normally holds the unexpanded replacement list of the innermost macro
 under expansion, except when cpplib is about to pre-expand an argument,
@@ -506,7 +507,7 @@ being expanded.
 Scanning the replacement list for macros to expand
 ==================================================
 
-   The C standard states that, after any parameters have been replaced
+The C standard states that, after any parameters have been replaced
 with their possibly-expanded arguments, the replacement list is scanned
 for nested macros.  Further, any identifiers in the replacement list
 that are not expanded during this scan are never again eligible for
@@ -556,7 +557,7 @@ it a second time.
 Looking for a function-like macro's opening parenthesis
 =======================================================
 
-   Function-like macros only expand when immediately followed by a
+Function-like macros only expand when immediately followed by a
 parenthesis.  To do this cpplib needs to temporarily disable macros and
 read the next token.  Unfortunately, because of spacing issues (*note
 Token Spacing::), there can be fake padding tokens in-between, and if
@@ -576,7 +577,7 @@ context just containing the padding information if necessary.
 Marking tokens ineligible for future expansion
 ==============================================
 
-   As discussed above, cpplib needs a way of marking tokens as
+As discussed above, cpplib needs a way of marking tokens as
 unexpandable.  Since the tokens cpplib handles are read-only once they
 have been lexed, it instead makes a copy of the token and adds the flag
 `NO_EXPAND' to the copy.
@@ -599,7 +600,7 @@ File: cppinternals.info,  Node: Token Spacing,  Next: Line Numbering,  Prev: Mac
 Token Spacing
 *************
 
-   First, consider an issue that only concerns the stand-alone
+First, consider an issue that only concerns the stand-alone
 preprocessor: there needs to be a guarantee that re-reading its
 preprocessed output results in an identical token stream.  Without
 taking special measures, this might not be the case because of macro
@@ -730,8 +731,8 @@ Line numbering
 Just which line number anyway?
 ==============================
 
-   There are three reasonable requirements a cpplib client might have
-for the line number of a token passed to it:
+There are three reasonable requirements a cpplib client might have for
+the line number of a token passed to it:
 
    * The source line it was lexed on.
 
@@ -786,10 +787,10 @@ produce correct output.
 Representation of line numbers
 ==============================
 
-   As mentioned above, cpplib stores with each token the line number
-that it was lexed on.  In fact, this number is not the number of the
-line in the source file, but instead bears more resemblance to the
-number of the line in the translation unit.
+As mentioned above, cpplib stores with each token the line number that
+it was lexed on.  In fact, this number is not the number of the line in
+the source file, but instead bears more resemblance to the number of the
+line in the translation unit.
 
    The preprocessor maintains a monotonic increasing line count, which
 is incremented at every new line character (and also at the end of any
@@ -817,7 +818,7 @@ File: cppinternals.info,  Node: Guard Macros,  Next: Files,  Prev: Line Numberin
 The Multiple-Include Optimization
 *********************************
 
-   Header files are often of the form
+Header files are often of the form
 
      #ifndef FOO
      #define FOO
@@ -894,7 +895,7 @@ no `#else' or `#elif' for it to survive and be copied to `mi_cmacro' by
 conditional block for the optimization to be on.
 
    Note that whilst we are inside the conditional block, `mi_valid' is
-likely to be reset to `false', but this does not matter since the the
+likely to be reset to `false', but this does not matter since the
 closing `#endif' restores it to `true' if appropriate.
 
    Finally, since `_cpp_lex_direct' pops the file off the buffer stack
@@ -918,15 +919,15 @@ top-of-file test in `push_conditional' fails and the optimization is
 turned off.
 
 
-File: cppinternals.info,  Node: Files,  Next: Index,  Prev: Guard Macros,  Up: Top
+File: cppinternals.info,  Node: Files,  Next: Concept Index,  Prev: Guard Macros,  Up: Top
 
 File Handling
 *************
 
-   Fairly obviously, the file handling code of cpplib resides in the
-file `cppfiles.c'.  It takes care of the details of file searching,
-opening, reading and caching, for both the main source file and all the
-headers it recursively includes.
+Fairly obviously, the file handling code of cpplib resides in the file
+`files.c'.  It takes care of the details of file searching, opening,
+reading and caching, for both the main source file and all the headers
+it recursively includes.
 
    The basic strategy is to minimize the number of system calls.  On
 many systems, the basic `open ()' and `fstat ()' system calls can be
@@ -986,49 +987,50 @@ applies.  This may be higher up the directory tree than the full path to
 the file minus the base name.
 
 
-File: cppinternals.info,  Node: Index,  Prev: Files,  Up: Top
+File: cppinternals.info,  Node: Concept Index,  Prev: Files,  Up: Top
 
-Index
-*****
+Concept Index
+*************
 
+ [index ]
 * Menu:
 
-* assertions:                            Hash Nodes.
-* controlling macros:                    Guard Macros.
-* escaped newlines:                      Lexer.
-* files:                                 Files.
-* guard macros:                          Guard Macros.
-* hash table:                            Hash Nodes.
-* header files:                          Conventions.
-* identifiers:                           Hash Nodes.
-* interface:                             Conventions.
-* lexer:                                 Lexer.
-* line numbers:                          Line Numbering.
-* macro expansion:                       Macro Expansion.
-* macro representation (internal):       Macro Expansion.
-* macros:                                Hash Nodes.
-* multiple-include optimization:         Guard Macros.
-* named operators:                       Hash Nodes.
-* newlines:                              Lexer.
-* paste avoidance:                       Token Spacing.
-* spacing:                               Token Spacing.
-* token run:                             Lexer.
-* token spacing:                         Token Spacing.
+* assertions:                            Hash Nodes.          (line   6)
+* controlling macros:                    Guard Macros.        (line   6)
+* escaped newlines:                      Lexer.               (line   6)
+* files:                                 Files.               (line   6)
+* guard macros:                          Guard Macros.        (line   6)
+* hash table:                            Hash Nodes.          (line   6)
+* header files:                          Conventions.         (line   6)
+* identifiers:                           Hash Nodes.          (line   6)
+* interface:                             Conventions.         (line   6)
+* lexer:                                 Lexer.               (line   6)
+* line numbers:                          Line Numbering.      (line   6)
+* macro expansion:                       Macro Expansion.     (line   6)
+* macro representation (internal):       Macro Expansion.     (line  19)
+* macros:                                Hash Nodes.          (line   6)
+* multiple-include optimization:         Guard Macros.        (line   6)
+* named operators:                       Hash Nodes.          (line   6)
+* newlines:                              Lexer.               (line   6)
+* paste avoidance:                       Token Spacing.       (line   6)
+* spacing:                               Token Spacing.       (line   6)
+* token run:                             Lexer.               (line 192)
+* token spacing:                         Token Spacing.       (line   6)
 
 
 
 Tag Table:
-Node: Top930
-Node: Conventions2599
-Node: Lexer3543
-Ref: Invalid identifiers11465
-Ref: Lexing a line13414
-Node: Hash Nodes18190
-Node: Macro Expansion21072
-Node: Token Spacing30037
-Node: Line Numbering35900
-Node: Guard Macros39991
-Node: Files44789
-Node: Index48253
+Node: Top964
+Node: Conventions2649
+Node: Lexer3591
+Ref: Invalid identifiers11504
+Ref: Lexing a line13453
+Node: Hash Nodes18226
+Node: Macro Expansion21105
+Node: Token Spacing30052
+Node: Line Numbering35912
+Node: Guard Macros39997
+Node: Files44788
+Node: Concept Index48254
 
 End Tag Table

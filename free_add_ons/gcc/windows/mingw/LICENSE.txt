@@ -1,0 +1,3 @@
+This binary package includes free software. License information for individual
+components can be usually found under the share/doc/<component_name> directory.
+

@@ -14,38 +14,14 @@ File: dir,	Node: Top	This is the top of the INFO tree
 
 * Menu:
 
-Miscellaneous
-* GNAT User's Guide (gnat_ugn_unw) for Native Platforms / Unix and Windows
+GNU Libraries
+* libgomp: (libgomp).           GNU OpenMP runtime library
 
-GNU Ada tools
-* GNAT Reference Manual: (gnat_rm).  Reference Manual for GNU Ada tools.
-
-Programming
-* Cpp: (cpp).		       The GNU C preprocessor.
-* Cpplib: (cppinternals).      Cpplib internals.
-* Gcj: (gcj).               Ahead-of-time compiler for the Java language
-* fastjar: (fastjar).       GNU jar utilities
-* g77: (g77).                  The GNU Fortran compiler.
-* gcc: (gcc).                  The GNU Compiler Collection.
-* gccinstall: (gccinstall).    Installing the GNU Compiler Collection.
-* gccint: (gccint).            Internals of the GNU Compiler Collection.
-* gnat-style: (gnat-style).      GNAT Coding Style
-
-Individual utilities
-* gcjh: (gcj)Invoking gcjh.
-                            Generate header files from Java class files
-* gij: (gcj)Invoking gij.   GNU interpreter for Java bytecode
-* grepjar: (fastjar)Invoking grepjar.
-                            Search files in a jar file for a pattern
-* jar: (fastjar)Invoking jar.
-                            An archive tool for Java archives
-* jcf-dump: (gcj)Invoking jcf-dump.
-                            Print information about Java class files
-* jv-convert: (gcj)Invoking jv-convert.
-                            Convert file from one encoding to another
-* jv-scan: (gcj)Invoking jv-scan.
-                            Print information about Java source files
-* rmic: (gcj)Invoking rmic.
-                            Generate stubs for Remote Method Invocation.
-* rmiregistry: (gcj)Invoking rmiregistry.
-                            The remote object registry.
+Software development
+* Cpp: (cpp).                   The GNU C preprocessor.
+* Cpplib: (cppinternals).       Cpplib internals.
+* g++: (gcc).                   The GNU C++ compiler.
+* gcc: (gcc).                   The GNU Compiler Collection.
+* gccinstall: (gccinstall).     Installing the GNU Compiler Collection.
+* gccint: (gccint).             Internals of the GNU Compiler Collection.
+* gfortran: (gfortran).         The GNU Fortran Compiler.

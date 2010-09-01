@@ -951,6 +951,7 @@ test	rout-entry-crash-2			incr391 tcf fail incrementality
 test	is-less-equal-postcondition-violation	incr392 tcf fail incrementality
 test	once-per-object-change-body		incr393 tcf fail incrementality
 test	add-vsrt4-to-expanded-then-remove	incr394 tcf fail incrementality
+test	same-generic-derivation-as-crash	incr395 tcf fail incrementality
 
 
 -- Melting

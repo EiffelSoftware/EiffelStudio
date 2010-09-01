@@ -1,0 +1,65 @@
+GCC: Changes from official gcc-4.4.x:
+------------------------------------------------------------------------
+
+- Backport of MinGW-w64 features:
+  * vendor name in target triplet is "w64", ie. x86_64-w64-mingw32 and
+    i686-w64-mingw32.
+  * support for -municode (unicode startup)
+  * proper support for MS x64 ABI with relation to symbol underscoring.
+  * optional multilib toolchain support (disabled by default: toolchain
+    re-build necessary with proper configuration.)
+
+- Prevent gcc-provided headers float.h, stdarg.h and stddef.h from being
+  installed for mingw-w64 and used vendor-provided headers.
+
+- Fix for PR target/37216 with support for -mpe-aligned-commons.
+
+- Use changes from the ix86/gcc-4_4-branch:
+  * atom cpu support.
+  * support for -mmovbe option.
+  * support for -mabi option.
+  * fixes for PR middle-end/39315, PR target/40838, PR target/44615.
+
+- Printf format string fixes for MS width specifiers (PR/40786).
+
+- Weak symbol handling for cygwin/mingw32 (PR target/43888).
+
+- Other x86/x86_64 target fixes:  PR/36399, 37488, 38781, 39062, 39065,
+  39066, 39397, 41799, 41985, 42377, 43731, 43869, 44046, 44139, 44161.
+
+- Fortran MinGW/MinGW-w64 fixes and large file support backports:
+  PR/32784, 40812, 41219, 42950, 40190, 42420, 43844.
+
+- Multiple backports of libiberty changes including mingw-related fixes.
+
+- Dll builds of libobjc and libgfortran with fixes for PR/30445 and
+  PR/40549.
+
+- Objc runtime dll fixes.
+
+- Build fixes for libgomp (PR/41418, etc.) OpenMP is enabled.
+
+- Many other PR fix backports in numerical order: PR/561, 13950, 15523,
+  18302, 19771, 22154, 22367, 22634, 25507, 26965, 27078, 28152, 28300,
+  29363, 30807, 31004, 31869, 32056, 33595, 34870, 34870, 35075, 35210,
+  36031, 36069, 36408, 36816, 37053, 37276, 37481, 38089, 38243, 38507,
+  38646, 38656, 38729, 38802, 38915, 39304, 39304, 39352, 39365, 39453,
+  39556, 39559, 39560, 39564, 39576, 39688, 39803, 39806, 39811, 39930,
+  39931, 40086, 40088, 40133, 40160, 40209, 40416, 40525, 40712, 40914,
+  40987, 41020, 41037, 41064, 41267, 41305, 41403, 41551, 41703, 41711,
+  41738, 41762, 41843, 41848, 41908, 41947, 42026, 42038, 42058, 42060,
+  42072, 42119, 42131, 42131, 42230, 42249, 42260, 42269, 42277, 42338,
+  42354, 42414, 42466, 42481, 42577, 42699, 42761, 42858, 42973, 42996,
+  43036, 43079, 43081, 43323, 43327, 43592, 43953, 44703, 44708.
+
+- A couple of other small fixes.
+
+
+Binutils: Changes from mainstream version:
+------------------------------------------------------------------------
+
+- Default import libraries to be compatible with the MS linker. Also
+  add --incompatible-mslink-implib as a command line switch to allow the
+  original behavior. (From Doug Semler.)
+- Fix PE-COFF archiving long name tables. (From Doug Semler.)
+

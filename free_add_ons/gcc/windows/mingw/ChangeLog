@@ -1,0 +1,84 @@
+Build 2010-07-11. Changes since 2010-07-02 build:
+--------------------------------------------------------
+- Updated mingw-w64 crt and headers to svn rev. 2823:
+  A couple of header updates and import library fixes.
+- Binutils updated to fix a symbol quotation problem.
+- GCC updated to 4.4.5-prerelease rev. 162041 to catch
+  up with several upstream fixes.
+- Added fixes for GCC PR/44703 and PR/43888. Added a
+  symbol quotation fix for the aligncomm problem from
+  trunk.
+- Make CVS snapshot updated to catch up with several
+  upstream fixes.
+
+Build 2010-07-02. Changes since 2010-06-04 build:
+--------------------------------------------------------
+- Updated mingw-w64 crt and headers to svn rev. 2745:
+  The gmon library (profiling) is fixed. Many X86 import
+  library fixes. Several header updates. Few other minor
+  fixes.
+- Binutils updated to fix a profiling bug.
+- GCC updated to 4.4.5-prerelease rev. 161668 to catch
+  up with several upstream fixes.
+- GCC ix86 branch patch updated to rev. 161497: fixes
+  PR/44615.
+- Added fixes for GCC PR/18302, PR/43731 and PR/44708.
+- Integrated Doug Semler's dll install path patch for
+  libgcc.
+- Updated OpenGL extension headers from Khronos Group to
+  2010-06-17.
+- Many patches re-diff'ed so that they apply cleanly and
+  without offsets or fuzzes.
+- A few other small things.
+
+Build 2010-06-04. Changes since 2010-05-27 build:
+--------------------------------------------------------
+- Updated mingw-w64 crt and headers to svn rev. 2458.
+- GCC updated to 4.4.5-prerelease rev. 160271 to catch
+  up with several upstream fixes.
+- Fix for GCC PR/44161. LOCAL_LABEL_PREFIX, LPREFIX and
+  ASM_GENERATE_INTERNAL_LABEL fixes backported from 4.6/
+  trunk revisions 160093 and 160272.
+
+Build 2010-05-27. Changes since 2010-05-15 build:
+--------------------------------------------------------
+- Updated mingw-w64 crt and headers to svn rev. 2445:
+  - Major winsock/winsock2 header update to support
+    broken include orders without erroring out.
+  - Unicode startup fix.
+  - Several other small header updates.
+- Updated binutils to cover several linker fixes, etc.
+- Updated binutils patches from Doug Semler.
+- Gcc updated to 4.4.5-prerelease rev. 159909 to fix
+  several issues.
+- Fixes for gcc PR/43869 and PR/44139.
+- Native toolchains: Added libiconv-1.13.1 and compiled
+  gdb against libiconv.
+- Native toolchains: Updated mpc to v0.8.2.
+
+Build 2010-05-15. Changes since 2010-05-13 build:
+--------------------------------------------------------
+- Fixed a major linker issue.
+
+Build 2010-05-13. Changes since 2010-04-28 build:
+--------------------------------------------------------
+- Several binutils patches from Doug Semler which
+  introduces import library compatibility with vendor
+  compiler/linker. (See Doug Semler's repository at
+  http://github.com/tpaxatb/buildscripts )
+- New included binutils (ld) version fixes a linker
+  symbol underscoring problem.
+- Enabled shared libobjc and libgfortran dlls
+- Fixes for the libobjc dll from Doug Semler
+- Gcc updated to 4.4.5-prerelease rev. 159365 to fix
+  several issues.
+- Fixes for gcc PR/44046 and PR/43953.
+- Fortran updates for win32 CONIO support and large
+  file support, along with a mktemp fix.
+- Mingw-w64 updated to svn revision 2373 to fix several
+  issues, such as a fix for the lack of __lc_codepage
+  symbol in new windows versions, fixes for *time_r
+  macros, updates to GL.h to include windows.h and to
+  ws2tcpip.h to include winsock2.h.
+- Updated pthreads patch for mingw-w64.
+

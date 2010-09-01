@@ -1650,7 +1650,7 @@ feature {NONE} -- Usage
 	copyright: STRING
 			-- Copyright information.
 		once
-			Result := "Copyright Eiffel Software 1985-2009. All Rights Reserved."
+			Result := "Copyright Eiffel Software 1985-2010. All Rights Reserved."
 		ensure
 			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty

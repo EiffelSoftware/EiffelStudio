@@ -156,6 +156,12 @@ feature -- Access
 			Result := internal_tabulation_size
 		end
 
+	text_loaded: STRING_8
+			-- Text in UTF-8 loaded by `load_string'
+		do
+			Result := current_string
+		end
+
 feature -- Status Setting
 
 	set_first_read_block_size (a_size: INTEGER)

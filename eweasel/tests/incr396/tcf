@@ -1,0 +1,45 @@
+
+test_name	new-poly-table-crash
+test_description After initial compilation, changing a once-per-object routine to a normal "do" routine and redefining it in a descendant to be once-per-object and then finalizing crashes the compiler in {ATTRIBUTE_I}.new_poly_table.
+
+define		ROUTINE_MARK "once ("OBJECT")"
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_sub 	test1.e $CLUSTER test1.e
+
+compile_frozen
+compile_result 	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work 	NONE 	exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+define		ROUTINE_MARK "do"
+copy_raw 	test_rev2.e $CLUSTER test.e
+copy_sub 	test1.e $CLUSTER test1.e
+
+compile_frozen
+compile_result 	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work 	NONE 	exec_output2
+execute_result 	ok
+compare		exec_output2 output
+
+compile_final
+compile_result 	ok
+
+c_compile_final
+c_compile_result ok
+
+execute_final 	NONE 	exec_output3
+execute_result 	ok
+compare		exec_output3 output
+
+test_end
+

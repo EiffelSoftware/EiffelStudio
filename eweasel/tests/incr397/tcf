@@ -1,0 +1,37 @@
+
+test_name	once-per-object-change-expansion
+test_description After initial compilation, changing the return type of a once-per-object function from non-expanded to expanded or vice versa crashes the compiler.
+
+define		EXPANDED ""
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_sub 	test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result 	ok
+
+execute_work 	NONE 	exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+define		EXPANDED "expanded"
+copy_sub 	test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result 	ok
+
+execute_work 	NONE 	exec_output2
+execute_result 	ok
+compare		exec_output2 output
+
+define		EXPANDED ""
+copy_sub 	test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result 	ok
+
+execute_work 	NONE 	exec_output3
+execute_result 	ok
+compare		exec_output3 output
+
+test_end

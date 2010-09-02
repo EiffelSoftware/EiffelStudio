@@ -1762,6 +1762,7 @@ test	vmfn-reporting-crash				term189 tcf fail termination validity
 test	conform-to-type-precondition-violation	term190 tcf fail termination validity
 test	generated-id-assertion-violation	term191 tcf fail termination multiconstraint expanded
 test	skeleton-adapted-in-crash		term192 tcf fail termination 
+test	is-valid-for-class-precondition		term193 tcf fail termination 
 
 -- Config
 

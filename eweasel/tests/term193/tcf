@@ -1,0 +1,17 @@
+
+test_name 	 is-valid-for-class-precondition
+test_description A set of classes with void_safety "all" crashes the compiler with a precondition violation on {VOID_A}.is_valid_for_class.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test2.e $CLUSTER test2.e
+copy_raw	test3.e $CLUSTER test3.e
+
+compile_melted
+compile_result	ok
+
+execute_work 	NONE 	exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+test_end

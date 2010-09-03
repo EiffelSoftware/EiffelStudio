@@ -125,7 +125,7 @@ feature -- Element change
 		end
 
 	remove_item_of_rout_id_set (a_rout_id_set: ROUT_ID_SET)
-			-- Info about object relative once associated with Current and an item of `a_rout_id_set'
+			-- Remove all info about object relative once associated with Current and an item of `a_rout_id_set'
 		require
 			a_rout_id_set_not_void: a_rout_id_set /= Void
 		local
@@ -137,7 +137,7 @@ feature -- Element change
 			until
 				after
 			loop
-				if item.once_routine_rout_id_set.same_as (a_rout_id_set) then
+				if item.once_routine_rout_id_set.intersect (a_rout_id_set) then
 					remove
 				else
 					forth

@@ -6,7 +6,7 @@ note
 	revision: "$Revision$"
 
 class
-	EQUALITY_TESTER [G -> detachable ANY]
+	EQUALITY_TESTER [G]
 
 feature -- Status report
 
@@ -23,7 +23,7 @@ feature -- Status report
 
 note
 	copyright: "[
-		Copyright (c) 1984-2009, Eiffel Software and others
+		Copyright (c) 1984-2010, Eiffel Software and others
 		Copyright (c) 2000, Eric Bezault and others
 		]"
 	license: "[

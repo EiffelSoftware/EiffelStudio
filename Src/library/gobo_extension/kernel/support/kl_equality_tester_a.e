@@ -5,12 +5,12 @@ note
 		"Equality testers"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 1999-2007, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2010, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class KL_EQUALITY_TESTER_A [G]
+class KL_EQUALITY_TESTER_A [G -> detachable ANY]
 
 inherit
 	ANY -- Needed for SE 2.1b1.

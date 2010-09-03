@@ -243,7 +243,6 @@
 		<mkdir directory="${_BINARY_DIR}/wizards" />
 		<echo to_file="${_BINARY_DIR}/wizards_compiled" message="compiled" />
 		<mkdir directory="${_BINARY_DIR}/gobo" />
-
 	</target>
 
 	<target name="quick_delivery" depend="init_deliv" >
@@ -254,9 +253,30 @@
 		<geant target="build_delivery" />
 	</target>
 
+	<target name="quick_eweasel_delivery" depend="init_deliv" >
+		<!-- copy executable from ISE_EIFFEL, remove ec and ecb, and make delivery -->
+		<geant target="copy_ise_eiffel_to_delivery" />
+		<geant target="safe_delete" arguments="${_BINARY_DIR},ecb${exe}" />
+		<available resource="${_BINARY_DIR}${path_separator}ec${exe}" variable="tmp_ec_available"/>
+		<echo to_file="${_BINARY_DIR}${path_separator}ec${exe}" message="ignore for eweasel" unless="$tmp_rt_available=true" />
+		<geant target="build_binaries" />
+		<geant target="install_eweasel" />
+	</target>
+
 	<target name="build_delivery" depend="init_deliv" >
 		<!-- Main target to build the whole delivery -->
 		<geant target="_log" arguments="Building EiffelStudio Delivery ..." />
+		<!-- prepare binaries, and others -->
+		<geant target="build_binaries" 		/>
+		<!-- Build target delivery, 
+			and install compiled binaries -->
+		<geant target="install_delivery"		/>
+		<geant target="_log" arguments="[build_delivery] is completed" />
+	</target>
+
+	<target name="build_binaries" depend="init_deliv" >
+		<!-- prepare main target to build the whole delivery -->
+		<geant target="_log" arguments="Building EiffelStudio Binaries ..." />
 
 		<geant target="_print_parameters" />
 
@@ -267,11 +287,7 @@
 		<!-- Compile binaries, and others -->
 		<geant target="make_binaries" 			/>
 
-		<!-- Build target delivery, 
-			and install compiled binaries -->
-		<geant target="install_delivery"		/>
-
-		<geant target="_log" arguments="[build_delivery] is completed" />
+		<geant target="_log" arguments="[build_binaries] is completed" />
 	</target>
 
 	<target name="install_delivery" depend="init_deliv" >

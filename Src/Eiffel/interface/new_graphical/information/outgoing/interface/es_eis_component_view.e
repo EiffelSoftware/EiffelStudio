@@ -291,10 +291,8 @@ feature -- Query
 	same_view (a_view: like Current): BOOLEAN
 			-- Is current view focusing the same component as `a_view'?
 		do
-			if a_view /= Void then
-				if component.same_type (a_view.component) then
-					Result := component.is_equal (a_view.component)
-				end
+			if attached a_view then
+				Result := component ~ a_view.component
 			end
 		end
 

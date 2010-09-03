@@ -7,7 +7,7 @@ note
 	revision: "$Revision$"
 
 class
-	DP_VISITOR [G]
+	DP_VISITOR [G -> detachable ANY]
 
 inherit
 	DP_HELPER

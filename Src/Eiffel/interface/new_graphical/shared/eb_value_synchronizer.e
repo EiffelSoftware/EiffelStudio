@@ -70,8 +70,8 @@ feature -- Access
 	current_value: G
 			-- Current synchronized value
 
-	host_agents_type: TUPLE [register: PROCEDURE [ANY, TUPLE [EB_VALUE_SYNCHRONIZER [ANY]]];
-							deregister: PROCEDURE [ANY, TUPLE [EB_VALUE_SYNCHRONIZER [ANY]]];
+	host_agents_type: TUPLE [register: PROCEDURE [ANY, TUPLE [EB_VALUE_SYNCHRONIZER [G]]];
+							deregister: PROCEDURE [ANY, TUPLE [EB_VALUE_SYNCHRONIZER [G]]];
 							getter: FUNCTION [ANY, TUPLE, G];
 							setter: PROCEDURE [ANY, TUPLE [G]]]
 			-- Anchored type for host agents
@@ -288,7 +288,7 @@ feature{NONE} -- Implementation
 	is_value_equal (a_value, b_value: G): BOOLEAN
 			-- Is `a_value' equal to `b_value'?
 		do
-			Result := equal (a_value, b_value)
+			Result := a_value ~ b_value
 		end
 
 	actual_value_tester: like value_equality_tester

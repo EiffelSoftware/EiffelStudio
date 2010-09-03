@@ -10953,7 +10953,9 @@ debug ("GEYACC")
 end
 
 				yyval81 := yyvs81.item (yyvsp81)
-				yyval81.set_separate_mark (yyvs12.item (yyvsp12))
+				if attached yyval81 then
+					yyval81.set_separate_mark (yyvs12.item (yyvsp12))
+				end
 			
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
@@ -11155,7 +11157,9 @@ debug ("GEYACC")
 end
 
 				yyval81 := yyvs81.item (yyvsp81)
-				yyval81.set_separate_mark (yyvs12.item (yyvsp12))
+				if attached yyval81 then
+					yyval81.set_separate_mark (yyvs12.item (yyvsp12))
+				end
 			
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2

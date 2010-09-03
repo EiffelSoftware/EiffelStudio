@@ -99,7 +99,7 @@ feature -- Update
 		local
 			l_changed: BOOLEAN
 		do
-			l_changed := not equal (value, a_value)
+			l_changed := value /~ a_value
 			value := a_value
 			if l_changed then
 				data_change_actions.do_all (agent {PROCEDURE [ANY, TUPLE [like value]]}.call ([value]))

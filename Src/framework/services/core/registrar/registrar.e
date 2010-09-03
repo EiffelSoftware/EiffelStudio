@@ -21,7 +21,7 @@ note
 	revision: "$Revision$"
 
 deferred class
-	REGISTRAR [G, K -> HASHABLE]
+	REGISTRAR [G -> detachable ANY, K -> HASHABLE]
 
 inherit
 	REGISTRAR_I [G, K]
@@ -458,7 +458,7 @@ invariant
 	table_attached: table /= Void
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

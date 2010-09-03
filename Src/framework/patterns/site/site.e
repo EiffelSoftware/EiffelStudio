@@ -97,7 +97,7 @@ feature -- Status report
 			site_attached: Result implies site /= Void
 		end
 
-	is_valid_site (a_site: detachable ANY): BOOLEAN
+	is_valid_site (a_site: detachable G): BOOLEAN
 			-- Determines if an object is a valid site object.
 			--
 			-- `a_site': The site object to determine validity of.
@@ -109,7 +109,7 @@ feature -- Status report
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

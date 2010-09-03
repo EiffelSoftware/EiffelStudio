@@ -1,4 +1,4 @@
 class
-	A [G]
+	A [G -> ANY]
 
 end

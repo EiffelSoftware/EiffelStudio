@@ -9,7 +9,7 @@ class
 	TUPLE
 
 inherit
-	ARRAY [ANY]
+	ARRAY [detachable separate ANY]
 		rename
 			make as array_make
 		end
@@ -412,7 +412,7 @@ feature -- Access
 
 feature -- Conversion
 
-	arrayed: ARRAY [ANY] is
+	arrayed: ARRAY [detachable separate ANY] is
 			-- Items of Current as array
 		local
 			i, cnt: INTEGER

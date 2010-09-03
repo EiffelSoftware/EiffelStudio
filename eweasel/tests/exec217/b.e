@@ -1,4 +1,4 @@
-class B [G]
+class B [G -> ANY]
 
 inherit
 	A

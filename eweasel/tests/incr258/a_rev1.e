@@ -1,5 +1,5 @@
 class
-	A [G]
+	A [G -> ANY]
 
 feature
 

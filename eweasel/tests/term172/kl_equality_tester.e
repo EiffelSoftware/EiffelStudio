@@ -32,7 +32,7 @@ feature -- Status report
 			elseif u = Void then
 				Result := False
 			else
-				Result := ANY_.equal_objects (v, u)
+				Result := v ~ u
 			end
 		end
 

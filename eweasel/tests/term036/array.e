@@ -200,7 +200,7 @@ feature -- Comparison
 					until 
 						not Result or i > upper 
 					loop
-						Result := equal (item (i), other.item (i))
+						Result := item (i) ~ other.item (i)
 						i := i + 1
 					end
 				else

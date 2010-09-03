@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ARRAYI [G] inherit
+class ARRAYI [G -> ANY] inherit
 
 	RESIZABLE [G]
 		redefine

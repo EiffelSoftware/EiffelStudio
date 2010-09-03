@@ -74,7 +74,7 @@ feature -- Access
 				Result := start_position
 				nb := count
 			until
-				Result >= nb or else equal (item (Result), v)
+				Result >= nb or else item (Result) ~ v
 			loop
 				Result := Result + 1
 			end

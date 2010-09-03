@@ -65,11 +65,11 @@ feature -- Access
 				closed_map.count > 0 and then
 				closed_map.item (closed_map.lower) = 0
 			then
-				Result := closed_operands.item (closed_operands.lower)
+				Result ?= closed_operands.item (closed_operands.lower)
 			elseif
 				operands /= Void and then operands.count > 0
 			then
-				Result := operands.item (operands.lower)
+				Result ?= operands.item (operands.lower)
 			end
 		end
 
@@ -169,7 +169,7 @@ feature -- Status report
 				until
 					i > open_map.count or mismatch
 				loop
-					arg := args.item (i)
+					arg ?= args.item (i)
 					arg_type_code := args.arg_item_code (i)
 					open_arg_type_code := open_type_codes.item (i + 1)
 					if arg_type_code = eif_reference_code then				
@@ -502,7 +502,7 @@ feature {NONE} -- Implementation
 					-- Special treatment of reals
 					ref_arg := loc_operands.real_item (i)
 				else
-					ref_arg := loc_operands.item (i)
+					ref_arg ?= loc_operands.item (i)
 				end
 
 				j := loc_open_map.item (i)
@@ -549,7 +549,7 @@ feature {NONE} -- Implementation
 					-- Special treatment of reals
 					ref_arg := loc_closed_operands.real_item (i)
 				else
-					ref_arg := loc_closed_operands.item (i)
+					ref_arg ?= loc_closed_operands.item (i)
 				end
 
 				j := loc_closed_map.item (i)

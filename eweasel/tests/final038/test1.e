@@ -1,5 +1,5 @@
 
-expanded class TEST1 [G]
+expanded class TEST1 [G -> ANY]
 create
 	default_create
 feature

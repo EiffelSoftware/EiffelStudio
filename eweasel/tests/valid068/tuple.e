@@ -218,7 +218,7 @@ feature -- Status report
 			Result := k >= 1 and then k <= count
 		end
 
-	valid_type_for_index (v: ANY; index: INTEGER): BOOLEAN is
+	valid_type_for_index (v: detachable separate ANY; index: INTEGER): BOOLEAN is
 			-- Is object `v' a valid target for element at position `index'?
 		require
 			valid_index: valid_index (index)
@@ -286,7 +286,7 @@ feature -- Status report
 
 feature -- Element change
 
-	put (v: ANY; index: INTEGER) is
+	put (v: detachable separate ANY; index: INTEGER) is
 			-- Insert `v' at position `index'.
 		require
 			valid_index: valid_index (index)

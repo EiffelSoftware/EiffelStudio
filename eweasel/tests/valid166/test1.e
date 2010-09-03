@@ -12,7 +12,7 @@ feature
 			f (g)
 		end
 
-	f (a: ANY) is
+	f (a: separate ANY) is
 		do
 		end
 

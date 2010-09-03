@@ -99,7 +99,7 @@ feature -- Access
 			end
 		ensure
 			object_found: (not exhausted and object_comparison)
-				 implies equal (v, item)
+				 implies v ~ item
 			item_found: (not exhausted and not object_comparison)
 				 implies v = item
 		end

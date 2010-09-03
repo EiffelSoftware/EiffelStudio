@@ -4,7 +4,7 @@
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
 
-class TEST1 [G]
+class TEST1 [G -> ANY]
 creation
 	make
 feature

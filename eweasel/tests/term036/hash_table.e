@@ -237,7 +237,7 @@ feature -- Access
 					until
 						i = capacity or else Result
 					loop
-						Result := occupied (i) and then equal (v, l_content.item (i))
+						Result := occupied (i) and then v ~ l_content.item (i)
 						i := i + 1
 					end
 				else
@@ -245,7 +245,7 @@ feature -- Access
 					until
 						i = capacity or else Result
 					loop
-						Result := occupied (i) and then (v = l_content.item (i))
+						Result := occupied (i) and then v = l_content.item (i)
 						i := i + 1
 					end
 				end
@@ -320,7 +320,7 @@ feature -- Measurement
 				until
 					off
 				loop
-					if equal (item_for_iteration, v) then
+					if item_for_iteration ~ v then
 						Result := Result + 1
 					end
 					forth

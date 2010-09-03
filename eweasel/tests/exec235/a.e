@@ -4,7 +4,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	A [G]
+	A [G -> ANY]
 
 feature
 	neutral (i: INTEGER) is do end

@@ -1,5 +1,5 @@
 class
-	TEST2 [G, H]
+	TEST2 [G, H -> ANY]
 
 inherit
 	TEST3 [H]

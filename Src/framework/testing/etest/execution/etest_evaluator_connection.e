@@ -10,7 +10,7 @@ note
 	revision: "$Revision$"
 
 frozen class
-	ETEST_EVALUATOR_CONNECTION [G, H]
+	ETEST_EVALUATOR_CONNECTION [G -> detachable ANY, H]
 
 create
 	make
@@ -216,7 +216,7 @@ invariant
 	valid_port: not has_connection_died implies (min_port <= current_port and current_port <= max_port)
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

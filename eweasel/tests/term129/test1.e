@@ -4,7 +4,7 @@
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
 
-class TEST1 [reference G]
+class TEST1 [reference G -> ANY]
 feature
 	s: ANY is
 		do

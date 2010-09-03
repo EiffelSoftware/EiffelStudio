@@ -1,5 +1,5 @@
 
-class TEST3 [G]
+class TEST3 [G -> detachable ANY]
 feature
 	weasel: like {like Current}.x
 

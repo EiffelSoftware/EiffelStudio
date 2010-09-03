@@ -1,4 +1,4 @@
-class A [G]
+class A [G -> ANY]
 
 feature
 	

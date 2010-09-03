@@ -502,9 +502,9 @@ feature -- Removal
 						put_i_th (i_th (i + offset), i) 
 					end
 					if obj_cmp then
-						res := equal (v, i_th (i))
+						res := v ~ i_th (i)
 					else
-						res := (v = i_th (i))
+						res := v = i_th (i)
 					end
 					if res then 
 						offset := offset + 1

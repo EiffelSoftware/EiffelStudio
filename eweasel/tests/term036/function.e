@@ -48,7 +48,7 @@ feature -- Comparison
 			-- associated with `other'?
 		do
 			Result := Precursor (other) and then
-					 equal (last_result, other.last_result)
+					 last_result ~ other.last_result
 		end
 
 feature -- Duplication

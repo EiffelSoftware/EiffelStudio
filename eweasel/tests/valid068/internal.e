@@ -181,7 +181,7 @@ feature -- Access
 			Result := feature {ISE_RUNTIME}.c_generating_type_of_type (type_id)
 		end
 
-	dynamic_type (object: ANY): INTEGER is
+	dynamic_type (object: separate ANY): INTEGER is
 			-- Dynamic type of `object'
 		require
 			object_not_void: object /= Void

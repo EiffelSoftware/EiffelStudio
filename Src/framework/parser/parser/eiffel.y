@@ -1704,7 +1704,9 @@ Attached_class_or_tuple_type: Unmarked_class_or_tuple_type
 	| TE_SEPARATE Unmarked_class_or_tuple_type
 			{
 				$$ := $2
-				$$.set_separate_mark ($1)
+				if attached $$ then
+					$$.set_separate_mark ($1)
+				end
 			}
 	;
 
@@ -1745,7 +1747,9 @@ Anchored_type:
 	|	TE_SEPARATE Unmarked_anchored_type
 			{
 				$$ := $2
-				$$.set_separate_mark ($1)
+				if attached $$ then
+					$$.set_separate_mark ($1)
+				end
 			}
 	;
 

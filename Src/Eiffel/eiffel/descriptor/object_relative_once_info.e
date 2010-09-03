@@ -67,6 +67,7 @@ feature -- Basic operations
 			a_once_attached: a_once /= Void
 		do
 			if
+				is_valid and then
 				a_once.rout_id_set.intersect (once_routine_rout_id_set) and then
 				a_once.same_interface (once_routine)
 			then
@@ -78,12 +79,18 @@ feature -- Basic operations
 				clean
 				make (a_once)
 				debug ("ONCE_PER_OBJECT")
-					print (generator + ".reuse [" + a_once.feature_name + "]: REUSED")
+					print (generator + ".reuse [" + a_once.feature_name + "]: CLEANED+REUSED%N")
 				end
 			end
 		end
 
 feature -- Status report
+
+	is_valid: BOOLEAN
+			-- Is valid info?
+		do
+			Result := system.class_of_id (once_routine.written_in) /= Void
+		end
 
 	debug_output: STRING
 		do
@@ -100,8 +107,13 @@ feature -- Status report
 				print ("Once per object (fid:" + l_once.feature_id.out
 						+ " rid:" + once_routine_id.out
 						+ " bid:" + l_once.body_index.out
-						+ "): " + l_once.written_class.name_in_upper
-						+ "<" + l_once.written_in.out + ">"
+						+ "): ")
+				if attached system.class_of_id (l_once.written_in) as c then
+					print (c.name_in_upper)
+				else
+					print ("!Missing-Class!")
+				end
+				print ("<" + l_once.written_in.out + ">"
 						+ "." + l_once.feature_name)
 			end
 			if a_msg /= Void then
@@ -237,17 +249,20 @@ feature -- Element change
 			called_attr_desc := Void
 			called_feature_id := 0
 			called_routine_id := 0
+			called_body_index := 0
 
 			exception_attribute_i := Void
 			exception_attr_desc := Void
 			exception_feature_id := 0
 			exception_routine_id := 0
+			exception_body_index := 0
 
 			if has_result then
 				result_attribute_i := Void
 				result_attr_desc := Void
 				result_feature_id := 0
 				result_routine_id := 0
+				result_body_index := 0
 				has_result := False
 				result_type_a := Void
 			end

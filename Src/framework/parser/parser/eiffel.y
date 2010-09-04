@@ -1335,11 +1335,11 @@ Routine:
 					temp_keyword_as := Void
 				end
 				if $7 /= Void then
-					$$ := ast_factory.new_routine_as (temp_string_as1, $3, $4, $5, $6, $7.second, $8, once_manifest_string_count, fbody_pos, temp_keyword_as, $7.first, object_test_locals)
+					$$ := ast_factory.new_routine_as (temp_string_as1, $3, $4, $5, $6, $7.second, $8, once_manifest_string_counter_value, fbody_pos, temp_keyword_as, $7.first, object_test_locals)
 				else
-					$$ := ast_factory.new_routine_as (temp_string_as1, $3, $4, $5, $6, Void, $8, once_manifest_string_count, fbody_pos, temp_keyword_as, Void, object_test_locals)
+					$$ := ast_factory.new_routine_as (temp_string_as1, $3, $4, $5, $6, Void, $8, once_manifest_string_counter_value, fbody_pos, temp_keyword_as, Void, object_test_locals)
 				end
-				once_manifest_string_count := 0
+				reset_once_manifest_string_counter
 				object_test_locals := Void
 			}
 	;
@@ -2362,8 +2362,8 @@ Class_invariant: -- Empty
 		Assertion
 			{
 				set_id_level (Normal_level)
-				$$ := ast_factory.new_invariant_as ($3, once_manifest_string_count, $1, object_test_locals)
-				once_manifest_string_count := 0
+				$$ := ast_factory.new_invariant_as ($3, once_manifest_string_counter_value, $1, object_test_locals)
+				reset_once_manifest_string_counter
 				object_test_locals := Void
 			}
 	;
@@ -3171,7 +3171,7 @@ Expression_constant:
 					$2.set_is_once_string (True)
 					$2.set_once_string_keyword ($1)
 				end
-				once_manifest_string_count := once_manifest_string_count + 1
+				increment_once_manifest_string_counter
 				$$ := $2
 			}
 	;

@@ -64,6 +64,9 @@ feature {NONE} -- Initialization
 			is_supplier_recorded := True
 			create counters.make (Initial_counters_capacity)
 			create counters2.make (Initial_counters_capacity)
+			create once_manifest_string_counters.make (initial_counters_capacity)
+				-- Keep one element in it.
+			once_manifest_string_counters.force (0)
 			create last_rsqure.make (initial_counters_capacity)
 			create feature_stack.make (1)
 			add_feature_frame
@@ -172,9 +175,10 @@ feature -- Initialization
 			add_feature_frame
 			is_supplier_recorded := True
 			is_constraint_renaming := False
-			once_manifest_string_count := 0
 			object_test_locals := Void
 			counters.wipe_out
+			counters2.wipe_out
+			reset_once_manifest_string_counter
 			last_rsqure.wipe_out
 			current_class := Void
 			is_ignoring_attachment_marks := False
@@ -486,10 +490,6 @@ feature -- Access
 	invariant_end_position: INTEGER
 			-- End of invariant
 
-	once_manifest_string_count: INTEGER
-			-- Number of once manifest strings in current feature declaration
-			-- or in an invariant
-
 	object_test_locals: ARRAYED_LIST [TUPLE [name: ID_AS; type: TYPE_AS]]
 			-- List of object test locals found
 			-- in the current feature declaration
@@ -625,6 +625,7 @@ feature {NONE} -- Implementation
 	add_feature_frame
 		do
 			feature_stack.force ([Normal_level, 0])
+			add_once_manifest_string_counter
 		end
 
 	remove_feature_frame
@@ -632,6 +633,7 @@ feature {NONE} -- Implementation
 			feature_stack.count > 1
 		do
 			feature_stack.remove
+			remove_once_manifest_string_counter
 		end
 
 	is_deferred: BOOLEAN
@@ -729,6 +731,16 @@ feature {NONE} -- Counters
 			value_positive: Result >= 0
 		end
 
+	once_manifest_string_counter_value: INTEGER
+			-- Value of the last counter registered
+		require
+			once_manifest_string_counters_not_empty: not once_manifest_string_counters.is_empty
+		do
+			Result := once_manifest_string_counters.item
+		ensure
+			value_positive: Result >= 0
+		end
+
 	add_counter
 			-- Register a new counter.
 		do
@@ -745,6 +757,23 @@ feature {NONE} -- Counters
 		ensure
 			one_more: counters2.count = old counters2.count + 1
 			value_zero: counter2_value = 0
+		end
+
+	add_once_manifest_string_counter
+			-- Register a new once manifest string counter
+		do
+			once_manifest_string_counters.force (0)
+		ensure
+			one_more: once_manifest_string_counters.count = old once_manifest_string_counters.count + 1
+			value_zero: once_manifest_string_counter_value = 0
+		end
+
+	reset_once_manifest_string_counter
+			-- Reset the value of `once_manifest_string_counter_value'
+		do
+			once_manifest_string_counters.replace (0)
+		ensure
+			value_zero: once_manifest_string_counter_value = 0
 		end
 
 	remove_counter
@@ -767,6 +796,16 @@ feature {NONE} -- Counters
 			one_less: counters2.count = old counters2.count - 1
 		end
 
+	remove_once_manifest_string_counter
+			-- Unregister last registered counter.
+		require
+			once_manifest_string_counters_not_empty: not once_manifest_string_counters.is_empty
+		do
+			once_manifest_string_counters.remove
+		ensure
+			one_less: once_manifest_string_counters.count = old once_manifest_string_counters.count - 1
+		end
+
 	increment_counter
 			-- Increment `counter_value'.
 		require
@@ -782,7 +821,7 @@ feature {NONE} -- Counters
 		end
 
 	increment_counter2
-			-- Increment `counter_value'.
+			-- Increment `counter2_value'.
 		require
 			counters2_not_empty: not counters2.is_empty
 		local
@@ -795,12 +834,29 @@ feature {NONE} -- Counters
 			one_more: counter2_value = old counter2_value + 1
 		end
 
+	increment_once_manifest_string_counter
+			-- Increment `once_manifest_string_counter_value'.
+		require
+			once_manifest_string_counters_not_empty: not once_manifest_string_counters.is_empty
+		local
+			a_value: INTEGER
+		do
+			a_value := once_manifest_string_counters.item
+			once_manifest_string_counters.replace (a_value + 1)
+		ensure
+			same_once_manifest_string_counters_count: once_manifest_string_counters.count = old once_manifest_string_counters.count
+			one_more: once_manifest_string_counter_value = old once_manifest_string_counter_value + 1
+		end
+
 	counters: ARRAYED_STACK [INTEGER]
 			-- Counters currently in use by the parser
 			-- to build lists of AST nodes with the right size.
 
 	counters2: ARRAYED_STACK [INTEGER]
 			-- Counters used for parsing tuples
+
+	once_manifest_string_counters: ARRAYED_STACK [INTEGER]
+			-- Counters used for once manifest string.
 
 feature {NONE} -- Actions
 
@@ -1026,6 +1082,7 @@ invariant
 		(id_level = Assert_level) or (id_level = Invariant_level)
 	is_external_class_not_set: not il_parser implies not is_external_class
 	is_partial_class_not_set: not il_parser implies not is_partial_class
+	once_manifest_string_counters_not_empty: not once_manifest_string_counters.is_empty
 
 note
 	copyright: "Copyright (c) 1984-2010, Eiffel Software"

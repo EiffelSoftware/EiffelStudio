@@ -328,7 +328,7 @@ feature {NONE} -- Arguments processing
 
 invariant
 	parser_not_void: parser /= Void
-	fast_parser_not_void: parser /= Void
+	fast_parser_not_void: fast_parser /= Void
 	factory_not_void: factory /= Void
 	fast_factory_not_void: fast_factory /= Void
 	visitor_not_void: visitor /= Void

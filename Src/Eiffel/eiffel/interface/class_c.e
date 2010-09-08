@@ -680,7 +680,7 @@ feature -- Access: object relative once
 			a_rout_id_set_not_void: a_rout_id_set /= Void
 		do
 			if attached object_relative_once_infos as l_infos then
-				Result := l_infos.item_of_rout_id_set (a_rout_id_set)
+				Result := l_infos.first_item_intersecting_with_rout_id_set (a_rout_id_set)
 			end
 		end
 

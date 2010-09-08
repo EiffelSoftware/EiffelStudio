@@ -27,7 +27,7 @@ create
 
 feature -- Access
 
-	has_info_by_routine_id (a_rid: INTEGER): BOOLEAN
+	has_info_intersecting_with_rout_id_set (a_rout_id_set: ROUT_ID_SET): BOOLEAN
 		local
 			c: like cursor
 		do
@@ -37,7 +37,7 @@ feature -- Access
 			until
 				after or Result
 			loop
-				if item.once_routine_id = a_rid then
+				if item.rout_id_set.intersect (a_rout_id_set) then
 					Result := True
 				else
 					forth
@@ -64,9 +64,9 @@ feature -- Status report
 
 feature -- Element change
 
-	replace_or_add_by_routine_id (a_info: like item; a_rid: INTEGER)
-			-- Replace entry associated for routine_id `a_rid' if it exists
-			-- otherwise add `a_info' and associate it to `a_rid'
+	add_or_replace_first_item_intersecting_with_rout_id_set (a_info: like item; a_rout_id_set: ROUT_ID_SET)
+			-- Replace entry associated with id from `a_rout_id_set' if it exists
+			-- otherwise add `a_info' and associate it to `a_rout_id_set'
 		local
 			c: like cursor
 			done: BOOLEAN
@@ -77,7 +77,7 @@ feature -- Element change
 			until
 				after
 			loop
-				if item.once_routine_id = a_rid then
+				if item.rout_id_set.intersect (a_rout_id_set) then
 					replace (a_info)
 					done := True
 				end
@@ -88,12 +88,13 @@ feature -- Element change
 			end
 			go_to (c)
 		ensure
-			has_info_by_routine_id: has_info_by_routine_id (a_rid)
-			a_info_set: item_of_rout_id (a_rid) = a_info
+			has_info: has_info_intersecting_with_rout_id_set (a_rout_id_set)
+			a_info_set: first_item_intersecting_with_rout_id_set (a_rout_id_set) = a_info
+			count: old count + 1 <= count
 		end
 
-	add_by_routine_id (a_info: like item; a_rid: INTEGER)
-			-- Add `a_info' and associate it to `a_rid'
+	add_after_item_intersecting_with_rout_id_set (a_info: like item; a_rout_id_set: ROUT_ID_SET)
+			-- Add `a_info' and associate it to `a_rout_id_set'
 		local
 			c: like cursor
 			done: BOOLEAN
@@ -104,7 +105,7 @@ feature -- Element change
 			until
 				after or done
 			loop
-				if item.once_routine_id = a_rid then
+				if item.rout_id_set.intersect (a_rout_id_set) then
 					put_right (a_info)
 					done := True
 				end
@@ -115,7 +116,35 @@ feature -- Element change
 			end
 			go_to (c)
 		ensure
-			has_info_by_routine_id: has_info_by_routine_id (a_rid)
+			has_info: has_info_intersecting_with_rout_id_set (a_rout_id_set)
+			count: old count + 1 = count
+		end
+
+	add_after_last_item_intersecting_with_rout_id_set (a_info: like item; a_rout_id_set: ROUT_ID_SET)
+			-- Add `a_info' and associate it to `a_rout_id_set'
+		local
+			c: like cursor
+			done: BOOLEAN
+		do
+			c := cursor
+			from
+				finish
+			until
+				before or done
+			loop
+				if item.rout_id_set.intersect (a_rout_id_set) then
+					put_right (a_info)
+					done := True
+				end
+				back
+			end
+			if not done then
+				force (a_info)
+			end
+			go_to (c)
+		ensure
+			has_info: has_info_intersecting_with_rout_id_set (a_rout_id_set)
+			count: old count + 1 = count
 		end
 
 	merge (other: OBJECT_RELATIVE_ONCE_INFO_TABLE)
@@ -124,7 +153,7 @@ feature -- Element change
 			append (other)
 		end
 
-	remove_item_of_rout_id_set (a_rout_id_set: ROUT_ID_SET)
+	remove_items_intersecting_with_rout_id_set (a_rout_id_set: ROUT_ID_SET)
 			-- Remove all info about object relative once associated with Current and an item of `a_rout_id_set'
 		require
 			a_rout_id_set_not_void: a_rout_id_set /= Void
@@ -137,7 +166,7 @@ feature -- Element change
 			until
 				after
 			loop
-				if item.once_routine_rout_id_set.intersect (a_rout_id_set) then
+				if item.rout_id_set.intersect (a_rout_id_set) then
 					remove
 				else
 					forth
@@ -146,6 +175,34 @@ feature -- Element change
 			if valid_cursor (c) then
 				go_to (c)
 			end
+		ensure
+			count: old count >= count
+		end
+
+	remove_items_with_same_rout_id_set (a_rout_id_set: ROUT_ID_SET)
+			-- Remove info about object relative once associated with Current and an item of `a_rout_id_set'
+		require
+			a_rout_id_set_not_void: a_rout_id_set /= Void
+		local
+			c: like cursor
+		do
+			c := cursor
+			from
+				start
+			until
+				after
+			loop
+				if item.rout_id_set.same_as (a_rout_id_set) then
+					remove
+				else
+					forth
+				end
+			end
+			if valid_cursor (c) then
+				go_to (c)
+			end
+		ensure
+			count: old count = count or old count = count + 1
 		end
 
 feature -- Access
@@ -162,7 +219,7 @@ feature -- Access
 				after or Result /= Void
 			loop
 				Result := item
-				if Result.once_routine_id /= rid then
+				if not Result.rout_id_set.has (rid) then
 					Result := Void
 				end
 				forth
@@ -170,8 +227,50 @@ feature -- Access
 			go_to (c)
 		end
 
-	item_of_rout_id_set (a_rout_id_set: ROUT_ID_SET): like item
-			-- Info about object relative once associated with Current and an item of `a_rout_id_set'
+	first_item_with_same_rout_id_set (a_rout_id_set: ROUT_ID_SET): like item
+			-- Item associated with object relative once with routine ID in `rout_id_set'.
+		local
+			c: like cursor
+		do
+			c := cursor
+			from
+				start
+			until
+				after or Result /= Void
+			loop
+				if item.rout_id_set.same_as (a_rout_id_set) then
+					Result := item
+				else
+					forth
+				end
+			end
+			go_to (c)
+		ensure
+			single_matched: Result /= Void implies items_with_same_rout_id_set (a_rout_id_set).count = 1
+		end
+
+	items_with_same_rout_id_set (a_rout_id_set: ROUT_ID_SET): LINKED_LIST [like item]
+			-- All items associated with object relative once with routine ID in `rout_id_set'.
+		local
+			c: like cursor
+		do
+			c := cursor
+			create Result.make
+			from
+				start
+			until
+				after
+			loop
+				if item.rout_id_set.same_as (a_rout_id_set) then
+					Result.extend (item)
+				end
+				forth
+			end
+			go_to (c)
+		end
+
+	first_item_intersecting_with_rout_id_set (a_rout_id_set: ROUT_ID_SET): like item
+			-- First info associated with object relative once with routine ID in `rout_id_set'.
 		require
 			a_rout_id_set_not_void: a_rout_id_set /= Void
 		local
@@ -183,11 +282,33 @@ feature -- Access
 			until
 				after or Result /= Void
 			loop
-				if item.once_routine_rout_id_set.intersect (a_rout_id_set) then
+				if item.rout_id_set.intersect (a_rout_id_set) then
 					Result := item
 				else
 					forth
 				end
+			end
+			go_to (c)
+		end
+
+	items_intersecting_with_rout_id_set (a_rout_id_set: ROUT_ID_SET): LINKED_LIST [like item]
+			-- All info associated with object relative once with routine ID in `rout_id_set'.
+		require
+			a_rout_id_set_not_void: a_rout_id_set /= Void
+		local
+			c: CURSOR
+		do
+			c := cursor
+			create Result.make
+			from
+				start
+			until
+				after
+			loop
+				if item.rout_id_set.intersect (a_rout_id_set) then
+					Result.extend (item)
+				end
+				forth
 			end
 			go_to (c)
 		end
@@ -221,6 +342,31 @@ feature -- Access
 				after or Result /= Void
 			loop
 				Result := item.attribute_of_routine_id (a_routine_id)
+				forth
+			end
+			go_to (c)
+		end
+
+feature -- Element changes
+
+	update_items_intersecting_with_rout_id_set (a_rout_id_set: ROUT_ID_SET; fi: FEATURE_I)
+			-- Replace all items associated with `a_rout_id_set'
+		require
+			a_rout_id_set_not_void: a_rout_id_set /= Void
+		local
+			c: CURSOR
+		do
+			c := cursor
+			from
+				start
+			until
+				after
+			loop
+				if item.rout_id_set.intersect (a_rout_id_set) then
+					if item.routine /= fi then
+						replace (item.updated_with (fi))
+					end
+				end
 				forth
 			end
 			go_to (c)

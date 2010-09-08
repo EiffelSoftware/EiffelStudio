@@ -47,39 +47,76 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_once: ONCE_PROC_I)
+	make (fi: FEATURE_I)
 			-- Create once relative info object
 		require
-			a_once_attached: a_once /= Void
+			fi_attached: fi /= Void
 		do
-			once_routine := a_once
-			once_routine_rout_id_set := a_once.rout_id_set
-			once_routine_id := once_routine_rout_id_set.first
-			result_type_a := a_once.type.as_detachable_type
+			routine := fi
+			rout_id_set := fi.rout_id_set
+			init_return_info (fi)
+			create_name_prefix
+		end
+
+feature {OBJECT_RELATIVE_ONCE_INFO, FEATURE_TABLE} -- Initialization		
+
+	init_return_info (fi: FEATURE_I)
+			-- Init return type info
+		do
+			result_type_a := fi.type.as_detachable_type
 			has_result := result_type_a /= Void and then not result_type_a.is_void
+		end
+
+feature -- Update changes
+
+	updated_with (fi: FEATURE_I): like Current
+			-- Current twin updated return info with `fi' information
+		do
+			create Result.make (routine)
+			Result.init_return_info (fi)
+
+			Result.set_called_feature_id (called_feature_id)
+			Result.set_called_body_index (called_body_index)
+			Result.set_called_name_id (called_name_id)
+			Result.set_called_routine_id (called_routine_id)
+
+			Result.set_exception_feature_id (exception_feature_id)
+			Result.set_exception_body_index (exception_body_index)
+			Result.set_exception_name_id (exception_name_id)
+			Result.set_exception_routine_id (exception_routine_id)
+
+			if has_result then
+				Result.set_result_feature_id (result_feature_id)
+				Result.set_result_body_index (result_body_index)
+				Result.set_result_name_id (result_name_id)
+				Result.set_result_routine_id (result_routine_id)
+			end
 		end
 
 feature -- Basic operations
 
-	reuse (a_once: ONCE_PROC_I)
+	reuse (fi: FEATURE_I)
 			-- Reuse current object.
 		require
-			a_once_attached: a_once /= Void
+			fi_attached: fi /= Void
 		do
 			if
 				is_valid and then
-				a_once.rout_id_set.intersect (once_routine_rout_id_set) and then
-				a_once.same_interface (once_routine)
+				fi.written_class = written_class and then
+				fi.rout_id_set.intersect (rout_id_set) and then
+				fi.same_interface (routine)
 			then
 				debug ("ONCE_PER_OBJECT")
-					print (generator + ".reuse [" + a_once.feature_name + "]: KEEP%N")
-					debug_output_info (once_routine, "Reused identifiers ...")
+					print (generator + ".reuse [" + fi.feature_name + "]: KEEP%N")
+					debug_output_info (routine, "Reused identifiers ...")
 				end
+				init_return_info (fi)
+				reset
 			else
 				clean
-				make (a_once)
+				make (fi)
 				debug ("ONCE_PER_OBJECT")
-					print (generator + ".reuse [" + a_once.feature_name + "]: CLEANED+REUSED%N")
+					print (generator + ".reuse [" + fi.feature_name + "]: CLEANED+REUSED%N")
 				end
 			end
 		end
@@ -89,12 +126,12 @@ feature -- Status report
 	is_valid: BOOLEAN
 			-- Is valid info?
 		do
-			Result := system.class_of_id (once_routine.written_in) /= Void
+			Result := system.class_of_id (routine.written_in) /= Void
 		end
 
 	debug_output: STRING
 		do
-			Result := once_routine.feature_name + ":" + once_routine_id.out
+			Result := routine.feature_name + ":" + rout_id_set.first.out
 		end
 
 	debug_output_info (f: FEATURE_I; a_msg: detachable STRING)
@@ -103,28 +140,55 @@ feature -- Status report
 			l_once: ONCE_PROC_I
 		do
 			l_once ?= f
-			if l_once /= Void then
-				print ("Once per object (fid:" + l_once.feature_id.out
-						+ " rid:" + once_routine_id.out
-						+ " bid:" + l_once.body_index.out
-						+ "): ")
-				if attached system.class_of_id (l_once.written_in) as c then
-					print (c.name_in_upper)
-				else
-					print ("!Missing-Class!")
-				end
-				print ("<" + l_once.written_in.out + ">"
-						+ "." + l_once.feature_name)
+			if f.is_object_relative_once then
+				print ("Once per object ")
+			else
+				print ("Routine ")
 			end
+			print ("(fid:" + f.feature_id.out
+					+ " rid:" + debug_output_rout_id_set_info (rout_id_set)
+					+ " bid:" + f.body_index.out
+					+ "): ")
+			if attached system.class_of_id (f.written_in) as c then
+				print (c.name_in_upper)
+			else
+				print ("!Missing-Class!")
+			end
+			print ("<" + f.written_in.out + ">." + f.feature_name)
+
 			if a_msg /= Void then
 				print (" -- " + a_msg)
 			end
 			print ("%N")
-			print ("%T- called: fid=" + called_feature_id.out + " rid=" + called_routine_id.out + " bid=" + called_body_index.out +"%N")
-			print ("%T- except: fid=" + exception_feature_id.out + " rid=" + exception_routine_id.out + " bid=" + exception_body_index.out + "%N")
+			print ("    - called: fid=" + called_feature_id.out + " rid=" + called_routine_id.out + " bid=" + called_body_index.out +"%N")
+			print ("    - except: fid=" + exception_feature_id.out + " rid=" + exception_routine_id.out + " bid=" + exception_body_index.out + "%N")
 			if has_result then
-				print ("%T- result: fid=" + result_feature_id.out + " rid=" + result_routine_id.out + " bid=" + result_body_index.out + "%N")
+				print ("    - result: fid=" + result_feature_id.out + " rid=" + result_routine_id.out + " bid=" + result_body_index.out)
+				print ("  TYPE=" + result_type_a.name)
+				print ("%N")
 			end
+		end
+
+	debug_output_rout_id_set_info (a_rout_id_set: ROUT_ID_SET): STRING
+			-- Debug output for ROUT_ID_SET
+		local
+			i,c: INTEGER
+		do
+			create Result.make_empty
+			Result.append_character ('<')
+			from
+				c := a_rout_id_set.count
+				i := 1
+			until
+				i > c
+			loop
+				Result.append_integer (a_rout_id_set.item (i))
+				if i < c then
+					Result.append_character (' ')
+				end
+				i := i + 1
+			end
+			Result.append_character ('>')
 		end
 
 feature -- Access
@@ -136,19 +200,22 @@ feature -- Access
 			Result := called_routine_id /= 0 and exception_routine_id /= 0 and (not has_result or else result_routine_id /= 0)
 		end
 
-	once_routine: ONCE_PROC_I
+	routine: FEATURE_I
 			-- Associated once routine.
 
-	once_routine_rout_id_set: ROUT_ID_SET
+	rout_id_set: ROUT_ID_SET
 			-- Associated once rout id set
 
-	once_routine_id: INTEGER
-			-- Routine id of the associated ONCE_PROC_I
+	written_class: CLASS_C
+			-- Associated once routine's written class.
+		do
+			Result := routine.written_class
+		end
 
 	is_transient: BOOLEAN
 			-- Is related once per object's extra attribute transient?
 		do
---			Result := once_routine.is_transient
+--			Result := routine.is_transient
 
 			--| FIXME 2010-04-27: Until there is a clear decision (ECMA?)
 			--| let's consider the once per object as transient (by default)
@@ -238,12 +305,31 @@ feature -- Access: attribute
 
 feature -- Element change
 
+	reset
+			-- Reset computed references.
+		do
+			debug ("ONCE_PER_OBJECT")
+				print (generator + ".reset: " + routine.feature_name + "%N")
+				debug_output_info (routine, "Reseting")
+			end
+			called_attribute_i := Void
+			called_attr_desc := Void
+
+			exception_attribute_i := Void
+			exception_attr_desc := Void
+
+			if has_result then
+				result_attribute_i := Void
+				result_attr_desc := Void
+			end
+		end
+
 	clean
 			-- Clean Current from computed and store data
 		do
 			debug ("ONCE_PER_OBJECT")
-				print (generator + ".clean: "+ once_routine.feature_name + "%N")
-				debug_output_info (once_routine, "Cleaning")
+				print (generator + ".clean: "+ routine.feature_name + "%N")
+				debug_output_info (routine, "Cleaning")
 			end
 			called_attribute_i := Void
 			called_attr_desc := Void
@@ -347,17 +433,17 @@ feature -- Element change
 			create l_att_i.make
 			l_att_i.set_type (called_type_a, 0)
 			l_att_i.set_body_index (called_body_index)
-			l_att_i.set_written_in (once_routine.written_in)
-			l_att_i.set_origin_class_id (once_routine.origin_class_id)
+			l_att_i.set_written_in (routine.written_in)
+			l_att_i.set_origin_class_id (routine.origin_class_id)
 			l_att_i.set_feature_id (called_feature_id)
 			l_att_i.set_origin_feature_id (called_feature_id)
 			l_att_i.set_feature_name_id (called_name_id, 0)
-			l_att_i.set_is_transient (once_routine.is_transient)
+			l_att_i.set_is_transient (routine.is_transient)
 			l_att_i.set_is_hidden (True)
 
 			create l_feat_depend.make
 			l_feat_depend.set_feature_name_id (called_name_id)
-			once_routine.record_suppliers (l_feat_depend)
+			routine.record_suppliers (l_feat_depend)
 
 			create l_id_set.make
 			l_id_set.extend (called_routine_id)
@@ -377,17 +463,17 @@ feature -- Element change
 			create l_att_i.make
 			l_att_i.set_type (exception_type_a, 0)
 			l_att_i.set_body_index (exception_body_index)
-			l_att_i.set_written_in (once_routine.written_in)
-			l_att_i.set_origin_class_id (once_routine.origin_class_id)
+			l_att_i.set_written_in (routine.written_in)
+			l_att_i.set_origin_class_id (routine.origin_class_id)
 			l_att_i.set_feature_id (exception_feature_id)
 			l_att_i.set_origin_feature_id (exception_feature_id)
 			l_att_i.set_feature_name_id (exception_name_id, 0)
-			l_att_i.set_is_transient (once_routine.is_transient)
+			l_att_i.set_is_transient (routine.is_transient)
 			l_att_i.set_is_hidden (True)
 
 			create l_feat_depend.make
 			l_feat_depend.set_feature_name_id (exception_name_id)
-			once_routine.record_suppliers (l_feat_depend)
+			routine.record_suppliers (l_feat_depend)
 
 			create l_id_set.make
 			l_id_set.extend (exception_routine_id)
@@ -410,17 +496,17 @@ feature -- Element change
 			create l_att_i.make
 			l_att_i.set_type (result_type_a, 0)
 			l_att_i.set_body_index (result_body_index)
-			l_att_i.set_written_in (once_routine.written_in)
-			l_att_i.set_origin_class_id (once_routine.origin_class_id)
+			l_att_i.set_written_in (routine.written_in)
+			l_att_i.set_origin_class_id (routine.origin_class_id)
 			l_att_i.set_feature_id (result_feature_id)
 			l_att_i.set_origin_feature_id (result_feature_id)
 			l_att_i.set_feature_name_id (result_name_id, 0)
-			l_att_i.set_is_transient (once_routine.is_transient)
+			l_att_i.set_is_transient (routine.is_transient)
 			l_att_i.set_is_hidden (True)
 
 			create l_feat_depend.make
 			l_feat_depend.set_feature_name_id (result_name_id)
-			once_routine.record_suppliers (l_feat_depend)
+			routine.record_suppliers (l_feat_depend)
 
 
 			create l_id_set.make
@@ -492,19 +578,35 @@ feature -- Access: result
 	result_name_id: INTEGER assign set_result_name_id
 			-- feature name id of extra attribute: result
 
+	name_prefix: STRING
+			-- Computed name prefix
+			-- (common to all attrib names)
+
 feature -- Element changes
+
+	create_name_prefix
+			-- Create the name prefix for hidden attributes
+		local
+			n: STRING
+		do
+			create n.make (15)
+			n.append_character ('_')
+			n.append_integer (routine.body_index)
+			n.append_character ('_')
+			n.append_string (routine.feature_name)
+			n.append_character ('_')
+			n.append_character ('_')
+			name_prefix := n
+		end
 
 	create_called_name_id
 			-- Set the associated `called_name_id' name id.
 		local
 			n: STRING
 		do
-			create n.make (10)
-			n.append_character ('_')
-			n.append_integer (once_routine.body_index)
-			n.append_character ('_')
-			n.append_string (once_routine.feature_name)
-			n.append_string ("__called")
+			create n.make (15)
+			n.append_string (name_prefix)
+			n.append_string ("called")
 			names_heap.put (n)
 			set_called_name_id (names_heap.found_item)
 		ensure
@@ -516,12 +618,9 @@ feature -- Element changes
 		local
 			n: STRING
 		do
-			create n.make (10)
-			n.append_character ('_')
-			n.append_integer (once_routine.body_index)
-			n.append_character ('_')
-			n.append_string (once_routine.feature_name)
-			n.append_string ("__exception")
+			create n.make (15)
+			n.append_string (name_prefix)
+			n.append_string ("exception")
 			names_heap.put (n)
 			set_exception_name_id (names_heap.found_item)
 		ensure
@@ -535,12 +634,9 @@ feature -- Element changes
 		local
 			n: STRING
 		do
-			create n.make (10)
-			n.append_character ('_')
-			n.append_integer (once_routine.body_index)
-			n.append_character ('_')
-			n.append_string (once_routine.feature_name)
-			n.append_string ("__result")
+			create n.make (15)
+			n.append_string (name_prefix)
+			n.append_string ("result")
 			names_heap.put (n)
 			set_result_name_id (names_heap.found_item)
 		ensure
@@ -613,7 +709,6 @@ feature -- Element changes
 			exception_name_id := a_id
 		end
 
-
 	set_result_body_index (a_bi: INTEGER)
 			-- Set body index related to result attribute
 		require
@@ -645,6 +740,10 @@ feature -- Element changes
 		do
 			result_name_id := a_id
 		end
+
+invariant
+	routine_attached: routine /= Void
+	rout_id_set_attached: rout_id_set /= Void
 
 ;note
 	copyright: "Copyright (c) 1984-2010, Eiffel Software"

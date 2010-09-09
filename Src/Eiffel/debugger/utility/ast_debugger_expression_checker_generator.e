@@ -274,6 +274,9 @@ feature {NONE} -- Implementation: byte node
 					l_local_table.forth
 				end
 			end
+			if f.has_return_value then
+				ctx.add_result_expression_scope
+			end
 
 			lst := a_context.object_test_locals
 			if lst /= Void and then	not lst.is_empty then
@@ -601,6 +604,7 @@ feature {INSPECT_CONTROL} -- AST modification
 				a.set_id_set (ids)
 --					-- Record that AST node is modified.
 --				tmp_ast_server.touch (context.current_class.class_id)
+--				is_ast_modified := True
 			end
 		end
 

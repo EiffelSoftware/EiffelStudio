@@ -436,7 +436,11 @@ feature {NONE} -- debugging
 				activate_debugger_environment (True)
 				app_exec := manager.application
 				app_exec.ignore_breakpoints (manager.execution_ignoring_breakpoints)
-				app_exec.set_execution_mode (a_execution_mode)
+				if a_execution_mode = {EXEC_MODES}.Step_next then
+					app_exec.set_execution_mode ({EXEC_MODES}.Step_into)
+				else
+					app_exec.set_execution_mode (a_execution_mode)
+				end
 				manager.on_application_before_launching
 				app_exec.run (param)
 				if manager.application_is_executing then
@@ -558,7 +562,7 @@ invariant
 	manager_not_void: manager /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -334,6 +334,9 @@ feature -- Execution
 			-- Request the application to pause, in order to update debugger data
 			-- such as new breakpoints, or other catcall detection,...
 			-- mainly for classic debugging
+		require
+			app_is_running: is_running
+			not_stopped: not is_stopped
 		do
 		end
 

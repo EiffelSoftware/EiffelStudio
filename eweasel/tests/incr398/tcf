@@ -1,0 +1,38 @@
+
+test_name	once-per-object-remove-constraint	
+test_description After initial compilation, removing two formal generic constraints in a system with once-per-object routines and refreezing causes system execution to produce wrong output and an empty exception trace.
+
+define		CONSTRAINT " -> DOUBLE"
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_sub 	test2.e $CLUSTER test2.e
+copy_sub 	test3.e $CLUSTER test3.e
+
+compile_frozen
+compile_result 	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work 	NONE 	exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+define		CONSTRAINT ""
+copy_sub 	test2.e $CLUSTER test2.e
+copy_sub 	test3.e $CLUSTER test3.e
+
+compile_melted
+compile_result 	ok
+
+compile_frozen
+compile_result 	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work 	NONE 	exec_output2
+execute_result 	ok
+compare		exec_output2 output
+
+test_end

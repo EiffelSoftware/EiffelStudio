@@ -954,6 +954,7 @@ test	add-vsrt4-to-expanded-then-remove	incr394 tcf fail incrementality
 test	same-generic-derivation-as-crash	incr395 tcf fail incrementality
 test	new-poly-table-crash			incr396 tcf fail incrementality
 test	once-per-object-change-expansion	incr397 tcf fail incrementality once
+test	once-per-object-remove-constraint	incr398 tcf fail incrementality once
 
 
 -- Melting

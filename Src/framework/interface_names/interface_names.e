@@ -62,7 +62,7 @@ feature -- Button texts
 	b_Unset_command: STRING_32					do Result := locale.translation("Unset")	end
 
 	b_Descendant_time: STRING_32					do Result := locale.translation("Descendant Time")	end
-	b_Execution_parameters: STRING_32			do Result := locale.translation ("Execution Parameters") end
+	b_Execution_parameters: STRING_32			do Result := locale.translation ("Execution Parameters ...") end
 	b_Discard_assertions: STRING_32				do Result := locale.translation("Discard Assertions")	end
 	b_Display_Exception_Trace: STRING_32			do Result := locale.translation("Display Exception Trace")	end
 	b_do_nothing: STRING_32 						do Result := locale.translation("Do nothing")	end
@@ -367,7 +367,7 @@ feature -- Accelerator, focus label and menu name
 	m_Breakpoint_index: STRING_32				do Result := locale.translation("Breakpoint index:")	end
 	m_enable_remove_breakpoint_here: STRING_32				do Result := locale.translation("Enable/Remove Breakpoint Here")	end
 	m_enable_disable_breakpoint_here: STRING_32				do Result := locale.translation("Enable/Disable Breakpoint Here")	end
-	m_Edit_breakpoint_here: STRING_32				do Result := locale.translation("Edit Breakpoint Here")	end
+	m_Edit_breakpoint_here: STRING_32				do Result := locale.translation("Edit Breakpoint Here ...")	end
 
 	m_Break_always: STRING_32						do Result := locale.translation("Break always")	end
 	m_Break_when_hit_count_equal: STRING_32			do Result := locale.translation("Break when the hit count is equal to")	end
@@ -434,7 +434,7 @@ feature -- Accelerator, focus label and menu name
 
 	m_Dbg_assertion_checking_disable: STRING_32	do Result := locale.translation("Disable Assertion Checking")	end
 	m_Dbg_assertion_checking_restore: STRING_32	do Result := locale.translation("Restore Assertion Checking")	end
-	m_Dbg_exception_handler: STRING_32			do Result := locale.translation("Exception Handling")	end
+	m_Dbg_exception_handler: STRING_32			do Result := locale.translation("Exception Handling ...")	end
 	m_Dbg_stop_at_breakpoints: STRING_32			do Result := locale.translation("Stop at Breakpoints")	end
 	m_Dbg_ignore_breakpoints: STRING_32			do Result := locale.translation("Ignore Breakpoints")	end
 	m_Dbg_ignoring_breakpoints: STRING_32		do Result := locale.translation("Ignoring Breakpoints")	end
@@ -527,8 +527,8 @@ feature -- Accelerator, focus label and menu name
 	f_display_breakpoints_sep_by_status: STRING_32	do Result := locale.translation("Display breakpoints separated by status")	end
 	m_Disable_stop_points: STRING_32		do Result := locale.translation("&Disable All Breakpoints")	end
 	m_Debug_block: STRING_32				do Result := locale.translation("E&mbed in %"Debug...%"%TCtrl+D")	end
-	m_Execution_parameters: STRING_32	do Result := locale.translation ("Execution &Parameters") end
-	m_Execution_profiles: STRING_32		do Result := locale.translation ("Execution Pro&files") end
+	m_Execution_parameters: STRING_32	do Result := locale.translation ("Execution &Parameters ...") end
+	m_Execution_profiles: STRING_32		do Result := locale.translation ("Execution Profiles") end
 	t_edit_auto_eis_node: STRING_32		do Result := locale.translation ("Edit EIS auto-node generation property.") end
 	m_Editor: STRING_32					do Result := locale.translation("&Editor")	end
 	m_Editor_area: STRING_32				do Result := locale.translation("&Editor Area")	end
@@ -893,7 +893,6 @@ feature -- Menu mnenomics
 	m_Display_system_info: STRING_32		do Result := locale.translation("S&ystem Info")	end
 	m_Edit: STRING_32					do Result := locale.translation("&Edit")	end
 	m_Edit_condition: STRING_32			do Result := locale.translation("E&dit Condition")	end
-	m_Edit_execution_parameters: STRING_32 	do Result := locale.translation("Edit Execution Parameters")	end
 	m_Edit_exported_feature: STRING_32	do Result := locale.translation("&Edit...")	end
 	m_Edit_external_commands: STRING_32	do Result := locale.translation("&External Commands...")	end
 	m_Enable_this_bkpt: STRING_32		do Result := locale.translation("&Enable This Breakpoint")	end
@@ -2408,7 +2407,7 @@ feature -- Title part
 	t_warning: STRING_32 						do Result := locale.translation ("Warning") end
 	t_Features_tool: STRING_32					do Result := locale.translation ("Features")	end
 	t_Editor: STRING_32							do Result := locale.translation("Editor")	end
-	t_execution_parameters: STRING_32			do Result := locale.translation("Execution Parameters")	end
+	t_execution_parameters: STRING_32			do Result := locale.translation("Execution Parameters ...")	end
 	t_contract_tool: STRING_32					do Result := locale.translation ("Contract Editor") end
 	t_compare_with_expected_result: STRING_32	do Result := locale.translation ("Compare With Expected Result") end
 
@@ -2623,7 +2622,7 @@ feature -- Description texts
 	e_Unify_stone: STRING_32				do Result := locale.translation("Link the context tool to the other components")	end
 	e_Terminate_c_compilation: STRING_32 do Result := locale.translation("Terminate current C compilation in progress")	end
 
-	e_Dbg_exception_handler: STRING_32	do Result := locale.translation("Exception handling")	end
+	e_Dbg_exception_handler: STRING_32	do Result := locale.translation("Exception handling ...")	end
 	e_Dbg_assertion_checking: STRING_32	do Result := locale.translation("Disable or restore assertion checking handling during execution")	end
 	e_Dbg_stop_at_breakpoints: STRING_32 do Result := locale.translation("Enable stop at breakpoint (Execution stops when a breakpoint is reached).")	end
 	e_Dbg_Ignore_breakpoints: STRING_32 	do Result := locale.translation("Disable stop at breakpoint (Execution ignores breakpoints).")	end
@@ -2805,6 +2804,3 @@ note
 		]"
 
 end -- class INTERFACE_NAMES
-
-
-

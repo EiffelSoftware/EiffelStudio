@@ -1,0 +1,34 @@
+
+test_name	once-per-object-change-inheritance	
+test_description A sequence of inheritance changes in a system that has once-per-object routines crashes the compiler in {ONCE_BYTE_CODE}.generate_once_prologue
+
+define		INHERITANCE "inherit TEST3 redefine value end"
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_sub 	test1.e $CLUSTER test1.e
+copy_raw 	test2.e $CLUSTER test2.e
+copy_raw 	test3.e $CLUSTER test3.e
+copy_raw 	test4.e $CLUSTER test4.e
+copy_raw 	test5.e $CLUSTER test5.e
+
+compile_frozen
+compile_result 	ok
+
+define		INHERITANCE ""
+copy_sub 	test1.e $CLUSTER test1.e
+compile_frozen
+compile_result 	validity_error TEST VGCC(3) VGCC(3)
+
+define		INHERITANCE "inherit TEST4 redefine value end"
+copy_sub 	test1.e $CLUSTER test1.e
+resume_compile
+compile_result 	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work 	NONE 	exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+test_end

@@ -254,8 +254,8 @@ feature {NONE} -- Visitor implementation
 							c.is_expanded)
 						then
 								-- The actual type should be expanded.
-							f.set_is_attached
 							f.set_is_expanded
+							f.set_is_attached
 							todo_attached.wipe_out
 								-- The generic is not separate.
 							s := False
@@ -275,7 +275,7 @@ feature {NONE} -- Visitor implementation
 											-- Skip the detachable type because it does not allow to see
 											-- if the formal is always attached or not.
 									else
-										if t.has_attached_mark then
+										if t.has_attached_mark and then not f.has_detachable_mark then
 											f.set_is_attached
 										end
 										if not todo_attached.has (ff.position) then
@@ -301,8 +301,9 @@ feature {NONE} -- Visitor implementation
 									-- Skip the detachable constraint because it does not allow to see
 									-- if the formal is always attached or not.
 							elseif
-								t.has_attached_mark or else
-								current_class.lace_class.is_attached_by_default
+								(t.has_attached_mark or else
+								current_class.lace_class.is_attached_by_default) and then
+								not f.has_detachable_mark
 							then
 									-- The type must be a class type with an attached mark
 									-- or without any attachment marks. Let's use the `current_class'

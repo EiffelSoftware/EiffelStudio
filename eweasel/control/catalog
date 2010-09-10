@@ -956,6 +956,7 @@ test	new-poly-table-crash			incr396 tcf fail incrementality
 test	once-per-object-change-expansion	incr397 tcf fail incrementality once
 test	once-per-object-remove-constraint	incr398 tcf fail incrementality once
 test	once-per-object-change-inheritance	incr399 tcf fail incrementality once
+test	qat-change-constant-anchor-type		incr400 tcf fail incrementality anchored_type
 
 
 -- Melting

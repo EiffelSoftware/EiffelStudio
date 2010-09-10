@@ -1,0 +1,24 @@
+
+test_name	qat-change-constant-anchor-type
+test_description Changing the type of a entity that is referenced in a qualified anchored type that is the type for a constant and melting causes system execution output to show the wrong generating type (the type before the change).
+
+define		TYPE "NATURAL_64"
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test2.e $CLUSTER test2.e
+copy_sub 	test3.e $CLUSTER test3.e
+
+compile_melted
+compile_result 	ok
+
+define		TYPE "INTEGER_32"
+copy_sub 	test3.e $CLUSTER test3.e
+
+compile_melted
+compile_result 	ok
+
+execute_work 	NONE 	exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+test_end

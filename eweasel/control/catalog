@@ -1580,6 +1580,7 @@ test once-per-object-anchored-or-generic	once011 tcf pass once
 test once-per-object-returning-expanded		once012 tcf fail once
 test once-per-object-precursor-descendant	once013 tcf fail once
 test once-per-object-inherited-chained		once014 tcf fail once
+test once-per-object-callee-exception		once015 tcf fail once
 
 -- Compiler termination (exception trace, panic, etc.)
 

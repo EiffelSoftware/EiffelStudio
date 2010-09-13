@@ -636,6 +636,20 @@ feature {NONE} -- Implementation
 			remove_once_manifest_string_counter
 		end
 
+	setup_binary_manifest_string (a_string_as: ATOMIC_AS)
+		require
+			a_string_as_not_void: a_string_as /= Void
+		do
+			if attached {STRING_AS}a_string_as as l_string_as then
+				utf8.convert_to (detected_encoding, l_string_as.value)
+				if utf8.last_conversion_successful then
+					l_string_as.set_binary_value (utf8.last_converted_stream)
+				else
+					check conversion_failed: False end
+				end
+			end
+		end
+
 	is_deferred: BOOLEAN
 			-- Boolean mark for deferred class
 
@@ -666,6 +680,9 @@ feature {NONE} -- Implementation
 
 	non_conforming_inheritance_flag: BOOLEAN
 			-- Flag for declaring when non conforming inheritance has been added.
+
+	is_binary_manifest_string: BOOLEAN
+			-- Is the current manifest simply taken as binary?
 
 	has_type: BOOLEAN
 			-- Is expression undoubtly typed?

@@ -66,6 +66,7 @@ feature -- Buffer
 			l_buffer.detect_file
 			if l_buffer.last_detection_successful then
 				last_bom := l_buffer.last_bom
+				detected_encoding := l_buffer.detected_encoding
 				if l_buffer.detected_encoding.is_equal (utf8) then
 					Result := l_buffer
 				else

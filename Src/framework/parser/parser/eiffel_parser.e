@@ -6570,7 +6570,9 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval44 := ast_factory.new_constant_as (yyvs36.item (yyvsp36)) 
+				setup_binary_manifest_string (yyvs36.item (yyvsp36))
+				yyval44 := ast_factory.new_constant_as (yyvs36.item (yyvsp36)) 
+			
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp44 := yyvsp44 + 1
@@ -20425,7 +20427,9 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval36 := yyvs16.item (yyvsp16) 
+				setup_binary_manifest_string (yyvs16.item (yyvsp16))
+				yyval36 := yyvs16.item (yyvsp16) 
+			
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp36 := yyvsp36 + 1
@@ -20463,6 +20467,7 @@ end
 				if yyvs16.item (yyvsp16) /= Void then
 					yyvs16.item (yyvsp16).set_is_once_string (True)
 					yyvs16.item (yyvsp16).set_once_string_keyword (yyvs12.item (yyvsp12))
+					setup_binary_manifest_string (yyvs16.item (yyvsp16))
 				end
 				increment_once_manifest_string_counter
 				yyval36 := yyvs16.item (yyvsp16)

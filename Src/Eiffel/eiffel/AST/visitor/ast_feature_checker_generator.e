@@ -2217,6 +2217,8 @@ feature {NONE} -- Implementation
 	process_string_as (l_as: STRING_AS)
 		local
 			t: like last_type
+			l_is_string_32: BOOLEAN
+			l_value: STRING
 		do
 				-- Constants are always of an attached type
 			if l_as.type = Void then
@@ -2231,11 +2233,19 @@ feature {NONE} -- Implementation
 				t := last_type.as_attached_in (context.current_class)
 				last_type := t
 				if is_byte_node_enabled then
+					l_is_string_32 := not t.same_as (string_type)
+					if not l_is_string_32 then
+							-- For STRING_8 manifest string, we keep the written value for compatibility.
+						l_value := l_as.binary_value
+					else
+							-- For STRING_32 manifest string, UTF-8 value is kept for later transformation.
+						l_value := l_as.value
+					end
 					if l_as.is_once_string then
 						once_manifest_string_index := once_manifest_string_index + 1
-						create {ONCE_STRING_B} last_byte_node.make (l_as.value, not t.same_as (string_type), once_manifest_string_index)
+						create {ONCE_STRING_B} last_byte_node.make (l_value, l_is_string_32, once_manifest_string_index)
 					else
-						create {STRING_B} last_byte_node.make (l_as.value, not t.same_as (string_type))
+						create {STRING_B} last_byte_node.make (l_value, l_is_string_32)
 					end
 				end
 			end

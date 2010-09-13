@@ -95,7 +95,7 @@ feature {NONE} -- Implementation
 		do
 				-- Default to STRING_8 if the type is not specified.
 			if a_string.type = Void then
-				create {STRING_VALUE_I} last_value.make (a_string.value, False, False)
+				create {STRING_VALUE_I} last_value.make (a_string.binary_value, False, False)
 			else
 				l_type := type_a_generator.evaluate_type (a_string.type, current_class)
 				create {STRING_VALUE_I} last_value.make (a_string.value, True, False)

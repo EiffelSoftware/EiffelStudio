@@ -681,9 +681,6 @@ feature {NONE} -- Implementation
 	non_conforming_inheritance_flag: BOOLEAN
 			-- Flag for declaring when non conforming inheritance has been added.
 
-	is_binary_manifest_string: BOOLEAN
-			-- Is the current manifest simply taken as binary?
-
 	has_type: BOOLEAN
 			-- Is expression undoubtly typed?
 

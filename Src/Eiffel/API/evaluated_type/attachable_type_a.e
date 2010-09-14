@@ -272,7 +272,7 @@ feature -- Duplication
 						Result := as_non_separate
 					end
 				elseif other.has_separate_mark then
-					if not is_expanded and then not has_detachable_mark then
+					if not is_expanded and then not has_separate_mark then
 						Result := duplicate
 						Result.set_separate_mark
 					end

@@ -6,3 +6,4 @@ VUTA, ECMA-367, 2nd edition, section 8.23.14
 
         1 It is unqualified.
         2 Its target is an attached expression.
+        3 Its target is a controlled expression.

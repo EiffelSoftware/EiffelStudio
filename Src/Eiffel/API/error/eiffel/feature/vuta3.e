@@ -1,56 +1,22 @@
 note
-	description: "Object_call target error."
+	description: "Error in Object_call which separate target is uncontrolled."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class VUTA
+class VUTA3
 
 inherit
-	FEATURE_ERROR
-		undefine
-			subcode
-		redefine
-			build_explain
-		end
+	VUTA
 
-feature {NONE} -- Creation
-
-	make (c: AST_CONTEXT; t: like target_type; l: LOCATION_AS)
-			-- Create error object for Object_call target
-			-- of type `t' at location `l' in the context `c'.
-		require
-			c_attached: c /= Void
-			t_attached: t /= Void
-			l_attached: l /= Void
-		do
-			c.init_error (Current)
-			target_type := t
-			set_location (l)
-		ensure
-			target_type_set: target_type = t
-		end
+create
+	make
 
 feature -- Error properties
 
-	code: STRING = "VUTA";
-			-- Error code
-
-feature {NONE} -- Access
-
-	target_type: TYPE_A
-			-- Target typel
-
-feature -- Output
-
-	build_explain (a_text_formatter: TEXT_FORMATTER)
-		do
-			Precursor (a_text_formatter)
-			a_text_formatter.add ("Type: ")
-			target_type.append_to (a_text_formatter)
-			a_text_formatter.add_new_line
-		end
+	subcode: INTEGER = 3
+			-- Subcode of error
 
 note
 	copyright:	"Copyright (c) 1984-2010, Eiffel Software"

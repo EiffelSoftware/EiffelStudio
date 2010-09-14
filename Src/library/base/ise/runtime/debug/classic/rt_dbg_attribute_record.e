@@ -95,7 +95,7 @@ feature -- Access
 				end
 			else
 				if v /= Void then
-					Result := v.out
+					Result := out_value (v)
 				else
 					check should_not_be_void: False end
 					create Result.make_empty
@@ -167,6 +167,18 @@ feature {NONE} -- Internal Implementation
 			end
 		end
 
+feature {NONE} -- Output
+
+	out_value (v: G): STRING
+			-- Printable representation of `v'.
+		require
+			v_attached: attached v
+		do
+			Result := v.out
+		ensure
+			result_attached: attached Result
+		end
+
 feature {NONE} -- Implementation
 
 	default_value: detachable G
@@ -176,7 +188,7 @@ feature {NONE} -- Implementation
 
 note
 	library:   "EiffelBase: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

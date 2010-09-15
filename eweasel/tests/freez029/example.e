@@ -1,5 +1,5 @@
 class
-	EXAMPLE [G]
+	EXAMPLE [G -> ANY]
 
 feature -- Query
 

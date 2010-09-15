@@ -87,7 +87,7 @@ feature {NONE} -- Agents
 				l_done or item_strings.after
 			loop
 				l_converted_data := convert_to_data (text_field.text)
-				if l_converted_data /= Void and then l_converted_data.is_equal (item_strings.item) then
+				if l_converted_data /= Void and then l_converted_data ~ item_strings.item then
 					if item_strings.islast then
 						l_item := item_strings.first
 					else

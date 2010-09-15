@@ -55,7 +55,7 @@ feature -- Status report
 					i := 1
 					p := node_prefix
 				until
-					i > level or else (not (a_key.item (i).is_equal (p.item (i))))
+					i > level or else a_key.item (i) /~ p.item (i)
 				loop
 					i := i + 1
 				end

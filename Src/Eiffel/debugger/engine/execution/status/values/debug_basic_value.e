@@ -142,7 +142,7 @@ feature {DEBUG_VALUE_EXPORTER} -- Output
 	output_value: STRING_32
 			-- Return a string representing `Current'.
 		do
-			Result := value.out
+			Result := value_out (value)
 		end
 
 	type_and_value: STRING_32
@@ -151,10 +151,18 @@ feature {DEBUG_VALUE_EXPORTER} -- Output
 			create Result.make (40)
 			Result.append (dynamic_class.name_in_upper)
 			Result.append (Equal_sign_str)
-			Result.append (value.out)
+			Result.append (value_out (value))
 		end
 
-feature -- ouput
+feature {NONE} -- Output
+
+	value_out (v: like value): STRING_32
+			-- Printable representation of `v'.
+		do
+			Result := v.out
+		end
+
+feature -- Output
 
 	expandable: BOOLEAN = False
 			-- Does `Current' have sub-items? (Is it a non void reference, a special object, ...)

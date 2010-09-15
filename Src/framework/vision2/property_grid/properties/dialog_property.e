@@ -61,7 +61,7 @@ feature {NONE} -- Agents
 			end
 			dialog.set_title (dialog_title (name))
 			if value /= Void then
-				dialog.set_value (value.twin)
+				dialog.set_value (value_twin (value))
 			else
 				dialog.set_value (l_default)
 			end
@@ -82,6 +82,12 @@ feature {NONE} -- Implementation
 	convert_to_data (a_string: like displayed_value): like value
 			-- Convert displayed data into data.
 		do
+		end
+
+	value_twin (v: like value): like value
+			-- Twin of `v'.
+		do
+			Result := v.twin
 		end
 
 end

@@ -6,4 +6,10 @@ indexing
 class
 	TYPE [G]
 
+feature
+
+	default_detachable_value: detachable G
+		do
+		end
+
 end

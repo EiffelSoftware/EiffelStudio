@@ -101,20 +101,16 @@ feature -- Access
 		local
 			i, nb: INTEGER
 			l_area: like area
-			l_item: G
 		do
 			l_area := area
 			nb := upper - lower
 			if object_comparison then
-				if v /= Void then
-					from
-					until
-						i > nb or Result
-					loop
-						l_item := l_area.item (i)
-						Result := l_item /= Void and then l_item.is_equal (v)
-						i := i + 1
-					end
+				from
+				until
+					i > nb or Result
+				loop
+					Result := l_area.item (i) ~ v
+					i := i + 1
 				end
 			else
 				from
@@ -219,7 +215,7 @@ feature -- Status report
 		ensure
 			definition: Result = (count = 0 or else 
 				((item (upper) = Void or else 
-				item (upper) = item (upper).default) and 
+				item (upper) = ({G}).default_detachable_value) and 
 				subarray (lower, upper - 1).all_default))
 		end
 

@@ -66,7 +66,7 @@ feature {AST_CONTEXT} -- Modification: nesting
 				-- Start new scope from the state of an outer one.
 			scope := duplicate (scope)
 				-- Reserve stack for sibling information.
-			inner_scopes.extend (scope.default)
+			inner_scopes.extend (({like scope}).default)
 		ensure then
 			not_has_siblings: not has_siblings
 			not_is_sibling_dominating: not is_sibling_dominating
@@ -117,9 +117,9 @@ feature {AST_CONTEXT} -- Modification: nesting
 			-- Leave a complex instruction and
 			-- promote scope information to the outer compound.
 		do
-			if has_siblings then
+			if has_siblings and then attached inner_scopes.item as i then
 					-- Promote nested scope information to the outer level.
-				scope := inner_scopes.item.as_attached
+				scope := i
 			end
 				-- Remove inner scope information.
 			inner_scopes.remove
@@ -155,7 +155,7 @@ feature {NONE} -- Status report
 	has_siblings: BOOLEAN
 			-- Are there any siblings in the current instruction?
 		do
-			Result := inner_scopes.item /= scope.default
+			Result := inner_scopes.item /= ({like scope}).default
 		end
 
 feature {NONE} -- Storage
@@ -178,7 +178,7 @@ feature {NONE} -- Initialization
 		deferred
 		ensure
 			result_attached: Result /= Void
-			result_not_default: Result /= Result.default
+			result_not_default: Result /= ({like scope}).default
 		end
 
 feature {NONE} -- Duplication
@@ -191,7 +191,7 @@ feature {NONE} -- Duplication
 			Result := s.twin
 		ensure
 			result_attached: Result /= Void
-			result_set: Result.is_equal (s)
+			result_set: Result ~ s
 		end
 
 invariant
@@ -202,7 +202,7 @@ invariant
 	same_level: outer_scopes.count = inner_scopes.count
 
 note
-	copyright:	"Copyright (c) 2008-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -215,22 +215,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

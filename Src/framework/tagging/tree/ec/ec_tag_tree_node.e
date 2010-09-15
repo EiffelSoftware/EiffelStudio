@@ -80,7 +80,7 @@ feature {NONE} -- Removal
 			-- <Precursor>
 		do
 			if attached item_cache as l_cache then
-				item_cache := l_cache.default
+				item_cache := ({like item}).default
 			end
 		end
 

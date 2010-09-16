@@ -10,7 +10,18 @@ feature
 		local
 			b: G;
 		do
-			print (b.generator); io.new_line;
+			print (generator_of (b)); io.new_line;
 		end
-	
+
+feature {NONE} -- Helper
+
+	generator_of (v: G): STRING
+		require
+			v_attached: v /= Void
+		do
+			Result := v.generator
+		ensure
+			result_attached: Result /= Void
+		end
+		
 end

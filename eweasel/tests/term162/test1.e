@@ -1,4 +1,4 @@
-class TEST1 [G]
+class TEST1 [G -> ANY]
 
 feature
 

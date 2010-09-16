@@ -20,7 +20,7 @@ feature
 			feature_with_old (g)
 			test (g)
 			if g /= Void then
-				print (g.generating_type)
+				print (generating_type_of (g))
 				print ("%N")
 			end
 			create l.make
@@ -62,7 +62,7 @@ feature
 			-- Test for cloning of arguments.
 		do
 			if g /= Void then
-				print (g.generating_type)
+				print (generating_type_of (g))
 				print ("%N")
 			end
 		end

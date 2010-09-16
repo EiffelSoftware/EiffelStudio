@@ -727,6 +727,7 @@ feature {NONE} -- Settings
 	reset_for_unqualified_call_checking
 		do
 			last_type := context.current_class_type
+			is_controlled := False
 		end
 
 	set_is_checking_postcondition (b: BOOLEAN)
@@ -2595,6 +2596,8 @@ feature {NONE} -- Implementation
 			end
 			if l_arg_pos /= 0 then
 					-- Found argument
+					-- Arguments are controlled.
+				is_controlled := True
 				l_type := l_feature.arguments.i_th (l_arg_pos)
 				l_type := l_type.actual_type.instantiation_in (last_type.as_implicitly_detachable, l_last_id)
 				l_has_vuar_error := l_as.parameters /= Void
@@ -2751,6 +2754,8 @@ feature {NONE} -- Implementation
 			l_error_level := error_level
 			if l_arg_pos /= 0 then
 					-- Found argument
+					-- Arguments are controlled.
+				is_controlled := True
 				l_arg_type := l_feature.arguments.i_th (l_arg_pos)
 
 				last_type := l_arg_type.actual_type.instantiation_in (last_type.as_implicitly_detachable, l_last_id)
@@ -2981,6 +2986,7 @@ feature {NONE} -- Implementation
 			l_is_qualified_call: BOOLEAN
 			l_error_level: NATURAL_32
 			l_is_assigner_call: BOOLEAN
+			l_is_controlled: BOOLEAN
 		do
 				-- Type check the target, but we reset the
 				-- assigner flag syntax, because it is only pertinent
@@ -2992,6 +2998,10 @@ feature {NONE} -- Implementation
 
 			l_target_type := last_type
 			if l_target_type /= Void then
+				if l_target_type.is_separate then
+					validate_separate_target (l_as.target)
+					l_is_controlled := is_controlled
+				end
 				if is_byte_node_enabled then
 					check last_byte_node_not_void: last_byte_node /= Void end
 					l_target_expr ?= last_byte_node
@@ -3005,17 +3015,20 @@ feature {NONE} -- Implementation
 				l_error_level := error_level
 				l_as.message.process (Current)
 				is_qualified_call := l_is_qualified_call
-				if error_level = l_error_level and is_byte_node_enabled then
-					l_call ?= last_byte_node
-					check
-						l_call_not_void: l_call /= Void
+				if error_level = l_error_level then
+					adapt_last_type_to_target (l_target_type, l_is_controlled)
+					if is_byte_node_enabled then
+						l_call ?= last_byte_node
+						check
+							l_call_not_void: l_call /= Void
+						end
+						create l_nested
+						l_nested.set_target (l_access_expr)
+						fixme ("Should we set `parent' on `l_access_expr' as we do for a NESTED_AS")
+						l_nested.set_message (l_call)
+						l_call.set_parent (l_nested)
+						last_byte_node := l_nested
 					end
-					create l_nested
-					l_nested.set_target (l_access_expr)
-					fixme ("Should we set `parent' on `l_access_expr' as we do for a NESTED_AS")
-					l_nested.set_message (l_call)
-					l_call.set_parent (l_nested)
-					last_byte_node := l_nested
 				end
 			end
 		end
@@ -3043,6 +3056,10 @@ feature {NONE} -- Implementation
 					l_target_access ?= last_byte_node
 				end
 				l_error_level := error_level
+					-- Check the target of a separate feature call.
+				if last_type.is_separate then
+					validate_separate_target (l_as.target)
+				end
 					-- Type check the message
 				l_as.message.process (Current)
 				if error_level /= l_error_level then
@@ -3963,6 +3980,7 @@ feature {NONE} -- Implementation
 			l_error_level: NATURAL_32
 			l_vtmc_error: VTMC
 			l_vtmc4: VTMC4
+			l_is_controlled: BOOLEAN
 		do
 			l_needs_byte_node := is_byte_node_enabled
 
@@ -3973,11 +3991,15 @@ feature {NONE} -- Implementation
 				-- Check operand
 			l_as.expr.process (Current)
 
-			if last_type /= Void then
+			if attached last_type as l_target_type then
+				if l_target_type.is_separate then
+					validate_separate_target (l_as.expr)
+					l_is_controlled := is_controlled
+				end
 				if l_needs_byte_node then
 					l_expr ?= last_byte_node
 				end
-				last_type := last_type.actual_type
+				last_type := l_target_type.actual_type
 				l_formal ?= last_type
 				if l_formal /= Void then
 					if not l_formal.is_single_constraint_without_renaming (l_context_current_class) then
@@ -4168,8 +4190,8 @@ feature {NONE} -- Implementation
 									last_byte_node := l_access
 								end
 							end
-
 							last_type := l_prefix_feature_type
+							adapt_last_type_to_target (l_target_type, l_is_controlled)
 						end
 					end
 				end
@@ -4292,6 +4314,7 @@ feature {NONE} -- Implementation
 			l_result_item: TUPLE [feature_i: FEATURE_I; cl_type: RENAMED_TYPE_A [TYPE_A]]
 			l_type_set: TYPE_SET_A
 			l_vtmc4: VTMC4
+			l_is_controlled: BOOLEAN
 		do
 			l_needs_byte_node := is_byte_node_enabled
 			l_context_current_class := context.current_class
@@ -4304,8 +4327,13 @@ feature {NONE} -- Implementation
 
 				-- First type check the left operand
 			l_as.left.process (Current)
-			if last_type /= Void then
-				l_left_type := last_type.actual_type
+			l_target_type := last_type
+			if attached l_target_type then
+				if l_target_type.is_separate then
+					validate_separate_target (l_as.left)
+					l_is_controlled := is_controlled
+				end
+				l_left_type := l_target_type.actual_type
 				if l_left_type.is_formal and then attached {FORMAL_A} l_left_type as l_formal then
 					if l_formal.is_multi_constrained (l_context_current_class) then
 						l_is_left_multi_constrained := True
@@ -4543,6 +4571,7 @@ feature {NONE} -- Implementation
 								last_byte_node := l_binary
 							end
 							last_type := l_infix_type
+							adapt_last_type_to_target (l_target_type, l_is_controlled)
 						end
 					end
 				end
@@ -4831,6 +4860,7 @@ feature {NONE} -- Implementation
 			l_access_b: ACCESS_B
 			l_is_qualified_call: BOOLEAN
 			l_error_level: NATURAL_32
+			l_is_controlled: BOOLEAN
 		do
 				-- Clean assigner call flag for bracket target
 			was_assigner_call := is_assigner_call
@@ -4841,7 +4871,11 @@ feature {NONE} -- Implementation
 
 				-- Check target
 			l_as.target.process (Current)
-			if last_type /= Void then
+			if attached last_type as l_target_type then
+				if l_target_type.is_separate then
+					validate_separate_target (l_as.target)
+					l_is_controlled := is_controlled
+				end
 				target_type := last_type.actual_type
 				if is_byte_node_enabled then
 					target_expr ?= last_byte_node
@@ -4924,6 +4958,7 @@ feature {NONE} -- Implementation
 						process_call (last_type, Void, id_feature_name, bracket_feature, l_as.operands, False, False, True, False)
 						is_qualified_call := l_is_qualified_call
 						if error_level = l_error_level then
+							adapt_last_type_to_target (l_target_type, l_is_controlled)
 							if is_byte_node_enabled then
 								create nested_b
 								create target_access
@@ -10325,6 +10360,42 @@ feature {INSPECT_CONTROL} -- AST modification
 			end
 		ensure
 			routine_ids_set: ids.is_equal_id_list (a)
+		end
+
+feature {NONE} -- Separateness
+
+	is_controlled: BOOLEAN
+			-- Is last expression of a separate type controlled?
+
+	validate_separate_target (a: AST_EIFFEL)
+			-- Check validity rules for the target `a' of a separate type.
+		require
+			a_attached: attached a
+			is_last_type_separate: attached last_type as t and then t.is_separate
+		do
+			if not is_controlled then
+				error_handler.insert_error (create {VUTA3}.make (context, last_type, a.start_location))
+			end
+		end
+
+	adapt_last_type_to_target (t: TYPE_A; c: BOOLEAN)
+			-- Adapt separateness status of the last message type `last_type'
+			-- to the target of type `t' which has a controlled status `c'
+			-- and update `is_controlled' accordingly.
+		do
+				-- Qualified call is controlled if target is controlled
+				-- and message type is not separate.
+			if
+				t.is_separate and then
+				attached {ATTACHABLE_TYPE_A} t as a and then
+				attached last_type as l and then
+				not l.is_separate
+			then
+				is_controlled := c
+				last_type := l.to_other_separateness (a)
+			else
+				is_controlled := False
+			end
 		end
 
 note

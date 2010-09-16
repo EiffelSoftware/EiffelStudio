@@ -76,6 +76,8 @@ RT_LNK EIF_REFERENCE eif_wean(EIF_OBJECT object);		/* Weans a previously adopted
 extern void eif_unfreeze(EIF_REFERENCE object);			/* Forget a frozen memory address */
 RT_LNK EIF_OBJECT eif_protect (EIF_REFERENCE object);		/* Low-level entry in hector table */
 RT_LNK EIF_OBJECT hrecord(EIF_REFERENCE object);	/* Record entry in hector table, only for code generation */
+RT_LNK EIF_OBJECT eif_create_weak_reference(EIF_REFERENCE object);
+RT_LNK EIF_REFERENCE eif_free_weak_reference (EIF_OBJECT object);
 #else
 #define eif_freeze(object)	(object)
 #define eif_adopt(object)	(object)

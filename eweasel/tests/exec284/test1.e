@@ -14,8 +14,20 @@ feature
 			print (t.generating_type)
 			print ("%N")
 			if g /= Void then
-				print (g.generating_type)
+				print (generating_type_of (g))
 				print ("%N")
 			end
 		end
+
+feature {NONE} -- Helper
+
+	generating_type_of (g: G): STRING
+		require
+			g_attached: g /= Void
+		do
+			Result := g.generating_type
+		ensure
+			result_attached: Result /= Void
+		end
+
 end

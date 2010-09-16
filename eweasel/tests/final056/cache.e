@@ -13,7 +13,8 @@ feature
 				s = 0
 			loop
 				s := s - 1
-				area.item(s).do_nothing
+				if area.item (s) = Void then
+				end
 			end
 		end
 

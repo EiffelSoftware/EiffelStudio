@@ -18,7 +18,14 @@ feature -- Access
 
 	test_deep_twin: G
 		do
-			Result := item.deep_twin
+			Result := deep_twin_of (item)
+		end
+
+feature {NONE} -- Helper
+
+	deep_twin_of (i: G): G
+		do
+			Result := i.deep_twin
 		end
 
 end

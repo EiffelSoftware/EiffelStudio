@@ -41,9 +41,9 @@ compile_result	ok
 c_compile_final
 c_compile_result ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f2
 execute_result	ok
-compare		exec_output_f output
+compare		exec_output_f2 output
 
 define VALUE 0
 copy_sub	Ace $TEST Ace
@@ -62,9 +62,9 @@ compile_result	ok
 c_compile_work
 c_compile_result ok
 
-execute_work	NONE exec_output_w
+execute_work	NONE exec_output_w2
 execute_result	ok
-compare		exec_output_w output
+compare		exec_output_w2 output
 
 
 test_end

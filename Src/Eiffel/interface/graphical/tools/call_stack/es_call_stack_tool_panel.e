@@ -1403,7 +1403,7 @@ feature {NONE} -- Stack grid implementation
 			dc, oc: CLASS_C
 			l_tooltip: STRING_32
 			l_nb_stack: INTEGER
-			l_feature_name: STRING
+			l_feature_name: STRING_32
 			l_is_melted: BOOLEAN
 			l_has_rescue: BOOLEAN
 			l_class_info: STRING
@@ -1442,7 +1442,7 @@ feature {NONE} -- Stack grid implementation
 				end
 
 					--| Routine name
-				l_feature_name := cse.routine_name
+				l_feature_name := cse.routine_name_for_display
 				if l_feature_name /= Void then
 					l_feature_name := l_feature_name.twin
 				else
@@ -1609,7 +1609,7 @@ feature {NONE} -- Stack grid implementation
 			dc, oc: CLASS_C
 			l_tooltip: STRING_32
 			l_nb_stack: INTEGER
-			l_feature_name: STRING
+			l_feature_name: STRING_32
 			rt_info_avail: BOOLEAN
 			l_is_melted: BOOLEAN
 			l_has_rescue: BOOLEAN

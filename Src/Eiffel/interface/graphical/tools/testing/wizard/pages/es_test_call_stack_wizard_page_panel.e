@@ -202,7 +202,8 @@ feature {NONE} -- Basic operations
 			dc, oc: CLASS_C
 			l_tooltip: STRING_32
 			l_nb_stack: INTEGER
-			l_feature_name: STRING
+			l_feature_name: STRING_32
+			l_text: STRING_32
 			l_is_melted: BOOLEAN
 			l_has_rescue: BOOLEAN
 			l_class_info: STRING
@@ -229,7 +230,7 @@ feature {NONE} -- Basic operations
 			l_breakindex_info := a_cse.break_index.out
 
 				--| Routine name
-			l_feature_name := a_cse.routine_name
+			l_feature_name := a_cse.routine_name_for_display
 			if l_feature_name /= Void then
 				l_feature_name := l_feature_name.twin
 			else
@@ -293,7 +294,9 @@ feature {NONE} -- Basic operations
 			end
 
 				--| Fill columns
-			create gclab.make_with_text (" " + l_feature_name)
+			create l_text.make_from_string (" ")
+			l_text.append (l_feature_name)
+			create gclab.make_with_text (l_text)
 			gclab.set_data (a_cse)
 			gclab.checked_changed_actions.extend (agent on_selection_change)
 			gclab.set_tooltip (l_tooltip)

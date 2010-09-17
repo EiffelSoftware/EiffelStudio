@@ -25,6 +25,9 @@ feature -- Properties
 	routine_name: STRING
 			-- Associated routine name
 
+	routine_name_for_display: STRING_32
+			-- Associated routine name for display
+
 	level_in_stack: INTEGER
 			-- Where is this element situated in the call stack?
 			-- 1 means on the top.
@@ -93,7 +96,7 @@ feature -- Output
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

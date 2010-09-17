@@ -442,7 +442,7 @@ feature -- Call stack
 				last_pos := 5
 			else
 				if c /= Void then
-					st.add_address (oaddr, cse.routine_name, c)
+					st.add_address (oaddr, cse.routine_name_for_display, c)
 					last_pos := oaddr.count + 2
 				else
 					st.add_string (oaddr)
@@ -467,7 +467,7 @@ feature -- Call stack
 			st.add_column_number (26)
 
 			if oc /= Void then
-				st.add_feature_name (cse.routine_name, oc)
+				st.add_feature_name (cse.routine_name_for_display, oc)
 				if oc /= c then
 					st.add_string (" (From ")
 					if oc /= Void then
@@ -478,7 +478,7 @@ feature -- Call stack
 					st.add_string (")")
 				end
 			else
-				st.add_string (cse.routine_name)
+				st.add_string (cse.routine_name_for_display)
 			end
 			if ecse /= Void then
 				create s.make_empty

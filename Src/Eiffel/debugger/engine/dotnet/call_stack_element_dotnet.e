@@ -118,6 +118,7 @@ feature -- Filling
 
 			is_melted := melted
 			routine_name := a_feature.feature_name
+			routine_name_for_display := a_feature.feature_name_32
 			routine := a_feature.e_feature
 
 				-- Adapt `routine' to `dynamic_class' and handles precursor case.

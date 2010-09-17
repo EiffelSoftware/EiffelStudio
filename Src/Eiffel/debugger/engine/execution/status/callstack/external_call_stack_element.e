@@ -12,6 +12,8 @@ class
 inherit
 	CALL_STACK_ELEMENT
 
+	SHARED_ENCODING_CONVERTER
+
 create
 	make
 
@@ -26,6 +28,7 @@ feature -- Change
 		do
 			class_name := a_cn
 			routine_name := a_fn
+			routine_name_for_display := encoding_converter.utf8_to_utf32 (a_fn)
 			break_index := a_bp
 			break_nested_index := a_bp_nested
 			object_address := a_oa
@@ -51,7 +54,7 @@ feature -- Output
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

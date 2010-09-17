@@ -683,7 +683,7 @@ feature {NONE} -- Notebook item's behavior
 
 								header_text_label.set_text (".")
 
-								header_feature_label.set_text (ecse.routine_name)
+								header_feature_label.set_text (ecse.routine_name_for_display)
 								create l_fstone.make (ecse.routine)
 								header_feature_label.set_pebble (l_fstone)
 								header_feature_label.set_accept_cursor (l_fstone.stone_cursor)
@@ -1527,7 +1527,7 @@ invariant
 	objects_grids_not_void: (is_initialized and is_interface_usable) implies objects_grids /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

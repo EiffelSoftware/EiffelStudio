@@ -198,7 +198,8 @@ rt_private bool_t idr_Notif(IDR *idrs, void *ext)
 	Notif *not = (Notif *) ext;
 	bool_t result;
 	result = idr_int(idrs, &not->st_type);
-	result = result && idr_rt_uint_ptr(idrs, &not->st_data);
+	result = result && idr_rt_uint_ptr(idrs, &not->st_data1);
+	result = result && idr_rt_uint_ptr(idrs, &not->st_data2);
 	return result;
 }
 

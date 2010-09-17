@@ -231,7 +231,7 @@ rt_public void undiscard_breakpoints(void);	/* un-discard all breakpoints. */
 /* exception trace occurred during debugging evaluation */
 
 rt_shared void debug_initialize(void);	/* Initialize debug information */
-rt_public void dnotify(int, rt_uint_ptr);		/* Notify the daemon event and data, no answer waited */
+rt_public void dnotify(int, rt_uint_ptr, rt_uint_ptr);		/* Notify the daemon event and data, no answer waited */
 rt_public void dstop(struct ex_vect *exvect, uint32 offset); /* Breakable point reached */
 rt_public void dstop_nested(struct ex_vect *exvect, uint32 break_index, uint32 nested_break_index); /* Breakable point in the middle of a nested call reached */
 rt_shared void set_breakpoint_count(int num);	/* Sets the n breakpoint to stop at*/
@@ -553,7 +553,7 @@ rt_public void dnotify_create_thread(EIF_THR_TYPE tid)
 	if (debug_mode) {
 		RT_GET_CONTEXT
 		DBGMTX_LOCK;	/* Enter critical section */
-		dnotify(THR_CREATED, (rt_uint_ptr) tid);
+		dnotify(THR_CREATED, (rt_uint_ptr) tid, (rt_uint_ptr) 0);
 		DBGMTX_UNLOCK; /* Leave critical section */
 	}
 }
@@ -562,7 +562,16 @@ rt_public void dnotify_exit_thread(EIF_THR_TYPE tid)
 	if (debug_mode) {
 		RT_GET_CONTEXT
 		DBGMTX_LOCK;	/* Enter critical section */
-		dnotify(THR_EXITED, (rt_uint_ptr) tid);
+		dnotify(THR_EXITED, (rt_uint_ptr) tid, (rt_uint_ptr) 0);
+		DBGMTX_UNLOCK; /* Leave critical section */
+	}
+}
+rt_public void dnotify_register_scoop_processor(EIF_THR_TYPE tid, uint32 scp_proc_id)
+{
+	if (debug_mode) {
+		RT_GET_CONTEXT
+		DBGMTX_LOCK;	/* Enter critical section */
+		dnotify(SCP_PROC_REGISTERED, (rt_uint_ptr) tid, (rt_uint_ptr) scp_proc_id);
 		DBGMTX_UNLOCK; /* Leave critical section */
 	}
 }

@@ -50,7 +50,7 @@ feature
 				event_data_tid := last_pointer
 
 				read_pointer
-				event_data_scp_pid := last_pointer.to_integer_32.as_natural_32
+				event_data_scp_pid := last_pointer
 
 					--|----------------------------|--
 					--| Data retrieved             |--

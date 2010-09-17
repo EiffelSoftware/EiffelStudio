@@ -79,7 +79,8 @@ typedef struct {			/* Stopping notification 	*/
 } Stop;
 typedef struct {			/* Event notification */
 	int st_type;			/* Event type */
-	rt_uint_ptr st_data;	/* Event data */
+	rt_uint_ptr st_data1;	/* Event data 1 */
+	rt_uint_ptr st_data2;	/* Event data 2 */
 } Notif;
 
 typedef struct dump Dump;	/* Structure returned by dumps */

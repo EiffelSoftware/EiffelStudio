@@ -118,8 +118,9 @@ feature {APPLICATION_STATUS} -- Implementation
 
 feature {NONE} -- Notification event type (check eif_debug.h)
 
-	Notif_thr_created: INTEGER			= 1
-	Notif_thr_exited: INTEGER			= 2
+	Notif_thr_created: INTEGER				= 1	--| THR_CREATED
+	Notif_thr_exited: INTEGER				= 2	--| THR_EXITED
+	Notif_scoop_proc_registered: INTEGER  	= 4	--| SCP_PROC_REGISTERED
 
 feature {NONE} -- For workbench responses.
 

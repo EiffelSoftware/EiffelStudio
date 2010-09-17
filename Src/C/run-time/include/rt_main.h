@@ -55,7 +55,7 @@ extern BODY_INDEX * EIF_process_once_indexes; /* Code indexes of registered proc
 extern void once_init (void);		/* Initialization and creation of once keys */
 extern char dinterrupt(void);
 extern void dserver(void);
-extern void dnotify(int, rt_uint_ptr);
+extern void dnotify(int, rt_uint_ptr, rt_uint_ptr);
 extern int eif_no_reclaim;		/* Call reclaim ion termination? */
 extern int cc_for_speed;		/* Optimized for speed or for memory */
 extern char *starting_working_directory;

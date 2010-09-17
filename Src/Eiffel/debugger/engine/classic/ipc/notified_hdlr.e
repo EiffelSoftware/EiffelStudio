@@ -27,7 +27,8 @@ feature
 		local
 			retried: BOOLEAN
 			event_type: INTEGER
-			event_data: POINTER
+			event_data_tid: POINTER
+			event_data_scp_pid: POINTER
 			s: APPLICATION_STATUS
 		do
 			if not retried then
@@ -46,30 +47,38 @@ feature
 				event_type := last_integer
 
 				read_pointer
-				event_data := last_pointer
+				event_data_tid := last_pointer
+
+				read_pointer
+				event_data_scp_pid := last_pointer.to_integer_32.as_natural_32
 
 					--|----------------------------|--
 					--| Data retrieved             |--
 					--| Now process stopped state  |--
-					--|----------------------------|--				
+					--|----------------------------|--
 
 				s := Debugger_manager.application_status
 				inspect
 					event_type
 				when notif_thr_created then
 					debug ("debugger_ipc")
-						print (generator + " : Thread created: " + event_data.out + "%N")
+						print (generator + " : Thread created: " + event_data_tid.out + "%N")
 					end
-					s.add_thread_id (event_data)
+					s.add_thread_id (event_data_tid)
 
 				when notif_thr_exited then
 					debug ("debugger_ipc")
-						print (generator + " : Thread exited: " + event_data.out + "%N")
+						print (generator + " : Thread exited: " + event_data_tid.out + "%N")
 					end
-					s.remove_thread_id (event_data)
+					s.remove_thread_id (event_data_tid)
+				when notif_scoop_proc_registered then
+					debug ("debugger_ipc")
+						print (generator + " : SCOOP Processor registered: " + event_data_tid.out + " scp_proc_id=" + event_data_scp_pid.out + "%N")
+					end
+					to_implement ("Implement SCOOP registration")
 				else
 					debug ("debugger_ipc")
-						print ("EWB notified eventType="+ event_type.out + "eventData=" + event_data.out + "%N")
+						print ("EWB notified eventType="+ event_type.out + "eventData=" + event_data_tid.out + "%N")
 						print ("  -> data=" + detail + "%N")
 					end
 				end
@@ -84,7 +93,7 @@ feature
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -97,22 +106,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

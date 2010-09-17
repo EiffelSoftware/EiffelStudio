@@ -156,7 +156,9 @@ rt_public EIF_REFERENCE request_dispatch (Request rqst)
 				notif_info = rqst.rqu.rqu_event;
 				sprintf (ptr, "%i", notif_info.st_type);
 				ptr += strlen (ptr) + 1;
-				sprintf (ptr, "0x%" EIF_POINTER_DISPLAY, (rt_uint_ptr) notif_info.st_data);
+				sprintf (ptr, "0x%" EIF_POINTER_DISPLAY, (rt_uint_ptr) notif_info.st_data1);
+				ptr += strlen (ptr) + 1;
+				sprintf (ptr, "0x%" EIF_POINTER_DISPLAY, (rt_uint_ptr) notif_info.st_data2);
 				ptr += strlen (ptr) + 1;
 				eif_string = makestr (string, ptr - string);
 				(notify_hdlr_set) (eif_access (notify_handler), eif_string);

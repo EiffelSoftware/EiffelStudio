@@ -48,8 +48,9 @@ extern "C" {
 extern struct pgcontext d_cxt;		/* Program context */
 extern struct dbstack db_stack;		/* Calling context stack */
 #else
-extern void dnotify_create_thread(EIF_THR_TYPE); 
-extern void dnotify_exit_thread(EIF_THR_TYPE); 
+extern void dnotify_create_thread(EIF_THR_TYPE); 					/* Notify the debuggeR a new Eiffel thread was created */
+extern void dnotify_exit_thread(EIF_THR_TYPE); 						/* Notify the debuggeR an Eiffel thread exited */
+extern void dnotify_register_scoop_processor(EIF_THR_TYPE,uint32);  /* Notify the debuggeR a SCOOP processor was registered on thread id */
 extern void dbstack_reset(struct dbstack *stk);
 
 extern EIF_THR_TYPE dbg_thread_id;		/* Current Thread identifier for debugging session. */
@@ -71,8 +72,9 @@ extern void dbreak(int why, int wait);		/* Program execution stopped */
 extern void safe_dbreak(int why);	/* Program execution stopped. Before calling this method, you should get the DBGMTX_LOCK*/
 
 /* Notification event types */
-#define THR_CREATED		1		/* thread created */
-#define THR_EXITED		2		/* thread exited  */
+#define THR_CREATED				1		/* thread created */
+#define THR_EXITED				2		/* thread exited  */
+#define SCP_PROC_REGISTERED		4		/* SCOOP Processor registered */
 
 #ifdef __cplusplus
 }

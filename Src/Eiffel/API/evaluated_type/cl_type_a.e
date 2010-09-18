@@ -562,6 +562,9 @@ feature {TYPE_A} -- Helpers
 				Result := twin
 				attachment_bits := l_attachment
 			end
+			if Result.is_separate then
+				Result := Result.as_non_separate
+			end
 		end
 
 	internal_same_generic_derivation_as (current_type, other: TYPE_A; a_level: INTEGER): BOOLEAN
@@ -572,8 +575,7 @@ feature {TYPE_A} -- Helpers
 						-- If 'declaration_mark' is not the same for both then we have to make sure
 						-- that both expanded and separate states are identical.
 				(l_cl_type.declaration_mark /= declaration_mark implies
-					(l_cl_type.is_expanded = is_expanded)) and then
-				l_cl_type.is_separate = is_separate
+					(l_cl_type.is_expanded = is_expanded))
 		end
 
 feature {COMPILER_EXPORTER} -- Settings

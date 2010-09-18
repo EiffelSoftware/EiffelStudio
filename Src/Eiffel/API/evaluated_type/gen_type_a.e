@@ -738,6 +738,9 @@ feature {TYPE_A} -- Helpers
 				attachment_bits := 0
 				Result := duplicate_for_instantiation
 				attachment_bits := l_attachment_bits
+				if Result.is_separate then
+					Result := Result.as_non_separate
+				end
 
 				l_generics := generics
 				l_new_generics := Result.generics
@@ -788,8 +791,7 @@ feature {TYPE_A} -- Helpers
 						-- If 'declaration_mark' is not the same for both then we have to make sure
 						-- that both expanded and separate states are identical.
 				(l_gen_type_i.declaration_mark /= declaration_mark implies
-					(l_gen_type_i.is_expanded = is_expanded and then
-					l_gen_type_i.is_separate = is_separate))
+					l_gen_type_i.is_expanded = is_expanded)
 			then
 				from
 					i := 1

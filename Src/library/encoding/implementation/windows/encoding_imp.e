@@ -118,10 +118,10 @@ feature -- String encoding convertion
 			l_out_string: MANAGED_POINTER
 		do
 			l_string := wide_string_to_pointer (a_string)
-			l_count := cwin_WideCharToMultiByte_buffer_length (a_code_page.to_integer, l_string.item)
+			l_count := cwin_WideCharToMultiByte_buffer_length (a_code_page.to_integer, l_string.item, a_string.count)
 			create l_out_string.make (l_count)
-			cwin_wide_char_to_multi_byte (a_code_page.to_integer, l_string.item, l_out_string.item, l_count, $last_conversion_successful)
-			Result := pointer_to_multi_byte (l_out_string.item, l_count - 1)
+			cwin_wide_char_to_multi_byte (a_code_page.to_integer, l_string.item, a_string.count, l_out_string.item, l_count, $last_conversion_successful)
+			Result := pointer_to_multi_byte (l_out_string.item, l_count)
 		end
 
 	multi_byte_to_wide_char (a_code_page: STRING; a_string: STRING_8): STRING_32
@@ -132,10 +132,10 @@ feature -- String encoding convertion
 			l_out_string: MANAGED_POINTER
 		do
 			l_string := multi_byte_to_pointer (a_string)
-			l_count := cwin_MultiByteToWideChar_buffer_length (a_code_page.to_integer, l_string.item)
+			l_count := cwin_MultiByteToWideChar_buffer_length (a_code_page.to_integer, l_string.item, a_string.count)
 			create l_out_string.make (l_count * Wchar_length)
-			cwin_multi_byte_to_wide_char (a_code_page.to_integer, l_string.item, l_out_string.item, l_count, $last_conversion_successful)
-			Result := pointer_to_wide_string (l_out_string.item, (l_count - 1) * 2)
+			cwin_multi_byte_to_wide_char (a_code_page.to_integer, l_string.item, a_string.count, l_out_string.item, l_count, $last_conversion_successful)
+			Result := pointer_to_wide_string (l_out_string.item, l_count * Wchar_length)
 		end
 
 feature -- Status report
@@ -215,23 +215,23 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Implementation
 
-	cwin_WideCharToMultiByte_buffer_length (cpid: INTEGER; a_wide_string: POINTER): INTEGER
+	cwin_WideCharToMultiByte_buffer_length (cpid: INTEGER; a_wide_string: POINTER; a_wide_count: INTEGER): INTEGER
 			-- Get buffer length of converted result.
 		external
 			"C inline use <windows.h>"
 		alias
-			"return WideCharToMultiByte ($cpid, 0, $a_wide_string, -1, NULL, 0, NULL, NULL);"
+			"return WideCharToMultiByte ($cpid, 0, $a_wide_string, $a_wide_count, NULL, 0, NULL, NULL);"
 		end
 
-	cwin_MultiByteToWideChar_buffer_length (cpid: INTEGER; a_multi_byte: POINTER): INTEGER
+	cwin_MultiByteToWideChar_buffer_length (cpid: INTEGER; a_multi_byte: POINTER; a_multi_byte_count: INTEGER): INTEGER
 			-- Get buffer length of converted result.
 		external
 			"C inline use <windows.h>"
 		alias
-			"return MultiByteToWideChar ($cpid, 0, $a_multi_byte, -1, NULL, 0);"
+			"return MultiByteToWideChar ($cpid, 0, $a_multi_byte, $a_multi_byte_count, NULL, 0);"
 		end
 
-	cwin_wide_char_to_multi_byte (cpid: INTEGER; a_wide_string: POINTER; a_out_pointer: POINTER; a_count_to_buffer: INTEGER; a_b: TYPED_POINTER [BOOLEAN])
+	cwin_wide_char_to_multi_byte (cpid: INTEGER; a_wide_string: POINTER; a_wide_count: INTEGER; a_out_pointer: POINTER; a_count_to_buffer: INTEGER; a_b: TYPED_POINTER [BOOLEAN])
 		external
 			"C inline use <windows.h>"
 		alias
@@ -239,7 +239,7 @@ feature {NONE} -- Implementation
 				DWORD dw;
 			    			    	
 				WideCharToMultiByte ((UINT) $cpid, (DWORD) 0, (LPCWSTR) $a_wide_string,
-					(int) -1, (LPSTR) $a_out_pointer, (int) $a_count_to_buffer, (LPCSTR) NULL, (LPBOOL) NULL);
+					(int) $a_wide_count, (LPSTR) $a_out_pointer, (int) $a_count_to_buffer, (LPCSTR) NULL, (LPBOOL) NULL);
 				dw = GetLastError();
 				if (dw == ERROR_INSUFFICIENT_BUFFER || dw == ERROR_INVALID_FLAGS || dw == ERROR_INVALID_PARAMETER) {
 					*$a_b = 0;
@@ -247,7 +247,7 @@ feature {NONE} -- Implementation
 			]"
 		end
 
-	cwin_multi_byte_to_wide_char (cpid: INTEGER; a_multi_byte: POINTER; a_out_pointer: POINTER; a_count_to_buffer: INTEGER; a_b: TYPED_POINTER [BOOLEAN])
+	cwin_multi_byte_to_wide_char (cpid: INTEGER; a_multi_byte: POINTER; a_multi_byte_count: INTEGER; a_out_pointer: POINTER; a_count_to_buffer: INTEGER; a_b: TYPED_POINTER [BOOLEAN])
 		external
 			"C inline use <windows.h>"
 		alias
@@ -255,7 +255,7 @@ feature {NONE} -- Implementation
 				DWORD dw;
 			    
 				MultiByteToWideChar ((UINT) $cpid, (DWORD) 0, (LPCSTR) $a_multi_byte,
-					(int) -1, (LPWSTR) $a_out_pointer, (int) $a_count_to_buffer);
+					(int) $a_multi_byte_count, (LPWSTR) $a_out_pointer, (int) $a_count_to_buffer);
 				dw = GetLastError();
 				if (dw == ERROR_INSUFFICIENT_BUFFER || dw == ERROR_INVALID_FLAGS || dw == ERROR_INVALID_PARAMETER || dw == ERROR_NO_UNICODE_TRANSLATION) {
 					*$a_b = 0;
@@ -274,14 +274,14 @@ feature {NONE} -- Implementation
 
 note
 	library:   "Encoding: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

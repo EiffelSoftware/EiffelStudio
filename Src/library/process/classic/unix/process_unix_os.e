@@ -88,7 +88,7 @@ feature -- Process operations
 	new_process_group
 			-- Let the current process become a process group leader.
 		external
-			"C inline use <sys/types.h>, <unistd.h>, <termios.h>"
+			"C inline use <unistd.h>"
 		alias
 			"[
 				{
@@ -256,7 +256,7 @@ feature {NONE} -- Externals
 			-- Set reported process status in `a_status' if `status_avail_addr' is set with True.
 			-- If succeeded, set `a_succ' to True, otherwise False.
 		external
-			"C blocking inline use <sys/types.h>, <sys/wait.h>"
+			"C blocking inline use <sys/types.h>, %"eif_process.h%""
 		alias
 			"[
 				{
@@ -358,7 +358,7 @@ feature {NONE} -- Externals
 	attach_terminals (pid: INTEGER)
 			-- Attach terminal control to process group to which process `pid' belongs.
 		external
-			"C inline use <sys/types.h>, <unistd.h>, <termios.h>"
+			"C inline use <unistd.h>"
 		alias
 			"[
 				{
@@ -370,14 +370,14 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

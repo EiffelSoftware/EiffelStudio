@@ -29,6 +29,9 @@ while test $# -gt 0; do
 			echo -liconv
 		elif echo "$ISE_PLATFORM" | grep "macosx" >/dev/null 2>&1; then
 			echo -liconv
+		elif echo "$ISE_PLATFORM" | grep "windows" >/dev/null 2>&1; then
+			echo -liconv
+# mingw
  		fi
 		;;
 		--include_path)

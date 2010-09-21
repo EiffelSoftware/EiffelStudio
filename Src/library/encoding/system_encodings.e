@@ -53,11 +53,7 @@ feature -- Access
 	iso_8859_1: ENCODING
 			-- ISO-8859-1 encoding.
 		once
-			if {PLATFORM}.is_windows then
-				create Result.make ("28591") -- Code page on Windows
-			else
-				create Result.make ("ISO-8859-1") -- Name on Unix (iconv).
-			end
+			create Result.make (system_encodings_i.iso_8859_1_code_page)
 		end
 
 feature {NONE} -- Implementation

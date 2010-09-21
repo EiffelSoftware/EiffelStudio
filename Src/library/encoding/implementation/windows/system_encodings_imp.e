@@ -30,6 +30,12 @@ feature -- Access
 			Result := c_console_code_page.out
 		end
 
+	iso_8859_1_code page: STRING
+			-- ISO-8859-1 code page.
+		do
+			Result := "28591"
+		end
+
 feature {NONE} -- NLS LC CTYPE CONSTANTS
 
 	LOCALE_IDEFAULTCODEPAGE: INTEGER 			=  	0x0000000B   -- default oem code page

@@ -702,7 +702,7 @@ feature {NONE} -- Implementation
 	exit_code_from_status (a_status: INTEGER): INTEGER
 			-- Exit code evaluated from status returned by process
 		external
-			"C inline use <sys/wait.h>"
+			"C inline use %"eif_process.h%""
 		alias
 			"WEXITSTATUS($a_status)"
 		end
@@ -710,7 +710,7 @@ feature {NONE} -- Implementation
 	terminate_flag_from_status (a_status: INTEGER): BOOLEAN
 			-- Returns true if the child terminated normally.
 		external
-			"C inline use <sys/wait.h>"
+			"C inline use %"eif_process.h%""
 		alias
 			"WIFEXITED($a_status)"
 		end
@@ -718,7 +718,7 @@ feature {NONE} -- Implementation
 	signaled_flag_from_status (a_status: INTEGER): BOOLEAN
 			-- Returns true if the child process was terminated by a signal.
 		external
-			"C inline use <sys/wait.h>"
+			"C inline use %"eif_process.h%""
 		alias
 			"WIFSIGNALED($a_status)"
 		end
@@ -726,7 +726,7 @@ feature {NONE} -- Implementation
 	stopped_flag_from_status (a_status: INTEGER): BOOLEAN
 			-- Returns true if the child process was stopped by delivery of a signal.
 		external
-			"C inline use <sys/wait.h>"
+			"C inline use %"eif_process.h%""
 		alias
 			"WIFSTOPPED($a_status)"
 		end
@@ -734,7 +734,7 @@ feature {NONE} -- Implementation
 	continued_flag_from_status (a_status: INTEGER): BOOLEAN
 			-- Returns true if the child process was stopped by delivery of a signal.
 		external
-			"C inline use <sys/wait.h>"
+			"C inline use %"eif_process.h%""
 		alias
 			"WIFSTOPPED($a_status)"
 		end
@@ -761,7 +761,7 @@ invariant
 	valid_stderr_descriptor: valid_file_descriptor (Stderr_descriptor)
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

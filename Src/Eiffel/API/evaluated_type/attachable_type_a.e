@@ -11,10 +11,11 @@ inherit
 	TYPE_A
 		redefine
 			as_attached_type,
+			as_attachment_mark_free,
+			as_detachable_type,
 			as_implicitly_attached,
 			as_implicitly_detachable,
-			as_detachable_type,
-			as_attachment_mark_free,
+			as_marks_free,
 			is_attached,
 			is_implicitly_attached,
 			is_separate,
@@ -213,6 +214,32 @@ feature -- Duplication
 				Result := duplicate
 				attachment_bits := l_bits
 			end
+		ensure then
+			result_has_no_attached_mark: not Result.has_attached_mark
+			result_has_no_detachable_mark: not Result.has_detachable_mark
+		end
+
+	as_marks_free: like Current
+			-- Same as Current but without any attachment and separate marks
+		local
+			a: like attachment_bits
+			s: BOOLEAN
+		do
+			a := attachment_bits
+			s := has_separate_mark
+			if a = 0 and then not s then
+				Result := Current
+			else
+				has_separate_mark := False
+				attachment_bits := 0
+				Result := duplicate
+				attachment_bits := a
+				has_separate_mark := s
+			end
+		ensure then
+			result_has_no_attached_mark: not Result.has_attached_mark
+			result_has_no_detachable_mark: not Result.has_detachable_mark
+			result_has_no_separate_mark: not Result.has_separate_mark
 		end
 
 	to_other_attachment (other: ATTACHABLE_TYPE_A): like Current

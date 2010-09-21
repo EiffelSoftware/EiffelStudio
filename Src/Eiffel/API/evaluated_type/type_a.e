@@ -902,6 +902,14 @@ feature -- Attachment properties
 			as_attachment_mark_free_not_void: Result /= Void
 		end
 
+	as_marks_free: like Current
+			-- Same as Current but without any attachment and separate marks
+		do
+			Result := Current
+		ensure
+			as_marks_free_attached: attached Result
+		end
+
 	to_other_attachment (other: ATTACHABLE_TYPE_A): like Current
 			-- Current type to which attachment status of `other' is applied
 		require

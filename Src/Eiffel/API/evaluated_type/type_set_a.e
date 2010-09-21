@@ -21,9 +21,10 @@ inherit
 			copy, is_equal
 		redefine
 			as_attached_type,
+			as_detachable_type,
 			as_implicitly_attached,
 			as_implicitly_detachable,
-			as_detachable_type,
+			as_marks_free,
 			formal_instantiation_in,
 			has_expanded,
 			has_formal_generic,
@@ -1627,6 +1628,32 @@ feature -- Attachment properties
 					r.set_type (t.as_detachable_type)
 					Result [i] := r
 --				end
+				i := i - 1
+			end
+		end
+
+	as_marks_free: like Current
+			-- Same as Current but without any attachment and separate marks
+		local
+			i: like count
+			r: RENAMED_TYPE_A [TYPE_A]
+			t: TYPE_A
+			q: TYPE_A
+		do
+			Result := Precursor
+			from
+				i := count
+			until
+				i <= 0
+			loop
+				r := Result [i]
+				t := r.type
+				q := t.as_marks_free
+				if q /= t then
+					r := r.duplicate
+					r.set_type (q)
+					Result [i] := r
+				end
 				i := i - 1
 			end
 		end

@@ -763,7 +763,7 @@ feature {TYPE_A} -- Helpers
 						if associated_class.generics.i_th (i).is_multi_constrained (associated_class.generics) then
 							l_new_generics.put (associated_class.constrained_types (i), i)
 						else
-							l_new_generics.put (associated_class.constrained_type (i).as_attachment_mark_free, i)
+							l_new_generics.put (associated_class.constrained_type (i).as_marks_free, i)
 						end
 					end
 				else

@@ -27,6 +27,11 @@ feature -- String encoding convertion
 			l_converted_32: STRING_32
 			l_converted_8: STRING_8
 		do
+		if a_from_string.is_empty then
+			last_conversion_successful := True
+			last_converted_string := a_from_string.twin
+			last_was_wide_string := a_from_string.is_string_32
+		else
 			l_from_code_page := platfrom_code_page_from_name (a_from_code_page)
 			l_to_code_page := platfrom_code_page_from_name (a_to_code_page)
 
@@ -108,6 +113,7 @@ feature -- String encoding convertion
 					last_converted_string := l_converted_8
 				end
 			end
+		end
 		end
 
 	wide_char_to_multi_byte (a_code_page: STRING; a_string: STRING_32): STRING_8

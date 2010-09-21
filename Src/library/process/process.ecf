@@ -16,6 +16,11 @@
 				<platform value="windows"/>
 			</condition>
 		</external_include>
+		<external_include location="$(ISE_LIBRARY)\library\process\classic\unix\include">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</external_include>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf">

@@ -8,7 +8,7 @@
 		<option>
 			<assertions precondition="true"/>
 		</option>
-		<external_include location="-D_WIN32_DCOM">
+		<external_include location="xyz -D_WIN32_DCOM">
 			<condition>
 				<platform value="windows"/>
 			</condition>

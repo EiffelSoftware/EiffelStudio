@@ -8,12 +8,17 @@
 		<option>
 			<assertions precondition="true"/>
 		</option>
-		<external_include location="$(EIFFEL_SRC)\framework\cli_writer\Clib -D_WIN32_DCOM">
+		<external_include location="$(EIFFEL_SRC)\framework\cli_writer\Clib">
 			<condition>
 				<platform value="windows"/>
 			</condition>
 		</external_include>
-		<external_object location="$(EIFFEL_SRC)\framework\cli_writer\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\cli_writer.lib">
+		<external_include location="xyz -D_WIN32_DCOM">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</external_include>
+		<external_object location="$(EIFFEL_SRC)\framework\cli_writer\spec\msc\$(ISE_PLATFORM)\lib\cli_writer.lib">
 			<condition>
 				<platform value="windows"/>
 			</condition>

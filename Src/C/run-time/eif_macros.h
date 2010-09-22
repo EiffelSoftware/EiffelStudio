@@ -54,6 +54,7 @@
 #include "eif_rout_obj.h"
 #include "eif_option.h"
 #include "eif_bits.h"
+#include "eif_separate.h"
 
 #ifdef WORKBENCH
 #include "eif_wbench.h"

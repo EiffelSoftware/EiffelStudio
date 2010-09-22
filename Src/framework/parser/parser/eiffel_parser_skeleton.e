@@ -637,8 +637,8 @@ feature {NONE} -- Implementation
 		end
 
 	setup_binary_manifest_string (a_string_as: ATOMIC_AS)
-		require
-			a_string_as_not_void: a_string_as /= Void
+			-- Caculate the original written bytes of the string
+			-- according to UTF-8 string and original encoding.
 		do
 			if attached {STRING_AS}a_string_as as l_string_as then
 				utf8.convert_to (detected_encoding, l_string_as.value)

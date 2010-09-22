@@ -235,7 +235,7 @@ feature {NONE} -- Click ast exploration
 							parents.forth
 							i := i + 1
 						end
-						inherit_clauses.put (l_mapper.next_utf32_pos_from_utf8_pos (current_class_as.conforming_inherit_clause_insert_position), i)
+						inherit_clauses.put (l_mapper.fast_utf32_pos_from_utf8_pos (current_class_as.conforming_inherit_clause_insert_position), i)
 						inherit_clauses.sort
 					end
 					ast_list := current_class_as.click_list

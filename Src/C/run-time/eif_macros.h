@@ -1340,6 +1340,54 @@ RT_LNK void eif_exit_eiffel_code(void);
 #define RTSA(x)		opt = eoption + x
 #endif
 
+ /*
+ * Macros for SCOOP 
+ *
+ * -- Run-time Setup
+ *
+ * RTSCPINIT - SCOOP Runtime Initialization, called prior to root creation
+ * RTSCPWTPR - Wait for SCOOP Processor Redundancy, called after root creation so that the system only completes when all processors have exited.
+ *
+ * -- Separate Object Initialization
+ *
+ * RTSCPAFPID (sep_obj) - Assign a free processor id to the client-side emalloc'd separate object
+ * RTSCPSPAL (sep_obj) - Start processor application loop, notify debugger that launched thread is a SCOOP processor.
+ *
+ * -- GC Processor Handling
+ *
+ * RTSCPFPID (pid) - Free processor id pid for reuse, called by GC after full collect to reclaim processor resources as zero objects reference pid in their object headers. Notify debugger that thread is no longer being used as a SCOOP processor.
+ *
+ * -- Request Chain Handling
+ *
+ * RTSCPSSRC - Signal start of request chain for `Current'
+ * RTSCPASPRC (sep_obj) - Assign supplier processor to request chain of `Current'
+ * RTSCPWRCSPL - Wait for supplier processor request chain nodes to be initialized prior to logging.
+ * RTSCPSERC - Signify end of request chain for `Current'
+ *
+ * -- Request Chain Node Logging
+ *
+ * RTSCPAPRC(sep_obj, predicate, arg_tuple, result) - Add predicate to request chain of `Current', wait for result.
+ * RTSCPACRC(sep_obj, command, arg_tuple) - Add command to request chain of `Current'
+ * RTSCPAQRC(sep_obj, query, arg_tuple, result) - Add query to request chain of `Current', wait for result.
+ *
+*/ 
+
+
+#define RTSCPINIT
+#define RTSCPWTPR
+
+#define RTSCPAFPID(sep_obj)
+#define RTSCPSPAL(sep_obj)
+
+#define RTSCPFPID(pid)
+#define RTSCPSSRC
+#define RTSCPASPRC(sep_obj)
+#define RTSCPWRCSPL
+#define RTSCPSERC
+
+#define RTSCPAPRC(sep_obj,predicate,arg_tuple,result)
+#define RTSCPACRC(sep_obj,command,arg_tuple) 
+#define RTSCPAQRC(sep_obj,query,arg_tuple,result) 
 
  /*
  * Macros for workbench

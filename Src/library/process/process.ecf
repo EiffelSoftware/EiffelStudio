@@ -16,7 +16,7 @@
 				<platform value="windows"/>
 			</condition>
 		</external_include>
-		<external_include location="$(ISE_LIBRARY)\library\process\classic\unix\include">
+		<external_include location="$(ISE_LIBRARY)/library/process/classic/unix/include">
 			<condition>
 				<platform excluded_value="windows"/>
 			</condition>

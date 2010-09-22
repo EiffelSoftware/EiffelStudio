@@ -542,7 +542,7 @@ feature -- Access
 				then
 					class_text := class_text.substring
 								(start_position, end_position);
-					a_text_formatter.add_feature (Current, class_text)
+					a_text_formatter.add_feature (Current, encoding_converter.utf8_to_utf32 (class_text))
 				end;
 				a_text_formatter.add_new_line;
 			else

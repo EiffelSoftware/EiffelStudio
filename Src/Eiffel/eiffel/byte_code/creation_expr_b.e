@@ -122,6 +122,13 @@ feature -- Analyze
 			else
 				create {REGISTER} register.make (l_type.c_type)
 			end
+			if real_type (type).is_separate then
+					-- Allocate a register for a container that stores arguments
+					-- to be passed to the scheduler.
+				create separate_register.make (reference_c_type)
+					-- The register is not used right after the call.
+				separate_register.free_register
+			end
 		end
 
 	unanalyze
@@ -137,6 +144,7 @@ feature -- Analyze
 					l_call.unanalyze
 				end
 			end
+			separate_register := Void
 		end
 
 feature -- Status report
@@ -363,11 +371,9 @@ feature -- Generation
 					if not l_is_make_filled then
 						c.generate_parameters (register)
 					end
-						-- We need a new line since `generate_on' doesn't do it.
-					buf.put_new_line
-					c.generate_on (register)
+						-- Call a creation procedure
+					c.generate_call (separate_register, attached separate_register, Void, register)
 					c.set_parent (Void)
-					buf.put_character (';')
 					generate_frozen_debugger_hook_nested
 				end
 				if
@@ -403,6 +409,11 @@ feature {BYTE_NODE_VISITOR} -- Assertion support
 				(call /= Void and then call.parameters /= Void and then
 				((not is_special_make_filled and call.parameters.count = 1) or (is_special_make_filled and call.parameters.count = 2)))
 		end
+
+feature {NONE} -- Separate feature call
+
+	separate_register: REGISTER;
+			-- Register to store data to be passed to the scheduler
 
 note
 	copyright:	"Copyright (c) 1984-2010, Eiffel Software"

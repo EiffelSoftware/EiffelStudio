@@ -351,10 +351,10 @@ feature -- Generation
 
 			if t.is_separate then
 					-- Attach new object to a new processor
+				buf.put_new_line
 				buf.put_string ("RTS_PA (")
 				register.print_register
 				buf.put_two_character (')', ';')
-				buf.put_new_line
 			end
 
 			if l_generate_call then

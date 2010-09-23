@@ -328,37 +328,74 @@ feature
 		local
 			message_target: ACCESS_B
 			buf: GENERATION_BUFFER
-			agent_call: AGENT_CALL_B
 			complex_message_target: BOOLEAN
+			is_separate_call: BOOLEAN
 		do
 			buf := buffer
 				-- Message_target is the target of the message (if message is a nested_bl) and message otherwise.
 			message_target := message.target
 				-- Put parameters, if any, in temporary registers
 			message_target.generate_parameters (reg)
-				-- Now if there is a result for the call and the result
-				-- has to be stored in a real register, do generate the
-				-- assignment.
-			agent_call ?= message_target
-			complex_message_target := agent_call /= Void
-			buf.put_new_line
-			if register /= Void and then register /= No_register and then not complex_message_target then
-				register.print_register
-				buf.put_three_character (' ', '=', ' ')
-			end
-				-- If register is No_register, then the call will be
-				-- generated directly by a call to `print_register'.
-				-- Otherwise, we have to generate it now.
 			if register /= No_register then
+					-- If register is No_register, then the call will be
+					-- generated directly by a call to `print_register'.
+					-- Otherwise, we have to generate it now.
+				buf.put_new_line
+				if real_type (target.type).is_separate then
+						-- Generate a call on a separate target as follows:
+						--    if (EIF_IS_DIFFERENT_PROCESSOR (Current, target)) {
+						--        ... // Prepare arguments to pass in args.
+						--        RTS_CF (Current, target, feature_address, args, result);
+						--    } else {
+						--        ... // Make non-separate call.
+						--    }
+					is_separate_call := True
+					buf.put_string ("if (EIF_IS_DIFFERENT_PROCESSOR (Current, ")
+					reg.print_register
+					buf.put_four_character (')', ')', ' ', '{')
+					buf.indent
+					buf.put_new_line
+					if attached register then
+						buf.put_string ("RTS_CF (Current, ")
+					else
+						buf.put_string ("RTS_CP (Current, ")
+					end
+					reg.print_register
+					buf.put_two_character (',', ' ')
+					message_target.generate_address_on (reg)
+					buf.put_string (", Void")
+					if attached register then
+						buf.put_two_character (',', ' ')
+						register.print_register
+					end
+					buf.put_two_character (')', ';')
+					buf.exdent
+					buf.put_new_line
+					buf.put_string ("} else {")
+					buf.indent
+					buf.put_new_line
+				end
+				complex_message_target := attached {AGENT_CALL_B} message_target
+					-- Now if there is a result for the call and the result
+					-- has to be stored in a real register, do generate the
+					-- assignment.
+				if register /= Void and then not complex_message_target then
+					register.print_register
+					buf.put_three_character (' ', '=', ' ')
+				end
 				message_target.generate_on (reg)
 				buf.put_character (';')
-
 				if register /= Void and then complex_message_target then
 					buf.put_new_line
 					register.print_register
 					buf.put_string (" = ")
 					message_target.register.print_register
 					buf.put_character (';')
+				end
+				if is_separate_call then
+					buf.exdent
+					buf.put_new_line
+					buf.put_character ('}')
 				end
 			end
 		end
@@ -369,7 +406,7 @@ feature
 	allocates_memory: BOOLEAN = True;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -382,22 +419,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

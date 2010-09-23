@@ -307,10 +307,7 @@ feature
 
 	generate
 			-- Generate expression
-		local
-			with_inv: BOOLEAN
 		do
-			with_inv := context.has_invariant
 			if parent = Void then
 					-- This is the first call. Generate the target.
 				target.generate
@@ -319,12 +316,12 @@ feature
 					generate_frozen_debugger_hook_nested
 				end
 						-- Generate a call on an entity stored in `target'
-				generate_call (target, with_inv)
+				generate_call (target)
 			else
 					-- This is part of a dot call. Generate a call on the
 					-- entity stored in the parent's register.
 					-- Our target is already generated.
-				generate_call (parent.register, with_inv)
+				generate_call (parent.register)
 			end
 			if message.target /= message then
 					-- generate a hook
@@ -334,18 +331,11 @@ feature
 			end
 		end
 
-	generate_call (reg: REGISTRABLE; with_inv: BOOLEAN)
+	generate_call (reg: REGISTRABLE)
 			-- Generate a call on entity held in `reg'
 		local
 			message_target: ACCESS_B
-			buf: GENERATION_BUFFER
-			complex_message_target: BOOLEAN
-			is_separate_call: BOOLEAN
-			p: BYTE_LIST [PARAMETER_B]
-			a: PARAMETER_B
-			n: like {BYTE_LIST [PARAMETER_B]}.count
 		do
-			buf := buffer
 				-- Message_target is the target of the message (if message is a nested_bl) and message otherwise.
 			message_target := message.target
 				-- Put parameters, if any, in temporary registers
@@ -354,97 +344,7 @@ feature
 					-- If register is No_register, then the call will be
 					-- generated directly by a call to `print_register'.
 					-- Otherwise, we have to generate it now.
-				buf.put_new_line
-				if real_type (target.type).is_separate then
-						-- Generate a call on a separate target as follows:
-						--    if (EIF_IS_DIFFERENT_PROCESSOR (Current, target)) {
-						--        ... // Prepare arguments to pass in args.
-						--        RTS_CF (Current, target, feature_address, args, result);
-						--    } else {
-						--        ... // Make non-separate call.
-						--    }
-					is_separate_call := True
-					buf.put_string ("if (EIF_IS_DIFFERENT_PROCESSOR (Current, ")
-					reg.print_register
-					buf.put_four_character (')', ')', ' ', '{')
-					buf.indent
-					buf.put_new_line
-					buf.put_string ("RTS_AC (")
-					p := message_target.parameters
-					if attached p then
-						n := p.count
-					end
-					buf.put_integer (n)
-					buf.put_two_character (',', ' ')
-					reg.print_register
-					buf.put_two_character (',', ' ')
-					separate_register.print_register
-					buf.put_two_character (')', ';')
-					if attached p then
-						from
-						until
-							n <= 0
-						loop
-							buf.put_new_line
-							buf.put_string ("RTS_AA (")
-							a := p [n]
-							a.print_register
-							buf.put_two_character (',', ' ')
-							a.c_type.generate_typed_field (buf)
-							buf.put_two_character (',', ' ')
-							a.c_type.generate_sk_value (buf)
-							buf.put_two_character (',', ' ')
-							buf.put_integer (n)
-							buf.put_two_character (',', ' ')
-							separate_register.print_register
-							buf.put_two_character (')', ';')
-							n := n - 1
-						end
-					end
-					buf.put_new_line
-					if attached register then
-						buf.put_string ("RTS_CF (Current, ")
-					else
-						buf.put_string ("RTS_CP (Current, ")
-					end
-					reg.print_register
-					buf.put_two_character (',', ' ')
-					message_target.generate_address_on (reg)
-					buf.put_two_character (',', ' ')
-					separate_register.print_register
-					if attached register then
-						buf.put_two_character (',', ' ')
-						register.print_register
-					end
-					buf.put_two_character (')', ';')
-					buf.exdent
-					buf.put_new_line
-					buf.put_string ("} else {")
-					buf.indent
-					buf.put_new_line
-				end
-				complex_message_target := attached {AGENT_CALL_B} message_target
-					-- Now if there is a result for the call and the result
-					-- has to be stored in a real register, do generate the
-					-- assignment.
-				if register /= Void and then not complex_message_target then
-					register.print_register
-					buf.put_three_character (' ', '=', ' ')
-				end
-				message_target.generate_on (reg)
-				buf.put_character (';')
-				if register /= Void and then complex_message_target then
-					buf.put_new_line
-					register.print_register
-					buf.put_string (" = ")
-					message_target.register.print_register
-					buf.put_character (';')
-				end
-				if is_separate_call then
-					buf.exdent
-					buf.put_new_line
-					buf.put_character ('}')
-				end
+				message_target.generate_call (separate_register, False, register, reg)
 			end
 		end
 

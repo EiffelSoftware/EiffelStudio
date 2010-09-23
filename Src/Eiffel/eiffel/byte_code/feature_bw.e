@@ -15,6 +15,7 @@ inherit
 			check_dt_current,
 			free_register,
 			generate_access_on_type,
+			generate_address_on,
 			generate_end,
 			is_polymorphic,
 			has_one_signature,
@@ -112,6 +113,18 @@ feature -- C code generation
 			generate_workbench_end (result_register)
 		end
 
+feature {NONE} -- Separate call
+
+	generate_address_on (r: REGISTRABLE)
+			-- <Precursor>
+		do
+			if attached {CL_TYPE_A} context_type as c then
+				generate_workbench_address (r, c)
+			else
+				Precursor (r)
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	result_register: REGISTER;
@@ -119,7 +132,7 @@ feature {NONE} -- Implementation
 			-- to be normalized before use.
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -73,17 +73,11 @@
 
 /*
  * Separate call arguments:
- * RTS_AD(a) - declare container for arguments using name n
- * RTS_AG(a) - register it with GC
- * RTS_AC(n,a) - allocate container that can hold n arguments
- * RTS_AT(v,t,a) - register target object v of type t in a
- * RTS_AA(v,t,n,a) - register argument v of type t at position n in a
+ * RTS_AC(n,t,a) - allocate container a that can hold n arguments for target t
+ * RTS_AA(v,n,a) - register argument v corresponding to field f of type t at position n in a
  */
-#define RTS_AD(a)
-#define RTS_AG(a)
-#define RTS_AC(n,a)
-#define RTS_AT(v,t,a)
-#define RTS_AA(v,t,n,a)
+#define RTS_AC(n,t,a)
+#define RTS_AA(v,f,t,n,a)
 
 #ifdef __cplusplus
 extern "C" {

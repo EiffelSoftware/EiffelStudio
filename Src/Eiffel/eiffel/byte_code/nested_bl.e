@@ -14,6 +14,9 @@ inherit
 			unanalyze, generate, analyze, allocates_memory
 		end
 
+	SHARED_TYPE_I
+		export {NONE} all end
+
 feature
 
 	register: REGISTRABLE
@@ -217,6 +220,7 @@ feature
 					-- We are not the last call on the chain.
 				message.unanalyze
 			end
+			separate_register := Void
 		end
 
 	analyze
@@ -292,6 +296,13 @@ feature
 					-- We are not the last call on the chain.
 				message.analyze
 			end
+			if real_type (target.type).is_separate then
+					-- Allocate a register for a container that stores arguments
+					-- to be passed to the scheduler.
+				create separate_register.make (reference_c_type)
+					-- The register is not used right after the call.
+				separate_register.free_register
+			end
 		end
 
 	generate
@@ -330,6 +341,9 @@ feature
 			buf: GENERATION_BUFFER
 			complex_message_target: BOOLEAN
 			is_separate_call: BOOLEAN
+			p: BYTE_LIST [PARAMETER_B]
+			a: PARAMETER_B
+			n: like {BYTE_LIST [PARAMETER_B]}.count
 		do
 			buf := buffer
 				-- Message_target is the target of the message (if message is a nested_bl) and message otherwise.
@@ -355,6 +369,39 @@ feature
 					buf.put_four_character (')', ')', ' ', '{')
 					buf.indent
 					buf.put_new_line
+					buf.put_string ("RTS_AC (")
+					p := message_target.parameters
+					if attached p then
+						n := p.count
+					end
+					buf.put_integer (n)
+					buf.put_two_character (',', ' ')
+					reg.print_register
+					buf.put_two_character (',', ' ')
+					separate_register.print_register
+					buf.put_two_character (')', ';')
+					if attached p then
+						from
+						until
+							n <= 0
+						loop
+							buf.put_new_line
+							buf.put_string ("RTS_AA (")
+							a := p [n]
+							a.print_register
+							buf.put_two_character (',', ' ')
+							a.c_type.generate_typed_field (buf)
+							buf.put_two_character (',', ' ')
+							a.c_type.generate_sk_value (buf)
+							buf.put_two_character (',', ' ')
+							buf.put_integer (n)
+							buf.put_two_character (',', ' ')
+							separate_register.print_register
+							buf.put_two_character (')', ';')
+							n := n - 1
+						end
+					end
+					buf.put_new_line
 					if attached register then
 						buf.put_string ("RTS_CF (Current, ")
 					else
@@ -363,7 +410,8 @@ feature
 					reg.print_register
 					buf.put_two_character (',', ' ')
 					message_target.generate_address_on (reg)
-					buf.put_string (", Void")
+					buf.put_two_character (',', ' ')
+					separate_register.print_register
 					if attached register then
 						buf.put_two_character (',', ' ')
 						register.print_register
@@ -404,6 +452,11 @@ feature
 			-- The expression has at least one call
 
 	allocates_memory: BOOLEAN = True;
+
+feature {NONE} -- Separate feature call
+
+	separate_register: REGISTER;
+			-- Register to store data to be passed to the scheduler
 
 note
 	copyright:	"Copyright (c) 1984-2010, Eiffel Software"

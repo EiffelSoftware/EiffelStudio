@@ -200,36 +200,13 @@ feature -- Byte code generation
 		require
 			result_register_attached: c_type.is_reference implies result_register /= Void
 		local
-			is_nested: BOOLEAN
-			rout_info: ROUT_INFO
 			buf: GENERATION_BUFFER
-			cl_type_i: CL_TYPE_A
-			l_type: TYPE_A
 			return_type: TYPE_C
 		do
-			is_nested := not is_first
 			buf := buffer
-
-			if precursor_type /= Void then
-				l_type := context.real_type (precursor_type)
-				if l_type.is_multi_constrained then
-					check
-						has_multi_constraint_static: has_multi_constraint_static
-					end
-					l_type := context.real_type (multi_constraint_static)
-				end
-				cl_type_i ?= l_type
-				check
-					cl_type_i_attached: cl_type_i /= Void
-				end
-			else
-				cl_type_i := typ
-			end
-
 			return_type := c_type
 			if not return_type.is_void then
-				buf.put_character ('(')
-				buf.put_character ('(')
+				buf.put_two_character ('(', '(')
 				if return_type.is_reference then
 					context.print_argument_register (result_register, buf)
 					buf.put_string (" = ")
@@ -237,7 +214,38 @@ feature -- Byte code generation
 			end
 			buf.put_character ('(')
 			return_type.generate_function_cast (buf, argument_types, True)
+			generate_workbench_address (reg, typ)
+			buf.put_character (')')
+		end
 
+	generate_workbench_address (reg: REGISTRABLE; typ: CL_TYPE_A)
+			-- Generate workbench address of a routine that is called on `reg' of type `typ'.
+		require
+			reg_attached: attached reg
+			typ_attached: attached typ
+		local
+			is_nested: BOOLEAN
+			rout_info: ROUT_INFO
+			buf: GENERATION_BUFFER
+			cl_type_i: CL_TYPE_A
+			l_type: TYPE_A
+		do
+			is_nested := not is_first
+			buf := buffer
+			if attached precursor_type as p then
+				l_type := context.real_type (p)
+				if l_type.is_multi_constrained then
+					check
+						has_multi_constraint_static: has_multi_constraint_static
+					end
+					l_type := context.real_type (multi_constraint_static)
+				end
+				check attached {CL_TYPE_A} l_type as c then
+					cl_type_i := c
+				end
+			else
+				cl_type_i := typ
+			end
 			if
 				Compilation_modes.is_precompiling or else
 				cl_type_i.associated_class.is_precompiled
@@ -280,7 +288,7 @@ feature -- Byte code generation
 				reg.print_register
 				buf.put_character (')')
 			end
-			buf.put_string ("))")
+			buf.put_character (')')
 		end
 
 	generate_workbench_end (result_register: REGISTER)

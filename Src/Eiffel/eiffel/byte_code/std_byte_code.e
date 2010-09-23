@@ -461,6 +461,11 @@ feature -- Analyzis
 				-- Generate termination for once routine
 			generate_once_epilogue (generated_c_feature_name)
 
+			if context.has_request_chain then
+				buf.put_new_line
+				buf.put_string ("RTS_RD (Current);")
+			end
+
 			if compound = Void or else not compound.last.last_all_in_result then
 					-- Remove the GC hooks we've been generated.
 				finish_compound
@@ -1042,7 +1047,33 @@ end
 			inh_assert		: INHERITED_ASSERTION
 			buf				: GENERATION_BUFFER
 			keep_assertions: BOOLEAN
+			i: like arguments.count
 		do
+			buf := buffer
+			if attached arguments as a then
+				from
+					i := a.count
+				until
+					i <= 0
+				loop
+					if real_type (a [i]).is_separate then
+						if not context.has_request_chain then
+							context.set_has_request_chain (True)
+							buf.put_new_line
+							buf.put_string ("RTS_RC (Current);")
+						end
+						buf.put_new_line
+						buf.put_string ("RTS_RS (Current, arg")
+						buf.put_integer (i)
+						buf.put_two_character (')', ';')
+					end
+					i := i - 1
+				end
+				if context.has_request_chain then
+					buf.put_new_line
+					buf.put_string ("RTS_RW (Current);")
+				end
+			end
 			context.set_assertion_type (In_precondition)
 			workbench_mode := context.workbench_mode
 			keep_assertions := workbench_mode or else context.system.keep_assertions
@@ -1053,7 +1084,6 @@ end
 				end
 				generate_invariant_before
 				if have_assert then
-					buf := buffer
 					buf.put_new_line
 					buf.put_string ("if ((RTAL & CK_REQUIRE) || RTAC) {")
 					buf.indent

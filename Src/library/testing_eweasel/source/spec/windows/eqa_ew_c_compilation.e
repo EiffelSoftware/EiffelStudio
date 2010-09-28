@@ -1,30 +1,51 @@
 note
 	description: "[
-						Copy file using RAW_FILE without using $SOURCE as origin for file. Useful to copy from a full path.
-																															]"
+					A C compilation
+																	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "Eiffel test"
-	date: "$Date$"
+	date: "93/08/30"
 	revision: "$Revision$"
 
-class
-	EQA_EW_COPY_FILE_INST
-
-inherit
-	EQA_EW_COPY_BIN_INST
-		redefine
-			use_source_environment_variable
-		end
+class EQA_EW_C_COMPILATION
 
 create
 	make
 
-feature {NONE} -- Implementation
+feature {NONE} -- Initialization
 
-	use_source_environment_variable: BOOLEAN = False
+	make (a_dir, a_save, a_freeze_cmd: STRING a_max_procs: INTEGER; a_test_set: EQA_EW_SYSTEM_TEST_SET)
+			-- Start a new process to do any necessary
+			-- C compilations (freezing) in directory `a_dir',
+			-- using at most `a_max_procs' simultaneous processes
+			-- to do C compilations.
+			-- Write all output from the new process to
+			-- file `a_save'.
+		require
+			directory_not_void: a_dir /= Void
+			save_name_not_void: a_save /= Void
+			not_void: attached a_test_set
+		local
+			l_execution: EQA_EXECUTION
+			l_processor: EQA_EW_OUTPUT_PROCESSOR [EQA_EW_C_COMPILATION_RESULT]
+		do
+			create l_execution.make (a_test_set, a_freeze_cmd)
+			l_execution.add_argument (a_dir)
+			if a_max_procs > 0 then
+				l_execution.add_argument ("-nproc")
+				l_execution.add_argument (a_max_procs.out)
+			end
 
-;note
+			create l_processor.make
+			l_execution.set_output_processor (l_processor)
+			l_execution.set_output_path (<< a_test_set.c_compile_output_name >>)
+			l_execution.launch
+			l_execution.process_output_until_exit
+			a_test_set.set_c_compilation_result (l_processor.current_result)
+		end
+
+note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	copying: "[
@@ -53,5 +74,6 @@ feature {NONE} -- Implementation
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 
 end

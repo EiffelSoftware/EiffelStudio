@@ -103,7 +103,11 @@ feature -- Command
 					execute_ok := True
 					l_arguments := arguments
 					check attached l_arguments end -- Implied by `init_ok' is True, otherwise assertion would be violated in `inst_initialize'
-					create l_execution.make (l_prog, l_arguments, l_execute_cmd, l_exec_dir, input_file_name, l_outfile, a_test)
+					if attached input_file_name as l_input_file_name then
+						create l_execution.make (l_prog, l_arguments, l_execute_cmd, l_exec_dir, l_input_file_name, l_outfile, a_test)
+					else
+						check False end -- input_file_name should not void
+					end
 				else
 					failure_explanation := l_exec_error
 					execute_ok := False

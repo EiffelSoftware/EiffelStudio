@@ -48,7 +48,8 @@ feature -- Command
 			-- Set `execute_ok' to indicate whether successful.
 		local
 			l_save: STRING
-			l_freeze_cmd, l_exec_error, l_dir: detachable STRING
+			l_freeze_cmd, l_dir: detachable IMMUTABLE_STRING_8
+			l_exec_error: detachable STRING
 			l_max_c_processes: INTEGER
 			l_compilation: EQA_EW_C_COMPILATION
 			l_file_system: EQA_FILE_SYSTEM
@@ -57,7 +58,12 @@ feature -- Command
 			check attached l_freeze_cmd end -- Implied by environment values have been set before executing test cases
 			l_freeze_cmd := a_test.environment.substitute_recursive (l_freeze_cmd)
 			l_file_system := a_test.file_system
-			l_exec_error := l_file_system.executable_file_exists (l_freeze_cmd)
+			if attached l_freeze_cmd as l_attached_freeze then
+				l_exec_error := l_file_system.executable_file_exists (l_attached_freeze)
+			else
+				check False end -- l_freeze_cmd should not void
+			end
+
 			if l_exec_error = Void then
 				a_test.increment_c_compile_count
 				l_dir := a_test.environment.get (compilation_dir_name)
@@ -68,9 +74,17 @@ feature -- Command
 				else
 					l_save := a_test.c_compile_output_name
 				end
+				if attached l_freeze_cmd as l_attached_freeze_2 then
+					create l_compilation.make (l_dir, l_save, l_attached_freeze_2, l_max_c_processes, a_test)
+					if attached l_compilation as l_attached_compilation then
+						a_test.set_c_compilation (l_compilation)
+					else
+						check False end -- l_compilation should not void
+					end
+				else
+					check False end -- l_freeze_cmd should not void
+				end
 
-				create l_compilation.make (l_dir, l_save, l_freeze_cmd, l_max_c_processes, a_test)
-				a_test.set_c_compilation (l_compilation)
 				execute_ok := True
 			else
 				failure_explanation := l_exec_error

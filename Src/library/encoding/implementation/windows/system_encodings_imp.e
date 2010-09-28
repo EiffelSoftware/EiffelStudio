@@ -30,7 +30,7 @@ feature -- Access
 			Result := c_console_code_page.out
 		end
 
-	iso_8859_1_code page: STRING
+	iso_8859_1_code_page: STRING
 			-- ISO-8859-1 code page.
 		do
 			Result := "28591"
@@ -112,7 +112,7 @@ invariant
 
 note
 	library:   "Encoding: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

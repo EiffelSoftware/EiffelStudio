@@ -82,6 +82,8 @@ feature -- Access
 				l_tool_bar.extend (create{SD_TOOL_BAR_SEPARATOR}.make)
 
 				l_tool_bar.extend (show_tooltip_button)
+				l_tool_bar.extend (expand_all_button)
+				l_tool_bar.extend (collapse_all_button)
 			end
 			Result := control_tool_bar
 		ensure then
@@ -296,6 +298,81 @@ feature{NONE} -- Actions
 		do
 			if data /= Void then
 				bind_grid
+			end
+		end
+
+	on_expand_all_rows
+			-- Expand all rows in `grid'
+		local
+			i: INTEGER
+			l_row: EV_GRID_ROW
+			l_count: INTEGER
+		do
+			from
+				i := 1
+				l_count := grid.row_count
+			until
+
+				i > l_count
+			loop
+				l_row := grid.row (i)
+				if l_row.is_expandable then
+					if not l_row.is_expanded then
+						l_row.expand
+					end
+				end
+				i := i + 1
+			end
+
+			-- Some times cannot expand all rows in one time, such as
+			-- quering clients of INTEGER. So we expand rows again if needed
+			if not is_all_rows_expanded then
+				on_expand_all_rows
+			end
+		end
+
+	on_collapse_all_rows
+			-- collapse all rows in `grid'
+		local
+			i: INTEGER
+			l_row: EV_GRID_ROW
+			l_count: INTEGER
+		do
+			from
+				i := 1
+				l_count := grid.row_count
+			until
+
+				i > l_count
+			loop
+				l_row := grid.row (i)
+				l_row.collapse
+				i := i + 1
+			end
+		end
+
+	is_all_rows_expanded: BOOLEAN
+			-- Check if all rows expanded
+		local
+			i: INTEGER
+			l_row: EV_GRID_ROW
+			l_count: INTEGER
+		do
+			from
+				Result := True
+				i := 1
+				l_count := grid.row_count
+			until
+
+				i > l_count or not Result
+			loop
+				l_row := grid.row (i)
+				if l_row.is_expandable then
+					if not l_row.is_expanded then
+						Result := False
+					end
+				end
+				i := i + 1
 			end
 		end
 
@@ -1461,6 +1538,42 @@ feature{NONE} -- Implementation
 
 	recursive_button_internal: like recursive_button
 			-- Implementation of `recursive_button'
+
+	expand_all_button: SD_TOOL_BAR_BUTTON
+			-- Button to expand all items in grid
+		do
+			if expand_all_button_internal = Void then
+				create expand_all_button_internal.make
+				expand_all_button_internal.set_pixmap (pixmaps.icon_pixmaps.grid_expand_all_icon)
+				expand_all_button_internal.set_pixel_buffer (pixmaps.icon_pixmaps.grid_expand_all_icon_buffer)
+				expand_all_button_internal.set_tooltip (interface_names.f_expand_all)
+				expand_all_button_internal.select_actions.extend (agent on_expand_all_rows)
+			end
+			Result := expand_all_button_internal
+		ensure
+			result_attached: Result /= Void
+		end
+
+	expand_all_button_internal: like expand_all_button
+			-- Implementation of `expand_all_button'
+
+	collapse_all_button: SD_TOOL_BAR_BUTTON
+			-- Button to collapse all items in grid
+		do
+			if collapse_all_button_internal = Void then
+				create collapse_all_button_internal.make
+				collapse_all_button.set_pixmap (pixmaps.icon_pixmaps.grid_collapse_all_icon)
+				collapse_all_button.set_pixel_buffer (pixmaps.icon_pixmaps.grid_collapse_all_icon_buffer)
+				collapse_all_button.set_tooltip (interface_names.f_collapse_all)
+				collapse_all_button_internal.select_actions.extend (agent on_collapse_all_rows)
+			end
+			Result := collapse_all_button_internal
+		ensure
+			result_attached: Result /= Void
+		end
+
+	collapse_all_button_internal: like collapse_all_button
+			-- Implementation of `collapse_all_button'
 
 feature{NONE} -- Initialization
 

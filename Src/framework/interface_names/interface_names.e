@@ -427,8 +427,10 @@ feature -- Accelerator, focus label and menu name
 	f_Create_new_feature: STRING_32		do Result := locale.translation("Add a new feature")	end
 	f_create_new_watch: STRING_32		do Result := locale.translation ("Create New watch") end
 	f_clear_watch_tool_expressions: STRING_32	do Result := locale.translation ("Clear Expressions") end
+	f_collapse_all: STRING_32 			do Result := locale.translation ("Collapse all rows in grid") end
 	f_copy_watch_tool_selected_expressions_to_clipboard: STRING_32	do Result := locale.translation ("Copy Selected Expressions To Clipboard") end
 
+	f_expand_all: STRING_32				do Result := locale.translation ("Expand all rows in grid") end
 	f_export_watch_tool_expressions_to_file: STRING_32	do Result := locale.translation ("Export Expressions To File") end
 	f_import_watch_tool_expressions_from_file: STRING_32	do Result := locale.translation ("Import Expressions From File") end
 

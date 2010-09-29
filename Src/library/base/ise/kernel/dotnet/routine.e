@@ -103,7 +103,7 @@ feature -- Access
 			--| FIXME compiler support needed!
 		end
 
-	empty_operands: OPEN_ARGS
+	empty_operands: attached OPEN_ARGS
 			-- Empty tuple matching open operands
 		do
 			create Result

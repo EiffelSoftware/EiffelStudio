@@ -172,7 +172,7 @@ feature -- Query
 			dv: DUMP_VALUE
 		do
 			dv := last_dump_value
-			if dv = Void then
+			if dv = Void and  debugger_manager.application_is_executing then
 				dv := associated_dump_value
 			end
 			if dv /= Void then

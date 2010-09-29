@@ -4794,6 +4794,38 @@ feature -- Icons
 			Result := named_icon_buffer (tab_close_all_name)
 		end
 
+	frozen grid_expand_all_icon: EV_PIXMAP
+			-- Access to `expand_all' pixmap.
+		require
+			has_named_icon: has_named_icon (grid_expand_all_name)
+		once
+			Result := named_icon (grid_expand_all_name)
+		end
+
+	frozen grid_expand_all_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to `expand_all' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (grid_expand_all_name)
+		once
+			Result := named_icon_buffer (grid_expand_all_name)
+		end
+
+	frozen grid_collapse_all_icon: EV_PIXMAP
+			-- Access to `collapse_all' pixmap.
+		require
+			has_named_icon: has_named_icon (grid_collapse_all_name)
+		once
+			Result := named_icon (grid_collapse_all_name)
+		end
+
+	frozen grid_collapse_all_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to `collapse_all' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (grid_collapse_all_name)
+		once
+			Result := named_icon_buffer (grid_collapse_all_name)
+		end
+
 	frozen view_previous_icon: EV_PIXMAP
 			-- Access to 'previous' pixmap.
 		require
@@ -8694,6 +8726,8 @@ feature -- Constants: Icon names
 	priority_low_name: STRING = "priority low"
 	tab_close_name: STRING = "tab close"
 	tab_close_all_name: STRING = "tab close all"
+	grid_expand_all_name: STRING = "grid expand all"
+	grid_collapse_all_name: STRING = "grid collapse all"
 	view_previous_name: STRING = "view previous"
 	view_next_name: STRING = "view next"
 	view_editor_name: STRING = "view editor"
@@ -9118,6 +9152,8 @@ feature {NONE} -- Basic operations
 			a_table.put ([{NATURAL_8} 29, {NATURAL_8} 11], priority_low_name)
 			a_table.put ([{NATURAL_8} 30, {NATURAL_8} 11], tab_close_name)
 			a_table.put ([{NATURAL_8} 31, {NATURAL_8} 11], tab_close_all_name)
+			a_table.put ([{NATURAL_8} 32, {NATURAL_8} 11], grid_expand_all_name)
+			a_table.put ([{NATURAL_8} 33, {NATURAL_8} 11], grid_collapse_all_name)
 			a_table.put ([{NATURAL_8} 1, {NATURAL_8} 12], view_previous_name)
 			a_table.put ([{NATURAL_8} 2, {NATURAL_8} 12], view_next_name)
 			a_table.put ([{NATURAL_8} 3, {NATURAL_8} 12], view_editor_name)

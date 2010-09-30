@@ -1754,8 +1754,7 @@ feature -- Basic operations
 		local
 			a: WEL_CHARACTER_ARRAY
 		do
-			create Result.make (1,
-				bitmap_info.header.size_image)
+			create Result.make_filled ('%U', 1, bitmap_info.header.size_image)
 			create a.make (Result)
 			cwin_get_di_bits (item, a_bitmap.item, start_scan,
 				scan_lines, a.item, bitmap_info.item, usage)

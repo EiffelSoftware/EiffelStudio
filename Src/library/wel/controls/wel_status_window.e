@@ -146,7 +146,7 @@ feature -- Status report
 		local
 			a: WEL_INTEGER_ARRAY
 		do
-			create Result.make (0, number_of_parts - 1)
+			create Result.make_filled (0, 0, number_of_parts - 1)
 			create a.make (Result)
 			{WEL_API}.send_message (item, Sb_getparts, to_wparam (number_of_parts), a.item)
 			Result := a.to_array (0)
@@ -344,7 +344,7 @@ feature {NONE} -- Implementation
 			a: WEL_INTEGER_ARRAY
 			borders: ARRAY [INTEGER]
 		do
-			create borders.make (0, 2)
+			create borders.make_filled (0, 0, 2)
 			create a.make (borders)
 			{WEL_API}.send_message (item, Sb_getborders, to_wparam (0), a.item)
 			Result := a.to_array (0).item (index)

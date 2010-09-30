@@ -124,7 +124,7 @@ feature -- Status report
 			result_count: INTEGER
 		do
 			if selected_count > 0 then
-				create Result.make (0, selected_count - 1)
+				create Result.make_filled (0, 0, selected_count - 1)
 				from
 					result_count := 0
 					index := {WEL_API}.send_message_result_integer (item, Lvm_getnextitem,
@@ -138,7 +138,7 @@ feature -- Status report
 					result_count := result_count + 1
 				end
 			else
-				create Result.make (1,0)
+				create Result.make_empty
 			end
 		ensure
 			result_not_void: Result /= Void

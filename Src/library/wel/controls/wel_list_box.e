@@ -55,7 +55,7 @@ feature -- Access
 		local
 			i: INTEGER
 		do
-			create Result.make (0, count - 1)
+			create Result.make_filled ("", 0, count - 1)
 			from
 				i := Result.lower
 			until

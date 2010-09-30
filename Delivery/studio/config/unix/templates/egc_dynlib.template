@@ -3,6 +3,9 @@
  ********************/
 
 #include "egc_dynlib.h"
+#include "eif_sig.h"
+
+extern void egc_init_plug();
 
 static short is_rt_initialized = 0;
 

@@ -115,7 +115,7 @@ feature -- Access
 			i: INTEGER
 		do
 			from
-				create Result.make (0,
+				create Result.make_filled (0, 0,
 					cwel_paraformat_get_ctabcount (item) - 1)
 				i := Result.lower
 			until
@@ -261,7 +261,7 @@ feature -- Element change
 			i: INTEGER
 		do
 			from
-				create a.make (0, Max_tab_stops - 1)
+				create a.make_filled (0, 0, Max_tab_stops - 1)
 				i := a.lower
 			until
 				i = a.count

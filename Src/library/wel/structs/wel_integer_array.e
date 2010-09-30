@@ -58,7 +58,7 @@ feature -- Conversion
 			from
 				i := a_lower
 				nb := a_lower + count - 1
-				create Result.make (a_lower, nb)
+				create Result.make_filled (0, a_lower, nb)
 			until
 				i > nb
 			loop

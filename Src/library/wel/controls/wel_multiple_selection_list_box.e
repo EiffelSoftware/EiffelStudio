@@ -154,7 +154,7 @@ feature -- Status report
 			l_result: WEL_INTEGER_ARRAY
 		do
 			local_count_selected_items := count_selected_items
-			create Result.make (0, local_count_selected_items - 1)
+			create Result.make_filled (0, 0, local_count_selected_items - 1)
 			if local_count_selected_items /= 0 then
 				create l_result.make (Result)
 	
@@ -184,7 +184,7 @@ feature -- Status report
 			i: INTEGER
 		do
 			a := selected_items
-			create Result.make (a.lower, a.upper)
+			create Result.make_filled ("", a.lower, a.upper)
 			from
 				i := a.lower
 			until

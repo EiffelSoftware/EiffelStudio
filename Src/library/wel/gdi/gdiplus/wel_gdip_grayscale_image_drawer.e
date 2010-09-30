@@ -167,7 +167,7 @@ feature {NONE} -- Implementation
 			l_sum: REAL
 		do
 			create Result.make
-			create l_temp_array.make (0, 4)
+			create l_temp_array.make_filled (0.0, 0, 4)
 			from
 				l_j := 0
 			until

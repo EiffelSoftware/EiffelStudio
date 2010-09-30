@@ -66,7 +66,7 @@ feature -- Query
 		require
 			valid: 0 <= a_x and a_x <= 4
 		do
-			create Result.make (0, 4)
+			create Result.make_filled (0.0, 0, 4)
 			Result [0] := m (a_x, 0)
 			Result [1] := m (a_x, 1)
 			Result [2] := m (a_x, 2)

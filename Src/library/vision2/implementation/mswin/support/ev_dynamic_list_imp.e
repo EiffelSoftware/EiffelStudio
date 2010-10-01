@@ -19,12 +19,10 @@ feature -- Access
 
 	i_th (i: INTEGER): detachable like item
 			-- Item at `i'-th position.
-		local
-			l_item: detachable G_IMP
 		do
-			l_item ?= ev_children.i_th (i)
-			check l_item /= Void end
-			Result ?= l_item.interface
+			if attached ev_children.i_th (i) as l_item and then attached {like item} l_item.interface as l_result then
+				Result := l_result
+			end
 		end
 
 feature -- Measurement
@@ -39,13 +37,11 @@ feature {NONE} -- Implementation
 
 	insert_i_th (v: attached like item; i: INTEGER)
 			-- Insert `v' at position `i'.
-		local
-			l_item: detachable G_IMP
 		do
-			l_item ?= v.implementation
-			check l_item /= Void end
-			ev_children.go_i_th (i)
-			ev_children.put_left (l_item)
+			check attached {G_IMP} v.implementation as l_item then
+				ev_children.go_i_th (i)
+				ev_children.put_left (l_item)
+			end
 		end
 
 	remove_i_th (i: INTEGER)

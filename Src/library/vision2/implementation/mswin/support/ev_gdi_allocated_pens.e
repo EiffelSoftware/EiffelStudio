@@ -26,8 +26,7 @@ create
 
 feature -- Access
 
-	get (a_dashed_mode: INTEGER; a_width: INTEGER;
-			a_color: WEL_COLOR_REF): WEL_PEN
+	get (a_dashed_mode: INTEGER; a_width: INTEGER; a_color: WEL_COLOR_REF): WEL_PEN
 			-- `Result' is WEL_PEN with `a_dashed_mode' as mode, `a_width' as
 			-- width, and `a_color' as color.
 			--| If an identical pen exists in our system then we return that

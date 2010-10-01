@@ -52,6 +52,8 @@ feature -- Initlization
 
 	init_from_cursor (a_cursor: EV_CURSOR)
 			-- Initialize from `a_cursor'
+		obsolete
+			"Use EV_POINTER_SYLE directly now."
 		do
 			init_from_pixmap (a_cursor, a_cursor.x_hotspot, a_cursor.y_hotspot)
 		end

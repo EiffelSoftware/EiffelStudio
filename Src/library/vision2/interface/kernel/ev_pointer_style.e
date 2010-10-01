@@ -65,14 +65,13 @@ feature {NONE} -- Initlization
 
 	make_with_cursor (a_cursor: EV_CURSOR)
 			-- Initialize from `a_cursor'.
-		local
-			l_temp: EV_CURSOR
+		obsolete
+			"Use EV_POINTER_STYLE directly now."
 		do
 			default_create
-			-- We convert from EV_CURSOR, `a_cursor' maybe void.
-			l_temp := a_cursor
-			if l_temp /= Void then
-				implementation.init_from_cursor (l_temp)
+				-- We convert from EV_CURSOR, `a_cursor' maybe void.
+			if a_cursor /= Void then
+				implementation.init_from_cursor (a_cursor)
 			end
 		end
 

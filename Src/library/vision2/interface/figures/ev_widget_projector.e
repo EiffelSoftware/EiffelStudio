@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 			a_widget_not_void: a_widget /= Void
 		do
 			make_with_drawable (a_drawable)
-			create draw_routines.make (0, 20)
+			create draw_routines.make_filled (Void, 0, 20)
 			make_with_world (a_world)
 			register_basic_figures
 			widget := a_widget

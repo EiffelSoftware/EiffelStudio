@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 		local
 			l_filename: like filename
 		do
-			create draw_routines.make (0, 20)
+			create draw_routines.make_filled (Void, 0, 20)
 			make_with_world (a_world)
 			set_margins (Default_left_margin, Default_bottom_margin)
 			set_page_size (Letter, False)

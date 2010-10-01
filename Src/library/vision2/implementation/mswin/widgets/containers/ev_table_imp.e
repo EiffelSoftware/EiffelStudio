@@ -74,7 +74,7 @@ feature {NONE} -- Initialization
 			columns := 1
 			rows := 1
 			create ev_children.make (2)
-			create internal_array.make (1, 1)
+			create internal_array.make_filled (Void, 1, 1)
 				-- Ensure that `internal_item_list' is
 				-- not `Void'.
 			rebuild_internal_item_list

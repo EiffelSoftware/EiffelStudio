@@ -23,8 +23,8 @@ feature {NONE} -- Initialization
 	default_create
 			-- Create an EV_SCALED_FONT_FACTORY
 		do
-			create scaled_fonts.make (1, max_table_size)
-			create orginal_fonts.make (1, max_table_size)
+			create scaled_fonts.make_filled (Void, 1, max_table_size)
+			create orginal_fonts.make_filled (Void, 1, max_table_size)
 		end
 
 feature -- Access

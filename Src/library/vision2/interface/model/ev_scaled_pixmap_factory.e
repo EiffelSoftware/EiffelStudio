@@ -23,8 +23,8 @@ feature {NONE} -- Initialization
 	default_create
 			-- Create an EV_SCALED_PIXMAP_FACTORY
 		do
-			create scaled_pixmaps.make (1, max_table_size)
-			create orginal_pixmaps.make (1, max_table_size)
+			create scaled_pixmaps.make_filled (Void, 1, max_table_size)
+			create orginal_pixmaps.make_filled (Void, 1, max_table_size)
 		end
 
 feature -- Access

@@ -757,9 +757,9 @@ feature -- Drawing operations
 			coords: EV_COORDINATE
 		do
 			if is_closed then
-				create flat_points.make (1, 2 * points.count + 2)
+				create flat_points.make_filled (0, 1, 2 * points.count + 2)
 			else
-				create flat_points.make (1, 2 * points.count)
+				create flat_points.make_filled (0, 1, 2 * points.count)
 			end
 			flat_index := 1
 			from
@@ -915,7 +915,7 @@ feature -- Filling operations
 			i, flat_i: INTEGER
 			coords: EV_COORDINATE
 		do
-			create flat_points.make (1, 2 * points.count)
+			create flat_points.make_filled (0, 1, 2 * points.count)
 			flat_i := 1
 			from
 				i := points.lower

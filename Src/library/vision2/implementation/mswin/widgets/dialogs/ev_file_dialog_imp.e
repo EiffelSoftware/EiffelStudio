@@ -173,8 +173,8 @@ feature {NONE} -- Implementation
 					-- Filters are now connected before showing the window based
 					-- on the current contents of `filters', as they do not need
 					-- to be updated dynamically.
-				create filter_names.make (1, filters.count)
-				create filter_patterns.make (1, filters.count)
+				create filter_names.make_filled ("", 1, filters.count)
+				create filter_patterns.make_filled ("", 1, filters.count)
 				from
 					filters.start
 				until

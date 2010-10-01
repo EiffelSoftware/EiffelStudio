@@ -260,8 +260,8 @@ feature {EV_ANY_I} -- Status Setting
 			last_load_successful := True
 			if rtf_text.item (1) = rtf_open_brace_character then
 				create format_stack.make (8)
-				create all_fonts.make (0, 50)
-				create all_colors.make (0, 50)
+				create all_fonts.make_filled (Void, 0, 50)
+				create all_colors.make_filled (Void, 0, 50)
 					-- If there are no color table in the RTF, we default to the
 					-- foreground color of `rich_text'.
 				all_colors.force (l_rich_text.foreground_color, 0)
@@ -491,38 +491,40 @@ feature {NONE} -- Implementation
 
 				if first_color_is_auto and l_current_format.text_color = 0 then
 					character_format.set_color (l_rich_text.foreground_color)
-				else
-					character_format.set_color (all_colors.item (l_current_format.text_color))
+				elseif attached all_colors.item (l_current_format.text_color) as l_color then
+					character_format.set_color (l_color)
 				end
 
 				if first_color_is_auto and l_current_format.highlight_color = 0 then
 					character_format.set_background_color (l_rich_text.background_color)
-				elseif l_current_format.highlight_set then
-					character_format.set_background_color (all_colors.item (l_current_format.highlight_color))
+				elseif l_current_format.highlight_set and then attached all_colors.item (l_current_format.highlight_color) as l_color then
+					character_format.set_background_color (l_color)
 				end
 
 				check all_fonts /= Void end
-				a_font := all_fonts.item (l_current_format.character_format).twin
-				if l_current_format.is_bold then
-					a_font.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
-				end
-				if l_current_format.is_italic then
-					a_font.set_shape ({EV_FONT_CONSTANTS}.shape_italic)
-				end
-				create effects
-				if l_current_format.is_striked_out then
-					effects.enable_striked_out
-				end
-				if l_current_format.is_underlined then
-					effects.enable_underlined
-				end
-				effects.set_vertical_offset (half_points_to_pixels (l_current_format.vertical_offset))
-				character_format.set_effects (effects)
+				if attached all_fonts.item (l_current_format.character_format) as l_font then
+					a_font := l_font.twin
+					if l_current_format.is_bold then
+						a_font.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
+					end
+					if l_current_format.is_italic then
+						a_font.set_shape ({EV_FONT_CONSTANTS}.shape_italic)
+					end
+					create effects
+					if l_current_format.is_striked_out then
+						effects.enable_striked_out
+					end
+					if l_current_format.is_underlined then
+						effects.enable_underlined
+					end
+					effects.set_vertical_offset (half_points_to_pixels (l_current_format.vertical_offset))
+					character_format.set_effects (effects)
 
-					-- RTF uses half points to specify font heights so divide by 2.
-				a_font.set_height_in_points (l_current_format.font_height // 2)
-				character_format.set_font (a_font)
-				all_formats.put (character_format, l_current_format.character_format_out)
+						-- RTF uses half points to specify font heights so divide by 2.
+					a_font.set_height_in_points (l_current_format.font_height // 2)
+					character_format.set_font (a_font)
+					all_formats.put (character_format, l_current_format.character_format_out)
+				end
 			end
 			if attached all_paragraph_formats and then (all_paragraph_formats.is_empty or else not all_paragraph_formats.has (l_current_format.paragraph_format_out)) then
 				create paragraph_format
@@ -952,10 +954,10 @@ feature {NONE} -- Implementation
 	last_colorblue: INTEGER
 		-- Current values read in by parsing RTF.
 
-	all_fonts: detachable ARRAY [EV_FONT] note option: stable attribute end
+	all_fonts: detachable ARRAY [detachable EV_FONT] note option: stable attribute end
 		-- All fonts retrieved during parsing, accessible through their index in the font table.
 
-	all_colors: detachable ARRAY [EV_COLOR] note option: stable attribute end
+	all_colors: detachable ARRAY [detachable EV_COLOR] note option: stable attribute end
 		-- All colors retrieved during parsing, accessible through their index in the color table.
 
 	all_formats: detachable HASH_TABLE [EV_CHARACTER_FORMAT, STRING_32] note option: stable attribute end

@@ -45,7 +45,7 @@ feature {NONE} -- Implementation
 	v2_to_wel_table: ARRAY [INTEGER]
 			-- WEL keycodes indexed by Vision2 key code.
 		once
-			create Result.make (Key_0, Key_menu)
+			create Result.make_filled (0, Key_0, Key_menu)
 			Result.put (48, Key_0)
 			Result.put (49, Key_1)
 			Result.put (50, Key_2)

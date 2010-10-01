@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 			create a_printer.make_with_context (print_dc)
 			drawable := a_printer
 
-			create draw_routines.make (0, 20)
+			create draw_routines.make_filled (Void, 0, 20)
 			make_with_world (a_world)
 			make
 		end

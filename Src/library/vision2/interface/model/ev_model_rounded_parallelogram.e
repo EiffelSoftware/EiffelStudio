@@ -139,13 +139,13 @@ feature {EV_MODEL_DRAWER} -- Implementation
 		local
 			i: INTEGER
 		do
-			create Result.make (1,12)
+			create Result.make_empty
 			from
 				i := 0
 			until
 				i > 11
 			loop
-				Result.put (point_array.item (i + 4), i + 1)
+				Result.force (point_array.item (i + 4), i + 1)
 				i := i + 1
 			end
 		end

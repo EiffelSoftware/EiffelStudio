@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 	make
 			-- Initialize `Current'.
 		do
-			create draw_routines.make (0, 20)
+			create draw_routines.make_filled (Void, 0, 20)
 			register_basic_figures
 			set_is_initialized (True)
 		end

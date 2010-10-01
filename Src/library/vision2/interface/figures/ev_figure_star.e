@@ -67,7 +67,7 @@ feature -- Implementation
 			from
 				radius := distance (center_point.x_abs, center_point.y_abs,
 					corner_point.x_abs, corner_point.y_abs)
-				create Result.make (1, line_count)
+				create Result.make_empty
 				n := 1
 				ang_step := 2 * Pi / line_count
 				ang := line_angle (center_point.x_abs, center_point.y_abs,
@@ -78,7 +78,7 @@ feature -- Implementation
 				create crd.set (
 					center_point.x_abs + delta_x (ang, radius),
 					center_point.y_abs + delta_y (ang, radius))
-				Result.put (crd, n)
+				Result.force (crd, n)
 				ang := ang + ang_step
 				n := n + 1
 			end
@@ -121,7 +121,7 @@ feature -- Implementation
 				max_y - min_y + 1
 			)
 		end
-		
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

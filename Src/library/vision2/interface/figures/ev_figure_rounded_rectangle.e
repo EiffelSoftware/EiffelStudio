@@ -91,19 +91,19 @@ feature {EV_FIGURE_DRAWER, EV_FIGURE_POSTSCRIPT_DRAWER} -- Implementation
 			end
 
 			ror := (r * Radius_offset).truncated_to_integer
-			create Result.make (1, 12)
-			Result.put (create {EV_COORDINATE}.set (ax + r, ay), 1)
-			Result.put (create {EV_COORDINATE}.set (ax + ror, ay + ror), 2)
-			Result.put (create {EV_COORDINATE}.set (ax, ay + r), 3)
-			Result.put (create {EV_COORDINATE}.set (ax, by - r), 4)
-			Result.put (create {EV_COORDINATE}.set (ax + ror, by - ror), 5)
-			Result.put (create {EV_COORDINATE}.set (ax + r, by), 6)
-			Result.put (create {EV_COORDINATE}.set (bx - r, by), 7)
-			Result.put (create {EV_COORDINATE}.set (bx - ror, by - ror), 8)
-			Result.put (create {EV_COORDINATE}.set (bx, by - r), 9)
-			Result.put (create {EV_COORDINATE}.set (bx, ay + r), 10)
-			Result.put (create {EV_COORDINATE}.set (bx - ror, ay + ror), 11)
-			Result.put (create {EV_COORDINATE}.set (bx - r, ay), 12)
+			create Result.make_empty
+			Result.force (create {EV_COORDINATE}.set (ax + r, ay), 1)
+			Result.force (create {EV_COORDINATE}.set (ax + ror, ay + ror), 2)
+			Result.force (create {EV_COORDINATE}.set (ax, ay + r), 3)
+			Result.force (create {EV_COORDINATE}.set (ax, by - r), 4)
+			Result.force (create {EV_COORDINATE}.set (ax + ror, by - ror), 5)
+			Result.force (create {EV_COORDINATE}.set (ax + r, by), 6)
+			Result.force (create {EV_COORDINATE}.set (bx - r, by), 7)
+			Result.force (create {EV_COORDINATE}.set (bx - ror, by - ror), 8)
+			Result.force (create {EV_COORDINATE}.set (bx, by - r), 9)
+			Result.force (create {EV_COORDINATE}.set (bx, ay + r), 10)
+			Result.force (create {EV_COORDINATE}.set (bx - ror, ay + ror), 11)
+			Result.force (create {EV_COORDINATE}.set (bx - r, ay), 12)
 		end
 
 	Radius_offset: DOUBLE = 0.2928932188134

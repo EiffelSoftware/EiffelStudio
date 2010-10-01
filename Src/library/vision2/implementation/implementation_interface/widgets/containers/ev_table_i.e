@@ -314,7 +314,7 @@ feature {EV_ANY, EV_ANY_I} -- Status settings
 			col_index, row_index, column_max, row_max: INTEGER
 			l_item: detachable EV_WIDGET
 		do
-			create new.make (1, a_column * a_row)
+			create new.make_filled (Void, 1, a_column * a_row)
 			column_max := columns.min (a_column)
 			row_max := rows.min (a_row)
 

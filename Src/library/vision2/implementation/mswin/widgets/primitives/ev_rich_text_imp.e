@@ -1284,7 +1284,7 @@ feature -- Status setting
 
 					-- The Windows rich edit only supports 32 positions to be set for tab stops. After that,
 					-- the default is reverted to.
-				create array.make (1, 32)
+				create array.make_filled (0, 1, 32)
 				from
 					counter := 1
 				until

@@ -118,7 +118,7 @@ feature -- Access
 	Key_strings: ARRAY [STRING_32]
 			-- String representations of all key codes.
 		once
-			create Result.make (Key_0, Key_menu)
+			create Result.make_filled ("", Key_0, Key_menu)
 			Result.put ("0", Key_0)
 			Result.put ("1", Key_1)
 			Result.put ("2", Key_2)

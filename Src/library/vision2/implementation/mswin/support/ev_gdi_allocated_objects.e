@@ -24,14 +24,16 @@ feature -- Initialization
 
 	default_create
 			-- Default initialization feature.
+		local
+			l_default: detachable G
 		do
 				-- Allocate space for `Max_allocated_objects' objects.
-			create allocated_objects.make (1, Max_allocated_objects)
+			create allocated_objects.make_filled (l_default, 1, Max_allocated_objects)
 		end
 
 feature {NONE} -- Implementation
 
-	allocated_objects: ARRAY [G]
+	allocated_objects: ARRAY [detachable G]
 			-- Sorted array (The most used item at the end of the array)
 			-- of all objects located in `allocated_objects'.
 
@@ -55,7 +57,7 @@ feature {NONE} -- Implementation
 		local
 			i: INTEGER
 			object_hash_code: INTEGER
-			curr_item: G
+			curr_item: detachable G
 			curr_item_value: INTEGER
 			previous_item_value: INTEGER
 			index_item_to_remove: INTEGER
@@ -71,28 +73,29 @@ feature {NONE} -- Implementation
 				found_object_index /= 0 or else i > allocated_objects_number
 			loop
 				curr_item := allocated_objects.item(i)
-				check curr_item /= Void end
-				if (object_hash_code = curr_item.hash_code) and then
-					an_object.is_equal (curr_item)
-				then
-					found_object_index := i
-				else
-						-- Can't find the object, so track the element to
-						-- be deleted in case a new cell is required.
-					curr_item_value := curr_item.value
-					if curr_item_value < value_item_to_remove then
-						value_item_to_remove := curr_item_value
-						index_item_to_remove := i
-					end
-
-						-- Swap Current and Previous if they are not ordered.
-					if (i > 1) and then (curr_item_value > previous_item_value) then
-						swap_allocated_objects (i, i-1)
-						if index_item_to_remove = i then
-							index_item_to_remove := i - 1
-						end
-						if index_item_to_remove = i-1 then
+				check curr_item /= Void then
+					if (object_hash_code = curr_item.hash_code) and then
+						an_object.is_equal (curr_item)
+					then
+						found_object_index := i
+					else
+							-- Can't find the object, so track the element to
+							-- be deleted in case a new cell is required.
+						curr_item_value := curr_item.value
+						if curr_item_value < value_item_to_remove then
+							value_item_to_remove := curr_item_value
 							index_item_to_remove := i
+						end
+
+							-- Swap Current and Previous if they are not ordered.
+						if (i > 1) and then (curr_item_value > previous_item_value) then
+							swap_allocated_objects (i, i-1)
+							if index_item_to_remove = i then
+								index_item_to_remove := i - 1
+							end
+							if index_item_to_remove = i-1 then
+								index_item_to_remove := i
+							end
 						end
 					end
 				end
@@ -112,7 +115,7 @@ feature {NONE} -- Implementation
 			-- Add `new_object' to the array of allocated objects.
 		local
 			index_new_item: INTEGER
-			l_item: G
+			l_item: detachable G
 		do
 			check
 				not (allocated_objects_number > Max_allocated_objects)
@@ -121,8 +124,9 @@ feature {NONE} -- Implementation
 				index_new_item := index_lightest_object
 					-- Free the object that will be replaced...	
 				l_item := allocated_objects.item (index_new_item)
-				check l_item /= Void end
-				l_item.delete
+				check l_item /= Void then
+					l_item.delete
+				end
 			else
 				allocated_objects_number := allocated_objects_number + 1
 				index_new_item := allocated_objects_number
@@ -139,23 +143,24 @@ feature {NONE} -- Implementation
 	get_previously_allocated_object (real_object_index: INTEGER): WEL_GDI_ANY
 			-- Retrieve the WEL object located in the array at index `real_object_index'.
 		local
-			real_object: G
+			real_object: detachable G
 			l_result: detachable WEL_GDI_ANY
 		do
 				-- Requested pen has been already allocated. We return the
 				-- item found in our table.
 			real_object := allocated_objects.item (real_object_index)
-			check real_object /= Void end
-			real_object.update (cache_time)
+			check real_object /= Void then
+				real_object.update (cache_time)
 
-			l_result ?= real_object.item
-			check l_result /= Void end
-			Result := l_result
-			Result.increment_reference
+				l_result ?= real_object.item
+				check l_result /= Void end
+				Result := l_result
+				Result.increment_reference
 
-			debug("VISION2_WINDOWS_GDI")
-				successful_cache := successful_cache + 1
-				io.put_string ("retrieved cached version ")
+				debug("VISION2_WINDOWS_GDI")
+					successful_cache := successful_cache + 1
+					io.put_string ("retrieved cached version ")
+				end
 			end
 		end
 
@@ -169,8 +174,8 @@ feature {NONE} -- Implementation
 				second_index >= 1 and then
 				second_index <= allocated_objects_number
 		local
-			first_object: G
-			second_object: G
+			first_object: detachable G
+			second_object: detachable G
 		do
 			first_object := allocated_objects.item (first_index)
 			second_object := allocated_objects.item (second_index)

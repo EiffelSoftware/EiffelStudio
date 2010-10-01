@@ -162,7 +162,7 @@ feature -- Implementation
 			coy := co.y_precise
 			from
 				radius := distance (cex, cey, cox, coy)
-				create Result.make (1, side_count)
+				create Result.make_empty
 				i := 1
 				nb := side_count
 				ang_step := pi_times_two / side_count
@@ -173,7 +173,7 @@ feature -- Implementation
 				create crd.make_precise (
 					cex + delta_x (ang, radius),
 					cey + delta_y (ang, radius))
-				Result.put (crd, i)
+				Result.force (crd, i)
 				ang := ang + ang_step
 				i := i + 1
 			end

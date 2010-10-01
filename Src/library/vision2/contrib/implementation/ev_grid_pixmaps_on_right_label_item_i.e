@@ -87,9 +87,9 @@ feature {EV_GRID_PIXMAPS_ON_RIGHT_LABEL_ITEM} -- change
 	set_pixmaps_on_right_count (c: INTEGER)
 		do
 			if attached pixmaps_on_right as l_pixmaps then
-				l_pixmaps.conservative_resize (1, c)
+				l_pixmaps.conservative_resize_with_default (Void, 1, c)
 			else
-				create pixmaps_on_right.make (1, c)
+				create pixmaps_on_right.make_filled (Void, 1, c)
 			end
 		end
 

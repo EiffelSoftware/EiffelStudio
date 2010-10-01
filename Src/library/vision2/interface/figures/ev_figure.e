@@ -108,7 +108,7 @@ feature -- Access
 			n: INTEGER
 		do
 			from
-				create Result.make (1, points.count)
+				create Result.make_empty
 				n := 1
 			until
 				n > points.count

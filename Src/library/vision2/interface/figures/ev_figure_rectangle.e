@@ -47,7 +47,7 @@ feature -- Events
 				h := (point_b.y_abs - point_a.y_abs)
 			end
 
-			create Result.make (1, 4)
+			create Result.make_empty
 			create c.set (xa, ya)
 			Result.force (c, 1)
 			create c.set ((cos_a * w).rounded + xa,
@@ -135,7 +135,7 @@ feature -- Status report
 			end
 			create Result.set (left, top)
 		end
-		
+
 	bounding_box: EV_RECTANGLE
 			-- Smallest orthogonal rectangular area `Current' fits in.
 		local

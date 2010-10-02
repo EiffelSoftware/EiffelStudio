@@ -11,7 +11,7 @@ note
 		"$Revision$"
 
 class
-	EV_LITE_ACTION_SEQUENCE [EVENT_DATA -> TUPLE create default_create end]
+	EV_LITE_ACTION_SEQUENCE [EVENT_DATA -> detachable TUPLE create default_create end]
 
 inherit
 	ACTION_SEQUENCE [EVENT_DATA]

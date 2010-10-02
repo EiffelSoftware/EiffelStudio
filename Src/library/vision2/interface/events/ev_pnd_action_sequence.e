@@ -11,7 +11,7 @@ class
 	EV_PND_ACTION_SEQUENCE
 
 inherit
-	EV_LITE_ACTION_SEQUENCE [TUPLE [pebble: ANY]]
+	EV_LITE_ACTION_SEQUENCE [detachable TUPLE [pebble: ANY]]
 		redefine
 			call
 		end
@@ -30,7 +30,7 @@ feature -- Basic operations
 			-- If `is_paused' delay execution until `resume'.
 			-- Stop at current point in list on `abort'.
 		local
-			snapshot: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [ANY]]]
+			snapshot: ARRAYED_LIST [PROCEDURE [ANY, detachable TUPLE [ANY]]]
 			l_is_accepting: BOOLEAN
 			l_tuple: TUPLE [ANY]
 		do

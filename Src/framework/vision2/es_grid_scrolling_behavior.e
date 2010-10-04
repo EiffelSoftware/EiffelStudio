@@ -49,11 +49,15 @@ feature -- change
 	enable_mouse_wheel
 		require
 			mouse_wheel_disabled: not mouse_wheel_enabled
+		local
+			l_on_mouse_wheel_action_agent: like on_mouse_wheel_action_agent
 		do
-			if on_mouse_wheel_action_agent = Void then
-				on_mouse_wheel_action_agent := agent on_mouse_wheel_action
+			l_on_mouse_wheel_action_agent := on_mouse_wheel_action_agent
+			if l_on_mouse_wheel_action_agent = Void then
+				l_on_mouse_wheel_action_agent := agent on_mouse_wheel_action
+				on_mouse_wheel_action_agent := l_on_mouse_wheel_action_agent
 			end
-			grid.mouse_wheel_actions.extend (on_mouse_wheel_action_agent)
+			grid.mouse_wheel_actions.extend (l_on_mouse_wheel_action_agent)
 			mouse_wheel_enabled := True
 		end
 
@@ -61,8 +65,8 @@ feature -- change
 		require
 			mouse_wheel_enabled: mouse_wheel_enabled
 		do
-			if on_mouse_wheel_action_agent /= Void then
-				grid.mouse_wheel_actions.prune_all (on_mouse_wheel_action_agent)
+			if attached on_mouse_wheel_action_agent as agt then
+				grid.mouse_wheel_actions.prune_all (agt)
 			end
 			mouse_wheel_enabled := False
 		end
@@ -255,7 +259,7 @@ feature -- Scrolling
 
 feature {NONE} -- Scrolling : Action implementation
 
-	on_mouse_wheel_action_agent: PROCEDURE [ANY, TUPLE [INTEGER]]
+	on_mouse_wheel_action_agent: detachable PROCEDURE [ANY, TUPLE [INTEGER]]
 			-- Agent representing `agent on_mouse_wheel_action' .
 
 	on_mouse_wheel_action (a_step: INTEGER)

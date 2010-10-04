@@ -21,7 +21,7 @@ feature -- Shortcut/Status report
 
 feature -- Shortcut/Access
 
-	shortcut_actions (a_shortcut: ES_KEY_SHORTCUT): LIST [PROCEDURE [ANY, TUPLE]]
+	shortcut_actions (a_shortcut: ES_KEY_SHORTCUT): detachable LIST [PROCEDURE [ANY, TUPLE]]
 			-- Trigger agent for `a_shortcut'
 			-- Void if no agent is registered for `a_shortcut'.
 		do
@@ -37,17 +37,16 @@ feature -- Call
 		require
 			a_shortcut_attached: a_shortcut /= Void
 			a_shortcut_registered: is_shortcut_registered (a_shortcut)
-		local
-			l_agent_list: LIST [PROCEDURE [ANY, TUPLE]]
 		do
-			l_agent_list := shortcut_actions (a_shortcut)
-			from
-				l_agent_list.start
-			until
-				l_agent_list.after
-			loop
-				l_agent_list.item.call (Void)
-				l_agent_list.forth
+			if attached shortcut_actions (a_shortcut) as l_agent_list then
+				from
+					l_agent_list.start
+				until
+					l_agent_list.after
+				loop
+					l_agent_list.item.call (Void)
+					l_agent_list.forth
+				end
 			end
 		end
 
@@ -59,17 +58,24 @@ feature -- Shortcut/Register key shortcuts
 			a_shortcut_attached: a_shortcut /= Void
 			a_agent_attached: a_agent /= Void
 		local
-			l_agent_list: LIST [PROCEDURE [ANY, TUPLE]]
+			l_agent_list: detachable LIST [PROCEDURE [ANY, TUPLE]]
 		do
 			if key_table.has_key (a_shortcut) then
-				l_agent_list := key_table.item (a_shortcut)
+				l_agent_list := key_table.found_item
+				check found_item: l_agent_list /= Void end
 			else
 				create {LINKED_LIST [PROCEDURE [ANY, TUPLE]]} l_agent_list.make
 				key_table.put (l_agent_list, a_shortcut)
 			end
-			l_agent_list.extend (a_agent)
+			if l_agent_list /= Void then
+				l_agent_list.extend (a_agent)
+			else
+				check found_agent_list: False end
+			end
 		ensure
-			shortcut_registered: is_shortcut_registered (a_shortcut) and then shortcut_actions (a_shortcut).has (a_agent)
+			shortcut_registered: is_shortcut_registered (a_shortcut) and then
+						attached shortcut_actions (a_shortcut) as l_acts and then
+						l_acts.has (a_agent)
 		end
 
 	deregister_shortcut (a_shortcut: ES_KEY_SHORTCUT)
@@ -85,16 +91,16 @@ feature -- Shortcut/Register key shortcuts
 
 feature -- Access
 
-	expand_selected_rows_agent: PROCEDURE [ANY, TUPLE]
+	expand_selected_rows_agent: detachable PROCEDURE [ANY, TUPLE]
 			-- Agent to be performed when expanding rows retrieved from `selected_rows_function'.			
 
-	expand_selected_rows_recursive_agent: PROCEDURE [ANY, TUPLE]
+	expand_selected_rows_recursive_agent: detachable PROCEDURE [ANY, TUPLE]
 			-- Agent to be performed when recursively expanding rows retrieved from `selected_rows_function'.		
 
-	collapse_selected_rows_agent: PROCEDURE [ANY, TUPLE]
+	collapse_selected_rows_agent: detachable PROCEDURE [ANY, TUPLE]
 			-- Agent to be performed when collapsing rows retrieved from `selected_rows_function'.
 
-	collapse_selected_rows_recursive_agent: PROCEDURE [ANY, TUPLE]
+	collapse_selected_rows_recursive_agent: detachable PROCEDURE [ANY, TUPLE]
 			-- Agent to be performed when recursively collapsing rows retrieved from `selected_rows_function'.
 
 feature -- Setting
@@ -192,16 +198,20 @@ feature{NONE} -- Shortcut/Implementation
 
 	key_table: HASH_TABLE [LIST [PROCEDURE [ANY, TUPLE]], ES_KEY_SHORTCUT]
 			-- Table of actions to be performed indexed by the key shortcut to trigger that action
+		local
+			l_key_table_internal: like key_table_internal
 		do
-			if key_table_internal = Void then
-				create key_table_internal.make (10)
+			l_key_table_internal := key_table_internal
+			if l_key_table_internal = Void then
+				create l_key_table_internal.make (10)
+				key_table_internal := l_key_table_internal
 			end
-			Result := key_table_internal
+			Result := l_key_table_internal
 		ensure
 			result_attached: Result /= Void
 		end
 
-	key_table_internal: like key_table;
+	key_table_internal: detachable like key_table;
 			-- Implementation of `key_table'	
 
 note

@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 		local
 			l_cmd: like command
 		do
-			l_cmd := a_test_set.environment.get_attached (system_executable_key, a_test_set)
+			l_cmd := a_test_set.environment.get_attached (system_executable_key, a_test_set.asserter)
 			make_execution (a_test_set, l_cmd)
 		end
 

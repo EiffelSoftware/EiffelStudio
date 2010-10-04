@@ -14,20 +14,20 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_test_set: like test_set)
+	make (an_asserter: like asserter)
 			-- Initialize `Current'.
 			--
-			-- `a_test_set': Test set in which `Current' is used.
+			-- `an_asserter': Asserter used to raise an exception to report unexpected behaviour.
 		require
-			a_test_set_attached: a_test_set /= Void
+			an_asserter_attached: an_asserter /= Void
 		do
-			test_set := a_test_set
+			asserter := an_asserter
 		end
 
 feature -- Access
 
-	test_set: EQA_TEST_SET
-			-- Test set in which `Current' is used
+	asserter: EQA_ASSERTIONS
+			-- Asserter used to raise an exception to report unexpected behaviour.
 
 feature -- Command
 
@@ -99,10 +99,10 @@ feature -- Query: Path
 			a_key_not_empty: not a_key.is_empty
 		local
 			l_base: READABLE_STRING_8
-			l_test_set: like test_set
+			l_environment: EQA_ENVIRONMENT
 		do
-			l_test_set := test_set
-			l_base := l_test_set.environment.get_attached (a_key, l_test_set)
+			create l_environment
+			l_base := l_environment.get_attached (a_key, asserter)
 			Result := build_partial_path (a_path, l_base, 0)
 		ensure
 			result_attached: Result /= Void
@@ -304,7 +304,7 @@ feature {NONE} -- Implementation
 		require
 			a_tag_attached: a_tag /= Void
 		do
-			test_set.assert (a_tag, a_condition)
+			asserter.assert (a_tag, a_condition)
 		end
 
 feature -- Constants

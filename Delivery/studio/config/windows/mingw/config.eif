@@ -129,8 +129,7 @@ cecil_def: "%
 %DEF_FILE= c_$appl.def %N%
 %c_$appl.def: %N%
 %%T$(RM) $@%N%
-%%T@echo LIBRARY c_$appl.dll > $@%N%
-%%T@echo DESCRIPTION %'c_$appl.dll%' >> $@%N%
+%%T@echo LIBRARY lib$appl.dll > $@%N%
 %%T@type %"$(ISE_EIFFEL)/studio/config/$(ISE_PLATFORM)/templates/cecil.def%" >> $@"
 
 cecil_dynlib: "\%N%

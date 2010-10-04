@@ -141,8 +141,7 @@ cecil_def: "%
 %DEF_FILE= c_$appl.def %N%
 %c_$appl.def: %N%
 %%Tif exist $@ $(RM) $@%N%
-%%Techo LIBRARY c_$appl.dll > $@%N%
-%%Techo DESCRIPTION %'c_$appl.dll%' >> $@%N%
+%%Techo LIBRARY lib$appl.dll > $@%N%
 %%Ttype %"$(ISE_EIFFEL)\studio\config\$(ISE_PLATFORM)\templates\cecil.def%"  >> $@"
 
 cecil_dynlib: "%T/def:$(DEF_FILE) \%N%

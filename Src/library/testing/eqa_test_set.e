@@ -26,10 +26,11 @@ feature {NONE} -- Initialization
 			l_target_path: detachable READABLE_STRING_8
 		do
 			create environment
+			file_system := new_file_system
 
 			create l_exec_env
-			l_name := environment.get_attached ({EQA_TEST_SET}.test_name_key, Current)
 
+			l_name := environment.get_attached ({EQA_TEST_SET}.test_name_key, asserter)
 			if attached environment.get ({EQA_TEST_SET}.target_path_key) as l_target then
 				l_target_path := l_target
 			else
@@ -75,17 +76,6 @@ feature -- Access
 			-- File system for creating directories and files
 			--
 			-- Note: to extend or modify the file system, redefine `new_file_system'.
-		do
-			if attached internal_file_system as l_file_system then
-				Result := l_file_system
-			else
-				Result := new_file_system
-				internal_file_system := Result
-			end
-		ensure
-			result_attached: Result /= Void
-			result_valid: Result.test_set = Current
-		end
 
 	environment: EQA_ENVIRONMENT
 			-- Environment containing global settings
@@ -166,10 +156,7 @@ feature {NONE} -- Events
 feature {NONE} -- Implementation
 
 	internal_asserter: detachable like asserter
-			-- Once per object storage for `asserter'.
-
-	internal_file_system: detachable like file_system
-			-- Once per object storage for `file_system'
+			-- Once per object storage for `asserter'
 
 feature {NONE} -- Factory
 
@@ -188,10 +175,10 @@ feature {NONE} -- Factory
 			--
 			-- Note: redefine in order to extend file system functionality.
 		do
-			create Result.make (Current)
+			create Result.make (asserter)
 		ensure
 			result_attached: Result /= Void
-			result_valid: Result.test_set = Current
+			result_valid: Result.asserter = asserter
 		end
 
 feature -- Constants
@@ -210,7 +197,7 @@ feature -- Constants
 			-- Key for path in which test of `Current' is executed
 
 invariant
-	internal_file_system_valid: attached internal_file_system as l_fs and then l_fs.test_set = Current
+	internal_file_system_valid: file_system.asserter = asserter
 
 note
 	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"

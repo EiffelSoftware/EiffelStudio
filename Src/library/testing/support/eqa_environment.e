@@ -28,22 +28,22 @@ feature -- Access
 			end
 		end
 
-	get_attached (a_key: READABLE_STRING_8; a_test_set: EQA_TEST_SET): IMMUTABLE_STRING_8
+	get_attached (a_key: READABLE_STRING_8; an_asserter: EQA_ASSERTIONS): IMMUTABLE_STRING_8
 			-- Retrieve setting for given key or rise exception if no value for given key has been defined.
 			--
 			-- `a_key': Key for which setting should be returned.
-			-- `a_test_set': Test set in which assertions is raised if value could not be retrieved.
+			-- `an_asserter': Asserter in which exceptions are raised if value could not be retrieved.
 			-- `Result': Value associated with `a_key'.
 		require
 			a_key_attached: a_key /= Void
-			a_test_set_attached: a_test_set /= Void
+			an_asserter_attached: an_asserter /= Void
 		local
 			l_value: like get
 		do
 			if attached get (a_key) as l_v then
 				l_value := l_v
 			else
-				a_test_set.assert (a_key + " not defined", False)
+				an_asserter.assert (a_key + " not defined", False)
 				check not_reached: l_value /= Void end
 			end
 			Result := l_value
@@ -51,19 +51,19 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	get_not_empty (a_key: READABLE_STRING_8; a_test_set: EQA_TEST_SET): IMMUTABLE_STRING_8
+	get_not_empty (a_key: READABLE_STRING_8; an_asserter: EQA_ASSERTIONS): IMMUTABLE_STRING_8
 			-- Retrieve setting for given key or rise exception if no value for given key has been defined
 			-- or the value defined is empty.
 			--
 			-- `a_key': Key for which setting should be returned.
-			-- `a_test_set': Test set in which assertions is raised if value could not be retrieved.
+			-- `an_asserter': Asserter in which exceptions are raised if value could not be retrieved.
 			-- `Result': Non-empty value associated with `a_key'.
 		require
 			a_key_attached: a_key /= Void
-			a_test_set_attached: a_test_set /= Void
+			an_asserter_attached: an_asserter /= Void
 		do
-			Result := get_attached (a_key, a_test_set)
-			a_test_set.assert (a_key + " is empty", not Result.is_empty)
+			Result := get_attached (a_key, an_asserter)
+			an_asserter.assert (a_key + " is empty", not Result.is_empty)
 		end
 
 feature {NONE} -- Access

@@ -64,18 +64,21 @@ feature -- Command
 			-- Initlialize actions
 		require
 			not_destroyed: not is_destroyed
+		local
+			l_docking_manager: like docking_manager
 		do
-			docking_manager.contents.add_actions.extend (agent on_added_content)
-			docking_manager.contents.remove_actions.extend (agent on_prune_content)
-			docking_manager.zones.zones.add_actions.extend (agent on_added_zone)
-			docking_manager.zones.zones.remove_actions.extend (agent on_pruned_zone)
-			docking_manager.internal_viewport.resize_actions.extend (agent on_resize (?, ?, ?, ?, False))
+			l_docking_manager := docking_manager
+			l_docking_manager.contents.add_actions.extend (agent on_added_content)
+			l_docking_manager.contents.remove_actions.extend (agent on_prune_content)
+			l_docking_manager.zones.zones.add_actions.extend (agent on_added_zone)
+			l_docking_manager.zones.zones.remove_actions.extend (agent on_pruned_zone)
+			l_docking_manager.internal_viewport.resize_actions.extend (agent on_resize (?, ?, ?, ?, False))
 
 			ev_application.pointer_button_press_actions.extend (widget_pointer_press_handler)
 			ev_application.pointer_button_press_actions.extend (widget_pointer_press_for_upper_zone_handler)
 
-			docking_manager.main_window.focus_out_actions.extend (top_level_window_focus_out)
-			docking_manager.main_window.focus_in_actions.extend (top_level_window_focus_in)
+			l_docking_manager.main_window.focus_out_actions.extend (top_level_window_focus_out)
+			l_docking_manager.main_window.focus_in_actions.extend (top_level_window_focus_in)
 		end
 
 feature  -- Agents
@@ -89,30 +92,32 @@ feature  -- Agents
 			l_zones: ARRAYED_LIST [SD_ZONE]
 			l_content: detachable SD_CONTENT
 			l_setter: SD_SYSTEM_SETTER
+			l_docking_manager: like docking_manager
 		do
 			create {SD_SYSTEM_SETTER_IMP} l_setter
 			if not l_setter.is_during_pnd then
-				l_zones := docking_manager.zones.zones.twin
+				l_docking_manager := docking_manager
+				l_zones := l_docking_manager.zones.zones.twin
 				from
 					l_zones.start
 				until
 					l_zones.after
 				loop
 					if attached {EV_CONTAINER} l_zones.item as lt_container then
-						if not lt_container.is_destroyed and then (lt_container.has_recursive (a_widget) and not ignore_additional_click) and l_zones.item.content /= docking_manager.zones.place_holder_content then
-							if docking_manager.property.last_focus_content /= l_zones.item.content then
-								docking_manager.property.set_last_focus_content (l_zones.item.content)
+						if not lt_container.is_destroyed and then (lt_container.has_recursive (a_widget) and not ignore_additional_click) and l_zones.item.content /= l_docking_manager.zones.place_holder_content then
+							if l_docking_manager.property.last_focus_content /= l_zones.item.content then
+								l_docking_manager.property.set_last_focus_content (l_zones.item.content)
 								l_zones.item.on_focus_in (Void)
 								if l_zones.item.content.focus_in_actions /= Void then
 									l_zones.item.content.focus_in_actions.call (Void)
 								end
 							else
-								l_content := docking_manager.property.last_focus_content
+								l_content := l_docking_manager.property.last_focus_content
 								if l_content /= Void then
 									l_auto_hide_zone ?= l_content.state.zone
 								end
 								if l_auto_hide_zone = Void and not ignore_additional_click then
-									docking_manager.command.remove_auto_hide_zones (True)
+									l_docking_manager.command.remove_auto_hide_zones (True)
 								elseif l_auto_hide_zone /= Void then
 									l_auto_hide_zone.set_focus_color (True)
 								end
@@ -171,45 +176,47 @@ feature  -- Agents
 		local
 			l_width, l_height: INTEGER
 			l_main_container: SD_MULTI_DOCK_AREA
+			l_docking_manager: like docking_manager
 		do
 			debug ("docking")
 				io.put_string ("%N SD_DOCKING_MANAGER on_resize ~~~~~~~~~~~~~~~~~~~~")
 			end
-			docking_manager.command.remove_auto_hide_zones (False)
+			l_docking_manager := docking_manager
+			l_docking_manager.command.remove_auto_hide_zones (False)
 
 			-- This is to make sure item in `fixed_area' is resized, otherwise zone's size is incorrect when maximize a zone
-			docking_manager.fixed_area.set_minimum_size (0, 0)
+			l_docking_manager.fixed_area.set_minimum_size (0, 0)
 
 			if a_width > 0 then
-				l_width := docking_manager.internal_viewport.width
+				l_width := l_docking_manager.internal_viewport.width
 				if l_width > 0 then
-					docking_manager.internal_viewport.set_item_width (l_width)
+					l_docking_manager.internal_viewport.set_item_width (l_width)
 				end
 
 				-- We have to make sure `l_width' not smaller than the minimum width of `l_main_container''s item
 				-- Otherwise, it will cause bug#12065. This bug ONLY happens on Solaris (both CDE and JDS), not happens on Windows, Ubuntu
 				-- And we don't need to care about the height of `l_main_container''s item since it works fine
-				l_main_container := docking_manager.query.inner_container_main
-				l_width := docking_manager.fixed_area.width
+				l_main_container := l_docking_manager.query.inner_container_main
+				l_width := l_docking_manager.fixed_area.width
 				if l_main_container.readable and then l_main_container.item /= Void and then l_width < l_main_container.item.minimum_width then
 					l_width := l_main_container.item.minimum_width
 				end
 
 				if l_width > 0 then
-					docking_manager.fixed_area.set_item_width (l_main_container , l_width)
+					l_docking_manager.fixed_area.set_item_width (l_main_container , l_width)
 				end
 			end
 			if a_height > 0 then
-				l_height := docking_manager.internal_viewport.height
+				l_height := l_docking_manager.internal_viewport.height
 				if l_height > 0 then
-					docking_manager.internal_viewport.set_item_height (l_height)
+					l_docking_manager.internal_viewport.set_item_height (l_height)
 				end
-				l_height := docking_manager.fixed_area.height
+				l_height := l_docking_manager.fixed_area.height
 				if l_height > 0 then
-					docking_manager.fixed_area.set_item_height (docking_manager.query.inner_container_main, l_height)
+					l_docking_manager.fixed_area.set_item_height (l_docking_manager.query.inner_container_main, l_height)
 				end
 			end
-			docking_manager.tool_bar_manager.on_resize (a_x, a_y, docking_manager.internal_viewport.width, docking_manager.internal_viewport.height, a_force)
+			l_docking_manager.tool_bar_manager.on_resize (a_x, a_y, l_docking_manager.internal_viewport.width, l_docking_manager.internal_viewport.height, a_force)
 		end
 
 	on_added_zone (a_zone: SD_ZONE)
@@ -256,13 +263,14 @@ feature  -- Agents
 		local
 			l_zone: detachable SD_ZONE
 		do
-			if is_docking_manager_attached then
-				if attached docking_manager.property.last_focus_content as l_content then
-					l_zone := docking_manager.zones.zone_by_content (l_content)
+			if attached docking_manager as l_docking_manager then
+				check is_docking_manager_attached end
+				if attached l_docking_manager.property.last_focus_content as l_content then
+					l_zone := l_docking_manager.zones.zone_by_content (l_content)
 				end
 				if l_zone /= Void then
 					if attached {EV_WIDGET} l_zone as lt_widget then
-						if docking_manager.main_container.has_recursive (lt_widget) then
+						if l_docking_manager.main_container.has_recursive (lt_widget) then
 							l_zone.set_non_focus_selection_color
 						end
 					else
@@ -283,14 +291,15 @@ feature  -- Agents
 			l_content: detachable SD_CONTENT
 			l_zone: detachable SD_ZONE
 		do
-			if is_docking_manager_attached then
-				l_content := docking_manager.property.last_focus_content
+			if attached docking_manager as l_docking_manager then
+				check is_docking_manager_attached end
+				l_content := l_docking_manager.property.last_focus_content
 				if l_content /= Void then
-					l_zone := docking_manager.zones.zone_by_content (l_content)
+					l_zone := l_docking_manager.zones.zone_by_content (l_content)
 				end
 				if l_zone /= Void then
 					if attached {EV_WIDGET} l_zone as lt_widget then
-						if docking_manager.main_container.has_recursive (lt_widget) then
+						if l_docking_manager.main_container.has_recursive (lt_widget) then
 							l_zone.set_focus_color (True)
 						end
 					else
@@ -466,14 +475,14 @@ feature -- Destory
 		local
 			l_viewport: EV_VIEWPORT
 		do
-			if is_docking_manager_attached then
-				l_viewport := docking_manager.internal_viewport
+			if attached docking_manager as l_docking_manager then
+				l_viewport := l_docking_manager.internal_viewport
 				check not_void: l_viewport /= Void end
 				l_viewport.resize_actions.wipe_out
-				docking_manager.main_window.focus_out_actions.prune_all (main_window_focus_out)
-				docking_manager.main_window.focus_in_actions.prune_all (main_window_focus_in)
-				docking_manager.main_window.focus_out_actions.prune_all (top_level_window_focus_out)
-				docking_manager.main_window.focus_in_actions.prune_all (top_level_window_focus_in)
+				l_docking_manager.main_window.focus_out_actions.prune_all (main_window_focus_out)
+				l_docking_manager.main_window.focus_in_actions.prune_all (main_window_focus_in)
+				l_docking_manager.main_window.focus_out_actions.prune_all (top_level_window_focus_out)
+				l_docking_manager.main_window.focus_in_actions.prune_all (top_level_window_focus_in)
 			end
 
 			ev_application.pnd_motion_actions.prune_all (pnd_motion_actions_handler)

@@ -57,6 +57,8 @@ feature -- Changes
 
 	set_delayed_action (v: like delayed_action)
 			-- Change the `delayed_action'
+		require
+			v_attached: v /= Void
 		do
 			delayed_action := v
 		end
@@ -152,42 +154,56 @@ feature -- Delayed action access
 			delayed_action_exists: delayed_action_exists
 		do
 			cancel_request
-			if is_kamikazed then
-				delayed_action.call (Void)
-			else
-				repeat_call
+			if attached delayed_action as l_act then
+				if is_kamikazed then
+					l_act.call (Void)
+				else
+					repeat_call
+				end
 			end
 		end
 
 	repeat_call
 			-- Call `delayed_action' continuously every `internal' milliseconds.
+		local
+			t: like action_timer
 		do
-			if action_timer = Void then
-				create action_timer.make_with_interval (interval)
+			if attached delayed_action as l_act then
+				t := action_timer
+				if t = Void then
+					create t.make_with_interval (interval)
+					action_timer := t
+				else
+					t.actions.wipe_out
+					t.set_interval (interval)
+				end
+				t.actions.extend (l_act)
 			else
-				action_timer.actions.wipe_out
-				action_timer.set_interval (interval)
+				cancel_request
 			end
-			action_timer.actions.extend (delayed_action)
 		end
 
 	request_call
 			-- Request evaluation of `delayed_action' after `delay'
 		require
 			delayed_action_exists: delayed_action_exists
+		local
+			t: like delayed_action_timer
 		do
 			dispose_action_timer
 			if delay = 0 then
 				call
 			else
-				if on_request_start_action /= Void then
-					on_request_start_action.call (Void)
+				if attached on_request_start_action as sa then
+					sa.call (Void)
 				end
-				if delayed_action_timer = Void then
-					create delayed_action_timer.make_with_interval (delay)
-					delayed_action_timer.actions.extend (agent call)
+				t := delayed_action_timer
+				if t = Void then
+					create t.make_with_interval (delay)
+					t.actions.extend (agent call)
+					delayed_action_timer := t
 				elseif reset_timer_on_request then
-					delayed_action_timer.set_interval (delay)
+					t.set_interval (delay)
 				end
 			end
 		ensure
@@ -199,13 +215,13 @@ feature -- Delayed action access
 		require
 			delayed_action_exists: delayed_action_exists
 		do
-			if delayed_action_timer /= Void then
-				delayed_action_timer.actions.wipe_out
-				delayed_action_timer.destroy
+			if attached delayed_action_timer as t then
+				t.actions.wipe_out
+				t.destroy
 				delayed_action_timer := Void
 				dispose_action_timer
-				if on_request_end_action /= Void then
-					on_request_end_action.call (Void)
+				if attached on_request_end_action as act then
+					act.call (Void)
 				end
 			end
 		ensure
@@ -222,35 +238,35 @@ feature -- Delayed action access
 		ensure
 			destroyed: 	on_request_start_action = Void and then
 						on_request_end_action = Void and then
-						delayed_action = Void and then
 						action_timer = Void and then
-						delayed_action_timer = Void
+						delayed_action_timer = Void and then
+						delayed_action = Void
 		end
 
 feature {NONE} -- Delayed cleaning implementation
 
-	on_request_start_action: PROCEDURE [ANY, TUPLE]
+	on_request_start_action: detachable PROCEDURE [ANY, TUPLE]
 			-- Action to be called on request
 
-	on_request_end_action: PROCEDURE [ANY, TUPLE]
+	on_request_end_action: detachable PROCEDURE [ANY, TUPLE]
 			-- Action to be called on cancelling
 			-- or after the request is completed (so just before the delayed_action)
 
-	delayed_action: PROCEDURE [ANY, TUPLE]
+	delayed_action: detachable PROCEDURE [ANY, TUPLE]
 			-- Action to be called
 
-	delayed_action_timer: EV_TIMEOUT
+	delayed_action_timer: detachable EV_TIMEOUT
 			-- Timer used to process the delay
 
-	action_timer: EV_TIMEOUT;
+	action_timer: detachable EV_TIMEOUT
 			-- Timer used to call `delayed_action' continuously
 
 	dispose_action_timer
 			-- Dispose `action_timer'.
 		do
-			if action_timer /= Void then
-				action_timer.actions.wipe_out
-				action_timer.destroy
+			if attached action_timer as t then
+				t.actions.wipe_out
+				t.destroy
 				action_timer := Void
 			end
 		end

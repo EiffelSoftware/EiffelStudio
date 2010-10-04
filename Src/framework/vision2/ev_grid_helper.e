@@ -50,12 +50,9 @@ feature -- Access
 			-- if possible, i.e on EV_GRID_LABEL_ITEM
 		require
 			cell_not_void: a_cell /= Void
-		local
-			glab: EV_GRID_LABEL_ITEM
 		do
 			if pixmap_enabled then
-				glab ?= a_cell
-				if glab /= Void then
+				if attached {EV_GRID_LABEL_ITEM} a_cell as glab then
 					if v /= Void then
 						glab.set_pixmap (v)
 					else
@@ -91,7 +88,9 @@ feature -- Access
 			a_row /= Void
 			a_row.parent /= Void
 		do
-			a_row.parent.move_rows (a_row.index, a_row.parent.row_count + 1, 1 + a_row.subrow_count_recursive)
+			if attached a_row.parent as p then
+				p.move_rows (a_row.index, p.row_count + 1, 1 + a_row.subrow_count_recursive)
+			end
 		end
 
 	grid_move_top_row_node_by (grid: EV_GRID; row_index: INTEGER; offset: INTEGER): INTEGER
@@ -120,7 +119,7 @@ feature -- Access
 			in_range: row_index > 0 and then row_index <= grid.row_count
 		local
 			j,k: INTEGER
-			r: EV_GRID_ROW
+			r: detachable EV_GRID_ROW
 		do
 			if grid.is_tree_enabled then
 				from
@@ -138,9 +137,19 @@ feature -- Access
 					if k > 0 and k <= grid.row_count then
 						r := grid.row (k)
 						r := r.parent_row_root
-						k := r.index
-						if offset > 0 then
-							k := k + r.subrow_count_recursive
+						if r /= Void then
+							k := r.index
+							if offset > 0 then
+								k := k + r.subrow_count_recursive
+								r := grid.row (k)
+							end
+						else
+							check
+								tree_enabled: False
+							end
+								-- Should not occurs since is_tree_enabled = True
+								-- however, handle the case							
+							k := k + 1
 							r := grid.row (k)
 						end
 					end
@@ -160,7 +169,7 @@ feature -- Access
 			result_in_range: Result > 0 implies Result <= grid.row_count
 		end
 
-	grid_ith_top_row (a_grid: EV_GRID; a_index: INTEGER): EV_GRID_ROW
+	grid_ith_top_row (a_grid: EV_GRID; a_index: INTEGER): detachable EV_GRID_ROW
 			-- I_th's top row of `a_grid'.
 		local
 			r: INTEGER
@@ -177,7 +186,7 @@ feature -- Access
 			end
 		end
 
-	grid_top_row (a_grid: EV_GRID; a_index: INTEGER): EV_GRID_ROW
+	grid_top_row (a_grid: EV_GRID; a_index: INTEGER): detachable EV_GRID_ROW
 			-- Return the `a_index' i_th top row of `a_grid'.
 		require
 			a_grid /= Void
@@ -252,15 +261,18 @@ feature -- Access
 	grid_extended_new_subrow (a_row: EV_GRID_ROW): EV_GRID_ROW
 			-- New subrow inserted in `a_row'
 		require
-			a_row /= Void
+			attached_row: a_row /= Void
+			parented: a_row.parent /= Void
 		local
 			r: INTEGER
-			g: EV_GRID
+			g: detachable EV_GRID
 		do
 			g := a_row.parent
-			r := a_row.index + a_row.subrow_count_recursive + 1
-			g.insert_new_row_parented (r, a_row)
-			Result := g.row (r)
+			check g /= Void then
+				r := a_row.index + a_row.subrow_count_recursive + 1
+				g.insert_new_row_parented (r, a_row)
+				Result := g.row (r)
+			end
 		end
 
 	grid_remove_and_clear_subrows_from (a_row: EV_GRID_ROW)
@@ -269,11 +281,8 @@ feature -- Access
 			-- but do not clear `a_row'
 		require
 			a_row /= Void
-		local
-			g: EV_GRID
 		do
-			g := a_row.parent
-			if g /= Void then
+			if attached a_row.parent as g then
 				if a_row.subrow_count > 0 then
 					g.remove_rows (a_row.index + 1, a_row.index + a_row.subrow_count_recursive)
 				end
@@ -290,11 +299,8 @@ feature -- Access
 		require
 			a_row /= Void
 			a_until_row.parent_row = a_row
-		local
-			g: EV_GRID
 		do
-			g := a_row.parent
-			if g /= Void then
+			if attached a_row.parent as g then
 				if a_row.subrow_count > 0 then
 					g.remove_rows (a_row.index + 1, a_until_row.index - 1)
 				end

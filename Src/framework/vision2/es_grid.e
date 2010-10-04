@@ -12,6 +12,7 @@ class
 inherit
 	EV_GRID
 		redefine
+			create_interface_objects,
 			initialize,
 			destroy
 		end
@@ -41,13 +42,20 @@ create
 
 feature {NONE} -- Initialization
 
+	create_interface_objects
+		do
+
+			create auto_resized_columns.make
+			auto_resized_columns.compare_objects
+		end
+
 	initialize
+		local
+			l_resizing_behavior: like resizing_behavior
 		do
 			Precursor {EV_GRID}
 
 			build_delayed_columns_auto_resizing
-			create auto_resized_columns.make
-			auto_resized_columns.compare_objects
 
 			enable_solid_resizing_divider
 			set_separator_color (color_separator)
@@ -56,8 +64,9 @@ feature {NONE} -- Initialization
 			header.pointer_double_press_actions.force_extend (agent on_header_auto_width_resize)
 
 			create scrolling_behavior.make (Current)
-			create resizing_behavior.make (Current)
-			resizing_behavior.enable_column_resizing
+			create l_resizing_behavior.make (Current)
+			l_resizing_behavior.enable_column_resizing
+			resizing_behavior := l_resizing_behavior
 
 			key_press_actions.extend (agent on_key_pressed)
 
@@ -95,7 +104,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	last_resized_grid_header: EV_HEADER_ITEM
+	last_resized_grid_header: detachable EV_HEADER_ITEM
 			-- Last resized header
 
 feature -- Status report
@@ -153,42 +162,46 @@ feature -- Status setting
 
 feature -- properties
 
-	scrolling_behavior: ES_GRID_SCROLLING_BEHAVIOR
-
 	border_enabled: BOOLEAN
 			-- Is border enabled ?
 			-- i.e: the pre draw cell's border, alias cell separators
 
-	resizing_behavior: ES_GRID_RESIZING_BEHAVIOR
+	scrolling_behavior: detachable ES_GRID_SCROLLING_BEHAVIOR
+
+	resizing_behavior: detachable ES_GRID_RESIZING_BEHAVIOR
 
 	selected_rows_function: FUNCTION [ANY, TUPLE, LIST [EV_GRID_ROW]]
 			-- Selected rows.
 			-- Use `selected_rows' by default.
 		do
-			if selected_rows_function_internal = Void then
-				Result := agent selected_rows
+			if attached selected_rows_function_internal as agt then
+				Result := agt
 			else
-				Result := selected_rows_function_internal
+				Result := agent selected_rows
 			end
 		ensure
 			result_attached: Result /= Void
 		end
 
-	selected_rows_function_internal: like selected_rows_function
-			-- Implementation of `selected_rows_fucntion'
+	selected_rows_function_internal: detachable like selected_rows_function
+			-- Implementation of `selected_rows_function'
 
 feature -- Change
 
 	disable_resize_column (a_column: INTEGER)
 			-- Disable resize for `a_column'.
 		do
-			resizing_behavior.disable_resize_on_column (a_column)
+			if attached resizing_behavior as agt then
+				agt.disable_resize_on_column (a_column)
+			end
 		end
 
 	enable_resize_column (a_column: INTEGER)
 			-- Enable resize for `a_column'.
 		do
-			resizing_behavior.enable_resize_on_column (a_column)
+			if attached resizing_behavior as agt then
+				agt.enable_resize_on_column (a_column)
+			end
 		end
 
 	enable_border
@@ -205,17 +218,23 @@ feature -- Change
 
 	set_mouse_wheel_scroll_size (i: INTEGER)
 		do
-			scrolling_behavior.set_mouse_wheel_scroll_size (i)
+			if attached scrolling_behavior as agt then
+				agt.set_mouse_wheel_scroll_size (i)
+			end
 		end
 
 	set_mouse_wheel_scroll_full_page (b: BOOLEAN)
 		do
-			scrolling_behavior.set_mouse_wheel_scroll_full_page (b)
+			if attached scrolling_behavior as agt then
+				agt.set_mouse_wheel_scroll_full_page (b)
+			end
 		end
 
 	set_scrolling_common_line_count (i: INTEGER)
 		do
-			scrolling_behavior.set_scrolling_common_line_count (i)
+			if attached scrolling_behavior as agt then
+				agt.set_scrolling_common_line_count (i)
+			end
 		end
 
 	set_selected_rows_function (a_function: like selected_rows_function)
@@ -232,30 +251,40 @@ feature -- Change
 			-- `a_expand_recursive' indicates if expanding a node recursively should be enabled.
 			-- `a_collapse' indicates if collapsing a node should be enabled.
 			-- `a_collapse_recursive' indicates if collapsing a node recursively should be enabled.
+		local
+			l_agent: like expand_selected_rows_agent
 		do
 			if a_expand then
-				if expand_selected_rows_agent = Void then
-					set_expand_selected_rows_agent (agent expand_rows (False))
+				l_agent := expand_selected_rows_agent
+				if l_agent = Void then
+					l_agent := agent expand_rows (False)
+					set_expand_selected_rows_agent (l_agent)
 				end
-				default_expand_rows_shortcuts.do_all (agent register_shortcut (?, expand_selected_rows_agent))
+				default_expand_rows_shortcuts.do_all (agent register_shortcut (?, l_agent))
 			end
 			if a_expand_recursive then
-				if expand_selected_rows_recursive_agent = Void then
-					set_expand_selected_rows_recursive_agent (agent expand_rows (True))
+				l_agent := expand_selected_rows_recursive_agent
+				if l_agent = Void then
+					l_agent := agent expand_rows (False)
+					set_expand_selected_rows_recursive_agent (l_agent)
 				end
-				default_expand_rows_recursive_shortcuts.do_all (agent register_shortcut (?, expand_selected_rows_recursive_agent))
+				default_expand_rows_recursive_shortcuts.do_all (agent register_shortcut (?, l_agent))
 			end
 			if a_collapse then
-				if collapse_selected_rows_agent = Void then
-					set_collapse_selected_rows_agent (agent collapse_rows (False))
+				l_agent := collapse_selected_rows_agent
+				if l_agent = Void then
+					l_agent := agent collapse_rows (False)
+					set_collapse_selected_rows_agent (l_agent)
 				end
-				default_collapse_rows_shortcuts.do_all (agent register_shortcut (?, collapse_selected_rows_agent))
+				default_collapse_rows_shortcuts.do_all (agent register_shortcut (?, l_agent))
 			end
 			if a_collapse_recursive then
-				if collapse_selected_rows_recursive_agent = Void then
-					set_collapse_selected_rows_recursive_agent (agent collapse_rows (True))
+				l_agent := collapse_selected_rows_recursive_agent
+				if l_agent = Void then
+					l_agent := agent collapse_rows (True)
+					set_collapse_selected_rows_recursive_agent (l_agent)
 				end
-				default_collapse_rows_recursive_shortcuts.do_all (agent register_shortcut (?, collapse_selected_rows_recursive_agent))
+				default_collapse_rows_recursive_shortcuts.do_all (agent register_shortcut (?, l_agent))
 			end
 		end
 
@@ -280,16 +309,16 @@ feature {NONE} -- Grid Events
 						end
 					else
 					end
-				else
+				elseif attached scrolling_behavior as scr then
 					inspect k.code
 					when {EV_KEY_CONSTANTS}.key_page_up then
-						scrolling_behavior.scroll_page (+1)
+						scr.scroll_page (+1)
 					when {EV_KEY_CONSTANTS}.key_page_down then
-						scrolling_behavior.scroll_page (-1)
+						scr.scroll_page (-1)
 					when {EV_KEY_CONSTANTS}.key_home then
-						scrolling_behavior.scroll_to_top
+						scr.scroll_to_top
 					when {EV_KEY_CONSTANTS}.key_end then
-						scrolling_behavior.scroll_to_end
+						scr.scroll_to_end
 					else
 					end
 				end
@@ -308,15 +337,15 @@ feature {NONE} -- Grid Events
 	on_header_item_clicked (hi: EV_HEADER_ITEM; ax, ay, abutton: INTEGER)
 		local
 			m: EV_MENU
-			col: EV_GRID_COLUMN
-			ghi: EV_GRID_HEADER_ITEM
+			col: detachable EV_GRID_COLUMN
 			lx: INTEGER_32
 		do
 			if abutton = 3 then
-				ghi ?= hi
-				if ghi /= Void and then header.pointed_divider_index = 0 then
-					col := column (ghi.column.index)
-						--| Col is the pointed header
+				if attached {EV_GRID_HEADER_ITEM} hi as ghi and then header.pointed_divider_index = 0 then
+					if attached ghi.column as col_i then
+						col := column (col_i.index)
+					end
+					--| Col is the pointed header
 				end
 				m := header_menu_on_column (col)
 				lx := ax
@@ -351,7 +380,12 @@ feature -- Resizing
 			hf: EV_FONT
 		do
 			if only_visible_part then
-				w := col.required_width_of_item_span (first_visible_row.index, last_visible_row.index)
+				if attached first_visible_row as fvr and attached last_visible_row as lvr then
+					w := col.required_width_of_item_span (fvr.index, lvr.index)
+				else
+						--| Should not occurs since the grid is not empty (see precondition)
+					check grid_not_empty: False end
+				end
 			else
 				w := col.required_width_of_item_span (1, row_count)
 			end
@@ -381,14 +415,14 @@ feature -- Resizing
 
 feature -- Header menu
 
-	header_menu_on_column (col: EV_GRID_COLUMN): EV_MENU
+	header_menu_on_column (col: detachable EV_GRID_COLUMN): EV_MENU
 			-- Menu related to `col'.
 		local
 			mi: EV_MENU_ITEM
 			mci: EV_CHECK_MENU_ITEM
 			hi: EV_HEADER_ITEM
 			gm: EV_MENU
-			s: STRING_GENERAL
+			s: detachable STRING_GENERAL
 		do
 			create Result
 			if col /= Void then
@@ -527,7 +561,9 @@ feature {NONE} -- Borders drawing
 			header_index: INTEGER
 			old_header_index: INTEGER
 		do
-			header_index := header_item.parent.index_of (header_item, 1)
+			if attached header_item.parent as hp then
+				header_index := hp.index_of (header_item, 1)
+			end
 			old_header_index := header_index
 			if (last_width_of_header_during_resize = 0 and header_item.width > 0) or last_width_of_header_during_resize_internal > 0 and header_item.width = 0 then
 				if header_index > 1 then
@@ -578,7 +614,9 @@ feature -- column resizing access
 	request_columns_auto_resizing
 		do
 			if not auto_resized_columns.is_empty then
-				delayed_columns_auto_resizing.request_call
+				if attached delayed_columns_auto_resizing as d then
+					d.request_call
+				end
 			end
 		end
 
@@ -709,7 +747,7 @@ feature {NONE} -- column resizing impl
 		end
 
 
-	delayed_columns_auto_resizing: ES_DELAYED_ACTION
+	delayed_columns_auto_resizing: detachable ES_DELAYED_ACTION
 
 	build_delayed_columns_auto_resizing
 		do
@@ -721,7 +759,7 @@ feature {NONE} -- column resizing impl
 			end
 		end
 
-	delayed_last_column_auto_resizing: ES_DELAYED_ACTION
+	delayed_last_column_auto_resizing: detachable ES_DELAYED_ACTION
 
 	build_delayed_last_column_auto_resizing
 		do
@@ -781,7 +819,9 @@ feature {NONE} -- column resizing impl
 					end
 					auto_resized_columns.forth
 				end
-				delayed_last_column_auto_resizing.request_call
+				if attached delayed_last_column_auto_resizing as d then
+					d.request_call
+				end
 			end
 		end
 
@@ -798,7 +838,9 @@ feature {NONE} -- Auto Events
 		do
 			last_resized_grid_header := Void
 			if not is_destroyed then
-				delayed_last_column_auto_resizing.request_call
+				if attached delayed_last_column_auto_resizing as d then
+					d.request_call
+				end
 			end
 		end
 
@@ -858,7 +900,7 @@ feature -- Grid helpers
 			end
 		end
 
-	single_selected_row: EV_GRID_ROW
+	single_selected_row: detachable EV_GRID_ROW
 		require
 			single_row_selection: is_single_row_selection_enabled or (is_multiple_row_selection_enabled and selected_rows.count <= 1)
 		local
@@ -881,21 +923,33 @@ feature -- Delayed cleaning
 		require
 			delayed_cleaning_exists
 		do
-			delayed_cleaning.request_call
+			if attached delayed_cleaning as d then
+				d.request_call
+			else
+				check delayed_cleaning_attached: False end
+			end
 		end
 
 	call_delayed_clean
 		require
 			delayed_cleaning_exists
 		do
-			delayed_cleaning.call
+			if attached delayed_cleaning as d then
+				d.call
+			else
+				check delayed_cleaning_attached: False end
+			end
 		end
 
 	cancel_delayed_clean
 		require
 			delayed_cleaning_exists
 		do
-			delayed_cleaning.cancel_request
+			if attached delayed_cleaning as d then
+				d.cancel_request
+			else
+				check delayed_cleaning_attached: False end
+			end
 		end
 
 	set_cleaning_delay (v: INTEGER)
@@ -903,20 +957,24 @@ feature -- Delayed cleaning
 			v_positive_or_zero: v >= 0
 		do
 			cleaning_delay := v
-			if delayed_cleaning /= Void then
-				delayed_cleaning.set_delay (cleaning_delay)
+			if attached delayed_cleaning as d then
+				d.set_delay (cleaning_delay)
 			end
 		end
 
 	build_delayed_cleaning
+		local
+			d: like delayed_cleaning
 		do
-			if delayed_cleaning = Void then
-				create delayed_cleaning.make (
+			d := delayed_cleaning
+			if d = Void then
+				create d.make (
 									agent default_clean,
 									cleaning_delay
 							)
-				delayed_cleaning.set_on_request_start_action (agent disable_sensitive)
-				delayed_cleaning.set_on_request_end_action (agent enable_sensitive)
+				delayed_cleaning := d
+				d.set_on_request_start_action (agent disable_sensitive)
+				d.set_on_request_end_action (agent enable_sensitive)
 			end
 		end
 
@@ -929,7 +987,11 @@ feature -- Delayed cleaning
 		require
 			delayed_cleaning_exists
 		do
-			delayed_cleaning.set_delayed_action (v)
+			if attached delayed_cleaning as d then
+				d.set_delayed_action (v)
+			else
+				check delayed_cleaning_attached: False end
+			end
 		end
 
 feature -- Commands
@@ -940,16 +1002,16 @@ feature -- Commands
 		do
 			Precursor {EV_GRID}
 
-			if delayed_columns_auto_resizing /= Void then
-				delayed_columns_auto_resizing.destroy
+			if attached delayed_columns_auto_resizing as dr then
+				dr.destroy
 				delayed_columns_auto_resizing := Void
 			end
-			if delayed_last_column_auto_resizing /= Void then
-				delayed_last_column_auto_resizing.destroy
+			if attached delayed_last_column_auto_resizing as dlr then
+				dlr.destroy
 				delayed_last_column_auto_resizing := Void
 			end
-			if delayed_cleaning /= Void then
-				delayed_cleaning.destroy
+			if attached delayed_cleaning as dc then
+				dc.destroy
 				delayed_cleaning := Void
 			end
 		end
@@ -958,7 +1020,7 @@ feature {NONE} -- Implementation
 
 	cleaning_delay: INTEGER
 
-	delayed_cleaning: ES_DELAYED_ACTION
+	delayed_cleaning: detachable ES_DELAYED_ACTION
 
 feature {NONE} -- Actions
 
@@ -966,12 +1028,12 @@ feature {NONE} -- Actions
 			-- Action to be performed when expanding rows.
 		do
 			if not a_recursive then
-				if expand_selected_rows_agent /= Void then
-					expand_selected_rows_agent.call (Void)
+				if attached expand_selected_rows_agent as agt_e then
+					agt_e.call (Void)
 				end
 			else
-				if expand_selected_rows_recursive_agent /= Void then
-					expand_selected_rows_recursive_agent.call (Void)
+				if attached expand_selected_rows_recursive_agent as agt_er then
+					agt_er.call (Void)
 				end
 			end
 		end
@@ -980,12 +1042,12 @@ feature {NONE} -- Actions
 			-- Action to be performed when collapsing rows.
 		do
 			if not a_recursive then
-				if collapse_selected_rows_agent /= Void then
-					collapse_selected_rows_agent.call (Void)
+				if attached collapse_selected_rows_agent as agt_c then
+					agt_c.call (Void)
 				end
 			else
-				if collapse_selected_rows_recursive_agent /= Void then
-					collapse_selected_rows_recursive_agent.call (Void)
+				if attached collapse_selected_rows_recursive_agent as agt_cr then
+					agt_cr.call (Void)
 				end
 			end
 		end
@@ -1045,11 +1107,8 @@ feature {NONE} -- Tree view behavior
 	expand_rows (a_recursive: BOOLEAN)
 			-- Expand all rows returned by `selected_rows_function'.
 			-- If `a_recursive' is True, expand those rows recursively.
-		local
-			l_rows: LIST [EV_GRID_ROW]
 		do
-			l_rows := selected_rows_function.item (Void)
-			if l_rows /= Void and then not l_rows.is_empty then
+			if attached selected_rows_function.item (Void) as l_rows and then not l_rows.is_empty then
 				if a_recursive then
 					remove_unnecessary_rows (l_rows)
 				end
@@ -1062,13 +1121,11 @@ feature {NONE} -- Tree view behavior
 			-- If `a_recursive' is True, collapse those rows recursively.
 		local
 			l_rows: LIST [EV_GRID_ROW]
-			l_parent_row: EV_GRID_ROW
 		do
 			l_rows := selected_rows_function.item (Void)
 			if l_rows /= Void and then not l_rows.is_empty then
 				if l_rows.count = 1 and then (not l_rows.first.is_expandable or else not l_rows.first.is_expanded) then
-					l_parent_row := l_rows.first.parent_row
-					if l_parent_row /= Void then
+					if attached l_rows.first.parent_row as l_parent_row then
 						l_rows.first.disable_select
 						if l_parent_row.is_selectable then
 							l_parent_row.enable_select
@@ -1092,7 +1149,7 @@ feature {NONE} -- Tree view behavior
 			a_rows_attached: a_rows /= Void
 		local
 			l_row_tbl: HASH_TABLE [EV_GRID_ROW, INTEGER]
-			l_parent_row: EV_GRID_ROW
+			l_parent_row: detachable EV_GRID_ROW
 			l_current_row: EV_GRID_ROW
 			done: BOOLEAN
 		do

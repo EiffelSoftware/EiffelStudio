@@ -21,7 +21,7 @@ feature {NONE} -- Resizing : initialization
 		do
 			grid := g
 			edge_size := 3
-			create disabled_resize_columns.make_default
+			create disabled_resize_columns.make (g.column_count)
 			create header_resize_start_actions
 			create header_resize_end_actions
 		end
@@ -34,7 +34,7 @@ feature -- Properties
 
 	resizing_column_enabled: BOOLEAN
 
-	disabled_resize_columns: DS_HASH_SET [INTEGER]
+	disabled_resize_columns: ARRAYED_SET [INTEGER]
 			-- Columns that don't allow resizing.
 
 	header_resize_start_actions: ACTION_SEQUENCE [TUPLE [EV_HEADER_ITEM]]
@@ -64,7 +64,7 @@ feature -- Change
 	disable_resize_on_column (a_column: INTEGER)
 			-- Disable resize for `a_column'.
 		do
-			disabled_resize_columns.force (a_column)
+			disabled_resize_columns.extend (a_column)
 		ensure
 			disabled: disabled_resize_columns.has (a_column)
 		end
@@ -72,20 +72,23 @@ feature -- Change
 	enable_resize_on_column (a_column: INTEGER)
 			-- Enable resize for `a_column'.
 		do
-			disabled_resize_columns.remove (a_column)
+			disabled_resize_columns.prune (a_column)
 		ensure
 			enabled: not disabled_resize_columns.has (a_column)
 		end
 
 feature {NONE} -- Actions
 
-	motion_resize_agent:   PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]]
-	press_resize_agent, release_resize_agent:   PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]]
-	leave_resize_agent:   PROCEDURE [ANY, TUPLE]
+	motion_resize_agent: detachable PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]]
+	press_resize_agent, release_resize_agent: detachable PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]]
+	leave_resize_agent: detachable PROCEDURE [ANY, TUPLE]
 
 	set_grid_separator_resizer (a_enabling: BOOLEAN)
 		local
 			g: like grid
+			l_motion_act: like motion_resize_agent
+			l_pointer_act: like press_resize_agent
+			l_leave_act: like leave_resize_agent
 		do
 			g := grid
 			if a_enabling then
@@ -96,28 +99,34 @@ feature {NONE} -- Actions
 					leave_resize_agent := agent leave_resize
 				end
 				if motion_resize_agent = Void then
-					motion_resize_agent := agent motion_resize
-					g.pointer_motion_actions.extend (motion_resize_agent)
+					l_motion_act := agent motion_resize
+					motion_resize_agent := l_motion_act
+					g.pointer_motion_actions.extend (l_motion_act)
 				end
 				if press_resize_agent = Void then
-					press_resize_agent := agent press_resize
-					g.pointer_button_press_actions.extend (press_resize_agent)
+					l_pointer_act := agent press_resize
+					press_resize_agent := l_pointer_act
+					g.pointer_button_press_actions.extend (l_pointer_act)
 				end
 			else
-				if motion_resize_agent /= Void then
-					g.pointer_motion_actions.prune_all (motion_resize_agent)
+				l_motion_act := motion_resize_agent
+				if l_motion_act /= Void then
+					g.pointer_motion_actions.prune_all (l_motion_act)
 					motion_resize_agent := Void
 				end
-				if press_resize_agent /= Void then
-					g.pointer_button_press_actions.prune_all (press_resize_agent)
+				l_pointer_act := press_resize_agent
+				if l_pointer_act /= Void then
+					g.pointer_button_press_actions.prune_all (l_pointer_act)
 					press_resize_agent := Void
 				end
-				if release_resize_agent /= Void then
-					g.pointer_button_release_actions.prune_all (release_resize_agent)
+				l_pointer_act := release_resize_agent
+				if l_pointer_act /= Void then
+					g.pointer_button_release_actions.prune_all (l_pointer_act)
 					release_resize_agent := Void
 				end
-				if leave_resize_agent /= Void then
-					g.pointer_leave_actions.prune_all (leave_resize_agent)
+				l_leave_act := leave_resize_agent
+				if l_leave_act /= Void then
+					g.pointer_leave_actions.prune_all (l_leave_act)
 					leave_resize_agent := Void
 				end
 			end
@@ -131,7 +140,7 @@ feature {NONE} -- Actions
 			column_index: INTEGER
 			l_near_border: BOOLEAN
 			l_new_width, l_new_neighbor, l_x_pos: INTEGER
-			l_resize, l_neighbor: EV_GRID_COLUMN
+			l_resize, l_neighbor: detachable EV_GRID_COLUMN
 			over_grid_content: BOOLEAN
 			l_visible_height: INTEGER
 			h,vscroll,hscroll: EV_WIDGET
@@ -222,12 +231,12 @@ feature {NONE} -- Actions
 			end_resizing
 		end
 
-	clicked_item: EV_GRID_ITEM
+	clicked_item: detachable EV_GRID_ITEM
 
 	start_resizing (x_pos, y_pos: INTEGER_32)
 		local
 			vx,vy: INTEGER_32
-			hi: EV_HEADER_ITEM
+			hi: detachable EV_HEADER_ITEM
 			i: like clicked_item
 			g: like grid
 		do
@@ -249,24 +258,35 @@ feature {NONE} -- Actions
 
 			g.pointer_button_press_item_actions.block
 			g.pointer_button_press_actions.block
-			g.pointer_button_release_actions.extend (release_resize_agent)
-			g.pointer_leave_actions.extend (leave_resize_agent)
+			if attached release_resize_agent as agt_r then
+				g.pointer_button_release_actions.extend (agt_r)
+			end
+			if attached leave_resize_agent as agt_l then
+				g.pointer_leave_actions.extend (agt_l)
+			end
 
 			if resize_index > 0 and resize_index < g.header.count then
 				hi := g.header.i_th (resize_index)
 			end
-			header_resize_start_actions.call ([hi])
+			if hi /= Void then
+				header_resize_start_actions.call ([hi])
+			end
 		end
 
 	end_resizing
 		local
-			hi: EV_HEADER_ITEM
+			hi: detachable EV_HEADER_ITEM
 			i: like clicked_item
 			g: like grid
 		do
 			g := grid
-			g.pointer_button_release_actions.prune_all (release_resize_agent)
-			g.pointer_leave_actions.prune_all (leave_resize_agent)
+			if attached release_resize_agent as agt_r then
+				g.pointer_button_release_actions.prune_all (agt_r)
+			end
+			if attached leave_resize_agent as agt_l then
+				g.pointer_leave_actions.prune_all (agt_l)
+			end
+
 			i := clicked_item
 			if i /= Void then
 				i.pointer_button_press_actions.resume
@@ -279,7 +299,9 @@ feature {NONE} -- Actions
 			if resize_index > 0 and resize_index < g.header.count then
 				hi := g.header.i_th (resize_index)
 			end
-			header_resize_end_actions.call ([hi])
+			if hi /= Void then
+				header_resize_end_actions.call ([hi])
+			end
 		end
 
 feature -- Status

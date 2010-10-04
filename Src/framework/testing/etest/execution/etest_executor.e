@@ -233,7 +233,7 @@ feature {NONE} -- Status setting
 				a_task_data.isolated := False
 				if
 					attached l_test.eiffel_class.compiled_representation as l_test_class and then
-					not l_test_class.is_generic and then
+					not l_test_class.is_generic and then not l_test_class.types.is_empty and then
 					attached l_test_class.feature_named (l_test.routine_name) as l_test_routine
 				then
 					l_body_id := l_test_routine.real_body_id (l_test_class.types.first) - 1

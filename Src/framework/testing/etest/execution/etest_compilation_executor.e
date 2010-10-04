@@ -164,7 +164,6 @@ feature {TEST_EXECUTION_I} -- Status setting
 				if sub_task = executor_task then
 					executor_task.start
 				elseif attached {ETEST_MELT_TASK} sub_task as l_task then
-					etest_suite.increase_etest_session_count
 					l_task.start (True)
 				else
 					check
@@ -196,7 +195,6 @@ feature {NONE} -- Implementation
 				end
 				executor_task.dispose
 			end
-			etest_suite.decrease_etest_session_count
 		end
 
 note

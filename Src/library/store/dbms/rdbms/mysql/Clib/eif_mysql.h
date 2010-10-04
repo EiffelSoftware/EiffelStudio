@@ -31,8 +31,7 @@ extern int eif_mysql_column_data(MYSQL_ROW row_ptr, int ind, char *ar,
 extern unsigned long eif_mysql_column_length (MYSQL_RES *result_ptr, int ind);
 extern int eif_mysql_column_name(MYSQL_RES *result_ptr, int ind, char *ar);
 extern int eif_mysql_column_type (MYSQL_RES *result_ptr, int ind);
-extern MYSQL *eif_mysql_connect(const char *user, const char *pass,
-	const char *host, const char *base);
+extern MYSQL *eif_mysql_connect(const char *user, const char *pass, const char *host, int port, const char *base);
 extern unsigned long eif_mysql_data_length (MYSQL_RES *result_ptr, int ind);
 extern int eif_mysql_date_data (MYSQL_ROW row_ptr, int ind, char *ar);
 extern void eif_mysql_disconnect(MYSQL *mysql_ptr);

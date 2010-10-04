@@ -698,8 +698,7 @@ feature -- External features
 				l_port := 3306
 			end
 			create l_base.make (application)
-			mysql_pointer := eif_mysql_connect (l_user.item, l_pass.item,
-				l_host.item, l_port, l_base.item)
+			mysql_pointer := eif_mysql_connect (l_user.item, l_pass.item, l_host.item, l_port, l_base.item)
 			is_error_updated := False
        	end
 
@@ -831,8 +830,7 @@ feature {NONE} -- C Externals
 			"C | %"eif_mysql.h%""
 		end
 
-	eif_mysql_connect (user_name, user_passwd, hostname: POINTER; port: INTEGER
-		application: POINTER): POINTER
+	eif_mysql_connect (user_name, user_passwd, hostname: POINTER; port: INTEGER; application: POINTER): POINTER
 		external
 			"C | %"eif_mysql.h%""
 		end

@@ -150,8 +150,7 @@ int eif_mysql_column_type(MYSQL_RES *result_ptr, int ind)
  *				const char *base:	Database to be selected
  * Returns:		Pointer to MYSQL structure as returned by mysql_init(...)
  */
-MYSQL *eif_mysql_connect(const char *user, const char *pass, const char *host,
-	int port, const char *base)
+MYSQL *eif_mysql_connect(const char *user, const char *pass, const char *host, int port, const char *base)
 {
 	MYSQL *res1 = (MYSQL *) 0;
 	MYSQL *res2 = (MYSQL *) 0;

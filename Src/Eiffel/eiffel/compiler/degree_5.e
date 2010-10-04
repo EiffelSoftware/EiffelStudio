@@ -72,7 +72,8 @@ feature -- Processing
 				if
 					count <= nb_errors and
 					l_testing_suppliers = Void and
-					l_system.test_system.is_testing_enabled
+					l_system.test_system.is_testing_enabled and
+					(l_system.is_rebuild or l_system.first_compilation)
 				then
 					l_system.test_system.add_possible_testing_classes
 					l_testing_suppliers := system.test_system.suppliers
@@ -121,7 +122,8 @@ feature -- Processing
 				if
 					count <= nb_errors and
 					l_testing_suppliers = Void and
-					l_system.test_system.is_testing_enabled
+					l_system.test_system.is_testing_enabled and
+					(l_system.is_rebuild or l_system.first_compilation)
 				then
 					l_system.test_system.add_possible_testing_classes
 					l_testing_suppliers := system.test_system.suppliers

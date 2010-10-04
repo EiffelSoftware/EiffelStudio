@@ -470,7 +470,7 @@ feature{NONE} -- Implementation
 
 invariant
 	system_not_void: system /= Void
-	feature_for_byte_code_injection_attached: feature_for_byte_code_injection /= Void
+--	feature_for_byte_code_injection_attached: feature_for_byte_code_injection /= Void
 	variable_table_attached: variable_table /= Void
 	expression_type_visitor_attached: expression_type_visitor /= Void
 	expression_b_visitor_attached: expression_b_visitor /= Void

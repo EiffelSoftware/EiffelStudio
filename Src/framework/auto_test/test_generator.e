@@ -230,7 +230,6 @@ feature -- Status setting
 	enable_slicing
 			-- Enable slicing.
 		require
-			no_minimization: not is_minimization_enabled
 			not_running: not has_next_step
 		do
 			is_slicing_enabled := True
@@ -316,31 +315,18 @@ feature {NONE} -- Basic operations
 		do
 			random.start
 			prepare
+			initiate_testing_task
 		end
 
 	remove_task (a_task: attached like sub_task; a_cancel: BOOLEAN)
 			-- <Precursor>
 		local
-			l_test_task: ETEST_GENERATION_TESTING
 			l_stat_task: ETEST_GENERATION_STATISTICS
 		do
-			if not a_cancel then
-				if attached {ETEST_MELT_TASK} sub_task as l_task then
-					if l_task.is_successful then
-						system.remove_explicit_root (interpreter_root_class_name, interpreter_root_feature_name)
-						system.make_update (False)
-						compute_interpreter_root_class
-						if attached interpreter_root_class then
-							create l_test_task.make_random (Current, class_names)
-							l_test_task.start
-							sub_task := l_test_task
-						end
-					end
-				elseif attached {ETEST_GENERATION_TESTING} sub_task as l_task then
-					create l_stat_task.make (Current)
-					l_stat_task.start (l_task.result_repository, l_task.classes_under_test)
-					sub_task := l_stat_task
-				end
+			if not a_cancel and attached {ETEST_GENERATION_TESTING} sub_task as l_task then
+				create l_stat_task.make (Current)
+				l_stat_task.start (l_task.result_repository, l_task.classes_under_test)
+				sub_task := l_stat_task
 			end
 			if not has_next_step then
 				clean
@@ -361,7 +347,7 @@ feature {NONE} -- Basic operations
 			clean_record
 		end
 
-feature {NONE} -- Implementation
+feature {NONE} -- Implementation: preparation
 
 	prepare
 			-- Prepare test generation
@@ -391,55 +377,20 @@ feature {NONE} -- Implementation
 			if is_debugging then
 				l_error_handler.set_debug_to_file (output_stream)
 			end
-			compile_project (class_names)
 		end
 
-	compile_project (a_class_name_list: like class_names)
-			-- Compile `a_project' with new `a_root_class' and `a_root_feature'.
-			--
-			-- TODO: `class_names' should be retrieved from `session'
+	initiate_testing_task
+			-- Launch a {ETEST_GENERATION_TESTING} task in `sub_task'
 		local
-			l_dir: PROJECT_DIRECTORY
-			l_file: KL_TEXT_OUTPUT_FILE
-			l_file_name: FILE_NAME
-			l_source_writer: TEST_INTERPRETER_SOURCE_WRITER
-			l_system: SYSTEM_I
-			l_melt: ETEST_MELT_TASK
+			l_test_task: ETEST_GENERATION_TESTING
 		do
-			l_system := system
-			check l_system /= Void end
-				-- Create actual root class in EIFGENs cluster
-			l_dir := l_system.project_location
-			create l_file_name.make_from_string (l_dir.eifgens_cluster_path)
-			l_file_name.set_file_name (interpreter_root_class_name.as_lower)
-			l_file_name.add_extension ("e")
-			create l_file.make (l_file_name)
-			if not l_file.exists then
-				l_system.force_rebuild
+			compute_interpreter_root_class
+			if attached interpreter_root_class then
+				create l_test_task.make_random (Current, class_names)
+				l_test_task.start
+				sub_task := l_test_task
 			end
-			l_file.recursive_open_write
-			create l_source_writer
-			if l_file.is_open_write then
-				l_source_writer.write_class (l_file, a_class_name_list, l_system)
-				l_file.flush
-				l_file.close
-			end
-
-			if not l_system.is_explicit_root (interpreter_root_class_name, interpreter_root_feature_name) then
-				l_system.add_explicit_root (Void, interpreter_root_class_name, interpreter_root_feature_name)
-			end
-
-			append_output (
-				agent (a_formatter: TEXT_FORMATTER)
-					do
-						a_formatter.process_basic_text ("Compiling project%N")
-					end, True)
-
-			create l_melt.make (etest_suite)
-			l_melt.start (True)
-			sub_task := l_melt
 		end
-
 
 feature{NONE} -- Test result analyizing
 

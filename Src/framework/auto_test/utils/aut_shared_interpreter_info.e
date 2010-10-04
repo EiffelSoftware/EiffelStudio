@@ -1,5 +1,10 @@
 note
-	description: "Summary description for {AUT_SHARED_INTERPRETER_INFO}."
+	description: "[
+		Class containing state shared information regarding a specific test generation run.
+		
+		Note: the information provided in this class should be aggregated not inherited
+		      through a {AUT_SESSION} instance.
+	]"
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
@@ -10,7 +15,7 @@ deferred class
 feature -- Access
 
 	system: SYSTEM_I
-			-- Sysetm
+			-- System
 		deferred
 		ensure
 			result_attached: Result /= Void
@@ -19,60 +24,27 @@ feature -- Access
 	compute_interpreter_root_class
 			-- Try assigning `interpreter_root_class'.
 		local
-			l_class: CLASS_I
+			l_class: detachable EIFFEL_CLASS_C
 		do
-			interpreter_root_class_cell.put (Void)
-			if attached {CONF_CLUSTER} system.test_system.eifgens_cluster as l_cluster then
-				l_class := system.universe.class_named (interpreter_root_class_name, l_cluster)
-				if l_class /= Void and then l_class.is_compiled then
-					interpreter_root_class_cell.put (l_class.compiled_class)
-				end
-			end
+			l_class := system.test_system.library_class_named (interpreter_root_class_name)
+			interpreter_root_class_cell.put (l_class)
 		end
 
-	interpreter_class: detachable CLASS_C
-			-- Compiled representation of "ITP_INTERPRETER"
-		local
-			l_parents: FIXED_LIST [CLASS_C]
-		do
-			if attached {CLASS_C} interpreter_root_class as l_root then
-				l_parents := l_root.parents_classes
-				if not l_parents.is_empty then
-					Result := l_parents.first
-				end
-			end
-		end
-
-	interpreter_root_class: detachable CLASS_C
+	interpreter_root_class: detachable EIFFEL_CLASS_C
 			-- Compiled representation of "ITP_INTERPRETER_ROOT"
 		do
 			Result := interpreter_root_class_cell.item
 		end
 
-	interpreter_root_class_cell: CELL [detachable CLASS_C]
-			-- Once per thread cell for `interpreter_root_class'
-		once
-			create Result.put (Void)
-		end
-
-	interpreter_class_name: STRING = "ITP_INTERPRETER"
-			-- Name of interpreter class
-
-	interpreter_root_class_name: STRING = "ITP_INTERPRETER_ROOT"
-			-- Name of root lass for interpreter
-
-	interpreter_root_feature_name: STRING = "execute"
-			-- Name of root feature for interpreter
-
 	feature_name_for_byte_code_injection: STRING = "execute_byte_code"
 			-- Name of feature whose byte code is to be injected.
 
-	feature_for_byte_code_injection: FEATURE_I
+	feature_for_byte_code_injection: detachable FEATURE_I
 			-- Feature whose byte-code is to be injected
 		do
-			Result := interpreter_root_class.feature_named_32 (feature_name_for_byte_code_injection)
-		ensure
-			result_attached: Result /= Void
+			if attached interpreter_root_class as l_class then
+				Result := l_class.feature_named_32 (feature_name_for_byte_code_injection)
+			end
 		end
 
 	interpreter_related_classes: DS_HASH_SET [STRING]
@@ -89,6 +61,7 @@ feature -- Access
 						end))
 
 			Result.force_last ("ITP_INTERPRETER")
+			Result.force_last ("ITP_INTERPRETER_ROOT")
 			Result.force_last ("ITP_REQUEST_PARSER")
 			Result.force_last ("ITP_STORE")
 			Result.force_last ("ITP_EXPRESSION")
@@ -98,6 +71,48 @@ feature -- Access
 			Result.force_last ("ERL_LIST")
 		ensure
 			result_attached: Result /= Void
+		end
+
+feature -- Access: names
+
+	interpreter_root_class_name: STRING
+			-- Class name of the interpreter root
+		do
+			if attached interpreter_root_class_name_cell.item as l_name then
+				Result := l_name
+			else
+				Result := {TEST_SYSTEM_I}.eqa_interpreter_name
+			end
+		end
+
+	interpreter_root_feature_name: STRING
+			-- Feature name of the interpreter root
+		do
+			if attached interpreter_root_feature_name_cell.item as l_name then
+				Result := l_name
+			else
+				Result := {TEST_SYSTEM_I}.eqa_interpreter_creator
+			end
+		end
+
+feature {NONE} -- Access: name cells
+
+	interpreter_root_class_name_cell: CELL [detachable STRING]
+			-- Once {CELL} for `interpreter_root_class_name'
+		once
+			create Result.put (Void)
+		end
+
+	interpreter_root_feature_name_cell: CELL [detachable STRING]
+			-- Once {CELL} for `interpreter_root_feature_name'
+		once
+			create Result.put (Void)
+		end
+
+	interpreter_root_class_cell: CELL [detachable EIFFEL_CLASS_C]
+			-- Once per thread cell for `interpreter_root_class'
+		once
+			create Result.put (Void)
 		end
 
 note

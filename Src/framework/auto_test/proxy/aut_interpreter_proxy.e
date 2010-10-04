@@ -83,20 +83,19 @@ feature {NONE} -- Initialization
 			a_error_handler_not_void: a_error_handler /= Void
 			interpreter_root_class_attached: interpreter_root_class /= Void
 		local
-			l_itp_class: like interpreter_class
+			l_itp_class: CLASS_C
 		do
 			make_event_producer
-
-			l_itp_class := interpreter_class
-
-
 			create variable_table.make (a_system)
 			create raw_response_analyzer
 			make_response_parser (a_system)
 
 				-- You can only do this after the compilation of the interpreter.
-			injected_feature_body_id := l_itp_class.feature_named_32 (feature_name_for_byte_code_injection).real_body_id (l_itp_class.types.first)
-			injected_feature_pattern_id := l_itp_class.feature_named_32 (feature_name_for_byte_code_injection).real_pattern_id (l_itp_class.types.first)
+			check attached feature_for_byte_code_injection as l_feature then
+				l_itp_class := l_feature.written_class
+				injected_feature_body_id := l_feature.real_body_id (l_itp_class.types.first)
+				injected_feature_pattern_id := l_feature.real_pattern_id (l_itp_class.types.first)
+			end
 
 				-- Setup request printers.
 			create socket_data_printer.make (system, variable_table)
@@ -685,7 +684,10 @@ feature{NONE} -- Process scheduling
 
 				-- We need `injected_feature_body_id'-1 because the underlying C array is 0-based.
 			l_body_id := injected_feature_body_id - 1
-			create arguments.make_from_array (<<"localhost", port.out, l_body_id.out, injected_feature_pattern_id.out, interpreter_log_filename, "-eif_root", interpreter_root_class_name + "." + interpreter_root_feature_name>>)
+			create arguments.make_from_array (
+				<<"localhost", port.out, l_body_id.out, injected_feature_pattern_id.out,
+				  interpreter_log_filename, "-eif_root",
+				  interpreter_root_class_name + "." + interpreter_root_feature_name >>)
 
 			l_workdir := system.lace.directory_name
 			create process.make (executable_file_name, arguments, l_workdir)

@@ -26,6 +26,11 @@ inherit
 
 	INTERNAL_COMPILER_STRING_EXPORTER
 
+	SHARED_STATELESS_VISITOR
+		rename
+			type_output_strategy as ast_type_output_strategy
+		end
+
 feature -- Access
 
 	has_feature (a_class: CLASS_C; a_feature: FEATURE_I): BOOLEAN
@@ -126,14 +131,6 @@ feature -- Access
 
 feature {NONE} -- Parsing class types
 
-	type_a_generator: AST_TYPE_A_GENERATOR
-			-- TYPE_A generator
-		once
-			create Result
-		ensure
-			result_attached: Result /= Void
-		end
-
 	base_type (a_name: STRING): TYPE_A
 			-- Type parsed from `a_name'
 			-- If `a_name' is "NONE", return {NONE_A}.
@@ -148,13 +145,31 @@ feature {NONE} -- Parsing class types
 				Result := none_type
 			else
 					-- Parse `a_name' into a type AST node.
-				type_parser.parse_from_string_32 ("type " + a_name, interpreter_root_class)
+				type_parser.parse_from_string_32 ("type " + a_name, Void)
 				l_type_as := type_parser.type_node
 
 					-- Generate TYPE_A object from type AST node.
-				if l_type_as /= Void and then attached {CLASS_C} interpreter_root_class as l_context_class then
-					Result := type_a_generator.evaluate_type_if_possible (l_type_as, l_context_class)
+				Result := evaluated_base_type (l_type_as)
+			end
+		end
+
+	evaluated_base_type (a_type: TYPE_AS): detachable TYPE_A
+			-- Retrieve evaluated base type for given parsed type representation.
+		require
+			a_type_attached: a_type /= Void
+		local
+			l_roots: ARRAYED_LIST [SYSTEM_ROOT]
+		do
+			l_roots := system.root_creators
+			from
+				l_roots.start
+			until
+				l_roots.after or Result /= Void
+			loop
+				if attached l_roots.item_for_iteration.root_class.compiled_class as l_root_class then
+					Result := type_a_generator.evaluate_type_if_possible (a_type, l_root_class)
 				end
+				l_roots.forth
 			end
 		end
 

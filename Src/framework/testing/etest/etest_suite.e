@@ -131,14 +131,6 @@ feature {NONE} -- Access: tests
 	etest_session_count: NATURAL
 			-- Number of etest sessions currently running.
 
-feature {TEST_SESSION_I, ETEST_EXECUTOR, ETEST_COMPILATION_EXECUTOR} -- Status report
-
-	frozen is_etest_session_running: BOOLEAN
-			-- Is an etest session currently running?
-		do
-			Result := etest_session_count > 0
-		end
-
 feature {NONE} -- Status report
 
 	is_retrieving: BOOLEAN
@@ -151,24 +143,6 @@ feature {NONE} -- Status report
 
 	has_class_map_changed: BOOLEAN
 			-- Have keys of `class_map' changed since last call to `force_test_class_compilation'
-
-feature {TEST_SESSION_I, ETEST_EXECUTOR, ETEST_COMPILATION_EXECUTOR} -- Status setting
-
-	increase_etest_session_count
-			-- Increase `etest_session_count' by one.
-		do
-			etest_session_count := etest_session_count + 1
-		ensure
-			running: is_etest_session_running
-		end
-
-	decrease_etest_session_count
-			-- Decrease `etest_session_count' by one.
-		require
-			running: is_etest_session_running
-		do
-			etest_session_count := etest_session_count - 1
-		end
 
 feature {NONE} -- Basic operations
 

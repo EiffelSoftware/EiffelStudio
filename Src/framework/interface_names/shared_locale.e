@@ -1,9 +1,7 @@
 note
-	description:
-		"Locale used by interface name translation."
+	description: "Locale used by interface name translation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -102,6 +100,27 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
+	is_white_space_code (n32: NATURAL_32): BOOLEAN
+			-- Is natural32 code `n32' a whitespace?
+		do
+			--| Optimized computation
+			--| should be the same as {NATURAL_32}.to_character_8.is_space
+			inspect n32
+			when 9..13, 32 then
+				--| 9	horizontal tab				'%T'
+				--| 10	NL line feed, new line		'%N'
+				--| 11	vertical tab
+				--| 12	NP form feed, new page
+				--| 13	carriage return=CR			'%R'
+				--| 32 	Space						' '
+				Result := True
+			else
+				-- False
+			end
+		ensure
+			is_space: Result = n32.to_character_8.is_space
+		end
+
 feature -- File saving
 
 	save_string_32_in_file (a_file: FILE; a_str: STRING_32)
@@ -152,26 +171,34 @@ feature -- String
 			a_str_not_void: a_s /= Void
 		local
 			i, nb: INTEGER_32
-			l_result: STRING_32
+			l_result: STRING_GENERAL
+			n32, upper_lower_a_offset: NATURAL_32
+			l_upper_a, l_upper_z: NATURAL_32
 		do
-			if attached {STRING_32} a_s as l_str then
-				create l_result.make_from_string (l_str)
+			if attached {STRING_8} a_s as s8 then
+				Result := s8.as_lower
+			else
 				from
+					l_result := a_s.twin
+					l_upper_a := ('A').natural_32_code
+					l_upper_z := ('Z').natural_32_code
+					upper_lower_a_offset := ('a').natural_32_code - l_upper_a
+
 					i := 1
-					nb := l_str.count
+					nb := a_s.count
 				until
 					i > nb
 				loop
-					if l_str.item (i).code <= {CHARACTER_8}.max_value then
-						l_result.put (l_str.item (i).to_character_8.as_lower, i)
+					n32 := a_s.code (i)
+					if n32 <= l_upper_z and l_upper_a <= n32 then
+						check is_valid_character_8_code: n32.is_valid_character_8_code end
+						l_result.put_code (n32 + upper_lower_a_offset, i)
 					else
-						l_result.put (l_str.item (i), i)
+							--| Keep character as it is							
 					end
 					i := i + 1
 				end
 				Result := l_result
-			elseif attached {STRING_8} a_s as l_str then
-				Result := l_str.as_lower
 			end
 		ensure
 			Result_not_void: Result /= Void
@@ -187,26 +214,33 @@ feature -- String
 			a_str_not_void: a_s /= Void
 		local
 			i, nb: INTEGER_32
-			l_result: STRING_32
+			l_result: STRING_GENERAL
+			n32, upper_lower_a_offset: NATURAL_32
+			l_lower_a, l_lower_z: NATURAL_32
 		do
-			if attached {STRING_32} a_s as l_str then
-				create l_result.make_from_string (l_str)
+			if attached {STRING_8} a_s as s8 then
+				Result := s8.as_upper
+			else
 				from
+					l_result := a_s.twin
+					l_lower_a := ('A').natural_32_code
+					l_lower_z := ('Z').natural_32_code
+					upper_lower_a_offset := l_lower_a - ('A').natural_32_code
 					i := 1
-					nb := l_str.count
+					nb := a_s.count
 				until
 					i > nb
 				loop
-					if l_str.item (i).code <= {CHARACTER_8}.max_value then
-						l_result.put (l_str.item (i).to_character_8.as_upper, i)
+					n32 := a_s.code (i)
+					if n32 <= l_lower_z and l_lower_a <= n32 then
+						check is_valid_character_8_code: n32.is_valid_character_8_code end
+						l_result.put_code (n32 - upper_lower_a_offset, i)
 					else
-						l_result.put (l_str.item (i), i)
+						--| Keep character as it is
 					end
 					i := i + 1
 				end
 				Result := l_result
-			elseif attached {STRING_8} a_s as l_str then
-				Result := l_str.as_upper
 			end
 		ensure
 			Result_not_void: Result /= Void
@@ -223,20 +257,20 @@ feature -- String
 		local
 			i, nb: INTEGER_32
 		do
-			if attached {STRING_32} a_str as l_str then
+			if attached {STRING_8} a_str as l_str_8 then
+				l_str_8.left_adjust
+			else
 				from
 					i := 1
-					nb := l_str.count
+					nb := a_str.count
 				until
-					i > nb or else (not l_str.item (i).is_character_8 or else not l_str.item (i).is_space)
+					i > nb or else not is_white_space_code (a_str.code (i))
 				loop
 					i := i + 1
 				end
 				if i > 1 then
-					l_str.keep_tail (nb - i + 1)
+					a_str.keep_tail (nb - i + 1)
 				end
-			elseif attached {STRING_8} a_str as l_str_8 then
-				l_str_8.left_adjust
 			end
 		end
 
@@ -248,20 +282,20 @@ feature -- String
 		local
 			i, nb: INTEGER_32
 		do
-			if attached {STRING_32} a_str as l_str then
+			if attached {STRING_8} a_str as l_str_8 then
+				l_str_8.right_adjust
+			else
 				from
-					nb := l_str.count
+					nb := a_str.count
 					i := nb
 				until
-					i < 1 or else (not l_str.item (i).is_character_8 or else not l_str.item (i).is_space)
+					i < 1 or else not is_white_space_code (a_str.code (i))
 				loop
 					i := i - 1
 				end
 				if i < nb then
-					l_str.keep_head (i)
+					a_str.keep_head (i)
 				end
-			elseif attached {STRING_8} a_str as l_str_8 then
-				l_str_8.right_adjust
 			end
 		end
 
@@ -272,24 +306,29 @@ feature -- String
 			a_str_not_void: a_str /= Void
 		local
 			i, nb: INTEGER_32
+			n32,m: NATURAL_32
+			c: CHARACTER_8
 		do
-			if attached {STRING_32} a_str as l_str then
+			if attached {STRING_8} a_str as l_str then
+				Result := l_str.as_upper.is_equal (l_str)
+			else
 				Result := True
 				from
 					i := 1
-					nb := l_str.count
+					nb := a_str.count
+					m := {CHARACTER_8}.max_value.to_natural_32
 				until
 					i > nb or not Result
 				loop
-					if l_str.item (i).code <= {CHARACTER_8}.max_value and then
-						l_str.item (i).to_character_8.as_lower /= l_str.item (i).to_character_8
-					then
-						Result := False
+					n32 := a_str.code (i)
+					if n32 <= m then
+						c := n32.to_character_8
+						if c.as_lower /= c then
+							Result := False
+						end
 					end
 					i := i + 1
 				end
-			elseif attached {STRING_8} a_str as l_str then
-				Result := l_str.as_upper.is_equal (l_str)
 			end
 		end
 
@@ -300,24 +339,29 @@ feature -- String
 			a_str_not_void: a_str /= Void
 		local
 			i, nb: INTEGER_32
+			n32,m: NATURAL_32
+			c: CHARACTER_8
 		do
-			if attached {STRING_32} a_str as l_str then
+			if attached {STRING_8} a_str as l_str then
+				Result := l_str.as_upper.is_equal (l_str)
+			else
 				Result := True
 				from
 					i := 1
-					nb := l_str.count
+					nb := a_str.count
+					m := {CHARACTER_8}.max_value.to_natural_32
 				until
 					i > nb or not Result
 				loop
-					if l_str.item (i).code <= {CHARACTER_8}.max_value and then
-						l_str.item (i).to_character_8.as_upper /= l_str.item (i).to_character_8
-					then
-						Result := False
+					n32 := a_str.code (i)
+					if n32 <= m then
+						c := n32.to_character_8
+						if c.as_upper /= c then
+							Result := False
+						end
 					end
 					i := i + 1
 				end
-			elseif attached {STRING_8} a_str as l_str then
-				Result := l_str.as_upper.is_equal (l_str)
 			end
 		end
 
@@ -344,7 +388,7 @@ feature -- String
 					loop
 						l_char := a_str_32.item (i)
 						l_char_2 := a_str_other.item (i)
-						if l_char.is_character_8 and then l_char_2.is_character_8 then
+						if l_char.is_character_8 and l_char_2.is_character_8 then
 							Result := l_char.as_lower = l_char_2.as_lower
 						else
 							Result := l_char = l_char_2

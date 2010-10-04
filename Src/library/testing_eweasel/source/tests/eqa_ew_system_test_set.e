@@ -65,7 +65,7 @@ feature {NONE} -- Initialization
 				i := i + 1
 			end
 
-			l_ise_platform := l_env.get_not_empty ("ISE_PLATFORM", Current)
+			l_ise_platform := l_env.get_not_empty ("ISE_PLATFORM", asserter)
 
 			l_path := file_system.build_path_from_key ("ISE_EIFFEL", << "precomp", "spec", l_ise_platform, "base.ecf" >>)
 			l_env.put (l_path, "PRECOMPILED_BASE")
@@ -135,7 +135,7 @@ feature {NONE} -- Initialization
 
 				-- Note: the following is a workaround to obtain the former Eweasel test name from the current one
 				--       e.g. TEST_ATTACH.test_001  --> attach001
-			l_test_name := l_env.get_attached (test_name_key, Current)
+			l_test_name := l_env.get_attached (test_name_key, asserter)
 			assert("valid_test_name_format", l_test_name.starts_with ("TEST_") and l_test_name.has_substring (".test_"))
 			create l_ew_test_name.make_from_string (l_test_name)
 			l_ew_test_name.remove_head (5)

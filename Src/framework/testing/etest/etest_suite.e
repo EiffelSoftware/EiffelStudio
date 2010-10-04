@@ -1,10 +1,10 @@
 note
 	description: "[
 		Test suite containing Eiffel tests which are added to {TEST_SUITE_S}.
-		
+
 		Whenever the project is successfully done compiling every test class is parsed and synchronized
 		with {TEST_SUITE_S}.
-		
+
 		Note: this is not a descendant of {TEST_SUITE_S}. Instead it contains the necessary structures
 		      for updating Eiffel tests after a compilation.
 	]"
@@ -205,18 +205,19 @@ feature -- Element change
 	retrieve_tests
 			-- Called when Eiffel project has finished compilation
 		local
-			l_test_system: TEST_SYSTEM_I
 			l_classes: SEARCH_TABLE [CLASS_C]
-
-			l_project: E_PROJECT
 			l_test_suite: TEST_SUITE_S
 		do
-			l_test_system := project_access.project.system.system.test_system
-
 			old_class_map := class_map
 			class_map := new_class_map
 
-			if l_test_system.is_testing_enabled then
+			if
+				attached project_access.project as l_project and then
+				attached l_project.system as l_esystem and then
+				attached l_esystem.system as l_systemi and then
+				attached l_systemi.test_system as l_test_system and then
+				l_test_system.is_testing_enabled
+			then
 				l_classes := l_test_system.test_set_descendants
 				from
 					l_classes.start

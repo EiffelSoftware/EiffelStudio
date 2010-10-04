@@ -327,9 +327,7 @@ feature {EV_WIDGET_IMP} -- Implementation
 			deferred
 			end
 
-
-
-	set_parent_imp (a_parent_imp: EV_CONTAINER_IMP)
+	set_parent_imp (a_parent_imp: detachable EV_CONTAINER_IMP)
 			--
 		do
 			Precursor {EV_WIDGET_IMP} (a_parent_imp)

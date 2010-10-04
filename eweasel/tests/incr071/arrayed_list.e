@@ -401,9 +401,11 @@ feature -- Element change
 
 	merge_right (other: ARRAYED_LIST [G]) is
 			-- Merge `other' into current structure after cursor.
+		local
+			l_default: G
 		do
 			if not other.is_empty then
-				conservative_resize (1, count + other.count)
+				conservative_resize_with_default (l_default, 1, count + other.count)
 				if index < count then
 					subcopy (Current, index + 1, count, 
 						index + other.count + 1) 
@@ -419,6 +421,7 @@ feature -- Element change
 		local
 			al: ARRAYED_LIST [G]
 			c, new_count: INTEGER
+			l_default: G
 		do
 			al ?= s
 			if al /= Void then -- Optimization for arrayed lists
@@ -426,7 +429,7 @@ feature -- Element change
 					-- If `s' is empty nothing to be done.
 				if c > 0 then
 					new_count := count + c
-					conservative_resize (1, new_count)
+					conservative_resize_with_default (l_default, 1, new_count)
 					subcopy (al, 1, c, count + 1)
 					set_count (new_count)
 				end

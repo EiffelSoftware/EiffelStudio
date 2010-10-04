@@ -43,16 +43,13 @@ feature -- Access
 		require
 			testing_enabled: is_testing_enabled
 		local
-			l_classes: LIST [CLASS_I]
 			l_server: CLASS_C_SERVER
 			i: INTEGER
 		do
 			create Result.make (10)
-			l_classes := universe.classes_with_name (eqa_test_set_name)
 			l_server := system.classes
 			if
-				l_classes.count = 1 and then
-				attached {EIFFEL_CLASS_C} l_classes.i_th (1).compiled_class as l_class
+				attached library_class_named (eqa_test_set_name) as l_class
 			then
 				from
 					i := l_server.lower
@@ -67,6 +64,41 @@ feature -- Access
 			end
 		ensure
 			result_attached: Result /= Void
+		end
+
+	library (a_target: CONF_TARGET): detachable CONF_LIBRARY
+			-- Retrieve testing library configuration in given target. Returns Void if testing library is not
+			-- included in target.
+		local
+			l_uuid_visitor: CONF_FIND_UUID_VISITOR
+		do
+			create l_uuid_visitor.make
+			l_uuid_visitor.set_uuid (testing_library_uuid)
+			l_uuid_visitor.set_recursive (False)
+			a_target.process (l_uuid_visitor)
+			if not l_uuid_visitor.found_libraries.is_empty then
+				Result := l_uuid_visitor.found_libraries.first
+			end
+		ensure
+			valid_result: Result /= Void implies Result.library_target.system.uuid.is_equal (testing_library_uuid)
+		end
+
+	library_class_named (a_class_name: READABLE_STRING_8): detachable EIFFEL_CLASS_C
+			-- Retrieve compiled representation of a testing library class
+		require
+			a_class_name_attached: a_class_name /= Void
+		local
+			l_universe: like universe
+		do
+			l_universe := universe
+			if
+				attached l_universe.target as l_target and then
+				attached library (l_target) as l_library and then
+				attached l_universe.class_named (a_class_name, l_library) as l_class and then
+				attached {EIFFEL_CLASS_C} l_class.compiled_class as l_cclass
+			then
+				Result := l_cclass
+			end
 		end
 
 feature {SYSTEM_I, DEGREE_5} -- Access
@@ -131,23 +163,12 @@ feature {SYSTEM_I} -- Basic operations
 			-- and everything needed for test execution, otherwise clean up any previously generated
 			-- directory or classes.
 		local
-			l_enable_testing: BOOLEAN
-			l_uuid_visitor: CONF_FIND_UUID_VISITOR
 			l_path: DIRECTORY_NAME
 		do
-			if not compilation_modes.is_precompiling then
-				create l_uuid_visitor.make
-				l_uuid_visitor.set_uuid (testing_library_uuid)
-				l_uuid_visitor.set_recursive (False)
-				a_target.process (l_uuid_visitor)
-
-					-- Enable testing mode if testing library is referenced by target
-				l_enable_testing := not l_uuid_visitor.found_libraries.is_empty
-			end
-
 				-- Set `suppliers_cache' accordingly as it will define from now on
 				-- whether testing is enabled or not
-			if l_enable_testing then
+			if not compilation_modes.is_precompiling and attached library (a_target) then
+					-- If `suppliers_cache' was created in a previous compilation, we reuse it
 				if not attached suppliers_cache then
 					create suppliers_cache.make (0)
 				end

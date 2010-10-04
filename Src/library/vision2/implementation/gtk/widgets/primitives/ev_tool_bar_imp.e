@@ -76,7 +76,7 @@ feature {NONE} -- Implementation
 			Result := visual_widget
 		end
 
-	set_parent_imp (a_container_imp: EV_CONTAINER_IMP)
+	set_parent_imp (a_container_imp: detachable EV_CONTAINER_IMP)
 			-- Set `parent_imp' to `a_container_imp'.
 		do
 			Precursor {EV_PRIMITIVE_IMP} (a_container_imp)

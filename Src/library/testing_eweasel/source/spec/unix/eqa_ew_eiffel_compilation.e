@@ -96,9 +96,8 @@ feature -- Basic operations
 			output_processor.reset_result
 			if l_precompile then
 				execution.put_string ("n%N")
-			else
-				execution.put_string ("q%N")
 			end
+			execution.put_string ("q%N")
 			execution.process_output_until_exit
 		end
 

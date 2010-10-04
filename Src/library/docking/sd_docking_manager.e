@@ -750,7 +750,7 @@ feature {SD_ACCESS} -- Library internal attributes
 			-- EV_FIXED for DOCKING_MANAGER to manage widgets
 
 	top_container: EV_CONTAINER
-			-- Topest level container. It contains EV_VIWEPORT which contains fixed_area	
+			-- Topest level container. It contains EV_VIEWPORT which contains fixed_area	
 
 	inner_containers: ARRAYED_SET [SD_MULTI_DOCK_AREA]
 			-- All containers, including main windows' and all floating windows'

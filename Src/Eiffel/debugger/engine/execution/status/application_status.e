@@ -368,7 +368,7 @@ feature -- Process related change
 			process_id := pid
 		end
 
-feature -- Thread related access
+feature -- Access: Thread related
 
 	active_thread_id: like current_thread_id
 			-- Thread ID when the execution was paused.
@@ -376,7 +376,7 @@ feature -- Thread related access
 	current_thread_id: POINTER
 			-- Thread ID of the Current call stack.
 
-	all_thread_ids: ARRAYED_LIST [like current_thread_id]
+	all_thread_ids: LIST [like current_thread_id]
 			-- All available threads' ids
 
 	all_thread_ids_count: INTEGER
@@ -387,6 +387,25 @@ feature -- Thread related access
 
 	thread_priority (id: like current_thread_id): INTEGER
 		do
+		end
+
+feature -- Access: SCOOP related
+
+	all_scoop_processor_thread_ids: detachable ARRAY [like scoop_processor_id]
+		do
+			if attached scoop_processor_ids as scp then
+				Result := scp.current_keys
+			end
+		end
+
+	scoop_processor_ids: HASH_TABLE [like scoop_processor_id, like current_thread_id]
+			-- SCOOP Processor id indexed by thread id
+
+	scoop_processor_id (tid: like current_thread_id): POINTER
+		do
+			if attached scoop_processor_ids as scp then
+				Result := scp.item (tid)
+			end
 		end
 
 feature -- Thread related change
@@ -445,25 +464,27 @@ feature -- Thread related change
 
 	add_thread_id (tid: like current_thread_id)
 		require
-			all_thread_ids = Void or else not all_thread_ids.has (tid)
+			thread_not_registered: all_thread_ids = Void or else not all_thread_ids.has (tid)
 		do
 			if all_thread_ids = Void then
-				create all_thread_ids.make (5)
+				create {ARRAYED_LIST [like current_thread_id]} all_thread_ids.make (5)
 			end
 			all_thread_ids.force (tid)
 			refresh_threads_information
 		ensure
-			all_thread_ids.has (tid)
+			thread_registered: all_thread_ids.has (tid)
 		end
 
 	remove_thread_id (tid: like current_thread_id)
 		require
-			all_thread_ids.has (tid)
+			thread_registered: all_thread_ids.has (tid)
 		do
+			unregister_scoop_thread_id (tid)
 			all_thread_ids.prune_all (tid)
 			refresh_threads_information
 		ensure
-			not all_thread_ids.has (tid)
+			thread_unregistered: not all_thread_ids.has (tid)
+			scoop_processor_unregistered: scoop_processor_id (tid) = Default_pointer
 		end
 
 	refresh_threads_information
@@ -477,6 +498,35 @@ feature -- Thread related change
 --			loop
 --				all_thread_ids.forth
 --			end
+		end
+
+	register_scoop_thread_id (tid: like current_thread_id; a_scp_proc_id: like scoop_processor_id)
+			-- Register thread `tid' as a SCOOP Processor identified by `a_scp_proc_id'
+		require
+			thread_registered: all_thread_ids.has (tid)
+		local
+			scp: like scoop_processor_ids
+		do
+			scp := scoop_processor_ids
+			if scp = Void then
+				create scp.make (10)
+				scoop_processor_ids := scp
+			end
+			scp.force (a_scp_proc_id, tid)
+		ensure
+			scoop_processor_registered: scoop_processor_id (tid) /= Default_pointer
+		end
+
+	unregister_scoop_thread_id (tid: like current_thread_id)
+			-- Unregister thread `tid' as a SCOOP Processor
+		require
+			thread_registered: all_thread_ids.has (tid)
+		do
+			if attached scoop_processor_ids as scp then
+				scp.remove (tid)
+			end
+		ensure
+			scoop_processor_registered: scoop_processor_id (tid) = Default_pointer
 		end
 
 feature {NONE} -- Call stack implementation

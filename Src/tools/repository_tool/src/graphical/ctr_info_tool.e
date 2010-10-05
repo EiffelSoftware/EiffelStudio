@@ -35,6 +35,7 @@ feature {NONE} -- Initialization
 			g.enable_tree
 			g.hide_tree_node_connectors
 			g.hide_header
+
 			c.set_short_title ("Info ...")
 			c.set_long_title ("Info")
 			create mtb.make
@@ -58,7 +59,7 @@ feature -- Access
 
 	current_repository: detachable REPOSITORY_DATA
 
-	grid: EV_GRID
+	grid: ES_GRID
 
 feature -- Element change
 
@@ -67,6 +68,7 @@ feature -- Element change
 			g: like grid
 			l_row, l_subrow: detachable EV_GRID_ROW
 			glab: EV_GRID_LABEL_ITEM
+			mlab: CTR_INFO_MESSAGE_GRID_ITEM
 			grtxt: EV_GRID_RICH_LABEL_ITEM
 --			gcb: EV_GRID_CHECKABLE_LABEL_ITEM
 --			gtxt: EV_GRID_TEXT_ITEM
@@ -78,6 +80,11 @@ feature -- Element change
 		do
 			g := grid
 			g.wipe_out
+			g.row_expand_actions.wipe_out
+			g.resize_actions.wipe_out
+			cst_info_title_col := 2
+			cst_info_value_col := 1
+
 			if attached {REPOSITORY_SVN_LOG} current_log as rsvnlog then
 				cst_info_title_col := 2
 				cst_info_value_col := 1 -- 2
@@ -100,17 +107,17 @@ feature -- Element change
 --				l_row.set_item (cst_info_title_col, glab)
 				repo := rsvnlog.parent
 				md  := smart_log_message (rsvnlog, repo.tokens_keys)
-				create glab.make_with_text (md.message)
-				glab.set_foreground_color (info_highlight_fgcolor)
-				glab.set_font (message_font)
-				glab.align_text_top
-				glab.set_top_border (3)
-				glab.set_bottom_border (5)
+				create mlab.make_with_text (md.message)
+				mlab.set_foreground_color (info_highlight_fgcolor)
+				mlab.set_font (message_font)
+				mlab.align_text_top
+				mlab.set_top_border (3)
+				mlab.set_bottom_border (5)
 --				glab.pointer_double_press_actions.extend (agent )
-				l_row.set_item (cst_info_value_col, glab)
+				l_row.set_item (cst_info_value_col, mlab)
 
-				if attached glab.font as ft then
-					l_row.set_height (ft.string_size (glab.text).height + glab.bottom_border + glab.top_border)
+				if attached mlab.font as ft then
+					l_row.set_height (ft.string_size (mlab.text).height + mlab.bottom_border + mlab.top_border)
 				end
 
 				if attached repo.tokens as l_tokens and then l_tokens.count > 0 then
@@ -123,7 +130,7 @@ feature -- Element change
 						if n > 1 then
 							g.insert_new_row (g.row_count + 1)
 							l_row := g.row (g.row_count)
-							l_row.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text (n.out + "references"))
+							l_row.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text (n.out + " references"))
 						else
 							l_row := Void
 						end
@@ -207,14 +214,7 @@ feature -- Element change
 					l_row.set_item (cst_info_value_col, glab)
 				end
 
-				if g.column_count >= cst_info_title_col then
-					g.column (cst_info_title_col).resize_to_content
---					g.column (cst_info_title_col).set_width (g.column (cst_info_title_col).width + 5)
-				end
-				if g.column_count >= cst_info_value_col then
-					g.column (cst_info_value_col).resize_to_content
-					g.column (cst_info_value_col).set_width (g.column (cst_info_value_col).width + 5)
-				end
+				request_update_grid_layout (cst_info_title_col, cst_info_value_col)
 			elseif attached {REPOSITORY_SVN_DATA} current_repository as rsvnrepo then
 				cst_info_title_col := 1
 				cst_info_value_col := 2
@@ -270,14 +270,61 @@ feature -- Element change
 						l_row.set_item (cst_info_value_col, create {EV_GRID_LABEL_ITEM}.make_with_text (l_url))
 					end
 
-					if g.column_count >= cst_info_title_col then
-						g.column (cst_info_title_col).resize_to_content
-						g.column (cst_info_title_col).set_width (g.column (cst_info_title_col).width + 5)
-					end
-					if g.column_count >= cst_info_value_col then
-						g.column (cst_info_value_col).resize_to_content
-					end
+					request_update_grid_layout (cst_info_title_col, cst_info_value_col)
 				end
+			end
+			g.row_expand_actions.force_extend (agent request_update_grid_layout (cst_info_title_col,cst_info_value_col))
+			g.resize_actions.force_extend (agent request_update_grid_layout (cst_info_title_col,cst_info_value_col))
+		end
+
+	request_update_grid_layout (cst_info_title_col, cst_info_value_col: INTEGER)
+		do
+			ev_application.add_idle_action_kamikaze (agent update_grid_layout (cst_info_title_col, cst_info_value_col))
+		end
+
+	update_grid_layout (cst_info_title_col, cst_info_value_col: INTEGER)
+		local
+			g: like grid
+			ww, w1, w2: INTEGER
+			col: EV_GRID_COLUMN
+			r,c,n: INTEGER
+		do
+			g := grid
+				-- Update layout columns
+			ww := g.viewable_width
+			if g.column_count >= cst_info_title_col then
+				col := g.column (cst_info_title_col)
+				w1 := col.required_width_of_item_span (1, g.row_count) + 5
+			end
+			if g.column_count >= cst_info_value_col then
+				col := g.column (cst_info_value_col)
+				w2 := col.required_width_of_item_span (1, g.row_count) + 5
+			end
+			w2 := w2.max (ww - w1)
+			if g.column_count >= cst_info_title_col then
+				g.column (cst_info_title_col).set_width (w1)
+			end
+			if g.column_count >= cst_info_value_col then
+				g.column (cst_info_value_col).set_width (w2)
+			end
+			from
+				r := 1
+			until
+				r > g.row_count
+			loop
+				from
+					c := 1
+					n := g.row (r).count
+				until
+					c > n
+				loop
+					if attached {CTR_INFO_MESSAGE_GRID_ITEM} g.item (c, r) as m then
+						m.update
+						g.row (r).set_height (m.required_height_after_update)
+					end
+					c := c + 1
+				end
+				r := r + 1
 			end
 		end
 

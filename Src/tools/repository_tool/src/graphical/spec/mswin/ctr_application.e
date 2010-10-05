@@ -37,12 +37,9 @@ feature {NONE} -- Initialization
 			tw.notify_icon_actions.extend (agent status_menu)
 
 			create vpn_icon.make_by_id (1)
-			create vpn_on_icon.make_by_id (2)
-			create vpn_off_icon.make_by_id (3)
 			tw.set_icon (vpn_icon)
 			tw.add_notify_icon
 			tw.set_tooltip ("Repository Tool")
-
 		end
 
 	on_first_shown
@@ -145,7 +142,7 @@ feature {NONE} -- Implementation: Access
 	tray_icon_window: detachable WEL_NOTIFY_WINDOW
 			-- Window used for inserting
 
-	vpn_icon, vpn_on_icon, vpn_off_icon: detachable WEL_ICON
+	vpn_icon: detachable WEL_ICON
 
 
 end

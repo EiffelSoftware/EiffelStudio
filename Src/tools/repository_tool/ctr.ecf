@@ -48,6 +48,7 @@
 				<assertions precondition="true" postcondition="true" check="true" supplier_precondition="true"/>
 			</option>
 		</library>
+		<library name="fmwk_vision2" location="$EIFFEL_SRC\framework\vision2\vision2-safe.ecf" readonly="false"/>
 		<library name="matcher" location="$ISE_LIBRARY\library\text\regexp\kmp_matcher\kmp_matcher-safe.ecf"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2-safe.ecf" readonly="false"/>
 		<library name="vision2_extension" location="$ISE_LIBRARY\library\vision2_extension\vision2_extension-safe.ecf"/>
@@ -56,8 +57,6 @@
 				<platform value="windows"/>
 			</condition>
 		</library>
-		<cluster name="fmwk_vision2_action" location="$EIFFEL_SRC\framework\vision2\action\" recursive="true"/>
-		<cluster name="fmwk_vision2_grid" location="$EIFFEL_SRC\framework\vision2\contrib_grid_items\" recursive="true"/>
 		<cluster name="graphical" location=".\src\graphical\" recursive="true">
 			<file_rule>
 				<exclude>/spec/mswin$</exclude>
@@ -71,7 +70,6 @@
 					<platform value="windows"/>
 				</condition>
 			</file_rule>
-
 		</cluster>
 	</target>
 	<target name="repository_tool_unix" extends="repository_tool">

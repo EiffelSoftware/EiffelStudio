@@ -129,7 +129,7 @@ feature -- Access
 
 	review_enabled: BOOLEAN
 
-	grid: EV_GRID
+	grid: ES_GRID
 
 feature -- Element change
 

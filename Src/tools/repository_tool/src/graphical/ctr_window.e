@@ -996,10 +996,16 @@ feature {CTR_TOOL} -- Catalog
 			g: like catalog_grid
 		do
 			g := catalog_grid
-			if attached g.column (cst_repo_name_column) as col then
+			if
+				g.column_count >= cst_repo_name_column and then
+				attached g.column (cst_repo_name_column) as col
+			then
 				col.set_width (col.required_width_of_item_span (1, g.row_count) + 4)
 			end
-			if attached g.column (cst_repo_uuid_column) as col then
+			if
+				g.column_count >= cst_repo_uuid_column and then
+				attached g.column (cst_repo_uuid_column) as col
+			then
 				col.set_width (col.required_width_of_item_span (1, g.row_count) + 4)
 			end
 		end
@@ -1620,10 +1626,16 @@ feature {NONE} -- Implementation / Constants
 	cst_repo_name_column: INTEGER = 1
 	cst_repo_uuid_column: INTEGER = 2
 
-	Window_title: STRING = "Commit Then Review"
+	Window_title: STRING
 			-- Title of the window.
+		once
+			Result := "Commit Then Review"
+			if debug_state then
+				Result := "WORKBENCH " + Result
+			end
+		end
 
-	Window_width: INTEGER = 700
+	Window_width: INTEGER = 800
 			-- Initial width for this window.
 
 	Window_height: INTEGER = 600

@@ -164,6 +164,7 @@ feature -- GUI events
 
 	reset
 		do
+			filter_tf.remove_text
 			apply_filter ("")
 		end
 

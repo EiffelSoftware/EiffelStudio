@@ -226,10 +226,12 @@ feature {NONE} -- Implementation
 				parent_grid.grid_cell_set_pixmap (glab, pixmaps.icon_pixmaps.folder_features_all_icon)
 				row.set_item (1, glab)
 				dbg_nb := list.count
-				create tmp.make (1, dbg_nb)
+				check list_not_empty: dbg_nb > 0 end
 				from
 					list.start
-					i := 1
+					create tmp.make_filled (list.first, 1, dbg_nb)
+					list.forth
+					i := 2
 				until
 					list.after
 				loop

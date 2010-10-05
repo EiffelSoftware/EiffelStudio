@@ -911,7 +911,6 @@ feature {NONE} -- Filling
 			application_is_executing: debugger_manager.application_is_executing
 		local
 			flist: LIST [E_FEATURE]
-			l_once_values: ARRAY [ABSTRACT_DEBUG_VALUE]
 		do
 			row_onces_filled := True
 
@@ -926,8 +925,7 @@ feature {NONE} -- Filling
 					--| Nota: address and class are used only for classic implementation
 					--| maybe optimize this call by testing if we are on classic or dotnet
 					--| but the benefit would be small compared to the gain of lisibility
-				l_once_values := debugger_manager.application.onces_values (flist, object_address, object_dynamic_class)
-				fill_onces_with_values (a_row, l_once_values)
+				fill_onces_with_values (a_row, debugger_manager.application.onces_values (flist, object_address, object_dynamic_class))
 			end
 
 			if a_row.is_expandable and then not a_row.is_expanded then
@@ -935,21 +933,21 @@ feature {NONE} -- Filling
 			end
 		end
 
-	fill_onces_with_values (a_row: EV_GRID_ROW; a_once_values: ARRAY [ABSTRACT_DEBUG_VALUE])
+	fill_onces_with_values (a_row: EV_GRID_ROW; a_once_values: SPECIAL [ABSTRACT_DEBUG_VALUE])
 		local
 			i, r: INTEGER
 			grid: EV_GRID
 			odv: ABSTRACT_DEBUG_VALUE
 		do
-			if a_once_values /= Void and then not a_once_values.is_empty then
+			if a_once_values /= Void and then a_once_values.count > 0 then
 				grid := a_row.parent
 				from
 					r := a_row.subrow_count + 1
 					a_row.insert_subrows (a_once_values.count, r)
 					r := a_row.index + r
-					i := a_once_values.lower
+					i := 0
 				until
-					i > a_once_values.upper
+					i >= a_once_values.count
 				loop
 					odv := a_once_values [i]
 						--| Add the once's value to the grid.

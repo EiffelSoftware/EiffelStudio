@@ -40,7 +40,7 @@ feature
 			create optimized_features.make (300)
 
 			nb := System.body_index_counter.count
-			create unsafe_body_indexes.make (1, nb)
+			create unsafe_body_indexes.make_filled (False, 1, nb)
 
 			Precursor {FEAT_ITERATOR}
 

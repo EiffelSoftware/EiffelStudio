@@ -170,7 +170,7 @@ feature -- Execution
 	request_debugger_data_update
 			-- Request the application to pause, in order to update debugger data
 			-- such as new breakpoints, or other catcall detection,...
-			-- mainl for classic debugging
+			-- mainly for classic debugging
 		do
 			ewb_request.make (Rqst_update_breakpoints)
 			ewb_request.send
@@ -362,9 +362,8 @@ feature -- Change
 
 feature -- Query
 
-	onces_values (flist: LIST [E_FEATURE]; a_addr: DBG_ADDRESS; a_cl: CLASS_C): ARRAY [ABSTRACT_DEBUG_VALUE]
+	onces_values (flist: LIST [E_FEATURE]; a_addr: DBG_ADDRESS; a_cl: CLASS_C): SPECIAL [ABSTRACT_DEBUG_VALUE]
 		local
-			i: INTEGER
 			err_dv: DUMMY_MESSAGE_DEBUG_VALUE
 			odv: ABSTRACT_DEBUG_VALUE
 			l_feat: FEATURE_I
@@ -375,8 +374,7 @@ feature -- Query
 			l_class := a_cl
 			from
 				once_r := Once_request
-				i := 1
-				create Result.make (i, i + flist.count - 1)
+				create Result.make_empty (flist.count)
 				flist.start
 			until
 				flist.after
@@ -436,8 +434,7 @@ feature -- Query
 						odv := err_dv
 					end
 				end
-				Result.put (odv, i)
-				i := i + 1
+				Result.extend (odv)
 				flist.forth
 			end
 		end

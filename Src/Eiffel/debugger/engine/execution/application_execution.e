@@ -1049,7 +1049,7 @@ feature {NONE} -- Assertion violation processing
 
 feature -- Query
 
-	onces_values (flist: LIST [E_FEATURE]; a_addr: DBG_ADDRESS; a_cl: CLASS_C): ARRAY [ABSTRACT_DEBUG_VALUE]
+	onces_values (flist: LIST [E_FEATURE]; a_addr: DBG_ADDRESS; a_cl: CLASS_C): SPECIAL [ABSTRACT_DEBUG_VALUE]
 			-- List of onces' value
 		require
 			flist_not_empty: flist /= Void and then not flist.is_empty
@@ -1086,7 +1086,7 @@ feature -- Query
 		deferred
 		end
 
-	internal_info (a_value: DUMP_VALUE): ARRAY [TUPLE [name: STRING; value: DUMP_VALUE]]
+	internal_info (a_value: DUMP_VALUE): detachable SPECIAL [TUPLE [name: STRING; value: detachable DUMP_VALUE]]
 			-- Internal info for `a_value'
 		require
 			is_stopped: is_stopped
@@ -1117,7 +1117,8 @@ feature -- Query
 								"deep_physical_size",
 								"physical_size"
 								>>
-					create Result.make (l_info.lower, l_info.upper)
+
+					create Result.make_empty (l_info.count)
 					from
 						create params.make (1)
 						params.extend (a_value)
@@ -1137,7 +1138,7 @@ feature -- Query
 							end
 							eval.reset
 						end
-						Result[i] := [n, l_dv]
+						Result.extend ([n, l_dv])
 						i := i + 1
 					end
 				end

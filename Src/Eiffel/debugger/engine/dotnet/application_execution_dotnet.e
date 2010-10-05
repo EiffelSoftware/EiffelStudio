@@ -648,11 +648,10 @@ feature {APPLICATION_EXECUTION} -- Launching status
 
 feature -- Query
 
-	onces_values (flist: LIST [E_FEATURE]; a_addr: DBG_ADDRESS; a_cl: CLASS_C): ARRAY [ABSTRACT_DEBUG_VALUE]
+	onces_values (flist: LIST [E_FEATURE]; a_addr: DBG_ADDRESS; a_cl: CLASS_C): SPECIAL [ABSTRACT_DEBUG_VALUE]
 		local
 			l_class: CLASS_C
 			l_feat: FEATURE_I
-			i: INTEGER
 			err_dv: DUMMY_MESSAGE_DEBUG_VALUE
 			exc_dv: EXCEPTION_DEBUG_VALUE
 			proc_dv: PROCEDURE_RETURN_DEBUG_VALUE
@@ -664,8 +663,7 @@ feature -- Query
 			l_eifnet_debugger := Eifnet_debugger
 			l_icdframe := l_eifnet_debugger.current_stack_icor_debug_frame
 			from
-				i := 1
-				create Result.make (i, i + flist.count - 1)
+				create Result.make_empty (flist.count)
 				flist.start
 			until
 				flist.after
@@ -734,8 +732,7 @@ feature -- Query
 					end
 					odv := err_dv
 				end
-				Result.put (odv, i)
-				i := i + 1
+				Result.extend (odv)
 				flist.forth
 			end
 		end

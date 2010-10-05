@@ -201,7 +201,7 @@ feature -- Properties
 
 feature {EIFFEL_CALL_STACK} -- Implementation
 
-	set_hector_addr (lst: ARRAY [ABSTRACT_DEBUG_VALUE])
+	set_hector_addr (lst: SPECIAL [ABSTRACT_DEBUG_VALUE])
 			-- Convert the physical addresses received from the application
 			-- to hector addresses. (should be called only once just after
 			-- all the information has been received from the application.)
@@ -213,11 +213,11 @@ feature {EIFFEL_CALL_STACK} -- Implementation
 				valid_values: lst /= Void
 			end
 			from
-				i := lst.lower
+				i := 0
 			until
-				i > lst.upper
+				i >= lst.count
 			loop
-				lst.item (i).set_hector_addr
+				lst[i].set_hector_addr
 				i := i + 1
 			end
 		end
@@ -237,11 +237,10 @@ feature {EIFFEL_CALL_STACK} -- Implementation
 
 feature {NONE} -- Implementation
 
-	retrieved_locals_and_arguments: TUPLE [args: detachable ARRAY [ABSTRACT_DEBUG_VALUE]; locals: detachable ARRAY [ABSTRACT_DEBUG_VALUE]]
+	retrieved_locals_and_arguments: TUPLE [args: detachable SPECIAL [ABSTRACT_DEBUG_VALUE]; locals: detachable SPECIAL [ABSTRACT_DEBUG_VALUE]]
 		local
 			l_values: ARRAYED_LIST [ABSTRACT_DEBUG_VALUE]
-			l_args, l_locals: ARRAY [ABSTRACT_DEBUG_VALUE]
-			i: INTEGER
+			l_args, l_locals: SPECIAL [ABSTRACT_DEBUG_VALUE]
 		do
 			debug ("DEBUGGER_TRACE");
 				io.error.put_string (generator + ": receiving locals & arguments%N")
@@ -276,14 +275,12 @@ feature {NONE} -- Implementation
 			end
 			if not l_values.is_empty then
 				from
-					i := 1
-					create l_args.make (i, l_values.count)
+					create l_args.make_empty (l_values.count)
 					l_values.start
 				until
 					l_values.after
 				loop
-					l_args[i] := l_values.item
-					i := i + 1
+					l_args.extend (l_values.item)
 					l_values.forth
 				end
 			end
@@ -315,14 +312,12 @@ feature {NONE} -- Implementation
 			end
 			if not l_values.is_empty then
 				from
-					i := 1
-					create l_locals.make (i, l_values.count)
+					create l_locals.make_empty (l_values.count)
 					l_values.start
 				until
 					l_values.after
 				loop
-					l_locals[i] := l_values.item
-					i := i + 1
+					l_locals.extend (l_values.item)
 					l_values.forth
 				end
 			end
@@ -339,10 +334,10 @@ feature {NONE} -- Implementation
 			l_count: INTEGER
 			value: ABSTRACT_DEBUG_VALUE
 			args_locs_info: like retrieved_locals_and_arguments
-			l_args, l_locals: ARRAY [ABSTRACT_DEBUG_VALUE]
+			l_args, l_locals: detachable SPECIAL [ABSTRACT_DEBUG_VALUE]
 			l_ot_locals: like private_object_test_locals_info
 			l_type: detachable TYPE_A
-			l_index, l_upper: INTEGER
+			l_index, l_upper: detachable INTEGER
 			locals_list: like private_locals
 			args_list: like private_arguments
 			arg_types: E_FEATURE_ARGUMENTS
@@ -365,7 +360,7 @@ feature {NONE} -- Implementation
 					l_args := Void
 					create l_error_mesg.make_with_name ("Warning")
 					l_error_mesg.set_message ("Unable to retrieve locals for melted invariant routine")
-					l_locals := <<l_error_mesg>>
+					create l_locals.make_filled (l_error_mesg, 1)
 				else
 					if not is_exhausted then
 						if attached routine as r and then not r.is_attribute then
@@ -384,8 +379,8 @@ feature {NONE} -- Implementation
 				debug ("DEBUGGER_TRACE_CALLSTACK"); io.put_string ("Finished retrieving locals and argument" + "%N"); end
 				if attached routine as rout then
 					if l_args /= Void then
-						l_index := l_args.lower
-						l_upper := l_args.upper
+						l_index := 0
+						l_upper := l_args.count - 1
 						counter := 1
 
 						--l_count := feat.argument_count
@@ -404,7 +399,7 @@ feature {NONE} -- Implementation
 								until
 									args_list.after or l_index > l_upper
 								loop
-									value := l_args.item (l_index)
+									value := l_args[l_index]
 									value.set_item_number (counter)
 									counter := counter + 1
 
@@ -425,7 +420,7 @@ feature {NONE} -- Implementation
 						l_args := Void
 					end
 
-					if l_locals /= Void and then not l_locals.is_empty then
+					if l_locals /= Void and then l_locals.count > 0 then
 
 						l_old_group := inst_context.group
 						inst_context.set_group (rout.associated_class.group)
@@ -438,8 +433,8 @@ feature {NONE} -- Implementation
 						--| FIXME IEK This check does not hold for unselected features or non-conforming features
 						l_names_heap := Names_heap
 
-						l_index := l_locals.lower
-						l_upper := l_locals.upper
+						l_index := 0
+						l_upper := l_locals.count - 1
 						counter := 1
 
 						create locals_list.make (l_locals.count)
@@ -463,7 +458,7 @@ feature {NONE} -- Implementation
 										id_list.after or
 										l_index > l_upper
 									loop
-										value := l_locals.item (l_index)
+										value := l_locals[l_index]
 										value.set_item_number (counter)
 										counter := counter + 1
 										value.set_name (l_names_heap.item (id_list.item))
@@ -482,7 +477,7 @@ feature {NONE} -- Implementation
 						if
 							l_index <= l_upper and rout.has_return_value
 						then
-							private_result := l_locals.item (l_upper)
+							private_result := l_locals[l_upper]
 							l_upper := l_upper - 1
 							private_result.set_name (once "Result")
 							if rout.type.has_associated_class then
@@ -499,7 +494,7 @@ feature {NONE} -- Implementation
 								until
 									l_index > l_upper or l_ot_locals.after
 								loop
-									value := l_locals.item (l_index)
+									value := l_locals[l_index]
 									value.set_item_number (counter)
 									counter := counter + 1
 									value.set_name (l_names_heap.item (l_ot_locals.item_for_iteration.id.name_id))
@@ -526,7 +521,7 @@ feature {NONE} -- Implementation
 							until
 								l_index > l_upper
 							loop
-								value := l_locals.item (l_index)
+								value := l_locals[l_index]
 								value.set_item_number (counter)
 								value.set_name ("value #" + counter.out)
 								counter := counter + 1

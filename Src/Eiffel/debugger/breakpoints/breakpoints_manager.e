@@ -849,13 +849,13 @@ feature -- Query
 			non_void_result: Result /= Void
 		end
 
-	breakpoints_tagged (a_tags: ARRAY [STRING_32]; include_hidden: BOOLEAN): LIST [BREAKPOINT]
+	breakpoints_tagged (a_tags: SPECIAL [STRING_32]; include_hidden: BOOLEAN): LIST [BREAKPOINT]
 			-- breakpoints which are set and match `a_tags'	
 		local
 			bp: BREAKPOINT
 			bplst: like breakpoints
 		do
-			if a_tags /= Void and then not a_tags.is_empty then
+			if a_tags /= Void and then a_tags.count > 0 then
 				create {LINKED_LIST [BREAKPOINT]} Result.make
 				from
 					bplst := breakpoints

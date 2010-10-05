@@ -1087,7 +1087,7 @@ feature -- Query
 		end
 
 	internal_info (a_value: DUMP_VALUE): ARRAY [TUPLE [name: STRING; value: DUMP_VALUE]]
-			-- Internal info for `a_addr'
+			-- Internal info for `a_value'
 		require
 			is_stopped: is_stopped
 		local

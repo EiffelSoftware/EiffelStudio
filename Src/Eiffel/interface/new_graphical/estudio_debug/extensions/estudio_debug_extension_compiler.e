@@ -401,6 +401,13 @@ feature -- Execution
 			create gi.make_with_text (attr_desc.attribute_name_id.out)
 			sr.set_item (2, gi)
 
+			if attached cl.feature_of_rout_id (attr_desc.rout_id) as f then
+				sr := g.grid_extended_new_subrow (l_row)
+				sr.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("body_index"))
+				create gi.make_with_text (f.body_index.out)
+				sr.set_item (2, gi)
+			end
+
 			if not a_list and then l_row.is_expandable then
 				l_row.expand
 			end

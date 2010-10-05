@@ -61,7 +61,7 @@ feature {NONE} -- Initialization
 			l_count: INTEGER
 			i: INTEGER
 		do
-			create l_segs.make (1, 16)
+			create l_segs.make_filled ({NATURAL_8} 0, 1, 16)
 
 			l_parts := a_uuid.split (separator_char)
 			from
@@ -269,7 +269,7 @@ feature {NONE} -- Implementation
 			-- UUID separator character
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

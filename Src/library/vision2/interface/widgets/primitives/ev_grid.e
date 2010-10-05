@@ -1479,7 +1479,7 @@ feature -- Status setting
 			row_count_set: row_count = a_row_count
 		end
 
-	set_dynamic_content_function (a_function: FUNCTION [ANY, TUPLE [INTEGER, INTEGER], EV_GRID_ITEM])
+	set_dynamic_content_function (a_function: FUNCTION [ANY, TUPLE [col: INTEGER; row: INTEGER], EV_GRID_ITEM])
 			-- Function which computes the item that resides in a particular position of the
 			-- grid while `is_content_partially_dynamic'.
 		require

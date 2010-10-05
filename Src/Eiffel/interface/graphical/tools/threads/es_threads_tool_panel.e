@@ -47,26 +47,31 @@ feature {NONE} -- Initialization
 			-- <Precursor>
 		local
 			box: EV_VERTICAL_BOX
+			g: like grid
 		do
 			box := a_widget
 			box.set_padding ({ES_UI_CONSTANTS}.vertical_padding)
 
-			create grid
-			grid.enable_single_row_selection
-			grid.enable_border
-			grid.set_column_count_to (4)
-			grid.column (col_id_index).set_title (debugger_names.t_id)
-			grid.column (col_name_index).set_title (debugger_names.t_name)
-			grid.column (col_priority_index).set_title (debugger_names.t_priority)
-			grid.column (col_note_index).set_title (debugger_names.t_note)
+			create g
+			grid := g
+			g.enable_single_row_selection
+			g.enable_border
+			g.enable_tree
+			g.set_column_count_to (4)
+			g.column (col_id_index).set_title (debugger_names.t_id)
+			g.column (col_name_index).set_title (debugger_names.t_name)
+			g.column (col_priority_index).set_title (debugger_names.t_priority)
+			g.column (col_note_index).set_title (debugger_names.t_note)
 
-			grid.pointer_double_press_item_actions.extend (agent on_item_double_clicked)
-			grid.set_auto_resizing_column (col_id_index, True)
-			grid.set_auto_resizing_column (col_name_index, True)
+			g.pointer_double_press_item_actions.extend (agent on_item_double_clicked)
+			g.set_auto_resizing_column (col_id_index, True)
+			g.set_auto_resizing_column (col_name_index, True)
 
-			box.extend (grid)
+			g.build_delayed_cleaning
+			g.enable_partial_dynamic_content
+			g.set_dynamic_content_function (agent dynamic_content_item)
 
-			grid.build_delayed_cleaning
+			box.extend (g)
 		end
 
 feature -- Properties
@@ -84,11 +89,95 @@ feature -- Access: Help
 
 feature {NONE} -- Factory
 
+	dynamic_content_item (c,r: INTEGER): EV_GRID_ITEM
+		local
+			l_item: detachable EV_GRID_ITEM
+		do
+			l_item := grid.item (c, r)
+			if l_item = Void then
+				compute_row (r)
+				l_item := grid.item (c, r)
+			end
+			if l_item = Void then
+				create Result
+			else
+				Result := l_item
+			end
+		end
+
+	compute_row (r: INTEGER)
+		local
+			l_row: EV_GRID_ROW
+			g: like grid
+			tid: like thread_id_from_row
+			lab: EV_GRID_LABEL_ITEM
+			gedit: EV_GRID_EDITABLE_ITEM
+			l_status: APPLICATION_STATUS
+			prio: INTEGER
+		do
+			g := grid
+			if r <= g.row_count then
+				l_row := grid.row (r)
+				if
+					has_scoop_processor and then
+					attached thread_id_and_scoop_processor_id_from_row (l_row) as tu_tid_scp
+				then
+					tid := tu_tid_scp.tid
+
+					l_row.set_item (col_id_index, create {EV_GRID_LABEL_ITEM}.make_with_text (tu_tid_scp.tid.out))
+					l_row.set_item (col_priority_index, create {EV_GRID_LABEL_ITEM}.make_with_text (tu_tid_scp.scp.out))
+				else
+					tid := thread_id_from_row (l_row)
+					if tid /= Default_pointer then
+						l_status := debugger_manager.application_status
+
+						create lab.make_with_text (tid.out)
+						if tid = l_status.active_thread_id then
+							lab.set_font (active_thread_font)
+							lab.set_tooltip (debugger_names.t_debuggees_active_thread)
+						end
+
+						l_row.set_item (col_id_index, lab)
+
+						if tid = l_status.current_thread_id then
+							l_row.set_background_color (row_highlight_bg_color)
+							if l_row.is_displayed then
+								l_row.ensure_visible
+							end
+						end
+
+						if attached l_status.thread_name (tid) as s then
+							create lab.make_with_text (s)
+						else
+							create lab
+						end
+						l_row.set_item (col_name_index, lab)
+
+						prio := l_status.thread_priority (tid)
+						if prio > 0 then
+							create lab.make_with_text (prio.out)
+						else
+							create lab
+						end
+						l_row.set_item (col_priority_index, lab)
+
+						if notes_on_threads.has (tid) then
+							create gedit.make_with_text (notes_on_threads.item (tid))
+						else
+							create gedit
+						end
+						gedit.deactivate_actions.extend (agent update_notes_from_item (gedit))
+						l_row.set_item (col_note_index, gedit)
+					end
+				end
+			end
+		end
+
     create_widget: EV_VERTICAL_BOX
             -- Create a new container widget upon request.
             -- Note: You may build the tool elements here or in `build_tool_interface'
         do
-        	Create Result
+        	create Result
         end
 
 	create_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
@@ -127,9 +216,17 @@ feature -- Status setting
 	on_row_double_clicked (a_row: EV_GRID_ROW)
 		local
 			tid: like thread_id_from_row
+			tu_tid_scp: like thread_id_and_scoop_processor_id_from_row
 		do
 			if a_row /= Void then
-				tid := thread_id_from_row (a_row)
+				if has_scoop_processor then
+					tu_tid_scp := thread_id_and_scoop_processor_id_from_row (a_row)
+				end
+				if tu_tid_scp /= Void then
+					tid := tu_tid_scp.tid
+				else
+					tid := thread_id_from_row (a_row)
+				end
 				if tid /= Default_pointer then
 					set_callstack_thread (tid)
 				end
@@ -208,19 +305,28 @@ feature {NONE} -- Memory management
 			Precursor
 		end
 
-feature {NONE} -- Implementation		
+feature {NONE} -- Implementation
+
+	has_scoop_processor: BOOLEAN
+			-- Is there any SCOOP processor thread displayed?
+
+	threads_expanded: BOOLEAN
+			-- Is threads row expanded?
+
+	scoop_processors_expanded: BOOLEAN
+			-- Is SCOOP Processor row expanded?	
 
 	clean_threads_info
 		do
-			if grid /= Void then
-				grid.call_delayed_clean
+			if attached grid as g then
+				g.call_delayed_clean
 			end
 		end
 
 	request_clean_threads_info
 		do
-			if grid /= Void then
-				grid.request_delayed_clean
+			if attached grid as g then
+				g.request_delayed_clean
 			end
 		end
 
@@ -229,101 +335,217 @@ feature {NONE} -- Implementation
 		require
 			application_is_executing: debugger_manager.application_is_executing
 		local
+			g: like grid
 			r: INTEGER
 			row: EV_GRID_ROW
 			lab: EV_GRID_LABEL_ITEM
-			gedit: EV_GRID_EDITABLE_ITEM
 
 			tid: POINTER
 			arr: LIST [POINTER]
+			scp: ARRAY [POINTER]
 			l_status: APPLICATION_STATUS
-			s: STRING
-			prio: INTEGER
+			i: INTEGER
+			l_notes_on_threads: like notes_on_threads
 		do
+			g := grid
 			clean_threads_info
+			g.disable_tree
 			l_status := debugger_manager.application_status
 			if l_status /= Void and then l_status.is_stopped then
-				arr := l_status.all_thread_ids
+				arr := l_status.all_thread_ids.twin
 				if arr /= Void and then not arr.is_empty then
 					from
-						notes_on_threads.start
+						l_notes_on_threads := notes_on_threads
+						l_notes_on_threads.start
 					until
-						notes_on_threads.after
+						l_notes_on_threads.after
 					loop
-						tid := notes_on_threads.key_for_iteration
+						tid := l_notes_on_threads.key_for_iteration
 						if not arr.has (tid) then
-							if notes_on_threads.valid_key (tid) then
-								notes_on_threads.remove (tid)
+							if l_notes_on_threads.valid_key (tid) then
+								l_notes_on_threads.remove (tid)
 							else
-								notes_on_threads.forth
+								l_notes_on_threads.forth
 							end
 						else
-							notes_on_threads.forth
+							l_notes_on_threads.forth
 						end
 					end
-					from
-						grid.insert_new_rows (arr.count, 1)
-						r := 1
-						arr.start
-					until
-						arr.after
-					loop
-						row := grid.row (r)
-						tid := arr.item
-						create lab.make_with_text (tid.out)
-						if tid = l_status.active_thread_id then
-							lab.set_font (active_thread_font)
-							lab.set_tooltip (debugger_names.t_debuggees_active_thread)
+
+					scp := l_status.all_scoop_processor_thread_ids
+					if scp = Void or else scp.is_empty then
+						has_scoop_processor := False
+						g.show_header
+					else
+						has_scoop_processor := True
+						g.hide_header
+						g.enable_tree
+
+							-- Remove scoop processors
+						from
+							i := scp.lower
+						until
+							i > scp.upper
+						loop
+							arr.prune (scp [i])
+							check removed: not arr.has (scp [i]) end
+							i := i + 1
 						end
 
-						row.set_item (col_id_index, lab)
+							-- Add SCOOP processors
+						r := g.row_count + 1
+						g.insert_new_row (r)
+						row := g.row (r)
+						create lab.make_with_text (debugger_names.t_scoop_processors_title (scp.count))
+						lab.set_font (group_thread_font)
+						row.set_item (1, lab)
 
-						if tid = l_status.current_thread_id then
-							row.set_background_color (row_highlight_bg_color)
-							if row.is_displayed then
-								row.ensure_visible
+						if scoop_processors_expanded then
+							fill_with_scoop_processors (row, scp, l_status)
+							row.expand
+						else
+							row.expand_actions.extend_kamikaze (agent fill_with_scoop_processors (row, scp, l_status))
+							row.ensure_expandable
+						end
+						row.expand_actions.extend (agent do scoop_processors_expanded := True end)
+						row.collapse_actions.extend (agent do scoop_processors_expanded := False end)
+					end
+
+					if arr.count > 0 then
+						if has_scoop_processor then
+							r := g.row_count + 1
+							g.insert_new_row (r)
+							row := g.row (r)
+							create lab.make_with_text (debugger_names.t_threads_title (arr.count))
+							lab.set_font (group_thread_font)
+							row.set_item (1, lab)
+
+							r := r + 1
+							if threads_expanded then
+								fill_with_threads (arr, row, True, l_status)
+								if row.is_expandable then
+									row.expand
+								end
+							else
+								row.expand_actions.extend_kamikaze (agent fill_with_threads (arr, row, True, l_status))
+								row.ensure_expandable
 							end
-						end
 
-						s := l_status.thread_name (tid)
-						if s /= Void then
-							create lab.make_with_text (s)
+							row.expand_actions.extend (agent do threads_expanded := True end)
+							row.collapse_actions.extend (agent do threads_expanded := False end)
 						else
-							create lab
+							--| no tree, flat grid
+							fill_with_threads (arr, Void, False, l_status)
 						end
-						row.set_item (col_name_index, lab)
-
-						prio := l_status.thread_priority (tid)
-						if prio > 0 then
-							create lab.make_with_text (prio.out)
-						else
-							create lab
-						end
-						row.set_item (col_priority_index, lab)
-
-						if notes_on_threads.has (tid) then
-							create gedit.make_with_text (notes_on_threads.item (tid))
-						else
-							create gedit
-						end
-						gedit.deactivate_actions.extend (agent update_notes_from_item (gedit))
-						row.set_item (col_note_index, gedit)
-
-						row.set_data (tid)
-						r := r + 1
-						arr.forth
 					end
 				else
-					grid.insert_new_row (1)
+					g.insert_new_row (1)
 					create lab.make_with_text (debugger_names.t_no_information_about_thread)
-					grid.set_item (1, 1, lab)
+					g.set_item (1, 1, lab)
 				end
 			else
-				grid.insert_new_row (1)
+				g.insert_new_row (1)
 				create lab.make_with_text (debugger_names.t_no_information_when_not_stopped)
-				grid.set_item (1, 1, lab)
+				g.set_item (1, 1, lab)
 			end
-			grid.request_columns_auto_resizing
+			g.request_columns_auto_resizing
+		end
+
+	fill_with_threads (arr: LIST [POINTER]; a_row: detachable EV_GRID_ROW; a_is_tree_enabled: BOOLEAN; a_appstatus: APPLICATION_STATUS)
+		require
+			a_appstatus_attached: a_appstatus /= Void and then a_appstatus.is_stopped
+			arr_non_empty: arr /= Void and then not arr.is_empty
+		local
+			g: like grid
+			r: INTEGER
+			l_row: EV_GRID_ROW
+			tid: POINTER
+			lab: EV_GRID_LABEL_ITEM
+			l_notes_on_threads: like notes_on_threads
+		do
+			g := grid
+			if a_row /= Void then
+				create lab.make_with_text (debugger_names.t_name)
+				lab.set_font (group_thread_font)
+				a_row.set_item (col_name_index, lab)
+
+				create lab.make_with_text (debugger_names.t_priority)
+				lab.set_font (group_thread_font)
+				a_row.set_item (col_priority_index, lab)
+
+				create lab.make_with_text (debugger_names.t_note)
+				lab.set_font (group_thread_font)
+				a_row.set_item (col_note_index, lab)
+			end
+			l_notes_on_threads := notes_on_threads
+			from
+				if a_is_tree_enabled and a_row /= Void then
+					r := a_row.index + 1
+					g.insert_new_rows_parented (arr.count, r, a_row)
+				else
+					r := g.row_count + 1
+					g.insert_new_rows (arr.count, r)
+				end
+				arr.start
+			until
+				arr.after
+			loop
+				l_row := g.row (r)
+				tid := arr.item
+				l_row.set_data (tid)
+				if tid = a_appstatus.active_thread_id then
+					ev_application.add_idle_action_kamikaze (agent l_row.ensure_visible)
+				end
+
+				r := r + 1
+				arr.forth
+			end
+		end
+
+	fill_with_scoop_processors (a_row: EV_GRID_ROW; a_scp: ARRAY [POINTER]; a_appstatus: APPLICATION_STATUS)
+		require
+			has_scoop_processor: has_scoop_processor
+			a_appstatus_attached: a_appstatus /= Void and then a_appstatus.is_stopped
+			a_row_attached: a_row /= Void and then a_row.parent /= Void
+			a_scp_non_empty: a_scp /= Void and then not a_scp.is_empty
+		local
+			g: like grid
+			l_tid: POINTER
+			l_scp: POINTER
+			j,sr: INTEGER
+			l_lab: EV_GRID_LABEL_ITEM
+			l_row: EV_GRID_ROW
+		do
+			g := grid
+
+--			create l_lab.make_with_text (debugger_names.t_name)
+--			l_lab.set_font (group_thread_font)
+--			a_row.set_item (col_name_index, l_lab)			
+			a_row.set_item (col_name_index, create {EV_GRID_ITEM})
+
+			create l_lab.make_with_text (debugger_names.t_id)
+			l_lab.set_font (group_thread_font)
+			a_row.set_item (col_priority_index, l_lab)
+
+			create l_lab.make_with_text (debugger_names.t_note)
+			l_lab.set_font (group_thread_font)
+			a_row.set_item (col_note_index, l_lab)
+
+			from
+				sr := a_row.index
+				g.insert_new_rows_parented (a_scp.count, sr + 1, a_row)
+				j := a_scp.lower
+			until
+				j > a_scp.upper
+			loop
+				l_tid := a_scp.item (j)
+				l_scp := a_appstatus.scoop_processor_id (l_tid)
+				sr := sr + 1
+				l_row := g.row (sr)
+				l_row.set_data ([l_tid, l_scp])
+
+				j := j + 1
+			end
 		end
 
 feature {NONE} -- Implementation note
@@ -334,7 +556,7 @@ feature {NONE} -- Implementation note
 			tid: like thread_id_from_row
 		do
 			if gi /= Void and then gi.parent /= Void and then gi.row /= Void then
-				tid := thread_id_from_row (gi.row)
+				tid := thread_id_from_row (gi.row) --| for thread and scoop processor
 				if tid /= Default_pointer then
 					notes_on_threads.force (gi.text, tid)
 				end
@@ -346,15 +568,24 @@ feature {NONE} -- Implementation note
 
 feature {NONE} -- Implementation, cosmetic
 
+	thread_id_and_scoop_processor_id_from_row (r: EV_GRID_ROW): detachable TUPLE [tid: POINTER; scp: POINTER]
+			-- Thread id and SCOOP Processor id related to `r'
+		do
+			if has_scoop_processor and then r.parent /= Void and then r /= Void then
+				if attached {TUPLE [tid: POINTER; scp: POINTER]} r.data as tu then
+					Result := tu
+				end
+			end
+		end
+
 	thread_id_from_row (r: EV_GRID_ROW): POINTER
 			-- Thread id related to `r'
-		local
-			tid: POINTER_REF
 		do
 			if r.parent /= Void and then r /= Void then
-				tid ?= r.data
-				if tid /= Void then
+				if attached {POINTER_REF} r.data as tid then
 					Result := tid.item
+				elseif has_scoop_processor and then attached {like thread_id_and_scoop_processor_id_from_row} r.data as tu then
+					Result := tu.tid
 				end
 			end
 		end
@@ -372,6 +603,12 @@ feature {NONE} -- Implementation, cosmetic
 	row_highlight_bg_color: EV_COLOR;
 			-- Background color for highlighted row.
 
+	group_thread_font: EV_FONT
+		once
+			create Result
+			Result.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
+		end
+
 	active_thread_font: EV_FONT
 		once
 			create Result
@@ -386,7 +623,7 @@ feature {NONE} -- Constants
 	col_note_index: 	INTEGER = 4
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

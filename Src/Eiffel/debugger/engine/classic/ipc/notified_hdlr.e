@@ -65,7 +65,6 @@ feature
 						print (generator + " : Thread created: " + event_data_tid.out + "%N")
 					end
 					s.add_thread_id (event_data_tid)
-
 				when notif_thr_exited then
 					debug ("debugger_ipc")
 						print (generator + " : Thread exited: " + event_data_tid.out + "%N")
@@ -75,7 +74,7 @@ feature
 					debug ("debugger_ipc")
 						print (generator + " : SCOOP Processor registered: " + event_data_tid.out + " scp_proc_id=" + event_data_scp_pid.out + "%N")
 					end
-					to_implement ("Implement SCOOP registration")
+					s.register_scoop_thread_id (event_data_tid, event_data_scp_pid)
 				else
 					debug ("debugger_ipc")
 						print ("EWB notified eventType="+ event_type.out + "eventData=" + event_data_tid.out + "%N")

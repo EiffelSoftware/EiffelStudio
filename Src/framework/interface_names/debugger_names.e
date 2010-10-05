@@ -319,6 +319,12 @@ feature -- Thread tool
 	t_no_information_when_not_stopped: STRING_32
 			do Result := locale.translation ("Sorry no information when application is not stopped") end
 
+	t_scoop_processors_title (a_nb: INTEGER): STRING_32 
+			do Result := locale.formatted_string (locale.plural_translation ("One SCOOP Processor", "$1 SCOOP Processors", a_nb), [a_nb]) end
+				
+	t_threads_title (a_nb: INTEGER): STRING_32 
+			do Result := locale.formatted_string (locale.plural_translation ("One Thread", "$1 Threads", a_nb), [a_nb]) end
+
 feature -- Expression evaluation messages
 
 	msg_error_call_on_void_target (fname: STRING_GENERAL): STRING_32

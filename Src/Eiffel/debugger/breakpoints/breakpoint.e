@@ -192,7 +192,7 @@ feature -- Tags access
 			end
 		end
 
-	match_tags (a_tags: ARRAY [STRING_32]): BOOLEAN
+	match_tags (a_tags: SPECIAL [STRING_32]): BOOLEAN
 			-- Does Current match `a_tags' criterion ?
 		require
 			a_tags_not_void: a_tags /= Void
@@ -203,7 +203,7 @@ feature -- Tags access
 			s: STRING_32
 		do
 			from
-				Result := a_tags.is_empty
+				Result := a_tags.count = 0
 				if not Result then
 					s_gcfi := to_tag_path
 					if s_gcfi /= Void then
@@ -215,9 +215,9 @@ feature -- Tags access
 						end
 					end
 				end
-				i := a_tags.lower
+				i := 0
 			until
-				i > a_tags.upper or Result
+				i >= a_tags.count or Result
 			loop
 				s := a_tags[i]
 				if s /= Void and then not s.is_empty then

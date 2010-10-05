@@ -14,7 +14,7 @@ inherit
 
 feature -- Properties
 
-	tags: ARRAY [STRING_32]
+	tags: SPECIAL [STRING_32]
 			-- Tags identifiying the set of breakpoints
 			--| This can be either a real tag,
 			--|		foo, bar, ...
@@ -36,21 +36,28 @@ feature -- Change
 			lst: LIST [STRING_32]
 			i: INTEGER
 			s: STRING_32
+			l_tags: like tags
 		do
 			lst := a_s32.split (',')
-			from
-				create tags.make (1, lst.count)
-				lst.start
-				i := 1
-			until
-				lst.after
-			loop
-				s := lst.item_for_iteration
-				s.left_adjust
-				s.right_adjust
-				tags[i] := s
-				i := i + 1
-				lst.forth
+			if lst.count = 0 then
+				tags := Void
+			else
+				from
+					lst.start
+					create l_tags.make_filled (lst.first, lst.count)
+					tags := l_tags
+					lst.forth
+					i := 1
+				until
+					lst.after
+				loop
+					s := lst.item
+					s.left_adjust
+					s.right_adjust
+					l_tags[i] := s
+					i := i + 1
+					lst.forth
+				end
 			end
 		end
 
@@ -61,23 +68,23 @@ feature -- Query
 		local
 			i: INTEGER
 		do
-			if tags /= Void and then not tags.is_empty then
+			if attached tags as t and then t.count > 0 then
 				from
-					i := tags.lower
-					create Result.make_from_string (tags[i])
+					i := 0
+					create Result.make_from_string (t[i])
 					i := i + 1
 				until
-					i > tags.upper
+					i >= t.count
 				loop
 					Result.append_character (',')
-					Result.append_string (tags[i])
+					Result.append_string (t[i])
 					i := i + 1
 				end
 			end
 		end
 
 note
-	copyright: "Copyright (c) 1984-2007, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -101,11 +108,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

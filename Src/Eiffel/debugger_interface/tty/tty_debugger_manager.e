@@ -102,29 +102,32 @@ feature -- output
 			b: BREAKPOINT
 			i: INTEGER
 			s: STRING
-			arr: ARRAY [BREAKPOINT]
+			arr: SPECIAL [BREAKPOINT]
 		do
 			bl := breakpoints_manager.breakpoints
-			from
-				i := 1
-				if on_select_proc /= Void then
-					create arr.make (1, bl.count)
+			if bl.count > 0 then
+				from
+					if on_select_proc /= Void then
+						create arr.make_empty (bl.count)
+					end
+					localized_print (debugger_names.m_n_breakpoints (bl.count.out))
+					i := 1
+					bl.start
+				until
+					bl.after
+				loop
+					b := bl.item_for_iteration
+					if arr /= Void then
+						io.put_string ("  [" + i.out + "] ")
+						arr.extend (b)
+						check b_added: arr[i - 1] = b end
+					else
+						io.put_string ("  - ")
+					end
+					localized_print (b.string_representation (True) + "%N")
+					bl.forth
+					i := i + 1
 				end
-				localized_print (debugger_names.m_n_breakpoints (bl.count.out))
-				bl.start
-			until
-				bl.after
-			loop
-				b := bl.item_for_iteration
-				if arr /= Void then
-					io.put_string ("  [" + i.out + "] ")
-					arr[i] := b
-				else
-					io.put_string ("  - ")
-				end
-				localized_print (b.string_representation (True) + "%N")
-				bl.forth
-				i := i + 1
 			end
 			if on_select_proc /= Void then
 				from
@@ -139,13 +142,13 @@ feature -- output
 				loop
 					s := adjusted_answer
 					if s.is_integer then
-						i:= s.to_integer
-						if arr.lower <= i and i <= arr.upper then
-							b := arr[i]
+						i := s.to_integer
+						if 1 <= i and i <= arr.count then
+							b := arr[i - 1]
 						end
 					end
 					if b = Void and then i /= 0 then
-						localized_print (debugger_names.m_error_invalid_value ("0-" + arr.upper.out))
+						localized_print (debugger_names.m_error_invalid_value ("0-" + arr.count.out))
 						io.put_new_line
 						io.put_string (" -> ")
 					end

@@ -77,7 +77,7 @@ feature -- Status Setting
 		local
 			l_parent: like parent
 		do
-			text := a_text
+			text := a_text.as_string_32
 			implementation.string_size_changed
 			l_parent := parent
 			if l_parent /= Void and then not l_parent.is_destroyed then

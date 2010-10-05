@@ -15,7 +15,9 @@ inherit
 		end
 
 create
+	make_empty,
 	make,
+	make_filled,
 	make_from_array
 
 feature -- Access
@@ -238,12 +240,13 @@ feature -- Duplication
 			-- bounds `start_pos' and `end_pos'.
 		do
 			if start_pos <= end_pos then
-				create Result.make (start_pos, end_pos)
+				create Result.make_filled (item (start_pos), start_pos, end_pos)
 					-- Only copy elements if needed.
 				Result.subcopy (Current, start_pos, end_pos, start_pos)
 			else
 					-- make empty
-				create Result.make (start_pos, end_pos)
+				create Result.make_empty
+				Result.rebase (start_pos)
 			end
 		end
 

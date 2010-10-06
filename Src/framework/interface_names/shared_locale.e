@@ -223,8 +223,8 @@ feature -- String
 			else
 				from
 					l_result := a_s.twin
-					l_lower_a := ('A').natural_32_code
-					l_lower_z := ('Z').natural_32_code
+					l_lower_a := ('a').natural_32_code
+					l_lower_z := ('z').natural_32_code
 					upper_lower_a_offset := l_lower_a - ('A').natural_32_code
 					i := 1
 					nb := a_s.count

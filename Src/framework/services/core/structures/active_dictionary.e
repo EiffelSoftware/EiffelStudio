@@ -82,7 +82,7 @@ feature {NONE} -- Access
 	table: DS_HASH_TABLE [G, K]
 			-- Actual table used to store active dictionary items.
 
-	adoptions: DS_ARRAYED_LIST [ANY]
+	adoptions: DS_ARRAYED_LIST [G]
 			-- List of adopted objects.
 
 feature -- Status report

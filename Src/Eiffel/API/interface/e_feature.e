@@ -589,7 +589,6 @@ feature -- Access
 	ast: FEATURE_AS
 			-- Associated AST structure for feature
 		local
-			class_ast: CLASS_AS;
 			bid: INTEGER
 			l_feature_names: EIFFEL_LIST [FEATURE_NAME]
 			has_error: BOOLEAN

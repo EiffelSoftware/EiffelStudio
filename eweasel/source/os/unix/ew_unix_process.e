@@ -447,7 +447,7 @@ feature {NONE} -- Implementation
 				count := 1
 				lower := 1	-- Not applicable
 			end
-			create a.make (1, count);
+			create a.make_filled (Void, 1, count);
 			if process_name /= Void then
 				pname := process_name
 			else

@@ -59,7 +59,7 @@ feature -- Creation
 			end;
 
 			count := args.count
-			create arg_array.make (1, count)
+			create arg_array.make_filled (Void, 1, count)
 			from
 				args.start
 				k := 1

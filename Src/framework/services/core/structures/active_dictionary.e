@@ -186,11 +186,9 @@ feature {NONE} -- Basic operations
 			-- <Precursor>
 		local
 			l_table: like table
-			l_adoptions: like adoptions
 			l_old_item: detachable G
 		do
 			l_table := table
-			l_adoptions := adoptions
 			if l_table.has (a_key) then
 				l_old_item := l_table.item (a_key)
 				check l_old_item_attached: l_old_item /= Void end
@@ -390,7 +388,7 @@ invariant
 --	adoptions_contains_attached_items: (attached {DS_LINEAR [detachable ANY]} as l_adoptions) and then not l_adoptions.has (Void)
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

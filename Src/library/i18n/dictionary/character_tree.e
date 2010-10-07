@@ -1,23 +1,21 @@
 note
-	description: "Datastructure that indexes items with a string_32 key by constructing a tree of characters"
+	description: "Data structure that indexes items with a string_32 key by constructing a tree of characters."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	CHARACTER_TREE[G]
-inherit
-	ANY
+	CHARACTER_TREE [G -> ANY]
 
 create
 	default_create,
 	make
 
-feature {NONE} -- Init
+feature {NONE} -- Creation
 
 	make (a_key: STRING_32; a_character_list: LINKED_LIST[CHARACTER_TREE[G]])
-			-- Make a tree with `a_key' as key and `a_character_list' as character list
+			-- Make a tree with `a_key' as a key and `a_character_list' as a character list.
 		require
 			a_key_not_exists: a_key /= Void
 			a_character_list_exists: a_character_list /= Void
@@ -26,10 +24,10 @@ feature {NONE} -- Init
 			character_trees_list := a_character_list
 		end
 
-feature -- Interface
+feature -- Modification
 
 	insert (a_item: G; a_key: STRING_32)
-			-- Insert an `a_item' with `a_key' as key in Current tree
+			-- Insert an `a_item' with `a_key' as key in Current tree.
 		require
 			item_and_key_exist: a_item /= Void and a_key /= Void
 			not_yet_in_tree: not has (a_item, a_key)
@@ -38,28 +36,31 @@ feature -- Interface
 			l_key: like key
 		do
 			if not is_leaf then
-					-- it is a node
+					-- It is a node.
 				l_key := key
 				check l_key /= Void end -- Implied from invariant
 				tree_el:= search_character_tree (a_key.substring (l_key.count+1, a_key.count))
 				if tree_el = Void or not a_key.substring (1,l_key.count).is_equal (l_key) then
-						-- element not in the node
+						-- Element is not in the node.
 					insert_character_tree (a_item, a_key)
-				else -- similar element in the node, insert there
+				else
+						-- Similar element is in the node, insert there.
 					tree_el.insert (a_item,a_key.substring (l_key.count+1, a_key.count))
 				end
 			elseif key = Void then
-					-- it is a empty leaf
+					-- It is an empty leaf.
 				key := a_key
 				item := a_item
 			else
-					-- it is a 1 element leaf
+					-- It is a 1-element leaf.
 				split (a_item, a_key)
 			end
 		end
 
+feature -- Access
+
 	get (a_key: STRING_32): detachable G
-			-- get item with `a_key' as key
+			-- Get item with `a_key' as key.
 		require
 			a_key_exists: a_key /= Void
 			a_key_in_tree: get_item_with_key (a_key) /= Void
@@ -82,7 +83,7 @@ feature -- Interface
 		end
 
 	has (a_item: G; s: STRING_32): BOOLEAN
-			-- Does current tree have `a_item' with `a_key' as key?
+			-- Does current tree have `a_item' with `s' as a key?
 		require
 			a_item_not_void: a_item /= Void
 			s_not_void: s /= Void
@@ -93,16 +94,16 @@ feature -- Interface
 			if not is_leaf then
 				l_key := key
 				check l_key /= Void end -- Implied by invariant
-				tree_el := search_character_tree (s.substring (l_key.count +1, s.count))
-				Result := tree_el /= Void and then tree_el.has (a_item, s.substring (l_key.count +1, s.count))
+				tree_el := search_character_tree (s.substring (l_key.count + 1, s.count))
+				Result := tree_el /= Void and then tree_el.has (a_item, s.substring (l_key.count + 1, s.count))
 			else
 				Result := (s ~ key and then a_item ~ item)
 			end
 		end
 
 	get_item_with_key (s: STRING_32): detachable G
-			-- get the item in the tree that has as key `s'
-			-- if no item with this porperty, Result is void
+			-- Get an item in the tree that has as key `s',
+			-- return Void otherwise.
 		require
 			a_key_exists: s /= Void
 		local
@@ -112,9 +113,9 @@ feature -- Interface
 			if not is_leaf then
 				l_key := key
 				check l_key /= Void end -- Implied by invariant
-				tree_el := search_character_tree (s.substring (l_key.count +1, s.count))
+				tree_el := search_character_tree (s.substring (l_key.count + 1, s.count))
 				if tree_el /= Void then
-					Result := tree_el.get_item_with_key (s.substring (l_key.count +1, s.count))
+					Result := tree_el.get_item_with_key (s.substring (l_key.count + 1, s.count))
 				end
 			elseif key ~ s then
 				Result := item
@@ -124,7 +125,7 @@ feature -- Interface
 feature {CHARACTER_TREE} -- Information
 
 	key_corresponds (a_key: STRING_32): BOOLEAN
-			-- does `a_key' correspond to a_string?
+			-- Does `a_key' correspond to a_string?
 		require
 			a_string_not_void: a_key /= Void
 		do
@@ -135,12 +136,12 @@ feature {CHARACTER_TREE} -- Information
 
 feature {NONE} -- character_trees_list
 
-	character_trees_list: detachable LINKED_LIST[CHARACTER_TREE[G]]
-			-- list of all subtrees
+	character_trees_list: detachable LINKED_LIST [CHARACTER_TREE[G]]
+			-- List of all subtrees
 
 	search_character_tree (a_string: STRING_32): detachable CHARACTER_TREE[G]
-			-- search tree which represents a_character
-			-- void if not available
+			-- Search for a tree that represents a_string,
+			-- return Void if not found.
 		require
 			not_is_leaf: not is_leaf
 			a_string_not_void: a_string /= Void
@@ -148,7 +149,7 @@ feature {NONE} -- character_trees_list
 			l_tree: detachable CHARACTER_TREE [G]
 			l_list: like character_trees_list
 		do
-				-- User move to front method
+				-- User move to front method.
 			l_list := character_trees_list
 			check l_list /= Void end -- Implied by invariant
 			from
@@ -173,9 +174,9 @@ feature {NONE} -- character_trees_list
 
 	insert_character_tree (a_item: G; a_key: STRING_32)
 			-- Insert in `character_trees_list' a subtree with
-			-- `a_item' es element and `a_key' as key
+			-- `a_item' as an element and `a_key' as a key
 			-- If necessary, update `key' and all keys
-			-- of the subtrees
+			-- of the subtrees.
 		require
 			not_is_leaf: not is_leaf
 			key_not_void: key /= Void
@@ -208,7 +209,7 @@ feature {NONE} -- character_trees_list
 		end
 
 	split (a_item: G; a_string: STRING_32)
-			-- split leaf in a node with a character tree list
+			-- Split leaf in a node with a character tree list.
 		require
 			a_item_not_void: a_item /= Void
 			a_string_not_void: a_string /= Void
@@ -218,7 +219,6 @@ feature {NONE} -- character_trees_list
 			r_key: STRING_32
 			l_key: detachable STRING_32
 			l_tree, r_tree: CHARACTER_TREE[G]
-			l_default: G
 			l_item: like item
 			l_list: like character_trees_list
 		do
@@ -251,7 +251,7 @@ feature {NONE} -- character_trees_list
 feature {NONE} -- Information
 
 	is_leaf: BOOLEAN
-			-- is current element a leaf?
+			-- Is current element a leaf?
 		do
 			Result := character_trees_list = Void
 		end
@@ -259,7 +259,7 @@ feature {NONE} -- Information
 	key: detachable STRING_32
 
 	prepend_to_key (a_string: STRING_32)
-			-- prepend `a_string' to `key'
+			-- Prepend `a_string' to `key'.
 		require
 			a_string_not_void: a_string /= Void
 			key_not_void: key /= Void
@@ -277,7 +277,7 @@ feature {NONE} -- Information
 		do
 		end
 
-feature {NONE} -- Implementation
+feature {NONE} -- Measurement
 
 	minimum_distance (a_key: STRING_32): INTEGER
 			-- find distance between `a_string' and `key'
@@ -302,17 +302,17 @@ feature {NONE} -- Implementation
 			Result := Result - 1
 		end
 
-feature --display
+feature -- Output
 
 	print_tree (t: INTEGER): STRING_32
-			-- display current tree,
-			-- `t' is the depth, of current item
+			-- Printable representation of the current tree,
+			-- `t' is a depth of the current item.
 		local
 			i : INTEGER
 			spaces: STRING_32
 			l_key, l_item: STRING
 		do
-			create spaces.make_filled (' ',t*2)
+			create spaces.make_filled (' ', t*2)
 			if attached key as k then
 				l_key := k.out
 			else
@@ -324,8 +324,7 @@ feature --display
 				l_item := ""
 			end
 			if is_leaf then
-
-				Result := spaces+"LEAF with item: "+l_item+" ("+l_key+")%N"
+				Result := spaces + "LEAF with item: " + l_item + " (" + l_key + ")%N"
 			else
 				if attached character_trees_list as l_list then
 					Result := spaces+"NODE with key: "+l_key+"%N"
@@ -335,7 +334,7 @@ feature --display
 					until
 						l_list.after
 					loop
-						spaces.make_filled (' ',(t+1)*2)
+						spaces.make_filled (' ', (t + 1) * 2)
 						Result.append (spaces+i.out+"th child%N"+l_list.item.print_tree (t+2))
 						l_list.forth
 						i := i + 1
@@ -353,7 +352,7 @@ invariant
 
 note
 	library:   "Internationalization library"
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -362,9 +361,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
-
 
 end -- Class CHARACTER_TREE

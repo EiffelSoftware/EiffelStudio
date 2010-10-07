@@ -983,12 +983,6 @@ feature -- Third pass: byte code production and type check
 							new_suppliers.remove_occurrence (f_suppliers)
 						end
 						dependances.remove (body_index)
-
-							-- Second pass desactive body id of changed
-							-- features only. Deactive body ids of removed
-							-- features.
-						Tmp_ast_server.desactive (body_index)
-
 						removed_features.forth
 					end
 

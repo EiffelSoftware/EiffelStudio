@@ -59,9 +59,9 @@ feature -- Processing
 				-- If this is the case then we don't need to perform any processing as the AST is already at the level of access_in.
 				-- This means that the byte nodes get generated
 			if a_parent_c /= Void then
-					-- We need to perform a deep twin of the feature a.s.
+					-- We need to perform a deep twin of the feature AST.
 					-- so that there is no aliasing between AST nodes.
-				l_feature_as := body_server.item (a_feature.body_index).deep_twin
+				l_feature_as := a_feature.body.deep_twin
 
 					-- Process replicated AST body content to account for renames within the same inheritance branch.
 					-- We can also check to see if explicit replication needs to be performed.
@@ -111,8 +111,7 @@ feature -- Processing
 					end
 
 						-- Make sure that replicated features always gets stored to disk even if no change has been made.
-					tmp_ast_server.body_force (l_feature_as, l_body_index)
-					tmp_ast_server.reactivate (l_body_index)
+					tmp_ast_server.body_force (a_current_class.class_id, l_feature_as, l_body_index)
 
 					a_feature.set_body_index (l_body_index)
 

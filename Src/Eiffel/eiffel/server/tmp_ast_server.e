@@ -45,11 +45,7 @@ feature {NONE} --  Initialization
 		do
 			Precursor {COMPILER_SERVER}
 			create storage.make (Chunk)
-			create body_storage.make (Chunk)
-			create body_info.make (Chunk)
-			create tmp_body_info.make (Chunk)
 			create invariant_info.make (Chunk)
-			create useless_body_indexes.make (Chunk)
 			create unique_values.make (Chunk)
 			create invariants_to_remove.make
 			create discardable_classes.make (chunk)
@@ -184,7 +180,7 @@ feature {NONE} -- Visitor
 							attached loaded_class as c and then
 							attached c.feature_of_name_id (n.internal_name.name_id) as f
 						then
-							body_force (t, f.body_index)
+							body_force (c.class_id, t, f.body_index)
 						end
 					end
 				(a, ?)
@@ -193,48 +189,19 @@ feature {NONE} -- Visitor
 
 feature -- Body element change
 
-	body_force (a_body: FEATURE_AS; a_body_index: INTEGER)
+	body_force (a_class_id: INTEGER; a_body: FEATURE_AS; a_body_index: INTEGER)
 			-- Put `a_body' under `a_body_index'.
 		require
+			has_class_id: has (a_class_id)
 			a_body_not_void: a_body /= Void
 			a_body_index_positive: a_body_index >= 0
+		local
+			l_ast: CLASS_AS
 		do
-			body_storage.force (a_body, a_body_index)
+			l_ast := item (a_class_id)
+			l_ast.body_indexes.force (a_body, a_body_index)
 		ensure
-			has: body_has (a_body_index)
-		end
-
-	desactive (a_body_index: INTEGER)
-			-- Put `a_body_index' in `useless_body_indexes'.
-		require
-			body_index_positive: a_body_index >= 0
-		do
-			if a_body_index > 0 then
-				debug
-					io.error.put_string ("TMP_AST_SERVER.desactivate ")
-					io.error.put_integer (a_body_index)
-					io.error.put_new_line
-				end
-				useless_body_indexes.force (a_body_index)
-			end
-		end
-
-	reactivate (a_body_index: INTEGER)
-			-- Remove `a_body_index' from `useless_body_indexes' if
-			-- present, otherwise nothing.
-		require
-			body_index_positive: a_body_index >= 0
-		do
-			if a_body_index > 0 then
-				debug
-					io.error.put_string ("TMP_AST_SERVER.reactivate ")
-					io.error.put_integer (a_body_index)
-					io.error.put_new_line
-				end
-				if useless_body_indexes.count > 0 then
-					useless_body_indexes.remove (a_body_index)
-				end
-			end
+			has: body_has (a_class_id, a_body_index)
 		end
 
 feature -- Invariant element change
@@ -282,40 +249,28 @@ feature -- Element access
 			end
 		end
 
-	body_has (a_body_id: INTEGER): BOOLEAN
+	body_has (a_class_id, a_body_id: INTEGER): BOOLEAN
 			-- Does the server contain a feature with `a_body_id'?
 		require
-			a_body_id_positive: a_body_id >= 0
-		do
-			Result := body_storage.has (a_body_id) or else body_info.has (a_body_id)
-		end
-
-	body_item (a_body_id: INTEGER): FEATURE_AS
-			-- Get feature with `a_body_id'.
-		require
+			has_a_class_id: has (a_class_id)
 			a_body_id_positive: a_body_id >= 0
 		local
-			info: READ_INFO
-			server_file: SERVER_FILE
+			l_ast: CLASS_AS
 		do
-			Result := body_storage.item (a_body_id)
-			if Result = Void then
-				info := body_info.item (a_body_id)
-				if info /= Void then
-					server_file := Server_controler.file_of_id (info.file_id)
-					check
-							-- Server file should exist since we are getting it from a READ_INFO.
-						server_file_not_void: server_file /= Void
-					end
-					if not server_file.is_open then
-						Server_controler.open_file (server_file)
-					end
-					Result := partial_retrieve_body (server_file.descriptor, info.position, info.object_count)
-						-- We set the `id' there because `Result.id' is actually the ID given at parsing
-						-- time, it is not its body index.
-					Result.set_id (a_body_id)
-				end
-			end
+			l_ast := item (a_class_id)
+			Result := l_ast.body_indexes.has (a_body_id)
+		end
+
+	body_item (a_class_id, a_body_id: INTEGER): FEATURE_AS
+			-- Get feature with `a_body_id'.
+		require
+			has_a_class_id: has (a_class_id)
+			a_body_id_positive: a_body_id >= 0
+		local
+			l_ast: CLASS_AS
+		do
+			l_ast := item (a_class_id)
+			Result := l_ast.body_indexes.item (a_body_id)
 		end
 
 	invariant_has (a_class_id: INTEGER): BOOLEAN
@@ -370,16 +325,12 @@ feature -- Finalization
 
 	finalize
 			-- Finalization after a successful recompilation.
-		local
-			useless_body_index: INTEGER
-			l_useless: like useless_body_indexes
 		do
 			debug
 				io.error.put_string ("TMP_AST_SERVER.finalize%N")
 			end
 
 				-- Flush all classes to disk
-			tmp_body_info.wipe_out
 			from
 				storage.start
 			until
@@ -391,56 +342,9 @@ feature -- Finalization
 				end
 				storage.forth
 			end
-				-- Convert the (read_info/id) touples into (read_info/body_index)
-			from
-				body_storage.start
-			until
-				body_storage.after
-			loop
-				if attached tmp_body_info.item (body_storage.item_for_iteration.id) as info then
-						-- Store only present items. Some of items can be missed
-						-- if the AST of the class is not stored. They are ignored.
-					body_info.put (info, body_storage.key_for_iteration)
-				end
-				body_storage.forth
-			end
 				-- Remove the stored data from memory
 			discardable_classes.wipe_out
 			storage.wipe_out
-			body_storage.wipe_out
-			tmp_body_info.wipe_out
-
-				-- Desactive useless body ids
-			from
-				l_useless := useless_body_indexes
-				l_useless.start
-			until
-				l_useless.after
-			loop
-				useless_body_index := l_useless.item_for_iteration
-					-- Note: `remove' will get the updated id
-					-- before performing the removal.
-				debug
-					io.error.put_string ("Useless body_index: ")
-					io.error.put_integer (useless_body_index)
-					io.error.put_new_line
-				end
-					-- Remove non-used `body_index' from both
-					-- Current and BODY_SERVER, otherwise during
-					-- `merge' we will add them back to BODY_SERVER
-					-- making this step useless.
-				body_info.remove (useless_body_index)
-				Body_server.remove (useless_body_index)
-				l_useless.forth
-			end
-				-- Wipeout useless body indexes as they are no longer required.
-			useless_body_indexes.wipe_out
-
-
-				-- Clear cache and merge with server
-			Body_server.cache.wipe_out
-			Body_server.merge (body_info)
-			body_info.wipe_out
 
 				-- Remove invariants
 			from
@@ -466,9 +370,6 @@ feature {NONE} -- Implementation (in memory)
 	storage: HASH_TABLE [CLASS_AS, INTEGER]
 			-- In memory storage for class.
 
-	body_storage: HASH_TABLE [FEATURE_AS, INTEGER]
-			-- In memory storage for features.
-
 	unique_values: HASH_TABLE [HASH_TABLE [INTEGER, STRING], INTEGER]
 			-- Mapping of unique values per class.
 
@@ -482,11 +383,6 @@ feature -- Implementation (disk cache)
 
 feature {NONE} -- Implementation (on disk)
 
-	body_info, tmp_body_info: HASH_TABLE [READ_INFO, INTEGER]
-			-- Offsets of the objects tracked by the store append if
-			-- saved to disk. Allows fast access to the objects.
-			-- Maps body_id to the position of FEATURE_AS
-
 	invariant_info: HASH_TABLE [READ_INFO, INTEGER]
 			-- Offsets of the objects tracked by the store append if
 			-- saved to disk. Allows fast access to the objects.
@@ -499,28 +395,20 @@ feature {NONE} -- Store to disk
 
 	make_index (obj: ANY; file_position, object_count: INTEGER)
 			-- Store object `obj' and track the instances
-			-- of FEATURE_AS and INVARIANT_AS
+			-- of INVARIANT_AS
 		local
 			read_info: READ_INFO
 		do
 				-- Put `obj' in the index.
 			create read_info.make (file_position, current_file_id)
 			read_info.set_object_count (object_count)
-
-			if attached {FEATURE_AS} obj as feat then
-				tmp_body_info.force (read_info, feat.id)
-			else
-				invariant_info.put (read_info, current_class_id)
-			end
+			invariant_info.put (read_info, current_class_id)
 		end
 
 	need_index (obj: ANY): BOOLEAN
 			-- Is an index needed for `obj'?
-		local
-			l_dynamic_type: INTEGER
 		do
-			l_dynamic_type := {ISE_RUNTIME}.dynamic_type (obj)
-			Result := l_dynamic_type = feature_as_type or else l_dynamic_type = invariant_as_type
+			Result := {ISE_RUNTIME}.dynamic_type (obj) = invariant_as_type
 		end
 
 	flush
@@ -534,10 +422,6 @@ feature {NONE} -- Implementation
 	invariants_to_remove: LINKED_LIST [INTEGER];
 			-- Id of invariants to remove from the invariant server
 			-- when finalization
-
-	useless_body_indexes: SEARCH_TABLE [INTEGER]
-			-- Set of body_indexes ids which have to disappear after a successful
-			-- recompilation
 
 feature {NONE} -- Implementation of dynamic type checking
 
@@ -580,10 +464,7 @@ invariant
 	cache_not_void: cache /= Void
 	unique_values_not_void: unique_values /= Void
 	storage_not_void: storage /= Void
-	body_storage_not_void: body_storage /= Void
-	body_info_not_void: body_info /= Void
 	invariant_info_not_void: invariant_info /= Void
-	useless_body_indexes_not_void: useless_body_indexes /= Void
 	invariants_to_remove_not_void: invariants_to_remove /= Void
 	discardable_classes_attached: attached discardable_classes
 

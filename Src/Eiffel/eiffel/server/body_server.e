@@ -9,40 +9,69 @@ class
 	BODY_SERVER
 
 inherit
-	READ_SERVER [FEATURE_AS]
-		redefine
-			has, item
-		end
+	ANY
 
-create
-	make
+	SHARED_SERVER
+		export
+			{NONE} all
+		end
 
 feature
 
-	cache: CACHE [FEATURE_AS]
-			-- Cache for routine tables
-		once
-			create Result.make
+	has (a_class_id, a_body_index: INTEGER): BOOLEAN
+			-- Is there `a_body_index' in the associated AST of `a_class_id'?
+		local
+			l_ast: CLASS_AS
+		do
+				-- FIXME: Should we first search in the TMP server first and if not found
+				-- the non-TMP one? Currently we assume that if there is an AST, we only look
+				-- where we got the AST and we skip the other source.
+			l_ast := tmp_ast_server.item (a_class_id)
+			if l_ast = Void then
+				l_ast := ast_server.item (a_class_id)
+			end
+			if l_ast /= Void then
+				Result := l_ast.body_indexes.has (a_body_index)
+			end
 		end
 
-	has (an_id: INTEGER): BOOLEAN
-			-- Has current `an_id'?
+	server_has (a_class_id, a_body_index: INTEGER): BOOLEAN
+			-- Is there `a_body_index' in the associated AST of `a_class_id'?
 		do
-			Result := tmp_ast_server.body_has (an_id) or else Precursor (an_id)
+			if
+				attached ast_server.item (a_class_id) as l_ast
+			then
+				Result := l_ast.body_indexes.has (a_body_index)
+			end
 		end
 
-	item (an_id: INTEGER): FEATURE_AS
-			-- Body of id `an_id'. Look first in the temporary
-			-- body server. It not present, look in itself.
+	item (a_class_id, a_body_index: INTEGER): detachable FEATURE_AS
+			-- Body of id `a_body_index' in the associated AST of `a_class_id'.
+		local
+			l_ast: CLASS_AS
 		do
-			Result := Tmp_ast_server.body_item (an_id)
-			if Result = Void then
-				Result := Precursor (an_id)
+				-- FIXME: Should we first search in the TMP server first and if not found
+				-- the non-TMP one? Currently we assume that if there is an AST, we only look
+				-- where we got the AST and we skip the other source.
+			l_ast := tmp_ast_server.item (a_class_id)
+			if l_ast = Void then
+				l_ast := ast_server.item (a_class_id)
+			end
+			if l_ast /= Void then
+				Result := l_ast.body_indexes.item (a_body_index)
+			end
+		end
+
+	server_item (a_class_id, a_body_index: INTEGER): detachable FEATURE_AS
+			-- Body of id `a_body_index' in the associated AST of `a_class_id'.
+		do
+			if attached ast_server.item (a_class_id) as l_ast then
+				Result := l_ast.body_indexes.item (a_body_index)
 			end
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -55,22 +84,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

@@ -144,7 +144,7 @@ feature -- Access
 				else
 						-- Feature may have disappeared from system and
 						-- we need to detect it.
-					Result := Body_server.server_has (body_index)
+					Result := Body_server.server_has (access_in, body_index)
 					if
 						Result and then
 						System.execution_table.has_dead_function (body_index)
@@ -155,7 +155,7 @@ feature -- Access
 								-- encapsulation is still needed.
 							Result := is_attribute_needed
 						else
-							f := Body_server.server_item (body_index)
+							f := Body_server.server_item (access_in, body_index)
 
 								-- This is an attribute that was a function before, so
 								-- it is not a valid `execution_unit' anymore if after

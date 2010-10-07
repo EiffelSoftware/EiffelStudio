@@ -1722,24 +1722,17 @@ feature -- Check
 		require
 			not_is_inline_agent: not is_inline_agent
 		local
-			class_ast: CLASS_AS
 			bid: INTEGER
 		do
 			bid := body_index
 			if bid > 0 then
-				Result := body_server.item (bid)
-			end
-			if Result = Void then
-					-- Means a degree 4 error has occurred so the
-					-- best we can do is to search through the
-					-- class ast and find the feature as
+					-- We need to check this flag as it tells whether or not we really have replication.
+					-- A typical case is {BILINEAR}.sequential_search does not get a new FEATURE_AS
+					-- in BILINEAR and the its FEATURE_AS has to be found in LINEAR.
 				if has_replicated_ast then
-					class_ast := Tmp_ast_server.item (access_in)
+					Result := body_server.item (access_in, bid)
 				else
-					class_ast := Tmp_ast_server.item (written_in)
-				end
-				if class_ast /= Void then
-					Result := class_ast.feature_with_name (feature_name_id)
+					Result := body_server.item (written_in, bid)
 				end
 			end
 		end
@@ -1920,11 +1913,10 @@ feature -- Polymorphism
  					-- If AST has been replicated, then we must use `access_in'
  					-- as this is the new written in value.
  				Result.set_access_in (access_in)
- 				Result.set_written_in (written_in)
  			else
- 				Result.set_written_in (written_in)
  				Result.set_access_in (written_in)
  			end
+			Result.set_written_in (written_in)
 
  			Result.set_pattern_id (pattern_id)
 			Result.set_feature_id (feature_id)
@@ -3025,6 +3017,7 @@ feature -- Replication
 			other.set_is_binary (is_binary)
 			other.set_is_unary (is_unary)
 			other.set_has_convert_mark (has_convert_mark)
+			other.set_has_replicated_ast (has_replicated_ast)
 			other.set_body_index (body_index)
 			other.set_is_type_evaluation_delayed (is_type_evaluation_delayed)
 		end

@@ -7867,7 +7867,7 @@ feature {NONE} -- Implementation
 					check assertion_info_attached: assertion_info /= Void end
 					if assertion_info.has_assertion then
 						body_index := assertion_info.body_index
-						precursor_feature := body_server.item (body_index)
+						precursor_feature := body_server.item (assertion_info.written_in, body_index)
 						check
 							precursor_feature_not_void: precursor_feature /= Void
 						end

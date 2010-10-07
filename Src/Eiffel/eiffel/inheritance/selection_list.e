@@ -93,7 +93,11 @@ feature -- Selection
 				loop
 					if l_has_old_feature_replication and then not item.non_conforming then
 							-- Use legacy replication if set and parent is non-conforming
-						replication := item.a_feature.replicated (item.internal_a_feature.written_in)
+						if item.a_feature.has_replicated_ast then
+							replication := item.a_feature.replicated (item.internal_a_feature.access_in)
+						else
+							replication := item.a_feature.replicated (item.internal_a_feature.written_in)
+						end
 					else
 						replication := item.a_feature.replicated (l_inheriting_class_id)
 						if item.non_conforming then
@@ -342,8 +346,12 @@ feature -- Selection
 			rid				: INTEGER
 			attribute_i: ATTRIBUTE_I
 		do
-			id := new_t.feat_tbl_id;
-			a_feature := a_info.a_feature;
+			a_feature := a_info.a_feature
+			if a_feature.has_replicated_ast then
+				id := a_feature.access_in
+			else
+				id := new_t.feat_tbl_id
+			end
 				-- New unselected feature
 			r_id_set := a_feature.rout_id_set;
 			a_feature := a_feature.unselected (id);

@@ -145,11 +145,10 @@ feature -- Settings
 			else
 				if has_replicated_ast then
 					Result.set_access_in (access_in)
-					Result.set_written_in (written_in)
 				else
-					Result.set_written_in (written_in)
 					Result.set_access_in (written_in)
 				end
+				Result.set_written_in (written_in)
 			end
 			Result.set_pattern_id (pattern_id)
 			Result.set_feature_id (feature_id)
@@ -387,7 +386,7 @@ feature -- Byte code generation
 				ba.append ({ONCE_BYTE_CODE}.once_mark_thread_relative)
 					-- Record routine body index
 				ba.append_integer_32 (body_index)
-				ba.append_integer_32 (0) --| check interp.c usage of `once_end_break_index' 
+				ba.append_integer_32 (0) --| check interp.c usage of `once_end_break_index'
 			elseif is_object_relative_once then
 				check no_constant_per_object: False end
 				ba.append ('%U')

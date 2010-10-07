@@ -77,8 +77,8 @@ feature {NONE} -- Creation
 						check assertion_info_attached: assertion_info /= Void end
 						if assertion_info.has_precondition then
 							body_index := assertion_info.body_index
-							precursor_feature := body_server.item (body_index)
 							written_class := assertion_info.written_class
+							precursor_feature := body_server.item (written_class.class_id, body_index)
 							check
 								precursor_feature_attached: precursor_feature /= Void
 							end
@@ -95,8 +95,8 @@ feature {NONE} -- Creation
 					end
 					if f.has_precondition then
 							-- Process current feature assertion
-						precursor_feature := body_server.item (f.body_index)
 						written_class := f.written_class
+						precursor_feature := body_server.item (written_class.class_id, f.body_index)
 						check
 							precursor_feature_attached: precursor_feature /= Void
 						end

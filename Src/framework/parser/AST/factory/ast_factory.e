@@ -363,7 +363,7 @@ feature -- Value AST creation
 			-- New integer value.
 		require
 			buffer_not_void: buffer /= Void
-			valid_sign: ("%U+-").has (sign_symbol)
+			valid_sign: sign_symbol = '%U' or sign_symbol = '-' or sign_symbol = '+'
 			a_psr_not_void: a_psr /= Void
 		local
 			token_value: STRING

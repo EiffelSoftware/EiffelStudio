@@ -122,12 +122,12 @@ feature {NONE} -- Implementation
 		do
 			if not is_retrying then
 				if is_inline_agent then
-					if attached {FEATURE_AS} Body_server.item (enclosing_body_id) as inl_agt_feat_as then
+					if attached ast as inl_agt_feat_as then
 						Result ?= inline_agent_lookup.lookup_inline_agent_of_feature (
 								inl_agt_feat_as, inline_agent_nr).content
 					end
 				elseif body_index > 0 then
-					if attached {FEATURE_AS} Body_server.item (body_index) as feat_as then
+					if attached ast as feat_as then
 							--| feature_as can be Void for invariant routine
 						Result ?= feat_as.body.content
 					end

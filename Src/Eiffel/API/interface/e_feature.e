@@ -600,13 +600,7 @@ feature -- Access
 				bid := body_id_for_ast;
 				if bid > 0 then
 						-- Server in the temporary server first to get the latest version of the AST.
-					Result := body_server.item (bid)
-				end
-				if Result = Void then
-					class_ast := tmp_ast_server.item (written_in)
-					if class_ast /= Void then
-						Result := class_ast.feature_with_name (name_id)
-					end
+					Result := body_server.item (written_in, bid)
 				end
 			end
 

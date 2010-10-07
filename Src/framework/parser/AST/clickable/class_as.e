@@ -82,6 +82,7 @@ feature {NONE} -- Initialization
 
 			end_keyword := ed
 			date := -1
+			create body_indexes.make (0)
 		ensure
 			class_name_set: class_name = n
 			external_class_name_set: external_class_name = ext_name
@@ -592,6 +593,9 @@ feature {EIFFEL_PARSER_SKELETON} -- Element change
 		end
 
 feature -- Access
+
+	body_indexes: HASH_TABLE [FEATURE_AS, INTEGER]
+			-- Table for FEATURE_AS instance indexed by their body index.
 
 	feature_with_name (n: INTEGER): FEATURE_AS
 			-- Feature AST with internal name `n'.

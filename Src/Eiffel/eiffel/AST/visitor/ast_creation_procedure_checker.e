@@ -103,7 +103,7 @@ feature {NONE} -- Processing
 					a := s.item (i)
 					check a_attached: a /= Void end
 					if a.has_precondition then
-						p := body_server.item (a.body_index)
+						p := body_server.item (a.written_in, a.body_index)
 						check
 							p_attached: p /= Void
 						end
@@ -128,7 +128,7 @@ feature {NONE} -- Processing
 					a := s.item (i)
 					check a_attached: a /= Void end
 					if a.has_postcondition then
-						p := body_server.item (a.body_index)
+						p := body_server.item (a.written_in, a.body_index)
 						check
 							p_attached: p /= Void
 						end

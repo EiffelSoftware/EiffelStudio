@@ -43,7 +43,7 @@ feature
 				Result := basic_equiv (other_unique)
 					and then value.is_equivalent (other_unique.value)
 			end;
-			if Not Result then
+			if not Result then
 				System.current_class.insert_changed_feature (feature_name_id)
 			end
 		end

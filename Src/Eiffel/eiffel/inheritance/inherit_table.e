@@ -279,8 +279,14 @@ feature
 				error_handler.raise_error
 			end
 
-				-- Remove all changed features if any
-			a_class.changed_features.clear_all;
+				-- In the past we used to call `a_class.changed_features.clear_all'
+				-- however this is not good for incrementality because if you change the body
+				-- of a routine f from Body1 to Body2 but then get an error at degree 3 after
+				-- the new bytecode for f has been generated. Then you fix the error and change
+				-- f back to Body1, the compiler will not detect the change and will not recompute
+				-- the bytecode which is necessary since we do not want Body2.
+				-- This fixes eweasel test#incr228 and test#incr399.
+			-- a_class.changed_features.clear_all;
 
 				-- Analyze features written directly in `a_class'.
 			if a_class.changed then
@@ -1366,12 +1372,12 @@ end;
 
 							-- Found a feature of same name and written in the
 							-- same class.
-						old_description := fetch_description (body_index)
+						old_description := body_server.server_item (a_class.class_id, body_index)
 						if old_description = Void then
 								-- This should not happen, but if it does.
 							is_the_same := False
 						else
-							old_tmp_description := Tmp_ast_server.body_item (body_index)
+							old_tmp_description := Tmp_ast_server.body_item (a_class.class_id, body_index)
 
 								-- Incrementality of the workbench is here: we
 								-- compare the content of a new feature and the
@@ -1450,14 +1456,13 @@ end;
 
 						-- Update `read_info' in BODY_SERVER
 					if body_index > 0 then
-						Tmp_ast_server.body_force (yacc_feature, body_index)
-						Tmp_ast_server.reactivate (body_index)
+						Tmp_ast_server.body_force (a_class.class_id, yacc_feature, body_index)
 					else
 						check
 							feature_is_il_external: old_feature_i.extension /= Void
 								and then old_feature_i.extension.is_il
 						end
-						Tmp_ast_server.body_force (yacc_feature, external_body_index)
+						Tmp_ast_server.body_force (a_class.class_id, yacc_feature, external_body_index)
 					end
 
 						-- Insert the changed feature in the table of
@@ -1465,12 +1470,11 @@ end;
 					changed_features.extend (feature_name_id);
 				else
 						-- Update `read_info' in BODY_SERVER
-					Tmp_ast_server.body_force (yacc_feature, body_index)
-					Tmp_ast_server.reactivate (body_index)
+					Tmp_ast_server.body_force (a_class.class_id, yacc_feature, body_index)
 				end;
 			else
 				Result.set_body_index (Body_index_counter.next_id)
-				Tmp_ast_server.body_force (yacc_feature, Result.body_index)
+				Tmp_ast_server.body_force (a_class.class_id, yacc_feature, Result.body_index)
 
 					-- Insert the changed feature in the table of changed
 					-- features of `a_class'.
@@ -1769,19 +1773,6 @@ end;
 					-- New feature id since the old feature table
 					-- doesn't have an entry `feature_name'
 				l_new_feature_id := retrieve_feature_id (a_inherit_info.a_feature)
-
-					-- We reactivate `body_index' in case `old_feature' is Void because
-					-- it was removed in `assign_feature_table' as it was not valid
-					-- anymore (Most likely because its signature had some classes
-					-- which have been moved to a different location and those
-					-- classes have now a different `class_id' which makes it not a
-					-- valid feature anymore).
-					--| The only issue when performing this call is that in a compilation
-					--| from scratch it is useless, but we do not have much choice in
-					--| case of incremental compilation.
-				if not l_compilation_straight then
-					Tmp_ast_server.reactivate (a_inherit_info.a_feature.body_index)
-				end
 			else
 					-- Take the old feature id
 				l_new_feature_id := old_feature.feature_id
@@ -1992,26 +1983,6 @@ feature {NONE} -- Implementation
 				vfav.set_inherited_feature (inherited_features.item_alias_id (f.alias_name_id))
 				Error_handler.insert_error (vfav)
 			end
-		end
-
-	fetch_description (a_body_index: INTEGER): FEATURE_AS
-			-- Fetch previous version of `a_body_index' in `body_server'.
-			--| Currently this does not work all the time due to EIFGENs corruption,
-			--| when this happens, we simply return True. That way we provide a quick
-			--| workaround when it crashes at later degrees by simply telling them
-			--| to resave the class that causes the failure. During debugging we should
-			--| get the exception which would hopefully help us fix that bug.
-		require
-			has_body: body_server.server_has (a_body_index)
-		local
-			retried: BOOLEAN
-		do
-			if not retried then
-				Result := body_server.server_item (a_body_index)
-			end
-		rescue
-			retried := True
-			retry
 		end
 
 feature {NONE} -- Temporary body index

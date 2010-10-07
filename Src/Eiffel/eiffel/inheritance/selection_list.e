@@ -347,6 +347,9 @@ feature -- Selection
 			attribute_i: ATTRIBUTE_I
 		do
 			a_feature := a_info.a_feature
+				-- If AST was replicated, we need to preserve the access_in of the inherited routine
+				-- since this is where we find the associated AST for `a_feature'. This fixes test#incr295
+				-- when compiling in full class checking mode.
 			if a_feature.has_replicated_ast then
 				id := a_feature.access_in
 			else

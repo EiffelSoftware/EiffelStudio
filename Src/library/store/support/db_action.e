@@ -10,7 +10,7 @@ note
 	Database: All_Bases
 
 class
-	DB_ACTION [G]
+	DB_ACTION [G -> ANY]
 
 inherit
 	ACTION
@@ -66,7 +66,7 @@ feature -- Access
 			-- Result list.
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
@@ -76,9 +76,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class DB_ACTION
-
-

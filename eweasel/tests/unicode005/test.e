@@ -10,6 +10,7 @@ feature {NONE} -- Initialization
 			-- Run application.
 		do
 			print (("%U+-").has ('%U'))
+			io.new_line
 		end
 
 end

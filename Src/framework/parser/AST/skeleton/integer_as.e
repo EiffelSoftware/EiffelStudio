@@ -78,7 +78,7 @@ feature {NONE} -- Initialization
 			-- It is fine to use STRING, since `s' as integer mush be ascii compatible.
 		require
 --			valid_type: a_type /= Void implies (a_type.actual_type.is_integer or a_type.actual_type.is_natural)
-			valid_sign: ("%U+-").has (sign)
+			valid_sign: sign = '%U' or sign = '-' or sign = '+'
 			s_not_void: s /= Void
 			s_long_enough: s.count >= 3
 			s_has_hexadecimal_prefix: s.as_lower.substring_index ("0x", 1) = 1
@@ -361,7 +361,7 @@ feature {NONE} -- Translation
 	read_hexadecimal_value (sign: CHARACTER; s: STRING)
 			-- Convert hexadecimal representation `s' with sign `sign' into an integer or natural value.
 		require
-			valid_sign: ("%U+-").has (sign)
+			valid_sign: sign = '%U' or sign = '-' or sign = '+'
 			s_not_void: s /= Void
 			s_large_enough: s.count > 2
 		local

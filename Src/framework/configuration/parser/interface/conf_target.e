@@ -1224,7 +1224,15 @@ feature -- Equality
 	is_group_equivalent (other: like Current): BOOLEAN
 			-- Is `other' and `Current' the same with respect to the group layout?
 		do
-			Result := is_abstract = other.is_abstract and then is_group_equal_check (libraries, other.libraries) and then
+				-- If there is a change in the target hierarchy, we cannot cope with it
+				-- properly, see eweasel test#incr379
+			if extends = Void then
+				Result := other.extends = Void
+			elseif other.extends /= Void then
+				Result := extends.name.same_string (other.extends.name)
+			end
+			if Result then
+				Result := is_abstract = other.is_abstract and then is_group_equal_check (libraries, other.libraries) and then
 						is_group_equal_check (assemblies, other.assemblies) and then
 						is_group_equal_check (clusters, other.clusters) and then
 						is_group_equal_check (overrides, other.overrides) and then
@@ -1233,6 +1241,7 @@ feature -- Equality
 						equal (file_rule, other.file_rule) and then
 						equal (mapping, other.mapping) and then
 						other.setting_enforce_unique_class_names = setting_enforce_unique_class_names
+			end
 			if Result then
 				if precompile = Void then
 					Result := other.precompile = Void

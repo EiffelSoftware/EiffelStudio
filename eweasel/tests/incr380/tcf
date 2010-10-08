@@ -10,6 +10,6 @@ compile_result	validity_error NONE VD27
 
 copy_sub 	Ace_rev2 $TEST Ace
 resume_compile
-compile_result 	validity_error NONE V???
+compile_result 	validity_error NONE VD25
 
 test_end

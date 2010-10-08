@@ -2844,7 +2844,6 @@ feature {NONE} -- Implementation
 			l_text_formatter_decorator: like text_formatter_decorator
 		do
 			l_text_formatter_decorator := text_formatter_decorator
-			put_breakable
 			check
 				not_expr_type_visiting: not expr_type_visiting
 			end

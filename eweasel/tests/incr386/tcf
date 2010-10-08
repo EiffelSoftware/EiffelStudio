@@ -22,4 +22,9 @@ copy_sub 	test1.e $CLUSTER test1.e
 resume_compile
 compile_result 	validity_error TEST1 VTUG(2)
 
+define		CLASS "class TEST1 [G -> TEST2 [TEST3 [INTEGER], INTEGER]] end"
+copy_sub 	test1.e $CLUSTER test1.e
+resume_compile
+compile_result 	ok
+
 test_end

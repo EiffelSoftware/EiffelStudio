@@ -938,6 +938,7 @@ end
 			l_errors, l_warnings: LIST [CONF_ERROR]
 			vd71: VD71
 			vd80: VD80
+			vd25: VD25
 			l_target: CONF_TARGET
 			l_file: PLAIN_TEXT_FILE
 			l_file_name: FILE_NAME
@@ -962,189 +963,197 @@ end
 				l_target_not_void: l_target /= Void
 			end
 
-				-- Check for testing library in current config
-			test_system.check_for_testing_configuration (l_target)
-
-				-- let the configuration system build "everything"
-			l_state := universe.conf_state_from_target (l_target)
-			if universe.target /= Void then
-				create l_vis_build.make_build_from_old (l_state,
-					l_target, universe.target, l_factory)
-			else
-				create l_vis_build.make_build (l_state, l_target, l_factory)
-			end
-			if has_potential_class_name_mismatch then
-				has_potential_class_name_mismatch := False
-				l_vis_build.set_is_full_class_name_analyzis (True)
-			else
-				has_potential_class_name_mismatch := True
-				l_vis_build.set_is_full_class_name_analyzis (False)
-			end
-			if il_generation then
-				l_vis_build.set_assembly_cach_folder (metadata_cache_path)
-				l_vis_build.set_il_version (clr_runtime_version)
-			end
-			l_vis_build.set_partial_location (
-				l_factory.new_location_from_path (project_location.partial_generation_path, l_target))
-
-				-- set observers
-			l_vis_build.consume_assembly_observer.extend (agent degree_output.put_consume_assemblies)
-			l_vis_build.process_group_observer.extend (agent degree_output.put_process_group)
-			l_vis_build.process_directory.extend (agent degree_output.put_degree_6)
-
-			l_target.process (l_vis_build)
-			if l_vis_build.is_error then
-				from
-					l_errors := l_vis_build.last_errors
-					l_errors.start
-				until
-					l_errors.after
-				loop
-					create vd71.make (l_errors.item)
-					Error_handler.insert_error (vd71)
-					l_errors.forth
-				end
-				set_is_force_rebuild (True)
+				-- We need to check that there is a root, otherwise compiler
+				-- would crash later in `update_root_class'. See eweasel test#incr380.
+			if l_target.root = Void then
+				create vd25.make (l_target.name)
+				Error_handler.insert_error (vd25)
 				Error_handler.raise_error
-			end
-			l_warnings := l_vis_build.last_warnings
-			from
-				l_warnings.start
-			until
-				l_warnings.after
-			loop
-				create vd80
-				vd80.set_warning (l_warnings.item)
-				error_handler.insert_warning (vd80)
-				l_warnings.forth
-			end
+			else
+					-- Check for testing library in current config
+				test_system.check_for_testing_configuration (l_target)
 
-				-- modified classes
-			l_classes := l_vis_build.modified_classes
-			create new_classes.make
-			from
-				l_classes.start
-			until
-				l_classes.after
-			loop
-				l_conf_class := l_classes.item_for_iteration
-					-- FIXME: Patrickr 03/14/2006 for now the compiler can't deal with changed
-					-- external or precompiled classes
-				if not l_conf_class.is_class_assembly then
-					l_class_i ?= l_conf_class
-					check l_class_i_not_void: l_class_i /= Void end
-					if not l_class_i.compiled_class.is_precompiled then
-						workbench.change_class (l_class_i)
-						if l_conf_class.is_renamed then
-							l_class_i.compiled_class.recompile_syntactical_clients
+					-- let the configuration system build "everything"
+				l_state := universe.conf_state_from_target (l_target)
+				if universe.target /= Void then
+					create l_vis_build.make_build_from_old (l_state,
+						l_target, universe.target, l_factory)
+				else
+					create l_vis_build.make_build (l_state, l_target, l_factory)
+				end
+				if has_potential_class_name_mismatch then
+					has_potential_class_name_mismatch := False
+					l_vis_build.set_is_full_class_name_analyzis (True)
+				else
+					has_potential_class_name_mismatch := True
+					l_vis_build.set_is_full_class_name_analyzis (False)
+				end
+				if il_generation then
+					l_vis_build.set_assembly_cach_folder (metadata_cache_path)
+					l_vis_build.set_il_version (clr_runtime_version)
+				end
+				l_vis_build.set_partial_location (
+					l_factory.new_location_from_path (project_location.partial_generation_path, l_target))
+
+					-- set observers
+				l_vis_build.consume_assembly_observer.extend (agent degree_output.put_consume_assemblies)
+				l_vis_build.process_group_observer.extend (agent degree_output.put_process_group)
+				l_vis_build.process_directory.extend (agent degree_output.put_degree_6)
+
+				l_target.process (l_vis_build)
+				if l_vis_build.is_error then
+					from
+						l_errors := l_vis_build.last_errors
+						l_errors.start
+					until
+						l_errors.after
+					loop
+						create vd71.make (l_errors.item)
+						Error_handler.insert_error (vd71)
+						l_errors.forth
+					end
+					set_is_force_rebuild (True)
+					Error_handler.raise_error
+				end
+				l_warnings := l_vis_build.last_warnings
+				from
+					l_warnings.start
+				until
+					l_warnings.after
+				loop
+					create vd80
+					vd80.set_warning (l_warnings.item)
+					error_handler.insert_warning (vd80)
+					l_warnings.forth
+				end
+
+					-- modified classes
+				l_classes := l_vis_build.modified_classes
+				create new_classes.make
+				from
+					l_classes.start
+				until
+					l_classes.after
+				loop
+					l_conf_class := l_classes.item_for_iteration
+						-- FIXME: Patrickr 03/14/2006 for now the compiler can't deal with changed
+						-- external or precompiled classes
+					if not l_conf_class.is_class_assembly then
+						l_class_i ?= l_conf_class
+						check l_class_i_not_void: l_class_i /= Void end
+						if not l_class_i.compiled_class.is_precompiled then
+							workbench.change_class (l_class_i)
+							if l_conf_class.is_renamed then
+								l_class_i.compiled_class.recompile_syntactical_clients
+							end
 						end
 					end
+					l_classes.forth
 				end
-				l_classes.forth
-			end
-				-- added classes
-			l_classes := l_vis_build.added_classes
-			from
-				l_classes.start
-			until
-				l_classes.after
-			loop
-				l_conf_class := l_classes.item_for_iteration
-				l_class_i ?= l_conf_class
-				check
-					class_i: l_class_i /= Void
+					-- added classes
+				l_classes := l_vis_build.added_classes
+				from
+					l_classes.start
+				until
+					l_classes.after
+				loop
+					l_conf_class := l_classes.item_for_iteration
+					l_class_i ?= l_conf_class
+					check
+						class_i: l_class_i /= Void
+					end
+
+						-- add visible classes
+					if l_conf_class.is_always_compile then
+						workbench.change_class (l_class_i)
+					end
+					record_new_class_i (l_class_i)
+
+					l_classes.forth
 				end
 
-					-- add visible classes
-				if l_conf_class.is_always_compile then
-					workbench.change_class (l_class_i)
-				end
-				record_new_class_i (l_class_i)
-
-				l_classes.forth
-			end
-
-				-- removed classes
-			if automatic_backup then
-				create l_file_name.make_from_string (workbench.backup_subdirectory)
-				l_file_name.set_file_name (backup_info)
-				create l_file.make_open_append (l_file_name)
-			end
-			l_classes := l_vis_build.removed_classes
-			from
-				l_classes.start
-			until
-				l_classes.after
-			loop
-				l_class_i ?= l_classes.item_for_iteration
-				check
-					class_i: l_class_i /= Void
-					class_compiled: l_class_i.is_compiled
-				end
-				l_class_i.compiled_class.recompile_syntactical_clients
+					-- removed classes
 				if automatic_backup then
-					l_file.put_string ("REMOVED: " +
-						l_class_i.name + " " +
-						l_class_i.group.target.system.uuid.out + " " +
-						l_class_i.group.name + "%N")
+					create l_file_name.make_from_string (workbench.backup_subdirectory)
+					l_file_name.set_file_name (backup_info)
+					create l_file.make_open_append (l_file_name)
 				end
-				remove_class (l_class_i.compiled_class)
-				real_removed_classes.force (l_class_i)
-				l_classes.forth
-			end
-
-			if automatic_backup then
-					-- Process classes that are not in the override.
-				l_classes := l_vis_build.removed_classes_from_override
+				l_classes := l_vis_build.removed_classes
 				from
 					l_classes.start
 				until
 					l_classes.after
 				loop
 					l_class_i ?= l_classes.item_for_iteration
-					l_file.put_string ("OVERRIDE_REMOVED: " +
-						l_class_i.name + " " +
-						l_class_i.group.target.system.uuid.out + " " +
-						l_class_i.group.name + "%N")
+					check
+						class_i: l_class_i /= Void
+						class_compiled: l_class_i.is_compiled
+					end
+					l_class_i.compiled_class.recompile_syntactical_clients
+					if automatic_backup then
+						l_file.put_string ("REMOVED: " +
+							l_class_i.name + " " +
+							l_class_i.group.target.system.uuid.out + " " +
+							l_class_i.group.name + "%N")
+					end
+					remove_class (l_class_i.compiled_class)
+					real_removed_classes.force (l_class_i)
 					l_classes.forth
 				end
-				l_file.close
+
+				if automatic_backup then
+						-- Process classes that are not in the override.
+					l_classes := l_vis_build.removed_classes_from_override
+					from
+						l_classes.start
+					until
+						l_classes.after
+					loop
+						l_class_i ?= l_classes.item_for_iteration
+						l_file.put_string ("OVERRIDE_REMOVED: " +
+							l_class_i.name + " " +
+							l_class_i.group.target.system.uuid.out + " " +
+							l_class_i.group.name + "%N")
+						l_classes.forth
+					end
+					l_file.close
+				end
+
+					-- partly removed classes
+				recheck_partly_removed (l_vis_build.partly_removed_classes)
+
+				debug ("timing")
+					create d2.make_now
+					print ("Degree 6 rebuild duration: ")
+					print (d2.relative_duration (d1).fine_seconds_count)
+					print ("%N")
+					print_memory_statistics
+					create d1.make_now
+				end
+
+					-- everything with the configuration system went ok, move new_target to target
+				universe.new_target_to_target
+
+					-- Try to reconnect removed classes with new classes
+				revive_moved_classes
+
+					-- check the universe if we don't use a precompile
+				if not uses_precompiled then
+					universe.check_universe
+				end
+
+					-- update/check root class
+				update_root_class
+
+					-- if enabled, check system wide uniqueness of class names
+				if l_target.setting_enforce_unique_class_names then
+					check_unique_class_names
+				end
+
+				rebuild_configuration_actions.call ([])
+
+				set_is_force_rebuild (False)
 			end
-
-				-- partly removed classes
-			recheck_partly_removed (l_vis_build.partly_removed_classes)
-
-			debug ("timing")
-				create d2.make_now
-				print ("Degree 6 rebuild duration: ")
-				print (d2.relative_duration (d1).fine_seconds_count)
-				print ("%N")
-				print_memory_statistics
-				create d1.make_now
-			end
-
-				-- everything with the configuration system went ok, move new_target to target
-			universe.new_target_to_target
-
-				-- Try to reconnect removed classes with new classes
-			revive_moved_classes
-
-				-- check the universe if we don't use a precompile
-			if not uses_precompiled then
-				universe.check_universe
-			end
-
-				-- update/check root class
-			update_root_class
-
-				-- if enabled, check system wide uniqueness of class names
-			if l_target.setting_enforce_unique_class_names then
-				check_unique_class_names
-			end
-
-			rebuild_configuration_actions.call ([])
-
-			set_is_force_rebuild (False)
 		rescue
 				-- An exception occur during system analysis, we should force a rebuild
 				-- at next compilation. This addresses bug#12911.

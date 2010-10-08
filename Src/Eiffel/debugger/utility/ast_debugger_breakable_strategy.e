@@ -411,7 +411,6 @@ feature {NONE} -- Iteration
 
 	process_guard_as (l_as: GUARD_AS)
 		do
-			register_breakable (l_as)
 			Precursor (l_as)
 		end
 

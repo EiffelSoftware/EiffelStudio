@@ -1553,7 +1553,6 @@ feature {NONE} -- Implementation
 			check
 				not_expr_type_visiting: not expr_type_visiting
 			end
-			put_breakable (l_as)
 			if attached l_as.check_list as l then
 				l.process (Current)
 			end

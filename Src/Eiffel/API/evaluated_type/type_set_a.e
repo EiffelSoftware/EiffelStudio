@@ -35,6 +35,7 @@ inherit
 			is_class_valid,
 			is_loose,
 			is_separate,
+			is_expanded,
 			is_type_set,
 			to_other_attachment,
 			to_other_immediate_attachment,
@@ -1314,6 +1315,15 @@ feature -- Status
 						Result := a_item.type.is_separate
 					end
 				)
+		end
+
+	is_expanded: BOOLEAN
+			-- Is the current actual type an expanded one ?
+		do
+			Result := for_all (agent (a_item: RENAMED_TYPE_A [TYPE_A]): BOOLEAN
+				do
+					Result := a_item.type.is_expanded
+				end)
 		end
 
 feature -- Access

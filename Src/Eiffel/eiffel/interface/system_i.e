@@ -1844,10 +1844,6 @@ end
 						reset_melted_conformance_table
 					end
 
-						-- We need to clean `instantiator' of all the types that do not make sense
-						-- anymore (see eweasel test#incr282).
-					instantiator.clean (any_class.compiled_class)
-
 						-- Inheritance analysis: `Degree_4' is sorted by class
 						-- topological ids so the parent come first the heirs after.
 					process_degree_4

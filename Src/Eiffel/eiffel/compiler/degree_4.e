@@ -54,6 +54,11 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_INSTANTIATOR
+		export
+			{NONE} all
+		end
+
 create
 
 	make
@@ -142,6 +147,11 @@ feature -- Processing
 				l_error_handler.raise_error
 			end
 
+				-- We need to clean `instantiator' of all the types that do not make sense
+				-- anymore (see eweasel test#incr282). It used to be done before calling
+				-- `execute' but this would trigger some assertion violations if some of the
+				-- constraints in the new system are not valid. See eweasel test#incr386.
+			instantiator.clean (system.any_class.compiled_class)
 
 			empty_temp_remaining_validity_checking_list
 

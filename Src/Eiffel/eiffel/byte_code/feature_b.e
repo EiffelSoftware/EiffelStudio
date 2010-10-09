@@ -411,7 +411,18 @@ feature -- Inlining
 					-- Get information on the routine being inlined.
 				f := system.class_of_id (entry.class_id).feature_of_feature_id (entry.feature_id)
 					-- Ensure the feature is not redeclared into attribute or external routine
-				if f.is_attribute or else f.is_external or else f.is_constant then
+				if f.is_attribute then
+						-- Changed the FEATURE_B into an ATTRIBUTE_B only if attribute is not of
+						-- an attached type in some descendant that declares an explicit body for it.
+						-- This is necessary because if the attribute requires a wrapper, often the wrapper
+						-- is only known to the descendant, not the ancestor. This fixes test#final076.
+					if not Eiffel_table.poly_table (f.rout_id_set.first).is_initialization_required (type_i, context.context_class_type) then
+							-- Create new byte node and process it instead of the current one
+						Result := byte_node (f, type_i).inlined_byte_code
+					else
+						Result := Current
+					end
+				elseif f.is_external or else f.is_constant then
 						-- Create new byte node and process it instead of the current one
 					Result := byte_node (f, type_i).inlined_byte_code
 				else

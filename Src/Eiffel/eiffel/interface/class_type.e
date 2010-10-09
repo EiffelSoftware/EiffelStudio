@@ -187,7 +187,11 @@ feature -- Access
 					i > nb or else not Result
 				loop
 					l_type := l_generics.item (i)
-					if not l_type.is_formal then
+					if attached {FORMAL_A} l_type as l_formal then
+							-- Fix eweasel test#incr388 by verifying that the constraint
+							-- is still a reference constraint.
+						Result := not associated_class.constraints (l_formal.position).is_expanded
+					else
 							-- Not a formal thus the generic derivation for an expanded.
 						check is_expanded: l_type.is_expanded end
 						l_gen_type.reset_constraint_error_list

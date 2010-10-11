@@ -156,32 +156,27 @@ feature -- Query
 			-- List of real body ids related to Current location
 			-- i.e: `routine'
 		local
-			l_class_type_list: LIST [CLASS_TYPE]
-			fi: FEATURE_I
 			lcurs: CURSOR
 		do
-			if routine /= Void and then routine.written_class /= Void then
-				l_class_type_list := routine.written_class.types
-				if l_class_type_list /= Void then
-					check routine_not_void: routine /= Void end
-					if routine.associated_class /= Void then
-						fi := routine.associated_feature_i
-						if fi /= Void then
-							create {ARRAYED_LIST [INTEGER]} Result.make (l_class_type_list.count)
-							lcurs := l_class_type_list.cursor
-							from
-								l_class_type_list.start
-							until
-								l_class_type_list.after
-							loop
-								Result.extend (fi.real_body_id (l_class_type_list.item))
-								l_class_type_list.forth
-							end
-							if l_class_type_list.valid_cursor (lcurs) then
-								l_class_type_list.go_to (lcurs)
-							end
-						end
-					end
+			if
+				attached routine as l_routine and then
+				attached l_routine.associated_class as l_associated_class and then
+				attached l_routine.associated_feature_i as fi and then
+				attached l_routine.written_class as l_wc and then
+				attached l_wc.types as l_class_type_list
+			then
+				create {ARRAYED_LIST [INTEGER]} Result.make (l_class_type_list.count)
+				lcurs := l_class_type_list.cursor
+				from
+					l_class_type_list.start
+				until
+					l_class_type_list.after
+				loop
+					Result.extend (fi.real_body_id (l_class_type_list.item))
+					l_class_type_list.forth
+				end
+				if l_class_type_list.valid_cursor (lcurs) then
+					l_class_type_list.go_to (lcurs)
 				end
 			end
 		end

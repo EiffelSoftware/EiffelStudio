@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 		do
 			height := a_height;
 			width := a_width;
-			make_filled (0, 1, height * width * 4)
+			make_filled ({NATURAL_8} 0, 1, height * width * 4)
 			initialize_alpha
 		ensure
 			new_count: count = height * width * 4
@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 		do
 			height := a_height;
 			width := a_width;
-			make_filled (0, 1, height * width * 4)
+			make_filled ({NATURAL_8} 0, 1, height * width * 4)
 		ensure
 			new_count: count = height * width * 4
 		end

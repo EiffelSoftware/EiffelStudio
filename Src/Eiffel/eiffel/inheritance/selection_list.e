@@ -506,7 +506,7 @@ if item.a_feature.written_class > System.any_class.compiled_class and
 
 	if item.a_feature.written_class.has_feature_table then
 				io.error.put_string
-(item.a_feature.written_class.feature_table.feature_of_body_index
+(item.a_feature.written_class.feature_of_body_index
 (item.a_feature.body_index).feature_name);
 	else
 				io.error.put_string ("Dunno");

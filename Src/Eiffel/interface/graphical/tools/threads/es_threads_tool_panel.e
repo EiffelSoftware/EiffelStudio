@@ -90,6 +90,7 @@ feature -- Access: Help
 feature {NONE} -- Factory
 
 	dynamic_content_item (c,r: INTEGER): EV_GRID_ITEM
+			-- Computed item at `(c,r)'
 		local
 			l_item: detachable EV_GRID_ITEM
 		do
@@ -106,6 +107,8 @@ feature {NONE} -- Factory
 		end
 
 	compute_row (r: INTEGER)
+			-- Compute the row indexed by `r'
+			-- to fulfil the dynamic behavior
 		local
 			l_row: EV_GRID_ROW
 			g: like grid
@@ -452,6 +455,7 @@ feature {NONE} -- Implementation
 		end
 
 	fill_with_threads (arr: LIST [POINTER]; a_row: detachable EV_GRID_ROW; a_is_tree_enabled: BOOLEAN; a_appstatus: APPLICATION_STATUS)
+			-- Add threads infos (from `arr') to the grid
 		require
 			a_appstatus_attached: a_appstatus /= Void and then a_appstatus.is_stopped
 			arr_non_empty: arr /= Void and then not arr.is_empty

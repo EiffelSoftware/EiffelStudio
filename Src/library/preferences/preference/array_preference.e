@@ -95,7 +95,7 @@ feature -- Status Setting
 			values: LIST [STRING]
 			l_value: like value
 		do
-			create internal_value.make (1, 0)
+			create internal_value.make_empty
 			values := a_value.split (';')
 			if values.count > 1 or not values.first.is_empty then
 				from
@@ -148,11 +148,11 @@ feature {NONE} -- Implementation
 	auto_default_value: ARRAY [STRING]
 			-- Value to use when Current is using auto by default (until real auto is set)
 		once
-			create Result.make (0, 1)
+			create Result.make_empty
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

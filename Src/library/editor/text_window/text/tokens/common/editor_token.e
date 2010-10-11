@@ -19,6 +19,8 @@ inherit
 
 	EDITOR_TOKEN_IDS
 
+	DEBUG_OUTPUT
+
 feature -- Access
 
 	wide_image: STRING_32
@@ -84,6 +86,23 @@ feature -- Status report
 
 	is_fake: BOOLEAN
 			-- Is current fake?
+
+feature -- Status report
+
+	debug_output: STRING
+			-- String that should be displayed in debugger to represent `Current'.
+		do
+			if attached wide_image as w then
+				create Result.make (w.count + 2)
+				Result.append_character ('`')
+				Result.append_string (w)
+				Result.append_character ('%'')
+			else
+				create Result.make_empty
+			end
+			Result.append_string (" pos_in_text=")
+			Result.append_integer (pos_in_text)
+		end
 
 feature -- Status Setting
 

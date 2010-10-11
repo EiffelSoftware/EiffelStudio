@@ -119,7 +119,7 @@ DEBUG("DEAD_CODE")
 
 	io.put_string ("MARKING: ")
 	a_class := System.class_of_id (actual_class_id)
-	io.put_string (a_class.feature_table.feature_of_body_index (body_index).feature_name)
+	io.put_string (a_class.feature_of_body_index (body_index).feature_name)
 	io.put_string (" (bid: ")
 	io.put_integer (body_index)
 	io.put_string (") of ")
@@ -143,7 +143,7 @@ end
 				depend_list := original_dependances.item (body_index)
 				if depend_list /= Void then
 					propagate_feature (written_class_id, body_index, depend_list);
-				end;
+				end
 DEBUG ("DEAD_CODE")
 	io.put_string ("La depend_list contient ")
 	if depend_list /= Void then

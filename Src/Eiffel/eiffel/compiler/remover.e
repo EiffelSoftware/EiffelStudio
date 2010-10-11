@@ -137,7 +137,7 @@ feature -- for debug purpose
 			a_class: CLASS_C
 		do
 			a_class := System.class_of_id (dep.class_id)
-			io.put_string (a_class.feature_table.feature_of_body_index (dep.body_index).feature_name)
+			io.put_string (a_class.feature_of_body_index (dep.body_index).feature_name)
 			io.put_string (" (bid: ")
 			io.put_integer (dep.body_index)
 			io.put_string ("; rid: ")

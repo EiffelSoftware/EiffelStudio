@@ -240,7 +240,7 @@ feature {NONE} -- Debug
 		do
 			l_class := System.class_of_id (class_id)
 			if l_class /= Void and l_class.has_feature_table then
-				l_feat := l_class.feature_table.feature_of_body_index (body_index)
+				l_feat := l_class.feature_of_body_index (body_index)
 				if l_feat /= Void then
 					Result := l_class.name_in_upper + ": " + l_feat.feature_name
 				else

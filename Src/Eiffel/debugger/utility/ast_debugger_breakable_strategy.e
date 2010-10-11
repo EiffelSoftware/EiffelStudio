@@ -682,7 +682,7 @@ feature {NONE} -- Implementation: Iteration
 					if l_inh_info /= Void and then l_inh_info.written_in /= l_written_in then
 						l_inh_written_class := l_inh_info.written_class
 						if l_inh_written_class.has_feature_table then
-							l_inh_feat := l_inh_written_class.feature_table.feature_of_body_index (l_inh_info.body_index)
+							l_inh_feat := l_inh_written_class.feature_of_body_index (l_inh_info.body_index)
 							if l_inh_feat /= Void then
 								l_inh_feat_as := l_inh_feat.body
 							end

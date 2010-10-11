@@ -881,6 +881,7 @@ feature -- Breakpoints change
 			a_bp_not_void: a_bp /= Void
 		do
 			breakpoints.add_breakpoint (a_bp)
+			on_breakpoint_added_or_deleted_event (True)
 		end
 
 	disable_breakpoint (bpk: detachable BREAKPOINT_KEY)

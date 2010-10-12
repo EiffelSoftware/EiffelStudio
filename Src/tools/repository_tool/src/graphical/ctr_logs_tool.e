@@ -13,7 +13,7 @@ inherit
 			make
 		end
 
-	REPOSITORY_SHARED
+	CTR_SHARED_RESOURCES
 
 	EV_SHARED_APPLICATION
 
@@ -890,8 +890,18 @@ feature {CTR_WINDOW} -- Implementation
 		end
 
 	archive_selected_row_logs
+		local
+			s: STRING
 		do
 			if attached grid.selected_rows as l_rows and then l_rows.count > 0 then
+				s := "Archiving " + l_rows.count.out + " entries"
+				if attached current_repositories as reps and then reps.count > 1 then
+					s.append_string (" from multiple repositories")
+				elseif attached current_repository as crep then
+					s.append_string (" from [" + crep.repository_location + "]")
+				end
+				console_log (s)
+
 				across
 					l_rows as c
 				loop

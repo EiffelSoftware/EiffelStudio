@@ -10,6 +10,8 @@ class
 inherit
 	REPOSITORY_SHARED
 
+	CTR_SHARED_CONSOLE
+
 feature -- Access
 
 	icons: CTR_ICONS_FACTORY

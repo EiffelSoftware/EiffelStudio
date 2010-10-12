@@ -82,7 +82,7 @@ feature {NONE} -- Implementation
 
 	frozen per_thread_tracer: TRACING_HANDLER
 			-- Per thread instance of Current used
-		once ("THREAD")
+		once
 			Result := duplicated
 		ensure
 			per_thread_tracer_not_void: Result /= Void

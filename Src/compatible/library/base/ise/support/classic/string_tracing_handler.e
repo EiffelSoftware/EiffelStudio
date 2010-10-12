@@ -44,7 +44,7 @@ feature {NONE} -- Implementation
 
 	internal: INTERNAL
 			-- Quick access to features of INTERNAL
-		once ("THREAD")
+		once
 			create Result
 		ensure
 			internal_not_void: Result /= Void
@@ -52,7 +52,7 @@ feature {NONE} -- Implementation
 
 	c_buffer: C_STRING
 			-- Buffer to convert C strings to Eiffel strings
-		once ("THREAD")
+		once
 			create Result.make_empty (0)
 		ensure
 			c_buffer_not_void: Result /= Void

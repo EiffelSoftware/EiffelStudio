@@ -58,7 +58,6 @@ feature {NONE} -- Initialization
 			create tbdpb.make
 			tbdpb.set_text ("Questions")
 			tb.extend (tbdpb)
-			tbdpb.set_dropdown_pixel_buffer (icons.dropdown_pixel_buffer)
 			tbdpb.set_popup_widget_function (agent on_questions_popup_widget)
 			tbdpb.select_actions.extend (agent on_question)
 			button_questions := tbdpb

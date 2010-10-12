@@ -80,26 +80,6 @@ feature -- Access
 			Result.set_mask (l_mask)
 		end
 
-	dropdown_pixel_buffer: EV_PIXEL_BUFFER
-		local
-			fcol: EV_COLOR
-			p: EV_PIXMAP
-			pb: EV_PIXEL_BUFFER
-		once
-			create fcol.make_with_8_bit_rgb (0, 0, 0)
-			create p.make_with_size (8, 16)
-			p.set_foreground_color (fcol)
---			p.fill_rectangle (0,0 , 6, 14)
-			p.fill_polygon (<<
-								create {EV_COORDINATE}.make (1, 8),
-								create {EV_COORDINATE}.make (8, 8),
-								create {EV_COORDINATE}.make (4, 12)
-							>>)
-
-			create pb.make_with_pixmap (p)
-			Result := pb
-		end
-
 feature -- Access: text icon
 
 	new_check_small_toolbar_button_icon: EV_PIXMAP

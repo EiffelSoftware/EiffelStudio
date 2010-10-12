@@ -128,13 +128,13 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	create_item_pointer_button_press_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_HEADER_ITEM, INTEGER, INTEGER, INTEGER]]
+	create_item_pointer_button_press_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [detachable EV_HEADER_ITEM, INTEGER, INTEGER, INTEGER]]
 			-- Create an item button press actions.
 		do
 			create Result
 		end
 
-	create_item_pointer_double_press_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_HEADER_ITEM, INTEGER, INTEGER, INTEGER]]
+	create_item_pointer_double_press_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [detachable EV_HEADER_ITEM, INTEGER, INTEGER, INTEGER]]
 			-- Create an item double press actions.
 		do
 			create Result

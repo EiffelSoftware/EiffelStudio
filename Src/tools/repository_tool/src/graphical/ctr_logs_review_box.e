@@ -33,6 +33,7 @@ feature {NONE} -- Initialization
 			tb: SD_TOOL_BAR
 			tbb: SD_TOOL_BAR_BUTTON
 			tbtb: SD_TOOL_BAR_TOGGLE_BUTTON
+			tbdpb: SD_TOOL_BAR_DUAL_POPUP_BUTTON
 			lab: EV_LABEL
 		do
 			create b
@@ -53,6 +54,14 @@ feature {NONE} -- Initialization
 			tb.extend (tbtb)
 			button_refuse := tbtb
 			tbtb.select_actions.extend (agent on_refuse)
+
+			create tbdpb.make
+			tbdpb.set_text ("Questions")
+			tb.extend (tbdpb)
+			tbdpb.set_dropdown_pixel_buffer (icons.dropdown_pixel_buffer)
+			tbdpb.set_popup_widget_function (agent on_questions_popup_widget)
+			tbdpb.select_actions.extend (agent on_question)
+			button_questions := tbdpb
 
 			create tbtb.make
 			tbtb.set_text ("Comment")
@@ -78,6 +87,7 @@ feature {NONE} -- Initialization
 			b.disable_item_expand (tb)
 
 			tb.compute_minimum_size
+
 			b.set_background_color (colors.yellow)
 			b.propagate_background_color
 		end
@@ -98,6 +108,7 @@ feature -- Access
 	button_approve: SD_TOOL_BAR_TOGGLE_BUTTON
 	button_refuse: SD_TOOL_BAR_TOGGLE_BUTTON
 	button_question: SD_TOOL_BAR_TOGGLE_BUTTON
+	button_questions: SD_TOOL_BAR_DUAL_POPUP_BUTTON
 	button_submit: SD_TOOL_BAR_BUTTON
 
 feature -- Event
@@ -164,6 +175,17 @@ feature -- Event
 			end
 		end
 
+	on_questions_popup_widget: EV_WIDGET
+		local
+			lab: EV_LABEL
+			fr: EV_FRAME
+		do
+			create fr
+			create lab.make_with_text ("Ahaha")
+			fr.extend (lab)
+			Result := fr
+		end
+
 	apply (a_log: REPOSITORY_LOG; r: REPOSITORY_LOG_REVIEW)
 		do
 			a_log.parent.store_log_review (a_log, r)
@@ -179,9 +201,11 @@ feature -- Event
 			then
 				-- Remote call !!!
 				if attached l_log.parent.review_client as l_client then
+					console_log ("Submit review [" + l_log.id + "]")
 					l_client.submit (l_log, l_review)
 					if l_client.last_error_occurred then
-						print (l_client.last_error_to_string + "%N")
+						console_log ("Error during review submission [" + l_log.id + "]: " + l_client.last_error_to_string)
+--						print (l_client.last_error_to_string + "%N")
 					end
 				end
 				apply (l_log, l_review)

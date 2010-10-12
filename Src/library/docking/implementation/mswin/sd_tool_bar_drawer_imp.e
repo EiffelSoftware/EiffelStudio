@@ -311,6 +311,13 @@ feature {NONE} -- Implementation
 					draw_pixmap_real (a_dc_to_draw, a_arguments)
 				end
 			end
+			if attached {SD_TOOL_BAR_POPUP_BUTTON} (a_arguments.item) as l_popup_button then
+				if (create {WEL_GDIP_STARTER}).is_gdi_plus_installed then
+					draw_pixel_buffer_for_dropdown_button (a_dc_to_draw, a_arguments)
+				else
+					-- not implemented
+				end
+			end
 		end
 
 	is_use_gdip (a_arguments: SD_TOOL_BAR_DRAWER_ARGUMENTS): BOOLEAN
@@ -324,37 +331,67 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	draw_pixel_buffer_for_dropdown_button (a_dc_to_draw: WEL_DC; a_arguments: SD_TOOL_BAR_DRAWER_ARGUMENTS)
+			-- Draw dropdown ending v pixelbuffer when using gdi+
+		require
+			use_gdip: (create {WEL_GDIP_STARTER}).is_gdi_plus_installed
+		local
+			l_dropdown_button: detachable SD_TOOL_BAR_POPUP_BUTTON
+			l_graphics: WEL_GDIP_GRAPHICS
+			l_dropdown_imp: detachable EV_PIXEL_BUFFER_IMP
+			l_dropdown: EV_PIXEL_BUFFER
+			l_left: INTEGER
+			l_coordinate: EV_COORDINATE
+			l_pixmap_coordinate: like pixmap_coordinate
+			l_dest_rect, l_src_rect: WEL_RECT
+			l_gdip_bitmap: detachable WEL_GDIP_BITMAP
+		do
+			l_dropdown_button ?= a_arguments.item
+			if l_dropdown_button /= Void then
+				if not l_dropdown_button.is_sensitive then
+					l_pixmap_coordinate := l_dropdown_button.pixmap_position
+					pixmap_coordinate := l_pixmap_coordinate
+					l_pixmap_coordinate.set_x (l_dropdown_button.dropdown_left)
+					desaturation_pixel_buffer (l_dropdown_button.dropdown_pixel_buffer, a_dc_to_draw)
+				else
+					l_dropdown := l_dropdown_button.dropdown_pixel_buffer
+					l_dropdown_imp ?= l_dropdown.implementation
+					check l_dropdown_imp /= Void end -- Implied by basic design of {EV_PIXEL_BUFFER}
+					l_left := l_dropdown_button.dropdown_left
+					create l_graphics.make_from_dc (a_dc_to_draw)
+					l_coordinate := l_dropdown_button.pixmap_position
+					create l_dest_rect.make (l_left, l_coordinate.y, l_left + l_dropdown.width , l_coordinate.y + l_dropdown.height)
+					create l_src_rect.make (0, 0, l_dropdown.width, l_dropdown.height)
+					l_gdip_bitmap := l_dropdown_imp.gdip_bitmap
+					check l_gdip_bitmap /= Void end -- Implied by precondition `is_use_gdip'						
+					l_graphics.draw_image_with_dest_rect_src_rect (l_gdip_bitmap, l_dest_rect, l_src_rect)
+					l_graphics.dispose
+				end
+			end
+		end
+
 	draw_pixel_buffer (a_dc_to_draw: WEL_DC; a_arguments: SD_TOOL_BAR_DRAWER_ARGUMENTS)
 			-- Draw icons when using gdi+
 		require
 			use_gdip: is_use_gdip (a_arguments)
 		local
 			l_coordinate: EV_COORDINATE
+			l_pixmap_coordinate: like pixmap_coordinate
 			l_button: detachable SD_TOOL_BAR_BUTTON
-			l_dropdown_button: detachable SD_TOOL_BAR_POPUP_BUTTON
 			l_graphics: WEL_GDIP_GRAPHICS
 			l_buffer_imp: detachable EV_PIXEL_BUFFER_IMP
-			l_dropdown_imp: detachable EV_PIXEL_BUFFER_IMP
 			l_dest_rect, l_src_rect: WEL_RECT
-			l_dropdown: EV_PIXEL_BUFFER
-			l_left: INTEGER
 			l_gdip_bitmap: detachable WEL_GDIP_BITMAP
-			l_pixmap_coordinate: like pixmap_coordinate
+
 		do
 			l_button ?= a_arguments.item
-			l_dropdown_button ?= a_arguments.item
+
 			if l_button /= Void and then (attached l_button.pixel_buffer as l_pixel_buffer and attached l_button.tool_bar as l_tool_bar) then
 				if not l_button.is_sensitive then
 					arguments := a_arguments
-
 					l_pixmap_coordinate := l_button.pixmap_position
 					pixmap_coordinate := l_pixmap_coordinate
 					desaturation_pixel_buffer (l_pixel_buffer, a_dc_to_draw)
-
-					if l_dropdown_button /= Void then
-						l_pixmap_coordinate.set_x (l_dropdown_button.dropdown_left)
-						desaturation_pixel_buffer (l_dropdown_button.dropdown_pixel_buffer, a_dc_to_draw)
-					end
 				else
 					create l_graphics.make_from_dc (a_dc_to_draw)
 					l_buffer_imp ?= l_pixel_buffer.implementation
@@ -365,20 +402,6 @@ feature {NONE} -- Implementation
 					l_gdip_bitmap := l_buffer_imp.gdip_bitmap
 					check l_gdip_bitmap /= Void end -- Implied by precondition `is_use_gdip'
 					l_graphics.draw_image_with_dest_rect_src_rect (l_gdip_bitmap, l_dest_rect, l_src_rect)
-
-					if l_dropdown_button /= Void then
-						l_dropdown := l_dropdown_button.dropdown_pixel_buffer
-						l_dropdown_imp ?= l_dropdown.implementation
-						check l_dropdown_imp /= Void end -- Implied by basic design of {EV_PIXEL_BUFFER}
-						l_left := l_dropdown_button.dropdown_left
-
-						create l_dest_rect.make (l_left, l_coordinate.y, l_left + l_dropdown.width , l_coordinate.y + l_dropdown.height)
-						create l_src_rect.make (0, 0, l_dropdown.width, l_dropdown.height)
-						l_gdip_bitmap := l_dropdown_imp.gdip_bitmap
-						check l_gdip_bitmap /= Void end -- Implied by precondition `is_use_gdip'						
-						l_graphics.draw_image_with_dest_rect_src_rect (l_gdip_bitmap, l_dest_rect, l_src_rect)
-					end
-
 					l_graphics.dispose
 				end
 			end
@@ -730,14 +753,14 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

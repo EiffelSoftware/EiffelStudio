@@ -59,6 +59,14 @@ feature -- Command
 			set: popup_widget = a_widget and popup.has (a_widget)
 		end
 
+	set_popup_widget_function (a_popup_widget_function: like popup_widget_function)
+			-- Set `popup_widget_function' with `a_popup_widget_function'
+		do
+			popup_widget_function := a_popup_widget_function
+		ensure
+			set: popup_widget_function = a_popup_widget_function
+		end
+
 	set_dropdown_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER)
 			-- Set `pixel_buffer_imp' with `a_pixel_buffer'
 		do
@@ -88,6 +96,13 @@ feature -- Query
 			-- It means, if `menu' or `menu_function.item (Void)' and `popup_widget' both not void,
 			-- `menu' or `menu_function.item (Void)' will be used.
 
+	popup_widget_function: detachable FUNCTION [ANY, TUPLE, like popup_widget]
+			-- Function to compute the popup_widget to popup after end user pressed.
+			-- Note: `popup_widget' has priority over `popup_widget_function',
+			--		which has priority over `popup_widget'.
+			-- It means, if `menu' or `menu_function.item (Void)' and `popup_widget' both not void,
+			-- `menu' or `menu_function.item (Void)' will be used.	
+
 	popup_widget: detachable EV_WIDGET
 			-- Widget to popup after end user pressed
 
@@ -103,11 +118,11 @@ feature -- Query
 	dropdown_pixel_buffer: EV_PIXEL_BUFFER
 			-- Dropdown pixel buffer
 		local
-			l_pixle_buffer: like dropdown_pixel_buffer_imp
+			l_pixel_buffer: like dropdown_pixel_buffer_imp
 		do
-			l_pixle_buffer := dropdown_pixel_buffer_imp
-			if l_pixle_buffer /= Void then
-				Result := l_pixle_buffer
+			l_pixel_buffer := dropdown_pixel_buffer_imp
+			if l_pixel_buffer /= Void then
+				Result := l_pixel_buffer
 			else
 				Result := internal_shared.icons.tool_bar_dropdown_buffer
 			end
@@ -133,7 +148,7 @@ feature -- Basic operations
 		require
 			not_is_destroyed: not is_destroyed
 			is_displayed: is_displayed
-			has_function: menu /= Void or menu_function /= Void or popup_widget /= Void
+			has_function: menu /= Void or menu_function /= Void or popup_widget /= Void or popup_widget_function /= Void
 		do
 			on_select
 		end
@@ -162,22 +177,26 @@ feature {NONE} -- Implementation
 	on_select
 			-- Handle select actions
 		require
-			set: menu /= Void or menu_function /= Void or popup_widget /= Void
+			set: menu /= Void or menu_function /= Void or popup_widget /= Void or popup_widget_function /= Void
 		local
 			l_helper: SD_POSITION_HELPER
 			l_x, l_y, l_height: INTEGER
 			l_menu: detachable EV_MENU
 			l_tool_bar: like tool_bar
-			l_menu_function: like menu_function
+			l_popup_widget: like popup_widget
+			l_popup: like popup
 		do
 			l_tool_bar := tool_bar
 			if l_tool_bar /= Void then
 				l_menu := menu
-				l_menu_function := menu_function
-				if l_menu = Void and l_menu_function /= Void then
+				if l_menu = Void and attached menu_function as l_menu_function then
 					l_menu := l_menu_function.item (Void)
 				end
-				if l_menu /= Void or popup_widget /= Void then
+				l_popup_widget := popup_widget
+				if l_menu = Void and l_popup_widget = Void and attached popup_widget_function as l_popup_widget_function then
+					l_popup_widget := l_popup_widget_function.item (Void)
+				end
+				if l_menu /= Void or l_popup_widget /= Void then
 					create l_helper.make
 					l_x := l_tool_bar.item_x (Current)
 					l_y := l_tool_bar.item_y (Current)
@@ -188,15 +207,20 @@ feature {NONE} -- Implementation
 						else
 							check not_possible: False end
 						end
-					else
-						l_helper.set_dialog_position (popup, l_tool_bar.screen_x + l_x, l_tool_bar.screen_y + l_y, l_height)
-						popup.show
+					elseif l_popup_widget /= Void then
+						l_popup := popup
+						if not l_popup.has (l_popup_widget) then
+							l_popup.wipe_out
+							l_popup.extend (l_popup_widget)
+						end
+						l_helper.set_dialog_position (l_popup, l_tool_bar.screen_x + l_x, l_tool_bar.screen_y + l_y, l_height)
+						l_popup.show
 					end
 				end
 			end
 		ensure
 			popuped: (menu = Void and (menu_function = Void
-						or else(attached menu_function as le_menu_function implies le_menu_function.item (Void) = Void)))
+						or else (attached menu_function as le_menu_function implies le_menu_function.item (Void) = Void)))
 						 implies popup.is_displayed
 		end
 
@@ -205,14 +229,14 @@ feature {NONE} -- Implementation
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

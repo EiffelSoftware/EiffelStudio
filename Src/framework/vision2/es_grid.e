@@ -334,7 +334,7 @@ feature {NONE} -- Grid Events
 			end
 		end
 
-	on_header_item_clicked (hi: EV_HEADER_ITEM; ax, ay, abutton: INTEGER)
+	on_header_item_clicked (hi: detachable EV_HEADER_ITEM; ax, ay, abutton: INTEGER)
 		local
 			m: EV_MENU
 			col: detachable EV_GRID_COLUMN

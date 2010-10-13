@@ -1232,6 +1232,7 @@ test	deadlock-when-thread-not-exiting	thread012	tcf pass multithreaded
 test	synchronization-objects				thread013	tcf pass multithreaded
 test	launching-n-threads-on-same-object	thread014	tcf pass multithreaded
 test	join-with-timeout-failure			thread015	tcf pass multithreaded
+test	multithreaded-bogus-catcall			thread016	tcf pass multithreaded
 
 -- Execution
 

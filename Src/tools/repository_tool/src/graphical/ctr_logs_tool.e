@@ -10,7 +10,8 @@ class
 inherit
 	CTR_TOOL
 		redefine
-			make
+			make,
+			focus_widget
 		end
 
 	CTR_SHARED_RESOURCES
@@ -96,6 +97,24 @@ feature {NONE} -- Initialization
 			tbbut.select_actions.extend (agent archive_selected_row_logs)
 			mtb.extend (tbbut)
 
+
+			create tbtoggbut.make
+			tbtoggbut.set_pixmap (icons.new_text_small_toolbar_button_standard_icon ("With Archive"))
+			tbtoggbut.select_actions.extend (agent (ai_togg: SD_TOOL_BAR_TOGGLE_BUTTON)
+					do
+						if ai_togg.is_selected then
+							import_archive_logs
+						else
+							reload
+						end
+					end(tbtoggbut))
+			mtb.extend (tbtoggbut)
+
+--			create tbbut.make
+--			tbbut.set_pixmap (icons.new_text_small_toolbar_button_standard_icon ("Import archive"))
+--			tbbut.select_actions.extend (agent import_archive_logs)
+--			mtb.extend (tbbut)
+
 			create tbbut.make
 			tbbut.set_pixmap (icons.new_remove_small_toolbar_button_icon)
 			tbbut.select_actions.extend (agent delete_selected_row_logs)
@@ -108,6 +127,12 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
+
+	focus_widget: detachable EV_WIDGET
+			-- Real widget to focus, when `set_focus' is called
+		do
+			Result := grid
+		end
 
 	current_log: detachable REPOSITORY_LOG
 
@@ -169,6 +194,18 @@ feature -- Element change
 			if o_filter /= filter then
 				custom_update (False)
 			end
+		end
+
+	reload
+		do
+			if attached current_repositories as reps then
+				across
+					reps as c
+				loop
+					c.item.reload_logs
+				end
+			end
+			update
 		end
 
 	update
@@ -887,6 +924,33 @@ feature {CTR_WINDOW} -- Implementation
 				g.row (r).enable_select
 				r := r + 1
 			end
+		end
+
+	import_archive_logs
+		local
+			s: STRING
+		do
+			s := "Import archives"
+			if attached current_repositories as reps and then reps.count > 1 then
+				s.append_string (" for multiple repositories")
+			elseif attached current_repository as crep then
+				s.append_string (" for [" + crep.repository_location + "]")
+			end
+			console_log (s)
+			if attached current_repositories as reps and then reps.count > 0 then
+				from
+					reps.start
+				until
+					reps.after
+				loop
+					if attached reps.item as rep then
+						rep.import_archive_logs
+					end
+					reps.forth
+				end
+			end
+			update
+			update_info_tool
 		end
 
 	archive_selected_row_logs

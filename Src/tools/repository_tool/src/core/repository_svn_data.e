@@ -96,6 +96,12 @@ feature -- Access: Diff
 
 feature -- Access
 
+	reload_logs
+		do
+			logs := Void
+			load_logs
+		end
+
 	load_logs
 		local
 			l_last_known_rev: INTEGER
@@ -139,6 +145,51 @@ feature -- Access
 			end
 			revision_last_known := l_last_known_rev
 			revision_first_known := l_first_known_rev
+		ensure then
+			logs_attached: logs /= Void
+		end
+
+	import_archive_logs
+		local
+			l_last_known_rev: INTEGER
+			l_first_known_rev: INTEGER
+			l_logs: like logs
+			d: DIRECTORY
+			r: INTEGER
+			l_id: STRING
+		do
+			load_logs
+			l_logs := logs
+			if l_logs = Void then
+				create l_logs.make (100)
+				logs := l_logs
+			end
+			create d.make (archive_data_folder_name)
+			if d.exists then
+				d.open_read
+				from
+					d.start
+					d.readentry
+				until
+					d.lastentry = Void
+				loop
+					if attached d.lastentry as s and then s.is_integer then
+						r := s.to_integer
+						l_id := r.out
+						l_last_known_rev := l_last_known_rev.max (r)
+						if l_first_known_rev = 0 then
+							l_first_known_rev := r
+						else
+							l_first_known_rev := l_first_known_rev.min (r)
+						end
+						if not l_logs.has (l_id) and attached archive_loaded_log (l_id) as e then
+							l_logs.put (e, l_id)
+						end
+					end
+					d.readentry
+				end
+				d.close
+			end
 		ensure then
 			logs_attached: logs /= Void
 		end
@@ -305,7 +356,17 @@ feature {REPOSITORY_SVN_LOG} -- Implementation
 			end
 		end
 
+	archive_loaded_log (a_id: STRING): detachable like log_from_revision
+		do
+			Result := log_from_file (a_id, archive_svn_log_data_filename (a_id))
+		end
+
 	loaded_log (a_id: STRING): detachable like log_from_revision
+		do
+			Result := log_from_file (a_id, svn_log_data_filename (a_id))
+		end
+
+	log_from_file (a_id: STRING; a_filename: STRING): detachable like log_from_revision
 		local
 			f: RAW_FILE
 			l_line,s: STRING
@@ -314,7 +375,7 @@ feature {REPOSITORY_SVN_LOG} -- Implementation
 			e: detachable SVN_REVISION_INFO
 			r: INTEGER
 		do
-			create f.make (svn_log_data_filename (a_id))
+			create f.make (a_filename)
 			if f.exists and then f.is_readable then
 				f.open_read
 				from

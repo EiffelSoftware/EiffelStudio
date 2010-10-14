@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			b: EV_HORIZONTAL_BOX
 			tb: SD_TOOL_BAR
 			tbb: SD_TOOL_BAR_BUTTON
-			tbw: SD_TOOL_BAR_WIDGET_ITEM
+--			tbw: SD_TOOL_BAR_WIDGET_ITEM
 			tf: EV_TEXT_FIELD
 			lab: EV_LABEL
 			c: EV_COLOR

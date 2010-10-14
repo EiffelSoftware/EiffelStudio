@@ -29,7 +29,7 @@ feature -- Access
 			create Result.make_with_size (10, 10)
 			Result.set_foreground_color (fcol)
 			Result.fill_ellipse (1, 1, 9, 9)
-			result.set_drawing_mode (0)
+			Result.set_drawing_mode (0)
 
 			create l_mask.make_with_size (10, 10)
 			l_mask.set_foreground_color (colors.white)
@@ -78,6 +78,26 @@ feature -- Access
 			l_mask.set_line_width (1)
 			l_mask.fill_polygon (<<c1, c2, c3>>)
 			Result.set_mask (l_mask)
+		end
+
+	dropdown_pixel_buffer: EV_PIXEL_BUFFER
+		local
+			fcol: EV_COLOR
+			p: EV_PIXMAP
+			pb: EV_PIXEL_BUFFER
+		do
+			create fcol.make_with_8_bit_rgb (0, 0, 0)
+			create p.make_with_size (8, 16)
+			p.set_foreground_color (fcol)
+--			p.fill_rectangle (0,0 , 6, 14)
+			p.fill_polygon (<<
+								create {EV_COORDINATE}.make (1, 8),
+								create {EV_COORDINATE}.make (8, 8),
+								create {EV_COORDINATE}.make (4, 12)
+							>>)
+
+			create pb.make_with_pixmap (p)
+			Result := pb
 		end
 
 feature -- Access: text icon

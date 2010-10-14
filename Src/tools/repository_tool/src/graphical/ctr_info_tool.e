@@ -9,6 +9,9 @@ class
 
 inherit
 	CTR_TOOL
+		redefine
+			focus_widget
+		end
 
 	EV_SHARED_APPLICATION
 
@@ -60,6 +63,13 @@ feature -- Access
 	current_repository: detachable REPOSITORY_DATA
 
 	grid: ES_GRID
+
+	focus_widget: detachable EV_WIDGET
+			-- Real widget to focus, when `set_focus' is called
+		do
+			Result := grid
+		end
+
 
 feature -- Element change
 

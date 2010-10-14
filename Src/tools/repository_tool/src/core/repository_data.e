@@ -138,6 +138,7 @@ feature -- Element change
 				ensure_folder_exists (archive_review_data_folder_name)
 				move_file (f, archive_log_review_data_filename (a_log))
 			end
+			delete_log (a_log)
 		end
 
 	delete_log (a_log: REPOSITORY_LOG)
@@ -148,6 +149,9 @@ feature -- Element change
 			l_id := a_log.id
 			if unread_logs.has (l_id) then
 				unread_logs.remove (l_id)
+			end
+			if attached logs as l_logs and then l_logs.has (l_id) then
+				l_logs.remove (l_id)
 			end
 			create f.make (log_diff_data_filename (a_log))
 			if f.exists then
@@ -186,7 +190,17 @@ feature -- Query
 		deferred
 		end
 
+	reload_logs
+			-- Clear logs, and get logs from storage
+		deferred
+		end
+
 	load_logs
+			-- Get logs from storage
+		deferred
+		end
+
+	import_archive_logs
 			-- Get logs from storage
 		deferred
 		end

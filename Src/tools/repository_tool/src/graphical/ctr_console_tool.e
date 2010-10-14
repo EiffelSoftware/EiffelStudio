@@ -8,6 +8,9 @@ class
 
 inherit
 	CTR_TOOL
+		redefine
+			focus_widget
+		end
 
 	CTR_CONSOLE_OBSERVER
 
@@ -74,6 +77,12 @@ feature -- Basic operation
 		end
 
 feature -- Access
+
+	focus_widget: detachable EV_WIDGET
+			-- Real widget to focus, when `set_focus' is called
+		do
+			Result := grid
+		end
 
 	pending_history: detachable ARRAYED_LIST [TUPLE [message: STRING_GENERAL]]
 

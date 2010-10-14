@@ -58,6 +58,7 @@ feature {NONE} -- Initialization
 			create tbdpb.make
 			tbdpb.set_text ("Questions")
 			tb.extend (tbdpb)
+--			tbdpb.set_dropdown_pixel_buffer (icons.dropdown_pixel_buffer)
 			tbdpb.set_popup_widget_function (agent on_questions_popup_widget)
 			tbdpb.select_actions.extend (agent on_question)
 			button_questions := tbdpb
@@ -176,13 +177,87 @@ feature -- Event
 
 	on_questions_popup_widget: EV_WIDGET
 		local
-			lab: EV_LABEL
 			fr: EV_FRAME
+			vb: EV_VERTICAL_BOX
+			tf: EV_TEXT
+			g: EV_GRID
+			but: EV_BUTTON
+			hb: EV_HORIZONTAL_BOX
+			r: detachable REPOSITORY_LOG_REVIEW
+			i: INTEGER
 		do
 			create fr
-			create lab.make_with_text ("Ahaha")
-			fr.extend (lab)
+			create vb
+			fr.extend (vb)
+
+			create g
+			g.hide_header
+			vb.extend (g)
+
+			create hb
+			vb.extend (hb)
+			vb.disable_item_expand (hb)
+			vb.set_background_color ((create {EV_STOCK_COLORS}).red)
+			hb.set_background_color ((create {EV_STOCK_COLORS}).blue)
+
+			create tf
+			hb.extend (tf)
+			create but.make_with_text ("Apply")
+			but.select_actions.extend (agent apply_question (tf))
+			hb.extend (but)
+			hb.disable_item_expand (but)
+--			but.set_minimum_width (but.font.string_width (but.text) + 5)
+			tf.set_minimum_height (40)
+
+			if attached current_log as l_log then
+				if l_log.has_review then
+					r := l_log.review
+				end
+			end
+			if r /= Void and then attached r.reviews as rws and then rws.count > 0 then
+				from
+					i := 0
+					g.insert_new_rows (rws.count, i + 1)
+					rws.start
+				until
+					rws.after
+				loop
+					if attached rws.item.comment as c then
+						i := i + 1
+						g.set_item (1, i, create {EV_GRID_LABEL_ITEM}.make_with_text (c))
+					end
+					rws.forth
+				end
+				if i = 0 then
+					vb.prune (g)
+				else
+					g.set_minimum_height (g.row_count.min (3) * g.row_height)
+					g.column (1).resize_to_content
+				end
+			else
+				vb.prune (g)
+			end
+			tf.set_minimum_width_in_characters (30)
+
 			Result := fr
+		end
+
+	apply_question (a_tf: EV_TEXTABLE)
+		local
+			r: detachable REPOSITORY_LOG_REVIEW
+		do
+			if attached current_log as l_log then
+				if l_log.has_review then
+					r := l_log.review
+				end
+				if r = Void then
+					create r.make
+				end
+				if attached a_tf.text as s and then s.count > 0 then
+					r.question (user_name, s)
+				end
+				apply (l_log, r)
+			end
 		end
 
 	apply (a_log: REPOSITORY_LOG; r: REPOSITORY_LOG_REVIEW)
@@ -288,8 +363,6 @@ feature -- Basic operation
 				widget.set_background_color (colors.yellow) -- unknown
 			end
 			widget.propagate_background_color
---			tool_bar.hide
---			tool_bar.show
 		end
 
 	reset

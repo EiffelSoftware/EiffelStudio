@@ -1,14 +1,14 @@
-class SEP_PASSENGER 
+class SEP_PASSENGER
 
 create
   set_passenger
 
 feature
-  set_passenger (p : attached separate PASSENGER)
+  set_passenger (p : separate PASSENGER)
     do
       passenger := p
     end
 
-  passenger : attached separate PASSENGER
+  passenger : separate PASSENGER
 
 end

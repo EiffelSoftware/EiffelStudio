@@ -33,7 +33,7 @@ feature {NONE} -- Implementation
 			over := True
 		end
 
-	enter (a_hall: attached separate HALL) is
+	enter (a_hall: separate HALL) is
 			-- Enter the hall.
 		require
 			not a_hall.judge_present
@@ -42,14 +42,14 @@ feature {NONE} -- Implementation
 			a_hall.enter_immigrant
 		end
 
-	check_in (a_hall: attached separate HALL) is
+	check_in (a_hall: separate HALL) is
 			-- Check in.
 		do
 			io.put_string (out + " checking in%N")
 			a_hall.check_in
 		end
 
-	sit_down (a_hall: attached separate HALL) is
+	sit_down (a_hall: separate HALL) is
 			-- Sit down.
 		require
 			a_hall.judge_ready
@@ -57,14 +57,14 @@ feature {NONE} -- Implementation
 			io.put_string (out + " taking place%N")
 		end
 
-	swear (a_hall: attached separate HALL)is
+	swear (a_hall: separate HALL)is
 			-- Swear.
 		do
 			io.put_string (out + " swearing%N")
 			a_hall.swear
 		end
 
-	get_certificate (a_hall: attached separate HALL) is
+	get_certificate (a_hall: separate HALL) is
 			-- Get the certificate.
 		require
 			not a_hall.judge_ready
@@ -72,7 +72,7 @@ feature {NONE} -- Implementation
 			io.put_string (out + " getting certificate%N")
 		end
 
-	leave (a_hall: attached separate HALL) is
+	leave (a_hall: separate HALL) is
 			-- Leave the hall.
 		require
 			not a_hall.judge_present

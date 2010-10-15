@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="dining_philosophers" uuid="732278AE-4185-4EFA-9091-6ADEE09B8FCA">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-6-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-6-0 http://www.eiffel.com/developers/xml/configuration-1-6-0.xsd" name="dining_philosophers" uuid="732278AE-4185-4EFA-9091-6ADEE09B8FCA">
 	<target name="dining_philosophers">
 		<root class="APPLICATION" feature="make"/>
-		<option is_attached_by_default="true" syntax="transitional">
+		<option full_class_checking="true" is_attached_by_default="true" void_safety="all">
 		</option>
-		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="concurrency" location="C:\eiffel_trunk\temp_working_folder\concurrency\concurrency.ecf" readonly="false"/>
+		<setting name="console_application" value="true"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<cluster name="dining_philosophers" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/EIFGENs$</exclude>

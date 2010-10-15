@@ -16,7 +16,7 @@ inherit
 
 feature {FANEUIL_HALL} -- Creation procedure
 
-	make_with_hall (a_id: INTEGER; a_hall: attached separate HALL) is
+	make_with_hall (a_id: INTEGER; a_hall: separate HALL) is
 			-- Creation procedure.
 		require
 			a_id_positive: a_id > 0
@@ -59,7 +59,7 @@ feature {FANEUIL_HALL} -- Basic operations
 
 feature {NONE} -- Implementation
 
-	hall: attached separate HALL
+	hall: separate HALL
 			-- Reference to the attached separate hall
 
 	type: STRING is

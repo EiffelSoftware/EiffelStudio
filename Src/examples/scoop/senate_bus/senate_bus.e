@@ -6,8 +6,6 @@ indexing
 
 class
 	SENATE_BUS
-inherit
-	SHARED_RANDOM
 
 create
 	make
@@ -18,6 +16,7 @@ feature -- Initialization
 		-- Creation procedure.
 	local
 		i: INTEGER
+		t_passenger: separate PASSENGER
 	do
 		create station.make
 		create bus.make_with_station(0, station)
@@ -37,18 +36,16 @@ feature -- Initialization
 
 feature {NONE} -- Implementation
 
-	launch_actor(a_actor: attached separate ACTOR) is
+	launch_actor(a_actor: separate ACTOR) is
 		-- Launch an actor.
 	do
 		a_actor.live
 	end
 
-	t_passenger: attached separate PASSENGER
-
 	passengers: INTEGER is 30
 
-	bus: attached separate BUS
+	bus: separate BUS
 
-	station: attached separate STATION
+	station: separate STATION
 
 end -- class SENATE_BUS	

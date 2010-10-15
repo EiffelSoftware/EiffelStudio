@@ -15,7 +15,7 @@ create
 
 feature -- Initialization
 
-	make (an_id: INTEGER; a_left_fork, a_right_fork: attached separate FORK; a_number_of_rounds: INTEGER)
+	make (an_id: INTEGER; a_left_fork, a_right_fork: separate FORK; a_number_of_rounds: INTEGER)
 			-- Creation procedure.
 		require
 			forks_exist: a_left_fork /= void and then a_right_fork /= void
@@ -35,7 +35,7 @@ feature
 			eat (left_fork, right_fork)
 		end
 
-	eat (l, r: attached separate FORK)
+	eat (l, r: separate FORK)
 			-- Eat, having grabbed l and r.
 		do
 			io.put_string ("Philosopher " + id.out + ": taking forks%N")
@@ -68,10 +68,10 @@ feature {NONE} -- Implementation
 	times_eaten: INTEGER
 			-- Number of times philosopher has eaten so far.
 
-	left_fork: attached separate FORK
+	left_fork: separate FORK
 			-- Left fork used for eating.	
 
-	right_fork: attached separate FORK
+	right_fork: separate FORK
 			-- Right fork used for eating.
 
 invariant

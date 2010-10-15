@@ -18,8 +18,8 @@ feature -- Initialization
 		local
 			l_data_size: INTEGER
 			l_seed: INTEGER
-			l_data: attached separate DATA
-			l_quicksorter: attached separate QUICKSORTER
+			l_data: separate DATA
+			l_quicksorter: separate QUICKSORTER
 		do
 			-- Read the data size from the console.
 			io.put_string ("Specify data size (between 2 and 1000):%N")
@@ -49,13 +49,13 @@ feature -- Initialization
 
 feature {NONE} -- Implementation
 
-	print_on_console (a_data: attached separate DATA)
+	print_on_console (a_data: separate DATA)
 			-- Print 'a_data' to the console.
 		do
 			a_data.print_on_console
 		end
 
-	sort (a_data: attached separate DATA; a_quicksorter: attached separate QUICKSORTER)
+	sort (a_data: separate DATA; a_quicksorter: separate QUICKSORTER)
 			-- Sort 'a_data' with 'a_quicksorter'.
 		do
 			a_quicksorter.sort (a_data)

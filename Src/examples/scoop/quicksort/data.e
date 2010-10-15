@@ -39,7 +39,7 @@ feature -- Initialization
 			end
 		end
 
-	make_with_other_data (a_data: attached separate DATA; a_left: INTEGER; a_right: INTEGER)
+	make_with_other_data (a_data: separate DATA; a_left: INTEGER; a_right: INTEGER)
 			-- Make the data based on the items in 'a_data' between 'a_left' and 'a_right'.
 		local
 			i: INTEGER
@@ -55,7 +55,7 @@ feature -- Initialization
 			end
 		end
 
-	make_with_other_items (a_items: attached ARRAY[INTEGER])
+	make_with_other_items (a_items: ARRAY[INTEGER])
 			-- Make the data with 'a_items'.
 		do
 			items := a_items

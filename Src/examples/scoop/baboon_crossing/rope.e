@@ -23,7 +23,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	announce (a_baboon: attached separate BABOON) is
+	announce (a_baboon: separate BABOON) is
 			-- Each baboon should announce the rope first
 		do
 			-- If nobody else is waiting to use the rope
@@ -58,7 +58,7 @@ feature -- Basic operations
 			end
 		end
 
-	unmount (a_baboon: attached separate BABOON) is
+	unmount (a_baboon: separate BABOON) is
 			-- Unmount the baboon from the rope
 		do
 			-- decrement the baboons amount who are passing the rope

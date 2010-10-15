@@ -16,7 +16,7 @@ create
 
 feature -- Initialization
 
-	make (an_id: INTEGER; a_pot: attached separate POT; a_cook: attached separate COOK; a_hunger: INTEGER ) is
+	make (an_id: INTEGER; a_pot: separate POT; a_cook: separate COOK; a_hunger: INTEGER ) is
 			-- Creation procedure.
 			require
 				an_id >= 0
@@ -52,7 +52,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Implementation
 
-	fill_pot (my_pot: attached separate POT; my_cook: attached separate COOK) is
+	fill_pot (my_pot: separate POT; my_cook: separate COOK) is
 			-- Fills pot if it's empty
 			do
 				io.put_string ("savage: fill_pot checking %N")
@@ -63,7 +63,7 @@ feature {NONE} -- Implementation
 			end
 
 
-	get_serving_from_pot (my_pot: attached separate POT) is
+	get_serving_from_pot (my_pot: separate POT) is
 			-- Gets the meal from the pot
 			require
 				not my_pot.is_empty
@@ -89,8 +89,8 @@ feature {NONE} -- Implementation
 feature {NONE}
 
 	id: INTEGER
-	pot: attached separate POT
-	cook: attached separate COOK
+	pot: separate POT
+	cook: separate COOK
 
 	hunger: INTEGER
 

@@ -41,7 +41,7 @@ feature {BUS} -- Basic Operations
 
 		local
 			i: INTEGER
-			passenger: attached separate PASSENGER
+			passenger: separate PASSENGER
 
 		do
 			from
@@ -83,7 +83,7 @@ feature {BUS} -- Basic Operations
 
 feature {PASSENGER} -- Basic Operations
 
-	pass_enter (a_passenger: attached separate PASSENGER)is
+	pass_enter (a_passenger: separate PASSENGER)is
 			-- passenger enters the station
 		do
 			-- add passenger to the waiting list
@@ -96,15 +96,15 @@ feature {BUS} -- Implementation
 
 	bus_is_waiting: BOOLEAN
 
-	waiting_list: LINKED_QUEUE [attached SEP_PASSENGER]
+	waiting_list: LINKED_QUEUE [SEP_PASSENGER]
 		-- each passenger will be added to this list when arrive
 
-	checked_in_list: LINKED_QUEUE [attached SEP_PASSENGER]
+	checked_in_list: LINKED_QUEUE [SEP_PASSENGER]
 		-- if the bus doesn't exist in the station, add the passengers from waiting list to this list
 
 feature {NONE}
 
-	get_on_passenger(a_passenger: attached separate PASSENGER) is
+	get_on_passenger(a_passenger: separate PASSENGER) is
 			-- tell the passenger that it's his turn to get on
 		do
 			a_passenger.get_on

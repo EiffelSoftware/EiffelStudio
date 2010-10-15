@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Objects that implement producers."
 	author		: "Volkan Arslan, Yann Mueller, Piotr Nienaltowski."
 	date		: "$Date: 18.05.2007$"
@@ -13,7 +13,7 @@ create
 
 feature -- Initialization
 
-	make_with_buffer (a_buffer: attached separate BOUNDED_BUFFER [INTEGER]; an_id: INTEGER)
+	make_with_buffer (a_buffer: separate BOUNDED_BUFFER [INTEGER]; an_id: INTEGER)
 			-- Creation procedure.
 		require
 			a_buffer /= void
@@ -44,7 +44,7 @@ feature -- Basic operations
 
 feature {NONE}
 
-	store (a_buffer: attached separate BOUNDED_BUFFER [INTEGER]; an_element: INTEGER)
+	store (a_buffer: separate BOUNDED_BUFFER [INTEGER]; an_element: INTEGER)
 			-- Store `an_element' into `a_buffer'.
 		require
 			a_buffer /= void
@@ -58,7 +58,7 @@ feature {NONE}
 
 feature {NONE} -- Implementation
 
-	buffer: attached separate BOUNDED_BUFFER [INTEGER]
+	buffer: separate BOUNDED_BUFFER [INTEGER]
 
 	id: INTEGER
 

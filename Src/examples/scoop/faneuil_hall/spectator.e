@@ -28,7 +28,7 @@ feature {NONE} -- Implementation
 			over := True
 		end
 
-	enter (a_hall: attached separate HALL) is
+	enter (a_hall: separate HALL) is
 			-- Enter the hall.
 		require
 			not a_hall.judge_present
@@ -46,7 +46,7 @@ feature {NONE} -- Implementation
 			(create {EXECUTION_ENVIRONMENT}).sleep (1000000 * random_integer (500, 1000))
 		end
 
-	leave (a_hall: attached separate HALL) is
+	leave (a_hall: separate HALL) is
 			-- Leave.
 		do
 			io.put_string (out + " leaving%N")

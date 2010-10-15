@@ -26,7 +26,7 @@ feature {NONE} -- Implementation
 			(create {EXECUTION_ENVIRONMENT}).sleep (2000 * 1000000)
 		end
 
-	enter (a_station: attached separate STATION)
+	enter (a_station: separate STATION)
 		require
 			a_station /= void
 			not a_station.bus_is_waiting
@@ -34,14 +34,14 @@ feature {NONE} -- Implementation
 			a_station.bus_enter
 		end
 
-	pick_up (a_station: attached separate STATION)
+	pick_up (a_station: separate STATION)
 		require
 			a_station /= void
 		do
 			a_station.pick_up
 		end
 
-	leave (a_station: attached separate STATION)
+	leave (a_station: separate STATION)
 		require
 			a_station /= void
 		do

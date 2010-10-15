@@ -4,9 +4,9 @@ create
   make
 
 feature
-  prod : attached separate PRODUCER
+  prod : separate PRODUCER
 
-  make (a_p : attached separate PRODUCER)
+  make (a_p : separate PRODUCER)
     do
       prod := a_p
     end
@@ -19,7 +19,7 @@ feature
     end
 
 feature {NONE}
-  take (a_p : attached separate PRODUCER)
+  take (a_p : separate PRODUCER)
     require
       producer_ready: a_p.has_something
     local

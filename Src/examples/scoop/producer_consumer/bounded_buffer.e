@@ -5,7 +5,7 @@ indexing
 	revision	: "1.0.0"
 
 class
-	BOUNDED_BUFFER [G]
+	BOUNDED_BUFFER [G -> ANY]
 
 create
 	make_with_capacity

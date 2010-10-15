@@ -31,7 +31,7 @@ feature {SEARCH_INSERT_DELETE} -- Basic operations
 
 feature {NONE} -- Implementation
 
-	start_search (a_list: attached separate SHARED_LIST) is
+	start_search (a_list: separate SHARED_LIST) is
 			-- Start a search operation.
 		require
 			a_list.can_search
@@ -40,7 +40,7 @@ feature {NONE} -- Implementation
 			a_list.start_search
 		end
 
-	end_search (a_list: attached separate SHARED_LIST) is
+	end_search (a_list: separate SHARED_LIST) is
 			-- End a search operation.
 		do
 			io.put_string (out + " ending search%N")

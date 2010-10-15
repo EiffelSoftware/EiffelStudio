@@ -20,9 +20,9 @@ feature -- Initialization
 		-- Creation procedure.
 	local
 		-- actors(searchers, inserters, deleters)
-		t_searcher: attached separate SEARCHER
-		t_inserter: attached separate INSERTER
-		t_deleter: attached separate DELETER
+		t_searcher: separate SEARCHER
+		t_inserter: separate INSERTER
+		t_deleter: separate DELETER
 		i: INTEGER
 	do
 		create random.set_seed (max_actors + 1)
@@ -56,7 +56,7 @@ feature -- Initialization
 
 feature {NONE} -- Implementation
 
-	list: attached separate SHARED_LIST is
+	list: separate SHARED_LIST is
 			-- Reference to the separate list
 		once
 			create Result
@@ -65,7 +65,7 @@ feature {NONE} -- Implementation
 	max_actors: INTEGER is 30
 			-- Maximum number of actors
 
-	launch_actor (a_actor: attached separate ACTOR) is
+	launch_actor (a_actor: separate ACTOR) is
 			-- Launch the actor.
 		do
 			a_actor.live

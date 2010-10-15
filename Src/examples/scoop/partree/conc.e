@@ -12,10 +12,10 @@ create
 
 feature
 
-	x : attached separate S
-	y : attached separate S
+	x : separate S
+	y : separate S
 
-	make (a_x, a_y : attached separate S)
+	make (a_x, a_y : separate S)
 		do
 			x := a_x
 			y := a_y
@@ -26,13 +26,13 @@ feature
 			g (x)
 		end
 
-	g (a_x : attached separate S)
+	g (a_x : separate S)
 		do
 			busy
 			h (y)
 		end
 
-	h (a_y : attached separate S)
+	h (a_y : separate S)
 		do
 		end
 

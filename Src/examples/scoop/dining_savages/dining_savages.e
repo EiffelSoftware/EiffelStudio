@@ -17,7 +17,7 @@ feature -- Initialization
 			-- Creation procedure.
 			local
 				i: INTEGER;
-				a_savage: attached separate SAVAGE
+				a_savage: separate SAVAGE
 			do
 				create pot.make (number_of_servings_in_pot) -- make the pot according to its capacity
 				create cook.make (pot) -- make the cooke to fill the specified pot
@@ -40,10 +40,10 @@ feature {NONE} -- Implementation
 	number_of_savages: INTEGER is 50
 	hunger_of_savage: INTEGER is 50 -- how many times each savage gets a serving
 
-	cook: attached separate COOK -- the cooke who fills the pot
-	pot: attached separate POT -- the POT from which savages eat
+	cook: separate COOK -- the cooke who fills the pot
+	pot: separate POT -- the POT from which savages eat
 
-	launch_savage(a_savage: attached separate SAVAGE) is
+	launch_savage(a_savage: separate SAVAGE) is
 			-- launch a_savage in a controlled manner
 			do
 				io.put_string ("launch savage%N")

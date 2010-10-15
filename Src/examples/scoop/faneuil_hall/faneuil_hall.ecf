@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="faneuil_hall" uuid="B3A333A0-1EBF-4764-94B0-7E5B9727616F">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-6-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-6-0 http://www.eiffel.com/developers/xml/configuration-1-6-0.xsd" name="faneuil_hall" uuid="B3A333A0-1EBF-4764-94B0-7E5B9727616F">
 	<target name="faneuil_hall">
 		<root class="FANEUIL_HALL" feature="make"/>
-		<precompile name="base_pre" location="$ISE_PRECOMP\base-mt.ecf"/>
-		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<option is_attached_by_default="true" void_safety="all">
+		</option>
+		<precompile name="base_pre" location="$ISE_PRECOMP\base-mt-safe.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<cluster name="faneuil_hall" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/EIFGENs$</exclude>
-				<exclude>/.svn$</exclude>
 				<exclude>/CVS$</exclude>
+				<exclude>/.svn$</exclude>
 			</file_rule>
 		</cluster>
 	</target>

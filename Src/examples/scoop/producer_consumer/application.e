@@ -16,6 +16,8 @@ feature -- Initialization
 			-- Creation procedure.
 		local
 			i: INTEGER
+			producer: separate PRODUCER
+			consumer: separate CONSUMER
 		do
 			create buffer.make_with_capacity (15)
 
@@ -42,19 +44,15 @@ feature -- Initialization
 
 feature -- Implementation
 
-	producer: attached separate PRODUCER
+	buffer: separate BOUNDED_BUFFER [INTEGER]
 
-	consumer: attached separate CONSUMER
-
-	buffer: attached separate BOUNDED_BUFFER [INTEGER]
-
-	launch_producer (a_producer: attached separate PRODUCER) is
+	launch_producer (a_producer: separate PRODUCER) is
 			-- Launch `a_producer'.
 		do
 			a_producer.produce (900)
 		end
 
-	launch_consumer (a_consumer: attached separate CONSUMER) is
+	launch_consumer (a_consumer: separate CONSUMER) is
 			-- Launch `a_consumer'.
 		do
 			a_consumer.consume (600)

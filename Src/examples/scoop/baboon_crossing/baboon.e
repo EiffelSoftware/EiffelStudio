@@ -18,7 +18,7 @@ create {BABOON_CROSSING}
 
 feature {NONE} -- Initialization
 
-	make_with_rope (a_id: INTEGER; a_rope: attached separate ROPE) is
+	make_with_rope (a_id: INTEGER; a_rope: separate ROPE) is
 			-- Creation procedure.
 		require
 			a_id_positive: a_id > 0
@@ -73,14 +73,14 @@ feature {BABOON_CROSSING} -- Basic operations
 
 feature {NONE} -- Implementation
 
-	announce (a_rope: attached separate ROPE) is
+	announce (a_rope: separate ROPE) is
 			-- Announce.
 		do
 			io.put_string (out + " announcing%N")
 			a_rope.announce (Current)
 		end
 
-	mount (a_rope: attached separate ROPE) is
+	mount (a_rope: separate ROPE) is
 			-- Mount on rope.
 		require
 			-- wait until the rope is safe
@@ -101,14 +101,14 @@ feature {NONE} -- Implementation
 			(create {EXECUTION_ENVIRONMENT}).sleep (random_integer (500, 1500) * 1000000)
 		end
 
-	unmount (a_rope: attached separate ROPE) is
+	unmount (a_rope: separate ROPE) is
 			-- Unmount from the rope.
 		do
 			io.put_string (out + " unmounting%N")
 			a_rope.unmount (Current)
 		end
 
-	rope: attached separate ROPE
+	rope: separate ROPE
 			-- Reference to separate rope
 
 invariant

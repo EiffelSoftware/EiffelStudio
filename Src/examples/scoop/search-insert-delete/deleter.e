@@ -31,7 +31,7 @@ feature {SEARCH_INSERT_DELETE} -- Basic operations
 
 feature {NONE} -- Implementation
 
-	start_delete (a_list: attached separate SHARED_LIST) is
+	start_delete (a_list: separate SHARED_LIST) is
 			-- Start delete operation.
 		require
 			a_list.can_delete
@@ -40,7 +40,7 @@ feature {NONE} -- Implementation
 			a_list.start_delete
 		end
 
-	end_delete (a_list: attached separate SHARED_LIST) is
+	end_delete (a_list: separate SHARED_LIST) is
 			-- End delete operation.
 		do
 			io.put_string (out + " ending delete%N")

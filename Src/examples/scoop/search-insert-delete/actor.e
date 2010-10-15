@@ -16,7 +16,7 @@ inherit
 
 feature {SEARCH_INSERT_DELETE} -- Creation procedure
 
-	make_with_list (a_id: INTEGER; a_randomness: BOOLEAN; a_list: attached separate SHARED_LIST) is
+	make_with_list (a_id: INTEGER; a_randomness: BOOLEAN; a_list: separate SHARED_LIST) is
 			-- Creation procedure.
 		do
 			randomness := a_randomness
@@ -47,7 +47,7 @@ feature {NONE} -- Implementation
 	id: INTEGER
 			-- Id of the actor
 
-	list: attached separate SHARED_LIST
+	list: separate SHARED_LIST
 			-- Reference to the separate index
 
 	type: STRING is

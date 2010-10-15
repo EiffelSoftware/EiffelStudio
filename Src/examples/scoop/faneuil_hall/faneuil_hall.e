@@ -52,7 +52,7 @@ feature -- Initialization
 
 feature {NONE} -- Implementation
 
-	hall: attached separate HALL
+	hall: separate HALL
 	once
 		create Result
 	end
@@ -60,7 +60,7 @@ feature {NONE} -- Implementation
 	max_actors: INTEGER is 3
 			-- Maximum number of actors
 
-	launch_actor (a_actor: attached separate ACTOR) is
+	launch_actor (a_actor: separate ACTOR) is
 			-- Launch the actor.
 		do
 			a_actor.live

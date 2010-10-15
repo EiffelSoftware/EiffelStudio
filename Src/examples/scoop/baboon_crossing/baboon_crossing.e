@@ -18,7 +18,7 @@ feature -- Initialization
 	make is
 		-- Creation procedure.
 	local
-		t_baboon: attached separate BABOON
+		t_baboon: separate BABOON
 		i: INTEGER
 	do
 		create random.set_seed (max_baboons + 1)
@@ -43,7 +43,7 @@ feature -- Initialization
 
 feature {NONE} -- Implementation
 
-	rope: attached separate ROPE is
+	rope: separate ROPE is
 			-- Reference to separate rope
 		once -- Only one rope will be created
 			create Result
@@ -52,7 +52,7 @@ feature {NONE} -- Implementation
 	max_baboons: INTEGER is 30
 			-- Maximum number of baboons
 
-	launch_baboon(a_baboon: attached separate BABOON) is
+	launch_baboon(a_baboon: separate BABOON) is
 			-- Launch the baboon.
 		do
 			a_baboon.live

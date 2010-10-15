@@ -62,7 +62,7 @@ feature {NONE} -- Process
 
 feature {NONE} -- Control Helper
 
-	enter (a_shop: attached separate SHOP): BOOLEAN is
+	enter (a_shop: separate SHOP): BOOLEAN is
 			-- Enter the shop and return true if it was successful
 			require
 				a_shop /= void
@@ -71,7 +71,7 @@ feature {NONE} -- Control Helper
 				Result := a_shop.enter
 			end
 
-	leave (a_shop: attached separate SHOP) is
+	leave (a_shop: separate SHOP) is
 			-- Leave the shop
 			require
 				a_shop /= void
@@ -82,7 +82,7 @@ feature {NONE} -- Control Helper
 
 feature {NONE}
 
-	get_hair_cut(a_barber: attached separate BARBER):BOOLEAN is
+	get_hair_cut(a_barber: separate BARBER):BOOLEAN is
 			-- if the barber is available, cut my hair and decrement my needed haircuts
 			require
 				a_barber /= void
@@ -99,8 +99,8 @@ feature {NONE} -- Implementation
 
 	id: INTEGER
 	needed_haircuts: INTEGER
-	shop: attached separate SHOP
-	barber: attached separate BARBER
+	shop: separate SHOP
+	barber: separate BARBER
 
 invariant
 

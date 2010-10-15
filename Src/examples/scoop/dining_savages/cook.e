@@ -13,7 +13,7 @@ create
 
 feature
 
-		make (a_pot: attached separate POT) is
+		make (a_pot: separate POT) is
 				-- Initialization
 				require
 					a_pot /= void
@@ -30,7 +30,7 @@ feature
 					cook (pot)
 				end
 
-		cook (a_pot: attached separate POT) is
+		cook (a_pot: separate POT) is
 				-- Fill the pot
 				require
 					a_pot.is_empty
@@ -43,6 +43,6 @@ feature
 
 feature {NONE} -- Implementation
 
-	pot: attached separate POT
+	pot: separate POT
 
 end

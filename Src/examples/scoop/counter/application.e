@@ -17,7 +17,7 @@ feature -- Initialization
 	do
 --			io.put_string ("Counter application%N")
 --			test_1 -- start just one counter
---			test_2 -- start two counters
+			test_2 -- start two counters
 --			test_3 -- start several counters
 --			test_4 -- start counter_1 twice
 			test_5 -- start counter_1 with precondition
@@ -45,7 +45,7 @@ feature -- Initialization
 			-- Launch several (300) counter
 		local
 			i: INTEGER
-			counter: attached separate COUNTER
+			counter: separate COUNTER
 		do
 			from
 				i := 1
@@ -81,8 +81,8 @@ feature -- Initialization
 	test_6 is
 			-- Launch a_counter_1 separately and a_counter_2 non-separate
 		local
-			a_counter_1: attached separate COUNTER
-			a_counter_2: attached COUNTER
+			a_counter_1: separate COUNTER
+			a_counter_2: COUNTER
 
 		do
 			create a_counter_1.make (1, 100)
@@ -90,34 +90,34 @@ feature -- Initialization
 			launch_two_mixed (a_counter_1, a_counter_2)
 		end
 
-	launch_two_mixed (a_counter_1: attached separate COUNTER; a_counter_2: attached separate COUNTER) is
+	launch_two_mixed (a_counter_1: separate COUNTER; a_counter_2: separate COUNTER) is
 			--
 		do
 			a_counter_1.run
 			a_counter_2.run
 		end
 
-	launch_one (a_counter: attached separate COUNTER) is
+	launch_one (a_counter: separate COUNTER) is
 			-- Launch a_counter
 		do
 			a_counter.set_speed (50)
 			a_counter.run
 		end
 
-	launch_one_run_100 (a_counter: attached separate COUNTER) is
+	launch_one_run_100 (a_counter: separate COUNTER) is
 		do
 			io.put_string ("launch_one_run_100 (counter_1) started%N")
 			a_counter.run_100
 		end
 
-	launch_two (a_counter_1: attached separate COUNTER; a_counter_2: attached separate COUNTER)
+	launch_two (a_counter_1: separate COUNTER; a_counter_2: separate COUNTER)
 			-- start a_counter_1 and a_counter_2
 		do
 			a_counter_1.run
 			a_counter_2.run
 		end
 
-	launch_one_with_precondition (a_counter: attached separate COUNTER) is
+	launch_one_with_precondition (a_counter: separate COUNTER) is
 			-- Launch a_counter
 		require
 			a_counter.value >= 200
@@ -126,7 +126,7 @@ feature -- Initialization
 			a_counter.run_100
 		end
 
-	launch_one_with_precondition_2 (a_counter: attached separate COUNTER) is
+	launch_one_with_precondition_2 (a_counter: separate COUNTER) is
 			-- Launch a_counter
 		require
 			a_counter.value >= 300 and a_counter.value <= 500
@@ -138,10 +138,10 @@ feature -- Initialization
 
 feature -- Access
 
-	counter_1:  attached separate COUNTER
+	counter_1:  separate COUNTER
 			-- Counter reference
 
-	counter_2:  attached separate COUNTER
+	counter_2:  separate COUNTER
 			-- Counter reference			
 
 end -- class APPLICATION	

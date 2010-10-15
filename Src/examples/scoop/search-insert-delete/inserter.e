@@ -31,7 +31,7 @@ feature {SEARCH_INSERT_DELETE} -- Basic operations
 
 feature {NONE} -- Implementation
 
-	start_insert (a_list: attached separate SHARED_LIST) is
+	start_insert (a_list: separate SHARED_LIST) is
 			-- Start an insert operation.
 		require
 			a_list.can_insert
@@ -40,7 +40,7 @@ feature {NONE} -- Implementation
 			a_list.start_insert
 		end
 
-	end_insert (a_list: attached separate SHARED_LIST) is
+	end_insert (a_list: separate SHARED_LIST) is
 			-- End an insert operation.
 		do
 			io.put_string (out + " ending insert%N")

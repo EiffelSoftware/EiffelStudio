@@ -15,7 +15,7 @@ inherit
 
 feature {NONE} -- Creation
 
-	make_with_station(a_id: INTEGER; a_station: attached separate STATION) is
+	make_with_station(a_id: INTEGER; a_station: separate STATION) is
 			-- Creation procedure.
 		do
 			id := a_id
@@ -63,7 +63,7 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-	station: attached separate STATION
+	station: separate STATION
 			-- Reference to attached separate station
 
 invariant

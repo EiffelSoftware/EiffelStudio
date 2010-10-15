@@ -29,7 +29,7 @@ feature {NONE} -- Implementation
 			over := True
 		end
 
-	enter (a_station: attached separate STATION)
+	enter (a_station: separate STATION)
 		require
 			a_station /= void
 		do

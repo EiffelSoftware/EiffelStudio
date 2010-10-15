@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="quicksort" uuid="732278AE-4185-4EFA-9091-6ADEE09B8FCA">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-6-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-6-0 http://www.eiffel.com/developers/xml/configuration-1-6-0.xsd" name="quicksort" uuid="732278AE-4185-4EFA-9091-6ADEE09B8FCA">
 	<target name="quicksort">
 		<root class="APPLICATION" feature="make"/>
-		<precompile name="base_pre" location="$ISE_PRECOMP\base-mt.ecf"/>
-		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<option is_attached_by_default="true" void_safety="all">
+		</option>
+		<precompile name="base_pre" location="$ISE_PRECOMP\base-mt-safe.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<cluster name="quicksort" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/EIFGENs$</exclude>
-				<exclude>/.svn$</exclude>
 				<exclude>/CVS$</exclude>
+				<exclude>/.svn$</exclude>
 			</file_rule>
 		</cluster>
 	</target>

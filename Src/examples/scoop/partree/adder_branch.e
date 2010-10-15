@@ -7,7 +7,7 @@ create
 	make
 
 feature
-	make (a_left, a_right : attached separate PAR_TREE [INTEGER])
+	make (a_left, a_right : separate PAR_TREE [INTEGER])
 		do
 			left  := a_left
 			right := a_right

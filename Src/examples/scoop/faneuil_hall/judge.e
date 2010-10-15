@@ -41,7 +41,7 @@ feature {NONE} -- Implementation
 			over := true
 		end
 
-	enter (a_hall: attached separate HALL) is
+	enter (a_hall: separate HALL) is
 			-- Enter the hall.
 		require
 			not a_hall.judge_present
@@ -52,7 +52,7 @@ feature {NONE} -- Implementation
 			a_hall.set_judge (True)
 		end
 
-	take_place(a_hall: attached separate HALL) is
+	take_place(a_hall: separate HALL) is
 			-- Sit in judgment position
 		require
 			a_hall.immigrants_ready
@@ -61,7 +61,7 @@ feature {NONE} -- Implementation
 			a_hall.sit_judge
 		end
 
-	confirm (a_hall: attached separate HALL) is
+	confirm (a_hall: separate HALL) is
 			-- Confirm.
 		require
 			a_hall.immigrants_swear_done
@@ -70,7 +70,7 @@ feature {NONE} -- Implementation
 			a_hall.confirm
 		end
 
-	leave (a_hall: attached separate HALL) is
+	leave (a_hall: separate HALL) is
 			-- Leave the hall.
 		do
 			io.put_string (out + " leaving%N")

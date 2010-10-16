@@ -10,10 +10,18 @@ class ASSERT_B
 inherit
 	EXPR_B
 		redefine
-			analyze, generate, unanalyze, enlarged,
-			is_unsafe, optimized_byte_node, calls_special_features,
-			size, pre_inlined_code, inlined_byte_code,
-			line_number, set_line_number
+			analyze,
+			calls_special_features,
+			enlarged,
+			generate,
+			inlined_byte_code,
+			is_unsafe,
+			line_number,
+			optimized_byte_node,
+			pre_inlined_code,
+			set_line_number,
+			size,
+			unanalyze
 		end
 
 	ASSERT_TYPE

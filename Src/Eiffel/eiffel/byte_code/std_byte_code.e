@@ -235,21 +235,43 @@ feature -- Analyzis
 			args: like arguments
 			i, nb: INTEGER
 			arg: TYPE_A
+			l_cl_type: CL_TYPE_A
+			l_is_catcall_checking_enabled, l_enable_hooks: BOOLEAN
+			l_name_id, l_any_class_id: INTEGER
 		do
-			args := arguments
-			if args /= Void then
+			nb := argument_count
+			if nb > 0 then
 				from
+					args := arguments
+					if context.workbench_mode or system.check_for_catcall_at_runtime then
+						l_name_id := context.current_feature.feature_name_id
+						l_any_class_id := system.any_id
+						l_is_catcall_checking_enabled := (context.current_feature.written_in /= l_any_class_id or else
+							(l_name_id /= {PREDEFINED_NAMES}.equal_name_id or
+							l_name_id /= {PREDEFINED_NAMES}.standard_equal_name_id))
+					end
 					i := args.lower
-					nb := args.count
 				until
 					i > nb
 				loop
 					arg := real_type (args.item (i))
-					if arg.is_true_expanded then
+					if l_is_catcall_checking_enabled and then arg.c_type.is_reference then
+						l_cl_type ?= args.item (i)
+								-- Only generate a catcall detection if the expected argument is different
+								-- than ANY since ANY is the ancestor to all types.
+						if l_cl_type = Void or else l_cl_type.class_id /= l_any_class_id then
+							l_enable_hooks := True
+						else
+							l_enable_hooks := False
+						end
+					else
+							-- See FIXME of `generate_expanded_initialization'
+							-- for possible improvement in the case of `true_expanded'.
+						l_enable_hooks := arg.is_true_expanded
+					end
+					if l_enable_hooks then
 							-- Force GC hook and its usage even if not used within
 							-- body of current routine.
-							-- See FIXME of `generate_expanded_arguments_cloning'
-							-- for possible improvement.
 						context.force_gc_hooks
 						arg_var.set_position (i)
 						context.set_local_index (arg_var.register_name, arg_var.enlarged)
@@ -1480,21 +1502,20 @@ end
 			l_type: TYPE_A
 			l_any_type: CL_TYPE_A
 			l_any_class_id, l_name_id: INTEGER
-			l_arg: ARGUMENT_BL
-			l_optimize_like_current: BOOLEAN
+			l_computed, l_optimize_like_current: BOOLEAN
 		do
 			if context.workbench_mode or system.check_for_catcall_at_runtime then
-					-- We do not have to generate a catcall detection for some features of ANY
-					-- which are properly handled at runtime.
-				l_name_id := context.current_feature.feature_name_id
-				l_any_class_id := system.any_id
-				if
-					context.current_feature.written_in /= l_any_class_id or else
-					(l_name_id /= {PREDEFINED_NAMES}.equal_name_id or
-					l_name_id /= {PREDEFINED_NAMES}.standard_equal_name_id)
-				then
-					nb := argument_count
-					if nb > 0 then
+				nb := argument_count
+				if nb > 0 then
+						-- We do not have to generate a catcall detection for some features of ANY
+						-- which are properly handled at runtime.
+					l_name_id := context.current_feature.feature_name_id
+					l_any_class_id := system.any_id
+					if
+						context.current_feature.written_in /= l_any_class_id or else
+						(l_name_id /= {PREDEFINED_NAMES}.equal_name_id or
+						l_name_id /= {PREDEFINED_NAMES}.standard_equal_name_id)
+					then
 						from
 							l_argument_types := arguments
 							i := l_argument_types.lower
@@ -1510,12 +1531,12 @@ end
 									-- Only generate a catcall detection if the expected argument is different
 									-- than ANY since ANY is the ancestor to all types.
 								if l_any_type = Void or else l_any_type.class_id /= l_any_class_id then
-									if l_arg = Void then
-										create l_arg
+									if not l_computed then
+										l_computed := True
 										l_optimize_like_current := not attribute_assignment_detector.has_attribute_assignment (Current)
 									end
-									l_arg.set_position (i)
-									context.generate_catcall_check (l_arg, l_type, i, l_optimize_like_current)
+									arg_var.set_position (i)
+									context.generate_catcall_check (arg_var, l_type, i, l_optimize_like_current)
 								end
 							end
 							i := i + 1

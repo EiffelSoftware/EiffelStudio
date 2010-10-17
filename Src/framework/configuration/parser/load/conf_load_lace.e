@@ -734,6 +734,14 @@ feature {NONE} -- Implementation of data retrieval
 							current_options.add_warning (w_syntax, l_value.is_yes)
 						elseif l_name.is_equal ("old_verbatim_strings_warning") and l_value /= Void then
 								-- This option has no effect in 6.3 or later, so we accept it but we don't do anything with it.
+						elseif l_name ~ s_multithreaded and then l_value /= Void then
+								-- Use "concurrency" setting instead.
+							l_str := l_value.value.as_lower
+							if l_str ~ "true" or else l_str ~ "yes" then
+								current_target.setting_concurrency.put_index ({CONF_TARGET}.setting_concurrency_index_thread)
+							elseif l_str ~ "false" or else l_str ~ "no" then
+								current_target.setting_concurrency.put_index ({CONF_TARGET}.setting_concurrency_index_none)
+							end
 						elseif valid_setting (l_name) and l_value /= Void then
 							current_target.add_setting (l_name, l_value.value)
 						end

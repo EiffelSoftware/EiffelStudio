@@ -313,7 +313,9 @@ feature {NONE} -- Access
 				-- Default constraint class type is detachable separate.
 			create t.make (System.any_id)
 			t.set_detachable_mark
-			t.set_separate_mark
+			if system.is_scoop then
+				t.set_separate_mark
+			end
 			create Result.make (t, Void)
 		end
 

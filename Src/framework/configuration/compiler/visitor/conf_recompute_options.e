@@ -55,6 +55,7 @@ feature -- Visit nodes
 				a_target.system.set_description (new_target.system.description)
 				a_target.set_version (new_target.internal_version)
 				a_target.set_settings (new_target.internal_settings)
+				a_target.set_immediate_setting_concurrency (new_target.immediate_setting_concurrency)
 				if new_target.internal_options /= Void then
 					a_target.set_options (new_target.internal_options)
 				end
@@ -140,7 +141,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

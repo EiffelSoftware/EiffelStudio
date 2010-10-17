@@ -489,7 +489,7 @@ feature -- Analyzis
 
 			if context.has_request_chain then
 				buf.put_new_line
-				buf.put_string ("RTS_RD (Current);")
+				buf.put_string ("if (uarg) RTS_RD (Current);")
 			end
 
 			if compound = Void or else not compound.last.last_all_in_result then
@@ -678,17 +678,18 @@ end
 		do
 		end
 
-	generate_expanded_arguments
+	generate_argument_initialization
 			-- Generate declaration for locals `earg' that will hold a copy of passed
 			-- arguments.
 		local
+			t: TYPE_A
 			l_arguments: like arguments
 			i, nb: INTEGER
 			l_buf: like buffer
-			l_has_expanded: BOOLEAN
-			l_type: CL_TYPE_A
 			l_arg_name: STRING
 			l_class_type: CLASS_TYPE
+			is_next: BOOLEAN
+			w: BOOLEAN
 		do
 			l_arguments := arguments
 			if l_arguments /= Void then
@@ -696,11 +697,22 @@ end
 					i := l_arguments.lower
 					nb := l_arguments.upper
 					l_buf := buffer
+					w := context.workbench_mode
 				until
 					i > nb
 				loop
-					l_type ?= real_type (l_arguments.item (i))
-					if l_type /= Void and then l_type.is_true_expanded then
+					t := real_type (l_arguments.item (i))
+					if w then
+							-- Generate definitions for arguments that are passed
+						l_buf.put_new_line_only
+						l_buf.put_string ("#define arg")
+						l_buf.put_integer (i)
+						l_buf.put_four_character (' ', 'a', 'r', 'g')
+						l_buf.put_integer (i)
+						l_buf.put_two_character ('x', '.')
+						t.c_type.generate_typed_field (l_buf)
+					end
+					if attached {CL_TYPE_A} t as l_type and then l_type.is_true_expanded then
 						create l_arg_name.make (6)
 						l_arg_name.append ("sarg")
 						l_arg_name.append_integer (i)
@@ -714,9 +726,40 @@ end
 						l_buf.put_string (".data")
 						l_buf.put_character (';')
 						l_buf.put_new_line
-						l_has_expanded := True
+					elseif t.is_separate then
+							-- Declare a variable that tells whether an argument is uncontrolled.
+						l_buf.put_new_line
+						l_buf.put_string ("EIF_BOOLEAN uarg")
+						l_buf.put_integer (i)
+						l_buf.put_string (" = (EIF_BOOLEAN) RTS_OU (Current, arg")
+						l_buf.put_integer (i)
+						l_buf.put_two_character (')', ';')
+							-- Record that a request chain is required to lock arguments.
+						context.set_has_request_chain (True)
 					end
 					i := i + 1
+				end
+				if context.has_request_chain then
+						-- Declare a variable that tells whether a request chain is required.
+						-- Its value is computed as "uargK || ... || uargM"
+					l_buf.put_new_line
+					l_buf.put_string ("EIF_BOOLEAN uarg = ")
+					from
+						i := l_arguments.lower
+					until
+						i > nb
+					loop
+						if real_type (l_arguments.item (i)).is_separate then
+							if is_next then
+								l_buf.put_four_character (' ', '|', '|', ' ')
+							end
+							l_buf.put_string ("uarg")
+							l_buf.put_integer (i)
+							is_next := True
+						end
+						i := i + 1
+					end
+					l_buf.put_character (';')
 				end
 			end
 		end
@@ -915,7 +958,7 @@ end
 				context.set_local_index ("saved_except", create {NAMED_REGISTER}.make ("saved_except", reference_c_type))
 			end
 
-			generate_expanded_arguments
+			generate_argument_initialization
 
 				-- Generate temporary locals under the control of the GC
 			context.generate_temporary_ref_variables
@@ -982,31 +1025,23 @@ end
 						i <= 0
 					loop
 						c_type := context.real_type (types [i]).c_type
-						buf.put_new_line_only
 						if not c_type.is_reference then
 								-- The argument type is not reference, so it might be boxed.
-							buf.put_indentation
+							buf.put_new_line
 							buf.put_string ("if (arg")
 							buf.put_integer (i)
 							buf.put_string ("x.type == SK_REF) arg")
 							buf.put_integer (i)
-							buf.put_string ("x.")
+							buf.put_two_character ('x', '.')
 							c_type.generate_typed_field (buf)
-							buf.put_string (" = * ")
+							buf.put_five_character (' ', '=', ' ', '*', ' ')
 							c_type.generate_access_cast (buf)
-							buf.put_string (" arg")
+							buf.put_four_character (' ', 'a', 'r', 'g')
 							buf.put_integer (i)
-							buf.put_string ("x.")
+							buf.put_two_character ('x', '.')
 							reference_c_type.generate_typed_field (buf)
 							buf.put_character (';')
-							buf.put_new_line_only
 						end
-						buf.put_string ("#define arg")
-						buf.put_integer (i)
-						buf.put_string (" arg")
-						buf.put_integer (i)
-						buf.put_string ("x.")
-						c_type.generate_typed_field (buf)
 						i := i - 1
 					end
 					buf.put_new_line
@@ -1076,34 +1111,52 @@ end
 			i: like arguments.count
 		do
 			buf := buffer
-			if attached arguments as a then
+			if attached arguments as a and then context.has_request_chain then
+					-- There are separate arguments.
+					-- They should be locked if they are not controlled yet.
+					-- Locking is done for all the uncontrolled arguments at once.
+					-- A request chain is created for that.
+					-- If argument is controlled, there is no need to lock it again.
+					-- The generated code looks like
+					--    if (uarg) {
+					--       RTS_RC (Current);                  // Create request chain.
+					--       if (uargN) RTS_RS (Current, argN); // Register uncontrolled argument in the chain.
+					--       ...                                // Repeat for other arguments.
+					--       if (uarg) RTS_RW (Current);        // Wait until all arguments are locked.
+					--    }
+				buf.put_new_line
+				buf.put_string ("if (uarg) {")
+				buf.indent
+				buf.put_new_line
+				buf.put_string ("RTS_RC (Current);");
 				from
 					i := a.count
 				until
 					i <= 0
 				loop
 					if real_type (a [i]).is_separate then
-						if not context.has_request_chain then
-							context.set_has_request_chain (True)
-							buf.put_new_line
-							buf.put_string ("RTS_RC (Current);")
-						end
+							-- Register uncontrolled argument in the request chain.
 						buf.put_new_line
-						buf.put_string ("RTS_RS (Current, arg")
+						buf.put_string ("if (uarg")
+						buf.put_integer (i)
+						buf.put_string (") RTS_RS (Current, arg")
 						buf.put_integer (i)
 						buf.put_two_character (')', ';')
 					end
 					i := i - 1
 				end
-				if context.has_request_chain then
-					buf.put_new_line
-					buf.put_string ("RTS_RW (Current);")
-				end
+				buf.put_new_line
+				buf.put_string ("RTS_RW (Current);");
+				buf.exdent
+				buf.put_new_line
+				buf.put_character ('}')
 			end
 			context.set_assertion_type (In_precondition)
 			workbench_mode := context.workbench_mode
-			keep_assertions := workbench_mode or else context.system.keep_assertions
-			if keep_assertions then
+				-- Preconditions are always generated in workbench mode.
+				-- In finalized mode they are generated if requested by user
+				-- and when there are uncontrolled arguments.
+			if workbench_mode or else context.system.keep_assertions or else context.has_request_chain then
 				inh_assert := Context.inherited_assertion
 				if Context.origin_has_precondition then
 					have_assert := (precondition /= Void or else inh_assert.has_precondition)

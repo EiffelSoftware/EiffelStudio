@@ -40,8 +40,10 @@
 /*
  * Object status:
  * EIF_IS_DIFFERENT_PROCESSOR (o1, o2) - tells if o1 and o2 run on different processors
+ * RTS_OU(c,o) - tells if object o is uncontrolled by the processor associated with object c
  */
 #define EIF_IS_DIFFERENT_PROCESSOR(o1,o2) EIF_FALSE
+#define RTS_OU(c,o) EIF_TRUE
 
 /*
  * Processor:

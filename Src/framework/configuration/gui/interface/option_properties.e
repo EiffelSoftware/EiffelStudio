@@ -509,7 +509,6 @@ feature {NONE} -- Implementation
 				l_choice_prop.use_inherited_actions.extend (agent (o: CONF_VALUE_CHOICE) do o.unset end (option))
 				l_choice_prop.use_inherited_actions.extend (agent l_choice_prop.enable_inherited)
 				l_choice_prop.use_inherited_actions.extend (agent handle_value_changes (False))
-				l_choice_prop.use_inherited_actions.extend (agent l_choice_prop.enable_inherited)
 				l_choice_prop.use_inherited_actions.extend (agent l_choice_prop.redraw)
 			end
 			if option.is_set then
@@ -646,7 +645,7 @@ feature {NONE} -- Refresh displayed data.
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

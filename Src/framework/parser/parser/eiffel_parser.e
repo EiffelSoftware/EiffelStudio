@@ -10955,7 +10955,7 @@ debug ("GEYACC")
 end
 
 				yyval81 := yyvs81.item (yyvsp81)
-				if attached yyval81 then
+				if not is_ignoring_separate_mark and then attached yyval81 then
 					yyval81.set_separate_mark (yyvs12.item (yyvsp12))
 				end
 			
@@ -11159,7 +11159,7 @@ debug ("GEYACC")
 end
 
 				yyval81 := yyvs81.item (yyvsp81)
-				if attached yyval81 then
+				if not is_ignoring_separate_mark and then attached yyval81 then
 					yyval81.set_separate_mark (yyvs12.item (yyvsp12))
 				end
 			

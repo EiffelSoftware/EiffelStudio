@@ -236,13 +236,15 @@ feature -- Analyzis
 			i, nb: INTEGER
 			arg: TYPE_A
 			l_cl_type: CL_TYPE_A
+			l_arg: ARGUMENT_BL
 			l_is_catcall_checking_enabled, l_enable_hooks: BOOLEAN
 			l_name_id, l_any_class_id: INTEGER
 		do
-			nb := argument_count
-			if nb > 0 then
+			args := arguments
+			if args /= Void then
 				from
-					args := arguments
+					i := args.lower
+					nb := args.count
 					if context.workbench_mode or system.check_for_catcall_at_runtime then
 						l_name_id := context.current_feature.feature_name_id
 						l_any_class_id := system.any_id
@@ -250,7 +252,6 @@ feature -- Analyzis
 							(l_name_id /= {PREDEFINED_NAMES}.equal_name_id or
 							l_name_id /= {PREDEFINED_NAMES}.standard_equal_name_id))
 					end
-					i := args.lower
 				until
 					i > nb
 				loop
@@ -273,8 +274,11 @@ feature -- Analyzis
 							-- Force GC hook and its usage even if not used within
 							-- body of current routine.
 						context.force_gc_hooks
-						arg_var.set_position (i)
-						context.set_local_index (arg_var.register_name, arg_var.enlarged)
+						if l_arg = Void then
+							create l_arg
+						end
+						l_arg.set_position (i)
+						context.set_local_index (l_arg.register_name, l_arg)
 					end
 					i := i + 1
 				end
@@ -1502,10 +1506,12 @@ end
 			l_type: TYPE_A
 			l_any_type: CL_TYPE_A
 			l_any_class_id, l_name_id: INTEGER
-			l_computed, l_optimize_like_current: BOOLEAN
+			l_arg: ARGUMENT_BL
+			l_optimize_like_current: BOOLEAN
 		do
-			if context.workbench_mode or system.check_for_catcall_at_runtime then
-				nb := argument_count
+			l_argument_types := arguments
+			if l_argument_types /= Void and then context.workbench_mode or system.check_for_catcall_at_runtime then
+				nb := l_argument_types.count
 				if nb > 0 then
 						-- We do not have to generate a catcall detection for some features of ANY
 						-- which are properly handled at runtime.
@@ -1517,11 +1523,9 @@ end
 						l_name_id /= {PREDEFINED_NAMES}.standard_equal_name_id)
 					then
 						from
-							l_argument_types := arguments
 							i := l_argument_types.lower
-							nb := i + l_argument_types.upper
 						until
-							i = nb
+							i > nb
 						loop
 							l_type := l_argument_types [i]
 								-- We instantiate `l_type' in current context to see if it is
@@ -1531,12 +1535,14 @@ end
 									-- Only generate a catcall detection if the expected argument is different
 									-- than ANY since ANY is the ancestor to all types.
 								if l_any_type = Void or else l_any_type.class_id /= l_any_class_id then
-									if not l_computed then
-										l_computed := True
+									if l_arg = Void then
+										create l_arg
+											-- See eweasel test#catcall006 and test#incr330 for a case where it is important
+											-- to detect such assignments.
 										l_optimize_like_current := not attribute_assignment_detector.has_attribute_assignment (Current)
 									end
-									arg_var.set_position (i)
-									context.generate_catcall_check (arg_var, l_type, i, l_optimize_like_current)
+									l_arg.set_position (i)
+									context.generate_catcall_check (l_arg, l_type, i, l_optimize_like_current)
 								end
 							end
 							i := i + 1
@@ -1825,12 +1831,6 @@ feature {NONE} -- Typing
 feature {NONE} -- Convenience
 
 	local_var: LOCAL_B
-			-- Instance used to generate local variable name
-		once
-			create Result
-		end
-
-	arg_var: ARGUMENT_B
 			-- Instance used to generate local variable name
 		once
 			create Result

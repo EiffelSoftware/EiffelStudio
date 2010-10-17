@@ -18,7 +18,7 @@ inherit
 			out
 		end
 
-create {CONF_OPTION}
+create {CONF_OPTION, CONF_TARGET}
 
 	make
 
@@ -73,6 +73,15 @@ feature -- Access
 			Result := content.count.to_natural_8
 		ensure
 			expected_result: Result = content.count
+		end
+
+	i_th alias "[]" (i: like index): like item
+			-- Value at index `i'.
+		require
+			i_large_enough: i > 0
+			i_small_enough: i <= count
+		do
+			Result := content [i]
 		end
 
 feature -- Modification
@@ -144,7 +153,7 @@ invariant
 	index_in_range: index <= count
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

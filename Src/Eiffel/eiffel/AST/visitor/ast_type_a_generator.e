@@ -194,8 +194,10 @@ feature {NONE} -- Visitor implementation
 		do
 			create f.make (l_as.is_reference, l_as.is_expanded, l_as.position)
 			last_type := f
-				-- The formal generic is separate by default.
-			s := True
+			if system.is_scoop then
+					-- The formal generic is separate by default.
+				s := True
+			end
 			if l_as.has_attached_mark then
 				f.set_attached_mark
 				check f.is_attached end

@@ -116,6 +116,17 @@ feature -- Target names and descriptions
 	target_console_application_description: STRING_GENERAL do Result := locale.translation ("Is the project a console application?")	end
 	target_cls_compliant_name: STRING_GENERAL do Result := locale.translation ("CLS Compliant")	end
 	target_cls_compliant_description: STRING_GENERAL do Result := locale.translation ("Should generated assemblies be marked as CLS compliant?")	end
+	target_concurrency_name: STRING_GENERAL do Result := locale.translation ("Concurrency")	end
+	target_concurrency_description: STRING_GENERAL do Result := locale.translation ("[
+			Concurrency mode of the target application:
+				none - mono-threaded
+				thread - based on EiffelThread library
+				scoop - controlled by SCOOP rules
+			]")
+		end
+	target_concurrency_none_name: STRING_GENERAL do Result := locale.translation ("No concurrency") end
+	target_concurrency_thread_name: STRING_GENERAL do Result := locale.translation ("EiffelThread") end
+	target_concurrency_scoop_name: STRING_GENERAL do Result := locale.translation ("SCOOP") end
 	target_dead_code_removal_name: STRING_GENERAL do Result := locale.translation ("Dead Code Removal")	end
 	target_dead_code_removal_description: STRING_GENERAL do Result := locale.translation ("Should unused code be removed?")	end
 	target_dotnet_naming_convention_name: STRING_GENERAL do Result := locale.translation (".NET Naming Convention")	end
@@ -146,8 +157,6 @@ feature -- Target names and descriptions
 	target_msil_key_file_name_description: STRING_GENERAL do Result := locale.translation ("Key to be able to add the generated binary to the Global Assembly Cache (GAC). %NChose a new, non existing filename to create a new key file.")	end
 	target_msil_use_optimized_precompile_name: STRING_GENERAL do Result := locale.translation ("Use Optimized Precompile")	end
 	target_msil_use_optimized_precompile_description: STRING_GENERAL do Result := locale.translation ("Use an optimized version of a precompile?")	end
-	target_multithreaded_name: STRING_GENERAL do Result := locale.translation ("Multithreaded")	end
-	target_multithreaded_description: STRING_GENERAL do Result := locale.translation ("Generate a multithreaded application?")	end
 	target_old_verbatim_strings_name: STRING_GENERAL do Result := locale.translation ("Old Verbatim Strings")	end
 	target_old_verbatim_strings_description: STRING_GENERAL do Result := locale.translation ("Use the old format for verbatim strings?")	end
 	target_platform_name: STRING_GENERAL do Result := locale.translation ("Platform")	end

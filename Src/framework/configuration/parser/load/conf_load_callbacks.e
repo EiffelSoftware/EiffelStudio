@@ -123,6 +123,7 @@ feature {NONE} -- Implementation
 				elseif a_value.is_equal (namespace_1_4_0) then namespace := namespace_1_4_0
 				elseif a_value.is_equal (namespace_1_5_0) then namespace := namespace_1_5_0
 				elseif a_value.is_equal (namespace_1_6_0) then namespace := namespace_1_6_0
+				elseif a_value.is_equal (namespace_1_7_0) then namespace := namespace_1_7_0
 				elseif a_value.is_equal (latest_namespace) then namespace := latest_namespace
 						-- current version
 				else

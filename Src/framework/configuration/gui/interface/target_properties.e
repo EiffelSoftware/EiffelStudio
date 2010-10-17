@@ -143,6 +143,18 @@ feature {NONE} -- Implementation
 
 			add_misc_option_properties (current_target.changeable_internal_options, current_target.options, l_extends)
 
+				-- Concurrency setting: duplicated in Advanced properties.
+			add_choice_property (
+				conf_interface_names.target_concurrency_name,
+				conf_interface_names.target_concurrency_description,
+				create {ARRAYED_LIST [STRING_32]}.make_from_array (
+					<<conf_interface_names.target_concurrency_none_name,
+					conf_interface_names.target_concurrency_thread_name,
+					conf_interface_names.target_concurrency_scoop_name>>),
+				current_target.setting_concurrency,
+				Void
+			)
+
 			l_bool_prop := new_boolean_property (conf_interface_names.target_line_generation_name, current_target.setting_line_generation)
 			l_bool_prop.set_description (conf_interface_names.target_line_generation_description)
 			add_boolean_setting_actions (l_bool_prop, s_line_generation)
@@ -253,13 +265,17 @@ feature {NONE} -- Implementation
 			end
 			properties.add_property (l_string_prop)
 
-			l_bool_prop := new_boolean_property (conf_interface_names.target_multithreaded_name, current_target.setting_multithreaded)
-			l_bool_prop.set_description (conf_interface_names.target_multithreaded_description)
-			add_boolean_setting_actions (l_bool_prop, s_multithreaded)
-			if l_il_generation then
-				l_bool_prop.enable_readonly
-			end
-			properties.add_property (l_bool_prop)
+				-- Concurrency setting: duplicated in General properties.
+			add_choice_property (
+				conf_interface_names.target_concurrency_name,
+				conf_interface_names.target_concurrency_description,
+				create {ARRAYED_LIST [STRING_32]}.make_from_array (
+					<<conf_interface_names.target_concurrency_none_name,
+					conf_interface_names.target_concurrency_thread_name,
+					conf_interface_names.target_concurrency_scoop_name>>),
+				current_target.setting_concurrency,
+				Void
+			)
 
 			create l_pf_choices.make (platform_names.count + 1)
 			l_pf_choices.extend ("")

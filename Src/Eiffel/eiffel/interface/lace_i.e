@@ -1133,30 +1133,26 @@ feature {NONE} -- Implementation
 				system.set_msil_use_optimized_precompile (False)
 			end
 
-				-- il generation has no multithreaded
-			if not system.il_generation then
-				l_s := l_settings.item (s_multithreaded)
-				if l_s /= Void then
-					if l_s.is_boolean then
-						l_b := l_s.to_boolean
-							-- value can't change from a precompile or in a compiled system
-						if l_b /= system.has_multithreaded and then (a_target.precompile /= Void or workbench.has_compilation_started) then
-							if not is_force_new_target then
-								create vd83.make (s_multithreaded, system.has_multithreaded.out.as_lower, l_s)
-								Error_handler.insert_warning (vd83)
-							end
-						else
-							system.set_has_multithreaded (l_b)
+				-- Check if "concurrency" setting is specified explicitly.
+			if a_target.setting_concurrency.is_set then
+					-- IL generation has no multithreaded, but is affected by SCOOP setting.
+				if
+					not system.il_generation or else
+					a_target.setting_concurrency.index = {CONF_TARGET}.setting_concurrency_index_scoop or else
+					system.concurrency_index = {CONF_TARGET}.setting_concurrency_index_scoop
+				then
+						-- Value can't change from a precompile or in a compiled system.
+					if a_target.setting_concurrency.index /= system.concurrency_index and then (a_target.precompile /= Void or workbench.has_compilation_started) then
+						if not is_force_new_target then
+							create vd83.make (s_concurrency, a_target.setting_concurrency [system.concurrency_index], a_target.setting_concurrency.item)
+							Error_handler.insert_warning (vd83)
 						end
 					else
-						create vd15
-						vd15.set_option_name (s_multithreaded)
-						vd15.set_option_value (l_s)
-						Error_handler.insert_error (vd15)
+						system.set_concurrency_index (a_target.setting_concurrency.index)
 					end
-				else
-					-- once set we don't loose the multithreaded flag
 				end
+			else
+					-- The previous value of "concurrency" setting is kept.
 			end
 
 			l_s := l_settings.item (s_old_feature_replication)

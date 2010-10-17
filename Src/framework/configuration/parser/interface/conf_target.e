@@ -55,6 +55,7 @@ feature {NONE} -- Initialization
 			create environ_variables.make (1)
 			create internal_settings.make (1)
 			system := a_system
+			create immediate_setting_concurrency.make (setting_concurrency_name, setting_concurrency_index_none)
 		ensure
 			name_set: name /= Void and then name.is_equal (a_name.as_lower)
 			system_set: system = a_system
@@ -636,12 +637,6 @@ feature -- Access queries for settings
 			Result := setting_boolean (s_msil_use_optimized_precompile)
 		end
 
-	setting_multithreaded: BOOLEAN
-			-- Value for the multithreaded setting.
-		do
-			Result := setting_boolean (s_multithreaded)
-		end
-
 	setting_platform: STRING
 			-- Value for the platform setting.
 		local
@@ -701,6 +696,55 @@ feature -- Access queries for settings
 			-- Value for the automatic_backup setting.
 		do
 			Result := setting_boolean (s_automatic_backup)
+		end
+
+feature -- Access: concurrency setting
+
+	setting_concurrency: CONF_VALUE_CHOICE
+			-- Value of the "concurrency" setting
+			-- calculated using both immediate and inherited data.
+		do
+			if attached extends as e then
+				Result := immediate_setting_concurrency.twin
+				Result.set_safely (e.setting_concurrency)
+			else
+				Result := immediate_setting_concurrency
+			end
+		ensure
+			result_attached: attached Result
+		end
+
+	setting_concurrency_index_none: NATURAL_8 = 1
+			-- Option index for no concurrency
+
+	setting_concurrency_index_thread: NATURAL_8 = 2
+			-- Option index for thread-based concurrency
+
+	setting_concurrency_index_scoop: NATURAL_8 = 3
+			-- Option index for SCOOP concurrency
+
+	immediate_setting_concurrency: like setting_concurrency
+			-- Value of the "concurrency" setting specified for this target.
+
+	set_immediate_setting_concurrency (v: like setting_concurrency)
+			-- Set value of the "concurrency" setting specified for this target.
+			-- Inherited setting (if any) overrides this one.
+		require
+			v_attached: attached v
+		do
+			immediate_setting_concurrency := v
+		ensure
+			immediate_setting_concurrency_set: immediate_setting_concurrency = v
+		end
+
+feature {NONE} -- Access: concurrency setting
+
+	setting_concurrency_name: ARRAY [READABLE_STRING_32]
+			-- Available values for `setting_concurrency'.
+		once
+			Result := <<"none", "thread", "scoop">>
+		ensure
+			result_attached: Result /= Void
 		end
 
 feature {CONF_ACCESS} -- Update, stored in configuration file
@@ -925,8 +969,8 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			a_name_valid: a_name /= Void and then valid_setting (a_name)
 		do
 			if a_value = Void or else a_value.is_empty then
-					internal_settings.remove (a_name)
-				else
+				internal_settings.remove (a_name)
+			else
 				add_setting (a_name, a_value)
 			end
 		ensure
@@ -1417,6 +1461,7 @@ invariant
 	internal_variables_not_void: internal_variables /= Void
 	internal_settings_not_void: internal_settings /= Void
 	environ_variables_not_void: environ_variables /= Void
+	internal_setting_concurrency_attached: attached immediate_setting_concurrency
 
 note
 	copyright:	"Copyright (c) 1984-2010, Eiffel Software"

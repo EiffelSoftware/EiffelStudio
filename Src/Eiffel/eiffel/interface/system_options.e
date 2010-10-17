@@ -44,10 +44,30 @@ feature -- Access
 	automatic_backup: BOOLEAN
 			-- Automatic backup generation?
 
+	concurrency_index: like {CONF_TARGET}.setting_concurrency_index_none
+			-- Current concurrency index.
+
 	has_multithreaded: BOOLEAN
 			-- Is the system a multithreaded one, only true for classic system?
 		do
-			Result := not il_generation and then internal_has_multithreaded
+				-- Result is False when generating IL.
+			if not il_generation then
+				inspect concurrency_index
+				when
+					{CONF_TARGET}.setting_concurrency_index_thread,
+					{CONF_TARGET}.setting_concurrency_index_scoop
+				then
+					Result := True
+				else
+						-- False otherwise.
+				end
+			end
+		end
+
+	is_scoop: BOOLEAN
+			-- Does the system follow SCOOP model?
+		do
+			Result := concurrency_index = {CONF_TARGET}.setting_concurrency_index_scoop
 		end
 
 	has_old_verbatim_strings: BOOLEAN
@@ -412,15 +432,15 @@ feature -- Update
 			line_generation_set : line_generation = b
 		end
 
-	set_has_multithreaded (b: BOOLEAN)
-			-- Set `internal_has_multithreaded' to `b'
+	set_concurrency_index (v: like concurrency_index)
+			-- Set `concurrency_index' to `v'.
 		do
-			if internal_has_multithreaded /= b then
+			if v /= concurrency_index then
 				request_freeze
 			end
-			internal_has_multithreaded := b
+			concurrency_index := v
 		ensure
-			has_multithreaded_set: internal_has_multithreaded = b
+			concurrency_index_set: concurrency_index = v
 		end
 
 	set_has_old_verbatim_strings (b: BOOLEAN)

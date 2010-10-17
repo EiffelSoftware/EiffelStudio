@@ -179,6 +179,10 @@ feature -- Visit nodes
 			append_file_rule (a_target.internal_file_rule)
 			append_options (a_target.internal_options, Void)
 			from
+				create l_a_name.make (2)
+				l_a_name.force ("name")
+				l_a_name.force ("value")
+				create l_a_val.make (2)
 				l_settings := a_target.internal_settings
 				create l_sort_lst.make_from_array (l_settings.current_keys)
 				create l_sorter.make (create {COMPARABLE_COMPARATOR [STRING]})
@@ -187,14 +191,31 @@ feature -- Visit nodes
 			until
 				l_sort_lst.after
 			loop
-				create l_a_name.make (2)
-				l_a_name.force ("name")
-				l_a_name.force ("value")
-				create l_a_val.make (1)
+				l_a_val.wipe_out
 				l_a_val.force (l_sort_lst.item_for_iteration)
 				l_a_val.force (l_settings.item (l_sort_lst.item_for_iteration))
 				append_tag ("setting", Void, l_a_name, l_a_val)
 				l_sort_lst.forth
+			end
+			if a_target.immediate_setting_concurrency.is_set then
+				if namespace >= namespace_1_7_0 then
+						-- Use "concurrency" setting.
+					l_a_val.wipe_out
+					l_a_val.force (s_concurrency)
+					l_a_val.force (a_target.immediate_setting_concurrency.item)
+				else
+						-- Use "multithreaded" setting.
+					l_a_val.wipe_out
+					l_a_val.force (s_multithreaded)
+					if a_target.immediate_setting_concurrency.index = {CONF_TARGET}.setting_concurrency_index_none then
+						l_a_val.force ("false")
+					else
+							-- There is no way to specify all concurrent variants,
+							-- so only multithreaded variant is used.
+						l_a_val.force ("true")
+					end
+				end
+				append_tag ("setting", Void, l_a_name, l_a_val)
 			end
 			append_mapping (a_target.internal_mapping)
 			append_externals (a_target.internal_external_include, "include")
@@ -1113,7 +1134,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

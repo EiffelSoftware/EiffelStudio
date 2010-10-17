@@ -594,10 +594,44 @@ feature {NONE} -- Implementation attribute processing
 			end
 			l_value := current_attributes.item (at_value)
 			if l_name /= Void and l_value /= Void then
-				if valid_setting (l_name) then
-					current_target.add_setting (l_name, l_value)
-				else
+				if not valid_setting (l_name) then
 					set_parse_error_message (conf_interface_names.e_parse_incorrect_setting (l_name))
+				elseif l_name ~ s_multithreaded then
+						-- Translate "multithreaded" setting into "concurrency" setting.
+					if is_unknown_version or else current_namespace <= namespace_1_6_0 then
+							-- The setting is allowed.
+						if l_value.is_boolean then
+								-- SCOOP is not supported in old projects.
+							if l_value.to_boolean then
+								current_target.setting_concurrency.put_index ({CONF_TARGET}.setting_concurrency_index_thread)
+							else
+								current_target.setting_concurrency.put_index ({CONF_TARGET}.setting_concurrency_index_none)
+							end
+						else
+								-- Boolean value is expected.
+							set_parse_error_message (conf_interface_names.e_parse_incorrect_setting_value (l_name))
+						end
+					else
+							-- The setting is not available in this XML schema.
+						set_parse_error_message (conf_interface_names.e_parse_incorrect_setting (l_name))
+					end
+				elseif l_name ~ s_concurrency then
+						-- Process "concurrency" setting.
+					if is_unknown_version or else current_namespace >= namespace_1_7_0 then
+							-- The setting is allowed.
+						if current_target.setting_concurrency.is_valid_item (l_value) then
+								-- Update setting with this value.
+							current_target.setting_concurrency.put (l_value)
+						else
+								-- The value is invalid.
+							set_parse_error_message (conf_interface_names.e_parse_incorrect_setting_value (l_name))
+						end
+					else
+							-- The setting is not available in this XML schema.
+						set_parse_error_message (conf_interface_names.e_parse_incorrect_setting (l_name))
+					end
+				else
+					current_target.add_setting (l_name, l_value)
 				end
 			elseif l_name = Void then
 				set_parse_error_message (conf_interface_names.e_parse_incorrect_setting_no_name)
@@ -1729,7 +1763,11 @@ feature {NONE} -- Processing of options
 				if o = Void then
 					o := factory.new_option
 				end
-				if namespace ~ namespace_1_6_0 or namespace ~ namespace_1_5_0 then
+				if
+					namespace ~ namespace_1_7_0 or else
+					namespace ~ namespace_1_6_0 or else
+					namespace ~ namespace_1_5_0
+				then
 						-- Use the defaults of ES 6.4.
 					o.merge (default_options_6_4)
 				elseif
@@ -2606,7 +2644,7 @@ invariant
 	factory_not_void: factory /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

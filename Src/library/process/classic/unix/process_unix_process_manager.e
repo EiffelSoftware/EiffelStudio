@@ -142,16 +142,21 @@ feature -- Setting
 		do
 			if arg_list /= Void then
 				count := arg_list.count
-				create l_arguments.make (1, count)
-				from
-					i := 1
-					arg_list.start
-				until
-					arg_list.after
-				loop
-					l_arguments.put (arg_list.item.twin, i)
-					arg_list.forth
-					i := i + 1
+				if count = 0 then
+					create l_arguments.make_empty
+				else
+					from
+						arg_list.start
+						create l_arguments.make_filled (arg_list.item.twin, 1, count)
+						arg_list.forth
+						i := 2
+					until
+						arg_list.after
+					loop
+						l_arguments.put (arg_list.item.twin, i)
+						arg_list.forth
+						i := i + 1
+					end
 				end
 				arguments := l_arguments
 			else
@@ -478,7 +483,8 @@ feature {NONE} -- Implementation
 				count := 1
 				lower := 1	-- Not applicable
 			end
-			create a.make (1, count);
+			create pname.make_empty
+			create a.make_filled (pname, 1, count);
 
 			pname := program_file_name
 			a.put (pname, 1)

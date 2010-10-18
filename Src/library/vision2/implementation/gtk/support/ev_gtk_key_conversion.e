@@ -43,7 +43,7 @@ feature {NONE} -- Implementation
 	v2_to_gtk_table: ARRAY [NATURAL_32]
 			-- GTK keycodes indexed by Vision2 key code.
 		once
-			create Result.make (Key_0, Key_menu)
+			create Result.make_filled ({NATURAL_32} 0, Key_0, Key_menu)
 			Result.put (Key_0_keysym, Key_0)
 			Result.put (Key_1_keysym, Key_1)
 			Result.put (Key_2_keysym, Key_2)

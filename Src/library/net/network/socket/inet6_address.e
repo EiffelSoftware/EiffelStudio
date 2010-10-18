@@ -1,6 +1,5 @@
 note
-	description: "Objects that ..."
-	author: ""
+	description: "Objects that represents an IP V6 address ..."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -8,7 +7,6 @@ class
 	INET6_ADDRESS
 
 inherit
-
 	INET_ADDRESS
 
 	INET_PROPERTIES
@@ -23,7 +21,6 @@ create {INET_ADDRESS_FACTORY}
 feature -- Constants
 
 	INADDRSZ: INTEGER = 16
-
 
 feature {INET_ADDRESS_FACTORY} -- Initialization
 
@@ -63,7 +60,7 @@ feature {INET_ADDRESS_FACTORY} -- Initialization
 			i: INTEGER
 			scope: INTEGER
 		do
-			create addr.make (1, inaddrsz)
+			create addr.make_filled ({NATURAL_8} 0, 1, inaddrsz)
 			if a_pointer /= default_pointer then
 				ptr := c_sockaddr_get_ipv6_address (a_pointer)
 				from

@@ -1005,7 +1005,7 @@ feature {NONE} -- Implemention
 		do
 			from
 				array_count := pts.count
-				create Result.make (1, array_count * 2)
+				create Result.make_filled (0, 1, array_count * 2)
 				l_coord_area := pts.area
 				l_area := Result.area
 				i := array_count - 1

@@ -168,7 +168,7 @@ feature -- Status Report
 
 feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 
-	on_key_event (a_key: EV_KEY; a_key_string: STRING_32; a_key_press: BOOLEAN)
+	on_key_event (a_key: detachable EV_KEY; a_key_string: detachable STRING_32; a_key_press: BOOLEAN)
 		do
 			Precursor (a_key, a_key_string, a_key_press)
 			if a_key_press then

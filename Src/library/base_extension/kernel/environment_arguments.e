@@ -176,7 +176,7 @@ feature {NONE} -- Implementation
 					Result := Result.subarray (Result.lower, r)
 				end
 			else
-				create Result.make (1, 0)
+				create Result.make_empty
 			end
 		end
 

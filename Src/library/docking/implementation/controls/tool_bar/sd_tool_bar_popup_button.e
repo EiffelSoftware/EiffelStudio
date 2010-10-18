@@ -17,6 +17,8 @@ inherit
 			width
 		end
 
+	EV_BUILDER
+
 create
 	make
 
@@ -117,11 +119,8 @@ feature -- Query
 
 	dropdown_pixel_buffer: EV_PIXEL_BUFFER
 			-- Dropdown pixel buffer
-		local
-			l_pixel_buffer: like dropdown_pixel_buffer_imp
 		do
-			l_pixel_buffer := dropdown_pixel_buffer_imp
-			if l_pixel_buffer /= Void then
+			if attached dropdown_pixel_buffer_imp as l_pixel_buffer then
 				Result := l_pixel_buffer
 			else
 				Result := internal_shared.icons.tool_bar_dropdown_buffer
@@ -132,11 +131,8 @@ feature -- Query
 
 	dropdown_left: INTEGER
 			--	X position where dropdown button should be drawn
-		local
-			l_tool_bar: like tool_bar
 		do
-			l_tool_bar := tool_bar
-			if l_tool_bar /= Void then
+			if attached tool_bar as l_tool_bar then
 				Result := l_tool_bar.item_x (Current) + width - dropdrown_width - 2
 			end
 		end
@@ -181,7 +177,7 @@ feature {NONE} -- Implementation
 		local
 			l_helper: SD_POSITION_HELPER
 			l_x, l_y, l_height: INTEGER
-			l_menu: detachable EV_MENU
+			l_menu: like menu
 			l_tool_bar: like tool_bar
 			l_popup_widget: like popup_widget
 			l_popup: like popup
@@ -211,6 +207,9 @@ feature {NONE} -- Implementation
 						l_popup := popup
 						if not l_popup.has (l_popup_widget) then
 							l_popup.wipe_out
+							l_popup.set_size (0, 0)
+							l_popup.reset_minimum_width
+							l_popup.reset_minimum_height
 							l_popup.extend (l_popup_widget)
 						end
 						l_helper.set_dialog_position (l_popup, l_tool_bar.screen_x + l_x, l_tool_bar.screen_y + l_y, l_height)

@@ -1143,6 +1143,11 @@ feature {NONE} -- Implementation
 				then
 						-- Value can't change from a precompile or in a compiled system.
 					if a_target.setting_concurrency.index /= system.concurrency_index and then (a_target.precompile /= Void or workbench.has_compilation_started) then
+							-- It's not obvious from the code, but at this point `system.concurrency_index' should be set
+							-- either because the system is compiled or because it uses a precompile.
+						check
+							concurrency_index_set: system.concurrency_index > 0 and then system.concurrency_index <= a_target.setting_concurrency.count
+						end
 						if not is_force_new_target then
 							create vd83.make (s_concurrency, a_target.setting_concurrency [system.concurrency_index], a_target.setting_concurrency.item)
 							Error_handler.insert_warning (vd83)
@@ -1151,8 +1156,13 @@ feature {NONE} -- Implementation
 						system.set_concurrency_index (a_target.setting_concurrency.index)
 					end
 				end
-			else
-					-- The previous value of "concurrency" setting is kept.
+			elseif
+				system.concurrency_index = 0 and then
+				a_target.precompile = Void and then
+				not workbench.has_compilation_started
+			then
+					-- Use the default value of the setting if it is not set in any way.
+				system.set_concurrency_index (a_target.setting_concurrency.index)
 			end
 
 			l_s := l_settings.item (s_old_feature_replication)

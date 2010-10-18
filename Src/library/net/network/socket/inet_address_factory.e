@@ -225,7 +225,7 @@ feature {NONE} -- Implementation
 			i: INTEGER
     	do
 			if not src.is_empty then
-				create Result.make(1, {INET4_ADDRESS}.INADDRSZ)
+				create Result.make_filled ({NATURAL_8} 0, 1, {INET4_ADDRESS}.INADDRSZ)
 				splitted := split (src, '.')
 			    inspect splitted.count
 			    when 1 then
@@ -336,7 +336,7 @@ feature {NONE} -- Implementation
     			length := src.count
 				percent_position := src.index_of ('%%', 1)
 				if percent_position < length then
-					create Result.make (1, {INET6_ADDRESS}.INADDRSZ)
+					create Result.make_filled ({NATURAL_8} 0, 1, {INET6_ADDRESS}.INADDRSZ)
 					if percent_position /= 0 then
 	    				length := percent_position - 1;
 					end
@@ -467,7 +467,7 @@ feature {NONE} -- Implementation
 			i: INTEGER
 		do
 			if is_ipv4_mapped_address (addr) then
-				create Result.make (1, {INET4_ADDRESS}.INADDRSZ)
+				create Result.make_filled ({NATURAL_8} 0, 1, {INET4_ADDRESS}.INADDRSZ)
 				from
 					i := 1
 				until

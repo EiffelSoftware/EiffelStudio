@@ -1,15 +1,12 @@
 note
-	description: "Objects that ..."
-	author: ""
+	description: "Objects that represents an IP V4 address ..."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-
 	INET4_ADDRESS
 
 inherit
-
 	INET_ADDRESS
 
 create
@@ -98,7 +95,7 @@ feature -- Access
 
     is_mc_node_local: BOOLEAN
     	do
-			Result := false;
+			Result := False
     	end
 
     is_mc_link_local: BOOLEAN
@@ -123,7 +120,7 @@ feature -- Access
 
 	raw_address: ARRAY [NATURAL_8]
 		do
-			create Result.make(1, inaddrsz)
+			create Result.make_filled ({NATURAL_8}0, 1, inaddrsz)
 			Result.put (((the_address |>> 24) & 0xFF).to_natural_8, 1)
 			Result.put (((the_address |>> 16) & 0xFF).to_natural_8, 2)
 			Result.put (((the_address |>> 8) & 0xFF).to_natural_8, 3)

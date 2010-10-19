@@ -27,6 +27,7 @@ feature -- String encoding convertion
 			l_converted_32: STRING_32
 			l_converted_8: STRING_8
 		do
+		last_conversion_lost_data := False
 		if a_from_string.is_empty then
 			last_conversion_successful := True
 			last_converted_string := a_from_string.twin
@@ -126,7 +127,7 @@ feature -- String encoding convertion
 			l_string := wide_string_to_pointer (a_string)
 			l_count := cwin_WideCharToMultiByte_buffer_length (a_code_page.to_integer, l_string.item, a_string.count)
 			create l_out_string.make (l_count)
-			cwin_wide_char_to_multi_byte (a_code_page.to_integer, l_string.item, a_string.count, l_out_string.item, l_count, $last_conversion_successful)
+			cwin_wide_char_to_multi_byte (a_code_page.to_integer, l_string.item, a_string.count, l_out_string.item, l_count, $last_conversion_successful, $last_conversion_lost_data)
 			Result := pointer_to_multi_byte (l_out_string.item, l_count)
 		end
 
@@ -161,6 +162,9 @@ feature -- Status report
 				-- `last_conversion_successful' reflects correct result.
 			Result := True
 		end
+
+	last_conversion_lost_data: BOOLEAN
+			-- Did last conversion lose data?
 
 feature {NONE} -- Access
 
@@ -237,19 +241,26 @@ feature {NONE} -- Implementation
 			"return MultiByteToWideChar ($cpid, 0, $a_multi_byte, $a_multi_byte_count, NULL, 0);"
 		end
 
-	cwin_wide_char_to_multi_byte (cpid: INTEGER; a_wide_string: POINTER; a_wide_count: INTEGER; a_out_pointer: POINTER; a_count_to_buffer: INTEGER; a_b: TYPED_POINTER [BOOLEAN])
+	cwin_wide_char_to_multi_byte (cpid: INTEGER; a_wide_string: POINTER; a_wide_count: INTEGER; a_out_pointer: POINTER; a_count_to_buffer: INTEGER; a_b, a_lost_b: TYPED_POINTER [BOOLEAN])
 		external
 			"C inline use <windows.h>"
 		alias
 			"[
 				DWORD dw;
-			    			    	
-				WideCharToMultiByte ((UINT) $cpid, (DWORD) 0, (LPCWSTR) $a_wide_string,
-					(int) $a_wide_count, (LPSTR) $a_out_pointer, (int) $a_count_to_buffer, (LPCSTR) NULL, (LPBOOL) NULL);
+				BOOL l_lost = EIF_FALSE;
+
+				if ($cpid == CP_UTF7 || $cpid == CP_UTF8) {
+					WideCharToMultiByte ((UINT) $cpid, (DWORD) 0, (LPCWSTR) $a_wide_string,
+						(int) $a_wide_count, (LPSTR) $a_out_pointer, (int) $a_count_to_buffer, (LPCSTR) NULL, (LPBOOL) NULL);
+				} else {
+					WideCharToMultiByte ((UINT) $cpid, (DWORD) 0, (LPCWSTR) $a_wide_string,
+						(int) $a_wide_count, (LPSTR) $a_out_pointer, (int) $a_count_to_buffer, (LPCSTR) NULL, (LPBOOL) &l_lost);
+				}
 				dw = GetLastError();
 				if (dw == ERROR_INSUFFICIENT_BUFFER || dw == ERROR_INVALID_FLAGS || dw == ERROR_INVALID_PARAMETER) {
 					*$a_b = 0;
 				}
+				*$a_lost_b = (l_lost ? EIF_TRUE : EIF_FALSE);
 			]"
 		end
 

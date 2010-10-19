@@ -102,9 +102,15 @@ feature -- Conversion
 feature -- Status report
 
 	last_conversion_successful: BOOLEAN
-			-- Is last conversion successful?
+			-- Was last conversion successful?
 		do
 			Result := encoding_i.last_conversion_successful
+		end
+
+	last_conversion_lost_data: BOOLEAN
+			-- Did last conversion lose data?
+		do
+			Result := encoding_i.last_conversion_lost_data
 		end
 
 feature -- Comparison

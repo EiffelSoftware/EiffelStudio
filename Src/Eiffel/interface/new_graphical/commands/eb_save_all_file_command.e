@@ -37,6 +37,16 @@ inherit
 			{NONE} all
 		end
 
+	SYSTEM_ENCODINGS
+		export
+			{NONE} all
+		end
+
+	BOM_CONSTANTS
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -61,25 +71,36 @@ feature -- Execution
 			-- Save a file with the chosen name.
 		local
 			l_dev_win: EB_DEVELOPMENT_WINDOW
-			l_editors: ARRAYED_LIST [EB_SMART_EDITOR]
-			l_editor: EB_SMART_EDITOR
+			l_editors, l_data_lost_editors: ARRAYED_LIST [EB_SMART_EDITOR]
+			l_editor, l_ed: EB_SMART_EDITOR
 			l_editors_manager: EB_EDITORS_MANAGER
 			cst: CLASSC_STONE
+			l_cmd: EB_SAVE_FILE_COMMAND
 		do
 			l_dev_win ?= target
-			l_dev_win.lock_update
 			if l_dev_win /= Void then
+				l_dev_win.lock_update
 				l_editors_manager := l_dev_win.editors_manager
 				l_editor := l_editors_manager.current_editor
 				l_editors := l_editors_manager.unsaved_editors
+				l_cmd := l_dev_win.save_cmd
+				create l_data_lost_editors.make (l_editors.count)
 				from
 					l_editors.start
 				until
 					l_editors.after
 				loop
-					l_editors_manager.select_editor (l_editors.item, True)
+					l_ed := l_editors.item_for_iteration
+					l_editors_manager.select_editor (l_ed, True)
+					l_cmd.presave_process (l_dev_win.text, l_dev_win.encoding, l_dev_win.bom)
 						-- Save file
-					l_dev_win.save_cmd.execute
+					if not l_cmd.last_process_lost_data then
+						l_cmd.set_data_lose_warning (False)
+						l_cmd.execute
+						l_cmd.set_data_lose_warning (True)
+					else
+						l_data_lost_editors.extend (l_ed)
+					end
 
 						-- Set changed in project
 					cst ?= l_editors.item.stone
@@ -88,11 +109,14 @@ feature -- Execution
 					end
 					l_editors.forth
 				end
+				if not l_data_lost_editors.is_empty then
+					warn_and_suggest_encoding (l_data_lost_editors)
+				end
 				if l_editor /= Void then
 					l_editors_manager.select_editor (l_editor, True)
 				end
+				l_dev_win.unlock_update
 			end
-			l_dev_win.unlock_update
 		end
 
 feature {NONE} -- Status
@@ -172,6 +196,60 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	warn_and_suggest_encoding (a_editors: ARRAYED_LIST [EB_SMART_EDITOR])
+			-- Warn data lose and suggest saving encoding.
+		require
+			a_editors_not_void: a_editors /= Void
+			a_editors_not_empty: not a_editors.is_empty
+		local
+			l_dialog: ES_SAVE_CLASSES_PROMPT
+			l_list: DS_ARRAYED_LIST [CLASS_I]
+		do
+			create l_list.make_default
+			from a_editors.start
+			until
+				a_editors.after
+			loop
+				if attached {CLASSI_STONE}a_editors.item_for_iteration.stone as l_cs then
+					l_list.force_last (l_cs.class_i)
+				end
+				a_editors.forth
+			end
+			create l_dialog.make_standard_with_cancel (interface_names.l_save_file_in_unicode)
+			l_dialog.classes := l_list
+			l_dialog.set_sub_title (interface_names.st_unicode_cannot_save)
+			l_dialog.set_button_action (l_dialog.dialog_buttons.yes_button, agent save_editors (a_editors, True))
+			l_dialog.set_button_action (l_dialog.dialog_buttons.no_button, agent save_editors (a_editors, False))
+			l_dialog.show_on_active_window
+		end
+
+	save_editors (a_editors: ARRAYED_LIST [EB_SMART_EDITOR]; a_unicode: BOOLEAN)
+			-- Save text in given editors in Unicode encoding or not.
+		require
+			a_editors_not_void: a_editors /= Void
+		local
+			l_cmd: EB_SAVE_FILE_COMMAND
+		do
+			if attached {EB_DEVELOPMENT_WINDOW}target as l_dev_win then
+				from
+					a_editors.start
+					l_cmd := l_dev_win.save_cmd
+					l_cmd.set_data_lose_warning (False)
+				until
+					a_editors.after
+				loop
+					l_dev_win.editors_manager.select_editor (a_editors.item_for_iteration, True)
+					if a_unicode then
+						l_dev_win.set_encoding (Utf8)
+						l_dev_win.set_bom (Bom_utf8)
+					end
+					l_cmd.execute
+					a_editors.forth
+				end
+				l_cmd.set_data_lose_warning (True)
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	enable_toolbar_items
@@ -201,7 +279,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -214,22 +292,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_SAVE_FILE_COMMAND

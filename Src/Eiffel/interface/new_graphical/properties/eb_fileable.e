@@ -129,6 +129,18 @@ feature -- Status Settings
 			stone = Void
 		end
 
+	set_encoding (a_encoding: ENCODING)
+			-- Set `encoding' with `a_encoding'.
+		require
+			a_encoding_not_void: a_encoding /= Void
+		deferred
+		end
+
+	set_bom (a_bom: like bom)
+			-- Set `bom' with `a_bom'.
+		deferred
+		end
+
 	on_before_text_saved
 			-- Notify the editor that the text is about to be saved.
 		do

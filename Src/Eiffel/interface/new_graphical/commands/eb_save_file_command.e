@@ -41,6 +41,11 @@ inherit
 
 	EB_SAVE_FILE
 
+	BOM_CONSTANTS
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -57,6 +62,7 @@ feature -- Initialization
 			accelerator.actions.extend (agent execute)
 			set_referred_shortcut (l_shortcut)
 			disable_sensitive
+			data_lose_warning := True
 		end
 
 feature -- Execution
@@ -67,7 +73,7 @@ feature -- Execution
 			compileok: BOOLEAN
 		do
 				-- FIXME XR: We add a test `is_sensitive' to prevent calls from the accelerator.
-				-- It would be nicer to use the `executable' feature but that's 5.1 :)
+				-- It would be nicer to use the `executable' feature but tshat's 5.1 :)
 			if is_sensitive and target.file_name /= Void then
 				target.perform_check_before_save
 				compileok := True
@@ -76,17 +82,33 @@ feature -- Execution
 					target.check_passed and then
 					compileok
 				then
-
-					save (target.file_name, target.text, target.encoding, target.bom)
-					if last_saving_success then
-						target.set_last_saving_date (last_saving_date)
-						target.on_text_saved
-						target.update_save_symbol
+					if data_lose_warning then
+						presave_process (target.text, target.encoding, target.bom)
+						if last_process_lost_data then
+							warn_and_suggest_encoding
+						else
+							real_save
+						end
 					else
-						target.set_last_save_failed (True)
+						real_save
 					end
 				end
 			end
+		end
+
+feature -- Status
+
+	data_lose_warning: BOOLEAN
+			-- Warn when there is data lose?
+
+feature -- Status setting
+
+	set_data_lose_warning (a_b: BOOLEAN)
+			-- Enable/disable data lose warning dialog.
+		do
+			data_lose_warning := a_b
+		ensure
+			data_lose_warning_set: data_lose_warning = a_b
 		end
 
 feature {NONE} -- Implementation
@@ -149,6 +171,45 @@ feature {NONE} -- Implementation
 			-- make the command insensitive
 		do
 			disable_sensitive
+		end
+
+	real_save
+			-- Save the text without warning
+		do
+			save (target.file_name, target.text, target.encoding, target.bom)
+			if last_saving_success then
+				target.set_last_saving_date (last_saving_date)
+				target.on_text_saved
+				target.update_save_symbol
+			else
+				target.set_last_save_failed (True)
+			end
+		end
+
+	set_unicode_encoding_and_save
+			-- Set the target to be unicode encoding and save.
+		do
+			target.set_encoding (utf8)
+			target.set_bom (bom_utf8)
+			real_save
+		end
+
+	warn_and_suggest_encoding
+			-- Warn data lose and suggest saving encoding.
+		local
+			l_dialog: ES_SAVE_CLASSES_PROMPT
+			l_list: DS_ARRAYED_LIST [CLASS_I]
+		do
+			create l_dialog.make_standard_with_cancel (interface_names.l_save_file_in_unicode)
+			create l_list.make (1)
+			if attached {CLASSI_STONE}target.stone as l_cs then
+				l_list.force_last (l_cs.class_i)
+			end
+			l_dialog.classes := l_list
+			l_dialog.set_button_action (l_dialog.dialog_buttons.yes_button, agent set_unicode_encoding_and_save)
+			l_dialog.set_button_action (l_dialog.dialog_buttons.no_button, agent real_save)
+			l_dialog.set_sub_title (interface_names.st_unicode_cannot_save)
+			l_dialog.show_on_active_window
 		end
 
 note

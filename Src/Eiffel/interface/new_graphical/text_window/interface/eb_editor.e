@@ -172,6 +172,14 @@ feature -- Status setting
 			is_main_editor := a_b
 		end
 
+	set_bom (a_bom: like bom)
+			-- Set `bom' with `a_bom'.
+		do
+			bom := a_bom
+		ensure
+			bom_set: bom = a_bom
+		end
+
 feature -- Text Loading
 
 	load_file (a_filename: STRING)

@@ -23,6 +23,7 @@ feature -- Conversion
 		local
 			l_encoding: ENCODING
 		do
+			last_conversion_lost_data := False
 			l_encoding := a_encoding
 			if l_encoding = Void then
 				l_encoding := default_encoding
@@ -32,6 +33,7 @@ feature -- Conversion
 				if utf32.last_conversion_successful then
 					Result := utf32.last_converted_stream
 				end
+				last_conversion_lost_data := utf32.last_conversion_lost_data
 			end
 			if Result = Void then
 				Result := a_string.as_string_8
@@ -39,6 +41,9 @@ feature -- Conversion
 		ensure
 			Result_not_void: Result /= Void
 		end
+
+	last_conversion_lost_data: BOOLEAN
+			-- Did last conversion lose data?
 
 	utf8_to_utf32 (a_string: STRING_8): STRING_32
 			-- Convert `a_string' from UTF-8 to UTF-32.
@@ -104,7 +109,7 @@ feature -- Conversion
 		end
 
 note
-	copyright: "Copyright (c) 1984-2007, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -128,11 +133,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

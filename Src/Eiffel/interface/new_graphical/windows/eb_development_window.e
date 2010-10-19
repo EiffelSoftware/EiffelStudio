@@ -495,6 +495,22 @@ feature -- Status setting
 			end
 		end
 
+	set_encoding (a_encoding: ENCODING)
+			-- Set `encoding' with `a_encoding'.
+		do
+			if attached editors_manager.current_editor as l_editor then
+				l_editor.set_encoding (a_encoding)
+			end
+		end
+
+	set_bom (a_bom: like bom)
+			-- Set `bom' with `a_bom'.
+		do
+			if attached editors_manager.current_editor as l_editor then
+				l_editor.set_bom (a_bom)
+			end
+		end
+
 feature -- Window Settings
 
 	set_initialized
@@ -528,16 +544,16 @@ feature -- Window Properties
 	text: STRING_32
 			-- Text representing Current
 		do
-			if editors_manager.current_editor /= Void then
-				Result := editors_manager.current_editor.wide_text
+			if attached editors_manager.current_editor as l_editor then
+				Result := l_editor.wide_text
 			end
 		end
 
 	encoding: ENCODING
 			-- Encoding in which text is saved.
 		do
-			if editors_manager.current_editor /= Void then
-				Result := editors_manager.current_editor.encoding
+			if attached editors_manager.current_editor as l_editor then
+				Result := l_editor.encoding
 			end
 		end
 

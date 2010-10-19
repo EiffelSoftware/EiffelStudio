@@ -32,7 +32,7 @@ feature -- Basic operations
 			not_a_container_is_destroyed: a_container /= Void implies not a_container.is_destroyed
 			a_container_has_parent: a_container /= Void implies a_container.has_parent
 		local
-			l_window: EV_WINDOW
+			l_window: detachable EV_WINDOW
 			l_locked: BOOLEAN
 			retried: BOOLEAN
 		do
@@ -73,7 +73,6 @@ feature -- Query
 			not_a_widget_is_destroyed: not a_widget.is_destroyed
 		local
 			l_stop_looking: BOOLEAN
-			l_dialog: EV_DIALOG
 		do
 			Result ?= a_widget
 			if a_main and Result /= Void then
@@ -82,12 +81,14 @@ feature -- Query
 				l_stop_looking := Result /= Void
 			end
 			if not l_stop_looking then
-				if a_widget.has_parent then
-					Result := widget_top_level_window (a_widget.parent, a_main)
+				if a_widget.has_parent and then attached a_widget.parent as p then
+					Result := widget_top_level_window (p, a_main)
 				else
-					l_dialog ?= a_widget
-					if l_dialog /= Void and then l_dialog.blocking_window /= Void then
-						Result := widget_top_level_window (l_dialog.blocking_window, a_main)
+					if
+						attached {EV_DIALOG} a_widget as l_dialog and then
+						attached l_dialog.blocking_window as w
+					then
+						Result := widget_top_level_window (w, a_main)
 					end
 				end
 			end
@@ -96,13 +97,11 @@ feature -- Query
 	parent_window_of_focused_widget: detachable EV_WINDOW
 			-- Parent window of current focused widget
 			-- Result maybe void.
-		local
-			l_application: EV_APPLICATION
-			l_env: EV_ENVIRONMENT
 		do
-			create l_env
-			l_application := l_env.application
-			if attached l_application.focused_widget as l_widget then
+			if
+				attached (create {EV_ENVIRONMENT}).application as l_application and then
+				attached l_application.focused_widget as l_widget
+			then
 				Result := widget_top_level_window (l_widget, False)
 			end
 		end
@@ -111,8 +110,6 @@ feature -- Query
 			-- Is `a_widget' (or its childs) focused?
 		require
 			attached_widget: a_widget /= Void
-		local
-			l_env: EV_ENVIRONMENT
 		do
 			if
 				not a_widget.is_destroyed and then
@@ -121,8 +118,10 @@ feature -- Query
 				if a_widget.has_focus then
 					Result := True
 				elseif attached {EV_CONTAINER} a_widget as cont then
-					create l_env
-					if attached l_env.application.focused_widget as fw then
+					if
+						attached (create {EV_ENVIRONMENT}).application as env_app and then
+						attached env_app.focused_widget as fw
+					then
 						Result := cont.has_recursive (fw)
 					end
 				end
@@ -139,32 +138,36 @@ feature -- Screen
 			a_window_attached: a_window /= Void
 			not_a_window_is_destroyed: not a_window.is_destroyed
 		local
-			l_top_window: EV_TITLED_WINDOW
+			l_area: detachable like window_working_area
 			l_screen: SD_SCREEN
 			l_width: INTEGER
 			l_height: INTEGER
 		do
-			l_top_window ?= widget_top_level_window (a_window, True)
-			if l_top_window /= Void and l_top_window.is_maximized then
+			if
+				attached {EV_TITLED_WINDOW} widget_top_level_window (a_window, True) as l_top_window and then
+				l_top_window.is_maximized
+			then
 				l_width := l_top_window.client_width + ((l_top_window.width - l_top_window.client_width) / 2).truncated_to_integer
 				l_height := l_top_window.client_height + ((l_top_window.height - l_top_window.client_height) / 2).truncated_to_integer
 				if l_top_window = a_window then
-					Result := [l_top_window.x_position, l_top_window.y_position, l_width, l_height]
+					l_area := [l_top_window.x_position, l_top_window.y_position, l_width, l_height]
 				else
 					if
 						a_window.width + a_window.x_position <= l_width and
 						a_window.height + a_window.y_position <= l_height
 					then
 							-- Window is within main window, so use main window coords
-						Result := [l_top_window.x_position, l_top_window.y_position, l_width, l_height]
+						l_area := [l_top_window.x_position, l_top_window.y_position, l_width, l_height]
 					end
 				end
 			end
 
-			if Result = Void then
+			if l_area = Void then
 					-- Use full screen coords
 				create l_screen
 				Result := [0, 0, l_screen.virtual_width, l_screen.virtual_height]
+			else
+				Result := l_area
 			end
 		ensure
 			result_attached: Result /= Void
@@ -222,10 +225,11 @@ feature -- Widget
 			a_font_attached: a_font /= Void
 		local
 			l_str: detachable READABLE_STRING_GENERAL
-			l_size: TUPLE [width: INTEGER; height: INTEGER; left_offset: INTEGER; right_offset: INTEGER]
+			l_size: like maximum_string_size
 			l_upper, i: INTEGER
 		do
 			from
+				create Result
 				i := a_strings.lower
 				l_upper := a_strings.upper
 			until
@@ -261,8 +265,8 @@ feature -- Placement
 			l_current_window: like widget_top_level_window
 			l_top_window: like widget_top_level_window
 			l_area: like window_working_area
-			l_current_area: like window_working_area
-			l_top_area: like window_working_area
+			l_current_area,
+			l_top_area: detachable like window_working_area
 			l_new_x: INTEGER
 			l_new_y: INTEGER
 		do

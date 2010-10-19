@@ -43,7 +43,7 @@ feature -- Conversion
 		end
 
 	last_conversion_lost_data: BOOLEAN
-			-- Did last conversion lose data?
+			-- Did last call of `convert_to_stream' lose data?
 
 	utf8_to_utf32 (a_string: STRING_8): STRING_32
 			-- Convert `a_string' from UTF-8 to UTF-32.

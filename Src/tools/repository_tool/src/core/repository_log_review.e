@@ -21,9 +21,9 @@ feature -- Access
 
 	reviews: LIST [like new_user_review]
 
-	user_review_tuple (a_user: STRING; a_status: detachable STRING): detachable like new_user_review_tuple
-		do
-		end
+--	user_review_tuple (a_user: STRING; a_status: detachable STRING): detachable like new_user_review_tuple
+--		do
+--		end
 
 	new_user_review_tuple (a_user: STRING): TUPLE [user: STRING; status: STRING; comment: detachable STRING; is_remote: BOOLEAN]
 		do
@@ -107,6 +107,14 @@ feature -- Access
 
 feature -- Basic operations
 
+	delete_user_review (r: like new_user_review)
+		local
+			l_reviews: like reviews
+		do
+			l_reviews := reviews
+			l_reviews.prune_all (r)
+		end
+
 	approve (a_user: STRING)
 		local
 			l_rdata: like {REPOSITORY_LOG_REVIEW}.user_review
@@ -169,11 +177,12 @@ feature -- Basic operations
 
 feature -- Status report
 
-	stats: TUPLE [approved, refused, question: INTEGER]
+	stats: TUPLE [approved, refused, question, local_only: INTEGER]
 		local
 			n_refused: INTEGER
 			n_approved: INTEGER
 			n_question: INTEGER
+			n_local_only: INTEGER
 			e: like user_review
 		do
 			if attached reviews as l_reviews then
@@ -191,10 +200,13 @@ feature -- Status report
 					elseif e.is_question_status then
 						n_question := n_question + 1
 					end
+					if not e.is_remote then
+						n_local_only := n_local_only + 1
+					end
 					l_reviews.forth
 				end
 			end
-			Result := [n_approved, n_refused, n_question]
+			Result := [n_approved, n_refused, n_question, n_local_only]
 		end
 
 	has_approval: BOOLEAN
@@ -219,6 +231,14 @@ feature -- Status report
 		do
 			st := stats
 			Result := st.question > 0
+		end
+
+	has_local_only: BOOLEAN
+		local
+			st: like stats
+		do
+			st := stats
+			Result := st.local_only > 0
 		end
 
 end

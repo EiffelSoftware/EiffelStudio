@@ -59,15 +59,15 @@ feature {NONE} -- Initialization
 			tbdpb.set_text ("Questions")
 			tb.extend (tbdpb)
 --			tbdpb.set_dropdown_pixel_buffer (icons.dropdown_pixel_buffer)
-			tbdpb.set_popup_widget_function (agent on_questions_popup_widget)
-			tbdpb.select_actions.extend (agent on_question)
+			tbdpb.set_popup_widget_function (agent on_questions_popup_widget (True))
+--			tbdpb.select_actions.extend (agent on_questions_popup_widget (False))
 			button_questions := tbdpb
 
-			create tbtb.make
-			tbtb.set_text ("Comment")
-			tb.extend (tbtb)
-			tbtb.select_actions.extend (agent on_question)
-			button_question := tbtb
+--			create tbtb.make
+--			tbtb.set_text ("Comment")
+--			tb.extend (tbtb)
+--			tbtb.select_actions.extend (agent on_question)
+--			button_question := tbtb
 
 			create tbb.make
 			tbb.set_text ("Submit")
@@ -76,6 +76,7 @@ feature {NONE} -- Initialization
 			button_submit := tbb
 
 			create lab.make_with_text ("Review #")
+			lab.pointer_double_press_actions.extend (agent on_review_hack)
 			b.extend (lab)
 			b.disable_item_expand (lab)
 			create log_id_lab.make_with_text ("...")
@@ -107,13 +108,71 @@ feature -- Access
 	log_id_lab: EV_LABEL
 	button_approve: SD_TOOL_BAR_TOGGLE_BUTTON
 	button_refuse: SD_TOOL_BAR_TOGGLE_BUTTON
-	button_question: SD_TOOL_BAR_TOGGLE_BUTTON
+--	button_question: SD_TOOL_BAR_TOGGLE_BUTTON
 	button_questions: SD_TOOL_BAR_DUAL_POPUP_BUTTON
 	button_submit: SD_TOOL_BAR_BUTTON
 
 feature -- Event
 
 --	review: detachable REPOSITORY_LOG_REVIEW
+
+	on_review_hack (ax, ay, abut: INTEGER; r1,r2,r3: REAL_64; i1,i2:INTEGER_32)
+		local
+			pop: EV_DIALOG
+			vb: EV_VERTICAL_BOX
+			but: EV_BUTTON
+			evs: EVS_HELPERS
+		do
+			if
+				attached current_log as l_log and then
+				attached l_log.parent.review_client as l_client
+			then
+				-- Remote call !!!
+--					console_log ("Submit review [" + l_log.id + "]")
+--					l_client.submit (l_log, l_review)
+--					if l_client.last_error_occurred then
+--						console_log_error ("Error during review submission [" + l_log.id + "]: " + l_client.last_error_to_string)
+----						print (l_client.last_error_to_string + "%N")
+--					end
+--				end
+
+
+				create pop.make_with_title ("Review Hack")
+				create vb
+				pop.extend (vb)
+				create but.make_with_text_and_action ("Close", agent pop.destroy)
+				pop.set_default_cancel_button (but)
+				create but.make_with_text_and_action ("get_logs_range", agent (cl: CTR_LOG_REVIEW_CLIENT_PROXY)
+						do
+							console_log ("get_logs_range")
+							if attached cl.get_logs_range as l_range then
+								console_log ("get_logs_range -> " + l_range.lower_revision.out + " .. " + l_range.upper_revision.out)
+							end
+						end(l_client)
+					)
+				vb.extend (but)
+
+				create but.make_with_text_and_action ("get_missing_logs", agent (cl: CTR_LOG_REVIEW_CLIENT_PROXY)
+						do
+							console_log ("get_missing_logs")
+						end(l_client)
+					)
+				vb.extend (but)
+
+				create but.make_with_text_and_action ("post_logs", agent (cl: CTR_LOG_REVIEW_CLIENT_PROXY)
+						do
+							console_log ("post_logs")
+						end(l_client)
+					)
+				vb.extend (but)
+				create evs
+				if attached evs.widget_top_level_window (widget, False) as w then
+					pop.show_relative_to_window (w)
+				else
+					pop.show
+				end
+			end
+		end
 
 	on_approve
 		local
@@ -155,27 +214,27 @@ feature -- Event
 			end
 		end
 
-	on_question
-		local
-			r: detachable REPOSITORY_LOG_REVIEW
-		do
-			if attached current_log as l_log then
-				if l_log.has_review then
-					r := l_log.review
-				end
-				if r = Void then
-					create r.make
-				end
-				if button_question.is_selected then
-					r.question (user_name, "???")
-				else
-					r.unquestion (user_name)
-				end
-				apply (l_log, r)
-			end
-		end
+--	on_question
+--		local
+--			r: detachable REPOSITORY_LOG_REVIEW
+--		do
+--			if attached current_log as l_log then
+--				if l_log.has_review then
+--					r := l_log.review
+--				end
+--				if r = Void then
+--					create r.make
+--				end
+--				if button_question.is_selected then
+--					r.question (user_name, "???")
+--				else
+--					r.unquestion (user_name)
+--				end
+--				apply (l_log, r)
+--			end
+--		end
 
-	on_questions_popup_widget: EV_WIDGET
+	on_questions_popup_widget (a_full: BOOLEAN): EV_WIDGET
 		local
 			fr: EV_FRAME
 			vb: EV_VERTICAL_BOX
@@ -185,6 +244,7 @@ feature -- Event
 			hb: EV_HORIZONTAL_BOX
 			r: detachable REPOSITORY_LOG_REVIEW
 			i: INTEGER
+			glab: EV_GRID_LABEL_ITEM
 		do
 			create fr
 			create vb
@@ -214,7 +274,7 @@ feature -- Event
 					r := l_log.review
 				end
 			end
-			if r /= Void and then attached r.reviews as rws and then rws.count > 0 then
+			if a_full and then r /= Void and then attached r.reviews as rws and then rws.count > 0 then
 				from
 					i := 0
 					g.insert_new_rows (rws.count, i + 1)
@@ -223,8 +283,15 @@ feature -- Event
 					rws.after
 				loop
 					if attached rws.item.comment as c then
+
 						i := i + 1
 						g.set_item (1, i, create {EV_GRID_LABEL_ITEM}.make_with_text (c))
+						if rws.item.user ~ user_name then
+							create glab
+							glab.set_pixmap (icons.delete_icon)
+							g.set_item (2, i, glab)
+							glab.select_actions.extend (agent delete_user_review (r, rws.item))
+						end
 					end
 					rws.forth
 				end
@@ -278,7 +345,7 @@ feature -- Event
 					console_log ("Submit review [" + l_log.id + "]")
 					l_client.submit (l_log, l_review)
 					if l_client.last_error_occurred then
-						console_log ("Error during review submission [" + l_log.id + "]: " + l_client.last_error_to_string)
+						console_log_error ("Error during review submission [" + l_log.id + "]: " + l_client.last_error_to_string)
 --						print (l_client.last_error_to_string + "%N")
 					end
 				end
@@ -287,6 +354,11 @@ feature -- Event
 		end
 
 feature -- Basic operation
+
+	delete_user_review (r: REPOSITORY_LOG_REVIEW; a_entry: REPOSITORY_LOG_REVIEW_ENTRY)
+		do
+			r.delete_user_review (a_entry)
+		end
 
 	update_current_log (a_log: like current_log)
 		local
@@ -325,7 +397,7 @@ feature -- Basic operation
 				if r = Void or l_rdata = Void then
 					button_approve.disable_select
 					button_refuse.disable_select
-					button_question.disable_select
+--					button_question.disable_select
 					button_submit.disable_sensitive
 				else
 					l_state := 1
@@ -339,16 +411,18 @@ feature -- Basic operation
 					else
 						button_refuse.disable_select
 					end
-					if l_rdata.is_question_status then
-						button_question.enable_select
-					else
-						button_question.disable_select
-					end
+--					if l_rdata.is_question_status then
+--						button_question.enable_select
+--					else
+--						button_question.disable_select
+--					end
 					if not l_rdata.is_remote then
 						button_submit.enable_sensitive
+						button_submit.set_tooltip ("You have local modification to submit")
 					else
 						l_state := 2
 						button_submit.disable_sensitive
+						button_submit.set_tooltip ("No modification to submit")
 					end
 				end
 			end

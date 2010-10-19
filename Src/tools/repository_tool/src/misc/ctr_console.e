@@ -21,10 +21,31 @@ feature -- Access
 
 	mutex: MUTEX
 
+	log_custom (m: STRING_GENERAL; t: INTEGER)
+		do
+			mutex.lock
+			observers.do_all (agent {CTR_CONSOLE_OBSERVER}.log_custom (m, t))
+			mutex.unlock
+		end
+
 	log (m: STRING_GENERAL)
 		do
 			mutex.lock
 			observers.do_all (agent {CTR_CONSOLE_OBSERVER}.log (m))
+			mutex.unlock
+		end
+
+	log_warning (m: STRING_GENERAL)
+		do
+			mutex.lock
+			observers.do_all (agent {CTR_CONSOLE_OBSERVER}.log_warning (m))
+			mutex.unlock
+		end
+
+	log_error (m: STRING_GENERAL)
+		do
+			mutex.lock
+			observers.do_all (agent {CTR_CONSOLE_OBSERVER}.log_error (m))
 			mutex.unlock
 		end
 
@@ -36,5 +57,13 @@ feature -- Access
 feature -- Observer
 
 	observers: ARRAYED_LIST [CTR_CONSOLE_OBSERVER]
+
+feature -- Constant
+
+	log_normal_type: INTEGER = 0
+
+	log_warning_type: INTEGER = 1
+
+	log_error_type: INTEGER = 2
 
 end

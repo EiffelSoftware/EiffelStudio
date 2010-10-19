@@ -37,7 +37,7 @@ feature -- Access
 			Result.set_mask (l_mask)
 		end
 
-	review_refused_icon: EV_PIXMAP
+	delete_icon, review_refused_icon: EV_PIXMAP
 		local
 			fcol: EV_COLOR
 			l_mask: EV_BITMAP
@@ -46,14 +46,34 @@ feature -- Access
 			create Result.make_with_size (10, 10)
 			Result.set_foreground_color (fcol)
 			Result.set_line_width (2)
-			Result.draw_straight_line (2, 2, 7, 7)
-			Result.draw_straight_line (2, 7, 7, 2)
+			Result.draw_straight_line (3, 3, 6, 6)
+			Result.draw_straight_line (3, 6, 6, 3)
 
 			create l_mask.make_with_size (10, 10)
 			l_mask.set_foreground_color (colors.white)
 			l_mask.set_line_width (2)
-			l_mask.draw_straight_line (2, 2, 7, 7)
-			l_mask.draw_straight_line (2, 7, 7, 2)
+			l_mask.draw_straight_line (3, 3, 6, 6)
+			l_mask.draw_straight_line (3, 6, 6, 3)
+			Result.set_mask (l_mask)
+		end
+
+	review_local_only_icon: EV_PIXMAP
+		local
+			fcol: EV_COLOR
+			l_mask: EV_BITMAP
+		once
+			create fcol.make_with_8_bit_rgb (148, 0, 211)
+			create Result.make_with_size (10, 10)
+			Result.set_foreground_color (fcol)
+			Result.set_line_width (1)
+			Result.fill_rectangle (4, 0, 2, 6)
+			Result.fill_rectangle (4, 8, 2, 2)
+
+			create l_mask.make_with_size (10, 10)
+			l_mask.set_foreground_color (colors.white)
+			l_mask.set_line_width (1)
+			l_mask.fill_rectangle (4, 0, 2, 6)
+			l_mask.fill_rectangle (4, 8, 2, 2)
 			Result.set_mask (l_mask)
 		end
 
@@ -63,7 +83,7 @@ feature -- Access
 			l_mask: EV_BITMAP
 			c1, c2, c3: EV_COORDINATE
 		once
-			create fcol.make_with_8_bit_rgb (210, 210, 255)
+			create fcol.make_with_8_bit_rgb (255, 165, 0)
 			create Result.make_with_size (10, 10)
 			Result.set_foreground_color (fcol)
 			Result.set_line_width (1)

@@ -595,6 +595,9 @@ feature {CTR_WINDOW} -- Implementation
 				if stats.question > 0 then
 					c := c + 1
 				end
+				if stats.local_only > 0 then
+					c := c + 1
+				end
 
 				create glab_buts.make_with_text (a_log.id)
 				if stats.approved > stats.refused then
@@ -604,8 +607,8 @@ feature {CTR_WINDOW} -- Implementation
 				end
 
 				glab_buts.set_pixmaps_on_right_count (c)
-				if stats.question > 0 then
-					glab_buts.put_pixmap_on_right (icons.review_question_icon, c)
+				if stats.local_only > 0 then
+					glab_buts.put_pixmap_on_right (icons.review_local_only_icon, c)
 					c := c - 1
 				end
 				if stats.approved > 0 then
@@ -614,6 +617,11 @@ feature {CTR_WINDOW} -- Implementation
 				end
 				if stats.refused > 0 then
 					glab_buts.put_pixmap_on_right (icons.review_refused_icon, c)
+					c := c - 1
+				end
+				if stats.question > 0 then
+					glab_buts.put_pixmap_on_right (icons.review_question_icon, c)
+					c := c - 1
 				end
 				a_row.set_item (cst_revision_column, glab_buts)
 			else

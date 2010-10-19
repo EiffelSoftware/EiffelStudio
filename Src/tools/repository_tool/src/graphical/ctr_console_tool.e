@@ -60,10 +60,20 @@ feature -- Basic operation
 
 	log (m: STRING_GENERAL)
 		do
-			ev_application.do_once_on_idle (agent add_log (m))
+			ev_application.do_once_on_idle (agent add_log (m, {CTR_CONSOLE}.log_normal_type))
 		end
 
-	add_log (m: STRING_GENERAL)
+	log_warning (m: STRING_GENERAL)
+		do
+			ev_application.do_once_on_idle (agent add_log (m, {CTR_CONSOLE}.log_warning_type))
+		end
+
+	log_error (m: STRING_GENERAL)
+		do
+			ev_application.do_once_on_idle (agent add_log (m, {CTR_CONSOLE}.log_error_type))
+		end
+
+	add_log (m: STRING_GENERAL; t: INTEGER)
 		local
 			h: like pending_history
 		do
@@ -72,7 +82,7 @@ feature -- Basic operation
 				create h.make (25)
 				pending_history := h
 			end
-			h.extend ([m])
+			h.extend ([m, t])
 			update
 		end
 
@@ -84,7 +94,9 @@ feature -- Access
 			Result := grid
 		end
 
-	pending_history: detachable ARRAYED_LIST [TUPLE [message: STRING_GENERAL]]
+	pending_history: detachable ARRAYED_LIST [TUPLE [message: STRING_GENERAL; type: INTEGER]]
+			-- Message: log message
+			-- Type: log type, see CTR_CONSOLE.log_***_type
 
 	grid: ES_GRID
 
@@ -102,10 +114,27 @@ feature -- Access
 					h.after
 				loop
 					create lab.make_with_text (h.item.message)
+					inspect h.item.type
+					when {CTR_CONSOLE}.log_warning_type then
+						lab.set_foreground_color (warning_color)
+					when {CTR_CONSOLE}.log_error_type then
+						lab.set_foreground_color (error_color)
+					else
+					end
 					g.set_item (1, g.row_count, lab)
 					h.remove
 				end
 			end
+		end
+
+	error_color: EV_COLOR
+		once
+			Result := (create {EV_STOCK_COLORS}).red
+		end
+
+	warning_color: EV_COLOR
+		once
+			create Result.make_with_8_bit_rgb (255, 165, 0)
 		end
 
 end

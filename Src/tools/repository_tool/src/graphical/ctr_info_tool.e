@@ -185,7 +185,7 @@ feature -- Element change
 						l_row := g.row (g.row_count)
 
 						l_row.set_item (cst_info_title_col, create {EV_GRID_LABEL_ITEM}.make_with_text (l_changes.count.out + " nodes changed"))
-						l_row.set_item (cst_info_value_col, create {EV_GRID_LABEL_ITEM}.make_with_text (rsvnlog.svn_revision.common_parent_path + " ..."))
+						l_row.set_item (cst_info_value_col, create {EV_GRID_LABEL_ITEM}.make_with_text (rsvnlog.svn_revision.common_parent_path + " (..)"))
 						l_row.expand_actions.extend (agent do changes_expanded := True end)
 						l_row.collapse_actions.extend (agent do changes_expanded := False end)
 					end

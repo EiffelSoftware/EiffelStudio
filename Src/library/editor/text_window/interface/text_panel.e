@@ -756,14 +756,18 @@ feature -- Basic Operations
 			-- Recompute token information for for loaded text.
 		local
 			l_line_index: INTEGER
+			l_text_displayed: like text_displayed
+			n: INTEGER
 		do
 				-- Recompute token information for for loaded text.
 			from
+				l_text_displayed := text_displayed
+				n := l_text_displayed.number_of_lines
 				l_line_index := 1
 			until
-				l_line_index > text_displayed.number_of_lines
+				l_line_index > n
 			loop
-				text_displayed.update_line (l_line_index)
+				l_text_displayed.update_line (l_line_index)
 				l_line_index := l_line_index + 1
 			end
 
@@ -824,8 +828,8 @@ feature -- Basic Operations
 	flush
 			-- Load texts immediately
 		do
-			if text_displayed /= Void then
-				text_displayed.flush
+			if attached text_displayed as t then
+				t.flush
 			end
 		end
 
@@ -1123,13 +1127,17 @@ feature {NONE} -- Scroll bars Management
 			-- Update `editor_width'
 		local
 			i: INTEGER
+			l_text_displayed: like text_displayed
+			n: INTEGER
 		do
 			from
+				l_text_displayed := text_displayed
+				n := number_of_lines
 				i := 1
 			until
-				i = number_of_lines
+				i = n
 			loop
-				if attached text_displayed.line (i) as l_line then
+				if attached l_text_displayed.line (i) as l_line then
 					editor_width := editor_width.max (l_line.width)
 				else
 					check False end -- Bug
@@ -1369,6 +1377,7 @@ feature {NONE} -- Display functions
  			curr_line,
  			y_offset: INTEGER
  			l_text: TEXT
+			l_editor_viewport: like editor_viewport
 		do
 			updating_line := True
 			l_text := text_displayed
@@ -1380,11 +1389,12 @@ feature {NONE} -- Display functions
 				end
 
 				from
+					l_editor_viewport := editor_viewport
 	 				curr_line := first
 	 			until
 	 				curr_line > last or else l_text.after
 	 			loop
-	 				y_offset := editor_viewport.y_offset + ((curr_line - first_line_displayed) * line_height)
+	 				y_offset := l_editor_viewport.y_offset + ((curr_line - first_line_displayed) * line_height)
 
 					if buffered then
 	 		--			draw_line_to_buffered_line (curr_line, l_text.current_line)
@@ -1570,19 +1580,22 @@ feature {NONE} -- Text loading
 
 	on_text_loaded
 			-- Finish the panel setup as the entire text has been loaded.
+		local
+			l_text_displayed: like text_displayed
 		do
 			editor_width := 0
 			from
-				text_displayed.start
+				l_text_displayed := text_displayed
+				l_text_displayed.start
 			until
-				text_displayed.after
+				l_text_displayed.after
 			loop
-				if attached text_displayed.current_line as l_line then
+				if attached l_text_displayed.current_line as l_line then
 					editor_width := editor_width.max (l_line.width)
 				else
 					check current_line_attached: False end -- Implied by not `after'.
 				end
-				text_displayed.forth
+				l_text_displayed.forth
 			end
 			if attached margin as l_margin then
 				editor_width := editor_width + left_margin_width + l_margin.width

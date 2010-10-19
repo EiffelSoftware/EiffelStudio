@@ -236,7 +236,7 @@ feature -- Access
 				Result := l_locked_column.offset
 			end
 		ensure
-			not_locked_implies_result_zero: not is_locked implies result = 0
+			not_locked_implies_result_zero: not is_locked implies Result = 0
 		end
 
 feature -- Status setting

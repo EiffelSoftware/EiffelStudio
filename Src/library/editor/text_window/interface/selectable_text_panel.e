@@ -21,6 +21,11 @@ inherit
 			recycle
 		end
 
+	REFACTORING_HELPER
+		undefine
+			default_create
+		end
+
 feature {NONE} -- Initialization
 
 	user_initialization
@@ -276,13 +281,14 @@ feature {NONE} -- Handle mouse clicks
 
 	is_word (s: STRING_32): BOOLEAN
 			-- Is `s' a word?
-			-- |FIXME: Not implemented correctly for Unicode.
+			--|FIXME: Not implemented correctly for Unicode.
 		require
 			s_not_void: s /= Void
 		local
 			c: CHARACTER
 			i, nb: INTEGER
 		do
+			fixme ("Not implemented correctly for Unicode.")
 			nb := s.count
 			if nb > 0 then
 				from
@@ -291,7 +297,7 @@ feature {NONE} -- Handle mouse clicks
 				until
 					i > nb or not Result
 				loop
-						-- |FIXME: This is not the correct way for Unicode.
+						--|FIXME: This is not the correct way for Unicode.
 					c := s.item (i).to_character_8
 					Result := c.is_alpha_numeric or c = '_'
 					i := i + 1

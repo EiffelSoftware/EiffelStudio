@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 					Encoding conversion implementation on Unix. The cache is never freed in the library. 
 					It relies on the normal termination of the client process.
@@ -167,6 +167,14 @@ feature -- Status report
 			Result := False
 			l_retried := True
 			retry
+		end
+
+	last_conversion_lost_data: BOOLEAN
+			-- Did last conversion lose data?
+			-- | When there is data lose, internal exception is raised
+			-- | and handled. The conversion simply fails.
+		do
+			Result := last_conversion_successful
 		end
 
 feature {NONE} -- Status report

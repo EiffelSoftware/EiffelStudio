@@ -55,6 +55,9 @@ feature -- Access
 	last_saving_success: BOOLEAN
 			-- Was the last saving successful?
 
+	last_process_lost_data: BOOLEAN
+			-- Did last call of `presave_process' report data lose?
+
 feature -- Basic operations
 
 	load (a_file_name: STRING): STRING
@@ -63,6 +66,23 @@ feature -- Basic operations
 			a_file_name_not_void: a_file_name /= Void
 		do
 
+		end
+
+	presave_process (a_text: STRING_GENERAL; a_encoding: ENCODING; a_bom: detachable STRING_8)
+			-- This is not necessary, unless extra info is needed before the real saving.
+			-- i.e. Whether the `a_text' conversion causes data lose.
+		require
+			a_text_not_void: a_text /= Void
+		local
+			l_stream: STRING_8
+		do
+			last_process_lost_data := False
+			if not a_text.is_empty then
+				l_stream := convert_to_stream (a_text.as_string_32, a_encoding)
+				if last_conversion_lost_data then
+					last_process_lost_data := True
+				end
+			end
 		end
 
 	save (a_file_name: STRING; a_text: STRING_GENERAL; a_encoding: ENCODING; a_bom: detachable STRING_8)
@@ -77,6 +97,7 @@ feature -- Basic operations
 			l_retry: BOOLEAN
 			l_notifier: SERVICE_CONSUMER [FILE_NOTIFIER_S]
 			l_text: STRING_32
+			l_stream: STRING
 		do
 			if not l_retry then
 					-- Always assume a saving is successful.
@@ -128,7 +149,8 @@ feature -- Basic operations
 						if attached a_bom as l_bom then
 							tmp_file.put_string (l_bom)
 						end
-						tmp_file.put_string (convert_to_stream (l_text, a_encoding))
+						l_stream := convert_to_stream (l_text, a_encoding)
+						tmp_file.put_string (l_stream)
 					end
 					tmp_file.close
 					if create_backup then

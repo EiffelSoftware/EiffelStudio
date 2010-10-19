@@ -739,6 +739,7 @@ feature -- Accelerator, focus label and menu name
 	t_tool_name: STRING_32 do Result := locale.translation ("Tool") end
 	t_formatter_displayer_name: STRING_32 do Result := locale.translation ("Formatter displayer") end
 	l_display: STRING_32 do Result := locale.translation ("Display?") end
+	l_save_file_in_unicode: STRING_32 do Result := locale.translation ("Some Unicode characters in the file(s) could not be saved in original encoding. Do you want to save as Unicode (Marked UTF-8) in order to maintain your data?") end
 	l_select_formatter: STRING_32 do Result := locale.translation ("Please select a formatter.") end
 	t_setup_formatter_tools (a_formatter_name: STRING_GENERAL): STRING_32
 		require
@@ -2473,6 +2474,7 @@ feature -- Sub titles
 	st_exit_eiffelstudio: STRING_32		do Result := locale.translation ("Exit EiffelStudio") end
 	st_unsaved_changed: STRING_32		do Result := locale.translation ("You have unsaved changes") end
 	st_cleaning_project: STRING_32		do Result := locale.translation ("Cleaning project...") end
+	st_unicode_cannot_save: STRING_32	do Result := locale.translation ("Unicode characters could not be saved.") end
 
 feature -- Titles translation needless (Title Original) for preference strings.
 

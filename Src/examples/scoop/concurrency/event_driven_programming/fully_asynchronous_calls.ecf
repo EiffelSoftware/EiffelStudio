@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-6-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-6-0 http://www.eiffel.com/developers/xml/configuration-1-6-0.xsd" name="event_driven_programming" uuid="FE4C7FF3-3AA9-46A1-96AE-E6E13E8E7969">
+	<target name="event_driven_programming">
+		<root class="APPLICATION" feature="make"/>
+		<option warning="true">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+		</option>
+		<setting name="multithreaded" value="true"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="concurrency" location="..\concurrency\concurrency.ecf"/>
+		<cluster name="fully_asynchronous_calls" location=".\" recursive="true">
+			<file_rule>
+				<exclude>/EIFGENs$</exclude>
+				<exclude>/CVS$</exclude>
+				<exclude>/.svn$</exclude>
+			</file_rule>
+		</cluster>
+	</target>
+	<target name="fully_asynchronous_calls_dotnet" extends="event_driven_programming">
+		<setting name="msil_generation" value="true"/>
+	</target>
+</system>

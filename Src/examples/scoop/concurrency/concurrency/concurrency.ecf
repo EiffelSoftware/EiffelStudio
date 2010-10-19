@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="docking" uuid="1EBF61BE-D506-44DC-AD76-1A636EF04D65" library_target="concurrency">
+	<target name="concurrency">
+		<description>Concurrency: SCOOP extension library of reusable components for Eiffel.
+      Copyright (c) 1984-2010, Eiffel Software and others.
+      Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</description>
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/\.svn</exclude>
+			<exclude>/EIFGEN.{0,1}$</exclude>
+			<exclude>/tmp$</exclude>
+			<exclude>/temp$</exclude>
+			<exclude>/release$</exclude>
+			<exclude>/obsolete$</exclude>
+		</file_rule>
+		<option namespace="EiffelSoftware.Library.Vision2">
+		</option>
+		<setting name="dotnet_naming_convention" value="true"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
+	
+		<cluster name="concurrency" location=".\">
+			<option namespace="concurrency">
+			</option>
+		</cluster>
+	</target>
+</system>

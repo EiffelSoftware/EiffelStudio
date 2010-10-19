@@ -52,6 +52,9 @@ feature -- Query
 			end
 		end
 
+	last_conversion_lost_data: BOOLEAN = False
+			-- Conversion between Unicode encoding does not lose data.
+
 feature -- Conversion
 
 	convert_to (a_from_code_page: STRING; a_from_string: STRING_GENERAL; a_to_code_page: STRING)

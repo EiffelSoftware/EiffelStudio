@@ -84,6 +84,11 @@ feature {ENCODING} -- Status report
 		deferred
 		end
 
+	last_conversion_lost_data: BOOLEAN
+			-- Did last conversion lose data?
+		deferred
+		end
+
 	last_conversion_successful: BOOLEAN
 			-- Was last conversion successful?
 

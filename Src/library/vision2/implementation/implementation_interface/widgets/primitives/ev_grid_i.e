@@ -118,13 +118,15 @@ feature -- Access
 		local
 			visible_counter, counter: INTEGER
 			a_col_i: detachable EV_GRID_COLUMN_I
+			l_columns: like columns
 		do
 			from
+				l_columns := columns
 				counter := 1
 			until
 				visible_counter = i
 			loop
-				a_col_i := columns @ (counter)
+				a_col_i := l_columns @ (counter)
 				check a_col_i /= Void end
 				if a_col_i.is_show_requested then
 					visible_counter := visible_counter + 1
@@ -783,6 +785,8 @@ feature -- Pick and Drop
 	set_accept_cursor (a_cursor: like accept_cursor)
 			-- Set `a_cursor' to be displayed when the screen pointer is over a
 			-- target that accepts `pebble' during pick and drop.
+		local
+			l_locked_indexes: like locked_indexes
 		do
 				-- Call Precursor so that post-condiition passes even though the cursor itself is never used.
 			Precursor {EV_CELL_I} (a_cursor)
@@ -792,13 +796,14 @@ feature -- Pick and Drop
 				drawable.set_accept_cursor (a_cursor)
 
 					-- Set cursor on the locked rows and columns.
+				l_locked_indexes := locked_indexes 
 				from
-					locked_indexes.start
+					l_locked_indexes.start
 				until
-					locked_indexes.off
+					l_locked_indexes.off
 				loop
-					locked_indexes.item.drawing_area.set_accept_cursor (a_cursor)
-					locked_indexes.forth
+					l_locked_indexes.item.drawing_area.set_accept_cursor (a_cursor)
+					l_locked_indexes.forth
 				end
 			end
 		end
@@ -806,6 +811,8 @@ feature -- Pick and Drop
 	set_deny_cursor (a_cursor: like deny_cursor)
 			-- Set `a_cursor' to be displayed when the screen pointer is over a
 			-- target that doesn't accept `pebble' during pick and drop.
+		local
+			l_locked_indexes: like locked_indexes
 		do
 				-- Call Precursor so that post-condiition passes even though the cursor itself is never used.
 			Precursor {EV_CELL_I} (a_cursor)
@@ -814,13 +821,14 @@ feature -- Pick and Drop
 				drawable.set_deny_cursor (a_cursor)
 
 					-- Set cursor on the locked rows and columns.
+				l_locked_indexes := locked_indexes
 				from
-					locked_indexes.start
+					l_locked_indexes.start
 				until
-					locked_indexes.off
+					l_locked_indexes.off
 				loop
-					locked_indexes.item.drawing_area.set_deny_cursor (a_cursor)
-					locked_indexes.forth
+					l_locked_indexes.item.drawing_area.set_deny_cursor (a_cursor)
+					l_locked_indexes.forth
 				end
 			end
 		end
@@ -834,18 +842,21 @@ feature -- Pick and Drop
 			-- To handle this data use `a_function' of type
 			-- FUNCTION [ANY, TUPLE [EV_GRID_ITEM], ANY] and return the
 			-- pebble as a function of EV_GRID_ITEM.
+		local
+			l_locked_indexes: like locked_indexes
 		do
 			if item_pebble_function = Void then
 					-- Intermediary only needs to be set once
 
 				drawable.set_pebble_function (agent user_pebble_function_intermediary)
+				l_locked_indexes := locked_indexes
 				from
-					locked_indexes.start
+					l_locked_indexes.start
 				until
-					locked_indexes.off
+					l_locked_indexes.off
 				loop
-					locked_indexes.item.drawing_area.set_pebble_function (agent user_pebble_function_intermediary_locked (?, ?, locked_indexes.item))
-					locked_indexes.forth
+					l_locked_indexes.item.drawing_area.set_pebble_function (agent user_pebble_function_intermediary_locked (?, ?, l_locked_indexes.item))
+					l_locked_indexes.forth
 				end
 			end
 			item_pebble_function := a_function
@@ -863,6 +874,7 @@ feature -- Pick and Drop
 			item_imp: detachable EV_GRID_ITEM_I
 			item_int: detachable EV_GRID_ITEM
 			a_cursor: detachable EV_POINTER_STYLE
+			l_locked_indexes: like locked_indexes
 		do
 				-- Find item if any at (a_x, a_y) then call user pebble function.
 			if a_x >= 0 and then a_y >= 0 then
@@ -881,13 +893,14 @@ feature -- Pick and Drop
 					a_cursor := l_item_accept_cursor_function.item ([item_int])
 					if a_cursor /= Void then
 						drawable.set_accept_cursor (a_cursor)
+						l_locked_indexes := locked_indexes
 						from
-							locked_indexes.start
+							l_locked_indexes.start
 						until
-							locked_indexes.off
+							l_locked_indexes.off
 						loop
-							locked_indexes.item.drawing_area.set_accept_cursor (a_cursor)
-							locked_indexes.forth
+							l_locked_indexes.item.drawing_area.set_accept_cursor (a_cursor)
+							l_locked_indexes.forth
 						end
 					end
 				end
@@ -895,13 +908,14 @@ feature -- Pick and Drop
 					a_cursor := l_item_deny_cursor_function.item ([item_int])
 					if a_cursor /= Void then
 						drawable.set_deny_cursor (a_cursor)
+						l_locked_indexes := locked_indexes
 						from
-							locked_indexes.start
+							l_locked_indexes.start
 						until
-							locked_indexes.off
+							l_locked_indexes.off
 						loop
-							locked_indexes.item.drawing_area.set_deny_cursor (a_cursor)
-							locked_indexes.forth
+							l_locked_indexes.item.drawing_area.set_deny_cursor (a_cursor)
+							l_locked_indexes.forth
 						end
 					end
 				end
@@ -2598,7 +2612,7 @@ feature -- Removal
 			l_selected_rows: ARRAYED_LIST [EV_GRID_ROW]
 			l_selected_items: ARRAYED_LIST [EV_GRID_ITEM]
 			l_row_index: INTEGER
-			l_row: detachable EV_GRID_ROW_I
+			l_rows: like rows
 		do
 			if is_row_selection_enabled then
 					-- In this case, it is possible that an empty row is selected
@@ -2633,13 +2647,13 @@ feature -- Removal
 				end
 			end
 			lock_update
+			l_rows := rows
 			from
 				i := upper_index
 			until
 				i < lower_index
 			loop
-				l_row := rows.i_th (i)
-				if l_row /= Void then
+				if attached l_rows.i_th (i) as l_row then
 						-- Row may void if Current is using partial_dynamic_content_function
 					l_row.update_for_removal
 				end
@@ -2650,10 +2664,10 @@ feature -- Removal
 				internal_row_data.move_items (upper_index + 1, lower_index, internal_row_data.count - upper_index)
 			end
 			internal_row_data.resize (internal_row_data.count - upper_index + lower_index - 1)
-			if upper_index < rows.count then
-				rows.shift_items (upper_index + 1, lower_index, rows.count - upper_index)
+			if upper_index < l_rows.count then
+				l_rows.shift_items (upper_index + 1, lower_index, l_rows.count - upper_index)
 			end
-			rows.resize (rows.count - upper_index + lower_index - 1)
+			l_rows.resize (l_rows.count - upper_index + lower_index - 1)
 
 			update_grid_row_indices (lower_index)
 
@@ -2708,12 +2722,12 @@ feature -- Removal
 		local
 			current_row_data: detachable SPECIAL [detachable EV_GRID_ITEM_I]
 			current_item: detachable EV_GRID_ITEM_I
-			current_row: detachable EV_GRID_ROW_I
 			current_column: detachable EV_GRID_COLUMN_I
 			i, j: INTEGER
 			l_row_count, l_column_count: INTEGER
 			current_column_count: INTEGER
 			l_selected_rows: ARRAYED_LIST [EV_GRID_ROW]
+			l_rows: like rows
 		do
 				-- Set 'displayed_column_count' immediately to zero to satisfy invariant.
 			displayed_column_count := 0
@@ -2761,18 +2775,18 @@ feature -- Removal
 				end
 				i := i + 1
 			end
+			l_rows := rows
 			from
 				i := 1
 			until
 				i > l_row_count
 			loop
-				current_row := rows.i_th (i)
-				if current_row /= Void then
-					if current_row.is_locked then
+				if attached l_rows.i_th (i) as l_row then
+					if l_row.is_locked then
 							-- Make sure that row is unlocked before removal.
-						current_row.unlock
+						l_row.unlock
 					end
-					current_row.unparent
+					l_row.unparent
 				end
 				i := i + 1
 			end
@@ -2796,7 +2810,7 @@ feature -- Removal
 				i := i + 1
 			end
 			internal_row_data.wipe_out
-			rows.wipe_out
+			l_rows.wipe_out
 			columns.wipe_out
 			set_vertical_computation_required (1)
 			set_horizontal_computation_required (1)
@@ -2870,17 +2884,20 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 		local
 			a_col: detachable EV_GRID_COLUMN_I
 			i, col_count: INTEGER
+			l_columns: like columns
 		do
 			if physical_column_indexes_dirty then
 					-- `Result' needs to be recalculated
-				col_count := columns.count
+				l_columns := columns
+				col_count := l_columns.count
 				create Result.make_empty (col_count)
+				
 				from
 					i := 1
 				until
 					i > col_count
 				loop
-					a_col := columns @ i
+					a_col := l_columns @ i
 					check a_col /= Void end
 					Result.extend (a_col.physical_index)
 					i := i + 1
@@ -3074,10 +3091,12 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			temp_columns: like columns
 			column_index: INTEGER
 			l_column_count: INTEGER
+			l_column_offsets: like column_offsets
 		do
 			temp_columns := columns
-			create column_offsets
-			column_offsets.extend (0)
+			create l_column_offsets
+			column_offsets := l_column_offsets
+			l_column_offsets.extend (0)
 			l_column_count := temp_columns.count
 			from
 				column_index := 1
@@ -3087,7 +3106,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 				if column_displayed (column_index) and then attached temp_columns.i_th (column_index) as l_column_i then
 					i := i + l_column_i.width
 				end
-				column_offsets.extend (i)
+				l_column_offsets.extend (i)
 				column_index := column_index + 1
 			end
 				-- Now move the virtual position so that it is restricted to the maximum
@@ -3308,7 +3327,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 				Result := column_offsets.i_th (columns.count + 1)
 			end
 		ensure
-			result_positive: result >= 0
+			result_positive: Result >= 0
 		end
 
 	total_row_height: INTEGER
@@ -4323,6 +4342,7 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 		local
 			header_index: INTEGER
 			l_column_i: detachable EV_GRID_COLUMN_I
+			l_columns: like columns
 		do
 				-- Update horizontal scroll bar size and position.
 			recompute_horizontal_scroll_bar
@@ -4331,7 +4351,8 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 			if is_column_resize_immediate then
 				header_index := header.index_of (header_item, 1)
 				set_horizontal_computation_required (header_index)
-				l_column_i := columns @ (header_index)
+				l_columns := columns
+				l_column_i := l_columns @ (header_index)
 				check l_column_i /= Void end
 				if are_column_separators_enabled and (last_width_of_header_during_resize = 0 and header_item.width > 0) or
 					last_width_of_header_during_resize_internal > 0 and header_item.width = 0 then
@@ -4342,7 +4363,7 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 						from
 							header_index := header_index - 1
 						until
-							header_index = 1 or else attached (columns @ (header_index)) as l_col_i and then l_col_i.width > 0
+							header_index = 1 or else attached (l_columns @ (header_index)) as l_col_i and then l_col_i.width > 0
 						loop
 							header_index := header_index - 1
 						end
@@ -5249,6 +5270,7 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 			item_offset: INTEGER
 			item_index: INTEGER
 			last_index: INTEGER
+			l_dynamic_content_function: like dynamic_content_function
 		do
 			if look_right then
 				item_offset := 1
@@ -5257,14 +5279,17 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 				item_offset := -1
 				last_index := 0
 			end
-
+			if is_content_partially_dynamic then
+				l_dynamic_content_function := dynamic_content_function
+			end
 			from
 				item_index := starting_index + item_offset
 			until
 				Result /= Void or else item_index = last_index
 			loop
 				Result := grid_row.item (item_index)
-				if result = Void and then is_content_partially_dynamic and then attached dynamic_content_function as l_dynamic_content_function then
+				if Result = Void and then l_dynamic_content_function /= Void then
+					check is_content_partially_dynamic: is_content_partially_dynamic end
 					Result := l_dynamic_content_function.item ([item_index, grid_row.index])
 						-- We now check that the set item is the same as the one returned. If you both
 						-- set an item and return a different item from the dynamic function, this is invalid
@@ -5293,6 +5318,7 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 			item_offset: INTEGER
 			item_index: INTEGER
 			last_index: INTEGER
+			l_dynamic_content_function: like dynamic_content_function
 		do
 			if look_down then
 				item_offset := 1
@@ -5301,14 +5327,17 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 				item_offset := -1
 				last_index := 0
 			end
-
+			if is_content_partially_dynamic then
+				l_dynamic_content_function := dynamic_content_function
+			end
 			from
 				item_index := starting_index + item_offset
 			until
 				Result /= Void or else item_index = last_index
 			loop
 				Result := grid_column.item (item_index)
-				if result = Void and then is_content_partially_dynamic and then attached dynamic_content_function as l_dynamic_content_function then
+				if Result = Void and then l_dynamic_content_function /= Void then
+					check is_content_partially_dynamic: is_content_partially_dynamic end
 					Result := l_dynamic_content_function.item ([grid_column.index, item_index])
 						-- We now check that the set item is the same as the one returned. If you both
 						-- set an item and return a different item from the dynamic function, this is invalid
@@ -5576,6 +5605,7 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 			l_last_selected_item: like last_selected_item
 			l_last_selected_row: like last_selected_row
 			l_shift_key_start_item: like shift_key_start_item
+			l_dynamic_content_function: like dynamic_content_function
 		do
 			a_application := ev_application
 			is_ctrl_pressed := a_application.ctrl_pressed
@@ -5648,6 +5678,10 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 						navigation_item_column_index := a_item.column.index
 						navigation_item_row_index := a_item.row.index
 
+						if is_content_partially_dynamic then
+							l_dynamic_content_function := dynamic_content_function
+						end
+
 						from
 							selection_boundary_left := shift_key_start_item_column_index.min (navigation_item_column_index)
 							selection_boundary_right := shift_key_start_item_column_index.max (navigation_item_column_index)
@@ -5668,7 +5702,8 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 								a_row_counter > end_row_index
 							loop
 								current_item := item_internal (a_col_counter, a_row_counter)
-								if current_item = Void and then is_content_partially_dynamic and then attached dynamic_content_function as l_dynamic_content_function then
+								if current_item = Void and then l_dynamic_content_function /= Void then
+									check is_content_partially_dynamic: is_content_partially_dynamic end
 									current_item := l_dynamic_content_function.item ([a_col_counter, a_row_counter]).implementation
 										-- We now check that the set item is the same as the one returned. If you both
 										-- set an item and return a different item from the dynamic function, this is invalid
@@ -5828,22 +5863,26 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_DRAWER_I} -- Implementation
 			a_row_data: SPECIAL [detachable EV_GRID_ITEM_I]
 			old_count: INTEGER
 			i, j: INTEGER
+			l_internal_row_data: like internal_row_data
+			l_attached_interface: like attached_interface
 		do
-			old_count := internal_row_data.count
-			resize_row_lists ((internal_row_data.count).max (a_index - 1) + rows_to_insert)
+			l_internal_row_data := internal_row_data
+			old_count := l_internal_row_data.count
+			resize_row_lists ((l_internal_row_data.count).max (a_index - 1) + rows_to_insert)
 
-			internal_row_data.area.move_data (a_index - 1, a_index - 1 + rows_to_insert, old_count - a_index + 1)
+			l_internal_row_data.area.move_data (a_index - 1, a_index - 1 + rows_to_insert, old_count - a_index + 1)
 			rows.area.move_data (a_index - 1, a_index - 1 + rows_to_insert, old_count - a_index + 1)
 
 			from
+				l_attached_interface := attached_interface
 				i := 1
 				j := a_index - 1
 			until
 				i > rows_to_insert
 			loop
 				create a_row_data.make_empty (0)
-				internal_row_data.put_i_th (a_row_data, i + j)
-				row_i := attached_interface.new_row.implementation
+				l_internal_row_data.put_i_th (a_row_data, i + j)
+				row_i := l_attached_interface.new_row.implementation
 				row_i.set_parent_i (Current, row_counter)
 				row_counter := row_counter + 1
 
@@ -5860,7 +5899,6 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_DRAWER_I} -- Implementation
 				redraw_client_area
 			end
 		end
-
 
 	row_internal (a_row: INTEGER): EV_GRID_ROW_I
 			-- Row `a_row', creates a new one if it doesn't exist.
@@ -6072,7 +6110,7 @@ feature {NONE} -- Implementation
 		once
 			Result := (create {EV_LABEL}).minimum_height + extra_text_spacing
 		ensure
-			result_positive: result > 0
+			result_positive: Result > 0
 		end
 
 	extra_text_spacing: INTEGER

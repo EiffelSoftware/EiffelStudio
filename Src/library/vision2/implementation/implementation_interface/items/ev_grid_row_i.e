@@ -507,7 +507,7 @@ feature -- Status report
 				Result := l_locked_row.offset
 			end
 		ensure
-			not_locked_implies_result_zero: not is_locked implies result = 0
+			not_locked_implies_result_zero: not is_locked implies Result = 0
 		end
 
 feature -- Status setting
@@ -1005,20 +1005,22 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 			i, j, l_subrow_index: INTEGER
 			l_original_subrow_count: INTEGER
 			l_parent_i: like parent_i
+			l_subrows: like subrows
 		do
 				-- Reset `is_ensured_expandable'
 			is_ensured_expandable := False
 
+			l_subrows := subrows
 
 			from
 				i := row_index
 				j := row_index + rows_to_insert
 				l_subrow_index := a_subrow_index
-				l_original_subrow_count := subrows.count
-				subrows.resize (subrows.count + rows_to_insert)
+				l_original_subrow_count := l_subrows.count
+				l_subrows.resize (l_subrows.count + rows_to_insert)
 				if a_subrow_index < l_original_subrow_count + 1 then
 						-- Move the existing items as required to make space for the new.
-					subrows.shift_items (a_subrow_index, a_subrow_index + rows_to_insert, l_original_subrow_count - a_subrow_index + 1)
+					l_subrows.shift_items (a_subrow_index, a_subrow_index + rows_to_insert, l_original_subrow_count - a_subrow_index + 1)
 				end
 				l_parent_i := parent_i
 				check l_parent_i /= Void end
@@ -1026,7 +1028,7 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 				i = j
 			loop
 				row_imp := l_parent_i.row (i).implementation
-				subrows.put_i_th (row_imp, l_subrow_index)
+				l_subrows.put_i_th (row_imp, l_subrow_index)
 				row_imp.internal_set_parent_row (Current)
 				row_imp.set_subrow_index (l_subrow_index)
 
@@ -1402,7 +1404,9 @@ feature {NONE} -- Implementation
 		local
 			a_subrow_index: INTEGER
 			l_row: detachable EV_GRID_ROW_I
+			l_subrows: like subrows
 		do
+			l_subrows := subrows
 			from
 				a_subrow_index := 1
 			until
@@ -1411,7 +1415,7 @@ feature {NONE} -- Implementation
 			loop
 				Result := Result + 1
 					-- Add one for the current row which is now hidden.
-				l_row := subrows.i_th (a_subrow_index)
+				l_row := l_subrows.i_th (a_subrow_index)
 				check l_row /= Void end
 				Result := Result + l_row.expanded_subrow_count_recursive
 					-- Add the number of expanded items for that row.
@@ -1419,7 +1423,7 @@ feature {NONE} -- Implementation
 				a_subrow_index := a_subrow_index + 1
 			end
 		ensure
-			result_non_negative: result >= 0
+			result_non_negative: Result >= 0
 		end
 
 	displayed_in_grid_tree: BOOLEAN
@@ -1448,7 +1452,7 @@ feature {NONE} -- Implementation
 		once
 			Result := (create {EV_LABEL}).minimum_height + 3
 		ensure
-			result_positive: result > 0
+			result_positive: Result > 0
 		end
 
 feature -- Contract Support

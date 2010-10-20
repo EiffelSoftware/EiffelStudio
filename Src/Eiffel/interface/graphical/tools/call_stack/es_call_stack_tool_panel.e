@@ -779,7 +779,11 @@ feature {NONE} -- Implementation: Exceptions
 			w := Eb_debugger_manager.debugging_window.window
 			if debugger_manager.safe_application_is_stopped then
 				create dlg.make
-				dlg.set_exception (exception_value)
+				if attached exception_value then
+					dlg.set_exception (exception_value)
+				elseif attached catcall_message as m then
+					dlg.set_exception_text (m)
+				end
 				dlg.set_is_modal (True)
 				dlg.show_on_active_window
 			else
@@ -848,7 +852,7 @@ feature {NONE} -- Catcall warning access
 			m := catcall_message
 			exception.set_text (m)
 			exception.set_tooltip (m)
-			exception_dialog_button.disable_sensitive
+			exception_dialog_button.enable_sensitive
 		end
 
 	catcall_message: STRING_32
@@ -1390,6 +1394,9 @@ feature {NONE} -- Stack grid implementation
 
 					--| Now Result should not be Void
 				Result := row.item (c)
+			end
+			if Result = Void then
+				create Result
 			end
 		end
 

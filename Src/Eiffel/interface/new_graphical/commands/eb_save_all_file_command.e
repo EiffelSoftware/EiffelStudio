@@ -70,15 +70,12 @@ feature -- Execution
 	execute
 			-- Save a file with the chosen name.
 		local
-			l_dev_win: EB_DEVELOPMENT_WINDOW
 			l_editors, l_data_lost_editors: ARRAYED_LIST [EB_SMART_EDITOR]
 			l_editor, l_ed: EB_SMART_EDITOR
 			l_editors_manager: EB_EDITORS_MANAGER
-			cst: CLASSC_STONE
 			l_cmd: EB_SAVE_FILE_COMMAND
 		do
-			l_dev_win ?= target
-			if l_dev_win /= Void then
+			if attached {EB_DEVELOPMENT_WINDOW} target as l_dev_win then
 				l_dev_win.lock_update
 				l_editors_manager := l_dev_win.editors_manager
 				l_editor := l_editors_manager.current_editor
@@ -103,8 +100,7 @@ feature -- Execution
 					end
 
 						-- Set changed in project
-					cst ?= l_editors.item.stone
-					if cst /= Void and then cst.is_valid then
+					if attached {CLASSC_STONE} l_editors.item.stone as cst and then cst.is_valid then
 						l_dev_win.set_classi_changed (cst.e_class)
 					end
 					l_editors.forth
@@ -123,11 +119,12 @@ feature {NONE} -- Status
 
 	has_unsaved_file: BOOLEAN
 			-- Has unsaved file?
-		local
-			l_dev: EB_DEVELOPMENT_WINDOW
 		do
-			l_dev ?= target
-			Result := l_dev.any_editor_changed
+			if attached {EB_DEVELOPMENT_WINDOW} target as l_dev then
+				Result := l_dev.any_editor_changed
+			else
+				check not_possible: False end
+			end
 		end
 
 feature {NONE} -- Implementation

@@ -15,6 +15,7 @@ resource_compiler='"$compiler_path/bin/windres"'
 #
 obj='o'
 lib='a'
+prfxlib='lib'
 objcflags='-ObjC'
 #
 #

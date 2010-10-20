@@ -15,6 +15,7 @@ resource_compiler='rc'
 #
 obj='obj'
 lib='lib'
+prfxlib='lib'
 objcflags='-ObjC'
 #
 #

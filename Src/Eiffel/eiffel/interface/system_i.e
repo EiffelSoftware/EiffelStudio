@@ -483,6 +483,12 @@ feature -- Properties
 			local_workbench.change_class (character_32_class)
 			local_workbench.change_class (boolean_class)
 
+				-- SCOOP Manager
+			if ise_scoop_manager_class /= Void then
+					-- SCOOP Manager may not be available in system.
+				local_workbench.change_class (ise_scoop_manager_class)
+			end
+
 				-- Exception manager
 			local_workbench.change_class (ise_exception_manager_class)
 			if exception_class /= Void then
@@ -545,6 +551,11 @@ feature -- Properties
 			ise_exception_manager_class.compiled_class.record_precompiled_class_in_system
 			if exception_class /= Void and then exception_class.is_compiled then
 				exception_class.compiled_class.record_precompiled_class_in_system
+			end
+
+			if ise_exception_manager_class /= Void then
+					-- SCOOP manager
+				ise_scoop_manager_class.compiled_class.record_precompiled_class_in_system
 			end
 
 			if il_generation then
@@ -2219,6 +2230,11 @@ end
 			predicate_class.compiled_class.mark_class (marked_classes)
 			typed_pointer_class.compiled_class.mark_class (marked_classes)
 			type_class.compiled_class.mark_class (marked_classes)
+
+			if ise_scoop_manager_class /= Void then
+				ise_scoop_manager_class.compiled_class.mark_class (marked_classes)
+			end
+
 			ise_exception_manager_class.compiled_class.mark_class (marked_classes)
 			if exception_class /= Void and then exception_class.is_compiled then
 				exception_class.compiled_class.mark_class (marked_classes)
@@ -3727,6 +3743,14 @@ feature -- Dead code removal
 			remover.record (l_feature_table.item_id ({PREDEFINED_NAMES}.once_raise_name_id), l_class)
 			remover.record (l_feature_table.item_id ({PREDEFINED_NAMES}.init_exception_manager_id), l_class)
 			remover.record (l_feature_table.item_id ({PREDEFINED_NAMES}.free_preallocated_trace_id), l_class)
+
+				-- Protection of ISE_SCOOP_MANAGER class features
+			if ise_scoop_manager_class /= Void then
+				l_class := ise_scoop_manager_class.compiled_class
+				l_feature_table := l_class.feature_table
+				remover.record (l_feature_table.item_id ({PREDEFINED_NAMES}.init_scoop_manager_name_id), l_class)
+				remover.record (l_feature_table.item_id ({PREDEFINED_NAMES}.scoop_manager_task_callback_name_id), l_class)
+			end
 
 				-- Protection of FUNCTION class features
 			l_class := function_class.compiled_class

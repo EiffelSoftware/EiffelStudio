@@ -54,7 +54,6 @@
 #include "eif_rout_obj.h"
 #include "eif_option.h"
 #include "eif_bits.h"
-#include "eif_separate.h"
 
 #ifdef WORKBENCH
 #include "eif_wbench.h"
@@ -1343,52 +1342,81 @@ RT_LNK void eif_exit_eiffel_code(void);
 
  /*
  * Macros for SCOOP 
- *
- * -- Run-time Setup
- *
- * RTSCPINIT - SCOOP Runtime Initialization, called prior to root creation
- * RTSCPWTPR - Wait for SCOOP Processor Redundancy, called after root creation so that the system only completes when all processors have exited.
- *
- * -- Separate Object Initialization
- *
- * RTSCPAFPID (sep_obj) - Assign a free processor id to the client-side emalloc'd separate object
- * RTSCPSPAL (sep_obj) - Start processor application loop, notify debugger that launched thread is a SCOOP processor.
- *
- * -- GC Processor Handling
- *
- * RTSCPFPID (pid) - Free processor id pid for reuse, called by GC after full collect to reclaim processor resources as zero objects reference pid in their object headers. Notify debugger that thread is no longer being used as a SCOOP processor.
- *
- * -- Request Chain Handling
- *
- * RTSCPSSRC - Signal start of request chain for `Current'
- * RTSCPASPRC (sep_obj) - Assign supplier processor to request chain of `Current'
- * RTSCPWRCSPL - Wait for supplier processor request chain nodes to be initialized prior to logging.
- * RTSCPSERC - Signify end of request chain for `Current'
- *
- * -- Request Chain Node Logging
- *
- * RTSCPAPRC(sep_obj, predicate, arg_tuple, result) - Add predicate to request chain of `Current', wait for result.
- * RTSCPACRC(sep_obj, command, arg_tuple) - Add command to request chain of `Current'
- * RTSCPAQRC(sep_obj, query, arg_tuple, result) - Add query to request chain of `Current', wait for result.
- *
-*/ 
+ */
 
+// Define RTS_SCP_CAPABLE for use by eplug to determine whether SCOOP can be initialized.
+#ifndef RTS_SCP_CAPABLE
+#ifdef EIF_THREADS
+#define RTS_SCP_CAPABLE 1 
+#else
+#define RTS_SCP_CAPABLE 0 
+#endif
+#endif
 
-#define RTSCPINIT
-#define RTSCPWTPR
+#define scoop_task_assign_processor 1
+#define	scoop_task_free_processor 2
+#define scoop_task_start_processor_loop 3
+#define scoop_task_signify_start_of_new_chain 4
+#define scoop_task_signify_end_of_new_chain 5
+#define scoop_task_add_supplier_to_request_chain 6
+#define scoop_task_wait_for_supplier_processor_locks 7
+#define	scoop_task_add_predicate 8
+#define scoop_task_add_command 9
+#define	scoop_task_add_function 10
 
-#define RTSCPAFPID(sep_obj)
-#define RTSCPSPAL(sep_obj)
+#define EIFNULL 0
 
-#define RTSCPFPID(pid)
-#define RTSCPSSRC
-#define RTSCPASPRC(sep_obj)
-#define RTSCPWRCSPL
-#define RTSCPSERC
+#ifdef WORKBENCH
+#define EIFVALARG(i,t) ((EIF_TYPED_VALUE){ (EIF_VALUE)i, (uint32)t} )
+#define RTS_TCB(t,c,s,f,a,r) (egc_scoop_manager_task_callback)(scp_mnger,EIFVALARG(t,SK_INT8),EIFVALARG(c,SK_INT32),EIFVALARG(s,SK_INT32),EIFVALARG(f,SK_POINTER),EIFVALARG(a,SK_POINTER),EIFVALARG(r, SK_POINTER)); 
+#else
+#define RTS_TCB(t,c,s,f,a,r) (egc_scoop_manager_task_callback)(scp_mnger,t,RTS_PID(c),RTS_PID(s),f,a,r); 
+#endif
+#define RTS_PID(o) (EIF_INTEGER_32) (HEADER(o)->ov_head.ovs_pid)
 
-#define RTSCPAPRC(sep_obj,predicate,arg_tuple,result)
-#define RTSCPACRC(sep_obj,command,arg_tuple) 
-#define RTSCPAQRC(sep_obj,query,arg_tuple,result) 
+/*
+ * Object status:
+ * EIF_IS_DIFFERENT_PROCESSOR (o1, o2) - tells if o1 and o2 run on different processors
+ * RTS_OU(c,o) - tells if object o is uncontrolled by the processor associated with object c
+*/
+#define EIF_IS_DIFFERENT_PROCESSOR(o1,o2) RTS_PID(o1) != RTS_PID(o2)
+#define RTS_OU(c,o) EIF_TRUE
+
+/*
+ * Processor:
+ * RTS_PA(o) - associate a fresh processor with an object o
+ */
+#define RTS_PA(o) RTS_TCB(scoop_task_assign_processor,RTS_PID(o),EIFNULL,EIFNULL,EIFNULL,EIFNULL)
+
+/*
+ * Request chain:
+ * RTS_RC(p)   - create a request chain for the processor identified by object p
+ * RTS_RD(p)   - delete a request chain for the processor identified by object p
+ * RTS_RS(p,s) - add a supplier s to the request chain of the processor identified by object p
+ * RTS_RW(p)   - wait until all the suppliers are ready in the request chain of the processor identified by object p
+ * The only valid sequence of calls is
+ *      RTS_RC (RTS_RS)* [RTS_RW] RTS_RD
+ */
+#define RTS_RC(p) RTS_TCB(scoop_task_signify_start_of_new_chain,RTS_PID(p),EIFNULL,EIFNULL,EIFNULL,EIFNULL)
+#define RTS_RD(p) RTS_TCB(scoop_task_signify_end_of_new_chain,RTS_PID(p),EIFNULL,EIFNULL,EIFNULL,EIFNULL)
+#define RTS_RS(p,s) RTS_TCB(scoop_task_add_supplier_to_request_chain,RTS_PID(p),RTS_PID(s),EIFNULL,EIFNULL,EIFNULL)
+#define RTS_RW(p) RTS_TCB(scoop_task_wait_for_supplier_processor_locks,RTS_PID(p),EIFNULL,EIFNULL,EIFNULL,EIFNULL)
+
+/*
+ * Separate call:
+ * RTS_CF(c,t,f,a,r) - call a function with an address f on a target t with current object c and arguments a and result r
+ * RTS_CP(c,t,f,a)   - call a procedure with an address f on a target t with current object c and arguments a
+ */
+#define RTS_CF(c,t,f,a,r) RTS_TCB(scoop_task_add_function,RTS_PID(c),RTS_PID(t),(EIF_REFERENCE)f,a,r)
+#define RTS_CP(c,t,f,a) RTS_TCB(scoop_task_add_command,RTS_PID(c),RTS_PID(t),(EIF_REFERENCE)f,a,EIFNULL)
+
+/*
+ * Separate call arguments:
+ * RTS_AC(n,t,a) - allocate container a that can hold n arguments for target t
+ * RTS_AA(v,n,a) - register argument v corresponding to field f of type t at position n in a
+ */
+#define RTS_AC(n,t,a) a = cmalloc (sizeof(EIF_TYPED_VALUE)*(n+1)); ((EIF_TYPED_VALUE*)a)[0].type = SK_REF; 
+#define RTS_AA(v,f,t,n,a)
 
  /*
  * Macros for workbench

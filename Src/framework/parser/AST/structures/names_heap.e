@@ -394,6 +394,8 @@ feature {NONE} -- Implementation: access
 			put ("positive_infinity") check found_item = positive_infinity_name_id end
 			put ("force") check found_item = force_name_id end
 			put ("fill_with") check found_item = fill_with_name_id end
+			put ("init_scoop_manager") check found_item = init_scoop_manager_id end
+			put ("scoop_manager_task_callback") check found_item = scoop_manager_task_callback_id end
 		end
 
 invariant

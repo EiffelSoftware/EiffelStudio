@@ -962,6 +962,7 @@ rt_public void eif_rtinit(int argc, char **argv, char **envp)
 	notify_root_thread();
 #endif
 	init_emnger();					/* Initialize ISE_EXCEPTION_MANAGER */
+	init_scp_manager();				/* Initialize ISE_SCOOP_MANAGER */
 }
 
 rt_public void failure(void)

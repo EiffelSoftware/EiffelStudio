@@ -643,6 +643,16 @@ doc:	</attribute>
 */
 rt_public EIF_REFERENCE except_mnger = NULL;
 
+
+/*
+doc:	<attribute name="scp_mnger" return_type="EIF_REFERENCE" export="public">
+doc:		<summary>Pointer to EXCEPTION_MANAGER object of current system. Initialized by generated C code.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:	</attribute>
+*/
+rt_public EIF_REFERENCE scp_mnger = NULL;
+
 /*
 doc:	<attribute name="has_reclaim_been_called" return_type="EIF_BOOLEAN" export="private">
 doc:		<summary>Flag to prevent multiple calls to `reclaim' which could occur if for some reasons `reclaim´ failed, then the `main' routine of the Eiffel program will call `failure' which calls `reclaim' again. So if it failed the first time around it is going to fail a second time and therefore it is useless to call `reclaim' again.</summary>

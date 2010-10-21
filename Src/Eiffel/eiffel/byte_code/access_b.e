@@ -374,14 +374,17 @@ feature -- C generation
 		do
 		end
 
-	generate_address_on (r: REGISTRABLE)
-			-- Generate address of a function that can be used to make a separate call
-			-- assuming that `r' contains a target of a call.
-		require
-			r_attached: attached r
+feature {NONE} -- C code generation: separate call
+
+	generate_separate_call (s: detachable REGISTER; r: detachable REGISTRABLE; t: REGISTRABLE)
+			-- Generate a call on target register `t' using register `s' to pass arguments
+			-- and storing result (if any) in `r'.
 		do
-			buffer.put_string ("(void *) 0 /* Not implemented */")
+			buffer.put_new_line
+			buffer.put_string ("/* Separate call is not implemented for " + generating_type + " */")
 		end
+
+feature -- C generation
 
 	generate_access
 			-- Generation of the C code for access
@@ -418,7 +421,7 @@ feature -- C generation
 					-- Generate a call on a separate target as follows:
 					--    if (EIF_IS_DIFFERENT_PROCESSOR (Current, target)) {
 					--        ... // Prepare arguments to pass in args.
-					--        RTS_CF (Current, target, feature_address, args, result);
+					--        RTS_Cxy (feature_data, target, arguments, result);
 					--    } else {
 					--        ... // Make non-separate call.
 					--    }
@@ -467,25 +470,7 @@ feature -- C generation
 					end
 				end
 					-- Register a call in a scheduler.
-				buf.put_new_line
-				if attached r then
-						-- Call to a function.
-					buf.put_string ("RTS_CF (Current, ")
-				else
-						-- Call to a procedure.
-					buf.put_string ("RTS_CP (Current, ")
-				end
-				t.print_register
-				buf.put_two_character (',', ' ')
-				generate_address_on (t)
-				buf.put_two_character (',', ' ')
-				s.print_register
-				if attached r then
-						-- Add result of call.
-					buf.put_two_character (',', ' ')
-					r.print_register
-				end
-				buf.put_two_character (')', ';')
+				generate_separate_call (s, r, t)
 				if not is_exactly_separate then
 						-- The call may be non-separate.
 					buf.exdent

@@ -4009,6 +4009,12 @@ rt_private EIF_REFERENCE eif_set(EIF_REFERENCE object, uint16 flags, EIF_TYPE_IN
 #endif  /* EIF_THREADS */
 #endif  /* EIF_TID */
 
+	// Set SCOOP Processor if available.
+#ifdef EIF_THREADS
+	zone->ov_head.ovu.ovs.scp_pid = (EIF_SCP_PID)(EIF_TEST(eif_thr_context->is_processor) ? eif_thr_context->logical_id : 0);
+#else
+	zone->ov_head.ovu.ovs.scp_pid = (EIF_SCP_PID)0;
+#endif
 	zone->ov_size &= ~B_C;		/* Object is an Eiffel one */
 	zone->ov_flags = flags;
 	zone->ov_dftype = dftype;	/* Set Full dynamic type */

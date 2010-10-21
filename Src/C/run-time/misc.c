@@ -104,6 +104,43 @@ rt_public EIF_INTEGER upintdiv(EIF_INTEGER n1, EIF_INTEGER n2)
 }
 
 /*
+doc:	<routine name="init_scp_manager" export="public">
+doc:		<summary>Initialize ISE_SCOOP_MANAGER if available.</summary>
+doc:		<thread_safety>Unsafe</thread_safety>
+doc:		<synchronization>None required</synchronization>
+doc:	</routine>
+*/
+
+rt_public void init_scp_manager (void)
+	/* Initialize ISE_SCOOP_MANAGER
+	 */
+{
+	if (egc_init_scoop_manager != NULL)
+	{
+	EIF_INTEGER pf_status = egc_prof_enabled;
+	EIF_BOOLEAN tr_status = eif_is_tracing_enabled();
+	
+		/* No need to create the global instance, when it has already been created by one thread. */
+	scp_mnger = RTLNSMART(egc_scp_mngr_dtype);
+
+#ifndef ENABLE_STEP_THROUGH
+	DISCARD_BREAKPOINTS; /* prevent the debugger from stopping in the following functions */
+#endif
+	eif_disable_tracing(); /* Disable tracing to not clobber the output. */
+	egc_prof_enabled = 0; /* Disable profiling to be safe. */
+	(egc_init_scoop_manager)(scp_mnger);
+	egc_prof_enabled = pf_status; /* Resume profiling status. */
+	if (!tr_status) {
+			/* Resume tracing if it was previously enabled. */
+		eif_enable_tracing();
+	}
+#ifndef ENABLE_STEP_THROUGH
+	UNDISCARD_BREAKPOINTS; /* prevent the debugger from stopping in the following functions */
+#endif
+	}
+}
+
+/*
 doc:	<routine name="eif_sleep" export="public">
 doc:		<summary>Suspend execution of current thread by interval `nanoseconds'. It uses the most precise sleep function available for a given platform.</summary>
 doc:		<param name="nanoseconds" type="EIF_INTEGER_64">Number of nanoseconds to sleep.</param>

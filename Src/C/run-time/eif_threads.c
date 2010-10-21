@@ -83,7 +83,9 @@ rt_public void eif_thr_panic(char *);
 rt_public void eif_thr_init_root(void);
 rt_public void eif_thr_register(int is_external);
 rt_public int eif_thr_is_initialized(void);
+
 rt_public void eif_thr_create_with_attr(EIF_OBJECT, EIF_PROCEDURE, EIF_THR_ATTR_TYPE *);
+rt_public void eif_thr_create_with_attr_new(EIF_OBJECT, EIF_PROCEDURE, EIF_INTEGER_32, EIF_BOOLEAN, EIF_THR_ATTR_TYPE *);
 rt_public void eif_thr_exit(void);
 
 rt_public EIF_POINTER eif_thr_mutex_create(void);
@@ -427,6 +429,8 @@ rt_public void eif_thr_register(int is_external)
 				eif_thr_context->is_alive = 1;
 				eif_thr_context->is_root = 1;
 				eif_thr_context->thread_id = eif_thr_current_thread();
+				eif_thr_context->is_processor = eif_thr_context->is_processor;
+				eif_thr_context->logical_id = eif_thr_context->logical_id; 
 #ifdef WORKBENCH
 				dnotify_create_thread(eif_thr_context->thread_id);
 #endif
@@ -459,6 +463,8 @@ rt_public void eif_set_thr_context (void) {
 			memset (eif_thr_context, 0, sizeof (rt_thr_context));
 			eif_thr_context->is_alive = 1;
 			eif_thr_context->is_root = 0;
+			eif_thr_context->logical_id = 0;
+			eif_thr_context->is_processor = EIF_FALSE;
 			eif_thr_context->thread_id = eif_thr_current_thread();
 		}
 	}
@@ -699,6 +705,15 @@ rt_public void eif_thr_create_with_attr (EIF_OBJECT thr_root_obj,
 										 EIF_PROCEDURE init_func,
 										 EIF_THR_ATTR_TYPE *attr)
 {
+	eif_thr_create_with_attr_new (thr_root_obj, init_func, -1, EIF_FALSE, attr);
+}
+
+rt_public void eif_thr_create_with_attr_new (EIF_OBJECT thr_root_obj, 
+										 EIF_PROCEDURE init_func,
+										 EIF_INTEGER_32 thr_logical_id,
+										 EIF_BOOLEAN is_processor,
+										 EIF_THR_ATTR_TYPE *attr)
+{
 	/*
 	 * Creates a new Eiffel thread. This function is only called from
 	 * Eiffel and is given five arguments: 
@@ -730,6 +745,8 @@ rt_public void eif_thr_create_with_attr (EIF_OBJECT thr_root_obj,
 		routine_ctxt->current = eif_adopt (thr_root_obj);
 		routine_ctxt->routine = init_func;
 		routine_ctxt->thread_id = (EIF_THR_TYPE) 0;
+		routine_ctxt->logical_id = thr_logical_id;
+		routine_ctxt->is_processor = is_processor;
 		routine_ctxt->parent_context = eif_thr_context;
 		routine_ctxt->is_alive = 1;
 
@@ -809,9 +826,16 @@ rt_private void eif_thr_entry (void *arg)
 		xinitint();
 			/* Call the `execute' routine of the thread */
 		dnotify_create_thread(eif_thr_context->thread_id);
+		if (eif_thr_context->is_processor == EIF_TRUE)
+				dnotify_register_scoop_processor (eif_thr_context->thread_id, eif_thr_context->logical_id);
+
 #endif
 		init_emnger(); /* Initialize objects hold by exception manager */
-		(FUNCTION_CAST(void,(EIF_REFERENCE)) eif_thr_context->routine)(eif_access(routine_ctxt->current));
+		if (eif_thr_context->logical_id != -1)
+				// A logical ID has been set so pass to Eiffel thread init callback.
+			(FUNCTION_CAST(void,(EIF_REFERENCE, EIF_INTEGER_32)) eif_thr_context->routine)(eif_access(routine_ctxt->current), eif_thr_context->logical_id);
+		else
+			(FUNCTION_CAST(void,(EIF_REFERENCE)) eif_thr_context->routine)(eif_access(routine_ctxt->current));
 
 		exok();
 	}

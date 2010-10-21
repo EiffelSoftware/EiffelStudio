@@ -245,6 +245,9 @@ typedef void *			EIF_POINTER;
 /* C type for underlying integer type identifying object's dynamic type. */
 typedef uint16		EIF_TYPE_INDEX;
 
+/* C type for underlying integer type identifying object's SCOOP Processor ID. */
+typedef uint16		EIF_SCP_PID;
+
 /* For workbench mode only. */
 typedef uint32		BODY_INDEX;
 

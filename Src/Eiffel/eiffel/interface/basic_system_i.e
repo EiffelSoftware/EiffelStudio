@@ -92,6 +92,9 @@ feature -- Access
 
 	rt_extension_class: CLASS_I
 
+	ise_scoop_manager_class: CLASS_I
+			-- Class ISE_SCOOP_MANAGER
+
 	ise_exception_manager_class: CLASS_I
 			-- Class ISE_EXCEPTION_MANAGER
 
@@ -469,6 +472,17 @@ feature -- Status report
 		end
 
 feature -- Status report
+
+	scoop_manager_type_id: INTEGER
+			-- Dynamic type_id of class ISE_SCOOP_MANAGER
+		require
+			scoop_manager_class_exist: ise_scoop_manager_class /= Void
+			compiled: ise_scoop_manager_class.is_compiled
+		do
+			Result := ise_scoop_manager_class.compiled_class.types.first.type_id
+		ensure
+			valid_result: Result > 0
+		end
 
 	exception_manager_type_id: INTEGER
 			-- Dynamic type_id of class ISE_EXCEPTION_MANAGER
@@ -946,6 +960,19 @@ feature -- Settings: XX_REF classes
 			pointer_ref_class := c
 		ensure
 			pointer_ref_class_set: pointer_ref_class = c
+		end
+
+feature -- Settings: SCOOP
+
+	set_scoop_manager_class (c: CLASS_I)
+			-- Assign `c' to `ise_scoop_manager_class'.
+		require
+			c_not_void: c /= Void
+		do
+			c.set_as_basic_class
+			ise_scoop_manager_class := c
+		ensure
+			ise_scoop_manager_class_set: ise_scoop_manager_class = c
 		end
 
 feature -- Settings: Exception

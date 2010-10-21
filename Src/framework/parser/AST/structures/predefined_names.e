@@ -223,6 +223,8 @@ feature -- Constants
 	positive_infinity_name_id: INTEGER = 210
 	force_name_id: INTEGER = 211
 	fill_with_name_id: INTEGER = 212
+	init_scoop_manager_id: INTEGER = 213
+	scoop_manager_task_callback_id: INTEGER = 214
 
 feature -- Classification
 

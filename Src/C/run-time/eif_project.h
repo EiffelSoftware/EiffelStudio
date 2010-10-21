@@ -99,6 +99,13 @@ extern "C" {
 	RT_LNK void (*egc_init_exception_manager)(EIF_REFERENCE); /* EXCEPTION_MANAGER `init_exception_manager' feature */
 	RT_LNK void (*egc_free_preallocated_trace)(EIF_REFERENCE); /* EXCEPTION_MANAGER `free_preallocated_trace' feature */
 
+	RT_LNK void (*egc_init_scoop_manager)(EIF_REFERENCE); /* SCOOP_MANAGER `init_scoop_manager' feature */
+#ifdef WORKBENCH
+	RT_LNK void (*egc_scoop_manager_task_callback)(EIF_REFERENCE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE); /* ISE_SCOOP_MANAGER `scoop_task_manager_callback' feature */
+#else
+	RT_LNK void (*egc_scoop_manager_task_callback)(EIF_REFERENCE, EIF_NATURAL_8, EIF_INTEGER_32, EIF_INTEGER_32, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE); /* ISE_SCOOP_MANAGER `scoop_task_manager_callback' feature */
+#endif
+
 	RT_LNK void (*egc_correct_mismatch)(EIF_REFERENCE);	/* ANY `correct_mismatch' */
 
 	RT_LNK int egc_has_old_special_semantic;
@@ -163,6 +170,8 @@ extern "C" {
 
 	RT_LNK EIF_TYPE_INDEX egc_except_emnger_dtype;	/* Dynamic type of EXCEPTION_MANAGER */
 	RT_LNK EIF_TYPE_INDEX egc_exception_dtype; /* Dynamic type of EXCEPTION. Could not be initialized if not exist. */
+
+	RT_LNK EIF_TYPE_INDEX egc_scp_mngr_dtype; /* Dynamic type of SCOOP_MANAGER */
 
 	RT_LNK struct ctable egc_ce_type;			/* Class name -> type ID */
 	RT_LNK struct ctable egc_ce_exp_type;		/* Class name -> type ID for expanded types */

@@ -78,6 +78,8 @@ struct tag_rt_thr_context {
 	volatile int is_root;			/* Is Current thread the thread that started all? */
 	EIF_COND_TYPE *children_cond;	/* For `join_all'. */
 	EIF_THR_TYPE thread_id;			/* Thread identifier for associated thread. */
+	EIF_INTEGER_32 logical_id;		/* Logical identifier for associated thread. */
+	EIF_BOOLEAN is_processor;		/* Is thread used as a SCOOP processor? */
 	rt_thr_context *parent_context;	/* Context of parent thread, NULL if root class. */
 };
 

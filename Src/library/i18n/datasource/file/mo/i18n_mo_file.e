@@ -134,16 +134,16 @@ feature -- Access
 			Result := l_list.i_th(red+1)
 		end
 
-	translated_plural_strings (i: INTEGER): ARRAY[STRING_32]
+	translated_plural_strings (i: INTEGER): ARRAY [STRING_32]
 			-- plural translations of `i'-th entry
 		local
 			counter: INTEGER
 			l_list: detachable LIST [STRING_32]
 		do
-			create Result.make (0, 3)
 			get_translated_entries (i)
 			l_list := last_translated.list
 			check l_list /= Void end -- Implied from postcondition of `get_translated_entries'
+			create Result.make_filled ("", 0, 3)
 			from
 				l_list.start
 				counter := 0
@@ -422,7 +422,7 @@ invariant
 
 note
 	library:   "Internationalization library"
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -39,7 +39,7 @@ feature {NONE} --creation
 		do
 			make(an_original_singular, a_translated_singular)
 			original_plural := an_original_plural.to_string_32
-			create plural_translations.make (0,3) -- there are at most 4 forms, INDEX IS 0-BASED!!!!!!!!!!!!
+			create plural_translations.make_filled ("", 0, 3) -- there are at most 4 forms, INDEX IS 0-BASED!!!!!!!!!!!!
 			has_plural := True
 		ensure
 			original_singular_set: original_singular.is_equal (an_original_singular.as_string_32)
@@ -74,7 +74,7 @@ invariant
 
 note
 	library:   "Internationalization library"
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

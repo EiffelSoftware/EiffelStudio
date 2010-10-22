@@ -553,7 +553,7 @@ feature -- Properties
 				exception_class.compiled_class.record_precompiled_class_in_system
 			end
 
-			if ise_exception_manager_class /= Void then
+			if ise_scoop_manager_class /= Void and then ise_scoop_manager_class.is_compiled then
 					-- SCOOP manager
 				ise_scoop_manager_class.compiled_class.record_precompiled_class_in_system
 			end

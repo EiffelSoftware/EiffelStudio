@@ -370,7 +370,7 @@ feature {NONE} -- Current locale
 
 feature {NONE} -- Transformation
 
-	grouping_string_to_integer(string: STRING_32): ARRAY[INTEGER]
+	grouping_string_to_integer(string: STRING_32): ARRAY [INTEGER]
 				--
 		require
 			string_not_void: string /= Void
@@ -379,7 +379,7 @@ feature {NONE} -- Transformation
 			position: INTEGER
 		do
 			temp := string.split (';')
-			create Result.make(1, temp.count)
+			create Result.make_filled (0, 0, temp.count)
 			from
 				temp.start
 				position := 1
@@ -394,7 +394,7 @@ feature {NONE} -- Transformation
 
 note
 	library:   "Internationalization library"
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

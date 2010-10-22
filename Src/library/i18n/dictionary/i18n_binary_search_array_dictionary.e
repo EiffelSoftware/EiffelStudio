@@ -78,18 +78,20 @@ feature--{NONE}	--help functions
 			-- put the last_input in `array' with right_index
 		local
 			left, right, middle: INTEGER
-			cur_entry: I18N_DICTIONARY_ENTRY
-			mid_entry: I18N_DICTIONARY_ENTRY
+			cur_entry, l_entry1, l_entry2: detachable I18N_DICTIONARY_ENTRY
+			mid_entry: detachable I18N_DICTIONARY_ENTRY
 			right_index: INTEGER
 		do
 				-- one element case will do nothing
-			if (last_index >1) then
-
+			if (last_index > 1) then
 				cur_entry:= array.item (last_index)
-
-				if cur_entry < array.item(1) then
+				check cur_entry_not_void: cur_entry /= Void end
+				l_entry1 := array.item (1)
+				l_entry2 := array.item (last_index-1)
+				check l_entry_exists: l_entry1 /= Void and then l_entry2 /= Void end -- Implied by `last_index > 1'
+				if cur_entry < l_entry1 then
 					right_index := 1
-				elseif cur_entry > array.item(last_index-1) then
+				elseif cur_entry > l_entry2 then
 					right_index := last_index
 				else
 						--cur_entry < array.item (last_index-1) and cur_entry > array.item(1)
@@ -102,7 +104,8 @@ feature--{NONE}	--help functions
 						left > right
 					loop
 						middle := ((left + right).as_natural_32 |>> 1).as_integer_32
-						mid_entry := array.item(middle)
+						mid_entry := array.item (middle)
+						check mid_entry_exists: mid_entry /= Void end
 						if cur_entry < mid_entry then
 							right := middle - 1
 						else
@@ -134,20 +137,25 @@ feature--{NONE}	--help functions
 			found: BOOLEAN
 		do
 			from
-				left:=min_index
-				right:=last_index
+				left := min_index
+				right := last_index
 			invariant
 				right < last_index
-						implies array.item(right + 1)<= array.item(last_index)
+						implies (attached array.item (right + 1) as l_item1 and then attached array.item (last_index) as l_item2 and then l_item1 <= l_item2)
 				left <= last_index and left > min_index
-						implies array.item(left - 1) <= array.item(last_index)
+						implies (attached array.item (left - 1) as l_item3 and then attached array.item (last_index) as l_item4 and then l_item3 <= l_item4)
 			variant
 				right - left + 1
 			until
 				left>right or found
 			loop
 				middle := ((left + right).as_natural_32 |>> 1).as_integer_32
-				m_string := array.item(middle).original_singular.as_string_32
+				if attached array.item (middle) as l_m then
+					m_string := l_m.original_singular.as_string_32
+				else
+					check always_has_item: False end
+					m_string := ""
+				end
 
 				if original.as_string_32 < m_string then
 					right := middle - 1
@@ -186,31 +194,34 @@ feature	-- Access
 			end
 		end
 
-	singular(original:STRING_GENERAL): STRING_32
-			--
+	singular (original:STRING_GENERAL): STRING_32
+			-- Singular form
 		local
-			entry: I18N_DICTIONARY_ENTRY
+			entry: detachable I18N_DICTIONARY_ENTRY
 			index: INTEGER
 		do
-			index:=has_index(original.as_string_32)
+			index := has_index (original.as_string_32)
+			check valid_index: index /= -1 end -- Implied by precondition.
 			entry := array.item (index)
+			check entry_not_void: entry /= Void end
 			Result := entry.singular_translation
 		end
 
-	plural(original_singular, original_plural: STRING_GENERAL; plural_number: INTEGER): STRING_32
-			--
+	plural (original_singular, original_plural: STRING_GENERAL; plural_number: INTEGER): STRING_32
+			-- Plural form
 		local
-			entry: I18N_DICTIONARY_ENTRY
+			entry: detachable I18N_DICTIONARY_ENTRY
 			index: INTEGER
 			l_trans: detachable ARRAY [STRING_32]
 		do
 			index := has_index(original_singular.as_string_32)
+			check valid_index: index /= -1 end -- Implied by precondition.
 			entry := array.item (index)
+			check entry_not_void: entry /= Void end -- Implied by precondition of `extend'
 			l_trans := entry.plural_translations
 			check l_trans /= Void end
 			Result := l_trans.item (reduce (plural_number))
 		end
-
 
 feature --Information
 
@@ -221,7 +232,7 @@ feature --Information
 
 feature {NONE} -- Implementation
 
-	array: ARRAY[I18N_DICTIONARY_ENTRY]
+	array: ARRAY [detachable I18N_DICTIONARY_ENTRY]
 	min_index: INTEGER = 1
 	max_index: INTEGER
 		-- should be updated after it is equal to `default_number_of_entries'
@@ -243,7 +254,7 @@ invariant
 
 note
 	library:   "Internationalization library"
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

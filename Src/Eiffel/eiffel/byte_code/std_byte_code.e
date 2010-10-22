@@ -1427,17 +1427,19 @@ end
 		end
 
 	trace_enabled: BOOLEAN
-			-- Is the trace enabled for the associated class
-			-- in final mode?
+			-- Is the trace enabled for the associated class in final mode?
+		require
+			in_final_mode: context.final_mode
 		do
-			Result := context.workbench_mode or Context.associated_class.trace_level.is_yes
+			Result := Context.associated_class.trace_level.is_yes
 		end
 
 	profile_enabled: BOOLEAN
-			-- Is the profile enabled for the associated class
-			-- in final mode?
+			-- Is the profile enabled for the associated class in final mode?
+		require
+			in_final_mode: context.final_mode
 		do
-			Result := context.workbench_mode or Context.associated_class.profile_level.is_yes
+			Result := Context.associated_class.profile_level.is_yes
 		end
 
 	generate_monitoring_start

@@ -230,6 +230,11 @@ feature
 				-- Generate the update of the locals stack used to debug.
 			context.generate_pop_debug_locals (Void)
 
+			if l_is_profiler_enabled and context.workbench_mode then
+				buf.put_new_line
+				buf.put_string ("RTSO;")
+			end
+
 				-- Remove gc hooks
 			i := context.ref_var_used;
 			if i > 0 then

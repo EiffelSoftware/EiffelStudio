@@ -1027,8 +1027,8 @@ RT_LNK void eif_exit_eiffel_code(void);
 #define RTDBGEAA(y,z,b)		RTDBGE(y,b,z,db_cstack);
 #define RTDBGLE		RTDBGL(exvect->ex_orig,exvect->ex_bodyid,exvect->ex_id,db_cstack); 
 
-#define RTEE		RTSO; d_data.db_callstack_depth = --db_cstack; expop(&eif_stack)
-#define RTEOK		RTSO; d_data.db_callstack_depth = --db_cstack; exok ()
+#define RTEE		d_data.db_callstack_depth = --db_cstack; expop(&eif_stack)
+#define RTEOK		d_data.db_callstack_depth = --db_cstack; exok ()
 
 #define RTEJ		current_call_level = trace_call_level; \
 					if (prof_stack) saved_prof_top = prof_stack->st_top; \

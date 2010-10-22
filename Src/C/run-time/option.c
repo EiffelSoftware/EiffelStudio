@@ -136,14 +136,14 @@ rt_public struct stack *prof_stack;
 /* INTERNAL TRACE VARIABLES */
 
 /*
-doc:	<attribute name="eif_trace_disabled" return_type="int" export="private">
+doc:	<attribute name="eif_trace_disabled" return_type="int" export="shared">
 doc:		<summary>Is tracing currently disabled at the application level? By default 0.</summary>
 doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Private per thread data.</synchronization>
 doc:	</attribute>
 */
-rt_private int eif_trace_disabled = 0;
+rt_shared int eif_trace_disabled = 0;
 
 /*
 doc:	<attribute name="last_dtype" return_type="int" export="private">
@@ -397,9 +397,6 @@ rt_public void check_options_stop(EIF_CONTEXT_NOARG)
 	/* Checks whether the feature on top of the 'eif_stack' is E-TRACEd
 	 * and E-PROFILEd and dispatches to the functions `stop_trace()' and
 	 * `stop_profile()' if necessary.
-	 * This function is called by RTSO, which is called by RTEE. Thus we
-	 * guarantee that at least this part of E-TRACE and E-PROFILE will
-	 * work for both frozen and melted code.
 	 */
 	EIF_GET_CONTEXT
 	struct ex_vect *vector;

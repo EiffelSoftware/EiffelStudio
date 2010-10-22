@@ -935,6 +935,9 @@ rt_shared int scollect(int (*gc_func) (void), int i)
 
 	GC_THREAD_PROTECT(eif_synchronize_gc (rt_globals));
 	DISCARD_BREAKPOINTS;
+		/* We have to disable the trace as if a `dispose' routine is called and trace
+		 * is enabled it might create Eiffel objects and we currently do not allow it. */
+	eif_trace_disabled = 1;
 
 	nb_full = rt_g_data.nb_full;
 	mem_used = rt_m_data.ml_used + rt_m_data.ml_over;		/* Count overhead */
@@ -1168,6 +1171,7 @@ rt_shared int scollect(int (*gc_func) (void), int i)
 	}
 #endif
 
+	eif_trace_disabled = 0;
 	UNDISCARD_BREAKPOINTS;
 	GC_THREAD_PROTECT(eif_unsynchronize_gc (rt_globals));
 	return status;		/* Forward status report */

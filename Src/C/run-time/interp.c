@@ -3759,6 +3759,8 @@ rt_private void interpret(int flag, int where)
 			}
 #endif /* EIF_THREADS */
 		}
+			/* Closing of trace and profiling for current routine. */
+		RTSO;
 		if (rescue) {
 			RTEOK;	/* end routine with rescue clause by cleaning the trace stack */
 		} else {
@@ -3772,6 +3774,8 @@ rt_private void interpret(int flag, int where)
 #endif
 		caller_assertion_level = saved_caller_assertion_level;
 		pop_registers();	/* Pop registers */
+			/* Closing of trace and profiling for current routine. */
+		RTSO;
 		RTEE;	/* remove execution vector from stack */
 		return;
 
@@ -3855,6 +3859,8 @@ enter_body:
 
 				/* Pop registers */
 			pop_registers();
+				/* Closing of trace and profiling for current routine. */
+			RTSO;
 			if (rescue) {
 					/* End routine with rescue clause. */
 				RTEOK;
@@ -3978,6 +3984,8 @@ enter_body:
 
 				/* Pop registers */
 			pop_registers();
+				/* Closing of trace and profiling for current routine. */
+			RTSO;
 			if (rescue) {
 					/* End routine with rescue clause. */
 				RTEOK;

@@ -46,6 +46,8 @@ extern "C" {
 
 #ifdef EIF_THREADS
 extern EIF_CS_TYPE *eif_trace_mutex;
+#else
+extern int eif_trace_disabled;
 #endif
 
 extern void exitprf(void);				/* Saves table as textfile */

@@ -213,18 +213,20 @@ feature -- Analyzis
 					-- For RTEA call
 				l_context.mark_current_used
 			end
-			if trace_enabled then
-					-- For RTTR
-				l_context.add_dt_current
-				l_context.add_dftype_current
-					-- For RTXT
-				l_context.add_dt_current
-				l_context.add_dftype_current
-			end
-			if profile_enabled then
-					-- For RTPR and RTXP
-				l_context.add_dt_current
-				l_context.add_dt_current
+			if context.final_mode then
+				if trace_enabled then
+						-- For RTTR
+					l_context.add_dt_current
+					l_context.add_dftype_current
+						-- For RTXT
+					l_context.add_dt_current
+					l_context.add_dftype_current
+				end
+				if profile_enabled then
+						-- For RTPR and RTXP
+					l_context.add_dt_current
+					l_context.add_dt_current
+				end
 			end
 
 		end
@@ -395,11 +397,8 @@ feature -- Analyzis
 				-- Generate execution trace information (RTEAA)
 			generate_execution_trace
 
-				-- Generate trace macro (start)
-			generate_trace_start
-
-				-- Generate profile macro (start)
-			generate_profile_start
+				-- Generate monitoring start for profiling and tracing
+			generate_monitoring_start
 
 				-- Generate GC synchronization macro
 			if not is_external and l_context.need_gc_hook then
@@ -444,13 +443,15 @@ feature -- Analyzis
 			if rescue_clause /= Void then
 					-- Generate a `setjmp' C instruction in case of a
 					-- rescue clause
-				if trace_enabled then
-					buf.put_new_line
-					buf.put_string ("RTTI;")
-				end
-				if profile_enabled then
-					buf.put_new_line
-					buf.put_string ("RTPI;")
+				if context.final_mode then
+					if trace_enabled then
+						buf.put_new_line
+						buf.put_string ("RTTI;")
+					end
+					if profile_enabled then
+						buf.put_new_line
+						buf.put_string ("RTPI;")
+					end
 				end
 				buf.put_new_line
 				buf.put_string ("RTE_T")
@@ -1294,7 +1295,7 @@ end
 					buf.put_two_character (')', ';')
 				end
 				rescue_clause.generate
-				generate_profile_stop
+				generate_monitoring_stop
 				buf.put_new_line
 				buf.put_string ("/* NOTREACHED */")
 				buf.put_new_line
@@ -1353,13 +1354,15 @@ end
 					buf.put_new_line
 					buf.put_string ("RTED;")
 						-- We only need this for finalized mode...
-					if trace_enabled then
-						buf.put_new_line
-						buf.put_string ("RTLT;")
-					end
-					if profile_enabled then
-						buf.put_new_line
-						buf.put_string ("RTLP;")
+					if context.final_mode then
+						if trace_enabled then
+							buf.put_new_line
+							buf.put_string ("RTLT;")
+						end
+						if profile_enabled then
+							buf.put_new_line
+							buf.put_string ("RTLP;")
+						end
 					end
 				end
 			end
@@ -1427,51 +1430,43 @@ end
 			-- Is the trace enabled for the associated class
 			-- in final mode?
 		do
-			Result := not context.workbench_mode and
-				Context.associated_class.trace_level.is_yes
+			Result := context.workbench_mode or Context.associated_class.trace_level.is_yes
 		end
 
 	profile_enabled: BOOLEAN
 			-- Is the profile enabled for the associated class
 			-- in final mode?
 		do
-			Result := not context.workbench_mode and
-				Context.associated_class.profile_level.is_yes
+			Result := context.workbench_mode or Context.associated_class.profile_level.is_yes
 		end
 
-	generate_profile_start
-			-- Generate the "start of profile" macro
+	generate_monitoring_start
+			-- Generate the start of various monitoring facilities.
 		do
-			if profile_enabled then
-				generate_option_macro ("RTPR", False)
+			if context.final_mode then
+				if trace_enabled then
+					generate_option_macro ("RTTR", True)
+				end
+				if profile_enabled then
+					generate_option_macro ("RTPR", False)
+				end
 			end
 		end
 
-	generate_profile_stop
-			-- Generate the "stop of progile" macro
-		local
-			buf: GENERATION_BUFFER
+	generate_monitoring_stop
+			-- Generate the stop of various monitoring facilities.
 		do
-			if profile_enabled then
-				buf := buffer
-				buf.put_new_line
-				buf.put_string ("RTXP;")
-			end
-		end
-
-	generate_trace_start
-			-- Generate the "start of trace" macro
-		do
-			if trace_enabled then
-				generate_option_macro ("RTTR", True)
-			end
-		end
-
-	generate_trace_stop
-			-- Generate the "end of trace" macro
-		do
-			if trace_enabled then
-				generate_option_macro ("RTXT", True)
+			if context.workbench_mode then
+				buffer.put_new_line
+				buffer.put_string ("RTSO;")
+			else
+				if trace_enabled then
+					generate_option_macro ("RTXT", True)
+				end
+				if profile_enabled then
+					buffer.put_new_line
+					buffer.put_string ("RTXP;")
+				end
 			end
 		end
 
@@ -1538,14 +1533,13 @@ end
 
 			generate_rtdbgd_leave
 
+				-- Stop monitoring before releasing the GC hooks
+			generate_monitoring_stop
+
 				-- Generate the remove of the GC hooks
 			context.remove_gc_hooks
 				-- Generate the update of the locals stack used to debug in C
 			context.generate_pop_debug_locals (arguments)
-				-- Generate trace macro (stop)
-			generate_trace_stop
-				-- Generate profile macro (stop)
-			generate_profile_stop
 				-- Generate the update of the trace stack before quitting
 				-- the routine
 			generate_pop_execution_trace
@@ -1590,6 +1584,8 @@ end
 								if l_any_type = Void or else l_any_type.class_id /= l_any_class_id then
 									if l_arg = Void then
 										create l_arg
+											-- See eweasel test#catcall006 and test#incr330 for a case where it is important
+											-- to detect such assignments.
 											-- See eweasel test#catcall006 and test#incr330 for a case where it is important
 											-- to detect such assignments.
 										l_optimize_like_current := not attribute_assignment_detector.has_attribute_assignment (Current)

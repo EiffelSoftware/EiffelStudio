@@ -11,7 +11,7 @@
 		<setting name="console_application" value="true"/>
 		<setting name="exception_trace" value="true"/>
 		<setting name="inlining_size" value="0"/>
-		<setting name="multithreaded" value="true"/>
+		<setting name="multithreaded" value="false"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="false"/>
 		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf" readonly="false"/>
 		<library name="cli_writer" location="$EIFFEL_SRC\framework\cli_writer\cli_writer.ecf" readonly="false" use_application_options="true"/>
@@ -46,7 +46,7 @@
 	<target name="batch" extends="common">
 		<root class="ES" feature="make"/>
 		<setting name="check_for_void_target" value="false"/>
-		<setting name="exception_trace" value="false"/>
+		<setting name="exception_trace" value="true"/>
 		<setting name="executable_name" value="ecb"/>
 		<setting name="multithreaded" value="false"/>
 		<variable name="batch_preferences" value="true"/>

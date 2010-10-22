@@ -603,9 +603,9 @@ feature {NONE} -- Implementation attribute processing
 						if l_value.is_boolean then
 								-- SCOOP is not supported in old projects.
 							if l_value.to_boolean then
-								current_target.setting_concurrency.put_index ({CONF_TARGET}.setting_concurrency_index_thread)
+								current_target.immediate_setting_concurrency.put_index ({CONF_TARGET}.setting_concurrency_index_thread)
 							else
-								current_target.setting_concurrency.put_index ({CONF_TARGET}.setting_concurrency_index_none)
+								current_target.immediate_setting_concurrency.put_index ({CONF_TARGET}.setting_concurrency_index_none)
 							end
 						else
 								-- Boolean value is expected.
@@ -619,9 +619,9 @@ feature {NONE} -- Implementation attribute processing
 						-- Process "concurrency" setting.
 					if is_unknown_version or else current_namespace >= namespace_1_7_0 then
 							-- The setting is allowed.
-						if current_target.setting_concurrency.is_valid_item (l_value) then
+						if current_target.immediate_setting_concurrency.is_valid_item (l_value) then
 								-- Update setting with this value.
-							current_target.setting_concurrency.put (l_value)
+							current_target.immediate_setting_concurrency.put (l_value)
 						else
 								-- The value is invalid.
 							set_parse_error_message (conf_interface_names.e_parse_incorrect_setting_value (l_name))

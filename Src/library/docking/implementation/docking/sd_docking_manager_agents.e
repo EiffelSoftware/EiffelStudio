@@ -104,7 +104,7 @@ feature  -- Agents
 					l_zones.after
 				loop
 					if attached {EV_CONTAINER} l_zones.item as lt_container then
-						if not lt_container.is_destroyed and then (lt_container.has_recursive (a_widget) and not ignore_additional_click) and l_zones.item.content /= l_docking_manager.zones.place_holder_content then
+						if not lt_container.is_destroyed and then (is_parent_recursive (lt_container, a_widget) and not ignore_additional_click) and l_zones.item.content /= l_docking_manager.zones.place_holder_content then
 							if l_docking_manager.property.last_focus_content /= l_zones.item.content then
 								l_docking_manager.property.set_last_focus_content (l_zones.item.content)
 								l_zones.item.on_focus_in (Void)
@@ -152,7 +152,7 @@ feature  -- Agents
 				l_upper_zone ?= l_zones.item
 				if l_upper_zone /= Void then
 					if attached {EV_CONTAINER} l_zones.item as lt_container then
-						if lt_container.has_recursive (a_widget) then
+						if is_parent_recursive (lt_container, a_widget) then
 							l_tool_bar ?= a_widget
 							-- We ignore click on tool bar.
 							if l_tool_bar = Void and then not l_upper_zone.is_ignore_restore_area
@@ -603,6 +603,20 @@ feature {SD_DEBUG_ACCESS} -- For debug
 		end
 
 feature {NONE}  -- Implementation
+
+	is_parent_recursive (a_parent: EV_CONTAINER; a_child: EV_WIDGET): BOOLEAN
+			-- If `a_parent' is parent of `a_child' ?
+		require
+			not_void: a_parent /= Void
+			not_void: a_child /= Void
+		do
+			if attached a_child.parent as l_parent then
+				Result := (a_parent = l_parent)
+				if not Result then
+					Result := is_parent_recursive (a_parent, l_parent)
+				end
+			end
+		end
 
 	internal_shared: SD_SHARED
 			-- All singletons

@@ -684,8 +684,9 @@ feature {COMPILER_EXPORTER} -- Implementation
 			l_actions.put (agent l_system.set_pointer_ref_class, "POINTER_REF")
 
 				-- SCOOP Manager
-			l_exceptions.put ("ISE_SCOOP_MANAGER")
-			l_actions.put (agent l_system.set_scoop_manager_class, "ISE_SCOOP_MANAGER")
+			if l_system.is_scoop then
+				l_actions.put (agent l_system.set_scoop_manager_class, "ISE_SCOOP_MANAGER")
+			end
 
 				-- Exception manager
 			l_actions.put (agent l_system.set_exception_manager_class, "ISE_EXCEPTION_MANAGER")

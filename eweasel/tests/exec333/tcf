@@ -3,6 +3,7 @@ test_description A system using the Eiffel tracing capability would corrupt the 
 
 copy_sub	Ace $TEST Ace
 copy_raw	test.e $CLUSTER test.e
+copy_raw	test_handler.e $CLUSTER test_handler.e
 
 compile_melted
 compile_result	ok

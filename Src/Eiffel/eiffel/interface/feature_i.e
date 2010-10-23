@@ -1678,16 +1678,18 @@ feature -- Export checking
 
 	suppliers: TWO_WAY_SORTED_SET [INTEGER]
 			-- Class ids of all suppliers of feature
-		require
-			has_dependance: depend_server.has (written_in)
 		local
-			class_dependance: CLASS_DEPENDANCE
+			class_dependance: detachable CLASS_DEPENDANCE
 		do
 			class_dependance := depend_server.item (written_in)
-			check
-				class_dependance_not_void: class_dependance /= Void
+			if class_dependance /= Void then
+					-- We have a class dependence so we must have been successfully type checked
+					-- from a previous compilation.
+				Result := class_dependance.item (body_index).suppliers
+			else
+					-- We have not yet been typed checked so we return an empty set.
+				create Result.make
 			end
-			Result := class_dependance.item (body_index).suppliers
 		end
 
 feature -- Check

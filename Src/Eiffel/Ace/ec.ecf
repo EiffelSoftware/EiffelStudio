@@ -11,7 +11,7 @@
 		<setting name="console_application" value="true"/>
 		<setting name="exception_trace" value="true"/>
 		<setting name="inlining_size" value="0"/>
-		<setting name="multithreaded" value="false"/>
+		<setting name="multithreaded" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="false"/>
 		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf" readonly="false"/>
 		<library name="cli_writer" location="$EIFFEL_SRC\framework\cli_writer\cli_writer.ecf" readonly="false" use_application_options="true"/>
@@ -232,9 +232,9 @@
 		<cluster name="interface" location="$EIFFEL_SRC\Eiffel\interface\" recursive="true">
 			<file_rule>
 				<exclude>/preferences$</exclude>
-				<exclude>^/tty$</exclude>
-				<exclude>/lite$</exclude>
 				<exclude>/overrides$</exclude>
+				<exclude>/lite$</exclude>
+				<exclude>^/tty$</exclude>
 			</file_rule>
 			<file_rule>
 				<exclude>/mswin$</exclude>

@@ -57,6 +57,7 @@ extern "C" {
 #ifdef EIF_TID
 #define ovs_tid     ov_head.ovs_tid
 #endif
+#define ovs_pid     ovu.ovs.scp_pid
 
 /*
  * Masks used on the ovs_size field.

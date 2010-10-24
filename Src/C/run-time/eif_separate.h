@@ -81,7 +81,7 @@
 /*
  * Separate call arguments:
  * RTS_AC(n,t,a) - allocate container a that can hold n arguments for target t
- * RTS_AA(v,n,a) - register argument v corresponding to field f of type t at position n in a
+ * RTS_AA(v,f,t,n,a) - register argument v corresponding to field f of type t at position n in a
  */
 #define RTS_AC(n,t,a)
 #define RTS_AA(v,f,t,n,a)

@@ -147,9 +147,10 @@ feature {NONE} -- Separate call
 					buf.put_character (';')
 					buf.put_new_line
 					r.print_register
-					buf.put_three_character (' ', '=', ' ')
+					buf.put_four_character (' ', '=', ' ', '(')
 					context.print_argument_register (result_register, buf)
 					generate_return_value_conversion (result_register)
+					buf.put_character (')')
 				else
 						-- Call to a procedure.
 					generate_call_macro (separate_procedure_macro, t, c, s, Void)

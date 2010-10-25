@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	evaluate (a_query: ?separate FUNCTION [ANY, TUPLE, ANY]; an_answer_collector : ?separate ANSWER_COLLECTOR)
+	evaluate (a_query: detachable separate FUNCTION [ANY, TUPLE, ANY]; an_answer_collector : detachable separate ANSWER_COLLECTOR)
 			-- Creation procedure.
 		require
 			a_query /= Void
@@ -28,21 +28,21 @@ feature {NONE} -- Initialization
 			if {a: separate ANSWER_COLLECTOR} an_answer_collector then
 				answer_collector := a
 			end
-			if {q: separate FUNCTION [ANY, TUPLE, ?separate ANY]}a_query then
+			if {q: separate FUNCTION [ANY, TUPLE, detachable separate ANY]}a_query then
 				evaluate_and_report (q)
 			end
 		end
 
 feature {NONE} -- Implementation
 
-	evaluate_and_report (a_query: separate FUNCTION [ANY, TUPLE, ?separate ANY])
+	evaluate_and_report (a_query: separate FUNCTION [ANY, TUPLE, detachable separate ANY])
 			-- Evaluate a query and report result to answer collector .
 		do
 			a_query.call ([])
 			notify_answer_collector (answer_collector, a_query.last_result)
 		end
 
-	notify_answer_collector (an_answer_collector: separate ANSWER_COLLECTOR; a_result : ?separate ANY)
+	notify_answer_collector (an_answer_collector: separate ANSWER_COLLECTOR; a_result : detachable separate ANY)
 			-- Report a result to an answer collector .
 		do
 			an_answer_collector.update_answer (a_result)

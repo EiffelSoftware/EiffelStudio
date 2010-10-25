@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_queries : attached separate LIST [?separate FUNCTION [ANY, TUPLE, ?separate ANY]]; an_initial_answer , a_ready_answer: ?separate ANY; a_combinator: attached separate FUNCTION [ANY, TUPLE, ?separate ANY])
+	make (a_queries : attached separate LIST [detachable separate FUNCTION [ANY, TUPLE, detachable separate ANY]]; an_initial_answer , a_ready_answer: detachable separate ANY; a_combinator: attached separate FUNCTION [ANY, TUPLE, detachable separate ANY])
 			-- Creation procedure.
 		require
 			a_queries.count > 0
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 
 feature {CONCURRENCY} -- Answer retrieval
 
-	answer: ?separate ANY
+	answer: detachable separate ANY
 		-- Answer
 
 	is_ready : BOOLEAN
@@ -59,7 +59,7 @@ feature {CONCURRENCY} -- Answer retrieval
 
 feature {EVALUATOR} -- Answer update
 
-	update_answer (a_result : ?separate ANY)
+	update_answer (a_result : detachable separate ANY)
 			-- Update answer with a result.
 		do
 			count := count - 1
@@ -83,10 +83,10 @@ feature {NONE} -- Implementation
 --			a_evaluator.
 		end
 
-	combinator: FUNCTION [ANY, TUPLE, ?separate ANY]
+	combinator: FUNCTION [ANY, TUPLE, detachable separate ANY]
 		-- Combinator for results
 
-	ready_answer: ?separate ANY
+	ready_answer: detachable separate ANY
 		-- Answer that allows ignoring further results
 
 	count: INTEGER

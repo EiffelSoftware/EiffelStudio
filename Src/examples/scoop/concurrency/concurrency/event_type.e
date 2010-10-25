@@ -14,12 +14,12 @@ note
 	revision: "$Revision$"
 
 class
---	EVENT_TYPE [?EVENT_DATA -> separate TUPLE create default_create end] --orignal
-	EVENT_TYPE [EVENT_DATA -> ?separate TUPLE create default_create end]
+--	EVENT_TYPE [detachable EVENT_DATA -> separate TUPLE create default_create end] --orignal
+	EVENT_TYPE [EVENT_DATA ->  TUPLE create default_create end]
 
 inherit
-	LINKED_LIST [?separate ROUTINE [ANY, EVENT_DATA]] --orignal
---	LINKED_LIST [?separate ROUTINE [ANY, separate EVENT_DATA]]
+	LINKED_LIST [detachable separate ROUTINE [ANY, EVENT_DATA]] --orignal
+--	LINKED_LIST [detachable separate ROUTINE [ANY, separate EVENT_DATA]]
 		redefine
 			default_create
 		end
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 
 feature -- Element change
 
-	subscribe (an_action: ?separate ROUTINE [ANY, EVENT_DATA])
+	subscribe (an_action: detachable separate ROUTINE [ANY, EVENT_DATA])
 			-- Add an action to subscription list .
 		require
 			an_action_not_void: an_action /= Void
@@ -54,7 +54,7 @@ feature -- Element change
 			index_at_same_position : index = old index
 		end
 
-	unsubscribe (an_action: ?separate ROUTINE [ANY, EVENT_DATA])
+	unsubscribe (an_action: detachable separate ROUTINE [ANY, EVENT_DATA])
 			-- Remove an action from subscription list .
 		require
 			an_action_not_void: an_action /= Void

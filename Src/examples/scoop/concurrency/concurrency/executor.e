@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	execute (a_feature : ?separate ROUTINE [ANY, TUPLE])
+	execute (a_feature : detachable separate ROUTINE [ANY, TUPLE])
 			-- Execute a feature
 		require
 			a_feature /= Void

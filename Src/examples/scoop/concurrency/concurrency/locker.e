@@ -16,10 +16,10 @@ inherit
 create
 --	try_to_lock
 	lock_target
-	
+
 feature {NONE} -- Initialization
 
-	lock_target (a_target : ?separate ANY; a_pool_manager: ?separate POOL_MANAGER)
+	lock_target (a_target : detachable separate ANY; a_pool_manager: detachable separate POOL_MANAGER)
 			-- Creation procedure.
 		require
 			a_target /= Void

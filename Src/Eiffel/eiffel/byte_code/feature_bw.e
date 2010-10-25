@@ -51,6 +51,9 @@ feature -- C code generation
 			if return_type.is_reference then
 					-- Do not use reference type because this register should not be tracked by GC.
 				result_register := context.get_argument_register (pointer_type.c_type)
+			elseif not return_type.is_void and then context_type.is_separate then
+					-- The register is used to store result of a separate feature call.
+				result_register := context.get_argument_register (return_type)
 			end
 		end
 
@@ -144,7 +147,8 @@ feature {NONE} -- Separate call
 					buf.put_character (';')
 					buf.put_new_line
 					r.print_register
-					buf.put_four_character (' ', '=', ' ', '0')
+					buf.put_three_character (' ', '=', ' ')
+					context.print_argument_register (result_register, buf)
 					generate_return_value_conversion (result_register)
 				else
 						-- Call to a procedure.

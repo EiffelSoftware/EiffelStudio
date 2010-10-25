@@ -403,7 +403,7 @@ feature {NONE} -- C code generation
 			end
 		end
 
-	generate_call_macro (m: like routine_macro; t: REGISTRABLE; c: CL_TYPE_A; s, r: detachable REGISTRABLE)
+	generate_call_macro (m: like routine_macro; t: REGISTRABLE; c: CL_TYPE_A; s, r: detachable REGISTER)
 			-- Generate a call macro identified by `m' to a feature
 			-- assuming that `t' contains a target of a call of type `c',
 			-- `s' contains arguments (if requires), `r' contains a result (if required).
@@ -487,7 +487,7 @@ feature {NONE} -- C code generation
 			if attached r then
 					-- Add result of call.
 				buf.put_two_character (',', ' ')
-				r.print_register
+				context.print_argument_register (r, buf)
 			end
 			buf.put_character (')')
 		end

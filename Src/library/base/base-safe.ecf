@@ -127,6 +127,9 @@
 					<build value="finalize"/>
 				</condition>
 			</file_rule>
+			<file_rule>
+				<exclude>/scoop$</exclude>
+			</file_rule>
 		</cluster>
 	</target>
 	<target name="base_dotnet" extends="base">

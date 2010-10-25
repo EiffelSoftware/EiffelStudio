@@ -54,6 +54,7 @@
 #include "eif_rout_obj.h"
 #include "eif_option.h"
 #include "eif_bits.h"
+#include "eif_scoop.h"
 
 #ifdef WORKBENCH
 #include "eif_wbench.h"
@@ -1367,12 +1368,27 @@ RT_LNK void eif_exit_eiffel_code(void);
 #define EIFNULL 0
 
 #ifdef WORKBENCH
-#define EIFVALARG(i,t) ((EIF_TYPED_VALUE){ (EIF_VALUE)i, (uint32)t} )
-#define RTS_TCB(t,c,s,f,a,r) (egc_scoop_manager_task_callback)(scp_mnger,EIFVALARG(t,SK_INT8),EIFVALARG(c,SK_INT32),EIFVALARG(s,SK_INT32),EIFVALARG(f,SK_POINTER),EIFVALARG(a,SK_POINTER),EIFVALARG(r, SK_POINTER)); 
+#define RTS_TCB(t,c,s,b,a,r) \
+	{                                                                       \
+		EIF_TYPED_VALUE xt,xc,xs,xf,xa,xr;                              \
+		xt.it_i1 = t;                                                   \
+		xt.type = SK_INT8;                                              \
+		xc.it_i4 = c;                                                   \
+		xc.type = SK_INT32;                                             \
+		xs.it_i4 = s;                                                   \
+		xs.type = SK_INT32;                                             \
+		xf.it_n4 = b;                                                   \
+		xf.type = SK_UINT32;                                            \
+		xa.it_p = a;                                                    \
+		xa.type = SK_POINTER;                                           \
+		xr.it_p = r;                                                    \
+		xr.type = SK_POINTER;                                           \
+		(egc_scoop_manager_task_callback)(scp_mnger,xt,xc,xs,xf,xa,xr); \
+	}
 #else
 #define RTS_TCB(t,c,s,f,a,r) (egc_scoop_manager_task_callback)(scp_mnger,t,RTS_PID(c),RTS_PID(s),f,a,r); 
 #endif
-#define RTS_PID(o) (EIF_INTEGER_32) (HEADER(o)->ov_head.ovs_pid)
+#define RTS_PID(o) HEADER(o)->ov_head.ovs_pid
 
 /*
  * Object status:
@@ -1386,7 +1402,12 @@ RT_LNK void eif_exit_eiffel_code(void);
  * Processor:
  * RTS_PA(o) - associate a fresh processor with an object o
  */
-#define RTS_PA(o) RTS_TCB(scoop_task_assign_processor,RTS_PID(o),EIFNULL,EIFNULL,EIFNULL,EIFNULL)
+#define RTS_PA(o) \
+	{                                                                                     \
+		EIF_INTEGER_32 pid;                                                           \
+		RTS_TCB(scoop_task_assign_processor,RTS_PID(o),EIFNULL,EIFNULL,EIFNULL,&pid); \
+		RTS_PID(o) = pid;                                                             \
+	}
 
 /*
  * Request chain:
@@ -1408,15 +1429,25 @@ RT_LNK void eif_exit_eiffel_code(void);
  * RTS_CP(c,t,f,a)   - call a procedure with an address f on a target t with current object c and arguments a
  */
 #define RTS_CF(c,t,f,a,r) RTS_TCB(scoop_task_add_function,RTS_PID(c),RTS_PID(t),(EIF_REFERENCE)f,a,r)
-#define RTS_CP(c,t,f,a) RTS_TCB(scoop_task_add_command,RTS_PID(c),RTS_PID(t),(EIF_REFERENCE)f,a,EIFNULL)
+#define RTS_CFP(s,f,n,t,a,r)
+#define RTS_CP(s,f,n,t,a) eif_log_procedure (s,f,RTS_PID(Current),a)
+#define RTS_CC(s,f,d,a) eif_log_procedure (s,f,RTS_PID(Current),a)
 
 /*
  * Separate call arguments:
  * RTS_AC(n,t,a) - allocate container a that can hold n arguments for target t
  * RTS_AA(v,n,a) - register argument v corresponding to field f of type t at position n in a
  */
-#define RTS_AC(n,t,a) a = cmalloc (sizeof(EIF_TYPED_VALUE)*(n+1)); ((EIF_TYPED_VALUE*)a)[0].type = SK_REF; 
-#define RTS_AA(v,f,t,n,a)
+#define RTS_AC(n,t,a) \
+	{                                                                                \
+		a = cmalloc (sizeof (call_data) + sizeof (EIF_TYPED_VALUE) * ((n) - 1)); \
+		((call_data*)(a)) -> target = (t);                                       \
+		((call_data*)(a)) -> count = (n);                                        \
+	}
+#define RTS_AA(v,f,t,n,a) \
+	{                                                      \
+		((call_data*)(a)) -> argument [(n) - 1] = (v); \
+	}
 
  /*
  * Macros for workbench

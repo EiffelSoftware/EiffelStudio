@@ -21,7 +21,7 @@ feature -- Basic operations
 			a_feature.call ([])
 		end
 
-	asynch (a_feature : ?separate ROUTINE [ANY, TUPLE])
+	asynch (a_feature : detachable separate ROUTINE [ANY, TUPLE])
 			-- Execute a feature fully asynchronously.
 		require
 			a_feature_exists : a_feature /= Void
@@ -41,7 +41,7 @@ feature -- Basic operations
 
 feature -- Waiting faster
 
-	evaluated_in_parallel (a_queries : LIST [?separate FUNCTION [ANY, TUPLE, ?separate ANY]]; an_initial_answer , a_ready_answer: ?separate ANY; an_operator : FUNCTION [ANY, TUPLE, ?separate ANY]): ?separate ANY
+	evaluated_in_parallel (a_queries : LIST [detachable separate FUNCTION [ANY, TUPLE, detachable separate ANY]]; an_initial_answer , a_ready_answer: detachable separate ANY; an_operator : FUNCTION [ANY, TUPLE, detachable separate ANY]): detachable separate ANY
 			-- Parallel evaluation of queries combined by an operator
 		require
 			a_queries.count > 0
@@ -52,7 +52,7 @@ feature -- Waiting faster
 			Result := answer (answer_collector)
 		end
 
-	answer (an_answer_collector : attached separate ANSWER_COLLECTOR): ?separate ANY
+	answer (an_answer_collector : attached separate ANSWER_COLLECTOR): detachable separate ANY
 			-- Answer from an answer collector
 		require
 			answer_ready (an_answer_collector)
@@ -62,7 +62,7 @@ feature -- Waiting faster
 
 feature -- Predefined parallel operators
 
-	parallel_or (l: LIST [?separate PREDICATE [ANY, TUPLE]]): BOOLEAN
+	parallel_or (l: LIST [detachable separate PREDICATE [ANY, TUPLE]]): BOOLEAN
 		do
 			if {res : BOOLEAN} evaluated_in_parallel (l , False , True,
 --				agent or_else (b1: BOOLEAN; b2: BOOLEAN): BOOLEAN
@@ -75,7 +75,7 @@ feature -- Predefined parallel operators
 			end
 	end
 
-	parallel_and (l : LIST [?separate PREDICATE [ANY, TUPLE]]): BOOLEAN
+	parallel_and (l : LIST [detachable separate PREDICATE [ANY, TUPLE]]): BOOLEAN
 		do
 			if {res : BOOLEAN} evaluated_in_parallel (l , True, False ,
 --				agent and_then (b1, b2: BOOLEAN): BOOLEAN
@@ -103,7 +103,7 @@ feature -- Predefined parallel operators
 
 feature -- Resource pooling
 
-	call_m_out_of_n (a_feature : ROUTINE [ANY, TUPLE]; a_pool : LIST [?separate ANY]; m: INTEGER)
+	call_m_out_of_n (a_feature : ROUTINE [ANY, TUPLE]; a_pool : LIST [detachable separate ANY]; m: INTEGER)
 			-- Apply a feature to m elements of a pool .
 		require
 			m > 0 and then a_pool . count >= m

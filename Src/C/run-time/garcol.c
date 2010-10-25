@@ -929,6 +929,7 @@ rt_shared int scollect(int (*gc_func) (void), int i)
 	struct gacstat *gstat = &rt_g_stat[i];	/* Address where stats are kept */
 	rt_uint_ptr nbstat;			/* Current number of statistics */
 	rt_uint_ptr nb_full;
+	int old_trace_disabled;
 
 	if (rt_g_data.status & GC_STOP)
 		return -1;						/* Garbage collection stopped */
@@ -937,6 +938,7 @@ rt_shared int scollect(int (*gc_func) (void), int i)
 	DISCARD_BREAKPOINTS;
 		/* We have to disable the trace as if a `dispose' routine is called and trace
 		 * is enabled it might create Eiffel objects and we currently do not allow it. */
+	old_trace_disabled = eif_trace_disabled;
 	eif_trace_disabled = 1;
 
 	nb_full = rt_g_data.nb_full;
@@ -1171,7 +1173,7 @@ rt_shared int scollect(int (*gc_func) (void), int i)
 	}
 #endif
 
-	eif_trace_disabled = 0;
+	eif_trace_disabled = old_trace_disabled;
 	UNDISCARD_BREAKPOINTS;
 	GC_THREAD_PROTECT(eif_unsynchronize_gc (rt_globals));
 	return status;		/* Forward status report */

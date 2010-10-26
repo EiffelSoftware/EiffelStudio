@@ -21,6 +21,7 @@ feature
 		do
 			create l_mem
 			l_mem.collect
+			$MODIFICATION
 		end
 
 end

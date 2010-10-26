@@ -30,13 +30,15 @@ feature {NONE} -- Implementation
 		local
 			l_class_name: STRING
 			l_type: TYPE [detachable ANY]
+			l_buffer: like c_buffer
 		do
 			l_type := internal.type_of_type (a_type_id)
 			if a_c_class_name /= default_pointer and a_c_feature_name /= default_pointer then
-				c_buffer.set_shared_from_pointer (a_c_class_name)
-				l_class_name := c_buffer.string
-				c_buffer.set_shared_from_pointer (a_c_feature_name)
-				trace (l_type, l_class_name, c_buffer.string, a_depth, a_is_entering)
+				l_buffer := c_buffer
+				l_buffer.set_shared_from_pointer (a_c_class_name)
+				l_class_name := l_buffer.string
+				l_buffer.set_shared_from_pointer (a_c_feature_name)
+				trace (l_type, l_class_name, l_buffer.string, a_depth, a_is_entering)
 			else
 				trace (l_type, Void, Void, a_depth, a_is_entering)
 			end

@@ -38,25 +38,37 @@
 doc:<file name="scoop.c" header="eif_scoop.h" version="$Id$" summary="SCOOP support.">
 */
 
+#include "rt_assert.h"
 #include "rt_globals.h"
 #include "rt_struct.h"
 #include "rt_wbench.h"
 
 
 #ifdef WORKBENCH
-rt_public void eif_log_procedure (int s, int f, uint16 p, call_data * a)
+rt_public void eif_log_call (int s, int f, uint16 p, call_data * a)
 {
 	BODY_INDEX body_id;
 	EIF_REFERENCE t = a -> target;
 
+	CHECK("Target attached", t);
 	CBodyId(body_id,Routids(s)[f],Dtype(t));
+	a -> body_index = body_id;
+	RTS_TCB(scoop_task_add_command,p,RTS_PID(t),body_id,a,EIFNULL);
+}
+ 
+rt_public void eif_log_callp (int s, int f, uint16 p, call_data * a)
+{
+	BODY_INDEX body_id;
+	EIF_REFERENCE t = a -> target;
+
+	CHECK("Target attached", t);
+	body_id = desc_tab[s][Dtype(t)][f].body_index;
 	a -> body_index = body_id;
 	RTS_TCB(scoop_task_add_command,p,RTS_PID(t),body_id,a,EIFNULL);
 }
  
 rt_public void eif_try_call (call_data * a)
 {
-	RT_GET_CONTEXT
 	uint32            pid = 0; /* Pattern id of the frozen feature */
 	EIF_NATURAL_32    i;
 	EIF_NATURAL_32    n;
@@ -81,6 +93,11 @@ rt_public void eif_try_call (call_data * a)
 		 * `tagval' will therefore be set, but we have to resynchronize the registers anyway.
 		 */
 		xinterp(MTC melt[body_id], 0);
+	}
+		/* Save result of a call */
+	v = a -> result;
+	if (v) {
+		* v = * opop ();
 	}
 }
 #endif

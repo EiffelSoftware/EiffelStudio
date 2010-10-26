@@ -1394,8 +1394,8 @@ RT_LNK void eif_exit_eiffel_code(void);
  * Object status:
  * EIF_IS_DIFFERENT_PROCESSOR (o1, o2) - tells if o1 and o2 run on different processors
  * RTS_OU(c,o) - tells if object o is uncontrolled by the processor associated with object c
-*/
-#define EIF_IS_DIFFERENT_PROCESSOR(o1,o2) RTS_PID(o1) != RTS_PID(o2)
+ */
+#define EIF_IS_DIFFERENT_PROCESSOR(o1,o2) (RTS_PID(o1) != RTS_PID(o2))
 #define RTS_OU(c,o) EIF_TRUE
 
 /*
@@ -1424,25 +1424,37 @@ RT_LNK void eif_exit_eiffel_code(void);
 #define RTS_RW(p) RTS_TCB(scoop_task_wait_for_supplier_processor_locks,RTS_PID(p),EIFNULL,EIFNULL,EIFNULL,EIFNULL)
 
 /*
- * Separate call:
- * RTS_CF(c,t,f,a,r) - call a function with an address f on a target t with current object c and arguments a and result r
- * RTS_CP(c,t,f,a)   - call a procedure with an address f on a target t with current object c and arguments a
+ * Separate call (versions ending with P stand for calls to precompiled routines, the first two arguments to them have a different meaning):
+ * RTS_CF(s,f,n,t,a,r) - call a function on a static type s with a feature id f and name n on a target t and arguments a and result r
+ * RTS_CP(s,f,n,t,a)   - call a procedure on a static type s with a feature id f and name n on a target t and arguments a
+ * RTS_CC(s,f,d,a)     - call a creation procedure on a static type s with a feature id f on a target of dynamic type d and arguments a
  */
-#define RTS_CF(c,t,f,a,r) RTS_TCB(scoop_task_add_function,RTS_PID(c),RTS_PID(t),(EIF_REFERENCE)f,a,r)
-#define RTS_CFP(s,f,n,t,a,r)
-#define RTS_CP(s,f,n,t,a) eif_log_procedure (s,f,RTS_PID(Current),a)
-#define RTS_CC(s,f,d,a) eif_log_procedure (s,f,RTS_PID(Current),a)
+#define RTS_CF(s,f,n,t,a,r) \
+	{                                                 \
+		((call_data*)(a)) -> result = &(r);       \
+		eif_log_call (s, f, RTS_PID(Current), a); \
+	}
+#define RTS_CFP(s,f,n,t,a,r) \
+	{                                                  \
+		((call_data*)(a)) -> result = &(r);        \
+		eif_log_callp (s, f, RTS_PID(Current), a); \
+	}
+#define RTS_CP(s,f,n,t,a)  eif_log_call  (s, f, RTS_PID(Current), a)
+#define RTS_CPP(s,f,n,t,a) eif_log_callp (s, f, RTS_PID(Current), a)
+#define RTS_CC(s,f,d,a)    eif_log_call  (s, f, RTS_PID(Current), a)
+#define RTS_CCP(s,f,d,a)   eif_log_callp (s, f, RTS_PID(Current), a)
 
 /*
  * Separate call arguments:
  * RTS_AC(n,t,a) - allocate container a that can hold n arguments for target t
- * RTS_AA(v,n,a) - register argument v corresponding to field f of type t at position n in a
+ * RTS_AA(v,f,t,n,a) - register argument v corresponding to field f of type t at position n in a
  */
 #define RTS_AC(n,t,a) \
 	{                                                                                \
 		a = cmalloc (sizeof (call_data) + sizeof (EIF_TYPED_VALUE) * ((n) - 1)); \
 		((call_data*)(a)) -> target = (t);                                       \
 		((call_data*)(a)) -> count = (n);                                        \
+		((call_data*)(a)) -> result = (EIF_TYPED_VALUE *) 0;                     \
 	}
 #define RTS_AA(v,f,t,n,a) \
 	{                                                      \

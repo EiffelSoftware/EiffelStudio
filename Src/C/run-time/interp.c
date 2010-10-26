@@ -241,6 +241,7 @@ rt_private void address(int32 aid);													/* Address of a routine */
 rt_private void assign(long offset, uint32 type);									/* Assignment in an attribute */
 rt_private void reverse_attribute(long offset, uint32 type);						/* Reverse assignment to attribute */
 rt_private void reverse_local(EIF_TYPED_VALUE * it, EIF_TYPE_INDEX type);						/* Reverse assignment to local or result*/
+rt_private void interp_check_options_start (struct eif_opt *opt, EIF_TYPE_INDEX dtype, struct stochunk *scur, EIF_TYPED_VALUE *stop);
 
 /* Calling protocol */
 rt_private void put_once_result (EIF_TYPED_VALUE * ptr, uint32 rtype, MTOT OResult); /* Save local result to permanent once storage */
@@ -806,10 +807,10 @@ rt_private void interpret(int flag, int where)
 			 */
 			RTEAA((char *) string, type, (icurrent->it_ref), (unsigned char)locnum, (unsigned char)argnum, body_id);
 			RTDBGEAA(type, (icurrent->it_ref), body_id);
-			check_options(MTC eoption + icur_dtype, icur_dtype);
 			dexset(exvect);
 				/* Save stack context */
 			SAVE(op_stack, scur, stop);
+			interp_check_options_start(eoption + icur_dtype, icur_dtype, scur, stop);
 			dostk();					/* Record position in calling context */
 			if (is_nested)
 				icheck_inv(MTC icurrent->it_ref, scur, stop, 0);	/* Invariant */
@@ -830,10 +831,10 @@ rt_private void interpret(int flag, int where)
 #endif
 
 			RTEAINV((char *) string, type, (icurrent->it_ref), (unsigned char)locnum, 0 /* Invariant has no body id for now */);
-			check_options(MTC eoption + icur_dtype, icur_dtype);
 			dexset(exvect);
 				/* Save stack context */
 			SAVE(op_stack, scur, stop);
+			interp_check_options_start(eoption + icur_dtype, icur_dtype, scur, stop);
 			dostk();					/* Record position in calling context */
 			break;
 
@@ -3760,7 +3761,7 @@ rt_private void interpret(int flag, int where)
 #endif /* EIF_THREADS */
 		}
 			/* Closing of trace and profiling for current routine. */
-		RTSO;
+		check_options_stop();
 		if (rescue) {
 			RTEOK;	/* end routine with rescue clause by cleaning the trace stack */
 		} else {
@@ -3775,7 +3776,7 @@ rt_private void interpret(int flag, int where)
 		caller_assertion_level = saved_caller_assertion_level;
 		pop_registers();	/* Pop registers */
 			/* Closing of trace and profiling for current routine. */
-		RTSO;
+		check_options_stop();
 		RTEE;	/* remove execution vector from stack */
 		return;
 
@@ -3860,7 +3861,7 @@ enter_body:
 				/* Pop registers */
 			pop_registers();
 				/* Closing of trace and profiling for current routine. */
-			RTSO;
+			check_options_stop();
 			if (rescue) {
 					/* End routine with rescue clause. */
 				RTEOK;
@@ -3985,7 +3986,7 @@ enter_body:
 				/* Pop registers */
 			pop_registers();
 				/* Closing of trace and profiling for current routine. */
-			RTSO;
+			check_options_stop();
 			if (rescue) {
 					/* End routine with rescue clause. */
 				RTEOK;
@@ -5411,6 +5412,23 @@ rt_private int ipcall(int32 origin, int32 offset, int ptype)
 	}
 	IC = OLD_IC;					/* Restore IC back-up */
 	return result;
+}
+
+rt_private void interp_check_options_start (struct eif_opt *opt, EIF_TYPE_INDEX dtype, struct stochunk *scur, EIF_TYPED_VALUE *stop)
+{
+	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
+	unsigned char * OLD_IC;
+	unsigned long stagval;
+
+	stagval = tagval;
+	OLD_IC = IC;
+	check_options(opt, dtype);
+	IC = OLD_IC;
+
+	if (tagval != stagval) {
+		sync_registers(scur, stop);
+	}
 }
 
 rt_private void interp_access(int fid, int stype, uint32 type)

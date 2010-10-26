@@ -1,16 +1,12 @@
 test_name 	 tracing-memory-corruption
-test_description A system using the Eiffel tracing capability would corrupt the memory when tracing is enabled on a function with a reference type.
+test_description A system using the Eiffel tracing capability would corrupt the memory when tracing is enabled on a function with a reference type, or when calling an external which expects a POINTER and we are giving an Eiffel object via the $ operator (that object can move if the GC kicks in during the trace of the external rendering useless for the external).
+
+define CONTENT	"1234"
+define MODIFICATION "io.do_nothing"
 
 copy_sub	Ace $TEST Ace
-copy_raw	test.e $CLUSTER test.e
-copy_raw	test_handler.e $CLUSTER test_handler.e
-
-compile_melted
-compile_result	ok
-
-execute_work	NONE exec_output_m
-execute_result	ok
-compare		exec_output_m output
+copy_sub	test.e $CLUSTER test.e
+copy_sub	test_handler.e $CLUSTER test_handler.e
 
 compile_frozen
 compile_result	ok
@@ -21,6 +17,18 @@ c_compile_result ok
 execute_work	NONE exec_output_w
 execute_result	ok
 compare		exec_output_w output
+
+define CONTENT	"4321"
+define MODIFICATION ""
+copy_sub	test.e $CLUSTER test.e
+copy_sub	test_handler.e $CLUSTER test_handler.e
+
+compile_melted
+compile_result	ok
+
+execute_work	NONE exec_output_m
+execute_result	ok
+compare		exec_output_m output
 
 compile_final
 compile_result	ok

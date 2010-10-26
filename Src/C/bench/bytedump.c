@@ -458,13 +458,20 @@ static  void    print_byte_code (void)
 	case ONCE_MARK_THREAD_RELATIVE:
 	case ONCE_MARK_PROCESS_RELATIVE:
 		once_key = get_int32(&ip);     /* Once index. */
+		once_end_break_index = get_uint32(&ip);		/* break index of end statement */
 		break;
 	case ONCE_MARK_OBJECT_RELATIVE:
 		once_is_precomp = get_bool(&ip);		/* is_precompiled */
 		once_class_id = get_type_id(&ip); 		/* class id */
-		once_called = get_feature_id(&ip); 		/* called */
-		once_except = get_feature_id(&ip);		/* except */
-		once_result = get_feature_id(&ip); 		/* result */
+		if (once_is_precomp) {
+			once_called = get_offset(&ip); 		/* called */
+			once_except = get_offset(&ip);		/* except */
+			once_result = get_offset(&ip); 		/* result */
+		} else {
+			once_called = get_feature_id(&ip); 		/* called */
+			once_except = get_feature_id(&ip);		/* except */
+			once_result = get_feature_id(&ip); 		/* result */
+		}
 		once_end_break_index = get_uint32(&ip);		/* break index of end statement */
 		break;
 	}

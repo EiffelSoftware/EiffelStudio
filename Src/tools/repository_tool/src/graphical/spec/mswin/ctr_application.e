@@ -22,9 +22,19 @@ create
 feature {NONE} -- Initialization
 
 	initialize
+		local
+			b: EV_PIXEL_BUFFER_IMP
+			p: EV_PIXEL_BUFFER
 		do
 			Precursor
 			initialize_tray_icon
+			if attached vpn_icon as i then
+				create b.make
+				b.set_from_icon (i)
+				create p
+				p.replace_implementation (b)
+				set_icon_pixmap (p)
+			end
 		end
 
 	initialize_tray_icon

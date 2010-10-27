@@ -23,7 +23,7 @@ feature
 			from
 				i := 1
 			until
-				i = 100000
+				i = 100
 			loop
 				str := f
 				if str /= attr or str.count /= 4 then
@@ -41,7 +41,7 @@ feature
 			s.disable_tracing
 			l_str.deactivate
 
-			print ("Success here%N")
+			print ("%NSuccess here%N")
 		end
 
 	attr: STRING

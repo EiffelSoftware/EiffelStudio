@@ -62,7 +62,7 @@ feature -- Access
 			ft := font
 			if ft = Void then
 				create ft
-			end 
+			end
 
 			w := width
 			from

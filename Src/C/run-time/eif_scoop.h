@@ -42,7 +42,7 @@ extern "C" {
 #endif
 
 typedef struct {
-	EIF_REFERENCE     target;       /* Target of a call */
+	EIF_OBJECT        target;       /* Target of a call */
 	BODY_INDEX        body_index;   /* Routine to be called */
 	EIF_NATURAL_32    count;        /* Number of arguments excluding target object */
 	EIF_TYPED_VALUE * result;       /* Address of a result for queries */

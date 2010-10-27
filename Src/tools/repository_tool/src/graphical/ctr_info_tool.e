@@ -32,12 +32,13 @@ feature {NONE} -- Initialization
 			a_container.extend (g)
 			c := sd_content
 
-			g.enable_single_row_selection
+			g.enable_multiple_row_selection
 			g.set_column_count_to (2)
 			g.disable_row_height_fixed
 			g.enable_tree
 			g.hide_tree_node_connectors
 			g.hide_header
+			g.key_release_actions.extend (agent on_key_released)
 
 			c.set_short_title ("Info ...")
 			c.set_long_title ("Info")
@@ -70,6 +71,72 @@ feature -- Access
 			Result := grid
 		end
 
+
+feature -- Actions
+
+	on_key_released	(k: EV_KEY)
+		local
+			s: detachable STRING_32
+		do
+			inspect k.code
+			when {EV_KEY_CONSTANTS}.key_C, {EV_KEY_CONSTANTS}.key_INSERT then
+				if
+					ev_application.ctrl_pressed and
+					not ev_application.alt_pressed and
+					not ev_application.shift_pressed
+				then
+					create s.make_empty
+					if
+						attached grid.selected_rows as l_rows and then
+						not l_rows.is_empty
+					then
+						create s.make_empty
+						from
+							l_rows.start
+						until
+							l_rows.after
+						loop
+							s.append_string (grid_row_to_string (l_rows.item))
+							l_rows.forth
+							if not l_rows.off then
+								s.append_character ('%N')
+							end
+						end
+					end
+					ev_application.clipboard.set_text (s)
+				end
+			else
+				-- default
+			end
+		end
+
+	grid_row_to_string (a_row: EV_GRID_ROW): STRING_32
+			-- Row's text to string
+		local
+			i,n: INTEGER
+		do
+			create Result.make_empty
+			n := a_row.count
+			if n > 0 then
+				from
+					i := 1
+				until
+					i > n
+				loop
+					if attached a_row.item (i) as l_item then
+						if attached {EV_GRID_LABEL_ITEM} l_item as l_lab then
+							Result.append_string (l_lab.text)
+						else
+						end
+					end
+					i := i + 1
+					if i <= n then
+						Result.append_character ('%T')
+					end
+
+				end
+			end
+		end
 
 feature -- Element change
 
@@ -123,7 +190,6 @@ feature -- Element change
 				mlab.align_text_top
 				mlab.set_top_border (3)
 				mlab.set_bottom_border (5)
---				glab.pointer_double_press_actions.extend (agent )
 				l_row.set_item (cst_info_value_col, mlab)
 
 				if attached mlab.font as ft then

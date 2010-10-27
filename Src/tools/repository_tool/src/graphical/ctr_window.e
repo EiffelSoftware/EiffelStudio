@@ -34,6 +34,13 @@ inherit
 			default_create, copy
 		end
 
+	CTR_SHARED_GUI_PREFERENCES
+		export
+			{NONE} all
+		undefine
+			default_create, copy
+		end
+
 create
 	default_create
 
@@ -47,8 +54,25 @@ feature {NONE} -- Initialization
 		end
 
 	create_interface_objects
+		local
+			l_storage: PREFERENCES_STORAGE_XML
+			args: ARGUMENTS
+			l_preferences: CTR_GUI_PREFERENCES
 		do
 			Precursor
+			create args
+			if
+				attached args.separate_word_option_value ("config") as s and then
+				not s.is_empty
+			then
+				set_common_data_folder (s)
+			else
+				set_common_data_folder ("data")
+			end
+			create l_preferences.make (preferences_xml_filename)
+			set_preferences (l_preferences)
+
+
 			create catalog_grid
 			create catalog_content.make_with_widget (catalog_grid, "Catalog")
 
@@ -126,12 +150,21 @@ feature {NONE} -- Initialization
 			create k.make_with_code ({EV_KEY_CONSTANTS}.key_A)
 			acc_n_key.register_action (k, agent check_all_repositories, ["Check All Repositories", "Check all repositories for new logs"])
 			create k.make_with_code ({EV_KEY_CONSTANTS}.key_C)
-			acc_n_key.register_action (k, agent edit_configuration, ["Configuration", "Edit configuration"])
+			acc_n_key.register_action (k, agent edit_configuration, ["Repositories", "Edit repositories configuration"])
+			create k.make_with_code ({EV_KEY_CONSTANTS}.key_P)
+			acc_n_key.register_action (k, agent edit_preferences, ["Preferences", "Edit preferences"])
+			create k.make_with_code ({EV_KEY_CONSTANTS}.key_I)
+			acc_n_key.register_action (k, agent show_information, ["Information", "Show Information"])
+
+
 			create k.make_with_code ({EV_KEY_CONSTANTS}.key_L)
 			acc_n_key.register_action (k, agent apply_default_layout, ["Reset Layout", Void])
 
 			acc_n_key.enable_popup
 			acc_n_key.attach_to (accelerators, True)
+
+
+			console_log ("Opening configuration from " + common_data_folder)
 		end
 
 	is_in_default_state: BOOLEAN
@@ -183,6 +216,9 @@ feature {NONE} -- Events
 				end
 			end
 			save_docking_layout
+			if attached preferences as prefs then
+				prefs.save_preferences
+			end
 		end
 
 feature -- Layout
@@ -286,6 +322,16 @@ feature -- Layout
 
 feature -- Storage
 
+	preferences_xml_filename: STRING
+		local
+			fn: FILE_NAME
+		once
+			create fn.make_from_string (common_data_folder)
+			fn.set_file_name ("preferences")
+			fn.add_extension ("xml")
+			Result := fn.string
+		end
+
 	catalog_ini_filename: STRING
 		local
 			fn: FILE_NAME
@@ -301,13 +347,23 @@ feature -- Storage
 			cat: like catalog
 			rf: RAW_FILE
 			repo: detachable REPOSITORY
+			svnrepo: detachable REPOSITORY_SVN
 			n,k: detachable STRING
 			p,i: INTEGER
 			s,s2,s3: STRING
 			v: STRING
+			l_svn_path_pref: detachable STRING_PREFERENCE
 		do
 			create rf.make (catalog_ini_filename)
 			if rf.exists then
+				if attached preferences as prefs then
+					l_svn_path_pref := prefs.svn_executable_pref
+--					l_svn_path_pref.change_actions.extend (agent
+--							do
+--								reload_catalog
+--							end
+--						)
+				end
 				rf.open_read
 				from
 					create cat.make
@@ -343,7 +399,15 @@ feature -- Storage
 							n.right_adjust
 							if k /= Void and then not k.is_empty then
 								if k.same_string ("svn") then
-									create {REPOSITORY_SVN} repo.make
+									create svnrepo.make
+									repo := svnrepo
+
+									if
+										l_svn_path_pref /= Void and then
+										not l_svn_path_pref.value.is_empty
+									then
+										svnrepo.set_svn_executable_path (l_svn_path_pref.value)
+									end
 								else
 									--|, cvs, git, ...
 									create {REPOSITORY_SVN} repo.make
@@ -581,7 +645,62 @@ feature -- Storage
 			end
 		end
 
-feature -- Configuration
+feature -- Preferences
+
+	internal_preferences_dialog: detachable PREFERENCES_GRID_DIALOG
+
+	edit_preferences
+		local
+			dlg: like internal_preferences_dialog
+		do
+			dlg := internal_preferences_dialog
+			if dlg = Void then
+				if attached preferences as p then
+					create dlg.make (p.preferences)
+				end
+			end
+			if dlg /= Void then
+				dlg.show_relative_to_window (Current)
+			end
+		end
+
+feature -- Information		
+
+	show_information
+		local
+			dlg: EV_POPUP_WINDOW
+			txt: EV_TEXT
+			but: EV_BUTTON
+			b: EV_VERTICAL_BOX
+		do
+			create dlg.make_with_shadow
+
+			create txt
+			create but.make_with_text_and_action ("Close", agent dlg.destroy)
+
+			create b
+			dlg.extend (b)
+			b.extend (txt)
+			b.extend (but)
+			b.disable_item_expand (but)
+
+			txt.set_text ("Information")
+			txt.append_text ("%Ndata folder=" + common_data_folder + "%N")
+			if attached txt.font.string_size (txt.text) as t then
+				dlg.set_size (t.width, t.height)
+				dlg.set_position (x_position + (width - dlg.width) // 2, y_position + (height - dlg.height) // 2)
+			else
+				dlg.set_size (width, height)
+				dlg.set_position (x_position, y_position)
+			end
+
+
+
+			dlg.close_request_actions.extend (agent dlg.destroy)
+			dlg.show_relative_to_window (Current)
+		end
+
+feature -- Configuration		
 
 	edit_configuration
 		local

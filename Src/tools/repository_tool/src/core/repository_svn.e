@@ -75,6 +75,13 @@ feature -- Element change
 			location := v
 		end
 
+	set_svn_executable_path (p: STRING)
+		require
+			p_not_empty: p /= Void and then not p.is_empty
+		do
+			engine.set_svn_executable_path (p)
+		end
+
 feature -- Implementation
 
 	options: SVN_ENGINE_OPTIONS

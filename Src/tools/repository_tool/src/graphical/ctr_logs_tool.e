@@ -16,6 +16,8 @@ inherit
 
 	CTR_SHARED_RESOURCES
 
+	CTR_SHARED_GUI_PREFERENCES
+
 	EV_SHARED_APPLICATION
 
 create
@@ -671,8 +673,10 @@ feature {CTR_WINDOW} -- Implementation
 			if
 				attached {REPOSITORY_LOG} r.data as rlog
 			then
-				rlog.mark_read
-				mark_log_read (r)
+				if auto_mark_read then
+					rlog.mark_read
+					mark_log_read (r)
+				end
 				w := ctr_window
 				if w /= Void then
 					w.update_catalog_row_by_data (rlog.parent)
@@ -711,7 +715,14 @@ feature {CTR_WINDOW} -- Implementation
 					show_search_bar
 				end
 			when {EV_KEY_CONSTANTS}.key_insert then
-				toggle_read_status_on_selected_row_logs
+				toggle_read_status_on_selected_row_logs (not auto_mark_read)
+			when {EV_KEY_CONSTANTS}.key_space then
+				if
+					not ev_application.ctrl_pressed and
+					not ev_application.alt_pressed
+				then
+					set_read_status_on_selected_row_logs (not ev_application.shift_pressed, not auto_mark_read)
+				end
 			else
 			end
 		end
@@ -1061,11 +1072,16 @@ feature {CTR_WINDOW} -- Implementation
 			end
 		end
 
-	toggle_read_status_on_selected_row_logs
+	toggle_read_status_on_selected_row_logs (a_move_to_next_row: BOOLEAN)
+			-- Toggle read status on selected rows
+			-- if `a_move_to_next_row' is True and only one selected row, then select following non selected row
 		local
 			w: like ctr_window
+			g: like grid
+			i: INTEGER
 		do
-			if attached grid.selected_rows as l_rows and then l_rows.count > 0 then
+			g := grid
+			if attached g.selected_rows as l_rows and then l_rows.count > 0 then
 				w := ctr_window
 				across
 					l_rows as c
@@ -1081,6 +1097,50 @@ feature {CTR_WINDOW} -- Implementation
 						if w /= Void then
 							w.update_catalog_row_by_data (l_log.parent)
 						end
+					end
+				end
+				if a_move_to_next_row and l_rows.count = 1 then
+					i := l_rows.first.index + 1
+					if i <= g.row_count then
+						g.remove_selection
+						g.select_row (i)
+					end
+				end
+			end
+		end
+
+	set_read_status_on_selected_row_logs (a_mark_read: BOOLEAN; a_move_to_next_row: BOOLEAN)
+			-- Set read status `a_mark_read' on selected rows
+			-- if `a_move_to_next_row' is True and only one selected row, then select following non selected row
+		local
+			w: like ctr_window
+			g: like grid
+			i: INTEGER
+		do
+			g := grid
+			if attached g.selected_rows as l_rows and then l_rows.count > 0 then
+				w := ctr_window
+				across
+					l_rows as c
+				loop
+					if attached {REPOSITORY_LOG} c.item.data as l_log then
+						if a_mark_read and l_log.unread then
+							l_log.mark_read
+							mark_log_read (c.item)
+						elseif not a_mark_read and not l_log.unread then
+							l_log.mark_unread
+							mark_log_unread (c.item)
+						end
+						if w /= Void then
+							w.update_catalog_row_by_data (l_log.parent)
+						end
+					end
+				end
+				if a_move_to_next_row and l_rows.count = 1 then
+					i := l_rows.first.index + 1
+					if i <= g.row_count then
+						g.remove_selection
+						g.select_row (i)
 					end
 				end
 			end
@@ -1156,6 +1216,17 @@ feature {CTR_WINDOW} -- Implementation
 		end
 
 	repository_colors: detachable HASH_TABLE [EV_COLOR, REPOSITORY_DATA]
+
+feature {NONE} -- Preferences
+
+	auto_mark_read: BOOLEAN
+		do
+			if attached preferences as p then
+				Result := p.auto_mark_read_pref.value
+			else
+				Result := True
+			end
+		end
 
 feature {NONE} -- Constants
 

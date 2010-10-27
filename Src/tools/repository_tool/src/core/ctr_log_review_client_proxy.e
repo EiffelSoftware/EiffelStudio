@@ -104,24 +104,27 @@ feature -- Basic operation
 		end
 
 	submit (a_log: REPOSITORY_LOG; a_review: REPOSITORY_LOG_REVIEW)
+		do
+			post_review (a_log.id, username, a_review)
+		end
+
+	post_review (a_rev: STRING; a_user: STRING; a_review: REPOSITORY_LOG_REVIEW)
 		local
 			i: INTEGER
 			e: detachable REPOSITORY_LOG_REVIEW_ENTRY
 			r: STRING
-			l_user_name: like username
 			l_struct: XRPC_STRUCT
 			l_data: ARRAY [XRPC_VALUE]
 		do
 			console_log ("submit review [" + repository.location +"]")
-			l_user_name := username
 
 			create r.make_empty
-			r.append_string (a_log.id)
+			r.append_string (a_rev)
 			r.append_character ('[')
-			r.append_string (l_user_name)
+			r.append_string (a_user)
 			r.append_character (']')
 			if
-				attached a_review.user_local_entries (l_user_name, Void) as l_entries
+				attached a_review.user_local_entries (a_user, Void) as l_entries
 			then
 				create r.make (25)
 				create l_data.make_filled (create {XRPC_DEFAULT_VALUE}, 1, l_entries.count)
@@ -149,8 +152,8 @@ feature -- Basic operation
 				if not last_error_occurred then
 					login
 					if not last_error_occurred then
-	--					xmlrpc_client.remote_call ("ise.ctr.get_log", <<a_log.id>>)
-						xmlrpc_client.remote_call ("ise.ctr.post_review", <<a_log.id, l_user_name, l_data>>)
+	--					xmlrpc_client.remote_call ("ise.ctr.get_log", <<a_rev>>)
+						xmlrpc_client.remote_call ("ise.ctr.post_review", <<a_rev, a_user, l_data>>)
 						if xmlrpc_client.last_answer_is_fault then
 							last_error := err_trouble_during_remote_call
 							if attached xmlrpc_client.last_fault_response as l_fault then
@@ -182,17 +185,9 @@ feature -- Basic operation
 			end
 		end
 
-	get_logs_range: detachable TUPLE [lower_revision, upper_revision: INTEGER]
-		local
-			i: INTEGER
-			e: detachable REPOSITORY_LOG_REVIEW_ENTRY
-			r: STRING
-			l_user_name: like username
-			l_struct: XRPC_STRUCT
-			l_data: ARRAY [XRPC_VALUE]
+	get_logs_range: detachable TUPLE [lower_revision, upper_revision: STRING]
 		do
 			console_log ("get_logs_range")
-			l_user_name := username
 
 			connect
 			if not last_error_occurred then
@@ -212,8 +207,8 @@ feature -- Basic operation
 							if attached {XRPC_ARRAY} rep.value as l_array then
 								if
 									l_array.count = 2 and then
-									attached {XRPC_INTEGER} l_array.item (1) as l_lower and then
-									attached {XRPC_INTEGER} l_array.item (2) as l_upper
+									attached {XRPC_STRING} l_array.item (1) as l_lower and then
+									attached {XRPC_STRING} l_array.item (2) as l_upper
 								then
 									Result := [l_lower.value, l_upper.value]
 								end
@@ -226,6 +221,125 @@ feature -- Basic operation
 			end
 			if last_error > 0 then
 				console_log_error ("get_logs_range [" + repository.location + "]: FAILED")
+			end
+		end
+
+	get_missing_logs (a_lower, a_upper: STRING): detachable ARRAY [STRING]
+		local
+			n, i: INTEGER
+			l_user_name: like username
+		do
+			console_log ("get_missing_logs")
+			l_user_name := username
+
+			connect
+			if not last_error_occurred then
+				login
+				if not last_error_occurred then
+					xmlrpc_client.remote_call ("ise.ctr.get_missing_logs", <<repository.location, a_lower, a_upper>>)
+					if xmlrpc_client.last_answer_is_fault then
+						last_error := err_trouble_during_remote_call
+						if attached xmlrpc_client.last_fault_response as l_fault then
+							last_error_message := l_fault.message
+						end
+					elseif attached xmlrpc_client.last_answer as rep then
+						if attached {XRPC_STRING} rep.value as rep_s then
+							console_log ("get_missing_logs response: " + rep_s.item)
+						else
+							console_log ("get_missing_logs response: " + rep.value.out)
+							if attached {XRPC_ARRAY} rep.value as l_array then
+								from
+									n := l_array.count.as_integer_32
+									create Result.make_filled ("", 1, n)
+									i := 1
+								until
+									i > n
+								loop
+									if attached {XRPC_STRING} l_array.item (i.as_natural_32) as s then
+										Result.put (s.value, i)
+									end
+									i := i + 1
+								end
+							end
+						end
+					end
+				end
+				logout
+				disconnect
+			end
+			if last_error > 0 then
+				console_log_error ("get_missing_logs [" + repository.location + "]: FAILED")
+			end
+		end
+
+	get_log (a_rev: STRING): detachable STRING
+		do
+			console_log ("get_log")
+
+			connect
+			if not last_error_occurred then
+				login
+				if not last_error_occurred then
+					xmlrpc_client.remote_call ("ise.ctr.get_log", <<repository.location, a_rev>>)
+					if xmlrpc_client.last_answer_is_fault then
+						last_error := err_trouble_during_remote_call
+						if attached xmlrpc_client.last_fault_response as l_fault then
+							last_error_message := l_fault.message
+						end
+					elseif attached xmlrpc_client.last_answer as rep then
+						if attached {XRPC_STRING} rep.value as rep_s then
+							console_log ("get_log response: " + rep_s.item)
+						else
+							console_log ("get_log response: " + rep.value.out)
+							if attached {XRPC_STRING} rep.value as s then
+								Result := s.value
+							end
+						end
+					end
+				end
+				logout
+				disconnect
+			end
+			if last_error > 0 then
+				console_log_error ("get_log [" + repository.location + "]: FAILED")
+			end
+		end
+
+
+	get_review (a_rev: STRING; a_user: detachable STRING): detachable STRING
+		do
+			console_log ("get_review")
+
+			connect
+			if not last_error_occurred then
+				login
+				if not last_error_occurred then
+					if a_user = Void then
+						xmlrpc_client.remote_call ("ise.ctr.get_review", <<repository.location, a_rev, create {XRPC_DEFAULT_VALUE}>>)
+					else
+						xmlrpc_client.remote_call ("ise.ctr.get_review", <<repository.location, a_rev, a_user>>)
+					end
+					if xmlrpc_client.last_answer_is_fault then
+						last_error := err_trouble_during_remote_call
+						if attached xmlrpc_client.last_fault_response as l_fault then
+							last_error_message := l_fault.message
+						end
+					elseif attached xmlrpc_client.last_answer as rep then
+						if attached {XRPC_STRING} rep.value as rep_s then
+							console_log ("get_review response: " + rep_s.item)
+						else
+							console_log ("get_review response: " + rep.value.out)
+							if attached {XRPC_STRING} rep.value as s then
+								Result := s.value
+							end
+						end
+					end
+				end
+				logout
+				disconnect
+			end
+			if last_error > 0 then
+				console_log_error ("get_review [" + repository.location + "]: FAILED")
 			end
 		end
 

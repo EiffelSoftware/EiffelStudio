@@ -38,6 +38,6 @@ c_compile_result ok
 
 execute_final	NONE exec_output_f
 execute_result	ok
-compare		exec_output_f output
+compare		exec_output_f output_f
 
 test_end

@@ -50,14 +50,14 @@ pccts:
 	$(MAKE) -f antlr.mak
 	cd ..
 	$(MV) $(ROOT)\antlr\WinDebug\antlr.exe $(ROOT)\$(BINDIR)\antlr.exe
-	if exist $(ROOT)\antlr\WinDebug\antlr.exe.manifest $(MV) $(ROOT)\antlr\WinDebug\antlr.exe.manifest $(ROOT)\$(BINDIR)\
+	if exist $(ROOT)\antlr\WinDebug\antlr.exe.manifest $(MV) $(ROOT)\antlr\WinDebug\antlr.exe.manifest $(ROOT)\$(BINDIR)
 	echo antlr executable now in $(BINDIR)
 
 	cd $(ROOT)\dlg
 	$(MAKE) -f dlg.mak
 	cd ..
 	$(MV) $(ROOT)\dlg\WinDebug\dlg.exe $(ROOT)\$(BINDIR)\dlg.exe
-	if exist $(ROOT)\dlg\WinDebug\dlg.exe.manifest $(MV) $(ROOT)\dlg\WinDebug\dlg.exe.manifest $(ROOT)\$(BINDIR)\
+	if exist $(ROOT)\dlg\WinDebug\dlg.exe.manifest $(MV) $(ROOT)\dlg\WinDebug\dlg.exe.manifest $(ROOT)\$(BINDIR)
 	echo dlg executable now in $(BINDIR)
 
 	echo

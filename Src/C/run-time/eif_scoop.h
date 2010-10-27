@@ -49,8 +49,8 @@ typedef struct {
 	EIF_TYPED_VALUE   argument [1]; /* Arguments excluding target object */
 } call_data;
 
-rt_public void eif_log_call (int static_type_id, int feature_id, uint16 current_pid, call_data * data);
-rt_public void eif_log_callp (int origin, int offset, uint16 current_pid, call_data * data);
+rt_public void eif_log_call (int static_type_id, int feature_id, EIF_SCP_PID current_pid, call_data * data);
+rt_public void eif_log_callp (int origin, int offset, EIF_SCP_PID current_pid, call_data * data);
 
 #ifdef __cplusplus
 }

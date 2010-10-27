@@ -45,7 +45,7 @@ doc:<file name="scoop.c" header="eif_scoop.h" version="$Id$" summary="SCOOP supp
 
 
 #ifdef WORKBENCH
-rt_public void eif_log_call (int s, int f, uint16 p, call_data * a)
+rt_public void eif_log_call (int s, int f, EIF_SCP_PID p, call_data * a)
 {
 	BODY_INDEX body_id;
 	EIF_REFERENCE t = a -> target;
@@ -56,7 +56,7 @@ rt_public void eif_log_call (int s, int f, uint16 p, call_data * a)
 	RTS_TCB(scoop_task_add_command,p,RTS_PID(t),body_id,a,EIFNULL);
 }
  
-rt_public void eif_log_callp (int s, int f, uint16 p, call_data * a)
+rt_public void eif_log_callp (int s, int f, EIF_SCP_PID p, call_data * a)
 {
 	BODY_INDEX body_id;
 	EIF_REFERENCE t = a -> target;

@@ -48,7 +48,7 @@ doc:<file name="scoop.c" header="eif_scoop.h" version="$Id$" summary="SCOOP supp
 rt_public void eif_log_call (int s, int f, EIF_SCP_PID p, call_data * a)
 {
 	BODY_INDEX body_id;
-	EIF_REFERENCE t = a -> target;
+	EIF_REFERENCE t = eif_access (a -> target);
 
 	CHECK("Target attached", t);
 	CBodyId(body_id,Routids(s)[f],Dtype(t));
@@ -59,7 +59,7 @@ rt_public void eif_log_call (int s, int f, EIF_SCP_PID p, call_data * a)
 rt_public void eif_log_callp (int s, int f, EIF_SCP_PID p, call_data * a)
 {
 	BODY_INDEX body_id;
-	EIF_REFERENCE t = a -> target;
+	EIF_REFERENCE t = eif_access (a -> target);
 
 	CHECK("Target attached", t);
 	body_id = desc_tab[s][Dtype(t)][f].body_index;
@@ -77,11 +77,15 @@ rt_public void eif_try_call (call_data * a)
 
 		/* Push arguments to the evaluation stack */
 	for (n = a -> count, i = 0; i < n; i++) {
-		* (iget ()) = a -> argument [i];
+		v = iget ();
+		* v = a -> argument [i];
+		if (v -> type == SK_REF) {
+			v -> it_r = eif_access (v -> it_r);
+		}
 	}
 		/* Push current to the evaluation stack */
 	v = iget ();
-	v -> it_r = a -> target;
+	v -> it_r = eif_access (a -> target);
 	v -> type = SK_REF;
 		/* Make a call */
 	if (egc_frozen [body_id]) {		/* We are below zero Celsius, i.e. ice */

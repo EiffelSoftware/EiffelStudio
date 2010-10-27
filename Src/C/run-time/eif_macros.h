@@ -1453,13 +1453,15 @@ RT_LNK void eif_exit_eiffel_code(void);
 #define RTS_AC(n,t,a) \
 	{                                                                                \
 		a = cmalloc (sizeof (call_data) + sizeof (EIF_TYPED_VALUE) * ((n) - 1)); \
-		((call_data*)(a)) -> target = (t);                                       \
+		((call_data*)(a)) -> target = eif_protect (t);                                       \
 		((call_data*)(a)) -> count = (n);                                        \
 		((call_data*)(a)) -> result = (EIF_TYPED_VALUE *) 0;                     \
 	}
 #define RTS_AA(v,f,t,n,a) \
-	{                                                      \
-		((call_data*)(a)) -> argument [(n) - 1] = (v); \
+	{                                                                                                                          \
+		((call_data*)(a)) -> argument [(n) - 1] = (v);                                                                     \
+		if ((t) == SK_REF)                                                                                                 \
+			((call_data*)(a)) -> argument [(n) - 1].it_r = eif_protect (((call_data*)(a)) -> argument [(n) - 1].it_r); \
 	}
 
  /*

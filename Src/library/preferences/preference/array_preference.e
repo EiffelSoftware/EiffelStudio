@@ -148,7 +148,7 @@ feature {NONE} -- Implementation
 	auto_default_value: ARRAY [STRING]
 			-- Value to use when Current is using auto by default (until real auto is set)
 		once
-			create internal_value.make_filled ("", 0, 1)
+			create Result.make_filled ("", 0, 1)
 		end
 
 note

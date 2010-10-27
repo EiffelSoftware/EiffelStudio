@@ -999,7 +999,7 @@ RT_LNK void eif_exit_eiffel_code(void);
  *  RTXSC resynchronizes the run-time stacks in a pseudo rescue clause in C
  *  RTXS(x) resynchronizes the run-time stacks in a rescue clause
  *  RTEOK ends a routine with a rescue clause by cleaning the trace stack
- *  RTSO stops the tracing as well as the profiling
+ *  RTMD(x) Stops monitoring (profile or tracing) for routine context 'y' (i.e. normal vs external)
  *	RTLA Last exception from EXCEPTION_MANAGER
  *	RTCO(x) Check if x is NULL, if not raise an OLD_VIOLATION
  *  RTE_T start try block (for body)
@@ -1018,7 +1018,8 @@ RT_LNK void eif_exit_eiffel_code(void);
 #define RTEV		exvect = exft()
 #define RTET(t,x)	eraise(t,x)
 #define RTEC(x)		RTET((EIF_REFERENCE) 0,x)
-#define RTSO		check_options_stop()
+#define RTSO		check_options_stop(0)
+#define RTMD(x)		check_options_stop(x)
 #define RTLA		last_exception()
 #define RTCO(x)		chk_old(x)
 
@@ -1325,7 +1326,8 @@ RT_LNK void eif_exit_eiffel_code(void);
  * RTSC saves assertion level of the current feature.
  * RTRS restores the caller_assertion_level.
  * WASC(x) Assertion level.
- * RTSA(x) saves assertion level for dynamic type 'x'
+ * RTSA(x) gets the option settings for dynamic type 'x'
+ * RTME(x,y) Starts monitoring (profile or tracing) for dynamic type 'x' for routine context 'y' (i.e. normal vs external)
  */
 
 #define RTDA		struct eif_opt * EIF_VOLATILE opt; \
@@ -1335,10 +1337,9 @@ RT_LNK void eif_exit_eiffel_code(void);
 #define RTSC		caller_assertion_level = RTAL & CK_SUP_REQUIRE
 #define RTRS		caller_assertion_level = saved_caller_assertion_level
 #define WASC(x)		eoption[x].assert_level	
+#define RTSA(x)		opt = eoption + x;
 #ifdef WORKBENCH
-#define RTSA(x)		opt = eoption + x; check_options(opt, x)
-#else
-#define RTSA(x)		opt = eoption + x
+#define RTME(x,y)	check_options_start(opt, x, y)
 #endif
 
  /*

@@ -348,7 +348,7 @@ rt_public int eif_is_debug(int st_type, char *key)
 	}
 }
 
-rt_public void check_options(EIF_CONTEXT struct eif_opt *opt, EIF_TYPE_INDEX dtype)
+rt_public void check_options_start(EIF_CONTEXT struct eif_opt *opt, EIF_TYPE_INDEX dtype, int is_external)
                     	/* Options for the Eiffel feature*/
           				/* Dtype of the Eiffel class */
 {
@@ -362,7 +362,10 @@ rt_public void check_options(EIF_CONTEXT struct eif_opt *opt, EIF_TYPE_INDEX dty
 	EIF_GET_CONTEXT
 	struct ex_vect *vector = (struct ex_vect *) 0;
 
- 	if (opt->trace_level) {
+		/* Tracing is only enabled for non-external code. See eweasel test#exec333
+		 * where if a C external is passed $obj as a POINTER then the object is not protected
+		 * anymore and tracing might cause it to move. */
+ 	if ((opt->trace_level) && (!is_external)) {
 			/* Vector is not initialized before for efficiency:
 			 * if both trace and profiling are off,
 			 * there is no need to get the exception vector.
@@ -392,7 +395,7 @@ rt_public void check_options(EIF_CONTEXT struct eif_opt *opt, EIF_TYPE_INDEX dty
 	}
 }
 
-rt_public void check_options_stop(EIF_CONTEXT_NOARG)
+rt_public void check_options_stop(int is_external)
 {
 	/* Checks whether the feature on top of the 'eif_stack' is E-TRACEd
 	 * and E-PROFILEd and dispatches to the functions `stop_trace()' and
@@ -408,7 +411,7 @@ rt_public void check_options_stop(EIF_CONTEXT_NOARG)
 	dtype = Dtype(vector->ex_id);
 	opt = eoption[dtype];
 
-	if (opt.trace_level) {
+ 	if ((opt.trace_level) && (!is_external)) {
 			/* User wants tracing. */
 		stop_trace(vector->ex_rout, vector->ex_orig, dtype, Dftype(vector->ex_id));
 	}

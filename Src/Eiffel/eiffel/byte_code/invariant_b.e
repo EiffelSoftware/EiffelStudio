@@ -218,10 +218,15 @@ feature
 				buf.put_real_body_id (body_index)
 				buf.put_two_character (')', ';')
 				if l_is_profiler_enabled and context.workbench_mode then
+						-- Start monitoring and use `0' because we are not in an external routine.
 					buf.put_new_line
 					buf.put_string ("RTSA(")
 					context.generate_current_dtype
 					buf.put_two_character (')', ';')
+					buf.put_new_line
+					buf.put_string ("RTME(")
+					context.generate_current_dtype
+					buf.put_five_character (',', ' ', '0', ')', ';')
 				end
 			end
 
@@ -231,8 +236,9 @@ feature
 			context.generate_pop_debug_locals (Void)
 
 			if l_is_profiler_enabled and context.workbench_mode then
+					-- Stop monitoring and use `0' because we are not in an external routine.
 				buf.put_new_line
-				buf.put_string ("RTSO;")
+				buf.put_string ("RTMD(0);")
 			end
 
 				-- Remove gc hooks

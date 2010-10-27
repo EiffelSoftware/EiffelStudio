@@ -92,8 +92,8 @@ RT_LNK int trace_call_level;			/* Call level to report at E-TRACE output */
 RT_LNK struct stack *prof_stack;		/* Stack that maintains profile information */
 #endif
 
-RT_LNK void check_options(struct eif_opt *opt, EIF_TYPE_INDEX dtype);			/* Dispatches to start_profile and start_trace */
-RT_LNK void check_options_stop(void);		/* Dispatches to stop_profile and stop_trace */
+RT_LNK void check_options_start(struct eif_opt *opt, EIF_TYPE_INDEX dtype, int is_external);			/* Dispatches to start_profile and start_trace */
+RT_LNK void check_options_stop(int is_external);		/* Dispatches to stop_profile and stop_trace */
 
 RT_LNK void start_trace(char *name, EIF_TYPE_INDEX origin, EIF_TYPE_INDEX dtype, EIF_TYPE_INDEX dftype);			/* Prints entering feature ... */
 RT_LNK void stop_trace(char *name, EIF_TYPE_INDEX origin, EIF_TYPE_INDEX dtype, EIF_TYPE_INDEX dftype);			/* Prints leaving feature ... */

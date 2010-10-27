@@ -59,9 +59,7 @@ feature -- Access
 	generated_c_feature_name: STRING
 			-- Name of generated routine in C generated code
 		do
-			Result := Encoder.feature_name (
-				context.class_type.type_id,
-				body_index)
+			Result := Encoder.feature_name (context.class_type.type_id, body_index)
 		end
 
 feature -- Setting
@@ -93,10 +91,10 @@ feature -- Analyzis
 				l_context.set_origin_has_precondition (True)
 				inh_assert := l_context.inherited_assertion
 				inh_assert.init
-			end
-			if keep_assertions and not l_context.associated_class.is_basic and feat.assert_id_set /= Void then
-					--! Do not get inherited pre & post for basic types
-				formulate_inherited_assertions (feat.assert_id_set)
+				if not l_context.associated_class.is_basic and feat.assert_id_set /= Void then
+						--! Do not get inherited pre & post for basic types
+					formulate_inherited_assertions (feat.assert_id_set)
+				end
 			end
 			l_context.set_assertion_type (0)
 
@@ -125,7 +123,6 @@ feature -- Analyzis
 
 				-- Check if we need GC hooks for current body.
 			l_context.compute_need_gc_hooks (keep_assertions)
-
 
 				-- Analyze arguments
 			analyze_arguments
@@ -397,6 +394,11 @@ feature -- Analyzis
 				-- Generate execution trace information (RTEAA)
 			generate_execution_trace
 
+				-- Generate the saving of the assertion level
+			if keep then
+				generate_save_assertion_level
+			end
+
 				-- Generate monitoring start for profiling and tracing
 			generate_monitoring_start
 
@@ -414,11 +416,6 @@ feature -- Analyzis
 
 				-- Allocate memory for once manifest strings if required
 			l_context.generate_once_manifest_string_allocation (once_manifest_string_count)
-
-				-- Generate the saving of the assertion level
-			if keep then
-				generate_save_assertion_level
-			end
 
 				-- Record enter feature execution
 			generate_rtdbgd_enter
@@ -1108,7 +1105,6 @@ end
 			have_assert		: BOOLEAN
 			inh_assert		: INHERITED_ASSERTION
 			buf				: GENERATION_BUFFER
-			keep_assertions: BOOLEAN
 			i: like arguments.count
 		do
 			buf := buffer
@@ -1198,11 +1194,9 @@ end
 			have_assert: BOOLEAN
 			inh_assert: INHERITED_ASSERTION
 			buf: GENERATION_BUFFER
-			keep_assertions: BOOLEAN
 		do
 			workbench_mode := context.workbench_mode
-			keep_assertions := workbench_mode or else context.system.keep_assertions
-			if keep_assertions then
+			if workbench_mode or else context.system.keep_assertions then
 				inh_assert := Context.inherited_assertion
 				have_assert := (postcondition /= Void or else inh_assert.has_postcondition)
 				if have_assert then
@@ -1444,9 +1438,26 @@ end
 
 	generate_monitoring_start
 			-- Generate the start of various monitoring facilities.
+		local
+			buf: like buffer
 		do
-			if context.final_mode then
-				if trace_enabled then
+			if context.workbench_mode then
+				buf := buffer
+				buf.put_new_line
+				buf.put_string ("RTME(")
+				context.generate_current_dtype
+				buf.put_two_character (',', ' ')
+					-- Externals routines cannot perform tracing
+					-- as it could invalidate pointer values that correspond
+					-- to Eiffel object via the $ operator (see eweasel test#exec333)
+				if is_external then
+					buf.put_integer (1)
+				else
+					buf.put_integer (0)
+				end
+				buf.put_two_character (')', ';')
+			else
+				if trace_enabled and not is_external then
 					generate_option_macro ("RTTR", True)
 				end
 				if profile_enabled then
@@ -1457,12 +1468,24 @@ end
 
 	generate_monitoring_stop
 			-- Generate the stop of various monitoring facilities.
+		local
+			buf: like buffer
 		do
 			if context.workbench_mode then
-				buffer.put_new_line
-				buffer.put_string ("RTSO;")
+				buf := buffer
+				buf.put_new_line
+				buf.put_string ("RTMD(")
+					-- Externals routines cannot perform tracing
+					-- as it could invalidate pointer values that correspond
+					-- to Eiffel object via the $ operator (see eweasel test#exec333)
+				if is_external then
+					buf.put_integer (1)
+				else
+					buf.put_integer (0)
+				end
+				buf.put_two_character (')', ';')
 			else
-				if trace_enabled then
+				if trace_enabled and not is_external then
 					generate_option_macro ("RTXT", True)
 				end
 				if profile_enabled then

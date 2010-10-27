@@ -3761,7 +3761,7 @@ rt_private void interpret(int flag, int where)
 #endif /* EIF_THREADS */
 		}
 			/* Closing of trace and profiling for current routine. */
-		check_options_stop();
+		check_options_stop(0);
 		if (rescue) {
 			RTEOK;	/* end routine with rescue clause by cleaning the trace stack */
 		} else {
@@ -3776,7 +3776,7 @@ rt_private void interpret(int flag, int where)
 		caller_assertion_level = saved_caller_assertion_level;
 		pop_registers();	/* Pop registers */
 			/* Closing of trace and profiling for current routine. */
-		check_options_stop();
+		check_options_stop(0);
 		RTEE;	/* remove execution vector from stack */
 		return;
 
@@ -3861,7 +3861,7 @@ enter_body:
 				/* Pop registers */
 			pop_registers();
 				/* Closing of trace and profiling for current routine. */
-			check_options_stop();
+			check_options_stop(0);
 			if (rescue) {
 					/* End routine with rescue clause. */
 				RTEOK;
@@ -3986,7 +3986,7 @@ enter_body:
 				/* Pop registers */
 			pop_registers();
 				/* Closing of trace and profiling for current routine. */
-			check_options_stop();
+			check_options_stop(0);
 			if (rescue) {
 					/* End routine with rescue clause. */
 				RTEOK;
@@ -5423,7 +5423,7 @@ rt_private void interp_check_options_start (struct eif_opt *opt, EIF_TYPE_INDEX 
 
 	stagval = tagval;
 	OLD_IC = IC;
-	check_options(opt, dtype);
+	check_options_start(opt, dtype, 0);
 	IC = OLD_IC;
 
 	if (tagval != stagval) {

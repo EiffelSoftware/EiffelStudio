@@ -20,17 +20,13 @@ feature
 
 	has (a_class_id, a_body_index: INTEGER): BOOLEAN
 			-- Is there `a_body_index' in the associated AST of `a_class_id'?
-		local
-			l_ast: CLASS_AS
 		do
-				-- FIXME: Should we first search in the TMP server first and if not found
-				-- the non-TMP one? Currently we assume that if there is an AST, we only look
-				-- where we got the AST and we skip the other source.
-			l_ast := tmp_ast_server.item (a_class_id)
-			if l_ast = Void then
-				l_ast := ast_server.item (a_class_id)
+				-- First we look in the most recent version of the AST if we can find the body,
+				-- if not we look at the AST of the previous compilation.
+			if attached tmp_ast_server.item (a_class_id) as l_ast then
+				Result := l_ast.body_indexes.has (a_body_index)
 			end
-			if l_ast /= Void then
+			if not Result and then attached ast_server.item (a_class_id) as l_ast then
 				Result := l_ast.body_indexes.has (a_body_index)
 			end
 		end
@@ -38,26 +34,20 @@ feature
 	server_has (a_class_id, a_body_index: INTEGER): BOOLEAN
 			-- Is there `a_body_index' in the associated AST of `a_class_id'?
 		do
-			if
-				attached ast_server.item (a_class_id) as l_ast
-			then
+			if attached ast_server.item (a_class_id) as l_ast then
 				Result := l_ast.body_indexes.has (a_body_index)
 			end
 		end
 
 	item (a_class_id, a_body_index: INTEGER): detachable FEATURE_AS
 			-- Body of id `a_body_index' in the associated AST of `a_class_id'.
-		local
-			l_ast: CLASS_AS
 		do
-				-- FIXME: Should we first search in the TMP server first and if not found
-				-- the non-TMP one? Currently we assume that if there is an AST, we only look
-				-- where we got the AST and we skip the other source.
-			l_ast := tmp_ast_server.item (a_class_id)
-			if l_ast = Void then
-				l_ast := ast_server.item (a_class_id)
+				-- First we look in the most recent version of the AST if we can find the body,
+				-- if not we look at the AST of the previous compilation.
+			if attached tmp_ast_server.item (a_class_id) as l_ast then
+				Result := l_ast.body_indexes.item (a_body_index)
 			end
-			if l_ast /= Void then
+			if Result = Void and then attached ast_server.item (a_class_id) as l_ast then
 				Result := l_ast.body_indexes.item (a_body_index)
 			end
 		end

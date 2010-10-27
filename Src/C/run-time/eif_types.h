@@ -325,7 +325,7 @@ union overhead {
 				EIF_TYPE_INDEX dtype;
 				EIF_TYPE_INDEX dftype;
 				uint16 flags;
-				uint16 scp_pid; 	/* SCOOP Processor ID to which object belongs */
+				EIF_SCP_PID scp_pid; 	/* SCOOP Processor ID to which object belongs */
 			} ovs;
 		} ovu;
 		rt_uint_ptr ovs_size;

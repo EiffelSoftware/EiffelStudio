@@ -55,7 +55,6 @@ feature {NONE} -- Initialization
 
 	create_interface_objects
 		local
-			l_storage: PREFERENCES_STORAGE_XML
 			args: ARGUMENTS
 			l_preferences: CTR_GUI_PREFERENCES
 		do
@@ -74,24 +73,21 @@ feature {NONE} -- Initialization
 
 
 			create catalog_grid
-			create catalog_content.make_with_widget (catalog_grid, "Catalog")
+			create catalog_content.make_with_widget (catalog_grid, Names.t_catalog)
 
 			create standard_status_bar
 			create standard_status_label
 			create main_container
 
-			create logs_tool.make ("Logs")
-			create info_tool.make ("Info")
-			create console_tool.make ("Console")
+			create logs_tool.make (Names.t_logs)
+			create info_tool.make (Names.t_info)
+			create console_tool.make (Names.t_console)
 		end
 
 	initialize
 			-- Build the interface for this window.
 		local
 			dm: like docking_manager
-			acc: EV_ACCELERATOR
-			acc_n_key: ACCELERATOR_AND_THEN_KEY
-			k: EV_KEY
 		do
 			Precursor {EV_TITLED_WINDOW}
 
@@ -127,18 +123,29 @@ feature {NONE} -- Initialization
 			show_actions.extend_kamikaze (agent on_first_shown)
 			console.register_observer (console_tool)
 
+			init_accelerators
+
+			console_log ("Opening configuration from %"" + common_data_folder + "%"")
+		end
+
+	init_accelerators
+		local
+			acc: EV_ACCELERATOR
+			acc_n_key: ACCELERATOR_AND_THEN_KEY
+			k: EV_KEY
+		do
 				--| Ctrl+G ... ?
 			create k.make_with_code ({EV_KEY_CONSTANTS}.key_G)
 			create acc.make_with_key_combination (k, True, False, False)
 			create acc_n_key.make (acc, Current)
 			create k.make_with_code ({EV_KEY_CONSTANTS}.key_C)
-			acc_n_key.register_action (k, agent console_tool.set_focus, ["Console", "Go To Console Tool"])
+			acc_n_key.register_action (k, agent console_tool.set_focus, [Names.t_console, Names.d_go_to_console_tool])
 			create k.make_with_code ({EV_KEY_CONSTANTS}.key_R)
-			acc_n_key.register_action (k, agent catalog_grid.set_focus, ["Repositories", "Go To Repositories Tool"])
+			acc_n_key.register_action (k, agent catalog_grid.set_focus, [Names.t_repositories, Names.d_go_to_catalog_tool])
 			create k.make_with_code ({EV_KEY_CONSTANTS}.key_L)
-			acc_n_key.register_action (k, agent logs_tool.set_focus, ["Logs", "Go To Logs Tool"])
+			acc_n_key.register_action (k, agent logs_tool.set_focus, [Names.t_logs, Names.d_go_to_logs_tool])
 			create k.make_with_code ({EV_KEY_CONSTANTS}.key_I)
-			acc_n_key.register_action (k, agent info_tool.set_focus, ["Info", "Go To Info Tool"])
+			acc_n_key.register_action (k, agent info_tool.set_focus, [Names.t_info, Names.d_go_to_info_tool])
 
 			acc_n_key.enable_popup
 			acc_n_key.attach_to (accelerators, True)
@@ -148,23 +155,27 @@ feature {NONE} -- Initialization
 			create acc.make_with_key_combination (k, True, False, False)
 			create acc_n_key.make (acc, Current)
 			create k.make_with_code ({EV_KEY_CONSTANTS}.key_A)
-			acc_n_key.register_action (k, agent check_all_repositories, ["Check All Repositories", "Check all repositories for new logs"])
+			acc_n_key.register_action (k, agent check_all_repositories, [Names.t_check_all_repositories, Names.d_check_all_repositories])
 			create k.make_with_code ({EV_KEY_CONSTANTS}.key_C)
-			acc_n_key.register_action (k, agent edit_configuration, ["Repositories", "Edit repositories configuration"])
+			acc_n_key.register_action (k, agent edit_configuration, [Names.t_edit_repositories, Names.d_edit_repositories])
 			create k.make_with_code ({EV_KEY_CONSTANTS}.key_P)
-			acc_n_key.register_action (k, agent edit_preferences, ["Preferences", "Edit preferences"])
+			acc_n_key.register_action (k, agent edit_preferences, [Names.t_edit_preferences, Names.d_edit_preferences])
 			create k.make_with_code ({EV_KEY_CONSTANTS}.key_I)
-			acc_n_key.register_action (k, agent show_information, ["Information", "Show Information"])
-
-
+			acc_n_key.register_action (k, agent show_information, [Names.t_show_information, Names.d_show_information])
 			create k.make_with_code ({EV_KEY_CONSTANTS}.key_L)
-			acc_n_key.register_action (k, agent apply_default_layout, ["Reset Layout", Void])
+			acc_n_key.register_action (k, agent apply_default_layout, [Names.t_reset_layout, Void])
 
 			acc_n_key.enable_popup
 			acc_n_key.attach_to (accelerators, True)
 
 
-			console_log ("Opening configuration from " + common_data_folder)
+			create k.make_with_code ({EV_KEY_CONSTANTS}.key_F5)
+			create acc.make_with_key_combination (k, False, False, False)
+			acc.actions.extend (agent
+				do
+					logs_tool.check_current_repositories
+				end)
+			accelerators.extend (acc)
 		end
 
 	is_in_default_state: BOOLEAN
@@ -1486,22 +1497,40 @@ feature {CTR_TOOL} -- Diff
 			but: EV_BUTTON
 			m: EV_VERTICAL_BOX
 			t: EV_TEXT
+			l_diff_fn: FILE_NAME
+			diff_cmd: detachable STRING
+			e: EXECUTION_ENVIRONMENT
 		do
-			create dlg
-			create m
-			create t
-			create but.make_with_text_and_action ("Close", agent dlg.destroy)
-			dlg.extend (m)
-			m.extend (t)
-			m.extend (but)
-			m.disable_item_expand (but)
-			t.set_text (a_log.diff)
-			dlg.close_request_actions.extend (agent dlg.destroy)
-			dlg.set_position (x_position, y_position)
-			dlg.set_size (width, height)
-			dlg.enable_border
-			dlg.enable_user_resize
-			dlg.show_relative_to_window (Current)
+			if attached preferences as prefs then
+				create diff_cmd.make_from_string (prefs.diff_viewer_command_pref.value)
+			end
+			if
+				diff_cmd /= Void and then not diff_cmd.is_empty and then
+				attached a_log.parent.log_diff_data_filename (a_log) as fn
+			then
+				create e
+				create l_diff_fn.make_from_string (e.current_working_directory)
+				l_diff_fn.extend (fn)
+				diff_cmd.replace_substring_all ("$filename", l_diff_fn.string)
+				diff_cmd.replace_substring_all ("$id", a_log.id)
+				e.launch (diff_cmd)
+			else
+				create dlg
+				create m
+				create t
+				create but.make_with_text_and_action ("Close", agent dlg.destroy)
+				dlg.extend (m)
+				m.extend (t)
+				m.extend (but)
+				m.disable_item_expand (but)
+				t.set_text (a_log.diff)
+				dlg.close_request_actions.extend (agent dlg.destroy)
+				dlg.set_position (x_position, y_position)
+				dlg.set_size (width, height)
+				dlg.enable_border
+				dlg.enable_user_resize
+				dlg.show_relative_to_window (Current)
+			end
 		end
 
 feature -- Access

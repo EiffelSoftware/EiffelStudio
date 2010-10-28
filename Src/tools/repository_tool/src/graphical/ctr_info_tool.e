@@ -15,6 +15,8 @@ inherit
 
 	EV_SHARED_APPLICATION
 
+	CTR_SHARED_GUI_PREFERENCES
+
 create
 	make
 
@@ -55,6 +57,10 @@ feature {NONE} -- Initialization
 
 			mtb.compute_minimum_size
 			c.set_mini_toolbar (mtb)
+
+			if attached preferences as prefs then
+				changes_expanded := prefs.info_tool_changes_expanded_pref.value
+			end
 		end
 
 feature -- Access
@@ -252,8 +258,8 @@ feature -- Element change
 
 						l_row.set_item (cst_info_title_col, create {EV_GRID_LABEL_ITEM}.make_with_text (l_changes.count.out + " nodes changed"))
 						l_row.set_item (cst_info_value_col, create {EV_GRID_LABEL_ITEM}.make_with_text (rsvnlog.svn_revision.common_parent_path + " (..)"))
-						l_row.expand_actions.extend (agent do changes_expanded := True end)
-						l_row.collapse_actions.extend (agent do changes_expanded := False end)
+						l_row.expand_actions.extend (agent set_changes_expanded (True))
+						l_row.collapse_actions.extend (agent set_changes_expanded (False))
 					end
 
 					across
@@ -585,5 +591,12 @@ feature {NONE} -- Implementation
 
 	changes_expanded: BOOLEAN
 
+	set_changes_expanded (b: BOOLEAN)
+		do
+			changes_expanded := b
+			if attached preferences as prefs then
+				prefs.info_tool_changes_expanded_pref.set_value (b)
+			end
+		end
 
 end

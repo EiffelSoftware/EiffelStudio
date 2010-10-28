@@ -304,7 +304,6 @@ feature -- Storage filename
 
 	archive_review_data_folder_name: STRING
 
-
 	log_diff_data_filename (a_log: REPOSITORY_LOG): STRING
 		local
 			fn: FILE_NAME

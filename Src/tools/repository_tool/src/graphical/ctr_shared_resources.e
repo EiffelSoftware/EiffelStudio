@@ -12,6 +12,8 @@ inherit
 
 	CTR_SHARED_CONSOLE
 
+	CTR_SHARED_INTERFACE_NAMES
+
 feature -- Access
 
 	icons: CTR_ICONS_FACTORY

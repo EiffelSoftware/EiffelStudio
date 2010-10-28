@@ -85,7 +85,7 @@ feature {NONE} -- Constants
 	Latest_schema: STRING
 			-- Latest schema location
 		once
-			Result := schema_1_6_0
+			Result := schema_1_7_0
 		end
 
 note

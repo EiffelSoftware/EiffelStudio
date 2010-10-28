@@ -151,7 +151,7 @@ feature {NONE} -- Implementation
 					<<conf_interface_names.target_concurrency_none_name,
 					conf_interface_names.target_concurrency_thread_name,
 					conf_interface_names.target_concurrency_scoop_name>>),
-				current_target.setting_concurrency,
+				current_target.immediate_setting_concurrency,
 				Void
 			)
 
@@ -273,7 +273,7 @@ feature {NONE} -- Implementation
 					<<conf_interface_names.target_concurrency_none_name,
 					conf_interface_names.target_concurrency_thread_name,
 					conf_interface_names.target_concurrency_scoop_name>>),
-				current_target.setting_concurrency,
+				current_target.immediate_setting_concurrency,
 				Void
 			)
 

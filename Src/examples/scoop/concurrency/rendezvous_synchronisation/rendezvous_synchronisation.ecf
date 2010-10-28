@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-6-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-6-0 http://www.eiffel.com/developers/xml/configuration-1-6-0.xsd" name="redezvous_synchronisation" uuid="0261208A-972F-4B15-B53E-16607507FD3B">
-	<target name="redezvous_synchronisation">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-6-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-6-0 http://www.eiffel.com/developers/xml/configuration-1-6-0.xsd" name="rendezvous_synchronisation" uuid="0261208A-972F-4B15-B53E-16607507FD3B">
+	<target name="rendezvous_synchronisation">
 		<root class="APPLICATION" feature="make"/>
 		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="concurrency" location="..\concurrency\concurrency-safe.ecf"/>
-		<cluster name="redezvous_synchronisation" location=".\" recursive="true">
+		<cluster name="rendezvous_synchronisation" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/EIFGENs$</exclude>
 				<exclude>/CVS$</exclude>
@@ -15,7 +15,7 @@
 			</file_rule>
 		</cluster>
 	</target>
-	<target name="redezvous_synchronisation_dotnet" extends="redezvous_synchronisation">
+	<target name="rendezvous_synchronisation_dotnet" extends="rendezvous_synchronisation">
 		<setting name="msil_generation" value="true"/>
 	</target>
 </system>

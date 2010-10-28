@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 		require
 			i > 0
 		do
---			feature_to_apply := a_feature.import -- Non?separate copy
+--			feature_to_apply := a_feature.import -- Non?separate copy FIXME: `import' not available for the moment 2010/10/25
 			feature_to_apply := a_feature.deep_twin -- Non?separate copy
 			m := i
 		ensure

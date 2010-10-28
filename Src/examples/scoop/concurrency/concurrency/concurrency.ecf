@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="docking" uuid="1EBF61BE-D506-44DC-AD76-1A636EF04D65" library_target="concurrency">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="concurrency" uuid="1EBF61BE-D506-44DC-AD76-1A636EF04D65" library_target="concurrency">
 	<target name="concurrency">
 		<description>Concurrency: SCOOP extension library of reusable components for Eiffel.
       Copyright (c) 1984-2010, Eiffel Software and others.

@@ -24,13 +24,20 @@ feature {NONE} -- Access
 			Precursor
 
 			auto_mark_read_pref := factory.new_boolean_preference_value (manager, namespace + ".auto_mark_read", True)
+			auto_mark_read_pref.set_description ("Automatically mark the selected log as read")
+			info_tool_changes_expanded_pref := factory.new_boolean_preference_value (manager, namespace + ".tools.info.changes_expanded", False)
+			info_tool_changes_expanded_pref.set_hidden (True)
+
 			date_formatting_pref := factory.new_string_preference_value (manager, namespace + ".date_formatting", "")
+			date_formatting_pref.set_hidden (True)
 			diff_viewer_command_pref := factory.new_string_preference_value (manager, namespace + ".diff_viewer_command", "")
 		end
 
 feature -- Access
 
 	auto_mark_read_pref: BOOLEAN_PREFERENCE
+
+	info_tool_changes_expanded_pref: BOOLEAN_PREFERENCE
 
 	date_formatting_pref: STRING_PREFERENCE
 

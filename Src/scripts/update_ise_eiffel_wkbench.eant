@@ -7,15 +7,16 @@
 	</description>
 
 	<target name="menu">
-		<set name="debug_mode" value="false" unless="${debug_mode}=true" />
+		<echo message="menu runtimeversion=$runtimeversion"/>
 		<unset name="runtimeversion" if="-${runtimeversion}-=--" />
 		<set name="runtimeversion" value="" unless="${runtimeversion}" />
+		<set name="debug_mode" value="false" unless="${debug_mode}=true" />
 		<echo message=" -> debug_mode=${debug_mode}" />
 		<echo message=" -> runtimeversion=${runtimeversion}" />
 		<geant target="update_wkbench" />
 	</target>
 
-	<target name="debug">
+	<target name="d">
 		<set name="debug_mode" value="true" />
 		<set name="runtimeversion" value="d" />
 		<geant target="menu" />
@@ -23,6 +24,10 @@
 	<target name="w">
 		<set name="runtimeversion" value="w" />
 		<geant target="menu" />
+	</target>
+	<target name="wd">
+		<set name="debug_mode" value="true" />
+		<geant target="w" />
 	</target>
 
 	<target name="init">
@@ -252,7 +257,7 @@
 	<target name="copy_from_eiffel_src" depend="init">
 		<echo message="Copy from [EIFFEL_SRC=${EIFFEL_SRC}]" />
 		<set name="runtimedir" value="${EIFFEL_SRC}${path_separator}C${runtimeversion}" unless="${debug_mode}=true" />
-		<set name="runtimedir" value="${EIFFEL_SRC}${path_separator}Cd${runtimeversion}" if="${debug_mode}=true" />
+		<set name="runtimedir" value="${EIFFEL_SRC}${path_separator}C${runtimeversion}d" if="${debug_mode}=true" />
 		<echo message=" - Runtime dir = ${runtimedir} " />
 		<echo message=" - Update eif_.h" />
 		<copy to_directory="${wb_platform_dir}${path_separator}include" 

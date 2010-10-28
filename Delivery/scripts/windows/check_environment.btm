@@ -19,39 +19,16 @@ iff not defined NO_COMPILE then
 		echo Cannot find a version of MinGW under ISE_EIFFEL. Cannot continue
 		CANCEL
 	endiff
-	iff "%@SEARCH[ecb.exe]" == "" then
-		echo Cannot find a version of ecb. Cannot continue
-		CANCEL
+	iff not exist %ISE_EIFFEL\studio\spec\%ISE_PLATFORM\bin\ecb.exe then
 	endiff
 	iff isdir %EIFFEL_SRC then
 		echo Warning: %EIFFEL_SRC will be erased by the script!
 	endiff
 endiff
-iff "%@SEARCH[tar]" == "" then
-	echo Cannot find a version of tar. Cannot continue without cygwin
-	CANCEL
-endiff
-iff not defined NO_DOCUMENTATION then
-	iff not defined DOCUMENT_DIR then
-		echo Error: No path specified for the documentation
-		CANCEL
-	endiff
-	iff not isdir %DOCUMENT_DIR then
-		echo Error: %DOCUMENT_DIR is not a directory
-		CANCEL
-	endiff
-	iff "%@SEARCH[hhc.exe]" == "" then
-		echo Cannot find the HTML help compiler
-		CANCEL
-	endiff
-	iff exist %DOCUMENT_DIR\newdocs then
-		echo Warning: %DOCUMENT_DIR\newdocs will be erased by this script!
-	endiff
-endiff	
-iff "%@SEARCH[upx.exe]" == "" then
-	echo Cannot find a version of upx packager. Cannot continue
-	CANCEL
-endiff
+rem An alternative to find a program is the following two lines
+rem set MyProgramPresent=0
+rem for %%x in (program.exe) do if not [%%~$PATH:x]==[] set MyProgramPresent=1
+tar --version 2>NUL 1>NUL || (echo "Cannot find a version of tar. Cannot continue" && CANCEL)
 iff not defined INSTALL_LOG then
 	echo Error: No file specified for the log
 	CANCEL
@@ -83,13 +60,10 @@ endiff
 iff defined BUILD_ENTERPRISE_ONLY then
 	echo Only EiffelStudio Enterprise will be build
 endiff
-iff defined NO_DOCUMENTATION then
-	echo No documentation will be generated
-endiff
 iff defined NO_INSTALL then
 	echo The delivery will be generated, but not the final installation executable
 endiff
-iff not defined NO_INSTALL .and. not defined NO_COMPILE .and. not defined NO_DOCUMENTATION then
+iff not defined NO_INSTALL .and. not defined NO_COMPILE then
 	echo All components will be recompiled
 endiff
 echo You have 60s to cancel this build

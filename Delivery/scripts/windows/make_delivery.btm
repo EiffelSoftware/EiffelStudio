@@ -15,18 +15,13 @@ TIMER ON /1 >> NUL
 TIMER ON /2 >> NUL
 iff %@INDEX[%@LOWER[%$],h] ge 0 then
 	echo Installation for ISE Eiffel 5 generation.
-	echo Parameters are no_compile, doc, no_new_ec, enterprise no_wizards and no_install (or nothing to fully regenerate the installation).
+	echo Parameters are no_compile, no_new_ec, enterprise no_wizards and no_install (or nothing to fully regenerate the installation).
 	CANCEL
 endiff
 iff %@INDEX[%@LOWER[%$],no_compil] ge 0 then
 	set NO_COMPILE="True"
 else
 	unset /Q NO_COMPILE
-endiff
-iff %@INDEX[%@LOWER[%$],doc] ge 0 then
-	unset /Q NO_DOCUMENTATION
-else
-	set NO_DOCUMENTATION="True"
 endiff
 iff %@INDEX[%@LOWER[%$],no_install] ge 0 then
 	set NO_INSTALL="True"
@@ -276,12 +271,6 @@ else
 	give_time_to copy executables from the old delivery
 endiff
 
-iff not defined NO_DOCUMENTATION then
-	remtrace Recompile the documentation
-	call make_xml_documentation
-	cdd %INIT_DIR
-	give_time_to compile the main documentation
-endiff
 cdd %INIT_DIR
 
 iff not defined NO_INSTALL then

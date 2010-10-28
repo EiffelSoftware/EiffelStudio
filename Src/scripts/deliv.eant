@@ -382,6 +382,10 @@
 		<geant target="copy_file" 		arguments="${EIFFEL_SRC}/C,${a_dir}/studio/spec/${ISE_PLATFORM}/include,eif_confmagic.h" />
 		<geant target="copy_exec_file" 	arguments="${EIFFEL_SRC}/C/run-time,${a_dir}/studio/spec/${ISE_PLATFORM}/bin,x2c${exe}" />
 		<geant target="copy_exec_file" 	arguments="${EIFFEL_SRC}/C/ipc/daemon,${a_dir}/studio/spec/${ISE_PLATFORM}/bin,ecdbgd${exe}" />
+
+		<!-- gcc folder -->
+		<mkdir directory="gcc" dir="${a_dir}" if="${is_windows}" />
+		<geant target="copy_full_tree" arguments="${EIFFEL_SRC}${path_separator}..${path_separator}free_add_ons${path_separator}gcc${path_separator}${ISE_PLATFORM},${a_dir}${path_separator}gcc${path_separator}${ISE_PLATFORM}" if="${is_windows}" />
 		
 		<!-- precomp folder -->
 		<geant target="copy_full_tree" arguments="${_DELIVERY_DIR}${path_separator}precomp${path_separator}spec${path_separator}platform,${a_dir}${path_separator}precomp${path_separator}spec${path_separator}${ISE_PLATFORM}" />
@@ -473,6 +477,10 @@
 		<!-- switch to use 'ec batch' compiler if available -->
 		<available dir="$_BINARY_DIR" resource="ecb${exe}" variable="ecb_available" />
 		<geant target="switch_to_ecb" arguments="$_BINARY_DIR" if="$ecb_available=true" />
+
+		<!-- recompile ecb ... with new ISE_EIFFEL context .. i.e bootstrap ecb -->
+		<geant target="safe_delete" arguments="${_BINARY_DIR},ecb${exe}" />
+		<geant target="get_bin__" arguments="ec_batch,${_BINARY_DIR},ecb${exe}" />
 
 		<geant target="get_bin__" arguments="ec_bench,${_BINARY_DIR},ec${exe}" />
 		<geant target="get_bin__" arguments="estudio,${_BINARY_DIR},estudio${exe}" />

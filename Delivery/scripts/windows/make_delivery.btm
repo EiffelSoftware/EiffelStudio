@@ -81,7 +81,7 @@ else
 	fullrd windows
 endiff
 cdd %STUDIO_DIR\studio\config
-if not "windows"=="%ISE_PLATFORM" move windows %ISE_PLATFORM
+if not "windows"=="%ISE_PLATFORM" ren windows %ISE_PLATFORM
 cdd %STUDIO_DIR
 remtrace esbuilder
 exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Delivery/esbuilder esbuilder

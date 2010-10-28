@@ -84,7 +84,7 @@ remtrace ----------------------------------------------
 remtrace Building the Zips
 remtrace ----------------------------------------------
 cdd %INSTALL_DIR
-move EiffelStudio %STUDIO_NAME%
+ren EiffelStudio %STUDIO_NAME%
 
 copy %INSTALL_DIR\releases\gpl_version\ec.exe %INSTALL_DIR\%STUDIO_NAME%\studio\spec\%ISE_PLATFORM%\bin
 copy %INSTALL_DIR\releases\gpl_version\ecb.exe %INSTALL_DIR\%STUDIO_NAME%\studio\spec\%ISE_PLATFORM%\bin
@@ -96,7 +96,7 @@ copy %INSTALL_DIR\releases\enterprise_version\ecb.exe %INSTALL_DIR\%STUDIO_NAME%
 
 remtrace Restoring the layout to its original state
 cdd %INSTALL_DIR
-move %STUDIO_NAME% EiffelStudio
+ren %STUDIO_NAME% EiffelStudio
 
 remtrace Uploading packages online
 cdd %INSTALL_DIR\setups\gpl

@@ -314,6 +314,7 @@ feature {NONE} -- Implementation
 			nfn: FILE_NAME
 			wd: STRING
 		do
+			last_bytecode_txt_filename := Void
 			if s /= Void then
 				selection_grid_content.minimize
 				create fn.make_from_string (s.to_string_8)
@@ -348,6 +349,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	last_bytecode_txt_filename: detachable STRING
 
 	analyze_bytecode_from (fn: STRING)
 			--
@@ -357,6 +359,7 @@ feature {NONE} -- Implementation
 			h,b: STRING
 			e: like analyzes_entry
 		do
+			last_bytecode_txt_filename := fn
 			analyzes := Void
 			create f.make (fn)
 			if f.exists then
@@ -487,6 +490,39 @@ feature {NONE} -- Implementation
 										bytecode_text.remove_text
 									end
 								end(r)
+							)
+						r.deselect_actions.extend (agent
+								do
+									ev_application.add_idle_action_kamikaze (agent
+										local
+											f: RAW_FILE
+											s: detachable STRING
+										do
+											if bytecode_grid.selected_rows.is_empty then
+												if attached last_bytecode_txt_filename as fn then
+													create f.make (fn)
+													if f.exists and f.is_readable then
+														f.open_read
+														from
+															create s.make (f.count)
+															f.read_stream (1024)
+															s.append (f.last_string)
+														until
+															f.exhausted or f.last_string.is_empty
+														loop
+															f.read_stream (1024)
+															s.append (f.last_string)
+														end
+														f.close
+													end
+												end
+												if s /= Void then
+													bytecode_text.set_text (s)
+												end
+											end
+										end
+									)
+								end
 							)
 					end
 					analyzes.forth

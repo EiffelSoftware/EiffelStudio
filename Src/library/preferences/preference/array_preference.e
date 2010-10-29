@@ -95,7 +95,7 @@ feature -- Status Setting
 			values: LIST [STRING]
 			l_value: like value
 		do
-			create internal_value.make_filled ("", 0, 1)
+			create internal_value.make_filled ("", 1, 0)
 			values := a_value.split (';')
 			if values.count > 1 or not values.first.is_empty then
 				from
@@ -148,7 +148,7 @@ feature {NONE} -- Implementation
 	auto_default_value: ARRAY [STRING]
 			-- Value to use when Current is using auto by default (until real auto is set)
 		once
-			create Result.make_filled ("", 0, 1)
+			create Result.make_filled ("", 1, 0)
 		end
 
 note

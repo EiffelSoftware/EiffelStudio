@@ -570,8 +570,8 @@ feature {NONE} -- Implementation
 		do
 			create feature_clause_order_table.make (array.count);
 			from
-				i := 1;
-				c := array.count
+				i := array.lower
+				c := array.upper
 			until
 				i > c
 			loop

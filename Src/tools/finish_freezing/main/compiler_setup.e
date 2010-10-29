@@ -24,19 +24,21 @@ feature {NONE} -- Initialize
 		require
 			options_not_void: options /= Void
 		local
-			l_smart_checking: BOOLEAN
 			l_vs_setup: VS_SETUP
 		do
 				-- Check if a smart checking should be done.
-			l_smart_checking := options.get_boolean ("smart_checking", True)
-			if eiffel_layout.eiffel_c_compiler ~ once "msc" and l_smart_checking then
-					-- Visual Studio C compiler.
-				create l_vs_setup.make (a_force_32bit)
+			if eiffel_layout.eiffel_c_compiler.same_string ("msc") and options.get_boolean ("smart_checking", True) then
+				if attached eiffel_layout.eiffel_c_compiler_version as l_version and then not l_version.is_empty then
+					create l_vs_setup.make (l_version, a_force_32bit)
+				else
+						-- Visual Studio C compiler.
+					create l_vs_setup.make (Void, a_force_32bit)
+				end
 			end
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -26,18 +26,26 @@ create
 
 feature -- Initialization
 
-	make (a_force_32bit_generation: BOOLEAN)
+	make (a_prefered_config: detachable STRING; a_force_32bit_generation: BOOLEAN)
 			-- Create and setup environment variables for currently installed
-			-- version of Visual Studio.
+			-- version of Visual Studio using `a_prefered_config' if present.
+		require
+			a_prefered_config_valid: a_prefered_config /= Void implies not a_prefered_config.is_empty
 		local
 			l_man: C_CONFIG_MANAGER
 			l_config: detachable C_CONFIG
 		do
 			create l_man.make (a_force_32bit_generation)
 			if l_man.has_applicable_config then
-					-- Synchronize with configuration
-				l_config := l_man.best_configuration
-				check l_config_attached: l_config /= Void end
+				if a_prefered_config /= Void then
+						-- `a_prefered_config' is not empty per precondition
+					l_config := l_man.config_from_code (a_prefered_config, True)
+				end
+				if l_config = Void then
+						-- Synchronize with configuration
+					l_config := l_man.best_configuration
+					check l_config_attached: l_config /= Void end
+				end
 				synchronize_variable (path_var_name, l_config.path_var)
 				synchronize_variable (include_var_name, l_config.include_var)
 				synchronize_variable (lib_var_name, l_config.lib_var)
@@ -116,7 +124,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

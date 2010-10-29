@@ -27,6 +27,9 @@ feature -- Variable names
 	ise_c_compiler_env: STRING = "ISE_C_COMPILER"
 			-- C compiler (windows only)
 
+	ise_c_compiler_ver_env: STRING = "ISE_C_COMPILER_VER"
+			-- C compiler version (windows only)
+
 	ise_projects_env: STRING = "ISE_PROJECTS"
 			-- Project locations
 

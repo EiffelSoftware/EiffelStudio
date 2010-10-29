@@ -1778,6 +1778,18 @@ feature -- Environment variables
 			not_result_is_empty: is_valid_environment implies not Result.is_empty
 		end
 
+	eiffel_c_compiler_version: STRING_8
+			-- ISE_C_COMPILER_CODE name.
+		require
+			windows: {PLATFORM}.is_windows
+		do
+			if attached {STRING} get_environment ({EIFFEL_ENVIRONMENT_CONSTANTS}.ise_c_compiler_ver_env) as l_result then
+				Result := l_result
+			else
+				Result := ""
+			end
+		end
+
 	eiffel_platform: STRING_8
 			-- ISE_PLATFORM name.
 		do

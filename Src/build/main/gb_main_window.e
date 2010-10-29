@@ -116,22 +116,23 @@ feature {NONE} -- Implementation
 		local
 			recent_projects: ARRAY [STRING]
 			recent_project_item: EV_MENU_ITEM
-			counter: INTEGER
+			i, nb: INTEGER
 		do
 				-- Clear any existing items.
 			recent_projects_menu.wipe_out
 				-- Now make menu entries for the recent projects.
 			recent_projects := preferences.global_data.recent_projects_string
 			from
-				counter := 1
+				i := recent_projects.lower
+				nb := recent_projects.upper
 			until
-				counter > recent_projects.count
+				i > nb
 			loop
-				create recent_project_item.make_with_text (recent_projects.item (counter))
+				create recent_project_item.make_with_text (recent_projects.item (i))
 				recent_project_item.select_actions.extend (agent open_named_project (
 					recent_project_item.text + operating_environment.Directory_separator.out + "build_project.bpr"))
 				recent_projects_menu.extend (recent_project_item)
-				counter := counter + 1
+				i := i + 1
 			end
 			if recent_projects_menu.is_empty then
 				recent_projects_menu.disable_sensitive

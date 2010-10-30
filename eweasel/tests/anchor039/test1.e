@@ -1,4 +1,3 @@
-
 class TEST1 [G]
 feature
 

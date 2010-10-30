@@ -1,4 +1,3 @@
-
 test_name 	qat-vmfn-compiler-error
 test_description A generic class that inherits from two generic parents, which each have a declaration `x: like {G}.out' crashes the compiler when it tries to report the VMFN error.
 
@@ -9,7 +8,18 @@ copy_raw	test2.e $CLUSTER test2.e
 copy_raw	test3.e $CLUSTER test3.e
 
 compile_melted
-compile_result	validity_error TEST3 VMFN ; TEST1 VEEN ; TEST2 VEEN
+compile_result	validity_error TEST1 VEEN ; TEST2 VEEN
+
+copy_raw	test1_1.e $CLUSTER test1.e
+copy_raw	test2_1.e $CLUSTER test2.e
+
+resume_compile
+compile_result	validity_error TEST3 VMFN
+
+copy_raw	test3_2.e $CLUSTER test3.e
+
+resume_compile
+compile_result	ok
 
 test_end
 

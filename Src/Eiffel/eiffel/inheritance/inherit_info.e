@@ -21,6 +21,12 @@ inherit
 			is_equal
 		end
 
+	SHARED_TMP_SERVER
+		export {NONE} all
+		undefine
+			is_equal
+		end
+
 create
 	set_with_feature_and_parent
 
@@ -159,12 +165,16 @@ feature -- Settings
 			a_feature_not_void: internal_a_feature /= Void
 		local
 			f: FEATURE_I
+			g: FEATURE_I
 		do
 				-- Record current feature for delayed instantiation.
 			f := internal_a_feature
 			if f.is_type_evaluation_delayed then
 					-- Make a clone of the current feature that will be updated later.
-				internal_a_feature := f.twin
+					-- `f.twin' cannot be used here because descendant may change
+					-- arguments types thus preventing ancestor features from correct
+					-- type checking.
+				g := f.duplicate
 					-- Register update action.
 				degree_4.put_action (
 					agent (destination: FEATURE_I; source: FEATURE_I; instantiation_type: TYPE_A)
@@ -176,8 +186,9 @@ feature -- Settings
 							destination.set_arguments (i.arguments)
 							destination.set_pattern_id (i.pattern_id)
 						end
-					(internal_a_feature, f, parent_type)
+					(g, f, parent_type)
 				)
+				internal_a_feature := g
 				set_a_feature_instantiated_for_feature_table (True)
 				set_a_feature_needs_instantiation (False)
 			else

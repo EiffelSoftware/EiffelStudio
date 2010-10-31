@@ -70,6 +70,7 @@ feature {NONE} -- Initialization
 		do
 			create changed_status.make
 			create ignored_classes.make (0)
+			create delayed_classes.make (0)
 		end
 
 feature -- Access
@@ -111,6 +112,7 @@ feature -- Processing
 			l_degree_output.put_start_degree (Degree_number, count)
 			classes := l_system.classes.sorted_classes
 			ignored_classes.wipe_out
+			delayed_classes.wipe_out
 
 				-- We need to clean the cache of feature tables since we would not know how
 				-- to distinguish the previous from the current computed feature tables.
@@ -168,7 +170,7 @@ feature -- Processing
 				from
 					i := 1
 				until
-					nb = count or else i > classes.upper
+					i > classes.upper
 				loop
 					a_class := classes.item (i)
 					if a_class /= Void and then a_class.degree_4_needed then
@@ -222,6 +224,21 @@ feature -- Processing
 					end
 					i := i + 1
 				end
+				from
+					delayed_classes.start
+				until
+					delayed_classes.after
+				loop
+					if attached delayed_classes.item_for_iteration as d and then not d.degree_4_needed then
+							-- Mark class for processing.
+						d.set_changed2 (True)
+						insert_new_class (d)
+							-- Actions should not be applied to the classes that are descendants of the affected ones.
+							-- These descendants will be processed again after processing their ancestors.
+						remove_descendant_classes_from_processing (d)
+					end
+					delayed_classes.forth
+				end
 					-- Run delayed actions.
 				from
 					actions.start
@@ -260,9 +277,24 @@ feature -- Processing
 					end
 					actions.forth
 				end
+					-- If there are any other actions on a new iteration, they'll be registered again.
+				actions.wipe_out
 					-- No need to continue if we have found some errors.
 				if l_error_handler.has_error then
 					l_error_handler.raise_error
+				end
+					-- Remove all ignored classes as they may need to be processed again
+					-- if there were no errors.
+				ignored_classes.wipe_out
+					-- Recompute the number of classes that need processing.
+					-- Take the total number of classes that need degree 4 and deduct the number of classes that were not processed yet.
+				nb := count
+				across
+					classes as each
+				loop
+					if attached each.item as c and then c.degree_4_needed and then not c.degree_4_processed then
+						nb := nb - 1
+					end
 				end
 			end
 
@@ -288,7 +320,6 @@ feature -- Processing
 				-- Wipe out feature table cache.
 			feature_table_cache.wipe_out
 			wipe_out
-
 
 			changed_status.wipe_out
 			l_system.set_current_class (Void)
@@ -351,6 +382,7 @@ feature -- Removal
 				i := i + 1
 			end
 			count := 0
+			delayed_classes.wipe_out
 		end
 
 feature -- Setting
@@ -457,6 +489,9 @@ feature -- Actions to be done at the end of degree
 		end
 
 feature {NONE} -- Actions to be done at the end of degree
+
+	delayed_classes: SEARCH_TABLE [CLASS_C]
+			-- Classes marked for recompilation during this degree
 
 	actions: ARRAYED_LIST [TUPLE [actions: ARRAYED_LIST [PROCEDURE [ANY, TUPLE]]; class_id: INTEGER_32]]
 			-- Actions to be done at the end of degree for the class identified by class ID
@@ -944,8 +979,7 @@ feature -- Qualified suppliers: recompilation
 						clients as i
 					loop
 						if attached system.class_of_id (i.item) as d then
-							d.set_changed2 (True)
-							insert_new_class (d)
+							delayed_classes.put (d)
 						end
 					end
 				end
@@ -955,6 +989,7 @@ feature -- Qualified suppliers: recompilation
 invariant
 	changed_status_not_void: changed_status /= Void
 	ignored_classes_not_void: ignored_classes /= Void
+	delayed_classes_attached: attached delayed_classes
 
 note
 	copyright:	"Copyright (c) 1984-2010, Eiffel Software"

@@ -1159,7 +1159,7 @@ end
 
 	same_interface (other: FEATURE_I): BOOLEAN
 			-- Has `other' same interface than Current ?
-			-- [Semnatic for second pass is `old_feat.same_interface (new)']
+			-- [Semantics for second pass is `old_feat.same_interface (new)']
 		require
 			good_argument: other /= Void
 --			export_statuses_exist: not (export_status = Void

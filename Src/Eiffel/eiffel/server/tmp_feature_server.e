@@ -71,6 +71,10 @@ feature -- Element change
 			if t_is_aliased then
 					-- If the feature is aliased then we do not add to 'storage'
 				aliased_features.force (t, t.id)
+			elseif t.is_type_evaluation_delayed then
+					-- The feature needs to be kept in memory until all classes are processed
+					-- because it can be modified.
+				delayed_storage.force (t, t.id)
 			else
 				storage.force (t, t.id)
 			end

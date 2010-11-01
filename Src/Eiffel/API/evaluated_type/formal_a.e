@@ -202,7 +202,14 @@ feature -- IL code generation
 feature -- Comparison
 
 	is_equivalent (other: FORMAL_A): BOOLEAN
-			-- Is `other' equivalent to the current object ?
+			-- Is `other' equivalent to the current object?
+		do
+			Result := is_equivalent_excluding_attachment (other) and then
+				is_attached = other.is_attached
+		end
+
+	is_equivalent_excluding_attachment (other: FORMAL_A): BOOLEAN
+			-- Is `other' equivalent to the current object without taking attachment status into account?
 		do
 			Result := position = other.position and then
 				is_reference = other.is_reference and then
@@ -502,7 +509,7 @@ feature {FORMAL_A} -- Conformance
 			a_context_class_attached: attached a_context_class
 			other_attached: attached other
 		do
-			if is_equivalent (other) then
+			if is_equivalent_excluding_attachment (other) then
 					-- The rules are as follows, but we need to take care about implicit attachment status:
     				-- 1. !G conforms to G, ?G and !G.
 					-- 2. G conforms to G and ?G.

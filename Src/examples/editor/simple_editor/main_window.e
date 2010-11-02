@@ -81,6 +81,8 @@ feature {NONE} -- Initialization
 
 				-- Set the initial size of the window
 			set_size (Window_width, Window_height)
+
+			setup_editor
 		end
 
 	create_interface_objects
@@ -117,7 +119,7 @@ feature {NONE} -- Menu Implementation
 	build_standard_menu_bar
 			-- Create and populate `standard_menu_bar'.
 		require
-			menu_bar_not_yet_created: standard_menu_bar = Void
+			menu_bar_not_yet_created: standard_menu_bar /= Void
 		do
 				-- Add the "File" menu
 			build_file_menu
@@ -135,7 +137,7 @@ feature {NONE} -- Menu Implementation
 	build_file_menu
 			-- Create and populate `file_menu'.
 		require
-			file_menu_not_yet_created: file_menu = Void
+			file_menu_not_yet_created: file_menu /= Void
 		local
 			menu_item: EV_MENU_ITEM
 		do
@@ -157,7 +159,7 @@ feature {NONE} -- Menu Implementation
 	build_help_menu
 			-- Create and populate `help_menu'.
 		require
-			help_menu_not_yet_created: help_menu = Void
+			help_menu_not_yet_created: help_menu /= Void
 		local
 			menu_item: EV_MENU_ITEM
 		do
@@ -224,7 +226,7 @@ feature {NONE} -- Implementation
 	build_main_container
 			-- Create and populate `main_container'.
 		require
-			main_container_not_yet_created: main_container = Void
+			main_container_not_yet_created: main_container /= Void
 		do
 			main_container.extend (editor.widget)
 		ensure
@@ -233,15 +235,19 @@ feature {NONE} -- Implementation
 
 	create_editor: like editor
 			-- Create editor
+		do
+			editor_preferences_cell.put (editor_data)
+			create Result
+		end
+
+	setup_editor
+			-- Setup the editor
 		local
 			l_doc: DOCUMENT_CLASS
 		do
-			editor_preferences_cell.put (editor_data)
-
-			create Result
 			editor_data.show_line_numbers_preference.set_value (True)
-			Result.add_edition_observer (Current)
-			Result.load_text ("Open a *.e or *.java file.")
+			editor.add_edition_observer (Current)
+			editor.load_text ("Open a *.e or *.java file.")
 
 				-- Init document classes
 			l_doc := eiffel_class

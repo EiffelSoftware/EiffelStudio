@@ -18,8 +18,6 @@ feature {NONE} -- Initialization
 	make_and_launch
 			-- Initialize and launch application
 		do
-				-- create and initialize the first window.
-			create first_window
 			default_create
 			prepare
 			launch
@@ -30,6 +28,8 @@ feature {NONE} -- Initialization
 			-- Perform one call to first window in order to
 			-- avoid to violate the invariant of class EV_APPLICATION.
 		do
+				-- create and initialize the first window.
+			create first_window
 
 				-- Show the first window.
 				--| TODO: Remove this line if you don't want the first
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	first_window: MAIN_WINDOW
+	first_window: detachable MAIN_WINDOW
 			-- Main window.
 
 end -- class APPLICATION

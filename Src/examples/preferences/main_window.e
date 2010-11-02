@@ -228,7 +228,7 @@ feature {NONE} -- Implementation / Constants
 	Window_title: STRING = "EiffelPreference Example"
 			-- Title of the window.
 
-	Window_width: INTEGER = 100
+	Window_width: INTEGER = 300
 			-- Initial width for this window.
 
 	Window_height: INTEGER = 100;

@@ -11,7 +11,8 @@ inherit
 	EV_TITLED_WINDOW
 		redefine
 			initialize,
-			is_in_default_state
+			is_in_default_state,
+			create_interface_objects
 		end
 
 	INTERFACE_NAMES
@@ -82,6 +83,16 @@ feature {NONE} -- Initialization
 			set_size (Window_width, Window_height)
 		end
 
+	create_interface_objects
+			-- Create interface objects
+		do
+			create standard_menu_bar
+			create file_menu.make_with_text (Menu_file_item)
+			create help_menu.make_with_text (Menu_help_item)
+			create main_container
+			editor := create_editor
+		end
+
 	is_in_default_state: BOOLEAN
 			-- the window in its default state
 			-- (as stated in `initialize')
@@ -108,9 +119,6 @@ feature {NONE} -- Menu Implementation
 		require
 			menu_bar_not_yet_created: standard_menu_bar = Void
 		do
-				-- Create the menu bar.
-			create standard_menu_bar
-
 				-- Add the "File" menu
 			build_file_menu
 			standard_menu_bar.extend (file_menu)
@@ -131,8 +139,6 @@ feature {NONE} -- Menu Implementation
 		local
 			menu_item: EV_MENU_ITEM
 		do
-			create file_menu.make_with_text (Menu_file_item)
-
 			create menu_item.make_with_text (Menu_file_open_item)
 			menu_item.select_actions.extend (agent on_file_open)
 			file_menu.extend (menu_item)
@@ -155,8 +161,6 @@ feature {NONE} -- Menu Implementation
 		local
 			menu_item: EV_MENU_ITEM
 		do
-			create help_menu.make_with_text (Menu_help_item)
-
 			create menu_item.make_with_text (Menu_help_contents_item)
 			help_menu.extend (menu_item)
 		ensure
@@ -199,14 +203,16 @@ feature {NONE} -- Implementation, Close event
 			create question_dialog.make_with_text (Label_confirm_close_window)
 			question_dialog.show_modal_to_window (Current)
 
-			if question_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_ok) then
+			if attached question_dialog.selected_button as l_button and then l_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_ok) then
 					-- Destroy the window
 				destroy;
 
 					-- End the application
 					--| TODO: Remove this line if you don't want the application
 					--|       to end when the first window closed..
-				(create {EV_ENVIRONMENT}).application.destroy
+				if attached (create {EV_ENVIRONMENT}).application as l_app then
+					l_app.destroy
+				end
 			end
 		end
 
@@ -220,8 +226,6 @@ feature {NONE} -- Implementation
 		require
 			main_container_not_yet_created: main_container = Void
 		do
-			create main_container
-			editor := create_editor
 			main_container.extend (editor.widget)
 		ensure
 			main_container_created: main_container /= Void

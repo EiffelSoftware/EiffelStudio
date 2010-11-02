@@ -5,18 +5,18 @@ copy_sub 	Ace $TEST Ace
 
 copy_raw 	test.e $CLUSTER test.e
 compile_melted
-compile_result	syntax_error TEST 12
+compile_result	syntax_error TEST 13
 
 copy_raw 	test1.e $CLUSTER test.e
 resume_compile
-compile_result	syntax_error TEST 12
+compile_result	syntax_error TEST 13
 
 copy_raw 	test2.e $CLUSTER test.e
 resume_compile
-compile_result	syntax_error TEST 12
+compile_result	syntax_error TEST 13
 
 copy_raw 	test3.e $CLUSTER test.e
 resume_compile
-compile_result	syntax_error TEST 12
+compile_result	syntax_error TEST 15
 
 test_end

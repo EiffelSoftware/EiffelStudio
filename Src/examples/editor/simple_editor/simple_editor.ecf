@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-7-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-7-0 http://www.eiffel.com/developers/xml/configuration-1-7-0.xsd" name="simple_editor" uuid="E1029699-0329-4981-80C7-7604F4A68CC2">
+	<target name="simple_editor">
+		<root cluster="root_cluster" class="APPLICATION" feature="make_and_launch"/>
+		<option profile="true" warning="true" is_attached_by_default="false" void_safety="none" syntax="standard">
+			<assertions precondition="true" postcondition="true" invariant="true" loop="true" supplier_precondition="true"/>
+		</option>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="editor" location="$ISE_LIBRARY\library\editor\editor.ecf" readonly="false">
+			<option profile="false" warning="true">
+				<assertions/>
+			</option>
+		</library>
+		<library name="encoding" location="$ISE_LIBRARY\library\encoding\encoding.ecf" readonly="false" use_application_options="true"/>
+		<library name="lex" location="$ISE_LIBRARY\library\lex\lex.ecf" readonly="false"/>
+		<library name="preferences_reg" location="$ISE_LIBRARY\library\preferences\preferences_reg.ecf"/>
+		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf"/>
+		<cluster name="root_cluster" location=".\" recursive="true">
+			<file_rule>
+				<exclude>/EIFGENs$</exclude>
+				<exclude>/CVS$</exclude>
+				<exclude>/.svn$</exclude>
+			</file_rule>
+		</cluster>
+	</target>
+</system>

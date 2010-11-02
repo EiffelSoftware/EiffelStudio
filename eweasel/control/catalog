@@ -234,6 +234,7 @@ test	bracket-expression-on-manifest-type	syntax058 tcf pass syntax bracket_expre
 test	across-loop-syntax		syntax059 tcf pass syntax loop variant invariant across iteration
 test	object-test-expression	syntax060 tcf pass syntax object_test
 test	constrained-generic-without-type	syntax061 tcf fail syntax formal generic
+test	loop-instruction-as-expression	syntax062 tcf pass syntax loop instruction expression across iteration
 
 
 -- Validity tests

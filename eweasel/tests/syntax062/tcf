@@ -1,0 +1,22 @@
+test_name 	loop-instruction-as-expression
+test_description A loop instruction used as an expression should be reported as a syntax error.
+
+copy_sub 	Ace $TEST Ace
+
+copy_raw 	test.e $CLUSTER test.e
+compile_melted
+compile_result	syntax_error TEST 12
+
+copy_raw 	test1.e $CLUSTER test.e
+resume_compile
+compile_result	syntax_error TEST 12
+
+copy_raw 	test2.e $CLUSTER test.e
+resume_compile
+compile_result	syntax_error TEST 12
+
+copy_raw 	test3.e $CLUSTER test.e
+resume_compile
+compile_result	syntax_error TEST 12
+
+test_end

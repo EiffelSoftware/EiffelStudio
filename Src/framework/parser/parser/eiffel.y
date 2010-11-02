@@ -148,7 +148,8 @@ create
 %type <INTERNAL_AS>			Internal
 %type <INTERVAL_AS>			Choice
 %type <INVARIANT_AS>		Class_invariant
-%type <EXPR_AS>				Loop
+%type <LOOP_EXPR_AS>			Loop_expression
+%type <LOOP_AS>				Loop_instruction
 %type <NESTED_AS>			Call_on_feature_access
 %type <OPERAND_AS>			Delayed_actual
 %type <PARENT_AS>			Parent Parent_clause
@@ -211,7 +212,7 @@ create
 %type <CONSTRAINT_LIST_AS> Multiple_constraint_list
 %type <CONSTRAINING_TYPE_AS> Single_constraint
 
-%expect 364
+%expect 360
 
 %%
 
@@ -1444,8 +1445,6 @@ Instruction_impl: Creation
 				if has_type then
 					report_one_error (create {SYNTAX_ERROR}.make (token_line ($1), token_column ($1),
 						filename, "Expression cannot be used as an instruction"))
-				elseif attached {INSTRUCTION_WRAPPER_AS} $1 as w then
-					$$ := w.instruction
 				elseif $1 /= Void then
 					$$ := new_call_instruction_from_expression ($1)
 				end
@@ -1457,6 +1456,8 @@ Instruction_impl: Creation
 	|	Reverse_assignment
 			{ $$ := $1 }
 	|	Conditional
+			{ $$ := $1 }
+	|	Loop_instruction
 			{ $$ := $1 }
 	|	Multi_branch
 			{ $$ := $1 }
@@ -2249,7 +2250,7 @@ Choice: Integer_constant
 
 	;
 
-Loop:
+Loop_instruction:
 	TE_FROM Compound Invariant Variant TE_UNTIL Expression TE_LOOP Compound TE_END
 			{
 				if has_syntax_warning then
@@ -2258,18 +2259,18 @@ Loop:
 						once "Loop variant should appear just before the end keyword of the loop."))
 				end
 				if $3 /= Void then
-					$$ := create {INSTRUCTION_WRAPPER_AS}.make (ast_factory.new_loop_as (Void, $2, $3.second, $4, $6, $8, $9, $1, $3.first, $5, $7))
+					$$ := ast_factory.new_loop_as (Void, $2, $3.second, $4, $6, $8, $9, $1, $3.first, $5, $7)
 				else
-					$$ := create {INSTRUCTION_WRAPPER_AS}.make (ast_factory.new_loop_as (Void, $2, Void, $4, $6, $8, $9, $1, Void, $5, $7))
+					$$ := ast_factory.new_loop_as (Void, $2, Void, $4, $6, $8, $9, $1, Void, $5, $7)
 				end
 				has_type := False
 			}
 	| TE_FROM Compound Invariant TE_UNTIL Expression TE_LOOP Compound Variant_opt TE_END
 			{
 				if $3 /= Void then
-					$$ := create {INSTRUCTION_WRAPPER_AS}.make (ast_factory.new_loop_as (Void, $2, $3.second, $8, $5, $7, $9, $1, $3.first, $4, $6))
+					$$ := ast_factory.new_loop_as (Void, $2, $3.second, $8, $5, $7, $9, $1, $3.first, $4, $6)
 				else
-					$$ := create {INSTRUCTION_WRAPPER_AS}.make (ast_factory.new_loop_as (Void, $2, Void, $8, $5, $7, $9, $1, Void, $4, $6))
+					$$ := ast_factory.new_loop_as (Void, $2, Void, $8, $5, $7, $9, $1, Void, $4, $6)
 				end
 				has_type := False
 			}
@@ -2277,15 +2278,15 @@ Loop:
 			{
 				if $4 /= Void then
 					if $5 /= Void then
-						$$ := create {INSTRUCTION_WRAPPER_AS}.make (ast_factory.new_loop_as ($1, $3, $4.second, $8, $5.second, $7, $9, $2, $4.first, $5.first, $6))
+						$$ := ast_factory.new_loop_as ($1, $3, $4.second, $8, $5.second, $7, $9, $2, $4.first, $5.first, $6)
 					else
-						$$ := create {INSTRUCTION_WRAPPER_AS}.make (ast_factory.new_loop_as ($1, $3, $4.second, $8, Void, $7, $9, $2, $4.first, Void, $6))
+						$$ := ast_factory.new_loop_as ($1, $3, $4.second, $8, Void, $7, $9, $2, $4.first, Void, $6)
 					end
 				else
 					if $5 /= Void then
-						$$ := create {INSTRUCTION_WRAPPER_AS}.make (ast_factory.new_loop_as ($1, $3, Void, $8, $5.second, $7, $9, $2, Void, $5.first, $6))
+						$$ := ast_factory.new_loop_as ($1, $3, Void, $8, $5.second, $7, $9, $2, Void, $5.first, $6)
 					else
-						$$ := create {INSTRUCTION_WRAPPER_AS}.make (ast_factory.new_loop_as ($1, $3, Void, $8, Void, $7, $9, $2, Void, Void, $6))
+						$$ := ast_factory.new_loop_as ($1, $3, Void, $8, Void, $7, $9, $2, Void, Void, $6)
 					end
 				end
 				has_type := False
@@ -2294,20 +2295,23 @@ Loop:
 			{
 				if $2 /= Void then
 					if $3 /= Void then
-						$$ := create {INSTRUCTION_WRAPPER_AS}.make (ast_factory.new_loop_as ($1, Void, $2.second, $6, $3.second, $5, $7, Void, $2.first, $3.first, $4))
+						$$ := ast_factory.new_loop_as ($1, Void, $2.second, $6, $3.second, $5, $7, Void, $2.first, $3.first, $4)
 					else
-						$$ := create {INSTRUCTION_WRAPPER_AS}.make (ast_factory.new_loop_as ($1, Void, $2.second, $6, Void, $5, $7, Void, $2.first, Void, $4))
+						$$ := ast_factory.new_loop_as ($1, Void, $2.second, $6, Void, $5, $7, Void, $2.first, Void, $4)
 					end
 				else
 					if $3 /= Void then
-						$$ := create {INSTRUCTION_WRAPPER_AS}.make (ast_factory.new_loop_as ($1, Void, Void, $6, $3.second, $5, $7, Void, Void, $3.first, $4))
+						$$ := ast_factory.new_loop_as ($1, Void, Void, $6, $3.second, $5, $7, Void, Void, $3.first, $4)
 					else
-						$$ := create {INSTRUCTION_WRAPPER_AS}.make (ast_factory.new_loop_as ($1, Void, Void, $6, Void, $5, $7, Void, Void, Void, $4))
+						$$ := ast_factory.new_loop_as ($1, Void, Void, $6, Void, $5, $7, Void, Void, Void, $4)
 					end
 				end
 				has_type := False
 			}
-	| Iteration Invariant Exit_condition_opt TE_ALL Expression Variant_opt TE_END
+	;
+
+Loop_expression:
+	Iteration Invariant Exit_condition_opt TE_ALL Expression Variant_opt TE_END
 			{
 				if $2 /= Void then
 					if $3 /= Void then
@@ -3011,7 +3015,7 @@ Bracket_target:
 			{ $$ := ast_factory.new_expr_call_as ($1); has_type := False }
 	|	Creation_expression
 			{ $$ := ast_factory.new_expr_call_as ($1); has_type := True }
-	|	Loop
+	|	Loop_expression
 			{ $$ := $1 }
 	|	TE_LPARAN Expression TE_RPARAN
 			{ $$ := ast_factory.new_paran_as ($2, $1, $3); has_type := True }

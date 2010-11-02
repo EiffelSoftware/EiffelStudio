@@ -8,9 +8,9 @@
 		</option>
 		<precompile name="vision2_pre" location="$ISE_PRECOMP\vision2.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="editor" location="$EIFFEL_SRC\library\editor\editor.ecf" readonly="false"/>
+		<library name="editor" location="$ISE_LIBRARY\library\editor\editor.ecf" readonly="false"/>
 		<library name="lex" location="$ISE_LIBRARY\library\lex\lex.ecf"/>
-		<library name="patterns" location="$EIFFEL_SRC\library\patterns\patterns.ecf"/>
+		<library name="patterns" location="$ISE_LIBRARY\library\patterns\patterns.ecf"/>
 		<library name="preferences_reg" location="$ISE_LIBRARY\library\preferences\preferences_reg.ecf" readonly="false">
 			<condition>
 				<platform value="windows"/>

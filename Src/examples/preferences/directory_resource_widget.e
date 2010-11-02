@@ -21,21 +21,21 @@ create
 
 feature -- Access
 
+	change_item_widget: EV_GRID_DRAWABLE_ITEM
+
 	graphical_type: STRING
 			-- Graphical type identifier.
 		do
 			Result := "DIRECTORY"
 		end
 
-	preference: DIRECTORY_RESOURCE
-			-- Actual preference.
 
-	last_selected_value: DIRECTORY_NAME
+	last_selected_value: detachable DIRECTORY_NAME
 
-	change_item_widget: EV_GRID_DRAWABLE_ITEM
+feature -- Basic operations
 
 	show
-			--
+			-- Show widget
 		do
 			show_change_item_widget
 		end
@@ -47,10 +47,17 @@ feature {PREFERENCE_VIEW} -- Commands
 		require
 			preference_exists: preference /= Void
 			in_view: caller /= Void
+		local
+			l_directory_tool: like directory_tool
 		do
-			create directory_tool
-			directory_tool.ok_actions.extend (agent update_changes)
-			directory_tool.show_modal_to_window (caller.parent_window)
+			create l_directory_tool
+			directory_tool := l_directory_tool
+			l_directory_tool.ok_actions.extend (agent update_changes)
+			if caller /= Void and attached caller.parent_window as p then
+				l_directory_tool.show_modal_to_window (p)
+			else
+				check caller_has_parent_window: False end
+			end
 		end
 
 feature {NONE} -- Commands
@@ -59,40 +66,49 @@ feature {NONE} -- Commands
 			-- Update the changes made in `change_item_widget' to `preference'.		
 		local
 			directory: STRING
+			l_last_selected_value: like last_selected_value
 		do
-			directory := directory_tool.directory
-			create last_selected_value.make_from_string (directory)
-			if last_selected_value /= Void then
-				preference.set_value (last_selected_value)
+			if attached directory_tool as d then
+				directory := d.directory
+				create l_last_selected_value.make_from_string (directory)
+				last_selected_value := l_last_selected_value
+				preference.set_value (l_last_selected_value)
 			end
 			Precursor {PREFERENCE_WIDGET}
 		end
 
 	update_preference
-			--
 		do
-			if last_selected_value /= Void then
-				preference.set_value (last_selected_value)
+			if attached last_selected_value as v then
+				preference.set_value (v)
 			end
 		end
+
+feature {PREFERENCE_VIEW} -- Implementation
+
+	preference: DIRECTORY_RESOURCE
+			-- Actual preference.
 
 feature {NONE} -- Implementation
 
 	build_change_item_widget
 			-- Create and setup `change_item_widget'.
+		local
+			l_change_item_widget: like change_item_widget
 		do
-			create change_item_widget
-			change_item_widget.expose_actions.extend (agent on_directory_item_exposed (?))
-			change_item_widget.set_data (preference)
-			change_item_widget.pointer_double_press_actions.force_extend (agent show_change_item_widget)
+			create l_change_item_widget
+			change_item_widget := l_change_item_widget
+			l_change_item_widget.expose_actions.extend (agent on_directory_item_exposed (?))
+			l_change_item_widget.set_data (preference)
+			l_change_item_widget.pointer_double_press_actions.force_extend (agent show_change_item_widget)
 		end
 
 	show_change_item_widget
-			--
+			-- Show change widget
 		do
 			change
-			if last_selected_value /= Void then
-				preference.set_value (last_selected_value)
+			if attached last_selected_value as v then
+				preference.set_value (v)
 			end
 		end
 
@@ -100,7 +116,9 @@ feature {NONE} -- Implementation
 			-- Expose part of directory preference value item.
 		do
 			if change_item_widget.row.is_selected then
-				area.set_foreground_color (change_item_widget.parent.focused_selection_color)
+				if attached change_item_widget.parent as p then
+					area.set_foreground_color (p.focused_selection_color)
+				end
 				area.fill_rectangle (0, 0, change_item_widget.width, change_item_widget.height)
 				area.set_foreground_color ((create {EV_STOCK_COLORS}).white)
 				area.draw_text_top_left (5, 1, preference.string_value)
@@ -112,7 +130,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	directory_tool: EV_DIRECTORY_DIALOG;
+	directory_tool: detachable EV_DIRECTORY_DIALOG;
 			-- Directory dialog from which we can select a color.
 
 note

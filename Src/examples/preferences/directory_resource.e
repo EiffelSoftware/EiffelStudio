@@ -10,9 +10,21 @@ class
 
 inherit
 	TYPED_PREFERENCE [DIRECTORY_NAME]
+		redefine
+			init_value_from_string
+		end
 
 create {PREFERENCE_FACTORY}
 	make, make_from_string_value
+
+feature {NONE} -- Initialization
+
+	 init_value_from_string (a_value: STRING)
+			-- Set initial value from String `a_value'
+		do
+			create internal_value.make_from_string (a_value)
+			Precursor (a_value)
+		end
 
 feature -- Setting	
 
@@ -53,7 +65,7 @@ feature -- Access
 	auto_default_value: DIRECTORY_NAME
 			-- Value to use when Current is using auto by default (until real auto is set)
 		once
-			Result := create {DIRECTORY_NAME}.make_from_string ("")
+			create {DIRECTORY_NAME} Result.make_from_string ("")
 		end
 
 note

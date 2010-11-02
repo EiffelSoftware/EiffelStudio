@@ -12,7 +12,12 @@ class
 	CUSTOM_PREFERENCE_DIALOG
 
 inherit
-	CUSTOM_PREFERENCE_DIALOG_IMP
+	EV_DIALOG
+		redefine
+			initialize,
+			create_interface_objects,
+			is_in_default_state
+		end
 
 	PREFERENCE_VIEW
 		undefine
@@ -23,6 +28,19 @@ create
 	make_with_parent
 
 feature {NONE} -- Initialization
+
+	create_interface_objects
+		do
+			create parent_pixmap_box
+			create parent_title_container
+			create parent_title_label
+			create main_preference_box
+			create restore_button
+			create ok_button
+			create cancel_button
+			create grid
+			Precursor
+		end
 
 	make_with_parent (a_preferences: like preferences; a_parent_window: like parent_window)
 				-- Initialize
@@ -35,7 +53,6 @@ feature {NONE} -- Initialization
 			cancel_button.select_actions.extend (agent on_cancel)
 			ok_button.select_actions.extend (agent on_close)
 			restore_button.select_actions.extend (agent on_restore)
-			create grid
 			main_preference_box.extend (grid)
 			show
 		end
@@ -47,16 +64,16 @@ feature {NONE} -- Initialization
 			-- (due to regeneration of implementation class)
 			-- can be added here.
 		local
-			p: EV_BOX
 			but_export, but_import: EV_BUTTON
 		do
-			p ?= restore_button.parent
 			create but_export.make_with_text_and_action ("Export", agent export_preferences)
 			create but_import.make_with_text_and_action ("Import", agent import_preferences)
-			p.put_front (but_export)
-			p.put_front (but_import)
-			p.disable_item_expand (but_export)
-			p.disable_item_expand (but_import)
+			if attached {EV_BOX} restore_button.parent as p then
+				p.put_front (but_export)
+				p.put_front (but_import)
+				p.disable_item_expand (but_export)
+				p.disable_item_expand (but_import)
+			end
 		end
 
 	export_preferences
@@ -86,13 +103,100 @@ feature {NONE} -- Initialization
 			if s /= Void and then not s.is_empty then
 				create stor.make_with_location (s)
 				preferences.import_from_storage (stor)
-				if selected_preference_name /= Void then
-					fill_container (selected_preference_name)
+				if attached selected_preference_name as pn then
+					fill_container (pn)
 				end
 			end
 		end
 
+	initialize
+			-- Initialize `Current'.
+		local
+			l_ev_vertical_box_1, l_ev_vertical_box_2: EV_VERTICAL_BOX
+			l_ev_frame_1: EV_FRAME
+			l_ev_horizontal_split_area_1: EV_HORIZONTAL_SPLIT_AREA
+			l_ev_horizontal_box_1: EV_HORIZONTAL_BOX
+			l_ev_cell_1: EV_CELL
+			internal_font: EV_FONT
+		do
+			Precursor {EV_DIALOG}
+
+				-- Create all widgets.
+			create l_ev_vertical_box_1
+			create l_ev_frame_1
+			create l_ev_horizontal_split_area_1
+			create l_ev_vertical_box_2
+			create l_ev_horizontal_box_1
+			create l_ev_cell_1
+
+				-- Build_widget_structure.
+			extend (l_ev_vertical_box_1)
+			l_ev_vertical_box_1.extend (l_ev_frame_1)
+			l_ev_frame_1.extend (l_ev_horizontal_split_area_1)
+			l_ev_horizontal_split_area_1.extend (parent_pixmap_box)
+			l_ev_horizontal_split_area_1.extend (l_ev_vertical_box_2)
+			l_ev_vertical_box_2.extend (parent_title_container)
+			parent_title_container.extend (parent_title_label)
+			l_ev_vertical_box_2.extend (main_preference_box)
+			l_ev_vertical_box_1.extend (l_ev_horizontal_box_1)
+			l_ev_horizontal_box_1.extend (restore_button)
+			l_ev_horizontal_box_1.extend (l_ev_cell_1)
+			l_ev_horizontal_box_1.extend (ok_button)
+			l_ev_horizontal_box_1.extend (cancel_button)
+
+			set_minimum_width (640)
+			set_minimum_height (480)
+			set_title ("Preferences")
+			l_ev_vertical_box_1.set_padding_width (5)
+			l_ev_vertical_box_1.set_border_width (5)
+			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_1)
+			parent_pixmap_box.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
+			parent_pixmap_box.set_minimum_width (150)
+			parent_pixmap_box.set_padding_width (5)
+			parent_pixmap_box.set_border_width (5)
+			l_ev_vertical_box_2.set_padding_width (5)
+			l_ev_vertical_box_2.set_border_width (5)
+			l_ev_vertical_box_2.disable_item_expand (parent_title_container)
+			parent_title_container.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 160))
+			parent_title_container.set_padding_width (5)
+			parent_title_container.set_border_width (5)
+			parent_title_label.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 160))
+			parent_title_label.set_foreground_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
+			create internal_font
+			internal_font.set_family (3)
+			internal_font.set_weight (7)
+			internal_font.set_shape (10)
+			internal_font.set_height_in_points (12)
+			internal_font.preferred_families.extend ("Verdana")
+			parent_title_label.set_font (internal_font)
+			parent_title_label.align_text_left
+			main_preference_box.set_padding_width (5)
+			main_preference_box.set_border_width (5)
+			l_ev_horizontal_box_1.set_padding_width (5)
+			l_ev_horizontal_box_1.set_border_width (5)
+			l_ev_horizontal_box_1.disable_item_expand (restore_button)
+			l_ev_horizontal_box_1.disable_item_expand (ok_button)
+			l_ev_horizontal_box_1.disable_item_expand (cancel_button)
+			restore_button.set_text ("Restore defaults")
+			ok_button.set_text ("OK")
+			ok_button.set_minimum_width (80)
+			cancel_button.set_text ("Cancel")
+			cancel_button.set_minimum_width (80)
+
+				--Connect events.
+				-- Close the application when an interface close
+				-- request is recieved on `Current'. i.e. the cross is clicked.
+
+				-- Call `user_initialization'.
+			user_initialization
+		end
+
 feature -- Access
+
+	parent_pixmap_box, main_preference_box: EV_VERTICAL_BOX
+	parent_title_container: EV_HORIZONTAL_BOX
+	parent_title_label: EV_LABEL
+	restore_button, ok_button, cancel_button: EV_BUTTON
 
 	parent_window: EV_WINDOW
 
@@ -105,6 +209,14 @@ feature -- Change
 		end
 
 feature {NONE} -- Implementation
+
+	is_in_default_state: BOOLEAN
+			-- Is `Current' in its default state?
+		do
+			-- Re-implement if you wish to enable checking
+			-- for `Current'.
+			Result := True
+		end
 
 	grid: EV_GRID
 
@@ -146,7 +258,9 @@ feature {NONE} -- Implementation
 							l_filename.extend (l_pref_parent_short_name)
 							l_filename.add_extension ("png")
 							l_root_pixmap.set_with_named_file (l_filename.string)
-							l_root_pixmap.pointer_button_press_actions.force_extend (agent (a_pre: like selected_preference_name)
+							l_root_pixmap.pointer_button_press_actions.force_extend (agent (a_pre: attached like selected_preference_name)
+										require
+											a_pre_attached: a_pre /= Void
 										do
 											selected_preference_name := a_pre;
 											fill_container (a_pre)
@@ -202,32 +316,24 @@ feature {NONE} -- Implementation
 			preference_not_void: a_preference /= Void
 		local
 			l_preference_widget: PREFERENCE_WIDGET
-			l_dr: DIRECTORY_RESOURCE
-			l_cr: COLOR_PREFERENCE
-			l_br: BOOLEAN_PREFERENCE
 		do
-			l_dr ?= a_preference
-			if l_dr = Void then
-				l_cr ?= a_preference
-				if l_cr /= Void then
-					create {COLOR_PREFERENCE_WIDGET} l_preference_widget.make_with_preference (l_cr)
-					l_preference_widget.set_caller (Current)
-					grid.set_item (1, a_row_index, create {EV_GRID_LABEL_ITEM}.make_with_text (a_preference.name))
-					grid.set_item (2, a_row_index, l_preference_widget.change_item_widget)
-				else
-					l_br ?= a_preference
-					if l_br /= Void then
-						create {BOOLEAN_PREFERENCE_WIDGET} l_preference_widget.make_with_preference (l_br)
-						l_preference_widget.set_caller (Current)
-						grid.set_item (1, a_row_index, create {EV_GRID_LABEL_ITEM}.make_with_text (a_preference.name))
-						grid.set_item (2, a_row_index, l_preference_widget.change_item_widget)
-					end
-				end
-			else
+			if attached {DIRECTORY_RESOURCE} a_preference as l_dr then
 				create {DIRECTORY_RESOURCE_WIDGET} l_preference_widget.make_with_preference (l_dr)
 				l_preference_widget.set_caller (Current)
 				grid.set_item (1, a_row_index, create {EV_GRID_LABEL_ITEM}.make_with_text (a_preference.name))
 				grid.set_item (2, a_row_index, l_preference_widget.change_item_widget)
+			else
+				if attached {COLOR_PREFERENCE} a_preference as l_cr then
+					create {COLOR_PREFERENCE_WIDGET} l_preference_widget.make_with_preference (l_cr)
+					l_preference_widget.set_caller (Current)
+					grid.set_item (1, a_row_index, create {EV_GRID_LABEL_ITEM}.make_with_text (a_preference.name))
+					grid.set_item (2, a_row_index, l_preference_widget.change_item_widget)
+				elseif attached {BOOLEAN_PREFERENCE} a_preference as l_br then
+					create {BOOLEAN_PREFERENCE_WIDGET} l_preference_widget.make_with_preference (l_br)
+					l_preference_widget.set_caller (Current)
+					grid.set_item (1, a_row_index, create {EV_GRID_LABEL_ITEM}.make_with_text (a_preference.name))
+					grid.set_item (2, a_row_index, l_preference_widget.change_item_widget)
+				end
 			end
 
 			grid.column (1).set_title ("Preference Name")
@@ -262,17 +368,20 @@ feature {NONE} -- Events
 			l_confirmation_dialog.set_text ("This will reset ALL preferences to their default values%N%
 				% and all previous settings will be overwritten.  Are you sure?")
 			l_confirmation_dialog.show_modal_to_window (parent_window)
-			if l_confirmation_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_ok) then
+			if
+				attached l_confirmation_dialog.selected_button as but_txt and then
+				but_txt.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_ok)
+			then
 				preferences.restore_defaults
-				if selected_preference_name /= Void then
-					fill_container (selected_preference_name)
+				if attached selected_preference_name as pn then
+					fill_container (pn)
 				end
 			end
 		end
 
 feature {NONE} -- Private Attributes
 
-	selected_preference_name: STRING
+	selected_preference_name: detachable STRING
 			-- Selected preference
 
 	padding_width: INTEGER = 3;

@@ -13,6 +13,7 @@ inherit
 	EV_TITLED_WINDOW
 		redefine
 			initialize,
+			create_interface_objects,
 			is_in_default_state
 		end
 
@@ -42,31 +43,33 @@ feature -- Preference Testing
 			cr: COLOR_PREFERENCE
 			df: EV_FONT
 			psf: PREFERENCES_STORAGE_FACTORY
+			l_basic_preferences: like basic_preferences
 		do
 			create l_factory
 			create psf
-			create basic_preferences.make_with_defaults_and_storage (<<"default.conf">>, psf.storage_for_basic)
+			create l_basic_preferences.make_with_defaults_and_storage (<<"default.conf">>, psf.storage_for_basic)
+			basic_preferences := l_basic_preferences
 
 			create df.make_with_values (1, 6, 10, 8)
 			df.preferred_families.extend ("verdana")
 			df.preferred_families.extend ("arial")
 			df.preferred_families.extend ("helvetica")
 
-			l_manager := basic_preferences.new_manager ("examples")
+			l_manager := l_basic_preferences.new_manager ("examples")
 			ir := l_factory.new_integer_preference_value (l_manager, "examples.my_integer_preference", 10)
 			ar := l_factory.new_array_preference_value (l_manager, "examples.my_list_preference", <<"1","2","3">>)
 			fr := l_factory.new_font_preference_value (l_manager, "examples.my_font_preference", df)
 			sr := l_factory.new_string_preference_value (l_manager, "examples.my_string_preference", "a string")
 			sr := l_factory.new_string_preference_value (l_manager, "examples.driver_location", (create {DIRECTORY_NAME}.make_from_string ("C:\My Directory Location")).string)
 
-			l_manager := basic_preferences.new_manager ("display")
+			l_manager := l_basic_preferences.new_manager ("display")
 			br := l_factory.new_boolean_preference_value (l_manager, "display.fullscreen_at_startup", True)
 			cr := l_factory.new_color_preference_value (l_manager, "display.background_color", create {EV_COLOR}.make_with_8_bit_rgb (128, 2, 136))
 
-			l_manager := basic_preferences.new_manager ("graphics")
+			l_manager := l_basic_preferences.new_manager ("graphics")
 			br := l_factory.new_boolean_preference_value (l_manager, "graphics.use_maximum_resolution", True)
 
---			basic_preferences.export_to_storage (create {PREFERENCES_STORAGE_XML}.make_with_location ("backup.conf"), False)
+--			l_basic_preferences.export_to_storage (create {PREFERENCES_STORAGE_XML}.make_with_location ("backup.conf"), False)
 		end
 
 	initialize_custom_preferences
@@ -78,37 +81,45 @@ feature -- Preference Testing
 			dr: DIRECTORY_RESOURCE
 			cr: COLOR_PREFERENCE
 			psf: PREFERENCES_STORAGE_FACTORY
+			l_custom_preferences: like custom_preferences
 		do
 			create psf
-			create custom_preferences.make_with_storage (psf.storage_for_custom)
+			create l_custom_preferences.make_with_storage (psf.storage_for_custom)
+			custom_preferences := l_custom_preferences
 
-			create l_manager.make (custom_preferences, "display")
+			create l_manager.make (l_custom_preferences, "display")
 			br := l_manager.new_boolean_preference_value (l_manager, "display.fullscreen_at_startup", True)
 			cr := l_manager.new_color_preference_value (l_manager, "display.background_color", create {EV_COLOR}.make_with_8_bit_rgb (128, 128, 0))
 			dr := l_manager.new_directory_preference_value ("display.driver_location", create {DIRECTORY_NAME}.make_from_string ("C:\A Directory Location"))
 
-			create l_manager.make (custom_preferences, "graphics")
+			create l_manager.make (l_custom_preferences, "graphics")
 			br := l_manager.new_boolean_preference_value (l_manager, "graphics.use_maximum_resolution", True)
 		end
 
-	preference_window: PREFERENCES_GRID_DIALOG
+	preference_window: detachable PREFERENCES_GRID_DIALOG
 			-- The default preference interface widget
 
-	custom_preference_window: CUSTOM_PREFERENCE_DIALOG
+	custom_preference_window: detachable CUSTOM_PREFERENCE_DIALOG
 			-- A custom preference interface widget
 
 feature {NONE} -- Initialization
 
-	basic_preferences: PREFERENCES
+	basic_preferences: detachable PREFERENCES
 
-	custom_preferences: PREFERENCES
+	custom_preferences: detachable PREFERENCES
+
+	create_interface_objects
+		do
+			create main_container
+			Precursor
+		end
 
 	initialize
 			-- Build the interface for this window.
 		do
 			Precursor {EV_TITLED_WINDOW}
 
-			build_main_container
+			main_container := new_main_container
 			extend (main_container)
 
 				-- Execute `request_close_window' when the user clicks
@@ -141,14 +152,19 @@ feature {NONE} -- Implementation, Close event
 			create question_dialog.make_with_text (Label_confirm_close_window)
 			question_dialog.show_modal_to_window (Current)
 
-			if question_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_ok) then
+			if
+				attached question_dialog.selected_button as but_txt and then
+				but_txt.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_ok)
+			then
 					-- Destroy the window
-				destroy;
+				destroy
 
 					-- End the application
 					--| TODO: Remove this line if you don't want the application
 					--|       to end when the first window is closed..
-				(create {EV_ENVIRONMENT}).application.destroy
+				if attached (create {EV_ENVIRONMENT}).application as app then
+					app.destroy
+				end
 			end
 		end
 
@@ -157,41 +173,54 @@ feature {NONE} -- Implementation
 	main_container: EV_VERTICAL_BOX
 			-- Main container (contains all widgets displayed in this window)
 
-	build_main_container
-			-- Create and populate `main_container'.
-		require
-			main_container_not_yet_created: main_container = Void
+	new_main_container: like main_container
+			-- Create and populate `Result'.
 		local
 			basic_button,
 			custom_button: EV_BUTTON
 		do
-			create main_container
-
+			create Result
+			Result.set_padding_width (3)
+			Result.set_border_width (3)
 			create basic_button.make_with_text ("Load preferences (normal view)")
 			basic_button.select_actions.extend (agent show_standard_preference_window)
-			main_container.extend (basic_button)
+			Result.extend (basic_button)
 
 			create custom_button.make_with_text ("Load preferences (custom view)")
 			custom_button.select_actions.extend (agent show_custom_preference_window)
-			main_container.extend (custom_button)
+			Result.extend (custom_button)
 		ensure
-			main_container_created: main_container /= Void
+			result_created: Result /= Void
 		end
 
 	show_standard_preference_window
 			-- Show preference window basic view
+		local
+			w: like preference_window
 		do
 			initialize_basic_preferences
-			create preference_window.make (basic_preferences)
-			preference_window.show
+			if attached basic_preferences as p then
+				create w.make (p)
+				preference_window := w
+				w.show
+			else
+				check basic_preferences_exists: False end
+			end
 		end
 
 	show_custom_preference_window
 			-- Show preference window customized view
+		local
+			w: like custom_preference_window
 		do
 			initialize_custom_preferences
-			create custom_preference_window.make_with_parent (custom_preferences, Current)
-			custom_preference_window.show
+			if attached custom_preferences as p then
+				create w.make_with_parent (p, Current)
+				custom_preference_window := w
+				w.show
+			else
+				check custom_preferences_exists: False end
+			end
 		end
 
 feature {NONE} -- Implementation / Constants

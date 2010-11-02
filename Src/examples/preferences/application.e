@@ -13,7 +13,7 @@ inherit
 	EV_APPLICATION
 
 create
-	make_and_launch 
+	make_and_launch
 
 feature {NONE} -- Initialization
 
@@ -29,21 +29,24 @@ feature {NONE} -- Initialization
 			-- Prepare the first window to be displayed.
 			-- Perform one call to first window in order to
 			-- avoid to violate the invariant of class EV_APPLICATION.
+		local
+			w: like first_window
 		do
 				-- create and initialize the first window.
-			create first_window
+			create w
+			first_window := w
 
 				-- Show the first window.
-				--| TODO: Remove this line if you don't want the first 
+				--| TODO: Remove this line if you don't want the first
 				--|       window to be shown at the start of the program.
-			first_window.show
+			w.show
 		end
 
 feature {NONE} -- Implementation
 
-	first_window: MAIN_WINDOW;
+	first_window: detachable MAIN_WINDOW;
 			-- Main window.
-	
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

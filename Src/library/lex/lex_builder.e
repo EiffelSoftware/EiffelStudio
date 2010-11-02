@@ -1461,14 +1461,15 @@ feature {NONE} -- Implementation
 			end;
 
 			l_tokens := l_dfa.possible_tokens (l);
-			check l_tokens_attached: l_tokens /= Void end
-			from
-				i := l_tokens.lower
-			until
-				Result or i > l_tokens.upper
-			loop
-				Result := (l_tokens.item (i) = token_type);
-				i := i + 1
+			if l_tokens /= Void then
+				from
+					i := l_tokens.lower
+				until
+					Result or i > l_tokens.upper
+				loop
+					Result := (l_tokens.item (i) = token_type);
+					i := i + 1
+				end
 			end
 		end;
 

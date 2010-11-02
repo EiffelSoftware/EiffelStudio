@@ -11,7 +11,7 @@ feature {NONE} -- Creation
 		do
 			i :=
 			across
-				"string" as c
+				("string") as c
 			loop
 				i := i + 1
 			end

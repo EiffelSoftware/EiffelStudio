@@ -53,6 +53,8 @@ feature {NONE} --Initialization
 
 	init_value_from_string (a_value: STRING)
 			-- Set initial value from String `a_value'
+		require
+			a_value_attached: a_value /= Void
 		do
 			set_value_from_string (a_value)
 		end

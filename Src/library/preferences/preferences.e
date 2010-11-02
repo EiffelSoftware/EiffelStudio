@@ -459,12 +459,16 @@ feature {NONE} -- Implementation
 			parser.set_callbacks (l_tree)
 
 			create l_file.make (a_default_file_name)
-			l_file.open_read
-			if l_file.is_open_read then
-				parser.parse_from_file (l_file)
-				l_file.close
-		  	else
-		  		has_error := True
+			if l_file.exists and then l_file.is_readable then
+				l_file.open_read
+				if l_file.is_open_read then
+					parser.parse_from_file (l_file)
+					l_file.close
+			  	else
+			  		has_error := True
+				end
+			else
+				has_error := True
 			end
 
     		if has_error then

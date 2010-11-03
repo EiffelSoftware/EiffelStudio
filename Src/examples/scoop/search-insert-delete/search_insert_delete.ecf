@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-6-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-6-0 http://www.eiffel.com/developers/xml/configuration-1-6-0.xsd" name="search_insert_delete" uuid="732278AE-4185-4EFA-9091-6ADEE09B8FCA">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-7-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-7-0 http://www.eiffel.com/developers/xml/configuration-1-7-0.xsd" name="search_insert_delete" uuid="9DC8A4DC-A1D0-4801-BBD2-7E154188E486">
 	<target name="search_insert_delete">
 		<root class="SEARCH_INSERT_DELETE" feature="make"/>
 		<option is_attached_by_default="true" void_safety="all">
 		</option>
-		<precompile name="base_pre" location="$ISE_PRECOMP\base-mt-safe.ecf"/>
+		<setting name="concurrency" value="scoop"/>
+		<precompile name="base_pre" location="$ISE_PRECOMP\base-scoop-safe.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<cluster name="search_insert_delete" location=".\" recursive="true">
 			<file_rule>

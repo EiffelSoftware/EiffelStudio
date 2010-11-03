@@ -16,8 +16,8 @@
 		<option namespace="EiffelSoftware.Library.Vision2">
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
+		<precompile name="base_pre" location="$ISE_PRECOMP\base-scoop-safe.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
-	
 		<cluster name="concurrency" location=".\">
 			<option namespace="concurrency">
 			</option>

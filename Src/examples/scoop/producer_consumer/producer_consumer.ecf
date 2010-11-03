@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="producer_consumer" uuid="732278AE-4185-4EFA-9091-6ADEE09B8FCA">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-7-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-7-0 http://www.eiffel.com/developers/xml/configuration-1-7-0.xsd" name="producer_consumer" uuid="88EF0D25-EB19-4ECA-8F71-403887FC8075">
 	<target name="producer_consumer">
 		<root class="APPLICATION" feature="make"/>
 		<option is_attached_by_default="true" void_safety="all">
 		</option>
-		<precompile name="base_pre" location="$ISE_PRECOMP\base-mt-safe.ecf"/>
+		<setting name="concurrency" value="scoop"/>
+		<precompile name="base_pre" location="$ISE_PRECOMP\base-scoop-safe.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<cluster name="counter" location=".\" recursive="true">
 			<file_rule>

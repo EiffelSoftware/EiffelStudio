@@ -16,6 +16,7 @@
 		<option full_class_checking="true" is_attached_by_default="true" void_safety="all" namespace="EiffelSoftware.Library.Vision2">
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
+		<precompile name="base_pre" location="$ISE_PRECOMP\base-scoop-safe.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<cluster name="concurrency" location=".\">
 			<option namespace="concurrency">

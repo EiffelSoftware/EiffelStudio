@@ -120,7 +120,7 @@ feature -- Basic operatons
 							if l_index > 1 then
 								l_path.keep_head (l_index - 1)
 								create l_fn.make_from_string (l_path)
-								l_fn.add_extension ("lic")
+								l_fn.add_extension (license_extension)
 
 									-- Try to load the license
 								l_path := l_fn.string
@@ -133,11 +133,21 @@ feature -- Basic operatons
 									if l_index > 1 then
 										l_path.keep_head (l_index - 1)
 										create l_fn.make_from_string (l_path)
-										l_fn.set_file_name (once "license.lic")
+										l_fn.set_file_name (default_license_filename)
+										l_fn.add_extension (license_extension)
 										l_path := l_fn.string
 										if (create {RAW_FILE}.make (l_path)).exists then
 											l_license := load_license (l_path, l_use_old_syntax)
 											l_load_default := False
+										else
+											create l_fn.make_from_string (l_path)
+											l_fn.set_file_name (alternative_default_license_filename)
+											l_fn.add_extension (license_extension)
+											l_path := l_fn.string
+											if (create {RAW_FILE}.make (l_path)).exists then
+												l_license := load_license (l_path, l_use_old_syntax)
+												l_load_default := False
+											end
 										end
 									end
 								end
@@ -285,7 +295,7 @@ feature {NONE} -- Basic operation
 				create l_fn.make_from_string (eiffel_layout.templates_path.string)
 				l_fn.extend ("licenses")
 				l_fn.set_file_name (a_name)
-				l_fn.add_extension ("lic")
+				l_fn.add_extension (license_extension)
 
 					-- Check user file
 				l_user_fn := eiffel_layout.user_priority_file_name (l_fn, True)
@@ -304,6 +314,12 @@ feature {NONE} -- Basic operation
 
 feature {NONE} -- Constants: Symbols
 
+	default_license_filename: STRING = "license"
+
+	alternative_default_license_filename: STRING = "licence"
+
+	license_extension: STRING = "lic"
+
 	note_keyword_symbol: STRING = "NOTE_KEYWORD"
 			-- Keyword symbol in the template license file.
 
@@ -319,7 +335,7 @@ feature {NONE} -- Internationalization
 			-- Default invalid license.
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

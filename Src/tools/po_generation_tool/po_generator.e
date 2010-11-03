@@ -74,13 +74,18 @@ feature -- Generation
 			if l_string_low.has_substring (name_of_translate) or else l_string_low.has_substring (name_of_translate_plural) or else l_string_low.has_substring (name_of_feature_clause.as_lower) then
 				eiffel_parser.reset
 				eiffel_parser.set_syntax_version (eiffel_parser.transitional_64_syntax)
-				eiffel_parser.parse_from_string (l_string, Void)
+				eiffel_parser.parse_class_from_string (l_string, Void, Void)
 				if eiffel_parser.error_count > 0 then
 					eiffel_parser.reset
 					eiffel_parser.set_syntax_version (eiffel_parser.Ecma_syntax)
-					eiffel_parser.parse_from_string (l_string, Void)
+					eiffel_parser.parse_class_from_string (l_string, Void, Void)
 					if eiffel_parser.error_count > 0 then
-						has_error := True
+						eiffel_parser.reset
+						eiffel_parser.set_syntax_version (eiffel_parser.Ecma_syntax)
+						eiffel_parser.parse_class_from_string (l_string, Void, Void)
+						if eiffel_parser.error_count > 0 then
+							has_error := True
+						end
 					end
 				end
 				if not has_error then
@@ -124,7 +129,7 @@ invariant
 	file_not_void: file /= Void
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

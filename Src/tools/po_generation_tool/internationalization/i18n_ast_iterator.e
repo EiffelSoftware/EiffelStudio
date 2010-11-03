@@ -25,6 +25,8 @@ inherit
 
 	CHARACTER_ROUTINES
 
+	INTERNAL_COMPILER_STRING_EXPORTER
+
 feature -- Access
 
 	po_file: PO_FILE
@@ -124,7 +126,7 @@ feature {NONE} -- Implementation
 			param2: STRING_AS
 			plural_entry: PO_FILE_ENTRY_PLURAL
 			singular_entry: PO_FILE_ENTRY_SINGULAR
-			temp:  STRING_32
+			temp:  STRING
 		do
 			l_feature_name := node.access_name
 			if l_feature_name /= Void and then l_feature_name.is_case_insensitive_equal (translate_feature) then
@@ -145,11 +147,11 @@ feature {NONE} -- Implementation
 					param1 ?= node.parameters.first
 					param2 ?= node.parameters.i_th (node.parameters.index_set.lower+1) --should be 2d item :)
 					if param1 /= Void and then param2 /= Void then
-						temp := param1.value.as_string_32
+						temp := param1.value
 						handle_special_chars (temp)
 						if (not po_file.has_entry(temp)) then
 							create plural_entry.make (utf8_string (temp))
-							temp := param2.value.as_string_32
+							temp := param2.value
 							handle_special_chars (temp)
 							plural_entry.set_msgid_plural (utf8_string (temp))
 							append_comments (param1, plural_entry)
@@ -234,7 +236,7 @@ feature {NONE} -- Implementation
 			-- <Precursor>
 		local
 			singular_entry: PO_FILE_ENTRY_SINGULAR
-			temp: STRING_32
+			temp: STRING
 		do
 			if is_extracting_strings then
 				temp := l_as.value
@@ -320,7 +322,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	handle_special_chars (a_s: STRING_32)
+	handle_special_chars (a_s: STRING)
 			-- Replace "%"" with "\%"".
 			-- Replace "\" with "\\".
 			-- Replace "%N" with "\n".
@@ -334,7 +336,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

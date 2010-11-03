@@ -220,31 +220,8 @@ feature {NONE} -- Implementation
 		local
 			l_item: detachable EV_GRID_ITEM
 			l_list: LIST [EV_GRID_ITEM]
-			l_choice_list: detachable like choice_list
 		do
-			l_choice_list := choice_list
-			check l_choice_list /= Void end
-			l_item := l_choice_list.item_at_virtual_position (l_choice_list.virtual_x_position + a_x,
-				l_choice_list.virtual_y_position + a_y)
-			if l_item /= Void then
-				l_list := l_choice_list.selected_items
-				if not l_list.is_empty and then l_list.first /= l_item then
-					l_choice_list.remove_selection
-					l_item.enable_select
-				end
-			end
-		end
-
-	on_mouse_click (a_x, a_y, a_button: INTEGER; a_item: EV_GRID_ITEM)
-			-- Handle mouse actions.
-		local
-			l_item: detachable EV_GRID_ITEM
-			l_list: LIST [EV_GRID_ITEM]
-			l_choice_list: detachable like choice_list
-		do
-			l_choice_list := choice_list
-			check l_choice_list /= Void end
-			if a_button = 1 then
+			if attached choice_list as l_choice_list then
 				l_item := l_choice_list.item_at_virtual_position (l_choice_list.virtual_x_position + a_x,
 					l_choice_list.virtual_y_position + a_y)
 				if l_item /= Void then
@@ -253,8 +230,33 @@ feature {NONE} -- Implementation
 						l_choice_list.remove_selection
 						l_item.enable_select
 					end
-					has_user_selected_item := True
-					deactivate
+				end
+			else
+				check choice_list /= Void end
+			end
+		end
+
+	on_mouse_click (a_x, a_y, a_button: INTEGER; a_item: EV_GRID_ITEM)
+			-- Handle mouse actions.
+		local
+			l_item: detachable EV_GRID_ITEM
+			l_list: LIST [EV_GRID_ITEM]
+		do
+			if a_button = 1 then
+				if attached choice_list as l_choice_list then
+					l_item := l_choice_list.item_at_virtual_position (l_choice_list.virtual_x_position + a_x,
+						l_choice_list.virtual_y_position + a_y)
+					if l_item /= Void then
+						l_list := l_choice_list.selected_items
+						if not l_list.is_empty and then l_list.first /= l_item then
+							l_choice_list.remove_selection
+							l_item.enable_select
+						end
+						has_user_selected_item := True
+						deactivate
+					end
+				else
+					check choice_list /= Void end
 				end
 			end
 		end

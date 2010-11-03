@@ -97,7 +97,7 @@ feature -- Execution
 								l_row := g.grid_extended_new_row (g)
 								l_row.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text (cli.name))
 								l_row.set_item (2, create {EV_GRID_LABEL_ITEM}.make_with_text (cli.file_name))
-								if attached {CLASS_C} cli.compiled_representation as cl then
+								if attached cli.compiled_representation as cl then
 									r := l_row
 									l_row := g.grid_extended_new_subrow (r)
 									l_row.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("is compiled"))
@@ -117,7 +117,7 @@ feature -- Execution
 													l_id := tf.text
 													if l_id.is_integer then
 														create i_sh_sys
-														if attached {CLASS_C} i_sh_sys.system.class_of_id (l_id.to_integer) as i_cl then
+														if attached i_sh_sys.system.class_of_id (l_id.to_integer) as i_cl then
 															open_debug_class_feature_info (i_cl.name, Void)
 														end
 													end
@@ -129,9 +129,61 @@ feature -- Execution
 									l_row.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("topological_id"))
 									l_row.set_item (2, create {EV_GRID_LABEL_ITEM}.make_with_text (cl.topological_id.out))
 
+									if cl.types.count = 1 then
+										l_row := g.grid_extended_new_subrow (r)
+										l_row.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("type_id"))
+										gei := create {EV_GRID_EDITABLE_ITEM}.make_with_text (cl.types.first.type_id.out)
+										gei.set_background_color (bgcol)
+										gei.pointer_double_press_actions.force_extend (agent gei.activate)
+										gei.deactivate_actions.extend (agent (ai_gei: EV_GRID_EDITABLE_ITEM)
+												local
+													l_id: STRING
+													i_sh_sys: SHARED_WORKBENCH
+												do
+													if attached ai_gei.text_field as tf then
+														l_id := tf.text
+														if l_id.is_integer then
+															create i_sh_sys
+															if attached i_sh_sys.system.class_type_of_id (l_id.to_integer) as i_ct then
+																open_debug_class_feature_info (i_ct.associated_class.name, Void)
+															end
+														end
+													end
+												end(gei))
+										l_row.set_item (2, gei)
+
+										l_row := g.grid_extended_new_subrow (r)
+										l_row.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("static_type_id"))
+										gei := create {EV_GRID_EDITABLE_ITEM}.make_with_text (cl.types.first.static_type_id.out)
+										gei.set_background_color (bgcol)
+										gei.pointer_double_press_actions.force_extend (agent gei.activate)
+										gei.deactivate_actions.extend (agent (ai_gei: EV_GRID_EDITABLE_ITEM)
+												local
+													l_id: STRING
+													i_sh_sys: SHARED_WORKBENCH
+												do
+													if attached ai_gei.text_field as tf then
+														l_id := tf.text
+														if l_id.is_integer then
+															create i_sh_sys
+															if attached i_sh_sys.system.class_type_of_static_type_id (l_id.to_integer) as i_ct then
+																open_debug_class_feature_info (i_ct.associated_class.name, Void)
+															end
+														end
+													end
+												end(gei))
+										l_row.set_item (2, gei)
+									end
+
 									if attached cl.types as l_class_types then
 										l_row := g.grid_extended_new_subrow (r)
 										l_row.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("Class types"))
+										if
+											l_class_types.count = 1 and then
+											attached l_class_types.first as ct
+										then
+											l_row.set_item (2, create {EV_GRID_LABEL_ITEM}.make_with_text ("static_type_id=" + ct.static_type_id.out + " type_id=" + ct.type_id.out))
+										end
 										from
 											l_class_types.start
 										until
@@ -144,7 +196,7 @@ feature -- Execution
 										end
 									end
 
-									if not f.is_empty and then attached {FEATURE_I} cl.feature_named_32 (f) as fi then
+									if not f.is_empty and then attached cl.feature_named_32 (f) as fi then
 										debug_class_feature_info_add_feature_i (cl, fi, r, bgcol, False)
 									elseif attached cl.feature_table as ftable then
 										l_row := g.grid_extended_new_subrow (r)
@@ -283,7 +335,13 @@ feature -- Execution
 				gi.pointer_double_press_actions.force_extend (agent open_debug_class_feature_info (cl.name, fi.feature_name_32))
 			end
 			l_row.set_item (1, gi)
-			l_row.set_item (2, create {EV_GRID_LABEL_ITEM}.make_with_text (attached_string(fi.alias_name_32)))
+			s := attached_string (fi.alias_name_32).as_string_8
+			if s.is_empty then
+				s := fi.feature_id.out
+			else
+				s.prepend_string (fi.feature_id.out + "  ")
+			end
+			l_row.set_item (2, create {EV_GRID_LABEL_ITEM}.make_with_text (s))
 
 			sr := g.grid_extended_new_subrow (l_row)
 			sr.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("feature_id"))
@@ -301,7 +359,7 @@ feature -- Execution
 							if attached ai_gei.text_field as tf then
 								l_id := tf.text
 								if l_id.is_integer then
-									if attached {FEATURE_I} ai_cl.feature_of_feature_id (l_id.to_integer) as i_ft then
+									if attached ai_cl.feature_of_feature_id (l_id.to_integer) as i_ft then
 										open_debug_class_feature_info (ai_cl.name, i_ft.feature_name_32)
 									end
 								end
@@ -322,7 +380,7 @@ feature -- Execution
 			sr.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("body_index"))
 			sr.set_item (2, create {EV_GRID_LABEL_ITEM}.make_with_text (fi.body_index.out))
 			if
-				attached {ROUT_ID_SET} fi.rout_id_set as ridset and then
+				attached fi.rout_id_set as ridset and then
 				attached ridset.linear_representation as ridset_list
 			then
 				create s.make_empty
@@ -355,7 +413,7 @@ feature -- Execution
 			sr.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("written_in"))
 			sr.set_item (2, create {EV_GRID_LABEL_ITEM}.make_with_text (fi.written_in.out))
 
-			if attached {CLASS_C} fi.written_class as wcl and then wcl /= cl then
+			if attached fi.written_class as wcl and then wcl /= cl then
 				sr := g.grid_extended_new_subrow (l_row)
 				sr.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("written_class"))
 				create gi.make_with_text (wcl.name)

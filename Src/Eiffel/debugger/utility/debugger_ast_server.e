@@ -85,6 +85,8 @@ feature -- Report
 
 	breakable_feature_info (a_feat: E_FEATURE): detachable DBG_BREAKABLE_FEATURE_INFO
 			-- Breakable info on feature `a_feat'
+		require
+			a_feat_attached: a_feat /= Void
 		local
 			vis: like ast_debugger_breakable_strategy
 			l_storage: like breakable_feature_info_storage

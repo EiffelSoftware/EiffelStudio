@@ -62,6 +62,10 @@ feature -- Reset
 feature -- Basic operations	
 
 	get_breakable_info (a_feat: FEATURE_I; a_class: CLASS_C; a_info: like breakable_feature_info)
+		require
+			a_feat_attached: a_feat /= Void
+			a_class_attached: a_class /= Void
+			a_info_attached: a_info /= Void
 		local
 			retried: BOOLEAN
 		do

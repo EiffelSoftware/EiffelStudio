@@ -146,7 +146,7 @@ feature {NONE} -- Access
 	layout: TAG_TREE_GRID_LAYOUT [G]
 			-- Layout specifying items in `grid'
 
-	computed_grid_item (a_col_index, a_row_index: INTEGER): detachable EV_GRID_ITEM
+	computed_grid_item (a_col_index, a_row_index: INTEGER): EV_GRID_ITEM
 			-- Computed grid item at given location
 			--
 			-- `a_col_index': Column index of requested item.
@@ -158,6 +158,9 @@ feature {NONE} -- Access
 			l_row := grid.row (a_row_index)
 			if attached {TAG_TREE_GRID_ROW_DATA [G]} l_row.data as l_data then
 				Result := layout.new_item (a_col_index, Current, l_data.node)
+			end
+			if Result = Void then
+				create Result
 			end
 		end
 

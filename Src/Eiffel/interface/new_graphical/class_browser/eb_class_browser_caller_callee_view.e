@@ -453,6 +453,9 @@ feature{NONE} -- Implementation
 					grid.column (2).set_width (l_width + 10)
 				end
 			end
+			if Result = Void then
+				create Result
+			end
 		end
 
 	select_all

@@ -498,6 +498,9 @@ feature {NONE} -- Events
 				end
 			end
 			eis_grid.request_columns_auto_resizing
+			if Result = Void then
+				create Result
+			end
 		end
 
 	activate_item (a_item: EV_GRID_ITEM)

@@ -60,6 +60,9 @@ feature {NONE} -- Initialization
 						populate_event_grid_row_items (l_event_item, l_row)
 						ia_grid.grid_row_fill_empty_cells (l_row)
 						Result := l_row.item (ia_col)
+						if Result = Void then
+							create Result
+						end
 					else
 						create {EV_GRID_ITEM} Result
 					end
@@ -1312,7 +1315,7 @@ invariant
 	grid_events_attached: (is_initialized and is_interface_usable) implies attached grid_events
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

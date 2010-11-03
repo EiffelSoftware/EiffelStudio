@@ -417,6 +417,9 @@ feature {NONE} -- Query
 				end
 				Result := l_span
 			end
+			if Result = Void then
+				create Result
+			end
 		end
 
 feature -- Basic operations

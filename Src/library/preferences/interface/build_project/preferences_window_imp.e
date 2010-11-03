@@ -26,7 +26,7 @@ feature {NONE}-- Initialization
 		do
 			Precursor {EV_DIALOG}
 
-			
+
 				-- Build widget structure.
 			extend (l_ev_vertical_box_1)
 			l_ev_vertical_box_1.extend (l_ev_horizontal_split_area_1)
@@ -81,11 +81,11 @@ feature {NONE}-- Initialization
 				-- Call `user_initialization'.
 			user_initialization
 		end
-		
+
 	create_interface_objects
 			-- Create objects
 		do
-			
+
 				-- Create all widgets.
 			create l_ev_vertical_box_1
 			create l_ev_horizontal_split_area_1
@@ -251,7 +251,7 @@ feature {NONE} -- Constant setting
 					font_constant_set_procedures.item.call ([f])
 				end
 				font_constant_set_procedures.forth
-			end	
+			end
 		end
 
 	set_attributes_using_color_constants
@@ -284,7 +284,7 @@ feature {NONE} -- Constant setting
 			set_attributes_using_font_constants
 			set_attributes_using_color_constants
 		end
-	
+
 	string_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [STRING_GENERAL]]]
 	string_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], STRING_32]]
 	integer_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [INTEGER]]]
@@ -305,4 +305,14 @@ feature {NONE} -- Constant setting
 			Result := an_integer
 		end
 
+note
+	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

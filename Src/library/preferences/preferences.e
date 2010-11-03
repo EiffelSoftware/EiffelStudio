@@ -10,17 +10,13 @@ note
 			must create a new class which implements the methods in PREFERENCES_STORAGE_I.
 
 			Regardless of the underlying data store used the preferences are managed in the same way.
-			There are 3 levels of control provided for such management:
+			There are 5 levels of control provided for such management:
+			
+			1. Storage specified. Use `make_with_storage'. A storage for the underlying data store
+			   is provided. Values are retrieved from this storage between sessions. You can specify
+			   the location for this storage, when you create it. This storage's location must exist.
 
-			1. Development use. Use `make' to create preferences. No underlying datastore location is
-			   provided. No default preference values are provided. A data store location is created
-			   automatically and modified preference values are tranparently retrieved between sessions.
-
-			2. Location specified. Use `make_with_location'. A location for the underlying data store
-			   is provided. Values are retrieved from this location between sessions. This location must
-			   exist.
-
-			3. Location and defaults specified. The same as in option 2, but a location of one or more default
+			2. Storage and defaults specified. The same as in option 1, but a location of one or more default
 			   files is provided in addition to the data store location. Those files are XML files which
 			   contain the default values to use in a preference if it is not already defined in the data
 			   store. It is a convenient way to initialize your application with all the default values
@@ -28,6 +24,19 @@ note
 			   additional attributes for preference configuration such a more detailed description of the
 			   preference, or whether it should be hidden by default. If two files list the same preference,
 			   the last one to mention it takes precedence.
+
+			3. Development use. Use `make' to create preferences. No underlying datastore location is
+			   provided. No default preference values are provided. A data store location is created
+			   automatically and modified preference values are tranparently retrieved between sessions.
+
+			4. Location specified. Use `make_with_location'. A location for the underlying data store
+			   is provided. Values are retrieved from this location between sessions. This location must
+			   exist.
+
+			5. Location and defaults specified. The same as in option 2, but using a storage with specified
+			   location.
+
+			We recommend using 1. or 2.  since 3,4,5 might become obsolete in the future.
 
 			Once preferences they may be modified programmatically or through an user interface conforming
 			to PREFERENCE_VIEW. A default interface is provided in PREFERENCES_WINDOW. You may implement
@@ -594,7 +603,7 @@ invariant
 	has_preferences_storage: preferences_storage /= Void
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

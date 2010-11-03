@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			has_preferences: preferences /= Void
 			inserted_in_preferences: preferences.has_manager (namespace)
 			has_namespace: namespace /= Void
-			namesapce_valid: not a_namespace.is_empty
+			namespace_valid: not a_namespace.is_empty
 		end
 
 feature -- Access
@@ -49,7 +49,7 @@ feature -- Query
 		end
 
 	known_resource (a_name: STRING): BOOLEAN
-		obsolete "[060113] use know_preference instead of know_resource"
+		obsolete "[2006-01-13] use know_preference instead of know_resource"
 		do
 			Result := known_preference (a_name)
 		end
@@ -65,7 +65,7 @@ invariant
 	namespace_valid: not namespace.is_empty
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -74,8 +74,6 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
 
 
 end -- class PREFERENCE_MANAGER

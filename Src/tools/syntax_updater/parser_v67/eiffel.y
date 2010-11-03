@@ -71,20 +71,19 @@ create
 %token <KEYWORD_AS> TE_PRECURSOR
 %token <KEYWORD_AS> TE_PREFIX
 
-%token <KEYWORD_AS> TE_IS
 %token <KEYWORD_AS> TE_AGENT TE_ALIAS TE_ALL TE_AND TE_AS
 %token <KEYWORD_AS> TE_BIT TE_CHECK TE_CLASS TE_CONVERT
 %token <KEYWORD_AS> TE_CREATE TE_DEBUG TE_DO TE_ELSE TE_ELSEIF
 %token <KEYWORD_AS> TE_ENSURE TE_EXPANDED TE_EXPORT TE_EXTERNAL TE_FEATURE
-%token <KEYWORD_AS> TE_FROM TE_IF TE_IMPLIES TE_INDEXING TE_INHERIT
+%token <KEYWORD_AS> TE_FROM TE_IF TE_IMPLIES TE_INHERIT
 %token <KEYWORD_AS> TE_INSPECT TE_INVARIANT TE_LIKE TE_LOCAL
-%token <KEYWORD_AS> TE_LOOP TE_NOT TE_NOTE TE_OBSOLETE TE_OLD TE_ONCE
+%token <KEYWORD_AS> TE_LOOP TE_NOT TE_OBSOLETE TE_OLD TE_ONCE
 %token <KEYWORD_AS> TE_ONCE_STRING TE_OR TE_REDEFINE TE_REFERENCE TE_RENAME
 %token <KEYWORD_AS> TE_REQUIRE TE_RESCUE TE_SELECT TE_SEPARATE TE_STRIP
 %token <KEYWORD_AS> TE_THEN TE_UNDEFINE	TE_UNTIL TE_VARIANT TE_WHEN	
 %token <KEYWORD_AS> TE_XOR
 -- Special type for keywords that are either keyword or identifier
-%token <TUPLE [KEYWORD_AS, ID_AS, INTEGER, INTEGER, STRING] as keyword_id> TE_ACROSS TE_ASSIGN TE_ATTRIBUTE TE_ATTACHED TE_DETACHABLE TE_SOME
+%token <TUPLE [KEYWORD_AS, ID_AS, INTEGER, INTEGER, STRING] as keyword_id> TE_ACROSS TE_ASSIGN TE_ATTRIBUTE TE_ATTACHED TE_DETACHABLE TE_INDEXING TE_IS TE_NOTE TE_SOME
 
 %token <STRING_AS> TE_STRING TE_EMPTY_STRING TE_VERBATIM_STRING	TE_EMPTY_VERBATIM_STRING
 %token <STRING_AS> TE_STR_LT TE_STR_LE TE_STR_GT TE_STR_GE TE_STR_MINUS
@@ -149,7 +148,8 @@ create
 %type <INTERNAL_AS>			Internal
 %type <INTERVAL_AS>			Choice
 %type <INVARIANT_AS>		Class_invariant
-%type <EXPR_AS>				Loop
+%type <LOOP_EXPR_AS>			Loop_expression
+%type <LOOP_AS>				Loop_instruction
 %type <NESTED_AS>			Call_on_feature_access
 %type <OPERAND_AS>			Delayed_actual
 %type <PARENT_AS>			Parent Parent_clause
@@ -165,7 +165,7 @@ create
 %type <STRING_AS>			Manifest_string Non_empty_string Default_manifest_string Typed_manifest_string Infix_operator Prefix_operator Alias_name
 %type <TAGGED_AS>			Assertion_clause
 %type <TUPLE_AS>			Manifest_tuple
-%type <TYPE_AS>				Type Anchored_type Attached_type Non_class_type Typed Class_or_tuple_type Attached_class_type Attached_class_or_tuple_type Marked_class_or_tuple_type Tuple_type Type_no_id Unqualified_anchored_type Constraint_type
+%type <TYPE_AS>				Type Anchored_type Attached_type Non_class_type Typed Class_or_tuple_type Attached_class_type Attached_class_or_tuple_type Marked_class_or_tuple_type Tuple_type Type_no_id Unmarked_anchored_type Unmarked_class_or_tuple_type Unqualified_anchored_type Constraint_type
 %type <QUALIFIED_ANCHORED_TYPE_AS>	Qualified_anchored_type
 %type <PAIR [SYMBOL_AS, TYPE_AS]> Type_mark
 %type <CLASS_TYPE_AS>		Parent_class_type
@@ -212,7 +212,7 @@ create
 %type <CONSTRAINT_LIST_AS> Multiple_constraint_list
 %type <CONSTRAINING_TYPE_AS> Single_constraint
 
-%expect 364
+%expect 360
 
 %%
 
@@ -343,7 +343,7 @@ Indexing: -- Empty
 			{
 				$$ := $3
 				if $$ /= Void then
-					$$.set_indexing_keyword ($1)
+					$$.set_indexing_keyword (extract_keyword ($1))
 				end				
 			}
 	|	TE_INDEXING
@@ -351,21 +351,21 @@ Indexing: -- Empty
 			{
 				$$ := ast_factory.new_indexing_clause_as (0)
 				if $$ /= Void then
-					$$.set_indexing_keyword ($1)
+					$$.set_indexing_keyword (extract_keyword ($1))
 				end
 			}
 	|	TE_NOTE Add_indexing_counter Note_list Remove_counter
 			{
 				$$ := $3
 				if $$ /= Void then
-					$$.set_indexing_keyword ($1)
+					$$.set_indexing_keyword (extract_keyword ($1))
 				end				
 			}
 	|	TE_NOTE
 			{
 				$$ := ast_factory.new_indexing_clause_as (0)
 				if $$ /= Void then
-					$$.set_indexing_keyword ($1)
+					$$.set_indexing_keyword (extract_keyword ($1))
 				end
 			}
 	;
@@ -377,7 +377,7 @@ Dotnet_indexing: -- Empty
 		{
 				$$ := ast_factory.new_indexing_clause_as (0)
 				if $$ /= Void then
-						$$.set_indexing_keyword ($1)
+						$$.set_indexing_keyword (extract_keyword ($1))
 						$$.set_end_keyword ($2)
 				end		
 		}
@@ -386,7 +386,7 @@ Dotnet_indexing: -- Empty
 				$$ := $3
 				if $$ /= Void then
 					if $1 /= Void then
-						$$.set_indexing_keyword ($1)
+						$$.set_indexing_keyword (extract_keyword ($1))
 					end
 					if $5 /= Void then	
 						$$.set_end_keyword ($5)
@@ -543,11 +543,6 @@ Header_mark: Frozen_mark External_mark
 			{
 				is_expanded := True
 				expanded_keyword := $2
-			}
-	|	Frozen_mark TE_SEPARATE External_mark
-			{
-				is_separate := True
-				separate_keyword := $2
 			}
 	;
 
@@ -842,7 +837,7 @@ Alias_mark: -- Empty
 Is_keyword: -- Empty
 			{ $$ := Void }
 	| TE_IS
-			{ $$ := $1 }
+			{ $$ := extract_keyword ($1) }
 	;
 
 Declaration_body: TE_COLON Type Assigner_mark_opt Dotnet_indexing
@@ -870,9 +865,9 @@ Declaration_body: TE_COLON Type Assigner_mark_opt Dotnet_indexing
 			{
 					-- Constant case
 				if $3 = Void then
-					$$ := ast_factory.new_body_as (Void, $2, Void, $5, $1, $4, Void, $6)
+					$$ := ast_factory.new_body_as (Void, $2, Void, $5, $1, extract_keyword ($4), Void, $6)
 				else
-					$$ := ast_factory.new_body_as (Void, $2, $3.second, $5, $1, $4, $3.first, $6)
+					$$ := ast_factory.new_body_as (Void, $2, $3.second, $5, $1, extract_keyword ($4), $3.first, $6)
 				end
 				
 				feature_indexes := $6
@@ -887,9 +882,9 @@ Declaration_body: TE_COLON Type Assigner_mark_opt Dotnet_indexing
 		{
 					-- Function without arguments
 				if $3 = Void then
-					$$ := ast_factory.new_body_as (Void, $2, Void, $6, $1, $4, Void, $5)
+					$$ := ast_factory.new_body_as (Void, $2, Void, $6, $1, extract_keyword ($4), Void, $5)
 				else
-					$$ := ast_factory.new_body_as (Void, $2, $3.second, $6, $1, $4, $3.first, $5)
+					$$ := ast_factory.new_body_as (Void, $2, $3.second, $6, $1, extract_keyword ($4), $3.first, $5)
 				end
 				
 				feature_indexes := $5
@@ -934,7 +929,10 @@ Assigner_mark_opt: -- Empty
 	;
 
 Constant_attribute: Manifest_constant
-			{ $$ := ast_factory.new_constant_as ($1) }
+			{
+				setup_binary_manifest_string ($1)
+				$$ := ast_factory.new_constant_as ($1) 
+			}
 	|	TE_UNIQUE
 			{ $$ := ast_factory.new_constant_as ($1) }
 	;
@@ -1341,11 +1339,11 @@ Routine:
 					temp_keyword_as := Void
 				end
 				if $7 /= Void then
-					$$ := ast_factory.new_routine_as (temp_string_as1, $3, $4, $5, $6, $7.second, $8, once_manifest_string_count, fbody_pos, temp_keyword_as, $7.first, object_test_locals)
+					$$ := ast_factory.new_routine_as (temp_string_as1, $3, $4, $5, $6, $7.second, $8, once_manifest_string_counter_value, fbody_pos, temp_keyword_as, $7.first, object_test_locals)
 				else
-					$$ := ast_factory.new_routine_as (temp_string_as1, $3, $4, $5, $6, Void, $8, once_manifest_string_count, fbody_pos, temp_keyword_as, Void, object_test_locals)
+					$$ := ast_factory.new_routine_as (temp_string_as1, $3, $4, $5, $6, Void, $8, once_manifest_string_counter_value, fbody_pos, temp_keyword_as, Void, object_test_locals)
 				end
-				once_manifest_string_count := 0
+				reset_once_manifest_string_counter
 				object_test_locals := Void
 			}
 	;
@@ -1447,8 +1445,6 @@ Instruction_impl: Creation
 				if has_type then
 					report_one_error (create {SYNTAX_ERROR}.make (token_line ($1), token_column ($1),
 						filename, "Expression cannot be used as an instruction"))
-				elseif attached {INSTRUCTION_WRAPPER_AS} $1 as w then
-					$$ := w.instruction
 				elseif $1 /= Void then
 					$$ := new_call_instruction_from_expression ($1)
 				end
@@ -1460,6 +1456,8 @@ Instruction_impl: Creation
 	|	Reverse_assignment
 			{ $$ := $1 }
 	|	Conditional
+			{ $$ := $1 }
+	|	Loop_instruction
 			{ $$ := $1 }
 	|	Multi_branch
 			{ $$ := $1 }
@@ -1601,15 +1599,6 @@ Non_class_type: TE_EXPANDED Attached_class_type
 						once "Make an expanded version of the base class associated with this type."))
 				end
 			}
-	|	TE_SEPARATE Class_or_tuple_type
-			{
-				last_class_type ?= $2
-				if last_class_type /= Void then
-					last_class_type.set_is_separate (True, $1)
-					last_class_type := Void
-				end
-				$$ := $2
-			}
 	|	TE_BIT Integer_constant
 			{ $$ := ast_factory.new_bits_as ($2, $1) }
 	|	TE_BIT Identifier_as_lower
@@ -1708,10 +1697,21 @@ Attached_class_type: Class_identifier Generics_opt
 			{ $$ := new_class_type ($1, $2) }
 	;
 
-Attached_class_or_tuple_type: Attached_class_type
+Unmarked_class_or_tuple_type: Attached_class_type
 			{ $$ := $1 }
 	| Tuple_type
 			{ $$ := $1 }
+	;
+
+Attached_class_or_tuple_type: Unmarked_class_or_tuple_type
+			{ $$ := $1 }
+	| TE_SEPARATE Unmarked_class_or_tuple_type
+			{
+				$$ := $2
+				if not is_ignoring_separate_mark and then attached $$ then
+					$$.set_separate_mark ($1)
+				end
+			}
 	;
 
 Generics_opt: -- Empty
@@ -1738,12 +1738,25 @@ Generics:	TE_LSQURE Type_list TE_RSQURE
 			}
 	;
 
-Anchored_type:
+Unmarked_anchored_type:
 		Unqualified_anchored_type
 			{ $$ := $1 }
 	|	Qualified_anchored_type
 			{ $$ := $1 }
 	;
+
+Anchored_type:
+		Unmarked_anchored_type
+			{ $$ := $1 }
+	|	TE_SEPARATE Unmarked_anchored_type
+			{
+				$$ := $2
+				if not is_ignoring_separate_mark and then attached $$ then
+					$$.set_separate_mark ($1)
+				end
+			}
+	;
+
 Unqualified_anchored_type:
 		TE_LIKE Identifier_as_lower
 			{ $$ := ast_factory.new_like_id_as ($2, $1) }
@@ -2237,7 +2250,7 @@ Choice: Integer_constant
 
 	;
 
-Loop:
+Loop_instruction:
 	TE_FROM Compound Invariant Variant TE_UNTIL Expression TE_LOOP Compound TE_END
 			{
 				if has_syntax_warning then
@@ -2246,18 +2259,18 @@ Loop:
 						once "Loop variant should appear just before the end keyword of the loop."))
 				end
 				if $3 /= Void then
-					$$ := create {INSTRUCTION_WRAPPER_AS}.make (ast_factory.new_loop_as (Void, $2, $3.second, $4, $6, $8, $9, $1, $3.first, $5, $7))
+					$$ := ast_factory.new_loop_as (Void, $2, $3.second, $4, $6, $8, $9, $1, $3.first, $5, $7)
 				else
-					$$ := create {INSTRUCTION_WRAPPER_AS}.make (ast_factory.new_loop_as (Void, $2, Void, $4, $6, $8, $9, $1, Void, $5, $7))
+					$$ := ast_factory.new_loop_as (Void, $2, Void, $4, $6, $8, $9, $1, Void, $5, $7)
 				end
 				has_type := False
 			}
 	| TE_FROM Compound Invariant TE_UNTIL Expression TE_LOOP Compound Variant_opt TE_END
 			{
 				if $3 /= Void then
-					$$ := create {INSTRUCTION_WRAPPER_AS}.make (ast_factory.new_loop_as (Void, $2, $3.second, $8, $5, $7, $9, $1, $3.first, $4, $6))
+					$$ := ast_factory.new_loop_as (Void, $2, $3.second, $8, $5, $7, $9, $1, $3.first, $4, $6)
 				else
-					$$ := create {INSTRUCTION_WRAPPER_AS}.make (ast_factory.new_loop_as (Void, $2, Void, $8, $5, $7, $9, $1, Void, $4, $6))
+					$$ := ast_factory.new_loop_as (Void, $2, Void, $8, $5, $7, $9, $1, Void, $4, $6)
 				end
 				has_type := False
 			}
@@ -2265,15 +2278,15 @@ Loop:
 			{
 				if $4 /= Void then
 					if $5 /= Void then
-						$$ := create {INSTRUCTION_WRAPPER_AS}.make (ast_factory.new_loop_as ($1, $3, $4.second, $8, $5.second, $7, $9, $2, $4.first, $5.first, $6))
+						$$ := ast_factory.new_loop_as ($1, $3, $4.second, $8, $5.second, $7, $9, $2, $4.first, $5.first, $6)
 					else
-						$$ := create {INSTRUCTION_WRAPPER_AS}.make (ast_factory.new_loop_as ($1, $3, $4.second, $8, Void, $7, $9, $2, $4.first, Void, $6))
+						$$ := ast_factory.new_loop_as ($1, $3, $4.second, $8, Void, $7, $9, $2, $4.first, Void, $6)
 					end
 				else
 					if $5 /= Void then
-						$$ := create {INSTRUCTION_WRAPPER_AS}.make (ast_factory.new_loop_as ($1, $3, Void, $8, $5.second, $7, $9, $2, Void, $5.first, $6))
+						$$ := ast_factory.new_loop_as ($1, $3, Void, $8, $5.second, $7, $9, $2, Void, $5.first, $6)
 					else
-						$$ := create {INSTRUCTION_WRAPPER_AS}.make (ast_factory.new_loop_as ($1, $3, Void, $8, Void, $7, $9, $2, Void, Void, $6))
+						$$ := ast_factory.new_loop_as ($1, $3, Void, $8, Void, $7, $9, $2, Void, Void, $6)
 					end
 				end
 				has_type := False
@@ -2282,20 +2295,23 @@ Loop:
 			{
 				if $2 /= Void then
 					if $3 /= Void then
-						$$ := create {INSTRUCTION_WRAPPER_AS}.make (ast_factory.new_loop_as ($1, Void, $2.second, $6, $3.second, $5, $7, Void, $2.first, $3.first, $4))
+						$$ := ast_factory.new_loop_as ($1, Void, $2.second, $6, $3.second, $5, $7, Void, $2.first, $3.first, $4)
 					else
-						$$ := create {INSTRUCTION_WRAPPER_AS}.make (ast_factory.new_loop_as ($1, Void, $2.second, $6, Void, $5, $7, Void, $2.first, Void, $4))
+						$$ := ast_factory.new_loop_as ($1, Void, $2.second, $6, Void, $5, $7, Void, $2.first, Void, $4)
 					end
 				else
 					if $3 /= Void then
-						$$ := create {INSTRUCTION_WRAPPER_AS}.make (ast_factory.new_loop_as ($1, Void, Void, $6, $3.second, $5, $7, Void, Void, $3.first, $4))
+						$$ := ast_factory.new_loop_as ($1, Void, Void, $6, $3.second, $5, $7, Void, Void, $3.first, $4)
 					else
-						$$ := create {INSTRUCTION_WRAPPER_AS}.make (ast_factory.new_loop_as ($1, Void, Void, $6, Void, $5, $7, Void, Void, Void, $4))
+						$$ := ast_factory.new_loop_as ($1, Void, Void, $6, Void, $5, $7, Void, Void, Void, $4)
 					end
 				end
 				has_type := False
 			}
-	| Iteration Invariant Exit_condition_opt TE_ALL Expression Variant_opt TE_END
+	;
+
+Loop_expression:
+	Iteration Invariant Exit_condition_opt TE_ALL Expression Variant_opt TE_END
 			{
 				if $2 /= Void then
 					if $3 /= Void then
@@ -2353,8 +2369,8 @@ Class_invariant: -- Empty
 		Assertion
 			{
 				set_id_level (Normal_level)
-				$$ := ast_factory.new_invariant_as ($3, once_manifest_string_count, $1, object_test_locals)
-				once_manifest_string_count := 0
+				$$ := ast_factory.new_invariant_as ($3, once_manifest_string_counter_value, $1, object_test_locals)
+				reset_once_manifest_string_counter
 				object_test_locals := Void
 			}
 	;
@@ -2999,7 +3015,7 @@ Bracket_target:
 			{ $$ := ast_factory.new_expr_call_as ($1); has_type := False }
 	|	Creation_expression
 			{ $$ := ast_factory.new_expr_call_as ($1); has_type := True }
-	|	Loop
+	|	Loop_expression
 			{ $$ := $1 }
 	|	TE_LPARAN Expression TE_RPARAN
 			{ $$ := ast_factory.new_paran_as ($2, $1, $3); has_type := True }
@@ -3155,14 +3171,18 @@ Expression_constant:
 	|	Bit_constant
 			{ $$ := $1 }
 	|	Manifest_string
-			{ $$ := $1 }
+			{
+				setup_binary_manifest_string ($1)
+				$$ := $1 
+			}
 	|	TE_ONCE_STRING Manifest_string
 			{
 				if $2 /= Void then
 					$2.set_is_once_string (True)
 					$2.set_once_string_keyword ($1)
+					setup_binary_manifest_string ($2)
 				end
-				once_manifest_string_count := once_manifest_string_count + 1
+				increment_once_manifest_string_counter
 				$$ := $2
 			}
 	;

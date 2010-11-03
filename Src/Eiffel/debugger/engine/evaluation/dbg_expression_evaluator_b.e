@@ -2302,7 +2302,9 @@ feature -- Access
 			ctx := context
 			ctx.set_data (f, f.written_class, Void, Void, Void, 0, 0) -- FIXME: we are missing locals and object test locals here
 			l_dbg_ast_server := debugger_manager.debugger_ast_server
-			l_feat := f.api_feature (f.written_in)
+
+			fi := f.written_class.feature_of_rout_id_set (f.rout_id_set)
+			l_feat := fi.api_feature (fi.written_in)
 			ctx.set_data (f, f.written_class, Void, l_dbg_ast_server.local_table (l_feat), l_dbg_ast_server.object_test_locals (l_feat, 0, 0), 0, 0) -- FIXME: we are missing locals and object test locals here
 
 			apply_context

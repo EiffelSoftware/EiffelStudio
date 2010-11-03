@@ -701,9 +701,6 @@ feature {NONE} -- Actions implementation
 			a_row: EV_GRID_ROW
 			obj_item: ES_OBJECTS_GRID_LINE
 		do
-debug ("debugger_interface")
-	print (generator + ".compute_grid_item ("+c.out+", "+r.out+") %N")
-end
 			if not is_processing_remove_and_clear_all_rows then
 				if c <= column_count and r <= row_count then
 					Result := item (c, r)
@@ -728,6 +725,9 @@ end
 					end
 				end
 				request_columns_auto_resizing
+			end
+			if Result = Void then
+				create Result
 			end
 		end
 

@@ -1432,12 +1432,12 @@ feature {NONE} -- String matching
 			-- On item expose.
 		local
 			l_row: EV_GRID_ROW
-			l_name: NAME_FOR_COMPLETION
 		do
 			l_row := choice_list.row (a_row)
-			l_name ?= l_row.data
-			if l_name /= Void then
+			if attached {NAME_FOR_COMPLETION} l_row.data as l_name then
 				Result := l_name.grid_item
+			else
+				create Result
 			end
 		end
 

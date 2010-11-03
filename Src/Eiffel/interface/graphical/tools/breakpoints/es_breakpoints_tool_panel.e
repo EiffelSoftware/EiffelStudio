@@ -1014,6 +1014,9 @@ feature {NONE} -- Dynamic item filling
 
 				--| Now Result should not be Void
 			Result := row.item (c)
+			if Result = Void then
+				create Result
+			end
 		end
 
 	compute_bp_row (a_row: EV_GRID_ROW)

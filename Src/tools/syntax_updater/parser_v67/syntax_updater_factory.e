@@ -12,6 +12,7 @@ inherit
 		redefine
 			new_creation_keyword_as,
 			new_keyword_as,
+			new_keyword_id_as,
 			new_old_routine_creation_as,
 			new_old_syntax_object_test_as,
 			new_static_access_as,
@@ -54,6 +55,18 @@ feature -- Processing
 			end
 		end
 
+	new_keyword_id_as (a_code: INTEGER_32; a_scn: EIFFEL_SCANNER_SKELETON): like keyword_id_type
+			-- New KEYWORD AST node
+		do
+			inspect a_code
+			when {EIFFEL_TOKENS}.te_is, {EIFFEL_TOKENS}.te_indexing then
+				has_obsolete_constructs := True
+
+			else
+
+			end
+		end
+
 	new_old_syntax_object_test_as (start: SYMBOL_AS; name: ID_AS; type: TYPE_AS; expression: EXPR_AS): OBJECT_TEST_AS
 		do
 			has_obsolete_constructs := True
@@ -85,7 +98,7 @@ feature -- Processing
 			end
 		end
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -58,9 +58,11 @@ feature {NONE} -- Initialization
 			l_void_safe_check: EV_CHECK_BUTTON
 			l_btn: EV_BUTTON
 			vb, vb2, l_padding: EV_VERTICAL_BOX
-			hb, hb2: EV_HORIZONTAL_BOX
+			hb, hbf, hb1, hb2: EV_HORIZONTAL_BOX
 			l_lbl: EV_LABEL
 			l_col: EV_GRID_COLUMN
+			l_filter: like filter
+			l_clear_filter_button: EV_BUTTON
 		do
 			Precursor
 
@@ -78,11 +80,35 @@ feature {NONE} -- Initialization
 			vb2.set_padding (layout_constants.small_padding_size)
 			vb2.set_border_width (layout_constants.small_border_size)
 
-			create l_lbl.make_with_text (conf_interface_names.dialog_create_library_defaults)
-			vb2.extend (l_lbl)
-			vb2.disable_item_expand (l_lbl)
-			l_lbl.align_text_left
+			create hb1
+			hb1.set_padding (layout_constants.small_padding_size)
 
+			create l_lbl.make_with_text (conf_interface_names.dialog_create_library_defaults)
+			l_lbl.align_text_left
+			hb1.extend (l_lbl)
+			hb1.disable_item_expand (l_lbl)
+
+			create hbf
+			hb1.extend (create {EV_HORIZONTAL_SEPARATOR})
+			hb1.extend (hbf)
+
+			hbf.extend (create {EV_LABEL}.make_with_text (Names.l_filter))
+			hbf.disable_item_expand (hbf.last)
+			create l_filter
+			filter := l_filter
+			hbf.extend (l_filter)
+			l_filter.change_actions.extend (agent request_update_filter)
+
+			create l_clear_filter_button
+			l_clear_filter_button.select_actions.extend (agent l_filter.remove_text)
+			l_clear_filter_button.set_pixmap (conf_pixmaps.general_remove_icon)
+			l_clear_filter_button.set_tooltip (names.b_reset)
+			hbf.extend (l_clear_filter_button)
+			hbf.disable_item_expand (l_clear_filter_button)
+
+
+			vb2.extend (hb1)
+			vb2.disable_item_expand (hb1)
 				-- Create grid
 			create libraries_grid
 			libraries_grid.set_minimum_size (400, 200)
@@ -180,16 +206,52 @@ feature {NONE} -- Initialization
 			layout_constants.set_default_width_for_button (l_btn)
 
 			show_actions.extend_kamikaze (agent
-				local
-					l_style: EV_POINTER_STYLE
 				do
-					l_style := pointer_style
-					set_pointer_style (create {EV_POINTER_STYLE}.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.busy_cursor))
 					populate_libraries
-					set_pointer_style (l_style)
-
 					libraries_grid.set_focus
 				end)
+		end
+
+feature {NONE} -- Update filter
+
+	update_filter_timeout: detachable EV_TIMEOUT
+
+	request_update_filter
+		local
+			l_update_filter_timeout: like update_filter_timeout
+		do
+			cancel_delayed_update_filter
+			l_update_filter_timeout := update_filter_timeout
+			if l_update_filter_timeout = Void then
+				create l_update_filter_timeout
+				update_filter_timeout := l_update_filter_timeout
+				l_update_filter_timeout.actions.extend_kamikaze (agent delayed_update_filter)
+			end
+			l_update_filter_timeout.set_interval (700)
+		end
+
+	cancel_delayed_update_filter
+		do
+			if attached update_filter_timeout as l_update_filter_timeout then
+				l_update_filter_timeout.destroy
+				update_filter_timeout := Void
+			end
+		end
+
+	delayed_update_filter
+		do
+			cancel_delayed_update_filter
+			update_filter
+		end
+
+	update_filter
+		local
+			l_style: EV_POINTER_STYLE
+		do
+			l_style := pointer_style
+			set_pointer_style (create {EV_POINTER_STYLE}.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.busy_cursor))
+			update_grid
+			set_pointer_style (l_style)
 		end
 
 feature {NONE} -- GUI elements
@@ -199,6 +261,9 @@ feature {NONE} -- GUI elements
 
 	libraries_grid: ES_GRID
 			-- Libraries grid
+
+	filter: EV_TEXT_FIELD
+			-- Filter
 
 	name: EV_TEXT_FIELD
 			-- Name of the library.
@@ -440,12 +505,64 @@ feature {NONE} -- Action handlers
 
 feature {NONE} -- Basic operation
 
+	populated_configuration_libraries: detachable like configuration_libraries
+	libraries_table: detachable HASH_TABLE [STRING, STRING]
+	libraries_sorted_keys: detachable DS_ARRAYED_LIST [STRING]
+
 	populate_libraries
 			-- Populates the list of libraries in the UI
 		local
 			l_libraries: like configuration_libraries
-			l_sorted_keys: HASH_TABLE [STRING, STRING]
-			l_list: DS_ARRAYED_LIST [STRING]
+			l_libraries_table: like libraries_table
+			l_libraries_sorted_keys: like libraries_sorted_keys
+			l_target: CONF_TARGET
+			l_path: STRING
+			l_key: STRING
+			l_style: EV_POINTER_STYLE
+		do
+			l_style := pointer_style
+			set_pointer_style (create {EV_POINTER_STYLE}.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.busy_cursor))
+
+			l_libraries := configuration_libraries
+			populated_configuration_libraries := l_libraries
+
+				-- Create a table of path names indexed by target_name#library_path, used to effectively sort.
+			create l_libraries_table.make (l_libraries.count)
+			from l_libraries.start until l_libraries.after loop
+				l_target := l_libraries.item_for_iteration.library_target
+				if l_target /= Void then
+					l_path := l_libraries.key_for_iteration
+					create l_key.make (256)
+					l_key.append_string (l_target.name)
+					l_key.append_string (once " # ")
+					l_key.append_string (l_path)
+					l_libraries_table.force (l_path, l_key)
+				end
+				l_libraries.forth
+			end
+
+				-- Sort keys
+			create l_libraries_sorted_keys.make_from_array (l_libraries_table.current_keys)
+			l_libraries_sorted_keys.sort (create {DS_QUICK_SORTER [STRING]}.make (create {KL_COMPARABLE_COMPARATOR [STRING]}.make))
+
+			libraries_table := l_libraries_table
+			libraries_sorted_keys := l_libraries_sorted_keys
+
+			update_grid
+			set_pointer_style (l_style)
+		end
+
+	update_grid
+			-- Update grid
+		require
+			libraries_table_attached: libraries_table /= Void
+			libraries_sorted_keys_attached: libraries_sorted_keys /= Void
+			populated_configuration_libraries_attached: populated_configuration_libraries /= Void
+		local
+			l_libraries_sorted_keys: like libraries_sorted_keys
+			l_libraries_table: like libraries_table
+			l_libraries: like populated_configuration_libraries
+			l_libraries_grid: like libraries_grid
 			l_system: CONF_SYSTEM
 			l_target: CONF_TARGET
 			l_row: EV_GRID_ROW
@@ -457,82 +574,99 @@ feature {NONE} -- Basic operation
 			l_description: STRING
 			l_void_safe_check: like void_safe_check
 			l_show_void_safe_only: BOOLEAN
+			l_filter: detachable STRING
+			l_filter_engine: detachable KMP_WILD
+			l_matched: BOOLEAN
 		do
-			l_void_safe_check := void_safe_check
-			l_show_void_safe_only := l_void_safe_check /= Void and then l_void_safe_check.is_selected
+			l_libraries_grid := libraries_grid
+			l_libraries_grid.remove_and_clear_all_rows
 
-			libraries_grid.remove_and_clear_all_rows
-			l_libraries := configuration_libraries
+			l_libraries_table := libraries_table
+			l_libraries_sorted_keys := libraries_sorted_keys
+			if l_libraries_table /= Void and l_libraries_sorted_keys /= Void and then l_libraries_sorted_keys.count > 0 then
+				l_void_safe_check := void_safe_check
+				l_show_void_safe_only := l_void_safe_check /= Void and then l_void_safe_check.is_selected
 
-				-- Create a table of path names indexed by target_name#library_path, used to effectively sort.
-			create l_sorted_keys.make (l_libraries.count)
-			from l_libraries.start until l_libraries.after loop
-				l_path := l_libraries.key_for_iteration
-				l_target := l_libraries.item_for_iteration.library_target
-				if l_target /= Void then
-					create l_key.make (256)
-					l_key.append_string (l_target.name)
-					l_key.append_string (once " # ")
-					l_key.append_string (l_path)
-					l_sorted_keys.force (l_path, l_key)
-				end
-				l_libraries.forth
-			end
+				l_libraries := populated_configuration_libraries
 
-				-- Sort keys
-			create l_list.make_from_array (l_sorted_keys.current_keys)
-			l_list.sort (create {DS_QUICK_SORTER [STRING]}.make (create {KL_COMPARABLE_COMPARATOR [STRING]}.make))
-
-				-- Build libraries list
-			libraries_grid.set_row_count_to (l_list.count)
-			from l_list.start until l_list.after loop
-				l_row := libraries_grid.row (l_list.index)
-
-					-- Fetch path from sortable key name
-				l_path :=  l_sorted_keys.item (l_list.item_for_iteration)
-				check
-					l_path_attached: l_path /= Void
-					l_libraries_has_l_path: l_libraries.has (l_path)
-				end
-
-				l_system := l_libraries.item (l_path)
-				l_target := l_system.library_target
-				check l_target_attached: l_target /= Void end
-
-					-- Extract description
-				l_description := l_system.description
-				if l_description = Void or else l_description.is_empty then
-					l_description := l_target.description
-					if l_description = Void or else l_description.is_empty then
-						l_description := once "No description available for library"
+					-- And filter if pattern specified
+				l_filter := filter.text
+				l_filter.left_adjust
+				l_filter.right_adjust
+				if l_filter.is_empty then
+					l_filter := Void
+				else
+					if l_filter.item (1) /= '*' then
+						l_filter.prepend_character ('*')
 					end
+					if l_filter.item (l_filter.count) /= '*' then
+						l_filter.append_character ('*')
+					end
+					create l_filter_engine.make_empty
+					l_filter_engine.set_pattern (l_filter)
+					l_filter_engine.disable_case_sensitive
 				end
 
-				if l_show_void_safe_only and then l_target.options.void_safety.index /= {CONF_OPTION}.void_safety_index_all then
-						-- The library is not Void-Safe, hide it if showing only Void-Safe libraries.
-					l_row.hide
+					-- Build libraries list
+				l_libraries_grid.set_row_count_to (l_libraries_sorted_keys.count)
+				from l_libraries_sorted_keys.start until l_libraries_sorted_keys.after loop
+					l_row := l_libraries_grid.row (l_libraries_sorted_keys.index)
+
+						-- Fetch path from sortable key name
+					l_path :=  l_libraries_table.item (l_libraries_sorted_keys.item_for_iteration)
+					check
+						l_path_attached: l_path /= Void
+						l_libraries_has_l_path: l_libraries.has (l_path)
+					end
+
+					l_system := l_libraries.item (l_path)
+					l_target := l_system.library_target
+					check l_target_attached: l_target /= Void end
+
+						-- Extract description
+					l_description := l_system.description
+					if l_description = Void or else l_description.is_empty then
+						l_description := l_target.description
+						if l_description = Void or else l_description.is_empty then
+							l_description := once "No description available for library"
+						end
+					end
+
+					if l_show_void_safe_only and then l_target.options.void_safety.index /= {CONF_OPTION}.void_safety_index_all then
+							-- The library is not Void-Safe, hide it if showing only Void-Safe libraries.
+						l_row.hide
+					else
+						if l_filter_engine /= Void then
+							l_filter_engine.set_text (l_target.name)
+							if not l_filter_engine.pattern_matches then
+								l_row.hide
+							end
+						else
+							l_row.show
+						end
+					end
+
+						-- Library name
+					create l_item.make_with_text (l_system.name)
+					l_item.set_tooltip (l_description)
+					l_row.set_item (name_column, l_item)
+					l_name_width := l_name_width.max (l_item.required_width + 10)
+
+						-- Location
+					create l_item.make_with_text (l_path)
+					l_item.set_tooltip (l_path)
+					l_row.set_item (location_column, l_item)
+
+					l_row.select_actions.extend (agent on_library_selected (l_system, l_path))
+					l_row.set_data (l_target)
+
+					l_libraries_sorted_keys.forth
 				end
 
-					-- Library name
-				create l_item.make_with_text (l_system.name)
-				l_item.set_tooltip (l_description)
-				l_row.set_item (name_column, l_item)
-				l_name_width := l_name_width.max (l_item.required_width + 10)
-
-					-- Location
-				create l_item.make_with_text (l_path)
-				l_item.set_tooltip (l_path)
-				l_row.set_item (location_column, l_item)
-
-				l_row.select_actions.extend (agent on_library_selected (l_system, l_path))
-				l_row.set_data (l_target)
-
-				l_list.forth
-			end
-
-			l_col := libraries_grid.column (name_column)
-			if l_col.width < l_name_width then
-				l_col.set_width (l_name_width)
+				l_col := l_libraries_grid.column (name_column)
+				if l_col.width < l_name_width then
+					l_col.set_width (l_name_width)
+				end
 			end
 		end
 
@@ -600,14 +734,15 @@ feature {NONE} -- Basic operation
 			a_path_exists: file_system.file_exists (a_path)
 			a_list_attached: attached a_list
 		local
-			l_file: KI_TEXT_INPUT_FILE
+			l_file: RAW_FILE
 			l_line: STRING
 			l_pos: INTEGER
 			l_location: STRING
 			l_depth_string: STRING
 			l_depth: INTEGER
 		do
-			l_file := file_system.new_input_file (a_path)
+			create l_file.make (a_path)
+
 			if l_file /= Void and then l_file.is_readable then
 				from l_file.open_read until l_file.end_of_file loop
 					l_file.read_line

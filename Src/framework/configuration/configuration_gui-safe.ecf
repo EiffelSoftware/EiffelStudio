@@ -20,6 +20,7 @@
 		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel-safe.ecf"/>
 		<library name="gobo_structure" location="$ISE_LIBRARY\library\gobo\gobo_structure-safe.ecf"/>
 		<library name="interface_names" location="$EIFFEL_SRC\framework\interface_names\interface_names-safe.ecf"/>
+		<library name="kmp_matcher" location="$ISE_LIBRARY\library\text\regexp\kmp_matcher\kmp_matcher-safe.ecf"/>
 		<library name="pe_reader" location="$EIFFEL_SRC\framework\file_formats\pe\pe-safe.ecf"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2-safe.ecf"/>
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel-safe.ecf"/>

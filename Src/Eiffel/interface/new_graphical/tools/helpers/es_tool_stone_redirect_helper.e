@@ -125,14 +125,33 @@ feature {NONE} -- Redirects
 			is_interface_usable: is_interface_usable
 			a_stone_is_valid: a_stone /= Void and then a_stone.is_valid
 		local
-			l_result: BOOLEAN
+			l_dropped: BOOLEAN
 		do
 			-- Note: need adding codes for new tools here
 			-- Or we can adding features like `try_find_es_tool_under_pointer', but have to loop all tools to find
 			-- out the ES_TOOL which is not efficient
-			l_result := try_drop_class (a_stone, development_window.shell_tools.tool ({ES_CLASS_TOOL}))
-			if not l_result then
-				l_result := try_drop_class (a_stone, development_window.shell_tools.tool ({ES_DEPENDENCY_TOOL}))
+			l_dropped := try_drop_class (a_stone, development_window.shell_tools.tool ({ES_CLASS_TOOL}))
+			if not l_dropped then
+				l_dropped := try_drop_class (a_stone, development_window.shell_tools.tool ({ES_DEPENDENCY_TOOL}))
+			end
+			if not l_dropped then
+				if
+					attached {ES_CLASS_TOOL} development_window.shell_tools.tool ({ES_CLASS_TOOL}) as l_class_tool and then
+					l_class_tool.is_interface_usable then
+					if attached {ES_STONABLE_I} l_class_tool as l_stonable then
+						check
+							refactored: False -- Remove check and remove OT else condition.
+						end
+						if l_stonable.is_stone_usable (a_stone) then
+							l_stonable.set_stone_with_query (a_stone)
+							l_class_tool.show (True)
+						end
+					else
+							-- Tool has not been converted yet!
+						l_class_tool.panel.set_stone (a_stone)
+						l_class_tool.show (True)
+					end
+				end
 			end
 		end
 

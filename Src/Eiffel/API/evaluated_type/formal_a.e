@@ -626,14 +626,16 @@ feature -- Access
 		end
 
 	instantiation_in (type: TYPE_A; written_id: INTEGER): TYPE_A
-			-- Instantiation of Current in the context of `class_type',
+			-- Instantiation of Current in the context of `type',
 			-- assuming that Current is written in class of id `written_id'.
 		local
 			t: ATTACHABLE_TYPE_A
 			l_class: CLASS_C
 			l_type_set: TYPE_SET_A
 		do
-			if attached {CL_TYPE_A} type.actual_type as l_cl_type then
+				-- The type should be evaluated in the context of the associated conformance type.
+				-- `type.conformance_type' is used because `type.actual_type' does not work for {LIKE_CURRENT}.
+			if attached {CL_TYPE_A} type.conformance_type as l_cl_type then
 				Result := l_cl_type.instantiation_of (Current, written_id).to_other_attachment (Current)
 			else
 				Result := Current

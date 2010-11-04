@@ -174,7 +174,7 @@ feature -- Status report
 			-- | When there is data lose, internal exception is raised
 			-- | and handled. The conversion simply fails.
 		do
-			Result := last_conversion_successful
+			Result := not last_conversion_successful
 		end
 
 feature {NONE} -- Status report

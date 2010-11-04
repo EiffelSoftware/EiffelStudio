@@ -142,6 +142,7 @@ feature {NONE} -- Implementation
 			l_file: PLAIN_TEXT_FILE
 			l_parser: XML_PARSER
 			l_ns_cb: XML_NAMESPACE_RESOLVER
+			l_end_tag_checker: XML_END_TAG_CHECKER
 			l_pos: XML_POSITION
 			l_retried: BOOLEAN
 		do
@@ -154,7 +155,8 @@ feature {NONE} -- Implementation
 				else
 					create {XML_LITE_STOPPABLE_PARSER} l_parser.make
 
-					create l_ns_cb.set_next (a_callback)
+					create l_end_tag_checker.set_next (a_callback)
+					create l_ns_cb.set_next (l_end_tag_checker)
 					l_parser.set_callbacks (l_ns_cb)
 
 					create l_file.make (a_file)

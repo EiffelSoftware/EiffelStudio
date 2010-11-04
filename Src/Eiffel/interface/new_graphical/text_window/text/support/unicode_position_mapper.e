@@ -27,15 +27,15 @@ feature -- Mapper
 
 	utf32_pos_from_utf8_pos (a_utf8_pos: INTEGER): INTEGER
 			-- UTF-32 character position from UTF-8 byte position.
-		require
-			a_utf8_pos: a_utf8_pos > 0
 		do
 			clean_up_cache
-			Result := utf32_pos_from_utf8_pos_from_cache (a_utf8_pos, 0, 0)
+			if a_utf8_pos > 0 then
+				Result := utf32_pos_from_utf8_pos_from_cache (a_utf8_pos, 0, 0)
 
-				-- Remember the first mapping.
-			cached_mappings.force (Result, a_utf8_pos)
-			sorted_known_byte_pos.extend (a_utf8_pos)
+					-- Remember the first mapping.
+				cached_mappings.force (Result, a_utf8_pos)
+				sorted_known_byte_pos.extend (a_utf8_pos)
+			end
 			last_byte_position := a_utf8_pos
 			last_character_position := Result
 		end

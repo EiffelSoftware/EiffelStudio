@@ -10,24 +10,6 @@ deferred class
 	EDITOR_SCANNER
 
 inherit
-	YY_COMPRESSED_SCANNER_SKELETON
-		rename
-			make as make_compressed_scanner_skeleton,
-			reset as reset_compressed_scanner_skeleton
-		export
-			{NONE} all
-		end
-
-	UT_CHARACTER_CODES
-		export
-			{NONE} all
-		end
-
-	KL_IMPORTED_INTEGER_ROUTINES
-	KL_IMPORTED_STRING_ROUTINES
-	KL_SHARED_PLATFORM
-	KL_SHARED_EXCEPTIONS
-	KL_SHARED_ARGUMENTS
 
 	STRING_HANDLER
 
@@ -49,7 +31,6 @@ feature {NONE} -- Initialization
 			-- Create a new Eiffel scanner.
 		do
 			create eif_buffer.make (Init_buffer_size)
-			make_with_buffer (Empty_buffer)
 		end
 
 feature -- Start Job / Reinitialization
@@ -71,7 +52,6 @@ feature -- Start Job / Reinitialization
 			end
 			current_start_condition := start_condition
 			reset
-			set_input_buffer (new_string_buffer(a_string))
 			scan
 		end
 
@@ -98,7 +78,6 @@ feature -- Start Job / Reinitialization
 	reset
 			-- Reset scanner before scanning next input.
 		do
-			reset_compressed_scanner_skeleton
 			eif_buffer.wipe_out
 			end_token := Void
 			first_token := Void
@@ -157,6 +136,18 @@ feature -- Status Setting
 			end
 		ensure
 			value_set: in_verbatim_string = a_flag
+		end
+
+	set_start_condition (a_st: INTEGER)
+		deferred
+		end
+
+	start_condition: INTEGER
+		deferred
+		end
+
+	scan
+		deferred
 		end
 
 feature -- Element Change
@@ -233,36 +224,6 @@ feature {NONE} -- Constants
 	current_start_condition: INTEGER
 
 feature {NONE} -- Implementation
-
-	is_verbatim_string_closer: BOOLEAN
-			-- Is `text' a valid Verbatim_string_closer?
-		local
-			i, j, nb: INTEGER
-			found: BOOLEAN
-		do
-				-- Look for first character ].
-				-- (Note that `text' matches the following
-				-- regexp:   [ \t\r]*\][^%\n"]*\"  .)
-			from j := 1 until found loop
-				if text_item (j) = ']' then
-					found := True
-				end
-				j := j + 1
-			end
-			nb := text.count
-			if nb = (text_count - j) then
-				Result := True
-				from i := 1 until i > nb loop
-					if text.item (i) = text_item (j) then
-						i := i + 1
-						j := j + 1
-					else
-						Result := False
-						i := nb + 1  -- Jump out of the loop.
-					end
-				end
-			end
-		end
 
 	INITIAL_st: INTEGER = 0
 	VERBATIM_st: INTEGER = 1

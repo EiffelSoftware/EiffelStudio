@@ -11,6 +11,35 @@ deferred class
 inherit
 	EC_ENCODINGS
 
+	EDITOR_SCANNER
+		redefine
+			make,
+			reset,
+			execute
+		end
+
+	YY_COMPRESSED_SCANNER_SKELETON
+		rename
+			make as make_compressed_scanner_skeleton,
+			reset as reset_compressed_scanner_skeleton
+		export
+			{NONE} all
+		end
+
+	KL_IMPORTED_INTEGER_ROUTINES
+	KL_IMPORTED_STRING_ROUTINES
+	KL_SHARED_PLATFORM
+	KL_SHARED_EXCEPTIONS
+	KL_SHARED_ARGUMENTS
+
+feature {NONE} -- Init
+
+	make
+		do
+			make_with_buffer (Empty_buffer)
+			Precursor
+		end
+
 feature -- Access
 
 	current_class : CONF_CLASS
@@ -30,6 +59,21 @@ feature -- Element change
 			-- Set `current_class' with `a_class'
 		do
 			current_class := a_class
+		end
+
+	reset
+			-- Reset
+		do
+			reset_compressed_scanner_skeleton
+			Precursor
+		end
+
+feature -- Action
+
+	execute (a_string: STRING)
+		do
+			set_input_buffer (new_string_buffer(a_string))
+			Precursor (a_string)
 		end
 
 feature {NONE} -- Status
@@ -208,7 +252,7 @@ invariant
 	invariant_clause: True -- Your invariant here
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

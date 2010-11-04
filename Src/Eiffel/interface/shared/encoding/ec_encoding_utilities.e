@@ -32,8 +32,23 @@ feature -- Conversion
 				utf32.convert_to (a_encoding, a_string)
 				if utf32.last_conversion_successful then
 					Result := utf32.last_converted_stream
+					last_conversion_lost_data := utf32.last_conversion_lost_data
+				else
+						-- This is a hack, since some OSes don't support convertion from/to UTF-32 to `a_encoding'.
+						-- We convert UTF-32 to UTF-8 first, then convert UTF-8 to `a_encoding'.
+					utf32.convert_to (utf8, a_string)
+					if utf32.last_conversion_successful then
+						utf8.convert_to (a_encoding, utf32.last_converted_stream)
+						if utf8.last_conversion_successful then
+							Result := utf8.last_converted_stream
+							last_conversion_lost_data := utf8.last_conversion_lost_data
+						else
+							last_conversion_lost_data := True
+						end
+					else
+						last_conversion_lost_data := True
+					end
 				end
-				last_conversion_lost_data := utf32.last_conversion_lost_data
 			end
 			if Result = Void then
 				Result := a_string.as_string_8

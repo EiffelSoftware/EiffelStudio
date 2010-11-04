@@ -882,6 +882,7 @@ feature {NONE} -- Implementation
 			routine_id: SPECIAL [INTEGER]
 			n: INTEGER
 			e: like error_handler.error_level
+			a: LIKE_CURRENT
 		do
 			if attached error_handler as h then
 				e := h.error_level
@@ -930,7 +931,9 @@ feature {NONE} -- Implementation
 							if attached last_type as r and then current_class /= c then
 									-- `r' references a type, relative to parent.
 									-- Let's make it relative to current class.
-								last_type := r.instantiation_in (c.actual_type, f.written_in)
+								create a
+								a.set_actual_type (c.actual_type)
+								last_type := r.instantiation_in (a, f.written_in)
 							end
 							current_class := saved_class
 							current_actual_type := saved_actual_type
@@ -989,6 +992,7 @@ feature {NONE} -- Implementation
 			saved_feature: like current_feature
 			name: SPECIAL [INTEGER]
 			n: INTEGER
+			a: LIKE_CURRENT
 		do
 			t.qualifier.process (Current)
 			if is_delayed then
@@ -1023,7 +1027,9 @@ feature {NONE} -- Implementation
 						if attached last_type as r and then current_class /= c then
 								-- `r' references a type, relative to parent.
 								-- Let's make it relative to current class.
-							last_type := r.instantiation_in (c.actual_type, f.written_in)
+							create a
+							a.set_actual_type (c.actual_type)
+							last_type := r.instantiation_in (a, f.written_in)
 						end
 						current_class := saved_class
 						current_actual_type := saved_actual_type

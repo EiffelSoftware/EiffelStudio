@@ -192,12 +192,13 @@ feature {NONE} -- Access
 		local
 			l_result: DS_ARRAYED_LIST [TUPLE [type: TYPE [ANY]; exact_only: BOOLEAN]]
 		once
-			create l_result.make (18)
+			create l_result.make (19)
 			l_result.put_last ([{CAT_CALL_WARNING}, True])
 			l_result.put_last ([{OBS_CLASS_WARN}, True])
 			l_result.put_last ([{OBS_FEAT_WARN}, True])
 			l_result.put_last ([{SYNTAX_WARNING}, True])
 			l_result.put_last ([{UNUSED_LOCAL_WARNING}, True])
+			l_result.put_last ([{C_COMPILER_WARNING}, True])
 			l_result.put_last ([{VTCM}, True])
 			l_result.put_last ([{VD43}, True])
 			l_result.put_last ([{VD80}, True])
@@ -272,11 +273,8 @@ feature {NONE} -- Basic operations
 			-- Toggles all selected rows
 		do
 			grid_warnings.selected_items.do_all (agent (a_item: EV_GRID_ITEM)
-				local
-					l_check_item: EV_GRID_CHECKABLE_LABEL_ITEM
 				do
-					l_check_item ?= a_item
-					if l_check_item /= Void then
+					if attached {EV_GRID_CHECKABLE_LABEL_ITEM} a_item as l_check_item then
 						l_check_item.set_is_checked (not l_check_item.is_checked)
 					end
 				end)
@@ -290,7 +288,6 @@ feature {NONE} -- Basic operations
 			l_grid: like grid_warnings
 			l_row: EV_GRID_ROW
 			l_count, i: INTEGER
-			l_item: EV_GRID_CHECKABLE_LABEL_ITEM
 		do
 			l_grid := grid_warnings
 			from
@@ -300,10 +297,9 @@ feature {NONE} -- Basic operations
 				i > l_count
 			loop
 				l_row := l_grid.row (i)
-				l_item ?= l_row.item (1)
-				if l_item /= Void then
-					if a_checked /= l_item.is_checked then
-						l_item.set_is_checked (a_checked)
+				if attached {EV_GRID_CHECKABLE_LABEL_ITEM} l_row.item (1) as l_check_item then
+					if a_checked /= l_check_item.is_checked then
+						l_check_item.set_is_checked (a_checked)
 					end
 				end
 				i := i + 1
@@ -378,7 +374,7 @@ invariant
 	filter_changed_actions_attached: filter_changed_actions /= Void
 
 ;note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -402,11 +398,11 @@ invariant
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

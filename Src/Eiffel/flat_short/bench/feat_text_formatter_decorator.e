@@ -89,6 +89,8 @@ feature -- Execution
 								put_new_line
 								print_error
 							end
+						else
+							process_comment_text ("-- Error(s) occurred, could not find invariant AST.", Void)
 						end
 					else
 						f_ast := target_feat.body
@@ -120,6 +122,8 @@ feature -- Execution
 								put_new_line
 								print_error
 							end
+						else
+							process_comment_text ("-- Error(s) occurred, could not find feature body AST.", Void)
 						end
 					end
 					commit
@@ -189,7 +193,7 @@ feature {NONE} -- Feature comments
 	export_status: EXPORT_I;
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -82,6 +82,9 @@ else
 endiff
 cdd %STUDIO_DIR\studio\config
 if not "windows"=="%ISE_PLATFORM" ren windows %ISE_PLATFORM
+cdd %STUDIO_DIR\studio\lang
+fullrd po_files
+fullrd script
 cdd %STUDIO_DIR
 remtrace esbuilder
 exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Delivery/esbuilder esbuilder

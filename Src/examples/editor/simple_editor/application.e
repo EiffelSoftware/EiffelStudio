@@ -27,14 +27,17 @@ feature {NONE} -- Initialization
 			-- Prepare the first window to be displayed.
 			-- Perform one call to first window in order to
 			-- avoid to violate the invariant of class EV_APPLICATION.
+		local
+			l_window: like first_window
 		do
 				-- create and initialize the first window.
-			create first_window
+			create l_window
+			first_window := l_window
 
 				-- Show the first window.
 				--| TODO: Remove this line if you don't want the first
 				--|       window to be shown at the start of the program.
-			first_window.show
+			l_window.show
 		end
 
 feature {NONE} -- Implementation

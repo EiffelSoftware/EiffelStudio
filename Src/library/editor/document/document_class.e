@@ -146,7 +146,7 @@ feature {NONE} -- Implementation
 	basic_lexer: EDITOR_BASIC_SCANNER
 			-- Basic default text lexer
 		once
-			create Result.make
+			create Result
 		end
 
 invariant

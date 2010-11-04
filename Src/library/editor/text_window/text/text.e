@@ -237,6 +237,7 @@ feature -- Query
 				until
 					l_found
 				loop
+					check Result_attached: Result /= Void end
 					Result := Result.next
 					if Result = void or else not attached {EDITOR_TOKEN_BLANK} Result then
 						l_found := True

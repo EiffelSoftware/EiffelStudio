@@ -20,9 +20,8 @@ inherit
 		    build
 		end
 
-	EDITOR_BASIC_SCANNER
+	EDITOR_SCANNER
 		rename
-		    case_diff as ut_case_diff,
 		    make as make_editor_scanner
 		undefine
 		    is_equal,
@@ -134,6 +133,18 @@ feature -- Actions
       	end
 
 feature {NONE} -- Implementation
+
+	set_start_condition (a_st: INTEGER)
+		do
+		end
+
+	start_condition: INTEGER
+		do
+		end
+
+	scan
+		do
+		end
 
 	token_list: ARRAYED_LIST [EDITOR_TOKEN]
 			-- List of EDITOR_TOKENs corresponding to analyzed list of lexer TOKENs from input string

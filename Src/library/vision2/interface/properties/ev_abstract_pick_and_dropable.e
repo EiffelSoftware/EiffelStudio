@@ -1,4 +1,4 @@
-note
+﻿note
 	description:
 		"Abstract interface for all pick and dropable classes.%N%
 		%Descendants include: widgets, items and figures."
@@ -189,7 +189,8 @@ feature {NONE} -- Implementation
 	create_interface_objects
 			-- <Precursor>
 		do
-
+				-- Create `pnd_targets' and EV_APPLICATION_I as soon as possible.
+			pnd_targets.do_nothing
 		end
 
 	pnd_targets: HASH_TABLE [INTEGER, INTEGER]

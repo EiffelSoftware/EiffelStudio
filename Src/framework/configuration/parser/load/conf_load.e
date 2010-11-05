@@ -156,6 +156,7 @@ feature {NONE} -- Implementation
 					create {XML_LITE_STOPPABLE_PARSER} l_parser.make
 
 					create l_end_tag_checker.set_next (a_callback)
+					l_end_tag_checker.set_associated_parser (l_parser)
 					create l_ns_cb.set_next (l_end_tag_checker)
 					l_parser.set_callbacks (l_ns_cb)
 

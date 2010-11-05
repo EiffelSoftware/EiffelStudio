@@ -23,4 +23,6 @@ if [ ! -f PorterPackage_all.tar ]; then
 	rm -f tmpin$$.tmp
 fi
 
-./compile_for_all_platforms &
+#./compile_for_all_platforms &
+(sh ./make_for_platform tokyo.ise manus linux-x86-64 22) &
+(sh ./make_for_platform amsterdam.ise manus solaris-x86-64 22) &

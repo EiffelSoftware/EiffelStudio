@@ -523,6 +523,7 @@ feature -- Third pass: byte code production and type check
 		local
 			feat_table: COMPUTED_FEATURE_TABLE
 				-- Feature invariant_type_checktable of the class
+			l_attribute_i: ATTRIBUTE_I
 			feature_i, def_resc: FEATURE_I
 				-- A feature of the class
 			l_feature_written_in_current: BOOLEAN
@@ -780,6 +781,32 @@ feature -- Third pass: byte code production and type check
 								system.request_freeze
 							end
 							add_feature_to_melted_set (feature_i)
+							if feature_i.is_object_relative_once then
+								if
+									attached object_relative_once_infos as l_obj_once_info_table and then
+									attached l_obj_once_info_table.items_intersecting_with_rout_id_set (feature_i.rout_id_set) as l_obj_once_info_list
+								then
+									from
+										l_obj_once_info_list.start
+									until
+										l_obj_once_info_list.after
+									loop
+										if attached l_obj_once_info_list.item as l_obj_info then
+											l_attribute_i := l_obj_info.called_attribute_i
+											add_feature_to_melted_set (l_attribute_i)
+
+											l_attribute_i := l_obj_info.exception_attribute_i
+											add_feature_to_melted_set (l_attribute_i)
+
+											if l_obj_info.has_result then
+												l_attribute_i := l_obj_info.result_attribute_i
+												add_feature_to_melted_set (l_attribute_i)
+											end
+										end
+										l_obj_once_info_list.forth
+									end
+								end
+							end
 						end
 						type_check_error := False
 						byte_code_generated := False

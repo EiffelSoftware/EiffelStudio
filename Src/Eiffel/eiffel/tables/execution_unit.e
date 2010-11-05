@@ -46,6 +46,11 @@ inherit
 			is_equal
 		end
 
+	DEBUG_OUTPUT
+		undefine
+			is_equal
+		end
+
 create
 	make
 
@@ -138,8 +143,8 @@ feature -- Access
 				class_type.associated_class.inherits_from (written_class)
 			then
 				if access_in = written_in and then class_type.written_type (written_class).is_precompiled then
-						-- If feature's routine id is generated from the written class and it is precompiled then
-						-- it must be valid.
+						-- If feature's routine id is generated from the written class 
+						-- and it is precompiled then it must be valid.
 					Result := True
 				else
 						-- Feature may have disappeared from system and
@@ -151,8 +156,8 @@ feature -- Access
 					then
 						if is_encapsulated then
 								-- If this was a unit for keeping access to
-								-- an encapsulated feature or if the attribute is directly replicated, we need to check if
-								-- encapsulation is still needed.
+								-- an encapsulated feature or if the attribute is directly 
+								-- replicated, we need to check if encapsulation is still needed.
 							Result := is_attribute_needed
 						else
 							f := Body_server.server_item (access_in, body_index)
@@ -165,6 +170,11 @@ feature -- Access
 								-- deferred before
 							Result := not f.is_attribute and then not f.is_deferred
 						end
+					elseif
+						attached class_type.associated_class as cl and then
+						cl.object_relative_once_attribute_with_body_index (body_index) /= Void
+					then
+						Result := True
 					end
 				end
 			end
@@ -177,7 +187,7 @@ feature -- Access
 		do
 				-- Slow part, but we do not have any other way to find the
 				-- associated feature with current information.
-			if attached {ENCAPSULATED_I} system.class_of_id (access_in).feature_table.feature_of_body_index (body_index) as l_encapsulated_feat then
+			if attached {ENCAPSULATED_I} system.class_of_id (access_in).feature_of_body_index (body_index) as l_encapsulated_feat then
 				Result := l_encapsulated_feat.generate_in > 0 or else l_encapsulated_feat.is_replicated_directly
 			end
 		end
@@ -214,6 +224,15 @@ feature -- Access
 			Result := class_type_id = other.class_type_id and then body_index = other.body_index
 		ensure
 			symmetric: Result implies other.same_as (Current)
+		end
+
+feature -- Status report
+
+	debug_output: STRING
+		do
+			create Result.make_from_string (compound_name)
+			Result.append (" (body_index=" + body_index.out + ")")
+			Result.append (" written_in=" + written_in.out)
 		end
 
 feature -- Setting

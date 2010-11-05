@@ -626,6 +626,12 @@ feature -- Byte code generation
 			current_type: CLASS_TYPE
 			create_info: CREATE_FEAT
 		do
+			--| Note: for once per object, 
+			--| we handle the rescue/retry clauses 
+			--| using DO_RESCUE_B
+			--| So we need to handle differently the rescue and retry
+			--| byte code generation and location
+
 			local_list := context.local_list
 			local_list.wipe_out
 			feat := Context.current_feature
@@ -670,11 +676,14 @@ feature -- Byte code generation
 			ba.append_short_integer (context.class_type.type_id - 1)
 
 				-- Rescue offset if any.
-			if rescue_clause /= Void then
-				ba.append ('%/001/')
+			if
+				rescue_clause /= Void and
+				not is_object_relative_once
+			then
+				ba.append_boolean (True)
 				ba.mark_forward
 			else
-				ba.append ('%U')
+				ba.append_boolean (False)
 			end
 
 			if feat.is_attribute then
@@ -716,22 +725,27 @@ feature -- Byte code generation
 			end
 
 				-- Record retry offset
-			ba.mark_retry
+			if is_object_relative_once then
+					-- Compound byte code
+				make_body_code (ba, melted_generator)
+			else
+				ba.mark_retry
 
-				-- Compound byte code
-			make_body_code (ba, melted_generator)
+					-- Compound byte code
+				make_body_code (ba, melted_generator)
 
-			if rescue_clause /= Void then
-					-- Jump to the end of the rescue clause in case of normal execution.
-				ba.append (bc_jmp)
-				ba.mark_forward2
-					-- Mark the start of the rescue clause.
-				ba.write_forward
-				ba.append (Bc_rescue)
-				melted_generator.generate (ba, rescue_clause)
-				ba.append (Bc_end_rescue)
-					-- Mark the end of the rescue clause.
-				ba.write_forward2
+				if rescue_clause /= Void then
+						-- Jump to the end of the rescue clause in case of normal execution.
+					ba.append (bc_jmp)
+					ba.mark_forward2
+						-- Mark the start of the rescue clause.
+					ba.write_forward
+					ba.append (Bc_rescue)
+					melted_generator.generate (ba, rescue_clause)
+					ba.append (Bc_end_rescue)
+						-- Mark the end of the rescue clause.
+					ba.write_forward2
+				end
 			end
 
 				-- Generate the hook corresponding to the final end.

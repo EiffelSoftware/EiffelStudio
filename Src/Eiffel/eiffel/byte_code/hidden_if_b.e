@@ -1,65 +1,37 @@
 note
-	description: "Byte node used to deactivate and reactive RTHOOK generation."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	description: "Summary description for {HIDDEN_IF_B}."
+	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	HIDDEN_B
+	HIDDEN_IF_B
 
 inherit
-	BYTE_LIST [BYTE_NODE]
+	IF_B
 		redefine
-			generate, process
-		end
-
-create
-	make,
-	make_filled,
-	make_wrapper
-
-feature {NONE} -- Initialization
-
-	make_wrapper (a_node: BYTE_NODE)
-			-- Initialization	
-		require
-			a_node_attached: a_node /= Void
-		do
-			make (1)
-			extend (a_node)
-		end
-
-feature -- Visitor
-
-	process (v: BYTE_NODE_VISITOR)
-			-- Process current element.
-		do
-			v.process_hidden_b (Current)
+			process,
+			generate_if_prologue
 		end
 
 feature -- Access
 
-	wrapped_into_byte_list: BYTE_LIST [BYTE_NODE]
+	process (v: BYTE_NODE_VISITOR)
+			-- Process current element.
 		do
-			create Result.make (1)
-			Result.extend (Current)
+			v.process_hidden_if_b (Current)
 		end
 
-feature -- C generation
-
-	generate
-			-- Generate `node'
+	generate_if_prologue
 		do
-			context.enter_hidden_code
-			Precursor
-			context.exit_hidden_code
+			--| no line info, or debugger hook
+			--| since this is implementation/hidden IF
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -87,6 +59,4 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
 end
-

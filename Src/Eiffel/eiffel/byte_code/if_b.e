@@ -318,15 +318,20 @@ feature -- Settings
 			end
 		end
 
+	generate_if_prologue
+		do
+			generate_line_info
+				-- Generate the hook for "if cond then"
+			generate_frozen_debugger_hook
+		end
+
 	generate
 			-- Generate C code in `buffer'.
 		local
 			buf: GENERATION_BUFFER
 		do
 			buf := buffer
-			generate_line_info
-				-- Generate the hook for "if cond then"
-			generate_frozen_debugger_hook
+			generate_if_prologue
 
 			condition.generate
 

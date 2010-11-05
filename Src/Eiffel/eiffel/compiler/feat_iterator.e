@@ -144,6 +144,14 @@ end
 				if depend_list /= Void then
 					propagate_feature (written_class_id, body_index, depend_list);
 				end
+				a_class := System.class_of_id (actual_class_id)
+				if a_class /= Void then
+					depend_list := a_class.object_relative_once_dependances  (body_index)
+					if depend_list /= Void then
+						propagate_feature (written_class_id, body_index, depend_list)
+					end
+				end
+
 DEBUG ("DEAD_CODE")
 	io.put_string ("La depend_list contient ")
 	if depend_list /= Void then

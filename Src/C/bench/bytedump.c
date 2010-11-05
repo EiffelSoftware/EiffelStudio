@@ -218,11 +218,11 @@ static  char    *names [] = {
 "BC_PTUPLE",
 "BC_STRING32",
 "BC_ONCE_STRING32",
-"BC_NOTUSED_172",
-"BC_NOTUSED_173",
-"BC_NOTUSED_174",
-"BC_NOTUSED_175",
-"BC_NOTUSED_176",
+"BC_TRY",
+"BC_TRY_END",
+"BC_TRY_END_EXCEPT",
+"BC_DO_RESCUE",
+"BC_DO_RESCUE_END",
 "BC_NOTUSED_177",
 "BC_NOTUSED_178",
 "BC_NOTUSED_179",
@@ -644,7 +644,10 @@ static  void    print_instructions (void)
 
 	while ((code != BC_NULL)     &&
 		   (code != BC_INV_NULL) &&
-		   (code != BC_END_RESCUE))
+		   (code != BC_END_RESCUE) &&
+		   (code != BC_TRY_END) &&
+		   (code != BC_TRY_END_EXCEPT) &&
+		   (code != BC_DO_RESCUE_END))
 	{
 		switch (code)
 		{
@@ -1380,11 +1383,30 @@ static  void    print_instructions (void)
 				break;
 			case  BC_RESCUE :
 				break;
+			case BC_TRY:
+				if (get_bool(&ip)) {
+					fprintf (ofp,"Try Except offset: %d\n", get_int32(&ip));
+				}
+				print_instructions ();
+				break;
+			case BC_TRY_END:
+				break;
+			case BC_TRY_END_EXCEPT:
+				break;
+			case BC_DO_RESCUE:
+				if (get_bool(&ip)) {
+					fprintf (ofp,"Do Rescue offset: %d\n", get_int32(&ip));
+				}
+				print_instructions ();
+				break;
+			case BC_DO_RESCUE_END:
+				break;
 
 /* NOTE: Separate codes not included yet */
 
 			default:
-				fprintf (stderr,"Illegal byte code %d\n", (int) code);
+				fprintf (ofp,"%d: Illegal byte code %d\n", (int)(ip - body), (int) code);
+				fprintf (stderr,"%d: Illegal byte code %d\n", (int)(ip - body), (int) code);
 				panic ();
 		}
 

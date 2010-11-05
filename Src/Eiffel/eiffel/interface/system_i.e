@@ -569,10 +569,13 @@ feature -- Properties
 				-- we need to make sure that its `is_in_system' flag is set.
 			root_creators.do_all (
 				agent (a_root: SYSTEM_ROOT)
+					local
+						cl: CLASS_C
 					do
-						if a_root.class_type.associated_class.original_class.is_compiled and then
-						   a_root.class_type.associated_class.is_precompiled then
-							a_root.class_type.associated_class.record_precompiled_class_in_system
+						cl := a_root.class_type.associated_class
+						if cl.original_class.is_compiled and then
+						   cl.is_precompiled then
+							cl.record_precompiled_class_in_system
 						end
 					end)
 		end
@@ -4325,7 +4328,13 @@ feature -- Generation
 				class_type := class_types.item (i)
 				check class_type_not_void: class_type /= Void end
 				class_type.skeleton.generate_size (buffer, False)
-				buffer.put_string (",%N")
+				buffer.put_character (',')
+				if class_type.type /= Void then
+					buffer.put_string (" /* " + class_type.type.dump + " */")
+				else
+					buffer.put_string (" /* " + class_type.associated_class.name_in_upper + " */")
+				end
+				buffer.put_character ('%N')
 				i := i + 1
 			end
 			buffer.put_string ("};%N")

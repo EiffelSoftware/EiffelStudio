@@ -131,11 +131,27 @@ feature -- Object relative once
 
 	prepare_object_relative_once (a_byte_code: BYTE_CODE)
 		local
-			l_result_assign_b: ASSIGN_B
+			l_rescue: DO_RESCUE_B
+			l_hidden_if_called_b: HIDDEN_IF_B
+			l_if_b: IF_B
+			l_bin_ne_b: BIN_NE_B
+			l_excep_attr_b: ATTRIBUTE_B
+			l_ISE_EXCEPTION_MANAGER_once_raise_feature_b: FEATURE_B
+			l_ISE_EXCEPTION_MANAGER_last_exception_feature_b: FEATURE_B
+
+			l_nested_b: NESTED_B
+			l_assign_b: ASSIGN_B
+			l_creation_expr_b: CREATION_EXPR_B
 			l_result_attr_b: ATTRIBUTE_B
-			l_called_assign_b: ASSIGN_B
 			l_called_attr_b: ATTRIBUTE_B
-			l_compound, l_new_compound: BYTE_LIST [BYTE_NODE]
+			l_compound: BYTE_LIST [BYTE_NODE]
+			l_body_compound: BYTE_LIST [BYTE_NODE]
+			l_then_compound, l_wrapper_compound: HIDDEN_B
+			l_parameters: BYTE_LIST [PARAMETER_B]
+			l_param: PARAMETER_B
+			l_try_b: TRY_B
+			l_ISE_EXCEPTION_MANAGER_type: CL_TYPE_A
+			l_ISE_EXCEPTION_MANAGER_class_c: CLASS_C
 			n: INTEGER
 		do
 			if
@@ -144,47 +160,185 @@ feature -- Object relative once
 			then
 				if attached {STD_BYTE_CODE} a_byte_code as bc then
 					l_compound := a_byte_code.compound
-					n := 1
 
+						--| Build new body compound
+						--|
+						--|		attr_called := True
+						--|		... body ...
+						--|		attr_result := Result
+						--|
+					if l_compound /= Void and then not l_compound.is_empty then
+						n := 2 --| called + compound
+					else
+						n := 1 --| called
+					end
+					if has_return_value then
+							--| To generate `attr_result := Result'
+						n := n + 1 --| attr_result := Result
+					end
+
+					create l_body_compound.make (n)
+						--| attr_called := True
 					create l_called_attr_b.make (l_obj_once_info.called_attribute_i)
 					l_called_attr_b.set_type (l_obj_once_info.called_type_a)
 					l_called_attr_b.set_is_attachment
-					create l_called_assign_b
-					l_called_assign_b.set_target (l_called_attr_b)
-					l_called_assign_b.set_source (create {BOOL_CONST_B}.make (True))
-
+					create l_assign_b
+					l_assign_b.set_target (l_called_attr_b)
+					l_assign_b.set_source (create {BOOL_CONST_B}.make (True))
+					l_body_compound.extend (create {HIDDEN_B}.make_wrapper (l_assign_b))
+						--| reuse existing compound	/ body				
+					if l_compound /= Void and then not l_compound.is_empty then
+						if l_compound.count = 1 then
+							l_body_compound.extend (l_compound.first)
+						else
+							check l_compound.count > 0 end
+							l_body_compound.extend (l_compound)
+						end
+					end
 					if has_return_value then
 						create l_result_attr_b.make (l_obj_once_info.result_attribute_i)
 						l_result_attr_b.set_type (a_byte_code.real_type (l_obj_once_info.result_type_a))
 						l_result_attr_b.set_is_attachment
-						create l_result_assign_b
-						l_result_assign_b.set_target (l_result_attr_b)
-						l_result_assign_b.set_source (create {RESULT_B})
+						create l_assign_b
+						l_assign_b.set_target (l_result_attr_b)
+						l_assign_b.set_source (create {RESULT_B})
 
-						n := n + 1
+						l_body_compound.extend (create {HIDDEN_B}.make_wrapper (l_assign_b))	--| attr_result := Result
+					end
+
+					--|
+					--| if called then
+					--| 	if attached attr_exception as l_attr_exception then
+					--|			(create {ISE_EXCEPTION_MANAGER}).raise (l_attr_exception)
+					--|		end
+					--|		Result := attr_result
+					--|	else --/ Not called yet
+					--|		attr_called := True
+					--|		... body ...
+					--|		attr_result := Result
+					--| end
+					--|
+
+						--| if called then
+					create l_hidden_if_called_b
+					create l_called_attr_b.make (l_obj_once_info.called_attribute_i)
+					l_called_attr_b.set_type (l_obj_once_info.called_type_a)
+					l_hidden_if_called_b.set_condition (l_called_attr_b)
+					create l_if_b
+					create l_excep_attr_b.make (l_obj_once_info.exception_attribute_i)
+					l_excep_attr_b.set_type (a_byte_code.real_type (l_obj_once_info.exception_type_a))
+					create l_bin_ne_b
+					l_bin_ne_b.set_left (l_excep_attr_b)
+					l_bin_ne_b.set_right (create {VOID_B})
+					l_if_b.set_condition (l_bin_ne_b)
+					l_ISE_EXCEPTION_MANAGER_class_c := system.ise_exception_manager_class.compiled_class
+					check
+						ise_exception_manager_class_compiled: l_ISE_EXCEPTION_MANAGER_class_c /= Void
+					end
+
+					if
+						l_ISE_EXCEPTION_MANAGER_class_c /= Void and then
+						attached l_ISE_EXCEPTION_MANAGER_class_c.feature_of_name_id (Names_heap.once_raise_name_id) as l_once_raise_fi
+					then
+						--| (create {ISE_EXCEPTION_MANAGER})
+						create l_creation_expr_b
+						l_ISE_EXCEPTION_MANAGER_type := l_ISE_EXCEPTION_MANAGER_class_c.types.first.type
+						l_creation_expr_b.set_type (l_ISE_EXCEPTION_MANAGER_type)
+						l_creation_expr_b.set_info (create {CREATE_TYPE}.make (l_ISE_EXCEPTION_MANAGER_type))
+						l_creation_expr_b.set_creation_instruction (True)
+
+							--| {ISE_EXCEPTION_MANAGER}.once_raise (EXCEPTION)
+						create l_ISE_EXCEPTION_MANAGER_once_raise_feature_b.make (l_once_raise_fi, a_byte_code.real_type (l_once_raise_fi.type), Void)
+						create l_excep_attr_b.make (l_obj_once_info.exception_attribute_i)
+						l_excep_attr_b.set_type (a_byte_code.real_type (l_obj_once_info.exception_type_a))
+
+						create l_parameters.make (1)
+						create l_param
+						l_param.set_expression (l_excep_attr_b)
+						l_param.set_attachment_type (l_excep_attr_b.type)
+						l_parameters.extend (l_param)
+						l_ISE_EXCEPTION_MANAGER_once_raise_feature_b.set_parameters (l_parameters)
+
+							--| Build ... (create {ISE_EXCEPTION_MANAGER}).once_raise (EXCEPTION)
+						create l_nested_b
+						l_nested_b.set_target (l_creation_expr_b)
+						l_nested_b.set_message (l_ISE_EXCEPTION_MANAGER_once_raise_feature_b)
+
+						create l_wrapper_compound.make (1)
+						l_wrapper_compound.extend (l_nested_b)
+						l_if_b.set_compound (l_wrapper_compound)
+					end
+
+					if has_return_value then
+						create l_then_compound.make (2)
+						l_then_compound.extend (l_if_b)
+
+						create l_result_attr_b.make (l_obj_once_info.result_attribute_i)
+						l_result_attr_b.set_type (a_byte_code.real_type (l_obj_once_info.result_type_a))
+						create l_assign_b
+						l_assign_b.set_target (create {RESULT_B})
+						l_assign_b.set_source (l_result_attr_b)
+						l_then_compound.extend (l_assign_b)
+					else
+						create l_then_compound.make_wrapper (l_if_b)
+					end
+
+					l_hidden_if_called_b.set_compound (l_then_compound)
+						--|	else --/ Not called yet
+						--| use l_body_compound inside a TRY_B
+					if
+						l_ISE_EXCEPTION_MANAGER_class_c /= Void and then
+						attached l_ISE_EXCEPTION_MANAGER_class_c.feature_of_name_id (Names_heap.last_exception_name_id) as l_last_exception_fi
+					then
+						create {HIDDEN_B} l_compound.make (1)
+						--| Get last exception
+						--| attr_except := (create {ISE_EXCEPTION_MANAGER}).last_exception
+						--| *(EIF_REFERENCE *)(Current + _REFACS_2_) = RTLA;
+						create l_excep_attr_b.make (l_obj_once_info.exception_attribute_i)
+						l_excep_attr_b.set_type (l_obj_once_info.exception_type_a)
+						l_excep_attr_b.set_is_attachment
+
+						create l_creation_expr_b
+						l_ISE_EXCEPTION_MANAGER_type := l_ISE_EXCEPTION_MANAGER_class_c.types.first.type
+						l_creation_expr_b.set_type (l_ISE_EXCEPTION_MANAGER_type)
+						l_creation_expr_b.set_info (create {CREATE_TYPE}.make (l_ISE_EXCEPTION_MANAGER_type))
+						l_creation_expr_b.set_creation_instruction (True)
+
+							--| {ISE_EXCEPTION_MANAGER}.last_exception: EXCEPTION
+						create l_ISE_EXCEPTION_MANAGER_last_exception_feature_b.make (l_last_exception_fi, a_byte_code.real_type (l_last_exception_fi.type), Void)
+
+							--| Build ... (create {ISE_EXCEPTION_MANAGER}).last_exception returning an EXCEPTION object
+						create l_nested_b
+						l_nested_b.set_target (l_creation_expr_b)
+						l_nested_b.set_message (l_ISE_EXCEPTION_MANAGER_last_exception_feature_b)
+
+						create l_assign_b
+						l_assign_b.set_target (l_excep_attr_b)
+						l_assign_b.set_source (l_nested_b)
+						l_compound.extend (l_assign_b)
+					else
+						l_compound := Void
+						check False end
+					end
+
+					create l_try_b
+					if attached a_byte_code.rescue_clause as rc then
+						create l_rescue.make (l_body_compound, rc)
+						l_try_b.set_compound (l_rescue.wrapped_into_byte_list)
+					else
+						l_try_b.set_compound (l_body_compound)
 					end
 
 					if l_compound /= Void then
-						create l_new_compound.make (l_compound.count + n)
-					else
-						create l_new_compound.make (n)
+						l_try_b.set_except_part (l_compound)
 					end
-					l_new_compound.extend (create {HIDDEN_B}.make (l_called_assign_b))
-					if l_compound /= Void and then l_compound.count > 0 then
-						from
-							l_compound.start
-						until
-							l_compound.after
-						loop
-							l_new_compound.extend (l_compound.item)
-							l_compound.forth
-						end
-					end
-					if has_return_value then
-						l_new_compound.extend (create {HIDDEN_B}.make (l_result_assign_b))
-					end
+					l_try_b.propagate_exception
 
-					bc.set_compound (l_new_compound)
+					l_hidden_if_called_b.set_else_part (l_try_b.wrapped_into_byte_list)
+
+					create l_compound.make (1)
+					l_compound.extend (l_hidden_if_called_b)
+					bc.set_compound (l_compound)
 				end
 			end
 		end

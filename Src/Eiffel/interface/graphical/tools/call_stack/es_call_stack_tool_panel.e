@@ -1232,7 +1232,7 @@ feature {NONE} -- Export call stack
 			retry
 		end
 
-	copy_call_stack_selection_to_clipboard
+	copy_call_stack_selection_to_clipboard (a_without_value: BOOLEAN)
 			-- Copy text representation of call stack selection to clipboard
 		local
 			l_output: YANK_STRING_WINDOW
@@ -1272,14 +1272,18 @@ feature {NONE} -- Export call stack
 							l_output.add_int (cse.level_in_stack)
 							l_output.add_space
 							tf.append_feature (cse, l_output)
-							tf.append_arguments (cse, l_output)
-							tf.append_locals (cse, l_output)
+							if not a_without_value then
+								tf.append_arguments (cse, l_output)
+								tf.append_locals (cse, l_output)
+							end
 
 							t := l_output.stored_output
 							if t /= Void and then not t.is_empty then
 								t.replace_substring_all ("%N", "%N%T")
-								s.append_string ("------")
-								s.append_character ('%N')
+								if not a_without_value then
+									s.append_string ("------")
+									s.append_character ('%N')
+								end
 								s.append_string (t)
 								s.append_character ('%N')
 							end
@@ -2048,7 +2052,7 @@ feature {NONE} -- Grid Implementation
 				end
 			when key_c, key_insert then
 				if ev_application.ctrl_pressed then
-					copy_call_stack_selection_to_clipboard
+					copy_call_stack_selection_to_clipboard (ev_application.alt_pressed)
 				end
 			else
 			end

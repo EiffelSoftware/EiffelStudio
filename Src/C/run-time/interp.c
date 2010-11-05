@@ -312,20 +312,20 @@ rt_private void iinternal_dump(FILE *, char *);				/* Internal (compound) dumpin
 	}
 
 /* Macros to handle exceptions in routine body:
- * SET_RESCUE - set rescue handler (if any)
+ * SET_RESCUE(rescue,exenv) - set rescue handler (if any)
  */
 
-#define SET_RESCUE                                                            \
-	if (rescue) {                                                         \
+#define SET_RESCUE(r,e)                                                            \
+	if (r) {                                                         \
 			/* Set exception handler address. */                  \
-		if (!setjmp(exenv)) {                                         \
+		if (!setjmp(e)) {                                         \
 				/* Register address to rescue on exception.*/ \
-			exvect->ex_jbuf = &exenv;                             \
+			exvect->ex_jbuf = &e;                             \
 		}                                                             \
 		else {                                                        \
 				/* There is an exception. */                  \
 				/* Jump to rescue clause. */                  \
-			IC = rescue;                                          \
+			IC = r;                                          \
 		}                                                             \
 	}
 
@@ -581,17 +581,8 @@ rt_private void interpret(int flag, int where)
 	char ** volatile saved_prof_top = NULL;	/* Saved top of `prof_stack' */
 	long volatile once_key = 0;				/* Index in once table */
 	uint32 volatile once_end_break_index = 0;				/* Index in once table */
-	int  volatile is_once = 0;				/* Is it a once routine? */
 	int  volatile is_process_or_thread_relative_once = 0;	/* Is it a process or thread relative once routine? */
 	int  volatile is_object_relative_once = 0;				/* Is it a object relative once routine? */
-	struct {
-		EIF_BOOLEAN is_precompiled;	/* Next chunk in stack */
-		EIF_INTEGER_16 class_id;	/* Class type id */
-		EIF_INTEGER_32 called;		/* feature id of extra once per object `called' attribute */
-		EIF_INTEGER_32 except;		/* feature id of extra once per object `exception' attribute */
-		EIF_INTEGER_32 result;		/* feature id of extra once per object `result' attribute */
-		EIF_INTEGER_16 result_type;	/* Once's returning value's type id */
-	} once_p_obj_info = {EIF_FALSE, 0, 0, 0, 0, 0};
 
 	int  volatile create_result = 1;			/* Should result be created? */
 	RTSN;							/* Save nested flag */
@@ -604,14 +595,12 @@ rt_private void interpret(int flag, int where)
 	switch (*IC++)
 	{
 	case ONCE_MARK_THREAD_RELATIVE:
-		is_once  = 1;
 		is_process_or_thread_relative_once = 1;
 		once_key = get_int32(&IC);
 		once_end_break_index = get_uint32(&IC);
 		break;
 #ifdef EIF_THREADS
 	case ONCE_MARK_PROCESS_RELATIVE:
-		is_once  = 1;
 		is_process_or_thread_relative_once = 1;
 		is_process_once = 1;
 		once_key = get_int32(&IC);
@@ -619,19 +608,7 @@ rt_private void interpret(int flag, int where)
 		break;
 #endif
 	case ONCE_MARK_OBJECT_RELATIVE:
-		is_once  = 1;
 		is_object_relative_once = 1;
-		once_p_obj_info.is_precompiled = get_bool(&IC);
-		once_p_obj_info.class_id = get_type_id(&IC);
-		if (once_p_obj_info.is_precompiled) {
-			once_p_obj_info.called = get_offset(&IC);
-			once_p_obj_info.except = get_offset(&IC);
-			once_p_obj_info.result = get_offset(&IC);
-		} else {
-			once_p_obj_info.called = get_feature_id(&IC);
-			once_p_obj_info.except = get_feature_id(&IC);
-			once_p_obj_info.result = get_feature_id(&IC);
-		}
 		once_end_break_index = get_uint32(&IC);
 		break;
 	case ONCE_MARK_ATTRIBUTE:
@@ -872,6 +849,94 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		 dprintf(2)("BC_DEFERRED\n");
 #endif
+		break;
+
+
+	case BC_TRY:
+#ifdef DEBUG
+		dprintf(2)("BC_TRY\n");
+#endif
+		{
+			unsigned char * volatile except_part = NULL;	/* Location of try except clause */
+			if (*IC++) {
+				offset = get_int32(&IC);	/* Fetch except_part offset */
+				except_part = IC + offset;	/* Compute except_part start */
+			}
+			if (except_part) {
+
+					/* Declare variables for exception handling. */
+
+				struct ex_vect * exvecto;
+
+					/* Record execution vector to catch exception. */
+				exvecto = extre();
+					/* Set catch address. */
+				exvect->ex_jbuf = &exenvo;
+					/* Update routine exception vector. */
+				exvect = exvecto;
+				dexset(exvect);
+
+					/* Set exception handler address. */
+				if (setjmp(exenvo)) {
+						/* There is an exception. */
+					IC = except_part; 
+				}
+			}
+		}
+		break;
+
+	case BC_TRY_END:
+#ifdef DEBUG
+		dprintf(2)("BC_TRY_END\n");
+#endif
+				/* Remove execution vector to restore    */
+				/* previous exception catch point.       */
+		exvect = extrl();
+		dexset(exvect);
+		break;
+
+	case BC_TRY_END_EXCEPT:
+#ifdef DEBUG
+		dprintf(2)("BC_TRY_END_EXCEPT\n");
+#endif
+		/* Propagate the exception */
+		ereturn();
+		break;
+
+	/*
+	 * Do+Rescue clause 
+	 */
+	case BC_DO_RESCUE:
+#ifdef DEBUG
+		dprintf(2)("BC_DO_RESCUE\n");
+#endif
+		rescue = NULL; /* no rescue */
+		if (*IC++) {
+			offset = get_int32(&IC);	/* Fetch rescue offset */
+			rescue = IC + offset;		/* Compute rescue start */
+
+			if (flag == INTERP_CMPD) {
+				if (rescue) {	/* If there is a rescue clause */
+#ifdef ISE_GC
+					SAVE(loc_set, l_cur, l_top);		/* Save C local stack */
+					SAVE(loc_stack, ls_cur, ls_top);	/* Save loc_stack */
+					SAVE(hec_stack, h_cur, h_top);		/* Save hector stack */
+#endif
+					current_trace_level = trace_call_level;	/* Save trace call level */
+					if (prof_stack) saved_prof_top = prof_stack->st_top;
+				}
+			}
+
+			SET_RESCUE(rescue,exenv);
+		}
+
+		break;
+
+	case BC_DO_RESCUE_END:
+#ifdef DEBUG
+		dprintf(2)("BC_DO_RESCUE_END\n");
+#endif
+		/* compound passes without exception raised */
 		break;
 
 	/*
@@ -1410,13 +1475,6 @@ rt_private void interpret(int flag, int where)
 		if (is_process_or_thread_relative_once) {
 			CHECK("OResult not null", OResult);
 			put_once_result (iresult, rtype, OResult);
-		} else if (is_object_relative_once) {
-			if (once_p_obj_info.is_precompiled) {
-				offset = RTWPA(once_p_obj_info.class_id, once_p_obj_info.result, icur_dtype);
-			} else {
-				offset = RTWA(once_p_obj_info.class_id, once_p_obj_info.result, icur_dtype);
-			}
-			put_once_per_object_result (icurrent, offset, rtype, iresult);
 		}
 		break;
 
@@ -1444,13 +1502,6 @@ rt_private void interpret(int flag, int where)
 					*(OResult->result.EIF_REFERENCE_result) = last->it_ref;
 					break;
 				}
-			} else if (is_object_relative_once) {
-				if (once_p_obj_info.is_precompiled) {
-					offset = RTWPA(once_p_obj_info.class_id, once_p_obj_info.result, icur_dtype);
-				} else {
-					offset = RTWA(once_p_obj_info.class_id, once_p_obj_info.result, icur_dtype);
-				}
-				put_once_per_object_result (icurrent, offset, rtype, iresult);
 			}
 			
 		}
@@ -3722,7 +3773,9 @@ rt_private void interpret(int flag, int where)
 		dprintf(2)("BC_END_RESCUE\n");
 #endif
 		RTEF;
-		return;
+		if (!is_object_relative_once) {
+			return;
+		}
 
 	/*
 	 * End of current Eiffel routine.
@@ -3741,7 +3794,7 @@ rt_private void interpret(int flag, int where)
 		pop_registers();	/* Pop registers */
 		/* leave_body: */
 			/* Exit rutine body. */
-		if (is_once) {
+		if (is_process_or_thread_relative_once) {
 				/* Remove execution vector to restore    */
 				/* previous exception catch point.       */
 			exvect = extrl();
@@ -3920,7 +3973,7 @@ enter_body:
 					put_once_result (iresult, rtype, OResult);
 				}
 					/* Register rescue handler (if any). */
-				SET_RESCUE;
+				SET_RESCUE(rescue,exenv);
 			} else {
 					/* Exception occurred. */
 				if (is_process_or_thread_relative_once) {
@@ -3943,96 +3996,12 @@ enter_body:
 				ereturn ();
 			}
 		}
-	} else if (is_object_relative_once) {
-		EIF_BOOLEAN was_executed = EIF_FALSE;
-		if (once_p_obj_info.is_precompiled) {
-			offset = RTWPA(once_p_obj_info.class_id, once_p_obj_info.called, icur_dtype);
-		} else {
-			offset = RTWA(once_p_obj_info.class_id, once_p_obj_info.called, icur_dtype);
-		}
-		was_executed = *(EIF_BOOLEAN*)(icurrent->it_ref + offset);
-
-			/* Check if once routine was executed earlier. */
-		if (was_executed) {
-			EIF_REFERENCE except_ref = NULL;
-				/* Yes, it was executed.      */
-
-			dstop(dtop()->dc_exec,once_end_break_index);	/* Debugger hook , dtop->dc_exec returns the current execution vector */
-
-				/* Check if it failed or not. */
-			if (once_p_obj_info.is_precompiled) {
-				offset = RTWPA(once_p_obj_info.class_id, once_p_obj_info.except, icur_dtype);
-			} else {
-				offset = RTWA(once_p_obj_info.class_id, once_p_obj_info.except, icur_dtype);
-			}
-			except_ref = *(EIF_REFERENCE *)(icurrent->it_ref + offset);
-			if (except_ref) {
-				oraise (except_ref);
-			}
-
-			if (once_p_obj_info.result > 0) {
-					/* if has returning value, retrieve once result. */
-				if (once_p_obj_info.is_precompiled) {
-					offset = RTWPA(once_p_obj_info.class_id, once_p_obj_info.result, icur_dtype);
-				} else {
-					offset = RTWA(once_p_obj_info.class_id, once_p_obj_info.result, icur_dtype);
-				}
-				get_once_per_object_result (icurrent, offset, rtype, iresult);
-			}
-
-				/* exit body */
-			RTDBGLE;
-
-				/* Pop registers */
-			pop_registers();
-				/* Closing of trace and profiling for current routine. */
-			check_options_stop(0);
-			if (rescue) {
-					/* End routine with rescue clause. */
-				RTEOK;
-			} else {
-					/* Remove execution vector from stack. */
-				RTEE;
-			}
-			return;
-		} else {
-				/* This is a first-time call. */
-				/* Declare variables for exception handling. */
-			struct ex_vect * exvecto;
-
-				/* Record execution vector to catch exception. */
-			exvecto = extre ();
-				/* Set catch address. */
-			exvect->ex_jbuf = &exenvo;
-				/* Update routine exception vector. */
-			exvect = exvecto;
-			dexset(exvect);
-			if (!setjmp(exenvo)) {
-				create_expanded_locals (scur, stop, create_result);
-
-					/* Register rescue handler (if any). */
-				SET_RESCUE;
-			} else {
-				EIF_REFERENCE except_ref = RTLA;
-					/* Exception occurred. */
-				if (once_p_obj_info.is_precompiled) {
-					offset = RTWPA(once_p_obj_info.class_id, once_p_obj_info.except, icur_dtype);
-				} else {
-					offset = RTWA(once_p_obj_info.class_id, once_p_obj_info.except, icur_dtype);
-				}
-
-				*(EIF_REFERENCE *)(icurrent->it_ref + offset) = except_ref;
-				RTAR(icurrent->it_ref, except_ref);
-					/* Propagate the exception. */
-				ereturn ();
-			}
-		}
 	} else {
 			/* Initialize expanded locals */
 		create_expanded_locals (scur, stop, create_result);
 			/* Register rescue handler (if any). */
 		CHECK("exvect not null", exvect);
-		SET_RESCUE;
+		SET_RESCUE(rescue,exenv);
 	}
 	}							/* Remember: indentation was wrong--RAM */
 	/* NOTREACHED */

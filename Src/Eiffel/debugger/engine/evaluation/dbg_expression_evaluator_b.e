@@ -644,6 +644,17 @@ feature {BYTE_NODE} -- Visitor
 	process_hidden_b (a_node: HIDDEN_B)
 			-- Process `a_node'.
 		do
+			process_byte_list (a_node)
+		end
+
+	process_do_rescue_b (a_node: DO_RESCUE_B)
+			-- Process `a_node'
+		do
+		end
+
+	process_try_b (a_node: TRY_B)
+			-- Process `a_node'
+		do
 		end
 
 	process_case_b (a_node: CASE_B)
@@ -991,6 +1002,12 @@ feature {BYTE_NODE} -- Visitor
 			-- Process `a_node'.
 		do
 			dbg_error_handler.notify_error_should_not_occur_in_expression_evaluation (a_node)
+		end
+
+	process_hidden_if_b (a_node: HIDDEN_IF_B)
+			-- Process `a_node'.
+		do
+			process_if_b (a_node)
 		end
 
 	process_inspect_b (a_node: INSPECT_B)

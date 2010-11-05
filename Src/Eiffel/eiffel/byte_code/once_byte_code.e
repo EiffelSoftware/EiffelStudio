@@ -327,14 +327,8 @@ feature -- C code generation
 		do
 			buf := buffer
 			if is_object_relative_once then
-				l_att_i := context.associated_class.object_relative_once_info (rout_id).called_attribute_i
-				buf.put_new_line
-				buf.put_string ("if (!EIF_TEST(")
-				l_att_i.generate_hidden_attribute_access (context.class_type, buf)
-				buf.put_string (")) {")
-				buf.indent
-				buf.put_new_line
-				buf.put_string ("RTO_TRY")
+				--| object relative once are now handled with _B objects
+				--| And not anymore with specific generated code like other onces
 			else
 				if context.workbench_mode then
 					if is_process_relative_once then
@@ -403,59 +397,8 @@ feature -- C code generation
 				-- See `generate_once_prologue' for details
 			buf := context.buffer
 			if is_object_relative_once then
-				l_obj_once_info := context.associated_class.object_relative_once_info (rout_id)
-				-- If needed, save result if any: now this is done in ONCE_FUNC_I.prepare_object_relative_once
-
-					-- Catch exception
-				buf.put_new_line
-				buf.put_string ("RTO_EXCEPT")
-					-- Record exception for future use
-				buf.put_new_line
-				l_obj_once_info.exception_attribute_i.generate_hidden_attribute_access (context.class_type, buf)
-				buf.put_string (" = RTLA;")
-				buf.put_new_line
-				buf.put_string ("RTO_END_EXCEPT")
-				buf.put_new_line
-				buf.put_string ({C_CONST}.if_conditional)
-				buf.put_two_character (' ', '(')
-				l_obj_once_info.exception_attribute_i.generate_hidden_attribute_access (context.class_type, buf)
-				buf.put_string (" != NULL) {")
-				buf.indent
-				buf.put_new_line
-				buf.put_string ("ereturn();")
-				buf.exdent
-				buf.put_new_line
-				buf.put_string ("}")
-				buf.exdent
-				buf.put_new_line
-				buf.put_two_character ('}', ' ')
-				buf.put_string ({C_CONST}.else_conditional)
-				buf.put_two_character (' ', '{')
-				buf.indent
-				buf.put_new_line
-					-- Raise the saved exception if any
-				buf.put_string ({C_CONST}.if_conditional)
-				buf.put_two_character (' ', '(')
-				l_obj_once_info.exception_attribute_i.generate_hidden_attribute_access (context.class_type, buf)
-				buf.put_string (" != NULL) {")
-				buf.indent
-				buf.put_new_line
-				buf.put_string ("oraise (")
-				l_obj_once_info.exception_attribute_i.generate_hidden_attribute_access (context.class_type, buf)
-				buf.put_two_character (')', ';')
-				buf.exdent
-				buf.put_new_line
-				buf.put_string ("}")
-				if l_obj_once_info.has_result then
-						-- Return save result if any
-					buf.put_new_line
-					buf.put_string ("Result = ")
-					l_obj_once_info.result_attribute_i.generate_hidden_attribute_access (context.class_type, buf)
-					buf.put_character (';')
-				end
-				buf.exdent
-				buf.put_new_line
-				buf.put_string ("}")
+				--| object relative once are now handled with _B objects
+				--| And not anymore with specific generated code like other onces
 			else
 				buf.put_new_line
 				if context.workbench_mode then

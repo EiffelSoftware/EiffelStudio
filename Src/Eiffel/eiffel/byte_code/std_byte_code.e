@@ -203,7 +203,10 @@ feature -- Analyzis
 				end
 				l_context.set_assertion_type (0)
 			end
-			if rescue_clause /= Void then
+			if 
+				rescue_clause /= Void and
+				not is_object_relative_once 
+			then
 				rescue_clause.analyze
 			end
 			if exception_stack_managed then
@@ -430,28 +433,16 @@ feature -- Analyzis
 				l_context.generate_body_label
 			end
 
-				-- If necessary, generate the once stuff (i.e. check if
-				-- the value of the once was already set within the same
-				-- thread).  That way we do not enter the body of the
-				-- once if it has already been done. Preconditions,
-				-- if any, are tested for all calls.
-			generate_once_prologue (internal_name)
 
-			if rescue_clause /= Void then
-					-- Generate a `setjmp' C instruction in case of a
-					-- rescue clause
-				if context.final_mode then
-					if trace_enabled then
-						buf.put_new_line
-						buf.put_string ("RTTI;")
-					end
-					if profile_enabled then
-						buf.put_new_line
-						buf.put_string ("RTPI;")
-					end
-				end
-				buf.put_new_line
-				buf.put_string ("RTE_T")
+			if not is_object_relative_once then
+					-- If necessary, generate the once stuff (i.e. check if
+					-- the value of the once was already set within the same
+					-- thread).  That way we do not enter the body of the
+					-- once if it has already been done. Preconditions,
+					-- if any, are tested for all calls.
+				generate_once_prologue (internal_name)
+
+				generate_rescue_prologue
 			end
 
 				-- Generate local expanded variable creations
@@ -479,11 +470,13 @@ feature -- Analyzis
 				generate_return_not_reached
 			end
 
+			if not is_object_relative_once then
 				-- If there is a rescue clause, generate it now...
-			generate_rescue
+				generate_rescue
 
-				-- Generate termination for once routine
-			generate_once_epilogue (generated_c_feature_name)
+					-- Generate termination for once routine
+				generate_once_epilogue (generated_c_feature_name)
+			end
 
 			if context.has_request_chain then
 				buf.put_new_line
@@ -578,8 +571,8 @@ end
 	generate_compound
 			-- Generate the function compound
 		do
-			if compound /= Void then
-				compound.generate
+			if attached compound as c then
+				c.generate
 			end
 		end
 
@@ -589,14 +582,14 @@ end
 			assignment: ASSIGN_B
 			buf: GENERATION_BUFFER
 		do
-			if compound /= Void then
-				compound.finish
+			if attached compound as c then
+				c.finish
 					-- If ALL the last statements were assignments in result,
 					-- generate a NOTREACHED for lint when last statement was
 					-- not of type assignment. Otherwise, the return
 					-- statements have already been generated.
-				if compound.item.last_all_in_result then
-					assignment ?= compound.item
+				if c.item.last_all_in_result then
+					assignment ?= c.item
 					if
 						assignment = Void and
 						not context.has_rescue
@@ -1260,6 +1253,31 @@ end
 				buf.put_character ('(')
 				context.current_register.print_register
 				buf.put_string (", RTAL);")
+			end
+		end
+
+	generate_rescue_prologue
+			-- Generate a `setjmp' C instruction in case of a
+			-- rescue clause
+		local
+			buf: GENERATION_BUFFER
+		do
+			if rescue_clause /= Void then
+				buf := buffer
+					-- Generate a `setjmp' C instruction in case of a
+					-- rescue clause
+				if context.final_mode then
+					if trace_enabled then
+						buf.put_new_line
+						buf.put_string ("RTTI;")
+					end
+					if profile_enabled then
+						buf.put_new_line
+						buf.put_string ("RTPI;")
+					end
+				end
+				buf.put_new_line
+				buf.put_string ("RTE_T")
 			end
 		end
 

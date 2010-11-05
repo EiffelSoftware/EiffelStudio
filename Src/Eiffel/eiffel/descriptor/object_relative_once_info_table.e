@@ -207,6 +207,52 @@ feature -- Element change
 
 feature -- Access
 
+	item_of_body_index (bid: INTEGER): like item
+			-- Info about object relative once associated with Current and `bid'
+		local
+			c: like cursor
+		do
+			c := cursor
+			from
+				start
+			until
+				after or Result /= Void
+			loop
+				Result := item
+				if Result.routine.body_index /= bid then
+					Result := Void
+				end
+				forth
+			end
+			go_to (c)
+		end
+
+	attribute_of_body_index (bid: INTEGER): detachable ATTRIBUTE_I
+			-- Info about object relative once associated with Current and `bid'
+		local
+			c: like cursor
+			l_info: like item
+		do
+			c := cursor
+			from
+				start
+			until
+				after or Result /= Void
+			loop
+				l_info := item
+				if l_info.called_body_index = bid then
+					Result := l_info.called_attribute_i
+				elseif l_info.exception_body_index = bid then
+					Result := l_info.exception_attribute_i
+				elseif l_info.result_body_index = bid then
+					check has_result: l_info.has_result end
+					Result := l_info.result_attribute_i
+				end
+				forth
+			end
+			go_to (c)
+		end
+
 	item_of_rout_id (rid: INTEGER): like item
 			-- Info about object relative once associated with Current and `a_once_routine_id'
 		local
@@ -308,6 +354,23 @@ feature -- Access
 				if item.rout_id_set.intersect (a_rout_id_set) then
 					Result.extend (item)
 				end
+				forth
+			end
+			go_to (c)
+		end
+
+	attribute_of_feature_name_id (a_feature_name_id: INTEGER): detachable ATTRIBUTE_I
+			-- Attribute of feature name id `a_feature_name_id'
+		local
+			c: like cursor
+		do
+			c := cursor
+			from
+				start
+			until
+				after or Result /= Void
+			loop
+				Result := item.attribute_of_feature_name_id (a_feature_name_id)
 				forth
 			end
 			go_to (c)

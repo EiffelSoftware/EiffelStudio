@@ -33,6 +33,38 @@ feature -- Code iterator routine
 		do
 		end
 
+feature {BYTE_NODE} -- Implementation visitors
+
+	process_hidden_if_b (a_node: HIDDEN_IF_B)
+			-- Process `a_node'.
+		do
+			process_if_b (a_node)
+		end
+
+	process_hidden_b (a_node: HIDDEN_B)
+			-- Process `a_node'
+		do
+			process_byte_list (a_node)
+		end
+
+	process_do_rescue_b (a_node: DO_RESCUE_B)
+			-- Process `a_node'
+		do
+			preorder_process (a_node)
+			safe_process (a_node.compound)
+			safe_process (a_node.rescue_clause)
+			postorder_process (a_node)
+		end
+
+	process_try_b (a_node: TRY_B)
+			-- Process `a_node'
+		do
+			preorder_process (a_node)
+			safe_process (a_node.compound)
+			safe_process (a_node.except_part)
+			postorder_process (a_node)
+		end
+
 feature {BYTE_NODE} -- Routine visitors
 
 	process_std_byte_code (a_node: STD_BYTE_CODE)
@@ -298,14 +330,6 @@ feature {BYTE_NODE} -- Visitors
 				safe_process (l_area.item (i))
 				i := i + 1
 			end
-			postorder_process (a_node)
-		end
-
-	process_hidden_b (a_node: HIDDEN_B)
-			-- Process `a_node'
-		do
-			preorder_process (a_node)
-			safe_process (a_node.node)
 			postorder_process (a_node)
 		end
 

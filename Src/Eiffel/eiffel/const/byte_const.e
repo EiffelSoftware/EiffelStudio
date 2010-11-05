@@ -250,6 +250,14 @@ feature -- Access
 	Bc_string32:		CHARACTER = '%/170/';
 	Bc_once_string32:	CHARACTER = '%/171/';
 
+		-- Implementation purpose byte code
+	Bc_try:				CHARACTER = '%/172/';
+	Bc_try_end:			CHARACTER = '%/173/';
+	Bc_try_end_except:	CHARACTER = '%/174/';
+	Bc_do_rescue:		CHARACTER = '%/175/';
+	Bc_do_rescue_end:	CHARACTER = '%/176/';
+
+
 note
 	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

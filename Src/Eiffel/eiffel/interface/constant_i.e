@@ -389,7 +389,7 @@ feature -- Byte code generation
 				ba.append_integer_32 (0) --| check interp.c usage of `once_end_break_index'
 			elseif is_object_relative_once then
 				check no_constant_per_object: False end
-				ba.append ('%U')
+				ba.append_boolean (False)
 			else
 					-- Not a once routine
 				ba.append ('%U')
@@ -416,7 +416,7 @@ feature -- Byte code generation
 			ba.append_short_integer (static_type)
 
 				-- No rescue
-			ba.append ('%U')
+			ba.append_boolean (False)
 
 				-- Access to attribute; Result := <attribute access>
 			value.make_byte_code (ba)

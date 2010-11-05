@@ -695,6 +695,7 @@ feature -- Generation
 			current_class: CLASS_C
 			current_eiffel_class: EIFFEL_CLASS_C
 			l_feature_i: FEATURE_I
+			l_attribute_i: ATTRIBUTE_I
 			file, extern_decl_file: INDENT_FILE
 			inv_byte_code: INVARIANT_B
 			final_mode: BOOLEAN
@@ -703,6 +704,7 @@ feature -- Generation
 			l_inline_agent_table: HASH_TABLE [FEATURE_I, INTEGER]
 			i, l_count: INTEGER
 			l_byte_context: like byte_context
+			l_obj_once_info_table: detachable OBJECT_RELATIVE_ONCE_INFO_TABLE
 		do
 			final_mode := byte_context.final_mode
 
@@ -820,6 +822,8 @@ feature -- Generation
 					generate_creation_routine (buffer, header_buffer)
 				end
 
+				l_obj_once_info_table := current_class.object_relative_once_infos
+
 				from
 					i := 0
 					l_count := l_feature_table.count
@@ -830,6 +834,37 @@ feature -- Generation
 					if l_feature_i.to_generate_in (current_class) then
 							-- Generate the C code of `feature_i'
 						generate_feature (l_feature_i, buffer, header_buffer)
+						if l_feature_i.is_object_relative_once then
+							--| generate also the related hidden attributes
+							if
+								l_obj_once_info_table /= Void and then
+								attached l_obj_once_info_table.items_intersecting_with_rout_id_set (l_feature_i.rout_id_set) as l_obj_once_info_list
+							then
+								from
+									l_obj_once_info_list.start
+								until
+									l_obj_once_info_list.after
+								loop
+									if attached l_obj_once_info_list.item as l_obj_info then
+										l_attribute_i := l_obj_info.called_attribute_i
+										if l_attribute_i.to_generate_in (current_class) then
+											generate_feature (l_attribute_i, buffer, header_buffer)
+										end
+										l_attribute_i := l_obj_info.exception_attribute_i
+										if l_attribute_i.to_generate_in (current_class) then
+											generate_feature (l_attribute_i, buffer, header_buffer)
+										end
+										if l_obj_info.has_result then
+											l_attribute_i := l_obj_info.result_attribute_i
+											if l_attribute_i.to_generate_in (current_class) then
+												generate_feature (l_attribute_i, buffer, header_buffer)
+											end
+										end
+									end
+									l_obj_once_info_list.forth
+								end
+							end
+						end
 					end
 					i := i + 1
 				end

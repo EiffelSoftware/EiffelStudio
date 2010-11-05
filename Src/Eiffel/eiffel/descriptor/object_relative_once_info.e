@@ -13,6 +13,8 @@ note
 				- FEATURE_TABLE.routine_id_array: to keep the mapping between routine id, and the extra attrib
 				- SELECT_TABLE.descriptors
 				- SELECT_TABLE.add_units
+				- CLASS_TYPE.pass4: to generate the function access to the attributes
+				- EIFFEL_CLASS_C.pass3: to associated a function access to the attributes
 				- CIL_CODE_GENERATOR where we generate private attributes
 				
 			This information container is kept in the associated CLASS_C
@@ -63,6 +65,9 @@ feature {OBJECT_RELATIVE_ONCE_INFO, FEATURE_TABLE} -- Initialization
 	init_return_info (fi: FEATURE_I)
 			-- Init return type info
 		do
+			written_in := fi.written_in
+			written_class := fi.written_class
+
 			result_type_a := fi.type.as_detachable_type
 			has_result := result_type_a /= Void and then not result_type_a.is_void
 		end
@@ -208,9 +213,9 @@ feature -- Access
 
 	written_class: CLASS_C
 			-- Associated once routine's written class.
-		do
-			Result := routine.written_class
-		end
+
+	written_in: INTEGER
+			-- Associated once routine's written class.	
 
 	is_transient: BOOLEAN
 			-- Is related once per object's extra attribute transient?
@@ -223,7 +228,41 @@ feature -- Access
 			Result := True
 		end
 
+	dependances: detachable FEATURE_DEPENDANCE
+			-- Dependances due to extra attributes.
+		local
+			du: DEPEND_UNIT
+			wid: like written_in
+		do
+			wid := written_in
+			create Result.make
+			Result.set_feature_name_id (routine.feature_name_id)
+
+			create du.make (wid, called_attribute_i)
+			Result.extend (du)
+
+			create du.make (wid, exception_attribute_i)
+			Result.extend (du)
+
+			if has_result then
+				create du.make (wid, result_attribute_i)
+				Result.extend (du)
+			end
+		end
+
 feature -- Access: attribute
+
+	attribute_of_feature_name_id (a_feature_name_id: INTEGER): detachable ATTRIBUTE_I
+			-- Attribute related to `a_feature_name_id' if exists.
+		do
+			if a_feature_name_id = called_name_id then
+				Result := called_attribute_i
+			elseif a_feature_name_id = exception_name_id then
+				Result := exception_attribute_i
+			elseif a_feature_name_id = result_name_id then
+				Result := result_attribute_i
+			end
+		end
 
 	attribute_of_feature_id (a_feature_id: INTEGER): detachable ATTRIBUTE_I
 			-- Attribute related to `a_feature_id' if exists.
@@ -433,7 +472,8 @@ feature -- Element change
 			create l_att_i.make
 			l_att_i.set_type (called_type_a, 0)
 			l_att_i.set_body_index (called_body_index)
-			l_att_i.set_written_in (routine.written_in)
+			l_att_i.set_written_in (written_in)
+			l_att_i.set_generate_in (written_in)
 			l_att_i.set_origin_class_id (routine.origin_class_id)
 			l_att_i.set_feature_id (called_feature_id)
 			l_att_i.set_origin_feature_id (called_feature_id)
@@ -463,7 +503,8 @@ feature -- Element change
 			create l_att_i.make
 			l_att_i.set_type (exception_type_a, 0)
 			l_att_i.set_body_index (exception_body_index)
-			l_att_i.set_written_in (routine.written_in)
+			l_att_i.set_written_in (written_in)
+			l_att_i.set_generate_in (written_in)
 			l_att_i.set_origin_class_id (routine.origin_class_id)
 			l_att_i.set_feature_id (exception_feature_id)
 			l_att_i.set_origin_feature_id (exception_feature_id)
@@ -496,7 +537,8 @@ feature -- Element change
 			create l_att_i.make
 			l_att_i.set_type (result_type_a, 0)
 			l_att_i.set_body_index (result_body_index)
-			l_att_i.set_written_in (routine.written_in)
+			l_att_i.set_written_in (written_in)
+			l_att_i.set_generate_in (written_in)
 			l_att_i.set_origin_class_id (routine.origin_class_id)
 			l_att_i.set_feature_id (result_feature_id)
 			l_att_i.set_origin_feature_id (result_feature_id)

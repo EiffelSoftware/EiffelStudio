@@ -10,7 +10,7 @@ class FEAT_MELTED_INFO
 inherit
 	MELTED_INFO
 		redefine
-			make
+			make, debug_output
 		end
 
 create
@@ -26,6 +26,14 @@ feature {NONE} -- Initialization
 			feature_name_id := f.feature_name_id
 			is_inline_agent := f.is_inline_agent
 			enclosing_feature := f.enclosing_feature
+		end
+
+feature -- Status report
+
+	debug_output: STRING
+		do
+			Result := Precursor
+			Result.prepend (enclosing_feature.feature_name_32)
 		end
 
 feature {NONE} -- Implementation
@@ -71,11 +79,23 @@ feature {NONE} -- Implementation
 				Result := eiffel_class.inline_agent_of_name_id (feature_name_id)
 			end
 
-			if Result = Void then	--Its not an inline agent
-				check
-					consistency: feat_tbl.has_id (feature_name_id)
+			if Result = Void then --| Its not an inline agent
+				if
+					enclosing_feature.is_hidden
+					and then not feat_tbl.has_id (feature_name_id)
+				then
+					if
+						Result = Void and then
+						attached class_c.object_relative_once_infos as l_obj_infos
+					then
+						Result := l_obj_infos.attribute_of_feature_name_id (feature_name_id)
+					end
+				else
+					check
+						consistency: feat_tbl.has_id (feature_name_id)
+					end
+					Result := feat_tbl.item_id (feature_name_id)
 				end
-				Result := feat_tbl.item_id (feature_name_id)
 			end
 		end
 
@@ -83,7 +103,7 @@ invariant
 	valid_enclosing_feature: is_inline_agent implies enclosing_feature /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -96,22 +116,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

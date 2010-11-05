@@ -61,7 +61,7 @@ feature -- Byte code generation
 			-- Generate default value of basic type on stack.
 		do
 			ba.append ({BYTE_CONST}.Bc_bool)
-			ba.append ('%U')
+			ba.append_boolean (False)
 		end
 
 feature -- C code generation

@@ -18,6 +18,28 @@ feature {BYTE_NODE} -- Routine visitors
 		do
 		end
 
+feature {BYTE_NODE} -- Implementation visitors
+
+	process_hidden_if_b (a_node: HIDDEN_IF_B)
+			-- Process `a_node'.
+		do
+		end
+
+	process_hidden_b (a_node: HIDDEN_B)
+			-- Process `a_node'.
+		do
+		end
+
+	process_do_rescue_b (a_node: DO_RESCUE_B)
+			-- Process `a_node'
+		do
+		end
+
+	process_try_b (a_node: TRY_B)
+			-- Process `a_node'
+		do
+		end
+
 feature {BYTE_NODE} -- Visitors
 
 	process_access_expr_b (a_node: ACCESS_EXPR_B)
@@ -176,11 +198,6 @@ feature {BYTE_NODE} -- Visitors
 		end
 
 	process_byte_list (a_node: BYTE_LIST [BYTE_NODE])
-			-- Process `a_node'.
-		do
-		end
-
-	process_hidden_b (a_node: HIDDEN_B)
 			-- Process `a_node'.
 		do
 		end

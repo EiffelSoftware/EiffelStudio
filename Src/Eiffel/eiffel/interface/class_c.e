@@ -674,6 +674,28 @@ feature -- Access: object relative once
 	object_relative_once_infos: detachable OBJECT_RELATIVE_ONCE_INFO_TABLE
 			-- List of info about object relative onces associated with Current
 
+	object_relative_once_dependances (a_body_index: INTEGER): detachable FEATURE_DEPENDANCE
+			-- feature dependances related to once per object associated with `a_body_index'.
+		do
+			if
+				attached feature_of_body_index (a_body_index) as fi and then
+				fi.is_object_relative_once and then
+				attached object_relative_once_info_of_rout_id_set (fi.rout_id_set) as l_info
+			then
+				Result := l_info.dependances
+			end
+		end
+
+	object_relative_once_attribute_with_body_index (a_body_index: INTEGER):	detachable ATTRIBUTE_I
+			-- Info about object relative once associated with Current and an item of `a_body_index'
+		require
+			a_body_index_valid: a_body_index /= 0
+		do
+			if attached object_relative_once_infos as l_infos then
+				Result := l_infos.attribute_of_body_index (a_body_index)
+			end
+		end
+
 	object_relative_once_info_of_rout_id_set (a_rout_id_set: ROUT_ID_SET): detachable OBJECT_RELATIVE_ONCE_INFO
 			-- Info about object relative once associated with Current and an item of `a_rout_id_set'
 		require

@@ -591,7 +591,7 @@ feature -- Element Change
 				ba.append_short_integer (current_type.type_id - 1)
 
 					-- No rescue
-				ba.append ('%U')
+				ba.append_boolean (False)
 					-- Access to attribute; Result := <attribute access>
 				ba.append (Bc_current)
 				if current_type.associated_class.is_precompiled then

@@ -59,7 +59,11 @@ feature {DUMP_VALUE_FACTORY} -- Restricted Initialization
 				value_string_dotnet.get_strong_reference_value
 			end
 
-			value_string := a_eifnet_dsv.string_value
+			if attached a_eifnet_dsv.string_value as s32 then
+				value_string := s32.as_string_8
+			else
+				value_string := Void
+			end
 			if a_eifnet_dsv.is_null then
 				value_address := Void
 			else
@@ -320,7 +324,7 @@ feature {NONE} -- Implementation dotnet
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

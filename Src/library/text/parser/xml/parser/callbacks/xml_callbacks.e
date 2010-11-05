@@ -126,6 +126,21 @@ feature -- Support
 			definition: Result = (a /= Void and then a.count > 0)
 		end
 
+feature -- Access
+
+	associated_parser: detachable XML_PARSER
+			-- Associated parser
+			-- mainly used to report error back to the parser
+			-- to handle position
+
+feature -- Element change
+
+	set_associated_parser (p: like associated_parser)
+			-- Set `p' to `associated_parser'
+		do
+			associated_parser := p
+		end
+
 feature -- Assertion
 
 	has_resolved_namespaces: BOOLEAN

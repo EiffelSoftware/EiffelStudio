@@ -47,6 +47,9 @@ feature -- Document
 
 	on_finish
 		do
+			if local_parts.count > 0 then
+				report_end_tag_mismatch_error (prefixes.item, local_parts.item)
+			end
 			prefixes.wipe_out
 			local_parts.wipe_out
 			Precursor
@@ -64,23 +67,26 @@ feature -- Tag
 
 	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
 			-- End tag.
+		local
+			l_prefixes: like prefixes
 		do
-			if prefixes.count >= 0 then
+			l_prefixes := prefixes
+			if l_prefixes.count >= 0 then
 				if
-					not (prefixes.item = a_prefix
+					not (l_prefixes.item = a_prefix
 						or else (
-									(a_prefix /= Void and attached prefixes.item as l_prefix_item) and then
+									(a_prefix /= Void and attached l_prefixes.item as l_prefix_item) and then
 									a_prefix.same_string_general (l_prefix_item)
 								)
 						)
 					or not a_local_part.same_string_general (local_parts.item)
 				then
-					on_error (End_tag_mismatch_error)
+					report_end_tag_mismatch_error (l_prefixes.item, local_parts.item)
 				end
-				prefixes.remove
+				l_prefixes.remove
 				local_parts.remove
 			else
-				on_error (Extra_end_tag_error)
+				report_extra_end_tag_error (l_prefixes.item, local_parts.item)
 			end
 			Precursor (a_namespace, a_prefix, a_local_part)
 		end
@@ -91,6 +97,36 @@ feature {NONE} -- Mean version of STACK [PREFIX+NAME]
 	local_parts: STACK [STRING]
 
 feature {NONE} -- Errors
+
+	report_error (a_error_msg: STRING; a_prefix: detachable STRING; a_local: STRING)
+			-- Report `a_error_msg' error with details	
+		local
+			s: STRING
+		do
+			create s.make_from_string (a_local)
+			if a_prefix /= Void then
+				s.prepend_character (':')
+				s.prepend (a_prefix)
+			end
+			s := a_error_msg + ": %"" + s + "%""
+			if attached associated_parser as p then
+				p.report_error_from_callback (s)
+			else
+				on_error (s)
+			end
+		end
+
+	report_end_tag_mismatch_error (a_prefix: detachable STRING; a_local: STRING)
+			-- Report `End_tag_mismatch_error' error with details
+		do
+			report_error (End_tag_mismatch_error, a_prefix, a_local)
+		end
+
+	report_extra_end_tag_error (a_prefix: detachable STRING; a_local: STRING)
+			-- Report `End_tag_mismatch_error' error with details
+		do
+			report_error (Extra_end_tag_error, a_prefix, a_local)
+		end
 
 	End_tag_mismatch_error: STRING = "End tag does not match start tag"
 	Extra_end_tag_error: STRING = "End tag without start tag"

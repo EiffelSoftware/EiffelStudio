@@ -24,6 +24,7 @@ inherit
 			reset as reset_compressed_scanner_skeleton
 		export
 			{NONE} all
+			{ANY} valid_start_condition
 		end
 
 	KL_IMPORTED_INTEGER_ROUTINES

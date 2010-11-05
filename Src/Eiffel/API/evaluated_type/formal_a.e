@@ -169,9 +169,7 @@ feature -- Property
 	is_initialization_required: BOOLEAN
 			-- Is initialization required for this type in void-safe mode?
 		do
-			if not is_expanded and then not has_detachable_mark then
-				Result := True
-			end
+			Result := not is_expanded and then not has_detachable_mark
 		end
 
 	annotation_flags: NATURAL_16

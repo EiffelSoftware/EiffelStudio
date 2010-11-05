@@ -1,4 +1,4 @@
-note
+﻿note
 	description:
 		"EiffelVision horizontal box. GTK+ implementation."
 	legal: "See notice at end of class."
@@ -40,6 +40,8 @@ feature {NONE} -- Initialization
 	make
 			-- Create an initialize GTK horizontal box.
 		do
+				-- Make sure that backend toolkit is initialized.
+			application_implementation.do_nothing
 			set_c_object ({EV_GTK_EXTERNALS}.gtk_hbox_new (Default_homogeneous, Default_spacing))
 			Precursor
 		end

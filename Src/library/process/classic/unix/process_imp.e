@@ -183,7 +183,7 @@ feature {PROCESS_TIMER}  -- Status checking
 					if l_threads_exited then
 						if not has_cleaned_up then
 							timer.destroy
-							input_buffer.clear_all
+							input_buffer.wipe_out
 							child_process.close_pipes
 							has_cleaned_up := True
 								-- Call registered actions.
@@ -358,7 +358,6 @@ feature {NONE}  -- Implementation
 			-- New threads attributes used to launch thread
 		do
 			create Result.make
-			Result.set_detached (True)
 		ensure
 			result_attached: Result /= Void
 		end

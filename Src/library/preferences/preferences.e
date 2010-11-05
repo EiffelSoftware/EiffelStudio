@@ -222,6 +222,12 @@ feature -- Access
 	save_defaults_to_store: BOOLEAN
 			-- Should preferences with default values be saved to the underlying data store when saving?
 
+	location: STRING
+			-- Storage's location
+		do
+			Result := preferences_storage.location
+		end
+
 feature -- Status Setting
 
 	set_save_defaults (a_flag: BOOLEAN)

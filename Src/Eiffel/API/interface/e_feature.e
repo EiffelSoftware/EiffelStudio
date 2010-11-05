@@ -463,7 +463,6 @@ feature -- Access
 		require
 			is_valid: is_valid
 		local
-			cl: CLASS_C
 			rescued: BOOLEAN
 		do
 			if rescued then
@@ -475,10 +474,11 @@ feature -- Access
 					(not is_constant) and then
 					(not is_deferred) and then
 					(not is_unique) and then
-					(not (is_attribute and not is_attribute_with_body))
+					(not (is_attribute and not is_attribute_with_body)) and then
+					(attached associated_feature_i as fi and then not fi.from_non_conforming_parent)
+						--| Try to support breakpoint in non-conforming inherited feature
 				then
-					cl := written_class
-					Result := cl /= Void and then cl.is_debuggable
+					Result := attached written_class as cl and then cl.is_debuggable
 				end
 			end
 		ensure

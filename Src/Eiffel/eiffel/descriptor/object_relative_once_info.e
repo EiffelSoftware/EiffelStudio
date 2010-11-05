@@ -106,6 +106,7 @@ feature -- Basic operations
 			fi_attached: fi /= Void
 		do
 			if
+				False and then -- FIXME: for now let's not try to reuse ...
 				is_valid and then
 				fi.written_class = written_class and then
 				fi.rout_id_set.intersect (rout_id_set) and then

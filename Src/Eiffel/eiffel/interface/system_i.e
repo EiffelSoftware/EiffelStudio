@@ -1,4 +1,4 @@
-﻿note
+note
 	description: "Internal representation of a system."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."

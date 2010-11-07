@@ -56,7 +56,7 @@ rt_public void eif_log_callp (int origin, int offset, EIF_SCP_PID current_pid, c
 
 /* Atomic Operations */
 
-#define EIF_ATOMIC_INLINE inline
+#define EIF_ATOMIC_INLINE
 
 static EIF_ATOMIC_INLINE EIF_INTEGER_32 eif_atomic_compare_and_swap_integer_32 (EIF_INTEGER_32 *dest, EIF_INTEGER_32 setter, EIF_INTEGER_32 compare)
 	{

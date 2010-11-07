@@ -1362,9 +1362,8 @@ RT_LNK void eif_exit_eiffel_code(void);
 #define scoop_task_signify_end_of_new_chain 5
 #define scoop_task_add_supplier_to_request_chain 6
 #define scoop_task_wait_for_supplier_processor_locks 7
-#define	scoop_task_add_predicate 8
-#define scoop_task_add_command 9
-#define	scoop_task_add_function 10
+#define scoop_task_add_call 8
+#define scoop_task_wait_for_processor_redundancy 9 
 
 #define EIFNULL 0
 
@@ -1405,9 +1404,11 @@ RT_LNK void eif_exit_eiffel_code(void);
  */
 #define RTS_PA(o) \
 	{                                                                                     \
-		EIF_INTEGER_32 pid;                                                           \
-		RTS_TCB(scoop_task_assign_processor,RTS_PID(o),EIFNULL,EIFNULL,EIFNULL,&pid); \
-		RTS_PID(o) = pid;                                                             \
+		EIF_TYPED_VALUE pid; \
+		pid.it_i4 = 0; \
+		pid.type = SK_INT32;                                                          \
+		RTS_TCB(scoop_task_assign_processor,RTS_PID(o),EIFNULL,EIFNULL,&pid,EIFNULL); \
+		RTS_PID(o) = pid.it_i4;                                                             \
 	}
 
 /*
@@ -1463,6 +1464,9 @@ RT_LNK void eif_exit_eiffel_code(void);
 		if ((t) == SK_REF)                                                                                                 \
 			((call_data*)(a)) -> argument [(n) - 1].it_r = eif_protect (((call_data*)(a)) -> argument [(n) - 1].it_r); \
 	}
+
+
+#define RTS_WPR RTS_TCB(scoop_task_wait_for_processor_redundancy,EIFNULL,EIFNULL,EIFNULL,EIFNULL,EIFNULL)
 
  /*
  * Macros for workbench

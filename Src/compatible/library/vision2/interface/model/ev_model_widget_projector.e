@@ -587,6 +587,15 @@ feature {NONE} -- Event implementation
 			end
 		end
 
+feature {EV_MODEL_WORLD_CELL} -- Element change
+
+	simulate_mouse_move (ax, ay: INTEGER)
+			-- Let `Current' behave as if pointer was moved to `ax', `ay'
+		do
+			is_projecting := True
+			mouse_move (ax, ay, 0, 0, 0, 0, 0)
+		end
+
 feature {NONE} -- Implementation
 
 	default_cursor: EV_POINTER_STYLE

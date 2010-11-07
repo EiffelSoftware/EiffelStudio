@@ -34,9 +34,20 @@ inherit
 		end
 
 create
-	make_with_buffer
+	make, make_with_buffer
 
 feature {NONE} -- Initialization
+
+	make (
+		a_world: like world;
+		a_drawing_area: EV_DRAWING_AREA)
+			-- Create with `a_world' and `a_drawing_area'.
+		require
+			a_world_not_void: a_world /= Void
+			a_drawing_area_not_void: a_drawing_area /= Void
+		do
+			make_with_buffer (a_world, a_drawing_area)
+		end
 
 	make_with_buffer (
 		a_world: like world;
@@ -145,15 +156,6 @@ feature -- Element change
 feature -- Status report
 
 	buffer_used: BOOLEAN = True
-
-feature {EV_MODEL_WORLD_CELL} -- Element change
-
-	simulate_mouse_move (ax, ay: INTEGER)
-			-- Let `Current' behave as if pointer was moved to `ax', `ay'
-		do
-			is_projecting := True
-			mouse_move (ax, ay, 0, 0, 0, 0, 0)
-		end
 
 feature -- Display updates
 

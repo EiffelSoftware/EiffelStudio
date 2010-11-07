@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Internal representation of a system."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -3612,8 +3612,7 @@ feature {NONE} -- Finalization implementation
 				i > nb
 			loop
 				a_class := class_array.item (i)
-					-- Since a class can be removed, test if `a_class�
-					-- is not Void.
+					-- Since a class can be removed, test if `a_class' is not Void.
 				if a_class /= Void then
 					if not a_class.is_precompiled or else a_class.is_in_system then
 						deg_output.put_degree_minus_3 (a_class, j)
@@ -5319,6 +5318,12 @@ feature -- Pattern table generation
 	}
 					}"
 				)
+			end
+
+			if attached ise_scoop_manager_class then
+					-- Wait for SCOOP Processor redundancy.
+				buffer.put_new_line
+				buffer.put_string ("RTS_WPR")
 			end
 
 			buffer.generate_block_close

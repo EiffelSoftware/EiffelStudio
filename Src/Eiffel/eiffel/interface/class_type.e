@@ -847,18 +847,19 @@ feature -- Generation
 								loop
 									if attached l_obj_once_info_list.item as l_obj_info then
 										l_attribute_i := l_obj_info.called_attribute_i
-										if l_attribute_i.to_generate_in (current_class) then
+--| FIXME:2010-11-07: find why when using to_generate_in, it is not working great for once per object
+--										if l_attribute_i.to_generate_in (current_class) then
 											generate_feature (l_attribute_i, buffer, header_buffer)
-										end
+--										end
 										l_attribute_i := l_obj_info.exception_attribute_i
-										if l_attribute_i.to_generate_in (current_class) then
+--										if l_attribute_i.to_generate_in (current_class) then
 											generate_feature (l_attribute_i, buffer, header_buffer)
-										end
+--										end
 										if l_obj_info.has_result then
 											l_attribute_i := l_obj_info.result_attribute_i
-											if l_attribute_i.to_generate_in (current_class) then
+--											if l_attribute_i.to_generate_in (current_class) then
 												generate_feature (l_attribute_i, buffer, header_buffer)
-											end
+--											end
 										end
 									end
 									l_obj_once_info_list.forth

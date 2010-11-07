@@ -79,7 +79,7 @@ feature {NONE} -- Initialization
 			horizontal_box.disable_item_expand (vertical_scrollbar)
 			drawing_area.resize_actions.extend (agent on_resizing)
 
-			create projector.make_with_buffer (world, drawing_area)
+			projector := new_projector
 
 			create vertical_box
 			vertical_box.extend (horizontal_box)
@@ -121,7 +121,7 @@ feature -- Access
 	world: EV_MODEL_WORLD
 			-- The world shown in `Current'.
 
-	projector: EV_MODEL_BUFFER_PROJECTOR
+	projector: EV_MODEL_WIDGET_PROJECTOR
 			-- Projector to render `world'.
 
 	drawing_area: EV_DRAWING_AREA
@@ -329,6 +329,13 @@ feature -- Element change
 		end
 
 feature {NONE} -- Implementation
+
+	new_projector: EV_MODEL_WIDGET_PROJECTOR
+			-- Returns a new projector
+			-- Redefined by descendents.
+		do
+			create {EV_MODEL_BUFFER_PROJECTOR} Result.make_with_buffer (world, drawing_area)
+		end
 
 	normal_timeout_interval: INTEGER = 500
 		-- Normal millesecond timeout interval for autoscrolling

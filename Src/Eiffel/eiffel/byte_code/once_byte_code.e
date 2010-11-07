@@ -79,41 +79,6 @@ feature -- Byte code generation
 				cl := context.associated_class
 				l_obj_once_info := cl.object_relative_once_info (rout_id)
 				ba.append (once_mark_object_relative)
-				if cl.is_precompiled then
-					ba.append_boolean (True)
-					-- origin class id --| should be the same for the 2 or 3 extra attributes
-					-- offset in origin --| known
-					-- attribute meta type 	--| no need to send for called and exception
-											--| we know it is SK_BOOL, SK_REF
-											--| send only the result type if any
-					l_rout_info := l_obj_once_info.called_rout_info
-					ba.append_type_id (l_rout_info.origin) -- origin class id
-					ba.append_integer_32 (l_rout_info.offset) -- called offset
-					ba.append_integer_32 (l_obj_once_info.exception_rout_info.offset) -- exception offset
-				else
-					ba.append_boolean (False)
-					-- feature id
-					-- static type: same for the 3, so let's send it first
-					-- attribute meta type	--| no need to send for called and exception
-											--| we know it is SK_BOOL, SK_REF
-											--| send only the result type if any
-					ba.append_type_id (context.class_type.static_type_id)
-					ba.append_feature_id (l_obj_once_info.called_feature_id)
-					ba.append_feature_id (l_obj_once_info.exception_feature_id)
-				end
-				if l_obj_once_info.has_result then
-					if cl.is_precompiled then
-						ba.append_offset (l_obj_once_info.result_rout_info.offset) -- result offset
-					else
-						ba.append_feature_id (l_obj_once_info.result_feature_id) -- result feature id
-					end
-				else
-					if cl.is_precompiled then
-						ba.append_offset (0)
-					else
-						ba.append_feature_id (0)
-					end
-				end
 			else
 					-- The once mark	
 				if is_process_relative_once then

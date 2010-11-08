@@ -141,7 +141,9 @@ feature -- Properties
 			-- If it is displayed on SD_TOOL_BAR_ZONE
 
 	description: STRING_32
-			-- Description when use SD_TOOL_BAR_CUSTOMIZE_DIALOG to customize SD_TOOL_BAR
+			-- Description which used by toolbar customize dialog {SD_TOOL_BAR_CUSTOMIZE_DIALOG}
+			-- In the dialog, a list item will represent current. `description' will be displayed as
+			-- list item texts on the dialog
 
 	set_description (a_description: STRING_GENERAL)
 			-- Set `description'
@@ -207,8 +209,7 @@ feature -- Properties
 		end
 
 	name: STRING_32
-			-- Name which is used for store configuration
-			-- Used by tool bar customize dialog also
+			-- Name which is used for save/open docking layout configuration
 			-- This name should not changed in all locales
 
 	set_name (a_name: STRING_GENERAL)
@@ -320,7 +321,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

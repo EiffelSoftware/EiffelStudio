@@ -369,6 +369,9 @@ feature -- Command
 
 	open_config (a_file: STRING_GENERAL): BOOLEAN
 			-- Open all docking layout configuration data previously stored in `a_file'
+			-- Result True means restore docking layout operation executed successfully.
+			-- Result False means the operation failed, maybe due to `a_file' not exist, or
+			-- data in `a_file' corrupted.
 		require
 			a_file_not_void: a_file /= Void
 			a_file_readable: is_file_readable (a_file)

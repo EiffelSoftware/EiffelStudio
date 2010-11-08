@@ -337,6 +337,7 @@ feature {NONE} -- Implementation: parse
 								report_error ("unexpected character '" + character_output (c) + "' after closing / in start tag")
 							end
 						else
+							report_error ("unexpected character '" + character_output (c) + "' in start tag")
 						end
 						done := True
 					end

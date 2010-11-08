@@ -122,6 +122,8 @@ feature {NONE} -- Implementation functions
 				l_text := "Button " + l_count.out
 				l_item.set_text (l_text)
 				l_item.set_name (l_text)
+				l_item.set_description (l_text)
+
 				l_item.set_pixmap ((create {EV_STOCK_PIXMAPS}).Default_window_icon)
 				l_items.extend (l_item)
 				if l_count = 2 then

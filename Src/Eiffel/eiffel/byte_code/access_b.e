@@ -454,8 +454,14 @@ feature -- C generation
 						n <= 0
 					loop
 						buf.put_new_line
-						buf.put_string ("RTS_AA (")
 						a := p [n]
+						if a.attachment_type.is_separate then
+								-- The argument needs to be checked if it is controlled or not.
+								-- If the argument is controlled, the call needs to be synchronous.
+							buf.put_string ("RTS_AS (")
+						else
+							buf.put_string ("RTS_AA (")
+						end
 						a.print_register
 						buf.put_two_character (',', ' ')
 						a.c_type.generate_typed_field (buf)

@@ -33,6 +33,7 @@
 		<set name="force_clean" value="false" unless="$force_clean"/>
 		<set name="force_batch" value="true"  unless="$force_batch"/>
 		<set name="force_gui" value="false"  unless="$force_gui"/>
+		<set name="keep_assertion" value="false"  unless="$keep_assertion"/>
 		<set name="c_compile" value="true"  unless="$c_compile"/>
 		<set name="use_settings" value="false"  unless="$use_settings"/>
 		<set name="force_silent" value="true"  unless="$force_silent"/>
@@ -120,6 +121,7 @@
 			<argument name="a_batch" value="$l_batch" />
 			<argument name="a_use_settings" value="$use_settings" />
 			<argument name="a_gui" value="$force_gui" />
+			<argument name="a_keep_assertion" value="$keep_assertion" />
 		</geant>
 		<unset name="l_clean" />
 		<unset name="l_batch" />
@@ -147,6 +149,7 @@
 			<argument name="a_batch" value="$force_batch" />
 			<argument name="a_use_settings" value="$use_settings" />
 			<argument name="a_gui" value="$force_gui" />
+			<argument name="a_keep_assertion" value="$keep_assertion" />
 		</geant>
 	</target>
 	<target name="freeze" depend="init">
@@ -210,6 +213,7 @@
 		<argument name="a_batch" />
 		<argument name="a_use_settings" />
 		<argument name="a_gui" />
+		<argument name="a_keep_assertion" />
 
 		<echo message="Compilation [$a_compilation_mode] of [$a_ecf]:" />
 
@@ -237,6 +241,7 @@
 		<local name="eccmd" value="${eccmd} -project_path $a_comp_dir" />
 		<local name="eccmd" value="${eccmd} -freeze " if="${a_compilation_mode}=freeze" />
 		<local name="eccmd" value="${eccmd} -finalize " if="${a_compilation_mode}=finalize" />
+		<local name="eccmd" value="${eccmd} -keep " if="${a_keep_assertion}=true" />
 		<local name="eccmd" value="${eccmd} -melt " if="${a_compilation_mode}=melt" />
 		<local name="eccmd" value="${eccmd} -precompile " if="${a_compilation_mode}=precompile" />
 		<local name="eccmd" value="${eccmd} -c_compile" if="$a_c_compile=true" />

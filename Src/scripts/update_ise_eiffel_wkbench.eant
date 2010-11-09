@@ -18,7 +18,6 @@
 
 	<target name="d">
 		<set name="debug_mode" value="true" />
-		<set name="runtimeversion" value="d" />
 		<geant target="menu" />
 	</target>
 	<target name="w">

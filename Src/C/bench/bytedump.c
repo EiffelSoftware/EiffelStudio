@@ -1365,20 +1365,38 @@ static  void    print_instructions (void)
 			case  BC_RESCUE :
 				break;
 			case BC_TRY:
-				if (get_bool(&ip)) {
-					fprintf (ofp,"Try Except offset: %d\n", get_int32(&ip));
+				{
+					char    has_except_part; 
+					has_except_part = get_bool(&ip);
+					if (has_except_part) {
+						NEWL;
+						fprintf (ofp,"Try-Except offset: %d\n", get_int32(&ip));
+					}
+					print_instructions ();
+					if (has_except_part) {
+						fprintf (ofp,"Try-Except clause:\n");
+						print_instructions ();
+					}
 				}
-				print_instructions ();
 				break;
 			case BC_TRY_END:
 				break;
 			case BC_TRY_END_EXCEPT:
 				break;
 			case BC_DO_RESCUE:
-				if (get_bool(&ip)) {
-					fprintf (ofp,"Do Rescue offset: %d\n", get_int32(&ip));
+				{
+					char    has_do_rescue; 
+					has_do_rescue = get_bool(&ip);
+					if (has_do_rescue) {
+						NEWL;
+						fprintf (ofp,"Do-Rescue offset: %d\n", get_int32(&ip));
+					}
+					print_instructions ();
+					if (has_do_rescue) {
+						fprintf (ofp,"Do-Rescue clause:\n");
+						print_instructions ();
+					}
 				}
-				print_instructions ();
 				break;
 			case BC_DO_RESCUE_END:
 				break;

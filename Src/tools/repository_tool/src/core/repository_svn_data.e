@@ -158,6 +158,7 @@ feature -- Access
 			r: INTEGER
 			l_id: STRING
 		do
+			save_unread_logs
 			load_logs
 			l_logs := logs
 			if l_logs = Void then
@@ -196,6 +197,7 @@ feature -- Access
 
 	fetch_logs
 		do
+			save_unread_logs
 			load_logs
 			internal_fetch_logs (repository, revision_last_known, 0)
 			import_fetched_logs
@@ -203,6 +205,7 @@ feature -- Access
 
 	fetch_range_of_logs (a_from, a_to: INTEGER)
 		do
+			save_unread_logs
 			load_logs
 			internal_fetch_logs (repository, a_from, a_to)
 			import_fetched_logs
@@ -219,6 +222,7 @@ feature -- Access
 			th: WORKER_THREAD
 			l_fetch_mutex: like fetch_mutex
 		do
+			save_unread_logs
 			load_logs
 			is_asynchronious_fetching := True
 			l_fetch_mutex := fetch_mutex

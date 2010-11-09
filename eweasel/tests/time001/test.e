@@ -47,6 +47,10 @@ feature {NONE} -- Initialization
 			print (t.time_valid ("3:30:00", "hh12:[0]mi:[0]ss PM"))
 			print ("%N")
 			
+			create t.make_from_string ("3:30:30 PM", "hh12:[0]mi:[0]ss PM")
+			print (t.formatted_out ("hh12:[0]mi:[0]ss PM"))
+			print ("%N")
+
 			create d1.make_now
 			print (d1.date_time_valid ("1/1/0000 3:30:00 PM", "mm/dd/yyyy hh12:[0]mi:[0]ss PM"))
 			print ("%N")

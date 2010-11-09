@@ -1374,14 +1374,17 @@ static  void    print_instructions (void)
 					}
 					print_instructions ();
 					if (has_except_part) {
-						fprintf (ofp,"Try-Except clause:\n");
+						fprintf (ofp,"Try-Except clause: start\n");
 						print_instructions ();
+						fprintf (ofp,"Try-Except clause: end");
 					}
 				}
 				break;
 			case BC_TRY_END:
+					fprintf (ofp,"Try-End\n");
 				break;
 			case BC_TRY_END_EXCEPT:
+					fprintf (ofp,"Try-End-Except\n");
 				break;
 			case BC_DO_RESCUE:
 				{
@@ -1393,8 +1396,9 @@ static  void    print_instructions (void)
 					}
 					print_instructions ();
 					if (has_do_rescue) {
-						fprintf (ofp,"Do-Rescue clause:\n");
+						fprintf (ofp,"Do-Rescue clause: start\n");
 						print_instructions ();
+						fprintf (ofp,"Do-Rescue clause: end");
 					}
 				}
 				break;
@@ -1405,7 +1409,6 @@ static  void    print_instructions (void)
 
 			default:
 				fprintf (ofp,"%d: Illegal byte code %d\n", (int)(ip - body), (int) code);
-				fprintf (stderr,"%d: Illegal byte code %d\n", (int)(ip - body), (int) code);
 				panic ();
 		}
 

@@ -917,6 +917,8 @@ rt_private void interpret(int flag, int where)
 
 			if (flag == INTERP_CMPD) {
 				if (rescue) {	/* If there is a rescue clause */
+					SAVE(op_stack, scur, stop);
+
 #ifdef ISE_GC
 					SAVE(loc_set, l_cur, l_top);		/* Save C local stack */
 					SAVE(loc_stack, ls_cur, ls_top);	/* Save loc_stack */

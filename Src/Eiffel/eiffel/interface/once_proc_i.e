@@ -136,11 +136,13 @@ feature -- Object relative once
 			l_if_b: IF_B
 			l_bin_ne_b: BIN_NE_B
 			l_excep_attr_b: ATTRIBUTE_B
+			l_ISE_EXCEPTION_MANAGER_default_create_feature_b: ANY_FEATURE_B
 			l_ISE_EXCEPTION_MANAGER_once_raise_feature_b: FEATURE_B
 			l_ISE_EXCEPTION_MANAGER_last_exception_feature_b: FEATURE_B
 
 			l_nested_b: NESTED_B
 			l_assign_b: ASSIGN_B
+			l_access_expr_b: ACCESS_EXPR_B
 			l_creation_expr_b: CREATION_EXPR_B
 			l_result_attr_b: ATTRIBUTE_B
 			l_called_attr_b: ATTRIBUTE_B
@@ -152,6 +154,7 @@ feature -- Object relative once
 			l_try_b: TRY_B
 			l_ISE_EXCEPTION_MANAGER_type: CL_TYPE_A
 			l_ISE_EXCEPTION_MANAGER_class_c: CLASS_C
+			l_default_create_fi: FEATURE_I
 			n: INTEGER
 		do
 			if
@@ -235,6 +238,10 @@ feature -- Object relative once
 					check
 						ise_exception_manager_class_compiled: l_ISE_EXCEPTION_MANAGER_class_c /= Void
 					end
+					l_default_create_fi := l_ISE_EXCEPTION_MANAGER_class_c.feature_of_name_id (Names_heap.default_create_name_id)
+					check
+						default_create_exists: l_default_create_fi /= Void
+					end
 
 					if
 						l_ISE_EXCEPTION_MANAGER_class_c /= Void and then
@@ -245,7 +252,12 @@ feature -- Object relative once
 						l_ISE_EXCEPTION_MANAGER_type := l_ISE_EXCEPTION_MANAGER_class_c.types.first.type
 						l_creation_expr_b.set_type (l_ISE_EXCEPTION_MANAGER_type)
 						l_creation_expr_b.set_info (create {CREATE_TYPE}.make (l_ISE_EXCEPTION_MANAGER_type))
-						l_creation_expr_b.set_creation_instruction (True)
+						l_creation_expr_b.set_creation_instruction (False)
+
+							--| default_create
+						create l_ISE_EXCEPTION_MANAGER_default_create_feature_b.make (l_default_create_fi, l_default_create_fi.type, Void)
+						l_creation_expr_b.set_call (l_ISE_EXCEPTION_MANAGER_default_create_feature_b)
+
 
 							--| {ISE_EXCEPTION_MANAGER}.once_raise (EXCEPTION)
 						create l_ISE_EXCEPTION_MANAGER_once_raise_feature_b.make (l_once_raise_fi, a_byte_code.real_type (l_once_raise_fi.type), Void)
@@ -258,11 +270,15 @@ feature -- Object relative once
 						l_param.set_attachment_type (l_excep_attr_b.type)
 						l_parameters.extend (l_param)
 						l_ISE_EXCEPTION_MANAGER_once_raise_feature_b.set_parameters (l_parameters)
+						l_param.set_parent (l_ISE_EXCEPTION_MANAGER_once_raise_feature_b)
 
 							--| Build ... (create {ISE_EXCEPTION_MANAGER}).once_raise (EXCEPTION)
 						create l_nested_b
-						l_nested_b.set_target (l_creation_expr_b)
+						create l_access_expr_b
+						l_access_expr_b.set_expr (l_creation_expr_b)
+						l_nested_b.set_target (l_access_expr_b)
 						l_nested_b.set_message (l_ISE_EXCEPTION_MANAGER_once_raise_feature_b)
+						l_ISE_EXCEPTION_MANAGER_once_raise_feature_b.set_parent (l_nested_b)
 
 						create l_wrapper_compound.make (1)
 						l_wrapper_compound.extend (l_nested_b)
@@ -302,15 +318,22 @@ feature -- Object relative once
 						l_ISE_EXCEPTION_MANAGER_type := l_ISE_EXCEPTION_MANAGER_class_c.types.first.type
 						l_creation_expr_b.set_type (l_ISE_EXCEPTION_MANAGER_type)
 						l_creation_expr_b.set_info (create {CREATE_TYPE}.make (l_ISE_EXCEPTION_MANAGER_type))
-						l_creation_expr_b.set_creation_instruction (True)
+						l_creation_expr_b.set_creation_instruction (False)
+
+							--| default_create
+						create l_ISE_EXCEPTION_MANAGER_default_create_feature_b.make (l_default_create_fi, l_default_create_fi.type, Void)
+						l_creation_expr_b.set_call (l_ISE_EXCEPTION_MANAGER_default_create_feature_b)
 
 							--| {ISE_EXCEPTION_MANAGER}.last_exception: EXCEPTION
 						create l_ISE_EXCEPTION_MANAGER_last_exception_feature_b.make (l_last_exception_fi, a_byte_code.real_type (l_last_exception_fi.type), Void)
 
 							--| Build ... (create {ISE_EXCEPTION_MANAGER}).last_exception returning an EXCEPTION object
 						create l_nested_b
-						l_nested_b.set_target (l_creation_expr_b)
+						create l_access_expr_b
+						l_access_expr_b.set_expr (l_creation_expr_b)
+						l_nested_b.set_target (l_access_expr_b)
 						l_nested_b.set_message (l_ISE_EXCEPTION_MANAGER_last_exception_feature_b)
+						l_ISE_EXCEPTION_MANAGER_last_exception_feature_b.set_parent (l_nested_b)
 
 						create l_assign_b
 						l_assign_b.set_target (l_excep_attr_b)

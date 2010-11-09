@@ -1363,7 +1363,8 @@ RT_LNK void eif_exit_eiffel_code(void);
 #define scoop_task_add_supplier_to_request_chain 6
 #define scoop_task_wait_for_supplier_processor_locks 7
 #define scoop_task_add_call 8
-#define scoop_task_wait_for_processor_redundancy 9 
+#define scoop_task_add_synchronous_call 9
+#define scoop_task_wait_for_processor_redundancy 10
 
 #define EIFNULL 0
 

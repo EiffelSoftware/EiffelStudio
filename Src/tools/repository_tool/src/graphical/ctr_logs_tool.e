@@ -1104,6 +1104,7 @@ feature {CTR_WINDOW} -- Implementation
 					if i <= g.row_count then
 						g.remove_selection
 						g.select_row (i)
+						g.row (i).ensure_visible
 					end
 				end
 			end
@@ -1141,6 +1142,7 @@ feature {CTR_WINDOW} -- Implementation
 					if i <= g.row_count then
 						g.remove_selection
 						g.select_row (i)
+						g.row (i).ensure_visible
 					end
 				end
 			end

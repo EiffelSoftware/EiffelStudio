@@ -116,6 +116,8 @@ feature -- Element change
 	mark_log_read (a_id: STRING)
 		do
 			unread_logs.remove (a_id)
+		ensure
+			removed: not unread_logs.has (a_id)
 		end
 
 	archive_log (a_log: REPOSITORY_LOG)

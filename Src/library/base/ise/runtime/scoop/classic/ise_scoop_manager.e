@@ -36,6 +36,8 @@ feature -- C callback function
 				wait_for_request_chain_supplier_processor_locks (client_processor_id)
 			when scoop_task_add_call then
 				log_call_on_processor (client_processor_id, supplier_processor_id, body_index, a_callback_data)
+			when scoop_task_add_synchronous_call then
+				log_call_on_processor (client_processor_id, supplier_processor_id, body_index, a_callback_data)
 			when scoop_task_wait_for_processor_redundancy then
 				wait_for_processor_redundancy
 				do_nothing -- Noop for system completion breakpoint.
@@ -52,7 +54,8 @@ feature -- C callback function
 	frozen scoop_task_add_supplier_to_request_chain: NATURAL_8 = 6
 	frozen scoop_task_wait_for_supplier_processor_locks: NATURAL_8 = 7
 	frozen scoop_task_add_call: NATURAL_8 = 8
-	frozen scoop_task_wait_for_processor_redundancy: NATURAL_8 = 9
+	frozen scoop_task_add_synchronous_call: NATURAL_8 = 9
+	frozen scoop_task_wait_for_processor_redundancy: NATURAL_8 = 10
 		-- SCOOP Task Constants, copy of those defined in <eif_macros.h>
 		-- FIXME IEK: Use external macros when valid in an inspect statement.
 

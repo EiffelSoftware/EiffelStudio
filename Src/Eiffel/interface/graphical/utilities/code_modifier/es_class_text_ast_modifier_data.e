@@ -64,7 +64,7 @@ feature -- Basic operations
 			l_parser: like parser
 			l_class: like associated_class
 			l_wrapper: like eiffel_parser_wrapper
-			l_current_class: detachable CLASS_C
+			l_current_class, l_prev_class: detachable CLASS_C
 			l_current_group: detachable CONF_GROUP
 			l_options: CONF_OPTION
 		do
@@ -76,6 +76,8 @@ feature -- Basic operations
 			l_current_group := inst_context.group
 			inst_context.set_group (l_class.group)
 
+			l_prev_class := system.current_class
+			system.set_current_class (l_current_class)
 				-- Perform parse
 			l_parser := parser
 			l_options := l_class.config_class.options
@@ -91,6 +93,7 @@ feature -- Basic operations
 
 			inst_context.set_group (l_current_group)
 			is_prepared := True
+			system.set_current_class (l_prev_class)
 		end
 
 feature {ES_CLASS_TEXT_MODIFIER} -- Basic operations

@@ -155,11 +155,13 @@ feature {NONE} -- Implementation
 				Void
 			)
 
+				-- Line generation
 			l_bool_prop := new_boolean_property (conf_interface_names.target_line_generation_name, current_target.setting_line_generation)
 			l_bool_prop.set_description (conf_interface_names.target_line_generation_description)
 			add_boolean_setting_actions (l_bool_prop, s_line_generation)
 			properties.add_property (l_bool_prop)
 
+				-- Dotnet options
 			add_dotnet_option_properties (current_target.changeable_internal_options, current_target.options, l_extends, current_target.setting_msil_generation)
 
 		ensure

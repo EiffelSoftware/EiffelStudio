@@ -156,7 +156,7 @@ feature {NONE} -- Special childrens
 		end
 
 	field_values_for (l_class_token: NATURAL_32; l_icd_class: ICOR_DEBUG_CLASS; l_object_value: ICOR_DEBUG_OBJECT_VALUE;
-				l_icd_frame: ICOR_DEBUG_FRAME; l_icd_module: ICOR_DEBUG_MODULE): DEBUG_VALUE_LIST
+				l_icd_frame: detachable ICOR_DEBUG_FRAME; l_icd_module: ICOR_DEBUG_MODULE): DEBUG_VALUE_LIST
 		local
 			l_md_import: MD_IMPORT
 			l_tokens: LIST [NATURAL_32]

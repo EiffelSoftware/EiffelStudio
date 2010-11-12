@@ -2213,7 +2213,7 @@ feature -- Specific function evaluation
 			l_icd_debug_value: ICOR_DEBUG_VALUE
 			l_prepared_icd_debug_value: ICOR_DEBUG_VALUE
 			l_once_not_available: BOOLEAN
-			l_icd_frame: ICOR_DEBUG_FRAME
+			l_icd_frame: detachable ICOR_DEBUG_FRAME
 			l_data_icd_class: ICOR_DEBUG_CLASS
 			l_icd_module: ICOR_DEBUG_MODULE
 			l_once_available, l_once_already_called, l_once_failed: BOOLEAN
@@ -2271,6 +2271,7 @@ feature -- Specific function evaluation
 			if l_once_not_available then
 				l_once_available := False
 			else
+				check l_icd_frame /= Void end
 				l_once_available := True
 				if l_once_already_called then
 					l_once_already_called := True

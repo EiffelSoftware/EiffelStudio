@@ -65,7 +65,7 @@ feature -- Status
 
 feature {EIFNET_EXPORTER} -- Evaluation primitives
 
-	function_evaluation (a_frame: ICOR_DEBUG_FRAME; a_func: ICOR_DEBUG_FUNCTION; a_args: ARRAY [ICOR_DEBUG_VALUE]): ICOR_DEBUG_VALUE
+	function_evaluation (a_frame: detachable ICOR_DEBUG_FRAME; a_func: ICOR_DEBUG_FUNCTION; a_args: ARRAY [ICOR_DEBUG_VALUE]): ICOR_DEBUG_VALUE
 			-- Function evaluation result for `a_func' on `a_icd'
 		require
 			func_not_void: a_func /= Void
@@ -89,7 +89,7 @@ feature {EIFNET_EXPORTER} -- Evaluation primitives
 			end
 		end
 
-	method_evaluation (a_frame: ICOR_DEBUG_FRAME; a_meth: ICOR_DEBUG_FUNCTION; a_args: ARRAY [ICOR_DEBUG_VALUE])
+	method_evaluation (a_frame: detachable ICOR_DEBUG_FRAME; a_meth: ICOR_DEBUG_FUNCTION; a_args: ARRAY [ICOR_DEBUG_VALUE])
 			-- Method evaluation result for `a_meth' on `a_icd'
 		require
 			args_not_void: a_args /= Void
@@ -106,7 +106,7 @@ feature {EIFNET_EXPORTER} -- Evaluation primitives
 			end
 		end
 
-	new_string_evaluation (a_frame: ICOR_DEBUG_FRAME; a_string: STRING_GENERAL): ICOR_DEBUG_VALUE
+	new_string_evaluation (a_frame: detachable ICOR_DEBUG_FRAME; a_string: STRING_GENERAL): ICOR_DEBUG_VALUE
 			-- NewString evaluation with `a_string'
 		require
 			a_string /= Void
@@ -116,7 +116,7 @@ feature {EIFNET_EXPORTER} -- Evaluation primitives
 			Result := complete_function_evaluation
 		end
 
-	new_object_no_constructor_evaluation (a_frame: ICOR_DEBUG_FRAME; a_icd_class: ICOR_DEBUG_CLASS): ICOR_DEBUG_VALUE
+	new_object_no_constructor_evaluation (a_frame: detachable ICOR_DEBUG_FRAME; a_icd_class: ICOR_DEBUG_CLASS): ICOR_DEBUG_VALUE
 			-- NewObjectNoConstructor evaluation on `a_icd_class'
 		require
 			a_icd_class /= Void
@@ -139,7 +139,7 @@ feature {EIFNET_EXPORTER} -- Evaluation primitives
 
 feature {EIFNET_EXPORTER} -- Basic value creation
 
-	new_elt_value_evaluation (a_frame: ICOR_DEBUG_FRAME; a_pval: POINTER; a_elt_type: INTEGER): ICOR_DEBUG_VALUE
+	new_elt_value_evaluation (a_frame: detachable ICOR_DEBUG_FRAME; a_pval: POINTER; a_elt_type: INTEGER): ICOR_DEBUG_VALUE
 			-- New Object evaluation with `a_elt_type'.
 		local
 			l_gen_obj: ICOR_DEBUG_GENERIC_VALUE
@@ -155,91 +155,91 @@ feature {EIFNET_EXPORTER} -- Basic value creation
 			end_evaluation
 		end
 
-	new_i1_evaluation (a_frame: ICOR_DEBUG_FRAME; a_val: INTEGER_8): ICOR_DEBUG_VALUE
+	new_i1_evaluation (a_frame: detachable ICOR_DEBUG_FRAME; a_val: INTEGER_8): ICOR_DEBUG_VALUE
 			-- New Object evaluation with i1
 		do
 			Result := new_elt_value_evaluation (a_frame, $a_val, element_type_i1)
 		end
 
-	new_i2_evaluation (a_frame: ICOR_DEBUG_FRAME; a_val: INTEGER_16): ICOR_DEBUG_VALUE
+	new_i2_evaluation (a_frame: detachable ICOR_DEBUG_FRAME; a_val: INTEGER_16): ICOR_DEBUG_VALUE
 			-- New Object evaluation with i2
 		do
 			Result := new_elt_value_evaluation (a_frame, $a_val, element_type_i2)
 		end
 
-	new_i4_evaluation (a_frame: ICOR_DEBUG_FRAME; a_val: INTEGER_32): ICOR_DEBUG_VALUE
+	new_i4_evaluation (a_frame: detachable ICOR_DEBUG_FRAME; a_val: INTEGER_32): ICOR_DEBUG_VALUE
 			-- New Object evaluation with i4
 		do
 			Result := new_elt_value_evaluation (a_frame, $a_val, element_type_i4)
 		end
 
-	new_i8_evaluation (a_frame: ICOR_DEBUG_FRAME; a_val: INTEGER_64): ICOR_DEBUG_VALUE
+	new_i8_evaluation (a_frame: detachable ICOR_DEBUG_FRAME; a_val: INTEGER_64): ICOR_DEBUG_VALUE
 			-- New Object evaluation with i8
 		do
 			Result := new_elt_value_evaluation (a_frame, $a_val, element_type_i8)
 		end
 
-	new_u1_evaluation (a_frame: ICOR_DEBUG_FRAME; a_val: NATURAL_8): ICOR_DEBUG_VALUE
+	new_u1_evaluation (a_frame: detachable ICOR_DEBUG_FRAME; a_val: NATURAL_8): ICOR_DEBUG_VALUE
 			-- New Object evaluation with u1
 		do
 			Result := new_elt_value_evaluation (a_frame, $a_val, element_type_u1)
 		end
 
-	new_u2_evaluation (a_frame: ICOR_DEBUG_FRAME; a_val: NATURAL_16): ICOR_DEBUG_VALUE
+	new_u2_evaluation (a_frame: detachable ICOR_DEBUG_FRAME; a_val: NATURAL_16): ICOR_DEBUG_VALUE
 			-- New Object evaluation with u2
 		do
 			Result := new_elt_value_evaluation (a_frame, $a_val, element_type_u2)
 		end
 
-	new_u4_evaluation (a_frame: ICOR_DEBUG_FRAME; a_val: NATURAL_32): ICOR_DEBUG_VALUE
+	new_u4_evaluation (a_frame: detachable ICOR_DEBUG_FRAME; a_val: NATURAL_32): ICOR_DEBUG_VALUE
 			-- New Object evaluation with u4
 		do
 			Result := new_elt_value_evaluation (a_frame, $a_val, element_type_u4)
 		end
 
-	new_u8_evaluation (a_frame: ICOR_DEBUG_FRAME; a_val: NATURAL_64): ICOR_DEBUG_VALUE
+	new_u8_evaluation (a_frame: detachable ICOR_DEBUG_FRAME; a_val: NATURAL_64): ICOR_DEBUG_VALUE
 			-- New Object evaluation with u8
 		do
 			Result := new_elt_value_evaluation (a_frame, $a_val, element_type_u8)
 		end
 
-	new_r4_evaluation (a_frame: ICOR_DEBUG_FRAME; a_val: REAL): ICOR_DEBUG_VALUE
+	new_r4_evaluation (a_frame: detachable ICOR_DEBUG_FRAME; a_val: REAL): ICOR_DEBUG_VALUE
 			-- New Object evaluation with real
 		do
 			Result := new_elt_value_evaluation (a_frame, $a_val, element_type_r4)
 		end
 
-	new_r8_evaluation (a_frame: ICOR_DEBUG_FRAME; a_val: DOUBLE): ICOR_DEBUG_VALUE
+	new_r8_evaluation (a_frame: detachable ICOR_DEBUG_FRAME; a_val: DOUBLE): ICOR_DEBUG_VALUE
 			-- New Object evaluation with real
 		do
 			Result := new_elt_value_evaluation (a_frame, $a_val, element_type_r8)
 		end
 
-	new_boolean_evaluation (a_frame: ICOR_DEBUG_FRAME; a_val: BOOLEAN): ICOR_DEBUG_VALUE
+	new_boolean_evaluation (a_frame: detachable ICOR_DEBUG_FRAME; a_val: BOOLEAN): ICOR_DEBUG_VALUE
 			-- New Object evaluation with Boolean
 		do
 			Result := new_elt_value_evaluation (a_frame, $a_val, element_type_boolean)
 		end
 
-	new_char_evaluation (a_frame: ICOR_DEBUG_FRAME; a_val: CHARACTER_8): ICOR_DEBUG_VALUE
+	new_char_evaluation (a_frame: detachable ICOR_DEBUG_FRAME; a_val: CHARACTER_8): ICOR_DEBUG_VALUE
 			-- New Object evaluation with Character
 		do
 			Result := new_elt_value_evaluation (a_frame, $a_val, element_type_char)
 		end
 
-	new_char32_evaluation (a_frame: ICOR_DEBUG_FRAME; a_val: CHARACTER_32): ICOR_DEBUG_VALUE
+	new_char32_evaluation (a_frame: detachable ICOR_DEBUG_FRAME; a_val: CHARACTER_32): ICOR_DEBUG_VALUE
 			-- New Object evaluation with Character
 		do
 			Result := new_elt_value_evaluation (a_frame, $a_val, element_type_u4)
 		end
 
-	new_ptr_evaluation (a_frame: ICOR_DEBUG_FRAME; a_val: POINTER): ICOR_DEBUG_VALUE
+	new_ptr_evaluation (a_frame: detachable ICOR_DEBUG_FRAME; a_val: POINTER): ICOR_DEBUG_VALUE
 			-- New Object evaluation with Character
 		do
 			Result := new_elt_value_evaluation (a_frame, $a_val, element_type_ptr)
 		end
 
-	new_void_evaluation (a_frame: ICOR_DEBUG_FRAME): ICOR_DEBUG_VALUE
+	new_void_evaluation (a_frame: detachable ICOR_DEBUG_FRAME): ICOR_DEBUG_VALUE
 			-- New Object evaluation with Void
 		do
 			prepare_evaluation (a_frame, False)
@@ -249,7 +249,7 @@ feature {EIFNET_EXPORTER} -- Basic value creation
 
 feature {EIFNET_EXPORTER} -- Eiffel Instances facilities
 
-	new_eiffel_string_evaluation (a_frame: ICOR_DEBUG_FRAME; a_val: STRING_GENERAL): ICOR_DEBUG_VALUE
+	new_eiffel_string_evaluation (a_frame: detachable ICOR_DEBUG_FRAME; a_val: STRING_GENERAL): ICOR_DEBUG_VALUE
 			-- New Object evaluation with String
 		local
 			l_icdv: ICOR_DEBUG_VALUE
@@ -259,7 +259,7 @@ feature {EIFNET_EXPORTER} -- Eiffel Instances facilities
 			l_icdv.clean_on_dispose
 		end
 
-	new_reference_i1_evaluation (a_frame: ICOR_DEBUG_FRAME; a_val: INTEGER_8): ICOR_DEBUG_VALUE
+	new_reference_i1_evaluation (a_frame: detachable ICOR_DEBUG_FRAME; a_val: INTEGER_8): ICOR_DEBUG_VALUE
 			-- New Object evaluation with i1 _REF
 		local
 			l_icdv: ICOR_DEBUG_VALUE
@@ -268,7 +268,7 @@ feature {EIFNET_EXPORTER} -- Eiffel Instances facilities
 			Result := icdv_reference_integer_8_from_icdv_integer_8 (a_frame, l_icdv)
 			l_icdv.clean_on_dispose
 		end
-	new_reference_i2_evaluation (a_frame: ICOR_DEBUG_FRAME; a_val: INTEGER_16): ICOR_DEBUG_VALUE
+	new_reference_i2_evaluation (a_frame: detachable ICOR_DEBUG_FRAME; a_val: INTEGER_16): ICOR_DEBUG_VALUE
 			-- New Object evaluation with i2 _REF
 		local
 			l_icdv: ICOR_DEBUG_VALUE
@@ -277,7 +277,7 @@ feature {EIFNET_EXPORTER} -- Eiffel Instances facilities
 			Result := icdv_reference_integer_16_from_icdv_integer_16 (a_frame, l_icdv)
 			l_icdv.clean_on_dispose
 		end
-	new_reference_i4_evaluation (a_frame: ICOR_DEBUG_FRAME; a_val: INTEGER_32): ICOR_DEBUG_VALUE
+	new_reference_i4_evaluation (a_frame: detachable ICOR_DEBUG_FRAME; a_val: INTEGER_32): ICOR_DEBUG_VALUE
 			-- New Object evaluation with i4 _REF
 		local
 			l_icdv: ICOR_DEBUG_VALUE
@@ -286,7 +286,7 @@ feature {EIFNET_EXPORTER} -- Eiffel Instances facilities
 			Result := icdv_reference_integer_32_from_icdv_integer_32 (a_frame, l_icdv)
 			l_icdv.clean_on_dispose
 		end
-	new_reference_i8_evaluation (a_frame: ICOR_DEBUG_FRAME; a_val: INTEGER_64): ICOR_DEBUG_VALUE
+	new_reference_i8_evaluation (a_frame: detachable ICOR_DEBUG_FRAME; a_val: INTEGER_64): ICOR_DEBUG_VALUE
 			-- New Object evaluation with i8 _REF
 		local
 			l_icdv: ICOR_DEBUG_VALUE
@@ -296,7 +296,7 @@ feature {EIFNET_EXPORTER} -- Eiffel Instances facilities
 			l_icdv.clean_on_dispose
 		end
 
-	new_reference_u1_evaluation (a_frame: ICOR_DEBUG_FRAME; a_val: NATURAL_8): ICOR_DEBUG_VALUE
+	new_reference_u1_evaluation (a_frame: detachable ICOR_DEBUG_FRAME; a_val: NATURAL_8): ICOR_DEBUG_VALUE
 			-- New Object evaluation with u1 _REF
 		local
 			l_icdv: ICOR_DEBUG_VALUE
@@ -305,7 +305,7 @@ feature {EIFNET_EXPORTER} -- Eiffel Instances facilities
 			Result := icdv_reference_natural_8_from_icdv_natural_8 (a_frame, l_icdv)
 			l_icdv.clean_on_dispose
 		end
-	new_reference_u2_evaluation (a_frame: ICOR_DEBUG_FRAME; a_val: NATURAL_16): ICOR_DEBUG_VALUE
+	new_reference_u2_evaluation (a_frame: detachable ICOR_DEBUG_FRAME; a_val: NATURAL_16): ICOR_DEBUG_VALUE
 			-- New Object evaluation with u2 _REF
 		local
 			l_icdv: ICOR_DEBUG_VALUE
@@ -314,7 +314,7 @@ feature {EIFNET_EXPORTER} -- Eiffel Instances facilities
 			Result := icdv_reference_natural_16_from_icdv_natural_16 (a_frame, l_icdv)
 			l_icdv.clean_on_dispose
 		end
-	new_reference_u4_evaluation (a_frame: ICOR_DEBUG_FRAME; a_val: NATURAL_32): ICOR_DEBUG_VALUE
+	new_reference_u4_evaluation (a_frame: detachable ICOR_DEBUG_FRAME; a_val: NATURAL_32): ICOR_DEBUG_VALUE
 			-- New Object evaluation with u4 _REF
 		local
 			l_icdv: ICOR_DEBUG_VALUE
@@ -323,7 +323,7 @@ feature {EIFNET_EXPORTER} -- Eiffel Instances facilities
 			Result := icdv_reference_natural_32_from_icdv_natural_32 (a_frame, l_icdv)
 			l_icdv.clean_on_dispose
 		end
-	new_reference_u8_evaluation (a_frame: ICOR_DEBUG_FRAME; a_val: NATURAL_64): ICOR_DEBUG_VALUE
+	new_reference_u8_evaluation (a_frame: detachable ICOR_DEBUG_FRAME; a_val: NATURAL_64): ICOR_DEBUG_VALUE
 			-- New Object evaluation with u8 _REF
 		local
 			l_icdv: ICOR_DEBUG_VALUE
@@ -333,7 +333,7 @@ feature {EIFNET_EXPORTER} -- Eiffel Instances facilities
 			l_icdv.clean_on_dispose
 		end
 
-	new_reference_real_evaluation (a_frame: ICOR_DEBUG_FRAME; a_val: REAL): ICOR_DEBUG_VALUE
+	new_reference_real_evaluation (a_frame: detachable ICOR_DEBUG_FRAME; a_val: REAL): ICOR_DEBUG_VALUE
 			-- New Object evaluation with real _REF
 		local
 			l_icdv: ICOR_DEBUG_VALUE
@@ -343,7 +343,7 @@ feature {EIFNET_EXPORTER} -- Eiffel Instances facilities
 			l_icdv.clean_on_dispose
 		end
 
-	new_reference_double_evaluation (a_frame: ICOR_DEBUG_FRAME; a_val: DOUBLE): ICOR_DEBUG_VALUE
+	new_reference_double_evaluation (a_frame: detachable ICOR_DEBUG_FRAME; a_val: DOUBLE): ICOR_DEBUG_VALUE
 			-- New Object evaluation with double _REF
 		local
 			l_icdv: ICOR_DEBUG_VALUE
@@ -353,7 +353,7 @@ feature {EIFNET_EXPORTER} -- Eiffel Instances facilities
 			l_icdv.clean_on_dispose
 		end
 
-	new_reference_boolean_evaluation (a_frame: ICOR_DEBUG_FRAME; a_val: BOOLEAN): ICOR_DEBUG_VALUE
+	new_reference_boolean_evaluation (a_frame: detachable ICOR_DEBUG_FRAME; a_val: BOOLEAN): ICOR_DEBUG_VALUE
 			-- New Object evaluation with boolean _REF
 		local
 			l_icdv: ICOR_DEBUG_VALUE
@@ -363,7 +363,7 @@ feature {EIFNET_EXPORTER} -- Eiffel Instances facilities
 			l_icdv.clean_on_dispose
 		end
 
-	new_reference_character_8_evaluation (a_frame: ICOR_DEBUG_FRAME; a_val: CHARACTER_8): ICOR_DEBUG_VALUE
+	new_reference_character_8_evaluation (a_frame: detachable ICOR_DEBUG_FRAME; a_val: CHARACTER_8): ICOR_DEBUG_VALUE
 			-- New Object evaluation with char _REF
 		local
 			l_icdv: ICOR_DEBUG_VALUE
@@ -373,7 +373,7 @@ feature {EIFNET_EXPORTER} -- Eiffel Instances facilities
 			l_icdv.clean_on_dispose
 		end
 
-	new_reference_character_32_evaluation (a_frame: ICOR_DEBUG_FRAME; a_val: CHARACTER_32): ICOR_DEBUG_VALUE
+	new_reference_character_32_evaluation (a_frame: detachable ICOR_DEBUG_FRAME; a_val: CHARACTER_32): ICOR_DEBUG_VALUE
 			-- New Object evaluation with char _REF
 		local
 			l_icdv: ICOR_DEBUG_VALUE
@@ -385,7 +385,7 @@ feature {EIFNET_EXPORTER} -- Eiffel Instances facilities
 
 feature {DBG_EVALUATOR_DOTNET} -- Class construction facilities
 
-	icdv_string_from_icdv_system_string (a_frame: ICOR_DEBUG_FRAME; a_sys_string: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE
+	icdv_string_from_icdv_system_string (a_frame: detachable ICOR_DEBUG_FRAME; a_sys_string: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE
 			-- ICorDebugValue for STRING object created from SystemString `a_sys_string'
 		do
 			prepare_evaluation (a_frame, True)
@@ -394,7 +394,7 @@ feature {DBG_EVALUATOR_DOTNET} -- Class construction facilities
 			method_evaluation (a_frame, eiffel_string_make_from_cil_constructor, <<Result, a_sys_string>>)
 		end
 
-	icdv_reference_integer_8_from_icdv_integer_8 (a_frame: ICOR_DEBUG_FRAME; a_icdv: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE
+	icdv_reference_integer_8_from_icdv_integer_8 (a_frame: detachable ICOR_DEBUG_FRAME; a_icdv: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE
 			-- ICorDebugValue for INTEGER_8_REF object created from SystemInteger `a_icdv'
 		do
 			prepare_evaluation (a_frame, True)
@@ -402,7 +402,7 @@ feature {DBG_EVALUATOR_DOTNET} -- Class construction facilities
 			Result := complete_function_evaluation
 			method_evaluation (a_frame, reference_integer_8_set_item_method, <<Result, a_icdv>>)
 		end
-	icdv_reference_integer_16_from_icdv_integer_16 (a_frame: ICOR_DEBUG_FRAME; a_icdv: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE
+	icdv_reference_integer_16_from_icdv_integer_16 (a_frame: detachable ICOR_DEBUG_FRAME; a_icdv: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE
 			-- ICorDebugValue for INTEGER_16_REF object created from SystemInteger `a_icdv'
 		do
 			prepare_evaluation (a_frame, True)
@@ -410,7 +410,7 @@ feature {DBG_EVALUATOR_DOTNET} -- Class construction facilities
 			Result := complete_function_evaluation
 			method_evaluation (a_frame, reference_integer_16_set_item_method, <<Result, a_icdv>>)
 		end
-	icdv_reference_integer_32_from_icdv_integer_32 (a_frame: ICOR_DEBUG_FRAME; a_icdv: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE
+	icdv_reference_integer_32_from_icdv_integer_32 (a_frame: detachable ICOR_DEBUG_FRAME; a_icdv: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE
 			-- ICorDebugValue for INTEGER_REF object created from SystemInteger `a_icdv'
 		do
 			prepare_evaluation (a_frame, True)
@@ -418,7 +418,7 @@ feature {DBG_EVALUATOR_DOTNET} -- Class construction facilities
 			Result := complete_function_evaluation
 			method_evaluation (a_frame, reference_integer_32_set_item_method, <<Result, a_icdv>>)
 		end
-	icdv_reference_integer_64_from_icdv_integer_64 (a_frame: ICOR_DEBUG_FRAME; a_icdv: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE
+	icdv_reference_integer_64_from_icdv_integer_64 (a_frame: detachable ICOR_DEBUG_FRAME; a_icdv: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE
 			-- ICorDebugValue for INTEGER_64_REF object created from SystemInteger `a_icdv'
 		do
 			prepare_evaluation (a_frame, True)
@@ -427,7 +427,7 @@ feature {DBG_EVALUATOR_DOTNET} -- Class construction facilities
 			method_evaluation (a_frame, reference_integer_64_set_item_method, <<Result, a_icdv>>)
 		end
 
-	icdv_reference_natural_8_from_icdv_natural_8 (a_frame: ICOR_DEBUG_FRAME; a_icdv: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE
+	icdv_reference_natural_8_from_icdv_natural_8 (a_frame: detachable ICOR_DEBUG_FRAME; a_icdv: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE
 			-- ICorDebugValue for NATURAL_8_REF object created from SystemInteger `a_icdv'
 		do
 			prepare_evaluation (a_frame, True)
@@ -435,7 +435,7 @@ feature {DBG_EVALUATOR_DOTNET} -- Class construction facilities
 			Result := complete_function_evaluation
 			method_evaluation (a_frame, reference_natural_8_set_item_method, <<Result, a_icdv>>)
 		end
-	icdv_reference_natural_16_from_icdv_natural_16 (a_frame: ICOR_DEBUG_FRAME; a_icdv: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE
+	icdv_reference_natural_16_from_icdv_natural_16 (a_frame: detachable ICOR_DEBUG_FRAME; a_icdv: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE
 			-- ICorDebugValue for NATURAL_16_REF object created from SystemInteger `a_icdv'
 		do
 			prepare_evaluation (a_frame, True)
@@ -443,7 +443,7 @@ feature {DBG_EVALUATOR_DOTNET} -- Class construction facilities
 			Result := complete_function_evaluation
 			method_evaluation (a_frame, reference_natural_16_set_item_method, <<Result, a_icdv>>)
 		end
-	icdv_reference_natural_32_from_icdv_natural_32 (a_frame: ICOR_DEBUG_FRAME; a_icdv: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE
+	icdv_reference_natural_32_from_icdv_natural_32 (a_frame: detachable ICOR_DEBUG_FRAME; a_icdv: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE
 			-- ICorDebugValue for NATURAL_REF object created from SystemInteger `a_icdv'
 		do
 			prepare_evaluation (a_frame, True)
@@ -451,7 +451,7 @@ feature {DBG_EVALUATOR_DOTNET} -- Class construction facilities
 			Result := complete_function_evaluation
 			method_evaluation (a_frame, reference_natural_32_set_item_method, <<Result, a_icdv>>)
 		end
-	icdv_reference_natural_64_from_icdv_natural_64 (a_frame: ICOR_DEBUG_FRAME; a_icdv: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE
+	icdv_reference_natural_64_from_icdv_natural_64 (a_frame: detachable ICOR_DEBUG_FRAME; a_icdv: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE
 			-- ICorDebugValue for NATURAL_64_REF object created from SystemInteger `a_icdv'
 		do
 			prepare_evaluation (a_frame, True)
@@ -460,7 +460,7 @@ feature {DBG_EVALUATOR_DOTNET} -- Class construction facilities
 			method_evaluation (a_frame, reference_natural_64_set_item_method, <<Result, a_icdv>>)
 		end
 
-	icdv_reference_real_from_icdv_real (a_frame: ICOR_DEBUG_FRAME; a_icdv: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE
+	icdv_reference_real_from_icdv_real (a_frame: detachable ICOR_DEBUG_FRAME; a_icdv: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE
 			-- ICorDebugValue for REAL_REF object created from SystemReal `a_icdv'
 		do
 			prepare_evaluation (a_frame, True)
@@ -469,7 +469,7 @@ feature {DBG_EVALUATOR_DOTNET} -- Class construction facilities
 			method_evaluation (a_frame, reference_real_set_item_method, <<Result, a_icdv>>)
 		end
 
-	icdv_reference_double_from_icdv_double (a_frame: ICOR_DEBUG_FRAME; a_icdv: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE
+	icdv_reference_double_from_icdv_double (a_frame: detachable ICOR_DEBUG_FRAME; a_icdv: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE
 			-- ICorDebugValue for DOUBLE_REF object created from SystemDouble `a_icdv'
 		do
 			prepare_evaluation (a_frame, True)
@@ -478,7 +478,7 @@ feature {DBG_EVALUATOR_DOTNET} -- Class construction facilities
 			method_evaluation (a_frame, reference_double_set_item_method, <<Result, a_icdv>>)
 		end
 
-	icdv_reference_boolean_from_icdv_boolean (a_frame: ICOR_DEBUG_FRAME; a_icdv: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE
+	icdv_reference_boolean_from_icdv_boolean (a_frame: detachable ICOR_DEBUG_FRAME; a_icdv: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE
 			-- ICorDebugValue for BOOLEAN_REF object created from SystemBoolean `a_icdv'
 		do
 			prepare_evaluation (a_frame, True)
@@ -487,7 +487,7 @@ feature {DBG_EVALUATOR_DOTNET} -- Class construction facilities
 			method_evaluation (a_frame, reference_boolean_set_item_method, <<Result, a_icdv>>)
 		end
 
-	icdv_reference_character_8_from_icdv_character_8 (a_frame: ICOR_DEBUG_FRAME; a_icdv: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE
+	icdv_reference_character_8_from_icdv_character_8 (a_frame: detachable ICOR_DEBUG_FRAME; a_icdv: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE
 			-- ICorDebugValue for CHARACTER_REF object created from SystemChar `a_icdv'
 		do
 			prepare_evaluation (a_frame, True)
@@ -496,7 +496,7 @@ feature {DBG_EVALUATOR_DOTNET} -- Class construction facilities
 			method_evaluation (a_frame, reference_character_8_set_item_method, <<Result, a_icdv>>)
 		end
 
-	icdv_reference_character_32_from_icdv_character_32 (a_frame: ICOR_DEBUG_FRAME; a_icdv: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE
+	icdv_reference_character_32_from_icdv_character_32 (a_frame: detachable ICOR_DEBUG_FRAME; a_icdv: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE
 			-- ICorDebugValue for CHARACTER_REF object created from SystemChar `a_icdv'
 		do
 			prepare_evaluation (a_frame, True)
@@ -505,7 +505,7 @@ feature {DBG_EVALUATOR_DOTNET} -- Class construction facilities
 			method_evaluation (a_frame, reference_character_32_set_item_method, <<Result, a_icdv>>)
 		end
 
-	icdv_reference_pointer_from_icdv_pointer (a_frame: ICOR_DEBUG_FRAME; a_icdv: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE
+	icdv_reference_pointer_from_icdv_pointer (a_frame: detachable ICOR_DEBUG_FRAME; a_icdv: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE
 			-- ICorDebugValue for POINTER_REF object created from SystemPtr `a_icdv'
 		do
 			prepare_evaluation (a_frame, True)
@@ -540,7 +540,7 @@ feature {NONE}
 	last_app_status: APPLICATION_STATUS_DOTNET
 			-- Last APPLICATION_STATUS_DOTNET data
 
-	prepare_evaluation (a_useless_frame: ICOR_DEBUG_FRAME; stop_timer_required: BOOLEAN)
+	prepare_evaluation (a_useless_frame: detachable ICOR_DEBUG_FRAME; stop_timer_required: BOOLEAN)
 			-- Prepare data for evaluation.
 			--| FIXME jfiat [2005/06/07] : get rid of `a_useless_frame' if really useless
 		require
@@ -1189,7 +1189,7 @@ feature {NONE} -- Helper Impl
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -1202,22 +1202,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

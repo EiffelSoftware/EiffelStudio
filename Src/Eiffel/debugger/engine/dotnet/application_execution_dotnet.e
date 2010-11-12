@@ -380,8 +380,13 @@ feature -- Remote access to RT_
 					if ftok > 0 then
 						icl := m.get_class_from_token (ctok)
 						f := eifnet_debugger.new_active_frame
-						Result := icl.get_static_field_value (ftok, f)
-						f.clean_on_dispose
+						if f = Void then
+							f := eifnet_debugger.current_stack_icor_debug_frame
+						end
+						if f /= Void then
+							Result := icl.get_static_field_value (ftok, f)
+							f.clean_on_dispose
+						end
 					end
 				end
 			end

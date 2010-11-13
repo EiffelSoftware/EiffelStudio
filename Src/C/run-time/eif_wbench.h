@@ -49,6 +49,8 @@ RT_LNK EIF_REFERENCE_FUNCTION wfeat(int static_type, int32 feature_id, int dyn_t
 RT_LNK EIF_REFERENCE_FUNCTION wpfeat(int32 origin, int32 offset, int dyn_type);	/* Precompiled feature call */
 RT_LNK EIF_REFERENCE_FUNCTION wfeat_inv(int static_type, int32 feature_id, char *name, EIF_REFERENCE object); /* Nested feature call */
 RT_LNK EIF_REFERENCE_FUNCTION wpfeat_inv(int32 origin, int32 offset, char *name, EIF_REFERENCE object);/* Nested precompiled feature call */
+RT_LNK EIF_REFERENCE_FUNCTION wcreat(int static_type, int32 feature_id, int dyn_type); /* Creation procedure call */
+RT_LNK EIF_REFERENCE_FUNCTION wpcreat(int32 origin, int32 offset, int dyn_type);	/* Precompiled creation procedure call */
 RT_LNK void wexp(int static_type, int32 feature_id, int dyn_type, EIF_REFERENCE object);						/* Creation call for expanded types */
 RT_LNK void wpexp(int32 origin, int32 offset, int dyn_type, EIF_REFERENCE object);			/* Creation call for precomp expanded types */
 RT_LNK EIF_REFERENCE_FUNCTION wdisp(EIF_TYPE_INDEX dyn_type); /* Feature call for dispose routine */ 

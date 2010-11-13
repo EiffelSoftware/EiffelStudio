@@ -59,6 +59,8 @@ doc:<file name="wbench.c" header="eif_wbench.h" version="$Id$" summary="Workbenc
  * `wpfeat (origin, offset, dyn_type)'
  * `wfeat_inv (static_type, feature_id, name, object)'
  * `wpfeat_inv (origin, offset, name, object)'
+ * `wcreat (static_type, feature_id, dyn_type)'
+ * `wpcreat (origin, offset, dyn_type)'
  * `wattr (static_type, feature_id, dyn_type)'
  * `wpattr (origin, offset, dyn_type)'
  * `wattr_inv (static_type, feature_id, name, object)'
@@ -172,6 +174,50 @@ rt_public EIF_REFERENCE_FUNCTION wpfeat_inv(int32 origin, int32 offset, char *na
 		return egc_frozen[body_id];
 	else {
 		IC = melt[body_id];	
+		return pattern[MPatId(body_id)].toi;
+	}
+}
+
+rt_public EIF_REFERENCE_FUNCTION wcreat(int static_type, int32 feature_id, int dyn_type)
+{
+	/* Function pointer associated to Eiffel feature of feature id
+	 * `feature_id' accessed in Eiffel static type `static_type' to
+	 * apply on an object of dynamic type `dyn_type'.
+	 * Return a function pointer.
+	 */
+	EIF_GET_CONTEXT
+	int32 rout_id;
+	BODY_INDEX body_id;
+
+	nstcall = -1; /* Invariant check at the end */
+	rout_id = Routids(static_type)[feature_id]; /* Get the routine id */
+	CBodyId(body_id,rout_id,dyn_type);		/* Get the body index */
+
+	if (egc_frozen [body_id])
+		return egc_frozen[body_id];			 /* Frozen feature */
+	else {
+		IC = melt[body_id];				 /* Position byte code to interpret */
+		return pattern[MPatId(body_id)].toi;
+	}
+}
+
+rt_public EIF_REFERENCE_FUNCTION wpcreat(int32 origin, int32 offset, int dyn_type)
+{
+	/* Function pointer associated to Eiffel feature of origin class
+	 * `origin', identified by `offset' in that class, and to
+	 * apply on an object of dynamic type `dyn_type'.
+	 * Return a function pointer.
+	 */
+	EIF_GET_CONTEXT
+	BODY_INDEX body_id;
+
+	nstcall = -1; /* Invariant check at the end */
+	body_id = desc_tab[origin][dyn_type][offset].body_index;
+
+	if (egc_frozen [body_id])
+		return egc_frozen[body_id];			 /* Frozen feature */
+	else {
+		IC = melt[body_id];				 /* Position byte code to interpret */
 		return pattern[MPatId(body_id)].toi;
 	}
 }

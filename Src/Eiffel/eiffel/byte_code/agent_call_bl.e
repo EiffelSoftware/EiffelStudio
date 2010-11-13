@@ -27,8 +27,8 @@ inherit
 			set_register,
 			register,
 			set_parent,
-			need_invariant,
-			set_need_invariant
+			call_kind,
+			set_call_kind
 		redefine
 			generate_on,
 			enlarged

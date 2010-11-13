@@ -1232,13 +1232,13 @@ end
 	generate_invariant_before
 			-- Generate invariant check at the entry of the routine.
 		do
-			generate_invariant ("RTIV2")
+			generate_invariant ("RTIV")
 		end
 
 	generate_invariant_after
 			-- Generate invariant check at the end of the routine.
 		do
-			generate_invariant ("RTVI2")
+			generate_invariant ("RTVI")
 		end
 
 	generate_invariant (tag: STRING)

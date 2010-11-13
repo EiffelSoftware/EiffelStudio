@@ -15,7 +15,7 @@ inherit
 			register, analyze_on, set_register,
 			is_feature_call, generate_special_feature, set_parent,
 			generate_parameters_list, generate_access_on_type,
-			need_invariant, set_need_invariant
+			call_kind, set_call_kind
 		redefine
 			parent, is_feature_special, generate_end,
 			generate_metamorphose_end, analyze

@@ -244,8 +244,6 @@ feature {NONE} -- Visitors
 				l_class_type_not_void: l_special_class_type /= Void
 			end
 			l_special_class_type.make_creation_byte_code (ba)
-				-- Even if we do not need to, we have to check the invariant as the interpreter expects it.
-			ba.append (Bc_create_inv)
 
 				-- We compute the expressions and store them into the special
 			from
@@ -749,9 +747,6 @@ feature {NONE} -- Visitors
 						l_call.set_parent (Void)
 					end
 				end
-					-- Runtime is in charge to make sure that newly created object
-					-- has been duplicated so that we can check the invariant.
-				ba.append (Bc_create_inv)
 			end
 		end
 
@@ -2045,10 +2040,6 @@ feature {NONE} -- Visitors
 			else
 				ba.append_boolean (False)
 			end
-
-				-- Runtime is in charge to make sure that newly created object
-				-- has been duplicated so that we can check the invariant.
-			ba.append (bc_create_inv)
 		end
 
 	process_typed_interval_b (a_node: TYPED_INTERVAL_B [INTERVAL_VAL_B])
@@ -2383,10 +2374,10 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	make_call_access_b (a_node: CALL_ACCESS_B; code_first, code_next, precomp_code_first, precomp_code_next: CHARACTER; flag: BOOLEAN)
+	make_call_access_b (a_node: CALL_ACCESS_B; code_first, code_next, precomp_code_first, precomp_code_next: CHARACTER; is_creation: BOOLEAN)
 			-- Generate call to EXTERNAL_B/FEATURE_B.
-			-- Generate byte code for a feature call. If not `flag', generate
-			-- an invariant check before the call.
+			-- Generate byte code for a feature call.
+			-- `is_creation' indicates if this is a call to a creation procedure.
 			-- if `meta', metamorphose the feature call.
 			-- Doesn't process the parameters
 		require
@@ -2424,7 +2415,9 @@ feature {NONE} -- Implementation
 					if l_associated_class.is_precompiled then
 						r_id := l_feat_tbl.item_id (a_node.feature_name_id).rout_id_set.first
 						l_rout_info := System.rout_info_table.item (r_id)
-						if a_node.is_first or flag then
+						if is_creation then
+							ba.append (bc_pcreation)
+						elseif a_node.is_first then
 							ba.append (precomp_code_first)
 						else
 							ba.append (precomp_code_next)
@@ -2434,7 +2427,9 @@ feature {NONE} -- Implementation
 						ba.append_integer (l_rout_info.offset)
 						make_precursor_byte_code (a_node)
 					else
-						if a_node.is_first or flag then
+						if is_creation then
+							ba.append (bc_creation)
+						elseif a_node.is_first then
 							ba.append (code_first)
 						else
 							ba.append (code_next)
@@ -2461,7 +2456,9 @@ feature {NONE} -- Implementation
 				if l_associated_class.is_precompiled then
 					r_id := a_node.routine_id
 					l_rout_info := System.rout_info_table.item (r_id)
-					if a_node.is_first or flag then
+					if is_creation then
+						ba.append (bc_pcreation)
+					elseif a_node.is_first then
 						ba.append (precomp_code_first)
 					else
 						ba.append (precomp_code_next)
@@ -2471,7 +2468,9 @@ feature {NONE} -- Implementation
 					ba.append_integer (l_rout_info.offset)
 					make_precursor_byte_code (a_node)
 				else
-					if a_node.is_first or flag then
+					if is_creation then
+						ba.append (bc_creation)
+					elseif a_node.is_first then
 						ba.append (code_first)
 					else
 						ba.append (code_next)

@@ -155,7 +155,7 @@ feature -- Routines for externals
 			-- Set `is_static_call' to `True'.
 		do
 			is_static_call := True
-			set_need_invariant (False)
+			set_call_kind (call_kind_unqualified)
 		ensure
 			is_static_call_set: is_static_call
 		end

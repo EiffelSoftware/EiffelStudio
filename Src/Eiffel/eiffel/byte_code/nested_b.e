@@ -10,7 +10,7 @@ inherit
 	CALL_B
 		redefine
 			enlarged,
-			need_invariant, set_need_invariant,
+			call_kind, set_call_kind,
 			is_unsafe, calls_special_features, optimized_byte_node,
 			is_special_feature, size, pre_inlined_code,
 			inlined_byte_code, need_target, has_call, allocates_memory
@@ -81,20 +81,24 @@ feature -- Access
 	sub_enlarged (p: NESTED_BL): NESTED_BL
 			-- Enlarge node and set parent to `p'
 		do
-			create Result;
-			Result.set_parent (p);
-			Result.set_target (target.sub_enlarged (Result));
-			Result.set_message (message.sub_enlarged (Result));
-		end;
+			create Result
+			Result.set_parent (p)
+			Result.set_target (target.sub_enlarged (Result))
+			Result.set_message (message.sub_enlarged (Result))
+		end
 
-	need_invariant: BOOLEAN
-		do
-			Result := message.need_invariant
-		end;
+feature {CALL_B} -- C code generation: kind of a call
 
-	set_need_invariant (b: BOOLEAN)
+	call_kind: INTEGER
+			-- <Precursor>
 		do
-			message.set_need_invariant (b)
+			Result := message.call_kind
+		end
+
+	set_call_kind (value: like call_kind)
+			-- <Precursor>
+		do
+			message.set_call_kind (value)
 		end
 
 feature -- Status report

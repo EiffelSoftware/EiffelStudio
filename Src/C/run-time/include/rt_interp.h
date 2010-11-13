@@ -179,7 +179,7 @@ extern struct opstack op_stack;               /* Operational stack */
 #define BC_CAST_REAL_32    	111
 #define BC_CAST_REAL_64  	112
 #define BC_INV_NULL  		113
-#define BC_CREAT_INV		114
+#define BC_NOTUSED_114		114
 #define BC_END_EVAL_OLD		115
 #define BC_START_EVAL_OLD	116
 #define BC_OBJECT_ADDR		117
@@ -275,8 +275,8 @@ extern struct opstack op_stack;               /* Operational stack */
 #define BC_QLIKE			(unsigned char) 161
 #define BC_PQLIKE			(unsigned char) 162
 #define BC_GUARD			(unsigned char) 163
-#define BC_NOTUSED_164		(unsigned char) 164
-#define BC_NOTUSED_165		(unsigned char) 165
+#define BC_CREATION		(unsigned char) 164
+#define BC_PCREATION		(unsigned char) 165
 #define BC_NOTUSED_166		(unsigned char) 166
 #define BC_NOTUSED_167		(unsigned char) 167
 

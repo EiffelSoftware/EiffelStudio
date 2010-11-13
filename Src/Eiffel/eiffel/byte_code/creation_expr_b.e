@@ -76,7 +76,9 @@ feature -- C code generation
 						-- 3 - if we cannot get the type of the creation, we do it the normal way.
 						-- 4 - if empty and it is {SPECIAL}.make we do the normal way.
 					l_type := info.type_to_create
-					if l_type = Void then
+					if l_type = Void or else not l_type.has_associated_class or else l_type.associated_class.assertion_level.is_invariant then
+							-- Type is not fixed or class invariant should be checked.
+							-- The latter is done inside the creation procedure.
 						Result.set_call (call.enlarged_on (context.real_type (type)))
 					elseif not l_type.associated_class.feature_of_rout_id (call.routine_id).is_empty then
 						Result.set_call (call.enlarged_on (context.real_type (type)))
@@ -114,7 +116,7 @@ feature -- Analyze
 					else
 						l_call.set_parent (nested_b)
 						l_call.set_register (register)
-						l_call.set_need_invariant (False)
+						l_call.set_call_kind (call_kind_creation)
 						l_call.analyze_on (register)
 						l_call.set_parent (Void)
 					end
@@ -365,26 +367,15 @@ feature -- Generation
 				buf.put_two_character (')', ';')
 			end
 
-			if l_generate_call then
-				if attached call as c then
-					c.set_parent (nested_b)
-					if not l_is_make_filled then
-						c.generate_parameters (register)
-					end
-						-- Call a creation procedure
-					c.generate_call (separate_register, attached separate_register, Void, register)
-					c.set_parent (Void)
-					generate_frozen_debugger_hook_nested
+			if l_generate_call and then attached call as c then
+				c.set_parent (nested_b)
+				if not l_is_make_filled then
+					c.generate_parameters (register)
 				end
-				if
-					context.workbench_mode
-					or else context.system.keep_assertions
-				then
-					buf.put_new_line
-					buf.put_string ("RTCI2(")
-					register.print_register
-					buf.put_two_character (')', ';')
-				end
+					-- Call a creation procedure
+				c.generate_call (separate_register, attached separate_register, Void, register)
+				c.set_parent (Void)
+				generate_frozen_debugger_hook_nested
 			end
 		end
 

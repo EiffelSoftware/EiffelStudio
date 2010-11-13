@@ -417,6 +417,7 @@ feature {NONE} -- C code generation
 			buf: GENERATION_BUFFER
 			cl_type_i: CL_TYPE_A
 			l_type: TYPE_A
+			macro: TUPLE [normal, precompiled: STRING]
 		do
 			is_nested := not is_first
 			buf := buffer
@@ -434,15 +435,23 @@ feature {NONE} -- C code generation
 			else
 				cl_type_i := c
 			end
+			if is_nested then
+				inspect call_kind
+				when call_kind_creation then
+					macro := m.creation_call
+				when call_kind_qualified then
+					macro := m.qualified_call
+				else
+					macro := m.unqualified_call
+				end
+			else
+				macro := m.unqualified_call
+			end
 			if compilation_modes.is_precompiling or else
 				cl_type_i.associated_class.is_precompiled
 			then
 					-- Call to a precompiled routine.
-				if is_nested and need_invariant then
-					buf.put_string (m.precompiled_with_invariant)
-				else
-					buf.put_string (m.precompiled)
-				end
+				buf.put_string (macro.precompiled)
 				buf.put_character ('(')
 				rout_info := System.rout_info_table.item (routine_id)
 				buf.put_class_id (rout_info.origin)
@@ -450,11 +459,7 @@ feature {NONE} -- C code generation
 				buf.put_integer (rout_info.offset)
 			else
 					-- Call to a non-precompiled routine.
-				if is_nested and need_invariant then
-					buf.put_string (m.routine_with_invariant)
-				else
-					buf.put_string (m.routine)
-				end
+				buf.put_string (macro.normal)
 				buf.put_character ('(')
 				buf.put_static_type_id (cl_type_i.static_type_id (Context.context_class_type.type))
 				buf.put_two_character (',', ' ')
@@ -469,7 +474,9 @@ feature {NONE} -- C code generation
 				else
 					context.generate_current_dtype
 				end
-			elseif need_invariant then
+			elseif call_kind = call_kind_qualified then
+					-- Feature name is used to report a call on a void target.
+					-- This cannot happen with unqualified call or a creation procedure call.
 				buf.put_string_literal (feature_name)
 				buf.put_two_character (',', ' ')
 				t.print_register
@@ -492,14 +499,14 @@ feature {NONE} -- C code generation
 			buf.put_character (')')
 		end
 
-	routine_macro: TUPLE [routine, routine_with_invariant, precompiled, precompiled_with_invariant: STRING]
+	routine_macro: TUPLE [unqualified_call, qualified_call, creation_call: TUPLE [normal, precompiled: STRING]]
 			-- Macros that compute address of a routine to be called.
-			-- `Result.routine' denotes a call to a non-precompiled feature without invariant check.
-			-- `Result.routine_with_invariant' denotes a call to a non-precompiled feature with invariant check.
-			-- `Result.precompiled' denotes a call to a precompiled feature without invariant check.
-			-- `Result.precompiled_with_invariant' denotes a call to a precompiled feature with invariant check.
+			-- `Result.unqualified_call' denotes an unqualified call.
+			-- `Result.qualified_call' denotes a qualified call.
+			-- `Result.creation_call' denotes a call to a creation procedure.
+			-- `normal' denotes a call to a non-precompiled feature, `precompiled' - to a precompiled one.
 		once
-			Result := ["RTWF", "RTVF", "RTWPF", "RTVPF"]
+			Result := [["RTWF", "RTWPF"], ["RTVF", "RTVPF"], ["RTWC", "RTWPC"]]
 		end
 
 feature {NONE} -- Debug

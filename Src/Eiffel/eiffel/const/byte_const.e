@@ -127,7 +127,7 @@ feature -- Access
 	Bc_cast_real32:		CHARACTER = '%/111/';
 	Bc_cast_real64:		CHARACTER = '%/112/';
 	Bc_inv_null:		CHARACTER = '%/113/';
-	Bc_create_inv:		CHARACTER = '%/114/';
+	Bc_notused_114:		CHARACTER = '%/114/';
 	Bc_end_eval_old:	CHARACTER = '%/115/';
 	Bc_start_eval_old:	CHARACTER = '%/116/';
 	Bc_object_addr:		CHARACTER = '%/117/';
@@ -235,10 +235,14 @@ feature -- Access
 	Bc_qlike:			CHARACTER = '%/161/';
 	Bc_pqlike:			CHARACTER = '%/162/';
 
-		-- Unused opcode
+		-- Check instruction that is always turned on
 	Bc_guard:			CHARACTER = '%/163/';
-	Bc_notused_164:		CHARACTER = '%/164/';
-	Bc_notused_165:		CHARACTER = '%/165/';
+
+		-- Call to creation procedure
+	Bc_creation:		CHARACTER = '%/164/';
+	Bc_pcreation:		CHARACTER = '%/165/';
+
+		-- Unused opcode
 	Bc_notused_166:		CHARACTER = '%/166/';
 	Bc_notused_167:		CHARACTER = '%/167/';
 

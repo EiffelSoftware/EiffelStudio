@@ -160,7 +160,7 @@ static  char    *names [] = {
 "BC_CAST_REAL_32" ,
 "BC_CAST_REAL_64" ,
 "BC_INV_NULL" ,
-"BC_CREAT_INV" ,
+"BC_NOTUSED_114" ,
 "BC_END_EVAL_OLD" ,
 "BC_START_EVAL_OLD" ,
 "BC_OBJECT_ADDR" ,
@@ -209,9 +209,9 @@ static  char    *names [] = {
 "BC_SPECIAL_EXTEND" ,
 "BC_QLIKE" ,
 "BC_PQLIKE" ,
-"BC_NOTUSED_163" ,
-"BC_NOTUSED_164" ,
-"BC_NOTUSED_165" ,
+"BC_GUARD" ,
+"BC_CREATION" ,
+"BC_PCREATION" ,
 "BC_NOTUSED_166" ,
 "BC_NOTUSED_167" ,
 "BC_TUPLE",
@@ -679,8 +679,6 @@ static  void    print_instructions (void)
 				/* If not enabled jump to 'offset' */
 				fprintf (ofp,"offset %d", get_int32(&ip));
 				break;
-			case  BC_CREAT_INV :
-				break;
 			case  BC_PRECOND :
 				/* If not enabled jump to 'offset' */
 				fprintf (ofp,"offset %d", get_int32(&ip));
@@ -974,6 +972,7 @@ static  void    print_instructions (void)
 				(void) get_int16(&ip);
 				break;
 			case  BC_FEATURE :
+			case  BC_CREATION :
 				/* Routine */
 				/* Feature id */
 				fprintf (ofp,"fid %d ", get_int32(&ip));
@@ -984,6 +983,7 @@ static  void    print_instructions (void)
 
 				break;
 			case  BC_PFEATURE :
+			case  BC_PCREATION :
 				/* Routine precompiled */
 				/* Org. id */
 				fprintf (ofp,"oid %d ", get_int32(&ip));

@@ -1,7 +1,9 @@
 note
+	description: "Enlarged access to an Eiffel feature"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
--- Enlarged access to an Eiffel feature
+	date: "$Date$"
+	revision: "$Revision$"
 
 class FEATURE_BL
 
@@ -15,7 +17,7 @@ inherit
 			generate_access_on_type, is_polymorphic,
 			set_register, register, set_parent, parent, generate_access,
 			generate_on, analyze_on, analyze,
-			generate_end, set_need_invariant, need_invariant
+			generate_end, set_call_kind, call_kind
 		end
 
 	SHARED_DECLARATIONS
@@ -33,7 +35,7 @@ feature {NONE} --Initialisation
 	fill_from (f: FEATURE_B)
 			-- Fill in node with feature `f'
 		do
-			need_invariant := True
+			call_kind := call_kind_qualified
 			feature_name_id := f.feature_name_id
 			feature_id := f.feature_id
 			type := f.type
@@ -83,14 +85,18 @@ feature
 			end
 		end
 
-	need_invariant: BOOLEAN;
-			-- Does the call need an invariant check ?
+feature {CALL_B} -- C code generation: kind of a call
 
-	set_need_invariant (b: BOOLEAN)
-			-- Assign `b' to `need_invariant'.
+	call_kind: INTEGER
+			-- <Precursor>
+
+	set_call_kind (value: like call_kind)
+			-- <Precursor>
 		do
-			need_invariant := b
-		end;
+			call_kind := value
+		end
+
+feature -- C code generation
 
 	analyze
 			-- Build a proper context for code generation.
@@ -371,8 +377,10 @@ end
 				end
 
 				if l_keep then
-					if is_nested and then need_invariant then
-						buf.put_string ("nstcall = 1, ")
+					if is_nested or else call_kind = call_kind_creation then
+						buf.put_string ("nstcall = ")
+						buf.put_integer (call_kind)
+						buf.put_two_character (',', ' ')
 					else
 						buf.put_string ("nstcall = 0, ")
 					end
@@ -443,8 +451,10 @@ end
 				end
 				if l_keep then
 					buf.put_character ('(')
-					if is_nested and then need_invariant then
-						buf.put_string ("nstcall = 1, ")
+					if is_nested or else call_kind = call_kind_creation then
+						buf.put_string ("nstcall = ")
+						buf.put_integer (call_kind)
+						buf.put_two_character (',', ' ')
 					else
 						buf.put_string ("nstcall = 0, ")
 					end

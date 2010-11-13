@@ -1288,34 +1288,23 @@ RT_LNK void eif_exit_eiffel_code(void);
 #define RTEO(x)			((x) - RTOF(x))
 
 
-/* Old Macros for invariant check.
- *  RTIV(x,y) checks invariant before call on object 'x' if good flags 'y'
- *  RTVI(x,y) checks invariant after call on object 'x' if good flags 'y'
- *  RTCI(x) checks invariant after creation call on object 'x'
- */
-#ifdef WORKBENCH
-#define RTIV(x,y)		if (is_nested && ((y) & CK_INVARIANT)) chkinv(MTC x,0)
-#define RTVI(x,y)		if (is_nested && ((y) & CK_INVARIANT)) chkinv(MTC x,1)
-#define RTCI(x)			chkcinv(MTC x)
-#else
-#define RTIV(x)			if (~in_assertion && is_nested) chkinv(MTC x,0)
-#define RTVI(x)			if (~in_assertion && is_nested) chkinv(MTC x,1)
-#define RTCI(x)			if (~in_assertion) chkinv(MTC x,1)
-#endif
-
-/* New Macros for invariant check.
+/* Macros for invariant check.
  *  RTSN saves global variable 'nstcall' within C stack
  *  RTIV(x,y) checks invariant before call on object 'x' if good flags 'y'
  *  RTVI(x,y) checks invariant after call on object 'x' if good flags 'y'
  *  RTCI(x) checks invariant after creation call on object 'x'
  */
-#define RTSN int EIF_VOLATILE is_nested = nstcall
+#define RTSN		int EIF_VOLATILE is_nested = nstcall
+#define RTIV(x,y)	if ((is_nested  > 0) && ((y) & CK_INVARIANT)) chkinv(MTC x,0)
+#define RTVI(x,y)	if ((is_nested != 0) && ((y) & CK_INVARIANT)) chkinv(MTC x,1)
+
+/* To be removed */
 #define RTIV2(x,y)		if (is_nested && ((y) & CK_INVARIANT)) chkinv(MTC x,0)
 #define RTVI2(x,y)		if (is_nested && ((y) & CK_INVARIANT)) chkinv(MTC x,1)
 #define RTCI2(x)			chkcinv(MTC x)
 
 #ifndef EIF_THREADS
-	RT_LNK int16 caller_assertion_level;	/*Saves information about the assertionlevel of the caller*/
+	RT_LNK int16 caller_assertion_level;	/*Saves information about the assertion level of the caller*/
 #endif
 
 
@@ -1342,7 +1331,7 @@ RT_LNK void eif_exit_eiffel_code(void);
 #define RTME(x,y)	check_options_start(opt, x, y)
 #endif
 
- /*
+/*
  * Macros for SCOOP 
  */
 
@@ -1490,6 +1479,8 @@ RT_LNK void eif_exit_eiffel_code(void);
  *  RTWPF(x,y,z) is a precompiled feature call
  *  RTVF(x,y,z,t) is a nested feature call (dot expression)
  *  RTVPF(x,y,z,t) is a nested precompiled feature call (dot expression)
+ *  RTWC(x,y,z) is a creation procedure call
+ *  RTWPC(x,y,z) is a precompiled creation procedure call
  *  RTWA(x,y,z) is the access to an attribute
  *  RTWPA(x,y,z) is the access to a precompiled attribute
  *  RTVA(x,y,z,t) is a nested access to an attribute (dot expression)
@@ -1507,6 +1498,8 @@ RT_LNK void eif_exit_eiffel_code(void);
 #define RTWPF(x,y,z)		wpfeat(x,y,z)
 #define RTVF(x,y,z,t)		wfeat_inv(x,y,z,t)
 #define RTVPF(x,y,z,t)		wpfeat_inv(x,y,z,t)
+#define RTWC(x,y,z)		wcreat(x,y,z)
+#define RTWPC(x,y,z)		wpcreat(x,y,z)
 #define RTWA(x,y,z)			wattr(x,y,z)
 #define RTWPA(x,y,z)		wpattr(x,y,z)
 #define RTVA(x,y,z,t)		wattr_inv(x,y,z,t)

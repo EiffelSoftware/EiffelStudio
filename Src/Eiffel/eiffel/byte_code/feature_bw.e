@@ -118,19 +118,20 @@ feature -- C code generation
 
 feature {NONE} -- Separate call
 
-	separate_function_macro: TUPLE [routine, routine_with_invariant, precompiled, precompiled_with_invariant: STRING]
+	separate_function_macro: TUPLE [unqualified_call, qualified_call, creation_call: TUPLE [normal, precompiled: STRING]]
 			-- Name of a macro to make a call to a function depending on the kind of a call:
 			-- See `routine_macro' for details.
 		once
-			Result := ["RTS_CF", "RTS_CF", "RTS_CFP", "RTS_CFP"]
+				-- There are no unqualified separate calls as well as creation function calls.
+			Result := [["ERROR", "ERROR"], ["RTS_CF", "RTS_CFP"], ["ERROR", "ERROR"]]
 		end
 
-	separate_procedure_macro: TUPLE [routine, routine_with_invariant, precompiled, precompiled_with_invariant: STRING]
+	separate_procedure_macro: TUPLE [unqualified_call, qualified_call, creation_call: TUPLE [normal, precompiled: STRING]]
 			-- Name of a macro to make a call to a procedure depending on the kind of a call.
 			-- See `routine_macro' for details.
 		once
-				-- Procedure call without an invariant check is a creation procedure call.
-			Result := ["RTS_CC", "RTS_CP", "RTS_CCP", "RTS_CPP"]
+				-- There are no unqualified separate calls.
+			Result := [["ERROR", "ERROR"], ["RTS_CP", "RTS_CPP"], ["RTS_CC", "RTS_CCP"]]
 		end
 
 	generate_separate_call (s: detachable REGISTER; r: detachable REGISTRABLE; t: REGISTRABLE)

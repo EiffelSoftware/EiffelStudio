@@ -789,8 +789,8 @@ rt_private void interpret(int flag, int where)
 			SAVE(op_stack, scur, stop);
 			interp_check_options_start(eoption + icur_dtype, icur_dtype, scur, stop);
 			dostk();					/* Record position in calling context */
-			if (is_nested)
-				icheck_inv(MTC icurrent->it_ref, scur, stop, 0);	/* Invariant */
+			if (is_nested > 0)
+				icheck_inv(MTC icurrent->it_ref, scur, stop, 0);	/* Invariant before feature application */
 
 #ifdef DEBUG
 			dprintf(1)("\tFeature %s written in %s on 0x%lx [%s]\n",
@@ -2087,16 +2087,6 @@ rt_private void interpret(int flag, int where)
 		break;
 
 	/*
-	 * Invariant checking after creation
-	 */
-	case BC_CREAT_INV:
-#ifdef DEBUG
-		dprintf(2)("BC_CREAT_INV\n");
-#endif
-		icheck_inv(MTC opop()->it_ref, scur, stop, 1);    /* Invariant */
-		break;
-
-	/*
 	 * Routine object creation instruction.
 	 */
 	case BC_RCREATE:
@@ -2209,7 +2199,6 @@ rt_private void interpret(int flag, int where)
 			last = iget();				/* Push a new value onto the stack */
 			last->type = SK_REF;
 			last->it_ref = new_obj;		/* Now it's safe for GC to see it */
-			opush (last);				/* We need to push object on stack to check invariants */
 			if (need_push == (char) 1)
 				opush (last);			/* If there is a creation procedure, we need to push
 										   object on stack to call creation procedure */
@@ -2292,7 +2281,6 @@ rt_private void interpret(int flag, int where)
 			last = iget();				/* Push a new value onto the stack */
 			last->type = SK_REF;
 			last->it_ref = new_obj;		/* Now it's safe for GC to see it */
-			opush (last);				/* We need to push object on stack to check invariants */
 
 			if (is_make_filled) {
 					/* Prepare the call to `make_filled'. By pushing the computed arguments starting
@@ -2468,6 +2456,32 @@ rt_private void interpret(int flag, int where)
 				sync_registers(MTC scur, stop);
 			break;
 		}
+	/*
+	 * Calling a creation procedure.
+	 */
+	case BC_CREATION:
+		offset = get_int32(&IC);				/* Get the feature id */
+		code = get_int16(&IC);					/* Get the static type */
+		nstcall = -1;						/* Invariant check is performed at the end */
+		if (icall(MTC (int)offset, code, GET_PTYPE))
+			sync_registers(MTC scur, stop);
+		break;
+
+	/*
+	 * Calling a precompiled creation procedure.
+	 */
+	case BC_PCREATION:
+		{
+			int32 origin, offset;
+
+			origin = get_int32(&IC);			/* Get the origin class id */
+			offset = get_int32(&IC);			/* Get the offset in origin */
+			nstcall = -1;					/* Invariant check is performed at the end */
+			if (ipcall(MTC origin, offset, GET_PTYPE))
+				sync_registers(MTC scur, stop);
+			break;
+		}
+
 
 	/*
 	 * Access to an attribute.
@@ -3787,8 +3801,8 @@ rt_private void interpret(int flag, int where)
 		dprintf(2)("BC_NULL\n");
 #endif
 		caller_assertion_level = saved_caller_assertion_level;
-		if (is_nested)		/* Nested feature call (dot notation) */
-			icheck_inv(MTC icurrent->it_ref, scur, stop, 1);	/* Invariant */
+		if (is_nested != 0)		/* Nested feature call (dot notation) */
+			icheck_inv(MTC icurrent->it_ref, scur, stop, 1);	/* Invariant after feature application */
 
 		CHECK("exvect not null", exvect);
 		RTDBGLE;

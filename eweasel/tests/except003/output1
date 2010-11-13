@@ -1,5 +1,5 @@
 True
-make
-APPLICATION
+default_create
+ANY
 
 Execution completed

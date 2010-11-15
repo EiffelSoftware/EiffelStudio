@@ -130,6 +130,10 @@ feature -- Adaptation
 feature -- Object relative once
 
 	prepare_object_relative_once (a_byte_code: BYTE_CODE)
+			-- <Precursor>
+			--| Warning: the code relies on the presence of
+			--|      ISE_EXCEPTION_MANAGER.default_create
+			--| and  ISE_EXCEPTION_MANAGER.once_raise (an_exception: EXCEPTION)
 		local
 			l_rescue: DO_RESCUE_B
 			l_hidden_if_called_b: HIDDEN_IF_B

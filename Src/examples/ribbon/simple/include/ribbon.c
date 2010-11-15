@@ -1,4 +1,5 @@
 #include "common.h"
+#include "command.c"
 
 HRESULT STDMETHODCALLTYPE QueryInterface(IUIApplication *This, REFIID vtblID, void **ppv);
 ULONG STDMETHODCALLTYPE AddRef(IUIApplication *This);
@@ -21,6 +22,7 @@ IUIApplicationVtbl myRibbon_Vtbl = {QueryInterface,
 
 LONG OutstandingObjects = 0;
 IUIFramework *g_pFramework = NULL;  // Reference to the Ribbon framework.
+IUICommandHandler	*pCommandHandler = NULL;
 
 HRESULT STDMETHODCALLTYPE QueryInterface(IUIApplication *This, REFIID vtblID, void **ppv)
 {
@@ -56,7 +58,28 @@ HRESULT STDMETHODCALLTYPE OnViewChanged(IUIApplication *This, UINT32 viewId, UI_
 
 HRESULT STDMETHODCALLTYPE OnCreateUICommand(IUIApplication *This, UINT32 commandId, UI_COMMANDTYPE typeID, IUICommandHandler **commandHandler)
 { 
-	return E_NOTIMPL; 
+
+	HRESULT	hr;
+
+	if (NULL == pCommandHandler)
+	{
+		/* allocate pApplication */
+		pCommandHandler = (IUICommandHandler *)GlobalAlloc(GMEM_FIXED, sizeof(IUICommandHandler));
+		if(!pCommandHandler) {
+			return(FALSE);
+		}
+
+		/*	
+		Point our pApplication to myCommand_Vtbl that contains standard IUnknown method (QueryInterface, AddRef, Release)
+		and callback for our IUICommandHandler interface (Execute, UpdateProperty).
+		*/
+		(IUICommandHandlerVtbl *)pCommandHandler->lpVtbl = &myCommand_Vtbl;				
+
+	}
+
+	hr = pCommandHandler->lpVtbl->QueryInterface(pCommandHandler, &IID_IUICommandHandler, commandHandler);		
+	
+	return hr; 
 }
 
 HRESULT STDMETHODCALLTYPE OnDestroyUICommand (IUIApplication *This, UINT32 commandId,  UI_COMMANDTYPE typeID, IUICommandHandler *commandHandler) 
@@ -64,10 +87,9 @@ HRESULT STDMETHODCALLTYPE OnDestroyUICommand (IUIApplication *This, UINT32 comma
 	return E_NOTIMPL; 
 }
 
-
 BOOL InitializeFramework(HWND hWnd)
 {
-	HRESULT			hr;
+	HRESULT hr;
 
 	hr = CoCreateInstance(&CLSID_UIRibbonFramework, NULL, CLSCTX_INPROC_SERVER, &IID_IUIFRAMEWORK, (VOID **)&g_pFramework);
 	if (FAILED(hr)) {

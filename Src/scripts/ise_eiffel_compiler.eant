@@ -173,6 +173,7 @@
 			<argument name="a_batch" value="$force_batch" />
 			<argument name="a_use_settings" value="$use_settings" />
 			<argument name="a_gui" value="$force_gui" />
+			<argument name="a_keep_assertion" value="$keep_assertion" />
 		</geant>
 	</target>
 	<target name="precompile" depend="init">
@@ -196,6 +197,7 @@
 			<argument name="a_batch" value="$force_batch" />
 			<argument name="a_use_settings" value="$use_settings" />
 			<argument name="a_gui" value="$force_gui" />
+			<argument name="a_keep_assertion" value="$keep_assertion" />
 		</geant>
 	</target>
 

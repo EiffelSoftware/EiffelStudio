@@ -142,7 +142,7 @@ feature {NONE} -- Agents
 		local
 			l_root: CONF_ROOT
 			l_cluster, l_class: STRING
-			l_feature: STRING_32
+			l_feature: STRING
 			l_checker: EIFFEL_SYNTAX_CHECKER
 		do
 			if all_classes.is_selected then
@@ -150,7 +150,10 @@ feature {NONE} -- Agents
 			else
 				l_cluster := cluster_name.text.to_string_8
 				l_class := class_name.text.to_string_8
-				l_feature := feature_name.text
+				if attached feature_name.text as l_f then
+						-- |FIXME: Unicode support
+					l_feature := l_f.as_string_8
+				end
 
 					-- Check validity of l_cluster, l_class and l_feature.
 				create l_checker
@@ -168,8 +171,7 @@ feature {NONE} -- Agents
 						l_feature := Void
 					end
 					if not l_class.is_empty then
-							-- |FIXME: Unicode support
-						create l_root.make (l_cluster, l_class, l_feature.as_string_8, False)
+						create l_root.make (l_cluster, l_class, l_feature, False)
 					elseif l_cluster /= Void or l_feature /= Void then
 						prompts.show_error_prompt (conf_interface_names.root_no_class, Current, Void)
 					elseif target.child_targets.is_empty then

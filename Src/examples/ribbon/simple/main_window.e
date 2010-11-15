@@ -28,6 +28,7 @@ feature {NONE} -- Initialization
 		local
 			l_result: INTEGER
 		do
+			print ("%N start test")
 			set_size (800, 400)
 
 			-- !!! Attach Ribbon by COM here !!!
@@ -73,7 +74,7 @@ feature {NONE} -- Externals
 			}
 			]"
 		end
-		
+
 	com_uninitialize
 			-- Clean up COM resources
 		external
@@ -81,7 +82,7 @@ feature {NONE} -- Externals
 		alias
 			"[
 			{
-				CoUninitialize();			
+				CoUninitialize();
 			}
 			]"
 		end

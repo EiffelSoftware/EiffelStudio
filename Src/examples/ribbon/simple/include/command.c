@@ -1,4 +1,5 @@
 #include "common.h"
+#include "eiffel_ribbon.h"
 
 HRESULT STDMETHODCALLTYPE QueryInterface2(IUICommandHandler *This, REFIID vtblID, void **ppv);
 ULONG STDMETHODCALLTYPE AddRef2(IUICommandHandler *This);
@@ -50,15 +51,42 @@ ULONG STDMETHODCALLTYPE Release2(IUICommandHandler *This)
 
 HRESULT STDMETHODCALLTYPE UpdateProperty(IUICommandHandler *This, UINT nCmdID, REFPROPERTYKEY key, const PROPVARIANT* ppropvarCurrentValue,PROPVARIANT* ppropvarNewValue)
 {
-	printf ("\n IUICommandHandler UpdateProperty in C. Command ID is %d. ", nCmdID);
+/* 	Eiffel function for Ribbon UICommandHandler update property
+		Eiffel function call need first parameter as EIF_REFERENCE. */
 
-	return S_OK;
+	if (eiffel_command_handler_object) {
+			return (EIF_NATURAL_32) ((eiffel_update_property_function) (
+	#ifndef EIF_IL_DLL
+				(EIF_REFERENCE) eif_access (eiffel_command_handler_object),
+	#endif
+				(EIF_NATURAL_32) nCmdID,
+				(EIF_POINTER) key,
+				(EIF_POINTER) ppropvarCurrentValue,
+				(EIF_POINTER) ppropvarNewValue));
+		} else {
+			return 0;
+		}  
+	
+	//return S_OK;
 }
 
 HRESULT STDMETHODCALLTYPE Execute(IUICommandHandler *This, UINT nCmdID, UI_EXECUTIONVERB verb, const PROPERTYKEY* key, const PROPVARIANT* ppropvarValue, IUISimplePropertySet* pCommandExecutionProperties)
 {
-	
-	printf ("\n IUICommandHandler Execute in C. Command ID is %d. UI_EXECUTIONVERB is %d.", nCmdID, verb);
-	
-	return S_OK;
+	/* 	Eiffel function for Ribbon UICommandHandler execute
+		Eiffel function call need first parameter as EIF_REFERENCE. */	
+	if (eiffel_command_handler_object) {
+			return (EIF_NATURAL_32) ((eiffel_execute_function) (
+	#ifndef EIF_IL_DLL
+				(EIF_REFERENCE) eif_access (eiffel_command_handler_object),
+	#endif
+				(EIF_NATURAL_32) nCmdID,
+				(EIF_INTEGER) verb,
+				(EIF_POINTER) key,
+				(EIF_POINTER) ppropvarValue,
+				(EIF_POINTER) pCommandExecutionProperties));
+		} else {
+			return 0;
+		} 
+		
+	//return S_OK;
 }

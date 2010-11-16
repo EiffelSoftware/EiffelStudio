@@ -50,7 +50,7 @@ ULONG STDMETHODCALLTYPE Release2(IUICommandHandler *This)
 
 HRESULT STDMETHODCALLTYPE UpdateProperty(IUICommandHandler *This, UINT nCmdID, REFPROPERTYKEY key, const PROPVARIANT* ppropvarCurrentValue,PROPVARIANT* ppropvarNewValue)
 {
-	printf ("\n IUICommandHandler UpdateProperty in C");
+	printf ("\n IUICommandHandler UpdateProperty in C. Command ID is %d. ", nCmdID);
 
 	return S_OK;
 }
@@ -58,7 +58,7 @@ HRESULT STDMETHODCALLTYPE UpdateProperty(IUICommandHandler *This, UINT nCmdID, R
 HRESULT STDMETHODCALLTYPE Execute(IUICommandHandler *This, UINT nCmdID, UI_EXECUTIONVERB verb, const PROPERTYKEY* key, const PROPVARIANT* ppropvarValue, IUISimplePropertySet* pCommandExecutionProperties)
 {
 	
-	printf ("\n IUICommandHandler Execute in C");
+	printf ("\n IUICommandHandler Execute in C. Command ID is %d. UI_EXECUTIONVERB is %d.", nCmdID, verb);
 	
 	return S_OK;
 }

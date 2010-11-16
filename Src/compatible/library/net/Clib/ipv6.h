@@ -125,4 +125,16 @@ EIF_BOOLEAN en_ipv6_available();
 EIF_BOOLEAN en_ipv6_supported();
 
 
+#ifdef EIF_VMS
+typedef size_t socklen_t;
+#if __INITIAL_POINTER_SIZE > 32
+    /* VMS with 64 bit pointers uses different struct addrinfo, etc. */
+#define STRUCT_ADDRINFO struct __addrinfo64
+#endif 
+#endif /* EIF_VMS */
+
+#ifndef STRUCT_ADDRINFO
+#define STRUCT_ADDRINFO  struct addrinfo
 #endif
+
+#endif /* IPV6_H */

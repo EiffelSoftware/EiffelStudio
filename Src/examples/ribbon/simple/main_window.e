@@ -31,6 +31,8 @@ feature {NONE} -- Initialization
 			print ("%N start test")
 			set_size (800, 400)
 
+			create command_handler.make
+
 			-- !!! Attach Ribbon by COM here !!!
 			if attached {EV_WINDOW_IMP} implementation as l_imp then
 				com_initialize
@@ -59,6 +61,9 @@ feature {NONE} -- Implementation
 			destroy_ribbon_com_framwork
 			com_uninitialize
 		end
+
+	command_handler: ER_COMMAND_HANDLER
+			-- EiffelRibbon command handler
 
 feature {NONE} -- Externals
 

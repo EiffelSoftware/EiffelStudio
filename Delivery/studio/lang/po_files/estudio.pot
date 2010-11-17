@@ -24888,9 +24888,9 @@ msgstr ""
 msgid "S&ystem Info"
 msgstr ""
 
-#. Source code: target_dead_code_removal_name: STRING_GENERAL do Result := locale.translation ("Dead Code Removal")	end
+#. Source code: target_concurrency_scoop_name: STRING_GENERAL do Result := locale.translation ("SCOOP (not supported yet)") end
 #: conf_interface_names.e:128
-msgid "SCOOP"
+msgid "SCOOP (not supported yet)"
 msgstr ""
 
 #. Source code: w_source_name_attribute_expected: STRING_32 do Result := locale.translation ("SOURCE name attribute expected") end

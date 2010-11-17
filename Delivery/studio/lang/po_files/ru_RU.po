@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: EiffelStudio $Revision$\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2010-11-03 17:58+0300\n"
+"PO-Revision-Date: 2010-11-17 21:16+0300\n"
 "Last-Translator: Alexander Kogtenkov <alexk@eiffel.com>\n"
 "Language-Team: Eiffel Software and others <support@eiffel.com>\n"
 "MIME-Version: 1.0\n"
@@ -25223,10 +25223,10 @@ msgstr "Синхронизироват панель контекста"
 msgid "S&ystem Info"
 msgstr "&Информация о системе"
 
-#. Source code: target_dead_code_removal_name: STRING_GENERAL do Result := locale.translation ("Dead Code Removal")	end
+#. Source code: target_concurrency_scoop_name: STRING_GENERAL do Result := locale.translation ("SCOOP (not supported yet)") end
 #: conf_interface_names.e:128
-msgid "SCOOP"
-msgstr "SCOOP"
+msgid "SCOOP (not supported yet)"
+msgstr "SCOOP (пока не поддерживается)"
 
 #. Source code: w_source_name_attribute_expected: STRING_32 do Result := locale.translation ("SOURCE name attribute expected") end
 #: warning_messages.e:942
@@ -34639,6 +34639,9 @@ msgstr "{$1} уже содержит компонент с именем $2."
 #: debugger_names.e:462
 msgid "{SPECIAL} is not yet supported"
 msgstr "{SPECIAL} ещё не поддерживается"
+
+#~ msgid "SCOOP"
+#~ msgstr "SCOOP"
 
 #~ msgid "Edit Execution Parameters"
 #~ msgstr "Редактировать параметры выполнения"

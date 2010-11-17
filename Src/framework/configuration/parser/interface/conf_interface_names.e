@@ -125,7 +125,7 @@ feature -- Target names and descriptions
 		end
 	target_concurrency_none_name: STRING_GENERAL do Result := locale.translation ("No concurrency") end
 	target_concurrency_thread_name: STRING_GENERAL do Result := locale.translation ("EiffelThread") end
-	target_concurrency_scoop_name: STRING_GENERAL do Result := locale.translation ("SCOOP") end
+	target_concurrency_scoop_name: STRING_GENERAL do Result := locale.translation ("SCOOP (not supported yet)") end
 	target_dead_code_removal_name: STRING_GENERAL do Result := locale.translation ("Dead Code Removal")	end
 	target_dead_code_removal_description: STRING_GENERAL do Result := locale.translation ("Should unused code be removed?")	end
 	target_dotnet_naming_convention_name: STRING_GENERAL do Result := locale.translation (".NET Naming Convention")	end

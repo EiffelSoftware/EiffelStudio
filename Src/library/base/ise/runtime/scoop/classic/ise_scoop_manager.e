@@ -115,7 +115,6 @@ feature -- Processor Initialization
 				-- Raise Exception if no free processor could not be found, or block until there is one.
 			end
 
-
 			debug ("ISE_SCOOP_MANAGER")
 				print ("assign_free_processor_id of pid " + Result.out + "%N")
 			end
@@ -432,18 +431,9 @@ feature -- Command/Query Handling
 					-- Mark processor as initialized.
 				(scoop_processor_meta_data [a_supplier_processor_id]).put (scoop_processor_status_initialized, scoop_processor_status_index)
 
-					-- Set current request chain id to `1' as the logging for creation routines is `inlined' without signify_start/end of request chain.
-					-- Request chain id `0' is always the creation routine.
-				(scoop_processor_meta_data [a_supplier_processor_id]).put (1, scoop_processor_current_request_chain_id_index)
-
 				l_request_chain_node_id := 0
 
-					-- Set values of current request chain node id and request chain node id depth to `1' and `invalid' respectively.
-				(scoop_processor_meta_data [a_supplier_processor_id]).put (1, scoop_processor_current_request_chain_node_id_index)
-
-					-- Reset chain depth to its default value of `invalid'
-				(scoop_processor_meta_data [a_supplier_processor_id]).put (scoop_processor_invalid_request_chain_node_id, scoop_processor_current_request_chain_id_depth_index)
-
+				initialize_default_processor_meta_data (a_supplier_processor_id)
 			else
 					-- Supplier processor is already initialized, retrieve request chain node id.
 				l_request_chain_node_id := (scoop_processor_meta_data [a_supplier_processor_id]) [scoop_processor_current_request_chain_node_id_index]
@@ -508,17 +498,16 @@ feature {NONE} -- Resource Initialization
 				-- Create request chain node queue pigeon for each potential processor.
 			create scoop_processor_request_chain_node_queue_list.make_filled (Void, max_scoop_processors_instantiable)
 
-
-
 				-- Initialize request chain and request chain id node values for root processor
-			(scoop_processor_meta_data [root_processor_id]).put (1, scoop_processor_current_request_chain_id_index)
+			initialize_default_processor_meta_data (root_processor_id)
+		end
 
-				-- Set values of current request chain node id and request chain node id depth to `1' and `invalid' respectively.
-			(scoop_processor_meta_data [root_processor_id]).put (1, scoop_processor_current_request_chain_node_id_index)
-
-				-- Reset chain depth to its default value of `invalid'
-			(scoop_processor_meta_data [root_processor_id]).put (scoop_processor_invalid_request_chain_node_id, scoop_processor_current_request_chain_id_depth_index)
-
+	initialize_default_processor_meta_data (a_processor_id: like processor_id_type)
+			-- Initialize processor `a_processor_id' meta data to default values after a creation routine has been logged.
+		do
+			(scoop_processor_meta_data [a_processor_id]).put (0, scoop_processor_current_request_chain_id_index)
+			(scoop_processor_meta_data [a_processor_id]).put (0, scoop_processor_current_request_chain_node_id_index)
+			(scoop_processor_meta_data [a_processor_id]).put (scoop_processor_invalid_request_chain_node_id, scoop_processor_current_request_chain_id_depth_index)
 		end
 
 	scoop_processor_loop (a_logical_processor_id: like processor_id_type)
@@ -528,7 +517,6 @@ feature {NONE} -- Resource Initialization
 			l_scoop_processor_meta_data: like new_scoop_processor_meta_data_entry
 			l_executing_node_id, l_current_request_node_id: like scoop_processor_invalid_request_chain_node_id
 			l_executing_node_id_cursor: INTEGER_32
-			l_execution_node_id_count: INTEGER_32
 			l_scoop_processor_request_chain_node_queue: detachable like new_scoop_processor_request_chain_node_queue
 			l_executing_request_chain_node: detachable like new_scoop_processor_request_chain_node_queue_entry
 			l_executing_request_chain_node_count: INTEGER_32
@@ -559,70 +547,77 @@ feature {NONE} -- Resource Initialization
 							-- Increment execution index
 						l_executing_node_id := {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 (l_scoop_processor_meta_data.item_address (scoop_processor_current_request_node_id_execution_index))
 						if
-							l_executing_node_id < l_current_request_node_id and then
-							l_executing_node_id < l_scoop_processor_request_chain_node_meta_data_queue.count and then
-							attached l_scoop_processor_request_chain_node_meta_data_queue [l_executing_node_id]
+							l_executing_node_id <= l_current_request_node_id and then
+							l_executing_node_id < l_scoop_processor_request_chain_node_meta_data_queue.count
 						then
-							-- We are in a valid feature application position.
-							from
-								if l_executing_node_id > 0 then
-										-- 0 = creation routine so we don't need head/tail locking.
+							if attached l_scoop_processor_request_chain_node_meta_data_queue [l_executing_node_id] then
+									-- We are in a valid feature application position.
+								from
+									if l_executing_node_id > 0 then
+											-- 0 = creation routine so we don't need head/tail locking.
 
-									l_executing_request_chain_node_meta_data := l_scoop_processor_request_chain_node_meta_data_queue [l_executing_node_id]
-									check l_executing_request_chain_node_meta_data_attached: attached l_executing_request_chain_node_meta_data end
+										l_executing_request_chain_node_meta_data := l_scoop_processor_request_chain_node_meta_data_queue [l_executing_node_id]
+										check l_executing_request_chain_node_meta_data_attached: attached l_executing_request_chain_node_meta_data end
 
-									l_head_pid := l_executing_request_chain_node_meta_data [scoop_processor_request_chain_meta_data_header_size]
-									l_is_head := l_head_pid = a_logical_processor_id
-									if l_is_head then
-										-- We are a head node so we need to lock every processor involved in the request chain
-										-- in logical order to avoid dead-locking.
+										l_head_pid := l_executing_request_chain_node_meta_data [scoop_processor_request_chain_meta_data_header_size]
+										l_is_head := l_head_pid = a_logical_processor_id
+										if l_is_head then
+											-- We are a head node so we need to lock every processor involved in the request chain
+											-- in logical order to avoid dead-locking.
 
+										else
+											-- We are a tail node so we wait until requested to continue by the head node
+											-- Signal the wait in the processor meta data.
+
+											-- Use compare and swap with the head node
+										end
 									else
-										-- We are a tail node so we wait until requested to continue by the head node
-										-- Signal the wait in the processor meta data.
-
-										-- Use compare and swap with the head node
+											-- Make sure request chain node meta data is detached incase processor has been recycled.
+										l_executing_request_chain_node_meta_data := Void
 									end
-								else
-										-- Make sure request chain node meta data is detached incase processor has been recycled.
-									l_executing_request_chain_node_meta_data := Void
+
+									l_executing_request_chain_node := l_scoop_processor_request_chain_node_queue [l_executing_node_id]
+									check l_executing_request_chain_node_attached: attached l_executing_request_chain_node end
+
+									l_executing_node_id_cursor := 0
+									l_executing_request_chain_node_count := l_executing_request_chain_node.count
+									l_feature_application_loop_exit := l_executing_request_chain_node_count = 0
+								until
+									l_feature_application_loop_exit
+								loop
+									l_current_call_data := l_executing_request_chain_node [l_executing_node_id_cursor]
+									if l_current_call_data /= default_pointer then
+											-- Call data
+											scoop_command_call (l_current_call_data)
+
+											-- Inspect call data for a return value.
+											-- If so then signal waiting processor to continue.
+											--
+										l_executing_node_id_cursor := l_executing_node_id_cursor + 1
+										l_feature_application_loop_exit := l_executing_node_id_cursor = l_executing_request_chain_node_count
+									else
+										l_feature_application_loop_exit := True
+									end
 								end
 
-								l_executing_request_chain_node := l_scoop_processor_request_chain_node_queue [l_executing_node_id]
-								check l_executing_request_chain_node_attached: attached l_executing_request_chain_node end
-
-								l_executing_node_id_cursor := 0
-								l_executing_request_chain_node_count := l_executing_request_chain_node.count
-								l_feature_application_loop_exit := l_executing_request_chain_node_count = 0
-							until
-								l_feature_application_loop_exit
-							loop
-								l_current_call_data := l_executing_request_chain_node [l_executing_node_id_cursor]
-								if l_current_call_data /= default_pointer then
-										-- Call data
-										scoop_command_call (l_current_call_data)
-
-										-- Inspect call data for a return value.
-										-- If so then signal waiting processor to continue.
-										--
-									l_executing_node_id_cursor := l_executing_node_id_cursor + 1
-									l_feature_application_loop_exit := l_executing_node_id_cursor = l_executing_request_chain_node_count
-								else
-									l_feature_application_loop_exit := True
+									-- Clear up call
+								if attached l_executing_request_chain_node_meta_data then
+									l_executing_request_chain_node_meta_data.wipe_out
 								end
+							else
+								-- A request chain was created but no calls were logged (no meta data)
+								--| FIXME IEK: Reset processors that are part of a chain but logs are not made.
 							end
-
-								-- Clear up call
-							if attached l_executing_request_chain_node_meta_data then
-								l_executing_request_chain_node_meta_data.wipe_out
-							end
+						else
+							l_executing_node_id := {ATOMIC_MEMORY_OPERATIONS}.decrement_integer_32 (l_scoop_processor_meta_data.item_address (scoop_processor_current_request_node_id_execution_index))
+							yield_to_operating_system
 						end
 					else
-							-- Reset execution node id
-						if l_executing_node_id > 0 then
-							l_executing_node_id := {ATOMIC_MEMORY_OPERATIONS}.decrement_integer_32 (l_scoop_processor_meta_data.item_address (scoop_processor_current_request_node_id_execution_index))
+						if l_executing_node_id > max_request_chain_node_queue_index then
+							l_processor_exit := True
+						else
+							yield_to_operating_system
 						end
-						yield_to_operating_system
 					end
 				elseif root_processor_has_exited then
 					l_processor_exit := True

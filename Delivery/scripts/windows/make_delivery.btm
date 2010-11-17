@@ -102,6 +102,8 @@ fullrd old_com
 fullrd old_matisse
 fullrd vision
 fullrd build
+fullrd scoop
+fullrd ribbon
 cd dotnet
 fullrd envision
 fullrd winforms\data\simple_binding

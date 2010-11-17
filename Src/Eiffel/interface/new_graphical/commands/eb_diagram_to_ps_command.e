@@ -74,7 +74,7 @@ feature -- Basic operations
 					dial.show_modal_to_window (tool.develop_window.window)
 					if not dial.file_name.is_empty then
 						error := 1
---						p := tool.projector.world_as_pixmap (5)
+						p := tool.projector.world_as_pixmap (5)
 						if p /= Void then
 							create png_file.make_from_string (dial.file_name)
 							create test_file.make_open_write (png_file)

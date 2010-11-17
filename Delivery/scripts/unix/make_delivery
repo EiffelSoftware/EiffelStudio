@@ -114,6 +114,8 @@ fullrd old_matisse
 fullrd vision
 fullrd build
 fullrd dotnet
+fullrd ribbon
+fullrd scoop
 fullrd thread/fancy
 fullrd vision2/Boxes
 fullrd vision2/drawing_area

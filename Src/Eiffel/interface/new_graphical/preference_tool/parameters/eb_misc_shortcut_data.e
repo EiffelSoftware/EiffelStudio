@@ -190,8 +190,8 @@ feature {NONE} -- Modifiable shortcuts
 			l_hash.put ([True, True, False, key_strings.item (Key_a).twin.as_string_8], "show_favorites_tool")
 			l_hash.put ([True, True, False, key_strings.item (Key_n).twin.as_string_8], "show_windows_tool")
 			l_hash.put ([True, True, False, key_strings.item (Key_b).twin.as_string_8], "show_breakpoints_tool")
-			l_hash.put ([True, True, False, key_strings.item (key_open_bracket).twin.as_string_8], "show_testing_tool")
-			l_hash.put ([True, True, False, key_strings.item (key_close_bracket).twin.as_string_8], "show_testing_results_tool")
+			l_hash.put ([True, True, False, key_strings.item (key_comma).twin.as_string_8], "show_testing_tool")
+			l_hash.put ([True, True, False, key_strings.item (key_period).twin.as_string_8], "show_testing_results_tool")
 			l_hash.put ([True, True, False, key_strings.item (Key_q).twin.as_string_8], "show_information_tool")
 			Result.extend ([l_hash, main_window_group])
 		end

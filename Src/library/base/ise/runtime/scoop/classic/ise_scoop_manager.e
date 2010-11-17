@@ -145,7 +145,7 @@ feature -- Processor Initialization
 			root_processor_has_exited := True
 
 				-- Wait for direct/indirect processors to finish processing.
-			wait_for_processor_redundancy
+			scoop_processor_root_wait_for_redundancy
 
 				-- Add break point here to wait for all processors to exit.
 			do_nothing
@@ -907,7 +907,7 @@ feature {NONE} -- Externals
 			"return eif_thr_thread_id();"
 		end
 
-	frozen wait_for_processor_redundancy
+	frozen scoop_processor_root_wait_for_redundancy
 			-- Called by root processor to wait for `child' processors (direct/indirect).
 		external
 			"C blocking use %"eif_threads.h%""

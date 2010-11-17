@@ -204,7 +204,7 @@ feature -- Request Chain Handling
 			check l_request_chain_meta_data_attached: attached l_request_chain_meta_data end
 
 			from
-				i := 0
+				i := scoop_processor_request_chain_meta_data_header_size
 				l_count := l_request_chain_meta_data.count
 			until
 				i = l_count
@@ -440,6 +440,8 @@ feature -- Command/Query Handling
 
 					-- Set values of current request chain node id and request chain node id depth to `1' and `invalid' respectively.
 				(scoop_processor_meta_data [a_supplier_processor_id]).put (1, scoop_processor_current_request_chain_node_id_index)
+
+					-- Reset chain depth to its default value of `invalid'
 				(scoop_processor_meta_data [a_supplier_processor_id]).put (scoop_processor_invalid_request_chain_node_id, scoop_processor_current_request_chain_id_depth_index)
 
 			else
@@ -505,6 +507,18 @@ feature {NONE} -- Resource Initialization
 
 				-- Create request chain node queue pigeon for each potential processor.
 			create scoop_processor_request_chain_node_queue_list.make_filled (Void, max_scoop_processors_instantiable)
+
+
+
+				-- Initialize request chain and request chain id node values for root processor
+			(scoop_processor_meta_data [root_processor_id]).put (1, scoop_processor_current_request_chain_id_index)
+
+				-- Set values of current request chain node id and request chain node id depth to `1' and `invalid' respectively.
+			(scoop_processor_meta_data [root_processor_id]).put (1, scoop_processor_current_request_chain_node_id_index)
+
+				-- Reset chain depth to its default value of `invalid'
+			(scoop_processor_meta_data [root_processor_id]).put (scoop_processor_invalid_request_chain_node_id, scoop_processor_current_request_chain_id_depth_index)
+
 		end
 
 	scoop_processor_loop (a_logical_processor_id: like processor_id_type)
@@ -694,8 +708,11 @@ feature {NONE} -- Resource Initialization
 		do
 		end
 
-	null_processor_id: INTEGER_32 = -1
+	null_processor_id: like processor_id_type = -1
 			-- Value to designate an unset processor id value.
+
+	root_processor_id: like processor_id_type = 0
+			-- ID of root processor.
 
 	scoop_logical_processor_id_count: INTEGER_32
 		-- Number of logical processor ids that have been allocated.

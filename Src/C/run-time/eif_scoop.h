@@ -59,12 +59,30 @@ rt_public void eif_log_callp (int origin, int offset, EIF_SCP_PID current_pid, c
 
 #define EIF_ATOMIC_INLINE
 
+#if defined(__GNUC__)
+# if defined(__GNUC_PATCHLEVEL__)
+#  define __GNUC_VERSION__ (__GNUC__ * 10000 \
+                            + __GNUC_MINOR__ * 100 \
+                            + __GNUC_PATCHLEVEL__)
+# else
+#  define __GNUC_VERSION__ (__GNUC__ * 10000 \
+                            + __GNUC_MINOR__ * 100)
+# endif
+
+#if (__GNUC_VERSION__ >= 40102)
+	#define __GNUC_ATOMOPS_BUILTIN__
+#endif
+
+#endif
+
+
+
 static EIF_ATOMIC_INLINE EIF_INTEGER_32 eif_atomic_compare_and_swap_integer_32 (EIF_INTEGER_32 *dest, EIF_INTEGER_32 setter, EIF_INTEGER_32 compare)
 	{
 		// Atomically update dest contents to setter if original contents were equal to compare, return original value, caller checks if value equals compare value, if so then dest must now equal setter, if not then no operation occurred.
 #if defined(_WIN32)
 		return (EIF_INTEGER_32) _InterlockedCompareExchange((long *)dest, setter, compare);
-#elif defined (__GNUC__) && (__GNUC__ * 100 + __GNUC_MINOR__ >= 412)
+#elif defined (__GNUC_ATOMOPS_BUILTIN__)
 		return __sync_val_compare_and_swap (dest, compare, setter);
 #else
 		return (EIF_INTEGER_32)0;
@@ -76,7 +94,7 @@ static EIF_ATOMIC_INLINE EIF_INTEGER_32 eif_atomic_swap_integer_32 (EIF_INTEGER_
 		// Atomically update contents of dest to setter, return original value of dest.
 #if defined(_WIN32)
 		return (EIF_INTEGER_32) _InterlockedExchange((long *)dest, setter);
-#elif defined (__GNUC__) && (__GNUC__ * 100 + __GNUC_MINOR__ >= 412)
+#elif defined (__GNUC_ATOMOPS_BUILTIN__)
 		return (EIF_INTEGER_32) __sync_val_compare_and_swap (dest, *dest, setter);
 #else
 		return (EIF_INTEGER_32)0;
@@ -88,7 +106,7 @@ static EIF_ATOMIC_INLINE EIF_INTEGER_32 eif_atomic_add_integer_32 (EIF_INTEGER_3
 		// Atomically update dest target to original value plus val, return this new value.
 #if defined(_WIN32)
 		return (EIF_INTEGER_32) (_InterlockedExchangeAdd((long *)dest, val) + val); // Add val to return new value.
-#elif defined (__GNUC__) && (__GNUC__ * 100 + __GNUC_MINOR__ >= 412)
+#elif defined (__GNUC_ATOMOPS_BUILTIN__)
 		return (EIF_INTEGER_32) __sync_add_and_fetch (dest, val);
 #else
 		return (EIF_INTEGER_32)0;

@@ -1461,7 +1461,7 @@ RT_LNK void eif_exit_eiffel_code(void);
 #define RTS_AS(v,f,t,n,a) \
 	{                                                               \
 		RTS_AA(v,f,t,n,a);                                      \
-		if (!RTS_OU(((call_data*)(a)) -> argument [(n) - 1]))   \
+		if (!RTS_OU(t, ((call_data*)(a)) -> argument [(n) - 1]))   \
 			((call_data*)(a)) -> is_synchronous = EIF_TRUE; \
 	}
 

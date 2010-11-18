@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2010-11-05 17:01+0800\n"
+"PO-Revision-Date: 2010-11-18 10:55+0800\n"
 "Last-Translator: Ted <tedf@eiffel.com>\n"
 "Language-Team: Eiffel Software and others\n"
 "MIME-Version: 1.0\n"
@@ -13,7 +13,6 @@ msgstr ""
 
 #. Source code: default_quick_melt_the_system: STRING_32				do Result := locale.translation ("%Tdefault (no option): quick melt the system.%N%N") end
 #: ewb_names.e:45
-#, fuzzy
 msgid ""
 "\tdefault (no option): quick melt the system.\n"
 "\n"
@@ -23,7 +22,6 @@ msgstr ""
 
 #. Source code: Result := locale.formatted_string (locale.translation ("%N   + Module = $1"), [a_module])
 #: interface_names.e:1756
-#, fuzzy
 msgid ""
 "\n"
 "   + Module = $1"
@@ -33,7 +31,6 @@ msgstr ""
 
 #. Source code: Result := locale.formatted_string (locale.translation ("%N   + address     = <$1>"), [a_address])
 #: interface_names.e:1770
-#, fuzzy
 msgid ""
 "\n"
 "   + address     = <$1>"
@@ -43,7 +40,6 @@ msgstr ""
 
 #. Source code: Result := locale.formatted_string (locale.translation ("%N   + break index = $1"), [a_index])
 #: interface_names.e:1763
-#, fuzzy
 msgid ""
 "\n"
 "   + break index = $1"
@@ -53,7 +49,6 @@ msgstr ""
 
 #. Source code: l_compilation_equal_melted: STRING_32 do Result := locale.translation ("%N   + compilation = melted") end
 #: interface_names.e:1890
-#, fuzzy
 msgid ""
 "\n"
 "   + compilation = melted"
@@ -63,7 +58,6 @@ msgstr ""
 
 #. Source code: Result := locale.translation ("%N   + feature has a rescue clause")
 #: interface_names.e:1749
-#, fuzzy
 msgid ""
 "\n"
 "   + feature has a rescue clause"
@@ -73,7 +67,6 @@ msgstr ""
 
 #. Source code: w_Folder_name_cannot_contain: STRING_32 do Result := locale.translation ("%N A favorite folder name cannot contain any of the following characters: %N ( ) * ") end
 #: warning_messages.e:952
-#, fuzzy
 msgid ""
 "\n"
 " A favorite folder name cannot contain any of the following characters: \n"
@@ -85,7 +78,6 @@ msgstr ""
 
 #. Source code: Result := locale.formatted_string (locale.translation ("%N$1 is not writable.%NPlease check permissions."), [file_name])
 #: warning_messages.e:209
-#, fuzzy
 msgid ""
 "\n"
 "$1 is not writable.\n"
@@ -96,7 +88,6 @@ msgstr ""
 
 #. Source code: Result := locale.formatted_string (locale.translation ("%NCONTEXT: $1%N"), [a_context])
 #: interface_names.e:1777
-#, fuzzy
 msgid ""
 "\n"
 "CONTEXT: $1\n"
@@ -106,7 +97,6 @@ msgstr ""
 
 #. Source code: Result := locale.formatted_string (locale.translation ("%NCannot open project `$1'.%N%NMake sure you have a complete EIFGEN directory in `$2'."), [file_name, dir_name])
 #: warning_messages.e:41
-#, fuzzy
 msgid ""
 "\n"
 "Cannot open project `$1'.\n"
@@ -120,7 +110,6 @@ msgstr ""
 
 #. Source code: options: STRING_32									do Result := locale.translation ("%NOptions:%N") end
 #: ewb_names.e:44
-#, fuzzy
 msgid ""
 "\n"
 "Options:\n"
@@ -130,7 +119,6 @@ msgstr ""
 
 #. Source code: the_total_active_query: STRING_32					do Result := locale.translation ("%NThe total active query:%N") end
 #: ewb_names.e:70
-#, fuzzy
 msgid ""
 "\n"
 "The total active query:\n"
@@ -140,7 +128,6 @@ msgstr ""
 
 #. Source code: Result := locale.formatted_string (locale.plural_translation ("   $1 replaced in $2 class", "   $1 replaced in $2 classes", a_class_num), [a_item_num, a_class_num])
 #: interface_names.e:1878
-#, fuzzy
 msgid "   $1 replaced in $2 class"
 msgid_plural "   $1 replaced in $2 classes"
 msgstr[0] "在$2个类中替换了$1处"
@@ -12481,7 +12468,6 @@ msgstr "编辑$1"
 
 #. Source code: m_Edit_breakpoint_here: STRING_32				do Result := locale.translation("Edit Breakpoint Here ...")	end
 #: interface_names.e:370
-#, fuzzy
 msgid "Edit Breakpoint Here ..."
 msgstr "编辑该处断点..."
 
@@ -25151,10 +25137,10 @@ msgstr "同步上下文(&Y)"
 msgid "S&ystem Info"
 msgstr "系统信息(&Y)"
 
-#. Source code: target_dead_code_removal_name: STRING_GENERAL do Result := locale.translation ("Dead Code Removal")	end
+#. Source code: target_concurrency_scoop_name: STRING_GENERAL do Result := locale.translation ("SCOOP (not supported yet)") end
 #: conf_interface_names.e:128
-msgid "SCOOP"
-msgstr "SCOOP"
+msgid "SCOOP (not supported yet)"
+msgstr "SCOOP (尚未支持)"
 
 #. Source code: w_source_name_attribute_expected: STRING_32 do Result := locale.translation ("SOURCE name attribute expected") end
 #: warning_messages.e:942
@@ -34514,6 +34500,9 @@ msgstr "{$1}已经包含名为$2的方法名。"
 #: debugger_names.e:462
 msgid "{SPECIAL} is not yet supported"
 msgstr "尚未支持{SPECIAL}"
+
+#~ msgid "SCOOP"
+#~ msgstr "SCOOP"
 
 #~ msgid "Edit Execution Parameters"
 #~ msgstr "编辑运行参数"

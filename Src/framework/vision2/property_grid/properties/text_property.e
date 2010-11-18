@@ -127,19 +127,32 @@ feature {NONE} -- Implementation
 	display_agent: FUNCTION [ANY, TUPLE [G], STRING_32]
 
 	to_displayed_value (a_value: like value): like displayed_value
+		local
+			r: detachable like displayed_value
 		do
-			if a_value /= Void then
-				if display_agent /= Void then
-					Result := display_agent.item ([a_value])
+			if attached a_value then
+					-- The data is used to compute displayed value.
+				if attached display_agent then
+						-- There is an agent to get displayed value.
+					r := display_agent.item ([a_value])
+				elseif attached {READABLE_STRING_GENERAL} a_value as s then
+						-- Avoid conversion to {STRING_8} by the feature `{READABLE_STRING_GENERAL}.out'.
+					r := s.twin.as_string_32
 				else
-					Result := a_value.out.twin.as_string_32
-					Result.replace_substring_all ("%N", "%%N")
+						-- Use standard printable representation of a value.
+					r := a_value.out.as_string_32
 				end
+			end
+			if attached r then
+				Result := r
+					-- Make sure there are no new lines in the result.
+				Result.replace_substring_all ("%N", "%%N")
 			else
+					-- There is no value, return an empty string.
 				create Result.make_empty
 			end
 		ensure
-			Result_not_void: Result /= Void
+			result_attached: attached Result
 		end
 
 	convert_to_data_agent: FUNCTION [ANY, TUPLE [STRING_32], G]

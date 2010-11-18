@@ -612,30 +612,23 @@ feature {NONE} -- Resource Initialization
 							l_executing_node_id < l_current_request_node_id and then
 							l_executing_node_id < l_scoop_processor_request_chain_node_meta_data_queue.count
 						then
-							if attached l_scoop_processor_request_chain_node_meta_data_queue [l_executing_node_id] then
+							if attached l_scoop_processor_request_chain_node_queue [l_executing_node_id] then
 									-- We are in a valid feature application position.
 								from
-									if l_executing_node_id > 0 then
-											-- 0 = creation routine so we don't need head/tail locking.
+									l_executing_request_chain_node_meta_data := l_scoop_processor_request_chain_node_meta_data_queue [l_executing_node_id]
+									check l_executing_request_chain_node_meta_data_attached: attached l_executing_request_chain_node_meta_data end
 
-										l_executing_request_chain_node_meta_data := l_scoop_processor_request_chain_node_meta_data_queue [l_executing_node_id]
-										check l_executing_request_chain_node_meta_data_attached: attached l_executing_request_chain_node_meta_data end
+									l_head_pid := l_executing_request_chain_node_meta_data [scoop_processor_request_chain_meta_data_header_size]
+									l_is_head := l_head_pid = a_logical_processor_id
+									if l_is_head then
+										-- We are a head node so we need to lock every processor involved in the request chain
+										-- in logical order to avoid dead-locking.
 
-										l_head_pid := l_executing_request_chain_node_meta_data [scoop_processor_request_chain_meta_data_header_size]
-										l_is_head := l_head_pid = a_logical_processor_id
-										if l_is_head then
-											-- We are a head node so we need to lock every processor involved in the request chain
-											-- in logical order to avoid dead-locking.
-
-										else
-											-- We are a tail node so we wait until requested to continue by the head node
-											-- Signal the wait in the processor meta data.
-
-											-- Use compare and swap with the head node
-										end
 									else
-											-- Make sure request chain node meta data is detached incase processor has been recycled.
-										l_executing_request_chain_node_meta_data := Void
+										-- We are a tail node so we wait until requested to continue by the head node
+										-- Signal the wait in the processor meta data.
+
+										-- Use compare and swap with the head node
 									end
 
 									l_executing_request_chain_node := l_scoop_processor_request_chain_node_queue [l_executing_node_id]
@@ -667,7 +660,8 @@ feature {NONE} -- Resource Initialization
 									l_executing_request_chain_node_meta_data.wipe_out
 								end
 							else
-								-- A request chain was created but no calls were logged (no meta data)
+								-- A request chain was created but no calls were logged or yet to be logged
+								l_executing_node_id := {ATOMIC_MEMORY_OPERATIONS}.decrement_integer_32 (l_scoop_processor_meta_data.item_address (scoop_processor_current_request_node_id_execution_index))
 								--| FIXME IEK: Reset processors that are part of a chain but logs are not made.
 							end
 						else

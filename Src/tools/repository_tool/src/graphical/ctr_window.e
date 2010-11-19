@@ -1506,7 +1506,8 @@ feature {CTR_TOOL} -- Diff
 			end
 			if
 				diff_cmd /= Void and then not diff_cmd.is_empty and then
-				attached a_log.parent.log_diff_data_filename (a_log) as fn
+				attached {REPOSITORY_FILE_STORAGE} a_log.parent.storage as fs and then
+				attached fs.log_diff_data_filename (a_log) as fn
 			then
 				create e
 				create l_diff_fn.make_from_string (e.current_working_directory)

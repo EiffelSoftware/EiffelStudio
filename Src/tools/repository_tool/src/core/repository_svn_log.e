@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_svn: SVN_REVISION_INFO; a_parent: REPOSITORY_SVN_DATA)
+	make (a_svn: SVN_REVISION_INFO; a_parent: REPOSITORY_DATA)
 		do
 			svn_revision := a_svn
 			id := a_svn.revision.out
@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	parent: REPOSITORY_SVN_DATA
+	parent: REPOSITORY_DATA
 
 	svn_revision: SVN_REVISION_INFO
 

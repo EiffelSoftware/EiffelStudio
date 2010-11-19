@@ -106,6 +106,8 @@ exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/examples examples
 cd examples
 fullrd obsolete
 fullrd eiffeltest
+fullrd iphone
+fullrd libevent
 fullrd math
 fullrd matisse
 fullrd store/matisse

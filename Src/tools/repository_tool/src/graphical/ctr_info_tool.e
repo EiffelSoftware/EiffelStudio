@@ -556,11 +556,18 @@ feature {NONE} -- Implementation
 		local
 			exec: EXECUTION_ENVIRONMENT
 			s: detachable STRING
+			rep: like current_repository
 		do
 			if attached current_repository as r then
-				s := r.data_folder_name
+				rep := r
 			elseif attached current_log as l_log then
-				s := l_log.parent.data_folder_name
+				rep := l_log.parent
+			end
+			if
+				rep /= Void and then
+				attached {REPOSITORY_FILE_STORAGE} rep.storage as fs
+			then
+				s := fs.data_folder_name
 			end
 			if s /= Void then
 				create exec

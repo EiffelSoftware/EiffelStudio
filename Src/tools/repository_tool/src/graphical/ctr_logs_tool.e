@@ -244,9 +244,7 @@ feature -- Element change
 						if a_reload then
 							rdata.load_logs
 						end
-						if attached rdata.logs as l_logs then
-							n := n + l_logs.count
-						end
+						n := n + rdata.logs.count
 					end
 					lst.forth
 				end

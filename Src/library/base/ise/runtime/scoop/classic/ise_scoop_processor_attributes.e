@@ -10,21 +10,20 @@ class
 
 inherit
 	MEMORY_STRUCTURE
-		redefine
-			default_create
-		end
 
 create {ISE_SCOOP_MANAGER}
-	default_create
+	make_with_stack_size
 
 feature {NONE} -- Initialization
 
-	default_create
+	make_with_stack_size (a_stack_size: NATURAL_8)
 			-- Set default values for SCOOP Processor Attributes.
+		require
+			a_stack_size_valid: a_stack_size > 0
 		do
 			make
 			c_set_priority (item, default_priority)
-			c_set_stack_size (item, 10)
+			c_set_stack_size (item, a_stack_size)
 		end
 
 feature {NONE} -- Implementation

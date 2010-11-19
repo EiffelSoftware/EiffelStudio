@@ -136,7 +136,7 @@ feature -- Processor Initialization
 			l_scoop_processor_attributes: ISE_SCOOP_PROCESSOR_ATTRIBUTES
 		do
 				--!FIXME IEK: Allocate a default value for reuse.
-			create l_scoop_processor_attributes
+			create l_scoop_processor_attributes.make_with_stack_size (1)
 			create_and_initialize_scoop_processor (Current, $scoop_processor_loop, l_scoop_processor_attributes.item, a_processor_id)
 		end
 

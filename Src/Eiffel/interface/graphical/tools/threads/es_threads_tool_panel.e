@@ -126,14 +126,32 @@ feature {NONE} -- Factory
 					attached thread_id_and_scoop_processor_id_from_row (l_row) as tu_tid_scp
 				then
 					tid := tu_tid_scp.tid
-					l_status := debugger_manager.application_status
-
 					create lab.make_with_text (tid.out)
-					if tu_tid_scp.tid = l_status.active_thread_id then
-						lab.set_font (active_thread_font)
-						lab.set_tooltip (debugger_names.t_debuggees_active_thread)
-					end
 					l_row.set_item (col_id_index, lab)
+					if tid /= Default_pointer then
+						l_status := debugger_manager.application_status
+
+						if tid = l_status.active_thread_id then
+							lab.set_font (active_thread_font)
+							lab.set_tooltip (debugger_names.t_debuggees_active_thread)
+						end
+						if tid = l_status.current_thread_id then
+							l_row.set_background_color (row_highlight_bg_color)
+							if l_row.is_displayed then
+								l_row.ensure_visible
+							end
+						end
+
+						if notes_on_threads.has (tid) then
+							create gedit.make_with_text (notes_on_threads.item (tid))
+						else
+							create gedit
+						end
+						gedit.deactivate_actions.extend (agent update_notes_from_item (gedit))
+						l_row.set_item (col_note_index, gedit)
+
+					end
+
 					l_row.set_item (col_priority_index, create {EV_GRID_LABEL_ITEM}.make_with_text (tu_tid_scp.scp.out))
 				else
 					tid := thread_id_from_row (l_row)

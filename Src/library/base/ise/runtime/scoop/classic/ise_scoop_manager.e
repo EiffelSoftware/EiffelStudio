@@ -242,6 +242,8 @@ feature -- Request Chain Handling
 			l_request_chain_node_id: like scoop_processor_invalid_request_chain_node_id
 			l_request_chain_meta_data: detachable like new_scoop_processor_request_chain_meta_data_entry
 			l_request_chain_node_meta_data_queue: detachable like new_scoop_processor_request_chain_node_meta_data_queue
+			l_request_chain_node_queue: detachable like new_scoop_processor_request_chain_node_queue
+			l_request_chain_node_queue_entry: detachable like new_scoop_processor_request_chain_node_queue_entry
 			l_sorted, l_swap_occurred: BOOLEAN
 			i, l_container_count, l_unique_pid_count: INTEGER
 			l_pid: like processor_id_type
@@ -349,6 +351,18 @@ feature -- Request Chain Handling
 				check l_request_chain_node_meta_data_queue_attached: attached l_request_chain_node_meta_data_queue end
 				l_request_chain_node_meta_data_queue [l_request_chain_node_id] := l_request_chain_meta_data
 
+					-- Set request chain node queue entry for `l_pid' for future logging.
+				l_request_chain_node_queue := scoop_processor_request_chain_node_queue_list [l_pid]
+				check l_request_chain_node_queue_attached: attached l_request_chain_node_queue end
+				l_request_chain_node_queue_entry := l_request_chain_node_queue [l_request_chain_node_id]
+				if not attached l_request_chain_node_queue_entry then
+					l_request_chain_node_queue_entry := new_scoop_processor_request_chain_node_queue_entry
+					l_request_chain_node_queue [l_request_chain_node_id] := l_request_chain_node_queue_entry
+				else
+						-- Make sure request chain node structure is empty.
+					l_request_chain_node_queue_entry.wipe_out
+				end
+
 				i := i + 1
 			end
 
@@ -362,7 +376,6 @@ feature -- Request Chain Handling
 					-- Release lock on processor request chain node id
 					-- This has to be done atomically via compare and swap
 				l_pid := l_request_chain_meta_data [i]
-
 
 					-- Increase current request chain node id for each processor now that it has been initialized.
 				l_request_chain_node_id := {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 (scoop_processor_meta_data [l_pid].item_address (scoop_processor_current_request_chain_node_id_index));
@@ -458,8 +471,14 @@ feature -- Command/Query Handling
 
 			l_request_chain_node_queue_entry := l_request_chain_node_queue [l_request_chain_node_id]
 			if not attached l_request_chain_node_queue_entry then
+				check request_chain_node_queue_entry_value: l_creation_routine_logging end
 				l_request_chain_node_queue_entry := new_scoop_processor_request_chain_node_queue_entry
 				l_request_chain_node_queue [l_request_chain_node_id] := l_request_chain_node_queue_entry
+			else
+				if l_creation_routine_logging then
+						-- If processor has been reused we need to make sure that the request node call structure is empty.
+					l_request_chain_node_queue_entry.wipe_out
+				end
 			end
 
 				-- Add `a_call_data' to the request chain node queue
@@ -589,6 +608,7 @@ feature {NONE} -- Resource Initialization
 			l_current_call_data: like call_data
 			l_head_pid: like processor_id_type
 			l_is_head: BOOLEAN
+			l_chain_node_count: INTEGER
 		do
 			-- SCOOP Processor has been launched
 			-- We are guaranteed that at least a creation routine has been logged.
@@ -618,15 +638,23 @@ feature {NONE} -- Resource Initialization
 
 								l_head_pid := l_executing_request_chain_node_meta_data [scoop_processor_request_chain_meta_data_header_size]
 								l_is_head := l_head_pid = a_logical_processor_id
-								if l_is_head then
-									-- We are a head node so we need to lock every processor involved in the request chain
-									-- in logical order to avoid dead-locking.
+								l_chain_node_count := l_executing_request_chain_node_meta_data [0]
+								if l_chain_node_count > 1 then
+									if l_is_head then
+										-- We are a head node so we need to lock every processor involved in the request chain
+										-- in logical order to avoid dead-locking.
+										do_nothing
 
+									else
+										-- We are a tail node so we wait until requested to continue by the head node
+										-- Signal the wait in the processor meta data.
+
+										-- Use compare and swap with the head node pid placed in to the last position of the
+
+										do_nothing
+									end
 								else
-									-- We are a tail node so we wait until requested to continue by the head node
-									-- Signal the wait in the processor meta data.
-
-									-- Use compare and swap with the head node
+									-- We must be the 'head' node so no need for locking/waiting on tail nodes.
 								end
 
 								l_executing_request_chain_node := l_scoop_processor_request_chain_node_queue [l_executing_node_id]
@@ -653,11 +681,7 @@ feature {NONE} -- Resource Initialization
 								end
 							end
 
-								-- Clear up call
-							if attached l_executing_request_chain_node_meta_data then
-								l_executing_request_chain_node_meta_data.wipe_out
-							end
-								-- Move
+								-- Increment execution cursor by one.
 							l_scoop_processor_meta_data [scoop_processor_current_request_node_id_execution_index] := l_executing_node_id + 1
 						end
 					else

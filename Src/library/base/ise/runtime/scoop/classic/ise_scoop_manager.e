@@ -179,10 +179,9 @@ feature -- Request Chain Handling
 				-- We cannot use any previous ones due to aliasing.
 				l_request_chain_meta_data := new_scoop_processor_request_chain_meta_data_entry
 				check l_request_chain_meta_data_attached: attached l_request_chain_meta_data end
-					-- Reset node count to default
-				l_request_chain_meta_data [0] := 0
-				l_request_chain_meta_data [1] := a_client_processor_id
-				l_request_chain_meta_data [2] := scoop_processor_invalid_request_chain_id
+					-- Reset node count to default values	
+				l_request_chain_meta_data [scoop_processor_request_chain_pid_count_index] := 0
+				l_request_chain_meta_data [scoop_processor_request_chain_client_pid_index] := a_client_processor_id
 				scoop_processor_request_chain_meta_data [a_client_processor_id] := l_request_chain_meta_data
 			else
 				--| FIXME IEK Handle nested request chain / potential lock passing / adding of supplier processors
@@ -298,9 +297,11 @@ feature -- Request Chain Handling
 			end
 
 				-- Reformulate meta data structure with unique pid count as the first value followed by the unique sorted pid values
-			l_request_chain_meta_data [0] := l_unique_pid_count
-			l_request_chain_meta_data [1] := a_client_processor_id
-			l_request_chain_meta_data [2] := l_request_chain_id
+
+			l_request_chain_meta_data [scoop_processor_request_chain_pid_count_index] := l_unique_pid_count
+			l_request_chain_meta_data [scoop_processor_request_chain_client_pid_index] := a_client_processor_id
+			l_request_chain_meta_data [scoop_processor_request_chain_client_pid_request_chain_id_index] := l_request_chain_id
+			l_request_chain_meta_data [scoop_processor_request_chain_status_index] := -1
 
 
 				-- Obtain a request queue lock on each of the processors (already uniquely sorted by logical pid order)
@@ -394,6 +395,7 @@ feature -- Request Chain Handling
 		local
 			l_new_request_chain_id: like scoop_processor_invalid_request_chain_id
 			l_request_chain_id_depth: like scoop_processor_default_request_chain_depth_value
+			l_request_chain_meta_data: detachable like new_scoop_processor_request_chain_meta_data_entry
 		do
 				-- Decrease current request chain id depth
 			l_request_chain_id_depth := (scoop_processor_meta_data [a_client_processor_id])[scoop_processor_current_request_chain_id_depth_index] - 1
@@ -401,6 +403,10 @@ feature -- Request Chain Handling
 
 			if l_request_chain_id_depth = scoop_processor_default_request_chain_depth_value then
 				-- We are completely closing off a chain so we can increase the request chain id value.
+				l_request_chain_meta_data := scoop_processor_request_chain_meta_data [a_client_processor_id]
+				check l_request_chain_meta_data_entry_attached: attached l_request_chain_meta_data end
+				l_request_chain_meta_data [scoop_processor_request_chain_status_index] := scoop_processor_request_chain_status_closed
+
 				l_new_request_chain_id := (scoop_processor_meta_data [a_client_processor_id])[scoop_processor_current_request_chain_id_index] + 1
 				(scoop_processor_meta_data [a_client_processor_id]).put (l_new_request_chain_id, scoop_processor_current_request_chain_id_index)
 			end
@@ -439,7 +445,7 @@ feature -- Command/Query Handling
 				l_request_chain_meta_data := scoop_processor_request_chain_meta_data [a_client_processor_id]
 				check l_client_request_chain_meta_data_attached: attached l_request_chain_meta_data end
 
-				l_unique_pid_count := l_request_chain_meta_data [0]
+				l_unique_pid_count := l_request_chain_meta_data [scoop_processor_request_chain_pid_count_index]
 				check l_unique_pid_count_valid: l_unique_pid_count > 0 end
 				l_first_pid := l_request_chain_meta_data [scoop_processor_request_chain_meta_data_header_size]
 				if l_first_pid = a_supplier_processor_id then
@@ -492,9 +498,10 @@ feature -- Command/Query Handling
 				l_request_chain_meta_data := new_scoop_processor_request_chain_meta_data_entry
 
 					-- Set request chain meta data for creation routine.
-				l_request_chain_meta_data [0] := 1 -- Number of processors involved in chain (a_processor_id)
-				l_request_chain_meta_data [1] := a_supplier_processor_id -- client processor id
-				l_request_chain_meta_data [2] := 0 -- current request chain id
+				l_request_chain_meta_data [scoop_processor_request_chain_pid_count_index] := 1 -- Number of processors involved in chain (a_processor_id)
+				l_request_chain_meta_data [scoop_processor_request_chain_client_pid_index] := a_supplier_processor_id -- client processor id
+				l_request_chain_meta_data [scoop_processor_request_chain_client_pid_request_chain_id_index] := 0 -- current request chain id
+				l_request_chain_meta_data [scoop_processor_request_chain_status_index] := scoop_processor_request_chain_status_closed -- Request chain is closed.
 				l_request_chain_meta_data.extend (a_supplier_processor_id)
 				l_request_chain_meta_data.extend (0) -- current request chain node id
 
@@ -547,22 +554,10 @@ feature {NONE} -- Resource Initialization
 	initialize_default_processor_meta_data (a_processor_id: like processor_id_type; a_reinitialize: BOOLEAN)
 			-- Initialize processor `a_processor_id' meta data to default values after a creation routine has been logged.
 		local
---			l_request_chain_meta_data: detachable like new_scoop_processor_request_chain_meta_data_entry
 			l_request_chain_node_meta_data_queue: detachable like new_scoop_processor_request_chain_node_meta_data_queue
 			l_request_chain_node_queue: detachable like new_scoop_processor_request_chain_node_queue
 		do
 			(scoop_processor_meta_data [a_processor_id]).put (scoop_processor_invalid_request_chain_node_id, scoop_processor_current_request_chain_id_depth_index)
-
---				-- Initialize request chain meta data
---			l_request_chain_meta_data := new_scoop_processor_request_chain_meta_data_entry
---			scoop_processor_request_chain_meta_data [a_processor_id] := l_request_chain_meta_data
-
---				-- Set request chain meta data for creation routine.
---			l_request_chain_meta_data [0] := 1 -- Number of processors involved in chain (a_processor_id)
---			l_request_chain_meta_data [1] := a_processor_id -- client processor id
---			l_request_chain_meta_data [2] := 0 -- current request chain id
---			l_request_chain_meta_data.extend (a_processor_id)
---			l_request_chain_meta_data.extend (0) -- current request chain node id
 
 
 				-- Initialize request chain node meta data queue
@@ -625,17 +620,18 @@ feature {NONE} -- Resource Initialization
 				if l_scoop_processor_meta_data [scoop_processor_status_index] = scoop_processor_status_initialized then
 						-- SCOOP processor is initialized so we can check current index
 
-						-- Increment execution index
+						-- Retrieve execution index
 					l_executing_node_id := l_scoop_processor_meta_data [scoop_processor_current_request_node_id_execution_index]
 					if
 						l_executing_node_id < l_scoop_processor_request_chain_node_meta_data_queue.count
 					then
-						if attached l_scoop_processor_request_chain_node_queue [l_executing_node_id] then
-								-- We are in a valid feature application position.
+						l_executing_request_chain_node_meta_data := l_scoop_processor_request_chain_node_meta_data_queue [l_executing_node_id]
+						if
+							attached l_executing_request_chain_node_meta_data and then
+							l_executing_request_chain_node_meta_data [scoop_processor_request_chain_status_index] = scoop_processor_request_chain_status_closed
+						then
+								-- We are in a valid feature application position as the request chain has been closed.
 							from
-								l_executing_request_chain_node_meta_data := l_scoop_processor_request_chain_node_meta_data_queue [l_executing_node_id]
-								check l_executing_request_chain_node_meta_data_attached: attached l_executing_request_chain_node_meta_data end
-
 								l_head_pid := l_executing_request_chain_node_meta_data [scoop_processor_request_chain_meta_data_header_size]
 								l_is_head := l_head_pid = a_logical_processor_id
 								l_chain_node_count := l_executing_request_chain_node_meta_data [0]
@@ -683,6 +679,9 @@ feature {NONE} -- Resource Initialization
 
 								-- Increment execution cursor by one.
 							l_scoop_processor_meta_data [scoop_processor_current_request_node_id_execution_index] := l_executing_node_id + 1
+						else
+								-- We are in a dorment state so we yield to the operating system.
+							yield_to_operating_system
 						end
 					else
 						yield_to_operating_system
@@ -807,9 +806,26 @@ feature {NONE} -- Scoop Processor Meta Data
 		do
 			create Result.make_empty (scoop_processor_request_chain_meta_data_default_size)
 				-- Add meta data header null values.
-			Result.fill_with (null_processor_id, 0, 2)
-			-- Format = {pid_count, client pid, client pid request chain id, head_pid, tailx_pid, head request chain node id, tail request chain node id}
+			Result.fill_with (null_processor_id, 0, 3)
+			-- Format = {pid_count, client pid, client pid request chain id, node status, head_pid, tailx_pid, head request chain node id, tail request chain node id}
 		end
+
+	scoop_processor_request_chain_pid_count_index: NATURAL_8 = 0
+	scoop_processor_request_chain_client_pid_index: NATURAL_8 = 1
+	scoop_processor_request_chain_client_pid_request_chain_id_index: NATURAL_8 = 2
+	scoop_processor_request_chain_status_index: NATURAL_8 = 3
+
+	scoop_processor_request_chain_status_open: INTEGER_8 = -1
+	scoop_processor_request_chain_status_closed: INTEGER_8 = 0
+	scoop_processor_request_chain_status_waiting_on_node: INTEGER_8 = 1
+
+	scoop_processor_request_chain_meta_data_default_size: INTEGER_32 = 8
+		-- meta data header + (2 * supplier PID request chain meta data)
+	scoop_processor_request_chain_meta_data_header_size: INTEGER_32 = 4
+		-- Size of request chain meta data header {pid_count, client pid, client pid request chain id}
+
+	scoop_processor_request_chain_meta_data_supplier_pid_meta_data_size: INTEGER_32 = 2
+		-- {Supplier PID, Supplier Request Chain Node ID}
 
 	new_scoop_processor_request_chain_node_meta_data_entry,
 	new_scoop_processor_request_chain_node_meta_data_queue_entry: like new_scoop_processor_request_chain_meta_data_entry
@@ -819,12 +835,7 @@ feature {NONE} -- Scoop Processor Meta Data
 			create Result.make_empty (0)
 		end
 
-	scoop_processor_request_chain_meta_data_default_size: INTEGER_32 = 9
-		-- meta data header + (3 * supplier PID request chain meta data to hold 3 processor metadata values)
-	scoop_processor_request_chain_meta_data_header_size: INTEGER_32 = 3
-		-- Size of request chain meta data header {pid_count, client pid, client pid request chain id}
-	scoop_processor_request_chain_meta_data_supplier_pid_meta_data_size: INTEGER_32 = 2
-		-- {Supplier PID, Supplier Request Chain Node ID}
+
 
 	scoop_processor_status_index: INTEGER_32 = 0
 			-- Current Status of the Scoop Processor at index 'scoop_logical_index'.

@@ -7,7 +7,7 @@
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="testing" location="$ISE_LIBRARY\library\testing\testing-safe.ecf" readonly="false"/>
-		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf" readonly="false"/>
+		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2-safe.ecf" readonly="false"/>
 		<tests name="tests" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/EIFGENs$</exclude>

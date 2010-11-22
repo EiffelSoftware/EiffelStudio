@@ -13,6 +13,7 @@ create {NONE}
 feature -- C callback function
 
 	scoop_manager_task_callback (scoop_task: NATURAL_8; client_processor_id, supplier_processor_id: like processor_id_type; body_index: NATURAL_32; a_callback_data, a_reserved: POINTER)
+			-- Entry point to ISE_SCOOP_MANAGER from RTS SCOOP macros.
 		local
 			l_id: INTEGER_32
 		do
@@ -297,12 +298,10 @@ feature -- Request Chain Handling
 			end
 
 				-- Reformulate meta data structure with unique pid count as the first value followed by the unique sorted pid values
-
 			l_request_chain_meta_data [scoop_processor_request_chain_pid_count_index] := l_unique_pid_count
 			l_request_chain_meta_data [scoop_processor_request_chain_client_pid_index] := a_client_processor_id
 			l_request_chain_meta_data [scoop_processor_request_chain_client_pid_request_chain_id_index] := l_request_chain_id
 			l_request_chain_meta_data [scoop_processor_request_chain_status_index] := -1
-
 
 				-- Obtain a request queue lock on each of the processors (already uniquely sorted by logical pid order)
 			from
@@ -325,7 +324,7 @@ feature -- Request Chain Handling
 			end
 
 			-- When all locks have been obtained we retrieve the request chain node ids for each of the locked processors.
-			-- When retrieved we initialize the data structure for each supplier pid so that we can
+			-- When retrieved we initialize the data structure for each supplier pid so that we can then log calls.
 
 			from
 				i := scoop_processor_request_chain_meta_data_header_size
@@ -363,7 +362,6 @@ feature -- Request Chain Handling
 						-- Make sure request chain node structure is empty.
 					l_request_chain_node_queue_entry.wipe_out
 				end
-
 				i := i + 1
 			end
 
@@ -603,7 +601,7 @@ feature {NONE} -- Resource Initialization
 			l_current_call_data: like call_data
 			l_head_pid: like processor_id_type
 			l_is_head: BOOLEAN
-			l_chain_node_count: INTEGER
+			l_orig_chain_node_count, l_temp_count: INTEGER
 		do
 			-- SCOOP Processor has been launched
 			-- We are guaranteed that at least a creation routine has been logged.
@@ -634,23 +632,51 @@ feature {NONE} -- Resource Initialization
 							from
 								l_head_pid := l_executing_request_chain_node_meta_data [scoop_processor_request_chain_meta_data_header_size]
 								l_is_head := l_head_pid = a_logical_processor_id
-								l_chain_node_count := l_executing_request_chain_node_meta_data [0]
-								if l_chain_node_count > 1 then
-									if l_is_head then
-										-- We are a head node so we need to lock every processor involved in the request chain
-										-- in logical order to avoid dead-locking.
-										do_nothing
 
-									else
-										-- We are a tail node so we wait until requested to continue by the head node
-										-- Signal the wait in the processor meta data.
+								if l_is_head then
+									l_orig_chain_node_count := {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_executing_request_chain_node_meta_data.item_address (0), 0)
+										-- We are a head node, set PID count to minus original tail count
 
-										-- Use compare and swap with the head node pid placed in to the last position of the
-
-										do_nothing
+										-- Wait until value is -1
+									from
+										l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.swap_integer_32 (l_executing_request_chain_node_meta_data.item_address (0), -l_orig_chain_node_count)
+									until
+										l_temp_count = -1
+									loop
+										yield_to_operating_system
+										l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_executing_request_chain_node_meta_data.item_address (0), 0)
 									end
+										-- Set to zero, increment by 1 (atomic swap with 1 as shortcut)
+										-- Wait until count is original count, this signifies that all tail nodes are now executing
+									from
+										l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.swap_integer_32 (l_executing_request_chain_node_meta_data.item_address (0), 1)
+									until
+										l_temp_count = l_orig_chain_node_count
+									loop
+										yield_to_operating_system
+										l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_executing_request_chain_node_meta_data.item_address (0), 0)
+									end
+										-- Tail nodes are all synchronized and executing so head node can continue.															
 								else
-									-- We must be the 'head' node so no need for locking/waiting on tail nodes.
+									-- We are a tail node, we wait for head node to set pid count to negative value.
+									from
+										l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_executing_request_chain_node_meta_data.item_address (0), 0)
+									until
+										l_temp_count < 0
+									loop
+										yield_to_operating_system
+										l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_executing_request_chain_node_meta_data.item_address (0), 0)
+									end
+									l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 (l_executing_request_chain_node_meta_data.item_address (0))
+									from
+										l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_executing_request_chain_node_meta_data.item_address (0), 0)
+									until
+										l_temp_count > 0
+									loop
+										yield_to_operating_system
+										l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_executing_request_chain_node_meta_data.item_address (0), 0)
+									end
+									l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 (l_executing_request_chain_node_meta_data.item_address (0))
 								end
 
 								l_executing_request_chain_node := l_scoop_processor_request_chain_node_queue [l_executing_node_id]
@@ -818,11 +844,13 @@ feature {NONE} -- Scoop Processor Meta Data
 	scoop_processor_request_chain_status_open: INTEGER_8 = -1
 	scoop_processor_request_chain_status_closed: INTEGER_8 = 0
 	scoop_processor_request_chain_status_waiting_on_node: INTEGER_8 = 1
+	scoop_processor_request_chain_status_executing: INTEGER_8 = 2
+	scoop_processor_request_chain_status_completed: INTEGER_8 = 3
 
 	scoop_processor_request_chain_meta_data_default_size: INTEGER_32 = 8
 		-- meta data header + (2 * supplier PID request chain meta data)
 	scoop_processor_request_chain_meta_data_header_size: INTEGER_32 = 4
-		-- Size of request chain meta data header {pid_count, client pid, client pid request chain id}
+		-- Size of request chain meta data header {pid_count, client pid, client pid request chain id, node status}
 
 	scoop_processor_request_chain_meta_data_supplier_pid_meta_data_size: INTEGER_32 = 2
 		-- {Supplier PID, Supplier Request Chain Node ID}
@@ -834,8 +862,6 @@ feature {NONE} -- Scoop Processor Meta Data
 			check do_not_call: False end
 			create Result.make_empty (0)
 		end
-
-
 
 	scoop_processor_status_index: INTEGER_32 = 0
 			-- Current Status of the Scoop Processor at index 'scoop_logical_index'.

@@ -310,7 +310,7 @@ feature -- String
 			c: CHARACTER_8
 		do
 			if attached {STRING_8} a_str as l_str then
-				Result := l_str.as_upper.is_equal (l_str)
+				Result := l_str.as_lower.is_equal (l_str)
 			else
 				Result := True
 				from

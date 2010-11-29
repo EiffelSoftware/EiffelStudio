@@ -5,7 +5,7 @@ note
 			Generators of XML documents from XML trees (wrapper for output filters)
 
 			Note: the original code is from Gobo's XM library (http://www.gobosoft.com/)
-		]"		
+		]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -36,6 +36,14 @@ feature -- Access
 
 	last_output: XML_OUTPUT_STREAM
 			-- Output stream
+
+	set_output_file (a_file: FILE)
+			-- Set output stream based on `a_file'.
+		require
+			not_void: a_file /= Void
+		do
+			set_output (create {XML_FILE_OUTPUT_STREAM}.make (a_file))
+		end
 
 	set_output (an_output: like last_output)
 			-- Set output stream.

@@ -287,10 +287,16 @@ feature {NONE} -- Error
 	Duplicate_namespace_declaration_error: STRING = "Namespace declared twice"
 			-- Error messages
 
-	same_string (a,b: STRING): BOOLEAN
+feature {NONE} -- Implementation
+
+	same_string (a,b: detachable STRING_GENERAL): BOOLEAN
 			-- Are `a' and `b' the same string?
 		do
-			Result := a.same_string (b)
+			if a = b then
+				Result := True
+			elseif a /= Void and b /= Void then
+				Result := a.same_string (b)
+			end
 		end
 
 note

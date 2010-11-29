@@ -7,12 +7,10 @@
 			<exclude>/CVS$</exclude>
 			<exclude>/.svn$</exclude>
 		</file_rule>
-		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" namespace="EiffelSoftware.Library" syntax="provisional">
+		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" syntax="provisional" namespace="EiffelSoftware.Library">
 		</option>
-
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<library name="xml" location="..\parser\xml_parser-safe.ecf"/>
-		<cluster name="xml_tree" location=".\" recursive="true">
-		</cluster>
+		<library name="xml_parser" location="..\parser\xml_parser-safe.ecf" readonly="false"/>
+		<cluster name="xml_tree" location=".\" recursive="true"/>
 	</target>
 </system>

@@ -1,6 +1,6 @@
 note
 	description: "[
-			Iterator pattern for XML node objects. 
+			Iterator pattern for XML node objects.
 		]"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,6 +22,36 @@ feature -- Processing
 				nodes.after
 			loop
 				nodes.item.process (Current)
+				nodes.forth
+			end
+		end
+
+	process_attribute_nodes (nodes: LIST [XML_NODE])
+			-- Process list of attribute nodes `nodes'.
+		do
+			from
+				nodes.start
+			until
+				nodes.after
+			loop
+				if attached {XML_ATTRIBUTE} nodes.item as att then
+					att.process (Current)
+				end
+				nodes.forth
+			end
+		end
+
+	process_non_attribute_nodes (nodes: LIST [XML_NODE])
+			-- Process list of non attribute nodes `nodes'.
+		do
+			from
+				nodes.start
+			until
+				nodes.after
+			loop
+				if not attached {XML_ATTRIBUTE} nodes.item then
+					nodes.item.process (Current)
+				end
 				nodes.forth
 			end
 		end

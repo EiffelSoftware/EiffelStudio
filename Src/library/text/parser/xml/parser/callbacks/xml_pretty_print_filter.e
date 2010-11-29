@@ -1,12 +1,10 @@
 note
-
 	description:
+		"[
+			Pretty printer, output as XML document
 
-		"Pretty printer, output as XML document"
-
-	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
-	license: "MIT License"
+			Note: the original code is from Gobo's XM library (http://www.gobosoft.com/)
+		]"
 	date: "$Date$"
 	revision: "$Revision$"
 

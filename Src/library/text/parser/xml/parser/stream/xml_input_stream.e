@@ -24,7 +24,7 @@ feature -- Status report
 			-- Can items be read from input stream?
 		deferred
 		end
-
+		
 feature -- Access
 
 	index: INTEGER

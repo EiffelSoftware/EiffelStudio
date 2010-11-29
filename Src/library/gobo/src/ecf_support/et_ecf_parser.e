@@ -236,7 +236,7 @@ feature {NONE} -- Implementation
 			end
 
 				-- Build state
-			create Result.make (l_platform, l_build, application_target.setting_multithreaded, application_target.setting_msil_generation, application_target.setting_dynamic_runtime, application_target.variables, l_version)
+			create Result.make (l_platform, l_build, application_target.setting_concurrency.index /= {CONF_TARGET}.setting_concurrency_index_none, application_target.setting_msil_generation, application_target.setting_dynamic_runtime, application_target.variables, l_version)
 		end
 
 	generate_system is

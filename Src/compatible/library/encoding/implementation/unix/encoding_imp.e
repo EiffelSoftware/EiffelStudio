@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 					Encoding conversion implementation on Unix. The cache is never freed in the library. 
 					It relies on the normal termination of the client process.
@@ -30,13 +30,11 @@ feature -- String encoding convertion
 			-- Convert `a_from_string' of `a_from_code_page' to a string of `a_to_code_page'.
 		local
 			l_managed_pointer: MANAGED_POINTER
-			l_count, l_size, i: INTEGER
+			l_count: INTEGER
 			l_pointer: POINTER
 			l_out_count: INTEGER
-			l_string: STRING_8
 			l_string_32: STRING_32
 			l_big_endian: BOOLEAN
-			l_no_endian: BOOLEAN
 			l_error: INTEGER
 			l_retried: BOOLEAN
 			l_converted: STRING_GENERAL
@@ -46,15 +44,23 @@ feature -- String encoding convertion
 				l_big_endian := is_big_endian_code_page (a_from_code_page) or else (not is_little_endian and not is_little_endian_code_page (a_from_code_page))
 				if is_four_byte_code_page (a_from_code_page) then
 					l_string_32 := a_from_string.twin
-					if not l_big_endian then
-						l_string_32.precede (byte_order_mark)
+					if not descriptor_cache.converted (a_from_code_page, a_to_code_page) then
+						if (l_big_endian xor is_little_endian) then
+							l_string_32.precede (byte_order_mark)
+						else
+							l_string_32.precede (byte_order_mark_32_reverse)
+						end
 					end
 					l_managed_pointer := string_32_to_pointer (l_string_32)
 					l_count := (l_string_32.count) * 4
 				elseif is_two_byte_code_page (a_from_code_page) then
 					l_string_32 := a_from_string.twin
-					if not l_big_endian then
-						l_string_32.precede (byte_order_mark)
+					if not descriptor_cache.converted (a_from_code_page, a_to_code_page) then
+						if (l_big_endian xor is_little_endian) then
+							l_string_32.precede (byte_order_mark)
+						else
+							l_string_32.precede (byte_order_mark_16_reverse)
+						end
 					end
 					l_managed_pointer := wide_string_to_pointer (l_string_32)
 					l_count := (l_string_32.count) * 2
@@ -70,18 +76,21 @@ feature -- String encoding convertion
 					last_conversion_successful := True
 				end
 				check l_pointer_set: l_pointer /= default_pointer end
-				l_no_endian := not is_big_endian_code_page (a_to_code_page) and not is_little_endian_code_page (a_to_code_page)
 				if is_four_byte_code_page (a_to_code_page) then
 					l_converted := pointer_to_string_32 (l_pointer, l_out_count)
 					if not l_converted.is_empty then
-						if bom_little_endian (l_converted.code (1)) then
+						if same_endian (l_converted.code (1)) then
 							l_converted := l_converted.substring (2, l_converted.count)
-							if l_no_endian and then not is_little_endian then
+							if (is_big_endian_code_page (a_to_code_page) and is_little_endian) or else
+								(is_little_endian_code_page (a_to_code_page) and not is_little_endian)
+							then
 								l_converted := string_32_switch_endian (l_converted)
 							end
-						elseif bom_big_endian (l_converted.code (1)) then
+						elseif reverse_endian (l_converted.code (1)) then
 							l_converted := l_converted.substring (2, l_converted.count)
-							if l_no_endian and then is_little_endian then
+							if (is_little_endian_code_page (a_to_code_page) and is_little_endian) or else
+								(is_big_endian_code_page (a_to_code_page) and not is_little_endian)
+							then
 								l_converted := string_32_switch_endian (l_converted)
 							end
 						end
@@ -89,14 +98,18 @@ feature -- String encoding convertion
 				elseif is_two_byte_code_page (a_to_code_page) then
 					l_converted := pointer_to_wide_string (l_pointer, l_out_count)
 					if not l_converted.is_empty then
-						if bom_little_endian (l_converted.code (1)) then
+						if same_endian (l_converted.code (1)) then
 							l_converted := l_converted.substring (2, l_converted.count)
-							if l_no_endian and then not is_little_endian then
+							if (is_big_endian_code_page (a_to_code_page) and is_little_endian) or else
+								(is_little_endian_code_page (a_to_code_page) and not is_little_endian)
+							then
 								l_converted := string_16_switch_endian (l_converted)
 							end
-						elseif bom_big_endian (l_converted.code (1)) then
+						elseif reverse_endian (l_converted.code (1)) then
 							l_converted := l_converted.substring (2, l_converted.count)
-							if l_no_endian and then is_little_endian then
+							if (is_little_endian_code_page (a_to_code_page) and is_little_endian) or else
+								(is_big_endian_code_page (a_to_code_page) and not is_little_endian)
+							then
 								l_converted := string_16_switch_endian (l_converted)
 							end
 						end
@@ -156,6 +169,14 @@ feature -- Status report
 			retry
 		end
 
+	last_conversion_lost_data: BOOLEAN
+			-- Did last conversion lose data?
+			-- | When there is data lose, internal exception is raised
+			-- | and handled. The conversion simply fails.
+		do
+			Result := not last_conversion_successful
+		end
+
 feature {NONE} -- Status report
 
 	is_known_code_page (a_code_page: STRING): BOOLEAN
@@ -165,15 +186,25 @@ feature {NONE} -- Status report
 			a_code_page_not_empty: not a_code_page.is_empty
 		local
 			l_error: INTEGER
+			l_retried: BOOLEAN
 		do
-			if not a_code_page.is_case_insensitive_equal (utf8) then
-				Result := c_codeset_valid (a_code_page, $l_error)
-				if l_error /= 0 then
-					conversion_exception (l_error).raise
+			if not l_retried then
+				if not a_code_page.is_case_insensitive_equal ({CODE_PAGE_CONSTANTS}.utf8) then
+					Result := c_codeset_valid (a_code_page, $l_error)
+					if l_error /= 0 then
+						conversion_exception (l_error).raise
+					end
+				else
+					Result := True
 				end
-			else
-				Result := True
 			end
+		rescue
+				-- In the future, a proper mechanism should be worked out
+				-- to reflect such internal errors. For now the rescue
+				-- is mostly for debugging.
+			Result := False
+			l_retried := True
+			retry
 		end
 
 	is_two_byte_code_page (a_code_page: STRING): BOOLEAN
@@ -229,16 +260,15 @@ feature {NONE} -- Implementation
 			a_to_code_page_valid: is_code_page_valid (a_to_code_page)
 			code_page_convertable: is_code_page_convertable (a_from_code_page, a_to_code_page)
 		local
-			l_fp, l_tp: MANAGED_POINTER
 			l_key: STRING
 			l_cd: POINTER
-			l_succ: BOOLEAN
 		do
 			l_key := a_from_code_page + a_to_code_page
 			descriptor_cache.search (l_key)
 			check found: descriptor_cache.found end
 			l_cd := descriptor_cache.found_item
 			Result := c_iconv (l_cd, a_str, a_size, a_out_count, a_b)
+			descriptor_cache.record_converted_pair (a_from_code_page, a_to_code_page)
 		end
 
 	is_codeset_convertable (a_from_code_page, a_to_code_page: STRING; a_error: TYPED_POINTER [INTEGER]): BOOLEAN
@@ -272,14 +302,14 @@ feature {NONE} -- Implementation
 			Result := is_codeset_convertable (a_code_set, "utf-8", a_error)
 		end
 
-	bom_little_endian (code: NATURAL_32): BOOLEAN
-			-- Is `code' little endian BOM?
+	same_endian (code: NATURAL_32): BOOLEAN
+			-- The same endianness with the sys?
 		do
-			Result := code = 0xFEFF or code = 0xFEFF0000
+			Result := code = 0xFEFF
 		end
 
-	bom_big_endian (code: NATURAL_32): BOOLEAN
-			-- Is `code' big endian BOM?
+	reverse_endian (code: NATURAL_32): BOOLEAN
+			-- Reverse endianness with the sys?
 		do
 			Result := code = 0xFFFE or code = 0xFFFE0000
 		end
@@ -320,6 +350,18 @@ feature {NONE} -- Implementation
 			-- Byte order mark (BOM)
 		once
 			Result := (0xFEFF).to_character_32
+		end
+
+	byte_order_mark_32_reverse: CHARACTER_32
+			-- Byte order mark (BOM)
+		once
+			Result := (0xFFFE0000).to_character_32
+		end
+
+	byte_order_mark_16_reverse: CHARACTER_32
+			-- Byte order mark (BOM)
+		once
+			Result := (0xFFFE).to_character_32
 		end
 
 	conversion_exception (a_error:INTEGER): CONVERSION_FAILURE
@@ -437,7 +479,7 @@ feature {NONE} -- Implementation
 
 note
 	library:   "Encoding: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

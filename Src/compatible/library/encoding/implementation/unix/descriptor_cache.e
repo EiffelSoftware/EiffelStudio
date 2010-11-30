@@ -15,6 +15,7 @@ feature {NONE} -- Initialization
 			-- Create
 		do
 			create cache.make (2)
+			create converted_pair.make (2)
 		end
 
 feature -- Operation
@@ -29,6 +30,15 @@ feature -- Operation
 			-- Search
 		do
 			cache.search (a_conv_pair)
+		end
+
+	record_converted_pair (a_to, a_from: STRING)
+			-- Record converted pair.
+		local
+			l_s: STRING
+		do
+			l_s := a_to + a_from
+			converted_pair.force (l_s, l_s)
 		end
 
 feature -- Querry
@@ -47,10 +57,19 @@ feature -- Querry
 			Result := cache.found_item
 		end
 
+	converted (a_to, a_from: STRING): BOOLEAN
+			-- Has `a_to' to `a_from' been converted once?
+		do
+			Result := converted_pair.has (a_to + a_from)
+		end
+
 feature {NONE} -- Implementation
 
 	cache: HASH_TABLE [POINTER, STRING]
 			-- Cache for descriptor pointers.
+
+	converted_pair: HASH_TABLE [STRING, STRING]
+			-- Converted pairs.
 
 feature -- Clean up
 
@@ -58,6 +77,7 @@ feature -- Clean up
 			-- Call `iconv_close' on all open descriptors.
 		do
 			cache.linear_representation.do_all (agent c_iconv_close)
+			converted_pair.wipe_out
 		end
 
 feature {NONE} -- Externals
@@ -78,7 +98,7 @@ invariant
 	cache_not_void: cache /= Void
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

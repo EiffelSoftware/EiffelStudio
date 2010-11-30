@@ -20,14 +20,20 @@ feature -- Access
 			-- Take oem as default
 		do
 			Result := extract_locale_string (system_locale,
-											LOCALE_IDEFAULTCODEPAGE,
-											locale_idefaultcodepage_maxlen)
+											LOCALE_IDEFAULTANSICODEPAGE,
+											locale_idefaultansicodepage_maxlen)
 		end
 
 	console_code_page: STRING
 			-- Console code page
 		do
 			Result := c_console_code_page.out
+		end
+
+	iso_8859_1_code_page: STRING
+			-- ISO-8859-1 code page.
+		do
+			Result := "28591"
 		end
 
 feature {NONE} -- NLS LC CTYPE CONSTANTS
@@ -48,7 +54,11 @@ feature {NONE} -- Implementation
 		do
 			create l_pointer.make (c_tchar_length * bufferlen)
 			l_int := c_extract_locale_string(lcid, lc_ctype, l_pointer.item, l_pointer.count)
-			Result := pointer_to_wide_string (l_pointer.item, l_pointer.count)
+			Result := pointer_to_wide_string (l_pointer.item, l_int * c_tchar_length)
+			if Result [Result.count].code = 0 then
+					-- Remove trailing zero.
+				Result.remove (Result.count)
+			end
 		end
 
 	c_extract_locale_string(lcid: INTEGER; lc_ctype: INTEGER; a_pointer: POINTER; a_len: INTEGER): INTEGER
@@ -102,14 +112,14 @@ invariant
 
 note
 	library:   "Encoding: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

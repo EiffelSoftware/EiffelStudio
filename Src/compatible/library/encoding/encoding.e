@@ -76,21 +76,23 @@ feature -- Conversion
 			a_to_encoding_not_void: a_to_encoding /= Void
 			a_string_not_void: a_string /= Void
 		local
-			l_unicode_conversion: BOOLEAN
+			l_is_unicode_conversion: BOOLEAN
+			l_unicode_conversion: like unicode_conversion
 		do
+			l_unicode_conversion := unicode_conversion
 			if
-				unicode_conversion.is_code_page_valid (a_to_encoding.code_page) and then
-				unicode_conversion.is_code_page_valid (code_page) and then
-				unicode_conversion.is_code_page_convertable (code_page, a_to_encoding.code_page)
+				l_unicode_conversion.is_code_page_valid (a_to_encoding.code_page) and then
+				l_unicode_conversion.is_code_page_valid (code_page) and then
+				l_unicode_conversion.is_code_page_convertable (code_page, a_to_encoding.code_page)
 			then
-				encoding_i := unicode_conversion
-				l_unicode_conversion := True
+				encoding_i := l_unicode_conversion
+				l_is_unicode_conversion := True
 			else
 				encoding_i := regular_encoding_imp
 			end
 
 			encoding_i.reset
-			if l_unicode_conversion then
+			if l_is_unicode_conversion then
 				encoding_i.convert_to (code_page, a_string, a_to_encoding.code_page)
 			elseif a_to_encoding.is_valid and then is_valid and then is_conversion_possible (a_to_encoding) then
 				encoding_i.convert_to (code_page, a_string, a_to_encoding.code_page)
@@ -100,9 +102,15 @@ feature -- Conversion
 feature -- Status report
 
 	last_conversion_successful: BOOLEAN
-			-- Is last conversion successful?
+			-- Was last conversion successful?
 		do
 			Result := encoding_i.last_conversion_successful
+		end
+
+	last_conversion_lost_data: BOOLEAN
+			-- Did last conversion lose data?
+		do
+			Result := encoding_i.last_conversion_lost_data
 		end
 
 feature -- Comparison
@@ -120,7 +128,7 @@ feature {ENCODING} -- Status report
 	is_valid: BOOLEAN
 			-- Is current valid?
 		do
-			Result := encoding_i.is_code_page_valid (code_page)
+			Result := regular_encoding_imp.is_code_page_valid (code_page)
 		end
 
 	is_conversion_possible (a_to_encoding: ENCODING): BOOLEAN
@@ -130,7 +138,7 @@ feature {ENCODING} -- Status report
 			a_to_encoding_valid: a_to_encoding.is_valid
 			is_valid: is_valid
 		do
-			Result := encoding_i.is_code_page_convertable (code_page, a_to_encoding.code_page)
+			Result := regular_encoding_imp.is_code_page_convertable (code_page, a_to_encoding.code_page)
 		end
 
 feature {NONE} -- Implementation
@@ -156,7 +164,7 @@ invariant
 
 note
 	library:   "Encoding: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

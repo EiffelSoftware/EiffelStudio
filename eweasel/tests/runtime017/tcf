@@ -1,0 +1,48 @@
+test_name 	 weak-reference
+test_description When a GC cycle occurs, the WEAK_REFERENCE object may be invalid when it should not.
+
+define COLLECTION_TYPE "full_collect"
+copy_sub	Ace $TEST Ace
+copy_sub	test.e $CLUSTER test.e
+
+compile_frozen
+compile_result ok
+c_compile_work
+c_compile_result ok
+
+execute_work	NONE	exec_output_w1
+execute_result	ok
+compare exec_output_w1 output
+
+compile_final
+compile_result	ok
+c_compile_final
+c_compile_result ok
+
+execute_final	NONE	exec_output_f1
+execute_result	ok
+compare exec_output_f1 output
+
+define COLLECTION_TYPE "collect"
+copy_sub	test.e $CLUSTER test.e
+
+compile_frozen
+compile_result ok
+c_compile_work
+c_compile_result ok
+
+execute_work	NONE	exec_output_w2
+execute_result	ok
+compare exec_output_w2 output
+
+compile_final
+compile_result	ok
+c_compile_final
+c_compile_result ok
+
+execute_final	NONE	exec_output_f2
+execute_result	ok
+compare exec_output_f2 output
+
+
+test_end

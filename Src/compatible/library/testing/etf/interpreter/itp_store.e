@@ -20,8 +20,8 @@ feature {NONE} -- Initialization
 	make
 			-- Create new store
 		do
-			create storage.make (1, default_capacity)
-			create storage_flag.make (1, default_capacity)
+			create storage.make_filled (Void, 1, default_capacity)
+			create storage_flag.make_filled (False, 1, default_capacity)
 		end
 
 feature -- Status report
@@ -119,7 +119,7 @@ feature -- Basic routines
 		do
 			from
 				count := an_expression_list.count
-				create Result.make (1, count)
+				create Result.make_filled (False, 1, count)
 				i := 1
 			until
 				i > count or Result = Void
@@ -151,7 +151,7 @@ invariant
 	storage_count_same_as_storage_flag_count: storage.count = storage_flag.count
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

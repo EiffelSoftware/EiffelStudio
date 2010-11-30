@@ -36,6 +36,14 @@ feature -- Output
 			output_stream := Void
 		end
 
+	set_output_file (a_file: FILE)
+			-- Initialize output to given file,
+		require
+			a_file_not_void: a_file /= Void
+		do
+			set_output_stream (create {XML_FILE_OUTPUT_STREAM}.make (a_file))
+		end
+
 	set_output_stream (a_stream: like output_stream)
 			-- Set output to stream.
 		require

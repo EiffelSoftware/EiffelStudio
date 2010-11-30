@@ -1216,6 +1216,7 @@ test	overflow-special-expanded-resizing		runtime013	tcf pass runtime special exp
 if WINDOWS test	console-in-windows-dll	runtime014	tcf pass runtime windows console input output dll
 test	array-allocation-failure		runtime015	tcf pass runtime special expanded array memory allocation exception
 test	special-copy-data				runtime016	tcf pass runtime special memory
+test	weak-reference					runtime017	tcf pass runtime weak_reference
 
 -- Thread
 test	cond-timedwait-failure		thread001	tcf pass multithreaded

@@ -58,8 +58,6 @@ feature -- Processing
 
 	process_element (e: XML_ELEMENT)
 			-- Process element `e'.
-		local
-			s: STRING
 		do
 			process_nodes (e.nodes)
 		end

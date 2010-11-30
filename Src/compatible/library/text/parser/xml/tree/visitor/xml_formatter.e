@@ -59,12 +59,10 @@ feature -- Tree processor routines
 			-- Process document using xmlns generator and pretty print filters.
 		local
 			pretty_print: XML_PRETTY_PRINT_FILTER
-			xmlns_generator: XML_XMLNS_GENERATOR
 		do
 			create pretty_print.make_null
 			pretty_print.set_output_stream (last_output)
-			create xmlns_generator.set_next (pretty_print)
-			a_document.process_to_events (xmlns_generator)
+			a_document.process_to_events (pretty_print)
 		end
 
 invariant

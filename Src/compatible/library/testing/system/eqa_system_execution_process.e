@@ -9,7 +9,7 @@ note
 frozen class
 	EQA_SYSTEM_EXECUTION_PROCESS
 
-create {EQA_SYSTEM_EXECUTION}
+create {EQA_EXECUTION}
 	make
 
 feature {NONE} -- Initialization
@@ -28,8 +28,8 @@ feature {NONE} -- Initialization
 			input_file_valid: a_infile /= Void implies a_infile.is_open_read
 		do
 			create mutex.make
-			create client_condition.make
-			create provider_condition.make
+			create consumer_signal.make
+			create producer_signal.make
 			output_processor := a_outproc
 			error_processor := a_errproc
 			output_file := a_outfile
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 			input_file_set: input_file = a_infile
 		end
 
-feature {EQA_SYSTEM_EXECUTION}
+feature {EQA_EXECUTION}
 
 	last_exit_code: INTEGER
 			-- Exit code last returned by `process'
@@ -58,11 +58,11 @@ feature {NONE} -- Access: threading
 	mutex: MUTEX
 			-- Mutex for controlling access to `Current'
 
-	client_condition: CONDITION_VARIABLE
+	consumer_signal: CONDITION_VARIABLE
 			-- Condition variable for signalling that new output is available
 
-	provider_condition: CONDITION_VARIABLE
-			-- Condition valiablefor signalling that `Current' is waiting for new output
+	producer_signal: CONDITION_VARIABLE
+			-- Condition variable for signalling that `Current' is waiting for new output
 
 	next_output: detachable READABLE_STRING_8
 			-- Output to be processed next
@@ -84,20 +84,12 @@ feature {NONE} -- Access: io redirection
 	input_file: detachable FILE
 			-- File from which input will be read, Void if input is not read from a file
 
-feature {EQA_SYSTEM_EXECUTION} -- Status report
+feature {EQA_EXECUTION} -- Status report
 
-	is_launched: BOOLEAN
-			-- Has `Current' been launched yet?
+	is_running: BOOLEAN
+			-- Is `Current' running an actual process?
 		do
 			Result := process /= Void
-		end
-
-	has_exited: BOOLEAN
-			-- Has `process' exited yet?
-		require
-			launched: is_launched
-		do
-			Result := process = Void
 		end
 
 feature {NONE} -- Status report
@@ -108,7 +100,7 @@ feature {NONE} -- Status report
 	is_finished: BOOLEAN
 			-- Has process terminated?
 
-feature {EQA_SYSTEM_EXECUTION} -- Status setting
+feature {EQA_EXECUTION} -- Status setting
 
 	launch (a_exec: READABLE_STRING_8; a_arg_list: LIST [STRING]; a_dir: READABLE_STRING_8)
 			-- Launch `processor'.
@@ -116,7 +108,7 @@ feature {EQA_SYSTEM_EXECUTION} -- Status setting
 			a_exec_attached: a_exec /= Void
 			a_arg_list_attached: a_arg_list /= Void
 			a_dir_attached: a_dir /= Void
-			not_launched: not is_launched
+			not_running: not is_running
 		local
 			l_factory: PROCESS_FACTORY
 			l_process: like process
@@ -141,11 +133,11 @@ feature {NONE} -- Status setting
 		do
 			mutex.lock
 			is_finished := True
-			client_condition.broadcast
+			consumer_signal.broadcast
 			mutex.unlock
 		end
 
-feature {EQA_SYSTEM_EXECUTION} -- Basic operations
+feature {EQA_EXECUTION} -- Basic operations
 
 	redirect_input (a_input: READABLE_STRING_8)
 			-- Send input to `process'.
@@ -155,8 +147,7 @@ feature {EQA_SYSTEM_EXECUTION} -- Basic operations
 			-- Note: this routine has preconditions since it is only meant to be called from the main thread
 		require
 			a_input_attached: a_input /= Void
-			launched: is_launched
-			not_exited: not has_exited
+			running: is_running
 		local
 			l_input: STRING
 			l_process: like process
@@ -176,8 +167,7 @@ feature {EQA_SYSTEM_EXECUTION} -- Basic operations
 			--
 			-- Note: this routine has preconditions since it is only meant to be called from the main thread
 		require
-			launched: is_launched
-			not_exited: not has_exited
+			running: is_running
 		local
 			l_output: like next_output
 			l_processor: like output_processor
@@ -186,7 +176,7 @@ feature {EQA_SYSTEM_EXECUTION} -- Basic operations
 		do
 			mutex.lock
 			if next_output = Void and not is_finished then
-				client_condition.wait (mutex)
+				consumer_signal.wait (mutex)
 			end
 			l_output := next_output
 			if l_output /= Void then
@@ -217,7 +207,7 @@ feature {EQA_SYSTEM_EXECUTION} -- Basic operations
 				last_exit_code := l_process.exit_code
 				process := Void
 			end
-			provider_condition.signal
+			producer_signal.signal
 			mutex.unlock
 		end
 
@@ -237,12 +227,12 @@ feature {NONE} -- Basic operations
 		do
 			mutex.lock
 			if next_output /= Void then
-				provider_condition.wait (mutex)
+				producer_signal.wait (mutex)
 			end
 			if not is_finished then
 				next_output := a_output.twin
 				is_next_error := a_is_error
-				client_condition.signal
+				consumer_signal.signal
 			end
 			mutex.unlock
 		end
@@ -274,6 +264,8 @@ feature {NONE} -- Basic operations
 					l_error_file.close
 				end
 				a_process.redirect_error_to_file (l_error_file.name)
+			else
+				a_process.redirect_error_to_same_as_output
 			end
 			l_input_file := input_file
 			if l_input_file /= Void then
@@ -281,14 +273,15 @@ feature {NONE} -- Basic operations
 					l_input_file.close
 				end
 				a_process.redirect_input_to_file (l_input_file.name)
+			else
+				a_process.redirect_input_to_stream
 			end
 		end
 
 	cleanup_redirection
 			-- Flush buffers which potentially contain redirected output and close any remaining open files.
 		require
-			launched: is_launched
-			not_exited: not has_exited
+			running: is_running
 			finished: is_finished
 		local
 			l_output_proc, l_error_proc: like output_processor
@@ -315,7 +308,7 @@ feature {NONE} -- Basic operations
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -87,6 +87,19 @@ feature -- Access
 			end
 		end
 
+	formatted_content: like buffer
+			-- Buffered content formatted in a printable way
+		do
+			if is_truncated then
+				create Result.make (buffer_size + 100)
+				Result.append (leading_content)
+				Result.append (m_truncated)
+				Result.append (closing_content)
+			else
+				Result := content
+			end
+		end
+
 feature {NONE} -- Access
 
 	buffer: STRING
@@ -123,7 +136,7 @@ feature -- Status setting
 	wipe_out
 			-- Empty buffer
 		do
-			buffer.clear_all
+			buffer.wipe_out
 			truncated_start_position := 0
 		end
 
@@ -257,6 +270,10 @@ feature -- Basic functionality: file
 		do
 		end
 
+feature {NONE} -- Constants
+
+	m_truncated: STRING = "%N%N---------------------------%NTruncated section%N---------------------------%N%N"
+
 invariant
 	buffer_capacity_at_least_buffer_size: buffer.capacity >= buffer_size
 	buffer_count_not_greater_buffer_size: buffer.count <= buffer_size
@@ -265,7 +282,7 @@ invariant
 	truncated_implies_buffer_full: is_truncated implies (buffer.count = buffer_size)
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

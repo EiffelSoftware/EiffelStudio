@@ -102,6 +102,7 @@ feature {EQA_SYSTEM_EXECUTION, EQA_SYSTEM_EXECUTION_PROCESS} -- Implementation
 feature {NONE} -- Constants
 
 	default_buffer_size: INTEGER
+			-- Default capacity for `buffer'
 		do
 			Result := 100
 		end
@@ -110,7 +111,7 @@ invariant
 	buffer_contains_no_new_lines: not (buffer.has ('%N') or buffer.has ('%R'))
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

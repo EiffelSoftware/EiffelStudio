@@ -27,39 +27,35 @@ feature {NONE} -- Query
 
 	compare_output (a_output: READABLE_STRING_8)
 		require
---			current_execution_attached: current_execution /= Void
---			current_execution_exited: attached current_execution as l_exec_exited and then
---				l_exec_exited.is_launched and then l_exec_exited.has_exited
---			current_execution_stored_output: attached current_execution as l_exec_out and then
---				l_exec_out.output_path /= Void
---		local
---			l_path: detachable EQA_SYSTEM_PATH
---			l_execution: like current_execution
+			current_execution_attached: current_execution /= Void
+			current_execution_exited: attached current_execution as l_exec_exited and then
+				l_exec_exited.is_launched and then l_exec_exited.has_exited
+			current_execution_stored_output: attached current_execution as l_exec_out and then
+				l_exec_out.output_file_name /= Void
+		local
+			l_path: detachable EQA_SYSTEM_PATH
 		do
---			l_execution := current_execution
---			check l_execution /= Void end
---			l_path := l_execution.output_path
---			check l_path /= Void end
---			assert ("identical_output", file_system.has_same_content_as_string (l_path, a_output))
+			check attached current_execution as l_execution and then attached l_execution.output_file_name as l_output then
+				l_path := << l_output >>
+				assert ("identical_output", file_system.has_same_content_as_string (l_path, a_output))
+			end
 		end
 
 	compare_output_with_file (a_output_path: EQA_SYSTEM_PATH)
 		require
---			current_execution_attached: current_execution /= Void
---			current_execution_exited: attached current_execution as l_exec_exited and then
---				l_exec_exited.is_launched and then l_exec_exited.has_exited
---			current_execution_stored_output: attached current_execution as l_exec_out and then
---				l_exec_out.output_path /= Void
---			a_output_path_not_empty: not a_output_path.is_empty
---		local
---			l_path: detachable EQA_SYSTEM_PATH
---			l_execution: like current_execution
+			current_execution_attached: current_execution /= Void
+			current_execution_exited: attached current_execution as l_exec_exited and then
+				l_exec_exited.is_launched and then l_exec_exited.has_exited
+			current_execution_stored_output: attached current_execution as l_exec_out and then
+				l_exec_out.output_file_name /= Void
+			a_output_path_not_empty: not a_output_path.is_empty
+		local
+			l_path: detachable EQA_SYSTEM_PATH
 		do
---			l_execution := current_execution
---			check l_execution /= Void end
---			l_path := l_execution.output_path
---			check l_path /= Void end
---			assert ("identical_output", file_system.has_same_content_as_path (l_path, a_output_path))
+			check attached current_execution as l_execution and then attached l_execution.output_file_name as l_output then
+				l_path := << l_output >>
+				assert ("identical_output", file_system.has_same_content_as_path (l_path, a_output_path))
+			end
 		end
 
 feature {NONE} -- Basic operations
@@ -75,13 +71,14 @@ feature {NONE} -- Basic operations
 			l_exec.set_output_path (a_output_path)
 			current_execution := l_exec
 		ensure
---			current_execution_attached: current_execution /= Void
---			current_execution_uses_environment: attached current_execution as l_exec_e and then
---				l_exec_e.environment = environment
---			current_execution_not_launched: attached current_execution as l_exec_nl and then
---				not l_exec_nl.is_launched
---			current_execution_uses_valid_output: attached current_execution as l_exec_o and then
---				l_exec_o.output_path ~ old a_output_path
+			current_execution_attached: current_execution /= Void
+			current_execution_uses_environment: attached current_execution as l_exec_e and then
+				l_exec_e.test_set.environment = environment
+			current_execution_not_launched: attached current_execution as l_exec_nl and then
+				not l_exec_nl.is_launched
+			current_execution_uses_valid_output: attached current_execution as l_exec_o and then
+				attached l_exec_o.output_file_name as l_output and then
+				create {EQA_SYSTEM_PATH}.make (<< l_output >>) ~ old a_output_path
 		end
 
 	run_system (a_args: ARRAY [STRING])
@@ -107,9 +104,9 @@ feature {NONE} -- Basic operations
 				-- Safety assignments to satisfy postcondition
 			current_execution := l_exec
 		ensure
---			current_execution_unchanged: current_execution = old current_execution
---			current_execution_exited: attached current_execution as l_exec_exited and then
---				l_exec_exited.is_launched and then l_exec_exited.has_exited
+			current_execution_unchanged: current_execution = old current_execution
+			current_execution_exited: attached current_execution as l_exec_exited and then
+				l_exec_exited.is_launched and then l_exec_exited.has_exited
 		end
 
 feature {NONE} -- Events

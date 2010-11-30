@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Parse an ecf system and generate a gobo universe.
 
@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_standard is
+	make_standard
 			-- Create a new Ecf parser.
 			-- Error messages will be sent to standard files.
 		local
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			make (a_handler)
 		end
 
-	make (an_error_handler: like error_handler) is
+	make (an_error_handler: like error_handler)
 			-- Create a new Lace parser.
 		require
 			an_error_handler_not_void: an_error_handler /= Void
@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 			error_handler_set: error_handler = an_error_handler
 		end
 
-	make_with_factory (a_factory: like ast_factory; an_error_handler: like error_handler) is
+	make_with_factory (a_factory: like ast_factory; an_error_handler: like error_handler)
 			-- Create a new Lace parser.
 		require
 			a_factory_not_void: a_factory /= Void
@@ -93,7 +93,7 @@ feature -- Access
 
 feature -- Update
 
-	set_workbench_build (a_bool: BOOLEAN) is
+	set_workbench_build (a_bool: BOOLEAN)
 			-- Set if we do a workbench build.
 		do
 			is_workbench_build := a_bool
@@ -101,7 +101,7 @@ feature -- Update
 			workbench_build_set: is_workbench_build = a_bool
 		end
 
-	set_compiler_version (a_version: like compiler_version) is
+	set_compiler_version (a_version: like compiler_version)
 			-- Set compiler version.
 		require
 			a_version_not_void: a_version /= Void
@@ -111,7 +111,7 @@ feature -- Update
 			compiler_version_set: compiler_version = a_version
 		end
 
-	set_target (a_target: like target) is
+	set_target (a_target: like target)
 			-- Set target to use for building the universe.
 		do
 			target := a_target
@@ -121,7 +121,7 @@ feature -- Update
 
 feature -- Basic operation
 
-	load (a_file: STRING) is
+	load (a_file: STRING)
 			-- Load ecf system from a_file.
 		require
 			a_file_ok: a_file /= Void and then not a_file.is_empty
@@ -200,7 +200,7 @@ feature {NONE} -- Implementation
 			-- All used targets (libraries and application target) of the last loaded system;
 			-- All this targets together build the system as they include everything.
 
-	state: CONF_STATE is
+	state: CONF_STATE
 			-- Current state for the compilation based on a_target and the environment
 		require
 			application_target_ok: application_target /= Void
@@ -239,7 +239,7 @@ feature {NONE} -- Implementation
 			create Result.make (l_platform, l_build, application_target.setting_concurrency.index /= {CONF_TARGET}.setting_concurrency_index_none, application_target.setting_msil_generation, application_target.setting_dynamic_runtime, application_target.variables, l_version)
 		end
 
-	generate_system is
+	generate_system
 			-- Generate a Gobo system representing a flat view of the system.
 		require
 			last_targets_not_void: last_targets /= Void
@@ -304,7 +304,7 @@ feature {NONE} -- Implementation
 			last_system_set: last_system /= Void
 		end
 
-	gobo_cluster (a_cluster: CONF_CLUSTER): ET_ECF_CLUSTER is
+	gobo_cluster (a_cluster: CONF_CLUSTER): ET_ECF_CLUSTER
 			-- EiffelStudio cluster converted to a Gobo cluster
 		require
 			a_cluster_not_void: a_cluster /= Void

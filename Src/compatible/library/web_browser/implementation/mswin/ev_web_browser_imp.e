@@ -99,26 +99,18 @@ create
 
 feature {NONE} -- Initialization
 
-	make
+	make (an_interface: like interface)
 			-- Create `Current' with interface `an_interface'
 		do
 			register_class
 			internal_window_make (default_parent, "", default_style, 0, 0, 0, 0, 0, default_pointer)
-			initialize
-			Precursor
-		end
-
-	old_make (an_interface: like interface)
-			-- Create underlying native toolkit objects.
-			-- Every descendant should exactly one a creation procedure `make'.
-			-- Must call `base_make'.
-		do
-			check never_used: False end -- Just because {EV_ANY_I} has it as deferred feature
+			browser_initialize
+			base_make (an_interface)
 		end
 
 feature {EV_WEB_BROWSER} -- Initialization
 
-	initialize
+	browser_initialize
 			-- Initialize `Current'
 		local
 			l_ole_ie_hwnd: POINTER

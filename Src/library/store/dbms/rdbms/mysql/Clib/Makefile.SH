@@ -14,7 +14,7 @@ $spitshell >Makefile <<!GROK!THIS!
 SHELL = /bin/sh
 CC= $cc
 AR = ar rc
-CFLAGS = $optimize $ccflags $large -I$rt_include -I/usr/include/mysql
+CFLAGS = $optimize $ccflags $large -I$rt_include -I\$(MYSQLINC)
 LDFLAGS = $ldflags
 LIBS = $libs
 MAKE = $make

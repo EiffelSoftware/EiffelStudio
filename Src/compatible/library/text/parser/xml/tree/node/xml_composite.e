@@ -10,8 +10,6 @@ deferred class
 inherit
 	XML_NODE
 
-	ITERABLE [XML_NODE]
-
 feature -- Initialization
 
 	initialize
@@ -25,14 +23,18 @@ feature -- Access
 	nodes: ARRAYED_LIST [XML_NODE]
 			-- List of nodes for Current composite.
 
-	new_cursor: XML_COMPOSITE_CURSOR
+	remove_at_cursor (item: like Current)
+			-- Remove item pointed at by `Current' from target.
+		local
+			l_nodes: like nodes
+			c: CURSOR
 		do
-			create Result.make (Current)
-		end
-
-	remove_at_cursor (c: like new_cursor)
-		do
-			c.remove
+			l_nodes := nodes
+			c := l_nodes.cursor
+			l_nodes.prune_all (item)
+			if l_nodes.valid_cursor (c) then
+				l_nodes.go_to (c)
+			end
 		end
 
 	wipe_out

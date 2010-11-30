@@ -48,7 +48,6 @@ feature -- Processing
 			-- Process element `e'.
 		local
 			t: STRING
-			s: STRING
 			n: INTEGER
 		do
 			output.put_character ('<')

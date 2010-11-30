@@ -29,7 +29,7 @@ feature {NONE} -- Implementation
 	create_implementation
 			-- See `{EV_ANY}.create_implementation'
 		do
-			create {EV_WEB_BROWSER_IMP} implementation.make
+			create {EV_WEB_BROWSER_IMP} implementation.make (Current)
 		end
 
 feature -- Command

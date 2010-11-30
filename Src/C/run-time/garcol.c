@@ -1783,13 +1783,13 @@ rt_private void update_weak_references(void)
 	rt_uint_ptr roots;			/* Number of roots in each chunk */
 	struct stchunk *s;			/* To walk through each stack's chunk */
 	int done = 0;				/* Top of stack not reached yet */
-	char moving;				/* May GC move objects around? */
+	int generational;				/* Are we in a generational cycle? */
 	union overhead *zone;
 
 	if (stk->st_top == (EIF_REFERENCE *) 0)	/* Stack is not created yet */
 		return;
 
-	moving = rt_g_data.status;				/* Garbage collector's state */
+	generational = rt_g_data.status & GC_FAST;
 
 	for (s = stk->st_hd; s && !done; s = s->sk_next) {
 		object = s->sk_arena;					/* Start of stack */
@@ -1803,11 +1803,11 @@ rt_private void update_weak_references(void)
 		for (; roots > 0; roots--, object++) {
 			if (*object) {
 				zone = HEADER(*object);
-				if (moving) {					/* Object may move? */
-					if (zone->ov_size & B_FWD) {
-							/* If the object has moved, update the stack */
-						*object = zone->ov_fwd;
-					} else if (!(zone->ov_flags & EO_MARK)) {
+				if (zone->ov_size & B_FWD) {
+						/* If the object has moved, update the stack */
+					*object = zone->ov_fwd;
+				} else if (generational) {
+					if ((!(zone->ov_flags & EO_OLD)) && (!(zone->ov_flags & EO_MARK))) {
 							/* Object is not alive anymore since it was not marked. */
 						*object = NULL;
 					}

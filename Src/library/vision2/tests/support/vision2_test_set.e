@@ -9,9 +9,6 @@ deferred class
 
 inherit
 	EQA_TEST_SET
-		redefine
-			run_test
-		end
 
 feature -- Access
 

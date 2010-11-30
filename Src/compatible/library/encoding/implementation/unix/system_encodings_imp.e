@@ -30,9 +30,18 @@ feature -- Access
 		do
 			if is_utf8_activated then
 				Result := "UTF-8"
+			elseif {PLATFORM}.is_windows then
+					-- Needed for mingw compatibility.
+				Result := "UTF-8"
 			else
 				Result := system_code_page
 			end
+		end
+
+	iso_8859_1_code_page: STRING
+			-- ISO-8859-1 code page.
+		do
+			Result := "ISO-8859-1"
 		end
 
 feature {NONE} -- Implementation
@@ -40,7 +49,7 @@ feature {NONE} -- Implementation
 	is_utf8_activated: BOOLEAN
 			-- Is UTF-8 activated in current system?
 		external
-			"C inline use <langinfo.h>, <locale.h>"
+			"C inline use %"eif_langinfo.h%", <locale.h>"
 		alias
 			"[
 				setlocale (LC_ALL, "");
@@ -51,7 +60,7 @@ feature {NONE} -- Implementation
 	c_current_codeset: POINTER
 			-- Current codeset name.
 		external
-			"C inline use <eif_langinfo.h>"
+			"C inline use %"eif_langinfo.h%""
 		alias
 			"[
 				#if EIF_OS == EIF_OS_OPENBSD
@@ -72,14 +81,14 @@ feature {NONE} -- Implementation
 
 note
 	library:   "Encoding: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 	make
 			-- Create builder.
 		do
-			create character_array.make (0, 255)
+			create character_array.make_filled (False, 0, 255)
 			create comparators.make
 			create last_token.make_empty
 		end

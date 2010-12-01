@@ -2542,6 +2542,9 @@ test	qat-generic-constrained-by-self		anchor056 tcf fail anchored_type formal ge
 test	qat-multi-constraint-type		anchor057 tcf fail anchored_type multiconstraint formal generic renaming creation
 test	qat-invalid-vffd-2			anchor058 tcf fail anchored_type
 
+-- Testing facility
+test	testing-with-error		testing001 tcf pass testing
+
 -- .NET specific test
 if DOTNET test expanded-object-conversion	dotnet001	tcf pass dotnet
 test tuple-insertions-assertions		dotnet002	tcf pass dotnet tuple

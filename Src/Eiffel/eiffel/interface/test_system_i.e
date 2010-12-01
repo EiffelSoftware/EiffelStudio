@@ -48,9 +48,7 @@ feature -- Access
 		do
 			create Result.make (10)
 			l_server := system.classes
-			if
-				attached library_class_named (eqa_test_set_name) as l_class
-			then
+			if attached library_class_named (eqa_test_set_name) as l_class and then system.successful then
 				from
 					i := l_server.lower
 				until

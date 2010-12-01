@@ -99,11 +99,11 @@ feature -- Basic operations
 				end
 			end
 		rescue
---			if tool.projector.is_world_too_large then
---				error := 2
---			else
---				error := 1
---			end
+			if tool.projector.is_world_too_large then
+				error := 2
+			else
+				error := 1
+			end
 			tool.develop_window.window.set_pointer_style (tool.Default_pixmaps.Standard_cursor)
 			retry
 		end

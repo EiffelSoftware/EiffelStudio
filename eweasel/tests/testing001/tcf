@@ -1,0 +1,11 @@
+test_name 	 testing-with-error
+test_description If you are compiling a project including the testing library that contains an error at degree 5, the compiler will crash.
+
+copy_sub	Ace $TEST Ace
+copy_raw	a.e    $CLUSTER a.e
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+test_end

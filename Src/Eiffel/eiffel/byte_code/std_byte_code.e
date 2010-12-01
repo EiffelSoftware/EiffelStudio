@@ -203,9 +203,9 @@ feature -- Analyzis
 				end
 				l_context.set_assertion_type (0)
 			end
-			if 
+			if
 				rescue_clause /= Void and
-				not is_object_relative_once 
+				not is_object_relative_once
 			then
 				rescue_clause.analyze
 			end
@@ -1099,8 +1099,53 @@ end
 			inh_assert		: INHERITED_ASSERTION
 			buf				: GENERATION_BUFFER
 			i: like arguments.count
+			has_wait_condition: BOOLEAN
 		do
 			buf := buffer
+				-- Generate class invariant if requried.
+			generate_invariant_before
+			context.set_assertion_type (In_precondition)
+				-- Figure out if there are preconditions and wait conditions.
+			inh_assert := Context.inherited_assertion
+			if Context.origin_has_precondition then
+				separate_target_collector.clean
+				if attached precondition as p then
+						-- There is an immediate precondition.
+					have_assert := True
+					if context.has_request_chain then
+							-- Check if there are wait conditions.
+						p.process (separate_target_collector)
+						has_wait_condition := separate_target_collector.has_separate_target
+					end
+				end
+				if not has_wait_condition and then inh_assert.has_precondition then
+						-- There are inherited preconditions.
+					have_assert := True
+					if context.has_request_chain then
+							-- Check if there are wait conditions.
+						inh_assert.process_precondition (separate_target_collector)
+						has_wait_condition := separate_target_collector.has_separate_target
+					end
+				end
+			end
+			if has_wait_condition then
+					-- There are wait conditions.
+					-- If they fail, the precondition needs to be re-eveluated.
+					-- The generated code looks like
+					--    for (;;) {
+					--       int has_wait_condition = 0
+					--       ... // Allocate request chain (see below).
+					--       ... // Evaluate preconditions and set has_wait_condition if wait conditions are involved.
+					--       if (!has_wait_condition) break;
+					--       RTS_RD (Current); // Free request chain to let the scheduler reschedule this call.
+					--    }
+					--    RTCF; // Raise exception
+				buf.put_new_line
+				buf.put_string ("for (;;) {")
+				buf.indent
+				buf.put_new_line
+				buf.put_string ("int has_wait_condition = 0;")
+			end
 			if attached arguments as a and then context.has_request_chain then
 					-- There are separate arguments.
 					-- They should be locked if they are not controlled yet.
@@ -1141,40 +1186,48 @@ end
 				buf.put_new_line
 				buf.put_character ('}')
 			end
-			context.set_assertion_type (In_precondition)
 			workbench_mode := context.workbench_mode
 				-- Preconditions are always generated in workbench mode.
 				-- In finalized mode they are generated if requested by user
-				-- and when there are uncontrolled arguments.
-			if workbench_mode or else context.system.keep_assertions or else context.has_request_chain then
-				inh_assert := Context.inherited_assertion
-				if Context.origin_has_precondition then
-					have_assert := (precondition /= Void or else inh_assert.has_precondition)
-				end
-				generate_invariant_before
-				if have_assert then
+				-- or when there are uncontrolled arguments.
+			if
+				have_assert and then
+				(workbench_mode or else context.system.keep_assertions or else has_wait_condition)
+			then
+					-- Precondition has to be checked all the time if there is a wait condition..
+				if not context.has_request_chain then
+						-- The precondition is checked on demand only.
 					buf.put_new_line
 					buf.put_string ("if ((RTAL & CK_REQUIRE) || RTAC) {")
 					buf.indent
+				end
 
-					if inh_assert.has_precondition then
-						inh_assert.generate_precondition
-					end
+				if inh_assert.has_precondition then
+					inh_assert.generate_precondition
+				end
 
-					if precondition /= Void then
-						Context.set_new_precondition_block (True)
-						precondition.generate
-					end
+				if precondition /= Void then
+					Context.set_new_precondition_block (True)
+					precondition.generate
+				end
 
+				buf.put_new_line
+				buf.put_string ("RTJB;")
+				Context.generate_current_label_definition
+
+				if has_wait_condition then
+						-- End part of the loop that checks wait conditions.
 					buf.put_new_line
-					buf.put_string ("RTJB;")
-					Context.generate_current_label_definition
-
+					buf.put_string ("if (!has_wait_condition) break;")
 					buf.put_new_line
-					buf.put_string ("RTCF;")
-					buf.exdent
-					buf.put_new_line
-					buf.put_character ('}')
+					buf.put_string ("RTS_RD (Current);")
+					buf.generate_block_close
+				end
+				buf.put_new_line
+				buf.put_string ("RTCF;")
+				if not context.has_request_chain then
+						-- Close on-demand check block.
+					buf.generate_block_close
 				end
 			end
 			context.set_assertion_type (0)
@@ -1924,6 +1977,14 @@ feature {NONE} -- Convenience
 
 	local_var: LOCAL_B
 			-- Instance used to generate local variable name
+		once
+			create Result
+		end
+
+feature {NONE} -- C code generation: wait conditions
+
+	separate_target_collector: SEPARATE_TARGET_COLLECTOR
+			-- Visitor to detect wait conditions.
 		once
 			create Result
 		end

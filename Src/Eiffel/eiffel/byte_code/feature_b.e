@@ -90,7 +90,10 @@ feature -- Visitor
 					-- Ensure the feature is not redeclared into attribute.
 				c ?= context_type
 				f := c.associated_class.feature_of_rout_id (routine_id)
-				if not f.is_attribute then
+				debug ("fixme")
+					(create {REFACTORING_HELPER}).fixme ("Correct evaluation of context type of an operator call.")
+				end
+				if attached f and then not f.is_attribute then
 					if not system.il_generation or else not c.is_expanded then
 						f := Void
 					end

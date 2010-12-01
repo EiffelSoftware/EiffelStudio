@@ -66,6 +66,29 @@ feature -- Locals
 			restore_current_context
 		end
 
+feature -- Visitor
+
+	process_precondition (v: BYTE_NODE_VISITOR)
+			-- Visit all precondition nodes using `v'.
+		require
+			v_attached: attached v
+			types_and_assert_count_same: valid_prec_count
+			is_precondition: context.assertion_type = {ASSERT_TYPE}.in_precondition
+		do
+			from
+				precondition_start
+			until
+				precondition_after
+			loop
+				precondition_context_init
+				precondition_list.item.process (v)
+				precondition_forth
+			end;
+			restore_current_context
+		ensure
+			context_restored: restored
+		end
+
 feature -- Assertion
 
 	saved_class_type: CLASS_TYPE

@@ -44,6 +44,8 @@ feature
 			first_generated: BOOLEAN
 			l_context: like context
 			l_expr: like expr
+			is_wait_condition_possible: BOOLEAN
+			s: TRAVERSABLE_SUBSET [INTEGER]
 		do
 			buf := buffer
 			l_context := context
@@ -85,6 +87,33 @@ feature
 				-- Now evaluate the expression
 			l_expr := expr
 			l_expr.generate
+			if context.has_request_chain then
+					-- It's possible that there is a wait condition.
+					-- Whether this is true or not is detected at run-time
+					-- by inspecting if the argument used in the precondition
+					-- as a separate target is controlled or not.
+				separate_target_collector.clean
+				l_expr.process (separate_target_collector)
+				if separate_target_collector.has_separate_target then
+					buf.put_new_line
+					buf.put_string ("has_wait_condition = ")
+					s := separate_target_collector.target
+					from
+						s.start
+					until
+						s.after
+					loop
+						buf.put_four_character ('u','a','r','g')
+						buf.put_integer (s.item)
+						s.forth
+						if not s.after then
+							buf.put_four_character (' ', '|', '|', ' ')
+						end
+					end
+					buf.put_character (';')
+					is_wait_condition_possible := True
+				end
+			end
 			buf.put_new_line
 			buf.put_string ("RTTE(")
 			l_expr.print_register
@@ -93,6 +122,20 @@ feature
 			buf.put_two_character (')', ';')
 			buf.put_new_line
 			buf.put_string ("RTCK;")
+			if is_wait_condition_possible then
+					-- If wait condition evaluates to True, the precondition cannot fail because of it.
+					-- Therefore the flag that indicates that the precondition is violated because of wait condition is reset.
+				buf.put_new_line
+				buf.put_string ("has_wait_condition = 0;")
+			end
+		end
+
+feature {NONE} -- C code generation: wait conditions
+
+	separate_target_collector: SEPARATE_TARGET_COLLECTOR
+			-- Visitor to detect wait conditions.
+		once
+			create Result
 		end
 
 note

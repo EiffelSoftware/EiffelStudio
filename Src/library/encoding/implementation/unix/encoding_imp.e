@@ -89,7 +89,8 @@ feature -- String encoding convertion
 						elseif reverse_endian (l_converted.code (1)) then
 							l_converted := l_converted.substring (2, l_converted.count)
 							if (is_little_endian_code_page (a_to_code_page) and is_little_endian) or else
-								(is_big_endian_code_page (a_to_code_page) and not is_little_endian)
+								(is_big_endian_code_page (a_to_code_page) and not is_little_endian) or else
+								not is_endianness_specified (a_to_code_page)
 							then
 								l_converted := string_32_switch_endian (l_converted)
 							end
@@ -108,7 +109,8 @@ feature -- String encoding convertion
 						elseif reverse_endian (l_converted.code (1)) then
 							l_converted := l_converted.substring (2, l_converted.count)
 							if (is_little_endian_code_page (a_to_code_page) and is_little_endian) or else
-								(is_big_endian_code_page (a_to_code_page) and not is_little_endian)
+								(is_big_endian_code_page (a_to_code_page) and not is_little_endian) or else
+								not is_endianness_specified (a_to_code_page)
 							then
 								l_converted := string_16_switch_endian (l_converted)
 							end
@@ -241,6 +243,15 @@ feature {NONE} -- Status report
 			a_code_page_not_empty: not a_code_page.is_empty
 		do
 			Result := little_endian_code_pages.has (a_code_page.as_lower)
+		end
+
+	is_endianness_specified (a_code_page: STRING): BOOLEAN
+			-- Is `a_code_page' endianness specified?
+		require
+			a_code_page_not_void: a_code_page /= Void
+			a_code_page_not_empty: not a_code_page.is_empty
+		do
+			Result := is_big_endian_code_page (a_code_page) or else is_little_endian_code_page (a_code_page)
 		end
 
 feature {NONE} -- Cache

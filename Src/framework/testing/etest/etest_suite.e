@@ -218,7 +218,7 @@ feature -- Element change
 				attached l_systemi.test_system as l_test_system and then
 				l_test_system.is_testing_enabled
 			then
-				l_classes := l_test_system.test_set_descendants
+				l_classes := l_test_system.test_set_descendants (True)
 				from
 					l_classes.start
 				until

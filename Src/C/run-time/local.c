@@ -308,30 +308,17 @@ rt_private int extend(struct stack *stk, rt_uint_ptr nb_items)
 }
 
 #ifdef EIF_WINDOWS
-#ifdef EIF_ASSERTIONS
-	/* This code is commented because it only exists with the latest Microsoft CRT runtime.
-	 * Uncomment if you need to catch CRT raised exception when passing incorrect arguments
-	 * to CRT routines. */
-/*
-void __cdecl myInvalidParameterHandler(const wchar_t* expression,
-   const wchar_t* function,
-   const wchar_t* file,
-   unsigned int line,
-   uintptr_t pReserved)
+	/* This is to catch CRT raised exception when passing incorrect arguments to CRT routines. */
+rt_private void __cdecl eif_invalid_paramter_handler(const wchar_t* expression,
+   const wchar_t* function, const wchar_t* file, unsigned int line, uintptr_t pReserved)
 {
-}
-void __cdecl report_failure(int code, void * unused)
-{
-	char s[512];
-
-	if (code == _SECERR_BUFFER_OVERRUN) {
-		printf("Buffer overrun detected! Program will end.\n");
-		printf("I'm here\n");
-		scanf("Press a key\n%s", s);
-	}
-}
-*/
+		/* We simply ignore those errors as they are caugth by our runtime and then it raises
+		 * an exception in the Eiffel code in normal Eiffel execution. However if _DEBUG is
+		 * enabled we can force a failure. */
+#ifdef _DEBUG
+	failure();
 #endif
+}
 #endif
 
 /*
@@ -368,15 +355,12 @@ rt_shared void initstk(void)
 	tmpDbgFlag |= _CRTDBG_LEAK_CHECK_DF;
 	tmpDbgFlag |= _CRTDBG_CHECK_ALWAYS_DF;
 	_CrtSetDbgFlag(tmpDbgFlag);
-
-	/* This code is commented because it only exists with the latest Microsoft CRT runtime.
-	 * Uncomment if you need to catch CRT raised exception when passing incorrect arguments
-	 * to CRT routines. */
-/*
-	_set_invalid_parameter_handler(myInvalidParameterHandler);
-	_set_security_error_handler(report_failure);
-*/
 #endif
+#endif
+
+#ifdef EIF_WINDOWS
+		/* This is to catch CRT raised exception when passing incorrect arguments to CRT routines. */
+	_set_invalid_parameter_handler(eif_invalid_paramter_handler);
 #endif
 
 #ifdef ISE_GC

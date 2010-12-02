@@ -4119,6 +4119,27 @@ feature {NONE} -- Implementation
 			l_as.identifier.process (Current)
 			l_text_formatter_decorator.exdent
 			l_text_formatter_decorator.put_new_line
+				-- Compute type of the cursor and associate cursor name with this type.
+			if attached last_type then
+				context.initialize (current_class, current_class.actual_type)
+				context.find_iteration_classes
+					-- The errors should have been reported during type checking.
+					-- Calculate type of a cursor.
+				if
+					attached context.iterable_class as i and then
+					attached context.iteration_cursor_class as c and then
+					last_type.associated_class.conform_to (i) and then
+					attached expr_type (l_as.cursor_expression) as t and then
+					attached t.as_attached_in (context.current_class) as a and then
+					t.associated_class.conform_to (c) and then
+					t.conform_to (context.current_class, a) and then
+					attached a.actual_type.evaluated_type_in_descendant
+						(i, last_type.associated_class, Void).instantiated_in (last_type) as ct
+				then
+						-- Associate type of a cursor with its name.
+					object_test_locals_for_current_feature.force (ct, l_as.identifier.name_8)
+				end
+			end
 		end
 
 feature -- Expression visitor

@@ -1776,7 +1776,8 @@ test	conform-to-type-precondition-violation	term190 tcf fail termination validit
 test	generated-id-assertion-violation	term191 tcf fail termination multiconstraint expanded
 test	skeleton-adapted-in-crash		term192 tcf fail termination 
 test	is-valid-for-class-precondition		term193 tcf fail termination 
-test	is-less-equal-postcondition-violation-2	term194 tcf fail incrementality
+test	is-less-equal-postcondition-violation-2	term194 tcf fail termination
+test	testing-class-removal-crash			term195 tcf pass termination
 
 -- Config
 

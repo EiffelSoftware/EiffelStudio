@@ -1,0 +1,620 @@
+test_name 	 testing-class-removal-crash
+test_description When compiling a system including the testing library the compiler compiles all reachable classes of the universe and remove them at the end of degree 4, however it corrupts some of the compiler internal structures that are still referring to the removed classes because they are not cleaned before processing.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test0.e $CLUSTER test0.e
+define INCR	"1"
+define PREV	"0"
+copy_sub	test_template.e $CLUSTER test1.e
+define INCR	"2"
+define PREV	"1"
+copy_sub	test_template.e $CLUSTER test2.e
+define INCR	"3"
+define PREV	"2"
+copy_sub	test_template.e $CLUSTER test3.e
+define INCR	"4"
+define PREV	"3"
+copy_sub	test_template.e $CLUSTER test4.e
+define INCR	"5"
+define PREV	"4"
+copy_sub	test_template.e $CLUSTER test5.e
+define INCR	"6"
+define PREV	"5"
+copy_sub	test_template.e $CLUSTER test6.e
+define INCR	"7"
+define PREV	"6"
+copy_sub	test_template.e $CLUSTER test7.e
+define INCR	"8"
+define PREV	"7"
+copy_sub	test_template.e $CLUSTER test8.e
+define INCR	"9"
+define PREV	"8"
+copy_sub	test_template.e $CLUSTER test9.e
+define INCR	"10"
+define PREV	"9"
+copy_sub	test_template.e $CLUSTER test10.e
+define INCR	"11"
+define PREV	"10"
+copy_sub	test_template.e $CLUSTER test11.e
+define INCR	"12"
+define PREV	"11"
+copy_sub	test_template.e $CLUSTER test12.e
+define INCR	"13"
+define PREV	"12"
+copy_sub	test_template.e $CLUSTER test13.e
+define INCR	"14"
+define PREV	"13"
+copy_sub	test_template.e $CLUSTER test14.e
+define INCR	"15"
+define PREV	"14"
+copy_sub	test_template.e $CLUSTER test15.e
+define INCR	"16"
+define PREV	"15"
+copy_sub	test_template.e $CLUSTER test16.e
+define INCR	"17"
+define PREV	"16"
+copy_sub	test_template.e $CLUSTER test17.e
+define INCR	"18"
+define PREV	"17"
+copy_sub	test_template.e $CLUSTER test18.e
+define INCR	"19"
+define PREV	"18"
+copy_sub	test_template.e $CLUSTER test19.e
+define INCR	"20"
+define PREV	"19"
+copy_sub	test_template.e $CLUSTER test20.e
+define INCR	"21"
+define PREV	"20"
+copy_sub	test_template.e $CLUSTER test21.e
+define INCR	"22"
+define PREV	"21"
+copy_sub	test_template.e $CLUSTER test22.e
+define INCR	"23"
+define PREV	"22"
+copy_sub	test_template.e $CLUSTER test23.e
+define INCR	"24"
+define PREV	"23"
+copy_sub	test_template.e $CLUSTER test24.e
+define INCR	"25"
+define PREV	"24"
+copy_sub	test_template.e $CLUSTER test25.e
+define INCR	"26"
+define PREV	"25"
+copy_sub	test_template.e $CLUSTER test26.e
+define INCR	"27"
+define PREV	"26"
+copy_sub	test_template.e $CLUSTER test27.e
+define INCR	"28"
+define PREV	"27"
+copy_sub	test_template.e $CLUSTER test28.e
+define INCR	"29"
+define PREV	"28"
+copy_sub	test_template.e $CLUSTER test29.e
+define INCR	"30"
+define PREV	"29"
+copy_sub	test_template.e $CLUSTER test30.e
+define INCR	"31"
+define PREV	"30"
+copy_sub	test_template.e $CLUSTER test31.e
+define INCR	"32"
+define PREV	"31"
+copy_sub	test_template.e $CLUSTER test32.e
+define INCR	"33"
+define PREV	"32"
+copy_sub	test_template.e $CLUSTER test33.e
+define INCR	"34"
+define PREV	"33"
+copy_sub	test_template.e $CLUSTER test34.e
+define INCR	"35"
+define PREV	"34"
+copy_sub	test_template.e $CLUSTER test35.e
+define INCR	"36"
+define PREV	"35"
+copy_sub	test_template.e $CLUSTER test36.e
+define INCR	"37"
+define PREV	"36"
+copy_sub	test_template.e $CLUSTER test37.e
+define INCR	"38"
+define PREV	"37"
+copy_sub	test_template.e $CLUSTER test38.e
+define INCR	"39"
+define PREV	"38"
+copy_sub	test_template.e $CLUSTER test39.e
+define INCR	"40"
+define PREV	"39"
+copy_sub	test_template.e $CLUSTER test40.e
+define INCR	"41"
+define PREV	"40"
+copy_sub	test_template.e $CLUSTER test41.e
+define INCR	"42"
+define PREV	"41"
+copy_sub	test_template.e $CLUSTER test42.e
+define INCR	"43"
+define PREV	"42"
+copy_sub	test_template.e $CLUSTER test43.e
+define INCR	"44"
+define PREV	"43"
+copy_sub	test_template.e $CLUSTER test44.e
+define INCR	"45"
+define PREV	"44"
+copy_sub	test_template.e $CLUSTER test45.e
+define INCR	"46"
+define PREV	"45"
+copy_sub	test_template.e $CLUSTER test46.e
+define INCR	"47"
+define PREV	"46"
+copy_sub	test_template.e $CLUSTER test47.e
+define INCR	"48"
+define PREV	"47"
+copy_sub	test_template.e $CLUSTER test48.e
+define INCR	"49"
+define PREV	"48"
+copy_sub	test_template.e $CLUSTER test49.e
+define INCR	"50"
+define PREV	"49"
+copy_sub	test_template.e $CLUSTER test50.e
+define INCR	"51"
+define PREV	"50"
+copy_sub	test_template.e $CLUSTER test51.e
+define INCR	"52"
+define PREV	"51"
+copy_sub	test_template.e $CLUSTER test52.e
+define INCR	"53"
+define PREV	"52"
+copy_sub	test_template.e $CLUSTER test53.e
+define INCR	"54"
+define PREV	"53"
+copy_sub	test_template.e $CLUSTER test54.e
+define INCR	"55"
+define PREV	"54"
+copy_sub	test_template.e $CLUSTER test55.e
+define INCR	"56"
+define PREV	"55"
+copy_sub	test_template.e $CLUSTER test56.e
+define INCR	"57"
+define PREV	"56"
+copy_sub	test_template.e $CLUSTER test57.e
+define INCR	"58"
+define PREV	"57"
+copy_sub	test_template.e $CLUSTER test58.e
+define INCR	"59"
+define PREV	"58"
+copy_sub	test_template.e $CLUSTER test59.e
+define INCR	"60"
+define PREV	"59"
+copy_sub	test_template.e $CLUSTER test60.e
+define INCR	"61"
+define PREV	"60"
+copy_sub	test_template.e $CLUSTER test61.e
+define INCR	"62"
+define PREV	"61"
+copy_sub	test_template.e $CLUSTER test62.e
+define INCR	"63"
+define PREV	"62"
+copy_sub	test_template.e $CLUSTER test63.e
+define INCR	"64"
+define PREV	"63"
+copy_sub	test_template.e $CLUSTER test64.e
+define INCR	"65"
+define PREV	"64"
+copy_sub	test_template.e $CLUSTER test65.e
+define INCR	"66"
+define PREV	"65"
+copy_sub	test_template.e $CLUSTER test66.e
+define INCR	"67"
+define PREV	"66"
+copy_sub	test_template.e $CLUSTER test67.e
+define INCR	"68"
+define PREV	"67"
+copy_sub	test_template.e $CLUSTER test68.e
+define INCR	"69"
+define PREV	"68"
+copy_sub	test_template.e $CLUSTER test69.e
+define INCR	"70"
+define PREV	"69"
+copy_sub	test_template.e $CLUSTER test70.e
+define INCR	"71"
+define PREV	"70"
+copy_sub	test_template.e $CLUSTER test71.e
+define INCR	"72"
+define PREV	"71"
+copy_sub	test_template.e $CLUSTER test72.e
+define INCR	"73"
+define PREV	"72"
+copy_sub	test_template.e $CLUSTER test73.e
+define INCR	"74"
+define PREV	"73"
+copy_sub	test_template.e $CLUSTER test74.e
+define INCR	"75"
+define PREV	"74"
+copy_sub	test_template.e $CLUSTER test75.e
+define INCR	"76"
+define PREV	"75"
+copy_sub	test_template.e $CLUSTER test76.e
+define INCR	"77"
+define PREV	"76"
+copy_sub	test_template.e $CLUSTER test77.e
+define INCR	"78"
+define PREV	"77"
+copy_sub	test_template.e $CLUSTER test78.e
+define INCR	"79"
+define PREV	"78"
+copy_sub	test_template.e $CLUSTER test79.e
+define INCR	"80"
+define PREV	"79"
+copy_sub	test_template.e $CLUSTER test80.e
+define INCR	"81"
+define PREV	"80"
+copy_sub	test_template.e $CLUSTER test81.e
+define INCR	"82"
+define PREV	"81"
+copy_sub	test_template.e $CLUSTER test82.e
+define INCR	"83"
+define PREV	"82"
+copy_sub	test_template.e $CLUSTER test83.e
+define INCR	"84"
+define PREV	"83"
+copy_sub	test_template.e $CLUSTER test84.e
+define INCR	"85"
+define PREV	"84"
+copy_sub	test_template.e $CLUSTER test85.e
+define INCR	"86"
+define PREV	"85"
+copy_sub	test_template.e $CLUSTER test86.e
+define INCR	"87"
+define PREV	"86"
+copy_sub	test_template.e $CLUSTER test87.e
+define INCR	"88"
+define PREV	"87"
+copy_sub	test_template.e $CLUSTER test88.e
+define INCR	"89"
+define PREV	"88"
+copy_sub	test_template.e $CLUSTER test89.e
+define INCR	"90"
+define PREV	"89"
+copy_sub	test_template.e $CLUSTER test90.e
+define INCR	"91"
+define PREV	"90"
+copy_sub	test_template.e $CLUSTER test91.e
+define INCR	"92"
+define PREV	"91"
+copy_sub	test_template.e $CLUSTER test92.e
+define INCR	"93"
+define PREV	"92"
+copy_sub	test_template.e $CLUSTER test93.e
+define INCR	"94"
+define PREV	"93"
+copy_sub	test_template.e $CLUSTER test94.e
+define INCR	"95"
+define PREV	"94"
+copy_sub	test_template.e $CLUSTER test95.e
+define INCR	"96"
+define PREV	"95"
+copy_sub	test_template.e $CLUSTER test96.e
+define INCR	"97"
+define PREV	"96"
+copy_sub	test_template.e $CLUSTER test97.e
+define INCR	"98"
+define PREV	"97"
+copy_sub	test_template.e $CLUSTER test98.e
+define INCR	"99"
+define PREV	"98"
+copy_sub	test_template.e $CLUSTER test99.e
+define INCR	"100"
+define PREV	"99"
+copy_sub	test_template.e $CLUSTER test100.e
+define INCR	"101"
+define PREV	"100"
+copy_sub	test_template.e $CLUSTER test101.e
+define INCR	"102"
+define PREV	"101"
+copy_sub	test_template.e $CLUSTER test102.e
+define INCR	"103"
+define PREV	"102"
+copy_sub	test_template.e $CLUSTER test103.e
+define INCR	"104"
+define PREV	"103"
+copy_sub	test_template.e $CLUSTER test104.e
+define INCR	"105"
+define PREV	"104"
+copy_sub	test_template.e $CLUSTER test105.e
+define INCR	"106"
+define PREV	"105"
+copy_sub	test_template.e $CLUSTER test106.e
+define INCR	"107"
+define PREV	"106"
+copy_sub	test_template.e $CLUSTER test107.e
+define INCR	"108"
+define PREV	"107"
+copy_sub	test_template.e $CLUSTER test108.e
+define INCR	"109"
+define PREV	"108"
+copy_sub	test_template.e $CLUSTER test109.e
+define INCR	"110"
+define PREV	"109"
+copy_sub	test_template.e $CLUSTER test110.e
+define INCR	"111"
+define PREV	"110"
+copy_sub	test_template.e $CLUSTER test111.e
+define INCR	"112"
+define PREV	"111"
+copy_sub	test_template.e $CLUSTER test112.e
+define INCR	"113"
+define PREV	"112"
+copy_sub	test_template.e $CLUSTER test113.e
+define INCR	"114"
+define PREV	"113"
+copy_sub	test_template.e $CLUSTER test114.e
+define INCR	"115"
+define PREV	"114"
+copy_sub	test_template.e $CLUSTER test115.e
+define INCR	"116"
+define PREV	"115"
+copy_sub	test_template.e $CLUSTER test116.e
+define INCR	"117"
+define PREV	"116"
+copy_sub	test_template.e $CLUSTER test117.e
+define INCR	"118"
+define PREV	"117"
+copy_sub	test_template.e $CLUSTER test118.e
+define INCR	"119"
+define PREV	"118"
+copy_sub	test_template.e $CLUSTER test119.e
+define INCR	"120"
+define PREV	"119"
+copy_sub	test_template.e $CLUSTER test120.e
+define INCR	"121"
+define PREV	"120"
+copy_sub	test_template.e $CLUSTER test121.e
+define INCR	"122"
+define PREV	"121"
+copy_sub	test_template.e $CLUSTER test122.e
+define INCR	"123"
+define PREV	"122"
+copy_sub	test_template.e $CLUSTER test123.e
+define INCR	"124"
+define PREV	"123"
+copy_sub	test_template.e $CLUSTER test124.e
+define INCR	"125"
+define PREV	"124"
+copy_sub	test_template.e $CLUSTER test125.e
+define INCR	"126"
+define PREV	"125"
+copy_sub	test_template.e $CLUSTER test126.e
+define INCR	"127"
+define PREV	"126"
+copy_sub	test_template.e $CLUSTER test127.e
+define INCR	"128"
+define PREV	"127"
+copy_sub	test_template.e $CLUSTER test128.e
+define INCR	"129"
+define PREV	"128"
+copy_sub	test_template.e $CLUSTER test129.e
+define INCR	"130"
+define PREV	"129"
+copy_sub	test_template.e $CLUSTER test130.e
+define INCR	"131"
+define PREV	"130"
+copy_sub	test_template.e $CLUSTER test131.e
+define INCR	"132"
+define PREV	"131"
+copy_sub	test_template.e $CLUSTER test132.e
+define INCR	"133"
+define PREV	"132"
+copy_sub	test_template.e $CLUSTER test133.e
+define INCR	"134"
+define PREV	"133"
+copy_sub	test_template.e $CLUSTER test134.e
+define INCR	"135"
+define PREV	"134"
+copy_sub	test_template.e $CLUSTER test135.e
+define INCR	"136"
+define PREV	"135"
+copy_sub	test_template.e $CLUSTER test136.e
+define INCR	"137"
+define PREV	"136"
+copy_sub	test_template.e $CLUSTER test137.e
+define INCR	"138"
+define PREV	"137"
+copy_sub	test_template.e $CLUSTER test138.e
+define INCR	"139"
+define PREV	"138"
+copy_sub	test_template.e $CLUSTER test139.e
+define INCR	"140"
+define PREV	"139"
+copy_sub	test_template.e $CLUSTER test140.e
+define INCR	"141"
+define PREV	"140"
+copy_sub	test_template.e $CLUSTER test141.e
+define INCR	"142"
+define PREV	"141"
+copy_sub	test_template.e $CLUSTER test142.e
+define INCR	"143"
+define PREV	"142"
+copy_sub	test_template.e $CLUSTER test143.e
+define INCR	"144"
+define PREV	"143"
+copy_sub	test_template.e $CLUSTER test144.e
+define INCR	"145"
+define PREV	"144"
+copy_sub	test_template.e $CLUSTER test145.e
+define INCR	"146"
+define PREV	"145"
+copy_sub	test_template.e $CLUSTER test146.e
+define INCR	"147"
+define PREV	"146"
+copy_sub	test_template.e $CLUSTER test147.e
+define INCR	"148"
+define PREV	"147"
+copy_sub	test_template.e $CLUSTER test148.e
+define INCR	"149"
+define PREV	"148"
+copy_sub	test_template.e $CLUSTER test149.e
+define INCR	"150"
+define PREV	"149"
+copy_sub	test_template.e $CLUSTER test150.e
+define INCR	"151"
+define PREV	"150"
+copy_sub	test_template.e $CLUSTER test151.e
+define INCR	"152"
+define PREV	"151"
+copy_sub	test_template.e $CLUSTER test152.e
+define INCR	"153"
+define PREV	"152"
+copy_sub	test_template.e $CLUSTER test153.e
+define INCR	"154"
+define PREV	"153"
+copy_sub	test_template.e $CLUSTER test154.e
+define INCR	"155"
+define PREV	"154"
+copy_sub	test_template.e $CLUSTER test155.e
+define INCR	"156"
+define PREV	"155"
+copy_sub	test_template.e $CLUSTER test156.e
+define INCR	"157"
+define PREV	"156"
+copy_sub	test_template.e $CLUSTER test157.e
+define INCR	"158"
+define PREV	"157"
+copy_sub	test_template.e $CLUSTER test158.e
+define INCR	"159"
+define PREV	"158"
+copy_sub	test_template.e $CLUSTER test159.e
+define INCR	"160"
+define PREV	"159"
+copy_sub	test_template.e $CLUSTER test160.e
+define INCR	"161"
+define PREV	"160"
+copy_sub	test_template.e $CLUSTER test161.e
+define INCR	"162"
+define PREV	"161"
+copy_sub	test_template.e $CLUSTER test162.e
+define INCR	"163"
+define PREV	"162"
+copy_sub	test_template.e $CLUSTER test163.e
+define INCR	"164"
+define PREV	"163"
+copy_sub	test_template.e $CLUSTER test164.e
+define INCR	"165"
+define PREV	"164"
+copy_sub	test_template.e $CLUSTER test165.e
+define INCR	"166"
+define PREV	"165"
+copy_sub	test_template.e $CLUSTER test166.e
+define INCR	"167"
+define PREV	"166"
+copy_sub	test_template.e $CLUSTER test167.e
+define INCR	"168"
+define PREV	"167"
+copy_sub	test_template.e $CLUSTER test168.e
+define INCR	"169"
+define PREV	"168"
+copy_sub	test_template.e $CLUSTER test169.e
+define INCR	"170"
+define PREV	"169"
+copy_sub	test_template.e $CLUSTER test170.e
+define INCR	"171"
+define PREV	"170"
+copy_sub	test_template.e $CLUSTER test171.e
+define INCR	"172"
+define PREV	"171"
+copy_sub	test_template.e $CLUSTER test172.e
+define INCR	"173"
+define PREV	"172"
+copy_sub	test_template.e $CLUSTER test173.e
+define INCR	"174"
+define PREV	"173"
+copy_sub	test_template.e $CLUSTER test174.e
+define INCR	"175"
+define PREV	"174"
+copy_sub	test_template.e $CLUSTER test175.e
+define INCR	"176"
+define PREV	"175"
+copy_sub	test_template.e $CLUSTER test176.e
+define INCR	"177"
+define PREV	"176"
+copy_sub	test_template.e $CLUSTER test177.e
+define INCR	"178"
+define PREV	"177"
+copy_sub	test_template.e $CLUSTER test178.e
+define INCR	"179"
+define PREV	"178"
+copy_sub	test_template.e $CLUSTER test179.e
+define INCR	"180"
+define PREV	"179"
+copy_sub	test_template.e $CLUSTER test180.e
+define INCR	"181"
+define PREV	"180"
+copy_sub	test_template.e $CLUSTER test181.e
+define INCR	"182"
+define PREV	"181"
+copy_sub	test_template.e $CLUSTER test182.e
+define INCR	"183"
+define PREV	"182"
+copy_sub	test_template.e $CLUSTER test183.e
+define INCR	"184"
+define PREV	"183"
+copy_sub	test_template.e $CLUSTER test184.e
+define INCR	"185"
+define PREV	"184"
+copy_sub	test_template.e $CLUSTER test185.e
+define INCR	"186"
+define PREV	"185"
+copy_sub	test_template.e $CLUSTER test186.e
+define INCR	"187"
+define PREV	"186"
+copy_sub	test_template.e $CLUSTER test187.e
+define INCR	"188"
+define PREV	"187"
+copy_sub	test_template.e $CLUSTER test188.e
+define INCR	"189"
+define PREV	"188"
+copy_sub	test_template.e $CLUSTER test189.e
+define INCR	"190"
+define PREV	"189"
+copy_sub	test_template.e $CLUSTER test190.e
+define INCR	"191"
+define PREV	"190"
+copy_sub	test_template.e $CLUSTER test191.e
+define INCR	"192"
+define PREV	"191"
+copy_sub	test_template.e $CLUSTER test192.e
+define INCR	"193"
+define PREV	"192"
+copy_sub	test_template.e $CLUSTER test193.e
+define INCR	"194"
+define PREV	"193"
+copy_sub	test_template.e $CLUSTER test194.e
+define INCR	"195"
+define PREV	"194"
+copy_sub	test_template.e $CLUSTER test195.e
+define INCR	"196"
+define PREV	"195"
+copy_sub	test_template.e $CLUSTER test196.e
+define INCR	"197"
+define PREV	"196"
+copy_sub	test_template.e $CLUSTER test197.e
+define INCR	"198"
+define PREV	"197"
+copy_sub	test_template.e $CLUSTER test198.e
+define INCR	"199"
+define PREV	"198"
+copy_sub	test_template.e $CLUSTER test199.e
+define INCR	"200"
+define PREV	"199"
+copy_sub	test_template.e $CLUSTER test200.e
+define INCR	"201"
+define PREV	"200"
+copy_sub	test_template.e $CLUSTER test201.e
+define INCR	"202"
+define PREV	"201"
+copy_sub	test_template.e $CLUSTER test202.e
+define INCR	"203"
+define PREV	"202"
+copy_sub	test_template.e $CLUSTER test203.e
+
+compile_melted
+compile_result	ok
+
+test_end

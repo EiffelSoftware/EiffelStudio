@@ -15,7 +15,7 @@ inherit
 			dispatch_anchors,
 			error_generics,
 			evaluated_type_in_descendant,
-			good_generics,
+			good_generics, internal_is_valid_for_class,
 			has_formal_generic,
 			has_like,
 			initialize_info,
@@ -222,6 +222,14 @@ feature -- Type checking
 				end
 				i := i + 1
 			end
+		end
+
+feature {TYPE_A} -- Helpers
+
+	internal_is_valid_for_class (a_class: CLASS_C): BOOLEAN
+			-- Is current type valid?
+		do
+			Result := attached qualifier as l_qualifier and then l_qualifier.internal_is_valid_for_class (a_class) and then Precursor (a_class)
 		end
 
 feature -- Modification

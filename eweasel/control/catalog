@@ -960,6 +960,7 @@ test	once-per-object-change-expansion	incr397 tcf fail incrementality once
 test	once-per-object-remove-constraint	incr398 tcf fail incrementality once
 test	once-per-object-change-inheritance	incr399 tcf fail incrementality once
 test	qat-change-constant-anchor-type		incr400 tcf fail incrementality anchored_type
+test	renaming-class-in-constraint-crash	incr401 tcf fail incrementality renaming
 
 
 -- Melting

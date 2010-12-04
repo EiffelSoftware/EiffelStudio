@@ -6,11 +6,11 @@
 # delivery with only the batch compiler.
 #(sh ./make_for_platform lisbon.ise manus linux-ppc 22) &
 
-#Let's compile for Solaris Sparc 64-bit on mosis in background
-(sh ./make_for_platform mosis.ise manus solaris-sparc-64 22) &
+#Let's compile for Solaris Sparc 64-bit on sparc9 in background
+(sh ./make_for_platform sparc9.ise manus solaris-sparc-64 22) &
 
-#Let's compile for Solaris Sparc 32-bit on sparc9 in background
-(sh ./make_for_platform sparc9.ise manus solaris-sparc 22) &
+#Let's compile for Solaris Sparc 32-bit on blade in background
+(sh ./make_for_platform blade.ise manus solaris-sparc 22) &
 
 #Let's compile for Solaris x86 in background
 (sh ./make_for_platform amsterdam.ise manus solaris-x86 22 ; sh ./make_for_platform amsterdam.ise manus solaris-x86-64 22) &
@@ -36,4 +36,4 @@
 (sh ./make_for_platform sushi.inf.ethz.ch manus openbsd-x86 22) &
 
 #Let's compile for Linux Sparc in background
-(sh ./make_for_platform calypso.frankengul.org manu linux-sparc 22 "-l 15") &
+#(sh ./make_for_platform calypso.frankengul.org manu linux-sparc 22 "-l 15") &

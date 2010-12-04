@@ -153,6 +153,25 @@ feature -- Attributes
 			derivations.wipe_out;
 		end;
 
+	clean_all
+			-- Clean up Current and all classes from obsolete types
+		local
+			class_array: ARRAY [CLASS_C];
+			i, nb: INTEGER
+		do
+				-- Remove obsolete class types in each class' filters.
+			class_array := System.classes
+			nb := Class_counter.count
+			from i := 1 until i > nb loop
+				if attached class_array [i] as l_class then
+					l_class.filters.clean (l_class)
+				end
+				i := i + 1
+			end
+				-- Remove obsolete types from the global list.
+			clean (system.any_class.compiled_class)
+		end
+
 	derivations: DERIVATIONS
 			-- Set of all the processed derivations
 			-- Avoid recursive loop in process

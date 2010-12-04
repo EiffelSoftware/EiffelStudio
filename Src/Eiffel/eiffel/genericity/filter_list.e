@@ -67,9 +67,7 @@ feature -- Cleaning
 				if attached local_content [i] as l_type then
 					l_is_valid := l_type.is_valid
 					if l_is_valid and l_type.generics /= Void then
-						l_type.reset_constraint_error_list
-						l_type.check_constraints (a_class, Void, False)
-						l_is_valid := l_type.constraint_error_list.is_empty
+						l_is_valid := is_generic_valid (l_type, a_class)
 					end
 					if not l_is_valid then
 						local_content.put (l_default, i)
@@ -79,6 +77,22 @@ feature -- Cleaning
 				end
 				i := i + 1
 			end
+		end
+
+	is_generic_valid (a_type: TYPE_A; a_context_class: CLASS_C): BOOLEAN
+			-- Check if `a_type' is valid.
+			--| Currently if you rename a class that is involved as
+		local
+			retried: BOOLEAN
+		do
+			if not retried then
+				a_type.reset_constraint_error_list
+				a_type.check_constraints (a_context_class, Void, False)
+				Result := a_type.constraint_error_list.is_empty
+			end
+		rescue
+			retried := True
+			retry
 		end
 
 note

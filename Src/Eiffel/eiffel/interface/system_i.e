@@ -2167,6 +2167,8 @@ end
 
 	process_removed_classes
 			-- Remove classes that disappeared after a recompilation.
+		local
+			l_has_removed_classes: BOOLEAN
 		do
 			if removed_classes /= Void then
 				from
@@ -2176,10 +2178,15 @@ end
 				loop
 					if removed_classes.key_for_iteration.is_removable then
 						internal_remove_class (removed_classes.key_for_iteration, 0)
+						l_has_removed_classes := True
 					end
 					removed_classes.forth
 				end
 				removed_classes := Void
+			end
+			if l_has_removed_classes then
+					-- Remove all obsolete types we may find in the universe after removal of classes.
+				instantiator.clean_all
 			end
 		end
 
@@ -3337,9 +3344,7 @@ feature {NONE} -- Implementation
 			finished: BOOLEAN
 			id: INTEGER
 			types: TYPE_LIST
-			eif_class: EIFFEL_CLASS_C
 		do
-			eif_class := a_class.eiffel_class_c
 			id := a_class.class_id
 			if system.class_of_id (id) /= Void then
 
@@ -3351,30 +3356,32 @@ feature {NONE} -- Implementation
 					-- `a_class' does not remove any subclasses from `unref_classes',
 					-- so that they are recompiled back
 				if a_depth = 0 then
-					unref_classes.prune_all (eif_class.original_class)
+					unref_classes.prune_all (a_class.original_class)
 				end
 
-				eif_class.remove_c_generated_files
+				check attached a_class.eiffel_class_c as l_eif_class then
+					l_eif_class.remove_c_generated_files
+				end
 
 					-- Update control flags of the topological sort
 				moved := True
 
 					-- Remove type check relations
-				if eif_class.parents /= Void then
-					eif_class.remove_relations
+				if a_class.parents /= Void then
+					a_class.remove_relations
 				end
 
 					-- Remove externals defined in current removed class
 				externals.remove (id)
 
 					-- Remove class `a_class' from the lists of changed classes
-				Degree_5.remove_class (eif_class)
-				Degree_4.remove_class (eif_class)
-				Degree_3.remove_class (eif_class)
-				Degree_2.remove_class (eif_class)
+				Degree_5.remove_class (a_class)
+				Degree_4.remove_class (a_class)
+				Degree_3.remove_class (a_class)
+				Degree_2.remove_class (a_class)
 
 					-- Mark the class to remove uncompiled
-				eif_class.original_class.reset_compiled_class
+				a_class.original_class.reset_compiled_class
 
 					-- Remove its types
 				from
@@ -3400,8 +3407,8 @@ feature {NONE} -- Implementation
 				Tmp_m_rout_id_server.remove (id)
 				Tmp_m_desc_server.remove (id)
 
-				Degree_1.remove_class (eif_class)
-				Degree_minus_1.remove_class (eif_class)
+				Degree_1.remove_class (a_class)
+				Degree_minus_1.remove_class (a_class)
 				classes.remove (id)
 
 					-- Create linked_set of classes that depends on current class.
@@ -3415,29 +3422,25 @@ feature {NONE} -- Implementation
 					finished
 				loop
 					finished := True
-					if not eif_class.syntactical_suppliers.after then
-						supplier := eif_class.syntactical_suppliers.item
+					if not a_class.syntactical_suppliers.after then
+						supplier := a_class.syntactical_suppliers.item
 						related_classes.extend (supplier)
-						supplier.suppliers.remove_class (eif_class)
-						eif_class.syntactical_suppliers.forth
+						supplier.suppliers.remove_class (a_class)
+						a_class.syntactical_suppliers.forth
 						finished := False
 					end
-					if not eif_class.syntactical_clients.after then
-						supplier := eif_class.syntactical_clients.item
+					if not a_class.syntactical_clients.after then
+						supplier := a_class.syntactical_clients.item
 						related_classes.extend (supplier)
-						supplier.suppliers.remove_class (eif_class)
-							-- Clean associated filters that may include the class being removed.
-						supplier.filters.clean (supplier)
-						eif_class.syntactical_clients.forth
+						supplier.suppliers.remove_class (a_class)
+						a_class.syntactical_clients.forth
 						finished := False
 					end
-					if not eif_class.clients.after then
-						supplier := eif_class.clients.item
+					if not a_class.clients.after then
+						supplier := a_class.clients.item
 						related_classes.extend (supplier)
-						supplier.suppliers.remove_class (eif_class)
-							-- Clean associated filters that may include the class being removed.
-						supplier.filters.clean (supplier)
-						eif_class.clients.forth
+						supplier.suppliers.remove_class (a_class)
+						a_class.clients.forth
 						finished := False
 					end
 				end
@@ -3475,13 +3478,13 @@ feature {NONE} -- Implementation
 					then
 							-- Recursively remove class.
 						internal_remove_class (supplier, a_depth + 1)
-					elseif supplier.has_dep_class (eif_class) then
+					elseif supplier.has_dep_class (a_class) then
 							-- Is it enough to remove the dependecies only on a class
 							-- which is still in the system, or should we do it for
 							-- all the classes even the ones that we just removed from
 							-- the system? In the last case, we should put the previous
 							-- test one level up.
-						supplier.remove_dep_class (eif_class)
+						supplier.remove_dep_class (a_class)
 					end
 
 					related_classes.forth

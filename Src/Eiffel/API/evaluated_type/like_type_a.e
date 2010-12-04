@@ -514,7 +514,7 @@ feature {TYPE_A} -- Helpers
 	internal_is_valid_for_class (a_class: CLASS_C): BOOLEAN
 			-- Is current type valid?
 		do
-			Result := actual_type /= Void and then actual_type.internal_is_valid_for_class (a_class)
+			Result := attached actual_type as l_actual_type and then l_actual_type.internal_is_valid_for_class (a_class)
 		end
 
 	internal_generic_derivation (a_level: INTEGER_32): TYPE_A

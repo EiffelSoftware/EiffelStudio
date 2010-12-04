@@ -1,0 +1,21 @@
+test_name	renaming-class-in-constraint-crash
+test_description Changing the name of a class used in a generic constraint crashes the compiler when done via the refactoring tool.
+
+define		CLASSNAME "TEST1"
+copy_sub 	Ace $TEST Ace
+copy_sub 	test.e $CLUSTER test.e
+copy_sub 	test1.e $CLUSTER test1.e
+copy_sub 	test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result 	ok
+
+define		CLASSNAME "TEST1_BIS"
+copy_sub 	test.e $CLUSTER test.e
+copy_sub 	test1.e $CLUSTER test1.e
+copy_sub 	test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result 	validity_warning TEST1_BIS VD80
+
+test_end

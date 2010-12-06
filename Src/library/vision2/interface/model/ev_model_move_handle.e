@@ -14,7 +14,8 @@ class
 inherit
 	EV_MODEL_GROUP
 		redefine
-			default_create
+			default_create,
+			create_interface_objects
 		end
 
 create
@@ -26,8 +27,8 @@ create {EV_MODEL_MOVE_HANDLE}
 
 feature {NONE} -- Initialization
 
-	default_create
-			-- Initialize actions.
+	create_interface_objects
+			-- <Precursor>
 		do
 			create start_actions
 			create end_actions
@@ -35,11 +36,14 @@ feature {NONE} -- Initialization
 			create rotate_actions
 			create scale_x_actions
 			create scale_y_actions
-			pointer_button_press_actions.extend (agent on_start_resizing)
-			pointer_motion_actions.extend (agent on_resizing)
-			pointer_button_release_actions.extend (agent on_stop_resizing)
 			show_agent := agent on_enter
 			hide_agent := agent on_leave
+			Precursor {EV_MODEL_GROUP}
+		end
+
+	default_create
+			-- Initialize actions.
+		do
 			is_always_shown := True
 			minimum_x := Min_integer
 			minimum_y := Min_integer
@@ -53,6 +57,9 @@ feature {NONE} -- Initialization
 			scale_button := 3
 			rotate_button := 2
 			Precursor {EV_MODEL_GROUP}
+			pointer_button_press_actions.extend (agent on_start_resizing)
+			pointer_motion_actions.extend (agent on_resizing)
+			pointer_button_release_actions.extend (agent on_stop_resizing)
 		end
 
 feature -- Access

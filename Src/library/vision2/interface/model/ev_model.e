@@ -20,7 +20,7 @@ inherit
 		export
 			{NONE} all
 			{ANY} generating_type
-		redefine
+		undefine
 			default_create
 		end
 
@@ -33,25 +33,36 @@ inherit
 
 	EV_ABSTRACT_PICK_AND_DROPABLE
 		undefine
-			default_create,
 			is_equal,
 			copy
+		redefine
+			default_create,
+			create_interface_objects
 		end
 
 feature {NONE} -- initialization
 
+	create_interface_objects
+		do
+			create internal_invalid_rectangle
+			create center
+			Precursor {EV_ABSTRACT_PICK_AND_DROPABLE}
+		end
+
 	default_create
 			-- Initialize a figure.
 		do
-			assign_draw_id
 			is_show_requested := True
 			internal_is_sensitive := True
-			create internal_invalid_rectangle
-			set_deny_cursor (default_deny_cursor)
-			set_accept_cursor (default_accept_cursor)
-			create center
 			is_center_valid := False
 			are_events_sent_to_group := True
+
+			create_interface_objects
+			Precursor {EV_ABSTRACT_PICK_AND_DROPABLE}
+
+			assign_draw_id
+			set_deny_cursor (default_deny_cursor)
+			set_accept_cursor (default_accept_cursor)
 		end
 
 feature -- Access

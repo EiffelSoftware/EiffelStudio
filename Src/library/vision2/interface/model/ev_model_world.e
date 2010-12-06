@@ -14,6 +14,7 @@ class
 inherit
 	EV_MODEL_GROUP
 		redefine
+			create_interface_objects,
 			default_create,
 			world,
 			full_redraw
@@ -28,10 +29,16 @@ create {EV_MODEL_WORLD}
 
 feature {NONE} -- Initialization
 
+	create_interface_objects
+			-- <Precursor>
+		do
+			background_color := default_colors.White
+			Precursor {EV_MODEL_GROUP}
+		end
+
 	default_create
 			-- Create with a white background.
 		do
-			background_color := default_colors.White
 			Precursor {EV_MODEL_GROUP}
 			grid_x := default_grid_x
 			grid_y := default_grid_x

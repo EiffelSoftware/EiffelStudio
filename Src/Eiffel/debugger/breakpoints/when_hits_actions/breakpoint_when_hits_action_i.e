@@ -10,7 +10,7 @@ deferred
 class
 	BREAKPOINT_WHEN_HITS_ACTION_I
 
-feature
+feature -- Operations
 
 	execute (a_bp: BREAKPOINT; a_dm: DEBUGGER_MANAGER)
 		require
@@ -19,8 +19,26 @@ feature
 		deferred
 		end
 
+feature -- Persistence
+
+	is_persistent: BOOLEAN
+			-- Does the system also save this object, when it stores breakpoint?
+		deferred
+		end
+
+	copy_for_saving: like Current
+			-- Copy of Current to be saved
+			-- Warning: Result can be the same object (i.e Current)
+		require
+			is_persistent: is_persistent
+		do
+			Result := Current
+		ensure
+			result_attached: Result /= Void
+		end
+
 note
-	copyright: "Copyright (c) 1984-2007, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -44,11 +62,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

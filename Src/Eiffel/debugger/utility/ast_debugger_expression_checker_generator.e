@@ -259,20 +259,25 @@ feature {NONE} -- Implementation: byte node
 			end
 
 			l_local_table := a_context.local_table
-			if l_local_table /= Void and then not l_local_table.is_empty then
-					--| if it failed .. let's continue anyway for now
-
-					--| Last local is a cached value, so let's twin it
+			if l_local_table /= Void then
 				ctx.set_locals (l_local_table.twin)
 				ctx.init_local_scopes
-				from
-					l_local_table.start
-				until
-					l_local_table.after
-				loop
-					ctx.add_local_expression_scope (l_local_table.key_for_iteration)
-					l_local_table.forth
+
+				if not l_local_table.is_empty then
+					--| if it failed .. let's continue anyway for now
+
+						--| Last local is a cached value, so let's twin it
+					from
+						l_local_table.start
+					until
+						l_local_table.after
+					loop
+						ctx.add_local_expression_scope (l_local_table.key_for_iteration)
+						l_local_table.forth
+					end
 				end
+			else
+				ctx.init_local_scopes
 			end
 			if f.has_return_value then
 				ctx.add_result_expression_scope

@@ -22,6 +22,7 @@ inherit
 			point_count
 		redefine
 			rotate,
+			create_interface_objects,
 			default_create,
 			recursive_transform,
 			set_x,
@@ -77,15 +78,21 @@ create {EV_MODEL_GROUP}
 
 feature {NONE} -- Initialization
 
-	default_create
-			-- Create an empty EV_MODEL_GROUP.
+	create_interface_objects
+			-- <Precursor>
 		do
 			create lookup_table.make (initiale_size)
 			create point_array.make_empty (1)
-			point_array.extend (create {EV_COORDINATE}.make (0, 0))
-			Precursor {EV_MODEL}
-			index := 0
 			make_empty_area (initiale_size)
+			Precursor {EV_MODEL}
+		end
+
+	default_create
+			-- Create an empty EV_MODEL_GROUP.
+		do
+			Precursor {EV_MODEL}
+			point_array.extend (create {EV_COORDINATE}.make (0, 0))
+			index := 0
 			is_grouped := True
 		ensure then
 			is_grouped: is_grouped
@@ -96,14 +103,14 @@ feature {NONE} -- Initialization
 			-- <Precursor>
 		do
 			default_create
-			Precursor (n)
+			Precursor {ARRAYED_LIST} (n)
 		end
 
 	list_make (n: INTEGER)
 			-- <Precursor>
 		do
 			default_create
-			Precursor (n)
+			Precursor {ARRAYED_LIST} (n)
 		end
 
 feature -- Access

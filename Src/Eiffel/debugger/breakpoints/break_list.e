@@ -95,7 +95,7 @@ feature {DEBUGGER_MANAGER,BREAKPOINTS_MANAGER} -- Update after loading
 			until
 				after
 			loop
-				item_for_iteration.location.set_application_not_set
+				item_for_iteration.location.restore
 				forth
 			end
 			update

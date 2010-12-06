@@ -9,7 +9,7 @@ note
 	date		: "$Date$"
 	revision	: "$Revision$"
 
-class
+frozen class
 	BREAKPOINT_LOCATION
 
 inherit
@@ -28,8 +28,16 @@ inherit
 			is_equal
 		end
 
+	SHARED_WORKBENCH
+		redefine
+			is_equal
+		end
+
 create {BREAKPOINTS_MANAGER}
 	make
+
+create {BREAKPOINT, BREAKPOINT_LOCATION}
+	make_copy_for_saving
 
 feature {NONE} -- Creation
 
@@ -50,6 +58,44 @@ feature {NONE} -- Creation
 		rescue
 			is_corrupted := True
 			retry
+		end
+
+	make_copy_for_saving (a_bp_loc: like Current)
+		do
+			application_status := a_bp_loc.application_status
+			body_index := a_bp_loc.body_index
+			breakable_line_number := a_bp_loc.breakable_line_number
+			if attached a_bp_loc.routine as r then
+				routine_written_in := r.written_in
+			end
+		ensure
+			routine_ids_valid: routine_from_ids ~ a_bp_loc.routine
+		end
+
+feature {BREAK_LIST, BREAKPOINT} -- Copy for saving
+
+	copy_for_saving: like Current
+			-- Create Current as a copy of `bp'
+		do
+			create Result.make_copy_for_saving (Current)
+		end
+
+	restore
+			-- Restore Current when loaded from storage.
+		do
+			set_application_not_set
+			routine := routine_from_ids
+			if routine = Void then
+				is_corrupted := True
+			end
+		end
+
+	routine_from_ids: detachable E_FEATURE
+			-- Routine computed from saved ids
+		do
+			if attached system.class_of_id (routine_written_in) as cl then
+				Result := cl.feature_with_body_index (body_index)
+			end
 		end
 
 feature -- Comparison
@@ -98,9 +144,13 @@ feature -- Properties
 
 	routine: E_FEATURE
 			-- Feature where this breakpoint is situated.
+		note
+			option: transient
+		attribute
+		end
 
 	breakable_line_number: INTEGER
-			-- Line number of the breakpoint in the stoppoint view under $EiffelGraphicalCompiler$.
+			-- Line number of the breakpoint in the stoppoint view under EiffelStudio.
 
 	body_index: INTEGER
 			-- `body_index' of the feature where this breakpoint is situated
@@ -114,6 +164,11 @@ feature -- Properties
 			--
 			-- See the private constants at the end of the class to see the
 			-- different possible values taken.			
+
+feature {NONE} -- Storage
+
+	routine_written_in: INTEGER
+			-- Class id where this breakpoint is situated
 
 feature -- Access
 
@@ -191,10 +246,11 @@ feature {BREAKPOINTS_MANAGER, BREAKPOINT_KEY} -- Change
 
 	update_routine_version
 			-- Set `routine' to the updated_version of `routine'
-		require
-			routine_not_void: routine /= Void
 		do
-			routine := routine.updated_version
+			if attached routine as r then
+				routine := r.updated_version
+			end
+			is_corrupted := is_corrupted or routine = Void
 		end
 
 feature -- Change status

@@ -47,7 +47,7 @@ feature {NONE} -- Creation
 			-- Create Current as a copy of `bp'
 		do
 				--| Key part
-			location := bp.location
+			create location.make_copy_for_saving (bp.location)
 			is_hidden := bp.is_hidden
 
 				--| Current part
@@ -61,7 +61,19 @@ feature {NONE} -- Creation
 
 			continue_execution := bp.continue_execution
 			hits_count_condition := bp.hits_count_condition
-			when_hits_actions := bp.when_hits_actions
+			if attached bp.when_hits_actions as l_w_h_actions then
+				create when_hits_actions.make
+				from
+					l_w_h_actions.start
+				until
+					l_w_h_actions.after
+				loop
+					if l_w_h_actions.item.is_persistent then
+						when_hits_actions.extend (l_w_h_actions.item.copy_for_saving)
+					end
+					l_w_h_actions.forth
+				end
+			end
 			tags := bp.tags
 		end
 
@@ -332,6 +344,10 @@ feature -- Properties
 
 	condition: DBG_EXPRESSION
 			-- Condition to stop.
+		note
+			option: transient
+		attribute
+		end
 
 	condition_as_is_true: BOOLEAN
 			-- Condition is a "Is True" condition.
@@ -411,7 +427,7 @@ feature -- Status and live properties
 
 feature {NONE} -- Internal value
 
-	last_condition_value: DUMP_VALUE
+	last_condition_value: detachable DUMP_VALUE
 			-- Last condition's value			
 
 feature -- Change
@@ -473,8 +489,8 @@ feature -- Change
 		do
 			reset_hits_count
 			last_condition_value := Void
-			if condition /= Void then
-				condition.reset
+			if attached condition as cond then
+				cond.reset
 			end
 			revert_saved_bench_status
 		end
@@ -624,8 +640,8 @@ feature -- Live's changes
 	revert_saved_bench_status
 			-- Revert `bench_status' to `saved_bench_status' if any
 		do
-			if saved_bench_status /= Void then
-				bench_status := saved_bench_status.item
+			if attached saved_bench_status as s then
+				bench_status := s.item
 			end
 			reset_saved_bench_status
 		end

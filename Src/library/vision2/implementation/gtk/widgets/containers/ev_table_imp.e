@@ -51,7 +51,7 @@ feature {NONE} -- Implementation
 			-- Initialize internal values
 			rows := 1
 			columns := 1
-			create internal_array.make (1, 1)
+			create internal_array.make_filled (Void, 1, 1)
 			rebuild_internal_item_list
 			Precursor
 		end

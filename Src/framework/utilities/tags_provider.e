@@ -17,31 +17,35 @@ feature {NONE} -- Initialization
 	make (nb: INTEGER)
 			-- Instanciate Current
 		do
-			create immediate_tags.make_equal (nb)
+			create immediate_tags.make (nb)
+			immediate_tags.compare_objects
 		end
 
 feature -- Access
 
-	tags: DS_ARRAYED_LIST [STRING_32]
+	tags: ARRAYED_LIST [STRING_32]
 			-- List of Tags.
 			-- note: this means Immediate tags + tags from attached `providers'.
 		local
 			ltags: like tags
 			lid: STRING_32
-			p: STRING_32
+			p: detachable STRING_32
 			t: STRING_32
+			l_providers: like providers
 		do
-			if providers = Void then
+			l_providers := providers
+			if l_providers = Void then
 				Result := immediate_tags
 			else
-				create Result.make_from_linear (immediate_tags)
+				create Result.make (immediate_tags.count)
+				Result.fill (immediate_tags)
 				from
-					providers.start
+					l_providers.start
 				until
-					providers.after
+					l_providers.after
 				loop
-					ltags := providers.item_for_iteration.tags
-					lid := providers.key_for_iteration
+					ltags := l_providers.item_for_iteration.tags
+					lid := l_providers.key_for_iteration
 					if lid.is_empty then
 						p := Void
 					else
@@ -57,33 +61,30 @@ feature -- Access
 						loop
 							t := ltags.item_for_iteration
 							if p = Void then
-								Result.force_last (t)
+								Result.force (t)
 							else
-								Result.force_last (p + t)
+								Result.force (p + t)
 							end
 							ltags.forth
 						end
 					end
-					providers.forth
+					l_providers.forth
 				end
 			end
 		end
 
-	immediate_tags: DS_ARRAYED_LIST [STRING_32]
+	immediate_tags: ARRAYED_LIST [STRING_32]
 			-- Immediate list of tags.
 
-	providers: DS_HASH_TABLE [TAGS_PROVIDER, STRING_32]
+	providers: detachable HASH_TABLE [TAGS_PROVIDER, STRING_32]
 			-- Other tags provider aggregated into Current
 
 feature -- Status
 
 	is_valid_tag (t: STRING_32): BOOLEAN
 			-- Is `t' a valid tag value ?
-		local
-			s: like formatted_tag
 		do
-			s := formatted_tag (t)
-			Result := s /= Void and then s.is_equal (t)
+			Result := attached formatted_tag (t) as s and then s.is_equal (t)
 		end
 
 feature -- Change
@@ -97,7 +98,7 @@ feature -- Change
 	sort
 			-- Sort tags
 		do
-			tags.sort (tags_sorter)
+			tags_sorter.sort (tags)
 		end
 
 	add_tags (a: ARRAY [STRING_32])
@@ -123,7 +124,7 @@ feature -- Change
 			is_valid_tag: is_valid_tag (a_tag)
 		do
 			if not tags.has (a_tag) then
-				tags.force_last (a_tag)
+				tags.force (a_tag)
 			end
 		end
 
@@ -133,7 +134,7 @@ feature -- Change
 			is_valid_tag: is_valid_tag (a_tag)
 		do
 			if tags.has (a_tag) then
-				tags.delete (a_tag)
+				tags.prune (a_tag)
 			end
 		end
 
@@ -144,11 +145,16 @@ feature -- Change providers
 		require
 			a_p_not_void: a_p /= Void
 			a_id_not_void: a_id /= Void
+		local
+			p: like providers
 		do
-			if providers = Void then
-				create providers.make_equal (3)
+			p := providers
+			if p = Void then
+				create p.make (3)
+				p.compare_objects
+				providers := p
 			end
-			providers.put_last (a_p, a_id)
+			p.force (a_p, a_id)
 		end
 
 	remove_provider (a_id: STRING_32)
@@ -156,10 +162,10 @@ feature -- Change providers
 		require
 			a_id_not_void: a_id /= Void
 		do
-			if providers /= Void then
-				providers.remove (a_id)
-				if providers.is_empty then
-					providers.wipe_out
+			if attached providers as p then
+				p.remove (a_id)
+				if p.is_empty then
+					p.wipe_out
 					providers := Void
 				end
 			end
@@ -167,21 +173,25 @@ feature -- Change providers
 
 feature {NONE} -- Implementation
 
-	tags_sorter: DS_SORTER [STRING_32]
+	tags_sorter: SORTER [STRING_32]
 			-- Sorter of tags.
 		once
-			create {DS_QUICK_SORTER [STRING_32]} Result.make (create {KL_COMPARABLE_COMPARATOR [STRING_32]}.make)
+			create {QUICK_SORTER [STRING_32]} Result.make (create {COMPARABLE_COMPARATOR [STRING_32]})
 		end
 
-	formatted_tag (t: STRING_32): STRING_32
+	formatted_tag (t: STRING_32): detachable STRING_32
 			-- Formatted tag
+		local
+			s32: STRING_32
 		do
 			if t /= Void then
-				create Result.make_from_string (t)
-				Result.left_adjust
-				Result.right_adjust
-				if Result.is_empty then
+				create s32.make_from_string (t)
+				s32.left_adjust
+				s32.right_adjust
+				if s32.is_empty then
 					Result := Void
+				else
+					Result := s32
 				end
 			end
 		end

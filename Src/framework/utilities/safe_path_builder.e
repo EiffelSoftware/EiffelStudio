@@ -11,7 +11,7 @@ class
 
 feature -- Safe path
 
-	safe_path (a_path: STRING): STRING
+	safe_path (a_path: STRING): detachable STRING
 			-- Double quoted string from `a_path'.
 			-- Use double quote to avoid issue with blank in `a_path'
 		do

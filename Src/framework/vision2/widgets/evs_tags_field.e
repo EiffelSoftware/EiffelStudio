@@ -64,7 +64,7 @@ feature -- Properties
 			-- Display using category ?
 			-- (otherwise display it flat)
 
-	provider: TAGS_PROVIDER
+	provider: detachable TAGS_PROVIDER
 			-- Tags provider.
 
 	original_text: like text
@@ -226,7 +226,7 @@ feature -- event
 			gpci: EV_GRID_CHECKABLE_LABEL_ITEM
 			glab: EV_GRID_LABEL_ITEM
 			ltags: like used_tags
-			lptags: DS_LIST [STRING_32]
+			lptags: LIST [STRING_32]
 			s,cat, lastcat: STRING_32
 			i,r: INTEGER
 			w: INTEGER
@@ -315,9 +315,9 @@ feature -- event
 					i := i + 1
 				end
 			end
-			if provider /= Void then
+			if attached provider as l_provider then
 				from
-					lptags := provider.tags --| Sorted list of tags				
+					lptags := l_provider.tags --| Sorted list of tags				
 					lptags.start
 					r := g.row_count
 					if ltags /= Void and then not ltags.is_empty then

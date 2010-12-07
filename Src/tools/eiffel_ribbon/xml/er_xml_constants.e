@@ -50,6 +50,21 @@ feature -- ALl types under group
 
 	control_group: STRING = "ControlGroup"
 
+feature -- Types under command node
+
+	command_small_images: STRING = "Command.SmallImages"
+			--
+
+	command_large_images: STRING = "Command.LargeImages"
+			--
+
+	command_label_title: STRING = "Command.LabelTitle"
+			--
+
+	string: STRING = "String"
+	
+	Image: STRING = "Image"
+
 feature -- Contract support
 
 	valid (a_string: STRING): BOOLEAN
@@ -72,7 +87,10 @@ feature -- Contract support
 					l_string.is_equal (button) or else
 					l_string.is_equal (check_box) or else
 					l_string.is_equal (combo_box) or else
-					l_string.is_equal (control_group)
+					l_string.is_equal (control_group) or else
+					l_string.is_equal (command_label_title) or else
+					l_string.is_equal (command_small_images) or else
+					l_string.is_equal (command_large_images)
 			end
 		end
 

@@ -25,6 +25,7 @@ feature {NONE} -- Initialization
 
 			create last_node.make (50)
 			create shared_singleton
+			create constants
 		end
 
 feature {NONE}	-- Implementation
@@ -95,22 +96,30 @@ feature -- Tag
 				-- this is first time
 			end
 
-			if attached shared_singleton.layout_constructor_cell.item as l_layout_constructor then
---				create l_new_node.make_with_text (a_local_part)
-				l_new_node := l_layout_constructor.tree_item_factory_method (a_local_part)
-
-				last_node.extend (l_new_node)
-
-				if attached l_parent_node as l_parent then
-					l_parent.extend (l_new_node)
-				else
-					tree.extend (l_new_node)
-				end
-
+			if attached data_callback as l_data_callback then
+				l_data_callback.on_start_tag (a_namespace, a_prefix, a_local_part)
 			else
-				check False end
-			end
+				if attached shared_singleton.layout_constructor_cell.item as l_layout_constructor then
+	--				create l_new_node.make_with_text (a_local_part)
+					l_new_node := l_layout_constructor.tree_item_factory_method (a_local_part)
 
+					last_node.extend (l_new_node)
+
+					if attached l_parent_node as l_parent then
+						l_parent.extend (l_new_node)
+					else
+						tree.extend (l_new_node)
+					end
+
+					if a_local_part.is_equal (constants.command) then
+						if attached {ER_TREE_NODE_DATA} l_new_node.data as l_data then
+							data_callback := l_data
+						end
+					end
+				else
+					check False end
+				end
+			end
 		end
 
 	on_attribute (a_namespace: detachable STRING; a_prefix: detachable STRING; a_local_part: STRING; a_value: STRING)
@@ -137,16 +146,16 @@ feature -- Tag
 --			l_list: detachable EV_ITEM_LIST [EV_TREE_NODE]
 		do
 			print ("%N on_end_tag")
-			-- move parent one level up
-			if attached last_node as l_last_node then
---				l_list := l_last_node.*parent
-				if last_node.count >= 1 then
-					last_node.finish
-					last_node.remove
-				else
-					check False end
-				end
+			if a_local_part.is_equal (constants.command) then
+				check set_by_on_start_tag: attached {ER_TREE_NODE_DATA} data_callback end
+				data_callback := void
 
+				remove_last_node
+			elseif data_callback /= Void then
+				-- nothing to do
+			elseif attached last_node as l_last_node then
+				-- move parent one level up
+				remove_last_node
 			end
 		end
 
@@ -156,6 +165,27 @@ feature -- Content
 			-- <Precursor>
 		do
 			print ("%N on_content")
+			if attached data_callback as l_data_callback then
+				l_data_callback.on_content (a_content)
+			end
 		end
 
+feature {NONE} -- Implementation
+
+	remove_last_node
+			--
+		do
+			if last_node.count >= 1 then
+				last_node.finish
+				last_node.remove
+			else
+				check False end
+			end
+		end
+
+	data_callback: detachable ER_TREE_NODE_DATA
+			-- When parsing some xml nodes, such as Command node. The sub nodes would be parsed by `data_callback' if available
+
+	constants: ER_XML_CONSTANTS
+			--
 end

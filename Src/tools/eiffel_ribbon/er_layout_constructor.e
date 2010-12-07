@@ -222,6 +222,7 @@ feature -- Persistance
 				if attached l_data.command_name as l_command_name and then not l_command_name.is_empty then
 					Result.add_attribute (l_constants.name, a_name_space, l_command_name)
 				end
+				l_data.add_sub_tree_nodes (Result, a_name_space)
 			elseif attached {ER_TREE_NODE_BUTTON_DATA} a_tree_node.data as l_data then
 				if attached l_data.command_name as l_command_name and then not l_command_name.is_empty then
 					Result.add_attribute (l_constants.command_name, a_name_space, l_command_name)

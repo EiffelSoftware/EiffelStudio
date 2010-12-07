@@ -43,7 +43,7 @@ feature -- Properties
 	title: STRING_GENERAL
 			-- Title of Current menu.
 
-	entry_disabled_message: STRING_GENERAL
+	entry_disabled_message: detachable STRING_GENERAL
 			-- Message to display when an entry is disabled.
 
 	enter_actions: ACTION_SEQUENCE [TUPLE]
@@ -84,7 +84,7 @@ feature -- Change
 			add_conditional_entry (a_abr, a_text, a_action, Void)
 		end
 
-	add_conditional_entry (a_abr: STRING; a_text: STRING_GENERAL; a_action: like action_from; a_cond: FUNCTION [ANY, TUPLE, BOOLEAN])
+	add_conditional_entry (a_abr: STRING; a_text: STRING_GENERAL; a_action: like action_from; a_cond: detachable FUNCTION [ANY, TUPLE, BOOLEAN])
 			-- Add a new entry with condition
 			-- the entry will be display only if the `a_cond' is satisfied.
 		local
@@ -144,9 +144,9 @@ feature -- Access
 				end
 				e := get_entry
 				if e /= Void then
-					if e.action /= Void then
+					if attached e.action as l_action then
 						if entry_enabled (e) then
-							e.action.call (Void)
+							l_action.call (Void)
 						else
 							console_print_entry_disabled
 						end
@@ -181,8 +181,8 @@ feature -- Access
 
 	console_print_entry_disabled
 		do
-			if entry_disabled_message /= Void then
-				console_print (entry_disabled_message)
+			if attached entry_disabled_message as m then
+				console_print (m)
 			end
 		end
 
@@ -197,7 +197,7 @@ feature {NONE} -- Implementation
 	leave: BOOLEAN
 			-- Leave when possible.
 
-	action_from (t: like entry): PROCEDURE [ANY, TUPLE]
+	action_from (t: attached like entry): detachable PROCEDURE [ANY, TUPLE]
 			-- Menu action for entry `t'.
 		require
 			t /= Void
@@ -205,13 +205,19 @@ feature {NONE} -- Implementation
 			Result := t.action
 		end
 
-	entry_enabled (a_entry: like entry): BOOLEAN
+	entry_enabled (a_entry: attached like entry): BOOLEAN
 			-- Is `a_entry' enabled (depending of the condition) ?
+		require
+			a_entry_attached: a_entry /= Void
 		do
-			Result := a_entry.cond = Void or else a_entry.cond.item (Void)
+			if attached a_entry.cond as l_cond then
+				Result := l_cond.item (Void)
+			else
+				Result := True
+			end
 		end
 
-	entry (a_index: INTEGER; a_abr: STRING): TUPLE [index:INTEGER; abrev: STRING; text: STRING_GENERAL; action: PROCEDURE [ANY, TUPLE]; cond: FUNCTION [ANY, TUPLE, BOOLEAN]]
+	entry (a_index: INTEGER; a_abr: detachable STRING): detachable TUPLE [index:INTEGER; abrev: detachable STRING; text: STRING_GENERAL; action: detachable PROCEDURE [ANY, TUPLE]; cond: detachable FUNCTION [ANY, TUPLE, BOOLEAN]]
 			-- Entry indexed by `a_index'.
 		local
 			lst: like entries
@@ -244,7 +250,7 @@ feature {NONE} -- Implementation
 
 	last_entry_index: INTEGER
 
-	entries: ARRAYED_LIST [like entry]
+	entries: ARRAYED_LIST [attached like entry]
 			-- Menu's choices.
 
 feature {NONE} -- Answers implementation
@@ -267,7 +273,7 @@ feature {NONE} -- Answers implementation
 			end
 		end
 
-	string_started_by (s: STRING; a_prefix: STRING; a_is_entire: BOOLEAN): BOOLEAN
+	string_started_by (s: STRING; a_prefix: detachable STRING; a_is_entire: BOOLEAN): BOOLEAN
 			-- Is string `s' started by `a_prefix' string ?
 			-- (first blanks are ignored)
 		require
@@ -290,9 +296,9 @@ feature {NONE} -- Answers implementation
 					end
 					i := i + 1
 				end
-			end
-			if Result and a_is_entire then
-				Result := s.count = a_prefix.count or else s.item (a_prefix.count + 1).is_space
+				if Result and a_is_entire then
+					Result := s.count = a_prefix.count or else s.item (a_prefix.count + 1).is_space
+				end
 			end
 		end
 
@@ -321,8 +327,8 @@ feature {NONE} -- Answers implementation
 							console.put_string ("    ")
 						else
 							console.put_string ("(")
-							if item.abrev /= Void and then not item.abrev.is_empty then
-								console_print (item.abrev)
+							if attached item.abrev as l_abrev and then not l_abrev.is_empty then
+								console_print (l_abrev)
 							else
 								console_print (item.index.out)
 							end

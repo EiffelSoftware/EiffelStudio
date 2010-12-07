@@ -16,4 +16,14 @@ feature -- Command
 		deferred
 		end
 
+	on_start_tag (a_namespace: detachable STRING; a_prefix: detachable STRING; a_local_part: STRING)
+			--
+		do
+		end
+
+	on_content (a_content: STRING)
+			--
+		do
+		end
+		
 end

@@ -27,7 +27,7 @@ feature {NONE}-- Initialization
 			Precursor {EV_TITLED_WINDOW}
 
 
-			set_title ("EiffeRibbon")
+			set_title ("EiffelRibbon")
 
 			set_all_attributes_using_constants
 			

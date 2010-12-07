@@ -6102,12 +6102,18 @@ feature {NONE} -- Implementation
 			t := l_creation_type
 				-- Compute creation information
 			if t.is_expanded then
-					-- Even if there is an anchor, once a type is expanded it
-					-- cannot change.
-				if t.is_like then
-					t := t.conformance_type
+				if t.is_formal then
+						-- Even if the constraint is expanded, we still keep the formal information
+						-- for creation. This fixes eweasel test#final093.
+					l_create_info := t.create_info
+				else
+						-- Even if there is an anchor, once a type is expanded it
+						-- cannot change.
+					if t.is_like then
+						t := t.conformance_type
+					end
+					create {CREATE_TYPE} l_create_info.make (t)
 				end
-				create {CREATE_TYPE} l_create_info.make (t)
 			elseif l_access.is_attribute and then l_explicit_type = Void then
 					-- When we create an attribute without a type specification,
 					-- then we need to create an instance matching the possible redeclared

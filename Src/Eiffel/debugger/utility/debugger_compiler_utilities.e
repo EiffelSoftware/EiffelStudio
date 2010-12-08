@@ -525,20 +525,21 @@ feature -- Access on Byte node
 
 feature -- Query
 
-	frozen descendants_type_names_for (n: STRING): DS_LIST [STRING]
+	frozen descendants_type_names_for (n: STRING): LIST [STRING]
 			-- CLASS_C associated to `n'
 		require
 			n_not_void: n /= Void
 		local
 			lst: like descendants_type_names
-			clis: LIST [CLASS_I]
+			clis: detachable LIST [CLASS_I]
 			cl_i: CLASS_I
 		do
 			clis := eiffel_system.universe.classes_with_name (n)
 			if clis /= Void and then not clis.is_empty then
 				from
 					clis.start
-					create {DS_ARRAYED_LIST [STRING]} Result.make_equal (0)
+					create {ARRAYED_LIST [STRING]} Result.make (0)
+					Result.compare_objects
 				until
 					clis.after
 				loop
@@ -546,37 +547,38 @@ feature -- Query
 					if cl_i /= Void and then cl_i.is_compiled then
 						lst := descendants_type_names (cl_i.compiled_class)
 						if lst /= Void then
-							Result.append_last (lst)
+							Result.append (lst)
 						end
 					end
 					clis.forth
 				end
 			end
 		ensure
-			Result /= Void implies Result.equality_tester /= Void
+			Result /= Void implies Result.object_comparison
 		end
 
-	frozen descendants_type_names (cl: CLASS_C): DS_LIST [STRING]
+	frozen descendants_type_names (cl: CLASS_C): LIST [STRING]
 			-- Type names for available EXCEPTION types
 		local
-			lst: LIST [CLASS_C]
+			lst: detachable LIST [CLASS_C]
 		do
 			if cl /= Void then
 				lst := descendants_from (cl)
 				if lst /= Void then
 					from
 						lst.start
-						create {DS_ARRAYED_LIST [STRING]} Result.make_equal (lst.count)
+						create {ARRAYED_LIST [STRING]} Result.make (lst.count)
+						Result.compare_objects
 					until
 						lst.after
 					loop
-						Result.put_last (lst.item.name_in_upper)
+						Result.force (lst.item.name_in_upper)
 						lst.forth
 					end
 				end
 			end
 		ensure
-			Result /= Void implies Result.equality_tester /= Void
+			Result /= Void implies Result.object_comparison
 
 		end
 
@@ -585,7 +587,7 @@ feature -- Query
 		require
 			cl_not_void: cl /= Void
 		local
-			desc, lst: LIST [CLASS_C]
+			desc, lst: detachable  LIST [CLASS_C]
 		do
 			desc := cl.direct_descendants
 			if desc /= Void then

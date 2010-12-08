@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Internal representation of the Eiffel universe."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -87,7 +87,26 @@ feature -- Properties
 				end
 				l_version.force (l_clr_version, v_msil_clr)
 			end
-			create Result.make (platform, build, system.has_multithreaded, system.il_generation, system.has_dynamic_runtime, a_target.variables, l_version)
+			create Result.make (platform, build, concurrency, system.has_multithreaded, system.il_generation, system.has_dynamic_runtime, a_target.variables, l_version)
+		end
+
+	concurrency: INTEGER
+			-- Type of Concurrency (none, thread, scoop)
+		do
+			inspect
+				system.concurrency_index
+			when {CONF_TARGET}.setting_concurrency_index_thread then
+				Result := concurrency_multithreaded
+			when {CONF_TARGET}.setting_concurrency_index_scoop then
+				Result := concurrency_scoop
+			else
+					-- Default to no concurrency if none is specified.
+				if system.has_multithreaded then
+					Result := concurrency_multithreaded
+				else
+					Result := concurrency_none
+				end
+			end
 		end
 
 	platform: INTEGER

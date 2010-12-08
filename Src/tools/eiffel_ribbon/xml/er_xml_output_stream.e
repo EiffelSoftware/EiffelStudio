@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 			l_constants: ER_MISC_CONSTANTS
 		do
 			create l_constants
-			if attached l_constants.full_file_name as l_file_name then
+			if attached l_constants.xml_full_file_name as l_file_name then
 				create l_file.make (l_file_name)
 				file := l_file
 				l_file.create_read_write

@@ -47,6 +47,7 @@ feature -- Button texts
 	b_C_functions: STRING_32						do Result := locale.translation("C Functions")	end
 	b_change: STRING_32 							do Result := locale.translation ("Change")	end
 	b_check: STRING_32							do Result := locale.translation ("Check") end
+	b_check_recursively: STRING_32				do Result := locale.translation ("Check recursively") end
 	b_Close: STRING_32							do Result := locale.translation("Close")	end
 	b_Close_tool (a_tool: STRING_GENERAL): STRING_32
 		require a_tool_not_void: a_tool /= Void
@@ -139,6 +140,7 @@ feature -- Button texts
 	b_Print: STRING_32							do Result := locale.translation("Print")	end
 	b_Undo: STRING_32							do Result := locale.translation("Undo")	end
 	b_Uncheck: STRING_32							do Result := locale.translation ("Uncheck") end
+	b_Uncheck_recursively: STRING_32			do Result := locale.translation ("Uncheck recursively") end
 	b_Redo: STRING_32							do Result := locale.translation("Redo")	end
 	b_Create_new_cluster: STRING_32				do Result := locale.translation("Add Cluster")	end
 	b_Create_new_library: STRING_32				do Result := locale.translation("Add Library")	end
@@ -1342,6 +1344,9 @@ feature -- Label texts
 	l_Inactive_subqueries: STRING_32		do Result := locale.translation("Inactive subqueries")	end
 	l_include_colon: STRING_32			do Result := locale.translation("Include:")	end
 	l_include: STRING_32 				do Result := locale.translation("Include")	end
+	l_exclude: STRING_32 				do Result := locale.translation("Exclude")	end
+	l_include_selection: STRING_32 				do Result := locale.translation("Include selection")	end
+	l_exclude_selection: STRING_32 				do Result := locale.translation("Exclude selection")	end
 	l_Index: STRING_32					do Result := locale.translation("Index:")	end
 	l_indexing_clause_error: STRING_32	do Result := locale.translation("Indexing clause has syntax error")	end
 	l_invariants: STRING_32				do Result := locale.translation("Invariants")	end

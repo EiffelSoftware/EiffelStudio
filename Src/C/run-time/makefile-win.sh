@@ -236,6 +236,7 @@ MT_WORKBENCH_OBJECTS = \
 	$(INDIR)MTwgen_conf.$obj \
 	$(INDIR)MTweif_type_id.$obj \
 	$(INDIR)MTwrout_obj.$obj \
+	$(INDIR)MTwscoop.$obj \
 	$(TOP)$(DIR)console$(DIR)mtwwinconsole.$lib
 
 MT_WOBJECTS = $(MT_WORKBENCH_OBJECTS) \
@@ -814,6 +815,9 @@ $(INDIR)MTweif_type_id.$obj: $(RTSRC)eif_type_id.c
 
 $(INDIR)MTwrout_obj.$obj: $(RTSRC)rout_obj.c
 	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)rout_obj.c
+
+$(INDIR)MTwscoop.$obj: $(RTSRC)scoop.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)scoop.c
 
 $(INDIR)MTwhash.$obj: $(RTSRC)hash.c
 	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)hash.c

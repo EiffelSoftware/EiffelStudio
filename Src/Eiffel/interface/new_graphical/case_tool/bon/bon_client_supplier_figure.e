@@ -132,7 +132,7 @@ feature -- Status report
 
 feature -- Access
 
-	xml_element (node: XM_ELEMENT): XM_ELEMENT
+	xml_element (node: like xml_element): XML_ELEMENT
 			-- Xml node representing `Current's state.
 		local
 			was_low: BOOLEAN
@@ -159,7 +159,7 @@ feature -- Access
 			end
 		end
 
-	set_with_xml_element (node: XM_ELEMENT)
+	set_with_xml_element (node: like xml_element)
 			-- Retrive state from `node'.
 		local
 			was_low: BOOLEAN

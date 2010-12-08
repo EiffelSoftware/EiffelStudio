@@ -11,14 +11,14 @@ class
 
 feature -- Sort
 
-	sort_with_position_comparator (a_list: DS_LIST [EVS_GRID_COORDINATED]; a_comparator: EVS_GRID_ITEM_POSITION_COMPARATOR)
+	sort_with_position_comparator (a_list: LIST [EVS_GRID_COORDINATED]; a_comparator: EVS_GRID_ITEM_POSITION_COMPARATOR)
 			-- Sort `a_list' with `a_comparator'.
 		require
 			a_list_attached: a_list /= Void
 			a_comparator_attached: a_comparator /= Void
 		local
-			l_tester: AGENT_BASED_EQUALITY_TESTER [EVS_GRID_COORDINATED]
-			l_sorter: DS_QUICK_SORTER [EVS_GRID_COORDINATED]
+			l_tester: AGENT_EQUALITY_TESTER [EVS_GRID_COORDINATED]
+			l_sorter: QUICK_SORTER [EVS_GRID_COORDINATED]
 		do
 			create l_tester.make (agent a_comparator.comparator)
 			create l_sorter.make (l_tester)

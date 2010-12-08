@@ -591,7 +591,7 @@ feature{NONE} -- Implementation/Data
 	grid: ES_EDITOR_TOKEN_GRID
 			-- Grid in `scope_grid'
 
-	rows: DS_LIST [EB_METRIC_DOMAIN_ITEM]
+	rows: LIST [EB_METRIC_DOMAIN_ITEM]
 			-- List of rows in `grid'
 		local
 			l_grid: like grid
@@ -599,7 +599,7 @@ feature{NONE} -- Implementation/Data
 			l_row_count: INTEGER
 			l_scope_row: EB_METRIC_DOMAIN_ITEM
 		do
-			create {DS_ARRAYED_LIST [EB_METRIC_DOMAIN_ITEM]}Result.make (grid.row_count)
+			create {ARRAYED_LIST [EB_METRIC_DOMAIN_ITEM]}Result.make (grid.row_count)
 			l_grid := grid
 			l_row_count := l_grid.row_count
 			if l_row_count > 0 then
@@ -610,7 +610,7 @@ feature{NONE} -- Implementation/Data
 				loop
 					l_scope_row ?= l_grid.row (l_row_index).data
 					check l_scope_row /= Void end
-					Result.force_last (l_scope_row)
+					Result.force (l_scope_row)
 					l_row_index := l_row_index + 1
 				end
 			end
@@ -694,7 +694,7 @@ feature{NONE} -- Implementation/Sorting
 			a_column_list_attached: a_column_list /= Void
 			not_a_column_list_is_empty:
 		local
-			l_sorter: DS_QUICK_SORTER [EB_METRIC_DOMAIN_ITEM]
+			l_sorter: QUICK_SORTER [EB_METRIC_DOMAIN_ITEM]
 			l_rows: like rows
 		do
 			create l_sorter.make (a_comparator)

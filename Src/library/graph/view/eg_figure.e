@@ -69,7 +69,7 @@ feature -- Access
 			Result ?= Precursor {EV_MODEL_MOVE_HANDLE}
 		end
 
-	xml_element (node: XM_ELEMENT): XM_ELEMENT
+	xml_element (node: like xml_element): XML_ELEMENT
 			-- Xml node representing `Current's state.
 		local
 			l_xml_routines: like xml_routines
@@ -91,13 +91,13 @@ feature -- Access
 	name_string: STRING = "NAME"
 		-- XML String constants.
 
-	set_with_xml_element (node: XM_ELEMENT)
+	set_with_xml_element (node: like xml_element)
 			-- Retrive state from `node'.
 		local
 			l_name: STRING
 			l_xml_routines: like xml_routines
 			l_model: like model
-			l_attribute: detachable XM_ATTRIBUTE
+			l_attribute: detachable XML_ATTRIBUTE
 			l_model_name: detachable STRING_8
 		do
 			l_xml_routines := xml_routines
@@ -204,6 +204,14 @@ feature -- Status setting
 			set: is_update_required
 		end
 
+feature -- Visitor
+
+	process (v: EG_FIGURE_VISITOR)
+			-- Visitor feature.
+		do
+			v.process_figure (Current)
+		end
+
 feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 
 	update
@@ -254,14 +262,14 @@ invariant
 	name_label_not_void: name_label /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

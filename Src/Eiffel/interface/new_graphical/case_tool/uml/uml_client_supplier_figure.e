@@ -108,7 +108,7 @@ feature -- Status report
 
 feature -- Access
 
-	xml_element (node: XM_ELEMENT): XM_ELEMENT
+	xml_element (node: like xml_element): XML_ELEMENT
 			-- Xml node representing `Current's state.
 		do
 			Result := Precursor {EIFFEL_CLIENT_SUPPLIER_FIGURE} (node)
@@ -117,7 +117,7 @@ feature -- Access
 			Result.put_last (xml_routines.xml_node (Result, "REAL_LINE_WIDTH", (real_line_width * 100).rounded.out))
 		end
 
-	set_with_xml_element (node: XM_ELEMENT)
+	set_with_xml_element (node: like xml_element)
 			-- Retrive state from `node'.
 		do
 			Precursor {EIFFEL_CLIENT_SUPPLIER_FIGURE} (node)

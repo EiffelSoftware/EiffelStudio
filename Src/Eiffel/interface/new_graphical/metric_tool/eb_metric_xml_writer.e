@@ -30,7 +30,7 @@ feature{NONE} -- Implementation
 
 feature -- Generate
 
-	xml_element (a_item: G; a_parent: XM_COMPOSITE): XM_ELEMENT
+	xml_element (a_item: G; a_parent: XML_COMPOSITE): XML_ELEMENT
 			-- Xml element for `a_item'
 			-- Generated xml element will be the last child of `a_parent'.
 		require
@@ -45,10 +45,10 @@ feature -- Generate
 			result_attached: Result /= Void
 		end
 
-	xml_document (a_item: G): XM_DOCUMENT
+	xml_document (a_item: G): XML_DOCUMENT
 			-- Xml document for `a_item'
 		local
-			l_element: XM_ELEMENT
+			l_element: like xml_element
 		do
 			create Result.make
 			element_stack.extend (Result)
@@ -61,13 +61,13 @@ feature -- Generate
 
 feature{NONE} -- Implementation
 
-	element_stack: LINKED_STACK [XM_COMPOSITE]
+	element_stack: LINKED_STACK [XML_COMPOSITE]
 			-- Stack of generated xml element
 
-	namespace: XM_NAMESPACE
+	namespace: XML_NAMESPACE
 			-- Default name space
 
-	target_element: XM_ELEMENT
+	target_element: like xml_element
 			-- Last recored element
 
 	matching_strategy_name (a_strategy_id: INTEGER): STRING
@@ -92,7 +92,7 @@ feature{NONE} -- Implementation
 
 feature{NONE} -- Process
 
-	process_metric (a_metric: EB_METRIC; a_metric_element: XM_ELEMENT)
+	process_metric (a_metric: EB_METRIC; a_metric_element: like xml_element)
 			-- Process `a_metric' to generate attribute name, unit and description.
 			-- `a_metric_element' is the XML element for `a_metric'.
 		require
@@ -100,8 +100,8 @@ feature{NONE} -- Process
 			a_metric_element_attached: a_metric_element /= Void
 		local
 			l_stack: like element_stack
-			l_description: XM_ELEMENT
-			l_content: XM_CHARACTER_DATA
+			l_description: like xml_element
+			l_content: XML_CHARACTER_DATA
 		do
 			l_stack := element_stack
 
@@ -119,9 +119,8 @@ feature{NONE} -- Process
 	process_basic_metric (a_basic_metric: EB_METRIC_BASIC)
 			-- Process `a_basic_metric'.
 		local
-			l_criterion: XM_ELEMENT
-			l_metric: XM_ELEMENT
-			l_parent: XM_COMPOSITE
+			l_criterion, l_metric: like xml_element
+			l_parent: XML_COMPOSITE
 		do
 				-- Generate basic metric element.
 			l_parent := element_stack.item
@@ -148,9 +147,9 @@ feature{NONE} -- Process
 		local
 			l_variable_metric: LIST [STRING]
 			l_coefficient: LIST [DOUBLE]
-			l_metric: XM_ELEMENT
-			l_linear: XM_ELEMENT
-			l_parent: XM_COMPOSITE
+			l_metric,
+			l_linear: like xml_element
+			l_parent: XML_COMPOSITE
 		do
 				-- Generate basic linear element.
 			l_parent := element_stack.item
@@ -183,8 +182,8 @@ feature{NONE} -- Process
 	process_ratio_metric (a_ratio_metric: EB_METRIC_RATIO)
 			-- Process `a_ratio_metric'.
 		local
-			l_ratio: XM_ELEMENT
-			l_parent: XM_COMPOSITE
+			l_ratio: like xml_element
+			l_parent: XML_COMPOSITE
 		do
 				-- Generate ratio metric element.
 			l_parent := element_stack.item
@@ -203,7 +202,7 @@ feature{NONE} -- Process
 			element_stack.remove
 		end
 
-	process_criterion_common (a_criterion: EB_METRIC_CRITERION; a_element: XM_ELEMENT)
+	process_criterion_common (a_criterion: EB_METRIC_CRITERION; a_element: like xml_element)
 			-- Add attribute "name", "unit" and "negation" for `a_criterion' into `a_element'.
 		require
 			a_criterion_attached: a_criterion /= Void
@@ -225,8 +224,8 @@ feature{NONE} -- Process
 	process_domain_criterion (a_criterion: EB_METRIC_DOMAIN_CRITERION)
 			-- Process `a_criterion'.
 		local
-			l_criterion: XM_ELEMENT
-			l_parent: XM_COMPOSITE
+			l_criterion: like xml_element
+			l_parent: XML_COMPOSITE
 		do
 			l_parent := element_stack.item
 			create l_criterion.make (l_parent, n_domain_criterion, namespace)
@@ -243,8 +242,8 @@ feature{NONE} -- Process
 	process_caller_callee_criterion (a_criterion: EB_METRIC_CALLER_CALLEE_CRITERION)
 			-- Process `a_criterion'.
 		local
-			l_criterion: XM_ELEMENT
-			l_parent: XM_COMPOSITE
+			l_criterion: like xml_element
+			l_parent: XML_COMPOSITE
 		do
 				-- Generate element.
 			l_parent := element_stack.item
@@ -263,8 +262,8 @@ feature{NONE} -- Process
 	process_supplier_client_criterion (a_criterion: EB_METRIC_SUPPLIER_CLIENT_CRITERION)
 			-- Process `a_criterion'.
 		local
-			l_criterion: XM_ELEMENT
-			l_parent: XM_COMPOSITE
+			l_criterion: like xml_element
+			l_parent: XML_COMPOSITE
 		do
 				-- Generate element.
 			l_parent := element_stack.item
@@ -285,10 +284,10 @@ feature{NONE} -- Process
 	process_text_criterion (a_criterion: EB_METRIC_TEXT_CRITERION)
 			-- Process `a_criterion'.
 		local
-			l_criterion: XM_ELEMENT
-			l_content: XM_CHARACTER_DATA
-			l_parent: XM_COMPOSITE
-			l_text: XM_ELEMENT
+			l_criterion,
+			l_text: like xml_element
+			l_content: XML_CHARACTER_DATA
+			l_parent: XML_COMPOSITE
 		do
 				-- Generate element.
 			l_parent := element_stack.item
@@ -308,10 +307,10 @@ feature{NONE} -- Process
 	process_path_criterion (a_criterion: EB_METRIC_PATH_CRITERION)
 			-- Process `a_criterion'.
 		local
-			l_criterion: XM_ELEMENT
-			l_content: XM_CHARACTER_DATA
-			l_parent: XM_COMPOSITE
-			l_path: XM_ELEMENT
+			l_criterion,
+			l_path: like xml_element
+			l_content: XML_CHARACTER_DATA
+			l_parent: XML_COMPOSITE
 		do
 				-- Generate element.
 			l_parent := element_stack.item
@@ -330,8 +329,8 @@ feature{NONE} -- Process
 	process_normal_criterion (a_criterion: EB_METRIC_NORMAL_CRITERION)
 			-- Process `a_criterion'.
 		local
-			l_criterion: XM_ELEMENT
-			l_parent: XM_COMPOSITE
+			l_criterion: like xml_element
+			l_parent: XML_COMPOSITE
 		do
 				-- Generate element.
 			l_parent := element_stack.item
@@ -347,8 +346,8 @@ feature{NONE} -- Process
 	process_value_criterion (a_criterion: EB_METRIC_VALUE_CRITERION)
 			-- Process `a_criterion'.
 		local
-			l_criterion: XM_ELEMENT
-			l_parent: XM_COMPOSITE
+			l_criterion: like xml_element
+			l_parent: XML_COMPOSITE
 		do
 				-- Generate element.
 			l_parent := element_stack.item
@@ -371,8 +370,8 @@ feature{NONE} -- Process
 	process_external_command_criterion (a_criterion: EB_METRIC_EXTERNAL_COMMAND_CRITERION)
 			-- Process `a_criterion'.
 		local
-			l_criterion: XM_ELEMENT
-			l_parent: XM_COMPOSITE
+			l_criterion: like xml_element
+			l_parent: XML_COMPOSITE
 		do
 				-- Generate element.
 			l_parent := element_stack.item
@@ -399,8 +398,8 @@ feature{NONE} -- Process
 			a_criterion_attached: a_criterion /= Void
 			a_criterion_name_attached: a_criterion_name /= Void
 		local
-			l_criterion: XM_ELEMENT
-			l_parent: XM_COMPOSITE
+			l_criterion: like xml_element
+			l_parent: XML_COMPOSITE
 		do
 				-- Generate element.
 			l_parent := element_stack.item
@@ -430,8 +429,8 @@ feature{NONE} -- Process
 	process_domain (a_domain: EB_METRIC_DOMAIN)
 			-- Process `a_domain'.
 		local
-			l_domain: XM_ELEMENT
-			l_parent: XM_COMPOSITE
+			l_domain: like xml_element
+			l_parent: XML_COMPOSITE
 		do
 			l_parent := element_stack.item
 			create l_domain.make (l_parent, n_domain, namespace)
@@ -455,8 +454,8 @@ feature{NONE} -- Process
 	process_domain_item_common (a_type: STRING; a_id: STRING; a_library_target_uuid: STRING)
 			-- Add a domain element.
 		local
-			l_domain_item: XM_ELEMENT
-			l_parent: XM_COMPOSITE
+			l_domain_item: like xml_element
+			l_parent: XML_COMPOSITE
 		do
 			l_parent := element_stack.item
 			create l_domain_item.make (l_parent, n_domain_item, namespace)
@@ -507,9 +506,9 @@ feature{NONE} -- Process
 	process_metric_archive_node (a_item: EB_METRIC_ARCHIVE_NODE)
 			-- Process `a_item'.
 		local
-			l_archive: XM_ELEMENT
+			l_archive: like xml_element
 			l_type_name: STRING
-			l_parent: XM_COMPOSITE
+			l_parent: XML_COMPOSITE
 		do
 			l_parent := element_stack.item
 			create l_archive.make (l_parent, n_metric, namespace)
@@ -542,11 +541,11 @@ feature{NONE} -- Process
 	process_value_tester (a_item: EB_METRIC_VALUE_TESTER)
 			-- Process `a_item'.
 		local
-			l_testers_element: XM_ELEMENT
+			l_testers_element,
+			l_tester_item: like xml_element
 			l_testers: LIST [TUPLE [EB_METRIC_VALUE_RETRIEVER, INTEGER]]
 			l_tester: TUPLE [l_retriever: EB_METRIC_VALUE_RETRIEVER; l_operator: INTEGER]
-			l_tester_item: XM_ELEMENT
-			l_parent: XM_COMPOSITE
+			l_parent: XML_COMPOSITE
 		do
 			if not a_item.criteria.is_empty then
 				l_parent := element_stack.item
@@ -587,8 +586,8 @@ feature{NONE} -- Process
 	process_constant_value_retriever (a_item: EB_METRIC_CONSTANT_VALUE_RETRIEVER)
 			-- Process `a_item'.
 		local
-			l_retriever: XM_ELEMENT
-			l_parent: XM_COMPOSITE
+			l_retriever: like xml_element
+			l_parent: XML_COMPOSITE
 		do
 			l_parent := element_stack.item
 			create l_retriever.make (l_parent, n_constant_value, namespace)
@@ -600,8 +599,8 @@ feature{NONE} -- Process
 	process_metric_value_retriever (a_item: EB_METRIC_METRIC_VALUE_RETRIEVER)
 			-- Process `a_item'.
 		local
-			l_retriever: XM_ELEMENT
-			l_parent: XM_COMPOSITE
+			l_retriever: like xml_element
+			l_parent: XML_COMPOSITE
 		do
 			l_parent := element_stack.item
 			create l_retriever.make (l_parent, n_metric_value, namespace)
@@ -621,18 +620,18 @@ feature{NONE} -- Process
 	process_external_command_tester (a_item: EB_METRIC_EXTERNAL_COMMAND_TESTER)
 			-- Process `a_item'.
 		local
-			l_command: XM_ELEMENT
-			l_dir: XM_ELEMENT
-			l_input: XM_ELEMENT
-			l_output: XM_ELEMENT
-			l_error: XM_ELEMENT
-			l_command_content: XM_CHARACTER_DATA
-			l_dir_content: XM_CHARACTER_DATA
-			l_input_content: XM_CHARACTER_DATA
-			l_output_content: XM_CHARACTER_DATA
-			l_error_content: XM_CHARACTER_DATA
-			l_exit_code: XM_ELEMENT
-			l_parent: XM_COMPOSITE
+			l_command,
+			l_dir,
+			l_input,
+			l_output,
+			l_error,
+			l_exit_code: like xml_element
+			l_command_content: XML_CHARACTER_DATA
+			l_dir_content: XML_CHARACTER_DATA
+			l_input_content: XML_CHARACTER_DATA
+			l_output_content: XML_CHARACTER_DATA
+			l_error_content: XML_CHARACTER_DATA
+			l_parent: XML_COMPOSITE
 			l_namespace: like namespace
 		do
 			l_namespace := namespace

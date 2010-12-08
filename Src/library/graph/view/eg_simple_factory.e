@@ -31,19 +31,21 @@ feature -- Basic operations
 			Result := create {EG_SIMPLE_LINK}.make_with_model (a_link)
 		end
 
-	model_from_xml (node: XM_ELEMENT): detachable EG_ITEM
+	model_from_xml (node: like xml_element_type): detachable EG_ITEM
 			-- Create an EG_ITEM from `node' if possible.
 		local
 			source_name, target_name: detachable STRING
-			node_name: STRING
+			node_name: detachable STRING
 			a_source, a_target: detachable EG_LINKABLE
 		do
 			node_name := node.name
-			if node_name.is_equal ("EG_SIMPLE_NODE") then
+			if node_name = Void then
+				check has_name: False end
+			elseif node_name.same_string ("EG_SIMPLE_NODE") then
 				create {EG_NODE} Result
-			elseif node_name.is_equal ("EG_SIMPLE_CLUSTER") then
+			elseif node_name.same_string ("EG_SIMPLE_CLUSTER") then
 				create {EG_CLUSTER} Result
-			elseif node_name.is_equal ("EG_SIMPLE_LINK") then
+			elseif node_name.same_string ("EG_SIMPLE_LINK") then
 				if attached node.attribute_by_name ("SOURCE") as l_attribute_by_name then
 					source_name := l_attribute_by_name.value
 				else
@@ -68,14 +70,14 @@ feature -- Basic operations
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

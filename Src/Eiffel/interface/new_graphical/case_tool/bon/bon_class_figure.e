@@ -196,7 +196,7 @@ feature -- Access
 	generics_color_string: STRING = "GENERICS_COLOR"
 	class_name_color_string: STRING = "CLASS_NAME_COLOR"
 
-	xml_element (node: XM_ELEMENT): XM_ELEMENT
+	xml_element (node: like xml_element): XML_ELEMENT
 			-- Xml element representing `Current's state.
 		local
 			colon_string: STRING
@@ -230,7 +230,7 @@ feature -- Access
 			Result.put_last (l_xml_routines.xml_node (Result, is_needed_on_diagram_string, boolean_representation (l_model.is_needed_on_diagram)))
 		end
 
-	set_with_xml_element (node: XM_ELEMENT)
+	set_with_xml_element (node: like xml_element)
 			-- Retrive state from `node'.
 		local
 			l_xml_routines: like xml_routines

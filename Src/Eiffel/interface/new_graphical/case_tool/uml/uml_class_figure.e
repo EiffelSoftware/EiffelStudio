@@ -258,10 +258,10 @@ feature -- Store/Retrive
 			Result := "UML_CLASS_FIGURE"
 		end
 
-	xml_element (node: XM_ELEMENT): XM_ELEMENT
+	xml_element (node: like xml_element): XML_ELEMENT
 			-- Xml element representing `Current's state.
 		local
-			xqueries, xcommands, xsection: XM_ELEMENT
+			xqueries, xcommands, xsection: like xml_element
 			l_item: FEATURE_SECTION_VIEW
 			i, nb: INTEGER
 			l_expanded_sections: ARRAYED_LIST [FEATURE_SECTION_VIEW]
@@ -318,11 +318,11 @@ feature -- Store/Retrive
 			end
 		end
 
-	set_with_xml_element (node: XM_ELEMENT)
+	set_with_xml_element (node: like xml_element)
 			-- Retrive state from `node'.
 		local
-			xqueries, xcommands, l_item: XM_ELEMENT
-			l_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
+			xqueries, xcommands, l_item: like xml_element
+			l_cursor: XML_COMPOSITE_CURSOR
 			sname: STRING
 			fsv: FEATURE_SECTION_VIEW
 		do

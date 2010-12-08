@@ -198,7 +198,7 @@ feature -- Grind binding
 				l_table.after
 			loop
 				l_related_feature_rows := new_node (l_table.key_for_iteration, Void, {like row_type}.compact_feature_row)
-				l_rows.children.force_last (l_related_feature_rows)
+				l_rows.children.force (l_related_feature_rows)
 				l_row_count := l_row_count + 1
 				l_inner_tbl := l_table.item_for_iteration
 				from
@@ -207,7 +207,7 @@ feature -- Grind binding
 					l_inner_tbl.after
 				loop
 					l_class_rows := new_node (l_inner_tbl.item_for_iteration.first, Void, {like row_type}.class_row)
-					l_related_feature_rows.children.force_last (l_class_rows)
+					l_related_feature_rows.children.force (l_class_rows)
 					l_row_count := l_row_count + 1
 					l_feature_list := l_inner_tbl.item_for_iteration
 					from
@@ -216,7 +216,7 @@ feature -- Grind binding
 						l_feature_list.after
 					loop
 						l_feature_rows := new_node (l_feature_list.item, l_table.key_for_iteration, {like row_type}.feature_name_row)
-						l_class_rows.children.force_last (l_feature_rows)
+						l_class_rows.children.force (l_feature_rows)
 						l_row_count := l_row_count + 1
 						l_feature_list.forth
 					end
@@ -230,7 +230,7 @@ feature -- Grind binding
 	build_row_table (a_node: EB_TREE_NODE [like row_type])
 			-- Build `row_table'.
 		local
-			l_cursor: DS_ARRAYED_LIST_CURSOR [EB_TREE_NODE [like row_type]]
+			l_cursor: like {EB_TREE_NODE [like row_type]}.children.new_cursor
 		do
 			if a_node.data /= Void then
 				row_table.put (a_node.data, row_table.count + 1)
@@ -249,7 +249,7 @@ feature -- Grind binding
 	bind_grid
 			-- Bind `data' into `grid'.
 		local
-			l_cursor: DS_ARRAYED_LIST_CURSOR [EB_TREE_NODE [like row_type]]
+			l_cursor: like rows.children.new_cursor
 			l_grid_row: EV_GRID_ROW
 		do
 			required_width_of_first_column := 0
@@ -346,7 +346,7 @@ feature -- Grind binding
 		local
 			l_grid: like grid
 			l_grid_row: EV_GRID_ROW
-			l_cursor: DS_ARRAYED_LIST_CURSOR [EB_TREE_NODE [like row_type]]
+			l_cursor: like {EB_TREE_NODE [like row_type]}.children.new_cursor
 			l_children_count: INTEGER
 		do
 			l_grid := grid

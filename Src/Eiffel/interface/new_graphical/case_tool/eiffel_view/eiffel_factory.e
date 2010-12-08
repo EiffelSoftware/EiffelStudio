@@ -56,7 +56,7 @@ feature -- Access
 
 	world: EIFFEL_WORLD
 
-	model_from_xml (node: XM_ELEMENT): EG_ITEM
+	model_from_xml (node: like xml_element_type): EG_ITEM
 			-- Create an EG_ITEM from `node' if possible.
 		local
 			node_name, class_name, source_name, target_name: STRING

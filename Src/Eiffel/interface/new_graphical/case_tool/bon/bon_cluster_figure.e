@@ -267,7 +267,7 @@ feature -- Access
 	is_iconified_string: STRING = "IS_ICONIFIED"
 		-- Xml string constant.
 
-	xml_element (node: XM_ELEMENT): XM_ELEMENT
+	xml_element (node: like xml_element): XML_ELEMENT
 			-- Xml element representing `Current's state.
 		do
 			Result := Precursor {EIFFEL_CLUSTER_FIGURE} (node)
@@ -276,7 +276,7 @@ feature -- Access
 			Result := polyline_label_xml_element (node)
 		end
 
-	set_with_xml_element (node: XM_ELEMENT)
+	set_with_xml_element (node: like xml_element)
 			-- Retrive state from `node'.
 		do
 			Precursor {EIFFEL_CLUSTER_FIGURE} (node)

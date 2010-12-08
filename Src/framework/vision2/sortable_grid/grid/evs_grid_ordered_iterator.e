@@ -63,7 +63,7 @@ feature{NONE} -- Initialization
 		require
 			grid_wrapper_attached: a_grid_wrapper /= Void
 		local
-			l_list: DS_LIST [EVS_GRID_COORDINATED]
+			l_list: LIST [EVS_GRID_COORDINATED]
 		do
 			l_list := a_grid_wrapper.grid_selected_items
 			if l_list.is_empty then
@@ -80,7 +80,7 @@ feature{NONE} -- Initialization
 		require
 			grid_wrapper_attached: a_grid_wrapper /= Void
 		local
-			l_list: DS_LIST [EVS_GRID_COORDINATED]
+			l_list: LIST [EVS_GRID_COORDINATED]
 		do
 			l_list := a_grid_wrapper.grid_selected_items
 			if l_list.is_empty then
@@ -150,18 +150,18 @@ feature -- Access
 			Result := y_internal
 		end
 
-	sortable_list (a_unsortable_list: LIST [EV_GRID_ITEM]): DS_LIST [EVS_GRID_COORDINATED]
+	sortable_list (a_unsortable_list: LIST [EV_GRID_ITEM]): LIST [EVS_GRID_COORDINATED]
 			-- A sortable list of EVS_GRID_COORDINATED objects which represents `a_unsortable'
 		require
 			a_unsortable_list_attached: a_unsortable_list /= Void
 		do
-			create {DS_ARRAYED_LIST [EVS_GRID_COORDINATED]}Result.make (a_unsortable_list.count)
+			create {ARRAYED_LIST [EVS_GRID_COORDINATED]}Result.make (a_unsortable_list.count)
 			from
 				a_unsortable_list.start
 			until
 				a_unsortable_list.after
 			loop
-				Result.force_last (coordinated_item (a_unsortable_list.item))
+				Result.force (coordinated_item (a_unsortable_list.item))
 				a_unsortable_list.forth
 			end
 		ensure

@@ -153,7 +153,7 @@ feature{NONE} -- Implementation/Data
 			Result := item_to_put_in_editor_for_single_item_grid
 		end
 
-	domain: DS_LINKED_LIST [TUPLE [ql_item: QL_ITEM; item_path: STRING_32]]
+	domain: LINKED_LIST [TUPLE [ql_item: QL_ITEM; item_path: STRING_32]]
 			-- Domain to be displayed in Current
 
 	editor_token_grid_support: EB_EDITOR_TOKEN_GRID_SUPPORT
@@ -250,7 +250,7 @@ feature{NONE} -- Implementation/Data
 			y_valid: y > 0 and y <= domain.count
 		local
 			i, j: INTEGER
-			l_content: DS_LIST [TUPLE [ql_item: QL_ITEM; item_path: STRING_32]]
+			l_content: like domain
 			l_tbl: HASH_TABLE [EV_GRID_ITEM, INTEGER]
 		do
 			from
@@ -397,7 +397,7 @@ feature{NONE} -- Implementation
 					l_content.after
 				loop
 					l_item := l_content.item
-					l_domain.force_last ([l_item, l_empty_path])
+					l_domain.force ([l_item, l_empty_path])
 					l_content.forth
 				end
 			else
@@ -486,8 +486,8 @@ feature{NONE} -- Implementation
 			create l_item.make (l_ql_item, 1, a_y, False)
 			create l_path_item.make (l_ql_item, 2, a_y, True)
 			l_domain := domain
-			if l_domain.item (a_y).item_path.is_empty then
-				l_domain.replace ([a_item.ql_item, l_path_item.image], a_y)
+			if l_domain.i_th (a_y).item_path.is_empty then
+				l_domain.put_i_th ([a_item.ql_item, l_path_item.image], a_y)
 			end
 			if is_fixed_fonts_used then
 				l_fixed_fonts := label_font_table
@@ -585,7 +585,7 @@ feature{NONE} -- Implementation/Sorting
 							l_item := l_domain.item_for_iteration
 							l_printer.wipe_out_output
 							l_printer.process_path (l_item.ql_item, False, True, True, False)
-							l_domain.replace_at ([l_item.ql_item, l_output.last_output])
+							l_domain.replace ([l_item.ql_item, l_output.last_output])
 						end
 						l_domain.forth
 						l_index := l_index + 1
@@ -603,11 +603,9 @@ feature{NONE} -- Implementation/Sorting
 		require
 			a_comparator_attached: a_comparator /= Void
 		local
-			l_sorter: DS_QUICK_SORTER [TUPLE [ql_item: QL_ITEM; item_path: STRING_32]]
-			l_domain: like domain
+			l_sorter: QUICK_SORTER [TUPLE [ql_item: QL_ITEM; item_path: STRING_32]]
 		do
-			l_domain := domain
-			if l_domain /= Void then
+			if attached domain as l_domain then
 				create l_sorter.make (a_comparator)
 				l_sorter.sort (l_domain)
 			end

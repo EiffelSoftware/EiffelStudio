@@ -8,7 +8,7 @@ deferred class
 	EB_XML_CALLBACKS
 
 inherit
-	XM_CALLBACKS_FILTER
+	XML_CALLBACKS_FILTER
 		redefine
 			on_error,
 			on_content,
@@ -252,7 +252,7 @@ invariant
 	attribute_name_table_attached: attribute_name_table /= Void
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

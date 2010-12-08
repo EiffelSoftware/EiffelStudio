@@ -121,7 +121,7 @@ feature -- Access
 		do
 			Result := once "DEFAULT"
 		ensure
-			Result_not_Void: Result /= Void
+			result_not_void: Result /= Void
 		end
 
 	uml_views (file_name: STRING): LIST [STRING]
@@ -129,9 +129,8 @@ feature -- Access
 		require
 			file_name_not_void: file_name /= Void
 		local
-			diagram_input: XM_DOCUMENT
-			node: XM_ELEMENT
-			a_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
+			diagram_input: XML_DOCUMENT
+			a_cursor: XML_COMPOSITE_CURSOR
 			view_name: STRING
 		do
 			create {ARRAYED_LIST [STRING]} Result.make (0)
@@ -146,8 +145,7 @@ feature -- Access
 				until
 					a_cursor.after
 				loop
-					node ?= a_cursor.item
-					if node /= Void then
+					if attached {like xml_element} a_cursor.item as node then
 						if node.name.is_equal ("VIEW") then
 							view_name := node.attribute_by_name ("NAME").value
 							if node.attribute_by_name ("IS_UML").value.is_equal ("True") then
@@ -165,9 +163,8 @@ feature -- Access
 		require
 			file_name_not_void: file_name /= Void
 		local
-			diagram_input: XM_DOCUMENT
-			node: XM_ELEMENT
-			a_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
+			diagram_input: XML_DOCUMENT
+			a_cursor: XML_COMPOSITE_CURSOR
 			view_name: STRING
 		do
 			create {ARRAYED_LIST [STRING]} Result.make (0)
@@ -182,8 +179,7 @@ feature -- Access
 				until
 					a_cursor.after
 				loop
-					node ?= a_cursor.item
-					if node /= Void then
+					if attached {like xml_element} a_cursor.item as node then
 						if node.name.is_equal (once "VIEW") then
 							view_name := node.attribute_by_name (once "NAME").value
 							if node.attribute_by_name (once "IS_UML").value.is_equal (once "False") then
@@ -557,10 +553,10 @@ feature -- Store/Retrive
 	store (ptf: RAW_FILE)
 			-- Freeze state of `Current'.
 		local
-			diagram_output: XM_DOCUMENT
-			view_output, node: XM_ELEMENT
-			a_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
-			root: XM_ELEMENT
+			diagram_output: XML_DOCUMENT
+			view_output: like xml_element
+			a_cursor: XML_COMPOSITE_CURSOR
+			root: like xml_element
 			l_view_str, l_name_str: STRING
 		do
 			if ptf.is_open_read then
@@ -569,7 +565,7 @@ feature -- Store/Retrive
 			else
 					-- Create a new view.
 				create diagram_output.make_with_root_named (xml_node_name,
-					create {XM_NAMESPACE}.make_default)
+					create {XML_NAMESPACE}.make_default)
 			end
 			if diagram_output /= Void then
 				a_cursor := diagram_output.root_element.new_cursor
@@ -580,9 +576,8 @@ feature -- Store/Retrive
 				until
 					a_cursor.after
 				loop
-					node ?= a_cursor.item
 					if
-						node /= Void and then
+						attached {like xml_element} a_cursor.item as node and then
 						node.name.is_equal (l_view_str) and then
 						equal (node.attribute_by_name (l_name_str).value, current_view)
 					then
@@ -592,7 +587,7 @@ feature -- Store/Retrive
 						a_cursor.forth
 					end
 				end
-				create root.make_root (create {XM_DOCUMENT}.make, "VIEW", xml_namespace)
+				create root.make_root (create {XML_DOCUMENT}.make, "VIEW", xml_namespace)
 				root.add_attribute ("IS_UML", xml_namespace, is_uml.out)
 				view_output := xml_element (root)
 				diagram_output.root_element.force_first (view_output)
@@ -605,9 +600,8 @@ feature -- Store/Retrive
 		require
 			f_exists: f /= Void
 		local
-			diagram_input: XM_DOCUMENT
-			node: XM_ELEMENT
-			a_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
+			diagram_input: XML_DOCUMENT
+			a_cursor: XML_COMPOSITE_CURSOR
 			view_name: STRING
 		do
 			available_views.wipe_out
@@ -622,8 +616,7 @@ feature -- Store/Retrive
 				until
 					a_cursor.after
 				loop
-					node ?= a_cursor.item
-					if node /= Void then
+					if attached {like xml_element} a_cursor.item as node then
 						if node.name.is_equal (once "VIEW") then
 							view_name := node.attribute_by_name (once "NAME").value
 							available_views.extend (view_name)
@@ -640,9 +633,9 @@ feature -- Store/Retrive
 	retrieve (f: RAW_FILE)
 			-- Reload former state of `Current'.
 		local
-			diagram_input: XM_DOCUMENT
-			view_input, node: XM_ELEMENT
-			a_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
+			diagram_input: XML_DOCUMENT
+			view_input: like xml_element
+			a_cursor: XML_COMPOSITE_CURSOR
 			nb_of_tags: INTEGER
 			view_name: STRING
 			l_name_str, l_view_str: STRING
@@ -661,8 +654,7 @@ feature -- Store/Retrive
 				until
 					a_cursor.after
 				loop
-					node ?= a_cursor.item
-					if node /= Void then
+					if attached {like xml_element} a_cursor.item as node then
 						if node.name.is_equal (l_view_str) then
 							view_name := node.attribute_by_name (l_name_str).value
 							available_views.extend (view_name)
@@ -711,7 +703,7 @@ feature -- Store/Retrive
 			Result := once "EIFFEL_WORLD"
 		end
 
-	xml_element (node: XM_ELEMENT): XM_ELEMENT
+	xml_element (node: like xml_element): XML_ELEMENT
 			-- Xml node representing `Current's state.
 		do
 			node.put_last (Xml_routines.xml_node (node, once "INHERITANCE_LINKS_DISPLAYED", is_inheritance_links_shown.out))
@@ -727,7 +719,7 @@ feature -- Store/Retrive
 			Result := Precursor {EG_FIGURE_WORLD} (node)
 		end
 
-	set_with_xml_element (node: XM_ELEMENT)
+	set_with_xml_element (node: like xml_element)
 			-- Retrive state from `node'.
 		local
 			ax, ay: INTEGER
@@ -922,9 +914,8 @@ feature {NONE} -- Implementation
 			ptf_is_readable: ptf.is_open_read
 			a_name_exists: a_name /= Void
 		local
-			diagram_output: XM_DOCUMENT
-			node: XM_ELEMENT
-			a_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
+			diagram_output: XML_DOCUMENT
+			a_cursor: XML_COMPOSITE_CURSOR
 		do
 			diagram_output := Xml_routines.deserialize_document (ptf.name)
 			if diagram_output /= Void then
@@ -937,9 +928,8 @@ feature {NONE} -- Implementation
 				until
 					a_cursor.after
 				loop
-					node ?= a_cursor.item
 					if
-						node /= Void and then
+						attached {like xml_element} a_cursor.item as node and then
 						node.name.is_equal (once "VIEW") and then
 						equal (node.attribute_by_name (once "NAME").value, a_name)
 					then
@@ -956,9 +946,8 @@ feature {NONE} -- Implementation
 	has_view_with_name (f: RAW_FILE; a_name: STRING): BOOLEAN
 			-- Does `f' contain a view with name `a_name'?
 		local
-			diagram_input: XM_DOCUMENT
-			node: XM_ELEMENT
-			a_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
+			diagram_input: XML_DOCUMENT
+			a_cursor: XML_COMPOSITE_CURSOR
 			view_name: STRING
 		do
 			diagram_input := Xml_routines.deserialize_document (f.name)
@@ -972,8 +961,7 @@ feature {NONE} -- Implementation
 				until
 					a_cursor.after or else Result
 				loop
-					node ?= a_cursor.item
-					if node /= Void then
+					if attached {like xml_element} a_cursor.item as node then
 						if node.name.is_equal (once "VIEW") then
 							view_name := node.attribute_by_name (once "NAME").value
 							Result := view_name.is_equal (a_name)

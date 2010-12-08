@@ -284,7 +284,7 @@ feature -- Sorting
 			a_column_list_attached: a_column_list /= Void
 			not_a_column_list_is_empty:
 		local
-			l_sorter: DS_QUICK_SORTER [EB_CLASS_BROWSER_TREE_ROW]
+			l_sorter: QUICK_SORTER [EB_CLASS_BROWSER_TREE_ROW]
 		do
 			create l_sorter.make (a_comparator)
 			fill_rows
@@ -292,7 +292,7 @@ feature -- Sorting
 			bind_grid
 		end
 
-	sort_classes (a_classes: DS_LIST [EB_CLASS_BROWSER_TREE_ROW]; a_sorter: DS_QUICK_SORTER [EB_CLASS_BROWSER_TREE_ROW])
+	sort_classes (a_classes: LIST [EB_CLASS_BROWSER_TREE_ROW]; a_sorter: QUICK_SORTER [EB_CLASS_BROWSER_TREE_ROW])
 			-- Sort `a_class' using `a_sorter'.
 		require
 			a_classes_attached: a_classes /= Void
@@ -381,7 +381,7 @@ feature{NONE} -- Implementation
 	data: QL_CLASS_DOMAIN
 			-- Data to be displayed in current view
 
-	rows: DS_ARRAYED_LIST [EB_CLASS_BROWSER_TREE_ROW]
+	rows: ARRAYED_LIST [EB_CLASS_BROWSER_TREE_ROW]
 			-- Rows to be displayed
 		do
 			if rows_internal = Void then
@@ -435,7 +435,7 @@ feature{NONE} -- Implementation
 					l_data.after
 				loop
 					create l_row.make (Current, l_data.item, False)
-					l_rows.force_last (l_row)
+					l_rows.force (l_row)
 					l_data.forth
 				end
 			else
@@ -458,7 +458,7 @@ feature{NONE} -- Implementation
 						-- Class may have been removed from the system, so we need to check for attachment.
 					check l_start_class /= Void end
 					create l_row.make (Current, l_start_class, False)
-					l_rows.force_last (l_row)
+					l_rows.force (l_row)
 					fill_row_tree (l_row, l_data)
 				end
 			end
@@ -775,7 +775,7 @@ feature{NONE} -- Implementation/Stone
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

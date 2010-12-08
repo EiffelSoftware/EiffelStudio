@@ -74,7 +74,7 @@ feature -- Store/Retrive
 			Result := eiffel_cluster_diagram_str
 		end
 
-	xml_element (node: XM_ELEMENT): XM_ELEMENT
+	xml_element (node: like xml_element): XML_ELEMENT
 			-- Xml node representing `Current's state.
 		do
 			node.add_attribute (name_str, xml_namespace, current_view)
@@ -84,7 +84,7 @@ feature -- Store/Retrive
 			Result := Precursor {EIFFEL_WORLD} (node)
 		end
 
-	set_with_xml_element (node: XM_ELEMENT)
+	set_with_xml_element (node: like xml_element)
 			-- Retrive state from `node'.
 		local
 			l_cluster_id: STRING

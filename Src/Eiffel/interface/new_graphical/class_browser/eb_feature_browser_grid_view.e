@@ -368,7 +368,7 @@ feature -- Notification
 				end
 				l_last_bid := l_branch_id
 				create l_row.make (l_data.item, l_branch_id, Current, l_written_class_used, is_signature_displayed)
-				l_rows.force_last (l_row)
+				l_rows.force (l_row)
 				l_data.forth
 			end
 			set_is_branch_id_used (not l_is_single_branch_id)
@@ -489,7 +489,7 @@ feature{NONE} -- Sorting
 			a_column_list_attached: a_column_list /= Void
 			not_a_column_list_is_empty:
 		local
-			l_sorter: DS_QUICK_SORTER [EB_FEATURE_BROWSER_GRID_ROW]
+			l_sorter: QUICK_SORTER [EB_FEATURE_BROWSER_GRID_ROW]
 		do
 			create l_sorter.make (a_comparator)
 			l_sorter.sort (rows)
@@ -509,7 +509,7 @@ feature{NONE} -- Implementation
 	data: QL_FEATURE_DOMAIN
 			-- Data to be displayed
 
-	rows: DS_ARRAYED_LIST [EB_FEATURE_BROWSER_GRID_ROW]
+	rows: ARRAYED_LIST [EB_FEATURE_BROWSER_GRID_ROW]
 			-- Rows to be displayed
 		do
 			if rows_internal = Void then

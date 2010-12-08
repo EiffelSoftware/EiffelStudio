@@ -123,10 +123,10 @@ feature -- Access
 			Result := line.foreground_color
 		end
 
-	xml_element (node: XM_ELEMENT): XM_ELEMENT
+	xml_element (node: like xml_element): XML_ELEMENT
 			-- Xml node representing `Current's state.
 		local
-			edge_xml_element, edges: XM_ELEMENT
+			edge_xml_element, edges: like xml_element
 			l_points: like point_array
 			i, nb: INTEGER
 			l_item: EV_COORDINATE
@@ -171,12 +171,12 @@ feature -- Access
 	line_width_string: STRING = "LINE_WIDTH"
 	line_color_string: STRING = "LINE_COLOR"
 
-	set_with_xml_element (node: XM_ELEMENT)
+	set_with_xml_element (node: like xml_element)
 			-- Retrive state from `node'.
 		local
-			edges: detachable XM_ELEMENT
-			l_item: detachable XM_ELEMENT
-			l_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
+			edges: detachable like xml_element
+			l_item: detachable like xml_element
+			l_cursor: XML_COMPOSITE_CURSOR
 			ax, ay: INTEGER
 			l_x_pos_string, l_y_pos_string: STRING
 			l_xml_routines: like xml_routines
@@ -684,18 +684,15 @@ invariant
 	line_not_void: line /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
-
-
-
 
 end -- class EG_POLYLINE_LINK_FIGURE
 

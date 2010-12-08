@@ -32,12 +32,12 @@ feature -- Basic operations
 			Result := create {EG_SIMPLE_LINK}.make_with_model (a_link)
 		end
 
-	model_from_xml (node: XM_ELEMENT): detachable EG_ITEM
+	model_from_xml (node: XML_ELEMENT): detachable EG_ITEM
 			-- Create an EG_ITEM from `node' if possible.
 		local
 			node_name, source_name, target_name: STRING
 			a_source, a_target: detachable EG_LINKABLE
-			l_attribute: detachable XM_ATTRIBUTE
+			l_attribute: detachable XML_ATTRIBUTE
 		do
 			node_name := node.name
 			if node_name.is_equal ("ELLIPSE_NODE") then

@@ -37,10 +37,6 @@
 		<library name="xml_parser" location="$ISE_LIBRARY\library\text\parser\xml\parser\xml_parser-safe.ecf"/>
 		<library name="fmwk_utilities" location="..\utilities\utilities-safe.ecf"/>
 
-		<cluster name="fmwk_vision2" location=".\" recursive="true">
-			<file_rule>
-				<exclude>/toto$</exclude>
-			</file_rule>
-		</cluster>
+		<cluster name="fmwk_vision2" location=".\" recursive="true"/>
 	</target>
 </system>

@@ -19,14 +19,14 @@ inherit
     		default_create
     	end
 
-	XM_CALLBACKS_FILTER_FACTORY
+	XML_CALLBACKS_FILTER_FACTORY
 		export
 			{NONE} all
 		redefine
 			default_create
 		end
 
-create {EG_XML_STORABLE}
+create {EG_XML_STORABLE, EG_FIGURE_XML_VISITOR}
 	make, default_create
 
 feature {NONE} -- Initialization
@@ -53,16 +53,14 @@ feature {NONE} -- Access
 	relative_window: detachable EV_WINDOW
 			-- relative window
 
-feature {EG_XML_STORABLE} -- Access
+feature {EG_XML_STORABLE, EG_FIGURE_XML_VISITOR} -- Access
 
-	number_of_tags (node: XM_ELEMENT): INTEGER
+	number_of_tags (node: like xml_node): INTEGER
 			-- Number of tags in node and all childrens of node.
 		require
 			node_not_void: node /= Void
 		local
-			l_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
-			l_item: detachable XM_ELEMENT
-			attr: detachable XM_ATTRIBUTE
+			l_cursor: XML_COMPOSITE_CURSOR
 		do
 			from
 				l_cursor := node.new_cursor
@@ -70,27 +68,23 @@ feature {EG_XML_STORABLE} -- Access
 			until
 				l_cursor.after
 			loop
-				l_item ?= l_cursor.item
-				if l_item /= Void then
+				if attached {like xml_node} l_cursor.item as l_item then
 					Result := Result + number_of_tags (l_item)
-				else
-					attr ?= l_cursor.item
-					if attr = Void then
-						Result := Result + 1
-					end
+				elseif attached {XML_ATTRIBUTE} l_cursor.item then
+					Result := Result + 1
 				end
 				l_cursor.forth
 			end
 		end
 
-feature {EG_XML_STORABLE} -- Status report
+feature {EG_XML_STORABLE, EG_FIGURE_XML_VISITOR} -- Status report
 
 	valid_tags: INTEGER
 			-- Number of valid tags read.
 
 	valid_tag_read_actions: EV_NOTIFY_ACTION_SEQUENCE
 
-feature {EG_XML_STORABLE} -- Status setting
+feature {EG_XML_STORABLE, EG_FIGURE_XML_VISITOR} -- Status setting
 
 	reset_valid_tags
 			-- Reset `valid_tags'.
@@ -109,16 +103,14 @@ feature {EG_XML_STORABLE} -- Status setting
 			valid_tags_incremented: valid_tags = old valid_tags + 1
 		end
 
-feature {EG_XML_STORABLE} -- Processing
+feature {EG_XML_STORABLE, EG_FIGURE_XML_VISITOR} -- Processing
 
-	xml_integer (elem: XM_ELEMENT; a_name: STRING): INTEGER
+	xml_integer (elem: like xml_node; a_name: STRING): INTEGER
 			-- Find in sub-elememt of `elem' integer item with tag `a_name'.
 		local
-			e: detachable XM_ELEMENT
 			int_str: detachable STRING
 		do
-			e ?= elem.item_for_iteration
-			if e /= Void and then e.name.is_equal (a_name) then
+			if attached {like xml_node} elem.item_for_iteration as e and then e.name.same_string (a_name) then
 				int_str := e.text
 				if int_str /= Void and then int_str.is_integer then
 					Result := int_str.to_integer
@@ -132,14 +124,12 @@ feature {EG_XML_STORABLE} -- Processing
 			elem.forth
 		end
 
-	xml_boolean (elem: XM_ELEMENT; a_name: STRING): BOOLEAN
+	xml_boolean (elem: like xml_node; a_name: STRING): BOOLEAN
 			-- Find in sub-elememt of `elem' boolean item with tag `a_name'.
 		local
-			e: detachable XM_ELEMENT
 			bool_str: detachable STRING
 		do
-			e ?= elem.item_for_iteration
-			if e /= Void and then e.name.is_equal (a_name) then
+			if attached {like xml_node} elem.item_for_iteration as e and then e.name.same_string (a_name) then
 				bool_str := e.text
 				if bool_str /= Void and then bool_str.is_boolean then
 					Result := bool_str.to_boolean
@@ -153,14 +143,12 @@ feature {EG_XML_STORABLE} -- Processing
 			elem.forth
 		end
 
-	xml_double (elem: XM_ELEMENT; a_name: STRING): DOUBLE
+	xml_double (elem: like xml_node; a_name: STRING): DOUBLE
 			-- Find in sub-elememt of `elem' integer item with tag `a_name'.
 		local
-			e: detachable XM_ELEMENT
 			double_str: detachable STRING
 		do
-			e ?= elem.item_for_iteration
-			if e /= Void and then e.name.is_equal (a_name) then
+			if attached {like xml_node} elem.item_for_iteration as e and then e.name.same_string (a_name) then
 				double_str := e.text
 				if double_str /= Void and then double_str.is_double then
 					Result := double_str.to_double
@@ -174,13 +162,10 @@ feature {EG_XML_STORABLE} -- Processing
 			elem.forth
 		end
 
-	xml_string (elem: XM_ELEMENT; a_name: STRING): detachable STRING
+	xml_string (elem: like xml_node; a_name: STRING): detachable STRING
 			-- Find in sub-elememt of `elem' string item with tag `a_name'.
-		local
-			e: detachable XM_ELEMENT
 		do
-			e ?= elem.item_for_iteration
-			if e /= Void and then e.name.is_equal (a_name) then
+			if attached {like xml_node} elem.item_for_iteration as e and then e.name.same_string (a_name) then
 				Result := e.text
 				valid_tags_read
 			else
@@ -189,18 +174,16 @@ feature {EG_XML_STORABLE} -- Processing
 			elem.forth
 		end
 
-	xml_color (elem: XM_ELEMENT; a_name: STRING): EV_COLOR
+	xml_color (elem: like xml_node; a_name: STRING): EV_COLOR
 			-- Find in sub-elememt of `elem' color item with tag `a_name'.
 		local
-			e: detachable XM_ELEMENT
 			s: detachable STRING
 			sc1, sc2: INTEGER
 			r, g, b: INTEGER
 			rescued: BOOLEAN
 		do
 			if not rescued then
-				e ?= elem.item_for_iteration
-				if e /= Void and then e.name.is_equal (a_name) then
+				if attached {like xml_node} elem.item_for_iteration as e and then e.name.same_string (a_name) then
 					s := e.text
 				end
 				if s /= Void and then not s.is_empty then
@@ -231,7 +214,7 @@ feature {EG_XML_STORABLE} -- Processing
 			retry
 		end
 
-	element_by_name (e: XM_ELEMENT; n: STRING): detachable XM_ELEMENT
+	element_by_name (e: like xml_node; n: STRING): detachable like xml_node
 			-- Find in sub-elemement of `e' an element with tag `n'.
 		require
 			e_not_void: e /= Void
@@ -239,13 +222,13 @@ feature {EG_XML_STORABLE} -- Processing
 			Result := e.element_by_name (n)
 		end
 
-	xml_string_node (a_parent: XM_ELEMENT; s: STRING): XM_CHARACTER_DATA
+	xml_string_node (a_parent: like xml_node; s: STRING): XML_CHARACTER_DATA
 			-- New node with `s' as content.
 		do
 			create Result.make (a_parent, s)
 		end
 
-	xml_node (a_parent: XM_ELEMENT; tag_name, content: STRING): XM_ELEMENT
+	xml_node (a_parent: like xml_node; tag_name, content: STRING): XML_ELEMENT
 			-- New node with `s' as content and named `tag_name'.
 		do
 			create Result.make (a_parent, tag_name, default_namespace)
@@ -254,23 +237,23 @@ feature {EG_XML_STORABLE} -- Processing
 
 feature -- Saving
 
-	save_xml_document (a_file_name: STRING; a_doc: XM_DOCUMENT)
+	save_xml_document (a_file_name: STRING; a_doc: XML_DOCUMENT)
 			-- Save `a_doc' in `ptf'
 		require
 			file_not_void: a_file_name /= Void
 			file_exists: not a_file_name.is_empty
 		local
 			retried: BOOLEAN
-			l_formatter: XM_FORMATTER
-			l_output_file: KL_TEXT_OUTPUT_FILE
+			l_formatter: XML_FORMATTER
+			l_output_file: RAW_FILE
 		do
 			if not retried then
 					-- Write document
 				create l_output_file.make (a_file_name)
-				l_output_file.open_write
-				if l_output_file.is_open_write then
+				if not l_output_file.exists or else l_output_file.is_writable then
+					l_output_file.open_write
 					create l_formatter.make
-					l_formatter.set_output (l_output_file)
+					l_formatter.set_output_file (l_output_file)
 					l_formatter.process_document (a_doc)
 					l_output_file.flush
 					l_output_file.close
@@ -286,30 +269,30 @@ feature -- Saving
 
 feature -- Deserialization
 
-	deserialize_document (a_file_path: STRING): detachable XM_DOCUMENT
+	deserialize_document (a_file_path: STRING): detachable XML_DOCUMENT
 			-- Retrieve xml document associated to file
 			-- serialized in `a_file_path'.
 			-- If deserialization fails, return Void.
 		require
 			valid_file_path: a_file_path /= Void and then not a_file_path.is_empty
 		local
-			l_parser: XM_EIFFEL_PARSER
-			l_tree_pipe: XM_TREE_CALLBACKS_PIPE
-			l_file: KL_BINARY_INPUT_FILE
-			l_xm_concatenator: XM_CONTENT_CONCATENATOR
-
+			l_parser: XML_LITE_STOPPABLE_PARSER
+			l_tree: XML_CALLBACKS_TREE
+			l_file: PLAIN_TEXT_FILE
+			l_xm_concatenator: XML_CONTENT_CONCATENATOR
 		do
 			create l_file.make (a_file_path)
-			l_file.open_read
-			if l_file.is_open_read then
+			if l_file.exists and l_file.is_readable then
+				l_file.open_read
+				check is_open_read: l_file.is_open_read end
 				create l_parser.make
-				create l_tree_pipe.make
+				create l_tree.make_null
 				create l_xm_concatenator.make_null
-				l_parser.set_callbacks (standard_callbacks_pipe (<<l_xm_concatenator, l_tree_pipe.start>>))
-				l_parser.parse_from_stream (l_file)
+				l_parser.set_callbacks (standard_callbacks_pipe (<<l_xm_concatenator, l_tree>>))
+				l_parser.parse_from_file (l_file)
 				l_file.close
 				if l_parser.is_correct then
-					Result := l_tree_pipe.document
+					Result := l_tree.document
 				else
 					display_error_message ("File " + a_file_path + " is corrupted")
 					Result := Void
@@ -321,7 +304,7 @@ feature -- Deserialization
 
 feature {NONE} -- Implementation
 
-	default_namespace: XM_NAMESPACE
+	default_namespace: XML_NAMESPACE
 			-- Default namespace for nodes.
 		once
 			create Result.make_default
@@ -364,14 +347,14 @@ feature {NONE} -- Error management
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

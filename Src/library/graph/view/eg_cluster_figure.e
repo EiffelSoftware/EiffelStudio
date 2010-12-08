@@ -17,7 +17,8 @@ inherit
 			xml_node_name,
 			xml_element,
 			set_with_xml_element,
-			recycle
+			recycle,
+			process
 		end
 
 feature {NONE} -- Initialization
@@ -69,11 +70,11 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
-	xml_element (node: XM_ELEMENT): XM_ELEMENT
+	xml_element (node: like xml_element): XML_ELEMENT
 			-- Xml element representing `Current's state.
 		local
 			eg_fig: detachable EG_LINKABLE_FIGURE
-			fig, elements: XM_ELEMENT
+			fig, elements: like xml_element
 		do
 			Result := Precursor {EG_LINKABLE_FIGURE} (node)
 			create elements.make (node, once "ELEMENTS", xml_namespace)
@@ -92,12 +93,12 @@ feature -- Access
 			Result.put_last (elements)
 		end
 
-	set_with_xml_element (node: XM_ELEMENT)
+	set_with_xml_element (node: like xml_element)
 			-- Retrive state from `node'.
 		local
-			elements: detachable XM_ELEMENT
-			l_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
-			l_item: detachable XM_ELEMENT
+			elements: detachable like xml_element
+			l_cursor: XML_COMPOSITE_CURSOR
+			l_item: detachable like xml_element
 			eg_model: detachable EG_LINKABLE
 			eg_cluster: detachable EG_CLUSTER
 			eg_node: detachable EG_NODE
@@ -202,6 +203,14 @@ feature -- Status settings
 			end
 		end
 
+feature -- Visitor
+
+	process (v: EG_FIGURE_VISITOR)
+			-- Visitor feature.
+		do
+			v.process_cluster_figure (Current)
+		end
+
 feature {NONE} -- Implementation
 
 	on_linkable_add (a_linkable: EG_LINKABLE)
@@ -241,14 +250,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

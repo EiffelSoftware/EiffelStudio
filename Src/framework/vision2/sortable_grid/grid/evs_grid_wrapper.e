@@ -547,7 +547,7 @@ feature -- Virtual grid
 			result_non_negative: Result >= 0
 		end
 
-	grid_selected_items: DS_ARRAYED_LIST [EVS_GRID_COORDINATED]
+	grid_selected_items: ARRAYED_LIST [EVS_GRID_COORDINATED]
 			-- Selected items in `grid'.
 			-- Returned list is unsorted so no particular ordering is guaranteed.			
 		local
@@ -565,7 +565,7 @@ feature -- Virtual grid
 					l_selected.after
 				loop
 					l_item := l_selected.item
-					Result.force_last (create {EVS_EMPTY_COORDINATED_ITEM}.make (l_item.column.index, l_item.row.index))
+					Result.force (create {EVS_EMPTY_COORDINATED_ITEM}.make (l_item.column.index, l_item.row.index))
 					l_selected.forth
 				end
 			end
@@ -751,7 +751,7 @@ feature{NONE} -- Implementation
 			-- This feature only take EV_GRID_LABEL_ITEM and its descendants into consideration.
 			-- If you have other type of grid item, use `selection_function' to define your own selection function.
 		local
-			l_sorted_items: DS_LIST [EV_GRID_ITEM]
+			l_sorted_items: LIST [EV_GRID_ITEM]
 			l_last_column_index: INTEGER
 			l_last_row_index: INTEGER
 			l_is_grid_tree_enabled: BOOLEAN
@@ -759,7 +759,7 @@ feature{NONE} -- Implementation
 			l_text: like selection
 			l_item_text_functon: like item_text_function
 
-			l_sorted_rows: DS_LIST [EV_GRID_ROW]
+			l_sorted_rows: LIST [EV_GRID_ROW]
 			l_row: EV_GRID_ROW
 			l_column_index: INTEGER
 			l_column_count: INTEGER
@@ -857,22 +857,22 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	topologically_sorted_items (a_item_list: LIST [EV_GRID_ITEM]): DS_LIST [EV_GRID_ITEM]
+	topologically_sorted_items (a_item_list: LIST [EV_GRID_ITEM]): LIST [EV_GRID_ITEM]
 			-- Sorted representation of `a_item_list'.
 			-- Item order is decided by `grid_item_order_tester'.
 		require
 			a_item_list_attached: a_item_list /= Void
 		local
-			l_tester: AGENT_BASED_EQUALITY_TESTER [EV_GRID_ITEM]
-			l_sorter: DS_QUICK_SORTER [EV_GRID_ITEM]
+			l_tester: AGENT_EQUALITY_TESTER [EV_GRID_ITEM]
+			l_sorter: QUICK_SORTER [EV_GRID_ITEM]
 		do
-			create {DS_ARRAYED_LIST [EV_GRID_ITEM]}Result.make (a_item_list.count)
+			create {ARRAYED_LIST [EV_GRID_ITEM]}Result.make (a_item_list.count)
 			from
 				a_item_list.start
 			until
 				a_item_list.after
 			loop
-				Result.force_last (a_item_list.item)
+				Result.force (a_item_list.item)
 				a_item_list.forth
 			end
 			create l_tester.make (agent grid_item_order_tester)
@@ -882,22 +882,22 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	topologically_sorted_rows (a_row_list: LIST [EV_GRID_ROW]): DS_LIST [EV_GRID_ROW]
+	topologically_sorted_rows (a_row_list: LIST [EV_GRID_ROW]): LIST [EV_GRID_ROW]
 			-- Sorted representation of `a_item_list'.
 			-- Item order is decided by `grid_item_order_tester'.
 		require
 			a_row_list_attached: a_row_list /= Void
 		local
-			l_tester: AGENT_BASED_EQUALITY_TESTER [EV_GRID_ROW]
-			l_sorter: DS_QUICK_SORTER [EV_GRID_ROW]
+			l_tester: AGENT_EQUALITY_TESTER [EV_GRID_ROW]
+			l_sorter: QUICK_SORTER [EV_GRID_ROW]
 		do
-			create {DS_ARRAYED_LIST [EV_GRID_ROW]}Result.make (a_row_list.count)
+			create {ARRAYED_LIST [EV_GRID_ROW]}Result.make (a_row_list.count)
 			from
 				a_row_list.start
 			until
 				a_row_list.after
 			loop
-				Result.force_last (a_row_list.item)
+				Result.force (a_row_list.item)
 				a_row_list.forth
 			end
 			create l_tester.make (agent grid_row_order_tester)

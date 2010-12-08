@@ -20,7 +20,8 @@ inherit
 			xml_element,
 			xml_node_name,
 			set_with_xml_element,
-			recycle
+			recycle,
+			process
 		end
 
 	EG_PARTICLE
@@ -132,7 +133,7 @@ feature -- Access
 	port_x_string: STRING = "PORT_X"
 	port_y_string: STRING = "PORT_Y"
 
-	xml_element (node: XM_ELEMENT): XM_ELEMENT
+	xml_element (node: like xml_element): XML_ELEMENT
 			-- Xml element representing `Current's state.
 		local
 			l_xml_routines: like xml_routines
@@ -144,7 +145,7 @@ feature -- Access
 			Result.put_last (l_xml_routines.xml_node (Result, port_y_string, port_y.out))
 		end
 
-	set_with_xml_element (node: XM_ELEMENT)
+	set_with_xml_element (node: like xml_element)
 			-- Retrive state from `node'.
 		local
 			ax, ay: INTEGER
@@ -188,6 +189,7 @@ feature -- Access
 			l_item: EV_MODEL
 			i, nb: INTEGER
 			l_bbox: like bounding_box
+			res: detachable like minimum_size
 		do
 			if count > number_of_figures then
 				from
@@ -209,10 +211,10 @@ feature -- Access
 						if l_item.is_show_requested then
 							l_item.update_rectangle_to_bounding_box (l_bbox)
 							if l_bbox.height > 0 and then l_bbox.width > 0 then
-								if Result = Void then
-									Result := l_bbox.twin
+								if res = Void then
+									res := l_bbox.twin
 								else
-									Result.merge (l_bbox)
+									res.merge (l_bbox)
 								end
 							end
 						end
@@ -220,7 +222,9 @@ feature -- Access
 					end
 				end
 			end
-			if Result = Void then
+			if res /= Void then
+				Result := res
+			else
 				create Result
 			end
 		ensure
@@ -369,6 +373,14 @@ feature {EG_LAYOUT, EG_FIGURE, EG_FIGURE_WORLD} -- Implementation
 	internal_links: ARRAYED_LIST [EG_LINK_FIGURE]
 			-- links to other figures.
 
+feature -- Visitor
+
+	process (v: EG_FIGURE_VISITOR)
+			-- Visitor feature.
+		do
+			v.process_linkable_figure (Current)
+		end
+
 feature {NONE} -- Implementation
 
 	on_handle_start
@@ -390,14 +402,14 @@ invariant
 	links_not_void: links /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

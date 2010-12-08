@@ -109,7 +109,7 @@ feature{NONE} -- Implementation
 			retry
 		end
 
-	store_in_file (a_descriptors: LIST [G]; a_root_name: STRING; a_xml_generator: FUNCTION [ANY, TUPLE [a_item: G; a_parent: XM_COMPOSITE], XM_ELEMENT]; a_path: FILE_NAME; a_file_name: STRING)
+	store_in_file (a_descriptors: LIST [G]; a_root_name: STRING; a_xml_generator: FUNCTION [ANY, TUPLE [a_item: G; a_parent: XML_COMPOSITE], XML_ELEMENT]; a_path: FILE_NAME; a_file_name: STRING)
 			-- Store `a_descritpors' in formatter descriptor `a_file_name' in `a_path'.
 			-- If `a_descriptors' doesn't contain any formatter descriptor but formatter file in `a_path exists, remove that file.
 			-- `a_error_agent' will be invoked when error occurs.

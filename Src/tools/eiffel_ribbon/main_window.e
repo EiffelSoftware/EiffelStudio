@@ -47,6 +47,8 @@ feature {NONE} -- Initialization
 
 	create_interface_objects
 			-- <Precursor>
+		local
+			l_project_info: ER_PROJECT_INFO
 		do
 				-- Initialize before calling Precursor all the attached attributes
 				-- from the current class.
@@ -62,9 +64,12 @@ feature {NONE} -- Initialization
 
 			create object_editor.make
 
-			create uicc_manager
+			create code_generator.make
 
 			shared_singleton.object_editor_cell.put (object_editor)
+
+			create l_project_info
+			shared_singleton.project_info_cell.put (l_project_info)
 		end
 
 	build_tool_bar: SD_TOOL_BAR_CONTENT
@@ -87,11 +92,33 @@ feature {NONE} -- Initialization
 
 			create l_item.make
 			l_item.set_text ("Generate Code")
-			l_item.select_actions.extend (agent uicc_manager.compile)
+			l_item.select_actions.extend (agent code_generator.generate_all_codes)
 			l_list.extend (l_item)
 
 			create Result.make_with_items ("MAIN_TOOL_BAR", l_list)
 		end
+
+feature {NONE} -- Agents
+
+	on_new_project_selected is
+			-- <Precursor>
+		local
+			l_folder: EV_DIRECTORY_DIALOG
+		do
+			create l_folder
+			l_folder.show_modal_to_window (Current)
+
+			if attached shared_singleton.project_info_cell.item as l_item then
+				if not l_folder.directory.is_empty then
+					l_item.set_project_location (l_folder.directory)
+				else
+					-- User didn't select any folder
+				end
+			else
+				check False end
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	docking_manager: detachable SD_DOCKING_MANAGER
@@ -109,6 +136,7 @@ feature {NONE} -- Implementation
 	shared_singleton: ER_SHARED_SINGLETON
 			--
 
-	uicc_manager: ER_UICC_MANAGER
+	code_generator: ER_CODE_GENERATOR
 			--
+
 end

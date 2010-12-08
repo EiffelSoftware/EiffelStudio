@@ -19,4 +19,11 @@ feature -- Query
 		once
 			create Result.put (void)
 		end
+
+	project_info_cell: CELL [detachable ER_PROJECT_INFO]
+			--
+		once
+			create Result.put (void)
+		end
+		
 end

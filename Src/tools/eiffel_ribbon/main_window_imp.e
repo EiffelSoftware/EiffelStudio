@@ -26,12 +26,20 @@ feature {NONE}-- Initialization
 		do
 			Precursor {EV_TITLED_WINDOW}
 
+			
+				-- Build widget structure.
+			set_menu_bar (l_ev_menu_bar_1)
+			l_ev_menu_bar_1.extend (l_ev_menu_2)
+			l_ev_menu_2.extend (l_ev_menu_item_1)
 
+			l_ev_menu_2.set_text ("File")
+			l_ev_menu_item_1.set_text ("New Project")
 			set_title ("EiffelRibbon")
 
 			set_all_attributes_using_constants
 			
 				-- Connect events.
+			l_ev_menu_item_1.select_actions.extend (agent on_new_project_selected)
 				-- Close the application when an interface close
 				-- request is recieved on `Current'. i.e. the cross is clicked.
 			close_request_actions.extend (agent destroy_and_exit_if_last)
@@ -43,6 +51,11 @@ feature {NONE}-- Initialization
 	create_interface_objects
 			-- Create objects
 		do
+			
+				-- Create all widgets.
+			create l_ev_menu_bar_1
+			create l_ev_menu_2
+			create l_ev_menu_item_1
 
 			create string_constant_set_procedures.make (10)
 			create string_constant_retrieval_functions.make (10)
@@ -60,6 +73,11 @@ feature {NONE}-- Initialization
 		end
 
 
+feature {NONE} -- Implementation
+
+	l_ev_menu_bar_1: EV_MENU_BAR
+	l_ev_menu_2: EV_MENU
+	l_ev_menu_item_1: EV_MENU_ITEM
 
 feature {NONE} -- Implementation
 
@@ -75,6 +93,12 @@ feature {NONE} -- Implementation
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
+	
+	on_new_project_selected is
+			-- Called by `select_actions' of `l_ev_menu_item_1'.
+		deferred
+		end
+	
 
 feature {NONE} -- Constant setting
 

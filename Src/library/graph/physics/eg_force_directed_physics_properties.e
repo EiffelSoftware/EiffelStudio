@@ -13,16 +13,16 @@ feature -- Access
 
 	electrical_repulsion: DOUBLE
 			-- Repulsion between particles in the system.
-	
+
 	stiffness: DOUBLE
 			-- Stiffness of all links connecting particles.
-	
+
 	center_x: INTEGER
 			-- X position of the center.
-			
+
 	center_y: INTEGER
 			-- Y position of the center
-			
+
 	center_attraction: DOUBLE
 			-- Attraction of the center for particles.
 
@@ -57,7 +57,7 @@ feature -- Element change
 		ensure
 			set: electrical_repulsion = a_value
 		end
-		
+
 	set_center (ax, ay: INTEGER)
 			-- Set `center_x' to `ax' and `center_y' to `ay'.
 		do
@@ -66,7 +66,7 @@ feature -- Element change
 		ensure
 			set: center_x = ax and center_y = ay
 		end
-		
+
 feature {NONE} -- Implementation
 
 	link_stiffness (a_link: EG_LINK_FIGURE): DOUBLE
@@ -76,14 +76,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

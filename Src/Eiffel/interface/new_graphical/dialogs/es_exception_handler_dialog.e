@@ -174,8 +174,9 @@ feature -- Change
 		local
 			exceptions_handling: LIST [TUPLE [INTEGER, STRING]]
 			elt: TUPLE [role: INTEGER; name: STRING]
-			lst: DS_LIST [STRING]
+			lst: detachable LIST [STRING]
 			eh: DBG_EXCEPTION_HANDLER
+			l_sorter: SORTER [STRING]
 		do
 			eh := exception_handler
 
@@ -184,7 +185,8 @@ feature -- Change
 
 			lst := descendants_type_names (exception_class_c)
 			if lst = Void then
-				create {DS_ARRAYED_LIST [STRING]} lst.make_equal (0)
+				create {ARRAYED_LIST [STRING]} lst.make (0)
+				lst.compare_objects
 			end
 
 			from
@@ -195,7 +197,7 @@ feature -- Change
 			loop
 				elt := exceptions_handling.item
 				if elt /= Void then
-					lst.delete (elt.name)
+					lst.prune_all (elt.name)
 					add_row_from_data (elt)
 				end
 				exceptions_handling.forth
@@ -209,13 +211,14 @@ feature -- Change
 				elt := exceptions_handling.item
 				if elt /= Void then
 					if not lst.has (elt.name) then
-						lst.force_last (elt.name)
+						lst.force (elt.name)
 					end
 				end
 				exceptions_handling.forth
 			end
 			from
-				lst.sort (create {DS_QUICK_SORTER [STRING]}.make (create {KL_COMPARABLE_COMPARATOR [STRING]}.make))
+				create {QUICK_SORTER [STRING]} l_sorter.make (create {COMPARABLE_COMPARATOR [STRING]})
+				l_sorter.sort (lst)
 				lst.start
 			until
 				lst.after
@@ -305,7 +308,7 @@ feature -- Change
 			end
 		end
 
-	refresh_row	(a_row: EV_GRID_ROW; a_details: like role_pattern_from_row)
+	refresh_row	(a_row: detachable EV_GRID_ROW; a_details: like role_pattern_from_row)
 			-- Refresh `a_row'
 		local
 			t: like role_pattern_from_row
@@ -333,7 +336,7 @@ feature -- Change
 			-- Activate combo grid item `ci'
 		local
 			t: STRING
-			cbox: EV_COMBO_BOX
+			cbox: detachable EV_COMBO_BOX
 			found: BOOLEAN
 		do
 			cbox := ci.combo_box
@@ -357,16 +360,16 @@ feature -- Change
 	Status_id: ARRAY [STRING]
 			-- Potential status ids
 		once
-			create Result.make ({DBG_EXCEPTION_HANDLER}.Role_disabled, {DBG_EXCEPTION_HANDLER}.Role_stop)
-			Result.put ("Disabled", {DBG_EXCEPTION_HANDLER}.Role_disabled)
+			create Result.make_filled ("Disabled", {DBG_EXCEPTION_HANDLER}.Role_disabled, {DBG_EXCEPTION_HANDLER}.Role_stop)
+			--| already added during creation. -- Result.put ("Disabled", {DBG_EXCEPTION_HANDLER}.Role_disabled)
 			Result.put ("Ignore", {DBG_EXCEPTION_HANDLER}.Role_continue)
 			Result.put ("Catch", {DBG_EXCEPTION_HANDLER}.Role_stop)
 		end
 
-	Status_pixmaps: ARRAY [EV_PIXMAP]
+	Status_pixmaps: ARRAY [detachable EV_PIXMAP]
 			-- Potential status ids pixmap
 		once
-			create Result.make ({DBG_EXCEPTION_HANDLER}.Role_disabled, {DBG_EXCEPTION_HANDLER}.Role_stop)
+			create Result.make_filled (Void, {DBG_EXCEPTION_HANDLER}.Role_disabled, {DBG_EXCEPTION_HANDLER}.Role_stop)
 			Result.put (Void, {DBG_EXCEPTION_HANDLER}.Role_disabled)
 			Result.put (stock_pixmaps.debug_run_icon, {DBG_EXCEPTION_HANDLER}.Role_continue)
 			Result.put (stock_pixmaps.debug_pause_icon, {DBG_EXCEPTION_HANDLER}.Role_stop)
@@ -387,9 +390,9 @@ feature {NONE} -- Implementation
 			selected_data := Void
 		end
 
-	selected_row: EV_GRID_ROW
+	selected_row: detachable EV_GRID_ROW
 
-	selected_data: STRING
+	selected_data: detachable STRING
 
 	apply_changes
 		local
@@ -424,14 +427,14 @@ feature {NONE} -- Implementation
 			debugger_manager.set_catcall_detection_mode (not disable_catcall_console_warning_checkbox.is_selected, not disable_catcall_debugger_warning_checkbox.is_selected)
 		end
 
-	role_pattern_from_row (a_row: EV_GRID_ROW): TUPLE [role: INTEGER; pattern: STRING]
+	role_pattern_from_row (a_row: detachable EV_GRID_ROW): TUPLE [role: INTEGER; pattern: STRING]
 			-- Role,Pattern contained by `a_row' if any
 		require
 			a_row_not_void: a_row /= Void
 		local
 			l_st: STRING
 			l_pat: STRING
-			cell: EV_GRID_LABEL_ITEM
+			cell: detachable EV_GRID_LABEL_ITEM
 			r: INTEGER
 		do
 			cell ?= a_row.item (1)
@@ -445,15 +448,11 @@ feature {NONE} -- Implementation
 			end
 
 			cell ?= a_row.item (2)
-			l_pat := cell.text
+			if cell /= Void then
+				l_pat := cell.text
+			end
 
 			Result := [r, l_pat]
-		end
-
-	row_for_pattern (s: STRING): EV_GRID_ROW
-			-- Grid row associated with `s'
-		local
-		do
 		end
 
 feature {NONE} -- events
@@ -461,7 +460,7 @@ feature {NONE} -- events
 	ignore_external_exception
 			-- Ignore external exceptions
 		local
-			lst: DS_LIST [STRING]
+			lst: detachable LIST [STRING]
 			t: like role_pattern_from_row
 			s: STRING
 			r: INTEGER
@@ -475,8 +474,8 @@ feature {NONE} -- events
 				loop
 					t := role_pattern_from_row (grid.row (r))
 					if lst.has (t.pattern) then
-						set_role_on_row ({DBG_EXCEPTION_HANDLER}.role_continue ,grid.row (r))
-						lst.delete (t.pattern)
+						set_role_on_row ({DBG_EXCEPTION_HANDLER}.role_continue, grid.row (r))
+						lst.prune_all (t.pattern)
 					end
 					r := r + 1
 				end

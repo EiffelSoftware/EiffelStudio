@@ -172,26 +172,27 @@ feature -- Data by exception name
 	disabled_handled_exceptions_by_name: like handled_exceptions_by_name
 			-- Disabled exception cases.
 
-	external_exception_names: DS_LIST [STRING]
+	external_exception_names: LIST [STRING]
 		local
 			api: DEBUGGER_COMPILER_UTILITIES
-			lst: DS_LIST [STRING]
+			lst: detachable LIST [STRING]
 		do
 			create api
 
-			create {DS_ARRAYED_LIST [STRING]} Result.make_equal (14)
-			Result.force_last ("MACHINE_EXCEPTION"); check {MACHINE_EXCEPTION} /= Void end
+			create {ARRAYED_LIST [STRING]} Result.make (14)
+			Result.compare_objects
+			Result.force ("MACHINE_EXCEPTION"); check {MACHINE_EXCEPTION} /= Void end
 			lst := api.descendants_type_names_for ("MACHINE_EXCEPTION")
 			if lst /= Void then
-				Result.append_last (lst)
+				Result.append (lst)
 			end
-			Result.force_last ("EIFFEL_RUNTIME_EXCEPTION"); check {EIFFEL_RUNTIME_EXCEPTION} /= Void end
+			Result.force ("EIFFEL_RUNTIME_EXCEPTION"); check {EIFFEL_RUNTIME_EXCEPTION} /= Void end
 			lst := api.descendants_type_names_for ("EIFFEL_RUNTIME_EXCEPTION")
 			if lst /= Void then
-				Result.append_last (lst)
+				Result.append (lst)
 			end
 		ensure
-			Result /= Void implies Result.equality_tester /= Void
+			Result /= Void implies Result.object_comparison
 		end
 
 feature -- Constants
@@ -207,7 +208,7 @@ feature -- Constants
 		end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -220,22 +221,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

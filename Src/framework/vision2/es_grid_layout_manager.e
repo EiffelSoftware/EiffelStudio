@@ -65,8 +65,8 @@ feature -- Status
 
 feature -- Layout acces
 
-	layout: TUPLE [id:STRING; subrows: DS_LIST [TUPLE]; value:ANY; is_visible_row: BOOLEAN]
-			--	TUPLE [id=STRING, subrows=DS_LIST [like layout]], value=ANY, visible_row=BOOLEAN]
+	layout: TUPLE [id:STRING; subrows: LIST [TUPLE]; value:ANY; is_visible_row: BOOLEAN]
+			--	TUPLE [id=STRING, subrows=LIST [like layout]], value=ANY, visible_row=BOOLEAN]
 			-- ["A"
 			--    {
 			--       ["sub a" Void `value`]
@@ -166,7 +166,7 @@ feature -- Access
 	record
 		local
 			r: INTEGER
-			lst: DS_LIST [TUPLE]
+			lst: LIST [TUPLE]
 			gid: STRING
 		do
 			if enabled then
@@ -185,13 +185,13 @@ feature -- Access
 					end
 
 					from
-						create {DS_ARRAYED_LIST [TUPLE]} lst.make (grid.row_count)
+						create {ARRAYED_LIST [TUPLE]} lst.make (grid.row_count)
 						layout := [gid, lst, Void, False]
 						r := 1
 					until
 						r > grid.row_count
 					loop
-						lst.put_last (recorded_row_layout (grid.row (r)))
+						lst.extend (recorded_row_layout (grid.row (r)))
 						r := r + grid.row (r).subrow_count_recursive + 1
 					end
 				end
@@ -208,8 +208,8 @@ feature -- Access
 	restore
 		local
 			s: STRING
-			lst: DS_LIST [TUPLE]
-			lst_curs: DS_LIST_CURSOR [TUPLE]
+			lst: LIST [TUPLE]
+			lst_curs: like {LIST [TUPLE]}.new_cursor
 			t: like layout
 			r: INTEGER
 			gid: STRING
@@ -257,7 +257,10 @@ feature -- Access
 								lst_curs.forth
 								r := r + grid.row (r).subrow_count_recursive + 1
 							end
-							lst_curs.go_after
+--							Note: this should be useless, since this is not anymore a Gobo cursor
+--							from until lst_curs.after loop
+--								lst_curs.forth
+--							end
 						end
 						if positioning_enabled and then last_row_set_as_first_visible_row /= Void then
 							ev_application.do_once_on_idle (agent ensure_row_is_first_visible_row (last_row_set_as_first_visible_row))
@@ -353,8 +356,8 @@ feature {NONE} -- Implementation
 		require
 			lay /= Void
 		local
-			lst: DS_LIST [like layout]
-			lst_curs: DS_LIST_CURSOR [like layout]
+			lst: LIST [like layout]
+			lst_curs: like {LIST [like layout]}.new_cursor
 		do
 			lay.value := Void
 			lst ?= lay.subrows
@@ -371,11 +374,11 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	recorded_row_layout (a_row: EV_GRID_ROW): TUPLE [id:STRING; subrows: DS_LIST [TUPLE]; value:ANY; is_visible_row: BOOLEAN]
+	recorded_row_layout (a_row: EV_GRID_ROW): TUPLE [id:STRING; subrows: LIST [TUPLE]; value:ANY; is_visible_row: BOOLEAN]
 			-- FIXME: compiler is complaining when using 'like layout' for Result type
 		local
 			r: INTEGER
-			lst: DS_LIST [TUPLE]
+			lst: LIST [TUPLE]
 			l_id: STRING
 			l_val: ANY
 			l_fvr: BOOLEAN
@@ -398,7 +401,7 @@ feature {NONE} -- Implementation
 							debug ("es_grid_layout")
 								print (":" + name + ":                     : -> " + a_row.subrow_count.out + " subrows %N")
 							end
-							create {DS_ARRAYED_LIST [TUPLE]} lst.make (a_row.subrow_count)
+							create {ARRAYED_LIST [TUPLE]} lst.make (a_row.subrow_count)
 							from
 								r := 1
 							until
@@ -408,7 +411,7 @@ feature {NONE} -- Implementation
 								if positioning_enabled and then lay /= Void then
 									l_fvr := l_fvr or else lay.is_visible_row
 								end
-								lst.put_last (lay)
+								lst.extend (lay)
 								r := r + 1
 							end
 						else
@@ -461,14 +464,15 @@ feature {NONE} -- Implementation
 			lay_not_empty: not lay.is_empty
 			row_is_ready_for_identification: row_is_ready_for_identification (a_row)
 		local
-			lst: DS_LIST [TUPLE]
-			lst_curs: DS_LIST_CURSOR [TUPLE]
+			lst: LIST [TUPLE]
+			lst_curs: like {LIST [TUPLE]}.new_cursor
 			ts, l_id: STRING
 			tv, l_val: ANY
 			tfvr: BOOLEAN
 			r: INTEGER
 			t: like layout
 			has_diff: BOOLEAN
+			l_done: BOOLEAN
 		do
 			if on_idle and l_pid /= current_processing_id then
 					--| Cancel this restoration operation
@@ -545,15 +549,16 @@ feature {NONE} -- Implementation
 									--| and then the others
 									--| This will avoid processing too may rows
 								from
+									l_done := False
 									lst_curs.start
 									r := 1
 								until
-									r > a_row.subrow_count or lst_curs.after
+									r > a_row.subrow_count or lst_curs.after or l_done
 								loop
 									t ?= lst_curs.item
 									if t /= Void and then t.is_visible_row then
 										process_row_layout_restoring (a_row.subrow (r), t)
-										lst_curs.finish --| "first visible row's group found"
+										l_done := True --| "first visible row's group found"
 									end
 									lst_curs.forth
 									r := r + 1
@@ -572,7 +577,10 @@ feature {NONE} -- Implementation
 									lst_curs.forth
 									r := r + 1
 								end
-								lst_curs.go_after
+--								Note: this should be useless, since this is not anymore a Gobo cursor
+--								from until lst_curs.after loop
+--									lst_curs.forth
+--								end
 							else
 								debug ("es_grid_layout")
 									print ("%N")
@@ -671,9 +679,9 @@ feature {NONE} -- Debugging
 			tu_s: STRING
 			tu_v: ANY
 			tu_v_s: STRING
-			tu_lst: DS_LIST [TUPLE]
+			tu_lst: LIST [TUPLE]
 			tu_fvr: BOOLEAN
-			tu_lst_curs: DS_LIST_CURSOR [TUPLE]
+			tu_lst_curs: like {LIST [TUPLE]}.new_cursor
 		do
 			Result := ":" + name + ": "
 			tu_s := a_layout.id

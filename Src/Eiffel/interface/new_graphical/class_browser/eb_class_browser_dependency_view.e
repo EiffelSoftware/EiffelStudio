@@ -623,7 +623,7 @@ feature{NONE} -- Grid binding
 			a_base_row_attached: a_base_row /= Void
 			a_level_attached: a_level /= Void
 		local
-			l_rows: DS_LIST [EB_TREE_NODE [EB_CLASS_BROWSER_DEPENDENCY_ROW]]
+			l_rows: LIST [EB_TREE_NODE [EB_CLASS_BROWSER_DEPENDENCY_ROW]]
 			l_grid_row: EV_GRID_ROW
 			l_starting_column: INTEGER
 			l_row, l_dependency_row: EB_CLASS_BROWSER_DEPENDENCY_ROW
@@ -718,7 +718,7 @@ feature{NONE} -- Grid binding
 					l_sorter.sort (l_feature_table.item_for_iteration)
 					l_dependency_row.set_feature_list (l_feature_table.item_for_iteration)
 					l_new_row_node.set_data (l_dependency_row)
-					a_row_node.children.force_last (l_new_row_node)
+					a_row_node.children.force (l_new_row_node)
 					l_feature_table.forth
 				end
 					-- Sort features.
@@ -794,10 +794,10 @@ feature{NONE} -- Grid binding
 			rows_attached: rows /= Void
 		local
 			l_rows: like rows
-			l_groups: DS_LIST [EB_TREE_NODE [EB_CLASS_BROWSER_DEPENDENCY_ROW]]
+			l_groups: LIST [EB_TREE_NODE [EB_CLASS_BROWSER_DEPENDENCY_ROW]]
 			l_show_self: BOOLEAN
 			l_starting_element_group: QL_GROUP
-			l_classes: DS_LIST [EB_TREE_NODE [EB_CLASS_BROWSER_DEPENDENCY_ROW]]
+			l_classes: LIST [EB_TREE_NODE [EB_CLASS_BROWSER_DEPENDENCY_ROW]]
 			l_classes_from_starting_element: like classes_in_starting_element
 			l_group: QL_GROUP
 			l_class: QL_CLASS
@@ -805,8 +805,8 @@ feature{NONE} -- Grid binding
 			l_new_class: BOOLEAN
 			l_is_group_equal: BOOLEAN
 			l_used_in_library: CONF_GROUP
-			l_folders: DS_LIST [EB_TREE_NODE [EB_CLASS_BROWSER_DEPENDENCY_ROW]]
-			l_cursor: DS_LIST_CURSOR [EB_TREE_NODE [EB_CLASS_BROWSER_DEPENDENCY_ROW]]
+			l_folders: LIST [EB_TREE_NODE [EB_CLASS_BROWSER_DEPENDENCY_ROW]]
+			l_cursor: like {LIST [EB_TREE_NODE [EB_CLASS_BROWSER_DEPENDENCY_ROW]]}.new_cursor
 			l_folder_count: INTEGER
 		do
 			l_rows := rows
@@ -902,7 +902,7 @@ feature{NONE} -- Grid binding
 			end
 		end
 
-	mark_display_in_rows (a_row_list: DS_LIST [EB_TREE_NODE [EB_CLASS_BROWSER_DEPENDENCY_ROW]]; a_depth: INTEGER; a_display: BOOLEAN)
+	mark_display_in_rows (a_row_list: LIST [EB_TREE_NODE [EB_CLASS_BROWSER_DEPENDENCY_ROW]]; a_depth: INTEGER; a_display: BOOLEAN)
 			-- Mark `a_row_list' with display status specified in `a_display'.
 			-- Mark subrows deep to `a_depth' of `a_row_list also'.
 			-- For example, if `a_depth' is 1, mark `a_row_list' only, and if 2, mark the first level subrows of `a_row_list', and so on.
@@ -1063,7 +1063,7 @@ feature{NONE} -- Implementation
 			a_data_attached: a_data /= Void
 			a_row_node_attached: a_row_node /= Void
 		local
-			l_cursor: DS_ARRAYED_LIST_CURSOR [EB_TREE_NODE [QL_ITEM]]
+			l_cursor: like {EB_TREE_NODE [QL_ITEM]}.children.new_cursor
 			l_dependency_row: EB_CLASS_BROWSER_DEPENDENCY_ROW
 			l_row_type: INTEGER
 			l_new_row_node: EB_TREE_NODE [EB_CLASS_BROWSER_DEPENDENCY_ROW]
@@ -1079,7 +1079,7 @@ feature{NONE} -- Implementation
 					create l_new_row_node
 					create l_dependency_row.make (l_cursor.item.data, l_new_row_node, l_row_type, Current)
 					l_new_row_node.set_data (l_dependency_row)
-					a_row_node.children.force_last (l_new_row_node)
+					a_row_node.children.force (l_new_row_node)
 					if a_fill_children then
 						fill_row_level (l_cursor.item, l_new_row_node, a_starting_level_index + 1, a_fill_children)
 					end
@@ -1112,7 +1112,7 @@ feature{NONE} -- Implementation
 					-- Setup group row.						
 				create l_group_level
 				l_group_level.set_data (l_dependency_data.key_for_iteration)
-				l_data_hierarchy.children.force_last (l_group_level)
+				l_data_hierarchy.children.force (l_group_level)
 
 					-- Setup referenced class rows
 				l_referenced_classes := l_dependency_data.item_for_iteration
@@ -1123,7 +1123,7 @@ feature{NONE} -- Implementation
 				loop
 					create l_referenced_class_level
 					l_referenced_class_level.set_data (l_referenced_classes.key_for_iteration)
-					l_group_level.children.force_last (l_referenced_class_level)
+					l_group_level.children.force (l_referenced_class_level)
 						-- Setup referencer class rows
 					l_referencer_class_set := l_referenced_classes.item_for_iteration
 					from
@@ -1133,7 +1133,7 @@ feature{NONE} -- Implementation
 					loop
 						create l_referencer_class_level
 						l_referencer_class_level.set_data (l_referencer_class_set.item_for_iteration)
-						l_referenced_class_level.children.force_last (l_referencer_class_level)
+						l_referenced_class_level.children.force (l_referencer_class_level)
 						l_referencer_class_set.forth
 					end
 					l_referenced_classes.forth
@@ -1176,7 +1176,7 @@ feature{NONE} -- Implementation
 					-- Setup group row.						
 				create l_group_level
 				l_group_level.set_data (l_dependency_data.key_for_iteration)
-				l_data_hierarchy.children.force_last (l_group_level)
+				l_data_hierarchy.children.force (l_group_level)
 
 					-- Setup referenced class rows
 				l_referenced_classes := l_dependency_data.item_for_iteration
@@ -1207,7 +1207,7 @@ feature{NONE} -- Implementation
 					create l_folder_level
 					l_class_list := l_class_table.item_for_iteration
 					l_folder_level.set_data (l_class_list.first)
-					l_group_level.children.force_last (l_folder_level)
+					l_group_level.children.force (l_folder_level)
 					from
 						l_class_list.start
 					until
@@ -1215,7 +1215,7 @@ feature{NONE} -- Implementation
 					loop
 						create l_referenced_class_level
 						l_referenced_class_level.set_data (l_class_list.item)
-						l_folder_level.children.force_last (l_referenced_class_level)
+						l_folder_level.children.force (l_referenced_class_level)
 							-- Setup referencer class rows
 						l_referencer_class_set := l_referenced_classes.item (l_class_list.item)
 						from
@@ -1226,7 +1226,7 @@ feature{NONE} -- Implementation
 							create l_referencer_class_row
 							create l_referencer_class_level
 							l_referencer_class_level.set_data (l_referencer_class_set.item_for_iteration)
-							l_referenced_class_level.children.force_last (l_referencer_class_level)
+							l_referenced_class_level.children.force (l_referencer_class_level)
 							l_referencer_class_set.forth
 						end
 						l_class_list.forth

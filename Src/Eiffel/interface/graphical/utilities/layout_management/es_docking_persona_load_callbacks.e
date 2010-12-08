@@ -11,7 +11,7 @@ class
 	ES_DOCKING_PERSONA_LOAD_CALLBACKS
 
 inherit
-	XM_STATE_LOAD_CALLBACKS
+	XML_STATE_LOAD_CALLBACKS
 		rename
 			make as make_load_callbacks
 		end
@@ -335,62 +335,62 @@ feature {NONE} -- Process
 
 feature {NONE} -- Factory
 
-	new_tag_state_transitions: attached DS_HASH_TABLE [attached DS_HASH_TABLE [NATURAL_8, attached STRING], NATURAL_8]
+	new_tag_state_transitions: HASH_TABLE [HASH_TABLE [NATURAL_8, STRING], NATURAL_8]
 			-- <Precursor>
 		local
-			l_trans: attached DS_HASH_TABLE [NATURAL_8, attached STRING]
+			l_trans: HASH_TABLE [NATURAL_8, STRING]
 		do
 			create Result.make (8)
 
 				-- XML
 				-- => layout
 			create l_trans.make (1)
-			l_trans.put (t_layout, {ES_DOCKING_PERSONA_ENTITY_NAMES}.layout_tag)
-			Result.put (l_trans, t_none)
+			l_trans.force (t_layout, {ES_DOCKING_PERSONA_ENTITY_NAMES}.layout_tag)
+			Result.force (l_trans, t_none)
 
 				-- layout
 				-- => zone
 			create l_trans.make (1)
-			l_trans.put (t_zone, {ES_DOCKING_PERSONA_ENTITY_NAMES}.zone_tag)
-			Result.put (l_trans, t_layout)
+			l_trans.force (t_zone, {ES_DOCKING_PERSONA_ENTITY_NAMES}.zone_tag)
+			Result.force (l_trans, t_layout)
 
 				-- zone
 				-- => tool
 				-- => zone
 			create l_trans.make (2)
-			l_trans.put (t_tool, {ES_DOCKING_PERSONA_ENTITY_NAMES}.tool_tag)
-			l_trans.put (t_zone, {ES_DOCKING_PERSONA_ENTITY_NAMES}.zone_tag)
-			Result.put (l_trans, t_zone)
+			l_trans.force (t_tool, {ES_DOCKING_PERSONA_ENTITY_NAMES}.tool_tag)
+			l_trans.force (t_zone, {ES_DOCKING_PERSONA_ENTITY_NAMES}.zone_tag)
+			Result.force (l_trans, t_zone)
 		end
 
-	new_attribute_states: attached DS_HASH_TABLE [attached DS_HASH_TABLE [NATURAL_8, attached STRING], NATURAL_8]
+	new_attribute_states: HASH_TABLE [HASH_TABLE [NATURAL_8, STRING], NATURAL_8]
 			-- <Precursor>
 		local
-			l_attr: attached DS_HASH_TABLE [NATURAL_8, attached STRING]
+			l_attr: HASH_TABLE [NATURAL_8, STRING]
 		do
-			create Result.make_default
+			create Result.make (10)
 
 				-- layout
 				-- @ name
 			create l_attr.make (1)
-			l_attr.put (at_name, {ES_DOCKING_PERSONA_ENTITY_NAMES}.layout_tag)
-			Result.put (l_attr, t_layout)
+			l_attr.force (at_name, {ES_DOCKING_PERSONA_ENTITY_NAMES}.layout_tag)
+			Result.force (l_attr, t_layout)
 
 				-- zone
 				-- @ dock
 				-- @ size
 				-- @ style
 			create l_attr.make (3)
-			l_attr.put (at_dock, {ES_DOCKING_PERSONA_ENTITY_NAMES}.dock_attribute)
-			l_attr.put (at_style, {ES_DOCKING_PERSONA_ENTITY_NAMES}.style_attribute)
-			l_attr.put (at_size, {ES_DOCKING_PERSONA_ENTITY_NAMES}.size_attribute)
-			Result.put (l_attr, t_zone)
+			l_attr.force (at_dock, {ES_DOCKING_PERSONA_ENTITY_NAMES}.dock_attribute)
+			l_attr.force (at_style, {ES_DOCKING_PERSONA_ENTITY_NAMES}.style_attribute)
+			l_attr.force (at_size, {ES_DOCKING_PERSONA_ENTITY_NAMES}.size_attribute)
+			Result.force (l_attr, t_zone)
 
 				-- tool
 				-- @ id
 			create l_attr.make (1)
-			l_attr.put (at_id, {ES_DOCKING_PERSONA_ENTITY_NAMES}.id_attribute)
-			Result.put (l_attr, t_tool)
+			l_attr.force (at_id, {ES_DOCKING_PERSONA_ENTITY_NAMES}.id_attribute)
+			Result.force (l_attr, t_tool)
 		end
 
 feature {NONE} -- Tag states
@@ -424,7 +424,7 @@ feature {NONE} -- Attribute values
 
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

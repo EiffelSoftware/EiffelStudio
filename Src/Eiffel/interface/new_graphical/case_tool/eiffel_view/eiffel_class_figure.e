@@ -120,7 +120,7 @@ feature -- XML
 	group_id_string: STRING = "GROUP_ID"
 			-- Group id
 
-	xml_element (node: XM_ELEMENT): XM_ELEMENT
+	xml_element (node: like xml_element): XML_ELEMENT
 			-- XML element
 		do
 			Result := Precursor {EG_LINKABLE_FIGURE} (node)
@@ -128,7 +128,7 @@ feature -- XML
 			Result.add_attribute (group_id_string, xml_namespace, model.group_id)
 		end
 
-	set_with_xml_element (node: XM_ELEMENT)
+	set_with_xml_element (node: like xml_element)
 			-- Retrive state from `node'.
 		do
 				-- Discard CLASS_FIGURE_ID and GROUP_ID, since they have been read in factory.

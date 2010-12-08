@@ -363,7 +363,7 @@ feature {NONE} -- Actions
 		require
 			metrics_loaded: is_metrics_loaded
 		local
-			l_cursor: DS_ARRAYED_LIST_CURSOR [EB_METRIC_IMPORT_GRID_ROW]
+			l_cursor: like metric_rows.new_cursor
 			l_library_tbl: like library_uuid_table
 		do
 			library_uuid_table_internal := Void
@@ -414,7 +414,7 @@ feature -- Status report
 		local
 			l_rows: like metric_rows
 			l_manager: like metric_manager
-			l_cursor: DS_ARRAYED_LIST_CURSOR [EB_METRIC_IMPORT_GRID_ROW]
+			l_cursor: like metric_rows.new_cursor
 		do
 			l_rows := metric_rows
 			l_manager := metric_manager
@@ -437,7 +437,7 @@ feature -- Access
 	loaded_metrics: LIST [EB_METRIC]
 			-- Metrics loaded from file
 
-	metric_rows: DS_ARRAYED_LIST [EB_METRIC_IMPORT_GRID_ROW]
+	metric_rows: ARRAYED_LIST [EB_METRIC_IMPORT_GRID_ROW]
 			-- Rows to hold `loaded_metrics'
 		require
 			metrics_loaded: is_metrics_loaded
@@ -449,7 +449,7 @@ feature -- Access
 				until
 					loaded_metrics.after
 				loop
-					metric_rows_internal.force_last (create {EB_METRIC_IMPORT_GRID_ROW}.make (loaded_metrics.item))
+					metric_rows_internal.force (create {EB_METRIC_IMPORT_GRID_ROW}.make (loaded_metrics.item))
 					loaded_metrics.forth
 				end
 			end
@@ -468,7 +468,7 @@ feature -- Access
 		local
 			l_metric_rows: like metric_rows
 			l_name: STRING
-			l_cursor: DS_ARRAYED_LIST_CURSOR [EB_METRIC_IMPORT_GRID_ROW]
+			l_cursor: like metric_rows.new_cursor
 		do
 			if metric_table_internal = Void then
 				l_metric_rows := metric_rows
@@ -564,7 +564,7 @@ feature{NONE} -- Implementation
 			l_metric_row: EB_METRIC_IMPORT_GRID_ROW
 			l_grid_row: EV_GRID_ROW
 			l_grid: like grid
-			l_cursor: DS_ARRAYED_LIST_CURSOR [EB_METRIC_IMPORT_GRID_ROW]
+			l_cursor: like metric_rows.new_cursor
 			l_missing_metrics: LINKED_LIST [STRING]
 			l_unselected_metrics: LINKED_LIST [STRING]
 			l_current_selected_metric: EB_METRIC_IMPORT_GRID_ROW
@@ -629,7 +629,7 @@ feature{NONE} -- Implementation
 			a_new_name_not_cause_name_crash: not has_metric (a_new_name)
 		local
 			l_renamer: EB_METRIC_RENAME_VISITOR
-			l_cursor: DS_ARRAYED_LIST_CURSOR [EB_METRIC_IMPORT_GRID_ROW]
+			l_cursor: like metric_rows.new_cursor
 		do
 			create l_renamer.make (a_old_name, a_new_name)
 			from
@@ -777,7 +777,7 @@ feature{NONE} -- Implementation
 			metrics_loaded: is_metrics_loaded
 		local
 			l_rows: like metric_rows
-			l_cursor: DS_ARRAYED_LIST_CURSOR [EB_METRIC_IMPORT_GRID_ROW]
+			l_cursor: like metric_rows.new_cursor
 		do
 			create {LINKED_LIST [EB_METRIC_IMPORT_GRID_ROW]} Result.make
 			l_rows := metric_rows
@@ -1024,7 +1024,7 @@ feature{NONE} -- Order testers
 			a_column_list_attached: a_column_list /= Void
 			not_a_column_list_is_empty:
 		local
-			l_sorter: DS_QUICK_SORTER [EB_METRIC_IMPORT_GRID_ROW]
+			l_sorter: QUICK_SORTER [EB_METRIC_IMPORT_GRID_ROW]
 		do
 			if grid.row_count > 0 then
 				create l_sorter.make (a_comparator)
@@ -1115,35 +1115,34 @@ invariant
 	backup_metrics_dialog_attached: backup_metrics_dialog /= Void
 
 note
-        copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-        license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-        licensing_options:	"http://www.eiffel.com/licensing"
-        copying: "[
-                        This file is part of Eiffel Software's Eiffel Development Environment.
-                        
-                        Eiffel Software's Eiffel Development Environment is free
-                        software; you can redistribute it and/or modify it under
-                        the terms of the GNU General Public License as published
-                        by the Free Software Foundation, version 2 of the License
-                        (available at the URL listed under "license" above).
-                        
-                        Eiffel Software's Eiffel Development Environment is
-                        distributed in the hope that it will be useful,	but
-                        WITHOUT ANY WARRANTY; without even the implied warranty
-                        of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-                        See the	GNU General Public License for more details.
-                        
-                        You should have received a copy of the GNU General Public
-                        License along with Eiffel Software's Eiffel Development
-                        Environment; if not, write to the Free Software Foundation,
-                        Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
-                ]"
-        source: "[
-                         Eiffel Software
-                         356 Storke Road, Goleta, CA 93117 USA
-                         Telephone 805-685-1006, Fax 805-685-6869
-                         Website http://www.eiffel.com
-                         Customer support http://support.eiffel.com
-                ]"
-
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

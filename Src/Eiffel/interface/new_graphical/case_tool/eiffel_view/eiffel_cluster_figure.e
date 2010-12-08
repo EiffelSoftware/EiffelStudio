@@ -141,7 +141,7 @@ feature -- XML
 	cluster_id_string: STRING = "CLUSTER_ID"
 			-- ES_CLUSTER id string
 
-	xml_element (node: XM_ELEMENT): XM_ELEMENT
+	xml_element (node: like xml_element): XML_ELEMENT
 			-- Xml element representing `Current's state.
 		do
 			Result := Precursor {EG_RESIZABLE_CLUSTER_FIGURE} (node)
@@ -149,7 +149,7 @@ feature -- XML
 			node.add_attribute (cluster_id_string, xml_namespace, model.cluster_id)
 		end
 
-	set_with_xml_element (node: XM_ELEMENT)
+	set_with_xml_element (node: like xml_element)
 			-- Retrive state from `node'.
 		do
 			node.forth

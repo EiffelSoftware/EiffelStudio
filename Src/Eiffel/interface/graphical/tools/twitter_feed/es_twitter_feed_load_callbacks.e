@@ -11,7 +11,7 @@ class
 	ES_TWITTER_FEED_LOAD_CALLBACKS
 
 inherit
-	XM_STATE_LOAD_CALLBACKS
+	XML_STATE_LOAD_CALLBACKS
 		rename
 			make as make_state_callbacks
 		end
@@ -118,10 +118,10 @@ feature {NONE} -- Process
 
 feature {NONE} -- State transistions
 
-	new_tag_state_transitions: DS_HASH_TABLE [DS_HASH_TABLE [NATURAL_8, STRING], NATURAL_8]
+	new_tag_state_transitions: HASH_TABLE [HASH_TABLE [NATURAL_8, STRING], NATURAL_8]
 			-- <Precursor>
 		local
-			l_trans: attached DS_HASH_TABLE [NATURAL_8, STRING]
+			l_trans: attached HASH_TABLE [NATURAL_8, STRING]
 		do
 			create Result.make (8)
 
@@ -156,7 +156,7 @@ feature {NONE} -- State transistions
 			Result.put (l_trans, t_user)
 		end
 
-	new_attribute_states: detachable DS_HASH_TABLE [DS_HASH_TABLE [NATURAL_8, STRING], NATURAL_8]
+	new_attribute_states: detachable HASH_TABLE [HASH_TABLE [NATURAL_8, STRING], NATURAL_8]
 			-- <Precursor>
 		do
 		end

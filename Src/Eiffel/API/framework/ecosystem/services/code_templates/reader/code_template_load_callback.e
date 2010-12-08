@@ -15,7 +15,7 @@ class
 	CODE_TEMPLATE_LOAD_CALLBACK
 
 inherit
-	XM_STATE_LOAD_CALLBACKS
+	XML_STATE_LOAD_CALLBACKS
 		rename
 			make as make_es_callbacks
 		redefine
@@ -79,7 +79,7 @@ feature {NONE} -- Basic operations
 	reset
 			-- <Precursor>
 		do
-			Precursor {XM_STATE_LOAD_CALLBACKS}
+			Precursor {XML_STATE_LOAD_CALLBACKS}
 			last_code_template_definition := Void
 			last_declaration := Void
 		ensure then
@@ -486,28 +486,28 @@ feature {NONE} -- Action handlers
 
 feature {NONE} -- Factory
 
-	new_tag_state_transitions: DS_HASH_TABLE [DS_HASH_TABLE [NATURAL_8, STRING], NATURAL_8]
+	new_tag_state_transitions: HASH_TABLE [HASH_TABLE [NATURAL_8, STRING], NATURAL_8]
 			-- <Precursor>
 		local
-			l_trans: DS_HASH_TABLE [NATURAL_8, STRING]
+			l_trans: HASH_TABLE [NATURAL_8, STRING]
 		do
 			create Result.make (8)
 
 				-- XML
 				-- => code_template
 			create l_trans.make (1)
-			l_trans.put (t_code_template, {CODE_TEMPLATE_ENTITY_NAMES}.code_template_tag)
-			Result.put (l_trans, t_none)
+			l_trans.force (t_code_template, {CODE_TEMPLATE_ENTITY_NAMES}.code_template_tag)
+			Result.force (l_trans, t_none)
 
 				-- code_template
 				-- => metadata
 				-- => declarations
 				-- => templates
 			create l_trans.make (3)
-			l_trans.put (t_metadata, {CODE_TEMPLATE_ENTITY_NAMES}.metadata_tag)
-			l_trans.put (t_declarations, {CODE_TEMPLATE_ENTITY_NAMES}.declarations_tag)
-			l_trans.put (t_templates, {CODE_TEMPLATE_ENTITY_NAMES}.templates_tag)
-			Result.put (l_trans, t_code_template)
+			l_trans.force (t_metadata, {CODE_TEMPLATE_ENTITY_NAMES}.metadata_tag)
+			l_trans.force (t_declarations, {CODE_TEMPLATE_ENTITY_NAMES}.declarations_tag)
+			l_trans.force (t_templates, {CODE_TEMPLATE_ENTITY_NAMES}.templates_tag)
+			Result.force (l_trans, t_code_template)
 
 				-- metadata
 				-- => title
@@ -516,85 +516,85 @@ feature {NONE} -- Factory
 				-- => shortcut
 				-- => categories
 			create l_trans.make (5)
-			l_trans.put (t_title, {CODE_TEMPLATE_ENTITY_NAMES}.title_tag)
-			l_trans.put (t_description, {CODE_TEMPLATE_ENTITY_NAMES}.description_tag)
-			l_trans.put (t_author, {CODE_TEMPLATE_ENTITY_NAMES}.author_tag)
-			l_trans.put (t_shortcut, {CODE_TEMPLATE_ENTITY_NAMES}.shortcut_tag)
-			l_trans.put (t_categories, {CODE_TEMPLATE_ENTITY_NAMES}.categories_tag)
-			Result.put (l_trans, t_metadata)
+			l_trans.force (t_title, {CODE_TEMPLATE_ENTITY_NAMES}.title_tag)
+			l_trans.force (t_description, {CODE_TEMPLATE_ENTITY_NAMES}.description_tag)
+			l_trans.force (t_author, {CODE_TEMPLATE_ENTITY_NAMES}.author_tag)
+			l_trans.force (t_shortcut, {CODE_TEMPLATE_ENTITY_NAMES}.shortcut_tag)
+			l_trans.force (t_categories, {CODE_TEMPLATE_ENTITY_NAMES}.categories_tag)
+			Result.force (l_trans, t_metadata)
 
 				-- categories
 				-- => category
 			create l_trans.make (1)
-			l_trans.put (t_category, {CODE_TEMPLATE_ENTITY_NAMES}.category_tag)
-			Result.put (l_trans, t_categories)
+			l_trans.force (t_category, {CODE_TEMPLATE_ENTITY_NAMES}.category_tag)
+			Result.force (l_trans, t_categories)
 
 				-- declarations
 				-- => literal
 			create l_trans.make (2)
-			l_trans.put (t_literal, {CODE_TEMPLATE_ENTITY_NAMES}.literal_tag)
-			l_trans.put (t_object, {CODE_TEMPLATE_ENTITY_NAMES}.object_tag)
-			Result.put (l_trans, t_declarations)
+			l_trans.force (t_literal, {CODE_TEMPLATE_ENTITY_NAMES}.literal_tag)
+			l_trans.force (t_object, {CODE_TEMPLATE_ENTITY_NAMES}.object_tag)
+			Result.force (l_trans, t_declarations)
 
 				-- literal
 				-- => description
 				-- => default
 			create l_trans.make (2)
-			l_trans.put (t_description, {CODE_TEMPLATE_ENTITY_NAMES}.description_tag)
-			l_trans.put (t_default, {CODE_TEMPLATE_ENTITY_NAMES}.default_tag)
-			Result.put (l_trans, t_literal)
+			l_trans.force (t_description, {CODE_TEMPLATE_ENTITY_NAMES}.description_tag)
+			l_trans.force (t_default, {CODE_TEMPLATE_ENTITY_NAMES}.default_tag)
+			Result.force (l_trans, t_literal)
 
 				-- object
 				-- => description
 				-- => default
 			create l_trans.make (2)
-			l_trans.put (t_description, {CODE_TEMPLATE_ENTITY_NAMES}.description_tag)
-			l_trans.put (t_default, {CODE_TEMPLATE_ENTITY_NAMES}.default_tag)
-			Result.put (l_trans, t_object)
+			l_trans.force (t_description, {CODE_TEMPLATE_ENTITY_NAMES}.description_tag)
+			l_trans.force (t_default, {CODE_TEMPLATE_ENTITY_NAMES}.default_tag)
+			Result.force (l_trans, t_object)
 
 				-- templates
 				-- => template
 			create l_trans.make (1)
-			l_trans.put (t_template, {CODE_TEMPLATE_ENTITY_NAMES}.template_tag)
-			Result.put (l_trans, t_templates)
+			l_trans.force (t_template, {CODE_TEMPLATE_ENTITY_NAMES}.template_tag)
+			Result.force (l_trans, t_templates)
 		end
 
-	new_attribute_states: DS_HASH_TABLE [DS_HASH_TABLE [NATURAL_8, STRING], NATURAL_8]
+	new_attribute_states: HASH_TABLE [HASH_TABLE [NATURAL_8, STRING], NATURAL_8]
 			-- <Precursor>
 		local
-			l_attr: DS_HASH_TABLE [NATURAL_8, STRING]
+			l_attr: HASH_TABLE [NATURAL_8, STRING]
 		do
 			create Result.make (4)
 
 				-- code_template
 				-- @ format
 			create l_attr.make (1)
-			l_attr.put (at_format, {CODE_TEMPLATE_ENTITY_NAMES}.format_attribute)
-			Result.put (l_attr, t_code_template)
+			l_attr.force (at_format, {CODE_TEMPLATE_ENTITY_NAMES}.format_attribute)
+			Result.force (l_attr, t_code_template)
 
 				-- literal
 				-- @ id
 				-- @ editable
 			create l_attr.make (2)
-			l_attr.put (at_id, {CODE_TEMPLATE_ENTITY_NAMES}.id_attribute)
-			l_attr.put (at_editable, {CODE_TEMPLATE_ENTITY_NAMES}.editable_attribute)
-			Result.put (l_attr, t_literal)
+			l_attr.force (at_id, {CODE_TEMPLATE_ENTITY_NAMES}.id_attribute)
+			l_attr.force (at_editable, {CODE_TEMPLATE_ENTITY_NAMES}.editable_attribute)
+			Result.force (l_attr, t_literal)
 
 				-- object
 				-- @ id
 				-- @ editable
 				-- @ conforms_to
 			create l_attr.make (3)
-			l_attr.put (at_id, {CODE_TEMPLATE_ENTITY_NAMES}.id_attribute)
-			l_attr.put (at_editable, {CODE_TEMPLATE_ENTITY_NAMES}.editable_attribute)
-			l_attr.put (at_conforms_to, {CODE_TEMPLATE_ENTITY_NAMES}.conforms_to_attribute)
-			Result.put (l_attr, t_object)
+			l_attr.force (at_id, {CODE_TEMPLATE_ENTITY_NAMES}.id_attribute)
+			l_attr.force (at_editable, {CODE_TEMPLATE_ENTITY_NAMES}.editable_attribute)
+			l_attr.force (at_conforms_to, {CODE_TEMPLATE_ENTITY_NAMES}.conforms_to_attribute)
+			Result.force (l_attr, t_object)
 
 				-- template
 				-- @ version
 			create l_attr.make (1)
-			l_attr.put (at_version, {CODE_TEMPLATE_ENTITY_NAMES}.version_attribute)
-			Result.put (l_attr, t_template)
+			l_attr.force (at_version, {CODE_TEMPLATE_ENTITY_NAMES}.version_attribute)
+			Result.force (l_attr, t_template)
 		end
 
 feature {NONE} -- Tag states
@@ -632,7 +632,7 @@ invariant
 	last_code_template_definition_attached: attached last_declaration implies attached last_code_template_definition
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

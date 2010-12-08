@@ -138,17 +138,17 @@ feature -- Access
 			Result := a_id.is_equal (b_id)
 		end
 
-	xml_for_descriptor (a_descriptor: EB_CUSTOMIZED_TOOL_DESP; a_parent: XM_COMPOSITE): XM_ELEMENT
+	xml_for_descriptor (a_descriptor: EB_CUSTOMIZED_TOOL_DESP; a_parent: XML_COMPOSITE): XML_ELEMENT
 			-- Xml element for `a_descriptor'
 		require
 			a_descriptor_attached: a_descriptor /= Void
 			a_parent_attached: a_parent /= Void
 		local
-			l_namespace: XM_NAMESPACE
-			l_pixmap: XM_ELEMENT
-			l_handlers: XM_ELEMENT
+			l_namespace: XML_NAMESPACE
+			l_pixmap: XML_ELEMENT
+			l_handlers: XML_ELEMENT
 			l_handler_table: HASH_TABLE [STRING, STRING]
-			l_handler: XM_ELEMENT
+			l_handler: XML_ELEMENT
 		do
 			create l_namespace.make_default
 			create Result.make (a_parent, n_tool, l_namespace)

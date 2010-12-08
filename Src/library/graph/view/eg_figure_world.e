@@ -14,7 +14,8 @@ inherit
 			default_create,
 			scale,
 			wipe_out,
-			new_filled_list
+			new_filled_list,
+			create_interface_objects
 		end
 
 	EV_SHARED_APPLICATION
@@ -38,11 +39,9 @@ create {EG_FIGURE_WORLD}
 
 feature {NONE} -- Initialization
 
-	default_create
-			-- Create an EG_FIGURE_WORLD
+	create_interface_objects
+			-- <Precursor>
 		do
-			Precursor {EV_MODEL_WORLD}
-			scale_factor := 1.0
 			create items_to_figure_lookup_table.make (50)
 			create root_cluster.make (10)
 			create nodes.make (50)
@@ -51,6 +50,14 @@ feature {NONE} -- Initialization
 			create clusters.make (10)
 			create figure_change_end_actions
 			create figure_change_start_actions
+			Precursor {EV_MODEL_WORLD}
+		end
+
+	default_create
+			-- Create an EG_FIGURE_WORLD
+		do
+			Precursor {EV_MODEL_WORLD}
+			scale_factor := 1.0
 			pointer_button_press_actions.extend (agent on_pointer_button_press_on_world)
 			pointer_button_release_actions.extend (agent on_pointer_button_release_on_world)
 			pointer_motion_actions.extend (agent on_pointer_motion_on_world)
@@ -79,8 +86,8 @@ feature {NONE} -- Initialization
 			i_cluster: EG_CLUSTER
 		do
 			model := a_model
-			set_factory (a_factory)
 			default_create
+			set_factory (a_factory)
 			-- create all views in model
 
 			if a_model.clusters.is_empty then
@@ -758,6 +765,14 @@ feature -- Element change
 			new_scale_factor: scale_factor = old scale_factor * a_scale
 		end
 
+feature -- Visitor
+
+	process (v: EG_FIGURE_VISITOR)
+			-- Visitor feature.
+		do
+			v.process_figure_world (Current)
+		end
+
 feature -- Save/Restore
 
 	store (ptf: RAW_FILE)
@@ -765,13 +780,13 @@ feature -- Save/Restore
 		require
 			ptf_not_Void: ptf /= Void
 		local
-			diagram_output: XM_DOCUMENT
-			view_output: XM_ELEMENT
-			root: XM_ELEMENT
+			diagram_output: XML_DOCUMENT
+			view_output: like xml_element
+			root: like xml_element
 		do
-			create diagram_output.make_with_root_named (xml_node_name, create {XM_NAMESPACE}.make_default)
+			create diagram_output.make_with_root_named (xml_node_name, create {XML_NAMESPACE}.make_default)
 
-			create root.make_root (create {XM_DOCUMENT}.make, "VIEW", xml_namespace)
+			create root.make_root (create {XML_DOCUMENT}.make, "VIEW", xml_namespace)
 			view_output := xml_element (root)
 			diagram_output.root_element.force_first (view_output)
 			Xml_routines.save_xml_document (ptf.name, diagram_output)
@@ -782,8 +797,8 @@ feature -- Save/Restore
 		require
 			f_not_Void: f /= Void
 		local
-			diagram_input: detachable XM_DOCUMENT
-			view_input: detachable XM_ELEMENT
+			diagram_input: detachable XML_DOCUMENT
+			view_input: detachable like xml_element
 		do
 			diagram_input := Xml_routines.deserialize_document (f.name)
 			if diagram_input /= Void then
@@ -805,14 +820,14 @@ feature -- Save/Restore
 			Result := "EG_FIGURE_WORLD"
 		end
 
-	xml_element (node: XM_ELEMENT): XM_ELEMENT
+	xml_element (node: like xml_element): XML_ELEMENT
 			-- Xml node representing `Current's state.
 		local
 			l_root_cluster: like root_cluster
 			l_links: like links
-			fig: XM_ELEMENT
+			fig: like xml_element
 			l_item: EG_FIGURE
-			root_elements: XM_ELEMENT
+			root_elements: like xml_element
 		do
 			node.put_last (Xml_routines.xml_node (node, "SCALE_FACTOR", scale_factor.out))
 
@@ -848,12 +863,12 @@ feature -- Save/Restore
 			Result := node
 		end
 
-	set_with_xml_element (node: XM_ELEMENT)
+	set_with_xml_element (node: like xml_element)
 			-- Retrive state from `node'.
 		local
-			l_item: detachable XM_ELEMENT
+			l_item: detachable like xml_element
 			sf: DOUBLE
-			l_cursor: detachable DS_LINKED_LIST_CURSOR [XM_NODE]
+			l_cursor: detachable XML_COMPOSITE_CURSOR
 			eg_item: detachable EG_ITEM
 			eg_node: detachable EG_NODE
 			eg_cluster: detachable EG_CLUSTER
@@ -877,7 +892,7 @@ feature -- Save/Restore
 				check l_item /= Void end -- FIXME: Implied by ...?
 				l_cursor ?= l_item.new_cursor
 				node.forth
-				check l_cursor /= Void end -- Implied by inheritance relation of {XM_NODE} and {XM_ELEMENT}
+				check l_cursor /= Void end -- Implied by inheritance relation of {XML_NODE} and {XML_ELEMENT}
 				l_cursor.start
 			until
 				l_cursor.after
@@ -958,7 +973,7 @@ feature -- Save/Restore
 			end
 		end
 
-feature {EG_FIGURE, EG_LAYOUT} -- Implementation
+feature {EG_FIGURE, EG_LAYOUT, EG_FIGURE_VISITOR} -- Implementation
 
 	items_to_figure_lookup_table: HASH_TABLE [EG_FIGURE, EG_ITEM]
 			-- The table maps EG_ITEM objects to EG_FIGURE objects (model to view).
@@ -1281,14 +1296,14 @@ invariant
 	selected_figures_not_void: selected_figures /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

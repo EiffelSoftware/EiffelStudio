@@ -242,7 +242,7 @@ feature -- Setting
 				l_original_desps.forth
 				l_desps.forth
 			end
-			l_desps.do_all (agent items.force_last)
+			l_desps.do_all (agent items.force)
 			set_has_changed (False)
 		end
 
@@ -591,7 +591,7 @@ feature{NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

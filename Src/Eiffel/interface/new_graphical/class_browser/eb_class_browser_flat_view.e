@@ -204,7 +204,7 @@ feature{NONE} -- Sorting
 			a_column_list_attached: a_column_list /= Void
 			not_a_column_list_is_empty:
 		local
-			l_sorter: DS_QUICK_SORTER [EB_CLASS_BROWSER_FLAT_ROW]
+			l_sorter: QUICK_SORTER [EB_CLASS_BROWSER_FLAT_ROW]
 		do
 			create l_sorter.make (a_comparator)
 			l_sorter.sort (rows)
@@ -283,7 +283,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	grid_selected_items: DS_ARRAYED_LIST [EVS_GRID_COORDINATED]
+	grid_selected_items: ARRAYED_LIST [EVS_GRID_COORDINATED]
 			-- Selected items in `grid'.
 			-- Returned list is unsorted so no particular ordering is guaranteed.			
 		local
@@ -304,7 +304,7 @@ feature -- Access
 					l_item := l_selected.item
 					l_row ?= l_item.row.data
 					if l_row /= Void then
-						Result.force_last (create {EVS_EMPTY_COORDINATED_ITEM}.make (l_item.column.index, l_item.row.index))
+						Result.force (create {EVS_EMPTY_COORDINATED_ITEM}.make (l_item.column.index, l_item.row.index))
 					end
 					l_selected.forth
 				end
@@ -361,7 +361,7 @@ feature -- Access
 	data: QL_FEATURE_DOMAIN
 			-- Data to be displayed
 
-	rows: DS_ARRAYED_LIST [EB_CLASS_BROWSER_FLAT_ROW]
+	rows: ARRAYED_LIST [EB_CLASS_BROWSER_FLAT_ROW]
 			-- Rows for features that are to be displayed
 
 	starting_element: QL_CLASS
@@ -575,7 +575,7 @@ feature{NONE} -- Implementation
 					if not l_filter_used or else l_filter.is_selected (l_feature, Void, Current) then
 						create l_row.make (l_feature_list.item, Current)
 						l_row.set_is_expanded (True)
-						rows.force_last (l_row)
+						rows.force (l_row)
 					end
 				end
 				l_feature_list.forth

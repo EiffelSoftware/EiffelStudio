@@ -103,10 +103,10 @@ feature -- Status report
 
 feature {NONE} -- Helpers
 
-	frozen xml_parser: XM_EIFFEL_PARSER
-			-- Access to an XML parser
+	frozen xml_lite_parser: XML_LITE_STOPPABLE_PARSER
+			-- Access to an XML lite parser
 		once
-			create {XM_EIFFEL_PARSER} Result.make
+			create {XML_LITE_STOPPABLE_PARSER} Result.make
 		end
 
 feature -- Basic operations: Standard persona
@@ -485,9 +485,9 @@ feature {NONE} -- Basic operations
 			not_a_file_name_is_empty: not a_file_name.is_empty
 			a_file_name_exists: (create {RAW_FILE}.make (a_file_name)).exists
 		local
-			l_parser: attached like xml_parser
-			l_resolver: attached XM_FILE_EXTERNAL_RESOLVER
-			l_callbacks: attached ES_DOCKING_PERSONA_LOAD_CALLBACKS
+			l_parser: like xml_lite_parser
+			l_resolver: XML_FILE_EXTERNAL_RESOLVER
+			l_callbacks: ES_DOCKING_PERSONA_LOAD_CALLBACKS
 			l_is_unlocked: BOOLEAN
 			retried: BOOLEAN
 		do
@@ -501,7 +501,7 @@ feature {NONE} -- Basic operations
 				l_resolver.resolve (a_file_name)
 				if not l_resolver.has_error and then attached development_window as l_window then
 						-- File is loaded, create the callbacks and parse the XML.
-					l_parser := xml_parser
+					l_parser := xml_lite_parser
 					create l_callbacks.make (l_window, l_parser)
 					check
 						l_parser_callbacks_set: l_parser.callbacks = l_callbacks

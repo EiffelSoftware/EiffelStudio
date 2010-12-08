@@ -96,7 +96,7 @@ feature {ES_DIAGRAM_TOOL_PANEL} -- Save/Restore
 			Result := "EIFFEL_CLASS_DIAGRAM"
 		end
 
-	xml_element (node: XM_ELEMENT): XM_ELEMENT
+	xml_element (node: like xml_element): XML_ELEMENT
 			-- Xml node representing `Current's state.
 		do
 			node.add_attribute ("NAME", xml_namespace, current_view)
@@ -112,7 +112,7 @@ feature {ES_DIAGRAM_TOOL_PANEL} -- Save/Restore
 			Result := Precursor {EIFFEL_WORLD} (node)
 		end
 
-	set_with_xml_element (node: XM_ELEMENT)
+	set_with_xml_element (node: like xml_element)
 			-- Retrive state from `node'.
 		local
 			ccn, cccn: STRING

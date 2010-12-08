@@ -102,11 +102,11 @@ feature -- Loading
 			--
 		local
 			f: RAW_FILE
-			st: KL_TEXT_INPUT_FILE
+			st: PLAIN_TEXT_FILE
 		do
 			grid.set_row_count_to (0)
 			create f.make (fn)
-			if f.exists and f.is_readable then
+			if f.exists and then f.is_readable then
 				build_xml_parser
 				xml_parser.parse_from_filename (fn)
 			end
@@ -147,7 +147,7 @@ feature {NONE} -- Xml parser implementation
 
 feature {NONE} -- xml callbacks
 
-	tags_row_index: DS_LINKED_STACK [INTEGER]
+	tags_row_index: LINKED_STACK [INTEGER]
 
 	log (a_message: STRING)
 		do

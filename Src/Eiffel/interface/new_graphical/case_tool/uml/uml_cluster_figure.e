@@ -203,7 +203,7 @@ feature -- Access
 			Result := "UML_CLUSTER_FIGURE"
 		end
 
-	xml_element (node: XM_ELEMENT): XM_ELEMENT
+	xml_element (node: like xml_element): XML_ELEMENT
 			-- Xml element representing `Current's state.
 		do
 			Result := Precursor {EIFFEL_CLUSTER_FIGURE} (node)
@@ -211,7 +211,7 @@ feature -- Access
 			Result.put_last (Xml_routines.xml_node (Result, "IS_NEEDED_ON_DIAGRAM", model.is_needed_on_diagram.out))
 		end
 
-	set_with_xml_element (node: XM_ELEMENT)
+	set_with_xml_element (node: like xml_element)
 			-- Retrive state from `node'.
 		do
 			Precursor {EIFFEL_CLUSTER_FIGURE} (node)

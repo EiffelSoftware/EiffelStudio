@@ -16,7 +16,8 @@ inherit
 			xml_element,
 			xml_node_name,
 			set_with_xml_element,
-			recycle
+			recycle,
+			process
 		end
 
 feature {NONE} -- Initialization
@@ -52,7 +53,7 @@ feature -- Access
 	model: detachable EG_LINK
 			-- The model for `Current'.
 
-	xml_element (node: XM_ELEMENT): XM_ELEMENT
+	xml_element (node: like xml_element): XML_ELEMENT
 			-- Xml node representing `Current's state.
 		local
 			l_model: like model
@@ -65,7 +66,7 @@ feature -- Access
 			Result.put_last (Xml_routines.xml_node (Result, is_directed_string, boolean_representation (l_model.is_directed)))
 		end
 
-	set_with_xml_element (node: XM_ELEMENT)
+	set_with_xml_element (node: like xml_element)
 			-- Retrive state from `node'.
 		local
 			l_model: like model
@@ -121,6 +122,14 @@ feature {EG_FIGURE_WORLD} -- Element change.
 			set: a_target = target
 		end
 
+feature -- Visitor
+
+	process (v: EG_FIGURE_VISITOR)
+			-- Visitor feature.
+		do
+			v.process_link_figure (Current)
+		end
+
 feature {NONE} -- Implementation
 
 	on_is_directed_change
@@ -129,14 +138,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

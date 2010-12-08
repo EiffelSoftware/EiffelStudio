@@ -38,7 +38,7 @@ feature{NONE} -- Initialization
 
 feature -- Access
 
-	archive: DS_ARRAYED_LIST [EB_METRIC_ARCHIVE_NODE]
+	archive: ARRAYED_LIST [EB_METRIC_ARCHIVE_NODE]
 			-- Archive to be displayed in Current grid
 		do
 			if archive_internal = Void then
@@ -154,7 +154,7 @@ feature -- Grid binding
 			a_archive_attached: a_archive /= Void
 		do
 			archive.wipe_out
-			a_archive.archive.do_all (agent archive.force_last)
+			a_archive.archive.do_all (agent archive.force)
 			disable_auto_sort_order_change
 			enable_force_multi_column_sorting
 			selected_archives_internal := a_selected_archive_nodes
@@ -749,7 +749,7 @@ feature{NONE} -- Implementation/Operations
 		require
 			a_column_list_attached: a_column_list /= Void
 		local
-			l_sorter: DS_QUICK_SORTER [EB_METRIC_ARCHIVE_NODE]
+			l_sorter: QUICK_SORTER [EB_METRIC_ARCHIVE_NODE]
 		do
 			create l_sorter.make (a_comparator)
 			l_sorter.sort (archive)
@@ -940,35 +940,34 @@ invariant
 	row_archive_table_attached: row_archive_table /= Void
 
 note
-        copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-        license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-        licensing_options:	"http://www.eiffel.com/licensing"
-        copying: "[
-                        This file is part of Eiffel Software's Eiffel Development Environment.
-                        
-                        Eiffel Software's Eiffel Development Environment is free
-                        software; you can redistribute it and/or modify it under
-                        the terms of the GNU General Public License as published
-                        by the Free Software Foundation, version 2 of the License
-                        (available at the URL listed under "license" above).
-                        
-                        Eiffel Software's Eiffel Development Environment is
-                        distributed in the hope that it will be useful,	but
-                        WITHOUT ANY WARRANTY; without even the implied warranty
-                        of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-                        See the	GNU General Public License for more details.
-                        
-                        You should have received a copy of the GNU General Public
-                        License along with Eiffel Software's Eiffel Development
-                        Environment; if not, write to the Free Software Foundation,
-                        Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
-                ]"
-        source: "[
-                         Eiffel Software
-                         356 Storke Road, Goleta, CA 93117 USA
-                         Telephone 805-685-1006, Fax 805-685-6869
-                         Website http://www.eiffel.com
-                         Customer support http://support.eiffel.com
-                ]"
-
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

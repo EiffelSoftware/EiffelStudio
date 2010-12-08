@@ -149,7 +149,7 @@ feature {NONE} -- Initialization
 
 feature -- Load archive
 
-	archive_comparison: DS_ARRAYED_LIST [EB_METRIC_ARCHIVE_RESULT_ROW]
+	archive_comparison: ARRAYED_LIST [EB_METRIC_ARCHIVE_RESULT_ROW]
 			-- Archive comparison result
 
 	load_archives (ref_archive, cur_archive: LIST [EB_METRIC_ARCHIVE_NODE])
@@ -184,10 +184,10 @@ feature -- Load archive
 			loop
 				l_metric_name := l_cur_tbl.key_for_iteration
 				if l_ref_tbl.has (l_metric_name) then
-					l_rlt.force_last (comparison_row (l_ref_tbl.item (l_metric_name), l_cur_tbl.item_for_iteration))
+					l_rlt.force (comparison_row (l_ref_tbl.item (l_metric_name), l_cur_tbl.item_for_iteration))
 					l_ref_tbl.remove (l_metric_name)
 				else
-					l_rlt.force_last (comparison_row (Void, l_cur_tbl.item_for_iteration))
+					l_rlt.force (comparison_row (Void, l_cur_tbl.item_for_iteration))
 				end
 				l_cur_tbl.forth
 			end
@@ -196,7 +196,7 @@ feature -- Load archive
 			until
 				l_ref_tbl.after
 			loop
-				l_rlt.force_last (comparison_row (l_ref_tbl.item_for_iteration, Void))
+				l_rlt.force (comparison_row (l_ref_tbl.item_for_iteration, Void))
 				l_ref_tbl.forth
 			end
 			archive_comparison := l_rlt
@@ -473,7 +473,7 @@ feature {NONE} -- Implementation/Sorting
 			a_column_list_attached: a_column_list /= Void
 			not_a_column_list_is_empty:
 		local
-			l_sorter: DS_QUICK_SORTER [EB_METRIC_ARCHIVE_RESULT_ROW]
+			l_sorter: QUICK_SORTER [EB_METRIC_ARCHIVE_RESULT_ROW]
 		do
 			create l_sorter.make (a_comparator)
 			l_sorter.sort (archive_comparison)
@@ -535,36 +535,35 @@ invariant
 	metric_panel_attached: metric_panel /= Void
 
 note
-        copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-        license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-        licensing_options:	"http://www.eiffel.com/licensing"
-        copying: "[
-                        This file is part of Eiffel Software's Eiffel Development Environment.
-                        
-                        Eiffel Software's Eiffel Development Environment is free
-                        software; you can redistribute it and/or modify it under
-                        the terms of the GNU General Public License as published
-                        by the Free Software Foundation, version 2 of the License
-                        (available at the URL listed under "license" above).
-                        
-                        Eiffel Software's Eiffel Development Environment is
-                        distributed in the hope that it will be useful,	but
-                        WITHOUT ANY WARRANTY; without even the implied warranty
-                        of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-                        See the	GNU General Public License for more details.
-                        
-                        You should have received a copy of the GNU General Public
-                        License along with Eiffel Software's Eiffel Development
-                        Environment; if not, write to the Free Software Foundation,
-                        Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
-                ]"
-        source: "[
-                         Eiffel Software
-                         356 Storke Road, Goleta, CA 93117 USA
-                         Telephone 805-685-1006, Fax 805-685-6869
-                         Website http://www.eiffel.com
-                         Customer support http://support.eiffel.com
-                ]"
-
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end -- class EB_METRIC_ARCHIVE_RESULT_AREA
 

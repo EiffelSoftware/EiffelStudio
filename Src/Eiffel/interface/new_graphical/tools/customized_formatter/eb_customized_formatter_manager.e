@@ -71,21 +71,21 @@ feature -- Access
 			Result := formatter_descriptors_internal
 		end
 
-	xml_for_descriptor (a_descriptor: EB_CUSTOMIZED_FORMATTER_DESP; a_parent: XM_COMPOSITE): XM_ELEMENT
+	xml_for_descriptor (a_descriptor: EB_CUSTOMIZED_FORMATTER_DESP; a_parent: XML_COMPOSITE): XML_ELEMENT
 			-- Xml element for `a_descriptor'
 		require
 			a_descriptor_attached: a_descriptor /= Void
 			a_parent_attached: a_parent /= Void
 		local
-			l_namespace: XM_NAMESPACE
-			l_tooltip: XM_ELEMENT
-			l_header: XM_ELEMENT
-			l_temp_header: XM_ELEMENT
-			l_metric: XM_ELEMENT
-			l_tools: XM_ELEMENT
-			l_tool: XM_ELEMENT
-			l_pixmap: XM_ELEMENT
-			l_content: XM_CHARACTER_DATA
+			l_namespace: XML_NAMESPACE
+			l_tooltip: XML_ELEMENT
+			l_header: XML_ELEMENT
+			l_temp_header: XML_ELEMENT
+			l_metric: XML_ELEMENT
+			l_tools: XML_ELEMENT
+			l_tool: XML_ELEMENT
+			l_pixmap: XML_ELEMENT
+			l_content: XML_CHARACTER_DATA
 			l_tool_tbl: HASH_TABLE [STRING, STRING]
 			l_order_tbl: HASH_TABLE [STRING, STRING]
 			l_tool_name: STRING

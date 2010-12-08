@@ -144,7 +144,7 @@ feature -- Access
 			-- List of descriptors of `items' defined in Current dialog
 		local
 			l_descriptors: like items
-			l_cursor: DS_ARRAYED_LIST_CURSOR [G]
+			l_cursor: like items.new_cursor
 		do
 			create {LINKED_LIST [G]} Result.make
 			l_descriptors := items
@@ -161,7 +161,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	items: DS_ARRAYED_LIST [G]
+	items: ARRAYED_LIST [G]
 			-- List of items
 
 	ok_actions: ACTION_SEQUENCE [TUPLE]
@@ -321,7 +321,7 @@ feature{NONE} -- Actions
 			l_grid: like item_grid
 		do
 			l_new_item := new_item
-			items.force_last (l_new_item)
+			items.force (l_new_item)
 
 			l_grid := item_grid
 			l_grid.column (1).header_item.remove_pixmap
@@ -355,9 +355,9 @@ feature{NONE} -- Actions
 				check l_descriptor /= Void end
 				descriptor_row_table.remove (l_descriptor)
 				items.start
-				items.search_forth (l_descriptor)
+				items.search (l_descriptor)
 				if not items.after then
-					items.remove_at
+					items.remove
 				end
 				l_grid := item_grid
 				l_grid.remove_row (l_row_index)
@@ -567,7 +567,7 @@ feature {NONE} -- Implementation
 	bind_item_grid
 			-- Bind formatters in `items' in `item_grid'.
 		local
-			l_cursor: DS_ARRAYED_LIST_CURSOR [G]
+			l_cursor: like items.new_cursor
 			l_item_grid: like item_grid
 			l_row_table: like descriptor_row_table
 			l_grid_row: EV_GRID_ROW
@@ -619,7 +619,7 @@ feature{NONE} -- Implementation/Sorting
 			a_column_list_attached: a_column_list /= Void
 			not_a_column_list_is_empty:
 		local
-			l_sorter: DS_QUICK_SORTER [G]
+			l_sorter: QUICK_SORTER [G]
 		do
 			create l_sorter.make (a_comparator)
 			l_sorter.sort (items)
@@ -637,7 +637,7 @@ invariant
 	formatter_grid_wrapper_attached: item_grid_wrapper /= Void
 	descriptor_row_table_attached: descriptor_row_table /= Void
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

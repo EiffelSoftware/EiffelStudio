@@ -270,6 +270,7 @@ MT_WOBJ = \
 	MTwgen_conf.o \
 	MTweif_type_id.o \
 	MTwrout_obj.o \
+	MTwscoop.o \
 	MTwoption.o \
 	MTwcompress.o \
 	MTwconsole.o \
@@ -722,6 +723,9 @@ MTweif_type_id.o: eif_type_id.c
 	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 MTwrout_obj.o: rout_obj.c
+	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
+
+MTwscoop.o: scoop.c
 	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 MTwoption.o: option.c

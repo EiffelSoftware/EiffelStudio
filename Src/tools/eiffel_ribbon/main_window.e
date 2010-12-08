@@ -27,6 +27,18 @@ feature {NONE} -- Initialization
 			set_size (1280, 600)
 
 			show_actions.extend_kamikaze (agent init_docking_manager)
+
+			restore_tool_info_from_disk
+
+			show_actions.extend_kamikaze (agent
+								local
+									l_env: EV_ENVIRONMENT
+								do
+									create l_env
+									if attached l_env.application as l_app then
+										l_app.destroy_actions.extend (agent save_tool_info_when_exit)
+									end
+								end)
 		end
 
 	init_docking_manager
@@ -142,6 +154,56 @@ feature {NONE} -- Agents
 		end
 
 feature {NONE} -- Implementation
+
+	restore_tool_info_from_disk
+			--
+		local
+			l_tool_info: detachable ER_TOOL_INFO
+
+			l_file: RAW_FILE
+			l_reader: SED_MEDIUM_READER_WRITER
+			l_facility: SED_STORABLE_FACILITIES
+			l_constants: ER_MISC_CONSTANTS
+		do
+			create l_constants
+			create l_file.make (l_constants.tool_info_file_name)
+			if l_file.exists then
+			l_file.open_read
+				create l_reader.make (l_file)
+				l_reader.set_for_reading
+				create l_facility
+				if attached {ER_TOOL_INFO} l_facility.retrieved (l_reader, False) as l_tool_info_attached then
+					l_tool_info := l_tool_info_attached
+				end
+				l_file.close
+			end
+
+			if l_tool_info = Void then
+				create l_tool_info.make
+			end
+
+			shared_singleton.tool_info_cell.put (l_tool_info)
+		end
+
+	save_tool_info_when_exit
+			--
+		local
+			l_file: RAW_FILE
+			l_writer: SED_MEDIUM_READER_WRITER
+			l_facility: SED_STORABLE_FACILITIES
+			l_constants: ER_MISC_CONSTANTS
+		do
+			if attached shared_singleton.tool_info_cell.item as l_tool_info then
+				create l_constants
+				create l_file.make (l_constants.tool_info_file_name)
+				l_file.create_read_write
+				create l_writer.make (l_file)
+				l_writer.set_for_writing
+				create l_facility
+				l_facility.store (l_tool_info, l_writer)
+				l_file.close
+			end
+		end
 
 	docking_manager: detachable SD_DOCKING_MANAGER
 			--

@@ -31,15 +31,24 @@ feature {NONE}-- Initialization
 			set_menu_bar (l_ev_menu_bar_1)
 			l_ev_menu_bar_1.extend (l_ev_menu_2)
 			l_ev_menu_2.extend (l_ev_menu_item_1)
+			l_ev_menu_2.extend (l_ev_menu_item_2)
+			l_ev_menu_2.extend (recent_projects)
+			l_ev_menu_2.extend (l_ev_menu_separator_1)
+			l_ev_menu_2.extend (l_ev_menu_item_3)
 
 			l_ev_menu_2.set_text ("File")
 			l_ev_menu_item_1.set_text ("New Project")
+			l_ev_menu_item_2.set_text ("Open Project")
+			recent_projects.set_text ("Recent Projects")
+			l_ev_menu_item_3.set_text ("Exit")
 			set_title ("EiffelRibbon")
 
 			set_all_attributes_using_constants
 			
 				-- Connect events.
 			l_ev_menu_item_1.select_actions.extend (agent on_new_project_selected)
+			l_ev_menu_item_2.select_actions.extend (agent on_open_project_selected)
+			l_ev_menu_item_3.select_actions.extend (agent on_exit_selected)
 				-- Close the application when an interface close
 				-- request is recieved on `Current'. i.e. the cross is clicked.
 			close_request_actions.extend (agent destroy_and_exit_if_last)
@@ -56,6 +65,10 @@ feature {NONE}-- Initialization
 			create l_ev_menu_bar_1
 			create l_ev_menu_2
 			create l_ev_menu_item_1
+			create l_ev_menu_item_2
+			create recent_projects
+			create l_ev_menu_separator_1
+			create l_ev_menu_item_3
 
 			create string_constant_set_procedures.make (10)
 			create string_constant_retrieval_functions.make (10)
@@ -73,11 +86,16 @@ feature {NONE}-- Initialization
 		end
 
 
+feature -- Access
+
+	recent_projects: EV_MENU
+
 feature {NONE} -- Implementation
 
 	l_ev_menu_bar_1: EV_MENU_BAR
 	l_ev_menu_2: EV_MENU
-	l_ev_menu_item_1: EV_MENU_ITEM
+	l_ev_menu_item_1, l_ev_menu_item_2, l_ev_menu_item_3: EV_MENU_ITEM
+	l_ev_menu_separator_1: EV_MENU_SEPARATOR
 
 feature {NONE} -- Implementation
 
@@ -96,6 +114,16 @@ feature {NONE} -- Implementation
 	
 	on_new_project_selected is
 			-- Called by `select_actions' of `l_ev_menu_item_1'.
+		deferred
+		end
+	
+	on_open_project_selected is
+			-- Called by `select_actions' of `l_ev_menu_item_2'.
+		deferred
+		end
+	
+	on_exit_selected is
+			-- Called by `select_actions' of `l_ev_menu_item_3'.
 		deferred
 		end
 	

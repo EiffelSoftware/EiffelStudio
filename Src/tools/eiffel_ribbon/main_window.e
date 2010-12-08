@@ -119,6 +119,28 @@ feature {NONE} -- Agents
 			end
 		end
 
+	on_open_project_selected
+			-- <Precursor>
+		local
+			l_file: EV_FILE_OPEN_DIALOG
+		do
+			create l_file
+			l_file.show_modal_to_window (Current)
+
+
+		end
+
+	on_exit_selected
+			-- <Precursor>
+		local
+			l_env: EV_ENVIRONMENT
+		do
+			create l_env
+			if attached l_env.application as l_app then
+				l_app.destroy
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	docking_manager: detachable SD_DOCKING_MANAGER

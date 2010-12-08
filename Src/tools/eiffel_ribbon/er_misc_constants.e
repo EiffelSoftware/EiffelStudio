@@ -19,4 +19,25 @@ feature -- Query
 
 	rc_file_name: STRING = "eiffelribbon.rc"
 			--
+
+	project_configuration_file_name: STRING = "ribbon_project.er"
+			--
+
+	full_file_name: detachable STRING_8
+			-- (export status {NONE})
+		local
+			l_singleton: ER_SHARED_SINGLETON
+			l_file_name: detachable FILE_NAME
+			l_constants: ER_MISC_CONSTANTS
+		do
+			create l_singleton
+			if attached l_singleton.Project_info_cell.item as l_info then
+				if attached l_info.project_location as l_location then
+					create l_file_name.make_from_string (l_location)
+					create l_constants
+					l_file_name.set_file_name (l_constants.Xml_file_name)
+					Result := l_file_name
+				end
+			end
+		end
 end

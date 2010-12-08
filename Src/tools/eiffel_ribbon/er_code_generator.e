@@ -49,12 +49,14 @@ feature {NONE} -- Implementation
 			l_sed_utility: SED_STORABLE_FACILITIES
 			l_file: RAW_FILE
 			l_file_name: FILE_NAME
+			l_constants: ER_MISC_CONSTANTS
 		do
 			create l_singleton
 			if attached l_singleton.project_info_cell.item as l_info then
 				if attached l_info.project_location as l_location and then not l_location.is_empty then
 					create l_file_name.make_from_string (l_location)
-					l_file_name.set_file_name ("ribbon_project.sed")
+					create l_constants
+					l_file_name.set_file_name (l_constants.project_configuration_file_name)
 					create l_file.make (l_file_name)
 					l_file.create_read_write
 					create l_sed.make (l_file)

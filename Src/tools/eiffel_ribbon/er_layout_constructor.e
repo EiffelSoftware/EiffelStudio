@@ -246,7 +246,7 @@ feature -- Persistance
 			l_constants: ER_MISC_CONSTANTS
 		do
 			create l_constants
-			if attached l_constants.full_file_name as l_file_name then
+			if attached l_constants.xml_full_file_name as l_file_name then
 				create l_factory
 				l_parser := l_factory.new_parser
 

@@ -23,7 +23,7 @@ feature -- Query
 	project_configuration_file_name: STRING = "ribbon_project.er"
 			--
 
-	full_file_name: detachable STRING_8
+	xml_full_file_name: detachable STRING_8
 			-- (export status {NONE})
 		local
 			l_singleton: ER_SHARED_SINGLETON

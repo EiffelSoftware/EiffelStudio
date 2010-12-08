@@ -545,6 +545,7 @@ void odbc_start_order (int no_desc)
 	ODBCSQLDA *dap=odbc_descriptor[no_desc];
 	short colNum = 0;
 	int i;
+	long l_length;
 	//int j;
 	int type;
 	SQLSMALLINT indColName;
@@ -742,6 +743,7 @@ void odbc_start_order (int no_desc)
 			switch (type) {
 				case SQL_LONGVARBINARY:
 				case SQL_LONGVARCHAR:
+				case SQL_WLONGVARCHAR:
 					SetDbColLength(dap, i, DB_MAX_STRING_LEN);
 					break;
 			}
@@ -764,7 +766,8 @@ void odbc_start_order (int no_desc)
 	if (colNum) {
 			/* Allocate for each column the buffer that will hold its value. */
 		for (i=0; i<colNum; i++) {
-			ODBC_SAFE_ALLOC(dataBuf, (char *) malloc(GetDbColLength(dap, i) + 1));
+			l_length = GetDbColLength(dap, i);
+			ODBC_SAFE_ALLOC(dataBuf, (char *) malloc(l_length + 1));
 			SetDbColPtr(dap, i, dataBuf);
 		}
 	}
@@ -794,6 +797,8 @@ void odbc_terminate_order (int no_des)
 {
 	int i;
 	ODBCSQLDA *dap = odbc_descriptor[no_des];
+	char *data_buffer;
+
 	int colNum;
 
 	if (dap != NULL) {
@@ -801,7 +806,8 @@ void odbc_terminate_order (int no_des)
 		colNum = GetColNum(dap);
 		if (colNum) {
 			for (i=0; i < colNum; i++) {
-				free(GetDbColPtr(dap,i));
+				data_buffer = GetDbColPtr(dap,i);
+				free(data_buffer);
 			}
 		}
 		free(dap);
@@ -878,9 +884,10 @@ int odbc_next_row (int no_des)
 	}
 	else {
 		for (i=0; i<colNum && error_number == 0; i++) {
+			SQLINTEGER old_length = GetDbColLength(dap, i) + 1;
+			char *l_buffer = GetDbColPtr(dap, i);
 			odbc_indicator[no_des][i] = 0;
-			rc = SQLGetData(hstmt[no_des], i+1, GetDbCType(dap, i), GetDbColPtr(dap, i),
-				GetDbColLength(dap, i)+1, &(odbc_indicator[no_des][i]));
+			rc = SQLGetData(hstmt[no_des], i+1, GetDbCType(dap, i), l_buffer, old_length, &(odbc_indicator[no_des][i]));
 			if (rc) {
 					/* Check if it failed because we did not have enough space to store the data. */
 				if (rc == SQL_SUCCESS_WITH_INFO) {
@@ -895,19 +902,14 @@ int odbc_next_row (int no_des)
 							((tmpSQLSTATE[0] == '0') && (tmpSQLSTATE[1] == '1') && (tmpSQLSTATE[2] == '0') &&
 							(tmpSQLSTATE[3] == '0') && (tmpSQLSTATE[4] == '4'))
 						{
-							size_t additional_length = odbc_indicator[no_des][i];
-							size_t old_length = GetDbColLength(dap, i) + 1;
-							char *l_buffer = GetDbColPtr(dap,i);
+							SQLINTEGER additional_length = odbc_indicator[no_des][i] - old_length + 1;
 							ODBC_SAFE_ALLOC(l_buffer, (char *) realloc (l_buffer, old_length + additional_length));
 							SetDbColPtr(dap, i, l_buffer);
-							SetDbColLength(dap, i, old_length + additional_length);
+							SetDbColLength(dap, i, old_length + additional_length - 1);
 								/* Reissue the call, this time starting from the end of `l_buffer' since we want to get
 								 * the remaining data. */
-							rc = SQLGetData(hstmt[no_des], i+1, GetDbCType(dap, i), l_buffer + old_length,
-								additional_length, &(odbc_indicator[no_des][i]));
-								/* In addition of what we just retrieved, we need to add what we retrieved on the first call
-								 * to SQLGetData. */
-							odbc_indicator [no_des][i] += old_length;
+							rc = SQLGetData(hstmt[no_des], i+1, GetDbCType(dap, i), l_buffer + old_length - 1,
+								additional_length + 1, NULL);
 						}
 					}
 				}

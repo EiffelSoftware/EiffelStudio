@@ -153,6 +153,7 @@ feature {NONE} -- Status setting
 		require
 			a_socket_attached: a_socket /= Void
 			a_socket_open_read: a_socket.is_open_read
+			a_socket_blocking: a_socket.is_blocking
 		local
 			l_connection: detachable NETWORK_STREAM_SOCKET
 			l_has_lock: BOOLEAN
@@ -161,7 +162,7 @@ feature {NONE} -- Status setting
 				a_socket.accept
 				l_connection := a_socket.accepted
 				if l_connection /= Void then
-					l_connection.set_blocking
+					check is_blocking: l_connection.is_blocking end
 					l_connection.set_nodelay
 
 						-- Start receiving results

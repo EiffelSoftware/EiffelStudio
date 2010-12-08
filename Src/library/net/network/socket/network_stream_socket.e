@@ -199,6 +199,12 @@ feature
 				if return > 0 then
 					create l_accepted.make_from_descriptor_and_address (return, l_address.twin);
 					l_accepted.set_peer_address (pass_address)
+						-- We preserve the blocking state specified on Current.
+					if is_blocking then
+						l_accepted.set_blocking
+					else
+						l_accepted.set_non_blocking
+					end
 					accepted := l_accepted
 				end
 			end

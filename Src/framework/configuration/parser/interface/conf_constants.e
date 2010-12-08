@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Configuration constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -32,6 +32,17 @@ feature -- Builds
 		-- Names
 	build_workbench_name: STRING = "Workbench"
 	build_finalize_name: STRING = "Finalize"
+
+feature -- Concurrency
+
+	concurrency_none: INTEGER = 0x0800
+	concurrency_multithreaded: INTEGER = 0x0F00
+	concurrency_scoop: INTEGER = 0x1000
+
+		-- Names
+	concurrency_none_name: STRING = "none"
+	concurrency_multithreaded_name: STRING = "thread"
+	concurrency_scoop_name: STRING = "scoop"
 
 feature -- Version types
 

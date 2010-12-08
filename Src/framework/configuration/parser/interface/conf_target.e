@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "A configuration target."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -742,7 +742,7 @@ feature {NONE} -- Access: concurrency setting
 	setting_concurrency_name: ARRAY [READABLE_STRING_32]
 			-- Available values for `setting_concurrency'.
 		once
-			Result := <<"none", "thread", "scoop">>
+			Result := <<concurrency_none_name, concurrency_multithreaded_name, concurrency_scoop_name>>
 		ensure
 			result_attached: Result /= Void
 		end

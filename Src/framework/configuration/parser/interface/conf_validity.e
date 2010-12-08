@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Specifies constants and validity check against the constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -29,6 +29,12 @@ feature -- Basic validity queries
 			-- Is `a_build' a valid build?
 		do
 			Result := build_names.has (a_build)
+		end
+
+	valid_concurrency (a_concurrency: INTEGER): BOOLEAN
+			-- Is `a_concurrency' a valid concurrency value?
+		do
+			Result := concurrency_names.has (a_concurrency)
 		end
 
 	valid_warning (a_warning: STRING): BOOLEAN
@@ -153,6 +159,25 @@ feature {NONE} -- Basic operation
 			Result_valid: Result = 0 or else valid_build (Result)
 		end
 
+	get_concurrency (a_name: STRING): INTEGER
+			-- Get the concurrency value with `a_name', otherwise return 0.
+		do
+			if a_name /= Void then
+				from
+					concurrency_names.start
+				until
+					Result /= 0 or concurrency_names.after
+				loop
+					if concurrency_names.item_for_iteration.is_case_insensitive_equal (a_name) then
+						Result := concurrency_names.key_for_iteration
+					end
+					concurrency_names.forth
+				end
+			end
+		ensure
+			Result_valid: Result = 0 or else valid_concurrency (Result)
+		end
+
 feature {NONE} -- Onces
 
 	platform_names: HASH_TABLE [STRING, INTEGER]
@@ -173,6 +198,17 @@ feature {NONE} -- Onces
 			create Result.make (2)
 			Result.force (build_workbench_name, build_workbench)
 			Result.force (build_finalize_name, build_finalize)
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	concurrency_names: HASH_TABLE [STRING, INTEGER]
+			-- The concurrency values mapped to their integer.
+		once
+			create Result.make (3)
+			Result.force (concurrency_none_name, concurrency_none)
+			Result.force (concurrency_multithreaded_name, concurrency_multithreaded)
+			Result.force (concurrency_scoop_name, concurrency_scoop)
 		ensure
 			Result_not_void: Result /= Void
 		end

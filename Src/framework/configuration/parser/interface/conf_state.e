@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Represent a conditioned state."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_platform: like platform; a_build: like build; a_multithreaded: like is_multithreaded; a_dotnet: like is_dotnet; a_dynamic_runtime: like is_dynamic_runtime; a_variables: like custom_variables; a_version: like version)
+	make (a_platform: like platform; a_build: like build; a_concurrency: like concurrency; a_multithreaded: like is_multithreaded; a_dotnet: like is_dotnet; a_dynamic_runtime: like is_dynamic_runtime; a_variables: like custom_variables; a_version: like version)
 			-- Create.
 		require
 			valid_platform: valid_platform (a_platform)
@@ -26,6 +26,7 @@ feature {NONE} -- Initialization
 		do
 			platform := a_platform
 			build := a_build
+			concurrency := a_concurrency
 			is_multithreaded := a_multithreaded
 			is_dotnet := a_dotnet
 			is_dynamic_runtime := a_dynamic_runtime
@@ -34,6 +35,7 @@ feature {NONE} -- Initialization
 		ensure
 			platform_set: platform = a_platform
 			build_set: build = a_build
+			concurrency_set: concurrency = a_concurrency
 			multithreaded_set: is_multithreaded = a_multithreaded
 			dotnet_set: is_dotnet = a_dotnet
 			dynamic_runtime_set: is_dynamic_runtime = a_dynamic_runtime
@@ -48,6 +50,9 @@ feature -- Access
 
 	build: INTEGER
 			-- Current build type.
+
+	concurrency: INTEGER
+			-- Current concurrency setting (none, thread, scoop)
 
 	is_multithreaded: BOOLEAN
 			-- Multithreaded?
@@ -71,7 +76,7 @@ invariant
 	custom_variables_not_void: custom_variables /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -84,21 +89,21 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

@@ -72,7 +72,6 @@ feature -- Byte code generation
 			-- and associated information (code index)
 		local
 			l_obj_once_info: OBJECT_RELATIVE_ONCE_INFO
-			l_rout_info: ROUT_INFO
 			cl: CLASS_C
 		do
 			if is_object_relative_once then
@@ -288,7 +287,6 @@ feature -- C code generation
 			-- Generate test at the head of once routines
 		local
 			buf: like buffer
-			l_att_i: ATTRIBUTE_I
 		do
 			buf := buffer
 			if is_object_relative_once then
@@ -357,7 +355,6 @@ feature -- C code generation
 			-- Generate end of a once block.
 		local
 			buf: like buffer
-			l_obj_once_info: OBJECT_RELATIVE_ONCE_INFO
 		do
 				-- See `generate_once_prologue' for details
 			buf := context.buffer

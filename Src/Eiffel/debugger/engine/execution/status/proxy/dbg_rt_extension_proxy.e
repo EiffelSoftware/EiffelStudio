@@ -1,6 +1,5 @@
 note
-	description : "Objects that ..."
-	author      : "$Author$"
+	description : "Objects that represents the RT_EXTENSION object"
 	date        : "$Date$"
 	revision    : "$Revision$"
 

@@ -44,6 +44,8 @@ feature
 			socket_exists: exists
 			address_attached: address /= Void
 		deferred
+		ensure
+			same_blocking_status: attached accepted as l_accepted implies l_accepted.is_blocking = is_blocking
 		end
 
 note

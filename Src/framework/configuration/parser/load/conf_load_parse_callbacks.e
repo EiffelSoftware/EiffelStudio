@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "The callbacks that react on the xml parsing."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -224,6 +224,8 @@ feature -- Callbacks
 					process_build_attributes
 				when t_multithreaded then
 					process_multithreaded_attributes
+				when t_concurrency then
+					process_concurrency_attributes
 				when t_dotnet then
 					process_dotnet_attributes
 				when t_dynamic_runtime then
@@ -1586,6 +1588,53 @@ feature {NONE} -- Implementation attribute processing
 			end
 		end
 
+	process_concurrency_attributes
+			-- Process attributes of a concurrency tag.
+		require
+			current_condition: current_condition /= Void
+		local
+			l_name, l_value, l_excluded_value: STRING
+			l_concurrency_values: LIST [STRING_8]
+			l_invert: BOOLEAN
+			l_conc: INTEGER
+		do
+			l_name := current_attributes.item (at_name)
+			l_value := current_attributes.item (at_value)
+			l_excluded_value := current_attributes.item (at_excluded_value)
+			if l_value = Void and then l_excluded_value = Void then
+					-- No value is set so we are in an invalid state.
+				set_parse_error_message (conf_interface_names.e_parse_incorrect_concurrency ("(undefined)"))
+			elseif l_value /= Void and then l_excluded_value /= Void then
+				set_parse_error_message (conf_interface_names.e_parse_incorrect_concurrency ("(Cannot include and exclude at the same time)"))
+			elseif l_value /= Void then
+				l_concurrency_values := l_value.split (' ')
+				-- Check for value and exclude_value tags.
+			else
+				l_concurrency_values := l_excluded_value.split (' ')
+				l_invert := True
+			end
+
+			if not is_error then
+				from
+					l_concurrency_values.start
+				until
+					l_concurrency_values.after or is_error
+				loop
+					l_conc := get_concurrency (l_concurrency_values.item)
+					if not valid_concurrency (l_conc) then
+						set_parse_error_message (conf_interface_names.e_parse_incorrect_concurrency (l_concurrency_values.item))
+					else
+						if l_invert then
+							current_condition.exclude_concurrency (l_conc)
+						else
+							current_condition.add_concurrency (l_conc)
+						end
+					end
+					l_concurrency_values.forth
+				end
+			end
+		end
+
 	process_dotnet_attributes
 			-- Process attributes of a dotnet tag.
 		require
@@ -2165,14 +2214,16 @@ feature {NONE} -- Implementation state transitions
 				-- => platform
 				-- => build
 				-- => multithreaded
+				-- => concurrency
 				-- => dotnet
 				-- => dynamic_runtime
 				-- => version
 				-- => custom
-			create l_trans.make (7)
+			create l_trans.make (8)
 			l_trans.force (t_platform, "platform")
 			l_trans.force (t_build, "build")
 			l_trans.force (t_multithreaded, "multithreaded")
+			l_trans.force (t_concurrency, "concurrency")
 			l_trans.force (t_dotnet, "dotnet")
 			l_trans.force (t_dynamic_runtime, "dynamic_runtime")
 			l_trans.force (t_version_condition, "version")
@@ -2411,6 +2462,14 @@ feature {NONE} -- Implementation state transitions
 			l_attr.force (at_value, "value")
 			Result.force (l_attr, t_multithreaded)
 
+				-- concurrency
+				-- * value
+				-- * excluded_value
+			create l_attr.make (2)
+			l_attr.force (at_value, "value")
+			l_attr.force (at_excluded_value, "excluded_value")
+			Result.force (l_attr, t_concurrency)
+
 				-- dotnet
 			create l_attr.make (1)
 			l_attr.force (at_value, "value")
@@ -2559,6 +2618,7 @@ feature {NONE} -- Implementation constants
 	t_mapping: INTEGER = 41
 	t_note: INTEGER = 42
 	t_test_cluster: INTEGER = 43
+	t_concurrency: INTEGER = 44
 
 		-- Attribute states
 	at_abstract: INTEGER = 1000

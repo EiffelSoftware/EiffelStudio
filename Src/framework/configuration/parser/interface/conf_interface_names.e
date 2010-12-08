@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Names and descriptions for configuration components."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -791,7 +791,11 @@ feature -- Parse errors
 			Result := "Invalid build "+a_build+"."
 		end
 
-	e_parse_incorrect_multithreaded: STRING = "No valid value specified in multithreaded condition."
+	e_parse_incorrect_multithreaded : STRING = "No valid value specified in multithreaded condition."
+	e_parse_incorrect_concurrency (a_concurrency: STRING): STRING
+		do
+			Result := "Invalid concurrency condition " + a_concurrency + "."
+		end
 	e_parse_incorrect_dotnet: STRING = "No valid value specified in .NET condition."
 	e_parse_incorrect_dynamic_runtime: STRING = "No valid value specified in dynamic runtime condition."
 

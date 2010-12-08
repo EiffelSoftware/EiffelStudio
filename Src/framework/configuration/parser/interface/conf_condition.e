@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Specifies a condition."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -43,6 +43,9 @@ feature -- Access
 	build: EQUALITY_TUPLE [TUPLE [value: ARRAYED_LIST [INTEGER]; invert: BOOLEAN]]
 			-- Build where it is is enabled or for which it is disabled (if `invert' is true)
 
+	concurrency: EQUALITY_TUPLE [TUPLE [value: ARRAYED_LIST [INTEGER]; invert: BOOLEAN]]
+			-- Concurrency setting where it is is enabled or for which it is disabled (if `invert' is true)
+
 	multithreaded: CELL [BOOLEAN]
 			-- Enabled for multithreaded?
 
@@ -76,6 +79,11 @@ feature -- Queries
 				-- multithreaded
 			if Result and multithreaded /= Void then
 				Result := a_state.is_multithreaded = multithreaded.item
+			end
+
+				-- concurrency
+			if Result and concurrency /= Void then
+				Result := concurrency.item.value.has (a_state.concurrency) xor concurrency.item.invert
 			end
 
 				-- dotnet
@@ -213,6 +221,41 @@ feature -- Update
 			-- Set `multithreaded' to `a_value'.
 		do
 			create multithreaded.put (a_value)
+		end
+
+	add_concurrency (a_concurrency: INTEGER)
+			-- Add requirement on `a_concurrency'.
+		require
+			valid_platform: valid_concurrency (a_concurrency)
+			no_invert: concurrency = Void or else not concurrency.item.invert
+		do
+			if concurrency = Void then
+				create concurrency
+				concurrency.item.value := create {ARRAYED_LIST [INTEGER]}.make (1)
+			end
+			concurrency.item.value.force (a_concurrency)
+		end
+
+	exclude_concurrency (a_concurrency: INTEGER)
+			-- Add an exclude requirement on `a_concurrency'.
+		require
+			valid_concurrency: valid_concurrency (a_concurrency)
+			all_invert: concurrency = Void or else concurrency.item.invert
+		do
+			if concurrency = Void then
+				create concurrency
+				concurrency.item.value := create {ARRAYED_LIST [INTEGER]}.make (1)
+				concurrency.item.invert := True
+			end
+			concurrency.item.value.force (a_concurrency)
+		end
+
+	wipe_out_concurrency
+			-- Wipe out concurrency.
+		do
+			concurrency := Void
+		ensure
+			concurrency_void: concurrency = Void
 		end
 
 	set_dotnet (a_value: BOOLEAN)
@@ -433,7 +476,7 @@ invariant
 	custom_not_void: custom /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

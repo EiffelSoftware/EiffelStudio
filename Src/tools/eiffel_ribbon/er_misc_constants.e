@@ -23,6 +23,9 @@ feature -- Query
 	project_configuration_file_name: STRING = "ribbon_project.er"
 			--
 
+	tool_info_file_name: STRING = "eiffel_ribbon_info.sed"
+			--
+
 	xml_full_file_name: detachable STRING_8
 			-- (export status {NONE})
 		local

@@ -17,11 +17,17 @@ feature {NONE} -- Initialization
 	make
 			-- Create stream
 		local
+			l_file: like file
 			l_constants: ER_MISC_CONSTANTS
 		do
 			create l_constants
-			create file.make (l_constants.xml_file_name)
-			file.create_read_write
+			if attached l_constants.full_file_name as l_file_name then
+				create l_file.make (l_file_name)
+				file := l_file
+				l_file.create_read_write
+			else
+				Check should_not_happen: False end
+			end
 		end
 
 feature -- Access
@@ -38,32 +44,40 @@ feature -- Basic operation
 	flush
 			-- Flush buffered data to stream.
 		do
-			file.flush
+			if attached file as l_file then
+				l_file.flush
+			end
 		end
 
 	close
 			--
 		do
-			file.close
+			if attached file as l_file then
+				l_file.close
+			end
 		end
-		
+
 feature -- Output
 
 	put_character (c: CHARACTER)
 			--
 		do
-			file.put_character (c)
+			if attached file as l_file then
+				l_file.put_character (c)
+			end
 		end
 
 	put_string (a_string: STRING)
 			-- Write `a_string' to output stream.
 		do
-			file.put_string (a_string)
+			if attached file as l_file then
+				l_file.put_string (a_string)
+			end
 		end
 
 feature {NONE} -- Implementation
 
-	file: RAW_FILE
+	file: detachable RAW_FILE
 			--
 
 end

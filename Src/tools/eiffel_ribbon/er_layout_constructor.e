@@ -245,16 +245,21 @@ feature -- Persistance
 			l_parser: XML_LITE_PARSER
 			l_constants: ER_MISC_CONSTANTS
 		do
-			create l_factory
-			l_parser := l_factory.new_parser
-
-			create l_callback.make (widget)
-			l_parser.set_callbacks (l_callback)
-
 			create l_constants
-			l_parser.parse_from_filename (l_constants.xml_file_name)
+			if attached l_constants.full_file_name as l_file_name then
+				create l_factory
+				l_parser := l_factory.new_parser
 
-			helper.expand_all (widget)
+				create l_callback.make (widget)
+				l_parser.set_callbacks (l_callback)
+
+				l_parser.parse_from_filename (l_file_name)
+
+				helper.expand_all (widget)
+			else
+				check should_not_happend: False end
+			end
+
 		end
 
 feature {NONE} -- Implementation

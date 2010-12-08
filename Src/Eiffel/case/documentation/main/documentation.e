@@ -689,9 +689,18 @@ feature -- Specific Generation
 		local
 			fi: PLAIN_TEXT_FILE
 		do
-			create fi.make_create_read_write (target_file_name)
-			fi.put_string(text.image)
-			fi.close
+			create fi.make (target_file_name)
+			if not fi.exists then
+				fi.create_read_write
+			elseif fi.is_writable then
+				fi.open_write
+			else
+				check file_writable: False end
+			end
+			if fi.is_open_write then
+				fi.put_string(text.image)
+				fi.close
+			end
 			filter.wipe_out_image
 		end
 
@@ -884,7 +893,7 @@ feature {NONE} -- Menu bars
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -69,7 +69,7 @@ inherit
 			default_create, copy
 		end
 
-	EB_CONSTANTS
+	EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY
 		export
 			{NONE} all
 		undefine
@@ -146,8 +146,11 @@ feature {NONE} -- Implementation
 			)
 			list_area.extend (filter_combo_box)
 			create cluster_include
+			cluster_include.set_pixmap_function (agent pixmap_from_group_data)
 			create indexing_include
-			indexing_include.exclude_list.set_strings (preferences.flat_short_data.excluded_indexing_items)
+			if attached preferences.flat_short_data.excluded_indexing_items as xstrs then
+				indexing_include.set_excluded_items_from_strings (xstrs)
+			end
 			create option_page
 			fill_option_box (option_page)
 			create view_page
@@ -185,23 +188,22 @@ feature -- Access
 
 	documentation_universe: DOCUMENTATION_UNIVERSE
 			-- User selection.
-		local
-			l: EV_LIST
-			cl: CONF_GROUP
 		do
 			create Result.make
-			l := cluster_include.include_list
-			from l.start until l.after loop
-				cl ?= l.item.data
-				Result.include_group (cl)
-				l.forth
+			if attached cluster_include.included_items_data as l then
+				from l.start until l.after loop
+					if attached {CONF_GROUP} l.item as cl then
+						Result.include_group (cl)
+					end
+					l.forth
+				end
 			end
 		end
 
-	excluded_indexing_items: ARRAYED_LIST [STRING]
+	excluded_indexing_items: LIST [STRING]
 			-- Indexing items user does not want generated in HTML meta clauses.
 		do
-			Result := indexing_include.exclude_list.strings_8
+			Result := indexing_include.excluded_items_string_8
 		end
 
 	diagram_views: HASH_TABLE [STRING, STRING]
@@ -347,16 +349,24 @@ feature -- Miscellaneous
 
 feature {NONE} -- Widgets
 
+	pixmap_from_group_data (a_data: ANY): detachable EV_PIXMAP
+			-- Pixmap for `a_data' is this is a CONF_GROUP
+		do
+			if attached {CONF_GROUP} a_data as cg then
+				Result := pixmap_from_group (cg)
+			end
+		end
+
 	filter_combo_box: EV_LIST
 			-- Where `filter' is selected.
 
 	list_area: EV_CELL
 			-- Bug workaround where EV_LIST does not like to be unparented.
 
-	cluster_include: EB_INCLUDE_EXCLUDE
-			-- Where cluster selection is made.
+	cluster_include: ES_INCLUDE_EXCLUDE_GRID
+			-- Where cluster selection is made.			
 
-	indexing_include: EB_INCLUDE_EXCLUDE
+	indexing_include: ES_INCLUDE_EXCLUDE_GRID
 			-- Where indexing tag selection is made.
 
 	option_page: EV_VERTICAL_BOX
@@ -467,7 +477,7 @@ feature {NONE} -- Implementation
 			wizard_area.set_text (interface_names.l_select_cluster_to_generate)
 			if update_clusters then
 				set_pointer_style (Default_pixmaps.Wait_cursor)
-				fill_cluster_box (cluster_include)
+				fill_cluster_grid (cluster_include)
 				update_clusters := False
 				set_pointer_style (Default_pixmaps.Standard_cursor)
 			end
@@ -476,7 +486,6 @@ feature {NONE} -- Implementation
 
 	show_indexing_selection
 		local
-			err: SYNTAX_ERROR
 			retried: BOOLEAN
 		do
 			if not retried then
@@ -493,12 +502,12 @@ feature {NONE} -- Implementation
 				cancel
 			end
 		rescue
-			if not Error_handler.error_list.is_empty then
-				err ?= Error_handler.error_list.first
-				if err /= void then
-					Error_handler.error_list.wipe_out
-					prompts.show_error_prompt (interface_names.l_indexing_clause_error, Void, Void)
-				end
+			if attached Error_handler.error_list as err_lst and then
+				not err_lst.is_empty and then
+				attached {SYNTAX_ERROR} err_lst.first as err
+			then
+				err_lst.wipe_out
+				prompts.show_error_prompt (interface_names.l_indexing_clause_error, Void, Void)
 			end
 			retried := True
 			retry
@@ -596,43 +605,65 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	fill_cluster_box (ie: EB_INCLUDE_EXCLUDE)
+	fill_cluster_grid (ie: like cluster_include)
 			-- Fill `ie.include_list' with all groups in system.
 			-- We assume that new added groups go into the "include" part.
 		local
-			li: EV_LIST_ITEM
-			cg: ARRAYED_LIST [CONF_GROUP]
-			cg_name: STRING
-			old_exclude: ARRAYED_LIST [STRING]
+			old_exclude: LIST [STRING]
 		do
-			old_exclude := ie.exclude_list.strings_8
+			old_exclude := ie.excluded_items_string_8
 			old_exclude.compare_objects
-			ie.exclude_list.wipe_out
-			ie.include_list.wipe_out
-			cg := Eiffel_universe.groups
+			ie.clear_all
+			add_groups_to_cluster_grid (ie, Eiffel_universe.groups, old_exclude, Void, True)
+		end
+
+	add_groups_to_cluster_grid (ie: like cluster_include; cg: LIST [CONF_GROUP]; a_exclusion: LIST [STRING]; a_parent: detachable CONF_GROUP; rec: BOOLEAN)
+		local
+			cg_name: STRING
+			g: detachable CONF_GROUP
+			p: detachable CONF_GROUP
+			subs: detachable LIST [CONF_GROUP]
+		do
 			from cg.start until cg.after loop
-				cg_name := cg.item.name.twin
-				create li.make_with_text (cg_name)
-				li.set_data (cg.item)
-				if old_exclude.has (cg_name) then
-					ie.exclude_list.extend (li)
-				else
-					ie.include_list.extend (li)
+				g := cg.item
+				p := Void
+				subs := Void
+				if attached {CONF_CLUSTER} g as l_cluster then
+					p := l_cluster.parent
+				elseif rec and then attached {CONF_LIBRARY} g as l_library then
+					subs := l_library.library_target.clusters.linear_representation
+				elseif attached {CONF_ASSEMBLY} g as l_assembly then
+					g := Void
+				end
+
+				if g /= Void and then (g.is_cluster or g.is_library or g.is_precompile) then
+					if p = Void then
+						p := a_parent
+					end
+					cg_name := g.name.twin
+					if a_exclusion.has (cg_name) then
+						ie.add_exclude_item_with_parent (cg_name, g, p)
+					else
+						ie.add_include_item_with_parent (cg_name, g, p)
+					end
+					if subs /= Void and then subs.count > 0 then
+						add_groups_to_cluster_grid (ie, subs, a_exclusion, g, False)
+					end
 				end
 				cg.forth
 			end
 		end
 
-	fill_indexing_box (ie: EB_INCLUDE_EXCLUDE)
+	fill_indexing_box (ie: like indexing_include)
 			-- Fill `ie.include_list' with all indexing tags.
 			-- Except the ones in `exclude_indexing_items'.
 		local
-			li: EV_LIST_ITEM
 			classes: CLASS_C_SERVER
 			all_tags: LINKED_LIST [STRING]
-			old_exclude: ARRAYED_LIST [STRING]
+			old_exclude: LIST [STRING]
 			l_class: CLASS_C
 			i: INTEGER
+			s: STRING
 		do
 			create all_tags.make
 			all_tags.extend ("keywords")
@@ -649,29 +680,28 @@ feature {NONE} -- Implementation
 				loop
 					l_class := classes.item (i)
 					if l_class /= Void then
-						add_indexes (l_class.ast.top_indexes, all_tags)
-						add_indexes (l_class.ast.bottom_indexes, all_tags)
+						add_indexes_to (l_class.ast.top_indexes, all_tags)
+						add_indexes_to (l_class.ast.bottom_indexes, all_tags)
 					end
 					i := i + 1
 				end
 			end
 
-			old_exclude := ie.exclude_list.strings_8
+			old_exclude := ie.excluded_items_string_8
 			old_exclude.compare_objects
-			ie.exclude_list.wipe_out
-			ie.include_list.wipe_out
+			ie.clear_all
 			from all_tags.start until all_tags.after loop
-				create li.make_with_text (all_tags.item)
-				if old_exclude.has (all_tags.item) then
-					ie.exclude_list.extend (li)
+				s := all_tags.item
+				if old_exclude.has (s) then
+					ie.add_exclude_item (s, Void)
 				else
-					ie.include_list.extend (li)
+					ie.add_include_item (s, Void)
 				end
 				all_tags.forth
 			end
 		end
 
-	add_indexes (i: EIFFEL_LIST [INDEX_AS]; l: LINKED_LIST [STRING])
+	add_indexes_to (i: EIFFEL_LIST [INDEX_AS]; l: LINKED_LIST [STRING])
 		local
 			t: STRING_32
 		do
@@ -743,8 +773,6 @@ feature {NONE} -- Implementation
 			cluster_row: EV_MULTI_COLUMN_LIST_ROW
 			right_vb: EV_VERTICAL_BOX
 			main_hb, button_hb: EV_HORIZONTAL_BOX
-			cluster_list: EV_LIST
-			ci: CONF_GROUP
 			g: EB_DIAGRAM_HTML_GENERATOR
 			views: LINKED_LIST [STRING]
 			l_data: TUPLE [STRING, LINKED_LIST [STRING]]
@@ -759,29 +787,29 @@ feature {NONE} -- Implementation
 			create set_view_button.make_with_text_and_action (interface_names.b_set, agent on_set_view_button_pressed)
 			set_view_button.disable_sensitive
 			create view_label.make_with_text (interface_names.l_select_cluster_to_display)
-			cluster_list := cluster_include.include_list
-			from
-				cluster_list.start
-			until
-				cluster_list.after
-			loop
-				ci ?= cluster_list.item.data
-				if ci /= Void then
-					create g.make_for_wizard (ci)
-					create cluster_row
-					cluster_row.extend (ci.name)
-					cluster_row.extend ("DEFAULT")
-					views := g.available_views
-					l_data := [id_of_group (ci), views]
-					cluster_row.set_data (l_data)
-					cluster_row.select_actions.extend (agent on_cluster_selected (cluster_row))
-					view_mcl.extend (cluster_row)
+			if attached cluster_include.included_items_data as cluster_list then
+				from
+					cluster_list.start
+				until
+					cluster_list.after
+				loop
+					if attached {CONF_GROUP} cluster_list.item as ci then
+						create g.make_for_wizard (ci)
+						create cluster_row
+						cluster_row.extend (ci.name)
+						cluster_row.extend ("DEFAULT")
+						views := g.available_views
+						l_data := [id_of_group (ci), views]
+						cluster_row.set_data (l_data)
+						cluster_row.select_actions.extend (agent on_cluster_selected (cluster_row))
+						view_mcl.extend (cluster_row)
 
-					if not views.is_empty then
-						diagram_views.put ("DEFAULT", id_of_group (ci))
+						if not views.is_empty then
+							diagram_views.put ("DEFAULT", id_of_group (ci))
+						end
 					end
+					cluster_list.forth
 				end
-				cluster_list.forth
 			end
 			view_mcl.set_column_title (interface_names.l_cluster, 1)
 			view_mcl.set_column_title (interface_names.l_view, 2)

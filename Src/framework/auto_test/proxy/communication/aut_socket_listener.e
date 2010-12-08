@@ -135,6 +135,8 @@ feature {NONE} -- Implementation
 			else
 				Result := Void
 			end
+		ensure
+			is_blocking: attached Result implies Result.is_blocking
 		end
 
 	close_listener
@@ -160,6 +162,8 @@ feature {NONE} -- Implementation
 			-- `is_listening' is still True, set `connection' to new connection with client.
 			--
 			-- Note: this routine is blocking.
+		require
+			blocking_socket: a_socket.is_blocking
 		local
 			l_rescued: BOOLEAN
 			l_connection: like connection
@@ -169,7 +173,7 @@ feature {NONE} -- Implementation
 				mutex.lock
 				if is_listening then
 					l_connection := a_socket.accepted
-					l_connection.set_blocking
+					check is_blocking: l_connection.is_blocking end
 					l_connection.set_nodelay
 					connection := l_connection
 					condition.broadcast
@@ -191,7 +195,7 @@ invariant
 	current_port_not_negative: current_port >= 0
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

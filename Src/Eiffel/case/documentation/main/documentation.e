@@ -88,21 +88,23 @@ feature -- Actions
 			l_cursor: CURSOR
 			l_class: CONF_CLASS
 			l_context_group: CONF_GROUP
+			l_filter: like filter
 		do
 			eiffel_system.system.set_current_class (any_class)
 			deg.put_start_output
 			if not cancelled then
 				deg.put_initializing_documentation
 
-				create filter.make (filter_name)
-				filter.set_universe (doc_universe)
+				create l_filter.make (filter_name)
+				filter := l_filter
+				l_filter.set_universe (doc_universe)
 				classes := doc_universe.classes
 				base_path := ""
-				filter.set_keyword (kw_Class, "")
-				if filter.is_html then
-					filter.set_keyword ("html_meta", html_meta_for_system)
+				l_filter.set_keyword (kw_Class, {STRING_32}"")
+				if l_filter.is_html then
+					l_filter.set_keyword ({STRING_32}"html_meta", html_meta_for_system.as_string_32)
 				else
-					filter.set_keyword ("html_meta", "")
+					l_filter.set_keyword ({STRING_32}"html_meta", {STRING_32}"")
 				end
 
 				class_links := Void
@@ -115,27 +117,27 @@ feature -- Actions
 					set_document_title (Eiffel_system.name + " documentation")
 					generate_index
 
-					if filter_name.is_equal ("html-stylesheet") then
+					if filter_name.same_string_general ("html-stylesheet") then
 						copy_additional_file ("default.css")
 						generate_goto_html
 					end
 
 					if class_list_generated then
-						deg.put_string ("Building class list")
+						deg.put_string ({STRING_32}"Building class list")
 						prepare_for_file (Void, "class_list")
 						set_document_title (Eiffel_system.name + " class dictionary")
 						generate_dictionary
 					end
 
 					if cluster_list_generated then
-						deg.put_string ("Building cluster list")
+						deg.put_string ({STRING_32}"Building cluster list")
 						prepare_for_file (Void, "cluster_list")
 						set_document_title (Eiffel_system.name + " alphabetical cluster list")
 						generate_cluster_list
 					end
 
 					if cluster_hierarchy_generated then
-						deg.put_string ("Building cluster hierarchy")
+						deg.put_string ({STRING_32}"Building cluster hierarchy")
 						prepare_for_file (Void, "cluster_hierarchy")
 						set_document_title (Eiffel_system.name + " cluster hierarchy")
 						generate_cluster_hierarchy
@@ -149,10 +151,10 @@ feature -- Actions
 							l_groups.after
 						loop
 							l_group := l_groups.item
-							deg.put_string ("Building cluster chart for " + group_name_presentation (".", "", l_group))
+							deg.put_string ({STRING_32}"Building cluster chart for " + group_name_presentation ({STRING_32}".", {STRING_32}"", l_group))
 							deg.flush_output
-							if filter.is_html then
-								filter.set_keyword ("html_meta", html_meta_for_cluster (l_group))
+							if l_filter.is_html then
+								l_filter.set_keyword ({STRING_32}"html_meta", html_meta_for_cluster (l_group).as_string_32)
 							end
 							set_base_cluster (l_group)
 							prepare_for_file (relative_path (l_group), "index")
@@ -162,14 +164,14 @@ feature -- Actions
 						end
 					end
 
-					if filter.is_html and then cluster_diagram_generated then
+					if l_filter.is_html and then cluster_diagram_generated then
 						from
 							l_groups.start
 						until
 							l_groups.after
 						loop
 							l_group := l_groups.item
-							deg.put_string ("Building cluster diagram for " + group_name_presentation (".", "", l_group))
+							deg.put_string ({STRING_32}"Building cluster diagram for " + group_name_presentation ({STRING_32}".", {STRING_32}"", l_group))
 							deg.flush_output
 							generate_cluster_diagram (l_group)
 							l_groups.forth
@@ -177,8 +179,8 @@ feature -- Actions
 					end
 
 					if any_class_format_generated then
-						deg.put_start_documentation (doc_universe.classes.count, generated_class_formats_string)
-						l_context_group := filter.context_group
+						deg.put_start_documentation (doc_universe.classes.count, generated_class_formats_string.as_string_8)
+						l_context_group := l_filter.context_group
 						from
 							l_groups.start
 						until
@@ -195,15 +197,15 @@ feature -- Actions
 									l_classes.after
 								loop
 									l_class := l_classes.item_for_iteration
-									filter.set_context_group (l_class.group)
+									l_filter.set_context_group (l_class.group)
 									if l_class.is_compiled then
 										deg.put_case_class_message (l_class)
 										deg.flush_output
 										set_base_cluster (l_group)
 										cl_name := l_class.name.as_lower
 										set_class_name (cl_name)
-										if filter.is_html then
-											filter.set_keyword ("html_meta", html_meta_for_class (l_classes.item_for_iteration))
+										if l_filter.is_html then
+											l_filter.set_keyword ({STRING_32}"html_meta", html_meta_for_class (l_classes.item_for_iteration).as_string_32)
 										end
 										af := all_class_formats.linear_representation
 										from af.start until af.after loop
@@ -224,7 +226,7 @@ feature -- Actions
 								l_classes.go_to (l_cursor)
 							end
 						end
-						filter.set_context_group (l_context_group)
+						l_filter.set_context_group (l_context_group)
 					end
 				end
 			end
@@ -270,9 +272,11 @@ feature -- Actions
 				af.forth
 				if cf.is_generated then
 					if not Result.is_empty then
-						Result.extend ('/')
+						Result.append_character ({CHARACTER_32}'/')
 					end
-					Result.append (cf.description)
+					if attached cf.description as desc then
+						Result.append_string_general (desc)
+					end
 				end
 			end
 		end
@@ -629,14 +633,18 @@ feature -- Access
 
 	relative_to_base (rel_filename: STRING): STRING
 			-- Path of `rel_filename' relative to documentation root dir.
+		local
+			l_filter: like filter
 		do
 			create Result.make_from_string (base_path)
 			if not base_path.is_empty then
 				Result.append_character (operating_environment.directory_separator)
 			end
 			Result.append (rel_filename)
-			if filter.file_separator /= Void and then not filter.file_separator.is_equal ("%U") then
-				Result.replace_substring_all (operating_environment.directory_separator.out, filter.file_separator.as_string_8)
+
+			l_filter := filter
+			if l_filter.file_separator /= Void and then not l_filter.file_separator.is_equal ("%U") then
+				Result.replace_substring_all (operating_environment.directory_separator.out, l_filter.file_separator.as_string_8)
 			end
 		end
 
@@ -659,7 +667,7 @@ feature {EB_DIAGRAM_HTML_GENERATOR, DOCUMENTATION_ROUTINES} -- Access
 			a_cluster_not_void: a_cluster /= Void
 		local
 			l_string: STRING
-			l_sep: STRING_32
+			l_sep: detachable STRING_32
 		do
 			l_sep := filter.file_separator
 			if l_sep = Void then
@@ -698,7 +706,8 @@ feature -- Specific Generation
 				check file_writable: False end
 			end
 			if fi.is_open_write then
-				fi.put_string(text.image)
+				fi.put_string (text.image.as_string_8) -- Truncated to STRING_8 ...
+				--| FIXME: 2010-12-09: find a way to doc unicode text.
 				fi.close
 			end
 			filter.wipe_out_image
@@ -706,65 +715,78 @@ feature -- Specific Generation
 
 	generate_index
 			-- Write project index to `target_file_name'.
+		local
+			l_filter: like filter
 		do
-			filter.prepend_to_file_suffix (class_links)
-			index_text (filter)
-			generate_from_text_filter (filter)
+			l_filter := filter
+			l_filter.prepend_to_file_suffix (class_links)
+			index_text (l_filter)
+			generate_from_text_filter (l_filter)
 		end
 
 	generate_dictionary
 			-- Write project class list to `target_file_name'.
+		local
+			l_filter: like filter
 		do
-			filter.prepend_to_file_suffix (class_links)
-			class_list_text (doc_universe, filter)
-			generate_from_text_filter (filter)
-			filter.set_feature_redirect (Void)
+			l_filter := filter
+			l_filter.prepend_to_file_suffix (class_links)
+			class_list_text (doc_universe, l_filter)
+			generate_from_text_filter (l_filter)
+			l_filter.set_feature_redirect (Void)
 		end
 
 	generate_cluster_list
 			-- Write project cluster list to `target_file_name'.
+		local
+			l_filter: like filter
 		do
-			filter.prepend_to_file_suffix (class_links)
-			cluster_list_text (doc_universe, filter)
-			generate_from_text_filter (filter)
+			l_filter := filter
+			l_filter.prepend_to_file_suffix (class_links)
+			cluster_list_text (doc_universe, l_filter)
+			generate_from_text_filter (l_filter)
 		end
 
 	generate_cluster_hierarchy
 			-- Write project cluster hierarchy to `target_file_name'.
+		local
+			l_filter: like filter
 		do
-			filter.prepend_to_file_suffix (class_links)
-			cluster_hierarchy_text (doc_universe, filter)
-			generate_from_text_filter (filter)
+			l_filter := filter
+			l_filter.prepend_to_file_suffix (class_links)
+			cluster_hierarchy_text (doc_universe, l_filter)
+			generate_from_text_filter (l_filter)
 		end
 
 	generate_cluster_index (a_group: CONF_GROUP)
 			-- Write project a_group index to `target_file_name'.
 		local
 			l_group: CONF_GROUP
+			l_filter: like filter
 		do
-			l_group := filter.context_group
-			filter.set_context_group (a_group)
-			filter.prepend_to_file_suffix (class_links)
+			l_filter := filter
+			l_group := l_filter.context_group
+			l_filter.set_context_group (a_group)
+			l_filter.prepend_to_file_suffix (class_links)
 			group_index_text (
-				a_group,
-				doc_universe.classes_in_group (a_group),
-				filter.is_html and cluster_diagram_generated,
-				filter)
-			filter.set_context_group (l_group)
-			generate_from_text_filter (filter)
+					a_group,
+					doc_universe.classes_in_group (a_group),
+					l_filter.is_html and cluster_diagram_generated,
+					l_filter
+				)
+			l_filter.set_context_group (l_group)
+			generate_from_text_filter (l_filter)
 		end
 
 	generate_cluster_diagram (cluster: CONF_GROUP)
 			-- Write project cluster diagram to `target_file_name'.
 		local
 			g: EB_DIAGRAM_HTML_GENERATOR
-			view_name: STRING
 		do
 			check
 				views_exist: diagram_views /= Void
 			end
-			view_name := diagram_views.item (id_of_group (cluster))
-			if view_name /= Void then
+			if attached diagram_views.item (id_of_group (cluster)) as view_name then
 				create g.make_for_documentation (cluster, view_name, Current)
 			else
 				create g.make_for_documentation (cluster, Void, Current)
@@ -781,61 +803,64 @@ feature -- Specific Generation
 		local
 			class_c: CLASS_C
 			retried: BOOLEAN
-			l_class_i: CLASS_I
+			l_filter: like filter
 		do
-			l_class_i ?= a_class
-			check
-				l_class_i /= Void and then l_class_i.is_compiled
-			end
-			format := a_format
-			filter.prepend_to_file_suffix (format.file_extension)
-			if not retried then
-				class_c := l_class_i.compiled_class
-				inspect
-					format.type
-				when cf_Chart then
-					class_chart_text (class_c, filter)
-				when cf_Diagram then
-					class_relations_text (class_c, filter)
-				when cf_Clickable then
-					filter.set_feature_redirect (Void)
-					class_text (class_c, False, False, filter)
-				when cf_Flat then
-					filter.set_feature_redirect (Void)
-					class_text (class_c, True, False, filter)
-				when cf_Short then
-					filter.set_feature_redirect (Void)
-					class_text (class_c, False, True, filter)
-				when cf_Flatshort then
-					filter.set_feature_redirect (Void)
-					class_text (class_c, True, True, filter)
+			if attached {CLASS_I} a_class as l_class_i then
+				check
+					l_class_i.is_compiled
 				end
-			else
-					-- An error occurred due to an internal bug while doing the formal for
-					-- `class_c'. Instead of failing the whole documentation generation process,
-					-- we generate an empty class and continue to the next class.
-					-- Note: we need to insert `ti_before_class_declaration' and
-					-- `ti_after_class_declaration' so that `insert_class_menu_bars'
-					-- works properly.
-				filter.process_filter_item (f_menu_bar, true)
-				insert_class_menu_bar (filter, l_class_i.name.as_lower)
-				filter.process_filter_item (f_menu_bar, false
-				)
-				filter.process_filter_item (f_class_declaration, true)
-				filter.add_new_line
-				filter.add_string ("Internal compiler error while generating documentation %
-					%for class ")
-				filter.add_class (l_class_i)
-				filter.add_new_line
+				format := a_format
+				l_filter := filter
+				l_filter.prepend_to_file_suffix (format.file_extension)
+				if not retried then
+					class_c := l_class_i.compiled_class
+					inspect
+						format.type
+					when cf_Chart then
+						class_chart_text (class_c, l_filter)
+					when cf_Diagram then
+						class_relations_text (class_c, l_filter)
+					when cf_Clickable then
+						l_filter.set_feature_redirect (Void)
+						class_text (class_c, False, False, l_filter)
+					when cf_Flat then
+						l_filter.set_feature_redirect (Void)
+						class_text (class_c, True, False, l_filter)
+					when cf_Short then
+						l_filter.set_feature_redirect (Void)
+						class_text (class_c, False, True, l_filter)
+					when cf_Flatshort then
+						l_filter.set_feature_redirect (Void)
+						class_text (class_c, True, True, l_filter)
+					end
+				else
+						-- An error occurred due to an internal bug while doing the formal for
+						-- `class_c'. Instead of failing the whole documentation generation process,
+						-- we generate an empty class and continue to the next class.
+						-- Note: we need to insert `ti_before_class_declaration' and
+						-- `ti_after_class_declaration' so that `insert_class_menu_bars'
+						-- works properly.
+					l_filter.process_filter_item (f_menu_bar, True)
+					insert_class_menu_bar (l_filter, l_class_i.name.as_lower)
+					l_filter.process_filter_item (f_menu_bar, False
+					)
+					l_filter.process_filter_item (f_class_declaration, True)
+					l_filter.add_new_line
+					l_filter.add_string ("Internal compiler error while generating documentation for class ")
+					l_filter.add_class (l_class_i)
+					l_filter.add_new_line
 
-				filter.process_filter_item (f_menu_bar, true)
-				insert_class_menu_bar (filter, l_class_i.name.as_lower)
-				filter.process_filter_item (f_menu_bar, false)
+					l_filter.process_filter_item (f_menu_bar, True)
+					insert_class_menu_bar (l_filter, l_class_i.name.as_lower)
+					l_filter.process_filter_item (f_menu_bar, False)
 
-				filter.process_filter_item (f_class_declaration, false)
+					l_filter.process_filter_item (f_class_declaration, False)
+				end
+				generate_from_text_filter (l_filter)
+				l_filter.set_feature_redirect (feature_links)
+			elseif not retried then
+				check is_a_class_i: False end
 			end
-			generate_from_text_filter (filter)
-			filter.set_feature_redirect (feature_links)
 		rescue
 			retried := True
 			retry

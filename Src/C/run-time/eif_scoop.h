@@ -81,7 +81,7 @@ static EIF_ATOMIC_INLINE EIF_INTEGER_32 eif_atomic_compare_and_swap_integer_32 (
 	{
 		// Atomically update dest contents to setter if original contents were equal to compare, return original value, caller checks if value equals compare value, if so then dest must now equal setter, if not then no operation occurred.
 #if defined(_WIN32)
-		return (EIF_INTEGER_32) _InterlockedCompareExchange((long *)dest, setter, compare);
+		return (EIF_INTEGER_32) InterlockedCompareExchange((long *)dest, setter, compare);
 #elif defined (__GNUC_ATOMOPS_BUILTIN__)
 		return __sync_val_compare_and_swap (dest, compare, setter);
 #else
@@ -93,7 +93,7 @@ static EIF_ATOMIC_INLINE EIF_INTEGER_32 eif_atomic_swap_integer_32 (EIF_INTEGER_
 	{
 		// Atomically update contents of dest to setter, return original value of dest.
 #if defined(_WIN32)
-		return (EIF_INTEGER_32) _InterlockedExchange((long *)dest, setter);
+		return (EIF_INTEGER_32) InterlockedExchange((long *)dest, setter);
 #elif defined (__GNUC_ATOMOPS_BUILTIN__)
 		return (EIF_INTEGER_32) __sync_val_compare_and_swap (dest, *dest, setter);
 #else
@@ -105,7 +105,7 @@ static EIF_ATOMIC_INLINE EIF_INTEGER_32 eif_atomic_add_integer_32 (EIF_INTEGER_3
 	{
 		// Atomically update dest target to original value plus val, return this new value.
 #if defined(_WIN32)
-		return (EIF_INTEGER_32) (_InterlockedExchangeAdd((long *)dest, val) + val); // Add val to return new value.
+		return (EIF_INTEGER_32) (InterlockedExchangeAdd((long *)dest, val) + val); // Add val to return new value.
 #elif defined (__GNUC_ATOMOPS_BUILTIN__)
 		return (EIF_INTEGER_32) __sync_add_and_fetch (dest, val);
 #else

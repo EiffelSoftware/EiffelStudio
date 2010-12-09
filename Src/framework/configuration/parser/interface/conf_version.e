@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 			l_parts: LIST [STRING]
 			l_version: ARRAY [NATURAL_16]
 		do
-			create l_version.make (1, 4)
+			create l_version.make_filled ({NATURAL_16}0, 1, 4)
 			l_parts := a_version.split ('.')
 			if l_parts.count = 0 or l_parts.count > 4 then
 				is_error := True
@@ -262,7 +262,7 @@ feature -- Output
 		end
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -286,10 +286,10 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

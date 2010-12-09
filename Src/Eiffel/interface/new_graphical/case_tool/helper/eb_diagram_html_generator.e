@@ -12,7 +12,7 @@ class
 inherit
 	SHARED_EIFFEL_PROJECT
 
-	XM_CALLBACKS_FILTER_FACTORY
+	XML_CALLBACKS_FILTER_FACTORY
 		export
 			{NONE} all
 		undefine
@@ -97,27 +97,28 @@ feature {EB_DOCUMENTATION_WIZARD} -- Basic operations
 	available_views: LINKED_LIST [STRING]
 			-- Names of available views of `cluster'.
 		local
-			l_parser: XM_EIFFEL_PARSER
-			l_tree_pipe: XM_TREE_CALLBACKS_PIPE
-			l_file: KL_BINARY_INPUT_FILE
-			l_xm_concatenator: XM_CONTENT_CONCATENATOR
-			diagram_input, node: XM_ELEMENT
-			a_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
+			l_parser: XML_LITE_STOPPABLE_PARSER
+			l_tree: XML_CALLBACKS_TREE
+			l_file: PLAIN_TEXT_FILE
+			l_concatenator: XML_CONTENT_CONCATENATOR
+			diagram_input: XML_ELEMENT
+			a_cursor: XML_COMPOSITE_CURSOR
 		do
 			create Result.make
 			create l_file.make (diagram_file_name)
-			l_file.open_read
-			if l_file.is_open_read then
+			if l_file.exists and then l_file.is_readable then
+				l_file.open_read
+				check is_open_read: l_file.is_open_read end
 				create l_parser.make
-				create l_tree_pipe.make
-				create l_xm_concatenator.make_null
-				l_parser.set_callbacks (standard_callbacks_pipe (<<l_xm_concatenator, l_tree_pipe.start>>))
-				l_parser.parse_from_stream (l_file)
+				create l_tree.make_null
+				create l_concatenator.make_null
+				l_parser.set_callbacks (standard_callbacks_pipe (<<l_concatenator, l_tree>>))
+				l_parser.parse_from_file (l_file)
 				l_file.close
 				if l_parser.is_correct then
-					diagram_input := l_tree_pipe.document.root_element
+					diagram_input := l_tree.document.root_element
 					check
-						valid_file: diagram_input.name.is_equal ("EIFFEL_CLUSTER_DIAGRAM")
+						valid_file: diagram_input.name.same_string ("EIFFEL_CLUSTER_DIAGRAM")
 					end
 					a_cursor := diagram_input.new_cursor
 					from
@@ -125,11 +126,14 @@ feature {EB_DOCUMENTATION_WIZARD} -- Basic operations
 					until
 						a_cursor.after
 					loop
-						node ?= a_cursor.item
-						check
-							valid_node: node.has_attribute_by_name ("NAME")
+						if attached {XML_ELEMENT} a_cursor.item as node then
+							check
+								valid_node: node.has_attribute_by_name ("NAME")
+							end
+							Result.extend (node.attribute_by_name ("NAME").value)
+						else
+							check node_is_element: False end
 						end
-						Result.extend (node.attribute_by_name ("NAME").value)
 						a_cursor.forth
 					end
 				end
@@ -141,70 +145,79 @@ feature {DOCUMENTATION} -- Basic operations
 	execute
 			-- Write diagram for `cluster' in `target_file_name'.
 		local
+			l_diagram: like diagram
 			png_format: EV_PNG_FORMAT
 			png_file: FILE_NAME
 			str: STRING
 			ptf: PLAIN_TEXT_FILE
 			minimum_pixmap: EV_PIXMAP
-			layout: EIFFEL_INHERITANCE_LAYOUT
+			l_layout: EIFFEL_INHERITANCE_LAYOUT
+			l_filter_name: like documentation.filter_name
+			l_cluster_name: like cluster.name
+			l_is_html_stylesheet: BOOLEAN
+			l_is_html: BOOLEAN
+			l_projector_widget: like projector.widget
 		do
 			check
 				for_documentation: documentation /= Void
 			end
-			if view_name /= Void then
-				diagram.change_view (view_name, diagram_file_name)
+			l_diagram := diagram
+			if attached view_name as l_view_name then
+				l_diagram.change_view (l_view_name, diagram_file_name)
 			else
-				diagram.model.set_center_cluster (create {ES_CLUSTER}.make (cluster))
-				diagram.model.explore_center_cluster
-				create layout.make_with_world (diagram)
-				layout.layout
+				l_diagram.model.set_center_cluster (create {ES_CLUSTER}.make (cluster))
+				l_diagram.model.explore_center_cluster
+				create l_layout.make_with_world (l_diagram)
+				l_layout.layout
 			end
 			world_cell.crop
 			create png_format
 			create png_file.make_from_string (documentation.root_directory.name)
-			if cluster_path /= Void then
-				png_file.extend (cluster_path)
+			if attached cluster_path as l_cluster_path then
+				png_file.extend (l_cluster_path)
 			end
 			png_file.extend ("diagram")
 			png_file.add_extension ("png")
 
+			l_filter_name := documentation.filter_name
+			l_is_html_stylesheet := l_filter_name.same_string ("html-stylesheet")
+			l_is_html := l_filter_name.same_string ("html")
+
+			l_cluster_name := cluster.name
+
 			create ptf.make_open_write (target_file_name)
-			str := "<HTML><HEAD>%
-						%<TITLE>Cluster " + cluster.name + "</TITLE>%N"
-			if documentation.filter_name.is_equal ("html-stylesheet") then
-				str.append ("<LINK REL=%"stylesheet%" HREF=%"" +
-					base_path +
-					"/default.css%" TYPE=%"text/css%">%N%
-					%<SCRIPT TYPE=%"text/javascript%" SRC=%"" +
-					base_path +
-					"/goto.html%"></SCRIPT>%N")
+			str := "<html><head>%N<title>Cluster " + l_cluster_name + "</title>%N"
+
+			if l_is_html_stylesheet then
+				str.append ("<link rel=%"stylesheet%" href=%"" + base_path + "/default.css%" type=%"text/css%">%N%
+								%<script type=%"text/javascript%" src=%"" + base_path + "/goto.html%"></script>%N")
 			end
-			str.append ("</HEAD>%N%
-							%<BODY BGCOLOR=%"white%">%N%
-							%<P ALIGN=%"CENTER%">Automatic generation produced by ISE Eiffel</P>%N")
-			if documentation.filter_name.is_equal ("html-stylesheet") then
+			str.append ("</head>%N%
+							%<body bgcolor=%"white%">%N%
+							%<p align=%"center%">Automatic generation produced by ISE Eiffel</p>%N")
+			if l_is_html_stylesheet then
 				str.append (form_code)
-			elseif documentation.filter_name.is_equal ("html") then
+			elseif l_is_html then
 				str.append (table_code)
 			end
 			str.append ("<img src=%"./diagram.png%" usemap=%"#diagram_map%" border=0>%N")
-			str.append (image_map (diagram))
-			if documentation.filter_name.is_equal ("html-stylesheet") then
+			str.append (image_map (l_diagram))
+			if l_is_html_stylesheet then
 				str.append (form_code)
-			elseif documentation.filter_name.is_equal ("html") then
+			elseif l_is_html then
 				str.append (table_code)
 			end
-			str.append ("<P ALIGN=%"CENTER%"> &#045;&#045; Generated by ISE Eiffel &#045;&#045 </P>%N%
-							%<P ALIGN=%"CENTER%">For more details: <A HREF=%"http://www.eiffel.com%">www.eiffel.com</A></P>%N%
-							%</BODY>%N%
-							%</HTML>%N")
+			str.append ("<p align=%"center%"> -- Generated by ISE Eiffel -- </p>%N%
+							%<p align=%"center%">For more details: <a href=%"http://www.eiffel.com%">www.eiffel.com</a></p>%N%
+							%</body>%N%
+							%</html>%N")
 			ptf.put_string (str)
 			ptf.close
 
 			if attached {EV_MODEL_BUFFER_PROJECTOR} projector as l_buffer_projector then
 				minimum_pixmap := l_buffer_projector.world_as_pixmap (border)
 				if l_buffer_projector.is_world_too_large then
-					prompts.show_warning_prompt (Warning_messages.W_cannot_generate_png.as_string_32 + " " + cluster.name, Void, Void)
+					prompts.show_warning_prompt (Warning_messages.W_cannot_generate_png + " " + l_cluster_name, Void, Void)
 					create minimum_pixmap.make_with_size (1, 1)
 				end
 				minimum_pixmap.save_to_named_file (png_format, png_file)
@@ -212,11 +225,12 @@ feature {DOCUMENTATION} -- Basic operations
 				minimum_pixmap.destroy
 			end
 
-			projector.widget.pointer_motion_actions.wipe_out
-			projector.widget.pointer_button_press_actions.wipe_out
-			projector.widget.pointer_double_press_actions.wipe_out
-			projector.widget.pointer_button_release_actions.wipe_out
-			projector.widget.pointer_leave_actions.wipe_out
+			l_projector_widget := projector.widget
+			l_projector_widget.pointer_motion_actions.wipe_out
+			l_projector_widget.pointer_button_press_actions.wipe_out
+			l_projector_widget.pointer_double_press_actions.wipe_out
+			l_projector_widget.pointer_button_release_actions.wipe_out
+			l_projector_widget.pointer_leave_actions.wipe_out
 			projector := Void
 			diagram := Void
 		end
@@ -254,34 +268,30 @@ feature {NONE} -- Implementation
 
 	form_code: STRING
 			-- For html-stylesheet format.
+		local
+			l_base_path: like base_path
 		do
-			Result := "<FORM ONSUBMIT=%"go_to('" +
-				base_path +
-				"/',this.c.value);return false;%">%N%
-				%<TABLE CELLSPACING=%"5%" CELLPADDING=%"4%"><TR>%N%
-				%<TD CLASS=%"link1%"><A CLASS=%"link1%" HREF=%"" +
-				base_path +
-				"/class_list.html%">Classes</A></TD>%N%
-				%<TD CLASS=%"link1%"><A CLASS=%"link1%" HREF=%"" +
-				base_path +
-				"/cluster_list.html%">Clusters</A></TD>%N%
-				%<TD CLASS=%"link1%"><A CLASS=%"link1%" HREF=%"" +
-				base_path +
-				"/cluster_hierarchy.html%">Cluster hierarchy</A></TD>%N%
-				%<TD CLASS=%"link2%">Go to: <INPUT NAME=%"c%" VALUE=%"%"></TD>%N%
-				%</TR></TABLE></FORM>%N"
+			l_base_path := base_path
+			create Result.make_from_string ("<form onsubmit=%"go_to('"); Result.append (l_base_path); Result.append ("/',this.c.value);return false;%">%N")
+			Result.append ("<table cellspacing=%"5%" cellpadding=%"4%"><tr>%N%
+				%<td class=%"link1%"><a class=%"link1%" href=%""); Result.append (l_base_path); Result.append ("/class_list.html%">Classes</a></td>%N%
+				%<td class=%"link1%"><a class=%"link1%" href=%""); Result.append (l_base_path); Result.append ("/cluster_list.html%">Clusters</a></td>%N%
+				%<td class=%"link1%"><a class=%"link1%" href=%""); Result.append (l_base_path); Result.append ("/cluster_hierarchy.html%">Cluster hierarchy</a></td>%N%
+				%<td class=%"link2%">Go to: <input name=%"c%" value=%"%"></td>%N%
+				%</tr></table></form>%N")
 		end
 
 	table_code: STRING
 			-- For html format.
+		local
+			l_base_path: like base_path
 		do
-			Result := "<TABLE BORDER=%"1%" ALIGN=%"CENTER%"><TR>%N%
-				%<TD><A HREF=%"" +
-				base_path + "/class_list.html%">Classes</A></TD>%N%
-				%<TD><A HREF=%"" +
-				base_path + "/cluster_list.html%">Clusters</A></TD>%N%
-				%<TD><A HREF=%"" +
-				base_path + "/cluster_hierarchy.html%">Cluster hierarchy</A></TD></TR></TABLE>%N"
+			l_base_path := base_path
+			create Result.make_from_string ("<table border=%"1%" align=%"center%"><tr>%N%
+				%<td><a href=%""); Result.append (l_base_path); Result.append ("/class_list.html%">Classes</a></td>%N%
+				%<td><a href=%""); Result.append (l_base_path); Result.append ("/cluster_list.html%">Clusters</a></td>%N%
+				%<td><a href=%""); Result.append (l_base_path); Result.append ("/cluster_hierarchy.html%">Cluster hierarchy</a></td>%N%
+				%</tr></table>%N")
 		end
 
 	image_map (cd: EIFFEL_CLUSTER_DIAGRAM): STRING
@@ -291,54 +301,63 @@ feature {NONE} -- Implementation
 		require
 			cd_not_void: cd /= Void
 		local
+			l_border: like border
 			class_figures: LIST [EG_LINKABLE_FIGURE]
-			cluster_figures, subs: ARRAYED_LIST [EG_CLUSTER_FIGURE]
+			cluster_figures: ARRAYED_LIST [EG_CLUSTER_FIGURE]
 			local_cluster_figures: ARRAYED_LIST [EG_CLUSTER_FIGURE]
-			cf: EIFFEL_CLASS_FIGURE
-			bcf: BON_CLASS_FIGURE
-			clf: EIFFEL_CLUSTER_FIGURE
 			item_file: STRING
 			path: FILE_NAME
 			only_leaf_clusters: BOOLEAN
 			bounds, bbox: EV_RECTANGLE
+			l_base_path: like base_path
+			l_class_i: CLASS_I
+			l_documentation: like documentation
+			l_doc_universe: like documentation.doc_universe
+			l_group: CONF_GROUP
 		do
 			bounds := cd.bounding_box
-			bounds.grow_left (border)
-			bounds.grow_top (border)
-			bounds.grow_right (border)
-			bounds.grow_bottom (border)
+			l_border := border
+			bounds.grow_left (l_border)
+			bounds.grow_top (l_border)
+			bounds.grow_right (l_border)
+			bounds.grow_bottom (l_border)
+
 			Result := "<map name=%"diagram_map%">%N"
+
+			l_base_path := base_path
+			l_documentation := documentation
+			l_doc_universe := l_documentation.doc_universe
+
 			class_figures := cd.flat_classes
 			from
 				class_figures.start
 			until
 				class_figures.after
 			loop
-				cf ?= class_figures.item
-				if cf.model.class_i.is_compiled and documentation.doc_universe.is_class_generated (cf.model.class_i) then
-					item_file := base_path.twin
-					path := documentation.relative_path (cf.model.class_i.group)
-					if path /= Void then
-						item_file.append_character ('/')
-						item_file.append (path)
-						item_file.append_character ('/')
-					end
-					item_file.append (cf.model.class_i.name.as_lower)
-					item_file.append ("_chart.html")
-					bbox := cf.bounding_box
-					Result.append ("<area shape=rect coords=%""
-						+ (bbox.left - bounds.x).out + ","
-						+ (bbox.top - bounds.y).out + ","
-						+ (bbox.right - bounds.x).out + ","
-						+ (bbox.bottom - bounds.y).out + "%"%
-						% href=%""
-						+ item_file
-						+ "%">%N")
-				else
-					bcf ?= cf
-					if bcf /= Void then
+				if attached {EIFFEL_CLASS_FIGURE} class_figures.item as cf then
+					l_class_i := cf.model.class_i
+					if l_class_i.is_compiled and l_doc_universe.is_class_generated (l_class_i) then
+						create item_file.make_from_string (l_base_path)
+						path := l_documentation.relative_path (l_class_i.group)
+						if path /= Void then
+							item_file.append_character ('/')
+							item_file.append (path)
+							item_file.append_character ('/')
+						end
+						item_file.append (l_class_i.name.as_lower)
+						item_file.append ("_chart.html")
+						bbox := cf.bounding_box
+						Result.append ("<area shape=rect coords=%"")
+						Result.append_integer (bbox.left - bounds.x);   Result.append_character (',')
+						Result.append_integer (bbox.top - bounds.y);    Result.append_character (',')
+						Result.append_integer (bbox.right - bounds.x);  Result.append_character (',')
+						Result.append_integer (bbox.bottom - bounds.y); Result.append_character ('%"')
+						Result.append (" href=%""); Result.append (item_file); Result.append ("%">%N")
+					elseif attached {BON_CLASS_FIGURE} cf as bcf then
 						bcf.set_background_color (create {EV_COLOR}.make_with_rgb (1, 1, 1))
 					end
+				else
+					check is_eiffel_class_figure: False end
 				end
 				class_figures.forth
 			end
@@ -363,14 +382,17 @@ feature {NONE} -- Implementation
 				until
 					local_cluster_figures.after
 				loop
-					clf ?= local_cluster_figures.item
-					subs := clf.subclusters
-					if subs.is_empty then
-						local_cluster_figures.forth
-					else
+					if
+						attached {EIFFEL_CLUSTER_FIGURE} local_cluster_figures.item as clf and then
+						attached clf.subclusters as subs and then
+						not subs.is_empty
+					then
 						only_leaf_clusters := False
 						local_cluster_figures.remove
 						local_cluster_figures.merge_left (subs)
+					else
+						check is_eiffel_cluster_figure: attached {EIFFEL_CLUSTER_FIGURE} local_cluster_figures.item end
+						local_cluster_figures.forth
 					end
 				end
 			end
@@ -383,29 +405,34 @@ feature {NONE} -- Implementation
 				until
 					local_cluster_figures.after
 				loop
-					clf ?= local_cluster_figures.item
-					if documentation.doc_universe.is_group_generated (clf.model.group) then
-						item_file := base_path.twin
-						path := documentation.relative_path (clf.model.group)
-						if path /= Void then
-							item_file.append_character ('/')
-							item_file.append (path)
+					if attached {EIFFEL_CLUSTER_FIGURE} local_cluster_figures.item as clf then
+						l_group := clf.model.group
+						if l_doc_universe.is_group_generated (l_group) then
+							create item_file.make_from_string (l_base_path)
+							path := l_documentation.relative_path (l_group)
+							if path /= Void then
+								item_file.append_character ('/')
+								item_file.append (path)
+							end
+							item_file.append ("/index.html")
+							bbox := clf.bounding_box
+							Result.append ("<area shape=rect coords=%"")
+							Result.append_integer (bbox.left - bounds.x); Result.append_character (',')
+							Result.append_integer (bbox.top - bounds.y); Result.append_character (',')
+							Result.append_integer (bbox.right - bounds.x); Result.append_character (',')
+							Result.append_integer (bbox.bottom - bounds.y); Result.append_character ('%"')
+							Result.append (" href=%""); Result.append (item_file); Result.append ("%">%N")
 						end
-						item_file.append ("/index.html")
-						bbox := clf.bounding_box
-						Result.append ("<area shape=rect coords=%""
-							+ (bbox.left - bounds.x).out + ","
-							+ (bbox.top - bounds.y).out + ","
-							+ (bbox.right - bounds.x).out + ","
-							+ (bbox.bottom - bounds.y).out + "%"%
-							% href=%""
-							+ item_file
-							+ "%">%N")
-					end
-					local_cluster_figures.remove
-					if clf.cluster /= Void and then
-						not local_cluster_figures.has (clf.cluster) then
-							local_cluster_figures.put_front (clf.cluster)
+						local_cluster_figures.remove
+						if
+							attached clf.cluster as l_clf_cluster and then
+							not local_cluster_figures.has (l_clf_cluster)
+						then
+							local_cluster_figures.put_front (l_clf_cluster)
+						end
+					else
+						check is_eiffel_cluster_figure: False end
+						local_cluster_figures.remove
 					end
 				end
 			end
@@ -444,5 +471,5 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_DIAGRAM_HTML_GENERATOR
+end
 

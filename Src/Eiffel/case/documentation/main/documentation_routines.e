@@ -42,11 +42,11 @@ feature -- Access
 		local
 			subs: ARRAYED_LIST [CONF_GROUP]
 		do
-			a_text_formatter.process_filter_item (f_class_declaration, true)
+			a_text_formatter.process_filter_item (f_class_declaration, True)
 
-			a_text_formatter.process_filter_item (f_menu_bar, true)
-			insert_global_menu_bar (a_text_formatter, true, true, true)
-			a_text_formatter.process_filter_item (f_menu_bar, false)
+			a_text_formatter.process_filter_item (f_menu_bar, True)
+			insert_global_menu_bar (a_text_formatter, True, True, True)
+			a_text_formatter.process_filter_item (f_menu_bar, False)
 
 			append_system_info (a_text_formatter)
 			subs := top_level_clusters
@@ -57,11 +57,11 @@ feature -- Access
 				a_text_formatter.add_new_line
 			end
 
-			a_text_formatter.process_filter_item (f_menu_bar, true)
-			insert_global_menu_bar (a_text_formatter, true, true, true)
-			a_text_formatter.process_filter_item (f_menu_bar, false)
+			a_text_formatter.process_filter_item (f_menu_bar, True)
+			insert_global_menu_bar (a_text_formatter, True, True, True)
+			a_text_formatter.process_filter_item (f_menu_bar, False)
 
-			a_text_formatter.process_filter_item (f_class_declaration, false)
+			a_text_formatter.process_filter_item (f_class_declaration, False)
 		end
 
 	class_list_text (du: DOCUMENTATION_UNIVERSE; a_text_formatter: TEXT_FORMATTER)
@@ -70,21 +70,21 @@ feature -- Access
 			du_not_void: du /= Void
 			a_text_formatter_not_void: a_text_formatter /= Void
 		do
-			a_text_formatter.process_filter_item (f_class_declaration, true)
+			a_text_formatter.process_filter_item (f_class_declaration, True)
 
-			a_text_formatter.process_filter_item (f_menu_bar, true)
-			insert_global_menu_bar (a_text_formatter, false, true, true)
-			a_text_formatter.process_filter_item (f_menu_bar, false)
+			a_text_formatter.process_filter_item (f_menu_bar, True)
+			insert_global_menu_bar (a_text_formatter, False, True, True)
+			a_text_formatter.process_filter_item (f_menu_bar, False)
 
 			a_text_formatter.process_keyword_text ("Classes", Void)
 			a_text_formatter.add_new_line
 			append_class_list (a_text_formatter, du.classes, True)
 
-			a_text_formatter.process_filter_item (f_menu_bar, true)
-			insert_global_menu_bar (a_text_formatter, false, true, true)
-			a_text_formatter.process_filter_item (f_menu_bar, false)
+			a_text_formatter.process_filter_item (f_menu_bar, True)
+			insert_global_menu_bar (a_text_formatter, False, True, True)
+			a_text_formatter.process_filter_item (f_menu_bar, False)
 
-			a_text_formatter.process_filter_item (f_class_declaration, false)
+			a_text_formatter.process_filter_item (f_class_declaration, False)
 		end
 
 	cluster_list_text (du: DOCUMENTATION_UNIVERSE; a_text_formatter:TEXT_FORMATTER)
@@ -93,21 +93,21 @@ feature -- Access
 			du_not_void: du /= Void
 			a_text_formatter_not_void: a_text_formatter /= Void
 		do
-			a_text_formatter.process_filter_item (f_class_declaration, true)
+			a_text_formatter.process_filter_item (f_class_declaration, True)
 
-			a_text_formatter.process_filter_item (f_menu_bar, true)
+			a_text_formatter.process_filter_item (f_menu_bar, True)
 			insert_global_menu_bar (a_text_formatter, True, False, True)
-			a_text_formatter.process_filter_item (f_menu_bar, false)
+			a_text_formatter.process_filter_item (f_menu_bar, False)
 
 			a_text_formatter.process_keyword_text ("Clusters", Void)
 			a_text_formatter.add_new_line
 			append_cluster_list (a_text_formatter, du.groups)
 
-			a_text_formatter.process_filter_item (f_menu_bar, true)
+			a_text_formatter.process_filter_item (f_menu_bar, True)
 			insert_global_menu_bar (a_text_formatter, True, False, True)
-			a_text_formatter.process_filter_item (f_menu_bar, false)
+			a_text_formatter.process_filter_item (f_menu_bar, False)
 
-			a_text_formatter.process_filter_item (f_class_declaration, false)
+			a_text_formatter.process_filter_item (f_class_declaration, False)
 		end
 
 	cluster_hierarchy_text (du: DOCUMENTATION_UNIVERSE; a_text_formatter: TEXT_FORMATTER)
@@ -122,11 +122,11 @@ feature -- Access
 			l_grp: CONF_GROUP
 			l_cluster: CONF_CLUSTER
 		do
-			a_text_formatter.process_filter_item (f_class_declaration, true)
+			a_text_formatter.process_filter_item (f_class_declaration, True)
 
-			a_text_formatter.process_filter_item (f_menu_bar, true)
+			a_text_formatter.process_filter_item (f_menu_bar, True)
 			insert_global_menu_bar (a_text_formatter, True, True, False)
-			a_text_formatter.process_filter_item (f_menu_bar, false)
+			a_text_formatter.process_filter_item (f_menu_bar, False)
 
 			a_text_formatter.process_keyword_text ("Clusters", Void)
 			a_text_formatter.add_new_line
@@ -149,41 +149,40 @@ feature -- Access
 				l_groups.forth
 			end
 
-			a_text_formatter.process_filter_item (f_menu_bar, true)
+			a_text_formatter.process_filter_item (f_menu_bar, True)
 			insert_global_menu_bar (a_text_formatter, True, True, False)
-			a_text_formatter.process_filter_item (f_menu_bar, false)
+			a_text_formatter.process_filter_item (f_menu_bar, False)
 
-			a_text_formatter.process_filter_item (f_class_declaration, false)
+			a_text_formatter.process_filter_item (f_class_declaration, False)
 		end
 
 	group_index_text (
-		group: CONF_GROUP;
-		class_list: ARRAYED_LIST [CONF_CLASS];
-		diagrams: BOOLEAN; a_text_formatter: TEXT_FORMATTER)
+				group: CONF_GROUP;
+				class_list: ARRAYED_LIST [CONF_CLASS];
+				diagrams: BOOLEAN; a_text_formatter: TEXT_FORMATTER
+			)
 			-- Generate documentation group index for `group'.
 			-- Add links to diagrams if `diagrams' is True.
 		require
 			group_not_void: group /= Void
 			a_text_formatter_not_void: a_text_formatter /= Void
 		local
-			subs: ARRAYED_LIST [CONF_CLUSTER]
 			l_name: STRING
-			l_cluster: CONF_CLUSTER
-			l_library: CONF_LIBRARY
 			l_group_type: STRING
+			l_desc: detachable STRING
 		do
 			l_group_type := type_of_group (group)
-			l_name := group_name_presentation (".", "", group)
-			a_text_formatter.process_filter_item (f_class_declaration, true)
+			l_name := group_name_presentation ({STRING_32}".", {STRING_32}"", group)
+			a_text_formatter.process_filter_item (f_class_declaration, True)
 
-			a_text_formatter.process_filter_item (f_menu_bar, true)
+			a_text_formatter.process_filter_item (f_menu_bar, True)
 			insert_global_menu_bar (a_text_formatter, True, True, False)
-			a_text_formatter.process_filter_item (f_menu_bar, false)
+			a_text_formatter.process_filter_item (f_menu_bar, False)
 
 			a_text_formatter.process_keyword_text (l_group_type, Void)
 			a_text_formatter.add_new_line
 			a_text_formatter.add_indent
-			a_text_formatter.process_cluster_name_text (l_name, group, false)
+			a_text_formatter.process_cluster_name_text (l_name, group, False)
 			if diagrams then
 				a_text_formatter.add_indent
 				a_text_formatter.process_string_text ("(diagram)", "./diagram.html")
@@ -200,46 +199,50 @@ feature -- Access
 			a_text_formatter.process_symbol_text (ti_colon)
 			a_text_formatter.process_basic_text (ti_space)
 			a_text_formatter.process_string_text (ti_double_quote, Void)
-			if group.is_library then
-				l_library ?= group
-				check l_library /= Void end
-				if l_library.classes_set and then l_library.library_target.description /= Void then
-					a_text_formatter.add_indexing_string (l_library.library_target.description)
-				elseif group.description /= Void then
-					a_text_formatter.add_indexing_string (group.description)
-				end
-			elseif group.description /= Void then
-				a_text_formatter.add_indexing_string (group.description)
+			l_desc := Void
+			if
+				group.is_library and then
+				attached {CONF_LIBRARY} group as l_library and then
+				l_library.classes_set
+			then
+				l_desc := l_library.library_target.description
+			else
+				l_desc := group.description
+			end
+			if l_desc /= Void then
+				a_text_formatter.add_indexing_string (l_desc)
 			end
 			a_text_formatter.process_string_text (ti_double_quote, Void)
 			a_text_formatter.process_new_line
-			if group.target.version /= Void and then group.target.version.copyright /= Void then
+			if attached group.target.version as l_version and then attached l_version.copyright as l_version_copyright then
 				a_text_formatter.add_indent
 				a_text_formatter.process_basic_text ("copyright")
 				a_text_formatter.process_symbol_text (ti_colon)
 				a_text_formatter.process_basic_text (ti_space)
 				a_text_formatter.process_string_text (ti_double_quote, Void)
-				a_text_formatter.add_indexing_string (group.target.version.copyright)
+				a_text_formatter.add_indexing_string (l_version_copyright)
 				a_text_formatter.process_string_text (ti_double_quote, Void)
 				a_text_formatter.process_new_line
 			end
 
 			a_text_formatter.process_new_line
 
-			if group.is_cluster then
-				l_cluster ?= group
-				if l_cluster.parent /= Void then
-					a_text_formatter.process_keyword_text ("Supercluster", Void)
-					a_text_formatter.add_new_line
-					a_text_formatter.add_indent
-					a_text_formatter.process_cluster_name_text (group_name_presentation (".", "", l_cluster.parent), l_cluster.parent, false)
-					a_text_formatter.add_new_line
-					a_text_formatter.add_new_line
-				end
+			if
+				group.is_cluster and then attached {CONF_CLUSTER} group as l_cluster and then
+				attached l_cluster.parent as l_cluster_parent
+			then
+				a_text_formatter.process_keyword_text ("Supercluster", Void)
+				a_text_formatter.add_new_line
+				a_text_formatter.add_indent
+				a_text_formatter.process_cluster_name_text (group_name_presentation ({STRING_32}".", {STRING_32}"", l_cluster_parent), l_cluster_parent, False)
+				a_text_formatter.add_new_line
+				a_text_formatter.add_new_line
 			end
 
-			subs := subclusters_of_group (group)
-			if subs /= Void and then not subs.is_empty then
+			if
+				attached subclusters_of_group (group) as subs and then
+				not subs.is_empty
+			then
 				a_text_formatter.process_keyword_text ("Subclusters", Void)
 				a_text_formatter.add_new_line
 				append_cluster_list (a_text_formatter, subs)
@@ -251,11 +254,11 @@ feature -- Access
 				append_class_list (a_text_formatter, class_list, False)
 			end
 
-			a_text_formatter.process_filter_item (f_menu_bar, true)
+			a_text_formatter.process_filter_item (f_menu_bar, True)
 			insert_global_menu_bar (a_text_formatter, True, True, False)
-			a_text_formatter.process_filter_item (f_menu_bar, false)
+			a_text_formatter.process_filter_item (f_menu_bar, False)
 
-			a_text_formatter.process_filter_item (f_class_declaration, false)
+			a_text_formatter.process_filter_item (f_class_declaration, False)
 		end
 
 	class_chart_text (class_c: CLASS_C; a_text_formatter: TEXT_FORMATTER)
@@ -270,10 +273,10 @@ feature -- Access
 			f: E_FEATURE
 		do
 			current_class := class_c
-			a_text_formatter.process_filter_item (f_class_declaration, true)
-			a_text_formatter.process_filter_item (f_menu_bar, true)
+			a_text_formatter.process_filter_item (f_class_declaration, True)
+			a_text_formatter.process_filter_item (f_menu_bar, True)
 			insert_class_menu_bar (a_text_formatter, class_c.name.as_lower)
-			a_text_formatter.process_filter_item (f_menu_bar, false)
+			a_text_formatter.process_filter_item (f_menu_bar, False)
 			class_c.append_header (a_text_formatter)
 			a_text_formatter.add_new_line
 			append_general_info (a_text_formatter, class_c.original_class)
@@ -302,10 +305,10 @@ feature -- Access
 			append_feature_chart_item (a_text_formatter, queries, "Queries")
 			append_feature_chart_item (a_text_formatter, commands, "Commands")
 			append_class_constraints (a_text_formatter, class_c)
-			a_text_formatter.process_filter_item (f_menu_bar, true)
+			a_text_formatter.process_filter_item (f_menu_bar, True)
 			insert_class_menu_bar (a_text_formatter, class_c.name.as_lower)
-			a_text_formatter.process_filter_item (f_menu_bar, false)
-			a_text_formatter.process_filter_item (f_class_declaration, false)
+			a_text_formatter.process_filter_item (f_menu_bar, False)
+			a_text_formatter.process_filter_item (f_class_declaration, False)
 			current_class := Void
 		end
 
@@ -315,23 +318,23 @@ feature -- Access
 			class_c_not_void: class_c /= Void
 			a_text_formatter_not_void: a_text_formatter /= Void
 		do
-			a_text_formatter.process_filter_item (f_class_declaration, true)
-			a_text_formatter.process_filter_item (f_menu_bar, true)
+			a_text_formatter.process_filter_item (f_class_declaration, True)
+			a_text_formatter.process_filter_item (f_menu_bar, True)
 			insert_class_menu_bar (a_text_formatter, class_c.name.as_lower)
-			a_text_formatter.process_filter_item (f_menu_bar, false)
+			a_text_formatter.process_filter_item (f_menu_bar, False)
 			class_c.append_header (a_text_formatter)
 			a_text_formatter.add_new_line
 			append_class_ancestors (a_text_formatter, class_c)
 			append_class_descendants (a_text_formatter, class_c)
 			append_class_clients (a_text_formatter, class_c)
 			append_class_suppliers (a_text_formatter, class_c)
-			a_text_formatter.process_filter_item (f_menu_bar, true)
+			a_text_formatter.process_filter_item (f_menu_bar, True)
 			insert_class_menu_bar (a_text_formatter, class_c.name.as_lower)
-			a_text_formatter.process_filter_item (f_menu_bar, false)
-			a_text_formatter.process_filter_item (f_class_declaration, false)
+			a_text_formatter.process_filter_item (f_menu_bar, False)
+			a_text_formatter.process_filter_item (f_class_declaration, False)
 		end
 
-	class_text (class_C: CLASS_C; flat, short: BOOLEAN; a_text_formatter: TEXT_FORMATTER)
+	class_text (class_c: CLASS_C; flat, short: BOOLEAN; a_text_formatter: TEXT_FORMATTER)
 			-- Generate documentation class text for `class_c' as structured text.
 		require
 			class_c_not_void: class_c /= Void
@@ -362,6 +365,7 @@ feature -- Routines
 			s: STRING
 			class_c: CLASS_C
 			l_external_class: EXTERNAL_CLASS_I
+			l_group: CONF_GROUP
 		do
 			class_c := class_i.compiled_class
 			text.process_keyword_text ("General", Void)
@@ -377,9 +381,10 @@ feature -- Routines
 				text.process_string_text (l_external_class.dotnet_name, Void)
 				text.add_new_line
 			end
-			s := type_of_group (class_i.group)
+			l_group := class_i.group
+			s := type_of_group (l_group)
 			append_info_item (text, s.as_lower)
-			text.process_cluster_name_text (class_i.group.name, class_i.group, false)
+			text.process_cluster_name_text (l_group.name, l_group, False)
 			text.add_new_line
 
 			s := indexing_item_as_string (class_i, "description")
@@ -413,7 +418,7 @@ feature -- Routines
 			ast := class_c.invariant_ast
 			if ast /= Void then
 				invariants := ast.assertion_list
-				if ast.assertion_list /= Void and then not ast.assertion_list.is_empty then
+				if attached ast.assertion_list as l_assertion_list and then not l_assertion_list.is_empty then
 					text.process_keyword_text ("Constraints", Void)
 					text.add_new_line
 					from
@@ -421,11 +426,11 @@ feature -- Routines
 					until
 						invariants.after
 					loop
-						if invariants.item.tag /= Void then
-							s := invariants.item.tag.name_32
+						if attached invariants.item.tag as l_tag then
+							s := l_tag.name_32
 						end
 						if s /= Void and then not s.is_empty then
-							s := s.twin
+							create s.make_from_string (s)
 							s.replace_substring_all ("_", " ")
 							text.add_indent
 							text.process_assertion_tag_text (s)
@@ -471,7 +476,7 @@ feature -- Routines
 			loop
 				text.add_indent
 				l_cluster := cluster_list.item_for_iteration
-				text.process_cluster_name_text (group_name_presentation (".", "", l_cluster), l_cluster, false)
+				text.process_cluster_name_text (group_name_presentation (".", "", l_cluster), l_cluster, False)
 				text.add_new_line
 				cluster_list.forth
 			end
@@ -482,6 +487,7 @@ feature -- Routines
 		local
 			f: E_FEATURE
 			t: STRING
+			wc: CLASS_C
 		do
 			from
 				f_list.start
@@ -491,14 +497,15 @@ feature -- Routines
 				f := f_list.item
 				t := feature_tooltip (f)
 				text.add_indent
-				text.process_tooltip_item (t, true)
+				text.process_tooltip_item (t, True)
 				f.append_signature (text)
-				text.process_tooltip_item (t, false)
+				text.process_tooltip_item (t, False)
+				wc := f.written_class
 
-				if current_class /= f.written_class then
-					text.process_filter_item (f_Origin_comment, true)
-					text.add_comment_text (" -- (from " + f.written_class.name_in_upper + ")")
-					text.process_filter_item (f_Origin_comment, false)
+				if current_class /= wc then
+					text.process_filter_item (f_Origin_comment, True)
+					text.add_comment_text (" -- (from " + wc.name_in_upper + ")")
+					text.process_filter_item (f_Origin_comment, False)
 				end
 
 				text.add_new_line
@@ -511,15 +518,14 @@ feature -- Routines
 			-- Get a descriptive comment on the origin of `f'.
 		local
 			wc: CLASS_C
-			anc: E_FEATURE
 			real_name: STRING_32
 		do
 			create Result.make (20)
-			Result.append ("`")
+			Result.append_character ({CHARACTER_32}'`')
 			Result.append (f.name_32)
-			Result.append ("' ")
-			anc := f.written_feature
-			if anc /= Void then
+			Result.append_character ({CHARACTER_32}'%'')
+			Result.append_character ({CHARACTER_32}' ')
+			if attached f.written_feature as anc then
 				real_name := anc.name_32
 			else
 				real_name := f.name_32
@@ -528,12 +534,12 @@ feature -- Routines
 			if wc = current_class then
 				Result.append ("is declared in `Current'")
 			else
-				Result.append ("was declared in ")
+				Result.append ({STRING_32}"was declared in ")
 				Result.append (wc.name_in_upper)
-				if not real_name.is_equal (f.name_32) then
+				if not real_name.same_string (f.name_32) then
 					Result.append (" as `")
 					Result.append (real_name)
-					Result.append ("'")
+					Result.append_character ({CHARACTER_32}'%'')
 				end
 			end
 		end
@@ -544,7 +550,7 @@ feature {NONE} -- Implementation
 			-- Append to `ctxt.text', formatted `class_list'.
 			-- Depending on `desc', include descriptions.
 		local
-			s: STRING
+			s: detachable STRING
 			ci: CLASS_I
 		do
 			from
@@ -562,7 +568,7 @@ feature {NONE} -- Implementation
 				if desc then
 					s := indexing_item_as_string (ci, "description")
 					if s /= Void then
-						s := s.twin
+						create s.make_from_string (s)
 						s.remove (1)
 						s.remove (s.count)
 						s.replace_substring_all ("%%T", "")
@@ -580,20 +586,18 @@ feature {NONE} -- Implementation
 	append_cluster_hierarchy_leaf (text: TEXT_FORMATTER; du: DOCUMENTATION_UNIVERSE; a_group: CONF_GROUP; indent: INTEGER)
 		local
 			n: INTEGER
-			subs: ARRAYED_LIST [CONF_CLUSTER]
 		do
 			from n := 1 until n > indent loop
 				text.add_indent
 				n := n + 1
 			end
 			if du.is_group_generated (a_group) then
-			 	text.process_cluster_name_text (a_group.name, a_group, false)
+			 	text.process_cluster_name_text (a_group.name, a_group, False)
 			else
 				text.process_basic_text (a_group.name)
 			end
 			text.add_new_line
-			subs := subclusters_of_group (a_group)
-			if subs /= Void then
+			if attached subclusters_of_group (a_group) as subs then
 				from subs.start until subs.after loop
 					append_cluster_hierarchy_leaf (text, du, subs.item_for_iteration, indent + 1)
 					subs.forth
@@ -699,13 +703,15 @@ feature {NONE} -- Indexing clauses
 			a_class_not_void: a_class /= Void
 		local
 			l_class_i: CLASS_I
+			cl: CLASS_C
 		do
 			l_class_i ?= a_class
 			check
 				l_class_i /= Void and then l_class_i.is_compiled
 			end
-			Result := indexes_to_html_meta (l_class_i.compiled_class.ast.top_indexes, "Eiffel class")
-			Result.append (indexes_to_html_meta (l_class_i.compiled_class.ast.bottom_indexes, "Eiffel class"))
+			cl := l_class_i.compiled_class
+			Result := indexes_to_html_meta (cl.ast.top_indexes, "Eiffel class")
+			Result.append (indexes_to_html_meta (cl.ast.bottom_indexes, "Eiffel class"))
 		end
 
 	html_meta_for_cluster (cluster_i: CONF_GROUP): STRING
@@ -727,18 +733,17 @@ feature {NONE} -- Indexing clauses
 		local
 			content, t: STRING
 			exc: like excluded_indexing_items
-			l_library: CONF_LIBRARY
-			l_description: STRING
+			l_description: detachable STRING
 		do
 			create Result.make (20)
 			exc := excluded_indexing_items
 
-			if a_group.is_library then
-				l_library ?= a_group
-				check l_library /= Void end
-				if l_library.classes_set then
-					l_description := l_library.library_target.description
-				end
+			if
+				a_group.is_library and then
+				attached {CONF_LIBRARY} a_group as l_library and then
+				l_library.classes_set
+			then
+				l_description := l_library.library_target.description
 			end
 			if l_description = Void then
 				l_description := a_group.description
@@ -752,9 +757,9 @@ feature {NONE} -- Indexing clauses
 				Result.append (indexing_tuple_to_string (t, content))
 			end
 
-			if a_group.target.version /= Void and then a_group.target.version.copyright /= Void then
+			if attached a_group.target.version as l_version and then attached l_version.copyright as l_version_copyright then
 				t := "copyright"
-				content := a_group.target.version.copyright
+				create content.make_from_string (l_version_copyright)
 				content.replace_substring_all ("%%N", " ")
 				content.prune_all ('%%')
 				content.prune_all ('"')
@@ -810,14 +815,14 @@ feature {NONE} -- Indexing clauses
 			-- Create HTML meta string.
 		do
 			create Result.make (20)
-			Result.append ("<META NAME=%"")
+			Result.append ("<meta name=%"")
 			Result.append (tag)
-			Result.append ("%" CONTENT=%"")
+			Result.append ("%" content=%"")
 			Result.append (content)
-			Result.append ("%">%N")
+			Result.append ("%"/>%N")
 		end
 
-	indexes_to_table (indexes: EIFFEL_LIST [INDEX_AS]): HASH_TABLE [STRING, STRING]
+	indexes_to_table (indexes: detachable EIFFEL_LIST [INDEX_AS]): HASH_TABLE [STRING, STRING]
 			-- Table of [content, tag].
 		local
 			t: STRING
@@ -831,8 +836,8 @@ feature {NONE} -- Indexing clauses
 					indexes.after
 				loop
 					ii := indexes.item
-					if ii.tag /= Void then
-						t := ii.tag.name
+					if attached ii.tag as l_tag then
+						t := l_tag.name
 					end
 					if t = Void then
 						t := "description"
@@ -870,11 +875,9 @@ feature {NONE} -- Implementation
 		require
 			f_not_void: f /= Void
 		local
-			t: TYPE_A
 			return_class: CLASS_C
 		do
-			t := f.type
-			if t /= Void then
+			if attached f.type as t then
 				if t.has_associated_class then
 					return_class := t.associated_class
 					if conf /= Void then
@@ -886,12 +889,9 @@ feature {NONE} -- Implementation
 
 	Action_sequence_class: CLASS_C
 			-- Compiled class ACTION_SEQUENCE.
-		local
-			cl: LIST [CLASS_I]
 		do
-			cl := Eiffel_system.Universe.compiled_classes_with_name ("ACTION_SEQUENCE")
-			if cl /= Void and then not cl.is_empty then
-				Result := cl.i_th (1).compiled_class
+			if attached Eiffel_system.Universe.compiled_classes_with_name ("ACTION_SEQUENCE") as cl and then not cl.is_empty then
+				Result := cl.first.compiled_class
 			end
 		end
 
@@ -972,4 +972,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class DOCUMENTATION_ROUTINES
+end

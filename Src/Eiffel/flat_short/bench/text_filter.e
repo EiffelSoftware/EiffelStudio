@@ -290,8 +290,8 @@ feature -- Text processing
 					i > str_count
 				loop
 					char := str.item (i)
-					if char.is_character_8 and then escape_characters.item (char.code) /= Void then
-						buffer.append (escape_characters.item (char.code))
+					if char.is_character_8 and then attached escape_characters.item (char.code) as l_esc then
+						buffer.append (l_esc)
 					else
 						buffer.extend (char)
 					end

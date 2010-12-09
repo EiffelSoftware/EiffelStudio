@@ -1858,7 +1858,7 @@ feature {NONE} -- Processing of options
 				>>
 			from
 				i := 1
-				create Result.make (1, 0)
+				create Result.make_empty
 			until
 				i > ids.upper
 			loop

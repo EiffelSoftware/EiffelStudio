@@ -363,7 +363,7 @@ feature -- Output
 			--| using DUMMY_MESSAGE_DEBUG_VALUE objects.
 			if has_value then
 				create Result.make_equal (1)
-				Result.put_last (debug_value)
+				Result.force (debug_value)
 			end
 		end
 

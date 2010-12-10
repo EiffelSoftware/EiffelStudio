@@ -54,7 +54,7 @@ feature -- Properties
 	error_in_bkpts: BOOLEAN
 			-- Has an error occurred in the last modification/examination of breakpoints?
 
-	observers: DS_ARRAYED_LIST [BREAKPOINTS_OBSERVER]
+	observers: ARRAYED_LIST [BREAKPOINTS_OBSERVER]
 			-- Observer for events on breakpoints.
 
 feature -- Notification
@@ -88,7 +88,7 @@ feature -- Observers
 		require
 			o_not_void: o /= Void
 		do
-			observers.put_last (o)
+			observers.force (o)
 		end
 
 	remove_observer (o: BREAKPOINTS_OBSERVER)
@@ -96,18 +96,15 @@ feature -- Observers
 		require
 			o_not_void: o /= Void
 		do
-			observers.delete (o)
+			observers.prune_all (o)
 		end
 
 feature -- Factory
 
 	entry_breakpoint_location: BREAKPOINT_LOCATION
 			-- Breakpint location for System's entry point
-		local
-			fe: E_FEATURE
 		do
-			fe := entry_point_feature
-			if fe /= Void then
+			if attached entry_point_feature as fe then
 				Result := breakpoint_location (fe, fe.first_breakpoint_slot_index, True)
 			end
 		end

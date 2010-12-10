@@ -11,27 +11,30 @@ class
 
 feature {NONE} -- Implementation
 
-	Abstract_debug_value_sorter: DS_SORTER [ABSTRACT_DEBUG_VALUE]
+	Abstract_debug_value_sorter: SORTER [ABSTRACT_DEBUG_VALUE]
 			-- Attributes sorter.
 		local
-			l_comp: KL_COMPARABLE_COMPARATOR [ABSTRACT_DEBUG_VALUE]
+			l_comp: COMPARABLE_COMPARATOR [ABSTRACT_DEBUG_VALUE]
 		once
-			create l_comp.make
-			create {DS_QUICK_SORTER [ABSTRACT_DEBUG_VALUE]} Result.make (l_comp)
+			create l_comp
+			create {QUICK_SORTER [ABSTRACT_DEBUG_VALUE]} Result.make (l_comp)
 		end
 
 	sort_debug_values (lst: DEBUG_VALUE_LIST)
 			-- sort `children' and return it.
 		require
 			lst_not_void: lst /= Void
+		local
+			l_sorter: like abstract_debug_value_sorter
 		do
+			l_sorter := abstract_debug_value_sorter
 			if
-				not lst.sorted (abstract_debug_value_sorter)
+				not l_sorter.sorted (lst)
 			then
-				lst.sort (abstract_debug_value_sorter)
+				l_sorter.sort (lst)
 			end
 		ensure
-			lst_sorted: lst.sorted (abstract_debug_value_sorter)
+			lst_sorted: abstract_debug_value_sorter.sorted (lst)
 		end
 
 note

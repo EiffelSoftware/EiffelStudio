@@ -115,7 +115,7 @@ feature {NONE} -- Implementation
 			-- to hector addresses. (should be called only once just after
 			-- all the information has been received from the application.)
 		local
-			l_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE]
+			l_cursor: like attributes.new_cursor
 		do
 			if attached address as add and then not add.is_void then
 				address := keep_object_as_hector_address (add)

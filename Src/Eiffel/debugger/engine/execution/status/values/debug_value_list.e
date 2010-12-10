@@ -9,10 +9,18 @@ class
 	DEBUG_VALUE_LIST
 
 inherit
-	DS_ARRAYED_LIST [ABSTRACT_DEBUG_VALUE]
+	ARRAYED_LIST [ABSTRACT_DEBUG_VALUE]
 
 create
 	make, make_equal
+
+feature {NONE} -- Initialization
+
+	make_equal (n: INTEGER)
+		do
+			make (n)
+			compare_objects
+		end
 
 feature -- Access
 
@@ -21,7 +29,7 @@ feature -- Access
 		require
 			not_void: n /= Void
 		local
-			l_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE]
+			l_cursor: like new_cursor
 			l_item: ABSTRACT_DEBUG_VALUE
 		do
 			from
@@ -31,14 +39,14 @@ feature -- Access
 				l_cursor.after or Result /= Void
 			loop
 				l_item := l_cursor.item
-				if attached l_item.name as l_name and then l_name.is_equal (n) then
+				if attached l_item.name as l_name and then l_name.same_string (n) then
 					Result := l_item
 				end
 				l_cursor.forth
 			end
-			l_cursor.go_after
+--| Useless:		from until l_cursor.after loop l_cursor.forth end
 		ensure
-			same_name_if_found: (Result /= Void) implies (Result.name.is_equal (n))
+			same_name_if_found: (Result /= Void) implies (Result.name.same_string (n))
 		end
 
 

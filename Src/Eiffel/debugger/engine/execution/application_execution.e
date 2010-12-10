@@ -1235,7 +1235,7 @@ feature -- Environment related
 			-- String representation of the Environment variables
 		local
 			k,v: STRING_32
-			lst: DS_LIST [STRING_32]
+			lst: LIST [STRING_32]
 		do
 			if env /= Void then
 				lst := Debugger_manager.sorted_comparable_string32_keys_from (env)

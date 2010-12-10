@@ -19,7 +19,7 @@ feature {EDIT_ITEM} -- Private attributes
 	status: APPLICATION_STATUS
 		-- Current application's status.
 
-	item_list: DS_LIST [ABSTRACT_DEBUG_VALUE]
+	item_list: LIST [ABSTRACT_DEBUG_VALUE]
 		-- list of all known items (locals, arguments, object attributes, ...).
 
 	item: ABSTRACT_DEBUG_VALUE

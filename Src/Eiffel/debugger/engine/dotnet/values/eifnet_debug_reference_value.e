@@ -277,7 +277,7 @@ feature {NONE} -- Children implementation
 							if l_feature_i.is_attribute then
 								l_att_debug_value := attribute_value (object_value, l_icd_class, l_feature_i)
 								if l_att_debug_value /= Void then
-									Result.put_last (l_att_debug_value)
+									Result.force (l_att_debug_value)
 								end
 							end
 							l_feature_table.forth

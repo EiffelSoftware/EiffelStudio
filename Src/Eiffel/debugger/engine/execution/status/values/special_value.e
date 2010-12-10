@@ -128,7 +128,7 @@ feature -- Access
 			int32_value: DEBUG_BASIC_VALUE [INTEGER_32]
 			char_value: CHARACTER_VALUE
 			wchar_value: CHARACTER_32_VALUE
-			l_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE]
+			l_cursor: like children.new_cursor
 			l_items: like children
 		do
 			l_items := children
@@ -160,7 +160,7 @@ feature -- Access
 							Result.append_code (wchar_value.value.natural_32_code)
 							l_cursor.forth
 						end
-						l_cursor.go_after
+--| Useless:			from until l_cursor.after loop l_cursor.forth end
 					else
 						int8_value ?= l_items.first
 						if int8_value /= Void then
@@ -175,7 +175,7 @@ feature -- Access
 								Result.append_code (int8_value.value.as_natural_32)
 								l_cursor.forth
 							end
-							l_cursor.go_after
+--| Useless:			from until l_cursor.after loop l_cursor.forth end
 						else
 							int32_value ?= l_items.first
 							if int32_value /= Void then
@@ -190,7 +190,7 @@ feature -- Access
 									Result.append_code (int32_value.value.as_natural_32)
 									l_cursor.forth
 								end
-								l_cursor.go_after
+--| Useless:					from until l_cursor.after loop l_cursor.forth end
 							end
 						end
 					end
@@ -239,7 +239,7 @@ feature -- Items
 			rqst.send
 			count := rqst.capacity
 			capacity := rqst.max_capacity
-			items.append_last (rqst.attributes)
+			items.append (rqst.attributes)
 			items_computed := True
 		end
 

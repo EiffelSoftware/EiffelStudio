@@ -154,7 +154,7 @@ feature -- Application status
 			-- Display `dobj'
 		local
 			l_attr: DEBUG_VALUE_LIST
-			l_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE]
+			l_cursor: like {DEBUG_VALUE_LIST}.new_cursor
 			dc: CLASS_C
 			n: STRING
 			add: DBG_ADDRESS
@@ -525,7 +525,7 @@ feature {NONE} -- append_to implementation
 			is_special_of_char: BOOLEAN
 			char_value: CHARACTER_VALUE
 			l_items: DEBUG_VALUE_LIST
-			l_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE]
+			l_cursor: like {DEBUG_VALUE_LIST}.new_cursor
 			dc: CLASS_C
 			n: STRING
 			add: DBG_ADDRESS
@@ -605,7 +605,7 @@ feature {NONE} -- append_to implementation
 	expanded_value_append_to (v: EXPANDED_VALUE; st: TEXT_FORMATTER; indent: INTEGER)
 		local
 			ec: CLASS_C;
-			l_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE]
+			l_cursor: like {DEBUG_VALUE_LIST}.new_cursor
 		do
 			append_tabs (st, indent);
 			st.add_feature_name (v.name, v.e_class)

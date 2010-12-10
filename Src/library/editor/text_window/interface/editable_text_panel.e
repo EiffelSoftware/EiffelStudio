@@ -690,7 +690,7 @@ feature -- Edition Operations on text
 			refresh_now
 		end
 
-	run_if_editable (command: PROCEDURE[like Current, TUPLE])
+	run_if_editable (command: PROCEDURE [EDITABLE_TEXT_PANEL, TUPLE])
 			-- Apply `command' if the current text is editable.
 			-- Otherwise, display a message which warns the user
 			-- that the text cannot be modified.

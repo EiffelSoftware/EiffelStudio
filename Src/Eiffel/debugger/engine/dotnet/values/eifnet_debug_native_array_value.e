@@ -180,7 +180,7 @@ feature -- Output
 							if l_elt /= Void then
 								l_att_debug_value := debug_value_from_icdv (l_elt, Void)
 								l_att_debug_value.set_name (i.out)
-								items.put_last (l_att_debug_value)
+								items.force (l_att_debug_value)
 							end
 							i := i + 1
 						end

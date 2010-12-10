@@ -1024,28 +1024,28 @@ feature -- Access
 			Result_attached: Result /= Void
 		end
 
-	sorted_comparable_string32_keys_from (env: like environment_variables_table): DS_LIST [STRING_32]
+	sorted_comparable_string32_keys_from (env: like environment_variables_table): LIST [STRING_32]
 		local
 			k: STRING_32
-			l_comp: KL_COMPARABLE_COMPARATOR [STRING_32]
-
+			l_comp: COMPARABLE_COMPARATOR [STRING_32]
+			l_sorter: SORTER [STRING_32]
 		do
 			if env /= Void and then not env.is_empty then
 				from
-					create {DS_ARRAYED_LIST [STRING_32]} Result.make (env.count)
+					create {ARRAYED_LIST [STRING_32]} Result.make (env.count)
 					env.start
 				until
 					env.after
 				loop
 					k := env.key_for_iteration
 					if k /= Void and then not k.is_empty then
-						Result.put_last (k)
+						Result.force (k)
 					end
 					env.forth
 				end
-				create l_comp.make
-
-				Result.sort (create {DS_QUICK_SORTER [STRING_32]}.make (l_comp))
+				create l_comp
+				create {QUICK_SORTER [STRING_32]} l_sorter.make (l_comp)
+				l_sorter.sort (Result)
 			end
 		end
 

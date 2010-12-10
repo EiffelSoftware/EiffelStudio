@@ -1361,7 +1361,7 @@ feature {NONE} -- Environment actions
 			m: EV_MENU
 			malpha: EV_MENU
 			mi: EV_MENU_ITEM
-			lst: DS_LIST [STRING_32]
+			lst: LIST [STRING_32]
 			ch: CHARACTER_32
 			k: STRING_32
 		do
@@ -1609,10 +1609,14 @@ feature {NONE} -- Environment implementation
 
 	internal_sorted_environment_variables: like sorted_environment_variables
 
-	sorted_environment_variables: DS_LIST [STRING_32]
+	sorted_environment_variables: LIST [STRING_32]
+		local
+			l_envs: detachable LIST [STRING_32]
 		do
-			Result := internal_sorted_environment_variables
-			if Result = Void then
+			l_envs := internal_sorted_environment_variables
+			if l_envs /= Void then
+				Result := l_envs
+			else
 				Result := debugger_manager.sorted_comparable_string32_keys_from (Debugger_manager.environment_variables_table)
 				internal_sorted_environment_variables := Result
 			end

@@ -531,7 +531,7 @@ feature {DUMP_VALUE} -- string_representation Implementation
 		local
 			f: E_FEATURE
 			l_attributes: DEBUG_VALUE_LIST
-			l_attributes_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE]
+			l_attributes_cursor: like {DEBUG_VALUE_LIST}.new_cursor
 			l_attributes_item: ABSTRACT_DEBUG_VALUE
 			cv_spec: SPECIAL_VALUE
 			done: BOOLEAN
@@ -607,7 +607,7 @@ feature {DUMP_VALUE} -- string_representation Implementation
 						end
 						l_attributes_cursor.forth
 					end
-					l_attributes_cursor.go_after
+--| Useless:		from until l_attributes_cursor.after loop l_attributes_cursor.forth end					
 
 						--| At the point `count' from STRING should have been found in
 						--| STRING object. `area' maybe Void, thus `area_attribute' may not be found.

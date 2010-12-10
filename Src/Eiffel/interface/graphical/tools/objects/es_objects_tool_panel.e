@@ -1445,8 +1445,8 @@ feature {NONE} -- Debugged objects grid Implementation
 			l: ES_OBJECTS_GRID_SPECIFIC_LINE
 			lines: LIST [ES_OBJECTS_GRID_SPECIFIC_LINE]
 			lst_pos: LIST [INTEGER]
-			l_reused: HASH_TABLE [ARRAY [ES_OBJECTS_GRID_SPECIFIC_LINE], STRING]
-			l_reused_lines: ARRAY [ES_OBJECTS_GRID_SPECIFIC_LINE]
+			l_reused: HASH_TABLE [ARRAY [detachable ES_OBJECTS_GRID_SPECIFIC_LINE], STRING]
+			l_reused_lines: ARRAY [detachable ES_OBJECTS_GRID_SPECIFIC_LINE]
 		do
 				--| Clean old lines
 			from
@@ -1457,7 +1457,7 @@ feature {NONE} -- Debugged objects grid Implementation
 			loop
 				g := objects_grids.item_for_iteration.grid
 				lines := objects_grids.item_for_iteration.lines
-				create l_reused_lines.make (position_stack, position_dropped)
+				create l_reused_lines.make_filled (Void, position_stack, position_dropped)
 				l_reused.put (l_reused_lines, g.id)
 				from
 					lines.start

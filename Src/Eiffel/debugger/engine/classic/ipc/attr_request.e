@@ -84,7 +84,7 @@ feature -- Update
 			-- if failure, then `is_erroneous' is True
 		local
 			address: POINTER
-			l_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE]
+			l_cursor: like attributes.new_cursor
 		do
 			is_erroneous := False
 			object_type_id := 0
@@ -338,7 +338,7 @@ feature {NONE} -- Implementation
 						io.error.put_string ("Putting `attr' in `attr_list'.%N")
 					end
 					attr.set_item_number (i-1)
-					attr_list.put_last (attr);
+					attr_list.force (attr)
 --					attr_list.forth
 					i := i + 1
 				end

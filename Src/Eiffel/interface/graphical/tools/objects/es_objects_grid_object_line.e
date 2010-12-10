@@ -639,20 +639,22 @@ feature {NONE} -- Implementation
 
 	icons: ARRAY [EV_PIXMAP]
 			-- List of available icons for objects.
+		local
+			l_icons: like pixmaps.icon_pixmaps
 		once
-			create Result.make ({VALUE_TYPES}.Immediate_value, {VALUE_TYPES}.Error_message_value)
-
-			Result.put (pixmaps.icon_pixmaps.debugger_object_immediate_icon, {VALUE_TYPES}.Immediate_value)
-			Result.put (pixmaps.icon_pixmaps.debugger_object_void_icon, {VALUE_TYPES}.Void_value)
-			Result.put (pixmaps.icon_pixmaps.debugger_object_eiffel_icon, {VALUE_TYPES}.Reference_value)
-			Result.put (pixmaps.icon_pixmaps.debugger_object_expanded_icon, {VALUE_TYPES}.Expanded_value)
-			Result.put (pixmaps.icon_pixmaps.debugger_object_eiffel_icon, {VALUE_TYPES}.Special_value)
-			Result.put (pixmaps.icon_pixmaps.debugger_object_dotnet_icon, {VALUE_TYPES}.External_reference_value)
-			Result.put (pixmaps.icon_pixmaps.debugger_object_dotnet_static_icon, {VALUE_TYPES}.Static_external_reference_value)
-			Result.put (pixmaps.icon_pixmaps.debugger_object_static_icon, {VALUE_TYPES}.Static_reference_value)
-			Result.put (pixmaps.icon_pixmaps.general_mini_error_icon, {VALUE_TYPES}.Exception_message_value)
-			Result.put (pixmaps.icon_pixmaps.debugger_value_routine_return_icon, {VALUE_TYPES}.Procedure_return_message_value)
-			Result.put (pixmaps.icon_pixmaps.general_mini_error_icon, {VALUE_TYPES}.Error_message_value)
+			l_icons := pixmaps.icon_pixmaps
+			create Result.make_filled (l_icons.debugger_object_immediate_icon, {VALUE_TYPES}.Immediate_value, {VALUE_TYPES}.Error_message_value)
+--			Result.put (l_icons.debugger_object_immediate_icon, {VALUE_TYPES}.Immediate_value)
+			Result.put (l_icons.debugger_object_void_icon, {VALUE_TYPES}.Void_value)
+			Result.put (l_icons.debugger_object_eiffel_icon, {VALUE_TYPES}.Reference_value)
+			Result.put (l_icons.debugger_object_expanded_icon, {VALUE_TYPES}.Expanded_value)
+			Result.put (l_icons.debugger_object_eiffel_icon, {VALUE_TYPES}.Special_value)
+			Result.put (l_icons.debugger_object_dotnet_icon, {VALUE_TYPES}.External_reference_value)
+			Result.put (l_icons.debugger_object_dotnet_static_icon, {VALUE_TYPES}.Static_external_reference_value)
+			Result.put (l_icons.debugger_object_static_icon, {VALUE_TYPES}.Static_reference_value)
+			Result.put (l_icons.general_mini_error_icon, {VALUE_TYPES}.Exception_message_value)
+			Result.put (l_icons.debugger_value_routine_return_icon, {VALUE_TYPES}.Procedure_return_message_value)
+			Result.put (l_icons.general_mini_error_icon, {VALUE_TYPES}.Error_message_value)
 		end
 
 	hexa_mode_enabled: BOOLEAN
@@ -799,7 +801,6 @@ feature {NONE} -- Filling
 			a_row = row
 			attributes_not_filled_yet: not row_attributes_filled
 		local
-			list_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE]
 			val: ABSTRACT_DEBUG_VALUE
 			l_is_hidden: BOOLEAN
 			i: INTEGER
@@ -807,6 +808,8 @@ feature {NONE} -- Filling
 			es_glab: EV_GRID_LABEL_ITEM
 
 			vlist: DEBUG_VALUE_LIST
+			list_cursor: like {DEBUG_VALUE_LIST}.new_cursor
+
 			l_row_index: INTEGER
 			dcl: like object_dynamic_class
 		do
@@ -830,7 +833,7 @@ feature {NONE} -- Filling
 						l_is_hidden := False
 					end
 					if l_is_hidden then
-						vlist.remove_at
+						vlist.remove
 					else
 						vlist.forth
 					end
@@ -1057,7 +1060,7 @@ feature {NONE} -- Agent filling
 			result_attached: Result /= Void
 		end
 
-	fill_extra_attributes_for_special (a_row: EV_GRID_ROW; list_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE])
+	fill_extra_attributes_for_special (a_row: EV_GRID_ROW; list_cursor: like {DEBUG_VALUE_LIST}.new_cursor)
 		require
 			a_row /= Void
 			list_cursor /= Void
@@ -1090,13 +1093,12 @@ feature {NONE} -- Agent filling
 			lrow.set_item (Col_value_index, glab)
 		end
 
-	fill_extra_attributes_for_tuple (a_row: EV_GRID_ROW; list_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE])
+	fill_extra_attributes_for_tuple (a_row: EV_GRID_ROW; list_cursor: like {DEBUG_VALUE_LIST}.new_cursor)
 		require
 			a_row /= Void
 			list_cursor /= Void
 		local
 			lrow: EV_GRID_ROW
-			vitem: DEBUG_BASIC_VALUE [BOOLEAN]
 			grid: EV_GRID
 			r: INTEGER
 			glab: EV_GRID_LABEL_ITEM
@@ -1105,9 +1107,8 @@ feature {NONE} -- Agent filling
 		do
 			grid := a_row.parent
 			list_cursor.start
-			if not list_cursor.off then
-				vitem ?= list_cursor.item
-				if vitem /= Void then
+			if not list_cursor.after then
+				if attached {DEBUG_BASIC_VALUE [BOOLEAN]} list_cursor.item as vitem then
 					r := 1
 					a_row.insert_subrow (r)
 					lrow := a_row.subrow (r)
@@ -1127,7 +1128,7 @@ feature {NONE} -- Agent filling
 			end
 		end
 
-	fill_extra_attributes_for_agent (a_row: EV_GRID_ROW; list_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE])
+	fill_extra_attributes_for_agent (a_row: EV_GRID_ROW; list_cursor: like {DEBUG_VALUE_LIST}.new_cursor)
 		require
 			a_row /= Void
 			list_cursor /= Void
@@ -1159,16 +1160,16 @@ feature {NONE} -- Agent filling
 					if n /= Void and then n.count > 3 then
 						if attached {DEBUG_BASIC_VALUE [INTEGER]} v_item as vi then
 							if vi.name /= Void then
-								if v_class_id = Void and n.item (1) = 'c' and then n.is_equal ("class_id") then
+								if v_class_id = Void and n.item (1) = 'c' and then n.same_string ("class_id") then
 									v_nb := v_nb + 1
 									v_class_id := vi
-								elseif v_feature_id = Void and n.item (1) = 'f' and then n.is_equal ("feature_id") then
+								elseif v_feature_id = Void and n.item (1) = 'f' and then n.same_string ("feature_id") then
 									v_nb := v_nb + 1
 									v_feature_id := vi
 								end
 							end
 						elseif attached {DEBUG_BASIC_VALUE [BOOLEAN]} list_cursor.item as vb then
-							if v_is_precompiled = void and n.item (1) = 'i' and then n.is_equal ("is_precompiled") then
+							if v_is_precompiled = void and n.item (1) = 'i' and then n.same_string ("is_precompiled") then
 								v_nb := v_nb + 1
 								v_is_precompiled := vb
 							end

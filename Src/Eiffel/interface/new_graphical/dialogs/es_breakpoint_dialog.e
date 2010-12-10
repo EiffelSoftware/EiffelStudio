@@ -523,7 +523,7 @@ feature {NONE} -- Hit count
 
 	hit_count_current_lb: EV_LABEL
 	hit_count_condition_combo: EV_COMBO_BOX
-	hit_count_condition_combo_items: ARRAY [EV_LIST_ITEM]
+	hit_count_condition_combo_items: ARRAY [detachable EV_LIST_ITEM]
 	hit_count_condition_value_tf: EV_TEXT_FIELD
 
 	build_hit_count_panel
@@ -578,7 +578,7 @@ feature {NONE} -- Hit count
 				--| Default
 			hit_count_condition_value_tf.hide
 
-			create hit_count_condition_combo_items.make ({BREAKPOINT}.Hits_count_condition_always, {BREAKPOINT}.hits_count_condition_continue_execution)
+			create hit_count_condition_combo_items.make_filled (Void, {BREAKPOINT}.Hits_count_condition_always, {BREAKPOINT}.hits_count_condition_continue_execution)
 
 			create li.make_with_text (Interface_names.m_Break_always)
 			register_action (li.select_actions, agent hit_count_condition_value_tf.hide)
@@ -814,6 +814,7 @@ feature -- change
 			bp: BREAKPOINT
 			wh_acts: LIST [BREAKPOINT_WHEN_HITS_ACTION_I]
 			wh_a: BREAKPOINT_WHEN_HITS_ACTION_I
+			l_mode: INTEGER
 		do
 			f := breakpoint_routine
 			i := breakpoint_index
@@ -890,6 +891,7 @@ feature -- change
 			if bp /= Void then
 				hit_count_current_lb.set_text (bp.hits_count.out)
 			end
+
 			if bp /= Void and then bp.has_hit_count_condition then
 				inspect bp.hits_count_condition.mode
 				when {BREAKPOINT}.hits_count_condition_always, {BREAKPOINT}.hits_count_condition_continue_execution then
@@ -899,11 +901,16 @@ feature -- change
 					hit_count_condition_value_tf.set_text (bp.hits_count_condition.value.out)
 					hit_count_condition_value_tf.show
 				end
-				hit_count_condition_combo_items[bp.hits_count_condition.mode].enable_select
+				l_mode := bp.hits_count_condition.mode
 			else
 				hit_count_condition_value_tf.hide
 				hit_count_condition_value_tf.remove_text
-				hit_count_condition_combo_items[{BREAKPOINT}.Hits_count_condition_always].enable_select
+				l_mode := {BREAKPOINT}.Hits_count_condition_always
+			end
+			if attached hit_count_condition_combo_items[l_mode] as l_combo_item then
+				l_combo_item.enable_select
+			else
+				check combo_item_exists: False end
 			end
 
 				-- When hits ...

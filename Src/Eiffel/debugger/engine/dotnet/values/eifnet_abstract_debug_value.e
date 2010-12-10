@@ -148,7 +148,7 @@ feature {NONE} -- Special childrens
 					if Result = Void then
 						Result := l_values
 					elseif l_values /= Void then
-						Result.append_last (l_values)
+						Result.append (l_values)
 					end
 				end
 				l_object_value.clean_on_dispose
@@ -205,14 +205,14 @@ feature {NONE} -- Special childrens
 							if l_att_debug_value /= Void then
 								l_att_debug_value.set_static (l_is_static)
 								l_att_debug_value.set_name (l_att_name)
-								Result.force_last (l_att_debug_value)
+								Result.force (l_att_debug_value)
 							end
 						else
 							create l_error_debug_value.make_with_name (l_att_name)
 							if l_error_message /= Void then
 								l_error_debug_value.set_message (l_error_message)
 							end
-							Result.force_last (l_error_debug_value)
+							Result.force (l_error_debug_value)
 						end
 					end
 					debug ("DBG_EXTRA_DISPLAY")
@@ -224,7 +224,7 @@ feature {NONE} -- Special childrens
 							end
 							create l_error_debug_value.make_with_name (l_att_name)
 							l_error_debug_value.set_message ("Const value are not displayed")
-							Result.force_last (l_error_debug_value)
+							Result.force (l_error_debug_value)
 						end
 					end
 					l_tokens.forth
@@ -280,14 +280,14 @@ feature {NONE} -- Special childrens
 							if l_debug_value /= Void then
 								l_debug_value.set_property (True)
 								l_debug_value.set_name (l_name)
-								Result.force_last (l_debug_value)
+								Result.force (l_debug_value)
 							end
 						else
 							create l_error_debug_value.make_with_name (l_name)
 							if l_error_message /= Void then
 								l_error_debug_value.set_message (l_error_message)
 							end
-							Result.force_last (l_error_debug_value)
+							Result.force (l_error_debug_value)
 						end
 					end
 					l_tokens.forth

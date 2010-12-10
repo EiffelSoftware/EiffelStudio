@@ -121,8 +121,7 @@ feature -- Query
 			not_void: n /= Void
 		local
 			l_item: ABSTRACT_DEBUG_VALUE
-			l_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE]
-			s: detachable STRING
+			l_cursor: like attributes.new_cursor
 		do
 			if attached attributes as atts then
 				from
@@ -132,16 +131,15 @@ feature -- Query
 					l_cursor.after or Result /= Void
 				loop
 					l_item := l_cursor.item
-					s := l_item.name
-					if s /= Void and then s ~ n then
+					if attached l_item.name as s and then n.same_string_general (s) then
 						Result := l_item
 					end
 					l_cursor.forth
 				end
-				l_cursor.go_after
+--| Useless:		from until l_cursor.after loop l_cursor.forth end
 			end
 		ensure
-			same_name_if_found: (Result /= Void) implies (Result.name.is_equal (n))
+			same_name_if_found: (Result /= Void) implies (n.same_string_general (Result.name))
 		end
 
 invariant

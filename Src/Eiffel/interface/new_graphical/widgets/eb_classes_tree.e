@@ -159,7 +159,7 @@ feature {NONE} -- Initialization
 			l_target: CONF_TARGET
 		do
 				-- Remove all items, ready for rebuilding.
-			if Eiffel_project.initialized and then Universe.target /= Void then
+			if Eiffel_project.workbench.is_universe_ready then
 				store_expanded_state
 					-- Store expanded state of `Current'
 

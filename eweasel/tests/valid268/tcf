@@ -1,0 +1,10 @@
+test_name	 crash-on-veen2a
+test_description When compiling a system using Result incorrectly the compiler crashes instead of reporting the error.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+
+compile_melted
+compile_result 	validity_error TEST VEEN(2) VEEN(2) VEEN(2) VEEN(2)
+
+test_end

@@ -25,21 +25,21 @@ feature {NONE} -- Initialization
 			-- could not be performed in `initialize',
 			-- (due to regeneration of implementation class)
 			-- can be added here.
-		local
-			l_result: INTEGER
 		do
 			print ("%N start test")
 			set_size (800, 400)
 
-			create command_handler.make
-
 			-- !!! Attach Ribbon by COM here !!!
-			if attached {EV_WINDOW_IMP} implementation as l_imp then
-				com_initialize
-				l_result := create_ribbon_com_framework (l_imp.wel_item)
-			end
-
-			close_request_actions.extend (agent on_destroy)
+			ribbon.init_with_window (Current)
+			show_actions.extend_kamikaze (agent
+									local
+										l_env: EV_ENVIRONMENT
+									do
+										create l_env
+										if attached l_env.application as l_app then
+											l_app.destroy_actions.extend (agent ribbon.destroy)
+										end
+									end)
 		end
 
 	create_interface_objects
@@ -50,69 +50,13 @@ feature {NONE} -- Initialization
 
 				-- Proceed with vision2 objects creation.
 			Precursor
+			create ribbon.make
 		end
 
 
 feature {NONE} -- Implementation
 
-	on_destroy
-			-- Clean up all ribbon related COM objects and resources
-		do
-			destroy_ribbon_com_framwork
-			com_uninitialize
-		end
+	ribbon: ER_TOOL_BAR
+			--
 
-	command_handler: ER_COMMAND_HANDLER
-			-- EiffelRibbon command handler
-
-feature {NONE} -- Externals
-
-	com_initialize
-			-- Initialize COM
-		external
-			"C inline use %"Objbase.h%""
-		alias
-			"[
-			{
-			
-				CoInitialize (0);
-			}
-			]"
-		end
-
-	com_uninitialize
-			-- Clean up COM resources
-		external
-			"C inline use %"Objbase.h%""
-		alias
-			"[
-			{
-				CoUninitialize();
-			}
-			]"
-		end
-
-	create_ribbon_com_framework (a_hwnd: POINTER): INTEGER
-			-- Create Ribbon framework, attach ribbon to `a_hwnd'
-		external
-			"C inline use <ribbon.c>"
-		alias
-			"[
-			{
-				return InitializeFramework ($a_hwnd);
-			}
-			]"
-		end
-
-	destroy_ribbon_com_framwork
-			-- Destroy ribbon framwork
-		external
-			"C inline use <ribbon.c>"
-		alias
-			"[
-			{
-				DestroyRibbon ();
-			}
-			]"
-		end
 end

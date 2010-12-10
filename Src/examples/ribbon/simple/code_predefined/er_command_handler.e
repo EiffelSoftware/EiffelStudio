@@ -6,7 +6,7 @@ note
 					the Windows Ribbon framework.
 																					]"
 	date: "$Date$"
-	revision: "$Revision$"
+	revision: "$Revision: 84925 $"
 
 class
 	ER_COMMAND_HANDLER
@@ -20,22 +20,64 @@ feature {NONE} -- Initialization
 			-- Creation method
 		do
 			set_object_and_function_address
+
+			create observers.make (100)
 		end
+
+feature -- Command
+
+	add_observer (a_observer: ER_COMMAND_HANDLER_OBSERVER)
+			--
+		do
+			observers.extend (a_observer)
+		end
+
+	remove_observer (a_observer: ER_COMMAND_HANDLER_OBSERVER)
+			--
+		do
+			observers.prune_all (a_observer)
+		end
+
+feature {NONE} -- Observers
+
+	observers: ARRAYED_LIST [ER_COMMAND_HANDLER_OBSERVER]
+			--
 
 feature {NONE} -- Implementation
 
 	execute (a_command_id: NATURAL_32; a_execution_verb: INTEGER; a_property_key: POINTER; a_property_value: POINTER; a_command_execution_properties: POINTER): NATURAL_32
 			-- Responds to execute events on Commands bound to the Command handle
 			-- This function is called from C codes
+		local
+			l_result: NATURAL_32
 		do
-			print ("%N Command handler execute in Eiffel. Command id is: " + a_command_id.out + " Execution verb is: " + a_execution_verb.out)
+--			print ("%N Command handler execute in Eiffel. Command id is: " + a_command_id.out + " Execution verb is: " + a_execution_verb.out)
+			from
+				observers.start
+			until
+				observers.after
+			loop
+				l_result := observers.item.execute (a_command_id, a_execution_verb, a_property_key, a_property_value, a_command_execution_properties)
+
+				observers.forth
+			end
 		end
 
 	update_property (a_command_id: NATURAL_32; a_property_key: POINTER; a_property_current_value: POINTER; a_property_new_value: POINTER): NATURAL_32
 			-- Responds to property update requests from the Ribbon framework
 			-- This function is called from C codes
+		local
+			l_result: NATURAL_32
 		do
-			print ("%N Command handler update_property in Eiffel. Command id is: " + a_command_id.out)
+			from
+				observers.start
+			until
+				observers.after
+			loop
+				l_result := observers.item.update_property (a_command_id, a_property_key, a_property_current_value, a_property_new_value)
+
+				observers.forth
+			end
 		end
 
 feature {NONE} -- Externals

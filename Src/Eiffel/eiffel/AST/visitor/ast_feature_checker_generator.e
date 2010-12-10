@@ -724,6 +724,14 @@ feature {NONE} -- Settings
 			current_target_type := Void
 		end
 
+	reset_byte_node
+			-- Reset byte node generation
+		do
+			if is_byte_node_enabled then
+				last_byte_node := Void
+			end
+		end
+
 	reset_for_unqualified_call_checking
 		do
 			last_type := context.current_class_type
@@ -2300,6 +2308,7 @@ feature {NONE} -- Implementation
 			l_veen2a: VEEN2A
 			l_result: RESULT_B
 		do
+			reset_byte_node
 				-- Error if in procedure or invariant
 			l_has_error := is_checking_invariant
 			if not l_has_error then
@@ -3572,9 +3581,8 @@ feature {NONE} -- Implementation
 			l_veen2a: VEEN2A
 			l_type: TYPE_A
 		do
-			if
-				is_checking_invariant or else not current_feature.has_return_value
-			then
+			reset_byte_node
+			if is_checking_invariant or else not current_feature.has_return_value then
 					-- It means that we are in a location where `Result' is not
 					-- acceptable (e.g. an invariant, or within the body of a procedure).
 				create l_vrle3
@@ -5112,7 +5120,7 @@ feature {NONE} -- Implementation
 			l_custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
 			l_error_level: NATURAL_32
 		do
-			last_byte_node := Void
+			reset_byte_node
 			l_error_level := error_level
 			reset_for_unqualified_call_checking
 			l_as.body.process (Current)
@@ -7361,7 +7369,7 @@ feature {NONE} -- Implementation
 				context.leave_optional_realm
 				set_is_checking_invariant (False)
 			else
-				last_byte_node := Void
+				reset_byte_node
 			end
 		end
 
@@ -7516,7 +7524,7 @@ feature {NONE} -- Implementation
 					l_is_empty := True
 					if l_as.compound /= Void then
 						process_compound (l_as.compound)
-						last_byte_node := Void
+						reset_byte_node
 					end
 				else
 						-- Array of intervals is not empty
@@ -7963,7 +7971,7 @@ feature {NONE} -- Implementation
 			l_as.go_i_th (l_cursor)
 			if error_level /= l_error_level then
 				last_expressions_type := Void
-				last_byte_node := Void
+				reset_byte_node
 			else
 				last_expressions_type := l_type_list
 			end
@@ -8042,7 +8050,7 @@ feature {NONE} -- Implementation
 			l_as.go_i_th (l_cursor)
 			if error_level /= l_error_level then
 				last_expressions_type := Void
-				last_byte_node := Void
+				reset_byte_node
 			else
 				last_expressions_type := l_type_list
 			end

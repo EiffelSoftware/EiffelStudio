@@ -307,7 +307,7 @@ rt_private int extend(struct stack *stk, rt_uint_ptr nb_items)
 	return 0;			/* Everything is ok */
 }
 
-#ifdef EIF_WINDOWS
+#if defined(EIF_WINDOWS) && defined(_MSC_VER)
 	/* This is to catch CRT raised exception when passing incorrect arguments to CRT routines. */
 rt_private void __cdecl eif_invalid_paramter_handler(const wchar_t* expression,
    const wchar_t* function, const wchar_t* file, unsigned int line, uintptr_t pReserved)
@@ -358,7 +358,7 @@ rt_shared void initstk(void)
 #endif
 #endif
 
-#ifdef EIF_WINDOWS
+#if defined(EIF_WINDOWS) && defined(_MSC_VER)
 		/* This is to catch CRT raised exception when passing incorrect arguments to CRT routines. */
 	_set_invalid_parameter_handler(eif_invalid_paramter_handler);
 #endif

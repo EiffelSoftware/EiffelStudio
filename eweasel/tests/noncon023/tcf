@@ -1,0 +1,17 @@
+test_name non-conforming-crash
+test_description A routine that is inherited by two successive non-conformance path causes the compiler to crash.
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+copy_raw es2_assertions.e $CLUSTER es2_assertions.e
+copy_raw es2_breadth_first_heap_traversal.e $CLUSTER es2_breadth_first_heap_traversal.e
+copy_raw es2_deep_equality_asserter.e $CLUSTER es2_deep_equality_asserter.e
+copy_raw es2_depth_first_heap_traversal.e $CLUSTER es2_depth_first_heap_traversal.e
+copy_raw es2_head_traversal_strategy.e $CLUSTER es2_head_traversal_strategy.e
+copy_raw es2_heap_traversal.e $CLUSTER es2_heap_traversal.e
+copy_raw es2_object_traversal.e $CLUSTER es2_object_traversal.e
+
+compile_melted
+compile_result 	ok
+
+test_end

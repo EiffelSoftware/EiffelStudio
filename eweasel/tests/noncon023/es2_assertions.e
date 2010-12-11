@@ -69,8 +69,7 @@ feature {NONE} -- Implementation
 			visited_attached: visited /= Void
 			same_types: expected.same_type (actual)
 		local
-			l_count, i, l_type: INTEGER
-			l_exp, l_act: detachable ANY
+			l_count, i: INTEGER
 			l_path: STRING
 		do
 			l_count := internal.field_count (expected)

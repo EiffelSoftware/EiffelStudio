@@ -2270,7 +2270,11 @@ rt_private void interpret(int flag, int where)
 				memset(&default_item, 0, ITEM_SZ);
 			}
 			CHECK("valid_type", (nb_item.type & SK_HEAD) == SK_INT32);
-			nb = (uint32) nb_item.it_int32;
+			if (nb_item.it_int32 >= 0) {
+				nb = (uint32) nb_item.it_int32;
+			} else {
+				eraise ("non_negative_argument", EN_RT_CHECK); 
+			}
 
 			if (is_expanded) {
 				flags = EO_COMP;

@@ -115,6 +115,9 @@ feature -- Processing
 
 					a_feature.set_body_index (l_body_index)
 
+						-- Body was replicated, we need to setup `access_in' properly.
+					a_feature.set_access_in (a_current_class.class_id)
+
 						-- We need to add the replicated feature as to the class as
 						-- so that it may be stored to disk for incrementality
 						--| FIXME IEK We need a better mechanism for doing this.

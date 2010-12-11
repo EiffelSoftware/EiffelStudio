@@ -99,7 +99,14 @@ feature -- Selection
 							replication := item.a_feature.replicated (item.internal_a_feature.written_in)
 						end
 					else
-						replication := item.a_feature.replicated (l_inheriting_class_id)
+						if item.a_feature.has_replicated_ast then
+								-- Parent feature was already replicated, we need to keep its `access_in'
+								-- it will be modified later in
+								-- `{AST_FEATURE_REPLICATION_GENERATOR}.process_replicated_feature'.
+							replication := item.a_feature.replicated (item.internal_a_feature.access_in)
+						else
+							replication := item.a_feature.replicated (l_inheriting_class_id)
+						end
 						if item.non_conforming then
 							replication.set_from_non_conforming_parent (True)
 						end

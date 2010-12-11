@@ -1574,7 +1574,7 @@ test	catcall-in-expanded-class-invariant	exec330 tcf fail execution catcall
 test	once-string-seg-fault			exec331 tcf fail execution
 test	object-test-wrong-with-expanded-generic	exec332 tcf fail execution
 test	tracing-memory-corruption		exec333 tcf pass execution
-test	special-make_empty				exec334 tcf pass execution special
+test	special-make-empty				exec334 tcf pass execution special
 
 -- Once specific
 

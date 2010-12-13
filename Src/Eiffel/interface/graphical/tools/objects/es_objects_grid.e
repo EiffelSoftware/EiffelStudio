@@ -203,7 +203,7 @@ feature -- Change with preferences
 		require
 			s_valid: s /= Void and then not s.is_empty
 		local
-			dts: ARRAY [like column_layout]
+			dts: ARRAY [detachable like column_layout]
 			sp: LIST [STRING]
 			i,n: INTEGER
 			l_id: INTEGER
@@ -218,7 +218,7 @@ feature -- Change with preferences
 				from
 					i := 0
 					n := sp.count // 5
-					create dts.make (0, n - 1)
+					create dts.make_filled (Void, 0, n - 1)
 					sp.start
 				until
 					sp.after
@@ -292,14 +292,18 @@ feature -- Columns layout access
 			retried: BOOLEAN
 		do
 			if not retried then
-				from
-					create Result.make (1, column_count)
-					i := 1
-				until
-					i > column_count
-				loop
-					Result[i] := column_layout (i)
-					i := i + 1
+				if column_count = 0 then
+					create Result.make_empty
+				else
+					from
+						create Result.make_filled (column_layout (1), 1, column_count)
+						i := 2
+					until
+						i > column_count
+					loop
+						Result[i] := column_layout (i)
+						i := i + 1
+					end
 				end
 			end
 		rescue
@@ -347,7 +351,7 @@ feature -- Change
 
 	set_columns_layout (
 				a_col_pixmap_index: INTEGER;
-				a_col_details: ARRAY [like column_layout] --| name, address, value, type, context
+				a_col_details: ARRAY [detachable like column_layout] --| name, address, value, type, context
 				)
 		require
 			a_col_details.count > 0
@@ -364,7 +368,9 @@ feature -- Change
 			until
 				i > a_col_details.upper
 			loop
-				set_column_layout (1 + i - a_col_details.lower, a_col_details[i])
+				if attached a_col_details[i] as d then
+					set_column_layout (1 + i - a_col_details.lower, d)
+				end
 				i := i + 1
 			end
 		end

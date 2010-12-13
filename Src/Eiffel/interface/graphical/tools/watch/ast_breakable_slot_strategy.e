@@ -211,7 +211,7 @@ feature -- reset
 			if breakable_lines /= Void then
 				breakable_lines.wipe_out
 			else
-				create {DS_LINKED_LIST [INTEGER]} breakable_lines.make
+				create {LINKED_LIST [INTEGER]} breakable_lines.make
 			end
 			if locals_for_current_feature	/= Void then
 				locals_for_current_feature.wipe_out
@@ -227,7 +227,7 @@ feature -- reset
 
 feature -- Access
 
-	sorted_breakable_lines: DS_LIST [INTEGER]
+	sorted_breakable_lines: LIST [INTEGER]
 		do
 			Result := breakable_lines
 			if not integer_sorter.sorted (Result) then
@@ -235,9 +235,9 @@ feature -- Access
 			end
 		end
 
-	integer_sorter: DS_QUICK_SORTER [INTEGER]
+	integer_sorter: QUICK_SORTER [INTEGER]
 		once
-			create Result.make (create {KL_COMPARABLE_COMPARATOR [INTEGER]}.make)
+			create Result.make (create {COMPARABLE_COMPARATOR [INTEGER]})
 		end
 
 	breakable_lines: like sorted_breakable_lines
@@ -2755,7 +2755,7 @@ feature {NONE} -- Implementation: helpers
 			debug ("debugger_trace")
 				print ("put_breakable : " + a_as.start_location.line.out + "%N")
 			end
-			breakable_lines.force_last (a_as.start_location.line)
+			breakable_lines.force (a_as.start_location.line)
 		end
 
 invariant

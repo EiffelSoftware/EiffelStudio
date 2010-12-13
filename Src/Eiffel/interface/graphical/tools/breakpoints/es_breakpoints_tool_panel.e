@@ -606,7 +606,7 @@ feature {NONE} -- Impl filling
 			l_last_sort_column: INTEGER
 			l_last_sort_order: INTEGER
 			bplst: BREAK_LIST
-			bps: DS_ARRAYED_LIST [BREAKPOINT]
+			bps: ARRAYED_LIST [BREAKPOINT]
 			bp: BREAKPOINT
 			no_bp: BOOLEAN
 			l_filter: like filter
@@ -653,7 +653,8 @@ feature {NONE} -- Impl filling
 					-- Flat like grid
 				bplst := bpm.breakpoints
 				from
-					create bps.make_equal (bplst.count)
+					create bps.make (bplst.count)
+					bps.compare_objects
 					bplst.start
 				until
 					bplst.after
@@ -661,7 +662,7 @@ feature {NONE} -- Impl filling
 					bp := bplst.item_for_iteration
 					if bp /= Void and then bp.is_set then
 						if l_filter = Void or else bp.match_tags (l_filter) then
-							bps.put_last (bp)
+							bps.force (bp)
 						end
 					end
 					bplst.forth
@@ -669,39 +670,39 @@ feature {NONE} -- Impl filling
 
 				no_bp := bps.is_empty
 				if not no_bp then
-					bps.sort (create {DS_QUICK_SORTER [BREAKPOINT]}.make (
-									create {AGENT_BASED_EQUALITY_TESTER [BREAKPOINT]}.make (
-											agent (a_data, a_other_data: BREAKPOINT; a_column, a_order: INTEGER): BOOLEAN
-												local
-													s1,s2: STRING_32
-												do
-													inspect a_column
-													when Data_column_index then
+					(create {QUICK_SORTER [BREAKPOINT]}.make (
+								create {AGENT_EQUALITY_TESTER [BREAKPOINT]}.make (
+										agent (a_data, a_other_data: BREAKPOINT; a_column, a_order: INTEGER): BOOLEAN
+											local
+												s1,s2: STRING_32
+											do
+												inspect a_column
+												when Data_column_index then
+													Result := a_data.location.is_lesser_than (a_other_data.location)
+												when Status_column_index then
+													if a_data.is_enabled = a_other_data.is_enabled then
 														Result := a_data.location.is_lesser_than (a_other_data.location)
-													when Status_column_index then
-														if a_data.is_enabled = a_other_data.is_enabled then
-															Result := a_data.location.is_lesser_than (a_other_data.location)
-														elseif a_data.is_enabled then
-															Result := True
-														else
-															Result := False
-														end
-													when Tags_column_index then
-														s1 := a_data.tags_as_string
-														s2 := a_other_data.tags_as_string
-														if s1.is_equal (s2) then
-															Result := a_data.location.is_lesser_than (a_other_data.location)
-														else
-															Result := s1 < s2
-														end
+													elseif a_data.is_enabled then
+														Result := True
+													else
+														Result := False
 													end
-													if a_order = {EVS_GRID_TWO_WAY_SORTING_ORDER}.descending_order then
-														Result := not Result
+												when Tags_column_index then
+													s1 := a_data.tags_as_string
+													s2 := a_other_data.tags_as_string
+													if s1.is_equal (s2) then
+														Result := a_data.location.is_lesser_than (a_other_data.location)
+													else
+														Result := s1 < s2
 													end
-												end (?, ?, l_last_sort_column, l_last_sort_order)
-											)
-									)
-							)
+												end
+												if a_order = {EVS_GRID_TWO_WAY_SORTING_ORDER}.descending_order then
+													Result := not Result
+												end
+											end (?, ?, l_last_sort_column, l_last_sort_order)
+										)
+								)
+						).sort(bps)
 
 					grid.disable_tree
 					insert_bp_list (bps)
@@ -722,7 +723,7 @@ feature {NONE} -- Impl filling
 			restore_grid_layout
 		end
 
-	insert_bp_list (bps: DS_LIST [BREAKPOINT])
+	insert_bp_list (bps: LIST [BREAKPOINT])
 		require
 			not grid.is_tree_enabled
 		local
@@ -798,8 +799,10 @@ feature {NONE} -- Impl filling
 					stwl.after or has_bp
 				loop
 					f := stwl.item
-					bp_list := bpm.breakpoints_set_for (f, False)
-					has_bp := not bp_list.is_empty
+					if bpm.is_feature_breakable (f) then
+						bp_list := bpm.breakpoints_set_for (f, False)
+						has_bp := not bp_list.is_empty
+					end
 					stwl.forth
 				end
 

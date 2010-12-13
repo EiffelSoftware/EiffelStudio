@@ -86,7 +86,7 @@ feature -- Entry
 						elseif i > c then
 							i := c
 						end
-						l_line_start := strat.sorted_breakable_lines.item (i)
+						l_line_start := strat.sorted_breakable_lines.i_th (i)
 
 							--| Upper line index
 						i := 1 + a_bp_index + a_delta_upper
@@ -95,7 +95,7 @@ feature -- Entry
 						elseif i < 1 then
 							i := 1
 						end
-						l_line_end := strat.sorted_breakable_lines.item (i)
+						l_line_end := strat.sorted_breakable_lines.i_th (i)
 					else
 						l_line_start := l_as.complete_start_location (leaf_as_list).line - 1
 						l_line_end := l_as.last_token (leaf_as_list).line

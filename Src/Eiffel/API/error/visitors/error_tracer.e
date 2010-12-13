@@ -34,12 +34,19 @@ feature -- Display
 			text_formatter_not_void: a_text_formatter /= Void
 			error_not_void: a_error /= Void
 			valid_kind: a_kind = normal or a_kind = single_line or a_kind = context
+		local
+			retried: BOOLEAN
 		do
-			type := a_kind
-			text_formatter := a_text_formatter
-			a_error.process (Current)
+			if not retried then
+				type := a_kind
+				text_formatter := a_text_formatter
+				a_error.process (Current)
+			end
 			text_formatter := Void
 			type := normal
+		rescue
+			retried := True
+			retry
 		end
 
 feature -- Access

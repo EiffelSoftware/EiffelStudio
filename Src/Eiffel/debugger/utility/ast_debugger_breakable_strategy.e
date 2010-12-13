@@ -366,12 +366,13 @@ feature {NONE} -- Element change
 	text_of (a_as: AST_EIFFEL): STRING
 			-- Text associated with `a_as'
 		local
-			s: detachable STRING
 			retried: BOOLEAN
 		do
 			if not retried then
-				s := a_as.text (leaf_as_list)
-				if s /= Void then
+				if
+					a_as.is_text_available (leaf_as_list) and then
+					attached a_as.text (leaf_as_list) as s
+				then
 					Result := s
 				else
 					create Result.make_empty

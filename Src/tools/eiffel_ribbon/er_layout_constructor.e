@@ -67,6 +67,9 @@ feature -- Command
 			content.set_default_editor_position
 		end
 
+	widget: EV_TREE
+			-- Main dockig content widget
+			
 feature -- Factory
 
 	tree_item_factory_method (a_item_text: STRING): EV_TREE_ITEM
@@ -266,9 +269,6 @@ feature {NONE} -- Implementation
 
 	content: SD_CONTENT
 			--
-
-	widget: EV_TREE
-			-- Main dockig content widget
 
 	helper: ER_HELPER
 			-- Helper

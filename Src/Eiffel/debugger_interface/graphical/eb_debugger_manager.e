@@ -539,13 +539,10 @@ feature -- tools
 
 	watch_tool_list: LINKED_SET [ES_WATCH_TOOL]
 			-- List of watched tools
-		local
-			l_tools: DS_ARRAYED_LIST [ES_TOOL [EB_TOOL]]
 		do
 			if debugging_window /= Void then
-				l_tools := debugging_window.shell_tools.tools ({ES_WATCH_TOOL})
 				create Result.make
-				l_tools.do_all (agent (a_tool: ES_TOOL [EB_TOOL]; a_result: LINKED_SET [ES_WATCH_TOOL])
+				debugging_window.shell_tools.tools ({ES_WATCH_TOOL}).do_all (agent (a_tool: ES_TOOL [EB_TOOL]; a_result: LINKED_SET [ES_WATCH_TOOL])
 						do
 							if attached {ES_WATCH_TOOL} a_tool as l_watch_tool then
 								a_result.extend (l_watch_tool)

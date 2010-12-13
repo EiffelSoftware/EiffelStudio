@@ -26,6 +26,9 @@ feature -- Query
 	tool_info_file_name: STRING = "eiffel_ribbon_info.sed"
 			--
 
+	template: STRING = "template"
+			-- Template folder name
+			
 	xml_full_file_name: detachable STRING_8
 			-- (export status {NONE})
 		local

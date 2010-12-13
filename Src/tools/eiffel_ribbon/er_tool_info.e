@@ -18,6 +18,7 @@ feature {NONE} -- Initialization
 			-- Creation method
 		do
 			create recent_projects.make (10)
+			recent_projects.compare_objects
 		end
 
 feature -- Query

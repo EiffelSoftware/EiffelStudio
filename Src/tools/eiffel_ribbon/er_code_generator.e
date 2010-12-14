@@ -287,7 +287,6 @@ feature {NONE} -- Implementation
 						until
 							l_file.after
 						loop
-							-- FIXME: replace/add tab codes here
 							l_file.read_line
 							l_last_string := l_file.last_string
 							l_last_string.replace_substring_all ("$TAB_CREATION", l_tab_creation_string)
@@ -419,7 +418,7 @@ feature {NONE} -- Implementation
 			l_generated: detachable STRING
 		do
 			create Result.make_empty
-			l_template := "%Ttab_$TAB: ER_TOOL_BAR_TAB"
+			l_template := "%Ttab_$INDEX: ER_TOOL_BAR_TAB_$INDEX"
 
 			from
 				l_index := 1
@@ -428,7 +427,7 @@ feature {NONE} -- Implementation
 				l_count < l_index
 			loop
 				l_generated := l_template.twin
-				l_generated.replace_substring_all ("$TAB", l_index.out)
+				l_generated.replace_substring_all ("$INDEX", l_index.out)
 
 				l_index := l_index + 1
 				if l_generated /= Void then
@@ -449,6 +448,8 @@ feature {NONE} -- Implementation
 			l_file_name, l_dest_file_name: FILE_NAME
 			l_singleton: ER_SHARED_SINGLETON
 			l_sub_dir, l_tool_bar_tab_file, l_sub_imp_dir, l_tool_bar_tab_imp_file: STRING
+			l_group_creation_string, l_group_registry_string, l_group_declaration_string: STRING
+			l_last_string: STRING
 		do
 			-- First check how many groups
 			l_group_count := a_tab_note.count
@@ -473,14 +474,24 @@ feature {NONE} -- Implementation
 						l_dest_file_name.set_file_name (l_tool_bar_tab_file)
 						create l_dest_file.make_create_read_write (l_dest_file_name + "_" + a_index.out + ".e")
 						from
+							l_group_creation_string := group_creation_string (a_tab_note)
+							l_group_registry_string := group_registry_string (a_tab_note)
+							l_group_declaration_string := group_declaration_string (a_tab_note)
 							l_file.open_read
 							l_file.start
 						until
 							l_file.after
 						loop
-							-- FIXME: replace/add tab codes here
+							-- replace/add tab codes here
 							l_file.read_line
-							l_dest_file.put_string (l_file.last_string + "%N")
+							l_last_string := l_file.last_string
+							l_last_string.replace_substring_all ("$GROUP_CREATION", l_group_creation_string)
+							l_last_string.replace_substring_all ("$GROUP_REGISTRY", l_group_registry_string)
+							l_last_string.replace_substring_all ("$GROUP_DECLARATION", l_group_declaration_string)
+
+							l_last_string.replace_substring_all ("$INDEX", a_index.out)
+
+							l_dest_file.put_string (l_last_string + "%N")
 						end
 
 						l_file.close
@@ -502,9 +513,11 @@ feature {NONE} -- Implementation
 						until
 							l_file.after
 						loop
-							-- FIXME: replace/add tab codes here
+							-- replace/add tab codes here
 							l_file.read_line
-							l_dest_file.put_string (l_file.last_string + "%N")
+							l_last_string := l_file.last_string
+							l_last_string.replace_substring_all ("$INDEX", a_index.out)
+							l_dest_file.put_string (l_last_string + "%N")
 						end
 
 						l_file.close
@@ -520,13 +533,110 @@ feature {NONE} -- Implementation
 				a_tab_note.after
 			loop
 				check a_tab_note.item.text.is_equal ({ER_XML_CONSTANTS}.group) end
-				generate_group_class (a_tab_note.item)
+				generate_group_class (a_tab_note.item, a_tab_note.index)
 				a_tab_note.forth
 			end
 
 		end
 
-	generate_group_class (a_group_node: EV_TREE_NODE)
+	group_creation_string (a_tab_note: EV_TREE_NODE): STRING
+			--
+		require
+			not_void: a_tab_note /= void
+			valid: a_tab_note.text.is_equal ({ER_XML_CONSTANTS}.tab)
+		local
+			l_count, l_index: INTEGER
+			l_template, l_command_string: STRING
+			l_generated: detachable STRING
+		do
+			create Result.make_empty
+			l_template := "%T%T%Tcreate group_$INDEX.make_with_command_list ($COMMAND_IDS)"
+
+			from
+				l_index := 1
+				l_count := a_tab_note.count
+			until
+				l_count < l_index
+			loop
+				l_generated := l_template.twin
+				l_generated.replace_substring_all ("$INDEX", l_index.out)
+				if attached {ER_TREE_NODE_GROUP_DATA} a_tab_note.i_th (l_index).data as l_group_data then
+					if attached l_group_data.command_name as l_command_name then
+						l_command_string := "<<{ER_C_CONSTANTS}." + l_command_name + ">>"
+					else
+						l_command_string := "<<>>"
+					end
+				else
+					l_command_string := "<<>>"
+				end
+				l_generated.replace_substring_all ("$COMMAND_IDS", l_command_string)
+				l_index := l_index + 1
+				if l_generated /= Void then
+					Result.append (l_generated + "%N")
+				end
+			end
+		end
+
+	group_registry_string (a_tab_note: EV_TREE_NODE): STRING
+			--
+		require
+			not_void: a_tab_note /= void
+			valid: a_tab_note.text.is_equal ({ER_XML_CONSTANTS}.tab)
+		local
+			l_count, l_index: INTEGER
+			l_template, l_command_string: STRING
+			l_generated: detachable STRING
+		do
+			--"groups.extend (group_1)"
+			create Result.make_empty
+			l_template := "%T%T%Tgroups.extend (group_$INDEX)"
+
+			from
+				l_index := 1
+				l_count := a_tab_note.count
+			until
+				l_count < l_index
+			loop
+				l_generated := l_template.twin
+				l_generated.replace_substring_all ("$INDEX", l_index.out)
+
+				l_index := l_index + 1
+				if l_generated /= Void then
+					Result.append (l_generated + "%N")
+				end
+			end
+		end
+
+	group_declaration_string (a_tab_note: EV_TREE_NODE): STRING
+			--
+		require
+			not_void: a_tab_note /= void
+			valid: a_tab_note.text.is_equal ({ER_XML_CONSTANTS}.tab)
+		local
+			l_count, l_index: INTEGER
+			l_template, l_command_string: STRING
+			l_generated: detachable STRING
+		do
+			create Result.make_empty
+			l_template := "%Tgroup_$INDEX: ER_TOOL_BAR_GROUP_$INDEX"
+
+			from
+				l_index := 1
+				l_count := a_tab_note.count
+			until
+				l_count < l_index
+			loop
+				l_generated := l_template.twin
+				l_generated.replace_substring_all ("$INDEX", l_index.out)
+
+				l_index := l_index + 1
+				if l_generated /= Void then
+					Result.append (l_generated + "%N")
+				end
+			end
+		end
+
+	generate_group_class (a_group_node: EV_TREE_NODE; a_index: INTEGER)
 			--
 		require
 			not_void: a_group_node /= void
@@ -538,15 +648,16 @@ feature {NONE} -- Implementation
 			l_file_name, l_dest_file_name: FILE_NAME
 			l_singleton: ER_SHARED_SINGLETON
 			l_sub_dir, l_tool_bar_group_file, l_sub_imp_dir, l_tool_bar_group_imp_file: STRING
+			l_last_string: STRING
 		do
 			-- First check how many groups
 			l_button_count := a_group_node.count
 
 			create l_singleton
 			l_sub_dir := "code_generated_once_change_by_user"
-			l_tool_bar_group_file := "er_tool_bar_group.e"
+			l_tool_bar_group_file := "er_tool_bar_group"
 			l_sub_imp_dir := "code_generated_everytime"
-			l_tool_bar_group_imp_file := "er_tool_bar_group_imp.e"
+			l_tool_bar_group_imp_file := "er_tool_bar_group_imp"
 
 			if attached l_singleton.project_info_cell.item as l_project_info then
 				if attached l_project_info.project_location as l_project_location then
@@ -555,11 +666,11 @@ feature {NONE} -- Implementation
 					-- Generate tool bar group class
 					create l_file_name.make_from_string (l_constants.template)
 					l_file_name.set_subdirectory (l_sub_dir)
-					l_file_name.set_file_name (l_tool_bar_group_file)
+					l_file_name.set_file_name (l_tool_bar_group_file + ".e")
 					create l_file.make (l_file_name)
 					if l_file.exists and then l_file.is_readable then
 						create l_dest_file_name.make_from_string (l_project_location)
-						l_dest_file_name.set_file_name (l_tool_bar_group_file)
+						l_dest_file_name.set_file_name (l_tool_bar_group_file + "_" + a_index.out + ".e")
 						create l_dest_file.make_create_read_write (l_dest_file_name)
 						from
 							l_file.open_read
@@ -569,7 +680,9 @@ feature {NONE} -- Implementation
 						loop
 							-- FIXME: replace/add tab codes here
 							l_file.read_line
-							l_dest_file.put_string (l_file.last_string + "%N")
+							l_last_string := l_file.last_string
+							l_last_string.replace_substring_all ("$INDEX", a_index.out)
+							l_dest_file.put_string (l_last_string + "%N")
 						end
 
 						l_file.close
@@ -579,11 +692,11 @@ feature {NONE} -- Implementation
 					-- Generate tool bar group imp class
 					create l_file_name.make_from_string (l_constants.template)
 					l_file_name.set_subdirectory (l_sub_imp_dir)
-					l_file_name.set_file_name (l_tool_bar_group_imp_file)
+					l_file_name.set_file_name (l_tool_bar_group_imp_file + ".e")
 					create l_file.make (l_file_name)
 					if l_file.exists and then l_file.is_readable then
 						create l_dest_file_name.make_from_string (l_project_location)
-						l_dest_file_name.set_file_name (l_tool_bar_group_imp_file)
+						l_dest_file_name.set_file_name (l_tool_bar_group_imp_file + "_" + a_index.out + ".e")
 						create l_dest_file.make_create_read_write (l_dest_file_name)
 						from
 							l_file.open_read
@@ -593,7 +706,9 @@ feature {NONE} -- Implementation
 						loop
 							-- FIXME: replace/add tab codes here
 							l_file.read_line
-							l_dest_file.put_string (l_file.last_string + "%N")
+							l_last_string := l_file.last_string
+							l_last_string.replace_substring_all ("$INDEX", a_index.out)
+							l_dest_file.put_string (l_last_string + "%N")
 						end
 
 						l_file.close

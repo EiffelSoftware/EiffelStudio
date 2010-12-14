@@ -4,10 +4,10 @@ note
 	revision: "$Revision$"
 
 frozen class
-	ER_TOOL_BAR_GROUP
+	ER_TOOL_BAR_GROUP_$INDEX
 
 inherit
-	ER_TOOL_BAR_GROUP_IMP
+	ER_TOOL_BAR_GROUP_IMP_$INDEX
 
 create
     {ER_TOOL_BAR_TAB} make_with_command_list

@@ -253,6 +253,8 @@ feature {NONE} -- Implementation
 			l_file_name, l_dest_file_name: FILE_NAME
 			l_singleton: ER_SHARED_SINGLETON
 			l_sub_dir, l_tool_bar_file, l_sub_imp_dir, l_tool_bar_imp_file: STRING
+			l_last_string: STRING
+			l_tab_creation_string, l_tab_registry_string, l_tab_declaration_string: STRING
 		do
 			-- First check how many tabs
 			l_tab_count := a_tabs_root_note.count
@@ -279,12 +281,20 @@ feature {NONE} -- Implementation
 						from
 							l_file.open_read
 							l_file.start
+							l_tab_creation_string := tag_creation_string (a_tabs_root_note)
+							l_tab_registry_string := tab_registry_string (a_tabs_root_note)
+							l_tab_declaration_string := tab_declaration_string (a_tabs_root_note)
 						until
 							l_file.after
 						loop
 							-- FIXME: replace/add tab codes here
 							l_file.read_line
-							l_dest_file.put_string (l_file.last_string + "%N")
+							l_last_string := l_file.last_string
+							l_last_string.replace_substring_all ("$TAB_CREATION", l_tab_creation_string)
+							l_last_string.replace_substring_all ("$TAB_REGISTRY", l_tab_registry_string)
+							l_last_string.replace_substring_all ("$TAB_DECLARATION", l_tab_declaration_string)
+
+							l_dest_file.put_string (l_last_string + "%N")
 						end
 
 						l_file.close
@@ -324,13 +334,110 @@ feature {NONE} -- Implementation
 				a_tabs_root_note.after
 			loop
 				check a_tabs_root_note.item.text.is_equal ({ER_XML_CONSTANTS}.tab) end
-				generate_tab_class (a_tabs_root_note.item)
+				generate_tab_class (a_tabs_root_note.item, a_tabs_root_note.index)
 				a_tabs_root_note.forth
 			end
 
 		end
 
-	generate_tab_class (a_tab_note: EV_TREE_NODE)
+	tag_creation_string (a_tabs_root_note: EV_TREE_NODE): STRING
+			--
+		require
+			not_void: a_tabs_root_note /= Void
+			valid:  a_tabs_root_note.text.is_equal ({ER_XML_CONSTANTS}.ribbon_tabs)
+		local
+			l_count, l_index: INTEGER
+			l_template, l_command_string: STRING
+			l_generated: detachable STRING
+		do
+			create Result.make_empty
+			l_template := "%T%T%Tcreate tab_$INDEX.make_with_command_list ($COMMAND_IDS)"
+
+			from
+				l_index := 1
+				l_count := a_tabs_root_note.count
+			until
+				l_count < l_index
+			loop
+				l_generated := l_template.twin
+				l_generated.replace_substring_all ("$INDEX", l_index.out)
+				if attached {ER_TREE_NODE_TAB_DATA} a_tabs_root_note.i_th (l_index).data as l_group_data then
+					if attached l_group_data.command_name as l_command_name then
+						l_command_string := "<<{ER_C_CONSTANTS}." + l_command_name + ">>"
+					else
+						l_command_string := "<<>>"
+					end
+				else
+					l_command_string := "<<>>"
+				end
+				l_generated.replace_substring_all ("$COMMAND_IDS", l_command_string)
+				l_index := l_index + 1
+				if l_generated /= Void then
+					Result.append (l_generated + "%N")
+				end
+			end
+		end
+
+	tab_registry_string (a_tabs_root_note: EV_TREE_NODE): STRING
+			--
+		require
+			not_void: a_tabs_root_note /= Void
+			valid:  a_tabs_root_note.text.is_equal ({ER_XML_CONSTANTS}.ribbon_tabs)
+		local
+			l_count, l_index: INTEGER
+			l_template, l_command_string: STRING
+			l_generated: detachable STRING
+		do
+			--"tabs.extend (tab_1)"
+			create Result.make_empty
+			l_template := "%T%T%Ttabs.extend (tab_$TAB)"
+
+			from
+				l_index := 1
+				l_count := a_tabs_root_note.count
+			until
+				l_count < l_index
+			loop
+				l_generated := l_template.twin
+				l_generated.replace_substring_all ("$TAB", l_index.out)
+
+				l_index := l_index + 1
+				if l_generated /= Void then
+					Result.append (l_generated + "%N")
+				end
+			end
+		end
+
+	tab_declaration_string (a_tabs_root_note: EV_TREE_NODE): STRING
+			--
+		require
+			not_void: a_tabs_root_note /= Void
+			valid:  a_tabs_root_note.text.is_equal ({ER_XML_CONSTANTS}.ribbon_tabs)
+		local
+			l_count, l_index: INTEGER
+			l_template, l_command_string: STRING
+			l_generated: detachable STRING
+		do
+			create Result.make_empty
+			l_template := "%Ttab_$TAB: ER_TOOL_BAR_TAB"
+
+			from
+				l_index := 1
+				l_count := a_tabs_root_note.count
+			until
+				l_count < l_index
+			loop
+				l_generated := l_template.twin
+				l_generated.replace_substring_all ("$TAB", l_index.out)
+
+				l_index := l_index + 1
+				if l_generated /= Void then
+					Result.append (l_generated + "%N")
+				end
+			end
+		end
+
+	generate_tab_class (a_tab_note: EV_TREE_NODE; a_index: INTEGER)
 			--
 		require
 			not_void: a_tab_note /= void
@@ -348,9 +455,9 @@ feature {NONE} -- Implementation
 
 			create l_singleton
 			l_sub_dir := "code_generated_once_change_by_user"
-			l_tool_bar_tab_file := "er_tool_bar_tab.e"
+			l_tool_bar_tab_file := "er_tool_bar_tab"
 			l_sub_imp_dir := "code_generated_everytime"
-			l_tool_bar_tab_imp_file := "er_tool_bar_tab_imp.e"
+			l_tool_bar_tab_imp_file := "er_tool_bar_tab_imp"
 
 			if attached l_singleton.project_info_cell.item as l_project_info then
 				if attached l_project_info.project_location as l_project_location then
@@ -359,12 +466,12 @@ feature {NONE} -- Implementation
 					-- Generate tool bar tab class
 					create l_file_name.make_from_string (l_constants.template)
 					l_file_name.set_subdirectory (l_sub_dir)
-					l_file_name.set_file_name (l_tool_bar_tab_file)
+					l_file_name.set_file_name (l_tool_bar_tab_file + ".e")
 					create l_file.make (l_file_name)
 					if l_file.exists and then l_file.is_readable then
 						create l_dest_file_name.make_from_string (l_project_location)
 						l_dest_file_name.set_file_name (l_tool_bar_tab_file)
-						create l_dest_file.make_create_read_write (l_dest_file_name)
+						create l_dest_file.make_create_read_write (l_dest_file_name + "_" + a_index.out + ".e")
 						from
 							l_file.open_read
 							l_file.start
@@ -383,12 +490,12 @@ feature {NONE} -- Implementation
 					-- Generate tool bar tab imp class
 					create l_file_name.make_from_string (l_constants.template)
 					l_file_name.set_subdirectory (l_sub_imp_dir)
-					l_file_name.set_file_name (l_tool_bar_tab_imp_file)
+					l_file_name.set_file_name (l_tool_bar_tab_imp_file + ".e")
 					create l_file.make (l_file_name)
 					if l_file.exists and then l_file.is_readable then
 						create l_dest_file_name.make_from_string (l_project_location)
 						l_dest_file_name.set_file_name (l_tool_bar_tab_imp_file)
-						create l_dest_file.make_create_read_write (l_dest_file_name)
+						create l_dest_file.make_create_read_write (l_dest_file_name + "_" + a_index.out + ".e")
 						from
 							l_file.open_read
 							l_file.start

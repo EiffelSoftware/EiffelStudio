@@ -28,16 +28,21 @@ feature {NONE} -- Initialization
 	create_interface_objects
 			--
 		do
-			create tab_1.make_with_command_list (<<{ER_C_CONSTANTS}.Idc_cmd_tab1.as_natural_32>>)
+			--create tab_1.make_with_command_list (<<{ER_C_CONSTANTS}.Idc_cmd_tab1.as_natural_32>>)
+$TAB_CREATION
 
 			create tabs.make (1)
-			tabs.extend (tab_1)
+			
+			
+			--tabs.extend (tab_1)
+$TAB_REGISTRY
 		end
 
 feature -- Query
 
-	tab_1: ER_TOOL_BAR_TAB
+	--tab_1: ER_TOOL_BAR_TAB
 			--
+$TAB_DECLARATION
 
 	tabs: ARRAYED_LIST [ER_TOOL_BAR_TAB]
 			-- All tabs in current tool bar

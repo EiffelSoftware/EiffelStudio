@@ -288,11 +288,19 @@ feature -- Element change
 
 				if rsvnlog.has_diff then
 					create glab.make_with_text ("Double click to SHOW diff")
-					glab.pointer_double_press_actions.force_extend (agent popup_diff (rsvnlog))
+					glab.pointer_double_press_actions.force_extend (agent show_info_diff) --popup_diff (rsvnlog))
 					l_row.set_item (cst_info_value_col, glab)
 				else
 					create glab.make_with_text ("Double click to GET diff")
 					glab.pointer_double_press_actions.force_extend (agent show_info_diff)
+					l_row.set_item (cst_info_value_col, glab)
+				end
+
+				if attached rsvnlog.parent.repository_option ("service.diff.web") then
+					g.insert_new_row (g.row_count + 1)
+					l_row := g.row (g.row_count)
+					create glab.make_with_text ("Double click to view changes online")
+					glab.pointer_double_press_actions.force_extend (agent show_info ("service.diff.web"))
 					l_row.set_item (cst_info_value_col, glab)
 				end
 
@@ -539,17 +547,10 @@ feature {NONE} -- Implementation
 
 	open_url (a_url: STRING)
 		local
-			exec: EXECUTION_ENVIRONMENT
-			s: STRING
+			e: CTR_EXTERNAL_TOOLS
 		do
-			s := a_url
-			if s /= Void then
-				create exec
-				if attached exec.get ("COMSPEC") as l_comspec then
-					s := l_comspec + " /C start " + s
-					exec.launch (s)
-				end
-			end
+			create e
+			e.open_url (a_url)
 		end
 
 	open_data_folder
@@ -580,18 +581,28 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	popup_diff (a_log: REPOSITORY_LOG)
-		do
-			if attached ctr_window as w then
-				w.popup_diff (a_log)
-			end
-		end
+--	popup_diff (a_log: REPOSITORY_LOG)
+--		do
+--			if attached ctr_window as w then
+--				w.popup_diff (a_log)
+--			end
+--		end
 
 	show_info_diff
 		do
+			show_info ("service.diff.file")
+--			if attached ctr_window as w then
+--				if attached current_log as l_log then
+--					w.show_log_diff (l_log)
+--				end
+--			end
+		end
+
+	show_info (a_service: STRING)
+		do
 			if attached ctr_window as w then
 				if attached current_log as l_log then
-					w.show_log_diff (l_log)
+					w.show_log (a_service, l_log)
 				end
 			end
 		end

@@ -7,12 +7,6 @@ note
 deferred class
 	REPOSITORY_STORAGE
 
---feature -- Initialization
-
---	set_data (a_data: REPOSITORY_DATA)
---		deferred
---		end
-
 feature -- Load
 
 	archive_loaded_log (a_id: STRING; a_data: REPOSITORY_DATA): like loaded_log

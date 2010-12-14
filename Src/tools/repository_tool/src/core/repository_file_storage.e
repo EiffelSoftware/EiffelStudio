@@ -11,9 +11,6 @@ inherit
 
 	REPOSITORY_SHARED
 
---create
---	make
-
 feature {NONE} -- Initialization
 
 	make
@@ -45,14 +42,6 @@ feature -- Initialization
 		end
 
 feature -- Load
-
-	archive_loaded_log (a_id: STRING; a_data: REPOSITORY_DATA): like loaded_log
-		deferred
-		end
-
-	loaded_log (a_id: STRING; a_data: REPOSITORY_DATA): detachable REPOSITORY_LOG
-		deferred
-		end
 
 	load_unread_logs (a_data: REPOSITORY_DATA)
 		local
@@ -427,29 +416,5 @@ feature {NONE} -- Implementation
 		do
 			ensure_folder_exists (review_data_folder_name)
 		end
-
-
---	get_info (a_data: REPOSITORY_DATA)
---		local
---			d: like info
---		do
---			create d
---			d.data_folder_name := Common_data_folder + sep + a_uuid.out + "_logs"
---			d.diff_data_folder_name := data_folder_name + sep + "_diff"
---			d.review_data_folder_name := data_folder_name + sep + "_review"
-
---			d.archive_data_folder_name := Common_data_folder + sep + a_uuid.out + "_logs" + sep + "_archive"
---			d.archive_diff_data_folder_name := archive_data_folder_name + sep + "_diff"
---			d.archive_review_data_folder_name := archive_data_folder_name + sep + "_review"
---		end
-
---	info (a_data: REPOSITORY_DATA): TUPLE [data_folder_name, diff_data_folder_name, review_data_folder_name, archive_data_folder_name, archive_diff_data_folder_name, archive_review_data_folder_name: STRING]
---		do
---			Result := info_by_repository.item (a_data.uuid)
---		end
-
---	info_by_repository: HASH_TABLE [like info, UUID]
-
-
 
 end

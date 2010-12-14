@@ -388,6 +388,10 @@ feature -- Storage
 					if s.count > 0 then
 						if s.item (1) = '#' then
 							--| skip
+							if repo /= Void then
+								s.remove_head (1)
+								repo.add_comment (s.string)
+							end
 						elseif s.item (1) = '[' then
 							if repo /= Void and then attached repo.location as loc then
 								if n /= Void then
@@ -427,7 +431,9 @@ feature -- Storage
 						elseif repo /= Void then
 							p := s.index_of ('=', 1)
 							v := s.substring (p + 1, s.count)
-							if s.substring (1, p -1).same_string ("uuid") then
+							if p = 0 then
+								print ("???: " + s + "%N")
+							elseif s.substring (1, p -1).same_string ("uuid") then
 								v.left_adjust; v.right_adjust
 								repo.set_uuid (create {UUID}.make_from_string (v))
 							elseif s.substring (1, p -1).same_string ("location") then
@@ -526,7 +532,13 @@ feature -- Storage
 									end
 								end
 							else
-								print ("???: " + s + "%N")
+								s2 := s.substring (1, p - 1)
+								if not s2.is_empty then
+									p := s2.index_of ('.', 1)
+									repo.add_free_configuration (s2, v)
+								else
+									print ("???: " + s + "%N")
+								end
 							end
 						else
 							print ("???: " + s + "%N")
@@ -621,6 +633,34 @@ feature -- Storage
 								Result.append_string ("filters." + flt.key + "=" + flt.item.name + "%N")
 							end
 							Result.append_string (filter_to_ini_line (flt.key, flt.item.filter))
+						end
+					end
+--					if attached c.item.services as l_services then
+--						across
+--							l_services as l_services_cursor
+--						loop
+--							Result.append_string ("service.")
+--							Result.append_string (l_services_cursor.key.name)
+--							if attached l_services_cursor.key.param as l_param  then
+--								Result.append_charactor ('.')
+--								Result.append_string (l_param)
+--							end
+--							Result.append_charactor ('=')
+--							Result.append_string (l_services_cursor.item)
+--							Result.append_charactor ('%N')
+--						end
+--					end
+					if attached c.item.free_configuration_values as l_free_configuration_values then
+						across
+							l_free_configuration_values as l_free_vals_cursor
+						loop
+							if attached l_free_vals_cursor.item as l_free_opt then
+								if l_free_opt.name.item (1) = '#' then
+									Result.append_string ("#" + l_free_opt.value + "%N")
+								else
+									Result.append_string (l_free_opt.name + "=" + l_free_opt.value + "%N")
+								end
+							end
 						end
 					end
 					Result.append_character ('%N')
@@ -1471,6 +1511,61 @@ feature {CTR_TOOL} -- Catalog
 --		end
 
 feature {CTR_TOOL} -- Diff
+
+	show_log (a_service: detachable STRING; a_log: REPOSITORY_LOG)
+		require
+			info_tool.current_log = a_log
+		local
+			rdata: REPOSITORY_DATA
+			l_diff: detachable STRING
+			l_service: detachable STRING
+			s: detachable STRING
+			l_diff_fn: FILE_NAME
+			e: CTR_EXTERNAL_TOOLS
+		do
+			rdata := a_log.parent
+			l_service := a_service
+			if l_service = Void then
+				l_service := "service.diff.file"
+			else
+				l_diff := rdata.repository_option (l_service)
+				if l_diff /= Void and then l_diff.is_empty then
+					l_diff := Void
+				end
+			end
+			if l_diff = Void or else l_service.same_string ("service.diff.file") then
+				if not a_log.has_diff then
+					set_busy
+					rdata.fetch_diff (a_log)
+					rdata.get_diff (a_log)
+					unset_busy
+				end
+				if a_log.has_diff then
+					info_tool.update_current_log (a_log)
+					if l_diff = Void then
+						popup_diff (a_log)
+					else
+						create e
+						create s.make_from_string (l_diff)
+						s.replace_substring_all ("$id", a_log.id)
+						if attached {REPOSITORY_FILE_STORAGE} rdata.storage as fs and then attached fs.log_diff_data_filename (a_log) as fn then
+							create l_diff_fn.make_from_string (e.current_working_directory)
+							l_diff_fn.extend (fn)
+							s.replace_substring_all ("$filename", l_diff_fn.string)
+						end
+						e.launch (s)
+					end
+				end
+			elseif l_service.same_string ("service.diff.web") then
+				create e
+				create s.make_from_string (l_diff)
+				s.replace_substring_all ("$id", a_log.id)
+				e.open_url (s)
+			elseif l_service.same_string ("service.diff.text") then
+				-- Need to fetch file, and previous version .. for each file
+				-- Todo ...
+			end
+		end
 
 	show_log_diff (a_log: REPOSITORY_LOG)
 		require

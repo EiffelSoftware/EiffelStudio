@@ -28,6 +28,8 @@ feature -- Command
 			generate_ecf
 			copy_predefine_classes
 			generate_readonly_classes
+
+			generate_eiffel_class_for_header_file
 		end
 
 feature {NONE} -- Implementation
@@ -164,6 +166,25 @@ feature {NONE} -- Implementation
 
 		end
 
+	generate_eiffel_class_for_header_file
+			--
+		local
+			l_translator: ER_H_FILE_TRANSLATOR
+			l_singleton: ER_SHARED_SINGLETON
+			l_source_header: FILE_NAME
+		do
+			create l_singleton
+			if attached l_singleton.project_info_cell.item as l_project_info then
+				if attached l_project_info.project_location as l_project_location then
+					create l_source_header.make_from_string (l_project_location)
+					l_source_header.set_file_name ({ER_MISC_CONSTANTS}.header_file_name)
+					create l_translator.make (l_source_header, l_project_location, "er_c_constants")
+					l_translator.translate
+				end
+			end
+
+		end
+
 	generate_readonly_classes
 			-- Generate readonly ribbon widget classes
 		local
@@ -218,7 +239,7 @@ feature {NONE} -- Implementation
 		end
 
 	uicc_manager: ER_UICC_MANAGER
-		--
+			--
 
 	generate_tool_bar_class (a_tabs_root_note: EV_TREE_NODE)
 			--

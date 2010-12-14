@@ -4,8 +4,8 @@ note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "event, action, sequence"
-	date: "Generated!"
-	revision: "Generated!"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class
 	 EV_WIDGET_ACTION_SEQUENCES_IMP
@@ -38,7 +38,7 @@ feature -- Event handling
 		do
 			create Result
 		end
-		
+
 	create_mouse_wheel_actions: EV_INTEGER_ACTION_SEQUENCE
 			-- Create a mouse_wheel action sequence.
 		do

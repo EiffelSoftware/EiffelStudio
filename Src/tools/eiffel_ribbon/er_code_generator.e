@@ -22,6 +22,9 @@ feature -- Command
 	generate_all_codes
 			--
 		do
+			group_counter := 0
+			button_counter := 0
+
 			uicc_manager.compile
 			-- Check XML compilation error here?
 			save_project_info
@@ -533,10 +536,10 @@ feature {NONE} -- Implementation
 				a_tab_node.after
 			loop
 				check a_tab_node.item.text.is_equal ({ER_XML_CONSTANTS}.group) end
-				generate_group_class (a_tab_node.item, a_tab_node.index)
+				generate_group_class (a_tab_node.item, a_tab_node.index + group_counter)
 				a_tab_node.forth
 			end
-
+			group_counter := group_counter + a_tab_node.count
 		end
 
 	group_creation_string (a_tab_node: EV_TREE_NODE): STRING
@@ -559,7 +562,7 @@ feature {NONE} -- Implementation
 				l_count < l_index
 			loop
 				l_generated := l_template.twin
-				l_generated.replace_substring_all ("$INDEX", l_index.out)
+				l_generated.replace_substring_all ("$INDEX", (group_counter + l_index).out)
 				if attached {ER_TREE_NODE_GROUP_DATA} a_tab_node.i_th (l_index).data as l_group_data then
 					if attached l_group_data.command_name as l_command_name then
 						l_command_string := "<<{ER_C_CONSTANTS}." + l_command_name + ">>"
@@ -598,7 +601,7 @@ feature {NONE} -- Implementation
 				l_count < l_index
 			loop
 				l_generated := l_template.twin
-				l_generated.replace_substring_all ("$INDEX", l_index.out)
+				l_generated.replace_substring_all ("$INDEX", (group_counter + l_index).out)
 
 				l_index := l_index + 1
 				if l_generated /= Void then
@@ -627,7 +630,7 @@ feature {NONE} -- Implementation
 				l_count < l_index
 			loop
 				l_generated := l_template.twin
-				l_generated.replace_substring_all ("$INDEX", l_index.out)
+				l_generated.replace_substring_all ("$INDEX", (group_counter + l_index).out)
 
 				l_index := l_index + 1
 				if l_generated /= Void then
@@ -635,6 +638,9 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
+
+	group_counter, button_counter: INTEGER
+			-- When generating group classes , it count how many groups totally
 
 	generate_group_class (a_group_node: EV_TREE_NODE; a_index: INTEGER)
 			--
@@ -732,10 +738,10 @@ feature {NONE} -- Implementation
 				a_group_node.after
 			loop
 				check a_group_node.item.text.is_equal ({ER_XML_CONSTANTS}.button) end
-				generate_button_class (a_group_node.item, a_group_node.index)
+				generate_button_class (a_group_node.item, a_group_node.index + button_counter)
 				a_group_node.forth
 			end
-
+			button_counter := button_counter + a_group_node.count
 		end
 
 	button_creation_string (a_group_node: EV_TREE_NODE): STRING
@@ -758,7 +764,7 @@ feature {NONE} -- Implementation
 				l_count < l_index
 			loop
 				l_generated := l_template.twin
-				l_generated.replace_substring_all ("$INDEX", l_index.out)
+				l_generated.replace_substring_all ("$INDEX", (button_counter + l_index).out)
 				if attached {ER_TREE_NODE_BUTTON_DATA} a_group_node.i_th (l_index).data as l_group_data then
 					if attached l_group_data.command_name as l_command_name then
 						l_command_string := "<<{ER_C_CONSTANTS}." + l_command_name + ">>"
@@ -797,7 +803,7 @@ feature {NONE} -- Implementation
 				l_count < l_index
 			loop
 				l_generated := l_template.twin
-				l_generated.replace_substring_all ("$INDEX", l_index.out)
+				l_generated.replace_substring_all ("$INDEX", (button_counter + l_index).out)
 
 				l_index := l_index + 1
 				if l_generated /= Void then
@@ -826,7 +832,7 @@ feature {NONE} -- Implementation
 				l_count < l_index
 			loop
 				l_generated := l_template.twin
-				l_generated.replace_substring_all ("$INDEX", l_index.out)
+				l_generated.replace_substring_all ("$INDEX", (button_counter + l_index).out)
 
 				l_index := l_index + 1
 				if l_generated /= Void then

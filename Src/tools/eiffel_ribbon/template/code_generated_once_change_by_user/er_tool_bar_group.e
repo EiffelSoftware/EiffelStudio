@@ -31,17 +31,20 @@ feature {NONE} -- Initialization
 			--
 		do
 --		    Precursor
-		    create button_1.make_with_command_list (<<{ER_C_CONSTANTS}.Cmdbutton1.as_natural_32>>) -- Just handles the default command
+$BUTTON_CREATION
 --		    create button2.make_with_command_list (<<3232, 4321>> Handles its default command plus another user chosen command
 
 			create buttons.make (1)
-			buttons.extend (button_1)
+
+$BUTTON_REGISTRY			
+			--buttons.extend (button_1)
 		end
 
 feature -- Query
 
-	button_1: ER_TOOL_BAR_BUTTON
+--	button_1: ER_TOOL_BAR_BUTTON
 			--
+$BUTTON_DECLARATION
 
 	buttons: ARRAYED_LIST [ER_TOOL_BAR_BUTTON]
 			--

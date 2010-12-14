@@ -4,10 +4,10 @@ note
 	revision: "$Revision$"
 
 frozen class
-	ER_TOOL_BAR_BUTTON
+	ER_TOOL_BAR_BUTTON_$INDEX
 
 inherit
-	ER_TOOL_BAR_BUTTON_IMP
+	ER_TOOL_BAR_BUTTON_IMP_$INDEX
 
 create
     {ER_TOOL_BAR_GROUP} make_with_command_list
@@ -51,13 +51,9 @@ feature {RIBBON_TOOL_BAR}
 		do
 			if command_list.has (a_command_id) then
 --			     l_command_position := command_list.i_th (a_command_id)
-				inspect
-					a_command_id
-				when {ER_C_CONSTANTS}.Cmdbutton1 then
-					print ("%NER_TOOL_BAR_BUTTON Cmdbutton1")
-				else
 
-				end
+					print ("%NER_TOOL_BAR_BUTTON_$INDEX")
+
 --			     when 1 then
 --			              -- 1st always default command
 --			          select_actions.call (Void)

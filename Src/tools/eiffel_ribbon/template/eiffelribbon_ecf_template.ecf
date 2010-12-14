@@ -6,6 +6,8 @@
 		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all">
 			<assertions precondition="true" postcondition="true" check="true" supplier_precondition="true"/>
 		</option>
+		<external_include location="$(ISE_LIBRARY)\examples\ribbon\simple\include"/>
+		<external_object location="$(ISE_LIBRARY)\examples\ribbon\simple\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\eiffel_ribbon.lib"/>		
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2-safe.ecf"/>
 		<cluster name="root_cluster" location=".\" recursive="true">

@@ -4,10 +4,10 @@ note
 	revision: "$Revision$"
 
 frozen class
-	ER_TOOL_BAR_TAB
+	ER_TOOL_BAR_TAB_$INDEX
 
 inherit
-	ER_TOOL_BAR_TAB_IMP
+	ER_TOOL_BAR_TAB_IMP_$INDEX
 
 create
     {ER_TOOL_BAR} make_with_command_list
@@ -30,18 +30,20 @@ feature {NONE} -- Initialization
 	create_interface_objects
 			--
 		do
-			create group.make_with_command_list (<<{ER_C_CONSTANTS}.Cmdgroup1.as_natural_32>>)
-
-			create all_groups.make (1)
-			all_groups.extend (group)
+--create group.make_with_command_list (<<{ER_C_CONSTANTS}.Cmdgroup1>>)
+$GROUP_CREATION
+			create groups.make (1)
+---groups.extend (group)
+$GROUP_REGISTRY
 		end
 
 feature -- Query
 
-	group: ER_TOOL_BAR_GROUP
+--group: ER_TOOL_BAR_GROUP
 			--
+$GROUP_DECLARATION			
 
-	all_groups: ARRAYED_LIST [ER_TOOL_BAR_GROUP]
+	groups: ARRAYED_LIST [ER_TOOL_BAR_GROUP]
 			--
 
 feature {NONE}	--Action handling

@@ -4,10 +4,12 @@ note
 	revision: "$Revision$"
 
 deferred class
-	ER_TOOL_BAR_BUTTON_IMP
+	ER_TOOL_BAR_BUTTON_IMP_$INDEX
 
 inherit
 	ER_COMMAND_HANDLER_OBSERVER
+	
+	ER_TOOL_BAR_BUTTON
 
 feature -- Query
 

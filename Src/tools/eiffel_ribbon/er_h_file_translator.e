@@ -144,7 +144,7 @@ feature {NONE} -- Implementation
 			until
 				name_value.after
 			loop
-				l_line := "%T" + name_value.item.a_name + ": INTEGER = " + name_value.item.a_value + "%N"
+				l_line := "%T" + name_value.item.a_name + ": NATURAL_32 = " + name_value.item.a_value + "%N"
 				Result.append (l_line)
 				name_value.forth
 			end

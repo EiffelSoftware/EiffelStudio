@@ -200,6 +200,11 @@ feature -- Query
 			Result := repository.location
 		end
 
+	repository_option (a_name: STRING): detachable STRING
+		do
+			Result := repository.free_configuration_value (a_name)
+		end
+
 feature {NONE} -- Implementation: Review
 
 	internal_review_client: detachable like review_client

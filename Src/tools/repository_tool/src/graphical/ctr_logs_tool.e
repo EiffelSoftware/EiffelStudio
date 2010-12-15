@@ -713,13 +713,13 @@ feature {CTR_WINDOW} -- Implementation
 					show_search_bar
 				end
 			when {EV_KEY_CONSTANTS}.key_insert then
-				toggle_read_status_on_selected_row_logs (not auto_mark_read)
+				toggle_read_status_on_selected_row_logs (auto_move_to_next_log_direction)
 			when {EV_KEY_CONSTANTS}.key_space then
 				if
 					not ev_application.ctrl_pressed and
 					not ev_application.alt_pressed
 				then
-					set_read_status_on_selected_row_logs (not ev_application.shift_pressed, not auto_mark_read)
+					set_read_status_on_selected_row_logs (not ev_application.shift_pressed, auto_move_to_next_log_direction)
 				end
 			else
 			end
@@ -1070,9 +1070,10 @@ feature {CTR_WINDOW} -- Implementation
 			end
 		end
 
-	toggle_read_status_on_selected_row_logs (a_move_to_next_row: BOOLEAN)
+	toggle_read_status_on_selected_row_logs (a_move_to_next_row: INTEGER)
 			-- Toggle read status on selected rows
-			-- if `a_move_to_next_row' is True and only one selected row, then select following non selected row
+			-- if `a_move_to_next_row' is +1 and only one selected row, then select following non selected row
+			-- if `a_move_to_next_row' is -1 and only one selected row, then select previous non selected row
 		local
 			w: like ctr_window
 			g: like grid
@@ -1097,9 +1098,9 @@ feature {CTR_WINDOW} -- Implementation
 						end
 					end
 				end
-				if a_move_to_next_row and l_rows.count = 1 then
-					i := l_rows.first.index + 1
-					if i <= g.row_count then
+				if a_move_to_next_row /= 0 and l_rows.count = 1 then
+					i := l_rows.first.index + a_move_to_next_row
+					if 1 <= i and i <= g.row_count then
 						g.remove_selection
 						g.select_row (i)
 						g.row (i).ensure_visible
@@ -1108,9 +1109,10 @@ feature {CTR_WINDOW} -- Implementation
 			end
 		end
 
-	set_read_status_on_selected_row_logs (a_mark_read: BOOLEAN; a_move_to_next_row: BOOLEAN)
+	set_read_status_on_selected_row_logs (a_mark_read: BOOLEAN; a_move_to_next_row: INTEGER)
 			-- Set read status `a_mark_read' on selected rows
-			-- if `a_move_to_next_row' is True and only one selected row, then select following non selected row
+			-- if `a_move_to_next_row' is +1 and only one selected row, then select following non selected row
+			-- if `a_move_to_next_row' is -1 and only one selected row, then select previous non selected row
 		local
 			w: like ctr_window
 			g: like grid
@@ -1135,9 +1137,9 @@ feature {CTR_WINDOW} -- Implementation
 						end
 					end
 				end
-				if a_move_to_next_row and l_rows.count = 1 then
-					i := l_rows.first.index + 1
-					if i <= g.row_count then
+				if a_move_to_next_row /= 0 and l_rows.count = 1 then
+					i := l_rows.first.index + a_move_to_next_row
+					if 1 <= i and i <= g.row_count then
 						g.remove_selection
 						g.select_row (i)
 						g.row (i).ensure_visible
@@ -1225,6 +1227,15 @@ feature {NONE} -- Preferences
 				Result := p.auto_mark_read_pref.value
 			else
 				Result := True
+			end
+		end
+
+	auto_move_to_next_log_direction: INTEGER
+		do
+			if auto_mark_read then
+				Result := 0
+			elseif attached preferences as p then
+				Result := p.auto_move_to_next_log_direction_pref.value
 			end
 		end
 

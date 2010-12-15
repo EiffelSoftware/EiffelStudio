@@ -364,7 +364,7 @@ feature {NONE} -- Implementation
 				l_generated := l_template.twin
 				l_generated.replace_substring_all ("$INDEX", l_index.out)
 				if attached {ER_TREE_NODE_TAB_DATA} a_tabs_root_note.i_th (l_index).data as l_group_data then
-					if attached l_group_data.command_name as l_command_name then
+					if attached l_group_data.command_name as l_command_name and then not l_command_name.is_empty then
 						l_command_string := "<<{ER_C_CONSTANTS}." + l_command_name + ">>"
 					else
 						l_command_string := "<<>>"
@@ -564,7 +564,7 @@ feature {NONE} -- Implementation
 				l_generated := l_template.twin
 				l_generated.replace_substring_all ("$INDEX", (group_counter + l_index).out)
 				if attached {ER_TREE_NODE_GROUP_DATA} a_tab_node.i_th (l_index).data as l_group_data then
-					if attached l_group_data.command_name as l_command_name then
+					if attached l_group_data.command_name as l_command_name and then not l_command_name.is_empty then
 						l_command_string := "<<{ER_C_CONSTANTS}." + l_command_name + ">>"
 					else
 						l_command_string := "<<>>"
@@ -766,7 +766,7 @@ feature {NONE} -- Implementation
 				l_generated := l_template.twin
 				l_generated.replace_substring_all ("$INDEX", (button_counter + l_index).out)
 				if attached {ER_TREE_NODE_BUTTON_DATA} a_group_node.i_th (l_index).data as l_group_data then
-					if attached l_group_data.command_name as l_command_name then
+					if attached l_group_data.command_name as l_command_name and then not l_command_name.is_empty then
 						l_command_string := "<<{ER_C_CONSTANTS}." + l_command_name + ">>"
 					else
 						l_command_string := "<<>>"

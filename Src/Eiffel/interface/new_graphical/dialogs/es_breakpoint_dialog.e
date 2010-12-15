@@ -758,6 +758,7 @@ feature {NONE} -- When hits
 						"$CLASS",
 						"$FEATURE",
 						"$THREADID",
+						"$TIMESTAMP",
 						"\{", "\}", "\\"
 					>>
 

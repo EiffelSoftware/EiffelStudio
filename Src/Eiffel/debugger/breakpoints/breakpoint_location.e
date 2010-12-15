@@ -84,9 +84,12 @@ feature {BREAK_LIST, BREAKPOINT} -- Copy for saving
 			-- Restore Current when loaded from storage.
 		do
 			set_application_not_set
-			routine := routine_from_ids
 			if routine = Void then
-				is_corrupted := True
+				if attached routine_from_ids as l_routine then
+					routine := l_routine
+				else
+					is_corrupted := True
+				end
 			end
 		end
 

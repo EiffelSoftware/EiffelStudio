@@ -141,6 +141,45 @@ feature -- Status report
 			end
 		end
 
+	path_content (a_location: STRING; a_path: STRING; a_rev: INTEGER; a_options: detachable SVN_ENGINE_OPTIONS): detachable STRING
+		local
+			s: detachable STRING
+			cmd: STRING
+		do
+			debug ("SVN_ENGINE")
+				print ("Fetch path content from [" + a_location + a_path + "] %N")
+			end
+
+			create cmd.make_from_string (svn_executable_path)
+			cmd.append_string (option_to_command_line_flags (a_options))
+			cmd.append_string (" cat ")
+			cmd.append_string (" -r")
+			cmd.append_integer (a_rev)
+			cmd.append_string (" ")
+			cmd.append_string (a_location)
+			cmd.append_string (a_path)
+
+			debug ("SVN_ENGINE")
+				print ("Command: [" + cmd + "]%N")
+			end
+			s := process_misc.output_of_command (cmd, Void)
+			debug ("SVN_ENGINE")
+				print ("-> terminated %N")
+			end
+			if s = Void then
+				debug ("SVN_ENGINE")
+					print ("-> terminated : None .%N")
+				end
+			else
+				debug ("SVN_ENGINE")
+					print ("-> terminated : count=" + s.count.out + " .%N")
+					print (s)
+				end
+
+				Result := s
+			end
+		end
+
 	logs (a_location: STRING; is_verbose: BOOLEAN; a_start, a_end: INTEGER; a_limit: INTEGER; a_options: detachable SVN_ENGINE_OPTIONS): detachable LIST [SVN_REVISION_INFO]
 		local
 			s: detachable STRING

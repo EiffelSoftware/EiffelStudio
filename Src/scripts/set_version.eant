@@ -62,7 +62,7 @@ For /f &quot;tokens=1-4 delims=/ &quot; %%a in ('findstr /L /B /C:&quot;Last Cha
 del %EFILE_TMP%
 if .%LASTREV%. == .. set LASTREV=0000 -- Script was unable to set this value
 
-For /f &quot;tokens=2-4 delims=/ &quot; %%a in ('date /t') do (set TODAYDATE=%%c-%%a-%%b)
+For /f &quot;tokens=1-4 delims=/ &quot; %%a in ('date /t') do (set TODAYDATE=%%c-%%a-%%b)
 
 echo Set version: LASTREV=%LASTREV%
 svn revert %EFILE%
@@ -70,7 +70,7 @@ sed -e &quot;s/:= 0000/:= %LASTREV%/&quot; %EFILE% &gt; %EFILE_TMP%
 move %EFILE_TMP% %EFILE%
 
 rem update the version_info ...
-sed -e &quot;s/Version_info:\ STRING\ is\ \&quot;[0-9a-zA-Z_\,\ \/\:()\.\=\-]*\&quot;/Version_info:\ STRING\ is\ \&quot;Revision:\ %LASTREV% , Compilation:\ %TODAYDATE%\ %TIME%\&quot;/g&quot; %EFILE% &gt; %EFILE_TMP%
+sed -e &quot;s/Version_info:\ STRING\ =\ \&quot;[0-9a-zA-Z_\,\ \/\:()\.\=\-]*\&quot;/Version_info:\ STRING\ =\ \&quot;Revision:\ %LASTREV% , Compilation:\ %TODAYDATE%\ %TIME% , Builder:\ %USERNAME%\&quot;/g&quot; %EFILE% &gt; %EFILE_TMP%
 move %EFILE_TMP% %EFILE%
 
 endlocal

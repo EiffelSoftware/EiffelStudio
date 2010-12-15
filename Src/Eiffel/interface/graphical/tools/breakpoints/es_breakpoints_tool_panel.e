@@ -1038,7 +1038,7 @@ feature {NONE} -- Dynamic item filling
 			bp: BREAKPOINT
 		do
 			bp ?= a_row.data
-			if bp /= Void then
+			if bp /= Void and then not bp.is_corrupted then
 				f := bp.routine
 				i := bp.breakable_line_number
 

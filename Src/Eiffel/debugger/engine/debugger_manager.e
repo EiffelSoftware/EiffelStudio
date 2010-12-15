@@ -541,6 +541,8 @@ feature -- Breakpoints management
 									s.append (cse.object_address.output)
 								elseif v.is_case_insensitive_equal ("HITCOUNT") then
 									s.append_integer (bp.hits_count)
+								elseif v.is_case_insensitive_equal ("TIMESTAMP") then
+									s.append_string ((create {DATE_TIME}.make_now).out)
 								else
 									s.append ("$" + v.as_upper)
 								end

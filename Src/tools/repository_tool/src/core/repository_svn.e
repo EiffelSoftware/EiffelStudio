@@ -48,6 +48,16 @@ feature -- Access
 
 	location: STRING
 
+	root: detachable STRING
+		local
+			l_svn_info: like info
+		do
+			l_svn_info := info
+			if l_svn_info /= Void and then attached l_svn_info.repository_root as l_root then
+				Result := l_root
+			end
+		end
+
 	info: detachable SVN_REPOSITORY_INFO
 		do
 			Result := engine.repository_info (location, options)
@@ -66,6 +76,15 @@ feature -- Access
 	revision_diff (a_rev: SVN_REVISION_INFO): detachable STRING
 		do
 			Result := engine.diff (location, a_rev.revision, 0, options)
+		end
+
+	revision_path_content (a_path: STRING; a_rev: SVN_REVISION_INFO): detachable STRING
+		do
+			if attached root as l_root then
+				Result := engine.path_content (l_root, a_path, a_rev.revision, options)
+			else
+				Result := engine.path_content (location, a_path, a_rev.revision, options)
+			end
 		end
 
 feature -- Element change

@@ -273,7 +273,9 @@ feature -- Element change
 
 						l_subrow := g.row (g.row_count)
 						l_subrow.set_item (cst_info_title_col, create {EV_GRID_LABEL_ITEM}.make_with_text (l_paths.item.action))
-						l_subrow.set_item (cst_info_value_col, create {EV_GRID_LABEL_ITEM}.make_with_text (l_paths.item.path))
+						create glab.make_with_text (l_paths.item.path)
+						l_subrow.set_item (cst_info_value_col, glab)
+						glab.pointer_double_press_actions.force_extend (agent show_info ("service.diff.text", l_paths.item.path))
 					end
 					if l_row /= Void and then l_row.is_expandable and changes_expanded then
 						l_row.expand
@@ -300,7 +302,7 @@ feature -- Element change
 					g.insert_new_row (g.row_count + 1)
 					l_row := g.row (g.row_count)
 					create glab.make_with_text ("Double click to view changes online")
-					glab.pointer_double_press_actions.force_extend (agent show_info ("service.diff.web"))
+					glab.pointer_double_press_actions.force_extend (agent show_info ("service.diff.web", Void))
 					l_row.set_item (cst_info_value_col, glab)
 				end
 
@@ -590,7 +592,7 @@ feature {NONE} -- Implementation
 
 	show_info_diff
 		do
-			show_info ("service.diff.file")
+			show_info ("service.diff.file", Void)
 --			if attached ctr_window as w then
 --				if attached current_log as l_log then
 --					w.show_log_diff (l_log)
@@ -598,11 +600,11 @@ feature {NONE} -- Implementation
 --			end
 		end
 
-	show_info (a_service: STRING)
+	show_info (a_service: STRING; a_path: detachable STRING)
 		do
 			if attached ctr_window as w then
 				if attached current_log as l_log then
-					w.show_log (a_service, l_log)
+					w.show_log (a_service, l_log, a_path)
 				end
 			end
 		end

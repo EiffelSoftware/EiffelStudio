@@ -14,6 +14,7 @@ inherit
 			repository,
 			fetch_diff,
 			logs,
+			log,
 			storage
 		end
 
@@ -40,7 +41,7 @@ feature -- Storage
 
 feature -- Access
 
-	logs: HASH_TABLE [attached like loaded_log, STRING]
+	logs: HASH_TABLE [attached like log, like log.id]
 
 	revision_last_known: INTEGER
 
@@ -48,11 +49,29 @@ feature -- Access
 
 	info: detachable SVN_REPOSITORY_INFO
 
-feature -- Access: Diff
+	log (a_id: like log.id): detachable REPOSITORY_SVN_LOG
+		do
+			Result := logs.item (a_id)
+		end
 
-	fetch_diff (a_log: REPOSITORY_SVN_LOG)
-		require else
-			not has_pending_diff
+	previous_log (a_log: attached like log): like log
+		require
+			a_log_attached: a_log /= Void
+		local
+			l_rev_info: SVN_REVISION_INFO
+		do
+			create l_rev_info.make (a_log.svn_revision.revision - 1)
+			Result := log (id_of (l_rev_info))
+			if Result = Void then
+				create Result.make (l_rev_info, Current)
+			end
+		end
+
+feature -- Direct SVN access
+
+	repository_diff (a_log: REPOSITORY_SVN_LOG; a_path: detachable STRING): detachable STRING
+		require
+			a_log_attached: a_log /= Void
 		local
 			s: detachable STRING
 		do
@@ -60,7 +79,30 @@ feature -- Access: Diff
 			if s /= Void then
 				s.prune_all ('%R')
 			end
-			internal_last_diff := s
+			Result := s
+		end
+
+	repository_path_content (a_log: REPOSITORY_SVN_LOG; a_path: STRING): detachable STRING
+		require
+			a_log_attached: a_log /= Void
+			a_path_attached: a_path /= Void
+		local
+			s: detachable STRING
+		do
+			s := repository.revision_path_content (a_path, a_log.svn_revision)
+			if s /= Void then
+				s.prune_all ('%R')
+			end
+			Result := s
+		end
+
+feature -- Access: delayed diff
+
+	fetch_diff (a_log: REPOSITORY_SVN_LOG)
+		require else
+			no_pending_diff: not has_pending_diff
+		do
+			internal_last_diff := repository_diff (a_log, Void)
 		end
 
 	get_diff (a_log: REPOSITORY_SVN_LOG)
@@ -260,7 +302,7 @@ feature {REPOSITORY_SVN_LOG} -- Implementation
 			Result := storage.archive_loaded_log (a_id, Current)
 		end
 
-	loaded_log (a_id: STRING): detachable REPOSITORY_LOG
+	loaded_log (a_id: STRING): detachable REPOSITORY_SVN_LOG
 		do
 			Result := storage.loaded_log (a_id, Current)
 		end

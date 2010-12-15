@@ -1512,7 +1512,7 @@ feature {CTR_TOOL} -- Catalog
 
 feature {CTR_TOOL} -- Diff
 
-	show_log (a_service: detachable STRING; a_log: REPOSITORY_LOG)
+	show_log (a_service: detachable STRING; a_log: REPOSITORY_LOG; a_path: detachable STRING)
 		require
 			info_tool.current_log = a_log
 		local
@@ -1561,7 +1561,24 @@ feature {CTR_TOOL} -- Diff
 				create s.make_from_string (l_diff)
 				s.replace_substring_all ("$id", a_log.id)
 				e.open_url (s)
-			elseif l_service.same_string ("service.diff.text") then
+			elseif l_service.same_string ("service.diff.text") and a_path /= Void then
+				if attached {REPOSITORY_SVN_DATA} rdata as rsvndata then
+					set_busy
+					if
+						attached rsvndata.log (a_log.id) as svn_log and then
+						attached rsvndata.previous_log (svn_log) as svn_log_prev and then
+						(
+							attached rsvndata.repository_path_content (svn_log, a_path) as s_0 and
+							attached rsvndata.repository_path_content (svn_log_prev, a_path) as s_prev
+						)
+					then
+						create e
+						e.open_2_text_diff ("revision_" + svn_log_prev.id, "revision_" + svn_log.id, s_prev, s_0, [l_diff, "$left", "$right"])
+					end
+					unset_busy
+				end
+--				s := rdata.
+--				a_log.paths
 				-- Need to fetch file, and previous version .. for each file
 				-- Todo ...
 			end

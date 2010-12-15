@@ -817,6 +817,43 @@ tokens.test.url=http://svn.origo.ethz.ch/viewvc/eiffelstudio/trunk/eweasel/tests
 			dlg.show_relative_to_window (Current)
 		end
 
+	show_help
+		local
+			dlg: EV_TITLED_WINDOW
+			m: EV_VERTICAL_BOX
+			t: EV_TEXT
+			s: detachable STRING
+		do
+			create dlg
+			create m
+			create t
+
+			dlg.extend (m)
+			m.extend (t)
+
+			s := "[
+			Quick Help:
+			   For now, there is no doc for button .. and everything you can figure out by looking at the interface
+			   
+			   Hidden commands:
+			   	 Ctrl+E ... and see popup window
+			   	 Ctrl+G ... and see popup window
+			   	 F5: refresh logs
+			   	 
+			   Logs tool:
+			     Space: mark selected logs as read
+			     Ins: toggle selected logs between read and unread
+			   	
+			]"
+			t.set_text (s)
+			dlg.close_request_actions.extend (agent dlg.destroy)
+			dlg.set_position (x_position, y_position)
+			dlg.set_size (width, height)
+			dlg.enable_border
+			dlg.enable_user_resize
+			dlg.show_relative_to_window (Current)
+		end
+
 	not_yet_implemented
 		local
 			p: EV_POPUP_WINDOW
@@ -1712,6 +1749,12 @@ feature {NONE} -- Implementation
 			tbbut.set_pixmap (icons.new_text_small_toolbar_button_standard_icon ("Config"))
 			tbbut.select_actions.extend (agent edit_configuration)
 			mtb.extend (tbbut)
+
+			create tbbut.make
+			tbbut.set_pixmap (icons.new_text_small_toolbar_button_standard_icon ("Help"))
+			tbbut.select_actions.extend (agent show_help)
+			mtb.extend (tbbut)
+
 
 			mtb.compute_minimum_size
 			cat_c.set_mini_toolbar (mtb)

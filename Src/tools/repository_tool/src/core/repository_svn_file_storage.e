@@ -48,17 +48,17 @@ feature -- Load
 			end
 		end
 
-	archive_loaded_log (a_id: STRING; a_data: REPOSITORY_DATA): like loaded_log
+	archive_loaded_log (a_id: STRING; a_data: REPOSITORY_SVN_DATA): like loaded_log
 		do
 			Result := log_from_file (a_id, archive_svn_log_data_filename (a_id), a_data)
 		end
 
-	loaded_log (a_id: STRING; a_data: REPOSITORY_DATA): detachable REPOSITORY_LOG
+	loaded_log (a_id: STRING; a_data: REPOSITORY_SVN_DATA): detachable REPOSITORY_SVN_LOG
 		do
 			Result := log_from_file (a_id, svn_log_data_filename (a_id), a_data)
 		end
 
-	log_from_file (a_id: STRING; a_filename: STRING; a_data: REPOSITORY_DATA): like loaded_log
+	log_from_file (a_id: STRING; a_filename: STRING; a_data: REPOSITORY_SVN_DATA): like loaded_log
 		local
 			f: RAW_FILE
 			l_line,s: STRING
@@ -135,7 +135,7 @@ feature -- Load
 		end
 
 
-	load_logs (a_data: REPOSITORY_DATA)
+	load_logs (a_data: REPOSITORY_SVN_DATA)
 		local
 			l_last_known_rev: INTEGER
 			l_first_known_rev: INTEGER
@@ -176,7 +176,7 @@ feature -- Load
 			end
 		end
 
-	import_archive_logs (a_data: REPOSITORY_DATA)
+	import_archive_logs (a_data: REPOSITORY_SVN_DATA)
 		local
 			l_last_known_rev: INTEGER
 			l_first_known_rev: INTEGER
@@ -223,7 +223,7 @@ feature -- Status
 
 feature -- Subversion specific
 
-	log_from_revision (r: SVN_REVISION_INFO; a_data: REPOSITORY_DATA): attached like loaded_log
+	log_from_revision (r: SVN_REVISION_INFO; a_data: REPOSITORY_SVN_DATA): attached like loaded_log
 		local
 			l_id: STRING
 		do
@@ -239,7 +239,7 @@ feature -- Subversion specific
 			end
 		end
 
-	store_svn_revision_info (r: SVN_REVISION_INFO; a_data: REPOSITORY_DATA)
+	store_svn_revision_info (r: SVN_REVISION_INFO; a_data: REPOSITORY_SVN_DATA)
 		local
 			f: RAW_FILE
 		do

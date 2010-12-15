@@ -28,9 +28,15 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	unread_logs: HASH_TABLE [BOOLEAN, like {REPOSITORY_LOG}.id]
+	unread_logs: HASH_TABLE [BOOLEAN, like log.id]
 
-	logs: HASH_TABLE [REPOSITORY_LOG, STRING]
+	logs: HASH_TABLE [attached like log, like log.id]
+			-- Log indexed by `id'
+
+	log (a_id: like log.id): detachable REPOSITORY_LOG
+		do
+			Result := logs.item (a_id)
+		end
 
 feature -- Status report
 

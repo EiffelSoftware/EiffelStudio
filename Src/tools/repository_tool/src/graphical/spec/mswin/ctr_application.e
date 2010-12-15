@@ -28,6 +28,7 @@ feature {NONE} -- Initialization
 		do
 			Precursor
 			initialize_tray_icon
+			minimize_actions.extend (agent hide_window)
 			if attached vpn_icon as i then
 				create b.make
 				b.set_from_icon (i)

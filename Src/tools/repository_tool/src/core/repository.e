@@ -291,36 +291,6 @@ feature -- Options
 			add_free_configuration ("#" + n.out, a_commented_text)
 		end
 
---feature -- Service
-
---	services: detachable HASH_TABLE [value, TUPLE [name: STRING; param: detachable STRING]]
-
---	service (a_name: STRING; a_param: detachable STRING): detachable STRING
---		do
---			if attached services as l_services then
---				Result := l_services.item ([a_name, a_param])
---			end
---		end
-
---	add_service (a_name: STRING; a_param: detachable STRING; a_value: STRING)
---		local
---			l_services: like services
---			s: like service
---		do
---			l_services := services
---			if l_services = Void then
---				create l_services.make (3)
---				l_services.compare_objects
---				services := l_services
---			end
---			s := service (a_name)
---			if s = Void then
---				l_services.force (a_value, [a_name, a_param])
---			elseif not s.same_string (a_value) then
---				l_services.force (a_value, [a_name, a_param])
---			end
---		end
-
 feature -- Element change
 
 	set_location (v: like location)

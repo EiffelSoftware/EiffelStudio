@@ -25,6 +25,10 @@ feature {NONE} -- Access
 
 			auto_mark_read_pref := factory.new_boolean_preference_value (manager, namespace + ".auto_mark_read", True)
 			auto_mark_read_pref.set_description ("Automatically mark the selected log as read")
+
+			auto_move_to_next_log_direction_pref := factory.new_integer_preference_value (manager, namespace + ".auto_move_to_next_log_direction", +1)
+			auto_move_to_next_log_direction_pref.set_description ("When marking a log as read, automatically move to next log (+1), previous log (-1), or do not auto move (0)")
+
 			info_tool_changes_expanded_pref := factory.new_boolean_preference_value (manager, namespace + ".tools.info.changes_expanded", False)
 			info_tool_changes_expanded_pref.set_hidden (True)
 
@@ -36,6 +40,9 @@ feature {NONE} -- Access
 feature -- Access
 
 	auto_mark_read_pref: BOOLEAN_PREFERENCE
+
+	auto_move_to_next_log_direction_pref: INTEGER_PREFERENCE
+			-- True: next, False: previous
 
 	info_tool_changes_expanded_pref: BOOLEAN_PREFERENCE
 

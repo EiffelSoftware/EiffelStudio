@@ -62,7 +62,9 @@ feature -- Status report
 	is_connected: BOOLEAN
 			-- Is the application connected to a database?
 		do
-			Result := session_control /= Void and then session_control.is_connected
+			if database_manager.session_control_created then
+				Result := session_control.is_connected
+			end
 		end
 
 	has_error: BOOLEAN

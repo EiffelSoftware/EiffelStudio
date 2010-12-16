@@ -256,13 +256,13 @@ feature -- Query
 			Result := property.last_focus_content
 		end
 
-	is_title_unique (a_title: STRING_GENERAL): BOOLEAN
-			-- If `a_title' unique in all contents `unique_title's ?
+	is_unique_title_free_to_use (a_title: STRING_GENERAL): BOOLEAN
+			-- If `a_title' unique in all current contents' `unique_title', not already used by other contents?
 		require
 			a_title: a_title /= Void
 			not_destroyed: not is_destroyed
 		do
-			Result := query.is_title_unique (a_title)
+			Result := query.is_unique_title_free_to_use (a_title)
 		end
 
 	is_locked: BOOLEAN
@@ -830,6 +830,17 @@ feature -- Obsolete
 			l_result: BOOLEAN
 		do
 			l_result := save_tools_data_with_name (a_file, a_name)
+		end
+
+	is_title_unique (a_title: STRING_GENERAL): BOOLEAN
+			-- If `a_title' unique in all contents `unique_title's ?
+		obsolete
+			"Use is_unique_title_free_to_use instead"
+		require
+			a_title: a_title /= Void
+			not_destroyed: not is_destroyed
+		do
+			Result := is_unique_title_free_to_use (a_title)
 		end
 
 invariant

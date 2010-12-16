@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="$WRAPPER_NAME" uuid="C1719730-0921-4A86-843E-0D0D9DF12BCD" library_target="$WRAPPER_NAME">
+	<target name="$WRAPPER_NAME">
+		<root all_classes="true"/>
+		<option debug="true" warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" syntax="provisional">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+		</option>
+		<external_include location="/Users/matteo/Documents/Projects/Eiffel/wrapper_generator/objc_wrapper/Clib -ObjC"/>
+		<external_object location="/Users/matteo/Documents/Projects/Eiffel/wrapper_generator/objc_wrapper/spec/$(ISE_PLATFORM)/lib/objc.o"/>
+$FRAMEWORKS
+		<library name="base" location="$ISE_LIBRARY/library/base/base-safe.ecf"/>
+		<cluster name="$WRAPPER_NAME" location=".\" recursive="true">
+			<file_rule>
+				<exclude>/EIFGENs$</exclude>
+				<exclude>/.svn$</exclude>
+				<exclude>/CVS$</exclude>
+			</file_rule>
+$ALIASES
+		</cluster>
+	</target>
+</system>

@@ -43,7 +43,7 @@ feature -- Querys
 			-- Content by a_title
 		require
 			a_title_not_void: a_unique_title /= Void and then not a_unique_title.is_empty
-			has: not is_title_unique (a_unique_title)
+			has: not is_unique_title_free_to_use (a_unique_title)
 		local
 			l_result: detachable like content_by_title
 		do
@@ -481,8 +481,8 @@ feature -- Querys
 			end
 		end
 
-	is_title_unique (a_title: STRING_GENERAL): BOOLEAN
-			-- If `a_title' unique in all contents unique_title?
+	is_unique_title_free_to_use (a_title: STRING_GENERAL): BOOLEAN
+			-- If `a_title' unique in all current contents? Not already used by other contents?
 		local
 			l_content: ARRAYED_LIST [SD_CONTENT]
 		do
@@ -717,14 +717,14 @@ feature {NONE} -- Implemnetation
 
 ;note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

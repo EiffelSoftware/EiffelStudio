@@ -1,0 +1,18 @@
+New dev period:
+== Files to update to reflect new version ==
+Delivery/VERSION
+$EIFFEL_SRC/C/ipc/daemon/env.c
+$EIFFEL_SRC/framework/environment/interface/eiffel_environment_constants.e
+$EIFFEL_SRC/Eiffel/Ace/ec.rc
+../../Delivery/scripts/unix/README.unix
+../../Delivery/scripts/unix/make_for_platform
+../../Delivery/scripts/unix/make_images
+../../Delivery/scripts/unix/set_aliases
+../../Delivery/scripts/windows/install/Package.wxs
+../../Delivery/scripts/windows/install/includes/Preprocessors.wxi
+../../Delivery/scripts/windows/set_aliases.btm
+../../Delivery/studio/config/windows/esvars.bat
+../../Delivery/studio/spec/unix/finish_freezing
+
+And 
+$EIFFEL_SRC/Eiffel/eiffel/com_il_generation/Core/run-time/runtime_assembly_info.cs

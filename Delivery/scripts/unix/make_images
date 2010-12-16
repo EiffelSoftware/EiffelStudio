@@ -52,13 +52,13 @@ chmod a+rx $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ecb
 chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ecb
 
 remtrace Building GPL CD image
-mv Eiffel67 cdrom
-./make_cd_image Eiffel67_gpl Eiffel67_gpl.iso cdrom
-bzip2 Eiffel67_gpl.iso
-mv Eiffel67_gpl.iso.bz2 Eiffel67_gpl_$FILE_SVN_REVISION-$ISE_PLATFORM.iso.bz2
-mv cdrom/Eiffel67 Eiffel67
-tar -cf Eiffel67_gpl_$FILE_SVN_REVISION-$ISE_PLATFORM.tar Eiffel67
-bzip2 Eiffel67_gpl_$FILE_SVN_REVISION-$ISE_PLATFORM.tar
+mv Eiffel68 cdrom
+./make_cd_image Eiffel68_gpl Eiffel68_gpl.iso cdrom
+bzip2 Eiffel68_gpl.iso
+mv Eiffel68_gpl.iso.bz2 Eiffel68_gpl_$FILE_SVN_REVISION-$ISE_PLATFORM.iso.bz2
+mv cdrom/Eiffel68 Eiffel68
+tar -cf Eiffel68_gpl_$FILE_SVN_REVISION-$ISE_PLATFORM.tar Eiffel68
+bzip2 Eiffel68_gpl_$FILE_SVN_REVISION-$ISE_PLATFORM.tar
 
 if [ "$MULTIPLE_EDITIONS" ]; then
 	remtrace Preparing Enterprise version
@@ -77,13 +77,13 @@ if [ "$MULTIPLE_EDITIONS" ]; then
 	cp $INSTALL_DIR/studio/bitmaps/png/activation.png $INSTALL_DIR/setup/install_left.png
 
 	remtrace Building Enterprise CD image
-	mv Eiffel67 cdrom
-	./make_cd_image Eiffel67_enterprise Eiffel67_ent.iso cdrom
-	bzip2 Eiffel67_ent.iso
-	mv Eiffel67_ent.iso.bz2 Eiffel67_ent_$FILE_SVN_REVISION-$ISE_PLATFORM.iso.bz2
-	mv cdrom/Eiffel67 Eiffel67
-	tar -cf Eiffel67_ent_$FILE_SVN_REVISION-$ISE_PLATFORM.tar Eiffel67 
-	bzip2 Eiffel67_ent_$FILE_SVN_REVISION-$ISE_PLATFORM.tar
+	mv Eiffel68 cdrom
+	./make_cd_image Eiffel68_enterprise Eiffel68_ent.iso cdrom
+	bzip2 Eiffel68_ent.iso
+	mv Eiffel68_ent.iso.bz2 Eiffel68_ent_$FILE_SVN_REVISION-$ISE_PLATFORM.iso.bz2
+	mv cdrom/Eiffel68 Eiffel68
+	tar -cf Eiffel68_ent_$FILE_SVN_REVISION-$ISE_PLATFORM.tar Eiffel68 
+	bzip2 Eiffel68_ent_$FILE_SVN_REVISION-$ISE_PLATFORM.tar
 fi
 
 

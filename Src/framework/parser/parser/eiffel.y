@@ -101,7 +101,7 @@ create
 %type <PAIR[KEYWORD_AS, STRING_AS]> External_name Obsolete
 %type <IDENTIFIER_LIST>		Identifier_list Strip_identifier_list
 %type <PAIR [KEYWORD_AS, EIFFEL_LIST [TAGGED_AS]]> Invariant
-%type <PAIR [KEYWORD_AS, EXPR_AS]>                 Exit_condition_opt 
+%type <PAIR [KEYWORD_AS, EXPR_AS]>	Exit_condition_opt 
 %type <AGENT_TARGET_TRIPLE> Agent_target
 
 %type <ACCESS_AS>			A_feature Creation_target
@@ -509,13 +509,13 @@ Disable_supplier_recording:
 		{
 			is_supplier_recorded := False
 		}	
-	  ;
+	;
 
 Enable_supplier_recording:
 		{
 			is_supplier_recorded := True
 		}	
-	  ;
+	;
 
 Disable_supplier_recording_only_for_classic:
 		{
@@ -523,7 +523,7 @@ Disable_supplier_recording_only_for_classic:
 				is_supplier_recorded := False
 			end
 		}	
-	  ;
+	;
 
 Enable_supplier_recording_only_for_classic:
 		{
@@ -531,7 +531,7 @@ Enable_supplier_recording_only_for_classic:
 				is_supplier_recorded := True
 			end
 		}	
-	  ;
+	;
 
 Header_mark: Frozen_mark External_mark
 	|	TE_DEFERRED External_mark
@@ -940,7 +940,7 @@ Constant_attribute: Manifest_constant
 -- Inheritance
 
 Inheritance: -- Empty
-		      	{ $$ := Void }
+			{ $$ := Void }
 	|	TE_INHERIT ASemi
 			{
 				if not conforming_inheritance_flag then
@@ -963,7 +963,7 @@ Inheritance: -- Empty
 					end
 				end
 			}
-	|	TE_INHERIT  Add_counter Parent_list Remove_counter
+	|	TE_INHERIT Add_counter Parent_list Remove_counter
 			{
 				if not conforming_inheritance_flag then
 						-- Conforming inheritance
@@ -1275,7 +1275,7 @@ Formal_arguments:	TE_LPARAN TE_RPARAN
 	|	TE_LPARAN Add_counter Entity_declaration_list Remove_counter TE_RPARAN
 			{ $$ := ast_factory.new_formal_argu_dec_list_as ($3, $1, $5) }
 	;
-  
+
 Entity_declaration_list: Entity_declaration_group
 			{
 				$$ := ast_factory.new_eiffel_list_type_dec_as (counter_value + 1)
@@ -1767,9 +1767,9 @@ Unqualified_anchored_type:
 Qualified_anchored_type:
 		Unqualified_anchored_type TE_DOT Identifier_as_lower
 			{ $$ := ast_factory.new_qualified_anchored_type ($1, $2, $3) }
-	|       TE_LIKE Typed TE_DOT Identifier_as_lower
+	|	TE_LIKE Typed TE_DOT Identifier_as_lower
 			{ $$ := ast_factory.new_qualified_anchored_type_with_type ($1, $2, $3, $4) }
-	|       Qualified_anchored_type TE_DOT Identifier_as_lower
+	|	Qualified_anchored_type TE_DOT Identifier_as_lower
 			{
 				$$ := $1
 				if attached $$ as q then
@@ -1803,7 +1803,7 @@ Tuple_type: Tuple_identifier
 			{ $$ := ast_factory.new_class_type_as ($1, Void) }
 	|	Tuple_identifier Add_counter Add_counter2 TE_LSQURE TE_RSQURE
 			{
-			  	last_type_list := ast_factory.new_eiffel_list_type (0)
+				last_type_list := ast_factory.new_eiffel_list_type (0)
 				if last_type_list /= Void then
 					last_type_list.set_positions ($4, $5)
 				end
@@ -1870,7 +1870,7 @@ Named_parameter_list: TE_ID TE_COLON Type TE_RSQURE
 					ast_factory.reverse_extend_identifier (last_identifier_list, $1)
 					$$.reverse_extend (ast_factory.new_type_dec_as (last_identifier_list, $3, $2))
 				end
-				last_identifier_list := Void     
+				last_identifier_list := Void
 				last_rsqure.force ($4)
 			}
 	|	TE_ID TE_COMMA Increment_counter Named_parameter_list
@@ -1885,7 +1885,7 @@ Named_parameter_list: TE_ID TE_COLON Type TE_RSQURE
 						ast_factory.reverse_extend_identifier (last_identifier_list, $1)
 						ast_factory.reverse_extend_identifier_separator (last_identifier_list, $2)
 					end
-					last_identifier_list := Void     
+					last_identifier_list := Void
 				end
 			}
 	|	TE_ID TE_COLON Type ASemi Increment_counter2 Add_counter Named_parameter_list
@@ -2038,7 +2038,7 @@ Constraint: -- Empty
 	;
 
 Single_constraint:
-	Constraint_type {is_constraint_renaming := True} Rename  {is_constraint_renaming := False}  TE_END
+	Constraint_type {is_constraint_renaming := True} Rename {is_constraint_renaming := False} TE_END
 			{
 				$$ := ast_factory.new_constraining_type ($1, $3, $5)
 			}
@@ -2375,7 +2375,7 @@ Class_invariant: -- Empty
 			}
 	;
 
-Exit_condition_opt:  -- Empty
+Exit_condition_opt: -- Empty
 			-- { $$ := Void }
 	| TE_UNTIL Expression
 			{ $$ := ast_factory.new_exit_condition_pair ($1, $2) }

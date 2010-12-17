@@ -1,4 +1,4 @@
-note	
+note
 	description:
 		"Facilities for managing peer relations between radio buttons.%N%
 		%Base class for EV_RADIO_BUTTON, EV_RADIO_MENU_ITEM and%
@@ -9,7 +9,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class 
+deferred class
 	EV_RADIO_PEER
 
 inherit
@@ -18,7 +18,7 @@ inherit
 			implementation,
 			is_in_default_state
 		end
-	
+
 feature -- Status report
 
 	is_selected: BOOLEAN
@@ -28,7 +28,7 @@ feature -- Status report
 		deferred
 		end
 
-	peers: LINKED_LIST [like Current]
+	peers: LINKED_LIST [like selected_peer]
 			-- All radio items in the group `Current' is in.
 			-- Includes `Current'.
 		require

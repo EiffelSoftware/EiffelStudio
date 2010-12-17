@@ -11,7 +11,7 @@ class
 inherit
 	EV_RADIO_BUTTON
 		redefine
-			implementation, create_implementation
+			selected_peer
 		end
 
 	DV_SENSITIVE_CHECK
@@ -25,6 +25,14 @@ inherit
 
 create
 	make_with_text
+
+feature -- Status report
+
+	selected_peer: EV_RADIO_BUTTON
+			-- Item in `peers' that is currently selected.
+		do
+			Result := implementation.selected_peer
+		end
 
 feature -- Access
 
@@ -56,18 +64,6 @@ feature -- Basic operations
 			disable_sensitive
 		end
 
-feature {EV_ANY, EV_ANY_I} -- Implementation
-
-	implementation: DV_RADIO_BUTTON_I
-
-feature {NONE} -- Implementation
-
-	create_implementation
-			-- See `{EV_ANY}.create_implementation'.
-		do
-			create {DV_RADIO_BUTTON_IMP} implementation.make
-		end
-
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
@@ -79,10 +75,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
-
-end -- class DV_CHECK_BUTTON
-
-
+end

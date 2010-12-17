@@ -11517,7 +11517,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-			  	last_type_list := ast_factory.new_eiffel_list_type (0)
+				last_type_list := ast_factory.new_eiffel_list_type (0)
 				if last_type_list /= Void then
 					last_type_list.set_positions (yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4))
 				end
@@ -11751,7 +11751,7 @@ end
 					ast_factory.reverse_extend_identifier (last_identifier_list, yyvs2.item (yyvsp2))
 					yyval119.reverse_extend (ast_factory.new_type_dec_as (last_identifier_list, yyvs83.item (yyvsp83), yyvs4.item (yyvsp4 - 1)))
 				end
-				last_identifier_list := Void     
+				last_identifier_list := Void
 				last_rsqure.force (yyvs4.item (yyvsp4))
 			
 if yy_parsing_status >= yyContinue then
@@ -11799,7 +11799,7 @@ end
 						ast_factory.reverse_extend_identifier (last_identifier_list, yyvs2.item (yyvsp2))
 						ast_factory.reverse_extend_identifier_separator (last_identifier_list, yyvs4.item (yyvsp4))
 					end
-					last_identifier_list := Void     
+					last_identifier_list := Void
 				end
 			
 if yy_parsing_status >= yyContinue then

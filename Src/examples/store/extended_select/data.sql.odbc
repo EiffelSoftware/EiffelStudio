@@ -1,0 +1,2 @@
+insert into DB_BOOK_EXTENDED (title, author, quantity, price, year, double_value) values ('面向对象软件构造', 'Bertrand Meyer', 4, 200.00, {d '1986-06-07'}, 7898.3423)
+insert into DB_BOOK_EXTENDED (title, author, quantity, price, year, double_value) values ('Object-Oriented Software Construction', 'Bertrand Meyer', 4, 200.00, {d '1986-06-07'}, 7898.3423)

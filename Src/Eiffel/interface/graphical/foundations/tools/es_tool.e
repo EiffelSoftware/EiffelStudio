@@ -8,6 +8,8 @@ note
                   as an attached entity carrying the hosted development window, as will the `edition' number.
               (C) Recycle memory management is handled automatically so there is no need to call `recycle' on this shim or on
                   the created tool panel.
+                  
+       (See: ES_SHELL_TOOLS.new_tool ... to see how tool is instantiated.)
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";

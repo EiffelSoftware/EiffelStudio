@@ -380,6 +380,11 @@ Dotnet_indexing: -- Empty
 						$$.set_indexing_keyword (extract_keyword ($1))
 						$$.set_end_keyword ($2)
 				end		
+				if has_syntax_warning then
+					report_one_warning (
+						create {SYNTAX_WARNING}.make (token_line ($2), token_column ($2), filename,
+						once "Missing `attribute' keyword before `end' keyword."))
+				end
 		}
 	|	TE_INDEXING Add_indexing_counter Index_list Remove_counter TE_END
 			{
@@ -392,6 +397,11 @@ Dotnet_indexing: -- Empty
 						$$.set_end_keyword ($5)
 					end
 				end				
+				if has_syntax_warning then
+					report_one_warning (
+						create {SYNTAX_WARNING}.make (token_line ($5), token_column ($5), filename,
+						once "Missing `attribute' keyword before `end' keyword."))
+				end
 			}
 	;
 

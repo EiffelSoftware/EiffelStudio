@@ -3899,6 +3899,11 @@ end
 						yyval108.set_indexing_keyword (extract_keyword (yyvs15.item (yyvsp15)))
 						yyval108.set_end_keyword (yyvs12.item (yyvsp12))
 				end		
+				if has_syntax_warning then
+					report_one_warning (
+						create {SYNTAX_WARNING}.make (token_line (yyvs12.item (yyvsp12)), token_column (yyvs12.item (yyvsp12)), filename,
+						once "Missing `attribute' keyword before `end' keyword."))
+				end
 		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
@@ -3944,6 +3949,11 @@ end
 						yyval108.set_end_keyword (yyvs12.item (yyvsp12))
 					end
 				end				
+				if has_syntax_warning then
+					report_one_warning (
+						create {SYNTAX_WARNING}.make (token_line (yyvs12.item (yyvsp12)), token_column (yyvs12.item (yyvsp12)), filename,
+						once "Missing `attribute' keyword before `end' keyword."))
+				end
 			
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 5

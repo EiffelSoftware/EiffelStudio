@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-7-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-7-0 http://www.eiffel.com/developers/xml/configuration-1-7-0.xsd" name="extended_select" uuid="B65E85C0-96CD-4185-9C61-060450FA68B3">
+	<target name="common" abstract="true">
+		<root cluster="root_cluster" class="SELECTOR" feature="make"/>
+		<option warning="true">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+		</option>
+		<setting name="console_application" value="true"/>
+		<precompile name="base_pre" location="$ISE_PRECOMP\base.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="encoding" location="$ISE_LIBRARY\library\encoding\encoding.ecf"/>
+		<library name="store" location="$ISE_LIBRARY\library\store\store.ecf" readonly="false"/>
+		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
+	</target>
+	<target name="extended_select_mysql" extends="common">
+		<library name="mysql" location="$ISE_LIBRARY\library\store\dbms\rdbms\mysql\mysql.ecf"/>
+		<cluster name="handle" location="..\Utilities\mysql\"/>
+		<cluster name="root_cluster" location=".\"/>
+		<cluster name="utilities" location="..\Utilities\"/>
+	</target>
+	<target name="extended_select_ingres" extends="common">
+		<library name="ingres" location="$ISE_LIBRARY\library\store\dbms\rdbms\ingres\ingres.ecf"/>
+		<cluster name="handle" location="..\Utilities\ingres\"/>
+		<cluster name="root_cluster" location=".\"/>
+		<cluster name="utilities" location="..\Utilities\"/>
+	</target>
+	<target name="extended_select_sybase" extends="common">
+		<library name="sybase" location="$ISE_LIBRARY\library\store\dbms\rdbms\sybase\sybase.ecf"/>
+		<cluster name="handle" location="..\Utilities\sybase\"/>
+		<cluster name="root_cluster" location=".\"/>
+		<cluster name="utilities" location="..\Utilities\"/>
+	</target>
+	<target name="extended_select_oracle" extends="common">
+		<library name="oracle" location="$ISE_LIBRARY\library\store\dbms\rdbms\oracle\oracle.ecf"/>
+		<cluster name="handle" location="..\Utilities\oracle\"/>
+		<cluster name="root_cluster" location=".\"/>
+		<cluster name="utilities" location="..\Utilities\"/>
+	</target>
+	<target name="extended_select_odbc" extends="common">
+		<library name="odbc" location="$ISE_LIBRARY\library\store\dbms\rdbms\odbc\odbc.ecf" readonly="false"/>
+		<cluster name="handle" location="..\Utilities\odbc\"/>
+		<cluster name="root_cluster" location=".\"/>
+		<cluster name="utilities" location="..\Utilities\"/>
+	</target>
+</system>

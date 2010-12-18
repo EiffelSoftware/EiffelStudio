@@ -460,6 +460,7 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (is_digit_type, is_digit_name_id)
  			Result.put (generator_type, generator_name_id)
  			Result.put (three_way_comparison_type, three_way_comparison_name_id)
+			Result.put (twin_type, standard_twin_name_id)
 			Result.put (twin_type, twin_name_id)
 			Result.put (twin_type, deep_twin_name_id)
 			Result.put (as_attached_type, as_attached_name_id)

@@ -3062,18 +3062,9 @@ feature {NONE} -- Implementation
 					indent := agent text_formatter_decorator.put_space
 					exdent := indent
 				end
-				l_text_formatter_decorator.process_keyword_text (ti_across_keyword, Void)
 				l_text_formatter_decorator.set_separator (Void)
 				l_text_formatter_decorator.set_new_line_between_tokens
-				indent.call (Void)
-				l_text_formatter_decorator.new_expression
-				put_breakable
-				l_as.iteration.expression.process (Current)
-				text_formatter_decorator.put_space
-				l_text_formatter_decorator.process_keyword_text (ti_as_keyword, Void)
-				text_formatter_decorator.put_space
-				l_as.iteration.identifier.process (Current)
-				exdent.call (Void)
+				append_iteration_as (l_as.iteration, indent, exdent)
 				if l_as.invariant_part /= Void then
 					l_text_formatter_decorator.process_keyword_text (ti_invariant_keyword, Void)
 					indent.call (Void)
@@ -4101,28 +4092,20 @@ feature {NONE} -- Implementation
 		end
 
 	process_iteration_as (l_as: ITERATION_AS)
-		local
-			l_text_formatter_decorator: like text_formatter_decorator
 		do
-			check
-				not_expr_type_visiting: not expr_type_visiting
-			end
-			l_text_formatter_decorator := text_formatter_decorator
-			l_text_formatter_decorator.process_keyword_text (ti_across_keyword, Void)
-			l_text_formatter_decorator.put_new_line
-			l_text_formatter_decorator.indent
-			put_breakable
-			l_as.expression.process (Current)
-			l_text_formatter_decorator.put_space
-			l_text_formatter_decorator.process_keyword_text (ti_as_keyword, Void)
-			l_text_formatter_decorator.put_space
-			l_as.identifier.process (Current)
-			l_text_formatter_decorator.exdent
-			l_text_formatter_decorator.put_new_line
-				-- Compute type of the cursor and associate cursor name with this type.
-			if attached last_type and then attached expr_type (l_as.cursor_expression) as t then
-				object_test_locals_for_current_feature.force (t.as_attached_in (current_class), l_as.identifier.name_8)
-			end
+			append_iteration_as (
+				l_as,
+				agent
+					do
+						text_formatter_decorator.put_new_line
+						text_formatter_decorator.indent
+					end,
+				agent
+					do
+						text_formatter_decorator.exdent
+						text_formatter_decorator.put_new_line
+					end
+			)
 		end
 
 feature -- Expression visitor
@@ -5010,6 +4993,31 @@ feature {NONE} -- Implementation: helpers
 			l_text_formatter_decorator := text_formatter_decorator
 			if l_text_formatter_decorator.is_with_breakable then
 				l_text_formatter_decorator.put_breakable
+			end
+		end
+
+	append_iteration_as (l_as: ITERATION_AS; indent: PROCEDURE [ANY, TUPLE]; exdent: PROCEDURE [ANY, TUPLE])
+		local
+			l_text_formatter_decorator: like text_formatter_decorator
+		do
+			if not expr_type_visiting then
+				l_text_formatter_decorator := text_formatter_decorator
+				l_text_formatter_decorator.process_keyword_text (ti_across_keyword, Void)
+				indent.call (Void)
+				l_text_formatter_decorator.new_expression
+				put_breakable
+			end
+			l_as.expression.process (Current)
+			if not expr_type_visiting then
+				l_text_formatter_decorator.put_space
+				l_text_formatter_decorator.process_keyword_text (ti_as_keyword, Void)
+				l_text_formatter_decorator.put_space
+				l_as.identifier.process (Current)
+				exdent.call (Void)
+			end
+				-- Compute type of the cursor and associate cursor name with this type.
+			if attached last_type and then attached expr_type (l_as.cursor_expression) as t then
+				object_test_locals_for_current_feature.force (t.as_attached_in (current_class), l_as.identifier.name_8)
 			end
 		end
 

@@ -25,6 +25,10 @@ feature {NONE} -- Initialization
 	make (a_tool: CTR_LOGS_TOOL)
 		do
 			logs_tool := a_tool
+			create show_hide_actions
+			create filters.make (2)
+			create filter_in
+			filter_in.message := True
 			build_interface
 		end
 
@@ -35,7 +39,7 @@ feature {NONE} -- Initialization
 			b: EV_HORIZONTAL_BOX
 			tb: SD_TOOL_BAR
 			tbb: SD_TOOL_BAR_BUTTON
---			tbw: SD_TOOL_BAR_WIDGET_ITEM
+			tbpb: SD_TOOL_BAR_POPUP_BUTTON -- SD_TOOL_BAR_DUAL_POPUP_BUTTON
 			tf: EV_TEXT_FIELD
 			lab: EV_LABEL
 			c: EV_COLOR
@@ -71,6 +75,13 @@ feature {NONE} -- Initialization
 			tb.extend (tbb)
 			button_submit := tbb
 
+			create tbpb.make
+			tbpb.set_text ("...")
+			tbpb.set_popup_widget_function (agent on_filter_choice)
+			tb.extend (tbpb)
+			button_filter := tbpb
+
+
 			create lab.make_with_text ("Filter ")
 			b.extend (lab)
 			b.disable_item_expand (lab)
@@ -82,9 +93,6 @@ feature {NONE} -- Initialization
 
 			b.extend (tb)
 			b.disable_item_expand (tb)
-
-
-
 
 			tb.compute_minimum_size
 			create c.make_with_8_bit_rgb (180, 216, 255)
@@ -98,6 +106,13 @@ feature {NONE} -- Initialization
 
 			tf.return_actions.extend (agent on_submit)
 			tf.key_release_actions.extend (agent on_key_released)
+
+			tf.set_tooltip ("[
+				Tips: 
+				- Click and Esc to discard search
+				- you can filter by date using before:2010-11-01 after:2010-10-01
+				- ...
+				]")
 		end
 
 feature -- Access
@@ -108,6 +123,7 @@ feature -- Access
 
 	tool_bar: SD_TOOL_BAR
 	button_submit: SD_TOOL_BAR_BUTTON
+	button_filter: SD_TOOL_BAR_BUTTON
 	filter_tf: EV_TEXT_FIELD
 
 feature -- Event
@@ -136,29 +152,151 @@ feature -- Event
 			apply_filter (s)
 		end
 
-	filter: detachable REPOSITORY_LOG_MESSAGE_FILTER
+	on_filter_changed
+		local
+			s: STRING_32
+		do
+			s := filter_tf.text
+			s.left_adjust
+			update_filter (s)
+		end
+
+	update_filter (a_filter: detachable STRING)
+		local
+			s: detachable STRING
+			flst: like filters
+			f: like filters.item
+			d_before, d_after: detachable STRING
+			p,e: INTEGER
+		do
+			s := a_filter
+			flst := filters
+			from
+				flst.start
+			until
+				flst.after
+			loop
+				logs_tool.remove_filter (flst.item)
+				flst.forth
+			end
+			flst.wipe_out
+			if s = Void or else s.is_empty then
+				--| nothing
+			else
+				p := s.substring_index ("before:", 1)
+				if p > 0 then
+					e := s.index_of (' ', p + 1)
+					if e > 0 then
+						e := e - 1
+					else
+						e := s.count
+					end
+					d_before := s.substring (p + 7, e)
+					s.remove_substring (p, e)
+					s.left_adjust
+				end
+				p := s.substring_index ("after:", 1)
+				if p > 0 then
+					e := s.index_of (' ', p + 1)
+					if e > 0 then
+						e := e - 1
+					else
+						e := s.count
+					end
+					d_after := s.substring (p + 6, e)
+					s.remove_substring (p, e)
+					s.left_adjust
+				end
+				if d_before /= Void or d_after /= Void then
+					p := s.index_of ('"', 1)
+					if p > 0 then
+						e := s.index_of ('"', p + 1)
+						if e > 0 then
+							s := out.substring (p + 1, e - 1)
+						end
+					end
+					create {REPOSITORY_LOG_DATE_FILTER} f.make (d_after, d_before)
+					flst.extend (f)
+				end
+				if s.count > 0 then
+					if filter_in.message then
+						create {REPOSITORY_LOG_MESSAGE_FILTER} f.make (s)
+						flst.extend (f)
+					end
+					if filter_in.path then
+						create {REPOSITORY_LOG_PATH_FILTER} f.make (s)
+						flst.extend (f)
+					end
+				end
+				from
+					flst.start
+				until
+					flst.after
+				loop
+					logs_tool.add_filter (flst.item)
+					flst.forth
+				end
+			end
+		end
 
 	apply_filter (s: detachable STRING)
-		local
-			f: like filter
 		do
-			f := filter
-
-			if s = Void or else s.is_empty then
-				if f /= Void then
-					logs_tool.remove_filter (f)
-				end
-				filter := Void
-			else
-				if f = Void then
-					create {REPOSITORY_LOG_MESSAGE_FILTER} f.make (s)
-					filter := f
-					logs_tool.add_filter (f)
-				end
-				f.set_message (s)
-			end
+			update_filter (s)
 			logs_tool.custom_update (False)
 		end
+
+	on_filter_choice: detachable EV_WIDGET
+		local
+			b: EV_VERTICAL_BOX
+--			bb: EV_VERTICAL_BOX
+			lab: EV_LABEL
+			cb: EV_CHECK_BUTTON
+		do
+			create b
+			create lab.make_with_text ("Search in ...")
+			b.extend (lab)
+			b.extend (create {EV_HORIZONTAL_SEPARATOR})
+			create cb.make_with_text ("Message")
+			if filter_in.message then
+				cb.enable_select
+			end
+			cb.select_actions.extend (agent (iacb: EV_CHECK_BUTTON)
+				do
+					filter_in.message := iacb.is_selected
+					on_filter_changed
+				end(cb))
+			b.extend (cb)
+
+			create cb.make_with_text ("Path")
+			if filter_in.path then
+				cb.enable_select
+			end
+			cb.select_actions.extend (agent (iacb: EV_CHECK_BUTTON)
+				do
+					filter_in.path := iacb.is_selected
+					on_filter_changed
+				end(cb))
+			b.extend (cb)
+
+--			create cb.make_with_text ("Dates")
+--			if filter_in.dates then
+--				cb.enable_select
+--			end
+--			cb.select_actions.extend (agent (iacb: EV_CHECK_BUTTON)
+--				do
+--					filter_in.dates := iacb.is_selected
+--					on_filter_changed
+--				end(cb))
+--			b.extend (cb)
+
+			Result := b
+		end
+
+feature -- Filter
+
+	filters: ARRAYED_LIST [REPOSITORY_LOG_FILTER]
+
+	filter_in: TUPLE [message: BOOLEAN; path: BOOLEAN; dates: BOOLEAN]
 
 feature -- GUI events
 
@@ -176,6 +314,7 @@ feature -- GUI events
 	show
 		do
 			widget.show
+			show_hide_actions.call ([True])
 			filter_tf.set_focus
 		end
 
@@ -183,7 +322,10 @@ feature -- GUI events
 		do
 			widget.hide
 			reset
+			show_hide_actions.call ([False])
 			logs_tool.grid.set_focus
 		end
+
+	show_hide_actions: ACTION_SEQUENCE [TUPLE [BOOLEAN]]
 
 end

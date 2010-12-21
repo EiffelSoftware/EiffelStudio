@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {REPOSITORY_LOG_AUTHOR_FILTER}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 

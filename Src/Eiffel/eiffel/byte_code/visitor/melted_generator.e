@@ -1564,6 +1564,7 @@ feature {NONE} -- Visitors
 				exit_count := 3
 			end
 
+			generate_melted_debugger_hook
 			a_node.expression_code.process (Current)
 			ba.append (bc_lassign)
 			ba.append_short_integer (result_local_number)

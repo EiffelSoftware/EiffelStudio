@@ -23,7 +23,7 @@
 				<platform value="windows"/>
 			</condition>
 		</library>
-		<cluster name="vision" location="$ISE_LIBRARY\library\vision\">
+		<cluster name="vision" location=".">
 			<cluster name="vision_context_data" location="$|oui\context_data\"/>
 			<cluster name="vision_figures" location="$|figures\"/>
 			<cluster name="vision_imp_motif" location="$|implement\motif\" recursive="true">

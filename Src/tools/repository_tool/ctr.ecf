@@ -10,12 +10,14 @@
 			<debug name="svn_engine" enabled="true"/>
 			<assertions precondition="true"/>
 		</option>
+		<setting name="concurrency" value="none"/>
 		<variable name="eapml_limb_type" value="natural_32"/>
 		<variable name="eapml_scan_type" value="vc"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension-safe.ecf"/>
 		<library name="eapml" location=".\lib\eapml\eapml-safe.ecf"/>
 		<library name="encryption" location=".\lib\eel\eel-safe.ecf"/>
+		<library name="matcher" location="$ISE_LIBRARY\library\text\regexp\kmp_matcher\kmp_matcher-safe.ecf"/>
 		<library name="process" location="$ISE_LIBRARY\library\process\process-safe.ecf"/>
 		<library name="svn" location="$EIFFEL_SRC\contrib\library\svn\svn-safe.ecf" readonly="false">
 			<option debug="false">
@@ -52,7 +54,6 @@
 			</option>
 		</library>
 		<library name="fmwk_vision2" location="$EIFFEL_SRC\framework\vision2\vision2-safe.ecf" readonly="false"/>
-		<library name="matcher" location="$ISE_LIBRARY\library\text\regexp\kmp_matcher\kmp_matcher-safe.ecf"/>
 		<library name="preferences_xml" location="$ISE_LIBRARY\library\preferences\preferences_xml-safe.ecf"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2-safe.ecf" readonly="false"/>
 		<library name="vision2_extension" location="$ISE_LIBRARY\library\vision2_extension\vision2_extension-safe.ecf"/>

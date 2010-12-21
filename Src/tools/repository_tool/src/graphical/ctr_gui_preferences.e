@@ -33,7 +33,9 @@ feature {NONE} -- Access
 			info_tool_changes_expanded_pref.set_hidden (True)
 
 			date_formatting_pref := factory.new_string_preference_value (manager, namespace + ".date_formatting", "")
-			date_formatting_pref.set_hidden (True)
+
+			use_smart_date_pref := factory.new_boolean_preference_value (manager, namespace + ".use_smart_date", True)
+
 			diff_viewer_command_pref := factory.new_string_preference_value (manager, namespace + ".diff_viewer_command", "")
 		end
 
@@ -45,6 +47,8 @@ feature -- Access
 			-- True: next, False: previous
 
 	info_tool_changes_expanded_pref: BOOLEAN_PREFERENCE
+
+	use_smart_date_pref: BOOLEAN_PREFERENCE
 
 	date_formatting_pref: STRING_PREFERENCE
 

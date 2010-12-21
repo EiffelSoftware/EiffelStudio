@@ -24,6 +24,10 @@ feature -- Access
 		deferred
 		end
 
+	date_time: detachable DATE_TIME
+		deferred
+		end
+
 	author: STRING
 		deferred
 		end

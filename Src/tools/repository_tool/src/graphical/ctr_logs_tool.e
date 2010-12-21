@@ -69,6 +69,19 @@ feature {NONE} -- Initialization
 			create mtb.make
 
 			create tbtoggbut.make
+			tbtoggbut.set_pixmap (icons.new_text_small_toolbar_button_standard_icon ("Filter"))
+			tbtoggbut.select_actions.extend (agent (ai_togg: SD_TOOL_BAR_TOGGLE_BUTTON)
+					do
+						if ai_togg.is_selected then
+							show_search_bar
+						else
+							hide_search_bar
+						end
+					end(tbtoggbut))
+			mtb.extend (tbtoggbut)
+			toggle_search_bar_button := tbtoggbut
+
+			create tbtoggbut.make
 			tbtoggbut.set_pixmap (icons.new_text_small_toolbar_button_standard_icon ("Hide-Read"))
 			tbtoggbut.select_actions.extend (agent (ai_togg: SD_TOOL_BAR_TOGGLE_BUTTON)
 					do
@@ -126,6 +139,24 @@ feature {NONE} -- Initialization
 			c.set_mini_toolbar (mtb)
 
 			g.key_press_actions.extend (agent on_key_pressed)
+
+			if attached preferences as prefs then
+				if attached prefs.use_smart_date_pref as p then
+					use_smart_date := p.value
+					p.change_actions.extend (agent (iap: BOOLEAN_PREFERENCE)
+							do
+								use_smart_date := iap.value
+								update
+							end(p))
+				end
+				if attached prefs.date_formatting_pref as p2 then
+					set_date_time_format (p2.value)
+					p2.change_actions.extend (agent (iap: STRING_PREFERENCE)
+							do
+								set_date_time_format (iap.value)
+							end(p2))
+				end
+			end
 		end
 
 feature -- Access
@@ -156,9 +187,42 @@ feature -- Access
 
 	review_enabled: BOOLEAN
 
+	use_smart_date: BOOLEAN
+
+	date_time_format: detachable STRING
+
 	grid: ES_GRID
 
+	toggle_search_bar_button: detachable SD_TOOL_BAR_TOGGLE_BUTTON
+
 feature -- Element change
+
+	set_date_time_format (f: like date_time_format)
+		local
+			s: detachable STRING
+		do
+			if f /= Void then
+				s := f.string
+				s.left_adjust
+				if s.is_empty then
+					s := Void
+				else
+					s := f.string
+				end
+				if s = date_time_format then
+				elseif s /= Void then
+					if attached date_time_format as dtf and then s.same_string (dtf) then
+						-- do nothing
+					else
+						date_time_format := s
+						update
+					end
+				else
+					date_time_format := Void
+					update
+				end
+			end
+		end
 
 	add_filter (f: REPOSITORY_LOG_FILTER)
 		local
@@ -404,6 +468,20 @@ feature -- Search
 
 			container.extend (box.widget)
 			container.disable_item_expand (box.widget)
+
+			box.show_hide_actions.extend (agent (b: BOOLEAN)
+					do
+						if attached toggle_search_bar_button as but then
+							but.select_actions.block
+							if b then
+								but.enable_select
+							else
+								but.disable_select
+							end
+							but.select_actions.resume
+						end
+					end
+				)
 		end
 
 	show_search_bar
@@ -417,6 +495,11 @@ feature -- Search
 				end
 				b.show
 			end
+			if attached toggle_search_bar_button as b then
+				b.select_actions.block
+				b.enable_select
+				b.select_actions.resume
+			end
 		end
 
 	hide_search_bar
@@ -424,6 +507,12 @@ feature -- Search
 			if attached search_bar as b then
 				b.hide
 			end
+			if attached toggle_search_bar_button as b then
+				b.select_actions.block
+				b.disable_select
+				b.select_actions.resume
+			end
+
 			filter := Void
 		end
 
@@ -579,6 +668,7 @@ feature {CTR_WINDOW} -- Implementation
 			row_has_log: a_row.data = a_log
 		local
 			glab_buts: EV_GRID_PIXMAPS_ON_RIGHT_LABEL_ITEM
+			gdate_time: EV_GRID_LABEL_ITEM
 			glab: EV_GRID_LABEL_ITEM
 			c: INTEGER
 			stats: like {REPOSITORY_LOG_REVIEW}.stats
@@ -630,7 +720,13 @@ feature {CTR_WINDOW} -- Implementation
 			create glab.make_with_text (a_log.single_line_message)
 			a_row.set_item (cst_log_column, glab)
 			a_row.set_item (cst_author_column, create {EV_GRID_LABEL_ITEM}.make_with_text (a_log.author))
-			a_row.set_item (cst_date_column, create {EV_GRID_LABEL_ITEM}.make_with_text (a_log.date))
+
+			if use_smart_date or date_time_format /= Void then
+				create {CTR_DATE_TIME_GRID_ITEM} gdate_time.make_with_text_and_date (a_log.date, a_log.date_time, use_smart_date, date_time_format)
+			else
+				create gdate_time.make_with_text (a_log.date)
+			end
+			a_row.set_item (cst_date_column, gdate_time)
 
 			if current_views.count > 1 then
 				a_row.set_foreground_color (repository_color (a_log.parent))

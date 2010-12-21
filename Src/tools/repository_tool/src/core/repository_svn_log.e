@@ -13,17 +13,29 @@ inherit
 			parent
 		end
 
+	SVN_DATE_UTILITIES
+		undefine
+			is_equal, copy
+		end
+
 create
 	make
 
 feature {NONE} -- Initialization
 
 	make (a_svn: SVN_REVISION_INFO; a_parent: REPOSITORY_DATA)
+		local
+			d: like date_time
 		do
 			svn_revision := a_svn
 			id := a_svn.revision.out
 			author := a_svn.author
 			date := a_svn.date
+			if attached svn_date_values (date) as dvals then
+				create d.make (dvals.year, dvals.month, dvals.day, dvals.hour, dvals.min, dvals.sec)
+				d.fine_second_add (dvals.fsec)
+				date_time := d
+			end
 			message := a_svn.log_message
 			message.right_adjust
 
@@ -39,6 +51,8 @@ feature -- Access
 	id: STRING
 
 	date: STRING
+
+	date_time: detachable DATE_TIME
 
 	author: STRING
 

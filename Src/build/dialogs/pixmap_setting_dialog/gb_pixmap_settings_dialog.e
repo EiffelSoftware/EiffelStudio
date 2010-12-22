@@ -149,6 +149,14 @@ feature {NONE} -- Initialization
 			set_icon_pixmap (Icon_build_window @ 1)
 		end
 
+	user_create_interface_objects
+			-- Create any auxilliary objects needed for MAIN_WINDOW.
+			-- Initialization for these objects must be performed in `user_initialization'.
+		do
+			-- Create attached types defined in class here, initialize them in `user_initialization'.
+
+		end
+
 feature {NONE} -- Implementation
 
 	all_object_and_event_names: ARRAYED_LIST [STRING]

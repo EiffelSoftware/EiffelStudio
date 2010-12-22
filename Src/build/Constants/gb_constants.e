@@ -366,27 +366,70 @@ feature -- Generation constants
 			--Definition of `make_with_window' and `default_create' to be used in window implementation when
 			-- we are a client of the window, and not inheriting it.
 		once
-			Result := "create" + indent_less_two + "default_create," + indent_less_two +
-				"make_with_window%N%N" + "feature {NONE} -- Initialization%N" + indent_less_two +
-				"make_with_window (a_window: "+ Ev_titled_window_string + ") is" + indent + "-- Create `Current' in `a_window'." +
-				indent_less_one + "require" + indent + "window_not_void: a_window /= Void" +
-				indent + "window_empty: a_window.is_empty" + indent + "no_menu_bar: a_window.menu_bar = Void" +
-				indent_less_one + "do" + indent + "window := a_window" + indent + "initialize" + indent_less_one + "ensure" + indent + "window_set: window = a_window" + indent + "window_not_void: window /= Void" + indent_less_one + "end%N" +
-				indent_less_two + "default_create is" + indent + " -- Create `Current'." + indent_less_one + "do" + indent +
-				"create window" + indent + "initialize" + indent_less_one + "ensure then" + indent + "window_not_void: window /= Void" + indent_less_one + "end"
+			Result := "[
+create
+	default_create,
+	make_with_window
+	
+feature {NONE} -- Initialization
+
+	make_with_window (a_window: like window)
+			-- Create `Current' in `a_window'.
+		require
+			window_not_void: a_window /= Void
+			window_empty: a_window.is_empty
+			no_menu_bar: a_window.menu_bar = Void
+		do
+			window := a_window
+			create_interface_objects
+			initialize
+		ensure
+			window_set: window = a_window
+			window_not_void: window /= Void
+		end
+
+	default_create
+			 -- Create `Current'.
+		do
+			make_with_window (create {like window})
+		ensure then
+			window_not_void: window /= Void
+		end
+				]"
 		end
 
 	redefined_creation: STRING
 			--Definition of `make_with_window' and `default_create' to be used in window implementation when
 			-- we are a client of the window, and not inheriting it.
 		once
-			Result := "create" + indent_less_two + "default_create," + indent_less_two +
-				"make_with_widget%N%N" + "feature {NONE} -- Initialization%N" + indent_less_two +
-				"make_with_widget (a_widget: "+ Ev_titled_window_string + ") is" + indent + "-- Create `Current' in `a_widget'." +
-				indent_less_one + "require" + indent + "widget_not_void: a_widget /= Void" +
-				indent_less_one + "do" + indent + "widget := a_widget" + indent + "initialize" + indent_less_one + "ensure" + indent + "widget_set: widget = a_widget" + indent + "widget_not_void: widget /= Void" + indent_less_one + "end%N" +
-				indent_less_two + "default_create is" + indent + " -- Create `Current'." + indent_less_one + "do" + indent +
-				"create widget" + indent + "initialize" + indent_less_one + "ensure then" + indent + "widget_not_void: widget /= Void" + indent_less_one + "end"
+			Result := "[
+create
+	default_create,
+	make_with_widget
+
+feature {NONE} -- Initialization
+
+	make_with_widget (a_widget: like widget)
+			-- Create `Current' in `a_widget'.
+		require
+			widget_not_void: a_widget /= Void
+		do
+			widget := a_widget
+			create_interface_objects
+			initialize
+		ensure
+			widget_set: widget = a_widget
+			widget_not_void: widget /= Void
+		end
+
+	default_create
+			 -- Create `Current'.
+		do
+			make_with_widget (create {like widget})
+		ensure then
+			widget_not_void: widget /= Void
+		end
+				]"
 		end
 
 	default_create_redefinition: STRING
@@ -398,14 +441,14 @@ feature -- Generation constants
 	show_window_feature: STRING
 			-- `Show' for the window implementation when we are a client of the window.
 		once
-			Result := indent_less_two + "show is" + indent + "-- Show `Current'." + indent_less_one + "do" + indent + client_window_string +
+			Result := indent_less_two + "show" + indent + "-- Show `Current'." + indent_less_one + "do" + indent + client_window_string +
 			".show" + indent_less_one + "end"
 		end
 
 	show_widget_feature: STRING
 			-- `Show' for the window implementation when we are a client of the window.
 		once
-			Result := indent_less_two + "show is" + indent + "-- Show `Current'." + indent_less_one + "do" + indent + client_widget_string +
+			Result := indent_less_two + "show" + indent + "-- Show `Current'." + indent_less_one + "do" + indent + client_widget_string +
 			".show" + indent_less_one + "end"
 		end
 

@@ -65,6 +65,14 @@ feature {NONE} -- Initialization
 			pixmap_cell_full: pixmap_cell.full
 		end
 
+	user_create_interface_objects
+			-- Create any auxilliary objects needed for MAIN_WINDOW.
+			-- Initialization for these objects must be performed in `user_initialization'.
+		do
+			-- Create attached types defined in class here, initialize them in `user_initialization'.
+
+		end
+
 feature {NONE} -- Implementation
 
 	object: GB_OBJECT

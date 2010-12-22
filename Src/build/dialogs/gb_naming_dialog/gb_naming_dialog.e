@@ -59,6 +59,14 @@ feature {NONE} -- Initialization
 			validation_agent := a_validation_agent
 		end
 
+	user_create_interface_objects
+			-- Create any auxilliary objects needed for MAIN_WINDOW.
+			-- Initialization for these objects must be performed in `user_initialization'.
+		do
+			-- Create attached types defined in class here, initialize them in `user_initialization'.
+
+		end
+
 feature -- Basic operation
 
 	set_name (a_name: STRING)

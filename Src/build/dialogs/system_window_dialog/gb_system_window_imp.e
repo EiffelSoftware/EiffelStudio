@@ -17,7 +17,7 @@ deferred class
 inherit
 	EV_DIALOG
 		redefine
-			initialize, is_in_default_state
+			create_interface_objects, initialize, is_in_default_state
 		end
 			
 	GB_INTERFACE_CONSTANTS
@@ -27,62 +27,12 @@ inherit
 
 feature {NONE}-- Initialization
 
-	initialize
+	frozen initialize
 			-- Initialize `Current'.
 		do
 			Precursor {EV_DIALOG}
 			initialize_constants
-			
-				-- Create all widgets.
-			create l_ev_horizontal_box_1
-			create l_ev_vertical_box_1
-			create l_ev_horizontal_box_2
-			create l_ev_label_1
-			create location_field
-			create main_notebook
-			create l_ev_vertical_box_2
-			create l_ev_frame_1
-			create l_ev_vertical_box_3
-			create l_ev_horizontal_box_3
-			create project_radio_button
-			create rebuild_ace_file_check_button
-			create l_ev_horizontal_box_4
-			create class_radio_button
-			create class_naming_frame
-			create l_ev_vertical_box_4
-			create project_specific_name_holder
-			create l_ev_label_2
-			create project_class_name_field
-			create l_ev_label_3
-			create application_class_name_field
-			create l_ev_label_4
-			create constants_class_name_field
-			create l_ev_vertical_box_5
-			create l_ev_frame_2
-			create l_ev_vertical_box_6
-			create attributes_local_check_button
-			create attributes_class_check_button
-			create l_ev_horizontal_box_5
-			create l_ev_cell_1
-			create attribute_class_box
-			create attributes_exported_check_button
-			create attributes_optimal_check_button
-			create attributes_not_exported_check_button
-			create local_check_button
-			create debugging_check_button
-			create load_constants_check_button
-			create l_ev_frame_3
-			create l_ev_vertical_box_7
-			create generate_to_current_project_location_radio_button
-			create l_ev_vertical_box_8
-			create l_ev_horizontal_box_6
-			create generate_to_specified_location_radio_button
-			create browse_for_generation_location_button
-			create generation_location_display
-			create l_ev_vertical_box_9
-			create ok_button
-			create cancel_button
-			create l_ev_cell_2
+
 			
 				-- Build widget structure.
 			extend (l_ev_horizontal_box_1)
@@ -134,20 +84,7 @@ feature {NONE}-- Initialization
 			l_ev_vertical_box_9.extend (ok_button)
 			l_ev_vertical_box_9.extend (cancel_button)
 			l_ev_vertical_box_9.extend (l_ev_cell_2)
-			
-			create string_constant_set_procedures.make (10)
-			create string_constant_retrieval_functions.make (10)
-			create integer_constant_set_procedures.make (10)
-			create integer_constant_retrieval_functions.make (10)
-			create pixmap_constant_set_procedures.make (10)
-			create pixmap_constant_retrieval_functions.make (10)
-			create integer_interval_constant_retrieval_functions.make (10)
-			create integer_interval_constant_set_procedures.make (10)
-			create font_constant_set_procedures.make (10)
-			create font_constant_retrieval_functions.make (10)
-			create pixmap_constant_retrieval_functions.make (10)
-			create color_constant_set_procedures.make (10)
-			create color_constant_retrieval_functions.make (10)
+
 			integer_constant_set_procedures.extend (agent l_ev_horizontal_box_1.set_padding (?))
 			integer_constant_retrieval_functions.extend (agent large_padding)
 			integer_constant_set_procedures.extend (agent l_ev_horizontal_box_1.set_border_width (?))
@@ -240,7 +177,7 @@ feature {NONE}-- Initialization
 			integer_constant_retrieval_functions.extend (agent default_button_width)
 			string_constant_set_procedures.extend (agent set_title (?))
 			string_constant_retrieval_functions.extend (agent system_window_title)
-			
+
 			set_all_attributes_using_constants
 			
 				-- Connect events.
@@ -257,52 +194,125 @@ feature {NONE}-- Initialization
 			show_actions.extend (agent display_project_information)
 			show_actions.extend (agent display_project_information)
 			show_actions.extend (agent display_project_information)
-				-- Close the application when an interface close
-				-- request is recieved on `Current'. i.e. the cross is clicked.
 
 				-- Call `user_initialization'.
 			user_initialization
+		end
+		
+	frozen create_interface_objects
+			-- Create objects
+		do
+			
+				-- Create all widgets.
+			create l_ev_horizontal_box_1
+			create l_ev_vertical_box_1
+			create l_ev_horizontal_box_2
+			create l_ev_label_1
+			create location_field
+			create main_notebook
+			create l_ev_vertical_box_2
+			create l_ev_frame_1
+			create l_ev_vertical_box_3
+			create l_ev_horizontal_box_3
+			create project_radio_button
+			create rebuild_ace_file_check_button
+			create l_ev_horizontal_box_4
+			create class_radio_button
+			create class_naming_frame
+			create l_ev_vertical_box_4
+			create project_specific_name_holder
+			create l_ev_label_2
+			create project_class_name_field
+			create l_ev_label_3
+			create application_class_name_field
+			create l_ev_label_4
+			create constants_class_name_field
+			create l_ev_vertical_box_5
+			create l_ev_frame_2
+			create l_ev_vertical_box_6
+			create attributes_local_check_button
+			create attributes_class_check_button
+			create l_ev_horizontal_box_5
+			create l_ev_cell_1
+			create attribute_class_box
+			create attributes_exported_check_button
+			create attributes_optimal_check_button
+			create attributes_not_exported_check_button
+			create local_check_button
+			create debugging_check_button
+			create load_constants_check_button
+			create l_ev_frame_3
+			create l_ev_vertical_box_7
+			create generate_to_current_project_location_radio_button
+			create l_ev_vertical_box_8
+			create l_ev_horizontal_box_6
+			create generate_to_specified_location_radio_button
+			create browse_for_generation_location_button
+			create generation_location_display
+			create l_ev_vertical_box_9
+			create ok_button
+			create cancel_button
+			create l_ev_cell_2
+
+			create string_constant_set_procedures.make (10)
+			create string_constant_retrieval_functions.make (10)
+			create integer_constant_set_procedures.make (10)
+			create integer_constant_retrieval_functions.make (10)
+			create pixmap_constant_set_procedures.make (10)
+			create pixmap_constant_retrieval_functions.make (10)
+			create integer_interval_constant_retrieval_functions.make (10)
+			create integer_interval_constant_set_procedures.make (10)
+			create font_constant_set_procedures.make (10)
+			create font_constant_retrieval_functions.make (10)
+			create pixmap_constant_retrieval_functions.make (10)
+			create color_constant_set_procedures.make (10)
+			create color_constant_retrieval_functions.make (10)
+			user_create_interface_objects
 		end
 
 
 feature -- Access
 
-	browse_for_generation_location_button, ok_button, cancel_button: EV_BUTTON
-	project_radio_button,
-	class_radio_button, attributes_local_check_button, attributes_class_check_button,
-	attributes_exported_check_button, attributes_optimal_check_button, attributes_not_exported_check_button,
-	generate_to_current_project_location_radio_button, generate_to_specified_location_radio_button: EV_RADIO_BUTTON
+	location_field, project_class_name_field, application_class_name_field, constants_class_name_field,
+	generation_location_display: EV_TEXT_FIELD
 	main_notebook: EV_NOTEBOOK
+	project_radio_button, class_radio_button,
+	attributes_local_check_button, attributes_class_check_button, attributes_exported_check_button,
+	attributes_optimal_check_button, attributes_not_exported_check_button, generate_to_current_project_location_radio_button,
+	generate_to_specified_location_radio_button: EV_RADIO_BUTTON
+	rebuild_ace_file_check_button, local_check_button,
+	debugging_check_button, load_constants_check_button: EV_CHECK_BUTTON
+	class_naming_frame: EV_FRAME
 	project_specific_name_holder,
 	attribute_class_box: EV_VERTICAL_BOX
-	rebuild_ace_file_check_button, local_check_button, debugging_check_button,
-	load_constants_check_button: EV_CHECK_BUTTON
-	location_field, project_class_name_field, application_class_name_field,
-	constants_class_name_field, generation_location_display: EV_TEXT_FIELD
-	class_naming_frame: EV_FRAME
+	browse_for_generation_location_button, ok_button, cancel_button: EV_BUTTON
 
 feature {NONE} -- Implementation
 
-	l_ev_cell_1, l_ev_cell_2: EV_CELL
-	l_ev_horizontal_box_1, l_ev_horizontal_box_2, l_ev_horizontal_box_3,
-	l_ev_horizontal_box_4, l_ev_horizontal_box_5, l_ev_horizontal_box_6: EV_HORIZONTAL_BOX
-	l_ev_vertical_box_1,
-	l_ev_vertical_box_2, l_ev_vertical_box_3, l_ev_vertical_box_4, l_ev_vertical_box_5,
-	l_ev_vertical_box_6, l_ev_vertical_box_7, l_ev_vertical_box_8, l_ev_vertical_box_9: EV_VERTICAL_BOX
-	l_ev_label_1,
-	l_ev_label_2, l_ev_label_3, l_ev_label_4: EV_LABEL
+	l_ev_horizontal_box_1, l_ev_horizontal_box_2, l_ev_horizontal_box_3, l_ev_horizontal_box_4,
+	l_ev_horizontal_box_5, l_ev_horizontal_box_6: EV_HORIZONTAL_BOX
+	l_ev_vertical_box_1, l_ev_vertical_box_2,
+	l_ev_vertical_box_3, l_ev_vertical_box_4, l_ev_vertical_box_5, l_ev_vertical_box_6,
+	l_ev_vertical_box_7, l_ev_vertical_box_8, l_ev_vertical_box_9: EV_VERTICAL_BOX
+	l_ev_label_1, l_ev_label_2,
+	l_ev_label_3, l_ev_label_4: EV_LABEL
 	l_ev_frame_1, l_ev_frame_2, l_ev_frame_3: EV_FRAME
+	l_ev_cell_1,
+	l_ev_cell_2: EV_CELL
 
 feature {NONE} -- Implementation
 
 	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state?
 		do
-			-- Re-implement if you wish to enable checking
-			-- for `Current'.
 			Result := True
 		end
-	
+
+	user_create_interface_objects
+			-- Feature for custom user interface object creation, called at end of `create_interface_objects'.
+		deferred
+		end
+
 	user_initialization
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
@@ -358,14 +368,14 @@ feature {NONE} -- Implementation
 		deferred
 		end
 	
-	
+
 feature {NONE} -- Constant setting
 
-	set_attributes_using_string_constants
+	frozen set_attributes_using_string_constants
 			-- Set all attributes relying on string constants to the current
 			-- value of the associated constant.
 		local
-			s: STRING_GENERAL
+			s: detachable STRING_32
 		do
 			from
 				string_constant_set_procedures.start
@@ -374,12 +384,14 @@ feature {NONE} -- Constant setting
 			loop
 				string_constant_retrieval_functions.i_th (string_constant_set_procedures.index).call (Void)
 				s := string_constant_retrieval_functions.i_th (string_constant_set_procedures.index).last_result
-				string_constant_set_procedures.item.call ([s])
+				if s /= Void then
+					string_constant_set_procedures.item.call ([s])
+				end
 				string_constant_set_procedures.forth
 			end
 		end
-		
-	set_attributes_using_integer_constants
+
+	frozen set_attributes_using_integer_constants
 			-- Set all attributes relying on integer constants to the current
 			-- value of the associated constant.
 		local
@@ -414,12 +426,12 @@ feature {NONE} -- Constant setting
 				integer_interval_constant_set_procedures.forth
 			end
 		end
-		
-	set_attributes_using_pixmap_constants
+
+	frozen set_attributes_using_pixmap_constants
 			-- Set all attributes relying on pixmap constants to the current
 			-- value of the associated constant.
 		local
-			p: EV_PIXMAP
+			p: detachable EV_PIXMAP
 		do
 			from
 				pixmap_constant_set_procedures.start
@@ -428,16 +440,18 @@ feature {NONE} -- Constant setting
 			loop
 				pixmap_constant_retrieval_functions.i_th (pixmap_constant_set_procedures.index).call (Void)
 				p := pixmap_constant_retrieval_functions.i_th (pixmap_constant_set_procedures.index).last_result
-				pixmap_constant_set_procedures.item.call ([p])
+				if p /= Void then
+					pixmap_constant_set_procedures.item.call ([p])
+				end
 				pixmap_constant_set_procedures.forth
 			end
 		end
-		
-	set_attributes_using_font_constants
+
+	frozen set_attributes_using_font_constants
 			-- Set all attributes relying on font constants to the current
 			-- value of the associated constant.
 		local
-			f: EV_FONT
+			f: detachable EV_FONT
 		do
 			from
 				font_constant_set_procedures.start
@@ -446,16 +460,18 @@ feature {NONE} -- Constant setting
 			loop
 				font_constant_retrieval_functions.i_th (font_constant_set_procedures.index).call (Void)
 				f := font_constant_retrieval_functions.i_th (font_constant_set_procedures.index).last_result
-				font_constant_set_procedures.item.call ([f])
+				if f /= Void then
+					font_constant_set_procedures.item.call ([f])
+				end
 				font_constant_set_procedures.forth
 			end	
 		end
-		
-	set_attributes_using_color_constants
+
+	frozen set_attributes_using_color_constants
 			-- Set all attributes relying on color constants to the current
 			-- value of the associated constant.
 		local
-			c: EV_COLOR
+			c: detachable EV_COLOR
 		do
 			from
 				color_constant_set_procedures.start
@@ -464,12 +480,14 @@ feature {NONE} -- Constant setting
 			loop
 				color_constant_retrieval_functions.i_th (color_constant_set_procedures.index).call (Void)
 				c := color_constant_retrieval_functions.i_th (color_constant_set_procedures.index).last_result
-				color_constant_set_procedures.item.call ([c])
+				if c /= Void then
+					color_constant_set_procedures.item.call ([c])
+				end
 				color_constant_set_procedures.forth
 			end
 		end
-		
-	set_all_attributes_using_constants
+
+	frozen set_all_attributes_using_constants
 			-- Set all attributes relying on constants to the current
 			-- calue of the associated constant.
 		do
@@ -479,9 +497,9 @@ feature {NONE} -- Constant setting
 			set_attributes_using_font_constants
 			set_attributes_using_color_constants
 		end
-					
-	string_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [STRING_GENERAL]]]
-	string_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], STRING_GENERAL]]
+	
+	string_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [READABLE_STRING_GENERAL]]]
+	string_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], STRING_32]]
 	integer_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [INTEGER]]]
 	integer_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], INTEGER]]
 	pixmap_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [EV_PIXMAP]]]
@@ -492,8 +510,8 @@ feature {NONE} -- Constant setting
 	font_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], EV_FONT]]
 	color_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [EV_COLOR]]]
 	color_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], EV_COLOR]]
-	
-	integer_from_integer (an_integer: INTEGER): INTEGER
+
+	frozen integer_from_integer (an_integer: INTEGER): INTEGER
 			-- Return `an_integer', used for creation of
 			-- an agent that returns a fixed integer value.
 		do

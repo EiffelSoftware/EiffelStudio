@@ -71,7 +71,7 @@ feature -- Access
 			Result := {NS_CONTROL_API}.is_enabled (item)
 		end
 
-	set_string_value (a_string: STRING_GENERAL)
+	set_string_value (a_string: READABLE_STRING_GENERAL)
 			-- Sets the value of the receiver's cell
 			-- If the cell is being edited, this method aborts all editing before setting the value.
 			-- If the cell does not inherit from NSActionCell, the method marks the cell's interior as needing to be redisplayed; NSActionCell performs its own updating of cells.

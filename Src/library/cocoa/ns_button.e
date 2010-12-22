@@ -198,7 +198,7 @@ feature -- Managing the button state
 
 feature -- Accessing Key Equivalents
 
-	set_key_equivalent (a_string: STRING_GENERAL)
+	set_key_equivalent (a_string: READABLE_STRING_GENERAL)
 			-- Sets the key equivalent character of the receiver to the given character.
 			-- This method redraws the button's interior if it displays a key equivalent instead of an image.
 			-- The key equivalent isn't displayed if the image position is set to NSNoImage, NSImageOnly, or NSImageOverlaps; that is,

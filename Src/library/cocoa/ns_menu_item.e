@@ -61,7 +61,7 @@ feature -- Access
 			{NS_MENU_ITEM_API}.set_title (item, a_title.item)
 		end
 
-	set_key_equivalent (a_string: STRING_GENERAL)
+	set_key_equivalent (a_string: READABLE_STRING_GENERAL)
 		do
 			{NS_MENU_ITEM_API}.set_key_equivalent (item, (create {NS_STRING}.make_with_string (a_string)).item)
 		end

@@ -159,7 +159,7 @@ feature -- Running Panels
 --			Result := {NS_SAVE_PANEL_API}.title (item)
 --		end
 
---	set_title (a_title: STRING_GENERAL)
+--	set_title (a_title: READABLE_STRING_GENERAL)
 --		do
 --			{NS_SAVE_PANEL_API}.set_title (item, (create {NS_STRING}.make_with_string (a_title)).item)
 --		end

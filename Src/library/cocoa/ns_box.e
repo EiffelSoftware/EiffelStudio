@@ -105,7 +105,7 @@ feature -- Box
 			fill_color_set: -- TODO
 		end
 
-	set_title (a_string: STRING_GENERAL)
+	set_title (a_string: READABLE_STRING_GENERAL)
 			-- Sets the title of the box and marks the region of the receiver within the title rectangle as needing display.
 			-- The new title of the NSBox. The default title of an NSBox is "Title." If the size of the new title is different
 			-- from that of the old title, the content view is resized to absorb the difference.

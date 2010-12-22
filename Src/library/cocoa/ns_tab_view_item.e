@@ -33,7 +33,7 @@ feature -- Working with Labels
 			create Result.share_from_pointer ({NS_TAB_VIEW_ITEM_API}.label (item))
 		end
 
-	set_label (a_label: STRING_GENERAL)
+	set_label (a_label: READABLE_STRING_GENERAL)
 			-- Sets the label text to a_label.
 		do
 			{NS_TAB_VIEW_ITEM_API}.set_label (item, (create {NS_STRING}.make_with_string (a_label)).item)

@@ -30,7 +30,7 @@ create {NS_OBJECT}
 
 feature {NONE} -- Creation
 
-	make_with_referencing_file (a_path: STRING_GENERAL)
+	make_with_referencing_file (a_path: READABLE_STRING_GENERAL)
 			-- Initializes and returns an NS_IMAGE instance and associates it with the specified file.
 		do
 			make_from_pointer ({NS_IMAGE_API}.alloc)
@@ -44,7 +44,7 @@ feature {NONE} -- Creation
 			item := {NS_IMAGE_API}.init_with_size (item, a_size.item)
 		end
 
-	make_named (a_name: STRING_GENERAL)
+	make_named (a_name: READABLE_STRING_GENERAL)
 			-- Returns the NS_IMAGE instance associated with the specified name.
 		do
 			share_from_pointer ({NS_IMAGE_API}.image_named ((create {NS_STRING}.make_with_string (a_name)).item))

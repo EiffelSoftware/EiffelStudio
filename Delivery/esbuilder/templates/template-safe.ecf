@@ -3,12 +3,12 @@
 	<target name="<PROJECT_NAME>">
 			<description>EiffelBuild Generated Configuration for Project <PROJECT_NAME>.</description>
 		<root cluster="root_cluster" class="<APPLICATION>" feature="make_and_launch"/>
-		<option warning="true" syntax="transitional">
+		<option warning="true" syntax="transitional" full_class_checking="true" is_attached_by_default="true" void_safety="all">
 			<assertions precondition="true" postcondition="true" check="true" invariant="false" loop="false" supplier_precondition="true"/>
 		</option>
-		<precompile name="vision2_pre" location="$ISE_PRECOMP/vision2.ecf"/>
-		<library name="base" location="$ISE_LIBRARY/library/base/base.ecf"/>
-		<library name="vision2" location="$ISE_LIBRARY/library/vision2/vision2.ecf"/>
+		<precompile name="vision2_pre" location="$ISE_PRECOMP/vision2-safe.ecf"/>
+		<library name="base" location="$ISE_LIBRARY/library/base/base-safe.ecf"/>
+		<library name="vision2" location="$ISE_LIBRARY/library/vision2/vision2-safe.ecf"/>
 		<cluster name="root_cluster" location="." recursive="true" >
 			<file_rule>
 				<exclude>/EIFGENs$</exclude>

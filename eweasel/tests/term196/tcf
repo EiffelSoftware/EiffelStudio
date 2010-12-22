@@ -1,0 +1,12 @@
+
+test_name 	 across-with-constrained-generic-crash
+test_description Compiling an "across" loop that iterates over an attribute whose type is a formal generic constrained by LIST [INTEGER] crashes the compiler.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result	ok
+
+test_end

@@ -11,7 +11,7 @@ class
 
 inherit
 	GB_IMPORT_DIALOG_IMP
-	
+
 	GB_SHARED_PIXMAPS
 		export
 			{NONE} all
@@ -33,19 +33,27 @@ feature {NONE} -- Initialization
 			set_default_push_button (ok_button)
 			set_icon_pixmap (Icon_build_window @ 1)
 		end
-		
+
+	user_create_interface_objects
+			-- Create any auxilliary objects needed for MAIN_WINDOW.
+			-- Initialization for these objects must be performed in `user_initialization'.
+		do
+			-- Create attached types defined in class here, initialize them in `user_initialization'.
+
+		end
+
 feature -- Basic operation
 
 	add_output (an_output: STRING)
 			-- Add text representation of `an_output' to `change_list'.
 		do
-			change_list.append_text (an_output + "%N")		
+			change_list.append_text (an_output + "%N")
 		end
-		
+
 
 feature {NONE} -- Implementation
 
-	
+
 	ok_pressed
 			-- Called by `select_actions' of `ok_button'.
 		do

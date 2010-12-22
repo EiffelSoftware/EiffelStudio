@@ -110,9 +110,17 @@ feature {NONE} -- Initialization
 			components_set: components = a_components
 		end
 
-		editor: GB_EV_TABLE_EDITOR_CONSTRUCTOR
+	editor: GB_EV_TABLE_EDITOR_CONSTRUCTOR
 
-		first: EV_TABLE
+	first: EV_TABLE
+
+	user_create_interface_objects
+			-- Create any auxilliary objects needed for MAIN_WINDOW.
+			-- Initialization for these objects must be performed in `user_initialization'.
+		do
+			-- Create attached types defined in class here, initialize them in `user_initialization'.
+
+		end
 
 feature {GB_EV_TABLE_EDITOR_CONSTRUCTOR} -- Implementation
 

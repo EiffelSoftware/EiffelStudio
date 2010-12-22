@@ -415,6 +415,7 @@ feature {NONE} -- Implementation
 			-- generate a debug and a release ace file.
 		do
 			generate_ace_file (ecf_file_name.twin, ecf_name)
+			generate_ace_file (void_safe_ecf_file_name.twin, void_safe_ecf_name)
 		end
 
 	generate_ace_file (template_file_name, file_name: STRING)
@@ -1011,18 +1012,14 @@ feature {NONE} -- Implementation
 				if info.generate_as_client then
 						-- There are different sets of setting code for windows and dialogs, or widgets.
 					if info.type.is_equal (ev_titled_window_string) or info.type.is_equal (ev_dialog_string) then
-						temp_string := redefined_window_creation.twin
+						temp_string := redefined_window_creation
 					else
-						temp_string := redefined_creation.twin
+						temp_string := redefined_creation
 					end
-
-						if not info.type.is_equal (Ev_titled_window_string)  then
-							temp_string.replace_substring_all (Ev_titled_window_string, info.type)
-						end
-					add_generated_string (class_text, temp_string, creation_tag)
 				else
-					add_generated_string (class_text, Void, creation_tag)
+					temp_string := Void
 				end
+				add_generated_string (class_text, temp_string, creation_tag)
 
 				add_generated_string (class_text, event_implementation_string, event_declaration_tag)
 
@@ -1046,7 +1043,7 @@ feature {NONE} -- Implementation
 		local
 			temp_index: INTEGER
 		do
-			if new /= Void and not new.is_equal ("") then
+			if new /= Void and not new.is_empty then
 				temp_index := a_class_text.substring_index (tag, 1)
 				a_class_text.replace_substring_all (tag, "")
 				a_class_text.insert_string (new, temp_index)
@@ -1312,14 +1309,14 @@ feature {NONE} -- Implementation
 						-- if so, there is nothing to do here.
 					supported_types.off or generated_info.associated_root_object_id > 0
 				loop
-						gb_ev_any ?= new_instance_of (dynamic_type_from_string ("GB_" + supported_types.item))
-								-- Call default_create on `gb_ev_any'
-						gb_ev_any.set_components (components)
-						gb_ev_any.default_create
-							-- Ensure that the new class exists.
-						check
-							new_instance_exists: gb_ev_any /= Void
-						end
+					gb_ev_any ?= new_instance_of (dynamic_type_from_string ("GB_" + supported_types.item))
+							-- Call default_create on `gb_ev_any'
+					gb_ev_any.set_components (components)
+					gb_ev_any.default_create
+						-- Ensure that the new class exists.
+					check
+						new_instance_exists: gb_ev_any /= Void
+					end
 					current_settings := gb_ev_any.generate_code (generated_info.supported_type_elements @ (supported_types.index), generated_info)
 					from
 						current_settings.start
@@ -1418,9 +1415,9 @@ feature {NONE} -- Implementation
 
 								-- No parameters if zero arguments.
 							if action_sequence.count = 0 then
-								parameters := " is"
+								parameters := ""
 							else
-								parameters := " (" +action_sequence.parameter_list + ") is"
+								parameters := " (" +action_sequence.parameter_list + ")"
 							end
 
 								-- If the user has selected that they wish to generate debugging output,

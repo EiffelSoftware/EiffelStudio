@@ -93,12 +93,21 @@ feature -- Generation constants
 			Result.extend ("template.ecf")
 		end
 
+	void_safe_ecf_file_name: FILE_NAME
+			-- `Result' is location of windows ace file template.
+		do
+			Result := template_file_location
+			Result.extend ("template-safe.ecf")
+		end
+
 	eiffel_class_extension: STRING = ".e"
 			-- String constant for class file extension to be used.
 
 feature -- XML saving
 
 	ecf_name: STRING = "build_project.ecf"
+
+	void_safe_ecf_name: STRING = "build_project-safe.ecf"
 
 	project_filename: STRING = "build_project.bpr"
 		-- File name for project settings.

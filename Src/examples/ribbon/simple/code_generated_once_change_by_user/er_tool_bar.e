@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 	create_interface_objects
 			--
 		do
-			create tab_1.make_with_command_list (<<{EIFFEL_C_CONSTANTS}.Idc_cmd_tab1.as_natural_32>>)
+			create tab_1.make_with_command_list (<<{ER_C_CONSTANTS}.Idc_cmd_tab1.as_natural_32>>)
 
 			create tabs.make (1)
 			tabs.extend (tab_1)
@@ -54,7 +54,7 @@ feature -- Command
 				l_result := create_ribbon_com_framework (l_imp.wel_item)
 			end
 		end
-		
+
 	destroy
 			-- Clean up all ribbon related COM objects and resources
 		do

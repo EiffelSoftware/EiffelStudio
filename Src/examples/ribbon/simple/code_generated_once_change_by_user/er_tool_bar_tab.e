@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 	create_interface_objects
 			--
 		do
-			create group.make_with_command_list (<<{EIFFEL_C_CONSTANTS}.Cmdgroup1.as_natural_32>>)
+			create group.make_with_command_list (<<{ER_C_CONSTANTS}.Cmdgroup1.as_natural_32>>)
 
 			create all_groups.make (1)
 			all_groups.extend (group)

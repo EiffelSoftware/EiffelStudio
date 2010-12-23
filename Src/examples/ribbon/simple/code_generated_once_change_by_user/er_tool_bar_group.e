@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 			--
 		do
 --		    Precursor
-		    create button_1.make_with_command_list (<<{EIFFEL_C_CONSTANTS}.Cmdbutton1.as_natural_32>>) -- Just handles the default command
+		    create button_1.make_with_command_list (<<{ER_C_CONSTANTS}.Cmdbutton1.as_natural_32>>) -- Just handles the default command
 --		    create button2.make_with_command_list (<<3232, 4321>> Handles its default command plus another user chosen command
 
 			create buttons.make (1)

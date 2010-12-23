@@ -53,7 +53,7 @@ feature {RIBBON_TOOL_BAR}
 --			     l_command_position := command_list.i_th (a_command_id)
 				inspect
 					a_command_id
-				when {EIFFEL_C_CONSTANTS}.Cmdbutton1 then
+				when {ER_C_CONSTANTS}.Cmdbutton1 then
 					print ("%NER_TOOL_BAR_BUTTON Cmdbutton1")
 				else
 

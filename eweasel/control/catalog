@@ -1785,6 +1785,7 @@ test	is-less-equal-postcondition-violation-2	term194 tcf fail termination
 test	testing-class-removal-crash			term195 tcf pass termination
 test	across-with-constrained-generic-crash	term196 tcf fail termination
 test	shared-library-with-generic-root	term197 tcf fail termination
+test	iteration-over-inline-agent		term198 tcf fail termination
 
 -- Config
 

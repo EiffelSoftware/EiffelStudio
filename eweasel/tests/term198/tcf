@@ -1,0 +1,11 @@
+
+test_name 	 iteration-over-inline-agent
+test_description Compiling an "across" loop that iterates over an inline agent crashes the compiler.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	validity_error TEST V???
+
+test_end

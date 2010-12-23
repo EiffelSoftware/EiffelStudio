@@ -1,0 +1,15 @@
+
+test_name 	 shared-library-with-generic-root	
+test_description Compiling a system with a generic root class where the configuration file specifies a shared library definition file that lists the root class as non-generic crashes the compiler.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test.def $CLUSTER test.def
+
+compile_frozen
+compile_result	ok
+
+c_compile_work
+c_compile_result ok
+
+test_end

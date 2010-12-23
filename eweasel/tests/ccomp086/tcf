@@ -1,0 +1,22 @@
+
+test_name 	 finalize-without-then-with-assertions
+test_description Finalizing a particular system without keeping assertions but with inlining and then finalizing the same system while keeping assertions causes C compilation to fail with a redeclared identifier for the second finalization.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test1.e $CLUSTER test1.e
+copy_raw	test2.e $CLUSTER test2.e
+
+compile_final
+compile_result	ok
+
+c_compile_final
+c_compile_result ok
+
+compile_final_keep
+compile_result	ok
+
+c_compile_final
+c_compile_result ok
+
+test_end

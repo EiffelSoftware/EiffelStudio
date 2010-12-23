@@ -681,39 +681,42 @@ feature {NONE} -- Implementation
 				counter > info.upper
 			loop
 				info_string := info @ counter
-				index := info_string.index_of ('_', 1)
-				tool_name := info_string.substring (1, index - 1)
-				info_string := info_string.substring (index + 1, info_string.count)
+				if not info_string.is_empty then
+					index := info_string.index_of ('_', 1)
+					tool_name := info_string.substring (1, index - 1)
+					info_string := info_string.substring (index + 1, info_string.count)
 
-				index := info_string.index_of ('_', 1)
-				state := info_string.substring (1, index - 1)
-				if state.is_equal ("maximized") then
-					maximized_index := counter
+					index := info_string.index_of ('_', 1)
+					state := info_string.substring (1, index - 1)
+					if state.is_equal ("maximized") then
+						maximized_index := counter
+					end
+					if state.is_equal ("minimized") then
+						minimized_items.extend (True)
+					else
+						minimized_items.extend (False)
+					end
+					info_string := info_string.substring (index + 1, info_string.count)
+
+					index := info_string.index_of ('_', 1)
+					stored_heights.extend (info_string.substring (1, index - 1).to_integer)
+					info_string := info_string.substring (index + 1, info_string.count)
+
+					index := info_string.index_of ('_', 1)
+					stored_widths.extend (info_string.to_integer)
+					info_string := info_string.substring (index + 1, info_string.count)
+
+
+					storable_tool := components.tools.tool_by_name (tool_name)
+					tool ?= storable_tool.as_widget
+					check
+						tool_was_widget: tool /= Void
+					end
+						-- Note that we convert from the stored name to the real name for the second argument.
+					multiple_split_area.extend (tool, storable_tool.name)
+					multiple_split_area.customizeable_area_of_widget (tool).extend (storable_tool.tool_bar)
 				end
-				if state.is_equal ("minimized") then
-					minimized_items.extend (True)
-				else
-					minimized_items.extend (False)
-				end
-				info_string := info_string.substring (index + 1, info_string.count)
 
-				index := info_string.index_of ('_', 1)
-				stored_heights.extend (info_string.substring (1, index - 1).to_integer)
-				info_string := info_string.substring (index + 1, info_string.count)
-
-				index := info_string.index_of ('_', 1)
-				stored_widths.extend (info_string.to_integer)
-				info_string := info_string.substring (index + 1, info_string.count)
-
-
-				storable_tool := components.tools.tool_by_name (tool_name)
-				tool ?= storable_tool.as_widget
-				check
-					tool_was_widget: tool /= Void
-				end
-					-- Note that we convert from the stored name to the real name for the second argument.
-				multiple_split_area.extend (tool, storable_tool.name)
-				multiple_split_area.customizeable_area_of_widget (tool).extend (storable_tool.tool_bar)
 				counter := counter + 1
 			end
 
@@ -759,44 +762,46 @@ feature {NONE} -- Implementation
 			storable_tool: GB_STORABLE_TOOL
 		do
 			from
-				counter := 1
+				counter := info.lower
 			until
-				counter > info.count
+				counter > info.upper
 			loop
 				info_string := info @ counter
+				if not info_string.is_empty then
+					index := info_string.index_of ('_', 1)
+					tool_name := info_string.substring (1, index - 1)
+					info_string := info_string.substring (index + 1, info_string.count)
 
-				index := info_string.index_of ('_', 1)
-				tool_name := info_string.substring (1, index - 1)
-				info_string := info_string.substring (index + 1, info_string.count)
+					index := info_string.index_of ('_', 1)
+					an_x := info_string.substring (1, index - 1).to_integer
+					info_string := info_string.substring (index + 1, info_string.count)
 
-				index := info_string.index_of ('_', 1)
-				an_x := info_string.substring (1, index - 1).to_integer
-				info_string := info_string.substring (index + 1, info_string.count)
+					index := info_string.index_of ('_', 1)
+					a_y := info_string.substring (1, index - 1).to_integer
+					info_string := info_string.substring (index + 1, info_string.count)
 
-				index := info_string.index_of ('_', 1)
-				a_y := info_string.substring (1, index - 1).to_integer
-				info_string := info_string.substring (index + 1, info_string.count)
+					index := info_string.index_of ('_', 1)
+					a_width := info_string.substring (1, index - 1).to_integer
+					info_string := info_string.substring (index + 1, info_string.count)
 
-				index := info_string.index_of ('_', 1)
-				a_width := info_string.substring (1, index - 1).to_integer
-				info_string := info_string.substring (index + 1, info_string.count)
+					index := info_string.index_of ('_', 1)
+					a_height :=  info_string.substring (1, index - 1).to_integer
+					info_string := info_string.substring (index + 1, info_string.count)
 
-				index := info_string.index_of ('_', 1)
-				a_height :=  info_string.substring (1, index - 1).to_integer
-				info_string := info_string.substring (index + 1, info_string.count)
+					a_position := info_string.to_integer
 
-				a_position := info_string.to_integer
-
-				tool := components.tools.tool_by_name (tool_name).as_widget
-				storable_tool := components.tools.tool_by_name (tool_name)
-					-- Remove `tool' from its parent if any.
-				if tool.parent /= Void then
-					tool.parent.prune_all (tool)
+					tool := components.tools.tool_by_name (tool_name).as_widget
+					storable_tool := components.tools.tool_by_name (tool_name)
+						-- Remove `tool' from its parent if any.
+					if tool.parent /= Void then
+						tool.parent.prune_all (tool)
+					end
+						-- Add `tool' as an enternal tool, that is one that appears if it has been docked out of
+						-- `multiple_split_area'.
+					multiple_split_area.add_external (tool, Current, storable_tool.name, a_position, an_x, a_y, a_width, a_height)
+					multiple_split_area.customizeable_area_of_widget (tool).extend (storable_tool.tool_bar)
 				end
-					-- Add `tool' as an enternal tool, that is one that appears if it has been docked out of
-					-- `multiple_split_area'.
-				multiple_split_area.add_external (tool, Current, storable_tool.name, a_position, an_x, a_y, a_width, a_height)
-				multiple_split_area.customizeable_area_of_widget (tool).extend (storable_tool.tool_bar)
+
 				counter := counter + 1
 			end
 		end

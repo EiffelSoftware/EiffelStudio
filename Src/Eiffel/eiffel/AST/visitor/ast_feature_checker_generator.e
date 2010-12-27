@@ -6087,6 +6087,13 @@ feature {NONE} -- Implementation
 					if l_needs_byte_node then
 						last_byte_node := l_call_access
 					end
+						-- Separate feature calls are currently supported only by frozen code.
+					if l_creation_type.is_separate then
+						debug ("to_implement")
+							to_implement ("Support separate calls in melted mode")
+						end
+						system.request_freeze
+					end
 				end
 			end
 		end
@@ -10390,6 +10397,11 @@ feature {NONE} -- Separateness
 			if not is_controlled then
 				error_handler.insert_error (create {VUTA3}.make (context, last_type, a.start_location))
 			end
+				-- Separate feature calls are currently supported only by frozen code.
+			debug ("to_implement")
+				to_implement ("Support separate calls in melted mode")
+			end
+			system.request_freeze
 		end
 
 	adapt_last_type_to_target (t: TYPE_A; c: BOOLEAN)

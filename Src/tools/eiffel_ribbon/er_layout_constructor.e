@@ -181,11 +181,12 @@ feature -- Persistance
 
 				l_parser.parse_from_filename (l_file_name)
 
+				vision_xml_translator.update_vision_tree_after_load (widget)
+
 				helper.expand_all (widget)
 			else
 				check should_not_happend: False end
 			end
-
 		end
 
 feature {NONE} -- Implementation

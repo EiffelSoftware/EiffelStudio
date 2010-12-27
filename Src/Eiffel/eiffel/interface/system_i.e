@@ -2997,7 +2997,7 @@ feature {NONE} -- IL generation
 feature -- Freeezing
 
 	freeze_system
-			-- Worrkbench C code generation
+			-- Workbench C code generation.
 		require
 			root_types_compiled: are_root_classes_compiled
 		do

@@ -62,15 +62,15 @@ feature {NONE} -- Implementation
 			create l_singleton
 			if attached l_singleton.project_info_cell.item as l_info then
 				if attached l_constants.project_configuration_file_name as l_project_config then
-						create l_file.make (l_project_config)
-						l_file.create_read_write
-						create l_sed.make (l_file)
-						l_sed.set_for_writing
+					create l_file.make (l_project_config)
+					l_file.create_read_write
+					create l_sed.make (l_file)
+					l_sed.set_for_writing
 
-						create l_sed_utility
-						l_sed_utility.store (l_info, l_sed)
+					create l_sed_utility
+					l_sed_utility.store (l_info, l_sed)
 
-						l_file.close
+					l_file.close
 				end
 			end
 		end

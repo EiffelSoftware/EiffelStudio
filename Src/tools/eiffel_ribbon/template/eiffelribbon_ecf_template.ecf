@@ -10,6 +10,7 @@
 		<external_object location="$(ISE_LIBRARY)\examples\ribbon\simple\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\eiffel_ribbon.lib"/>		
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2-safe.ecf"/>
+		<library name="ribbon" location="$EIFFEL_SRC\library\ribbon\ribbon-safe.ecf"/>
 		<cluster name="root_cluster" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/EIFGENs$</exclude>

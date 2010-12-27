@@ -48,6 +48,24 @@ feature -- Command
 				else
 					name.remove_text
 				end
+
+				if attached a_data.label_title as l_label_title then
+					label.set_text (l_label_title)
+				else
+					label.remove_text
+				end
+
+				if attached a_data.small_image as l_small_image then
+					small_image.set_text (l_small_image)
+				else
+					small_image.remove_text
+				end
+
+				if attached a_data.large_image as l_large_image then
+					large_image.set_text (l_large_image)
+				else
+					large_image.remove_text
+				end
 			end
 		end
 
@@ -76,7 +94,7 @@ feature {NONE} -- Implementation
 			-- Called by `change_actions' of `small_image'.
 		do
 			if attached tree_node_data as l_data then
-				l_data.set_command_name (small_image.text)
+				l_data.set_small_image (small_image.text)
 			end
 		end
 
@@ -84,7 +102,7 @@ feature {NONE} -- Implementation
 			-- Called by `change_actions' of `large_image'.
 		do
 			if attached tree_node_data as l_data then
-				l_data.set_command_name (large_image.text)
+				l_data.set_large_image (large_image.text)
 			end
 		end
 

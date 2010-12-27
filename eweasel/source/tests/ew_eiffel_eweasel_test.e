@@ -7,11 +7,12 @@ note
 class EW_EIFFEL_EWEASEL_TEST
 
 inherit
-	EW_INSTRUCTION_TABLES
 	EW_EIFFEL_TEST_CONSTANTS
-	EW_STRING_UTILITIES
+	EW_INSTRUCTION_TABLES
 	EW_OS_ACCESS
+	EW_PREDEFINED_VARIABLES
 	EW_SHARED_OBJECTS
+	EW_STRING_UTILITIES
 
 create
 	make
@@ -229,9 +230,16 @@ feature {EW_TEST_INSTRUCTION} -- Set test properties
 		end;
 
 	set_system_name (name: STRING)
+		local
+			dir: STRING
 		do
-			system_name := name;
-		end;
+			system_name := name
+			dir := environment.value (test_dir_name)
+			dir := os.full_directory_name (dir, Eiffel_gen_directory)
+			dir := os.full_directory_name (dir, name)
+			environment.define (Work_execution_dir_name, os.full_directory_name (dir, Work_c_code_directory))
+			environment.define (Final_execution_dir_name, os.full_directory_name (dir, Final_c_code_directory))
+		end
 
 	set_ace_name (name: STRING)
 		do

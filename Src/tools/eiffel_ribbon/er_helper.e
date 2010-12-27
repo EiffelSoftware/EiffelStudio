@@ -20,9 +20,10 @@ feature -- Command
 				a_tree.after
 			loop
 				l_item := a_tree.item_for_iteration
-				l_item.expand
+				if l_item.is_expandable then
+					l_item.expand
+				end
 				expand_all_imp (l_item)
-
 				a_tree.forth
 			end
 		end

@@ -9,18 +9,7 @@ class
 inherit
 	ER_TREE_NODE_DATA
 
-feature -- Query
-
-	command_name: detachable STRING
-			--
-
 feature -- Command
-
-	set_command_name (a_command_name: detachable STRING)
-			--
-		do
-			command_name := a_command_name
-		end
 
 	update_for_xml_attribute (a_name, a_value: STRING)
 			-- <Precursor>

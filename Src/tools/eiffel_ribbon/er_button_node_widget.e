@@ -64,4 +64,28 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	on_label_text_change is
+			-- Called by `change_actions' of `label'.
+		do
+			if attached tree_node_data as l_data then
+				l_data.set_label_title (label.text)
+			end
+		end
+
+	on_small_image_change is
+			-- Called by `change_actions' of `small_image'.
+		do
+			if attached tree_node_data as l_data then
+				l_data.set_command_name (small_image.text)
+			end
+		end
+
+	on_large_image_change is
+			-- Called by `change_actions' of `large_image'.
+		do
+			if attached tree_node_data as l_data then
+				l_data.set_command_name (large_image.text)
+			end
+		end
+
 end

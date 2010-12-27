@@ -32,6 +32,8 @@ feature {NONE}-- Initialization
 			extend (l_ev_label_2)
 			extend (l_ev_label_3)
 			extend (name)
+			extend (l_ev_label_4)
+			extend (label)
 
 			l_ev_label_1.set_text ("Type:")
 			l_ev_label_1.align_text_left
@@ -39,15 +41,20 @@ feature {NONE}-- Initialization
 			l_ev_label_2.align_text_left
 			l_ev_label_3.set_text ("Command name:")
 			l_ev_label_3.align_text_left
+			l_ev_label_4.set_text ("Label title:")
+			l_ev_label_4.align_text_left
 			disable_item_expand (l_ev_label_1)
 			disable_item_expand (l_ev_label_2)
 			disable_item_expand (l_ev_label_3)
 			disable_item_expand (name)
+			disable_item_expand (l_ev_label_4)
+			disable_item_expand (label)
 
 			set_all_attributes_using_constants
 			
 				-- Connect events.
 			name.change_actions.extend (agent on_name_text_change)
+			label.change_actions.extend (agent on_label_changes)
 
 				-- Call `user_initialization'.
 			user_initialization
@@ -62,6 +69,8 @@ feature {NONE}-- Initialization
 			create l_ev_label_2
 			create l_ev_label_3
 			create name
+			create l_ev_label_4
+			create label
 
 			create string_constant_set_procedures.make (10)
 			create string_constant_retrieval_functions.make (10)
@@ -82,10 +91,11 @@ feature {NONE}-- Initialization
 feature -- Access
 
 	name: EV_COMBO_BOX
+	label: EV_TEXT_FIELD
 
 feature {NONE} -- Implementation
 
-	l_ev_label_1, l_ev_label_2, l_ev_label_3: EV_LABEL
+	l_ev_label_1, l_ev_label_2, l_ev_label_3, l_ev_label_4: EV_LABEL
 
 feature {NONE} -- Implementation
 
@@ -104,6 +114,11 @@ feature {NONE} -- Implementation
 	
 	on_name_text_change is
 			-- Called by `change_actions' of `name'.
+		deferred
+		end
+	
+	on_label_changes is
+			-- Called by `change_actions' of `label'.
 		deferred
 		end
 	

@@ -11,19 +11,10 @@ inherit
 
 feature -- Query
 
-	command_name: detachable STRING
-			--
-
 	size_definition: detachable STRING
 			--
 
 feature -- Command
-
-	set_command_name (a_command_name: like command_name)
-			--
-		do
-			command_name := a_command_name
-		end
 
 	set_size_definition (a_size_definition: like size_definition)
 			--

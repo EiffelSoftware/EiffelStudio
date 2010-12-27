@@ -588,7 +588,6 @@ feature -- Command/Query Handling
 			-- Block until previous logged synchronous call on `a_client_processor_id' has been applied by `a_supplier_processor_id'.
 		local
 			l_scoop_processor_request_chain_meta_data: detachable like new_scoop_processor_request_chain_meta_data_entry
-			l_orig_chain_node_count, l_temp_count: INTEGER_32
 		do
 					-- Update chain to be callable, wait for tail node to signal that call has been processed.
 			(scoop_processor_meta_data [a_client_processor_id]) [scoop_processor_current_request_chain_query_blocking_processor_index] := a_supplier_processor_id

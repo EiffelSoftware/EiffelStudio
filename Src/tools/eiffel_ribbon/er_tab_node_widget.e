@@ -64,4 +64,11 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	on_label_changes is
+			-- Called by `change_actions' of `label'.
+		do
+			if attached tree_node_data as l_data then
+				l_data.set_label_title (label.text)
+			end
+		end
 end

@@ -9,13 +9,47 @@ inherit
 
 	ATTRIBUTE_BL
 		redefine
-			check_dt_current, is_polymorphic, generate_access_on_type
+			analyze_on,
+			check_dt_current,
+			free_register,
+			generate_access_on_type,
+			generate_separate_call,
+			is_polymorphic,
+			unanalyze
 		end
 
 create
 	fill_from
 
-feature
+feature -- C code generation
+
+	analyze_on (reg: REGISTRABLE)
+			-- <Precursor>
+		local
+			return_type: like c_type
+		do
+			Precursor (reg)
+			if context_type.is_separate then
+					-- The register is used to store result of a separate feature call.
+				result_register := context.get_argument_register (c_type)
+			end
+		end
+
+	free_register
+			-- <Precursor>
+		do
+			Precursor
+			if result_register /= Void then
+				result_register.free_register
+			end
+		end
+
+	unanalyze
+			-- <Precursor>
+		do
+			Precursor
+			result_register := Void
+		end
 
 	check_dt_current (reg: REGISTRABLE)
 			-- Check whether we need to compute the dynamic type of current
@@ -101,6 +135,40 @@ feature
 			  buf.exdent;
 			end;
 		end;
+
+feature {NONE} -- Separate call
+
+	result_register: REGISTER
+			-- A register to hold return value from a separate call.
+
+	separate_attribute_macro: TUPLE [unqualified_call, qualified_call, creation_call: TUPLE [normal, precompiled: STRING]]
+			-- Name of a macro to make a call to a function depending on the kind of a call:
+			-- See `routine_macro' for details.
+		once
+				-- There are no unqualified separate calls as well as creation function calls.
+			Result := [["ERROR", "ERROR"], ["RTS_CF", "RTS_CFP"], ["ERROR", "ERROR"]]
+		end
+
+	generate_separate_call (s: detachable REGISTER; r: detachable REGISTRABLE; t: REGISTRABLE)
+			-- <Precursor>
+		local
+			buf: like buffer
+		do
+			check attached {CL_TYPE_A} context_type as c and attached r then
+				buf := buffer
+				buf.put_new_line
+					-- Call to an attribute.
+				generate_call_macro (separate_attribute_macro, t, c, s, result_register)
+				buf.put_character (';')
+				buf.put_new_line
+				r.print_register
+				buf.put_three_character (' ', '=', ' ')
+				context.print_argument_register (result_register, buf)
+				buf.put_character ('.')
+				c_type.generate_typed_field (buf)
+				buf.put_character (';')
+			end
+		end
 
 note
 	copyright:	"Copyright (c) 1984-2010, Eiffel Software"

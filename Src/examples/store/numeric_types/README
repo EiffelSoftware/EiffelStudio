@@ -1,0 +1,21 @@
+
+
+Before running `numeric_types' sample, one must do
+link a specific file to data.sql as follows:
+
+With Oracle:
+
+	ln data.sql.oracle data.sql
+
+With Sybase:
+
+	ln data.sql.sybase data.sql
+
+With Ingres:
+
+	ln data.sql.ingres data.sql
+
+With ODBC:
+
+	ln data.sql.odbc data.sql
+

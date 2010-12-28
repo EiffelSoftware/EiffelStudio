@@ -39,6 +39,9 @@ feature {NONE} -- Initialization
 										l_app.destroy_actions.extend (agent save_tool_info_when_exit)
 									end
 								end)
+
+			new_project_command.set_main_window (Current)
+			open_project_command.set_main_window (Current)
 		end
 
 	init_docking_manager
@@ -76,12 +79,15 @@ feature {NONE} -- Initialization
 
 			create object_editor.make
 
-			create code_generator.make
-
 			shared_singleton.object_editor_cell.put (object_editor)
 
 			create l_project_info
 			shared_singleton.project_info_cell.put (l_project_info)
+
+			create new_project_command.make (new_project_menu)
+			create open_project_command.make (open_project_menu)
+			create save_project_command.make (save_project_menu)
+			create gen_code_command.make
 		end
 
 	build_tool_bar: SD_TOOL_BAR_CONTENT
@@ -92,19 +98,13 @@ feature {NONE} -- Initialization
 		do
 			create l_list.make (10)
 
-			create l_item.make
-			l_item.set_text ("Open")
-			l_item.select_actions.extend (agent layout_constructor.load_tree)
+			l_item := open_project_command.new_menu_item
 			l_list.extend (l_item)
 
-			create l_item.make
-			l_item.set_text ("Save")
-			l_item.select_actions.extend (agent layout_constructor.save_tree)
+			l_item := save_project_command.new_menu_item
 			l_list.extend (l_item)
 
-			create l_item.make
-			l_item.set_text ("Generate Code")
-			l_item.select_actions.extend (agent code_generator.generate_all_codes)
+			l_item := gen_code_command.new_tool_bar_item
 			l_list.extend (l_item)
 
 			create Result.make_with_items ("MAIN_TOOL_BAR", l_list)
@@ -114,45 +114,20 @@ feature {NONE} -- Agents
 
 	on_new_project_selected
 			-- <Precursor>
-		local
-			l_folder: EV_DIRECTORY_DIALOG
-			l_misc: ER_MISC_CONSTANTS
 		do
-			create l_folder
-			l_folder.show_modal_to_window (Current)
-
-			if attached shared_singleton.project_info_cell.item as l_item then
-				if not l_folder.directory.is_empty then
-					l_item.set_project_location (l_folder.directory)
-
-					if attached shared_singleton.tool_info_cell.item as l_tool_info then
-						create l_misc
-						if attached l_misc.project_full_file_name as l_config_file then
-							l_tool_info.recent_projects.extend (l_config_file)
-						end
-
-					else
-						check should_not_happen: False end
-					end
-				else
-					-- User didn't select any folder
-				end
-			else
-				check False end
-			end
+			new_project_command.execute
 		end
 
 	on_open_project_selected
 			-- <Precursor>
-		local
-			l_file: EV_FILE_OPEN_DIALOG
 		do
-			create l_file
-			l_file.show_modal_to_window (Current)
+			open_project_command.execute
+		end
 
-			if attached l_file.file_name as l_file_name then
-				open_project_file (l_file_name)
-			end
+	on_save_project_selected
+			-- <Precursor>
+		do
+			save_project_command.execute
 		end
 
 	on_exit_selected
@@ -213,51 +188,12 @@ feature {NONE} -- Implementation
 				until
 					l_projects.before or l_projects.index > 10
 				loop
-					create l_menu_item.make_with_text_and_action (l_projects.item, agent open_project_file (l_projects.item))
+					create l_menu_item.make_with_text_and_action (l_projects.item, agent open_project_command.execute_with_file_name (l_projects.item))
 					recent_projects.extend (l_menu_item)
 					l_projects.back
 				end
 
 			end
-		end
-
-	open_project_file (a_eiffel_ribbon_file: STRING)
-			--
-		require
-			not_void: a_eiffel_ribbon_file /= Void
-		local
-			l_file_name: FILE_NAME
---			l_inf
-			l_env: OPERATING_ENVIRONMENT
-			l_dir: STRING
-			l_index, l_last_index: INTEGER
-		do
-			if attached shared_singleton.tool_info_cell.item as l_tool_info then
-
-				create l_env
-				from
-					l_index := 1 -- Make sure loop run at least once
-				until
-					l_index = 0
-				loop
-					l_index := a_eiffel_ribbon_file.index_of (l_env.directory_separator, (l_last_index + 1))
-					if l_index /= 0 then
-						l_last_index := l_index
-					end
-				end
-				check l_last_index /= 0 end
-				l_dir := a_eiffel_ribbon_file.substring (1, (l_last_index - 1))
-
-				create l_file_name.make_from_string (a_eiffel_ribbon_file)
-				if not l_tool_info.recent_projects.has (a_eiffel_ribbon_file) then
-					l_tool_info.recent_projects.extend (a_eiffel_ribbon_file)
-				end
-
-				if attached shared_singleton.project_info_cell.item as l_project_info then
-					l_project_info.set_project_location (l_dir)
-				end
-			end
-
 		end
 
 	save_tool_info_when_exit
@@ -295,7 +231,17 @@ feature {NONE} -- Implementation
 	shared_singleton: ER_SHARED_SINGLETON
 			--
 
-	code_generator: ER_CODE_GENERATOR
+feature {NONE} -- Commands
+
+	new_project_command: ER_NEW_PROJECT_COMMAND
 			--
 
+	open_project_command: ER_OPEN_PROJECT_COMMAND
+			--
+
+	save_project_command: ER_SAVE_PROJECT_COMMAND
+			--
+
+	gen_code_command: ER_GENERATE_CODE_COMMAND
+			--
 end

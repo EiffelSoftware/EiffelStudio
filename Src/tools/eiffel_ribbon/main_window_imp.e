@@ -30,25 +30,29 @@ feature {NONE}-- Initialization
 				-- Build widget structure.
 			set_menu_bar (l_ev_menu_bar_1)
 			l_ev_menu_bar_1.extend (l_ev_menu_2)
-			l_ev_menu_2.extend (l_ev_menu_item_1)
-			l_ev_menu_2.extend (l_ev_menu_item_2)
-			l_ev_menu_2.extend (recent_projects)
+			l_ev_menu_2.extend (new_project_menu)
+			l_ev_menu_2.extend (open_project_menu)
+			l_ev_menu_2.extend (save_project_menu)
 			l_ev_menu_2.extend (l_ev_menu_separator_1)
-			l_ev_menu_2.extend (l_ev_menu_item_3)
+			l_ev_menu_2.extend (recent_projects)
+			l_ev_menu_2.extend (l_ev_menu_separator_2)
+			l_ev_menu_2.extend (exit_menu)
 
 			l_ev_menu_2.set_text ("File")
-			l_ev_menu_item_1.set_text ("New Project")
-			l_ev_menu_item_2.set_text ("Open Project")
+			new_project_menu.set_text ("New Project")
+			open_project_menu.set_text ("Open Project")
+			save_project_menu.set_text ("Save Project")
 			recent_projects.set_text ("Recent Projects")
-			l_ev_menu_item_3.set_text ("Exit")
+			exit_menu.set_text ("Exit")
 			set_title ("EiffelRibbon")
 
 			set_all_attributes_using_constants
 			
 				-- Connect events.
-			l_ev_menu_item_1.select_actions.extend (agent on_new_project_selected)
-			l_ev_menu_item_2.select_actions.extend (agent on_open_project_selected)
-			l_ev_menu_item_3.select_actions.extend (agent on_exit_selected)
+			new_project_menu.select_actions.extend (agent on_new_project_selected)
+			open_project_menu.select_actions.extend (agent on_open_project_selected)
+			save_project_menu.select_actions.extend (agent on_save_project_selected)
+			exit_menu.select_actions.extend (agent on_exit_selected)
 				-- Close the application when an interface close
 				-- request is recieved on `Current'. i.e. the cross is clicked.
 			close_request_actions.extend (agent destroy_and_exit_if_last)
@@ -64,11 +68,13 @@ feature {NONE}-- Initialization
 				-- Create all widgets.
 			create l_ev_menu_bar_1
 			create l_ev_menu_2
-			create l_ev_menu_item_1
-			create l_ev_menu_item_2
-			create recent_projects
+			create new_project_menu
+			create open_project_menu
+			create save_project_menu
 			create l_ev_menu_separator_1
-			create l_ev_menu_item_3
+			create recent_projects
+			create l_ev_menu_separator_2
+			create exit_menu
 
 			create string_constant_set_procedures.make (10)
 			create string_constant_retrieval_functions.make (10)
@@ -88,14 +94,14 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
+	new_project_menu, open_project_menu, save_project_menu, exit_menu: EV_MENU_ITEM
 	recent_projects: EV_MENU
 
 feature {NONE} -- Implementation
 
 	l_ev_menu_bar_1: EV_MENU_BAR
 	l_ev_menu_2: EV_MENU
-	l_ev_menu_item_1, l_ev_menu_item_2, l_ev_menu_item_3: EV_MENU_ITEM
-	l_ev_menu_separator_1: EV_MENU_SEPARATOR
+	l_ev_menu_separator_1, l_ev_menu_separator_2: EV_MENU_SEPARATOR
 
 feature {NONE} -- Implementation
 
@@ -113,17 +119,22 @@ feature {NONE} -- Implementation
 		end
 	
 	on_new_project_selected is
-			-- Called by `select_actions' of `l_ev_menu_item_1'.
+			-- Called by `select_actions' of `new_project_menu'.
 		deferred
 		end
 	
 	on_open_project_selected is
-			-- Called by `select_actions' of `l_ev_menu_item_2'.
+			-- Called by `select_actions' of `open_project_menu'.
+		deferred
+		end
+	
+	on_save_project_selected is
+			-- Called by `select_actions' of `save_project_menu'.
 		deferred
 		end
 	
 	on_exit_selected is
-			-- Called by `select_actions' of `l_ev_menu_item_3'.
+			-- Called by `select_actions' of `exit_menu'.
 		deferred
 		end
 	

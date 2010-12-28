@@ -48,6 +48,12 @@ feature -- Command
 				else
 					name.remove_text
 				end
+
+				if attached a_data.label_title as l_label_title then
+					label.set_text (l_label_title)
+				else
+					label.remove_text
+				end
 			end
 		end
 

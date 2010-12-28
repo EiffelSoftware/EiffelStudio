@@ -26,7 +26,7 @@
 			</condition>
 		</library>
 	
-		<cluster name="ribbon" location=".\">
+		<cluster name="ribbon" location=".\" recursive="true">
 			<option namespace="Ribbon">
 			</option>
 		</cluster>

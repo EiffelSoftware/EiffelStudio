@@ -39,6 +39,7 @@ feature {NONE} -- Initialization
 			l_tree_item_app: EV_TREE_ITEM
 		do
 			create widget
+			widget.key_press_actions.extend (agent on_tree_key_press)
 
 			create l_tree_item_app.make_with_text (constants.ribbon_tabs)
 			l_tree_item_app.drop_actions.set_veto_pebble_function (agent on_veto_pebble_function (?, constants.ribbon_tabs))
@@ -135,6 +136,18 @@ feature {NONE} -- Action handing
 			if attached l_child as l_type then
 				if attached {ER_OBJECT_EDITOR} shared_singleton.object_editor_cell.item as l_object_editor then
 					l_object_editor.update_ui_with_node (l_child)
+				end
+			end
+		end
+
+	on_tree_key_press (a_key: EV_KEY)
+			--
+		do
+			if a_key.code = {EV_KEY_CONSTANTS}.Key_delete then
+				if attached widget.selected_item as l_selected_node then
+					if attached l_selected_node.parent as l_parent then
+						l_parent.prune_all (l_selected_node)
+					end
 				end
 			end
 		end

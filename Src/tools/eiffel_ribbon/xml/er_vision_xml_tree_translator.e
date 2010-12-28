@@ -115,7 +115,7 @@ feature -- Command
 				from
 					a_app_commands.start
 				until
-					a_app_commands.after
+					a_app_commands.after or Result /= Void
 				loop
 					Result := command_tree_node_with_command_name (a_command_name, a_app_commands.item)
 

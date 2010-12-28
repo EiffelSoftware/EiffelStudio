@@ -47,6 +47,13 @@ feature -- Command
 						else
 							check should_not_happen: False end
 						end
+
+						l_win.save_project_command.enable
+						l_win.gen_code_command.enable
+
+						disable
+						l_win.new_project_command.disable
+						l_win.recent_project_command.disable
 					else
 						-- User didn't select any folder
 					end
@@ -56,44 +63,7 @@ feature -- Command
 			end
 		end
 
-	open_project_file (a_eiffel_ribbon_file: STRING)
-			--
-		require
-			not_void: a_eiffel_ribbon_file /= Void
-		local
-			l_file_name: FILE_NAME
-			l_env: OPERATING_ENVIRONMENT
-			l_dir: STRING
-			l_index, l_last_index: INTEGER
-		do
-			if attached shared_singleton.tool_info_cell.item as l_tool_info then
-
-				create l_env
-				from
-					l_index := 1 -- Make sure loop run at least once
-				until
-					l_index = 0
-				loop
-					l_index := a_eiffel_ribbon_file.index_of (l_env.directory_separator, (l_last_index + 1))
-					if l_index /= 0 then
-						l_last_index := l_index
-					end
-				end
-				check l_last_index /= 0 end
-				l_dir := a_eiffel_ribbon_file.substring (1, (l_last_index - 1))
-
-				create l_file_name.make_from_string (a_eiffel_ribbon_file)
-				if not l_tool_info.recent_projects.has (a_eiffel_ribbon_file) then
-					l_tool_info.recent_projects.extend (a_eiffel_ribbon_file)
-				end
-
-				if attached shared_singleton.project_info_cell.item as l_project_info then
-					l_project_info.set_project_location (l_dir)
-				end
-			end
-		end
-
-	set_main_window (a_main_window: EV_WINDOW)
+	set_main_window (a_main_window: MAIN_WINDOW)
 			--
 		do
 			main_window := a_main_window
@@ -103,7 +73,7 @@ feature -- Query
 
 feature {NONE} -- Implementation
 
-	main_window: detachable EV_WINDOW
+	main_window: detachable MAIN_WINDOW
 			--
 
 	shared_singleton: ER_SHARED_SINGLETON

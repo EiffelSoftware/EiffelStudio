@@ -26,9 +26,7 @@ feature {NONE} -- Initialization
 		do
 			set_size (1280, 600)
 
-			show_actions.extend_kamikaze (agent init_docking_manager)
-
-			restore_tool_info_from_disk
+			show_actions.extend_kamikaze (agent init_after_shown)
 
 			show_actions.extend_kamikaze (agent
 								local
@@ -42,9 +40,12 @@ feature {NONE} -- Initialization
 
 			new_project_command.set_main_window (Current)
 			open_project_command.set_main_window (Current)
+			recent_project_command.set_main_window (Current)
+
+			restore_tool_info_from_disk
 		end
 
-	init_docking_manager
+	init_after_shown
 			--
 		local
 			l_docking_manager: like docking_manager
@@ -58,6 +59,9 @@ feature {NONE} -- Initialization
 			l_tool_bar := build_tool_bar
 			l_docking_manager.tool_bar_manager.contents.extend (l_tool_bar)
 			l_tool_bar.set_top ({SD_ENUMERATION}.top)
+
+			save_project_command.disable
+			gen_code_command.disable
 		end
 
 	create_interface_objects
@@ -88,6 +92,7 @@ feature {NONE} -- Initialization
 			create open_project_command.make (open_project_menu)
 			create save_project_command.make (save_project_menu)
 			create gen_code_command.make
+			create recent_project_command.make (recent_projects)
 		end
 
 	build_tool_bar: SD_TOOL_BAR_CONTENT
@@ -172,28 +177,7 @@ feature {NONE} -- Implementation
 
 			shared_singleton.tool_info_cell.put (l_tool_info)
 
-			restore_recent_item_menu
-		end
-
-	restore_recent_item_menu
-			--
-		local
-			l_menu_item: EV_MENU_ITEM
-			l_projects: ARRAYED_LIST [STRING]
-		do
-			if attached shared_singleton.tool_info_cell.item as l_tool_info then
-				l_projects := l_tool_info.recent_projects
-				from
-					l_projects.finish
-				until
-					l_projects.before or l_projects.index > 10
-				loop
-					create l_menu_item.make_with_text_and_action (l_projects.item, agent open_project_command.execute_with_file_name (l_projects.item))
-					recent_projects.extend (l_menu_item)
-					l_projects.back
-				end
-
-			end
+			recent_project_command.restore_recent_item_menu
 		end
 
 	save_tool_info_when_exit
@@ -231,7 +215,7 @@ feature {NONE} -- Implementation
 	shared_singleton: ER_SHARED_SINGLETON
 			--
 
-feature {NONE} -- Commands
+feature -- Commands
 
 	new_project_command: ER_NEW_PROJECT_COMMAND
 			--
@@ -243,5 +227,8 @@ feature {NONE} -- Commands
 			--
 
 	gen_code_command: ER_GENERATE_CODE_COMMAND
+			--
+
+	recent_project_command: ER_RECENT_PROJECT_COMMAND
 			--
 end

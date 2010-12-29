@@ -126,7 +126,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_size_text_change is
+	on_size_text_change
 			-- <Precursor>
 		do
 			if attached tree_node_data as l_data then

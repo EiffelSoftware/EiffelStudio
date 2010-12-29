@@ -60,7 +60,6 @@ feature {NONE} -- Implementation
 			--
 		local
 			l_source_file: RAW_FILE
-			l_dest_file: RAW_FILE
 			l_first_blank, l_second_blank: INTEGER
 			l_name, l_value: STRING
 		do

@@ -131,22 +131,22 @@ feature {NONE} -- Implementation
 		deferred
 		end
 	
-	on_name_text_change is
+	on_name_text_change
 			-- Called by `change_actions' of `name'.
 		deferred
 		end
 	
-	on_label_text_change is
+	on_label_text_change
 			-- Called by `change_actions' of `label'.
 		deferred
 		end
 	
-	on_small_image_change is
+	on_small_image_change
 			-- Called by `change_actions' of `small_image'.
 		deferred
 		end
 	
-	on_large_image_change is
+	on_large_image_change
 			-- Called by `change_actions' of `large_image'.
 		deferred
 		end

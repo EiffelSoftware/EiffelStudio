@@ -52,7 +52,7 @@ feature {NONE}  -- Initlization
 	set_docking_manager (a_docking_manager: SD_DOCKING_MANAGER)
 			-- <Precursor>
 		do
-			precursor {SD_DOCKING_MANAGER_HOLDER} (a_docking_manager)
+			Precursor {SD_DOCKING_MANAGER_HOLDER} (a_docking_manager)
 
 			docking_manager.main_window.focus_out_actions.extend (main_window_focus_out)
 			docking_manager.main_window.focus_in_actions.extend (main_window_focus_in)
@@ -378,7 +378,7 @@ feature  -- Agents
 			docking_manager.main_container.set_background_color (internal_shared.non_focused_color_lightness)
 		end
 
-	on_pnd_motions (a_x, a_y: INTEGER; a_target: EV_ABSTRACT_PICK_AND_DROPABLE)
+	on_pnd_motions (a_x, a_y: INTEGER; a_target: detachable EV_ABSTRACT_PICK_AND_DROPABLE)
 			-- Handle pick and drop motion actions
 			-- We notify all auto hide tab stubs when pick and drop shere
 		require
@@ -389,9 +389,9 @@ feature  -- Agents
 			l_position: EV_COORDINATE
 			l_widget: detachable EV_WIDGET
 		do
-			-- When set_capture, if pointer moving at area outside captured widget,
-			-- the `a_target' parameter in {EV_APPLICATION}.pnd_motion_actions is void
-			-- on both GTK and Windows platforms
+				-- When set_capture, if pointer moving at area outside captured widget,
+				-- the `a_target' parameter in {EV_APPLICATION}.pnd_motion_actions is void
+				-- on both GTK and Windows platforms
 			l_widget ?= a_target
 
 			create l_screen
@@ -631,7 +631,7 @@ feature {NONE}  -- Implementation
 	widget_pointer_press_for_upper_zone_handler: PROCEDURE [SD_DOCKING_MANAGER_AGENTS, TUPLE [EV_WIDGET, INTEGER_32, INTEGER_32, INTEGER_32]]
 			-- Pointer press actions for SD_UPPER_ZONEs
 
-	pnd_motion_actions_handler: PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, EV_ABSTRACT_PICK_AND_DROPABLE]]
+	pnd_motion_actions_handler: PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, detachable EV_ABSTRACT_PICK_AND_DROPABLE]]
 			-- Pick and Drop pointer motion action handler
 
 	pick_actions_handler: PROCEDURE [SD_DOCKING_MANAGER_AGENTS, TUPLE [ANY]]

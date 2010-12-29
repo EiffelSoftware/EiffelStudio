@@ -111,12 +111,12 @@ feature {NONE} -- Implementation
 		deferred
 		end
 	
-	on_name_text_change is
+	on_name_text_change
 			-- Called by `change_actions' of `name'.
 		deferred
 		end
 	
-	on_size_text_change is
+	on_size_text_change
 			-- Called by `change_actions' of `size_combo_box'.
 		deferred
 		end

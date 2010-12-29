@@ -82,7 +82,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_label_text_change is
+	on_label_text_change
 			-- Called by `change_actions' of `label'.
 		do
 			if attached tree_node_data as l_data then
@@ -90,7 +90,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_small_image_change is
+	on_small_image_change
 			-- Called by `change_actions' of `small_image'.
 		do
 			if attached tree_node_data as l_data then
@@ -98,7 +98,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_large_image_change is
+	on_large_image_change
 			-- Called by `change_actions' of `large_image'.
 		do
 			if attached tree_node_data as l_data then

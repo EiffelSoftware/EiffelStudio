@@ -112,12 +112,12 @@ feature {NONE} -- Implementation
 		deferred
 		end
 	
-	on_name_text_change is
+	on_name_text_change
 			-- Called by `change_actions' of `name'.
 		deferred
 		end
 	
-	on_label_changes is
+	on_label_changes
 			-- Called by `change_actions' of `label'.
 		deferred
 		end

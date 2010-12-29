@@ -70,7 +70,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_label_changes is
+	on_label_changes
 			-- Called by `change_actions' of `label'.
 		do
 			if attached tree_node_data as l_data then

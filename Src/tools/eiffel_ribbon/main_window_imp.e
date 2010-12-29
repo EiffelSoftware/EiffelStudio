@@ -118,22 +118,22 @@ feature {NONE} -- Implementation
 		deferred
 		end
 	
-	on_new_project_selected is
+	on_new_project_selected
 			-- Called by `select_actions' of `new_project_menu'.
 		deferred
 		end
 	
-	on_open_project_selected is
+	on_open_project_selected
 			-- Called by `select_actions' of `open_project_menu'.
 		deferred
 		end
 	
-	on_save_project_selected is
+	on_save_project_selected
 			-- Called by `select_actions' of `save_project_menu'.
 		deferred
 		end
 	
-	on_exit_selected is
+	on_exit_selected
 			-- Called by `select_actions' of `exit_menu'.
 		deferred
 		end

@@ -60,8 +60,20 @@ feature -- Command
 			content.set_default_editor_position
 		end
 
+feature -- Query
+
 	widget: EV_TREE
 			-- Main dockig content widget
+
+	all_items_with (a_text: STRING): ARRAYED_LIST [EV_TREE_NODE]
+			-- All tree items which text equal `a_text'
+		require
+			not_void: a_text /= Void
+		do
+			create Result.make (50)
+			check widget.count = 1 end
+			recrusive_all_items_with (a_text, widget.i_th (1), Result)
+		end
 
 feature -- Factory
 
@@ -203,6 +215,27 @@ feature -- Persistance
 		end
 
 feature {NONE} -- Implementation
+
+	recrusive_all_items_with (a_text: STRING; a_tree_node: EV_TREE_NODE; a_list: ARRAYED_LIST [EV_TREE_NODE])
+			-- Recursive find tree node which text is same as `a_text'
+		require
+			not_void: a_text /= Void
+			not_void: a_tree_node /= Void
+			not_void: a_list /= Void
+		do
+			if a_tree_node.text.same_string (a_text) then
+				a_list.extend (a_tree_node)
+			end
+			from
+				a_tree_node.start
+			until
+				a_tree_node.after
+			loop
+				recrusive_all_items_with (a_text, a_tree_node.item, a_list)
+
+				a_tree_node.forth
+			end
+		end
 
 	content: SD_CONTENT
 			--

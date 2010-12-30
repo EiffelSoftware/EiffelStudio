@@ -30,7 +30,7 @@ feature -- Factory method
 			elseif a_type.is_equal (constants.group) then
 				create {ER_TREE_NODE_GROUP_DATA} Result
 			elseif a_type.is_equal (constants.button) then
-				create {ER_TREE_NODE_BUTTON_DATA} Result
+				create {ER_TREE_NODE_BUTTON_DATA} Result.make
 			elseif a_type.is_equal (constants.tab) then
 				create {ER_TREE_NODE_TAB_DATA} Result
 			else

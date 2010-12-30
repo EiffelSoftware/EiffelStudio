@@ -35,9 +35,7 @@ feature {NONE}-- Initialization
 			extend (l_ev_label_4)
 			extend (label)
 			extend (l_ev_label_5)
-			extend (small_image)
 			extend (l_ev_label_6)
-			extend (large_image)
 
 			l_ev_label_1.set_text ("Type:")
 			l_ev_label_1.align_text_left
@@ -59,17 +57,13 @@ feature {NONE}-- Initialization
 			disable_item_expand (l_ev_label_4)
 			disable_item_expand (label)
 			disable_item_expand (l_ev_label_5)
-			disable_item_expand (small_image)
 			disable_item_expand (l_ev_label_6)
-			disable_item_expand (large_image)
 
 			set_all_attributes_using_constants
 			
 				-- Connect events.
 			name.change_actions.extend (agent on_name_text_change)
 			label.change_actions.extend (agent on_label_text_change)
-			small_image.change_actions.extend (agent on_small_image_change)
-			large_image.change_actions.extend (agent on_large_image_change)
 
 				-- Call `user_initialization'.
 			user_initialization
@@ -87,9 +81,7 @@ feature {NONE}-- Initialization
 			create l_ev_label_4
 			create label
 			create l_ev_label_5
-			create small_image
 			create l_ev_label_6
-			create large_image
 
 			create string_constant_set_procedures.make (10)
 			create string_constant_retrieval_functions.make (10)
@@ -110,7 +102,7 @@ feature {NONE}-- Initialization
 feature -- Access
 
 	name: EV_COMBO_BOX
-	label, small_image, large_image: EV_TEXT_FIELD
+	label: EV_TEXT_FIELD
 
 feature {NONE} -- Implementation
 
@@ -138,16 +130,6 @@ feature {NONE} -- Implementation
 	
 	on_label_text_change
 			-- Called by `change_actions' of `label'.
-		deferred
-		end
-	
-	on_small_image_change
-			-- Called by `change_actions' of `small_image'.
-		deferred
-		end
-	
-	on_large_image_change
-			-- Called by `change_actions' of `large_image'.
 		deferred
 		end
 	

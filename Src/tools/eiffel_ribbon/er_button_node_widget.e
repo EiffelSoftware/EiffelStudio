@@ -24,6 +24,20 @@ feature {NONE} -- Initialization
 			-- (due to regeneration of implementation class)
 			-- can be added here.
 		do
+			small_image.set_browse_for_open_file ("")
+			go_i_th (count - 1)
+			put_right (small_image)
+			disable_item_expand (small_image)
+			if attached small_image.field as l_field then
+				l_field.change_actions.extend (agent on_small_image_change)
+			end
+
+			large_image.set_browse_for_open_file ("")
+			extend (large_image)
+			disable_item_expand (large_image)
+			if attached large_image.field as l_field then
+				l_field.change_actions.extend (agent on_large_image_change)
+			end
 		end
 
 	create_interface_objects
@@ -34,6 +48,8 @@ feature {NONE} -- Initialization
 
 				-- Proceed with vision2 objects creation.
 			Precursor
+			create small_image.make
+			create large_image.make
 		end
 
 feature -- Command
@@ -70,6 +86,9 @@ feature -- Command
 		end
 
 feature {NONE} -- Implementation
+
+	small_image, large_image: EV_PATH_FIELD
+			--
 
 	tree_node_data: detachable ER_TREE_NODE_BUTTON_DATA
 			--

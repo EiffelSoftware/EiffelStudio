@@ -13,7 +13,10 @@ indexing
 */
 
 #include "eiffel_ribbon.h"
-	
+#include "ribbon.h"
+#include "command.c"
+#include "ribbon.c"
+
 EIF_OBJECT eiffel_command_handler_object = NULL;
 	/* Address of Eiffel object ER_COMMAND_HANDLER */
 	

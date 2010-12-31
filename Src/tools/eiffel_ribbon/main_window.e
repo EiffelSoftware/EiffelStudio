@@ -41,6 +41,7 @@ feature {NONE} -- Initialization
 			new_project_command.set_main_window (Current)
 			open_project_command.set_main_window (Current)
 			recent_project_command.set_main_window (Current)
+			gen_code_command.set_main_window (Current)
 
 			restore_tool_info_from_disk
 		end

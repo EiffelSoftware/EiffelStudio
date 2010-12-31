@@ -33,8 +33,17 @@ feature -- Command
 			generate_readonly_classes
 
 			generate_eiffel_class_for_header_file
+
 		end
 
+feature -- Query
+
+	is_uicc_available: BOOLEAN
+			--
+		do
+			Result := uicc_manager.check_if_uicc_available
+		end
+		
 feature {NONE} -- Implementation
 
 	ecf_template_file_path: STRING

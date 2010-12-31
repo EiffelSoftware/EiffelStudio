@@ -40,7 +40,7 @@ feature {NONE} -- Externals
 	create_ribbon_com_framework (a_hwnd: POINTER): INTEGER
 			-- Create Ribbon framework, attach ribbon to `a_hwnd'
 		external
-			"C inline use <ribbon.c>"
+			"C inline use <ribbon.h>"
 		alias
 			"[
 			{
@@ -52,7 +52,7 @@ feature {NONE} -- Externals
 	destroy_ribbon_com_framwork
 			-- Destroy ribbon framwork
 		external
-			"C inline use <ribbon.c>"
+			"C inline use <ribbon.h>"
 		alias
 			"[
 			{

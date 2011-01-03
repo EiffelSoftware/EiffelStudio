@@ -1,0 +1,18 @@
+
+test_name 	fix-expanded-generic-vlec-infinite-loop	
+test_description Fixing a VLEC error on an expanded generic root class and resuming compilation causes the compiler to go into an infinite loop
+
+define		ATTRIBUTE_TYPE "TEST [TEST [G]]"
+copy_sub 	Ace $TEST Ace
+copy_sub 	test.e $CLUSTER test.e
+
+compile_melted
+compile_result 	validity_error TEST VLEC
+
+define		ATTRIBUTE_TYPE "G"
+copy_sub 	test.e $CLUSTER test.e
+
+resume_compile
+compile_result 	ok
+
+test_end

@@ -589,16 +589,20 @@ feature -- Access
 			end
 		end
 
-	is_at (f_body_index: INTEGER; index: INTEGER): BOOLEAN
+	is_at (f: E_FEATURE; index: INTEGER): BOOLEAN
 			-- Is the program stopped at the given index in the given feature ?
 			-- Returns False when the couple ('f','index') cannot be found on the stack.
 			--         or is on the stack but not currently active.
 			-- Returns True when the couple ('f','index') is active (i.e is the current
 			--	       active feature on stack)
+		require
+			f_attached: f /= Void
 		local
 			n: INTEGER
+			f_body_index: INTEGER
 		do
 			if is_stopped then
+				f_body_index := f.body_index
 				if attached current_replayed_call as crep then
 					if crep.replayed_break_index = index then
 						Result := attached crep.feature_i as fi and then fi.body_index = f_body_index
@@ -607,7 +611,7 @@ feature -- Access
 				if not Result then
 					if attached replayed_call as rep then
 						if rep.line = index then
-							Result := attached rep.feat as f and then f.body_index = f_body_index
+							Result := attached rep.feat as rep_f and then rep_f.body_index = f_body_index
 						end
 					else
 						if attached current_call_stack as l_ccs and then not l_ccs.is_empty then
@@ -622,14 +626,18 @@ feature -- Access
 			end
 		end
 
-	is_top (f_body_index: INTEGER; index: INTEGER): BOOLEAN
+	is_top (f: E_FEATURE; index: INTEGER): BOOLEAN
 			-- Return True if the couple ('f','index') is the top position on the stack,
 			-- Return False if the couple ('f','index') is somewhere else in the stack,
 			-- 		or if the couple ('f','index') is not in the stack.
+		require
+			f_attached: f /= Void
 		local
 			n: INTEGER
+			f_body_index: INTEGER
 		do
 			if is_stopped then
+				f_body_index := f.body_index
 				if attached current_replayed_call as rep then
 					if rep.replayed_break_index = index then
 						Result := attached rep.feature_i as fi and then fi.body_index = f_body_index
@@ -786,7 +794,7 @@ feature -- Setting
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

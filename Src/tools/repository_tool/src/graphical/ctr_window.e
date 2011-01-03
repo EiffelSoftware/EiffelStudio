@@ -843,7 +843,7 @@ tokens.test.url=http://svn.origo.ethz.ch/viewvc/eiffelstudio/trunk/eweasel/tests
 			   Logs tool:
 			     Space: mark selected logs as read
 			     Ins: toggle selected logs between read and unread
-			   	
+
 			]"
 			t.set_text (s)
 			dlg.close_request_actions.extend (agent dlg.destroy)
@@ -1429,6 +1429,7 @@ feature {CTR_TOOL} -- Catalog
 			l_unselected_views: ARRAYED_LIST [REPOSITORY_DATA_VIEW]
 			l_new_views: ARRAYED_LIST [REPOSITORY_DATA_VIEW]
 		do
+			set_busy
 			l_old_views := logs_tool.current_views
 			from
 				create l_unselected_views.make (l_old_views.count)
@@ -1461,6 +1462,7 @@ feature {CTR_TOOL} -- Catalog
 			end
 
 			if not logs_tool.same_views (l_old_views, l_new_views) then
+
 				from
 					l_old_views.start
 				until
@@ -1512,6 +1514,7 @@ feature {CTR_TOOL} -- Catalog
 --				catalog_repository_row (a_repodata) = r or
 --				catalog_repository_row (a_repodata) = r.parent_row_root
 --			end
+			unset_busy
 		end
 
 --	select_repository (r: EV_GRID_ROW; a_repodata: REPOSITORY_DATA; a_log_filter: detachable REPOSITORY_LOG_FILTER)
@@ -2035,4 +2038,4 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-end -- class MAIN_WINDOW
+end

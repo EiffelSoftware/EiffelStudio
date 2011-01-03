@@ -1041,7 +1041,6 @@ feature {NONE} -- Implementation
 		local
 			l_deps: SEARCH_TABLE [CONF_GROUP]
 			l_visible: EQUALITY_HASH_TABLE [EQUALITY_TUPLE [TUPLE [STRING_8, EQUALITY_HASH_TABLE [STRING_8, STRING_8]]], STRING_8]
-			l_clusters: ARRAYED_LIST [CONF_CLUSTER]
 		do
 			append_file_rule (a_cluster.internal_file_rule)
 			append_mapping (a_cluster.internal_mapping)
@@ -1061,8 +1060,7 @@ feature {NONE} -- Implementation
 				append_visible (l_visible)
 			end
 				-- process subclusters
-			l_clusters := a_cluster.children
-			if l_clusters /= Void then
+			if attached a_cluster.children as l_clusters then
 				l_clusters.do_all (agent (ai_cluster: CONF_CLUSTER)
 					do
 						current_is_subcluster := True

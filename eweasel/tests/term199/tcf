@@ -1,0 +1,12 @@
+
+test_name 	 expanded-constrained-generic-root-crash
+test_description Compiling a system whose root class is an expanded generic class where one of the formal generics is referenced in the constraint of the other generic crashes the compiler.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test1.e $CLUSTER test1.e
+
+compile_melted
+compile_result	ok
+
+test_end

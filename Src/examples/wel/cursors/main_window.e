@@ -60,7 +60,7 @@ feature {NONE} -- Behaviors
 				create cursor.make_by_predefined_id (Idc_ibeam)
 			when Cmd_cursor_size then
 				create cursor.make_by_predefined_id (Idc_sizeall)
-			when Cmd_cursor_sieznesw then
+			when Cmd_cursor_sizenesw then
 				create cursor.make_by_predefined_id (Idc_sizenesw)
 			when Cmd_cursor_sizens then
 				create cursor.make_by_predefined_id (Idc_sizens)

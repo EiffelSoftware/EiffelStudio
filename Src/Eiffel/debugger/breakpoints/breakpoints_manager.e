@@ -674,6 +674,8 @@ feature -- Breakpoints access with feature,index
 			-- Returns `Breakpoint_not_set' if breakpoint is not set,
 			--         `Breakpoint_set' if breakpoint is set,
 			--         `Breakpoint_disabled' if breakpoint is set but disabled,
+		require
+			f_attached: f /= Void
 		local
 			bp: BREAKPOINT
 			loc: BREAKPOINT_LOCATION
@@ -681,7 +683,7 @@ feature -- Breakpoints access with feature,index
 --|			if not (f.is_deferred or else f.is_attribute or else f.is_constant or else f.is_unique) then
 			error_in_bkpts := False
 			Result := Breakpoint_not_set
-			if f.valid_body_index then
+			if f /= Void and then f.valid_body_index then
 				if f.real_body_id /= 0 then
 					loc := breakpoint_location (f, i, False)
 					if not loc.is_corrupted then
@@ -1425,7 +1427,7 @@ invariant
 	breakpoints_not_void: breakpoints /= Void
 
 ;note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

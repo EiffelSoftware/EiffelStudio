@@ -27,17 +27,16 @@ feature
 						--  1 = not stopped version
 						--  2 = stopped version.
 		do
+			i := 1
 			if in_execution and then a_dm.safe_application_is_stopped then
 				status := a_dm.application_status
-				if status.is_top (a_routine.body_index, a_index) then
-					i := 2
-				elseif status.is_at (a_routine.body_index, a_index) then
-					i := 3
-				else
-					i := 1
+				if a_routine /= Void then
+					if status.is_top (a_routine, a_index) then
+						i := 2
+					elseif status.is_at (a_routine, a_index) then
+						i := 3
+					end
 				end
-			else
-				i := 1
 			end
 
 			bm := a_dm.breakpoints_manager
@@ -123,7 +122,7 @@ feature {NONE} -- Pixmap resources
 		end
 
 note
-	copyright: "Copyright (c) 1984-2007, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -147,11 +146,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

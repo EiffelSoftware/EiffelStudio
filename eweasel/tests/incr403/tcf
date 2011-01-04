@@ -1,0 +1,19 @@
+
+test_name	qat-change-agent-target-type
+test_description Changing the type of a entity that is referenced in a qualified anchored type that is the type for the target of an inline agent creates a NOT_SUPPORTED error but the compiler does not detect it
+
+define		ATTRIBUTE_TYPE "STRING"
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_sub 	test2.e $CLUSTER test2.e
+
+compile_frozen
+compile_result 	ok
+
+define		ATTRIBUTE_TYPE "DOUBLE"
+copy_sub 	test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result 	validity_error TEST NOT_SUPPORTED
+
+test_end

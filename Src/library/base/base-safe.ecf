@@ -129,9 +129,9 @@
 			</file_rule>
  			<file_rule>
  				<exclude>/scoop$</exclude>
-				<!--condition>
+				<condition>
 					<concurrency excluded_value="scoop"/>
-				</condition-->
+				</condition>
 			</file_rule>
 		</cluster>
 	</target>

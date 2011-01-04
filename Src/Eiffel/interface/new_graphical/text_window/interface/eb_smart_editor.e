@@ -681,7 +681,7 @@ feature {EB_CODE_COMPLETION_WINDOW} -- automatic completion
 			if attached {EV_TITLED_WINDOW} l_helpers.widget_top_level_window (widget, True) as l_window and then l_window.is_maximized then
 				Result := l_helpers.suggest_pop_up_widget_location_with_size (l_window, Result, 0, list_width, 10).x
 			end
-			Result := Result.max (0)
+			Result := Result.max (screen.virtual_left)
 		end
 
 	calculate_completion_list_y_position: INTEGER
@@ -1909,7 +1909,7 @@ feature {NONE} -- Implementation: Internal cache
 			-- Note: Do not use directly!
 
 ;note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

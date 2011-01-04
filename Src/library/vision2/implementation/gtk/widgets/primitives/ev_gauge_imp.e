@@ -114,8 +114,6 @@ feature -- Element change
 			-- Set `value' to `a_value'.
 		do
 			internal_set_value (a_value)
-				-- Make sure value is immediately displayed on screen.
-			refresh_now
 		ensure then
 			step_same: step = old step
 			leap_same: leap = old leap
@@ -200,6 +198,9 @@ feature {NONE} -- Implementation
 		do
 			if value /= a_value then
 				{EV_GTK_EXTERNALS}.gtk_adjustment_set_value (adjustment, a_value.to_real)
+				if is_displayed then
+					refresh_now
+				end
 			end
 		end
 

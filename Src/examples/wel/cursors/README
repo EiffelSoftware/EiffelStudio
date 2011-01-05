@@ -1,0 +1,1 @@
+Since it is using .rc file to include resources, as it is using precompilation, you need to freeze the application to link the executable with this resource. This is needed in order to execute the example as expected.

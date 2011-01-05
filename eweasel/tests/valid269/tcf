@@ -1,0 +1,11 @@
+
+test_name	 bogus-vsrp3-with-require-else-false
+test_description A root creation procedure with precondition `require else valid: False' should be a VSRP(3) error but the compiler accepts it.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+
+compile_melted
+compile_result 	validity_error NONE VSRP(3)
+
+test_end

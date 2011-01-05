@@ -166,7 +166,7 @@ fi
 if [ -n "$CFLAGS" ]; then
 	ccflags=$CFLAGS
 else
-	ccflags='-pipe'
+	ccflags='-pipe -fPIC'
 fi
 ccldflags=''
 if [ -n "$CPP" ]; then

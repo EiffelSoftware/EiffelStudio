@@ -1,0 +1,26 @@
+
+test_name 	once-per-object-link-failure
+test_description After initial compilation, a once-per-object routine that is a redefinition of an inherited once-per-object routine is changed to a normal "do" routine and the system is frozen.  The generated C code won't link due to undefined symbols.
+
+define		ROUTINE_MARK "once ("OBJECT")"
+copy_sub 	Ace $TEST Ace
+copy_sub 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+
+compile_melted
+compile_result 	ok
+
+define		ROUTINE_MARK "do"
+copy_sub 	test.e $CLUSTER test.e
+
+compile_frozen
+compile_result 	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work	NONE exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+test_end

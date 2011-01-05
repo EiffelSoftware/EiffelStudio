@@ -966,6 +966,7 @@ test	qat-change-constant-anchor-type		incr400 tcf fail incrementality anchored_t
 test	renaming-class-in-constraint-crash	incr401 tcf fail incrementality renaming
 test	fix-expanded-generic-vlec-infinite-loop	incr402	tcf fail incrementality expanded manual
 test	qat-change-agent-target-type		incr403	tcf fail incrementality anchored_type
+test 	once-per-object-link-failure		incr404 tcf fail incrementality once
 
 
 -- Melting

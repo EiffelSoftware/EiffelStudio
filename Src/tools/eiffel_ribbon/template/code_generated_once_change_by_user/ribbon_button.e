@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 		end
 
 	create_interface_objects
-			--
+			-- Create objects
 		do
 			create select_actions
 		end
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 feature {RIBBON}
 
 	command_list: ARRAY [NATURAL_32]
-			--
+			-- Command ids handled by current
 
 	execute (a_command_id: NATURAL_32; a_execution_verb: INTEGER; a_property_key: POINTER; a_property_value: POINTER; a_command_execution_properties: POINTER): NATURAL_32
 			-- <Precursor>

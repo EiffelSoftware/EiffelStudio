@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 		end
 
 	create_interface_objects
-			--
+			-- Create objects
 		do
 $TAB_CREATION
 			create tabs.make (1)

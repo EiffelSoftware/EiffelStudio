@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 		end
 
 	create_interface_objects
-			--
+			-- Create objects
 		do
 $BUTTON_CREATION
 			create buttons.make (1)
@@ -40,7 +40,7 @@ feature -- Query
 $BUTTON_DECLARATION
 
 	buttons: ARRAYED_LIST [ER_TOOL_BAR_BUTTON]
-			--
+			-- All buttons in current group
 
 feature {NONE}	--Action handling
 
@@ -64,5 +64,5 @@ feature {NONE}	--Action handling
 feature {NONE} -- Implementation
 
 	command_list: ARRAY [NATURAL_32]
-			--
+			-- Command ids handled by current
 end

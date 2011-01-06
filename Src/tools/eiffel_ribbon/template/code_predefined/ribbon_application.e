@@ -43,6 +43,6 @@ feature {NONE} -- Implementation
 		end
 
 	main_window: MAIN_WINDOW
-		-- Main window of `Current'.
+		-- Main window of `Current'
 
 end

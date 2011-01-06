@@ -26,7 +26,6 @@ feature {NONE}-- Initialization
 		do
 			Precursor {EV_TITLED_WINDOW}
 
-
 				-- Build widget structure.
 			extend (l_ev_vertical_box_1)
 
@@ -46,8 +45,7 @@ feature {NONE}-- Initialization
 	create_interface_objects
 			-- Create objects
 		do
-
-				-- Create all widgets.
+				-- Create all widgets
 			create l_ev_vertical_box_1
 
 			create string_constant_set_procedures.make (10)

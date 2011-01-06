@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 		end
 
 	create_interface_objects
-			--
+			-- Create objects
 		do
 $GROUP_CREATION
 			create groups.make (1)
@@ -39,7 +39,7 @@ feature -- Query
 $GROUP_DECLARATION
 
 	groups: ARRAYED_LIST [ER_TOOL_BAR_GROUP]
-			--
+			-- All groups in current tab
 
 feature {NONE}	--Action handling
 
@@ -62,5 +62,5 @@ feature {NONE}	--Action handling
 feature {NONE}	-- Implementation
 
 	command_list: ARRAY [NATURAL_32]
-			--
+			-- Command ids handled by current
 end

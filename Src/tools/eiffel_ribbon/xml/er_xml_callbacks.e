@@ -44,19 +44,25 @@ feature -- Document
 	on_start
 			-- <Precursor>
 		do
-			print ("%N on_start")
+			debug ("Ribbon")
+				print ("%N on_start")
+			end
 		end
 
 	on_finish
 			-- <Precursor>
 		do
-			print ("%N on_finish")
+			debug ("Ribbon")
+				print ("%N on_finish")
+			end
 		end
 
 	on_xml_declaration (a_version: STRING; an_encoding: detachable STRING; a_standalone: BOOLEAN)
 			-- <Precursor>
 		do
-			print ("%N on_xml_declaration")
+			debug ("Ribbon")
+				print ("%N on_xml_declaration")
+			end
 		end
 
 feature -- Errors
@@ -64,7 +70,9 @@ feature -- Errors
 	on_error (a_message: STRING)
 			-- <Precursor>
 		do
-			print ("%N on_error")
+			debug ("Ribbon")
+				print ("%N on_error")
+			end
 		end
 
 feature -- Meta
@@ -72,13 +80,17 @@ feature -- Meta
 	on_processing_instruction (a_name: STRING; a_content: STRING)
 			-- <Precursor>
 		do
-			print ("%N on_processing_instruction")
+			debug ("Ribbon")
+				print ("%N on_processing_instruction")
+			end
 		end
 
 	on_comment (a_content: STRING)
 			-- <Precursor>
 		do
-			print ("%N on_comment")
+			debug ("Ribbon")
+				print ("%N on_comment")
+			end
 		end
 
 feature -- Tag
@@ -89,7 +101,9 @@ feature -- Tag
 			l_parent_node: detachable EV_TREE_NODE
 			l_new_node: EV_TREE_ITEM
 		do
-			print ("%N on_start_tag " + a_local_part)
+			debug ("Ribbon")
+				print ("%N on_start_tag " + a_local_part)
+			end
 			if last_node.count >= 1 then
 				l_parent_node := last_node.last
 			else
@@ -127,7 +141,9 @@ feature -- Tag
 		local
 			l_tree_node: EV_TREE_NODE
 		do
-			print ("%N on_attribute")
+			debug ("Ribbon")
+				print ("%N on_attribute")
+			end
 			l_tree_node := last_node.last
 			if attached {ER_TREE_NODE_DATA} l_tree_node.data as l_data then
 				l_data.update_for_xml_attribute (a_local_part, a_value)
@@ -137,7 +153,9 @@ feature -- Tag
 	on_start_tag_finish
 			-- <Precursor>
 		do
-			print ("%N on_start_tag_finish")
+			debug ("Ribbon")
+				print ("%N on_start_tag_finish")
+			end
 		end
 
 	on_end_tag (a_namespace: detachable STRING; a_prefix: detachable STRING; a_local_part: STRING)
@@ -145,7 +163,9 @@ feature -- Tag
 		local
 --			l_list: detachable EV_ITEM_LIST [EV_TREE_NODE]
 		do
-			print ("%N on_end_tag")
+			debug ("Ribbon")
+				print ("%N on_end_tag")
+			end
 			if a_local_part.is_equal (constants.command) then
 				check set_by_on_start_tag: attached {ER_TREE_NODE_DATA} data_callback end
 				data_callback := void
@@ -164,7 +184,9 @@ feature -- Content
 	on_content (a_content: STRING)
 			-- <Precursor>
 		do
-			print ("%N on_content")
+			debug ("Ribbon")
+				print ("%N on_content")
+			end
 			if attached data_callback as l_data_callback then
 				l_data_callback.on_content (a_content)
 			end

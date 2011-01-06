@@ -22,18 +22,17 @@ feature {NONE} -- Initialization
 			l_list: ARRAYED_LIST [EV_TREE_NODE]
 			l_command_name: STRING
 			l_count: INTEGER
-			l_conflict: BOOLEAN
 		do
-			-- Initialize a command name automatically
+				-- Initialize a command name automatically
 
-			-- Count how many buttons node in layout constructor
+				-- Count how many buttons node in layout constructor
 			create l_shared
 			if attached l_shared.layout_constructor_cell.item as l_layout_constructor then
 				create l_constants
 				l_list := l_layout_constructor.all_items_with (l_constants.button)
 				l_count := l_list.count
 
-				-- check if the command name conflict with other buttons
+					-- check if the command name conflict with other buttons
 				from
 					l_count := l_count + 1
 					l_command_name := "button_cmd_" + l_count.out

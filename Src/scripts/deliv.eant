@@ -930,6 +930,7 @@
 			<geant target="copy_library_to" arguments="parse,${a_target_dir}" />
 			<geant target="copy_library_to" arguments="preferences,${a_target_dir}" />
 			<geant target="copy_library_to" arguments="uuid,${a_target_dir}" />
+			<geant target="copy_library_to" arguments="text,${a_target_dir}" />
 			<geant target="copy_library_to" arguments="vision2,${a_target_dir}" />
 			<geant target="clean_folder" arguments="gtk" dir="$a_target_dir/library/vision2/implementation" unless="${is_unix}" />
 			<geant target="clean_folder" arguments="mswin" dir="$a_target_dir/library/vision2/implementation" unless="${is_windows}" />

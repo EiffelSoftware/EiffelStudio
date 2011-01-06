@@ -104,6 +104,12 @@ feature -- Command
 				else
 					command_name.remove_text
 				end
+				
+				if attached a_data.label_title as l_label_title then
+					label.set_text (l_label_title)
+				else
+					label.remove_text
+				end
 
 				if attached a_data.size_definition as l_size_definition then
 					size_combo_box.set_text (l_size_definition)
@@ -123,6 +129,14 @@ feature {NONE} -- Implementation
 		do
 			if attached tree_node_data as l_data then
 				l_data.set_command_name (command_name.text)
+			end
+		end
+
+	on_label_text_changs
+			-- Called by `change_actions' of `label'.
+		do
+			if attached tree_node_data as l_data then
+				l_data.set_label_title (label.text)
 			end
 		end
 

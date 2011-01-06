@@ -174,11 +174,7 @@ feature {NONE} -- Interface text
 		local
 			l_now: DATE_TIME
 			l_duration: DATE_TIME_DURATION --like {DATE_TIME}.relative_duration
-			y,m,d,h,mn,sec: INTEGER
-			s32: STRING_32
-			s: STRING
-			c: CHARACTER_32
-			i: INTEGER
+			m,d,h: INTEGER
 		do
 			if a_date_time /= Void then
 				if a_smart_date_enabled then

@@ -1088,7 +1088,11 @@ feature {NONE} -- Tree view behavior
 		local
 			i, c: INTEGER
 		do
-			if a_row.is_expandable and then a_row.is_expanded then
+			if
+				not a_row.is_destroyed and then
+				a_row.is_expandable and then
+				a_row.is_expanded
+			then
 				a_row.collapse
 				c := a_row.subrow_count
 				if a_recursive and then c > 0 then
@@ -1121,17 +1125,21 @@ feature {NONE} -- Tree view behavior
 			-- If `a_recursive' is True, collapse those rows recursively.
 		local
 			l_rows: LIST [EV_GRID_ROW]
+			l_first_row: EV_GRID_ROW
 		do
 			l_rows := selected_rows_function.item (Void)
 			if l_rows /= Void and then not l_rows.is_empty then
-				if l_rows.count = 1 and then (not l_rows.first.is_expandable or else not l_rows.first.is_expanded) then
-					if attached l_rows.first.parent_row as l_parent_row then
-						l_rows.first.disable_select
-						if l_parent_row.is_selectable then
-							l_parent_row.enable_select
-						end
-						if l_parent_row.is_displayed then
-							l_parent_row.ensure_visible
+				l_first_row := l_rows.first
+				if l_rows.count = 1 and then (not l_first_row.is_expandable or else not l_first_row.is_expanded) then
+					if attached l_first_row.parent_row as l_parent_row then
+						l_first_row.disable_select
+						if not l_parent_row.is_destroyed then
+							if l_parent_row.is_selectable then
+								l_parent_row.enable_select
+							end
+							if l_parent_row.is_displayed then
+								l_parent_row.ensure_visible
+							end
 						end
 					end
 				else

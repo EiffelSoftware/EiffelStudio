@@ -32,11 +32,11 @@ feature -- Initialization
 		do
 			sep := operating_environment.directory_separator.out
 
-			data_folder_name := Common_data_folder + sep + a_data.uuid.out + "_logs"
+			data_folder_name := Common_data_folder + sep + "db" + sep + a_data.uuid.out + "_logs"
 			diff_data_folder_name := data_folder_name + sep + "_diff"
 			review_data_folder_name := data_folder_name + sep + "_review"
 
-			archive_data_folder_name := Common_data_folder + sep + a_data.uuid.out + "_logs" + sep + "_archive"
+			archive_data_folder_name := Common_data_folder + sep + "db" + sep + a_data.uuid.out + "_logs" + sep + "_archive"
 			archive_diff_data_folder_name := archive_data_folder_name + sep + "_diff"
 			archive_review_data_folder_name := archive_data_folder_name + sep + "_review"
 		end

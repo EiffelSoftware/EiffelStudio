@@ -61,7 +61,7 @@ feature {NONE} -- Initialization
 			Precursor
 			create args
 			if
-				attached args.separate_word_option_value ("config") as s and then
+				attached args.separate_word_option_value (names.opt_word_config) as s and then
 				not s.is_empty
 			then
 				set_common_data_folder (s)
@@ -833,7 +833,7 @@ tokens.test.url=http://svn.origo.ethz.ch/viewvc/eiffelstudio/trunk/eweasel/tests
 
 			s := "[
 			Quick Help:
-			   For now, there is no doc for button .. and everything you can figure out by looking at the interface
+			   (For now, there is no documentation for buttons, and whatever you can figure out by looking at the interface)
 			   
 			   Hidden commands:
 			   	 Ctrl+E ... and see popup window
@@ -843,8 +843,12 @@ tokens.test.url=http://svn.origo.ethz.ch/viewvc/eiffelstudio/trunk/eweasel/tests
 			   Logs tool:
 			     Space: mark selected logs as read
 			     Ins: toggle selected logs between read and unread
-
+			     
+			   Command line:
+			     -$OPT_WORD_CONFIG: path to data folder
 			]"
+			s.replace_substring_all ("$OPT_WORD_CONFIG", names.opt_word_config)
+
 			t.set_text (s)
 			dlg.close_request_actions.extend (agent dlg.destroy)
 			dlg.set_position (x_position, y_position)

@@ -1,0 +1,19 @@
+
+test_name 	finalize-generic-once-per-object
+test_description Finalizing a system with a once-per-object routine in a generic class TEST2 [G] with two different actual parameters (INTEGER and STRING) used in different declarations crashes the compiler.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test2.e $CLUSTER test2.e
+
+compile_final
+compile_result 	ok
+
+c_compile_final
+c_compile_result ok
+
+execute_final 	NONE 	exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+test_end

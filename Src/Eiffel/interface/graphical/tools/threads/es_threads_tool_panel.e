@@ -522,7 +522,12 @@ feature {NONE} -- Implementation
 				tid := arr.item
 				l_row.set_data (tid)
 				if tid = a_appstatus.active_thread_id then
-					ev_application.add_idle_action_kamikaze (agent l_row.ensure_visible)
+					ev_application.add_idle_action_kamikaze (agent (irow: EV_GRID_ROW)
+						do
+							if not irow.is_destroyed and then irow.parent /= Void and then irow.is_displayed then
+								irow.ensure_visible
+							end
+						end(l_row))
 				end
 
 				r := r + 1
@@ -651,7 +656,7 @@ feature {NONE} -- Constants
 	col_note_index: 	INTEGER = 4
 
 ;note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

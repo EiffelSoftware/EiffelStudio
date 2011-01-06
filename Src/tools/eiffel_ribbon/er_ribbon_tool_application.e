@@ -6,7 +6,7 @@ note
 	revision: "$Revision$"
 
 class
-	VISION2_APPLICATION
+	ER_RIBBON_TOOL_APPLICATION
 
 inherit
 	EV_APPLICATION
@@ -36,7 +36,7 @@ feature {NONE} -- Implementation
 			create main_window
 		end
 
-	main_window: MAIN_WINDOW
+	main_window: ER_MAIN_WINDOW
 		-- Main window of `Current'.
 
 end

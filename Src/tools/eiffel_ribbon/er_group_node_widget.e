@@ -100,9 +100,9 @@ feature -- Command
 			tree_node_data := a_data
 			if attached a_data as l_data then
 				if attached a_data.command_name as l_command_name then
-					name.set_text (l_command_name)
+					command_name.set_text (l_command_name)
 				else
-					name.remove_text
+					command_name.remove_text
 				end
 
 				if attached a_data.size_definition as l_size_definition then
@@ -118,11 +118,11 @@ feature {NONE} -- Implementation
 	tree_node_data: detachable ER_TREE_NODE_GROUP_DATA
 			--
 
-	on_name_text_change
+	on_command_name_text_change
 			-- <Precursor>
 		do
 			if attached tree_node_data as l_data then
-				l_data.set_command_name (name.text)
+				l_data.set_command_name (command_name.text)
 			end
 		end
 

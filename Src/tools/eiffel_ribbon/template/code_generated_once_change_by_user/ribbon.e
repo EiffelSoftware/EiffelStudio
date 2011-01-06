@@ -4,10 +4,10 @@ note
 	revision: "$Revision$"
 
 frozen class
-	ER_TOOL_BAR
+	RIBBON
 
 inherit
-	ER_TOOL_BAR_IMP
+	RIBBON_IMP
 
 	EV_ANY_HANDLER
 		export
@@ -20,7 +20,7 @@ create
 feature {NONE} -- Initialization
 
 	make
-			--
+			-- Creation method
 		do
 			create_interface_objects
 		end
@@ -28,20 +28,12 @@ feature {NONE} -- Initialization
 	create_interface_objects
 			--
 		do
-			--create tab_1.make_with_command_list (<<{ER_C_CONSTANTS}.Idc_cmd_tab1.as_natural_32>>)
 $TAB_CREATION
-
 			create tabs.make (1)
-			
-			
-			--tabs.extend (tab_1)
 $TAB_REGISTRY
 		end
 
 feature -- Query
-
-	--tab_1: ER_TOOL_BAR_TAB
-			--
 $TAB_DECLARATION
 
 	tabs: ARRAYED_LIST [ER_TOOL_BAR_TAB]
@@ -59,7 +51,7 @@ feature -- Command
 				l_result := create_ribbon_com_framework (l_imp.wel_item)
 			end
 		end
-		
+
 	destroy
 			-- Clean up all ribbon related COM objects and resources
 		do

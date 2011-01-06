@@ -63,17 +63,15 @@ feature -- Command
 			end
 		end
 
-	set_main_window (a_main_window: MAIN_WINDOW)
+	set_main_window (a_main_window: ER_MAIN_WINDOW)
 			--
 		do
 			main_window := a_main_window
 		end
 
-feature -- Query
-
 feature {NONE} -- Implementation
 
-	main_window: detachable MAIN_WINDOW
+	main_window: detachable ER_MAIN_WINDOW
 			--
 
 	shared_singleton: ER_SHARED_SINGLETON

@@ -43,7 +43,12 @@ feature -- Query
 		do
 			Result := uicc_manager.check_if_uicc_available
 		end
-		
+
+feature {NONE} -- Constants
+
+	command_name_constants: STRING = "command_name_constants"
+			-- Constants for command name file
+
 feature {NONE} -- Implementation
 
 	ecf_template_file_path: STRING
@@ -190,7 +195,7 @@ feature {NONE} -- Implementation
 				if attached l_project_info.project_location as l_project_location then
 					create l_source_header.make_from_string (l_project_location)
 					l_source_header.set_file_name ({ER_MISC_CONSTANTS}.header_file_name)
-					create l_translator.make (l_source_header, l_project_location, "er_c_constants")
+					create l_translator.make (l_source_header, l_project_location, command_name_constants)
 					l_translator.translate
 				end
 			end
@@ -273,9 +278,9 @@ feature {NONE} -- Implementation
 
 			create l_singleton
 			l_sub_dir := "code_generated_once_change_by_user"
-			l_tool_bar_file := "er_tool_bar.e"
+			l_tool_bar_file := "ribbon.e"
 			l_sub_imp_dir := "code_generated_everytime"
-			l_tool_bar_imp_file := "er_tool_bar_imp.e"
+			l_tool_bar_imp_file := "ribbon_imp.e"
 
 			if attached l_singleton.project_info_cell.item as l_project_info then
 				if attached l_project_info.project_location as l_project_location then
@@ -374,7 +379,7 @@ feature {NONE} -- Implementation
 				l_generated.replace_substring_all ("$INDEX", l_index.out)
 				if attached {ER_TREE_NODE_TAB_DATA} a_tabs_root_note.i_th (l_index).data as l_group_data then
 					if attached l_group_data.command_name as l_command_name and then not l_command_name.is_empty then
-						l_command_string := "<<{ER_C_CONSTANTS}." + l_command_name + ">>"
+						l_command_string := "<<{" + command_name_constants.as_upper + "}." + l_command_name + ">>"
 					else
 						l_command_string := "<<>>"
 					end
@@ -430,7 +435,7 @@ feature {NONE} -- Implementation
 			l_generated: detachable STRING
 		do
 			create Result.make_empty
-			l_template := "%Ttab_$INDEX: ER_TOOL_BAR_TAB_$INDEX"
+			l_template := "%Ttab_$INDEX: RIBBON_TAB_$INDEX"
 
 			from
 				l_index := 1
@@ -468,9 +473,9 @@ feature {NONE} -- Implementation
 
 			create l_singleton
 			l_sub_dir := "code_generated_once_change_by_user"
-			l_tool_bar_tab_file := "er_tool_bar_tab"
+			l_tool_bar_tab_file := "ribbon_tab"
 			l_sub_imp_dir := "code_generated_everytime"
-			l_tool_bar_tab_imp_file := "er_tool_bar_tab_imp"
+			l_tool_bar_tab_imp_file := "ribbon_tab_imp"
 
 			if attached l_singleton.project_info_cell.item as l_project_info then
 				if attached l_project_info.project_location as l_project_location then
@@ -574,7 +579,7 @@ feature {NONE} -- Implementation
 				l_generated.replace_substring_all ("$INDEX", (group_counter + l_index).out)
 				if attached {ER_TREE_NODE_GROUP_DATA} a_tab_node.i_th (l_index).data as l_group_data then
 					if attached l_group_data.command_name as l_command_name and then not l_command_name.is_empty then
-						l_command_string := "<<{ER_C_CONSTANTS}." + l_command_name + ">>"
+						l_command_string := "<<{" + command_name_constants.as_upper + "}." + l_command_name + ">>"
 					else
 						l_command_string := "<<>>"
 					end
@@ -630,7 +635,7 @@ feature {NONE} -- Implementation
 			l_generated: detachable STRING
 		do
 			create Result.make_empty
-			l_template := "%Tgroup_$INDEX: ER_TOOL_BAR_GROUP_$INDEX"
+			l_template := "%Tgroup_$INDEX: RIBBON_GROUP_$INDEX"
 
 			from
 				l_index := 1
@@ -671,9 +676,9 @@ feature {NONE} -- Implementation
 
 			create l_singleton
 			l_sub_dir := "code_generated_once_change_by_user"
-			l_tool_bar_group_file := "er_tool_bar_group"
+			l_tool_bar_group_file := "ribbon_group"
 			l_sub_imp_dir := "code_generated_everytime"
-			l_tool_bar_group_imp_file := "er_tool_bar_group_imp"
+			l_tool_bar_group_imp_file := "ribbon_group_imp"
 
 			if attached l_singleton.project_info_cell.item as l_project_info then
 				if attached l_project_info.project_location as l_project_location then
@@ -746,8 +751,14 @@ feature {NONE} -- Implementation
 			until
 				a_group_node.after
 			loop
-				check a_group_node.item.text.is_equal ({ER_XML_CONSTANTS}.button) end
-				generate_button_class (a_group_node.item, a_group_node.index + button_counter)
+				if a_group_node.item.text.is_equal ({ER_XML_CONSTANTS}.button)  then
+					generate_button_class (a_group_node.item, a_group_node.index + button_counter)
+				elseif a_group_node.item.text.is_equal ({ER_XML_CONSTANTS}.check_box) then
+--					generate_checkbox_class (a_group_node.item, a_group_node.index + button_counter)	
+				else
+					check not_implemented: False end
+				end
+
 				a_group_node.forth
 			end
 			button_counter := button_counter + a_group_node.count
@@ -776,7 +787,7 @@ feature {NONE} -- Implementation
 				l_generated.replace_substring_all ("$INDEX", (button_counter + l_index).out)
 				if attached {ER_TREE_NODE_BUTTON_DATA} a_group_node.i_th (l_index).data as l_group_data then
 					if attached l_group_data.command_name as l_command_name and then not l_command_name.is_empty then
-						l_command_string := "<<{ER_C_CONSTANTS}." + l_command_name + ">>"
+						l_command_string := "<<{" + command_name_constants.as_upper + "}." + l_command_name + ">>"
 					else
 						l_command_string := "<<>>"
 					end
@@ -832,7 +843,7 @@ feature {NONE} -- Implementation
 			l_generated: detachable STRING
 		do
 			create Result.make_empty
-			l_template := "%Tbutton_$INDEX: ER_TOOL_BAR_BUTTON_$INDEX"
+			l_template := "%Tbutton_$INDEX: RIBBON_BUTTON_$INDEX"
 
 			from
 				l_index := 1
@@ -865,9 +876,9 @@ feature {NONE} -- Implementation
 		do
 			create l_singleton
 			l_sub_dir := "code_generated_once_change_by_user"
-			l_tool_bar_button_file := "er_tool_bar_button"
+			l_tool_bar_button_file := "ribbon_button"
 			l_sub_imp_dir := "code_generated_everytime"
-			l_tool_bar_button_imp_file := "er_tool_bar_button_imp"
+			l_tool_bar_button_imp_file := "ribbon_button_imp"
 
 			if attached l_singleton.project_info_cell.item as l_project_info then
 				if attached l_project_info.project_location as l_project_location then

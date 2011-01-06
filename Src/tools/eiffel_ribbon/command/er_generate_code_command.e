@@ -48,7 +48,7 @@ feature -- Command
 			tool_bar_items.extend (Result)
 		end
 
-	set_main_window (a_main_window: MAIN_WINDOW)
+	set_main_window (a_main_window: ER_MAIN_WINDOW)
 			--
 		do
 			main_window := a_main_window
@@ -62,7 +62,7 @@ feature {NONE} -- Implementation
 	code_generator: ER_CODE_GENERATOR
 			--		
 
-	main_window: detachable MAIN_WINDOW
+	main_window: detachable ER_MAIN_WINDOW
 			--
 
 end

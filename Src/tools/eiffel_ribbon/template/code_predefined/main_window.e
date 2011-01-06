@@ -8,10 +8,10 @@ note
 	revision: "$Revision$"
 
 class
-	ER_MAIN_WINDOW
+	MAIN_WINDOW
 
 inherit
-	ER_MAIN_WINDOW_IMP
+	MAIN_WINDOW_IMP
 		redefine
 			create_interface_objects
 		end
@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	ribbon: ER_TOOL_BAR
-			--
+	ribbon: RIBBON
+			-- Ribbon attached to current
 
 end

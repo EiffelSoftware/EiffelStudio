@@ -31,7 +31,7 @@ feature {NONE}-- Initialization
 			extend (l_ev_label_1)
 			extend (l_ev_label_2)
 			extend (l_ev_label_3)
-			extend (name)
+			extend (command_name)
 			extend (l_ev_label_4)
 			extend (size_combo_box)
 
@@ -46,14 +46,14 @@ feature {NONE}-- Initialization
 			disable_item_expand (l_ev_label_1)
 			disable_item_expand (l_ev_label_2)
 			disable_item_expand (l_ev_label_3)
-			disable_item_expand (name)
+			disable_item_expand (command_name)
 			disable_item_expand (l_ev_label_4)
 			disable_item_expand (size_combo_box)
 
 			set_all_attributes_using_constants
 			
 				-- Connect events.
-			name.change_actions.extend (agent on_name_text_change)
+			command_name.change_actions.extend (agent on_command_name_text_change)
 			size_combo_box.change_actions.extend (agent on_size_text_change)
 
 				-- Call `user_initialization'.
@@ -68,7 +68,7 @@ feature {NONE}-- Initialization
 			create l_ev_label_1
 			create l_ev_label_2
 			create l_ev_label_3
-			create name
+			create command_name
 			create l_ev_label_4
 			create size_combo_box
 
@@ -90,7 +90,8 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	name, size_combo_box: EV_COMBO_BOX
+	command_name: EV_TEXT_FIELD
+	size_combo_box: EV_COMBO_BOX
 
 feature {NONE} -- Implementation
 
@@ -111,8 +112,8 @@ feature {NONE} -- Implementation
 		deferred
 		end
 	
-	on_name_text_change
-			-- Called by `change_actions' of `name'.
+	on_command_name_text_change
+			-- Called by `change_actions' of `command_name'.
 		deferred
 		end
 	

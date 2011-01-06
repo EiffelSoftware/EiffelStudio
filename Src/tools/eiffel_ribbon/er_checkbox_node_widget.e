@@ -6,10 +6,10 @@ note
 	revision: "$Revision$"
 
 class
-	ER_TAB_NODE_WIDGET
+	ER_CHECKBOX_NODE_WIDGET
 
 inherit
-	ER_TAB_NODE_WIDGET_IMP
+	ER_CHECKBOX_NODE_WIDGET_IMP
 		redefine
 			create_interface_objects
 		end
@@ -38,15 +38,15 @@ feature {NONE} -- Initialization
 
 feature -- Command
 
-	set_tree_node_data (a_data: detachable ER_TREE_NODE_TAB_DATA)
+	set_tree_node_data (a_data: detachable ER_TREE_NODE_CHECKBOX_DATA)
 			--
 		do
 			tree_node_data := a_data
 			if attached a_data as l_data then
 				if attached a_data.command_name as l_command_name then
-					command_name.set_text (l_command_name)
+					name.set_text (l_command_name)
 				else
-					command_name.remove_text
+					name.remove_text
 				end
 
 				if attached a_data.label_title as l_label_title then
@@ -54,23 +54,35 @@ feature -- Command
 				else
 					label.remove_text
 				end
+
+--				if attached a_data.small_image as l_small_image then
+--					small_image.set_text (l_small_image)
+--				else
+--					small_image.remove_text
+--				end
+
+--				if attached a_data.large_image as l_large_image then
+--					large_image.set_text (l_large_image)
+--				else
+--					large_image.remove_text
+--				end
 			end
 		end
 
 feature {NONE} -- Implementation
 
-	tree_node_data: detachable ER_TREE_NODE_TAB_DATA
+	tree_node_data: detachable ER_TREE_NODE_CHECKBOX_DATA
 			--
 
-	on_command_name_text_change
+	on_name_text_change
 			-- <Precursor>
 		do
 			if attached tree_node_data as l_data then
-				l_data.set_command_name (command_name.text)
+				l_data.set_command_name (name.text)
 			end
 		end
 
-	on_label_changes
+	on_label_text_change
 			-- Called by `change_actions' of `label'.
 		do
 			if attached tree_node_data as l_data then

@@ -11,10 +11,10 @@ note
 	revision: "$Revision$"
 
 deferred class
-	ER_BUTTON_NODE_WIDGET_IMP
+	ER_MAIN_WINDOW_IMP
 
 inherit
-	EV_VERTICAL_BOX
+	EV_TITLED_WINDOW
 		redefine
 			create_interface_objects, initialize, is_in_default_state
 		end
@@ -24,46 +24,38 @@ feature {NONE}-- Initialization
 	initialize
 			-- Initialize `Current'.
 		do
-			Precursor {EV_VERTICAL_BOX}
+			Precursor {EV_TITLED_WINDOW}
 
 			
 				-- Build widget structure.
-			extend (l_ev_label_1)
-			extend (l_ev_label_2)
-			extend (l_ev_label_3)
-			extend (command_name)
-			extend (l_ev_label_4)
-			extend (label)
-			extend (l_ev_label_5)
-			extend (l_ev_label_6)
+			set_menu_bar (l_ev_menu_bar_1)
+			l_ev_menu_bar_1.extend (l_ev_menu_2)
+			l_ev_menu_2.extend (new_project_menu)
+			l_ev_menu_2.extend (open_project_menu)
+			l_ev_menu_2.extend (save_project_menu)
+			l_ev_menu_2.extend (l_ev_menu_separator_1)
+			l_ev_menu_2.extend (recent_projects)
+			l_ev_menu_2.extend (l_ev_menu_separator_2)
+			l_ev_menu_2.extend (exit_menu)
 
-			l_ev_label_1.set_text ("Type:")
-			l_ev_label_1.align_text_left
-			l_ev_label_2.set_text ("Button")
-			l_ev_label_2.align_text_left
-			l_ev_label_3.set_text ("Command name:")
-			l_ev_label_3.align_text_left
-			l_ev_label_4.set_text ("Label title:")
-			l_ev_label_4.align_text_left
-			label.set_tooltip ("label")
-			l_ev_label_5.set_text ("Small image:")
-			l_ev_label_5.align_text_left
-			l_ev_label_6.set_text ("Large image:")
-			l_ev_label_6.align_text_left
-			disable_item_expand (l_ev_label_1)
-			disable_item_expand (l_ev_label_2)
-			disable_item_expand (l_ev_label_3)
-			disable_item_expand (command_name)
-			disable_item_expand (l_ev_label_4)
-			disable_item_expand (label)
-			disable_item_expand (l_ev_label_5)
-			disable_item_expand (l_ev_label_6)
+			l_ev_menu_2.set_text ("File")
+			new_project_menu.set_text ("New Project")
+			open_project_menu.set_text ("Open Project")
+			save_project_menu.set_text ("Save Project")
+			recent_projects.set_text ("Recent Projects")
+			exit_menu.set_text ("Exit")
+			set_title ("EiffelRibbon")
 
 			set_all_attributes_using_constants
 			
 				-- Connect events.
-			command_name.change_actions.extend (agent on_command_name_text_change)
-			label.change_actions.extend (agent on_label_text_change)
+			new_project_menu.select_actions.extend (agent on_new_project_selected)
+			open_project_menu.select_actions.extend (agent on_open_project_selected)
+			save_project_menu.select_actions.extend (agent on_save_project_selected)
+			exit_menu.select_actions.extend (agent on_exit_selected)
+				-- Close the application when an interface close
+				-- request is recieved on `Current'. i.e. the cross is clicked.
+			close_request_actions.extend (agent destroy_and_exit_if_last)
 
 				-- Call `user_initialization'.
 			user_initialization
@@ -74,14 +66,15 @@ feature {NONE}-- Initialization
 		do
 			
 				-- Create all widgets.
-			create l_ev_label_1
-			create l_ev_label_2
-			create l_ev_label_3
-			create command_name
-			create l_ev_label_4
-			create label
-			create l_ev_label_5
-			create l_ev_label_6
+			create l_ev_menu_bar_1
+			create l_ev_menu_2
+			create new_project_menu
+			create open_project_menu
+			create save_project_menu
+			create l_ev_menu_separator_1
+			create recent_projects
+			create l_ev_menu_separator_2
+			create exit_menu
 
 			create string_constant_set_procedures.make (10)
 			create string_constant_retrieval_functions.make (10)
@@ -101,11 +94,14 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	command_name, label: EV_TEXT_FIELD
+	new_project_menu, open_project_menu, save_project_menu, exit_menu: EV_MENU_ITEM
+	recent_projects: EV_MENU
 
 feature {NONE} -- Implementation
 
-	l_ev_label_1, l_ev_label_2, l_ev_label_3, l_ev_label_4, l_ev_label_5, l_ev_label_6: EV_LABEL
+	l_ev_menu_bar_1: EV_MENU_BAR
+	l_ev_menu_2: EV_MENU
+	l_ev_menu_separator_1, l_ev_menu_separator_2: EV_MENU_SEPARATOR
 
 feature {NONE} -- Implementation
 
@@ -122,13 +118,23 @@ feature {NONE} -- Implementation
 		deferred
 		end
 	
-	on_command_name_text_change is
-			-- Called by `change_actions' of `command_name'.
+	on_new_project_selected
+			-- Called by `select_actions' of `new_project_menu'.
 		deferred
 		end
 	
-	on_label_text_change is
-			-- Called by `change_actions' of `label'.
+	on_open_project_selected
+			-- Called by `select_actions' of `open_project_menu'.
+		deferred
+		end
+	
+	on_save_project_selected
+			-- Called by `select_actions' of `save_project_menu'.
+		deferred
+		end
+	
+	on_exit_selected
+			-- Called by `select_actions' of `exit_menu'.
 		deferred
 		end
 	

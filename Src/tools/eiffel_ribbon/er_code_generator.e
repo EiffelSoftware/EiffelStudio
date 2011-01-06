@@ -105,20 +105,23 @@ feature {NONE} -- Implementation
 						create l_file_name.make_from_string (l_location)
 						l_file_name.set_file_name ("ribbon_project.ecf")
 						create l_dest_file.make (l_file_name)
-						l_dest_file.create_read_write
+						-- Don't replace destination file
+						if not l_dest_file.exists then
+							l_dest_file.create_read_write
 
-						from
-							l_file.open_read
-							l_file.start
-						until
-							l_file.after
-						loop
+							from
+								l_file.open_read
+								l_file.start
+							until
+								l_file.after
+							loop
 
-							l_file.read_line
+								l_file.read_line
 
-							l_dest_file.put_string (l_file.last_string+ "%N")
+								l_dest_file.put_string (l_file.last_string+ "%N")
+							end
+							l_dest_file.close
 						end
-						l_dest_file.close
 					end
 				end
 
@@ -166,14 +169,18 @@ feature {NONE} -- Implementation
 							and then not l_sub_files.item.is_equal ("..") then
 							create l_dest_file_name.make_from_string (l_project_location)
 							l_dest_file_name.set_file_name (l_sub_files.item)
-							create l_dest_file.make_create_read_write (l_dest_file_name)
+							create l_dest_file.make (l_dest_file_name)
+							-- Don't replace destination files
+							if not l_dest_file.exists then
+								l_dest_file.create_read_write
+								l_file.open_read
+								l_file.start
+								l_file.copy_to (l_dest_file)
 
-							l_file.open_read
-							l_file.start
-							l_file.copy_to (l_dest_file)
+								l_file.close
+								l_dest_file.close
+							end
 
-							l_file.close
-							l_dest_file.close
 						end
 
 						l_sub_files.forth
@@ -499,22 +506,27 @@ feature {NONE} -- Implementation
 					if l_file.exists and then l_file.is_readable then
 						create l_dest_file_name.make_from_string (l_project_location)
 						l_dest_file_name.set_file_name (l_tool_bar_tab_imp_file)
-						create l_dest_file.make_create_read_write (l_dest_file_name + "_" + a_index.out + ".e")
-						from
-							l_file.open_read
-							l_file.start
-						until
-							l_file.after
-						loop
-							-- replace/add tab codes here
-							l_file.read_line
-							l_last_string := l_file.last_string
-							l_last_string.replace_substring_all ("$INDEX", a_index.out)
-							l_dest_file.put_string (l_last_string + "%N")
+						create l_dest_file.make (l_dest_file_name + "_" + a_index.out + ".e")
+						-- Don't replace destination file if exists
+						if not l_dest_file.exists then
+							l_dest_file.create_read_write
+							from
+								l_file.open_read
+								l_file.start
+							until
+								l_file.after
+							loop
+								-- replace/add tab codes here
+								l_file.read_line
+								l_last_string := l_file.last_string
+								l_last_string.replace_substring_all ("$INDEX", a_index.out)
+								l_dest_file.put_string (l_last_string + "%N")
+							end
+
+							l_file.close
+							l_dest_file.close
 						end
 
-						l_file.close
-						l_dest_file.close
 					end
 				end
 			end
@@ -701,22 +713,27 @@ feature {NONE} -- Implementation
 					if l_file.exists and then l_file.is_readable then
 						create l_dest_file_name.make_from_string (l_project_location)
 						l_dest_file_name.set_file_name (l_tool_bar_group_imp_file + "_" + a_index.out + ".e")
-						create l_dest_file.make_create_read_write (l_dest_file_name)
-						from
-							l_file.open_read
-							l_file.start
-						until
-							l_file.after
-						loop
-							-- replace/add tab codes here
-							l_file.read_line
-							l_last_string := l_file.last_string
-							l_last_string.replace_substring_all ("$INDEX", a_index.out)
-							l_dest_file.put_string (l_last_string + "%N")
+						create l_dest_file.make (l_dest_file_name)
+						-- Don't replace destination file if exists
+						if not l_dest_file.exists then
+							l_dest_file.create_read_write
+							from
+								l_file.open_read
+								l_file.start
+							until
+								l_file.after
+							loop
+								-- replace/add tab codes here
+								l_file.read_line
+								l_last_string := l_file.last_string
+								l_last_string.replace_substring_all ("$INDEX", a_index.out)
+								l_dest_file.put_string (l_last_string + "%N")
+							end
+
+							l_file.close
+							l_dest_file.close
 						end
 
-						l_file.close
-						l_dest_file.close
 					end
 				end
 			end
@@ -894,22 +911,26 @@ feature {NONE} -- Implementation
 					if l_file.exists and then l_file.is_readable then
 						create l_dest_file_name.make_from_string (l_project_location)
 						l_dest_file_name.set_file_name (l_tool_bar_button_imp_file + "_" + a_index.out + ".e")
-						create l_dest_file.make_create_read_write (l_dest_file_name)
-						from
-							l_file.open_read
-							l_file.start
-						until
-							l_file.after
-						loop
-							-- replace/add tab codes here
-							l_file.read_line
-							l_last_string := l_file.last_string
-							l_last_string.replace_substring_all ("$INDEX", a_index.out)
-							l_dest_file.put_string (l_last_string + "%N")
+						create l_dest_file.make (l_dest_file_name)
+						if not l_dest_file.exists then
+							l_dest_file.create_read_write
+							from
+								l_file.open_read
+								l_file.start
+							until
+								l_file.after
+							loop
+								-- replace/add tab codes here
+								l_file.read_line
+								l_last_string := l_file.last_string
+								l_last_string.replace_substring_all ("$INDEX", a_index.out)
+								l_dest_file.put_string (l_last_string + "%N")
+							end
+
+							l_file.close
+							l_dest_file.close
 						end
 
-						l_file.close
-						l_dest_file.close
 					end
 				end
 			end

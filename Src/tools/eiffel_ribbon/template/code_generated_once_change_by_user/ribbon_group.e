@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 	make_with_command_list (a_list: ARRAY [NATURAL_32])
 			-- Creation method
 		require
-			not_void: a_list /= void
+			not_void: a_list /= Void
 		do
 			command_list := a_list
 
@@ -52,7 +52,6 @@ feature {NONE}	--Action handling
 			-- <Precursor>
 		do
 			if command_list.has (a_command_id) then
-				print ("%NEV_RIBBON_GROUP execute")
 			end
 
 		end
@@ -61,7 +60,6 @@ feature {NONE}	--Action handling
 			-- <Precursor>
 		do
 			if command_list.has (a_command_id) then
-				print ("%NEV_RIBBON_GROUP update_property")
 			end
 		end
 

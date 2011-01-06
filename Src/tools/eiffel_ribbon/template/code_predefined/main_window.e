@@ -17,7 +17,6 @@ inherit
 			initialize
 		end
 
-
 feature {NONE}-- Initialization
 
 	initialize
@@ -40,21 +39,19 @@ feature {NONE}-- Initialization
 			-- (due to regeneration of implementation class)
 			-- can be added here.
 		do
-			print ("%N start test")
-
 			set_size (800, 400)
 
-			-- !!! Attach Ribbon by COM here !!!
+				-- !!! Attach Ribbon by COM here !!!
 			ribbon.init_with_window (Current)
 			show_actions.extend_kamikaze (agent
-									local
-										l_env: EV_ENVIRONMENT
-									do
-										create l_env
-										if attached l_env.application as l_app then
-											l_app.destroy_actions.extend (agent ribbon.destroy)
-										end
-									end)
+					local
+						l_env: EV_ENVIRONMENT
+					do
+						create l_env
+						if attached l_env.application as l_app then
+							l_app.destroy_actions.extend (agent ribbon.destroy)
+						end
+					end)
 		end
 
 	create_interface_objects
@@ -68,7 +65,7 @@ feature {NONE}-- Initialization
 			create ribbon.make
 		end
 
-feature {NONE} -- Implementation
+feature -- Access
 
 	ribbon: RIBBON
 			-- Ribbon attached to current

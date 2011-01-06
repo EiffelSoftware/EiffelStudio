@@ -1149,7 +1149,7 @@ feature {NONE} -- Event handling
 				end
 
 				watched_items.extend (expr_item)
-				if expr_item.row /= Void then
+				if attached expr_item.row as l_row then
 					if
 						not expr_item.compute_grid_display_done
 						and then (evl.disabled or not evl.evaluated)
@@ -1157,10 +1157,10 @@ feature {NONE} -- Event handling
 						expr_item.compute_grid_display
 					end
 					watches_grid.remove_selection
-					if not expr_item.row.is_destroyed and then expr_item.row.is_displayed then
-						expr_item.row.ensure_visible
+					if not l_row.is_destroyed and then l_row.is_displayed then
+						l_row.ensure_visible
 					end
-					expr_item.row.enable_select
+					l_row.enable_select
 				end
 			end
 		end
@@ -1972,7 +1972,7 @@ invariant
 	not_void_delete_expression_cmd: mini_toolbar /= Void implies delete_expression_cmd /= Void
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

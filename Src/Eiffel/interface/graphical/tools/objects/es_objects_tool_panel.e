@@ -859,17 +859,20 @@ feature {NONE} -- Update
 		local
 			l_app: APPLICATION_EXECUTION
 			l_status: APPLICATION_STATUS
+			l_grids: like objects_grids
+			l_dropped_objects_grid: like dropped_objects_grid
 			g: like objects_grid
 			lines: LIST [ES_OBJECTS_GRID_SPECIFIC_LINE]
 			t: like objects_grid_data
 		do
+			l_grids := objects_grids
 			from
-				objects_grids.start
+				l_grids.start
 			until
-				objects_grids.after
+				l_grids.after
 			loop
-				objects_grids.item_for_iteration.grid.request_delayed_clean
-				objects_grids.forth
+				l_grids.item_for_iteration.grid.request_delayed_clean
+				l_grids.forth
 			end
 
 			if debugger_manager.application_is_executing then
@@ -881,19 +884,20 @@ feature {NONE} -- Update
 					if l_status.has_valid_call_stack and then l_status.has_valid_current_eiffel_call_stack_element then
 						init_specific_lines
 						from
-							objects_grids.start
+							l_grids.start
 						until
-							objects_grids.after
+							l_grids.after
 						loop
-							objects_grids.item_for_iteration.grid.cancel_delayed_clean
-							objects_grids.forth
+							l_grids.item_for_iteration.grid.cancel_delayed_clean
+							l_grids.forth
 						end
 						from
-							objects_grids.start
+							l_dropped_objects_grid := dropped_objects_grid
+							l_grids.start
 						until
-							objects_grids.after
+							l_grids.after
 						loop
-							t := objects_grids.item_for_iteration
+							t := l_grids.item_for_iteration
 							g := t.grid
 							g.call_delayed_clean
 							t.grid_is_empty := False
@@ -904,10 +908,10 @@ feature {NONE} -- Update
 							until
 								lines.after
 							loop
-								if lines.item /= Void then
-									lines.item.attach_to_row (g.extended_new_row)
+								if attached lines.item as l_line then
+									l_line.attach_to_row (g.extended_new_row)
 								else --| Void is the place for displayed objects
-									if dropped_objects_grid = g then
+									if l_dropped_objects_grid = g then
 										add_displayed_objects_to_grid (g)
 									end
 								end
@@ -918,7 +922,7 @@ feature {NONE} -- Update
 								g.row (1).redraw
 							end
 							g.restore_layout
-							objects_grids.forth
+							l_grids.forth
 						end
 					end
 				end
@@ -1238,10 +1242,12 @@ feature {NONE} -- Impl : Debugged objects grid specifics
 				displayed_objects.extend (n_obj)
 				g.insert_new_row (g.row_count + 1)
 				n_obj.attach_to_row (g.row (g.row_count))
-				if n_obj.row.is_displayed then
-					n_obj.row.ensure_visible
+				if attached n_obj.row as l_row then
+					if l_row.is_displayed then
+						l_row.ensure_visible
+					end
+					l_row.enable_select
 				end
-				n_obj.row.enable_select
 			end
 		end
 
@@ -1527,7 +1533,7 @@ invariant
 	objects_grids_not_void: (is_initialized and is_interface_usable) implies objects_grids /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -50,7 +50,11 @@ feature {NONE} -- Implementation
 			-- This function is called from C codes
 		local
 			l_result: NATURAL_32
+			l_property_key: ER_PROPERTY_KEY
+			l_propery_value: ER_PROPERTY_VARIANT
 		do
+			create l_property_key.share_from_pointer (a_property_key)
+			create l_propery_value.share_from_pointer (a_property_value)
 --			print ("%N Command handler execute in Eiffel. Command id is: " + a_command_id.out + " Execution verb is: " + a_execution_verb.out)
 			from
 				observers.start

@@ -14,7 +14,7 @@ deferred class
 	MAIN_WINDOW_IMP
 
 inherit
-	EV_TITLED_WINDOW
+	ER_RIBBON_TITLED_WINDOW
 		redefine
 			create_interface_objects, initialize, is_in_default_state
 		end
@@ -24,10 +24,9 @@ feature {NONE}-- Initialization
 	initialize
 			-- Initialize `Current'.
 		do
-			Precursor {EV_TITLED_WINDOW}
+			Precursor {ER_RIBBON_TITLED_WINDOW}
 
 				-- Build widget structure.
-			extend (l_ev_vertical_box_1)
 
 			set_title ("Display window")
 
@@ -46,8 +45,6 @@ feature {NONE}-- Initialization
 			-- Create objects
 		do
 				-- Create all widgets
-			create l_ev_vertical_box_1
-
 			create string_constant_set_procedures.make (10)
 			create string_constant_retrieval_functions.make (10)
 			create integer_constant_set_procedures.make (10)
@@ -62,11 +59,6 @@ feature {NONE}-- Initialization
 			create color_constant_set_procedures.make (10)
 			create color_constant_retrieval_functions.make (10)
 		end
-
-
-feature {NONE} -- Implementation
-
-	l_ev_vertical_box_1: EV_VERTICAL_BOX
 
 feature {NONE} -- Implementation
 

@@ -3,3 +3,4 @@
 
 BOOL InitializeFramework(HWND hWnd);
 void DestroyRibbon();
+HRESULT GetRibbonHeight(UINT* ribbonHeight);

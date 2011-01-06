@@ -31,9 +31,10 @@ feature {NONE} -- Initialization
 	build_ui
 			--
 		local
-			l_tree_item_app: EV_TREE_ITEM
-			l_tree_item_commands, l_tree_item_view: EV_TREE_ITEM
-			l_command: EV_TREE_ITEM
+--			l_tree_item_app: EV_TREE_ITEM
+--			l_tree_item_commands: EV_TREE_ITEM
+			l_tree_item_view: EV_TREE_ITEM
+--			l_command: EV_TREE_ITEM
 
 			l_ribbon: EV_TREE_ITEM
 			l_context_popup: EV_TREE_ITEM
@@ -131,16 +132,16 @@ feature {NONE} -- Implementation
 			l_check_box: EV_TREE_ITEM
 			l_combo_box: EV_TREE_ITEM
 			l_control_group: EV_TREE_ITEM
-			l_dropdown_button: EV_TREE_ITEM
-			l_dropdown_color_picker: EV_TREE_ITEM
-			l_dropdown_gallery: EV_TREE_ITEM
-			l_font_control: EV_TREE_ITEM
-			l_in_ribbon_gallery: EV_TREE_ITEM
-			l_size_definition: EV_TREE_ITEM
-			l_spinner: EV_TREE_ITEM
-			l_split_button: EV_TREE_ITEM
-			l_split_button_gallery: EV_TREE_ITEM
-			l_toggle_button: EV_TREE_ITEM
+--			l_dropdown_button: EV_TREE_ITEM
+--			l_dropdown_color_picker: EV_TREE_ITEM
+--			l_dropdown_gallery: EV_TREE_ITEM
+--			l_font_control: EV_TREE_ITEM
+--			l_in_ribbon_gallery: EV_TREE_ITEM
+--			l_size_definition: EV_TREE_ITEM
+--			l_spinner: EV_TREE_ITEM
+--			l_split_button: EV_TREE_ITEM
+--			l_split_button_gallery: EV_TREE_ITEM
+--			l_toggle_button: EV_TREE_ITEM
 		do
 			create l_button.make_with_text (constants.button)
 			l_button.set_pebble (constants.button)

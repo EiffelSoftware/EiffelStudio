@@ -17,6 +17,12 @@ inherit
 			initialize
 		end
 
+	EV_SHARED_APPLICATION
+		undefine
+			default_create, copy
+		end
+
+
 feature {NONE}-- Initialization
 
 	initialize
@@ -43,15 +49,13 @@ feature {NONE}-- Initialization
 
 				-- !!! Attach Ribbon by COM here !!!
 			ribbon.init_with_window (Current)
+			close_request_actions.extend (agent ev_application.destroy)
 			show_actions.extend_kamikaze (agent
-					local
-						l_env: EV_ENVIRONMENT
-					do
-						create l_env
-						if attached l_env.application as l_app then
-							l_app.destroy_actions.extend (agent ribbon.destroy)
-						end
-					end)
+									do
+										if attached ev_application as l_app then
+											l_app.destroy_actions.extend (agent ribbon.destroy)
+										end
+									end)
 		end
 
 	create_interface_objects

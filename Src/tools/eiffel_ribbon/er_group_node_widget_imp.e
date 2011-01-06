@@ -33,6 +33,8 @@ feature {NONE}-- Initialization
 			extend (l_ev_label_3)
 			extend (command_name)
 			extend (l_ev_label_4)
+			extend (label)
+			extend (l_ev_label_5)
 			extend (size_combo_box)
 
 			l_ev_label_1.set_text ("Type:")
@@ -41,19 +43,24 @@ feature {NONE}-- Initialization
 			l_ev_label_2.align_text_left
 			l_ev_label_3.set_text ("Command name:")
 			l_ev_label_3.align_text_left
-			l_ev_label_4.set_text ("Size definition:")
+			l_ev_label_4.set_text ("Label title:")
 			l_ev_label_4.align_text_left
+			l_ev_label_5.set_text ("Size definition:")
+			l_ev_label_5.align_text_left
 			disable_item_expand (l_ev_label_1)
 			disable_item_expand (l_ev_label_2)
 			disable_item_expand (l_ev_label_3)
 			disable_item_expand (command_name)
 			disable_item_expand (l_ev_label_4)
+			disable_item_expand (label)
+			disable_item_expand (l_ev_label_5)
 			disable_item_expand (size_combo_box)
 
 			set_all_attributes_using_constants
 			
 				-- Connect events.
 			command_name.change_actions.extend (agent on_command_name_text_change)
+			label.change_actions.extend (agent on_label_text_changs)
 			size_combo_box.change_actions.extend (agent on_size_text_change)
 
 				-- Call `user_initialization'.
@@ -70,6 +77,8 @@ feature {NONE}-- Initialization
 			create l_ev_label_3
 			create command_name
 			create l_ev_label_4
+			create label
+			create l_ev_label_5
 			create size_combo_box
 
 			create string_constant_set_procedures.make (10)
@@ -90,12 +99,12 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	command_name: EV_TEXT_FIELD
+	command_name, label: EV_TEXT_FIELD
 	size_combo_box: EV_COMBO_BOX
 
 feature {NONE} -- Implementation
 
-	l_ev_label_1, l_ev_label_2, l_ev_label_3, l_ev_label_4: EV_LABEL
+	l_ev_label_1, l_ev_label_2, l_ev_label_3, l_ev_label_4, l_ev_label_5: EV_LABEL
 
 feature {NONE} -- Implementation
 
@@ -114,6 +123,11 @@ feature {NONE} -- Implementation
 	
 	on_command_name_text_change
 			-- Called by `change_actions' of `command_name'.
+		deferred
+		end
+	
+	on_label_text_changs
+			-- Called by `change_actions' of `label'.
 		deferred
 		end
 	

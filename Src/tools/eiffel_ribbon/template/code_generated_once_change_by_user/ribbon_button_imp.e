@@ -7,14 +7,13 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-frozen class
-	RIBBON_BUTTON_$INDEX
-
-inherit
+deferred class
 	RIBBON_BUTTON_IMP_$INDEX
 
-create
-    {ER_TOOL_BAR_GROUP} make_with_command_list
+inherit
+	ER_COMMAND_HANDLER_OBSERVER
+
+	ER_TOOL_BAR_BUTTON
 
 feature {NONE} -- Initialization
 
@@ -41,6 +40,9 @@ feature {RIBBON}
 
 	command_list: ARRAY [NATURAL_32]
 			-- Command ids handled by current
+
+	select_actions: EV_NOTIFY_ACTION_SEQUENCE
+			-- Select actions executed just after user clicked on button
 
 	execute (a_command_id: NATURAL_32; a_execution_verb: INTEGER; a_property_key: POINTER; a_property_value: POINTER; a_command_execution_properties: POINTER): NATURAL_32
 			-- <Precursor>

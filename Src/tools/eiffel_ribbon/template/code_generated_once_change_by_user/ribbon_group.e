@@ -7,7 +7,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-frozen class
+class
 	RIBBON_GROUP_$INDEX
 
 inherit

@@ -869,9 +869,9 @@ feature {NONE} -- Implementation
 		do
 			create l_singleton
 			l_sub_dir := "code_generated_once_change_by_user"
-			l_tool_bar_button_file := "ribbon_button"
+			l_tool_bar_button_file := "ribbon_button_imp"
 			l_sub_imp_dir := "code_generated_everytime"
-			l_tool_bar_button_imp_file := "ribbon_button_imp"
+			l_tool_bar_button_imp_file := "ribbon_button"
 
 			if attached l_singleton.project_info_cell.item as l_project_info then
 				if attached l_project_info.project_location as l_project_location then

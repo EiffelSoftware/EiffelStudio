@@ -5,7 +5,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
+class
 	RIBBON_TAB_IMP_$INDEX
 
 inherit

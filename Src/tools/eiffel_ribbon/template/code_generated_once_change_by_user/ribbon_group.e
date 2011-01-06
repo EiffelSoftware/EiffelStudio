@@ -1,16 +1,16 @@
 note
-	description: "Summary description for {ER_TOOL_BAR_TAB}."
+	description: "Summary description for RIBBON_GROUP."
 	date: "$Date$"
 	revision: "$Revision$"
 
 frozen class
-	ER_TOOL_BAR_TAB_$INDEX
+	RIBBON_GROUP_$INDEX
 
 inherit
-	ER_TOOL_BAR_TAB_IMP_$INDEX
+	RIBBON_GROUP_IMP_$INDEX
 
 create
-    {ER_TOOL_BAR} make_with_command_list
+    {ER_TOOL_BAR_TAB} make_with_command_list
 
 feature {NONE} -- Initialization
 
@@ -30,20 +30,16 @@ feature {NONE} -- Initialization
 	create_interface_objects
 			--
 		do
---create group.make_with_command_list (<<{ER_C_CONSTANTS}.Cmdgroup1>>)
-$GROUP_CREATION
-			create groups.make (1)
----groups.extend (group)
-$GROUP_REGISTRY
+$BUTTON_CREATION
+			create buttons.make (1)
+$BUTTON_REGISTRY
 		end
 
 feature -- Query
 
---group: ER_TOOL_BAR_GROUP
-			--
-$GROUP_DECLARATION			
+$BUTTON_DECLARATION
 
-	groups: ARRAYED_LIST [ER_TOOL_BAR_GROUP]
+	buttons: ARRAYED_LIST [ER_TOOL_BAR_BUTTON]
 			--
 
 feature {NONE}	--Action handling
@@ -54,28 +50,20 @@ feature {NONE}	--Action handling
 		     l_command_position: INTEGER
 		do
 			if command_list.has (a_command_id) then
-				print ("%NER_TOOL_BAR_TAB execute")
---			     l_command_position := command_list.i_th (a_command_id)
---			     when 1 then
---			              -- 1st always default command
---			          select_actions.call (Void)
---			     when 2 then
---			          other_actions.call (Void)
---			     else
---			         do_nothing
---			     end				
+				print ("%NER_TOOL_BAR_GROUP execute")
 			end
+
 		end
 
 	update_property (a_command_id: NATURAL_32; a_property_key: POINTER; a_property_current_value: POINTER; a_property_new_value: POINTER): NATURAL_32
 			-- <Precursor>
 		do
 			if command_list.has (a_command_id) then
-				print ("%NER_TOOL_BAR_TAB update_property")
+				print ("%NER_TOOL_BAR_GROUP update_property")
 			end
 		end
 
-feature {NONE}	-- Implementation
+feature {NONE} -- Implementation
 
 	command_list: ARRAY [NATURAL_32]
 			--

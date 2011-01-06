@@ -4,7 +4,7 @@ note
 	revision: "$Revision$"
 
 deferred class
-	ER_TOOL_BAR_BUTTON_IMP_$INDEX
+	RIBBON_BUTTON_IMP_$INDEX
 
 inherit
 	ER_COMMAND_HANDLER_OBSERVER

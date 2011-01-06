@@ -7,7 +7,7 @@ note
 	revision: "$Revision$"
 
 deferred class
-	ER_TOOL_BAR_IMP
+	RIBBON_IMP
 
 
 feature {NONE} -- Externals

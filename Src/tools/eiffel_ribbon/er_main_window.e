@@ -6,10 +6,10 @@ note
 	revision: "$Revision$"
 
 class
-	MAIN_WINDOW
+	ER_MAIN_WINDOW
 
 inherit
-	MAIN_WINDOW_IMP
+	ER_MAIN_WINDOW_IMP
 		redefine
 			create_interface_objects
 		end

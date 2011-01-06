@@ -1,16 +1,16 @@
 note
-	description: "Summary description for {ER_TOOL_BAR_BUTTON}."
+	description: "Summary description for {ER_TOOL_BAR_TAB}."
 	date: "$Date$"
 	revision: "$Revision$"
 
 frozen class
-	ER_TOOL_BAR_BUTTON_$INDEX
+	RIBBON_TAB_$INDEX
 
 inherit
-	ER_TOOL_BAR_BUTTON_IMP_$INDEX
+	RIBBON_TAB_IMP_$INDEX
 
 create
-    {ER_TOOL_BAR_GROUP} make_with_command_list
+	{RIBBON} make_with_command_list
 
 feature {NONE} -- Initialization
 
@@ -30,19 +30,18 @@ feature {NONE} -- Initialization
 	create_interface_objects
 			--
 		do
-			create select_actions
-			create other_actions
+$GROUP_CREATION
+			create groups.make (1)
+$GROUP_REGISTRY
 		end
 
-feature -- Access
+feature -- Query
+$GROUP_DECLARATION
 
-	-- select_actions is a default command defined in parent.
-	other_actions: EV_NOTIFY_ACTION_SEQUENCE
-
-feature {RIBBON_TOOL_BAR}
-
-	command_list: ARRAY [NATURAL_32]
+	groups: ARRAYED_LIST [ER_TOOL_BAR_GROUP]
 			--
+
+feature {NONE}	--Action handling
 
 	execute (a_command_id: NATURAL_32; a_execution_verb: INTEGER; a_property_key: POINTER; a_property_value: POINTER; a_command_execution_properties: POINTER): NATURAL_32
 			-- <Precursor>
@@ -50,25 +49,20 @@ feature {RIBBON_TOOL_BAR}
 		     l_command_position: INTEGER
 		do
 			if command_list.has (a_command_id) then
---			     l_command_position := command_list.i_th (a_command_id)
-
-					print ("%NER_TOOL_BAR_BUTTON_$INDEX")
-
---			     when 1 then
---			              -- 1st always default command
---			          select_actions.call (Void)
---			     when 2 then
---			          other_actions.call (Void)
---			     else
---			         do_nothing
---			     end				
+				print ("%NRIBBON_TAB execute")
 			end
-
 		end
 
 	update_property (a_command_id: NATURAL_32; a_property_key: POINTER; a_property_current_value: POINTER; a_property_new_value: POINTER): NATURAL_32
 			-- <Precursor>
 		do
+			if command_list.has (a_command_id) then
+				print ("%NRIBBON_TAB update_property")
+			end
 		end
 
+feature {NONE}	-- Implementation
+
+	command_list: ARRAY [NATURAL_32]
+			--
 end

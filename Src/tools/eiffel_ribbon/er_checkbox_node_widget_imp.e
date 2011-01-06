@@ -11,10 +11,10 @@ note
 	revision: "$Revision$"
 
 deferred class
-	ER_MAIN_WINDOW_IMP
+	ER_CHECKBOX_NODE_WIDGET_IMP
 
 inherit
-	EV_TITLED_WINDOW
+	EV_VERTICAL_BOX
 		redefine
 			create_interface_objects, initialize, is_in_default_state
 		end
@@ -24,20 +24,37 @@ feature {NONE}-- Initialization
 	initialize
 			-- Initialize `Current'.
 		do
-			Precursor {EV_TITLED_WINDOW}
+			Precursor {EV_VERTICAL_BOX}
 
 			
 				-- Build widget structure.
-			extend (l_ev_vertical_box_1)
+			extend (l_ev_label_1)
+			extend (l_ev_label_2)
+			extend (l_ev_label_3)
+			extend (name)
+			extend (l_ev_label_4)
+			extend (label)
 
-			set_title ("Display window")
+			l_ev_label_1.set_text ("Type:")
+			l_ev_label_1.align_text_left
+			l_ev_label_2.set_text ("Check box")
+			l_ev_label_2.align_text_left
+			l_ev_label_3.set_text ("Command name:")
+			l_ev_label_3.align_text_left
+			l_ev_label_4.set_text ("Label title:")
+			l_ev_label_4.align_text_left
+			disable_item_expand (l_ev_label_1)
+			disable_item_expand (l_ev_label_2)
+			disable_item_expand (l_ev_label_3)
+			disable_item_expand (name)
+			disable_item_expand (l_ev_label_4)
+			disable_item_expand (label)
 
 			set_all_attributes_using_constants
 			
 				-- Connect events.
-				-- Close the application when an interface close
-				-- request is recieved on `Current'. i.e. the cross is clicked.
-			close_request_actions.extend (agent destroy_and_exit_if_last)
+			name.change_actions.extend (agent on_name_text_change)
+			label.change_actions.extend (agent on_label_text_change)
 
 				-- Call `user_initialization'.
 			user_initialization
@@ -48,7 +65,12 @@ feature {NONE}-- Initialization
 		do
 			
 				-- Create all widgets.
-			create l_ev_vertical_box_1
+			create l_ev_label_1
+			create l_ev_label_2
+			create l_ev_label_3
+			create name
+			create l_ev_label_4
+			create label
 
 			create string_constant_set_procedures.make (10)
 			create string_constant_retrieval_functions.make (10)
@@ -66,9 +88,13 @@ feature {NONE}-- Initialization
 		end
 
 
+feature -- Access
+
+	name, label: EV_TEXT_FIELD
+
 feature {NONE} -- Implementation
 
-	l_ev_vertical_box_1: EV_VERTICAL_BOX
+	l_ev_label_1, l_ev_label_2, l_ev_label_3, l_ev_label_4: EV_LABEL
 
 feature {NONE} -- Implementation
 
@@ -84,6 +110,17 @@ feature {NONE} -- Implementation
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
+	
+	on_name_text_change is
+			-- Called by `change_actions' of `name'.
+		deferred
+		end
+	
+	on_label_text_change is
+			-- Called by `change_actions' of `label'.
+		deferred
+		end
+	
 
 feature {NONE} -- Constant setting
 

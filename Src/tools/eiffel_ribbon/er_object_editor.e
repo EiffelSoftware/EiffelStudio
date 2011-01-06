@@ -54,6 +54,7 @@ feature -- Command
 			l_group_widget: ER_GROUP_NODE_WIDGET
 			l_tab_widget: ER_TAB_NODE_WIDGET
 			l_button_widget: ER_BUTTON_NODE_WIDGET
+			l_checkbox_widget: ER_CHECKBOX_NODE_WIDGET
 		do
 			widget.wipe_out
 			if attached a_node.text as l_text then
@@ -82,6 +83,12 @@ feature -- Command
 						l_button_widget.set_tree_node_data (l_data)
 					end
 					widget.extend (l_button_widget)
+				elseif l_text.same_string (constants.check_box) then
+					create l_checkbox_widget
+					if attached {ER_TREE_NODE_CHECKBOX_DATA} a_node.data as l_data then
+						l_checkbox_widget.set_tree_node_data (l_data)
+					end
+					widget.extend (l_checkbox_widget)
 				end
 			end
 

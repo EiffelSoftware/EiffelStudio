@@ -3,7 +3,7 @@ note
 		%C:\eiffel_trunk\Src\examples\ribbon\simple\ribbon.h."
 
 class
-	ER_C_CONSTANTS
+	COMMAND_NAME_CONSTANTS
 
 feature -- Access
 
@@ -49,4 +49,4 @@ feature -- Access
 	Idc_cmd_exit_labeltitle_resid: INTEGER = 290
 	Idc_cmd_exit_largeimages_resid: INTEGER = 291
 
-end -- class EIFFEL_C_CONSTANTS
+end -- class COMMAND_NAME_CONSTANTS

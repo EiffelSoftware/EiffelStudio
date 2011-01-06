@@ -11,7 +11,7 @@ note
 	revision: "$Revision$"
 
 class
-	ER_VISION2_APPLICATION
+	RIBBON_APPLICATION
 
 inherit
 	EV_APPLICATION
@@ -42,7 +42,7 @@ feature {NONE} -- Implementation
 
 		end
 
-	main_window: ER_MAIN_WINDOW
+	main_window: MAIN_WINDOW
 		-- Main window of `Current'.
 
 end

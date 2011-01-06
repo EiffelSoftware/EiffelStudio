@@ -159,7 +159,7 @@ feature {NONE}
 					l_string := utf8.last_converted_string_32
 					localized_print (l_string)
 					io.new_line
-					base_update.modify_32 (l_string)
+					base_update.modify (l_string)
 				end
 			end
 			l_data_file.close
@@ -183,7 +183,7 @@ feature {NONE}
 			base_selection.set_action (Current)
 
 				-- Query database.
-			base_selection.query_32 (Select_all)
+			base_selection.query (Select_all)
 				-- Iterate through resulting data, and display them
 			base_selection.load_result
 
@@ -200,7 +200,7 @@ feature {NONE}
 			base_selection.set_action (Current)
 
 				-- Query database.
-			base_selection.query_32 (Select_all)
+			base_selection.query (Select_all)
 				-- Iterate through resulting data, and display them
 			base_selection.load_result
 

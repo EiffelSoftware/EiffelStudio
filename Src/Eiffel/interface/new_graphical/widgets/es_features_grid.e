@@ -326,8 +326,12 @@ feature -- Tree construction
 	ensure_first_row_visible
 			-- Ensure first row is visible (if any)
 		do
-			if row_count > 0 then
-				row (1).ensure_visible
+			if
+				row_count > 0 and then
+				attached row (1) as l_first and then
+				l_first.is_displayed
+			then
+				l_first.ensure_visible
 			end
 		end
 
@@ -1092,7 +1096,7 @@ feature {NONE} -- Tree item factory
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

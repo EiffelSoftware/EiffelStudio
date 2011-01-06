@@ -14,7 +14,7 @@ inherit
 	RIBBON_GROUP_IMP_$INDEX
 
 create
-    {ER_TOOL_BAR_TAB} make_with_command_list
+	{EV_RIBBON_TAB} make_with_command_list
 
 feature {NONE} -- Initialization
 
@@ -43,7 +43,7 @@ feature -- Query
 
 $BUTTON_DECLARATION
 
-	buttons: ARRAYED_LIST [ER_TOOL_BAR_BUTTON]
+	buttons: ARRAYED_LIST [EV_RIBBON_BUTTON]
 			-- All buttons in current group
 
 feature {NONE}	--Action handling
@@ -52,7 +52,7 @@ feature {NONE}	--Action handling
 			-- <Precursor>
 		do
 			if command_list.has (a_command_id) then
-				print ("%NER_TOOL_BAR_GROUP execute")
+				print ("%NEV_RIBBON_GROUP execute")
 			end
 
 		end
@@ -61,7 +61,7 @@ feature {NONE}	--Action handling
 			-- <Precursor>
 		do
 			if command_list.has (a_command_id) then
-				print ("%NER_TOOL_BAR_GROUP update_property")
+				print ("%NEV_RIBBON_GROUP update_property")
 			end
 		end
 

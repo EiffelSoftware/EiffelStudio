@@ -42,7 +42,7 @@ $GROUP_REGISTRY
 feature -- Query
 $GROUP_DECLARATION
 
-	groups: ARRAYED_LIST [ER_TOOL_BAR_GROUP]
+	groups: ARRAYED_LIST [EV_RIBBON_GROUP]
 			-- All groups in current tab
 
 feature {NONE}	--Action handling

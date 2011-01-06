@@ -1,10 +1,10 @@
 note
-	description: "Summary description for {ER_RIBBON_TITLED_WINDOW_IMP}."
+	description: "Summary description for EV_RIBBON_TITLED_WINDOW_IMP."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	ER_RIBBON_TITLED_WINDOW_IMP
+	EV_RIBBON_TITLED_WINDOW_IMP
 
 inherit
 	EV_TITLED_WINDOW_IMP
@@ -30,7 +30,7 @@ feature {NONE} -- Implementation
 		local
 			l_height: INTEGER
 		do
-			{ER_RIBBON}.get_height ($l_height)
+			{EV_RIBBON}.get_height ($l_height)
 			Result := l_height
 		end
 

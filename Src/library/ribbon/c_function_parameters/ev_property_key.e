@@ -13,7 +13,7 @@ note
 	revision: "$Revision$"
 
 class
-	ER_PROPERTY_KEY
+	EV_PROPERTY_KEY
 
 create
 	share_from_pointer

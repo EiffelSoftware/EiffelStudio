@@ -11,9 +11,7 @@ deferred class
 	RIBBON_BUTTON_IMP_$INDEX
 
 inherit
-	ER_COMMAND_HANDLER_OBSERVER
-
-	ER_TOOL_BAR_BUTTON
+	EV_RIBBON_BUTTON
 
 feature {NONE} -- Initialization
 

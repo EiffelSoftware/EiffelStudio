@@ -1,10 +1,10 @@
 note
-	description: "Summary description for {ER_COMMAND_HANDLER_OBSERVER}."
+	description: "Summary description for EV_COMMAND_HANDLER_OBSERVER."
 	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class
-	ER_COMMAND_HANDLER_OBSERVER
+	EV_COMMAND_HANDLER_OBSERVER
 
 feature -- Action handlers
 
@@ -25,7 +25,7 @@ feature {NONE}	-- Register
 	register_observer
 			--
 		local
-			l_shared: ER_SHARED_RESOURCES
+			l_shared: EV_SHARED_RESOURCES
 		do
 			create l_shared
 			l_shared.command_handler_singleton.add_observer (Current)

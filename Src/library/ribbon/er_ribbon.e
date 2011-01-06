@@ -7,10 +7,43 @@ note
 	revision: "$Revision$"
 
 deferred class
-	RIBBON_IMP
+	ER_RIBBON
 
+inherit
+	EV_ANY_HANDLER
 
-feature {NONE} -- Externals
+feature -- Command
+
+	init_with_window (a_window: EV_WINDOW)
+			-- Creation method
+		local
+			l_result: INTEGER
+		do
+			if attached {EV_WINDOW_IMP} a_window.implementation as l_imp then
+				com_initialize
+				l_result := create_ribbon_com_framework (l_imp.wel_item)
+			end
+		end
+
+	destroy
+			-- Clean up all ribbon related COM objects and resources
+		do
+			destroy_ribbon_com_framwork
+			com_uninitialize
+		end
+
+feature -- Query
+
+	tabs: ARRAYED_LIST [ER_TOOL_BAR_TAB]
+			-- All tabs in current tool bar
+
+	height: INTEGER
+			-- Get current ribbon height
+		do
+			get_height ($Result)
+		end
+
+feature {ER_RIBBON_TITLED_WINDOW_IMP} -- Externals
 
 	com_initialize
 			-- Initialize COM
@@ -61,5 +94,16 @@ feature {NONE} -- Externals
 			]"
 		end
 
+	get_height (a_height: TYPED_POINTER[INTEGER])
+			-- Get ribbon height
+		external
+			"C inline use <ribbon.h>"
+		alias
+			"[
+			{
+				GetRibbonHeight ($a_height);	
+			}
+			]"
+		end
 end
 

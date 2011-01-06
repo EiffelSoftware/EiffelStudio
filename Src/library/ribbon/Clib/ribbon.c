@@ -146,3 +146,27 @@ void DestroyRibbon()
 	}
 
 }
+
+//
+//  FUNCTION: GetRibbonHeight()
+//
+//  PURPOSE:  Get the ribbon height.
+//
+//
+HRESULT GetRibbonHeight(UINT* ribbonHeight)
+{
+    HRESULT hr = S_OK;
+
+    if (g_pFramework)
+    {
+        IUIRibbon* pRibbon = NULL;
+
+        if (SUCCEEDED(g_pFramework->lpVtbl->GetView(g_pFramework, 0, &IID_IUIRIBBON, &(pRibbon))))
+        {
+            hr = pRibbon->lpVtbl->GetHeight(pRibbon, ribbonHeight);
+            pRibbon->lpVtbl->Release(pRibbon);
+        }
+    }
+
+    return hr;
+}

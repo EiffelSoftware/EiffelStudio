@@ -269,7 +269,7 @@ feature {NONE} -- Implementation
 			l_constants: ER_MISC_CONSTANTS
 			l_file_name, l_dest_file_name: FILE_NAME
 			l_singleton: ER_SHARED_SINGLETON
-			l_sub_dir, l_tool_bar_file, l_sub_imp_dir, l_tool_bar_imp_file: STRING
+			l_sub_dir, l_tool_bar_file, l_sub_imp_dir: STRING
 			l_last_string: STRING
 			l_tab_creation_string, l_tab_registry_string, l_tab_declaration_string: STRING
 		do
@@ -280,7 +280,6 @@ feature {NONE} -- Implementation
 			l_sub_dir := "code_generated_once_change_by_user"
 			l_tool_bar_file := "ribbon.e"
 			l_sub_imp_dir := "code_generated_everytime"
-			l_tool_bar_imp_file := "ribbon_imp.e"
 
 			if attached l_singleton.project_info_cell.item as l_project_info then
 				if attached l_project_info.project_location as l_project_location then
@@ -317,29 +316,6 @@ feature {NONE} -- Implementation
 						l_dest_file.close
 					end
 
-					-- Generate tool bar imp class
-					create l_file_name.make_from_string (l_constants.template)
-					l_file_name.set_subdirectory (l_sub_imp_dir)
-					l_file_name.set_file_name (l_tool_bar_imp_file)
-					create l_file.make (l_file_name)
-					if l_file.exists and then l_file.is_readable then
-						create l_dest_file_name.make_from_string (l_project_location)
-						l_dest_file_name.set_file_name (l_tool_bar_imp_file)
-						create l_dest_file.make_create_read_write (l_dest_file_name)
-						from
-							l_file.open_read
-							l_file.start
-						until
-							l_file.after
-						loop
-							-- FIXME: replace/add tab codes here
-							l_file.read_line
-							l_dest_file.put_string (l_file.last_string + "%N")
-						end
-
-						l_file.close
-						l_dest_file.close
-					end
 				end
 			end
 

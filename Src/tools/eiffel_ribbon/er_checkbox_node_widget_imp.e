@@ -26,7 +26,7 @@ feature {NONE}-- Initialization
 		do
 			Precursor {EV_VERTICAL_BOX}
 
-			
+
 				-- Build widget structure.
 			extend (l_ev_label_1)
 			extend (l_ev_label_2)
@@ -51,7 +51,7 @@ feature {NONE}-- Initialization
 			disable_item_expand (label)
 
 			set_all_attributes_using_constants
-			
+
 				-- Connect events.
 			name.change_actions.extend (agent on_name_text_change)
 			label.change_actions.extend (agent on_label_text_change)
@@ -59,11 +59,11 @@ feature {NONE}-- Initialization
 				-- Call `user_initialization'.
 			user_initialization
 		end
-		
+
 	create_interface_objects
 			-- Create objects
 		do
-			
+
 				-- Create all widgets.
 			create l_ev_label_1
 			create l_ev_label_2
@@ -110,17 +110,17 @@ feature {NONE} -- Implementation
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
-	
-	on_name_text_change is
+
+	on_name_text_change
 			-- Called by `change_actions' of `name'.
 		deferred
 		end
-	
-	on_label_text_change is
+
+	on_label_text_change
 			-- Called by `change_actions' of `label'.
 		deferred
 		end
-	
+
 
 feature {NONE} -- Constant setting
 
@@ -217,7 +217,7 @@ feature {NONE} -- Constant setting
 					font_constant_set_procedures.item.call ([f])
 				end
 				font_constant_set_procedures.forth
-			end	
+			end
 		end
 
 	set_attributes_using_color_constants
@@ -250,7 +250,7 @@ feature {NONE} -- Constant setting
 			set_attributes_using_font_constants
 			set_attributes_using_color_constants
 		end
-	
+
 	string_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [STRING_GENERAL]]]
 	string_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], STRING_32]]
 	integer_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [INTEGER]]]

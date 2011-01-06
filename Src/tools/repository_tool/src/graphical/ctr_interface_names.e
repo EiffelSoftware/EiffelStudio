@@ -35,4 +35,8 @@ feature -- Access
 	d_go_to_logs_tool: STRING_32 once Result := "Go To Logs Tool" end
 	d_go_to_info_tool: STRING_32 once Result := "Go To Info Tool" end
 
+feature -- Argument Option
+
+	opt_word_config: STRING = "config"
+
 end

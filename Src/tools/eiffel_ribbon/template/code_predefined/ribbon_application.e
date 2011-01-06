@@ -10,12 +10,6 @@ note
 class
 	RIBBON_APPLICATION
 
-inherit
-	EV_APPLICATION
-		redefine
-			create_interface_objects
-		end
-
 create
 	make_and_launch
 
@@ -24,10 +18,13 @@ feature {NONE} -- Initialization
 	make_and_launch
 			-- Create `Current', build and display `main_window',
 			-- then launch the application.
+		local
+			l_app: EV_APPLICATION
 		do
-			default_create
+			create l_app
+			create_interface_objects
 			main_window.show
-			launch
+			l_app.launch
 		end
 
 feature {NONE} -- Implementation

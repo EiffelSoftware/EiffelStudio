@@ -33,15 +33,13 @@ feature {NONE} -- Initialization
 			create select_actions
 		end
 
-feature {RIBBON_TOOL_BAR}
+feature {RIBBON}
 
 	command_list: ARRAY [NATURAL_32]
 			--
 
 	execute (a_command_id: NATURAL_32; a_execution_verb: INTEGER; a_property_key: POINTER; a_property_value: POINTER; a_command_execution_properties: POINTER): NATURAL_32
 			-- <Precursor>
-		local
-		     l_command_position: INTEGER
 		do
 			if command_list.has (a_command_id) then
 				print ("%NRIBBON_BUTTON_$INDEX")

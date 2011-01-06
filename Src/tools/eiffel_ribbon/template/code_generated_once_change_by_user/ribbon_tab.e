@@ -45,8 +45,6 @@ feature {NONE}	--Action handling
 
 	execute (a_command_id: NATURAL_32; a_execution_verb: INTEGER; a_property_key: POINTER; a_property_value: POINTER; a_command_execution_properties: POINTER): NATURAL_32
 			-- <Precursor>
-		local
-		     l_command_position: INTEGER
 		do
 			if command_list.has (a_command_id) then
 				print ("%NRIBBON_TAB execute")

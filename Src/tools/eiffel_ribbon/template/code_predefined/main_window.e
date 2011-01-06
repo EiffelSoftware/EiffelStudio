@@ -11,13 +11,27 @@ class
 	MAIN_WINDOW
 
 inherit
-	MAIN_WINDOW_IMP
+	ER_RIBBON_TITLED_WINDOW
 		redefine
-			create_interface_objects
+			create_interface_objects,
+			initialize
 		end
 
 
-feature {NONE} -- Initialization
+feature {NONE}-- Initialization
+
+	initialize
+			-- Initialize `Current'.
+		do
+			Precursor {ER_RIBBON_TITLED_WINDOW}
+
+				-- Build widget structure.
+
+			set_title ("Ribbon window")
+
+				-- Call `user_initialization'.
+			user_initialization
+		end
 
 	user_initialization
 			-- Called by `initialize'.
@@ -27,6 +41,7 @@ feature {NONE} -- Initialization
 			-- can be added here.
 		do
 			print ("%N start test")
+
 			set_size (800, 400)
 
 			-- !!! Attach Ribbon by COM here !!!
@@ -52,7 +67,6 @@ feature {NONE} -- Initialization
 			Precursor
 			create ribbon.make
 		end
-
 
 feature {NONE} -- Implementation
 

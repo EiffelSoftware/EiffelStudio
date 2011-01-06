@@ -14,7 +14,7 @@ note
 	revision: "$Revision$"
 
 class
-	ER_PROPERTY_VARIANT
+	EV_PROPERTY_VARIANT
 
 create
 	share_from_pointer

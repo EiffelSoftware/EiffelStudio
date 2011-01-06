@@ -9,7 +9,7 @@ note
 	revision: "$Revision$"
 
 class
-	ER_COMMAND_HANDLER
+	EV_COMMAND_HANDLER
 
 create
 	make
@@ -26,13 +26,13 @@ feature {NONE} -- Initialization
 
 feature -- Command
 
-	add_observer (a_observer: ER_COMMAND_HANDLER_OBSERVER)
+	add_observer (a_observer: EV_COMMAND_HANDLER_OBSERVER)
 			--
 		do
 			observers.extend (a_observer)
 		end
 
-	remove_observer (a_observer: ER_COMMAND_HANDLER_OBSERVER)
+	remove_observer (a_observer: EV_COMMAND_HANDLER_OBSERVER)
 			--
 		do
 			observers.prune_all (a_observer)
@@ -40,7 +40,7 @@ feature -- Command
 
 feature {NONE} -- Observers
 
-	observers: ARRAYED_LIST [ER_COMMAND_HANDLER_OBSERVER]
+	observers: ARRAYED_LIST [EV_COMMAND_HANDLER_OBSERVER]
 			--
 
 feature {NONE} -- Implementation
@@ -50,20 +50,22 @@ feature {NONE} -- Implementation
 			-- This function is called from C codes
 		local
 			l_result: NATURAL_32
-			l_property_key: ER_PROPERTY_KEY
-			l_propery_value: ER_PROPERTY_VARIANT
+			l_property_key: EV_PROPERTY_KEY
+			l_propery_value: EV_PROPERTY_VARIANT
+			l_observer: like observers
 		do
 			create l_property_key.share_from_pointer (a_property_key)
 			create l_propery_value.share_from_pointer (a_property_value)
 --			print ("%N Command handler execute in Eiffel. Command id is: " + a_command_id.out + " Execution verb is: " + a_execution_verb.out)
 			from
-				observers.start
+				l_observer := observers.twin
+				l_observer.start
 			until
-				observers.after
+				l_observer.after or l_result /= 0
 			loop
-				l_result := observers.item.execute (a_command_id, a_execution_verb, a_property_key, a_property_value, a_command_execution_properties)
+				l_result := l_observer.item.execute (a_command_id, a_execution_verb, a_property_key, a_property_value, a_command_execution_properties)
 
-				observers.forth
+				l_observer.forth
 			end
 		end
 
@@ -72,15 +74,17 @@ feature {NONE} -- Implementation
 			-- This function is called from C codes
 		local
 			l_result: NATURAL_32
+			l_observer: like observers
 		do
 			from
-				observers.start
+				l_observer := observers.twin
+				l_observer.start
 			until
-				observers.after
+				l_observer.after or l_result /= 0
 			loop
-				l_result := observers.item.update_property (a_command_id, a_property_key, a_property_current_value, a_property_new_value)
+				l_result := l_observer.item.update_property (a_command_id, a_property_key, a_property_current_value, a_property_new_value)
 
-				observers.forth
+				l_observer.forth
 			end
 		end
 

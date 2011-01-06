@@ -1,19 +1,19 @@
 note
 	description: "[
-					Shared resources
+					Ribbon shared resources
 																]"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	ER_SHARED_RESOURCES
+	EV_SHARED_RESOURCES
 
 feature -- Factory methods
 
-	command_handler_singleton: ER_COMMAND_HANDLER
+	command_handler_singleton: EV_COMMAND_HANDLER
 			--
 		local
-			l_result: detachable ER_COMMAND_HANDLER
+			l_result: detachable EV_COMMAND_HANDLER
 		do
 			l_result := global_command_handler_cell.item
 			if l_result = void then
@@ -25,7 +25,7 @@ feature -- Factory methods
 
 feature {NONE} -- Implementation
 
-	global_command_handler_cell: CELL [detachable ER_COMMAND_HANDLER]
+	global_command_handler_cell: CELL [detachable EV_COMMAND_HANDLER]
 			--
 		once
 			create Result.put (void)

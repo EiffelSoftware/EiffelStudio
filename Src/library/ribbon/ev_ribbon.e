@@ -7,7 +7,7 @@ note
 	revision: "$Revision$"
 
 deferred class
-	ER_RIBBON
+	EV_RIBBON
 
 inherit
 	EV_ANY_HANDLER
@@ -34,7 +34,7 @@ feature -- Command
 
 feature -- Query
 
-	tabs: ARRAYED_LIST [ER_TOOL_BAR_TAB]
+	tabs: ARRAYED_LIST [EV_RIBBON_TAB]
 			-- All tabs in current tool bar
 
 	height: INTEGER
@@ -43,7 +43,7 @@ feature -- Query
 			get_height ($Result)
 		end
 
-feature {ER_RIBBON_TITLED_WINDOW_IMP} -- Externals
+feature {EV_RIBBON_TITLED_WINDOW_IMP} -- Externals
 
 	com_initialize
 			-- Initialize COM

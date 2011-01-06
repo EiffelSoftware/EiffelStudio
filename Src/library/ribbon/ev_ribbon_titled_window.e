@@ -6,7 +6,7 @@ note
 	revision: "$Revision$"
 
 class
-	ER_RIBBON_TITLED_WINDOW
+	EV_RIBBON_TITLED_WINDOW
 
 inherit
 	EV_TITLED_WINDOW
@@ -27,7 +27,7 @@ feature {NONE} -- Implementation
 	create_implementation
 			-- Responsible for interaction with native graphics toolkit.
 		do
-			create {ER_RIBBON_TITLED_WINDOW_IMP} implementation.make
+			create {EV_RIBBON_TITLED_WINDOW_IMP} implementation.make
 		end
 
 end

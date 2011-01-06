@@ -11,7 +11,7 @@ class
 	RIBBON
 
 inherit
-	ER_RIBBON
+	EV_RIBBON
 
 create
 	make

@@ -12,7 +12,7 @@ inherit
 	RIBBON_BUTTON_IMP_$INDEX
 
 create
-    {ER_TOOL_BAR_GROUP} make_with_command_list
+	{EV_RIBBON_GROUP} make_with_command_list
 
 feature -- Query
 

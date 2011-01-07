@@ -1,0 +1,17 @@
+
+test_name 	is-expanded-crash-2
+test_description After initial compilation where the system is finalized with inlining, removing an inheritance clause and refinalizing crashes the compiler with a call on Void target in {GEN_TYPE_A}.is_expanded.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test2.e $CLUSTER test2.e
+
+compile_final
+compile_result 	ok
+
+copy_raw 	test_rev2.e $CLUSTER test.e
+
+compile_final
+compile_result 	ok
+
+test_end

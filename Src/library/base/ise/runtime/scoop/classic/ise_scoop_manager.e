@@ -585,6 +585,7 @@ feature -- Command/Query Handling
 			-- Block until previous logged synchronous call on `a_client_processor_id' has been applied by `a_supplier_processor_id'.
 		local
 			l_request_chain_meta_data: detachable like new_request_chain_meta_data_entry
+			l_temp_count, l_orig_chain_node_count: INTEGER_32
 		do
 					-- Update chain to be callable, wait for tail node to signal that call has been processed.
 			(processor_meta_data [a_client_processor_id]) [current_request_chain_query_blocking_processor_index] := a_supplier_processor_id
@@ -593,16 +594,36 @@ feature -- Command/Query Handling
 			l_request_chain_meta_data := request_chain_meta_data [a_client_processor_id]
 			check l_scoop_process_request_chain_meta_data_attached: attached l_request_chain_meta_data end
 
+			-- Wait for all chains to have began before manipulating meta data. (head chain node will set application flag)
 
-				-- Wait until status has been reset to 'application' before continuing
+			if l_request_chain_meta_data [request_chain_status_index] = request_chain_status_open then
+					-- If the chain is open then mark as waiting so that the request chain nodes may proceed.
+				from
+					l_request_chain_meta_data [request_chain_status_index] := request_chain_status_waiting
+				until
+					l_request_chain_meta_data [request_chain_status_index] = request_chain_status_application
+				loop
+					yield_to_operating_system
+				end
+			end
+
+			l_orig_chain_node_count := {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_request_chain_meta_data.item_address (request_chain_pid_count_index), 0)
+
+				-- Wait for nodes to enter waiting state.
 			from
-				-- Set request chain status to waiting, this will active the current request chain
+				l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.swap_integer_32 (l_request_chain_meta_data.item_address (request_chain_pid_count_index), -l_orig_chain_node_count)
 				l_request_chain_meta_data [request_chain_status_index] := request_chain_status_waiting
 			until
-				l_request_chain_meta_data [request_chain_status_index] = request_chain_status_application
+				{ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_request_chain_meta_data.item_address (request_chain_pid_count_index), 0) = 0
 			loop
 				yield_to_operating_system
 			end
+
+				-- Reset chain status to application
+			l_request_chain_meta_data [request_chain_status_index] := request_chain_status_application
+
+				-- Rest chain node code so that the request chain nodes may continue.
+			l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.swap_integer_32 (l_request_chain_meta_data.item_address (request_chain_pid_count_index), l_orig_chain_node_count)
 		end
 
 feature {NONE} -- Resource Initialization
@@ -740,24 +761,26 @@ feature {NONE} -- Resource Initialization
 									end
 										-- Tail nodes are all synchronized and executing so head node can continue.	
 
+										-- Signify that the chains are now being applied (if not already closed)
+										-- This is used by the client to make sure that all chains have been started before attempting any wait calls.
+									if l_executing_request_chain_node_meta_data [request_chain_status_index] /= request_chain_status_closed then
+										l_executing_request_chain_node_meta_data [request_chain_status_index] := request_chain_status_application
+									end
 								else
-									-- We are a tail node, we wait for head node to set pid count to negative value.
+										-- We are a tail node, we wait for head node to set pid count to negative value.
 									from
-										l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_executing_request_chain_node_meta_data.item_address (request_chain_pid_count_index), 0)
 									until
-										l_temp_count < 0
+										{ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_executing_request_chain_node_meta_data.item_address (request_chain_pid_count_index), 0) < 0
 									loop
 										yield_to_operating_system
-										l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_executing_request_chain_node_meta_data.item_address (request_chain_pid_count_index), 0)
 									end
 									l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 (l_executing_request_chain_node_meta_data.item_address (request_chain_pid_count_index))
+
 									from
-										l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_executing_request_chain_node_meta_data.item_address (request_chain_pid_count_index), 0)
 									until
-										l_temp_count > 0
+										{ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_executing_request_chain_node_meta_data.item_address (request_chain_pid_count_index), 0) > 0
 									loop
 										yield_to_operating_system
-										l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_executing_request_chain_node_meta_data.item_address (request_chain_pid_count_index), 0)
 									end
 									l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 (l_executing_request_chain_node_meta_data.item_address (request_chain_pid_count_index))
 								end
@@ -777,22 +800,22 @@ feature {NONE} -- Resource Initialization
 										-- Request chain has been fully closed therefore we can exit
 									l_feature_application_loop_exit := l_executing_node_id_cursor = l_executing_request_chain_node.count
 								elseif l_executing_request_chain_node_meta_data [request_chain_status_index] = request_chain_status_waiting then
-										-- The client is waiting for all nodes to apply all logged calls before using query value.
-										from
-											l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.decrement_integer_32 (l_executing_request_chain_node_meta_data.item_address (request_chain_pid_count_index))
-										until
-											l_executing_request_chain_node_meta_data [request_chain_status_index] = request_chain_status_application
-										loop
-											l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_executing_request_chain_node_meta_data.item_address (request_chain_pid_count_index), 0)
-											if l_is_head and then l_temp_count = 0 then
-													-- Reset count to `l_orig_chain_node_count' stored in the previous sync section.
-												l_executing_request_chain_node_meta_data [request_chain_pid_count_index] := l_orig_chain_node_count
-												l_executing_request_chain_node_meta_data [request_chain_status_index] := request_chain_status_application
-											else
-												yield_to_operating_system
-											end
-										end
 
+									from
+										-- Wait for waiting processor to set pid count to a negative value.
+									until
+										{ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_executing_request_chain_node_meta_data.item_address (request_chain_pid_count_index), 0) < 0
+									loop
+										yield_to_operating_system
+									end
+									l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 (l_executing_request_chain_node_meta_data.item_address (request_chain_pid_count_index))
+
+									from
+									until
+										{ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_executing_request_chain_node_meta_data.item_address (request_chain_pid_count_index), 0) > 0
+									loop
+										yield_to_operating_system
+									end
 								else
 									-- We are waiting for the request chain to close or to have more calls logged
 									yield_to_operating_system

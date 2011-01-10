@@ -22,7 +22,7 @@ feature
 				-- Check that special of expanded initialization works.
 				-- The line below will create a SPECIAL which is about 6GB in workbench because
 				-- we have the header, but only 4GB in finalized mode.
-			create l_spec_exp.make (0x8000000)
+			create l_spec_exp.make_filled (l_expd, 0x8000000)
 			create l_string.make_empty
 
 				-- Check that insertion and access in a special of expanded works.
@@ -39,13 +39,13 @@ feature
 				io.put_string ("Not OK - 14%N")
 			end
 
-			l_spec_exp.put_default (0x7FFFFFF)
+			l_spec_exp.put (l_expd, 0x7FFFFFF)
 			if l_expd /~ l_spec_exp.item (0x7FFFFFF) then
 				io.put_string ("Not OK - 15%N")
 			end
 
 				-- Check various call to copy data between specials
-			create l_spec_exp_bis.make (0x7FFFFFF)
+			create l_spec_exp_bis.make_filled (l_expd, 0x7FFFFFF)
 			create l_string.make_empty
 			if
 				not l_spec_exp.standard_is_equal (l_spec_exp_bis) or
@@ -69,7 +69,7 @@ feature
 				-- Repeat the test but this time with expanded containing references
 				-- Check that special of expanded initialization works. This will be
 				-- 6GB in both workbench and finalized
-			create l_spec_exp2.make (0x8000000)
+			create l_spec_exp2.make_filled (l_exp2d, 0x8000000)
 			create l_string.make_empty
 
 				-- Check that insertion and access in a special of expanded works.
@@ -86,13 +86,13 @@ feature
 				io.put_string ("Not OK - 17%N")
 			end
 
-			l_spec_exp2.put_default (0x7FFFFFF)
+			l_spec_exp2.put (l_exp2d, 0x7FFFFFF)
 			if l_exp2d /~ l_spec_exp2.item (0x7FFFFFF) then
 				io.put_string ("Not OK - 18%N")
 			end
 
 				-- Check various call to copy data between specials
-			create l_spec_exp2_bis.make (0x7FFFFFF)
+			create l_spec_exp2_bis.make_filled (l_exp2d, 0x7FFFFFF)
 			create l_string.make_empty
 			if
 				not l_spec_exp2.standard_is_equal (l_spec_exp2_bis) or

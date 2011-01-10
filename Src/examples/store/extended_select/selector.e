@@ -168,7 +168,7 @@ feature {NONE}
 					l_string := utf8.last_converted_string
 					localized_print (l_string)
 					io.new_line
-					base_update.modify_32 (l_string)
+					base_update.modify (l_string)
 				end
 			end
 			l_data_file.close
@@ -215,7 +215,7 @@ feature {NONE}
 					-- Query database.
 					-- The reference ":author_name" will be changed to the value of
 					-- the Eiffel object referred to by the key "author_name".
-				base_selection.query_32 (Select_author)
+				base_selection.query (Select_author)
 					-- Iterate through resulting data, and display them
 				base_selection.load_result
 

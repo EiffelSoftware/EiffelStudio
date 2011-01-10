@@ -1,0 +1,28 @@
+
+test_name 	once-per-object-add-attributes
+test_description After initial compilation, adding attributes to a class with once-per-object routines that is inherited another class causes system execution to crash with a seg fault
+
+define		EXTRA_ATTRIBUTES ""
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+copy_sub 	test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result 	ok
+
+execute_work	NONE exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+define		EXTRA_ATTRIBUTES "val1, val2, val3, val4: G"
+copy_sub 	test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result 	ok
+
+execute_work	NONE exec_output2
+execute_result 	ok
+compare		exec_output2 output
+
+test_end

@@ -968,6 +968,7 @@ test	fix-expanded-generic-vlec-infinite-loop	incr402	tcf fail incrementality exp
 test	qat-change-agent-target-type		incr403	tcf fail incrementality anchored_type
 test 	once-per-object-link-failure		incr404 tcf fail incrementality once
 test 	is-expanded-crash-2			incr405 tcf fail incrementality
+test 	once-per-object-add-attributes		incr406 tcf fail incrementality once
 
 
 -- Melting

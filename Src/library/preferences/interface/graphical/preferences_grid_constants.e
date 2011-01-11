@@ -42,6 +42,7 @@ feature -- Access
 	l_restore_defaults: STRING_GENERAL 		do Result := "Restore Defaults" end
 	l_import_preferences: STRING_GENERAL 	do Result := "Import ..." end
 	l_export_preferences: STRING_GENERAL 	do Result := "Export ..." end
+	l_display_hidden_preferences: STRING_GENERAL 	do Result := "Display Hidden Entries" end
 	l_restore_default: STRING_GENERAL		do Result := "Restore Default" end
 	l_no_default_value: STRING_GENERAL 		do Result := "No default value" end
 	l_close: STRING_GENERAL					do Result := "Close" end
@@ -91,7 +92,7 @@ feature -- Access
 		-- Base name of the file that contains the icon of the preferences window.
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

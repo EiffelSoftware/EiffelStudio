@@ -95,7 +95,7 @@ feature {EW_EIFFEL_TEST_EXECUTOR} -- Implementation
 			associate (Result, Output_dir_name, os.full_directory_name (test_dir, "output"));
 			fixme ("set correct directory depending on used target")
 			gen_dir := os.full_directory_name (test_dir, Eiffel_gen_directory)
-			gen_dir := os.full_directory_name (gen_dir, Default_system_name)
+			gen_dir := os.full_directory_name (gen_dir, Default_target_name)
 			exec_dir := os.full_directory_name (gen_dir, Work_c_code_directory);
 			Result.define (Work_execution_dir_name, exec_dir);
 			exec_dir := os.full_directory_name (gen_dir, Final_c_code_directory);
@@ -236,7 +236,7 @@ feature {NONE} -- Implementation
 
 note
 	copyright: "[
-			Copyright (c) 1984-2007, University of Southern California and contributors.
+			Copyright (c) 1984-2011, University of Southern California and contributors.
 			All rights reserved.
 			]"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
@@ -259,6 +259,5 @@ note
 			if not, write to the Free Software Foundation,
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA
 		]"
-
 
 end

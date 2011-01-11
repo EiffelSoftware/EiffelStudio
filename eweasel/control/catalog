@@ -1583,6 +1583,7 @@ test	object-test-wrong-with-expanded-generic	exec332 tcf fail execution
 test	tracing-memory-corruption		exec333 tcf pass execution
 test	special-make-empty				exec334 tcf pass execution special
 test	standard-twin-on-formal			exec335 tcf pass execution
+test	gc-after-rescue-in-once			exec336 tcf fail execution once
 
 -- Once specific
 

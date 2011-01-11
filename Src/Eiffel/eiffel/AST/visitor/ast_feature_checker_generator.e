@@ -6088,7 +6088,7 @@ feature {NONE} -- Implementation
 						last_byte_node := l_call_access
 					end
 						-- Separate feature calls are currently supported only by frozen code.
-					if l_creation_type.is_separate then
+					if a_creation_type.is_separate then
 						debug ("to_implement")
 							to_implement ("Support separate calls in melted mode")
 						end

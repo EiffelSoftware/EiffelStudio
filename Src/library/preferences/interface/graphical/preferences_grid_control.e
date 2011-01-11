@@ -129,6 +129,10 @@ feature {NONE} -- Initialization
 			create restore_button.make_with_text (l_restore_defaults)
 			create import_button.make_with_text (l_import_preferences)
 			create export_button.make_with_text (l_export_preferences)
+			create display_hidden_button.make_with_text (l_display_hidden_preferences)
+			if show_hidden_preferences then
+				display_hidden_button.enable_select
+			end
 
 			create apply_or_close_button.make_with_text (l_apply)
 			set_default_width_for_button (restore_button)
@@ -138,11 +142,13 @@ feature {NONE} -- Initialization
 			hb.extend (restore_button)
 			hb.extend (import_button)
 			hb.extend (export_button)
+			hb.extend (display_hidden_button)
 			hb.extend (create {EV_CELL})
 			hb.extend (apply_or_close_button)
 			hb.disable_item_expand (restore_button)
 			hb.disable_item_expand (import_button)
 			hb.disable_item_expand (export_button)
+			hb.disable_item_expand (display_hidden_button)
 			hb.disable_item_expand (apply_or_close_button)
 			box.extend (hb)
 			box.disable_item_expand (hb)
@@ -182,6 +188,7 @@ feature {NONE} -- Initialization
 			restore_button.select_actions.extend (agent on_restore)
 			import_button.select_actions.extend (agent on_import)
 			export_button.select_actions.extend (agent on_export)
+			display_hidden_button.select_actions.extend (agent toggle_hiddens)
 			apply_or_close_button.select_actions.extend (agent on_apply_or_close)
 			description_location.key_press_actions.extend (agent on_description_key_pressed)
 			description_text.key_press_actions.extend (agent on_description_key_pressed)
@@ -223,6 +230,7 @@ feature -- Access
 		end
 
 	restore_button, apply_or_close_button: EV_BUTTON
+	display_hidden_button: EV_CHECK_BUTTON
 	export_button, import_button: EV_BUTTON
 	description_text: EV_TEXT
 	description_location: EV_TEXT_FIELD
@@ -1158,6 +1166,13 @@ feature {NONE} -- Implementation
 			-- Show/hide hiddens preferences
 		do
 			set_show_hidden_preferences (not show_hidden_preferences)
+			display_hidden_button.select_actions.block
+			if show_hidden_preferences then
+				display_hidden_button.enable_select
+			else
+				display_hidden_button.disable_select
+			end
+			display_hidden_button.select_actions.resume
 			rebuild
 		end
 
@@ -1680,7 +1695,7 @@ invariant
 	has_preferences: preferences /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

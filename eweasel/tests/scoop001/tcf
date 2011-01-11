@@ -6,8 +6,7 @@ test_description Smoke test for access to features of separate objects.
 copy_sub 	precomp.ecf $TEST precomp.ecf
 copy_raw 	a.e $CLUSTER/precomp a.e
 
-ace precomp.ecf
-system precomp
+config precomp.ecf precomp
 
 compile_precompiled
 compile_result 	ok
@@ -17,8 +16,7 @@ c_compile_result ok
 -- Compile system
 
 copy_raw	test.e $CLUSTER test.e
-ace Ace
-system test
+config Ace test
 
 -- Use precompile
 

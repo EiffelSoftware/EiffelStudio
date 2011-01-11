@@ -1584,6 +1584,7 @@ test	tracing-memory-corruption		exec333 tcf pass execution
 test	special-make-empty				exec334 tcf pass execution special
 test	standard-twin-on-formal			exec335 tcf pass execution
 test	gc-after-rescue-in-once			exec336 tcf fail execution once
+test	gc-after-rescue-in-attribute		exec337 tcf fail execution
 
 -- Once specific
 

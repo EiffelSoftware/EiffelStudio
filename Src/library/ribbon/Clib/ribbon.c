@@ -170,3 +170,15 @@ HRESULT GetRibbonHeight(UINT* ribbonHeight)
 
     return hr;
 }
+
+HRESULT SetModes(INT32 iModes)
+{
+	  HRESULT hr = S_OK;
+
+    if (g_pFramework)
+    {
+    	hr = g_pFramework->lpVtbl->SetModes(g_pFramework, UI_MAKEAPPMODE(iModes));
+    }
+    
+    return hr;
+}

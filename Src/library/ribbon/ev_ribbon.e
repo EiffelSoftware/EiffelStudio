@@ -105,5 +105,18 @@ feature {EV_RIBBON_TITLED_WINDOW_IMP} -- Externals
 			}
 			]"
 		end
+
+	set_modes (a_mode: INTEGER)
+			-- Set application mode
+		external
+			"C inline use <ribbon.h>"
+		alias
+			"[
+			{
+				SetModes ($a_mode);
+			}
+			]"
+		end
+
 end
 

@@ -230,15 +230,8 @@ feature {EW_TEST_INSTRUCTION} -- Set test properties
 		end;
 
 	set_system_name (name: STRING)
-		local
-			dir: STRING
 		do
 			system_name := name
-			dir := environment.value (test_dir_name)
-			dir := os.full_directory_name (dir, Eiffel_gen_directory)
-			dir := os.full_directory_name (dir, name)
-			environment.define (Work_execution_dir_name, os.full_directory_name (dir, Work_c_code_directory))
-			environment.define (Final_execution_dir_name, os.full_directory_name (dir, Final_c_code_directory))
 		end
 
 	set_ace_name (name: STRING)
@@ -248,8 +241,15 @@ feature {EW_TEST_INSTRUCTION} -- Set test properties
 
 	set_target_name (a_target: STRING)
 			-- Set `target_name' with `a_target'
+		local
+			dir: STRING
 		do
 			target_name := a_target
+			dir := environment.value (test_dir_name)
+			dir := os.full_directory_name (dir, Eiffel_gen_directory)
+			dir := os.full_directory_name (dir, a_target)
+			environment.define (Work_execution_dir_name, os.full_directory_name (dir, Work_c_code_directory))
+			environment.define (Final_execution_dir_name, os.full_directory_name (dir, Final_c_code_directory))
 		ensure
 			set: target_name = a_target
 		end
@@ -344,7 +344,7 @@ feature {NONE}  -- Implementation
 
 note
 	copyright: "[
-			Copyright (c) 1984-2007, University of Southern California and contributors.
+			Copyright (c) 1984-2011, University of Southern California and contributors.
 			All rights reserved.
 			]"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"

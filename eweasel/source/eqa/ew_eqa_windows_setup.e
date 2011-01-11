@@ -402,7 +402,7 @@ feature {NONE} -- Implementation
 			associate (a_env, Output_dir_name, os.full_directory_name (l_test_dir, "output"))
 			-- fixme ("set correct directory depending on used target")
 			l_gen_dir := os.full_directory_name (l_test_dir, Eiffel_gen_directory)
-			l_gen_dir := os.full_directory_name (l_gen_dir, Default_system_name)
+			l_gen_dir := os.full_directory_name (l_gen_dir, Default_target_name)
 			l_exec_dir := os.full_directory_name (l_gen_dir, Work_c_code_directory)
 			a_env.define (Work_execution_dir_name, l_exec_dir)
 			l_exec_dir := os.full_directory_name (l_gen_dir, Final_c_code_directory)
@@ -477,7 +477,7 @@ feature {NONE} -- Implementation
 
 ;note
 	copyright: "[
-			Copyright (c) 1984-2007, University of Southern California and contributors.
+			Copyright (c) 1984-2011, University of Southern California and contributors.
 			All rights reserved.
 			]"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
@@ -500,11 +500,5 @@ feature {NONE} -- Implementation
 			if not, write to the Free Software Foundation,
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA
 		]"
-
-
-
-
-
-
 
 end

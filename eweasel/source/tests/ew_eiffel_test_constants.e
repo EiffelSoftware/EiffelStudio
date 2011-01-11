@@ -12,6 +12,8 @@ feature {NONE}  -- Defaults
 
 	Default_system_name: STRING = "test";
 
+	Default_target_name: STRING = "test";
+
 feature {NONE}  -- Miscellaneous constants
 
 	Eiffel_gen_directory: STRING = "EIFGENs";
@@ -24,7 +26,7 @@ feature {NONE}  -- Miscellaneous constants
 
 note
 	copyright: "[
-			Copyright (c) 1984-2007, University of Southern California and contributors.
+			Copyright (c) 1984-2011, University of Southern California and contributors.
 			All rights reserved.
 			]"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"

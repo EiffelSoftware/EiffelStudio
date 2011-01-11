@@ -1602,6 +1602,7 @@ test once-per-object-precursor-descendant	once013 tcf fail once
 test once-per-object-inherited-chained		once014 tcf fail once
 test once-per-object-callee-exception		once015 tcf fail once
 test once-per-object-recursive-call		once016 tcf fail once
+test once-per-object-rescue-gc			once017 tcf fail once
 
 -- Compiler termination (exception trace, panic, etc.)
 

@@ -933,20 +933,22 @@ feature {NONE} -- Implementation
 			l_target: CONF_TARGET
 			l_item, l_new_item: EB_CLASSES_TREE_TARGET_ITEM
 		do
-			from
-				l_target := universe.target
-				create l_item.make (l_target)
-			until
-				l_target.extends = Void
-			loop
-				l_target := l_target.extends
-				create l_new_item.make (l_target)
-				l_new_item.extend (l_item)
-				l_item := l_new_item
+			l_target := universe.target
+			if attached l_target then
+				from
+					create l_item.make (l_target)
+				until
+					l_target.extends = Void
+				loop
+					l_target := l_target.extends
+					create l_new_item.make (l_target)
+					l_new_item.extend (l_item)
+					l_item := l_new_item
+				end
+				target := l_item
+				a_list.extend (l_item)
+				l_item.associate_with_window (window)
 			end
-			target := l_item
-			a_list.extend (target)
-			target.associate_with_window (window)
 		end
 
 	has_targets: BOOLEAN

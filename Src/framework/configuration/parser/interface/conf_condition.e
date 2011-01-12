@@ -360,47 +360,10 @@ feature -- Output
 			l_lst: ARRAYED_LIST [INTEGER]
 		do
 			create Result.make_empty
-			if platform /= Void then
-				if platform.item.invert then
-					Result.append ("not ")
-					l_conc := " and "
-				else
-					l_conc := " or "
-				end
-				Result.append ("(")
-				from
-					l_lst := platform.item.value
-					l_lst.start
-				until
-					l_lst.after
-				loop
-					Result.append (platform_names.item (l_lst.item) + l_conc)
-					l_lst.forth
-				end
-				Result.remove_tail (l_conc.count)
-				Result.append (") and ")
-			end
 
-			if build /= Void then
-				if build.item.invert then
-					Result.append ("not ")
-					l_conc := " and "
-				else
-					l_conc := " or "
-				end
-				Result.append ("(")
-				from
-					l_lst := build.item.value
-					l_lst.start
-				until
-					l_lst.after
-				loop
-					Result.append (build_names.item (l_lst.item) + l_conc)
-					l_lst.forth
-				end
-				Result.remove_tail (l_conc.count)
-				Result.append (") and ")
-			end
+			append_list (platform, platform_names, Result)
+			append_list (build, build_names, Result)
+			append_list (concurrency, concurrency_names, Result)
 
 			from
 				version.start
@@ -469,14 +432,49 @@ feature -- Output
 			Result_not_void: Result /= Void
 		end
 
+feature {NONE} -- Output
+
+	append_list (data: like platform; names: like platform_names; output: STRING)
+			-- Append `data' (if any) to `output' using specified `names'.
+		require
+			names_attached: attached names
+			output_attached: attached output
+		local
+			c: STRING
+		do
+			if attached data then
+				check attached data.item as i and then attached i.value as v then
+					if i.invert then
+						output.append ("not ")
+						c := " and "
+					else
+						c := " or "
+					end
+					output.append_character ('(')
+					from
+						v.start
+					until
+						v.after
+					loop
+						output.append (names.item (v.item))
+						output.append (c)
+						v.forth
+					end
+					output.remove_tail (c.count)
+					output.append (") and ")
+				end
+			end
+		end
+
 invariant
 	platform_ok: platform /= Void implies platform.item.value /= Void
 	build_ok: build /= Void implies build.item.value /= Void
+	concurrency_ok: attached concurrency as c implies attached c.item as i and then attached i.value
 	version_not_void: version /= Void
 	custom_not_void: custom /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

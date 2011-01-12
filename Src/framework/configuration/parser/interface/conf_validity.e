@@ -121,6 +121,16 @@ feature {NONE} -- Basic operation
 			result_not_void: Result /= Void
 		end
 
+	get_concurrency_name (index: INTEGER): STRING
+			-- Get the concurrency name of `index'.
+		require
+			valid_index: valid_concurrency (index)
+		do
+			Result := concurrency_names.item (index)
+		ensure
+			result_not_void: Result /= Void
+		end
+
 	get_platform (a_name: STRING): INTEGER
 			-- Get the platform with `a_name', otherwise return 0.
 		do
@@ -346,7 +356,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

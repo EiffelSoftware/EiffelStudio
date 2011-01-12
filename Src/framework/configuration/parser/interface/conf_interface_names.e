@@ -420,7 +420,9 @@ feature -- Condition dialog
 	dial_cond_other: STRING_GENERAL do Result := locale.translation ("Other")	end
 	dial_cond_build: STRING_GENERAL do Result := locale.translation ("Build")	end
 	dial_cond_dotnet: STRING_GENERAL do Result := locale.translation (".NET")	end
-	dial_cond_multithreaded: STRING_GENERAL do Result := locale.translation ("Multithreaded")	end
+	dial_cond_concurrency: STRING_GENERAL do Result := locale.translation ("Concurrency")	end
+	dial_cond_concurrency_exclude: STRING_GENERAL do Result := locale.translation ("Exclude value(s)")	end
+	dial_cond_concurrency_value (value: STRING_GENERAL): STRING_GENERAL do Result := locale.translation (value)	end
 	dial_cond_dynamic_runtime: STRING_GENERAL do Result := locale.translation ("Dynamic runtime")	end
 	dial_cond_version: STRING_GENERAL do Result := locale.translation ("Version")	end
 	dial_cond_version_compiler: STRING_GENERAL do Result := locale.translation ("<= compiler version <= ")	end
@@ -855,7 +857,7 @@ feature -- Boolean values
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

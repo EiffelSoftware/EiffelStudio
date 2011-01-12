@@ -123,6 +123,33 @@ feature {NONE} -- Initialization
 				exclude_platforms.enable_select
 			end
 
+				-- concurrency
+			create l_frame.make_with_text (conf_interface_names.dial_cond_concurrency)
+			hb_top.extend (l_frame)
+			create vb
+			l_frame.extend (vb)
+			vb.set_border_width (layout_constants.default_border_size)
+			create concurrency
+			from
+				concurrency_names.start
+			until
+				concurrency_names.after
+			loop
+				create li.make_with_text (conf_interface_names.dial_cond_concurrency_value (concurrency_names.item_for_iteration))
+				concurrency.extend (li)
+				if data.concurrency /= Void and then data.concurrency.item.value.has (concurrency_names.key_for_iteration) then
+					concurrency.check_item (li)
+				end
+				concurrency_names.forth
+			end
+			vb.extend (concurrency)
+			concurrency.set_minimum_size (105, 75)
+			create exclude_concurrency.make_with_text (conf_interface_names.dial_cond_concurrency_exclude)
+			vb.extend (exclude_concurrency)
+			if data.concurrency /= Void and then data.concurrency.item.invert then
+				exclude_concurrency.enable_select
+			end
+
 				-- other
 			create l_frame.make_with_text (conf_interface_names.dial_cond_other)
 			hb_top.extend (l_frame)
@@ -178,15 +205,9 @@ feature {NONE} -- Initialization
 				dynamic_runtime.disable_sensitive
 			end
 
-				-- cell to separate left and right settings
-			create l_cell
-			l_cell.set_minimum_width (5)
-			hb.extend (l_cell)
-			hb.disable_item_expand (l_cell)
 
 				-- dotnet
-			create vb
-			hb.extend (vb)
+			append_small_margin (vb)
 			create dotnet_enabled.make_with_text (conf_interface_names.dial_cond_dotnet)
 			vb.extend (dotnet_enabled)
 			create dotnet.make_with_strings (boolean_list)
@@ -202,25 +223,6 @@ feature {NONE} -- Initialization
 				end
 			else
 				dotnet.disable_sensitive
-			end
-
-				-- multithreaded
-			append_small_margin (vb)
-			create multithreaded_enabled.make_with_text (conf_interface_names.dial_cond_multithreaded)
-			vb.extend (multithreaded_enabled)
-			create multithreaded.make_with_strings (boolean_list)
-			multithreaded.disable_edit
-			vb.extend (multithreaded)
-			vb.disable_item_expand (multithreaded)
-			if data.multithreaded /= Void then
-				multithreaded_enabled.enable_select
-				if data.multithreaded.item then
-					multithreaded.first.enable_select
-				else
-					multithreaded.last.enable_select
-				end
-			else
-				multithreaded.disable_sensitive
 			end
 
 			append_small_margin (Current)
@@ -302,13 +304,14 @@ feature {NONE} -- Initialization
 				-- platform
 			platforms.focus_out_actions.extend (agent on_platform)
 			exclude_platforms.select_actions.extend (agent on_platform)
+				-- concurrency
+			concurrency.focus_out_actions.extend (agent on_concurrency)
+			exclude_concurrency.select_actions.extend (agent on_concurrency)
 				--other
 			build_enabled.select_actions.extend (agent on_build_enabled)
 			builds.select_actions.extend (agent on_build)
 			dotnet_enabled.select_actions.extend (agent on_dotnet_enabled)
 			dotnet.select_actions.extend (agent on_dotnet)
-			multithreaded_enabled.select_actions.extend (agent on_multithreaded_enabled)
-			multithreaded.select_actions.extend (agent on_multithreaded)
 			dynamic_runtime_enabled.select_actions.extend (agent on_dynamic_runtime_enabled)
 			dynamic_runtime.select_actions.extend (agent on_dynamic_runtime)
 
@@ -332,17 +335,17 @@ feature {NONE} -- GUI elements
 	exclude_platforms: EV_CHECK_BUTTON
 			-- Are the selected platforms excluded?
 
+	concurrency: EV_CHECKABLE_LIST
+			-- Concurrency list.
+
+	exclude_concurrency: EV_CHECK_BUTTON
+			-- Are the selected concurrency elements excluded?
+
 	build_enabled: EV_CHECK_BUTTON
 			-- Is the build value set?
 
 	builds: EV_COMBO_BOX
 			-- Build.
-
-	multithreaded_enabled: EV_CHECK_BUTTON
-			-- Is the multithreaded value set?
-
-	multithreaded: EV_COMBO_BOX
-			-- Multithreaded.
 
 	dotnet_enabled: EV_CHECK_BUTTON
 			-- Is the .NET value set?
@@ -395,6 +398,31 @@ feature {NONE} -- Actions
 			end
 		end
 
+	on_concurrency
+			-- Concurrency value was changed, update data.
+		local
+			is_excluded: BOOLEAN
+		do
+			data.wipe_out_concurrency
+			is_excluded := exclude_concurrency.is_selected
+			from
+				concurrency.start
+				concurrency_names.start
+			until
+				concurrency.after
+			loop
+				if concurrency.is_item_checked (concurrency.item) then
+					if is_excluded then
+						data.exclude_concurrency (concurrency_names.key_for_iteration)
+					else
+						data.add_concurrency (concurrency_names.key_for_iteration)
+					end
+				end
+				concurrency.forth
+				concurrency_names.forth
+			end
+		end
+
 	on_dotnet_enabled
 			-- enable/disable combo box to choose a value for .NET.
 		do
@@ -404,18 +432,6 @@ feature {NONE} -- Actions
 			else
 				dotnet.disable_sensitive
 				data.unset_dotnet
-			end
-		end
-
-	on_multithreaded_enabled
-			-- enable/disable combo box to choose a value for multithreaded.
-		do
-			if multithreaded_enabled.is_selected then
-				multithreaded.enable_sensitive
-				on_multithreaded
-			else
-				multithreaded.disable_sensitive
-				data.unset_multithreaded
 			end
 		end
 
@@ -457,15 +473,6 @@ feature {NONE} -- Actions
 				has_boolean_text: conf_interface_names.boolean_values.has (dotnet.text)
 			end
 			data.set_dotnet (boolean_value_from_name (dotnet.text))
-		end
-
-	on_multithreaded
-			-- Multithreaded value hsas changed, udpate data.
-		do
-			check
-				has_boolean_text: conf_interface_names.boolean_values.has (multithreaded.text)
-			end
-			data.set_multithreaded (boolean_value_from_name (multithreaded.text))
 		end
 
 	on_dynamic_runtime
@@ -725,7 +732,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

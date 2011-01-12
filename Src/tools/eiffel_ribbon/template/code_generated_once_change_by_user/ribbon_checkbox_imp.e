@@ -7,21 +7,18 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	RIBBON_GROUP_$INDEX
+deferred class
+	RIBBON_CHECKBOX_IMP_$INDEX
 
 inherit
-	RIBBON_GROUP_IMP_$INDEX
-
-create
-	{EV_RIBBON_TAB} make_with_command_list
+	EV_RIBBON_CHECKBOX
 
 feature {NONE} -- Initialization
 
 	make_with_command_list (a_list: ARRAY [NATURAL_32])
 			-- Creation method
 		require
-			not_void: a_list /= Void
+			not_void: a_list /= void
 		do
 			command_list := a_list
 
@@ -34,37 +31,28 @@ feature {NONE} -- Initialization
 	create_interface_objects
 			-- Create objects
 		do
-$BUTTON_CREATION
-			create buttons.make (1)
-$BUTTON_REGISTRY
+			create select_actions
 		end
 
-feature -- Query
+feature {RIBBON}
 
-$BUTTON_DECLARATION
+	command_list: ARRAY [NATURAL_32]
+			-- Command ids handled by current
 
-	buttons: ARRAYED_LIST [EV_RIBBON_ITEM]
-			-- All buttons in current group
-
-feature {NONE}	--Action handling
+	select_actions: EV_NOTIFY_ACTION_SEQUENCE
+			-- Select actions executed just after user clicked on button
 
 	execute (a_command_id: NATURAL_32; a_execution_verb: INTEGER; a_property_key: POINTER; a_property_value: POINTER; a_command_execution_properties: POINTER): NATURAL_32
 			-- <Precursor>
 		do
 			if command_list.has (a_command_id) then
+				select_actions.call (Void)
 			end
-
 		end
 
 	update_property (a_command_id: NATURAL_32; a_property_key: POINTER; a_property_current_value: POINTER; a_property_new_value: POINTER): NATURAL_32
 			-- <Precursor>
 		do
-			if command_list.has (a_command_id) then
-			end
 		end
 
-feature {NONE} -- Implementation
-
-	command_list: ARRAY [NATURAL_32]
-			-- Command ids handled by current
 end

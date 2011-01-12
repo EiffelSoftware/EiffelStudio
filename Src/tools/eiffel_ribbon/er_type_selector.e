@@ -148,7 +148,7 @@ feature {NONE} -- Implementation
 			a_parent.extend (l_button)
 --Uncomment following lines when the ribbon features supported
 			create l_check_box.make_with_text (constants.check_box)
---			l_check_box.set_pebble (constants.check_box)
+			l_check_box.set_pebble (constants.check_box)
 			a_parent.extend (l_check_box)
 
 			create l_combo_box.make_with_text (constants.combo_box)

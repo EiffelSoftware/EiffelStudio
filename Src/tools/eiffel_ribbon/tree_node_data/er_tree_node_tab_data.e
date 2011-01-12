@@ -17,7 +17,12 @@ feature -- Command
 			l_constants: ER_XML_ATTRIBUTE_CONSTANTS
 		do
 			create l_constants
-			check a_name.is_equal (l_constants.command_name) end
-			command_name := a_value
+
+			if a_name.is_equal (l_constants.command_name) then
+				command_name := a_value
+			else
+				-- Maybe ApplicationModes, or....
+				check not_implemented: False end
+			end
 		end
 end

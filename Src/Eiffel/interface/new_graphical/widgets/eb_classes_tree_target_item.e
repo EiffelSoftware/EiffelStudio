@@ -28,6 +28,8 @@ feature {NONE} -- Initialization
 
 	make (a_target: CONF_TARGET)
 			-- Create.
+		require
+			a_target_attached: attached a_target
 		do
 			default_create
 			create stone.make (a_target)
@@ -74,7 +76,7 @@ invariant
 	stone_set: stone /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

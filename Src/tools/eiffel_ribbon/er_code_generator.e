@@ -747,7 +747,7 @@ feature {NONE} -- Implementation
 				if a_group_node.item.text.is_equal ({ER_XML_CONSTANTS}.button)  then
 					generate_button_class (a_group_node.item, a_group_node.index + button_counter)
 				elseif a_group_node.item.text.is_equal ({ER_XML_CONSTANTS}.check_box) then
---					generate_checkbox_class (a_group_node.item, a_group_node.index + button_counter)	
+					generate_checkbox_class (a_group_node.item, a_group_node.index + button_counter)
 				else
 					check not_implemented: False end
 				end
@@ -832,19 +832,29 @@ feature {NONE} -- Implementation
 			valid: a_group_node.text.is_equal ({ER_XML_CONSTANTS}.group)
 		local
 			l_count, l_index: INTEGER
-			l_template: STRING
+			l_template, l_checkbox_template: STRING
 			l_generated: detachable STRING
+			l_constants: ER_XML_CONSTANTS
 		do
 			create Result.make_empty
 			l_template := "%Tbutton_$INDEX: RIBBON_BUTTON_$INDEX"
-
+			l_checkbox_template := "%Tbutton_$INDEX: RIBBON_CHECKBOX_$INDEX"
 			from
+				create l_constants
 				l_index := 1
 				l_count := a_group_node.count
 			until
 				l_count < l_index
 			loop
-				l_generated := l_template.twin
+				if a_group_node.i_th (1).text.same_string (l_constants.button) then
+					l_generated := l_template.twin
+				elseif a_group_node.i_th (1).text.same_string (l_constants.check_box) then
+					l_generated := l_checkbox_template.twin
+				else
+					create l_generated.make_empty
+					check not_implemented: False end
+				end
+
 				l_generated.replace_substring_all ("$INDEX", (button_counter + l_index).out)
 
 				l_index := l_index + 1
@@ -872,6 +882,88 @@ feature {NONE} -- Implementation
 			l_tool_bar_button_file := "ribbon_button_imp"
 			l_sub_imp_dir := "code_generated_everytime"
 			l_tool_bar_button_imp_file := "ribbon_button"
+
+			if attached l_singleton.project_info_cell.item as l_project_info then
+				if attached l_project_info.project_location as l_project_location then
+					create l_constants
+
+					-- Generate tool bar button class
+					create l_file_name.make_from_string (l_constants.template)
+					l_file_name.set_subdirectory (l_sub_dir)
+					l_file_name.set_file_name (l_tool_bar_button_file + ".e")
+					create l_file.make (l_file_name)
+					if l_file.exists and then l_file.is_readable then
+						create l_dest_file_name.make_from_string (l_project_location)
+						l_dest_file_name.set_file_name (l_tool_bar_button_file + "_" + a_index.out + ".e")
+						create l_dest_file.make_create_read_write (l_dest_file_name)
+						from
+							l_file.open_read
+							l_file.start
+						until
+							l_file.after
+						loop
+							-- replace/add tab codes here
+							l_file.read_line
+							l_last_string := l_file.last_string
+							l_last_string.replace_substring_all ("$INDEX", a_index.out)
+							l_dest_file.put_string (l_last_string + "%N")
+						end
+
+						l_file.close
+						l_dest_file.close
+					end
+
+					-- Generate tool bar button imp class
+					create l_file_name.make_from_string (l_constants.template)
+					l_file_name.set_subdirectory (l_sub_imp_dir)
+					l_file_name.set_file_name (l_tool_bar_button_imp_file + ".e")
+					create l_file.make (l_file_name)
+					if l_file.exists and then l_file.is_readable then
+						create l_dest_file_name.make_from_string (l_project_location)
+						l_dest_file_name.set_file_name (l_tool_bar_button_imp_file + "_" + a_index.out + ".e")
+						create l_dest_file.make (l_dest_file_name)
+						if not l_dest_file.exists then
+							l_dest_file.create_read_write
+							from
+								l_file.open_read
+								l_file.start
+							until
+								l_file.after
+							loop
+								-- replace/add tab codes here
+								l_file.read_line
+								l_last_string := l_file.last_string
+								l_last_string.replace_substring_all ("$INDEX", a_index.out)
+								l_dest_file.put_string (l_last_string + "%N")
+							end
+
+							l_file.close
+							l_dest_file.close
+						end
+
+					end
+				end
+			end
+		end
+
+	generate_checkbox_class (a_checkbox_node: EV_TREE_NODE; a_index: INTEGER)
+			--
+		require
+			not_void: a_checkbox_node /= void
+			valid: a_checkbox_node.text.is_equal ({ER_XML_CONSTANTS}.check_box)
+		local
+			l_file, l_dest_file: RAW_FILE
+			l_constants: ER_MISC_CONSTANTS
+			l_file_name, l_dest_file_name: FILE_NAME
+			l_singleton: ER_SHARED_SINGLETON
+			l_sub_dir, l_tool_bar_button_file, l_sub_imp_dir, l_tool_bar_button_imp_file: STRING
+			l_last_string: STRING
+		do
+			create l_singleton
+			l_sub_dir := "code_generated_once_change_by_user"
+			l_tool_bar_button_file := "ribbon_checkbox_imp"
+			l_sub_imp_dir := "code_generated_everytime"
+			l_tool_bar_button_imp_file := "ribbon_checkbox"
 
 			if attached l_singleton.project_info_cell.item as l_project_info then
 				if attached l_project_info.project_location as l_project_location then

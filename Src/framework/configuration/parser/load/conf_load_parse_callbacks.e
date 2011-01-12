@@ -1580,11 +1580,23 @@ feature {NONE} -- Implementation attribute processing
 		local
 			l_value: STRING
 		do
-			l_value := current_attributes.item (at_value)
-			if l_value = Void or else not l_value.is_boolean then
-				set_parse_error_message (conf_interface_names.e_parse_incorrect_multithreaded)
+			if current_namespace >= namespace_1_8_0 then
+					-- "multithreaded" tag is not available.
+				set_parse_error_message (conf_interface_names.e_parse_incorrect_condition)
 			else
-				current_condition.set_multithreaded (l_value.to_boolean)
+					-- Retrieve boolean value.
+				l_value := current_attributes.item (at_value)
+				if l_value = Void or else not l_value.is_boolean then
+						-- The value is invalid.
+					set_parse_error_message (conf_interface_names.e_parse_incorrect_multithreaded)
+				else
+						-- Convert "multithreaded" condition to "concurrency" condition.
+					if l_value.to_boolean then
+						current_condition.add_concurrency (concurrency_multithreaded)
+					else
+						current_condition.add_concurrency (concurrency_none)
+					end
+				end
 			end
 		end
 
@@ -1598,39 +1610,44 @@ feature {NONE} -- Implementation attribute processing
 			l_invert: BOOLEAN
 			l_conc: INTEGER
 		do
-			l_name := current_attributes.item (at_name)
-			l_value := current_attributes.item (at_value)
-			l_excluded_value := current_attributes.item (at_excluded_value)
-			if l_value = Void and then l_excluded_value = Void then
-					-- No value is set so we are in an invalid state.
-				set_parse_error_message (conf_interface_names.e_parse_incorrect_concurrency ("(undefined)"))
-			elseif l_value /= Void and then l_excluded_value /= Void then
-				set_parse_error_message (conf_interface_names.e_parse_incorrect_concurrency ("(Cannot include and exclude at the same time)"))
-			elseif l_value /= Void then
-				l_concurrency_values := l_value.split (' ')
-				-- Check for value and exclude_value tags.
+			if current_namespace < namespace_1_8_0 then
+					-- "concurrency" tag is not available.
+				set_parse_error_message (conf_interface_names.e_parse_incorrect_condition)
 			else
-				l_concurrency_values := l_excluded_value.split (' ')
-				l_invert := True
-			end
+				l_name := current_attributes.item (at_name)
+				l_value := current_attributes.item (at_value)
+				l_excluded_value := current_attributes.item (at_excluded_value)
+				if l_value = Void and then l_excluded_value = Void then
+						-- No value is set so we are in an invalid state.
+					set_parse_error_message (conf_interface_names.e_parse_incorrect_concurrency ("(undefined)"))
+				elseif l_value /= Void and then l_excluded_value /= Void then
+					set_parse_error_message (conf_interface_names.e_parse_incorrect_concurrency ("(Cannot include and exclude at the same time)"))
+				elseif l_value /= Void then
+					l_concurrency_values := l_value.split (' ')
+					-- Check for value and exclude_value tags.
+				else
+					l_concurrency_values := l_excluded_value.split (' ')
+					l_invert := True
+				end
 
-			if not is_error then
-				from
-					l_concurrency_values.start
-				until
-					l_concurrency_values.after or is_error
-				loop
-					l_conc := get_concurrency (l_concurrency_values.item)
-					if not valid_concurrency (l_conc) then
-						set_parse_error_message (conf_interface_names.e_parse_incorrect_concurrency (l_concurrency_values.item))
-					else
-						if l_invert then
-							current_condition.exclude_concurrency (l_conc)
+				if not is_error then
+					from
+						l_concurrency_values.start
+					until
+						l_concurrency_values.after or is_error
+					loop
+						l_conc := get_concurrency (l_concurrency_values.item)
+						if not valid_concurrency (l_conc) then
+							set_parse_error_message (conf_interface_names.e_parse_incorrect_concurrency (l_concurrency_values.item))
 						else
-							current_condition.add_concurrency (l_conc)
+							if l_invert then
+								current_condition.exclude_concurrency (l_conc)
+							else
+								current_condition.add_concurrency (l_conc)
+							end
 						end
+						l_concurrency_values.forth
 					end
-					l_concurrency_values.forth
 				end
 			end
 		end
@@ -2704,7 +2721,7 @@ invariant
 	factory_not_void: factory /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

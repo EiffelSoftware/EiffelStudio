@@ -46,9 +46,6 @@ feature -- Access
 	concurrency: EQUALITY_TUPLE [TUPLE [value: ARRAYED_LIST [INTEGER]; invert: BOOLEAN]]
 			-- Concurrency setting where it is is enabled or for which it is disabled (if `invert' is true)
 
-	multithreaded: CELL [BOOLEAN]
-			-- Enabled for multithreaded?
-
 	dotnet: CELL [BOOLEAN]
 			-- Enabled for dotnet?
 
@@ -76,10 +73,6 @@ feature -- Queries
 			l_var_key, l_var_val: STRING_GENERAL
 		do
 			Result := True
-				-- multithreaded
-			if Result and multithreaded /= Void then
-				Result := a_state.is_multithreaded = multithreaded.item
-			end
 
 				-- concurrency
 			if Result and concurrency /= Void then
@@ -217,12 +210,6 @@ feature -- Update
 			build_void: build = Void
 		end
 
-	set_multithreaded (a_value: BOOLEAN)
-			-- Set `multithreaded' to `a_value'.
-		do
-			create multithreaded.put (a_value)
-		end
-
 	add_concurrency (a_concurrency: INTEGER)
 			-- Add requirement on `a_concurrency'.
 		require
@@ -268,12 +255,6 @@ feature -- Update
 			-- Set `dynamic_runtime' to `a_value'.
 		do
 			create dynamic_runtime.put (a_value)
-		end
-
-	unset_multithreaded
-			-- Unset `multithreaded'.
-		do
-			multithreaded := Void
 		end
 
 	unset_dotnet
@@ -355,9 +336,6 @@ feature -- Output
 
 	out: STRING
 			-- Text representation for the conditions.
-		local
-			l_conc: STRING
-			l_lst: ARRAYED_LIST [INTEGER]
 		do
 			create Result.make_empty
 
@@ -386,14 +364,6 @@ feature -- Output
 					Result.append (".NET and ")
 				else
 					Result.append ("not .NET and ")
-				end
-			end
-
-			if multithreaded /= Void then
-				if multithreaded.item then
-					Result.append ("multithreaded and ")
-				else
-					Result.append ("not multithreaded and ")
 				end
 			end
 

@@ -487,12 +487,41 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	append_condition_list (condition: like {CONF_CONDITION}.platform; get_name: FUNCTION [ANY, TUPLE [INTEGER], STRING]; name: READABLE_STRING_8)
+			-- Append condition of name `name' with values specified by `condition' with printable elements that can be obtained using `get_name'.
+		require
+			condition_attached: attached condition
+			get_name_attached: attached get_name
+			name_attached: attached name
+		do
+			check attached condition.item as i and then attached i.value as v then
+				append_text_indent ("<")
+				append_text (name)
+				if i.invert then
+					append_text (" excluded_value=%"")
+				else
+					append_text (" value=%"")
+				end
+				from
+					v.start
+				until
+					v.after
+				loop
+					append_text (get_name.item ([v.item]).as_lower)
+					append_text (" ")
+					v.forth
+				end
+				text.remove_tail (1)
+				append_text ("%"/>%N")
+			end
+		end
+
+
 	append_conditionals (a_conditions: ARRAYED_LIST [CONF_CONDITION]; is_assembly: BOOLEAN)
 			-- Append `a_conditions' ignore platform if it `is_assembly'.
 		local
 			l_condition: CONF_CONDITION
 			l_done: BOOLEAN
-			l_platforms, l_builds: ARRAYED_LIST [INTEGER]
 			l_custs: HASH_TABLE [EQUALITY_TUPLE [TUPLE [value: STRING_GENERAL; invert: BOOLEAN]], STRING_GENERAL]
 			l_custom: EQUALITY_TUPLE [TUPLE [value: STRING_GENERAL; invert: BOOLEAN]]
 			l_versions: HASH_TABLE [EQUALITY_TUPLE [TUPLE [min: CONF_VERSION; max: CONF_VERSION]], STRING]
@@ -503,7 +532,7 @@ feature {NONE} -- Implementation
 					-- assembly and only the default rule? => don't print it
 				if is_assembly and then a_conditions.count = 1 then
 					l_condition := a_conditions.first
-					l_done := l_condition.build = Void and l_condition.platform = Void and l_condition.multithreaded = Void and l_condition.version.is_empty and l_condition.custom.is_empty
+					l_done := l_condition.build = Void and l_condition.platform = Void and l_condition.concurrency = Void and l_condition.version.is_empty and l_condition.custom.is_empty
 				end
 				if not l_done then
 					from
@@ -515,46 +544,20 @@ feature {NONE} -- Implementation
 						indent := indent + 1
 
 						l_condition := a_conditions.item
-						if l_condition.platform /= Void then
-							if l_condition.platform.item.invert then
-								append_text_indent ("<platform excluded_value=%"")
-							else
-								append_text_indent ("<platform value=%"")
-							end
-							from
-								l_platforms := l_condition.platform.item.value
-								l_platforms.start
-							until
-								l_platforms.after
-							loop
-								append_text (get_platform_name (l_platforms.item).as_lower + " ")
-								l_platforms.forth
-							end
-							text.remove_tail (1)
-							append_text ("%"/>%N")
+						if attached l_condition.platform as p then
+							append_condition_list (p, agent get_platform_name, "platform")
 						end
-
-						if l_condition.build /= Void then
-							if l_condition.build.item.invert then
-								append_text_indent ("<build excluded_value=%"")
-							else
-								append_text_indent ("<build value=%"")
-							end
-							from
-								l_builds := l_condition.build.item.value
-								l_builds.start
-							until
-								l_builds.after
-							loop
-								append_text (get_build_name (l_builds.item).as_lower + " ")
-								l_builds.forth
-							end
-							text.remove_tail (1)
-							append_text ("%"/>%N")
+						if attached l_condition.build as b then
+							append_condition_list (b, agent get_build_name, "build")
 						end
-
-						if l_condition.multithreaded /= Void then
-							append_text_indent ("<multithreaded value=%""+l_condition.multithreaded.item.out.as_lower+"%"/>%N")
+						if attached l_condition.concurrency as c then
+							if namespace >= namespace_1_8_0 then
+									-- Use "concurrency" condition.
+								append_condition_list (c, agent get_concurrency_name, "concurrency")
+							else
+									-- Use "multithreaded" condition.
+								append_text_indent ("<multithreaded value=%""+ (c.item.value.has (concurrency_none) = c.item.invert).out.as_lower+"%"/>%N")
+							end
 						end
 
 						if l_condition.dynamic_runtime /= Void then
@@ -1132,7 +1135,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

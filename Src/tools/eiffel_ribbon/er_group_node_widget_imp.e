@@ -41,7 +41,7 @@ feature {NONE}-- Initialization
 			l_ev_label_1.align_text_left
 			l_ev_label_2.set_text ("Group")
 			l_ev_label_2.align_text_left
-			l_ev_label_3.set_text ("Command name:")
+			l_ev_label_3.set_text ("Identifier:")
 			l_ev_label_3.align_text_left
 			l_ev_label_4.set_text ("Label title:")
 			l_ev_label_4.align_text_left

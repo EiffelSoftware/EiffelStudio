@@ -1155,6 +1155,12 @@ rt_public int eif_gen_conf (EIF_TYPE_INDEX stype, EIF_TYPE_INDEX ttype)
 	int result;
 	unsigned char mask;
 
+	if (ttype > MAX_DTYPE) {
+			/* Target is NONE, it can conform only if source is also NONE. */
+		CHECK("NONE type", ttype == NONE_TYPE);
+		return stype == ttype;
+	}
+
 	if (stype == ttype) {
 		return 1;
 	}

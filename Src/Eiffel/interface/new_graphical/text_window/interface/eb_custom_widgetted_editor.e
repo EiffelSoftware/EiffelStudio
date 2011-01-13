@@ -553,6 +553,7 @@ feature {NONE} -- Action hanlders
 			l_handler: like token_handler
 			l_cursor: EIFFEL_EDITOR_CURSOR
 			l_instant: BOOLEAN
+			evapp: like ev_application
 		do
 			if is_interface_usable and then not is_empty and then text_is_fully_loaded then
 				l_handler := token_handler
@@ -563,7 +564,8 @@ feature {NONE} -- Action hanlders
 						position_cursor (l_cursor, a_abs_x, a_abs_y - editor_viewport.y_offset)
 						if attached l_cursor.token as l_token then
 								-- An instant key (CTRL) allows direct processing of the token.
-							l_instant := (ev_application.ctrl_pressed and then not ev_application.alt_pressed and then not ev_application.shift_pressed)
+							evapp := ev_application
+							l_instant := (evapp.ctrl_pressed and then not evapp.alt_pressed and then not evapp.shift_pressed)
 							if l_instant or else not l_handler.is_active then
 									-- Even if the handler is active, an instant key will override it.
 								if l_handler.is_applicable_token (l_token) then
@@ -794,7 +796,7 @@ feature {NONE} -- Internal implentation cache
 			-- Note: Do not use directly!
 
 ;note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

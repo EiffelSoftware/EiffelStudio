@@ -64,7 +64,10 @@ feature -- Byte Code generation
 			byte_code := Inv_byte_server.item (written_in)
 
 			Byte_array.clear
+			byte_context.set_byte_code (create {STD_BYTE_CODE})
+			byte_context.set_current_feature (Current)
 			melted_generator.generate (byte_array, byte_code)
+			byte_context.clear_feature_data
 
 			melted_feature := Byte_array.melted_feature
 			melted_feature.set_real_body_id (exec.real_body_id)

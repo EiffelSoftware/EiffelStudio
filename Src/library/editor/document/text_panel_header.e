@@ -41,9 +41,6 @@ inherit
 create
 	make_with_panel
 
-create {TEXT_PANEL_HEADER}
-	make, make_filled
-
 feature -- Creation
 
 	make_with_panel (a_text_panel: TEXT_PANEL)
@@ -526,6 +523,13 @@ feature {NONE} -- Implementation
 			open_linked_list.remove
 			open_linked_list.extend (a_item)
 			open_linked_list.finish
+		end
+
+feature {NONE} -- Implementation
+
+	new_filled_list (n: INTEGER_32): like Current
+		do
+			create Result.make_with_panel (panel)
 		end
 
 invariant

@@ -6,18 +6,17 @@ note
 	date		: "$Date$"
 	revision	: "$Revision$"
 
-class
+deferred class
 	DOCUMENT_LIST [G -> DOCUMENT_ITEM]
 
 inherit
 	ARRAYED_LIST [G]
+		undefine
+			new_filled_list
 		redefine
 			remove,
 			extend
 		end
-
-create {DOCUMENT_LIST}
-	make, make_filled
 
 feature -- List operations
 

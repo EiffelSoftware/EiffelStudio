@@ -80,7 +80,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_start_directory (a_path: STRING_GENERAL)
+	set_start_directory (a_path: READABLE_STRING_GENERAL)
 			-- Make `a_path' the base directory.
 		do
 			set_starting_folder (a_path)

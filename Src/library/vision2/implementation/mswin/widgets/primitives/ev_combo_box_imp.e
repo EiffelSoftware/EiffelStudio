@@ -400,7 +400,7 @@ feature -- Status setting
 			{WEL_API}.send_message (edit_item, Em_setsel, to_wparam (pos), to_lparam (pos))
 		end
 
-	set_tooltip (a_tooltip: STRING_GENERAL)
+	set_tooltip (a_tooltip: READABLE_STRING_GENERAL)
 			-- Assign `a_tooltip' to tooltip.
 		do
 				-- We need to set the tooltip on all the components of the combobox.
@@ -446,7 +446,7 @@ feature -- Basic operation
 			{WEL_API}.send_message (edit_item, Wm_paste, to_wparam (0), to_lparam (0))
 		end
 
-	replace_selection (txt: STRING_GENERAL)
+	replace_selection (txt: READABLE_STRING_GENERAL)
 			-- Replace the current selection with `txt'.
 			-- If there is no selection, `txt' is inserted
 			-- at the current `caret_position'.

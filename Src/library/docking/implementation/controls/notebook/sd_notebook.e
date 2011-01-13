@@ -131,7 +131,7 @@ feature -- Command
 			end
 		end
 
-	set_item_text (a_content: SD_CONTENT; a_text: STRING_GENERAL)
+	set_item_text (a_content: SD_CONTENT; a_text: READABLE_STRING_GENERAL)
 			-- Assign `a_text' to label of `an_item'
 		require
 			has: has (a_content)

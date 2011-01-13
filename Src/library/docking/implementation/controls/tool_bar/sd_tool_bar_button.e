@@ -31,13 +31,13 @@ feature {NONE} -- Initlization
 
 feature -- Properties
 
-	set_text (a_text: detachable STRING_GENERAL)
+	set_text (a_text: detachable READABLE_STRING_GENERAL)
 			-- Set `text', can set Void text
 		local
 			l_tool_bar: like tool_bar
 		do
 			if a_text /= Void then
-				text := a_text
+				text := a_text.as_string_32
 			else
 				text := Void
 			end
@@ -47,22 +47,22 @@ feature -- Properties
 			end
 			refresh
 		ensure
-			set: a_text /= Void implies (attached text as le_text and then le_text ~ (a_text.as_string_32))
+			set: a_text /= Void implies (attached text as l_text and then l_text.same_string_general (a_text))
 		end
 
 	text: detachable STRING_32
 			-- Text shown on item
 
-	set_tooltip (a_tip: STRING_GENERAL)
+	set_tooltip (a_tip: READABLE_STRING_GENERAL)
 			-- Set `a_tooltip' with `a_tip'
 		do
 			if a_tip /= Void then
-				tooltip := a_tip
+				tooltip := a_tip.as_string_32
 			else
 				tooltip := Void
 			end
 		ensure
-			set: a_tip /= Void implies (attached tooltip as le_tooltip and then le_tooltip ~ (a_tip.as_string_32))
+			set: a_tip /= Void implies (attached tooltip as l_tooltip and then l_tooltip.same_string_general (a_tip))
 		end
 
 	tooltip: detachable STRING_32

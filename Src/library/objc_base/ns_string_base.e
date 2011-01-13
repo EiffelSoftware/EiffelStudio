@@ -17,7 +17,7 @@ create {NS_OBJECT}
 	make_from_pointer,
 	share_from_pointer
 convert
-	make_with_string ({STRING_32, STRING_8, STRING_GENERAL}),
+	make_with_string ({STRING_32, STRING_8, READABLE_STRING_GENERAL, STRING_GENERAL}),
 	as_string_8: {STRING_8},
 	as_string_32: {STRING_32}
 

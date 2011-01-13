@@ -249,7 +249,7 @@ feature -- Status setting
 			end
 		end
 
-	set_tooltip (a_tooltip: STRING_GENERAL)
+	set_tooltip (a_tooltip: READABLE_STRING_GENERAL)
 			-- Assign `a_tooltip' to `internal_tooltip_string'.
 		do
 			internal_tooltip_string := a_tooltip.as_string_32
@@ -260,11 +260,11 @@ feature -- Status setting
 
 feature -- Element change
 
-	wel_set_text (txt: STRING_GENERAL)
+	wel_set_text (txt: READABLE_STRING_GENERAL)
 			-- Make `txt' the new label of `Current'.
 		do
 			if txt /= Void then
-				real_text := txt.twin
+				real_text := txt.as_string_32.twin
 			end
 			if attached parent_imp as l_parent_imp then
 				l_parent_imp.internal_reset_button (Current)

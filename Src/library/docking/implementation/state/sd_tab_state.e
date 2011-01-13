@@ -229,7 +229,7 @@ feature -- Redefine
 			l_docking_state: SD_DOCKING_STATE
 			l_tab_state: SD_TAB_STATE
 			l_tab_zone: detachable SD_TAB_ZONE
-			l_titles: detachable ARRAYED_LIST [STRING_GENERAL]
+			l_titles: detachable ARRAYED_LIST [READABLE_STRING_GENERAL]
 			l_selected_index: INTEGER
 		do
 			direction := a_data.direction
@@ -543,7 +543,7 @@ feature -- Redefine
 
 feature {SD_CONTENT} -- Redefine
 
-	change_short_title (a_title: STRING_GENERAL; a_content: SD_CONTENT)
+	change_short_title (a_title: READABLE_STRING_GENERAL; a_content: SD_CONTENT)
 			-- <Precursor>
 		do
 			if tab_zone.has (a_content) then
@@ -551,7 +551,7 @@ feature {SD_CONTENT} -- Redefine
 			end
 		end
 
-	change_long_title (a_title: STRING_GENERAL; a_content: SD_CONTENT)
+	change_long_title (a_title: READABLE_STRING_GENERAL; a_content: SD_CONTENT)
 			-- <Precursor>
 		do
 			-- During zone transforming, `tab_zone' maybe not has `a_content'
@@ -571,7 +571,7 @@ feature {SD_CONTENT} -- Redefine
 			end
 		end
 
-	change_tab_tooltip (a_text: detachable STRING_GENERAL)
+	change_tab_tooltip (a_text: detachable READABLE_STRING_GENERAL)
 			-- <Precursor>
 		do
 			-- During zone transforming, `tab_zone' maybe not has `a_content'
@@ -668,7 +668,7 @@ feature -- Properties redefine
 
 feature -- Query
 
-	content_count_valid (a_titles: ARRAYED_LIST [STRING_GENERAL]): BOOLEAN
+	content_count_valid (a_titles: ARRAYED_LIST [READABLE_STRING_GENERAL]): BOOLEAN
 		do
 			Result := a_titles.count > 1
 		end

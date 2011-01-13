@@ -328,7 +328,7 @@ feature -- Status report
 
 feature -- Search
 
-	search_string (searched_string: STRING_GENERAL)
+	search_string (searched_string: READABLE_STRING_GENERAL)
 			-- Search the text for the string `searched_string'.
 			-- If the search was successful, `successful_search' is
 			-- set to True and `found_string_line' &
@@ -558,7 +558,7 @@ feature {NONE} -- Implementation
 		   	Result := current_class.scanner
 		end
 
-	execute_lexer_with_wide_string (a_string: STRING_GENERAL)
+	execute_lexer_with_wide_string (a_string: READABLE_STRING_GENERAL)
 			-- Excute the lexer with wide string.
 			-- Convert the string back to `lexer.current_encoding' first.
 		require

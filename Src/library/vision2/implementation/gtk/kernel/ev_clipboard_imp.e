@@ -83,7 +83,7 @@ feature -- Access
 
 feature -- Status Setting
 
-	set_text (a_text: STRING_GENERAL)
+	set_text (a_text: READABLE_STRING_GENERAL)
 			-- Assign `a_text' to clipboard.
 		local
 			a_cs: EV_GTK_C_STRING

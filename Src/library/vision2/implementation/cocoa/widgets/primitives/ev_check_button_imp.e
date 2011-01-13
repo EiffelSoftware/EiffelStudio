@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 			align_text_left
 		end
 
-	accomodate_text (a_text: STRING_GENERAL)
+	accomodate_text (a_text: READABLE_STRING_GENERAL)
 			-- Change internal minimum size to make `a_text' fit.
 		local
 			t: TUPLE [width: INTEGER; height: INTEGER]

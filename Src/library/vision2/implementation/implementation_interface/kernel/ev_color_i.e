@@ -93,13 +93,13 @@ feature {EV_COLOR} -- Element change
 			blue_assigned: (blue - a_blue).abs <= delta
 		end
 
-	set_name (a_name: STRING_GENERAL)
+	set_name (a_name: READABLE_STRING_GENERAL)
 			-- Assign `a_name' to `name'.
 		require
 			name_not_void: a_name /= Void
 		deferred
 		ensure
-			name_assigned: name /= Void and then name.is_equal (a_name)
+			name_assigned: name /= Void and then name.same_string_general (a_name)
 		end
 
 feature {EV_COLOR} -- Conversion

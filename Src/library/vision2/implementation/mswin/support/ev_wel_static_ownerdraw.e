@@ -47,11 +47,11 @@ feature -- Access
 
 feature -- Element change
 
-	set_text (a_new_text: STRING_GENERAL)
+	set_text (a_new_text: READABLE_STRING_GENERAL)
 			-- Set the window text
 		do
 			if a_new_text /= Void then
-				internal_text := a_new_text.twin
+				internal_text := a_new_text.as_string_32.twin
 			else
 				internal_text := Void
 			end

@@ -71,17 +71,17 @@ feature -- Access: Default values
 
 feature -- Element change
 
-	set_value_decimal_separator(separator:STRING_GENERAL)
+	set_value_decimal_separator (separator: READABLE_STRING_GENERAL)
 			-- set the decimal separator for values
 		require
 			argument_not_void: separator /= Void
 		do
-			value_decimal_separator := separator.to_string_32
+			value_decimal_separator := separator.as_string_32
 		ensure
-			value_decimal_separator_set: value_decimal_separator.is_equal(separator.as_string_32)
+			value_decimal_separator_set: value_decimal_separator.same_string_general (separator)
 		end
 
-	set_value_numbers_after_decimal_separator(numbers:INTEGER)
+	set_value_numbers_after_decimal_separator (numbers: INTEGER)
 			-- set the amount of numbers after a decimal separator in a numeric value
 		require
 			numbers_positive: numbers >= 0
@@ -91,44 +91,44 @@ feature -- Element change
 			value_numbers_after_decimal_separator_set: value_numbers_after_decimal_separator = numbers
 		end
 
-	set_value_group_separator(separator:STRING_GENERAL)
+	set_value_group_separator (separator: READABLE_STRING_GENERAL)
 			-- set the group separator for values - sometimes called "thousands separator"
 		require
 			argument_not_void: separator /= Void
 		do
-			value_group_separator := separator.to_string_32
+			value_group_separator := separator.as_string_32
 		ensure
-			value_group_separator_set: value_group_separator.is_equal(separator.as_string_32)
+			value_group_separator_set: value_group_separator.same_string_general (separator)
 		end
 
-	set_value_number_list_separator(separator:STRING_GENERAL)
+	set_value_number_list_separator (separator: READABLE_STRING_GENERAL)
 			-- set the  separator for lists of numbers
 		require
 			argument_not_void: separator /= Void
 		do
-			value_number_list_separator := separator.to_string_32
+			value_number_list_separator := separator.as_string_32
 		ensure
-			value_number_list_separator_set: value_number_list_separator.is_equal(separator.as_string_32)
+			value_number_list_separator_set: value_number_list_separator.same_string_general (separator)
 		end
 
-	set_value_positive_sign (a_string: STRING_GENERAL)
+	set_value_positive_sign (a_string: READABLE_STRING_GENERAL)
 			-- set the positive sign to use
 		require
 			argument_not_void: a_string /= Void
 		do
-			value_positive_sign := a_string
+			value_positive_sign := a_string.as_string_32
 		ensure
-			value_positive_sign_set: value_positive_sign.is_equal (a_string)
+			value_positive_sign_set: value_positive_sign.same_string_general (a_string)
 		end
 
-	set_value_negative_sign (a_string: STRING_GENERAL)
+	set_value_negative_sign (a_string: READABLE_STRING_GENERAL)
 			-- set the negative sign to use
 		require
 			argument_not_void: a_string /= Void
 		do
-			value_negative_sign := a_string
+			value_negative_sign := a_string.as_string_32
 		ensure
-			value_negative_sign_set: value_negative_sign.is_equal (a_string)
+			value_negative_sign_set: value_negative_sign.same_string_general (a_string)
 		end
 
 	set_value_grouping (a_array: ARRAY[INTEGER])
@@ -143,7 +143,7 @@ feature -- Element change
 
 note
 	library:   "Internationalization library"
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

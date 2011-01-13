@@ -156,7 +156,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	insert_text (a_text: STRING_GENERAL)
+	insert_text (a_text: READABLE_STRING_GENERAL)
 			-- Insert `a_text' to right of `caret_position'.
 		require
 			not_destroyed: not is_destroyed
@@ -171,7 +171,7 @@ feature -- Element change
 			caret_not_moved: old caret_position = caret_position
 		end
 
-	append_text (a_text: STRING_GENERAL)
+	append_text (a_text: READABLE_STRING_GENERAL)
 			-- Append `a_text' to `text'.
 		require
 			not_destroyed: not is_destroyed
@@ -180,11 +180,11 @@ feature -- Element change
 		do
 			implementation.append_text (a_text)
 		ensure
-			text_appended: check_text_modification (old text, a_text)
+			text_appended: check_text_modification (old text, a_text.as_string_32)
 			caret_not_moved: old caret_position = caret_position
 		end
 
-	prepend_text (a_text: STRING_GENERAL)
+	prepend_text (a_text: READABLE_STRING_GENERAL)
 			-- Prepend `a_text' to `text'.
 		require
 			not_destroyed: not is_destroyed

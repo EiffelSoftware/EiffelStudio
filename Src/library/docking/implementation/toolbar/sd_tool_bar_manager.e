@@ -58,7 +58,7 @@ feature -- Query
 	contents: ACTIVE_LIST [SD_TOOL_BAR_CONTENT]
 			-- All tool bar contents.
 
-	content_by_title (a_title: STRING_GENERAL): SD_TOOL_BAR_CONTENT
+	content_by_title (a_title: READABLE_STRING_GENERAL): SD_TOOL_BAR_CONTENT
 			-- SD_TOOL_BAR_CONTENT which has `a_title'.
 		require
 			not_destroyed: not is_destroyed
@@ -84,7 +84,7 @@ feature -- Query
 			Result := l_result
 		end
 
-	has (a_unique_title: STRING_GENERAL): BOOLEAN
+	has (a_unique_title: READABLE_STRING_GENERAL): BOOLEAN
 			-- If `content' has item which unique title is `a_unique_title'?
 		require
 			a_unique_title_not_void: a_unique_title /= Void
@@ -598,7 +598,7 @@ feature {NONE} -- Implementation
 			l_menu_item: EV_CHECK_MENU_ITEM
 			l_separator: EV_MENU_SEPARATOR
 			l_custom_dialog: SD_TOOL_BAR_HIDDEN_ITEM_DIALOG
-			l_string: STRING_GENERAL
+			l_string: READABLE_STRING_GENERAL
 			l_contents: like contents
 		do
 			create Result

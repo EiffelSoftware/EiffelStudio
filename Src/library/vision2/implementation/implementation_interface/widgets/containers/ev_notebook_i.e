@@ -97,7 +97,7 @@ feature {EV_NOTEBOOK} -- Status setting
 
 feature {EV_NOTEBOOK} -- Element change
 
-	set_item_text (an_item: like item; a_text: STRING_GENERAL)
+	set_item_text (an_item: like item; a_text: READABLE_STRING_GENERAL)
 			-- Assign `a_text' to the label for `an_item'.
 		require
 			interface_has_an_item: attached an_item and then attached_interface.has (an_item)

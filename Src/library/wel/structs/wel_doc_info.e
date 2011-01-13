@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_document_name: STRING_GENERAL)
+	make (a_document_name: READABLE_STRING_GENERAL)
 			-- Make doc info structure with `document_name'.
 		require
 			a_document_name_not_void: a_document_name /= Void
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			set_document_name (a_document_name)
 			set_default_output
 		ensure
-			document_name_set: document_name.is_equal (a_document_name)
+			document_name_set: document_name.same_string_general (a_document_name)
 		end
 
 feature -- Access
@@ -55,7 +55,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_document_name (a_document_name: STRING_GENERAL)
+	set_document_name (a_document_name: READABLE_STRING_GENERAL)
 			-- Set `document_name' with `a_document_name'.
 		require
 			a_document_name_not_void: a_document_name /= Void
@@ -63,10 +63,10 @@ feature -- Element change
 			create str_document_name.make (a_document_name)
 			cwel_doc_info_set_lpszdocname (item, str_document_name.item)
 		ensure
-			document_name_set: document_name.is_equal (a_document_name)
+			document_name_set: document_name.same_string_general (a_document_name)
 		end
 
-	set_output (an_output: STRING_GENERAL)
+	set_output (an_output: READABLE_STRING_GENERAL)
 			-- Set `output' with `an_output'.
 		require
 			an_output_not_void: an_output /= Void
@@ -74,7 +74,7 @@ feature -- Element change
 			create str_output.make (an_output)
 			cwel_doc_info_set_lpszoutput (item, str_output.item)
 		ensure
-			output_set: output.is_equal (an_output)
+			output_set: output.same_string_general (an_output)
 		end
 
 	set_default_output
@@ -149,14 +149,14 @@ invariant
 	str_document_name_not_void: str_document_name /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

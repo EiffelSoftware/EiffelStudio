@@ -313,7 +313,7 @@ feature -- Command
 			end
 		end
 
-	set_tooltip (a_tooltip: STRING_GENERAL)
+	set_tooltip (a_tooltip: READABLE_STRING_GENERAL)
 			-- Assign `a_tooltip' to `tooltip'
 		do
 			tool_bar.set_tooltip (a_tooltip)

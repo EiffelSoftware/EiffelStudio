@@ -19,22 +19,22 @@ create
 
 feature {NONE} -- Initlization
 
-	make_with_items (a_unique_title: STRING_GENERAL; a_items: like items)
+	make_with_items (a_unique_title: READABLE_STRING_GENERAL; a_items: like items)
 			-- Creation method
 		require
 			a_title_not_void: a_unique_title /= Void
 			a_items_not_void: a_items /= Void
 		do
-			unique_title := a_unique_title
+			unique_title := a_unique_title.as_string_32
 			-- We set display title same as unique title by default
-			title := a_unique_title
+			title := unique_title.twin
 			items := a_items
 		ensure
-			set: unique_title.is_equal (a_unique_title.as_string_32)
+			set: unique_title.same_string_general (a_unique_title)
 			set: items = a_items
 		end
 
-	make_with_tool_bar (a_unique_title: STRING_GENERAL; a_tool_bar: EV_TOOL_BAR)
+	make_with_tool_bar (a_unique_title: READABLE_STRING_GENERAL; a_tool_bar: EV_TOOL_BAR)
 			-- Creation method. A helper function, actually SD_TOOL_BAR_ZONE only appcept EV_TOOL_BAR_ITEMs.
 			-- Warning: use this method will lose alpha data, which will show nothing when use AlphaBlend functions!
 		require
@@ -64,7 +64,7 @@ feature {NONE} -- Initlization
 			set: a_tool_bar.count = items.count
 		end
 
-	convert_to_sd_item (a_ev_item: EV_TOOL_BAR_ITEM; a_name: STRING_GENERAL): SD_TOOL_BAR_ITEM
+	convert_to_sd_item (a_ev_item: EV_TOOL_BAR_ITEM; a_name: READABLE_STRING_GENERAL): SD_TOOL_BAR_ITEM
 			-- Convert a EV_TOOL_BAR_ITEM to SD_TOOL_BAR_ITEM
 			-- Warning: use this method to convert pixmap in `a_ev_item' will lose alpha data, which will show nothing when use AlphaBlend functions!
 		require
@@ -169,15 +169,15 @@ feature -- Command
 			end
 		end
 
-	set_title (a_display_title: STRING_GENERAL)
+	set_title (a_display_title: READABLE_STRING_GENERAL)
 			-- Set `title' with `a_display_title'
 		require
 			not_destroyed: not is_destroyed
 			not_void: a_display_title /= Void
 		do
-			title := a_display_title
+			title := a_display_title.as_string_32
 		ensure
-			set: title.is_equal (a_display_title.as_string_32)
+			set: title.same_string_general (a_display_title)
 		end
 
 	set_top (a_direction: INTEGER)
@@ -784,14 +784,14 @@ invariant
 
 ;note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

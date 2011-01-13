@@ -279,7 +279,7 @@ feature {EV_TREE_NODE_IMP} -- Implementation
 		do
 		end
 
-	set_text_on_position (a_tree_node_imp: EV_TREE_NODE_IMP; a_text: STRING_GENERAL)
+	set_text_on_position (a_tree_node_imp: EV_TREE_NODE_IMP; a_text: READABLE_STRING_GENERAL)
 			-- Set cell text at to `a_text'.
 		do
 		end

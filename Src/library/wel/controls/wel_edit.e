@@ -132,7 +132,7 @@ feature -- Basic operations
 			has_no_selection: not has_selection
 		end
 
-	replace_selection (new_text: STRING_GENERAL)
+	replace_selection (new_text: READABLE_STRING_GENERAL)
 			-- Replace the current selection with `new_text'.
 			-- If there is no selection, `new_text' is inserted
 			-- at the current `caret_position'.

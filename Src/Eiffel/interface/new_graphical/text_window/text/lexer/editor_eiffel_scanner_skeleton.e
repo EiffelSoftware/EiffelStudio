@@ -241,7 +241,7 @@ feature {NONE} -- Encoding conversion
 		do
 			utf8.convert_to (utf32, a_string)
 			if utf8.last_conversion_successful then
-				Result := utf8.last_converted_string
+				Result := utf8.last_converted_string_32
 			else
 				Result := a_string
 			end

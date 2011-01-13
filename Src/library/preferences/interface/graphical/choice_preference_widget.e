@@ -66,7 +66,7 @@ feature {NONE} -- Command
 		local
 			l_value,
 			l_item: STRING
-			l_displayed_value: detachable STRING_GENERAL
+			l_displayed_value: detachable STRING_32
 			l_cnt, nb_values: INTEGER
 			l_pref_value: detachable ARRAY [STRING]
 			l_value_mapping: like value_mapping
@@ -147,13 +147,12 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	displayed_values: ARRAY [STRING_GENERAL]
+	displayed_values: ARRAY [READABLE_STRING_GENERAL]
 			-- Displayed values
 			-- If `value_mapping' is Void or empty, original values are used.
 		local
 			l_array: ARRAY [STRING]
 			i: INTEGER
-			s: detachable STRING_GENERAL
 		do
 			if attached value_mapping as vmap and then not vmap.is_empty then
 				l_array := preference.value
@@ -163,10 +162,8 @@ feature {NONE} -- Implementation
 				until
 					i > l_array.upper
 				loop
-					if vmap.has_key (l_array.item (i)) then
-						s := vmap.found_item
-						check s /= Void end -- implied by `has_key'
-						Result.put (s, i)
+					if vmap.has_key (l_array.item (i)) and then attached vmap.found_item as l_item then
+						Result.put (l_item, i)
 					else
 						Result.put (l_array.item (i), i)
 					end
@@ -177,27 +174,25 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	displayed_selected_value: STRING_GENERAL
+	displayed_selected_value: STRING_32
 			-- Displayed value
 		local
-			l_selected: detachable STRING
-			s: detachable STRING_GENERAL
+			s: detachable STRING_32
 		do
-			l_selected := preference.selected_value
-			if attached value_mapping as v and l_selected /= Void then
-				s := v.item (l_selected)
-			end
-			if s /= Void then
-				Result := s
+			if attached preference.selected_value as l_selected then
+				if attached value_mapping as v and then attached v.item (l_selected) as l_found_item then
+					Result := l_found_item
+				else
+					Result := l_selected
+				end
 			else
-				check l_selected /= Void end -- implied by ... ?
-				Result := l_selected
+				Result := ""
 			end
 		ensure
 			Result_not_void: Result /= Void
 		end
 
-	value_mapping: detachable HASH_TABLE [STRING_GENERAL, STRING];
+	value_mapping: detachable HASH_TABLE [STRING_32, STRING];
 			-- Key: values
 			-- Item: strings displayed
 

@@ -61,7 +61,7 @@ feature -- Access
 				new_preference (a_manager.preferences, a_manager, a_name, a_fallback_value)
 		ensure
 			has_result: Result /= Void
-			preference_name_set: Result.name.is_equal (a_name)
+			preference_name_set: Result.name.same_string_general (a_name)
 			preference_added: a_manager.preferences.has_preference (a_name)
 		end
 

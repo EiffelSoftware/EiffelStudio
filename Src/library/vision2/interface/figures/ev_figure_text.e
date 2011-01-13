@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 			Precursor {EV_ATOMIC_FIGURE}
 		end
 
-	make_with_text (a_text: STRING_GENERAL)
+	make_with_text (a_text: READABLE_STRING_GENERAL)
 			-- Create with `a_text'.
 		require
 			a_text_not_void: a_text /= Void
@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	text: STRING_GENERAL
+	text: READABLE_STRING_GENERAL
 			-- Text that is displayed.
 
 	font: EV_FONT
@@ -89,7 +89,7 @@ feature -- Status setting
 			font_assigned: font = a_font
 		end
 
-	set_text (a_text: STRING_GENERAL)
+	set_text (a_text: READABLE_STRING_GENERAL)
 			-- Assign `a_text' to `text'.
 		require
 			a_text_not_void: a_text /= Void

@@ -169,7 +169,7 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-	string_general_to_stream (a_string: STRING_GENERAL): STRING
+	string_general_to_stream (a_string: READABLE_STRING_GENERAL): STRING
 			-- Streamize `a_string'.
 		require
 			a_string_not_void: a_string /= Void
@@ -244,14 +244,14 @@ feature {NONE} -- Endian
 
 note
 	library:   "Encoding: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

@@ -155,21 +155,21 @@ feature {EV_BUILDER} -- Status setting
 			pixmap_exists_set: not pixmap_exists
 		end
 
-	set_pixmap_path (path: detachable STRING_GENERAL)
-			-- Assign `path' to `pixmap_path'.
+	set_pixmap_path (a_path: detachable READABLE_STRING_GENERAL)
+			-- Assign `a_path' to `pixmap_path'.
 		do
-			if path = Void then
+			if a_path = Void then
 				pixmap_path := Void
 			else
-				pixmap_path := path
+				pixmap_path := a_path.as_string_32
 			end
 		ensure
-			pixmap_path_set: attached path as l_path implies (attached pixmap_path as l_pixmap_path and then l_path.is_equal (l_pixmap_path))
+			pixmap_path_set: a_path /= Void implies (attached pixmap_path as l_pixmap_path and then l_pixmap_path.same_string_general (a_path))
 		end
 
 feature -- Status setting
 
-	set_with_named_file (file_name: STRING_GENERAL)
+	set_with_named_file (file_name: READABLE_STRING_GENERAL)
 			-- Attempt to load pixmap data from a file specified by `file_name'.
 			-- May raise `Ev_unknown_image_format' or `Ev_corrupt_image_data'
 			-- exceptions.

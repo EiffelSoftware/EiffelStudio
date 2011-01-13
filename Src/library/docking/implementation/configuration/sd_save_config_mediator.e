@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 
 feature -- Save inner container data.
 
-	save_config_with_name (a_file: STRING_GENERAL; a_name: STRING_GENERAL): BOOLEAN
+	save_config_with_name (a_file: READABLE_STRING_GENERAL; a_name: READABLE_STRING_GENERAL): BOOLEAN
 			-- Save all docking library data to `a_file' with `a_name'
 		require
 			a_file_not_void: a_file /= Void
@@ -41,7 +41,7 @@ feature -- Save inner container data.
 			Result := save_config_data_to_file (l_config_data, a_file)
 		end
 
-	save_config_with_name_maximized_data (a_config_data: SD_CONFIG_DATA; a_name: STRING_GENERAL; a_save_maximized_data: BOOLEAN)
+	save_config_with_name_maximized_data (a_config_data: SD_CONFIG_DATA; a_name: READABLE_STRING_GENERAL; a_save_maximized_data: BOOLEAN)
 			-- Save all docking library data to `a_file' with `a_name'
 		require
 			a_config_data_not_void: a_config_data /= Void
@@ -77,7 +77,7 @@ feature -- Save inner container data.
 			cleared: top_container = Void
 		end
 
-	save_config (a_file: STRING_GENERAL): BOOLEAN
+	save_config (a_file: READABLE_STRING_GENERAL): BOOLEAN
 			-- Save all docking library data to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -85,7 +85,7 @@ feature -- Save inner container data.
 			Result := save_config_with_name (a_file, "")
 		end
 
-	save_editors_config (a_file: STRING_GENERAL): BOOLEAN
+	save_editors_config (a_file: READABLE_STRING_GENERAL): BOOLEAN
 			-- Save main window editor config data.
 		require
 			not_void: a_file /= Void
@@ -132,7 +132,7 @@ feature -- Save inner container data.
 			cleared: top_container = Void
 		end
 
-	save_tools_config (a_file: STRING_GENERAL): BOOLEAN
+	save_tools_config (a_file: READABLE_STRING_GENERAL): BOOLEAN
 			-- Save tools config, except all editors.
 		require
 			not_void: a_file /= Void
@@ -140,7 +140,7 @@ feature -- Save inner container data.
 			Result := save_tools_config_with_name (a_file, "")
 		end
 
-	save_tools_config_with_name (a_file: STRING_GENERAL; a_name: STRING_GENERAL): BOOLEAN
+	save_tools_config_with_name (a_file: READABLE_STRING_GENERAL; a_name: READABLE_STRING_GENERAL): BOOLEAN
 			-- Save tools config to `a_file' with `a_name'
 		require
 			not_called: top_container = Void
@@ -372,7 +372,7 @@ feature {NONE} -- Implementation
 		local
 			l_auto_hide_panel: SD_AUTO_HIDE_PANEL
 			l_tab_groups: ARRAYED_LIST [ARRAYED_LIST [SD_TAB_STUB]]
-			l_one_group_data: ARRAYED_LIST [TUPLE [STRING_GENERAL, INTEGER, INTEGER, INTEGER]]
+			l_one_group_data: ARRAYED_LIST [TUPLE [READABLE_STRING_GENERAL, INTEGER, INTEGER, INTEGER]]
 			l_one_group: ARRAYED_LIST [SD_TAB_STUB]
 		do
 			l_auto_hide_panel := internal_docking_manager.query.auto_hide_panel (a_direction)
@@ -482,7 +482,7 @@ feature {NONE} -- Implementation
 			l_rows: LINEAR [EV_WIDGET]
 			l_tool_bars: ARRAYED_LIST [SD_TOOL_BAR_ZONE]
 			l_zone: SD_TOOL_BAR_ZONE
-			l_row_data: ARRAYED_LIST [TUPLE [STRING_GENERAL, INTEGER, SD_TOOL_BAR_ZONE_STATE]]
+			l_row_data: ARRAYED_LIST [TUPLE [READABLE_STRING_GENERAL, INTEGER, SD_TOOL_BAR_ZONE_STATE]]
 		do
 			l_tool_bar_area := internal_docking_manager.tool_bar_manager.tool_bar_container (a_direction)
 			l_rows := l_tool_bar_area.linear_representation
@@ -560,7 +560,7 @@ feature {NONE} -- Implementation
 			a_config_data.set_resizable_items_data (internal_docking_manager.property.resizable_items_data)
 		end
 
-	save_config_data_to_file (a_config_data: ANY; a_file: STRING_GENERAL): BOOLEAN
+	save_config_data_to_file (a_config_data: ANY; a_file: READABLE_STRING_GENERAL): BOOLEAN
 			-- Save `a_config_data' to `a_file'
 			-- Result true means saving successed
 			-- Result false means saving failed

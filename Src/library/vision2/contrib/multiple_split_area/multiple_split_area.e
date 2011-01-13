@@ -355,7 +355,7 @@ feature -- Status setting
 			restore_pixmap := pixmap.twin
 		end
 
-	extend (widget: EV_WIDGET; name: STRING_GENERAL)
+	extend (widget: EV_WIDGET; name: READABLE_STRING_GENERAL)
 			-- Add `widget' to end with default height of 150 pixels.
 		require
 			widget_not_void: widget /= Void
@@ -367,7 +367,7 @@ feature -- Status setting
 			count_increased: linear_representation.count = old linear_representation.count + 1
 		end
 
-	insert_widget (widget: EV_WIDGET; name: STRING_GENERAL; position, desired_height: INTEGER)
+	insert_widget (widget: EV_WIDGET; name: READABLE_STRING_GENERAL; position, desired_height: INTEGER)
 			-- Insert `widget' into `Current' at position `position' with height `desired_height'.
 		require
 			widget_not_void: widget /= Void
@@ -413,7 +413,7 @@ feature -- Status setting
 			count_increased: linear_representation.count = old linear_representation.count + 1
 		end
 
-	add_external (widget: EV_WIDGET; window: EV_WINDOW; name: STRING_GENERAL; position, an_x, a_y, a_width, a_height: INTEGER)
+	add_external (widget: EV_WIDGET; window: EV_WINDOW; name: READABLE_STRING_GENERAL; position, an_x, a_y, a_width, a_height: INTEGER)
 			-- Add `widget' to `Current' as an external tool with name `name', a restore position of `position'
 			-- for when it is returned back to `Current', and a dialog screen size and position of `an_x', `a_y',
 			-- `a_width' and `a_height'. This effectively restores a tool as if it had already been dragged

@@ -80,7 +80,7 @@ feature -- Status report
 
 feature -- Element change
 
-	set_filter (a_filter: STRING_GENERAL)
+	set_filter (a_filter: READABLE_STRING_GENERAL)
 			-- Set `a_filter' as new filter.
 		local
 			filter_name: STRING_32
@@ -105,13 +105,13 @@ feature -- Element change
 
 		end
 
-	set_file_name (a_name: STRING_GENERAL)
+	set_file_name (a_name: READABLE_STRING_GENERAL)
 			-- Make `a_name' the selected file.
 		do
 			internal_filename := a_name.twin.as_string_32
 		end
 
-	set_start_directory (a_path: STRING_GENERAL)
+	set_start_directory (a_path: READABLE_STRING_GENERAL)
 			-- Make `a_path' the base directory.
 		do
 			start_directory := a_path

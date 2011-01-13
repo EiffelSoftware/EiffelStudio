@@ -170,7 +170,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_icon_name (an_icon_name: STRING_GENERAL)
+	set_icon_name (an_icon_name: READABLE_STRING_GENERAL)
 			-- Assign `an_icon_name' to `icon_name'.
 		local
 			a_cs: EV_GTK_C_STRING
@@ -178,7 +178,7 @@ feature -- Element change
 			a_cs := an_icon_name
 			{EV_GTK_EXTERNALS}.gdk_window_set_icon_name (
 				{EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), a_cs.item)
-			icon_name_holder := an_icon_name.twin
+			icon_name_holder := an_icon_name.as_string_32.twin
 		end
 
 	set_icon_pixmap (an_icon: EV_PIXMAP)

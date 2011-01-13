@@ -28,7 +28,7 @@ feature -- Initialization
 
 feature -- Element change
 
-	set_tooltip (a_tooltip: STRING_GENERAL)
+	set_tooltip (a_tooltip: READABLE_STRING_GENERAL)
 			-- Assign `a_tooltip' to `tooltip'.
 		local
 			l_app: detachable EV_APPLICATION_IMP

@@ -173,7 +173,7 @@ feature -- Command
 			set: a_show = internal_title_bar.is_show_stick
 		end
 
-	set_short_title (a_title: STRING_GENERAL; a_content: SD_CONTENT)
+	set_short_title (a_title: READABLE_STRING_GENERAL; a_content: SD_CONTENT)
 			-- Set texts on tab
 		require
 			a_title_not_void: a_title /= Void
@@ -185,7 +185,7 @@ feature -- Command
 			set: internal_notebook.item_text (a_content) ~ (a_title.as_string_32)
 		end
 
-	set_long_title (a_title: STRING_GENERAL; a_content: SD_CONTENT)
+	set_long_title (a_title: READABLE_STRING_GENERAL; a_content: SD_CONTENT)
 			-- Set texts on title bar
 		require
 			a_title_not_void: a_title /= Void

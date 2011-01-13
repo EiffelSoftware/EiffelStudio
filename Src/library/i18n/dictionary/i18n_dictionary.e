@@ -43,14 +43,14 @@ feature -- Element change
 
 feature -- Status report
 
-	has (original: STRING_GENERAL) : BOOLEAN
+	has (original: READABLE_STRING_GENERAL) : BOOLEAN
 			-- Is there an entry with this original?
 		require
 			original_exists: original /= Void
 		deferred
 		end
 
-	has_plural (original_singular, original_plural: STRING_GENERAL; plural_number: INTEGER): BOOLEAN
+	has_plural (original_singular, original_plural: READABLE_STRING_GENERAL; plural_number: INTEGER): BOOLEAN
 			-- Does the dictionary have an entry with `original_singular', `original_plural'
 			-- and does this entry have the `plural_number'-th plural translation?
 		require
@@ -61,7 +61,7 @@ feature -- Status report
 
 feature -- Access
 
-	singular (original: STRING_GENERAL): STRING_32
+	singular (original: READABLE_STRING_GENERAL): STRING_32
 			-- Translation of `original' in singular form
 		require
 			original_exists: original /= Void
@@ -71,7 +71,7 @@ feature -- Access
 			result_exists: Result /= Void
 		end
 
-	plural (original_singular, original_plural: STRING_GENERAL; plural_number: INTEGER): STRING_32
+	plural (original_singular, original_plural: READABLE_STRING_GENERAL; plural_number: INTEGER): STRING_32
 			-- Translation of `original_singular' in the given plural form
 		require
 			original_singular_exists: original_singular /= Void

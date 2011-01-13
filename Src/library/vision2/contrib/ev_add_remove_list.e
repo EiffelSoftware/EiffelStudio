@@ -179,7 +179,7 @@ feature {NONE} -- GUI building
 			disable_item_expand (hbox)
 		end
 
-	build_text_field (t: STRING_GENERAL)
+	build_text_field (t: READABLE_STRING_GENERAL)
 			-- Create text field part.
 		local
 			hbox: EV_HORIZONTAL_BOX

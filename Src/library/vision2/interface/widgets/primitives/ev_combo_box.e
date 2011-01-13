@@ -69,7 +69,7 @@ feature -- Status report
 
 feature -- Element change
 
-	set_text (a_text: STRING_GENERAL)
+	set_text (a_text: READABLE_STRING_GENERAL)
 			-- Assign `a_text' to `text'.
 		require
 			not_destroyed: not is_destroyed
@@ -102,7 +102,7 @@ feature -- Element change
 			end
 			go_to (l_cursor)
 		ensure
-			text_set: check_text_modification ("", a_text)
+			text_set: check_text_modification ({STRING_32} "", a_text.as_string_32)
 		end
 
 feature {NONE} -- Contract support

@@ -26,7 +26,7 @@ feature -- Status
 			end
 		end
 
-	basic_valid_name_for_hkey (name: STRING_GENERAL): BOOLEAN
+	basic_valid_name_for_hkey (name: READABLE_STRING_GENERAL): BOOLEAN
 			-- Return True if 'name' correspond to one of the
 			-- value names below.
 		require
@@ -49,7 +49,7 @@ feature -- Status
 			end
 		end
 
-	index_value_for_root_keys (name: STRING_GENERAL): POINTER
+	index_value_for_root_keys (name: READABLE_STRING_GENERAL): POINTER
 			-- Return the index corresponding to a root key.
 		require
 			name_not_void: name /= Void

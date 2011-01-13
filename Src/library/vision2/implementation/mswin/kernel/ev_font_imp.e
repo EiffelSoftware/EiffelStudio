@@ -251,13 +251,13 @@ feature -- Status report
 			Result := wel_font.string_width ("W")
 		end
 
-	string_width (a_string: STRING_GENERAL): INTEGER
+	string_width (a_string: READABLE_STRING_GENERAL): INTEGER
 			-- Width in pixels of `a_string' in the current font.
 		do
 			Result := wel_font.string_width (a_string)
 		end
 
-	string_size (a_string: STRING_GENERAL): TUPLE [width: INTEGER; height: INTEGER; left_offset: INTEGER; right_offset: INTEGER]
+	string_size (a_string: READABLE_STRING_GENERAL): TUPLE [width: INTEGER; height: INTEGER; left_offset: INTEGER; right_offset: INTEGER]
 			-- [width, height, left_offset, right_offset] in pixels of `a_string' in the current font,
 			-- taking into account line breaks ('%N').
 			-- `width' and `height' correspond to the rectange used to bound `a_string', and
@@ -436,7 +436,7 @@ feature {EV_ANY_I} -- Implementation
 			update_internal_is_proportional (Wel_log_font)
 		end
 
-	set_name (str: STRING_GENERAL)
+	set_name (str: READABLE_STRING_GENERAL)
 			-- sets the name of the current font
 		do
 				-- retrieve current values
@@ -482,7 +482,7 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
-	maximum_line_width (dc: WEL_DC; str: STRING_GENERAL; number_of_lines: INTEGER): INTEGER
+	maximum_line_width (dc: WEL_DC; str: READABLE_STRING_GENERAL; number_of_lines: INTEGER): INTEGER
 			-- Calculate the width of the longest %N delimited string in
 			-- `str' on `dc' given there are `number_of_lines' lines
 		require
@@ -490,7 +490,7 @@ feature {EV_ANY_I} -- Implementation
 		local
 			i, pos, new_pos: INTEGER
 			l_newline_code: NATURAL_32
-			line: STRING_GENERAL
+			line: READABLE_STRING_GENERAL
 		do
 			from
 				i := 1
@@ -591,7 +591,7 @@ feature {EV_ANY_I} -- Implementation
 
 feature {EV_TEXTABLE_IMP} -- Implementation
 
-	string_width_and_height_ignore_new_line (a_string: STRING_GENERAL):
+	string_width_and_height_ignore_new_line (a_string: READABLE_STRING_GENERAL):
 		TUPLE [INTEGER, INTEGER]
 			-- [width, height] of `a_string'.
 			-- Treat `%N' as a character.
@@ -618,7 +618,7 @@ feature {EV_TEXTABLE_IMP} -- Implementation
 
 feature -- Obsolete
 
-	string_width_and_height (a_string: STRING_GENERAL): TUPLE [INTEGER, INTEGER]
+	string_width_and_height (a_string: READABLE_STRING_GENERAL): TUPLE [INTEGER, INTEGER]
 			-- [width, height] of `a_string'.
 		obsolete
 			"Use `string_size'."
@@ -628,40 +628,40 @@ feature -- Obsolete
 
 feature {NONE} -- Not used
 
-	set_charset (a_charset: STRING_GENERAL)
+	set_charset (a_charset: READABLE_STRING_GENERAL)
 			-- Set the charset to a value based on `a_charset'.
 		do
-			if a_charset.is_equal ("ansi") then
+			if a_charset.same_string ("ansi") then
 				Wel_log_font.set_ansi_character_set
-			elseif a_charset.is_equal ("oem") then
+			elseif a_charset.same_string ("oem") then
 				Wel_log_font.set_oem_character_set
-			elseif a_charset.is_equal ("symbol") then
+			elseif a_charset.same_string ("symbol") then
 				Wel_log_font.set_symbol_character_set
-			elseif a_charset.is_equal ("unicode") then
+			elseif a_charset.same_string ("unicode") then
 				Wel_log_font.set_unicode_character_set
 			else
 				Wel_log_font.set_default_character_set
 			end
 		end
 
-	set_clip_precision (a_clip_precision: STRING_GENERAL)
+	set_clip_precision (a_clip_precision: READABLE_STRING_GENERAL)
 			-- Set the clip precision based on `a_clip_precision'.
 		do
-			if a_clip_precision.is_equal ("character") then
+			if a_clip_precision.same_string ("character") then
 				Wel_log_font.set_character_clipping_precision
-			elseif a_clip_precision.is_equal ("stroke") then
+			elseif a_clip_precision.same_string ("stroke") then
 				Wel_log_font.set_stroke_clipping_precision
 			else
 				Wel_log_font.set_default_clipping_precision
 			end
 		end
 
-	set_escapement (an_escapement: STRING_GENERAL)
+	set_escapement (an_escapement: READABLE_STRING_GENERAL)
 			-- Set escapement based on value of `an_escapement'.
 		local
 			l_value: STRING_32
 		do
-			l_value := an_escapement
+			l_value := an_escapement.as_string_32
 			if l_value /= Void and l_value.is_integer then
 				Wel_log_font.set_escapement (l_value.to_integer)
 			else
@@ -669,12 +669,12 @@ feature {NONE} -- Not used
 			end
 		end
 
-	set_orientation (an_orientation: STRING_GENERAL)
+	set_orientation (an_orientation: READABLE_STRING_GENERAL)
 			-- Set the orientation based on the value of `an_orientation'.
 		local
 			l_value: STRING_32
 		do
-			l_value := an_orientation
+			l_value := an_orientation.as_string_32
 			if l_value /= Void and then l_value.is_integer then
 				Wel_log_font.set_orientation (l_value.to_integer)
 			else
@@ -682,45 +682,45 @@ feature {NONE} -- Not used
 			end
 		end
 
-	set_out_precision (a_precision: STRING_GENERAL)
+	set_out_precision (a_precision: READABLE_STRING_GENERAL)
 			-- Set the precision based on the value of `a_precision'.
 		do
-			if a_precision.is_equal ("character") then
+			if a_precision.same_string ("character") then
 				Wel_log_font.set_character_output_precision
-			elseif a_precision.is_equal ("string") then
+			elseif a_precision.same_string ("string") then
 				Wel_log_font.set_string_output_precision
-			elseif a_precision.is_equal ("stroke") then
+			elseif a_precision.same_string ("stroke") then
 				Wel_log_font.set_stroke_output_precision
 			else
 				Wel_log_font.set_default_output_precision
 			end
 		end
 
-	set_pitch (a_pitch: STRING_GENERAL)
+	set_pitch (a_pitch: READABLE_STRING_GENERAL)
 			-- Set pitch based on value in `a_pitch'.
 		do
-			if a_pitch.is_equal ("fixed") then
+			if a_pitch.same_string ("fixed") then
 				Wel_log_font.set_fixed_pitch
-			elseif a_pitch.is_equal ("variable") then
+			elseif a_pitch.same_string ("variable") then
 				Wel_log_font.set_variable_pitch
 			else
 				Wel_log_font.set_default_pitch
 			end
 		end
 
-	set_quality (a_quality: STRING_GENERAL)
+	set_quality (a_quality: READABLE_STRING_GENERAL)
 			-- Set quality based on value in `a_quality'.
 		do
-			if a_quality.is_equal ("draft") then
+			if a_quality.same_string ("draft") then
 				Wel_log_font.set_draft_quality
-			elseif a_quality.is_equal ("proof") then
+			elseif a_quality.same_string ("proof") then
 				Wel_log_font.set_proof_quality
 			else
 				Wel_log_font.set_default_quality
 			end
 		end
 
-	set_styles (styles: STRING_GENERAL)
+	set_styles (styles: READABLE_STRING_GENERAL)
 			-- Set the style based on values in `styles'.
 		do
 			Wel_log_font.set_not_italic

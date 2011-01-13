@@ -114,12 +114,12 @@ feature -- Access
 
 feature -- Element change
 
-	set_title (new_title: STRING_GENERAL)
+	set_title (new_title: READABLE_STRING_GENERAL)
 			-- Assign `new_title' to `title'.
 		do
-			internal_title := new_title.twin
+			internal_title := new_title.as_string_32.twin
 		ensure then
-			title_set: title.is_equal (new_title)
+			title_set: title.same_string_general (new_title)
 		end
 
 	set_font (a_font: EV_FONT)

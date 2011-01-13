@@ -67,7 +67,7 @@ feature -- Command
 		do
 		end
 
-	set_title (a_title: STRING_GENERAL)
+	set_title (a_title: READABLE_STRING_GENERAL)
 			-- Do nothing
 		do
 		end

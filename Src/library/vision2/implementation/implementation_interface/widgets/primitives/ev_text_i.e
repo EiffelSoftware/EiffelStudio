@@ -101,13 +101,13 @@ feature -- Basic operation
 			word_wrapping_disabled: not has_word_wrapping
 		end
 
-	search (str: STRING_GENERAL; start: INTEGER): INTEGER
+	search (str: READABLE_STRING_GENERAL; start: INTEGER): INTEGER
 			-- Position of first occurrence of `str' at or after `start';
 			-- 0 if none.
 		require
 			valid_string: str /= Void
 		do
-			Result := text.substring_index (str, start)
+			Result := text.substring_index (str.as_string_32, start)
 		end
 
 	scroll_to_line (i: INTEGER)

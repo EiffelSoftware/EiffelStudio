@@ -53,7 +53,7 @@ feature -- Basic operations
 			cwin_draw_focus_rect (dc.item, rect.item)
 		end
 
-	draw_insensitive_text (dc: WEL_DC; txt: STRING_GENERAL; x, y: INTEGER)
+	draw_insensitive_text (dc: WEL_DC; txt: READABLE_STRING_GENERAL; x, y: INTEGER)
 			-- Draw the given text with the insensitive
 		require
 			txt_not_void: txt /= Void

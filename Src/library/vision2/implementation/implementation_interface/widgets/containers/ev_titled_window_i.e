@@ -79,13 +79,13 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_icon_name (an_icon_name: STRING_GENERAL)
+	set_icon_name (an_icon_name: READABLE_STRING_GENERAL)
 			-- Assign `an_icon_name' to `icon_name'.
 		require
 			an_icon_name_not_void: an_icon_name /= Void
 		deferred
 		ensure
-			icon_name_assigned: icon_name.is_equal (an_icon_name)
+			icon_name_assigned: icon_name.same_string_general (an_icon_name)
 		end
 
 	set_icon_pixmap (an_icon: EV_PIXMAP)

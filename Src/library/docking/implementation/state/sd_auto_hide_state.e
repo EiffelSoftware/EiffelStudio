@@ -166,7 +166,7 @@ feature -- Redefine
 			docking_manager.command.resize (True)
 		end
 
- 	change_short_title (a_title: STRING_GENERAL; a_content: SD_CONTENT)
+ 	change_short_title (a_title: READABLE_STRING_GENERAL; a_content: SD_CONTENT)
 			-- <Precursor>
 		do
 			tab_stub.set_text (a_title)
@@ -174,7 +174,7 @@ feature -- Redefine
 			set: tab_stub.text ~ a_title
 		end
 
- 	change_long_title (a_title: STRING_GENERAL; a_content: SD_CONTENT)
+ 	change_long_title (a_title: READABLE_STRING_GENERAL; a_content: SD_CONTENT)
 			-- <Precursor>
 		do
 			if is_zone_attached then

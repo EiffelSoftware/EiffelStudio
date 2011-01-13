@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_class_name: STRING_GENERAL; a_title: STRING_GENERAL)
+	make (a_class_name: READABLE_STRING_GENERAL; a_title: READABLE_STRING_GENERAL)
 			-- Make a MDI create structure with `a_class_name' and
 			-- `a_title'.
 		require
@@ -45,8 +45,8 @@ feature {NONE} -- Initialization
 			set_style (0)
 			set_lparam (default_pointer)
 		ensure
-			class_name_set: class_name.is_equal (a_class_name)
-			title_set: title.is_equal (a_title)
+			class_name_set: class_name.same_string_general (a_class_name)
+			title_set: title.same_string_general (a_title)
 			owner_set: owner.item = main_args.current_instance.item
 			style_set: style = 0
 			lparam_set: lparam = default_pointer
@@ -138,7 +138,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_class_name (a_class_name: STRING_GENERAL)
+	set_class_name (a_class_name: READABLE_STRING_GENERAL)
 			-- Set `class_name' with `a_class_name'
 		require
 			exists: exists
@@ -148,10 +148,10 @@ feature -- Element change
 			cwel_mdi_cs_set_class_name (item,
 				str_class_name.item)
 		ensure
-			class_name_set: class_name.is_equal (a_class_name)
+			class_name_set: class_name.same_string_general (a_class_name)
 		end
 
-	set_title (a_title: STRING_GENERAL)
+	set_title (a_title: READABLE_STRING_GENERAL)
 			-- Set `title' with `a_title'
 		require
 			exists: exists
@@ -160,7 +160,7 @@ feature -- Element change
 			create str_title.make (a_title)
 			cwel_mdi_cs_set_title (item, str_title.item)
 		ensure
-			title_set: title.is_equal (a_title)
+			title_set: title.same_string_general (a_title)
 		end
 
 	set_owner (an_owner: WEL_INSTANCE)
@@ -352,14 +352,14 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

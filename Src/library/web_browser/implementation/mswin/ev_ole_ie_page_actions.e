@@ -13,22 +13,22 @@ class
 
 feature -- Emurations
 
-	move_back: INTEGER is 0
+	move_back: INTEGER = 0
 		-- Move back to the previously viewed web page
 
-	move_forward: INTEGER is 1
+	move_forward: INTEGER = 1
 		-- Move forward to the previously viewed web page
 
-	move_to_home: INTEGER is 2
+	move_to_home: INTEGER = 2
 		-- Move to the home page
 
-	search: INTEGER is 3
+	search: INTEGER = 3
 		-- Search
 
-	refresh: INTEGER is 4
+	refresh: INTEGER = 4
 		-- Refresh the page
 
-	stop: INTEGER is 5
+	stop: INTEGER = 5
 		-- Stop the currently loading page	
 
 feature -- Contract support

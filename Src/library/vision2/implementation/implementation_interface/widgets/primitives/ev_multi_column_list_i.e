@@ -226,7 +226,7 @@ feature {EV_ANY, EV_ANY_I} -- Status setting
 
 feature {EV_ANY, EV_ANY_I}-- Element change
 
-	set_column_title (a_title: STRING_GENERAL; a_column: INTEGER)
+	set_column_title (a_title: READABLE_STRING_GENERAL; a_column: INTEGER)
 			-- Assign `a_title' to the `column_title'(`a_column').
 		require
 			a_column_positive: a_column > 0
@@ -234,7 +234,7 @@ feature {EV_ANY, EV_ANY_I}-- Element change
 		do
 			if a_column <= column_titles.count then
 				column_titles.go_i_th (a_column)
-				column_titles.replace (a_title.twin)
+				column_titles.replace (a_title.as_string_32.twin)
 			else
 				from
 				until
@@ -242,17 +242,17 @@ feature {EV_ANY, EV_ANY_I}-- Element change
 				loop
 					column_titles.extend (Void)
 				end
-				column_titles.extend (a_title.twin)
+				column_titles.extend (a_title.as_string_32.twin)
 			end
 			column_title_changed (a_title, a_column)
 			if column_titles.count > column_count then
 				expand_column_count_to (column_titles.count)
 			end
 		ensure
-			a_title_assigned: column_title (a_column).is_equal (a_title)
+			a_title_assigned: column_title (a_column).same_string_general (a_title)
 		end
 
-	set_column_titles (titles: ARRAY [STRING_GENERAL])
+	set_column_titles (titles: ARRAY [READABLE_STRING_GENERAL])
 			-- Assign `titles' to titles of columns in order.
 		require
 			titles_not_void: titles /= Void
@@ -271,7 +271,7 @@ feature {EV_ANY, EV_ANY_I}-- Element change
 				i > titles.count
 			loop
 				column_title_changed (titles @ (i + titles.lower - 1), i)
-				column_titles.extend ((titles @ (i + titles.lower - 1)).twin)
+				column_titles.extend ((titles @ (i + titles.lower - 1)).as_string_32.twin)
 				i := i + 1
 				old_count := old_count - 1
 			end
@@ -422,7 +422,7 @@ feature {EV_ANY_I} -- Implementation
 			a_width_assigned: a_width = column_width (a_column)
 		end
 
-	set_text_on_position (a_column, a_row: INTEGER; a_text: STRING_GENERAL)
+	set_text_on_position (a_column, a_row: INTEGER; a_text: READABLE_STRING_GENERAL)
 			-- Set the label of the cell with coordinates `a_column',
 			-- `a_row' with `a_text'.
 		require
@@ -452,7 +452,7 @@ feature {EV_ANY_I} -- Implementation
 			-- Do nothing by default
 		end
 
-	column_title_changed (a_title: STRING_GENERAL; a_column: INTEGER)
+	column_title_changed (a_title: READABLE_STRING_GENERAL; a_column: INTEGER)
 			-- Replace title of `a_column' with `a_title' if column present.
 			-- If `a_title' is Void, remove it.
 			-- Called when a title has been altered.

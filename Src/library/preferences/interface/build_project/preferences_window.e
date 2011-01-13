@@ -668,7 +668,7 @@ feature {NONE} -- Implementation
 		require
 			preference_not_void: a_preference /= Void
 		local
-			l_text: STRING_GENERAL
+			l_text: STRING_32
 		do
 			if attached a_preference.description as d then
 					-- We know that descriptions of preference have been extacted out
@@ -796,12 +796,12 @@ feature {NONE} -- Implementation
 			create Result.make (10)
 		end
 
-	try_to_translate (a_string: STRING_GENERAL): STRING_GENERAL
+	try_to_translate (a_string: READABLE_STRING_GENERAL): STRING_32
 			-- Try to translate `a_string'.
 		require
 			a_string_not_void: a_string /= Void
 		do
-			Result := a_string
+			Result := a_string.as_string_32
 		ensure
 			result_not_void: Result /= Void
 		end

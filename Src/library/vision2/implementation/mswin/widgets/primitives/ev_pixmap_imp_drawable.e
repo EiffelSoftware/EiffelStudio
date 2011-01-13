@@ -182,7 +182,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	read_from_named_file (file_name: STRING_GENERAL)
+	read_from_named_file (file_name: READABLE_STRING_GENERAL)
 			-- Load the pixmap described in 'file_name'.
 			--
 			-- Exceptions "Unable to retrieve icon information",
@@ -1098,7 +1098,7 @@ feature -- Delegated features
 			attached_interface.implementation.set_minimum_width(a_minimum_width)
 		end
 
-	set_tooltip (a_text: STRING_GENERAL)
+	set_tooltip (a_text: READABLE_STRING_GENERAL)
 			-- Set the minimum horizontal size to `a_minimum_width' in pixels.
 		do
 			promote_to_widget

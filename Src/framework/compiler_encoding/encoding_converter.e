@@ -240,7 +240,7 @@ feature -- Conversion
 					-- Default to ASCII
 				iso_8859_1.convert_to (utf32, a_stream)
 				if iso_8859_1.last_conversion_successful then
-					Result := iso_8859_1.last_converted_string
+					Result := iso_8859_1.last_converted_string_32
 				else
 						-- Try converting to utf8 as some OS does not support UTF-32 conversion.
 					iso_8859_1.convert_to (utf8, a_stream)

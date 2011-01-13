@@ -24,7 +24,7 @@ create
 
 feature --{NONE} -- Initialization
 
-	make (a_string: STRING_GENERAL)
+	make (a_string: READABLE_STRING_GENERAL)
 			-- Make a C string from `a_string'.
 		require
 			a_string_not_void: a_string /= Void
@@ -267,7 +267,7 @@ feature -- Element change
 			end
 		end
 
-	set_string (a_string: STRING_GENERAL)
+	set_string (a_string: READABLE_STRING_GENERAL)
 			-- Set `string' with `a_string'.
 		require
 			a_string_not_void: a_string /= Void
@@ -275,7 +275,7 @@ feature -- Element change
 			set_substring (a_string, 1, a_string.count)
 		end
 
-	set_substring (a_string: STRING_GENERAL; start_pos, end_pos: INTEGER)
+	set_substring (a_string: READABLE_STRING_GENERAL; start_pos, end_pos: INTEGER)
 			-- Set `string' with `a_string'.
 		require
 			a_string_not_void: a_string /= Void
@@ -416,14 +416,14 @@ invariant
 	bytes_count_valid: (bytes_count \\ character_size) = 0
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

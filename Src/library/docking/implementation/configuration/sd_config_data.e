@@ -28,14 +28,14 @@ feature -- Properties
 	name: STRING_32
 			-- Name of this layout
 
-	set_name (a_name: like name)
+	set_name (a_name: READABLE_STRING_GENERAL)
 			-- Set `name'
 		require
 			not_void: a_name /= Void
 		do
-			name := a_name
+			name := a_name.as_string_32
 		ensure
-			set: name = a_name
+			set: name.same_string_general (a_name)
 		end
 
 	set_is_docking_locked (a_bool: BOOLEAN)
@@ -96,7 +96,7 @@ feature -- Properties
 	tool_bar_data: ARRAYED_LIST [SD_TOOL_BAR_DATA]
 			-- Four direction tool bar data. 1 is top, 2 is bottom, 3 is left, 4 is right
 
-	resizable_items_data: ARRAYED_LIST [TUPLE [name: STRING_GENERAL; width: INTEGER]]
+	resizable_items_data: ARRAYED_LIST [TUPLE [name: READABLE_STRING_GENERAL; width: INTEGER]]
 			-- Tool bar resizable items data
 
 	set_resizable_items_data (a_data: like resizable_items_data)
@@ -135,7 +135,7 @@ feature -- Data for only one editor zone
 
 feature -- Data for maximized.
 
-	maximized_tools: ARRAYED_LIST [STRING_GENERAL]
+	maximized_tools: ARRAYED_LIST [READABLE_STRING_GENERAL]
 			-- Maximized tool, count is 0 if no maximized tool
 
 feature {NONE}  -- Implementation
@@ -152,14 +152,14 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

@@ -161,7 +161,7 @@ feature -- Items layout
 			set: items_layout = a_layout
 		end
 
-	items_layout: detachable ARRAYED_LIST [TUPLE [STRING_GENERAL, BOOLEAN]]
+	items_layout: detachable ARRAYED_LIST [TUPLE [READABLE_STRING_GENERAL, BOOLEAN]]
 			-- Items layout, first is item name, second is whether item `is_displayed'
 			-- Order of this list, it's order items displayed
 

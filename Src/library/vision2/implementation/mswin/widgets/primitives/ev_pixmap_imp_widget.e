@@ -194,7 +194,7 @@ feature {NONE} -- Initialization
 
 feature -- Loading/Saving
 
-	read_from_named_file (file_name: STRING_GENERAL)
+	read_from_named_file (file_name: READABLE_STRING_GENERAL)
 			-- Load the pixmap described in 'file_name'.
 			--
 			-- Exceptions "Unable to retrieve icon information",
@@ -282,7 +282,7 @@ feature -- Drawing operations
 			update_display
 		end
 
-	draw_text (x, y: INTEGER; a_text: STRING_GENERAL)
+	draw_text (x, y: INTEGER; a_text: READABLE_STRING_GENERAL)
 			-- Draw `a_text' at (`x', `y') using `font'.
 		do
 			Precursor {EV_PIXMAP_IMP_DRAWABLE} (x, y, a_text)

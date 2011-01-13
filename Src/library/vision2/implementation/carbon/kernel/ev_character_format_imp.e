@@ -65,7 +65,7 @@ feature -- Status setting
 		do
 		end
 
-	set_font_attributes (a_name: STRING_GENERAL; a_family, a_point_height, a_weight, a_shape, a_charset: INTEGER)
+	set_font_attributes (a_name: READABLE_STRING_GENERAL; a_family, a_point_height, a_weight, a_shape, a_charset: INTEGER)
 			-- Set internal font attributes
 		do
 		end

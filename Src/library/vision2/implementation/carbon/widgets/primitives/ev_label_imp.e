@@ -105,7 +105,7 @@ feature -- Minimum size
 				Result:= text.split ('%N').first.count * 8 + 5 -- Currently we approximate the width of the first text line
 			end
 
-		set_text (a_text: STRING_GENERAL)
+		set_text (a_text: READABLE_STRING_GENERAL)
 			-- Assign `a_text' to `text'.
 		local
 			ret: INTEGER

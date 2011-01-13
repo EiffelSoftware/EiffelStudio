@@ -164,7 +164,7 @@ feature {NONE} -- Implementation
 
 feature {WIZARD_STATE_WINDOW, WIZARD_STATE_MANAGER} -- Basic Operations	
 
-	set_final_state (text: STRING_GENERAL)
+	set_final_state (text: READABLE_STRING_GENERAL)
 			-- Current state is final, hence a special process.
 		do
 			next_b.set_text(text)

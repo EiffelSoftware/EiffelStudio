@@ -146,47 +146,47 @@ feature -- Access
 			end
 		end
 
-	preferences_title: STRING_GENERAL				do Result := names.t_preference_window				end
+	preferences_title: STRING_32				do Result := names.t_preference_window				end
 
 feature {NONE} -- Names
 
-	l_name: STRING_GENERAL							do Result := names.l_name							end
-	l_literal_value: STRING_GENERAL					do Result := names.l_Literal_value					end
-	l_status: STRING_GENERAL						do Result := names.l_status							end
-	l_type: STRING_GENERAL							do Result := names.l_type							end
-	l_request_restart: STRING_GENERAL				do Result := names.l_request_restart				end
-	p_default_value: STRING_GENERAL					do Result := names.l_default						end
-	user_value: STRING_GENERAL						do Result := names.l_user_set						end
-	auto_value: STRING_GENERAL						do Result := names.l_auto							end
-	no_description_text: STRING_GENERAL				do Result := names.l_no_description_text			end
-	restore_preference_string: STRING_GENERAL		do Result := names.l_restore_preference_string		end
-	shortcut_modification_denied: STRING_GENERAL	do Result := names.l_shortcut_modification_denied 	end
-	w_Preferences_delayed_resources: STRING_GENERAL	do Result := names.l_preferences_delayed_resources	end
+	l_name: STRING_32							do Result := names.l_name							end
+	l_literal_value: STRING_32					do Result := names.l_Literal_value					end
+	l_status: STRING_32						do Result := names.l_status							end
+	l_type: STRING_32							do Result := names.l_type							end
+	l_request_restart: STRING_32				do Result := names.l_request_restart				end
+	p_default_value: STRING_32					do Result := names.l_default						end
+	user_value: STRING_32						do Result := names.l_user_set						end
+	auto_value: STRING_32						do Result := names.l_auto							end
+	no_description_text: STRING_32				do Result := names.l_no_description_text			end
+	restore_preference_string: STRING_32		do Result := names.l_restore_preference_string		end
+	shortcut_modification_denied: STRING_32	do Result := names.l_shortcut_modification_denied 	end
+	w_Preferences_delayed_resources: STRING_32	do Result := names.l_preferences_delayed_resources	end
 			-- Texts used in the dialog that tells the user
 			-- they have to restart the application to use the new preferences.
 
-	l_tree_view: STRING_GENERAL						do Result := names.l_Tree_view						end
-	f_switch_to_tree_view: STRING_GENERAL 			do Result := names.f_switch_to_tree_view			end
-	l_flat_view: STRING_GENERAL						do Result := names.l_Flat_view 						end
-	f_switch_to_flat_view: STRING_GENERAL 			do Result := names.f_switch_to_flat_view			end
-	l_updating_the_view: STRING_GENERAL 			do Result := names.l_update_the_view				end
-	l_filter: STRING_GENERAL						do Result := names.l_filter 						end
-	l_tree_or_flat_view: STRING_GENERAL				do Result := names.l_tree_or_flat_view 				end
-	l_restore_defaults: STRING_GENERAL 				do Result := names.l_restore_defaults 				end
-	l_restore_default: STRING_GENERAL				do Result := names.l_restore_default 				end
-	l_no_default_value: STRING_GENERAL 				do Result := names.l_no_default_value 				end
-	l_close: STRING_GENERAL							do Result := names.b_close 							end
-	l_display_window: STRING_GENERAL 				do Result := names.l_display_window 				end
-	l_description: STRING_GENERAL					do Result := names.l_description 					end
-	l_building_flat_view: STRING_GENERAL			do Result := names.l_building_flat_view 			end
-	l_building_tree_view: STRING_GENERAL			do Result := names.l_building_tree_view 			end
+	l_tree_view: STRING_32						do Result := names.l_Tree_view						end
+	f_switch_to_tree_view: STRING_32 			do Result := names.f_switch_to_tree_view			end
+	l_flat_view: STRING_32						do Result := names.l_Flat_view 						end
+	f_switch_to_flat_view: STRING_32 			do Result := names.f_switch_to_flat_view			end
+	l_updating_the_view: STRING_32 			do Result := names.l_update_the_view				end
+	l_filter: STRING_32						do Result := names.l_filter 						end
+	l_tree_or_flat_view: STRING_32				do Result := names.l_tree_or_flat_view 				end
+	l_restore_defaults: STRING_32 				do Result := names.l_restore_defaults 				end
+	l_restore_default: STRING_32				do Result := names.l_restore_default 				end
+	l_no_default_value: STRING_32 				do Result := names.l_no_default_value 				end
+	l_close: STRING_32							do Result := names.b_close 							end
+	l_display_window: STRING_32 				do Result := names.l_display_window 				end
+	l_description: STRING_32					do Result := names.l_description 					end
+	l_building_flat_view: STRING_32			do Result := names.l_building_flat_view 			end
+	l_building_tree_view: STRING_32			do Result := names.l_building_tree_view 			end
 
-	l_matches_of_total_preferences (a_count: INTEGER; a_total_count: INTEGER): STRING_GENERAL
+	l_matches_of_total_preferences (a_count: INTEGER; a_total_count: INTEGER): STRING_32
 		do
 			Result := names.l_matches_of_total_preferences (a_count, a_total_count)
 		end
 
-	l_count_preferences (a_count: STRING_GENERAL): STRING_GENERAL
+	l_count_preferences (a_count: STRING_GENERAL): STRING_32
 		do
 			Result := names.l_count_preferences (a_count)
 		end
@@ -290,7 +290,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	try_to_translate (a_string: STRING_GENERAL): STRING_GENERAL
+	try_to_translate (a_string: STRING_GENERAL): STRING_32
 			-- Try to translate `a_string'.
 		do
 			Result := names.find_translation (a_string)
@@ -313,7 +313,7 @@ feature {NONE} -- Widget initialization
 	new_choice_widget (a_pref: ARRAY_PREFERENCE): CHOICE_PREFERENCE_WIDGET
 		local
 			l_array: ARRAY [STRING]
-			l_displayed_names: HASH_TABLE [STRING_GENERAL, STRING]
+			l_displayed_names: HASH_TABLE [STRING_32, STRING]
 		do
 			Result := Precursor (a_pref)
 				-- Set display names for preferences of type LIST.
@@ -332,7 +332,7 @@ feature {NONE} -- Widget initialization
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -88,7 +88,7 @@ feature -- test features
 
 feature -- Basic operations
 
-	search_string (searched_string: STRING_GENERAL)
+	search_string (searched_string: READABLE_STRING_GENERAL)
 			-- Search the text for the string `searched_string'.
 			-- If the search was successful, `successful_search' is
 			-- set to True and `found_string_line' &

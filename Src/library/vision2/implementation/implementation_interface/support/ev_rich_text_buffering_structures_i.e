@@ -78,7 +78,7 @@ feature -- Status Setting
 			clear_structures
 		end
 
-	append_text_for_rtf (a_text: STRING_GENERAL; a_format: EV_CHARACTER_FORMAT_I)
+	append_text_for_rtf (a_text: READABLE_STRING_GENERAL; a_format: EV_CHARACTER_FORMAT_I)
 			-- Append RTF representation of `a_text' with format `a_format' to `internal_text'
 			-- and store information required from `a_format' ready for completion of buffering.
 		local
@@ -198,7 +198,7 @@ feature -- Status Setting
 
 feature {EV_ANY_I} -- Status Setting
 
-	generate_paragraph_information (a_text: STRING_GENERAL)
+	generate_paragraph_information (a_text: READABLE_STRING_GENERAL)
 			-- `Result' is index of first character of every line in `a_text' upon
 			-- which the paragraph formatting changes, as determined by '%N'.
 		require

@@ -84,7 +84,7 @@ feature -- Setting
 			icon_set: notify_icon_data.icon = a_icon
 		end
 
-	set_tooltip (a_tooltip: STRING_GENERAL)
+	set_tooltip (a_tooltip: READABLE_STRING_GENERAL)
 			-- Set `a_tooltip' to `notify_icon_data'.
 		require
 			a_tooltip_not_void: a_tooltip /= Void
@@ -97,7 +97,7 @@ feature -- Setting
 				notify_icon_data.set_tooltip_text (a_tooltip)
 			end
 		ensure
-			tooltip_set: notify_icon_data.tooltip_text.string.is_equal (a_tooltip)
+			tooltip_set: notify_icon_data.tooltip_text.string.same_string_general (a_tooltip)
 		end
 
 	add_notify_icon
@@ -162,14 +162,14 @@ invariant
 	notify_message_name_not_void: notify_message_name /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

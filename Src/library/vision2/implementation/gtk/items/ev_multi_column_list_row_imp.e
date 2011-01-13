@@ -187,10 +187,10 @@ feature -- Element Change
 			end
 		end
 
-	set_tooltip (a_tooltip: STRING_GENERAL)
+	set_tooltip (a_tooltip: READABLE_STRING_GENERAL)
 			-- Assign `a_tooltip' to `tooltip'.
 		do
-			tooltip := a_tooltip.twin
+			tooltip := a_tooltip.as_string_32.twin
 		end
 
 	tooltip: STRING_32
@@ -276,7 +276,7 @@ feature -- Measurement
 
 feature {NONE} -- Implementation
 
-	on_item_added_at (an_item: STRING_GENERAL; item_index: INTEGER)
+	on_item_added_at (an_item: READABLE_STRING_GENERAL; item_index: INTEGER)
 			-- `an_item' has been added to index `item_index'.
 		local
 			a_parent_imp: like parent_imp
@@ -290,7 +290,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_item_removed_at (an_item: STRING_GENERAL; item_index: INTEGER)
+	on_item_removed_at (an_item: READABLE_STRING_GENERAL; item_index: INTEGER)
 			-- `an_item' has been removed from index `item_index'.
 		do
 			if attached parent_imp as l_parent_imp then

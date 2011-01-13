@@ -54,12 +54,12 @@ feature -- Status Setting
 			change_item_widget.set_text (displayed_value (preference.value))
 		end
 
-	set_displayed_booleans (a_true, a_false: STRING_GENERAL)
+	set_displayed_booleans (a_true, a_false: READABLE_STRING_GENERAL)
 			-- Set booleans to display.
 			-- {BOOLEAN}.out is used if void.
 		do
-			displayed_true := a_true
-			displayed_false := a_false
+			displayed_true := a_true.as_string_32
+			displayed_false := a_false.as_string_32
 			refresh
 		end
 
@@ -93,24 +93,24 @@ feature {NONE} -- Implementation
 	last_selected_value: BOOLEAN
 			-- Last selected value in the combo widget.
 
-	displayed_value (a_b: BOOLEAN): STRING_GENERAL
+	displayed_value (a_b: BOOLEAN): STRING_32
 			-- Displayed value according to `a_b'
 		local
-			s: detachable STRING_GENERAL
+			l_result: detachable STRING_32
 		do
 			if a_b then
 				if displayed_true /= Void then
-					s := displayed_true
+					l_result := displayed_true
 				end
 			else
 				if displayed_false /= Void then
-					s := displayed_false
+					l_result := displayed_false
 				end
 			end
-			if s = Void then
-				s := a_b.out
+			if l_result = Void then
+				l_result := a_b.out
 			end
-			Result := s
+			Result := l_result
 			if a_b then
 				last_displayed_true := Result
 			else
@@ -133,9 +133,9 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	displayed_true, displayed_false: detachable STRING_GENERAL
+	displayed_true, displayed_false: detachable STRING_32
 
-	last_displayed_true, last_displayed_false: detachable STRING_GENERAL;
+	last_displayed_true, last_displayed_false: detachable STRING_32;
 
 note
 	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"

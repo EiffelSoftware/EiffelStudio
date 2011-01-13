@@ -143,7 +143,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	insert_text_header_item (a_label: STRING_GENERAL; a_width, a_format: INTEGER; insert_after_item_no: INTEGER)
+	insert_text_header_item (a_label: READABLE_STRING_GENERAL; a_width, a_format: INTEGER; insert_after_item_no: INTEGER)
 			-- Insert a text item to the header control after the
 			-- `insert_item_item_no' item. If there is no item in the list
 			-- yet, or you want to insert the new item as the first

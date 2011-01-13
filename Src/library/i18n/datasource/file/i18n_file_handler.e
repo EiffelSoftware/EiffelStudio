@@ -16,7 +16,7 @@ feature -- Status report
 	handled: BOOLEAN
 			-- Was last file handled by current handler?
 
-	can_handle (a_path: STRING_32): BOOLEAN
+	can_handle (a_path: READABLE_STRING_GENERAL): BOOLEAN
 			-- Can this class handle the file pointed to?
 			--
 			-- Check extension, magic number, doctype or whatever you have to.
@@ -47,7 +47,7 @@ feature -- Element change
 
 feature -- Locale
 
-	file_scope (a_path: STRING_GENERAL): detachable I18N_FILE_SCOPE_INFORMATION
+	file_scope (a_path: READABLE_STRING_GENERAL): detachable I18N_FILE_SCOPE_INFORMATION
 			-- Scope of file represented by `a_path'
 			--
 			-- NOTE: Void if scope cannot be determined from file contents.
@@ -75,7 +75,7 @@ feature -- Locale
 
 feature {NONE} -- Implementation
 
-	extract_scope (a_path: STRING_32): detachable I18N_FILE_SCOPE_INFORMATION
+	extract_scope (a_path: READABLE_STRING_GENERAL): detachable I18N_FILE_SCOPE_INFORMATION
 			-- Extract scope of file at `a_path'
 			-- NOTE: Void if scope cannot be determined from file contents
 		require
@@ -127,7 +127,7 @@ feature {NONE} 	-- Implementation
 
 note
 	library:   "Internationalization library"
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

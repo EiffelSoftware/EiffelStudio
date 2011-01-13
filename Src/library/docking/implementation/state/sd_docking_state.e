@@ -126,7 +126,7 @@ feature -- Redefine
 			-- <Precursor>
 		local
 			l_content: detachable SD_CONTENT
-			l_titles: detachable ARRAYED_LIST [STRING_GENERAL]
+			l_titles: detachable ARRAYED_LIST [READABLE_STRING_GENERAL]
 		do
 			create internal_shared
 			l_titles := a_data.titles
@@ -170,7 +170,7 @@ feature -- Redefine
 			end
 		end
 
-	change_long_title (a_title: STRING_GENERAL; a_content: SD_CONTENT)
+	change_long_title (a_title: READABLE_STRING_GENERAL; a_content: SD_CONTENT)
 			-- <Precursor>
 		do
 			if content /= Void and then content.type = {SD_ENUMERATION}.tool then
@@ -180,7 +180,7 @@ feature -- Redefine
 			set: a_title /= Void implies zone.title ~ (a_title.as_string_32)
 		end
 
-	change_short_title (a_title: STRING_GENERAL; a_content: SD_CONTENT)
+	change_short_title (a_title: READABLE_STRING_GENERAL; a_content: SD_CONTENT)
 			-- <Precursor>
 		do
 			if content /= Void and then content.type = {SD_ENUMERATION}.editor then
@@ -515,7 +515,7 @@ feature -- Redefine
 			zone.update_mini_toolbar
 		end
 
-	change_tab_tooltip (a_text: detachable STRING_GENERAL)
+	change_tab_tooltip (a_text: detachable READABLE_STRING_GENERAL)
 			-- <Precursor>
 		local
 			l_upper: detachable SD_DOCKING_ZONE_UPPER

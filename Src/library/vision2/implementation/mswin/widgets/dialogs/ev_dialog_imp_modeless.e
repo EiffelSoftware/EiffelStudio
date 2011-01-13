@@ -159,7 +159,7 @@ feature {NONE} -- Implementation
 			result_id := Idcancel
 		end
 
-	internal_dialog_make (a_parent: detachable WEL_WINDOW; an_id: INTEGER; a_name: detachable STRING_GENERAL)
+	internal_dialog_make (a_parent: detachable WEL_WINDOW; an_id: INTEGER; a_name: detachable READABLE_STRING_GENERAL)
 			-- Create the dialog
 		local
 			common_controls_dll: WEL_COMMON_CONTROLS_DLL

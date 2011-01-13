@@ -382,7 +382,7 @@ feature -- Element change
 			until
 				known_formatters.after or else found
 			loop
-				if name_copy.is_equal (known_formatters.item.command_name) then
+				if name_copy.same_string (known_formatters.item.command_name) then
 					known_formatters.item.invalidate
 					known_formatters.item.execute
 					found := True

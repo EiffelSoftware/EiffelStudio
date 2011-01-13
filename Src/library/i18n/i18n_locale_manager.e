@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_uri: STRING_GENERAL)
+	make (a_uri: READABLE_STRING_GENERAL)
 			-- Initialize manager from given URI.
 			--
 			-- Note: At the moment only file resources are available. Thus

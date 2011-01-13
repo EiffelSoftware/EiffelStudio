@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_widget_title_pixmap (a_widget: EV_WIDGET; a_pixmap: EV_PIXMAP; a_unique_title: STRING_GENERAL)
+	make_with_widget_title_pixmap (a_widget: EV_WIDGET; a_pixmap: EV_PIXMAP; a_unique_title: READABLE_STRING_GENERAL)
 			-- Creation method
 			-- `a_widget' is the main widget displayed in Current
 			-- `a_pixmap' is the icon displayed in auto hide tab, notebook tab
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 
 			internal_user_widget := a_widget
 			user_widget.set_minimum_size (0, 0)
-			internal_unique_title := a_unique_title
+			internal_unique_title := a_unique_title.as_string_32
 			internal_pixmap := a_pixmap
 
 			create l_state.make
@@ -60,12 +60,12 @@ feature {NONE} -- Initialization
 			a_title_set: internal_unique_title /= Void
 			a_pixmap_set: a_pixmap = internal_pixmap
 			state_not_void: is_state_set
-			a_unique_title_set: a_unique_title.as_string_32.is_equal (internal_unique_title)
+			a_unique_title_set: internal_unique_title.same_string_general (a_unique_title)
 			long_title_not_void: long_title /= Void
 			short_title_not_void: short_title /= Void
 		end
 
-	make_with_widget (a_widget: EV_WIDGET; a_unique_title: STRING_GENERAL)
+	make_with_widget (a_widget: EV_WIDGET; a_unique_title: READABLE_STRING_GENERAL)
 			-- Creation method
 			-- `a_widget' is the main widget displayed in Current
 			-- `a_unique_title' is the unique title for Current	
@@ -179,7 +179,7 @@ feature -- Access
 			Result := docking_manager.focused_content = Current
 		end
 
-	is_title_unique_except_current (a_title: STRING_GENERAL): BOOLEAN
+	is_title_unique_except_current (a_title: READABLE_STRING_GENERAL): BOOLEAN
 			-- If `a_title' unique in all docking manager's contents' titles?
 		local
 			l_contents: ARRAYED_LIST [SD_CONTENT]
@@ -241,38 +241,38 @@ feature -- Access
 
 feature -- Settings
 
-	set_long_title (a_long_title: STRING_GENERAL)
+	set_long_title (a_long_title: READABLE_STRING_GENERAL)
 			-- Set `long_title'
 		require
 			a_long_title_not_void: a_long_title /= Void
 		do
-			long_title := a_long_title
+			long_title := a_long_title.as_string_32
 			state.change_long_title (a_long_title, Current)
 		ensure
-			set: a_long_title.as_string_32.is_equal (long_title)
+			set: long_title.same_string_general (a_long_title)
 		end
 
-	set_short_title (a_short_title: STRING_GENERAL)
+	set_short_title (a_short_title: READABLE_STRING_GENERAL)
 			-- Set `short_title'
 		require
 			a_short_title_not_void: a_short_title /= Void
 			not_too_long: a_short_title.count < 1000
 		do
-			short_title := a_short_title
+			short_title := a_short_title.as_string_32
 			state.change_short_title (a_short_title, Current)
 		ensure
-			set: a_short_title.as_string_32.is_equal (short_title)
+			set: short_title.same_string_general (a_short_title)
 		end
 
-	set_unique_title (a_unique_title: STRING_GENERAL)
+	set_unique_title (a_unique_title: READABLE_STRING_GENERAL)
 			-- Set `unique_title'
 		require
 			a_unique_title_not_void: a_unique_title /= Void
 			title_valid: is_title_unique_except_current (a_unique_title)
 		do
-			internal_unique_title := a_unique_title
+			internal_unique_title := a_unique_title.as_string_32
 		ensure
-			set: unique_title.is_equal (a_unique_title.as_string_32)
+			set: unique_title.same_string_general (a_unique_title)
 		end
 
 	set_pixmap (a_pixmap: like internal_pixmap)

@@ -534,7 +534,7 @@ feature{NONE} -- Implementation/Setting
 		do
 			command_name_internal := a_name.twin
 		ensure
-			command_name_internal_set: command_name_internal.is_equal (a_name)
+			command_name_internal_set: command_name_internal.same_string (a_name)
 		end
 
 	set_header_internal (a_header: like header_internal)
@@ -544,7 +544,7 @@ feature{NONE} -- Implementation/Setting
 		do
 			header_internal := a_header.twin
 		ensure
-			header_internal_set: header_internal.is_equal (a_header)
+			header_internal_set: header_internal.same_string (a_header)
 		end
 
 	set_temp_header_internal (a_temp_header: like temp_header_internal)
@@ -554,7 +554,7 @@ feature{NONE} -- Implementation/Setting
 		do
 			temp_header_internal := a_temp_header.twin
 		ensure
-			temp_header_internal_set: temp_header_internal.is_equal (a_temp_header)
+			temp_header_internal_set: temp_header_internal.same_string (a_temp_header)
 		end
 
 	set_menu_name_internal (a_name: like menu_name_internal)
@@ -564,7 +564,7 @@ feature{NONE} -- Implementation/Setting
 		do
 			menu_name_internal := a_name.twin
 		ensure
-			menu_name_internal_set: menu_name_internal.is_equal (a_name)
+			menu_name_internal_set: menu_name_internal.same_string (a_name)
 		end
 
 	load_pixmap

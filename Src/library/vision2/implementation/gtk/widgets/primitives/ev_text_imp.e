@@ -411,7 +411,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	insert_text (a_text: STRING_GENERAL)
+	insert_text (a_text: READABLE_STRING_GENERAL)
 		local
 			a_cs: EV_GTK_C_STRING
 			a_iter: EV_GTK_TEXT_ITER_STRUCT
@@ -427,7 +427,7 @@ feature -- Status setting
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_insert (text_buffer, a_iter.item, a_cs.item, -1)
 		end
 
-	set_text (a_text: STRING_GENERAL)
+	set_text (a_text: READABLE_STRING_GENERAL)
 			-- Set `text' to `a_text'
 		local
 			a_cs: EV_GTK_C_STRING
@@ -436,13 +436,13 @@ feature -- Status setting
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_set_text (text_buffer, a_cs.item, -1)
 		end
 
-	append_text (a_text: STRING_GENERAL)
+	append_text (a_text: READABLE_STRING_GENERAL)
 			-- Append `a_text' to `text'.
 		do
 			append_text_internal (text_buffer, a_text)
 		end
 
-	prepend_text (a_text: STRING_GENERAL)
+	prepend_text (a_text: READABLE_STRING_GENERAL)
 			-- Prepend 'txt' to `text'.
 		local
 			a_cs: EV_GTK_C_STRING
@@ -596,7 +596,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	append_text_internal (a_text_buffer: POINTER; a_text: STRING_GENERAL)
+	append_text_internal (a_text_buffer: POINTER; a_text: READABLE_STRING_GENERAL)
 			-- Append `txt' to `text'.
 		local
 			a_cs: EV_GTK_C_STRING

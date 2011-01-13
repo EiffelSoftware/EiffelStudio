@@ -159,7 +159,7 @@ feature -- Command
 			end
 		end
 
-	change_tab_tooltip (a_content: SD_CONTENT; a_tooltip: detachable STRING_GENERAL)
+	change_tab_tooltip (a_content: SD_CONTENT; a_tooltip: detachable READABLE_STRING_GENERAL)
 			-- Change `a_content' tab's tooltip to `a_tooltip'
 		require
 			not_void: a_content /= Void

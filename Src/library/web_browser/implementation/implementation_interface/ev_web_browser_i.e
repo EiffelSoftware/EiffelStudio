@@ -25,7 +25,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 feature -- Command
 
-	load_uri (a_uri: STRING_GENERAL)
+	load_uri (a_uri: READABLE_STRING_GENERAL)
 			-- Load content from `a_uri' for rendering
 		require
 			not_empty: a_uri /= void and then not a_uri.is_empty

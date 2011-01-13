@@ -154,15 +154,15 @@ feature -- Query
 
 feature -- Command
 
-	set_text (a_text: STRING_GENERAL)
+	set_text (a_text: READABLE_STRING_GENERAL)
 			-- Set `title'
 		do
-			internal_text := a_text
+			internal_text := a_text.as_string_32
 			set_text_size (internal_shared.tool_bar_font.string_width (a_text))
 			update_size_internal
 			on_expose (0, 0, internal_drawing_area.width, internal_drawing_area.height)
 		ensure
-			set: a_text /= Void implies internal_text.is_equal (a_text.as_string_32)
+			set: a_text /= Void implies internal_text.same_string_general (a_text)
 		end
 
 	set_text_size (a_size: INTEGER)
@@ -454,14 +454,14 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

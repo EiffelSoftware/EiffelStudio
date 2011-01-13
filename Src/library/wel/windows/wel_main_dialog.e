@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			dialog_children_not_void: dialog_children /= Void
 		end
 
-	make_by_name (a_name: STRING_GENERAL)
+	make_by_name (a_name: READABLE_STRING_GENERAL)
 			-- Initialize a loadable dialog box identified by
 			-- `a_name'.
 		require
@@ -45,11 +45,11 @@ feature {NONE} -- Initialization
 			name_not_empty: not a_name.is_empty
 		do
 			parent := Void
-			resource_name := a_name.twin
+			resource_name := a_name.as_string_32.twin
 			create dialog_children.make
 		ensure
 			no_parent: parent = Void
-			resource_name_set: attached resource_name as l_name and then l_name.same_string (a_name)
+			resource_name_set: attached resource_name as l_name and then l_name.same_string_general (a_name)
 			dialog_children_not_void: dialog_children /= Void
 		end
 
@@ -62,14 +62,14 @@ feature -- Basic operations
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

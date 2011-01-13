@@ -50,24 +50,51 @@ feature -- Access
 			last_converted_stream_not_void: Result /= Void
 		end
 
-	last_converted_string: STRING_GENERAL
+	last_converted_string_8: STRING_8
 			-- Last converted string.
 			-- Note: Original string object could be returned directly.
 		require
 			last_conversion_successful: last_conversion_successful
-		local
-			l_str: detachable STRING_GENERAL
 		do
-			l_str := encoding_i.last_converted_string
-			check l_str /= Void end -- Implied from the precondition and postcondition of `encoding_i.convert_to'
-			Result := l_str
+			check attached encoding_i.last_converted_stream as l_str then
+					-- Implied from the precondition and postcondition of `encoding_i.convert_to'
+				Result := l_str
+			end
+		ensure
+			last_converted_string_not_void: Result /= Void
+		end
+
+	last_converted_string_32: STRING_32
+			-- Last converted string.
+			-- Note: Original string object could be returned directly.
+		require
+			last_conversion_successful: last_conversion_successful
+		do
+			check attached encoding_i.last_converted_string as l_str then
+					-- Implied from the precondition and postcondition of `encoding_i.convert_to'
+				Result := l_str.as_string_32
+			end
+		ensure
+			last_converted_string_not_void: Result /= Void
+		end
+
+	last_converted_string: READABLE_STRING_GENERAL
+			-- Last converted string.
+			-- Note: Original string object could be returned directly.
+		require
+			last_conversion_successful: last_conversion_successful
+		do
+			check attached encoding_i.last_converted_string as l_str then
+				-- Implied from the precondition and postcondition of `encoding_i.convert_to'
+				Result := l_str
+			end
 		ensure
 			last_converted_string_not_void: Result /= Void
 		end
 
 feature -- Conversion
 
-	convert_to (a_to_encoding: ENCODING; a_string: STRING_GENERAL)
+	convert_to (a_to_encoding: ENCODING; a_string: READABLE_STRING_GENERAL)
 			-- Convert `a_string' from current encoding to `a_to_encoding'.
 			-- If either current or `a_to_encoding' is not `is_valid', or an error occurs during conversion,
 			-- `last_conversion_successful' is unset.

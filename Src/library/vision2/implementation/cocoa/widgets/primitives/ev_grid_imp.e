@@ -124,7 +124,7 @@ feature {EV_GRID_ITEM_I} -- Implementation
 			Result := 4
 		end
 
-	string_size (a_string: STRING_GENERAL; a_font: EV_FONT; tuple: TUPLE [INTEGER, INTEGER])
+	string_size (a_string: READABLE_STRING_GENERAL; a_font: EV_FONT; tuple: TUPLE [INTEGER, INTEGER])
 			-- `Result' contains width and height required to
 			-- fully display string `s' in font `f'.
 			-- This should be used instead of `string_size' from EV_FONT

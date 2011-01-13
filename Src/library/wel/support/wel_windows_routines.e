@@ -34,7 +34,7 @@ inherit
 
 feature -- Basic operations
 
-	output_debug_string (s: STRING_GENERAL)
+	output_debug_string (s: READABLE_STRING_GENERAL)
 			-- Send a string `s' to the system debugger.
 		require
 			s_not_void: s /= Void

@@ -93,7 +93,7 @@ feature -- Status setting
 
 feature -- Insertion
 
-	set_text_on_position (a_row: INTEGER; a_text: STRING_GENERAL)
+	set_text_on_position (a_row: INTEGER; a_text: READABLE_STRING_GENERAL)
 			-- Set cell text at (a_column, a_row) to `a_text'.
 		do
 

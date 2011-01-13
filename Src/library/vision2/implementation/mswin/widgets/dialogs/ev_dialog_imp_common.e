@@ -204,7 +204,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	internal_dialog_make (a_parent: detachable WEL_WINDOW; an_id: INTEGER; a_name: detachable STRING_GENERAL)
+	internal_dialog_make (a_parent: detachable WEL_WINDOW; an_id: INTEGER; a_name: detachable READABLE_STRING_GENERAL)
 			-- Create the dialog
 		deferred
 		end

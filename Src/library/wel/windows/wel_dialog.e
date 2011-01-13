@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 			dialog_children_not_void: dialog_children /= Void
 		end
 
-	make_by_name (a_parent: detachable WEL_COMPOSITE_WINDOW; a_name: STRING_GENERAL)
+	make_by_name (a_parent: detachable WEL_COMPOSITE_WINDOW; a_name: READABLE_STRING_GENERAL)
 			-- Initialize a loadable dialog box identified by
 			-- `a_name' using `a_parent' as parent.
 		require
@@ -56,11 +56,11 @@ feature {NONE} -- Initialization
 			name_not_empty: not a_name.is_empty
 		do
 			parent := a_parent
-			resource_name := a_name.twin
+			resource_name := a_name.as_string_32.twin
 			create dialog_children.make
 		ensure
 			parent_set: parent = a_parent
-			resource_name_set: attached resource_name as l_name and then l_name.same_string (a_name)
+			resource_name_set: attached resource_name as l_name and then l_name.same_string_general (a_name)
 			dialog_children_not_void: dialog_children /= Void
 		end
 
@@ -198,7 +198,7 @@ feature {NONE} -- Implementation
 			registered: new_dialog = Current
 		end
 
-	resource_name: detachable STRING_GENERAL
+	resource_name: detachable STRING_32
 			-- Name of the dialog in the resource.
 			-- Void if the dialog is identified by an
 			-- id (`resource_id').
@@ -276,7 +276,7 @@ feature {NONE} -- Implementation
 feature {NONE} -- Implementation
 
 	internal_dialog_make (a_parent: detachable WEL_WINDOW; an_id: INTEGER;
-			a_name: detachable STRING_GENERAL)
+			a_name: detachable READABLE_STRING_GENERAL)
 			-- Create the dialog
 		deferred
 		end
@@ -327,14 +327,14 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

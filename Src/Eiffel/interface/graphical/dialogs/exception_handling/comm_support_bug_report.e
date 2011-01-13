@@ -33,9 +33,9 @@ feature {NONE} -- Initialization
 			-- Default value
 			severity := severtiy_serious
 		ensure
-			synopsis_set: synopsis.is_equal (a_synopsis)
-			description_set: description.is_equal (a_desc)
-			release_set: release.is_equal (a_release)
+			synopsis_set: synopsis.same_string (a_synopsis)
+			description_set: description.same_string (a_desc)
+			release_set: release.same_string (a_release)
 		end
 
 feature -- Query
@@ -72,7 +72,7 @@ feature -- Command
 		do
 			synopsis := a_synopsis
 		ensure
-			synopsis_set: synopsis.is_equal (a_synopsis)
+			synopsis_set: synopsis.same_string (a_synopsis)
 		end
 
 	set_description (a_description: STRING_GENERAL)
@@ -83,7 +83,7 @@ feature -- Command
 		do
 			description := a_description
 		ensure
-			description_set: description.is_equal (a_description)
+			description_set: description.same_string (a_description)
 		end
 
 	set_release (a_release: STRING_GENERAL)
@@ -94,7 +94,7 @@ feature -- Command
 		do
 			release := a_release
 		ensure
-			release_set: release.is_equal (a_release)
+			release_set: release.same_string (a_release)
 		end
 
 	set_environment (a_environment: STRING_GENERAL)
@@ -105,7 +105,7 @@ feature -- Command
 		do
 			environment := a_environment
 		ensure
-			environment_set: environment.is_equal (a_environment)
+			environment_set: environment.same_string (a_environment)
 		end
 
 	set_to_reproduce (a_to_reproduce: STRING_GENERAL)
@@ -116,7 +116,7 @@ feature -- Command
 		do
 			to_reproduce := a_to_reproduce
 		ensure
-			to_reproduce_set: to_reproduce.is_equal (a_to_reproduce)
+			to_reproduce_set: to_reproduce.same_string (a_to_reproduce)
 		end
 
 	set_confidential (a_confidential: like confidential)
@@ -165,7 +165,7 @@ invariant
 	not_release_is_empty: not release.is_empty
 
 note
-	copyright: "Copyright (c) 1984-2007, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -189,11 +189,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

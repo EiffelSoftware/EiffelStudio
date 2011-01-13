@@ -145,14 +145,14 @@ feature -- Properties
 			-- In the dialog, a list item will represent current. `description' will be displayed as
 			-- list item texts on the dialog
 
-	set_description (a_description: STRING_GENERAL)
+	set_description (a_description: READABLE_STRING_GENERAL)
 			-- Set `description'
 		require
 			not_void: a_description /= Void
 		do
-			description := a_description
+			description := a_description.as_string_32
 		ensure
-			set: description.is_equal (a_description.as_string_32)
+			set: description.same_string_general (a_description)
 		end
 
 	enable_displayed
@@ -212,14 +212,14 @@ feature -- Properties
 			-- Name which is used for save/open docking layout configuration
 			-- This name should not changed in all locales
 
-	set_name (a_name: STRING_GENERAL)
+	set_name (a_name: READABLE_STRING_GENERAL)
 			-- Set `name'
 		require
 			not_void: a_name /= Void
 		do
-			name := a_name
+			name := a_name.as_string_32
 		ensure
-			set: name.is_equal (a_name.as_string_32)
+			set: name.same_string_general (a_name)
 		end
 
 	set_pebble_function (a_pebble: like pebble_function)

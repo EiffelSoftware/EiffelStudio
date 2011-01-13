@@ -263,7 +263,7 @@ feature {NONE} -- Implementation
 			save_check_button_state (check_button.is_selected)
 		end
 
-	create_button (a_text: STRING_GENERAL): EV_BUTTON
+	create_button (a_text: READABLE_STRING_GENERAL): EV_BUTTON
 			-- Create a new button labeled `a_text'
 		do
 			create Result
@@ -273,7 +273,7 @@ feature {NONE} -- Implementation
 			Result.select_actions.extend (agent destroy)
 		end
 
-	dialog_title: STRING_GENERAL
+	dialog_title: STRING_32
 			-- Title for this confirmation dialog
 		do
 			Result := "Confirmation"
@@ -281,14 +281,14 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Deferred Constants
 
-	check_button_label: STRING_GENERAL
+	check_button_label: STRING_32
 			-- Label for `check_button'.
 		deferred
 		ensure
 			valid_label: Result /= Void and then not Result.is_empty
 		end
 
-	ok_button_label: STRING_GENERAL
+	ok_button_label: STRING_32
 			-- Label for the Ok/Yes button.
 		do
 			if buttons_count >= 3 then
@@ -300,7 +300,7 @@ feature {NONE} -- Deferred Constants
 			valid_label: Result /= Void and then not Result.is_empty
 		end
 
-	no_button_label: STRING_GENERAL
+	no_button_label: STRING_32
 			-- Label for the No button.
 		do
 			Result := (create {EV_DIALOG_CONSTANTS}).ev_No
@@ -308,7 +308,7 @@ feature {NONE} -- Deferred Constants
 			valid_label: Result /= Void and then not Result.is_empty
 		end
 
-	cancel_button_label: STRING_GENERAL
+	cancel_button_label: STRING_32
 			-- Label for the Cancel/No button.
 		do
 			Result := (create {EV_DIALOG_CONSTANTS}).ev_Cancel
@@ -316,7 +316,7 @@ feature {NONE} -- Deferred Constants
 			valid_label: Result /= Void and then not Result.is_empty
 		end
 
-	confirmation_message_label: STRING_GENERAL
+	confirmation_message_label: STRING_32
 			-- Label for the confirmation message.
 		deferred
 		ensure

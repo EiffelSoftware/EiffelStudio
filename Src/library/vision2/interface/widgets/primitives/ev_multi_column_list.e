@@ -250,7 +250,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_column_title (a_title: STRING_GENERAL; a_column: INTEGER)
+	set_column_title (a_title: READABLE_STRING_GENERAL; a_column: INTEGER)
 			-- Assign `a_title' to the `column_title'(`a_column').
 		require
 			not_destroyed: not is_destroyed
@@ -259,12 +259,12 @@ feature -- Element change
 		do
 			implementation.set_column_title (a_title, a_column)
 		ensure
-			a_title_assigned: column_title (a_column).is_equal (a_title)
+			a_title_assigned: column_title (a_column).same_string_general (a_title)
 			column_count_valid: column_count >= a_column
 			cloned: column_title (a_column) /= a_title
 		end
 
-	set_column_titles (titles: ARRAY [STRING_GENERAL])
+	set_column_titles (titles: ARRAY [READABLE_STRING_GENERAL])
 			-- Assign `titles' to titles of columns in order.
 			-- `Current' will resize if the number of titles exceeds
 			-- `Column_count'.
@@ -384,7 +384,7 @@ feature {NONE} -- Contract support
 			end
 		end
 
-	column_titles_assigned (titles: ARRAY [STRING_GENERAL]): BOOLEAN
+	column_titles_assigned (titles: ARRAY [READABLE_STRING_GENERAL]): BOOLEAN
 			-- Are titles of columns equal to `titles'?
 		require
 			titles_not_void: titles /= Void
@@ -397,7 +397,7 @@ feature {NONE} -- Contract support
 			until
 				i > titles.count
 			loop
-				if not column_title (i).is_equal (titles.item (i)) then
+				if not column_title (i).same_string_general (titles.item (i)) then
 					Result := False
 				end
 				i := i + 1

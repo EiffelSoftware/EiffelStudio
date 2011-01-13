@@ -24,7 +24,7 @@ inherit
 
 feature -- Initialization
 
-	read_from_named_file (file_name: STRING_GENERAL)
+	read_from_named_file (file_name: READABLE_STRING_GENERAL)
 			-- Load pixmap data from the file named `file_name'.
 			-- Exceptions: "Unable to retrieve icon information"
 		require

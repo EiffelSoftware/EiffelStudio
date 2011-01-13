@@ -118,7 +118,7 @@ feature {EDITABLE_TEXT} -- Element change
 			notify_observers
 		end
 
-	record_insert_eol (inserted_indentation: STRING_GENERAL)
+	record_insert_eol (inserted_indentation: READABLE_STRING_GENERAL)
 			-- Update `Current' as a new line with indentation `inserted_indentation'
 			-- is to be inserted at cursor position.
 		local
@@ -142,7 +142,7 @@ feature {EDITABLE_TEXT} -- Element change
 				l_cursor := text.cursor
 				check l_cursor_not_void: l_cursor /= Void end
 				l_string := "%N"
-				l_string.append (inserted_indentation)
+				l_string.append_string_general (inserted_indentation)
 				create uic.make_from_string	(l_cursor, l_string, text)
 				put (uic)
 				current_status := insert_eol
@@ -151,7 +151,7 @@ feature {EDITABLE_TEXT} -- Element change
 			notify_observers
 		end
 
-	record_paste (s: STRING_GENERAL)
+	record_paste (s: READABLE_STRING_GENERAL)
 			-- Update `Current' as `s' is to be inserted at cursor position.
 		local
 			uic: UNDO_INSERT_CMD
@@ -191,7 +191,7 @@ feature {EDITABLE_TEXT} -- Element change
 			notify_observers
 		end
 
-	record_delete_selection (s: STRING_GENERAL)
+	record_delete_selection (s: READABLE_STRING_GENERAL)
 			-- Update `Current' as `s' has just been deleted at cursor position.
 		local
 			udc: UNDO_DELETE_CMD
@@ -238,7 +238,7 @@ feature {EDITABLE_TEXT} -- Element change
 			notify_observers
 		end
 
-	record_replace_selection (s1, s2: STRING_GENERAL)
+	record_replace_selection (s1, s2: READABLE_STRING_GENERAL)
 		local
 			urc: UNDO_REPLACE_CMD
 			l_cursor: detachable EDITOR_CURSOR
@@ -251,7 +251,7 @@ feature {EDITABLE_TEXT} -- Element change
 			notify_observers
 		end
 
-	record_replace_all (s1, s2: STRING_GENERAL)
+	record_replace_all (s1, s2: READABLE_STRING_GENERAL)
 		local
 			urac: detachable UNDO_REPLACE_ALL_CMD
 			urc: UNDO_REPLACE_CMD
@@ -301,7 +301,7 @@ feature {EDITABLE_TEXT} -- Element change
 			notify_observers
 		end
 
-	record_symbol (lines: LIST [INTEGER]; symbl: STRING_GENERAL)
+	record_symbol (lines: LIST [INTEGER]; symbl: READABLE_STRING_GENERAL)
 		local
 			uisc: UNDO_SYMBOL_SELECTION_CMD
 		do
@@ -311,7 +311,7 @@ feature {EDITABLE_TEXT} -- Element change
 			current_status := symbol
 		end
 
-	record_unsymbol (lines: LIST[INTEGER]; symbl: STRING_GENERAL)
+	record_unsymbol (lines: LIST[INTEGER]; symbl: READABLE_STRING_GENERAL)
 			--| Warning : to be called after `unsymbol_selection'
 		local
 			uusc: UNDO_UNSYMBOL_SELECTION_CMD
@@ -322,7 +322,7 @@ feature {EDITABLE_TEXT} -- Element change
 			current_status := unsymbol
 		end
 
-	record_remove_trailing_blank (s: STRING_GENERAL)
+	record_remove_trailing_blank (s: READABLE_STRING_GENERAL)
 			-- Update `Current' as `s' has just been removed at cursor position.
 		local
 			undo_rtb_cmd: detachable UNDO_DELETE_STRINGS_CMD
@@ -368,7 +368,7 @@ feature {EDITABLE_TEXT} -- Element change
 			end
 		end
 
-	record_uncomment (s: STRING_GENERAL)
+	record_uncomment (s: READABLE_STRING_GENERAL)
 			-- Update `Current' as `s' has just been removed at cursor position.
 		local
 			undo_rtb_cmd: detachable UNDO_DELETE_STRINGS_CMD

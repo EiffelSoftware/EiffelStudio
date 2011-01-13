@@ -186,10 +186,10 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_tooltip (a_tooltip: STRING_GENERAL)
+	set_tooltip (a_tooltip: READABLE_STRING_GENERAL)
 			-- Assign `a_tooltip' to `tooltip'.
 		do
-			internal_tooltip := a_tooltip.twin
+			internal_tooltip := a_tooltip.as_string_32.twin
 		end
 
 	tooltip: STRING_32
@@ -202,10 +202,10 @@ feature -- Element change
 			end
 		end
 
-	set_text (txt: STRING_GENERAL)
+	set_text (txt: READABLE_STRING_GENERAL)
 			-- Set current button text to `txt'.
 		do
-			internal_text := txt.twin
+			internal_text := txt.as_string_32.twin
 			if attached parent_imp as l_parent_imp then
 				l_parent_imp.set_text_on_position (l_parent_imp.index_of (attached_interface, 1) , txt)
 			end

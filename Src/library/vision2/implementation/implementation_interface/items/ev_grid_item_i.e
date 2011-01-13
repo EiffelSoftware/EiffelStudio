@@ -445,22 +445,21 @@ feature -- Element change
 			end
 		end
 
-	set_tooltip (a_tooltip: detachable STRING_GENERAL)
+	set_tooltip (a_tooltip: detachable READABLE_STRING_GENERAL)
 			-- Assign `a_tooltip' to `tooltip'.
 			-- pass `Void' to remove the tooltip.
 		do
 				-- The `if' statement is necessary because of the conversion
-				-- from STRING_GENERAL to STRING_32
+				-- from READABLE_STRING_GENERAL to STRING_32
 			if a_tooltip = Void then
 				tooltip := Void
 			else
-				tooltip := a_tooltip
+				tooltip := a_tooltip.as_string_32
 			end
 		ensure
 			tooltip_reset: a_tooltip = Void implies tooltip = Void
 			tooltip_set: a_tooltip /= Void and then attached tooltip as l_tooltip implies (
-				(l_tooltip.same_type (a_tooltip) implies l_tooltip = a_tooltip) or
-				(not l_tooltip.same_type (a_tooltip) implies a_tooltip.is_equal (l_tooltip)))
+				l_tooltip.same_string_general (a_tooltip))
 		end
 
 feature {EV_GRID_I, EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I} -- Implementation

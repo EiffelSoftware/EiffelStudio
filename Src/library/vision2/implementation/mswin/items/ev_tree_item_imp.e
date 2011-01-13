@@ -29,7 +29,7 @@ create
 
 feature {NONE} -- Implementation
 
-	set_tooltip (a_tooltip: STRING_GENERAL)
+	set_tooltip (a_tooltip: READABLE_STRING_GENERAL)
 			-- Assign `a_tooltip' to `internal_tooltip_string'.
 		do
 			internal_tooltip_string := a_tooltip.as_string_32

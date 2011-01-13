@@ -158,7 +158,7 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
-	key_press_string_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [widget: EV_WIDGET; string: STRING_GENERAL]]
+	key_press_string_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [widget: EV_WIDGET; string: READABLE_STRING_GENERAL]]
 			-- Actions to be performed when a keyboard press generates a displayable character.
 		do
 			Result := implementation.key_press_string_actions

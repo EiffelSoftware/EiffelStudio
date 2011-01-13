@@ -104,7 +104,7 @@ feature {NONE} -- Initlization
 
 feature -- Command
 
-	set_title (a_title: STRING_GENERAL)
+	set_title (a_title: READABLE_STRING_GENERAL)
 			-- Set the title on the title bar
 		require
 			a_title_not_void: a_title /= Void

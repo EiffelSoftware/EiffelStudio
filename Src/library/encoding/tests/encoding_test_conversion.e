@@ -72,10 +72,10 @@ feature {NONE}
 			-- test_interconvert (counter, "UTF-32BE", chinese_encoding, utf32be_string)
 		end
 
-	test_interconvert (a_c: INTEGER; e1, e2: STRING; a_str: STRING_GENERAL)
+	test_interconvert (a_c: INTEGER; e1, e2: STRING; a_str: READABLE_STRING_GENERAL)
 		local
 			l_encoding1, l_encoding2: ENCODING
-			l_str: STRING_GENERAL
+			l_str: READABLE_STRING_GENERAL
 			i: INTEGER
 		do
 			create l_encoding1.make (e1)
@@ -95,11 +95,9 @@ feature {NONE}
 			print ("%N")
 
 			l_encoding1.convert_to (l_encoding2, a_str)
-			l_str := l_encoding1.last_converted_string
-
-			print ("%N")
 			if l_encoding1.last_conversion_successful then
-				print ("Forward Converted String: ")
+				l_str := l_encoding1.last_converted_string
+				print ("%NForward Converted String: ")
 				from
 					i := 1
 				until
@@ -111,11 +109,9 @@ feature {NONE}
 				print ("%N")
 
 				l_encoding2.convert_to (l_encoding1, l_str)
-				l_str := l_encoding2.last_converted_string
-
-				print ("%N")
 				if l_encoding2.last_conversion_successful then
-					print ("Backward Converted String: ")
+					l_str := l_encoding2.last_converted_string
+					print ("%NBackward Converted String: ")
 					from
 						i := 1
 					until
@@ -125,12 +121,12 @@ feature {NONE}
 						i := i + 1
 					end
 					print ("%N")
+					assert ("Converting result does not match the input.", l_str.is_equal (a_str))
+					print (l_str.is_equal (a_str))
+					print ("%N")
 				else
 					assert ("The second conversion is failing.", False)
 				end
-				assert ("Converting result does not match the input.", l_str.is_equal (a_str))
-				print (l_str.is_equal (a_str))
-				print ("%N")
 			else
 				assert ("The first conversion is failing.", False)
 			end
@@ -142,7 +138,7 @@ feature {NONE}
 		local
 			l_encoding_from, l_encoding_to: ENCODING
 			l_string_from: STRING_32
-			l_output: STRING_GENERAL
+			l_output: READABLE_STRING_GENERAL
 		do
 			create l_string_from.make (2)
 			l_string_from.append_code (0x0E0041)
@@ -204,13 +200,13 @@ feature {NONE} -- Constants
 	utf16be_string: STRING_32
 		once
 			utf32.convert_to (create {ENCODING}.make ("UTF-16BE"), utf32_16_string)
-			Result := utf32.last_converted_string
+			Result := utf32.last_converted_string_32
 		end
 
 	utf32be_string: STRING_32
 		once
 			utf32.convert_to (create {ENCODING}.make ("UTF-32BE"), ucs4_string)
-			Result := utf32.last_converted_string
+			Result := utf32.last_converted_string_32
 		end
 
 	utf32_16_string: STRING_32
@@ -222,7 +218,7 @@ feature {NONE} -- Constants
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

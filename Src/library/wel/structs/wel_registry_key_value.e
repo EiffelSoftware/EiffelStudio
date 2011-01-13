@@ -24,7 +24,7 @@ create
 
 feature -- Initialization
 
-	make (t: like type; v: STRING_GENERAL)
+	make (t: like type; v: READABLE_STRING_GENERAL)
 			-- Create a new string key value.
 		require
 			v_not_void: v /= Void
@@ -33,7 +33,7 @@ feature -- Initialization
 			set_string_value (v)
 		ensure
 			type_set: type = reg_sz
-			string_value_set: string_value.is_equal (v)
+			string_value_set: string_value.same_string_general (v)
 		end
 
 	make_with_data (t: like type; v: MANAGED_POINTER)
@@ -179,7 +179,7 @@ feature -- Element Change
 			dword_value_set: dword_value = v
 		end
 
-	set_string_value (v: STRING_GENERAL)
+	set_string_value (v: READABLE_STRING_GENERAL)
 			-- Set `string_value' with `v'.
 			-- Set `type' with `reg_sz'.
 		require
@@ -193,18 +193,18 @@ feature -- Element Change
 			data.item.memory_copy (l_str.item, l_str.capacity)
 		ensure
 			type_set: type = reg_sz
-			dword_value_set: string_value.is_equal (v)
+			string_value_set: string_value.same_string_general (v)
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

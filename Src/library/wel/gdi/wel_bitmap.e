@@ -55,7 +55,7 @@ feature {NONE} -- Initialization
 			gdi_make
 		end
 
-	make_by_name (name: STRING_GENERAL)
+	make_by_name (name: READABLE_STRING_GENERAL)
 			-- Load the resource by a `name'
 		do
 			Precursor (name)

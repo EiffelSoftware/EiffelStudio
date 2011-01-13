@@ -298,7 +298,7 @@ feature {SD_TOOL_BAR_ITEM, SD_GENERIC_TOOL_BAR, SD_TOOL_BAR_ZONE_ASSISTANT, SD_F
 
 feature -- Vision2 command
 
-	set_tooltip (a_tooltip: STRING_GENERAL)
+	set_tooltip (a_tooltip: READABLE_STRING_GENERAL)
 			-- Assign `a_tooltip' to `tooltip'.
 		deferred
 		end
@@ -369,7 +369,7 @@ feature {SD_WIDGET_TOOL_BAR, SD_TOOL_BAR_ZONE} -- Implementation
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

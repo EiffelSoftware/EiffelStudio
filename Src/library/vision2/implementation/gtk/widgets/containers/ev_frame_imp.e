@@ -159,12 +159,12 @@ feature -- Access
 
 feature -- Element change
 
-	set_text (a_text: STRING_GENERAL)
+	set_text (a_text: READABLE_STRING_GENERAL)
 			-- set the `text' of the frame
 		local
 			a_cs: EV_GTK_C_STRING
 		do
-			internal_text := a_text.twin
+			internal_text := a_text.as_string_32.twin
 			a_cs := a_text
 			{EV_GTK_EXTERNALS}.gtk_frame_set_label (container_widget, a_cs.item)
 		end

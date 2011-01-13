@@ -267,7 +267,7 @@ feature -- Status report
 			result_exists: Result /= Void
 		end
 
-	string_size (s: STRING_GENERAL): WEL_SIZE
+	string_size (s: READABLE_STRING_GENERAL): WEL_SIZE
 			-- Size of the string `s' using the selected font.
 		require
 			exists: exists
@@ -298,7 +298,7 @@ feature -- Status report
 			positive_height: Result.height >= 0
 		end
 
-	string_width (s: STRING_GENERAL): INTEGER
+	string_width (s: READABLE_STRING_GENERAL): INTEGER
 			-- Width of the string `s' using the selected font.
 		require
 			exists: exists
@@ -309,7 +309,7 @@ feature -- Status report
 			positive_result: Result >= 0
 		end
 
-	string_height (s: STRING_GENERAL): INTEGER
+	string_height (s: READABLE_STRING_GENERAL): INTEGER
 			-- Height of the string `s' using the selected font.
 		require
 			exists: exists
@@ -320,7 +320,7 @@ feature -- Status report
 			positive_result: Result >= 0
 		end
 
-	tabbed_text_size (text: STRING_GENERAL): WEL_SIZE
+	tabbed_text_size (text: READABLE_STRING_GENERAL): WEL_SIZE
 			-- Size of a tabbed `text'.
 		require
 			exists: exists
@@ -340,7 +340,7 @@ feature -- Status report
 			positive_height: Result.height >= 0
 		end
 
-	tabbed_text_width (text: STRING_GENERAL): INTEGER
+	tabbed_text_width (text: READABLE_STRING_GENERAL): INTEGER
 			-- Width of a tabbed `text'.
 		require
 			exists: exists
@@ -351,7 +351,7 @@ feature -- Status report
 			positive_width: Result >= 0
 		end
 
-	tabbed_text_height (text: STRING_GENERAL): INTEGER
+	tabbed_text_height (text: READABLE_STRING_GENERAL): INTEGER
 			-- Height of a tabbed `text'.
 		require
 			exists: exists
@@ -362,7 +362,7 @@ feature -- Status report
 			positive_height: Result >= 0
 		end
 
-	tabbed_text_size_with_tabulation (text: STRING_GENERAL;
+	tabbed_text_size_with_tabulation (text: READABLE_STRING_GENERAL;
 			tabulations: ARRAY [INTEGER]): WEL_SIZE
 			-- Size of a tabbed `text', with `tabulations' as
 			-- tabulation positions.
@@ -478,7 +478,7 @@ feature -- Status report
 			valid_stretch_mode: valid_stretch_mode_constant (Result)
 		end
 
-	text_face: STRING_GENERAL
+	text_face: READABLE_STRING_GENERAL
 			-- Typeface name of the font that is currently selected.
 		require
 			exists: exists
@@ -1033,7 +1033,7 @@ feature -- Basic operations
 			cwin_select_clip_rgn (item, a_default_pointer)
 		end
 
-	text_out (x, y: INTEGER; string: STRING_GENERAL)
+	text_out (x, y: INTEGER; string: READABLE_STRING_GENERAL)
 			-- Write `string' on `x' and `y' position.
 		require
 			exists: exists
@@ -1045,7 +1045,7 @@ feature -- Basic operations
 			cwin_text_out (item, x, y, a_wel_string.item, string.count)
 		end
 
-	tabbed_text_out (x, y: INTEGER; string: STRING_GENERAL;
+	tabbed_text_out (x, y: INTEGER; string: READABLE_STRING_GENERAL;
 			tabulations: ARRAY [INTEGER];
 			tabulations_origin: INTEGER)
 			-- Write `string' on `x' and `y' position expanding
@@ -1066,7 +1066,7 @@ feature -- Basic operations
 				tabulations.count, a.item, tabulations_origin)
 		end
 
-	draw_text (string: STRING_GENERAL; rect: WEL_RECT; format: INTEGER)
+	draw_text (string: READABLE_STRING_GENERAL; rect: WEL_RECT; format: INTEGER)
 			-- Draw the text `string' inside
 			-- the `rect' using `format'
 			-- See class WEL_DT_CONSTANTS for `format' value.
@@ -1080,7 +1080,7 @@ feature -- Basic operations
 			drawn_height := draw_text_with_result (string, rect, format)
 		end
 
-	draw_text_with_result (string: STRING_GENERAL; rect: WEL_RECT; format: INTEGER): INTEGER
+	draw_text_with_result (string: READABLE_STRING_GENERAL; rect: WEL_RECT; format: INTEGER): INTEGER
 			-- Draw the text `string' inside the `rect' using `format'.
 			-- Return the height of the text drawn.
 			-- See class WEL_DT_CONSTANTS for `format' value.
@@ -1096,7 +1096,7 @@ feature -- Basic operations
 				string.count, rect.item, format)
 		end
 
-	draw_disabled_text (string: STRING_GENERAL; rect: WEL_RECT; format: INTEGER)
+	draw_disabled_text (string: READABLE_STRING_GENERAL; rect: WEL_RECT; format: INTEGER)
 			-- Draw the text `string' in disabled mode inside
 			-- the `rect' using `format'
 			-- See class WEL_DT_CONSTANTS for `format' value.
@@ -1111,7 +1111,7 @@ feature -- Basic operations
 			cwin_draw_disabled_text (item, a_wel_string.item, string.count, rect.item, format)
 		end
 
-	draw_state_text (a_brush: detachable WEL_BRUSH; string: STRING_GENERAL; x, y: INTEGER; format: INTEGER)
+	draw_state_text (a_brush: detachable WEL_BRUSH; string: READABLE_STRING_GENERAL; x, y: INTEGER; format: INTEGER)
 			-- Draw the text `string' using `format' at the
 			-- location (`x',`y') using the brush `a_brush' if `format' include `Dss_mono'.
 			--
@@ -1133,7 +1133,7 @@ feature -- Basic operations
 			success := cwin_draw_state (item, a_brush_ptr, null, a_wel_string.item, string.count, x, y, 0, 0, format)
 		end
 
-	draw_centered_text (string: STRING_GENERAL; rect: WEL_RECT)
+	draw_centered_text (string: READABLE_STRING_GENERAL; rect: WEL_RECT)
 			-- Draw the text `string' centered in `rect'.
 		require
 			exists: exists

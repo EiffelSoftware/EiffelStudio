@@ -58,7 +58,7 @@ create
 feature {NONE} -- Initialization
 
 	make_with_text_and_action
-		(a_text: STRING_GENERAL; an_action: PROCEDURE [ANY, TUPLE])
+		(a_text: READABLE_STRING_GENERAL; an_action: PROCEDURE [ANY, TUPLE])
 			-- Create with 'a_text' as `text' and `an_action' in `select_actions'.
 		require
 			text_not_void: a_text /= Void
@@ -68,7 +68,7 @@ feature {NONE} -- Initialization
 			set_text (a_text)
 			select_actions.extend (an_action)
 		ensure
-			text_assigned: text.is_equal (a_text)
+			text_assigned: text.same_string_general (a_text)
 			select_actions_has_an_action: select_actions.has (an_action)
 		end
 

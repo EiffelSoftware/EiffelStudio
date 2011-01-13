@@ -64,7 +64,7 @@ feature {NONE} -- Initialization
 
 feature -- Command
 
-	load_uri (a_uri: STRING_GENERAL)
+	load_uri (a_uri: READABLE_STRING_GENERAL)
 			-- <Precursor>
 		do
 			webkit.load_uri (a_uri)

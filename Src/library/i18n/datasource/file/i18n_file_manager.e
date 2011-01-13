@@ -19,7 +19,7 @@ create
 
 feature	{NONE} -- Creation
 
-	make (an_uri: STRING_GENERAL)
+	make (an_uri: READABLE_STRING_GENERAL)
 		do
 			Precursor (an_uri)
 				-- Initialize chain-of-responsability

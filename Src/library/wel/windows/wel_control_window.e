@@ -30,7 +30,7 @@ create
 
 feature {NONE} -- Intialization
 
-	make_with_coordinates (a_parent: WEL_WINDOW; a_name: STRING_GENERAL;
+	make_with_coordinates (a_parent: WEL_WINDOW; a_name: READABLE_STRING_GENERAL;
 			a_x, a_y, a_width, a_height: INTEGER)
 			-- Make a control using `a_parent' as parent and
 			-- `a_name' as name. `a_x', `a_y', `a_width', and

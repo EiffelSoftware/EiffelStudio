@@ -17,7 +17,7 @@ create
 
 feature -- Initialization
 
-	make (a_lines: like lines; symbl: STRING_GENERAL; txt: EDITABLE_TEXT)
+	make (a_lines: like lines; symbl: READABLE_STRING_GENERAL; txt: EDITABLE_TEXT)
 		require
 			a_lines_not_void: a_lines /= Void
 			symbl_not_void: symbl /= Void
@@ -36,7 +36,7 @@ feature -- Access
 
 	lines: LIST[INTEGER]
 
-	symbol: STRING_GENERAL
+	symbol: READABLE_STRING_GENERAL
 		-- symbol added at the beginning of the lines.
 
 feature -- Basic operations

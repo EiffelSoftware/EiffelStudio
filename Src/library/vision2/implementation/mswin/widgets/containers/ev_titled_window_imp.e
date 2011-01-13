@@ -199,19 +199,19 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_title (txt: STRING_GENERAL)
+	set_title (txt: READABLE_STRING_GENERAL)
 			-- Make `txt' the title of `Current'.
 		do
-			internal_title := txt.twin
+			internal_title := txt.as_string_32.twin
 			if not is_minimized then
 				set_text (txt)
 			end
 		end
 
-	set_icon_name (txt: STRING_GENERAL)
+	set_icon_name (txt: READABLE_STRING_GENERAL)
 			-- Make `txt' the new icon name.
 		do
-			internal_icon_name := txt.twin
+			internal_icon_name := txt.as_string_32.twin
 			if is_minimized then
 				set_text (txt)
 			end

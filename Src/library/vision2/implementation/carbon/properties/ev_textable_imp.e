@@ -109,7 +109,7 @@ feature -- Status setting
 
 feature -- Element change	
 
-	set_text (a_text: STRING_GENERAL)
+	set_text (a_text: READABLE_STRING_GENERAL)
 			-- Assign `a_text' to `text'.
 		local
 			ret: INTEGER
@@ -164,7 +164,7 @@ feature {EV_ANY_IMP} -- Implementation
 			s.replace_substring_all (once "&&", once "&")
 		end
 
-	u_lined_filter (s: STRING_GENERAL): STRING_32
+	u_lined_filter (s: READABLE_STRING_GENERAL): STRING_32
 			-- Copy of `s' with underscores instead of ampersands.
 			-- (If `s' does not contain ampersands, return `s'.)
 		require

@@ -52,7 +52,7 @@ feature {EV_ANY_I} -- Access
 		do
 		end
 
-	add_ps_line (ps_code: STRING_GENERAL)
+	add_ps_line (ps_code: READABLE_STRING_GENERAL)
 			-- Append `ps_code' postscript to output.
 		do
 		end

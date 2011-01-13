@@ -182,7 +182,7 @@ feature -- Element change
 			instance_set: instance.item = an_instance.item
 		end
 
-	set_text (a_text: STRING_GENERAL)
+	set_text (a_text: READABLE_STRING_GENERAL)
 			-- Set `text' with `a_text'.
 		require
 			a_text_not_void: a_text /= Void
@@ -194,7 +194,7 @@ feature -- Element change
 			str_text := l_text
 			cwel_toolinfo_set_lpsztext (item, l_text.item)
 		ensure
-			text_set: text.is_equal (a_text)
+			text_set: text.same_string_general (a_text)
 		end
 
 	set_text_id (an_id: INTEGER)
@@ -325,14 +325,14 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

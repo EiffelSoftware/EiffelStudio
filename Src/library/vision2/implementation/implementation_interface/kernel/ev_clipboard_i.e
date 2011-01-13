@@ -30,13 +30,13 @@ feature -- Access
 
 feature -- Status setting
 
-	set_text (a_text: STRING_GENERAL)
+	set_text (a_text: READABLE_STRING_GENERAL)
 			-- Assign `a_text' to clipboard.
 		require
 			text_not_void: a_text /= Void
 		deferred
 		ensure
-			text_cloned: text.is_equal (a_text) and then text /= a_text
+			text_cloned: text.same_string_general (a_text) and then text /= a_text
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation

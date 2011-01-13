@@ -341,7 +341,7 @@ feature {NONE} -- Implementation
 			end
 
 
-	set_text (a_text: STRING_GENERAL)
+	set_text (a_text: READABLE_STRING_GENERAL)
 			-- Assign `a_text' to `text'.
 		do
 			precursor {EV_TEXT_FIELD_IMP} (a_text)

@@ -15,12 +15,12 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_full_name: STRING_GENERAL)
+	make (a_full_name: READABLE_STRING_GENERAL)
 			-- Initialize.
 		require
 			a_full_name_not_void: a_full_name /= Void
 		do
-			full_name := a_full_name
+			full_name := a_full_name.as_string_32
 			load
 		end
 

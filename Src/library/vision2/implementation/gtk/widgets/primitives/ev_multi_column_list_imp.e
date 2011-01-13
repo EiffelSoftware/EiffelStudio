@@ -656,7 +656,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	column_title_changed (a_txt: STRING_GENERAL; a_column: INTEGER)
+	column_title_changed (a_txt: READABLE_STRING_GENERAL; a_column: INTEGER)
 			-- Make `a_txt' the title of the column number.
 		local
 			l_txt: STRING_32
@@ -1025,7 +1025,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- Implementation
 
 feature {EV_MULTI_COLUMN_LIST_ROW_IMP}
 
-	set_text_on_position (a_column, a_row: INTEGER; a_text: STRING_GENERAL)
+	set_text_on_position (a_column, a_row: INTEGER; a_text: READABLE_STRING_GENERAL)
 			-- Set cell text at (a_column, a_row) to `a_text'.
 		local
 			a_cs: EV_GTK_C_STRING

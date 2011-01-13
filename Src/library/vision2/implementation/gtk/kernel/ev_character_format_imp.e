@@ -118,10 +118,10 @@ feature -- Status setting
 				)
 		end
 
-	set_font_attributes (a_name: STRING_GENERAL; a_family, a_point_height, a_weight, a_shape, a_charset: INTEGER)
+	set_font_attributes (a_name: READABLE_STRING_GENERAL; a_family, a_point_height, a_weight, a_shape, a_charset: INTEGER)
 			-- Set internal font attributes
 		do
-			name := a_name
+			name := a_name.as_string_32
 			family := a_family
 			height_in_points := a_point_height
 			weight := a_weight

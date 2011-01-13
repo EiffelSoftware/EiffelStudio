@@ -16,17 +16,17 @@ inherit
 
 feature -- Interface
 
-	can_handle (a_path:STRING_32) :BOOLEAN
+	can_handle (a_path: READABLE_STRING_GENERAL) :BOOLEAN
 			-- will handle this _if_  it has a file name ending in .mo
 			-- extend later, maybe, to check the magic number.
 		do
 				-- Check file  name
-			if a_path.substring (a_path.count-2, a_path.count).is_equal (".mo") then
+			if a_path.substring (a_path.count-2, a_path.count).same_string (".mo") then
 				Result := True
 			end
 		end
 
-	extract_dictionary (a_path:STRING_32): I18N_DICTIONARY
+	extract_dictionary (a_path: STRING_32): I18N_DICTIONARY
 		local
 			i: INTEGER
 			temp: I18N_DICTIONARY_ENTRY
@@ -38,7 +38,7 @@ feature -- Interface
 			create l_file.make (a_path)
 			l_file.open
 			if l_file.opened then
-				create {I18N_BINARY_SEARCH_ARRAY_DICTIONARY} Result.make(l_file.plural_form)
+				create {I18N_BINARY_SEARCH_ARRAY_DICTIONARY} Result.make (l_file.plural_form)
 				from
 					i := 1
 				until
@@ -65,7 +65,7 @@ feature -- Interface
 			end
 		end
 
-	extract_scope (a_path: STRING_32): detachable I18N_FILE_SCOPE_INFORMATION
+	extract_scope (a_path: READABLE_STRING_GENERAL): detachable I18N_FILE_SCOPE_INFORMATION
 			-- Not much scope information we can extract from the file itself. All we have to go on is the name.
 			-- NOTE: Void indicates unknown scope, not a bug
 		local
@@ -94,7 +94,7 @@ feature -- File
 
 note
 	library:   "Internationalization library"
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

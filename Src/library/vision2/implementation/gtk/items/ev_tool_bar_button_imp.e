@@ -136,7 +136,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_text (a_text: STRING_GENERAL)
+	set_text (a_text: READABLE_STRING_GENERAL)
 			-- Assign `a_text' to `text'.
 		local
 			a_parent_imp: detachable EV_TOOL_BAR_IMP
@@ -162,12 +162,12 @@ feature -- Element change
 			end
 		end
 
-	set_tooltip (a_text: STRING_GENERAL)
+	set_tooltip (a_text: READABLE_STRING_GENERAL)
 			-- Set `tooltip' to `a_text'.
 		local
 			a_cs: EV_GTK_C_STRING
 		do
-			internal_tooltip := a_text.twin
+			internal_tooltip := a_text.as_string_32.twin
 			a_cs := App_implementation.c_string_from_eiffel_string (a_text)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tool_item_set_tooltip (
 				visual_widget,

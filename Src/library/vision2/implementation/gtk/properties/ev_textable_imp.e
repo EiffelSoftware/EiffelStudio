@@ -87,7 +87,7 @@ feature -- Status setting
 
 feature -- Element change	
 
-	set_text (a_text: STRING_GENERAL)
+	set_text (a_text: READABLE_STRING_GENERAL)
 			-- Assign `a_text' to `text'.
 		local
 			a_cs: EV_GTK_C_STRING
@@ -147,13 +147,13 @@ feature {EV_ANY_IMP} -- Implementation
 			s.replace_substring_all (once "&&", once "&")
 		end
 
-	u_lined_filter (s: STRING_GENERAL): STRING_32
+	u_lined_filter (s: READABLE_STRING_GENERAL): STRING_32
 			-- Copy of `s' with underscores instead of ampersands.
 			-- (If `s' does not contain ampersands, return `s'.)
 		require
 			s_not_void: s /= Void
 		do
-			Result := s.twin
+			Result := s.as_string_32.twin
 			Result.replace_substring_all (once  "_", once  "__")
 			if s.has_code (('&').natural_32_code) then
 				filter_ampersand (Result, '_')

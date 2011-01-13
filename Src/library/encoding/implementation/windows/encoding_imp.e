@@ -18,7 +18,7 @@ inherit
 
 feature -- String encoding convertion
 
-	convert_to (a_from_code_page: STRING; a_from_string: STRING_GENERAL; a_to_code_page: STRING)
+	convert_to (a_from_code_page: STRING; a_from_string: READABLE_STRING_GENERAL; a_to_code_page: STRING)
 			-- Convert `a_from_string' of `a_from_code_page' to a string of `a_to_code_page'.
 		local
 			l_from_code_page, l_to_code_page: STRING
@@ -30,7 +30,11 @@ feature -- String encoding convertion
 		last_conversion_lost_data := False
 		if a_from_string.is_empty then
 			last_conversion_successful := True
-			last_converted_string := a_from_string.twin
+			if a_from_string.is_string_8 then
+				last_converted_string := a_from_string.as_string_8.twin
+			else
+				last_converted_string := a_from_string.as_string_32.twin
+			end
 			last_was_wide_string := a_from_string.is_string_32
 		else
 			l_from_code_page := platfrom_code_page_from_name (a_from_code_page)

@@ -160,7 +160,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_text (a_text: STRING_GENERAL)
+	set_text (a_text: READABLE_STRING_GENERAL)
 			-- Assign `a_text' to `text'.
 		local
 			a_c_str: C_STRING
@@ -170,7 +170,7 @@ feature -- Status setting
 			ret := txnset_data_external (entry_widget, kTXNTextData, a_c_str.item, a_text.count, kTXNStartOffset, kTXNEndOffset)
 		end
 
-	append_text (txt: STRING_GENERAL)
+	append_text (txt: READABLE_STRING_GENERAL)
 			-- Append `txt' to the end of the text.
 		local
 			a_c_str: C_STRING
@@ -180,7 +180,7 @@ feature -- Status setting
 			ret := txnset_data_external (entry_widget, kTXNTextData, a_c_str.item, txt.count, kTXNEndOffset, kTXNEndOffset)
 		end
 
-	prepend_text (txt: STRING_GENERAL)
+	prepend_text (txt: READABLE_STRING_GENERAL)
 			-- Prepend `txt' to the end of the text.
 		local
 			a_c_str: C_STRING
@@ -304,7 +304,7 @@ feature -- status settings
 
 feature -- Basic operation
 
-	insert_text (txt: STRING_GENERAL)
+	insert_text (txt: READABLE_STRING_GENERAL)
 			-- Insert `txt' at the current position.
 		local
 			a_c_str: C_STRING
@@ -314,7 +314,7 @@ feature -- Basic operation
 			ret := txnset_data_external (entry_widget, kTXNTextData, a_c_str.item, txt.count, selection_start-1, selection_end-1)
 		end
 
-	insert_text_at_position (txt: STRING_GENERAL; a_pos: INTEGER)
+	insert_text_at_position (txt: READABLE_STRING_GENERAL; a_pos: INTEGER)
 			-- Insert `txt' at the current position at position `a_pos'
 		local
 			a_c_str: C_STRING
@@ -382,7 +382,7 @@ feature -- Basic operation
 		end
 
 
-	real_text: STRING_GENERAL
+	real_text: READABLE_STRING_GENERAL
 
 feature {NONE} -- Implementation
 	entry_widget: POINTER

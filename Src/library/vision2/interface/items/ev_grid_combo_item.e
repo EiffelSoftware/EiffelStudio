@@ -38,7 +38,7 @@ create
 
 feature -- Element change
 
-	set_item_strings (a_string_array: INDEXABLE [STRING_GENERAL, INTEGER])
+	set_item_strings (a_string_array: INDEXABLE [READABLE_STRING_GENERAL, INTEGER])
 			-- Set each item in `Current' to the strings referenced in `a_string_array'.
 		require
 			a_string_array_not_void: a_string_array /= Void
@@ -57,7 +57,7 @@ feature -- Access
 		-- Text field used to edit `Current' on `activate'
 		-- Void when `Current' isn't being activated.
 
-	item_strings: detachable INDEXABLE [STRING_GENERAL, INTEGER]
+	item_strings: detachable INDEXABLE [READABLE_STRING_GENERAL, INTEGER]
 		-- Item strings used to make up combo box list.
 
 feature {NONE} -- Implementation

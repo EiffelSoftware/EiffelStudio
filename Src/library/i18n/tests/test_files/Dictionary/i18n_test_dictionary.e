@@ -109,8 +109,8 @@ feature {NONE}	-- Data generation
 			entry:I18N_DICTIONARY_ENTRY
 			random:RANDOM
 			i:INTEGER
-			singular:STRING_GENERAL
-			translated_singular, original_plural: STRING_GENERAL
+			singular:READABLE_STRING_GENERAL
+			translated_singular, original_plural: READABLE_STRING_GENERAL
 			file: PLAIN_TEXT_FILE
 			l_name, l_generated_name: STRING
 			l_fn: STRING
@@ -181,8 +181,8 @@ data_query(t:I18N_DICTIONARY; datalength,seed:INTEGER)
 				-- the data_file could also be used, not try it yet
 		local
 			i,j: INTEGER
-			singular: STRING_GENERAL
-			translated_singular, original_plural: STRING_GENERAL
+			singular: READABLE_STRING_GENERAL
+			translated_singular, original_plural: READABLE_STRING_GENERAL
 			random: RANDOM
 			output_file: PLAIN_TEXT_FILE
 
@@ -300,8 +300,8 @@ feature {NONE} -- Data access
 				-- the data_file could also be used, not try it yet
 		local
 			i,j: INTEGER
-			singular: STRING_GENERAL
-			translated_singular, original_plural: STRING_GENERAL
+			singular: READABLE_STRING_GENERAL
+			translated_singular, original_plural: READABLE_STRING_GENERAL
 			random: RANDOM
 			output_file: PLAIN_TEXT_FILE
 

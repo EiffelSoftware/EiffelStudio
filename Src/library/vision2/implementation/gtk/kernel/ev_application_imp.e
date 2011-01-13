@@ -1238,7 +1238,7 @@ feature {EV_ANY_I, EV_FONT_IMP, EV_STOCK_PIXMAPS_IMP, EV_INTERMEDIARY_ROUTINES} 
 			Result := {EV_GTK_EXTERNALS}.c_gdk_rectangle_struct_allocate
 		end
 
-	c_string_from_eiffel_string (a_string: STRING_GENERAL): EV_GTK_C_STRING
+	c_string_from_eiffel_string (a_string: READABLE_STRING_GENERAL): EV_GTK_C_STRING
 			-- Return a EV_GTK_C_STRING from`a_string'
 			-- `Item' of result must not be freed by gtk.
 			-- Result must only be used for temporary setting and should not be persistent.

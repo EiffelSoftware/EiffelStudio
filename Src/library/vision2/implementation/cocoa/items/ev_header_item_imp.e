@@ -90,7 +90,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_text (a_text: STRING_GENERAL)
+	set_text (a_text: READABLE_STRING_GENERAL)
 		do
 			Precursor {EV_TEXTABLE_IMP} (a_text)
 			table_column.header_cell.set_string_value (create {NS_STRING}.make_with_string (a_text))

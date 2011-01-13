@@ -124,13 +124,13 @@ feature -- Status setting
 
 feature -- Element change
 
-	add_string (a_string: STRING_GENERAL)
+	add_string (a_string: READABLE_STRING_GENERAL)
 			-- Add `a_string' in the combo box.
 		do
 			insert_string_at (a_string, count)
 		end
 
-	insert_string_at (a_string: STRING_GENERAL; index: INTEGER)
+	insert_string_at (a_string: READABLE_STRING_GENERAL; index: INTEGER)
 			-- Add `a_string' at the zero-based `index'.
 		local
 			citem: WEL_COMBO_BOX_EX_ITEM
@@ -192,7 +192,7 @@ feature -- Notification
 
 feature -- Inapplicable
 
-	find_string (index: INTEGER; a_string: STRING_GENERAL): INTEGER
+	find_string (index: INTEGER; a_string: READABLE_STRING_GENERAL): INTEGER
 			-- Find the first string that contains the
 			-- prefix `a_string'. `index' specifies the
 			-- zero-based index of the item before the first
@@ -204,7 +204,7 @@ feature -- Inapplicable
 			end
 		end
 
-	add_files (attribut: INTEGER; files: STRING_GENERAL)
+	add_files (attribut: INTEGER; files: READABLE_STRING_GENERAL)
 			-- Add `files' to the combo box. `files' may contain
 			-- wildcards (?*). See class WEL_DDL_CONSTANTS for
 			-- `attribut' values.

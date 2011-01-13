@@ -10,7 +10,7 @@ deferred class
 
 feature -- Access
 
-	name: STRING_GENERAL
+	name: STRING
 			-- Name of the shortcut.
 		deferred
 		end

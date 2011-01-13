@@ -356,26 +356,26 @@ feature -- Drawing operations
 			release_dc
 		end
 
-	draw_rotated_text (x, y: INTEGER; a_angle: REAL; a_text: STRING_GENERAL)
+	draw_rotated_text (x, y: INTEGER; a_angle: REAL; a_text: READABLE_STRING_GENERAL)
 			-- Draw rotated text `a_text' with left of baseline at (`x', `y') using `font'.
 			-- Rotation is number of radians counter-clockwise from horizontal plane.
 		do
 			internal_draw_text (x, y, a_angle, 0, True, a_text)
 		end
 
-	draw_text (x, y: INTEGER; a_text: STRING_GENERAL)
+	draw_text (x, y: INTEGER; a_text: READABLE_STRING_GENERAL)
 			-- Draw `a_text' with left of baseline at (`x', `y') using `font'.
 		do
 			internal_draw_text (x, y, 0, 0, True, a_text)
 		end
 
-	draw_text_top_left (x, y: INTEGER; a_text: STRING_GENERAL)
+	draw_text_top_left (x, y: INTEGER; a_text: READABLE_STRING_GENERAL)
 			-- Draw `a_text' with top left corner at (`x', `y') using `font'.
 		do
 			internal_draw_text (x, y, 0, 0, False, a_text)
 		end
 
-	draw_ellipsed_text (x, y: INTEGER; a_text: STRING_GENERAL; clipping_width: INTEGER)
+	draw_ellipsed_text (x, y: INTEGER; a_text: READABLE_STRING_GENERAL; clipping_width: INTEGER)
 			-- Draw `a_text' with left of baseline at (`x', `y') using `font'.
 			-- Text is clipped to `clipping_width' in pixels and ellipses are displayed
 			-- to show truncated characters if any.
@@ -383,7 +383,7 @@ feature -- Drawing operations
 			internal_draw_text (x, y, 0, clipping_width, True, a_text)
 		end
 
-	draw_ellipsed_text_top_left (x, y: INTEGER; a_text: STRING_GENERAL; clipping_width: INTEGER)
+	draw_ellipsed_text_top_left (x, y: INTEGER; a_text: READABLE_STRING_GENERAL; clipping_width: INTEGER)
 			-- Draw `a_text' with top left corner at (`x', `y') using `font'.
 			-- Text is clipped to `clipping_width' in pixels and ellipses are displayed
 			-- to show truncated characters if any.
@@ -391,7 +391,7 @@ feature -- Drawing operations
 			internal_draw_text (x, y, 0, clipping_width, False, a_text)
 		end
 
-	internal_draw_text (x, y: INTEGER; angle: REAL; clipping_width: INTEGER; from_baseline: BOOLEAN; a_text: STRING_GENERAL)
+	internal_draw_text (x, y: INTEGER; angle: REAL; clipping_width: INTEGER; from_baseline: BOOLEAN; a_text: READABLE_STRING_GENERAL)
 			-- Draw `a_text' with top left corner at (`x', `y') using `font'.
 			-- Text is clipped to `clipping_width' in pixels and ellipses are displayed
 			-- to show truncated characters if any.

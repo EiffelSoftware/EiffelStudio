@@ -97,12 +97,12 @@ feature -- Access
 
 feature -- Element change
 
-	set_start_directory (a_path: STRING_GENERAL)
+	set_start_directory (a_path: READABLE_STRING_GENERAL)
 			-- Make `a_path' the base directory.
 		local
 			a_cs: EV_GTK_C_STRING
 		do
-			start_directory := a_path.twin
+			start_directory := a_path.as_string_32.twin
 			a_cs := start_directory + "/."
 			{EV_GTK_EXTERNALS}.gtk_file_chooser_set_filename (
 				c_object,

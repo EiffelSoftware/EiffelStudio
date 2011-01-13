@@ -12,7 +12,7 @@ obsolete
 
 feature -- Basic operations
 
-	message_box (a_text, a_title: STRING_GENERAL; a_style: INTEGER)
+	message_box (a_text, a_title: READABLE_STRING_GENERAL; a_style: INTEGER)
 			-- Show a message box with `a_text' inside and
 			-- `a_title' using `a_style'.
 			-- See class WEL_MB_CONSTANTS for `a_style' value.
@@ -28,7 +28,7 @@ feature -- Basic operations
 				a_wel_string1.item, a_wel_string2.item, a_style)
 		end
 
-	error_message_box (a_text: STRING_GENERAL; a_style: INTEGER)
+	error_message_box (a_text: READABLE_STRING_GENERAL; a_style: INTEGER)
 			-- Show a error message box with `a_text'
 			-- inside using `a_style'.
 			-- See class WEL_MB_CONSTANTS for `a_style' value.

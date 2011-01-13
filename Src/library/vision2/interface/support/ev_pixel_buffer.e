@@ -123,7 +123,7 @@ feature -- Command
 			implementation.draw_pixel_buffer_with_x_y (a_x, a_y, a_pixel_buffer)
 		end
 
-	draw_text (a_text: STRING_GENERAL; a_font: EV_FONT; a_point: EV_COORDINATE)
+	draw_text (a_text: READABLE_STRING_GENERAL; a_font: EV_FONT; a_point: EV_COORDINATE)
 			-- Draw `a_text' with `a_font' at `a_rect'.
 		require
 			not_void: a_text /= Void

@@ -244,7 +244,7 @@ feature -- Command
 			end
 		end
 
-	set_title (a_title: STRING_GENERAL)
+	set_title (a_title: READABLE_STRING_GENERAL)
 			-- Set title of title bar.
 		require
 			a_title_not_void: a_title /= Void

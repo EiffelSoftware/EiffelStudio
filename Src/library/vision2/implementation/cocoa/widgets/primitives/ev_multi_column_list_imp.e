@@ -342,7 +342,7 @@ feature -- Element change
 		do
 		end
 
-	column_title_changed (a_txt: STRING_GENERAL; a_column: INTEGER)
+	column_title_changed (a_txt: READABLE_STRING_GENERAL; a_column: INTEGER)
 			-- Make `a_txt' the title of the column number.
 		do
 		end
@@ -492,7 +492,7 @@ feature -- Implementation
 
 feature {EV_MULTI_COLUMN_LIST_ROW_IMP}
 
-	set_text_on_position (a_column, a_row: INTEGER; a_text: STRING_GENERAL)
+	set_text_on_position (a_column, a_row: INTEGER; a_text: READABLE_STRING_GENERAL)
 			--
 		do
 

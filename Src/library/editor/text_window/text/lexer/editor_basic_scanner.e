@@ -12,6 +12,9 @@ inherit
 			execute
 		end
 
+create
+	make
+
 feature -- Action
 
 	execute (a_string: STRING)

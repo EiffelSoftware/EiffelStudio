@@ -78,10 +78,10 @@ feature -- Initialization
 
 feature -- Access
 
-	wel_set_text (a_string: STRING_GENERAL)
+	wel_set_text (a_string: READABLE_STRING_GENERAL)
 			-- Set the text of the item to `a_string'
 		do
-			internal_text := a_string.twin
+			internal_text := a_string.as_string_32.twin
 		end
 
 	wel_text: STRING_32
@@ -154,7 +154,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_text (a_text: STRING_GENERAL)
+	set_text (a_text: READABLE_STRING_GENERAL)
 		do
 			wel_set_text (a_text)
 			lv_item.set_text (a_text)
@@ -387,7 +387,7 @@ feature {EV_LIST_ITEM_LIST_IMP} -- Pixmap Handling
 			end
 		end
 
-	set_tooltip (a_tooltip: STRING_GENERAL)
+	set_tooltip (a_tooltip: READABLE_STRING_GENERAL)
 			-- Assign `a_tooltip' to `internal_tooltip_string'.
 		do
 			internal_tooltip_string := a_tooltip.as_string_32

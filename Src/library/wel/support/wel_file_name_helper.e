@@ -12,7 +12,7 @@ class
 
 feature -- Access
 
-	short_path_name (a_file_name: STRING_GENERAL): STRING_32
+	short_path_name (a_file_name: READABLE_STRING_GENERAL): STRING_32
 			-- Short path name of `a_file_name'
 			-- File/directory must exists before convert to short name
 		require

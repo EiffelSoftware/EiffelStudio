@@ -145,7 +145,7 @@ feature -- Measurement
 
 feature -- Element change
 
-	read_from_named_file (a_path: STRING_GENERAL)
+	read_from_named_file (a_path: READABLE_STRING_GENERAL)
 			-- Attempt to load pixmap data from a file specified by `file_name'.
 		local
 			l_image: NS_IMAGE
@@ -165,7 +165,7 @@ feature -- Element change
 			end
 		end
 
-	load_system_image (a_name: STRING_GENERAL)
+	load_system_image (a_name: READABLE_STRING_GENERAL)
 			-- Load a OS X default system image
 		local
 			l_image: NS_IMAGE

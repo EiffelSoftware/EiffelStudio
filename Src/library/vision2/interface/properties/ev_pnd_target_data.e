@@ -27,14 +27,14 @@ feature -- Access
 
 feature -- Element Change
 
-	set_name (a_name: STRING_GENERAL)
+	set_name (a_name: READABLE_STRING_GENERAL)
 			-- Set `name' to `a_name'.
 		require
 			a_name_not_void: a_name /= Void
 		do
-			internal_name := a_name
+			internal_name := a_name.as_string_32
 		ensure
-			name_assigned: name = a_name
+			name_assigned: name.same_string_general (a_name)
 		end
 
 	set_pixmap (a_pixmap: EV_PIXMAP)

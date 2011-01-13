@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_tool (a_tool: EV_WIDGET; a_display_name: STRING_GENERAL; a_parent: MULTIPLE_SPLIT_AREA)
+	make_with_tool (a_tool: EV_WIDGET; a_display_name: READABLE_STRING_GENERAL; a_parent: MULTIPLE_SPLIT_AREA)
 			-- Create `Current', and initalize with
 			-- tool `a_tool'. Use `display_name' for title of `a_tool'.
 		require
@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 			create maximize_button
 			create close_button
 			create customizeable_area
-			display_name := a_display_name
+			display_name := a_display_name.as_string_32
 
 			default_create
 

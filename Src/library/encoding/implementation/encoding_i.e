@@ -18,7 +18,7 @@ inherit
 
 feature {ENCODING} -- String encoding convertion
 
-	convert_to (a_from_code_page: STRING; a_from_string: STRING_GENERAL; a_to_code_page: STRING)
+	convert_to (a_from_code_page: STRING; a_from_string: READABLE_STRING_GENERAL; a_to_code_page: STRING)
 			-- Convert `a_from_string' of `a_from_code_page' to a string of `a_to_code_page'.
 		require
 			a_from_code_page_valid: is_code_page_valid (a_from_code_page)
@@ -66,7 +66,19 @@ feature {ENCODING} -- Access
 			last_converted_stream_not_void: Result /= Void
 		end
 
-	last_converted_string: detachable STRING_GENERAL
+	last_converted_string_8: detachable STRING_8
+		require
+			last_conversion_successful: last_conversion_successful
+			not_wide: not last_was_wide_string
+		do
+			check attached last_converted_string as l_string then
+				Result := string_general_to_stream (l_string)
+			end
+		ensure
+			last_converted_stream_not_void: Result /= Void
+		end
+
+	last_converted_string: detachable READABLE_STRING_GENERAL
 			-- Last converted string.
 
 feature {ENCODING} -- Status report
@@ -97,7 +109,7 @@ feature {ENCODING} -- Status report
 
 feature {NONE} -- Status report
 
-	is_valid_as_string_16 (a_string: STRING_GENERAL): BOOLEAN
+	is_valid_as_string_16 (a_string: READABLE_STRING_GENERAL): BOOLEAN
 			-- Check high 16 bit of any char in `a_string' is zero.
 		local
 			i, nb: INTEGER_32

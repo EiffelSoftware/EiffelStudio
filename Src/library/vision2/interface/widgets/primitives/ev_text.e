@@ -151,7 +151,7 @@ feature -- Basic operation
 			implementation.scroll_to_end
 		end
 
-	search (str: STRING_GENERAL; start: INTEGER): INTEGER
+	search (str: READABLE_STRING_GENERAL; start: INTEGER): INTEGER
 			-- Position of first occurrence of `str' at or after `start';
 			-- 0 if none.
 		require

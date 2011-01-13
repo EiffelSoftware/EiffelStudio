@@ -395,7 +395,7 @@ feature -- Status setting
 			{WEL_API}.send_message (item, Lvm_setitemcount, to_wparam (value), to_lparam (0))
 		end
 
-	set_cell_text (isub_item, iitem: INTEGER; txt: STRING_GENERAL)
+	set_cell_text (isub_item, iitem: INTEGER; txt: READABLE_STRING_GENERAL)
 			-- Set the label of the cell with coordinates `isub_item', `item'
 			-- with `txt'.
 		require
@@ -412,7 +412,7 @@ feature -- Status setting
 			{WEL_API}.send_message (item, Lvm_setitemtext, to_wparam (iitem), an_item.item)
 		end
 
-	set_column_title (txt: STRING_GENERAL; index: INTEGER)
+	set_column_title (txt: READABLE_STRING_GENERAL; index: INTEGER)
 			-- Make `txt' the new title of the `index'-th column.
 		require
 			exists: exists

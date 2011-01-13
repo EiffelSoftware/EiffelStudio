@@ -94,7 +94,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	string_size (s: STRING_GENERAL; f: EV_FONT; tuple: TUPLE [width: INTEGER; height: INTEGER])
+	string_size (s: READABLE_STRING_GENERAL; f: EV_FONT; tuple: TUPLE [width: INTEGER; height: INTEGER])
 			-- `Result' contains width and height required to
 			-- fully display string `s' in font `f'.
 			-- This should be used instead of `string_size' from EV_FONT

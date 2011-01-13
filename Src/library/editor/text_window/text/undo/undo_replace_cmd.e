@@ -17,12 +17,12 @@ create
 
 feature -- Initialization
 
-	make_from_strings (c: EDITOR_CURSOR; s1,s2: STRING_GENERAL; w: EDITABLE_TEXT)
+	make_from_strings (c: EDITOR_CURSOR; s1,s2: READABLE_STRING_GENERAL; w: EDITABLE_TEXT)
 		do
 			y_start := c.y_in_lines
 			x_start := c.x_in_characters
-			old_message := s1
-			new_message := s2
+			old_message := s1.as_string_32
+			new_message := s2.as_string_32
 			text := w
 		end
 

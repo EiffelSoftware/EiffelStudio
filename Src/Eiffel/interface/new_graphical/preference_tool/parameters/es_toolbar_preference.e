@@ -41,7 +41,7 @@ feature {NONE} -- Implementation
 			loop
 				l_command_name := a_layout.item (l_i).twin
 				l_command_name_count := l_command_name.count
-				if l_command_name.is_equal (l_separator_name) then
+				if l_command_name.same_string (l_separator_name) then
 						-- This is a separator.
 					create l_separator.make
 					Result.extend (l_separator)
@@ -53,12 +53,12 @@ feature {NONE} -- Implementation
 							-- should be long enough to contain "__visible" or "__hidden"
 					end
 					l_command_suffix := l_command_name.substring (l_command_name_count - 8, l_command_name_count)
-					if l_command_suffix.is_equal ("__visible") then
+					if l_command_suffix.same_string ("__visible") then
 						l_command_visibility := True
 						l_command_name := l_command_name.substring (1, l_command_name_count - 9)
 					else
 						l_command_suffix := l_command_name.substring (l_command_name_count - 7, l_command_name_count)
-						if l_command_suffix.is_equal ("__hidden") then
+						if l_command_suffix.same_string ("__hidden") then
 							l_command_visibility := False
 							l_command_name := l_command_name.substring (1, l_command_name_count - 8)
 						else
@@ -76,7 +76,7 @@ feature {NONE} -- Implementation
 					loop
 						l_toolbarable_command := a_command_pool.item
 						l_toolbarable_name := l_toolbarable_command.name
-						if l_toolbarable_name.is_equal (l_command_name) then
+						if l_toolbarable_name.same_string (l_command_name) then
 							l_found := True
 								-- Add this command in the toolbar and set its visibility
 							l_button := l_toolbarable_command.new_sd_toolbar_item (l_toolbarable_command.is_tooltext_important)
@@ -102,7 +102,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -115,22 +115,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class ES_TOOLBAR_PREFERENCE

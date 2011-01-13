@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_range: WEL_CHARACTER_RANGE; to_find: STRING_GENERAL)
+	make (a_range: WEL_CHARACTER_RANGE; to_find: READABLE_STRING_GENERAL)
 		require
 			a_range_not_void: a_range /= Void
 			a_range_exists: a_range.exists

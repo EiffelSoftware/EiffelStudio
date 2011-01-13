@@ -105,7 +105,7 @@ feature -- Settings
 			icon_set: icon = a_icon
 		end
 
-	set_tooltip_text (a_str: detachable STRING_GENERAL)
+	set_tooltip_text (a_str: detachable READABLE_STRING_GENERAL)
 			-- Set `a_str' as `tooltip_text'.
 		require
 			exists: exists

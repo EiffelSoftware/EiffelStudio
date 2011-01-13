@@ -34,7 +34,7 @@ feature {NONE} -- Implementation
 
 feature -- Command
 
-	load_uri (a_uri: STRING_GENERAL)
+	load_uri (a_uri: READABLE_STRING_GENERAL)
 			-- Requests loading of the specified URI string
 		require
 			not_empty: a_uri /= void and then not a_uri.is_empty

@@ -25,7 +25,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_tooltip (a_tooltip: STRING_GENERAL)
+	set_tooltip (a_tooltip: READABLE_STRING_GENERAL)
 			-- Assign `a_tooltip' to `tooltip'.
 		require
 			a_tooltip_not_void: a_tooltip /= Void

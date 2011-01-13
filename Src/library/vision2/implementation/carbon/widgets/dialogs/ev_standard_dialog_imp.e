@@ -68,7 +68,7 @@ feature -- Status setting
 			end
 		end
 
-	set_title (a_title: STRING_GENERAL)
+	set_title (a_title: READABLE_STRING_GENERAL)
 			-- Set the title of the dialog.
 		do
 		end

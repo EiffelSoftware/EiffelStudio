@@ -159,7 +159,7 @@ feature -- Settings
 			end
 		end
 
-	set_label_string_and_size (a_string: STRING_GENERAL; a_size: INTEGER)
+	set_label_string_and_size (a_string: READABLE_STRING_GENERAL; a_size: INTEGER)
 			-- Set the label text to `a_string' and the minimum width for
 			-- the label to `a_size'.
 		do
@@ -172,7 +172,7 @@ feature -- Settings
 			end
 		end
 
-	set_textfield_string_and_capacity (a_string: STRING; a_capacity: INTEGER)
+	set_textfield_string_and_capacity (a_string: READABLE_STRING_GENERAL; a_capacity: INTEGER)
 			-- Set the textfield text to `a_string' and the capacity (max
 			-- number of characters) for the textfield to `a_capacity'.
 		do
@@ -180,7 +180,7 @@ feature -- Settings
 				textfield.set_text (a_string)
 				textfield.set_capacity (a_capacity)
 			else
-				textfield_string := a_string
+				textfield_string := a_string.as_string_32
 				textfield_capacity := a_capacity
 			end
 		end
@@ -322,13 +322,13 @@ feature {NONE} -- Implementation
 	label_size: INTEGER
 			-- Requested size for the label.
 
-	label_string: STRING_GENERAL
+	label_string: STRING_32
 			-- Requested Text for the Label.
 
 	textfield_capacity: INTEGER
 			-- Requested capacity for the text field.
 
-	textfield_string: STRING
+	textfield_string: STRING_32
 			-- Requested text for the text field.
 
 	browse_button: EV_BUTTON

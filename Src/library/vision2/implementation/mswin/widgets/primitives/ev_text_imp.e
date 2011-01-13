@@ -200,10 +200,10 @@ feature -- Access
 			Result.prune_all ('%R')
 		end
 
-	set_text (a_text: STRING_GENERAL)
+	set_text (a_text: READABLE_STRING_GENERAL)
 			-- Assign `a_text' to `text'.
 		local
-			exp: detachable STRING_GENERAL
+			exp: detachable READABLE_STRING_GENERAL
 		do
 			if a_text /= Void then
 					-- Replace "%N" with "%R%N" for Windows.
@@ -234,11 +234,11 @@ feature -- Access
 			end
 		end
 
-	insert_text (txt: STRING_GENERAL)
+	insert_text (txt: READABLE_STRING_GENERAL)
 			-- Insert `txt' at `caret_position'.
 		local
 			previous_caret_position: INTEGER
-			a_string: STRING_GENERAL
+			a_string: READABLE_STRING_GENERAL
 			sel_start, sel_end: INTEGER
 		do
 			if has_selection then
@@ -348,11 +348,11 @@ feature -- Status Settings
 			recreate_current (ws_hscroll)
 		end
 
-	append_text (txt: STRING_GENERAL)
+	append_text (txt: READABLE_STRING_GENERAL)
 			-- Append `txt' to end of `text'.
 		local
 			previous_caret_position: INTEGER
-			a_string: STRING_GENERAL
+			a_string: READABLE_STRING_GENERAL
 		do
 			previous_caret_position := internal_caret_position
 			internal_set_caret_position (wel_text_length)
@@ -449,7 +449,7 @@ feature {NONE} -- Implementation
 		end
 
 
-	convert_string (a_string: STRING_GENERAL): STRING_32
+	convert_string (a_string: READABLE_STRING_GENERAL): STRING_32
 			-- Replace all "%N" with "%R%N" which is the Windows new line
 			-- character symbol.
 		require

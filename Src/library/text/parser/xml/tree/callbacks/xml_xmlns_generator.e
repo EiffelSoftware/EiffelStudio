@@ -227,7 +227,7 @@ feature -- Events mode
 
 feature {NONE} -- Implementation
 
-	same_string (a,b: detachable STRING_GENERAL): BOOLEAN
+	same_string (a,b: detachable READABLE_STRING_GENERAL): BOOLEAN
 			-- Are `a' and `b' the same string?
 		do
 			if a = b then

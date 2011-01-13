@@ -93,7 +93,7 @@ feature -- Properties
 		deferred
 		end
 
-	change_tab_tooltip (a_tooltip: detachable STRING_GENERAL)
+	change_tab_tooltip (a_tooltip: detachable READABLE_STRING_GENERAL)
 			-- Set notebook tab tooltip if possible
 		do
 		end
@@ -328,14 +328,14 @@ feature -- Properties
 
 feature {SD_CONTENT} -- SD_CONTENT called functions.
 
-	change_short_title (a_title: STRING_GENERAL; a_content: SD_CONTENT)
+	change_short_title (a_title: READABLE_STRING_GENERAL; a_content: SD_CONTENT)
 			-- Change short title
 		require
 			a_title_not_void: a_title /= Void
 		do
 		end
 
-	change_long_title (a_title: STRING_GENERAL; a_content: SD_CONTENT)
+	change_long_title (a_title: READABLE_STRING_GENERAL; a_content: SD_CONTENT)
 			-- Change long title
 		require
 			a_title_not_void: a_title /= Void
@@ -379,7 +379,7 @@ feature  -- States report
 			Result := internal_content = Void
 		end
 
-	content_count_valid (a_titles: ARRAYED_LIST [STRING_GENERAL]): BOOLEAN
+	content_count_valid (a_titles: ARRAYED_LIST [READABLE_STRING_GENERAL]): BOOLEAN
 			-- If `a_titles' vaild?
 		require
 			a_titles_not_void: a_titles /= Void

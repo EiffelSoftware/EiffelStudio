@@ -173,7 +173,7 @@ feature -- Access
 			menu_asked := True
 		end
 
-	console_print (m: STRING_GENERAL)
+	console_print (m: READABLE_STRING_GENERAL)
 			-- console.put_string ...
 		do
 			console.put_string (m.as_string_8)

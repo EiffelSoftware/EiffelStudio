@@ -32,7 +32,7 @@ inherit
 
 feature -- Command
 
-	set_title (a_title: STRING_GENERAL)
+	set_title (a_title: READABLE_STRING_GENERAL)
 			-- Set title
 		require
 			not_void: a_title /= Void

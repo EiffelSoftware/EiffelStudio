@@ -64,16 +64,16 @@ feature -- Element change
 
 feature {EV_BUILDER} -- Element change
 
-	set_internal_pixmap_path (a_path: STRING_GENERAL)
+	set_internal_pixmap_path (a_path: READABLE_STRING_GENERAL)
 			-- Assign `a_path' to `internal_pixmap_path'.
 		do
 			if a_path = Void then
 				internal_pixmap_path := Void
 			else
-				internal_pixmap_path := a_path
+				internal_pixmap_path := a_path.as_string_32
 			end
 		ensure
-			path_set: a_path /= Void implies (attached internal_pixmap_path as l_internal_pixmap_path and then a_path.is_equal (l_internal_pixmap_path))
+			path_set: a_path /= Void implies (attached internal_pixmap_path as l_internal_pixmap_path and then a_path.same_string (l_internal_pixmap_path))
 		end
 
 feature {NONE} -- Contract support

@@ -286,9 +286,9 @@ feature {NONE} -- Action handlers
 	on_before_shown
 			-- <Precursor>		
 		local
-			l_dialog_filters: ARRAYED_LIST [TUPLE [STRING_GENERAL, STRING_GENERAL]]
+			l_dialog_filters: like dialog.filters
 			l_filters: like filters
-			l_filter: TUPLE [extension: attached STRING_32; description: attached STRING_32]
+			l_filter: TUPLE [extension, description: STRING_32]
 			l_extension: STRING_32
 			l_description: STRING_32
 		do
@@ -361,7 +361,7 @@ invariant
 	filter_index_is_valid: filter_index = 0 or else filters.valid_index (filter_index)
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

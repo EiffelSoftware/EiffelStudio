@@ -220,7 +220,7 @@ feature -- Access
 			Result.put ("Menu", Key_menu)
 		end
 
-	key_code_from_key_string (key_string: STRING_GENERAL): INTEGER
+	key_code_from_key_string (key_string: READABLE_STRING_GENERAL): INTEGER
 			-- Key code value from `key_string'
 		require
 			key_string_not_void: key_string /= Void
@@ -230,8 +230,7 @@ feature -- Access
 			found: BOOLEAN
 			l_key: STRING_32
 		do
-			l_key := key_string
-			l_key := l_key.as_lower
+			l_key := key_string.as_string_32.as_lower
 			l_key_strings := key_strings
 			from
 				l_cnt := l_key_strings.lower

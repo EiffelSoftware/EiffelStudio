@@ -342,7 +342,7 @@ feature {EV_NOTEBOOK, EV_NOTEBOOK_TAB_IMP} -- Element change
 	default_tab_label_spacing: INTEGER = 3
 		-- Space between pixmap and text in the tab label.
 
-	set_item_text (an_item: like item; a_text: STRING_GENERAL)
+	set_item_text (an_item: like item; a_text: READABLE_STRING_GENERAL)
 			-- Assign `a_text' to the label for `an_item'.
 		local
 			item_index : INTEGER

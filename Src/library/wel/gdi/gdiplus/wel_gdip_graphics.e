@@ -140,7 +140,7 @@ feature -- Command
 			check ok: l_result = {WEL_GDIP_STATUS}.ok end
 		end
 
-	draw_string (a_string: STRING_GENERAL; a_length: INTEGER; a_font: WEL_GDIP_FONT; a_x, a_y: REAL)
+	draw_string (a_string: READABLE_STRING_GENERAL; a_length: INTEGER; a_font: WEL_GDIP_FONT; a_x, a_y: REAL)
 			-- Draw `a_length' characters of `a_string' with `a_font' at `a_x',`a_y' position.
 		require
 			not_void: a_string /= Void
@@ -165,7 +165,7 @@ feature -- Command
 			draw_string_with_length_font_rect_format_brush (a_string, a_length, a_font, l_rect_f, l_format, l_brush)
 		end
 
-	draw_string_with_length_font_rect_format_brush (a_string: STRING_GENERAL; a_length: INTEGER; a_font: WEL_GDIP_FONT; a_rect_f: WEL_GDIP_RECT_F; a_format: WEL_GDIP_STRING_FORMAT; a_brush: WEL_GDIP_BRUSH)
+	draw_string_with_length_font_rect_format_brush (a_string: READABLE_STRING_GENERAL; a_length: INTEGER; a_font: WEL_GDIP_FONT; a_rect_f: WEL_GDIP_RECT_F; a_format: WEL_GDIP_STRING_FORMAT; a_brush: WEL_GDIP_BRUSH)
 			-- Draw string with arguments.
 		require
 			not_void: a_string /= Void

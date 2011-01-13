@@ -34,7 +34,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_tooltip (a_tooltip: STRING_GENERAL)
+	set_tooltip (a_tooltip: READABLE_STRING_GENERAL)
 			-- Assign `a_tooltip' to `tooltip'.
 		require
 			not_destroyed: not is_destroyed
@@ -42,7 +42,7 @@ feature -- Element change
 		do
 			implementation.set_tooltip (a_tooltip)
 		ensure
-			tooltip_assigned: tooltip.is_equal (a_tooltip)
+			tooltip_assigned: tooltip.same_string_general (a_tooltip)
 			cloned: tooltip /= a_tooltip
 		end
 

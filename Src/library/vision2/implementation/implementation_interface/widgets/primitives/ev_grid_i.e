@@ -796,7 +796,7 @@ feature -- Pick and Drop
 				drawable.set_accept_cursor (a_cursor)
 
 					-- Set cursor on the locked rows and columns.
-				l_locked_indexes := locked_indexes 
+				l_locked_indexes := locked_indexes
 				from
 					l_locked_indexes.start
 				until
@@ -2542,10 +2542,10 @@ feature -- Element change
 			item_set: item (a_column, a_row) = a_item
 		end
 
-	set_tooltip (a_tooltip: STRING_GENERAL)
+	set_tooltip (a_tooltip: READABLE_STRING_GENERAL)
 			-- Assign `a_tooltip' to `Current'.
 		do
-			internal_tooltip := a_tooltip
+			internal_tooltip := a_tooltip.as_string_32
 		end
 
 feature -- Removal
@@ -2891,7 +2891,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 				l_columns := columns
 				col_count := l_columns.count
 				create Result.make_empty (col_count)
-				
+
 				from
 					i := 1
 				until
@@ -6215,7 +6215,7 @@ feature {EV_GRID_ITEM_I} -- Implementation
 			item_removed: not internal_selected_items.has (a_item)
 		end
 
-	string_size (s: STRING_GENERAL; f: EV_FONT; tuple: TUPLE [INTEGER, INTEGER])
+	string_size (s: READABLE_STRING_GENERAL; f: EV_FONT; tuple: TUPLE [INTEGER, INTEGER])
 			-- `Result' contains width and height required to
 			-- fully display string `s' in font `f'.
 			-- This should be used instead of `string_size' from EV_FONT

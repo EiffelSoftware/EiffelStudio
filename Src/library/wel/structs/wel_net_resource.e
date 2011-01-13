@@ -227,7 +227,7 @@ feature -- Element change
 			value_set: usage = a_value
 		end
 
-	set_local_name (a_value: detachable STRING_GENERAL)
+	set_local_name (a_value: detachable READABLE_STRING_GENERAL)
 			-- Set `local_name' to `a_value'
 			--
 			-- Can only be set if `scope' is equal to `Resource_connected'
@@ -248,10 +248,10 @@ feature -- Element change
 			cwel_net_resource_set_local_name (item, string_pointer)
 		ensure
 			value_set_void: a_value = Void implies local_name.is_empty
-			value_set_attached: a_value /= Void implies equal (local_name, a_value)
+			value_set_attached: a_value /= Void implies local_name.same_string_general (a_value)
 		end
 
-	set_remote_name (a_value: STRING_GENERAL)
+	set_remote_name (a_value: READABLE_STRING_GENERAL)
 			-- Set `remote_name' to `a_value'
 			--
 			-- The string can be MAX_PATH characters in length, and it must
@@ -263,19 +263,15 @@ feature -- Element change
 			string_pointer: POINTER
 			l_name: like internal_remote_name
 		do
-			if a_value /= Void then
-				create l_name.make (a_value)
-				internal_remote_name := l_name
-				string_pointer := l_name.item
-			else
-				internal_remote_name := Void
-			end
+			create l_name.make (a_value)
+			internal_remote_name := l_name
+			string_pointer := l_name.item
 			cwel_net_resource_set_remote_name (item, string_pointer)
 		ensure
-			value_set: equal (remote_name, a_value)
+			value_set: remote_name.same_string_general (a_value)
 		end
 
-	set_comment (a_value: detachable STRING_GENERAL)
+	set_comment (a_value: detachable READABLE_STRING_GENERAL)
 			-- Set `comment' to `a_value'
 		local
 			string_pointer: POINTER
@@ -291,10 +287,10 @@ feature -- Element change
 			cwel_net_resource_set_comment (item, string_pointer)
 		ensure
 			value_set_void: a_value = Void implies comment.is_empty
-			value_set_attached: a_value /= Void implies equal (comment, a_value)
+			value_set_attached: a_value /= Void implies comment.same_string_general (a_value)
 		end
 
-	set_provider (a_value: detachable STRING_GENERAL)
+	set_provider (a_value: detachable READABLE_STRING_GENERAL)
 			-- Set `provider' to `a_value'
 		local
 			string_pointer: POINTER
@@ -310,7 +306,7 @@ feature -- Element change
 			cwel_net_resource_set_provider (item, string_pointer)
 		ensure
 			value_set_void: a_value = Void implies provider.is_empty
-			value_set_attached: a_value /= Void implies equal (provider, a_value)
+			value_set_attached: a_value /= Void implies provider.same_string_general (a_value)
 		end
 
 feature -- Measurement
@@ -425,7 +421,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

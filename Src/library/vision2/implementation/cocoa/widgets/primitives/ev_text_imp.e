@@ -135,7 +135,7 @@ feature -- Status setting
 
 feature -- Status setting
 
-	insert_text (a_text: STRING_GENERAL)
+	insert_text (a_text: READABLE_STRING_GENERAL)
 		local
 			l_text: STRING_32
 		do
@@ -145,14 +145,14 @@ feature -- Status setting
 			text_view.size_to_fit
 		end
 
-	set_text (a_text: STRING_GENERAL)
+	set_text (a_text: READABLE_STRING_GENERAL)
 			-- Set `text' to `a_text'
 		do
 			text_view.set_string (a_text)
 			text_view.size_to_fit
 		end
 
-	append_text (a_text: STRING_GENERAL)
+	append_text (a_text: READABLE_STRING_GENERAL)
 			-- Append `a_text' to `text'.	
 		local
 			l_text: STRING_32
@@ -173,7 +173,7 @@ feature -- Status setting
 			text_view.set_selected_range (range)
 		end
 
-	prepend_text (a_text: STRING_GENERAL)
+	prepend_text (a_text: READABLE_STRING_GENERAL)
 			-- Prepend 'txt' to `text'.
 		local
 			l_text: STRING_32

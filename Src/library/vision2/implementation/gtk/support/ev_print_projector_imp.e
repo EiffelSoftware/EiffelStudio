@@ -92,7 +92,7 @@ feature {EV_ANY_I} -- Access
 			l_file.close
 		end
 
-	add_ps_line (ps_code: STRING_GENERAL)
+	add_ps_line (ps_code: READABLE_STRING_GENERAL)
 			-- Append `ps_code' postscript to output.
 		local
 			l_file: like file

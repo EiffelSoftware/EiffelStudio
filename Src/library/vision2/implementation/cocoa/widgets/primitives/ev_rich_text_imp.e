@@ -258,7 +258,7 @@ feature -- Status setting
 
 		end
 
-	buffered_append (a_text: STRING_GENERAL; format: EV_CHARACTER_FORMAT)
+	buffered_append (a_text: READABLE_STRING_GENERAL; format: EV_CHARACTER_FORMAT)
 			-- Apply `a_text' with format `format' to append buffer.
 			-- To apply buffer contents to `Current', call `flush_append_buffer' or
 			-- `flush_append_buffer_to'.

@@ -93,13 +93,13 @@ feature -- Status report
 
 feature -- Element change
 
-	set_filter (a_filter: STRING_GENERAL)
+	set_filter (a_filter: READABLE_STRING_GENERAL)
 			-- Set `a_filter' as new filter.
 		local
 			filter_name: STRING_32
 		do
-			filter := a_filter.twin
-			filter_name := a_filter.twin
+			filter := a_filter.as_string_32.twin
+			filter_name := a_filter.as_string_32.twin
 			if
 				filter_name.count >= 3 and
 				filter_name.item (1) = '*' and
@@ -108,10 +108,10 @@ feature -- Element change
 				filter_name.remove_head (2)
 				filter_name.put (filter_name.item (1).upper, 1)
 				filter_name.append (" Files (")
-				filter_name.append (a_filter)
+				filter_name.append_string_general (a_filter)
 				filter_name.append (")")
 			end
-			if a_filter.is_equal ("*.*") then
+			if a_filter.same_string ("*.*") then
 				wel_set_filter (<<"All files">>, <<"*.*">>)
 			else
 				wel_set_filter (<<filter_name, "All files">>, <<a_filter, "*.*">>)
@@ -119,22 +119,22 @@ feature -- Element change
 			wel_set_filter_index (0)
 		end
 
-	set_file_name (a_name: STRING_GENERAL)
+	set_file_name (a_name: READABLE_STRING_GENERAL)
 			-- Make `a_name' the selected file.
 		do
 			wel_set_file_name (a_name)
 		end
 
-	set_start_directory (a_path: STRING_GENERAL)
+	set_start_directory (a_path: READABLE_STRING_GENERAL)
 			-- Make `a_path' the base directory.
 		do
-			start_directory := a_path.twin
+			start_directory := a_path.as_string_32.twin
 			wel_set_initial_directory (a_path)
 		end
 
 feature {NONE} -- Implementation
 
-	valid_file_name (a_name: STRING_32): BOOLEAN
+	valid_file_name (a_name: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `a_name' a valid file_name on the current platform?
 			-- Certain characters are not permissible and this is dependent
 			-- on the current platform. The following characters are not permitted,
@@ -142,30 +142,29 @@ feature {NONE} -- Implementation
 			-- Windows - " * : < > ? |
 			-- Linux - & *
 		do
-			if not (a_name.has ('%%') or a_name.has ('*') or a_name.has ('<') or
-				a_name.has ('>') or a_name.has ('?') or a_name.has ('|')) then
-				Result := True
-			end
+			Result := not (a_name.has_code (('%%').natural_32_code) or a_name.has_code (('*').natural_32_code) or
+				a_name.has_code (('<').natural_32_code) or a_name.has_code (('>').natural_32_code) or
+				a_name.has_code (('?').natural_32_code) or a_name.has_code (('|').natural_32_code))
 		end
 
-	valid_file_title (a_title: STRING_32): BOOLEAN
+	valid_file_title (a_title: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `a_title' a valid file title on the current platform?
 			-- The following characters are not permitted,
 			-- and this list may not be exhaustive:
 			-- Windows - " * / : < > ? \ |
 			-- Linux - & *
 		do
-			Result := valid_file_name (a_title) and not (a_title.has ('/') or a_title.has ('\') or  a_title.has (':'))
+			Result := valid_file_name (a_title) and then not (a_title.has_code (('/').natural_32_code) or a_title.has_code (('\').natural_32_code) or  a_title.has_code ((':').natural_32_code))
 		end
 
 	show_modal_to_window (a_window: EV_WINDOW)
 			-- Show the window and wait until the user closed it.
 		local
-			filter_name: STRING_GENERAL
-			filter_pattern: STRING_GENERAL
+			filter_name: READABLE_STRING_GENERAL
+			filter_pattern: READABLE_STRING_GENERAL
 			filter_names: ARRAY [STRING_32]
 			filter_patterns: ARRAY [STRING_32]
-			filter_info: TUPLE [filter: STRING_GENERAL; text: STRING_GENERAL]
+			filter_info: TUPLE [filter: READABLE_STRING_GENERAL; text: READABLE_STRING_GENERAL]
 		do
 				--| FIXME when `set_filter' is removed, this check for
 				--| being non empty may be removed. Julian.
@@ -209,11 +208,11 @@ feature -- Deferred
 		deferred
 		end
 
-	wel_set_file_name (a_file_name: STRING_GENERAL)
+	wel_set_file_name (a_file_name: READABLE_STRING_GENERAL)
 		deferred
 		end
 
-	wel_set_filter (filter_names, filter_patterns: ARRAY [STRING_GENERAL])
+	wel_set_filter (filter_names, filter_patterns: ARRAY [READABLE_STRING_GENERAL])
 		deferred
 		end
 
@@ -221,7 +220,7 @@ feature -- Deferred
 		deferred
 		end
 
-	wel_set_initial_directory (a_directory: STRING_GENERAL)
+	wel_set_initial_directory (a_directory: READABLE_STRING_GENERAL)
 		deferred
 		end
 

@@ -111,14 +111,14 @@ feature -- Status setting
 
 feature -- Element change
 
-	insert_text (a_text: STRING_GENERAL)
+	insert_text (a_text: READABLE_STRING_GENERAL)
 			-- Insert `a_text' at the current caret position.
 		require
 			valid_text: a_text /= Void
 		deferred
 		end
 
-	append_text (a_text: STRING_GENERAL)
+	append_text (a_text: READABLE_STRING_GENERAL)
 			-- append 'a_text' into `Current'.
 		require
 			valid_text: a_text /= Void
@@ -127,7 +127,7 @@ feature -- Element change
 			text_appended:
 		end
 
-	prepend_text (a_text: STRING_GENERAL)
+	prepend_text (a_text: READABLE_STRING_GENERAL)
 			-- prepend 'a_text' into `Current'.
 		require
 			valid_text: a_text /= Void

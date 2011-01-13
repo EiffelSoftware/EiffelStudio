@@ -10,7 +10,7 @@ class
 
 inherit
 	WEL_STRUCTURE
-	
+
 	WEL_BIT_OPERATIONS
 		undefine
 			copy, is_equal
@@ -46,7 +46,7 @@ feature -- Access
 		do
 			Result := cwel_list_view_search_info_flags (item)
 		end
-	
+
 	target: STRING_32
 			-- Search target
 			-- Either `target' or `lparam' will be used during search according to `flags'.
@@ -62,7 +62,7 @@ feature -- Access
 				create Result.make_empty
 			end
 		end
-	
+
 	lparam: INTEGER
 			-- Search target
 			-- Either `target' or `lparam' will be used during search according to `flags'.
@@ -80,30 +80,30 @@ feature -- Access
 			create Result.make_by_pointer (cwel_list_view_search_info_starting_position (item))
 			Result.set_unshared
 		end
-	
+
 	upwards: BOOLEAN
 			-- Will search be upwards?
 		do
 			Result := cwel_list_view_search_info_direction (item) = Vk_up
 		end
-	
+
 	downwards: BOOLEAN
 			-- Will search be downwards?
 		do
 			Result := cwel_list_view_search_info_direction (item) = Vk_down
 		end
-	
+
 	right: BOOLEAN
 			-- Will search direction be right?
 		do
 			Result := cwel_list_view_search_info_direction (item) = Vk_right
 		end
-	
+
 	left: BOOLEAN
 			-- Will search direction be left?
 		do
 			Result := cwel_list_view_search_info_direction (item) = Vk_left
-		end	
+		end
 
 feature -- Element Change
 
@@ -119,8 +119,8 @@ feature -- Element Change
 		ensure
 			added: flag_set (flags, a_flag)
 		end
-		
-	set_target (a_target: STRING_GENERAL)
+
+	set_target (a_target: READABLE_STRING_GENERAL)
 			-- Set `target' with `a_target'.
 		require
 			non_void_target: a_target /= Void
@@ -133,9 +133,9 @@ feature -- Element Change
 			str_target := l_target
 			cwel_list_view_search_info_set_target (item, l_target.item)
 		ensure
-			target_set: target.is_equal (a_target)
+			target_set: target.same_string_general (a_target)
 		end
-		
+
 	set_flags (a_flags: like flags)
 			-- Set `flags' with `a_flags'.
 		require
@@ -145,7 +145,7 @@ feature -- Element Change
 		ensure
 			flags_set: flags = a_flags
 		end
-		
+
 	set_lparam (a_lparam: like lparam)
 			-- Set `lparam' with `a_lparam'.
 		do
@@ -154,7 +154,7 @@ feature -- Element Change
 		ensure
 			lparam_set: lparam = a_lparam
 		end
-		
+
 	set_starting_position (a_starting_position: like starting_position)
 			-- Set `starting_position' with `a_starting_position'.
 		require
@@ -164,28 +164,28 @@ feature -- Element Change
 			add_flag (Lvfi_nearestxy)
 			cwel_list_view_search_info_set_starting_position (item, starting_position.item)
 		end
-		
+
 	set_upwards
 			-- Set search direction upwards
 		do
 			add_flag (Lvfi_nearestxy)
 			cwel_list_view_search_info_set_direction (item, Vk_up)
 		end
-	
+
 	set_downwards
 			-- Set search direction downwards
 		do
 			add_flag (Lvfi_nearestxy)
 			cwel_list_view_search_info_set_direction (item, Vk_down)
 		end
-	
+
 	set_right
 			-- Set search direction right
 		do
 			add_flag (Lvfi_nearestxy)
 			cwel_list_view_search_info_set_direction (item, Vk_right)
 		end
-	
+
 	set_left
 			-- Set search direction left
 		do
@@ -268,17 +268,17 @@ invariant
 	valid_direction: (upwards implies (not downwards and not right and not left)) and
 						(downwards implies (not upwards and not right and not left)) and
 						(right implies (not upwards and not downwards and not left)) and
-						(left implies (not upwards and not downwards and not right)) 
+						(left implies (not upwards and not downwards and not right))
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

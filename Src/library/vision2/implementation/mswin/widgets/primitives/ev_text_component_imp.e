@@ -118,7 +118,7 @@ feature {EV_ANY_I}-- Status setting
 
 feature {EV_ANY_I}-- element change
 
-	insert_text (txt: STRING_GENERAL)
+	insert_text (txt: READABLE_STRING_GENERAL)
 			-- Insert `txt' at `caret_position'.
 		local
 			temp_text: STRING_32
@@ -127,15 +127,15 @@ feature {EV_ANY_I}-- element change
 			previous_caret_position := internal_caret_position
 			temp_text := text
 			if caret_position > temp_text.count then
-				temp_text.append (txt)
+				temp_text.append (txt.as_string_32)
 			else
-				temp_text.insert_string (txt, caret_position)
+				temp_text.insert_string (txt.as_string_32, caret_position)
 			end
 			set_text (temp_text)
 			internal_set_caret_position (previous_caret_position)
 		end
 
-	append_text (txt:STRING_GENERAL)
+	append_text (txt:READABLE_STRING_GENERAL)
 			-- Append 'txt' to text of `Current'.
 		local
 			temp_text: STRING_32
@@ -143,12 +143,12 @@ feature {EV_ANY_I}-- element change
 		do
 			previous_caret_position := internal_caret_position
 			temp_text := text
-			temp_text.append (txt)
+			temp_text.append_string_general (txt)
 			set_text (temp_text)
 			internal_set_caret_position (previous_caret_position)
 		end
 
-	prepend_text (txt: STRING_GENERAL)
+	prepend_text (txt: READABLE_STRING_GENERAL)
 			-- Prepend 'txt' to text of `Current'.
 		local
 			temp_text: STRING_32
@@ -156,7 +156,7 @@ feature {EV_ANY_I}-- element change
 		do
 			previous_caret_position := internal_caret_position
 			temp_text :=  text
-			temp_text.prepend (txt)
+			temp_text.prepend_string_general (txt)
 			set_text (temp_text)
 			internal_set_caret_position (previous_caret_position)
 		end

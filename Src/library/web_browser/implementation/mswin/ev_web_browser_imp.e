@@ -233,7 +233,7 @@ feature {NONE} -- Window class register
 
 feature -- Command
 
-	load_uri (a_uri: STRING_GENERAL)
+	load_uri (a_uri: READABLE_STRING_GENERAL)
 			-- <Precursor>
 		do
 			ole_ie.display_web_page (a_uri)

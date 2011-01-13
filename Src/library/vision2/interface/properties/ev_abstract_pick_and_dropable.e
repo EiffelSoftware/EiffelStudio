@@ -1,4 +1,4 @@
-﻿note
+note
 	description:
 		"Abstract interface for all pick and dropable classes.%N%
 		%Descendants include: widgets, items and figures."
@@ -24,7 +24,7 @@ feature -- Access
 		deferred
 		end
 
-	target_name: detachable STRING_GENERAL
+	target_name: detachable READABLE_STRING_GENERAL
 			-- Optional textual name describing `Current' pick and drop hole.
 		note
 			option: stable
@@ -100,7 +100,7 @@ feature -- Status setting
 			pebble_function_assigned: pebble_function = a_function
 		end
 
-	set_target_name (a_name: STRING_GENERAL)
+	set_target_name (a_name: READABLE_STRING_GENERAL)
 			-- Assign `a_name' to `target_name'.
 		require
 			a_name_not_void: a_name /= Void
@@ -108,7 +108,7 @@ feature -- Status setting
 			target_name := a_name.twin
 		ensure
 			target_name_assigned:
-				attached target_name as l_target_name and then a_name /= l_target_name and then a_name.is_equal (l_target_name)
+				attached target_name as l_target_name and then a_name /= l_target_name and then a_name.same_string (l_target_name)
 		end
 
 	set_target_data_function (a_function: FUNCTION [ANY, TUPLE [like pebble], EV_PND_TARGET_DATA])

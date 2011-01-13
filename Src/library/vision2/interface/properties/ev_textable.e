@@ -19,7 +19,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_with_text (a_text: STRING_GENERAL)
+	make_with_text (a_text: READABLE_STRING_GENERAL)
 			-- Create `Current' and assign `a_text' to `text'
 		require
 			a_text_not_void: a_text /= Void
@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 			default_create
 			set_text (a_text)
 		ensure
-			text_assigned: text.is_equal (a_text) and text /= a_text
+			text_assigned: text.same_string_general (a_text) and text /= a_text
 		end
 
 feature -- Access
@@ -47,7 +47,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_text (a_text: STRING_GENERAL)
+	set_text (a_text: READABLE_STRING_GENERAL)
 			-- Assign `a_text' to `text'.
 		require
 			not_destroyed: not is_destroyed
@@ -56,7 +56,7 @@ feature -- Element change
 		do
 			implementation.set_text (a_text)
 		ensure
-			text_cloned: text.is_equal (a_text) and then text /= a_text
+			text_cloned: text.same_string_general (a_text) and then text /= a_text
 		end
 
 	remove_text

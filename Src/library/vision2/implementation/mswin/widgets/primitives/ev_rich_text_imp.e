@@ -787,7 +787,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_text (a_text: STRING_GENERAL)
+	set_text (a_text: READABLE_STRING_GENERAL)
 			-- Set `text' with `a_text'.
 		local
 			stream: WEL_RICH_EDIT_BUFFER_LOADER
@@ -933,7 +933,7 @@ feature -- Status setting
 			end_formats.put (format_out, end_pos)
 		end
 
-	buffered_append (a_text: STRING_GENERAL; format: EV_CHARACTER_FORMAT)
+	buffered_append (a_text: READABLE_STRING_GENERAL; format: EV_CHARACTER_FORMAT)
 			-- Append `a_text' with format `format' to append buffer.
 			-- To render buffer to `Current', call `flush_buffer' which replaces current content,
 			-- or `flush_buffer_to' which inserts the formatted text.

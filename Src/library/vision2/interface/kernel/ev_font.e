@@ -288,7 +288,7 @@ feature -- Status report
 			bridge_ok: Result = implementation.maximum_width
 		end
 
-	string_width (a_string: STRING_GENERAL): INTEGER
+	string_width (a_string: READABLE_STRING_GENERAL): INTEGER
 			-- Width in pixels of `a_string' in the current font.
 		require
 			not_destroyed: not is_destroyed
@@ -334,7 +334,7 @@ feature -- Status report
 			bridge_ok: Result = implementation.is_proportional
 		end
 
-	string_size (a_string: STRING_GENERAL): TUPLE [width: INTEGER; height: INTEGER; left_offset: INTEGER; right_offset: INTEGER]
+	string_size (a_string: READABLE_STRING_GENERAL): TUPLE [width: INTEGER; height: INTEGER; left_offset: INTEGER; right_offset: INTEGER]
 			-- [width, height, left_offset, right_offset] in pixels of `a_string' in the current font,
 			-- taking into account line breaks ('%N').
 			-- `width' and `height' correspond to the rectange used to bound `a_string', and

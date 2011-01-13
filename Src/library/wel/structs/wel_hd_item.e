@@ -138,7 +138,7 @@ feature -- Element change
 			cwel_hd_item_set_mask (item, value)
 		end
 
-	set_text (a_text: STRING_GENERAL)
+	set_text (a_text: READABLE_STRING_GENERAL)
 			-- Set `text' with `a_text'.
 			-- Also Updates `text_count' and `mask'
 		require
@@ -154,7 +154,7 @@ feature -- Element change
 			internal_add_format (hdf_string)
 			set_format (clear_flag (format, hdf_bitmap))
 		ensure
-			text_set: text.is_equal (a_text)
+			text_set: text.same_string_general (a_text)
 			text_count_set: a_text.count = text_count
 			mask_set: flag_set (mask, {WEL_HDI_CONSTANTS}.Hdi_text)
 		end
@@ -356,14 +356,14 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

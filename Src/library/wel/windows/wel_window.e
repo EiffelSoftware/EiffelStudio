@@ -786,7 +786,7 @@ feature -- Element change
 			end
 		end
 
-	set_text (a_text: detachable STRING_GENERAL)
+	set_text (a_text: detachable READABLE_STRING_GENERAL)
 			-- Set the window text
 		require
 			exists: exists
@@ -800,7 +800,7 @@ feature -- Element change
 			end
 			{WEL_API}.set_window_text (item, a_wel_string.item)
 		ensure
-			text_set_when_not_void: a_text /= Void implies text.is_equal (a_text)
+			text_set_when_not_void: a_text /= Void implies text.same_string_general (a_text)
 			text_set_when_void: a_text = Void implies text.count = 0
 		end
 
@@ -1115,7 +1115,7 @@ feature -- Basic operations
 			cwin_enable_scroll_bar (item, Sb_vert, Esb_enable_both)
 		end
 
-	message_box (a_text, a_title: STRING_GENERAL; a_style: INTEGER): INTEGER
+	message_box (a_text, a_title: READABLE_STRING_GENERAL; a_style: INTEGER): INTEGER
 		obsolete "Use class WEL_MSG_BOX instead."
 			-- Show an information message box with `Current'
 			-- as parent with `a_text' and `a_title'.
@@ -1134,7 +1134,7 @@ feature -- Basic operations
 				a_style)
 		end
 
-	information_message_box (a_text, a_title: STRING_GENERAL)
+	information_message_box (a_text, a_title: READABLE_STRING_GENERAL)
 		obsolete "Use class WEL_MSG_BOX instead."
 			-- Show an information message box with `Current'
 			-- as parent with `a_text' and `a_title'.
@@ -1151,7 +1151,7 @@ feature -- Basic operations
 				Mb_ok + Mb_iconinformation)
 		end
 
-	warning_message_box (a_text, a_title: STRING_GENERAL)
+	warning_message_box (a_text, a_title: READABLE_STRING_GENERAL)
 		obsolete "Use class WEL_MSG_BOX instead."
 			-- Show a warning message box with `Current'
 			-- as parent with `a_text' and `a_title'.
@@ -1168,7 +1168,7 @@ feature -- Basic operations
 				Mb_ok + Mb_iconexclamation)
 		end
 
-	error_message_box (a_text: STRING_GENERAL)
+	error_message_box (a_text: READABLE_STRING_GENERAL)
 		obsolete "Use class WEL_MSG_BOX instead."
 			-- Show an error message box with `Current' as
 			-- parent with `a_text' and error as title.
@@ -1183,7 +1183,7 @@ feature -- Basic operations
 				Mb_ok + Mb_iconhand)
 		end
 
-	question_message_box (a_text, a_title: STRING_GENERAL): BOOLEAN
+	question_message_box (a_text, a_title: READABLE_STRING_GENERAL): BOOLEAN
 		obsolete "Use class WEL_MSG_BOX instead."
 			-- Show a question message box with `Current'
 			-- as parent with `a_text' and `a_title'.
@@ -1300,7 +1300,7 @@ feature -- Basic operations
 				default_pointer, default_pointer)
 		end
 
-	win_help (help_file: STRING_GENERAL; a_command, data: INTEGER)
+	win_help (help_file: READABLE_STRING_GENERAL; a_command, data: INTEGER)
 			-- Start the Windows Help program with `help_file'.
 			-- `a_command' specifies the type of help requested. See
 			-- class WEL_HELP_CONSTANTS for `a_command' values.
@@ -1650,7 +1650,7 @@ feature {WEL_WINDOW, WEL_DISPATCHER} -- Implementation
 
 feature {WEL_WINDOW} -- Implementation
 
-	internal_window_make (a_parent: detachable WEL_WINDOW; a_name: detachable STRING_GENERAL;
+	internal_window_make (a_parent: detachable WEL_WINDOW; a_name: detachable READABLE_STRING_GENERAL;
 			a_style, a_x, a_y, a_w, a_h, an_id: INTEGER;
 			data: POINTER)
 			-- Create the window
@@ -2701,14 +2701,14 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

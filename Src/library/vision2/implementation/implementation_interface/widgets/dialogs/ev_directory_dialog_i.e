@@ -25,13 +25,13 @@ feature -- Access
 
 feature -- Element change
 
-	set_start_directory (a_path: STRING_GENERAL)
+	set_start_directory (a_path: READABLE_STRING_GENERAL)
 			-- Make `a_path' the base directory.
 		require
 			a_path_not_void: a_path /= Void
 		deferred
 		ensure
-			assigned: start_directory.is_equal (a_path)
+			assigned: start_directory.same_string_general (a_path)
 		end
 
 note

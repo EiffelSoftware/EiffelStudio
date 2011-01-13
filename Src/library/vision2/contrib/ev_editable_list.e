@@ -222,7 +222,7 @@ feature -- Removal
 
 feature -- Selection
 
-	select_item (a_string: STRING_GENERAL; i: INTEGER)
+	select_item (a_string: READABLE_STRING_GENERAL; i: INTEGER)
 			-- Select in list the first item with text 'a_string' at index 'i'.
 		local
 			done: BOOLEAN
@@ -232,7 +232,7 @@ feature -- Selection
 			until
 				after or done
 			loop
-				if item.i_th (i).is_equal (a_string) then
+				if item.i_th (i).same_string_general (a_string) then
 					item.enable_select
 					done := True
 				end
@@ -560,7 +560,7 @@ feature {NONE} -- Implementation
 			--update_agents (relative_window, True)
 		end
 
-	is_valid_text (a_string: STRING_GENERAL; c, r: INTEGER): BOOLEAN
+	is_valid_text (a_string: READABLE_STRING_GENERAL; c, r: INTEGER): BOOLEAN
 			-- Is the string 'a_string' at row 'r' and column 'c' unique to column 'c'?.
 		do
 			from

@@ -41,7 +41,7 @@ feature -- Access
 			bridge_ok: Result.is_equal (implementation.filter)
 		end
 
-	filters: ARRAYED_LIST [TUPLE [filter: STRING_GENERAL; text: STRING_GENERAL]]
+	filters: ARRAYED_LIST [TUPLE [filter, text: READABLE_STRING_GENERAL]]
 			-- All filters currently applied to file list.
 			-- First STRING represents the filter e.g "*.txt".
 			-- Second STRING represents the displayed text
@@ -109,7 +109,7 @@ feature -- Status report
 
 feature -- Element change
 
-	set_filter (a_filter: STRING_GENERAL)
+	set_filter (a_filter: READABLE_STRING_GENERAL)
 			-- Set `a_filter' as new filter.
 		obsolete "Use `filters.extend ([%"*.`a_filter'%", %"Files of type ('a_filter')%"])' instead."
 		require
@@ -118,10 +118,10 @@ feature -- Element change
 		do
 			implementation.set_filter (a_filter)
 		ensure
-			assigned: filter.is_equal (a_filter)
+			assigned: filter.same_string_general (a_filter)
 		end
 
-	set_file_name (a_name: STRING_GENERAL)
+	set_file_name (a_name: READABLE_STRING_GENERAL)
 			-- Make `a_name' the selected file.
 		require
 			not_destroyed: not is_destroyed
@@ -130,10 +130,10 @@ feature -- Element change
 		do
 			implementation.set_file_name (a_name)
 		ensure
-			assigned: not file_name.is_empty implies file_name.is_equal (a_name)
+			assigned: not file_name.is_empty implies file_name.same_string_general (a_name)
 		end
 
-	set_start_directory (a_path: STRING_GENERAL)
+	set_start_directory (a_path: READABLE_STRING_GENERAL)
 			-- Make `a_path' the base directory.
 		require
 			not_destroyed: not is_destroyed
@@ -141,12 +141,12 @@ feature -- Element change
 		do
 			implementation.set_start_directory (a_path)
 		ensure
-			assigned: start_directory.is_equal (a_path)
+			assigned: start_directory.same_string_general (a_path)
 		end
 
 feature -- Contract Support
 
-	valid_file_name (a_name: STRING_GENERAL): BOOLEAN
+	valid_file_name (a_name: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `a_name' a valid file_name on the current platform?
 			-- Certain characters are not permissible and this is dependent
 			-- on the current platform. The following characters are not permitted,
@@ -159,7 +159,7 @@ feature -- Contract Support
 			Result := implementation.valid_file_name (a_name)
 		end
 
-	valid_file_title (a_title: STRING_GENERAL): BOOLEAN
+	valid_file_title (a_title: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `a_title' a valid file title on the current platform?
 			-- The following characters are not permitted,
 			-- and this list may not be exhaustive:

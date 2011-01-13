@@ -148,6 +148,7 @@ feature {NONE} -- Implementation
 					l_file.read_string (l_count)
 					l_str := l_file.last_string
 						-- No need to put the class, it seems that encoding by built-in classes have no need to be controlled by .ecf.
+					filename := l_file.name
 					parse_class_from_string (l_str, Void, Void)
 					l_file.close
 					l_class_as := root_node

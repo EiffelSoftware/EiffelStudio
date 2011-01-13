@@ -195,7 +195,7 @@ feature -- Element change
 			style_set: style = value
 		end
 
-	set_text (txt: STRING_GENERAL)
+	set_text (txt: READABLE_STRING_GENERAL)
 			-- Set `text' as `txt'.
 		require
 			exists: exists
@@ -210,7 +210,7 @@ feature -- Element change
 			cwel_rebarbandinfo_set_cch (item, txt.count)
 			cwel_rebarbandinfo_set_lptext (item, l_text.item)
 		ensure
-			text_set: text.is_equal (txt)
+			text_set: text.same_string_general (txt)
 		end
 
 	set_length (value: INTEGER)
@@ -541,14 +541,14 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

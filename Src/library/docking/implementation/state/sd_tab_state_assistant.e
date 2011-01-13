@@ -87,7 +87,7 @@ feature {SD_TAB_STATE}  -- Implementation functions
 		local
 			l_new_split_area: EV_SPLIT_AREA
 			l_target_zone_parent: detachable EV_CONTAINER
-			l_old_zone_parent_type: STRING_GENERAL
+			l_old_zone_parent_type: READABLE_STRING_GENERAL
 			l_target_zone_parent_split_position: INTEGER
 			l_target_zone_parent_spliter: detachable EV_SPLIT_AREA
 		do

@@ -135,7 +135,7 @@ feature -- Status Setting
 		do
 		end
 
-	set_text (a_str: STRING_GENERAL)
+	set_text (a_str: READABLE_STRING_GENERAL)
 			local
 				ret: INTEGER
 			do

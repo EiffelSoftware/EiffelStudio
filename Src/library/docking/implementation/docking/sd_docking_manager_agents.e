@@ -573,7 +573,7 @@ feature {SD_DEBUG_ACCESS} -- For debug
 			show_inner_container_structure_imp (docking_manager.inner_containers.item.item, " ")
 		end
 
-	show_inner_container_structure_imp (a_container: EV_WIDGET; a_indent: STRING_GENERAL)
+	show_inner_container_structure_imp (a_container: EV_WIDGET; a_indent: READABLE_STRING_GENERAL)
 			-- For debug
 		require
 			not_destroyed: not is_destroyed

@@ -415,7 +415,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	set_text_on_position (a_x, a_y: INTEGER; a_text: STRING_GENERAL)
+	set_text_on_position (a_x, a_y: INTEGER; a_text: READABLE_STRING_GENERAL)
 			-- Set the label of the cell with coordinates `a_x', `a_y'
 			-- with `txt'.
 		do
@@ -483,7 +483,7 @@ feature {NONE} -- Implementation
 			insert_column (wel_column, col_index)
 		end
 
-	column_title_changed (a_title: STRING_GENERAL; a_column: INTEGER)
+	column_title_changed (a_title: READABLE_STRING_GENERAL; a_column: INTEGER)
 			-- Replace title of `a_column' with `a_title' if column present.
 			-- If `a_title' is Void, remove it.
 		do
@@ -659,7 +659,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 				-- scroll bar to be hidden.
 		end
 
-	set_item_text (row: EV_MULTI_COLUMN_LIST_ROW_IMP; an_item: STRING_32; item_index: INTEGER)
+	set_item_text (row: EV_MULTI_COLUMN_LIST_ROW_IMP; an_item: READABLE_STRING_GENERAL; item_index: INTEGER)
 			-- Assign `an_item' text to row `row' at position `item_index'.
 		require
 			row_not_void: row /= Void
@@ -682,7 +682,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 			{WEL_API}.send_message (wel_item, Lvm_setitem, to_wparam (0), litem.item)
 		end
 
-	on_item_added_at (row: EV_MULTI_COLUMN_LIST_ROW_IMP; an_item: STRING_GENERAL; item_index: INTEGER)
+	on_item_added_at (row: EV_MULTI_COLUMN_LIST_ROW_IMP; an_item: READABLE_STRING_GENERAL; item_index: INTEGER)
 			-- `an_item' has been added to index `item_index' in row `row.
 		local
 			current_index: INTEGER
@@ -703,7 +703,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 			end
 		end
 
-	on_item_removed_at (row: EV_MULTI_COLUMN_LIST_ROW_IMP; an_item: STRING_GENERAL; item_index: INTEGER)
+	on_item_removed_at (row: EV_MULTI_COLUMN_LIST_ROW_IMP; an_item: READABLE_STRING_GENERAL; item_index: INTEGER)
 			-- `an_item' has been removed from index `item_index' in row `row'.
 		local
 			current_index: INTEGER

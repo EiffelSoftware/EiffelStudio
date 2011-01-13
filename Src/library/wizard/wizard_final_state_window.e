@@ -53,7 +53,7 @@ feature -- Access
 
 	is_final_state: BOOLEAN = TRUE
 
-	final_message: STRING_GENERAL
+	final_message: STRING_32
 		deferred
 		end
 

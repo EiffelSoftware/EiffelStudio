@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Eiffel wrapper for WebKitView object
 					see: http://webkitgtk.org/reference/webkitgtk-WebKitWebView.html
@@ -99,7 +99,7 @@ feature -- Query
 			end
 		end
 
-	webkit_web_view_can_show_mime_type (a_mime_type: STRING_GENERAL): BOOLEAN
+	webkit_web_view_can_show_mime_type (a_mime_type: READABLE_STRING_GENERAL): BOOLEAN
 			-- This functions returns whether or not a MIME type can be displayed using this view.
 			--
 			-- mime_type: a MIME type
@@ -388,7 +388,7 @@ feature -- Command
 			end
 		end
 
-	load_uri (a_uri: STRING_GENERAL)
+	load_uri (a_uri: READABLE_STRING_GENERAL)
 			-- Requests loading of the specified URI string.
 			--
 			-- a_uri: an URI string 						
@@ -445,7 +445,7 @@ feature -- Command
 			end
 		end
 
-	execute_script (a_script: STRING_GENERAL)
+	execute_script (a_script: READABLE_STRING_GENERAL)
 			-- Execute script
 		require
 			not_default: item /= default_pointer
@@ -513,7 +513,7 @@ feature -- Command
 			check webkit_web_view_go_to_back_forward_item_not_implemented: False end
 		end
 
-	load_html_string (a_content: STRING_GENERAL; a_base_uri: STRING_GENERAL)
+	load_html_string (a_content: READABLE_STRING_GENERAL; a_base_uri: READABLE_STRING_GENERAL)
 			-- Load HTML string
 		require
 			not_void: a_content /= Void and then not a_content.is_empty
@@ -540,7 +540,7 @@ feature -- Command
 			check webkit_web_view_load_request_not_implemented: False end
 		end
 
-	load_string (a_content, a_mime_type, a_encoding, a_base_uri: STRING_GENERAL)
+	load_string (a_content, a_mime_type, a_encoding, a_base_uri: READABLE_STRING_GENERAL)
 			-- Load string
 		require
 			not_default: item /= default_pointer
@@ -562,7 +562,7 @@ feature -- Command
 			end
 		end
 
-	mark_text_matches (a_string: STRING_GENERAL; a_case_sensitive: BOOLEAN; a_limit: INTEGER): NATURAL
+	mark_text_matches (a_string: READABLE_STRING_GENERAL; a_case_sensitive: BOOLEAN; a_limit: INTEGER): NATURAL
 			-- Attempts to highlight all occurances of string inside web_view.
 			--
 			-- a_string: a string to look for
@@ -632,7 +632,7 @@ feature -- Command
 			end
 		end
 
-	search_text (a_text: STRING_GENERAL; a_case_sensitive, a_forward, a_wrap: BOOLEAN): BOOLEAN
+	search_text (a_text: READABLE_STRING_GENERAL; a_case_sensitive, a_forward, a_wrap: BOOLEAN): BOOLEAN
 			-- Looks for a specified string inside web_view.
 			--
 			-- a_text: a string to look for
@@ -667,7 +667,7 @@ feature -- Command
 			end
 		end
 
-	set_custom_encoding (a_encoding: STRING_GENERAL)
+	set_custom_encoding (a_encoding: READABLE_STRING_GENERAL)
 			-- Sets the current WebKitWebView encoding, without modifying the default one, and reloads the page.
 			--
 			-- a_encoding: the new encoding, or NULL to restore the default encoding

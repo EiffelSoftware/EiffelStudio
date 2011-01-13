@@ -24,18 +24,14 @@ create
 
 feature {EV_FONT_IMP, EV_ENVIRONMENT_IMP} -- Basic operations
 
-	is_font_face_supported (a_face_name: STRING_GENERAL): BOOLEAN
+	is_font_face_supported (a_face_name: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `a_font_face' supported on the current system?
 		require
 			a_face_name_valid:
 				a_face_name /= Void and then
 				not a_face_name.is_empty
-		local
-			search_face: STRING_32
 		do
-			search_face := a_face_name.twin
-			search_face.to_lower
-			Result := font_faces.has (a_face_name)
+			Result := font_faces.has (a_face_name.as_string_32)
 		end
 
 	font_faces: ARRAYED_LIST [STRING_32]

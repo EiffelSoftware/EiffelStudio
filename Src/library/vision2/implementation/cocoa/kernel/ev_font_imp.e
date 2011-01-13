@@ -88,7 +88,7 @@ feature -- Element change
 			--font := shared_font_manager.convert_font_to_family (font, ...)
 		end
 
-	set_face_name (a_face: STRING_GENERAL)
+	set_face_name (a_face: READABLE_STRING_GENERAL)
 			-- Set the face name for current.
 		do
 			font := shared_font_manager.convert_font_to_face (font, a_face)
@@ -173,7 +173,7 @@ feature -- Status report
 			Result := string_width ("W")
 		end
 
-	string_size (a_string: STRING_GENERAL): TUPLE [width: INTEGER; height: INTEGER; left_offset: INTEGER; right_offset: INTEGER]
+	string_size (a_string: READABLE_STRING_GENERAL): TUPLE [width: INTEGER; height: INTEGER; left_offset: INTEGER; right_offset: INTEGER]
 			-- `Result' is [width, height, left_offset, right_offset] in pixels of `a_string' in the
 			-- current font, taking into account line breaks ('%N').
 		local
@@ -190,7 +190,7 @@ feature -- Status report
 			Result.height := l_size.height.rounded
 		end
 
-	string_width (a_string: STRING_GENERAL): INTEGER
+	string_width (a_string: READABLE_STRING_GENERAL): INTEGER
 			-- Width in pixels of `a_string' in the current font.
 		do
 			Result := string_size (a_string).width

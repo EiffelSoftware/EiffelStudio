@@ -545,9 +545,9 @@ feature {NONE} -- Implementation
 		require
 			an_option_not_void: an_option /= Void
 			a_inherited_option_not_void: a_inherited_option /= Void
-			a_name_valid: a_name.is_equal (conf_interface_names.option_require_name) or a_name.is_equal (conf_interface_names.option_ensure_name) or
-				a_name.is_equal (conf_interface_names.option_check_name) or a_name.is_equal (conf_interface_names.option_invariant_name) or
-				a_name.is_equal (conf_interface_names.option_loop_name) or a_name.is_equal (conf_interface_names.option_sup_require_name)
+			a_name_valid: a_name.same_string (conf_interface_names.option_require_name) or a_name.same_string (conf_interface_names.option_ensure_name) or
+				a_name.same_string (conf_interface_names.option_check_name) or a_name.same_string (conf_interface_names.option_invariant_name) or
+				a_name.same_string (conf_interface_names.option_loop_name) or a_name.same_string (conf_interface_names.option_sup_require_name)
 		local
 			l_assertion: CONF_ASSERTIONS
 		do
@@ -561,37 +561,37 @@ feature {NONE} -- Implementation
 				end
 				an_option.set_assertions (l_assertion)
 			end
-			if a_name.is_equal (conf_interface_names.option_require_name) then
+			if a_name.same_string (conf_interface_names.option_require_name) then
 				if a_value then
 					l_assertion.enable_precondition
 				else
 					l_assertion.disable_precondition
 				end
-			elseif a_name.is_equal (conf_interface_names.option_ensure_name) then
+			elseif a_name.same_string (conf_interface_names.option_ensure_name) then
 				if a_value then
 					l_assertion.enable_postcondition
 				else
 					l_assertion.disable_postcondition
 				end
-			elseif a_name.is_equal (conf_interface_names.option_check_name) then
+			elseif a_name.same_string (conf_interface_names.option_check_name) then
 				if a_value then
 					l_assertion.enable_check
 				else
 					l_assertion.disable_check
 				end
-			elseif a_name.is_equal (conf_interface_names.option_invariant_name) then
+			elseif a_name.same_string (conf_interface_names.option_invariant_name) then
 				if a_value then
 					l_assertion.enable_invariant
 				else
 					l_assertion.disable_invariant
 				end
-			elseif a_name.is_equal (conf_interface_names.option_loop_name) then
+			elseif a_name.same_string (conf_interface_names.option_loop_name) then
 				if a_value then
 					l_assertion.enable_loop
 				else
 					l_assertion.disable_loop
 				end
-			elseif a_name.is_equal (conf_interface_names.option_sup_require_name) then
+			elseif a_name.same_string (conf_interface_names.option_sup_require_name) then
 				if a_value then
 					l_assertion.enable_supplier_precondition
 				else

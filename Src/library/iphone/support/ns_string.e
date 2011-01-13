@@ -25,7 +25,7 @@ feature {NONE} -- Creation
 			share_from_pointer (nsstring_with_c_string (a_c_string.item))
 		end
 
-	make_with_string (a_string: STRING_GENERAL)
+	make_with_string (a_string: READABLE_STRING_GENERAL)
 		local
 			cstring: C_STRING
 		do

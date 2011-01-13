@@ -171,7 +171,7 @@ feature -- Status setting
 			set_maximum_height (mh)
 		end
 
-	set_title (txt : STRING_GENERAL)
+	set_title (txt : READABLE_STRING_GENERAL)
 			-- Make `txt' the new title.
 		require
 			valid_title: txt /= Void

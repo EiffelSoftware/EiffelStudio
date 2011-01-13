@@ -215,7 +215,7 @@ feature -- Element change
 			{WEL_API}.send_message (item, Sb_simple, to_wparam (0), to_lparam (0))
 		end
 
-	set_simple_text (a_text: STRING_GENERAL)
+	set_simple_text (a_text: READABLE_STRING_GENERAL)
 			-- Set `a_text' for the simple mode
 		require
 			exists: exists
@@ -227,7 +227,7 @@ feature -- Element change
 			{WEL_API}.send_message (item, Sb_settext, to_wparam (Simple_part), a_wel_string.item)
 		end
 
-	set_simple_text_with_style (a_text: STRING_GENERAL; a_style: INTEGER)
+	set_simple_text_with_style (a_text: READABLE_STRING_GENERAL; a_style: INTEGER)
 			-- Set the text `a_text' with style `a_style' for a part
 			-- identified by `Simple_part'.
 			-- See class WEL_SBT_CONSTANTS for `a_style' values.
@@ -262,7 +262,7 @@ feature -- Element change
 			edges_set: edges.same_items (a_edges)
 		end
 
-	set_text_part (index: INTEGER; a_text: STRING_GENERAL)
+	set_text_part (index: INTEGER; a_text: READABLE_STRING_GENERAL)
 			-- Set the text for a part identified by the
 			-- zero-based `index'.
 		require
@@ -279,7 +279,7 @@ feature -- Element change
 			text_set: a_text.is_equal (text_for_part (index))
 		end
 
-	set_text_part_with_style (index: INTEGER; a_text: STRING_GENERAL;
+	set_text_part_with_style (index: INTEGER; a_text: READABLE_STRING_GENERAL;
 			a_style: INTEGER)
 			-- Set the text for a part identified by the
 			-- zero-based `index'.
@@ -366,7 +366,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Inapplicable
 
-	set_text (a_text: detachable STRING_GENERAL)
+	set_text (a_text: detachable READABLE_STRING_GENERAL)
 			-- Set the window text.
 		do
 		end

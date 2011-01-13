@@ -28,7 +28,7 @@ create
 	make_unshared
 
 convert
-	make_unshared_with_eiffel_string ({STRING_GENERAL, STRING, STRING_32})
+	make_unshared_with_eiffel_string ({READABLE_STRING_GENERAL, STRING, STRING_32})
 
 feature {NONE} -- Initialization
 
@@ -62,7 +62,7 @@ feature {NONE} -- Initialization
 			item_set : item = a_ptr
 		end
 
-	make_unshared_with_eiffel_string (a_string: STRING_GENERAL)
+	make_unshared_with_eiffel_string (a_string: READABLE_STRING_GENERAL)
 			-- Create `item' and retain ownership.
 		require
 			a_string_not_void: a_string /= Void

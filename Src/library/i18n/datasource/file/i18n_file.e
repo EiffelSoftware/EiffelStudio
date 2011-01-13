@@ -13,7 +13,7 @@ inherit
 
 feature {NONE}	-- creation
 
-	make (path: STRING_GENERAL)
+	make (path: READABLE_STRING_GENERAL)
 			-- Initialize file from `a_path'.
 			--
 			-- `a_path': File path of a valid mo file

@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 			security_attributes := l_sec_attr
 		end
 
-	make_named (a_name: STRING_GENERAL; a_direction: INTEGER)
+	make_named (a_name: READABLE_STRING_GENERAL; a_direction: INTEGER)
 			-- Create a named pipe with name `name' and 'a_direction'
 		require
 			non_void_name: a_name /= Void
@@ -70,7 +70,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	make_client (a_name: STRING_GENERAL; a_direction: INTEGER; a_wait_server: BOOLEAN)
+	make_client (a_name: READABLE_STRING_GENERAL; a_direction: INTEGER; a_wait_server: BOOLEAN)
 			-- Create a pipe connecting to named pipe with name `name' and 'a_direction'
 			-- named pipe must have previously been created.
 			-- if `a_wait_server' then execution halts until a compatible server has been created
@@ -154,7 +154,7 @@ feature -- Status Report
 	last_read_successful: BOOLEAN
 			-- Was last read operation successful?
 
-	last_string: detachable STRING_GENERAL
+	last_string: detachable READABLE_STRING_GENERAL
 			-- Last read string
 
 	last_written_bytes: INTEGER
@@ -237,14 +237,14 @@ feature -- Output
 
 feature {NONE} -- Implementation
 
-	format_pipe_name (a_name: STRING_GENERAL): STRING_32
+	format_pipe_name (a_name: READABLE_STRING_GENERAL): STRING_32
 			--
 		require
 			non_void_name: a_name /= Void
 			valid_name: not a_name.is_empty
 		do
 			Result := "\\.\pipe\"
-			Result.append (a_name)
+			Result.append_string_general (a_name)
 		ensure
 			non_void_result: Result /= Void
 		end
@@ -347,14 +347,14 @@ feature {NONE} -- Externals
 
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

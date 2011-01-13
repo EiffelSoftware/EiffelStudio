@@ -6,7 +6,7 @@ note
 	revision: "$Revision$"
 
 class
-	SD_TEXT_FINDER [G -> STRING_GENERAL]
+	SD_TEXT_FINDER [G -> READABLE_STRING_GENERAL]
 
 create
 	make
@@ -90,7 +90,7 @@ feature -- Behavior
 
 feature {NONE} -- Implementation
 
-	search_perform (a_str: STRING_GENERAL)
+	search_perform (a_str: READABLE_STRING_GENERAL)
 			-- Perform searching
 		do
 			texts_found_internal.wipe_out

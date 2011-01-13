@@ -287,13 +287,13 @@ feature -- Element change
 			internal_set_maximum_size (maximum_width, a_max_height)
 		end
 
-	set_title (new_title: STRING_GENERAL)
+	set_title (new_title: READABLE_STRING_GENERAL)
 			-- Set `title' to `new_title'.
 		local
 			a_title: STRING_32
 			a_cs: EV_GTK_C_STRING
 		do
-			a_title := new_title
+			a_title := new_title.as_string_32
 			if a_title.is_empty then
 				-- Some window managers do not like empty strings as titles and show it as an error.
 				a_title := "%T"

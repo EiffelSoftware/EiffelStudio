@@ -48,14 +48,14 @@ feature -- Floating data
 	title: detachable STRING_32
 			-- Title of floating zone
 
-	set_title (a_title: STRING_GENERAL)
+	set_title (a_title: READABLE_STRING_GENERAL)
 			-- Set `a_title'.
 		require
 			a_title_not_void: a_title /= Void
 		do
-			title := a_title
+			title := a_title.as_string_32
 		ensure
-			set: attached title as le_title implies a_title.as_string_32 ~ le_title
+			set: attached title as l_title implies l_title.same_string_general (a_title)
 		end
 
 	screen_x, screen_y: INTEGER
@@ -75,14 +75,14 @@ feature -- Docking data
 	rows: ARRAYED_LIST [attached like tool_bar_data]
 			-- All row data in `Current'
 
-	row (a_title: STRING_GENERAL): like tool_bar_data
+	row (a_title: READABLE_STRING_GENERAL): like tool_bar_data
 			-- Row data contain a_title
 			-- If not found, create a new one
 		require
 			a_title_not_void: a_title /= Void
 		local
 			l_row_data: like tool_bar_data
-			l_item: TUPLE [title: STRING_GENERAL]
+			l_item: TUPLE [title: READABLE_STRING_GENERAL]
 		do
 			from
 				rows.start
@@ -96,7 +96,7 @@ feature -- Docking data
 					l_row_data.after or Result /= Void
 				loop
 					l_item := l_row_data.item
-					if l_item.title.is_equal (a_title) then
+					if l_item.title.same_string (a_title) then
 						Result := l_row_data
 					end
 
@@ -123,7 +123,7 @@ feature -- SD_TOOL_BAR_ZONE last state
 
 feature  {NONE} -- Implementation
 
-	tool_bar_data: detachable ARRAYED_LIST [TUPLE [STRING_GENERAL, INTEGER, SD_TOOL_BAR_ZONE_STATE]]
+	tool_bar_data: detachable ARRAYED_LIST [TUPLE [READABLE_STRING_GENERAL, INTEGER, SD_TOOL_BAR_ZONE_STATE]]
 			-- When `Current' is docking tool bar data, 1st is tool bar content's title, 2nd is this tool bar position in tool bar row
 
 invariant
@@ -132,14 +132,14 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

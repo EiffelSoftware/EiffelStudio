@@ -57,7 +57,7 @@ feature -- Element Change
 
 feature -- Basic operations
 
-	formatted_string (a_string: STRING_32; args_tuple: TUPLE): STRING_32
+	formatted_string (a_string: READABLE_STRING_GENERAL; args_tuple: TUPLE): STRING_32
 			-- String which has it's tokens replaced by given values
 			--
 			-- The string given can have token placeholders. The placeholder has
@@ -78,7 +78,7 @@ feature -- Basic operations
 			l_string: STRING_32
 			l_id: INTEGER
 		do
-			l_list := a_string.split (escape_character)
+			l_list := a_string.as_string_32.split (escape_character)
 			create Result.make_empty
 			from
 					-- Append first string to Result
@@ -109,8 +109,8 @@ feature -- Basic operations
 						l_id := l_string.to_integer
 
 							--FIXME!!! HACK because 'out' in ANY possibly gives a STRING_8 and this is not so good for STRING_32
-						if attached {STRING_GENERAL} args_tuple.item (l_id) as test then
-							Result.append (test)
+						if attached {READABLE_STRING_GENERAL} args_tuple.item (l_id) as test then
+							Result.append_string_general (test)
 						else
 							if attached args_tuple.item (l_id) as a_arg then
 								Result.append (a_arg.out)
@@ -150,7 +150,7 @@ feature -- Check functions
 			end
 		end
 
-	required_arguments (a_string: STRING_32): INTEGER
+	required_arguments (a_string: READABLE_STRING_GENERAL): INTEGER
 			-- The number of arguments which `a_string' needs to have replaced
 		require
 			a_string_not_void: a_string /= Void
@@ -160,7 +160,7 @@ feature -- Check functions
 			i : INTEGER
 			l_string: STRING_32
 		do
-			l_list := a_string.split (escape_character)
+			l_list := a_string.as_string_32.split (escape_character)
 			Result := 0
 			from
 				l_list.start
@@ -186,12 +186,12 @@ feature -- Check functions
 			end
 		ensure
 			result_not_negative: Result >= 0
-			result_correct: a_string.has_substring (escape_character.out + Result.out)
+			result_correct: a_string.as_string_32.has_substring (escape_character.out + Result.out)
 		end
 
 note
 	library:   "Internationalization library"
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

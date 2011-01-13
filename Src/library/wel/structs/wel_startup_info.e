@@ -152,7 +152,7 @@ feature -- Access
 
 feature -- Element Change
 
-	set_title (a_title: STRING_GENERAL)
+	set_title (a_title: READABLE_STRING_GENERAL)
 			-- Set `title' with `a_title'.
 		require
 			non_void_title: a_title /= Void
@@ -160,7 +160,7 @@ feature -- Element Change
 			create internal_title.make (a_title)
 			cwel_startup_info_set_title (item, internal_title.item)
 		ensure
-			title_set: title.is_equal (a_title)
+			title_set: title.same_string_general (a_title)
 		end
 
 	set_x_offset (an_offset: like x_offset)
@@ -455,14 +455,14 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

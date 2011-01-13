@@ -181,7 +181,7 @@ feature -- Status setting
 			ret := hiview_set_frame_external (c_object, rect.item)
 		end
 
-	set_text (a_text: STRING_GENERAL)
+	set_text (a_text: READABLE_STRING_GENERAL)
 			-- Assign `a_text' to `text'.
 		local
 			str: C_STRING
@@ -192,12 +192,12 @@ feature -- Status setting
 
 		end
 
-	append_text (a_text: STRING_GENERAL)
+	append_text (a_text: READABLE_STRING_GENERAL)
 			-- Append `a_text' to the end of the text.
 		do
 		end
 
-	prepend_text (a_text: STRING_GENERAL)
+	prepend_text (a_text: READABLE_STRING_GENERAL)
 			-- Prepend `a_text' to the end of the text.
 		do
 		end
@@ -347,13 +347,13 @@ feature -- status settings
 
 feature -- Basic operation
 
-	insert_text (txt: STRING_GENERAL)
+	insert_text (txt: READABLE_STRING_GENERAL)
 			-- Insert `txt' at the current position.
 		do
 
 		end
 
-	insert_text_at_position (txt: STRING_GENERAL; a_pos: INTEGER)
+	insert_text_at_position (txt: READABLE_STRING_GENERAL; a_pos: INTEGER)
 			-- Insert `txt' at the current position at position `a_pos'
 		do
 

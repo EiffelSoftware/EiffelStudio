@@ -88,7 +88,7 @@ feature -- Command
 			window.set_show_stick (a_show)
 		end
 
-	set_title (a_title: STRING_GENERAL)
+	set_title (a_title: READABLE_STRING_GENERAL)
 			-- <Precursor>
 		do
 			window.title_bar.set_title (a_title)

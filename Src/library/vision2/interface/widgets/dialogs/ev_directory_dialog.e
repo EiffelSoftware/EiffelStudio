@@ -46,7 +46,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_start_directory (a_path: STRING_GENERAL)
+	set_start_directory (a_path: READABLE_STRING_GENERAL)
 			-- Assign `a_path' to `start_directory'.
 		require
 			not_destroyed: not is_destroyed
@@ -56,7 +56,7 @@ feature -- Element change
 		do
 			implementation.set_start_directory (a_path)
 		ensure
-			assigned: start_directory.is_equal (a_path)
+			assigned: start_directory.same_string_general (a_path)
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation

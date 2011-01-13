@@ -13,7 +13,7 @@ create
 
 feature -- Initialization
 
-	make (a_name, a_class_id: STRING_GENERAL; a_modification_time: WEL_FILE_TIME)
+	make (a_name, a_class_id: READABLE_STRING_GENERAL; a_modification_time: WEL_FILE_TIME)
 			-- Create current instance.
 		require
 			a_name_not_void: a_name /= Void
@@ -31,10 +31,10 @@ feature -- Initialization
 
 feature -- Access
 
-	name: STRING_GENERAL
+	name: READABLE_STRING_GENERAL
 			-- Name of key
 
-	class_id: STRING_GENERAL
+	class_id: READABLE_STRING_GENERAL
 			-- Class of key
 
 	last_change: WEL_FILE_TIME;

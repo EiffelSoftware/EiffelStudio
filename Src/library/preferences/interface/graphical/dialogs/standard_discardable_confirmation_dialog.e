@@ -20,7 +20,7 @@ create
 feature {NONE} -- Initialization
 
 	make_initialized (button_count: INTEGER; res_name: STRING;
-				confirmation_text: STRING_GENERAL; check_label: STRING_GENERAL; app_prefs: PREFERENCES)
+				confirmation_text, check_label: READABLE_STRING_GENERAL; app_prefs: PREFERENCES)
 			-- Initialize `Current' based on these values.
 			-- `res_name' is the name of the boolean preference corresponding
 			-- to this dialog.
@@ -34,10 +34,10 @@ feature {NONE} -- Initialization
 			valid_res_name: res_name /= Void
 		do
 			preferences := app_prefs
-			check_button_label := check_label
+			check_button_label := check_label.as_string_32
 			buttons_count := button_count
 			preference_name := res_name
-			confirmation_message_label := confirmation_text
+			confirmation_message_label := confirmation_text.as_string_32
 			default_create
 		ensure
 			status_set: buttons_count = button_count and
@@ -57,10 +57,10 @@ feature -- Access
 	buttons_count: INTEGER
 			-- Number of buttons (OK, OK/Cancel, Yes/No/Cancel).
 
-	check_button_label: STRING_GENERAL
+	check_button_label: STRING_32
 			-- Label displayed next to the check box.
 
-	confirmation_message_label: STRING_GENERAL
+	confirmation_message_label: STRING_32
 			-- Main explanatory label displayed in the dialog.
 
 	preference_name: STRING

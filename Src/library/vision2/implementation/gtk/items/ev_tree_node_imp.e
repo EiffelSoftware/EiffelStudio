@@ -250,12 +250,12 @@ feature {EV_ANY_I} -- Status setting
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_free (a_tree_path)
 		end
 
-	set_text (a_text: STRING_GENERAL)
+	set_text (a_text: READABLE_STRING_GENERAL)
 			-- Set 'text' to 'a_text'
 		local
 			par_tree: detachable EV_TREE_IMP
 		do
-			internal_text := a_text.twin
+			internal_text := a_text.as_string_32.twin
 			par_tree := parent_tree_imp
 			if par_tree /= Void then
 				par_tree.set_text_on_position (Current, internal_text)
@@ -509,10 +509,10 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 			internal_text := once ""
 		end
 
-	set_internal_text (a_text: STRING_GENERAL)
+	set_internal_text (a_text: READABLE_STRING_GENERAL)
 			-- Set `internal_text' to `a_text'
 		do
-			internal_text := a_text
+			internal_text := a_text.as_string_32
 		end
 
 	internal_text: STRING_32
@@ -521,10 +521,10 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 	internal_tooltip: detachable STRING_32
 		-- Internal representation of `tooltip'.
 
-	set_tooltip (a_text: STRING_GENERAL)
+	set_tooltip (a_text: READABLE_STRING_GENERAL)
 			-- Set `a_text' to `tooltip'.
 		do
-			internal_tooltip := a_text
+			internal_tooltip := a_text.as_string_32
 		end
 
 	remove_tooltip

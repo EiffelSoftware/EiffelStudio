@@ -218,7 +218,7 @@ feature -- Constants
 
 feature -- Element change
 
-	set_item_text (an_item: EV_WIDGET; a_text: STRING_GENERAL)
+	set_item_text (an_item: EV_WIDGET; a_text: READABLE_STRING_GENERAL)
 			-- Assign `a_text' to label of `an_item'.
 		require
 			not_destroyed: not is_destroyed
@@ -227,7 +227,7 @@ feature -- Element change
 		do
 			implementation.set_item_text (an_item, a_text)
 		ensure
-			item_text_assigned: item_text (an_item).is_equal (a_text)
+			item_text_assigned: item_text (an_item).same_string_general (a_text)
 			cloned: item_text (an_item) /= a_text
 		end
 

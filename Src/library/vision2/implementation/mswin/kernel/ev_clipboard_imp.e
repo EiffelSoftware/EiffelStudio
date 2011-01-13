@@ -78,7 +78,7 @@ feature -- Access
 
 feature -- Status Setting
 
-	set_text (a_text: STRING_GENERAL)
+	set_text (a_text: READABLE_STRING_GENERAL)
 			-- Assign `a_text' to clipboard.
 		local
 			window: EV_WINDOW
@@ -93,7 +93,7 @@ feature -- Status Setting
 				empty_clipboard
 				if not a_text.is_empty then
 						-- If there is no text then we leave the clipboard as empty.
-					local_text := a_text.twin
+					local_text := a_text.as_string_32.twin
 					if local_text.substring_index ("%R%N", 1) = 0 then
 						local_text.replace_substring_all ("%N", "%R%N")
 					end

@@ -39,7 +39,7 @@ feature -- Querys
 			not_void: Result /= Void
 		end
 
-	content_by_title (a_unique_title: STRING_GENERAL): SD_CONTENT
+	content_by_title (a_unique_title: READABLE_STRING_GENERAL): SD_CONTENT
 			-- Content by a_title
 		require
 			a_title_not_void: a_unique_title /= Void and then not a_unique_title.is_empty
@@ -129,13 +129,13 @@ feature -- Querys
 	is_opening_tools_layout: BOOLEAN
 			-- If executing {SD_DOCKING_MANAGER_QUERY}.`open_tools_config'
 
-	content_by_title_for_restore (a_unique_title: STRING_GENERAL): detachable SD_CONTENT
+	content_by_title_for_restore (a_unique_title: READABLE_STRING_GENERAL): detachable SD_CONTENT
 			-- Content by a_unique_title. Result = Void if not found
 		require
 			a_unique_title_not_void: a_unique_title /= Void
 		local
 			l_contents: ARRAYED_LIST [SD_CONTENT]
-			l_callback: detachable FUNCTION [ANY, TUPLE [STRING_GENERAL], SD_CONTENT]
+			l_callback: detachable FUNCTION [ANY, TUPLE [READABLE_STRING_GENERAL], SD_CONTENT]
 		do
 			from
 				l_contents := docking_manager.contents
@@ -481,7 +481,7 @@ feature -- Querys
 			end
 		end
 
-	is_unique_title_free_to_use (a_title: STRING_GENERAL): BOOLEAN
+	is_unique_title_free_to_use (a_title: READABLE_STRING_GENERAL): BOOLEAN
 			-- If `a_title' unique in all current contents? Not already used by other contents?
 		local
 			l_content: ARRAYED_LIST [SD_CONTENT]
@@ -493,7 +493,7 @@ feature -- Querys
 			until
 				l_content.after or not Result
 			loop
-				if l_content.item.unique_title.is_equal (a_title) then
+				if l_content.item.unique_title.same_string_general (a_title) then
 					Result := False
 				end
 				l_content.forth

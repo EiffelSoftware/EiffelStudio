@@ -64,30 +64,28 @@ feature -- Access
 	eol_token: detachable EDITOR_TOKEN_EOL
 			-- Last token of the line.
 
-	wide_indentation: STRING_GENERAL
+	wide_indentation: STRING_32
 			-- Create a string containing the same indentation as `ref_line'.
 			-- New instance created at each call.
 		local
-			l_string_32: STRING_32
 			l_blank: detachable EDITOR_TOKEN_BLANK
 		do
-			create l_string_32.make_empty
+			create Result.make_empty
 			if attached {EDITOR_TOKEN_BLANK} first_token as t_blank then
 				from
 					l_blank := t_blank
-					l_string_32.append (l_blank.wide_image)
+					Result.append (l_blank.wide_image)
 				until
 					l_blank = Void
 				loop
 					if attached {EDITOR_TOKEN_BLANK}l_blank.next as l_next then
-						l_string_32.append (l_next.wide_image)
+						Result.append (l_next.wide_image)
 						l_blank := l_next
 					else
 						l_blank := Void
 					end
 				end
 			end
-			Result := l_string_32
 		ensure
 			indentation_not_void: Result /= Void
 		end

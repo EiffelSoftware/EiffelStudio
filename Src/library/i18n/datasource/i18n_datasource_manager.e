@@ -10,7 +10,7 @@ deferred class
 
 feature {NONE} -- Initialization
 
-	make (a_uri : STRING_GENERAL)
+	make (a_uri : READABLE_STRING_GENERAL)
 			-- Initialize datasource manager with given URI.
 			--
 			-- Note: Implementations should redefine this and parse URI

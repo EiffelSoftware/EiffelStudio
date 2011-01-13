@@ -10,59 +10,63 @@ class
 
 feature -- Access
 
-	l_name: STRING_GENERAL				do Result := "Name" end
-	l_literal_value: STRING_GENERAL		do Result := "Literal Value" end
-	l_status: STRING_GENERAL				do Result := "Status" end
-	l_type: STRING_GENERAL				do Result := "Type" end
-	l_request_restart: STRING_GENERAL	do Result := " (REQUIRES RESTART)" end
-	l_tree_view: STRING_GENERAL			do Result := "Tree View" end
-	f_switch_to_tree_view: STRING_GENERAL do Result := "Switch to Tree View" end
-	l_flat_view: STRING_GENERAL			do Result := "Flat View" end
-	f_switch_to_flat_view: STRING_GENERAL do Result := "Switch to Flat View" end
+	l_name: STRING_32				do Result := "Name" end
+	l_literal_value: STRING_32		do Result := "Literal Value" end
+	l_status: STRING_32				do Result := "Status" end
+	l_type: STRING_32				do Result := "Type" end
+	l_request_restart: STRING_32	do Result := " (REQUIRES RESTART)" end
+	l_tree_view: STRING_32			do Result := "Tree View" end
+	f_switch_to_tree_view: STRING_32 do Result := "Switch to Tree View" end
+	l_flat_view: STRING_32			do Result := "Flat View" end
+	f_switch_to_flat_view: STRING_32 do Result := "Switch to Flat View" end
 
-	l_matches_of_total_preferences (a_count: STRING_GENERAL; a_total_count: STRING_GENERAL): STRING_GENERAL
+	l_matches_of_total_preferences (a_count, a_total_count: READABLE_STRING_GENERAL): STRING_32
 		require
 			a_count_not_void: a_count /= Void
 			a_total_count_not_void: a_total_count /= Void
 		do
-			Result := a_count.as_string_32 + " matches of " + a_total_count + " total preferences"
+			create Result.make (50)
+			Result.append_string_general (a_count)
+			Result.append_string_general (" matches of ")
+			Result.append_string_general (a_total_count)
+			Result.append_string_general (" total preferences")
 		end
 
-	l_count_preferences (a_count: STRING_GENERAL): STRING_GENERAL
+	l_count_preferences (a_count: READABLE_STRING_GENERAL): STRING_32
 		require
 			a_count_not_void: a_count /= Void
 		do
 			Result := a_count.as_string_32 + " preferences"
 		end
 
-	l_updating_the_view: STRING_GENERAL 	do Result := "Updating the view ..." end
-	l_filter: STRING_GENERAL				do Result := "Filter:" end
-	l_tree_or_flat_view: STRING_GENERAL		do Result := "Tree/Flat View" end
-	l_restore_defaults: STRING_GENERAL 		do Result := "Restore Defaults" end
-	l_restore_default: STRING_GENERAL		do Result := "Restore Default" end
-	l_no_default_value: STRING_GENERAL 		do Result := "No default value" end
-	l_close: STRING_GENERAL					do Result := "Close" end
-	l_display_window: STRING_GENERAL 		do Result := "Display window" end
-	l_description: STRING_GENERAL			do Result := "Description" end
-	l_building_flat_view: STRING_GENERAL	do Result := "Building flat view ..." end
-	l_building_tree_view: STRING_GENERAL	do Result := "Building tree view ..." end
+	l_updating_the_view: STRING_32 	do Result := "Updating the view ..." end
+	l_filter: STRING_32				do Result := "Filter:" end
+	l_tree_or_flat_view: STRING_32		do Result := "Tree/Flat View" end
+	l_restore_defaults: STRING_32 		do Result := "Restore Defaults" end
+	l_restore_default: STRING_32		do Result := "Restore Default" end
+	l_no_default_value: STRING_32 		do Result := "No default value" end
+	l_close: STRING_32					do Result := "Close" end
+	l_display_window: STRING_32 		do Result := "Display window" end
+	l_description: STRING_32			do Result := "Description" end
+	l_building_flat_view: STRING_32	do Result := "Building flat view ..." end
+	l_building_tree_view: STRING_32	do Result := "Building tree view ..." end
 
 
-	p_default_value: STRING_GENERAL		do Result := "default" end
-	user_value: STRING_GENERAL			do Result := "user set" end
-	auto_value: STRING_GENERAL			do Result := "auto" end
-	no_description_text: STRING_GENERAL	do Result := "No description available for this preference." end
-	preferences_title: STRING_GENERAL 	do Result := "Preferences" end
-	restore_preference_string: STRING_GENERAL do Result := "This will reset ALL preferences to their default values%N and all previous settings will be overwritten.  Are you sure?" end
-	shortcut_modification_denied: STRING_GENERAL do Result := "Shortcut modification failed. It is either used by a fixed shortcut or reserved by the system." end
-	preferences_root: STRING_GENERAL do Result := "Preferences root" end
+	p_default_value: STRING_32		do Result := "default" end
+	user_value: STRING_32			do Result := "user set" end
+	auto_value: STRING_32			do Result := "auto" end
+	no_description_text: STRING_32	do Result := "No description available for this preference." end
+	preferences_title: STRING_32 	do Result := "Preferences" end
+	restore_preference_string: STRING_32 do Result := "This will reset ALL preferences to their default values%N and all previous settings will be overwritten.  Are you sure?" end
+	shortcut_modification_denied: STRING_32 do Result := "Shortcut modification failed. It is either used by a fixed shortcut or reserved by the system." end
+	preferences_root: STRING_32 do Result := "Preferences root" end
 
 	Alt_text: STRING = "Alt"
 	Ctrl_text: STRING = "Ctrl"
 	Shift_text: STRING = "Shift"
 	Shortcut_delimiter: STRING = "+"
 
-	w_Preferences_delayed_resources: STRING_GENERAL
+	w_preferences_delayed_resources: STRING_32
 			-- Texts used in the dialog that tells the user
 			-- they have to restart the application to use the new preferences.
 		once

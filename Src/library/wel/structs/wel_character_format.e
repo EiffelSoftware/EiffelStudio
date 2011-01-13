@@ -226,7 +226,7 @@ feature -- Element change
 			char_set_set: char_set = a_char_set
 		end
 
-	set_face_name (a_face_name: STRING_GENERAL)
+	set_face_name (a_face_name: READABLE_STRING_GENERAL)
 			-- Set `face_name' with `a_face_name'.
 		require
 			exists: exists
@@ -240,7 +240,7 @@ feature -- Element change
 			a_wel_string.set_string (a_face_name)
 			cwel_charformat_set_szfacename (item, a_wel_string.item)
 		ensure
-			face_name_set: face_name.is_equal (a_face_name)
+			face_name_set: face_name.same_string_general (a_face_name)
 		end
 
 	set_height (a_height: INTEGER)
@@ -626,14 +626,14 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

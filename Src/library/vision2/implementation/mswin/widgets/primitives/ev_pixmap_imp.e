@@ -145,7 +145,7 @@ feature {EV_ANY_I, EV_STOCK_PIXMAPS_IMP} -- Loading/Saving
 			set_foreground_color (a_default_colors.default_foreground_color)
 		end
 
-	read_from_named_file (file_name: STRING_GENERAL)
+	read_from_named_file (file_name: READABLE_STRING_GENERAL)
 			-- Load the pixmap described in 'file_name'.
 			-- Exceptions "No such file or directory",
 			--            "Unable to retrieve icon information",
@@ -508,7 +508,7 @@ feature {EV_ANY_I} -- Delegated features
 			attached_interface.implementation.draw_point (a_x, a_y)
 		end
 
-	draw_text (a_x, a_y: INTEGER; a_text: STRING_GENERAL)
+	draw_text (a_x, a_y: INTEGER; a_text: READABLE_STRING_GENERAL)
 			-- Draw `a_text' at (`x', 'y') using `font'.
 		do
 			promote_to_drawable
@@ -522,21 +522,21 @@ feature {EV_ANY_I} -- Delegated features
 			attached_interface.implementation.draw_rotated_text (a_x, a_y, a_angle, a_text)
 		end
 
-	draw_text_top_left (a_x, a_y: INTEGER; a_text: STRING_GENERAL)
+	draw_text_top_left (a_x, a_y: INTEGER; a_text: READABLE_STRING_GENERAL)
 			-- Draw `a_text' with top left corner at (`x', `y') using `font'.
 		do
 			promote_to_drawable
 			attached_interface.implementation.draw_text_top_left (a_x, a_y, a_text)
 		end
 
-	draw_ellipsed_text (a_x, a_y: INTEGER; a_text: STRING_GENERAL; clipping_width: INTEGER)
+	draw_ellipsed_text (a_x, a_y: INTEGER; a_text: READABLE_STRING_GENERAL; clipping_width: INTEGER)
 			-- Draw `a_text' at (`x', 'y') using `font'.
 		do
 			promote_to_drawable
 			attached_interface.implementation.draw_ellipsed_text (a_x, a_y, a_text, clipping_width)
 		end
 
-	draw_ellipsed_text_top_left (a_x, a_y: INTEGER; a_text: STRING_GENERAL; clipping_width: INTEGER)
+	draw_ellipsed_text_top_left (a_x, a_y: INTEGER; a_text: READABLE_STRING_GENERAL; clipping_width: INTEGER)
 			-- Draw `a_text' with top left corner at (`x', `y') using `font'.
 		do
 			promote_to_drawable
@@ -1200,7 +1200,7 @@ feature {EV_ANY_I} -- Delegated features
 			attached_interface.implementation.set_minimum_width(a_minimum_width)
 		end
 
-	set_tooltip (a_text: STRING_GENERAL)
+	set_tooltip (a_text: READABLE_STRING_GENERAL)
 			-- Set `tooltip' to `a_text'.
 		do
 			promote_to_widget

@@ -29,7 +29,7 @@ feature -- Command
 			exists: Result /= default_pointer
 		end
 
-	setopt_string (a_curl_handle: POINTER; a_opt: INTEGER; a_string: STRING_GENERAL)
+	setopt_string (a_curl_handle: POINTER; a_opt: INTEGER; a_string: READABLE_STRING_GENERAL)
 			-- Declared as curl_easy_setopt().
 		require
 			exists: a_curl_handle /= default_pointer
@@ -396,7 +396,7 @@ feature {NONE} -- C externals
 
 note
 	library:   "cURL: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

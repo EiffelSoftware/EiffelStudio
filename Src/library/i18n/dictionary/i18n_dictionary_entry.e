@@ -17,7 +17,7 @@ create
 
 feature {NONE} --creation
 
-	make (an_original_singular, a_translated_singular: STRING_GENERAL)
+	make (an_original_singular, a_translated_singular: READABLE_STRING_GENERAL)
 			-- create the entry for a singular-form string
 		require
 			singular_not_void: an_original_singular /= Void
@@ -30,7 +30,7 @@ feature {NONE} --creation
 			singular_translation_set: singular_translation.is_equal (a_translated_singular.as_string_32)
 		end
 
-	make_with_plural(an_original_singular, a_translated_singular, an_original_plural: STRING_GENERAL)
+	make_with_plural(an_original_singular, a_translated_singular, an_original_plural: READABLE_STRING_GENERAL)
 			-- create the entry for a string with both plural and singular forms
 			-- the actual plural translations will have to be added by hand!
 		require

@@ -42,7 +42,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_with_strings (a_string_array: INDEXABLE [STRING_GENERAL, INTEGER])
+	make_with_strings (a_string_array: INDEXABLE [READABLE_STRING_GENERAL, INTEGER])
 			-- Create with an item for each of `a_string_array'.
 		do
 			default_create
@@ -116,7 +116,7 @@ feature -- Status setting
 			not_selected: selected_item = Void
 		end
 
-	set_strings (a_string_array: INDEXABLE [STRING_GENERAL, INTEGER])
+	set_strings (a_string_array: INDEXABLE [READABLE_STRING_GENERAL, INTEGER])
 			-- Wipe out and re-initialize with an item
 			-- for each of `a_string_array'.
 		require

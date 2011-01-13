@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_path: STRING_GENERAL)
+	make (a_path: READABLE_STRING_GENERAL)
 			-- Map the networking path `a_path' to a temporary path
 		require
 			a_path_not_void: a_path /= Void

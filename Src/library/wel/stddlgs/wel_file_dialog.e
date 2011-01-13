@@ -193,7 +193,7 @@ feature -- Element change
 			has_not_flag: not has_flag (a_flags)
 		end
 
-	set_file_name (a_file_name: STRING_GENERAL)
+	set_file_name (a_file_name: READABLE_STRING_GENERAL)
 			-- Set `file_name' with `a_file' and initialize
 			-- the file name edit control.
 		require
@@ -204,10 +204,10 @@ feature -- Element change
 			cwel_open_file_name_set_lpstrfile (item,
 				str_file_name.item)
 		ensure
-			file_name_set: file_name.is_equal (a_file_name)
+			file_name_set: file_name.same_string_general (a_file_name)
 		end
 
-	set_title (a_title: STRING_GENERAL)
+	set_title (a_title: READABLE_STRING_GENERAL)
 			-- Set `title' with `a_title' and use this string to
 			-- display the title.
 		require
@@ -217,7 +217,7 @@ feature -- Element change
 			cwel_open_file_name_set_lpstrtitle (item,
 				str_title.item)
 		ensure
-			title_set: title.is_equal (a_title)
+			title_set: title.same_string_general (a_title)
 		end
 
 	set_default_title
@@ -231,7 +231,7 @@ feature -- Element change
 			default_title_set: title.is_empty
 		end
 
-	set_filter (filter_names, filter_patterns: ARRAY [STRING_GENERAL])
+	set_filter (filter_names, filter_patterns: ARRAY [READABLE_STRING_GENERAL])
 			-- Set the file type combo box.
 			-- `filter_names' is an array of string containing
 			-- the filter names and `filter_patterns' is an
@@ -260,9 +260,9 @@ feature -- Element change
 			until
 				i > filter_names.upper
 			loop
-				s.append (filter_names.item (i))
+				s.append_string_general (filter_names.item (i))
 				s.extend ('%U')
-				s.append (filter_patterns.item (i))
+				s.append_string_general (filter_patterns.item (i))
 				s.extend ('%U')
 				i := i + 1
 			end
@@ -285,7 +285,7 @@ feature -- Element change
 			filter_index_set: filter_index = a_filter_index
 		end
 
-	set_initial_directory (directory: STRING_GENERAL)
+	set_initial_directory (directory: READABLE_STRING_GENERAL)
 			-- Set the initial directory with `directory'.
 		require
 			directory_not_void: directory /= Void
@@ -305,7 +305,7 @@ feature -- Element change
 				default_pointer)
 		end
 
-	set_default_extension (extension: STRING_GENERAL)
+	set_default_extension (extension: READABLE_STRING_GENERAL)
 			-- Set the default extension with `extension'.
 			-- This extension will be automatically added to the
 			-- file name if the user fails to type an extension.
@@ -521,14 +521,14 @@ invariant
 	str_title_exists: str_title.exists
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

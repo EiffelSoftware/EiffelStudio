@@ -1,4 +1,4 @@
-﻿note
+note
 	description: "[
 					Encoding conversion implementation on Unix. The cache is never freed in the library. 
 					It relies on the normal termination of the client process.
@@ -26,7 +26,7 @@ inherit
 
 feature -- String encoding convertion
 
-	convert_to (a_from_code_page: STRING; a_from_string: STRING_GENERAL; a_to_code_page: STRING)
+	convert_to (a_from_code_page: STRING; a_from_string: READABLE_STRING_GENERAL; a_to_code_page: STRING)
 			-- Convert `a_from_string' of `a_from_code_page' to a string of `a_to_code_page'.
 		local
 			l_managed_pointer: MANAGED_POINTER
@@ -37,13 +37,13 @@ feature -- String encoding convertion
 			l_big_endian: BOOLEAN
 			l_error: INTEGER
 			l_retried: BOOLEAN
-			l_converted: STRING_GENERAL
+			l_converted: READABLE_STRING_GENERAL
 			l_exception: detachable EXCEPTION
 		do
 			if not l_retried then
 				l_big_endian := is_big_endian_code_page (a_from_code_page) or else (not is_little_endian and not is_little_endian_code_page (a_from_code_page))
 				if is_four_byte_code_page (a_from_code_page) then
-					l_string_32 := a_from_string.twin
+					l_string_32 := a_from_string.as_string_32.twin
 					if not descriptor_cache.converted (a_from_code_page, a_to_code_page) then
 						if (l_big_endian xor is_little_endian) then
 							l_string_32.precede (byte_order_mark)
@@ -54,7 +54,7 @@ feature -- String encoding convertion
 					l_managed_pointer := string_32_to_pointer (l_string_32)
 					l_count := (l_string_32.count) * 4
 				elseif is_two_byte_code_page (a_from_code_page) then
-					l_string_32 := a_from_string.twin
+					l_string_32 := a_from_string.as_string_32.twin
 					if not descriptor_cache.converted (a_from_code_page, a_to_code_page) then
 						if (l_big_endian xor is_little_endian) then
 							l_string_32.precede (byte_order_mark)
@@ -77,46 +77,48 @@ feature -- String encoding convertion
 				end
 				check l_pointer_set: l_pointer /= default_pointer end
 				if is_four_byte_code_page (a_to_code_page) then
-					l_converted := pointer_to_string_32 (l_pointer, l_out_count)
-					if not l_converted.is_empty then
-						if same_endian (l_converted.code (1)) then
-							l_converted := l_converted.substring (2, l_converted.count)
+					l_string_32 := pointer_to_string_32 (l_pointer, l_out_count)
+					if not l_string_32.is_empty then
+						if same_endian (l_string_32.code (1)) then
+							l_string_32 := l_string_32.substring (2, l_string_32.count)
 							if (is_big_endian_code_page (a_to_code_page) and is_little_endian) or else
 								(is_little_endian_code_page (a_to_code_page) and not is_little_endian)
 							then
-								l_converted := string_32_switch_endian (l_converted)
+								l_string_32 := string_32_switch_endian (l_string_32)
 							end
-						elseif reverse_endian (l_converted.code (1)) then
-							l_converted := l_converted.substring (2, l_converted.count)
+						elseif reverse_endian (l_string_32.code (1)) then
+							l_string_32 := l_string_32.substring (2, l_string_32.count)
 							if (is_little_endian_code_page (a_to_code_page) and is_little_endian) or else
 								(is_big_endian_code_page (a_to_code_page) and not is_little_endian) or else
 								not is_endianness_specified (a_to_code_page)
 							then
-								l_converted := string_32_switch_endian (l_converted)
+								l_string_32 := string_32_switch_endian (l_string_32)
 							end
 						end
 					end
+					l_converted := l_string_32
 				elseif is_two_byte_code_page (a_to_code_page) then
-					l_converted := pointer_to_wide_string (l_pointer, l_out_count)
-					if not l_converted.is_empty then
-						if same_endian (l_converted.code (1)) then
-							l_converted := l_converted.substring (2, l_converted.count)
+					l_string_32 := pointer_to_wide_string (l_pointer, l_out_count)
+					if not l_string_32.is_empty then
+						if same_endian (l_string_32.code (1)) then
+							l_string_32 := l_string_32.substring (2, l_string_32.count)
 							if (is_big_endian_code_page (a_to_code_page) and is_little_endian) or else
 								(is_little_endian_code_page (a_to_code_page) and not is_little_endian)
 							then
-								l_converted := string_16_switch_endian (l_converted)
+								l_string_32 := string_16_switch_endian (l_string_32)
 							end
-						elseif reverse_endian (l_converted.code (1)) then
-							l_converted := l_converted.substring (2, l_converted.count)
+						elseif reverse_endian (l_string_32.code (1)) then
+							l_string_32 := l_string_32.substring (2, l_string_32.count)
 							if (is_little_endian_code_page (a_to_code_page) and is_little_endian) or else
 								(is_big_endian_code_page (a_to_code_page) and not is_little_endian) or else
 								not is_endianness_specified (a_to_code_page)
 							then
-								l_converted := string_16_switch_endian (l_converted)
+								l_string_32 := string_16_switch_endian (l_string_32)
 							end
 						end
 					end
 					last_was_wide_string := True
+					l_converted := l_string_32
 				else
 					l_converted := pointer_to_multi_byte (l_pointer, l_out_count)
 				end

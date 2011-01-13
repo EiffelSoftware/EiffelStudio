@@ -64,7 +64,7 @@ feature {NONE} -- Initialization
 
 feature -- Element change
 
-	set_text (a_text: STRING_GENERAL)
+	set_text (a_text: READABLE_STRING_GENERAL)
 			-- Assign `a_text' to `text'.
 		do
 			if notebook /= Void then

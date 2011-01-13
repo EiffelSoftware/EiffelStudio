@@ -174,7 +174,7 @@ feature -- Basic Operations
 			end
 		end
 
-	replace_selection (a_word: STRING_GENERAL)
+	replace_selection (a_word: READABLE_STRING_GENERAL)
 			-- replace the selected text with `a_word'
 		require
 			selection_present: has_selection
@@ -514,7 +514,7 @@ feature -- Basic Operations
 			end
 		end
 
-	insert_string (txt: STRING_GENERAL)
+	insert_string (txt: READABLE_STRING_GENERAL)
 			-- Insert `txt' at cursor position.
 			-- Delete selection, if any.
 		require
@@ -566,7 +566,7 @@ feature -- Basic Operations
 			end
 		end
 
-	insert_string_as_selectable (txt: STRING_GENERAL)
+	insert_string_as_selectable (txt: READABLE_STRING_GENERAL)
 			-- Insert `txt' at cursor position as a selectable token			
 		require
 			text_not_empty: not is_empty
@@ -736,7 +736,7 @@ feature -- Basic Operations
 
 feature -- for search only
 
-	replace_for_replace_all (start_pos, end_pos: INTEGER; a_word: STRING_GENERAL)
+	replace_for_replace_all (start_pos, end_pos: INTEGER; a_word: READABLE_STRING_GENERAL)
 			-- replace the selected text with `a_word'
 		require
 			not_empty: not is_empty
@@ -787,7 +787,7 @@ feature -- Reinitialization
 
 feature {UNDO_CMD} -- Operations on selected text
 
-	symbol_selection (start_selection: like cursor; end_selection: like cursor; symbol: STRING_GENERAL)
+	symbol_selection (start_selection: like cursor; end_selection: like cursor; symbol: READABLE_STRING_GENERAL)
 			-- Prepend all lines included in the selection with the string `symbol'.
 			-- Even if `start_selection' does not begin the line, the entire line
 			-- is prepended with `symbol'. Same for the last line of the selection.
@@ -829,7 +829,7 @@ feature {UNDO_CMD} -- Operations on selected text
 					symboled_lines.extend(ln.index)
 
 						-- Add the commentary symbol in front of the line
-					line_image.prepend (symbol)
+					line_image.prepend_string_general (symbol)
 					if ln = attached_cursor.line then
 						l_line_modified := true
 					end
@@ -880,7 +880,7 @@ feature {UNDO_CMD} -- Operations on selected text
 					symboled_lines.extend(ln.index)
 
 						-- Add the commentary symbol in front of the line
-					line_image.prepend(symbol)
+					line_image.prepend_string_general (symbol)
 					if ln = attached_cursor.line then
 						l_line_modified := true
 					end
@@ -917,7 +917,7 @@ feature {UNDO_CMD} -- Operations on selected text
 			symboled_lines_set: symboled_lines /= Void
 		end
 
-	unsymbol_selection (start_selection: like cursor; end_selection: like cursor; symbol: STRING_GENERAL)
+	unsymbol_selection (start_selection: like cursor; end_selection: like cursor; symbol: READABLE_STRING_GENERAL)
 			-- Prepend all lines included in the selection with the string `symbol'.
 			-- Even If `start_selection' does not begin the line, the entire line
 			-- is prepended with `symbol'. Same for the last line of the selection.
@@ -956,7 +956,7 @@ feature {UNDO_CMD} -- Operations on selected text
 				line_image := ln.wide_image
 
 					-- Remove the commentary symbol in front of the line (if any)
-				if (line_image.count >= symbol_length) and then (line_image.substring(1, symbol_length).is_equal(symbol)) then
+				if (line_image.count >= symbol_length) and then (line_image.substring (1, symbol_length).same_string_general (symbol)) then
 					if ln = attached_cursor.line then
 						l_line_modified := true
 					end
@@ -1000,7 +1000,7 @@ feature {UNDO_CMD} -- Operations on selected text
 				line_image := ln.wide_image
 
 					-- Remove the commentary symbol in front of the line (if any)
-				if (line_image.count >= symbol_length) and then (line_image.substring(1, symbol_length).is_equal(symbol)) then
+				if (line_image.count >= symbol_length) and then (line_image.substring (1, symbol_length).same_string_general (symbol)) then
 					record_modified_line (ln)
 					if ln = attached_cursor.line then
 						l_line_modified := true
@@ -1212,7 +1212,7 @@ feature {UNDO_CMD} -- Basic Text changes
 			end
 		end
 
-	insert_string_at_cursor_pos (s: STRING_GENERAL)
+	insert_string_at_cursor_pos (s: READABLE_STRING_GENERAL)
 			-- Insert `s' in text, at cursor position.
 			-- Leave cursor pointing at the first non inserted character.
 			-- Warning: Changes are not recorded in the undo stack.
@@ -1240,7 +1240,7 @@ feature {UNDO_CMD} -- Basic Text changes
 			record_first_modified_line (ln, tok)
 			record_last_modified_line (ln, tok)
 
-			aux := s.twin
+			aux := s.as_string_32.twin
 			aux.prune_all ('%R')
 			if tok = ln.eol_token then
 				first_image := ln.wide_image
@@ -1342,7 +1342,7 @@ feature {UNDO_CMD} -- Basic Text changes
 			attached_cursor.set_x_in_characters (end_pos)
 		end
 
-	insert_string_as_selectable_at_cursor_pos (s: STRING_GENERAL)
+	insert_string_as_selectable_at_cursor_pos (s: READABLE_STRING_GENERAL)
 			-- Insert `s' in text, at cursor position as a selectable token.
 			-- Leave cursor pointing at the first non inserted character.
 			-- Warning: Changes are not recorded in the undo stack.
@@ -1370,7 +1370,7 @@ feature {UNDO_CMD} -- Basic Text changes
 			record_first_modified_line (ln, tok)
 			record_last_modified_line (ln, tok)
 
-			aux := s.twin
+			aux := s.as_string_32.twin
 			aux.prune_all ('%R')
 			if tok = ln.eol_token then
 				first_image := ln.wide_image

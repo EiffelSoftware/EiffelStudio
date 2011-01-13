@@ -468,7 +468,7 @@ feature {NONE} -- Implementation
 	is_tooltext_important: BOOLEAN
 			-- Is the tooltext important shown when view is 'Selective Text'
 		do
-			Result := tooltext.is_equal (Interface_names.b_Compile)
+			Result := tooltext.same_string (Interface_names.b_Compile)
 		end
 
 	menu_name: STRING_GENERAL

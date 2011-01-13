@@ -42,7 +42,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_text (a_text: STRING_GENERAL)
+	make_with_text (a_text: READABLE_STRING_GENERAL)
 			-- Create `Current' and assign `a_text' to `text'
 		require
 			a_text_not_void: a_text /= Void
@@ -50,8 +50,7 @@ feature {NONE} -- Initialization
 			default_create
 			set_text (a_text)
 		ensure
-			text_set: (text.same_type (a_text) implies text = a_text) or else
-				not text.same_type (a_text) implies text.is_equal (a_text)
+			text_set: text.same_string_general (a_text)
 		end
 
 	initialize
@@ -68,7 +67,7 @@ feature {NONE} -- Initialization
 
 feature -- Status Setting
 
-	set_text (a_text: STRING_GENERAL)
+	set_text (a_text: READABLE_STRING_GENERAL)
 			-- Assign `a_text' to `text'.
 		require
 			not_destroyed: not is_destroyed
@@ -84,8 +83,7 @@ feature -- Status Setting
 				l_parent.implementation.redraw_item (implementation)
 			end
 		ensure
-			text_set: (text.same_type (a_text) implies text = a_text) or else
-				not text.same_type (a_text) implies text.is_equal (a_text)
+			text_set: text.same_string_general (a_text)
 		end
 
 	remove_text

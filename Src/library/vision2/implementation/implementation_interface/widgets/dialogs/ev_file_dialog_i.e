@@ -23,7 +23,7 @@ feature -- Access
 		deferred
 		end
 
-	filters: ARRAYED_LIST [TUPLE [filter: STRING_GENERAL; text: STRING_GENERAL]]
+	filters: ARRAYED_LIST [TUPLE [filter: READABLE_STRING_GENERAL; text: READABLE_STRING_GENERAL]]
 			-- All filters currently applied to file list.
 			-- First element represents the filter e.g "*.txt".
 			-- Second element represents the displayed text
@@ -57,41 +57,41 @@ feature -- Status report
 
 feature -- Element change
 
-	set_filter (a_filter: STRING_GENERAL)
+	set_filter (a_filter: READABLE_STRING_GENERAL)
 			-- Set `a_filter' as new filter.
 		require
 			a_filter_not_void: a_filter /= Void
 		deferred
 		ensure
-			assigned: filter.is_equal (a_filter)
+			assigned: filter.same_string_general (a_filter)
 		end
 
-	set_file_name (a_name: STRING_GENERAL)
+	set_file_name (a_name: READABLE_STRING_GENERAL)
 			-- Make `a_name' the selected file.
 		require
 			a_name_not_void: a_name /= Void
 		deferred
 		ensure
-			assigned: not file_name.is_empty implies file_name.is_equal (a_name)
+			assigned: not file_name.is_empty implies file_name.same_string_general (a_name)
 		end
 
-	set_start_directory (a_path: STRING_GENERAL)
+	set_start_directory (a_path: READABLE_STRING_GENERAL)
 			-- Make `a_path' the base directory.
 		require
 			a_path_not_void: a_path /= Void
 		deferred
 		ensure
-			assigned: start_directory.is_equal (a_path)
+			assigned: start_directory.same_string_general (a_path)
 		end
 
 feature {EV_FILE_DIALOG} -- Contract support
 
-	valid_file_name (a_name: STRING_32): BOOLEAN
+	valid_file_name (a_name: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `a_name' a valid file_name on the current platform?
 		deferred
 		end
 
-	valid_file_title (a_title: STRING_32): BOOLEAN
+	valid_file_title (a_title: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `a_title' a valid file title on the current platform?
 		deferred
 		end

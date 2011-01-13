@@ -268,14 +268,14 @@ feature {NONE} -- Implementation
 			--| No need to do anything here. Deferred from EV_MENU_ITEM_LIST_IMP.
 		end
 
-	wel_set_text (a_text: STRING_GENERAL)
+	wel_set_text (a_text: READABLE_STRING_GENERAL)
 			-- Assign `a_text' to `Current' and refresh `Current'.
 		local
 			wel_string: WEL_STRING
 			pos: INTEGER
 		do
 
-			real_text := a_text.twin
+			real_text := a_text.as_string_32.twin
 			if has_parent and then attached parent_imp as l_parent_imp then
 				create wel_string.make (a_text)
 					-- Retrieve the index of `Current'.

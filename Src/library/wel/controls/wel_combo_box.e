@@ -73,7 +73,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	find_string (index: INTEGER; a_string: STRING_GENERAL): INTEGER
+	find_string (index: INTEGER; a_string: READABLE_STRING_GENERAL): INTEGER
 			-- Find the first string that contains the
 			-- prefix `a_string'. `index' specifies the
 			-- zero-based index of the item before the first
@@ -92,7 +92,7 @@ feature -- Basic operations
 				Cb_findstring, to_wparam (index), a_wel_string.item)
 		end
 
-	find_string_exact (index: INTEGER; a_string: STRING_GENERAL): INTEGER
+	find_string_exact (index: INTEGER; a_string: READABLE_STRING_GENERAL): INTEGER
 			-- Find the first string that matches `a_string'.
 			-- `index' specifies the zero-based index of the
 			-- item before the first item to be searched.
@@ -112,7 +112,7 @@ feature -- Basic operations
 
 feature -- Element change
 
-	add_string (a_string: STRING_GENERAL)
+	add_string (a_string: READABLE_STRING_GENERAL)
 			-- Add `a_string' in the combo box.
 		require
 			exists: exists
@@ -126,7 +126,7 @@ feature -- Element change
 			new_count: count = old count + 1
 		end
 
-	insert_string_at (a_string: STRING_GENERAL; index: INTEGER)
+	insert_string_at (a_string: READABLE_STRING_GENERAL; index: INTEGER)
 			-- Add `a_string' at the zero-based `index'.
 		require
 			exists: exists
@@ -154,7 +154,7 @@ feature -- Element change
 			new_count: count = old count - 1
 		end
 
-	add_files (attribut: INTEGER; files: STRING_GENERAL)
+	add_files (attribut: INTEGER; files: READABLE_STRING_GENERAL)
 			-- Add `files' to the combo box. `files' may contain
 			-- wildcards (?*). See class WEL_DDL_CONSTANTS for
 			-- `attribut' values.

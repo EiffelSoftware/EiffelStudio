@@ -27,7 +27,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_text (a_text: STRING_GENERAL)
+	set_text (a_text: READABLE_STRING_GENERAL)
 			-- Assign `a_text' to `text'.
 		do
 			wel_set_text (escaped_text (a_text))
@@ -35,12 +35,12 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	escaped_text (s: STRING_GENERAL): STRING_32
+	escaped_text (s: READABLE_STRING_GENERAL): STRING_32
 			-- `text' with doubled ampersands.
 		do
 			Result := s.as_string_32
 			if Result = s then
-				create Result.make_from_string (s)
+				create Result.make_from_string (Result)
 			end
 			escape_ampersands (Result)
 		end

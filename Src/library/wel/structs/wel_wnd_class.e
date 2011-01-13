@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_class_name: STRING_GENERAL)
+	make (a_class_name: READABLE_STRING_GENERAL)
 			-- Make a window class named `a_class_name'.
 		require
 			class_name_not_void: a_class_name /= Void
@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 			cursor_unset: not cursor_set
 			background_unset: not background_set
 			menu_nameunset: not menu_name_set
-			class_name_set: class_name.is_equal (a_class_name)
+			class_name_set: class_name.same_string_general (a_class_name)
 			atom_set: atom = 0
 		end
 
@@ -244,7 +244,7 @@ feature -- Element change
 			background_equal: background.item = a_background.item
 		end
 
-	set_class_name (a_class_name: STRING_GENERAL)
+	set_class_name (a_class_name: READABLE_STRING_GENERAL)
 			-- Set `class_name' with `a_class_name'.
 		require
 			a_class_name_valid: a_class_name /= Void
@@ -259,10 +259,10 @@ feature -- Element change
 			end
 			cwel_wnd_class_set_class_name (item, l_name.item)
 		ensure
-			class_name_set: class_name.is_equal (a_class_name)
+			class_name_set: class_name.same_string_general (a_class_name)
 		end
 
-	set_menu_name (a_menu_name: STRING_GENERAL)
+	set_menu_name (a_menu_name: READABLE_STRING_GENERAL)
 			-- Set `menu_name' with `a_menu_name'.
 		require
 			a_menu_name_valid: a_menu_name /= Void
@@ -276,7 +276,7 @@ feature -- Element change
 			end
 			cwel_wnd_class_set_menu_name (item, l_name.item)
 		ensure
-			menu_name_equal: menu_name.is_equal (a_menu_name)
+			menu_name_equal: menu_name.same_string_general (a_menu_name)
 		end
 
 	unset_window_procedure
@@ -574,14 +574,14 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

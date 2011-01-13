@@ -89,7 +89,7 @@ feature -- Redefine
 			notebook.set_focus_color (False)
 		end
 
-	set_title (a_title: STRING_GENERAL)
+	set_title (a_title: READABLE_STRING_GENERAL)
 			-- <Precursor>
 		do
 			notebook.set_item_text (internal_content, a_title)

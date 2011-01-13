@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 
 feature -- Open inner container data
 
-	open_config (a_file: STRING_GENERAL): BOOLEAN
+	open_config (a_file: READABLE_STRING_GENERAL): BOOLEAN
 			-- Open all docking library data from `a_file'
 		require
 			a_file_not_void: a_file /= Void
@@ -50,7 +50,7 @@ feature -- Open inner container data
 			end
 		end
 
-	open_editors_config (a_file: STRING_GENERAL)
+	open_editors_config (a_file: READABLE_STRING_GENERAL)
 			-- Open main window eidtor config data
 		require
 			not_void: a_file /= Void
@@ -131,7 +131,7 @@ feature -- Open inner container data
 			call_show_actions
 		end
 
-	open_tools_config (a_file: STRING_GENERAL): BOOLEAN
+	open_tools_config (a_file: READABLE_STRING_GENERAL): BOOLEAN
 			-- Open tools config, except all editors
 			-- Not same as normal `open_config', it doesn't clear editors related things.
 		local
@@ -143,7 +143,7 @@ feature -- Open inner container data
 			end
 		end
 
-	open_maximized_tool_data (a_file: STRING_GENERAL)
+	open_maximized_tool_data (a_file: READABLE_STRING_GENERAL)
 			-- Open maximized tool data.
 		require
 			a_file_not_void: a_file /= Void
@@ -156,7 +156,7 @@ feature -- Open inner container data
 			end
 		end
 
-	open_tool_bar_item_data (a_file: STRING_GENERAL)
+	open_tool_bar_item_data (a_file: READABLE_STRING_GENERAL)
 			-- Restore SD_TOOL_BAR_RESIZABLE_ITEM's width.
 		require
 			a_file_not_void: a_file /= Void
@@ -171,7 +171,7 @@ feature -- Open inner container data
 
 feature -- Query
 
-	config_data_from_file (a_file: STRING_GENERAL): detachable SD_CONFIG_DATA
+	config_data_from_file (a_file: READABLE_STRING_GENERAL): detachable SD_CONFIG_DATA
 			-- Config data readed from `a_file'
 		require
 			not_void: a_file /= Void
@@ -200,7 +200,7 @@ feature -- Query
 
 feature {NONE} -- Implementation
 
-	open_all_config (a_file: STRING_GENERAL): BOOLEAN
+	open_all_config (a_file: READABLE_STRING_GENERAL): BOOLEAN
 			-- Open all docking library data from `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -626,7 +626,7 @@ feature {NONE} -- Implementation
 			open_one_auto_hide_panel_data (a_data.top, {SD_ENUMERATION}.top)
 		end
 
-	open_one_auto_hide_panel_data (a_data: ARRAYED_LIST [ARRAYED_LIST [TUPLE [STRING_GENERAL, INTEGER, INTEGER, INTEGER]]]; a_direction: INTEGER)
+	open_one_auto_hide_panel_data (a_data: ARRAYED_LIST [ARRAYED_LIST [TUPLE [READABLE_STRING_GENERAL, INTEGER, INTEGER, INTEGER]]]; a_direction: INTEGER)
 			-- Open one SD_AUTO_HIDE_PANEL's data.
 		require
 			a_data_not_void: a_data /= Void
@@ -636,12 +636,12 @@ feature {NONE} -- Implementation
 			l_auto_hide_state: SD_AUTO_HIDE_STATE
 			l_content: detachable SD_CONTENT
 			l_panel: SD_AUTO_HIDE_PANEL
-			l_list: ARRAYED_LIST [TUPLE [STRING_GENERAL, INTEGER, INTEGER, INTEGER]]
-			l_list_item: TUPLE [title: STRING_GENERAL; wh: INTEGER; w: INTEGER; h:INTEGER]
-			l_list_for_state: ARRAYED_LIST [STRING_GENERAL]
+			l_list: ARRAYED_LIST [TUPLE [READABLE_STRING_GENERAL, INTEGER, INTEGER, INTEGER]]
+			l_list_item: TUPLE [title: READABLE_STRING_GENERAL; wh: INTEGER; w: INTEGER; h:INTEGER]
+			l_list_for_state: ARRAYED_LIST [READABLE_STRING_GENERAL]
 			l_tab_group: ARRAYED_LIST [SD_CONTENT]
 			l_temp_data: SD_INNER_CONTAINER_DATA
-			l_string: STRING_GENERAL
+			l_string: READABLE_STRING_GENERAL
 		do
 			l_panel := internal_docking_manager.query.auto_hide_panel (a_direction)
 			from
@@ -801,13 +801,13 @@ feature {NONE} -- Implementation
 			a_tool_bar_data_not_void: a_tool_bar_data /= Void
 		local
 			l_tool_bar_container: EV_CONTAINER
-			l_rows: ARRAYED_LIST [ARRAYED_LIST [TUPLE [STRING_GENERAL, INTEGER, SD_TOOL_BAR_ZONE_STATE]]]
-			l_row: ARRAYED_LIST [TUPLE [STRING_GENERAL,INTEGER, SD_TOOL_BAR_ZONE_STATE]]
-			l_row_item: TUPLE [title: STRING_GENERAL; pos: INTEGER; state: SD_TOOL_BAR_ZONE_STATE]
+			l_rows: ARRAYED_LIST [ARRAYED_LIST [TUPLE [READABLE_STRING_GENERAL, INTEGER, SD_TOOL_BAR_ZONE_STATE]]]
+			l_row: ARRAYED_LIST [TUPLE [READABLE_STRING_GENERAL,INTEGER, SD_TOOL_BAR_ZONE_STATE]]
+			l_row_item: TUPLE [title: READABLE_STRING_GENERAL; pos: INTEGER; state: SD_TOOL_BAR_ZONE_STATE]
 			l_content: SD_TOOL_BAR_CONTENT
 			l_tool_bar_row: SD_TOOL_BAR_ROW
 			l_tool_bar_zone: SD_TOOL_BAR_ZONE
-			l_string: STRING_GENERAL
+			l_string: READABLE_STRING_GENERAL
 		do
 			l_tool_bar_container := internal_docking_manager.tool_bar_manager.tool_bar_container (a_direction)
 			l_rows := a_tool_bar_data.rows
@@ -873,7 +873,7 @@ feature {NONE} -- Implementation
 		local
 			l_contents: ARRAYED_LIST [SD_TOOL_BAR_CONTENT]
 			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
-			l_tool_bar_data: ARRAYED_LIST [TUPLE [name: STRING_GENERAL; width: INTEGER_32]]
+			l_tool_bar_data: ARRAYED_LIST [TUPLE [name: READABLE_STRING_GENERAL; width: INTEGER_32]]
 			l_found: BOOLEAN
 		do
 			if a_config_data /= Void then
@@ -923,7 +923,7 @@ feature {SD_EDITOR_CONFIG_HELPER} -- Internals
 			-- Open maximized tool data.
 		local
 			l_content: SD_CONTENT
-			l_maximzied_tools: ARRAYED_LIST [STRING_GENERAL]
+			l_maximzied_tools: ARRAYED_LIST [READABLE_STRING_GENERAL]
 			l_zone: detachable SD_ZONE
 		do
 			if a_config_data /= Void then

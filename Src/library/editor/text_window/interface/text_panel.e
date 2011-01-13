@@ -722,7 +722,7 @@ feature -- Basic Operations
 			size_of_file_when_loaded := l_size
 		end
 
-	load_text (a_text: STRING_GENERAL)
+	load_text (a_text: READABLE_STRING_GENERAL)
 			-- Display `a_text'.
 			-- `a_text' is not necessarily in UTF-32, it can be specified by `set_encoding'.
 		local
@@ -879,9 +879,9 @@ feature -- Graphical interface
 			Result := internal_reference_window
 		end
 
-	show_warning_message (a_message: STRING_GENERAL)
+	show_warning_message (a_message: READABLE_STRING_GENERAL)
 			-- Show `a_message' in a dialog window
-			-- |Use {STRING_GENERAL}, following Vision2 interface.
+			-- |Use {READABLE_STRING_GENERAL}, following Vision2 interface.
 		local
 			wd: EV_WARNING_DIALOG
 		do
@@ -1875,7 +1875,7 @@ feature {NONE} -- Encoding conversion
 			-- Detected encoding of the text loaded
 			-- `user_encoding' takes higher priority.
 
-	evaluate_encoding_and_convert_to_utf8 (a_string: STRING_GENERAL): STRING
+	evaluate_encoding_and_convert_to_utf8 (a_string: READABLE_STRING_GENERAL): STRING
 			-- Convert `a_string' as `user_encoding' to UTF-8.
 			-- If `user_encoding' is not set,
 			-- evaluate encoding of `a_string', set `detected_encoding' and
@@ -1884,7 +1884,7 @@ feature {NONE} -- Encoding conversion
 		require
 			a_string_not_void: a_string /= Void
 		local
-			l_str: detachable STRING_GENERAL
+			l_str: detachable READABLE_STRING_GENERAL
 			l_encoding: detachable ENCODING
 		do
 			if not attached user_encoding as l_encod then
@@ -1928,7 +1928,7 @@ feature {NONE} -- Encoding detector
 			encoding_detector_not_void: Result /= Void
 		end
 
-	detect (a_string: STRING_GENERAL)
+	detect (a_string: READABLE_STRING_GENERAL)
 			-- <precursor>
 			-- Current is used as simple encoding detector.
 			-- Only `system_encoding' is simply returned.

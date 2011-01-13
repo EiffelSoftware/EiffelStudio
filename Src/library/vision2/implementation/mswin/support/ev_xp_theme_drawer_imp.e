@@ -21,7 +21,7 @@ inherit
 
 feature -- Basic operations
 
-	open_theme_data (item: POINTER; a_class_name: STRING_GENERAL): POINTER
+	open_theme_data (item: POINTER; a_class_name: READABLE_STRING_GENERAL): POINTER
 			-- Open theme data for WEL_WINDOW represented by `item'
 			-- with type of theme `class_name'. See "Parts and States" of MSDN
 			-- for a list of valid class names.
@@ -147,7 +147,7 @@ feature -- Basic operations
 			-- Nothing to do here as themed buttons do not offset their text when pressed as per classic buttons.
 		end
 
-	draw_text (theme: POINTER; a_hdc: WEL_DC; a_part_id, a_state_id: INTEGER; text: STRING_GENERAL; dw_text_flags: INTEGER; is_sensitive: BOOLEAN; a_content_rect: WEL_RECT; foreground_color: EV_COLOR_IMP)
+	draw_text (theme: POINTER; a_hdc: WEL_DC; a_part_id, a_state_id: INTEGER; text: READABLE_STRING_GENERAL; dw_text_flags: INTEGER; is_sensitive: BOOLEAN; a_content_rect: WEL_RECT; foreground_color: EV_COLOR_IMP)
 			-- Draw `text' using theme `theme' on `a_hdc' within `a_content_rect' corresponding to part `a_part_id', `a_state_id'. Respect state of `is_sensitive'
 		local
 			wel_string: WEL_STRING
@@ -200,7 +200,7 @@ feature {NONE} -- Implementation
 			create Result
 		end
 
-	unicode_string (string: STRING_GENERAL): WEL_STRING
+	unicode_string (string: READABLE_STRING_GENERAL): WEL_STRING
 			-- Convert `string' into a unicode string,
 		require
 			string_not_void: string /= Void

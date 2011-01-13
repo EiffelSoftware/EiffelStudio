@@ -39,7 +39,7 @@ feature -- Initialization
 			set_mask (0)
 		end
 
-	make_with_attributes (a_mask, a_width, an_alignment: INTEGER; a_text: STRING_GENERAL)
+	make_with_attributes (a_mask, a_width, an_alignment: INTEGER; a_text: READABLE_STRING_GENERAL)
 			-- Make a list view column structure with the given
 			-- attributes:
 			-- `a_mask' set the valid member (`Lvcf_text', ...)
@@ -182,7 +182,7 @@ feature -- Element change
 			mask_reseted: mask = 0
 		end
 
-	set_text (a_text: STRING_GENERAL)
+	set_text (a_text: READABLE_STRING_GENERAL)
 			-- Set `text' with `a_text'.
 		require
 			exists: exists
@@ -196,7 +196,7 @@ feature -- Element change
 			cwel_lv_column_set_psztext (item, l_text.item)
 			cwel_lv_column_set_cchtextmax (item, a_text.count)
 		ensure
-			text_set: text.is_equal (a_text)
+			text_set: text.same_string_general (a_text)
 		end
 
 	remove_text
@@ -394,14 +394,14 @@ feature {NONE} -- Externals
 -----------------------------------------------------------------
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

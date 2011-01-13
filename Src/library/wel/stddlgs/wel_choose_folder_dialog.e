@@ -64,7 +64,7 @@ feature -- Access
 		do
 			Result := folder_name
 		end
-	
+
 	title: STRING_32
 			-- Dialog title
 		do
@@ -79,7 +79,7 @@ feature -- Access
 
 	flags: INTEGER
 			-- Dialog box creation flags
-			-- Can be a combination of values defined in 
+			-- Can be a combination of values defined in
 			-- class WEL_BIF_CONSTANTS.
 		do
 			Result := cwel_browse_info_get_ulflags (item)
@@ -94,14 +94,14 @@ feature -- Access
 
 feature -- Element Change
 
-	set_title (a_title: STRING_GENERAL)
+	set_title (a_title: READABLE_STRING_GENERAL)
 			-- Set `title' with `a_title'
 		require
 			a_title_not_void: a_title /= Void
 		do
 			str_title.set_string (a_title)
 		ensure
-			title_set: title.is_equal (a_title)
+			title_set: title.same_string_general (a_title)
 		end
 
 	set_default_title
@@ -110,14 +110,14 @@ feature -- Element Change
 			set_title ("Please choose a folder.")
 		end
 
-	set_starting_folder (a_folder_name: STRING_GENERAL)
+	set_starting_folder (a_folder_name: READABLE_STRING_GENERAL)
 			-- Set the initial folder name
 		require
 			valid_folder_name: a_folder_name /= Void and then not a_folder_name.is_empty
 		do
 			str_starting_folder.set_string (a_folder_name)
 		ensure
-			starting_folder_set: starting_folder.is_equal(a_folder_name)
+			starting_folder_set: starting_folder.same_string_general (a_folder_name)
 		end
 
 	set_flags (a_flags: INTEGER)
@@ -157,7 +157,7 @@ feature -- Basic operations
 		do
 			set_parent (a_parent)
 			browse_folder_result := cwel_sh_browse_for_folder (item, str_folder_name.item)
-			
+
 			if browse_folder_result = 0 and not str_folder_name.string.is_empty then
 				selected := True
 			else
@@ -165,7 +165,7 @@ feature -- Basic operations
 				str_folder_name.set_count (0)
 			end
 		end
-		
+
 	cwel_sh_browse_for_folder (p: POINTER; str: POINTER): INTEGER
 			-- Open dialog in a different thread with COM properly initialized
 			-- to single threaded appartment. `Result' is 1 if user cancelled dialog,
@@ -235,7 +235,7 @@ feature {NONE} -- External
 			external
 				"C [macro %"choose_folder.h%"]"
 			end
-	
+
 	cwel_browse_info_set_pszdisplayname (ptr, name: POINTER)
 			external
 				"C [macro %"choose_folder.h%"]"
@@ -255,21 +255,21 @@ feature {NONE} -- External
 			external
 				"C [macro %"choose_folder.h%"]"
 			end
-	
+
 	cwel_browse_info_set_lparam (ptr, value: POINTER)
 			external
 				"C [macro %"choose_folder.h%"]"
 			end
-			
+
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

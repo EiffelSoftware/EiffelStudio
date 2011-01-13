@@ -104,7 +104,7 @@ feature {NONE} -- Implementation
 			create Result.make (0)
 		end
 
-	internal_tab_group: ARRAYED_LIST [TUPLE [STRING_GENERAL, INTEGER, INTEGER, INTEGER]]
+	internal_tab_group: ARRAYED_LIST [TUPLE [READABLE_STRING_GENERAL, INTEGER, INTEGER, INTEGER]]
 			-- Anchor type
 			-- In the Tuple, first argument is SD_CONTENT unique name
 			--               second argument is last_width_height of a SD_AUTO_HIDE_ZONE

@@ -94,12 +94,12 @@ feature -- Element change
 			update_font_face
 		end
 
-	set_face_name (a_face: STRING_GENERAL)
+	set_face_name (a_face: READABLE_STRING_GENERAL)
 			-- Set the face name for current.
 		local
 			propvalue: EV_GTK_C_STRING
 		do
-			name := a_face
+			name := a_face.as_string_32
 			propvalue := app_implementation.c_string_from_eiffel_string (a_face)
 			{EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_set_family (font_description, propvalue.item)
 			calculate_font_metrics
@@ -208,7 +208,7 @@ feature -- Status report
 			Result := string_width (once "W")
 		end
 
-	string_size (a_string: STRING_GENERAL): like reusable_string_size_tuple
+	string_size (a_string: READABLE_STRING_GENERAL): like reusable_string_size_tuple
 			-- `Result' is [width, height, left_offset, right_offset] in pixels of `a_string' in the
 			-- current font, taking into account line breaks ('%N').
 		local
@@ -276,7 +276,7 @@ feature -- Status report
 			create Result
 		end
 
-	string_width (a_string: STRING_GENERAL): INTEGER
+	string_width (a_string: READABLE_STRING_GENERAL): INTEGER
 			-- Width in pixels of `a_string' in the current font.
 		local
 			a_pango_layout: POINTER

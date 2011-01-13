@@ -10,7 +10,7 @@ class
 
 feature -- Parser
 
-	parse_uri (uri: STRING_GENERAL): I18N_DATASOURCE_MANAGER
+	parse_uri (uri: READABLE_STRING_GENERAL): I18N_DATASOURCE_MANAGER
 			-- parses an uri and returns the appropriate datasource manager
 		require
 			uri_not_void: uri /= Void

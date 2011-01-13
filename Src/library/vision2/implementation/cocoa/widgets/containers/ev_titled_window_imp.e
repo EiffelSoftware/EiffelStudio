@@ -110,7 +110,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_icon_name (a_icon_name: STRING_GENERAL)
+	set_icon_name (a_icon_name: READABLE_STRING_GENERAL)
 			-- Assign `a_icon_name' to `icon_name'.
 		do
 			internal_icon_name := a_icon_name.twin

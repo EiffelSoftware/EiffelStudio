@@ -80,7 +80,7 @@ feature -- Element change
 			style := a_style
 		end
 
-	set_text (a_text: STRING_GENERAL)
+	set_text (a_text: READABLE_STRING_GENERAL)
 		do
 			Precursor {EV_TEXTABLE_IMP} (a_text)
 			if a_text /= void and then not a_text.is_empty then

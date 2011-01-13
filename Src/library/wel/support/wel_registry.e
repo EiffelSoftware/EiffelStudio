@@ -17,7 +17,7 @@ inherit
 
 feature -- Actions
 
-	create_new_key (key_path: STRING_GENERAL)
+	create_new_key (key_path: READABLE_STRING_GENERAL)
 				-- Create a new key, with as path 'path'
 				-- The path should be like "a\b\c"
 				-- Please refer to WEL_HKEY for possible value for a.
@@ -30,7 +30,7 @@ feature -- Actions
 			close_key (index_value)
 		end
 
-	open_key_with_access (key_path: STRING_GENERAL; acc: INTEGER): POINTER
+	open_key_with_access (key_path: READABLE_STRING_GENERAL; acc: INTEGER): POINTER
 				-- Open the key relative to the path 'key_path', with
 				-- the access 'acc'.
 				-- Return the key reference (default_pointer if the operation failed).
@@ -40,7 +40,7 @@ feature -- Actions
 			Result := key_from_path (key_path, False, acc)
 		end
 
-	open_key_value (key_path: STRING_GENERAL; value_name: STRING_GENERAL): detachable WEL_REGISTRY_KEY_VALUE
+	open_key_value (key_path: READABLE_STRING_GENERAL; value_name: READABLE_STRING_GENERAL): detachable WEL_REGISTRY_KEY_VALUE
 				-- Open a key, with as path 'path' and
 				-- name 'key_name'.
 				-- The path should be like "a\b\c"
@@ -59,7 +59,7 @@ feature -- Actions
 			end
 		end
 
-	save_key_value (key_path, value_name: STRING_GENERAL; value: WEL_REGISTRY_KEY_VALUE)
+	save_key_value (key_path, value_name: READABLE_STRING_GENERAL; value: WEL_REGISTRY_KEY_VALUE)
 			-- Set value of key in `key_path' with name `value_name' to `value'.
 			-- Create key if needed.
 			-- The path should be like "a\b\c"
@@ -78,7 +78,7 @@ feature -- Actions
 			end
 		end
 
-	delete_key_value (key_path, value_name: STRING_GENERAL)
+	delete_key_value (key_path, value_name: READABLE_STRING_GENERAL)
 			-- Delete `key_path' key value `value_name'.
 			-- The path should be like "a\b\c"
 			-- Please refer to WEL_HKEY for possible value for a.
@@ -102,7 +102,7 @@ feature -- Status
 
 feature {NONE} -- Internal Results
 
-	value_keys_list (path: STRING_GENERAL): LIST [STRING_32]
+	value_keys_list (path: READABLE_STRING_GENERAL): LIST [STRING_32]
 			-- From a path ( "a\b\c\...\x")
 			-- Return a list of string: a,b,c,d,e,...x
 		require
@@ -113,15 +113,15 @@ feature {NONE} -- Internal Results
 			value_keys_list_not_void: Result /= Void
 		end
 
-	key_from_path (key_path: STRING_GENERAL; generate: BOOLEAN; access: INTEGER): POINTER
+	key_from_path (key_path: READABLE_STRING_GENERAL; generate: BOOLEAN; access: INTEGER): POINTER
 			-- Key at `key_path'.
 			-- Create keys if `generate'.
 		require
 			at_least_one_back_slash: key_path /= Void and then key_path.has_code (('\').natural_32_code)
 		local
-			node_list: LIST [STRING_GENERAL]
+			node_list: LIST [READABLE_STRING_GENERAL]
 			i: POINTER
-			item: STRING_GENERAL
+			item: READABLE_STRING_GENERAL
 		do
 			node_list := value_keys_list (key_path)
 			check
@@ -150,7 +150,7 @@ feature {NONE} -- Internal Results
 
 feature -- Access
 
-	key_from_remote_host (host_name: STRING_GENERAL; root_key: POINTER): POINTER
+	key_from_remote_host (host_name: READABLE_STRING_GENERAL; root_key: POINTER): POINTER
 			-- Connect the computer designed by its name 'host_name'.
 			-- 'Host_name' should be under the format: \\computer_name
 			-- 'root_key' is the key from where we want to start the
@@ -221,7 +221,7 @@ feature -- Access
 			end
 		end
 
-	default_key_value (key: POINTER; subkey: detachable STRING_GENERAL): detachable WEL_REGISTRY_KEY_VALUE
+	default_key_value (key: POINTER; subkey: detachable READABLE_STRING_GENERAL): detachable WEL_REGISTRY_KEY_VALUE
 			-- Retrieve value of `subkey' associated with open
 			-- `key'.
 		obsolete
@@ -252,7 +252,7 @@ feature -- Access
 
 feature -- Settings
 
-	set_key_value (key: POINTER; value_name: STRING_GENERAL; value: WEL_REGISTRY_KEY_VALUE)
+	set_key_value (key: POINTER; value_name: READABLE_STRING_GENERAL; value: WEL_REGISTRY_KEY_VALUE)
 			-- Change value defined by `key' and `value_name' to `value'.
 	     	-- The key identified by the hKey parameter must have been
 			-- opened with KEY_SET_VALUE access
@@ -277,7 +277,7 @@ feature -- Settings
 
 feature -- Basic Actions
 
-	create_key (parent_key: POINTER; key_name: STRING_GENERAL; sam: INTEGER): POINTER
+	create_key (parent_key: POINTER; key_name: READABLE_STRING_GENERAL; sam: INTEGER): POINTER
 			-- Create `key_name' under `parent_key' according to `sam'.
 			-- Return handle to created key or default_pointer on failure.
 		require
@@ -304,7 +304,7 @@ feature -- Basic Actions
 			end
 		end
 
-	open_key (parent_key: POINTER; key_name: STRING_GENERAL; access_mode: INTEGER): POINTER
+	open_key (parent_key: POINTER; key_name: READABLE_STRING_GENERAL; access_mode: INTEGER): POINTER
 			-- Open subkey `key_name' of `parent_key' according to `access_mode'.
 			-- Return handle to created key or default_pointer on failure.
 		require
@@ -330,7 +330,7 @@ feature -- Basic Actions
 			last_call_successful := cwin_reg_close_key (key) = Error_success
 		end
 
-	delete_key (parent_key: POINTER; key_name: STRING_GENERAL)
+	delete_key (parent_key: POINTER; key_name: READABLE_STRING_GENERAL)
 			-- Delete subkey `key_name' of `parent_key'.
 			-- Return True if succeeded, False otherwise.
 			-- Under Windows 95, all subkeys are deleted.
@@ -353,7 +353,7 @@ feature -- Basic Actions
 		-- key referenced by 'key'.
 		local
 			i: INTEGER
-			s: detachable STRING_GENERAL
+			s: detachable READABLE_STRING_GENERAL
 		do
 			create Result.make
 			from
@@ -363,7 +363,7 @@ feature -- Basic Actions
 			loop
 				s := enumerate_value(key, i)
 				if s /= Void then
-					Result.extend(s)
+					Result.extend(s.as_string_32)
 					i := i+1
 				else
 					i := -1
@@ -376,7 +376,7 @@ feature -- Basic Actions
 		-- key referenced by 'key'.
 		local
 			i: INTEGER
-			s: detachable STRING_GENERAL
+			s: detachable READABLE_STRING_GENERAL
 		do
 			create Result.make
 			from
@@ -396,7 +396,7 @@ feature -- Basic Actions
 
 feature  -- New actions
 
-	delete_value (parent_key: POINTER; name: STRING_GENERAL)
+	delete_value (parent_key: POINTER; name: READABLE_STRING_GENERAL)
 		require
 			key_possible: valid_value_for_hkey(parent_key)
 			name_possible: name /= Void
@@ -409,7 +409,7 @@ feature  -- New actions
 			last_call_successful := res = Error_success
 		end
 
-	enumerate_value (key: POINTER; index: INTEGER): detachable STRING_GENERAL
+	enumerate_value (key: POINTER; index: INTEGER): detachable READABLE_STRING_GENERAL
 			-- Find the name of the key_value corresponding
 			-- to the key 'key and the index 'index'.
 		local
@@ -461,7 +461,7 @@ feature  -- New actions
 
 feature -- Access
 
-	key_value (key: POINTER; value_name: STRING_GENERAL): detachable WEL_REGISTRY_KEY_VALUE
+	key_value (key: POINTER; value_name: READABLE_STRING_GENERAL): detachable WEL_REGISTRY_KEY_VALUE
 			-- Retrieve value of `value_name' associated with open
 			-- `key'.
 			-- The identifier 'key' relative to the parent key must
@@ -622,14 +622,14 @@ feature {NONE} -- External constants
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

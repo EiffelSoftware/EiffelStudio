@@ -119,7 +119,7 @@ feature -- Enumeration
 			Result_not_void: Result /= Void
 		end
 
-	tool_bar_right_click_customize (toolbar_name: STRING_GENERAL): STRING_32
+	tool_bar_right_click_customize (toolbar_name: READABLE_STRING_GENERAL): STRING_32
 			-- String for menu area right click menu.
 		deferred
 		ensure

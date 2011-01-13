@@ -137,7 +137,7 @@ feature {NONE} -- Implementation
 	tooltips_pointer: POINTER
 		-- Tooltips pointer for `Current'.
 
-	--set_tooltip (a_text: STRING_GENERAL) is
+	--set_tooltip (a_text: READABLE_STRING_GENERAL) is
 	--		-- Set `tooltip' to `a_text'.
 	--	do
 	--	end

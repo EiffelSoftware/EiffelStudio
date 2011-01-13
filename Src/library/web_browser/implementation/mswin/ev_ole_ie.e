@@ -69,7 +69,7 @@ feature -- Command
 			cleared: hwnd = default_pointer
 		end
 
-	display_web_page (a_url: STRING_GENERAL)
+	display_web_page (a_url: READABLE_STRING_GENERAL)
 			-- Displays a URL, or HTML file on disk
 		require
 			created: hwnd /= default_pointer

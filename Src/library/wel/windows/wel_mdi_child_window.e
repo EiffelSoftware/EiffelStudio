@@ -29,7 +29,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_parent: WEL_MDI_FRAME_WINDOW; a_name: STRING_GENERAL)
+	make (a_parent: WEL_MDI_FRAME_WINDOW; a_name: READABLE_STRING_GENERAL)
 			-- Make window as child of `a_parent' and `a_name' as title.
 		do
 			parent := a_parent
@@ -82,7 +82,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	internal_window_make (a_parent: detachable WEL_MDI_FRAME_WINDOW; a_name: detachable STRING_GENERAL;
+	internal_window_make (a_parent: detachable WEL_MDI_FRAME_WINDOW; a_name: detachable READABLE_STRING_GENERAL;
 			a_style, a_x, a_y, a_w, a_h, an_id: INTEGER;
 			data: POINTER)
 			-- Create the window

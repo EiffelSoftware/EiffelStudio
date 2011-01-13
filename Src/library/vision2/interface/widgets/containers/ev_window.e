@@ -58,7 +58,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_title (a_title: STRING_GENERAL)
+	make_with_title (a_title: READABLE_STRING_GENERAL)
 			-- Initialize with `a_title'.
 		require
 			a_title_not_void: a_title /= Void
@@ -290,7 +290,7 @@ feature -- Status setting
 			maximum_height_assigned: maximum_height = a_maximum_height
 		end
 
-	set_title (a_title: STRING_GENERAL)
+	set_title (a_title: READABLE_STRING_GENERAL)
 			-- Assign `a_title' to `title'.
 		require
 			not_destroyed: not is_destroyed
@@ -298,7 +298,7 @@ feature -- Status setting
 		do
 			implementation.set_title (a_title)
 		ensure
-			a_title_assigned: title.is_equal (a_title)
+			a_title_assigned: title.same_string_general (a_title)
 			cloned: title /= a_title
 		end
 

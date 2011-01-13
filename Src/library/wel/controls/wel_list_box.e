@@ -120,7 +120,7 @@ feature -- Access
 
 feature -- Element change
 
-	add_string (a_string: STRING_GENERAL)
+	add_string (a_string: READABLE_STRING_GENERAL)
 			-- Add `a_string' in the list box.
 			-- If the list box does not have the
 			-- `Lbs_sort' style, `a_string' is added
@@ -139,7 +139,7 @@ feature -- Element change
 			count_increased: count = old count + 1
 		end
 
-	insert_string_at (a_string: STRING_GENERAL; index: INTEGER)
+	insert_string_at (a_string: READABLE_STRING_GENERAL; index: INTEGER)
 			-- Add `a_string' at the zero-based `index'
 		require
 			exists: exists
@@ -167,7 +167,7 @@ feature -- Element change
 			count_decreased: count = old count - 1
 		end
 
-	add_files (attribut: INTEGER; files: STRING_GENERAL)
+	add_files (attribut: INTEGER; files: READABLE_STRING_GENERAL)
 			-- Add `files' to the list box. `files' may contain
 			-- wildcards (?*). See class WEL_DDL_CONSTANTS for
 			-- `attribut' values.
@@ -293,7 +293,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	find_string (index: INTEGER; a_string: STRING_GENERAL): INTEGER
+	find_string (index: INTEGER; a_string: READABLE_STRING_GENERAL): INTEGER
 			-- Find the first string that contains the
 			-- prefix `a_string'. `index' specifies the
 			-- zero-based index of the item before the first
@@ -313,7 +313,7 @@ feature -- Basic operations
 				Lb_findstring, to_wparam (index), a_wel_string.item)
 		end
 
-	find_string_exact (index: INTEGER; a_string: STRING_GENERAL): INTEGER
+	find_string_exact (index: INTEGER; a_string: READABLE_STRING_GENERAL): INTEGER
 			-- Find the first string that matches `a_string'.
 			-- `index' specifies the zero-based index of the
 			-- item before the first item to be searched.

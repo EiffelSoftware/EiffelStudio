@@ -15,7 +15,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_full_name: STRING_GENERAL)
+	make (a_full_name: READABLE_STRING_GENERAL)
 			-- Initialize.
 		do
 		end

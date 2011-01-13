@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 			make_with_text (Void)
 		end
 
-	make_with_text (t: detachable STRING_GENERAL)
+	make_with_text (t: detachable READABLE_STRING_GENERAL)
 			-- Create a widget that is made to browse for directory.
 		do
 			default_start_directory := ""
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 			make_with_text_and_parent (Void, win)
 		end
 
-	make_with_text_and_parent (t: detachable STRING_GENERAL; win: like parent_window)
+	make_with_text_and_parent (t: detachable READABLE_STRING_GENERAL; win: like parent_window)
 			-- Create a widget that is made to browse for directory.
 		require
 			win_not_void: win /= Void
@@ -99,7 +99,7 @@ feature -- Settings
 			internal_parent_window := win
 		end
 
-	set_text, set_path (p: STRING_GENERAL)
+	set_text, set_path (p: READABLE_STRING_GENERAL)
 			-- Assign `p' to `path'.
 		require
 			not_destroyed: not is_destroyed
@@ -111,10 +111,10 @@ feature -- Settings
 			check l_field /= Void end
 			l_field.set_text (p)
 		ensure
-			path_set: path.is_equal (p)
+			path_set: path.same_string_general (p)
 		end
 
-	set_browse_for_file (filter: STRING_GENERAL)
+	set_browse_for_file (filter: READABLE_STRING_GENERAL)
 			-- Force file browsing dialog to appear when user
 			-- click on `browse_button'.
 		obsolete "Please use `set_browse_for_open_file' or `set_browse_for_save_file' ."
@@ -122,7 +122,7 @@ feature -- Settings
 			set_browse_for_open_file (filter)
 		end
 
-	set_browse_for_open_file (filter: STRING_GENERAL)
+	set_browse_for_open_file (filter: READABLE_STRING_GENERAL)
 			-- Force file browsing dialog to appear when user
 			-- click on `browse_button'.
 		local
@@ -134,7 +134,7 @@ feature -- Settings
 			l_browse_button.select_actions.extend (agent browse_for_open_file (filter))
 		end
 
-	set_browse_for_save_file (filter: STRING_GENERAL)
+	set_browse_for_save_file (filter: READABLE_STRING_GENERAL)
 			-- Force file browsing dialog to appear when user
 			-- click on `browse_button'.
 		local
@@ -178,7 +178,7 @@ feature -- Removal
 
 feature {NONE} -- GUI building
 
-	build_widget (t: detachable STRING_GENERAL)
+	build_widget (t: detachable READABLE_STRING_GENERAL)
 			-- Create Current using `t' as text label.
 		local
 			l_label: EV_LABEL
@@ -234,19 +234,19 @@ feature {NONE} -- GUI building
 			end
 		end
 
-	browse_for_save_file (filter: STRING_GENERAL)
+	browse_for_save_file (filter: READABLE_STRING_GENERAL)
 			-- Popup a "select save file" dialog
 		do
 			browse_for_file (filter, True)
 		end
 
-	browse_for_open_file (filter: STRING_GENERAL)
+	browse_for_open_file (filter: READABLE_STRING_GENERAL)
 			-- Popup a "select open file" dialog
 		do
 			browse_for_file (filter, False)
 		end
 
-	browse_for_file (filter: STRING_GENERAL; allow_new: BOOLEAN)
+	browse_for_file (filter: READABLE_STRING_GENERAL; allow_new: BOOLEAN)
 			-- Popup a open or save "select file" dialog according to `allow_new' value
 		local
 			fd: EV_FILE_DIALOG
@@ -295,7 +295,7 @@ feature {NONE} -- Interface names
 	Label_select_directory: STRING = "Select a directory"
 	Label_select_file: STRING = "Select a file"
 	Label_all_files: STRING = "All Files (*.*)"
-	Label_files_of_type (f: STRING_GENERAL): STRING_32
+	Label_files_of_type (f: READABLE_STRING_GENERAL): STRING_32
 		require
 			f_not_void: f /= Void
 		do

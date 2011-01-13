@@ -108,7 +108,7 @@ feature -- Properties
 			set: docker_mediator = a_mediator
 		end
 
-	resizable_items_data: ARRAYED_LIST [TUPLE [name: STRING_GENERAL; width: INTEGER]]
+	resizable_items_data: ARRAYED_LIST [TUPLE [name: READABLE_STRING_GENERAL; width: INTEGER]]
 			-- SD_TOOL_BAR_RESIABLE_ITEM data
 		require
 			not_destroyed: not is_destroyed

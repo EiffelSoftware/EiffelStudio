@@ -101,18 +101,18 @@ feature -- Command
 			internal_draw_pixmap := True
 		end
 
-	set_tool_tip (a_text: detachable STRING_GENERAL)
+	set_tool_tip (a_text: detachable READABLE_STRING_GENERAL)
 			-- Set `tool_tip' with `a_text'
 		require
 			not_destroyed: not is_destroyed
 		do
 			if a_text /= Void then
-				tool_tip := a_text
+				tool_tip := a_text.as_string_32
 			else
 				tool_tip := Void
 			end
 		ensure
-			set: a_text /= Void implies tool_tip ~ a_text.as_string_32
+			set: a_text /= Void implies (attached tool_tip as l_tooltip and then l_tooltip.same_string_general (a_text))
 		end
 
 	clear_pressed_flag
@@ -307,16 +307,16 @@ feature -- Properties
 	text: STRING_32
 			-- Text shown on Current
 
-	set_text (a_text: STRING_GENERAL)
+	set_text (a_text: READABLE_STRING_GENERAL)
 			-- Set `text'
 		require
 			not_destroyed: not is_destroyed
 			a_text_not_void: a_text /= Void
 		do
-			text := a_text
+			text := a_text.as_string_32
 			update_minmum_size
 		ensure
-			set: a_text.as_string_32.is_equal (text)
+			set: text.same_string_general (a_text)
 		end
 
 	pixmap: EV_PIXMAP

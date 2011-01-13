@@ -66,7 +66,7 @@ feature -- Minimum size
 			accomodate_text (" ")
 		end
 
-	accomodate_text (a_text: STRING_GENERAL)
+	accomodate_text (a_text: READABLE_STRING_GENERAL)
 			-- Change internal minimum size to make `a_text' fit.
 		require
 			a_text_not_void: a_text /= Void
@@ -83,7 +83,7 @@ feature -- Minimum size
 
 feature -- Status setting
 
-	set_text (a_text: STRING_GENERAL)
+	set_text (a_text: READABLE_STRING_GENERAL)
 			-- Assign `a_text' to `text'.
 		do
 			if not text.is_equal (a_text) then

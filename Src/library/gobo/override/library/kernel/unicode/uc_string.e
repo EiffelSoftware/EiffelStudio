@@ -115,6 +115,7 @@ inherit
 			insert,
 			prepend,
 			prepend_string,
+			prepend_string_general,
 			append_string_general,
 			keep_head,
 			keep_tail,
@@ -208,6 +209,7 @@ inherit
 			insert,
 			prepend,
 			prepend_string,
+			prepend_string_general,
 			append_string_general,
 			keep_head,
 			keep_tail,
@@ -1800,6 +1802,12 @@ feature -- Element change
 			if s /= Void then
 				prepend (s)
 			end
+		end
+
+	prepend_string_general (s: READABLE_STRING_GENERAL) is
+			-- Append a copy of `s' at front.
+		do
+			prepend (s.as_string_8)
 		end
 
 	append_string_general (s: READABLE_STRING_GENERAL) is

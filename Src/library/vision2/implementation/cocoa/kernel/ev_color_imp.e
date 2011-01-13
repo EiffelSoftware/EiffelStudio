@@ -78,7 +78,7 @@ feature -- Element change
 			blue_16_bit := (a_blue * 0xFFFF).rounded
 		end
 
-	set_name (a_name: STRING_GENERAL)
+	set_name (a_name: READABLE_STRING_GENERAL)
 			-- Assign `a_name' to `name'.
 		do
 			name.copy (a_name)

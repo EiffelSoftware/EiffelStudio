@@ -17,7 +17,7 @@ create
 
 feature -- Initialization
 
-	make_from_string (a_string: STRING_GENERAL)
+	make_from_string (a_string: READABLE_STRING_GENERAL)
 			-- Create `Current' from `a_string'.
 		require
 			a_string: a_string /= Void

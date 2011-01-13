@@ -350,7 +350,7 @@ feature {NONE} -- Implementation
 			Precursor {TEXT} (was_first_block)
 		end
 
-	string_selected (start_sel, end_sel: like cursor): STRING_GENERAL
+	string_selected (start_sel, end_sel: like cursor): STRING_32
 			-- String between cursors `start_sel' and `end_sel'.
 		require
 			attached_cursors: start_sel /= Void and then end_sel /= Void
@@ -358,48 +358,46 @@ feature {NONE} -- Implementation
 		local
 			ln: like current_line
 			t, t2 : detachable EDITOR_TOKEN
-			l_string_32: STRING_32
 		do
 				-- Retrieving line after `start_selection'.
 			t := start_sel.token
 			t2 := end_sel.token
 			if t = t2 then
 				if start_sel.pos_in_token = end_sel.pos_in_token then
-					l_string_32 := ""
+					Result := ""
 				else
-					l_string_32 := t.wide_image.substring (start_sel.pos_in_token, end_sel.pos_in_token -1)
+					Result := t.wide_image.substring (start_sel.pos_in_token, end_sel.pos_in_token -1)
 				end
 			else
 				ln := start_sel.line
 				from
 					if t = ln.eol_token then
-						l_string_32 := "%N"
+						Result := "%N"
 						ln := ln.next
 						check ln /= Void end -- Never, otherwise a bug.
 						t := ln.first_token
 					else
-						l_string_32 := t.wide_image.substring (start_sel.pos_in_token, t.wide_image.count)
+						Result := t.wide_image.substring (start_sel.pos_in_token, t.wide_image.count)
 						t := t.next
 					end
 					until
 						t = t2 or t = end_sel.line.eol_token
 					loop
 						if t = Void or else t = ln.eol_token then
-							l_string_32.extend ('%N')
+							Result.extend ('%N')
 							ln := ln.next
 							check ln /= Void end -- Never, otherwise a bug.
 							t := ln.first_token
 						else
-							l_string_32.append (t.wide_image)
+							Result.append (t.wide_image)
 							t := t.next
 						end
 					end
 					check
 						good_line: ln = end_sel.line
 					end
-					l_string_32.append (t2.wide_image.substring (1, end_sel.pos_in_token -1))
+					Result.append (t2.wide_image.substring (1, end_sel.pos_in_token -1))
 				end
-				Result := l_string_32
 			end
 
 invariant

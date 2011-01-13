@@ -36,13 +36,13 @@ feature --Insertion
 
 feature --Access
 
-	has (original: STRING_GENERAL):BOOLEAN
+	has (original: READABLE_STRING_GENERAL):BOOLEAN
 			-- does the dictionary have this entry?
 		do
 			Result := hash.has (original.as_string_32)
 		end
 
-	has_plural(original_singular, original_plural: STRING_GENERAL; plural_number: INTEGER): BOOLEAN
+	has_plural(original_singular, original_plural: READABLE_STRING_GENERAL; plural_number: INTEGER): BOOLEAN
 			-- does the dictionary have an entry with `original_singular', `original_plural'
 			-- and does this entry have the `plural_number'-th plural translation
 		local
@@ -60,7 +60,7 @@ feature --Access
 			end
 		end
 
-	singular (original: STRING_GENERAL): STRING_32
+	singular (original: READABLE_STRING_GENERAL): STRING_32
 			-- get the singular translation of `original'
 		local
 			entry: detachable I18N_DICTIONARY_ENTRY
@@ -70,7 +70,7 @@ feature --Access
 			Result := entry.singular_translation
 		end
 
-	plural (original_singular, original_plural: STRING_GENERAL; plural_number: INTEGER): STRING_32
+	plural (original_singular, original_plural: READABLE_STRING_GENERAL; plural_number: INTEGER): STRING_32
 			-- get the `plural_number'-th plural translation of entry
 			-- with `original_singular' and `original_plural'
 		local

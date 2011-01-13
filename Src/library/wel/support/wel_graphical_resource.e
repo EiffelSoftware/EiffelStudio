@@ -32,7 +32,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_by_file (file_name: STRING_GENERAL)
+	make_by_file (file_name: READABLE_STRING_GENERAL)
 			-- Load an icon file named `file_name'.
 		require
 			file_name_not_void: file_name /= Void
@@ -71,7 +71,7 @@ feature {NONE} -- Initialization
 			gdi_make
 		end
 
-	make_by_name (name: STRING_GENERAL)
+	make_by_name (name: READABLE_STRING_GENERAL)
 			-- Load the resource by a `name'
 		do
 			Precursor {WEL_RESOURCE} (name)

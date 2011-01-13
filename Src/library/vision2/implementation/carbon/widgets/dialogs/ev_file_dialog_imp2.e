@@ -178,7 +178,7 @@ feature -- Status report
 
 feature -- Element change
 
-	set_filter (a_filter: STRING_GENERAL)
+	set_filter (a_filter: READABLE_STRING_GENERAL)
 			-- Set `a_filter' as new filter.
 		local
 			a_cs: EV_CARBON_CF_STRING
@@ -220,7 +220,7 @@ feature -- Element change
 --			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_add_filter (c_object, a_filter_ptr)
 		end
 
-	set_file_name (a_name: STRING_GENERAL)
+	set_file_name (a_name: READABLE_STRING_GENERAL)
 			-- Make `a_name' the selected file.
 		local
 			a_cs: EV_CARBON_CF_STRING
@@ -229,7 +229,7 @@ feature -- Element change
 --			{EV_GTK_EXTERNALS}.gtk_file_chooser_set_filename (c_object, a_cs.item)
 		end
 
-	set_start_directory (a_path: STRING_GENERAL)
+	set_start_directory (a_path: READABLE_STRING_GENERAL)
 			-- Make `a_path' the base directory.
 		local
 			a_cs: EV_CARBON_CF_STRING
@@ -270,7 +270,7 @@ feature {NONE} -- Implementation
 			-- Show `Current' modal to `a_window' until the user closes it
 		local
 			filter_string_list: LIST [STRING_32]
-			current_filter_string, current_filter_description: STRING_GENERAL
+			current_filter_string, current_filter_description: READABLE_STRING_GENERAL
 			filter_ptr: POINTER
 			a_cs: EV_CARBON_CF_STRING
 		do

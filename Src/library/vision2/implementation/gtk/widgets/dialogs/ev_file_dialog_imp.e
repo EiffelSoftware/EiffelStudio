@@ -141,16 +141,16 @@ feature -- Status report
 
 feature -- Element change
 
-	set_filter (a_filter: STRING_GENERAL)
+	set_filter (a_filter: READABLE_STRING_GENERAL)
 			-- Set `a_filter' as new filter.
 		local
 			a_cs: EV_GTK_C_STRING
 			filter_name: STRING_32
 			a_filter_ptr: POINTER
 		do
-			filter := a_filter.twin
+			filter := a_filter.as_string_32.twin
 
-			filter_name := a_filter.twin
+			filter_name := a_filter.as_string_32.twin
 			if
 				filter_name.count >= 3 and
 				filter_name.item (1) = '*' and
@@ -159,7 +159,7 @@ feature -- Element change
 				filter_name.remove_head (2)
 				filter_name.put (filter_name.item (1).upper, 1)
 				filter_name.append (" Files (")
-				filter_name.append (a_filter)
+				filter_name.append_string_general (a_filter)
 				filter_name.append (")")
 			end
 
@@ -183,7 +183,7 @@ feature -- Element change
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_add_filter (c_object, a_filter_ptr)
 		end
 
-	set_file_name (a_name: STRING_GENERAL)
+	set_file_name (a_name: READABLE_STRING_GENERAL)
 			-- Make `a_name' the selected file.
 		local
 			a_cs: EV_GTK_C_STRING
@@ -192,12 +192,12 @@ feature -- Element change
 			{EV_GTK_EXTERNALS}.gtk_file_chooser_set_filename (c_object, a_cs.item)
 		end
 
-	set_start_directory (a_path: STRING_GENERAL)
+	set_start_directory (a_path: READABLE_STRING_GENERAL)
 			-- Make `a_path' the base directory.
 		local
 			a_cs: EV_GTK_C_STRING
 		do
-			start_directory := a_path.twin
+			start_directory := a_path.as_string_32.twin
 			a_cs := start_directory + "/"
 			{EV_GTK_EXTERNALS}.gtk_file_chooser_set_current_folder (
 				c_object,
@@ -256,7 +256,7 @@ feature {NONE} -- Implementation
 			-- Show `Current' modal to `a_window' until the user closes it
 		local
 			filter_string_list: LIST [STRING_32]
-			current_filter_string, current_filter_description: detachable STRING_GENERAL
+			current_filter_string, current_filter_description: detachable READABLE_STRING_GENERAL
 			filter_ptr: POINTER
 			a_cs: EV_GTK_C_STRING
 		do

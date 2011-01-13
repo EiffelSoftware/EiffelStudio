@@ -420,7 +420,7 @@ feature -- Drawing operations
 			end
 		end
 
-	draw_text (x, y: INTEGER; a_text: STRING_GENERAL)
+	draw_text (x, y: INTEGER; a_text: READABLE_STRING_GENERAL)
 			-- Draw `a_text' with left of baseline at (`x', `y') using `font'.
 		do
 			draw_text_internal (
@@ -433,7 +433,7 @@ feature -- Drawing operations
 			)
 		end
 
-	draw_rotated_text (x, y: INTEGER; angle: REAL; a_text: STRING_GENERAL)
+	draw_rotated_text (x, y: INTEGER; angle: REAL; a_text: READABLE_STRING_GENERAL)
 			-- Draw rotated text `a_text' with left of baseline at (`x', `y') using `font'.
 			-- Rotation is number of radians counter-clockwise from horizontal plane.
 		do
@@ -447,7 +447,7 @@ feature -- Drawing operations
 			)
 		end
 
-	draw_ellipsed_text (x, y: INTEGER; a_text: STRING_GENERAL; clipping_width: INTEGER)
+	draw_ellipsed_text (x, y: INTEGER; a_text: READABLE_STRING_GENERAL; clipping_width: INTEGER)
 			-- Draw `a_text' with left of baseline at (`x', `y') using `font'.
 			-- Text is clipped to `clipping_width' in pixels and ellipses are displayed
 			-- to show truncated characters if any.
@@ -462,7 +462,7 @@ feature -- Drawing operations
 			)
 		end
 
-	draw_ellipsed_text_top_left (x, y: INTEGER; a_text: STRING_GENERAL; clipping_width: INTEGER)
+	draw_ellipsed_text_top_left (x, y: INTEGER; a_text: READABLE_STRING_GENERAL; clipping_width: INTEGER)
 			-- Draw `a_text' with top left corner at (`x', `y') using `font'.
 			-- Text is clipped to `clipping_width' in pixels and ellipses are displayed
 			-- to show truncated characters if any.
@@ -477,7 +477,7 @@ feature -- Drawing operations
 			)
 		end
 
-	draw_text_top_left (x, y: INTEGER; a_text: STRING_GENERAL)
+	draw_text_top_left (x, y: INTEGER; a_text: READABLE_STRING_GENERAL)
 			-- Draw `a_text' with top left corner at (`x', `y') using `font'.
 		do
 			draw_text_internal (
@@ -490,7 +490,7 @@ feature -- Drawing operations
 			)
 		end
 
-	draw_text_internal (x, y: INTEGER; a_text: STRING_GENERAL; draw_from_baseline: BOOLEAN; a_width: INTEGER; a_angle: REAL)
+	draw_text_internal (x, y: INTEGER; a_text: READABLE_STRING_GENERAL; draw_from_baseline: BOOLEAN; a_width: INTEGER; a_angle: REAL)
 			-- Draw `a_text' at (`x', `y') using `font'.
 		local
 			a_cs: EV_GTK_C_STRING

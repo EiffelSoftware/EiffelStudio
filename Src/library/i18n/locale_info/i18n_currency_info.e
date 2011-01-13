@@ -107,14 +107,14 @@ feature -- Access: Default values
 
 feature -- Element change: Normal values
 
-	set_currency_symbol (a_currency_symbol : STRING_GENERAL)
+	set_currency_symbol (a_currency_symbol : READABLE_STRING_GENERAL)
 			-- set the currency symbol
 		require
 			a_currency_symbol_exists: a_currency_symbol /= Void
 		do
-			currency_symbol := a_currency_symbol
+			currency_symbol := a_currency_symbol.as_string_32
 		ensure
-			symbol_set: currency_symbol = a_currency_symbol
+			symbol_set: currency_symbol.same_string_general (a_currency_symbol)
 		end
 
 	set_currency_symbol_location(a_location:INTEGER)
@@ -127,7 +127,7 @@ feature -- Element change: Normal values
 			symbol_location_set: currency_symbol_location = a_location
 		end
 
-	set_currency_decimal_separator(separator:STRING_GENERAL)
+	set_currency_decimal_separator(separator:READABLE_STRING_GENERAL)
 			-- set the decimal separator for currency values
 		require
 			argument_not_void: separator /= Void
@@ -147,7 +147,7 @@ feature -- Element change: Normal values
 			currency_numbers_after_decimal_separator_set: currency_numbers_after_decimal_separator = numbers
 		end
 
-	set_currency_group_separator(separator:STRING_GENERAL)
+	set_currency_group_separator(separator:READABLE_STRING_GENERAL)
 			-- set the group separator for curency values - sometimes called "thousands separator"
 		require
 			argument_not_void: separator /= Void
@@ -157,7 +157,7 @@ feature -- Element change: Normal values
 			currency_group_separator_set: currency_group_separator.is_equal(separator.as_string_32)
 		end
 
-	set_currency_number_list_separator(separator:STRING_GENERAL)
+	set_currency_number_list_separator(separator:READABLE_STRING_GENERAL)
 			-- set the  separator for lists of currency values
 		require
 			argument_not_void: separator /= Void
@@ -167,7 +167,7 @@ feature -- Element change: Normal values
 			currency_number_list_separator_set: currency_number_list_separator.is_equal(separator.as_string_32)
 		end
 
-	set_currency_positive_sign (a_string: STRING_GENERAL)
+	set_currency_positive_sign (a_string: READABLE_STRING_GENERAL)
 			-- set positive sign used
 		require
 			argument_not_void: a_string/= Void
@@ -177,7 +177,7 @@ feature -- Element change: Normal values
 			currency_positive_sign_set: currency_positive_sign.is_equal (a_string.as_string_32)
 		end
 
-	set_currency_negative_sign (a_string: STRING_GENERAL)
+	set_currency_negative_sign (a_string: READABLE_STRING_GENERAL)
 			-- set negative sign used
 		require
 			argument_not_void: a_string/= Void
@@ -199,14 +199,14 @@ feature -- Element change: Normal values
 
 feature -- Element change: International values
 
-	set_international_currency_symbol (a_currency_symbol : STRING_GENERAL)
+	set_international_currency_symbol (a_currency_symbol : READABLE_STRING_GENERAL)
 			-- set the international currency symbol
 		require
 			a_currency_symbol_exists: a_currency_symbol /= Void
 		do
-			currency_international_symbol := a_currency_symbol
+			currency_international_symbol := a_currency_symbol.as_string_32
 		ensure
-			symbol_set: currency_international_symbol = a_currency_symbol
+			symbol_set: currency_international_symbol.same_string_general (a_currency_symbol)
 		end
 
 	set_international_currency_symbol_location(a_location:INTEGER)
@@ -219,7 +219,7 @@ feature -- Element change: International values
 			symbol_location_set: currency_international_symbol_location = a_location
 		end
 
-	set_international_currency_decimal_separator(separator:STRING_GENERAL)
+	set_international_currency_decimal_separator(separator:READABLE_STRING_GENERAL)
 			-- set the decimal separator for currency values
 		require
 			argument_not_void: separator /= Void
@@ -239,7 +239,7 @@ feature -- Element change: International values
 			currency_international_numbers_after_decimal_separator_set: currency_international_numbers_after_decimal_separator = numbers
 		end
 
-	set_international_currency_group_separator(separator:STRING_GENERAL)
+	set_international_currency_group_separator(separator:READABLE_STRING_GENERAL)
 			-- set the group separator for curency values - sometimes called "thousands separator"
 		require
 			argument_not_void: separator /= Void
@@ -249,7 +249,7 @@ feature -- Element change: International values
 			currency_group_separator_set: currency_international_group_separator.is_equal(separator.as_string_32)
 		end
 
-	set_international_currency_number_list_separator(separator:STRING_GENERAL)
+	set_international_currency_number_list_separator(separator:READABLE_STRING_GENERAL)
 			-- set the  separator for lists of currency values
 		require
 			argument_not_void: separator /= Void
@@ -271,7 +271,7 @@ feature -- Element change: International values
 
 note
 	library:   "Internationalization library"
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

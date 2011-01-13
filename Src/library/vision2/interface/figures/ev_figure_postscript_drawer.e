@@ -352,7 +352,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	add_ps_line (a_code: STRING_GENERAL)
+	add_ps_line (a_code: READABLE_STRING_GENERAL)
 			-- Add `a_code' to postscript data.
 		require
 			a_code_not_void: a_code /= Void
@@ -365,7 +365,7 @@ feature {NONE} -- Implementation
 			l_ps_result.append_character ('%N')
 		end
 
-	add_ps_string (a_code: STRING_GENERAL)
+	add_ps_string (a_code: READABLE_STRING_GENERAL)
 			-- Add `a_code' to postscript data.
 		require
 			a_code_not_void: a_code /= Void
@@ -491,7 +491,7 @@ feature {NONE} -- Implementation
 			add_ps_line ("grestore")
 		end
 
-	draw_arrowhead (a_color, a_line_width: STRING_GENERAL; point1, point2, point3: EV_RELATIVE_POINT)
+	draw_arrowhead (a_color, a_line_width: READABLE_STRING_GENERAL; point1, point2, point3: EV_RELATIVE_POINT)
 		do
 			add_ps_line ("%%Draw arrowhead")
 			add_ps_line ("gsave")

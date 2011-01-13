@@ -215,7 +215,7 @@ feature -- Status setting
 
 		end
 
-	set_text (a_text: STRING_GENERAL)
+	set_text (a_text: READABLE_STRING_GENERAL)
 			-- Assign `a_text' to `text'.
 		local
 			str: EV_CARBON_CF_STRING
@@ -225,12 +225,12 @@ feature -- Status setting
 			ret := hiview_set_text_external (c_object, str.item)
 		end
 
-	append_text (a_text: STRING_GENERAL)
+	append_text (a_text: READABLE_STRING_GENERAL)
 			-- Append `a_text' to the end of the text.
 		local
 			ptr: POINTER
 			str: EV_CARBON_CF_STRING
-			total_text:STRING_GENERAL
+			total_text:READABLE_STRING_GENERAL
 			ret: INTEGER
 		do
 			ptr := hiview_copy_text_external (c_object)
@@ -241,12 +241,12 @@ feature -- Status setting
 
 		end
 
-	prepend_text (a_text: STRING_GENERAL)
+	prepend_text (a_text: READABLE_STRING_GENERAL)
 			-- Prepend `a_text' to the end of the text.
 		local
 			ptr: POINTER
 			str: EV_CARBON_CF_STRING
-			total_text:STRING_GENERAL
+			total_text:READABLE_STRING_GENERAL
 			ret: INTEGER
 		do
 			ptr := hiview_copy_text_external (c_object)

@@ -54,7 +54,7 @@ feature --Insertion
 
 feature --Access
 
-	has(original:STRING_GENERAL):BOOLEAN
+	has(original:READABLE_STRING_GENERAL):BOOLEAN
 			-- does the dictionary have this entry?
 			-- use binary search algorithm
 			-- require `array'is sorted
@@ -122,7 +122,7 @@ feature--{NONE}	--help functions
 			end
 		end
 
-	has_index(original:STRING_GENERAL):INTEGER
+	has_index(original:READABLE_STRING_GENERAL):INTEGER
 			-- does the dictionary have this entry?
 			-- use binary search algorithm
 			-- require `array' is sorted
@@ -176,7 +176,7 @@ feature--{NONE}	--help functions
 
 feature	-- Access
 
-	has_plural (original_singular, original_plural: STRING_GENERAL; plural_number:INTEGER):BOOLEAN
+	has_plural (original_singular, original_plural: READABLE_STRING_GENERAL; plural_number:INTEGER):BOOLEAN
 			--
 		local
 			entry: detachable I18N_DICTIONARY_ENTRY
@@ -194,7 +194,7 @@ feature	-- Access
 			end
 		end
 
-	singular (original:STRING_GENERAL): STRING_32
+	singular (original:READABLE_STRING_GENERAL): STRING_32
 			-- Singular form
 		local
 			entry: detachable I18N_DICTIONARY_ENTRY
@@ -207,7 +207,7 @@ feature	-- Access
 			Result := entry.singular_translation
 		end
 
-	plural (original_singular, original_plural: STRING_GENERAL; plural_number: INTEGER): STRING_32
+	plural (original_singular, original_plural: READABLE_STRING_GENERAL; plural_number: INTEGER): STRING_32
 			-- Plural form
 		local
 			entry: detachable I18N_DICTIONARY_ENTRY

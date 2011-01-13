@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 	make (a_height, a_width, escapement, orientation, weight,
 			italic, underline, strike_out, charset,
 			output_precision, clip_precision, quality,
-			pitch_and_family: INTEGER; a_face_name: STRING_GENERAL)
+			pitch_and_family: INTEGER; a_face_name: READABLE_STRING_GENERAL)
 			-- Make font named `a_face_name'.
 		require
 			a_face_name_not_void: a_face_name /= Void
@@ -190,7 +190,7 @@ feature -- Access
 			screen_dc.release
 		end
 
-	string_width (a_string: STRING_GENERAL): INTEGER
+	string_width (a_string: READABLE_STRING_GENERAL): INTEGER
 			-- Width of `a_string'.
 		require
 			exists: exists
@@ -199,7 +199,7 @@ feature -- Access
 			Result := string_size (a_string).width
 		end
 
-	string_height (a_string: STRING_GENERAL): INTEGER
+	string_height (a_string: READABLE_STRING_GENERAL): INTEGER
 			-- Height of `a_string'.
 		require
 			exists: exists
@@ -208,7 +208,7 @@ feature -- Access
 			Result := string_size (a_string).height
 		end
 
-	string_size_extended (a_string: STRING_GENERAL): TUPLE [width: INTEGER; height: INTEGER; leading_overhang: INTEGER; trailing_overhang: INTEGER]
+	string_size_extended (a_string: READABLE_STRING_GENERAL): TUPLE [width: INTEGER; height: INTEGER; leading_overhang: INTEGER; trailing_overhang: INTEGER]
 			-- [width, height, leading overhang, trailing overhang] of `a_string'.
 			-- Not all fonts have characters that fit completely within the bounds of
 			-- the standard `string_size'. See `char_abc_widths' from WEL_DC which
@@ -354,7 +354,7 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
-	string_size (a_string: STRING_GENERAL): TUPLE [width: INTEGER; height: INTEGER]
+	string_size (a_string: READABLE_STRING_GENERAL): TUPLE [width: INTEGER; height: INTEGER]
 			-- [width, height] of `a_string'.
 		require
 			exists: exists

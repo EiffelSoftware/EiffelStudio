@@ -26,7 +26,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	detect (a_string: STRING_GENERAL)
+	detect (a_string: READABLE_STRING_GENERAL)
 			-- Detect `detected_encoding' of `a_string'.
 		local
 			l_bytes: STRING

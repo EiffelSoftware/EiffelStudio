@@ -96,7 +96,7 @@ feature -- Element change
 			abbreviated_month_names_set: abbreviated_month_names = a_abbreviated_month_names
 		end
 
-	set_date_time_format(format:STRING_GENERAL)
+	set_date_time_format(format:READABLE_STRING_GENERAL)
 			-- set the long date format string
 		require
 			argument_not_void: format /= Void
@@ -106,7 +106,7 @@ feature -- Element change
 			long_date_format_set: date_time_format.is_equal(format.as_string_32)
 		end
 
-	set_long_date_format(format:STRING_GENERAL)
+	set_long_date_format(format:READABLE_STRING_GENERAL)
 			-- set the long date format string
 		require
 			argument_not_void: format /= Void
@@ -116,7 +116,7 @@ feature -- Element change
 			long_date_format_set: long_date_format.is_equal(format.as_string_32)
 		end
 
-	set_short_date_format(format:STRING_GENERAL)
+	set_short_date_format(format:READABLE_STRING_GENERAL)
 			-- set the short date format string
 		require
 			argument_not_void: format /= Void
@@ -126,7 +126,7 @@ feature -- Element change
 			short_date_format_set: short_date_format.is_equal(format.as_string_32)
 		end
 
-	set_long_time_format(format:STRING_GENERAL)
+	set_long_time_format(format:READABLE_STRING_GENERAL)
 			-- set the long time format string
 		require
 			argument_not_void: format /= Void
@@ -136,7 +136,7 @@ feature -- Element change
 			long_time_format_set: long_time_format.is_equal(format.as_string_32)
 		end
 
-	set_short_time_format(format:STRING_GENERAL)
+	set_short_time_format(format:READABLE_STRING_GENERAL)
 			-- set the short time format string
 		require
 			argument_not_void: format /= Void
@@ -146,7 +146,7 @@ feature -- Element change
 			short_time_format_set: short_time_format.is_equal(format.as_string_32)
 		end
 
-	set_am_suffix(suffix:STRING_GENERAL)
+	set_am_suffix(suffix:READABLE_STRING_GENERAL)
 			-- set the am suffix
 		require
 			argument_not_void: suffix /= Void
@@ -156,7 +156,7 @@ feature -- Element change
 			am_suffix_set: am_suffix.is_equal(suffix.as_string_32)
 		end
 
-	set_pm_suffix(suffix:STRING_GENERAL)
+	set_pm_suffix(suffix:READABLE_STRING_GENERAL)
 			-- set the pm suffix
 		require
 			argument_not_void: suffix /= Void
@@ -166,7 +166,7 @@ feature -- Element change
 			pm_suffix_set: pm_suffix.is_equal(suffix.as_string_32)
 		end
 
-	set_time_separator(sep:STRING_GENERAL)
+	set_time_separator(sep:READABLE_STRING_GENERAL)
 			-- set the pm suffix
 		require
 			argument_not_void: sep /= Void
@@ -176,7 +176,7 @@ feature -- Element change
 			separator_set: time_separator.is_equal(sep.as_string_32)
 		end
 
-	set_date_separator(sep:STRING_GENERAL)
+	set_date_separator(sep:READABLE_STRING_GENERAL)
 			-- set the pm suffix
 		require
 			argument_not_void: sep /= Void

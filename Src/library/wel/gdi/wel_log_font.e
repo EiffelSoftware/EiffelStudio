@@ -77,7 +77,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_height: INTEGER; a_face_name: STRING_GENERAL)
+	make (a_height: INTEGER; a_face_name: READABLE_STRING_GENERAL)
 			-- Make a font with `a_height' as `height' and
 			-- `a_face_name' as `face_name'.
 		require
@@ -113,7 +113,7 @@ feature {NONE} -- Initialization
 			has_default_quality: has_default_quality
 			has_default_pitch: has_default_pitch
 			is_dont_care_family: is_dont_care_family
-			face_name_set: face_name.is_equal (a_face_name)
+			face_name_set: face_name.same_string_general (a_face_name)
 		end
 
 	make_by_font (font: WEL_FONT)
@@ -791,7 +791,7 @@ feature -- Status setting
 			pitch_and_family_set: pitch_and_family = a_pitch_and_family
 		end
 
-	set_face_name (a_face_name: STRING_GENERAL)
+	set_face_name (a_face_name: READABLE_STRING_GENERAL)
 			-- Set `face_name' to `a_face_name'.
 		require
 			a_face_name_not_void: a_face_name /= Void
@@ -802,7 +802,7 @@ feature -- Status setting
 			create a_wel_string.make (a_face_name)
 			cwel_log_font_set_facename (item, a_wel_string.item)
 		ensure
-			face_name_set: face_name.is_equal (a_face_name)
+			face_name_set: face_name.same_string_general (a_face_name)
 		end
 
 	Max_face_name_length: INTEGER
@@ -1013,14 +1013,14 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

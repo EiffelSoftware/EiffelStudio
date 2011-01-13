@@ -242,7 +242,7 @@ feature -- Button texts
 
 feature -- Choices
 
-	c_right_click_receiver: HASH_TABLE [STRING_GENERAL, STRING]
+	c_right_click_receiver: HASH_TABLE [STRING_32, STRING]
 			-- Choice names for the preference of right_click_receiver.
 		once
 			create Result.make (5)
@@ -261,7 +261,7 @@ feature -- Choices
 	c_external_editor: STRING_32 				do Result := locale.translation ("External Editor") end
 	c_new_tab_editor: STRING_32 					do Result := locale.translation ("New tab editor") end
 
-	c_init_search_scope: HASH_TABLE [STRING_GENERAL, STRING]
+	c_init_search_scope: HASH_TABLE [STRING_32, STRING]
 			-- Choice names for the preference of tools.search_tool.init_scope.
 		once
 			create Result.make (3)
@@ -272,7 +272,7 @@ feature -- Choices
 			result_not_void: Result /= Void
 		end
 
-	c_report_c_compiler_errors: HASH_TABLE [STRING_GENERAL, STRING]
+	c_report_c_compiler_errors: HASH_TABLE [STRING_32, STRING]
 			-- Choice names for the preference of right_click_receiver.
 		once
 			create Result.make (3)

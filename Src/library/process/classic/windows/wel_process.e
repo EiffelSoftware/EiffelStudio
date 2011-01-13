@@ -442,7 +442,7 @@ feature{NONE} -- Implementation
 			"GetStdHandle (STD_ERROR_HANDLE)"
 		end
 
-	spawn_process (a_command_line: STRING_GENERAL; a_working_directory: detachable STRING_GENERAL; a_flags: INTEGER; a_environs: POINTER)
+	spawn_process (a_command_line: READABLE_STRING_GENERAL; a_working_directory: detachable READABLE_STRING_GENERAL; a_flags: INTEGER; a_environs: POINTER)
 			-- Spawn asynchronously process described in `a_command_line' from `a_working_directory'.
 		require
 			non_void_command_line: a_command_line /= Void
@@ -470,7 +470,7 @@ feature{NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

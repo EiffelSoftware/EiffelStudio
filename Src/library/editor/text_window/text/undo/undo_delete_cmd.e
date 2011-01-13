@@ -17,7 +17,7 @@ create
 
 feature -- Initialization
 
-	make_from_string (tc: EDITOR_CURSOR; s: STRING_GENERAL; txt: EDITABLE_TEXT)
+	make_from_string (tc: EDITOR_CURSOR; s: READABLE_STRING_GENERAL; txt: EDITABLE_TEXT)
 		require
 			tc_not_void: tc /= Void
 			s_not_void: s /= Void
@@ -25,7 +25,7 @@ feature -- Initialization
 		do
 			y_start := tc.y_in_lines
 			x_start := tc.x_in_characters
-			message := s
+			message := s.as_string_32
 			text := txt
 		end
 

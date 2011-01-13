@@ -63,7 +63,7 @@ feature -- Element change
 
 feature -- Access
 
-	item_strings: detachable INDEXABLE [STRING_GENERAL, INTEGER]
+	item_strings: detachable INDEXABLE [READABLE_STRING_GENERAL, INTEGER]
 		-- Item strings used to make up combo box list.
 
 	required_width: INTEGER
@@ -108,7 +108,7 @@ feature {NONE} -- Implementation
 			l_item: EV_GRID_LABEL_ITEM
 			i, j, nb: INTEGER
 			l_interval: INTEGER_INTERVAL
-			l_text, l_selected_text: STRING_32
+			l_text, l_selected_text: READABLE_STRING_GENERAL
 			l_font: EV_FONT
 			l_choice_list: like choice_list
 		do
@@ -126,11 +126,11 @@ feature {NONE} -- Implementation
 					i > nb
 				loop
 					l_text := l_item_strings.item (i)
-					create l_item.make_with_text (l_item_strings.item (i))
+					create l_item.make_with_text (l_text)
 					i := i + 1
 					l_choice_list.set_item (1, j, l_item)
 					j := j + 1
-					if l_text.is_equal (l_selected_text) then
+					if l_text.same_string (l_selected_text) then
 						create l_font
 						l_font.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
 						l_item.set_font (l_font)

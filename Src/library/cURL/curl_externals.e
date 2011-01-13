@@ -38,7 +38,7 @@ feature -- Command
 			end
 		end
 
-	formadd_string_string (a_form: CURL_FORM; a_last_pointer: CURL_FORM; a_arg_1: INTEGER; a_arg_1_value: STRING_GENERAL; a_arg_2: INTEGER; a_arg_2_value: STRING_GENERAL; a_arg_3: INTEGER)
+	formadd_string_string (a_form: CURL_FORM; a_last_pointer: CURL_FORM; a_arg_1: INTEGER; a_arg_1_value: READABLE_STRING_GENERAL; a_arg_2: INTEGER; a_arg_2_value: READABLE_STRING_GENERAL; a_arg_3: INTEGER)
 			-- Declared as curl_formadd ().
 		require
 			not_void: a_form /= Void
@@ -65,7 +65,7 @@ feature -- Command
 			end
 		end
 
-	slist_append (a_list: POINTER; a_string: STRING_GENERAL): POINTER
+	slist_append (a_list: POINTER; a_string: READABLE_STRING_GENERAL): POINTER
 			-- Declared as curl_slist_append ().
 			-- note: call with a null `a_list' to get initialized pointer as Result
 		require
@@ -118,7 +118,7 @@ feature {NONE} -- Implementation
 			Result := l_utility.api_loader
 		end
 
-	internal_formadd_string_string (a_form: TYPED_POINTER [POINTER]; a_last_pointer: TYPED_POINTER [POINTER]; a_arg_1: INTEGER; a_arg_1_value: STRING_GENERAL; a_arg_2: INTEGER; a_arg_2_value: STRING_GENERAL; a_arg_3: INTEGER)
+	internal_formadd_string_string (a_form: TYPED_POINTER [POINTER]; a_last_pointer: TYPED_POINTER [POINTER]; a_arg_1: INTEGER; a_arg_1_value: READABLE_STRING_GENERAL; a_arg_2: INTEGER; a_arg_2_value: READABLE_STRING_GENERAL; a_arg_3: INTEGER)
 			-- Declared as curl_formadd ().
 		local
 			l_c_string_1, l_c_string_2: C_STRING
@@ -212,11 +212,11 @@ feature {NONE} -- C externals
 
 note
 	library:   "cURL: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
-			356 Storke Road, Goleta, CA 93117 USA
+			5949 Hollister Ave., Goleta, CA 93117 USA
 			Telephone 805-685-1006, Fax 805-685-6869
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com

@@ -128,7 +128,7 @@ feature -- Query
 	valid_value_string (a_string: STRING): BOOLEAN
 			-- Is `a_string' valid for this preference type to convert into a value?		
 		do
-			Result := a_string /= Void
+			Result := True
 		end
 
 feature {PREFERENCES} -- Access

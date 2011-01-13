@@ -174,7 +174,7 @@ feature -- Measurement
 
 feature -- Element change
 
-	read_from_named_file (file_name: STRING_GENERAL)
+	read_from_named_file (file_name: READABLE_STRING_GENERAL)
 			-- Attempt to load pixmap data from a file specified by `file_name'.
 		local
 			url, provider: POINTER

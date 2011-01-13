@@ -1268,7 +1268,7 @@ feature {NONE} -- Implementation
 		require
 			preference_not_void: a_preference /= Void
 		local
-			l_text: STRING_GENERAL
+			l_text: STRING_32
 		do
 			description_location.set_text (a_preference.name)
 			if attached a_preference.description as d then
@@ -1371,12 +1371,12 @@ feature {NONE} -- Implementation
 			show_dialog_modal (l_error_dialog)
 		end
 
-	try_to_translate (a_string: STRING_GENERAL): STRING_GENERAL
+	try_to_translate (a_string: READABLE_STRING_GENERAL): STRING_32
 			-- Try to translate `a_string'.
 		require
 			a_string_not_void: a_string /= Void
 		do
-			Result := a_string
+			Result := a_string.as_string_32
 		ensure
 			result_not_void: Result /= Void
 		end

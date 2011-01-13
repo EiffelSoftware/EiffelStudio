@@ -231,7 +231,7 @@ feature {NONE} -- Implementation
 			l_scanner: EDITOR_BASIC_SCANNER
 			l_line: EDITOR_LINE
 		once
-			create l_scanner
+			create l_scanner.make
 			l_scanner.execute (ise_info)
 			create l_line.make_from_lexer (l_scanner)
 			create Result.make (2)

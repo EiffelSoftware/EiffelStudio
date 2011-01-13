@@ -63,7 +63,7 @@ feature -- Element Change
 			last_string_not_void: last_string /= Void
 		end
 
-	set_clipboard_text (a_text: STRING_GENERAL)
+	set_clipboard_text (a_text: READABLE_STRING_GENERAL)
 			-- Assign `a_text' to the clipboard
 		require
 			clipboard_open: clipboard_open

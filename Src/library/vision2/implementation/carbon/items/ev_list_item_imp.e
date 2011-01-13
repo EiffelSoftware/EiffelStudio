@@ -167,7 +167,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_tooltip (a_tooltip: STRING_GENERAL)
+	set_tooltip (a_tooltip: READABLE_STRING_GENERAL)
 			-- Assign `a_tooltip' to `tooltip'.
 		do
 			internal_tooltip := a_tooltip.twin
@@ -183,7 +183,7 @@ feature -- Element change
 			end
 		end
 
-	set_text (txt: STRING_GENERAL)
+	set_text (txt: READABLE_STRING_GENERAL)
 			-- Set current button text to `txt'.
 		do
 			internal_text := txt.twin

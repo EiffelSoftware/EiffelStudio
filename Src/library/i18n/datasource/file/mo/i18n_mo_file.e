@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_path: STRING_GENERAL)
+	make (a_path: READABLE_STRING_GENERAL)
 			-- Initialize file from `a_path'.
 			--
 			-- `a_path': File path of a valid mo file

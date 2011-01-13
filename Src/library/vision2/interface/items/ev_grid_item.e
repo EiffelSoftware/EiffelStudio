@@ -225,7 +225,7 @@ feature -- Status setting
 			background_color_assigned: background_color = a_color
 		end
 
-	set_tooltip (a_tooltip: detachable STRING_GENERAL)
+	set_tooltip (a_tooltip: detachable READABLE_STRING_GENERAL)
 			-- Assign `a_tooltip' to `tooltip'.
 			-- pass `Void' to remove the tooltip.
 		require

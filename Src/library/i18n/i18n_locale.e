@@ -38,7 +38,7 @@ feature -- Access
 	info: I18N_LOCALE_INFO
 			-- Specific information about locale
 
-	translation (original: STRING_GENERAL): STRING_32
+	translation (original: READABLE_STRING_GENERAL): STRING_32
 			-- Translation of `original' in locale
 			--
 			-- `original': String to translate
@@ -51,14 +51,14 @@ feature -- Access
 			if dictionary.has (original) then
 				l_result := dictionary.singular (original)
 			else
-				l_result := original
+				l_result := original.as_string_32
 			end
 			Result := l_result
 		ensure
 			result_attached: Result /= Void
 		end
 
-	plural_translation (original_singular, original_plural: STRING_GENERAL; plural_number: INTEGER): STRING_32
+	plural_translation (original_singular, original_plural: READABLE_STRING_GENERAL; plural_number: INTEGER): STRING_32
 			-- Translation of `original_singular' or `original_plural' in locale depending on `plural_number'
 			--
 			-- `original_singular': String to translate if singular is used
@@ -75,9 +75,9 @@ feature -- Access
 				l_result := dictionary.plural (original_singular, original_plural, plural_number)
 			else
 				if plural_number = 1 then
-					l_result := original_singular
+					l_result := original_singular.as_string_32
 				else
-					l_result := original_plural
+					l_result := original_plural.as_string_32
 				end
 			end
 			Result := l_result
@@ -85,7 +85,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	formatted_string (original: STRING_GENERAL; token_values: TUPLE): STRING_32
+	formatted_string (original: READABLE_STRING_GENERAL; token_values: TUPLE): STRING_32
 			-- String which has it's tokens replaced by given values
 			--
 			-- The string given can have token placeholders in the form of '$1'
@@ -139,7 +139,7 @@ invariant
 
 note
 	library:   "Internationalization library"
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

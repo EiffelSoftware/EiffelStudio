@@ -57,14 +57,18 @@ feature -- Query
 
 feature -- Conversion
 
-	convert_to (a_from_code_page: STRING; a_from_string: STRING_GENERAL; a_to_code_page: STRING)
+	convert_to (a_from_code_page: STRING; a_from_string: READABLE_STRING_GENERAL; a_to_code_page: STRING)
 			-- Convert between Unicode encodings.
 		do
 			reset
 				-- We accept conversion between the same encodings to optimize.
 			if a_from_code_page.is_case_insensitive_equal (a_to_code_page) then
 				last_conversion_successful := True
-				last_converted_string := a_from_string
+				if a_from_string.is_string_8 then
+					last_converted_string := a_from_string.as_string_8
+				else
+					last_converted_string := a_from_string.as_string_32
+				end
 			else
 				if a_from_code_page.is_case_insensitive_equal ({CODE_PAGE_CONSTANTS}.utf8) then
 						-- UTF-8 to UTF-32

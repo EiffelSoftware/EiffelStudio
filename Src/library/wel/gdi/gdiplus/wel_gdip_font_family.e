@@ -30,7 +30,7 @@ feature{NONE} -- Initlization
 			check ok: l_result = {WEL_GDIP_STATUS}.ok end
 		end
 
-	make_with_name (a_font_name: STRING_GENERAL)
+	make_with_name (a_font_name: READABLE_STRING_GENERAL)
 			-- Creation method
 		require
 			a_font_name_not_void: a_font_name /= Void

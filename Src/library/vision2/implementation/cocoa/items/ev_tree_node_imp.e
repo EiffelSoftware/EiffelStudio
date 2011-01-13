@@ -112,7 +112,7 @@ feature {EV_ANY_I} -- Status setting
 			internal_is_expanded := a_flag
 		end
 
-	set_text (a_text: STRING_GENERAL)
+	set_text (a_text: READABLE_STRING_GENERAL)
 			-- Set 'text' to 'a_text'
 		do
 			internal_text := a_text -- .twin??
@@ -176,7 +176,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 			internal_text := Void
 		end
 
-	set_internal_text (a_text: STRING_GENERAL)
+	set_internal_text (a_text: READABLE_STRING_GENERAL)
 			-- Set `internal_text' to `a_text'
 		do
 			internal_text := a_text
@@ -188,7 +188,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 	internal_tooltip: detachable STRING_32
 		-- Internal representation of `tooltip'.
 
-	set_tooltip (a_text: STRING_GENERAL)
+	set_tooltip (a_text: READABLE_STRING_GENERAL)
 			-- Set `a_text' to `tooltip'.
 		do
 			internal_tooltip := a_text

@@ -80,7 +80,7 @@ feature -- Command
 		do
 		end
 
-	draw_text (a_text: STRING_GENERAL; a_font: EV_FONT; a_point: EV_COORDINATE)
+	draw_text (a_text: READABLE_STRING_GENERAL; a_font: EV_FONT; a_point: EV_COORDINATE)
 			-- Draw `a_text' using `a_font' at `a_point'.
 		do
 			check not_implemented: False end

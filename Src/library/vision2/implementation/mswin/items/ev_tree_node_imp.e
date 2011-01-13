@@ -283,12 +283,12 @@ feature {EV_ANY_I} -- Element change
 	real_text: STRING_32
 			-- Internal `text'.
 
-	wel_set_text (txt: STRING_GENERAL)
+	wel_set_text (txt: READABLE_STRING_GENERAL)
 			-- Make `txt' the new label of `Current'.
 		local
 			tree: detachable EV_TREE_IMP
 		do
-			real_text := txt.twin
+			real_text := txt.as_string_32.twin
 			set_mask (Tvif_text)
 			Precursor (txt)
 			tree := top_parent_imp
@@ -567,7 +567,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Pixmap Handling
 			end
 		end
 
-	set_tooltip (a_tooltip: STRING_GENERAL)
+	set_tooltip (a_tooltip: READABLE_STRING_GENERAL)
 			-- Assign `a_tooltip' to `internal_tooltip_string'.
 		do
 			internal_tooltip_string := a_tooltip.as_string_32

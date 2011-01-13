@@ -69,7 +69,7 @@ feature -- Access
 
 feature -- Update
 
-	set_text (a_text: STRING_GENERAL)
+	set_text (a_text: READABLE_STRING_GENERAL)
 		local
 			l_has_changed: BOOLEAN
 		do

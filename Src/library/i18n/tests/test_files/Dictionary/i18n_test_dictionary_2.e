@@ -75,8 +75,8 @@ feature {NONE}	-- Data generation
 			entry:I18N_DICTIONARY_ENTRY
 			random:RANDOM
 			i:INTEGER
-			singular:STRING_GENERAL
-			translated_singular, original_plural: STRING_GENERAL
+			singular:READABLE_STRING_GENERAL
+			translated_singular, original_plural: READABLE_STRING_GENERAL
 
 		do
 			create random.set_seed (seed)
@@ -176,8 +176,8 @@ feature {NONE} -- data query
 			local
 				i,j: INTEGER
 				entry:I18N_DICTIONARY_ENTRY
-				singular: STRING_GENERAL
-				translated_singular, original_plural: STRING_GENERAL
+				singular: READABLE_STRING_GENERAL
+				translated_singular, original_plural: READABLE_STRING_GENERAL
 
 			do
 				output_string ("in feature data_query: %N")
@@ -293,8 +293,8 @@ feature {NONE} -- Data access
 		local
 			i,j: INTEGER
 			entry:I18N_DICTIONARY_ENTRY
-			singular: STRING_GENERAL
-			translated_singular, original_plural: STRING_GENERAL
+			singular: READABLE_STRING_GENERAL
+			translated_singular, original_plural: READABLE_STRING_GENERAL
 
 		do
 			output_string ("in feature data_get: %N")

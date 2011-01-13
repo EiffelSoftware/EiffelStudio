@@ -84,7 +84,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_parent: WEL_WINDOW; a_name: STRING_GENERAL;
+	make (a_parent: WEL_WINDOW; a_name: READABLE_STRING_GENERAL;
 			a_x, a_y, a_width, a_height, an_id: INTEGER)
 			-- Make a rich edit control.
 		require
@@ -98,7 +98,7 @@ feature {NONE} -- Initialization
 		ensure
 			parent_set: parent = a_parent
 			exists: exists
-			name_set: text.is_equal (a_name)
+			name_set: text.same_string_general (a_name)
 			id_set: id = an_id
 		end
 
@@ -395,7 +395,7 @@ feature -- Status setting
 			{WEL_API}.send_message (item, Em_setoptions, to_wparam (operation), to_lparam (an_options))
 		end
 
-	set_text (a_text: detachable STRING_GENERAL)
+	set_text (a_text: detachable READABLE_STRING_GENERAL)
 			-- Set `text' with `a_text'.
 		local
 			stream: WEL_RICH_EDIT_BUFFER_LOADER
@@ -410,7 +410,7 @@ feature -- Status setting
 			stream.release_stream
 		end
 
-	insert_text (a_text: STRING_GENERAL)
+	insert_text (a_text: READABLE_STRING_GENERAL)
 			-- Insert `a_text' at the position of the cursor.
 			-- Replace the current selection if there is one
 		require
@@ -652,7 +652,7 @@ feature -- Basic operations
 			{WEL_API}.send_message (item, Em_hideselection, to_wparam (0), to_lparam (0))
 		end
 
-	find (text_to_find: STRING_GENERAL; match_case: BOOLEAN; start_from: INTEGER): INTEGER
+	find (text_to_find: READABLE_STRING_GENERAL; match_case: BOOLEAN; start_from: INTEGER): INTEGER
 			-- Find `text_to_find' in WEL_RICH_EDIT
 		require
 			text_to_find: text_to_find /= Void
@@ -717,7 +717,7 @@ feature -- Element change
 			{WEL_API}.send_message (item, Em_setparaformat, to_wparam (0), a_para_format.item)
 		end
 
-	print_all (dc: WEL_PRINTER_DC; title: STRING_GENERAL)
+	print_all (dc: WEL_PRINTER_DC; title: READABLE_STRING_GENERAL)
 			-- Print the contents of the rich edit control on
 			-- the printer `dc'. `title' is the printer job name.
 		require
@@ -865,14 +865,14 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

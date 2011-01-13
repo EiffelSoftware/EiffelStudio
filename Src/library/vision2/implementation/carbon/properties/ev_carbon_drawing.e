@@ -92,7 +92,7 @@ set_elipse (a_x, a_y, a_height, a_width, a_line: INTEGER; a_filled, a_dashed: BO
 
 	end
 
-set_text (a_x, a_y: INTEGER; a_filled: BOOLEAN; a_col: EV_COLOR; a_font: EV_FONT; an_angle: REAL; a_string: STRING_GENERAL)
+set_text (a_x, a_y: INTEGER; a_filled: BOOLEAN; a_col: EV_COLOR; a_font: EV_FONT; an_angle: REAL; a_string: READABLE_STRING_GENERAL)
 	do
 		internal_text := true
 

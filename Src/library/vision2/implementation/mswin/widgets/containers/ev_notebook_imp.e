@@ -781,7 +781,7 @@ feature {EV_NOTEBOOK_TAB_IMP} -- Implementation
 			end
 		end
 
-	set_item_text (v: like item; a_text: STRING_GENERAL)
+	set_item_text (v: like item; a_text: READABLE_STRING_GENERAL)
 			-- Assign `a_text' to the label for `an_item'.
 		local
 			a_wel_item: WEL_TAB_CONTROL_ITEM

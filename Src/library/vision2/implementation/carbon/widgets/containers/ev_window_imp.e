@@ -385,7 +385,7 @@ feature -- Element change
 			set_height (a_height)
 		end
 
-	set_title (new_title: STRING_GENERAL)
+	set_title (new_title: READABLE_STRING_GENERAL)
 			-- Set `title' to `new_title'.
 		local
 			res: INTEGER

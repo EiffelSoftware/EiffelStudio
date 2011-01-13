@@ -87,10 +87,11 @@ feature {EV_COLOR} -- Element change
 			wel_set_blue ((a_blue * 255).rounded)
 		end
 
-	set_name (a_name: STRING_GENERAL)
+	set_name (a_name: READABLE_STRING_GENERAL)
 			-- Assign `a_name' to `name'.
 		do
-			name.copy (a_name)
+			name.wipe_out
+			name.append_string_general (a_name)
 		end
 
 feature {EV_ANY_I, EV_STOCK_COLORS_IMP}

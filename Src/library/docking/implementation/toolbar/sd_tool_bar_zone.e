@@ -771,7 +771,7 @@ feature {NONE} -- Implmentation
 			end
 		end
 
-	internal_text: detachable ARRAYED_LIST [detachable STRING_GENERAL]
+	internal_text: detachable ARRAYED_LIST [detachable READABLE_STRING_GENERAL]
 			-- When `is_vertical' we hide all texts, store orignal texts here
 
 	internal_hidden_widget_items: detachable HASH_TABLE [SD_TOOL_BAR_WIDGET_ITEM, INTEGER]

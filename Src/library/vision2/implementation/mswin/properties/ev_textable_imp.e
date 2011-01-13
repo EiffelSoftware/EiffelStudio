@@ -22,7 +22,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_text (a_text: STRING_GENERAL)
+	set_text (a_text: READABLE_STRING_GENERAL)
 			-- Assign `a_text' to `text'.
 		do
 			wel_set_text (a_text)
@@ -30,7 +30,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	wel_set_text (a_text: detachable STRING_GENERAL)
+	wel_set_text (a_text: detachable READABLE_STRING_GENERAL)
 			-- Set `a_text' in WEL object.
 		deferred
 		end

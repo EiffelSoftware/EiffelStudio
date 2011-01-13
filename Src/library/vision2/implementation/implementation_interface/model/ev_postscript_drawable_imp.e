@@ -407,13 +407,13 @@ feature -- Drawing operations
 			translate_to (-x, y)
 		end
 
-	draw_text (x, y: INTEGER; a_text: STRING_GENERAL)
+	draw_text (x, y: INTEGER; a_text: READABLE_STRING_GENERAL)
 			-- Draw `a_text' with left of baseline at (`x', `y') using `font.
 		do
 			draw_text_top_left (x, y - font.ascent, a_text)
 		end
 
-	draw_text_top_left (x, y: INTEGER; a_text: STRING_GENERAL)
+	draw_text_top_left (x, y: INTEGER; a_text: READABLE_STRING_GENERAL)
 			-- Draw `a_text' with top left corner at (`x', `y') using `font'.
 		local
 			font_name, font_style, line: STRING_32
@@ -470,7 +470,7 @@ feature -- Drawing operations
 			add_ps ("grestore")
 		end
 
-	draw_ellipsed_text (x, y: INTEGER; a_text: STRING_GENERAL; clipping_width: INTEGER)
+	draw_ellipsed_text (x, y: INTEGER; a_text: READABLE_STRING_GENERAL; clipping_width: INTEGER)
 			-- Draw `a_text' with left of baseline at (`x', `y') using `font'.
 			-- Text is clipped to `clipping_width' in pixels and ellipses are displayed
 			-- to show truncated characters if any.
@@ -478,7 +478,7 @@ feature -- Drawing operations
 			fixme ("draw_ellipsed_text: To be implemented")
 		end
 
-	draw_ellipsed_text_top_left (x, y: INTEGER; a_text: STRING_GENERAL; clipping_width: INTEGER)
+	draw_ellipsed_text_top_left (x, y: INTEGER; a_text: READABLE_STRING_GENERAL; clipping_width: INTEGER)
 			-- Draw `a_text' with top left corner at (`x', `y') using `font'.
 			-- Text is clipped to `clipping_width' in pixels and ellipses are displayed
 			-- to show truncated characters if any.
@@ -486,7 +486,7 @@ feature -- Drawing operations
 			fixme ("draw_ellipsed_text_top_left: To be implemented")
 		end
 
-	draw_rotated_text (x, y: INTEGER; angle: REAL; a_text: STRING_GENERAL)
+	draw_rotated_text (x, y: INTEGER; angle: REAL; a_text: READABLE_STRING_GENERAL)
 			-- Draw rotated text `a_text' with left of baseline at (`x', `y') using `font'.
 			-- Rotation is number of radians counter-clockwise from horizontal plane.
 		do
@@ -730,7 +730,7 @@ feature {EV_ANY, EV_ANY_I} -- Command
 
 feature {EV_POSTSCRIPT_DRAWABLE} -- Write line
 
-	add_ps (a_code: STRING_GENERAL)
+	add_ps (a_code: READABLE_STRING_GENERAL)
 			-- Add `a_code' to postscript data.
 		do
 			postscript_result.append ("      "+a_code.to_string_8)

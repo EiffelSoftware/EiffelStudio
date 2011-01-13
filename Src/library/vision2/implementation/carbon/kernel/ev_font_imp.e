@@ -83,7 +83,7 @@ feature -- Element change
 			family := a_family
 		end
 
-	set_face_name (a_face: STRING_GENERAL)
+	set_face_name (a_face: READABLE_STRING_GENERAL)
 			-- Set the face name for current.
 		do
 			name := a_face
@@ -161,7 +161,7 @@ feature -- Status report
 		do
 		end
 
-	string_size (a_string: STRING_GENERAL): TUPLE [INTEGER, INTEGER, INTEGER, INTEGER, INTEGER]
+	string_size (a_string: READABLE_STRING_GENERAL): TUPLE [INTEGER, INTEGER, INTEGER, INTEGER, INTEGER]
 			-- `Result' is [width, height, left_offset, right_offset] in pixels of `a_string' in the
 			-- current font, taking into account line breaks ('%N').
 		do
@@ -173,7 +173,7 @@ feature -- Status report
 		once
 		end
 
-	string_width (a_string: STRING_GENERAL): INTEGER
+	string_width (a_string: READABLE_STRING_GENERAL): INTEGER
 			-- Width in pixels of `a_string' in the current font.
 		do
 		end

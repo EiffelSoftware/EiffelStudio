@@ -87,7 +87,7 @@ feature -- Setting
 		do
 			history_connector := a_connector.twin
 		ensure
-			history_connector_set: history_connector /= Void and then history_connector.is_equal (a_connector)
+			history_connector_set: history_connector /= Void and then history_connector.same_string (a_connector)
 		end
 
 	set_history_item_output_function (a_func: like history_item_output_function)

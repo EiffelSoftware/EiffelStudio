@@ -252,15 +252,15 @@ feature -- Colors
 
 feature -- Interface names
 
-	b_back: STRING_GENERAL do Result := locale.translation ("< Back ") end
-	b_next: STRING_GENERAL do Result := locale.translation ("Next >") end
-	b_cancel: STRING_GENERAL do Result := locale.translation ("Cancel") end
-	b_help: STRING_GENERAL do Result := locale.translation ("Help") end
-	b_finish: STRING_GENERAL do Result := locale.translation ("Finish") end
-	b_abort: STRING_GENERAL do Result := locale.translation ("Abort") end
-	b_browse: STRING_GENERAL do Result := locale.translation ("Browse...") end
+	b_back: STRING_32 do Result := locale.translation ("< Back ") end
+	b_next: STRING_32 do Result := locale.translation ("Next >") end
+	b_cancel: STRING_32 do Result := locale.translation ("Cancel") end
+	b_help: STRING_32 do Result := locale.translation ("Help") end
+	b_finish: STRING_32 do Result := locale.translation ("Finish") end
+	b_abort: STRING_32 do Result := locale.translation ("Abort") end
+	b_browse: STRING_32 do Result := locale.translation ("Browse...") end
 
-	t_choose_directory: STRING_GENERAL do Result := locale.translation ("Please choose a folder.") end
+	t_choose_directory: STRING_32 do Result := locale.translation ("Please choose a folder.") end
 
 feature {NONE} -- Implementation
 

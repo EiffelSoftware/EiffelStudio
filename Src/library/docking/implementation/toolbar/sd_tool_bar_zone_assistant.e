@@ -340,8 +340,8 @@ feature -- Command
 			l_item: detachable SD_TOOL_BAR_ITEM
 			l_all_items: detachable ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			l_content_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
-			l_name: STRING_GENERAL
-			l_data: detachable ARRAYED_LIST [TUPLE [name: STRING_GENERAL; displayed: BOOLEAN]]
+			l_name: READABLE_STRING_GENERAL
+			l_data: detachable ARRAYED_LIST [TUPLE [name: READABLE_STRING_GENERAL; displayed: BOOLEAN]]
 			l_content: detachable SD_TOOL_BAR_CONTENT
 			l_separator: SD_TOOL_BAR_SEPARATOR
 		do
@@ -417,7 +417,7 @@ feature -- Command
 			-- Save items layout
 			-- (export status {NONE})
 		local
-			l_data: ARRAYED_LIST [TUPLE [name: STRING_GENERAL; displayed: BOOLEAN]]
+			l_data: ARRAYED_LIST [TUPLE [name: READABLE_STRING_GENERAL; displayed: BOOLEAN]]
 			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 		do
 			from
@@ -608,7 +608,7 @@ feature -- Query
 	last_state: SD_TOOL_BAR_ZONE_STATE
 			-- Last tool bar docking state
 
-	is_items_name_unique (a_name: STRING_GENERAL): BOOLEAN
+	is_items_name_unique (a_name: READABLE_STRING_GENERAL): BOOLEAN
 			-- If all items' name in `a_items' unique?
 		require
 			not_void: a_name /= Void and then not a_name.is_empty

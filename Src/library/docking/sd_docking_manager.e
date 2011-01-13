@@ -180,7 +180,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	restoration_callback: detachable FUNCTION [ANY, TUPLE [title: STRING_GENERAL], SD_CONTENT]
+	restoration_callback: detachable FUNCTION [ANY, TUPLE [title: READABLE_STRING_GENERAL], SD_CONTENT]
 			-- Agent to use to attempt to retrieve a {SD_CONTENT} during restoration from a cached
 			-- layout file
 
@@ -256,7 +256,7 @@ feature -- Query
 			Result := property.last_focus_content
 		end
 
-	is_unique_title_free_to_use (a_title: STRING_GENERAL): BOOLEAN
+	is_unique_title_free_to_use (a_title: READABLE_STRING_GENERAL): BOOLEAN
 			-- If `a_title' unique in all current contents' `unique_title', not already used by other contents?
 		require
 			a_title: a_title /= Void
@@ -319,7 +319,7 @@ feature -- Query
 
 feature -- Command
 
-	save_data (a_file: STRING_GENERAL): BOOLEAN
+	save_data (a_file: READABLE_STRING_GENERAL): BOOLEAN
 			-- Save current docking config data (including tools' data and editors' data) into `a_file'
 		require
 			a_file_not_void: a_file /= Void
@@ -331,7 +331,7 @@ feature -- Command
 			Result := l_config.save_config (a_file)
 		end
 
-	save_editors_data (a_file: STRING_GENERAL): BOOLEAN
+	save_editors_data (a_file: READABLE_STRING_GENERAL): BOOLEAN
 			-- Save main window's editor layout configuration data into `a_file'
 		require
 			not_void: a_file /= Void
@@ -343,7 +343,7 @@ feature -- Command
 			Result := l_config.save_editors_config (a_file)
 		end
 
-	save_tools_data (a_file: STRING_GENERAL): BOOLEAN
+	save_tools_data (a_file: READABLE_STRING_GENERAL): BOOLEAN
 			-- Save tools' layout configuration data into `a_file'
 		require
 			not_void: a_file /= Void
@@ -355,7 +355,7 @@ feature -- Command
 			Result := l_config.save_tools_config (a_file)
 		end
 
-	save_tools_data_with_name (a_file: STRING_GENERAL; a_name: STRING_GENERAL): BOOLEAN
+	save_tools_data_with_name (a_file: READABLE_STRING_GENERAL; a_name: READABLE_STRING_GENERAL): BOOLEAN
 			-- Save tools' layout configuration data into a file named `a_file' and store `a_name' into the data
 		require
 			not_void: a_file /= Void
@@ -367,7 +367,7 @@ feature -- Command
 			Result := l_config.save_tools_config_with_name (a_file, a_name)
 		end
 
-	open_config (a_file: STRING_GENERAL): BOOLEAN
+	open_config (a_file: READABLE_STRING_GENERAL): BOOLEAN
 			-- Open all docking layout configuration data previously stored in `a_file'
 			-- Result True means restore docking layout operation executed successfully.
 			-- Result False means the operation failed, maybe due to `a_file' not exist, or
@@ -383,7 +383,7 @@ feature -- Command
 			Result := l_config.open_config (a_file)
 		end
 
-	open_editors_config (a_file: STRING_GENERAL)
+	open_editors_config (a_file: READABLE_STRING_GENERAL)
 			-- Open main window editors' layout configuration data previously stored in `a_file'
 		require
 			not_destroyed: not is_destroyed
@@ -394,7 +394,7 @@ feature -- Command
 			l_config.open_editors_config (a_file)
 		end
 
-	open_tools_config (a_file: STRING_GENERAL): BOOLEAN
+	open_tools_config (a_file: READABLE_STRING_GENERAL): BOOLEAN
 			-- Open tool type contents' layout configuration data previously stored in `a_file'
 			-- When editor area available, open all tools' layout except all editor area panels'
 			-- It means, when no editor area avaliable, open_tools_config doesn't make sense
@@ -409,7 +409,7 @@ feature -- Command
 			Result := l_config.open_tools_config (a_file)
 		end
 
-	open_maximized_tool_config (a_file: STRING_GENERAL)
+	open_maximized_tool_config (a_file: READABLE_STRING_GENERAL)
 			-- Open tool's maximization statues configuration data previously stored in `a_file'
 		require
 			not_destroyed: not is_destroyed
@@ -420,7 +420,7 @@ feature -- Command
 			l_config.open_maximized_tool_data (a_file)
 		end
 
-	open_tool_bar_item_config (a_file: STRING_GENERAL)
+	open_tool_bar_item_config (a_file: READABLE_STRING_GENERAL)
 			-- Open tool bar items' layout configuration data previously stored in `a_file'
 		require
 			not_destroyed: not is_destroyed
@@ -688,7 +688,7 @@ feature -- Command
 
 feature -- Contract support
 
-	is_file_readable (a_file_name: STRING_GENERAL): BOOLEAN
+	is_file_readable (a_file_name: READABLE_STRING_GENERAL): BOOLEAN
 			-- Does `a_file_name' exist and readable?
 		local
 			l_file: RAW_FILE
@@ -780,7 +780,7 @@ feature {SD_DOCKING_MANAGER_AGENTS, SD_DOCKING_MANAGER_QUERY, SD_DOCKING_MANAGER
 
 feature -- Obsolete
 
-	save_config (a_file: STRING_GENERAL)
+	save_config (a_file: READABLE_STRING_GENERAL)
 			-- Save current docking config
 		obsolete
 			"Use save_data instead"
@@ -793,7 +793,7 @@ feature -- Obsolete
 			l_result := save_data (a_file)
 		end
 
-	save_editors_config (a_file: STRING_GENERAL)
+	save_editors_config (a_file: READABLE_STRING_GENERAL)
 			-- Save main window editor config
 		obsolete
 			"Use save_editors_data instead"
@@ -806,7 +806,7 @@ feature -- Obsolete
 			l_result := save_editors_data (a_file)
 		end
 
-	save_tools_config (a_file: STRING_GENERAL)
+	save_tools_config (a_file: READABLE_STRING_GENERAL)
 			-- Save tools config
 		obsolete
 			"Use save_tools_data instead"
@@ -819,7 +819,7 @@ feature -- Obsolete
 			l_result := save_tools_data (a_file)
 		end
 
-	save_tools_config_with_name (a_file: STRING_GENERAL; a_name: STRING_GENERAL)
+	save_tools_config_with_name (a_file: READABLE_STRING_GENERAL; a_name: READABLE_STRING_GENERAL)
 			-- Save tools config
 		obsolete
 			"Use save_tools_data_with_name instead"
@@ -832,7 +832,7 @@ feature -- Obsolete
 			l_result := save_tools_data_with_name (a_file, a_name)
 		end
 
-	is_title_unique (a_title: STRING_GENERAL): BOOLEAN
+	is_title_unique (a_title: READABLE_STRING_GENERAL): BOOLEAN
 			-- If `a_title' unique in all contents `unique_title's ?
 		obsolete
 			"Use is_unique_title_free_to_use instead"

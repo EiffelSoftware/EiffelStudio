@@ -36,7 +36,7 @@ feature -- Initialization
 
 feature -- Element change
 
-	set_tooltip (a_text: STRING_GENERAL)
+	set_tooltip (a_text: READABLE_STRING_GENERAL)
 			-- Set `tooltip' to `a_text'.
 		local
 			ret: INTEGER

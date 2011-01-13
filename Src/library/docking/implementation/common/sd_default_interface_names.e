@@ -103,7 +103,7 @@ feature -- Enumeration
 			Result := "No detail available."
 		end
 
-	tool_bar_right_click_customize (toolbar_name: STRING_GENERAL): STRING_32
+	tool_bar_right_click_customize (toolbar_name: READABLE_STRING_GENERAL): STRING_32
 			-- String for menu area right click menu.
 		do
 			Result := "Customize " + toolbar_name.as_string_8 + "..."

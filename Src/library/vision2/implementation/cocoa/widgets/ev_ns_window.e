@@ -24,7 +24,7 @@ inherit
 
 feature -- Window Title
 
-	set_title (a_title: STRING_GENERAL)
+	set_title (a_title: READABLE_STRING_GENERAL)
 			-- <Precursor>
 		do
 			cocoa_set_title (create {NS_STRING}.make_with_string (a_title))

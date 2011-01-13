@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 			first_window.show
 		end
 
-	Wizard_title: STRING_GENERAL
+	Wizard_title: STRING_32
 			-- Window title for this wizard.
 		once
 			Result := "Wizard Version 1.1"

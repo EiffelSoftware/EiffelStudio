@@ -224,7 +224,7 @@ feature {NONE} -- Implementation
 		require
 			not_void: a_items /= Void
 		local
-			l_data: ARRAYED_LIST [TUPLE [STRING_GENERAL, BOOLEAN]]
+			l_data: ARRAYED_LIST [TUPLE [READABLE_STRING_GENERAL, BOOLEAN]]
 		do
 			from
 				create l_data.make (a_items.count)

@@ -41,14 +41,14 @@ feature -- Properties
 	title: STRING_32
 			-- Text showing on Current
 
-	set_title (a_title: STRING_GENERAL)
+	set_title (a_title: READABLE_STRING_GENERAL)
 			-- Set `title' with `a_title'
 		require
 			not_void: a_title /= Void
 		do
-			title := a_title
+			title := a_title.as_string_32
 		ensure
-			set: title.is_equal (a_title.as_string_32)
+			set: title.same_string_general (a_title)
 		end
 
 	is_focus_color_enable: BOOLEAN
@@ -276,7 +276,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

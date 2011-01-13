@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_language: STRING_GENERAL)
+	make (a_language: READABLE_STRING_GENERAL)
 			-- Initialize language id to `a_language'.
 		require
 			a_language_not_void: a_language /= Void

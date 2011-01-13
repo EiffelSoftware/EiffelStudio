@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING_GENERAL)
+	make (a_name: READABLE_STRING_GENERAL)
 			-- Make an atom named `a_name'.
 		require
 			a_name_not_void: a_name /= Void
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			create a_wel_string.make (a_name)
 			item := cwin_add_atom (a_wel_string.item)
 		ensure
-			name_is_equal: item /= 0 implies name.is_equal (a_name)
+			name_is_equal: item /= 0 implies name.same_string_general (name)
 		end
 
 feature -- Access
@@ -93,14 +93,14 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

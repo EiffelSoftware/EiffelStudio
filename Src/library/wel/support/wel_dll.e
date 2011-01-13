@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (dll_name: STRING_GENERAL)
+	make (dll_name: READABLE_STRING_GENERAL)
 			-- Load the DLL `dll_name'
 		require
 			dll_name_not_void: dll_name /= Void

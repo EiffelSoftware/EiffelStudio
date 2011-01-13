@@ -139,7 +139,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_icon_name (an_icon_name: STRING_GENERAL)
+	set_icon_name (an_icon_name: READABLE_STRING_GENERAL)
 			-- Assign `an_icon_name' to `icon_name'.
 		do
 		end

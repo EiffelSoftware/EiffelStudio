@@ -26,7 +26,7 @@ feature -- Basic operations
 		do
 		end
 
-	start_document (title: STRING_GENERAL)
+	start_document (title: READABLE_STRING_GENERAL)
 			-- Start the job `title' on the printer.
 		require
 			exists: exists

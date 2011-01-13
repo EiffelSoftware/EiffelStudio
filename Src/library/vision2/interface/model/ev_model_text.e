@@ -85,7 +85,7 @@ feature {NONE} -- Initialization
 			center_is_valid: is_center_valid
 		end
 
-	make_with_text (a_text: STRING_GENERAL)
+	make_with_text (a_text: READABLE_STRING_GENERAL)
 			-- Create with `a_text'.
 		require
 			a_text_not_void: a_text /= Void
@@ -228,16 +228,16 @@ feature -- Status setting
 			set: id_font = an_id_font
 		end
 
-	set_text (a_text: like text)
+	set_text (a_text: READABLE_STRING_GENERAL)
 			-- Assign `a_text' to `text'.
 		require
 			a_text_not_void: a_text /= Void
 		do
-			text := a_text
+			text := a_text.as_string_32
 			update_dimensions
 			invalidate
 		ensure
-			text_assigned: text = a_text
+			text_assigned: text.same_string_general (a_text)
 		end
 
 feature -- Events

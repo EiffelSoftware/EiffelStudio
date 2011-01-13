@@ -188,7 +188,7 @@ feature {NONE} -- Implementation
 			--| FIXME Version when tooltips were fixed for 2.2.x needs to be investigated, 12 is a certainty.
 		end
 
-	set_tooltip (a_text: STRING_GENERAL)
+	set_tooltip (a_text: READABLE_STRING_GENERAL)
 			-- Set `tooltip' to `a_text'.
 		local
 			a_tip_label: POINTER
@@ -208,7 +208,7 @@ feature {NONE} -- Implementation
 				end
 			end
 			if needs_custom_tooltip_implementation then
-				internal_tooltip := a_text.twin
+				internal_tooltip := a_text.as_string_32.twin
 				a_cs := App_implementation.c_string_from_eiffel_string (internal_tooltip)
 				a_tip_label := {EV_GTK_EXTERNALS}.gtk_tooltips_struct_tip_label (tooltips_pointer)
 				a_tip_win := {EV_GTK_EXTERNALS}.gtk_tooltips_struct_tip_window (tooltips_pointer)

@@ -52,7 +52,7 @@ feature -- Status setting
 		deferred
 		end
 
-	set_title (a_title: STRING_GENERAL)
+	set_title (a_title: READABLE_STRING_GENERAL)
 			-- Set the title of the dialog.
 		require
 			a_title_not_void: a_title /= Void

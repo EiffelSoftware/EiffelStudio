@@ -64,7 +64,7 @@ feature -- Access
 
 feature -- Element change
 
-	append_string (a_string: STRING_GENERAL; an_id: INTEGER)
+	append_string (a_string: READABLE_STRING_GENERAL; an_id: INTEGER)
 			-- Append `a_string' with the identifier `an_id' to the
 			-- menu.
 		require
@@ -81,10 +81,10 @@ feature -- Element change
 		ensure
 			new_count: count = old count + 1
 			item_exists: item_exists (an_id)
-			string_set: id_string (an_id).is_equal (a_string)
+			string_set: id_string (an_id).same_string_general (a_string)
 		end
 
-	append_popup (a_menu: WEL_MENU; a_title: STRING_GENERAL)
+	append_popup (a_menu: WEL_MENU; a_title: READABLE_STRING_GENERAL)
 			-- Append a popup menu `a_menu' with `a_title' to the
 			-- current menu.
 		require
@@ -114,7 +114,7 @@ feature -- Element change
 			new_count: count = old count + 1
 		end
 
-	append_string_with_break (a_string: STRING_GENERAL; an_id: INTEGER; has_separator: BOOLEAN)
+	append_string_with_break (a_string: READABLE_STRING_GENERAL; an_id: INTEGER; has_separator: BOOLEAN)
 			-- Append an item with a break to the menu.
 			-- All the following items will be set in a new column.
 			-- If `has_separator' is True, then a vertical separator
@@ -138,7 +138,7 @@ feature -- Element change
 		ensure
 			new_count: count = old count + 1
 			item_exists: item_exists (an_id)
-			string_set: id_string (an_id).is_equal (a_string)
+			string_set: id_string (an_id).same_string_general (a_string)
 		end
 
 	append_bitmap (bitmap: WEL_BITMAP; an_id: INTEGER)
@@ -158,7 +158,7 @@ feature -- Element change
 			item_exists: item_exists (an_id)
 		end
 
-	insert_string (a_string: STRING_GENERAL; a_position, an_id: INTEGER)
+	insert_string (a_string: READABLE_STRING_GENERAL; a_position, an_id: INTEGER)
 			-- Insert `a_string' at zero-based `a_position' with
 			-- `an_id'.
 		require
@@ -176,10 +176,10 @@ feature -- Element change
 				 cwel_integer_to_pointer (an_id), a_wel_string.item)
 		ensure
 			new_count: count = old count + 1
-			string_set: id_string (an_id).is_equal (a_string)
+			string_set: id_string (an_id).same_string_general (a_string)
 		end
 
-	insert_popup (a_menu: WEL_MENU; a_position: INTEGER; a_title: STRING_GENERAL)
+	insert_popup (a_menu: WEL_MENU; a_position: INTEGER; a_title: READABLE_STRING_GENERAL)
 			-- Insert a popup menu `a_menu' at zero-based `a_position'
 			-- with `a_title'.
 		require
@@ -231,7 +231,7 @@ feature -- Element change
 			new_count: count = old count + 1
 		end
 
-	modify_string (a_string: STRING_GENERAL; an_id: INTEGER)
+	modify_string (a_string: READABLE_STRING_GENERAL; an_id: INTEGER)
 			-- Modify the menu title identified by `an_id' to
 			-- `a_string'.
 		require
@@ -246,7 +246,7 @@ feature -- Element change
 			cwin_modify_menu (item, an_id, Mf_string + Mf_bycommand,
 				cwel_integer_to_pointer (an_id), a_wel_string.item)
 		ensure
-			string_set: id_string (an_id).is_equal (a_string)
+			string_set: id_string (an_id).same_string_general (a_string)
 		end
 
 feature -- Removal
@@ -733,14 +733,14 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

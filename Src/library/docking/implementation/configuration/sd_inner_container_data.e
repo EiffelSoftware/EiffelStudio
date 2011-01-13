@@ -11,10 +11,10 @@ class
 
 feature -- Tab and Docking data.
 
-	titles: detachable ARRAYED_LIST [STRING_GENERAL]
+	titles: detachable ARRAYED_LIST [READABLE_STRING_GENERAL]
 			-- All titles. If it's a docking zone, there is only one title.
 
-	add_title (a_title: STRING_GENERAL)
+	add_title (a_title: READABLE_STRING_GENERAL)
 			-- Add `a_title'.
 		require
 			a_title_not_void: a_title /= Void
@@ -181,12 +181,12 @@ feature -- Common properties
 	state: detachable STRING_32
 			-- One generator type name of SD_STATE and it's descendents.
 
-	set_state (a_class_name: STRING_GENERAL)
+	set_state (a_class_name: READABLE_STRING_GENERAL)
 			-- Set `state'.
 		do
-			state := a_class_name
+			state := a_class_name.as_string_32
 		ensure
-			set: (a_class_name /= Void and attached state as le_state) implies state ~ (a_class_name.as_string_32)
+			set: (a_class_name /= Void and attached state as l_state) implies l_state.same_string_general (a_class_name)
 		end
 
 	direction: INTEGER
@@ -215,14 +215,14 @@ feature -- Common properties
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

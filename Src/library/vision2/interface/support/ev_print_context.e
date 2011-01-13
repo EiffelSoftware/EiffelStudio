@@ -129,24 +129,24 @@ feature {EV_PRINT_DIALOG_I} -- Status setting
 			copies_set: copies = a_value
 		end
 
-	set_printer_name (a_string: STRING_GENERAL)
+	set_printer_name (a_string: READABLE_STRING_GENERAL)
 			-- Set "printer_name" to "a_string".
 		require
 			a_string_not_empty: a_string.count > 0
 		do
-			printer_name := a_string
+			printer_name := a_string.as_string_32
 		ensure
-			printer_name_set: printer_name = a_string
+			printer_name_set: printer_name.same_string_general (a_string)
 		end
 
-	set_file_name (a_string: STRING_GENERAL)
+	set_file_name (a_string: READABLE_STRING_GENERAL)
 			-- Set "file_name" to "a_string".
 		require
 			a_string_not_empty: a_string.count > 0
 		do
-			file_name := a_string
+			file_name := a_string.as_string_32
 		ensure
-			file_name_set: file_name = a_string
+			file_name_set: file_name.same_string_general (a_string)
 		end
 
 	set_horizontal_resolution (resolution: INTEGER)

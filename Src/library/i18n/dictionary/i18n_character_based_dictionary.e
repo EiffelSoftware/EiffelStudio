@@ -50,7 +50,7 @@ feature -- Manipulation
 
 feature -- Access
 
-	has (original : STRING_GENERAL) : BOOLEAN
+	has (original : READABLE_STRING_GENERAL) : BOOLEAN
 			-- is there an entry with original?
 		do
 			Result := singular_char_tree.get_item_with_key (original.as_string_32) /= Void
@@ -59,7 +59,7 @@ feature -- Access
 			end
 		end
 
-	has_plural (original_singular, original_plural: STRING_GENERAL; plural_number: INTEGER): BOOLEAN
+	has_plural (original_singular, original_plural: READABLE_STRING_GENERAL; plural_number: INTEGER): BOOLEAN
 			--
 		local
 			l_trans: detachable ARRAY [STRING_32]
@@ -73,7 +73,7 @@ feature -- Access
 			end
 		end
 
-	singular (original: STRING_GENERAL): STRING_32
+	singular (original: READABLE_STRING_GENERAL): STRING_32
 			-- get the translation of `original'
 			-- in the singular form
 		local
@@ -92,7 +92,7 @@ feature -- Access
 			Result := l_result
 		end
 
-	plural (original_singular, original_plural: STRING_GENERAL; plural_number: INTEGER): STRING_32
+	plural (original_singular, original_plural: READABLE_STRING_GENERAL; plural_number: INTEGER): STRING_32
 			-- get the translation of `original_singular'
 			-- in the given plural form
 		local

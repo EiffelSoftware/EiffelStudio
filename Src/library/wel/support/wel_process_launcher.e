@@ -55,7 +55,7 @@ feature -- Element settings
 
 feature -- Basic Operations
 
-	spawn (a_command_line: STRING_GENERAL; a_working_directory: detachable STRING_GENERAL)
+	spawn (a_command_line: READABLE_STRING_GENERAL; a_working_directory: detachable READABLE_STRING_GENERAL)
 			-- Spawn asynchronously process described in `a_command_line' from `a_working_directory'.
 		require
 			non_void_command_line: a_command_line /= Void
@@ -64,7 +64,7 @@ feature -- Basic Operations
 			spawn_with_flags (a_command_line, a_working_directory, detached_process)
 		end
 
-	spawn_with_console (a_command_line: STRING_GENERAL; a_working_directory: detachable STRING_GENERAL)
+	spawn_with_console (a_command_line: READABLE_STRING_GENERAL; a_working_directory: detachable READABLE_STRING_GENERAL)
 			-- Spawn asynchronously process described in `a_command_line' from `a_working_directory'.
 		require
 			non_void_command_line: a_command_line /= Void
@@ -73,7 +73,7 @@ feature -- Basic Operations
 			spawn_with_flags (a_command_line, a_working_directory, create_new_console)
 		end
 
-	launch (a_command_line: STRING_GENERAL; a_working_directory: detachable STRING_GENERAL; a_output_handler: detachable ROUTINE [ANY, TUPLE [STRING]])
+	launch (a_command_line: READABLE_STRING_GENERAL; a_working_directory: detachable READABLE_STRING_GENERAL; a_output_handler: detachable ROUTINE [ANY, TUPLE [STRING]])
 			-- Launch process described in `a_command_line' from `a_working_directory'.
 			-- Wait for end of process and send output to `a_output_handler' if not void.
 		require
@@ -82,7 +82,7 @@ feature -- Basic Operations
 		local
 			l_block_size: INTEGER
 			l_tuple: TUPLE [str: STRING]
-			l_last_string: detachable STRING_GENERAL
+			l_last_string: detachable READABLE_STRING_GENERAL
 			l_input_pipe: like input_pipe
 			l_output_pipe: like output_pipe
 			l_process_info: like process_info
@@ -130,7 +130,7 @@ feature -- Basic Operations
 			l_input_pipe.close_output
 		end
 
-	launch_and_refresh (a_command_line: STRING_GENERAL; a_working_directory: detachable STRING_GENERAL; a_refresh_handler: detachable ROUTINE [ANY, TUPLE])
+	launch_and_refresh (a_command_line: READABLE_STRING_GENERAL; a_working_directory: detachable READABLE_STRING_GENERAL; a_refresh_handler: detachable ROUTINE [ANY, TUPLE])
 			-- Launch process described in `a_command_line' from `a_working_directory'.
 			-- Calls `a_refresh_handler' regularly while waiting for end of process.
 		require
@@ -204,7 +204,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	spawn_with_flags (a_command_line: STRING_GENERAL; a_working_directory: detachable STRING_GENERAL; a_flags: INTEGER)
+	spawn_with_flags (a_command_line: READABLE_STRING_GENERAL; a_working_directory: detachable READABLE_STRING_GENERAL; a_flags: INTEGER)
 			-- Spawn asynchronously process described in `a_command_line' from `a_working_directory'.
 		require
 			non_void_command_line: a_command_line /= Void

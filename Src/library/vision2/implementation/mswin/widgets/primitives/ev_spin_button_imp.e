@@ -294,7 +294,7 @@ feature -- Setting
 			internal_text_field.set_focus
 		end
 
-	set_tooltip (a_tooltip: STRING_GENERAL)
+	set_tooltip (a_tooltip: READABLE_STRING_GENERAL)
 		do
 			Precursor {EV_GAUGE_IMP} (a_tooltip)
 			check internal_arrows_control /= Void end
@@ -556,25 +556,25 @@ feature -- EV_TEXT_COMPONENT_I implementation
 			internal_text_field.set_caret_position (pos)
 		end
 
-	set_text (txt: STRING_GENERAL)
+	set_text (txt: READABLE_STRING_GENERAL)
 			-- Assign `txt' to text of `Current'.
 		do
 			internal_text_field.set_text (txt)
 		end
 
-	insert_text (txt: STRING_GENERAL)
+	insert_text (txt: READABLE_STRING_GENERAL)
 			-- Insert `txt' at the current caret position.
 		do
 			internal_text_field.insert_text (txt)
 		end
 
-	append_text (txt: STRING_GENERAL)
+	append_text (txt: READABLE_STRING_GENERAL)
 			-- append 'txt' into `Current'.
 		do
 			internal_text_field.append_text (txt)
 		end
 
-	prepend_text (txt: STRING_GENERAL)
+	prepend_text (txt: READABLE_STRING_GENERAL)
 			-- prepend 'txt' into `Current'.
 		do
 			internal_text_field.prepend_text (txt)

@@ -110,7 +110,7 @@ feature -- Status report
 
 feature -- Element change
 
-	set_item_name (an_item: PROCEDURE [ANY, TUPLE [ANY]]; a_name: STRING_GENERAL)
+	set_item_name (an_item: PROCEDURE [ANY, TUPLE [ANY]]; a_name: READABLE_STRING_GENERAL)
 			-- Acociate `a_name' with `an_item'.
 		obsolete
 			"Removed because did nothing useful."

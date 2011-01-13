@@ -91,7 +91,7 @@ feature -- Status setting
 			end
 		end
 
-	set_tooltip (a_tooltip: STRING_GENERAL)
+	set_tooltip (a_tooltip: READABLE_STRING_GENERAL)
 			-- Assign `a_tooltip' to `internal_tooltip_string'.
 		do
 			internal_tooltip_string := a_tooltip.as_string_32
@@ -235,7 +235,7 @@ feature {EV_ANY_I} -- Access
 			end
 		end
 
-	on_item_added_at (an_item: STRING_GENERAL; item_index: INTEGER)
+	on_item_added_at (an_item: READABLE_STRING_GENERAL; item_index: INTEGER)
 			-- `an_item' has been added to index `item_index'.
 		do
 			if attached parent_imp as l_parent_imp then
@@ -243,7 +243,7 @@ feature {EV_ANY_I} -- Access
 			end
 		end
 
-	on_item_removed_at (an_item: STRING_GENERAL; item_index: INTEGER)
+	on_item_removed_at (an_item: READABLE_STRING_GENERAL; item_index: INTEGER)
 			-- `an_item' has been removed from index `item_index'.
 		do
 			if attached parent_imp as l_parent_imp then

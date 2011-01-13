@@ -37,7 +37,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_text (a_text: STRING_GENERAL)
+	make_with_text (a_text: READABLE_STRING_GENERAL)
 			-- Create `Current' and assign `a_text' to `text'.
 		require
 			a_text_not_void: a_text /= Void
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 		end
 
 	make_with_text_and_actions (
-		a_text: STRING_GENERAL;
+		a_text: READABLE_STRING_GENERAL;
 		actions: ARRAY [PROCEDURE [ANY, TUPLE]]
 	)
 			-- Create `Current', assign `a_text' to `text' and `actions' to `select_actions'
@@ -246,7 +246,7 @@ feature -- Status setting
 			pixmap_void: pixmap = Void
 		end
 
-	set_text (a_text: STRING_GENERAL)
+	set_text (a_text: READABLE_STRING_GENERAL)
 			-- Assign `a_text' to `text'.
 		require
 			not_destroyed: not is_destroyed
@@ -254,7 +254,7 @@ feature -- Status setting
 		do
 			label.set_text (a_text)
 		ensure
-			assigned: text.is_equal (a_text)
+			assigned: text.same_string_general (a_text)
 			cloned: text /= a_text
 		end
 
@@ -268,7 +268,7 @@ feature -- Status setting
 			text_not_void: text /= Void and text.is_empty
 		end
 
-	set_buttons (button_labels: ARRAY [STRING_GENERAL])
+	set_buttons (button_labels: ARRAY [READABLE_STRING_GENERAL])
 			-- Assign new buttons with `button_labels' to `buttons'.
 		require
 			not_destroyed: not is_destroyed
@@ -285,7 +285,7 @@ feature -- Status setting
 		end
 
 	set_buttons_and_actions (
-		button_labels: ARRAY [STRING_GENERAL]
+		button_labels: ARRAY [READABLE_STRING_GENERAL]
 		actions: ARRAY [PROCEDURE [ANY, TUPLE]]
 	)
 			-- Assign new buttons with `button_labels' and `actions' to `buttons'.
@@ -313,16 +313,16 @@ feature -- Status setting
 
 feature -- Status report
 
-	has_button (a_text: STRING_GENERAL): BOOLEAN
+	has_button (a_text: READABLE_STRING_GENERAL): BOOLEAN
 			-- Does `Current' contain a button with `text' `a_text'?
 		require
 			not_destroyed: not is_destroyed
 			a_text_not_void: a_text /= Void
 		do
-			Result := buttons.has (a_text)
+			Result := buttons.has (a_text.as_string_32)
 		end
 
-	button (a_text: STRING_GENERAL): EV_BUTTON
+	button (a_text: READABLE_STRING_GENERAL): EV_BUTTON
 			-- Button that has `a_text'.
 		require
 			not_destroyed: not is_destroyed
@@ -331,7 +331,7 @@ feature -- Status report
 		local
 			l_result: detachable EV_BUTTON
 		do
-			l_result := buttons.item (a_text)
+			l_result := buttons.item (a_text.as_string_32)
 			check l_result /= Void end
 			Result := l_result
 		ensure
@@ -371,7 +371,7 @@ feature {NONE} -- Implementation
 			buttons.wipe_out
 		end
 
-	add_button (a_text: STRING_GENERAL)
+	add_button (a_text: READABLE_STRING_GENERAL)
 			-- An item has been added to `buttons'.
 		require
 			not_destroyed: not is_destroyed
@@ -400,7 +400,7 @@ feature {NONE} -- Implementation
 		end
 
 	add_button_with_action
-		(a_text: STRING_GENERAL; a_action: PROCEDURE [ANY, TUPLE])
+		(a_text: READABLE_STRING_GENERAL; a_action: PROCEDURE [ANY, TUPLE])
 			-- An item has been added to `buttons'.
 		require
 			not_destroyed: not is_destroyed
@@ -411,10 +411,10 @@ feature {NONE} -- Implementation
 			button (a_text).select_actions.extend (a_action)
 		end
 
-	on_button_press (a_button_text: STRING_GENERAL)
+	on_button_press (a_button_text: READABLE_STRING_GENERAL)
 			-- A button with text `a_button_text' has been pressed.
 		do
-			selected_button := a_button_text
+			selected_button := a_button_text.as_string_32
 			if not is_destroyed then
 				destroy
 			end

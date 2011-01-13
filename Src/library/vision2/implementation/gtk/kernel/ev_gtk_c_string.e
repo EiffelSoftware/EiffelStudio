@@ -18,7 +18,7 @@ create
 	set_with_eiffel_string, share_from_pointer, make_from_pointer
 
 convert
-	set_with_eiffel_string ({STRING_GENERAL, STRING, STRING_32})
+	set_with_eiffel_string ({READABLE_STRING_GENERAL, STRING, STRING_32})
 
 feature {NONE} -- Initialization
 
@@ -119,24 +119,24 @@ feature -- Access
 	string_length: INTEGER
 			-- Length of string data held in `managed_data'
 
-	set_with_eiffel_string (a_string: STRING_GENERAL)
+	set_with_eiffel_string (a_string: READABLE_STRING_GENERAL)
 			-- Create `item' and retain ownership.
 		require
 			a_string_not_void: a_string /= Void
 		do
 			internal_set_with_eiffel_string (a_string, False)
 		ensure
-			string_set: string.is_equal (a_string)
+			string_set: string.same_string_general (a_string)
 		end
 
-	share_with_eiffel_string (a_string: STRING_GENERAL)
+	share_with_eiffel_string (a_string: READABLE_STRING_GENERAL)
 			-- Create `item' but do not take ownership.
 		require
 			a_string_not_void: a_string /= Void
 		do
 			internal_set_with_eiffel_string (a_string, True)
 		ensure
-			string_set: string.is_equal (a_string)
+			string_set: string.same_string_general (a_string)
 		end
 
 	share_from_pointer (a_utf8_ptr: POINTER)
@@ -156,7 +156,7 @@ feature {NONE} -- Implementation
 			create Result.share_from_pointer (default_pointer, 0)
 		end
 
-	internal_set_with_eiffel_string (a_string: STRING_GENERAL; a_shared: BOOLEAN)
+	internal_set_with_eiffel_string (a_string: READABLE_STRING_GENERAL; a_shared: BOOLEAN)
 			-- Create a UTF8 string from Eiffel String `a_string'
 		require
 			a_string_not_void: a_string /= Void

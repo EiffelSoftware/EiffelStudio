@@ -31,6 +31,15 @@ feature {NONE} -- Initialization
 	user_initialization
 			-- Initialize variables and objects related to display.
 		do
+			create autoscroll.make_with_interval (0)
+			autoscroll.actions.extend (agent scroll)
+
+				-- Default `auto_scroll' to be true.
+			auto_scroll := True
+
+			create click_delay.make_with_interval (0)
+			click_delay.actions.wipe_out
+			click_delay.actions.extend (agent mouse_time_out_action)
 
 			Precursor {KEYBOARD_SELECTABLE_TEXT_PANEL}
 
@@ -42,16 +51,6 @@ feature {NONE} -- Initialization
 			editor_drawing_area.pointer_button_release_actions.extend (agent on_mouse_button_up)
 			editor_drawing_area.pointer_motion_actions.extend (agent on_mouse_move)
 
-			clipboard := ev_application.clipboard
-
-			create click_delay.make_with_interval (0)
-			click_delay.actions.wipe_out
-			click_delay.actions.extend (agent mouse_time_out_action)
-
-				-- Default `auto_scroll' to be true.
-			auto_scroll := True
-			create autoscroll.make_with_interval (0)
-			autoscroll.actions.extend (agent scroll)
 		end
 
 feature {NONE} -- Process Vision2 events
@@ -132,13 +131,13 @@ feature {NONE} -- Scroll Management
 				end
 			else
 			end
-			if current_mouse_coordinates /= Void then
+			if attached current_mouse_coordinates as l_coordinates then
 				check
 						-- array has indexes 1 to 4
-					current_mouse_coordinates.index_set.is_equal (create {INTEGER_INTERVAL}.make (1, 4))
+					l_coordinates.index_set.is_equal (create {INTEGER_INTERVAL}.make (1, 4))
 				end
 					-- call on_mouse_move back to handle selection.
-				on_mouse_move (current_mouse_coordinates @ 1, current_mouse_coordinates @ 2, 0, 0, 0, current_mouse_coordinates @ 3, current_mouse_coordinates @ 4)
+				on_mouse_move (l_coordinates [1], l_coordinates [2], 0, 0, 0, l_coordinates [3], l_coordinates [4])
 			end
 		end
 
@@ -668,7 +667,7 @@ feature {NONE} -- Private Characteristics of the window
 	scroll_right: BOOLEAN
 			-- If `horizontal_scroll', automatic scroll to right?
 
-	current_mouse_coordinates: ARRAY [INTEGER]
+	current_mouse_coordinates: detachable ARRAY [INTEGER]
 			-- Coordinates of mouse pointer during automatic scrolling.
 
 	empty_word_selection: BOOLEAN

@@ -25,8 +25,6 @@ feature -- C code generation
 
 	analyze_on (reg: REGISTRABLE)
 			-- <Precursor>
-		local
-			return_type: like c_type
 		do
 			Precursor (reg)
 			if context_type.is_separate then
@@ -171,7 +169,7 @@ feature {NONE} -- Separate call
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

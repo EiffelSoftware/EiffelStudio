@@ -612,18 +612,25 @@ feature -- Command/Query Handling
 				-- Wait for nodes to enter waiting state.
 			from
 				l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.swap_integer_32 (l_request_chain_meta_data.item_address (request_chain_pid_count_index), -l_orig_chain_node_count)
-				l_request_chain_meta_data [request_chain_status_index] := request_chain_status_waiting
+				l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.swap_integer_32 (l_request_chain_meta_data.item_address (request_chain_status_index), request_chain_status_waiting)
 			until
 				{ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_request_chain_meta_data.item_address (request_chain_pid_count_index), 0) = 0
 			loop
 				yield_to_operating_system
 			end
 
-				-- Reset chain status to application
-			l_request_chain_meta_data [request_chain_status_index] := request_chain_status_application
+			from
+					-- Set request chain status back to application so that when waiting processors exit they don't re-enter the loop.
+				l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.swap_integer_32 (l_request_chain_meta_data.item_address (request_chain_status_index), request_chain_status_application)
+				l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 (l_request_chain_meta_data.item_address (request_chain_pid_count_index))
+			until
+				{ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_request_chain_meta_data.item_address (request_chain_pid_count_index), 0) = l_orig_chain_node_count + 1
+			loop
+				yield_to_operating_system
+			end
 
-				-- Rest chain node code so that the request chain nodes may continue.
-			l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.swap_integer_32 (l_request_chain_meta_data.item_address (request_chain_pid_count_index), l_orig_chain_node_count)
+				-- Set request chain pid count back to original value.
+			l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.decrement_integer_32 (l_request_chain_meta_data.item_address (request_chain_pid_count_index))
 		end
 
 feature {NONE} -- Resource Initialization
@@ -764,7 +771,7 @@ feature {NONE} -- Resource Initialization
 										-- Signify that the chains are now being applied (if not already closed)
 										-- This is used by the client to make sure that all chains have been started before attempting any wait calls.
 									if l_executing_request_chain_node_meta_data [request_chain_status_index] /= request_chain_status_closed then
-										l_executing_request_chain_node_meta_data [request_chain_status_index] := request_chain_status_application
+										l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.swap_integer_32 (l_executing_request_chain_node_meta_data.item_address (request_chain_status_index), request_chain_status_application)
 									end
 								else
 										-- We are a tail node, we wait for head node to set pid count to negative value.
@@ -785,14 +792,13 @@ feature {NONE} -- Resource Initialization
 									l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 (l_executing_request_chain_node_meta_data.item_address (request_chain_pid_count_index))
 								end
 
-								l_executing_request_chain_node := l_request_chain_node_queue [l_executing_node_id]
-								check l_executing_request_chain_node_attached: attached l_executing_request_chain_node end
-
 								l_executing_node_id_cursor := 0
 								l_feature_application_loop_exit := False
 							until
 								l_feature_application_loop_exit
 							loop
+								l_executing_request_chain_node := l_request_chain_node_queue [l_executing_node_id]
+								check l_executing_request_chain_node_attached: attached l_executing_request_chain_node end
 								if l_executing_node_id_cursor < l_executing_request_chain_node.count then
 									scoop_command_call (l_executing_request_chain_node [l_executing_node_id_cursor])
 									l_executing_node_id_cursor := l_executing_node_id_cursor + 1
@@ -800,7 +806,6 @@ feature {NONE} -- Resource Initialization
 										-- Request chain has been fully closed therefore we can exit
 									l_feature_application_loop_exit := l_executing_node_id_cursor = l_executing_request_chain_node.count
 								elseif l_executing_request_chain_node_meta_data [request_chain_status_index] = request_chain_status_waiting then
-
 									from
 										-- Wait for waiting processor to set pid count to a negative value.
 									until
@@ -816,6 +821,7 @@ feature {NONE} -- Resource Initialization
 									loop
 										yield_to_operating_system
 									end
+									l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 (l_executing_request_chain_node_meta_data.item_address (request_chain_pid_count_index))
 								else
 									-- We are waiting for the request chain to close or to have more calls logged
 									yield_to_operating_system

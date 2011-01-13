@@ -28,11 +28,11 @@ create
 	make_with_size
 
 feature -- Access
-	
-	current_font_used: EV_FONT
+
+	current_font_used: detachable EV_FONT
 			-- Current font used to draw text.
 
-	current_foreground_color_used: EV_COLOR
+	current_foreground_color_used: detachable EV_COLOR
 			-- Current foreground color.
 
 feature -- Measurement
@@ -41,13 +41,13 @@ feature -- Measurement
 			-- Vertical size in pixels.
 			-- Same as `minimum_height' when not displayed.
 		do
-			Result := (height - height \\ editor_preferences.line_height) + editor_preferences.line_height		
+			Result := (height - height \\ editor_preferences.line_height) + editor_preferences.line_height
 		ensure
 			result_valid: Result >= height
-		end 
+		end
 
 feature -- Element change
-	
+
 	set_font (a_font: EV_FONT)
 			-- Change the current font
 		do
@@ -56,7 +56,7 @@ feature -- Element change
 				Precursor(a_font)
 			end
 		end
-	
+
 	set_foreground_color (a_color: EV_COLOR)
 			-- Change the current foreground color
 		do

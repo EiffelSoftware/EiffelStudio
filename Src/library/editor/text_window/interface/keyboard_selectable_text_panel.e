@@ -43,14 +43,14 @@ feature {NONE} -- Initialization
 	user_initialization
 			-- Initialize variables and objects related to display.
 		do
-
-			Precursor {TEXT_PANEL}
-
+			clipboard := ev_application.clipboard
+			create key_action_timer.make_with_interval (0)
 			create blinking_timeout
 			blinking_timeout.set_interval (blink_interval)
 
+			Precursor {TEXT_PANEL}
+
 			editor_drawing_area.key_press_actions.extend (agent on_key_down)
-			create key_action_timer.make_with_interval (0)
 			editor_drawing_area.key_release_actions.extend (agent on_key_up)
 
 			editor_drawing_area.focus_in_actions.extend (agent gain_focus)
@@ -718,14 +718,15 @@ feature {NONE} -- Blink Cursor Management
 	blinking_timeout: EV_TIMEOUT
 			-- Timeout for control cursor blinking	
 
-	internal_blink_delay_timeout: EV_TIMEOUT
+	internal_blink_delay_timeout: detachable EV_TIMEOUT
 			-- Cached version of `blinking_timeout' do not use directly
 
 	blink_delay_timeout: EV_TIMEOUT
 			-- Timeout for controlling blinking cursor resuce (when `reset_blinking' is called)
 		do
-			Result := internal_blink_delay_timeout
-			if Result = Void then
+			if attached internal_blink_delay_timeout as l_timeout then
+				Result := l_timeout
+			else
 				create Result.make_with_interval (400)
 				Result.actions.extend (agent on_blink_delay_timer)
 				Result.actions.resume
@@ -783,7 +784,7 @@ feature {NONE} -- Blink Cursor Management
 					reset_blinking
 					let_blink := True
 				end
-				if blinking_timeout /= Void and then text_displayed.has_cursor then
+				if text_displayed.has_cursor then
 					draw_cursor (buffered_line, current_cursor_position, (text_displayed.attached_cursor.y_in_lines - first_line_displayed) * line_height, cursor_width)
 				end
 			end
@@ -1301,7 +1302,7 @@ feature {NONE} -- Scroll bars management
  			Precursor {TEXT_PANEL} (vscroll_pos)
 
  				-- If the cursor is blinking here we must wipe out the previous action because they draw onto the wrong line
- 			if blinking_timeout /= Void and then attached text_displayed.cursor as l_cursor then
+ 			if attached text_displayed.cursor as l_cursor then
 				reset_blinking
 				let_blink := False
 				draw_cursor (buffered_line, current_cursor_position, (l_cursor.y_in_lines - first_line_displayed) * line_height, cursor_width)
@@ -1315,7 +1316,7 @@ feature {NONE} -- Scroll bars management
  			Precursor {TEXT_PANEL} (scroll_pos)
 
  				-- If the cursor is blinking here we must wipe out the previous action because they draw onto the wrong line
- 			if blinking_timeout /= Void and then attached text_displayed.cursor as l_cursor then
+ 			if attached text_displayed.cursor as l_cursor then
 				reset_blinking
 				let_blink := False
 				draw_cursor (buffered_line, current_cursor_position, (l_cursor.y_in_lines - first_line_displayed) * line_height, cursor_width)
@@ -1330,16 +1331,15 @@ feature {NONE} -- Memory Management
 		do
 			Precursor {TEXT_PANEL}
 
-			if key_action_timer /= Void and then not key_action_timer.is_destroyed then
+			if not key_action_timer.is_destroyed then
 				key_action_timer.destroy
 			end
-			if blinking_timeout /= Void and then not blinking_timeout.is_destroyed then
+			if not blinking_timeout.is_destroyed then
 				blinking_timeout.destroy
 			end
-			if internal_blink_delay_timeout /= Void and then not internal_blink_delay_timeout.is_destroyed then
-				internal_blink_delay_timeout.destroy
+			if attached internal_blink_delay_timeout as l_timeout and then not l_timeout.is_destroyed then
+				l_timeout.destroy
 			end
-			create key_action_timer.make_with_interval (0)
 			create key_action_timer.make_with_interval (0)
 			create internal_blink_delay_timeout.make_with_interval (0)
 		end

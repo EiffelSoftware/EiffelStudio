@@ -18,8 +18,10 @@
 	</xs:element>
 	
 	<xs:complexType name="note">
+		<xs:sequence>
+			<xs:any minOccurs="0" maxOccurs="unbounded" processContents="lax"/>
+		</xs:sequence>
 		<xs:anyAttribute processContents="lax"/>
-		<xs:any minOccurs="0"/>
 	</xs:complexType>
 
 	<xs:simpleType name="uuid">

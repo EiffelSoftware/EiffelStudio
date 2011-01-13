@@ -51,24 +51,26 @@ feature {NONE} -- Initialization
 				-- Set default mode
 			overwrite_mode := False
 			enable_editable
+			basic_pointer := editor_drawing_area.pointer_style
 
 			Precursor {SELECTABLE_TEXT_PANEL}
 			editor_drawing_area.key_press_string_actions.extend (agent on_char)
-			basic_pointer := editor_drawing_area.pointer_style
 		end
 
 feature -- Access
 
-	not_editable_warning_message: STRING
+	not_editable_warning_message: detachable STRING
 			-- Warning message indicating text is not editable.
 			-- If Void, default message will be used.
 		obsolete
 			"Use `not_editable_warning_wide_message' instead"
 		do
-			Result := not_editable_warning_wide_message.as_string_8
+			if attached not_editable_warning_wide_message as l_msg then
+				Result := l_msg.as_string_8
+			end
 		end
 
-	not_editable_warning_wide_message: STRING_32
+	not_editable_warning_wide_message: detachable STRING_32
 			-- Warning message indicating text is not editable.
 			-- If Void, default message will be used.
 
@@ -720,8 +722,8 @@ feature -- Edition Operations on text
 			wm := "Current text is not editable"
 			if text_displayed /= Void then
 				if is_read_only then
-					if not_editable_warning_wide_message /= Void and not not_editable_warning_wide_message.is_empty then
-						wm := not_editable_warning_wide_message
+					if attached not_editable_warning_wide_message as l_msg and then not l_msg.is_empty then
+						wm := l_msg
 					end
 					show_warning_message (wm)
 				else

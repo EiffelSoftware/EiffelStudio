@@ -38,6 +38,7 @@
 doc:<file name="scoop.c" header="eif_scoop.h" version="$Id$" summary="SCOOP support.">
 */
 
+#include "eif_portable.h"
 #include "rt_assert.h"
 #include "rt_globals.h"
 #include "rt_struct.h"

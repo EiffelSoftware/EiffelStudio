@@ -984,7 +984,7 @@ feature {NONE} -- Tool construction
 
 feature {NONE} -- Docking
 
-	frozen retrieve_docking_content (a_tool_id: STRING_GENERAL): SD_CONTENT
+	frozen retrieve_docking_content (a_tool_id: READABLE_STRING_GENERAL): SD_CONTENT
 			-- Performs dynamic creation of tools when restoration of the docked layout requires them.
 			--
 			-- `a_tool_id': The unique title for the persisted docking content.
@@ -1021,7 +1021,7 @@ feature {NONE} -- Docking
 				end
 			end
 			if not l_ignore then
-				l_info := tool_utils.tool_info (a_tool_id)
+				l_info := tool_utils.tool_info (a_tool_id.to_string_32)
 				if l_info /= Void and then l_info.edition = 1 then
 						-- We only want to rebuild first edition tools! We might want to change this in the future.
 					l_tool := develop_window.shell_tools.tool_next_available_edition (l_info.type, True)
@@ -1181,7 +1181,7 @@ feature{NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

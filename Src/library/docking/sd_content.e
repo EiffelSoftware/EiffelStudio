@@ -854,15 +854,10 @@ feature {SD_ACCESS} -- State
 			-- Current docking state
 		require
 			set: is_state_set
-		local
-			l_result: like internal_state
 		do
-			l_result := internal_state
-			check
-				-- Implied by precondition `set'
-				l_result /= Void
-			then
-				Result := l_result
+			check attached internal_state as l_state then
+					-- Implied by precondition `set'
+				Result := l_state
 			end
 		ensure
 			not_void: Result /= Void
@@ -897,7 +892,7 @@ feature {SD_STATE} -- implementation
 		end
 
 	internal_state: detachable like state
-			-- SD_STATE instacne, which will be changed base on different docking states
+			-- SD_STATE instance, which will be changed base on different docking states
 
 feature {SD_STATE, SD_DOCKING_MANAGER, SD_TAB_STATE_ASSISTANT, SD_OPEN_CONFIG_MEDIATOR} -- Change the SD_STATE base on the states
 

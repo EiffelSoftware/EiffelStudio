@@ -40,7 +40,7 @@ feature -- Status
 	last_error: CONF_ERROR_PARSE
 			-- The last error message from the parser.
 
-	last_warning: ARRAYED_LIST [CONF_ERROR_PARSE]
+	last_warning: ARRAYED_LIST [CONF_ERROR]
 			-- The last warning messages from the parser.
 
 	current_namespace: detachable STRING
@@ -199,7 +199,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

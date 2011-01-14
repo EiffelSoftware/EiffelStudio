@@ -57,7 +57,7 @@ feature
 			l_result := (a_from_encoding.last_conversion_successful and then
 				a_from_encoding.last_converted_string /= Void)
 			if l_result and then a_expected_str /= Void then
-				if not a_expected_str.is_equal (a_from_encoding.last_converted_string) then
+				if a_expected_str /~ a_from_encoding.last_converted_string then
 					print_converting (a_from_encoding, a_to_encoding)
 					print ("Conversion result does not match.%N")
 				end

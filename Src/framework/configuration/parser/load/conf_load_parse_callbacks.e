@@ -94,16 +94,11 @@ feature -- Callbacks
 				end
 
 				if l_tag = 0 then
-					if is_unknown_version then
-							-- unknown version, just add a warning
-						set_parse_warning_message (conf_interface_names.e_parse_invalid_tag (a_local_part))
-					else
-							-- known version, this is an error
-						set_parse_error_message (conf_interface_names.e_parse_invalid_tag (a_local_part))
-					end
-				else
-					current_tag.extend (l_tag)
+					set_parse_error_message (conf_interface_names.e_parse_invalid_tag (a_local_part))
+						-- Preserve a stack of tags and push an unknown tag to the top.
+					l_tag := t_unknown
 				end
+				current_tag.extend (l_tag)
 			end
 		end
 
@@ -600,7 +595,7 @@ feature {NONE} -- Implementation attribute processing
 					set_parse_error_message (conf_interface_names.e_parse_incorrect_setting (l_name))
 				elseif l_name ~ s_multithreaded then
 						-- Translate "multithreaded" setting into "concurrency" setting.
-					if is_unknown_version or else current_namespace <= namespace_1_6_0 then
+					if includes_this_or_before (namespace_1_6_0) then
 							-- The setting is allowed.
 						if l_value.is_boolean then
 								-- SCOOP is not supported in old projects.
@@ -619,7 +614,7 @@ feature {NONE} -- Implementation attribute processing
 					end
 				elseif l_name ~ s_concurrency then
 						-- Process "concurrency" setting.
-					if is_unknown_version or else current_namespace >= namespace_1_7_0 then
+					if includes_this_or_after (namespace_1_7_0) then
 							-- The setting is allowed.
 						if current_target.immediate_setting_concurrency.is_valid_item (l_value) then
 								-- Update setting with this value.
@@ -1285,7 +1280,7 @@ feature {NONE} -- Implementation attribute processing
 				end
 			end
 			if l_is_void_safe /= Void then
-				if is_unknown_version or else current_namespace <= namespace_1_4_0 then
+				if includes_this_or_before (namespace_1_4_0) then
 					if l_is_void_safe.is_boolean then
 						if l_is_void_safe.to_boolean then
 							current_option.void_safety.put_index ({CONF_OPTION}.void_safety_index_all)
@@ -1300,7 +1295,7 @@ feature {NONE} -- Implementation attribute processing
 				end
 			end
 			if l_void_safety /= Void then
-				if is_unknown_version or else current_namespace >= namespace_1_5_0 then
+				if includes_this_or_after (namespace_1_5_0) then
 					if current_option.void_safety.is_valid_item (l_void_safety) then
 						current_option.void_safety.put (l_void_safety)
 					else
@@ -1311,7 +1306,7 @@ feature {NONE} -- Implementation attribute processing
 				end
 			end
 			if l_syntax_level /= Void then
-				if is_unknown_version or else current_namespace <= namespace_1_4_0 then
+				if includes_this_or_before (namespace_1_4_0) then
 					if l_syntax_level.is_natural_8 then
 						inspect l_syntax_level.to_natural_8
 						when 0 then
@@ -1331,7 +1326,7 @@ feature {NONE} -- Implementation attribute processing
 				end
 			end
 			if l_syntax /= Void then
-				if is_unknown_version or else current_namespace >= namespace_1_5_0 then
+				if includes_this_or_after (namespace_1_5_0) then
 					if current_option.syntax.is_valid_item (l_syntax) then
 						current_option.syntax.put (l_syntax)
 					else
@@ -1580,10 +1575,7 @@ feature {NONE} -- Implementation attribute processing
 		local
 			l_value: STRING
 		do
-			if current_namespace >= namespace_1_8_0 then
-					-- "multithreaded" tag is not available.
-				set_parse_error_message (conf_interface_names.e_parse_incorrect_condition)
-			else
+			if includes_this_or_before (namespace_1_7_0) then
 					-- Retrieve boolean value.
 				l_value := current_attributes.item (at_value)
 				if l_value = Void or else not l_value.is_boolean then
@@ -1597,6 +1589,9 @@ feature {NONE} -- Implementation attribute processing
 						current_condition.add_concurrency (concurrency_none)
 					end
 				end
+			else
+					-- "multithreaded" tag is not available.
+				set_parse_error_message (conf_interface_names.e_parse_incorrect_condition)
 			end
 		end
 
@@ -1610,10 +1605,7 @@ feature {NONE} -- Implementation attribute processing
 			l_invert: BOOLEAN
 			l_conc: INTEGER
 		do
-			if current_namespace < namespace_1_8_0 then
-					-- "concurrency" tag is not available.
-				set_parse_error_message (conf_interface_names.e_parse_incorrect_condition)
-			else
+			if includes_this_or_after (namespace_1_8_0) then
 				l_name := current_attributes.item (at_name)
 				l_value := current_attributes.item (at_value)
 				l_excluded_value := current_attributes.item (at_excluded_value)
@@ -1649,6 +1641,9 @@ feature {NONE} -- Implementation attribute processing
 						l_concurrency_values.forth
 					end
 				end
+			else
+					-- "concurrency" tag is not available.
+				set_parse_error_message (conf_interface_names.e_parse_incorrect_condition)
 			end
 		end
 
@@ -1830,6 +1825,7 @@ feature {NONE} -- Processing of options
 					o := factory.new_option
 				end
 				if
+					namespace ~ namespace_1_8_0 or else
 					namespace ~ namespace_1_7_0 or else
 					namespace ~ namespace_1_6_0 or else
 					namespace ~ namespace_1_5_0
@@ -2010,7 +2006,7 @@ feature {NONE} -- Note Implementation
 	tag_from_state_transitions (a_tag: INTEGER; a_local_part: STRING): INTEGER
 			-- Get number presentation from current tag state transitions.
 		require
-			a_tag_greater_than_zero: a_tag > 0
+			a_tag_greater_than_zero: a_tag >= 0
 			a_local_part_not_void: a_local_part /= Void
 		local
 			l_trans: HASH_TABLE [INTEGER, STRING]
@@ -2562,13 +2558,7 @@ feature {NONE} -- Implementation state transitions
 		require
 			name_attached: name /= Void
 		do
-			if is_unknown_version then
-					-- unknown version, just add a warning
-				set_parse_warning_message (conf_interface_names.e_parse_invalid_attribute (name))
-			else
-					-- known version, this is an error
-				set_parse_error_message (conf_interface_names.e_parse_invalid_attribute (name))
-			end
+			set_parse_error_message (conf_interface_names.e_parse_invalid_attribute (name))
 		end
 
 feature {NONE} -- Default options
@@ -2589,9 +2579,34 @@ feature {NONE} -- Default options
 			result_attached: Result /= Void
 		end
 
+feature {NONE} -- Namespace checks
+
+	includes_this_or_before (n: like current_namespace): BOOLEAN
+			-- Is current namespace less or equal to `n'?
+			-- (Includes unknown namespaces.)
+		require
+			n_attached: attached n
+		do
+			Result := is_unknown_version or else current_namespace <= n
+		ensure
+			definition: Result = (is_unknown_version or else current_namespace <= n)
+		end
+
+	includes_this_or_after (n: like current_namespace): BOOLEAN
+			-- Is current namespace greater or equal to `n'?
+			-- (Includes unknown namespaces.)
+		require
+			n_attached: attached n
+		do
+			Result := is_unknown_version or else current_namespace >= n
+		ensure
+			definition: Result = (is_unknown_version or else current_namespace >= n)
+		end
+
 feature {NONE} -- Implementation constants
 
 		-- Tag states
+	t_unknown: INTEGER = 0
 	t_none: INTEGER = 1
 	t_system: INTEGER = 2
 	t_description: INTEGER = 3

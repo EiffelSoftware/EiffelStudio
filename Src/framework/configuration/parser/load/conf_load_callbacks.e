@@ -124,6 +124,7 @@ feature {NONE} -- Implementation
 				elseif a_value.is_equal (namespace_1_5_0) then namespace := namespace_1_5_0
 				elseif a_value.is_equal (namespace_1_6_0) then namespace := namespace_1_6_0
 				elseif a_value.is_equal (namespace_1_7_0) then namespace := namespace_1_7_0
+				elseif a_value.is_equal (namespace_1_8_0) then namespace := namespace_1_8_0
 				elseif a_value.is_equal (latest_namespace) then namespace := latest_namespace
 						-- current version
 				else
@@ -170,18 +171,24 @@ feature {NONE} -- Implementation
 		end
 
 	set_parse_error_message (a_message: STRING)
-			-- We have a parse error with a message.
+			-- Report a parse error with a message `a_message' if the current namespace is known.
+			-- Report a parse warning with a message `a_message' otherwise.
 		local
 			l_error: CONF_ERROR_PARSE
 			l_conf_exception: CONF_EXCEPTION
 		do
-			create l_error
-			l_error.set_message (a_message)
-			is_error := True
-			last_error := l_error
-			create l_conf_exception
-			l_conf_exception.set_message ("Parse error")
-			l_conf_exception.raise
+				-- Do not promote error to warning if this is an XML error.
+			if not is_invalid_xml and then is_unknown_version then
+				set_parse_warning_message (a_message)
+			else
+				create l_error
+				l_error.set_message (a_message)
+				is_error := True
+				last_error := l_error
+				create l_conf_exception
+				l_conf_exception.set_message ("Parse error")
+				l_conf_exception.raise
+			end
 		end
 
 	set_parse_warning_message (a_message: STRING)

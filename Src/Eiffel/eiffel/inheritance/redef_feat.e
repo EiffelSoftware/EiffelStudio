@@ -70,6 +70,7 @@ feature {NONE} -- Implementation
 			info: INH_ASSERT_INFO
 			new_assert_id_set: ASSERT_ID_SET
 			has_precondition: BOOLEAN
+			has_false_postcondition: BOOLEAN
 			feat_assert_id_set: ASSERT_ID_SET
 			processed_features: ARRAYED_LIST [INTEGER]
 		do
@@ -82,6 +83,9 @@ feature {NONE} -- Implementation
 
 				-- By default, we suppose that the feature defines preconditions.
 			has_precondition := True
+
+				-- By default there is no false postcondition.
+			-- has_false_postcondition := False
 
 				-- We will loop twice on the list of features.
 				-- First we will add the inherited assertions of each feature.
@@ -115,15 +119,22 @@ feature {NONE} -- Implementation
 					(feat_assert_id_set /= Void and then feat_assert_id_set.has_precondition)
 				)
 
+					-- A feature has a false postcondition if it or any ancestor
+					-- has a false postcondition.
+				has_false_postcondition := has_false_postcondition or else
+					(attached feat_assert_id_set as s and then s.has_false_postcondition)
+
 					-- Prepare next iteration.
 				features.forth
 			end
 
-				-- Set the calculated precondition status
+				-- Set the calculated precondition status.
 			new_assert_id_set.set_has_precondition (has_precondition)
 
-				-- Second loop: Add the inner assertions
+				-- Set the calculated false postcondition status.
+			new_assert_id_set.set_has_false_postcondition (has_false_postcondition)
 
+				-- Second loop: Add the inner assertions.
 			from
 				features.start
 				processed_features.wipe_out

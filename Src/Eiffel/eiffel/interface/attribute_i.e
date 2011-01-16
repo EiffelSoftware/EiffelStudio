@@ -181,6 +181,7 @@ feature -- Element Change
 			set_is_ensure_then (content.is_ensure_then)
 			set_has_precondition (content.has_precondition)
 			set_has_postcondition (content.has_postcondition)
+			set_has_false_postcondition (content.has_false_postcondition)
 		end
 
 	set_assert_id_set (set: like assert_id_set)
@@ -516,7 +517,13 @@ feature -- Element Change
 			other.set_type (type, assigner_name_id)
 			other.set_has_function_origin (has_function_origin)
 			other.set_extension (extension)
+			other.set_is_require_else (is_require_else)
+			other.set_is_ensure_then (is_ensure_then)
+			other.set_has_precondition (has_precondition)
+			other.set_has_postcondition (has_postcondition)
+			other.set_has_false_postcondition (has_false_postcondition)
 			other.set_assert_id_set (assert_id_set)
+			other.set_has_rescue_clause (has_rescue_clause)
 			other.set_is_transient (is_transient)
 			other.set_is_stable (is_stable)
 		end

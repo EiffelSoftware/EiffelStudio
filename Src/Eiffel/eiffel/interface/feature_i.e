@@ -933,6 +933,14 @@ feature -- Setting
 			has_postcondition_set: has_postcondition = b
 		end
 
+	frozen set_has_false_postcondition (b: BOOLEAN)
+			-- Assign `b' to `has_false_postcondition'.
+		do
+			feature_flags := feature_flags.set_bit_with_mask (b, has_false_postcondition_mask)
+		ensure
+			is_failing_set: has_false_postcondition = b
+		end
+
 	frozen set_is_fake_inline_agent (b: BOOLEAN)
 			-- Assign `b' to `is_fake_inline_agent'.
 		do
@@ -1066,6 +1074,7 @@ feature -- Incrementality
 				and then same_signature (other)
 				and then has_precondition = other.has_precondition
 				and then has_postcondition = other.has_postcondition
+				and then has_false_postcondition = other.has_false_postcondition
 				and then is_once = other.is_once
 				and then is_process_relative = other.is_process_relative
 				and then is_object_relative_once = other.is_object_relative_once
@@ -1443,6 +1452,20 @@ feature -- Conveniences
 			-- Is feature declaring some postconditions ?
 		do
 			Result := feature_flags & has_postcondition_mask = has_postcondition_mask
+		end
+
+	frozen has_false_postcondition: BOOLEAN
+			-- Does feature have a false postcondition?
+		do
+			Result := feature_flags & has_false_postcondition_mask = has_false_postcondition_mask
+		end
+
+	frozen is_failing: BOOLEAN
+			-- Does feature fail?
+			-- (This usually happens when the feature or its ancestor version has a postcondition "false".)
+		do
+			Result := has_false_postcondition or else
+				(attached assert_id_set as a and then a.has_false_postcondition)
 		end
 
 	has_assertion: BOOLEAN
@@ -2891,8 +2914,9 @@ feature -- Undefinition
 			Result.set_is_ensure_then (is_ensure_then)
 			Result.set_export_status (export_status)
 			Result.set_body_index (body_index)
-			Result.set_has_postcondition (has_postcondition)
 			Result.set_has_precondition (has_precondition)
+			Result.set_has_postcondition (has_postcondition)
+			Result.set_has_false_postcondition (has_false_postcondition)
 			Result.set_is_bracket (is_bracket)
 			Result.set_is_binary (is_binary)
 			Result.set_is_unary (is_unary)
@@ -3430,6 +3454,7 @@ feature {FEATURE_I} -- Implementation
 	is_transient_mask: NATURAL_32 = 				0x0400_0000 -- Used in ATTRIBUTE_I
 	is_hidden_mask: NATURAL_32 = 					0x0800_0000 -- Used in ATTRIBUTE_I
 	is_type_evaluation_delayed_mask: NATURAL_32 =	0x1000_0000
+	has_false_postcondition_mask: NATURAL_32 =                   0x2000_0000
 			-- Mask used for each feature property.
 
 	internal_export_status: like export_status

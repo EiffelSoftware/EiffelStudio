@@ -122,6 +122,7 @@ feature {NONE} -- Implementation
 					-- A feature has a false postcondition if it or any ancestor
 					-- has a false postcondition.
 				has_false_postcondition := has_false_postcondition or else
+					feat.has_false_postcondition or else
 					(attached feat_assert_id_set as s and then s.has_false_postcondition)
 
 					-- Prepare next iteration.
@@ -184,7 +185,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -100,6 +100,7 @@ feature -- Initialization
 			set_is_ensure_then (content.is_ensure_then)
 			set_has_precondition (content.has_precondition)
 			set_has_postcondition (content.has_postcondition)
+			set_has_false_postcondition (content.has_false_postcondition)
 		end
 
 	duplicate: like Current
@@ -164,6 +165,7 @@ feature -- Initialization
 			other.set_obsolete_message_id (obsolete_message_id)
 			other.set_has_precondition (has_precondition)
 			other.set_has_postcondition (has_postcondition)
+			other.set_has_false_postcondition (has_false_postcondition)
 			other.set_assert_id_set (assert_id_set)
 			other.set_has_rescue_clause (has_rescue_clause)
 		end

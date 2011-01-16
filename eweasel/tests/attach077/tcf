@@ -2,6 +2,7 @@ test_name 	 attached-attribute-initialization
 test_description Attached attribute should be initialized before it can be used.
 
 copy_sub	Ace $TEST Ace
+copy_raw	a.e $CLUSTER a.e
 
 define C "--"
 copy_sub	test.e $CLUSTER test.e

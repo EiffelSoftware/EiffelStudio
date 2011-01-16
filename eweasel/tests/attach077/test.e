@@ -1,6 +1,12 @@
 class
 	TEST
 
+inherit
+	A
+		redefine
+			f
+		end
+
 create
 	make,
 	make_explicit
@@ -29,10 +35,8 @@ feature {NONE} -- Creation
 feature {TEST} -- Execution
 
 	f
-			-- The routine triggers an exception.
+			-- <Precursor>
 		do
-		ensure
-			false
 		end
 
 feature {NONE} -- Access

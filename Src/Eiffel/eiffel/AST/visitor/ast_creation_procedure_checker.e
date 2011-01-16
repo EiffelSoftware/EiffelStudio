@@ -234,7 +234,7 @@ feature {AST_EIFFEL} -- Visitor: access to features
 					end
 					if not bodies.has (f.body_index) then
 							-- This feature has not been processed yet.
-						if f.has_false_postcondition then
+						if f.is_failing then
 								-- The feature never exits, all bets after calling it are off.
 								-- In particular all the attributes may be considered initialized.
 							attribute_initialization.set_all
@@ -521,7 +521,7 @@ feature {NONE} -- Access
 			-- Bodies that are being processed
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

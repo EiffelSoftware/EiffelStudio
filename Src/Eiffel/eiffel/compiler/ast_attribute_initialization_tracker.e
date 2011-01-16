@@ -57,6 +57,23 @@ feature {AST_CONTEXT, AST_CREATION_PROCEDURE_CHECKER, AST_SCOPE_COMBINED_PRECOND
 			is_attribute_set: is_attribute_set (position)
 		end
 
+	set_all
+			-- Mark that all attributes are set.
+		local
+			position: like attribute_count
+		do
+			from
+				position := attribute_count
+			until
+				position <= 0
+			loop
+				keeper.set (position)
+				position := position - 1
+			end
+		ensure
+			all_set: (1 |..| attribute_count).for_all (agent is_attribute_set (?))
+		end
+
 feature {AST_CONTEXT, AST_CREATION_PROCEDURE_CHECKER, AST_SCOPE_COMBINED_PRECONDITION} -- Transformation
 
 	keeper: AST_INITIALIZATION_KEEPER

@@ -2,9 +2,15 @@ test_name 	 attached-attribute-initialization
 test_description Attached attribute should be initialized before it can be used.
 
 copy_sub	Ace $TEST Ace
-copy_raw	test.e $CLUSTER test.e
 
+define C "--"
+copy_sub	test.e $CLUSTER test.e
 compile_melted
-compile_result validity_error TEST VEVI
+compile_result validity_error TEST VEVI VEVI VEVI
+
+define C ""
+copy_sub	test.e $CLUSTER test.e
+resume_compile
+compile_result ok
 
 test_end

@@ -226,6 +226,20 @@ feature -- Properties
 							postcondition.assertions = Void)
 		end
 
+	has_false_postcondition: BOOLEAN
+			-- Does postcondition evaluate to false?
+		do
+				-- Check if there are assertion clauses of the form "[tag:] false".
+			if attached postcondition as p and then attached p.assertions as a and then a.count > 0 then
+				Result := a.there_exists (
+					agent (c: TAGGED_AS): BOOLEAN
+						do
+							Result := attached {BOOL_AS} c.expr as b and then not b.value
+						end
+				)
+			end
+		end
+
 	has_rescue: BOOLEAN
 			-- Has the routine a non-empty rescue clause ?
 		do
@@ -369,7 +383,7 @@ invariant
 --	end_keyword_not_void: end_keyword /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

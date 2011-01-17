@@ -54,8 +54,14 @@ feature -- XML callbacks
 					label_title := a_content
 				elseif l_start_tag.is_equal (l_constants.command_small_images) then
 					small_image := a_content
+					if attached small_image as l_image then
+						l_image.replace_substring_all ("\\", "\")
+					end
 				elseif l_start_tag.is_equal (l_constants.command_large_images) then
 					large_image := a_content
+					if attached large_image as l_image then
+						l_image.replace_substring_all ("\\", "\")
+					end
 				end
 
 				tag_of_start := void

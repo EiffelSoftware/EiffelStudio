@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_platform: like platform; a_build: like build; a_concurrency: like concurrency; a_multithreaded: like is_multithreaded; a_dotnet: like is_dotnet; a_dynamic_runtime: like is_dynamic_runtime; a_variables: like custom_variables; a_version: like version)
+	make (a_platform: like platform; a_build: like build; a_concurrency: like concurrency; a_dotnet: like is_dotnet; a_dynamic_runtime: like is_dynamic_runtime; a_variables: like custom_variables; a_version: like version)
 			-- Create.
 		require
 			valid_platform: valid_platform (a_platform)
@@ -27,7 +27,6 @@ feature {NONE} -- Initialization
 			platform := a_platform
 			build := a_build
 			concurrency := a_concurrency
-			is_multithreaded := a_multithreaded
 			is_dotnet := a_dotnet
 			is_dynamic_runtime := a_dynamic_runtime
 			custom_variables := a_variables
@@ -36,7 +35,6 @@ feature {NONE} -- Initialization
 			platform_set: platform = a_platform
 			build_set: build = a_build
 			concurrency_set: concurrency = a_concurrency
-			multithreaded_set: is_multithreaded = a_multithreaded
 			dotnet_set: is_dotnet = a_dotnet
 			dynamic_runtime_set: is_dynamic_runtime = a_dynamic_runtime
 			variables_set: custom_variables = a_variables
@@ -51,11 +49,9 @@ feature -- Access
 	build: INTEGER
 			-- Current build type.
 
-	concurrency: INTEGER
-			-- Current concurrency setting (none, thread, scoop)
-
-	is_multithreaded: BOOLEAN
-			-- Multithreaded?
+	concurrency: like concurrency_none
+			-- Current concurrency setting.
+			-- (See `concurrency_none', `concurrency_thread', `concurrency_scoop'.)
 
 	is_dotnet: BOOLEAN
 			-- Dotnet?

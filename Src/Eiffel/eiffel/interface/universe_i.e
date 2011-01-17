@@ -87,7 +87,7 @@ feature -- Properties
 				end
 				l_version.force (l_clr_version, v_msil_clr)
 			end
-			create Result.make (platform, build, concurrency, system.has_multithreaded, system.il_generation, system.has_dynamic_runtime, a_target.variables, l_version)
+			create Result.make (platform, build, concurrency, system.il_generation, system.has_dynamic_runtime, a_target.variables, l_version)
 		end
 
 	concurrency: INTEGER
@@ -926,7 +926,7 @@ invariant
 	target_in_conf_system: (conf_system /= Void and new_target = Void) implies target.system = conf_system
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

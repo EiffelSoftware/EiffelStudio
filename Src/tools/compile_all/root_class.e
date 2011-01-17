@@ -230,7 +230,7 @@ feature {NONE} -- Implementation
 				-- create state for conditioning
 			create l_version.make (1)
 			l_version.force (create {CONF_VERSION}.make_version ({EIFFEL_ENVIRONMENT_CONSTANTS}.major_version, {EIFFEL_ENVIRONMENT_CONSTANTS}.minor_version, 0, 0), v_compiler)
-			create l_state.make (pf_windows, build_workbench, a_target.setting_concurrency.index /= {CONF_TARGET}.setting_concurrency_index_none , a_target.setting_msil_generation, a_target.setting_dynamic_runtime, a_target.variables, l_version)
+			create l_state.make (pf_windows, build_workbench, a_target.concurrency_mode, a_target.setting_msil_generation, a_target.setting_dynamic_runtime, a_target.variables, l_version)
 
 				-- setup ISE_PRECOMP
 			eiffel_layout.set_precompile (a_target.setting_msil_generation)
@@ -395,7 +395,7 @@ feature {NONE} -- Error handling
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

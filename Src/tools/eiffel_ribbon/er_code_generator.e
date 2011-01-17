@@ -456,9 +456,9 @@ feature {NONE} -- Implementation
 
 			create l_singleton
 			l_sub_dir := "code_generated_once_change_by_user"
-			l_tool_bar_tab_file := "ribbon_tab"
+			l_tool_bar_tab_file := "ribbon_tab_imp"
 			l_sub_imp_dir := "code_generated_everytime"
-			l_tool_bar_tab_imp_file := "ribbon_tab_imp"
+			l_tool_bar_tab_imp_file := "ribbon_tab"
 
 			if attached l_singleton.project_info_cell.item as l_project_info then
 				if attached l_project_info.project_location as l_project_location then
@@ -664,9 +664,9 @@ feature {NONE} -- Implementation
 
 			create l_singleton
 			l_sub_dir := "code_generated_once_change_by_user"
-			l_tool_bar_group_file := "ribbon_group"
+			l_tool_bar_group_file := "ribbon_group_imp"
 			l_sub_imp_dir := "code_generated_everytime"
-			l_tool_bar_group_imp_file := "ribbon_group_imp"
+			l_tool_bar_group_imp_file := "ribbon_group"
 
 			if attached l_singleton.project_info_cell.item as l_project_info then
 				if attached l_project_info.project_location as l_project_location then

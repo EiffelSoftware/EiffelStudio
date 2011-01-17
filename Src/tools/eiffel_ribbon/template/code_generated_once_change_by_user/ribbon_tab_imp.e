@@ -7,14 +7,11 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	RIBBON_TAB_$INDEX
-
-inherit
+deferred class
 	RIBBON_TAB_IMP_$INDEX
 
-create
-	{RIBBON} make_with_command_list
+inherit
+	EV_RIBBON_TAB
 
 feature {NONE} -- Initialization
 

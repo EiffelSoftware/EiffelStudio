@@ -5,10 +5,13 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
-	RIBBON_TAB_IMP_$INDEX
+class
+	RIBBON_TAB_$INDEX
 
 inherit
-	EV_RIBBON_TAB
+	RIBBON_TAB_IMP_$INDEX
 
+create
+	{RIBBON} make_with_command_list
+	
 end

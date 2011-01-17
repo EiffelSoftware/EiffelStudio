@@ -714,6 +714,21 @@ feature -- Access: concurrency setting
 			result_attached: attached Result
 		end
 
+	concurrency_mode: like {CONF_STATE}.concurrency
+			-- Concurrency mode corresponding to `setting_concurrency'.
+		do
+			inspect setting_concurrency.index
+			when setting_concurrency_index_none   then Result := concurrency_none
+			when setting_concurrency_index_thread then Result := concurrency_multithreaded
+			when setting_concurrency_index_scoop  then Result := concurrency_scoop
+			end
+		ensure
+			definition:
+				setting_concurrency.index = setting_concurrency_index_none   and then Result = concurrency_none or else
+				setting_concurrency.index = setting_concurrency_index_thread and then Result = concurrency_multithreaded or else
+				setting_concurrency.index = setting_concurrency_index_scoop  and then Result = concurrency_scoop
+		end
+
 	setting_concurrency_index_none: NATURAL_8 = 1
 			-- Option index for no concurrency
 

@@ -1,0 +1,38 @@
+
+test_name 	once-per-object-to-attribute
+test_description After initial compilation, changing a once-per-object function to an attribute with a body and then back to once-per-object crashes the compiler when the system is finalized.
+
+define		ROUTINE_MARK "once ("OBJECT")"
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_sub 	test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result 	ok
+
+execute_work	NONE exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+define		ROUTINE_MARK "attribute"
+copy_sub 	test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result 	validity_error TEST VDRD(6)
+
+define		ROUTINE_MARK "once ("OBJECT")"
+copy_sub 	test2.e $CLUSTER test2.e
+resume_compile
+compile_result 	ok
+
+compile_final
+compile_result 	ok
+
+c_compile_final
+c_compile_result ok
+
+execute_final	NONE exec_output2
+execute_result 	ok
+compare		exec_output2 output
+
+test_end

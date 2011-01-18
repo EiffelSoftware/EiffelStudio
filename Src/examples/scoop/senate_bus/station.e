@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Class representing a bus stop."
 	author: "Mohammad Seyed Alavi"
 	date: "24/07/2009"
@@ -11,7 +11,8 @@ create
 	make
 
 feature {SENATE_BUS}
-	make is
+
+	make
 			-- station constructor
 		do
 			bus_is_waiting := false
@@ -21,7 +22,7 @@ feature {SENATE_BUS}
 
 feature {BUS} -- Basic Operations
 
-	bus_enter is
+	bus_enter
 			-- bus enters the bus stop
 		require
 			bus_is_waiting = false
@@ -34,7 +35,7 @@ feature {BUS} -- Basic Operations
 
 		end
 
-	pick_up is
+	pick_up
 			-- bus picks up the waiting passengers
 		require
 			bus_is_waiting = true
@@ -56,7 +57,7 @@ feature {BUS} -- Basic Operations
 			end
 		end
 
-	leave is
+	leave
 			-- bus leaves the bus stop
 		require
 			bus_is_waiting = true
@@ -83,14 +84,13 @@ feature {BUS} -- Basic Operations
 
 feature {PASSENGER} -- Basic Operations
 
-	pass_enter (a_passenger: separate PASSENGER)is
+	pass_enter (a_passenger: separate PASSENGER)
 			-- passenger enters the station
 		do
 			-- add passenger to the waiting list
 			waiting_list.put (
                           create {SEP_PASSENGER}.set_passenger(a_passenger))
 		end
-
 
 feature {BUS} -- Implementation
 
@@ -104,13 +104,10 @@ feature {BUS} -- Implementation
 
 feature {NONE}
 
-	get_on_passenger(a_passenger: separate PASSENGER) is
+	get_on_passenger(a_passenger: separate PASSENGER)
 			-- tell the passenger that it's his turn to get on
 		do
 			a_passenger.get_on
 		end
-
-invariant
-	invariant_clause: True -- Your invariant here
 
 end

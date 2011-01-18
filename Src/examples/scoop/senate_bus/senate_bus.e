@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "System's root class"
 	author		: "Mohammad Seyed Alavi"
 	date		: "23/07/2009"
@@ -12,37 +12,37 @@ create
 
 feature -- Initialization
 
-	make is
-		-- Creation procedure.
-	local
-		i: INTEGER
-		t_passenger: separate PASSENGER
-	do
-		create station.make
-		create bus.make_with_station(0, station)
-		launch_actor (bus)
+	make
+			-- Creation procedure.
+		local
+			i: INTEGER
+			t_passenger: separate PASSENGER
+		do
+			create station.make
+			create bus.make_with_station(0, station)
+			launch_actor (bus)
 
-		from
-			i := 1
-		until
-			i > passengers
-		loop
-			create t_passenger.make_with_station(i, station)
-			launch_actor (t_passenger)
-			i := i + 1
-			(create {EXECUTION_ENVIRONMENT}).sleep (500 * 1000000)
+			from
+				i := 1
+			until
+				i > passengers
+			loop
+				create t_passenger.make_with_station(i, station)
+				launch_actor (t_passenger)
+				i := i + 1
+				(create {EXECUTION_ENVIRONMENT}).sleep (500 * 1000000)
+			end
 		end
-	end
 
 feature {NONE} -- Implementation
 
-	launch_actor(a_actor: separate ACTOR) is
-		-- Launch an actor.
-	do
-		a_actor.live
-	end
+	launch_actor(a_actor: separate ACTOR)
+			-- Launch an actor.
+		do
+			a_actor.live
+		end
 
-	passengers: INTEGER is 30
+	passengers: INTEGER = 30
 
 	bus: separate BUS
 

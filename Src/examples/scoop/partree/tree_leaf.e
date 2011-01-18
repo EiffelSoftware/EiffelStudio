@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {TREE_LEAF}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -11,14 +10,14 @@ inherit
 	PAR_TREE [G]
 
 feature
-	list : SPECIAL [G]
+	list: SPECIAL [G]
 
-        compute_agents (init : G; 
-                        trns : FUNCTION [ANY, TUPLE [G], G];
-                        comb : FUNCTION [ANY, TUPLE [G,G], G]
+        compute_agents (init: G; 
+                        trns: FUNCTION [ANY, TUPLE [G], G];
+                        comb: FUNCTION [ANY, TUPLE [G,G], G]
                        )
                 local
-                        i : INTEGER
+                        i: INTEGER
                 do
                         from
                                 i := 0
@@ -33,9 +32,9 @@ feature
                         end
                 end
 
-	compute (init : G)
+	compute (init: G)
 		local
-			i : INTEGER
+			i: INTEGER
 		do
 			from
 				i := 0

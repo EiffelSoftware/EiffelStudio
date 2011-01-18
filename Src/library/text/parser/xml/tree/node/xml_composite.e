@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {XML_COMPOSITE}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -17,7 +16,7 @@ feature -- Initialization
 	initialize
 			-- Initialize internal data
 		do
-			create nodes.make (10)
+			create nodes.make (5)
 		end
 
 feature -- Access
@@ -283,7 +282,7 @@ invariant
 	elements_attached: nodes /= Void
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -137,6 +137,7 @@ feature -- Basic operation
 				chunk_source_lower := index
 				chunk_source_upper := chunk_source_lower + current_chunk.count - 1
 			end
+
 			if index < chunk_source_lower then
 				c := '%U'
 			else

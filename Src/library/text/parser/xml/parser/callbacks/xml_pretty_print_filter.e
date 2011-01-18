@@ -29,7 +29,6 @@ inherit
 		export {NONE} all end
 
 create
-
 	make_null,
 	set_next
 

@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 	make (a_prefix: like ns_prefix; a_uri: like uri)
 			-- Create a new namespace declaration.
 		require
-			uri_not_void: a_uri /= Void
+			uri_attached: a_uri /= Void
 		do
 			ns_prefix := a_prefix
 			uri := a_uri
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 	make_default
 			-- Make default namespace (empty URI)
 		do
-			make ("", "")
+			make (Void, "")
 		ensure
 			no_prefix: not has_prefix
 			default_namespace: uri.count = 0

@@ -62,20 +62,20 @@ feature -- Status
 
 feature -- Element change
 
-	attach_parent (a_parent: like parent)
+	attach_parent (a_parent: attached like parent)
 			-- Set `parent' to `a_parent'.
 		require
-			a_parent_not_void: a_parent /= Void
+			a_parent_attached: a_parent /= Void
 		do
 			parent := a_parent
 		ensure
 			parent_set: parent = a_parent
 		end
 
-	set_parent (a_parent: like parent)
+	set_parent (a_parent: attached like parent)
 			-- Set `parent' to `a_parent'.
 		require
-			a_parent_not_void: a_parent /= Void
+			a_parent_attached: a_parent /= Void
 			not_root_node: not is_root_node
 		do
 			parent := a_parent
@@ -129,7 +129,7 @@ feature -- Processing
 		deferred
 		end
 
-;note
+note
 	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

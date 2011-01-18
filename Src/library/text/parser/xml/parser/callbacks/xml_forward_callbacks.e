@@ -13,18 +13,13 @@ class
 inherit
 	XML_CALLBACKS_SOURCE
 
-	XML_CALLBACKS
-		export
-			{NONE} all
-		end
-
 create
 	make_null
 
 feature {NONE} -- Initialization
 
 	make_null
-			-- Do nothing.
+			-- Don't forward anything
 		do
 			set_callbacks (create {XML_CALLBACKS_NULL}.make)
 		end
@@ -121,7 +116,7 @@ feature {NONE} -- Content
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

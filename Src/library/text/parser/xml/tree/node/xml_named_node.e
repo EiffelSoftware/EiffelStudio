@@ -14,13 +14,8 @@ inherit
 
 feature -- Status report
 
-	has_namespace: BOOLEAN
+	has_namespace: BOOLEAN = True
 			-- Has the name of current node been defined with namespace?
-		do
-			Result := (namespace /= Void)
-		ensure
-			definition: Result = (namespace /= Void)
-		end
 
 	has_prefix: BOOLEAN
 			-- Has a prefix been used to define the namespace?
@@ -34,19 +29,17 @@ feature -- Status report
 	same_namespace (other: XML_NAMED_NODE): BOOLEAN
 			-- Has current node same namespace as other?
 		require
-			other_not_void: other /= Void
+			other_attached: other /= Void
 		do
-			Result := ((not has_namespace) and (not other.has_namespace))
-				or ((has_namespace and other.has_namespace) and then namespace.is_equal (other.namespace))
+			Result := other.has_namespace and then namespace ~ other.namespace
 		ensure
-			equal_namespaces: Result implies (((not has_namespace) and (not other.has_namespace))
-				or else namespace.is_equal (other.namespace))
+			equal_namespaces: Result implies namespace ~ other.namespace
 		end
 
 	same_name (other: XML_NAMED_NODE): BOOLEAN
 			-- Has current node same name and namespace as other?
 		require
-			other_not_void: other /= Void
+			other_attached: other /= Void
 		do
 			Result := same_namespace (other) and
 				(name ~ other.name)
@@ -78,8 +71,6 @@ feature -- Access
 	ns_prefix: detachable STRING
 			-- Namespace prefix used to declare the namespace of the
 			-- name of current node
-		require
-			has_ns: has_namespace
 		do
 			Result := namespace.ns_prefix
 		ensure
@@ -88,8 +79,6 @@ feature -- Access
 
 	ns_uri: STRING
 			-- URI of namespace.
-		require
-			has_ns: has_namespace
 		do
 			Result := namespace.uri
 		ensure
@@ -101,7 +90,7 @@ feature -- Element change
 	set_name (a_name: like name)
 			-- Set `name' to `a_name'.
 		require
-			a_name_not_void: a_name /= Void
+			a_name_attached: a_name /= Void
 			a_name_not_empty: a_name.count > 0
 		do
 			name := a_name
@@ -112,7 +101,7 @@ feature -- Element change
 	set_namespace (a_namespace: like namespace)
 			-- Set `namespace' to `a_namespace'.
 		require
-			a_namespace_not_void: a_namespace /= Void
+			a_namespace_attached: a_namespace /= Void
 		do
 			namespace := a_namespace
 		ensure
@@ -135,13 +124,11 @@ feature -- Status report
 		end
 
 invariant
-
-	name_not_void: name /= Void
+	name_attached: name /= Void
 	name_not_empty: name.count > 0
---	has_namespace: has_namespace
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

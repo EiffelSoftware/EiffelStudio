@@ -7,17 +7,9 @@ class
 	XML_CALLBACKS_TREE
 
 inherit
-	XML_CALLBACKS_FILTER
+	XML_CALLBACKS
 		redefine
-			make_null,
-			has_resolved_namespaces,
-			on_start,
-			on_start_tag,
-			on_attribute,
-			on_content,
-			on_end_tag,
-			on_processing_instruction,
-			on_comment
+			has_resolved_namespaces
 		end
 
 create
@@ -26,9 +18,8 @@ create
 feature {NONE} -- Initialization
 
 	make_null
-			-- Instanciate current tree builder.
+			-- Create and initialize callbacks tree.
 		do
-			Precursor
 			create document.make
 			create namespace_cache.make (0)
 			create default_namespace.make_default
@@ -58,6 +49,30 @@ feature -- Document
 			namespace_cache.wipe_out
 			namespace_cache.compare_objects
 		end
+
+	on_finish
+			-- Called when parsing finished.
+		do
+		end
+
+	on_xml_declaration (a_version: STRING; an_encoding: detachable STRING; a_standalone: BOOLEAN)
+			-- XML declaration.
+		do
+		end
+
+feature -- Errors
+
+	on_error (a_message: STRING)
+			-- Event producer detected an error.
+		do
+		end
+
+feature -- Tag
+
+	on_start_tag_finish
+			-- End of start tag.
+		do
+  		end
 
 feature -- Meta
 
@@ -92,17 +107,17 @@ feature -- Tag
 	on_start_tag (a_namespace: detachable STRING; a_ns_prefix: detachable STRING; a_local_part: STRING)
 			-- Start of start tag.
 		local
-			an_element: XML_ELEMENT
+			l_element: XML_ELEMENT
 		do
 			if attached current_element as curr then
 					-- This is not the first element in the parent.
-				create an_element.make_last (curr, a_local_part, new_namespace (a_namespace, a_ns_prefix))
+				create l_element.make_last (curr, a_local_part, new_namespace (a_namespace, a_ns_prefix))
 			else
 					-- This is the first element in the document.
-				create an_element.make_root (document, a_local_part, new_namespace (a_namespace, a_ns_prefix))
+				create l_element.make_root (document, a_local_part, new_namespace (a_namespace, a_ns_prefix))
 			end
-			current_element := an_element
-			handle_position (an_element)
+			current_element := l_element
+			handle_position (l_element)
 		ensure then
 			element_not_void: current_element /= Void
 		end
@@ -203,8 +218,6 @@ feature {NONE} -- Implementation
 	handle_position (a_node: XML_NODE)
 			-- If desired, store position information of
 			-- node `a_node' in position table.
-		require
-			a_node_not_void: a_node /= Void
 		do
 			-- Not Yet Implemented
 		end
@@ -240,11 +253,11 @@ feature {NONE} -- Implementation
 				end
 			end
 		ensure
-			result_not_void: Result /= Void
+			result_attached: Result /= Void
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

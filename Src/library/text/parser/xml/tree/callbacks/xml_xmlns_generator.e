@@ -5,7 +5,7 @@ note
 			Filter that generates consistent xmlns declarations (existings ones if any are replaced)
 
 			Note: the original code is from Gobo's XM library (http://www.gobosoft.com/)
-		]"		
+		]"
 	date: "$Date$"
 	revision: "$Revision$"
 

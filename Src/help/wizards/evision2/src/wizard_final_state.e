@@ -48,7 +48,7 @@ feature -- Access
 			)
 		end
 
-	final_message: STRING
+	final_message: STRING_32
 		do
 		end
 

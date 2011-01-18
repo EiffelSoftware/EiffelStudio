@@ -19,21 +19,18 @@ create
 
 feature -- Access
 
-	final_message: STRING_GENERAL
-		local
-			l_str: STRING_32
+	final_message: STRING_32
 		do
-			create l_str.make (100)
-			l_str.append (interface_names.m_following_evironment_variables_not_set)
+			create Result.make (100)
+			Result.append (interface_names.m_following_evironment_variables_not_set)
 			if eiffel_layout.eiffel_install = Void then
-				l_str.append (" - ISE_EIFFEL%N")
+				Result.append (" - ISE_EIFFEL%N")
 			end
 			if eiffel_layout.eiffel_platform = Void then
-				l_str.append (" - ISE_PLATFORM%N")
+				Result.append (" - ISE_PLATFORM%N")
 			end
-			l_str.append ("%N%N")
-			l_str.append (interface_names.m_fix_and_restart)
-			Result := l_str
+			Result.append ("%N%N")
+			Result.append (interface_names.m_fix_and_restart)
 		end
 
 	pixmap_icon_location: FILE_NAME

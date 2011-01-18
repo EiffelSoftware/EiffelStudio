@@ -59,7 +59,7 @@ feature -- Access
 			message.set_text (interface_names.m_final_state_message (wizard_information.compile_project))
 		end
 
-	final_message: STRING_GENERAL
+	final_message: STRING_32
 		do
 		end
 

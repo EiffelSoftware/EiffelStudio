@@ -49,7 +49,7 @@ feature -- Initialization
 			Precursor
 		end
 
-	Wizard_title: STRING_GENERAL
+	Wizard_title: STRING_32
 			-- Window title for this wizard.
 		once
 			Result := interface_names.t_precompilation_wizard

@@ -32,7 +32,7 @@ feature -- Initialization
 			Precursor {BENCH_WIZARD_MANAGER}
 		end
 
-	Wizard_title: STRING_GENERAL
+	Wizard_title: STRING_32
 			-- Window title for this wizard.
 		once
 			Result := Interface_names.t_Wizard_title

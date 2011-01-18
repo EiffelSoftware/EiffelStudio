@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Objects that implement bounded buffers."
 	author		: "Volkan Arslan, Yann Mueller, Piotr Nienaltowski."
 	date		: "$Date: 18.05.2007$"
@@ -11,6 +11,7 @@ create
 	make_with_capacity
 
 feature -- Initialization
+
 	make_with_capacity (a_capacity: INTEGER)
 			-- Creation procedure.
 		require
@@ -82,6 +83,7 @@ feature -- Access
 		end
 
 feature {NONE}-- Implementation
+
 	storage: LINKED_LIST [G]
 
 invariant

@@ -4,7 +4,6 @@ note
 	date		: "$Date: 18.05.2007$"
 	revision	: "1.0.0"
 
-
 class
 	PRODUCER
 
@@ -26,7 +25,7 @@ feature -- Initialization
 feature -- Basic operations
 
 	produce (n: INTEGER)
-			-- Produce n elements		
+			-- Produce n elements.
 		local
 			i, an_element: INTEGER
 		do

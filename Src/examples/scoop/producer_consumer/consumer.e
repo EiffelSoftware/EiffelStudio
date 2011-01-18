@@ -24,7 +24,7 @@ feature -- Initialization
 feature -- Basic operations
 
 	consume (n: INTEGER)
-			-- Consume n elements		
+			-- Consume n elements.
 		local
 			i, an_element: INTEGER
 		do

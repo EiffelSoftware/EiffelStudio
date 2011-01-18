@@ -1,4 +1,4 @@
-indexing
+note
 	description : "Class representing a rope."
 	author		: "Martino Trosi & Matteo Cortonesi"
 	date		: "Spring 2009"
@@ -15,7 +15,7 @@ feature -- Access
 			-- true: left
 			-- false: right
 
-	is_secure: BOOLEAN is
+	is_secure: BOOLEAN
 			-- true if the rope is secure to pass
 		do
 			Result := baboons < capacity and not changing
@@ -23,7 +23,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	announce (a_baboon: separate BABOON) is
+	announce (a_baboon: separate BABOON)
 			-- Each baboon should announce the rope first
 		do
 			-- If nobody else is waiting to use the rope
@@ -40,7 +40,7 @@ feature -- Basic operations
 			directions.extend (a_baboon.direction)
 		end
 
-	mount is
+	mount
 			-- Mount the baboon on the rope
 		do
 			-- increment the number of baboons on the rope
@@ -58,7 +58,7 @@ feature -- Basic operations
 			end
 		end
 
-	unmount (a_baboon: separate BABOON) is
+	unmount (a_baboon: separate BABOON)
 			-- Unmount the baboon from the rope
 		do
 			-- decrement the baboons amount who are passing the rope
@@ -72,7 +72,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	capacity: INTEGER is 5
+	capacity: INTEGER = 5
 			-- Maximum number of baboons on rope
 
 	baboons: INTEGER
@@ -81,7 +81,7 @@ feature {NONE} -- Implementation
 	changing: BOOLEAN
 			-- Are we changing direction? Should we wait to free the rope and change the direction
 
-	directions: LINKED_QUEUE [BOOLEAN] is
+	directions: LINKED_QUEUE [BOOLEAN]
 			-- List of announced directions
 			-- Each baboon who wants to use the rope should add his direction to this queue.
 		once

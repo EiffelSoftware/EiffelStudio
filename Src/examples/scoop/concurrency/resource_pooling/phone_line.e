@@ -1,5 +1,4 @@
 note
-	description: "Summary description for {PHONE_LINE}."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -28,11 +27,9 @@ feature -- Command
 			a_app.phone_line_test
 		end
 
-
 feature -- Query
 
 	id: INTEGER
 			-- Id of current phone line
-
 
 end

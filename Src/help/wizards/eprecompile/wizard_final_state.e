@@ -111,7 +111,7 @@ feature {NONE} -- Implementation
 			message.set_text (interface_names.m_precompilation_will_be_launch)
 		end
 
-	final_message: STRING_GENERAL
+	final_message: STRING_32
 			-- final message for the last message dialog at the end of all the precompilations
 		do
 			Result:= interface_names.m_precompilation_done

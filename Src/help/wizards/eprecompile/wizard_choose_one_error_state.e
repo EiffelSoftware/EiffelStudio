@@ -36,7 +36,7 @@ feature {NONE} -- Implementation
 			message.set_text (interface_names.m_you_must_choose_library)
 		end
 
-	final_message: STRING_GENERAL
+	final_message: STRING_32
 		do
 			Result := interface_names.l_bye
 		end

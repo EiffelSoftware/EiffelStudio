@@ -11,7 +11,7 @@ class
 
 inherit
 	BENCH_WIZARD_ERROR_STATE_WINDOW
-	
+
 	BENCH_WIZARD_CONSTANTS
 		export
 			{NONE} all
@@ -29,7 +29,7 @@ feature -- basic Operations
 			message.set_text (Bench_interface_names.m_Project_name_error_state)
 		end
 
-	final_message: STRING
+	final_message: STRING_32
 		do
 		end
 
@@ -41,7 +41,7 @@ feature {WIZARD_STATE_WINDOW}
 			create Result.make_from_string ("eiffel_wizard_icon")
 			Result.add_extension (pixmap_extension)
 		end
-	
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

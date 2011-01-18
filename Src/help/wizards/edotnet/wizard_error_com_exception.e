@@ -46,7 +46,7 @@ feature -- basic Operations
 			message.set_text (interface_names.m_Wizard_instalation_error)
 		end
 
-	final_message: STRING
+	final_message: STRING_32
 		do
 		end
 

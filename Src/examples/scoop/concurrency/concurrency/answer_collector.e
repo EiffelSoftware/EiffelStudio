@@ -22,12 +22,12 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_queries : attached separate LIST [detachable separate FUNCTION [ANY, TUPLE, detachable separate ANY]]; an_initial_answer , a_ready_answer: detachable separate ANY; a_combinator: attached separate FUNCTION [ANY, TUPLE, detachable separate ANY])
+	make (a_queries: attached separate LIST [detachable separate FUNCTION [ANY, TUPLE, detachable separate ANY]]; an_initial_answer , a_ready_answer: detachable separate ANY; a_combinator: attached separate FUNCTION [ANY, TUPLE, detachable separate ANY])
 			-- Creation procedure.
 		require
 			a_queries.count > 0
 		local
-			evaluator : separate EVALUATOR
+			evaluator: separate EVALUATOR
 		do
 			answer := an_initial_answer;
 			ready_answer := a_ready_answer
@@ -52,14 +52,14 @@ feature {NONE} -- Initialization
 feature {CONCURRENCY} -- Answer retrieval
 
 	answer: detachable separate ANY
-		-- Answer
+			-- Answer
 
-	is_ready : BOOLEAN
-		-- Is answer ready?
+	is_ready: BOOLEAN
+			-- Is answer ready?
 
 feature {EVALUATOR} -- Answer update
 
-	update_answer (a_result : detachable separate ANY)
+	update_answer (a_result: detachable separate ANY)
 			-- Update answer with a result.
 		do
 			count := count - 1
@@ -84,12 +84,12 @@ feature {NONE} -- Implementation
 		end
 
 	combinator: FUNCTION [ANY, TUPLE, detachable separate ANY]
-		-- Combinator for results
+			-- Combinator for results
 
 	ready_answer: detachable separate ANY
-		-- Answer that allows ignoring further results
+			-- Answer that allows ignoring further results
 
 	count: INTEGER
-		-- Number of partial results to come
+			-- Number of partial results to come
 
 end

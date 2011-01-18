@@ -1,8 +1,8 @@
 note
 	description: "[
-					Class POOL MANAGER supports the resource pooling mechanism accessible
-					through call m out of n in class CONCURRENCY.
-																							]"
+		Class POOL MANAGER supports the resource pooling mechanism accessible
+		through call m out of n in class CONCURRENCY.
+	]"
 	author: "Piotr Nienaltowski"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_feature : separate ROUTINE [ANY, TUPLE]; i: INTEGER)
+	make (a_feature: separate ROUTINE [ANY, TUPLE]; i: INTEGER)
 			-- Creation procedure.
 		require
 			i > 0
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 
 feature {LOCKER} -- Feature application
 
-	try_to_apply_feature (a_target : separate ANY)
+	try_to_apply_feature (a_target: separate ANY)
 			-- Apply feature to apply to a target .
 			-- Do nothing if already applied the required number of times .
 		local
@@ -57,9 +57,10 @@ feature {NONE} -- Implementation
 			-- Requested number of executions
 
 	count: INTEGER
-		-- Number of executions already performed
+			-- Number of executions already performed
 
 invariant
 	m > 0
 	count >= 0 and then count <= m
+
 end

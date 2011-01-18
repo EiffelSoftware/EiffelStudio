@@ -1,14 +1,14 @@
 note
 	description: "[
-					Notion of event type ; extended to provide SCOOP support
-					Original class by Volkan Arslan; SCOOP extensions by Piotr Nienaltowski					
+		Notion of event type ; extended to provide SCOOP support
+		Original class by Volkan Arslan; SCOOP extensions by Piotr Nienaltowski					
 					
-					This is a SCOOP-enabled version of EVENT_TYPE. The original class, proposed
-					by Arslan et al, provided synchronous event publication and notification of 
-					subscribed objects. The new version supports fully asynchronous semantics 
-					of both operations; see section 10.2.4 for a detailed discussion and 
-					examples.
-																								]"
+		This is a SCOOP-enabled version of EVENT_TYPE. The original class, proposed
+		by Arslan et al, provided synchronous event publication and notification of 
+		subscribed objects. The new version supports fully asynchronous semantics 
+		of both operations; see section 10.2.4 for a detailed discussion and 
+		examples.
+	]"
 	author: "Piotr Nienaltowski"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -46,12 +46,12 @@ feature -- Element change
 			-- Add an action to subscription list .
 		require
 			an_action_not_void: an_action /= Void
-			an_action_not_yet_subscribed : not has (an_action)
+			an_action_not_yet_subscribed: not has (an_action)
 		do
 			extend (an_action)
 		ensure
 			an_action_subscribed: count = old count + 1 and has (an_action)
-			index_at_same_position : index = old index
+			index_at_same_position: index = old index
 		end
 
 	unsubscribe (an_action: detachable separate ROUTINE [ANY, EVENT_DATA])
@@ -77,7 +77,7 @@ feature -- Event publication
 	publish (arguments: EVENT_DATA)
 			-- Notify all actions from subscription list .
 		require
-			arguments_not_void : arguments /= Void
+			arguments_not_void: arguments /= Void
 		do
 			if not is_suspended then
 				from
@@ -85,7 +85,7 @@ feature -- Event publication
 				until
 					after
 				loop
-					if {action : separate ROUTINE [ANY, EVENT_DATA]}item then
+					if attached {separate ROUTINE [ANY, EVENT_DATA]} item as action then
 						asynch (agent action.call (arguments))
 						-- Full asynchrony; no waiting here
 					end
@@ -96,8 +96,8 @@ feature -- Event publication
 
 feature -- Status report
 
-	is_suspended : BOOLEAN
-			-- Is publication of all actions suspended? (Default : no.)
+	is_suspended: BOOLEAN
+			-- Is publication of all actions suspended? (Default: no.)
 
 feature -- Status change
 
@@ -107,7 +107,7 @@ feature -- Status change
 		do
 			is_suspended := True
 		ensure
-			subscription_suspended : is_suspended
+			subscription_suspended: is_suspended
 		end
 
 	restore_subscription
@@ -116,6 +116,7 @@ feature -- Status change
 		do
 			is_suspended := False
 		ensure
-			subscription_not_suspended : not is_suspended
+			subscription_not_suspended: not is_suspended
 		end
+
 end

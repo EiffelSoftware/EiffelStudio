@@ -13,7 +13,6 @@ feature -- Access
 		local
 			l_duration: DATE_TIME_DURATION
 			h,m, l_step: INTEGER
-			s: STRING
 		do
 			l_duration := (create {DATE_TIME}.make_now).relative_duration (create {DATE_TIME}.make_now_utc)
 			l_step := +1

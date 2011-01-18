@@ -1584,7 +1584,7 @@ feature {NONE} -- Implementation attribute processing
 				else
 						-- Convert "multithreaded" condition to "concurrency" condition.
 					if l_value.to_boolean then
-						current_condition.add_concurrency (concurrency_multithreaded)
+						current_condition.exclude_concurrency (concurrency_none)
 					else
 						current_condition.add_concurrency (concurrency_none)
 					end

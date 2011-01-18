@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Class representing a deleter."
 	author		: "Martino Trosi & Matteo Cortonesi"
 	date		: "Spring 2009"
@@ -12,11 +12,12 @@ inherit
 	ACTOR
 
 create {SEARCH_INSERT_DELETE}
+
 	make_with_list
 
 feature {SEARCH_INSERT_DELETE} -- Basic operations
 
-	live is
+	live
 			-- Live.
 		do
 			io.put_string (out + " created%N")
@@ -31,7 +32,7 @@ feature {SEARCH_INSERT_DELETE} -- Basic operations
 
 feature {NONE} -- Implementation
 
-	start_delete (a_list: separate SHARED_LIST) is
+	start_delete (a_list: separate SHARED_LIST)
 			-- Start delete operation.
 		require
 			a_list.can_delete
@@ -40,7 +41,7 @@ feature {NONE} -- Implementation
 			a_list.start_delete
 		end
 
-	end_delete (a_list: separate SHARED_LIST) is
+	end_delete (a_list: separate SHARED_LIST)
 			-- End delete operation.
 		do
 			io.put_string (out + " ending delete%N")
@@ -49,7 +50,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	type: STRING is "Deleter"
+	type: STRING = "Deleter"
 			-- What's the type of this actor?
 
 end

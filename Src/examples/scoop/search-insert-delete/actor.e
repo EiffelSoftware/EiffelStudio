@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Class representing a generic actor."
 	author		: "Martino Trosi & Matteo Cortonesi"
 	date		: "Spring 2009"
@@ -16,7 +16,7 @@ inherit
 
 feature {SEARCH_INSERT_DELETE} -- Creation procedure
 
-	make_with_list (a_id: INTEGER; a_randomness: BOOLEAN; a_list: separate SHARED_LIST) is
+	make_with_list (a_id: INTEGER; a_randomness: BOOLEAN; a_list: separate SHARED_LIST)
 			-- Creation procedure.
 		do
 			randomness := a_randomness
@@ -27,7 +27,7 @@ feature {SEARCH_INSERT_DELETE} -- Creation procedure
 
 feature -- Access
 
-	out: STRING is
+	out: STRING
 			-- How to print this?
 		once
 			Result := type + "-" + id.out
@@ -35,7 +35,7 @@ feature -- Access
 
 feature {SEARCH_INSERT_DELETE} -- Basic operations
 
-	live is
+	live
 			-- Live.
 		deferred
 		end
@@ -50,7 +50,7 @@ feature {NONE} -- Implementation
 	list: separate SHARED_LIST
 			-- Reference to the separate index
 
-	type: STRING is
+	type: STRING
 			-- What's the type of this actor?
 		deferred
 		end

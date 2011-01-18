@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Class representing a searcher."
 	author		: "Martino Trosi & Matteo Cortonesi"
 	date		: "Spring 2009"
@@ -16,7 +16,7 @@ create {SEARCH_INSERT_DELETE}
 
 feature {SEARCH_INSERT_DELETE} -- Basic operations
 
-	live is
+	live
 			-- Live.
 		do
 			io.put_string (out + " created%N")
@@ -31,7 +31,7 @@ feature {SEARCH_INSERT_DELETE} -- Basic operations
 
 feature {NONE} -- Implementation
 
-	start_search (a_list: separate SHARED_LIST) is
+	start_search (a_list: separate SHARED_LIST)
 			-- Start a search operation.
 		require
 			a_list.can_search
@@ -40,7 +40,7 @@ feature {NONE} -- Implementation
 			a_list.start_search
 		end
 
-	end_search (a_list: separate SHARED_LIST) is
+	end_search (a_list: separate SHARED_LIST)
 			-- End a search operation.
 		do
 			io.put_string (out + " ending search%N")
@@ -49,7 +49,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	type: STRING is "Searcher"
+	type: STRING = "Searcher"
 			-- What's the type of this actor?
 
 end

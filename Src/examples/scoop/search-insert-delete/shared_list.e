@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Class representing the index."
 	author		: "Martino Trosi & Matteo Cortonesi"
 	date		: "Spring 2009"
@@ -10,13 +10,13 @@ class
 
 feature {SEARCHER} -- Search
 
-	can_search: BOOLEAN is
+	can_search: BOOLEAN
 			-- Can search?
 		do
 			Result := not deleting
 		end
 
-	start_search is
+	start_search
 			-- Start a search.
 		require
 			can_search
@@ -24,7 +24,7 @@ feature {SEARCHER} -- Search
 			searchers := searchers + 1
 		end
 
-	end_search is
+	end_search
 			-- End a search.
 		do
 			searchers := searchers - 1
@@ -32,13 +32,13 @@ feature {SEARCHER} -- Search
 
 feature {INSERTER} -- Insert
 
-	can_insert: BOOLEAN is
+	can_insert: BOOLEAN
 			-- Can insert?
 		do
 			Result := not deleting and not inserting
 		end
 
-	start_insert is
+	start_insert
 			-- Start an insert.
 		require
 			can_insert
@@ -46,7 +46,7 @@ feature {INSERTER} -- Insert
 			inserting := True
 		end
 
-	end_insert is
+	end_insert
 			-- End an insert.
 		do
 			inserting := False
@@ -54,13 +54,13 @@ feature {INSERTER} -- Insert
 
 feature {DELETER} -- Delete
 
-	can_delete: BOOLEAN is
+	can_delete: BOOLEAN
 			-- Can delete?
 		do
 			Result := not deleting and not inserting and searchers = 0
 		end
 
-	start_delete is
+	start_delete
 			-- Start a delete.
 		require
 			can_delete
@@ -68,7 +68,7 @@ feature {DELETER} -- Delete
 			deleting := True
 		end
 
-	end_delete is
+	end_delete
 			-- End a delete.
 		do
 			deleting := False

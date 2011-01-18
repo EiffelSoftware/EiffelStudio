@@ -24,7 +24,7 @@ feature -- Access
 		deferred
 		end
 
-	date_time: detachable DATE_TIME
+	gmt_date_time: detachable DATE_TIME
 		deferred
 		end
 

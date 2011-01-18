@@ -285,6 +285,8 @@ feature {NONE} -- Implementation
 					fetched_logs := a_repo.logs (True, 0, 0, 100)
 				end
 				has_fetched_data := True --fetched_logs /= Void
+			else
+				print ("Trouble...%N")
 			end
 		end
 

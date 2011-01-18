@@ -18,13 +18,15 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_text_and_date (a_text: STRING_GENERAL; a_date: detachable DATE_TIME; a_smart_date_enabled: BOOLEAN; a_date_time_format: detachable STRING)
+	make_with_text_and_date (a_text: STRING_GENERAL; a_date: detachable DATE_TIME; a_smart_date_enabled: BOOLEAN; a_date_time_format: detachable STRING; a_gmt_offset: INTEGER; a_gmt_offset_minute: INTEGER)
 		do
 			date_time := a_date
 			date_time_format := a_date_time_format
 			smart_date_enabled := a_smart_date_enabled
+			gmt_offset := a_gmt_offset
+			gmt_offset_minute := a_gmt_offset_minute
 			data := a_text
-			make_with_text (text_for_date (a_text, a_date, a_smart_date_enabled, a_date_time_format))
+			make_with_text (text_for_date (a_text, a_date, a_smart_date_enabled, a_date_time_format, a_gmt_offset, a_gmt_offset_minute))
 			pointer_enter_actions.extend (agent refresh)
 		end
 
@@ -42,11 +44,17 @@ feature -- Access
 	date_time_format: detachable STRING
 			-- Date time format
 
+	gmt_offset: INTEGER
+			-- GMT offset
+
+	gmt_offset_minute: INTEGER
+			-- GMT offset for minutes
+
 feature -- Basic operation
 
 	refresh
 		do
-			set_text (text_for_date (data, date_time, smart_date_enabled, date_time_format))
+			set_text (text_for_date (data, date_time, smart_date_enabled, date_time_format, gmt_offset, gmt_offset_minute))
 		end
 
 feature {NONE} -- Interface text
@@ -130,7 +138,7 @@ feature {NONE} -- Interface text
 						s32.append_integer (h)
 					end
 				when 'G', 'H' then
-					if c = 'G' and h < 10 then
+					if c = 'H' and h < 10 then
 						s32.append_integer (0)
 					end
 					s32.append_integer (h)
@@ -170,46 +178,59 @@ feature {NONE} -- Interface text
 
 		end
 
-	text_for_date (a_text: STRING_GENERAL; a_date_time: detachable DATE_TIME; a_smart_date_enabled: BOOLEAN; a_date_time_format: like date_time_format): STRING_GENERAL
+	text_for_date (a_text: STRING_GENERAL; a_gmt_date_time: detachable DATE_TIME; a_smart_date_enabled: BOOLEAN; a_date_time_format: like date_time_format;
+			a_gmt_offset: like gmt_offset; a_gmt_offset_minute: like gmt_offset_minute): STRING_GENERAL
 		local
+			l_date_time: DATE_TIME
 			l_now: DATE_TIME
 			l_duration: DATE_TIME_DURATION --like {DATE_TIME}.relative_duration
+			l_duration_time: like {DATE_TIME_DURATION}.time
 			m,d,h: INTEGER
 		do
-			if a_date_time /= Void then
+			if a_gmt_date_time /= Void then
+				if a_gmt_offset /= 0 or a_gmt_offset_minute /= 0 then
+					l_date_time := a_gmt_date_time.deep_twin
+					l_date_time.hour_add (a_gmt_offset)
+					l_date_time.minute_add (a_gmt_offset_minute)
+				else
+					l_date_time := a_gmt_date_time
+				end
+
 				if a_smart_date_enabled then
 					create l_now.make_now_utc
-					l_duration := l_now.relative_duration (a_date_time)
+					l_duration := l_now.relative_duration (a_gmt_date_time)
 					d := l_duration.date.day
 					if d = 0 then
-						h := l_duration.time.hour
+						l_duration_time := l_duration.time
+						h := l_duration_time.hour
 						if h > 0 then
 							Result := h.out + " hours ago"
 						else
-							m := l_duration.time.minute
+							m := l_duration_time.minute
 							if m = 0 then
-								Result := l_duration.time.second.out + " seconds ago"
+								Result := l_duration_time.second.out + " seconds ago"
 							else
 								Result := m.out + " minutes ago"
 							end
 						end
 					elseif d < 7 then
+						l_duration_time := l_duration.time
 						Result := d.out + " days"
-						h := l_duration.time.hour
+						h := l_duration_time.hour
 						if h > 0 then
 							Result.append (" and " + h.out + " hours")
 						end
 						Result.append (" ago")
 					else
 						if a_date_time_format /= Void then
-							Result := formatted_date_time (a_date_time, a_date_time_format)
+							Result := formatted_date_time (l_date_time, a_date_time_format)
 						else
-							Result := a_date_time.out
+							Result := l_date_time.out
 						end
 					end
 				else
 					if a_date_time_format /= Void then
-						Result := formatted_date_time (a_date_time, a_date_time_format)
+						Result := formatted_date_time (l_date_time, a_date_time_format)
 					else
 						Result := a_text -- a_date_time.out
 					end

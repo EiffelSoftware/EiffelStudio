@@ -34,12 +34,24 @@ feature {NONE} -- Access
 
 			date_formatting_pref := factory.new_string_preference_value (manager, namespace + ".date_formatting", "")
 
+			initialize_gmt_offset_preferences
+
 			use_smart_date_pref := factory.new_boolean_preference_value (manager, namespace + ".use_smart_date", True)
 
 			diff_viewer_command_pref := factory.new_string_preference_value (manager, namespace + ".diff_viewer_command", "")
 		end
 
 feature -- Access
+
+	initialize_gmt_offset_preferences
+		local
+			s: STRING
+		do
+			s := (create {CTR_GMT_OFFSET_UTILITY}).gmt_offset_string
+
+			gmt_offset_pref := factory.new_string_preference_value (manager, namespace + ".gmt_offset", s)
+			gmt_offset_pref.set_default_value (s)
+		end
 
 	auto_mark_read_pref: BOOLEAN_PREFERENCE
 
@@ -51,6 +63,8 @@ feature -- Access
 	use_smart_date_pref: BOOLEAN_PREFERENCE
 
 	date_formatting_pref: STRING_PREFERENCE
+
+	gmt_offset_pref: STRING_PREFERENCE
 
 	diff_viewer_command_pref: STRING_PREFERENCE
 

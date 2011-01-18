@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 
 	make (a_svn: SVN_REVISION_INFO; a_parent: REPOSITORY_DATA)
 		local
-			d: like date_time
+			d: like gmt_date_time
 		do
 			svn_revision := a_svn
 			id := a_svn.revision.out
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 			if attached svn_date_values (date) as dvals then
 				create d.make (dvals.year, dvals.month, dvals.day, dvals.hour, dvals.min, dvals.sec)
 				d.fine_second_add (dvals.fsec)
-				date_time := d
+				gmt_date_time := d
 			end
 			message := a_svn.log_message
 			message.right_adjust
@@ -52,7 +52,7 @@ feature -- Access
 
 	date: STRING
 
-	date_time: detachable DATE_TIME
+	gmt_date_time: detachable DATE_TIME
 
 	author: STRING
 

@@ -1,7 +1,4 @@
 note
-	description: "[
-					Summary description for {ACTIVE_OBJECT}.
-																				]"
 	date: "$Date$"
 	revision: "$Revision$"
 

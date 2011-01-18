@@ -1,9 +1,9 @@
 note
 	description: "[
-					The deferred class CONCURRENCY provides an interface for the above 
-					library facilities. To use these facilities, application classes must
-					inherit from CONCURRENCY.
-																							]"
+		The deferred class CONCURRENCY provides an interface for the above 
+		library facilities. To use these facilities, application classes must
+		inherit from CONCURRENCY.
+	]"
 	author: "Piotr Nienaltowski"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -21,38 +21,38 @@ feature -- Basic operations
 			a_feature.call ([])
 		end
 
-	asynch (a_feature : detachable separate ROUTINE [ANY, TUPLE])
+	asynch (a_feature: detachable separate ROUTINE [ANY, TUPLE])
 			-- Execute a feature fully asynchronously.
 		require
-			a_feature_exists : a_feature /= Void
+			a_feature_exists: a_feature /= Void
 		local
-			executor : separate EXECUTOR
+			executor: separate EXECUTOR
 		do
 			create executor.execute (a_feature)
 		end
 
-	sleep (a_time : INTEGER)
+	sleep (a_time: INTEGER)
 			-- Suspend activity for a time milliseconds .
 		require
-			a_time_non_negative : a_time >= 0
+			a_time_non_negative: a_time >= 0
 		do
 			-- Implementation provided by scoop2scoopli
 		end
 
 feature -- Waiting faster
 
-	evaluated_in_parallel (a_queries : LIST [detachable separate FUNCTION [ANY, TUPLE, detachable separate ANY]]; an_initial_answer , a_ready_answer: detachable separate ANY; an_operator : FUNCTION [ANY, TUPLE, detachable separate ANY]): detachable separate ANY
+	evaluated_in_parallel (a_queries: LIST [detachable separate FUNCTION [ANY, TUPLE, detachable separate ANY]]; an_initial_answer , a_ready_answer: detachable separate ANY; an_operator: FUNCTION [ANY, TUPLE, detachable separate ANY]): detachable separate ANY
 			-- Parallel evaluation of queries combined by an operator
 		require
 			a_queries.count > 0
 		local
-			answer_collector : separate ANSWER_COLLECTOR
+			answer_collector: separate ANSWER_COLLECTOR
 		do
 			create answer_collector.make (a_queries, an_initial_answer , a_ready_answer, an_operator)
 			Result := answer (answer_collector)
 		end
 
-	answer (an_answer_collector : attached separate ANSWER_COLLECTOR): detachable separate ANY
+	answer (an_answer_collector: attached separate ANSWER_COLLECTOR): detachable separate ANY
 			-- Answer from an answer collector
 		require
 			answer_ready (an_answer_collector)
@@ -64,38 +64,38 @@ feature -- Predefined parallel operators
 
 	parallel_or (l: LIST [detachable separate PREDICATE [ANY, TUPLE]]): BOOLEAN
 		do
-			if {res : BOOLEAN} evaluated_in_parallel (l , False , True,
+			if attached {BOOLEAN} evaluated_in_parallel (l , False , True,
 --				agent or_else (b1: BOOLEAN; b2: BOOLEAN): BOOLEAN
 				agent (b1, b2: BOOLEAN): BOOLEAN
 					do
 						Result := b1 or else b2
-					end (?, ?))
+					end (?, ?)) as res
 			then
 				Result := res
 			end
 	end
 
-	parallel_and (l : LIST [detachable separate PREDICATE [ANY, TUPLE]]): BOOLEAN
+	parallel_and (l: LIST [detachable separate PREDICATE [ANY, TUPLE]]): BOOLEAN
 		do
-			if {res : BOOLEAN} evaluated_in_parallel (l , True, False ,
+			if attached {BOOLEAN} evaluated_in_parallel (l , True, False ,
 --				agent and_then (b1, b2: BOOLEAN): BOOLEAN
 				agent (b1, b2: BOOLEAN): BOOLEAN
 					do
 						Result := b1 and then b2
-					end (?, ?))
+					end (?, ?)) as res
 			then
 				Result := res
 			end
 		end
 
-	parallel_sum (l : LIST [detachable separate FUNCTION [ANY, TUPLE, INTEGER]]): INTEGER
+	parallel_sum (l: LIST [detachable separate FUNCTION [ANY, TUPLE, INTEGER]]): INTEGER
 		do
-			if {res : INTEGER} evaluated_in_parallel (l , 0,{INTEGER}.min_value,
---				agent sum (i , j : INTEGER): INTEGER
-				agent (i , j : INTEGER): INTEGER
+			if attached {INTEGER} evaluated_in_parallel (l , 0,{INTEGER}.min_value,
+--				agent sum (i , j: INTEGER): INTEGER
+				agent (i , j: INTEGER): INTEGER
 					do
 						Result := i + j
-					end (?, ?))
+					end (?, ?)) as res
 			then
 				Result := res
 			end
@@ -103,13 +103,13 @@ feature -- Predefined parallel operators
 
 feature -- Resource pooling
 
-	call_m_out_of_n (a_feature : ROUTINE [ANY, TUPLE]; a_pool : LIST [detachable separate ANY]; m: INTEGER)
+	call_m_out_of_n (a_feature: ROUTINE [ANY, TUPLE]; a_pool: LIST [detachable separate ANY]; m: INTEGER)
 			-- Apply a feature to m elements of a pool .
 		require
 			m > 0 and then a_pool . count >= m
 		local
 			pool_manager: separate POOL_MANAGER
-			locker : separate LOCKER
+			locker: separate LOCKER
 		do
 			create pool_manager.make (a_feature , m)
 			from
@@ -125,7 +125,7 @@ feature -- Resource pooling
 
 feature -- Contract support
 
-	answer_ready (an_answer_collector : attached separate ANSWER_COLLECTOR): BOOLEAN
+	answer_ready (an_answer_collector: attached separate ANSWER_COLLECTOR): BOOLEAN
 			-- If `an_answer_collector' ready?
 		do
 			Result := an_answer_collector.is_ready

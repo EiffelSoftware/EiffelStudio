@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Generic class for actors"
 	author		: "Martino Trosi & Matteo Cortonesi"
 	date		: "Spring 2009"
@@ -10,13 +10,13 @@ deferred class
 
 inherit
 	SHARED_RANDOM
-	redefine
-		out
-	end
+		redefine
+			out
+		end
 
 feature {FANEUIL_HALL} -- Creation procedure
 
-	make_with_hall (a_id: INTEGER; a_hall: separate HALL) is
+	make_with_hall (a_id: INTEGER; a_hall: separate HALL)
 			-- Creation procedure.
 		require
 			a_id_positive: a_id > 0
@@ -35,7 +35,7 @@ feature -- Access
 	id: INTEGER
 			-- Id of the actor
 
-	out: STRING is
+	out: STRING
 			-- How to print actor?
 		once
 			Result := type + "-" + id.out
@@ -43,7 +43,7 @@ feature -- Access
 
 feature {FANEUIL_HALL} -- Basic operations
 
-	live is
+	live
 			-- Live.
 		do
 			from
@@ -62,7 +62,7 @@ feature {NONE} -- Implementation
 	hall: separate HALL
 			-- Reference to the attached separate hall
 
-	type: STRING is
+	type: STRING
 			-- What's the type of this object?
 		deferred
 		end
@@ -70,7 +70,7 @@ feature {NONE} -- Implementation
 	over: BOOLEAN
 			-- Is life over?
 
-	step is
+	step
 			-- Do a process step.
 		deferred
 		end

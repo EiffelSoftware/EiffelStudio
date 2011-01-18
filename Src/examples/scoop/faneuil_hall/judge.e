@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Class representing a judge"
 	author		: "Martino Trosi & Matteo Cortonesi"
 	date		: "Spring 2009"
@@ -10,24 +10,25 @@ class
 
 inherit
 	ACTOR
-	redefine
-		out
-	end
+		redefine
+			out
+		end
 
 create {FANEUIL_HALL}
+
 	make_with_hall
 
 feature -- Access
 
-	out: STRING is "Judge"
+	out: STRING = "Judge"
 			-- How to print the judge?
 
 feature {NONE} -- Implementation
 
-	type: STRING is "Judge"
+	type: STRING = "Judge"
 			-- What's the type?
 
-	step is
+	step
 			-- Do a process step.
 		do
 			random.forth;
@@ -41,7 +42,7 @@ feature {NONE} -- Implementation
 			over := true
 		end
 
-	enter (a_hall: separate HALL) is
+	enter (a_hall: separate HALL)
 			-- Enter the hall.
 		require
 			not a_hall.judge_present
@@ -52,7 +53,7 @@ feature {NONE} -- Implementation
 			a_hall.set_judge (True)
 		end
 
-	take_place(a_hall: separate HALL) is
+	take_place(a_hall: separate HALL)
 			-- Sit in judgment position
 		require
 			a_hall.immigrants_ready
@@ -61,7 +62,7 @@ feature {NONE} -- Implementation
 			a_hall.sit_judge
 		end
 
-	confirm (a_hall: separate HALL) is
+	confirm (a_hall: separate HALL)
 			-- Confirm.
 		require
 			a_hall.immigrants_swear_done
@@ -70,10 +71,11 @@ feature {NONE} -- Implementation
 			a_hall.confirm
 		end
 
-	leave (a_hall: separate HALL) is
+	leave (a_hall: separate HALL)
 			-- Leave the hall.
 		do
 			io.put_string (out + " leaving%N")
 			a_hall.set_judge (False)
 		end
+
 end

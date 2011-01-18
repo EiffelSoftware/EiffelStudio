@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Class representing a spectator"
 	author		: "Martino Trosi & Matteo Cortonesi"
 	date		: "Spring 2009"
@@ -16,10 +16,10 @@ create
 
 feature {NONE} -- Implementation
 
-	type: STRING is "Spectator"
+	type: STRING = "Spectator"
 			-- What's the type?
 
-	step is
+	step
 			-- Do a process step.
 		do
 			enter (hall)
@@ -28,7 +28,7 @@ feature {NONE} -- Implementation
 			over := True
 		end
 
-	enter (a_hall: separate HALL) is
+	enter (a_hall: separate HALL)
 			-- Enter the hall.
 		require
 			not a_hall.judge_present
@@ -36,7 +36,7 @@ feature {NONE} -- Implementation
 			io.put_string (out + " entering%N")
 		end
 
-	spectate is
+	spectate
 			-- Spectate.
 		do
 			random.forth;
@@ -46,7 +46,7 @@ feature {NONE} -- Implementation
 			(create {EXECUTION_ENVIRONMENT}).sleep (1000000 * random_integer (500, 1000))
 		end
 
-	leave (a_hall: separate HALL) is
+	leave (a_hall: separate HALL)
 			-- Leave.
 		do
 			io.put_string (out + " leaving%N")

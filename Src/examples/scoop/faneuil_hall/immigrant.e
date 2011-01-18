@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Class representing an immigrant"
 	author		: "Martino Trosi & Matteo Cortonesi"
 	date		: "Spring 2009"
@@ -12,14 +12,15 @@ inherit
 	ACTOR
 
 create {FANEUIL_HALL}
+
 	make_with_hall
 
 feature {NONE} -- Implementation
 
-	type: STRING is "Immigrant"
+	type: STRING = "Immigrant"
 			-- What's the type?
 
-	step is
+	step
 			-- Do a process step.
 		do
 			enter (hall)
@@ -33,7 +34,7 @@ feature {NONE} -- Implementation
 			over := True
 		end
 
-	enter (a_hall: separate HALL) is
+	enter (a_hall: separate HALL)
 			-- Enter the hall.
 		require
 			not a_hall.judge_present
@@ -42,14 +43,14 @@ feature {NONE} -- Implementation
 			a_hall.enter_immigrant
 		end
 
-	check_in (a_hall: separate HALL) is
+	check_in (a_hall: separate HALL)
 			-- Check in.
 		do
 			io.put_string (out + " checking in%N")
 			a_hall.check_in
 		end
 
-	sit_down (a_hall: separate HALL) is
+	sit_down (a_hall: separate HALL)
 			-- Sit down.
 		require
 			a_hall.judge_ready
@@ -57,14 +58,14 @@ feature {NONE} -- Implementation
 			io.put_string (out + " taking place%N")
 		end
 
-	swear (a_hall: separate HALL)is
+	swear (a_hall: separate HALL)
 			-- Swear.
 		do
 			io.put_string (out + " swearing%N")
 			a_hall.swear
 		end
 
-	get_certificate (a_hall: separate HALL) is
+	get_certificate (a_hall: separate HALL)
 			-- Get the certificate.
 		require
 			not a_hall.judge_ready
@@ -72,7 +73,7 @@ feature {NONE} -- Implementation
 			io.put_string (out + " getting certificate%N")
 		end
 
-	leave (a_hall: separate HALL) is
+	leave (a_hall: separate HALL)
 			-- Leave the hall.
 		require
 			not a_hall.judge_present

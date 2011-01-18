@@ -1,12 +1,16 @@
-class ADDER_LEAF
+class
+	ADDER_LEAF
 
-inherit TREE_LEAF [INTEGER]
+inherit
+	TREE_LEAF [INTEGER]
 	ADDER_IMP
 
-create make
+create
+	make
 
 feature
-	make (a_list : SPECIAL [INTEGER])
+
+	make (a_list: SPECIAL [INTEGER])
 		do
 			list := a_list
 		end

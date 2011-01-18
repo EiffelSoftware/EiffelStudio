@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {CONC}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -12,10 +11,10 @@ create
 
 feature
 
-	x : separate S
-	y : separate S
+	x: separate S
+	y: separate S
 
-	make (a_x, a_y : separate S)
+	make (a_x, a_y: separate S)
 		do
 			x := a_x
 			y := a_y
@@ -26,13 +25,13 @@ feature
 			g (x)
 		end
 
-	g (a_x : separate S)
+	g (a_x: separate S)
 		do
 			busy
 			h (y)
 		end
 
-	h (a_y : separate S)
+	h (a_y: separate S)
 		do
 		end
 
@@ -42,4 +41,5 @@ feature
 			(create {EXECUTION_ENVIRONMENT}).sleep (100*1000*1000)
 			print ("Busy end")
 		end
+
 end

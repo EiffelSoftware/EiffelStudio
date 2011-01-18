@@ -1,7 +1,7 @@
 note
 	description: "[
-					Server of class MIDDLE_ACTIVE_OBJECT
-																						]"
+		Server of class MIDDLE_ACTIVE_OBJECT
+	]"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -156,6 +156,13 @@ feature {NONE} -- Initialization
 								set_date_time_format (iap.value)
 							end(p2))
 				end
+				if attached prefs.gmt_offset_pref as p3 then
+					set_gmt_offset_with_string (p3.value)
+					p3.change_actions.extend (agent (iap: STRING_PREFERENCE)
+							do
+								set_gmt_offset_with_string (iap.value)
+							end(p3))
+				end
 			end
 		end
 
@@ -191,11 +198,69 @@ feature -- Access
 
 	date_time_format: detachable STRING
 
+	gmt_offset: INTEGER
+	gmt_offset_minutes: INTEGER
+
 	grid: ES_GRID
 
 	toggle_search_bar_button: detachable SD_TOOL_BAR_TOGGLE_BUTTON
 
 feature -- Element change
+
+	set_gmt_offset_with_string (a_offset: STRING)
+		local
+			s: STRING
+			h,m: INTEGER
+			p: INTEGER
+			err: BOOLEAN
+		do
+			a_offset.left_adjust
+			p := a_offset.index_of (':', 1)
+			if p > 0 then
+				s := a_offset.substring (1, p - 1)
+				if s.is_integer then
+					h := s.to_integer
+				else
+					err := True
+				end
+				s := a_offset.substring (p + 1, a_offset.count)
+				if s.is_integer then
+					m := s.to_integer
+				else
+					err := True
+				end
+				if a_offset[1] = '-' then
+					m := -1 * m
+				end
+			else
+				if a_offset.is_integer then
+					h := a_offset.to_integer
+				else
+					err := True
+				end
+			end
+			if err then
+				s := (create {CTR_GMT_OFFSET_UTILITY}).gmt_offset_string
+				console_log_error ("GMT offset value is not valid [" + a_offset + "] => reset to [" + s + "]")
+				if attached (create {CTR_GMT_OFFSET_UTILITY}).gmt_offset as t then
+					h := t.hour
+					m := t.minute
+					if t.negative then
+						h := -1 * h
+						m := -1 * m
+					end
+				else
+					h := 0
+					m := 0
+				end
+			end
+
+			if gmt_offset /= h or gmt_offset_minutes /= m then
+				gmt_offset := h
+				gmt_offset_minutes := m
+				update
+			end
+		end
 
 	set_date_time_format (f: like date_time_format)
 		local
@@ -722,7 +787,8 @@ feature {CTR_WINDOW} -- Implementation
 			a_row.set_item (cst_author_column, create {EV_GRID_LABEL_ITEM}.make_with_text (a_log.author))
 
 			if use_smart_date or date_time_format /= Void then
-				create {CTR_DATE_TIME_GRID_ITEM} gdate_time.make_with_text_and_date (a_log.date, a_log.date_time, use_smart_date, date_time_format)
+				create {CTR_DATE_TIME_GRID_ITEM} gdate_time.make_with_text_and_date (a_log.date, a_log.gmt_date_time, use_smart_date, date_time_format,
+					gmt_offset, gmt_offset_minutes)
 			else
 				create gdate_time.make_with_text (a_log.date)
 			end

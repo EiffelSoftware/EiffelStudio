@@ -37,6 +37,7 @@ feature {NONE} -- Initialization
 		do
 			make
 			location := a_repo.location.string
+			engine.set_svn_executable_path (a_repo.engine.svn_executable_path)
 		ensure
 			new_engine: engine /= a_repo.engine
 			same_location: location ~ a_repo.location

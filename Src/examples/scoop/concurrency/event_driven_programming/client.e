@@ -1,5 +1,4 @@
 note
-	description: "Summary description for {CLIENT}."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -28,7 +27,6 @@ feature -- Command
 		end
 
 feature -- Query
-
 
 	id: INTEGER
 			-- Client id

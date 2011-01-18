@@ -11,11 +11,6 @@ note
 class
 	APPLICATION
 
-inherit
-	ANY
-
-	ARGUMENTS
-
 create
 	make
 

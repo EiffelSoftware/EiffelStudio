@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "System's root class"
 	author		: "Volkan Arslan, Yann Mueller, Piotr Nienaltowski."
 	reviewer	: "Benjamin Morandi"

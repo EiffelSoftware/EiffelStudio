@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Objects that implement forks."
 	author		: "Volkan Arslan, Yann Mueller, Piotr Nienaltowski."
 	reviewer	: "Benjamin Morandi"

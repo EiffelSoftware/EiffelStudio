@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that implement philosophers."
 	author		: "Volkan Arslan, Yann Mueller, Piotr Nienaltowski."
 	reviewer	: "Benjamin Morandi"
@@ -80,5 +80,3 @@ invariant
 	times_eaten <= number_of_rounds
 
 end -- class PHILOSOPHER
-
-

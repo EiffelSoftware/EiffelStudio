@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Random utility"
 	author		: "Martino Trosi & Matteo Cortonesi"
 	date		: "Spring 2009"
@@ -10,7 +10,7 @@ deferred class
 
 feature -- Access
 
-	random_integer(a_min, a_max: INTEGER): INTEGER is
+	random_integer(a_min, a_max: INTEGER): INTEGER
 			-- What's the current random integer between a_min and a_max?
 		require
 			a_max > a_min
@@ -25,7 +25,5 @@ feature -- Access
 
 	random: RANDOM
 			-- Reference to the random number generator
-
-invariant
 
 end

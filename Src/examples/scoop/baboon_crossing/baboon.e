@@ -1,4 +1,4 @@
-indexing
+note
 	description : "Class representing a baboon."
 	author		: "Martino Trosi & Matteo Cortonesi"
 	date		: "Spring 2009"
@@ -7,18 +7,20 @@ indexing
 
 class
 	BABOON
+
 inherit
 	SHARED_RANDOM
-	redefine
-		out
-	end
+		redefine
+			out
+		end
 
 create {BABOON_CROSSING}
+
 	make_with_rope
 
 feature {NONE} -- Initialization
 
-	make_with_rope (a_id: INTEGER; a_rope: separate ROPE) is
+	make_with_rope (a_id: INTEGER; a_rope: separate ROPE)
 			-- Creation procedure.
 		require
 			a_id_positive: a_id > 0
@@ -58,7 +60,7 @@ feature -- Access
 
 feature {BABOON_CROSSING} -- Basic operations
 
-	live is
+	live
 			-- Live.
 		do
 			-- announce the rope
@@ -73,14 +75,14 @@ feature {BABOON_CROSSING} -- Basic operations
 
 feature {NONE} -- Implementation
 
-	announce (a_rope: separate ROPE) is
+	announce (a_rope: separate ROPE)
 			-- Announce.
 		do
 			io.put_string (out + " announcing%N")
 			a_rope.announce (Current)
 		end
 
-	mount (a_rope: separate ROPE) is
+	mount (a_rope: separate ROPE)
 			-- Mount on rope.
 		require
 			-- wait until the rope is safe
@@ -101,7 +103,7 @@ feature {NONE} -- Implementation
 			(create {EXECUTION_ENVIRONMENT}).sleep (random_integer (500, 1500) * 1000000)
 		end
 
-	unmount (a_rope: separate ROPE) is
+	unmount (a_rope: separate ROPE)
 			-- Unmount from the rope.
 		do
 			io.put_string (out + " unmounting%N")

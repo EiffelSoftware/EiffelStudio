@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "System's root class"
 	author		: "Martino Trosi & Matteo Cortonesi"
 	date		: "Spring 2009"
@@ -7,6 +7,7 @@ indexing
 
 class
 	BABOON_CROSSING
+
 inherit
 	SHARED_RANDOM
 
@@ -15,7 +16,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 		-- Creation procedure.
 	local
 		t_baboon: separate BABOON
@@ -43,19 +44,19 @@ feature -- Initialization
 
 feature {NONE} -- Implementation
 
-	rope: separate ROPE is
+	rope: separate ROPE
 			-- Reference to separate rope
 		once -- Only one rope will be created
 			create Result
 		end
 
-	max_baboons: INTEGER is 30
+	max_baboons: INTEGER = 30
 			-- Maximum number of baboons
 
-	launch_baboon(a_baboon: separate BABOON) is
+	launch_baboon(a_baboon: separate BABOON)
 			-- Launch the baboon.
 		do
 			a_baboon.live
 		end
 
-end -- class APPLICATION	
+end

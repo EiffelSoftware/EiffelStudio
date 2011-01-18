@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Objects that implement counters"
 	author		: "Volkan Arslan, Yann Mueller, Piotr Nienaltowski."
 	date		: "$Date: 18.05.2007$"
@@ -23,7 +23,7 @@ feature -- Access
 
 feature -- Element change
 
-	run is
+	run
 			-- Run counter infinitely long.
 		do
 			from
@@ -37,9 +37,9 @@ feature -- Element change
 			end
 		end
 
-	run_100 is
+	run_100
 			-- Run counter 100 values
-		 local
+		local
 			i: INTEGER_32
 		do
 			from
@@ -54,9 +54,9 @@ feature -- Element change
 			end
 		end
 
-	output is
+	output
 			-- Output the state of counter
-		 local
+		local
 			res: STRING_8
 		do
 			create res.make_empty
@@ -65,15 +65,15 @@ feature -- Element change
 			res.clear_all
 		end
 
-	increment is
+	increment
 			-- Increment counter
-		 do
+		do
 			value := value + 1
 		ensure
 			value = old value + 1
 		end
 
-	set_value (a_value: INTEGER_32) is
+	set_value (a_value: INTEGER_32)
 			-- Set `value' to `a_value'.
 		require
 			a_value_positive: a_value >= 0
@@ -83,7 +83,7 @@ feature -- Element change
 			value_assigned: value = a_value
 		end
 
-	set_speed (a_speed: INTEGER_32) is
+	set_speed (a_speed: INTEGER_32)
 			-- Set `speed' to `a_speed'.
 		require
 			a_speed_positvie: a_speed >= 0
@@ -95,9 +95,9 @@ feature -- Element change
 
 feature  -- Implementation
 
-	make (an_identifier: INTEGER_32; a_speed: INTEGER_32) is
+	make (an_identifier: INTEGER_32; a_speed: INTEGER_32)
 			-- Creation
-		 require
+		require
 			a_counter_number_valid: an_identifier >= 0
 			a_speed_valid: a_speed >= 0
 		do

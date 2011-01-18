@@ -12,8 +12,6 @@ class
 	APPLICATION
 
 inherit
-	ARGUMENTS
-
 	CONCURRENCY
 
 create

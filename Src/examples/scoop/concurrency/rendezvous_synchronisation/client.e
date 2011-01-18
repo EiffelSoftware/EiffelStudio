@@ -1,7 +1,7 @@
 note
 	description: "[
-					Client of class MIDDLE ACTIVE OBJECT
-																			]"
+		Client of class MIDDLE ACTIVE OBJECT.
+	]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -36,4 +36,5 @@ feature {NONE} -- Implementation
 
 	id: INTEGER
 			-- Id of current
+
 end

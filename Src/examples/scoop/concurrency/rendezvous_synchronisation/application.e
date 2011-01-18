@@ -13,9 +13,6 @@ note
 class
 	APPLICATION
 
-inherit
-	ARGUMENTS
-
 create
 	make
 
@@ -44,4 +41,5 @@ feature {NONE} -- Initialization
 
 	client_1, client_2: separate CLIENT
 			-- Client
+
 end

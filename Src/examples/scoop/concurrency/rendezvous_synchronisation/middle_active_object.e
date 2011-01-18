@@ -1,9 +1,9 @@
 note
 	description: "[
-					Client of class SERVER
-					Server of class CLIENT
-					It works as an active object in middle
-																						]"
+			Client of class SERVER
+			Server of class CLIENT
+			It works as an active object in middle
+	]"
 	date: "$Date$"
 	revision: "$Revision$"
 

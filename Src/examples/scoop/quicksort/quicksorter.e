@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Quicksorter that sorts in parallel."
 	author: "Marco Zietzling"
 	reviewer: "Benjamin Morandi"
@@ -11,7 +11,7 @@ class
 feature -- Basic operations
 
 	sort (a_data: separate DATA)
-			--	Sort `a_data'.
+			-- Sort `a_data'.
 		local
 			l_left_quicksorter: separate QUICKSORTER
 			l_right_quicksorter: separate QUICKSORTER

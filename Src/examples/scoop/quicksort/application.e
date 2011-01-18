@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Main application which initializes and starts a quicksort on random data."
 	author: "Marco Zietzling"
 	reviewer: "Benjamin Morandi"

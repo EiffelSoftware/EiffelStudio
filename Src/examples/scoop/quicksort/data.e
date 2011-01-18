@@ -1,4 +1,4 @@
-indexing
+note
 	description: "The data to work on."
 	author: "Benjamin Morandi"
 	date: "$Date$"
@@ -81,6 +81,7 @@ feature -- Basic operations
 		end
 
 feature -- Access
+
 	items: ARRAY[INTEGER]
 		-- The items.
 

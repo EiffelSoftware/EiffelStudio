@@ -76,7 +76,21 @@ feature -- 2 files diff
 
 		end
 
-feature -- Temporary files
+feature -- files
+
+	precise_file_name (a_filename: STRING): STRING
+		local
+			fn: FILE_NAME
+			f: RAW_FILE
+		do
+			create fn.make_from_string (current_working_directory)
+			fn.extend (a_filename)
+			Result := fn.string
+			create f.make (Result)
+			if not f.exists then
+				Result := a_filename.string
+			end
+		end
 
 	temporary_file_from_content (a_name: STRING; s: STRING): FILE
 		local

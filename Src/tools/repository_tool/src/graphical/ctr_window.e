@@ -1564,7 +1564,7 @@ feature {CTR_TOOL} -- Diff
 			l_diff: detachable STRING
 			l_service: detachable STRING
 			s: detachable STRING
-			l_diff_fn: FILE_NAME
+			l_diff_fn: STRING
 			e: CTR_EXTERNAL_TOOLS
 		do
 			rdata := a_log.parent
@@ -1593,8 +1593,7 @@ feature {CTR_TOOL} -- Diff
 						create s.make_from_string (l_diff)
 						s.replace_substring_all ("$id", a_log.id)
 						if attached {REPOSITORY_FILE_STORAGE} rdata.storage as fs and then attached fs.log_diff_data_filename (a_log) as fn then
-							create l_diff_fn.make_from_string (e.current_working_directory)
-							l_diff_fn.extend (fn)
+							l_diff_fn := e.precise_file_name (fn)
 							s.replace_substring_all ("$filename", l_diff_fn.string)
 						end
 						e.launch (s)
@@ -1653,9 +1652,9 @@ feature {CTR_TOOL} -- Diff
 			but: EV_BUTTON
 			m: EV_VERTICAL_BOX
 			t: EV_TEXT
-			l_diff_fn: FILE_NAME
+			l_diff_fn: STRING
 			diff_cmd: detachable STRING
-			e: EXECUTION_ENVIRONMENT
+			e: CTR_EXTERNAL_TOOLS
 		do
 			if attached preferences as prefs then
 				create diff_cmd.make_from_string (prefs.diff_viewer_command_pref.value)
@@ -1666,8 +1665,7 @@ feature {CTR_TOOL} -- Diff
 				attached fs.log_diff_data_filename (a_log) as fn
 			then
 				create e
-				create l_diff_fn.make_from_string (e.current_working_directory)
-				l_diff_fn.extend (fn)
+				l_diff_fn := e.precise_file_name (fn)
 				diff_cmd.replace_substring_all ("$filename", l_diff_fn.string)
 				diff_cmd.replace_substring_all ("$id", a_log.id)
 				e.launch (diff_cmd)

@@ -237,7 +237,7 @@ feature -- Deserialization
 			valid_file_path: a_file_path /= Void and then not a_file_path.is_empty
 		local
 			l_parser: XML_LITE_STOPPABLE_PARSER
-			l_tree: XML_CALLBACKS_TREE
+			l_tree: XML_CALLBACKS_FILTER_TREE
 			l_file: PLAIN_TEXT_FILE
 			l_xm_concatenator: XML_CONTENT_CONCATENATOR
 		do
@@ -310,7 +310,7 @@ feature {SHARED_XML_ROUTINES} -- Error management
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

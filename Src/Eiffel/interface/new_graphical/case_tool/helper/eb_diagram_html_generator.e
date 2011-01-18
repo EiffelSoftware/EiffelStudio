@@ -98,7 +98,7 @@ feature {EB_DOCUMENTATION_WIZARD} -- Basic operations
 			-- Names of available views of `cluster'.
 		local
 			l_parser: XML_LITE_STOPPABLE_PARSER
-			l_tree: XML_CALLBACKS_TREE
+			l_tree: XML_CALLBACKS_FILTER_TREE
 			l_file: PLAIN_TEXT_FILE
 			l_concatenator: XML_CONTENT_CONCATENATOR
 			diagram_input: XML_ELEMENT
@@ -440,7 +440,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

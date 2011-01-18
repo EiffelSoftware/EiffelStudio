@@ -1,4 +1,4 @@
-indexing
+note
 	description : "Class representing a generic actor."
 	author		: "Martino Trosi & Matteo Cortonesi"
 	date		: "Spring 2009"
@@ -7,15 +7,16 @@ indexing
 
 deferred class
 	ACTOR
+
 inherit
 	SHARED_RANDOM
-	redefine
-		out
-	end
+		redefine
+			out
+		end
 
 feature {NONE} -- Creation
 
-	make_with_station(a_id: INTEGER; a_station: separate STATION) is
+	make_with_station(a_id: INTEGER; a_station: separate STATION)
 			-- Creation procedure.
 		do
 			id := a_id
@@ -28,20 +29,20 @@ feature -- Access
 	id: INTEGER
 			-- Id of actor
 
-	out: STRING is
+	out: STRING
 			-- How to print actor?
 		once
 			Result := type + "-" + id.out
 		end
 
-	type: STRING is
+	type: STRING
 			-- What's the type of this?
 		deferred
 		end
 
 feature {SENATE_BUS} -- Basic operations
 
-	live is
+	live
 			-- Live.
 		do
 			from
@@ -58,7 +59,7 @@ feature {NONE} -- Implementation
 	over: BOOLEAN
 			-- Is life over?
 
-	step is
+	step
 			-- Do a step.
 		deferred
 		end

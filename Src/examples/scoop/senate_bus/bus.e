@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Class representing a bus."
 	author: "Mohammad Seyed Alavi"
 	date: "24/07/2009"
@@ -10,11 +10,12 @@ inherit
 	ACTOR
 
 create {SENATE_BUS}
+
 	make_with_station
 
 feature {NONE} -- Implementation
 
-	step is
+	step
 			-- Do a step.
 		do
 			io.put_string (out + " is coming to station%N")
@@ -48,9 +49,7 @@ feature {NONE} -- Implementation
 			a_station.leave
 		end
 
-	type: STRING is "Bus"
+	type: STRING = "Bus"
 			-- What's the type of this?
-
-invariant
 
 end

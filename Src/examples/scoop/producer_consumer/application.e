@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "System's root class"
 	author		: "Volkan Arslan, Yann Mueller, Piotr Nienaltowski."
 	date		: "$Date: 18.05.2007$"
@@ -46,13 +46,13 @@ feature -- Implementation
 
 	buffer: separate BOUNDED_BUFFER [INTEGER]
 
-	launch_producer (a_producer: separate PRODUCER) is
+	launch_producer (a_producer: separate PRODUCER)
 			-- Launch `a_producer'.
 		do
 			a_producer.produce (900)
 		end
 
-	launch_consumer (a_consumer: separate CONSUMER) is
+	launch_consumer (a_consumer: separate CONSUMER)
 			-- Launch `a_consumer'.
 		do
 			a_consumer.consume (600)

@@ -208,13 +208,21 @@ feature {NONE} -- Implementation
 				l_ex_obj := conf_factory.new_external_object (quote_path (l_dir + l_lib_name), a_target)
 				create l_cond.make
 				l_cond.add_build (conf_constants.build_finalize)
-				l_cond.set_multithreaded (a_multi_threaded)
+				if a_multi_threaded then
+					l_cond.exclude_concurrency ({CONF_CONSTANTS}.concurrency_none)
+				else
+					l_cond.add_concurrency ({CONF_CONSTANTS}.concurrency_none)
+				end
 				l_ex_obj.add_condition (l_cond)
 				a_target.add_external_object (l_ex_obj)
 				l_ex_obj := conf_factory.new_external_object (quote_path (l_dir + "w" + l_lib_name), a_target)
 				create l_cond.make
 				l_cond.add_build (conf_constants.build_workbench)
-				l_cond.set_multithreaded (a_multi_threaded)
+				if a_multi_threaded then
+					l_cond.exclude_concurrency ({CONF_CONSTANTS}.concurrency_none)
+				else
+					l_cond.add_concurrency ({CONF_CONSTANTS}.concurrency_none)
+				end
 				l_ex_obj.add_condition (l_cond)
 				a_target.add_external_object (l_ex_obj)
 			end
@@ -300,7 +308,7 @@ feature {NONE} -- Onces
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -313,21 +321,21 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

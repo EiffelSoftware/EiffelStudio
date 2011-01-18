@@ -1,20 +1,18 @@
-indexing
-	description : "scoop_test application root class"
-	date        : "$Date$"
-	revision    : "$Revision$"
+note
+	description: "scoop_test application root class"
+	date       : "$Date$"
+	revision   : "$Revision$"
 
 class
 	APPLICATION
-
---inherit
---	ARGUMENTS
 
 create
 	make
 
 feature {NONE} -- Initialization
-	prod : separate PRODUCER
-	cons : separate CONSUMER
+
+	prod: separate PRODUCER
+	cons: separate CONSUMER
 
 	make
 		do
@@ -23,7 +21,7 @@ feature {NONE} -- Initialization
 			run (cons)
 		end
 
-	run (c : separate CONSUMER)
+	run (c: separate CONSUMER)
 		do
 			c.run
 
@@ -32,10 +30,11 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	produce (p : separate PRODUCER)
+	produce (p: separate PRODUCER)
 		require
 			not p.has_something
 		do
 			p.make_something
 		end
+
 end

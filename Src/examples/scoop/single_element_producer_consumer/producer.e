@@ -1,35 +1,37 @@
 class PRODUCER
 
 create
-  make
+	make
 
 feature
-  make
-    do
-      has_something := False
-      value := 0
-    end
 
-  has_something : BOOLEAN
+	make
+		do
+			has_something := False
+			value := 0
+		end
 
-  make_something
-    require
-      has_nothing: not has_something
-    do
-      has_something := True
-      value := value + 1
-      io.put_string ("Produced: " + value.out + "%N")
-    end
+	has_something: BOOLEAN
 
-  get_something : INTEGER
-    require
-      is_ready: has_something
-    do
-      has_something := False
-      Result := value
-    end
+	make_something
+		require
+			has_nothing: not has_something
+		do
+			has_something := True
+			value := value + 1
+			io.put_string ("Produced: " + value.out + "%N")
+		end
+
+	get_something: INTEGER
+		require
+			is_ready: has_something
+		do
+			has_something := False
+			Result := value
+		end
 
 feature {NONE}
-  value : INTEGER
+
+	value: INTEGER
 
 end

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "The most general notion of process."
 	author		: "Volkan Arslan, Yann Mueller, Piotr Nienaltowski."
 	reviewer	: "Benjamin Morandi"

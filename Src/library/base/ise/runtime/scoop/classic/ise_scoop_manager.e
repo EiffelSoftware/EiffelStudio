@@ -202,7 +202,6 @@ feature -- Request Chain Handling
 			debug ("ISE_SCOOP_MANAGER")
 				print ("assign_supplier_process_to_request_chain for pid " + a_client_processor_id.out + " with supplier processor " + a_supplier_processor_id.out + "%N")
 			end
-
 			l_request_chain_id := (processor_meta_data [a_client_processor_id])[current_request_chain_id_index]
 
 				-- Retrieve request chain meta data structure, add supplier pid to it if not already present.
@@ -339,9 +338,22 @@ feature -- Request Chain Handling
 					-- Add the current supplier processor request chain node id
 				l_pid := l_request_chain_meta_data [i]
 
-					-- Increase request chain node id for supplier processor `l_pid'.
-					-- Increase atomically in memory.
 				l_request_chain_node_id := (processor_meta_data [l_pid]) [current_request_chain_node_id_index]
+
+				if l_request_chain_node_id = max_request_chain_node_queue_index then
+						-- We are at the maximum amount of allocations so we wait for the processor to reset its request chain node counter.
+					from
+						-- We can wait until the processor's application counter has caught up to the logging counter so that everything may be reset.
+					until
+						l_request_chain_node_id < max_request_chain_node_queue_index
+					loop
+						yield_to_operating_system
+						l_request_chain_node_id := {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (processor_meta_data [l_pid].item_address (current_request_chain_node_id_index), 0)
+					end
+					-- Processor `a_client_processor_id' has to wait for `l_pid' to reset its application queue.
+					--| FIXME: We may have to force iteration of application loop to allow for reset.
+				end
+
 					-- Extend value to request chain node meta data.
 				l_request_chain_meta_data.extend (l_request_chain_node_id)
 
@@ -384,6 +396,7 @@ feature -- Request Chain Handling
 					a_client_processor_id,
 					True  -- High Priority
 				)
+
 				i := i + 1
 			end
 		end
@@ -406,6 +419,7 @@ feature -- Request Chain Handling
 				l_request_chain_meta_data [request_chain_status_index] := request_chain_status_closed
 
 				l_new_request_chain_id := (processor_meta_data [a_client_processor_id])[current_request_chain_id_index] + 1
+
 				(processor_meta_data [a_client_processor_id]).put (l_new_request_chain_id, current_request_chain_id_index)
 			end
 
@@ -803,8 +817,21 @@ feature {NONE} -- Resource Initialization
 									scoop_command_call (l_executing_request_chain_node [l_executing_node_id_cursor])
 									l_executing_node_id_cursor := l_executing_node_id_cursor + 1
 								elseif l_executing_request_chain_node_meta_data [request_chain_status_index] = request_chain_status_closed then
-										-- Request chain has been fully closed therefore we can exit
-									l_feature_application_loop_exit := l_executing_node_id_cursor = l_executing_request_chain_node.count
+										-- Request chain has been fully closed therefore we can exit if all calls have been applied.
+									if l_executing_node_id_cursor >= l_executing_request_chain_node.count then
+										l_feature_application_loop_exit := True
+											--| FIXME IEK: Clear up call data if not done by call.
+										l_executing_request_chain_node.keep_head (0)
+										l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.decrement_integer_32 (l_executing_request_chain_node_meta_data.item_address (request_chain_pid_count_index))
+										if l_temp_count = 0 then
+												-- We are the last processor executing therefore we can reset the meta data (shared among other request chain nodes)
+											l_executing_request_chain_node_meta_data.fill_with (null_processor_id, 0, Request_chain_meta_data_header_size - 1)
+											l_executing_request_chain_node_meta_data.keep_head (Request_chain_meta_data_header_size)
+										else
+												 -- Reset the memory with a new value so that it can be reused upon reset.
+											l_request_chain_node_meta_data_queue [l_executing_node_id] := Void
+										end
+									end
 								elseif l_executing_request_chain_node_meta_data [request_chain_status_index] = request_chain_status_waiting then
 									from
 										-- Wait for waiting processor to set pid count to a negative value.
@@ -828,7 +855,15 @@ feature {NONE} -- Resource Initialization
 								end
 							end
 								-- Increment execution cursor by one.
-							l_processor_meta_data [current_request_node_id_execution_index] := l_executing_node_id + 1
+							l_executing_node_id := l_executing_node_id + 1
+							if l_executing_node_id = max_request_chain_node_queue_index then
+									-- We have reached the maximum indexes so we can reset both so that logging can resume.
+								l_processor_meta_data [current_request_node_id_execution_index] := 1
+								l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.swap_integer_32 (l_processor_meta_data.item_address (current_request_chain_node_id_index), 1)
+								l_executing_node_id := 1
+							else
+								l_processor_meta_data [current_request_node_id_execution_index] := l_executing_node_id
+							end
 						else
 								-- We are in a dorment state so we yield to the operating system.
 							yield_to_operating_system
@@ -964,11 +999,13 @@ feature {NONE} -- Scoop Processor Meta Data
 	request_chain_client_pid_index: NATURAL_8 = 1
 	request_chain_client_pid_request_chain_id_index: NATURAL_8 = 2
 	request_chain_status_index: NATURAL_8 = 3
+			-- Index values for request chain states
 
 	request_chain_status_open: INTEGER_8 = -1
 	request_chain_status_waiting: INTEGER_8 = 0
 	request_chain_status_application: INTEGER_8 = 1
 	request_chain_status_closed: INTEGER_8 = 2
+		-- Various state constants for a request chain.
 
 	request_chain_meta_data_default_size: INTEGER_32 = 8
 		-- meta data header + (2 * supplier PID request chain meta data)
@@ -987,7 +1024,7 @@ feature {NONE} -- Scoop Processor Meta Data
 		end
 
 	processor_status_index: INTEGER_32 = 0
-			-- Current Status of the Scoop Processor at index 'scoop_logical_index'.
+		-- Current Status of the Scoop Processor at index 'scoop_logical_index'.
 
 	processor_status_uninitialized: INTEGER_32 = -1
 		-- Only processor object has been allocated at this point.
@@ -1059,6 +1096,7 @@ feature {NONE} -- Scoop Processor Meta Data
 feature {NONE} -- Externals
 
 	frozen available_cpus: NATURAL_8
+			--| FIXME: Not Currently used: Implemented for future pooling optimizations
 		external
 			"C inline use %"eif_scoop.h%""
 		alias

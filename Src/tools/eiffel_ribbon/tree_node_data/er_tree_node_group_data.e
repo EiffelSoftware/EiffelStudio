@@ -28,10 +28,14 @@ feature -- Command
 			l_constants: ER_XML_ATTRIBUTE_CONSTANTS
 		do
 			create l_constants
-			if a_name.is_equal (l_constants.command_name) then
+			if a_name.same_string (l_constants.command_name) then
 				command_name := a_value
-			else
+			elseif a_name.same_string (l_constants.application_mode) then
+				application_mode := a_value.to_integer
+			elseif a_name.same_string (l_constants.size_definition) then
 				size_definition := a_value
+			else
+				-- 
 			end
 		end
 end

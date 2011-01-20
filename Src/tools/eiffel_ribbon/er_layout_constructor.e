@@ -26,10 +26,13 @@ feature {NONE} -- Initialization
 
 	build_docking_content
 			--
+		local
+			l_count: INTEGER
 		do
+			l_count := shared_singleton.layout_constructor_list.count
 			create content.make_with_widget (widget, "ER_LAYOUT_CONSTRUCTOR")
-			content.set_long_title ("Layout Constructor")
-			content.set_short_title ("Layout Constructor")
+			content.set_long_title ("Layout Constructor " + l_count.out)
+			content.set_short_title ("Layout Constructor " + l_count.out)
 			content.set_type ({SD_ENUMERATION}.editor)
 		end
 
@@ -55,9 +58,39 @@ feature -- Command
 			--
 		require
 			not_void: a_docking_manager /= Void
+		local
+			l_contents: ARRAYED_LIST [SD_CONTENT]
+			l_last_editor: detachable SD_CONTENT
+			l_count: INTEGER
 		do
+			from
+				l_contents := a_docking_manager.contents
+				l_contents.start
+			until
+				l_contents.after
+			loop
+				if l_contents.item.type = {SD_ENUMERATION}.editor then
+					l_count := l_count + 1
+					l_last_editor := l_contents.item
+				end
+				l_contents.forth
+			end
+
 			a_docking_manager.contents.extend (content)
-			content.set_default_editor_position
+
+			if l_count = 0 then
+				content.set_default_editor_position
+			else
+				check l_last_editor /= Void end
+				content.set_tab_with (l_last_editor, False)
+			end
+
+		end
+
+	expand_tree
+			--
+		do
+			helper.expand_all (widget)
 		end
 
 feature -- Query
@@ -73,6 +106,25 @@ feature -- Query
 			create Result.make (50)
 			check widget.count = 1 end
 			recrusive_all_items_with (a_text, widget.i_th (1), Result)
+		end
+
+	all_items_in_all_constructors (a_text: STRING): ARRAYED_LIST [EV_TREE_NODE]
+			-- Find in all layout constructors
+		require
+			not_void: a_text /= Void
+		local
+			l_list: ARRAYED_LIST [ER_LAYOUT_CONSTRUCTOR]
+		do
+			from
+				create Result.make (100)
+				l_list := shared_singleton.layout_constructor_list
+				l_list.start
+			until
+				l_list.after
+			loop
+				Result.merge_right (l_list.item.all_items_with (a_text))
+				l_list.forth
+			end
 		end
 
 feature -- Factory
@@ -173,7 +225,7 @@ feature -- Persistance
 			l_output_stream: ER_XML_OUTPUT_STREAM
 			l_document: XML_DOCUMENT
 		do
-			vision_xml_translator.add_xml_nodes_by_vision_tree (widget)
+			vision_xml_translator.save_xml_nodes_for_all_layout_constructors
 			l_document := vision_xml_translator.xml_document
 
 			create l_printer.make
@@ -184,8 +236,6 @@ feature -- Persistance
 			l_document.process (l_printer)
 
 			l_output_stream.close
-
-
 		end
 
 	load_tree

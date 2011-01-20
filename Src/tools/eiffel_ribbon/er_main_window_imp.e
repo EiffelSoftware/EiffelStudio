@@ -34,6 +34,7 @@ feature {NONE}-- Initialization
 			l_ev_menu_2.extend (open_project_menu)
 			l_ev_menu_2.extend (save_project_menu)
 			l_ev_menu_2.extend (l_ev_menu_separator_1)
+			l_ev_menu_2.extend (new_ribbon_menu)
 			l_ev_menu_2.extend (recent_projects)
 			l_ev_menu_2.extend (l_ev_menu_separator_2)
 			l_ev_menu_2.extend (exit_menu)
@@ -42,6 +43,7 @@ feature {NONE}-- Initialization
 			new_project_menu.set_text ("New Project")
 			open_project_menu.set_text ("Open Project")
 			save_project_menu.set_text ("Save Project")
+			new_ribbon_menu.set_text ("New Ribbon")
 			recent_projects.set_text ("Recent Projects")
 			exit_menu.set_text ("Exit")
 			set_title ("EiffelRibbon")
@@ -52,6 +54,7 @@ feature {NONE}-- Initialization
 			new_project_menu.select_actions.extend (agent on_new_project_selected)
 			open_project_menu.select_actions.extend (agent on_open_project_selected)
 			save_project_menu.select_actions.extend (agent on_save_project_selected)
+			new_ribbon_menu.select_actions.extend (agent on_new_ribbon_selected)
 			exit_menu.select_actions.extend (agent on_exit_selected)
 				-- Close the application when an interface close
 				-- request is recieved on `Current'. i.e. the cross is clicked.
@@ -72,6 +75,7 @@ feature {NONE}-- Initialization
 			create open_project_menu
 			create save_project_menu
 			create l_ev_menu_separator_1
+			create new_ribbon_menu
 			create recent_projects
 			create l_ev_menu_separator_2
 			create exit_menu
@@ -94,7 +98,7 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	new_project_menu, open_project_menu, save_project_menu, exit_menu: EV_MENU_ITEM
+	new_project_menu, open_project_menu, save_project_menu, new_ribbon_menu, exit_menu: EV_MENU_ITEM
 	recent_projects: EV_MENU
 
 feature {NONE} -- Implementation
@@ -130,6 +134,11 @@ feature {NONE} -- Implementation
 	
 	on_save_project_selected
 			-- Called by `select_actions' of `save_project_menu'.
+		deferred
+		end
+	
+	on_new_ribbon_selected
+			-- Called by `select_actions' of `new_ribbon_menu'.
 		deferred
 		end
 	

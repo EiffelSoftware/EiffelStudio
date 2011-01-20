@@ -113,7 +113,7 @@ feature -- Tag
 			if attached data_callback as l_data_callback then
 				l_data_callback.on_start_tag (a_namespace, a_prefix, a_local_part)
 			else
-				if attached shared_singleton.layout_constructor_cell.item as l_layout_constructor then
+				if attached shared_singleton.layout_constructor_list.first as l_layout_constructor then
 	--				create l_new_node.make_with_text (a_local_part)
 					l_new_node := l_layout_constructor.tree_item_factory_method (a_local_part)
 
@@ -144,6 +144,7 @@ feature -- Tag
 			debug ("Ribbon")
 				print ("%N on_attribute")
 			end
+
 			l_tree_node := last_node.last
 			if attached {ER_TREE_NODE_DATA} l_tree_node.data as l_data then
 				l_data.update_for_xml_attribute (a_local_part, a_value)

@@ -42,6 +42,9 @@ feature {NONE} -- Initialization
 			open_project_command.set_main_window (Current)
 			recent_project_command.set_main_window (Current)
 			gen_code_command.set_main_window (Current)
+			new_ribbon_command.set_main_window (Current)
+
+			shared_singleton.main_window_cell.put (Current)
 
 			restore_tool_info_from_disk
 		end
@@ -80,7 +83,7 @@ feature {NONE} -- Initialization
 			create type_selector.make
 
 			create layout_constructor.make
-			shared_singleton.layout_constructor_cell.put (layout_constructor)
+			shared_singleton.layout_constructor_list.extend (layout_constructor)
 
 			create object_editor.make
 
@@ -94,6 +97,7 @@ feature {NONE} -- Initialization
 			create save_project_command.make (save_project_menu)
 			create gen_code_command.make
 			create recent_project_command.make (recent_projects)
+			create new_ribbon_command.make
 		end
 
 	build_tool_bar: SD_TOOL_BAR_CONTENT
@@ -128,6 +132,12 @@ feature {NONE} -- Agents
 			-- <Precursor>
 		do
 			open_project_command.execute
+		end
+
+	on_new_ribbon_selected is
+			-- <Precursor>
+		do
+			new_ribbon_command.execute
 		end
 
 	on_save_project_selected
@@ -201,9 +211,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	docking_manager: detachable SD_DOCKING_MANAGER
-			--
-
 	type_selector: ER_TYPE_SELECTOR
 			--
 
@@ -232,4 +239,12 @@ feature -- Commands
 
 	recent_project_command: ER_RECENT_PROJECT_COMMAND
 			--
+
+	new_ribbon_command: ER_NEW_RIBBON_COMMAND
+			--
+
+feature -- Query
+
+	docking_manager: detachable SD_DOCKING_MANAGER
+			--			
 end

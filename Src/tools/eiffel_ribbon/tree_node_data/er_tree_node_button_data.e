@@ -27,9 +27,9 @@ feature {NONE} -- Initialization
 
 				-- Count how many buttons node in layout constructor
 			create l_shared
-			if attached l_shared.layout_constructor_cell.item as l_layout_constructor then
+			if attached l_shared.layout_constructor_list.first as l_layout_constructor then
 				create l_constants
-				l_list := l_layout_constructor.all_items_with (l_constants.button)
+				l_list := l_layout_constructor.all_items_in_all_constructors (l_constants.button)
 				l_count := l_list.count
 
 					-- check if the command name conflict with other buttons

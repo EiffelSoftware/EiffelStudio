@@ -35,7 +35,7 @@ feature -- Command
 		do
 			if attached a_project_file as l_file and then not l_file.is_empty then
 				open_project_file (l_file)
-				if attached shared_singleton.layout_constructor_cell.item as l_layout_constructor then
+				if attached shared_singleton.layout_constructor_list.first as l_layout_constructor then
 					l_layout_constructor.load_tree
 				end
 
@@ -54,7 +54,7 @@ feature -- Command
 			--
 		do
 			create Result.make
-			if attached shared_singleton.layout_constructor_cell.item as l_layout_constructor then
+			if attached shared_singleton.layout_constructor_list.first as l_layout_constructor then
 				Result.set_text ("Open")
 				Result.select_actions.extend (agent execute)
 

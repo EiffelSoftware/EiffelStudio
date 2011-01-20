@@ -27,7 +27,7 @@ feature -- Command
 	execute
 			--
 		do
-			if attached shared_singleton.layout_constructor_cell.item as l_layout_constructor then
+			if attached shared_singleton.layout_constructor_list.first as l_layout_constructor then
 				l_layout_constructor.save_tree
 			end
 		end

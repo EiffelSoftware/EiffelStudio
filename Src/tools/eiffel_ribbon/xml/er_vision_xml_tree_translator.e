@@ -29,6 +29,8 @@ feature -- Command
 			l_xml_element: XML_ELEMENT
 			l_parent: XML_ELEMENT
 		do
+			application_mode := 0
+
 			create xml_document.make
 			create name_space.make_default
 			create root_xml_element.make_root (xml_document, "Application", name_space)
@@ -49,23 +51,42 @@ feature -- Command
 			l_parent.put_last (l_xml_element)
 		end
 
+	save_xml_nodes_for_all_layout_constructors
+			--
+		local
+			l_shared: ER_SHARED_SINGLETON
+			l_list: ARRAYED_LIST [ER_LAYOUT_CONSTRUCTOR]
+		do
+			reset_xml_tree
+			from
+				create l_shared
+				l_list := l_shared.layout_constructor_list
+				l_list.start
+			until
+				l_list.after
+			loop
+				application_mode := l_list.index - 1
+				add_xml_nodes_by_vision_tree (l_list.item.widget)
+
+				l_list.forth
+			end
+		end
+
+feature -- Tree loading
+
 	update_vision_tree_after_load (a_tree: EV_TREE)
 			--
 		local
 			l_ribbon_tabs, l_app_commands: detachable EV_TREE_ITEM
+			l_list: ARRAYED_LIST [EV_TREE_ITEM]
+			l_singleton: ER_SHARED_SINGLETON
+			l_layout_constructor: ER_LAYOUT_CONSTRUCTOR
 		do
 			-- Separate command and ribbon.tabs
 			l_app_commands := tree_node_by_name (xml_constants.application_commands, a_tree)
 			l_ribbon_tabs := tree_node_by_name (xml_constants.ribbon_tabs, a_tree)
 
 			if l_ribbon_tabs /= Void  then
-				a_tree.wipe_out
-
-				if attached l_ribbon_tabs.parent as l_parent then
-					l_parent.prune_all (l_ribbon_tabs)
-				end
-				a_tree.extend (l_ribbon_tabs)
-
 				if l_app_commands /= Void then
 					from
 						l_app_commands.start
@@ -76,8 +97,105 @@ feature -- Command
 
 						l_app_commands.forth
 					end
-
 				end
+
+				l_list := separate_tabs_to_different_ribbons (l_ribbon_tabs)
+				check l_list.count >= 1 end
+
+				a_tree.wipe_out
+				a_tree.extend (l_list.first)
+
+				if l_list.count > 1 then
+					-- Need to create new layout constructors
+					from
+						create l_singleton
+						l_list.go_i_th (2)
+					until
+						l_list.after
+					loop
+						if attached l_singleton.main_window_cell.item as l_win then
+							l_win.new_ribbon_command.execute
+
+							l_layout_constructor := l_singleton.layout_constructor_list.i_th (l_list.index)
+							l_layout_constructor.widget.wipe_out
+							l_layout_constructor.widget.extend (l_list.item)
+							l_layout_constructor.expand_tree
+						end
+
+						l_list.forth
+					end
+				end
+			end
+		end
+
+	separate_tabs_to_different_ribbons (a_ribbon_tabs: EV_TREE_ITEM): ARRAYED_LIST [EV_TREE_ITEM]
+			--
+		local
+			l_xml: ER_XML_CONSTANTS
+			l_mode_count: INTEGER
+			l_application_modes: SORTED_TWO_WAY_LIST [INTEGER]
+			l_ribbon_tabs: detachable EV_TREE_ITEM
+			l_ribbon_item: EV_TREE_NODE
+			l_search_result: INTEGER
+		do
+			create l_xml
+			check valid: a_ribbon_tabs.text.same_string_general (l_xml.ribbon_tabs) end
+
+			-- First find out how many application modes
+			from
+				create l_application_modes.make
+				l_application_modes.extend (0) -- default application mode
+				a_ribbon_tabs.start
+			until
+				a_ribbon_tabs.after
+			loop
+				if attached {ER_TREE_NODE_TAB_DATA} a_ribbon_tabs.item.data as l_group_data then
+					if not l_application_modes.has (l_group_data.application_mode) then
+						l_application_modes.extend (l_group_data.application_mode)
+					end
+				end
+
+				a_ribbon_tabs.forth
+			end
+
+			-- Prepare root node Ribbon.Tabs for each ribbon
+			create Result.make (l_application_modes.count)
+			from
+				l_application_modes.start
+			until
+				l_application_modes.after
+			loop
+				create l_ribbon_tabs.make_with_text (l_xml.ribbon_tabs)
+				Result.extend (l_ribbon_tabs)
+
+				l_application_modes.forth
+			end
+
+			-- Separate application mode to different ribbon_tabs
+			from
+				a_ribbon_tabs.start
+			until
+				a_ribbon_tabs.after
+			loop
+				l_ribbon_item := a_ribbon_tabs.item
+				if attached l_ribbon_item.parent as l_parent then
+					l_parent.prune_all (l_ribbon_item)
+				else
+					check False end
+				end
+				a_ribbon_tabs.start
+
+				if attached {ER_TREE_NODE_TAB_DATA} l_ribbon_item.data as l_group_data then
+					l_search_result := l_application_modes.index_of  (l_group_data.application_mode, 1)
+					check l_search_result /= 0 end
+					l_ribbon_tabs := Result.i_th (l_search_result)
+					l_ribbon_tabs.extend (l_ribbon_item)
+				else
+					-- No data, put to default
+					Result.first.extend (l_ribbon_item)
+				end
+
+--				a_ribbon_tabs.forth
 			end
 		end
 
@@ -124,15 +242,14 @@ feature -- Command
 			end
 		end
 
+feature {NONE} -- Tree saving
+
 	add_xml_nodes_by_vision_tree (a_vision_tree: EV_TREE)
 			-- Add xml nodes by querying info from `a_vision_tree'
 		require
 			not_void: a_vision_tree /= Void
 			valid: a_vision_tree.i_th (1).text.same_string (xml_constants.ribbon_tabs)
-		local
-
 		do
-			reset_xml_tree
 			if attached {EV_TREE_ITEM} a_vision_tree.i_th (1) as l_tree_item then
 				check l_tree_item.text.same_string (xml_constants.ribbon_tabs) end
 
@@ -166,13 +283,15 @@ feature -- Command
 				l_ribbon_tab_node.put_last (l_tab_node)
 
 				if attached {ER_TREE_NODE_TAB_DATA} a_tree_item.data as l_data then
+					create l_constants
 					-- Add xml attribute
 					if attached l_data.command_name as l_command_name and then not l_command_name.is_empty then
-						create l_constants
 						l_tab_node.add_attribute (l_constants.command_name, name_space, l_command_name)
-
 						-- Add coresspond command xml node
 						add_xml_command_node (l_data)
+					end
+					if application_mode /= 0 then
+						l_tab_node.add_attribute (l_constants.application_mode, name_space, application_mode.out)
 					end
 				end
 
@@ -211,9 +330,11 @@ feature -- Command
 					-- Add xml attribute
 					if attached l_data.command_name as l_command_name and then not l_command_name.is_empty then
 						l_group_node.add_attribute (l_constants.command_name, name_space, l_command_name)
-
 						-- Add coresspond command xml node
 						add_xml_command_node (l_data)
+					end
+					if application_mode /= 0 then
+						l_group_node.add_attribute (l_constants.application_mode, name_space, application_mode.out)
 					end
 
 					if attached l_data.size_definition as l_size_definition and then not l_size_definition.is_empty then
@@ -329,6 +450,11 @@ feature -- Query
 
 	name_space: XML_NAMESPACE
 			--
+
+ 	application_mode: INTEGER
+ 			-- 0 means first layout constructor
+ 			-- 1 means second layout constructor
+ 			-- 2 means third...
 
 feature {NONE} -- implementation
 

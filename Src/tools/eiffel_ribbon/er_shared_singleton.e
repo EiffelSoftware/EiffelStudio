@@ -14,10 +14,10 @@ feature -- Query
 			create Result.put (void)
 		end
 
-	layout_constructor_cell: CELL [detachable ER_LAYOUT_CONSTRUCTOR]
+	layout_constructor_list: ARRAYED_LIST [ER_LAYOUT_CONSTRUCTOR]
 			--
 		once
-			create Result.put (void)
+			create Result.make (10)
 		end
 
 	project_info_cell: CELL [detachable ER_PROJECT_INFO]
@@ -31,5 +31,11 @@ feature -- Query
 		once
 			create Result.put (void)
 		end
-		
+
+	main_window_cell: CELL [detachable ER_MAIN_WINDOW]
+			--
+		once
+			create Result.put (void)
+		end
+
 end

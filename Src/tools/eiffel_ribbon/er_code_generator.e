@@ -210,32 +210,48 @@ feature {NONE} -- Implementation
 		end
 
 	generate_readonly_classes
+			--
+		local
+			l_list: ARRAYED_LIST [ER_LAYOUT_CONSTRUCTOR]
+			l_singleton: ER_SHARED_SINGLETON
+		do
+			-- Parse EV_TREE until Ribbon.Tabs
+--			from
+				create l_singleton
+				l_list := l_singleton.layout_constructor_list
+--				l_list.start
+--			until
+--				l_list.after
+--			loop
+--				generate_readonly_classes_imp (l_list.item)
+--				l_list.forth
+--			end
+			-- FIXME: Current only generate classes for default window (application mode is 0)
+			generate_readonly_classes_imp (l_list.first)
+		end
+
+	generate_readonly_classes_imp (a_layout_constructor: ER_LAYOUT_CONSTRUCTOR)
 			-- Generate readonly ribbon widget classes
 		local
-			l_singleton: ER_SHARED_SINGLETON
 			l_tree: EV_TREE
 			l_tree_node: detachable EV_TREE_NODE
 			l_xml: ER_XML_CONSTANTS
 		do
-			-- Parse EV_TREE until Ribbon.Tabs
-			create l_singleton
-			if attached l_singleton.layout_constructor_cell.item as l_layout_constructor then
-				from
-					create l_xml
-					l_tree := l_layout_constructor.widget
-					l_tree.start
-				until
-					l_tree.after or l_tree_node /= Void
-				loop
-					l_tree_node := tree_node_with_text (l_tree.item, l_xml.ribbon_tabs)
+			from
+				create l_xml
+				l_tree := a_layout_constructor.widget
+				l_tree.start
+			until
+				l_tree.after or l_tree_node /= Void
+			loop
+				l_tree_node := tree_node_with_text (l_tree.item, l_xml.ribbon_tabs)
 
-					l_tree.forth
-				end
+				l_tree.forth
+			end
 
-				if l_tree_node /= Void then
-					-- Start real generation
-					generate_tool_bar_class (l_tree_node)
-				end
+			if l_tree_node /= Void then
+				-- Start real generation
+				generate_tool_bar_class (l_tree_node)
 			end
 		end
 

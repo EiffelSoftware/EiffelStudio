@@ -12,6 +12,8 @@ feature -- Query
 
 	command_name: STRING = "CommandName"
 
+	application_mode: STRING = "ApplicationModes"
+
 	size_definition: STRING = "SizeDefinition"
 
 end

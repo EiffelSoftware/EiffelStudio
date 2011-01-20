@@ -18,8 +18,10 @@ feature -- Command
 		do
 			create l_constants
 
-			if a_name.is_equal (l_constants.command_name) then
+			if a_name.same_string (l_constants.command_name) then
 				command_name := a_value
+			elseif a_name.same_string (l_constants.application_mode) then
+				application_mode := a_value.to_integer
 			else
 				-- Maybe ApplicationModes, or....
 				check not_implemented: False end

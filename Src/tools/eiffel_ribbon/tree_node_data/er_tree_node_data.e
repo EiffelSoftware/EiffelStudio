@@ -66,4 +66,6 @@ feature -- Query
 	large_image: detachable STRING
 			--
 
+	application_mode: INTEGER
+			--
 end

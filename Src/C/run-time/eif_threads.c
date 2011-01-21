@@ -880,12 +880,18 @@ rt_public void eif_thr_exit(void)
 		exitprf();
 
 		if (l_has_parent_thread) {
-			offset = eifaddr_offset (eif_access(eif_thr_context->current), "terminated", &ret);
-			CHECK("terminated attribute exists", ret == EIF_CECIL_OK);
 
-				/* Set the `terminated' field of the thread object to True so that
-				 * it knows the thread is terminated */
-			*(EIF_BOOLEAN *) (eif_access(eif_thr_context->current) + offset) = EIF_TRUE;
+			if (eif_thr_context->is_processor == EIF_FALSE)
+			{
+				// Set {THREAD}.terminated to True, not applicable to SCOOP Processors.
+
+				offset = eifaddr_offset (eif_access(eif_thr_context->current), "terminated", &ret);
+				CHECK("terminated attribute exists", ret == EIF_CECIL_OK);
+
+					/* Set the `terminated' field of the thread object to True so that
+					* it knows the thread is terminated */
+				*(EIF_BOOLEAN *) (eif_access(eif_thr_context->current) + offset) = EIF_TRUE;
+			}
 				
 				/* Remove current object from hector and reset entry to NULL. */
 			eif_wean(eif_thr_context->current);
@@ -920,7 +926,7 @@ rt_public void eif_thr_exit(void)
 			 * eif_thr_create_with_attr() has created a mutex and a condition 
 			 * variable to be able to do a join_all (or a join). If no children are
 			 * still alive, we destroy eif_children_mutex and eif_children_cond,
-			 * otherwise we will let the last children alive do the cleaning. */
+			 * otherwise we will let the last child alive do the cleaning. */
 		l_children_mutex = eif_thr_context->children_mutex;
 		if (l_children_mutex) {
 			EIF_ASYNC_SAFE_MUTEX_LOCK(l_children_mutex);

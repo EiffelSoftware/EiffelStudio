@@ -27,7 +27,6 @@ feature -- Command
 	execute
 			-- <Precursor>
 		local
-			l_warning: EV_WARNING_DIALOG
 			layout_constructor: ER_LAYOUT_CONSTRUCTOR
 		do
 			if attached main_window as l_win then

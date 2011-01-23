@@ -132,7 +132,6 @@ feature -- Tree loading
 			--
 		local
 			l_xml: ER_XML_CONSTANTS
-			l_mode_count: INTEGER
 			l_application_modes: SORTED_TWO_WAY_LIST [INTEGER]
 			l_ribbon_tabs: detachable EV_TREE_ITEM
 			l_ribbon_item: EV_TREE_NODE

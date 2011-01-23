@@ -134,7 +134,7 @@ feature {NONE} -- Agents
 			open_project_command.execute
 		end
 
-	on_new_ribbon_selected is
+	on_new_ribbon_selected
 			-- <Precursor>
 		do
 			new_ribbon_command.execute

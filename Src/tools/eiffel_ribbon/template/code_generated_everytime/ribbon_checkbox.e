@@ -6,10 +6,10 @@ note
 	revision: "$Revision$"
 
 class
-	RIBBON_CHECKBOX_$INDEX
+	$INDEX_1
 
 inherit
-	RIBBON_CHECKBOX_IMP_$INDEX
+	$INDEX_2
 
 create
 	{EV_RIBBON_GROUP} make_with_command_list

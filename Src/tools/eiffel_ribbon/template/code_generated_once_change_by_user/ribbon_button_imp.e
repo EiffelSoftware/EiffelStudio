@@ -8,7 +8,7 @@ note
 	revision: "$Revision$"
 
 deferred class
-	RIBBON_BUTTON_IMP_$INDEX
+	$INDEX
 
 inherit
 	EV_RIBBON_BUTTON

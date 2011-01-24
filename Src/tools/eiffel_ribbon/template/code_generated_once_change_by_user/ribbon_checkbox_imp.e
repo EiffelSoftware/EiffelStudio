@@ -8,7 +8,7 @@ note
 	revision: "$Revision$"
 
 deferred class
-	RIBBON_CHECKBOX_IMP_$INDEX
+	$INDEX
 
 inherit
 	EV_RIBBON_CHECKBOX

@@ -486,7 +486,10 @@ feature {NONE} -- implementation
 				create l_sub_item.make (l_item, l_constants.image, name_space)
 				l_item.put_last (l_sub_item)
 
-				l_image.replace_substring_all ("\", "\\")
+				if not l_image.has_substring ("\\") then
+					l_image.replace_substring_all ("\", "\\")
+				end
+
 				create l_item_text.make (l_sub_item, l_image)
 				l_sub_item.put_last (l_item_text)
 				-- Adding id attribute automatically here?
@@ -499,7 +502,10 @@ feature {NONE} -- implementation
 				create l_sub_item.make (l_item, l_constants.image, name_space)
 				l_item.put_last (l_sub_item)
 
-				l_image.replace_substring_all ("\", "\\")
+				if not l_image.has_substring ("\\") then
+					l_image.replace_substring_all ("\", "\\")
+				end
+				
 				create l_item_text.make (l_sub_item, l_image)
 				l_sub_item.put_last (l_item_text)
 				-- Adding id attribute automatically here?

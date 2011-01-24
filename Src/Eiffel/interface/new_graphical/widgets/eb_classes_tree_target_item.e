@@ -53,8 +53,6 @@ feature -- Interactivity
 
 	associate_with_window (a_window: EB_STONABLE)
 			-- Associate recursively with `a_window' so that we can call `set_stone' on `a_window'.
-		local
-			l_conv_target: EB_CLASSES_TREE_TARGET_ITEM
 		do
 				-- Uncomment the following line, when dev window is ready
 				-- to print something for a target.
@@ -64,8 +62,7 @@ feature -- Interactivity
 			until
 				after
 			loop
-				l_conv_target ?= item
-				if l_conv_target /= Void then
+				if attached {EB_CLASSES_TREE_TARGET_ITEM} item as l_conv_target then
 					l_conv_target.associate_with_window (a_window)
 				end
 				forth

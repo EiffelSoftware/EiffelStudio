@@ -506,7 +506,10 @@ feature -- Set Position
 			not_destroyed: not is_destroyed
 		do
 			set_visible (True)
-			if attached {SD_TAB_ZONE} a_content.state.zone as l_tab_zone then
+			if attached {SD_AUTO_HIDE_STATE} a_content.state as l_auto_hide_state then
+				-- `a_content' is auto hide state, zone is void
+				state.auto_hide_tab_with (a_content)
+			elseif attached {SD_TAB_ZONE} a_content.state.zone as l_tab_zone then
 				if not a_left then
 				 	state.move_to_tab_zone (l_tab_zone, l_tab_zone.count + 1)
 				 else
@@ -993,7 +996,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

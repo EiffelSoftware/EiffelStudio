@@ -1,5 +1,5 @@
 note
-	description: "Summary description for {EV_RIBBON_CHECKBOX}."
+	description: "Abstract representation of a checkbox in a ribbon"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -7,16 +7,16 @@ deferred class
 	EV_RIBBON_CHECKBOX
 
 inherit
-	EV_COMMAND_HANDLER_OBSERVER
-
 	EV_RIBBON_ITEM
+
+	EV_COMMAND_HANDLER_OBSERVER
 
 feature {NONE} -- Initialization
 
 	make_with_command_list (a_list: ARRAY [NATURAL_32])
 			-- Creation method
 		require
-			not_void: a_list /= void
+			not_void: a_list /= Void
 		do
 			command_list := a_list
 
@@ -32,13 +32,15 @@ feature {NONE} -- Initialization
 			create select_actions
 		end
 
-feature {EV_RIBBON}
-
-	command_list: ARRAY [NATURAL_32]
-			-- Command ids handled by current
+feature -- Access
 
 	select_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Select actions executed just after user clicked on button
+			-- Select actions executed just after user clicked on check box.
+
+	text: STRING_32
+			-- Text of check box.
+		deferred
+		end
 
 feature {EV_RIBBON} -- Command
 
@@ -55,4 +57,10 @@ feature {EV_RIBBON} -- Command
 		do
 		end
 
-end -- class EV_RIBBON_CHECKBOX
+feature {NONE} -- Implementation
+
+	command_list: ARRAY [NATURAL_32]
+			-- Command ids handled by current
+
+
+end

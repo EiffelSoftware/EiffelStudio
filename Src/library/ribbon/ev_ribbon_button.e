@@ -16,7 +16,7 @@ feature {NONE} -- Initialization
 	make_with_command_list (a_list: ARRAY [NATURAL_32])
 			-- Creation method
 		require
-			not_void: a_list /= void
+			not_void: a_list /= Void
 		do
 			command_list := a_list
 

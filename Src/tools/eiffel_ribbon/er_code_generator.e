@@ -320,7 +320,7 @@ feature {NONE} -- Implementation
 						from
 							l_file.open_read
 							l_file.start
-							l_tab_creation_string := tag_creation_string (a_tabs_root_note)
+							l_tab_creation_string := tab_creation_string (a_tabs_root_note)
 							l_tab_registry_string := tab_registry_string (a_tabs_root_note)
 							l_tab_declaration_string := tab_declaration_string (a_tabs_root_note)
 						until
@@ -355,7 +355,7 @@ feature {NONE} -- Implementation
 
 		end
 
-	tag_creation_string (a_tabs_root_note: EV_TREE_NODE): STRING
+	tab_creation_string (a_tabs_root_note: EV_TREE_NODE): STRING
 			--
 		require
 			not_void: a_tabs_root_note /= Void
@@ -565,7 +565,7 @@ feature {NONE} -- Implementation
 							create l_dest_file.make (l_dest_file_name)
 						else
 							l_dest_file_name.set_file_name (l_tool_bar_tab_imp_file)
-							create l_dest_file.make (l_tool_bar_tab_imp_file + "_" + a_index.out + ".e")
+							create l_dest_file.make (l_dest_file_name + "_" + a_index.out + ".e")
 						end
 
 						-- Don't replace destination file if exists
@@ -622,7 +622,7 @@ feature {NONE} -- Implementation
 			l_generated: detachable STRING
 		do
 			create Result.make_empty
-			l_template := "%T%T%Tcreate group_$INDEX.make_with_command_list ($COMMAND_IDS)"
+			l_template := "%T%T%Tcreate $INDEX.make_with_command_list ($COMMAND_IDS)"
 
 			from
 				l_index := 1
@@ -631,7 +631,14 @@ feature {NONE} -- Implementation
 				l_count < l_index
 			loop
 				l_generated := l_template.twin
-				l_generated.replace_substring_all ("$INDEX", (group_counter + l_index).out)
+				if attached {ER_TREE_NODE_GROUP_DATA} a_tab_node.i_th(l_index).data as l_data
+					and then attached l_data.command_name as l_identify_name
+					and then not l_identify_name.is_empty then
+					l_generated.replace_substring_all ("$INDEX", l_identify_name.as_lower)
+				else
+					l_generated.replace_substring_all ("$INDEX", "group_" + (group_counter + l_index).out)
+				end
+
 				if attached {ER_TREE_NODE_GROUP_DATA} a_tab_node.i_th (l_index).data as l_group_data then
 					if attached l_group_data.command_name as l_command_name and then not l_command_name.is_empty then
 						l_command_string := "<<{" + command_name_constants.as_upper + "}." + l_command_name + ">>"
@@ -661,7 +668,7 @@ feature {NONE} -- Implementation
 		do
 			--"groups.extend (group_1)"
 			create Result.make_empty
-			l_template := "%T%T%Tgroups.extend (group_$INDEX)"
+			l_template := "%T%T%Tgroups.extend ($INDEX)"
 
 			from
 				l_index := 1
@@ -670,7 +677,13 @@ feature {NONE} -- Implementation
 				l_count < l_index
 			loop
 				l_generated := l_template.twin
-				l_generated.replace_substring_all ("$INDEX", (group_counter + l_index).out)
+				if attached {ER_TREE_NODE_GROUP_DATA} a_tab_node.i_th(l_index).data as l_data
+					and then attached l_data.command_name as l_identify_name
+					and then not l_identify_name.is_empty then
+					l_generated.replace_substring_all ("$INDEX", l_identify_name.as_lower)
+				else
+					l_generated.replace_substring_all ("$INDEX", "group_" + (group_counter + l_index).out)
+				end
 
 				l_index := l_index + 1
 				if l_generated /= Void then
@@ -690,7 +703,7 @@ feature {NONE} -- Implementation
 			l_generated: detachable STRING
 		do
 			create Result.make_empty
-			l_template := "%Tgroup_$INDEX: RIBBON_GROUP_$INDEX"
+			l_template := "%T$INDEX_1: $INDEX_2"
 
 			from
 				l_index := 1
@@ -699,7 +712,16 @@ feature {NONE} -- Implementation
 				l_count < l_index
 			loop
 				l_generated := l_template.twin
-				l_generated.replace_substring_all ("$INDEX", (group_counter + l_index).out)
+				if attached {ER_TREE_NODE_GROUP_DATA} a_tab_node.i_th(l_index).data as l_data
+					and then attached l_data.command_name as l_identify_name
+					and then not l_identify_name.is_empty then
+
+					l_generated.replace_substring_all ("$INDEX_1", l_identify_name.as_lower)
+					l_generated.replace_substring_all ("$INDEX_2", l_identify_name.as_upper)
+				else
+					l_generated.replace_substring_all ("$INDEX_1", "group_" + (group_counter + l_index).out)
+					l_generated.replace_substring_all ("$INDEX_2", "RIBBON_GROUP_" + (group_counter + l_index).out)
+				end
 
 				l_index := l_index + 1
 				if l_generated /= Void then
@@ -725,6 +747,7 @@ feature {NONE} -- Implementation
 			l_sub_dir, l_tool_bar_group_file, l_sub_imp_dir, l_tool_bar_group_imp_file: STRING
 			l_last_string: STRING
 			l_button_creation_string, l_button_registry_string, l_button_declaration_string: STRING
+			l_identifier_name: detachable STRING
 		do
 			-- First check how many groups
 			l_button_count := a_group_node.count
@@ -744,10 +767,23 @@ feature {NONE} -- Implementation
 					l_file_name.set_subdirectory (l_sub_dir)
 					l_file_name.set_file_name (l_tool_bar_group_file + ".e")
 					create l_file.make (l_file_name)
+
+					if attached {ER_TREE_NODE_GROUP_DATA} a_group_node.data as l_data then
+						if attached l_data.command_name as l_command_name  and then not l_command_name.is_empty then
+							l_identifier_name := l_command_name
+						end
+					end
+
 					if l_file.exists and then l_file.is_readable then
 						create l_dest_file_name.make_from_string (l_project_location)
-						l_dest_file_name.set_file_name (l_tool_bar_group_file + "_" + a_index.out + ".e")
+						if l_identifier_name /= Void then
+							l_dest_file_name.set_file_name (l_identifier_name.as_lower + "_imp.e")
+						else
+							l_dest_file_name.set_file_name (l_tool_bar_group_file + "_" + a_index.out + ".e")
+						end
+
 						create l_dest_file.make_create_read_write (l_dest_file_name)
+
 						from
 							l_button_creation_string := button_creation_string (a_group_node)
 							l_button_registry_string := button_registry_string (a_group_node)
@@ -763,8 +799,12 @@ feature {NONE} -- Implementation
 							l_last_string.replace_substring_all ("$BUTTON_CREATION", l_button_creation_string)
 							l_last_string.replace_substring_all ("$BUTTON_REGISTRY", l_button_registry_string)
 							l_last_string.replace_substring_all ("$BUTTON_DECLARATION", l_button_declaration_string)
+							if l_identifier_name /= Void then
+								l_last_string.replace_substring_all ("$INDEX", l_identifier_name.as_upper + "_IMP")
+							else
+								l_last_string.replace_substring_all ("$INDEX", "RIBBON_GROUP_IMP_" + a_index.out)
+							end
 
-							l_last_string.replace_substring_all ("$INDEX", a_index.out)
 							l_dest_file.put_string (l_last_string + "%N")
 						end
 
@@ -779,7 +819,12 @@ feature {NONE} -- Implementation
 					create l_file.make (l_file_name)
 					if l_file.exists and then l_file.is_readable then
 						create l_dest_file_name.make_from_string (l_project_location)
-						l_dest_file_name.set_file_name (l_tool_bar_group_imp_file + "_" + a_index.out + ".e")
+						if l_identifier_name /= Void then
+							l_dest_file_name.set_file_name (l_identifier_name.as_lower + ".e")
+						else
+							l_dest_file_name.set_file_name (l_tool_bar_group_imp_file + "_" + a_index.out + ".e")
+						end
+
 						create l_dest_file.make (l_dest_file_name)
 						-- Don't replace destination file if exists
 						if not l_dest_file.exists then
@@ -793,7 +838,14 @@ feature {NONE} -- Implementation
 								-- replace/add tab codes here
 								l_file.read_line
 								l_last_string := l_file.last_string
-								l_last_string.replace_substring_all ("$INDEX", a_index.out)
+								if l_identifier_name /= Void then
+									l_last_string.replace_substring_all ("$INDEX_1", l_identifier_name.as_upper)
+									l_last_string.replace_substring_all ("$INDEX_2", l_identifier_name.as_upper + "_IMP")
+								else
+									l_last_string.replace_substring_all ("$INDEX_1", "RIBBON_GROUP_" + a_index.out)
+									l_last_string.replace_substring_all ("$INDEX_2", "RIBBON_GROUP_IMP_" + a_index.out)
+								end
+
 								l_dest_file.put_string (l_last_string + "%N")
 							end
 

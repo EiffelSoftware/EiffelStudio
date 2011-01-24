@@ -163,12 +163,14 @@ feature {NONE}
 					l_laststring := l_data_file.laststring
 					check l_laststring /= Void end -- implied by `readline' postcondition
 
-						-- Insert objects in the table "DB_BOOK"
-					utf8.convert_to (utf16, l_laststring.twin)
-					l_string := utf8.last_converted_string
-					localized_print (l_string)
-					io.new_line
-					base_update.modify (l_string)
+					if not l_laststring.is_empty then
+							-- Insert objects in the table "DB_BOOK"
+						utf8.convert_to (utf16, l_laststring.twin)
+						l_string := utf8.last_converted_string_32
+						localized_print (l_string)
+						io.new_line
+						base_update.modify (l_string)
+					end
 				end
 			end
 			l_data_file.close

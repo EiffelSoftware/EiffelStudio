@@ -13,19 +13,5 @@ deferred class
 inherit
 	EV_RIBBON_BUTTON
 
-feature {RIBBON}
-
-	execute (a_command_id: NATURAL_32; a_execution_verb: INTEGER; a_property_key: POINTER; a_property_value: POINTER; a_command_execution_properties: POINTER): NATURAL_32
-			-- <Precursor>
-		do
-			if command_list.has (a_command_id) then
-				select_actions.call (Void)
-			end
-		end
-
-	update_property (a_command_id: NATURAL_32; a_property_key: POINTER; a_property_current_value: POINTER; a_property_new_value: POINTER): NATURAL_32
-			-- <Precursor>
-		do
-		end
 
 end

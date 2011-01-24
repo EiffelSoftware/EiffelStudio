@@ -366,7 +366,7 @@ feature {NONE} -- Implementation
 			l_generated: detachable STRING
 		do
 			create Result.make_empty
-			l_template := "%T%T%Tcreate tab_$INDEX.make_with_command_list ($COMMAND_IDS)"
+			l_template := "%T%T%Tcreate $INDEX.make_with_command_list ($COMMAND_IDS)"
 
 			from
 				l_index := 1
@@ -375,15 +375,18 @@ feature {NONE} -- Implementation
 				l_count < l_index
 			loop
 				l_generated := l_template.twin
-				l_generated.replace_substring_all ("$INDEX", l_index.out)
+
 				if attached {ER_TREE_NODE_TAB_DATA} a_tabs_root_note.i_th (l_index).data as l_group_data then
 					if attached l_group_data.command_name as l_command_name and then not l_command_name.is_empty then
 						l_command_string := "<<{" + command_name_constants.as_upper + "}." + l_command_name + ">>"
+						l_generated.replace_substring_all ("$INDEX", l_command_name.as_lower)
 					else
 						l_command_string := "<<>>"
+						l_generated.replace_substring_all ("$INDEX", "tab_" + l_index.out)
 					end
 				else
 					l_command_string := "<<>>"
+					l_generated.replace_substring_all ("$INDEX", "tab_" + l_index.out)
 				end
 				l_generated.replace_substring_all ("$COMMAND_IDS", l_command_string)
 				l_index := l_index + 1
@@ -405,7 +408,7 @@ feature {NONE} -- Implementation
 		do
 			--"tabs.extend (tab_1)"
 			create Result.make_empty
-			l_template := "%T%T%Ttabs.extend (tab_$TAB)"
+			l_template := "%T%T%Ttabs.extend ($TAB)"
 
 			from
 				l_index := 1
@@ -414,7 +417,15 @@ feature {NONE} -- Implementation
 				l_count < l_index
 			loop
 				l_generated := l_template.twin
-				l_generated.replace_substring_all ("$TAB", l_index.out)
+				if attached {ER_TREE_NODE_TAB_DATA} a_tabs_root_note.i_th (l_index).data as l_tab_data then
+					if attached l_tab_data.command_name as l_command_name and then not l_command_name.is_empty then
+						l_generated.replace_substring_all ("$TAB", l_command_name.as_lower)
+					else
+						l_generated.replace_substring_all ("$TAB", "tab_" + l_index.out)
+					end
+				else
+					l_generated.replace_substring_all ("$TAB", "tab_" + l_index.out)
+				end
 
 				l_index := l_index + 1
 				if l_generated /= Void then
@@ -434,7 +445,7 @@ feature {NONE} -- Implementation
 			l_generated: detachable STRING
 		do
 			create Result.make_empty
-			l_template := "%Ttab_$INDEX: RIBBON_TAB_$INDEX"
+			l_template := "%T$INDEX_1: $INDEX_2"
 
 			from
 				l_index := 1
@@ -443,8 +454,18 @@ feature {NONE} -- Implementation
 				l_count < l_index
 			loop
 				l_generated := l_template.twin
-				l_generated.replace_substring_all ("$INDEX", l_index.out)
-
+				if attached {ER_TREE_NODE_TAB_DATA} a_tabs_root_note.i_th (l_index).data as l_tab_data then
+					if attached l_tab_data.command_name as l_command_name and then not l_command_name.is_empty then
+						l_generated.replace_substring_all ("$INDEX_1", l_command_name.as_lower)
+						l_generated.replace_substring_all ("$INDEX_2", l_command_name.as_upper)
+					else
+						l_generated.replace_substring_all ("$INDEX_1", "tab_" + l_index.out)
+						l_generated.replace_substring_all ("$INDEX_2", "RIBBON_TAB_" + l_index.out)
+					end
+				else
+					l_generated.replace_substring_all ("$INDEX_1", "tab_" + l_index.out)
+					l_generated.replace_substring_all ("$INDEX_2", "RIBBON_TAB_" + l_index.out)
+				end
 				l_index := l_index + 1
 				if l_generated /= Void then
 					Result.append (l_generated + "%N")
@@ -466,6 +487,7 @@ feature {NONE} -- Implementation
 			l_sub_dir, l_tool_bar_tab_file, l_sub_imp_dir, l_tool_bar_tab_imp_file: STRING
 			l_group_creation_string, l_group_registry_string, l_group_declaration_string: STRING
 			l_last_string: STRING
+			l_identifier_name: detachable STRING
 		do
 			-- First check how many groups
 			l_group_count := a_tab_node.count
@@ -483,12 +505,24 @@ feature {NONE} -- Implementation
 					-- Generate tool bar tab class
 					create l_file_name.make_from_string (l_constants.template)
 					l_file_name.set_subdirectory (l_sub_dir)
+					if attached {ER_TREE_NODE_TAB_DATA} a_tab_node.data as l_data then
+						if attached l_data.command_name as l_command_name  and then not l_command_name.is_empty then
+							l_identifier_name := l_command_name
+						end
+					end
 					l_file_name.set_file_name (l_tool_bar_tab_file + ".e")
+
 					create l_file.make (l_file_name)
 					if l_file.exists and then l_file.is_readable then
 						create l_dest_file_name.make_from_string (l_project_location)
-						l_dest_file_name.set_file_name (l_tool_bar_tab_file)
-						create l_dest_file.make_create_read_write (l_dest_file_name + "_" + a_index.out + ".e")
+						if l_identifier_name /= void  then
+							l_dest_file_name.set_file_name (l_identifier_name.as_lower + "_imp.e")
+							create l_dest_file.make_create_read_write (l_dest_file_name)
+						else
+							l_dest_file_name.set_file_name (l_tool_bar_tab_file)
+							create l_dest_file.make_create_read_write (l_dest_file_name + "_" + a_index.out + ".e")
+						end
+
 						from
 							l_group_creation_string := group_creation_string (a_tab_node)
 							l_group_registry_string := group_registry_string (a_tab_node)
@@ -505,7 +539,11 @@ feature {NONE} -- Implementation
 							l_last_string.replace_substring_all ("$GROUP_REGISTRY", l_group_registry_string)
 							l_last_string.replace_substring_all ("$GROUP_DECLARATION", l_group_declaration_string)
 
-							l_last_string.replace_substring_all ("$INDEX", a_index.out)
+							if l_identifier_name /= Void then
+								l_last_string.replace_substring_all ("$INDEX", l_identifier_name.as_upper + "_IMP")
+							else
+								l_last_string.replace_substring_all ("$INDEX", "RIBBON_TAB_IMP_" + a_index.out)
+							end
 
 							l_dest_file.put_string (l_last_string + "%N")
 						end
@@ -518,11 +556,18 @@ feature {NONE} -- Implementation
 					create l_file_name.make_from_string (l_constants.template)
 					l_file_name.set_subdirectory (l_sub_imp_dir)
 					l_file_name.set_file_name (l_tool_bar_tab_imp_file + ".e")
+
 					create l_file.make (l_file_name)
 					if l_file.exists and then l_file.is_readable then
 						create l_dest_file_name.make_from_string (l_project_location)
-						l_dest_file_name.set_file_name (l_tool_bar_tab_imp_file)
-						create l_dest_file.make (l_dest_file_name + "_" + a_index.out + ".e")
+						if l_identifier_name /= Void then
+							l_dest_file_name.set_file_name (l_identifier_name.as_lower + ".e")
+							create l_dest_file.make (l_dest_file_name)
+						else
+							l_dest_file_name.set_file_name (l_tool_bar_tab_imp_file)
+							create l_dest_file.make (l_tool_bar_tab_imp_file + "_" + a_index.out + ".e")
+						end
+
 						-- Don't replace destination file if exists
 						if not l_dest_file.exists then
 							l_dest_file.create_read_write
@@ -535,7 +580,13 @@ feature {NONE} -- Implementation
 								-- replace/add tab codes here
 								l_file.read_line
 								l_last_string := l_file.last_string
-								l_last_string.replace_substring_all ("$INDEX", a_index.out)
+								if l_identifier_name /= Void then
+									l_last_string.replace_substring_all ("$INDEX_1", l_identifier_name.as_upper)
+									l_last_string.replace_substring_all ("$INDEX_2", l_identifier_name.as_upper + "_IMP")
+								else
+									l_last_string.replace_substring_all ("$INDEX_1", "RIBBON_TAB_" + a_index.out)
+									l_last_string.replace_substring_all ("$INDEX_2", "RIBBON_TAB_IMP_" + a_index.out)
+								end
 								l_dest_file.put_string (l_last_string + "%N")
 							end
 

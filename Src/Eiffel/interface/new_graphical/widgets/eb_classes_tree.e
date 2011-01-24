@@ -532,9 +532,6 @@ feature {NONE} -- Rebuilding
 	library_header: EB_CLASSES_TREE_HEADER_ITEM
 			-- Header for libraries.
 
-	target: EB_CLASSES_TREE_TARGET_ITEM
-			-- Targets.
-
 	expanded_clusters: HASH_TABLE [STRING, STRING]
 		-- All cluster names marked as expanded during last call to
 		-- `store_expanded_state'.
@@ -930,7 +927,7 @@ feature {NONE} -- Implementation
 		require
 			a_list_not_void: a_list /= Void
 		local
-			l_target: CONF_TARGET
+			l_target: detachable CONF_TARGET
 			l_item, l_new_item: EB_CLASSES_TREE_TARGET_ITEM
 		do
 			l_target := universe.target
@@ -945,7 +942,6 @@ feature {NONE} -- Implementation
 					l_new_item.extend (l_item)
 					l_item := l_new_item
 				end
-				target := l_item
 				a_list.extend (l_item)
 				l_item.associate_with_window (window)
 			end
@@ -1095,7 +1091,7 @@ invariant
 	expanded_clusters_not_void: expanded_clusters /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

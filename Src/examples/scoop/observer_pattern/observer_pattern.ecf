@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="observer_pattern" uuid="91991B55-A1B5-4190-8D50-65A7F4256446">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-7-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-7-0 http://www.eiffel.com/developers/xml/configuration-1-7-0.xsd" name="observer_pattern">
 	<target name="observer_pattern">
 		<root feature="make" class="APPLICATION"/>
 		<option warning="true">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
-		<precompile name="base_pre" location="$ISE_PRECOMP/base.ecf"/>
-		<library name="base" location="$ISE_LIBRARY/library/base/base.ecf"/>
+		<setting name="console_application" value="true"/>
+		<setting name="concurrency" value="scoop"/>
+		<precompile name="precompile" location="$ISE_PRECOMP\base-scoop-safe.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<cluster name="observer_pattern" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/EIFGENs$</exclude>

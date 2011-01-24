@@ -6,10 +6,10 @@ note
 	revision: "$Revision$"
 
 class
-	RIBBON_TAB_$INDEX
+	$INDEX_1
 
 inherit
-	RIBBON_TAB_IMP_$INDEX
+	$INDEX_2
 
 create
 	{RIBBON} make_with_command_list

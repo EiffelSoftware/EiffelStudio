@@ -8,7 +8,7 @@ note
 	revision: "$Revision$"
 
 deferred class
-	RIBBON_TAB_IMP_$INDEX
+	$INDEX
 
 inherit
 	EV_RIBBON_TAB

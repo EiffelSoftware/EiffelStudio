@@ -1,0 +1,36 @@
+test_name 	 bogus-object-test
+test_description If you have an object test on a detachable formal generic parameter in a class where the constraint is attached the compiler assumes that the object test is successful all the time even if it is Void.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test1.e $CLUSTER test1.e
+define INSTR	"create a.make (10)"
+
+compile_melted
+compile_result ok
+
+execute_work 	NONE 	exec_output_m
+execute_result 	ok
+compare		exec_output_m output
+
+compile_frozen
+compile_result ok
+
+c_compile_work
+c_compile_result	ok
+
+execute_work 	NONE 	exec_output_w
+execute_result 	ok
+compare		exec_output_w output
+
+compile_final
+compile_result ok
+
+c_compile_final
+c_compile_result	ok
+
+execute_final 	NONE 	exec_output_f
+execute_result 	ok
+compare		exec_output_f output
+
+test_end

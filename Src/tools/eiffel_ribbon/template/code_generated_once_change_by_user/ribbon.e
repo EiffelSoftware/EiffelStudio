@@ -12,7 +12,10 @@ class
 
 inherit
 	EV_RIBBON
-
+		redefine
+			init_with_window
+		end
+		
 create
 	make
 
@@ -21,7 +24,7 @@ feature {NONE} -- Initialization
 	make
 			-- Creation method
 		do
-			create_interface_objects
+			create_interface_objects			
 		end
 
 	create_interface_objects
@@ -32,6 +35,16 @@ $TAB_CREATION
 $TAB_REGISTRY
 		end
 
+feature -- Command
+
+	init_with_window (a_window: EV_WINDOW)
+			-- <Precursor>
+		do
+			Precursor (a_window)
+			-- You could call setModes here
+$SET_MODES
+		end
+		
 feature -- Query
 $TAB_DECLARATION
 

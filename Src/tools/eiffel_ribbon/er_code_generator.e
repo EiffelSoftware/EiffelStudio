@@ -226,7 +226,7 @@ feature {NONE} -- Implementation
 		local
 			l_singleton: ER_SHARED_SINGLETON
 			l_list: ARRAYED_LIST [ER_LAYOUT_CONSTRUCTOR]
-			l_window_file, l_sub_dir, l_set_modes_string, l_last_string: STRING
+			l_window_file, l_sub_dir, l_last_string: STRING
 			l_constants: ER_MISC_CONSTANTS
 			l_file_name, l_dest_file_name: FILE_NAME
 			l_file, l_dest_file: RAW_FILE
@@ -262,7 +262,6 @@ feature {NONE} -- Implementation
 							from
 								l_file.open_read
 								l_file.start
-								l_set_modes_string := "%T%T%Tribbon.set_modes (" + (l_list.index - 1).out + ")"
 							until
 								l_file.after
 							loop
@@ -270,10 +269,10 @@ feature {NONE} -- Implementation
 								l_last_string := l_file.last_string
 								if l_list.index = 1 then
 									l_last_string.replace_substring_all ("$INDEX", "")
-									l_last_string.replace_substring_all ("$SET_MODES", "")
+
 								else
 									l_last_string.replace_substring_all ("$INDEX", "_" + l_list.index.out)
-									l_last_string.replace_substring_all ("$SET_MODES", l_set_modes_string)
+
 								end
 
 								l_dest_file.put_string (l_last_string + "%N")
@@ -362,7 +361,7 @@ feature {NONE} -- Implementation
 			l_file_name, l_dest_file_name: FILE_NAME
 			l_singleton: ER_SHARED_SINGLETON
 			l_sub_dir, l_tool_bar_file, l_sub_imp_dir: STRING
-			l_last_string: STRING
+			l_last_string, l_set_modes_string: STRING
 			l_tab_creation_string, l_tab_registry_string, l_tab_declaration_string: STRING
 		do
 			-- First check how many tabs
@@ -397,6 +396,7 @@ feature {NONE} -- Implementation
 							l_tab_creation_string := tab_creation_string (a_tabs_root_note)
 							l_tab_registry_string := tab_registry_string (a_tabs_root_note)
 							l_tab_declaration_string := tab_declaration_string (a_tabs_root_note)
+							l_set_modes_string := "%T%T%Tset_modes (" + (a_index - 1).out + ")"
 						until
 							l_file.after
 						loop
@@ -407,8 +407,10 @@ feature {NONE} -- Implementation
 							l_last_string.replace_substring_all ("$TAB_DECLARATION", l_tab_declaration_string)
 							if a_index = 1 then
 								l_last_string.replace_substring_all ("$INDEX", "")
+								l_last_string.replace_substring_all ("$SET_MODES", "")
 							else
 								l_last_string.replace_substring_all ("$INDEX", "_" + a_index.out)
+								l_last_string.replace_substring_all ("$SET_MODES", l_set_modes_string)
 							end
 
 							l_dest_file.put_string (l_last_string + "%N")

@@ -171,13 +171,13 @@ HRESULT GetRibbonHeight(UINT* ribbonHeight)
     return hr;
 }
 
-HRESULT SetModes(INT32 iModes)
+HRESULT SetModes(INT32 iModes, IUIFramework *a_framework)
 {
 	  HRESULT hr = S_OK;
 
-    if (g_pFramework)
+    if (a_framework)
     {
-    	hr = g_pFramework->lpVtbl->SetModes(g_pFramework, UI_MAKEAPPMODE(iModes));
+    	hr = a_framework->lpVtbl->SetModes(g_pFramework, UI_MAKEAPPMODE(iModes));
     }
     
     return hr;
@@ -195,3 +195,7 @@ HRESULT GetUICommandPropertyBoolean(UINT32 commandId, PROPVARIANT *value)
     return hr;
 }
 
+IUIFramework *GetRibbonFramwork()
+{
+		return g_pFramework;
+}

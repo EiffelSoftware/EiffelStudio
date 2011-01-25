@@ -22,7 +22,14 @@ feature -- Command
 			if attached {EV_WINDOW_IMP} a_window.implementation as l_imp then
 				com_initialize
 				l_result := create_ribbon_com_framework (l_imp.wel_item)
+				item := get_ribbon_framework
 			end
+		end
+
+	set_modes (a_mode: INTEGER)
+			-- Set application mode for current ribbon framework
+		do
+			c_set_modes (a_mode, item)
 		end
 
 	destroy
@@ -42,6 +49,9 @@ feature -- Query
 		do
 			get_height ($Result)
 		end
+
+	item: POINTER
+			-- Ribbon framework object
 
 feature {EV_RIBBON_TITLED_WINDOW_IMP} -- Externals
 
@@ -106,14 +116,26 @@ feature {EV_RIBBON_TITLED_WINDOW_IMP} -- Externals
 			]"
 		end
 
-	set_modes (a_mode: INTEGER)
+	c_set_modes (a_mode: INTEGER; a_ribbon_framework: POINTER)
 			-- Set application mode
 		external
 			"C inline use <ribbon.h>"
 		alias
 			"[
 			{
-				SetModes ($a_mode);
+				SetModes ($a_mode, $a_ribbon_framework);
+			}
+			]"
+		end
+
+	get_ribbon_framework: POINTER
+			-- Get Ribbon framework pointer
+		external
+			"C inline use <ribbon.h>"
+		alias
+			"[
+			{
+				return GetRibbonFramwork ();
 			}
 			]"
 		end

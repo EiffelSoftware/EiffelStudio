@@ -215,19 +215,80 @@ feature {NONE} -- Implementation
 			l_list: ARRAYED_LIST [ER_LAYOUT_CONSTRUCTOR]
 			l_singleton: ER_SHARED_SINGLETON
 		do
-			-- Parse EV_TREE until Ribbon.Tabs
---			from
+			create l_singleton
+			l_list := l_singleton.layout_constructor_list
+			generate_window_classes
+			generate_readonly_classes_imp (l_list.first)
+		end
+
+	generate_window_classes
+			-- Generate window classes
+		local
+			l_singleton: ER_SHARED_SINGLETON
+			l_list: ARRAYED_LIST [ER_LAYOUT_CONSTRUCTOR]
+			l_window_file, l_sub_dir, l_set_modes_string, l_last_string: STRING
+			l_constants: ER_MISC_CONSTANTS
+			l_file_name, l_dest_file_name: FILE_NAME
+			l_file, l_dest_file: RAW_FILE
+		do
+			l_window_file := "main_window"
+			l_sub_dir := "code_generated_everytime"
+
+			from
 				create l_singleton
 				l_list := l_singleton.layout_constructor_list
---				l_list.start
---			until
---				l_list.after
---			loop
---				generate_readonly_classes_imp (l_list.item)
---				l_list.forth
---			end
-			-- FIXME: Current only generate classes for default window (application mode is 0)
-			generate_readonly_classes_imp (l_list.first)
+				l_list.start
+			until
+				l_list.after
+			loop
+				if attached l_singleton.project_info_cell.item as l_project_info then
+					if attached l_project_info.project_location as l_project_location then
+						create l_constants
+
+						-- Generate tool bar class
+						create l_file_name.make_from_string (l_constants.template)
+						l_file_name.set_subdirectory (l_sub_dir)
+						l_file_name.set_file_name (l_window_file + ".e")
+						create l_file.make (l_file_name)
+						if l_file.exists and then l_file.is_readable then
+							create l_dest_file_name.make_from_string (l_project_location)
+							if l_list.index /= 1 then
+								l_dest_file_name.set_file_name (l_window_file + "_" + l_list.index.out + ".e")
+							else
+								l_dest_file_name.set_file_name (l_window_file + ".e")
+							end
+
+							create l_dest_file.make_create_read_write (l_dest_file_name)
+							from
+								l_file.open_read
+								l_file.start
+								l_set_modes_string := "%T%T%Tribbon.set_modes (" + (l_list.index - 1).out + ")"
+							until
+								l_file.after
+							loop
+								l_file.read_line
+								l_last_string := l_file.last_string
+								if l_list.index = 1 then
+									l_last_string.replace_substring_all ("$INDEX", "")
+									l_last_string.replace_substring_all ("$SET_MODES", "")
+								else
+									l_last_string.replace_substring_all ("$INDEX", "_" + l_list.index.out)
+									l_last_string.replace_substring_all ("$SET_MODES", l_set_modes_string)
+								end
+
+								l_dest_file.put_string (l_last_string + "%N")
+							end
+
+							l_file.close
+							l_dest_file.close
+						end
+
+					end
+				end
+
+				l_list.forth
+			end
+
 		end
 
 	generate_readonly_classes_imp (a_layout_constructor: ER_LAYOUT_CONSTRUCTOR)
@@ -236,23 +297,31 @@ feature {NONE} -- Implementation
 			l_tree: EV_TREE
 			l_tree_node: detachable EV_TREE_NODE
 			l_xml: ER_XML_CONSTANTS
+			l_singleton: ER_SHARED_SINGLETON
+			l_list: ARRAYED_LIST [ER_LAYOUT_CONSTRUCTOR]
 		do
+
 			from
-				create l_xml
-				l_tree := a_layout_constructor.widget
-				l_tree.start
+				create l_singleton
+				l_list := l_singleton.layout_constructor_list
+				l_list.start
 			until
-				l_tree.after or l_tree_node /= Void
+				l_list.after
 			loop
+
+				create l_xml
+				l_tree := l_list.item.widget
+				l_tree.start
 				l_tree_node := tree_node_with_text (l_tree.item, l_xml.ribbon_tabs)
 
-				l_tree.forth
+				if l_tree_node /= Void then
+						-- Start real generation		
+					generate_tool_bar_class (l_tree_node, l_list.index)
+				end
+
+				l_list.forth
 			end
 
-			if l_tree_node /= Void then
-				-- Start real generation
-				generate_tool_bar_class (l_tree_node)
-			end
 		end
 
 	tree_node_with_text (a_tree_node: EV_TREE_NODE; a_text: STRING): detachable EV_TREE_NODE
@@ -281,7 +350,7 @@ feature {NONE} -- Implementation
 	uicc_manager: ER_UICC_MANAGER
 			--
 
-	generate_tool_bar_class (a_tabs_root_note: EV_TREE_NODE)
+	generate_tool_bar_class (a_tabs_root_note: EV_TREE_NODE; a_index: INTEGER)
 			--
 		require
 			not_void: a_tabs_root_note /= Void
@@ -301,7 +370,7 @@ feature {NONE} -- Implementation
 
 			create l_singleton
 			l_sub_dir := "code_generated_once_change_by_user"
-			l_tool_bar_file := "ribbon.e"
+			l_tool_bar_file := "ribbon"
 			l_sub_imp_dir := "code_generated_everytime"
 
 			if attached l_singleton.project_info_cell.item as l_project_info then
@@ -311,11 +380,16 @@ feature {NONE} -- Implementation
 					-- Generate tool bar class
 					create l_file_name.make_from_string (l_constants.template)
 					l_file_name.set_subdirectory (l_sub_dir)
-					l_file_name.set_file_name (l_tool_bar_file)
+					l_file_name.set_file_name (l_tool_bar_file + ".e")
 					create l_file.make (l_file_name)
 					if l_file.exists and then l_file.is_readable then
 						create l_dest_file_name.make_from_string (l_project_location)
-						l_dest_file_name.set_file_name (l_tool_bar_file)
+						if a_index /= 1 then
+							l_dest_file_name.set_file_name (l_tool_bar_file + "_" + a_index.out + ".e")
+						else
+							l_dest_file_name.set_file_name (l_tool_bar_file + ".e")
+						end
+
 						create l_dest_file.make_create_read_write (l_dest_file_name)
 						from
 							l_file.open_read
@@ -331,6 +405,11 @@ feature {NONE} -- Implementation
 							l_last_string.replace_substring_all ("$TAB_CREATION", l_tab_creation_string)
 							l_last_string.replace_substring_all ("$TAB_REGISTRY", l_tab_registry_string)
 							l_last_string.replace_substring_all ("$TAB_DECLARATION", l_tab_declaration_string)
+							if a_index = 1 then
+								l_last_string.replace_substring_all ("$INDEX", "")
+							else
+								l_last_string.replace_substring_all ("$INDEX", "_" + a_index.out)
+							end
 
 							l_dest_file.put_string (l_last_string + "%N")
 						end
@@ -342,7 +421,8 @@ feature {NONE} -- Implementation
 				end
 			end
 
-			-- Generate tab classes
+
+				-- Generate tab classes
 			from
 				a_tabs_root_note.start
 			until

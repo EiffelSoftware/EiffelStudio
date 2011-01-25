@@ -8,7 +8,7 @@ note
 	revision: "$Revision$"
 
 class
-	MAIN_WINDOW
+	MAIN_WINDOW$INDEX
 
 inherit
 	EV_RIBBON_TITLED_WINDOW
@@ -56,6 +56,7 @@ feature {NONE}-- Initialization
 											l_app.destroy_actions.extend (agent ribbon.destroy)
 										end
 									end)
+$SET_MODES
 		end
 
 	create_interface_objects
@@ -71,7 +72,7 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	ribbon: RIBBON
+	ribbon: RIBBON$INDEX
 			-- Ribbon attached to current
 
 end

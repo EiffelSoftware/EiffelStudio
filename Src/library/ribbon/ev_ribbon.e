@@ -18,11 +18,14 @@ feature -- Command
 			-- Creation method
 		local
 			l_result: INTEGER
+			l_resources: EV_RIBBON_RESOURCES
 		do
 			if attached {EV_WINDOW_IMP} a_window.implementation as l_imp then
 				com_initialize
 				l_result := create_ribbon_com_framework (l_imp.wel_item)
 				item := get_ribbon_framework
+				create l_resources
+				l_resources.ribbon_list.extend (Current)
 			end
 		end
 
@@ -142,14 +145,14 @@ feature {EV_RIBBON_TITLED_WINDOW_IMP} -- Externals
 
 feature {EV_RIBBON_CHECKBOX} -- Query
 
-	get_UI_Command_Property_Boolean (a_command_id: NATURAL_32; a_proper_variant: POINTER)
+	get_UI_Command_Property_Boolean (a_command_id: NATURAL_32; a_proper_variant: POINTER; a_framework: POINTER)
 			--
 		external
 			"C inline use <ribbon.h>"
 		alias
 			"[
 			{
-				GetUICommandPropertyBoolean($a_command_id, $a_proper_variant);
+				GetUICommandPropertyBoolean($a_command_id, $a_proper_variant, $a_framework);
 			}
 			]"
 		end

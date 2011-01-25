@@ -183,13 +183,13 @@ HRESULT SetModes(INT32 iModes, IUIFramework *a_framework)
     return hr;
 }
 
-HRESULT GetUICommandPropertyBoolean(UINT32 commandId, PROPVARIANT *value)
+HRESULT GetUICommandPropertyBoolean(UINT32 commandId, PROPVARIANT *value, IUIFramework *a_framework)
 {
 	  HRESULT hr = S_OK;
 
-    if (g_pFramework)
+    if (a_framework)
     {
-    	hr = g_pFramework->lpVtbl->GetUICommandProperty(g_pFramework, commandId, & UI_PKEY_BooleanValue, value);
+    	hr = a_framework->lpVtbl->GetUICommandProperty(a_framework, commandId, & UI_PKEY_BooleanValue, value);
     }
     
     return hr;

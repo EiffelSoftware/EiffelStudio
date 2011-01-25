@@ -42,6 +42,21 @@ feature -- Access
 		deferred
 		end
 
+	is_selected: BOOLEAN
+			-- If current has been checked?
+		local
+			l_value: EV_PROPERTY_VARIANT
+			l_command_id: NATURAL_32
+		do
+			l_command_id := command_list.item (command_list.lower)
+			check command_id_valid: l_command_id /= 0 end
+			create l_value.make_empty
+
+			{EV_RIBBON}.get_UI_Command_Property_Boolean (l_command_id, l_value.pointer.item)
+
+			Result := l_value.boolean_value
+		end
+
 feature {EV_RIBBON} -- Command
 
 	execute (a_command_id: NATURAL_32; a_execution_verb: INTEGER; a_property_key: POINTER; a_property_value: POINTER; a_command_execution_properties: POINTER): NATURAL_32

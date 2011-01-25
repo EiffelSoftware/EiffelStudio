@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="ribbon" uuid="52D26B03-0A56-4A1D-85C0-9F5AA69D8436" library_target="ribbon">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-8-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-8-0 http://www.eiffel.com/developers/xml/configuration-1-8-0.xsd" name="ribbon" uuid="52D26B03-0A56-4A1D-85C0-9F5AA69D8436" library_target="ribbon">
 	<target name="ribbon">
 		<description>Eiffel Ribbon library of reusable components for Eiffel.
       Copyright (c) 1984-2010, Eiffel Software and others.
       Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</description>
 		<root all_classes="true"/>
 		<file_rule>
-			<exclude>/\.svn</exclude>
-			<exclude>/EIFGEN.{0,1}$</exclude>
-			<exclude>/tmp$</exclude>
-			<exclude>/temp$</exclude>
-			<exclude>/release$</exclude>
 			<exclude>/obsolete$</exclude>
+			<exclude>/release$</exclude>
+			<exclude>/tmp$</exclude>
+			<exclude>/EIFGEN.{0,1}$</exclude>
+			<exclude>/\.svn</exclude>
+			<exclude>/temp$</exclude>
 		</file_rule>
 		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" namespace="EiffelSoftware.Library.Ribbon">
 		</option>
@@ -31,6 +31,7 @@
 				<platform value="windows"/>
 			</condition>
 		</external_object>
+		<external_object location="Propsys.lib"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf" readonly="true"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2-safe.ecf" readonly="true"/>
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel-safe.ecf" readonly="true">

@@ -182,3 +182,16 @@ HRESULT SetModes(INT32 iModes)
     
     return hr;
 }
+
+HRESULT GetUICommandPropertyBoolean(UINT32 commandId, PROPVARIANT *value)
+{
+	  HRESULT hr = S_OK;
+
+    if (g_pFramework)
+    {
+    	hr = g_pFramework->lpVtbl->GetUICommandProperty(g_pFramework, commandId, & UI_PKEY_BooleanValue, value);
+    }
+    
+    return hr;
+}
+

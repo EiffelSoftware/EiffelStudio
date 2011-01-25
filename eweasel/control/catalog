@@ -2489,6 +2489,7 @@ test	once-per-object-creation-procedure		attach075 tcf pass attached_types void_
 test	attached-to-none				attach076 tcf fail attached_types void_safe once
 test	attached-attribute-initialization		attach077 tcf pass attached_types void_safe validity
 test	detachable-formal-attached-constraint		attach078 tcf pass attached_types formal generic constraint conformance validity
+test	empty-attribute-body-bogus-vevi			attach079 tcf pass attached_types validity
 
 -- Tests for conformance in general
 test	basic-conformance		conform001 tcf pass conformance

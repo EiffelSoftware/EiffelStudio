@@ -1,0 +1,19 @@
+test_name 	 empty-attribute-body-bogus-vevi
+test_description If you have an empty attribute body, the compiler reports a VEVI error even if the attribute is created in the creation procedure of the class, or if the class is deferred.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test1.e $CLUSTER test1.e
+define INSTR	"create a.make (10)"
+copy_sub	test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result ok
+
+define INSTR	""
+copy_sub	test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result validity_error TEST2 VEVI
+
+test_end

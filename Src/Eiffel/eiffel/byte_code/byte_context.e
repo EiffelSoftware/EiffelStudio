@@ -1190,7 +1190,6 @@ feature -- Access
 			context_type_not_void: a_context_type /= Void
 			context_type_generics: type.is_formal implies a_context_type.generics /= Void
 		local
-			formal: FORMAL_A
 			formal_position: INTEGER
 		do
 			debug ("to_implement")
@@ -1199,21 +1198,17 @@ feature -- Access
 			from
 				Result := type
 			until
-				not Result.is_formal or Result.is_multi_constrained
+				not attached {FORMAL_A} Result as formal or else formal.has_multi_constrained
 			loop
-				formal ?= Result
-				check formal_not_void: formal /= Void end
 				formal_position := formal.position
 				Result := a_context_type.generics.item (formal_position)
-				if Result.is_formal then
-					formal ?= Result
-					check formal_not_void: formal /= Void end
-					if formal.is_multi_constrained (a_context_type.associated_class) then
-						create {MULTI_FORMAL_A} Result.make (True, formal.is_expanded, formal.position)
+				if attached {FORMAL_A} Result as actual_formal then
+					if actual_formal.is_multi_constrained (a_context_type.associated_class) then
+						create {MULTI_FORMAL_A} Result.make (True, actual_formal.is_expanded, actual_formal.position)
 					else
 						Result := a_context_type.associated_class.constrained_type (formal_position)
 					end
-						-- Preserve attachment and separateness status of the context actual parameter.
+						-- Preserve attachment and separateness status of the context parameter.
 					Result := Result.to_other_attachment (formal).to_other_separateness (formal)
 				end
 			end
@@ -2904,7 +2899,7 @@ invariant
 	postconditionobject_test_local_offset_attached: postcondition_object_test_local_offset /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

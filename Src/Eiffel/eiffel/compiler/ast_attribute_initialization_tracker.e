@@ -29,7 +29,7 @@ feature -- Access
 			-- Is an attribute with the given `position' set?
 		require
 			position_large_enough: position > 0
-			position_small_emough: position <= attribute_count
+			position_small_enough: position <= attribute_count
 		do
 			Result := keeper.is_set (position)
 		end
@@ -50,7 +50,7 @@ feature {AST_CONTEXT, AST_CREATION_PROCEDURE_CHECKER, AST_SCOPE_COMBINED_PRECOND
 			-- Mark that an attribute with the given `position' is set.
 		require
 			position_large_enough: position > 0
-			position_small_emough: position <= attribute_count
+			position_small_enough: position <= attribute_count
 		do
 			keeper.set (position)
 		ensure
@@ -99,7 +99,7 @@ invariant
 	keeper_attached: keeper /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -56,7 +56,6 @@ feature {NONE}-- Initialization
 											l_app.destroy_actions.extend (agent ribbon.destroy)
 										end
 									end)
-$SET_MODES
 		end
 
 	create_interface_objects

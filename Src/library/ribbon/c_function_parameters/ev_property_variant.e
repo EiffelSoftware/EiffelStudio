@@ -8,7 +8,7 @@ note
 					  WORD    wReserved2;
 					  WORD    wReserved3;
 					  union {....} ;
-					} PROPVARIANT;					
+					} PROPVARIANT;
 																									]"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,14 +17,21 @@ class
 	EV_PROPERTY_VARIANT
 
 create
-	share_from_pointer
+	share_from_pointer,
+	make_empty
 
 feature {NONE}  -- Initialization
 
 	share_from_pointer (a_property_variant: POINTER)
 			-- Creation method
 		do
-			pointer := a_property_variant
+			create pointer.share_from_pointer (a_property_variant, size)
+		end
+
+	make_empty
+			--
+		do
+			create pointer.make (size)
 		end
 
 feature -- Query
@@ -32,18 +39,16 @@ feature -- Query
 	var_type: NATURAL_16
 			--
 		do
-			Result := c_var_type (pointer)
+			Result := c_var_type (pointer.item)
 		end
 
-	value
+	boolean_value: BOOLEAN
 			-- Value type is based on `var_type'
 		do
-
+			c_read_boolean (pointer.item, $Result)
 		end
 
-feature {NONE}	-- Implementation
-
-	pointer: POINTER
+	pointer: MANAGED_POINTER
 			--
 
 feature {NONE} -- Externals
@@ -62,10 +67,27 @@ feature {NONE} -- Externals
 			]"
 		end
 
-	c_read_xxx
+	c_read_boolean (a_item: POINTER; a_result: TYPED_POINTER [BOOLEAN])
 			--
-		do
-
+		external
+			"C inline use %"PropIdl.h%""
+		alias
+			"[
+			{
+				PropVariantToBoolean ($a_item, $a_result);
+			}
+			]"
 		end
-		
+
+	size: INTEGER
+			--
+		external
+			"C inline use %"PropIdl.h%""
+		alias
+			"[
+			{
+				return sizeof (PROPVARIANT);
+			}
+			]"
+		end
 end

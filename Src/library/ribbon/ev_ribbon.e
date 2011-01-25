@@ -118,5 +118,18 @@ feature {EV_RIBBON_TITLED_WINDOW_IMP} -- Externals
 			]"
 		end
 
+feature {EV_RIBBON_CHECKBOX} -- Query
+
+	get_UI_Command_Property_Boolean (a_command_id: NATURAL_32; a_proper_variant: POINTER)
+			--
+		external
+			"C inline use <ribbon.h>"
+		alias
+			"[
+			{
+				GetUICommandPropertyBoolean($a_command_id, $a_proper_variant);
+			}
+			]"
+		end
 end
 

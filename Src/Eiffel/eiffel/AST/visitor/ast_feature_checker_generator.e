@@ -3163,6 +3163,7 @@ feature {NONE} -- Implementation
 				if
 					l_feat_type.is_initialization_required and then
 					not l_as.is_external and then
+					not l_as.is_attribute and then
 					not context.local_initialization.is_result_set and then
 					not current_feature.is_deferred and then
 					is_void_safe_initialization (context.current_class)
@@ -10425,7 +10426,7 @@ feature {NONE} -- Separateness
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

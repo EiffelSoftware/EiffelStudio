@@ -31,6 +31,7 @@ inherit
 			process_nested_as,
 			process_once_as,
 			process_precursor_as,
+			process_result_as,
 			process_retry_as,
 			process_routine_as
 		end
@@ -66,7 +67,8 @@ feature {NONE} -- Creation
 			creation_procedure := f
 			context := c
 			create {ARRAYED_STACK [INTEGER_32]} bodies.make (1)
-			create attribute_initialization.make (c.attributes.count)
+				-- Last entry is used to track initialization of a result in an attribute with a body.
+			create attribute_initialization.make (c.attributes.count + 1)
 			process (f)
 			check_attributes (f.body.last_token (Void))
 		end
@@ -156,6 +158,9 @@ feature {NONE} -- Processing
 			s: GENERIC_SKELETON
 			i: INTEGER
 		do
+				-- Make sure attribute initialization checks do not affect each other.
+				-- Treat each attribute initialization in its own section that does not interfere with the other one.
+			attribute_initialization.keeper.enter_realm
 			from
 				s := current_class.skeleton
 				i := s.count
@@ -164,7 +169,12 @@ feature {NONE} -- Processing
 			loop
 				check_attribute (current_class.feature_of_feature_id (s [i].feature_id), l)
 				i := i - 1
+				if i > 0 then
+						-- Move to the next independent section of checks.
+					attribute_initialization.keeper.save_sibling
+				end
 			end
+			attribute_initialization.keeper.leave_realm
 		end
 
 	check_attribute (f: FEATURE_I; l: LOCATION_AS)
@@ -174,19 +184,24 @@ feature {NONE} -- Processing
 		require
 			f_attached: f /= Void
 			l_attached: l /= Void
+		local
+			i: INTEGER
 		do
-			if f.type.is_initialization_required and then not attribute_initialization.is_attribute_set (context.attributes.item (f.feature_id)) then
+			i := context.attributes.item (f.feature_id)
+			if f.type.is_initialization_required and then not attribute_initialization.is_attribute_set (i) then
 				if attached {ATTRIBUTE_I} f as d and then d.has_body and then not bodies.has (d.body_index) then
 						-- Attribute is self-initializing and not processed yet
 						-- (there is no recursion for an uninitialized self-initializing attribute).
 					process (f)
-				else
+				end
+					-- Attribute might have been initialized by the associated body (if any).
+				if not attribute_initialization.is_attribute_set (i) then
 						-- Attribute is not properly initialized.
 					error_handler.insert_error (create {VEVI}.make_attribute (f, current_class.class_id, creation_procedure, context, l))
+						-- Mark that the attribute is initialized because it is self-initializing
+						-- or just to avoid repeated errors.
+					attribute_initialization.set_attribute (i)
 				end
-					-- Mark that the attribute is initialized because it is self-initializing
-					-- or just to avoid repeated errors.
-				attribute_initialization.set_attribute (context.attributes.item (f.feature_id))
 			end
 		end
 
@@ -307,6 +322,17 @@ feature {AST_EIFFEL} -- Visitor: access to features
 				k := k - 1
 			variant
 				k
+			end
+		end
+
+feature {AST_EIFFEL} -- Visitor: Result
+
+	process_result_as (a: RESULT_AS)
+		do
+			if context.current_feature.is_attribute then
+					-- Correct use of result is checked during general routine body check.
+					-- Here it's sufficient to know that it is set.
+				attribute_initialization.set_attribute (result_position)
 			end
 		end
 
@@ -432,7 +458,15 @@ feature {AST_EIFFEL} -- Visitor: compound
 		end
 
 	process_routine_as (a: ROUTINE_AS)
+		local
+			i: INTEGER
+			f: FEATURE_I
 		do
+			if a.is_attribute then
+					-- Make sure result position is never set except during checking of an attribute body.
+				attribute_initialization.keeper.enter_realm
+			end
+				-- Process feature body.
 			safe_process (a.precondition)
 			attribute_initialization.keeper.enter_realm
 			a.routine_body.process (Current)
@@ -440,6 +474,29 @@ feature {AST_EIFFEL} -- Visitor: compound
 			attribute_initialization.keeper.save_sibling
 			safe_process (a.rescue_clause)
 			attribute_initialization.keeper.leave_realm
+			if a.is_attribute then
+					-- Copy result initialization status to the status of the associated attribute.
+				if attribute_initialization.is_attribute_set (result_position) then
+					f := context.current_feature
+					if current_class /= written_class then
+						f := current_class.feature_of_rout_id (f.rout_id_set.first)
+					end
+					attribute_initialization.set_attribute (context.attributes.item (f.feature_id))
+						-- Propagate current initialization information to the outer realm.
+					attribute_initialization.keeper.save_sibling
+						-- Set all attributes except for the position of the result.
+					from
+						i := context.attributes.count
+					until
+						i <= 0
+					loop
+						attribute_initialization.set_attribute (i)
+						i := i - 1
+					end
+				end
+					-- Leave current scope cleaning result initialization information if requried.
+				attribute_initialization.keeper.leave_realm
+			end
 		end
 
 feature {AST_EIFFEL} -- Visitor: nested call
@@ -516,6 +573,12 @@ feature {NONE} -- Access
 
 	attribute_initialization: AST_ATTRIBUTE_INITIALIZATION_TRACKER
 			-- Storage to track attributes usage
+
+	result_position: INTEGER
+			-- Position of result in the `attributes_initialization'.
+		do
+			Result := context.attributes.count + 1
+		end
 
 	bodies: STACK [INTEGER_32];
 			-- Bodies that are being processed

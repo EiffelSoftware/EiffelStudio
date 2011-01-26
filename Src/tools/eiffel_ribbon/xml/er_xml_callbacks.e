@@ -44,7 +44,7 @@ feature -- Document
 	on_start
 			-- <Precursor>
 		do
-			debug ("Ribbon")
+			debug ("Ribbon-xml")
 				print ("%N on_start")
 			end
 		end
@@ -52,7 +52,7 @@ feature -- Document
 	on_finish
 			-- <Precursor>
 		do
-			debug ("Ribbon")
+			debug ("Ribbon-xml")
 				print ("%N on_finish")
 			end
 		end
@@ -60,7 +60,7 @@ feature -- Document
 	on_xml_declaration (a_version: STRING; an_encoding: detachable STRING; a_standalone: BOOLEAN)
 			-- <Precursor>
 		do
-			debug ("Ribbon")
+			debug ("Ribbon-xml")
 				print ("%N on_xml_declaration")
 			end
 		end
@@ -70,7 +70,7 @@ feature -- Errors
 	on_error (a_message: STRING)
 			-- <Precursor>
 		do
-			debug ("Ribbon")
+			debug ("Ribbon-xml")
 				print ("%N on_error")
 			end
 		end
@@ -80,7 +80,7 @@ feature -- Meta
 	on_processing_instruction (a_name: STRING; a_content: STRING)
 			-- <Precursor>
 		do
-			debug ("Ribbon")
+			debug ("Ribbon-xml")
 				print ("%N on_processing_instruction")
 			end
 		end
@@ -88,7 +88,7 @@ feature -- Meta
 	on_comment (a_content: STRING)
 			-- <Precursor>
 		do
-			debug ("Ribbon")
+			debug ("Ribbon-xml")
 				print ("%N on_comment")
 			end
 		end
@@ -101,7 +101,7 @@ feature -- Tag
 			l_parent_node: detachable EV_TREE_NODE
 			l_new_node: EV_TREE_ITEM
 		do
-			debug ("Ribbon")
+			debug ("Ribbon-xml")
 				print ("%N on_start_tag " + a_local_part)
 			end
 			if last_node.count >= 1 then
@@ -141,7 +141,7 @@ feature -- Tag
 		local
 			l_tree_node: EV_TREE_NODE
 		do
-			debug ("Ribbon")
+			debug ("Ribbon-xml")
 				print ("%N on_attribute")
 			end
 
@@ -154,7 +154,7 @@ feature -- Tag
 	on_start_tag_finish
 			-- <Precursor>
 		do
-			debug ("Ribbon")
+			debug ("Ribbon-xml")
 				print ("%N on_start_tag_finish")
 			end
 		end
@@ -164,12 +164,12 @@ feature -- Tag
 		local
 --			l_list: detachable EV_ITEM_LIST [EV_TREE_NODE]
 		do
-			debug ("Ribbon")
+			debug ("Ribbon-xml")
 				print ("%N on_end_tag")
 			end
 			if a_local_part.is_equal (constants.command) then
 				check set_by_on_start_tag: attached {ER_TREE_NODE_DATA} data_callback end
-				data_callback := void
+				data_callback := Void
 
 				remove_last_node
 			elseif data_callback /= Void then
@@ -185,7 +185,7 @@ feature -- Content
 	on_content (a_content: STRING)
 			-- <Precursor>
 		do
-			debug ("Ribbon")
+			debug ("Ribbon-xml")
 				print ("%N on_content")
 			end
 			if attached data_callback as l_data_callback then

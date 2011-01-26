@@ -10,9 +10,6 @@ class
 
 inherit
 	ER_MAIN_WINDOW_IMP
-		redefine
-			create_interface_objects
-		end
 
 
 feature {NONE} -- Initialization
@@ -68,7 +65,7 @@ feature {NONE} -- Initialization
 			gen_code_command.disable
 		end
 
-	create_interface_objects
+	user_create_interface_objects
 			-- <Precursor>
 		local
 			l_project_info: ER_PROJECT_INFO
@@ -77,7 +74,6 @@ feature {NONE} -- Initialization
 				-- from the current class.
 
 				-- Proceed with vision2 objects creation.
-			Precursor
 			create shared_singleton
 
 			create type_selector.make
@@ -89,7 +85,7 @@ feature {NONE} -- Initialization
 
 			shared_singleton.object_editor_cell.put (object_editor)
 
-			create l_project_info
+			create l_project_info.make
 			shared_singleton.project_info_cell.put (l_project_info)
 
 			create new_project_command.make (new_project_menu)

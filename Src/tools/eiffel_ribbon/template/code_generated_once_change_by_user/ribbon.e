@@ -8,7 +8,7 @@ note
 	revision: "$Revision$"
 
 class
-	RIBBON$INDEX
+	$INDEX
 
 inherit
 	EV_RIBBON

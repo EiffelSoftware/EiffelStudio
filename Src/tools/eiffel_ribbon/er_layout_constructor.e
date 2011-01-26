@@ -45,6 +45,7 @@ feature {NONE} -- Initialization
 			widget.key_press_actions.extend (agent on_tree_key_press)
 
 			create l_tree_item_app.make_with_text (constants.ribbon_tabs)
+			l_tree_item_app.pointer_button_press_actions.extend (agent on_pointer_press (?, ?, ?, ?, ?, ?, ?, ?, l_tree_item_app))
 			l_tree_item_app.drop_actions.set_veto_pebble_function (agent on_veto_pebble_function (?, constants.ribbon_tabs))
 			l_tree_item_app.drop_actions.extend (agent on_drop (?, l_tree_item_app))
 			widget.extend (l_tree_item_app)

@@ -21,7 +21,7 @@ inherit
 
 feature {NONE}-- Initialization
 
-	initialize
+	frozen initialize
 			-- Initialize `Current'.
 		do
 			Precursor {EV_VERTICAL_BOX}
@@ -67,7 +67,7 @@ feature {NONE}-- Initialization
 			user_initialization
 		end
 		
-	create_interface_objects
+	frozen create_interface_objects
 			-- Create objects
 		do
 			
@@ -94,6 +94,7 @@ feature {NONE}-- Initialization
 			create pixmap_constant_retrieval_functions.make (10)
 			create color_constant_set_procedures.make (10)
 			create color_constant_retrieval_functions.make (10)
+			user_create_interface_objects
 		end
 
 
@@ -111,9 +112,12 @@ feature {NONE} -- Implementation
 	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state?
 		do
-			-- Re-implement if you wish to enable checking
-			-- for `Current'.
 			Result := True
+		end
+
+	user_create_interface_objects
+			-- Feature for custom user interface object creation, called at end of `create_interface_objects'.
+		deferred
 		end
 
 	user_initialization
@@ -139,7 +143,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constant setting
 
-	set_attributes_using_string_constants
+	frozen set_attributes_using_string_constants
 			-- Set all attributes relying on string constants to the current
 			-- value of the associated constant.
 		local
@@ -159,7 +163,7 @@ feature {NONE} -- Constant setting
 			end
 		end
 
-	set_attributes_using_integer_constants
+	frozen set_attributes_using_integer_constants
 			-- Set all attributes relying on integer constants to the current
 			-- value of the associated constant.
 		local
@@ -195,7 +199,7 @@ feature {NONE} -- Constant setting
 			end
 		end
 
-	set_attributes_using_pixmap_constants
+	frozen set_attributes_using_pixmap_constants
 			-- Set all attributes relying on pixmap constants to the current
 			-- value of the associated constant.
 		local
@@ -215,7 +219,7 @@ feature {NONE} -- Constant setting
 			end
 		end
 
-	set_attributes_using_font_constants
+	frozen set_attributes_using_font_constants
 			-- Set all attributes relying on font constants to the current
 			-- value of the associated constant.
 		local
@@ -235,7 +239,7 @@ feature {NONE} -- Constant setting
 			end	
 		end
 
-	set_attributes_using_color_constants
+	frozen set_attributes_using_color_constants
 			-- Set all attributes relying on color constants to the current
 			-- value of the associated constant.
 		local
@@ -255,7 +259,7 @@ feature {NONE} -- Constant setting
 			end
 		end
 
-	set_all_attributes_using_constants
+	frozen set_all_attributes_using_constants
 			-- Set all attributes relying on constants to the current
 			-- calue of the associated constant.
 		do
@@ -266,7 +270,7 @@ feature {NONE} -- Constant setting
 			set_attributes_using_color_constants
 		end
 	
-	string_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [STRING_GENERAL]]]
+	string_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [READABLE_STRING_GENERAL]]]
 	string_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], STRING_32]]
 	integer_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [INTEGER]]]
 	integer_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], INTEGER]]
@@ -279,7 +283,7 @@ feature {NONE} -- Constant setting
 	color_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [EV_COLOR]]]
 	color_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], EV_COLOR]]
 
-	integer_from_integer (an_integer: INTEGER): INTEGER
+	frozen integer_from_integer (an_integer: INTEGER): INTEGER
 			-- Return `an_integer', used for creation of
 			-- an agent that returns a fixed integer value.
 		do

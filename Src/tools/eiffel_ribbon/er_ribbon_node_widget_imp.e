@@ -11,7 +11,7 @@ note
 	revision: "$Revision$"
 
 deferred class
-	ER_TAB_NODE_WIDGET_IMP
+	ER_RIBBON_NODE_WIDGET_IMP
 
 inherit
 	EV_VERTICAL_BOX
@@ -32,29 +32,22 @@ feature {NONE}-- Initialization
 			extend (l_ev_label_2)
 			extend (l_ev_label_3)
 			extend (command_name)
-			extend (l_ev_label_4)
-			extend (label)
 
 			l_ev_label_1.set_text ("Type:")
 			l_ev_label_1.align_text_left
-			l_ev_label_2.set_text ("Tab")
+			l_ev_label_2.set_text ("Ribbon")
 			l_ev_label_2.align_text_left
 			l_ev_label_3.set_text ("Identifier:")
 			l_ev_label_3.align_text_left
-			l_ev_label_4.set_text ("Label title:")
-			l_ev_label_4.align_text_left
 			disable_item_expand (l_ev_label_1)
 			disable_item_expand (l_ev_label_2)
 			disable_item_expand (l_ev_label_3)
 			disable_item_expand (command_name)
-			disable_item_expand (l_ev_label_4)
-			disable_item_expand (label)
 
 			set_all_attributes_using_constants
 			
 				-- Connect events.
 			command_name.change_actions.extend (agent on_command_name_text_change)
-			label.change_actions.extend (agent on_label_changes)
 
 				-- Call `user_initialization'.
 			user_initialization
@@ -69,8 +62,6 @@ feature {NONE}-- Initialization
 			create l_ev_label_2
 			create l_ev_label_3
 			create command_name
-			create l_ev_label_4
-			create label
 
 			create string_constant_set_procedures.make (10)
 			create string_constant_retrieval_functions.make (10)
@@ -91,11 +82,11 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	command_name, label: EV_TEXT_FIELD
+	command_name: EV_TEXT_FIELD
 
 feature {NONE} -- Implementation
 
-	l_ev_label_1, l_ev_label_2, l_ev_label_3, l_ev_label_4: EV_LABEL
+	l_ev_label_1, l_ev_label_2, l_ev_label_3: EV_LABEL
 
 feature {NONE} -- Implementation
 
@@ -117,11 +108,6 @@ feature {NONE} -- Implementation
 	
 	on_command_name_text_change
 			-- Called by `change_actions' of `command_name'.
-		deferred
-		end
-	
-	on_label_changes
-			-- Called by `change_actions' of `label'.
 		deferred
 		end
 	

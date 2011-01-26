@@ -136,6 +136,7 @@ feature -- Tree loading
 			l_ribbon_tabs: detachable EV_TREE_ITEM
 			l_ribbon_item: EV_TREE_NODE
 			l_search_result: INTEGER
+			l_shared: ER_SHARED_SINGLETON
 		do
 			create l_xml
 			check valid: a_ribbon_tabs.text.same_string_general (l_xml.ribbon_tabs) end
@@ -160,11 +161,12 @@ feature -- Tree loading
 			-- Prepare root node Ribbon.Tabs for each ribbon
 			create Result.make (l_application_modes.count)
 			from
+				create l_shared
 				l_application_modes.start
 			until
 				l_application_modes.after
 			loop
-				create l_ribbon_tabs.make_with_text (l_xml.ribbon_tabs)
+				l_ribbon_tabs := l_shared.layout_constructor_list.first.tree_item_factory_method (l_xml.ribbon_tabs)
 				Result.extend (l_ribbon_tabs)
 
 				l_application_modes.forth
@@ -505,7 +507,7 @@ feature {NONE} -- implementation
 				if not l_image.has_substring ("\\") then
 					l_image.replace_substring_all ("\", "\\")
 				end
-				
+
 				create l_item_text.make (l_sub_item, l_image)
 				l_sub_item.put_last (l_item_text)
 				-- Adding id attribute automatically here?

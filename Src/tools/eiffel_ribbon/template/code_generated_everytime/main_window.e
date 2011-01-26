@@ -71,7 +71,7 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	ribbon: RIBBON$INDEX
+	ribbon: $RIBBON_NAME
 			-- Ribbon attached to current
 
 end

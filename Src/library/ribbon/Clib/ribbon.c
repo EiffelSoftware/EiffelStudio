@@ -157,15 +157,15 @@ void DestroyRibbon()
 //  PURPOSE:  Get the ribbon height.
 //
 //
-HRESULT GetRibbonHeight(UINT* ribbonHeight)
+HRESULT GetRibbonHeight(UINT* ribbonHeight, IUIFramework *a_framework)
 {
 	HRESULT hr = S_OK;
 
-	if (g_pFramework)
+	if (a_framework)
 	{
 		IUIRibbon* pRibbon = NULL;
 
-		if (SUCCEEDED(g_pFramework->lpVtbl->GetView(g_pFramework, 0, &IID_IUIRIBBON, &(pRibbon))))
+		if (SUCCEEDED(a_framework->lpVtbl->GetView(a_framework, 0, &IID_IUIRIBBON, &(pRibbon))))
 		{
 			hr = pRibbon->lpVtbl->GetHeight(pRibbon, ribbonHeight);
 			pRibbon->lpVtbl->Release(pRibbon);

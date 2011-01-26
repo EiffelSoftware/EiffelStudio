@@ -51,7 +51,7 @@ feature -- Query
 	height: INTEGER
 			-- Get current ribbon height
 		do
-			get_height ($Result)
+			get_height ($Result, item)
 		end
 
 	item: POINTER
@@ -111,14 +111,14 @@ feature {EV_RIBBON_TITLED_WINDOW_IMP} -- Externals
 			]"
 		end
 
-	get_height (a_height: TYPED_POINTER[INTEGER])
+	get_height (a_height: TYPED_POINTER[INTEGER]; a_ribbon_framework: POINTER)
 			-- Get ribbon height
 		external
 			"C inline use <ribbon.h>"
 		alias
 			"[
 			{
-				GetRibbonHeight ($a_height);	
+				GetRibbonHeight ($a_height, $a_ribbon_framework);	
 			}
 			]"
 		end

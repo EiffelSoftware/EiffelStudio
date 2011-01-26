@@ -5,7 +5,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	EV_RIBBON_TITLED_WINDOW
 
 inherit
@@ -15,7 +15,12 @@ inherit
 			create_implementation
 		end
 
-feature {NONE} -- Implementation
+feature -- Access
+	
+	ribbon: detachable EV_RIBBON
+			-- Associated ribbon if any.
+		deferred
+		end
 
 feature {EV_ANY, EV_ANY_I, EV_ANY_HANDLER} -- Implementation
 

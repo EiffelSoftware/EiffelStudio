@@ -161,6 +161,7 @@ feature -- Button texts
 	b_Bkpt_remove: STRING_32						do Result := locale.translation("Remove Breakpoints")	end
 	b_Bkpt_stop_in_hole: STRING_32				do Result := locale.translation("Pause")	end
 	b_Exec_kill: STRING_32						do Result := locale.translation("Stop Application")	end
+	b_Exec_detach: STRING_32					do Result := locale.translation("Detach Application")	end
 	b_Exec_into: STRING_32						do Result := locale.translation("Step Into")	end
 	b_Exec_no_stop: STRING_32					do Result := locale.translation("Run Without Breakpoints")	end
 	b_Exec_out: STRING_32						do Result := locale.translation("Step Out")	end
@@ -451,6 +452,7 @@ feature -- Accelerator, focus label and menu name
 	f_Debug_dynamic_eval: STRING_32		do Result := locale.translation("Dynamic feature evaluation")	end
 	m_Debug_dynamic_eval: STRING_32		do Result := locale.translation("Dynamic Feature Evaluation")	end
 	m_Debug_kill: STRING_32				do Result := locale.translation("&Stop Execution")	end
+	m_Debug_detach: STRING_32			do Result := locale.translation("&Detach Execution")	end
 	f_Debug_run: STRING_32				do Result := locale.translation("Run")	end
 	m_Debug_run: STRING_32				do Result := locale.translation("&Run")	end
 	m_Debug_run_new: STRING_32			do Result := locale.translation("St&art")	end
@@ -1125,6 +1127,7 @@ feature -- Label texts
 	l_Condition: STRING_32				do Result := locale.translation("Condition")	end
 	l_Confirm_kill: STRING_32			do Result := locale.translation("Are you sure you want to stop the execution?")	end
 	l_Confirm_kill_and_restart: STRING_32			do Result := locale.translation("Are you sure you want to stop and restart the execution?")	end
+	l_dbg_confirm_detach: STRING_32		do Result := locale.translation("Are you sure you want to detach the execution?")	end
 
 	l_confirm_reload_execution_profile (a_title: detachable STRING_32): STRING_32
 		do
@@ -2576,6 +2579,7 @@ feature -- Description texts
 	e_Exec_debug: STRING_32				do Result := locale.translation("Start execution and stop at breakpoints")	end
 	e_Exec_debug_continue: STRING_32		do Result := locale.translation("Continue execution and stop at breakpoints")	end
 	e_Exec_kill: STRING_32				do Result := locale.translation("Stop execution")	end
+	e_Exec_detach: STRING_32				do Result := locale.translation("Detach execution")	end
 	e_Exec_into: STRING_32				do Result := locale.translation("Step into a routine")	end
 	e_Exec_no_stop: STRING_32			do Result := locale.translation("Run without stopping at breakpoints")	end
 	e_Exec_ignore_contract_violation: STRING_32	do Result := locale.translation("Contract violation occurred. Do you want to%N - [break] into debugger,%N - or [continue] to let the application handle the violation,%N - or [ignore] the violation and continue as if it was not violated? %N%NNote: You can always ignore contract violation later using the drop down menu from %"Run%" button.")	end
@@ -2781,7 +2785,7 @@ feature -- String escape
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

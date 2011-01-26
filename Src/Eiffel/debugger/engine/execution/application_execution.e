@@ -358,6 +358,13 @@ feature -- Execution
 		deferred
 		end
 
+	detach
+			-- Ask the application to detach itself.
+		require
+			app_is_running: is_running
+		deferred
+		end
+
 	clear_internals
 			-- Clear internal values
 		do
@@ -1320,7 +1327,7 @@ feature {NONE} -- fake
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

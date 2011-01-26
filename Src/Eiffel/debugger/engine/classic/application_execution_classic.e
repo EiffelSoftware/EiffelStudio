@@ -200,7 +200,33 @@ feature -- Execution
 				ewb_request.recv_dead
 			loop
 				debug ("ipc")
-					print (generator + ".kill -> quit_request.recv_dead ? %N")
+					print (generator + ".kill -> ewb_request.recv_dead ? %N")
+				end
+			end
+
+			process_termination
+
+			Ipc_engine.end_of_debugging
+		ensure then
+			app_is_not_running: not is_running
+		end
+
+	detach
+			-- Ask the application to be detached from the debugger.
+		do
+			ewb_request.make (Rqst_detach)
+			ewb_request.send
+
+				-- Don't wait until the next event loop to
+				-- to process the actual termination of the application.
+				-- `recv_dead' will process all other messages sent by
+				-- the application until the application is dead or detached.
+			from
+			until
+				ewb_request.recv_dead
+			loop
+				debug ("ipc")
+					print (generator + ".detach -> ewb_request.recv_dead ? %N")
 				end
 			end
 
@@ -617,7 +643,7 @@ invariant
 	ipc_engine_not_void: ipc_engine /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -125,6 +125,7 @@ rt_private struct idr_discrim u_Request[] = {
 	/* 51 */ { LAST_RTCC_INFO, idr_void },
 	/* 52 */ { DUMPED_WITH_OFFSET, idr_Opaque },
 	/* 53 */ { EWB_IGN_ASSERT_VIOLATION, idr_Opaque },
+	/* 54 */ { DETACH, idr_void },
 };
 
 /*

@@ -21,6 +21,7 @@ IUIApplicationVtbl myRibbon_Vtbl = {QueryInterface,
 
 LONG OutstandingObjects = 0;
 IUIFramework *g_pFramework = NULL;  // Reference to the Ribbon framework.
+IUIFramework *last_pFramework = NULL;  // Reference to the Ribbon framework when calling "OnCreateUICommand"
 IUICommandHandler	*pCommandHandler = NULL;
 
 HRESULT STDMETHODCALLTYPE QueryInterface(IUIApplication *This, REFIID vtblID, void **ppv)
@@ -60,8 +61,11 @@ HRESULT STDMETHODCALLTYPE OnCreateUICommand(IUIApplication *This, UINT32 command
 
 	HRESULT	hr;
 
-	if (NULL == pCommandHandler)
+	// only create a new command handler if `g_pFramwork' changed since last time
+	if (g_pFramework != last_pFramework) 
 	{
+		last_pFramework = g_pFramework;
+		
 		/* allocate pApplication */
 		pCommandHandler = (IUICommandHandler *)GlobalAlloc(GMEM_FIXED, sizeof(IUICommandHandler));
 		if(!pCommandHandler) {
@@ -198,4 +202,9 @@ HRESULT GetUICommandPropertyBoolean(UINT32 commandId, PROPVARIANT *value, IUIFra
 IUIFramework *GetRibbonFramwork()
 {
 		return g_pFramework;
+}
+
+IUICommandHandler *GetCommandHandler()
+{
+		return pCommandHandler;
 }

@@ -79,6 +79,7 @@ HRESULT STDMETHODCALLTYPE Execute(IUICommandHandler *This, UINT nCmdID, UI_EXECU
 	#ifndef EIF_IL_DLL
 				(EIF_REFERENCE) eif_access (eiffel_command_handler_object),
 	#endif
+				(EIF_POINTER) This,
 				(EIF_NATURAL_32) nCmdID,
 				(EIF_INTEGER) verb,
 				(EIF_POINTER) key,

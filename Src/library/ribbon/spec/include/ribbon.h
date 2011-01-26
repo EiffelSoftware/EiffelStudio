@@ -3,7 +3,7 @@
 
 BOOL InitializeFramework(HWND hWnd);
 void DestroyRibbon();
-HRESULT GetRibbonHeight(UINT* ribbonHeight);
+HRESULT GetRibbonHeight(UINT* ribbonHeight, IUIFramework *a_framework);
 HRESULT SetModes(INT32 iModes, IUIFramework *a_framework);
 HRESULT GetUICommandPropertyBoolean(UINT32 commandId, PROPVARIANT *value, IUIFramework *a_framework);
 HRESULT SetUICommandPropertyBoolean (UINT32 commandId, PROPVARIANT *value, IUIFramework *a_framework);

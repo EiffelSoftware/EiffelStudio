@@ -10,7 +10,8 @@ inherit
 	EV_TITLED_WINDOW_IMP
 		redefine
 			client_y,
-			on_paint
+			on_paint,
+			interface
 		end
 
 create
@@ -27,11 +28,10 @@ feature {NONE} -- Implementation
 
 	ribbon_height: INTEGER
 			-- Height of ribbon tool bar
-		local
-			l_height: INTEGER
 		do
-			{EV_RIBBON}.get_height ($l_height)
-			Result := l_height
+			if attached ribbon as l_ribbon then
+				Result := l_ribbon.height
+			end
 		end
 
 	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT)
@@ -40,4 +40,20 @@ feature {NONE} -- Implementation
 			on_size ({WEL_WINDOW_CONSTANTS}.Size_restored, width, height)
 			Precursor {EV_TITLED_WINDOW_IMP}(paint_dc, invalid_rect)
 		end
+
+feature -- Access
+	
+	ribbon: detachable EV_RIBBON
+			-- Ribbon if any.
+		do
+			if attached interface as l_interface then
+				Result := l_interface.ribbon
+			end
+		end
+
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
+	interface: detachable EV_RIBBON_TITLED_WINDOW note option: stable attribute end
+
+
 end

@@ -224,7 +224,7 @@ feature -- Access
 
 	state_value: INTEGER
 			-- Current state
-			-- Note, it's possible result is {SD_ENUMERATION}.auto_hide, but `is_visible' return False. See bug#13339.
+			-- Note, its possible result is {SD_ENUMERATION}.auto_hide, but `is_visible' return False. See bug#13339.
 		do
 			if attached {SD_STATE_VOID} state then
 				Result := {SD_ENUMERATION}.state_void
@@ -504,19 +504,24 @@ feature -- Set Position
 			manager_has_a_content: manager_has_content (a_content)
 			target_content_zone_parent_exist: target_content_zone_parent_exist (a_content)
 			not_destroyed: not is_destroyed
+		local
+			l_tab_zone: detachable SD_TAB_ZONE
+			l_content_state: SD_STATE
 		do
 			set_visible (True)
-			if attached {SD_AUTO_HIDE_STATE} a_content.state as l_auto_hide_state then
+			l_content_state := a_content.state
+			if attached {SD_AUTO_HIDE_STATE} l_content_state as l_auto_hide_state then
 				-- `a_content' is auto hide state, zone is void
 				state.auto_hide_tab_with (a_content)
-			elseif attached {SD_TAB_ZONE} a_content.state.zone as l_tab_zone then
+			elseif attached {SD_TAB_STATE} l_content_state as l_tab_state then
+				l_tab_zone := l_tab_state.zone
 				if not a_left then
 				 	state.move_to_tab_zone (l_tab_zone, l_tab_zone.count + 1)
 				 else
 				 	state.move_to_tab_zone (l_tab_zone, 1)
 				end
-			elseif attached {SD_DOCKING_ZONE} a_content.state.zone as l_docking_zone then
-				state.move_to_docking_zone (l_docking_zone, a_left)
+			elseif attached {SD_DOCKING_STATE} l_content_state as l_docking_state then
+				state.move_to_docking_zone (l_docking_state.zone, a_left)
 			else
 				-- `a_content' is auto hide state, zone is void
 				state.auto_hide_tab_with (a_content)

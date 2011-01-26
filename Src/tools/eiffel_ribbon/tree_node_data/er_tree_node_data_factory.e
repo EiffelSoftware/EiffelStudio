@@ -35,6 +35,8 @@ feature -- Factory method
 				create {ER_TREE_NODE_TAB_DATA} Result
 			elseif a_type.same_string (constants.check_box) then
 				create {ER_TREE_NODE_CHECKBOX_DATA} Result.make
+			elseif a_type.same_string (constants.ribbon_tabs) then
+				create {ER_TREE_NODE_RIBBON_DATA} Result
 			else
 				--no data for `a_type'
 --				check not_implemented: False end

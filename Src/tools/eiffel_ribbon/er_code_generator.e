@@ -75,6 +75,7 @@ feature {NONE} -- Implementation
 			create l_constants
 			create l_singleton
 			if attached l_singleton.project_info_cell.item as l_info then
+				l_info.update_ribbon_names_from_ui
 				if attached l_constants.project_full_file_name as l_project_config then
 					create l_file.make (l_project_config)
 					l_file.create_read_write
@@ -267,12 +268,23 @@ feature {NONE} -- Implementation
 							loop
 								l_file.read_line
 								l_last_string := l_file.last_string
+								if attached {ER_TREE_NODE_RIBBON_DATA} l_list.item.widget.i_th (1).data as l_data
+									and then attached l_data.command_name as l_identifer_name
+									and then not l_identifer_name.is_empty then
+
+									l_last_string.replace_substring_all ("$RIBBON_NAME", l_identifer_name.as_upper)
+								else
+									if l_list.index = 1 then
+										l_last_string.replace_substring_all ("$RIBBON_NAME", "RIBBON")
+									else
+										l_last_string.replace_substring_all ("$RIBBON_NAME", "RIBBON_" + l_list.index.out)
+									end
+								end
+
 								if l_list.index = 1 then
 									l_last_string.replace_substring_all ("$INDEX", "")
-
 								else
 									l_last_string.replace_substring_all ("$INDEX", "_" + l_list.index.out)
-
 								end
 
 								l_dest_file.put_string (l_last_string + "%N")
@@ -363,6 +375,7 @@ feature {NONE} -- Implementation
 			l_sub_dir, l_tool_bar_file, l_sub_imp_dir: STRING
 			l_last_string, l_set_modes_string: STRING
 			l_tab_creation_string, l_tab_registry_string, l_tab_declaration_string: STRING
+			l_identifier_name: detachable STRING
 		do
 			-- First check how many tabs
 			l_tab_count := a_tabs_root_note.count
@@ -375,6 +388,11 @@ feature {NONE} -- Implementation
 			if attached l_singleton.project_info_cell.item as l_project_info then
 				if attached l_project_info.project_location as l_project_location then
 					create l_constants
+					if attached {ER_TREE_NODE_RIBBON_DATA} a_tabs_root_note.data as l_data
+						and then attached l_data.command_name as l_identifier
+						and then not l_identifier.is_empty then
+						l_identifier_name := l_identifier
+					end
 
 					-- Generate tool bar class
 					create l_file_name.make_from_string (l_constants.template)
@@ -383,10 +401,14 @@ feature {NONE} -- Implementation
 					create l_file.make (l_file_name)
 					if l_file.exists and then l_file.is_readable then
 						create l_dest_file_name.make_from_string (l_project_location)
-						if a_index /= 1 then
-							l_dest_file_name.set_file_name (l_tool_bar_file + "_" + a_index.out + ".e")
+						if l_identifier_name /= Void then
+							l_dest_file_name.set_file_name (l_identifier_name.as_lower + ".e")
 						else
-							l_dest_file_name.set_file_name (l_tool_bar_file + ".e")
+							if a_index /= 1 then
+								l_dest_file_name.set_file_name (l_tool_bar_file + "_" + a_index.out + ".e")
+							else
+								l_dest_file_name.set_file_name (l_tool_bar_file + ".e")
+							end
 						end
 
 						create l_dest_file.make_create_read_write (l_dest_file_name)
@@ -405,11 +427,18 @@ feature {NONE} -- Implementation
 							l_last_string.replace_substring_all ("$TAB_CREATION", l_tab_creation_string)
 							l_last_string.replace_substring_all ("$TAB_REGISTRY", l_tab_registry_string)
 							l_last_string.replace_substring_all ("$TAB_DECLARATION", l_tab_declaration_string)
+							if l_identifier_name /= Void then
+								l_last_string.replace_substring_all ("$INDEX", l_identifier_name.as_upper)
+							else
+								if a_index = 1 then
+									l_last_string.replace_substring_all ("$INDEX", "RIBBON")
+								else
+									l_last_string.replace_substring_all ("$INDEX", "RIBBON_" + a_index.out)
+								end
+							end
 							if a_index = 1 then
-								l_last_string.replace_substring_all ("$INDEX", "")
 								l_last_string.replace_substring_all ("$SET_MODES", "")
 							else
-								l_last_string.replace_substring_all ("$INDEX", "_" + a_index.out)
 								l_last_string.replace_substring_all ("$SET_MODES", l_set_modes_string)
 							end
 

@@ -41,6 +41,11 @@ feature -- Command
 					l_layout_constructor.load_tree
 				end
 
+				load_project_info
+				if attached shared_singleton.project_info_cell.item as l_info then
+					l_info.update_ribbon_names_to_ui
+				end
+
 				if attached main_window as l_win then
 					l_win.save_project_command.enable
 					l_win.gen_code_command.enable
@@ -75,6 +80,7 @@ feature {NONE}	-- Implementation
 			l_env: OPERATING_ENVIRONMENT
 			l_dir: STRING
 			l_index, l_last_index: INTEGER
+			l_sed: SED_MEDIUM_READER_WRITER
 		do
 			if attached shared_singleton.tool_info_cell.item as l_tool_info then
 
@@ -99,6 +105,38 @@ feature {NONE}	-- Implementation
 
 				if attached shared_singleton.project_info_cell.item as l_project_info then
 					l_project_info.set_project_location (l_dir)
+					load_project_info
+					-- Again, to update project location now
+					l_project_info.set_project_location (l_dir)
+				end
+			end
+		end
+
+	load_project_info
+			--
+		local
+			l_sed: SED_MEDIUM_READER_WRITER
+			l_sed_utility: SED_STORABLE_FACILITIES
+			l_file: RAW_FILE
+			l_constants: ER_MISC_CONSTANTS
+			l_singleton: ER_SHARED_SINGLETON
+		do
+			create l_constants
+			create l_singleton
+			if attached l_singleton.project_info_cell.item as l_info then
+
+				if attached l_constants.project_full_file_name as l_project_config then
+					create l_file.make (l_project_config)
+					l_file.open_read
+					create l_sed.make (l_file)
+					l_sed.set_for_reading
+
+					create l_sed_utility
+					if attached {ER_PROJECT_INFO} l_sed_utility.retrieved (l_sed, False) as l_data then
+						l_singleton.project_info_cell.put (l_data)
+					end
+
+					l_file.close
 				end
 			end
 		end

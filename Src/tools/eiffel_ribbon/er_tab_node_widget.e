@@ -10,9 +10,6 @@ class
 
 inherit
 	ER_TAB_NODE_WIDGET_IMP
-		redefine
-			create_interface_objects
-		end
 
 
 feature {NONE} -- Initialization
@@ -26,14 +23,13 @@ feature {NONE} -- Initialization
 		do
 		end
 
-	create_interface_objects
+	user_create_interface_objects
 			-- <Precursor>
 		do
 				-- Initialize before calling Precursor all the attached attributes
 				-- from the current class.
 
 				-- Proceed with vision2 objects creation.
-			Precursor
 		end
 
 feature -- Command

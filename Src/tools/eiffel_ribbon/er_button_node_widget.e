@@ -10,9 +10,6 @@ class
 
 inherit
 	ER_BUTTON_NODE_WIDGET_IMP
-		redefine
-			create_interface_objects
-		end
 
 
 feature {NONE} -- Initialization
@@ -40,14 +37,13 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	create_interface_objects
+	user_create_interface_objects
 			-- <Precursor>
 		do
 				-- Initialize before calling Precursor all the attached attributes
 				-- from the current class.
 
 				-- Proceed with vision2 objects creation.
-			Precursor
 			create small_image.make
 			create large_image.make
 		end

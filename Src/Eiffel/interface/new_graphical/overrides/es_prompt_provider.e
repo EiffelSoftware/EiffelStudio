@@ -12,7 +12,7 @@ class
 
 feature -- Factory
 
-	show_error_prompt (a_message: STRING_32; a_window: EV_WINDOW; a_ok_action: PROCEDURE [ANY, TUPLE])
+	show_error_prompt (a_message: STRING_32; a_window: detachable EV_WINDOW; a_ok_action: detachable PROCEDURE [ANY, TUPLE])
 			-- Displays an error prompt to the user with an Ok button only
 			--
 			-- `a_message': A message to display to the user
@@ -30,7 +30,7 @@ feature -- Factory
 			l_error.recycle
 		end
 
-	show_info_prompt (a_message: STRING_32; a_window: EV_WINDOW; a_ok_action: PROCEDURE [ANY, TUPLE])
+	show_info_prompt (a_message: STRING_32; a_window: detachable EV_WINDOW; a_ok_action: detachable PROCEDURE [ANY, TUPLE])
 			-- Displays an information prompt to the user with an Ok button only
 			--
 			-- `a_message': A message to display to the user
@@ -48,7 +48,7 @@ feature -- Factory
 			l_info.recycle
 		end
 
-	show_warning_prompt (a_message: STRING_32; a_window: EV_WINDOW; a_ok_action: PROCEDURE [ANY, TUPLE])
+	show_warning_prompt (a_message: STRING_32; a_window: detachable EV_WINDOW; a_ok_action: detachable PROCEDURE [ANY, TUPLE])
 			-- Displays a warning prompt to the user with an Ok button only.
 			--
 			-- `a_message': A message to display to the user
@@ -66,7 +66,7 @@ feature -- Factory
 			l_warning.recycle
 		end
 
-	show_warning_prompt_with_cancel (a_message: STRING_32; a_window: EV_WINDOW; a_ok_action: PROCEDURE [ANY, TUPLE]; a_cancel_action: PROCEDURE [ANY, TUPLE])
+	show_warning_prompt_with_cancel (a_message: STRING_32; a_window: detachable EV_WINDOW; a_ok_action: detachable PROCEDURE [ANY, TUPLE]; a_cancel_action: detachable PROCEDURE [ANY, TUPLE])
 			-- Displays an warning prompt to the user with Ok & Cancel buttons
 			--
 			-- `a_message': A message to display to the user
@@ -86,7 +86,7 @@ feature -- Factory
 			l_warning.recycle
 		end
 
-	show_question_prompt (a_message: STRING_32; a_window: EV_WINDOW; a_yes_action: PROCEDURE [ANY, TUPLE]; a_no_action: PROCEDURE [ANY, TUPLE];)
+	show_question_prompt (a_message: STRING_32; a_window: detachable EV_WINDOW; a_yes_action: detachable PROCEDURE [ANY, TUPLE]; a_no_action: detachable PROCEDURE [ANY, TUPLE])
 			-- Displays a question prompt to the user with an Ok button only.
 			--
 			-- `a_message': A message to display to the user
@@ -106,7 +106,7 @@ feature -- Factory
 			l_question.recycle
 		end
 
-	show_question_prompt_with_cancel (a_message: STRING_32; a_window: EV_WINDOW; a_yes_action: PROCEDURE [ANY, TUPLE]; a_no_action: PROCEDURE [ANY, TUPLE]; a_cancel_action: PROCEDURE [ANY, TUPLE])
+	show_question_prompt_with_cancel (a_message: STRING_32; a_window: detachable EV_WINDOW; a_yes_action: detachable PROCEDURE [ANY, TUPLE]; a_no_action: detachable PROCEDURE [ANY, TUPLE]; a_cancel_action: detachable PROCEDURE [ANY, TUPLE])
 			-- Displays an question prompt to the user with Ok & Cancel buttons
 			--
 			-- `a_message': A message to display to the user
@@ -130,7 +130,7 @@ feature -- Factory
 
 feature {NONE} -- Display
 
-	safe_set_button_action (a_prompt: ES_PROMPT; a_button: INTEGER; a_action: PROCEDURE [ANY, TUPLE])
+	safe_set_button_action (a_prompt: ES_PROMPT; a_button: INTEGER; a_action: detachable PROCEDURE [ANY, TUPLE])
 			-- Associates a dialog prompt's button with an action
 			--
 			-- `a_prompt': Dialog prompt to set the button action on.
@@ -148,7 +148,7 @@ feature {NONE} -- Display
 			button_action_set: a_prompt.button_action (a_button) = a_action
 		end
 
-	safe_show_prompt (a_prompt: ES_PROMPT; a_window: EV_WINDOW)
+	safe_show_prompt (a_prompt: ES_PROMPT; a_window: detachable EV_WINDOW)
 			-- Displays a prompt.
 			--
 			-- `a_prompt': Dialog prompt to show
@@ -166,7 +166,7 @@ feature {NONE} -- Display
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -179,22 +179,22 @@ feature {NONE} -- Display
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

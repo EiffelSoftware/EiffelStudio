@@ -46,6 +46,7 @@ feature {IPC_ENGINE} -- Request constants
 	Rqst_rt_operation: INTEGER 			= 50 -- Invoke an `RT_EXTENSION' operation	
 	Rqst_last_rtcc_info: INTEGER		= 51 -- Last RunTime CatCall information (if any)
 	Rqst_ignore_assertion_violation: INTEGER  = 53 -- Set the assertion checking state. (EWB_IGN_ASSERT_VIOLATION)
+	Rqst_detach: INTEGER  				= 54 -- Detach the debugger from the debuggee
 
 feature {IPC_ENGINE} -- Unused request constants
 
@@ -86,10 +87,11 @@ feature {NONE} -- Inspection constants
 
 feature -- Rt operations
 
-	Rtop_option: INTEGER 				= 0	-- See rqst_constant.h:RQST_RTOP_OPTION
-	Rtop_exec_replay: INTEGER 			= 1	-- See rqst_constant.h:RQST_RTOP_EXEC_REPLAY
-	Rtop_dump_object: INTEGER 			= 2	-- See rqst_constant.h:RQST_RTOP_DUMP_OBJECT
-	Rtop_set_catcall_detection: INTEGER = 10	-- See rqst_constant.h:RQST_RTOP_SET_CATCALL_DETECTION
+	Rtop_option: INTEGER 				= 0		-- See rqst_const.h:RQST_RTOP_OPTION
+	Rtop_exec_replay: INTEGER 			= 1		-- See rqst_const.h:RQST_RTOP_EXEC_REPLAY
+	Rtop_dump_object: INTEGER 			= 2		-- See rqst_const.h:RQST_RTOP_DUMP_OBJECT
+	Rtop_dump_scoop_manager: INTEGER 	= 3		-- See rqst_const.h:RQST_RTOP_DUMP_SCOOP_MANAGER
+	Rtop_set_catcall_detection: INTEGER = 10	-- See rqst_const.h:RQST_RTOP_SET_CATCALL_DETECTION
 
 feature {APPLICATION_STATUS} -- Implementation
 
@@ -135,7 +137,7 @@ feature {NONE} -- For workbench responses.
 	Rep_notified: INTEGER				= 7
 
 ;note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

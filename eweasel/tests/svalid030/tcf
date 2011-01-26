@@ -1,0 +1,28 @@
+
+test_name 	svalid-generic-creation
+test_description A routine that creates an instance whose type is a formal generic incorrectly causes the compiler to report VGCC(6) and VGCC(3) errors in a descendant class if an explict creation type G is specified, but only if a generic class is inherited directly with one generic derivation and indirectly with a second generic derivation.
+
+define		PARENTS "TEST2 [STRING]; TEST3 [DOUBLE]"
+copy_sub 	Ace $TEST Ace
+copy_sub 	test.e $CLUSTER test.e
+copy_raw 	test2.e $CLUSTER test2.e
+copy_raw 	test3.e $CLUSTER test3.e
+
+compile_melted
+compile_result	ok
+
+execute_work 	NONE 	exec_output_1
+execute_result 	ok
+compare		exec_output_1 output
+
+define		PARENTS "TEST3 [DOUBLE]; TEST2 [STRING]"
+copy_sub 	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+execute_work 	NONE 	exec_output_2
+execute_result 	ok
+compare		exec_output_2 output
+
+test_end

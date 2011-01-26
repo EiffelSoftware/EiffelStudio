@@ -22,7 +22,8 @@ feature {NONE} -- Ancestor facade
 	continue_ignoring_kept_objects do end
 	interrupt do end
 	notify_breakpoints_change do end
-	kill do  end
+	kill do end
+	detach do end
 	keep_only_objects (kept_objects: LIST [DBG_ADDRESS]) do end
 
 	dump_value_at_address_with_class (a_addr: DBG_ADDRESS; a_cl: CLASS_C): DUMP_VALUE do end
@@ -45,7 +46,7 @@ feature -- Client facade
 	callback_notification_processing: BOOLEAN do end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

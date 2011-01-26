@@ -104,7 +104,8 @@ extern int errno;												/* System call error number */
 #endif
 
 rt_private void kill_app(void);		/* Kill Eiffel application brutally*/
-rt_private IDRF dbg_idrf;				/* IDR filters used for serializing */
+rt_private void detach_app(void);	/* Detach Eiffel application */
+rt_private IDRF dbg_idrf;			/* IDR filters used for serializing */
 rt_private char dbg_idrf_initialized = (char) 0;	/* IDR filter already initialized ? */
 rt_private int interrupted;			/* Has application been asked to be interrupted */
 rt_private char *current_directory = NULL;	/* Directory where application is launched */
@@ -255,6 +256,11 @@ rt_private void dprocess_request(EIF_PSTREAM sp, Request *rqst)
 		break;
 #endif /* EIF_VMS && IPCVMS_WAKE_EWB */
 
+	case DETACH:			/* Detach application asynchronously */
+		interrupted = FALSE;
+		dbg_send_packet(OTHER(sp), rqst);
+		detach_app();
+		break;
 	case RESUME:			/* Debugger asking to resume application */
 		interrupted = FALSE;
 		/* Fall through */	/* i.e. send the request to application */
@@ -985,6 +991,21 @@ rt_public void dead_app(void)
 	child_pid = waitpid((Pid_t) daemon_data.d_app, &status, WNOHANG);
 #endif
 
-	rqst.rq_type = DEAD;			/* Application is dead */
-	dbg_send_packet(daemon_data.d_cs, &rqst);			/* Notify workbench */
+	rqst.rq_type = DEAD;						/* Application is dead */
+	dbg_send_packet(daemon_data.d_cs, &rqst);	/* Notify workbench */
+}
+
+rt_private void detach_app (void)
+{
+	/* Detach the application brutally */
+
+	if (daemon_data.d_app != 0)	{		/* Check the application is still running */
+#ifdef USE_ADD_LOG
+	add_log(8, "Detaching application process %d", daemon_data.d_app);
+#endif
+
+#ifdef EIF_WINDOWS
+		rem_input (daemon_data.d_as);
+#endif
+	}
 }

@@ -132,7 +132,7 @@ rt_private EIF_TYPED_VALUE *previous_otop = NULL;
 rt_private rt_uint_ptr nb_pushed = 0;
 rt_private void dynamic_evaluation(EIF_PSTREAM s, int fid_or_offset, int stype_or_origin, int dtype, int is_precompiled, int is_basic_type, int is_static_call);
 rt_private void dbg_new_instance_of_type(EIF_PSTREAM s, EIF_TYPE_INDEX typeid);
-rt_private void dbg_dump_rt_extension_object (EIF_PSTREAM sp);
+rt_private void dbg_dump_rt_object (EIF_PSTREAM sp, EIF_REFERENCE obj);
 
 /* Private Constants */
 #define NO_CURRMODIF	0
@@ -313,7 +313,10 @@ static int curr_modify = NO_CURRMODIF;
 		dthread_prepare();
 		switch (arg_1) {
 			case RQST_RTOP_DUMP_OBJECT:
-				dbg_dump_rt_extension_object(sp);
+				dbg_dump_rt_object(sp, rt_extension_obj);
+				break;
+			case RQST_RTOP_DUMP_SCOOP_MANAGER:
+				dbg_dump_rt_object(sp, scp_mnger);
 				break;
 			case RQST_RTOP_EXEC_REPLAY:
 				/*    arg_2: record; arg_3: value (0 or 1) */
@@ -403,6 +406,14 @@ static int curr_modify = NO_CURRMODIF;
 		break;
 	case EWB_IGN_ASSERT_VIOLATION:
 		ignore_current_assertion_violation ((int) arg_1);
+		break;
+	case DETACH:
+		/* perform a RESUME just in case it was stopped */
+		if (!gc_stopped) eif_gc_run();
+		set_breakpoint_count (1);
+		dstatus(DX_CONT);				/* Debugger status (DX_STEP, DX_NEXT,..) */
+		debug_mode = 0;
+		(void) rem_input(sp);		/* Stop selection -> exit listening loop */
 		break;
 	}
 
@@ -1744,11 +1755,11 @@ rt_private EIF_REFERENCE rt_boxed_expanded_item_at_index (EIF_REFERENCE a_obj, i
 	return RTCL(a_obj + OVERHEAD + (rt_uint_ptr) a_index * RT_SPECIAL_ELEM_SIZE(a_obj));
 }
 
-rt_private void dbg_dump_rt_extension_object (EIF_PSTREAM sp)
+rt_private void dbg_dump_rt_object (EIF_PSTREAM sp, EIF_REFERENCE obj)
 {
-	/* Dump the rt_extension_obj */
+	/* Dump the `obj' */
 
-	app_send_reference (sp, rt_extension_obj, DMP_ITEM);
+	app_send_reference (sp, obj, DMP_ITEM);
 }
 
 rt_private void dbg_new_instance_of_type (EIF_PSTREAM sp, EIF_TYPE_INDEX typeid)

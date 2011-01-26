@@ -3,7 +3,7 @@ note
 		Automatically generated class for EiffelStudio 16x16 icons.
 	]"
 	generator: "Eiffel Matrix Generator"
-	command_line: "emcgen.exe c:\_dev\trunk\Delivery\studio\bitmaps\png\16x16.ini -f c:\_dev\trunk\src\tools\eiffel_matrix_code_generator\frames\studio.e.frame"
+	command_line: "emcgen $EIFFEL_SRC/../Delivery/studio/bitmaps/png/16x16.ini -f $EIFFEL_SRC/tools/eiffel_matrix_code_generator/frames/studio.e.frame"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
 	date: "$Date$"
@@ -41,7 +41,7 @@ feature {NONE} -- Access
 			-- <Precursor>
 
 feature -- Icons
-
+	
 	frozen expanded_normal_icon: EV_PIXMAP
 			-- Access to 'normal' pixmap.
 		require
@@ -3382,6 +3382,26 @@ feature -- Icons
 			debugger_value_routine_return_icon_buffer_attached: Result /= Void
 		end
 
+	frozen debug_detach_icon: EV_PIXMAP
+			-- Access to 'detach' pixmap.
+		require
+			has_named_icon: has_named_icon (debug_detach_name)
+		once
+			Result := named_icon (debug_detach_name)
+		ensure
+			debug_detach_icon_attached: Result /= Void
+		end
+
+	frozen debug_detach_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'detach' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (debug_detach_name)
+		once
+			Result := named_icon_buffer (debug_detach_name)
+		ensure
+			debug_detach_icon_buffer_attached: Result /= Void
+		end
+
 	frozen general_blank_icon: EV_PIXMAP
 			-- Access to 'blank' pixmap.
 		require
@@ -4768,6 +4788,8 @@ feature -- Icons
 			has_named_icon: has_named_icon (tab_close_name)
 		once
 			Result := named_icon (tab_close_name)
+		ensure
+			tab_close_icon_attached: Result /= Void
 		end
 
 	frozen tab_close_icon_buffer: EV_PIXEL_BUFFER
@@ -4776,54 +4798,68 @@ feature -- Icons
 			has_named_icon: has_named_icon (tab_close_name)
 		once
 			Result := named_icon_buffer (tab_close_name)
+		ensure
+			tab_close_icon_buffer_attached: Result /= Void
 		end
 
 	frozen tab_close_all_icon: EV_PIXMAP
-			-- Access to 'close all' pixmap.
+			-- Access to 'close_all' pixmap.
 		require
 			has_named_icon: has_named_icon (tab_close_all_name)
 		once
 			Result := named_icon (tab_close_all_name)
+		ensure
+			tab_close_all_icon_attached: Result /= Void
 		end
 
 	frozen tab_close_all_icon_buffer: EV_PIXEL_BUFFER
-			-- Access to 'close all' pixmap pixel buffer.
+			-- Access to 'close_all' pixmap pixel buffer.
 		require
 			has_named_icon: has_named_icon (tab_close_all_name)
 		once
 			Result := named_icon_buffer (tab_close_all_name)
+		ensure
+			tab_close_all_icon_buffer_attached: Result /= Void
 		end
 
 	frozen grid_expand_all_icon: EV_PIXMAP
-			-- Access to `expand_all' pixmap.
+			-- Access to 'expand_all' pixmap.
 		require
 			has_named_icon: has_named_icon (grid_expand_all_name)
 		once
 			Result := named_icon (grid_expand_all_name)
+		ensure
+			grid_expand_all_icon_attached: Result /= Void
 		end
 
 	frozen grid_expand_all_icon_buffer: EV_PIXEL_BUFFER
-			-- Access to `expand_all' pixmap pixel buffer.
+			-- Access to 'expand_all' pixmap pixel buffer.
 		require
 			has_named_icon: has_named_icon (grid_expand_all_name)
 		once
 			Result := named_icon_buffer (grid_expand_all_name)
+		ensure
+			grid_expand_all_icon_buffer_attached: Result /= Void
 		end
 
 	frozen grid_collapse_all_icon: EV_PIXMAP
-			-- Access to `collapse_all' pixmap.
+			-- Access to 'collapse_all' pixmap.
 		require
 			has_named_icon: has_named_icon (grid_collapse_all_name)
 		once
 			Result := named_icon (grid_collapse_all_name)
+		ensure
+			grid_collapse_all_icon_attached: Result /= Void
 		end
 
 	frozen grid_collapse_all_icon_buffer: EV_PIXEL_BUFFER
-			-- Access to `collapse_all' pixmap pixel buffer.
+			-- Access to 'collapse_all' pixmap pixel buffer.
 		require
 			has_named_icon: has_named_icon (grid_collapse_all_name)
 		once
 			Result := named_icon_buffer (grid_collapse_all_name)
+		ensure
+			grid_collapse_all_icon_buffer_attached: Result /= Void
 		end
 
 	frozen view_previous_icon: EV_PIXMAP
@@ -8427,7 +8463,7 @@ feature -- Icons
 		end
 
 feature -- Icons: Animations
-
+	
 	frozen compile_animation_anim: ARRAY [EV_PIXMAP]
 			-- Access to 'compile_animation' pixmap animation items.
 		once
@@ -8655,6 +8691,7 @@ feature -- Constants: Icon names
 	execution_object_storage_name: STRING = "execution object storage"
 	execution_ignore_contract_violation_name: STRING = "execution ignore contract violation"
 	debugger_value_routine_return_name: STRING = "debugger value routine_return"
+	debug_detach_name: STRING = "debug detach"
 	general_blank_name: STRING = "general blank"
 	general_dialog_name: STRING = "general dialog"
 	general_open_name: STRING = "general open"
@@ -8725,9 +8762,9 @@ feature -- Constants: Icon names
 	priority_high_name: STRING = "priority high"
 	priority_low_name: STRING = "priority low"
 	tab_close_name: STRING = "tab close"
-	tab_close_all_name: STRING = "tab close all"
-	grid_expand_all_name: STRING = "grid expand all"
-	grid_collapse_all_name: STRING = "grid collapse all"
+	tab_close_all_name: STRING = "tab close_all"
+	grid_expand_all_name: STRING = "grid expand_all"
+	grid_collapse_all_name: STRING = "grid collapse_all"
 	view_previous_name: STRING = "view previous"
 	view_next_name: STRING = "view next"
 	view_editor_name: STRING = "view editor"
@@ -9081,6 +9118,7 @@ feature {NONE} -- Basic operations
 			a_table.put ([{NATURAL_8} 12, {NATURAL_8} 8], execution_object_storage_name)
 			a_table.put ([{NATURAL_8} 13, {NATURAL_8} 8], execution_ignore_contract_violation_name)
 			a_table.put ([{NATURAL_8} 14, {NATURAL_8} 8], debugger_value_routine_return_name)
+			a_table.put ([{NATURAL_8} 15, {NATURAL_8} 8], debug_detach_name)
 			a_table.put ([{NATURAL_8} 1, {NATURAL_8} 9], general_blank_name)
 			a_table.put ([{NATURAL_8} 2, {NATURAL_8} 9], general_dialog_name)
 			a_table.put ([{NATURAL_8} 3, {NATURAL_8} 9], general_open_name)
@@ -9337,7 +9375,7 @@ feature {NONE} -- Basic operations
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -165,18 +165,6 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			Result := stop_execution_when_compiling_preference.value
 		end
 
-	confirm_kill: BOOLEAN
-			--
-		do
-			Result := confirm_kill_preference.value
-		end
-
-	confirm_kill_and_restart: BOOLEAN
-			--
-		do
-			Result := confirm_kill_and_restart_preference.value
-		end
-
 	already_editing_class: BOOLEAN
 			--
 		do
@@ -315,6 +303,7 @@ feature {EB_SHARED_PREFERENCES, EB_TOOL} -- Preference
 	stop_execution_when_compiling_preference: BOOLEAN_PREFERENCE
 	confirm_kill_preference: BOOLEAN_PREFERENCE
 	confirm_kill_and_restart_preference: BOOLEAN_PREFERENCE
+	dbg_confirm_detach_preference: BOOLEAN_PREFERENCE
 	confirm_reload_execution_profile_preference: BOOLEAN_PREFERENCE
 	already_editing_class_preference: BOOLEAN_PREFERENCE
 	executing_command_preference: BOOLEAN_PREFERENCE
@@ -377,6 +366,7 @@ feature -- Preference strings
 	stop_execution_when_compiling_string: STRING = "interface.dialogs.stop_execution_when_compiling"
 	confirm_kill_string: STRING = "interface.dialogs.confirm_kill"
 	confirm_kill_and_restart_string: STRING = "interface.dialogs.confirm_kill_and_restart"
+	dbg_confirm_detach_string: STRING = "interface.dialogs.dbg_confirm_detach"
 	confirm_reload_execution_profile_string: STRING = "interface.dialogs.confirm_reload_execution_profile"
 	already_editing_class_string: STRING = "interface.dialogs.already_editing_class"
 	executing_command_string: STRING = "interface.dialogs.executing_command"
@@ -443,6 +433,7 @@ feature {NONE} -- Implementation
 			stop_execution_when_compiling_preference := l_manager.new_boolean_preference_value (l_manager, stop_execution_when_compiling_string, True)
 			confirm_kill_preference := l_manager.new_boolean_preference_value (l_manager, confirm_kill_string, True)
 			confirm_kill_and_restart_preference := l_manager.new_boolean_preference_value (l_manager, confirm_kill_and_restart_string, True)
+			dbg_confirm_detach_preference := l_manager.new_boolean_preference_value (l_manager, dbg_confirm_detach_string, True)
 			confirm_reload_execution_profile_preference := l_manager.new_boolean_preference_value (l_manager, confirm_reload_execution_profile_string, True)
 			already_editing_class_preference := l_manager.new_boolean_preference_value (l_manager, already_editing_class_string, True)
 			executing_command_preference := l_manager.new_boolean_preference_value (l_manager, executing_command_string, True)
@@ -501,6 +492,7 @@ invariant
 	generate_homonyms_preference_not_void: generate_homonyms_preference /= Void
 	stop_execution_when_compiling_preference_not_void: stop_execution_when_compiling_preference /= Void
 	confirm_kill_preference_not_void: confirm_kill_preference /= Void
+	dbg_confirm_detach_preference_not_void: dbg_confirm_detach_preference /= Void
 	already_editing_class_preference_not_void: already_editing_class_preference /= Void
 	executing_command_preference_not_void:  executing_command_preference /= Void
 	project_settings_width_preference_not_void: project_settings_width_preference /= Void
@@ -514,7 +506,7 @@ invariant
 	open_project_dialog_height_preference_not_void: open_project_dialog_height_preference /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

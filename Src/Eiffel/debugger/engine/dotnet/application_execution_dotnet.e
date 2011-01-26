@@ -341,6 +341,13 @@ feature -- Execution
 			process_termination
 		end
 
+	detach
+			-- Ask the application to be detached.
+		do
+			to_implement ("Implement debuggee detach operation. Get inspired by `kill'")
+			process_termination
+		end
+
 	clean_on_process_termination
 			-- Process the termination of the executed
 			-- application. Also execute the `termination_command'.

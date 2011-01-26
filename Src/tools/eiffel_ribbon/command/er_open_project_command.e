@@ -24,6 +24,8 @@ feature -- Command
 		do
 			if attached main_window as l_win then
 				create l_file
+				l_file.filters.extend (["*.er", "EiffelRibbon Project Files"])
+				l_file.filters.extend (["*.*", "All Files"])
 				l_file.show_modal_to_window (l_win)
 
 				execute_with_file_name (l_file.file_name)

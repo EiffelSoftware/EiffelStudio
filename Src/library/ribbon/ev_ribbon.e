@@ -24,6 +24,7 @@ feature -- Command
 				com_initialize
 				l_result := create_ribbon_com_framework (l_imp.wel_item)
 				item := get_ribbon_framework
+				command_handler := get_command_handler
 				create l_resources
 				l_resources.ribbon_list.extend (Current)
 			end
@@ -55,6 +56,9 @@ feature -- Query
 
 	item: POINTER
 			-- Ribbon framework object
+
+	command_handler: POINTER
+			-- Command handler C object
 
 feature {EV_RIBBON_TITLED_WINDOW_IMP} -- Externals
 
@@ -139,6 +143,18 @@ feature {EV_RIBBON_TITLED_WINDOW_IMP} -- Externals
 			"[
 			{
 				return GetRibbonFramwork ();
+			}
+			]"
+		end
+
+	get_command_handler: POINTER
+			-- Get Ribbon command handler C object
+		external
+			"C inline use <ribbon.h>"
+		alias
+			"[
+			{
+				return GetCommandHandler ();
 			}
 			]"
 		end

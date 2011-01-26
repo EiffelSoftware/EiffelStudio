@@ -45,7 +45,7 @@ feature {NONE} -- Observers
 
 feature {NONE} -- Implementation
 
-	execute (a_command_id: NATURAL_32; a_execution_verb: INTEGER; a_property_key: POINTER; a_property_value: POINTER; a_command_execution_properties: POINTER): NATURAL_32
+	execute (a_command_handler: POINTER; a_command_id: NATURAL_32; a_execution_verb: INTEGER; a_property_key: POINTER; a_property_value: POINTER; a_command_execution_properties: POINTER): NATURAL_32
 			-- Responds to execute events on Commands bound to the Command handle
 			-- This function is called from C codes
 		local
@@ -53,17 +53,20 @@ feature {NONE} -- Implementation
 			l_property_key: EV_PROPERTY_KEY
 			l_propery_value: EV_PROPERTY_VARIANT
 			l_observer: like observers
+			l_ribbon: detachable EV_RIBBON
 		do
 			create l_property_key.share_from_pointer (a_property_key)
 			create l_propery_value.share_from_pointer (a_property_value)
---			print ("%N Command handler execute in Eiffel. Command id is: " + a_command_id.out + " Execution verb is: " + a_execution_verb.out)
 			from
 				l_observer := observers.twin
 				l_observer.start
 			until
 				l_observer.after or l_result /= 0
 			loop
-				l_result := l_observer.item.execute (a_command_id, a_execution_verb, a_property_key, a_property_value, a_command_execution_properties)
+				l_ribbon := l_observer.item.ribbon
+				if l_ribbon /= Void and then l_ribbon.command_handler = a_command_handler then
+					l_result := l_observer.item.execute (a_command_id, a_execution_verb, a_property_key, a_property_value, a_command_execution_properties)
+				end
 
 				l_observer.forth
 			end

@@ -172,5 +172,18 @@ feature {EV_RIBBON_CHECKBOX} -- Query
 			}
 			]"
 		end
+
+	set_UI_Command_Property_Boolean (a_command_id: NATURAL_32; a_proper_variant: POINTER; a_framework: POINTER)
+			--
+		external
+			"C inline use <ribbon.h>"
+		alias
+			"[
+			{
+				SetUICommandPropertyBoolean($a_command_id, $a_proper_variant, $a_framework);
+			}
+			]"
+		end
+
 end
 

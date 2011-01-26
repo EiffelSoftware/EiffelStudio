@@ -50,12 +50,27 @@ feature -- Access
 		do
 			l_command_id := command_list.item (command_list.lower)
 			check command_id_valid: l_command_id /= 0 end
-			create l_value.make_empty
-			if attached ribbon as l_ribbon then
-				{EV_RIBBON}.get_UI_Command_Property_Boolean (l_command_id, l_value.pointer.item, l_ribbon.item)
-			end
 
-			Result := l_value.boolean_value
+			if attached ribbon as l_ribbon then
+				create l_value.make_empty
+				{EV_RIBBON}.get_UI_Command_Property_Boolean (l_command_id, l_value.pointer.item, l_ribbon.item)
+				Result := l_value.boolean_value
+				l_value.destroy
+			end
+		end
+
+feature -- Command
+
+	enable_select
+			-- Make `is_selected' true
+		do
+			set_selected (True)
+		end
+
+	disable_select
+			-- Make `is_selected' false
+		do
+			set_selected (False)
 		end
 
 feature {EV_RIBBON} -- Command
@@ -78,5 +93,21 @@ feature {NONE} -- Implementation
 	command_list: ARRAY [NATURAL_32]
 			-- Command ids handled by current
 
+	set_selected (a_bool: BOOLEAN)
+			-- Set `is_selected' with `a_bool'
+		local
+			l_value: EV_PROPERTY_VARIANT
+			l_command_id: NATURAL_32
+		do
+			l_command_id := command_list.item (command_list.lower)
+			check command_id_valid: l_command_id /= 0 end
+
+			if attached ribbon as l_ribbon then
+				create l_value.make_empty
+				l_value.set_boolean_value (a_bool)
+				{EV_RIBBON}.set_UI_Command_Property_Boolean (l_command_id, l_value.pointer.item, l_ribbon.item)
+				l_value.destroy
+			end
+		end
 
 end

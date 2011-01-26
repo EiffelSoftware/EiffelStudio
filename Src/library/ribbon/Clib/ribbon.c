@@ -159,44 +159,56 @@ void DestroyRibbon()
 //
 HRESULT GetRibbonHeight(UINT* ribbonHeight)
 {
-    HRESULT hr = S_OK;
+	HRESULT hr = S_OK;
 
-    if (g_pFramework)
-    {
-        IUIRibbon* pRibbon = NULL;
+	if (g_pFramework)
+	{
+		IUIRibbon* pRibbon = NULL;
 
-        if (SUCCEEDED(g_pFramework->lpVtbl->GetView(g_pFramework, 0, &IID_IUIRIBBON, &(pRibbon))))
-        {
-            hr = pRibbon->lpVtbl->GetHeight(pRibbon, ribbonHeight);
-            pRibbon->lpVtbl->Release(pRibbon);
-        }
-    }
+		if (SUCCEEDED(g_pFramework->lpVtbl->GetView(g_pFramework, 0, &IID_IUIRIBBON, &(pRibbon))))
+		{
+			hr = pRibbon->lpVtbl->GetHeight(pRibbon, ribbonHeight);
+			pRibbon->lpVtbl->Release(pRibbon);
+		}
+	}
 
-    return hr;
+	return hr;
 }
 
 HRESULT SetModes(INT32 iModes, IUIFramework *a_framework)
 {
-	  HRESULT hr = S_OK;
+	HRESULT hr = S_OK;
 
-    if (a_framework)
-    {
-    	hr = a_framework->lpVtbl->SetModes(g_pFramework, UI_MAKEAPPMODE(iModes));
-    }
-    
-    return hr;
+	if (a_framework)
+	{
+		hr = a_framework->lpVtbl->SetModes(g_pFramework, UI_MAKEAPPMODE(iModes));
+	}
+
+	return hr;
 }
 
 HRESULT GetUICommandPropertyBoolean(UINT32 commandId, PROPVARIANT *value, IUIFramework *a_framework)
 {
-	  HRESULT hr = S_OK;
+	HRESULT hr = S_OK;
 
-    if (a_framework)
-    {
-    	hr = a_framework->lpVtbl->GetUICommandProperty(a_framework, commandId, & UI_PKEY_BooleanValue, value);
-    }
-    
-    return hr;
+	if (a_framework)
+	{
+		hr = a_framework->lpVtbl->GetUICommandProperty(a_framework, commandId, & UI_PKEY_BooleanValue, value);
+	}
+
+	return hr;
+}
+
+HRESULT SetUICommandPropertyBoolean (UINT32 commandId, PROPVARIANT *value, IUIFramework *a_framework)
+{
+	HRESULT hr = S_OK;
+
+	if (a_framework)
+	{
+		hr = a_framework->lpVtbl->SetUICommandProperty(a_framework, commandId, & UI_PKEY_BooleanValue, value);
+	}
+
+	return hr;
 }
 
 IUIFramework *GetRibbonFramwork()

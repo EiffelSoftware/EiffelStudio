@@ -34,6 +34,20 @@ feature {NONE}  -- Initialization
 			create pointer.make (size)
 		end
 
+feature -- Command
+
+	set_boolean_value (a_value: BOOLEAN)
+			-- Set value with `a_value'
+		do
+			c_init_prop_variant_from_boolean (pointer.item, a_value)
+		end
+
+	destroy
+			-- clean up current
+		do
+			c_prop_variant_clear (pointer.item)
+		end
+
 feature -- Query
 
 	var_type: NATURAL_16
@@ -79,6 +93,21 @@ feature {NONE} -- Externals
 			]"
 		end
 
+	c_init_prop_variant_from_boolean (a_item: POINTER; a_value: BOOLEAN)
+			--
+		external
+			"C inline use %"Propvarutil.h%""
+		alias
+			"[
+			{
+				//InitPropVariantFromBoolean only available for C++
+				PROPVARIANT *ppropvar = (PROPVARIANT *) $a_item;
+				ppropvar->vt = VT_BOOL;
+				ppropvar->boolVal = $a_value ? VARIANT_TRUE : VARIANT_FALSE;
+			}
+			]"
+		end
+
 	size: INTEGER
 			--
 		external
@@ -87,6 +116,18 @@ feature {NONE} -- Externals
 			"[
 			{
 				return sizeof (PROPVARIANT);
+			}
+			]"
+		end
+
+	c_prop_variant_clear (a_item: POINTER)
+			--
+		external
+			"C inline use %"PropIdl.h%""
+		alias
+			"[
+			{
+				PropVariantClear ($a_item);
 			}
 			]"
 		end

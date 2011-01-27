@@ -172,7 +172,10 @@ feature {NONE} -- Basic operations
 									from l_file.start until l_file.end_of_file loop
 										l_file.read_line
 										l_line := l_file.last_string
-										if l_line /= Void and then not l_line.is_empty then
+										if
+											l_line /= Void and then
+											is_valid_variable_name_value_pair_string (l_line)
+										then
 											l_pair := parse_variable_name_value_pair (l_line)
 											if
 												l_pair /= Void and then
@@ -224,13 +227,26 @@ feature {NONE} -- Basic operations
 		require
 			a_string_not_void: a_string /= Void
 			a_string_not_empty: not a_string.is_empty
-			a_string_valid: a_string.occurrences ('=') >= 1
+			a_string_valid: is_valid_variable_name_value_pair_string (a_string)
 		local
 			p: INTEGER
 		do
 			p := a_string.index_of ('=', 1)
 			if p > 0 then
 				Result := [a_string.substring (1, p - 1), a_string.substring (p + 1, a_string.count)]
+			end
+		end
+
+	is_valid_variable_name_value_pair_string (a_line: STRING): BOOLEAN
+			-- Is `a_string' a valid name value/pair string?
+		local
+			pos: INTEGER
+		do
+			if a_line.count > 0 and then not a_line.item (1).is_space then
+				pos := a_line.index_of ('=', 1)
+				if pos > 0 then
+					Result := True
+				end
 			end
 		end
 
@@ -371,7 +387,7 @@ invariant
 	batch_options_attached: batch_options /= Void
 
 ;note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

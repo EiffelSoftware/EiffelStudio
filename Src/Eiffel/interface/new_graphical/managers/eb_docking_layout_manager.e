@@ -161,6 +161,12 @@ feature -- Debug mode command
 				l_sd_button.enable_displayed
 			end
 
+			check at_least_one_button: l_debugger_manager.detach_cmd.managed_sd_toolbar_items.count >= 1 end
+			l_sd_button := tool_bar_item_belong_to (l_tool_bar_content, l_debugger_manager.detach_cmd.managed_sd_toolbar_items)
+			if l_sd_button /= Void then
+				l_sd_button.enable_displayed
+			end
+
 			check at_least_one_button: l_debugger_manager.assertion_checking_handler_cmd.managed_sd_toolbar_items.count >= 1 end
 			l_sd_button := tool_bar_item_belong_to (l_tool_bar_content, l_debugger_manager.assertion_checking_handler_cmd.managed_sd_toolbar_items)
 			if l_sd_button /= Void then
@@ -534,7 +540,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

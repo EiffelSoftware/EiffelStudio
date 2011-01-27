@@ -2,9 +2,8 @@ note
 	description	: "Tools with information about a feature."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author		: "Xavier Rousselot"
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	ES_FEATURES_RELATION_TOOL_PANEL
@@ -19,7 +18,8 @@ inherit
 			force_last_stone,
 			on_file_changed,
 			initialize,
-			tool_veto_pebble_function
+			tool_veto_pebble_function,
+			refresh
 		end
 
 	ES_FEATURE_RELATION_TOOL_COMMANDER_I
@@ -70,6 +70,14 @@ feature -- Access
 			-- If current need a fresh?
 			-- Useful for refresh Current only when Current is redisplayed
 			-- See bug#14840
+
+feature -- Basic operations
+
+	refresh
+		do
+			Precursor
+			is_refresh_needed := False
+		end
 
 feature {ES_FEATURE_RELATION_TOOL} -- Access
 
@@ -299,7 +307,6 @@ feature -- Status setting
 		do
 			if is_refresh_needed then
 				refresh
-				is_refresh_needed := False
 			end
 		ensure
 			cleared: not is_refresh_needed
@@ -419,7 +426,7 @@ feature{NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

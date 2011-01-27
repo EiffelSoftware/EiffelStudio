@@ -159,21 +159,29 @@ feature {EV_RIBBON_TITLED_WINDOW_IMP} -- Externals
 			]"
 		end
 
-feature {EV_RIBBON_CHECKBOX} -- Query
+feature {EV_RIBBON_CHECKBOX, EV_RIBBON_BUTTON} -- Query
 
-	get_UI_Command_Property (a_command_id: NATURAL_32; a_proper_key: POINTER; a_proper_variant: POINTER; a_framework: POINTER)
+	get_ui_command_property (a_command_id: NATURAL_32; a_proper_key: POINTER; a_proper_variant: POINTER; a_framework: POINTER)
 			--
 		external
 			"C inline use <ribbon.h>"
 		alias
 			"[
 			{
-				GetUICommandProperty ($a_command_id, $a_proper_key, $a_proper_variant, $a_framework);
+				HRESULT l_r;
+				l_r = GetUICommandProperty ($a_command_id, $a_proper_key, $a_proper_variant, $a_framework);
+				if (SUCCEEDED (l_r))
+				{
+					printf ("\nsuccess");
+				}else
+				{
+					printf ("\nfail %x", l_r);
+				}
 			}
 			]"
 		end
 
-	set_UI_Command_Property (a_command_id: NATURAL_32; a_proper_key: POINTER; a_proper_variant: POINTER; a_framework: POINTER)
+	set_ui_command_property (a_command_id: NATURAL_32; a_proper_key: POINTER; a_proper_variant: POINTER; a_framework: POINTER)
 			--
 		external
 			"C inline use <ribbon.h>"
@@ -185,5 +193,16 @@ feature {EV_RIBBON_CHECKBOX} -- Query
 			]"
 		end
 
+	c_invalidate_ui_command (a_command_id: NATURAL_32; a_flags: INTEGER; a_proper_key: POINTER; a_framework: POINTER)
+			--
+		external
+			"C inline use <ribbon.h>"
+		alias
+			"[
+			{
+				InvalidateUICommand($a_command_id, $a_flags, $a_proper_key, $a_framework);
+			}
+			]"
+		end
 end
 

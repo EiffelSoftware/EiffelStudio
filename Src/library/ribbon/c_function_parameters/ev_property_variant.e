@@ -42,6 +42,15 @@ feature -- Command
 			c_init_prop_variant_from_boolean (pointer.item, a_value)
 		end
 
+	set_string_value (a_value: STRING_32)
+			-- Set value with `a_value'
+		local
+			l_wel_string: WEL_STRING
+		do
+			create l_wel_string.make (a_value)
+			c_init_prop_variant_from_string (pointer.item, l_wel_string.item)
+		end
+
 	destroy
 			-- clean up current
 		do
@@ -60,6 +69,18 @@ feature -- Query
 			-- Value type is based on `var_type'
 		do
 			c_read_boolean (pointer.item, $Result)
+		end
+
+	string_value: STRING_32
+			-- String value of current
+		local
+			l_wel_string: WEL_STRING
+			l_pointer: POINTER
+		do
+			c_read_string (pointer.item, $l_pointer)
+			create l_wel_string.make_by_pointer (l_pointer)
+			Result := l_wel_string.string
+			c_co_task_mem_free (l_pointer)
 		end
 
 	pointer: MANAGED_POINTER
@@ -93,6 +114,30 @@ feature {NONE} -- Externals
 			]"
 		end
 
+	c_read_string (a_item: POINTER; a_pwstr: TYPED_POINTER [POINTER])
+			--
+		external
+			"C inline use %"Propvarutil.h%""
+		alias
+			"[
+			{
+				PropVariantToStringAlloc ($a_item, $a_pwstr);
+			}
+			]"
+		end
+
+	c_co_task_mem_free (a_pointer: POINTER)
+			-- Frees a block of task memory previously allocated through a call to the CoTaskMemAlloc or CoTaskMemRealloc function
+		external
+			"C inline use %"Objbase.h%""
+		alias
+			"[
+			{
+				CoTaskMemFree ($a_pointer);
+			}
+			]"
+		end
+
 	c_init_prop_variant_from_boolean (a_item: POINTER; a_value: BOOLEAN)
 			--
 		external
@@ -104,6 +149,27 @@ feature {NONE} -- Externals
 				PROPVARIANT *ppropvar = (PROPVARIANT *) $a_item;
 				ppropvar->vt = VT_BOOL;
 				ppropvar->boolVal = $a_value ? VARIANT_TRUE : VARIANT_FALSE;
+			}
+			]"
+		end
+
+	c_init_prop_variant_from_string (a_item: POINTER; a_string: POINTER)
+			--
+		external
+			"C inline use %"Shlwapi.h%""
+		alias
+			"[
+			{
+				//InitPropVariantFromString only available for C++
+				HRESULT hr;
+				PROPVARIANT *ppropvar = (PROPVARIANT *) $a_item;
+				ppropvar->vt = VT_LPWSTR;
+				hr = SHStrDupW($a_string, &ppropvar->pwszVal);
+				if (FAILED(hr))
+				{
+				PropVariantInit(ppropvar);
+				}
+				return hr;
 			}
 			]"
 		end

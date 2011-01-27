@@ -211,6 +211,18 @@ HRESULT SetUICommandProperty (UINT32 commandId, REFPROPERTYKEY key, PROPVARIANT 
 	return hr;
 }
 
+HRESULT InvalidateUICommand(UINT32 commandId, UI_INVALIDATIONS flags, const PROPERTYKEY *key, IUIFramework *a_framework)
+{
+	HRESULT hr = S_OK;
+
+	if (a_framework)
+	{
+		hr = a_framework->lpVtbl->InvalidateUICommand(a_framework, commandId, flags, key);
+	}
+
+	return hr;	
+}
+
 IUIFramework *GetRibbonFramwork()
 {
 		return g_pFramework;

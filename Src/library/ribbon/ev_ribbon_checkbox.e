@@ -45,6 +45,7 @@ feature -- Access
 	is_selected: BOOLEAN
 			-- If current has been checked?
 		local
+			l_key: EV_PROPERTY_KEY
 			l_value: EV_PROPERTY_VARIANT
 			l_command_id: NATURAL_32
 		do
@@ -52,8 +53,9 @@ feature -- Access
 			check command_id_valid: l_command_id /= 0 end
 
 			if attached ribbon as l_ribbon then
+				create l_key.make_boolean
 				create l_value.make_empty
-				{EV_RIBBON}.get_UI_Command_Property_Boolean (l_command_id, l_value.pointer.item, l_ribbon.item)
+				{EV_RIBBON}.get_UI_Command_Property (l_command_id, l_key.pointer, l_value.pointer.item, l_ribbon.item)
 				Result := l_value.boolean_value
 				l_value.destroy
 			end
@@ -96,6 +98,7 @@ feature {NONE} -- Implementation
 	set_selected (a_bool: BOOLEAN)
 			-- Set `is_selected' with `a_bool'
 		local
+			l_key: EV_PROPERTY_KEY
 			l_value: EV_PROPERTY_VARIANT
 			l_command_id: NATURAL_32
 		do
@@ -103,9 +106,10 @@ feature {NONE} -- Implementation
 			check command_id_valid: l_command_id /= 0 end
 
 			if attached ribbon as l_ribbon then
+				create l_key.make_boolean
 				create l_value.make_empty
 				l_value.set_boolean_value (a_bool)
-				{EV_RIBBON}.set_UI_Command_Property_Boolean (l_command_id, l_value.pointer.item, l_ribbon.item)
+				{EV_RIBBON}.set_UI_Command_Property (l_command_id, l_key.pointer, l_value.pointer.item, l_ribbon.item)
 				l_value.destroy
 			end
 		end

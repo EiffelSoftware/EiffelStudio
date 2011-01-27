@@ -161,26 +161,26 @@ feature {EV_RIBBON_TITLED_WINDOW_IMP} -- Externals
 
 feature {EV_RIBBON_CHECKBOX} -- Query
 
-	get_UI_Command_Property_Boolean (a_command_id: NATURAL_32; a_proper_variant: POINTER; a_framework: POINTER)
+	get_UI_Command_Property (a_command_id: NATURAL_32; a_proper_key: POINTER; a_proper_variant: POINTER; a_framework: POINTER)
 			--
 		external
 			"C inline use <ribbon.h>"
 		alias
 			"[
 			{
-				GetUICommandPropertyBoolean($a_command_id, $a_proper_variant, $a_framework);
+				GetUICommandProperty ($a_command_id, $a_proper_key, $a_proper_variant, $a_framework);
 			}
 			]"
 		end
 
-	set_UI_Command_Property_Boolean (a_command_id: NATURAL_32; a_proper_variant: POINTER; a_framework: POINTER)
+	set_UI_Command_Property (a_command_id: NATURAL_32; a_proper_key: POINTER; a_proper_variant: POINTER; a_framework: POINTER)
 			--
 		external
 			"C inline use <ribbon.h>"
 		alias
 			"[
 			{
-				SetUICommandPropertyBoolean($a_command_id, $a_proper_variant, $a_framework);
+				SetUICommandProperty ($a_command_id, $a_proper_key, $a_proper_variant, $a_framework);
 			}
 			]"
 		end

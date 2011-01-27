@@ -187,25 +187,25 @@ HRESULT SetModes(INT32 iModes, IUIFramework *a_framework)
 	return hr;
 }
 
-HRESULT GetUICommandPropertyBoolean(UINT32 commandId, PROPVARIANT *value, IUIFramework *a_framework)
+HRESULT GetUICommandProperty(UINT32 commandId, REFPROPERTYKEY key, PROPVARIANT *value, IUIFramework *a_framework)
 {
 	HRESULT hr = S_OK;
 
 	if (a_framework)
 	{
-		hr = a_framework->lpVtbl->GetUICommandProperty(a_framework, commandId, & UI_PKEY_BooleanValue, value);
+		hr = a_framework->lpVtbl->GetUICommandProperty(a_framework, commandId, key, value);
 	}
 
 	return hr;
 }
 
-HRESULT SetUICommandPropertyBoolean (UINT32 commandId, PROPVARIANT *value, IUIFramework *a_framework)
+HRESULT SetUICommandProperty (UINT32 commandId, REFPROPERTYKEY key, PROPVARIANT *value, IUIFramework *a_framework)
 {
 	HRESULT hr = S_OK;
 
 	if (a_framework)
 	{
-		hr = a_framework->lpVtbl->SetUICommandProperty(a_framework, commandId, & UI_PKEY_BooleanValue, value);
+		hr = a_framework->lpVtbl->SetUICommandProperty(a_framework, commandId, key, value);
 	}
 
 	return hr;

@@ -16,7 +16,8 @@ class
 	EV_PROPERTY_KEY
 
 create
-	share_from_pointer
+	share_from_pointer,
+	make_boolean
 
 feature {NONE}  -- Initialization
 
@@ -24,6 +25,12 @@ feature {NONE}  -- Initialization
 			-- Creation method
 		do
 			pointer := a_property_key
+		end
+
+	make_boolean
+			-- Make a boolean key
+		do
+			share_from_pointer (c_ui_key_boolean_value)
 		end
 
 feature -- Query
@@ -39,8 +46,6 @@ feature -- Query
 		do
 			Result := c_pid (pointer)
 		end
-
-feature {NONE} -- Implementation
 
 	pointer: POINTER
 			--
@@ -60,7 +65,7 @@ feature {NONE} -- Externals
 			}
 			]"
 		end
-	
+
 	c_pid (a_property_key: POINTER): NATURAL_32
 			--
 		external
@@ -75,4 +80,15 @@ feature {NONE} -- Externals
 			]"
 		end
 
+	c_ui_key_boolean_value: POINTER
+			--
+		external
+			"C inline use %"UIRibbon.h%""
+		alias
+			"[
+			{
+				return &UI_PKEY_BooleanValue;
+			}
+			]"
+		end
 end

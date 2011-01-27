@@ -50,6 +50,11 @@ inherit
 			{NONE} all
 		end
 
+	OPERATING_ENVIRONMENT
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -58,7 +63,11 @@ feature -- Execution
 	execute
 			-- Execute the command. Prompt the user for the new filenane and save it.
 		do
-			execute_with_dialog (Void)
+			if attached window_manager.last_focused_development_window as l_w then
+				execute_with_dialog (Void, l_w.file_name)
+			else
+				execute_with_dialog (Void, Void)
+			end
 		end
 
 	execute_with_filename (new_filename: STRING)
@@ -137,7 +146,7 @@ feature {EB_FILE_OPENER} -- Callbacks
 
 feature {EB_SAVE_FILE_COMMAND} -- Implementation
 
-	execute_with_dialog (argument: EB_FILE_SAVE_DIALOG)
+	execute_with_dialog (argument: detachable EB_FILE_SAVE_DIALOG; a_file_name: detachable STRING)
 			-- Save a file with the chosen name.
 		local
 			fsd: EB_FILE_SAVE_DIALOG
@@ -149,7 +158,10 @@ feature {EB_SAVE_FILE_COMMAND} -- Implementation
 					l_pref.set_value (eiffel_layout.user_projects_path)
 				end
 				create fsd.make_with_preference (l_pref)
-				fsd.save_actions.extend (agent execute_with_dialog (fsd))
+				if attached a_file_name as a_f then
+					fsd.set_file_name (a_f.substring (a_f.last_index_of (Directory_separator, a_f.count) + 1, a_f.count))
+				end
+				fsd.save_actions.extend (agent execute_with_dialog (fsd, Void))
 				fsd.show_modal_to_window (window_manager.last_focused_development_window.window)
 			else
 				execute_with_filename (argument.file_name)
@@ -181,7 +193,7 @@ feature -- Obsolete
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -194,22 +206,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_SAVE_FILE_AS_COMMAND

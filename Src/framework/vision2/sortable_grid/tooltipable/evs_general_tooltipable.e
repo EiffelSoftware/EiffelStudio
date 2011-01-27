@@ -192,8 +192,8 @@ feature -- Status setting
 		do
 			safe_register_agent (pointer_enter_agent, owner_pointer_enter_actions)
 			safe_register_agent (pointer_leave_agent, owner_pointer_leave_actions)
-			if owner_select_actions /= Void then
-				safe_register_agent (select_agent, owner_select_actions)
+			if attached owner_select_actions as l_actions then
+				safe_register_agent (select_agent, l_actions)
 			end
 			is_tooltip_enabled := True
 		ensure

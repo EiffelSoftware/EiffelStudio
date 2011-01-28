@@ -22,7 +22,7 @@ feature {NONE} -- Initlization
 		require
 			not_void: a_content /= Void
 		local
-			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+			l_items: LIST [SD_TOOL_BAR_ITEM]
 			l_group_count: INTEGER
 		do
 			l_group_count := a_content.groups_count (False)
@@ -37,10 +37,9 @@ feature {NONE} -- Initlization
 			set: algorithm.item_width /= Void
 		end
 
-	init_group_width (a_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]): ARRAYED_LIST [INTEGER]
+	init_group_width (a_items: LIST [SD_TOOL_BAR_ITEM]): ARRAYED_LIST [INTEGER]
 			-- Initlizatie a list with each items width in it
 		local
-			l_separator: detachable SD_TOOL_BAR_SEPARATOR
 			l_temp_group: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 		do
 			create Result.make (1)
@@ -50,15 +49,13 @@ feature {NONE} -- Initlization
 			until
 				a_items.after
 			loop
-				l_separator := Void
-				l_separator ?= a_items.item
-				if l_separator = Void then
-					l_temp_group.extend (a_items.item)
-				else
+				if attached {SD_TOOL_BAR_SEPARATOR} a_items.item then
 					if l_temp_group.count > 0 then
 						Result.extend (group_width (l_temp_group))
 						create l_temp_group.make (1)
 					end
+				else
+					l_temp_group.extend (a_items.item)
 				end
 				a_items.forth
 			end
@@ -116,10 +113,8 @@ feature -- Query
 			valid: Result >= 0
 		end
 
-	group_item_width (a_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]): ARRAYED_LIST [INTEGER]
+	group_item_width (a_items: LIST [SD_TOOL_BAR_ITEM]): ARRAYED_LIST [INTEGER]
 			-- Initlizatie a list with each item width in it
-		local
-			l_separator: detachable SD_TOOL_BAR_SEPARATOR
 		do
 			create Result.make (1)
 			from
@@ -127,12 +122,10 @@ feature -- Query
 			until
 				a_items.after
 			loop
-				l_separator := Void
-				l_separator ?= a_items.item
-				if l_separator = Void then
-					Result.extend (tool_bar_item_width (a_items.item))
-				else
+				if attached {SD_TOOL_BAR_SEPARATOR} a_items.item then
 					check must_not_contain_separator: False end
+				else
+					Result.extend (tool_bar_item_width (a_items.item))
 				end
 				a_items.forth
 			end
@@ -483,14 +476,14 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

@@ -47,7 +47,7 @@ feature -- Content Type
 feature -- {SD_STATE, SD_HOT_ZONE}
 
 	place_holder: INTEGER = 3
-			-- Place holder for eidtor.
+			-- Place holder for editor.
 
 feature -- State
 
@@ -69,31 +69,43 @@ feature -- Contract support
 	 is_direction_valid (a_direction: INTEGER): BOOLEAN
 	 		-- If `a_direction' valid?
 	 	do
-			Result := a_direction = top or a_direction = bottom or a_direction = left or a_direction = right
+			inspect a_direction
+			when top, bottom, left, right then
+				Result := True
+			else
+			end
 	 	end
 
 	is_type_valid (a_type: INTEGER): BOOLEAN
 			-- If `a_type' valid?
 		do
-			Result := a_type = editor or a_type = tool or a_type = place_holder
+			inspect a_type
+			when editor, tool, place_holder then
+				Result := True
+			else
+			end
 		end
 
 	is_state_valid (a_state: INTEGER): BOOLEAN
 			-- If `a_state' valid?
 		do
-			Result := a_state = state_void or a_state = docking or a_state = tab or a_state = auto_hide
+			inspect a_state
+			when state_void, docking, tab, auto_hide then
+				Result := True
+			else
+			end
 		end
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

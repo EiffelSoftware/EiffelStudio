@@ -294,7 +294,7 @@ feature {NONE} -- Implementation
 			a_config_data.set_height (1)
 		ensure
 			is_editor: not a_config_data.is_split_area
-			title_correct: attached a_config_data.titles as le_titles implies le_titles.first ~ (internal_shared.editor_place_holder_content_name)
+			title_correct: attached a_config_data.titles as le_titles implies le_titles.first.same_string (internal_shared.editor_place_holder_content_name)
 		end
 
 	save_inner_container_data_split_area (a_split_area: SD_MIDDLE_CONTAINER; a_config_data: SD_INNER_CONTAINER_DATA)

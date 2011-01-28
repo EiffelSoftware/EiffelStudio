@@ -226,17 +226,9 @@ feature -- Access
 			-- Current state
 			-- Note, its possible result is {SD_ENUMERATION}.auto_hide, but `is_visible' return False. See bug#13339.
 		do
-			if attached {SD_STATE_VOID} state then
-				Result := {SD_ENUMERATION}.state_void
-			elseif attached {SD_DOCKING_STATE} state then
-				Result := {SD_ENUMERATION}.docking
-			elseif attached {SD_TAB_STATE} state then
-				Result := {SD_ENUMERATION}.tab
-			elseif attached {SD_AUTO_HIDE_STATE} state then
-				Result := {SD_ENUMERATION}.auto_hide
-			end
+			Result := state.value
 		ensure
-			vaild: (create {SD_ENUMERATION}).is_state_valid (Result)
+			valid: (create {SD_ENUMERATION}).is_state_valid (Result)
 		end
 
 feature -- Settings

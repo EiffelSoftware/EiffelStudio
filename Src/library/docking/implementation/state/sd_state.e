@@ -365,6 +365,13 @@ feature {SD_AUTO_HIDE_STATE} -- Internal calls
 
 feature  -- States report
 
+	value: INTEGER
+			-- State value, see {SD_ENUMERATION} -- State
+		deferred
+		ensure
+			valid: (create {SD_ENUMERATION}).is_state_valid (Result)
+		end
+
 	has (a_content: SD_CONTENT): BOOLEAN
 			-- If Current has `a_content'?
 		require
@@ -568,7 +575,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

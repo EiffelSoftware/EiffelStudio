@@ -35,7 +35,7 @@ create
 create {SD_PLACE_HOLDER_ZONE}
 	make_for_place_holder_zone
 
-feature {NONE}-- Initlization
+feature {NONE} -- Initlization
 
 	make (a_content: SD_CONTENT; a_direction: INTEGER; a_width_height: INTEGER)
 			-- Creation method
@@ -107,7 +107,7 @@ feature {NONE}-- Initlization
 			last_floating_width := a_content.state.last_floating_width
 		end
 
-feature {SD_TAB_STATE_ASSISTANT} -- Initlization
+feature {SD_TAB_STATE_ASSISTANT} -- Initialization
 
 	set_widget_main_area (a_widget: EV_WIDGET; a_main_area: SD_MULTI_DOCK_AREA; a_parent: EV_CONTAINER; a_split_position: INTEGER)
 			-- Set widget and main area which used by normal window
@@ -118,6 +118,13 @@ feature {SD_TAB_STATE_ASSISTANT} -- Initlization
 		do
 			zone.set_max (True)
 			zone.set_widget_main_area (a_widget, a_main_area, a_parent, a_split_position)
+		end
+
+feature  -- States report
+
+	value: INTEGER
+		do
+			Result := {SD_ENUMERATION}.docking
 		end
 
 feature -- Redefine
@@ -173,21 +180,21 @@ feature -- Redefine
 	change_long_title (a_title: READABLE_STRING_GENERAL; a_content: SD_CONTENT)
 			-- <Precursor>
 		do
-			if content /= Void and then content.type = {SD_ENUMERATION}.tool then
+			if attached content as l_content and then l_content.type = {SD_ENUMERATION}.tool then
 				zone.set_title (a_title)
 			end
 		ensure then
-			set: a_title /= Void implies zone.title ~ (a_title.as_string_32)
+			set: a_title /= Void implies zone.title.same_string_general (a_title)
 		end
 
 	change_short_title (a_title: READABLE_STRING_GENERAL; a_content: SD_CONTENT)
 			-- <Precursor>
 		do
-			if content /= Void and then content.type = {SD_ENUMERATION}.editor then
+			if attached content as l_content and then l_content.type = {SD_ENUMERATION}.editor then
 				zone.set_title (a_title)
 			end
 		ensure then
-			set: a_title /= Void implies zone.title ~ (a_title.as_string_32)
+			set: a_title /= Void implies zone.title.same_string_general (a_title)
 		end
 
 	change_pixmap (a_pixmap: EV_PIXMAP; a_content: SD_CONTENT)
@@ -470,8 +477,6 @@ feature -- Redefine
 	hide
 			-- <Precursor>
 		local
-			l_multi_dock_area: SD_MULTI_DOCK_AREA
-			l_spliter: detachable EV_SPLIT_AREA
 			l_first, l_second: detachable EV_WIDGET
 		do
 			Precursor {SD_STATE}
@@ -480,8 +485,7 @@ feature -- Redefine
 			end
 
 			zone.hide
-			l_spliter ?= zone.parent
-			if l_spliter /= Void and then l_spliter.is_displayed then
+			if attached {EV_SPLIT_AREA} zone.parent as l_spliter and then l_spliter.is_displayed then
 				if l_spliter.full then
 					l_first := l_spliter.first
 					l_second := l_spliter.second
@@ -492,8 +496,7 @@ feature -- Redefine
 				end
 			end
 
-			l_multi_dock_area := docking_manager.query.inner_container (zone)
-			if l_multi_dock_area /= Void then
+			if attached {SD_MULTI_DOCK_AREA} docking_manager.query.inner_container (zone) as l_multi_dock_area then
 				if not docking_manager.query.is_main_inner_container (l_multi_dock_area) then
 					l_multi_dock_area.update_title_bar
 				else
@@ -517,16 +520,12 @@ feature -- Redefine
 
 	change_tab_tooltip (a_text: detachable READABLE_STRING_GENERAL)
 			-- <Precursor>
-		local
-			l_upper: detachable SD_DOCKING_ZONE_UPPER
-			l_tab: detachable SD_NOTEBOOK_TAB
 		do
-			l_upper ?= zone
-			if l_upper /= Void then
-				l_tab := l_upper.notebook.tab_by_content (content)
-				if l_tab /= Void then
-					l_tab.set_tool_tip (a_text)
-				end
+			if
+				attached {SD_DOCKING_ZONE_UPPER} zone as l_upper and then
+				attached l_upper.notebook.tab_by_content (content) as l_tab
+			then
+				l_tab.set_tool_tip (a_text)
 			end
 		end
 
@@ -538,35 +537,36 @@ feature {NONE} -- Implementation
 	move_to_zone_internal (a_target_zone: SD_ZONE; a_first: BOOLEAN)
 			-- Move to a zone
 		local
-			l_tab_state: SD_TAB_STATE
-			l_orignal_direction: INTEGER
-			l_docking_zone: detachable SD_DOCKING_ZONE
-			l_tab_zone: detachable SD_TAB_ZONE
+			l_tab_state: detachable SD_TAB_STATE
+			l_original_direction: INTEGER
 		do
 			docking_manager.command.lock_update (zone, False)
 			docking_manager.zones.prune_zone (zone)
-			l_orignal_direction := a_target_zone.state.direction
+			l_original_direction := a_target_zone.state.direction
 
-			l_docking_zone ?= a_target_zone
-			l_tab_zone ?= a_target_zone
 			if attached {EV_WIDGET} a_target_zone as lt_widget then
 				docking_manager.command.lock_update (lt_widget, False)
 			else
 				check not_possible: False end
 			end
-			if l_docking_zone /= Void then
-				create l_tab_state.make (content, l_docking_zone, l_orignal_direction)
+			if attached {SD_DOCKING_ZONE} a_target_zone as l_docking_zone then
+				create l_tab_state.make (content, l_docking_zone, l_original_direction)
+			elseif attached {SD_TAB_ZONE} a_target_zone as l_tab_zone then
+				create l_tab_state.make_with_tab_zone (content, l_tab_zone, l_original_direction)
 			else
-				check only_allow_two_type_zone: l_tab_zone /= Void end
-				create l_tab_state.make_with_tab_zone (content, l_tab_zone, l_orignal_direction)
+				check only_allow_two_type_zone: False end
 			end
-			if a_first then
+			if a_first and l_tab_state /= Void then
 				l_tab_state.zone.set_content_position (content, 1)
 			end
 			docking_manager.command.unlock_update
-			l_tab_state.set_direction (l_orignal_direction)
+			if l_tab_state /= Void then
+				l_tab_state.set_direction (l_original_direction)
+			end
 			docking_manager.command.remove_empty_split_area
-			change_state (l_tab_state)
+			if l_tab_state /= Void then
+				change_state (l_tab_state)
+			end
 			docking_manager.command.unlock_update
 			docking_manager.command.update_title_bar
 		end
@@ -638,36 +638,38 @@ feature {NONE} -- Implementation
 			l_spliter: detachable EV_SPLIT_AREA
 			l_widget: detachable EV_WIDGET
 		do
-			from
-				l_widget ?= a_zone
-				check l_widget_not_void: l_widget /= Void end
-				l_spliter ?= l_widget.parent
-			until
-				l_spliter = Void
-			loop
-				if l_spliter /= Void and then not l_spliter.is_displayed then
-					l_spliter.show
+			l_widget ?= a_zone
+			if l_widget /= Void then
+				from
+					l_spliter ?= l_widget.parent
+				until
+					l_spliter = Void
+				loop
+					if l_spliter /= Void and then not l_spliter.is_displayed then
+						l_spliter.show
+					end
+					l_widget := l_widget.parent
+					check l_widget /= Void end -- Implied by loop condition
+					l_spliter ?= l_widget.parent
 				end
-				l_widget := l_widget.parent
-				check l_widget /= Void end -- Implied by loop condition
-				l_spliter ?= l_widget.parent
+			else
+				check a_zone_is_widget: False end
 			end
 		end
 
 invariant
-
 	internal_zone_not_void: initialized implies is_zone_attached
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

@@ -251,7 +251,7 @@ feature -- Command
 		do
 			window.title_bar.set_title (a_title)
 		ensure
-			set: window.title_bar.title ~ a_title
+			set: window.title_bar.title.same_string_general (a_title)
 		end
 
 	destroy
@@ -279,7 +279,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

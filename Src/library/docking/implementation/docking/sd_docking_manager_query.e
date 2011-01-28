@@ -227,7 +227,7 @@ feature -- Querys
 					Result := maximized_inner_container (lt_widget)
 				end
 				if Result = Void then
-					Result := maiximized_hidden_main_container (a_zone)
+					Result := maximized_hidden_main_container (a_zone)
 				end
 			else
 				check not_possible: False end
@@ -266,7 +266,7 @@ feature -- Querys
 			end
 		end
 
-	maiximized_hidden_main_container (a_zone: SD_ZONE): detachable SD_MULTI_DOCK_AREA
+	maximized_hidden_main_container (a_zone: SD_ZONE): detachable SD_MULTI_DOCK_AREA
 			-- Find the item in main area hidden widget when whole editor area maximized
 		local
 			l_item: detachable EV_WIDGET
@@ -478,6 +478,37 @@ feature -- Querys
 					end
 					l_floating_zones.forth
 				end
+			end
+		end
+
+	unique_title_verified: BOOLEAN
+		local
+			l_contents: ARRAYED_LIST [SD_CONTENT]
+			l_content: SD_CONTENT
+			c1, c2: like docking_manager.contents.new_cursor
+			l_title: STRING_GENERAL
+		do
+			l_contents := docking_manager.contents
+			c1 := l_contents.new_cursor
+			c2 := l_contents.new_cursor
+			from
+				c1.start
+			until
+				c1.after or not Result
+			loop
+				l_content := c1.item
+				l_title := l_content.unique_title
+				from
+					c2.start
+				until
+					c2.after or not Result
+				loop
+					if l_content /= c2.item then
+						Result := not l_title.same_string (c2.item.unique_title)
+					end
+					c2.forth
+				end
+				c1.forth
 			end
 		end
 
@@ -717,7 +748,7 @@ feature {NONE} -- Implemnetation
 
 ;note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

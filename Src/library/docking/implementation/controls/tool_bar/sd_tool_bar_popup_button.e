@@ -217,10 +217,10 @@ feature {NONE} -- Implementation
 					end
 				end
 			end
-		ensure
-			popuped: (menu = Void and (menu_function = Void
-						or else (attached menu_function as le_menu_function implies le_menu_function.item (Void) = Void)))
-						 implies popup.is_displayed
+--		ensure
+--			popuped: (menu = Void and (menu_function = Void
+--						or else (attached menu_function as le_menu_function implies le_menu_function.item (Void) = Void)))
+--						 implies popup.is_displayed
 		end
 
 	dropdown_pixel_buffer_imp: detachable EV_PIXEL_BUFFER;

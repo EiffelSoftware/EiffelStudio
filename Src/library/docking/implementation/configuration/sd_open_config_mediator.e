@@ -501,7 +501,7 @@ feature {NONE} -- Implementation
 					l_state.set_docking_manager (internal_docking_manager)
 
 					if attached a_config_data.titles as l_titles and then not l_titles.is_empty
-						and then l_titles.first ~ (internal_shared.editor_place_holder_content_name) then
+						and then l_titles.first.same_string (internal_shared.editor_place_holder_content_name) then
 						-- We do something special for place holder zone.
 						-- Ignore duplicated place holder zones
 						-- Because, sometimes the docking data saved is strange such as the docking data in bug#14698
@@ -642,8 +642,10 @@ feature {NONE} -- Implementation
 			l_tab_group: ARRAYED_LIST [SD_CONTENT]
 			l_temp_data: SD_INNER_CONTAINER_DATA
 			l_string: READABLE_STRING_GENERAL
+			l_docking_manager_query: like internal_docking_manager.query
 		do
-			l_panel := internal_docking_manager.query.auto_hide_panel (a_direction)
+			l_docking_manager_query := internal_docking_manager.query
+			l_panel := l_docking_manager_query.auto_hide_panel (a_direction)
 			from
 				a_data.start
 			until
@@ -669,7 +671,7 @@ feature {NONE} -- Implementation
 					l_list_item := l_list.item
 					l_string := l_list_item.title
 					check not_void: l_string /= Void end
-					l_content := internal_docking_manager.query.content_by_title_for_restore (l_string)
+					l_content := l_docking_manager_query.content_by_title_for_restore (l_string)
 					-- If we don't find SD_CONTENT last saved, ignore it.
 					if l_content /= Void then
 						l_content.set_visible (True)
@@ -705,6 +707,8 @@ feature {NONE} -- Implementation
 			l_content: SD_TOOL_BAR_CONTENT
 			l_state: detachable SD_TOOL_BAR_ZONE_STATE
 			l_title: detachable STRING_32
+			l_internal_docking_manager: like internal_docking_manager
+			l_tool_bar_manager: like internal_docking_manager.tool_bar_manager
 		do
 			-- Top
 			a_tool_bar_data.start
@@ -719,6 +723,10 @@ feature {NONE} -- Implementation
 			a_tool_bar_data.forth
 			open_one_tool_bar_data ({SD_ENUMERATION}.right, a_tool_bar_data.item)
 
+
+			l_internal_docking_manager := internal_docking_manager
+			l_tool_bar_manager := l_internal_docking_manager.tool_bar_manager
+
 			-- Floating tool_bars
 			from
 				a_tool_bar_data.forth
@@ -729,14 +737,14 @@ feature {NONE} -- Implementation
 				check is_floating_tool_bar_data: l_data.is_floating end
 				l_title := l_data.title
 				check l_title /= Void end -- Implied by check `is_floating_tool_bar_data'
-				l_content := internal_docking_manager.tool_bar_manager.content_by_title (l_title)
+				l_content := l_tool_bar_manager.content_by_title (l_title)
 
 				-- Reset texts if original docking vertically
 				if attached l_content.zone as l_zone then
 					l_zone.change_direction (True)
 				end
 
-				create l_tool_bar.make (False, internal_docking_manager, False)
+				create l_tool_bar.make (False, l_internal_docking_manager, False)
 				l_tool_bar.extend (l_content)
 				l_state := l_data.last_state
 				if l_state /= Void then
@@ -766,9 +774,9 @@ feature {NONE} -- Implementation
 					-- before trying to retrieve its state.
 				if
 					attached l_data.title as l_title_2 and then
-					internal_docking_manager.tool_bar_manager.has (l_title_2)
+					l_tool_bar_manager.has (l_title_2)
 				then
-					l_content := internal_docking_manager.tool_bar_manager.content_by_title (l_title_2)
+					l_content := l_tool_bar_manager.content_by_title (l_title_2)
 
 					-- Reset texts if original docking vertically
 					if attached l_content.zone as l_zone then
@@ -776,9 +784,9 @@ feature {NONE} -- Implementation
 					end
 
 					if attached {SD_TOOL_BAR_ZONE_STATE} l_data.last_state as l_state_2 then
-						create l_tool_bar.make (l_state_2.is_vertical, internal_docking_manager, False)
+						create l_tool_bar.make (l_state_2.is_vertical, l_internal_docking_manager, False)
 					else
-						create l_tool_bar.make (False, internal_docking_manager, False)
+						create l_tool_bar.make (False, l_internal_docking_manager, False)
 					end
 					l_tool_bar.extend (l_content)
 					l_content.set_zone (l_tool_bar)
@@ -808,8 +816,10 @@ feature {NONE} -- Implementation
 			l_tool_bar_row: SD_TOOL_BAR_ROW
 			l_tool_bar_zone: SD_TOOL_BAR_ZONE
 			l_string: READABLE_STRING_GENERAL
+			l_tool_bar_manager: like internal_docking_manager.tool_bar_manager
 		do
-			l_tool_bar_container := internal_docking_manager.tool_bar_manager.tool_bar_container (a_direction)
+			l_tool_bar_manager := internal_docking_manager.tool_bar_manager
+			l_tool_bar_container := l_tool_bar_manager.tool_bar_container (a_direction)
 			l_rows := a_tool_bar_data.rows
 			from
 				l_rows.start
@@ -832,7 +842,7 @@ feature {NONE} -- Implementation
 					l_row_item := l_row.item
 					l_string := l_row_item.title
 					check not_void: l_string /= Void end
-					l_content := internal_docking_manager.tool_bar_manager.content_by_title (l_string)
+					l_content := l_tool_bar_manager.content_by_title (l_string)
 					check l_content_not_void: l_content /= Void end
 					l_content.set_visible (True)
 					create l_tool_bar_zone.make (False, internal_docking_manager, False)
@@ -897,7 +907,7 @@ feature {NONE} -- Implementation
 							until
 								l_tool_bar_data.after or l_found
 							loop
-								if l_item.name.as_string_32.is_equal (l_tool_bar_data.item.name.as_string_32) then
+								if l_item.name.same_string_general (l_tool_bar_data.item.name) then
 									l_item.widget.set_minimum_width (l_tool_bar_data.item.width)
 									l_found := True
 								end
@@ -922,26 +932,27 @@ feature {SD_EDITOR_CONFIG_HELPER} -- Internals
 	internal_open_maximized_tool_data (a_config_data: SD_CONFIG_DATA)
 			-- Open maximized tool data.
 		local
-			l_content: SD_CONTENT
-			l_maximzied_tools: ARRAYED_LIST [READABLE_STRING_GENERAL]
+			l_maximized_tools: LIST [READABLE_STRING_GENERAL]
 			l_zone: detachable SD_ZONE
 		do
 			if a_config_data /= Void then
 				from
-					l_maximzied_tools := a_config_data.maximized_tools
-					l_maximzied_tools.start
+					l_maximized_tools := a_config_data.maximized_tools
+					l_maximized_tools.start
 				until
-					l_maximzied_tools.after
+					l_maximized_tools.after
 				loop
-					l_content := internal_docking_manager.query.content_by_title (l_maximzied_tools.item)
-					if l_content /= Void and then l_content.state.is_zone_attached then
+					if
+						attached  internal_docking_manager.query.content_by_title (l_maximized_tools.item) as l_content and then
+						l_content.state.is_zone_attached
+					then
 						l_zone := l_content.state.zone
 						check l_zone /= Void end -- Implied by `is_zone_attached'
 						if not l_zone.is_maximized then
 							l_content.state.on_normal_max_window
 						end
 					end
-					l_maximzied_tools.forth
+					l_maximized_tools.forth
 				end
 			end
 		end
@@ -983,7 +994,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

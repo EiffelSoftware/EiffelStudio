@@ -98,7 +98,7 @@ feature {NONE} -- Implementation functions
 		require
 			not_void: a_group_indexs /= Void
 		local
-			l_group: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+			l_group: LIST [SD_TOOL_BAR_ITEM]
 			l_first_item: detachable SD_TOOL_BAR_ITEM
 			l_separator: detachable SD_TOOL_BAR_SEPARATOR
 		do
@@ -128,7 +128,7 @@ feature {NONE} -- Implementation functions
 		require
 			not_void: a_sub_info /= Void
 		local
-			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+			l_items: LIST [SD_TOOL_BAR_ITEM]
 			l_first_item: SD_TOOL_BAR_ITEM
 			l_separator: detachable SD_TOOL_BAR_SEPARATOR
 		do
@@ -174,7 +174,7 @@ feature {NONE} -- Implementation functions
 	reset_all_items_wrap
 			-- Reset items to wrap state
 		local
-			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+			l_items: LIST [SD_TOOL_BAR_ITEM]
 		do
 			l_items := zone.content.items_visible
 			from
@@ -211,14 +211,14 @@ feature {NONE} -- Implementation attributes
 
 ;note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

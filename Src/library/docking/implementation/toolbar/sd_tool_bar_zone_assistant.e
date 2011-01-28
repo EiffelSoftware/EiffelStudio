@@ -40,7 +40,7 @@ feature -- Command
 		require
 			valid: a_size >= 0
 		local
-			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+			l_items: LIST [SD_TOOL_BAR_ITEM]
 			l_item: SD_TOOL_BAR_ITEM
 		do
 			l_items := attached_zone.content.items_visible
@@ -474,10 +474,12 @@ feature -- Query
 	can_reduce_size (a_size: INTEGER): INTEGER
 			-- How many size can reduce, same as `reduce_size' but not really prune items
 		local
-			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+			l_items: LIST [SD_TOOL_BAR_ITEM]
 			l_item: SD_TOOL_BAR_ITEM
+			l_zone: like attached_zone
 		do
-			l_items := attached_zone.content.items_visible
+			l_zone := attached_zone
+			l_items := l_zone.content.items_visible
 			from
 				l_items.finish
 			until
@@ -485,14 +487,14 @@ feature -- Query
 				l_items.index <= 1 or Result >= a_size
 			loop
 				l_item := l_items.item
-				if attached_zone.has (l_item) then
-					if not attached_zone.is_vertical then
+				if l_zone.has (l_item) then
+					if not l_zone.is_vertical then
 						Result := Result + l_item.width
 					else
 						Result := Result + l_item.rectangle.height
 					end
 					if attached {SD_TOOL_BAR_SEPARATOR} l_items.i_th (l_items.index - 1) as l_separator then
-						check has: attached_zone.has (l_separator) end
+						check has: l_zone.has (l_separator) end
 						Result := Result + l_separator.width
 					end
 				end
@@ -564,7 +566,7 @@ feature -- Query
 	groups: ARRAYED_LIST [ARRAYED_LIST [SD_TOOL_BAR_ITEM]]
 			-- Groups in `internal_tool_bar'
 		local
-			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+			l_items: LIST [SD_TOOL_BAR_ITEM]
 			l_group: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 		do
 			l_items := attached_zone.content.items_visible
@@ -700,7 +702,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

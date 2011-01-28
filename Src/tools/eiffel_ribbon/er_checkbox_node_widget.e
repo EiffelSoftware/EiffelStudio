@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 				-- from the current class.
 
 				-- Proceed with vision2 objects creation.
-			
+
 		end
 
 feature -- Command
@@ -73,10 +73,11 @@ feature {NONE} -- Implementation
 
 	on_name_text_change
 			-- <Precursor>
+		local
+			l_checker: ER_IDENTIFIER_UNIQUENESS_CHECKER
 		do
-			if attached tree_node_data as l_data then
-				l_data.set_command_name (name.text)
-			end
+			create l_checker
+			l_checker.on_identifier_name_change (name, tree_node_data)
 		end
 
 	on_label_text_change

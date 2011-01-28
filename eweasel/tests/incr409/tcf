@@ -1,0 +1,19 @@
+
+test_name 	has-stable-attribute-crash
+test_description Adding an attribute to a particular void-safe system and recompiling crashes the compiler.
+
+define		ATTRIBUTE ""
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+copy_raw 	test2.e $CLUSTER test2.e
+copy_sub 	test3.e $CLUSTER test3.e
+compile_melted
+compile_result 	ok
+
+define		ATTRIBUTE "x: INTEGER"
+copy_sub 	test3.e $CLUSTER test3.e
+compile_melted
+compile_result 	ok
+
+test_end

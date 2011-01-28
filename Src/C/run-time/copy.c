@@ -135,7 +135,7 @@ rt_public EIF_REFERENCE eif_twin (EIF_REFERENCE Current)
 	if (!egc_has_old_copy_semantic) {
 			/* When using the new semantic for `copy', we have to perform
 			 * a shallow copy of the object being twined before call `copy'. */
-		ecopy (Result, Current);
+		ecopy (Current, Result);
 	}
 #ifdef WORKBENCH
 	call_copy (Dtype (Result), Result, Current);
@@ -170,7 +170,7 @@ rt_public EIF_REFERENCE eif_standard_twin (EIF_REFERENCE Current)
 
 	a = c_check_assert (EIF_FALSE);
 	Result = eclone (Current);
-	ecopy (Result, Current);
+	ecopy (Current, Result);
 	c_check_assert (a);
 
 	RT_GC_WEAN_N(2);		/* Remove protection */

@@ -59,11 +59,12 @@ feature {NONE} -- Implementation
 			--
 
 	on_command_name_text_change
-			-- <Precursor>
+			--
+		local
+			l_checker: ER_IDENTIFIER_UNIQUENESS_CHECKER
 		do
-			if attached tree_node_data as l_data then
-				l_data.set_command_name (command_name.text)
-			end
+			create l_checker
+			l_checker.on_identifier_name_change (command_name, tree_node_data)
 		end
 
 	on_label_changes

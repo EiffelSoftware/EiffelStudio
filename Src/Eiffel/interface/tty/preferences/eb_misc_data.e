@@ -235,8 +235,9 @@ feature {NONE} -- Implementation
 			locale_id_preference := l_manager.new_array_preference_value (l_manager, locale_id_preference_string, <<"Unselected">>)
 			locale_id_preference.set_is_choice (True)
 			init_locale
-				-- Set default values to be the starting value.
-			locale_id_preference.set_default_value (locale_id_preference.string_value)
+
+				-- Set the exact value, otherwise the preference detected default will be removed.
+			locale_id_preference.set_default_value ("de_DE;[en_US];fr_FR;ru_RU;zh_CN;Unselected")
 
 			pnd_preference := l_manager.new_boolean_preference_value (l_manager, pnd_preference_string, False)
 
@@ -371,7 +372,7 @@ invariant
 	eis_preference_not_void: eis_path_preference /= Void
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -972,6 +972,7 @@ test 	is-expanded-crash-2			incr405 tcf fail incrementality
 test 	once-per-object-add-attributes		incr406 tcf fail incrementality once
 test 	once-per-object-to-attribute		incr407 tcf fail incrementality once
 test 	non-conforming-remove-precondition	incr408 tcf fail incrementality non-conforming
+test 	has-stable-attribute-crash		incr409 tcf fail incrementality stable attached_types
 
 
 -- Melting

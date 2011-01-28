@@ -60,7 +60,7 @@ feature {NONE} -- Initlization
 			end
 			make_with_items (a_unique_title, l_temp_items)
 		ensure
-			set: a_unique_title.as_string_32 ~ unique_title
+			set: a_unique_title.same_string (unique_title)
 			set: a_tool_bar.count = items.count
 		end
 
@@ -255,11 +255,11 @@ feature -- Query
 	items: ARRAYED_SET [SD_TOOL_BAR_ITEM]
 			-- All 	EV_TOOL_BAR_ITEM in `Current' including invisible items
 
-	items_visible: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+	items_visible: LIST [SD_TOOL_BAR_ITEM]
 			-- All displayed items
 		do
 			from
-				create Result.make (1)
+				create {ARRAYED_LIST [SD_TOOL_BAR_ITEM]} Result.make (1)
 				items.start
 			until
 				items.after
@@ -273,11 +273,11 @@ feature -- Query
 			not_void: Result /= Void
 		end
 
-	items_except_sep (a_include_invisible: BOOLEAN): ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+	items_except_sep (a_include_invisible: BOOLEAN): LIST [SD_TOOL_BAR_ITEM]
 			-- `items' except SD_TOOL_BAR_SEPARATOR
 		local
 			l_separator: detachable SD_TOOL_BAR_SEPARATOR
-			l_snap_shot: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+			l_snap_shot: LIST [SD_TOOL_BAR_ITEM]
 		do
 			if a_include_invisible then
 				Result := items.twin
@@ -350,7 +350,7 @@ feature -- Query
 			end
 		end
 
-	group_items (a_group_index: INTEGER; a_include_invisible: BOOLEAN): ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+	group_items (a_group_index: INTEGER; a_include_invisible: BOOLEAN): LIST [SD_TOOL_BAR_ITEM]
 			-- Group items.
 		require
 			valid: 0 < a_group_index and a_group_index <= groups_count (False)
@@ -369,7 +369,7 @@ feature -- Query
 				else
 					l_items := items_visible
 				end
-				create Result.make (1)
+				create {ARRAYED_LIST [SD_TOOL_BAR_ITEM]} Result.make (1)
 				l_group_count := 1
 				l_items.start
 			until
@@ -426,7 +426,7 @@ feature -- Query
 	item_count_except_sep (a_include_invisible: BOOLEAN): INTEGER
 			-- Item count except SD_TOOL_BAR_SEPARATOR
 		local
-			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+			l_items: like items
 			l_separator: detachable SD_TOOL_BAR_SEPARATOR
 		do
 			from
@@ -528,7 +528,7 @@ feature -- Obsolete
 			Result := item_count_except_sep (True)
 		end
 
-	group (a_group_index: INTEGER_32): ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+	group (a_group_index: INTEGER_32): like group_items
 			-- Group items except hidden items
 		obsolete
 			"Use group_items instead."
@@ -544,7 +544,7 @@ feature -- Obsolete
 			Result := groups_count (True)
 		end
 
-	items_except_separator: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+	items_except_separator: like items_except_sep
 			-- `items' except SD_TOOL_BAR_SEPARATOR
 		obsolete
 			"Use items_except_sep instead."
@@ -563,7 +563,7 @@ feature {SD_ACCESS}  -- Internal issues
 	clear
 			-- Clear widget items' parents and reset state flags
 		local
-			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+			l_items: like items
 			l_widget_item: detachable SD_TOOL_BAR_WIDGET_ITEM
 			l_parent: detachable EV_CONTAINER
 		do
@@ -594,7 +594,7 @@ feature {SD_ACCESS}  -- Internal issues
 		require
 			has: items.has (a_item)
 		local
-			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+			l_items: LIST [SD_TOOL_BAR_ITEM]
 		do
 			from
 				if a_include_invisible then
@@ -784,7 +784,7 @@ invariant
 
 ;note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

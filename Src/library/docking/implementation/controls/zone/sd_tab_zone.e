@@ -182,7 +182,7 @@ feature -- Command
 		do
 			internal_notebook.set_item_text (a_content, a_title)
 		ensure
-			set: internal_notebook.item_text (a_content) ~ (a_title.as_string_32)
+			set: internal_notebook.item_text (a_content).same_string_general (a_title)
 		end
 
 	set_long_title (a_title: READABLE_STRING_GENERAL; a_content: SD_CONTENT)
@@ -197,7 +197,7 @@ feature -- Command
 			end
 		ensure
 			set_title_bar: internal_notebook.selected_item_index = internal_notebook.index_of (a_content)
-				implies internal_title_bar.title ~ (a_title.as_string_32)
+				implies internal_title_bar.title.same_string_general (a_title)
 		end
 
 	set_pixmap (a_pixmap: EV_PIXMAP; a_content: SD_CONTENT)
@@ -482,7 +482,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -148,7 +148,7 @@ feature {NONE} -- Initlization
 			set: internal_content = a_content
 		end
 
-	make_for_restore (a_contents: ARRAYED_LIST [SD_CONTENT]; a_container: EV_CONTAINER; a_direction: INTEGER)
+	make_for_restore (a_contents: LIST [SD_CONTENT]; a_container: EV_CONTAINER; a_direction: INTEGER)
 			-- Creation method for restoring
 		require
 			at_least_two: a_contents /= Void and then a_contents.count >= 2
@@ -156,6 +156,7 @@ feature {NONE} -- Initlization
 			direction_valid: (create {SD_ENUMERATION}).is_direction_valid (a_direction)
 		local
 			l_tab_state: SD_TAB_STATE
+			l_content: SD_CONTENT
 		do
 			init_common (a_contents.first, a_direction)
 
@@ -172,11 +173,12 @@ feature {NONE} -- Initlization
 			until
 				a_contents.after
 			loop
+				l_content := a_contents.item
 				if a_contents.isfirst then
-					a_contents.item.change_state (Current)
+					l_content.change_state (Current)
 				else
-					create l_tab_state.make_for_restore_internal (a_contents.item, tab_zone, a_direction)
-					a_contents.item.change_state (Current)
+					create l_tab_state.make_for_restore_internal (l_content, tab_zone, a_direction)
+					l_content.change_state (Current)
 				end
 
 				a_contents.forth
@@ -217,6 +219,13 @@ feature {NONE} -- Initlization
 		do
 			create assistant.make (docking_manager)
 			assistant.init (Current)
+		end
+
+feature  -- States report
+
+	value: INTEGER
+		do
+			Result := {SD_ENUMERATION}.tab
 		end
 
 feature -- Redefine
@@ -267,15 +276,16 @@ feature -- Redefine
 				until
 					l_contents.after
 				loop
+					l_content := l_contents.item
 					if l_contents.isfirst then
 						create l_tab_state.make_for_restore (l_contents.twin, a_container, a_data.direction)
 						l_tab_zone := l_tab_state.zone
 					else
 						check l_tab_zone /= Void end -- Implied by first iteration of this loop
-						create l_tab_state.make_for_restore_internal (l_contents.item, l_tab_zone, a_data.direction)
+						create l_tab_state.make_for_restore_internal (l_content, l_tab_zone, a_data.direction)
 					end
-					l_contents.item.change_state (l_tab_state)
-					l_contents.item.set_visible (True)
+					l_content.change_state (l_tab_state)
+					l_content.set_visible (True)
 
 					l_contents.forth
 				end
@@ -334,7 +344,7 @@ feature -- Redefine
 			-- <Precursor>
 		local
 			l_auto_hide_state: SD_AUTO_HIDE_STATE
-			l_contents: ARRAYED_LIST [SD_CONTENT]
+			l_contents: LIST [SD_CONTENT]
 			l_auto_hide_panel: SD_AUTO_HIDE_PANEL
 			l_width_height: INTEGER
 		do
@@ -393,7 +403,6 @@ feature -- Redefine
 		local
 			l_docking_state: SD_DOCKING_STATE
 			l_parent: detachable EV_CONTAINER
-			l_floating_zone: like floating_zone
 		do
 			docking_manager.command.lock_update (zone, False)
 			if not zone.is_drag_title_bar then
@@ -408,8 +417,7 @@ feature -- Redefine
 				end
 				docking_manager.command.unlock_update
 			else
-				l_floating_zone := floating_zone
-				if l_floating_zone /= Void then
+				if attached floating_zone as l_floating_zone then
 					last_floating_height := l_floating_zone.height
 					last_floating_width := l_floating_zone.width
 				end
@@ -432,8 +440,11 @@ feature -- Redefine
 			l_orignal_multi_dock_area: SD_MULTI_DOCK_AREA
 		do
 			l_orignal_multi_dock_area := docking_manager.query.inner_container (zone)
-			if l_orignal_multi_dock_area.has (zone) and attached l_orignal_multi_dock_area.parent_floating_zone as l_floating_zone
-				and zone.is_drag_title_bar then
+			if
+				l_orignal_multi_dock_area.has (zone) and
+				attached l_orignal_multi_dock_area.parent_floating_zone as l_floating_zone and
+				zone.is_drag_title_bar
+			then
 				l_floating_zone.set_position (a_x, a_y)
 			else
 				assistant.float_internal (a_x, a_y)
@@ -445,7 +456,8 @@ feature -- Redefine
 	move_to_tab_zone (a_target_zone: SD_TAB_ZONE; a_index: INTEGER)
 			-- <Precursor>
 		local
-			l_contents: ARRAYED_LIST [SD_CONTENT]
+			l_content: SD_CONTENT
+			l_contents: LIST [SD_CONTENT]
 			l_tab_state: detachable SD_TAB_STATE
 			l_orignal_direction: INTEGER
 		do
@@ -459,12 +471,13 @@ feature -- Redefine
 				until
 					l_contents.before
 				loop
-					if attached l_contents.item.user_widget.parent as l_parent then
-						l_parent.prune (l_contents.item.user_widget)
+					l_content := l_contents.item
+					if attached l_content.user_widget.parent as l_parent then
+						l_parent.prune (l_content.user_widget)
 					end
-					create l_tab_state.make_with_tab_zone (l_contents.item, a_target_zone, l_orignal_direction)
-					a_target_zone.set_content_position (l_contents.item, a_index)
-					l_contents.item.change_state (l_tab_state)
+					create l_tab_state.make_with_tab_zone (l_content, a_target_zone, l_orignal_direction)
+					a_target_zone.set_content_position (l_content, a_index)
+					l_content.change_state (l_tab_state)
 					l_contents.back
 				end
 				check l_tab_state /= Void end -- Implied by `tab_zone.contents' must has contents, so `l_tab_state' must be created
@@ -741,7 +754,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -97,14 +97,17 @@ feature -- Query
 			-- If `Current' has `a_content'?
 		require
 			a_content_not_void: a_content /= Void
+		local
+			l_tab_stubs: like tab_stubs
 		do
 			from
-				tab_stubs.start
+				l_tab_stubs := tab_stubs
+				l_tab_stubs.start
 			until
-				tab_stubs.after or Result
+				l_tab_stubs.after or Result
 			loop
-				Result := tab_stubs.item.content = a_content
-				tab_stubs.forth
+				Result := l_tab_stubs.item.content = a_content
+				l_tab_stubs.forth
 			end
 		end
 
@@ -114,13 +117,15 @@ feature -- Query
 			a_content_not_void: a_content /= Void
 		local
 			l_group: like internal_tab_group
+			l_tab_groups: like tab_groups
 		do
 			from
-				tab_groups.start
+				l_tab_groups := tab_groups
+				l_tab_groups.start
 			until
-				tab_groups.after or Result
+				l_tab_groups.after or Result
 			loop
-				l_group := tab_groups.item
+				l_group := l_tab_groups.item
 				from
 					l_group.start
 				until
@@ -129,7 +134,7 @@ feature -- Query
 					Result := l_group.item.content = a_content
 					l_group.forth
 				end
-				tab_groups.forth
+				l_tab_groups.forth
 			end
 		end
 
@@ -140,16 +145,19 @@ feature -- Query
 			has_tab: has_tab (a_content)
 		local
 			l_result: detachable like tab_by_content
+			l_internal_tab_stubs: like internal_tab_stubs
 		do
 			from
-				internal_tab_stubs.start
+				l_internal_tab_stubs := internal_tab_stubs
+				l_internal_tab_stubs.start
 			until
-				internal_tab_stubs.after or l_result /= Void
+				l_internal_tab_stubs.after or l_result /= Void
 			loop
-				if internal_tab_stubs.item.content = a_content then
-					l_result := internal_tab_stubs.item
+				l_result := l_internal_tab_stubs.item
+				if l_result.content /= a_content then
+					l_result := Void
 				end
-				internal_tab_stubs.forth
+				l_internal_tab_stubs.forth
 			end
 
 			check l_result /= Void end -- Implied by precondition `has_tab'
@@ -173,8 +181,9 @@ feature -- Query
 			until
 				l_contents.after or l_result /= Void
 			loop
-				if l_contents.item = a_tab.content then
-					l_result := l_contents.item
+				l_result := l_contents.item
+				if l_result /= a_tab.content then
+					l_result := Void
 				end
 				l_contents.forth
 			end
@@ -184,7 +193,7 @@ feature -- Query
 
 feature -- Command
 
-	set_tab_group (a_contents: ARRAYED_LIST [SD_CONTENT])
+	set_tab_group (a_contents: LIST [SD_CONTENT])
 			-- Set `a_contents' to a `tab_groups'
 		require
 			a_contents_not_void: a_contents /= Void
@@ -193,9 +202,11 @@ feature -- Command
 			l_tab_group: detachable ARRAYED_LIST [SD_TAB_STUB]
 			l_tab_group_prune: ARRAYED_LIST [SD_TAB_STUB]
 			l_tab: SD_TAB_STUB
+			l_tab_groups: like tab_groups
 		do
 			from
 				a_contents.start
+				l_tab_groups := tab_groups
 			until
 				a_contents.after
 			loop
@@ -204,8 +215,8 @@ feature -- Command
 					l_tab_group := tab_group_internal (l_tab)
 				else
 					l_tab_group_prune := tab_group_internal (l_tab)
-					tab_groups.start
-					tab_groups.prune (l_tab_group_prune)
+					l_tab_groups.start
+					l_tab_groups.prune (l_tab_group_prune)
 					l_tab_group.extend (l_tab)
 				end
 				a_contents.forth
@@ -230,7 +241,7 @@ feature -- Command
 			a_tab_not_void: a_tab /= Void
 			has: has (a_tab)
 		local
-			l_tab_group: ARRAYED_LIST [SD_TAB_STUB]
+			l_tab_group: LIST [SD_TAB_STUB]
 		do
 			l_tab_group := tab_group_internal (a_tab)
 			from
@@ -314,33 +325,35 @@ feature -- Command
 
 	update_tab_group
 			-- Update tab stubs layout by tab group
+		local
+			l_tab_groups: like tab_groups
+			l_tab_groups_max_size: like tab_groups_max_size
 		do
 			from
-				tab_groups_max_size.wipe_out
-				tab_groups.start
+				l_tab_groups := tab_groups
+				l_tab_groups_max_size := tab_groups_max_size
+				l_tab_groups_max_size.wipe_out
+				l_tab_groups.start
 			until
-				tab_groups.after
+				l_tab_groups.after
 			loop
 				-- Remove stub separator by group
-				update_one_tab_group (tab_groups.item)
-				tab_groups_max_size.extend (tab_group_max_size (tab_groups.item))
-				tab_groups.forth
+				update_one_tab_group (l_tab_groups.item)
+				l_tab_groups_max_size.extend (tab_group_max_size (l_tab_groups.item))
+				l_tab_groups.forth
 			end
 			update_tab_group_max_size
 		end
 
 	set_background_color (a_color: EV_COLOR)
 			-- <Precursor>
-		local
-			l_spacer: detachable SD_AUTO_HIDE_SEPARATOR
 		do
 			from
 				start
 			until
 				after
 			loop
-				l_spacer ?= item
-				if l_spacer /= Void then
+				if attached {SD_AUTO_HIDE_SEPARATOR} item as l_spacer then
 					l_spacer.set_background_color (a_color)
 				end
 				forth
@@ -379,7 +392,7 @@ feature -- Command
 
 feature -- States report
 
-	contents_tab_group_set (a_contents: ARRAYED_LIST [SD_CONTENT]): BOOLEAN
+	contents_tab_group_set (a_contents: LIST [SD_CONTENT]): BOOLEAN
 			-- If `a_contents' tab group set?
 		require
 			a_contents_not_void: a_contents /= Void
@@ -398,14 +411,17 @@ feature {NONE} -- Implementation functions
 		require
 			a_tab_group_not_void: a_tab_group /= Void
 			has: tab_groups.has (a_tab_group)
+		local
+			w: INTEGER
 		do
 			from
 				a_tab_group.start
 			until
 				a_tab_group.after
 			loop
-				if Result <= a_tab_group.item.text_width then
-					Result := a_tab_group.item.text_width
+				w := a_tab_group.item.text_width
+				if Result <= w then
+					Result := w
 				end
 				a_tab_group.forth
 			end
@@ -415,8 +431,6 @@ feature {NONE} -- Implementation functions
 			-- Only leave one text show in a group
 		require
 			a_tab_group_not_void: a_tab_group /= Void
-		local
-			l_separator: detachable SD_AUTO_HIDE_SEPARATOR
 		do
 			from
 				a_tab_group.start
@@ -432,8 +446,7 @@ feature {NONE} -- Implementation functions
 				if a_tab_group.index /= a_tab_group.count then
 					-- Remove separator
 					forth
-					l_separator ?= item
-					if l_separator /= Void then
+					if attached {SD_AUTO_HIDE_SEPARATOR} item as l_separator then
 						prune_all (l_separator)
 					end
 				end
@@ -446,30 +459,34 @@ feature {NONE} -- Implementation functions
 	update_tab_group_max_size
 			-- Update tab group max size
 		local
-			l_tab_group: ARRAYED_LIST [SD_TAB_STUB]
+			l_tab_group: LIST [SD_TAB_STUB]
+			l_tab_groups: like tab_groups
+			l_tab_groups_max_size: like tab_groups_max_size
 		do
 			from
-				tab_groups.start
-				tab_groups_max_size.start
+				l_tab_groups := tab_groups
+				l_tab_groups.start
+				l_tab_groups_max_size := tab_groups_max_size
+				l_tab_groups_max_size.start
 			until
-				tab_groups.after
+				l_tab_groups.after
 			loop
-				l_tab_group := tab_groups.item
+				l_tab_group := l_tab_groups.item
 				from
 					l_tab_group.start
 				until
 					l_tab_group.after
 				loop
 					if not internal_shared.show_all_tab_stub_text then
-						l_tab_group.item.set_text_size (tab_groups_max_size.item)
+						l_tab_group.item.set_text_size (l_tab_groups_max_size.item)
 					end
 					update_separators (l_tab_group.index = 1, l_tab_group.index = l_tab_group.count, l_tab_group.item)
 					l_tab_group.forth
 				end
 
-				tab_groups.forth
-				if not tab_groups_max_size.after then
-					tab_groups_max_size.forth
+				l_tab_groups.forth
+				if not l_tab_groups_max_size.after then
+					l_tab_groups_max_size.forth
 				end
 			end
 		end
@@ -581,24 +598,28 @@ feature {NONE} -- Implementation functions
 			removed: not has (a_stub)
 		end
 
-	tab_group_internal (a_tab: SD_TAB_STUB):like internal_tab_group
+	tab_group_internal (a_tab: SD_TAB_STUB): like internal_tab_group
 			-- Get the group contain `a_tab'
 		require
 			a_tab_not_void: a_tab /= Void
 			has_tab: has (a_tab)
 		local
 			l_result: detachable like tab_group_internal
+			l_tab_groups: like tab_groups
+			l_item: like tab_groups.item
 		do
 			from
-				tab_groups.start
+				l_tab_groups := tab_groups
+				l_tab_groups.start
 			until
-				tab_groups.after or l_result /= Void
+				l_tab_groups.after or l_result /= Void
 			loop
-				tab_groups.item.start
-				if tab_groups.item.has (a_tab) then
-					l_result := tab_groups.item
+				l_item := l_tab_groups.item
+				l_item.start
+				if l_item.has (a_tab) then
+					l_result := l_item
 				end
-				tab_groups.forth
+				l_tab_groups.forth
 			end
 			check l_result /= Void end -- Implied by precondition `has_tab'
 			Result := l_result
@@ -643,7 +664,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

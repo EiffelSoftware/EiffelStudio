@@ -89,7 +89,7 @@ feature -- Command
 			selected: internal_notebook.selected_item_index = internal_notebook.index_of (a_content)
 		end
 
-	extend_contents (a_contents: ARRAYED_LIST [SD_CONTENT])
+	extend_contents (a_contents: LIST [SD_CONTENT])
 			-- Extend `a_contents'
 			-- This feature is faster than extend one by one
 		require
@@ -218,14 +218,14 @@ feature {NONE} -- Implementation
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

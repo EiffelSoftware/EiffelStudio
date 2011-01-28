@@ -466,12 +466,15 @@ feature {SD_NOTEBOOK_TAB_BOX} -- Command
 			-- Handle pointer motion actions for setting tooltips
 		require
 			not_destroyed: not is_destroyed
+		local
+			l_attached_parent: like attached_parent
 		do
 			if rectangle.has_x_y (a_x, a_y) then
-				if attached tool_tip as l_tool_tip and then not (attached_parent.tooltip.as_string_32 ~ tool_tip) then
-					attached_parent.set_tooltip (l_tool_tip)
+				l_attached_parent := attached_parent
+				if attached tool_tip as l_tool_tip and then not (l_attached_parent.tooltip.same_string (l_tool_tip)) then
+					l_attached_parent.set_tooltip (l_tool_tip)
 				elseif tool_tip = Void then
-					attached_parent.remove_tooltip
+					l_attached_parent.remove_tooltip
 				end
 			end
 		end
@@ -742,7 +745,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

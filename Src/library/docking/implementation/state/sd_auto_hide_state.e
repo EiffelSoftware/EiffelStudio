@@ -93,6 +93,13 @@ feature {NONE} -- Initlization
 			auto_hide_panel.set_tab_with_friend (tab_stub, a_friend)
 		end
 
+feature  -- States report
+
+	value: INTEGER
+		do
+			Result := {SD_ENUMERATION}.auto_hide
+		end
+
 feature -- Redefine
 
 	set_focus (a_content: SD_CONTENT)
@@ -171,7 +178,7 @@ feature -- Redefine
 		do
 			tab_stub.set_text (a_title)
 		ensure then
-			set: tab_stub.text ~ a_title
+			set: tab_stub.text.same_string_general (a_title)
 		end
 
  	change_long_title (a_title: READABLE_STRING_GENERAL; a_content: SD_CONTENT)
@@ -181,7 +188,7 @@ feature -- Redefine
 				zone.set_title (a_title)
 			end
 		ensure then
-			set: is_zone_attached implies zone.title ~ a_title
+			set: is_zone_attached implies zone.title.same_string_general (a_title)
 		end
 
 	change_pixmap (a_pixmap: EV_PIXMAP; a_content: SD_CONTENT)
@@ -460,35 +467,36 @@ feature {NONE} -- Implementation functions
 	move_to_zone_internal (a_target_zone: SD_ZONE; a_first: BOOLEAN)
 			-- Move to `a_target_zone'
 		local
-			l_tab_state: SD_TAB_STATE
-			l_orignal_direction: INTEGER
-			l_docking_zone: detachable SD_DOCKING_ZONE
-			l_tab_zone: detachable SD_TAB_ZONE
+			l_tab_state: detachable SD_TAB_STATE
+			l_original_direction: INTEGER
 		do
 			if is_zone_attached and then not zone.is_destroyed then
 				docking_manager.command.lock_update (zone, False)
 			else
-				docking_manager.command.lock_update (void, True)
+				docking_manager.command.lock_update (Void, True)
 			end
 
 			internal_close
 			docking_manager.zones.prune_zone_by_content (content)
 
-			l_orignal_direction := a_target_zone.state.direction
-			l_docking_zone ?= a_target_zone
-			l_tab_zone ?= a_target_zone
-			if l_docking_zone /= Void then
-				create l_tab_state.make (content, l_docking_zone, l_orignal_direction)
+			l_original_direction := a_target_zone.state.direction
+			if attached {SD_DOCKING_ZONE} a_target_zone as l_docking_zone then
+				create l_tab_state.make (content, l_docking_zone, l_original_direction)
+			elseif attached {SD_TAB_ZONE} a_target_zone as l_tab_zone then
+				create l_tab_state.make_with_tab_zone (content, l_tab_zone, l_original_direction)
 			else
-				check only_allow_two_type_zone: l_tab_zone /= Void end
-				create l_tab_state.make_with_tab_zone (content, l_tab_zone, l_orignal_direction)
+				check only_allow_two_type_zone: False end
 			end
-			if a_first then
-				l_tab_state.zone.set_content_position (content, 1)
+			if l_tab_state /= Void then
+				if a_first then
+					l_tab_state.zone.set_content_position (content, 1)
+				end
+				l_tab_state.set_direction (l_original_direction)
 			end
-			l_tab_state.set_direction (l_orignal_direction)
 			docking_manager.command.remove_empty_split_area
-			change_state (l_tab_state)
+			if l_tab_state /= Void then
+				change_state (l_tab_state)
+			end
 			docking_manager.command.update_title_bar
 			docking_manager.command.unlock_update
 		end
@@ -553,7 +561,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

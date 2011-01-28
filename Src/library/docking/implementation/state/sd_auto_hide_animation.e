@@ -302,71 +302,77 @@ feature {NONE} -- Implementation functions
 
 	internal_open_moving
 			-- Zone open animation
+		local
+			l_state_zone: SD_AUTO_HIDE_ZONE
 		do
+			l_state_zone := state.zone
 			inspect
 				state.direction
 			when {SD_ENUMERATION}.left then
-				if state.zone.x_position + internal_show_step >= internal_final_position then
+				if l_state_zone.x_position + internal_show_step >= internal_final_position then
 					remove_moving_timer (True)
-					internal_docking_manager.fixed_area.set_item_x_position (state.zone, internal_final_position)
+					internal_docking_manager.fixed_area.set_item_x_position (l_state_zone, internal_final_position)
 				else
-					internal_docking_manager.fixed_area.set_item_x_position (state.zone, state.zone.x_position + internal_show_step)
+					internal_docking_manager.fixed_area.set_item_x_position (l_state_zone, l_state_zone.x_position + internal_show_step)
 				end
 			when {SD_ENUMERATION}.right then
-				if state.zone.x_position - internal_show_step <= internal_final_position then
+				if l_state_zone.x_position - internal_show_step <= internal_final_position then
 					remove_moving_timer (True)
-					internal_docking_manager.fixed_area.set_item_x_position (state.zone, internal_final_position)
+					internal_docking_manager.fixed_area.set_item_x_position (l_state_zone, internal_final_position)
 				else
-					internal_docking_manager.fixed_area.set_item_x_position (state.zone, state.zone.x_position - internal_show_step)
+					internal_docking_manager.fixed_area.set_item_x_position (l_state_zone, l_state_zone.x_position - internal_show_step)
 				end
 			when {SD_ENUMERATION}.top then
-				if state.zone.y_position + internal_show_step >= internal_final_position then
+				if l_state_zone.y_position + internal_show_step >= internal_final_position then
 					remove_moving_timer (True)
-					internal_docking_manager.fixed_area.set_item_y_position (state.zone, internal_final_position)
+					internal_docking_manager.fixed_area.set_item_y_position (l_state_zone, internal_final_position)
 				else
-					internal_docking_manager.fixed_area.set_item_y_position (state.zone, state.zone.y_position + internal_show_step)
+					internal_docking_manager.fixed_area.set_item_y_position (l_state_zone, l_state_zone.y_position + internal_show_step)
 				end
 			when {SD_ENUMERATION}.bottom then
-				if state.zone.y_position - internal_show_step <= internal_final_position then
+				if l_state_zone.y_position - internal_show_step <= internal_final_position then
 					remove_moving_timer (True)
-					internal_docking_manager.fixed_area.set_item_y_position (state.zone, internal_final_position)
+					internal_docking_manager.fixed_area.set_item_y_position (l_state_zone, internal_final_position)
 				else
-					internal_docking_manager.fixed_area.set_item_y_position (state.zone, state.zone.y_position - internal_show_step)
+					internal_docking_manager.fixed_area.set_item_y_position (l_state_zone, l_state_zone.y_position - internal_show_step)
 				end
 			end
-			if not state.zone.is_displayed then
-				state.zone.show
+			if not l_state_zone.is_displayed then
+				l_state_zone.show
 			end
 		end
 
 	internal_close_moving
 			-- Zone close animation
+		local
+			l_state_zone: SD_AUTO_HIDE_ZONE
 		do
+			l_state_zone := state.zone
 			inspect
 				state.direction
 			when {SD_ENUMERATION}.left then
-				if state.zone.x_position - internal_show_step <= internal_final_position then
+				if l_state_zone.x_position - internal_show_step <= internal_final_position then
 					remove_moving_timer (False)
 				else
-					internal_docking_manager.fixed_area.set_item_x_position (state.zone, state.zone.x_position - internal_show_step)
+					internal_docking_manager.fixed_area.set_item_x_position (l_state_zone, l_state_zone.x_position - internal_show_step)
 				end
 			when {SD_ENUMERATION}.right then
-				if state.zone.x_position + internal_show_step >= internal_final_position then
+				if l_state_zone.x_position + internal_show_step >= internal_final_position then
 					remove_moving_timer (False)
 				else
-					internal_docking_manager.fixed_area.set_item_x_position (state.zone, state.zone.x_position + internal_show_step)
+					internal_docking_manager.fixed_area.set_item_x_position (l_state_zone, l_state_zone.x_position + internal_show_step)
 				end
 			when {SD_ENUMERATION}.top then
-				if state.zone.y_position - internal_show_step <= internal_final_position then
+				if l_state_zone.y_position - internal_show_step <= internal_final_position then
 					remove_moving_timer (False)
 				else
-					internal_docking_manager.fixed_area.set_item_y_position (state.zone, state.zone.y_position - internal_show_step)
+					internal_docking_manager.fixed_area.set_item_y_position (l_state_zone, l_state_zone.y_position - internal_show_step)
 				end
 			when {SD_ENUMERATION}.bottom then
-				if state.zone.y_position + internal_show_step >= internal_final_position then
+				if l_state_zone.y_position + internal_show_step >= internal_final_position then
 					remove_moving_timer (False)
 				else
-					internal_docking_manager.fixed_area.set_item_y_position (state.zone, state.zone.y_position + internal_show_step)
+					internal_docking_manager.fixed_area.set_item_y_position (l_state_zone, l_state_zone.y_position + internal_show_step)
 				end
 			end
 		end
@@ -405,7 +411,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

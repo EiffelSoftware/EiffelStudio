@@ -45,6 +45,13 @@ feature {NONE} -- Initlization
 			set: docking_manager = a_docking_manager
 		end
 
+feature  -- States report
+
+	value: INTEGER
+		do
+			check should_not_be_called: False end
+		end
+
 feature -- Redefine
 
 	dock_at_top_level (a_multi_dock_area: SD_MULTI_DOCK_AREA)
@@ -329,14 +336,14 @@ feature {NONE} -- Implementation
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

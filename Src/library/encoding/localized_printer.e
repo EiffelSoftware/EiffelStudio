@@ -59,14 +59,16 @@ feature -- Conversion
 			else
 					-- This is a hack, since some OSes don't support convertion from/to UTF-32 to `a_console_encoding'.
 					-- We convert UTF-32 to UTF-8 first, then convert UTF-8 to `a_console_encoding'.
-				if not utf8.is_equal (a_console_encoding) then
-					utf32.convert_to (utf8, a_str)
-					if utf32.last_conversion_successful then
+				utf32.convert_to (utf8, a_str)
+				if utf32.last_conversion_successful then
+					if not utf8.is_equal (a_console_encoding) then
 						l_result := utf32.last_converted_string_8
 						utf8.convert_to (a_console_encoding, l_result)
 						if utf8.last_conversion_successful then
 							l_result := utf8.last_converted_string_8
 						end
+					else
+						l_result := utf32.last_converted_string_8
 					end
 				end
 				if l_result = Void then
@@ -99,6 +101,11 @@ feature -- Conversion
 						if utf8.last_conversion_successful then
 							l_result := utf8.last_converted_string_32
 						end
+					end
+				else
+					utf8.convert_to (utf32, l_result)
+					if utf8.last_conversion_successful then
+						l_result := utf8.last_converted_string_32
 					end
 				end
 				if l_result = Void then

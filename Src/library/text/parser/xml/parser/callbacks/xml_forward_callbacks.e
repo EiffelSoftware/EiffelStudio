@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 	make_null
 			-- Don't forward anything
 		do
-			set_callbacks (create {XML_CALLBACKS_NULL}.make)
+			callbacks := create {XML_CALLBACKS_NULL}.make
 		end
 
 feature -- Access
@@ -36,7 +36,7 @@ feature -- Setting
 		do
 			callbacks := a_callbacks
 		ensure then
-			callbackes_set: callbacks = a_callbacks
+			callbacks_set: callbacks = a_callbacks
 		end
 
 feature {NONE} -- Document

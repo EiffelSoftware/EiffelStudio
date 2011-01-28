@@ -1,0 +1,12 @@
+
+test_name	 spurious-vuot-in-assertion
+test_description A reference to a nonexistent feature of an object test local in an assertion causes the compiler to report a VEEN error but it also reports a spurious VUOT(1) error on the object test local
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result 	validity_error TEST2 VEEN VEEN VEEN VEEN
+
+test_end

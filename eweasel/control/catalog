@@ -509,6 +509,7 @@ test	vtcg7-precondition-violation	valid266 tcf fail validity
 test	bogus-vdrd2-error				valid267 tcf fail validity
 test	crash-on-veen2a					valid268 tcf pass validity
 test	bogus-vsrp3-with-require-else-false	valid269 tcf pass validity
+test	spurious-vuot-in-assertion		valid270 tcf pass validity object_test
 
 -- Multiple error reporting tests
 test	multi-error-degree-4	multierr001 tcf pass multi-errors

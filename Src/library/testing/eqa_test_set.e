@@ -44,9 +44,17 @@ feature {NONE} -- Initialization
 			end
 
 			create l_directory.make (l_target_path)
-			assert ("testing_directory_already_exists", not l_directory.exists)
-			l_directory.recursive_create_dir
-			assert ("testing_directory_created", l_directory.exists)
+				-- We cannot assume that the directory does not already exist which sometimes
+				-- happen since EiffelStudio let users keep their testing directory via a preference.
+				-- This is why we do not assert its non-existence anymore, we will create it only if 
+				-- it does not exist.
+			if not l_directory.exists then
+				l_directory.recursive_create_dir
+			else
+					-- Remove existing file which could prevent a proper re-execution of the test
+				l_directory.delete_content
+			end
+			assert ("testing_directory_exists " + l_target_path, l_directory.exists)
 			l_exec_env.change_working_directory (l_target_path)
 
 			on_prepare

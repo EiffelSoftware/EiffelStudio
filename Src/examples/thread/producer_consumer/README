@@ -4,28 +4,9 @@ Producer-consumer example using the EiffelThread library.
 A proposition of Eiffel code for implementing
 the famous Producer-Consumer example.
 
-Works with Eiffel 4.2 and higher.
-
 Implementation notes
 --------------------
 
 Condition variables are used to synchronize consumers and
 producers access to the shared buffer.
 A mutex synchronized the output.
-
-Implementation notes specific to Eiffel
----------------------------------------
-
-We can only share flat object (no reference in it). However,
-the shared buffer contains an attribute data:ARRAY[INTEGER].
-If we do not freeze it, the Eiffel GC will collect it.
-
-We use a proxy[BOOLEAN_REF] as a flag for exiting the program.
-It is does not work with a simple boolean (no expanded type can be
-put into a proxy). 
- 
-Compilation
------------
-Assertions should not be turned on with any version of the eiffel compiler
-anterior to 4.3. Assertions are only MT-safe since the 4.3 release.
-

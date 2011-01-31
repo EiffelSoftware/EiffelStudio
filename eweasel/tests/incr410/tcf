@@ -1,0 +1,29 @@
+
+test_name 	type-to-create-crash
+test_description Changing a function with a generic return type that is referenced by a qualified anchored type to an attribute and finalizing crashes the compiler.
+
+define		FEATURE "value: G do create Result end"
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_sub 	test1.e $CLUSTER test1.e
+copy_raw 	test2.e $CLUSTER test2.e
+compile_melted
+compile_result 	ok
+
+execute_work 	NONE 	exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+define		FEATURE "value: G"
+copy_sub 	test1.e $CLUSTER test1.e
+compile_final
+compile_result 	ok
+
+c_compile_final
+c_compile_result ok
+
+execute_final 	NONE 	exec_output2
+execute_result 	ok
+compare		exec_output2 output
+
+test_end

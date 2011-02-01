@@ -991,7 +991,6 @@ feature {NONE} -- Sort handling
 			l_count, i: INTEGER
 			l_event_items: ARRAYED_LIST [TUPLE [event_item: EVENT_LIST_ITEM_I; expand: BOOLEAN]]
 			l_event_item: EVENT_LIST_ITEM_I
-			l_sub_row_count: INTEGER
 		do
 			create l_sorter.make (a_comparator)
 
@@ -1037,10 +1036,11 @@ feature {NONE} -- Sort handling
 				end
 
 				if l_row.parent /= Void then
-					l_sub_row_count := l_row.subrow_count_recursive
+						-- Increase `i' by recursive subrow count so that they get included.
+					i := i + l_row.subrow_count_recursive
 				end
-
-				i := i + 1 + l_sub_row_count
+					-- Move `i' to next row
+				i := i + 1
 				l_event_items.forth
 			end
 
@@ -1121,6 +1121,8 @@ feature {EVENT_LIST_OBSERVER} -- Events handlers
 				if item_count = 1 then
 						-- First item to be added
 					update_content_applicable_widgets (True)
+						-- Set leap to be that of the height of the first row added.
+					l_grid.vertical_scroll_bar.set_step (l_row.height)
 				end
 			end
 		ensure then
@@ -1315,7 +1317,7 @@ invariant
 	grid_events_attached: (is_initialized and is_interface_usable) implies attached grid_events
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

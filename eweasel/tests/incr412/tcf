@@ -1,0 +1,22 @@
+
+test_name 	create-qualified-explicit-crash
+test_description Changing an attribute to a function after a VEVI error is reported in a system that uses qualified anchored types and then finalizing crashes the compiler in {CREATE_QUALIFIED}.is_explicit.
+
+define		ROUTINE_BODY ""
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_sub 	test1.e $CLUSTER test1.e
+copy_raw 	test2.e $CLUSTER test2.e
+copy_sub 	parent.e $CLUSTER parent.e
+compile_melted
+compile_result 	validity_error TEST1 VEVI
+
+define		ROUTINE_BODY "do create Result end"
+copy_sub 	test1.e $CLUSTER test1.e
+resume_compile
+compile_result 	ok
+
+compile_final
+compile_result 	ok
+
+test_end

@@ -1,0 +1,21 @@
+
+test_name 	rout-entry-crash-3
+test_description A sequence of changes crashes the compiler in {FORMAL_ENTRY}.entry or {ROUT_ENTRY}.entry.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+copy_raw 	test2.e $CLUSTER test2.e
+compile_melted
+compile_result 	ok
+
+copy_raw 	test2_rev2.e $CLUSTER test2.e
+compile_melted
+compile_result 	ok
+
+copy_raw 	test1_rev2.e $CLUSTER test1.e
+copy_raw 	test2_rev3.e $CLUSTER test2.e
+compile_melted
+compile_result 	ok
+
+test_end

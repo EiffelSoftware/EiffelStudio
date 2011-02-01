@@ -977,6 +977,7 @@ test 	non-conforming-remove-precondition	incr408 tcf fail incrementality non-con
 test 	has-stable-attribute-crash		incr409 tcf fail incrementality stable attached_types
 test 	type-to-create-crash			incr410 tcf fail incrementality attached_types
 test 	rout-entry-crash-3			incr411 tcf fail incrementality
+test 	create-qualified-explicit-crash		incr412 tcf fail incrementality anchored_types
 
 
 -- Melting

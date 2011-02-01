@@ -1,0 +1,3 @@
+
+class PARENT [G]
+end

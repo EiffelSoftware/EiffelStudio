@@ -38,7 +38,6 @@ feature -- Init
 		do
 			group_internal := a_group_callback
 			make_old
---			text_field.hide
 		end
 
 feature -- Access
@@ -59,16 +58,10 @@ feature {NONE} -- GUI
 			hbox: EV_HORIZONTAL_BOX
 		do
 			create list
-
-			set_border_width (5)
-			set_padding (5)
+				-- Set default size to hold at least three classes.
+			list.set_minimum_height (60)
 
 			extend (list)
-
---			build_text_field (interface_names.l_Entry_colon)
-
---			text_field.change_actions.extend (agent update_button_status)
---			text_field.return_actions.extend (agent add_item_in)
 
 			list.select_actions.extend (agent update_buttons)
 			list.deselect_actions.extend (agent update_buttons)
@@ -81,16 +74,11 @@ feature {NONE} -- GUI
 			add_button.set_minimum_width (80)
 			hbox.extend (add_button)
 			hbox.disable_item_expand (add_button)
---			add_button.disable_sensitive
+
 
 			hbox.extend (create {EV_CELL})
 
 			create apply_button.make_with_text (interface_names.b_Rename)
---			apply_button.select_actions.extend (agent modify_pressed)
---			apply_button.set_minimum_width (80)
---			hbox.extend (apply_button)
---			hbox.disable_item_expand (apply_button)
---			apply_button.disable_sensitive
 
 			hbox.extend (create {EV_CELL})
 			create remove_button.make_with_text (interface_names.b_Remove)
@@ -157,35 +145,13 @@ feature {NONE} -- Implementation
 			-- Enable or disable sensitivity of `Apply', `Add'
 			-- and `Remove' buttons.
 		local
---			l_text: STRING_32
 			l_item: detachable EV_LIST_ITEM
 		do
---			check text_field /= Void end
 			check list /= Void end
 			check add_button /= Void end
 			check apply_button /= Void end
 			check remove_button /= Void end
---			l_text := text_field.text
 			l_item := list.selected_item
---			l_text := l_item.text
-
-				-- Update `Add'
---			if not l_text.is_empty then
---				add_button.enable_sensitive
---			else
---				add_button.disable_sensitive
---			end
-
-				-- Update `Apply'
---			if l_item /= Void and not l_text.is_empty then
---				if not l_text.is_equal (l_item.text) then
---					apply_button.enable_sensitive
---				else
---					apply_button.disable_sensitive
---				end
---			else
---				apply_button.disable_sensitive
---			end
 
 				-- Update `Remove'
 			if l_item /= Void then
@@ -196,11 +162,8 @@ feature {NONE} -- Implementation
 		end
 
 
-invariant
-	invariant_clause: True -- Your invariant here
-
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

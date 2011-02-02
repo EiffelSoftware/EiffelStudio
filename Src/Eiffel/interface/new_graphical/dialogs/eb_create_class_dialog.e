@@ -138,8 +138,6 @@ feature {NONE} -- Initialization
 			create creation_check.make_with_text (Interface_names.l_generate_creation)
 			creation_check.select_actions.extend (agent on_creation_check)
 			create parents_list.make (agent compute_group)
---			parents_list.text_field.focus_in_actions.extend (agent on_focus_in)
---			parents_list.text_field.focus_out_actions.extend (agent on_focus_out)
 
 			parents_list.add_actions.extend (agent on_parent_add)
 			parents_list.modify_actions.extend (agent on_parent_modify)
@@ -161,11 +159,7 @@ feature {NONE} -- Initialization
 			extend_no_expand (bbox, name_label)
 			bbox.extend (class_entry)
 			extend_no_expand (vb, bbox)
---| IEK File name should always be class name.
---			create bbox
---			extend_no_expand (bbox, file_label)
---			bbox.extend (file_entry)
---			extend_no_expand (vb, bbox)
+
 			if not a_from_diagram then
 				extend_no_expand (vb, cluster_label)
 				vb.extend (cluster_list)
@@ -175,20 +169,21 @@ feature {NONE} -- Initialization
 
 			create vb
 			create bbox
-			bbox.enable_homogeneous
-			bbox.extend (deferred_check)
-			bbox.extend (expanded_check)
+			extend_no_expand (bbox, deferred_check)
+			extend_no_expand (bbox, expanded_check)
+
 			extend_no_expand (vb, bbox)
-			create creation_label.make_with_text (Interface_names.l_creation)
-			creation_label.align_text_left
-			extend_no_expand (vb, creation_check)
+
 			create bbox
 			create l_cell
 			l_cell.set_minimum_width (22)
-			extend_no_expand (bbox, l_cell)
-			extend_no_expand (bbox, creation_label)
+
+			create creation_label.make_with_text (Interface_names.l_creation)
+			creation_label.align_text_left
+
+			extend_no_expand (bbox, creation_check)
 			bbox.extend (creation_entry)
-			bbox.disable_sensitive
+			creation_entry.disable_sensitive
 			extend_no_expand (vb, bbox)
 			extend_no_expand (vb, empty_check)
 			vb.set_border_width (Layout_constants.Small_border_size)
@@ -744,9 +739,9 @@ feature {NONE} -- Implementation
 			-- User selected or unselected the `creation procedure' check box.
 		do
 			if creation_check.is_selected then
-				creation_entry.parent.enable_sensitive
+				creation_entry.enable_sensitive
 			else
-				creation_entry.parent.disable_sensitive
+				creation_entry.disable_sensitive
 			end
 		end
 
@@ -795,6 +790,9 @@ feature {NONE} -- Implementation
 							l_item.set_text (l_inh_dlg.type_selector.code)
 						end
 						l_item.set_data (l_inh_dlg.code)
+					else
+						-- Remove item as it is not valid content
+						l_item.parent.prune (l_item)
 					end
 				end
 			end
@@ -859,7 +857,7 @@ feature {NONE} -- Constants
 	Cluster_list_minimum_height: INTEGER
 			-- Minimum height for the cluster list.
 		do
-			Result := Layout_constants.Dialog_unit_to_pixels (100)
+			Result := Layout_constants.Dialog_unit_to_pixels (150)
 		end
 
 	new_class_counter: CELL [INTEGER]

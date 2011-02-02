@@ -90,10 +90,12 @@ shell\bin\sed -e "s/\//\\\/g" make.w32 >> make.w32.modif
 shell\bin\mv make.w32.modif make.w32
 
 if exist run-time\eif_config.h del run-time\eif_config.h
+if exist run-time\eif_confmagic.h del run-time\eif_confmagic.h
 rem
 rem Copy the config 
 rem
 copy eif_config.h run-time
+copy eif_confmagic.h run-time
 copy eif_portable.h run-time
 copy config.sh bench
 copy make.w32 bench\make.bat
@@ -242,10 +244,10 @@ cd ..
 cd ..
 
 if exist run-time\eif_config.h del run-time\eif_config.h
+if exist run-time\eif_confmagic.h del run-time\eif_confmagic.h
 if exist run-time\eif_size.h del run-time\eif_size.h
 if exist run-time\eif_portable.h del run-time\eif_portable.h
 if exist config.sh del config.sh
-if exist confmagc.h del confmagc.h
 if exist eif_config.h del eif_config.h
 if exist make.bat del make.bat
 if exist eif_size.h del eif_size.h

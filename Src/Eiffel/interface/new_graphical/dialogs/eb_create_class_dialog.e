@@ -342,6 +342,7 @@ feature {NONE} -- Basic operations
 			l_parents: EV_LIST
 			l_creation_routine: detachable STRING_32
 			l_class_name: detachable STRING_32
+			l_has_conforming_inheritance, l_has_non_conforming_inheritance: BOOLEAN
 			retried: BOOLEAN
 		do
 			if not retried then
@@ -400,13 +401,38 @@ feature {NONE} -- Basic operations
 						l_buffer.wipe_out
 						l_parents := parents_list.list
 						if not l_parents.is_empty then
-							l_buffer.append ({EIFFEL_KEYWORD_CONSTANTS}.inherit_keyword)
-							l_buffer.append_character ('%N')
 							from l_parents.start until l_parents.after loop
-								l_buffer.append_character ('%T')
-								l_buffer.append (string_general_as_upper (l_parents.item.text))
-								l_buffer.append ("%N%N")
+								if l_parents.item.text.has_substring ("{NONE} ") then
+									l_has_non_conforming_inheritance := True
+								else
+									l_has_conforming_inheritance := True
+								end
 								l_parents.forth
+							end
+							if l_has_conforming_inheritance then
+								l_buffer.append ({EIFFEL_KEYWORD_CONSTANTS}.inherit_keyword)
+								l_buffer.append_character ('%N')
+								from l_parents.start until l_parents.after loop
+									if not l_parents.item.text.has_substring ("{NONE} ") then
+										l_buffer.append_character ('%T')
+										l_buffer.append (string_general_as_upper (l_parents.item.data.out))
+										l_buffer.append ("%N%N")
+									end
+									l_parents.forth
+								end
+							end
+							if l_has_non_conforming_inheritance then
+								l_buffer.append ({EIFFEL_KEYWORD_CONSTANTS}.inherit_keyword)
+								l_buffer.append (" {NONE}")
+								l_buffer.append_character ('%N')
+								from l_parents.start until l_parents.after loop
+									if l_parents.item.text.has_substring ("{NONE} ") then
+										l_buffer.append_character ('%T')
+										l_buffer.append (string_general_as_upper (l_parents.item.data.out))
+										l_buffer.append ("%N%N")
+									end
+									l_parents.forth
+								end
 							end
 						end
 						l_params.put_last (l_buffer.twin, inherit_clause_symbol)
@@ -759,9 +785,15 @@ feature {NONE} -- Implementation
 				l_item := parents_list.list.last
 				if l_item /= Void then
 					create l_inh_dlg.make
+					l_inh_dlg.set_child_type (Void)
+					l_inh_dlg.set_parent_type (Void)
 					l_inh_dlg.show_modal_to_window (Current)
 					if l_inh_dlg.ok_clicked and then l_inh_dlg.valid_content then
-						l_item.set_text (l_inh_dlg.type_selector.code)
+						if l_inh_dlg.is_non_conforming then
+							l_item.set_text ("{NONE} " + l_inh_dlg.type_selector.code)
+						else
+							l_item.set_text (l_inh_dlg.type_selector.code)
+						end
 						l_item.set_data (l_inh_dlg.code)
 					end
 				end
@@ -866,7 +898,7 @@ invariant
 	cluster_implies_path: cluster /= Void implies path /= Void
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

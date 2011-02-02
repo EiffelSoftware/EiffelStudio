@@ -258,8 +258,6 @@ feature {NONE} -- Implementation
 						ts.set_initial_types (client_type, supplier_type, False)
 						ts.update_list_strings (False)
 					end
-
-					-- ts.set_constraint (...)
 					generic_type_selectors.extend (ts)
 					generic_box.extend (ts)
 					i := i + 1
@@ -392,19 +390,24 @@ feature {NONE} -- Implementation
 			end
 		end
 
-feature {EB_FEATURE_EDITOR, EB_TYPE_SELECTOR, EB_INHERITANCE_DIALOG} -- Access
+feature {EB_FEATURE_EDITOR, EB_CREATE_CLASS_DIALOG, EB_TYPE_SELECTOR, EB_INHERITANCE_DIALOG} -- Access
 
 	client_type, supplier_type: ES_CLASS
 
 	set_initial_types (a_client_type, a_supplier_type: ES_CLASS; a_used_for_inheritance: BOOLEAN)
+			-- Update `Current' GUI for the context of `a_client_type', a_supplier_type' and `a_used_for_inheritance'
 		do
 			client_type := a_client_type
 			supplier_type := a_supplier_type
 			if a_used_for_inheritance then
 				is_used_for_inheritance := True
-				selector.wipe_out
-				selector.set_text (a_supplier_type.name)
-				selector.disable_sensitive
+				if a_supplier_type /= Void then
+						-- Used when selecting inheritance via the diagram tool.
+					selector.wipe_out
+					selector.set_text (a_supplier_type.name)
+					selector.disable_sensitive
+				end
+					-- Detachable types not valid for inheritance.
 				detachable_check_box.disable_sensitive
 			end
 		end
@@ -481,7 +484,7 @@ feature {EV_ANY} -- Contract support
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

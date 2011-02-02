@@ -41,7 +41,6 @@ feature {NONE} -- Initialization
 		do
 			create inline_agent_counter
 			create hidden_local_counter
-			create inline_agents.make (1, 0)
 			create_local_containers
 			create attributes.make (0)
 		end
@@ -98,12 +97,14 @@ feature -- Access
 		local
 			i: INTEGER
 		do
-			from
-				i := inline_agents.count
-			until
-				i <= 0 or else inline_agents [i].ast = a
-			loop
-				i := i - 1
+			if inline_agents /= Void then
+				from
+					i := inline_agents.count
+				until
+					i <= 0 or else inline_agents [i].ast = a
+				loop
+					i := i - 1
+				end
 			end
 			if i > 0 then
 				Result := inline_agents [i].f
@@ -171,13 +172,18 @@ feature -- Modification
 			i: INTEGER
 		do
 				-- Check that the given AST has no feature descriptor yet.
-			from
-				i := inline_agents.count
-			until
-				i <= 0 or else inline_agents [i].ast = a
-			loop
-				i := i - 1
+			if inline_agents /= Void then
+				from
+					i := inline_agents.count
+				until
+					i <= 0 or else inline_agents [i].ast = a
+				loop
+					i := i - 1
+				end
+			else
+				create inline_agents.make_empty
 			end
+
 			if i = 0 then
 					-- AST `a' is not yet registered.
 					-- Register it now.
@@ -892,7 +898,7 @@ feature -- Managing the type stack
 			set_written_class (Void)
 			inline_agent_counter.reset
 			hidden_local_counter.reset
-			create inline_agents.make (1, 0)
+			inline_agents := Void
 			clear_local_context
 		end
 
@@ -936,11 +942,9 @@ feature {NONE} --Internals
 invariant
 	locals_attached: locals /= Void
 	object_test_locals_attached: object_test_locals /= Void
-	inline_agents_attached: inline_agents /= Void
-	inline_agents_normalized: inline_agents.lower = 1
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

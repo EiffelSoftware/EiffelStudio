@@ -492,9 +492,6 @@ feature -- Element change
 				Result := build_ast (False, False)
 				if Result /= Void and then l_error_level = error_handler.error_level then
 					Result.set_class_id (class_id)
-						-- Although it is not very nice to store in the server, it will save
-						-- a lot of parsing when switching back and forth between classes.
-					tmp_ast_server.put (Result)
 				else
 					Result := Void
 				end
@@ -2251,7 +2248,7 @@ invariant
 	inline_agent_table_not_void: inline_agent_table /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -2500,6 +2500,7 @@ test	attached-attribute-initialization		attach077 tcf pass attached_types void_s
 test	detachable-formal-attached-constraint		attach078 tcf pass attached_types formal generic constraint conformance validity
 test	empty-attribute-body-bogus-vevi			attach079 tcf pass attached_types validity
 test	bogus-object-test						attach080 tcf pass attached_types object_test execution
+test	nonconforming-inheritance-bogus-vevi		attach081 tcf fail attached_types non-conforming
 
 -- Tests for conformance in general
 test	basic-conformance		conform001 tcf pass conformance

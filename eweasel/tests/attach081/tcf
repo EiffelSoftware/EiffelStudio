@@ -1,0 +1,17 @@
+
+test_name 	 nonconforming-inheritance-bogus-vevi
+test_description An attribute with a body that is inherited via non-conforming inheritance causes the compiler to report a spurious VEVI error.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test2.e $CLUSTER test2.e
+copy_raw	test3.e $CLUSTER test3.e
+
+compile_melted
+compile_result ok
+
+execute_work 	NONE 	exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+test_end

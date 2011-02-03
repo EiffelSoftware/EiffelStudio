@@ -162,8 +162,8 @@ feature {NONE} -- Agents
 			combo_grid.focus_out_actions.force (agent combo_focus_lost)
 
 			combo_popup.extend (l_frame)
+			combo_popup.show_actions.extend (agent do combo_grid.set_focus end)
 			combo_popup.show
-			combo_grid.set_focus
 		end
 
 	deactivate
@@ -202,6 +202,7 @@ feature {NONE} -- Agents
 					set_value (l_item.value)
 				end
 				update_text_on_deactivation
+				deactivate
 				destroy_combo_popup
 			end
 		end

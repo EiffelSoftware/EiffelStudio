@@ -1619,6 +1619,7 @@ test once-per-object-recursive-call		once016 tcf fail once
 test once-per-object-rescue-gc			once017 tcf fail once
 test once-per-object-nonconforming-inheritance	once018 tcf fail once
 test once-per-object-redefined-precursor	once019 tcf fail once
+test once-per-object-nonconforming-2		once020 tcf fail once non-conforming
 
 -- Compiler termination (exception trace, panic, etc.)
 

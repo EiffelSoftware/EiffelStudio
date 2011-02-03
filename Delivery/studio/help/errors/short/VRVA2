@@ -1,2 +1,2 @@
-Error: volatile attribute usage is invalid.
-What to do: remove volatile qualification or remove the expanded status of enclosing class.
+Error: transient attribute usage is invalid.
+What to do: remove transient qualification or remove the expanded status of enclosing class.

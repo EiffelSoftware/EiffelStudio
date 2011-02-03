@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-6-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-6-0 http://www.eiffel.com/developers/xml/configuration-1-6-0.xsd" name="mt_thread_example" uuid="D57B873E-EB8F-401B-8918-FAFA539A6119">
+	<target name="mt_thread_example">
+		<root class="APPLICATION" feature="make"/>
+		<option warning="true">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+		</option>
+		<setting name="console_application" value="true" />
+		<setting name="multithreaded" value="true" />
+		<precompile name="precomp_base-mt" location="$ISE_PRECOMP\base-mt.ecf" />
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" />
+		<library name="logging" location="$ITP_EIFFEL_DEV\logging\library\logging.ecf" />
+		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf" />
+		<cluster name="mt_thread_example" location=".\" recursive="true">
+			<file_rule>
+				<exclude>/EIFGENs$</exclude>
+				<exclude>/CVS$</exclude>
+				<exclude>/.svn$</exclude>
+			</file_rule>
+		</cluster>
+	</target>
+</system>
+

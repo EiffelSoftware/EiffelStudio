@@ -176,7 +176,7 @@ feature -- Processor Initialization
 			from
 					-- Wait for the SCOOP system to be in a static state, ie: all processors are in an idle state.
 			until
-				processor_count = idle_processor_count
+				processor_count = idle_processor_count + waiting_processor_count
 			loop
 				yield_processor
 			end
@@ -185,9 +185,13 @@ feature -- Processor Initialization
 			from
 				root_processor_has_exited := True
 			until
-				idle_processor_count = 1
+				idle_processor_count - waiting_processor_count = 1
 			loop
 				yield_processor
+			end
+
+			if waiting_processor_count > 0 then
+				--| FIXME Alert debugger of deadlock
 			end
 		end
 
@@ -640,6 +644,9 @@ feature -- Command/Query Handling
 			l_request_chain_meta_data: detachable like new_request_chain_meta_data_entry
 			l_temp_count, l_orig_chain_node_count: INTEGER_32
 		do
+
+			l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 ($waiting_processor_count)
+
 					-- Update chain to be callable, wait for tail node to signal that call has been processed.
 			(processor_meta_data [a_client_processor_id]) [current_request_chain_query_blocking_processor_index] := a_supplier_processor_id
 
@@ -684,6 +691,9 @@ feature -- Command/Query Handling
 
 				-- Set request chain pid count back to original value.
 			l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.decrement_integer_32 (l_request_chain_meta_data.item_address (request_chain_pid_count_index))
+
+
+			l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.decrement_integer_32 ($waiting_processor_count)
 		end
 
 feature {NONE} -- Resource Initialization
@@ -693,7 +703,6 @@ feature {NONE} -- Resource Initialization
 		local
 			i: INTEGER_32
 			l_processor_meta_data: like processor_meta_data
-			l_id: INTEGER_32
 		do
 				-- Assign a new id for the root processor.
 			from
@@ -766,7 +775,7 @@ feature {NONE} -- Resource Initialization
 			l_request_chain_node_meta_data_queue: detachable like new_request_chain_node_meta_data_queue
 			l_executing_request_chain_node_meta_data: detachable like new_request_chain_node_meta_data_queue_entry
 			l_head_pid: like processor_id_type
-			l_is_head, l_is_idle: BOOLEAN
+			l_is_head: BOOLEAN
 			l_orig_chain_node_count, l_temp_count: INTEGER
 		do
 			-- SCOOP Processor has been launched

@@ -1,0 +1,14 @@
+
+test_name 	 repeated-inheritance-bogus-vevi
+test_description A routine that is repeatedly inherited and redefined into an attribute with a body causes the compiler to report a spurious VEVI error.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test2.e $CLUSTER test2.e
+copy_raw	test3.e $CLUSTER test3.e
+copy_raw	test4.e $CLUSTER test4.e
+
+compile_melted
+compile_result ok
+
+test_end

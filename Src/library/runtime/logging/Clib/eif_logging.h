@@ -15,7 +15,7 @@
 #include <eif_macros.h>
 
 #ifdef EIF_WINDOWS
-# include "eif_messages.h"
+# include "eif_eventlog_messages.h"
 
 	/* Log Options */
 # define EIF_LOGGING_PID			0

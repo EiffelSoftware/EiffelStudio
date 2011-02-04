@@ -985,6 +985,10 @@ feature {NONE} -- Resource Initialization
 							-- If high priority then we perform a spin lock.
 						if not a_high_priority then
 							yield_processor
+						else
+								--| This is needed so that any pending gc cycles are correctly handled
+								--| as this is a tight loop without any call to RTGC
+							check_for_gc
 						end
 					else
 						-- We don't have the lock and we do not block so we exit and return False.
@@ -996,6 +1000,14 @@ feature {NONE} -- Resource Initialization
 					end
 				end
 			end
+		end
+
+	frozen check_for_gc
+			-- Hack needed to force the gc to kick in when code is in a tight loop.
+		external
+			"C macro use <eif_scoop.h>"
+		alias
+			"RTGC"
 		end
 
 	resource_lock_unattained: NATURAL_8 = 0

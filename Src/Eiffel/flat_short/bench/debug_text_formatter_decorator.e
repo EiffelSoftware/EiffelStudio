@@ -2,9 +2,8 @@ note
 	description	: "Facilities to handle breakpoints adding in flat/short formats"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
-	author		: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class DEBUG_TEXT_FORMATTER_DECORATOR
 
@@ -36,7 +35,7 @@ feature -- Execution
 				e_feature := a_target_feat
 				Precursor {FEAT_TEXT_FORMATTER_DECORATOR} (a_target_feat)
 				debug ("debugger")
-					if not e_feature.is_debuggable then
+					if not a_target_feat.is_debuggable then
 						text_formatter.add ("Warning: you can not set breakpoint in this feature")
 					end
 				end
@@ -51,15 +50,15 @@ feature -- Execution
 feature {NONE}
 
 	added_breakpoint: BOOLEAN
-			-- Was a break point added?
+			-- Was a breakpoint added?
 
 	put_breakable
 			-- Create a breakable mark.
 		do
 			breakpoint_index := breakpoint_index + 1
-			if e_feature /= Void and then e_feature.is_debuggable then
+			if attached e_feature as l_e_feat and then l_e_feat.is_debuggable then
 				added_breakpoint := True
-				text_formatter.process_breakpoint (e_feature, breakpoint_index)
+				text_formatter.process_breakpoint (l_e_feat, breakpoint_index)
 			end
 		end
 
@@ -106,4 +105,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end	 -- class DEBUG_TEXT_FORMATTER_DECORATOR
+end

@@ -176,7 +176,8 @@ feature -- Comparison
 			good_argument: other /= Void
 		do
 			Result := other.level = level and other.feature_id = feature_id and
-				other.rout_id = rout_id
+				other.rout_id = rout_id and other.is_hidden = is_hidden and
+				other.is_transient = is_transient
 		end
 
 feature -- Code generation
@@ -221,7 +222,7 @@ feature -- Code generation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

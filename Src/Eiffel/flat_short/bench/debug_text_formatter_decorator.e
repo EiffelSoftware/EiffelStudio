@@ -35,8 +35,10 @@ feature -- Execution
 			if not retried then
 				e_feature := a_target_feat
 				Precursor {FEAT_TEXT_FORMATTER_DECORATOR} (a_target_feat)
-				if not e_feature.is_debuggable then
-					text_formatter.add ("Warning: you can not set breakpoint in this feature")
+				debug ("debugger")
+					if not e_feature.is_debuggable then
+						text_formatter.add ("Warning: you can not set breakpoint in this feature")
+					end
 				end
 			else
 				text_formatter.add (warning_messages.w_formatter_failed)
@@ -65,7 +67,7 @@ feature {NONE}
 			-- Add the good number of tabulations to the text.
 		do
 			if added_breakpoint then
-				added_breakpoint := false
+				added_breakpoint := False
 			else
 				text_formatter.process_padded
 			end
@@ -73,7 +75,7 @@ feature {NONE}
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

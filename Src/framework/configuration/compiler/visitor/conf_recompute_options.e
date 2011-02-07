@@ -98,6 +98,7 @@ feature -- Visit nodes
 				a_group.set_class_options (new_group.internal_class_options)
 				a_group.set_readonly (new_group.internal_read_only)
 				a_group.set_readonly_set (new_group.is_readonly_set)
+				a_group.set_note_node (new_group.note_node)
 				if a_group.is_cluster then
 					l_cluster ?= a_group
 					l_cluster_new ?= new_group
@@ -141,7 +142,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,0 +1,39 @@
+test_name	adding-removing-transient
+test_description Adding/Removing the transient note clause on an attribute has no effect at runtime.
+
+define		TRANSIENT "note option: transient attribute  end"
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_sub 	test1.e $CLUSTER test1.e
+copy_raw 	test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result 	ok
+
+execute_work NONE 	exec_output_m1
+execute_result	ok
+compare		exec_output_m1 output_transient
+
+
+define		TRANSIENT ""
+copy_sub 	test1.e $CLUSTER test1.e
+
+compile_melted
+compile_result 	ok
+
+execute_work NONE 	exec_output_m2
+execute_result	ok
+compare		exec_output_m2 output
+
+
+define		TRANSIENT "note option: transient attribute  end"
+copy_sub 	test1.e $CLUSTER test1.e
+
+compile_melted
+compile_result 	ok
+
+execute_work NONE 	exec_output_m3
+execute_result	ok
+compare		exec_output_m3 output_transient
+
+test_end

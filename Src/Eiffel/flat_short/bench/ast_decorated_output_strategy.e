@@ -1308,6 +1308,16 @@ feature {NONE} -- Implementation
 				end
 				l_text_formatter_decorator.put_origin_comment
 				l_text_formatter_decorator.exdent
+				if current_feature.is_transient then
+						-- Transiant attributes always have a body thus we can handle the transient 
+						-- property here by adding a `note' clause just after the comments.
+					l_text_formatter_decorator.process_keyword_text (ti_note_keyword, Void)
+					l_text_formatter_decorator.indent
+					l_text_formatter_decorator.put_new_line
+					l_text_formatter_decorator.add_string ("option: transient")
+					l_text_formatter_decorator.exdent
+					l_text_formatter_decorator.put_new_line
+				end
 			end
 			l_text_formatter_decorator.set_first_assertion (True)
 
@@ -2345,6 +2355,7 @@ feature {NONE} -- Implementation
 				l_text_formatter_decorator.put_new_line
 			end
 			cont := l_as.body.content
+				-- Are we handling a constant or an attribute without a body?
 			is_const_or_att := cont = Void or else cont.is_constant
 			if is_const_or_att then
 				l_text_formatter_decorator.indent
@@ -5029,7 +5040,7 @@ invariant
 	object_test_locals_for_current_feature_not_void: object_test_locals_for_current_feature /= Void
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

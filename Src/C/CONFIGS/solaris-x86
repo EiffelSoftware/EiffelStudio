@@ -194,11 +194,11 @@ d_tls='define'
 objcflags='-ObjC'
 mtccflags="$ccflags -D_REENTRANT -DEIF_THREADS -DEIF_POSIX_THREADS"
 mtcppflags="$cppflags -D_REENTRANT -DEIF_THREADS -DEIF_POSIX_THREADS"
-optimize="-xO2 -xstrconst"
+optimize='-xO2 -xstrconst'
 voidflags='15'
 #Check value for next 1
 warning_level=''
-wkoptimize=""
+wkoptimize=''
 
 #Makefiles
 ar='ar'
@@ -209,7 +209,7 @@ cp='/bin/cp'
 eiflib='finalized'
 ld='ld'
 lintflags='-m -x -errsecurity=extended -Ncheck=%all -Nlevel=4 -errfmt=tab -errchk=locfmtchk,parentheses,no%signext,no%sizematch,structarg'
-ldflags=""
+ldflags=''
 ldsharedflags="$ldflags -G -o"
 libs='-lsocket -lnsl -lm -lrt'
 ln='/bin/ln'

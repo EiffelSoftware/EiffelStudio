@@ -244,7 +244,9 @@ feature {NONE} -- Conf modification
 						l_found := True
 					end
 				end
-				l_notes.forth
+				if not l_notes.after then
+					l_notes.forth
+				end
 			end
 			if l_found then
 				a_system.store
@@ -529,7 +531,7 @@ invariant
 	conf_notable_is_valid: valid_notable (conf_notable)
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

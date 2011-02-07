@@ -100,6 +100,14 @@ feature {NONE} -- Initialization
 					-- been rebuilt.
 				window.unlock_update
 			end
+
+				-- Do not keep the old view when the tree has been rebuild,
+				-- as the old view is most likely invalid.
+			if attached old_view as l_view then
+				l_view.wipe_out
+				l_view.destroy
+				old_view := Void
+			end
 		end
 
 	add_target (a_list: EV_DYNAMIC_LIST [EV_CONTAINABLE]; a_target: CONF_TARGET)
@@ -324,7 +332,7 @@ feature {NONE} -- Implemenation
 
 feature {NONE} -- Access
 
-	old_view: ES_EIS_COMPONENT_VIEW [ANY]
+	old_view: detachable ES_EIS_COMPONENT_VIEW [ANY]
 
 	tag_header: EB_CLASSES_TREE_HEADER_ITEM
 
@@ -342,7 +350,7 @@ invariant
 	only_first_item_is_off_mapping: (tag_header /= Void and not is_recycled) implies managed_tags.count = tag_header.count - 1
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

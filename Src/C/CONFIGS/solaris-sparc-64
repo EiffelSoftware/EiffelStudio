@@ -191,8 +191,8 @@ Mcc='Mcc'
 d_tls='define'
 #Check value for next 2
 objcflags='-ObjC'
-mtccflags="$ccflags -D_REENTRANT -DEIF_THREADS -DSOLARIS_THREADS"
-mtcppflags="$cppflags -D_REENTRANT -DEIF_THREADS -DSOLARIS_THREADS"
+mtccflags="$ccflags -D_REENTRANT -DEIF_THREADS -DEIF_POSIX_THREADS"
+mtcppflags="$cppflags -D_REENTRANT -DEIF_THREADS -DEIF_POSIX_THREADS"
 optimize='-xO2 -xstrconst'
 voidflags='15'
 #Check value for next 1
@@ -208,7 +208,7 @@ cp='/bin/cp'
 eiflib='finalized'
 ld='ld'
 lintflags='-m -x -errsecurity=extended -Ncheck=%all -Nlevel=4 -errfmt=tab -errchk=locfmtchk,parentheses,no%signext,no%sizematch,structarg'
-ldflags="-64"
+ldflags='-64'
 ldsharedflags="$ldflags -G -o"
 libs='-lsocket -lnsl -lm -lrt'
 ln='/bin/ln'
@@ -221,7 +221,7 @@ mkdep='\$(EIFFEL_SRC)/C/mkdep'
 mkdir='mkdir'
 mtldflags="$ldflags"
 mtldsharedflags="$ldsharedflags"
-mtlibs="$libs -lthread"
+mtlibs="$libs -lpthread"
 mt_prefix='mt'
 mv='/bin/mv'
 prefix='lib'

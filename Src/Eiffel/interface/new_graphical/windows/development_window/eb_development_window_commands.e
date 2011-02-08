@@ -40,12 +40,8 @@ feature -- Query
 	toggle_stone_cmd: EB_UNIFY_STONE_CMD
 			-- Command to toggle between the stone management modes.
 
-	system_info_cmd: EB_STANDARD_CMD
+	system_info_cmd: EB_SYSTEM_INFORMATION_CMD
 			-- Command to display information about the system (root class,...)
-		do
-			Result := develop_window.Eb_debugger_manager.system_info_cmd
-		end
-
 	send_stone_to_context_cmd: EB_STANDARD_CMD
 			-- Command to send the current stone to the context tool.
 
@@ -372,6 +368,14 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -
 			toggle_stone_cmd := a_cmd
 		ensure
 			set: toggle_stone_cmd = a_cmd
+		end
+
+	set_system_info_cmd (a_cmd: like system_info_cmd)
+			-- Set `system_info_cmd'
+		do
+			system_info_cmd := a_cmd
+		ensure
+			set: system_info_cmd = a_cmd
 		end
 
 	set_send_stone_to_context_cmd (a_cmd: like send_stone_to_context_cmd)
@@ -834,7 +838,7 @@ feature -- Recycle
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

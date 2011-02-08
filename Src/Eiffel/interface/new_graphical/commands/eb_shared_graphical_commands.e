@@ -129,6 +129,13 @@ feature -- Commands
 			Result.disable_sensitive
 		end
 
+	System_information_cmd: EB_SYSTEM_INFORMATION_CMD
+			-- Display system information in output tool
+		once
+			create Result.make
+			Result.disable_sensitive
+		end
+
 	Show_preferences_cmd: EB_SHOW_PREFERENCES_COMMAND
 			-- Command to Display the User Preferences Editor.
 		once
@@ -150,7 +157,7 @@ feature -- Commands
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

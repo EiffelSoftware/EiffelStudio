@@ -203,16 +203,6 @@ feature {NONE} -- Initialization
 			bkpt_info_cmd.enable_sensitive
 			toolbarable_commands.extend (bkpt_info_cmd)
 
-			create system_info_cmd.make
-			system_info_cmd.set_pixmap (pixmaps.icon_pixmaps.command_system_info_icon)
-			system_info_cmd.set_pixel_buffer (pixmaps.icon_pixmaps.command_system_info_icon_buffer)
-			system_info_cmd.set_tooltip (Interface_names.e_Display_system_info)
-			system_info_cmd.set_menu_name (Interface_names.m_Display_system_info)
-			system_info_cmd.set_name ("System_info")
-			system_info_cmd.set_tooltext (Interface_names.b_System_info)
-			system_info_cmd.add_agent (agent display_system_status)
-			toolbarable_commands.extend (system_info_cmd)
-
 			create set_critical_stack_depth_cmd.make
 			set_critical_stack_depth_cmd.set_menu_name (Interface_names.m_Set_critical_stack_depth)
 			set_critical_stack_depth_cmd.add_agent (agent change_critical_stack_depth)
@@ -294,6 +284,7 @@ feature {NONE} -- Initialization
 			ignore_breakpoints_cmd.disable_sensitive
 
 			toolbarable_commands.extend (system_cmd)
+			toolbarable_commands.extend (system_information_cmd)
 			toolbarable_commands.extend (Melt_project_cmd)
 			toolbarable_commands.extend (Freeze_project_cmd)
 			toolbarable_commands.extend (Finalize_project_cmd)
@@ -433,11 +424,6 @@ feature -- Access
 
 	force_debug_mode_cmd: EB_FORCE_EXECUTION_MODE_CMD
 			-- Force debug mode command.
-
-feature {EB_DEVELOPMENT_WINDOW, EB_DEVELOPMENT_WINDOW_PART} -- Implementation
-
-	system_info_cmd: EB_STANDARD_CMD
-			-- Command that displays information about current system in the output tool.
 
 feature {ES_OBJECTS_GRID_MANAGER, EB_CONTEXT_MENU_FACTORY} -- Command
 
@@ -1143,41 +1129,9 @@ feature -- Output
 
 	display_system_info
 			-- <Precursor>
-		local
-			l_formatter: like general_formatter
-			l_auto_scrolled_changed: BOOLEAN
-			l_locked: BOOLEAN
-			retried: BOOLEAN
 		do
-			if attached general_output as l_output then
-				if not retried then
-					l_formatter := general_formatter
-					l_output.activate (True)
-
-					if attached {ES_OUTPUT_PANE_I} l_output as l_output_pane then
-						if l_output_pane.is_auto_scrolled then
-							l_output_pane.is_auto_scrolled := False
-							l_auto_scrolled_changed := True
-						end
-					end
-
-					l_output.lock
-					l_locked := True
-
-					l_output.clear;
-					(create {ES_OUTPUT_ROUTINES}).append_system_info (l_formatter)
-
-					l_locked := False
-					l_output.unlock
-
-					if l_auto_scrolled_changed and then attached {ES_OUTPUT_PANE_I} l_output as l_output_pane then
-						l_output_pane.is_auto_scrolled := True
-					end
-				elseif l_locked then
-					l_output.unlock
-				end
-			else
-				check False end
+			if attached system_information_cmd as c and then c.executable then
+				c.execute
 			end
 		end
 

@@ -139,6 +139,7 @@ feature -- Command
 			l_delete_class_cluster_cmd: EB_DELETE_CLASS_CLUSTER_COMMAND
 			l_new_feature_cmd: EB_NEW_FEATURE_COMMAND
 			l_toggle_stone_cmd: EB_UNIFY_STONE_CMD
+			l_system_info_cmd: EB_SYSTEM_INFORMATION_CMD
 			l_send_stone_to_context_cmd: EB_STANDARD_CMD
 
 --			l_show_tool_commands: HASH_TABLE [EB_SHOW_TOOL_COMMAND, EB_TOOL]
@@ -308,6 +309,11 @@ feature -- Command
 			auto_recycle (l_toggle_stone_cmd)
 			l_dev_commands.set_toggle_stone_cmd (l_toggle_stone_cmd)
 			l_dev_commands.toolbarable_commands.extend (l_toggle_stone_cmd)
+
+			l_system_info_cmd := develop_window.system_information_cmd
+			auto_recycle (l_system_info_cmd)
+			l_dev_commands.set_system_info_cmd (l_system_info_cmd)
+			l_dev_commands.toolbarable_commands.extend (l_system_info_cmd)
 
 			create l_send_stone_to_context_cmd.make
 			auto_recycle (l_send_stone_to_context_cmd)

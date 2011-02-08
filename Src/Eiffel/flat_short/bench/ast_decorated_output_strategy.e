@@ -1277,6 +1277,7 @@ feature {NONE} -- Implementation
 			inline_agent_assertion: ROUTINE_ASSERTIONS
 			l_built_in_as: BUILT_IN_AS
 			l_text_formatter_decorator: like text_formatter_decorator
+			l_has_note: BOOLEAN
 		do
 			check
 				not_expr_type_visiting: not expr_type_visiting
@@ -1308,13 +1309,19 @@ feature {NONE} -- Implementation
 				end
 				l_text_formatter_decorator.put_origin_comment
 				l_text_formatter_decorator.exdent
-				if current_feature.is_transient then
-						-- Transiant attributes always have a body thus we can handle the transient 
+				if current_feature.is_transient or current_feature.is_stable then
+						-- Transiant/stable attributes always have a body thus we can handle the transient/stable
 						-- property here by adding a `note' clause just after the comments.
 					l_text_formatter_decorator.process_keyword_text (ti_note_keyword, Void)
 					l_text_formatter_decorator.indent
 					l_text_formatter_decorator.put_new_line
-					l_text_formatter_decorator.add_string ("option: transient")
+					if current_feature.is_transient and current_feature.is_stable then
+						l_text_formatter_decorator.add_string ("option: stable, transient")
+					elseif current_feature.is_transient then
+						l_text_formatter_decorator.add_string ("option: transient")
+					else
+						l_text_formatter_decorator.add_string ("option: stable")
+					end
 					l_text_formatter_decorator.exdent
 					l_text_formatter_decorator.put_new_line
 				end

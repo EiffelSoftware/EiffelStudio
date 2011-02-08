@@ -311,7 +311,7 @@ feature {NONE} -- Initialization
 		do
 			l_grid := eis_grid
 			l_grid.enable_multiple_row_selection
-			register_action (l_grid.key_release_actions, agent on_key_released)
+			register_action (l_grid.key_press_actions, agent on_key_pressed)
 			register_action (l_grid.pointer_double_press_actions, agent on_pointer_double_pressed)
 			l_grid.enable_partial_dynamic_content
 			l_grid.set_dynamic_content_function (agent on_item_display)
@@ -410,8 +410,8 @@ feature {NONE} -- Events
 			refresh_grid
 		end
 
-	on_key_released (ev_key: EV_KEY)
-			-- On `en_key' released
+	on_key_pressed (ev_key: EV_KEY)
+			-- On `en_key' pressed
 		do
 			if ev_key.code = {EV_KEY_CONSTANTS}.key_enter then
 				if
@@ -1076,7 +1076,7 @@ invariant
 	eis_grid_not_void: eis_grid /= Void
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

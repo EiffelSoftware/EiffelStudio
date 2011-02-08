@@ -75,10 +75,11 @@ feature -- Factory
 				end
 			end
 			if a_node.indexes /= Void then
-				if Result.is_attribute then
-					if a_node.indexes.is_stable and then attached {ATTRIBUTE_I} Result as a then
+				if attached {ATTRIBUTE_I} Result as a then
+					if a_node.indexes.is_stable then
 						a.set_is_stable (True)
-					elseif a_node.indexes.is_transient and then attached {ATTRIBUTE_I} Result as a then
+					end
+					if a_node.indexes.is_transient then
 						a.set_is_transient (True)
 					end
 				end
@@ -381,7 +382,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

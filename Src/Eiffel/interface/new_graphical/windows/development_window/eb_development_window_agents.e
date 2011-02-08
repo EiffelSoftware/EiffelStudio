@@ -380,7 +380,7 @@ feature {NONE} -- Implementation
 	enable_commands_on_project_created
 			-- Enable commands when a new project has been created (not yet compiled)
 		do
-			develop_window.commands.system_info_cmd.enable_sensitive
+			develop_window.system_information_cmd.enable_sensitive
 			if
 				develop_window.stone /= Void and then
 				not develop_window.unified_stone
@@ -402,7 +402,7 @@ feature {NONE} -- Implementation
 			if eiffel_layout.has_dll_generation then
 				develop_window.show_dynamic_lib_tool.enable_sensitive
 			end
-			develop_window.commands.system_info_cmd.enable_sensitive
+			develop_window.system_information_cmd.enable_sensitive
 			if develop_window.unified_stone then
 				develop_window.commands.send_stone_to_context_cmd.disable_sensitive
 			elseif develop_window.stone /= Void then
@@ -430,7 +430,7 @@ feature {NONE} -- Implementation
 			develop_window.commands.new_assembly_cmd.disable_sensitive
 			develop_window.commands.new_cluster_cmd.disable_sensitive
 			if not develop_window.project_manager.is_created then
-				develop_window.commands.system_info_cmd.disable_sensitive
+				develop_window.system_information_cmd.disable_sensitive
 				develop_window.commands.send_stone_to_context_cmd.disable_sensitive
 			end
 			develop_window.commands.delete_class_cluster_cmd.disable_sensitive
@@ -449,7 +449,7 @@ invariant
 	not_void: not is_recycled implies develop_window /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

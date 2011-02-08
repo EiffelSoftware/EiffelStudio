@@ -1199,6 +1199,7 @@ feature -- Events
 			Finalize_project_cmd.enable_sensitive
 			Precompilation_cmd.enable_sensitive
 			System_cmd.enable_sensitive
+			System_information_cmd.enable_sensitive
 			override_scan_cmd.enable_sensitive
 			discover_melt_cmd.enable_sensitive
 			for_all (agent create_project_action)
@@ -1230,6 +1231,7 @@ feature -- Events
 					discover_melt_cmd.enable_sensitive
 				end
 				System_cmd.enable_sensitive
+				System_information_cmd.enable_sensitive
 				Export_cmd.enable_sensitive
 				Document_cmd.enable_sensitive
 			else
@@ -1238,6 +1240,7 @@ feature -- Events
 				Freeze_project_cmd.disable_sensitive
 				Finalize_project_cmd.disable_sensitive
 				System_cmd.disable_sensitive
+				System_information_cmd.disable_sensitive
 				Export_cmd.disable_sensitive
 				Document_cmd.disable_sensitive
 				Run_project_cmd.disable_sensitive
@@ -1269,6 +1272,7 @@ feature -- Events
 			Finalize_project_cmd.disable_sensitive
 			Precompilation_cmd.disable_sensitive
 			System_cmd.disable_sensitive
+			System_information_cmd.disable_sensitive
 			Export_cmd.disable_sensitive
 			Document_cmd.disable_sensitive
 			Run_project_cmd.disable_sensitive
@@ -1679,7 +1683,7 @@ feature{NONE} -- Implementation
 			-- Implementation of `compile_start_actions'
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

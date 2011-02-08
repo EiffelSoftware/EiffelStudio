@@ -7,7 +7,7 @@
 		</option>
 		<precompile name="base_pre" location="$ISE_PRECOMP\base.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="logging" location="$ITP_EIFFEL_DEV\logging\library\logging.ecf" />
+		<library name="logging" location="$ISE_LIBRARY\library\runtime\logging\logging.ecf" />
 		<cluster name="multiclass_example" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/EIFGENs$</exclude>

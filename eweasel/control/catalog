@@ -1392,7 +1392,7 @@ test	negative-integer-8		exec130  tcf pass execution
 test	melted-memory-copy		exec131  tcf pass execution
 test	is-integer-accepts-invalid	exec132  tcf pass execution
 test	agent-lighter-tuple-arg		exec133  tcf pass execution tuple
-test	insert-hash-table-zero		exec134  tcf pass execution
+test	insert-hash-table-zero		exec134  tcf pass execution table
 test	store-expanded-retrieve-wrong	exec135  tcf pass execution storable
 test	store-expanded-retrieve-dies	exec136  tcf pass execution storable
 test	array-expanded-not-deep-equal	exec137  tcf pass execution

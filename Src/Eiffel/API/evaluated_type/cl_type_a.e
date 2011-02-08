@@ -295,6 +295,16 @@ feature -- Output
 
 	ext_append_to (st: TEXT_FORMATTER; c: CLASS_C)
 		do
+			if
+				not has_attached_mark and then not has_detachable_mark and then
+				not is_attached and then not is_implicitly_attached
+			then
+					-- There is no explicit attachment mark, let's put an assumed one.
+				st.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_l_bracket)
+				st.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_detachable_keyword, Void)
+				st.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_r_bracket)
+				st.add_space
+			end
 			ext_append_marks (st)
 			if has_expanded_mark then
 				st.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_expanded_keyword, Void)
@@ -953,7 +963,7 @@ invariant
 		class_declaration_mark = no_mark or class_declaration_mark = expanded_mark
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

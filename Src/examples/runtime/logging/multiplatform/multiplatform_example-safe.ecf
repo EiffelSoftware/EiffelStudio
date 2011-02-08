@@ -6,7 +6,7 @@
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true" />
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf" />
-		<library name="logging" location="$ITP_EIFFEL_DEV\logging\library\logging-safe.ecf" />
+		<library name="logging" location="$ISE_LIBRARY\library\runtime\logging\logging-safe.ecf" />
 		<cluster name="multiplatform_example" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/EIFGENs$</exclude>

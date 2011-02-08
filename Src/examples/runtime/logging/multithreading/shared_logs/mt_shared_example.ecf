@@ -9,7 +9,7 @@
 		<setting name="multithreaded" value="true" />
 		<precompile name="precomp_base-mt" location="$ISE_PRECOMP\base-mt.ecf" />
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" />
-		<library name="logging" location="$ITP_EIFFEL_DEV\logging\library\logging.ecf" />
+		<library name="logging" location="$ISE_LIBRARY\library\runtime\logging\logging.ecf" />
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf" />
 		<cluster name="mt_shared_example" location=".\" recursive="true">
 			<file_rule>

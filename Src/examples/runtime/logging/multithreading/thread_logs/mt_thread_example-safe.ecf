@@ -10,7 +10,7 @@
 		<precompile name="precomp_base-mt" location="$ISE_PRECOMP\base-mt.ecf" />
 		-->
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf" />
-		<library name="logging" location="$ITP_EIFFEL_DEV\logging\library\logging-safe.ecf" />
+		<library name="logging" location="$ISE_LIBRARY\library\runtime\logging\logging-safe.ecf" />
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread-safe.ecf" />
 		<cluster name="mt_thread_example" location=".\" recursive="true">
 			<file_rule>

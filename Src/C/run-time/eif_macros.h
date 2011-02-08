@@ -1386,7 +1386,7 @@ RT_LNK void eif_exit_eiffel_code(void);
  * RTS_OU(c,o) - tells if object o is uncontrolled by the processor associated with object c
  */
 #define EIF_IS_DIFFERENT_PROCESSOR(o1,o2) (RTS_PID(o1) != RTS_PID(o2))
-#define RTS_OU(c,o) EIF_TRUE
+#define RTS_OU(c,o) (o != EIFNULL && EIF_IS_DIFFERENT_PROCESSOR (c, o))
 
 /*
  * Processor:
@@ -1460,12 +1460,15 @@ RT_LNK void eif_exit_eiffel_code(void);
 			(EIF_REFERENCE) eif_protect (((call_data*)(a)) -> argument [(n) - 1].it_r); \
 	}
 #define RTS_AS(v,f,t,n,a) \
-	{                                                               \
-		RTS_AA(v,f,t,n,a);                                      \
-		if (!RTS_OU(t, ((call_data*)(a)) -> argument [(n) - 1]))   \
-			((call_data*)(a)) -> is_synchronous = EIF_TRUE; \
+	{	\
+		((call_data*)(a)) -> argument [(n) - 1] = (v);	\
+		if ((t) == SK_REF) 	\
+		{			\
+			((call_data*)(a)) -> argument [(n) - 1].it_r = eif_protect (((call_data*)(a)) -> argument [(n) - 1].it_r); \
+			if ( !RTS_OU(Current, ((call_data*)(a)) -> argument [(n) - 1].it_r) )	\
+				((call_data*)(a)) -> is_synchronous = EIF_TRUE; \
+		}	\
 	}
-
 
 #define RTS_WPR RTS_TCB(scoop_task_wait_for_processor_redundancy,EIFNULL,EIFNULL,EIFNULL,EIFNULL,EIFNULL)
 

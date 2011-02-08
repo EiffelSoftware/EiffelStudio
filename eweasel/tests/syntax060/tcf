@@ -188,37 +188,37 @@ resume_compile
 compile_result	syntax_error TEST1 7; TEST2 7; TEST3 7; TEST4 7
 
 -- Equality 
-define OBJECT_TEST "object = object"
+define OBJECT_TEST "object = b"
 copy_sub test1.e $CLUSTER test1.e
 copy_sub test2.e $CLUSTER test2.e
 copy_sub test3.e $CLUSTER test3.e
 copy_sub test4.e $CLUSTER test4.e
 resume_compile
-compile_result	syntax_error TEST1 7; TEST2 7; TEST3 7; TEST4 7
+compile_result	syntax_error TEST2 7; TEST3 7
 
-define OBJECT_TEST "object /= object"
+define OBJECT_TEST "object /= b"
 copy_sub test1.e $CLUSTER test1.e
 copy_sub test2.e $CLUSTER test2.e
 copy_sub test3.e $CLUSTER test3.e
 copy_sub test4.e $CLUSTER test4.e
 resume_compile
-compile_result	syntax_error TEST1 7; TEST2 7; TEST3 7; TEST4 7
+compile_result	syntax_error TEST2 7; TEST3 7
 
-define OBJECT_TEST "object ~ object"
+define OBJECT_TEST "object ~ b"
 copy_sub test1.e $CLUSTER test1.e
 copy_sub test2.e $CLUSTER test2.e
 copy_sub test3.e $CLUSTER test3.e
 copy_sub test4.e $CLUSTER test4.e
 resume_compile
-compile_result	syntax_error TEST1 7; TEST2 7; TEST3 7; TEST4 7
+compile_result	syntax_error TEST2 7; TEST3 7
 
-define OBJECT_TEST "object /~ object"
+define OBJECT_TEST "object /~ b"
 copy_sub test1.e $CLUSTER test1.e
 copy_sub test2.e $CLUSTER test2.e
 copy_sub test3.e $CLUSTER test3.e
 copy_sub test4.e $CLUSTER test4.e
 resume_compile
-compile_result	syntax_error TEST1 7; TEST2 7; TEST3 7; TEST4 7
+compile_result	syntax_error TEST2 7; TEST3 7
 
 
 test_end

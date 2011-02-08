@@ -11,4 +11,6 @@ feature
 
 	object: ANY
 
+	b: BOOLEAN
+
 end

@@ -44,6 +44,8 @@ feature -- ALl types under group
 
 	button: STRING = "Button"
 
+	toggle_button: STRING = "ToggleButton"
+
 	check_box: STRING = "CheckBox"
 
 	combo_box: STRING = "ComboBox"
@@ -62,7 +64,7 @@ feature -- Types under command node
 			--
 
 	string: STRING = "String"
-	
+
 	Image: STRING = "Image"
 
 feature -- Contract support
@@ -71,26 +73,27 @@ feature -- Contract support
 			--
 		do
 			if attached a_string as l_string then
-				Result := l_string.is_equal (application) or else
-					l_string.is_equal (application_commands) or else
-					l_string.is_equal (application_views) or else
-					l_string.is_equal (ribbon) or else
-					l_string.is_equal (ribbon_application_menu) or else
-					l_string.is_equal (ribbon_contextual_tabs) or else
-					l_string.is_equal (ribbon_helpbutton) or else
-					l_string.is_equal (ribbon_quick_access_toolbar) or else
-					l_string.is_equal (ribbon_size_definitions) or else
-					l_string.is_equal (ribbon_tabs) or else
-					l_string.is_equal (command) or else
-					l_string.is_equal (group) or else
-					l_string.is_equal (tab) or else
-					l_string.is_equal (button) or else
-					l_string.is_equal (check_box) or else
-					l_string.is_equal (combo_box) or else
-					l_string.is_equal (control_group) or else
-					l_string.is_equal (command_label_title) or else
-					l_string.is_equal (command_small_images) or else
-					l_string.is_equal (command_large_images)
+				Result := l_string.same_string (application) or else
+					l_string.same_string (application_commands) or else
+					l_string.same_string (application_views) or else
+					l_string.same_string (ribbon) or else
+					l_string.same_string (ribbon_application_menu) or else
+					l_string.same_string (ribbon_contextual_tabs) or else
+					l_string.same_string (ribbon_helpbutton) or else
+					l_string.same_string (ribbon_quick_access_toolbar) or else
+					l_string.same_string (ribbon_size_definitions) or else
+					l_string.same_string (ribbon_tabs) or else
+					l_string.same_string (command) or else
+					l_string.same_string (group) or else
+					l_string.same_string (tab) or else
+					l_string.same_string (button) or else
+					l_string.same_string (check_box) or else
+					l_string.same_string (combo_box) or else
+					l_string.same_string (control_group) or else
+					l_string.same_string (command_label_title) or else
+					l_string.same_string (command_small_images) or else
+					l_string.same_string (command_large_images) or else
+					l_string.same_string (toggle_button)
 			end
 		end
 

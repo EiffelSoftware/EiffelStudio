@@ -165,32 +165,33 @@ feature {NONE} -- Action handing
 			--
 		do
 			if attached {STRING} a_stone as l_stone_child then
-				if a_parent_type.is_equal (constants.application_commands) then
-					Result := l_stone_child.is_equal (constants.command)
-				elseif a_parent_type.is_equal (constants.application_views) then
-					Result := l_stone_child.is_equal (constants.ribbon)
-				elseif a_parent_type.is_equal (constants.ribbon) then
-					Result := l_stone_child.is_equal (constants.ribbon_application_menu) or else
-						l_stone_child.is_equal (constants.ribbon_contextual_tabs) or else
-						l_stone_child.is_equal (constants.ribbon_helpbutton) or else
-						l_stone_child.is_equal (constants.ribbon_quick_access_toolbar) or else
-						l_stone_child.is_equal (constants.ribbon_size_definitions) or else
-						l_stone_child.is_equal (constants.ribbon_tabs)
-				elseif a_parent_type.is_equal (constants.ribbon_tabs) then
-					Result := l_stone_child.is_equal (constants.tab)
-				elseif a_parent_type.is_equal (constants.tab) then
-					Result := l_stone_child.is_equal (constants.group) or else
-						l_stone_child.is_equal (constants.tab_scaling_policy)
---				elseif a_parent_type.is_equal (constants.ribbon_tabs) then
---					Result := l_stone_child.is_equal (constants.tab)
---				elseif a_parent_type.is_equal (constants.tab) then
---					Result := l_stone_child.is_equal (constants.group) or else
---						l_stone_child.is_equal (constants.tab_scaling_policy)
-				elseif a_parent_type.is_equal (constants.group) then
-					Result := l_stone_child.is_equal (constants.button) or else
-						l_stone_child.is_equal (constants.check_box) or else
-						l_stone_child.is_equal (constants.combo_box) or else
-						l_stone_child.is_equal (constants.control_group)
+				if a_parent_type.same_string (constants.application_commands) then
+					Result := l_stone_child.same_string (constants.command)
+				elseif a_parent_type.same_string (constants.application_views) then
+					Result := l_stone_child.same_string (constants.ribbon)
+				elseif a_parent_type.same_string (constants.ribbon) then
+					Result := l_stone_child.same_string (constants.ribbon_application_menu) or else
+						l_stone_child.same_string (constants.ribbon_contextual_tabs) or else
+						l_stone_child.same_string (constants.ribbon_helpbutton) or else
+						l_stone_child.same_string (constants.ribbon_quick_access_toolbar) or else
+						l_stone_child.same_string (constants.ribbon_size_definitions) or else
+						l_stone_child.same_string (constants.ribbon_tabs)
+				elseif a_parent_type.same_string (constants.ribbon_tabs) then
+					Result := l_stone_child.same_string (constants.tab)
+				elseif a_parent_type.same_string (constants.tab) then
+					Result := l_stone_child.same_string (constants.group) or else
+						l_stone_child.same_string (constants.tab_scaling_policy)
+--				elseif a_parent_type.same_string (constants.ribbon_tabs) then
+--					Result := l_stone_child.same_string (constants.tab)
+--				elseif a_parent_type.same_string (constants.tab) then
+--					Result := l_stone_child.same_string (constants.group) or else
+--						l_stone_child.same_string (constants.tab_scaling_policy)
+				elseif a_parent_type.same_string (constants.group) then
+					Result := l_stone_child.same_string (constants.button) or else
+						l_stone_child.same_string (constants.check_box) or else
+						l_stone_child.same_string (constants.combo_box) or else
+						l_stone_child.same_string (constants.control_group) or else
+						l_stone_child.same_string (constants.toggle_button)
 				end
 			end
 		end

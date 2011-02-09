@@ -191,7 +191,8 @@ feature {NONE} -- Action handing
 						l_stone_child.same_string (constants.check_box) or else
 						l_stone_child.same_string (constants.combo_box) or else
 						l_stone_child.same_string (constants.control_group) or else
-						l_stone_child.same_string (constants.toggle_button)
+						l_stone_child.same_string (constants.toggle_button) or else
+						l_stone_child.same_string (constants.spinner)
 				end
 			end
 		end

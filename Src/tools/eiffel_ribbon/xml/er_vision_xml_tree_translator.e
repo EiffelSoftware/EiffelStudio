@@ -355,6 +355,8 @@ feature {NONE} -- Tree saving
 						add_xml_toggle_button_node (l_group_node, a_group_tree_node.item)
 					elseif a_group_tree_node.item.text.same_string (l_xml_constants.check_box) then
 						add_xml_checkbox_node (l_group_node, a_group_tree_node.item)
+					elseif a_group_tree_node.item.text.same_string (l_xml_constants.spinner) then
+						add_xml_spinner_node (l_group_node, a_group_tree_node.item)
 					else
 						check not_implemented: False end
 					end
@@ -409,6 +411,35 @@ feature {NONE} -- Tree saving
 				a_group_node.put_last (l_button_node)
 
 				if attached {ER_TREE_NODE_TOGGLE_BUTTON_DATA} a_button_tree_node.data as l_data then
+					create l_constants
+
+					-- Add xml attribute
+					if attached l_data.command_name as l_command_name and then not l_command_name.is_empty then
+						l_button_node.add_attribute (l_constants.command_name, name_space, l_command_name)
+
+						-- Add coresspond command xml node
+						add_xml_command_node (l_data)
+					end
+				end
+			end
+		end
+
+	add_xml_spinner_node (a_group_node: XML_ELEMENT; a_button_tree_node: EV_TREE_NODE)
+			--
+		require
+			not_void: a_group_node /= Void
+			valid: a_group_node.name.same_string (xml_constants.group)
+		local
+			l_button_node: XML_ELEMENT
+			l_constants: ER_XML_ATTRIBUTE_CONSTANTS
+		do
+			if attached {EV_TREE_ITEM} a_button_tree_node as l_item then
+				check l_item.text.same_string (xml_constants.spinner) end
+
+				create l_button_node.make (a_group_node, xml_constants.spinner, name_space)
+				a_group_node.put_last (l_button_node)
+
+				if attached {ER_TREE_NODE_SPINNER_DATA} a_button_tree_node.data as l_data then
 					create l_constants
 
 					-- Add xml attribute

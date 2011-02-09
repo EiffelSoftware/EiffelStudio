@@ -980,6 +980,8 @@ feature {NONE} -- Implementation
 					generate_checkbox_class (a_group_node.item, a_group_node.index + button_counter)
 				elseif a_group_node.item.text.same_string ({ER_XML_CONSTANTS}.toggle_button) then
 					generate_toggle_button_class (a_group_node.item, a_group_node.index + button_counter)
+				elseif a_group_node.item.text.same_string ({ER_XML_CONSTANTS}.spinner) then
+					generate_spinner_class (a_group_node.item, a_group_node.index + button_counter)
 				else
 					check not_implemented: False end
 				end
@@ -1120,6 +1122,16 @@ feature {NONE} -- Implementation
 					else
 						l_generated.replace_substring_all ("$INDEX_1", "toggle_button_" + (button_counter + l_index).out)
 						l_generated.replace_substring_all ("$INDEX_2", "RIBBON_TOGGLE_BUTTON" + (button_counter + l_index).out)
+					end
+				elseif a_group_node.i_th (1).text.same_string (l_constants.spinner) then
+					if attached {ER_TREE_NODE_SPINNER_DATA} a_group_node.i_th (l_index).data as l_data
+						and then attached l_data.command_name as l_identify_name
+						and then not l_identify_name.is_empty then
+						l_generated.replace_substring_all ("$INDEX_1", l_identify_name.as_lower)
+						l_generated.replace_substring_all ("$INDEX_2", l_identify_name.as_upper)
+					else
+						l_generated.replace_substring_all ("$INDEX_1", "toggle_button_" + (button_counter + l_index).out)
+						l_generated.replace_substring_all ("$INDEX_2", "RIBBON_SPINNER" + (button_counter + l_index).out)
 					end
 				else
 					create l_generated.make_empty
@@ -1339,6 +1351,116 @@ feature {NONE} -- Implementation
 								else
 									l_last_string.replace_substring_all ("$INDEX_1", "RIBBON_TOGGLE_BUTTON_" + a_index.out)
 									l_last_string.replace_substring_all ("$INDEX_2", "RIBBON_TOGGLE_BUTTON_IMP_" + a_index.out)
+								end
+
+								l_dest_file.put_string (l_last_string + "%N")
+							end
+
+							l_file.close
+							l_dest_file.close
+						end
+
+					end
+				end
+			end
+		end
+
+	generate_spinner_class (a_spinner_node: EV_TREE_NODE; a_index: INTEGER)
+			--
+		require
+			not_void: a_spinner_node /= void
+			valid: a_spinner_node.text.same_string ({ER_XML_CONSTANTS}.spinner)
+		local
+			l_file, l_dest_file: RAW_FILE
+			l_constants: ER_MISC_CONSTANTS
+			l_file_name, l_dest_file_name: FILE_NAME
+			l_singleton: ER_SHARED_SINGLETON
+			l_sub_dir, l_tool_bar_button_file, l_sub_imp_dir, l_tool_bar_button_imp_file: STRING
+			l_last_string: STRING
+			l_identifier_name: detachable STRING
+		do
+			create l_singleton
+			l_sub_dir := "code_generated_once_change_by_user"
+			l_tool_bar_button_file := "ribbon_spinner_imp"
+			l_sub_imp_dir := "code_generated_everytime"
+			l_tool_bar_button_imp_file := "ribbon_spinner"
+
+			if attached l_singleton.project_info_cell.item as l_project_info then
+				if attached l_project_info.project_location as l_project_location then
+					create l_constants
+
+					-- Generate tool bar button class
+					create l_file_name.make_from_string (l_constants.template)
+					l_file_name.set_subdirectory (l_sub_dir)
+					l_file_name.set_file_name (l_tool_bar_button_file + ".e")
+					create l_file.make (l_file_name)
+					if l_file.exists and then l_file.is_readable then
+						create l_dest_file_name.make_from_string (l_project_location)
+						if attached {ER_TREE_NODE_BUTTON_DATA} a_spinner_node.data as l_data then
+							if attached l_data.command_name as l_command_name  and then not l_command_name.is_empty then
+								l_identifier_name := l_command_name
+							end
+						end
+						if l_identifier_name /= Void then
+							l_dest_file_name.set_file_name (l_identifier_name.as_lower + "_imp.e")
+						else
+							l_dest_file_name.set_file_name (l_tool_bar_button_file + "_" + a_index.out + ".e")
+						end
+
+						create l_dest_file.make_create_read_write (l_dest_file_name)
+						from
+							l_file.open_read
+							l_file.start
+						until
+							l_file.after
+						loop
+							-- replace/add tab codes here
+							l_file.read_line
+							l_last_string := l_file.last_string
+							if l_identifier_name /= Void then
+								l_last_string.replace_substring_all ("$INDEX", l_identifier_name.as_upper + "_IMP")
+							else
+								l_last_string.replace_substring_all ("$INDEX", "RIBBON_SPINNER_IMP_" + a_index.out)
+							end
+
+							l_dest_file.put_string (l_last_string + "%N")
+						end
+
+						l_file.close
+						l_dest_file.close
+					end
+
+					-- Generate tool bar toggle button imp class
+					create l_file_name.make_from_string (l_constants.template)
+					l_file_name.set_subdirectory (l_sub_imp_dir)
+					l_file_name.set_file_name (l_tool_bar_button_imp_file + ".e")
+					create l_file.make (l_file_name)
+					if l_file.exists and then l_file.is_readable then
+						create l_dest_file_name.make_from_string (l_project_location)
+						if l_identifier_name /= Void then
+							l_dest_file_name.set_file_name (l_identifier_name.as_lower + ".e")
+						else
+							l_dest_file_name.set_file_name (l_tool_bar_button_imp_file + "_" + a_index.out + ".e")
+						end
+
+						create l_dest_file.make (l_dest_file_name)
+						if not l_dest_file.exists then
+							l_dest_file.create_read_write
+							from
+								l_file.open_read
+								l_file.start
+							until
+								l_file.after
+							loop
+								-- replace/add tab codes here
+								l_file.read_line
+								l_last_string := l_file.last_string
+								if l_identifier_name /= Void then
+									l_last_string.replace_substring_all ("$INDEX_1", l_identifier_name.as_upper)
+									l_last_string.replace_substring_all ("$INDEX_2", l_identifier_name.as_upper + "_IMP")
+								else
+									l_last_string.replace_substring_all ("$INDEX_1", "RIBBON_SPINNER_" + a_index.out)
+									l_last_string.replace_substring_all ("$INDEX_2", "RIBBON_SPINNER_IMP_" + a_index.out)
 								end
 
 								l_dest_file.put_string (l_last_string + "%N")

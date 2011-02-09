@@ -48,6 +48,8 @@ feature -- ALl types under group
 
 	check_box: STRING = "CheckBox"
 
+	spinner: STRING = "Spinner"
+
 	combo_box: STRING = "ComboBox"
 
 	control_group: STRING = "ControlGroup"
@@ -93,7 +95,8 @@ feature -- Contract support
 					l_string.same_string (command_label_title) or else
 					l_string.same_string (command_small_images) or else
 					l_string.same_string (command_large_images) or else
-					l_string.same_string (toggle_button)
+					l_string.same_string (toggle_button) or else
+					l_string.same_string (spinner)
 			end
 		end
 

@@ -464,7 +464,7 @@ feature {NONE} -- Implementation
 		local
 			parser: XML_LITE_STOPPABLE_PARSER
 			l_file: PLAIN_TEXT_FILE
-			l_tree: XML_CALLBACKS_TREE
+			l_tree: XML_CALLBACKS_DOCUMENT
 			xml_data: detachable XML_ELEMENT
 			l_document: detachable XML_DOCUMENT
 			has_error: BOOLEAN

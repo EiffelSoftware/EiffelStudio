@@ -162,7 +162,7 @@ feature {NONE} -- Implementation
 		local
 			parser: XML_LITE_STOPPABLE_PARSER
 			l_file: PLAIN_TEXT_FILE
-			l_tree: XML_CALLBACKS_TREE
+			l_tree: XML_CALLBACKS_DOCUMENT
 			l_attrib: detachable XML_ATTRIBUTE
 			pref_name,
 			pref_value: detachable STRING

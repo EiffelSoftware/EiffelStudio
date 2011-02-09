@@ -98,7 +98,7 @@ feature {EB_DOCUMENTATION_WIZARD} -- Basic operations
 			-- Names of available views of `cluster'.
 		local
 			l_parser: XML_LITE_STOPPABLE_PARSER
-			l_tree: XML_CALLBACKS_FILTER_TREE
+			l_tree: XML_CALLBACKS_NULL_FILTER_DOCUMENT
 			l_file: PLAIN_TEXT_FILE
 			l_concatenator: XML_CONTENT_CONCATENATOR
 			diagram_input: XML_ELEMENT

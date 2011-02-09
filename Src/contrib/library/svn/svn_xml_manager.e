@@ -98,7 +98,7 @@ feature -- Access
 			retried: BOOLEAN
 			l_path, l_status, l_revision: detachable STRING
 			info: SVN_STATUS_INFO
-			tree: XML_CALLBACKS_TREE
+			tree: XML_CALLBACKS_DOCUMENT
 			docs: XML_DOCUMENT
 			att: detachable XML_ATTRIBUTE
 			elt: detachable XML_ELEMENT
@@ -200,7 +200,7 @@ feature -- Access
 			l_revision: STRING
 			l_kind,l_action: detachable STRING
 			info: SVN_REVISION_INFO
-			tree: XML_CALLBACKS_TREE
+			tree: XML_CALLBACKS_DOCUMENT
 			docs: XML_DOCUMENT
 			att: detachable XML_ATTRIBUTE
 			elt: XML_ELEMENT

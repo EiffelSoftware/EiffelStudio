@@ -141,11 +141,31 @@ feature {NONE} -- Initialization
 			g.key_press_actions.extend (agent on_key_pressed)
 
 			if attached preferences as prefs then
-				if attached prefs.use_smart_date_pref as p then
-					use_smart_date := p.value
-					p.change_actions.extend (agent (iap: BOOLEAN_PREFERENCE)
+				if attached prefs.smart_date_kind_pref as p then
+					if attached p.selected_value as p_value then
+						if p_value.same_string ({CTR_DATE_TIME_UTILITY}.smart_date_duration_kind_string) then
+							smart_date_kind := {CTR_DATE_TIME_UTILITY}.smart_date_duration_kind
+						elseif p_value.same_string ({CTR_DATE_TIME_UTILITY}.smart_date_short_kind_string) then
+							smart_date_kind := {CTR_DATE_TIME_UTILITY}.smart_date_short_kind
+						else
+							smart_date_kind := {CTR_DATE_TIME_UTILITY}.smart_date_none_kind
+						end
+					else
+						smart_date_kind := {CTR_DATE_TIME_UTILITY}.smart_date_none_kind
+					end
+					p.change_actions.extend (agent (iap: ARRAY_PREFERENCE)
 							do
-								use_smart_date := iap.value
+								if attached iap.selected_value as p_value then
+									if p_value.same_string ({CTR_DATE_TIME_UTILITY}.smart_date_duration_kind_string) then
+										smart_date_kind := {CTR_DATE_TIME_UTILITY}.smart_date_duration_kind
+									elseif p_value.same_string ({CTR_DATE_TIME_UTILITY}.smart_date_short_kind_string) then
+										smart_date_kind := {CTR_DATE_TIME_UTILITY}.smart_date_short_kind
+									else
+										smart_date_kind := {CTR_DATE_TIME_UTILITY}.smart_date_none_kind
+									end
+								else
+									smart_date_kind := {CTR_DATE_TIME_UTILITY}.smart_date_none_kind
+								end
 								update
 							end(p))
 				end
@@ -194,7 +214,12 @@ feature -- Access
 
 	review_enabled: BOOLEAN
 
+	smart_date_kind: INTEGER
+
 	use_smart_date: BOOLEAN
+		do
+			Result := smart_date_kind /= 0
+		end
 
 	date_time_format: detachable STRING
 
@@ -787,7 +812,7 @@ feature {CTR_WINDOW} -- Implementation
 			a_row.set_item (cst_author_column, create {EV_GRID_LABEL_ITEM}.make_with_text (a_log.author))
 
 			if use_smart_date or date_time_format /= Void then
-				create {CTR_DATE_TIME_GRID_ITEM} gdate_time.make_with_text_and_date (a_log.date, a_log.gmt_date_time, use_smart_date, date_time_format,
+				create {CTR_DATE_TIME_GRID_ITEM} gdate_time.make_with_text_and_date (a_log.date, a_log.gmt_date_time, smart_date_kind, date_time_format,
 					gmt_offset, gmt_offset_minutes)
 			else
 				create gdate_time.make_with_text (a_log.date)

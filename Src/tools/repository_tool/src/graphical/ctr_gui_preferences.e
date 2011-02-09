@@ -36,7 +36,13 @@ feature {NONE} -- Access
 
 			initialize_gmt_offset_preferences
 
-			use_smart_date_pref := factory.new_boolean_preference_value (manager, namespace + ".use_smart_date", True)
+			smart_date_kind_pref := factory.new_array_preference_value (manager, namespace + ".smart_date_kind",
+					<<
+						{CTR_DATE_TIME_UTILITY}.smart_date_none_kind_string,
+						{CTR_DATE_TIME_UTILITY}.smart_date_duration_kind_string,
+						{CTR_DATE_TIME_UTILITY}.smart_date_short_kind_string
+					>>)
+			smart_date_kind_pref.set_is_choice (True)
 
 			diff_viewer_command_pref := factory.new_string_preference_value (manager, namespace + ".diff_viewer_command", "")
 		end
@@ -60,7 +66,7 @@ feature -- Access
 
 	info_tool_changes_expanded_pref: BOOLEAN_PREFERENCE
 
-	use_smart_date_pref: BOOLEAN_PREFERENCE
+	smart_date_kind_pref: ARRAY_PREFERENCE
 
 	date_formatting_pref: STRING_PREFERENCE
 

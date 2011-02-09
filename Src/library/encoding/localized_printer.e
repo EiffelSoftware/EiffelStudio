@@ -103,7 +103,7 @@ feature -- Conversion
 						end
 					end
 				else
-					utf8.convert_to (utf32, l_result)
+					utf8.convert_to (utf32, a_str)
 					if utf8.last_conversion_successful then
 						l_result := utf8.last_converted_string_32
 					end
@@ -116,7 +116,7 @@ feature -- Conversion
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

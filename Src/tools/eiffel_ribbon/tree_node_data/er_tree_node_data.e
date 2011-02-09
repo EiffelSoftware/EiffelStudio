@@ -32,24 +32,28 @@ feature -- Settings
 			--
 		do
 			command_name := a_command_name
+			remove_useless_symbol (command_name)
 		end
 
 	set_label_title (a_label_title: detachable STRING)
 			--
 		do
 			label_title := a_label_title
+			remove_useless_symbol (label_title)
 		end
 
 	set_small_image (a_small_image: detachable STRING)
 			--
 		do
 			small_image := a_small_image
+			remove_useless_symbol (small_image)
 		end
 
 	set_large_image (a_large_image: detachable STRING)
 			--
 		do
 			large_image := a_large_image
+			remove_useless_symbol (large_image)
 		end
 
 feature -- Query
@@ -68,4 +72,16 @@ feature -- Query
 
 	application_mode: INTEGER
 			--
+
+feature {NONE} -- Implementation
+
+	remove_useless_symbol (a_string: detachable STRING)
+			--
+		do
+			if attached a_string as l_string then
+				l_string.replace_substring_all ("%N", "")
+				l_string.replace_substring_all ("%T", "")
+				l_string.replace_substring_all (" ", "")
+			end
+		end
 end

@@ -129,6 +129,7 @@ feature {NONE} -- Implementation
 			valid: a_parent.text.is_equal ((create {ER_XML_CONSTANTS}).group)
 		local
 			l_button: EV_TREE_ITEM
+			l_toggle_button: EV_TREE_ITEM
 			l_check_box: EV_TREE_ITEM
 			l_combo_box: EV_TREE_ITEM
 			l_control_group: EV_TREE_ITEM
@@ -146,6 +147,11 @@ feature {NONE} -- Implementation
 			create l_button.make_with_text (constants.button)
 			l_button.set_pebble (constants.button)
 			a_parent.extend (l_button)
+
+			create l_toggle_button.make_with_text (constants.toggle_button)
+			l_toggle_button.set_pebble (constants.toggle_button)
+			a_parent.extend (l_toggle_button)
+
 --Uncomment following lines when the ribbon features supported
 			create l_check_box.make_with_text (constants.check_box)
 			l_check_box.set_pebble (constants.check_box)

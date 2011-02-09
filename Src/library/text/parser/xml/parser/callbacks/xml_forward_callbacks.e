@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 	make_null
 			-- Don't forward anything
 		do
-			create {XML_CALLBACKS_NULL} callbacks.make
+			set_callbacks (create {XML_CALLBACKS_NULL}.make)
 		end
 
 feature -- Access

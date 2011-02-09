@@ -26,7 +26,8 @@ feature -- Filters
 			namespace_resolver_not_void: Result /= Void
 		end
 
-	new_tree_builder: XML_CALLBACKS_TREE
+	new_document_builder,
+	new_tree_builder: XML_CALLBACKS_DOCUMENT
 			-- New tree construction filter
 		do
 			create Result.make_null
@@ -36,14 +37,38 @@ feature -- Filters
 
 feature -- Filters to implement
 
---	new_pretty_print: XML_PRETTY_PRINT_FILTER
---			-- New pretty printer (to standard io)
---		do
---			create Result.make_null
---		ensure
---			pretty_print_not_void: Result /= Void
---		end
---
+	new_pretty_print: XML_PRETTY_PRINT_FILTER
+			-- New pretty printer (to standard io)
+		do
+			create Result.make_null
+		ensure
+			pretty_print_not_void: Result /= Void
+		end
+
+	new_indent_pretty_print: XML_INDENT_PRETTY_PRINT_FILTER
+			-- Indenting pretty print filter
+		do
+			create Result.make_null
+		ensure
+			indent_pretty_print_not_void: Result /= Void
+		end
+
+	new_xmlns_generator: XML_XMLNS_GENERATOR
+			-- New xmlns: generator (opposite of namespace resolver)
+		do
+			create Result.make_null
+		ensure
+			xmlns_generator_not_void: Result /= Void
+		end
+
+	new_content_concatenator: XML_CONTENT_CONCATENATOR
+			-- New content concatenation filter.
+		do
+			create Result.make_null
+		ensure
+			content_concatenator_not_void: Result /= Void
+		end
+
 --	new_canonical_pretty_print: XML_CANONICAL_PRETTY_PRINT_FILTER
 --			-- James Clark' canonical XML output
 --		do
@@ -51,23 +76,7 @@ feature -- Filters to implement
 --		ensure
 --			pretty_print_not_void: Result /= Void
 --		end
---
---	new_indent_pretty_print: XML_INDENT_PRETTY_PRINT_FILTER
---			-- Indenting pretty print filter
---		do
---			create Result.make_null
---		ensure
---			indent_pretty_print_not_void: Result /= Void
---		end
 
---	new_xmlns_generator: XM_XMLNS_GENERATOR
---			-- New xmlns: generator (opposite of namespace resolver)
---		do
---			create Result.make_null
---		ensure
---			xmlns_generator_not_void: Result /= Void
---		end
---		
 --	new_stop_on_error: XM_STOP_ON_ERROR_FILTER
 --			-- New stop-on-error filter
 --		do
@@ -76,14 +85,6 @@ feature -- Filters to implement
 --			stop_on_error_not_void: Result /= Void
 --		end
 
---	new_content_concatenator: XML_CONTENT_CONCATENATOR
---			-- New content concatenation filter.
---		do
---			create Result.make_null
---		ensure
---			content_concatenator_not_void: Result /= Void
---		end
---		
 --	new_whitespace_normalizer: XML_WHITESPACE_NORMALIZER
 --			-- New whitespace normalizer.
 --		do
@@ -91,7 +92,6 @@ feature -- Filters to implement
 --		ensure
 --			whitespace_normalizer_not_void: Result /= Void
 --		end
-
 
 feature -- Pipes
 

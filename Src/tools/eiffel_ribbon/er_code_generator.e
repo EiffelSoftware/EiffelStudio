@@ -860,6 +860,7 @@ feature {NONE} -- Implementation
 			l_button_creation_string, l_button_registry_string, l_button_declaration_string: STRING
 			l_identifier_name: detachable STRING
 			l_gen_info: ER_CODE_GENERATOR_INFO
+			l_split_button: EV_TREE_NODE
 		do
 			-- First check how many groups
 			l_button_count := a_group_node.count
@@ -1005,6 +1006,28 @@ feature {NONE} -- Implementation
 					l_gen_info.set_default_item_class_name_prefix ("RIBBON_COMBO_BOX_IMP_")
 					l_gen_info.set_item_file ("ribbon_combo_box")
 					l_gen_info.set_item_imp_file ("ribbon_combo_box_imp")
+				elseif a_group_node.item.text.same_string ({ER_XML_CONSTANTS}.split_button) then
+					from
+						create l_gen_info
+						l_gen_info.set_default_item_class_imp_name_prefix ("RIBBON_BUTTON_")
+						l_gen_info.set_default_item_class_name_prefix ("RIBBON_BUTTON_IMP_")
+						l_gen_info.set_item_file ("ribbon_button")
+						l_gen_info.set_item_imp_file ("ribbon_button_imp")
+						l_split_button := a_group_node.item
+						l_split_button.start
+					until
+						l_split_button.after
+					loop
+						generate_item_class (l_split_button.item, l_split_button.index + a_group_node.index + button_counter, l_gen_info)
+
+						l_split_button.forth
+					end
+
+					create l_gen_info
+					l_gen_info.set_default_item_class_imp_name_prefix ("RIBBON_SPLIT_BUTTON_")
+					l_gen_info.set_default_item_class_name_prefix ("RIBBON_SPLIT_BUTTON_IMP_")
+					l_gen_info.set_item_file ("ribbon_split_button")
+					l_gen_info.set_item_imp_file ("ribbon_split_button_imp")
 				else
 					check not_implemented: False end
 					create l_gen_info
@@ -1167,6 +1190,16 @@ feature {NONE} -- Implementation
 					else
 						l_generated.replace_substring_all ("$INDEX_1", "combo_box_" + (button_counter + l_index).out)
 						l_generated.replace_substring_all ("$INDEX_2", "RIBBON_COMBO_BOX_" + (button_counter + l_index).out)
+					end
+				elseif a_group_node.i_th (1).text.same_string (l_constants.combo_box) then
+					if attached {ER_TREE_NODE_DATA} a_group_node.i_th (l_index).data as l_data
+						and then attached l_data.command_name as l_identify_name
+						and then not l_identify_name.is_empty then
+						l_generated.replace_substring_all ("$INDEX_1", l_identify_name.as_lower)
+						l_generated.replace_substring_all ("$INDEX_2", l_identify_name.as_upper)
+					else
+						l_generated.replace_substring_all ("$INDEX_1", "split_button_" + (button_counter + l_index).out)
+						l_generated.replace_substring_all ("$INDEX_2", "RIBBON_SPLIT_BUTTON_" + (button_counter + l_index).out)
 					end
 				else
 					create l_generated.make_empty

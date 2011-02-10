@@ -140,7 +140,7 @@ feature {NONE} -- Implementation
 --			l_in_ribbon_gallery: EV_TREE_ITEM
 --			l_size_definition: EV_TREE_ITEM
 			l_spinner: EV_TREE_ITEM
---			l_split_button: EV_TREE_ITEM
+			l_split_button: EV_TREE_ITEM
 --			l_split_button_gallery: EV_TREE_ITEM
 --			l_toggle_button: EV_TREE_ITEM
 		do
@@ -165,6 +165,10 @@ feature {NONE} -- Implementation
 			l_combo_box.set_pebble (constants.combo_box)
 			a_parent.extend (l_combo_box)
 
+			create l_split_button.make_with_text (constants.split_button)
+			l_split_button.set_pebble (constants.split_button)
+			a_parent.extend (l_split_button)
+			
 			create l_control_group.make_with_text (constants.control_group)
 --			l_control_group.set_pebble (constants.control_group)
 			a_parent.extend (l_control_group)

@@ -41,6 +41,8 @@ feature -- Factory method
 				create {ER_TREE_NODE_TOGGLE_BUTTON_DATA} Result.make
 			elseif a_type.same_string (constants.spinner) then
 				create {ER_TREE_NODE_SPINNER_DATA} Result.make
+			elseif a_type.same_string (constants.combo_box) then
+				create {ER_TREE_NODE_COMBO_BOX_DATA} Result.make
 			else
 				--no data for `a_type'
 				-- Maybe `a_type' is "Application". It should not have any tree node data

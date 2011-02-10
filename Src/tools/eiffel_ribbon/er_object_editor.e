@@ -58,6 +58,7 @@ feature -- Command
 			l_ribbon_widget: ER_RIBBON_NODE_WIDGET
 			l_toggle_button_widget: ER_TOGGLE_BUTTON_NODE_WIDGET
 			l_spinner_widget: ER_SPINNER_NODE_WIDGET
+			l_combo_box_widget: ER_COMBO_BOX_NODE_WIDGET
 		do
 			widget.wipe_out
 			if attached a_node.text as l_text then
@@ -110,6 +111,12 @@ feature -- Command
 						l_spinner_widget.set_tree_node_data (l_data)
 					end
 					widget.extend (l_spinner_widget)
+				elseif l_text.same_string (constants.combo_box) then
+					create l_combo_box_widget
+					if attached {ER_TREE_NODE_COMBO_BOX_DATA} a_node.data as l_data then
+						l_combo_box_widget.set_tree_node_data (l_data)
+					end
+					widget.extend (l_combo_box_widget)
 				end
 			end
 

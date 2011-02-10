@@ -999,6 +999,12 @@ feature {NONE} -- Implementation
 					l_gen_info.set_default_item_class_name_prefix ("RIBBON_SPINNER_IMP_")
 					l_gen_info.set_item_file ("ribbon_spinner")
 					l_gen_info.set_item_imp_file ("ribbon_spinner_imp")
+				elseif a_group_node.item.text.same_string ({ER_XML_CONSTANTS}.combo_box) then
+					create l_gen_info
+					l_gen_info.set_default_item_class_imp_name_prefix ("RIBBON_COMBO_BOX_")
+					l_gen_info.set_default_item_class_name_prefix ("RIBBON_COMBO_BOX_IMP_")
+					l_gen_info.set_item_file ("ribbon_combo_box")
+					l_gen_info.set_item_imp_file ("ribbon_combo_box_imp")
 				else
 					check not_implemented: False end
 					create l_gen_info
@@ -1140,7 +1146,7 @@ feature {NONE} -- Implementation
 						l_generated.replace_substring_all ("$INDEX_2", l_identify_name.as_upper)
 					else
 						l_generated.replace_substring_all ("$INDEX_1", "toggle_button_" + (button_counter + l_index).out)
-						l_generated.replace_substring_all ("$INDEX_2", "RIBBON_TOGGLE_BUTTON" + (button_counter + l_index).out)
+						l_generated.replace_substring_all ("$INDEX_2", "RIBBON_TOGGLE_BUTTON_" + (button_counter + l_index).out)
 					end
 				elseif a_group_node.i_th (1).text.same_string (l_constants.spinner) then
 					if attached {ER_TREE_NODE_SPINNER_DATA} a_group_node.i_th (l_index).data as l_data
@@ -1150,7 +1156,17 @@ feature {NONE} -- Implementation
 						l_generated.replace_substring_all ("$INDEX_2", l_identify_name.as_upper)
 					else
 						l_generated.replace_substring_all ("$INDEX_1", "toggle_button_" + (button_counter + l_index).out)
-						l_generated.replace_substring_all ("$INDEX_2", "RIBBON_SPINNER" + (button_counter + l_index).out)
+						l_generated.replace_substring_all ("$INDEX_2", "RIBBON_SPINNER_" + (button_counter + l_index).out)
+					end
+				elseif a_group_node.i_th (1).text.same_string (l_constants.combo_box) then
+					if attached {ER_TREE_NODE_DATA} a_group_node.i_th (l_index).data as l_data
+						and then attached l_data.command_name as l_identify_name
+						and then not l_identify_name.is_empty then
+						l_generated.replace_substring_all ("$INDEX_1", l_identify_name.as_lower)
+						l_generated.replace_substring_all ("$INDEX_2", l_identify_name.as_upper)
+					else
+						l_generated.replace_substring_all ("$INDEX_1", "combo_box_" + (button_counter + l_index).out)
+						l_generated.replace_substring_all ("$INDEX_2", "RIBBON_COMBO_BOX_" + (button_counter + l_index).out)
 					end
 				else
 					create l_generated.make_empty

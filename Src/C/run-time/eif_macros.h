@@ -1419,7 +1419,7 @@ RT_LNK void eif_exit_eiffel_code(void);
  * Separate call (versions ending with P stand for calls to precompiled routines, the first two arguments to them have a different meaning):
  * RTS_CF(s,f,n,t,a,r) - call a function on a static type s with a feature id f and name n on a target t and arguments a and result r
  * RTS_CP(s,f,n,t,a)   - call a procedure on a static type s with a feature id f and name n on a target t and arguments a
- * RTS_CC(s,f,d,a)     - call a creation procedure on a static type s with a feature id f on a target of dynamic type d and arguments a
+ * RTS_CC(s,f,d,a)     - call a creation procedure (asynchronous) on a static type s with a feature id f on a target of dynamic type d and arguments a
  */
 #define RTS_CF(s,f,n,t,a,r) \
 	{                                                       \
@@ -1433,10 +1433,19 @@ RT_LNK void eif_exit_eiffel_code(void);
 		((call_data*)(a)) -> is_synchronous = EIF_TRUE; \
 		eif_log_callp (s, f, RTS_PID(Current), a);      \
 	}
-#define RTS_CP(s,f,n,t,a)  eif_log_call  (s, f, RTS_PID(Current), a)
-#define RTS_CPP(s,f,n,t,a) eif_log_callp (s, f, RTS_PID(Current), a)
-#define RTS_CC(s,f,d,a)    eif_log_call  (s, f, RTS_PID(Current), a)
-#define RTS_CCP(s,f,d,a)   eif_log_callp (s, f, RTS_PID(Current), a)
+#define RTS_CP(s,f,n,t,a)  eif_log_call  (s, f, RTS_PID(Current), a);
+#define RTS_CPP(s,f,n,t,a) eif_log_callp (s, f, RTS_PID(Current), a);
+
+#define RTS_CC(s,f,d,a) \
+	{														\
+		((call_data*)(a)) -> is_synchronous = EIF_FALSE; \
+		eif_log_call  (s, f, RTS_PID(Current), a);			\
+	}
+#define RTS_CCP(s,f,d,a) \
+	{														\
+		((call_data*)(a)) -> is_synchronous = EIF_FALSE; \
+		eif_log_callp  (s, f, RTS_PID(Current), a);			\
+	}
 
 /*
  * Separate call arguments:

@@ -52,6 +52,8 @@ feature -- ALl types under group
 
 	combo_box: STRING = "ComboBox"
 
+	split_button: STRING = "SplitButton"
+
 	control_group: STRING = "ControlGroup"
 
 feature -- Types under command node
@@ -96,7 +98,8 @@ feature -- Contract support
 					l_string.same_string (command_small_images) or else
 					l_string.same_string (command_large_images) or else
 					l_string.same_string (toggle_button) or else
-					l_string.same_string (spinner)
+					l_string.same_string (spinner) or else
+					l_string.same_string (split_button)
 			end
 		end
 
@@ -108,7 +111,8 @@ feature -- Contract support
 					l_string.same_string (check_box) or else
 					l_string.same_string (combo_box) or else
 					l_string.same_string (toggle_button) or else
-					l_string.same_string (spinner)
+					l_string.same_string (spinner) or else
+					l_string.same_string (split_button)
 			end
 		end
 end

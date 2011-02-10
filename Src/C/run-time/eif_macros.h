@@ -1438,12 +1438,12 @@ RT_LNK void eif_exit_eiffel_code(void);
 
 #define RTS_CC(s,f,d,a) \
 	{														\
-		((call_data*)(a)) -> is_synchronous = EIF_FALSE; \
+		/*((call_data*)(a)) -> is_synchronous = EIF_FALSE; */ \
 		eif_log_call  (s, f, RTS_PID(Current), a);			\
 	}
 #define RTS_CCP(s,f,d,a) \
 	{														\
-		((call_data*)(a)) -> is_synchronous = EIF_FALSE; \
+		/*((call_data*)(a)) -> is_synchronous = EIF_FALSE; */ \
 		eif_log_callp  (s, f, RTS_PID(Current), a);			\
 	}
 
@@ -1461,20 +1461,14 @@ RT_LNK void eif_exit_eiffel_code(void);
 		((call_data*)(a)) -> result = (EIF_TYPED_VALUE *) 0;                     \
 		((call_data*)(a)) -> is_synchronous = EIF_FALSE;                         \
 	}
-#define RTS_AA(v,f,t,n,a) \
-	{                                                                                           \
-		((call_data*)(a)) -> argument [(n) - 1] = (v);                                      \
-		if ((t) == SK_REF)                                                                  \
-			((call_data*)(a)) -> argument [(n) - 1].it_r =                              \
-			(EIF_REFERENCE) eif_protect (((call_data*)(a)) -> argument [(n) - 1].it_r); \
-	}
+#define RTS_AA(v,f,t,n,a) RTS_AS(v,f,t,n,a)
 #define RTS_AS(v,f,t,n,a) \
 	{	\
 		((call_data*)(a)) -> argument [(n) - 1] = (v);	\
 		if ((t) == SK_REF) 	\
 		{			\
 			((call_data*)(a)) -> argument [(n) - 1].it_r = eif_protect (((call_data*)(a)) -> argument [(n) - 1].it_r); \
-			if ( !RTS_OU(Current, ((call_data*)(a)) -> argument [(n) - 1].it_r) )	\
+			if ( ((call_data*)(a)) -> is_synchronous == EIF_FALSE && !RTS_OU(Current, ((call_data*)(a)) -> argument [(n) - 1].it_r) )	\
 				((call_data*)(a)) -> is_synchronous = EIF_TRUE; \
 		}	\
 	}

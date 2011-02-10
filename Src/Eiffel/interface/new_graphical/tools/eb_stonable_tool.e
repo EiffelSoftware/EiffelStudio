@@ -38,8 +38,11 @@ feature {NONE} -- Clean up
 				create l_notifier
 				if l_notifier.is_service_available then
 						-- Unregister existing file check modification
-					if attached {FILED_STONE} last_monitored_stone as l_stone2 and then attached {STRING_32} l_stone2.file_name.out.as_string_32 as l_fn2 then
-						l_notifier.service.uncheck_modifications_with_callback (l_fn2, agent on_file_changed)
+					if
+						attached last_monitored_stone as l_stone2 and then
+						attached l_stone2.file_name as l_stone2_filename
+					then
+						l_notifier.service.uncheck_modifications_with_callback (l_stone2_filename.as_string_32, agent on_file_changed)
 						last_monitored_stone := Void
 					end
 				end
@@ -129,11 +132,13 @@ feature {NONE} -- Implementation
 			create l_notifier
 			if l_notifier.is_service_available then
 					-- Unregister existing file check modification
-				if attached {FILED_STONE} last_monitored_stone as l_stone then
-					if l_stone.file_name /= Void and then attached {STRING_32} l_stone.file_name.out.as_string_32 as l_fn then
-						if l_notifier.service.is_monitoring (l_fn) then
-							l_notifier.service.uncheck_modifications_with_callback (l_fn, agent on_file_changed)
-						end
+				if
+					attached last_monitored_stone as l_stone and then
+					attached l_stone.file_name as l_stone_filename and then
+					attached l_stone_filename.as_string_32 as l_fn
+				then
+					if l_notifier.service.is_monitoring (l_fn) then
+						l_notifier.service.uncheck_modifications_with_callback (l_fn, agent on_file_changed)
 					end
 				end
 			end
@@ -144,11 +149,12 @@ feature {NONE} -- Implementation
 
 			if l_notifier.is_service_available then
 					-- Unregister existing file check modification
-				if attached {FILED_STONE} a_stone as l_stone2 then
-					if l_stone2.file_name /= Void and then attached {STRING_32} l_stone2.file_name.out.as_string_32 as l_fn2 then
-						l_notifier.service.check_modifications_with_callback (l_fn2, agent on_file_changed)
-						last_monitored_stone := l_stone2
-					end
+				if
+					attached {FILED_STONE} a_stone as l_stone2 and then
+					attached l_stone2.file_name as l_stone2_filename
+				then
+					l_notifier.service.check_modifications_with_callback (l_stone2_filename.as_string_32, agent on_file_changed)
+					last_monitored_stone := l_stone2
 				end
 			end
 		ensure
@@ -167,7 +173,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -180,22 +186,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

@@ -42,6 +42,8 @@ feature -- Access
 		deferred
 		end
 
+feature -- Command
+
 	set_text (a_text: STRING_32)
 			-- Set `text' with `a_text'
 		local
@@ -57,6 +59,46 @@ feature -- Access
 				create l_enum
 				{EV_RIBBON}.c_invalidate_ui_command (l_command_id, l_enum.ui_invalidations_property, l_key.pointer, l_ribbon.item)
 				text_to_set := a_text
+			end
+		end
+
+	set_small_image (a_image: EV_PIXEL_BUFFER)
+			-- Set small image
+		require
+			not_void: a_image /= Void
+		local
+			l_key: EV_PROPERTY_KEY
+			l_command_id: NATURAL_32
+			l_enum: EV_UI_INVALIDATIONS_ENUM
+		do
+			l_command_id := command_list.item (command_list.lower)
+			check command_id_valid: l_command_id /= 0 end
+
+			if attached ribbon as l_ribbon then
+				create l_key.make_small_image
+				create l_enum
+				{EV_RIBBON}.c_invalidate_ui_command (l_command_id, l_enum.ui_invalidations_property, l_key.pointer, l_ribbon.item)
+				small_image_to_set := a_image
+			end
+		end
+
+	set_large_image (a_image: EV_PIXEL_BUFFER)
+			-- Set large image
+		require
+			not_void: a_image /= Void
+		local
+			l_key: EV_PROPERTY_KEY
+			l_command_id: NATURAL_32
+			l_enum: EV_UI_INVALIDATIONS_ENUM
+		do
+			l_command_id := command_list.item (command_list.lower)
+			check command_id_valid: l_command_id /= 0 end
+
+			if attached ribbon as l_ribbon then
+				create l_key.make_large_image
+				create l_enum
+				{EV_RIBBON}.c_invalidate_ui_command (l_command_id, l_enum.ui_invalidations_property, l_key.pointer, l_ribbon.item)
+				large_image_to_set := a_image
 			end
 		end
 
@@ -85,8 +127,19 @@ feature {EV_RIBBON} -- Command
 						l_value.set_string_value (l_text)
 						text_to_set := void
 					end
+				elseif l_key.is_small_image then
+					if attached small_image_to_set as l_image then
+						create l_value.share_from_pointer (a_property_new_value)
+						l_value.set_image (l_image)
+						small_image_to_set := Void
+					end
+				elseif l_key.is_large_image then
+					if attached large_image_to_set as l_image then
+						create l_value.share_from_pointer (a_property_new_value)
+						l_value.set_image (l_image)
+						large_image_to_set := Void
+					end
 				else
-
 				end
 
 			end
@@ -99,5 +152,12 @@ feature {NONE} -- Implementation
 
 	text_to_set: detachable STRING_32
 			-- Text will be used by `update_property'
+
+	small_image_to_set: detachable EV_PIXEL_BUFFER
+			-- Image will be used by `update_proptery'
+
+	large_image_to_set: detachable EV_PIXEL_BUFFER
+			-- Image will be used by `update_proptery'
+
 end
 

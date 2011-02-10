@@ -18,7 +18,11 @@ class
 create
 	share_from_pointer,
 	make_boolean,
-	make_label
+	make_label,
+	make_small_image,
+	make_large_image,
+	make_small_high_contrast_image,
+	make_large_high_contrast_image
 
 feature {NONE}  -- Initialization
 
@@ -38,6 +42,30 @@ feature {NONE}  -- Initialization
 			-- Make a label key
 		do
 			share_from_pointer (c_ui_pkey_label)
+		end
+
+	make_small_image
+			-- Make a small image key
+		do
+			share_from_pointer (c_ui_pkey_small_image)
+		end
+
+	make_large_image
+			-- Make a large image key
+		do
+			share_from_pointer (c_ui_pkey_large_image)
+		end
+
+	make_small_high_contrast_image
+			-- Make a small high contrast image key
+		do
+			share_from_pointer (c_ui_pkey_small_high_contrast_image)
+		end
+
+	make_large_high_contrast_image
+			-- Make a large high contrast image key
+		do
+			share_from_pointer (c_ui_pkey_large_high_contrast_image)
 		end
 
 feature -- Query
@@ -63,6 +91,42 @@ feature -- Query
 			l_tmp: EV_PROPERTY_KEY
 		do
 			create l_tmp.make_label
+			Result := l_tmp.guid.is_equal (guid)
+		end
+
+	is_small_image: BOOLEAN
+			-- Is current small image key?
+		local
+			l_tmp: EV_PROPERTY_KEY
+		do
+			create l_tmp.make_small_image
+			Result := l_tmp.guid.is_equal (guid)
+		end
+
+	is_large_image: BOOLEAN
+			-- Is current large image key?
+		local
+			l_tmp: EV_PROPERTY_KEY
+		do
+			create l_tmp.make_large_image
+			Result := l_tmp.guid.is_equal (guid)
+		end
+
+	is_small_high_contrast_image: BOOLEAN
+			-- Is current small high contrast image key?
+		local
+			l_tmp: EV_PROPERTY_KEY
+		do
+			create l_tmp.make_small_high_contrast_image
+			Result := l_tmp.guid.is_equal (guid)
+		end
+
+	is_large_high_contrast_image: BOOLEAN
+			-- Is current large high contrast image key?
+		local
+			l_tmp: EV_PROPERTY_KEY
+		do
+			create l_tmp.make_large_high_contrast_image
 			Result := l_tmp.guid.is_equal (guid)
 		end
 
@@ -116,6 +180,54 @@ feature {NONE} -- Externals
 			"[
 			{
 				return &UI_PKEY_Label;
+			}
+			]"
+		end
+
+	c_ui_pkey_small_image: POINTER
+			--
+		external
+			"C inline use %"UIRibbon.h%""
+		alias
+			"[
+			{
+				return &UI_PKEY_SmallImage;
+			}
+			]"
+		end
+
+	c_ui_pkey_large_image: POINTER
+			--
+		external
+			"C inline use %"UIRibbon.h%""
+		alias
+			"[
+			{
+				return &UI_PKEY_LargeImage;
+			}
+			]"
+		end
+
+	c_ui_pkey_small_high_contrast_image: POINTER
+			--
+		external
+			"C inline use %"UIRibbon.h%""
+		alias
+			"[
+			{
+				return &UI_PKEY_SmallHighContrastImage;
+			}
+			]"
+		end
+
+	c_ui_pkey_large_high_contrast_image: POINTER
+			--
+		external
+			"C inline use %"UIRibbon.h%""
+		alias
+			"[
+			{
+				return &UI_PKEY_LargeHighContrastImage;
 			}
 			]"
 		end

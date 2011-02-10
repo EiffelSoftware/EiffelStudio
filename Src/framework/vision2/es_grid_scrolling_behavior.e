@@ -145,22 +145,34 @@ feature -- Scrolling
 				else
 					vy_now := g.virtual_y_position
 					if is_full_page_scrolling then
+						if g.is_tree_enabled then
+							l_viewable_row_indexes := g.viewable_row_indexes
+						else
+							l_viewable_row_indexes := g.visible_row_indexes
+						end
+
 						if a_step < 0 then
 								-- We are scrolling down.
 							if scrolling_common_line_count < l_visible_rows.count then
-								vy := g.row (l_visible_rows.i_th (
-									l_visible_rows.count - scrolling_common_line_count)).virtual_y_position
+								if l_visible_rows.count - scrolling_common_line_count > 1 then
+									vy := g.row (l_visible_rows.i_th (l_visible_rows.count - scrolling_common_line_count)).virtual_y_position
+								else
+									l_viewable_row_indexes.start
+									l_viewable_row_indexes.search (l_visible_rows.first)
+									l_viewable_row_indexes.move (1)
+									if not l_viewable_row_indexes.exhausted then
+										vy := g.row (l_viewable_row_indexes.item).virtual_y_position
+									else
+										vy := g.row (l_viewable_row_indexes.last).virtual_y_position
+									end
+								end
 							else
+									-- Do nothing.
 									-- Cannot go below, go to the last element.
-								vy := g.row (l_visible_rows.last).virtual_y_position
+								vy := g.row (l_viewable_row_indexes.last).virtual_y_position
 							end
 						else
 								-- We are scrolling up
-							if g.is_tree_enabled then
-								l_viewable_row_indexes := g.viewable_row_indexes
-							else
-								l_viewable_row_indexes := g.visible_row_indexes
-							end
 							if l_viewable_row_indexes /= Void then
 								if g.is_row_height_fixed then
 									l_visible_count := g.viewable_height // g.row_height - scrolling_common_line_count
@@ -187,6 +199,7 @@ feature -- Scrolling
 									end
 								end
 							else
+								check l_viewable_row_indexes_attached: False end
 									-- We could not use `visible_indexes_to_row_indexes' to get the right
 									-- information. Use an approximation that only works when there is no
 									-- tree in the grid.
@@ -203,8 +216,22 @@ feature -- Scrolling
 							if mouse_wheel_scroll_size < l_visible_rows.count then
 								vy := g.row (l_visible_rows.i_th (mouse_wheel_scroll_size + 1)).virtual_y_position
 							else
-									-- Do nothing.
-								vy := vy_now
+								if g.is_tree_enabled then
+									l_viewable_row_indexes := g.viewable_row_indexes
+								else
+									l_viewable_row_indexes := g.visible_row_indexes
+								end
+
+								l_first_row := g.row (l_visible_rows.first)
+								l_viewable_row_indexes.start
+								l_viewable_row_indexes.search (l_first_row.index)
+								l_viewable_row_indexes.move (mouse_wheel_scroll_size)
+								if not l_viewable_row_indexes.exhausted then
+									vy := g.row (l_viewable_row_indexes.item).virtual_y_position
+								else
+										-- Do nothing.
+									vy := g.row (l_viewable_row_indexes.last).virtual_y_position
+								end
 							end
 						else
 								-- We are scrolling up
@@ -213,6 +240,7 @@ feature -- Scrolling
 							else
 								l_viewable_row_indexes := g.visible_row_indexes
 							end
+
 							if l_viewable_row_indexes /= Void then
 								l_first_row := g.row (l_visible_rows.first)
 								l_viewable_row_indexes.start
@@ -233,6 +261,7 @@ feature -- Scrolling
 									end
 								end
 							else
+								check l_viewable_row_indexes_attached: False end
 									-- We could not use `visible_indexes_to_row_indexes' to get the right
 									-- information. Use an approximation that only works when there is no
 									-- tree in the grid.

@@ -237,7 +237,7 @@ feature -- Access: Help
 	help_context_id: STRING
 			-- <Precursor>
 		once
-			Result := "28E1B33F-4B74-4DAB-AF6B-51E7E7FBAFCF"
+			Result := "867BCB6B-1052-B28F-BD18-243532816DFD"
 		end
 
 feature {NONE} -- Element change
@@ -1594,7 +1594,7 @@ invariant
 	contract_editor_attached: (is_initialized and is_interface_usable) implies contract_editor /= Void
 
 ;note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

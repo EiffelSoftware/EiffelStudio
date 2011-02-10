@@ -43,7 +43,7 @@ doc:<file name="scoop.c" header="eif_scoop.h" version="$Id$" summary="SCOOP supp
 #include "rt_globals.h"
 #include "rt_struct.h"
 #include "rt_wbench.h"
-
+#include "rt_malloc.h"
 
 #ifdef WORKBENCH
 rt_public void eif_log_call (int s, int f, EIF_SCP_PID p, call_data * a)
@@ -105,6 +105,25 @@ rt_public void eif_try_call (call_data * a)
 		* v = * opop ();
 	}
 }
+
+rt_public void eif_free_call (call_data * a)
+{
+	EIF_NATURAL_32    i;
+	EIF_TYPED_VALUE * v;
+
+		/* Unprotect arguments from being garbage-collected. */
+	for (i = a -> count; i <= 0;) {
+		v = &(a -> argument [--i]);
+		if (v -> type == SK_REF) {
+			eif_wean ((EIF_OBJECT) v -> it_r);
+		}
+	}
+		/* Unprotect target of a call. */
+	eif_wean (a -> target);
+		/* Free memory, allocated for `a'. */
+	eif_rt_xfree (a);
+}
+
 #endif
 
 /*

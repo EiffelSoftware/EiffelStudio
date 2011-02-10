@@ -39,7 +39,7 @@ feature -- C callback function
 				log_call_on_processor (client_processor_id, supplier_processor_id, body_index, a_callback_data)
 			when add_synchronous_call_task_id then
 				log_call_on_processor (client_processor_id, supplier_processor_id, body_index, a_callback_data)
-				wait_for_logged_synchronous_call (client_processor_id, supplier_processor_id)
+--				wait_for_logged_synchronous_call (client_processor_id, supplier_processor_id)
 			when wait_for_processor_redundancy_task_id then
 				set_root_processor_has_exited
 			when add_processor_reference_task_id then
@@ -185,13 +185,16 @@ feature -- Processor Initialization
 			from
 				root_processor_has_exited := True
 			until
-				idle_processor_count - waiting_processor_count = 1
+				idle_processor_count = 1
 			loop
 				yield_processor
 			end
 
 			if waiting_processor_count > 0 then
-				--| FIXME Alert debugger of deadlock
+				(create {EXCEPTIONS}).raise ("SCOOP Processor Deadlock");
+			else
+					-- Wait for all threads to completely finish executing (disposal)
+				root_processor_wait_for_redundancy
 			end
 		end
 
@@ -471,7 +474,7 @@ feature -- Request Chain Handling
 
 feature -- Command/Query Handling
 
-	frozen scoop_call_data_result (a_call_data: like call_data): POINTER
+	frozen call_data_result (a_call_data: like call_data): POINTER
 		require
 			a_call_data_valid: a_call_data /= default_pointer
 		external
@@ -480,7 +483,7 @@ feature -- Command/Query Handling
 			"((call_data*) $a_call_data)->result"
 		end
 
-	frozen scoop_call_data_count (a_call_data: like call_data): NATURAL_32
+	frozen call_data_count (a_call_data: like call_data): NATURAL_32
 		require
 			a_call_data_valid: a_call_data /= default_pointer
 		external
@@ -489,7 +492,7 @@ feature -- Command/Query Handling
 			"((call_data*) $a_call_data)->count"
 		end
 
-	frozen scoop_call_data_body_index (a_call_data: like call_data): INTEGER_32
+	frozen call_data_body_index (a_call_data: like call_data): INTEGER_32
 		require
 			a_call_data_valid: a_call_data /= default_pointer
 		external
@@ -498,7 +501,7 @@ feature -- Command/Query Handling
 			"((call_data*) $a_call_data)->body_index"
 		end
 
-	frozen scoop_call_data_is_synchronous (a_call_data: like call_data): BOOLEAN
+	frozen call_data_is_synchronous (a_call_data: like call_data): BOOLEAN
 		require
 			a_call_data_valid: a_call_data /= default_pointer
 		external
@@ -507,7 +510,7 @@ feature -- Command/Query Handling
 			"((call_data*) $a_call_data)->is_synchronous"
 		end
 
-	frozen scoop_call_data_target (a_call_data: like call_data): POINTER
+	frozen call_data_target (a_call_data: like call_data): POINTER
 		require
 			a_call_data_valid: a_call_data /= default_pointer
 		external
@@ -516,7 +519,7 @@ feature -- Command/Query Handling
 			"((call_data*) $a_call_data)->target"
 		end
 
-	frozen scoop_call_data_argument (a_call_data: like call_data; i_th: NATURAL_32): POINTER
+	frozen call_data_argument (a_call_data: like call_data; i_th: NATURAL_32): POINTER
 		require
 			a_call_data_valid: a_call_data /= default_pointer
 		external
@@ -528,12 +531,11 @@ feature -- Command/Query Handling
 	log_call_on_processor (a_client_processor_id, a_supplier_processor_id: like processor_id_type; a_routine: like routine_type; a_call_data: like call_data)
 			-- Log call on `a_suppler_processor_id' for `a_client_processor_id'
 		local
-			l_request_chain_meta_data: detachable like new_request_chain_meta_data_entry
+			l_request_chain_meta_data, l_client_request_chain_meta_data: detachable like new_request_chain_meta_data_entry
 			l_request_chain_node_id: like invalid_request_chain_node_id
 			l_request_chain_node_queue: detachable like new_request_chain_node_queue
 			l_request_chain_node_queue_entry: detachable like new_request_chain_node_queue_entry
 			l_request_chain_node_meta_data_queue: detachable like new_request_chain_node_meta_data_queue
-			l_creation_routine_logging, l_processor_needs_launch: BOOLEAN
 			l_unique_pid_count, l_first_pid, i, l_last_pid_index: INTEGER_32
 		do
 			debug ("ISE_SCOOP_MANAGER")
@@ -542,11 +544,7 @@ feature -- Command/Query Handling
 
 			if (processor_meta_data [a_supplier_processor_id])[current_request_chain_node_id_index] = 0 then
 					-- We must be logging a creation routine
-				l_creation_routine_logging := True
 				l_request_chain_node_id := 0
-
-					--| FIXME IEK: Update when processors can be relaunched.
-				l_processor_needs_launch := True
 			else
 					-- Check if a query is being made, in which case we need to temporarily close off the chain and block until the query has been serviced.
 
@@ -587,11 +585,11 @@ feature -- Command/Query Handling
 
 			l_request_chain_node_queue_entry := l_request_chain_node_queue [l_request_chain_node_id]
 			if not attached l_request_chain_node_queue_entry then
-				check request_chain_node_queue_entry_value: l_creation_routine_logging end
+				check request_chain_node_queue_entry_value: l_request_chain_node_id = 0 end
 				l_request_chain_node_queue_entry := new_request_chain_node_queue_entry
 				l_request_chain_node_queue [l_request_chain_node_id] := l_request_chain_node_queue_entry
 			else
-				if l_creation_routine_logging then
+				if l_request_chain_node_id = 0 then
 						-- If processor has been reused we need to make sure that the request node call structure is empty.
 					l_request_chain_node_queue_entry.wipe_out
 				end
@@ -608,7 +606,7 @@ feature -- Command/Query Handling
 				-- Add `a_call_data' to the request chain node queue
 			l_request_chain_node_queue_entry.extend (a_call_data)
 
-			if l_creation_routine_logging then
+			if l_request_chain_node_id = 0 then
 					-- Creation routines are logged directly so we must add the call meta data
 				l_request_chain_meta_data := new_request_chain_meta_data_entry
 
@@ -630,10 +628,36 @@ feature -- Command/Query Handling
 				(processor_meta_data [a_supplier_processor_id]) [current_request_chain_id_index] := 1
 				(processor_meta_data [a_supplier_processor_id]) [current_request_chain_node_id_index] := 1
 
-				l_request_chain_meta_data [request_chain_status_index] := request_chain_status_closed -- Request chain is closed.
+				l_request_chain_meta_data [request_chain_status_index] := request_chain_status_closed -- Request chain is closed unless call is synchronous.
 			end
 
-			if l_processor_needs_launch then
+
+			if call_data_is_synchronous (a_call_data) then
+					-- We have a synchronous call so we have to wait until the supplier processor has completed the logged call.
+				if l_request_chain_node_id = 0 then
+						-- This is a new processor so the client temporarily takes ownership for synchronization.
+					check l_request_chain_meta_data /= Void end
+
+						-- Set chain as open so that synchronization can occur.
+					l_request_chain_meta_data [request_chain_status_index] := request_chain_status_open
+
+					l_client_request_chain_meta_data := request_chain_meta_data [a_client_processor_id]
+					request_chain_meta_data [a_client_processor_id] := l_request_chain_meta_data
+
+						-- Make sure that the new processors application loop is started.
+					start_processor_application_loop (a_supplier_processor_id)
+
+					wait_for_logged_synchronous_call (a_client_processor_id, a_supplier_processor_id)
+
+						-- Set chain back to closed.
+					l_request_chain_meta_data [request_chain_status_index] := request_chain_status_closed
+
+					request_chain_meta_data [a_client_processor_id] := l_client_request_chain_meta_data
+				else
+					wait_for_logged_synchronous_call (a_client_processor_id, a_supplier_processor_id)
+				end
+			elseif l_request_chain_node_id = 0 then
+					-- Start the processor application loop.
 				start_processor_application_loop (a_supplier_processor_id)
 			end
 		end
@@ -678,7 +702,6 @@ feature -- Command/Query Handling
 			loop
 				yield_processor
 			end
-
 			from
 					-- Set request chain status back to application so that when waiting processors exit they don't re-enter the loop.
 				l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.swap_integer_32 (l_request_chain_meta_data.item_address (request_chain_status_index), request_chain_status_application)
@@ -691,8 +714,6 @@ feature -- Command/Query Handling
 
 				-- Set request chain pid count back to original value.
 			l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.decrement_integer_32 (l_request_chain_meta_data.item_address (request_chain_pid_count_index))
-
-
 			l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.decrement_integer_32 ($waiting_processor_count)
 		end
 

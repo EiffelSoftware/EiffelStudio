@@ -10,3 +10,4 @@ HRESULT SetUICommandProperty(UINT32 commandId, REFPROPERTYKEY key, PROPVARIANT *
 HRESULT InvalidateUICommand(UINT32 commandId, UI_INVALIDATIONS flags, const PROPERTYKEY *key, IUIFramework *a_framework);
 IUIFramework *GetRibbonFramwork();
 IUICommandHandler *GetCommandHandler();
+BOOL CreateIUIImageFromBitmap (HBITMAP bitmap, IUIImage **image);

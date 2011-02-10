@@ -51,6 +51,25 @@ feature -- Command
 			c_init_prop_variant_from_string (pointer.item, l_wel_string.item)
 		end
 
+	set_image (a_image: EV_PIXEL_BUFFER)
+			-- Set value with `a_value'
+		local
+			l_bitmap: WEL_BITMAP
+			l_iui_image: POINTER
+		do
+			-- Convert to IUIImage
+			if attached {EV_PIXEL_BUFFER_IMP} a_image.implementation as l_imp then
+				if attached l_imp.gdip_bitmap as l_gdip_bitmap then
+					l_bitmap := l_gdip_bitmap.new_bitmap
+					c_create_iui_image (l_bitmap.item, $l_iui_image)
+				end
+			end
+
+			if l_iui_image /= default_pointer then
+				c_init_prop_variant_from_iunknown (pointer.item, l_iui_image)
+			end
+		end
+
 	destroy
 			-- clean up current
 		do
@@ -85,7 +104,6 @@ feature -- Query
 
 	pointer: MANAGED_POINTER
 			--
-
 feature {NONE} -- Externals
 
 	c_var_type (a_property_variant: POINTER): NATURAL_16
@@ -174,6 +192,20 @@ feature {NONE} -- Externals
 			]"
 		end
 
+	c_init_prop_variant_from_iunknown (a_item: POINTER; a_iunknown: POINTER)
+			--
+		external
+			"C inline use %"Propidl.h%""
+		alias
+			"[
+			{
+				PROPVARIANT *ppropvar = (PROPVARIANT *) $a_item;
+				ppropvar->vt = VT_UNKNOWN;
+				ppropvar->punkVal = $a_iunknown;
+			}
+			]"
+		end
+
 	size: INTEGER
 			--
 		external
@@ -194,6 +226,18 @@ feature {NONE} -- Externals
 			"[
 			{
 				PropVariantClear ($a_item);
+			}
+			]"
+		end
+
+	c_create_iui_image (a_hbitmap: POINTER; a_result_iui_image: TYPED_POINTER [POINTER])
+			--
+		external
+			"C inline use %"ribbon.h%""
+		alias
+			"[
+			{
+				CreateIUIImageFromBitmap ($a_hbitmap, $a_result_iui_image);
 			}
 			]"
 		end

@@ -23,6 +23,7 @@ LONG OutstandingObjects = 0;
 IUIFramework *g_pFramework = NULL;  // Reference to the Ribbon framework.
 IUIFramework *last_pFramework = NULL;  // Reference to the Ribbon framework when calling "OnCreateUICommand"
 IUICommandHandler	*pCommandHandler = NULL;
+IUIImageFromBitmap *g_image_from_bitmap = NULL;
 
 HRESULT STDMETHODCALLTYPE QueryInterface(IUIApplication *This, REFIID vtblID, void **ppv)
 {
@@ -88,6 +89,23 @@ HRESULT STDMETHODCALLTYPE OnCreateUICommand(IUIApplication *This, UINT32 command
 HRESULT STDMETHODCALLTYPE OnDestroyUICommand (IUIApplication *This, UINT32 commandId,  UI_COMMANDTYPE typeID, IUICommandHandler *commandHandler) 
 { 
 	return E_NOTIMPL; 
+}
+
+BOOL CreateIUIImageFromBitmap (HBITMAP bitmap, IUIImage **image)
+{
+	HRESULT hr;
+	if (!g_image_from_bitmap)
+		{
+			hr = CoCreateInstance(&CLSID_UIRibbonImageFromBitmapFactory, NULL, CLSCTX_ALL, &IID_IUIImageFromBitmap, (VOID **)&g_image_from_bitmap);
+			if (FAILED(hr)) {
+				return(FALSE);
+			}					
+		}
+	if (g_image_from_bitmap)
+	{
+		hr = g_image_from_bitmap->lpVtbl->CreateImage(g_image_from_bitmap, bitmap, UI_OWNERSHIP_COPY , image);
+	}
+
 }
 
 BOOL InitializeFramework(HWND hWnd)

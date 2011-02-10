@@ -100,4 +100,15 @@ feature -- Contract support
 			end
 		end
 
+	is_valid_ribbon_item (a_string: STRING): BOOLEAN
+			--
+		do
+			if attached a_string as l_string then
+				Result := l_string.same_string (button) or else
+					l_string.same_string (check_box) or else
+					l_string.same_string (combo_box) or else
+					l_string.same_string (toggle_button) or else
+					l_string.same_string (spinner)
+			end
+		end
 end

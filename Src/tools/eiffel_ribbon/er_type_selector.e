@@ -162,7 +162,7 @@ feature {NONE} -- Implementation
 			a_parent.extend (l_spinner)
 
 			create l_combo_box.make_with_text (constants.combo_box)
---			l_combo_box.set_pebble (constants.combo_box)
+			l_combo_box.set_pebble (constants.combo_box)
 			a_parent.extend (l_combo_box)
 
 			create l_control_group.make_with_text (constants.control_group)

@@ -16,7 +16,7 @@ create {ISE_SCOOP_MANAGER}
 
 feature {NONE} -- Initialization
 
-	make_with_stack_size (a_stack_size: NATURAL_8)
+	make_with_stack_size (a_stack_size: INTEGER_32)
 			-- Set default values for SCOOP Processor Attributes.
 		require
 			a_stack_size_valid: a_stack_size > 0

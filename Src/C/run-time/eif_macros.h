@@ -1436,16 +1436,8 @@ RT_LNK void eif_exit_eiffel_code(void);
 #define RTS_CP(s,f,n,t,a)  eif_log_call  (s, f, RTS_PID(Current), a);
 #define RTS_CPP(s,f,n,t,a) eif_log_callp (s, f, RTS_PID(Current), a);
 
-#define RTS_CC(s,f,d,a) \
-	{														\
-		/*((call_data*)(a)) -> is_synchronous = EIF_FALSE; */ \
-		eif_log_call  (s, f, RTS_PID(Current), a);			\
-	}
-#define RTS_CCP(s,f,d,a) \
-	{														\
-		/*((call_data*)(a)) -> is_synchronous = EIF_FALSE; */ \
-		eif_log_callp  (s, f, RTS_PID(Current), a);			\
-	}
+#define RTS_CC(s,f,d,a)  eif_log_call  (s, f, RTS_PID(Current), a);
+#define RTS_CCP(s,f,d,a) eif_log_callp  (s, f, RTS_PID(Current), a);
 
 /*
  * Separate call arguments:
@@ -1467,10 +1459,12 @@ RT_LNK void eif_exit_eiffel_code(void);
 		((call_data*)(a)) -> argument [(n) - 1] = (v);	\
 		if ((t) == SK_REF) 	\
 		{			\
-			((call_data*)(a)) -> argument [(n) - 1].it_r = eif_protect (((call_data*)(a)) -> argument [(n) - 1].it_r); \
-			if ( ((call_data*)(a)) -> is_synchronous == EIF_FALSE && !RTS_OU(Current, ((call_data*)(a)) -> argument [(n) - 1].it_r) )	\
+			if ( ( ((call_data*)(a)) -> is_synchronous == EIF_FALSE ) && ( !RTS_OU(Current, v.it_r) ) )	\
+			{ \
 				((call_data*)(a)) -> is_synchronous = EIF_TRUE; \
-		}	\
+			} \
+			((call_data*)(a)) -> argument [(n) - 1].it_r = eif_protect (v.it_r); \
+		} \
 	}
 
 #define RTS_WPR RTS_TCB(scoop_task_wait_for_processor_redundancy,EIFNULL,EIFNULL,EIFNULL,EIFNULL,EIFNULL)

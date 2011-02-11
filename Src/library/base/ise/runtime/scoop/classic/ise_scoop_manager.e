@@ -39,7 +39,6 @@ feature -- C callback function
 				log_call_on_processor (client_processor_id, supplier_processor_id, body_index, a_callback_data)
 			when add_synchronous_call_task_id then
 				log_call_on_processor (client_processor_id, supplier_processor_id, body_index, a_callback_data)
---				wait_for_logged_synchronous_call (client_processor_id, supplier_processor_id)
 			when wait_for_processor_redundancy_task_id then
 				set_root_processor_has_exited
 			when add_processor_reference_task_id then
@@ -53,6 +52,7 @@ feature -- C callback function
 
 	add_processor_reference (a_processor_id: like processor_id_type)
 			-- Increase reference count for `a_processor_id'.
+			--| FIXME Needs GC implementation for use
 		local
 			l_ref: INTEGER_32
 		do
@@ -61,6 +61,7 @@ feature -- C callback function
 
 	remove_processor_reference (a_processor_id: like processor_id_type)
 			-- Decrease reference count for `a_processor_id'.
+			--| FIXME Needs GC implementation for use
 		local
 			l_ref: INTEGER_32
 		do

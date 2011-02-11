@@ -14,6 +14,7 @@ inherit
 			on_after_initialized,
 			internal_recycle,
 			on_show,
+			on_focus_in,
 			create_mini_tool_bar_items
 		end
 
@@ -199,6 +200,12 @@ feature {NONE} -- Action handlers
         	end
 		end
 
+	on_focus_in
+		do
+			Precursor
+			user_widget.tree.set_focus
+		end
+
 feature {ES_EIS_TOOL_WIDGET} -- Actions handlers
 
 	on_sweep_now
@@ -267,7 +274,7 @@ feature {NONE} -- Constants
 			-- Session IDs
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

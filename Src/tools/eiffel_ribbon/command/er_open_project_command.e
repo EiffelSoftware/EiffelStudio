@@ -34,25 +34,34 @@ feature -- Command
 
 	execute_with_file_name (a_project_file: STRING)
 			--
+		local
+			l_warn: EV_WARNING_DIALOG
 		do
 			if attached a_project_file as l_file and then not l_file.is_empty then
 				open_project_file (l_file)
-				if attached shared_singleton.layout_constructor_list.first as l_layout_constructor then
-					l_layout_constructor.load_tree
-				end
+				if is_open_file_successed then
+					if attached shared_singleton.layout_constructor_list.first as l_layout_constructor then
+						l_layout_constructor.load_tree
+					end
 
-				load_project_info
-				if attached shared_singleton.project_info_cell.item as l_info then
-					l_info.update_ribbon_names_to_ui
-				end
+					load_project_info
+					if attached shared_singleton.project_info_cell.item as l_info then
+						l_info.update_ribbon_names_to_ui
+					end
 
-				if attached main_window as l_win then
-					l_win.save_project_command.enable
-					l_win.gen_code_command.enable
+					if attached main_window as l_win then
+						l_win.save_project_command.enable
+						l_win.gen_code_command.enable
 
-					disable
-					l_win.new_project_command.disable
-					l_win.recent_project_command.disable
+						disable
+						l_win.new_project_command.disable
+						l_win.recent_project_command.disable
+					end
+				else
+					if attached main_window as l_win then
+						create l_warn.make_with_text ("Cannot open file: " + a_project_file + ". Please select a valid project configuration file.")
+						l_warn.show_modal_to_window (l_win)
+					end
 				end
 			end
 		end
@@ -120,25 +129,37 @@ feature {NONE}	-- Implementation
 			l_file: RAW_FILE
 			l_constants: ER_MISC_CONSTANTS
 			l_singleton: ER_SHARED_SINGLETON
+			l_retried: BOOLEAN
 		do
-			create l_constants
-			create l_singleton
-			if attached l_singleton.project_info_cell.item as l_info then
+			if not l_retried then
+				create l_constants
+				create l_singleton
+				if attached l_singleton.project_info_cell.item as l_info then
 
-				if attached l_constants.project_full_file_name as l_project_config then
-					create l_file.make (l_project_config)
-					l_file.open_read
-					create l_sed.make (l_file)
-					l_sed.set_for_reading
+					if attached l_constants.project_full_file_name as l_project_config then
+						create l_file.make (l_project_config)
+						l_file.open_read
+						create l_sed.make (l_file)
+						l_sed.set_for_reading
 
-					create l_sed_utility
-					if attached {ER_PROJECT_INFO} l_sed_utility.retrieved (l_sed, False) as l_data then
-						l_singleton.project_info_cell.put (l_data)
+						create l_sed_utility
+						if attached {ER_PROJECT_INFO} l_sed_utility.retrieved (l_sed, False) as l_data then
+							l_singleton.project_info_cell.put (l_data)
+						end
+
+						l_file.close
 					end
-
-					l_file.close
 				end
+				is_open_file_successed := True
+			else
+				is_open_file_successed := False
 			end
+		rescue
+			l_retried := True
+			retry
 		end
+
+	is_open_file_successed: BOOLEAN
+			--
 
 end

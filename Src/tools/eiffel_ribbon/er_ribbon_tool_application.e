@@ -14,6 +14,12 @@ inherit
 			create_interface_objects
 		end
 
+	ARGUMENTS
+		undefine
+			default_create,
+			copy
+		end
+
 create
 	make_and_launch
 
@@ -22,8 +28,20 @@ feature {NONE} -- Initialization
 	make_and_launch
 			-- Create `Current', build and display `main_window',
 			-- then launch the application.
+		local
+			l_file_name: FILE_NAME
 		do
 			default_create
+			if argument_count >= 1 then
+				create l_file_name.make_from_string (argument(1))
+				if l_file_name.is_valid then
+					main_window.show_actions.extend_kamikaze (agent (a_file_name: FILE_NAME)
+																do
+																	main_window.open_project_command.execute_with_file_name (a_file_name)
+																end (l_file_name))
+				end
+			end
+
 			main_window.show
 			launch
 		end

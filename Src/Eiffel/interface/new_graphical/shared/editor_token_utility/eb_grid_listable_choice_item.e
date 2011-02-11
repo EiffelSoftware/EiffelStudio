@@ -82,6 +82,14 @@ feature -- Element change
 			selection_changing_action_set: selection_changing_action = a_action
 		end
 
+	set_choice_list_key_press_action (a_action: like choice_list_key_press_action)
+			-- Set `choice_list_key_press_action' with `a_action'
+		do
+			choice_list_key_press_action := a_action
+		ensure
+			choice_list_key_press_action_set: choice_list_key_press_action = a_action
+		end
+
 feature -- Access
 
 	item_components: INDEXABLE [EB_GRID_LISTABLE_CHOICE_ITEM_ITEM, INTEGER]
@@ -104,6 +112,9 @@ feature -- Access
 			-- Called on selected value changing
 			-- Result indicate if the real change should be conducted.
 			-- If not set, value will always be changed.
+
+	choice_list_key_press_action: PROCEDURE [ANY, TUPLE [key: EV_KEY]]
+			-- Actions to be performed when a keyboard key is pressed on the choice list.
 
 feature {NONE} -- Implementation
 
@@ -223,6 +234,7 @@ feature {NONE} -- Implementation
 				choice_list.pointer_double_press_item_actions.extend (agent on_mouse_click)
 				choice_list.pointer_motion_actions.force_extend (agent on_mouse_move)
 				choice_list.key_press_actions.extend (agent on_key)
+				choice_list.key_press_actions.extend (choice_list_key_press_action)
 				choice_list.hide_horizontal_scroll_bar
 			else
 					-- Something wrong happend here, we should deactivate if possible.
@@ -444,7 +456,7 @@ invariant
 	choice_list_parented_during_activation: choice_list /= Void implies choice_list.parent /= Void
 
 note
-	copyright: "Copyright (c) 1984-2007, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -468,11 +480,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

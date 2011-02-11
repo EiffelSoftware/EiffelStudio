@@ -16,7 +16,8 @@
 (sh ./make_for_platform amsterdam.ise manus solaris-x86 22 ; sh ./make_for_platform amsterdam.ise manus solaris-x86-64 22) &
 
 #Let's compile for Red Hat Fedora and FreeBSD (done together because they are on the same machine and we don't want to overload the machine
-(sh ./make_for_platform mojo.ise manus linux-x86 22 ; sh ./make_for_platform freebsd.ise manus freebsd-x86 22 ; sh ./make_for_platform freebsd_64.ise manus freebsd-x86-64 22) &
+(sh ./make_for_platform mojo.ise manus linux-x86 22 ; sh ./make_for_platform freebsd.ise manus freebsd-x86 22) &
+(sh ./make_for_platform freebsd_64.ise manus freebsd-x86-64 22 ; sh ./make_for_platform openbsd_64 manus openbsd-x86-64 22) &
 
 #Let's compile for SGI in background
 #(

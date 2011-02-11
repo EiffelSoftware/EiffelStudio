@@ -22,7 +22,8 @@ create
 	make_small_image,
 	make_large_image,
 	make_small_high_contrast_image,
-	make_large_high_contrast_image
+	make_large_high_contrast_image,
+	make_decimal
 
 feature {NONE}  -- Initialization
 
@@ -66,6 +67,12 @@ feature {NONE}  -- Initialization
 			-- Make a large high contrast image key
 		do
 			share_from_pointer (c_ui_pkey_large_high_contrast_image)
+		end
+
+	make_decimal
+			-- Make a decimal key
+		do
+			share_from_pointer (c_ui_pkey_decimal)
 		end
 
 feature -- Query
@@ -127,6 +134,15 @@ feature -- Query
 			l_tmp: EV_PROPERTY_KEY
 		do
 			create l_tmp.make_large_high_contrast_image
+			Result := l_tmp.guid.is_equal (guid)
+		end
+
+	is_decimal: BOOLEAN
+			-- Is current decimal value key?
+		local
+			l_tmp: EV_PROPERTY_KEY
+		do
+			create l_tmp.make_decimal
 			Result := l_tmp.guid.is_equal (guid)
 		end
 
@@ -228,6 +244,18 @@ feature {NONE} -- Externals
 			"[
 			{
 				return &UI_PKEY_LargeHighContrastImage;
+			}
+			]"
+		end
+
+	c_ui_pkey_decimal: POINTER
+			--
+		external
+			"C inline use %"UIRibbon.h%""
+		alias
+			"[
+			{
+				return &UI_PKEY_DecimalValue;
 			}
 			]"
 		end

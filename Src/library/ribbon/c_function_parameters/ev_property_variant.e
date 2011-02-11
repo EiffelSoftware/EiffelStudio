@@ -51,6 +51,12 @@ feature -- Command
 			c_init_prop_variant_from_string (pointer.item, l_wel_string.item)
 		end
 
+	set_decimal_value (a_value: REAL_64)
+			-- Set value with `a_value'
+		do
+			c_init_prop_variant_from_decimal (pointer.item, a_value)
+		end
+
 	set_image (a_image: EV_PIXEL_BUFFER)
 			-- Set value with `a_value'
 		local
@@ -102,6 +108,12 @@ feature -- Query
 			c_co_task_mem_free (l_pointer)
 		end
 
+	decimal_value: REAL_64
+			-- Decimal value of current
+		do
+			c_read_decimal (pointer.item, $Result)
+		end
+
 	pointer: MANAGED_POINTER
 			--
 feature {NONE} -- Externals
@@ -140,6 +152,19 @@ feature {NONE} -- Externals
 			"[
 			{
 				PropVariantToStringAlloc ($a_item, $a_pwstr);
+			}
+			]"
+		end
+
+	c_read_decimal (a_item: POINTER; a_result: TYPED_POINTER [REAL_64])
+			--
+		external
+			"C inline use %"Propvarutil.h%""
+		alias
+			"[
+			{
+				DECIMAL * l_dec = (DECIMAL *)$a_item;
+				*($a_result) = l_dec->Lo64;
 			}
 			]"
 		end
@@ -188,6 +213,20 @@ feature {NONE} -- Externals
 				PropVariantInit(ppropvar);
 				}
 				return hr;
+			}
+			]"
+		end
+
+	c_init_prop_variant_from_decimal (a_item: POINTER; a_value: REAL_64)
+			--
+		external
+			"C inline use %"Shlwapi.h%""
+		alias
+			"[
+			{
+				PROPVARIANT *ppropvar = (PROPVARIANT *) $a_item;
+				ppropvar->vt = VT_DECIMAL;
+				VarDecFromR8($a_value, &ppropvar->decVal);
 			}
 			]"
 		end

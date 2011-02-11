@@ -369,6 +369,7 @@ feature {NONE} -- Location token
 				l_written_in_features := l_classc.written_in_features
 
 				l_editable_item := new_listable_item
+				l_editable_item.set_choice_list_key_press_action (agent tab_to_next)
 
 					-- Fill entries of list
 				create l_list.make (l_written_in_features.count + 1)
@@ -423,13 +424,11 @@ feature {NONE} -- Location token
 			-- Grid item of override from an EIS entry.
 		local
 			l_type: NATURAL_32
-			l_item: EV_GRID_CHECKABLE_LABEL_ITEM
+			l_item: ES_EIS_GRID_CHECKABLE_LABEL_ITEM
 			l_pixmap_item: EV_GRID_LABEL_ITEM
 		do
 			l_type := id_solution.most_possible_type_of_id (a_entry.id)
 
-			create l_item
-			l_item.set_is_checked (a_entry.override)
 			if l_type /= id_solution.class_type then
 				create {EV_GRID_LABEL_ITEM}Result.make_with_text ("-")
 			elseif a_entry.is_auto then
@@ -438,6 +437,9 @@ feature {NONE} -- Location token
 				Result := l_pixmap_item
 				Result.set_tooltip (interface_names.l_remove_auto_entry)
 			else
+				create l_item
+				l_item.set_is_checked (a_entry.override)
+				l_item.set_check_button_key_press_action (agent tab_to_next)
 				if a_editable then
 					l_item.enable_sensitive
 					l_item.checked_changed_actions.extend (agent on_override_changed)
@@ -732,7 +734,7 @@ feature {NONE} -- Callbacks
 			end
 		end
 
-	on_override_changed (a_item: EV_GRID_CHECKABLE_LABEL_ITEM)
+	on_override_changed (a_item: ES_EIS_GRID_CHECKABLE_LABEL_ITEM)
 			-- On override changed
 		local
 			l_enabled: BOOLEAN
@@ -880,7 +882,7 @@ feature {NONE} -- Callbacks
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

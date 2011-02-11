@@ -52,6 +52,8 @@ inherit
 
 	EB_RECYCLABLE
 
+	EV_SHARED_APPLICATION
+
 feature -- HELP_CONTEXT_I, Access
 
 	help_context_id: STRING
@@ -425,6 +427,12 @@ feature {NONE} -- Events
 						show_help
 					end
 				end
+			elseif (ev_key.code = {EV_KEY_CONSTANTS}.key_left or ev_key.code = {EV_KEY_CONSTANTS}.key_right) and then component_editable then
+				if eis_grid.selected_rows.count >= 1 then
+					if attached eis_grid.selected_rows.first as l_row then
+						l_row.item (1).activate
+					end
+				end
 			elseif ev_key.code = {EV_KEY_CONSTANTS}.key_delete then
 				delete_selected_entries
 			end
@@ -610,6 +618,90 @@ feature {NONE} -- Recycling
 
 feature {NONE} -- Implementation
 
+	tab_to_next (a_key: EV_KEY)
+		local
+			i, l_count, l_row_index: INTEGER
+			l_found: BOOLEAN
+			l_old_data: ANY
+		do
+			if a_key.code = {EV_KEY_CONSTANTS}.key_tab then
+				if attached eis_grid.activated_item as l_item and then attached l_item.row as l_row then
+					from
+						l_count := l_row.count
+						i := 1
+					until
+						i > l_count or l_found
+					loop
+						if l_row.item (i) = l_item then
+							l_found := True
+						end
+						i := i + 1
+					end
+					if l_found then
+						l_row_index := l_row.index
+						l_old_data := l_row.data
+						l_item.deactivate
+							-- Do it on idle in order to make sure the tree has been refreshed completely.
+							-- Otherwise the data could no be ready.
+						ev_application.do_once_on_idle (
+							agent (a_row_index: INTEGER; a_old_data: ANY; a_shift: BOOLEAN; a_item_index: INTEGER)
+							local
+								l_new_row: EV_GRID_ROW
+								j, l_c_count: INTEGER
+								l_activated: BOOLEAN
+							do
+									-- Get the new row instance, as the grid might be refreshed.
+								if a_row_index <= eis_grid.row_count then
+									l_new_row := eis_grid.row (a_row_index)
+									l_c_count := l_new_row.count
+									if
+										attached {EIS_ENTRY} a_old_data as l_o and then
+										attached {EIS_ENTRY}l_new_row.data as l_n and then
+										l_o.same_entry (l_n)
+									then
+										j := a_item_index
+										if a_shift then
+											from
+												j := j - 1
+											until
+												j < 1 or l_activated
+											loop
+												if
+													attached {ES_EIS_GRID_EDITABLE_ITEM} l_new_row.item (j) or else
+													attached {EB_GRID_LISTABLE_CHOICE_ITEM} l_new_row.item (j) or else
+													attached {ES_EIS_GRID_CHECKABLE_LABEL_ITEM} l_new_row.item (j)
+												then
+													l_new_row.item (j).activate
+													l_activated := True
+												end
+												j := j - 1
+											end
+										else
+											from
+												j := j + 1
+											until
+												j > l_c_count or l_activated
+											loop
+												if
+													attached {ES_EIS_GRID_EDITABLE_ITEM} l_new_row.item (j) or else
+													attached {EB_GRID_LISTABLE_CHOICE_ITEM} l_new_row.item (j) or else
+													attached {ES_EIS_GRID_CHECKABLE_LABEL_ITEM} l_new_row.item (j)
+												then
+													l_new_row.item (j).activate
+													l_activated := True
+												end
+												j := j + 1
+											end
+										end
+									end
+								end
+							end (l_row_index, l_old_data, ev_application.shift_pressed, i - 1)
+						)
+					end
+				end
+			end
+		end
+
 	frozen session_manager: SERVICE_CONSUMER [SESSION_MANAGER_S]
 			-- Access to the session manager service {SESSION_MANAGER_S} consumer
 		once
@@ -675,7 +767,7 @@ feature {NONE} -- Grid items
 			a_entry_not_void: a_entry /= Void
 		local
 			l_name: STRING_32
-			l_editable_item: EV_GRID_EDITABLE_ITEM
+			l_editable_item: ES_EIS_GRID_EDITABLE_ITEM
 		do
 			l_name := a_entry.name
 			if l_name = Void then
@@ -686,6 +778,7 @@ feature {NONE} -- Grid items
 				l_editable_item.pointer_button_press_actions.force_extend (agent activate_item (l_editable_item))
 				l_editable_item.set_text_validation_agent (agent is_name_valid (?, l_editable_item))
 				l_editable_item.deactivate_actions.extend (agent on_name_changed (l_editable_item))
+				l_editable_item.set_key_press_action (agent tab_to_next)
 				Result := l_editable_item
 			else
 				create {EV_GRID_LABEL_ITEM}Result.make_with_text (l_name)
@@ -700,7 +793,7 @@ feature {NONE} -- Grid items
 			a_entry_not_void: a_entry /= Void
 		local
 			l_protocol: STRING_32
-			l_editable_item: attached EV_GRID_EDITABLE_ITEM
+			l_editable_item: attached ES_EIS_GRID_EDITABLE_ITEM
 		do
 			l_protocol := a_entry.protocol
 			if l_protocol = Void then
@@ -711,6 +804,7 @@ feature {NONE} -- Grid items
 				l_editable_item.pointer_button_press_actions.force_extend (agent activate_item (l_editable_item))
 				l_editable_item.set_text_validation_agent (agent is_protocol_valid (?, l_editable_item))
 				l_editable_item.deactivate_actions.extend (agent on_protocol_changed (l_editable_item))
+				l_editable_item.set_key_press_action (agent tab_to_next)
 				Result := l_editable_item
 			else
 				create {EV_GRID_LABEL_ITEM}Result.make_with_text (l_protocol)
@@ -725,7 +819,7 @@ feature {NONE} -- Grid items
 			a_entry_not_void: a_entry /= Void
 		local
 			l_source: STRING_32
-			l_editable_item: EV_GRID_EDITABLE_ITEM
+			l_editable_item: ES_EIS_GRID_EDITABLE_ITEM
 		do
 			l_source := a_entry.source
 			if l_source = Void then
@@ -736,6 +830,7 @@ feature {NONE} -- Grid items
 				l_editable_item.pointer_button_press_actions.force_extend (agent activate_item (l_editable_item))
 				l_editable_item.set_text_validation_agent (agent is_source_valid (?, l_editable_item))
 				l_editable_item.deactivate_actions.extend (agent on_source_changed (l_editable_item))
+				l_editable_item.set_key_press_action (agent tab_to_next)
 				Result := l_editable_item
 			else
 				create {EV_GRID_LABEL_ITEM}Result.make_with_text (l_source)
@@ -750,7 +845,7 @@ feature {NONE} -- Grid items
 			a_entry_not_void: a_entry /= Void
 		local
 			l_tags: STRING_32
-			l_editable_item: EV_GRID_EDITABLE_ITEM
+			l_editable_item: ES_EIS_GRID_EDITABLE_ITEM
 		do
 			l_tags := eis_output.tags_as_code (a_entry)
 			if a_editable then
@@ -758,6 +853,7 @@ feature {NONE} -- Grid items
 				l_editable_item.pointer_button_press_actions.force_extend (agent activate_item (l_editable_item))
 				l_editable_item.set_text_validation_agent (agent is_tags_valid (?, l_editable_item))
 				l_editable_item.deactivate_actions.extend (agent on_tags_changed (l_editable_item))
+				l_editable_item.set_key_press_action (agent tab_to_next)
 				Result := l_editable_item
 			else
 				create {EV_GRID_LABEL_ITEM}Result.make_with_text (l_tags)
@@ -782,7 +878,7 @@ feature {NONE} -- Grid items
 			a_entry_not_void: a_entry /= Void
 		local
 			l_others: STRING_32
-			l_editable_item: EV_GRID_EDITABLE_ITEM
+			l_editable_item: ES_EIS_GRID_EDITABLE_ITEM
 		do
 			l_others := eis_output.others_as_code (a_entry)
 			if a_editable then
@@ -790,6 +886,7 @@ feature {NONE} -- Grid items
 				l_editable_item.pointer_button_press_actions.force_extend (agent activate_item (l_editable_item))
 				l_editable_item.set_text_validation_agent (agent is_others_valid (?, l_editable_item))
 				l_editable_item.deactivate_actions.extend (agent on_others_changed (l_editable_item))
+				l_editable_item.set_key_press_action (agent tab_to_next)
 				Result := l_editable_item
 			else
 				create {EV_GRID_LABEL_ITEM}Result.make_with_text (l_others)
@@ -874,6 +971,7 @@ feature {NONE} -- Location token
 				create l_item_item.make (create {ARRAYED_LIST [ES_GRID_ITEM_COMPONENT]}.make_from_array (<<target_pixmap_component, l_e_com>>))
 				l_item_item.set_data (a_item)
 				l_editable_item.set_list_item (l_item_item)
+				l_editable_item.set_choice_list_key_press_action (agent tab_to_next)
 			end
 			if attached {EB_GRID_LISTABLE_CHOICE_ITEM} l_editable_item as lt_item then
 				Result := lt_item
@@ -901,6 +999,7 @@ feature {NONE} -- Location token
 				create l_item_item.make (create {ARRAYED_LIST [ES_GRID_ITEM_COMPONENT]}.make_from_array (<<group_pixmap_component (a_item), l_e_com>>))
 				l_item_item.set_data (a_item)
 				l_editable_item.set_list_item (l_item_item)
+				l_editable_item.set_choice_list_key_press_action (agent tab_to_next)
 			end
 			if attached {EB_GRID_LISTABLE_CHOICE_ITEM} l_editable_item as lt_item then
 				Result := lt_item
@@ -928,6 +1027,7 @@ feature {NONE} -- Location token
 				create l_item_item.make (create {ARRAYED_LIST [ES_GRID_ITEM_COMPONENT]}.make_from_array (<<folder_pixmap_component, l_e_com>>))
 				l_item_item.set_data (a_item)
 				l_editable_item.set_list_item (l_item_item)
+				l_editable_item.set_choice_list_key_press_action (agent tab_to_next)
 			end
 			if attached {EB_GRID_LISTABLE_CHOICE_ITEM} l_editable_item as lt_item then
 				Result := lt_item
@@ -955,6 +1055,7 @@ feature {NONE} -- Location token
 				create l_item_item.make (create {ARRAYED_LIST [ES_GRID_ITEM_COMPONENT]}.make_from_array (<<class_pixmap_component (a_item), l_e_com>>))
 				l_item_item.set_data (a_item)
 				l_editable_item.set_list_item (l_item_item)
+				l_editable_item.set_choice_list_key_press_action (agent tab_to_next)
 			end
 			if attached {EB_GRID_LISTABLE_CHOICE_ITEM} l_editable_item as lt_item then
 				Result := lt_item
@@ -993,6 +1094,7 @@ feature {NONE} -- Location token
 			create l_item_item.make (create {ARRAYED_LIST [ES_GRID_ITEM_COMPONENT]}.make_from_array (<<l_component, l_e_com>>))
 			l_item_item.set_data (a_item)
 			l_editable_item.set_list_item (l_item_item)
+			l_editable_item.set_choice_list_key_press_action (agent tab_to_next)
 			if attached {EB_GRID_LISTABLE_CHOICE_ITEM} l_editable_item as lt_item then
 				Result := lt_item
 			else

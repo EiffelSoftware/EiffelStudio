@@ -281,7 +281,7 @@ feature {NONE} -- Visitor implementation
 											f.set_is_attached
 										end
 										if not todo_attached.has (ff.position) then
-												-- The contraints have to be checked.
+												-- The constraints have to be checked.
 											todo_attached.extend (ff.position)
 										end
 									end
@@ -291,7 +291,7 @@ feature {NONE} -- Visitor implementation
 												-- Skip separate type because it does not allow to see
 												-- if the formal is always non-separate.
 										elseif not todo_separate.has (ff.position) then
-												-- The contraints have to be checked.
+												-- The constraints have to be checked.
 											todo_separate.extend (ff.position)
 										end
 									end

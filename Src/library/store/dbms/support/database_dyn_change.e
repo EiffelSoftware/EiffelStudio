@@ -51,7 +51,7 @@ feature
 			end
 			l_sql_string.append (s)
 			s.wipe_out
-			s.append (parse (l_sql_string))
+			s.append (parse_32 (l_sql_string))
 			ArgNum := s.occurrences('?')
 
 			descriptor := db_spec.new_descriptor

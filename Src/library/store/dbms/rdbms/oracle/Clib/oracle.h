@@ -43,6 +43,9 @@ extern "C" {
 #define ORA_EIF_BOOLEAN_TYPE            3
 #define ORA_EIF_DATE_TYPE              11
 #define ORA_EIF_UNKNOWN_TYPE            0
+#define ORA_EIF_WSTRING_TYPE			12
+#define ORA_EIF_INTEGER_16_TYPE			13
+#define ORA_EIF_INTEGER_64_TYPE			14
 
  /*  internal/external datatype codes */
 #define VARCHAR2_TYPE				1
@@ -155,6 +158,8 @@ void ora_rollback (void); //
 void ora_commit (void); //
 int ora_trancount (void);
 int ora_get_integer_data (int, int);
+int ora_get_integer_16_data (int, int);
+EIF_NATURAL_64 ora_get_integer_64_data (int no_desc, int i);
 double ora_get_float_data (int, int);
 float ora_get_real_data (int, int);
 int ora_get_boolean_data (int, int);
@@ -179,10 +184,13 @@ void ora_c_free(char *ptr);
 void ora_error_handler(Cda_Def *cursor);
 int ora_c_character_type (void);
 int ora_c_integer_type (void);
+int ora_c_integer_16_type (void);
+int ora_c_integer_64_type (void);
 int ora_c_float_type (void);
 int ora_c_real_type (void);
 int ora_c_boolean_type (void);
 int ora_c_string_type (void);
+int ora_c_wstring_type (void);
 int ora_c_date_type (void);
 
 

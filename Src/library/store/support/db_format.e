@@ -41,10 +41,20 @@ feature -- Conversion
 
 	string_format (object: STRING): STRING
 			-- Converted string of `object' according to the database format.
+		obsolete
+			"Use `string_format_32' instead."
 		require
 			argument_not_void: object /= Void
 		do
-			Result := implementation.string_format (object)
+			Result := string_format_32 (object.as_string_8).as_string_8
+		end
+
+	string_format_32 (object: READABLE_STRING_GENERAL): STRING_32
+			-- Converted string of `object' according to the database format.
+		require
+			argument_not_void: object /= Void
+		do
+			Result := implementation.string_format_32 (object)
 		end
 
 feature {NONE} -- Implementation

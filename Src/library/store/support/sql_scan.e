@@ -19,7 +19,7 @@ inherit
 			is_equal, copy, out
 		end
 
-	STRING
+	STRING_32
 		rename
 			make as string_make,
 			is_real as string_is_real,
@@ -61,7 +61,7 @@ feature -- Initialization
 	string_make (i: INTEGER)
 			-- <Precursor>
 		do
-			Precursor {STRING} (i)
+			Precursor {STRING_32} (i)
 			format_make
 		end
 
@@ -71,20 +71,32 @@ feature -- Basic operations
 			-- Parse string `s' by replacing each pattern ":<name>"
 			-- with the Eiffel object description whose name
 			-- also matches "<name>".
+		obsolete
+			"Use `parse_32' instead."
+		require
+			s_not_void: s /= Void
+		do
+			Result := parse_32 (s).as_string_8
+		end
+
+	parse_32 (s: READABLE_STRING_GENERAL): STRING_32
+			-- Parse string `s' by replacing each pattern ":<name>"
+			-- with the Eiffel object description whose name
+			-- also matches "<name>".
 		require
 			s_not_void: s /= Void
 		do
 			wipe_out
-			append (s)
+			append (s.as_string_32)
 			replace
 			if handle.execution_type.is_tracing then
-				handle.execution_type.trace_output.putstring (Current)
+				handle.execution_type.trace_output.putstring (Current.as_string_8)
 				handle.execution_type.trace_output.new_line
 			end
 			Result := Current
 		end
 
-	get_value (obj: detachable ANY; str: STRING)
+	get_value (obj: detachable ANY; str: STRING_32)
 			-- Retrieve string value of `obj' and put in `str'.
 		require
 			str_exists: str /= Void
@@ -134,8 +146,15 @@ feature -- Basic operations
 					end
 				elseif is_string (obj) then
 					if attached {STRING} obj as r_string then
+						buffer.copy (r_string.as_string_32)
+						str.append (string_format_32 (buffer))
+					else
+						check False end -- implied by `is_string'
+					end
+				elseif is_string32 (obj) then
+					if attached {STRING_32} obj as r_string then
 						buffer.copy (r_string)
-						str.append (string_format (buffer))
+						str.append (string_format_32 (buffer))
 					else
 						check False end -- implied by `is_string'
 					end
@@ -225,7 +244,7 @@ feature -- Basic operations
 			-- Replace all occurrences of :key by `ht.item (":key")'
 		local
 			l_new_string: detachable like Current
-			c: CHARACTER
+			c: CHARACTER_32
 			old_index: INTEGER
 		do
 			from
@@ -279,10 +298,10 @@ feature {NONE} -- Status report
 	index: INTEGER
 			-- Internal counter
 
-	Null_string: STRING = "NULL"
+	Null_string: STRING_32 = {STRING_32}"NULL"
 			-- SQL null value constant
 
-	buffer: STRING
+	buffer: STRING_32
 			-- Constant temporary string
 		once
 			create Result.make (200)
@@ -315,7 +334,7 @@ feature {NONE} -- Status setting
 	search_special
 			-- Move cursor to next occurrence of ':', '%'', or '"'
 		local
-			c: CHARACTER
+			c: CHARACTER_32
 			i: INTEGER
 			l_count: INTEGER
 		do
@@ -373,7 +392,7 @@ feature {NONE} -- Status setting
 			index := i
 		end
 
-	replacement_string (key, destination: STRING)
+	replacement_string (key, destination: STRING_32)
 			-- Replace object associated with `key' in `destination'.
 		require
 			key_exists: key /= Void

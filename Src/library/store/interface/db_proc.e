@@ -93,7 +93,8 @@ feature -- Basic operations
 			implementation.load
 			loaded := True
 			if not is_ok and then is_tracing then
-				trace_output.putstring (error_message)
+				fixme ("Unicode support for output tracing.")
+				trace_output.putstring (error_message_32)
 				trace_output.new_line
 			end
 		ensure
@@ -108,7 +109,8 @@ feature -- Basic operations
 		do
 			implementation.store (sql)
 			if not is_ok and then is_tracing then
-				trace_output.putstring (error_message)
+				fixme ("Unicode support for output tracing.")
+				trace_output.putstring (error_message_32.as_string_8)
 				trace_output.new_line
 			end
 		end
@@ -124,7 +126,8 @@ feature -- Basic operations
 		do
 			implementation.execute (destination)
 			if not is_ok and then is_tracing then
-				trace_output.putstring (error_message)
+				fixme ("Unicode support for output tracing.")
+				trace_output.putstring (error_message_32.as_string_8)
 				trace_output.new_line
 			end
 		end
@@ -140,7 +143,8 @@ feature -- Basic operations
 		do
 			implementation.execute_string (destination, sql)
 			if not is_ok and then is_tracing then
-				trace_output.putstring (error_message)
+				fixme ("Unicode support for output tracing.")
+				trace_output.putstring (error_message_32.as_string_8)
 				trace_output.new_line
 			end
 		end
@@ -152,7 +156,8 @@ feature -- Basic operations
 		do
 			implementation.drop
 			if not is_ok and then is_tracing then
-				trace_output.putstring (error_message)
+				fixme ("Unicode support for output tracing.")
+				trace_output.putstring (error_message_32.as_string_8)
 				trace_output.new_line
 			end
 			loaded := False

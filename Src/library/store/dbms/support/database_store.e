@@ -123,7 +123,7 @@ feature -- Basic operations
 			sql_string.append(db_spec.put_column_name(l_repository, l_map_table, object))
 			sql_string.append (" VALUES ( :XZ7Hj0sb5UU )")
 			set_map_name (object, "XZ7Hj0sb5UU")
-			tmp_string := parse (sql_string)
+			tmp_string := parse_32 (sql_string)
 			unset_map_name ("XZ7Hj0sb5UU")
 			if tmp_string /= Void then
 				temp_descriptor := db_spec.new_descriptor

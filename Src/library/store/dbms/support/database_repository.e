@@ -28,6 +28,8 @@ inherit
 
 	TYPES [G]
 
+	GLOBAL_SETTINGS
+
 create -- Creation procedure
 
 	make
@@ -48,7 +50,12 @@ feature -- Initialization
 			-- Load in description of repository `repository_name'.
 		require else
 			repository_name_exists: repository_name /= Void
+		local
+			l_use_ext: BOOLEAN
 		do
+				-- Read repository names as STRING_8, since Eiffel do not support Unicode names anyway.
+			l_use_ext := use_extended_types
+			set_use_extended_types (False)
 			table.wipe_out
 			request_select.set_action (Current)
 			request_select.set_map_name (repository_name, "rep")
@@ -58,6 +65,7 @@ feature -- Initialization
 				request_select.load_result
 			end
 			request_select.terminate
+			set_use_extended_types (l_use_ext)
 		end
 
 
@@ -79,19 +87,19 @@ feature -- Basic operations
 			tmp_class_name := repository_name.as_upper
 			Create s.make(20)
 
-			s.append("indexing%N")
+			s.append("note%N")
 			s.append("%Tdescription: %"Class which allows EiffelStore to retrieve/store%%%N")
 			s.append("%T      %%the content relative to a column of the table "+tmp_class_name+"%"%N%N")
 
 			s.append("class%N%T"+tmp_class_name+" %N%N")
-			s.append("inherit%N%TANY%N%T%Tredefine%N%T%T%Tout%N%T%Tend%N%N")
+			s.append("inherit%N%TANY%N%N")
 			s.append("create%N%Tmake%N%N")
 
 			s.append ("%Nfeature -- Access%N%N")
 
 			s1 := "feature -- Settings%N%N"
 			s3 := "feature -- Initialization%N%N%Tmake%N%T%Tdo%N"
-			s4 := "feature -- Output%N%N%Tout: STRING%N%T%Tdo%N%T%T%TResult := %"%"%N"
+			s4 := "feature -- Output%N%N%Tout_32: STRING_32%N%T%Tdo%N%T%T%TResult := {STRING_32}%"%"%N"
 
 			from
 				table.start
@@ -99,8 +107,10 @@ feature -- Basic operations
 				table.off
 			loop
 				el := table.item
-				l_column_name := el.column_name
-				check l_column_name /= Void end -- FIXME: implied by ...bug
+				check attached el.column_name as l_name then
+						-- FIXME: implied by ...bug
+					l_column_name := l_name.as_string_8
+				end
 				col_name := l_column_name.as_lower
 
 				s1.append("%Tset_"+col_name+" (a_"+col_name+": ")
@@ -126,6 +136,9 @@ feature -- Basic operations
 						s3.append("%T%T%T"+col_name+" := %"%"%N")
 						s2 := "STRING"
 					end
+				elseif el_type = Wide_string_type_database then
+					s3.append("%T%T%T"+col_name+" := {STRING_32}%"%"%N")
+					s2 := "STRING_32"
 				elseif el_type = Date_type_database then
 					s2 := "DATE_TIME"
 					s3.append("%T%T%Tcreate "+col_name+".make_now%N")
@@ -133,7 +146,11 @@ feature -- Basic operations
 					s2 :=  "ANY"
 				end
 
-				s4.append("%T%T%TResult.append (" + col_name + ".out + %"%%N%")%N")
+				if el_type /= Wide_string_type_database then
+					s4.append("%T%T%TResult.append (" + col_name + ".out + %"%%N%")%N")
+				else
+					s4.append("%T%T%TResult.append (" + col_name + " + %"%%N%")%N")
+				end
 
 				s1.append(s2+")%N%T%T%T-- Set the value of "+col_name)
 				s1.append("%N%T%Trequire")
@@ -222,6 +239,14 @@ feature -- Status setting
 					r_string.append (field_name (i, object))
 					r_string.append (" ")
 					r_string.append (db_spec.sql_name_integer)
+				when integer_16_type then
+					r_string.append (field_name (i, object))
+					r_string.append (" ")
+					r_string.append (db_spec.sql_name_integer_16)
+				when integer_64_type then
+					r_string.append (field_name (i, object))
+					r_string.append (" ")
+					r_string.append (db_spec.sql_name_integer_64)
 				when Real_type then
 					r_string.append (field_name (i, object))
 					r_string.append (" ")
@@ -256,6 +281,27 @@ feature -- Status setting
 							else
 								r_string.append (" ")
 								r_string.append (db_spec.sql_string2 (Max_char_size))
+							end
+						else
+							check False end -- implied by `is_string (field (i, object))'
+						end
+					elseif is_string32 (field (i, object)) then
+						r_string.append (field_name (i, object))
+						if attached {STRING_32} field (i, object) as t_string_32 then
+							if t_string_32.count < Max_char_size then
+								r_string.append (" ")
+								r_string.append (db_spec.sql_wstring)
+								t_int := t_string_32.capacity
+								if t_int = 0 then
+									t_int := 10
+								elseif t_int > Max_char_size then
+									t_int := Max_char_size - 1
+								end
+								r_string.append (t_int.out)
+								r_string.append (")")
+							else
+								r_string.append (" ")
+								r_string.append (db_spec.sql_wstring2 (Max_char_size))
 							end
 						else
 							check False end -- implied by `is_string (field (i, object))'
@@ -295,6 +341,7 @@ feature -- Status report
 
 	repository_name: STRING
 			-- Repository name corresponding to table name in DB schema.
+			-- Cannot be Unicode string, because Eiffel identifier's restriction.
 
 	rep_qualifier: STRING
 			-- Qualifier of the Repository.
@@ -315,13 +362,10 @@ feature -- Status report
 		require else
 			repository_exists: exists
 			good_position: 0 < i and i <= dimension
-		local
-			l_result: detachable STRING
 		do
 			table.go_i_th (i)
-			l_result := (table.item).column_name
-			if l_result /= Void then
-				Result := l_result.twin
+			if attached table.item.column_name as l_name then
+				Result := l_name
 			end
 		end
 
@@ -378,6 +422,8 @@ feature -- Status report
 						else
 							if is_string (field (i, object)) then
 								Result := Result and (col_type = String_type_database)
+							elseif is_string32 (field (i, object)) then
+								Result := Result and (col_type = Wide_string_type_database)
 							elseif is_date (field (i,object)) then
 								Result := Result and (col_type = Date_type_database)
 							else
@@ -443,7 +489,6 @@ feature {NONE} -- Status report
 		do
 			Result := db_spec.Selection_string (rep_qualifier, rep_owner, repository_name)
 		end
-
 
 	Max_char_size: INTEGER
 		do

@@ -65,7 +65,7 @@ feature -- For DATABASE_CHANGE
 
 	hide_qualifier (tmp_strg: STRING): POINTER
 		local
-			c_temp: C_STRING
+			c_temp: SQL_STRING
 		do
 			create c_temp.make (tmp_strg)
 			Result := odbc_hide_qualifier (c_temp.item)
@@ -91,20 +91,28 @@ feature -- For DATABASE_FORMAT
 
 	string_format (object: detachable STRING): STRING
 			-- String representation in SQL of `object'.
+		obsolete
+			"Use `string_format_32' instead."
+		do
+			Result := string_format_32 (object)
+		end
+
+	string_format_32 (object: detachable READABLE_STRING_GENERAL): STRING_32
+			-- String representation in SQL of `object'.
 		do
 			if object /= Void and then not object.is_empty then
 				if not is_binary (object) then
-					Result := object.twin
+					Result := object.as_string_32.twin
 					Result.replace_substring_all ("\", "\\")
 					Result.replace_substring_all ("'", "''")
 					Result.precede ('%'')
 					Result.extend ('%'')
 				else
 					-- FIXME: fool compiler and bug here
-					Result := "NULL"
+					Result := {STRING_32} "NULL"
 				end
 			else
-				Result := "NULL"
+				Result := {STRING_32} "NULL"
 			end
 		end
 
@@ -116,18 +124,19 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 
 	normal_parse: BOOLEAN = False
 
-	parse (descriptor: INTEGER; uht: DB_STRING_HASH_TABLE [ANY]; ht_order: ARRAYED_LIST [STRING]; uhandle: HANDLE; sql: STRING): BOOLEAN
+	parse (descriptor: INTEGER; uht: detachable DB_STRING_HASH_TABLE [ANY]; ht_order: detachable ARRAYED_LIST [STRING]; uhandle: HANDLE; sql: READABLE_STRING_GENERAL): BOOLEAN
 		local
-			tmp_str: STRING
-			c_temp: C_STRING
+			tmp_str: STRING_32
+			c_temp, c_temp2: SQL_STRING
 			l_para: like para
 		do
 			create c_temp.make (sql)
 			create tmp_str.make (1)
-			tmp_str.from_c (odbc_hide_qualifier (c_temp.item))
+			create c_temp2.make_by_pointer (odbc_hide_qualifier (c_temp.item))
+			tmp_str := c_temp2.string.as_string_8 -- No problem, only used to find '{'.
 			tmp_str.left_adjust
 			if tmp_str.count > 1 and then (tmp_str.substring (1, 1)).is_equal ("{") then
-				if uht.count > 0 then
+				if uht /= Void and then uht.count > 0 then
 					if uhandle.execution_type.immediate_execution then
 						odbc_pre_immediate (descriptor, uht.count)
 					else
@@ -160,7 +169,7 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 			i: INTEGER
 			object : ANY
 			tmp_str: STRING
-			tmp_c: C_STRING
+			tmp_c: SQL_STRING
 			tmp_date: detachable DATE_TIME
 			type: INTEGER
 			l_managed_pointer: MANAGED_POINTER
@@ -282,6 +291,20 @@ feature -- DATABASE_INTEGER
 			Result := "integer"
 		ensure then
 			Result.is_equal ("integer")
+		end
+
+	sql_name_integer_16: STRING
+		once
+			Result := "integer"
+		ensure then
+			Result.is_equal ("smallint")
+		end
+
+	sql_name_integer_64: STRING
+		once
+			Result := "integer"
+		ensure then
+			Result.is_equal ("bigint")
 		end
 
 feature -- DATABASE_BOOLEAN
@@ -444,9 +467,18 @@ feature -- For DATABASE_REPOSITORY
 			Result.append (")")
 		end
 
+	sql_wstring: STRING = "nchar ("
+
+	sql_wstring2 (int: INTEGER): STRING
+		do
+			Result := "nchar ("
+			Result.append (int.out)
+			Result.append (")")
+		end
+
 	selection_string (rep_qualifier, rep_owner, repository_name: STRING): STRING
 		local
-			c_tmp: C_STRING
+			c_tmp: SQL_STRING
 		do
 			create c_tmp.make (rep_qualifier)
 			odbc_set_qualifier (c_tmp.item)
@@ -474,6 +506,14 @@ feature -- External
 			Result := odbc_get_error_message
 		end
 
+	get_error_message_string: STRING_32
+		local
+			l_s: SQL_STRING
+		do
+			create l_s.make_by_pointer (odbc_get_error_message)
+			Result := l_s.string
+		end
+
 	get_error_code: INTEGER
 		do
 			Result := odbc_get_error_code
@@ -485,14 +525,22 @@ feature -- External
 			Result := odbc_get_warn_message
 		end
 
+	get_warn_message_string: STRING_32
+		local
+			l_s: SQL_STRING
+		do
+			create l_s.make_by_pointer (odbc_get_warn_message)
+			Result := l_s.string
+		end
+
 	new_descriptor: INTEGER
 		do
 			Result := odbc_new_descriptor
 		end
 
-	init_order (no_descriptor: INTEGER; command: STRING)
+	init_order (no_descriptor: INTEGER; command: READABLE_STRING_GENERAL)
 		local
-			c_temp: C_STRING
+			c_temp: SQL_STRING
 		do
 			create c_temp.make (command)
 			odbc_init_order (no_descriptor, c_temp.item, 0)
@@ -528,9 +576,9 @@ feature -- External
 			is_error_updated := False
 		end
 
-	exec_immediate (no_descriptor: INTEGER; command: STRING)
+	exec_immediate (no_descriptor: INTEGER; command: READABLE_STRING_GENERAL)
 		local
-			c_temp: C_STRING
+			c_temp: SQL_STRING
 		do
 			create c_temp.make (command)
 			odbc_exec_immediate (no_descriptor, c_temp.item)
@@ -540,11 +588,12 @@ feature -- External
 	put_col_name (no_descriptor: INTEGER; index: INTEGER; ar: STRING; max_len:INTEGER): INTEGER
 		local
 			l_area: MANAGED_POINTER
-			i: INTEGER
+			l_str: SQL_STRING
 		do
 			create l_area.make (max_len)
-
 			Result := odbc_put_col_name (no_descriptor, index, l_area.item)
+
+			create l_str.make_shared_from_pointer_and_count (l_area.item, Result)
 
 			check
 				Result <= max_len
@@ -552,14 +601,7 @@ feature -- External
 			ar.grow (Result)
 			ar.set_count (Result)
 
-			from
-				i := 1
-			until
-				i > Result
-			loop
-				ar.put (l_area.read_integer_8 (i - 1).to_character_8, i)
-				i := i + 1
-			end
+			l_str.read_substring_into (ar, 1, Result)
 		end
 
 	put_data (no_descriptor: INTEGER; index: INTEGER; ar: STRING; max_len:INTEGER): INTEGER
@@ -582,6 +624,23 @@ feature -- External
 					i := i + 1
 				end
 			end
+			if l_data /= l_null then
+					-- `odbc_put_data' allocate some memory, we need to free it.
+				l_data.memory_free
+			end
+		end
+
+	put_data_32 (no_descriptor: INTEGER; index: INTEGER; ar: STRING_32; max_len:INTEGER): INTEGER
+		local
+			l_sql_string: SQL_STRING
+			i: INTEGER
+			l_data, l_null: POINTER
+		do
+			Result := odbc_put_data (no_descriptor, index, $l_data) // {SQL_STRING}.character_size
+			ar.grow (Result)
+			ar.set_count (Result)
+			create l_sql_string.make_shared_from_pointer_and_count (l_data, Result)
+			l_sql_string.read_substring_into (ar, 1, Result)
 			if l_data /= l_null then
 					-- `odbc_put_data' allocate some memory, we need to free it.
 				l_data.memory_free
@@ -633,6 +692,16 @@ feature -- External
 	get_integer_data (no_descriptor: INTEGER; ind: INTEGER): INTEGER
 		do
 			Result := odbc_get_integer_data (no_descriptor, ind)
+		end
+
+	get_integer_16_data (no_descriptor: INTEGER; ind: INTEGER): INTEGER_16
+		do
+			Result := odbc_get_integer_16_data (no_descriptor, ind)
+		end
+
+	get_integer_64_data (no_descriptor: INTEGER; ind: INTEGER): INTEGER_64
+		do
+			Result := odbc_get_integer_64_data (no_descriptor, ind)
 		end
 
 	get_float_data (no_descriptor: INTEGER; ind: INTEGER): DOUBLE
@@ -696,6 +765,11 @@ feature -- External
 			Result := odbc_c_string_type
 		end
 
+	c_wstring_type: INTEGER
+		do
+			Result := odbc_c_wstring_type
+		end
+
 	c_character_type: INTEGER
 		do
 			Result := odbc_c_character_type
@@ -704,6 +778,16 @@ feature -- External
 	c_integer_type: INTEGER
 		do
 			Result := odbc_c_integer_type
+		end
+
+	c_integer_16_type: INTEGER
+		do
+			Result := odbc_c_integer_16_type
+		end
+
+	c_integer_64_type: INTEGER
+		do
+			Result := odbc_c_integer_64_type
 		end
 
 	c_float_type: INTEGER
@@ -735,7 +819,7 @@ feature -- External
 		require else
 			data_source_set: data_source /= Void
 		local
-			c_temp1, c_temp2, c_temp3: C_STRING
+			c_temp1, c_temp2, c_temp3: SQL_STRING
 		do
 			create c_temp1.make (user_name)
 			create c_temp2.make (user_passwd)
@@ -890,6 +974,16 @@ feature {NONE} -- External features
 			"C use %"odbc.h%""
 		end
 
+	odbc_get_integer_16_data (no_descriptor: INTEGER ind: INTEGER): INTEGER_16
+		external
+			"C use %"odbc.h%""
+		end
+
+	odbc_get_integer_64_data (no_descriptor: INTEGER ind: INTEGER): INTEGER_64
+		external
+			"C use %"odbc.h%""
+		end
+
 	odbc_get_float_data (no_descriptor: INTEGER ind: INTEGER): DOUBLE
 		external
 			"C use %"odbc.h%""
@@ -952,6 +1046,13 @@ feature {NONE} -- External features
 			"STRING_TYPE"
 		end
 
+	odbc_c_wstring_type: INTEGER
+		external
+			"C [macro %"odbc.h%"]"
+		alias
+			"WSTRING_TYPE"
+		end
+
 	odbc_c_character_type: INTEGER
 		external
 			"C [macro %"odbc.h%"]"
@@ -964,6 +1065,20 @@ feature {NONE} -- External features
 			"C [macro %"odbc.h%"]"
 		alias
 			"INTEGER_TYPE"
+		end
+
+	odbc_c_integer_16_type: INTEGER
+		external
+			"C [macro %"odbc.h%"]"
+		alias
+			"INTEGER_16_TYPE"
+		end
+
+	odbc_c_integer_64_type: INTEGER
+		external
+			"C [macro %"odbc.h%"]"
+		alias
+			"INTEGER_64_TYPE"
 		end
 
 	odbc_c_float_type: INTEGER
@@ -1065,20 +1180,20 @@ feature {NONE} -- External features
 		    "C use %"odbc.h%""
 		end
 
-	is_binary (s: STRING): BOOLEAN
+	is_binary (s: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `s' a binary type?
 		require
 			s_not_void: s /= Void
 		do
-			Result := s.count > 2 and then s.item (1) = '0' and then s.item (2) = 'x'
+			Result := s.count > 2 and then s.code (1) = ('0').code and then s.code (2) = ('x').code
 		ensure
 			result_condition:
-				Result implies (s.count > 2 and then s.item (1) = '0' and then s.item (2) = 'x')
+				Result implies (s.count > 2 and then s.code (1) = ('0').code and then s.code (2) = ('x').code)
 		end
 
 	para: detachable DB_PARA_ODBC
 
-	bind_args_value (descriptor: INTEGER; uht: DB_STRING_HASH_TABLE [ANY]; ht_order: ARRAYED_LIST [STRING])
+	bind_args_value (descriptor: INTEGER; uht: DB_STRING_HASH_TABLE [ANY]; ht_order: detachable ARRAYED_LIST [STRING])
 			-- Append map variables name from to `s'.
 			-- Map variables are used for set input arguments.
 		require
@@ -1092,7 +1207,7 @@ feature {NONE} -- External features
 			l_any: detachable ANY
 			tmp_date: DATE_TIME
 			l_managed_pointer: detachable MANAGED_POINTER
-			l_c_string: C_STRING
+			l_c_string: SQL_STRING
 			l_platform: PLATFORM
 			l_value_count: INTEGER
 			l_para: like para
@@ -1100,111 +1215,123 @@ feature {NONE} -- External features
 			create tmp_str.make (1)
 			create l_platform
 			i := 1
-			from
-				ht_order.start
-				pointers.wipe_out
-			until
-				ht_order.off
-			loop
-				type := -1
-				l_string := ht_order.item
-				l_any := uht.item (l_string)
-				check l_any /= Void end -- FIXME: bug here?
-				if obj_is_string (l_any) then
-					type := c_string_type
-					if attached {STRING} l_any as l_val_string then
-						create l_c_string.make (l_val_string)
-						pointers.extend (l_c_string.item)
-						l_value_count := l_c_string.count
-						l_managed_pointer := l_c_string.managed_data
+			if ht_order /= Void then
+				from
+					ht_order.start
+					pointers.wipe_out
+				until
+					ht_order.off
+				loop
+					type := -1
+					l_string := ht_order.item
+					l_any := uht.item (l_string)
+					check l_any /= Void end -- FIXME: bug here?
+					if obj_is_string (l_any) then
+						type := c_string_type
+						if attached {STRING} l_any as l_val_string then
+							create l_c_string.make (l_val_string)
+							pointers.extend (l_c_string.item)
+							l_value_count := l_c_string.count
+							l_managed_pointer := l_c_string.managed_data
+						else
+							check False end -- implied by `obj_is_string (l_any)'
+						end
+					elseif obj_is_string_32 (l_any) then
+						type := c_wstring_type
+						if attached {STRING_32} l_any as l_string_32 then
+							create l_c_string.make (l_string_32)
+							pointers.extend (l_c_string.item)
+							l_value_count := l_c_string.count
+							l_managed_pointer := l_c_string.managed_data
+						else
+							check False end -- implied by `obj_is_string (l_any)'
+						end
+					elseif obj_is_integer (l_any) then
+						type := c_integer_type
+						if attached {INTEGER_REF} l_any as l_val_int then
+							create l_managed_pointer.make (l_platform.integer_bytes)
+							l_managed_pointer.put_integer_32 (l_val_int.item, 0)
+							pointers.extend (l_managed_pointer.item)
+							l_value_count := l_platform.integer_bytes
+						else
+							check False end -- implied by `obj_is_integer (l_any)'
+						end
+					elseif obj_is_date (l_any) then
+						type := c_date_type
+						if attached {DATE_TIME} l_any as l_tmp_date then
+							tmp_date := l_tmp_date
+							create l_managed_pointer.make (c_timestamp_struct_size)
+							odbc_stru_of_date (l_managed_pointer.item, tmp_date.year, tmp_date.month, tmp_date.day,
+								 tmp_date.hour, tmp_date.minute, tmp_date.second, tmp_date.fractional_second.truncated_to_integer)
+							l_value_count := c_timestamp_struct_size
+						else
+							check False end -- implied by `obj_is_date (l_any)'
+						end
+					elseif obj_is_double (l_any) then
+						type := c_float_type
+						if attached {DOUBLE_REF} l_any as l_val_double then
+							create l_managed_pointer.make (l_platform.double_bytes)
+							l_managed_pointer.put_real_64 (l_val_double.item, 0)
+							pointers.extend (l_managed_pointer.item)
+							l_value_count := l_platform.double_bytes
+						else
+							check False end -- implied by `obj_is_double (l_any)'
+						end
+					elseif obj_is_real (l_any) then
+						type := c_real_type
+						if attached {REAL_REF} l_any as l_val_real then
+							create l_managed_pointer.make (l_platform.real_bytes)
+							l_managed_pointer.put_real_32 (l_val_real.item, 0)
+							pointers.extend (l_managed_pointer.item)
+							l_value_count := l_platform.real_bytes
+						else
+							check False end -- implied by `obj_is_real (l_any)'
+						end
+					elseif obj_is_character (l_any) then
+						type := c_character_type
+						if attached {CHARACTER_REF} l_any as l_val_char then
+							create l_managed_pointer.make (l_platform.character_bytes)
+							l_managed_pointer.put_character (l_val_char.item, 0)
+							pointers.extend (l_managed_pointer.item)
+							l_value_count := l_platform.character_bytes
+						else
+							check False end -- implied by `obj_is_character (l_any)'
+						end
+					elseif obj_is_boolean (l_any) then
+						type := c_boolean_type
+						if attached {BOOLEAN_REF} l_any as l_val_bool  then
+							create l_managed_pointer.make (l_platform.boolean_bytes)
+							l_managed_pointer.put_boolean (l_val_bool.item, 0)
+							pointers.extend (l_managed_pointer.item)
+							l_value_count := l_platform.boolean_bytes
+						else
+							check False end -- implied by `obj_is_boolean (l_any)'
+						end
 					else
-						check False end -- implied by `obj_is_string (l_any)'
+						 -- Should we attempt to insert NULL here since the type was not found and hence value was
+						 -- most likely Void?
 					end
-				elseif obj_is_integer (l_any) then
-					type := c_integer_type
-					if attached {INTEGER_REF} l_any as l_val_int then
-						create l_managed_pointer.make (l_platform.integer_bytes)
-						l_managed_pointer.put_integer_32 (l_val_int.item, 0)
-						pointers.extend (l_managed_pointer.item)
-						l_value_count := l_platform.integer_bytes
+
+					l_para := para
+					check l_para_not_void: l_para /= Void end
+					if type = -1 then
+						l_para.set (Void, i)
 					else
-						check False end -- implied by `obj_is_integer (l_any)'
+						check l_managed_pointer /= Void end -- implied by `type /= -1' and previous codes
+						l_para.set (l_managed_pointer, i)
 					end
-				elseif obj_is_date (l_any) then
-					type := c_date_type
-					if attached {DATE_TIME} l_any as l_tmp_date then
-						tmp_date := l_tmp_date
-						create l_managed_pointer.make (c_timestamp_struct_size)
-						odbc_stru_of_date (l_managed_pointer.item, tmp_date.year, tmp_date.month, tmp_date.day,
-							 tmp_date.hour, tmp_date.minute, tmp_date.second, tmp_date.fractional_second.truncated_to_integer)
-						l_value_count := c_timestamp_struct_size
-					else
-						check False end -- implied by `obj_is_date (l_any)'
+
+					tmp_str.wipe_out
+					if l_value_count = 0 then
+						l_value_count := 1
 					end
-				elseif obj_is_double (l_any) then
-					type := c_float_type
-					if attached {DOUBLE_REF} l_any as l_val_double then
-						create l_managed_pointer.make (l_platform.double_bytes)
-						l_managed_pointer.put_real_64 (l_val_double.item, 0)
-						pointers.extend (l_managed_pointer.item)
-						l_value_count := l_platform.double_bytes
-					else
-						check False end -- implied by `obj_is_double (l_any)'
-					end
-				elseif obj_is_real (l_any) then
-					type := c_real_type
-					if attached {REAL_REF} l_any as l_val_real then
-						create l_managed_pointer.make (l_platform.real_bytes)
-						l_managed_pointer.put_real_32 (l_val_real.item, 0)
-						pointers.extend (l_managed_pointer.item)
-						l_value_count := l_platform.real_bytes
-					else
-						check False end -- implied by `obj_is_real (l_any)'
-					end
-				elseif obj_is_character (l_any) then
-					type := c_character_type
-					if attached {CHARACTER_REF} l_any as l_val_char then
-						create l_managed_pointer.make (l_platform.character_bytes)
-						l_managed_pointer.put_character (l_val_char.item, 0)
-						pointers.extend (l_managed_pointer.item)
-						l_value_count := l_platform.character_bytes
-					else
-						check False end -- implied by `obj_is_character (l_any)'
-					end
-				elseif obj_is_boolean (l_any) then
-					type := c_boolean_type
-					if attached {BOOLEAN_REF} l_any as l_val_bool  then
-						create l_managed_pointer.make (l_platform.boolean_bytes)
-						l_managed_pointer.put_boolean (l_val_bool.item, 0)
-						pointers.extend (l_managed_pointer.item)
-						l_value_count := l_platform.boolean_bytes
-					else
-						check False end -- implied by `obj_is_boolean (l_any)'
-					end
-				else
-					 -- Should we attempt to insert NULL here since the type was not found and hence value was
-					 -- most likely Void?
+
+					odbc_set_parameter (descriptor, i, 1, type, 100, l_value_count, l_para.get (i))
+
+					is_error_updated := False
+					i := i + 1
+					ht_order.forth
 				end
-
-				l_para := para
-				check l_para_not_void: l_para /= Void end
-				if type = -1 then
-					l_para.set (Void, i)
-				else
-					check l_managed_pointer /= Void end -- implied by `type /= -1' and previous codes
-					l_para.set (l_managed_pointer, i)
-				end
-
-				tmp_str.wipe_out
-				if l_value_count = 0 then
-					l_value_count := 1
-				end
-
-				odbc_set_parameter (descriptor, i, 1, type, 100, l_value_count, l_para.get (i))
-
-				is_error_updated := False
-				i := i + 1
-				ht_order.forth
 			end
 		end
 
@@ -1288,6 +1415,13 @@ feature {NONE} -- External features
 			argument_not_null: obj /= Void
 		do
 			Result := attached {STRING} obj
+		end
+
+	obj_is_string_32 (obj: ANY): BOOLEAN
+		require
+			argument_not_null: obj /= Void
+		do
+			Result := attached {STRING_32} obj
 		end
 
 	obj_is_character (obj: ANY): BOOLEAN

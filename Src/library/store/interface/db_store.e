@@ -18,6 +18,8 @@ inherit
 
 	DB_EXEC_USE
 
+	REFACTORING_HELPER
+
 create -- Creation procedure
 
 	make
@@ -54,7 +56,8 @@ feature -- Basic operations
 		do
 			implementation.put (object)
 			if not is_ok and then is_tracing then
-				trace_output.putstring (error_message)
+				fixme ("Unicode support for output tracing.")
+				trace_output.putstring (error_message_32.as_string_8)
 				trace_output.new_line
 			end
 		end
@@ -69,7 +72,8 @@ feature -- Basic operations
 		do
 			implementation.force (object)
 			if not is_ok and then is_tracing then
-				trace_output.putstring (error_message)
+				fixme ("Unicode support for output tracing.")
+				trace_output.putstring (error_message_32.as_string_8)
 				trace_output.new_line
 			end
 		end

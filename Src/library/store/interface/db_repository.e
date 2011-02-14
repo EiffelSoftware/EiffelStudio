@@ -101,7 +101,8 @@ feature -- Basic operations
 			implementation.load
 			loaded := true
 			if not is_ok and then is_tracing then
-				trace_output.putstring (error_message)
+				fixme ("Unicode support for output tracing.")
+				trace_output.putstring (error_message_32.as_string_8)
 				trace_output.new_line
 			end
 		ensure
@@ -142,7 +143,8 @@ feature -- Basic operations
 		do
 			implementation.allocate (object, repository_name)
 			if not is_ok and then is_tracing then
-				trace_output.putstring (error_message)
+				fixme ("Unicode support for output tracing.")
+				trace_output.putstring (error_message_32.as_string_8)
 				trace_output.new_line
 			end
 		end

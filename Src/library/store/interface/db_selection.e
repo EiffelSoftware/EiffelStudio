@@ -55,8 +55,18 @@ feature -- Access
 
 	last_parsed_query : detachable STRING
 			-- Last parsed SQL query
+		obsolete
+			"Use `last_parsed_query_32' instead."
 		do
-			Result := implementation.last_parsed_query
+			if attached implementation.last_parsed_query_32 as l_s then
+				Result := l_s.as_string_8
+			end
+		end
+
+	last_parsed_query_32 : detachable STRING_32
+			-- Last parsed SQL query
+		do
+			Result := implementation.last_parsed_query_32
 		end
 
 feature -- Status report
@@ -325,7 +335,7 @@ feature -- Basic operations
 			exit_condition_met: is_exiting
 		end
 
-	query (s: STRING)
+	query (s: READABLE_STRING_GENERAL)
 			-- Select stored objects using `s' and make
 			-- them retrievable using `load_result'.
 		require
@@ -336,16 +346,15 @@ feature -- Basic operations
 			is_ok: is_ok
 			is_allocatable: is_allocatable
 		do
-			if s.count /= 0 then
-				last_query := s
-				implementation.query (s)
-			end
+			last_query_32 := s.as_string_32
+			implementation.query (s)
 			if not is_ok and then is_tracing then
-				trace_output.putstring (error_message)
+				fixme ("Unicode support for output tracing.")
+				trace_output.putstring (error_message_32)
 				trace_output.new_line
 			end
 		ensure
-			last_query_changed: last_query = s
+			last_query_changed: attached last_query_32 as l_s and then l_s.same_string (s.as_string_32)
 		end
 
 	next
@@ -391,9 +400,9 @@ feature -- Basic operations
 	execute_query
 			-- Execute `query' with `last_query'.
 		local
-			l_query: like last_query
+			l_query: like last_query_32
 		do
-			l_query := last_query
+			l_query := last_query_32
 			check l_query /= Void end -- implied by precursor's precondition `last_query_not_void'
 			query (l_query)
 		end

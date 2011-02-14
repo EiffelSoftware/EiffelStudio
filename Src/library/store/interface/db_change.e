@@ -35,13 +35,25 @@ feature -- Access
 
 	last_parsed_query : detachable STRING
 			-- Last parsed SQL query
+		obsolete
+			"Use `last_parsed_query_32' instead."
 		do
-			Result := implementation.last_parsed_query
+			if attached last_parsed_query_32 as l_str then
+				Result := l_str.as_string_8
+			end
+		end
+
+	last_parsed_query_32 : detachable STRING_32
+			-- Last parsed SQL query
+		do
+			if attached implementation.last_parsed_query_32 as l_query then
+				Result := l_query
+			end
 		end
 
 feature -- Basic operations
 
-	modify (request: STRING)
+	modify (request: READABLE_STRING_GENERAL)
 			-- Execute `request' to modify persistent objects.
 			-- When using the DBMS layer the request must be
 			-- SQL-like compliant.
@@ -50,22 +62,23 @@ feature -- Basic operations
 			request_exists: request /= Void
 			is_ok: is_ok
 		do
-			last_query := request
+			last_query_32 := request.as_string_32
 			implementation.modify (request)
 			if not is_ok and then is_tracing then
-				trace_output.putstring (error_message)
+				fixme ("Unicode support for output tracing.")
+				trace_output.putstring (error_message_32)
 				trace_output.new_line
 			end
 		ensure
-			last_query_changed: last_query = request
+			last_query_changed: last_query_32 = request
 		end
 
 	execute_query
 			-- Execute `modify' with `last_query'.
 		local
-			l_query: like last_query
+			l_query: like last_query_32
 		do
-			l_query := last_query
+			l_query := last_query_32
 			check l_query /= Void end -- implied by precursor's precondition `last_query_not_void'
 			modify (l_query)
 		end

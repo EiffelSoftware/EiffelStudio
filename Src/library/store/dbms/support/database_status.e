@@ -5,7 +5,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class 
+class
 	DATABASE_STATUS [G -> DATABASE create default_create end]
 
 inherit
@@ -14,7 +14,7 @@ inherit
 		export
 			{DB_STATUS} error_message, error_code, warning_message, reset
 		redefine
-			error_message, error_code, warning_message, reset
+			error_message_32, error_code, warning_message_32, reset
 		end
 
 	HANDLE_SPEC [G]
@@ -26,13 +26,12 @@ feature -- Status report
 			-- updated error code, error message or warning message?
 		do
 			Result := db_spec.is_error_updated
-		end	
+		end
 
-	error_message: STRING
+	error_message_32: STRING_32
 			-- Error message from database server
 		do
-			create Result.make (10)
-			Result.from_c (db_spec.get_error_message)
+			Result := db_spec.get_error_message_string
 		end
 
 	error_code: INTEGER
@@ -41,11 +40,10 @@ feature -- Status report
 			Result := db_spec.get_error_code
 		end
 
-	warning_message: STRING
+	warning_message_32: STRING_32
 			-- Warning message from database server
 		do
-			create Result.make (10)
-			Result.from_c (db_spec.get_warn_message)
+			Result := db_spec.get_warn_message_string
 		end
 
 	found: BOOLEAN
@@ -75,6 +73,6 @@ note
 
 
 
-end -- class DATABASE_STATUS 
+end -- class DATABASE_STATUS
 
 

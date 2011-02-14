@@ -13,7 +13,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 #include <mysql.h>
+
 
 /* Project Include File */
 #include "eif_except.h"
@@ -115,7 +117,7 @@ int eif_mysql_column_type(MYSQL_RES *result_ptr, int ind)
 		case MYSQL_TYPE_VARCHAR:
 		case MYSQL_TYPE_VAR_STRING:
 		case MYSQL_TYPE_STRING:
-			result = EIF_MYSQL_C_STRING_TYPE;
+			result = EIF_MYSQL_C_WSTRING_TYPE;
 			break;
 		case MYSQL_TYPE_DATETIME:
 			result = EIF_MYSQL_C_DATE_TYPE;
@@ -124,10 +126,23 @@ int eif_mysql_column_type(MYSQL_RES *result_ptr, int ind)
 			result = EIF_MYSQL_C_REAL_TYPE;
 			break;
 		case MYSQL_TYPE_DOUBLE:
+		case MYSQL_TYPE_DECIMAL:
+		case MYSQL_TYPE_NEWDECIMAL:
 			result = EIF_MYSQL_C_DOUBLE_TYPE;
 			break;
 		case MYSQL_TYPE_BLOB:
 			result = EIF_MYSQL_C_STRING_TYPE;
+			break;
+		case MYSQL_TYPE_TINY:
+		case MYSQL_TYPE_SHORT:
+			result = EIF_MYSQL_C_INTEGER_16_TYPE;
+			break;
+		case MYSQL_TYPE_LONGLONG:
+			result = EIF_MYSQL_C_INTEGER_64_TYPE;
+			break;
+		case MYSQL_TYPE_LONG:
+		case MYSQL_TYPE_INT24:
+			result = EIF_MYSQL_C_INTEGER_TYPE;
 			break;
 		default:
 			result = EIF_MYSQL_C_INTEGER_TYPE;
@@ -243,8 +258,10 @@ MYSQL_RES *eif_mysql_execute(MYSQL *mysql_ptr, const char *command)
 	if(res == 0) {
 		result = mysql_store_result(mysql_ptr);
 		if(result == (MYSQL_RES *) 0) {
-			fprintf(stderr, "MySQL error code: %d; MySQL error msg: '%s'\n",
-				mysql_errno(mysql_ptr), mysql_error(mysql_ptr));
+			if (mysql_error(mysql_ptr)[0]) {
+				fprintf(stderr, "MySQL error code: %d; MySQL error msg: '%s'\n",
+					mysql_errno(mysql_ptr), mysql_error(mysql_ptr));
+			}
 		}
 	} else {
 		fprintf(stderr, "mysql_real_query returned non-zero!\n");
@@ -328,6 +345,38 @@ char *eif_mysql_get_warn_message(MYSQL *mysql_ptr)
  * Returns:		The integer in that field
  */
 long eif_mysql_integer_data(MYSQL_ROW row_ptr, int ind)
+{
+	int result = (long) atol(row_ptr[ind - 1]);
+
+	return result;
+}
+
+/*
+ * Function:	EIF_NATURAL_64 eif_mysql_integer_16_data(MYSQL_ROW row_ptr, int ind)
+ * Description:	Get the integer at field ind in row_ptr
+ * Arguments:	MYSQL_ROW row_ptr:	Pointer to the current row
+ *				int ind:			Column index
+ * Returns:		The EIF_NATURAL_64 integer in that field
+ */
+EIF_NATURAL_64 eif_mysql_integer_64_data(MYSQL_ROW row_ptr, int ind)
+{
+#ifdef EIF_WINDOWS
+	EIF_NATURAL_64 result = (EIF_NATURAL_64) _atoi64(row_ptr[ind - 1]);
+#else
+	EIF_NATURAL_64 result = (EIF_NATURAL_64) strtoll(row_ptr[ind - 1], NULL, 10);
+#endif
+
+	return result;
+}
+
+/*
+ * Function:	long eif_mysql_integer_data(MYSQL_ROW row_ptr, int ind)
+ * Description:	Get the integer at field ind in row_ptr
+ * Arguments:	MYSQL_ROW row_ptr:	Pointer to the current row
+ *				int ind:			Column index
+ * Returns:		The integer in that field
+ */
+int eif_mysql_integer_16_data(MYSQL_ROW row_ptr, int ind)
 {
 	int result = (long) atol(row_ptr[ind - 1]);
 

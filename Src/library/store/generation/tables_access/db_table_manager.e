@@ -73,6 +73,17 @@ feature -- Status report
 	error_message: detachable STRING
 			-- Error message if an error occurred during last
 			-- database operation.
+		obsolete
+			"Use `error_message_32' instead."
+		do
+			if attached error_message_32 as l_s then
+				Result := l_s.as_string_8
+			end
+		end
+
+	error_message_32: detachable STRING_32
+			-- Error message if an error occurred during last
+			-- database operation.
 
 	select_query_prepared: BOOLEAN
 			-- Is a select query prepared?
@@ -391,15 +402,15 @@ feature -- Queries
 		require
 			meaningful_select: s /= Void
 		local
-			l_error_message: detachable STRING
+			l_error_message: detachable STRING_32
 		do
 			has_error := False
 			Result := database_manager.load_data_with_select (s)
 			if database_manager.has_error then
 				has_error := True
-				l_error_message := database_manager.error_message
+				l_error_message := database_manager.error_message_32
 				check l_error_message /= Void end -- implied by `has_error'
-				error_message := selection_failed (s) + l_error_message
+				error_message_32 := selection_failed (s) + l_error_message
 			end
 		end
 
@@ -411,16 +422,16 @@ feature -- Queries
 			is_valid_code: is_valid_code (tablecode)
 		local
 			obj: DB_TABLE
-			l_error_message: detachable STRING
+			l_error_message: detachable STRING_32
 		do
 			obj := tables.obj (tablecode)
 			has_error := False
 			Result ?= database_manager.load_list_with_select (query, obj)
 			if database_manager.has_error then
 				has_error := True
-				l_error_message := database_manager.error_message
+				l_error_message := database_manager.error_message_32
 				check l_error_message /= Void end -- implied by `has_error'
-				error_message := selection_failed (query) + l_error_message
+				error_message_32 := selection_failed (query) + l_error_message
 			end
 		end
 
@@ -431,14 +442,14 @@ feature -- General command
 		require
 			not_void: query /= Void
 		local
-			l_error_message: detachable STRING
+			l_error_message: detachable STRING_32
 		do
 			database_manager.execute_query (query)
 			if database_manager.has_error then
 				has_error := True
-				l_error_message := database_manager.error_message
+				l_error_message := database_manager.error_message_32
 				check l_error_message /= Void end -- implied by `has_error'
-				error_message := Command_failed + l_error_message
+				error_message_32 := Command_failed + l_error_message
 			end
 		end
 
@@ -450,7 +461,7 @@ feature -- Update
 			table_descr: DB_TABLE_DESCRIPTION
 			rescued: BOOLEAN
 			updater: DB_CHANGE
-			l_error_message: detachable STRING
+			l_error_message: detachable STRING_32
 		do
 			if not rescued then
 				has_error := False
@@ -468,13 +479,13 @@ feature -- Update
 				commit
 				if database_manager.has_error then
 					has_error := True
-					l_error_message := database_manager.error_message
+					l_error_message := database_manager.error_message_32
 					check l_error_message /= Void end -- implied by `has_error'
-					error_message := Update_failed + l_error_message
+					error_message_32 := Update_failed + l_error_message
 				end
 			else
 				has_error := True
-				error_message := Update_failed + Unexpected_error
+				error_message_32 := Update_failed + Unexpected_error
 			end
 		rescue
 			rescued := True
@@ -509,7 +520,7 @@ feature -- Creation
 					Result := 1
 				else
 					has_error := True
-					error_message := id_creation_failed (table_descr.Table_name)
+					error_message_32 := id_creation_failed (table_descr.Table_name)
 				end
 			end
 		ensure
@@ -675,17 +686,17 @@ feature {NONE} -- Creation implementation
 			--Store in the DB object `an_obj'.
 		local
 			rep: DB_REPOSITORY
-			l_error_message: detachable STRING
-			l_error_message_2: detachable STRING
+			l_error_message: detachable STRING_32
+			l_error_message_2: detachable STRING_32
 		do
 			has_error := False
 			rep := repository (tablecode)
 			if database_manager.has_error or else not rep.exists then
 				has_error := True
 				l_error_message_2 := Creation_failed + repository_failed (tables.name_list.i_th (tablecode))
-				error_message := l_error_message_2
+				error_message_32 := l_error_message_2
 				if database_manager.has_error then
-					l_error_message := database_manager.error_message
+					l_error_message := database_manager.error_message_32
 					check l_error_message /= Void end  -- implied by `has_error'
 					l_error_message_2.append (l_error_message)
 				else
@@ -695,9 +706,9 @@ feature {NONE} -- Creation implementation
 				database_manager.insert_with_repository (an_obj, rep)
 				if database_manager.has_error then
 					has_error := True
-					l_error_message := database_manager.error_message
+					l_error_message := database_manager.error_message_32
 					check l_error_message /= Void end  -- implied by `has_error'
-					error_message := Creation_failed + l_error_message
+					error_message_32 := Creation_failed + l_error_message
 				end
 			end
 		end
@@ -743,16 +754,16 @@ feature {NONE} -- Deletion implementation
 			-- the table row of `an_obj' table with `an_obj' ID.
 		local
 			q: STRING
-			l_error_message: detachable STRING
+			l_error_message: detachable STRING_32
 		do
 			q := "delete from " + description.Table_name + " where " + description.id_name
 				+ " = " + description.printable_id
 			database_manager.execute_query (q)
 			if database_manager.has_error then
 				has_error := True
-				l_error_message := database_manager.error_message
+				l_error_message := database_manager.error_message_32
 				check l_error_message /= Void end -- implied by `has_error'
-				error_message := Deletion_failed + l_error_message
+				error_message_32 := Deletion_failed + l_error_message
 			end
 		end
 
@@ -887,67 +898,67 @@ feature {NONE} -- SQL query construction
 
 feature {NONE} -- Error messages
 
-	selection_failed (query: STRING): STRING
+	selection_failed (query: STRING_32): STRING_32
 			-- Database selection failed.
 		require
 			query_not_void: query /= Void
 		do
-			Result := "Database selection failed:%NSQL query was: "
-					+ query + "%NDatabase message is: "
+			Result := {STRING_32}"Database selection failed:%NSQL query was: "
+					+ query + {STRING_32}"%NDatabase message is: "
 		end
 
-	Command_failed: STRING
+	Command_failed: STRING_32
 			-- Database command failed.
 		do
-			Result := "Database command failed:%N"
+			Result := {STRING_32}"Database command failed:%N"
 		end
 
-	Update_failed: STRING
+	Update_failed: STRING_32
 			-- Database update failed.
 		do
-			Result := "Database update failed:%N"
+			Result := {STRING_32}"Database update failed:%N"
 		end
 
-	Creation_failed: STRING
+	Creation_failed: STRING_32
 			-- Database creation failed.
 		do
-			Result := "Table row creation failed:%N"
+			Result := {STRING_32}"Table row creation failed:%N"
 		end
 
 	Deletion_failed: STRING
 			-- Database deletion failed.
 		do
-			Result := "Table row deletion failed:%N"
+			Result := {STRING_32}"Table row deletion failed:%N"
 		end
 
-	id_creation_failed (name: STRING): STRING
+	id_creation_failed (name: STRING_32): STRING_32
 			-- ID creation failed on table with `name'.
 		require
 			not_void: name /= Void
 		do
-			Result := "Cannot find a valid ID for the table: "
+			Result := {STRING_32}"Cannot find a valid ID for the table: "
 				+ name + "%N"
 		end
 
-	repository_failed (name: STRING): STRING
+	repository_failed (name: STRING_32): STRING_32
 			-- Description on table with `name' cannot be retrieved.
 		require
 			not_void: name /= Void
 		do
-			Result := "Cannot retrieve description of table "
-				+ name + " :%N"
+			Result := {STRING_32}"Cannot retrieve description of table "
+				+ name + {STRING_32}" :%N"
 		end
 
-	No_repository: STRING
+	No_repository: STRING_32
 			-- Reposioty does not exist.
 		do
-			Result := "Repository does not exist.%N"
+			Result := {STRING_32}"Repository does not exist.%N"
 		end
 
-	Unexpected_error: STRING
+	Unexpected_error: STRING_32
 			-- Unexpected error.
 		do
-			Result := "Unexpected error."
+			Result := {STRING_32}"Unexpected error."
 		end
 
 note

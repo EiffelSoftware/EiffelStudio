@@ -37,10 +37,20 @@ feature -- Access
 
 	last_parsed_query : detachable STRING
 			-- Last parsed query
+		obsolete
+			"Use `last_parsed_query_32' instead."
+		do
+			if attached last_parsed_query_32 as l_str then
+				Result := l_str.as_string_8
+			end
+		end
+
+	last_parsed_query_32: detachable STRING_32
+			-- Last parsed query
 
 feature -- Basic operations
 
-	query (s: STRING)
+	query (s: READABLE_STRING_GENERAL)
 			-- Query database server using SQL `statement'.
 		require
 			argument_exists: s /= Void
@@ -48,7 +58,7 @@ feature -- Basic operations
 			prepare_execute: not immediate_execution
 			descriptor_is_available: db_spec.descriptor_is_available
 		local
-			parsed_s: detachable STRING
+			parsed_s: detachable STRING_32
 			parsed: BOOLEAN
 		do
 			descriptor := db_spec.new_descriptor
@@ -56,10 +66,10 @@ feature -- Basic operations
 				parsed := db_spec.parse (descriptor, ht, ht_order, handle, s)
 			end
 			if not parsed then
-				parsed_s := parse (s)
+				parsed_s := parse_32 (s)
 				db_spec.init_order (descriptor, parsed_s)
 			end
-			last_parsed_query := parsed_s
+			last_parsed_query_32 := parsed_s
 			if is_ok then
 				db_spec.start_order (descriptor)
 			end

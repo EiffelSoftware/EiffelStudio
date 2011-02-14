@@ -11,6 +11,8 @@ class DB_STATUS_USE
 inherit
 	HANDLE_USE
 
+	REFACTORING_HELPER
+
 feature {NONE} -- Status report
 
 	exhausted: BOOLEAN
@@ -39,14 +41,30 @@ feature {NONE} -- Status report
 
 	error_message: STRING
 			-- SQL error message prompted by database server
+		obsolete
+			"Use `error_message_32' instead."
 		do
-			Result := handle.status.error_message
+			Result := error_message_32.as_string_8
 		end
-	
+
 	warning_message: STRING
 			-- SQL warning message prompted by database server
+		obsolete
+			"Use `warning_message_32' instead."
 		do
-			Result := handle.status.warning_message
+			Result := warning_message_32.as_string_8
+		end
+
+	error_message_32: STRING_32
+			-- SQL error message prompted by database server
+		do
+			Result := handle.status.error_message_32
+		end
+
+	warning_message_32: STRING_32
+			-- SQL warning message prompted by database server
+		do
+			Result := handle.status.error_message_32
 		end
 
 feature {NONE} -- Status setting
@@ -59,8 +77,8 @@ feature {NONE} -- Status setting
 		ensure
 			is_ok: is_ok
 			no_error: error_code = 0
-			no_message_error: error_message.is_equal ("") 
-			no_message_warning: warning_message.is_equal ("") 
+			no_message_error: error_message_32.same_string ({STRING_32}"")
+			no_message_warning: warning_message_32.same_string ({STRING_32}"")
 		end
 
 note

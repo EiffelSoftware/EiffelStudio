@@ -11,8 +11,7 @@
 
 #ifndef __eif_mysql_h__
 #define __eif_mysql_h__
-
-#include <mysql/mysql.h>
+#include <mysql.h>
 
 #include "eif_macros.h"
 
@@ -24,6 +23,9 @@
 #define EIF_MYSQL_C_DOUBLE_TYPE		5
 #define EIF_MYSQL_C_BOOLEAN_TYPE	6
 #define EIF_MYSQL_C_CHARACTER_TYPE	7
+#define EIF_MYSQL_C_INTEGER_16_TYPE	8
+#define EIF_MYSQL_C_INTEGER_64_TYPE	9
+#define EIF_MYSQL_C_WSTRING_TYPE	10
 
 /* Public functions */
 extern int eif_mysql_column_data(MYSQL_ROW row_ptr, int ind, char *ar,
@@ -42,6 +44,8 @@ extern int eif_mysql_get_error_code(MYSQL *mysql_ptr);
 extern char *eif_mysql_get_error_message(MYSQL *mysql_ptr);
 extern char *eif_mysql_get_warn_message(MYSQL *mysql_ptr);
 extern long eif_mysql_integer_data(MYSQL_ROW row_ptr, int ind);
+extern int eif_mysql_integer_16_data(MYSQL_ROW row_ptr, int ind);
+extern EIF_NATURAL_64 eif_mysql_integer_64_data(MYSQL_ROW row_ptr, int ind);
 extern EIF_BOOLEAN eif_mysql_is_null_data(MYSQL_ROW row_ptr, int ind);
 extern MYSQL_ROW eif_mysql_next_row(MYSQL_RES *result_ptr);
 extern int eif_mysql_num_fields(MYSQL_RES *result_ptr);

@@ -65,7 +65,8 @@ feature -- Element change
 			implementation.prepare (s)
 			set_prepared (TRUE)
 			if not is_ok and then is_tracing then
-				trace_output.putstring (error_message)
+				fixme ("Unicode support for output tracing.")
+				trace_output.putstring (error_message_32)
 				trace_output.new_line
 			end
 		ensure
@@ -87,7 +88,8 @@ feature -- Element change
 				implementation.execute
 			end
 			if not is_ok and then is_tracing then
-				trace_output.putstring (error_message)
+				fixme ("Unicode support for output tracing.")
+				trace_output.putstring (error_message_32)
 				trace_output.new_line
 			end
 		ensure

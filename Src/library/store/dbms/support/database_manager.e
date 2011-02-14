@@ -24,7 +24,7 @@ feature -- Connection
 				l_database_appl.set_data_source (data_source)
 			else
 				has_error := True
-				error_message := unexpected_error (Connection_info_name)
+				error_message_32 := unexpected_error (Connection_info_name)
 			end
 		rescue
 			rescued := True
@@ -56,10 +56,10 @@ feature -- Connection
 				session_control := l_session_control
 				l_session_control.connect
 				has_error := not l_session_control.is_ok
-				error_message := l_session_control.error_message
+				error_message_32 := l_session_control.error_message_32
 			else
 				has_error := True
-				error_message := unexpected_error (Establish_connection_name)
+				error_message_32 := unexpected_error (Establish_connection_name)
 			end
 		rescue
 			rescued := True
@@ -84,6 +84,17 @@ feature -- Status report
 			-- Has an error occurred during last database operation?
 
 	error_message: detachable STRING
+			-- Error message if an error occurred during last
+			-- database operation.
+		obsolete
+			"Use `error_message_32' instead."
+		do
+			if attached error_message_32 as l_s then
+				Result := l_s.as_string_8
+			end
+		end
+
+	error_message_32: detachable STRING_32
 			-- Error message if an error occurred during last
 			-- database operation.
 
@@ -144,11 +155,11 @@ feature -- Queries
 				db_selection.terminate
 				if not db_selection.is_ok then
 					has_error := True
-					error_message := l_session_control.error_message
+					error_message_32 := l_session_control.error_message_32
 				end
 			else
 				has_error := True
-				error_message := unexpected_error (data_select_name)
+				error_message_32 := unexpected_error (data_select_name)
 			end
 		rescue
 			rescued := TRUE
@@ -187,12 +198,12 @@ feature -- Queries
 				db_selection.terminate
 				if not db_selection.is_ok then
 					has_error := True
-					error_message := l_session_control.error_message
+					error_message_32 := l_session_control.error_message_32
 					create l_result.make (0)
 				end
 			else
 				has_error := True
-				error_message := unexpected_error (list_select_name)
+				error_message_32 := unexpected_error (list_select_name)
 				create l_result.make (0)
 			end
 			check l_result /= Void end -- FIXME: implied by previous if caluse, bug here? `l_result' can be void if rescued
@@ -234,7 +245,7 @@ feature -- Queries without result to load.
 				db_change.execute_query
 			else
 				has_error := True
-				error_message := unexpected_error (Execute_query_name)
+				error_message_32 := unexpected_error (Execute_query_name)
 			end
 		rescue
 			rescued := TRUE
@@ -256,11 +267,11 @@ feature -- Queries without result to load.
 					l_session_control.commit
 				else
 					has_error := True
-					error_message := l_session_control.error_message
+					error_message_32 := l_session_control.error_message_32
 				end
 			else
 				has_error := True
-				error_message := unexpected_error (Commit_name)
+				error_message_32 := unexpected_error (Commit_name)
 			end
 		rescue
 			rescued := True
@@ -288,7 +299,7 @@ feature -- Queries without result to load.
 				commit
 			else
 				has_error := True
-				error_message := unexpected_error (Insert_name)
+				error_message_32 := unexpected_error (Insert_name)
 			end
 		rescue
 			rescued := True
@@ -321,7 +332,7 @@ feature -- Access
 		do
 			l_database_appl := database_appl
 			check l_database_appl /= Void end -- implied by precondition
-			Result := l_database_appl.db_spec.string_format (s)
+			Result := l_database_appl.db_spec.string_format_32 (s).as_string_8
 		end
 
 	session_control: detachable DB_CONTROL
@@ -344,7 +355,7 @@ feature {NONE} -- Implementation
 	database_appl: detachable DATABASE_APPL [G]
 			-- Database application.
 
-	unexpected_error (action: STRING): STRING
+	unexpected_error (action: STRING_32): STRING_32
 			-- Unexpected error message.
 		require
 			action_not_void: action /= Void

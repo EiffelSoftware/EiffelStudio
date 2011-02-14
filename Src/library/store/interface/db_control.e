@@ -10,13 +10,13 @@ class DB_CONTROL
 
 inherit
 	DB_STATUS_USE
-		export 
+		export
 			{ANY} all
 			{NONE} handle
 		end
 
 	DB_EXEC_USE
-		export 
+		export
 			{ANY} all
 			{NONE} handle
 		end
@@ -80,6 +80,7 @@ feature -- Basic operations
 			-- Prompt error code and error message on standard output.
 		do
 			if not is_ok then
+				fixme ("Unicode support for output.")
 				io.error.putstring ("EiffelStore Error")
 				if error_code /= 0 then
 					io.error.putstring (" <")
@@ -87,7 +88,7 @@ feature -- Basic operations
 					io.error.putchar ('>')
 				end
 				io.error.putstring (": ")
-				io.error.putstring (error_message)
+				io.error.putstring (error_message_32.as_string_8)
 			end
 		end
 

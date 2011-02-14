@@ -23,6 +23,13 @@ inherit
 
 	TYPES [G]
 
+	GLOBAL_SETTINGS
+		export
+			{NONE} all
+		end
+
+	REFACTORING_HELPER
+
 feature -- Status report
 
 	count:  INTEGER
@@ -117,14 +124,18 @@ feature -- Element change
 			time: TIME
 			get_metadata: BOOLEAN
 			l_integer: like f_integer
+			l_integer_16: like f_integer_16
+			l_integer_64: like f_integer_64
 			l_double: like f_double
 			l_real: like f_real
 			l_date: like f_date
 			l_boolean: like f_boolean
 			l_string: like f_string
+			l_string_32: like f_string_32
 			l_value_size: like value_size
 			l_value_max_size: like value_max_size
 			l_database_string: like database_string
+			l_database_string_32: like database_string_32
 			l_value_type: like value_type
 			l_value: like value
 			l_select_name: like select_name
@@ -133,6 +144,11 @@ feature -- Element change
 			if l_database_string = Void then
 				create l_database_string.make (selection_string_size)
 				database_string := l_database_string
+			end
+			l_database_string_32 := database_string_32
+			if l_database_string_32 = Void then
+				create l_database_string_32.make (selection_string_size)
+				database_string_32 := l_database_string_32
 			end
 			count := db_spec.get_count (no_descriptor)
 			get_metadata := False  -- do not get metadata
@@ -223,6 +239,32 @@ feature -- Element change
 						l_string.append (l_database_string)
 						l_value.put (l_string, ind)
 
+					-- STRING_32 TYPE
+					elseif l_value_type.item (ind) = Wide_string_type_database then
+						l_database_string_32.get_value (no_descriptor, ind)
+						if l_value_size.item (ind) = l_value_max_size.item (ind) then
+							l_database_string_32.force_right_adjust
+						end
+						if attached {like f_string_32} f_any as l_string_3 then
+							l_string_3.wipe_out
+							f_string_32 := l_string_3
+						else
+							create f_string_32.make_empty
+						end
+						l_string_32 := f_string_32
+						check l_string_32 /= Void end -- implied by previous if clause
+						l_string_32.append (l_database_string_32)
+						if use_extended_types then
+							l_value.put (l_string_32, ind)
+						else
+							if l_string_32.is_valid_as_string_8 then
+								l_value.put (l_string_32.as_string_8, ind)
+							else
+								l_value.put (l_string_32.as_string_8, ind)
+								fixme ("Report data lose.")
+							end
+						end
+
 					-- INTEGER type
 					elseif l_value_type.item (ind) = Integer_type_database then
 						if f_any = Void then
@@ -239,6 +281,51 @@ feature -- Element change
 						l_integer := f_integer
 						check l_integer /= Void end -- implied by previous if clause
 						l_integer.set_item (db_spec.get_integer_data (no_descriptor, ind))
+
+					-- INTEGER_16 type
+					elseif l_value_type.item (ind) = Integer_16_type_database then
+						if f_any = Void then
+							create f_integer_16
+							l_value.put (f_integer_16, ind)
+						else
+							if attached {like f_integer_16} f_any as l_integer_3 then
+								f_integer_16 := l_integer_3
+							else
+								create f_integer_16
+								l_value.put (f_integer_16, ind)
+							end
+						end
+						l_integer_16 := f_integer_16
+						check l_integer_16 /= Void end -- implied by previous if clause
+						l_integer_16.set_item (db_spec.get_integer_16_data (no_descriptor, ind))
+
+						if not use_extended_types then
+							l_value.put (l_integer_16.item.as_integer_32.to_reference, ind)
+						end
+
+					-- INTEGER_64 type
+					elseif l_value_type.item (ind) = Integer_64_type_database then
+						if f_any = Void then
+							create f_integer_64
+							l_value.put (f_integer_64, ind)
+						else
+							if attached {like f_integer_64} f_any as l_integer_4 then
+								f_integer_64 := l_integer_4
+							else
+								create f_integer_64
+								l_value.put (f_integer_64, ind)
+							end
+						end
+						l_integer_64 := f_integer_64
+						check l_integer_64 /= Void end -- implied by previous if clause
+						l_integer_64.set_item (db_spec.get_integer_64_data (no_descriptor, ind))
+
+						if not use_extended_types then
+							l_value.put (l_integer_64.item.as_integer_32.to_reference, ind)
+							if (l_integer_64.item > {INTEGER_32}.max_value or l_integer_64.item < {INTEGER_32}.min_value) then
+								fixme ("Report data lose.")
+							end
+						end
 
 					-- DOUBLE type
 					elseif l_value_type.item (ind) = Float_type_database then
@@ -328,15 +415,21 @@ feature {NONE} -- Status report
 
 	f_any: detachable ANY
 	f_integer: detachable INTEGER_REF
+	f_integer_16: detachable INTEGER_16_REF
+	f_integer_64: detachable INTEGER_64_REF
 	f_real: detachable REAL_REF
 	f_double: detachable DOUBLE_REF
 	f_boolean: detachable BOOLEAN_REF
 	f_date: detachable DATE_TIME
 	f_string: detachable STRING
+	f_string_32: detachable STRING_32
 			-- Temporary variables
 
 	database_string: detachable DATABASE_STRING_EX [G]
 		-- String returned from the database C interface
+
+	database_string_32: detachable DATABASE_STRING_32_EX [G]
+		-- String returned from the database C interface WIDE version.
 
 	buffer: STRING
 			-- String buffer.

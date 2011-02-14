@@ -5,11 +5,11 @@ note
 	date: "$Date$";
 	revision: "$Revision$"
 
-class 
+class
 	TYPES [G -> DATABASE create default_create end]
 
 inherit
-	
+
 	HANDLE_SPEC [G]
 
 feature -- Conversion
@@ -18,6 +18,12 @@ feature -- Conversion
 			-- String type code in Ingres
 		once
 			Result := db_spec.c_string_type
+		end
+
+	Wide_string_type_database: INTEGER
+			-- String type code in Ingres
+		once
+			Result := db_spec.c_wstring_type
 		end
 
 	Character_type_database: INTEGER
@@ -32,12 +38,24 @@ feature -- Conversion
 			Result := db_spec.c_integer_type
 		end
 
+	Integer_16_type_database: INTEGER
+			-- Integer type code in Ingres
+		once
+			Result := db_spec.c_integer_16_type
+		end
+
+	Integer_64_type_database: INTEGER
+			-- Integer type code in Ingres
+		once
+			Result := db_spec.c_integer_64_type
+		end
+
 	Float_type_database: INTEGER
 			-- Double type code in Ingres
       once
          Result := db_spec.c_float_type
       end
-	
+
 	Real_type_database: INTEGER
 			-- Real type code in Ingres
         once

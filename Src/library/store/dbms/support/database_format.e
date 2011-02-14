@@ -42,10 +42,20 @@ feature -- Conversion
 
 	string_format (object: STRING): STRING
 			-- String representation in SQL of `object'
+		obsolete
+			"Use `string_format_32' instead."
 		require
 			object_not_void: object /= Void
 		do
-			Result := db_spec.string_format (object)
+			Result := string_format_32 (object.as_string_8).as_string_8
+		end
+
+	string_format_32 (object: READABLE_STRING_GENERAL): STRING_32
+			-- String representation in SQL of `object'
+		require
+			object_not_void: object /= Void
+		do
+			Result := db_spec.string_format_32 (object)
 		end
 
 feature {NONE} -- Status report

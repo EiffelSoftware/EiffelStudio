@@ -30,6 +30,16 @@ feature -- Status report
 
 	conv_message: detachable STRING
 			-- Error message.
+		obsolete
+			"Use `conv_message_32' instead."
+		do
+			if attached conv_message_32 as l_s then
+				Result := l_s.as_string_8
+			end
+		end
+
+	conv_message_32: detachable STRING_32
+			-- Error message.
 
 	descriptor: detachable EC_DESCRIPTOR
 			-- The object descriptor
@@ -130,14 +140,14 @@ feature -- Basic operations
 
 feature {NONE} -- Status setting
 
-	set_error (s: STRING)
+	set_error (s: like conv_message_32)
 			-- Set the error flag to `True' and the
 			-- error message to `s'.
 		require
 			error_message_exists: s /= Void
 		do
 			conv_error := True;
-			conv_message := s
+			conv_message_32 := s
 		end;
 
 feature {NONE} -- Status report

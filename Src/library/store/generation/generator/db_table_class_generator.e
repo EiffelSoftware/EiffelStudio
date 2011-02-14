@@ -91,8 +91,11 @@ feature {NONE} -- Implementation
 			manage_type (column)
 			if type_correspond then
 				mapped_item := attribute_block.twin
-				l_column_name := column.column_name
-				check l_column_name /= Void end -- FIXME: implied by ...bug?
+				check attached column.column_name as l_name then
+				 		-- FIXME: implied by ...bug?
+					l_column_name := l_name
+				end
+
 				attribute_name := l_column_name.as_lower
 				mapped_item.replace_substring_all (tags.Lower_attribute_name, attribute_name)
 				to_initcap (attribute_name)

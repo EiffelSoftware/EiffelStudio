@@ -14,7 +14,7 @@ $spitshell >Makefile <<!GROK!THIS!
 SHELL = /bin/sh
 CC= $cc
 AR = ar rc
-CFLAGS = $optimize $ccflags $large -I$rt_include
+CFLAGS = $ccflags $large -I$rt_include -DUNICODE -D_UNICODE
 LDFLAGS = $ldflags
 LIBS = $libs
 MAKE = $make
@@ -44,4 +44,3 @@ clean:
 !NO!SUBS!
 chmod 644 Makefile
 $eunicefix Makefile
-

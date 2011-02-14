@@ -36,10 +36,20 @@ feature -- Access
 
 	last_parsed_query : detachable STRING
 			-- Last parsed query
+		obsolete
+			"Use `last_parsed_query_32' instead."
+		do
+			if attached last_parsed_query_32 as l_str then
+				Result := l_str.as_string_8
+			end
+		end
+
+	last_parsed_query_32 : detachable STRING_32
+			-- Last parsed query
 
 feature -- Element change
 
-	modify (sql: STRING)
+	modify (sql: READABLE_STRING_GENERAL)
 			-- Pass to active database handle a modification
 			-- query with SQL statement `sql'.
 			-- Execute `sql' statement.
@@ -48,7 +58,7 @@ feature -- Element change
 			connected: is_connected
 			descriptor_is_available: db_spec.descriptor_is_available
 		local
-			tmp_string: detachable STRING
+			tmp_string: detachable STRING_32
 			temp_descriptor: INTEGER
 			parsed: BOOLEAN
 		do
@@ -58,18 +68,18 @@ feature -- Element change
 			if not db_spec.normal_parse then
 			--	handle.execution_type.set_immediate
 				parsed := db_spec.parse (temp_descriptor, ht, ht_order, handle, sql)
-				tmp_string := sql
+				tmp_string := sql.as_string_32
 			end
 
 			if not parsed then
-				tmp_string := parse (sql)
+				tmp_string := parse_32 (sql)
 				if immediate_execution then
 					db_spec.pre_immediate (temp_descriptor, 0)
 				else
 					db_spec.init_order (temp_descriptor, tmp_string)
 				end
 			end
-			last_parsed_query := tmp_string
+			last_parsed_query_32 := tmp_string
 			if tmp_string /= Void then
 				if immediate_execution then
 						-- Allocate a new descriptor, just for the exec_immediate.

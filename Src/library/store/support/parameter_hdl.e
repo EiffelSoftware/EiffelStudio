@@ -232,7 +232,7 @@ feature {PARAMETER_HDL}
 
 --	parameter_name_to_position : DB_STRING_HASH_TABLE [INTEGER]
 
-	replacement_string (key, destination: STRING)
+	replacement_string (key, destination: STRING_32)
 			-- Replace object associated with `key' by a '?' in `destination'.
 			-- and, fill chronologically, the parameters_value array.
 		local

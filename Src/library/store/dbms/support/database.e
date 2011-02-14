@@ -83,6 +83,13 @@ feature -- For DATABASE_FORMAT
 
 	string_format (object: detachable STRING): STRING
 			-- String representation in SQL of `object'
+		obsolete
+			"Use `string_format_32' instead."
+		deferred
+		end
+
+	string_format_32 (object: detachable READABLE_STRING_GENERAL): STRING_32
+			-- String representation in SQL of `object'
 		deferred
 		end
 
@@ -104,7 +111,7 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 		deferred
 		end
 
-	parse (descriptor: INTEGER; uht: detachable DB_STRING_HASH_TABLE [ANY]; ht_order: detachable ARRAYED_LIST [STRING]; uhandle: HANDLE; sql: STRING): BOOLEAN
+	parse (descriptor: INTEGER; uht: detachable DB_STRING_HASH_TABLE [ANY]; ht_order: detachable ARRAYED_LIST [STRING]; uhandle: HANDLE; sql: READABLE_STRING_GENERAL): BOOLEAN
 			-- Prepare string `sql' by appending map
 			-- variables name from to `sql'. Map variables are used
 			-- for set input arguments
@@ -222,6 +229,16 @@ feature -- DATABASE_CHARACTER
 feature -- DATABASE_INTEGER
 
 	sql_name_integer: STRING
+			-- SQL type name for integer
+		deferred
+		end
+
+	sql_name_integer_16: STRING
+			-- SQL type name for integer
+		deferred
+		end
+
+	sql_name_integer_64: STRING
 			-- SQL type name for integer
 		deferred
 		end
@@ -446,6 +463,18 @@ feature -- For DATABASE_REPOSITORY
 		deferred
 		end
 
+	sql_wstring: STRING
+			-- Database type of a string
+			-- with a size less than Max_char_size
+		deferred
+		end
+
+	sql_wstring2 (int: INTEGER): STRING
+			-- Database type of a string
+			-- with a size more than Max_char_size
+		deferred
+		end
+
 feature -- For DATABASE_DYN_STORE
 
 	unset_catalog_flag (desc: INTEGER)
@@ -477,12 +506,22 @@ feature -- External features
 		deferred
 		end
 
+	get_error_message_string: STRING_32
+			-- Function related with the error processing
+		deferred
+		end
+
 	get_error_code: INTEGER
 			-- Function related with the error processing
 		deferred
 		end
 
 	get_warn_message: POINTER
+			-- Function related with the error processing
+		deferred
+		end
+
+	get_warn_message_string: STRING_32
 			-- Function related with the error processing
 		deferred
 		end
@@ -495,7 +534,7 @@ feature -- External features
 		deferred
 		end
 
-	init_order (no_descriptor: INTEGER; command: STRING)
+	init_order (no_descriptor: INTEGER; command: READABLE_STRING_GENERAL)
 			-- In DYNAMICALLY EXECUTE mode perform the SQL statement
 			-- But this routine only get things ready for dynamic execution:
 			-- 1. get the SQL statement PREPAREd; and check if there are
@@ -540,7 +579,7 @@ feature -- External features
 		deferred
 		end
 
-	exec_immediate (no_descriptor: INTEGER; command: STRING)
+	exec_immediate (no_descriptor: INTEGER; command: READABLE_STRING_GENERAL)
 			-- In IMMEDIATE EXECUTE mode perform the SQL statement,
 			-- and then check if there is warning message for the execution,
 		deferred
@@ -554,6 +593,11 @@ feature -- External features
 		end
 
 	put_data (no_descriptor: INTEGER; index: INTEGER; ar: STRING; max_len:INTEGER): INTEGER
+			-- Function used to get data from structure SQLDA filled  by FETCH clause.
+		deferred
+		end
+
+	put_data_32 (no_descriptor: INTEGER; index: INTEGER; ar: STRING_32; max_len:INTEGER): INTEGER
 			-- Function used to get data from structure SQLDA filled  by FETCH clause.
 		deferred
 		end
@@ -613,6 +657,16 @@ feature -- External features
 		end
 
 	get_integer_data (no_descriptor: INTEGER; ind: INTEGER): INTEGER
+			-- Function used to get data from structure SQLDA filled  by FETCH clause.
+		deferred
+		end
+
+	get_integer_16_data (no_descriptor: INTEGER; ind: INTEGER): INTEGER_16
+			-- Function used to get data from structure SQLDA filled  by FETCH clause.
+		deferred
+		end
+
+	get_integer_64_data (no_descriptor: INTEGER; ind: INTEGER): INTEGER_64
 			-- Function used to get data from structure SQLDA filled  by FETCH clause.
 		deferred
 		end
@@ -677,12 +731,27 @@ feature -- External features
 		deferred
 		end
 
+	c_wstring_type: INTEGER
+			-- String Eiffel type
+		deferred
+		end
+
 	c_character_type: INTEGER
 			-- Character Eiffel type
 		deferred
 		end
 
 	c_integer_type: INTEGER
+			-- Integer Eiffel type
+		deferred
+		end
+
+	c_integer_16_type: INTEGER
+			-- Integer Eiffel type
+		deferred
+		end
+
+	c_integer_64_type: INTEGER
 			-- Integer Eiffel type
 		deferred
 		end

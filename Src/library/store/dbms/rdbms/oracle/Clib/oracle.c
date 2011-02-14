@@ -20,6 +20,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "eif_eiffel.h"
+
 #include "oracle.h"
 
 #define MAX_BINDS 12
@@ -46,7 +48,7 @@
 struct define
 {
 	ub1 buf[MAX_ITEM_BUFFER_SIZE];
-	float flt_buf;
+	double flt_buf;
 	sword int_buf; //removable in current case.
 	sb2 indp;
 	ub2 col_retlen, col_retcode;
@@ -278,11 +280,11 @@ void ora_init_order (text order[1024], int no_desc)
 	/*return error_number;*/
 }
 
- /* Describe select–list items. */
+ /* Describe selectlist items. */
 sword describe_define(Cda_Def *tmp, int no_desc) {
 	sword col, deflen, deftyp;
 	static ub1 *defptr;
-	/* Describe the select–list items. */
+	/* Describe the selectlist items. */
 	for (col = 0; col < MAX_SELECT_LIST_SIZE; col++) {
 		desc [no_desc] [col].buflen = MAX_ITEM_BUFFER_SIZE;
 		if (odescr(tmp, col + 1, &desc [no_desc] [col].dbsize,
@@ -304,7 +306,7 @@ sword describe_define(Cda_Def *tmp, int no_desc) {
 			/* Handle NUMBER with scale as float. */
 //			if (desc [no_desc] [col].scale != 0) {
 				defptr = (ub1 *) &def [no_desc] [col].flt_buf;
-				deflen = (sword) sizeof(float);
+				deflen = (sword) sizeof(double);
 				deftyp = FLOAT_TYPE;
 				desc [no_desc] [col].dbtype = FLOAT_TYPE;
 //  			} else {
@@ -370,7 +372,7 @@ void print_rows(Cda_Def *tmp, sword ncols, int no_desc) {
 	for (;;) {
 		//fputc('\n', stdout);
 		/* Fetch a row. Break on end of fetch,
-		   disregard null fetch ”error”. */
+		   disregard null fetch error */
 		if (ofetch(tmp)) {
 			if (tmp->rc == NO_DATA_FOUND)
 				break;
@@ -460,14 +462,14 @@ int ora_put_select_name (int no_des, int i, char *result) {
 /*****************************************************************/
 
 void ora_start_order (int no_desc) {
-	/* Process user’s SQL statements. */
+	/* Process users SQL statements. */
 	//for (;;)
 	//{
 
 	/* Save the SQL function code right after parse. */
 
 /* If the statement is a query, describe and define
-all select–list items before doing the oexec. */
+all selectlist items before doing the oexec. */
 	if (sql_function == FT_SELECT) {
 		if ((ncol [no_desc] = describe_define(cda[no_desc], no_desc)) == -1) {
 			ora_error_handler(cda[no_desc]);
@@ -486,7 +488,7 @@ all select–list items before doing the oexec. */
 		print_header(ncol [no_desc], no_desc);
 		print_rows(cda[no_desc], ncol [no_desc], no_desc);
 		}*/
-	/* Print the rows–processed count. */
+	/* Print the rowsprocessed count. */
 	/*if (sql_function == FT_SELECT ||
 	  sql_function == FT_UPDATE ||
 	  sql_function == FT_DELETE ||
@@ -547,7 +549,7 @@ int ora_next_row (int no_des)
 //	{
 		//fputc('\n', stdout);
 /* Fetch a row. Break on end of fetch,
-disregard null fetch ”error”. */
+disregard null fetch error */
 
 		if (ofetch(dap))
 		{
@@ -765,6 +767,14 @@ int ora_get_integer_data (int no_desc, int i) {
 	return (int) def [no_desc] [i-1].int_buf;
 }
 
+int ora_get_integer_16_data (int no_desc, int i) {
+	return (int) def [no_desc] [i-1].int_buf;
+}
+
+EIF_NATURAL_64 ora_get_integer_64_data (int no_desc, int i) {
+	return (EIF_NATURAL_64) def [no_desc] [i-1].flt_buf;
+}
+
 double ora_get_float_data (int no_desc, int i) {
 	return (double) def [no_desc] [i-1].flt_buf;
 }
@@ -857,6 +867,8 @@ int ora_conv_type (int i)
 	switch (i)
 	{
 		case VARCHAR2_TYPE:
+				/* No NVARCHAR2_TYPE in old set of OCI, UTF-8 is specified in client side, so we take it as UTF-8 stream. */
+			return ORA_EIF_WSTRING_TYPE;
 		case STRING_TYPE:
 		case CHAR_TYPE:
 		case LONG_TYPE:
@@ -891,6 +903,11 @@ int ora_c_string_type ()
 	  return ORA_EIF_STRING_TYPE;
 }
 
+int ora_c_wstring_type ()
+{
+	  return ORA_EIF_WSTRING_TYPE;
+}
+
 int ora_c_character_type ()
 {
 	  return ORA_EIF_CHARACTER_TYPE;
@@ -899,6 +916,16 @@ int ora_c_character_type ()
 int ora_c_integer_type ()
 {
 	  return ORA_EIF_INTEGER_TYPE;
+}
+
+int ora_c_integer_16_type ()
+{
+	return ORA_EIF_INTEGER_16_TYPE;
+}
+
+int ora_c_integer_64_type ()
+{
+	return ORA_EIF_INTEGER_64_TYPE;
 }
 
 int ora_c_float_type ()
@@ -970,5 +997,3 @@ void ora_error_handler(Cda_Def *cursor)
 		fprintf(stderr, "Processing OCI function %s",
 			oci_func_tab[cursor->fc]);
 }
-
-

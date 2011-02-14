@@ -59,13 +59,21 @@ feature -- For DATABASE_FORMAT
 			Result.append ("','MM/DD/YYYY HH24:MI:SS')")
 		end
 
-	string_format (object: STRING): STRING
+	string_format (object: detachable STRING): STRING
+			-- String representation in SQL of `object'.
+		obsolete
+			"Use `string_format_32' instead."
+		do
+			Result := string_format_32 (object)
+		end
+
+	string_format_32 (object: detachable READABLE_STRING_GENERAL): STRING_32
 			-- String representation in SQL of `object'.
 			-- WARNING: use "IS NULL" if object is empty instead of
 			-- "= NULL" which does not work.
 		do
 			if object /= Void and then not object.is_empty then
-				Result := object.twin
+				Result := object.as_string_32
 				Result.replace_substring_all ("'", "''")
 				if Result.count > Max_char_size then
 					Result := break (Result)
@@ -93,7 +101,7 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 			end
 		end
 
-	parse (descriptor: INTEGER; uht: DB_STRING_HASH_TABLE [ANY]; ht_order: ARRAYED_LIST [STRING]; uhandle: HANDLE; sql: STRING): BOOLEAN
+	parse (descriptor: INTEGER; uht: detachable DB_STRING_HASH_TABLE [ANY]; ht_order: detachable ARRAYED_LIST [STRING]; uhandle: HANDLE; sql: READABLE_STRING_GENERAL): BOOLEAN
 		do
 			if uhandle.execution_type.immediate_execution then
 				Result := True
@@ -104,10 +112,10 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 			end
 		end
 
-	bind_parameter (value: ARRAY [ANY]; parameters: ARRAY [ANY]; descriptor: INTEGER; sql: STRING)
+	bind_parameter (value: ARRAY [ANY]; parameters: ARRAY [ANY]; descriptor: INTEGER; sql: READABLE_STRING_GENERAL)
 		local
 			i: INTEGER
-			tmp_c2, tmp_c, c_temp: C_STRING
+			tmp_c2, tmp_c, c_temp: SQL_STRING
 		do
 			create c_temp.make (sql)
 			from
@@ -123,23 +131,29 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 			is_error_updated := False
 		end
 
-	bind_args_value (descriptor: INTEGER; uht: DB_STRING_HASH_TABLE [ANY]; sql: STRING)
+	bind_args_value (descriptor: INTEGER; uht: detachable DB_STRING_HASH_TABLE [ANY]; sql: READABLE_STRING_GENERAL)
 			-- Append map variables name from to `s'.
 			-- Map variables are used for set input arguments.
 			-- `uht' can be empty (for stored procedures).
 		local
-			tmp_c, tmp_c2, c_temp: C_STRING
+			tmp_c, tmp_c2, c_temp: SQL_STRING
 		do
-			create c_temp.make (sql)
-			from
-				uht.start
-			until
-				uht.off
-			loop
-				create tmp_c.make (uht.item_for_iteration.out)
-				create tmp_c2.make (uht.key_for_iteration)
-				ora_set_parameter (descriptor, c_temp.item, tmp_c2.item, tmp_c.item)
-				uht.forth
+			if attached uht as l_u then
+				create c_temp.make (escape_utf32 (sql.as_string_32))
+				from
+					l_u.start
+				until
+					l_u.off
+				loop
+					if attached {STRING_32} l_u.item_for_iteration as l_s32 then
+						create tmp_c.make (escape_utf32 (l_s32))
+					else
+						create tmp_c.make (l_u.item_for_iteration.out)
+					end
+					create tmp_c2.make (l_u.key_for_iteration)
+					ora_set_parameter (descriptor, c_temp.item, tmp_c2.item, tmp_c.item)
+					l_u.forth
+				end
 			end
 			is_error_updated := False
 		end
@@ -177,6 +191,10 @@ feature -- DATABASE_INTEGER
 
 	sql_name_integer: STRING = "NUMBER"
 
+	sql_name_integer_16: STRING = "NUMBER(5)"
+
+	sql_name_integer_64: STRING = "NUMBER(19)"
+
 feature -- DATABASE_BOOLEAN
 
 	sql_name_boolean: STRING = "CHAR"
@@ -207,6 +225,8 @@ feature -- For database types
 					create data_type
 					if r_any.is_equal ("VARCHAR2") or else r_any.is_equal ("CHAR") then
 						data_type.set_item (ora_string_type)
+					elseif r_any.is_equal ("NVARCHAR2") or else r_any.is_equal ("NCHAR") then
+						data_type.set_item (ora_wstring_type)
 					elseif r_any.is_equal ("NUMBER") then
 						data_type.set_item (ora_number_type)
 					elseif r_any.is_equal ("FLOAT") then
@@ -298,12 +318,32 @@ feature -- For DATABASE_REPOSITORY
 			Result.append (")")
 		end
 
+	sql_wstring: STRING = "NVARCHAR2 ("
+
+	sql_wstring2 (int: INTEGER): STRING
+		do
+			Result := "NVARCHAR2 ("
+			Result.append (int.out)
+			Result.append (")")
+		end
+
 feature -- External features
 
 	get_error_message: POINTER
 		do
 			Result := ora_get_error_message
 			is_error_updated := True
+		end
+
+	get_error_message_string: STRING_32
+			-- The error message as returned by the RDBMS after the last
+			-- action.
+			-- This feature also sets is_error_updated to True
+		local
+			l_s: SQL_STRING
+		do
+			create l_s.make_by_pointer (get_error_message)
+			Result := l_s.string
 		end
 
 	get_error_code: INTEGER
@@ -318,17 +358,28 @@ feature -- External features
 			is_error_updated := True
 		end
 
+	get_warn_message_string: STRING_32
+			-- The warning message as returned by the RDBMS after the last
+			-- action.
+			-- This feature also sets is_error_updated to True
+		local
+			l_s: SQL_STRING
+		do
+			create l_s.make_by_pointer (get_warn_message)
+			Result := l_s.string
+		end
+
 	new_descriptor: INTEGER
 		do
 			Result := ora_new_descriptor
 			is_error_updated := False
 		end
 
-	init_order (no_descriptor: INTEGER; command: STRING)
+	init_order (no_descriptor: INTEGER; command: READABLE_STRING_GENERAL)
 		local
-			c_temp: C_STRING
+			c_temp: SQL_STRING
 		do
-			create c_temp.make (command)
+			create c_temp.make (escape_utf32 (command.as_string_32))
 			ora_init_order (c_temp.item, no_descriptor)
 			is_error_updated := False
 		end
@@ -356,11 +407,11 @@ feature -- External features
 		do
 		end
 
-	exec_immediate (no_descriptor: INTEGER; command: STRING)
+	exec_immediate (no_descriptor: INTEGER; command: READABLE_STRING_GENERAL)
 		local
-			c_temp: C_STRING
+			c_temp: SQL_STRING
 		do
-			create c_temp.make (command)
+			create c_temp.make (escape_utf32 (command.as_string_32))
 			ora_exec_immediate (no_descriptor, c_temp.item)
 			is_error_updated := False
 		end
@@ -415,6 +466,35 @@ feature -- External features
 			end
 		end
 
+	put_data_32 (no_descriptor: INTEGER; index: INTEGER; ar: STRING_32; max_len:INTEGER): INTEGER
+		local
+			i: INTEGER
+			l_data, l_null: POINTER
+			l_area: MANAGED_POINTER
+			l_str32: STRING_32
+			l_str: STRING
+			l_count: INTEGER
+		do
+			create l_area.make (max_len)
+			l_data := l_area.item
+			l_count := ora_put_data (no_descriptor, index, l_data)
+
+			create l_str.make (l_count)
+			l_str.set_count (l_count)
+			from
+				i := 1
+			until
+				i > l_count
+			loop
+				l_str.put (l_area.read_character (i - 1), i)
+				i := i + 1
+			end
+			l_str32 := utf8_to_utf32 (l_str)
+			ar.wipe_out
+			ar.append (l_str32)
+			Result := l_str32.count
+		end
+
 	conv_type (indicator: INTEGER; index: INTEGER): INTEGER
 		do
 			Result := ora_conv_type (index)
@@ -443,6 +523,16 @@ feature -- External features
 	get_integer_data (no_descriptor: INTEGER; ind: INTEGER): INTEGER
 		do
 			Result := ora_get_integer_data (no_descriptor, ind)
+		end
+
+	get_integer_16_data (no_descriptor: INTEGER; ind: INTEGER): INTEGER_16
+		do
+			Result := ora_get_integer_16_data (no_descriptor, ind)
+		end
+
+	get_integer_64_data (no_descriptor: INTEGER; ind: INTEGER): INTEGER_64
+		do
+			Result := ora_get_integer_64_data (no_descriptor, ind)
 		end
 
 	get_float_data (no_descriptor: INTEGER; ind: INTEGER): DOUBLE
@@ -530,6 +620,11 @@ feature -- External features
 			Result := ora_c_string_type
 		end
 
+	c_wstring_type: INTEGER
+		do
+			Result := ora_c_wstring_type
+		end
+
 	c_character_type: INTEGER
 		do
 			Result := ora_c_character_type
@@ -538,6 +633,16 @@ feature -- External features
 	c_integer_type: INTEGER
 		do
 			Result := ora_c_integer_type
+		end
+
+	c_integer_16_type: INTEGER
+		do
+			Result := ora_c_integer_16_type
+		end
+
+	c_integer_64_type: INTEGER
+		do
+			Result := ora_c_integer_64_type
 		end
 
 	c_float_type: INTEGER
@@ -565,7 +670,7 @@ feature -- External features
 			ora_database_make (i)
 		end
 
-	connect (user_name, user_passwd, data_source, application, hostname, roleId, rolePassWd, groupId: STRING)
+	connect (user_name, user_passwd, data_source, application, hostname, roleId: STRING; rolePassWd: detachable STRING; groupId: STRING)
         local
 			c_temp1, c_temp2: C_STRING
 		do
@@ -601,6 +706,212 @@ feature -- External features
 
  	begin
 		do
+		end
+
+feature -- Explicit Conversion
+
+	utf8_to_utf32 (a_string: STRING_8): STRING_32
+			-- UTF8 to UTF32 conversion, Eiffel implementation.
+		require
+			a_string_not_void: a_string /= Void
+		local
+			i, nb: INTEGER
+			l_ref: INTEGER_32_REF
+		do
+			from
+				i := 1
+				nb := a_string.count
+				create Result.make (nb)
+				create l_ref
+			until
+				i > nb
+			loop
+				Result.append_character (read_character_from_utf8 (i, l_ref, a_string))
+				i := i + l_ref.item
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	utf32_to_utf8 (a_string: STRING_32): STRING_8
+			-- Convert UTF32 to UTF8.
+		require
+			a_string_not_void: a_string /= Void
+		local
+			bytes_written: INTEGER
+			i: INTEGER
+			l_code: NATURAL_32
+			l_string_length: INTEGER
+		do
+			l_string_length := a_string.count
+
+				-- First compute how many bytes we need to convert `a_string' to UTF-8.
+			from
+				i := l_string_length
+				bytes_written := 0
+			until
+				i = 0
+			loop
+				l_code := a_string.code (i)
+				if l_code <= 127 then
+					bytes_written := bytes_written + 1
+				elseif l_code <= 0x7FF then
+					bytes_written := bytes_written + 2
+				elseif l_code <= 0xFFFF then
+					bytes_written := bytes_written + 3
+				else -- l_code <= 0x10FFFF
+					bytes_written := bytes_written + 4
+				end
+				i := i - 1
+			end
+
+				-- Fill `utf_ptr8' with the converted data.
+			from
+				i := 1
+				create Result.make (bytes_written)
+			until
+				i > l_string_length
+			loop
+				l_code := a_string.code (i)
+				append_code_point_to_utf8 (l_code, Result)
+				i := i + 1
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	append_code_point_to_utf8 (a_code: NATURAL_32; a_string: STRING_8)
+			-- Append an unicode code point `a_code' to an utf8 stream.
+		require
+			a_string_not_void: a_string /= Void
+				-- According to ISO/IEC 10646, the maximum unicode point is 10FFFF.
+			a_code_is_valid: a_code >= 0 and then a_code <= 0x10FFFF
+		do
+				if a_code <= 127 then
+						-- Of the form 0xxxxxxx.
+					a_string.append_code (a_code)
+				elseif a_code <= 0x7FF then
+						-- Insert 110xxxxx 10xxxxxx.
+					a_string.append_code (0xC0 | (a_code |>> 6))
+					a_string.append_code (0x80 | (a_code & 0x3F))
+				elseif a_code <= 0xFFFF then
+						-- Start with 1110xxxx
+					a_string.append_code (0xE0 | (a_code |>> 12))
+					a_string.append_code (0x80 | ((a_code |>> 6) & 0x3F))
+					a_string.append_code (0x80 | (a_code & 0x3F))
+				else -- a_code <= 0x10FFFF then
+						-- Start with 11110xxx
+					check
+						max_4_bytes: a_code <= 0x10FFFF
+						-- UTF-8 has been restricted to 4 bytes characters
+					end
+					a_string.append_code (0xF0 | (a_code |>> 18))
+					a_string.append_code (0x80 | ((a_code |>> 12) & 0x3F))
+					a_string.append_code (0x80 | ((a_code |>> 6) & 0x3F))
+					a_string.append_code (0x80 | (a_code & 0x3F))
+				end
+		ensure
+			a_string_appended: (a_code <= 127 implies a_string.count = old a_string.count + 1) and
+								((a_code > 127 and a_code <= 0x7FF) implies a_string.count = old a_string.count + 2) and
+								((a_code > 0x7FF and a_code <= 0xFFFF) implies a_string.count = old a_string.count + 3) and
+								((a_code > 0xFFFF and a_code <= 0x10FFFF) implies a_string.count = old a_string.count + 4)
+		end
+
+	read_character_from_utf8 (a_position: INTEGER; a_read_bytes: detachable INTEGER_32_REF; a_string: STRING_8): CHARACTER_32
+			-- Read a Unicode character from UTF-8 string.
+			-- `a_string' is in UTF-8.
+			-- `a_position' is the starting byte point of a character.
+			-- `a_read_bytes' is the number of bytes read.
+		require
+			a_string_not_void: a_string /= Void
+			a_position_in_range: a_position > 0 and a_position <= a_string.count
+			a_position_valid: a_string.code (a_position).to_natural_8 <= 127 or
+								(a_string.code (a_position).to_natural_8 & 0xE0) = 0xC0 or
+								(a_string.code (a_position).to_natural_8 & 0xF0) = 0xE0 or
+								(a_string.code (a_position).to_natural_8 & 0xF8) = 0xF0 or
+								(a_string.code (a_position).to_natural_8 & 0xFC) = 0xF8 or
+								(a_string.code (a_position).to_natural_8 & 0xFE) = 0xFC
+		local
+			l_pos: INTEGER
+			l_nat8: NATURAL_8
+			l_code: NATURAL_32
+		do
+			l_pos := a_position
+			l_nat8 := a_string.code (l_pos).to_natural_8
+			if l_nat8 <= 127 then
+					-- Form 0xxxxxxx.
+				Result := l_nat8.to_character_32
+
+			elseif (l_nat8 & 0xE0) = 0xC0 then
+					-- Form 110xxxxx 10xxxxxx.
+				l_code := (l_nat8 & 0x1F).to_natural_32 |<< 6
+				l_pos := l_pos + 1
+				l_nat8 := a_string.code (l_pos).to_natural_8
+				l_code := l_code | (l_nat8 & 0x3F).to_natural_32
+				Result := l_code.to_character_32
+
+			elseif (l_nat8 & 0xF0) = 0xE0 then
+				-- Form 1110xxxx 10xxxxxx 10xxxxxx.
+				l_code := (l_nat8 & 0x0F).to_natural_32 |<< 12
+				l_nat8 := a_string.code (l_pos + 1).to_natural_8
+				l_code := l_code | ((l_nat8 & 0x3F).to_natural_32 |<< 6)
+				l_nat8 := a_string.code (l_pos + 2).to_natural_8
+				l_code := l_code | (l_nat8 & 0x3F).to_natural_32
+				Result := l_code.to_character_32
+				l_pos := l_pos + 2
+
+			elseif (l_nat8 & 0xF8) = 0xF0 then
+				-- Form 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx.
+				l_code := (l_nat8 & 0x07).to_natural_32 |<< 18
+				l_nat8 := a_string.code (l_pos + 1).to_natural_8
+				l_code := l_code | ((l_nat8 & 0x3F).to_natural_32 |<< 12)
+				l_nat8 := a_string.code (l_pos + 2).to_natural_8
+				l_code := l_code | ((l_nat8 & 0x3F).to_natural_32 |<< 6)
+				l_nat8 := a_string.code (l_pos + 3).to_natural_8
+				l_code := l_code | (l_nat8 & 0x3F).to_natural_32
+				Result := l_code.to_character_32
+				l_pos := l_pos + 3
+
+			elseif (l_nat8 & 0xFC) = 0xF8 then
+				-- Starts with 111110xx
+				-- This seems to be a 5 bytes character,
+				-- but UTF-8 is restricted to 4, then substitute with a space
+				Result := ' '
+				l_pos := l_pos + 4
+
+			else
+				-- Starts with 1111110x
+				-- This seems to be a 6 bytes character,
+				-- but UTF-8 is restricted to 4, then substitute with a space
+				Result := ' '
+				l_pos := l_pos + 5
+
+			end
+			if a_read_bytes /= Void then
+				a_read_bytes.set_item (l_pos - a_position + 1)
+			end
+		end
+
+	escape_utf32 (a_str: STRING_32): STRING_8
+			-- Append an unicode code point `a_code' to an utf8 stream.
+		require
+			a_str_not_void: a_str /= Void
+		do
+			Result := utf32_to_utf8 (a_str)
+		end
+
+	cut (a_str: STRING): STRING
+			-- cut to 4 digit if too long
+		do
+			Result := a_str
+			if Result.count > 4 then
+				Result.keep_tail (4)
+			end
+		end
+
+	format: FORMAT_INTEGER
+		do
+			create Result.make (4)
 		end
 
 feature {NONE} -- External features
@@ -690,6 +1001,16 @@ feature {NONE} -- External features
 		end
 
 	ora_get_integer_data (no_descriptor:INTEGER; ind: INTEGER): INTEGER
+		external
+			"C | %"oracle.h%""
+		end
+
+	ora_get_integer_16_data (no_descriptor:INTEGER; ind: INTEGER): INTEGER_16
+		external
+			"C | %"oracle.h%""
+		end
+
+	ora_get_integer_64_data (no_descriptor:INTEGER; ind: INTEGER): INTEGER_64
 		external
 			"C | %"oracle.h%""
 		end
@@ -799,6 +1120,12 @@ feature {NONE} -- External features
 			"VARCHAR2_TYPE"
 		end
 
+	ora_wstring_type: INTEGER
+			-- No NVARCHAE2_TYPE in OCI 7.0
+		do
+			Result := ora_string_type
+		end
+
 	ora_int_type: INTEGER
 		external
 			"C [macro %"oracle.h%"]"
@@ -832,12 +1159,27 @@ feature {NONE} -- External features
 			"C | %"oracle.h%""
 		end
 
+	ora_c_wstring_type: INTEGER
+		external
+			"C | %"oracle.h%""
+		end
+
 	ora_c_character_type: INTEGER
 		external
 			"C | %"oracle.h%""
 		end
 
 	ora_c_integer_type: INTEGER
+		external
+			"C | %"oracle.h%""
+		end
+
+	ora_c_integer_16_type: INTEGER
+		external
+			"C | %"oracle.h%""
+		end
+
+	ora_c_integer_64_type: INTEGER
 		external
 			"C | %"oracle.h%""
 		end
@@ -867,7 +1209,7 @@ feature {NONE} -- External features
 			"C | %"oracle.h%""
 		end
 
-	break (s: STRING): STRING
+	break (s: STRING_32): STRING_32
 			-- Broken long string using
 			-- Oracle's concatenation character.
 		require
@@ -889,7 +1231,7 @@ feature {NONE} -- External features
 			end
 		end
 
-	Concat_string: STRING = "'||'";
+	Concat_string: STRING_32 = "'||'";
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

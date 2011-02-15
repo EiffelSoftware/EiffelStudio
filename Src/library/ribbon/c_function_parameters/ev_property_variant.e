@@ -111,7 +111,6 @@ feature -- Query
 			c_read_string (pointer.item, $l_pointer)
 			create l_wel_string.make_by_pointer (l_pointer)
 			Result := l_wel_string.string
-			c_co_task_mem_free (l_pointer)
 		end
 
 	decimal_value: REAL_64
@@ -127,7 +126,7 @@ feature {NONE} -- Externals
 	c_var_type (a_property_variant: POINTER): NATURAL_16
 			--
 		external
-			"C inline use %"PropIdl.h%""
+			"C inline use <ribbon.h>"
 		alias
 			"[
 			{
@@ -141,11 +140,19 @@ feature {NONE} -- Externals
 	c_read_boolean (a_item: POINTER; a_result: TYPED_POINTER [BOOLEAN])
 			--
 		external
-			"C inline use %"PropIdl.h%""
+			"C inline use <ribbon.h>"
 		alias
 			"[
 			{
-				PropVariantToBoolean ($a_item, $a_result);
+				//PropVariantToBoolean ($a_item, $a_result);
+				PROPVARIANT *ppropvar = (PROPVARIANT *) $a_item;
+				if ((ppropvar->boolVal) == VARIANT_TRUE)
+				{
+					*($a_result) = EIF_TRUE;
+				}else
+				{
+					*($a_result) = EIF_FALSE;
+				}			
 			}
 			]"
 		end
@@ -153,11 +160,13 @@ feature {NONE} -- Externals
 	c_read_string (a_item: POINTER; a_pwstr: TYPED_POINTER [POINTER])
 			--
 		external
-			"C inline use %"Propvarutil.h%""
+			"C inline use <ribbon.h>"
 		alias
 			"[
 			{
-				PropVariantToStringAlloc ($a_item, $a_pwstr);
+				//PropVariantToStringAlloc ($a_item, $a_pwstr);
+				PROPVARIANT *ppropvar = (PROPVARIANT *) $a_item;
+				*($a_pwstr) = ppropvar->pwszVal;
 			}
 			]"
 		end
@@ -165,7 +174,7 @@ feature {NONE} -- Externals
 	c_read_decimal (a_item: POINTER; a_result: TYPED_POINTER [REAL_64])
 			--
 		external
-			"C inline use %"Propvarutil.h%""
+			"C inline use <ribbon.h>"
 		alias
 			"[
 			{
@@ -190,7 +199,7 @@ feature {NONE} -- Externals
 	c_init_prop_variant_from_boolean (a_item: POINTER; a_value: BOOLEAN)
 			--
 		external
-			"C inline use %"Propvarutil.h%""
+			"C inline use <ribbon.h>"
 		alias
 			"[
 			{
@@ -240,7 +249,7 @@ feature {NONE} -- Externals
 	c_init_prop_variant_from_uint32 (a_item: POINTER; a_value: NATURAL_32)
 			--
 		external
-			"C inline use %"Propvarutil.h%""
+			"C inline use <ribbon.h>"
 		alias
 			"[
 			{
@@ -255,7 +264,7 @@ feature {NONE} -- Externals
 	c_init_prop_variant_from_iunknown (a_item: POINTER; a_iunknown: POINTER)
 			--
 		external
-			"C inline use %"Propidl.h%""
+			"C inline use <ribbon.h>"
 		alias
 			"[
 			{
@@ -269,7 +278,7 @@ feature {NONE} -- Externals
 	size: INTEGER
 			--
 		external
-			"C inline use %"PropIdl.h%""
+			"C inline use <ribbon.h>"
 		alias
 			"[
 			{
@@ -281,7 +290,7 @@ feature {NONE} -- Externals
 	c_prop_variant_clear (a_item: POINTER)
 			--
 		external
-			"C inline use %"PropIdl.h%""
+			"C inline use <ribbon.h>"
 		alias
 			"[
 			{

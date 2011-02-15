@@ -132,7 +132,8 @@ feature -- Launching
 				s := Execution_environment.get (Ise_timeout_varname)
 				if s /= Void and then s.is_integer then
 					ise_timeout := s.to_integer
-				else
+				end
+				if ise_timeout <= 0 then
 					ise_timeout := 30
 				end
 			end

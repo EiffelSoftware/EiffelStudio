@@ -120,17 +120,17 @@ feature {NONE} -- Implementation
 			-- in the communication.
 		do
 				-- Initialize sending of working directory
-			if working_directory /= Void then
+			if attached working_directory as w then
 				send_rqst_0 (Rqst_application_cwd)
 					-- Send working directory of application
-				send_string_content (working_directory)
+				send_string_content (w)
 			end
 
 				-- Initialize sending of environment
-			if environment_variables /= Void and then environment_variables.count > 0 then
+			if attached environment_variables as envs and then envs.count > 0 then
 				send_rqst_0 (Rqst_application_env)
 				-- Send environment of application
-				send_string_content_with_size (environment_variables, environment_variables.count)
+				send_string_content_with_size (envs, envs.count)
 			end
 
 				-- Start the application (in debug mode).
@@ -141,10 +141,10 @@ feature {NONE} -- Implementation
 
 				-- Send the arguments.
 
-			if arguments = Void then
-				send_string_content	("")
+			if attached arguments as l_args then
+				send_string_content	(l_args)
 			else
-				send_string_content	(arguments)
+				send_string_content	("")
 			end
 
 			Result := recv_ack
@@ -173,7 +173,7 @@ feature {NONE} -- Implementation
 			-- Process ID of last application launched
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -186,22 +186,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

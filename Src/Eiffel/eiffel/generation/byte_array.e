@@ -351,6 +351,15 @@ feature -- Element change
 			append_short_integer (type_id - 1)
 		end
 
+	append_argument_count (c: INTEGER)
+			-- Append argument count `c'.
+		require
+			c_non_negative: c >= 0
+			c_small_enough: c <= {INTEGER_16}.Max_value
+		do
+			append_short_integer (c)
+		end
+
 	append_string (s: STRING)
 			-- Append string `s'.
 		require
@@ -632,7 +641,7 @@ invariant
 	integer_32_valid: integer_32_bytes = natural_32_bytes
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,6 +1,6 @@
 /*
 indexing
-	description: "Functions used by the class ER_COMMAND_HANDLER."
+	description: "Functions used by the class EV_COMMAND_HANDLER."
 	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

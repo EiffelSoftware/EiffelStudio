@@ -16,6 +16,7 @@ indexing
 #include "ribbon.h"
 #include "command.c"
 #include "ribbon.c"
+#include "simple_property_set.c"
 
 EIF_OBJECT eiffel_command_handler_object = NULL;
 	/* Address of Eiffel object ER_COMMAND_HANDLER */

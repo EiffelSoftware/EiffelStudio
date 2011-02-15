@@ -23,7 +23,10 @@ create
 	make_large_image,
 	make_small_high_contrast_image,
 	make_large_high_contrast_image,
-	make_decimal
+	make_decimal,
+	make_items_source,
+	make_categories,
+	make_selected_item
 
 feature {NONE}  -- Initialization
 
@@ -73,6 +76,24 @@ feature {NONE}  -- Initialization
 			-- Make a decimal key
 		do
 			share_from_pointer (c_ui_pkey_decimal)
+		end
+
+	make_items_source
+			-- Make a items source key
+		do
+			share_from_pointer (c_ui_pkey_items_source)
+		end
+
+	make_categories
+			-- Make a items source key
+		do
+			share_from_pointer (c_ui_pkey_categories)
+		end
+
+	make_selected_item
+			-- Make a selected item key
+		do
+			share_from_pointer (c_ui_pkey_selected_item)
 		end
 
 feature -- Query
@@ -143,6 +164,33 @@ feature -- Query
 			l_tmp: EV_PROPERTY_KEY
 		do
 			create l_tmp.make_decimal
+			Result := l_tmp.guid.is_equal (guid)
+		end
+
+	is_items_source: BOOLEAN
+			-- Is current items source key?
+		local
+			l_tmp: EV_PROPERTY_KEY
+		do
+			create l_tmp.make_items_source
+			Result := l_tmp.guid.is_equal (guid)
+		end
+
+	is_categories: BOOLEAN
+			-- Is current categories?
+		local
+			l_tmp: EV_PROPERTY_KEY
+		do
+			create l_tmp.make_categories
+			Result := l_tmp.guid.is_equal (guid)
+		end
+
+	is_selected_item: BOOLEAN
+			-- Is current selected item?
+		local
+			l_tmp: EV_PROPERTY_KEY
+		do
+			create l_tmp.make_selected_item
 			Result := l_tmp.guid.is_equal (guid)
 		end
 
@@ -256,6 +304,42 @@ feature {NONE} -- Externals
 			"[
 			{
 				return &UI_PKEY_DecimalValue;
+			}
+			]"
+		end
+
+	c_ui_pkey_items_source: POINTER
+			--
+		external
+			"C inline use %"UIRibbon.h%""
+		alias
+			"[
+			{
+				return &UI_PKEY_ItemsSource;
+			}
+			]"
+		end
+
+	c_ui_pkey_categories: POINTER
+			--
+		external
+			"C inline use %"UIRibbon.h%""
+		alias
+			"[
+			{
+				return &UI_PKEY_Categories;
+			}
+			]"
+		end
+
+	c_ui_pkey_selected_item: POINTER
+			--
+		external
+			"C inline use %"UIRibbon.h%""
+		alias
+			"[
+			{
+				return &UI_PKEY_SelectedItem;
 			}
 			]"
 		end

@@ -76,6 +76,12 @@ feature -- Command
 			end
 		end
 
+	set_uint32 (a_natural: NATURAL_32)
+			-- Set value with `a_natural'
+		do
+			c_init_prop_variant_from_uint32 (pointer.item, a_natural)
+		end
+
 	destroy
 			-- clean up current
 		do
@@ -227,6 +233,21 @@ feature {NONE} -- Externals
 				PROPVARIANT *ppropvar = (PROPVARIANT *) $a_item;
 				ppropvar->vt = VT_DECIMAL;
 				VarDecFromR8($a_value, &ppropvar->decVal);
+			}
+			]"
+		end
+
+	c_init_prop_variant_from_uint32 (a_item: POINTER; a_value: NATURAL_32)
+			--
+		external
+			"C inline use %"Propvarutil.h%""
+		alias
+			"[
+			{
+				//InitPropVariantFromUInt32 only available for C++
+				PROPVARIANT *ppropvar = (PROPVARIANT *) $a_item;
+				ppropvar->vt = VT_UI4;
+				ppropvar->ulVal = $a_value;
 			}
 			]"
 		end

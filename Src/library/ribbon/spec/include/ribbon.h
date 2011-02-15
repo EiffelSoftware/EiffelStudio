@@ -11,3 +11,5 @@ HRESULT InvalidateUICommand(UINT32 commandId, UI_INVALIDATIONS flags, const PROP
 IUIFramework *GetRibbonFramwork();
 IUICommandHandler *GetCommandHandler();
 BOOL CreateIUIImageFromBitmap (HBITMAP bitmap, IUIImage **image);
+HRESULT QueryInterfaceIUICollectionWithPropVariant (PROPVARIANT * a_prop_variant);
+IUICollection * GetUICollection ();

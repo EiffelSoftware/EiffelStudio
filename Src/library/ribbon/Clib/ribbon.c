@@ -24,6 +24,7 @@ IUIFramework *g_pFramework = NULL;  // Reference to the Ribbon framework.
 IUIFramework *last_pFramework = NULL;  // Reference to the Ribbon framework when calling "OnCreateUICommand"
 IUICommandHandler	*pCommandHandler = NULL;
 IUIImageFromBitmap *g_image_from_bitmap = NULL;
+IUICollection *g_ui_collection = NULL;
 
 HRESULT STDMETHODCALLTYPE QueryInterface(IUIApplication *This, REFIID vtblID, void **ppv)
 {
@@ -249,4 +250,31 @@ IUIFramework *GetRibbonFramwork()
 IUICommandHandler *GetCommandHandler()
 {
 		return pCommandHandler;
+}
+
+HRESULT QueryInterfaceIUICollectionWithPropVariant (PROPVARIANT * a_prop_variant)
+{
+	HRESULT hr;
+	VOID *ppvObj = NULL;
+		
+	hr = a_prop_variant->punkVal->lpVtbl->QueryInterface(a_prop_variant->punkVal, &IID_IUICollection, &g_ui_collection);
+
+	return hr;	
+}
+
+IUICollection * GetUICollection ()
+{
+	return g_ui_collection;
+}
+
+HRESULT IUICollection_Add (IUICollection *a_ui_collection, IUnknown *item)
+{
+	HRESULT hr = S_OK;
+
+	if (a_ui_collection)
+	{
+		hr = a_ui_collection->lpVtbl->Add(a_ui_collection, item);
+	}
+
+	return hr;		
 }

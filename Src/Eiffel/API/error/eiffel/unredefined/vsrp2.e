@@ -11,21 +11,42 @@ inherit
 
 	EIFFEL_ERROR
 		redefine
-			trace, build_explain, subcode, is_defined, trace_primary_context
-		end;
+			build_explain, subcode, is_defined, trace_primary_context
+		end
+
+create
+	make
+
+feature {NONE} -- Creation
+
+	make (c: like class_c; t: like root_type; f: FEATURE_I)
+			-- Create an error object with context class `c', root class type `t' and creation procedure `f'.
+		require
+			c_attached: attached c
+			t_attached: attached t
+			f_attached: attached f
+		do
+			set_class (c)
+			root_type := t
+			creation_feature := f.api_feature (f.written_in)
+		ensure
+			class_c_set: class_c = c
+			root_type_set: root_type = t
+			creation_feature_set: attached creation_feature
+		end
 
 feature -- Properties
 
-	code: STRING = "VSRP";
+	code: STRING = "VSRP"
 			-- Error code
 
-	subcode: INTEGER = 2;
+	subcode: INTEGER = 2
 			-- Subcode
 
-	creation_feature: E_FEATURE;
+	creation_feature: E_FEATURE
 			-- Creation procedure name involved in the error
 
-	root_type: TYPE_A;
+	root_type: TYPE_A
 			-- Root type involved in the error
 
 feature -- Access
@@ -41,21 +62,17 @@ feature -- Access
 
 feature -- Output
 
-	trace (a_text_formatter: TEXT_FORMATTER)
-		do
-			print_error_message (a_text_formatter);
-			build_explain (a_text_formatter)
-		end;
-
 	build_explain (a_text_formatter: TEXT_FORMATTER)
 		do
-			a_text_formatter.add ("Class: ");
-			root_type.append_to  (a_text_formatter);
-			a_text_formatter.add_new_line;
-			a_text_formatter.add ("Creation feature: ");
-			creation_feature.append_signature (a_text_formatter);
-			a_text_formatter.add_new_line;
-		end;
+			if root_type.has_generics then
+				a_text_formatter.add ("Class type: ")
+				root_type.append_to  (a_text_formatter)
+				a_text_formatter.add_new_line
+			end
+			a_text_formatter.add ("Creation feature: ")
+			creation_feature.append_signature (a_text_formatter)
+			a_text_formatter.add_new_line
+		end
 
 	trace_primary_context (a_text_formatter: TEXT_FORMATTER)
 			-- Build the primary context string so errors can be navigated to
@@ -71,26 +88,8 @@ feature -- Output
 			end
 		end
 
-feature {COMPILER_EXPORTER}
-
-	set_root_type (a_root_type: like root_type)
-			-- Assign `a_root_type' to `root_type'.
-		require
-			a_valid_root_type: a_root_type /= Void
-		do
-			root_type := a_root_type;
-		end;
-
-	set_creation_feature (f: FEATURE_I)
-			-- Assign `s' to `creation_name'.
-		require
-			valid_f: f /= Void
-		do
-			creation_feature := f.api_feature (f.written_in);
-		end;
-
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

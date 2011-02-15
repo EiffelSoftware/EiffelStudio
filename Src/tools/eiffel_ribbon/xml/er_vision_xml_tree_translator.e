@@ -141,7 +141,7 @@ feature -- Tree loading
 			create l_xml
 			check valid: a_ribbon_tabs.text.same_string_general (l_xml.ribbon_tabs) end
 
-			-- First find out how many application modes
+				-- First find out how many application modes
 			from
 				create l_application_modes.make
 				l_application_modes.extend (0) -- default application mode
@@ -158,7 +158,7 @@ feature -- Tree loading
 				a_ribbon_tabs.forth
 			end
 
-			-- Prepare root node Ribbon.Tabs for each ribbon
+				-- Prepare root node Ribbon.Tabs for each ribbon
 			create Result.make (l_application_modes.count)
 			from
 				create l_shared
@@ -172,7 +172,7 @@ feature -- Tree loading
 				l_application_modes.forth
 			end
 
-			-- Separate application mode to different ribbon_tabs
+				-- Separate application mode to different ribbon_tabs
 			from
 				a_ribbon_tabs.start
 			until

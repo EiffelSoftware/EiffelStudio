@@ -16,12 +16,6 @@
 		<cluster name="root_cluster" location=".\"/>
 		<cluster name="utilities" location="..\Utilities\"/>
 	</target>
-	<target name="nesting_ingres" extends="common">
-		<library name="ingres" location="$ISE_LIBRARY\library\store\dbms\rdbms\ingres\ingres.ecf"/>
-		<cluster name="handle" location="..\Utilities\ingres\"/>
-		<cluster name="root_cluster" location=".\"/>
-		<cluster name="utilities" location="..\Utilities\"/>
-	</target>
 	<target name="nesting_sybase" extends="common">
 		<library name="sybase" location="$ISE_LIBRARY\library\store\dbms\rdbms\sybase\sybase.ecf"/>
 		<cluster name="handle" location="..\Utilities\sybase\"/>

@@ -160,7 +160,7 @@ static  char    *names [] = {
 "BC_CAST_REAL_32" ,
 "BC_CAST_REAL_64" ,
 "BC_INV_NULL" ,
-"BC_NOTUSED_114" ,
+"BC_SEPARATE" ,
 "BC_END_EVAL_OLD" ,
 "BC_START_EVAL_OLD" ,
 "BC_OBJECT_ADDR" ,
@@ -929,7 +929,14 @@ static  void    print_instructions (void)
 				break;
 
 /* Calls */
-
+			case  BC_SEPARATE :
+				/* Separate feature call prefix */
+				fprintf (ofp, "%d args ", get_uint16(&ip));
+				if (get_bool(&ip))
+					fprintf (ofp, "(wait)");
+				else
+					fprintf (ofp, "(nowait)");
+				break;
 			case  BC_EXTERN :
 				/* External */
 				/* Feature id */

@@ -20,3 +20,4 @@ DEFINE_GUID(IID_IUISimplePropertySet, 0xc205bb48, 0x5b1c, 0x4219, 0xa1, 0x06, 0x
 
 BOOL InitializeFramework(HWND hWnd);
 void DestroyRibbon();
+HRESULT SHStrDupW_eiffel(LPCWSTR src, LPWSTR * dest);

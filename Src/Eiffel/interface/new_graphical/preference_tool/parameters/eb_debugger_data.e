@@ -91,6 +91,11 @@ feature {SHARED_COMPILER_PREFERENCES} -- Classic specific
 			Result := classic_debugger_timeout_preference.value
 		end
 
+	classic_debugger_ending_timeout: INTEGER
+		do
+			Result := classic_debugger_ending_timeout_preference.value
+		end
+
 	classic_debugger_location: STRING
 		do
 			Result := classic_debugger_location_preference.value
@@ -119,6 +124,7 @@ feature {SHARED_COMPILER_PREFERENCES, EB_TOOL, ES_DIALOG} -- Preference
 	dotnet_debugger_preference: ARRAY_PREFERENCE
 	close_classic_dbg_daemon_on_end_of_debugging_preference: BOOLEAN_PREFERENCE
 	classic_debugger_timeout_preference: INTEGER_PREFERENCE
+	classic_debugger_ending_timeout_preference: INTEGER_PREFERENCE
 	classic_debugger_location_preference: STRING_PREFERENCE
 	debug_output_evaluation_enabled_preference: BOOLEAN_PREFERENCE
 	generating_type_evaluation_enabled_preference: BOOLEAN_PREFERENCE
@@ -135,6 +141,7 @@ feature {NONE} -- Preference Strings
 	dotnet_debugger_string: STRING = "debugger.dotnet_debugger"
 	close_classic_dbg_daemon_on_end_of_debugging_string: STRING = "debugger.classic_debugger.close_dbg_daemon_on_end_of_debugging"
 	classic_debugger_timeout_string: STRING = "debugger.classic_debugger.timeout"
+	classic_debugger_ending_timeout_string: STRING = "debugger.classic_debugger.ending_timeout"
 	classic_debugger_location_string: STRING = "debugger.classic_debugger.debugger_location"
 	interrupt_every_n_instructions_string: STRING = "debugger.interrupt_every_N_instructions"
 	debug_output_evaluation_enabled_string: STRING = "debugger.debug_output_evaluation"
@@ -169,6 +176,7 @@ feature {NONE} -- Implementation
 			dotnet_debugger_preference.set_is_choice (True)
 			close_classic_dbg_daemon_on_end_of_debugging_preference := l_manager.new_boolean_preference_value (l_manager, close_classic_dbg_daemon_on_end_of_debugging_string, True)
 			classic_debugger_timeout_preference := l_manager.new_integer_preference_value (l_manager, classic_debugger_timeout_string, 0)
+			classic_debugger_ending_timeout_preference := l_manager.new_integer_preference_value (l_manager, classic_debugger_ending_timeout_string, 0)
 			classic_debugger_location_preference := l_manager.new_string_preference_value (l_manager, classic_debugger_location_string, "")
 		end
 
@@ -177,6 +185,7 @@ invariant
 	critical_stack_depth_preference_not_void: critical_stack_depth_preference /= Void
 	close_classic_dbg_daemon_on_end_of_debugging_preference_not_void:  close_classic_dbg_daemon_on_end_of_debugging_preference /= Void
 	classic_debugger_timeout_preference_not_void: classic_debugger_timeout_preference /= Void
+	classic_debugger_ending_timeout_preference_not_void: classic_debugger_ending_timeout_preference /= Void
 	classic_debugger_location_preference_not_void: classic_debugger_location_preference /= Void
 	keep_stepping_info_dotnet_feature_preference_not_void: keep_stepping_info_dotnet_feature_preference /= Void
 	interrupt_every_n_instructions_preference_not_void: interrupt_every_n_instructions_preference /= Void
@@ -189,7 +198,7 @@ invariant
 --	_preference_not_void: _preference /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -202,22 +211,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_DEBUGGER_DATA

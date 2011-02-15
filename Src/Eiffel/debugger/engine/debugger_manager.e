@@ -926,6 +926,13 @@ feature -- Settings
 			Result := 0 --| Use default settings in runtime
 		end
 
+	classic_debugger_ending_timeout: INTEGER
+			-- Timeout use in IPC protocol for the ending of ecdbgd
+			-- if zero use the default value set in runtime
+		do
+			Result := 0 --| Use default settings in runtime
+		end
+
 	classic_debugger_location: STRING
 			-- Path to ecdbgd executable
 			-- If Void use the default executable located in ISE_EIFFEL ... bin
@@ -1754,7 +1761,7 @@ invariant
 	application_associated_to_current: application /= Void implies application.debugger_manager = Current
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1645,7 +1645,6 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Supplier checking
 		local
 			l_creation_proc: FEATURE_I
 			l_error: BOOLEAN
-			l_vsrp2: VSRP2
 			l_arg_type: TYPE_A
 			l_vd27: VD27
 			l_feat_tbl: like feature_table
@@ -1674,14 +1673,10 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Supplier checking
 						end
 
 						if l_error then
-							create l_vsrp2
-							l_vsrp2.set_class (Current)
-							l_vsrp2.set_root_type (a_type)
 								-- Need duplication otherwise we would change the original FEATURE_I
 								-- object while displaying the error.
 							l_creation_proc := l_creation_proc.instantiation_in (a_type)
-							l_vsrp2.set_creation_feature (l_creation_proc)
-							Error_handler.insert_error (l_vsrp2)
+							Error_handler.insert_error (create {VSRP2}.make (Current, a_type, l_creation_proc))
 						end
 						if not l_creation_proc.is_precondition_free then
 							error_handler.insert_error (create {VSRP3}.make (Current, a_type, l_creation_proc.instantiation_in (a_type)))
@@ -4937,7 +4932,7 @@ invariant
 	-- has_ast: has_ast
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

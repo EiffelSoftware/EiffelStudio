@@ -278,3 +278,25 @@ HRESULT IUICollection_Add (IUICollection *a_ui_collection, IUnknown *item)
 
 	return hr;		
 }
+
+HRESULT SHStrDupW_eiffel(LPCWSTR src, LPWSTR * dest)
+{
+	HRESULT hr;
+	int len = 0;
+
+	if (src) {
+		len = (lstrlenW(src) + 1) * sizeof(WCHAR);
+		*dest = CoTaskMemAlloc(len);
+	} else {
+		*dest = NULL;
+	}
+
+	if (*dest) {
+		memcpy(*dest, src, len);
+		hr = S_OK;
+	} else {
+		hr = E_OUTOFMEMORY;
+	}
+
+	return hr;
+}

@@ -49,6 +49,7 @@ feature -- Command
 		do
 			create l_wel_string.make (a_value)
 			c_init_prop_variant_from_string (pointer.item, l_wel_string.item)
+			-- FIXME: should call CoTaskMemFree to free string?
 		end
 
 	set_decimal_value (a_value: REAL_64)
@@ -214,7 +215,7 @@ feature {NONE} -- Externals
 	c_init_prop_variant_from_string (a_item: POINTER; a_string: POINTER)
 			--
 		external
-			"C inline use %"Shlwapi.h%""
+			"C inline use <ribbon.h>"
 		alias
 			"[
 			{
@@ -222,7 +223,7 @@ feature {NONE} -- Externals
 				HRESULT hr;
 				PROPVARIANT *ppropvar = (PROPVARIANT *) $a_item;
 				ppropvar->vt = VT_LPWSTR;
-				hr = SHStrDupW($a_string, &ppropvar->pwszVal);
+				hr = SHStrDupW_eiffel($a_string, &ppropvar->pwszVal);
 				if (FAILED(hr))
 				{
 				PropVariantInit(ppropvar);
@@ -235,7 +236,7 @@ feature {NONE} -- Externals
 	c_init_prop_variant_from_decimal (a_item: POINTER; a_value: REAL_64)
 			--
 		external
-			"C inline use %"Shlwapi.h%""
+			"C inline use <ribbon.h>"
 		alias
 			"[
 			{

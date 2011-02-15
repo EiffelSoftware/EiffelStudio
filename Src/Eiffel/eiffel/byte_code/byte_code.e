@@ -626,8 +626,8 @@ feature -- Byte code generation
 			current_type: CLASS_TYPE
 			create_info: CREATE_FEAT
 		do
-			--| Note: for once per object, 
-			--| we handle the rescue/retry clauses 
+			--| Note: for once per object,
+			--| we handle the rescue/retry clauses
 			--| using DO_RESCUE_B
 			--| So we need to handle differently the rescue and retry
 			--| byte code generation and location
@@ -664,7 +664,7 @@ feature -- Byte code generation
 			Temp_byte_code_array.append_natural_32 (l_type.sk_value (context.context_class_type.type))
 
 				-- Argument number
-			Temp_byte_code_array.append_short_integer (argument_count)
+			Temp_byte_code_array.append_argument_count (argument_count)
 
 				-- Set up the local variables
 			setup_local_variables (True)
@@ -1072,7 +1072,7 @@ invariant
 	valid_once_manifest_string_count: once_manifest_string_count >= 0
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

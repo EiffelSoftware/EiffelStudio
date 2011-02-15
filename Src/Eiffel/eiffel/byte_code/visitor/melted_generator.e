@@ -2394,6 +2394,19 @@ feature {NONE} -- Implementation
 			l_rout_info: ROUT_INFO
 		do
 			l_inst_cont_type := a_node.context_type
+			if l_inst_cont_type.is_separate then
+					-- The call may be separate.
+				ba.append (bc_separate)
+					-- Arguments need to be passed together with feature information.
+				if attached a_node.parameters as p then
+					ba.append_argument_count (p.count)
+				else
+					ba.append_argument_count (0)
+				end
+					-- Indicate if this is a query or procedure call:
+					-- True is used for a query, False - for a procedure.
+				ba.append_boolean (not a_node.type.is_void)
+			end
 			l_metamorphosed := l_inst_cont_type.is_basic and then not l_inst_cont_type.is_bit
 				-- Note: Manu 08/08/2002: if `a_node.precursor_type' is not Void, it can only means
 				-- that we are currently performing a static access call on a feature
@@ -2568,7 +2581,7 @@ feature -- Type information
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

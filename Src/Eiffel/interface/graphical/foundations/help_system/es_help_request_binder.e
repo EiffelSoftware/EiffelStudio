@@ -2,7 +2,7 @@ note
 	description: "[
 		Provides access to help functionality through inheritance.
 		
-		Note: Descendents should implement {HELP_CONTEXT_I} or use the base implementation {HELP_CONTEXT}
+		Note: Descendents should implement {HELP_CONTEXT_I} or use the base implementation {ES_HELP_CONTEXT}
 		      in order for help to usable.
 	]"
 	legal: "See notice at end of class."
@@ -105,7 +105,7 @@ feature {NONE} -- Action handlers
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

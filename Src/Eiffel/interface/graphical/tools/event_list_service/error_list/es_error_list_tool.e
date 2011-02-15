@@ -39,13 +39,13 @@ feature -- Access
 			Result := stock_pixmaps.tool_errors_list_with_errors_icon
 		end
 
-	title: attached STRING_32
+	title: STRING_32
 			-- <Precursor>
 		do
 			Result := locale_formatter.translation (t_tool_title)
 		end
 
-	shortcut_preference_name: attached STRING
+	shortcut_preference_name: STRING
 			-- <Precursor>
 		do
 			Result := "show_errors_and_warnings_tool"
@@ -92,7 +92,7 @@ feature -- Basic operations
 
 feature {NONE} -- Factory
 
-	new_tool: attached ES_ERROR_LIST_TOOL_PANEL
+	new_tool: ES_ERROR_LIST_TOOL_PANEL
 			-- <Precursor>
 		do
 			create Result.make (window, Current)
@@ -103,7 +103,7 @@ feature {NONE} -- Internationalization
 	t_tool_title: STRING = "Error List"
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

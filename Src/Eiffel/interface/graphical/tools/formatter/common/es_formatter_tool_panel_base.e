@@ -215,15 +215,15 @@ feature -- Setting
 			do_all_in_list (
 				displayer_cache.linear_representation,
 				agent (a_formatter: EB_FORMATTER_DISPLAYER)
-					local
-						l_displayer: EB_FORMATTER_EDITOR_DISPLAYER
 					do
-						l_displayer ?= a_formatter
-						if l_displayer /= Void and then l_displayer.editor /= Void then
-							l_displayer.editor.refresh
+						if
+							attached {EB_FORMATTER_EDITOR_DISPLAYER} a_formatter as l_displayer and then
+						 	attached l_displayer.editor as l_editor
+						 then
+							l_editor.refresh
 						end
 					end
-			)
+				)
 		end
 
 	quick_refresh_margin
@@ -232,15 +232,15 @@ feature -- Setting
 			do_all_in_list (
 				displayer_cache.linear_representation,
 				agent (a_formatter: EB_FORMATTER_DISPLAYER)
-					local
-						l_displayer: EB_FORMATTER_EDITOR_DISPLAYER
 					do
-						l_displayer ?= a_formatter
-						if l_displayer /= Void and then l_displayer.editor /= Void then
-							l_displayer.editor.margin.refresh
+						if
+							attached {EB_FORMATTER_EDITOR_DISPLAYER} a_formatter as l_displayer and then
+						 	attached l_displayer.editor as l_editor
+						 then
+							l_editor.margin.refresh
 						end
 					end
-			)
+					)
 		end
 
 	set_parent_notebook (a_notebook: EV_NOTEBOOK)
@@ -964,7 +964,7 @@ invariant
 	veto_format_function_agent_attached: veto_format_function_agent /= Void
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

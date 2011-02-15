@@ -1992,7 +1992,7 @@ feature {NONE} -- Recycle
 			end
 		end
 
-feature {EB_DEVELOPMENT_WINDOW_BUILDER} -- Initliazed by EB_DEVELOPMENT_WINDOW_BUILDER
+feature {EB_DEVELOPMENT_WINDOW_BUILDER} -- Initialized by EB_DEVELOPMENT_WINDOW_BUILDER
 
 	show_dynamic_library_dialog
 			-- Create a new dynamic library window and display it.
@@ -2629,7 +2629,7 @@ invariant
 	window_id_positive: window_id > 0
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

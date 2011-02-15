@@ -25,6 +25,7 @@
 	<PREF NAME="debugger.interrupt_every_N_instructions" DESCRIPTION="Number of instructions that will be executed before interrupting the execution."><INTEGER>1</INTEGER></PREF>
 	<PREF NAME="debugger.classic_debugger.close_dbg_daemon_on_end_of_debugging" DESCRIPTION="Close the Eiffel debugger daemon (classic) after each debug session (recommended)"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="debugger.classic_debugger.timeout" DESCRIPTION="Timeout used to start the Eiffel debugger daemon (classic only). Leave it to 0 to use the default environment value."><INTEGER>0</INTEGER></PREF>
+	<PREF NAME="debugger.classic_debugger.ending_timeout" DESCRIPTION="Timeout used to wait the ending of ecdbgd (daemon) before cleaning the connections (classic only). Leave it to 0 to use the default environment value."><INTEGER>0</INTEGER></PREF>
 	<PREF NAME="debugger.classic_debugger.debugger_location" DESCRIPTION="Path to the Eiffel debugger daemon (classic). Leave it empty to use the default environment value."><STRING></STRING></PREF>
 	<PREF NAME="debugger.always_compile_before_debug" DESCRIPTION="Do not show the dialog that asks if a compilation should be started before running the debug if there where changes in classes."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="debugger.always_show_callstack_tool_when_stopping" DESCRIPTION="Always show the callstack tool, when the execution stops (note: if the tool is closed, do not open it)."><BOOLEAN>True</BOOLEAN></PREF>

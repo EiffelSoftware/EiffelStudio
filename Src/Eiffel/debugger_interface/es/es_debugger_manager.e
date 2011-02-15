@@ -15,6 +15,7 @@ inherit
 			make,
 			set_default_parameters,
 			classic_debugger_timeout,
+			classic_debugger_ending_timeout,
 			classic_debugger_location,
 			classic_close_dbg_daemon_on_end_of_debugging,
 			dotnet_keep_stepping_info_non_eiffel_feature,
@@ -84,22 +85,24 @@ feature -- Settings
 
 	classic_debugger_timeout: INTEGER
 			-- <Precursor>
-		local
-			prefs: EB_DEBUGGER_DATA
 		do
-			prefs := debugger_data
-			if prefs /= Void then
+			if attached debugger_data as prefs then
 				Result := prefs.classic_debugger_timeout
+			end
+		end
+
+	classic_debugger_ending_timeout: INTEGER
+			-- <Precursor>
+		do
+			if attached debugger_data as prefs then
+				Result := prefs.classic_debugger_ending_timeout
 			end
 		end
 
 	classic_debugger_location: STRING
 			-- <Precursor>
-		local
-			prefs: EB_DEBUGGER_DATA
 		do
-			prefs := debugger_data
-			if prefs /= Void then
+			if attached debugger_data as prefs then
 				Result := prefs.classic_debugger_location
 			end
 		end
@@ -178,7 +181,7 @@ feature {NONE} -- Logger
 			-- Note: Do not use directly!	
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -2403,6 +2403,7 @@ rt_private void interpret(int flag, int where)
 	 		uint32 n = get_uint16 (&IC);    /* Number of arguments.  */
 	 		EIF_BOOLEAN q = get_bool (&IC); /* Indicator of a query. */
 			
+#ifdef EIF_THREADS
 			if (otop()->it_ref == (EIF_REFERENCE) 0) /* Called on a void reference? */
 				eraise("", EN_VOID);	         /* Yes, raise exception */
 				/* Check if this is indeed a separate call. */
@@ -2477,6 +2478,7 @@ rt_private void interpret(int flag, int where)
 					eif_panic(MTC "illegal separate opcode");
 				}
 			}
+#endif /* EIF_THREADS */
 	 	}
 	 	break;
 

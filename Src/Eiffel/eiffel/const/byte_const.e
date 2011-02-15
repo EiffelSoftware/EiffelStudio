@@ -127,7 +127,7 @@ feature -- Access
 	Bc_cast_real32:		CHARACTER = '%/111/';
 	Bc_cast_real64:		CHARACTER = '%/112/';
 	Bc_inv_null:		CHARACTER = '%/113/';
-	Bc_notused_114:		CHARACTER = '%/114/';
+	Bc_separate:		CHARACTER = '%/114/';
 	Bc_end_eval_old:	CHARACTER = '%/115/';
 	Bc_start_eval_old:	CHARACTER = '%/116/';
 	Bc_object_addr:		CHARACTER = '%/117/';
@@ -263,7 +263,7 @@ feature -- Access
 
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -89,10 +89,8 @@ feature {NONE}	-- Implementation
 			l_env: OPERATING_ENVIRONMENT
 			l_dir: STRING
 			l_index, l_last_index: INTEGER
-			l_sed: SED_MEDIUM_READER_WRITER
 		do
 			if attached shared_singleton.tool_info_cell.item as l_tool_info then
-
 				create l_env
 				from
 					l_index := 1 -- Make sure loop run at least once
@@ -115,7 +113,7 @@ feature {NONE}	-- Implementation
 				if attached shared_singleton.project_info_cell.item as l_project_info then
 					l_project_info.set_project_location (l_dir)
 					load_project_info
-					-- Again, to update project location now
+						-- Again, to update project location now
 					l_project_info.set_project_location (l_dir)
 				end
 			end

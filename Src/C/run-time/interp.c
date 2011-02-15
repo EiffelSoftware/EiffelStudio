@@ -70,6 +70,7 @@ doc:<file name="interp.c" header="eif_interp.h" version="$Id$" summary="Byte cod
 #include "eif_helpers.h"
 #include "eif_rout_obj.h"
 #include "eif_built_in.h"
+#include "eif_macros.h"
 
 /*#define SEP_DEBUG */  /**/
 /*#define DEBUG 6 */ 	/**/
@@ -2393,6 +2394,91 @@ rt_private void interpret(int flag, int where)
 				sync_registers(scur, stop);
 		}
 		break;
+
+	/*
+	 * Separate feature call prefix.
+	 */
+	case BC_SEPARATE:
+	 	{
+	 		uint32 n = get_uint16 (&IC);    /* Number of arguments.  */
+	 		EIF_BOOLEAN q = get_bool (&IC); /* Indicator of a query. */
+			
+			if (otop()->it_ref == (EIF_REFERENCE) 0) /* Called on a void reference? */
+				eraise("", EN_VOID);	         /* Yes, raise exception */
+				/* Check if this is indeed a separate call. */
+			last = otop ();
+			if (EIF_IS_DIFFERENT_PROCESSOR (icurrent->it_ref, last->it_ref)) {
+					/* Perform a separate call. */
+				call_data * a;
+				EIF_TYPED_VALUE * p;
+				EIF_REFERENCE Current = last -> it_ref;
+
+				RTS_AC (n, Current, a); /* Create call structure. */
+				opop ();                /* Remove target of a call. */
+				while (n > 0) {         /* Record arguments of a call. */
+					p = opop ();
+					if (p -> type == SK_REF) {
+						RTS_AS(*p, "", p -> type, n, a); /* Record a possibly separate argument. */
+					}
+					else {
+						RTS_AA(*p, "", p -> type, n, a); /* Record non-separate argument. */
+					}
+					n--;
+				};
+				switch (code = *IC++)
+				{
+				case BC_EXTERN_INV:
+				case BC_FEATURE_INV:
+					string = get_string8(&IC, -1); /* Get the feature name. */
+					offset = get_int32(&IC);       /* Get the feature id */
+					code = get_int16(&IC);         /* Get the static type */
+					if (q) {
+						last = iget ();                             /* Allocate a cell to store result of a call. */
+						last -> type = SK_POINTER;                  /* Avoid GC on result until it is ready.      */
+						RTS_CF (code, offset, string, 0, a, *last); /* Make a separate call to a function. */
+					}
+					else {
+						RTS_CP (code, offset, string, 0, a);       /* Make a separate call to a procedure. */
+					}
+					break;
+				case BC_PEXTERN_INV:
+				case BC_PFEATURE_INV:
+					{
+						int32 offset, origin;
+						string = get_string8(&IC, -1); /* Get the feature name. */
+						origin = get_int32(&IC);       /* Get the origin class id */
+						offset = get_int32(&IC);       /* Get the offset in origin */
+						if (q) {
+							last = iget ();                                /* Allocate a cell to store result of a call. */
+							last -> type = SK_POINTER;                     /* Avoid GC on result until it is ready. */
+							RTS_CFP (origin, offset, string, 0, a, *last); /* Make a separate call to a function. */
+						}
+						else {
+							RTS_CPP (origin, offset, string, 0, a);       /* Make a separate call to a procedure. */
+						}
+					}
+					break;
+				case BC_CREATION:
+					offset = get_int32(&IC);           /* Get the feature id. */
+					code = get_int16(&IC);             /* Get the static type. */
+					RTS_PA (eif_access (a -> target)); /* Associate new processor with the target of a call. */
+					RTS_CC (code, offset, 0, a);       /* Make a separate call to a creation procedure. */
+					break;
+				case BC_PCREATION:
+					{
+						int32 origin, offset;
+						origin = get_int32(&IC);           /* Get the origin class id. */
+						offset = get_int32(&IC);           /* Get the offset in origin. */
+						RTS_PA (eif_access (a -> target)); /* Associate new processor with the target of a call. */
+						RTS_CCP (origin, offset, 0, a);    /* Make a separate call to a creation procedure. */
+						break;
+					}
+				default:
+					eif_panic(MTC "illegal separate opcode");
+				}
+			}
+	 	}
+	 	break;
 
 	/*
 	 * Calling an external function.

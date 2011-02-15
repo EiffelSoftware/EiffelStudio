@@ -179,7 +179,7 @@ extern struct opstack op_stack;               /* Operational stack */
 #define BC_CAST_REAL_32    	111
 #define BC_CAST_REAL_64  	112
 #define BC_INV_NULL  		113
-#define BC_NOTUSED_114		114
+#define BC_SEPARATE		114
 #define BC_END_EVAL_OLD		115
 #define BC_START_EVAL_OLD	116
 #define BC_OBJECT_ADDR		117

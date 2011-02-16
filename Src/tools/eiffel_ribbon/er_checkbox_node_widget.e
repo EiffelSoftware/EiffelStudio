@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 				-- from the current class.
 
 				-- Proceed with vision2 objects creation.
-
+			create checker
 		end
 
 feature -- Command
@@ -68,16 +68,22 @@ feature -- Command
 
 feature {NONE} -- Implementation
 
+	checker: ER_IDENTIFIER_UNIQUENESS_CHECKER
+			--
+
 	tree_node_data: detachable ER_TREE_NODE_CHECKBOX_DATA
 			--
 
+	on_command_name_focus_out
+			-- <Precursor>
+		do
+			checker.on_focus_out (name, tree_node_data)
+		end
+
 	on_name_text_change
 			-- <Precursor>
-		local
-			l_checker: ER_IDENTIFIER_UNIQUENESS_CHECKER
 		do
-			create l_checker
-			l_checker.on_identifier_name_change (name, tree_node_data)
+			checker.on_identifier_name_change (name, tree_node_data)
 		end
 
 	on_label_text_change

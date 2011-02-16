@@ -19,6 +19,7 @@ feature {NONE} -- Initialization
 			-- Initialization for these objects must be performed in `user_initialization'.
 		do
 				-- Create attached types defined in class here, initialize them in `user_initialization'.
+			create checker
 		end
 
 	user_initialization
@@ -51,16 +52,22 @@ feature -- Command
 
 feature {NONE} -- Implementation
 
+	checker: ER_IDENTIFIER_UNIQUENESS_CHECKER
+			--
+
 	tree_node_data: detachable ER_TREE_NODE_BUTTON_DATA
 			--
 
 	on_command_name_text_change
 			-- <Precursor>
-		local
-			l_checker: ER_IDENTIFIER_UNIQUENESS_CHECKER
 		do
-			create l_checker
-			l_checker.on_identifier_name_change (command_name, tree_node_data)
+			checker.on_identifier_name_change (command_name, tree_node_data)
+		end
+
+	on_command_name_focus_out
+			-- <Precursor>
+		do
+			checker.on_focus_out (command_name, tree_node_data)
 		end
 
 	on_label_text_change

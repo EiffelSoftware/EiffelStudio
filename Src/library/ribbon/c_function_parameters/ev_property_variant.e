@@ -25,13 +25,21 @@ feature {NONE}  -- Initialization
 	share_from_pointer (a_property_variant: POINTER)
 			-- Creation method
 		do
-			create pointer.share_from_pointer (a_property_variant, size)
+			create internal_data.share_from_pointer (a_property_variant, size)
 		end
 
 	make_empty
 			--
 		do
-			create pointer.make (size)
+			create internal_data.make (size)
+		end
+
+feature -- Access
+
+	item: POINTER
+			-- Associated C memory.
+		do
+			Result := internal_data.item
 		end
 
 feature -- Command
@@ -39,7 +47,7 @@ feature -- Command
 	set_boolean_value (a_value: BOOLEAN)
 			-- Set value with `a_value'
 		do
-			c_init_prop_variant_from_boolean (pointer.item, a_value)
+			c_init_prop_variant_from_boolean (item, a_value)
 		end
 
 	set_string_value (a_value: STRING_32)
@@ -48,14 +56,14 @@ feature -- Command
 			l_wel_string: WEL_STRING
 		do
 			create l_wel_string.make (a_value)
-			c_init_prop_variant_from_string (pointer.item, l_wel_string.item)
+			c_init_prop_variant_from_string (item, l_wel_string.item)
 			-- FIXME: should call CoTaskMemFree to free string?
 		end
 
 	set_decimal_value (a_value: REAL_64)
 			-- Set value with `a_value'
 		do
-			c_init_prop_variant_from_decimal (pointer.item, a_value)
+			c_init_prop_variant_from_decimal (item, a_value)
 		end
 
 	set_image (a_image: EV_PIXEL_BUFFER)
@@ -73,20 +81,20 @@ feature -- Command
 			end
 
 			if l_iui_image /= default_pointer then
-				c_init_prop_variant_from_iunknown (pointer.item, l_iui_image)
+				c_init_prop_variant_from_iunknown (item, l_iui_image)
 			end
 		end
 
 	set_uint32 (a_natural: NATURAL_32)
 			-- Set value with `a_natural'
 		do
-			c_init_prop_variant_from_uint32 (pointer.item, a_natural)
+			c_init_prop_variant_from_uint32 (item, a_natural)
 		end
 
 	destroy
 			-- clean up current
 		do
-			c_prop_variant_clear (pointer.item)
+			c_prop_variant_clear (item)
 		end
 
 feature -- Query
@@ -94,13 +102,13 @@ feature -- Query
 	var_type: NATURAL_16
 			--
 		do
-			Result := c_var_type (pointer.item)
+			Result := c_var_type (item)
 		end
 
 	boolean_value: BOOLEAN
 			-- Value type is based on `var_type'
 		do
-			c_read_boolean (pointer.item, $Result)
+			c_read_boolean (item, $Result)
 		end
 
 	string_value: STRING_32
@@ -109,7 +117,7 @@ feature -- Query
 			l_wel_string: WEL_STRING
 			l_pointer: POINTER
 		do
-			c_read_string (pointer.item, $l_pointer)
+			c_read_string (item, $l_pointer)
 			create l_wel_string.make_by_pointer (l_pointer)
 			Result := l_wel_string.string
 		end
@@ -117,11 +125,14 @@ feature -- Query
 	decimal_value: REAL_64
 			-- Decimal value of current
 		do
-			c_read_decimal (pointer.item, $Result)
+			Result := c_read_decimal (item)
 		end
 
-	pointer: MANAGED_POINTER
-			--
+feature {NONE} -- Implementation
+
+	internal_data: MANAGED_POINTER
+			-- The property variant structure.
+
 feature {NONE} -- Externals
 
 	c_var_type (a_property_variant: POINTER): NATURAL_16
@@ -172,17 +183,16 @@ feature {NONE} -- Externals
 			]"
 		end
 
-	c_read_decimal (a_item: POINTER; a_result: TYPED_POINTER [REAL_64])
+	c_read_decimal (a_item: POINTER): REAL_64
 			--
 		external
 			"C inline use <ribbon.h>"
 		alias
-			"[
-			{
-				DECIMAL * l_dec = (DECIMAL *)$a_item;
-				*($a_result) = l_dec->Lo64;
-			}
-			]"
+			"{
+				DOUBLE val;
+				VarR8FromDec(&((PROPVARIANT *) $a_item)->decVal, &val);
+				return val;
+			}"
 		end
 
 	c_co_task_mem_free (a_pointer: POINTER)
@@ -190,11 +200,7 @@ feature {NONE} -- Externals
 		external
 			"C inline use %"Objbase.h%""
 		alias
-			"[
-			{
-				CoTaskMemFree ($a_pointer);
-			}
-			]"
+			"CoTaskMemFree ($a_pointer);"
 		end
 
 	c_init_prop_variant_from_boolean (a_item: POINTER; a_value: BOOLEAN)
@@ -224,11 +230,9 @@ feature {NONE} -- Externals
 				PROPVARIANT *ppropvar = (PROPVARIANT *) $a_item;
 				ppropvar->vt = VT_LPWSTR;
 				hr = SHStrDupW_eiffel($a_string, &ppropvar->pwszVal);
-				if (FAILED(hr))
-				{
-				PropVariantInit(ppropvar);
+				if (FAILED(hr))	{
+					PropVariantInit(ppropvar);
 				}
-				return hr;
 			}
 			]"
 		end
@@ -307,7 +311,7 @@ feature {NONE} -- Externals
 		alias
 			"[
 			{
-				CreateIUIImageFromBitmap ($a_hbitmap, $a_result_iui_image);
+				CreateIUIImageFromBitmap ((HBITMAP) $a_hbitmap, (IUIImage **) $a_result_iui_image);
 			}
 			]"
 		end

@@ -103,7 +103,7 @@ void c_release_simple_property_set_object()
 }
 
 /* Set EV_SIMPLE_PROPERTY_SET.get_value */
-void c_set_get_value_address (EIF_POINTER a_address)
+void c_set_get_value_address (EIF_RIBBON_SIMPLE_PROPERTY_SET_GET_VALUE_PROC a_address)
 {
-	eiffel_get_value_function = (EIF_RIBBON_SIMPLE_PROPERTY_SET_GET_VALUE_PROC) a_address;
+	eiffel_get_value_function = a_address;
 }

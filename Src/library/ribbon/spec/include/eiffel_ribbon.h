@@ -23,6 +23,10 @@ indexing
 #include <unistd.h> 
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef EIF_NATURAL_32 (* EIF_RIBBON_UPDATE_PROPERTY_PROC) (
 #ifndef EIF_IL_DLL
 	EIF_REFERENCE,  /* EIFFEL_RIBBON Eiffel object */
@@ -45,14 +49,10 @@ typedef EIF_INTEGER (* EIF_RIBBON_EXECUTE_PROC) (
 	EIF_POINTER  /* IUISimplePropertySet* pCommandExecutionProperties */
 	);
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 extern void c_set_object(EIF_REFERENCE a_address);
 extern void c_release_object(void);
-extern void c_set_execute_address(EIF_POINTER a_address);
-extern void c_set_update_property_address( EIF_POINTER a_address);
+extern void c_set_execute_address (EIF_RIBBON_EXECUTE_PROC a_address);
+extern void c_set_update_property_address(EIF_RIBBON_UPDATE_PROPERTY_PROC a_address);
 
 extern EIF_OBJECT eiffel_command_handler_object;
 	/* Address of Eiffel object ER_COMMAND_HANDLER */

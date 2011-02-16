@@ -70,7 +70,7 @@ feature -- Command
 			if attached ribbon as l_ribbon then
 				create l_key.make_items_source
 				create l_enum
-				{EV_RIBBON}.c_invalidate_ui_command (l_command_id, l_enum.ui_invalidations_property, l_key.pointer, l_ribbon.item)
+				l_ribbon.invalidate (l_command_id, l_enum.ui_invalidations_property, l_key)
 			end
 		end
 

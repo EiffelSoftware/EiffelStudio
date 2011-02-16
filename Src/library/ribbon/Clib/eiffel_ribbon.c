@@ -44,15 +44,15 @@ void c_release_object()
 }
 
 /* Set ER_COMMAND_HANDLER.execute address */
-void c_set_execute_address (EIF_POINTER a_address)
+void c_set_execute_address (EIF_RIBBON_EXECUTE_PROC a_address)
 {
-	eiffel_execute_function = (EIF_RIBBON_EXECUTE_PROC) a_address;
+	eiffel_execute_function = a_address;
 }
 
 /* Set ER_COMMAND_HANDLER.update_property address */
-void c_set_update_property_address(EIF_POINTER a_address)
+void c_set_update_property_address(EIF_RIBBON_UPDATE_PROPERTY_PROC a_address)
 {
-	eiffel_update_property_function = (EIF_RIBBON_UPDATE_PROPERTY_PROC) a_address;
+	eiffel_update_property_function = a_address;
 }
 
 

@@ -55,7 +55,7 @@ feature -- Access
 			if attached ribbon as l_ribbon then
 				create l_key.make_boolean
 				create l_value.make_empty
-				{EV_RIBBON}.get_UI_Command_Property (l_command_id, l_key.pointer, l_value.pointer.item, l_ribbon.item)
+				l_ribbon.get_command_property (l_command_id, l_key, l_value)
 				Result := l_value.boolean_value
 				l_value.destroy
 			end
@@ -109,7 +109,7 @@ feature {NONE} -- Implementation
 				create l_key.make_boolean
 				create l_value.make_empty
 				l_value.set_boolean_value (a_bool)
-				{EV_RIBBON}.set_UI_Command_Property (l_command_id, l_key.pointer, l_value.pointer.item, l_ribbon.item)
+				l_ribbon.set_command_property (l_command_id, l_key, l_value)
 				l_value.destroy
 			end
 		end

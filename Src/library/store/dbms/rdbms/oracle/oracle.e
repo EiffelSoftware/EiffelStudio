@@ -900,20 +900,6 @@ feature -- Explicit Conversion
 			Result := utf32_to_utf8 (a_str)
 		end
 
-	cut (a_str: STRING): STRING
-			-- cut to 4 digit if too long
-		do
-			Result := a_str
-			if Result.count > 4 then
-				Result.keep_tail (4)
-			end
-		end
-
-	format: FORMAT_INTEGER
-		do
-			create Result.make (4)
-		end
-
 feature {NONE} -- External features
 
 	repository_name: detachable STRING

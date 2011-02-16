@@ -139,14 +139,14 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 			tmp_c, tmp_c2, c_temp: SQL_STRING
 		do
 			if attached uht as l_u then
-				create c_temp.make (escape_utf32 (sql.as_string_32))
+				create c_temp.make (database_format (sql.as_string_32))
 				from
 					l_u.start
 				until
 					l_u.off
 				loop
 					if attached {STRING_32} l_u.item_for_iteration as l_s32 then
-						create tmp_c.make (escape_utf32 (l_s32))
+						create tmp_c.make (database_format (l_s32))
 					else
 						create tmp_c.make (l_u.item_for_iteration.out)
 					end
@@ -379,7 +379,7 @@ feature -- External features
 		local
 			c_temp: SQL_STRING
 		do
-			create c_temp.make (escape_utf32 (command.as_string_32))
+			create c_temp.make (database_format (command.as_string_32))
 			ora_init_order (c_temp.item, no_descriptor)
 			is_error_updated := False
 		end
@@ -411,7 +411,7 @@ feature -- External features
 		local
 			c_temp: SQL_STRING
 		do
-			create c_temp.make (escape_utf32 (command.as_string_32))
+			create c_temp.make (database_format (command.as_string_32))
 			ora_exec_immediate (no_descriptor, c_temp.item)
 			is_error_updated := False
 		end
@@ -892,7 +892,7 @@ feature -- Explicit Conversion
 			end
 		end
 
-	escape_utf32 (a_str: STRING_32): STRING_8
+	database_format (a_str: STRING_32): STRING_8
 			-- Append an unicode code point `a_code' to an utf8 stream.
 		require
 			a_str_not_void: a_str /= Void

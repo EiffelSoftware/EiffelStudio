@@ -65,5 +65,4 @@ extern EIF_RIBBON_UPDATE_PROPERTY_PROC eiffel_update_property_function;
 }
 #endif
 	
-	
 #endif	

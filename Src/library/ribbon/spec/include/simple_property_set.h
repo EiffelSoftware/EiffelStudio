@@ -1,4 +1,4 @@
-﻿/*
+/*
 indexing
 	description: "Functions used by the class EV_SIMPLE_PROPERTY_SET."
 	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"

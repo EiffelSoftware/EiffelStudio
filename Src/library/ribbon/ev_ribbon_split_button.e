@@ -11,7 +11,7 @@ inherit
 
 feature -- Query
 
-	buttons: ARRAYED_LIST [EV_RIBBON_ITEM]
+	buttons: detachable ARRAYED_LIST [EV_RIBBON_ITEM]
 			-- All items in current group
 
 end

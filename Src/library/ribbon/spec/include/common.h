@@ -1,6 +1,5 @@
 #ifndef _COMMON_H_
 #define _COMMON_H_
-#define CINTERFACE
 #include <windows.h>
 #include <ObjBase.h>
 #include <initguid.h>
@@ -18,6 +17,12 @@ DEFINE_GUID(IID_IUISimplePropertySet, 0xc205bb48, 0x5b1c, 0x4219, 0xa1, 0x06, 0x
 
 #endif
 
-BOOL InitializeFramework(HWND hWnd);
-void DestroyRibbon();
-HRESULT SHStrDupW_eiffel(LPCWSTR src, LPWSTR * dest);
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+extern HRESULT SHStrDupW_eiffel(LPCWSTR src, LPWSTR * dest);
+
+#ifdef __cplusplus
+}
+#endif

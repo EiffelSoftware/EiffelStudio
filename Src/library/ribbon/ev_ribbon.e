@@ -17,13 +17,11 @@ feature -- Command
 	init_with_window (a_window: EV_WINDOW)
 			-- Creation method
 		local
-			l_result: INTEGER
 			l_resources: EV_RIBBON_RESOURCES
 		do
 			if attached {EV_WINDOW_IMP} a_window.implementation as l_imp then
 				com_initialize
-				l_result := create_ribbon_com_framework (l_imp.wel_item)
-				item := get_ribbon_framework
+				item := create_ribbon_com_framework (l_imp.wel_item)
 				command_handler := get_command_handler
 				create l_resources
 				l_resources.ribbon_list.extend (Current)
@@ -32,6 +30,8 @@ feature -- Command
 
 	set_modes (a_mode: INTEGER)
 			-- Set application mode for current ribbon framework
+		require
+			exists: exists
 		do
 			c_set_modes (a_mode, item)
 		end
@@ -39,11 +39,44 @@ feature -- Command
 	destroy
 			-- Clean up all ribbon related COM objects and resources
 		do
-			destroy_ribbon_com_framwork
+			destroy_ribbon_com_framwork (item)
+			item := default_pointer
 			com_uninitialize
 		end
 
-feature -- Query
+feature {EV_RIBBON_BUTTON, EV_RIBBON_CHECKBOX} -- Commands
+
+	get_command_property (a_command_id: NATURAL_32; a_key: EV_PROPERTY_KEY; a_variant: EV_PROPERTY_VARIANT)
+		require
+			exists: exists
+			a_key_not_void: a_key /= Void
+			a_key_exists: a_key.exists
+			a_variant_not_void: a_variant /= Void
+		do
+			c_get_ui_command_property (item, a_command_id, a_key.item, a_variant.item)
+		end
+
+	set_command_property (a_command_id: NATURAL_32; a_key: EV_PROPERTY_KEY; a_variant: EV_PROPERTY_VARIANT)
+		require
+			exists: exists
+			a_key_not_void: a_key /= Void
+			a_key_exists: a_key.exists
+			a_variant_not_void: a_variant /= Void
+		do
+			c_set_ui_command_property (item, a_command_id, a_key.item, a_variant.item)
+		end
+
+	invalidate (a_command_id: NATURAL_32; a_flags: INTEGER_32; a_key: EV_PROPERTY_KEY)
+		require
+			exists: exists
+			a_key_not_void: a_key /= Void
+			a_key_exists: a_key.exists
+		do
+			c_invalidate_ui_command (item, a_command_id, a_flags, a_key.item)
+		end
+
+
+feature -- Status Report
 
 	tabs: ARRAYED_LIST [EV_RIBBON_TAB]
 			-- All tabs in current tool bar
@@ -51,8 +84,16 @@ feature -- Query
 	height: INTEGER
 			-- Get current ribbon height
 		do
-			get_height ($Result, item)
+			Result := c_height (item)
 		end
+
+	exists: BOOLEAN
+			-- Does current still exist?
+		do
+			Result := item /= default_pointer
+		end
+
+feature -- Status Report
 
 	item: POINTER
 			-- Ribbon framework object
@@ -67,12 +108,7 @@ feature {EV_RIBBON_TITLED_WINDOW_IMP} -- Externals
 		external
 			"C inline use %"Objbase.h%""
 		alias
-			"[
-			{
-			
-				CoInitialize (0);
-			}
-			]"
+			"CoInitialize (0);"
 		end
 
 	com_uninitialize
@@ -80,71 +116,61 @@ feature {EV_RIBBON_TITLED_WINDOW_IMP} -- Externals
 		external
 			"C inline use %"Objbase.h%""
 		alias
-			"[
-			{
-				CoUninitialize();
-			}
-			]"
+			"CoUninitialize();"
 		end
 
-	create_ribbon_com_framework (a_hwnd: POINTER): INTEGER
+	create_ribbon_com_framework (a_hwnd: POINTER): POINTER
 			-- Create Ribbon framework, attach ribbon to `a_hwnd'
 		external
-			"C inline use <ribbon.h>"
+			"C++ inline use <ribbon.h>"
 		alias
-			"[
-			{
-				return InitializeFramework ($a_hwnd);
-			}
-			]"
+			"return InitializeFramework ((HWND) $a_hwnd);"
 		end
 
-	destroy_ribbon_com_framwork
+	destroy_ribbon_com_framwork (a_framework: POINTER)
 			-- Destroy ribbon framwork
+		require
+			a_framework_exists: a_framework /= default_pointer
 		external
-			"C inline use <ribbon.h>"
+			"C++ inline use <ribbon.h>"
 		alias
-			"[
-			{
-				DestroyRibbon ();
-			}
-			]"
+			"{
+				HRESULT hr = S_OK;
+				hr = ((IUIFramework *) $a_framework)->Destroy ();
+			}"
 		end
 
-	get_height (a_height: TYPED_POINTER[INTEGER]; a_ribbon_framework: POINTER)
+	c_height (a_framework: POINTER): INTEGER
 			-- Get ribbon height
+		require
+			a_framework_exists: a_framework /= default_pointer
 		external
-			"C inline use <ribbon.h>"
+			"C++ inline use <ribbon.h>"
 		alias
-			"[
-			{
-				GetRibbonHeight ($a_height, $a_ribbon_framework);	
-			}
-			]"
+			"{
+				UINT32 val;
+				HRESULT hr = S_OK;
+
+				IUIRibbon* pRibbon = NULL;
+				if (SUCCEEDED(((IUIFramework *) $a_framework)->GetView(0, IID_IUIRIBBON, (void **) &pRibbon))) {
+					hr = pRibbon->GetHeight(&val);
+					pRibbon->Release();
+				}
+				return (EIF_INTEGER) val;
+			}"
 		end
 
-	c_set_modes (a_mode: INTEGER; a_ribbon_framework: POINTER)
+	c_set_modes (a_mode: INTEGER; a_framework: POINTER)
 			-- Set application mode
+		require
+			a_framework_exists: a_framework /= default_pointer
 		external
-			"C inline use <ribbon.h>"
+			"C++ inline use <ribbon.h>"
 		alias
-			"[
-			{
-				SetModes ($a_mode, $a_ribbon_framework);
-			}
-			]"
-		end
-
-	get_ribbon_framework: POINTER
-			-- Get Ribbon framework pointer
-		external
-			"C inline use <ribbon.h>"
-		alias
-			"[
-			{
-				return GetRibbonFramwork ();
-			}
-			]"
+			"{
+				HRESULT hr = S_OK;
+				hr = ((IUIFramework *) $a_framework)->SetModes(UI_MAKEAPPMODE((INT32) $a_mode));
+			}"
 		end
 
 	get_command_handler: POINTER
@@ -152,57 +178,58 @@ feature {EV_RIBBON_TITLED_WINDOW_IMP} -- Externals
 		external
 			"C inline use <ribbon.h>"
 		alias
-			"[
-			{
-				return GetCommandHandler ();
-			}
-			]"
+			"return GetCommandHandler ();"
 		end
 
-feature {EV_RIBBON_CHECKBOX, EV_RIBBON_BUTTON} -- Query
+feature {NONE} -- Implementation
 
-	get_ui_command_property (a_command_id: NATURAL_32; a_proper_key: POINTER; a_proper_variant: POINTER; a_framework: POINTER)
-			--
+	c_get_ui_command_property (a_framework: POINTER; a_command_id: NATURAL_32; a_key, a_variant: POINTER)
+		require
+			a_framework_not_null: a_framework /= default_pointer
+			a_key_not_null: a_key /= default_pointer
+			a_variant_not_null: a_variant /= default_pointer
 		external
-			"C inline use <ribbon.h>"
+			"C++ inline use <ribbon.h>"
 		alias
-			"[
-			{
-				HRESULT l_r;
-				l_r = GetUICommandProperty ($a_command_id, $a_proper_key, $a_proper_variant, $a_framework);
-				if (SUCCEEDED (l_r))
-				{
-					printf ("\nsuccess");
-				}else
-				{
-					printf ("\nfail %x", l_r);
-				}
-			}
-			]"
+			"{
+				HRESULT hr = S_OK;
+				hr = ((IUIFramework *) $a_framework)->GetUICommandProperty(
+					(UINT32) $a_command_id,
+					(REFPROPERTYKEY) *(PROPERTYKEY *) $a_key,
+					(PROPVARIANT *) $a_variant);
+			}"
 		end
 
-	set_ui_command_property (a_command_id: NATURAL_32; a_proper_key: POINTER; a_proper_variant: POINTER; a_framework: POINTER)
+	c_set_ui_command_property (a_framework: POINTER; a_command_id: NATURAL_32; a_key, a_variant: POINTER)
 			--
+		require
+			a_framework_exists: a_framework /= default_pointer
 		external
-			"C inline use <ribbon.h>"
+			"C++ inline use <ribbon.h>"
 		alias
-			"[
-			{
-				SetUICommandProperty ($a_command_id, $a_proper_key, $a_proper_variant, $a_framework);
-			}
-			]"
+			"{
+				HRESULT hr = S_OK;
+				hr = ((IUIFramework *) $a_framework)->SetUICommandProperty(
+					(UINT32) $a_command_id,
+					(REFPROPERTYKEY) *(PROPERTYKEY *)$a_key,
+					(REFPROPVARIANT) *(PROPVARIANT *)$a_variant);
+			}"
 		end
 
-	c_invalidate_ui_command (a_command_id: NATURAL_32; a_flags: INTEGER; a_proper_key: POINTER; a_framework: POINTER)
+	c_invalidate_ui_command (a_framework: POINTER; a_command_id: NATURAL_32; a_flags: INTEGER; a_key: POINTER)
 			--
+		require
+			a_framework_exists: a_framework /= default_pointer
 		external
-			"C inline use <ribbon.h>"
+			"C++ inline use <ribbon.h>"
 		alias
-			"[
-			{
-				InvalidateUICommand($a_command_id, $a_flags, $a_proper_key, $a_framework);
-			}
-			]"
+			"{
+				HRESULT hr = S_OK;
+				hr = ((IUIFramework *) $a_framework)->InvalidateUICommand(
+					(UINT32) $a_command_id,
+					(UI_INVALIDATIONS) $a_flags,
+					(PROPERTYKEY *) $a_key);
+			}"
 		end
 end
 

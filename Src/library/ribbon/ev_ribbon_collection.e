@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 		local
 			l_pointer: POINTER
 		do
-			query_interface_with_prop_variant (a_prop_variant.pointer.item)
+			query_interface_with_prop_variant (a_prop_variant.item)
 			l_pointer := get_ui_collection
 			create item.share_from_pointer (l_pointer, size)
 		end
@@ -54,11 +54,7 @@ feature {NONE} -- C external
 		external
 			"C inline use <ribbon.h>"
 		alias
-			"[
-			{
-				return sizeof (IUICollection);
-			}
-			]"
+			"return sizeof(IUICollection);"
 		end
 
 	query_interface_with_prop_variant (a_item: POINTER)
@@ -68,7 +64,7 @@ feature {NONE} -- C external
 		alias
 			"[
 			{
-				QueryInterfaceIUICollectionWithPropVariant ($a_item);	
+				QueryInterfaceIUICollectionWithPropVariant ((PROPVARIANT *) $a_item);	
 			}
 			]"
 		end
@@ -88,24 +84,16 @@ feature {NONE} -- C external
 	c_release (a_item: POINTER)
 			--
 		external
-			"C inline use <ribbon.h>"
+			"C++ inline use <ribbon.h>"
 		alias
-			"[
-			{
-				((IUICollection *) $a_item)->lpVtbl->Release ((IUICollection *) $a_item);
-			}
-			]"
+			"((IUICollection *) $a_item)->Release();"
 		end
 
 	c_add (a_collection_item: POINTER; a_item: POINTER)
 			--
 		external
-			"C inline use <ribbon.h>"
+			"C++ inline use <ribbon.h>"
 		alias
-			"[
-			{
-				((IUICollection *) $a_collection_item)->lpVtbl->Add ((IUICollection *) $a_collection_item, (IUISimplePropertySet *) $a_item);
-			}
-			]"
+			"((IUICollection *) $a_collection_item)->Add ((IUnknown *) $a_item);"
 		end
 end

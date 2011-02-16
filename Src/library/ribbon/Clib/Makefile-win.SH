@@ -4,11 +4,10 @@ OUTDIR= .
 INDIR= .
 CC = $cc
 OUTPUT_CMD = $output_cmd
-CFLAGS = -I"$rt_include" -I..$(DIR)include -I. \
-	-I..$(DIR)spec$(DIR)include
-JCFLAGS = $(CFLAGS) $ccflags $optimize
-JMTCFLAGS = $(CFLAGS) $mtccflags $optimize
-JILCFLAGS = $(CFLAGS) $mtccflags $optimize -DEIF_IL_DLL
+CFLAGS = -I"$rt_include" -I..$(DIR)include -I. -I..$(DIR)spec$(DIR)include -Od -Zi
+JCFLAGS = $(CFLAGS) $ccflags 
+JMTCFLAGS = $(CFLAGS) $mtccflags
+JILCFLAGS = $(CFLAGS) $mtccflags -DEIF_IL_DLL
 LN = copy
 MV = $mv
 RM = $del

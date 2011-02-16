@@ -41,9 +41,9 @@ feature {NONE} -- Status report
 	is_stone_usable_internal (a_stone: attached like stone): BOOLEAN
 			-- <Precursor>
 		do
-			Result := attached {CLASSI_STONE} a_stone as l_cs
+			Result := attached {CLASSI_STONE} a_stone
 		ensure then
-			a_stone_is_class_stone: attached {CLASSI_STONE} a_stone as el_cs
+			a_stone_is_class_stone: Result = attached {CLASSI_STONE} a_stone
 		end
 
 feature {NONE} -- Factory

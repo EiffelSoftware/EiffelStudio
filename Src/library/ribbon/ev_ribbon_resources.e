@@ -132,16 +132,19 @@ feature -- Helper
 								Result := l_ribbon
 							end
 							if Result = Void then
-								if attached {EV_RIBBON_SPLIT_BUTTON} l_group.buttons.item as l_split_button then
+								if
+									attached {EV_RIBBON_SPLIT_BUTTON} l_group.buttons.item as l_split_button and then
+									attached l_split_button.buttons as l_buttons
+								then
 									from
-										l_split_button.buttons.start
+										l_buttons.start
 									until
-										l_split_button.buttons.after or Result /= Void
+										l_buttons.after or Result /= Void
 									loop
-										if l_split_button.buttons.item = a_item then
+										if l_buttons.item = a_item then
 											Result := l_ribbon
 										end
-										l_split_button.buttons.forth
+										l_buttons.forth
 									end
 								end
 							end

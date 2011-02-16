@@ -1043,7 +1043,7 @@ feature {NONE} -- Implementation
 			--
 		require
 			not_void: a_group_node /= void
-			valid: a_group_node.text.is_equal ({ER_XML_CONSTANTS}.group)
+			valid: a_group_node.text.is_equal ({ER_XML_CONSTANTS}.group) or else a_group_node.text.same_string ({ER_XML_CONSTANTS}.split_button)
 		local
 			l_count, l_index: INTEGER
 			l_template, l_command_string: STRING
@@ -1088,7 +1088,7 @@ feature {NONE} -- Implementation
 			--
 		require
 			not_void: a_group_node /= void
-			valid: a_group_node.text.is_equal ({ER_XML_CONSTANTS}.group)
+			valid: a_group_node.text.same_string ({ER_XML_CONSTANTS}.group) or else a_group_node.text.same_string ({ER_XML_CONSTANTS}.split_button)
 		local
 			l_count, l_index: INTEGER
 			l_template: STRING
@@ -1124,7 +1124,7 @@ feature {NONE} -- Implementation
 			--
 		require
 			not_void: a_group_node /= void
-			valid: a_group_node.text.is_equal ({ER_XML_CONSTANTS}.group)
+			valid: a_group_node.text.is_equal ({ER_XML_CONSTANTS}.group) or else a_group_node.text.same_string ({ER_XML_CONSTANTS}.split_button)
 		local
 			l_count, l_index: INTEGER
 			l_template: STRING
@@ -1282,7 +1282,8 @@ feature {NONE} -- Implementation
 									l_last_string.replace_substring_all ("$INDEX",  l_prefix_imp + a_index.out)
 								end
 							end
-
+							--FIXME: need improve efficiency here?
+							generate_for_split_button_if_possible (a_item_node, l_last_string)
 							l_dest_file.put_string (l_last_string + "%N")
 						end
 
@@ -1335,6 +1336,29 @@ feature {NONE} -- Implementation
 						end
 					end
 				end
+			end
+		end
+
+	generate_for_split_button_if_possible (a_item_node: EV_TREE_NODE; a_last_string: STRING)
+			--
+		require
+			not_void: a_item_node /= void
+--			not_void: a_file_generated /= Void and then a_file_generated.is_open_write
+		local
+			l_button_regiestry_string: STRING
+			l_button_creation_string, l_button_registry_string, l_button_declaration_string: STRING
+			l_file_content: STRING
+			l_last_string: STRING
+		do
+			if attached {ER_TREE_NODE_SPLIT_BUTTON_DATA} a_item_node.data as l_data then
+				l_button_creation_string := button_creation_string (a_item_node)
+				l_button_registry_string := button_registry_string (a_item_node)
+				l_button_declaration_string := button_declaration_string (a_item_node)
+
+--				a_last_string := a_file_generated.last_string
+				a_last_string.replace_substring_all ("$BUTTON_CREATION", l_button_creation_string)
+				a_last_string.replace_substring_all ("$BUTTON_REGISTRY", l_button_registry_string)
+				a_last_string.replace_substring_all ("$BUTTON_DECLARATION", l_button_declaration_string)
 			end
 		end
 

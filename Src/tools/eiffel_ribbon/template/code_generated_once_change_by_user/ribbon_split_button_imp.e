@@ -12,6 +12,23 @@ deferred class
 
 inherit
 	EV_RIBBON_SPLIT_BUTTON
+			redefine
+				create_interface_objects
+			end
+			
+feature {NONE} -- Initialization
 
+	create_interface_objects
+			-- Create objects
+		do
+			Precursor
+$BUTTON_CREATION
+			create buttons.make (1)
+$BUTTON_REGISTRY
+		end
+
+feature -- Query
+
+$BUTTON_DECLARATION
 
 end

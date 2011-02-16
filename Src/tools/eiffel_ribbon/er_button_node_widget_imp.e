@@ -63,6 +63,7 @@ feature {NONE}-- Initialization
 			
 				-- Connect events.
 			command_name.change_actions.extend (agent on_command_name_text_change)
+			command_name.focus_out_actions.extend (agent on_command_name_focus_out)
 			label.change_actions.extend (agent on_label_text_change)
 
 				-- Call `user_initialization'.
@@ -128,6 +129,11 @@ feature {NONE} -- Implementation
 	
 	on_command_name_text_change
 			-- Called by `change_actions' of `command_name'.
+		deferred
+		end
+	
+	on_command_name_focus_out
+			-- Called by `focus_out_actions' of `command_name'.
 		deferred
 		end
 	

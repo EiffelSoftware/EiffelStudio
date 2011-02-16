@@ -46,6 +46,7 @@ feature {NONE} -- Initialization
 				-- Proceed with vision2 objects creation.
 			create small_image.make
 			create large_image.make
+			create checker
 		end
 
 feature -- Command
@@ -83,6 +84,9 @@ feature -- Command
 
 feature {NONE} -- Implementation
 
+	checker: ER_IDENTIFIER_UNIQUENESS_CHECKER
+			--
+
 	small_image, large_image: EV_PATH_FIELD
 			--
 
@@ -91,11 +95,14 @@ feature {NONE} -- Implementation
 
 	on_command_name_text_change
 			-- <Precursor>
-		local
-			l_checker: ER_IDENTIFIER_UNIQUENESS_CHECKER
 		do
-			create l_checker
-			l_checker.on_identifier_name_change (command_name, tree_node_data)
+			checker.on_identifier_name_change (command_name, tree_node_data)
+		end
+
+	on_command_name_focus_out
+			-- <Precursor>
+		do
+			checker.on_focus_out (command_name, tree_node_data)
 		end
 
 	on_label_text_change

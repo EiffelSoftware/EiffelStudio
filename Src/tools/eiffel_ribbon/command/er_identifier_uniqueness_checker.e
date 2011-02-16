@@ -8,37 +8,51 @@ class
 
 feature -- Command
 
+	on_focus_out (a_text: EV_TEXT_FIELD; a_tree_data: detachable ER_TREE_NODE_DATA)
+			--
+		local
+			l_colors: EV_STOCK_COLORS
+		do
+			if attached a_tree_data as l_data then
+				a_text.change_actions.block
+				-- Restore to text stored in command name
+				if attached l_data.command_name as l_command_name then
+					a_text.set_text (l_command_name)
+				else
+					a_text.remove_text
+				end
+				create l_colors
+				a_text.set_foreground_color (l_colors.black)
+				a_text.change_actions.resume
+			end
+		end
+
 	on_identifier_name_change (a_text: EV_TEXT_FIELD; a_tree_data: detachable ER_TREE_NODE_DATA)
 			--
 		require
 			not_void: a_text /= Void
 		local
-			l_list: ARRAYED_LIST [EV_TREE_NODE]
-			l_warning: EV_WARNING_DIALOG
+			l_colors: EV_STOCK_COLORS
+			l_already_set: BOOLEAN
 		do
 			if attached a_tree_data as l_data then
 				if attached a_text.text as l_text
 					and then not l_text.is_empty then
-
-					l_list := all_items_with_identifier (l_text)
-					if l_list.count = 0 then
-						-- no conflict
-						l_data.set_command_name (a_text.text)
-					else
-						-- name conflict
-						if attached parent_window_of_widget (a_text) as l_win then
-							create l_warning.make_with_text ("Identifier name is not unique.")
-							l_warning.show_modal_to_window (l_win)
+					if attached l_data.command_name as l_command_name then
+						if l_text.same_string (l_command_name) then
+							l_already_set := True
 						end
-
-						a_text.change_actions.block
-						-- Restore to previous name
-						if attached l_data.command_name as l_command_name then
-							a_text.set_text (l_command_name)
+					end
+					create l_colors
+					if not l_already_set then
+						if not is_name_conflict (a_text) then
+							-- no conflict
+							l_data.set_command_name (a_text.text)
+							a_text.set_foreground_color (l_colors.black)
 						else
-							a_text.remove_text
+							-- name conflict
+							a_text.set_foreground_color (l_colors.red)
 						end
-						a_text.change_actions.resume
 					end
 				else
 					l_data.set_command_name (void)
@@ -48,6 +62,22 @@ feature -- Command
 		end
 
 feature -- Query
+
+	is_name_conflict (a_text: EV_TEXT_FIELD): BOOLEAN
+			--
+		local
+			l_list: ARRAYED_LIST [EV_TREE_NODE]
+		do
+			if attached a_text.text as l_text
+				and then not l_text.is_empty then
+				l_list := all_items_with_identifier (l_text)
+				if l_list.count >= 1 then
+					Result := True
+				else
+					Result := False
+				end
+			end
+		end
 
 	all_items_with_identifier (a_identifier: STRING): ARRAYED_LIST [EV_TREE_NODE]
 			--

@@ -16,6 +16,14 @@ feature {NONE} -- Initialization
 
 	make
 			-- Creation method
+		do
+			command_name_prefix := "button_"
+			xml_constants := {ER_XML_CONSTANTS}.button
+			new_unique_command_name
+		end
+
+	new_unique_command_name
+			-- Initialize a command name automatically
 		local
 			l_shared: ER_SHARED_SINGLETON
 			l_constants: ER_XML_CONSTANTS
@@ -23,28 +31,32 @@ feature {NONE} -- Initialization
 			l_command_name: STRING
 			l_count: INTEGER
 		do
-				-- Initialize a command name automatically
-
 				-- Count how many buttons node in layout constructor
 			create l_shared
 			if attached l_shared.layout_constructor_list.first as l_layout_constructor then
-				create l_constants
-				l_list := l_layout_constructor.all_items_in_all_constructors (l_constants.button)
+
+				l_list := l_layout_constructor.all_items_in_all_constructors (xml_constants)
 				l_count := l_list.count
 
 					-- check if the command name conflict with other buttons
 				from
 					l_count := l_count + 1
-					l_command_name := "button_cmd_" + l_count.out
+					l_command_name := command_name_prefix + l_count.out
 				until
 					not is_name_conflict (l_list, l_command_name)
 				loop
 					l_count := l_count + 1
-					l_command_name := "button_cmd_" + l_count.out
+					l_command_name := command_name_prefix + l_count.out
 				end
 				set_command_name (l_command_name)
 			end
 		end
+
+	command_name_prefix: STRING
+			-- Command name prefix
+
+	xml_constants: STRING
+			-- XML tree constants
 
 feature -- Command
 

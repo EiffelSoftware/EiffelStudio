@@ -295,14 +295,14 @@ feature -- DATABASE_INTEGER
 
 	sql_name_integer_16: STRING
 		once
-			Result := "integer"
+			Result := "smallint"
 		ensure then
 			Result.is_equal ("smallint")
 		end
 
 	sql_name_integer_64: STRING
 		once
-			Result := "integer"
+			Result := "bigint"
 		ensure then
 			Result.is_equal ("bigint")
 		end

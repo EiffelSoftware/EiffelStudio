@@ -45,7 +45,18 @@ doc:<file name="scoop.c" header="eif_scoop.h" version="$Id$" summary="SCOOP supp
 #include "rt_wbench.h"
 #include "rt_malloc.h"
 
+
 #ifdef WORKBENCH
+
+rt_public EIF_BOOLEAN eif_is_uncontrolled (EIF_SCP_PID c, EIF_SCP_PID s)
+{
+	EIF_TYPED_VALUE ou; 
+	ou.item.b = EIF_FALSE;
+	ou.type = SK_BOOL;
+	RTS_TCB(scoop_task_check_uncontrolled,c,s,EIFNULL,&ou,EIFNULL);
+	return EIF_TEST (ou.item.b);
+}
+
 rt_public void eif_log_call (int s, int f, EIF_SCP_PID p, call_data * a)
 {
 	BODY_INDEX body_id;

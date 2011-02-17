@@ -272,13 +272,12 @@ feature -- Request Chain Handling
 			l_request_chain_id_depth: like default_request_chain_depth_value
 			l_request_chain_meta_data: detachable like new_request_chain_meta_data_entry
 		do
-
 				-- Retrieve existing meta data chain.
 			l_request_chain_meta_data := request_chain_meta_data [a_client_processor_id]
 			check l_request_chain_meta_data_entry_attached: attached l_request_chain_meta_data end
 			l_request_chain_meta_data [request_chain_status_index] := request_chain_status_closed
 
-							-- Decrease current request chain id depth
+				-- Decrease current request chain id depth
 			l_request_chain_id_depth := (processor_meta_data [a_client_processor_id])[current_request_chain_id_depth_index] - 1
 			(processor_meta_data [a_client_processor_id])[current_request_chain_id_depth_index] := l_request_chain_id_depth
 
@@ -287,6 +286,9 @@ feature -- Request Chain Handling
 			else
 				request_chain_meta_data [a_client_processor_id] := Void
 			end
+
+				-- Remove previous request chain from stack
+			(request_chain_meta_data_stack_list [a_client_processor_id]) [l_request_chain_id_depth + 1] := Void
 
 			debug ("ISE_SCOOP_MANAGER")
 				print ("signify_end_of_request_chain for pid " + a_client_processor_id.out + "%N")

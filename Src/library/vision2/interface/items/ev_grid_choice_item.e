@@ -236,7 +236,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_mouse_click (a_x, a_y, a_button: INTEGER; a_item: EV_GRID_ITEM)
+	on_mouse_click (a_x, a_y, a_button: INTEGER; a_item: detachable EV_GRID_ITEM)
 			-- Handle mouse actions.
 		local
 			l_item: detachable EV_GRID_ITEM

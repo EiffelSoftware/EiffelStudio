@@ -175,7 +175,7 @@ feature -- Properties
 		end
 
 	all_possible_client_classes (a_class: CLASS_I): SEARCH_TABLE [CLASS_I]
-			-- Retrieves all classes that could potential be a client to the class `a_class'.
+			-- Retrieves all classes that can reach `a_class' in the Universe. It is a subset of `all_classes'.
 		require
 			a_class_attached: a_class /= Void
 		local
@@ -200,7 +200,7 @@ feature -- Properties
 			l_class_target := a_class.target
 			l_target_system := l_class_target.system
 
-				-- Retireve a list of targets			
+				-- Retrieve a list of targets			
 			l_targets := l_target_system.targets.linear_representation
 				-- Remove current class target as we know all classes in the target are reachable
 			l_targets.start
@@ -213,7 +213,11 @@ feature -- Properties
 			l_apt_targets.extend (l_class_target)
 
 				-- Build list of applicable targets
-			from l_targets.start until l_targets.is_empty or else l_targets.after loop
+			from
+				l_targets.start
+			until
+				l_targets.is_empty or else l_targets.after
+			loop
 				l_target := l_targets.item
 				if l_target.extends /= Void then
 					if l_apt_targets.has (l_target.extends) then
@@ -224,6 +228,7 @@ feature -- Properties
 						l_apt_targets.extend (l_target)
 					end
 				end
+				l_targets.forth
 			end
 				-- Done with target list
 			l_targets := Void

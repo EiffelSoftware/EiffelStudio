@@ -23,7 +23,7 @@ feature -- Initialization
 			create shop.make (number_of_chairs)
 			create barber.make (shop, time_for_hair_cut)
 
-			create customers.make(1, number_of_customers)
+			create customers.make (number_of_customers)
 
 			from
 				i := 1
@@ -32,17 +32,17 @@ feature -- Initialization
 			loop
 				create a_customer.make (i, barber, shop, number_of_haircuts)
 				create l_sep_customer.make (a_customer)
-				customers.put(l_sep_customer, i)
+				customers.extend (l_sep_customer)
 				i := i + 1
 			end
 
 			from
-				i := 1
+				customers.start
 			until
-				i > number_of_customers
+				customers.after
 			loop
-				launch_customer ((customers @ i).customer)
-				i := i + 1
+				launch_customer (customers.item.customer)
+				customers.forth
 			end
 		end
 
@@ -59,7 +59,7 @@ feature {NONE} -- Implementation
 	barber: separate BARBER
 	shop: separate SHOP
 
-	customers: ARRAY [SEP_CUSTOMER]
+	customers: ARRAYED_LIST [SEP_CUSTOMER]
 
 	launch_customer (a_customer: separate CUSTOMER)
 			-- Launch customer in a controlled manner.

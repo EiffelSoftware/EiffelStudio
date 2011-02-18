@@ -683,8 +683,7 @@ feature -- Command/Query Handling
 				check l_request_chain_node_meta_data_queue_attached: attached l_request_chain_node_meta_data_queue end
 				l_request_chain_node_meta_data_queue [0] := l_request_chain_meta_data
 
-				request_chain_meta_data [a_supplier_processor_id] := l_request_chain_meta_data;
-
+				request_chain_meta_data [a_supplier_processor_id] := Void
 					-- Increase request chain and request chain node id to simulate normal logging procedure
 				(processor_meta_data [a_supplier_processor_id]) [current_request_chain_id_index] := 1
 				(processor_meta_data [a_supplier_processor_id]) [current_request_chain_node_id_index] := 1
@@ -726,7 +725,7 @@ feature -- Command/Query Handling
 				else
 					if not l_is_lock_passing then
 						from
-							-- Wait until the request
+							-- Wait until the request chain has started.
 						until
 							l_request_chain_meta_data [request_chain_status_index] /= request_chain_status_open
 						loop

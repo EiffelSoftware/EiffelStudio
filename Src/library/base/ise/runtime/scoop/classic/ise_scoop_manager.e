@@ -78,9 +78,13 @@ feature -- C callback function
 			l_current_request_chain: detachable like new_request_chain_meta_data_entry
 			l_end_index, i: INTEGER
 		do
-			Result := True
+			Result := a_client_processor_id /= a_supplier_processor_id
 			l_current_request_chain := request_chain_meta_data [a_client_processor_id]
 			if l_current_request_chain /= Void then
+				if l_current_request_chain [request_chain_client_pid_index] = a_supplier_processor_id then
+						-- We are lock passing so we must be controlled.
+					Result := False
+				end
 				l_end_index := l_current_request_chain [request_chain_pid_count_index]
 				if l_end_index > 0 then
 					from
@@ -259,7 +263,7 @@ feature -- Request Chain Handling
 			l_request_chain_meta_data [request_chain_pid_count_index] := 0
 			l_request_chain_meta_data [request_chain_client_pid_index] := a_client_processor_id
 			l_request_chain_meta_data [request_chain_client_pid_request_chain_id_index] := invalid_request_chain_id
-			l_request_chain_meta_data [request_chain_status_index] := request_chain_status_open
+			l_request_chain_meta_data [request_chain_status_index] := request_chain_status_uninitialized
 
 			request_chain_meta_data [a_client_processor_id] := l_request_chain_meta_data;
 
@@ -345,6 +349,7 @@ feature -- Request Chain Handling
 		end
 
 	update_request_chain_meta_data (a_client_processor_id: like processor_id_type; a_request_chain_meta_data: like new_request_chain_meta_data_entry)
+			-- Update request chain meta data for `a_client_processor_id'.
 		local
 			l_request_chain_depth: INTEGER
 		do
@@ -419,7 +424,7 @@ feature -- Request Chain Handling
 			l_request_chain_meta_data [request_chain_pid_count_index] := l_unique_pid_count
 			l_request_chain_meta_data [request_chain_client_pid_index] := a_client_processor_id
 			l_request_chain_meta_data [request_chain_client_pid_request_chain_id_index] := l_request_chain_id
-			l_request_chain_meta_data [request_chain_status_index] := -1
+			l_request_chain_meta_data [request_chain_status_index] := request_chain_status_uninitialized
 
 				-- Obtain a request queue lock on each of the processors (already uniquely sorted by logical pid order)
 			from
@@ -517,6 +522,9 @@ feature -- Request Chain Handling
 
 				i := i + 1
 			end
+
+				-- Set chain as open so that the processors may enter the chain
+			l_request_chain_meta_data [request_chain_status_index] := request_chain_status_open
 		end
 
 feature -- Command/Query Handling
@@ -717,16 +725,14 @@ feature -- Command/Query Handling
 					l_request_chain_meta_data [request_chain_status_index] := request_chain_status_closed
 				else
 					if not l_is_lock_passing then
-						if l_request_chain_meta_data [request_chain_status_index] = request_chain_status_open then
-								-- If the chain is open then mark as waiting so that the request chain nodes may proceed.
-							from
-								l_request_chain_meta_data [request_chain_status_index] := request_chain_status_waiting
-							until
-								l_request_chain_meta_data [request_chain_status_index] = request_chain_status_application
-							loop
-								yield_processor
-							end
+						from
+							-- Wait until the request
+						until
+							l_request_chain_meta_data [request_chain_status_index] /= request_chain_status_open
+						loop
+							yield_processor
 						end
+
 							-- Synchronize call chain before any further calls are logged.
 						synchronize_processors_upon_application (a_client_processor_id, a_supplier_processor_id)
 
@@ -811,6 +817,8 @@ feature -- Command/Query Handling
 			l_request_chain_meta_data := request_chain_meta_data [a_client_processor_id]
 			check l_scoop_process_request_chain_meta_data_attached: attached l_request_chain_meta_data end
 
+			check l_chain_is_being_applied: l_request_chain_meta_data [request_chain_status_index] = request_chain_status_application end
+
 			l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 ($waiting_processor_count)
 			l_orig_chain_node_count := {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_request_chain_meta_data.item_address (request_chain_pid_count_index), 0)
 
@@ -832,6 +840,10 @@ feature -- Command/Query Handling
 			loop
 				yield_processor
 			end
+				-- Reset waiting processor value back to null processor id
+			(processor_meta_data [a_client_processor_id]) [current_request_chain_query_blocking_processor_index] := null_processor_id
+
+
 				-- Set request chain pid count back to original value.
 			l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.decrement_integer_32 (l_request_chain_meta_data.item_address (request_chain_pid_count_index))
 			l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.decrement_integer_32 ($waiting_processor_count)
@@ -942,19 +954,11 @@ feature {NONE} -- Resource Initialization
 
 					l_executing_request_chain_node_meta_data := l_request_chain_node_meta_data_queue [l_executing_node_id]
 					if
-						l_executing_request_chain_node_meta_data /= Void
+						l_executing_request_chain_node_meta_data /= Void and then l_executing_request_chain_node_meta_data [request_chain_status_index] /= request_chain_status_uninitialized
 							-- We only allow feature application to occur when the chain is correctly set.
 					then
 							-- We are in a valid feature application position as the request chain has been initialized.
 						from
-							from
-								-- Block until chain is no longer open.
-							until
-								l_executing_request_chain_node_meta_data [request_chain_status_index] /= request_chain_status_open
-							loop
-								yield_processor
-							end
-
 							l_head_pid := l_executing_request_chain_node_meta_data [request_chain_meta_data_header_size]
 							l_is_head := l_head_pid = a_logical_processor_id
 
@@ -1246,10 +1250,11 @@ feature {NONE} -- Scoop Processor Meta Data
 	request_chain_status_index: NATURAL_8 = 3
 			-- Index values for request chain states
 
-	request_chain_status_open: INTEGER_8 = -1
-	request_chain_status_waiting: INTEGER_8 = 0
-	request_chain_status_application: INTEGER_8 = 1
-	request_chain_status_closed: INTEGER_8 = 2
+	request_chain_status_uninitialized: INTEGER_8 = -1
+	request_chain_status_open: INTEGER_8 = 0
+	request_chain_status_waiting: INTEGER_8 = 1
+	request_chain_status_application: INTEGER_8 = 2
+	request_chain_status_closed: INTEGER_8 = 3
 		-- Various state constants for a request chain.
 
 	request_chain_meta_data_default_size: INTEGER_32 = 8

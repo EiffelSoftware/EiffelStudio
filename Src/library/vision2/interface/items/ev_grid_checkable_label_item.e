@@ -77,7 +77,7 @@ feature -- Status setting
 
 feature -- Actions
 
-	checked_changed_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_GRID_CHECKABLE_LABEL_ITEM]]
+	checked_changed_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [like Current]]
 			-- Actions called when checkbox value changed.
 		do
 			Result := implementation.checked_changed_actions

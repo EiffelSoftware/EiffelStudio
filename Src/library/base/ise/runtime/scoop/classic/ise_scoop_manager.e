@@ -778,8 +778,10 @@ feature -- Command/Query Handling
 								-- We need to set the queue entry each time in case it has resized.
 							l_client_request_chain_node_queue_entry := l_request_chain_node_queue [(processor_meta_data [a_client_processor_id])[current_request_node_id_execution_index]]
 							check l_client_request_chain_node_queue_entry_attached: l_client_request_chain_node_queue_entry /= Void end
-
-							if l_client_request_chain_node_queue_entry.count > l_logged_calls_count then
+							if
+								l_client_request_chain_node_queue_entry.count > l_logged_calls_count and then
+								l_client_request_chain_node_queue_entry [l_logged_calls_count] /= default_pointer
+							then
 								if not l_is_lock_passing then
 									l_request_chain_meta_data := request_chain_meta_data [a_supplier_processor_id]
 									check l_request_chain_meta_data_attached: attached l_request_chain_meta_data end
@@ -1054,7 +1056,7 @@ feature {NONE} -- Resource Initialization
 						loop
 							l_executing_request_chain_node := l_request_chain_node_queue [l_executing_node_id]
 							check l_executing_request_chain_node_attached: attached l_executing_request_chain_node end
-							if l_executing_node_id_cursor < l_executing_request_chain_node.count then
+							if l_executing_node_id_cursor < l_executing_request_chain_node.count and then l_executing_request_chain_node [l_executing_node_id_cursor] /= default_pointer then
 								scoop_command_call (l_executing_request_chain_node [l_executing_node_id_cursor])
 								l_executing_node_id_cursor := l_executing_node_id_cursor + 1
 							elseif l_executing_request_chain_node_meta_data [request_chain_status_index] = request_chain_status_closed then
@@ -1132,8 +1134,10 @@ feature {NONE} -- Resource Initialization
 		end
 
 	scoop_command_call (data: like call_data)
+		require
+			data_not_null: data /= default_pointer
 		external
-			"C inline"
+			"C inline use <eif_scoop.h>"
 		alias
 			"[
 			#ifdef WORKBENCH

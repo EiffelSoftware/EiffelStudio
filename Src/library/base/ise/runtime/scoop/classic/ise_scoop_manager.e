@@ -264,6 +264,7 @@ feature -- Request Chain Handling
 			l_request_chain_meta_data [request_chain_client_pid_index] := a_client_processor_id
 			l_request_chain_meta_data [request_chain_client_pid_request_chain_id_index] := invalid_request_chain_id
 			l_request_chain_meta_data [request_chain_status_index] := request_chain_status_uninitialized
+			l_request_chain_meta_data [request_chain_sync_counter_index] := 0
 
 			request_chain_meta_data [a_client_processor_id] := l_request_chain_meta_data;
 
@@ -278,6 +279,9 @@ feature -- Request Chain Handling
 		do
 				-- Retrieve existing meta data chain.
 			l_request_chain_meta_data := request_chain_meta_data [a_client_processor_id]
+			if l_request_chain_meta_data = Void then
+				(create {EXCEPTIONS}).raise ("Invalid SCOOP Meta Data%N")
+			end
 			check l_request_chain_meta_data_entry_attached: attached l_request_chain_meta_data end
 			l_request_chain_meta_data [request_chain_status_index] := request_chain_status_closed
 
@@ -315,6 +319,9 @@ feature -- Request Chain Handling
 
 				-- Retrieve request chain meta data structure, add supplier pid to it if not already present.
 			l_request_chain_meta_data := request_chain_meta_data [a_client_processor_id]
+			if l_request_chain_meta_data = Void then
+				(create {EXCEPTIONS}).raise ("Invalid SCOOP Meta Data%N")
+			end
 			check l_request_chain_meta_data_attached: attached l_request_chain_meta_data end
 
 			if (processor_meta_data [a_supplier_processor_id]) [current_request_chain_query_blocking_processor_index] = a_client_processor_id then
@@ -355,7 +362,9 @@ feature -- Request Chain Handling
 		do
 			l_request_chain_depth := (processor_meta_data [a_client_processor_id]) [Current_request_chain_id_depth_index]
 			(request_chain_meta_data_stack_list [a_client_processor_id]) [l_request_chain_depth] := a_request_chain_meta_data
-			request_chain_meta_data [a_client_processor_id] := a_request_chain_meta_data
+			if request_chain_meta_data [a_client_processor_id] /= a_request_chain_meta_data  then
+				request_chain_meta_data [a_client_processor_id] := a_request_chain_meta_data
+			end
 		end
 
 	wait_for_request_chain_supplier_processor_locks (a_client_processor_id: like processor_id_type)
@@ -383,6 +392,9 @@ feature -- Request Chain Handling
 
 				-- Retrieve request chain meta data structure.
 			l_request_chain_meta_data := request_chain_meta_data [a_client_processor_id]
+			if l_request_chain_meta_data = Void then
+				(create {EXCEPTIONS}).raise ("Invalid SCOOP Meta Data%N")
+			end
 			check l_request_chain_meta_data_attached: attached l_request_chain_meta_data end
 
 			from
@@ -425,6 +437,7 @@ feature -- Request Chain Handling
 			l_request_chain_meta_data [request_chain_client_pid_index] := a_client_processor_id
 			l_request_chain_meta_data [request_chain_client_pid_request_chain_id_index] := l_request_chain_id
 			l_request_chain_meta_data [request_chain_status_index] := request_chain_status_uninitialized
+			l_request_chain_meta_data [request_chain_sync_counter_index] := l_unique_pid_count
 
 				-- Obtain a request queue lock on each of the processors (already uniquely sorted by logical pid order)
 			from
@@ -454,7 +467,6 @@ feature -- Request Chain Handling
 
 					-- Resize meta data to allow for supplier processor meta data.
 				l_request_chain_meta_data := l_request_chain_meta_data.aliased_resized_area (l_container_count + l_unique_pid_count)
-				update_request_chain_meta_data (a_client_processor_id, l_request_chain_meta_data)
 			until
 				i = l_container_count
 			loop
@@ -483,11 +495,17 @@ feature -- Request Chain Handling
 					-- Set meta data for the request node of `l_pid'
 					-- This is used for both `head' and `tail' request chain nodes.
 				l_request_chain_node_meta_data_queue := request_chain_node_meta_data_queue_list [l_pid]
+				if l_request_chain_node_meta_data_queue = Void then
+					(create {EXCEPTIONS}).raise ("Invalid SCOOP Meta Data%N")
+				end
 				check l_request_chain_node_meta_data_queue_attached: attached l_request_chain_node_meta_data_queue end
 				l_request_chain_node_meta_data_queue [l_request_chain_node_id] := l_request_chain_meta_data
 
 					-- Set request chain node queue entry for `l_pid' for future logging.
 				l_request_chain_node_queue := request_chain_node_queue_list [l_pid]
+				if l_request_chain_node_queue = Void then
+					(create {EXCEPTIONS}).raise ("Invalid SCOOP Meta Data%N")
+				end
 				check l_request_chain_node_queue_attached: attached l_request_chain_node_queue end
 				l_request_chain_node_queue_entry := l_request_chain_node_queue [l_request_chain_node_id]
 				if not attached l_request_chain_node_queue_entry then
@@ -604,9 +622,13 @@ feature -- Command/Query Handling
 			else
 					-- Call is specific to `a_client_processor_id' so we need to retrieve the request chain node for `a_supplier_processor_id' from here.
 				l_request_chain_meta_data := request_chain_meta_data [a_client_processor_id]
+				if l_request_chain_meta_data = Void then
+					(create {EXCEPTIONS}).raise ("Invalid SCOOP Meta Data%N")
+				end
 				check l_client_request_chain_meta_data_attached: attached l_request_chain_meta_data end
 
 				l_unique_pid_count := l_request_chain_meta_data [request_chain_pid_count_index]
+
 				l_request_chain_node_id := invalid_request_chain_node_id
 
 				if l_unique_pid_count > 0 then
@@ -637,6 +659,9 @@ feature -- Command/Query Handling
 
 				-- Retrieve request chain node list so the call can be logged
 			l_request_chain_node_queue := request_chain_node_queue_list [a_supplier_processor_id]
+			if l_request_chain_node_queue = Void then
+				(create {EXCEPTIONS}).raise ("Invalid SCOOP Meta Data%N")
+			end
 			check l_request_chain_node_queue_attached: attached l_request_chain_node_queue end
 
 			if l_request_chain_node_id /= invalid_request_chain_node_id then
@@ -675,15 +700,15 @@ feature -- Command/Query Handling
 				l_request_chain_meta_data [request_chain_pid_count_index] := 1 -- Number of processors involved in chain (a_processor_id)
 				l_request_chain_meta_data [request_chain_client_pid_index] := a_supplier_processor_id -- client processor id
 				l_request_chain_meta_data [request_chain_client_pid_request_chain_id_index] := 0 -- current request chain id
+				l_request_chain_meta_data [request_chain_sync_counter_index] := 1 -- One value in the sync chain.
 
 				l_request_chain_meta_data.extend (a_supplier_processor_id)
 				l_request_chain_meta_data.extend (0) -- current request chain node id
 
 				l_request_chain_node_meta_data_queue := request_chain_node_meta_data_queue_list [a_supplier_processor_id]
 				check l_request_chain_node_meta_data_queue_attached: attached l_request_chain_node_meta_data_queue end
-				l_request_chain_node_meta_data_queue [0] := l_request_chain_meta_data
+				l_request_chain_node_meta_data_queue [0] := l_request_chain_meta_data;
 
-				request_chain_meta_data [a_supplier_processor_id] := Void
 					-- Increase request chain and request chain node id to simulate normal logging procedure
 				(processor_meta_data [a_supplier_processor_id]) [current_request_chain_id_index] := 1
 				(processor_meta_data [a_supplier_processor_id]) [current_request_chain_node_id_index] := 1
@@ -784,15 +809,20 @@ feature -- Command/Query Handling
 						end
 					else
 							-- Lock passing so we need to log the call on the supplier processors current request node chain.
+						if request_chain_meta_data [a_supplier_processor_id] = Void then
+							do_nothing
+						end
 						l_request_chain_meta_data := request_chain_meta_data [a_supplier_processor_id]
-						check l_request_chain_meta_data_attached: attached l_request_chain_meta_data end
+						if l_request_chain_meta_data /= Void then
+							l_request_chain_node_queue_entry.extend (a_call_data)
+								-- Client call discovery sync
+							sync_with_waiting_client_processor (l_request_chain_meta_data)
 
-						l_request_chain_node_queue_entry.extend (a_call_data)
-							-- Client call discovery sync
-						sync_with_waiting_client_processor (l_request_chain_meta_data)
-
-							-- Client call execution sync
-						sync_with_waiting_client_processor (l_request_chain_meta_data)
+								-- Client call execution sync
+							sync_with_waiting_client_processor (l_request_chain_meta_data)
+						else
+							(create {EXCEPTIONS}).raise ("Request Chain Invalid%N")
+						end
 					end
 				end
 
@@ -811,7 +841,7 @@ feature -- Command/Query Handling
 			-- Synchronize `a_client_processor_id' with `a_supplier_processor_id'.
 		local
 			l_request_chain_meta_data: detachable like new_request_chain_meta_data_entry
-			l_temp_count, l_orig_chain_node_count: INTEGER_32
+			l_temp_count, l_orig_sync_count: INTEGER_32
 		do
 			l_request_chain_meta_data := request_chain_meta_data [a_client_processor_id]
 			check l_scoop_process_request_chain_meta_data_attached: attached l_request_chain_meta_data end
@@ -819,23 +849,23 @@ feature -- Command/Query Handling
 			check l_chain_is_being_applied: l_request_chain_meta_data [request_chain_status_index] = request_chain_status_application end
 
 			l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 ($waiting_processor_count)
-			l_orig_chain_node_count := {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_request_chain_meta_data.item_address (request_chain_pid_count_index), 0)
+			l_orig_sync_count := {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_request_chain_meta_data.item_address (request_chain_sync_counter_index), 0)
 
 				-- Wait for nodes to enter waiting state.
 			from
-				l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.swap_integer_32 (l_request_chain_meta_data.item_address (request_chain_pid_count_index), -l_orig_chain_node_count)
+				l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.swap_integer_32 (l_request_chain_meta_data.item_address (request_chain_sync_counter_index), -l_orig_sync_count)
 				l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.swap_integer_32 (l_request_chain_meta_data.item_address (request_chain_status_index), request_chain_status_waiting)
 			until
-				{ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_request_chain_meta_data.item_address (request_chain_pid_count_index), 0) = 0
+				{ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_request_chain_meta_data.item_address (request_chain_sync_counter_index), 0) = 0
 			loop
 				yield_processor
 			end
 			from
 					-- Set request chain status back to application so that when waiting processors exit they don't re-enter the loop.
 				l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.swap_integer_32 (l_request_chain_meta_data.item_address (request_chain_status_index), request_chain_status_application)
-				l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 (l_request_chain_meta_data.item_address (request_chain_pid_count_index))
+				l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 (l_request_chain_meta_data.item_address (request_chain_sync_counter_index))
 			until
-				{ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_request_chain_meta_data.item_address (request_chain_pid_count_index), 0) = l_orig_chain_node_count + 1
+				{ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_request_chain_meta_data.item_address (request_chain_sync_counter_index), 0) = l_orig_sync_count + 1
 			loop
 				yield_processor
 			end
@@ -844,7 +874,7 @@ feature -- Command/Query Handling
 
 
 				-- Set request chain pid count back to original value.
-			l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.decrement_integer_32 (l_request_chain_meta_data.item_address (request_chain_pid_count_index))
+			l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.decrement_integer_32 (l_request_chain_meta_data.item_address (request_chain_sync_counter_index))
 			l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.decrement_integer_32 ($waiting_processor_count)
 		end
 
@@ -880,8 +910,11 @@ feature {NONE} -- Resource Initialization
 				-- Create request chain node queue pigeon for each potential processor.
 			create request_chain_node_queue_list.make_filled (Void, max_scoop_processors_instantiable)
 
-				-- Assign root processor id.
+				-- Set up root processor and initial chain meta data.
 			root_processor_id := assign_free_processor_id
+			signify_start_of_request_chain (root_processor_id)
+			assign_supplier_processor_to_request_chain (root_processor_id, root_processor_id)
+			wait_for_request_chain_supplier_processor_locks (root_processor_id)
 		end
 
 	initialize_default_processor_meta_data (a_processor_id: like processor_id_type; a_reinitialize: BOOLEAN)
@@ -931,7 +964,7 @@ feature {NONE} -- Resource Initialization
 			l_executing_request_chain_node_meta_data: detachable like new_request_chain_node_meta_data_queue_entry
 			l_head_pid: like processor_id_type
 			l_is_head: BOOLEAN
-			l_orig_chain_node_count, l_temp_count: INTEGER
+			l_orig_sync_count, l_temp_count: INTEGER
 		do
 			-- SCOOP Processor has been launched
 			-- We are guaranteed that at least a creation routine has been logged.
@@ -962,28 +995,28 @@ feature {NONE} -- Resource Initialization
 							l_is_head := l_head_pid = a_logical_processor_id
 
 							if l_is_head then
-								l_orig_chain_node_count := {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_executing_request_chain_node_meta_data.item_address (request_chain_pid_count_index), 0)
-									-- We are a head node, set PID count to minus original tail count
+								l_orig_sync_count := {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_executing_request_chain_node_meta_data.item_address (request_chain_sync_counter_index), 0)
+									-- We are a head node, set sync count to minus original sync count
 
 									-- Wait until value is -1
 								from
-									l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.swap_integer_32 (l_executing_request_chain_node_meta_data.item_address (request_chain_pid_count_index), -l_orig_chain_node_count)
+									l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.swap_integer_32 (l_executing_request_chain_node_meta_data.item_address (request_chain_sync_counter_index), -l_orig_sync_count)
 								until
 									l_temp_count = -1
 								loop
 									yield_processor
-									l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_executing_request_chain_node_meta_data.item_address (request_chain_pid_count_index), 0)
+									l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_executing_request_chain_node_meta_data.item_address (request_chain_sync_counter_index), 0)
 								end
 									-- Set to zero, increment by 1 (atomic swap with 1 as shortcut)
-									-- Wait until count is original count, this signifies that all tail nodes are now executing
+									-- Wait until sync counter is original value, this signifies that all tail nodes are now executing
 								from
-									l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 (l_executing_request_chain_node_meta_data.item_address (request_chain_pid_count_index))
-									l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 (l_executing_request_chain_node_meta_data.item_address (request_chain_pid_count_index))
+									l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 (l_executing_request_chain_node_meta_data.item_address (request_chain_sync_counter_index))
+									l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 (l_executing_request_chain_node_meta_data.item_address (request_chain_sync_counter_index))
 								until
-									l_temp_count = l_orig_chain_node_count
+									l_temp_count = l_orig_sync_count
 								loop
 									yield_processor
-									l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_executing_request_chain_node_meta_data.item_address (request_chain_pid_count_index), 0)
+									l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_executing_request_chain_node_meta_data.item_address (request_chain_sync_counter_index), 0)
 								end
 									-- Tail nodes are all synchronized and executing so head node can continue.	
 
@@ -995,23 +1028,23 @@ feature {NONE} -- Resource Initialization
 							else
 									-- We are a tail node, we wait for head node to set pid count to negative value. (as we are a tail node then there must be at least two processors involved)
 								from
-									l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_executing_request_chain_node_meta_data.item_address (request_chain_pid_count_index), 0)
+									l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_executing_request_chain_node_meta_data.item_address (request_chain_sync_counter_index), 0)
 								until
 									l_temp_count < -1
 								loop
 									yield_processor
-									l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_executing_request_chain_node_meta_data.item_address (request_chain_pid_count_index), 0)
+									l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_executing_request_chain_node_meta_data.item_address (request_chain_sync_counter_index), 0)
 								end
-								l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 (l_executing_request_chain_node_meta_data.item_address (request_chain_pid_count_index))
+								l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 (l_executing_request_chain_node_meta_data.item_address (request_chain_sync_counter_index))
 
 								from
 								until
 									l_temp_count >= 1
 								loop
 									yield_processor
-									l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_executing_request_chain_node_meta_data.item_address (request_chain_pid_count_index), 0)
+									l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_executing_request_chain_node_meta_data.item_address (request_chain_sync_counter_index), 0)
 								end
-								l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 (l_executing_request_chain_node_meta_data.item_address (request_chain_pid_count_index))
+								l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 (l_executing_request_chain_node_meta_data.item_address (request_chain_sync_counter_index))
 							end
 
 							l_executing_node_id_cursor := 0
@@ -1083,19 +1116,19 @@ feature {NONE} -- Resource Initialization
 			from
 				-- Wait for waiting processor to set pid count to a negative value.
 			until
-				{ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (a_request_chain_node_meta_data.item_address (request_chain_pid_count_index), 0) < 0
+				{ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (a_request_chain_node_meta_data.item_address (request_chain_sync_counter_index), 0) < 0
 			loop
 				yield_processor
 			end
-			l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 (a_request_chain_node_meta_data.item_address (request_chain_pid_count_index))
+			l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 (a_request_chain_node_meta_data.item_address (request_chain_sync_counter_index))
 
 			from
 			until
-				{ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (a_request_chain_node_meta_data.item_address (request_chain_pid_count_index), 0) > 0
+				{ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (a_request_chain_node_meta_data.item_address (request_chain_sync_counter_index), 0) > 0
 			loop
 				yield_processor
 			end
-			l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 (a_request_chain_node_meta_data.item_address (request_chain_pid_count_index))
+			l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 (a_request_chain_node_meta_data.item_address (request_chain_sync_counter_index))
 		end
 
 	scoop_command_call (data: like call_data)
@@ -1239,7 +1272,7 @@ feature {NONE} -- Scoop Processor Meta Data
 		do
 			create Result.make_empty (request_chain_meta_data_default_size)
 				-- Add meta data header null values.
-			Result.fill_with (null_processor_id, 0, 3)
+			Result.fill_with (null_processor_id, 0, 4)
 			-- Format = {pid_count, client pid, client pid request chain id, node status, head_pid, tailx_pid, head request chain node id, tail request chain node id}
 		end
 
@@ -1247,6 +1280,7 @@ feature {NONE} -- Scoop Processor Meta Data
 	request_chain_client_pid_index: NATURAL_8 = 1
 	request_chain_client_pid_request_chain_id_index: NATURAL_8 = 2
 	request_chain_status_index: NATURAL_8 = 3
+	request_chain_sync_counter_index: NATURAL_8 = 4
 			-- Index values for request chain states
 
 	request_chain_status_uninitialized: INTEGER_8 = -1
@@ -1256,9 +1290,9 @@ feature {NONE} -- Scoop Processor Meta Data
 	request_chain_status_closed: INTEGER_8 = 3
 		-- Various state constants for a request chain.
 
-	request_chain_meta_data_default_size: INTEGER_32 = 8
+	request_chain_meta_data_default_size: INTEGER_32 = 9
 		-- meta data header + (2 * supplier PID request chain meta data)
-	request_chain_meta_data_header_size: INTEGER_32 = 4
+	request_chain_meta_data_header_size: INTEGER_32 = 5
 		-- Size of request chain meta data header {pid_count, client pid, client pid request chain id, node status}
 
 	request_chain_meta_data_supplier_pid_meta_data_size: INTEGER_32 = 2

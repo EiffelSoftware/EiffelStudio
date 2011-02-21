@@ -26,6 +26,11 @@ feature -- Command
 			button_counter := 0
 
 			uicc_manager.compile
+
+			-- FIXME: how to detect where EIFGENs folder (for generated project) is?
+			-- Otherwise users have to copy generated ribbon.h, ribbon.bml and eiffelribbon.rc to one-level up folder of "EIFGENs" folder
+--			copy_generated_file_to_eifgen_if_needed
+
 			-- Check XML compilation error here?
 			save_project_info
 			generate_ecf
@@ -1343,19 +1348,15 @@ feature {NONE} -- Implementation
 			--
 		require
 			not_void: a_item_node /= void
---			not_void: a_file_generated /= Void and then a_file_generated.is_open_write
 		local
-			l_button_regiestry_string: STRING
-			l_button_creation_string, l_button_registry_string, l_button_declaration_string: STRING
-			l_file_content: STRING
-			l_last_string: STRING
+			l_button_registry_string: STRING
+			l_button_creation_string, l_button_declaration_string: STRING
 		do
 			if attached {ER_TREE_NODE_SPLIT_BUTTON_DATA} a_item_node.data as l_data then
 				l_button_creation_string := button_creation_string (a_item_node)
 				l_button_registry_string := button_registry_string (a_item_node)
 				l_button_declaration_string := button_declaration_string (a_item_node)
 
---				a_last_string := a_file_generated.last_string
 				a_last_string.replace_substring_all ("$BUTTON_CREATION", l_button_creation_string)
 				a_last_string.replace_substring_all ("$BUTTON_REGISTRY", l_button_registry_string)
 				a_last_string.replace_substring_all ("$BUTTON_DECLARATION", l_button_declaration_string)

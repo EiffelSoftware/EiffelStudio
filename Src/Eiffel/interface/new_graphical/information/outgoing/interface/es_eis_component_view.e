@@ -669,7 +669,7 @@ feature {NONE} -- Implementation
 												if
 													attached {ES_EIS_GRID_EDITABLE_ITEM} l_new_row.item (j) or else
 													attached {EB_GRID_LISTABLE_CHOICE_ITEM} l_new_row.item (j) or else
-													attached {ES_EIS_GRID_CHECKABLE_LABEL_ITEM} l_new_row.item (j)
+													attached {EV_GRID_CHECKABLE_LABEL_ITEM} l_new_row.item (j)
 												then
 													l_new_row.item (j).activate
 													l_activated := True
@@ -685,7 +685,7 @@ feature {NONE} -- Implementation
 												if
 													attached {ES_EIS_GRID_EDITABLE_ITEM} l_new_row.item (j) or else
 													attached {EB_GRID_LISTABLE_CHOICE_ITEM} l_new_row.item (j) or else
-													attached {ES_EIS_GRID_CHECKABLE_LABEL_ITEM} l_new_row.item (j)
+													attached {EV_GRID_CHECKABLE_LABEL_ITEM} l_new_row.item (j)
 												then
 													l_new_row.item (j).activate
 													l_activated := True

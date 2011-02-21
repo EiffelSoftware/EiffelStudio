@@ -437,7 +437,7 @@ feature {NONE} -- Location token
 				Result := l_pixmap_item
 				Result.set_tooltip (interface_names.l_remove_auto_entry)
 			else
-				create l_item
+				create l_item.make
 				l_item.set_is_checked (a_entry.override)
 				l_item.set_check_button_key_press_action (agent tab_to_next)
 				if a_editable then
@@ -446,7 +446,7 @@ feature {NONE} -- Location token
 				else
 					l_item.disable_sensitive
 				end
-				Result := l_item
+				Result := l_item.grid_item
 			end
 		end
 
@@ -734,7 +734,7 @@ feature {NONE} -- Callbacks
 			end
 		end
 
-	on_override_changed (a_item: ES_EIS_GRID_CHECKABLE_LABEL_ITEM)
+	on_override_changed (a_item: EV_GRID_CHECKABLE_LABEL_ITEM)
 			-- On override changed
 		local
 			l_enabled: BOOLEAN

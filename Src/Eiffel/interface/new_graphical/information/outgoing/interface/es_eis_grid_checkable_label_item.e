@@ -6,17 +6,40 @@ note
 class
 	ES_EIS_GRID_CHECKABLE_LABEL_ITEM
 
-inherit
-	EV_GRID_CHECKABLE_LABEL_ITEM
-		redefine
-			activate_action,
-			deactivate
+create
+	make
+
+feature {NONE} -- Init
+
+	make
+			-- Init
+		do
+			create item
+			item.activate_actions.extend (agent activate_action)
+			item.deactivate_actions.extend (agent deactivate)
 		end
 
 feature -- Access
 
+	checked_changed_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_GRID_CHECKABLE_LABEL_ITEM]]
+			-- Actions called when checkbox value changed.
+		do
+			Result := item.checked_changed_actions
+		end
+
+	grid_item: EV_GRID_ITEM
+			-- The grid item
+		do
+			Result := item
+		end
+
+feature {NONE} -- Access
+
 	check_button: detachable EV_CHECK_BUTTON
-		-- Check button to be activated.
+			-- Check button to be activated.
+
+	item: EV_GRID_CHECKABLE_LABEL_ITEM
+			-- The item to be wrapped.
 
 feature -- Element change
 
@@ -28,18 +51,35 @@ feature -- Element change
 			check_button_key_press_action_set: check_button_key_press_action = a_action
 		end
 
+	set_is_checked (b: BOOLEAN)
+			-- Set checkbox status
+		do
+			item.set_is_checked (b)
+		end
+
+	enable_sensitive
+			-- Make object sensitive to user input
+		do
+			item.enable_sensitive
+		end
+
+	disable_sensitive
+			-- Make object non-sensitive to user input
+		do
+			item.disable_sensitive
+		end
+
 feature -- Action
 
 	deactivate
 			-- Cleanup from previous call to activate.
 		do
-			Precursor {EV_GRID_CHECKABLE_LABEL_ITEM}
 			if attached check_button as l_check_button then
 				l_check_button.focus_out_actions.wipe_out
 				if not user_cancelled_activation then
 					if attached check_button as l_cb then
-						if is_checked /= l_cb.is_selected then
-							set_is_checked (l_cb.is_selected)
+						if item.is_checked /= l_cb.is_selected then
+							item.set_is_checked (l_cb.is_selected)
 						end
 					end
 				end
@@ -64,31 +104,33 @@ feature {NONE} -- Implementation
 			a_width: INTEGER
 			a_widget_y_offset: INTEGER
 			a_widget: EV_WIDGET
-			l_parent: like parent
+			l_parent: EV_GRID
+			l_item: like item
 		do
 			a_widget := a_popup.item
+			l_item := item
 				-- Account for position of text relative to pixmap.
-			l_x_offset := left_border
-			if attached pixmap as l_pixmap then
-				l_x_offset := l_x_offset + l_pixmap.width + spacing
+			l_x_offset := l_item.left_border
+			if attached l_item.pixmap as l_pixmap then
+				l_x_offset := l_x_offset + l_pixmap.width + l_item.spacing
 			end
 
-			l_parent := parent
+			l_parent := l_item.parent
 			check l_parent /= Void end
 
-			l_x_coord := (virtual_x_position + l_x_offset) - l_parent.virtual_x_position
+			l_x_coord := (item.virtual_x_position + l_x_offset) - l_parent.virtual_x_position
 			l_x_coord := l_x_coord.max (0).min (l_x_offset)
 
-			a_width := a_popup.width - l_x_coord - right_border
+			a_width := a_popup.width - l_x_coord - item.right_border
 
-			a_widget_y_offset := (a_widget.minimum_height - text_height) // 2
+			a_widget_y_offset := (a_widget.minimum_height - l_item.text_height) // 2
 
 			a_widget.set_minimum_width (0)
 
 			a_popup.set_x_position (a_popup.x_position + l_x_coord)
 			a_popup.set_width (a_width)
-			a_popup.set_y_position (a_popup.y_position + ((a_popup.height - top_border - bottom_border - text_height) // 2) + top_border - a_widget_y_offset)
-			a_popup.set_height (text_height)
+			a_popup.set_y_position (a_popup.y_position + ((a_popup.height - l_item.top_border - l_item.bottom_border - l_item.text_height) // 2) + l_item.top_border - a_widget_y_offset)
+			a_popup.set_height (l_item.text_height)
 		end
 
 	handle_key (a_key: EV_KEY)
@@ -114,20 +156,25 @@ feature {NONE} -- Implementation
 			-- `Current' has been requested to be updated via `popup_window'.
 		local
 			l_check_button: like check_button
-			l_bg_color: EV_COLOR
+			l_bg_color: detachable EV_COLOR
 		do
 			create l_check_button
 			check_button := l_check_button
 
-			if is_checked then
+			if item.is_checked then
 				l_check_button.enable_select
 			else
 				l_check_button.disable_select
 			end
 
-			l_bg_color := implementation.displayed_background_color
-			popup_window.set_background_color (l_bg_color)
-			l_check_button.set_foreground_color (implementation.displayed_foreground_color)
+			l_bg_color := item.background_color
+			if l_bg_color /= Void then
+				popup_window.set_background_color (l_bg_color)
+			end
+			l_bg_color := item.foreground_color
+			if l_bg_color /= Void then
+				l_check_button.set_foreground_color (l_bg_color)
+			end
 
 			popup_window.extend (l_check_button)
 				-- Change `popup_window' to suit `Current'.
@@ -150,6 +197,7 @@ feature {NONE} -- Implementation
 		end
 
 invariant
+	item_not_void: item /= Void
 	check_button_parented_during_activation: attached check_button as l_check_button implies l_check_button.parent /= Void
 
 note

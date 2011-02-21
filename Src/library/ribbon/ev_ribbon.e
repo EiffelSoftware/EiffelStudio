@@ -36,6 +36,14 @@ feature -- Command
 			c_set_modes (a_mode, item)
 		end
 
+	set_background_color (a_color: EV_RIBBON_HSB_COLOR)
+			-- Set global background color with `a_color'
+		require
+			not_void: a_color /= Void
+		do
+			c_set_ribbon_background_color (item, a_color.value)
+		end
+
 	destroy
 			-- Clean up all ribbon related COM objects and resources
 		do
@@ -74,7 +82,6 @@ feature {EV_RIBBON_BUTTON, EV_RIBBON_CHECKBOX} -- Commands
 		do
 			c_invalidate_ui_command (item, a_command_id, a_flags, a_key.item)
 		end
-
 
 feature -- Status Report
 
@@ -230,6 +237,31 @@ feature {NONE} -- Implementation
 					(UI_INVALIDATIONS) $a_flags,
 					(PROPERTYKEY *) $a_key);
 			}"
+		end
+
+	c_set_ribbon_background_color (a_ribbon_framework: POINTER; a_color_value: NATURAL_32)
+			-- Set ribbon color
+		external
+			"C++ inline use <Propvarutil.h>"
+		alias
+			"[
+			{			
+				IPropertyStore *l_spPropertyStore;
+				IUIFramework *l_framework = (IUIFramework *) $a_ribbon_framework;
+
+				PROPVARIANT propvarBackground;
+				UI_HSBCOLOR BackgroundColor = (UI_HSBCOLOR) $a_color_value;
+				InitPropVariantFromUInt32(BackgroundColor, &propvarBackground);
+
+				if (SUCCEEDED(l_framework->QueryInterface(__uuidof(IPropertyStore), (void **)&l_spPropertyStore)))
+				{
+					 l_spPropertyStore->SetValue(UI_PKEY_GlobalBackgroundColor, propvarBackground);
+ 					 l_spPropertyStore->Commit();
+ 					 l_spPropertyStore->Release();
+				}
+
+			}
+			]"
 		end
 end
 

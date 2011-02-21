@@ -26,7 +26,10 @@ create
 	make_decimal,
 	make_items_source,
 	make_categories,
-	make_selected_item
+	make_selected_item,
+	make_global_background_color,
+	make_global_text_color,
+	make_global_highlight_color
 
 feature {NONE}  -- Initialization
 
@@ -94,6 +97,24 @@ feature {NONE}  -- Initialization
 			-- Make a selected item key
 		do
 			share_from_pointer (c_ui_pkey_selected_item)
+		end
+
+	make_global_background_color
+			-- Make a global background color
+		do
+			share_from_pointer (c_ui_pkey_globalbackgroundcolor)
+		end
+
+	make_global_text_color
+			-- Make a global text color
+		do
+			share_from_pointer (c_ui_pkey_globaltextcolor)
+		end
+
+	make_global_highlight_color
+			-- Make a global hightligh color
+		do
+			share_from_pointer (c_ui_pkey_globalhighlightcolor)
 		end
 
 feature -- Access
@@ -348,6 +369,42 @@ feature {NONE} -- Externals
 			"[
 			{
 				return (EIF_POINTER) &UI_PKEY_SelectedItem;
+			}
+			]"
+		end
+
+	c_ui_pkey_globalbackgroundcolor: POINTER
+			--
+		external
+			"C inline use %"UIRibbon.h%""
+		alias
+			"[
+			{
+				return &UI_PKEY_GlobalBackgroundColor;
+			}
+			]"
+		end
+
+	c_ui_pkey_globaltextcolor: POINTER
+			--
+		external
+			"C inline use %"UIRibbon.h%""
+		alias
+			"[
+			{
+				return &UI_PKEY_GlobalTextColor;
+			}
+			]"
+		end
+
+	c_ui_pkey_globalhighlightcolor: POINTER
+			--
+		external
+			"C inline use %"UIRibbon.h%""
+		alias
+			"[
+			{
+				return &UI_PKEY_GlobalHighlightColor;
 			}
 			]"
 		end

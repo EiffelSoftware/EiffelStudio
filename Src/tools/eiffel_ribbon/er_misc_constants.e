@@ -28,7 +28,7 @@ feature -- Query
 
 	template: STRING = "template"
 			-- Template folder name
-			
+
 	xml_full_file_name: detachable STRING_8
 			-- (export status {NONE})
 		local

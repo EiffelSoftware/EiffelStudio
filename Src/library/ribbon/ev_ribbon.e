@@ -39,6 +39,7 @@ feature -- Command
 	set_background_color (a_color: EV_RIBBON_HSB_COLOR)
 			-- Set global background color with `a_color'
 		require
+			exists: exists
 			not_void: a_color /= Void
 		do
 			c_set_ribbon_background_color (item, a_color.value)
@@ -46,6 +47,8 @@ feature -- Command
 
 	destroy
 			-- Clean up all ribbon related COM objects and resources
+		require
+			exists: exists
 		do
 			destroy_ribbon_com_framwork (item)
 			item := default_pointer
@@ -90,6 +93,8 @@ feature -- Status Report
 
 	height: INTEGER
 			-- Get current ribbon height
+		require
+			exists: exists
 		do
 			Result := c_height (item)
 		end

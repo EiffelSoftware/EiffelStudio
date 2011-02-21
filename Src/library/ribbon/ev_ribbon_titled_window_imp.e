@@ -29,7 +29,7 @@ feature {NONE} -- Implementation
 	ribbon_height: INTEGER
 			-- Height of ribbon tool bar
 		do
-			if attached ribbon as l_ribbon then
+			if attached ribbon as l_ribbon and then l_ribbon.exists then
 				Result := l_ribbon.height
 			end
 		end
@@ -42,7 +42,7 @@ feature {NONE} -- Implementation
 		end
 
 feature -- Access
-	
+
 	ribbon: detachable EV_RIBBON
 			-- Ribbon if any.
 		do

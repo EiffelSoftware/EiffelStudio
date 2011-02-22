@@ -60,7 +60,7 @@ feature -- Access
 			if splash_pixmap_filename /= Void and then (create {RAW_FILE}.make (splash_pixmap_filename)).exists then
 				create Result
 				Result.set_with_named_file (splash_pixmap_filename)
-				print_year (Result, "2010")
+				print_year (Result, "2011")
 			else
 				create f.default_create
 				f.set_weight ({EV_FONT_CONSTANTS}.weight_black)
@@ -254,7 +254,7 @@ feature {NONE} -- Properties
 	verbose_panel: EV_LABEL;
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

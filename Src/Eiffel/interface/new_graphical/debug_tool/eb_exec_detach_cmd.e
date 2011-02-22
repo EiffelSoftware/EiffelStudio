@@ -26,19 +26,13 @@ feature {NONE} -- Initialization
 
 	make
 			-- Initialize `Current'.
-		local
-			--l_shortcut: SHORTCUT_PREFERENCE
 		do
-			--l_shortcut := preferences.misc_shortcut_data.shortcuts.item ("stop_application")
-			--create accelerator.make_with_key_combination (l_shortcut.key, l_shortcut.is_ctrl, l_shortcut.is_alt, l_shortcut.is_shift)
-			--set_referred_shortcut (l_shortcut)
-			--accelerator.actions.extend (agent execute)
 		end
 
 feature -- Formatting
 
 	execute
-			-- Pause the execution.
+			-- Detach the debugger
 		do
 			if attached debugger_manager as dbg and then dbg.application_is_executing then
 				ask_and_detach
@@ -49,12 +43,17 @@ feature -- Element change
 
 	enable_sensitive
 		do
-			if debugger_manager.is_classic_project then
-				Precursor
-			else
-				prompts.show_warning_prompt ("Detaching application is not yet supported for dotnet Eiffel project", Void, Void)
+			if attached debugger_manager as dbg then
+				if dbg.is_classic_project then
+					Precursor
+				end
 			end
 		end
+
+feature -- Command property
+
+	name: STRING = "Exec_detach"
+			-- Name of the command.
 
 feature {NONE} -- Attributes
 
@@ -75,9 +74,6 @@ feature {NONE} -- Attributes
 		do
 			Result := Interface_names.b_Exec_detach
 		end
-
-	name: STRING = "Exec_detach"
-			-- Name of the command.
 
 	menu_name: STRING_GENERAL
 			-- Menu entry corresponding to `Current'.
@@ -117,7 +113,11 @@ feature {NONE} -- Implementation
 			-- Effectively detach the application.
 		do
 			if attached debugger_manager as dbg and then dbg.application_is_executing then
-				dbg.application.detach
+				if dbg.is_classic_project then
+					dbg.application.detach
+				else
+					prompts.show_warning_prompt ("Detaching application is not yet supported for dotnet Eiffel project", Void, Void)
+				end
 			end
 		end
 

@@ -2400,8 +2400,15 @@ rt_private void interpret(int flag, int where)
 	 */
 	case BC_SEPARATE:
 	 	{
-	 		uint32 n = get_uint16 (&IC);    /* Number of arguments.  */
-	 		EIF_BOOLEAN q = get_bool (&IC); /* Indicator of a query. */
+	 			/* Variables are not used in non-SCOOP context */
+#ifdef EIF_THREADS
+	 		uint32 n = 
+#endif
+	 			get_uint16 (&IC);    /* Number of arguments.  */
+#ifdef EIF_THREADS
+	 		EIF_BOOLEAN q = 
+#endif
+	 			get_bool (&IC); /* Indicator of a query. */
 			
 #ifdef EIF_THREADS
 			if (otop()->it_ref == (EIF_REFERENCE) 0) /* Called on a void reference? */

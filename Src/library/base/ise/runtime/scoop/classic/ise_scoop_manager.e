@@ -173,13 +173,13 @@ feature -- Processor Initialization
 				--| FIXME Implement redundant processor traversal to return next available id
 			Result := {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 ($processor_count) - 1
 
-			initialize_default_processor_meta_data (Result, False)
-
 			if Result = max_scoop_processors_instantiable then
 				-- Perform processor cleanup.
 				-- Raise Exception if no free processor could not be found, or block until there is one.
 				(create {EXCEPTIONS}).raise ("Maximum SCOOP Processor Allocation reached%N")
 			end
+
+			initialize_default_processor_meta_data (Result, False)
 
 			debug ("ISE_SCOOP_MANAGER")
 				print ("assign_free_processor_id of pid " + Result.out + "%N")
@@ -748,6 +748,8 @@ feature -- Command/Query Handling
 				(processor_meta_data [a_supplier_processor_id]) [current_request_chain_node_id_index] := 1
 
 				l_request_chain_meta_data [request_chain_status_index] := request_chain_status_closed -- Request chain is closed unless call is synchronous.
+
+				l_is_synchronous := True
 			end
 
 			if l_is_synchronous then

@@ -37,6 +37,8 @@ feature -- Access
 			b := x.w (a)
 			b := x [Current] 
 			b := x [a]
+			b := x + Current
+			b := x + a
 		end
 
 	h (y: TEST)
@@ -44,6 +46,10 @@ feature -- Access
 		end
 
 	w alias "[]" (z: TEST): BOOLEAN
+		do
+		end
+
+	t alias "+" (z: TEST): BOOLEAN
 		do
 		end
 

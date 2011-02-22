@@ -1461,7 +1461,15 @@ RT_LNK void eif_exit_eiffel_code(void);
 		((call_data*)(a)) -> result = (EIF_TYPED_VALUE *) 0;                     \
 		((call_data*)(a)) -> is_synchronous = EIF_FALSE;                         \
 	}
-#define RTS_AA(v,f,t,n,a) RTS_AS(v,f,t,n,a)
+#define RTS_AA(v,f,t,n,a) \
+	{	\
+		((call_data*)(a)) -> argument [(n) - 1] = (v);	\
+		if ((t) == SK_REF) 	\
+		{			\
+			((call_data*)(a)) -> is_synchronous = EIF_TRUE; \
+			((call_data*)(a)) -> argument [(n) - 1].it_r = (EIF_REFERENCE) eif_protect ((v).it_r); \
+		} \
+	}
 #define RTS_AS(v,f,t,n,a) \
 	{	\
 		((call_data*)(a)) -> argument [(n) - 1] = (v);	\

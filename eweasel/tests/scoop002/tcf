@@ -1,0 +1,11 @@
+test_name	scoop-argument-validity
+test_description Formal arguments of features used in separate calls must be expanded or separate.
+
+copy_sub	Ace	$TEST Ace
+copy_raw	test.e	$CLUSTER test.e
+config Ace test
+
+compile_melted
+compile_result	validity_error TEST VUAR(3) VUAR(3) VUAR(2)
+
+test_end

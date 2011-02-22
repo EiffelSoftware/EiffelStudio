@@ -1391,10 +1391,7 @@ RT_LNK void eif_exit_eiffel_code(void);
  */
  
 #define EIF_IS_DIFFERENT_PROCESSOR(o1,o2) (RTS_PID(o1) != RTS_PID(o2))
-#define RTS_OU_FUNC(c,o) ( (scp_mnger != EIFNULL) && EIF_TEST(eif_is_uncontrolled(RTS_PID(c),RTS_PID(o))) )
-#define RTS_OU(c,o) \
-	( (o != EIFNULL ) ? RTS_OU_FUNC(c, o) : FALSE ) 
-	/* ( (o != EIFNULL && EIF_IS_DIFFERENT_PROCESSOR(c, o)) ? RTS_OU_FUNC(c, o) : FALSE ) */
+#define RTS_OU(c,o) ( (o) && (scp_mnger) && EIF_TEST(eif_is_uncontrolled(RTS_PID(c),RTS_PID(o))) ) 
 
 /*
  * Processor:

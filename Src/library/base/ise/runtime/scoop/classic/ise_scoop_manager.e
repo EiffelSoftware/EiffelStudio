@@ -748,8 +748,6 @@ feature -- Command/Query Handling
 				(processor_meta_data [a_supplier_processor_id]) [current_request_chain_node_id_index] := 1
 
 				l_request_chain_meta_data [request_chain_status_index] := request_chain_status_closed -- Request chain is closed unless call is synchronous.
-
-				l_is_synchronous := True
 			end
 
 			if l_is_synchronous then

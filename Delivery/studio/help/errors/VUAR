@@ -11,3 +11,7 @@ VUAR, chapter 22 (Type checking), page 369
 
        2 Every actual  argument of the call is  compatible
          with the corresponding formal argument of `sf'.
+
+       3 If an actual argument of a separate call is of  a
+         reference type, the corresponding formal argument
+         must be declared as separate.

@@ -301,12 +301,12 @@ feature -- Setting
 			has_feature_name_stored_set: has_feature_name_stored = v
 		end
 
-	set_has_request_chain (v: BOOLEAN)
-			-- Set `has_request_chain' to `v'.
+	set_has_request_chain
+			-- Set `has_request_chain' to `True'.
 		do
-			has_request_chain := v
+			has_request_chain := True
 		ensure
-			has_request_chain_set: has_request_chain = v
+			has_request_chain: has_request_chain
 		end
 
 	set_hidden_code_level (a_level: like hidden_code_level)

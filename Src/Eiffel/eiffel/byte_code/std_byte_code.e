@@ -423,8 +423,11 @@ feature -- Analyzis
 				-- Record enter feature execution
 			generate_rtdbgd_enter
 
-				-- Checkcat calls
+				-- Check cat calls
 			generate_catcall_check
+
+				-- Generate variables for used in request chain generation (for SCOOP).
+			generate_control_information
 
 				-- Precondition check generation
 			generate_precondition
@@ -679,7 +682,6 @@ end
 			l_buf: like buffer
 			l_arg_name: STRING
 			l_class_type: CLASS_TYPE
-			is_next: BOOLEAN
 			w: BOOLEAN
 		do
 			l_arguments := arguments
@@ -722,35 +724,16 @@ end
 						l_buf.put_new_line
 						l_buf.put_string ("EIF_BOOLEAN uarg")
 						l_buf.put_integer (i)
-						l_buf.put_string (" = (EIF_BOOLEAN) RTS_OU (Current, arg")
-						l_buf.put_integer (i)
-						l_buf.put_two_character (')', ';')
+						l_buf.put_character (';')
 							-- Record that a request chain is required to lock arguments.
-						context.set_has_request_chain (True)
+						context.set_has_request_chain
 					end
 					i := i + 1
 				end
 				if context.has_request_chain then
 						-- Declare a variable that tells whether a request chain is required.
-						-- Its value is computed as "uargK || ... || uargM"
 					l_buf.put_new_line
-					l_buf.put_string ("EIF_BOOLEAN uarg = ")
-					from
-						i := l_arguments.lower
-					until
-						i > nb
-					loop
-						if real_type (l_arguments.item (i)).is_separate then
-							if is_next then
-								l_buf.put_four_character (' ', '|', '|', ' ')
-							end
-							l_buf.put_string ("uarg")
-							l_buf.put_integer (i)
-							is_next := True
-						end
-						i := i + 1
-					end
-					l_buf.put_character (';')
+					l_buf.put_string ("EIF_BOOLEAN uarg;")
 				end
 			end
 		end
@@ -1697,6 +1680,46 @@ end
 			end
 		end
 
+feature {NONE} -- C code generation
+
+	generate_control_information
+			-- Generate code to compute information about controlled and uncontrolled arguments.
+		local
+			i: INTEGER
+			nb: INTEGER
+			l_buf: GENERATION_BUFFER
+			uarg_or: STRING
+		do
+			if attached arguments as a and then context.has_request_chain then
+				from
+						-- The variable to detect if a request chain is required
+						-- is generated in the form "uarg = uarg || (uargK = ...)".
+						-- But first time it is generated as "uarg = (uargK = ...)".
+					uarg_or := ""
+					i := a.lower
+					nb := a.upper
+					l_buf := buffer
+				until
+					i > nb
+				loop
+					if real_type (a [i]).is_separate then
+							-- Initialize a variable that tells whether an argument is uncontrolled
+							-- and update a variable that tells whether a request chain is required.
+						l_buf.put_new_line
+						l_buf.put_string ("uarg = ")
+						l_buf.put_string (uarg_or)
+						l_buf.put_string ("(uarg")
+						l_buf.put_integer (i)
+						l_buf.put_string (" = (EIF_BOOLEAN) RTS_OU (Current, arg")
+						l_buf.put_integer (i)
+						l_buf.put_three_character (')', ')', ';')
+						uarg_or := "uarg || "
+					end
+					i := i + 1
+				end
+			end
+		end
+
 feature -- Byte code generation
 
 	make_body_code (ba: BYTE_ARRAY; a_generator: MELTED_GENERATOR)
@@ -1990,7 +2013,7 @@ feature {NONE} -- C code generation: wait conditions
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

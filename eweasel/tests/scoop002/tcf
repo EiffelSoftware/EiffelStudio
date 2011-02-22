@@ -6,6 +6,7 @@ copy_raw	test.e	$CLUSTER test.e
 config Ace test
 
 compile_melted
-compile_result	validity_error TEST VUAR(3) VUAR(3) VUAR(2)
+compile_result	validity_error TEST VUAR(3) VUAR(3) VUAR(2) VUAR(3) VUAR(3) VUAR(2) VUAR(3) VUAR(3) VUAR(2) VUAR(3) VUAR(3) VUAR(2)
+
 
 test_end

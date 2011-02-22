@@ -1209,6 +1209,7 @@ feature {NONE} -- Implementation
 			l_cl_type_i: CL_TYPE_A
 			l_parameter: PARAMETER_B
 			l_parameter_list: BYTE_LIST [PARAMETER_B]
+			l_is_separate: BOOLEAN
 			l_is_assigner_call, l_is_last_access_tuple_access: BOOLEAN
 			l_named_tuple: NAMED_TUPLE_TYPE_A
 			l_label_pos: INTEGER
@@ -1526,6 +1527,8 @@ feature {NONE} -- Implementation
 
 								if error_level = l_error_level then
 										-- Conformance checking of arguments
+										-- Compute required separateness status of arguments.
+									l_is_separate := a_type.is_separate
 									from
 										i := 1
 									until
@@ -1555,6 +1558,8 @@ feature {NONE} -- Implementation
 											if l_warning_count /= error_handler.warning_list.count then
 												error_handler.warning_list.last.set_location (l_parameters.i_th (i).start_location)
 											end
+										elseif l_is_separate and then l_arg_type.is_reference and then not l_formal_arg_type.is_separate then
+											error_handler.insert_error (create {VUAR3}.make (context, l_feature, l_last_class, i, l_formal_arg_type, l_arg_type, l_parameters.i_th (i).start_location))
 										end
 
 											-- Check if `l_formal_arg_type' involves some generics whose actuals
@@ -4451,7 +4456,7 @@ feature {NONE} -- Implementation
 								l_error := last_alias_error
 							end
 						else
-							if is_infix_valid (l_left_type, l_right_type, l_as.infix_function_name) then
+							if is_infix_valid (l_left_type, l_right_type, l_as.infix_function_name, l_as.operator_location) then
 								check last_calls_target_type /= Void end
 								if l_left_constrained = Void then
 									l_left_constrained := last_calls_target_type
@@ -4461,7 +4466,7 @@ feature {NONE} -- Implementation
 								l_error := last_alias_error
 								if not is_inherited and then l_left_type.convert_to (context.current_class, l_right_type.deep_actual_type) then
 									l_target_conv_info := context.last_conversion_info
-									if is_infix_valid (l_right_type, l_right_type, l_as.infix_function_name) then
+									if is_infix_valid (l_right_type, l_right_type, l_as.infix_function_name, l_as.operator_location) then
 										l_right_constrained := last_calls_target_type
 										l_left_constrained := l_right_constrained
 										l_error := Void
@@ -8227,7 +8232,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	is_infix_valid (a_left_type, a_right_type: TYPE_A; a_name: STRING): BOOLEAN
+	is_infix_valid (a_left_type, a_right_type: TYPE_A; a_name: STRING; location: LOCATION_AS): BOOLEAN
 			-- Does infix routine `a_name' exists in `a_left_type' and if so is
 			-- it valid for `a_right_type'?
 		require
@@ -8313,6 +8318,13 @@ feature {NONE} -- Implementation
 				end
 			else
 				last_alias_error := l_vtmc_error
+			end
+			if last_alias_error = Void then
+					-- Verify that if left operand is separate and right operand is of reference type
+					-- then formal feature argument is separate.
+				if a_left_type.is_separate and then a_right_type.is_reference and then not l_infix.arguments.i_th (1).is_separate then
+					create {VUAR3} last_alias_error.make (context, l_infix, l_class, 1, l_infix.arguments.i_th (1).actual_type, a_left_type, location)
+				end
 			end
 			if last_alias_error /= Void then
 				last_alias_feature := Void

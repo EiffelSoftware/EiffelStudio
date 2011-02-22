@@ -1329,6 +1329,7 @@ rt_public void reclaim(void)
 			rt_extension_obj = NULL;
 #endif
 			except_mnger = NULL;
+			scp_mnger = NULL;
 
 			plsc ();
 
@@ -1489,6 +1490,9 @@ rt_private void full_mark (EIF_CONTEXT_NOARG)
 	}
 #endif
 	except_mnger = MARK_SWITCH(&except_mnger);	/* EXCEPTION_MANAGER */
+	if (scp_mnger) {
+		scp_mnger = MARK_SWITCH(&scp_mnger);	/* ISE_SCOOP_MANAGER */
+	}
 
 		/* Deal with once manifest strings. */
 #ifndef EIF_THREADS
@@ -3847,6 +3851,9 @@ rt_private void mark_new_generation(EIF_CONTEXT_NOARG)
 	if (rt_extension_obj && !(HEADER(rt_extension_obj)->ov_flags & EO_OLD))
 		rt_extension_obj = GEN_SWITCH(&rt_extension_obj);
 #endif
+	if (scp_mnger && !(HEADER(scp_mnger)->ov_flags & EO_OLD))
+		scp_mnger = GEN_SWITCH(&scp_mnger);
+
 	if (except_mnger && !(HEADER(except_mnger)->ov_flags & EO_OLD))
 		except_mnger = GEN_SWITCH(&except_mnger);
 

@@ -1,0 +1,3 @@
+Type error: formal argument of a separate call should be of separate type
+  if the actual argument is of a reference type.
+What to do: make sure that type of the formal argument is separate.

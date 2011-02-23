@@ -1358,9 +1358,6 @@ RT_LNK void eif_exit_eiffel_code(void);
 #define scoop_task_remove_processor_reference 12
 #define scoop_task_check_uncontrolled 13
 
-
-#define EIFNULL 0
-
 #ifdef WORKBENCH
 #define RTS_TCB(t,c,s,b,a,r) \
 	{                                                                       \
@@ -1402,7 +1399,7 @@ RT_LNK void eif_exit_eiffel_code(void);
 		EIF_TYPED_VALUE pid; \
 		pid.it_i4 = 0; \
 		pid.type = SK_INT32;                                                          \
-		RTS_TCB(scoop_task_assign_processor,RTS_PID(o),EIFNULL,EIFNULL,&pid,EIFNULL); \
+		RTS_TCB(scoop_task_assign_processor,RTS_PID(o),0,0,&pid,NULL); \
 		RTS_PID(o) = (EIF_SCP_PID) pid.it_i4;                                         \
 	}
 
@@ -1415,10 +1412,10 @@ RT_LNK void eif_exit_eiffel_code(void);
  * The only valid sequence of calls is
  *      RTS_RC (RTS_RS)* [RTS_RW] RTS_RD
  */
-#define RTS_RC(p) RTS_TCB(scoop_task_signify_start_of_new_chain,RTS_PID(p),EIFNULL,EIFNULL,EIFNULL,EIFNULL)
-#define RTS_RD(p) RTS_TCB(scoop_task_signify_end_of_new_chain,RTS_PID(p),EIFNULL,EIFNULL,EIFNULL,EIFNULL)
-#define RTS_RS(p,s) RTS_TCB(scoop_task_add_supplier_to_request_chain,RTS_PID(p),RTS_PID(s),EIFNULL,EIFNULL,EIFNULL)
-#define RTS_RW(p) RTS_TCB(scoop_task_wait_for_supplier_processor_locks,RTS_PID(p),EIFNULL,EIFNULL,EIFNULL,EIFNULL)
+#define RTS_RC(p) RTS_TCB(scoop_task_signify_start_of_new_chain,RTS_PID(p),0,0,NULL,NULL)
+#define RTS_RD(p) RTS_TCB(scoop_task_signify_end_of_new_chain,RTS_PID(p),0,0,NULL,NULL)
+#define RTS_RS(p,s) RTS_TCB(scoop_task_add_supplier_to_request_chain,RTS_PID(p),RTS_PID(s),0,NULL,NULL)
+#define RTS_RW(p) RTS_TCB(scoop_task_wait_for_supplier_processor_locks,RTS_PID(p),0,0,NULL,NULL)
 
 /*
  * Separate call (versions ending with P stand for calls to precompiled routines, the first two arguments to them have a different meaning):
@@ -1480,7 +1477,7 @@ RT_LNK void eif_exit_eiffel_code(void);
 		} \
 	}
 
-#define RTS_WPR RTS_TCB(scoop_task_wait_for_processor_redundancy,EIFNULL,EIFNULL,EIFNULL,EIFNULL,EIFNULL)
+#define RTS_WPR RTS_TCB(scoop_task_wait_for_processor_redundancy,0,0,0,NULL,NULL)
 
  /*
  * Macros for workbench

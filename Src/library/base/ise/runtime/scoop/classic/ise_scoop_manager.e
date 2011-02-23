@@ -1037,6 +1037,10 @@ feature {NONE} -- Resource Initialization
 			until
 				l_processor_exit
 			loop
+					--| This is needed so that any pending gc cycles are correctly handled
+					--| as this is a tight loop without any call to RTGC
+				check_for_gc
+
 				if l_processor_meta_data [processor_status_index] = processor_status_initialized then
 						-- SCOOP processor is initialized so we can check current index
 

@@ -1120,6 +1120,7 @@ end
 					--       ... // Allocate request chain (see below).
 					--       ... // Evaluate preconditions and set has_wait_condition if wait conditions are involved.
 					--       if (!has_wait_condition) break;
+					--       RTCK; // Remove a stack item pushed when entering a precondition.
 					--       RTS_RD (Current); // Free request chain to let the scheduler reschedule this call.
 					--    }
 					--    RTCF; // Raise exception
@@ -1202,6 +1203,8 @@ end
 						-- End part of the loop that checks wait conditions.
 					buf.put_new_line
 					buf.put_string ("if (!has_wait_condition) break;")
+					buf.put_new_line
+					buf.put_string ("RTCK;")
 					buf.put_new_line
 					buf.put_string ("RTS_RD (Current);")
 					buf.generate_block_close

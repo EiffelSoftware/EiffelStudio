@@ -55,10 +55,20 @@ feature -- Initialization
 			end
 		end
 
-	make_with_other_items (a_items: ARRAY[INTEGER])
+	make_with_other_items (a_items: separate ARRAY[INTEGER])
 			-- Make the data with 'a_items'.
+		local
+			i: INTEGER
 		do
-			items := a_items
+			create items.make (a_items.lower, a_items.upper)
+			from
+				i := a_items.lower
+			until
+				i > a_items.upper
+			loop
+				items.put (a_items [i], i)
+				i := i + 1
+			end
 		end
 
 feature -- Basic operations
@@ -82,7 +92,7 @@ feature -- Basic operations
 
 feature -- Access
 
-	items: ARRAY[INTEGER]
+	items: ARRAY [INTEGER]
 		-- The items.
 
 end -- class DATA	

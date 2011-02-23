@@ -265,7 +265,7 @@ feature -- Request Chain Handling
 
 			if l_request_chain_meta_data /= Void then
 				if l_request_chain_meta_data [request_chain_client_pid_index] = null_processor_id then
-						-- We are lock passing so we reuse the passed chain.					
+						-- We are lock passing so we reuse the passed chain.				
 				else
 					l_request_chain_meta_data := Void
 				end
@@ -806,7 +806,9 @@ feature -- Command/Query Handling
 								-- Set the client of the chain to be the null processor.
 							l_request_chain_meta_data [request_chain_client_pid_index] := null_processor_id
 
-							request_chain_meta_data [a_supplier_processor_id] := l_request_chain_meta_data
+							request_chain_meta_data [a_supplier_processor_id] := l_request_chain_meta_data;
+
+							(processor_meta_data [a_supplier_processor_id])[current_request_chain_query_blocking_processor_index] := a_client_processor_id
 
 								-- Store current logged call count to see if any feature application requests are made by the call.
 							l_logged_calls_count := l_client_request_chain_node_queue_entry.count
@@ -853,10 +855,10 @@ feature -- Command/Query Handling
 					else
 							-- Lock passing so we need to log the call on the supplier processors current request node chain.
 						l_request_chain_node_queue_entry.extend (a_call_data)
-						sync_with_waiting_client_processor (a_supplier_processor_id)
+						sync_with_waiting_client_processor ((processor_meta_data [a_client_processor_id])[current_request_chain_query_blocking_processor_index])
 
 							-- Client call execution sync
-						sync_with_waiting_client_processor (a_supplier_processor_id)
+						sync_with_waiting_client_processor ((processor_meta_data [a_client_processor_id])[current_request_chain_query_blocking_processor_index])
 					end
 				end
 			else
@@ -1202,7 +1204,6 @@ feature {NONE} -- Resource Initialization
 			l_exit: BOOLEAN
 			l_original_value: INTEGER_32
 			l_processor_resource: like new_processor_meta_data_entry
-			l_resource_address: POINTER
 		do
 			from
 				l_processor_resource := processor_meta_data [a_resource_processor]

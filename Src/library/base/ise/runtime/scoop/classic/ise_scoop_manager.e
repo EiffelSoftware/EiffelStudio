@@ -475,10 +475,11 @@ feature -- Request Chain Handling
 						-- This has to be done atomically via compare and swap
 					l_pid := l_request_chain_meta_data [i]
 					l_lock_request_return := request_processor_resource (
-						processor_meta_data [l_pid].item_address (current_request_chain_node_id_lock_index),
+						current_request_chain_node_id_lock_index,
+						l_pid,
 						a_client_processor_id,
 						True, -- Wait until granted, we cannot continue until we have control over the value.
-						True  -- High Priority, wait is minimal as this is a temporary lock value
+						False  -- Low Priority, wait is minimal as this is a temporary lock value
 					)
 					check resource_attained: l_lock_request_return = resource_lock_newly_attained end
 
@@ -1195,25 +1196,28 @@ feature {NONE} -- Resource Initialization
 			]"
 		end
 
-	request_processor_resource (a_resource_address: POINTER; a_requesting_processor: like processor_id_type; a_block_until_request_granted, a_high_priority: BOOLEAN): NATURAL_8
+	request_processor_resource (a_resource_index: INTEGER_32; a_resource_processor, a_requesting_processor: like processor_id_type; a_block_until_request_granted, a_high_priority: BOOLEAN): NATURAL_8
 			--| FIXME IEK: a_resource_address should be type safe with TYPED_POINTER [INTEGER_32] but this not current be returned from SPECIAL [INTEGER_32]
 		local
 			l_exit: BOOLEAN
 			l_original_value: INTEGER_32
+			l_processor_resource: like new_processor_meta_data_entry
+			l_resource_address: POINTER
 		do
 			from
+				l_processor_resource := processor_meta_data [a_resource_processor]
 			until
 				l_exit
 			loop
 					-- Use `a_resource_type' to determine what kind of resource of `a_requesting_processor' needs from `a_resource_processor'.
 					-- Be it exclusive access to request queue, or for access to processor locks for lock passing.
-				l_original_value := {ATOMIC_MEMORY_OPERATIONS}.compare_and_swap_integer_32 (a_resource_address, a_requesting_processor, null_processor_id)
+				l_original_value := {ATOMIC_MEMORY_OPERATIONS}.compare_and_swap_integer_32 (l_processor_resource.item_address (a_resource_index), a_requesting_processor, null_processor_id)
 				if l_original_value = null_processor_id then
 						-- The value has been correctly set so Return True and Exit
 					Result := resource_lock_newly_attained
 					l_exit := True
 				else
-					-- The processor resource has already been prior requested.
+						-- The processor resource has already been prior requested.
 					if l_original_value = a_requesting_processor then
 						-- `a_requesting_processor' already has the lock so we can exit.
 

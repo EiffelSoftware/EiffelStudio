@@ -299,6 +299,7 @@ feature -- External	features
 	next_row (no_descriptor: INTEGER)
 		do
 			last_error_code := syb_next_row(no_descriptor)
+			found := (last_error_code = 0)
 		end
 
 	terminate_order (no_descriptor: INTEGER)
@@ -509,6 +510,7 @@ feature -- External	features
 	disconnect
 		do
 			last_error_code := syb_disconnect
+			found := False
 		end
 
 	commit

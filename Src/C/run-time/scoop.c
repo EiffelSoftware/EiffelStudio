@@ -123,7 +123,7 @@ rt_public void eif_free_call (call_data * a)
 	EIF_TYPED_VALUE * v;
 
 		/* Unprotect arguments from being garbage-collected. */
-	for (i = a -> count; i <= 0;) {
+	for (i = a -> count; i > 0;) {
 		v = &(a -> argument [--i]);
 		if (v -> type == SK_REF) {
 			eif_wean ((EIF_OBJECT) v -> it_r);

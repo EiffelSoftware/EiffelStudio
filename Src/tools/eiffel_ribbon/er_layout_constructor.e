@@ -193,7 +193,8 @@ feature {NONE} -- Action handing
 						l_stone_child.same_string (constants.control_group) or else
 						l_stone_child.same_string (constants.toggle_button) or else
 						l_stone_child.same_string (constants.spinner) or else
-						l_stone_child.same_string (constants.split_button)
+						l_stone_child.same_string (constants.split_button) or else
+						l_stone_child.same_string (constants.drop_down_gallery)
 				elseif a_parent_type.same_string (constants.split_button) then
 					Result := l_stone_child.same_string (constants.button)
 				end

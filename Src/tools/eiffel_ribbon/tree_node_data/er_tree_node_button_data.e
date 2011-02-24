@@ -26,7 +26,6 @@ feature {NONE} -- Initialization
 			-- Initialize a command name automatically
 		local
 			l_shared: ER_SHARED_SINGLETON
-			l_constants: ER_XML_CONSTANTS
 			l_list: ARRAYED_LIST [EV_TREE_NODE]
 			l_command_name: STRING
 			l_count: INTEGER
@@ -66,8 +65,17 @@ feature -- Command
 			l_constants: ER_XML_ATTRIBUTE_CONSTANTS
 		do
 			create l_constants
-			check a_name.is_equal (l_constants.command_name) end
-			command_name := a_value
+--			check a_name.same_string (l_constants.command_name) end
+			if a_name.same_string (l_constants.command_name) then
+				command_name := a_value
+			elseif a_name.same_string (l_constants.text_position) then
+				-- nothing to do
+			elseif a_name.same_string (l_constants.type) then
+				-- nothing to do
+			else
+
+			end
+
 		end
 
 feature {NONE} -- Implementation

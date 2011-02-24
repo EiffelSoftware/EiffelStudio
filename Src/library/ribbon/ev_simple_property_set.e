@@ -32,12 +32,23 @@ feature -- Command
 	string: detachable STRING_32
 			-- string used when key is label
 
+	item_image: detachable EV_PIXEL_BUFFER
+			-- string used when key is image
+
 	set_string (a_string: like string)
 			-- Set `string' with `a_string'
 		do
 			string := a_string
 		ensure
 			set: a_string = string
+		end
+
+	set_item_image (a_image: like item_image)
+			-- Set `image' with `a_image'
+		do
+			item_image := a_image
+		ensure
+			set: a_image = item_image
 		end
 
 feature {EV_SIMPLE_PROPERTY_SET} -- Implementation
@@ -54,6 +65,11 @@ feature {EV_SIMPLE_PROPERTY_SET} -- Implementation
 					if attached string as l_string then
 						create l_value.share_from_pointer (a_property_value)
 						l_value.set_string_value (l_string)
+					end
+				elseif l_key.is_item_image then
+					if attached item_image as l_image then
+						create l_value.share_from_pointer (a_property_value)
+						l_value.set_image (l_image)
 					end
 				end
 			else

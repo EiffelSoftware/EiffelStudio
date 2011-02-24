@@ -60,6 +60,7 @@ feature -- Command
 			l_spinner_widget: ER_SPINNER_NODE_WIDGET
 			l_combo_box_widget: ER_COMBO_BOX_NODE_WIDGET
 			l_split_button_widget: ER_SPLIT_BUTTON_NODE_WIDGET
+			l_drop_down_gallery_widget: ER_DROP_DOWN_GALLERY_NODE_WIDGET
 		do
 			widget.wipe_out
 			if attached a_node.text as l_text then
@@ -124,6 +125,12 @@ feature -- Command
 						l_split_button_widget.set_tree_node_data (l_data)
 					end
 					widget.extend (l_split_button_widget)
+				elseif l_text.same_string (constants.drop_down_gallery) then
+					create l_drop_down_gallery_widget
+					if attached {ER_TREE_NODE_DROP_DOWN_GALLERY_DATA} a_node.data as l_data then
+						l_drop_down_gallery_widget.set_tree_node_data (l_data)
+					end
+					widget.extend (l_drop_down_gallery_widget)
 				end
 			end
 

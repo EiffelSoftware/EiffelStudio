@@ -494,6 +494,7 @@ feature -- Request Chain Handling
 
 						-- Resize meta data to allow for supplier processor meta data.
 					l_request_chain_meta_data := l_request_chain_meta_data.aliased_resized_area (l_container_count + l_unique_pid_count)
+					update_request_chain_meta_data (a_client_processor_id, l_request_chain_meta_data)
 				until
 					i = l_container_count
 				loop
@@ -1128,6 +1129,7 @@ feature {NONE} -- Resource Initialization
 									else
 										scoop_command_call (l_call_ptr)
 									end
+									--scoop_command_call_cleanup (l_call_ptr)
 									l_executing_node_id_cursor := l_executing_node_id_cursor + 1
 								end
 							elseif l_executing_request_chain_node_meta_data [request_chain_status_index] = request_chain_status_closed then
@@ -1194,6 +1196,19 @@ feature {NONE} -- Resource Initialization
 			"[
 			#ifdef WORKBENCH
 				eif_try_call ($data);
+			#endif
+			]"
+		end
+
+	scoop_command_call_cleanup (data: like call_data)
+		require
+			data_not_null: data /= default_pointer
+		external
+			"C inline use <eif_scoop.h>"
+		alias
+			"[
+			#ifdef WORKBENCH
+				eif_free_call ($data);
 			#endif
 			]"
 		end

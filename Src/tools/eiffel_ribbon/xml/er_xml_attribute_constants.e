@@ -16,4 +16,16 @@ feature -- Query
 
 	size_definition: STRING = "SizeDefinition"
 
+feature -- Dropdown gallery
+
+	text_position: STRING = "TextPosition"
+
+	type: STRING = "Type"
+
+	rows: STRING = "Rows"
+
+	columns: STRING = "Columns"
+
+	gripper: STRING = "Gripper"
+
 end

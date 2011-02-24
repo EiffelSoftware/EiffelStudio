@@ -54,6 +54,12 @@ feature -- ALl types under group
 
 	split_button: STRING = "SplitButton"
 
+	drop_down_gallery: STRING = "DropDownGallery"
+
+	drop_down_gallery_menu_layout: STRING = "DropDownGallery.MenuLayout"
+
+	flow_menu_layout: STRING = "FlowMenuLayout"
+
 	control_group: STRING = "ControlGroup"
 
 feature -- Types under command node
@@ -99,7 +105,8 @@ feature -- Contract support
 					l_string.same_string (command_large_images) or else
 					l_string.same_string (toggle_button) or else
 					l_string.same_string (spinner) or else
-					l_string.same_string (split_button)
+					l_string.same_string (split_button) or else
+					l_string.same_string (drop_down_gallery)
 			end
 		end
 
@@ -112,7 +119,8 @@ feature -- Contract support
 					l_string.same_string (combo_box) or else
 					l_string.same_string (toggle_button) or else
 					l_string.same_string (spinner) or else
-					l_string.same_string (split_button)
+					l_string.same_string (split_button) or else
+					l_string.same_string (drop_down_gallery)
 			end
 		end
 end

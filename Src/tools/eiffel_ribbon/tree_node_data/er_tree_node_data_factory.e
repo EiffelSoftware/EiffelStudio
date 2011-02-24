@@ -45,6 +45,8 @@ feature -- Factory method
 				create {ER_TREE_NODE_COMBO_BOX_DATA} Result.make
 			elseif a_type.same_string (constants.split_button) then
 				create {ER_TREE_NODE_SPLIT_BUTTON_DATA} Result.make
+			elseif a_type.same_string (constants.drop_down_gallery) then
+				create {ER_TREE_NODE_DROP_DOWN_GALLERY_DATA} Result.make
 			else
 				--no data for `a_type'
 				-- Maybe `a_type' is "Application". It should not have any tree node data

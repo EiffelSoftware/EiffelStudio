@@ -1379,7 +1379,7 @@ RT_LNK void eif_exit_eiffel_code(void);
 #else
 #define RTS_TCB(t,c,s,f,a,r) (egc_scoop_manager_task_callback)(scp_mnger,t,RTS_PID(c),RTS_PID(s),f,a,r); 
 #endif
-#define RTS_PID(o) HEADER(o)->ov_head.ovs_pid
+#define RTS_PID(o) HEADER(o)->ov_pid
 
 /*
  * Object status:
@@ -1469,11 +1469,11 @@ RT_LNK void eif_exit_eiffel_code(void);
 		((call_data*)(a)) -> argument [(n) - 1] = (v);	\
 		if ((t) == SK_REF) 	\
 		{			\
-			if ( ( ((call_data*)(a)) -> is_synchronous == EIF_FALSE ) && ( !RTS_OU(Current, (v).it_r) ) )	\
+			((call_data*)(a)) -> argument [(n) - 1].it_r = (EIF_REFERENCE) eif_protect ((v).it_r); \
+			if ( ( ((call_data*)(a)) -> is_synchronous == EIF_FALSE ) && ( !RTS_OU(Current, eif_access ( ((call_data*)(a)) -> argument [(n) - 1].it_r ) ) ) )\
 			{ \
 				((call_data*)(a)) -> is_synchronous = EIF_TRUE; \
 			} \
-			((call_data*)(a)) -> argument [(n) - 1].it_r = (EIF_REFERENCE) eif_protect ((v).it_r); \
 		} \
 	}
 

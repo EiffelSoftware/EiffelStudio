@@ -41,8 +41,33 @@ feature -- Command
 		require
 			exists: exists
 			not_void: a_color /= Void
+		local
+			l_key: EV_PROPERTY_KEY
 		do
-			c_set_ribbon_background_color (item, a_color.value)
+			create l_key.make_global_background_color
+			c_set_ribbon_color (item, l_key.item, a_color.value)
+		end
+
+	set_highlight_color (a_color: EV_RIBBON_HSB_COLOR)
+			-- Set global highlight color with `a_color'
+		require
+			not_void: a_color /= Void
+		local
+			l_key: EV_PROPERTY_KEY
+		do
+			create l_key.make_global_highlight_color
+			c_set_ribbon_color (item, l_key.item, a_color.value)
+		end
+
+	set_text_color (a_color: EV_RIBBON_HSB_COLOR)
+			-- Set global text color with `a_color'
+		require
+			not_void: a_color /= Void
+		local
+			l_key: EV_PROPERTY_KEY
+		do
+			create l_key.make_global_text_color
+			c_set_ribbon_color (item, l_key.item, a_color.value)
 		end
 
 	destroy
@@ -244,7 +269,7 @@ feature {NONE} -- Implementation
 			}"
 		end
 
-	c_set_ribbon_background_color (a_ribbon_framework: POINTER; a_color_value: NATURAL_32)
+	c_set_ribbon_color (a_ribbon_framework: POINTER; a_key: POINTER; a_color_value: NATURAL_32)
 			-- Set ribbon color
 		external
 			"C++ inline use <Propvarutil.h>"
@@ -255,12 +280,13 @@ feature {NONE} -- Implementation
 				IUIFramework *l_framework = (IUIFramework *) $a_ribbon_framework;
 
 				PROPVARIANT propvarBackground;
+				PROPERTYKEY *property_key = (PROPERTYKEY *)$a_key;
 				UI_HSBCOLOR BackgroundColor = (UI_HSBCOLOR) $a_color_value;
 				InitPropVariantFromUInt32(BackgroundColor, &propvarBackground);
 
 				if (SUCCEEDED(l_framework->QueryInterface(__uuidof(IPropertyStore), (void **)&l_spPropertyStore)))
 				{
-					 l_spPropertyStore->SetValue(UI_PKEY_GlobalBackgroundColor, propvarBackground);
+					 l_spPropertyStore->SetValue(*(property_key), propvarBackground);
  					 l_spPropertyStore->Commit();
  					 l_spPropertyStore->Release();
 				}

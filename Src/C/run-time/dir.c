@@ -72,7 +72,7 @@ doc:<file name="dir.c" header="eif_dir.h" version="$Id$" summary="Externals for 
 #endif
 
 #include "rt_dir.h"
-#include "eif_file.h" /* %%ss moved from 2 lines above */
+#include "rt_file.h" /* %%ss moved from 2 lines above */
 #include "eif_plug.h"
 #include "rt_error.h"
 
@@ -151,67 +151,6 @@ rt_public void dir_rewind(EIF_POINTER d)
 #ifdef HAS_REWINDDIR
 	rewinddir((DIR *) d);
 #endif
-#endif
-}
-
-/*
- * Looking for a specific entry.
- */
-
-rt_public EIF_POINTER dir_search(EIF_POINTER d, char *name)
-          		/* Directory where search is made */
-           		/* Entry we are looking for */
-{
-#ifdef EIF_WINDOWS
-	EIF_WIN_DIRENT *dirp = (EIF_WIN_DIRENT *) d;
-	HANDLE h;
-	WIN32_FIND_DATA wfd;
-	char *filename;
-
-	filename = (char *) eif_malloc (strlen(name) + strlen (dirp->name) + 2);
-	if (filename == (char *) 0)
-		enomem(MTC_NOARG);
-
-	strcpy (filename, dirp->name);
-	if (filename[strlen(filename)-1] != '\\')
-		strcat (filename, "\\");
-	strcat (filename, name);
-	h = FindFirstFile (filename, &wfd);
-	eif_free (filename);
-	if (h != INVALID_HANDLE_VALUE) {
-		FindClose (h);
-		return (EIF_POINTER) 1;
-	}
-
-	return NULL;		/* Not found */
-
-#else /* UNIX, VMS */
-	/* Look for a given entry throughout the directory and return a pointer
-	 * to a descriptor if found, a null pointer otherwise.
-	 * Note that no rewinddir() is performed, as the Eiffel side provides
-	 * us with a freshly opened directory pointer.
-	 */
-
-	DIR *dirp = (DIR *) d;
-#ifdef DIRNAMLEN
-	int len = strlen(name);		/* Avoid unncessary calls to strcmp() */
-#endif
-#ifdef EIF_WIN_31
-	DIR *dp;
-#else
-	DIRENTRY *dp;
-#endif
-
-	for (dp = readdir(dirp); dp != (DIRENTRY *) 0; dp = readdir(dirp))
-#ifdef DIRNAMLEN
-		if (dp->d_namlen == len && 0 == strcmp(dp->d_name, name))
-			return (EIF_POINTER) dp;
-#else
-		if (0 == strcmp(dp->d_name, name))
-			return (EIF_POINTER) dp;
-#endif
-
-	return NULL;		/* Not found */
 #endif
 }
 
@@ -430,7 +369,7 @@ rt_public EIF_BOOLEAN eif_dir_exists(char *name)
 	if (stat(name, &buf) == -1)	/* Attempt to stat file */
 		return (EIF_BOOLEAN) '\0';
 	else
-		return (EIF_BOOLEAN) ((buf.st_mode & S_IFDIR) ? '\1' : '\0');
+		return (EIF_BOOLEAN) (S_ISDIR(buf.st_mode) ? '\1' : '\0');
 #endif	/* else (platform) */
 }
 

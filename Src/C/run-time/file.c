@@ -123,7 +123,7 @@ struct utimbuf {
 #include "rt_error.h"
 #include "eif_dir.h"
 
-#include "eif_file.h"
+#include "rt_file.h"
 #include "rt_out.h"
 #include "rt_lmalloc.h"
 #include "rt_constants.h"
@@ -133,10 +133,6 @@ struct utimbuf {
 #define FS_CUR		1			/* Current position for `fseek' */
 #define FS_END		2			/* End of file for `fseek' */
 #define ST_MODE		0x0fff		/* Keep only permission mode */
-
-#ifndef NAME_MAX
-#define NAME_MAX	10			/* Maximum length for user/group name */
-#endif
 
 rt_public char *file_open_mode(int how, char mode);		/* Open file */
 rt_private char *file_fopen(char *name, char *type);		/* Open file */
@@ -975,7 +971,7 @@ rt_public void file_stat (char *path, struct stat *buf)
 			 * the info, but this case is quite rare and there is a benefit
 			 * in using `lstat' over `stat' the first time as more than 90%
 			 * of the files we stat are not symlink. */
-			if ((buf->st_mode & S_IFLNK) == S_IFLNK) {
+			if (S_ISLNK(buf->st_mode)) {
 				status = stat (path, buf);
 			}
 		}
@@ -1030,29 +1026,25 @@ rt_public EIF_INTEGER file_info (struct stat *buf, int op)
 	case 10: /* Number of links */
 		return (EIF_INTEGER) buf->st_nlink;
 	case 11: /* File type */
-		return (EIF_INTEGER) (buf->st_mode & ~ST_MODE);
+		return (EIF_INTEGER) (buf->st_mode & S_IFMT);
 	case 12: /* Is file a directory */
-		return (EIF_INTEGER) ((buf->st_mode & S_IFDIR) == S_IFDIR);
+		return (EIF_INTEGER) S_ISDIR(buf->st_mode);
 	case 13: /* Is file a regular (plain) one */
-		if (((buf->st_mode & S_IFREG) == S_IFREG) || (0 == (buf->st_mode & ~ST_MODE)))
-			return (EIF_INTEGER) S_IFREG;
+		if (S_ISREG(buf->st_mode) || (0 == (buf->st_mode & S_IFMT)))
+			return (EIF_INTEGER) EIF_TRUE;
 		return (EIF_INTEGER) 0;
-	case 14: /* Is file a device */
-		if ((buf->st_mode & S_IFCHR) == S_IFCHR)
-			return (EIF_INTEGER) S_IFCHR;
-		if ((buf->st_mode & S_IFBLK) == S_IFBLK)
-			return (EIF_INTEGER) S_IFBLK;
-		return (EIF_INTEGER) 0;
+	case 14: /* Is file a device, ie character or block device. */
+		return (S_ISCHR(buf->st_mode) || S_ISBLK(buf->st_mode));
 	case 15: /* Is file a character device */
-		return (EIF_INTEGER) ((buf->st_mode & S_IFCHR) == S_IFCHR);
+		return (EIF_INTEGER) S_ISCHR(buf->st_mode);
 	case 16: /* Is file a block device */
-		return (EIF_INTEGER) ((buf->st_mode & S_IFBLK) == S_IFBLK);
+		return (EIF_INTEGER) S_ISBLK(buf->st_mode);
 	case 17: /* Is file a FIFO */
-		return (EIF_INTEGER) ((buf->st_mode & S_IFIFO) == S_IFIFO);
+		return (EIF_INTEGER) S_ISFIFO(buf->st_mode);
 	case 18: /* Is file a symbolic link */
-		return (EIF_INTEGER) ((buf->st_mode & S_IFLNK) == S_IFLNK);
+		return (EIF_INTEGER) S_ISLNK(buf->st_mode);
 	case 19: /* Is file a socket */
-		return (EIF_INTEGER) ((buf->st_mode & S_IFSOCK) == S_IFSOCK);
+		return (EIF_INTEGER) S_ISSOCK(buf->st_mode);
 	default:
 		eif_panic(MTC "illegal stat request");
     }
@@ -1095,8 +1087,8 @@ rt_public EIF_BOOLEAN file_eaccess(struct stat *buf, int op)
 			return (EIF_BOOLEAN) ((mode & S_IRGRP) ? '\01' : '\0');
 #endif
 		else
-#endif
 			return (EIF_BOOLEAN) ((mode & S_IROTH) ? '\01' : '\0');
+#endif
 	case 1: /* Is file writable */
 #if defined EIF_WINDOWS || defined EIF_OS2
 	return (EIF_BOOLEAN) ((mode & S_IWRITE) ? '\01' : '\0');
@@ -1115,8 +1107,8 @@ rt_public EIF_BOOLEAN file_eaccess(struct stat *buf, int op)
 			return (EIF_BOOLEAN) ((mode & S_IWGRP) ? '\01' : '\0');
 #endif
 		else
-#endif
 			return (EIF_BOOLEAN) ((mode & S_IWOTH) ? '\01' : '\0');
+#endif
 	case 2: /* Is file executable */
 #if defined EIF_WINDOWS || defined EIF_OS2
 	return (EIF_BOOLEAN) '\01';
@@ -1135,8 +1127,8 @@ rt_public EIF_BOOLEAN file_eaccess(struct stat *buf, int op)
 			return (EIF_BOOLEAN) ((mode & S_IXGRP) ? '\01' : '\0');
 #endif
 		else
-#endif
 			return (EIF_BOOLEAN) ((mode & S_IXOTH) ? '\01' : '\0');
+#endif
 	case 3: /* Is file setuid */
 #if defined EIF_WINDOWS || defined EIF_OS2
 		return (EIF_BOOLEAN) ('\0');
@@ -1216,7 +1208,7 @@ rt_public EIF_BOOLEAN file_exists(char *name)
 		/* We found a file, not let's check if it is not a symbolic link,
 		 * if it is the case, we need to call `stat' to make sure the link
 		 * is valid. */
-		if ((buf.st_mode & S_IFLNK) == S_IFLNK) {
+		if (S_ISLNK(buf.st_mode)) {
 			status = stat (name, &buf);
 		}
 	}
@@ -1446,7 +1438,7 @@ rt_public void file_unlink(char *name)
 
 	for (;;) {
 		errno = 0;						/* Reset error condition */
-		if (buf.st_mode & S_IFDIR)		/* Directory */
+		if (S_ISDIR(buf.st_mode))		/* Directory */
 			status = rmdir(name);		/* Remove only if empty */
 		else
 			status = unlink(name);		/* Not a directory */
@@ -1572,19 +1564,24 @@ rt_public void file_perm(char *name, char *who, char *what, int flag)
 		while (*what)
 			switch (*what++) {
 			case 's':
-#if defined EIF_WINDOWS || defined EIF_OS2
-#else
+#ifdef S_ISGID
 				if (flag) fmode |= S_ISGID; else fmode &= ~S_ISGID;
 #endif
 				break;
 			case 'r':
+#ifdef S_IRGRP
 				if (flag) fmode |= S_IRGRP; else fmode &= ~S_IRGRP;
+#endif
 				break;
 			case 'w':
+#ifdef S_IWGRP
 				if (flag) fmode |= S_IWGRP; else fmode &= ~S_IWGRP;
+#endif
 				break;
 			case 'x':
+#ifdef S_IXGRP
 				if (flag) fmode |= S_IXGRP; else fmode &= ~S_IXGRP;
+#endif
 				break;
 			default:
 				eraise("invalid group permission", EN_EXT);
@@ -1594,19 +1591,24 @@ rt_public void file_perm(char *name, char *who, char *what, int flag)
 		while (*what)
 			switch (*what++) {
 			case 't':
-#if defined EIF_WINDOWS || defined EIF_OS2 || defined VXWORKS
-#else
+#ifdef S_ISVTX
 				if (flag) fmode |= S_ISVTX; else fmode &= ~S_ISVTX;
 #endif
 				break;
 			case 'r':
+#ifdef S_IROTH
 				if (flag) fmode |= S_IROTH; else fmode &= ~S_IROTH;
+#endif
 				break;
 			case 'w':
+#ifdef S_IWOTH
 				if (flag) fmode |= S_IWOTH; else fmode &= ~S_IWOTH;
+#endif
 				break;
 			case 'x':
+#ifdef S_IXOTH
 				if (flag) fmode |= S_IXOTH; else fmode &= ~S_IXOTH;
+#endif
 				break;
 			default:
 				eraise("invalid other permission", EN_EXT);
@@ -1762,14 +1764,17 @@ rt_public EIF_BOOLEAN file_creatable(char *path, EIF_INTEGER length)
 		file_stat(temp, &buf);
 		eif_free (temp);
 
-		if (buf.st_mode & S_IFDIR) {	/* Is parent a directory? */
+		if (S_ISDIR(buf.st_mode)) {	/* Is parent a directory? */
 			if (file_eaccess(&buf, 1)) {	/* Check for write permissions */
 					/* Check if a non writable file `path' exists */
 				if (file_exists(path)) {
 					file_stat(path, &buf);
-					if (buf.st_mode & S_IFDIR)
-						return (EIF_BOOLEAN) '\0';	/* is a directory */
-					return (file_eaccess(&buf, 1)); /* Check for write permissions to re create it */
+					if (S_ISDIR(buf.st_mode)) {
+							/* File exists and it is already a directory, thus we cannot create a file. */
+						return (EIF_BOOLEAN) '\0';
+					} else {
+						return (file_eaccess(&buf, 1)); /* Check for write permissions to re create it */
+					}
 				}
 
 				return (EIF_BOOLEAN) '\01';

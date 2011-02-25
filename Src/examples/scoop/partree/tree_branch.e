@@ -21,16 +21,16 @@ feature
                         comp_result := compute_agents_sub (init, trns, comb, left, right)
                 end
 
-        compute_agents_sub (init: G;
-                        trns: FUNCTION [ANY, TUPLE [G], G];
-                        comb: FUNCTION [ANY, TUPLE [G,G], G];
+        compute_agents_sub (init: separate G;
+                        trns: separate FUNCTION [ANY, TUPLE [G], G];
+                        comb: separate FUNCTION [ANY, TUPLE [G,G], G];
                         l, r: separate PAR_TREE [G]
                        ): G
                 do
                         l.compute_agents (init, trns, comb)
                         r.compute_agents (init, trns, comb)
 
-                        Result := comb.item([l.comp_result, r.comp_result])
+                        Result := comb.item_separate ([l.comp_result, r.comp_result])
                 end
 
 	compute (init: G)

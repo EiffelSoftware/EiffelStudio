@@ -19,29 +19,39 @@ feature {NONE} -- Initialization
 	list_size: INTEGER = 5
 
 	tree_stuff
+			--
 		local
-			lefty, righty: separate ADDER_LEAF
 			list: SPECIAL [INTEGER]
-			i: INTEGER
-			tre: ADDER_BRANCH
 		do
 			create list.make_filled (0, list_size)
+			tree_stuff_imp (list)
+		end
+
+	tree_stuff_imp (a_list: separate SPECIAL [INTEGER])
+		local
+			lefty, righty: separate ADDER_LEAF
+			i: INTEGER
+			tre: ADDER_BRANCH
+			l_function: FUNCTION [APPLICATION, TUPLE[INTEGER, INTEGER], INTEGER]
+		do
+
 
 			from i := 0 until i >= list_size loop
-				list [i] := i
+				a_list [i] := i
 				i := i + 1
 			end
 
-			create lefty.make (list)
-			create righty.make (list)
+			create lefty.make (a_list)
+			create righty.make (a_list)
 			create tre.make (lefty,righty)
 
 			tre.compute (0)
 			print (tre.comp_result)
 
-			tre.compute_agents (0, agent addf,
-				agent (x,y: INTEGER): INTEGER
-					do Result := x + y end)
+			l_function := agent (x,y: INTEGER): INTEGER
+					do Result := x + y end
+
+			tre.compute_agents (0, agent addf, l_function)
 			print (tre.comp_result)
 		end
 

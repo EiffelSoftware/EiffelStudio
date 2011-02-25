@@ -3,6 +3,7 @@ class
 
 inherit
 	TREE_LEAF [INTEGER]
+	
 	ADDER_IMP
 
 create
@@ -10,7 +11,7 @@ create
 
 feature
 
-	make (a_list: SPECIAL [INTEGER])
+	make (a_list: separate SPECIAL [INTEGER])
 		do
 			list := a_list
 		end

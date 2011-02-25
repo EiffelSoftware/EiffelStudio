@@ -118,7 +118,7 @@
 			</cluster>
 			<cluster name="scoop" location="ise\runtime\scoop\" recursive="true" hidden="true">
 				<condition>
-					<concurrency excluded_value="scoop"/>
+					<concurrency value="scoop"/>
 				</condition>
 				<file_rule>
 					<exclude>/dotnet$</exclude>

@@ -57,8 +57,11 @@ feature {NONE} -- Implementation
 
 	sort (a_data: separate DATA; a_quicksorter: separate QUICKSORTER)
 			-- Sort 'a_data' with 'a_quicksorter'.
+		local
+			l_result_data_items: separate ARRAY [INTEGER_32]
 		do
-			a_quicksorter.sort (a_data)
+			create l_result_data_items.make (a_data.items.lower, a_data.items.upper)
+			a_quicksorter.sort (a_data, l_result_data_items)
 		end
 
 end -- class APPLICATION	

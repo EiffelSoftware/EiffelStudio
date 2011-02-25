@@ -107,7 +107,7 @@
 			<file_rule>
 				<exclude>/runtime$</exclude>
 			</file_rule>
-			<cluster name="debug" location="ise\runtime\debug\" recursive="true">
+			<cluster name="debug" location="ise\runtime\debug\" recursive="true" hidden="true">
 				<condition>
 					<build value="workbench"/>
 				</condition>

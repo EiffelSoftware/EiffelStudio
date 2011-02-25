@@ -12,7 +12,7 @@ inherit
 
 feature
 
-	parse (a_file: STRING)
+	parse (a_file: separate STRING)
 		do
 				-- Need some time to parse.
 			sleep (1000)

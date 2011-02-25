@@ -50,7 +50,7 @@ feature
 			Result_not_void: Result /= Void
 		end
 
-	parse_internal (a_parser: separate EIFFEL_PARSER; a_file: STRING)
+	parse_internal (a_parser: separate EIFFEL_PARSER; a_file: separate STRING)
 		do
 			a_parser.parse (a_file)
 		end

@@ -8,6 +8,16 @@
 		<file_rule>
 			<exclude>/\.svn</exclude>
 		</file_rule>
+		<external_include location="$(ISE_LIBRARY)\library\store\dbms\rdbms\sybase\Clib">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</external_include>
+		<external_include location="$(ISE_LIBRARY)/library/store/dbms/rdbms/sybase/Clib">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</external_include>
 		<external_object location="-L$(ISE_LIBRARY)/library/store/spec/$(ISE_PLATFORM)/lib">
 			<condition>
 				<platform excluded_value="windows"/>

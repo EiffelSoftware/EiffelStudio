@@ -567,10 +567,6 @@ feature {NONE} -- C code generation
 
 			generate_force_precondition (buffer, final_mode, "arg2", "arg3")
 
-				-- Increment count if we are extending.
-			buffer.put_new_line
-			buffer.put_string ("if (arg2 == arg3) { RT_SPECIAL_COUNT(Current) = arg3 + 1; }")
-
 			if l_param_is_expanded then
 				if final_mode then
 					l_exp_class_type := gen_param.associated_class_type (Void)
@@ -594,11 +590,17 @@ feature {NONE} -- C code generation
 					buffer.put_string ("ecopy(arg1, Current + OVERHEAD + (rt_uint_ptr) arg2 * %
 						%RT_SPECIAL_ELEM_SIZE(Current));")
 				end
+					-- Increment count if we are extending.
+				buffer.put_new_line
+				buffer.put_string ("if (arg2 == arg3) { RT_SPECIAL_COUNT(Current) = arg3 + 1; }")
 			else
 				buffer.put_new_line
 				buffer.put_string ("*(")
 				type_c.generate_access_cast (buffer)
 				buffer.put_string (" Current + arg2) = arg1;")
+					-- Increment count if we are extending.
+				buffer.put_new_line
+				buffer.put_string ("if (arg2 == arg3) { RT_SPECIAL_COUNT(Current) = arg3 + 1; }")
 				if type_c.level = c_ref then
 					buffer.put_new_line
 					buffer.put_string ("RTAR(Current, arg1);%N")
@@ -665,6 +667,7 @@ feature {NONE} -- C code generation
 			value_arg_name: STRING
 			l_byte_context: like byte_context
 			l_arg: ARGUMENT_BL
+			l_is_multithreaded: BOOLEAN
 		do
 			l_byte_context := byte_context
 			gen_param := first_generic
@@ -693,8 +696,19 @@ feature {NONE} -- C code generation
 			buffer.generate_block_open
 			buffer.put_gtcx
 
+			l_is_multithreaded := system.has_multithreaded
+
+				-- To make the code more efficient, we update the count immediately,
+				-- but only in non-MT mode. In MT mode we only update it later to ensure
+				-- that visibility of change does not make a thread read junk if the
+				-- count is updated before.
 			buffer.put_new_line
-			buffer.put_string ("EIF_INTEGER_32 arg2 = RT_SPECIAL_COUNT(Current)++;")
+			buffer.put_string ("EIF_INTEGER_32 arg2 = RT_SPECIAL_COUNT(Current)")
+			if l_is_multithreaded then
+				buffer.put_character (';')
+			else
+				buffer.put_string ("++;")
+			end
 
 			if not final_mode then
 				buffer.put_new_line
@@ -767,11 +781,21 @@ feature {NONE} -- C code generation
 					buffer.put_string ("ecopy(arg1, Current + OVERHEAD + (rt_uint_ptr) arg2 * %
 						%RT_SPECIAL_ELEM_SIZE(Current));")
 				end
+					-- Update to new count
+				if l_is_multithreaded then
+					buffer.put_new_line
+					buffer.put_string ("RT_SPECIAL_COUNT(Current) = arg2 + 1;")
+				end
 			else
 				buffer.put_new_line
 				buffer.put_string ("*(")
 				type_c.generate_access_cast (buffer)
 				buffer.put_string (" Current + arg2) = arg1;")
+					-- Update to new count
+				if l_is_multithreaded then
+					buffer.put_new_line
+					buffer.put_string ("RT_SPECIAL_COUNT(Current) = arg2 + 1;")
+				end
 				if type_c.level = c_ref then
 					buffer.put_new_line
 					buffer.put_string ("RTAR(Current, arg1);%N")
@@ -802,7 +826,17 @@ feature {NONE} -- C code generation
 					end
 					buffer.put_string ("arg1);")
 				else
-					buffer.put_string ("EIF_INTEGER_32 arg2 = RT_SPECIAL_COUNT(Current)++;")
+						-- To make the code more efficient, we update the count immediately,
+						-- but only in non-MT mode. In MT mode we only update it later to ensure
+						-- that visibility of change does not make a thread read junk if the
+						-- count is updated before.
+					buffer.put_new_line
+					buffer.put_string ("EIF_INTEGER_32 arg2 = RT_SPECIAL_COUNT(Current)")
+					if l_is_multithreaded then
+						buffer.put_character (';')
+					else
+						buffer.put_string ("++;")
+					end
 					buffer.put_new_line
 					buffer.put_string ("*(")
 					type_c.generate_access_cast (buffer)
@@ -812,6 +846,12 @@ feature {NONE} -- C code generation
 						gen_param.c_type.generate_access_cast (buffer)
 					end
 					buffer.put_string ("arg1;")
+
+					if l_is_multithreaded then
+							-- Update to new count
+						buffer.put_new_line
+						buffer.put_string ("RT_SPECIAL_COUNT(Current) = arg2 + 1;")
+					end
 				end
 				buffer.generate_block_close
 					-- Separation for formatting
@@ -1442,15 +1482,14 @@ feature {NONE} -- C code generation
 			buffer.put_new_line
 			buffer.put_character ('}')
 
+				-- Update count.
+			buffer.put_new_line
+			buffer.put_string ("RT_SPECIAL_COUNT(Current) = eif_max_int32(RT_SPECIAL_COUNT(Current), arg3 + 1);")
 				-- We need to remember Current if it is old and arg1 is new.
 			if type_c.level = c_ref then
 				buffer.put_new_line
 				buffer.put_string ("RTAR(Current, arg1);")
 			end
-
-				-- Update count.
-			buffer.put_new_line
-			buffer.put_string ("RT_SPECIAL_COUNT(Current) = eif_max_int32(RT_SPECIAL_COUNT(Current), arg3 + 1);")
 
 			buffer.generate_block_close
 			if not final_mode then
@@ -1501,14 +1540,15 @@ feature {NONE} -- C code generation
 					buffer.put_new_line
 					buffer.put_character ('}')
 
+						-- Update count.
+					buffer.put_new_line
+					buffer.put_string ("RT_SPECIAL_COUNT(Current) = eif_max_int32(RT_SPECIAL_COUNT(Current), arg3 + 1);")
 						-- We need to remember Current if it is old and arg1 is new.
 					if type_c.level = c_ref then
 						buffer.put_new_line
 						buffer.put_string ("RTAR(Current, arg1);")
 					end
 
-						-- Update count.
-					buffer.put_string ("RT_SPECIAL_COUNT(Current) = eif_max_int32(RT_SPECIAL_COUNT(Current), arg3 + 1);")
 				end
 				buffer.generate_block_close
 					-- Separation for formatting
@@ -1714,7 +1754,7 @@ feature -- IL code generation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

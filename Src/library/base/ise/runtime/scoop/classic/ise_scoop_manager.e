@@ -78,7 +78,6 @@ feature -- C callback function
 			l_current_request_chain: detachable like new_request_chain_meta_data_entry
 			l_end_index, i: INTEGER
 		do
-
 			l_current_request_chain := request_chain_meta_data [a_client_processor_id]
 			if l_current_request_chain /= Void then
 				if l_current_request_chain [request_chain_client_pid_index] = a_supplier_processor_id then
@@ -493,8 +492,10 @@ feature -- Request Chain Handling
 					i := request_chain_meta_data_header_size
 
 						-- Resize meta data to allow for supplier processor meta data.
-					l_request_chain_meta_data := l_request_chain_meta_data.aliased_resized_area (l_container_count + l_unique_pid_count)
-					update_request_chain_meta_data (a_client_processor_id, l_request_chain_meta_data)
+					if (l_container_count + l_unique_pid_count) > l_request_chain_meta_data.capacity  then
+						l_request_chain_meta_data := l_request_chain_meta_data.aliased_resized_area (l_container_count + l_unique_pid_count)
+						update_request_chain_meta_data (a_client_processor_id, l_request_chain_meta_data)
+					end
 				until
 					i = l_container_count
 				loop
@@ -640,6 +641,7 @@ feature -- Command/Query Handling
 			l_request_chain_node_meta_data_queue: detachable like new_request_chain_node_meta_data_queue
 			l_unique_pid_count, l_first_pid, i, l_last_pid_index, l_logged_calls_count: INTEGER_32
 			l_is_lock_passing, l_is_synchronous, l_exit_loop: BOOLEAN
+			l_call_ptr: POINTER
 		do
 			debug ("ISE_SCOOP_MANAGER")
 				print ("log_call_on_processor for pid " + a_client_processor_id.out + " on pid " + a_supplier_processor_id.out + "%N")
@@ -791,9 +793,6 @@ feature -- Command/Query Handling
 							yield_processor
 						end
 
-							-- Synchronize call chain before any further calls are logged.
-						synchronize_processors_upon_application (a_client_processor_id)
-
 						l_request_chain_node_queue := request_chain_node_queue_list [a_client_processor_id]
 						check l_request_chain_node_queue_attached: attached l_request_chain_node_queue end
 
@@ -811,9 +810,14 @@ feature -- Command/Query Handling
 
 							(processor_meta_data [a_supplier_processor_id])[current_request_chain_query_blocking_processor_index] := a_client_processor_id
 
+							put_supplier_processors_in_wait_state (a_client_processor_id)
+
 								-- Store current logged call count to see if any feature application requests are made by the call.
 							l_logged_calls_count := l_client_request_chain_node_queue_entry.count
+
 							l_request_chain_node_queue_entry.extend (a_call_data)
+
+							release_supplier_processors_from_wait_state (a_client_processor_id)
 
 								-- Synchronize to make sure that any supplier processors calls to the client will be marked as logged.
 							synchronize_processors_upon_application (a_client_processor_id)
@@ -827,18 +831,21 @@ feature -- Command/Query Handling
 								l_client_request_chain_node_queue_entry.count > l_logged_calls_count
 							then
 									-- The supplier processor has logged a call on the client processor so we must service it.
-								if l_client_request_chain_node_queue_entry [l_logged_calls_count] /= default_pointer then
+								l_call_ptr := l_client_request_chain_node_queue_entry [l_logged_calls_count]
+								if l_call_ptr /= default_pointer then
 									if not l_is_lock_passing then
 										l_is_lock_passing := True
 									else
 											-- We only synchronize on the second iteration as the first sync was performed outside of the loop.
 										synchronize_processors_upon_application (a_client_processor_id)
 									end
-										-- We must service all requests until the routine has closed its chain.
-									scoop_command_call (l_client_request_chain_node_queue_entry [l_logged_calls_count])
-
-										-- FIXME We need to clean up the call.
+										-- Reset call ptr from list before call in case list resizes
+									l_client_request_chain_node_queue_entry [l_logged_calls_count] := default_pointer
 									l_client_request_chain_node_queue_entry.keep_head (l_logged_calls_count)
+										-- We must service all requests until the routine has closed its chain.
+									scoop_command_call (l_call_ptr)
+									scoop_command_call_cleanup (l_call_ptr)
+									l_call_ptr := default_pointer
 
 										-- Signal the supplier processors to continue.
 									synchronize_processors_upon_application (a_client_processor_id)
@@ -874,6 +881,13 @@ feature -- Command/Query Handling
 
 	synchronize_processors_upon_application (a_client_processor_id: like processor_id_type)
 			-- Synchronize `a_client_processor_id' with `a_supplier_processor_id'.
+		do
+			put_supplier_processors_in_wait_state (a_client_processor_id)
+			release_supplier_processors_from_wait_state (a_client_processor_id)
+		end
+
+	put_supplier_processors_in_wait_state (a_client_processor_id: like processor_id_type)
+			-- Put all supplier processors of `a_client_processor_ids' current request chain in a wait state.
 		local
 			l_request_chain_meta_data: detachable like new_request_chain_meta_data_entry
 			l_temp_count, l_orig_sync_count: INTEGER_32
@@ -884,7 +898,7 @@ feature -- Command/Query Handling
 			check processor_is_chain_client: l_request_chain_meta_data [request_chain_client_pid_index] = a_client_processor_id end
 			check chain_is_being_applied: l_request_chain_meta_data [request_chain_status_index] = request_chain_status_application end
 
-			l_orig_sync_count := {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_request_chain_meta_data.item_address (request_chain_sync_counter_index), 0)
+			l_orig_sync_count := {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_request_chain_meta_data.item_address (request_chain_pid_count_index), 0)
 
 			check sync_count_reset: l_request_chain_meta_data [request_chain_pid_count_index] = l_orig_sync_count end
 
@@ -897,7 +911,18 @@ feature -- Command/Query Handling
 			loop
 				yield_processor
 			end
+		end
 
+	release_supplier_processors_from_wait_state (a_client_processor_id: like processor_id_type)
+			-- Release processors of `a_client_processor_id's current request chain from their wait state.
+		local
+			l_request_chain_meta_data: detachable like new_request_chain_meta_data_entry
+			l_temp_count, l_orig_sync_count: INTEGER_32
+		do
+			l_request_chain_meta_data := request_chain_meta_data [a_client_processor_id]
+			check request_chain_meta_data_attached: attached l_request_chain_meta_data end
+
+			l_orig_sync_count := {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_request_chain_meta_data.item_address (request_chain_pid_count_index), 0)
 			from
 				l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.swap_integer_32 (l_request_chain_meta_data.item_address (request_chain_status_index), request_chain_status_application)
 				l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.swap_integer_32 (l_request_chain_meta_data.item_address (request_chain_sync_counter_index), 0)
@@ -906,8 +931,6 @@ feature -- Command/Query Handling
 			loop
 				yield_processor
 			end
-
-			-- Client processor waits until nodes have entered the wait state and subsequently left.
 		end
 
 	sync_with_waiting_client_processor (a_client_processor_id: like processor_id_type)
@@ -1124,12 +1147,15 @@ feature {NONE} -- Resource Initialization
 							if l_executing_node_id_cursor < l_executing_request_chain_node.count then
 								l_call_ptr := l_executing_request_chain_node [l_executing_node_id_cursor]
 								if l_call_ptr /= default_pointer then
+										-- Reset call pointer from list in case structure structure resizes as a result of the call.
+									l_executing_request_chain_node [l_executing_node_id_cursor] := default_pointer
+										-- Code used for debugging request chain initialization.
 									if call_data_is_synchronous (l_call_ptr) then
 										scoop_command_call (l_call_ptr)
 									else
 										scoop_command_call (l_call_ptr)
 									end
-									--scoop_command_call_cleanup (l_call_ptr)
+									scoop_command_call_cleanup (l_call_ptr)
 									l_executing_node_id_cursor := l_executing_node_id_cursor + 1
 								end
 							elseif l_executing_request_chain_node_meta_data [request_chain_status_index] = request_chain_status_closed then
@@ -1188,6 +1214,7 @@ feature {NONE} -- Resource Initialization
 		end
 
 	scoop_command_call (data: like call_data)
+			-- Make scoop call from call data `data'.
 		require
 			data_not_null: data /= default_pointer
 		external
@@ -1201,6 +1228,7 @@ feature {NONE} -- Resource Initialization
 		end
 
 	scoop_command_call_cleanup (data: like call_data)
+			-- Free scoop call data in `data'.
 		require
 			data_not_null: data /= default_pointer
 		external

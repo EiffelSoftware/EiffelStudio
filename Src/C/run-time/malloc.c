@@ -2959,6 +2959,7 @@ rt_shared EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, size_t nbytes, int 
 		HEADER(zone)->ov_flags = HEADER(ptr)->ov_flags;		/* Keep Eiffel flags */
 		HEADER(zone)->ov_dftype = HEADER(ptr)->ov_dftype;
 		HEADER(zone)->ov_dtype = HEADER(ptr)->ov_dtype;
+		HEADER(zone)->ov_pid = HEADER(ptr)->ov_pid;
 		if (!(gc_flag & GC_FREE)) {		/* Will GC take care of free? */
 			eif_rt_xfree(ptr);					/* Free old location */
 		} else {
@@ -4095,6 +4096,13 @@ rt_private EIF_REFERENCE eif_spset(EIF_REFERENCE object, EIF_BOOLEAN in_scavenge
     zone->ovs_tid = (rt_uint_ptr) 0; /* In non-MT-mode, it is NULL by convention */
 #endif  /* EIF_THREADS */
 #endif  /* EIF_TID */
+
+	// Set SCOOP Processor if available.
+#ifdef EIF_THREADS
+	zone->ov_head.ovu.ovs.scp_pid = (EIF_SCP_PID)(EIF_TEST(eif_thr_context->is_processor) ? eif_thr_context->logical_id : 0);
+#else
+	zone->ov_head.ovu.ovs.scp_pid = (EIF_SCP_PID)0;
+#endif
 
 	zone->ov_size &= ~B_C;				/* Object is an Eiffel one */
 

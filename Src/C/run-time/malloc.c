@@ -1414,6 +1414,7 @@ rt_public EIF_REFERENCE sprealloc(EIF_REFERENCE ptr, unsigned int nbitems)
 		zone->ov_flags |= HEADER(ptr)->ov_flags & (EO_REF | EO_COMP);
 		zone->ov_dftype = HEADER(ptr)->ov_dftype;
 		zone->ov_dtype = HEADER(ptr)->ov_dtype;
+		zone->ov_pid = HEADER(ptr)->ov_pid;
 
 			/* Update flags of new object if it contains references and the object is not
 			 * in the scavenge zone anymore. */

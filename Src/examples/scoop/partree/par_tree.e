@@ -10,9 +10,9 @@ feature
 
 	comp_result: G
 
-        compute_agents (init: G; 
-                        trns: FUNCTION [ANY, TUPLE [G], G];
-                        comb: FUNCTION [ANY, TUPLE [G,G], G]
+        compute_agents (init: separate G;
+                        trns: separate FUNCTION [ANY, TUPLE [G], G];
+                        comb: separate FUNCTION [ANY, TUPLE [G,G], G]
                        )
                 deferred
                 end

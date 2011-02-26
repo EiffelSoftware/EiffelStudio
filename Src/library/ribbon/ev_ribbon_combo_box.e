@@ -30,10 +30,23 @@ feature -- Query
 			check not_implemented: False end
 		end
 
-	selected_item
-			--
+	selected_item: NATURAL
+			-- Current selected item index (base is 0)
+		local
+			l_key: EV_PROPERTY_KEY
+			l_value: EV_PROPERTY_VARIANT
+			l_command_id: NATURAL_32
 		do
-			check not_implemented: False end
+			l_command_id := command_list.item (command_list.lower)
+			check command_id_valid: l_command_id /= 0 end
+
+			if attached ribbon as l_ribbon then
+				create l_key.make_selected_item
+				create l_value.make_empty
+				l_ribbon.get_command_property (l_command_id, l_key, l_value)
+				Result := l_value.uint32_value
+				l_value.destroy
+			end
 		end
 
 	item_source: ARRAYED_LIST [EV_RIBBON_COMBO_BOX_ITEM]
@@ -47,10 +60,25 @@ feature -- Command
 			check not_implemented: False end
 		end
 
-	set_selected_item
-			--
+	set_selected_item (a_index: NATURAL)
+			-- Set selected item index
+		require
+			valid: a_index >= 0 and then item_source.count.as_natural_32 > a_index
+		local
+			l_key: EV_PROPERTY_KEY
+			l_value: EV_PROPERTY_VARIANT
+			l_command_id: NATURAL_32
 		do
-			check not_implemented: False end
+			l_command_id := command_list.item (command_list.lower)
+			check command_id_valid: l_command_id /= 0 end
+
+			if attached ribbon as l_ribbon then
+				create l_key.make_selected_item
+				create l_value.make_empty
+				l_value.set_uint32 (a_index)
+				l_ribbon.set_command_property (l_command_id, l_key, l_value)
+				l_value.destroy
+			end
 		end
 
 	set_item_source (a_item_source: like item_source)
@@ -118,8 +146,40 @@ feature {NONE} -- Implementation
 				elseif l_key.is_selected_item then
 					create l_value.share_from_pointer (a_property_new_value)
 					l_value.set_uint32 (0)
+				elseif l_key.is_representative_string then
+					-- Initialize combo box width with maximum width string
+					if attached maximum_width_string as l_string then
+						create l_value.share_from_pointer (a_property_new_value)
+						l_value.set_string_value (l_string)
+					end
 				end
 
+			end
+		end
+
+	maximum_width_string: detachable STRING
+			-- Maximum width string from items source
+		local
+			l_item: EV_RIBBON_COMBO_BOX_ITEM
+			l_font: EV_FONT
+			l_max_width, l_width: INTEGER
+		do
+			from
+				create l_font
+				item_source.start
+			until
+				item_source.after
+			loop
+				l_item := item_source.item
+				if attached l_item.label as l_label then
+					l_width := l_font.string_width (l_label)
+					if l_width > l_max_width then
+						l_max_width := l_width
+						Result := l_label
+					end
+				end
+
+				item_source.forth
 			end
 		end
 end

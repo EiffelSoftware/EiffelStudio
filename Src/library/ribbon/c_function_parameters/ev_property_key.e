@@ -30,7 +30,8 @@ create
 	make_global_background_color,
 	make_global_text_color,
 	make_global_highlight_color,
-	make_item_image
+	make_item_image,
+	make_representative_string
 
 feature {NONE}  -- Initialization
 
@@ -122,6 +123,12 @@ feature {NONE}  -- Initialization
 			-- Make a item image
 		do
 			share_from_pointer (c_ui_pkey_item_image)
+		end
+
+	make_representative_string
+			-- Make a representative string key
+		do
+			share_from_pointer (c_ui_pkey_representative_string)
 		end
 
 feature -- Access
@@ -236,6 +243,15 @@ feature -- Status Report
 			l_tmp: EV_PROPERTY_KEY
 		do
 			create l_tmp.make_item_image
+			Result := l_tmp.guid.is_equal (guid)
+		end
+
+	is_representative_string: BOOLEAN
+			-- Is current representative string?
+		local
+			l_tmp: EV_PROPERTY_KEY
+		do
+			create l_tmp.make_representative_string
 			Result := l_tmp.guid.is_equal (guid)
 		end
 
@@ -433,6 +449,18 @@ feature {NONE} -- Externals
 			"[
 			{
 				return &UI_PKEY_ItemImage;
+			}
+			]"
+		end
+
+	c_ui_pkey_representative_string: POINTER
+			--
+		external
+			"C inline use %"UIRibbon.h%""
+		alias
+			"[
+			{
+				return &UI_PKEY_RepresentativeString;
 			}
 			]"
 		end

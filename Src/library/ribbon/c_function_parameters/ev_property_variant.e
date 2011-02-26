@@ -128,6 +128,12 @@ feature -- Query
 			Result := c_read_decimal (item)
 		end
 
+	uint32_value: NATURAL_32
+			-- Natural value of current
+		do
+			Result := c_read_uint32 (item)
+		end
+
 feature {NONE} -- Implementation
 
 	internal_data: MANAGED_POINTER
@@ -192,6 +198,17 @@ feature {NONE} -- Externals
 				DOUBLE val;
 				VarR8FromDec(&((PROPVARIANT *) $a_item)->decVal, &val);
 				return val;
+			}"
+		end
+
+	c_read_uint32 (a_item: POINTER): NATURAL_32
+			--
+		external
+			"C inline use <ribbon.h>"
+		alias
+			"{
+				PROPVARIANT *ppropvar = (PROPVARIANT *) $a_item;
+				return ppropvar->ulVal;
 			}"
 		end
 

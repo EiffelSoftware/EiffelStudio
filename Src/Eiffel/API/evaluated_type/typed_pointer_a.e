@@ -35,7 +35,7 @@ inherit
 		undefine
 			meta_type, is_basic,
 			description, instantiated_description, description_with_detachable_type,
-			generate_cecil_value, sk_value, element_type, cl_make
+			generate_cecil_value, sk_value, element_type, cl_make, is_processor_attachable_to
 		redefine
 			is_typed_pointer, c_type, associated_class, process, reference_type,
 			il_type_name, generic_il_type_name
@@ -125,7 +125,7 @@ feature {COMPILER_EXPORTER} -- Access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

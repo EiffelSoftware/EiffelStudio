@@ -20,7 +20,8 @@ inherit
 			il_type_name, generate_gen_type_il, is_generated_as_single_type,
 			generic_derivation, associated_class_type, has_associated_class_type,
 			internal_same_generic_derivation_as, internal_generic_derivation,
-			has_associated_class, is_class_valid, instantiated_in, deep_actual_type
+			has_associated_class, is_class_valid, instantiated_in, deep_actual_type,
+			is_processor_attachable_to
 		end
 
 	SHARED_IL_CASING
@@ -180,6 +181,26 @@ feature -- Comparison
 			Result := other_class_type /= Void and then class_id = other_class_type.class_id
 						and then is_expanded = other_class_type.is_expanded
 						and then has_same_marks (other_class_type)
+		end
+
+	is_processor_attachable_to (other: TYPE_A): BOOLEAN
+			-- <Precursor>
+		do
+			if Precursor (other) then
+					-- If `other' is not separate, the checks done by `Precursor' are sufficient.
+				Result := True
+				if other.is_separate and then is_expanded and then attached associated_class.skeleton as s then
+						-- `other' is separate and current type is expanded,
+						-- all attributes of the current type must be runnable in the context of `other' processor.
+					across
+						s as t
+					until
+						not Result
+					loop
+						Result := t.item.type_i.instantiation_in (Current, class_id).is_runnable_on_processor (other)
+					end
+				end
+			end
 		end
 
 feature -- Access

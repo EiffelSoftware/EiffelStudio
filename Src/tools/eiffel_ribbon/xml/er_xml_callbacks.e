@@ -151,7 +151,6 @@ feature -- Tag
 			-- <Precursor>
 		local
 			l_tree_node: EV_TREE_NODE
-			l_attribute: ER_XML_ATTRIBUTE_CONSTANTS
 		do
 			debug ("Ribbon-xml")
 				print ("%N on_attribute")

@@ -20,6 +20,10 @@ feature -- Query, the value of string is what should be written to XML
 
 	ribbon_application_menu: STRING = "Ribbon.ApplicationMenu"
 
+	application_menu: STRING = "ApplicationMenu"
+
+	menu_group: STRING = "MenuGroup"
+
 	ribbon_contextual_tabs: STRING = "Ribbon.ContextualTabs"
 
 	ribbon_helpbutton: STRING = "Ribbon.HelpButton"
@@ -86,8 +90,10 @@ feature -- Contract support
 				Result := l_string.same_string (application) or else
 					l_string.same_string (application_commands) or else
 					l_string.same_string (application_views) or else
+					l_string.same_string (menu_group) or else
 					l_string.same_string (ribbon) or else
 					l_string.same_string (ribbon_application_menu) or else
+					l_string.same_string (application_menu) or else
 					l_string.same_string (ribbon_contextual_tabs) or else
 					l_string.same_string (ribbon_helpbutton) or else
 					l_string.same_string (ribbon_quick_access_toolbar) or else

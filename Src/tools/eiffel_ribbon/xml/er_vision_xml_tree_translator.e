@@ -49,6 +49,13 @@ feature -- Command
 			l_parent := l_xml_element
 			create l_xml_element.make (l_parent, xml_constants.ribbon_tabs, name_space)
 			l_parent.put_last (l_xml_element)
+
+			create l_xml_element.make (l_parent, xml_constants.ribbon_application_menu, name_space)
+			l_parent.put_last (l_xml_element)
+
+			l_parent := l_xml_element
+			create l_xml_element.make (l_parent, xml_constants.application_menu, name_space)
+			l_parent.put_last (l_xml_element)
 		end
 
 	save_xml_nodes_for_all_layout_constructors
@@ -77,29 +84,31 @@ feature -- Tree loading
 	update_vision_tree_after_load (a_tree: EV_TREE)
 			--
 		local
-			l_ribbon_tabs, l_app_commands: detachable EV_TREE_ITEM
+			l_ribbon, l_app_commands: detachable EV_TREE_ITEM
 			l_list: ARRAYED_LIST [EV_TREE_ITEM]
 			l_singleton: ER_SHARED_SINGLETON
 			l_layout_constructor: ER_LAYOUT_CONSTRUCTOR
 		do
 			-- Separate command and ribbon.tabs
 			l_app_commands := tree_node_by_name (xml_constants.application_commands, a_tree)
-			l_ribbon_tabs := tree_node_by_name (xml_constants.ribbon_tabs, a_tree)
+			l_ribbon := tree_node_by_name (xml_constants.ribbon, a_tree)
 
-			if l_ribbon_tabs /= Void  then
+			if l_ribbon /= Void  then
 				if l_app_commands /= Void then
 					from
 						l_app_commands.start
 					until
 						l_app_commands.after
 					loop
-						update_tree_node_data_with_commands (l_app_commands.item, l_ribbon_tabs)
+						update_tree_node_data_with_commands (l_app_commands.item, l_ribbon)
 
 						l_app_commands.forth
 					end
 				end
 
-				l_list := separate_tabs_to_different_ribbons (l_ribbon_tabs)
+				l_list := separate_tabs_to_different_ribbons (l_ribbon.i_th (1))
+				-- Add application menu to first
+
 				check l_list.count >= 1 end
 
 				a_tree.wipe_out
@@ -124,11 +133,22 @@ feature -- Tree loading
 
 						l_list.forth
 					end
+
+					-- Add application menu to first
+					-- FIXME: what about application menu for other windows?
+					if attached l_ribbon.i_th (2) as l_application_menu then
+						if attached l_application_menu.parent as l_parent then
+							l_parent.prune_all (l_application_menu)
+						end
+						l_layout_constructor := l_singleton.layout_constructor_list.i_th (1)
+						l_layout_constructor.widget.extend (l_application_menu)
+						l_layout_constructor.expand_tree
+					end
 				end
 			end
 		end
 
-	separate_tabs_to_different_ribbons (a_ribbon_tabs: EV_TREE_ITEM): ARRAYED_LIST [EV_TREE_ITEM]
+	separate_tabs_to_different_ribbons (a_ribbon_tabs: EV_TREE_NODE): ARRAYED_LIST [EV_TREE_ITEM]
 			--
 		local
 			l_xml: ER_XML_CONSTANTS
@@ -267,6 +287,69 @@ feature {NONE} -- Tree saving
 
 					l_tree_item.forth
 				end
+
+				-- Saving applicaition menu node
+				if a_vision_tree.count >= 2 then
+					if attached {EV_TREE_ITEM} a_vision_tree.i_th (2) as l_tree_item_menu then
+						check l_tree_item_menu.text.same_string (xml_constants.ribbon_application_menu) end
+						if attached l_tree_item_menu.i_th (1) as l_application_menu then
+							from
+								l_application_menu.start
+							until
+								l_application_menu.after
+							loop
+								if attached {EV_TREE_ITEM} l_application_menu.item as l_tree_menu_group_item then
+									check l_tree_menu_group_item.text.same_string (xml_constants.menu_group) end
+									add_xml_menu_group_node (l_tree_menu_group_item)
+
+								end
+
+								l_application_menu.forth
+							end
+						end
+
+					end
+				end
+			end
+		end
+
+	add_xml_menu_group_node (a_tree_item: EV_TREE_ITEM)
+			--
+		require
+			not_void: a_tree_item /= Void
+			valid: a_tree_item.text.same_string (xml_constants.menu_group)
+		local
+			l_menu_group_node: XML_ELEMENT
+			l_constants: ER_XML_ATTRIBUTE_CONSTANTS
+		do
+			if attached xml_node_by_name (xml_constants.application_menu) as l_ribbon_application_menu_node then
+				create l_menu_group_node.make (l_ribbon_application_menu_node, xml_constants.menu_group, name_space)
+				l_ribbon_application_menu_node.put_last (l_menu_group_node)
+
+				if attached {ER_TREE_NODE_MENU_GROUP_DATA} a_tree_item.data as l_data then
+					create l_constants
+					-- Add xml attribute
+					if attached l_data.command_name as l_command_name and then not l_command_name.is_empty then
+						l_menu_group_node.add_attribute (l_constants.command_name, name_space, l_command_name)
+						-- Add coresspond command xml node
+						add_xml_command_node (l_data)
+					end
+					if application_mode /= 0 then
+						l_menu_group_node.add_attribute (l_constants.application_mode, name_space, application_mode.out)
+					end
+				end
+
+				from
+					a_tree_item.start
+				until
+					a_tree_item.after
+				loop
+					add_xml_button_node (l_menu_group_node, a_tree_item.item)
+
+					a_tree_item.forth
+				end
+			else
+				check False end
 			end
 		end
 
@@ -377,6 +460,7 @@ feature {NONE} -- Tree saving
 		require
 			not_void: a_group_node /= Void
 			valid: a_group_node.name.same_string (xml_constants.group) or else a_group_node.name.same_string (xml_constants.split_button)
+					or else a_group_node.name.same_string (xml_constants.menu_group)
 		local
 			l_button_node: XML_ELEMENT
 			l_constants: ER_XML_ATTRIBUTE_CONSTANTS

@@ -767,6 +767,23 @@ feature -- Comparison
 			Result := is_separate implies other.is_separate
 		end
 
+feature {CL_TYPE_A} -- Comparison
+
+	is_runnable_on_processor (other: TYPE_A): BOOLEAN
+			-- Can current type run on processor of `other'?
+		require
+			other_attached: attached other
+			other_separate: other.is_separate
+		do
+			if is_separate then
+					-- Separate type can run on the processor of `other'.
+				Result := True
+			elseif is_expanded then
+					-- Verify that all the attributes of the expanded type can run on the processor of `other'.
+				Result := is_processor_attachable_to (other)
+			end
+		end
+
 feature -- Access
 
 	associated_class: CLASS_C
@@ -1562,7 +1579,7 @@ invariant
 	generics_not_void_implies_generics_not_empty_or_tuple: (generics /= Void implies (not generics.is_empty or is_tuple))
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

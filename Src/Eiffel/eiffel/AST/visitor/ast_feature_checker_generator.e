@@ -1560,6 +1560,8 @@ feature {NONE} -- Implementation
 											end
 										elseif l_is_separate and then l_arg_type.is_reference and then not l_formal_arg_type.is_separate then
 											error_handler.insert_error (create {VUAR3}.make (context, l_feature, l_last_class, i, l_formal_arg_type, l_arg_type, l_parameters.i_th (i).start_location))
+										elseif l_arg_type.is_expanded and then not l_arg_type.is_processor_attachable_to (a_type) then
+											error_handler.insert_error (create {VUAR4}.make (context, l_feature, l_last_class, i, l_formal_arg_type, l_arg_type, l_parameters.i_th (i).start_location))
 										end
 
 											-- Check if `l_formal_arg_type' involves some generics whose actuals
@@ -8319,11 +8321,14 @@ feature {NONE} -- Implementation
 			else
 				last_alias_error := l_vtmc_error
 			end
-			if last_alias_error = Void then
-					-- Verify that if left operand is separate and right operand is of reference type
-					-- then formal feature argument is separate.
-				if a_left_type.is_separate and then a_right_type.is_reference and then not l_infix.arguments.i_th (1).is_separate then
+			if last_alias_error = Void and then a_left_type.is_separate then
+					-- Left operand is of a separate type, so the right operand is subject to SCOOP argument rules.
+				if a_right_type.is_reference and then not l_infix.arguments.i_th (1).is_separate then
+						-- If the right operand is of a reference type then formal feature argument must be separate.
 					create {VUAR3} last_alias_error.make (context, l_infix, l_class, 1, l_infix.arguments.i_th (1).actual_type, a_left_type, location)
+				elseif a_right_type.is_expanded and then not a_right_type.is_processor_attachable_to (a_left_type) then
+						-- If the right operand is of an expanded type then it should not have non-separate reference fields.
+					create {VUAR4} last_alias_error.make (context, l_infix, l_class, 1, l_infix.arguments.i_th (1).actual_type, a_left_type, location)
 				end
 			end
 			if last_alias_error /= Void then

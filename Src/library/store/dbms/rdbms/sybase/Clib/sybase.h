@@ -25,8 +25,11 @@ extern "C" {
 #endif
 
 #define STRING_TYPE            10
+#define WSTRING_TYPE			12
 #define CHARACTER_TYPE          4
 #define INTEGER_TYPE            4
+#define INTEGER_16_TYPE			13
+#define INTEGER_64_TYPE			14
 #define FLOAT_TYPE              5
 #define REAL_TYPE 		6
 #define BOOLEAN_TYPE            3
@@ -38,6 +41,10 @@ extern "C" {
 /* Max descriptor available simultaneously */
 #define MAX_DESCRIPTOR        (5+1)  /* 1 for internal use */
 #define NO_MORE_DESCRIPTOR    (-1)
+
+#define TXTLEN(x) 	(sqlstrlen((char *) x))
+
+extern size_t sqlstrlen(const char *str);
 
 extern void enomem ();
 /* Raises an "Out of memory" exception

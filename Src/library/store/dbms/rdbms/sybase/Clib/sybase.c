@@ -24,6 +24,8 @@
 #include <sybdb.h>
 #include "sybase.h"
 
+#include "eif_eiffel.h"
+
 int CS_PUBLIC err_handler ();
 int CS_PUBLIC msg_handler ();
 void clear_error ();
@@ -78,7 +80,8 @@ int c_syb_make (int m_size)
   
   if (login == NULL)
     {
-    login = safe_alloc (dblogin());
+		login = safe_alloc (dblogin());
+		DBSETLCHARSET (login, "utf8");
     }
  
   for (count = 0; count < MAX_DESCRIPTOR; count++)
@@ -94,8 +97,8 @@ int syb_new_descriptor ()
   int result = syb_first_descriptor_available ();
   
   if (result != NO_MORE_DESCRIPTOR)
-    {
-    descriptor[result] = safe_alloc (dbopen (login, NULL));
+	{
+		descriptor[result] = safe_alloc (dbopen (login, NULL));
 	}
   return result;
 }
@@ -336,8 +339,11 @@ int syb_conv_type (int i)
     case SYBTEXT:
     case SYBBINARY:  
       return STRING_TYPE;
+	case SYBLONGBINARY: /* For type UNICHAR, DB-Library returns type SYBLONGBINARY */
+		return WSTRING_TYPE;
     case SYBINT1:
     case SYBINT2:
+		return INTEGER_16_TYPE;
     case SYBINT4:
       return INTEGER_TYPE;
     case SYBREAL:
@@ -361,35 +367,41 @@ int syb_get_col_type (int no_des, int i)
 
 int syb_put_data (int no_des, int i, char *result)
 {
-  DBPROCESS * dbp = descriptor[no_des];
-  data_type = dbcoltype (dbp, i);
-  
-  if (data_type == SYBBINARY)
-    { 
-      /* Prefix the string by `Ox' for Hexa */
-      result[0] = '0';
-      result[1] = 'x';
-      
-      size = dbconvert (dbp, data_type, dbdata (dbp, i), dbdatlen (dbp, i),
+	DBPROCESS * dbp = descriptor[no_des];
+	data_type = dbcoltype (dbp, i);
+
+	if (data_type == SYBBINARY)
+	{ 
+		/* Prefix the string by `Ox' for Hexa */
+		result[0] = '0';
+		result[1] = 'x';
+
+		size = dbconvert (dbp, data_type, dbdata (dbp, i), dbdatlen (dbp, i),
 			SYBCHAR, &(result[2]), max_size-2);
-      if (size != -1)
+		if (size != -1)
+		{
+			size += 2;
+		} 
+	}
+	else if (data_type == SYBLONGBINARY)
 	{
-	  size += 2;
-	} 
-    }
-  else
-    {
-      size = dbconvert (dbp, data_type, dbdata (dbp, i), dbdatlen (dbp, i),
+		size = dbdatlen(dbp,i);
+		memcpy(result, (char *)dbdata(dbp,i), size); 
+		size = TXTLEN(result)*2;
+	}
+	else
+	{
+		size = dbconvert (dbp, data_type, dbdata (dbp, i), dbdatlen (dbp, i),
 			SYBCHAR, result, max_size);
-    }
-  if (size == -1)
-    {
-      return 0;
-    }
-  else
-    {
-      return size;
-    }
+	}
+	if (size == -1)
+	{
+		return 0;
+	}
+	else
+	{
+		return size;
+	}
 }
 
 int syb_get_integer_data (int no_des, int i)
@@ -406,6 +418,29 @@ int syb_get_integer_data (int no_des, int i)
 
     }
   return 0;
+}
+
+
+int syb_get_integer_16_data (int no_des, int i)
+{
+  int result;
+  DBPROCESS * dbp = descriptor[no_des];
+  
+  data_type = dbcoltype (dbp, i);
+  if ( (data_type == SYBINT1) || (data_type == SYBINT2) || (data_type == SYBINT4) )
+    {
+      dbconvert (dbp, data_type, dbdata (dbp, i), dbdatlen (dbp, i),
+		 SYBINT2, &result, sizeof (result));
+      return (int) result;
+
+    }
+  return 0;
+}
+
+EIF_NATURAL_64 syb_get_integer_64_data (int no_des, int i)
+{
+	/* Don't see 8-byte integer type, proper implementation is needed */
+	return syb_get_integer_data (no_des, i);
 }
 
 int syb_get_boolean_data (int no_des, int i)
@@ -624,6 +659,14 @@ int CS_PUBLIC msg_handler(
   return INT_CANCEL;
 }
 
+size_t sqlstrlen(const char *str)
+{
+	int i;
+	CS_UNICHAR *l_str;
+	l_str = (CS_UNICHAR *)str;
+	for (i=0; l_str[i]!=(CS_UNICHAR)0; i++){};
+	return (size_t)i;
+}
 
 /***************/
 /* eiffel_type */
@@ -632,6 +675,11 @@ int CS_PUBLIC msg_handler(
 int c_string_type ()
 {
   return STRING_TYPE;
+}
+
+int c_wstring_type ()
+{
+	return WSTRING_TYPE;
 }
 
 int c_character_type ()
@@ -643,6 +691,18 @@ int c_integer_type ()
 /*char c_integer_type ()*/
 {
   return INTEGER_TYPE;
+}
+
+int c_integer_16_type ()
+/*char c_integer_type ()*/
+{
+  return INTEGER_16_TYPE;
+}
+
+int c_integer_64_type ()
+/*char c_integer_type ()*/
+{
+  return INTEGER_64_TYPE;
 }
 
 int c_float_type ()

@@ -72,13 +72,21 @@ feature -- For DATABASE_FORMAT
 			Result.extend ('%'')
 		end
 
-	string_format (object: STRING): STRING
+	string_format (object: detachable STRING): STRING
+			-- String representation in SQL of `object'
+		obsolete
+			"Use `string_format_32' instead."
+		do
+			Result := string_format_32 (object)
+		end
+
+	string_format_32 (object: detachable READABLE_STRING_GENERAL): STRING_32
 			-- String representation in SQL of `object'
 		do
-			Result := object
-			if not is_binary (object) then
-			Result.precede ('%'')
-			Result.extend ('%'')
+			Result := object.as_string_32
+			if not is_binary (Result) then
+				Result.precede ('%'')
+				Result.extend ('%'')
 			end
 		end
 
@@ -165,6 +173,20 @@ feature -- DATABASE_INTEGER
 			Result := "int"
 		ensure then
 			Result.is_equal ("int")
+		end
+
+	sql_name_integer_16: STRING
+		once
+			Result := "smallint"
+		ensure then
+			Result.is_equal ("smallint")
+		end
+
+	sql_name_integer_64: STRING
+		once
+			Result := "bigint"
+		ensure then
+			Result.is_equal ("bigint")
 		end
 
 feature -- DATABASE_BOOLEAN
@@ -265,6 +287,13 @@ feature -- For DATABASE_REPOSITORY
 			Result := " text"
 		end
 
+	sql_wstring: STRING = "unichar ("
+
+	sql_wstring2 (int: INTEGER): STRING
+		do
+			Result := " unitext"
+		end
+
 feature -- External	features
 
 	get_error_message: POINTER
@@ -272,10 +301,25 @@ feature -- External	features
 			Result := syb_get_error_message
 		end
 
+	get_error_message_string: STRING_32
+		local
+			l_s: C_STRING
+		do
+			create l_s.make_by_pointer (syb_get_error_message)
+			Result := l_s.string
+		end
 
 	get_warn_message: POINTER
 		do
 			Result := syb_get_warn_message
+		end
+
+	get_warn_message_string: STRING_32
+		local
+			l_s: C_STRING
+		do
+			create l_s.make_by_pointer (syb_get_warn_message)
+			Result := l_s.string
 		end
 
 	new_descriptor: INTEGER
@@ -283,11 +327,12 @@ feature -- External	features
 			Result := syb_new_descriptor
 		end
 
-	init_order (no_descriptor: INTEGER; command: STRING)
+	init_order (no_descriptor: INTEGER; command: READABLE_STRING_GENERAL)
 		local
 			c_temp: C_STRING
 		do
-			create c_temp.make (command)
+			create c_temp.make (utf32_to_utf8 (command.as_string_32))
+
 			last_error_code := syb_init_order (no_descriptor, c_temp.item)
 		end
 
@@ -298,8 +343,7 @@ feature -- External	features
 
 	next_row (no_descriptor: INTEGER)
 		do
-			last_error_code := syb_next_row(no_descriptor)
-			found := (last_error_code = 0)
+			found := (syb_next_row(no_descriptor) = 0)
 		end
 
 	terminate_order (no_descriptor: INTEGER)
@@ -312,11 +356,11 @@ feature -- External	features
 		do
 		end
 
-	exec_immediate (no_descriptor: INTEGER; command: STRING)
+	exec_immediate (no_descriptor: INTEGER; command: READABLE_STRING_GENERAL)
 		local
 			c_temp: C_STRING
 		do
-			create c_temp.make (command)
+			create c_temp.make (utf32_to_utf8 (command.as_string_32))
 			last_error_code := syb_exec_immediate(c_temp.item)
 		end
 
@@ -370,6 +414,27 @@ feature -- External	features
 			end
 		end
 
+	put_data_32 (no_descriptor: INTEGER; index: INTEGER; ar: STRING_32; max_len:INTEGER): INTEGER
+		local
+			l_sql_string: SQL_STRING
+			i: INTEGER
+			l_area: MANAGED_POINTER
+		do
+			create l_area.make (max_len)
+			Result := syb_put_data (no_descriptor, index, l_area.item)
+
+			check
+				Result <= max_len
+			end
+
+			Result := Result // {SQL_STRING}.character_size
+
+			ar.grow (Result)
+			ar.set_count (Result)
+			create l_sql_string.make_shared_from_pointer_and_count (l_area.item, Result)
+			l_sql_string.read_substring_into (ar, 1, Result)
+		end
+
 	conv_type (indicator: INTEGER; index: INTEGER): INTEGER
 		do
 			Result := syb_conv_type (index)
@@ -398,6 +463,16 @@ feature -- External	features
 	get_integer_data (no_descriptor: INTEGER; ind: INTEGER): INTEGER
 		do
 			Result := syb_get_integer_data (no_descriptor, ind)
+		end
+
+	get_integer_16_data (no_descriptor: INTEGER; ind: INTEGER): INTEGER_16
+		do
+			Result := syb_get_integer_16_data (no_descriptor, ind)
+		end
+
+	get_integer_64_data (no_descriptor: INTEGER; ind: INTEGER): INTEGER_64
+		do
+			Result := syb_get_integer_64_data (no_descriptor, ind)
 		end
 
 	get_float_data (no_descriptor: INTEGER; ind: INTEGER): DOUBLE
@@ -460,6 +535,11 @@ feature -- External	features
 			Result := syb_c_string_type
 		end
 
+	c_wstring_type: INTEGER
+		do
+			Result := syb_c_wstring_type
+		end
+
 	c_character_type: INTEGER
 		do
 			Result := syb_c_character_type
@@ -468,6 +548,16 @@ feature -- External	features
 	c_integer_type: INTEGER
 		do
 			Result := syb_c_integer_type
+		end
+
+	c_integer_16_type: INTEGER
+		do
+			Result := syb_c_integer_16_type
+		end
+
+	c_integer_64_type: INTEGER
+		do
+			Result := syb_c_integer_64_type
 		end
 
 	c_float_type: INTEGER
@@ -615,6 +705,16 @@ feature {NONE} -- External features
 			"C"
 		end
 
+	syb_get_integer_16_data (no_descriptor: INTEGER; ind: INTEGER): INTEGER_16
+		external
+			"C"
+		end
+
+	syb_get_integer_64_data (no_descriptor: INTEGER; ind: INTEGER): INTEGER_64
+		external
+			"C"
+		end
+
 	syb_get_float_data (no_descriptor: INTEGER; ind: INTEGER): DOUBLE
 		external
 			"C"
@@ -672,6 +772,13 @@ feature {NONE} -- External features
 			"c_string_type"
 		end
 
+	syb_c_wstring_type: INTEGER
+		external
+			"C"
+		alias
+			"c_wstring_type"
+		end
+
 	syb_c_character_type: INTEGER
 		external
 			"C"
@@ -684,6 +791,20 @@ feature {NONE} -- External features
 			"C"
 		alias
 			"c_integer_type"
+		end
+
+	syb_c_integer_16_type: INTEGER
+		external
+			"C"
+		alias
+			"c_integer_16_type"
+		end
+
+	syb_c_integer_64_type: INTEGER
+		external
+			"C"
+		alias
+			"c_integer_64_type"
 		end
 
 	syb_c_float_type: INTEGER
@@ -762,15 +883,15 @@ feature {NONE} -- External features
 			"C"
 		end
 
-	is_binary (s: STRING): BOOLEAN
+	is_binary (s: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `s' a binary type?
 		require
 			s_not_void: s /= Void
 		do
-			Result := s.item (1) = '0' and then s.item (2) = 'x'
+			Result := s.code (1) = ('0').natural_32_code and then s.code (2) = ('x').natural_32_code
 		ensure
 			result_condition:
-				Result implies (s.item (1) = '0' and then s.item (2) = 'x')
+				Result implies (s.code (1) = ('0').natural_32_code and then s.code (2) = ('x').natural_32_code)
 		end
 
 	syb_available_descriptor: INTEGER

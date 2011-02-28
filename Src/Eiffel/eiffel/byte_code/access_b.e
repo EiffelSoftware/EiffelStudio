@@ -455,12 +455,13 @@ feature -- C generation
 					loop
 						buf.put_new_line
 						a := p [n]
-						if a.attachment_type.is_separate then
+						if a.attachment_type.is_basic then
+								-- The argument is passed without any additional checks.
+							buf.put_string ("RTS_AA (")
+						else
 								-- The argument needs to be checked if it is controlled or not.
 								-- If the argument is controlled, the call needs to be synchronous.
 							buf.put_string ("RTS_AS (")
-						else
-							buf.put_string ("RTS_AA (")
 						end
 						a.print_register
 						buf.put_two_character (',', ' ')
@@ -679,7 +680,7 @@ feature -- Inlining
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -15,3 +15,8 @@ VUAR, chapter 22 (Type checking), page 369
        3 If an actual argument of a separate call is of  a
          reference type, the corresponding formal argument
          must be declared as separate.
+
+       4 If an actual argument of a separate call is of an
+         expanded type,   its base class does not include,
+         directly   or   indirectly,    any   non-separate
+         attribute of a reference type.

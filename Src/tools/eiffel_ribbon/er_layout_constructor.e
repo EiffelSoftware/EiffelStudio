@@ -22,6 +22,9 @@ feature {NONE} -- Initialization
 
 			build_ui
 			build_docking_content
+
+			widget.drop_actions.extend (agent on_root_tree_drop)
+			widget.drop_actions.set_veto_pebble_function (agent on_veto_root_tree_drop)
 		end
 
 	build_docking_content
@@ -44,6 +47,7 @@ feature {NONE} -- Initialization
 			create widget
 			widget.key_press_actions.extend (agent on_tree_key_press)
 
+			-- Ribbon tabs
 			create l_tree_item_app.make_with_text (constants.ribbon_tabs)
 			l_tree_item_app.pointer_button_press_actions.extend (agent on_pointer_press (?, ?, ?, ?, ?, ?, ?, ?, l_tree_item_app))
 			l_tree_item_app.drop_actions.set_veto_pebble_function (agent on_veto_pebble_function (?, constants.ribbon_tabs))
@@ -105,8 +109,16 @@ feature -- Query
 			not_void: a_text /= Void
 		do
 			create Result.make (50)
-			check widget.count = 1 end
-			recrusive_all_items_with (a_text, widget.i_th (1), Result)
+			check widget.count >= 1 end
+			from
+				widget.start
+			until
+				widget.after
+			loop
+				recrusive_all_items_with (a_text, widget.item, Result)
+				widget.forth
+			end
+
 		end
 
 	all_items_in_all_constructors (a_text: STRING): ARRAYED_LIST [EV_TREE_NODE]
@@ -197,6 +209,10 @@ feature {NONE} -- Action handing
 						l_stone_child.same_string (constants.drop_down_gallery)
 				elseif a_parent_type.same_string (constants.split_button) then
 					Result := l_stone_child.same_string (constants.button)
+				elseif a_parent_type.same_string (constants.ribbon_application_menu) then
+					Result := l_stone_child.same_string (constants.menu_group)
+				elseif a_parent_type.same_string (constants.menu_group) then
+					Result := l_stone_child.same_string (constants.button)
 				end
 			end
 		end
@@ -219,6 +235,28 @@ feature {NONE} -- Action handing
 					if attached l_selected_node.parent as l_parent then
 						l_parent.prune_all (l_selected_node)
 					end
+				end
+			end
+		end
+
+	on_root_tree_drop (a_pebble: ANY)
+			--
+		local
+			l_tree_item: EV_TREE_ITEM
+		do
+			if attached {STRING} a_pebble as l_item then
+				check l_item.same_string (constants.ribbon_application_menu) end
+				l_tree_item := tree_item_factory_method (l_item)
+				widget.extend (l_tree_item)
+			end
+		end
+
+	on_veto_root_tree_drop (a_pebble: ANY): BOOLEAN
+			--
+		do
+			if attached {STRING} a_pebble as l_item then
+				if l_item.same_string (constants.ribbon_application_menu) then
+					Result := True
 				end
 			end
 		end

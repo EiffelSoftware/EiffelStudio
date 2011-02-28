@@ -39,7 +39,8 @@ feature {NONE} -- Initialization
 			l_ribbon: EV_TREE_ITEM
 			l_context_popup: EV_TREE_ITEM
 
-			l_ribbon_application_menu: EV_TREE_ITEM
+			l_ribbon_application_menu, l_ribbon_group: EV_TREE_ITEM
+			l_menu_group: EV_TREE_ITEM
 			l_ribbon_contextual_tabs: EV_TREE_ITEM
 			l_ribbon_help_button: EV_TREE_ITEM
 			l_ribbon_quick_access_toolbar: EV_TREE_ITEM
@@ -60,7 +61,11 @@ feature {NONE} -- Initialization
 			l_tree_item_view.extend (l_ribbon)
 --Uncomment following lines when the ribbon features supported
 			create l_ribbon_application_menu.make_with_text (constants.ribbon_application_menu)
---			l_ribbon_application_menu.set_pebble (constants.ribbon_application_menu)
+			l_ribbon_application_menu.set_pebble (constants.ribbon_application_menu)
+
+			create l_ribbon_group.make_with_text (constants.menu_group)
+			l_ribbon_group.set_pebble (constants.menu_group)
+			l_ribbon_application_menu.extend (l_ribbon_group)
 
 			create l_ribbon_contextual_tabs.make_with_text (constants.ribbon_contextual_tabs)
 --			l_ribbon_contextual_tabs.set_pebble (constants.ribbon_contextual_tabs)

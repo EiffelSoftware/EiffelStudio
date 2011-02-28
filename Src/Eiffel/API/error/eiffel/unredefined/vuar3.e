@@ -45,7 +45,11 @@ feature {NONE} -- Creation
 
 feature -- Access
 
-	subcode: INTEGER = 3
+	subcode: INTEGER
+			-- <Precursor>
+		do
+			Result := 3
+		end
 
 note
 	copyright:	"Copyright (c) 1984-2011, Eiffel Software"

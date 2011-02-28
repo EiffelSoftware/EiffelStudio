@@ -19,7 +19,7 @@ inherit
 			description, description_with_detachable_type,
 			generic_il_type_name, hash_code, internal_generic_derivation, generic_derivation,
 			internal_same_generic_derivation_as, generate_cecil_value,
-			sk_value, element_type, make
+			sk_value, element_type, make, is_processor_attachable_to
 		end
 
 feature {NONE} -- Initialization
@@ -196,13 +196,15 @@ feature {TYPE_A} -- Helpers
 			end
 		end
 
-feature {COMPILER_EXPORTER}
+feature -- Comparison
 
---	feature_type (f: FEATURE_I): TYPE_A is
---			-- Type of the feature `f' in the context of Current
---		do
---			Result ?= f.type
---		end
+	is_processor_attachable_to (other: TYPE_A): BOOLEAN
+			-- <Precursor>
+		do
+			Result := True
+		end
+
+feature {COMPILER_EXPORTER}
 
 	instantiation_of (type: TYPE_A; a_class_id: INTEGER): TYPE_A
 			-- Insatiation of `type' in s simple type
@@ -225,7 +227,7 @@ invariant
 	is_expanded: is_expanded
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

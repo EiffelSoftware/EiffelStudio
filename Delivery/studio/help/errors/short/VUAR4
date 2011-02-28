@@ -1,0 +1,6 @@
+Type error: base type of an actual argument of a separate call is
+  expanded and includes, directly or indirectly, a non-separate reference
+  attribute.
+What to do: make sure the type of the actual argument is reference
+  or does not include, directly or indirectly, any non-separate reference
+  attribute.

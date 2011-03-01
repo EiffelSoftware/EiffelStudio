@@ -107,7 +107,24 @@
 			<file_rule>
 				<exclude>/runtime$</exclude>
 			</file_rule>
-			<cluster name="debug" location="ise\runtime\debug\" recursive="true" hidden="true">
+			<cluster name="debug" location="ise\runtime\debug\api\" recursive="true" >
+				<condition>
+					<build value="workbench"/>
+				</condition>
+				<file_rule>
+					<exclude>/dotnet$</exclude>
+					<condition>
+						<dotnet value="false"/>
+					</condition>
+				</file_rule>
+				<file_rule>
+					<exclude>/classic$</exclude>
+					<condition>
+						<dotnet value="true"/>
+					</condition>
+				</file_rule>
+			</cluster>
+			<cluster name="debug_implementation" location="ise\runtime\debug\implementation\" recursive="true" hidden="true">
 				<condition>
 					<build value="workbench"/>
 				</condition>

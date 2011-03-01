@@ -100,9 +100,6 @@
 				<exclude>/runtime$</exclude>
 			</file_rule>
 			<cluster name="debug" location="ise\runtime\debug\api\" recursive="true">
-				<condition>
-					<build value="workbench"/>
-				</condition>
 				<file_rule>
 					<exclude>/dotnet$</exclude>
 					<condition>

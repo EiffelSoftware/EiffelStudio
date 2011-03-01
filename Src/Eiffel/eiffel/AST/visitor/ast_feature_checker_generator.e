@@ -736,6 +736,7 @@ feature {NONE} -- Settings
 		do
 			last_type := context.current_class_type
 			is_controlled := False
+			is_qualified_call := False
 		end
 
 	set_is_checking_postcondition (b: BOOLEAN)
@@ -3057,47 +3058,59 @@ feature {NONE} -- Implementation
 			l_is_assigner_call: BOOLEAN
 			l_is_qualified_call: BOOLEAN
 			l_error_level: NATURAL_32
+			l_is_controlled: BOOLEAN
 		do
-				-- Mask out assigner call flag for target of the call
-			l_is_assigner_call := is_assigner_call
-			is_assigner_call := False
-				-- Type check the target
-			l_as.target.process (Current)
-			if last_type /= Void then
-					-- Restore assigner call flag for nested call
-				is_assigner_call := l_is_assigner_call
+			check attached last_type as c then
+					-- Record if a call is qualified.
 				l_is_qualified_call := is_qualified_call
-				is_qualified_call := True
-				if is_byte_node_enabled then
-					l_target_access ?= last_byte_node
-				end
-				l_error_level := error_level
-					-- Check the target of a separate feature call.
-				if last_type.is_separate then
-					validate_separate_target (l_as.target)
-				end
-					-- Type check the message
-				l_as.message.process (Current)
-				if error_level /= l_error_level then
-					reset_types
-				else
-					if is_byte_node_enabled then
-							-- Create byte node.
-						l_call ?= last_byte_node
-						check
-							l_call_not_void: l_call /= Void
-						end
-						create l_nested
-						l_nested.set_target (l_target_access)
-						l_nested.set_message (l_call)
-
-						l_target_access.set_parent (l_nested)
-						l_call.set_parent (l_nested)
-
-						last_byte_node := l_nested
+				l_is_controlled := is_controlled
+					-- Mask out assigner call flag for target of the call
+				l_is_assigner_call := is_assigner_call
+				is_assigner_call := False
+					-- Type check the target
+				l_as.target.process (Current)
+				if attached last_type as t then
+						-- Restore assigner call flag for nested call
+					is_assigner_call := l_is_assigner_call
+						-- Adapt type of the target if required.
+					if l_is_qualified_call then
+						adapt_last_type_to_target (c, l_is_controlled)
 					end
+					l_is_qualified_call := is_qualified_call
+					is_qualified_call := True
+					if is_byte_node_enabled then
+						l_target_access ?= last_byte_node
+					end
+					l_error_level := error_level
+						-- Check the target of a separate feature call.
+					if t.is_separate then
+						validate_separate_target (l_as.target)
+						l_is_controlled := is_controlled
+					end
+						-- Type check the message
+					l_as.message.process (Current)
+					if error_level /= l_error_level then
+						reset_types
+					else
+						adapt_last_type_to_target (t, l_is_controlled)
+						if is_byte_node_enabled then
+								-- Create byte node.
+							l_call ?= last_byte_node
+							check
+								l_call_not_void: l_call /= Void
+							end
+							create l_nested
+							l_nested.set_target (l_target_access)
+							l_nested.set_message (l_call)
+
+							l_target_access.set_parent (l_nested)
+							l_call.set_parent (l_nested)
+
+							last_byte_node := l_nested
+						end
+					end
+					is_qualified_call := l_is_qualified_call
 				end
-				is_qualified_call := l_is_qualified_call
 			end
 		end
 
@@ -3282,41 +3295,40 @@ feature {NONE} -- Implementation
 		local
 			l_cursor: INTEGER
 			l_list: BYTE_LIST [BYTE_NODE]
+			e: like {ERROR_HANDLER}.error_level
 		do
-			l_cursor := l_as.index
-			l_as.start
-
 			if is_byte_node_enabled then
-				from
-					if b = Void then
-						create l_list.make (l_as.count)
-					else
-						l_list := b
-					end
-				until
-					l_as.after
-				loop
-					l_as.item.process (Current)
-					if m /= Void then
-						m.add_scopes (l_as.item)
-					end
-					l_list.extend (last_byte_node)
-					l_as.forth
-				end
-				last_byte_node := l_list
-			else
-				from
-				until
-					l_as.after
-				loop
-					l_as.item.process (Current)
-					if m /= Void then
-						m.add_scopes (l_as.item)
-					end
-					l_as.forth
+					-- Initialize result byte node.
+				if b = Void then
+					create l_list.make (l_as.count)
+				else
+					l_list := b
 				end
 			end
+			e := error_handler.error_level
+			l_cursor := l_as.index
+			from
+				l_as.start
+			until
+				l_as.after
+			loop
+				l_as.item.process (Current)
+				if m /= Void then
+					m.add_scopes (l_as.item)
+				end
+				if attached l_list then
+					if e = error_handler.error_level then
+						l_list.extend (last_byte_node)
+					else
+						l_list := Void
+					end
+				end
+				l_as.forth
+			end
 			l_as.go_i_th (l_cursor)
+			if is_byte_node_enabled then
+				last_byte_node := l_list
+			end
 		end
 
 	process_indexing_clause_as (l_as: INDEXING_CLAUSE_AS)
@@ -6584,10 +6596,8 @@ feature {NONE} -- Implementation
 			context.enter_realm
 			if l_as.case_list /= Void then
 				l_as.case_list.process (Current)
-				if l_inspect /= Void then
-					l_list ?= last_byte_node
-					l_list := l_list.remove_voids
-					l_inspect.set_case_list (l_list)
+				if l_inspect /= Void and then attached {like {INSPECT_B}.case_list} last_byte_node as l then
+					l_inspect.set_case_list (l.remove_voids)
 				end
 			end
 

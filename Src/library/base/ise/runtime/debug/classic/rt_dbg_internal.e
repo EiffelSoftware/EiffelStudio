@@ -681,7 +681,7 @@ feature -- Change local
 	rt_DLT_RESULT: INTEGER = 2
 			-- DLT=DebugLocalType, the type is the Result of the current feature
 
-	set_stack_value_at (dep: INTEGER; a_loc_type: INTEGER; pos: INTEGER; a_rt_type: NATURAL_32; value: detachable separate ANY): INTEGER
+	set_stack_value_at (dep: INTEGER; a_loc_type: INTEGER; pos: INTEGER; a_rt_type: NATURAL_32; value: detachable ANY): INTEGER
 			-- Set stack value at position `pos' on stack of depth `dep' with `value'
 			--| Result is 0 is succeed, otherwise Result /= 0 implies error occurred.
 		require

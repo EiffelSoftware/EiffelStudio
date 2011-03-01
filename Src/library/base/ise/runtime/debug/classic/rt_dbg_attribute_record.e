@@ -6,7 +6,7 @@ note
 	revision: "$Revision$"
 
 class
-	RT_DBG_ATTRIBUTE_RECORD [G]
+	RT_DBG_ATTRIBUTE_RECORD [G -> detachable ANY]
 
 inherit
 	RT_DBG_VALUE_RECORD

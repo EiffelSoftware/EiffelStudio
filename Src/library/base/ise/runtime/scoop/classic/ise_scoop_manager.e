@@ -80,7 +80,9 @@ feature -- C callback function
 		do
 			l_current_request_chain := request_chain_meta_data [a_client_processor_id]
 			if l_current_request_chain /= Void then
-				if l_current_request_chain [request_chain_client_pid_index] = a_supplier_processor_id then
+				if l_current_request_chain [request_chain_client_pid_index] = null_processor_id then
+					Result := True
+				elseif l_current_request_chain [request_chain_client_pid_index] = a_supplier_processor_id then
 						-- We are lock passing.
 						-- We return True if processors are different so that the supplier processor can temporarily take control of the current request chain.
 					Result := a_client_processor_id /= a_supplier_processor_id
@@ -264,7 +266,7 @@ feature -- Request Chain Handling
 
 			if l_request_chain_meta_data /= Void then
 				if l_request_chain_meta_data [request_chain_client_pid_index] = null_processor_id then
-						-- We are lock passing so we reuse the passed chain.				
+						-- We are lock passing so we reuse the passed chain.
 				else
 					l_request_chain_meta_data := Void
 				end
@@ -343,9 +345,6 @@ feature -- Request Chain Handling
 
 				-- Retrieve request chain meta data structure, add supplier pid to it if not already present.
 			l_request_chain_meta_data := request_chain_meta_data [a_client_processor_id]
-			if l_request_chain_meta_data = Void then
-				(create {EXCEPTIONS}).raise ("Invalid SCOOP Meta Data%N")
-			end
 			check l_request_chain_meta_data_attached: attached l_request_chain_meta_data end
 
 			if l_request_chain_meta_data [request_chain_client_pid_index] = null_processor_id then
@@ -412,12 +411,12 @@ feature -- Request Chain Handling
 
 				-- Retrieve request chain meta data structure.
 			l_request_chain_meta_data := request_chain_meta_data [a_client_processor_id]
-			if l_request_chain_meta_data = Void then
-				(create {EXCEPTIONS}).raise ("Invalid SCOOP Meta Data%N")
-			end
 			check l_request_chain_meta_data_attached: attached l_request_chain_meta_data end
 
-			if l_request_chain_meta_data [request_chain_client_pid_index] = a_client_processor_id then
+			if l_request_chain_meta_data [request_chain_client_pid_index] = null_processor_id then
+					-- We are lock passing so we update the request chain with the client processor
+				l_request_chain_meta_data [request_chain_client_pid_index] := a_client_processor_id
+			else
 						-- Retrieve request chain meta data structure
 					-- Sort unique pid values by logical order
 				l_request_chain_id := (processor_meta_data [a_client_processor_id])[current_request_chain_id_index]
@@ -524,17 +523,11 @@ feature -- Request Chain Handling
 						-- Set meta data for the request node of `l_pid'
 						-- This is used for both `head' and `tail' request chain nodes.
 					l_request_chain_node_meta_data_queue := request_chain_node_meta_data_queue_list [l_pid]
-					if l_request_chain_node_meta_data_queue = Void then
-						(create {EXCEPTIONS}).raise ("Invalid SCOOP Meta Data%N")
-					end
 					check l_request_chain_node_meta_data_queue_attached: attached l_request_chain_node_meta_data_queue end
 					l_request_chain_node_meta_data_queue [l_request_chain_node_id] := l_request_chain_meta_data
 
 						-- Set request chain node queue entry for `l_pid' for future logging.
 					l_request_chain_node_queue := request_chain_node_queue_list [l_pid]
-					if l_request_chain_node_queue = Void then
-						(create {EXCEPTIONS}).raise ("Invalid SCOOP Meta Data%N")
-					end
 					check l_request_chain_node_queue_attached: attached l_request_chain_node_queue end
 					l_request_chain_node_queue_entry := l_request_chain_node_queue [l_request_chain_node_id]
 					if not attached l_request_chain_node_queue_entry then
@@ -639,8 +632,9 @@ feature -- Command/Query Handling
 			l_request_chain_node_queue: detachable like new_request_chain_node_queue
 			l_client_request_chain_node_queue_entry, l_request_chain_node_queue_entry: detachable like new_request_chain_node_queue_entry
 			l_request_chain_node_meta_data_queue: detachable like new_request_chain_node_meta_data_queue
-			l_unique_pid_count, l_first_pid, i, l_last_pid_index, l_logged_calls_count: INTEGER_32
-			l_is_lock_passing, l_is_synchronous, l_exit_loop: BOOLEAN
+			l_unique_pid_count, i, l_last_pid_index, l_logged_calls_count: INTEGER_32
+			l_is_lock_passing, l_is_synchronous, l_client_is_sibling, l_client_sync_needed, l_exit_loop: BOOLEAN
+			l_blocking_pid: like processor_id_type
 			l_call_ptr: POINTER
 		do
 			debug ("ISE_SCOOP_MANAGER")
@@ -648,6 +642,13 @@ feature -- Command/Query Handling
 			end
 
 			l_is_synchronous := call_data_is_synchronous (a_call_data)
+			l_blocking_pid := (processor_meta_data [a_client_processor_id])[current_request_chain_query_blocking_processor_index]
+			if l_blocking_pid = null_processor_id then
+				l_blocking_pid := a_client_processor_id
+			else
+					-- The client of the chain is waiting for this
+				l_client_sync_needed := True
+			end
 
 			if (processor_meta_data [a_supplier_processor_id])[current_request_chain_node_id_index] = 0 then
 					-- We must be logging a creation routine
@@ -655,54 +656,36 @@ feature -- Command/Query Handling
 			else
 					-- Call is specific to `a_client_processor_id' so we need to retrieve the request chain node for `a_supplier_processor_id' from here.
 				l_request_chain_meta_data := request_chain_meta_data [a_client_processor_id]
-				if l_request_chain_meta_data = Void then
-					(create {EXCEPTIONS}).raise ("Invalid SCOOP Meta Data%N")
-				end
 				check l_client_request_chain_meta_data_attached: attached l_request_chain_meta_data end
 
-				if l_request_chain_meta_data [request_chain_client_pid_index] = null_processor_id then
-						-- We are lock passing so we mark the chain node as invalid
-					l_request_chain_node_id := invalid_request_chain_node_id
-				else
-					l_unique_pid_count := l_request_chain_meta_data [request_chain_pid_count_index]
+				l_request_chain_node_id := invalid_request_chain_node_id
+				l_unique_pid_count := l_request_chain_meta_data [request_chain_pid_count_index]
 
-					l_request_chain_node_id := invalid_request_chain_node_id
-
-					if l_unique_pid_count > 0 then
-						l_first_pid := l_request_chain_meta_data [request_chain_meta_data_header_size]
-						if l_first_pid = a_supplier_processor_id then
-							l_request_chain_node_id := l_request_chain_meta_data [request_chain_meta_data_header_size + l_unique_pid_count]
-						else
-								-- If supplier pid is not the first pid then we must have more than one unique pid
-							check l_unique_pid_count_valid: l_unique_pid_count > 1 end
-
-								-- Search through remaining pid's to find the associating request chain node id.
-							from
-								l_request_chain_node_id := invalid_request_chain_node_id
-								i := request_chain_meta_data_header_size + 1
-								l_last_pid_index := request_chain_meta_data_header_size + l_unique_pid_count - 1
-							until
-								i > l_last_pid_index
-							loop
-								if l_request_chain_meta_data [i] = a_supplier_processor_id then
-									l_request_chain_node_id := l_request_chain_meta_data [i + l_unique_pid_count]
-									i := l_last_pid_index
-								end
-								i := i + 1
-							end
-						end
+					-- Search through remaining pid's to find the associating request chain node id.
+				from
+					i := request_chain_meta_data_header_size
+					l_last_pid_index := request_chain_meta_data_header_size + l_unique_pid_count - 1
+				until
+					i > l_last_pid_index
+				loop
+					if l_request_chain_meta_data [i] = a_supplier_processor_id then
+						l_request_chain_node_id := l_request_chain_meta_data [i + l_unique_pid_count]
+					elseif l_request_chain_meta_data [i] = a_client_processor_id then
+						l_client_is_sibling := True
 					end
+					i := i + 1
+				end
+
+				if l_request_chain_node_id = invalid_request_chain_id then
+					l_is_lock_passing := True
 				end
 			end
 
 				-- Retrieve request chain node list so the call can be logged
 			l_request_chain_node_queue := request_chain_node_queue_list [a_supplier_processor_id]
-			if l_request_chain_node_queue = Void then
-				(create {EXCEPTIONS}).raise ("Invalid SCOOP Meta Data%N")
-			end
 			check l_request_chain_node_queue_attached: attached l_request_chain_node_queue end
 
-			if l_request_chain_node_id /= invalid_request_chain_node_id then
+			if not l_is_lock_passing then
 				l_request_chain_node_queue_entry := l_request_chain_node_queue [l_request_chain_node_id]
 				if not attached l_request_chain_node_queue_entry then
 					check request_chain_node_queue_entry_value: l_request_chain_node_id = 0 end
@@ -716,12 +699,12 @@ feature -- Command/Query Handling
 				end
 			else
 					-- We are in a lock passing situation.
-				l_is_lock_passing := True
 				l_request_chain_node_queue_entry := l_request_chain_node_queue [(processor_meta_data [a_supplier_processor_id])[current_request_node_id_execution_index]]
 				check l_request_chain_node_queue_entry_attached: attached l_request_chain_node_queue_entry end
 			end
 
-			if l_request_chain_node_queue_entry.count = l_request_chain_node_queue_entry.capacity then
+			l_logged_calls_count := l_request_chain_node_queue_entry.count
+			if l_logged_calls_count = l_request_chain_node_queue_entry.capacity then
 					-- Resize node structure if there is not enough room for the new entry
 					--| FIXME IEK: Resizing 3 extra items may not be optimal in all cases
 				l_request_chain_node_queue_entry := l_request_chain_node_queue_entry.aliased_resized_area (l_request_chain_node_queue_entry.count + 3)
@@ -776,19 +759,20 @@ feature -- Command/Query Handling
 					loop
 						yield_processor
 					end
-					synchronize_processors_upon_application (a_client_processor_id)
+					put_supplier_processors_in_wait_state (a_client_processor_id, False)
 
 					request_chain_meta_data [a_client_processor_id] := l_client_request_chain_meta_data
 
 						-- Set chain back to closed so that the supplier processor may continue with other calls.
 					l_request_chain_meta_data [request_chain_status_index] := request_chain_status_closed
+
+					release_supplier_processors_from_wait_state (a_client_processor_id, False)
 				else
 					if not l_is_lock_passing then
-
 						from
 							-- Wait until the request chain has started.
 						until
-							l_request_chain_meta_data [request_chain_status_index] = request_chain_status_application
+							l_request_chain_meta_data [request_chain_status_index] > request_chain_status_open
 						loop
 							yield_processor
 						end
@@ -800,27 +784,26 @@ feature -- Command/Query Handling
 						check l_client_request_chain_node_queue_entry_attached: l_client_request_chain_node_queue_entry /= Void end
 
 						from
-								-- We make a copy of the current request chain meta data and pass to the supplier for correct synchronization.
+								-- We make a copy of the current request chain meta data and pass to the supplier for correct synchronization and controlled argument processing.
+							put_supplier_processors_in_wait_state (l_blocking_pid, l_client_is_sibling)
+
 							l_request_chain_meta_data := l_request_chain_meta_data.twin
 
 								-- Set the client of the chain to be the null processor.
 							l_request_chain_meta_data [request_chain_client_pid_index] := null_processor_id
-
 							request_chain_meta_data [a_supplier_processor_id] := l_request_chain_meta_data;
-
-							(processor_meta_data [a_supplier_processor_id])[current_request_chain_query_blocking_processor_index] := a_client_processor_id
-
-							put_supplier_processors_in_wait_state (a_client_processor_id)
+							(processor_meta_data [a_supplier_processor_id])[current_request_chain_query_blocking_processor_index] := l_blocking_pid
 
 								-- Store current logged call count to see if any feature application requests are made by the call.
 							l_logged_calls_count := l_client_request_chain_node_queue_entry.count
 
 							l_request_chain_node_queue_entry.extend (a_call_data)
-
-							release_supplier_processors_from_wait_state (a_client_processor_id)
+							release_supplier_processors_from_wait_state (l_blocking_pid, l_client_is_sibling)
 
 								-- Synchronize to make sure that any supplier processors calls to the client will be marked as logged.
-							synchronize_processors_upon_application (a_client_processor_id)
+							put_supplier_processors_in_wait_state (l_blocking_pid, l_client_is_sibling)
+								-- Now the call has been processed so we can check if a call on `a_client_processor_id' was made.
+
 						until
 							l_exit_loop
 						loop
@@ -832,41 +815,31 @@ feature -- Command/Query Handling
 							then
 									-- The supplier processor has logged a call on the client processor so we must service it.
 								l_call_ptr := l_client_request_chain_node_queue_entry [l_logged_calls_count]
-								if l_call_ptr /= default_pointer then
-									if not l_is_lock_passing then
-										l_is_lock_passing := True
-									else
-											-- We only synchronize on the second iteration as the first sync was performed outside of the loop.
-										synchronize_processors_upon_application (a_client_processor_id)
-									end
-										-- Reset call ptr from list before call in case list resizes
-									l_client_request_chain_node_queue_entry [l_logged_calls_count] := default_pointer
-									l_client_request_chain_node_queue_entry.keep_head (l_logged_calls_count)
-										-- We must service all requests until the routine has closed its chain.
-									scoop_command_call (l_call_ptr)
-									scoop_command_call_cleanup (l_call_ptr)
-									l_call_ptr := default_pointer
 
-										-- Signal the supplier processors to continue.
-									synchronize_processors_upon_application (a_client_processor_id)
-								end
+									-- Reset call ptr from list before call in case list resizes
+								l_client_request_chain_node_queue_entry [l_logged_calls_count] := default_pointer
+								l_client_request_chain_node_queue_entry.keep_head (l_logged_calls_count)
+									-- We must service all requests until the routine has closed its chain.
+								scoop_command_call (l_call_ptr)
+								scoop_command_call_cleanup (l_call_ptr)
+								l_call_ptr := default_pointer
+
+									-- Signal the supplier processors to continue.
+								release_supplier_processors_from_wait_state (l_blocking_pid, l_client_is_sibling)
+
+									-- Put them in a wait state so that we can check on the next loop iteration if a call has been added.
+								put_supplier_processors_in_wait_state (l_blocking_pid, l_client_is_sibling)
 							else
-								if not l_is_lock_passing or else l_request_chain_meta_data [request_chain_status_index] = request_chain_status_closed then
-										-- We can exit as no calls have been logged back to the client processor.
-									request_chain_meta_data [a_supplier_processor_id] := Void
-									l_exit_loop := True
-								else
-									yield_processor
-								end
+								release_supplier_processors_from_wait_state (l_blocking_pid, l_client_is_sibling)
+								(processor_meta_data [a_supplier_processor_id])[current_request_chain_query_blocking_processor_index] := null_processor_id
+								request_chain_meta_data [a_supplier_processor_id] := Void
+								l_exit_loop := True
 							end
 						end
 					else
 							-- Lock passing so we need to log the call on the supplier processors current request node chain.
 						l_request_chain_node_queue_entry.extend (a_call_data)
-						sync_with_waiting_client_processor ((processor_meta_data [a_client_processor_id])[current_request_chain_query_blocking_processor_index])
-
-							-- Client call execution sync
-						sync_with_waiting_client_processor ((processor_meta_data [a_client_processor_id])[current_request_chain_query_blocking_processor_index])
+						sync_with_waiting_client_processor (l_blocking_pid)
 					end
 				end
 			else
@@ -879,57 +852,90 @@ feature -- Command/Query Handling
 			end
 		end
 
-	synchronize_processors_upon_application (a_client_processor_id: like processor_id_type)
-			-- Synchronize `a_client_processor_id' with `a_supplier_processor_id'.
-		do
-			put_supplier_processors_in_wait_state (a_client_processor_id)
-			release_supplier_processors_from_wait_state (a_client_processor_id)
-		end
-
-	put_supplier_processors_in_wait_state (a_client_processor_id: like processor_id_type)
+	put_supplier_processors_in_wait_state (a_client_processor_id: like processor_id_type; a_is_sibling: BOOLEAN)
 			-- Put all supplier processors of `a_client_processor_ids' current request chain in a wait state.
 		local
 			l_request_chain_meta_data: detachable like new_request_chain_meta_data_entry
-			l_temp_count, l_orig_sync_count: INTEGER_32
+			l_temp_count, l_sync_count, l_orig_sync_count: INTEGER_32
 		do
 			l_request_chain_meta_data := request_chain_meta_data [a_client_processor_id]
 			check request_chain_meta_data_attached: attached l_request_chain_meta_data end
 
-			check processor_is_chain_client: l_request_chain_meta_data [request_chain_client_pid_index] = a_client_processor_id end
-			check chain_is_being_applied: l_request_chain_meta_data [request_chain_status_index] = request_chain_status_application end
+			if a_is_sibling then
+					-- Wait for nodes to enter waiting state (-2, ie: not including client or current processor)
+				l_sync_count := {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_request_chain_meta_data.item_address (request_chain_pid_count_index), 0) + 1
+				l_orig_sync_count := {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_request_chain_meta_data.item_address (request_chain_sync_counter_index), 0)
 
-			l_orig_sync_count := {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_request_chain_meta_data.item_address (request_chain_pid_count_index), 0)
+				if l_orig_sync_count < -1 then
+						-- We are already in a state of waiting so we wait until the sync count reaches -sync_count
+					l_temp_count := l_orig_sync_count
+				else
+					l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.swap_integer_32 (l_request_chain_meta_data.item_address (request_chain_status_index), request_chain_status_waiting)
+					l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.swap_integer_32 (l_request_chain_meta_data.item_address (request_chain_sync_counter_index), -l_sync_count)
+				end
 
-			check sync_count_reset: l_request_chain_meta_data [request_chain_pid_count_index] = l_orig_sync_count end
-
-				-- Wait for nodes to enter waiting state.
-			from
-				l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.swap_integer_32 (l_request_chain_meta_data.item_address (request_chain_sync_counter_index), -(l_orig_sync_count + 1))
-				l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.swap_integer_32 (l_request_chain_meta_data.item_address (request_chain_status_index), request_chain_status_waiting)
-			until
-				{ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_request_chain_meta_data.item_address (request_chain_sync_counter_index), 0) = -1
-			loop
-				yield_processor
+				from
+					-- Wait until the sync count is -2 (ie: not including client or current processor)
+				until
+					l_temp_count = -2
+				loop
+					yield_processor
+					l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_request_chain_meta_data.item_address (request_chain_sync_counter_index), 0)
+				end
+			else
+					-- Wait for nodes to enter waiting state (-1, ie: not including client processor)
+				l_sync_count := {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_request_chain_meta_data.item_address (request_chain_pid_count_index), 0) + 1
+				from
+					l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.swap_integer_32 (l_request_chain_meta_data.item_address (request_chain_status_index), request_chain_status_waiting)
+					l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.swap_integer_32 (l_request_chain_meta_data.item_address (request_chain_sync_counter_index), -l_sync_count)
+				until
+					l_temp_count = -1
+				loop
+					yield_processor
+					l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_request_chain_meta_data.item_address (request_chain_sync_counter_index), 0)
+				end
 			end
 		end
 
-	release_supplier_processors_from_wait_state (a_client_processor_id: like processor_id_type)
+	release_supplier_processors_from_wait_state (a_client_processor_id: like processor_id_type; a_is_sibling: BOOLEAN)
 			-- Release processors of `a_client_processor_id's current request chain from their wait state.
 		local
 			l_request_chain_meta_data: detachable like new_request_chain_meta_data_entry
-			l_temp_count, l_orig_sync_count: INTEGER_32
+			l_temp_count, l_sync_count, l_orig_sync_count: INTEGER_32
 		do
 			l_request_chain_meta_data := request_chain_meta_data [a_client_processor_id]
 			check request_chain_meta_data_attached: attached l_request_chain_meta_data end
 
-			l_orig_sync_count := {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_request_chain_meta_data.item_address (request_chain_pid_count_index), 0)
-			from
-				l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.swap_integer_32 (l_request_chain_meta_data.item_address (request_chain_status_index), request_chain_status_application)
-				l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.swap_integer_32 (l_request_chain_meta_data.item_address (request_chain_sync_counter_index), 0)
-			until
-				{ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_request_chain_meta_data.item_address (request_chain_sync_counter_index), 0) = l_orig_sync_count
-			loop
-				yield_processor
+			if a_is_sibling then
+				l_sync_count := {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_request_chain_meta_data.item_address (request_chain_pid_count_index), 0)
+				l_orig_sync_count := {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_request_chain_meta_data.item_address (request_chain_sync_counter_index), 0)
+
+				if l_orig_sync_count > 1 then
+						-- Processors are already in a release state so we wait until the sync counts match up.
+					l_temp_count := l_orig_sync_count
+				else
+					l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.swap_integer_32 (l_request_chain_meta_data.item_address (request_chain_status_index), request_chain_status_application)
+					l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.swap_integer_32 (l_request_chain_meta_data.item_address (request_chain_sync_counter_index), 1)
+				end
+				from
+				until
+					l_temp_count = l_sync_count
+				loop
+					yield_processor
+					l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_request_chain_meta_data.item_address (request_chain_sync_counter_index), 0)
+				end
+			else
+				l_sync_count := {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_request_chain_meta_data.item_address (request_chain_pid_count_index), 0) + 1
+				from
+					l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.swap_integer_32 (l_request_chain_meta_data.item_address (request_chain_status_index), request_chain_status_application)
+					l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.swap_integer_32 (l_request_chain_meta_data.item_address (request_chain_sync_counter_index), 1)
+				until
+					l_temp_count = l_sync_count
+				loop
+					yield_processor
+					l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_request_chain_meta_data.item_address (request_chain_sync_counter_index), 0)
+				end
+				l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.swap_integer_32 (l_request_chain_meta_data.item_address (request_chain_sync_counter_index), l_sync_count - 1)
 			end
 		end
 

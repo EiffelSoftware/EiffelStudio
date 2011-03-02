@@ -13,7 +13,7 @@ inherit
 
 	EV_VERTICAL_SPLIT_AREA_I
 		redefine
-			interface
+			interface, maximum_split_position
 		end
 
 	EV_SPLIT_AREA_IMP
@@ -30,6 +30,27 @@ inherit
 create
 	make
 
+feature -- Status Report
+
+	maximum_split_position: INTEGER
+			-- Maximum position the splitter can have.
+		local
+			a_sec_height: INTEGER
+		do
+				-- We force a resize of current if the split is parented but not visible and the position has never been calculated yet		
+			if not is_maximum_split_position_computed and not is_displayed and attached parent_imp as l_parent then
+				is_maximum_split_position_computed := True
+				l_parent.notify_change (nc_minheight, Current, True)
+			end
+			if second_visible and then attached second as l_second then
+				a_sec_height := l_second.minimum_height
+			end
+			Result := height - a_sec_height - splitter_width
+			if Result < minimum_split_position then
+				Result := minimum_split_position
+			end
+		end
+
 feature {NONE} -- Status Setting
 
 	set_first (v: EV_WIDGET)
@@ -37,6 +58,7 @@ feature {NONE} -- Status Setting
 		local
 			l_imp: detachable EV_WIDGET_IMP
 		do
+			is_maximum_split_position_computed := False
 			v.implementation.on_parented
 			l_imp ?= v.implementation
 			check l_imp_not_void: l_imp /= Void end
@@ -48,7 +70,7 @@ feature {NONE} -- Status Setting
 			else
 				set_split_position (maximum_split_position)
 			end
-			notify_change (Nc_minsize, Current)
+			notify_change (Nc_minsize, Current, False)
 			new_item_actions.call ([v])
 		end
 
@@ -57,12 +79,13 @@ feature {NONE} -- Status Setting
 		local
 			l_imp: detachable EV_WIDGET_IMP
 		do
+			is_maximum_split_position_computed := False
 			v.implementation.on_parented
 			l_imp ?= v.implementation
 			check l_imp_not_void: l_imp /= Void end
 			l_imp.set_parent_imp (Current)
 			second := v
-			notify_change (Nc_minsize, Current)
+			notify_change (Nc_minsize, Current, False)
 			if first_visible then
 				set_split_position (height - splitter_width - v.minimum_height.min
 					(height - minimum_split_position - splitter_width))
@@ -75,7 +98,7 @@ feature {NONE} -- Status Setting
 				--| and be sure it is correct. Then we call notify change
 				--| again after the split position has been set,
 				--| to reflect these changes.
-			notify_change (Nc_minsize, Current)
+			notify_change (Nc_minsize, Current, False)
 			new_item_actions.call ([v])
 		end
 
@@ -88,7 +111,7 @@ feature {NONE} -- Implementation
 			click_relative_position := y_pos - internal_split_position
 		end
 
-	compute_minimum_size
+	compute_minimum_size (a_is_size_forced: BOOLEAN)
 			-- Recompute the minimum_size of `Current'.
 		local
 			mh, mw, sep_wid: INTEGER
@@ -102,10 +125,10 @@ feature {NONE} -- Implementation
 				mw := mw.max (l_second.minimum_width)
 				mh := mh + l_second.minimum_height + sep_wid
 			end
-			ev_set_minimum_size (mw, mh)
+			ev_set_minimum_size (mw, mh, a_is_size_forced)
 		end
 
-	compute_minimum_height
+	compute_minimum_height (a_is_size_forced: BOOLEAN)
 			-- Recompute the minimum_height of `Current'.
 		local
 			mh, sep_wid: INTEGER
@@ -117,10 +140,10 @@ feature {NONE} -- Implementation
 			if second_visible and then attached second as l_second then
 				mh := mh + l_second.minimum_height + sep_wid
 			end
-			ev_set_minimum_height (mh)
+			ev_set_minimum_height (mh, a_is_size_forced)
 		end
 
-	compute_minimum_width
+	compute_minimum_width (a_is_size_forced: BOOLEAN)
 			-- Recompute the minimum_width of `Current'.
 		local
 			mw: INTEGER
@@ -131,7 +154,7 @@ feature {NONE} -- Implementation
 			if second_visible and then attached second as l_second then
 				mw := mw.max (l_second.minimum_width)
 			end
-			ev_set_minimum_width (mw)
+			ev_set_minimum_width (mw, a_is_size_forced)
 		end
 
 	on_size (size_type, a_width, a_height: INTEGER)
@@ -144,8 +167,7 @@ feature {NONE} -- Implementation
 	ev_apply_new_size (a_x_position, a_y_position,
 				a_width, a_height: INTEGER; repaint: BOOLEAN)
 		do
-			ev_move_and_resize
-				(a_x_position, a_y_position, a_width, a_height, repaint)
+			ev_move_and_resize (a_x_position, a_y_position, a_width, a_height, repaint)
 			split_area_resizing (a_height, False)
 		end
 
@@ -223,9 +245,11 @@ feature {NONE} -- Implementation
 					end
 				end
 
-					-- Store the number of pixels `Current' has increased
-					-- by (negative for a reduction).
-				size_change := height - last_dimension
+				if originator then
+						-- Store the number of pixels `Current' has increased
+						-- by (negative for a reduction).
+					size_change := height - last_dimension
+				end
 
 					-- Store the current size as `last_split_position'.
 				last_dimension:= a_height
@@ -388,6 +412,9 @@ feature {NONE} -- Implementation
 			paint_dc.unselect_pen
 		end
 
+	is_computing_max_position: BOOLEAN
+			-- To prevent recursion when computing the maximum position of the splitter.
+
 feature {NONE} -- WEL internal
 
 	class_cursor: WEL_CURSOR
@@ -416,15 +443,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EV_VERTICAL_SPLIT_AREA_IMP
-
-
-
-
-
-
-
-
+end

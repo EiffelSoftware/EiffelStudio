@@ -296,7 +296,7 @@ feature -- Status setting
 			show_window (l_bar.item, {WEL_WINDOW_CONSTANTS}.Sw_show)
 			p_imp := parent_imp
 			if p_imp /= Void then
-				p_imp.notify_change (Nc_minsize, Current)
+				p_imp.notify_change (Nc_minsize, Current, False)
 			end
 		end
 
@@ -311,7 +311,7 @@ feature -- Status setting
 			show_window (l_bar.item, {WEL_WINDOW_CONSTANTS}.Sw_hide)
 			p_imp := parent_imp
 			if p_imp /= Void then
-				p_imp.notify_change (Nc_minsize, Current)
+				p_imp.notify_change (Nc_minsize, Current, False)
 			end
 		end
 
@@ -493,7 +493,7 @@ feature -- Element change
 				-- execution of `reset_button'.
 			if not is_in_reset_button then
 					-- We notify the change to integrate them if necessary
-				notify_change (nc_minsize, Current)
+				notify_change (nc_minsize, Current, False)
 			end
 		end
 
@@ -507,7 +507,7 @@ feature -- Element change
 				-- Only perform resizing if we are not currently within
 				-- execution of `reset_button'.
 			if not is_in_reset_button then
-				notify_change (nc_minsize, Current)
+				notify_change (nc_minsize, Current, False)
 			end
 				-- Now restore `private_pixmap' and
 				-- `private_grey_pixmap' if necessary.
@@ -596,41 +596,41 @@ feature -- Basic operation
 				wel_item, Tb_commandtoindex, to_wparam (button.id), to_lparam (0))
 		end
 
-	compute_minimum_width
+	compute_minimum_width (a_is_size_forced: BOOLEAN)
 			-- Update the minimum-size of `Current'.
 		local
 			num: INTEGER
 		do
 			if comctl32_version >= version_471 then
 					-- New version using API available starting with IE4.
-				ev_set_minimum_width (get_max_width)
+				ev_set_minimum_width (get_max_width, a_is_size_forced)
 			else
 					-- No API available, we can only guess the right value...
 				num := separator_count
 				num := (count - num) * buttons_width + num * separator_width
-				ev_set_minimum_width (num)
+				ev_set_minimum_width (num, a_is_size_forced)
 			end
 		end
 
-	compute_minimum_height
+	compute_minimum_height (a_is_size_forced: BOOLEAN)
 			-- Update the minimum-size of `Current'.
 		do
 			if comctl32_version >= version_471 then
 					-- New version using API available starting with IE4.
-				ev_set_minimum_height (get_max_height)
+				ev_set_minimum_height (get_max_height, a_is_size_forced)
 			else
 					-- No API available, we can only guess the right value...
-				ev_set_minimum_height (buttons_height + 4)
+				ev_set_minimum_height (buttons_height + 4, a_is_size_forced)
 			end
 
 		end
 
-	compute_minimum_size
+	compute_minimum_size (a_is_size_forced: BOOLEAN)
 			-- Recompute both the minimum_width and then
 			-- minimum_height of `Current'.
 		do
-			compute_minimum_height
-			compute_minimum_width
+			compute_minimum_height (a_is_size_forced)
+			compute_minimum_width (a_is_size_forced)
 		end
 
 	internal_reset_button (but: EV_TOOL_BAR_ITEM_IMP)
@@ -659,7 +659,7 @@ feature -- Basic operation
 				unlock_window_update
 			end
 			is_in_reset_button := False
-			notify_change (nc_minsize, Current)
+			notify_change (nc_minsize, Current, False)
 		end
 
 	is_in_reset_button: BOOLEAN

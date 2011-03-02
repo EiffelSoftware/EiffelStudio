@@ -28,7 +28,7 @@ feature -- Status setting
    	set_default_minimum_size
    			-- Set `default_minimum_size'.
    		do
-			ev_set_minimum_width (2)
+			ev_set_minimum_width (2, False)
  		end
 
 feature {NONE} -- Implementation

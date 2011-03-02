@@ -131,7 +131,7 @@ feature {NONE} -- Implementation
 			-- Update size of `Parent_imp'.
 		do
 			if attached parent_imp as l_parent_imp then
-				l_parent_imp.compute_minimum_size
+				l_parent_imp.compute_minimum_size (False)
 			end
 		end
 

@@ -28,7 +28,7 @@ feature -- Status setting
    	set_default_minimum_size
    			-- Platform dependant initialization.
    		do
-			ev_set_minimum_height (2)
+			ev_set_minimum_height (2, False)
  		end
 
 feature {NONE} -- Implementation

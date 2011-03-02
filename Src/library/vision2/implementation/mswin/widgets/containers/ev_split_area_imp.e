@@ -133,6 +133,7 @@ feature {NONE} -- Implementation
 		local
 			v_imp: detachable EV_WIDGET_IMP
 		do
+			is_maximum_split_position_computed := False
 			if v /= Void then
 				if v = first then
 					v_imp := first_imp
@@ -159,7 +160,7 @@ feature {NONE} -- Implementation
 						-- Reflect the changes by updating the position of the
 						-- splitter and laying out the widgets.
 					update_split_position
-					notify_change (Nc_minsize, Current)
+					notify_change (Nc_minsize, Current, False)
 				end
 			end
 		end
@@ -201,6 +202,9 @@ feature {NONE} -- Implementation
 			-- Maximum position in pixels allowed for the splitter.
 		deferred
 		end
+
+	is_maximum_split_position_computed: BOOLEAN
+			-- To prevent recursion when computing the maximum position of the splitter.
 
 	layout_widgets (originator: BOOLEAN)
 		deferred

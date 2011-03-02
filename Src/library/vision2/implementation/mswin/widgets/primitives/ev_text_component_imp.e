@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 		do
 			ev_set_minimum_size (
 				maximum_character_width * 4, internal_font_height +
-				total_vertical_padding)
+				total_vertical_padding, False)
 		end
 
 	total_vertical_padding: INTEGER = 9

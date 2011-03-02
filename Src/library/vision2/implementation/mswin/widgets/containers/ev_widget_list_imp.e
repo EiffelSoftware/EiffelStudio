@@ -55,7 +55,7 @@ feature {NONE} -- Implementation
 			v_imp.wel_set_parent (wel_win)
 			v_imp.set_top_level_window_imp (top_level_window_imp)
 			new_item_actions.call ([v])
-			notify_change (Nc_minsize, Current)
+			notify_change (Nc_minsize, Current, False)
 		end
 
 	remove_i_th (i: INTEGER)
@@ -73,7 +73,7 @@ feature {NONE} -- Implementation
 			remove_item_actions.call ([v_imp.attached_interface])
 			ev_children.go_i_th (i)
 			ev_children.remove
-			notify_change (Nc_minsize, Current)
+			notify_change (Nc_minsize, Current, False)
 
 				-- Unlink the widget from its parent and
 				-- signal it.

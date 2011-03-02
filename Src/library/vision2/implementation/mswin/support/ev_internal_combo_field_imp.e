@@ -416,6 +416,8 @@ feature {NONE} -- Implementation
 			set_message_return_value (to_lresult ({WEL_DLGC_CONSTANTS}.dlgc_want_all_keys))
 		end
 
+
+
 	tooltip_window: WEL_WINDOW
 		do
 			Result := Current

@@ -154,7 +154,7 @@ feature -- Element change
 		do
 			Precursor {EV_FONTABLE_IMP} (ft)
 			update_text_size
-			notify_change (nc_minsize, Current)
+			notify_change (nc_minsize, Current, False)
 			invalidate
 		end
 
@@ -190,7 +190,7 @@ feature -- Element change
 				Precursor {EV_TEXT_ALIGNABLE_IMP} (a_text)
 				update_text_size
 			end
-			notify_change (nc_minsize, Current)
+			notify_change (nc_minsize, Current, False)
 			invalidate
 		end
 
@@ -228,7 +228,7 @@ feature -- Status setting
 	set_default_minimum_size
 			-- Initialize the size of `Current'.
 		do
-			ev_set_minimum_size (2 * Text_padding, 2 * Border_width)
+			ev_set_minimum_size (2 * Text_padding, 2 * Border_width, False)
 		end
 
 	align_text_center
@@ -266,7 +266,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation for automatic size compute.
 
-	compute_minimum_width
+	compute_minimum_width (a_is_size_forced: BOOLEAN)
 			-- Recompute the minimum_width of `Current'.
 		local
 			minwidth: INTEGER
@@ -276,10 +276,10 @@ feature {NONE} -- Implementation for automatic size compute.
 			end
 			minwidth := minwidth + client_x + Border_width
 			minwidth := minwidth.max (text_width + 2 * Text_padding)
-			ev_set_minimum_width (minwidth)
+			ev_set_minimum_width (minwidth, a_is_size_forced)
 		end
 
-	compute_minimum_height
+	compute_minimum_height (a_is_size_forced: BOOLEAN)
 			-- Recompute the minimum_height of `Current'.
 		local
 			minheight: INTEGER
@@ -288,10 +288,10 @@ feature {NONE} -- Implementation for automatic size compute.
 				minheight := l_item_imp.minimum_height
 			end
 			minheight := minheight + client_y + Border_width
-			ev_set_minimum_height (minheight)
+			ev_set_minimum_height (minheight, a_is_size_forced)
 		end
 
-	compute_minimum_size
+	compute_minimum_size (a_is_size_forced: BOOLEAN)
 			-- Recompute both the minimum_width and then
 			-- minimum_height of `Current'.
 		local
@@ -304,7 +304,7 @@ feature {NONE} -- Implementation for automatic size compute.
 			minwidth := minwidth + client_x + Border_width
 			minheight := minheight + client_y + Border_width
 			minwidth := minwidth.max (text_width + 2 * Text_padding)
-			ev_set_minimum_size (minwidth, minheight)
+			ev_set_minimum_size (minwidth, minheight, a_is_size_forced)
 		end
 
 feature {NONE} -- WEL Implementation

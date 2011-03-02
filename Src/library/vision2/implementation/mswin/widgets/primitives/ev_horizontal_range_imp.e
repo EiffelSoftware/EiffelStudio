@@ -46,8 +46,7 @@ feature -- Status setting
    	set_default_minimum_size
    			-- Platform dependant initializations.
    		do
-			ev_set_minimum_height (30)
-			ev_set_minimum_width (10)
+			ev_set_minimum_size (10, 30, False)
  		end
 
 feature {EV_ANY, EV_ANY_I, EV_INTERNAL_SILLY_WINDOW_IMP} -- Implementation

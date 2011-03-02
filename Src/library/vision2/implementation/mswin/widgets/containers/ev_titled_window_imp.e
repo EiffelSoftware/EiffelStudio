@@ -288,7 +288,7 @@ feature {EV_ANY_I} -- Implementation
 	internal_icon_name: STRING_32
 			-- Name given by the user. internal representation.
 
-	compute_minimum_height
+	compute_minimum_height (a_is_size_forced: BOOLEAN)
 			-- Recompute the minimum height of `Current'.
 		local
 			mh: INTEGER
@@ -298,11 +298,11 @@ feature {EV_ANY_I} -- Implementation
 				if attached item_imp as l_item_imp and then l_item_imp.is_show_requested then
 					mh := mh + l_item_imp.minimum_height
 				end
-				ev_set_minimum_height (mh)
+				ev_set_minimum_height (mh, a_is_size_forced)
 			end
 		end
 
-	compute_minimum_size
+	compute_minimum_size (a_is_size_forced: BOOLEAN)
 			-- Recompute the minimum size of `Current'.
 		local
 			mw, mh: INTEGER
@@ -314,7 +314,7 @@ feature {EV_ANY_I} -- Implementation
 					mw := mw + l_item_imp.minimum_width
 					mh := mh + l_item_imp.minimum_height
 				end
-				ev_set_minimum_size (mw, mh)
+				ev_set_minimum_size (mw, mh, a_is_size_forced)
 			end
 		end
 

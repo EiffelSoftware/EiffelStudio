@@ -29,7 +29,7 @@ feature -- Status settings
 	set_default_minimum_size
 			-- Initialize the size of `Current'.
 		do
-			ev_set_minimum_size (10, 14)
+			ev_set_minimum_size (10, 14, False)
 		end
 
 feature {NONE} -- Implementation

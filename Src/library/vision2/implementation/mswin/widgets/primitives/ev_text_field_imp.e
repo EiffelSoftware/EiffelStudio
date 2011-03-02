@@ -175,7 +175,7 @@ feature {EV_ANY_I} -- Status setting
 			set_ex_style (0)
 				-- The minimum size must now be reduced as there are no borders.
 			ev_set_minimum_size (
-				maximum_character_width * 4, internal_font_height)
+				maximum_character_width * 4, internal_font_height, False)
 		end
 
 feature {NONE} -- WEL Implementation

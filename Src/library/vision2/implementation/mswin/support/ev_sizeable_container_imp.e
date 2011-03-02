@@ -77,9 +77,9 @@ feature -- Access
 				if is_minheight_recomputation_needed then
 					set_minheight_recomputation_needed (False)
 					is_in_min_height := True
-					compute_minimum_size
+					compute_minimum_size (False)
 				else
-					compute_minimum_width
+					compute_minimum_width (False)
 				end
 				is_in_min_height := False
 				is_in_min_width := False
@@ -96,9 +96,9 @@ feature -- Access
 				if is_minwidth_recomputation_needed then
 					set_minwidth_recomputation_needed (False)
 					is_in_min_width := True
-					compute_minimum_size
+					compute_minimum_size (False)
 				else
-					compute_minimum_height
+					compute_minimum_height (False)
 				end
 				is_in_min_height := False
 				is_in_min_width := False
@@ -108,7 +108,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	ev_set_minimum_width (value: INTEGER)
+	ev_set_minimum_width (value: INTEGER; a_is_size_forced: BOOLEAN)
 			-- Assign `value' to `minimum_width'.
 			-- Should check if the user didn't set the minimum width
 			-- before we set the new value.
@@ -123,14 +123,14 @@ feature -- Basic operations
 				internal_set_minimum_width (value)
 				p_imp := parent_imp
 				if p_imp /= Void and then (not is_in_notify.item or else is_notify_originator) then
-					p_imp.notify_change (Nc_minwidth, attached_interface.implementation)
+					p_imp.notify_change (Nc_minwidth, attached_interface.implementation, a_is_size_forced)
 					do_change := True
 				end
 			end
 			top_imp := top_level_window_imp
 			if
 				not do_change and then
-				top_imp /= Void and then top_imp.is_displayed
+				(a_is_size_forced or (top_imp /= Void and then top_imp.is_displayed))
 			then
 					-- Current width
 				rw := child_cell.width
@@ -138,14 +138,14 @@ feature -- Basic operations
 					ev_move_and_resize (x_position, y_position,
 							value, child_cell.height, True)
 				elseif is_initialized then
-						-- Apply changes to descendant only
+						-- Apply changes to children only
 					ev_apply_new_size (x_position, y_position,
 							rw.max (value), child_cell.height, True)
 				end
 			end
 		end
 
-	ev_set_minimum_height (value: INTEGER)
+	ev_set_minimum_height (value: INTEGER; a_is_size_forced: BOOLEAN)
 			-- Assign `value' to `minimum_height'.
 			-- Should check if the user didn't set the minimum width
 			-- before we set the new value.
@@ -160,29 +160,29 @@ feature -- Basic operations
 				internal_set_minimum_height (value)
 				p_imp := parent_imp
 				if p_imp /= Void and then (not is_in_notify.item or else is_notify_originator) then
-					p_imp.notify_change (Nc_minheight, attached_interface.implementation)
+					p_imp.notify_change (Nc_minheight, attached_interface.implementation, a_is_size_forced)
 					do_change := True
 				end
 			end
 			top_imp := top_level_window_imp
 			if
 				not do_change and then
-				top_imp /= Void and then top_imp.is_displayed
+				(a_is_size_forced or (top_imp /= Void and then top_imp.is_displayed))
 			then
 				rh := child_cell.height
 				if value > rh then
-						-- Apply changes to current and descendant
+						-- Apply changes to current and children
 					ev_move_and_resize (x_position, y_position,
 							child_cell.width, value, True)
 				elseif is_initialized then
-						-- Apply changes to descendant only
+						-- Apply changes to children only
 					ev_apply_new_size (x_position, y_position,
 							child_cell.width, rh.max (value), True)
 				end
 			end
 		end
 
-	ev_set_minimum_size (a_width, a_height: INTEGER)
+	ev_set_minimum_size (a_width, a_height: INTEGER; a_is_size_forced: BOOLEAN)
 			-- Assign `mw' to minimum_width and `mh' to minimum_height.
 			-- Should check if the user didn't set the minimum width
 			-- before to set the new value.
@@ -206,12 +206,12 @@ feature -- Basic operations
 				if p_imp /= Void and then (not is_in_notify.item or else is_notify_originator) then
 					if w_cd then
 						if h_cd then
-							p_imp.notify_change (Nc_minsize, attached_interface.implementation)
+							p_imp.notify_change (Nc_minsize, attached_interface.implementation, a_is_size_forced)
 						else
-							p_imp.notify_change (Nc_minwidth, attached_interface.implementation)
+							p_imp.notify_change (Nc_minwidth, attached_interface.implementation, a_is_size_forced)
 						end
 					else
-						p_imp.notify_change (Nc_minheight, attached_interface.implementation)
+						p_imp.notify_change (Nc_minheight, attached_interface.implementation, a_is_size_forced)
 					end
 					do_change := True
 				end
@@ -219,23 +219,23 @@ feature -- Basic operations
 			top_imp := top_level_window_imp
 			if
 				not do_change and then
-				top_imp /= Void and then top_imp.is_displayed
+				(a_is_size_forced or (top_imp /= Void and then top_imp.is_displayed))
 			then
 				rw := child_cell.width
 				rh := child_cell.height
 				if a_width > rw or a_height > rh then
-						-- Apply changes to current and descendant
+						-- Apply changes to current and children
 					ev_move_and_resize (x_position, y_position,
 							a_width.max (rw), a_height.max (rh), True)
 				elseif is_initialized then
-						-- Apply changes to descendant only
+						-- Apply changes to children only
 					ev_apply_new_size (x_position, y_position,
 							rw.max (a_width), rh.max (a_height), True)
 				end
 			end
 		end
 
-	notify_change (type: INTEGER; child: detachable EV_ANY_I)
+	notify_change (type: INTEGER; child: detachable EV_ANY_I; a_is_size_forced: BOOLEAN)
 			-- Notify the current widget that the change identify by
 			-- type have been done. For types, see `internal_changes'
 			-- in class EV_SIZEABLE_IMP. If the container is shown,
@@ -248,49 +248,51 @@ feature -- Basic operations
 			t: detachable EV_SIZEABLE_CONTAINER_IMP
 		do
 			if not is_in_min_height and not is_in_min_width then
-			if is_in_notify.item then
-				t ?= child
-				if t /= Void and then t.is_notify_originator then
-						-- `notify_change' call has finished its work on descendants,
-						-- we go up to parents.
+				if is_in_notify.item then
+					t ?= child
+					if t /= Void and then t.is_notify_originator then
+							-- `notify_change' call has finished its work on descendants,
+							-- we go up to parents.
+						is_in_notify.put (False)
+					end
+				end
+				if not is_in_notify.item then
+					is_notify_originator := True
+					is_in_notify.put (True)
+					top_imp := top_level_window_imp
+					if (a_is_size_forced or (top_imp /= Void and then top_imp.is_displayed)) then
+						inspect type
+						when Nc_minwidth then
+							set_minwidth_recomputation_needed (False)
+							compute_minimum_width (a_is_size_forced)
+						when Nc_minheight then
+							set_minheight_recomputation_needed (False)
+							compute_minimum_height (a_is_size_forced)
+						when Nc_minsize then
+							set_minwidth_recomputation_needed (False)
+							set_minheight_recomputation_needed (False)
+							compute_minimum_size (a_is_size_forced)
+						end
+					else
+						inspect type
+						when Nc_minwidth then
+							set_minwidth_recomputation_needed (True)
+						when Nc_minheight then
+							set_minheight_recomputation_needed (True)
+						when Nc_minsize then
+							set_minwidth_recomputation_needed (True)
+							set_minheight_recomputation_needed (True)
+						end
+						if top_imp = Void or else not top_imp.is_displayed then
+							p_imp := parent_imp
+							if p_imp /= Void then
+								p_imp.notify_change (type, attached_interface.implementation, a_is_size_forced)
+							end
+						end
+					end
+					is_notify_originator := False
 					is_in_notify.put (False)
 				end
-			end
-			if not is_in_notify.item then
-				is_notify_originator := True
-				is_in_notify.put (True)
-				top_imp := top_level_window_imp
-				if top_imp /= Void and then top_imp.is_displayed then
-					inspect type
-					when Nc_minwidth then
-						set_minwidth_recomputation_needed (False)
-						compute_minimum_width
-					when Nc_minheight then
-						set_minheight_recomputation_needed (False)
-						compute_minimum_height
-					when Nc_minsize then
-						set_minwidth_recomputation_needed (False)
-						set_minheight_recomputation_needed (False)
-						compute_minimum_size
-					end
-				else
-					inspect type
-					when Nc_minwidth then
-						set_minwidth_recomputation_needed (True)
-					when Nc_minheight then
-						set_minheight_recomputation_needed (True)
-					when Nc_minsize then
-						set_minwidth_recomputation_needed (True)
-						set_minheight_recomputation_needed (True)
-					end
-					p_imp := parent_imp
-					if p_imp /= Void then
-						p_imp.notify_change (type, attached_interface.implementation)
-					end
-				end
-				is_notify_originator := False
-				is_in_notify.put (False)
-			end
 			end
 		end
 
@@ -301,9 +303,10 @@ feature -- Basic operations
 		deferred
 		end
 
-	compute_minimum_width, compute_minimum_height, compute_minimum_size
+	compute_minimum_width, compute_minimum_height, compute_minimum_size (a_is_size_forced: BOOLEAN)
 			-- Recompute the minimum_width of the object.
 			-- Should call only ev_set_minimum_xxxx.
+			-- If `a_is_size_forced' then force an actual computation of the real size too.
 		require
 			not_is_destroyed: not is_destroyed
 		deferred

@@ -223,7 +223,7 @@ feature {EV_ANY, EV_ANY_I}-- Status setting
 					end
 				end
 			end
-			notify_change (Nc_minsize, Current)
+			notify_change (Nc_minsize, Current, False)
 		end
 
 feature -- Contract support

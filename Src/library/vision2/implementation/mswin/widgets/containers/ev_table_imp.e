@@ -263,35 +263,35 @@ feature {EV_ANY_I} -- Status settings
 			-- the box has the same size.
 		do
 			is_homogeneous := True
-			notify_change (Nc_minsize, Current)
+			notify_change (Nc_minsize, Current, False)
 		end
 
 	disable_homogeneous
 			-- Disable homogeneous. Allow controls to take different sizes.
 		do
 			is_homogeneous := False
-			notify_change (Nc_minsize, Current)
+			notify_change (Nc_minsize, Current, False)
 		end
 
 	set_row_spacing (value: INTEGER)
 			-- Make `value' the new `row_spacing'.
 		do
 			row_spacing := value
-			notify_change (nc_minheight, Current)
+			notify_change (nc_minheight, Current, False)
 		end
 
 	set_column_spacing (value: INTEGER)
 			-- Make `value' the new `column_spacing'.
 		do
 			column_spacing := value
-			notify_change (nc_minwidth, Current)
+			notify_change (nc_minwidth, Current, False)
 		end
 
 	set_border_width (a_value: INTEGER)
 			-- Spacing between edge of `Current' and items.
 		do
 			border_width := a_value
-			notify_change (Nc_minsize, Current)
+			notify_change (Nc_minsize, Current, False)
 		end
 
 	replace (v: like item)
@@ -327,7 +327,7 @@ feature {EV_ANY_I} -- Status settings
 
 				-- We show the child and resize the container
 			child_imp.show
-			notify_change (Nc_minsize, Current)
+			notify_change (Nc_minsize, Current, False)
 			new_item_actions.call ([child])
 		end
 
@@ -337,7 +337,7 @@ feature {EV_ANY_I} -- Status settings
 			Precursor {EV_TABLE_I} (a_column, a_row)
 			initialize_columns (a_column)
 			initialize_rows (a_row)
-			notify_change (Nc_minsize, Current)
+			notify_change (Nc_minsize, Current, False)
 		end
 
 
@@ -362,7 +362,7 @@ feature {EV_ANY_I} -- Status settings
 			ev_children.prune_all (tchild)
 
 				-- Update changes.
-			notify_change (Nc_minsize, Current)
+			notify_change (Nc_minsize, Current, False)
 				-- Update the parent of `child_imp'.
 			widget_imp.set_parent_imp (Void)
 				-- Call on_orphaned.
@@ -384,7 +384,7 @@ feature {EV_ANY_I} -- Status settings
 			check table_child /= Void end
 			table_child.set_attachment
 				(a_row - 1, a_column - 1, table_child.bottom_attachment - table_child.top_attachment + a_row - 1, table_child.right_attachment - table_child.left_attachment + a_column - 1)
-			notify_change (Nc_minsize, Current)
+			notify_change (Nc_minsize, Current, False)
 		end
 
 	set_item_span (v: EV_WIDGET; column_span, row_span: INTEGER)
@@ -402,7 +402,7 @@ feature {EV_ANY_I} -- Status settings
 			check table_child /= Void end
 			table_child.set_attachment
 				(table_child.top_attachment, table_child.left_attachment, table_child.top_attachment + row_span, table_child.left_attachment + column_span)
-			notify_change (Nc_minsize, Current)
+			notify_change (Nc_minsize, Current, False)
 		end
 
 	set_item_position_and_span (v: EV_WIDGET; a_column, a_row, column_span, row_span: INTEGER)
@@ -570,7 +570,7 @@ feature {NONE} -- Resize Implementation
 
 feature {NONE} -- Basic operations for implementation
 
-	compute_minimum_width
+	compute_minimum_width (a_is_size_forced: BOOLEAN)
 			-- Recompute minimum_width of `Curren'.
 		local
 			list: ARRAYED_LIST [EV_TABLE_CHILD_IMP]
@@ -625,17 +625,17 @@ feature {NONE} -- Basic operations for implementation
 						-- as the values are still the non - homogeneous transformed values.
 						-- Therefore, we compute directly.
 					ev_set_minimum_width (maximum_value (columns_minimum) * columns_minimum.count +
-						border_width * 2 + column_spacing * (columns_minimum.count - 1))
+						border_width * 2 + column_spacing * (columns_minimum.count - 1), a_is_size_forced)
 				else
 					sum_columns_minimums
-					ev_set_minimum_width (columns_sum + border_width * 2)
+					ev_set_minimum_width (columns_sum + border_width * 2, a_is_size_forced)
 				end
 			else
-				ev_set_minimum_width (0)
+				ev_set_minimum_width (0, a_is_size_forced)
 			end
 		end
 
-	compute_minimum_height
+	compute_minimum_height (a_is_size_forced: BOOLEAN)
 			-- Recompute minimum_width of `Current'.
 		local
 			list: ARRAYED_LIST [EV_TABLE_CHILD_IMP]
@@ -689,17 +689,17 @@ feature {NONE} -- Basic operations for implementation
 						-- as the values are still the non - homogeneous transformed values.
 						-- Therefore, we compute directly.
 					ev_set_minimum_height (maximum_value (rows_minimum) * rows_minimum.count +
-						border_width * 2 + row_spacing * (rows_minimum.count - 1))
+						border_width * 2 + row_spacing * (rows_minimum.count - 1), a_is_size_forced)
 				else
 					sum_rows_minimums
-					ev_set_minimum_height (rows_sum + border_width * 2)
+					ev_set_minimum_height (rows_sum + border_width * 2, a_is_size_forced)
 				end
 			else
-				ev_set_minimum_height (0)
+				ev_set_minimum_height (0, a_is_size_forced)
 			end
 		end
 
-	compute_minimum_size
+	compute_minimum_size (a_is_size_forced: BOOLEAN)
 			-- Recompute minimum size of `Current'.
 		local
 			list: ARRAYED_LIST [EV_TABLE_CHILD_IMP]
@@ -768,14 +768,14 @@ feature {NONE} -- Basic operations for implementation
 						-- Note that `sum_rows_minimum' does not correctly sum when homogeneous,
 						-- as the values are still the non - homogeneous transformed values.
 						-- Therefore, we compute directly.
-					ev_set_minimum_size (maximum_value (columns_minimum) * columns_minimum.count + border_width * 2 + column_spacing * (columns_minimum.count - 1), maximum_value (rows_minimum) * rows_minimum.count + border_width * 2 + row_spacing * (rows_minimum.count - 1))
+					ev_set_minimum_size (maximum_value (columns_minimum) * columns_minimum.count + border_width * 2 + column_spacing * (columns_minimum.count - 1), maximum_value (rows_minimum) * rows_minimum.count + border_width * 2 + row_spacing * (rows_minimum.count - 1), a_is_size_forced)
 				else
 					sum_rows_minimums
 					sum_columns_minimums
-					ev_set_minimum_size (columns_sum + border_width * 2, rows_sum + border_width * 2)
+					ev_set_minimum_size (columns_sum + border_width * 2, rows_sum + border_width * 2, a_is_size_forced)
 				end
 			else
-				ev_set_minimum_size (border_width * 2, border_width * 2)
+				ev_set_minimum_size (border_width * 2, border_width * 2, a_is_size_forced)
 			end
 		end
 

@@ -139,6 +139,7 @@ feature {NONE} -- Implementation
 				if l_key.is_items_source then
 					create l_value.share_from_pointer (a_property_current_value)
 					create l_collection.make_with_prop_variant (l_value)
+					l_collection.clear
 					add_items_to_ui_collection (l_collection)
 					l_collection.release -- Release COM object here
 				elseif l_key.is_categories then

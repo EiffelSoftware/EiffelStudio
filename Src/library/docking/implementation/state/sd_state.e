@@ -306,7 +306,7 @@ feature -- Properties
 	set_last_floating_width (a_width: INTEGER)
 			-- Set `last_floating_width'
 		require
-			valid: a_width > 0
+			valid: a_width >= 0
 		do
 			last_floating_width := a_width
 		ensure
@@ -319,7 +319,7 @@ feature -- Properties
 	set_last_floating_height (a_height: INTEGER)
 			-- Set `last_floating_height'
 		require
-			valid: a_height > 0
+			valid: a_height >= 0
 		do
 			last_floating_height := a_height
 		ensure

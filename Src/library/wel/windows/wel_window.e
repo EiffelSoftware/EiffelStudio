@@ -2202,7 +2202,6 @@ feature {WEL_WINDOW} -- Windows bug workaround
 		local
 			l_diff: BOOLEAN
 			l_flags: INTEGER
-			l_parent: like parent
 		do
 				-- Reset `internal_wm_size_called'. It is set to True in `process_message'
 				-- when receiving a WM_SIZE message.
@@ -2218,9 +2217,7 @@ feature {WEL_WINDOW} -- Windows bug workaround
 			l_diff := ((l_flags & swp_nosize) = 0) and then (a_width /= width or a_height /= height)
 
 				 -- Perform call to `SetWindowPos'.
-			if
-				not  {WEL_API}.set_window_pos (item, default_pointer, a_x, a_y,  a_width, a_height, l_flags)
-			then
+			if not {WEL_API}.set_window_pos (item, default_pointer, a_x, a_y,  a_width, a_height, l_flags) then
 					-- An error occurred, what can we do then?
 				do_nothing
 			end
@@ -2233,15 +2230,25 @@ feature {WEL_WINDOW} -- Windows bug workaround
 					-- was not sent because it did not need to.
 					-- Ideally, we should hook to the WM_WINDOWPOSCHANGED in Vision2 to better bypass
 					-- this limitation.
-				l_parent := parent
-				if l_parent /= Void then
-					l_parent.invalidate
-				end
-				invalidate
-				{WEL_API}.post_message (item, wm_size, to_wparam (0), cwin_make_long (a_width, a_height))
-				if (l_flags & swp_nomove) = 0 then
-					{WEL_API}.post_message (item, wm_move, to_wparam (0), cwin_make_long (a_x, a_y))
-				end
+					-- Note the we use `a_flags', i.e. the original value, not the computed one `l_flags'
+					-- so that we can repeat the call exactly as it was requested.
+				delayed_move_and_resize_internal (a_x, a_y, a_width, a_height, repaint, a_flags)
+			end
+		end
+
+	delayed_move_and_resize_internal (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN; a_flags: INTEGER)
+			-- Call to `move_and_resize_internal' did not complete as expected. We trigger it at the next processing
+			-- of the event queue.
+		require
+			exists: exists
+		do
+			if attached parent as l_parent then
+				l_parent.invalidate
+			end
+			invalidate
+			{WEL_API}.post_message (item, wm_size, to_wparam (0), cwin_make_long (a_width, a_height))
+			if (a_flags & swp_nomove) = 0 then
+				{WEL_API}.post_message (item, wm_move, to_wparam (0), cwin_make_long (a_x, a_y))
 			end
 		end
 

@@ -143,6 +143,7 @@ inherit
 			has_focus,
 			on_set_focus,
 			on_kill_focus,
+			delayed_move_and_resize_internal,
 			set_focus
 		end
 
@@ -1073,6 +1074,42 @@ feature {NONE} -- WEL Implementation
 		do
 			Result := cwin_hi_word ({WEL_API}.send_message_result (edit_item,
 				Em_getsel, to_wparam (0), to_lparam (0)))
+		end
+
+	delayed_move_and_resize_internal (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN; a_flags: INTEGER)
+			-- <Precursor>
+		do
+			if attached wel_parent as l_parent then
+				l_parent.invalidate
+			end
+			invalidate
+				-- Combo boxes are really special, in a sense that if the resizing failed then
+				-- we have to put the resizing if any on idle again, we cannot use the WM_SIZE/WM_MOVE message
+				-- as they don't work for Combo boxes.
+			if attached application_imp as l_app then
+				l_app.do_once_on_idle (agent safe_move_and_resize (a_x, a_y, a_width, a_height, repaint, a_flags))
+			end
+		end
+
+	safe_move_and_resize (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN; a_flags: INTEGER)
+		require
+			exists: exists
+		local
+			l_flags: INTEGER_32
+		do
+			l_flags := a_flags | Swp_nozorder | Swp_noactivate
+			if not repaint then
+				l_flags := l_flags | Swp_noredraw
+			end
+				-- First perform a shrinking of the combo box so that it realizes it is different than
+				-- the last time it was set but it did not proceed further.
+			if not {WEL_API}.set_window_pos (wel_item, default_pointer, a_x, a_y, a_width - 1, a_height - 1, l_flags) then
+				do_nothing
+			end
+				-- Perform the requested resizing.
+			if not {WEL_API}.set_window_pos (wel_item, default_pointer, a_x, a_y, a_width, a_height, l_flags) then
+				do_nothing
+			end
 		end
 
 	destroy

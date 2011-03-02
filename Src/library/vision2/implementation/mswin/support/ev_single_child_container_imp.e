@@ -85,7 +85,7 @@ feature -- Element change
 				v_imp.set_parent_imp (Void)
 				v_imp.on_orphaned
 				if interface /= Void then
-					notify_change (nc_minsize, attached_interface.implementation)
+					notify_change (nc_minsize, attached_interface.implementation, False)
 				end
 			end
 		end
@@ -106,7 +106,7 @@ feature -- Element change
 				end
 				v_imp.set_parent_imp (Current)
 				item := v
-				notify_change (nc_minsize, Current)
+				notify_change (nc_minsize, Current, False)
 				new_item_actions.call ([v])
 			end
 		end

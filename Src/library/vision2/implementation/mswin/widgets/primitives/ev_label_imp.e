@@ -256,7 +256,7 @@ feature {EV_ANY_I} -- Initialization
 			end
 			text_height := a_height
 			text_width := a_width
-			ev_set_minimum_size (a_width.abs, a_height.abs)
+			ev_set_minimum_size (a_width.abs, a_height.abs, False)
 		end
 
 feature {NONE} -- WEL Implementation

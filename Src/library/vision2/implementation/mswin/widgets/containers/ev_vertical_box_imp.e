@@ -37,21 +37,21 @@ feature -- Status setting
 			-- Recompute heights of children.
 		do
 			is_homogeneous := flag
-			notify_change (Nc_minheight, Current)
+			notify_change (Nc_minheight, Current, False)
 		end
 
 	set_padding (value: INTEGER)
 			-- Make `value' the new spacing of `Current'.
 		do
 			padding := value
-			notify_change (Nc_minheight, Current)
+			notify_change (Nc_minheight, Current, False)
 		end
 
 	set_border_width (value: INTEGER)
 			-- Make `value' the new border width of `Current'.
 		do
 			border_width := value
-			notify_change (Nc_minsize, Current)
+			notify_change (Nc_minsize, Current, False)
 		end
 
 feature {NONE} -- Basic operation
@@ -197,7 +197,7 @@ feature {NONE} -- Basic operation
 
 feature {NONE} -- Implementation for automatic size computation.
 
-	compute_minimum_width
+	compute_minimum_width (a_is_size_forced: BOOLEAN)
 			-- Recompute the minimum_width of `Current'.
 		local
 			lchild: ARRAYED_LIST [EV_WIDGET_IMP]
@@ -227,10 +227,10 @@ feature {NONE} -- Implementation for automatic size computation.
 			end
 			childvisible_nb := nb_visi
 			compute_childexpand_nb
-			ev_set_minimum_width (value + 2 * border_width)
+			ev_set_minimum_width (value + 2 * border_width, a_is_size_forced)
 		end
 
-	compute_minimum_height
+	compute_minimum_height (a_is_size_forced: BOOLEAN)
 			-- Recompute the minimum_height of `Current'.
 		local
 			lchild: ARRAYED_LIST [EV_WIDGET_IMP]
@@ -258,7 +258,7 @@ feature {NONE} -- Implementation for automatic size computation.
 					childvisible_nb := nb_visi
 					compute_childexpand_nb
 					ev_set_minimum_height (value * nb_visi +
-						total_spacing + 2 * border_width)
+						total_spacing + 2 * border_width, a_is_size_forced)
 				else
 					from
 						lchild.start
@@ -276,18 +276,18 @@ feature {NONE} -- Implementation for automatic size computation.
 					childvisible_nb := nb_visi
 					compute_childexpand_nb
 					ev_set_minimum_height
-						(value + total_spacing + 2 * border_width)
+						(value + total_spacing + 2 * border_width, a_is_size_forced)
 				end
 				if lchild.valid_cursor (cur) then
 					lchild.go_to (cur)
 				end
 			else
 				children_height := 0
-				ev_set_minimum_height (2 * border_width)
+				ev_set_minimum_height (2 * border_width, a_is_size_forced)
 			end
 		end
 
-	compute_minimum_size
+	compute_minimum_size (a_is_size_forced: BOOLEAN)
 			-- Recompute both the minimum_width and the minimum_height
 			-- of `Current'.
 		local
@@ -318,7 +318,7 @@ feature {NONE} -- Implementation for automatic size computation.
 					compute_childexpand_nb
 					ev_set_minimum_size (wvalue + 2 * border_width,
 						hvalue * nb_visi + total_spacing +
-						2 * border_width)
+						2 * border_width, a_is_size_forced)
 				else
 					from
 						lchild.start
@@ -337,14 +337,14 @@ feature {NONE} -- Implementation for automatic size computation.
 					childvisible_nb := nb_visi
 					compute_childexpand_nb
 					ev_set_minimum_size (wvalue + 2 * border_width,
-						hvalue + total_spacing + 2 * border_width)
+						hvalue + total_spacing + 2 * border_width, a_is_size_forced)
 				end
 				if lchild.valid_cursor (cur) then
 					lchild.go_to (cur)
 				end
 			else
 				children_height := 0
-				ev_set_minimum_size (2 * border_width, 2 * border_width)
+				ev_set_minimum_size (2 * border_width, 2 * border_width, a_is_size_forced)
 			end
 		end
 

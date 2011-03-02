@@ -210,9 +210,9 @@ feature {EV_ANY_I} -- Status setting
 			internal_set_font
 			if tab_pos = {EV_NOTEBOOK}.Tab_top
 					or else tab_pos = {EV_NOTEBOOK}.Tab_bottom then
-				ev_set_minimum_height (tab_height)
+				ev_set_minimum_height (tab_height, False)
 			else
-				ev_set_minimum_width (tab_height)
+				ev_set_minimum_width (tab_height, False)
 			end
 		end
 
@@ -226,7 +226,7 @@ feature {EV_ANY_I} -- Status setting
  			set_style (basic_style)
 			internal_set_font
 			ww ?= selected_window
-			notify_change (Nc_minsize, ww)
+			notify_change (Nc_minsize, ww, False)
 		end
 
 	set_current_page (an_index: INTEGER)
@@ -374,7 +374,7 @@ feature -- Assertion features
 
 feature {NONE} -- Implementation
 
-	compute_minimum_width
+	compute_minimum_width (a_is_size_forced: BOOLEAN)
 			-- Recompute the minimum_width of `Current'.
 		local
 			child_imp: detachable EV_WIDGET_IMP
@@ -398,13 +398,13 @@ feature {NONE} -- Implementation
 				tab_pos = {EV_NOTEBOOK}.Tab_right
 				or else tab_pos = {EV_NOTEBOOK}.Tab_left
 			then
-				ev_set_minimum_width (value + tab_height + 4)
+				ev_set_minimum_width (value + tab_height + 4, a_is_size_forced)
 			else
-				ev_set_minimum_width (value + 6)
+				ev_set_minimum_width (value + 6, a_is_size_forced)
 			end
 		end
 
-	compute_minimum_height
+	compute_minimum_height (a_is_size_forced: BOOLEAN)
 			-- Recompute the minimum_height of `Current'.
 		local
 			counter: INTEGER
@@ -430,13 +430,13 @@ feature {NONE} -- Implementation
 				tab_pos = {EV_NOTEBOOK}.Tab_top
 				or else tab_pos = {EV_NOTEBOOK}.Tab_bottom
 			then
-				ev_set_minimum_height (value + tab_height + 4)
+				ev_set_minimum_height (value + tab_height + 4, a_is_size_forced)
 			else
-				ev_set_minimum_height (value + 6)
+				ev_set_minimum_height (value + 6, a_is_size_forced)
 			end
 		end
 
-	compute_minimum_size
+	compute_minimum_size (a_is_size_forced: BOOLEAN)
 			-- Recompute both the minimum_width and then
 			-- minimum_height of `Current'.
 		local
@@ -464,12 +464,12 @@ feature {NONE} -- Implementation
 				tab_pos = {EV_NOTEBOOK}.Tab_top
 				or else tab_pos = {EV_NOTEBOOK}.Tab_bottom
 			then
-				ev_set_minimum_size (mw + 6, mh + tab_height + 4)
+				ev_set_minimum_size (mw + 6, mh + tab_height + 4, a_is_size_forced)
 			elseif
 				tab_pos = {EV_NOTEBOOK}.Tab_left
 				or else tab_pos = {EV_NOTEBOOK}.Tab_right
 			then
-				ev_set_minimum_size (mw + tab_height + 4, mh + 6)
+				ev_set_minimum_size (mw + tab_height + 4, mh + 6, a_is_size_forced)
 			end
 		end
 
@@ -712,7 +712,7 @@ feature {NONE} -- Implementation
 			if selected_item_index /= i then
 				v_imp.show_window (v_imp.wel_item, Sw_hide)
 			end
-			notify_change (Nc_minsize, v_imp)
+			notify_change (Nc_minsize, v_imp, False)
 				-- Call `new_item_actions' on `Current'.
 			new_item_actions.call ([v])
 		end
@@ -753,7 +753,7 @@ feature {NONE} -- Implementation
 			v_imp.show
 			v_imp.wel_set_parent (Default_parent)
 			enable_notebook_assertions
-			notify_change (Nc_minsize, v_imp)
+			notify_change (Nc_minsize, v_imp, False)
 		end
 
 feature {EV_NOTEBOOK_TAB_IMP} -- Implementation
@@ -1049,7 +1049,7 @@ feature {NONE} -- Font implementation
 			else
 				{WEL_API}.send_message (wel_item, Wm_setfont, to_wparam (0), cwin_make_long (1, 0))
 			end
-			notify_change (nc_minsize, Current)
+			notify_change (nc_minsize, Current, False)
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation

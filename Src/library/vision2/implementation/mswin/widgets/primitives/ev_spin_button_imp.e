@@ -277,7 +277,7 @@ feature -- Setting
 			-- notify the parent.
 		do
 			ev_set_minimum_size (internal_text_field.minimum_width + spin_width,
-				internal_text_field.minimum_height.max (default_spin_height))
+				internal_text_field.minimum_height.max (default_spin_height), False)
 		end
 
 	set_top_level_window_imp (a_window: detachable EV_WINDOW_IMP)

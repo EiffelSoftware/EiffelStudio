@@ -4,8 +4,8 @@ note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
-	revision: "$Revision$" 
- 
+	revision: "$Revision$"
+
 deferred class
 	EV_SIZEABLE_PRIMITIVE_IMP
 
@@ -14,7 +14,7 @@ inherit
 
 feature -- Access
 
-	ev_set_minimum_width (value: INTEGER)
+	ev_set_minimum_width (value: INTEGER; a_is_size_forced: BOOLEAN)
 			-- Make `value' the new `minimum_width' of `Current'.
 			-- Should check if the user didn't set the minimum width
 			-- before setting a new value.
@@ -25,12 +25,12 @@ feature -- Access
 				internal_set_minimum_width (value)
 				p_imp := parent_imp
 				if p_imp /= Void then
-					p_imp.notify_change (Nc_minwidth, Current)
+					p_imp.notify_change (Nc_minwidth, Current, a_is_size_forced)
 				end
 			end
 		end
 
-	ev_set_minimum_height (value: INTEGER)
+	ev_set_minimum_height (value: INTEGER; a_is_size_forced: BOOLEAN)
 			-- Make `value' the new `minimum_height' of `Current'.
 			-- Should check if the user didn't set the minimum width
 			-- before setting a new value.
@@ -41,12 +41,12 @@ feature -- Access
 				internal_set_minimum_height (value)
 				p_imp := parent_imp
 				if p_imp /= Void then
-					p_imp.notify_change (Nc_minheight, Current)
+					p_imp.notify_change (Nc_minheight, Current, a_is_size_forced)
 				end
 			end
 		end
 
-	ev_set_minimum_size (mw, mh: INTEGER)
+	ev_set_minimum_size (mw, mh: INTEGER; a_is_size_forced: BOOLEAN)
 			-- Make `mw' the new minimum_width and `mh' the new
 			-- minimum_height of `Current'.
 			-- Should check if the user didn't set the minimum width
@@ -61,11 +61,11 @@ feature -- Access
 			p_imp := parent_imp
 			if p_imp /= Void then
 				if w_cd and h_cd then
-					p_imp.notify_change (Nc_minsize, Current)
+					p_imp.notify_change (Nc_minsize, Current, a_is_size_forced)
 				elseif w_cd then
-					p_imp.notify_change (Nc_minwidth, Current)
+					p_imp.notify_change (Nc_minwidth, Current, a_is_size_forced)
 				elseif h_cd then
-					p_imp.notify_change (Nc_minheight, Current)
+					p_imp.notify_change (Nc_minheight, Current, a_is_size_forced)
 				end
 			end
 		end

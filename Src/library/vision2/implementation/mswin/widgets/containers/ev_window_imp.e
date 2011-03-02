@@ -289,7 +289,7 @@ feature -- Status setting
 	set_default_minimum_size
 			-- Initialize the size of `Current'.
 		do
-			ev_set_minimum_size (0, 0)
+			ev_set_minimum_size (0, 0, False)
 				-- Assign arbitarily large values.
 				-- As long as they are bigger than the current screen
 				-- resolution there will be no problems from this.
@@ -431,7 +431,7 @@ feature -- Element change
 				implementation_not_void: mb /= Void
 			end
 			mb.set_parent_imp (Current)
-			compute_minimum_height
+			compute_minimum_height (False)
 		end
 
 	remove_menu_bar
@@ -447,7 +447,7 @@ feature -- Element change
 				mb.set_parent_imp (Void)
 				menu_bar := Void
 				unset_menu
-				compute_minimum_height
+				compute_minimum_height (False)
 			end
 		end
 
@@ -581,7 +581,7 @@ feature {EV_WIDGET_IMP} -- Implementation
 
 feature {EV_MENU_ITEM_LIST_IMP} -- Implementation
 
-	compute_minimum_width
+	compute_minimum_width (a_is_size_forced: BOOLEAN)
 			-- Recompute the minimum width of `Current'.
 		local
 			mw: INTEGER
@@ -595,10 +595,10 @@ feature {EV_MENU_ITEM_LIST_IMP} -- Implementation
 				(lower_bar.minimum_width)
 			ev_set_minimum_width (
 				mw.max (upper_bar.minimum_width).max
-					(lower_bar.minimum_width))
+					(lower_bar.minimum_width), a_is_size_forced)
 		end
 
-	compute_minimum_height
+	compute_minimum_height (a_is_size_forced: BOOLEAN)
 			-- Recompute the minimum height of `Current'.
 		local
 			mh: INTEGER
@@ -616,10 +616,10 @@ feature {EV_MENU_ITEM_LIST_IMP} -- Implementation
 			if not lower_bar.is_empty then
 				mh := mh + lower_bar.minimum_height + 1
 			end
-			ev_set_minimum_height (mh)
+			ev_set_minimum_height (mh, a_is_size_forced)
 		end
 
-	compute_minimum_size
+	compute_minimum_size (a_is_size_forced: BOOLEAN)
 			-- Recompute the minimum size of `Current'.
 		local
 			mw, mh: INTEGER
@@ -648,7 +648,7 @@ feature {EV_MENU_ITEM_LIST_IMP} -- Implementation
 			end
 			ev_set_minimum_size (
 				mw.max (upper_bar.minimum_width).max
-				(lower_bar.minimum_width), mh)
+				(lower_bar.minimum_width), mh, a_is_size_forced)
 		end
 
 feature {NONE} -- Inapplicable
@@ -1272,7 +1272,7 @@ feature {EV_ANY_I} -- Implementation
 			-- sizing dimensions and redraw.
 		do
 			set_style (new_style)
-			notify_change (nc_minsize, Current)
+			notify_change (nc_minsize, Current, False)
 			if is_displayed then
 				invalidate
 			end
@@ -1364,7 +1364,7 @@ feature {NONE} -- Implementation for switch non-parented and parented windows
 				call_show_actions := True
 				cwin_show_window (wel_item, show_flags)
 				if item_imp /= Void then
-					notify_change (nc_minsize, item_imp)
+					notify_change (nc_minsize, item_imp, False)
 				end
 					-- We call show actions
 				if call_show_actions then

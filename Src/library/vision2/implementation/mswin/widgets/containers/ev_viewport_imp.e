@@ -99,12 +99,12 @@ feature -- Element change
 
 feature {EV_ANY_I} -- Implementation
 
-	compute_minimum_width, compute_minimum_height, compute_minimum_size
+	compute_minimum_width, compute_minimum_height, compute_minimum_size (a_is_size_forced: BOOLEAN)
 			-- Recompute both minimum_width and minimum_height of `Current'.
 			-- Does nothing since it does not have a sense to compute it,
 			-- it is only what the user set it to.
 		do
-			ev_set_minimum_size (child_cell.minimum_width, child_cell.minimum_height)
+			ev_set_minimum_size (child_cell.minimum_width, child_cell.minimum_height, a_is_size_forced)
 		end
 
 feature {NONE} -- Implementation
@@ -190,7 +190,7 @@ feature {NONE} -- Implementation
 				wel_win.x_position + wel_win.width > width or else
 				wel_win.y_position + wel_win.height > height
 			then
-				notify_change (Nc_minsize, wel_win)
+				notify_change (Nc_minsize, wel_win, False)
 			end
 
 				-- If we have not been displayed, then we

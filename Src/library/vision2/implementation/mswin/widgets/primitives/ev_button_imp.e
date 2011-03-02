@@ -221,7 +221,7 @@ feature -- Status setting
 			end
 
 				-- Finaly, we set the minimum values.
-			ev_set_minimum_size (w, h)
+			ev_set_minimum_size (w, h, False)
 		end
 
 	align_text_left

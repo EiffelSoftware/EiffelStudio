@@ -69,7 +69,7 @@ feature -- Resizing
 			not_is_destroyed: not is_destroyed
 		do
 			child_cell.disable_user_min_width_set
-			ev_set_minimum_width (value)
+			ev_set_minimum_width (value, False)
 			child_cell.set_user_minimum_width (value)
 		end
 
@@ -81,7 +81,7 @@ feature -- Resizing
 			not_is_destroyed: not is_destroyed
 		do
 			child_cell.disable_user_min_height_set
-			ev_set_minimum_height (value)
+			ev_set_minimum_height (value, False)
 			child_cell.set_user_minimum_height (value)
 		end
 
@@ -93,32 +93,35 @@ feature -- Resizing
 		do
 			child_cell.disable_user_min_width_set
 			child_cell.disable_user_min_height_set
-			ev_set_minimum_size (mw, mh)
+			ev_set_minimum_size (mw, mh, False)
 			child_cell.set_user_minimum_width (mw)
 			child_cell.set_user_minimum_height (mh)
 		end
 
-	ev_set_minimum_width (value: INTEGER)
+	ev_set_minimum_width (value: INTEGER; a_is_size_forced: BOOLEAN)
 			-- Make `value' the new `minimum_width' of `Current'.
 			-- There is no need to grow `Current' if its size is
 			-- too small, the parent will do it if necessary.
+			-- If `a_is_size_forced' then force an actual computation of the real size too.
 		require
 			not_is_destroyed: not is_destroyed
 		deferred
 		end
 
-	ev_set_minimum_height (value: INTEGER)
+	ev_set_minimum_height (value: INTEGER; a_is_size_forced: BOOLEAN)
 			-- Make `value' the new `minimum_height' of `Current'.
 			-- There is no need to grow `Current' if its size is
 			-- too small, the parent will do it if necessary.
+			-- If `a_is_size_forced' then force an actual computation of the real size too.
 		require
 			not_is_destroyed: not is_destroyed
 		deferred
 		end
 
-	ev_set_minimum_size (mw, mh: INTEGER)
+	ev_set_minimum_size (mw, mh: INTEGER; a_is_size_forced: BOOLEAN)
 			-- Make `mw' the new minimum_width and `mh' the new
 			-- minimum_height of `Current'.
+			-- If `a_is_size_forced' then force an actual computation of the real size too.
 		require
 			not_is_destroyed: not is_destroyed
 		deferred

@@ -198,7 +198,7 @@ feature {NONE} -- Implementation
 			-- the `user_can_resize' flag.
 		do
 			update_style
-			notify_change (nc_minsize, Current)
+			notify_change (nc_minsize, Current, False)
 			if is_displayed then
 				invalidate
 			end

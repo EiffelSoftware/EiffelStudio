@@ -46,7 +46,7 @@ feature -- Status setting
    			-- Platform dependant initializations.
    		do
 			ev_set_minimum_width ((create {WEL_SYSTEM_METRICS})
-				.vertical_scroll_bar_arrow_width)
+				.vertical_scroll_bar_arrow_width, False)
  		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation

@@ -89,7 +89,7 @@ feature -- Status setting
 			v_imp.ev_move (a_x, a_y)
 			v_imp.parent_ask_resize (a_width, a_height)
 			v_imp.invalidate
-			notify_change (nc_minsize, Current)
+			notify_change (nc_minsize, Current, False)
 		end
 
 	set_item_position_and_size (a_widget: EV_WIDGET; a_x, a_y, a_width, a_height: INTEGER)
@@ -102,7 +102,7 @@ feature -- Status setting
 			wel_win.ev_move (a_x, a_y)
 			wel_win.parent_ask_resize (a_width, a_height)
 			wel_win.invalidate
-			notify_change (Nc_minsize, wel_win)
+			notify_change (Nc_minsize, wel_win, False)
 		end
 
 	set_item_position (a_widget: EV_WIDGET; an_x, a_y: INTEGER)
@@ -118,7 +118,7 @@ feature -- Status setting
 			end
 			wel_win.ev_move (an_x, a_y)
 			wel_win.invalidate
-			notify_change (Nc_minsize, wel_win)
+			notify_change (Nc_minsize, wel_win, False)
 		end
 
 	set_item_size (a_widget: EV_WIDGET; a_width, a_height: INTEGER)
@@ -132,7 +132,7 @@ feature -- Status setting
 				wel_win_not_void: wel_win /= Void
 			end
 			wel_win.parent_ask_resize (a_width, a_height)
-			notify_change (Nc_minsize, wel_win)
+			notify_change (Nc_minsize, wel_win, False)
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -170,7 +170,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	compute_minimum_width
+	compute_minimum_width (a_is_size_forced: BOOLEAN)
 			-- Compute both to avoid duplicate code.
 		local
 			v_imp: EV_WIDGET_IMP
@@ -189,11 +189,11 @@ feature {NONE} -- Implementation
 					ev_children.forth
 				end
 				ev_children.go_i_th (cur)
-				ev_set_minimum_width (new_min_width)
+				ev_set_minimum_width (new_min_width, a_is_size_forced)
 			end
 		end
 
-	compute_minimum_height
+	compute_minimum_height (a_is_size_forced: BOOLEAN)
 			-- Compute both to avoid duplicate code.
 		local
 			v_imp: EV_WIDGET_IMP
@@ -212,11 +212,11 @@ feature {NONE} -- Implementation
 					ev_children.forth
 				end
 				ev_children.go_i_th (cur)
-				ev_set_minimum_height (new_min_height)
+				ev_set_minimum_height (new_min_height, a_is_size_forced)
 			end
 		end
 
-	compute_minimum_size
+	compute_minimum_size (a_is_size_forced: BOOLEAN)
 			-- Recompute the minimum size of the object.
 		local
 			v_imp: EV_WIDGET_IMP
@@ -236,7 +236,7 @@ feature {NONE} -- Implementation
 					ev_children.forth
 				end
 				ev_children.go_i_th (cur)
-				ev_set_minimum_size (new_min_width, new_min_height)
+				ev_set_minimum_size (new_min_width, new_min_height, a_is_size_forced)
 			end
 		end
 
@@ -249,7 +249,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	notify_change (type: INTEGER; child: EV_SIZEABLE_IMP)
+	notify_change (type: INTEGER; child: EV_SIZEABLE_IMP; a_is_size_forced: BOOLEAN)
 			-- Notify the current widget that the change identify by
 			-- type have been done. For types, see `internal_changes'
 			-- in class EV_SIZEABLE_IMP. If the container is shown,
@@ -258,7 +258,7 @@ feature {NONE} -- Implementation
 			-- Use the constants defined in EV_SIZEABLE_IMP
 		do
 			if not child_cell.is_user_min_height_set or else not child_cell.is_user_min_width_set then
-				Precursor {EV_WIDGET_LIST_IMP} (type, child)
+				Precursor {EV_WIDGET_LIST_IMP} (type, child, a_is_size_forced)
 			else
 				child.parent_ask_resize (child.child_cell.width, child.child_cell.height)
 			end

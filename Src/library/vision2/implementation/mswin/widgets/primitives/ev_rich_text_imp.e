@@ -1211,7 +1211,7 @@ feature -- Status setting
 				set_default_font
 			end
 			if attached parent_imp as l_parent_imp then
-				l_parent_imp.notify_change (nc_minsize, Current)
+				l_parent_imp.notify_change (nc_minsize, Current, False)
 			end
 			set_background_color (background_color)
 			enable_all_notifications

@@ -363,7 +363,7 @@ feature -- Status setting
 			show_window (wel_item, {WEL_WINDOW_CONSTANTS}.Sw_show)
 			p_imp := parent_imp
 			if p_imp /= Void then
-				p_imp.notify_change (Nc_minsize, attached_interface.implementation)
+				p_imp.notify_change (Nc_minsize, attached_interface.implementation, False)
 			end
 		end
 
@@ -375,24 +375,20 @@ feature -- Status setting
 			show_window (wel_item, {WEL_WINDOW_CONSTANTS}.Sw_hide)
 			p_imp := parent_imp
 			if p_imp /= Void then
-				p_imp.notify_change (Nc_minsize, Current)
+				p_imp.notify_change (Nc_minsize, Current, False)
 			end
 		end
 
 	parent_is_sensitive: BOOLEAN
 			-- Is parent of `Current' sensitive?
 		do
-			if attached parent_imp as l_parent_imp and then l_parent_imp.is_sensitive then
-				result := True
-			end
+			Result := attached parent_imp as l_parent_imp and then l_parent_imp.is_sensitive
 		end
 
 	has_parent: BOOLEAN
 			-- Is `Current' parented?
 		do
-			if parent_imp /= Void then
-				result := True
-			end
+			Result := parent_imp /= Void
 		end
 
 	disable_sensitive
@@ -419,7 +415,7 @@ feature -- Status setting
 			-- Initialize the size of `Current'.
 			-- Redefined by many widgets.
 		do
-			ev_set_minimum_size (0, 0)
+			ev_set_minimum_size (0, 0, False)
 		end
 
 	enable_capture
@@ -1288,6 +1284,8 @@ feature -- Deferred features
 
 	on_size (size_type, a_width, a_height: INTEGER)
 			-- `Current' has been resized.
+		require
+			exists: exists
 		local
 			t: like resize_actions_internal
 		do
@@ -1355,28 +1353,22 @@ feature -- Deferred features
 
 	wel_background_color: WEL_COLOR_REF
 			-- `Result' is background color of `Current'.
-		local
-			l_result: detachable WEL_COLOR_REF
 		do
-			l_result := background_color_imp
-			if l_result = Void then
-				create l_result.make_system ({WEL_COLOR_CONSTANTS}.Color_btnface)
+			if attached background_color_imp as l_color then
+				Result := l_color
+			else
+				create Result.make_system ({WEL_COLOR_CONSTANTS}.Color_btnface)
 			end
-			check l_result /= Void end
-			Result := l_result
 		end
 
 	wel_foreground_color: WEL_COLOR_REF
 			-- `Result' is foreground color of `Current'.
-		local
-			l_result: detachable WEL_COLOR_REF
 		do
-			l_result := foreground_color_imp
-			if l_result = Void then
-				create l_result.make_rgb (0, 0, 0)
+			if attached foreground_color_imp as l_color then
+				Result := l_color
+			else
+				create Result.make_rgb (0, 0, 0)
 			end
-			check l_result /= Void end
-			Result := l_result
 		end
 
 	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER
@@ -1438,7 +1430,6 @@ feature -- Deferred features
 			if l_result = Void then
 				l_result := next_tabstop_widget_from_parent (start_widget, search_pos, forwards)
 			end
-			check l_result /= Void end
 			Result := l_result
 		ensure
 			Result_not_void: Result /= Void

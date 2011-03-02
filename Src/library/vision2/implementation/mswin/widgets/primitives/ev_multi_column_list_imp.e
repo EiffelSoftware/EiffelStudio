@@ -771,7 +771,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 			ev_set_minimum_size (
 				l_font.width.abs * 20 + 7, -- 20 characters wide
 				l_font.height.abs	* 5 + 7	 -- 5 characters tall
-				)
+				, False)
 		end
 
 feature {NONE} -- Implementation, Pixmap handling

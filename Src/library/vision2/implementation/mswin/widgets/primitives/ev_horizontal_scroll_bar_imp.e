@@ -48,7 +48,7 @@ feature -- Status setting
    		do
 			ev_set_minimum_height (
 				(create {WEL_SYSTEM_METRICS}).
-				horizontal_scroll_bar_arrow_height)
+				horizontal_scroll_bar_arrow_height, False)
  		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation

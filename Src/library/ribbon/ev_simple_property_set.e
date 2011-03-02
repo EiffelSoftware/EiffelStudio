@@ -10,7 +10,8 @@ inherit
 	IDENTIFIED
 
 create
-	make
+	make,
+	share_with_pointer
 
 feature {NONE} -- Initialization
 
@@ -19,6 +20,16 @@ feature {NONE} -- Initialization
 		do
 			set_object_and_function_address
 			create item.share_from_pointer (c_create_instance, size)
+			all_property_sets.extend (object_id)
+		end
+
+	share_with_pointer (a_pointer: POINTER)
+			--
+		require
+			valid: a_pointer /= default_pointer
+		do
+			set_object_and_function_address
+			create item.share_from_pointer (a_pointer, size)
 			all_property_sets.extend (object_id)
 		end
 

@@ -66,11 +66,11 @@ feature -- Action
 					set_text (l_text_field.text)
 				end
 			end
-			Precursor {EV_GRID_LABEL_ITEM}
 			if attached text_field as l_text_field then
 				l_text_field.destroy
 				text_field := Void
 			end
+			Precursor {EV_GRID_LABEL_ITEM}
 		end
 
 feature {NONE} -- Implementation
@@ -168,7 +168,7 @@ feature {NONE} -- Implementation
 		end
 
 invariant
-	text_field_parented_during_activation: attached text_field as l_text_field implies l_text_field.parent /= Void
+	text_field_parented_during_activation: attached text_field as l_field implies l_field.has_parent
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

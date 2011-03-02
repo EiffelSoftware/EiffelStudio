@@ -73,7 +73,7 @@ feature -- Status report
 	has_parent: BOOLEAN
 			-- Does identifiable has a parent?
 		do
-			Result := parent /= Void
+			Result := not is_destroyed and then parent /= Void
 		end
 
 	has_identifier_name_set: BOOLEAN

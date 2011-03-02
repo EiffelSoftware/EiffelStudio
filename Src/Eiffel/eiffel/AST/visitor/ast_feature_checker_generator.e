@@ -736,7 +736,6 @@ feature {NONE} -- Settings
 		do
 			last_type := context.current_class_type
 			is_controlled := False
-			is_qualified_call := False
 		end
 
 	set_is_checking_postcondition (b: BOOLEAN)
@@ -3061,8 +3060,7 @@ feature {NONE} -- Implementation
 			l_is_controlled: BOOLEAN
 		do
 			check attached last_type as c then
-					-- Record if a call is qualified.
-				l_is_qualified_call := is_qualified_call
+					-- Record if a call is controlled.
 				l_is_controlled := is_controlled
 					-- Mask out assigner call flag for target of the call
 				l_is_assigner_call := is_assigner_call
@@ -3073,9 +3071,7 @@ feature {NONE} -- Implementation
 						-- Restore assigner call flag for nested call
 					is_assigner_call := l_is_assigner_call
 						-- Adapt type of the target if required.
-					if l_is_qualified_call then
-						adapt_last_type_to_target (c, l_is_controlled)
-					end
+					adapt_last_type_to_target (c, l_is_controlled)
 					l_is_qualified_call := is_qualified_call
 					is_qualified_call := True
 					if is_byte_node_enabled then
@@ -10437,18 +10433,19 @@ feature {NONE} -- Separateness
 			-- to the target of type `t' which has a controlled status `c'
 			-- and update `is_controlled' accordingly.
 		do
-				-- Qualified call is controlled if target is controlled
-				-- and message type is not separate.
-			if
-				t.is_separate and then
-				attached {ATTACHABLE_TYPE_A} t as a and then
-				attached last_type as l and then
-				not l.is_separate
-			then
-				is_controlled := c
-				last_type := l.to_other_separateness (a)
-			else
-				is_controlled := False
+			if t.is_separate then
+					-- Separate call is controlled if target is controlled
+					-- and message type is not separate.
+				if
+					attached {ATTACHABLE_TYPE_A} t as a and then
+					attached last_type as l and then
+					not l.is_separate
+				then
+					is_controlled := c
+					last_type := l.to_other_separateness (a)
+				else
+					is_controlled := False
+				end
 			end
 		end
 

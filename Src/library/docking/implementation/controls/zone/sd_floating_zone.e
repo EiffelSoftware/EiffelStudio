@@ -528,7 +528,7 @@ feature {NONE} -- Agents
 			l_zones: like all_zones
 		do
 			if attached {SD_CONTENT} docking_manager.property.last_focus_content as l_content then
-				if attached {SD_STATE} l_content.state as l_state then
+				if l_content.is_state_set and then attached l_content.state as l_state then
 					l_last_zone := l_state.zone
 					if attached {EV_WIDGET} l_last_zone as lt_widget then
 						if not has_recursive (lt_widget) then
@@ -556,7 +556,7 @@ feature {NONE} -- Agents
 			l_last_zone: detachable SD_ZONE
 		do
 			if attached {SD_CONTENT} docking_manager.property.last_focus_content as l_content then
-				if attached {SD_STATE} l_content.state as l_state then
+				if l_content.is_state_set and then attached l_content.state as l_state then
 					l_last_zone := l_state.zone
 					if attached {EV_WIDGET} l_last_zone as lt_widget then
 						if not is_destroyed and then has_recursive (lt_widget) then
@@ -657,19 +657,21 @@ feature {NONE} -- Agents
 		local
 			l_zone: detachable SD_ZONE
 		do
-			if internal_inner_container.readable then
-				l_zone ?= internal_inner_container.item
+			if not is_destroyed then
+				if internal_inner_container.readable then
+					l_zone ?= internal_inner_container.item
+				end
+				if l_zone /= Void then
+					l_zone.set_last_floating_height (a_height)
+					l_zone.set_last_floating_width (a_width)
+				end
+				floating_state.record_state
 			end
-			if l_zone /= Void then
-				l_zone.set_last_floating_height (a_height)
-				l_zone.set_last_floating_width (a_width)
-			end
-			floating_state.record_state
 		end
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

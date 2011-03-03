@@ -1338,7 +1338,7 @@ rt_shared void eif_synchronize_gc (rt_global_context_t *rt_globals)
 					 * so on a uniprocessor WinXP system, the execution was about 1000 times
 					 * slower than on a bi-processor WinXP system. */
 				if (all_thread_list.count != 0) {
-						// Yield to other runnable threads if available.
+						/* Yield to other ready to run threads if available. */
 					RT_TRACE(eif_pthread_yield());
 				}
 			}

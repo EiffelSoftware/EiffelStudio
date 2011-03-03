@@ -460,9 +460,16 @@ rt_public int eif_pthread_yield (void)
 	thr_yield();
 	Result = T_OK;
 #elif defined(EIF_WINDOWS)
-		/* We ignore whether the current thread execution released its execution to another thread or not. */
-	(void) SwitchToThread();
-	Result = T_OK;
+	if ( SwitchToThread() ) {
+			// We are able to give our timeslice to another thread of equal priority running on the same processor.
+		Result = T_OK;
+	} else {
+			// There are no waiting threads on the current processor with the same thread priority so Sleep(0) yields to any available threads on any processor.
+			// However the current thread is still marked as runnable so if there are no threads of the same thread priority in a waiting state then it will return
+			// immediately and not relinquish our timeslice, which Sleep(1) will do but unfortunately the timer resolution may be up to 15ms on multicore systems before returning.
+		Sleep(0);
+		Result = T_OK;
+	}
 #elif defined(VXWORKS)
 	if (taskDelay(1) == ERROR) {
 		Result = T_CANNOT_YIELD;

@@ -355,7 +355,7 @@ feature {NONE} -- Click ast exploration
 
 feature {NONE}-- Clickable/Editable implementation
 
-	stone_in_click_ast (a_position: INTEGER): STONE
+	stone_in_click_ast (a_position: INTEGER): detachable STONE
 			-- search in the click_ast for a stone to associate with `a_position' in text
 		require
 			group_not_void: group /= Void
@@ -367,21 +367,20 @@ feature {NONE}-- Clickable/Editable implementation
 			class_i: CLASS_I
 			feat: E_FEATURE
 		do
-			if clickable_position_list /= Void then
+			if attached clickable_position_list as l_plist and then not l_plist.is_empty then
 				index_min := 1
-				index_max := clickable_position_list.count
-				if a_position >= (clickable_position_list @ 1).start then
+				index_max := l_plist.count
+				if a_position >= (l_plist @ 1).start then
 						-- search in the list
-					if a_position >= (clickable_position_list @ index_max).start then
+					if a_position >= (l_plist @ index_max).start then
 						index_min := index_max
 					else
 						from
-
 						until
 							index_min >= index_max - 1
 						loop
 							middle := index_min + (index_max - index_min) // 2
-							position := (clickable_position_list @ middle).start
+							position := (l_plist @ middle).start
 							if position > a_position then
 								index_max := middle
 							else
@@ -389,7 +388,7 @@ feature {NONE}-- Clickable/Editable implementation
 							end
 						end
 					end
-					click_pos := clickable_position_list @ index_min
+					click_pos := l_plist @ index_min
 					if a_position <= click_pos.stop then
 						if click_pos.is_feature then
 							class_i := Universe.safe_class_named (click_pos.class_name, group)
@@ -2221,7 +2220,7 @@ invariant
 	current_token_in_current_line: (current_line = Void and current_token = Void) or else (current_line /= Void and then current_line.has_token (current_token))
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

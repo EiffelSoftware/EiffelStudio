@@ -82,7 +82,7 @@ feature {NONE} -- Implementation
 		end
 
 	compute_minimum_width, compute_minimum_height,
-	compute_minimum_size
+	compute_minimum_size (a_is_size_forced: BOOLEAN)
 			-- Recompute the minimum dimensions of `Current'.
 		do
 			-- There is nothing to be done here. The minimum size

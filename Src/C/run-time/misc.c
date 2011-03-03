@@ -185,20 +185,27 @@ rt_public void eif_sleep(EIF_INTEGER_64 nanoseconds)
 #		define EIF_SLEEP_FUNCTION  sleep
 #	endif
 		/* Set total delay time */
-	EIF_INTEGER_64 total_time = nanoseconds / EIF_SLEEP_PRECISION;
-		/* Set maximum timeout that can be handled by one API call */
-	EIF_SLEEP_TYPE timeout = ~((~ (EIF_SLEEP_TYPE) 0) << (sizeof timeout * 8 - 1));
-	if ((nanoseconds % EIF_SLEEP_PRECISION) > 0) {
-			/* Increase delay to handle underflow */
-		total_time++;
-	}
-	while (total_time > 0) {
-			/* Sleep for maximum timeout not exceeding time left */
-		if (timeout > total_time) {
-			timeout = (EIF_SLEEP_TYPE) total_time;
+	if (nanoseconds > 1)
+	{
+		EIF_INTEGER_64 total_time = nanoseconds / EIF_SLEEP_PRECISION;
+			/* Set maximum timeout that can be handled by one API call */
+		EIF_SLEEP_TYPE timeout = ~((~ (EIF_SLEEP_TYPE) 0) << (sizeof timeout * 8 - 1));
+		if ((nanoseconds % EIF_SLEEP_PRECISION) > 0) {
+				/* Increase delay to handle underflow */
+			total_time++;
 		}
-		EIF_SLEEP_FUNCTION (timeout);
-		total_time -= timeout;
+		while (total_time > 0) {
+				/* Sleep for maximum timeout not exceeding time left */
+			if (timeout > total_time) {
+				timeout = (EIF_SLEEP_TYPE) total_time;
+			}
+			EIF_SLEEP_FUNCTION (timeout);
+			total_time -= timeout;
+		}
+	}
+	else
+	{
+		EIF_SLEEP_FUNCTION ((EIF_SLEEP_TYPE) nanoseconds);
 	}
 #  undef EIF_SLEEP_PRECISION
 #  undef EIF_SLEEP_TYPE

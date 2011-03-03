@@ -7,7 +7,6 @@
 		</option>
 		<setting name="console_application" value="true"/>
 		<setting name="concurrency" value="scoop"/>
-		<precompile name="base_pre" location="$ISE_PRECOMP\base-scoop-safe.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<cluster name="partree" location=".\" recursive="true">
 			<file_rule>

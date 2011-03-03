@@ -65,7 +65,7 @@ feature -- Initialization
 			until
 				i > a_right
 			loop
-				a_item.put (a_data.items[i], i - a_left + 1)
+				a_item.put (data_items (a_data)[i], i - a_left + 1)
 				i := i + 1
 			end
 		end
@@ -115,5 +115,13 @@ feature -- Access
 
 	items: separate ARRAY[INTEGER]
 		-- The items.
+
+feature {NONE} -- Implementation
+
+	data_items (a_input_data: separate DATA): separate ARRAY[INTEGER]
+			--
+		do
+			Result := a_input_data.items
+		end
 
 end -- class DATA	

@@ -60,8 +60,14 @@ feature {NONE} -- Implementation
 		local
 			l_result_data_items: separate ARRAY [INTEGER_32]
 		do
-			create l_result_data_items.make (a_data.items.lower, a_data.items.upper)
+			create l_result_data_items.make (data_items (a_data).lower, data_items (a_data).upper)
 			a_quicksorter.sort (a_data, l_result_data_items)
 		end
 
+	data_items (a_input_data: separate DATA): separate ARRAY[INTEGER]
+			--
+		do
+			Result := a_input_data.items
+		end
+		
 end -- class APPLICATION	

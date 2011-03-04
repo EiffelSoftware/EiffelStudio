@@ -65,7 +65,7 @@ feature -- Initialization
 			until
 				i > a_right
 			loop
-				a_item.put (data_items (a_data)[i], i - a_left + 1)
+				a_item.put (data_items_i_th (a_data.items, i), i - a_left + 1)
 				i := i + 1
 			end
 		end
@@ -118,10 +118,10 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	data_items (a_input_data: separate DATA): separate ARRAY[INTEGER]
+	data_items_i_th (a_data_items: separate ARRAY[INTEGER]; a_i_th: separate INTEGER): separate INTEGER
 			--
 		do
-			Result := a_input_data.items
+			Result := a_data_items [a_i_th]
 		end
 
 end -- class DATA	

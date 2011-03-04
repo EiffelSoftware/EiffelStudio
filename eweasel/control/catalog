@@ -2591,6 +2591,7 @@ test	qat-using-generic-feature-finalized	anchor059 tcf fail anchored_type
 -- SCOOP
 test	scoop-access-smoke			scoop001 tcf pass scoop execution
 test	scoop-argument-validity			scoop002 tcf pass scoop validity
+test	scoop-basic-argument-formal			scoop003 tcf pass scoop execution
 
 -- Testing facility
 test	testing-with-error		testing001 tcf pass testing

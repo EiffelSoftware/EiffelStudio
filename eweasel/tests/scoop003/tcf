@@ -1,0 +1,19 @@
+test_name	scoop-basic-argument-formal
+test_description When basic types are used for arguments of separate entities in a normal class or a generic class it should work instead of crashing properly.
+
+copy_sub	Ace	$TEST Ace
+copy_raw	a.e	$CLUSTER a.e
+copy_raw	test.e	$CLUSTER test.e
+config Ace test
+
+compile_melted
+compile_result	ok
+
+c_compile_work
+c_compile_result	ok
+
+execute_work 	NONE 	exec_output
+execute_result 	ok
+compare		exec_output output
+
+test_end

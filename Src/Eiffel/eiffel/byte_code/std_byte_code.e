@@ -1691,14 +1691,15 @@ feature {NONE} -- C code generation
 			i: INTEGER
 			nb: INTEGER
 			l_buf: GENERATION_BUFFER
-			uarg_or: STRING
+			uarg: STRING
 		do
 			if attached arguments as a and then context.has_request_chain then
 				from
+						-- The variable that tells if an argument is uncontrolled
+						-- is generated in the form "uargK = (EIF_BOOLEAN) RTS_OU (Current, argK);"
 						-- The variable to detect if a request chain is required
-						-- is generated in the form "uarg = uarg || (uargK = ...)".
-						-- But first time it is generated as "uarg = (uargK = ...)".
-					uarg_or := ""
+						-- is generated in the form "uarg = uargA || uargB || ... || uargZ;".
+					uarg := ""
 					i := a.lower
 					nb := a.upper
 					l_buf := buffer
@@ -1706,20 +1707,28 @@ feature {NONE} -- C code generation
 					i > nb
 				loop
 					if real_type (a [i]).is_separate then
-							-- Initialize a variable that tells whether an argument is uncontrolled
-							-- and update a variable that tells whether a request chain is required.
+							-- Initialize a variable that tells whether an argument is uncontrolled.
 						l_buf.put_new_line
-						l_buf.put_string ("uarg = ")
-						l_buf.put_string (uarg_or)
-						l_buf.put_string ("(uarg")
+						l_buf.put_string ("uarg")
 						l_buf.put_integer (i)
 						l_buf.put_string (" = (EIF_BOOLEAN) RTS_OU (Current, arg")
 						l_buf.put_integer (i)
-						l_buf.put_three_character (')', ')', ';')
-						uarg_or := "uarg || "
+						l_buf.put_two_character (')', ';')
+							-- Update expression to compute a variable that tells whether a request chain is required.
+						if uarg.is_empty then
+								-- This is the first factor of "uarg" expression.
+							uarg := "uarg = uarg"
+						else
+								-- This is the next factor of "uarg" expression.
+							uarg.append_string (" || uarg")
+						end
+						uarg.append_integer (i)
 					end
 					i := i + 1
 				end
+				l_buf.put_new_line
+				l_buf.put_string (uarg)
+				l_buf.put_character (';')
 			end
 		end
 

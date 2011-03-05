@@ -2593,6 +2593,7 @@ test	scoop-access-smoke					scoop001 tcf pass scoop execution
 test	scoop-argument-validity				scoop002 tcf pass scoop validity
 test	scoop-hanging-1						scoop003 tcf pass scoop execution
 test	scoop-basic-argument-formal-nested	scoop004 tcf pass scoop execution
+test	scoop-separate-like-current			scoop005 tcf pass scoop execution
 
 -- Testing facility
 test	testing-with-error		testing001 tcf pass testing

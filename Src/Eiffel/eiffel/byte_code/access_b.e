@@ -455,7 +455,7 @@ feature -- C generation
 					loop
 						buf.put_new_line
 						a := p [n]
-						if a.attachment_type.is_basic then
+						if real_type (a.attachment_type).is_basic then
 								-- The argument is passed without any additional checks.
 							buf.put_string ("RTS_AA (")
 						else

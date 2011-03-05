@@ -279,6 +279,7 @@ feature -- Element Change
 			l_byte_context: like byte_context
 			create_info: CREATE_FEAT
 			is_initialization_required: BOOLEAN
+			typed_field: STRING
 		do
 			if used then
 				generate_header (class_type, buffer)
@@ -336,23 +337,39 @@ feature -- Element Change
 					internal_name, True, l_byte_context.header_buffer,
 					<<{C_CONST}.current_name>>, <<"EIF_REFERENCE">>)
 				buffer.generate_block_open
-				buffer.put_new_line
 				if byte_context.workbench_mode then
+					buffer.put_new_line
 					buffer.put_string ("EIF_TYPED_VALUE r;")
 					buffer.put_new_line
 					buffer.put_string ("r.")
 					result_type.c_type.generate_typed_tag (buffer)
 					buffer.put_character (';')
+						-- Record typed field name with a leading dot.
+					typed_field := "." + result_type.c_type.typed_field
+				else
+					if is_initialization_required then
+							-- Define variable for result.
+						buffer.put_new_line
+						buffer.put_string (return_type_name)
+						buffer.put_three_character (' ', 'r', ';')
+					end
+						-- Typed field is not used in finalized mode.
+					typed_field := ""
 				end
 				if is_initialization_required then
 					buffer.put_new_line
-					buffer.put_string ("if (!")
+					buffer.put_character ('r')
+					buffer.put_string (typed_field)
+					buffer.put_three_character (' ', '=', ' ')
 					generate_attribute_access (class_type, buffer)
+					buffer.put_character (';')
+					buffer.put_new_line
+					buffer.put_string ("if (!r")
+					buffer.put_string (typed_field)
 					buffer.put_string (") {")
 					buffer.indent
 					if not result_type.is_attached then
 							-- Check if type is really attached.
-						buffer.put_new_line
 						create_info.generate_start (buffer)
 						create_info.generate_gen_type_conversion (0)
 						buffer.put_new_line
@@ -361,43 +378,58 @@ feature -- Element Change
 						buffer.put_string (")) {")
 						buffer.indent
 					end
-					if has_body then
-						buffer.put_new_line
-						generate_attribute_access (class_type, buffer)
-						buffer.put_string (" = (")
-						buffer.put_string (internal_name)
-						buffer.put_string ("_body (")
-						buffer.put_string ({C_CONST}.current_name)
-						buffer.put_two_character (')', ')')
-						if byte_context.workbench_mode then
-							buffer.put_character ('.')
-							result_type.c_type.generate_typed_field (buffer)
-						end
-						buffer.put_character (';')
-					end
+					check has_body end
+						-- Define variables used by "RTLI/RTLE".
+					buffer.put_new_line
+					buffer.put_string ("GTCX")
+					buffer.put_new_line
+					buffer.put_string ("RTLD;")
+						-- Register "Current" with GC.
+					buffer.put_new_line
+					buffer.put_string ("RTLI(1);")
+					buffer.put_new_line
+					buffer.put_string ("RTLR(0,Current);")
+					buffer.put_new_line
+					buffer.put_character ('r')
+					buffer.put_string (typed_field)
+					buffer.put_four_character (' ', '=', ' ', '(')
+					buffer.put_string (internal_name)
+					buffer.put_string ("_body (")
+					buffer.put_string ({C_CONST}.current_name)
+					buffer.put_two_character (')', ')')
+					buffer.put_string (typed_field)
+					buffer.put_character (';')
+					buffer.put_new_line
+					generate_attribute_access (class_type, buffer)
+					buffer.put_four_character (' ', '=', ' ', 'r')
+					buffer.put_string (typed_field)
+					buffer.put_character (';')
+					buffer.put_new_line
+					buffer.put_string ("RTLE;")
 					if create_info /= Void then
 						buffer.generate_block_close
 						create_info.generate_end (buffer)
 					end
 					buffer.generate_block_close
-				end
-
-				if byte_context.workbench_mode then
 					buffer.put_new_line
-					buffer.put_string ("r.")
-					result_type.c_type.generate_typed_field (buffer)
-					buffer.put_string (" = ")
-				else
-					buffer.put_string ("return ")
-				end
-
-				generate_attribute_access (class_type, buffer)
-				buffer.put_character (';')
-				buffer.put_new_line
-
-				if l_byte_context.workbench_mode then
 					buffer.put_string ("return r;")
+				elseif byte_context.workbench_mode then
+						-- Assign attribute value to result field.
 					buffer.put_new_line
+					buffer.put_character ('r')
+					buffer.put_string (typed_field)
+					buffer.put_string (" = ")
+					generate_attribute_access (class_type, buffer)
+					buffer.put_character (';')
+						-- Return result structure.
+					buffer.put_new_line
+					buffer.put_string ("return r;")
+				else
+						-- Return attribute value directly.
+					buffer.put_new_line
+					buffer.put_string ("return ")
+					generate_attribute_access (class_type, buffer)
+					buffer.put_character (';')
 				end
 
 				buffer.generate_block_close
@@ -641,7 +673,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

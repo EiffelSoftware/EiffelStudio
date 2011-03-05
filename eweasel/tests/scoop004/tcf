@@ -1,5 +1,5 @@
-test_name	scoop-hanging-1
-test_description The following code simply hangs instead of running to completion.
+test_name	scoop-basic-argument-formal-nested
+test_description When basic types are used for arguments of separate entities in a generic class that are also used as arguments in another separate call it will crash at runtime.
 
 copy_sub	Ace	$TEST Ace
 copy_raw	a.e	$CLUSTER a.e

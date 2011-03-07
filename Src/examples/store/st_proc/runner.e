@@ -118,6 +118,8 @@ feature {NONE}
 				if l_proc.is_ok then
 					l_proc.load
 					io.putstring ("Procedure created.%N")
+				else
+					io.putstring ("Procedure creation failed.%N")
 				end
 			end
 

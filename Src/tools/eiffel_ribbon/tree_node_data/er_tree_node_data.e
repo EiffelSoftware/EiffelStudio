@@ -34,22 +34,28 @@ feature -- Settings
 			command_name := a_command_name
 		end
 
-	set_label_title (a_label_title: detachable STRING)
+	set_label_title (a_label_title: detachable STRING_32)
 			--
 		do
 			label_title := a_label_title
 		end
 
-	set_small_image (a_small_image: detachable STRING)
+	set_small_image (a_small_image: detachable STRING_32)
 			--
 		do
 			small_image := a_small_image
 		end
 
-	set_large_image (a_large_image: detachable STRING)
+	set_large_image (a_large_image: detachable STRING_32)
 			--
 		do
 			large_image := a_large_image
+		end
+
+	set_application_mode (a_mode: INTEGER)
+			--
+		do
+			application_mode := a_mode
 		end
 
 feature -- Query
@@ -57,13 +63,13 @@ feature -- Query
 	command_name: detachable STRING
 			--
 
-	label_title: detachable STRING
+	label_title: detachable STRING_32
 			--
 
-	small_image: detachable STRING
+	small_image: detachable STRING_32
 			--
 
-	large_image: detachable STRING
+	large_image: detachable STRING_32
 			--
 
 	application_mode: INTEGER

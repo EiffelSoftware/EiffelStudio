@@ -140,6 +140,40 @@ feature -- Query
 			end
 		end
 
+	all_items_with_command_name (a_command_name: STRING): ARRAYED_LIST [EV_TREE_NODE]
+			-- All tree items which data's command name equal `a_command_name'
+		do
+			create Result.make (5)
+			check widget.count >= 1 end
+			from
+				widget.start
+			until
+				widget.after
+			loop
+				recrusive_all_items_with_command_name (a_command_name, widget.item, Result)
+				widget.forth
+			end
+		end
+
+	all_items_with_command_name_in_all_constructors (a_text: STRING): ARRAYED_LIST [EV_TREE_NODE]
+			-- Find in all layout constructors with command name `a_text'
+		require
+			not_void: a_text /= Void
+		local
+			l_list: ARRAYED_LIST [ER_LAYOUT_CONSTRUCTOR]
+		do
+			from
+				create Result.make (100)
+				l_list := shared_singleton.layout_constructor_list
+				l_list.start
+			until
+				l_list.after
+			loop
+				Result.merge_right (l_list.item.all_items_with_command_name (a_text))
+				l_list.forth
+			end
+		end
+
 feature -- Factory
 
 	tree_item_factory_method (a_item_text: STRING): EV_TREE_ITEM
@@ -286,26 +320,26 @@ feature -- Persistance
 	load_tree
 			--
 		local
-			l_callback: ER_XML_CALLBACKS
-			l_factory: XML_LITE_PARSER_FACTORY
-			l_parser: XML_LITE_PARSER
-			l_constants: ER_MISC_CONSTANTS
+			l_manager: ER_XML_TREE_MANAGER
+			l_vision2_visitor: ER_LOAD_VISION_TREE_VISITOR
+			l_command_updater: ER_UPDATE_COMMAND_VISITOR
+			l_separate_tab_visitor: ER_SEPARATE_WINDOW_TAB_VISITOR
+			l_drop_down_gallery_visitor: ER_DROP_DOWN_GALLERY_INFO_VISITOR
 		do
-			create l_constants
-			if attached l_constants.xml_full_file_name as l_file_name then
-				create l_factory
-				l_parser := l_factory.new_parser
+			l_manager := shared_singleton.xml_tree_manager.item
+			l_manager.load_tree
 
-				create l_callback.make (widget)
-				l_parser.set_callbacks (l_callback)
-
-				l_parser.parse_from_filename (l_file_name)
-
-				vision_xml_translator.update_vision_tree_after_load (widget)
-
-				helper.expand_all (widget)
+			if attached l_manager.xml_root as l_root then
+				create l_vision2_visitor
+				l_root.accept (l_vision2_visitor)
+				create l_command_updater
+				l_root.accept (l_command_updater)
+				create l_separate_tab_visitor.make
+				l_root.accept (l_separate_tab_visitor)
+				create l_drop_down_gallery_visitor
+				l_root.accept (l_drop_down_gallery_visitor)
 			else
-				check should_not_happend: False end
+				check False end
 			end
 		end
 
@@ -327,6 +361,29 @@ feature {NONE} -- Implementation
 				a_tree_node.after
 			loop
 				recrusive_all_items_with (a_text, a_tree_node.item, a_list)
+
+				a_tree_node.forth
+			end
+		end
+
+	recrusive_all_items_with_command_name (a_text: STRING; a_tree_node: EV_TREE_NODE; a_list: ARRAYED_LIST [EV_TREE_NODE])
+			-- Recursive find tree node which command anme is same as `a_text'
+		require
+			not_void: a_text /= Void
+			not_void: a_tree_node /= Void
+			not_void: a_list /= Void
+		do
+			if attached {ER_TREE_NODE_DATA} a_tree_node.data as l_data then
+				if attached l_data.command_name as l_command_name and then l_command_name.same_string (a_text) then
+					a_list.extend (a_tree_node)
+				end
+			end
+			from
+				a_tree_node.start
+			until
+				a_tree_node.after
+			loop
+				recrusive_all_items_with_command_name (a_text, a_tree_node.item, a_list)
 
 				a_tree_node.forth
 			end

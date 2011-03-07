@@ -112,7 +112,9 @@ feature -- Contract support
 					l_string.same_string (toggle_button) or else
 					l_string.same_string (spinner) or else
 					l_string.same_string (split_button) or else
-					l_string.same_string (drop_down_gallery)
+					l_string.same_string (drop_down_gallery) or else
+					l_string.same_string (drop_down_gallery_menu_layout) or else
+					l_string.same_string (flow_menu_layout)
 			end
 		end
 

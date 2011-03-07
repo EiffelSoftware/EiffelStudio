@@ -1,0 +1,7 @@
+VUER
+
+    Separate call result rule
+
+    If a result of a separate call is of an expanded type,
+    its base class does not include, directly or indirectly,
+    any non-separate attribute of a reference type.

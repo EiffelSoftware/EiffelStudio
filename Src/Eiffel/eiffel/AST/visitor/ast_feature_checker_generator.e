@@ -1937,6 +1937,15 @@ feature {NONE} -- Implementation
 			if is_qualified and then attached last_type then
 					-- Adapt separateness and controlled status of the result to target type.
 				adapt_last_type_to_target (a_type, l_is_controlled)
+					-- Verify that if result type of a separate feature call is expanded it has no non-separate reference attributes.
+				if
+					error_level = l_error_level and then
+					a_type.is_separate and then
+					last_type.is_expanded and then
+					not last_type.is_processor_attachable_to (a_type)
+				then
+					error_handler.insert_error (create {VUER}.make (context, last_type, l_feature_name))
+				end
 			end
 		ensure
 			last_calls_target_type_proper_set: (error_level = old error_level and not is_last_access_tuple_access) implies last_calls_target_type /= Void
@@ -4215,6 +4224,15 @@ feature {NONE} -- Implementation
 							end
 							last_type := l_prefix_feature_type
 							adapt_last_type_to_target (l_target_type, l_is_controlled)
+								-- Verify that if result type of a separate feature call is expanded it has no non-separate reference attributes.
+							if
+								error_level = l_error_level and then
+								l_target_type.is_separate and then
+								last_type.is_expanded and then
+								not last_type.is_processor_attachable_to (l_target_type)
+							then
+								error_handler.insert_error (create {VUER}.make (context, last_type, l_as.operator_location))
+							end
 						end
 					end
 				end
@@ -4595,6 +4613,15 @@ feature {NONE} -- Implementation
 							end
 							last_type := l_infix_type
 							adapt_last_type_to_target (l_target_type, l_is_controlled)
+								-- Verify that if result type of a separate feature call is expanded it has no non-separate reference attributes.
+							if
+								error_level = l_error_level and then
+								l_target_type.is_separate and then
+								last_type.is_expanded and then
+								not last_type.is_processor_attachable_to (l_target_type)
+							then
+								error_handler.insert_error (create {VUER}.make (context, last_type, l_as.operator_location))
+							end
 						end
 					end
 				end

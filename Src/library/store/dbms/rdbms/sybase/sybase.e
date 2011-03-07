@@ -125,9 +125,9 @@ feature -- DATABASE_STRING
 
 	sql_name_string: STRING
 		once
-			Result := "varchar("
+			Result := "varchar(500)"
 		ensure then
-			Result.is_equal ("varchar(")
+			Result.is_equal ("varchar(500)")
 		end
 
 feature -- DATABASE_REAL
@@ -243,10 +243,9 @@ feature -- For DATABASE_PROC
 	map_var_name (par_name: STRING): STRING
 			-- Map variable string for late bound stored procedure execution
 		do
-			check
-				to_be_implemented: False
-			end
-			create Result.make_empty -- FIXME: fool compiler
+			create Result.make (par_name.count + 1)
+			Result.append_character (':')
+			Result.append (par_name)
 		end
 
 	map_var_after: STRING = ""
@@ -348,7 +347,9 @@ feature -- External	features
 
 	terminate_order (no_descriptor: INTEGER)
 		do
-			last_error_code := syb_terminate_order(no_descriptor)
+				-- We don't bother to change `last_error_code' because `syb_terminate_order'
+				-- at C side always return 0, which wipes out actual last error.
+			syb_terminate_order(no_descriptor).do_nothing
 		end
 
 	close_cursor (no_descriptor: INTEGER)

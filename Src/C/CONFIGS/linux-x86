@@ -165,7 +165,7 @@ fi
 if [ -n "$CFLAGS" ]; then
 	ccflags=$CFLAGS
 else
-	ccflags='-pipe -D_GNU_SOURCE'
+	ccflags='-pipe -march=i686 -D_GNU_SOURCE'
 fi
 ccldflags=''
 if [ -n "$CPP" ]; then

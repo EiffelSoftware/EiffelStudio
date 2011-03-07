@@ -9,6 +9,7 @@ deferred class
 inherit
 	EV_RIBBON_BUTTON
 		redefine
+			execute,
 			update_property,
 			create_interface_objects
 		end
@@ -123,6 +124,31 @@ feature {NONE} -- Implementation
 				end
 
 				item_source.forth
+			end
+		end
+
+	execute (a_command_id: NATURAL_32; a_execution_verb: INTEGER; a_property_key: POINTER; a_property_value: POINTER; a_command_execution_properties: POINTER): NATURAL_32
+			-- <Precursor>
+		local
+			l_selected: NATURAL_32
+			l_item: EV_RIBBON_COMBO_BOX_ITEM
+		do
+			Result := Precursor (a_command_id, a_execution_verb, a_property_key, a_property_value, a_command_execution_properties)
+			if command_list.has (a_command_id) then
+				l_selected := selected_item
+				if item_source.valid_index (l_selected.as_integer_32 + 1) then
+					l_item := item_source.i_th (l_selected.as_integer_32 + 1)
+					if a_execution_verb = {EV_EXECUTION_VERB_CONSTANTS}.ui_executionverb_execute then
+						if attached l_item.select_actions_cache as l_select_action then
+							l_select_action.call (void)
+						end
+					elseif a_execution_verb = {EV_EXECUTION_VERB_CONSTANTS}.ui_executionverb_preview then
+
+					elseif a_execution_verb = {EV_EXECUTION_VERB_CONSTANTS}.ui_executionverb_cancelpreview then
+
+					end
+
+				end
 			end
 		end
 

@@ -38,4 +38,12 @@ feature -- Query
 			create Result.put (void)
 		end
 
+	xml_tree_manager: CELL [ER_XML_TREE_MANAGER]
+			--
+		local
+			l_manger: ER_XML_TREE_MANAGER
+		once
+			create l_manger
+			create Result.put (l_manger)
+		end
 end

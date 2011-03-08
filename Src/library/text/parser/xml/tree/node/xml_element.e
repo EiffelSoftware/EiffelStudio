@@ -240,6 +240,32 @@ feature -- Access (from XM_COMPOSITE)
 			elts.go_to (c)
 		end
 
+	elements_by_name (a_name: STRING): detachable LIST [XML_ELEMENT]
+			-- Direct child elements with name `a_name';
+			-- Return Void if no element with that name is a child of current node.
+		local
+			c: CURSOR
+			elts: like nodes
+		do
+			elts := nodes
+			c := elts.cursor
+			from
+				create {LINKED_LIST [XML_ELEMENT]} Result.make
+				elts.start
+			until
+				elts.after
+			loop
+				if attached {XML_ELEMENT} elts.item as e and then
+					named_same_name (e, a_name)
+				then
+					Result.extend (e)
+				end
+				elts.forth
+			end
+			elts.go_to (c)
+		end
+
+
 	element_by_qualified_name (a_uri: STRING; a_name: STRING): detachable XML_ELEMENT
 			-- Direct child element with given qualified name;
 			-- If there are more than one element with that name, anyone may be returned.

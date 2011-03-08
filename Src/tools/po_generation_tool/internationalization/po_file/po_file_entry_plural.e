@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 		do
 			Precursor {PO_FILE_ENTRY} (a_msgid)
 				-- reasonable default values
-			create msgstr_n_lines.make (0, 2)
+			create msgstr_n_lines.make_filled (Void, 0, 2)
 				-- ensure at least one msgstr. Otherwise some .po editors get fussy.
 			msgstr_n_lines.force (break_line (""),0)
 			create msgid_plural_lines.make
@@ -127,7 +127,7 @@ feature {NONE} -- Implementation
 			-- List of message ID lines of plural form
 
 note
-	copyright: "Copyright (c) 1984-2007, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -151,11 +151,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

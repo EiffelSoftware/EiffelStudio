@@ -196,6 +196,7 @@ feature -- Output
 					root_cluster := l_root.cluster
 					a_formatter.set_context_group (root_cluster)
 
+					a_formatter.add_new_line
 					a_formatter.process_keyword_text (locale_formatter.translation (lb_root_class), Void)
 					a_formatter.add_new_line
 					a_formatter.add_indent
@@ -261,7 +262,7 @@ feature {NONE} -- Internationalization
 	lb_more_info_on_compile: STRING = "More information available after a compilation!"
 
 ;note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

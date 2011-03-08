@@ -1277,7 +1277,6 @@ feature {NONE} -- Implementation
 			inline_agent_assertion: ROUTINE_ASSERTIONS
 			l_built_in_as: BUILT_IN_AS
 			l_text_formatter_decorator: like text_formatter_decorator
-			l_has_note: BOOLEAN
 		do
 			check
 				not_expr_type_visiting: not expr_type_visiting

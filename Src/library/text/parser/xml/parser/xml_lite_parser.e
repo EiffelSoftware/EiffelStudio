@@ -999,7 +999,7 @@ feature {NONE} -- Query
 				until
 					done or parsing_stopped
 				loop
-					if not l_in_double_quote and c.is_space then
+					if not l_in_double_quote and not l_in_single_quote and c.is_space then
 						done := True
 					else
 						inspect c

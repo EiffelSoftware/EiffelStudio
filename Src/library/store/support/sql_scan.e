@@ -178,7 +178,7 @@ feature -- Basic operations
 			end
 		end
 
-	get_complex_value (obj: ANY; str: STRING)
+	get_complex_value (obj: ANY; str: STRING_32)
 			-- Retrieve string value of reference object `obj' and put in `str'.
 		require
 			object_exists: obj /= Void

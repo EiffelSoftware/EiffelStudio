@@ -72,12 +72,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	update_property (a_command_id: NATURAL_32; a_property_key: POINTER; a_property_current_value: POINTER; a_property_new_value: POINTER): NATURAL_32
+	update_property (a_command_handler: POINTER; a_command_id: NATURAL_32; a_property_key: POINTER; a_property_current_value: POINTER; a_property_new_value: POINTER): NATURAL_32
 			-- Responds to property update requests from the Ribbon framework
 			-- This function is called from C codes
 		local
 			l_result: NATURAL_32
 			l_observer: like observers
+			l_ribbon: detachable EV_RIBBON
 		do
 			from
 				l_observer := observers.twin
@@ -85,7 +86,10 @@ feature {NONE} -- Implementation
 			until
 				l_observer.after or l_result /= 0
 			loop
-				l_result := l_observer.item.update_property (a_command_id, a_property_key, a_property_current_value, a_property_new_value)
+				l_ribbon := l_observer.item.ribbon
+				if l_ribbon /= Void and then l_ribbon.command_handler = a_command_handler then
+					l_result := l_observer.item.update_property (a_command_id, a_property_key, a_property_current_value, a_property_new_value)
+				end
 
 				l_observer.forth
 			end
@@ -97,18 +101,18 @@ feature {NONE} -- Externals
 			-- Set object and function addresses
 			-- This set callbacks in C codes, so `execute' and `update_property' can be called in C codes.
 		do
-			c_set_object ($Current)
+			c_set_command_handler_object ($Current)
 			c_set_execute_address ($execute)
 			c_set_update_property_address ($update_property)
 		end
 
-	c_set_object (a_object: POINTER)
+	c_set_command_handler_object (a_object: POINTER)
 			-- Set Current object address.
 		external
 			"C signature (EIF_REFERENCE) use %"eiffel_ribbon.h%""
 		end
 
-	c_release_object
+	c_release_command_handler_object
 			-- Release Current pointer in C
 		external
 			"C use %"eiffel_ribbon.h%""

@@ -21,8 +21,9 @@ feature -- Command
 		do
 			if attached {EV_WINDOW_IMP} a_window.implementation as l_imp then
 				com_initialize
+				set_object_and_function_address
 				item := create_ribbon_com_framework (l_imp.wel_item)
-				command_handler := get_command_handler
+				ui_application := get_ui_application
 				create l_resources
 				l_resources.ribbon_list.extend (Current)
 			end
@@ -135,6 +136,9 @@ feature -- Status Report
 	item: POINTER
 			-- Ribbon framework object
 
+	ui_application: POINTER
+			-- IUIApplication object
+
 	command_handler: POINTER
 			-- Command handler C object
 
@@ -210,12 +214,12 @@ feature {EV_RIBBON_TITLED_WINDOW_IMP} -- Externals
 			}"
 		end
 
-	get_command_handler: POINTER
-			-- Get Ribbon command handler C object
+	get_ui_application: POINTER
+			-- Get Ribbon IUIApplication C object
 		external
 			"C inline use <ribbon.h>"
 		alias
-			"return GetCommandHandler ();"
+			"return GetUIApplication ();"
 		end
 
 feature {NONE} -- Implementation
@@ -293,6 +297,91 @@ feature {NONE} -- Implementation
 
 			}
 			]"
+		end
+
+feature {EV_RIBBON} -- Externals callbacks
+
+	on_create_ui_command (a_iui_application: POINTER; a_command_id: NATURAL_32; a_ui_command_type: INTEGER; a_iui_command_handler: POINTER): NATURAL_32
+			--
+		local
+			l_pointer: POINTER
+			l_res: EV_RIBBON_RESOURCES
+			l_list: ARRAYED_LIST [EV_RIBBON]
+		do
+			if ui_application = default_pointer then
+				-- Set `ui_application' for first time
+				ui_application := a_iui_application
+			end
+			if ui_application = a_iui_application then
+				if command_handler = default_pointer then
+					l_pointer := c_create_ui_command_handler (a_iui_command_handler)
+					command_handler := l_pointer
+				else
+					c_set_command_handler (command_handler, a_iui_command_handler)
+				end
+			else
+				-- Delegate it to other EV_RIBBON instances
+				create l_res
+				l_list := l_res.ribbon_list
+				from
+					l_list.start
+				until
+					l_list.after
+				loop
+					if l_list.item /= Current and then l_list.item.ui_application = a_iui_application then
+						Result := l_list.item.on_create_ui_command (a_iui_application, a_command_id, a_ui_command_type, a_iui_command_handler)
+					end
+					l_list.forth
+				end
+			end
+			Result := 0x00000000;--HRESULT S_OK, must return S_OK, otherwise IUICommandHandler.updateProperty and execute will not be called
+		end
+
+	c_set_command_handler (a_iui_command_handler: POINTER; a_pointer_pointer: POINTER)
+			-- Call COM queryInterface to initialize `a_pointer_pointer'
+		external
+			"C++ inline use %"eiffel_ribbon.h%""
+		alias
+			"[
+			{
+				HRESULT hr;
+				IUICommandHandler *pCommandHandler = (IUICommandHandler *)$a_iui_command_handler;	
+				IUICommandHandler ** l_command_handler = (IUICommandHandler **)$a_pointer_pointer;
+				hr = pCommandHandler->QueryInterface(IID_IUICommandHandler, (void **)l_command_handler);
+			}
+			]"
+		end
+
+	set_object_and_function_address
+			-- Set object and function addresses
+			-- This set callbacks in C codes, so `execute' and `update_property' can be called in C codes.
+		do
+			c_set_ribbon_object ($Current)
+			c_set_on_create_ui_command_address ($on_create_ui_command)
+		end
+
+	c_set_ribbon_object (a_object: POINTER)
+			-- Set Current object address.
+		external
+			"C signature (EIF_REFERENCE) use %"eiffel_ribbon.h%""
+		end
+
+	c_release_ribbon_object
+			-- Release Current pointer in C
+		external
+			"C use %"eiffel_ribbon.h%""
+		end
+
+	c_set_on_create_ui_command_address (a_address: POINTER)
+			-- Set on_create_ui_command function address
+		external
+			"C use %"eiffel_ribbon.h%""
+		end
+
+	c_create_ui_command_handler (a_iui_command_handler: POINTER): POINTER
+			--
+		external
+			"C use %"Uiribbon.h%""
 		end
 end
 

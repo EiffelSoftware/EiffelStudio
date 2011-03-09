@@ -22,6 +22,7 @@ extern "C" {
 #endif
 
 extern HRESULT SHStrDupW_eiffel(LPCWSTR src, LPWSTR * dest);
+EIF_POINTER c_create_ui_command_handler (EIF_POINTER a_commandHandler);
 
 #ifdef __cplusplus
 }

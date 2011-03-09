@@ -21,6 +21,7 @@ IUIApplicationVtbl myRibbon_Vtbl = {QueryInterface,
 
 LONG OutstandingObjects = 0;
 IUIFramework *g_pFramework = NULL;  // Reference to the Ribbon framework.
+IUIApplication	*pApplication = NULL;
 IUIFramework *last_pFramework = NULL;  // Reference to the Ribbon framework when calling "OnCreateUICommand"
 IUICommandHandler	*pCommandHandler = NULL;
 IUIImageFromBitmap *g_image_from_bitmap = NULL;
@@ -60,31 +61,22 @@ HRESULT STDMETHODCALLTYPE OnViewChanged(IUIApplication *This, UINT32 viewId, UI_
 
 HRESULT STDMETHODCALLTYPE OnCreateUICommand(IUIApplication *This, UINT32 commandId, UI_COMMANDTYPE typeID, IUICommandHandler **commandHandler)
 { 
-
-	HRESULT	hr;
-
-	// only create a new command handler if `g_pFramwork' changed since last time
-	if (g_pFramework != last_pFramework) 
-	{
-		last_pFramework = g_pFramework;
-		
-		/* allocate pApplication */
-		pCommandHandler = (IUICommandHandler *)GlobalAlloc(GMEM_FIXED, sizeof(IUICommandHandler));
-		if(!pCommandHandler) {
-			return(FALSE);
-		}
-
-		/*	
-		Point our pApplication to myCommand_Vtbl that contains standard IUnknown method (QueryInterface, AddRef, Release)
-		and callback for our IUICommandHandler interface (Execute, UpdateProperty).
-		*/
-		(IUICommandHandlerVtbl *)pCommandHandler->lpVtbl = &myCommand_Vtbl;				
-
-	}
-
-	hr = pCommandHandler->lpVtbl->QueryInterface(pCommandHandler, &IID_IUICommandHandler, commandHandler);		
 	
-	return hr; 
+	if (eiffel_ribbon_object) {
+			return (EIF_NATURAL_32) ((eiffel_on_create_ui_command_function) (
+	#ifndef EIF_IL_DLL
+				(EIF_REFERENCE) eif_access (eiffel_ribbon_object),
+	#endif
+				(EIF_POINTER) This,
+				(EIF_NATURAL_32) commandId,
+				(EIF_INTEGER) typeID,
+				(EIF_POINTER) commandHandler));
+		} else {
+			return 0;
+		}  
+		/*	
+			
+*/
 }
 
 HRESULT STDMETHODCALLTYPE OnDestroyUICommand (IUIApplication *This, UINT32 commandId,  UI_COMMANDTYPE typeID, IUICommandHandler *commandHandler) 
@@ -115,7 +107,6 @@ EIF_POINTER InitializeFramework(HWND hWnd)
 
 	hr = CoCreateInstance(&CLSID_UIRibbonFramework, NULL, CLSCTX_INPROC_SERVER, &IID_IUIFRAMEWORK, (VOID **)&g_pFramework);
 	if (SUCCEEDED(hr)) {
-		IUIApplication	*pApplication = NULL;
 		VOID *ppvObj = NULL;
 
 		/* allocate pApplication */
@@ -146,9 +137,9 @@ EIF_POINTER InitializeFramework(HWND hWnd)
 	return NULL;
 }
 
-IUICommandHandler *GetCommandHandler()
+IUIApplication *GetUIApplication()
 {
-	return pCommandHandler;
+	return pApplication;
 }
 
 HRESULT QueryInterfaceIUICollectionWithPropVariant (PROPVARIANT * a_prop_variant)

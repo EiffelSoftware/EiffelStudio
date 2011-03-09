@@ -103,6 +103,7 @@ feature -- Helper
 			from
 				create l_res
 				l_list := l_res.ribbon_list
+				check l_list.count > 0 end
 				l_list.start
 			until
 				l_list.after or Result /= Void

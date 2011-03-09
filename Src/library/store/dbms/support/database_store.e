@@ -85,10 +85,10 @@ feature -- Basic operations
 			owns_repository: owns_repository
 			repository_exists: attached repository as lr_repository and then lr_repository.exists
 		local
-			tmp_string: STRING
+			tmp_string: STRING_32
 			temp_descriptor: INTEGER
-			quoter: STRING
-			sep: STRING
+			quoter: STRING_32
+			sep: STRING_32
 			l_repository: like repository
 			l_map_table: like map_table
 		do
@@ -98,7 +98,7 @@ feature -- Basic operations
 			quoter := db_spec.identifier_quoter
 			sep := db_spec.qualifier_seperator
 			sql_string.wipe_out
-			sql_string.append ("INSERT INTO ")
+			sql_string.append ({STRING_32} "INSERT INTO ")
 			l_repository := repository
 			check l_repository /= Void end -- implied by precondition `owns_repository'
 			if (l_repository.rep_qualifier /= Void and then l_repository.rep_qualifier.count > 0) then
@@ -113,7 +113,7 @@ feature -- Basic operations
 				sql_string.append(quoter)
 			end
 			if ((l_repository.rep_owner /= Void and then l_repository.rep_owner.count > 0) or (l_repository.rep_qualifier /= Void and then l_repository.rep_qualifier.count > 0)) then
-				sql_string.append(".")
+				sql_string.append({STRING_32} ".")
 			end
 			sql_string.append(quoter)
 			sql_string.append (l_repository.repository_name)
@@ -121,7 +121,7 @@ feature -- Basic operations
 			l_map_table := map_table
 			check l_map_table /= Void end -- FIXME: implied by ...bug?			
 			sql_string.append(db_spec.put_column_name(l_repository, l_map_table, object))
-			sql_string.append (" VALUES ( :XZ7Hj0sb5UU )")
+			sql_string.append ({STRING_32} " VALUES ( :XZ7Hj0sb5UU )")
 			set_map_name (object, "XZ7Hj0sb5UU")
 			tmp_string := parse_32 (sql_string)
 			unset_map_name ("XZ7Hj0sb5UU")
@@ -175,7 +175,7 @@ feature {NONE} -- Status report
 			resulting_value: attached map_table as le_map_table and then Result = le_map_table.item (k)
 		end
 
-	sql_string: STRING
+	sql_string: STRING_32
 			-- Constant string
 		once
 			create Result.make (256)

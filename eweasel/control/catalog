@@ -2596,6 +2596,7 @@ test	scoop-hanging-1						scoop003 tcf pass scoop execution
 test	scoop-basic-argument-formal-nested	scoop004 tcf pass scoop execution
 test	scoop-separate-like-current			scoop005 tcf pass scoop execution
 test	scoop-result-validity				scoop006 tcf pass scoop validity expanded
+test	scoop-external-call				scoop007 tcf pass scoop execution
 
 -- Testing facility
 test	testing-with-error		testing001 tcf pass testing

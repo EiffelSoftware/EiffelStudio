@@ -56,7 +56,7 @@ feature {SAVAGE} -- only savages can eat..hoho
 		require
 			not is_empty
 		do
-			io.put_string ("get_meal: pot givinig meal %N")
+			io.put_string ("get_meal: pot providing meal %N")
 			servings := servings - 1
 		ensure
 			servings = old servings - 1

@@ -57,7 +57,7 @@ feature {NONE} -- Implementation
 			io.put_string ("savage: fill_pot checking %N")
 			if my_pot.is_empty then
 				io.put_string ("savage: fill_pot filling%N")
-				my_cook.do_cooking -- wake cook
+				my_cook.cook (my_pot)
 			end
 		end
 

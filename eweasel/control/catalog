@@ -1815,6 +1815,7 @@ test	across-with-constrained-generic-crash	term196 tcf fail termination
 test	shared-library-with-generic-root	term197 tcf fail termination
 test	iteration-over-inline-agent		term198 tcf fail termination
 test	expanded-constrained-generic-root-crash	term199 tcf fail termination expanded generic
+test	check-instruction-invalid-code		term200 tcf pass termination check instruction validity
 
 -- Config
 

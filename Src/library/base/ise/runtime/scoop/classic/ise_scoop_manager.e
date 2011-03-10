@@ -666,23 +666,23 @@ feature -- Command/Query Handling
 			end
 
 			l_client_request_chain_meta_data := request_chain_meta_data [a_client_processor_id]
-			check l_client_request_chain_meta_data_attached: attached l_client_request_chain_meta_data end
-
-				-- Call is specific to `a_client_processor_id' so we need to retrieve the request chain node for `a_supplier_processor_id' from here.
-			l_unique_pid_count := l_client_request_chain_meta_data [request_chain_pid_count_index]
-				-- Search through remaining pid's to find the associating request chain node id.
-			from
-				i := request_chain_meta_data_header_size
-				l_last_pid_index := request_chain_meta_data_header_size + l_unique_pid_count - 1
-			until
-				i > l_last_pid_index
-			loop
-				if l_client_request_chain_meta_data [i] = a_supplier_processor_id then
-					l_request_chain_node_id := l_client_request_chain_meta_data [i + l_unique_pid_count]
-				elseif l_client_request_chain_meta_data [i] = a_client_processor_id then
-					l_client_is_sibling := True
+			if l_client_request_chain_meta_data /= Void then
+					-- Call is specific to `a_client_processor_id' so we need to retrieve the request chain node for `a_supplier_processor_id' from here.
+				l_unique_pid_count := l_client_request_chain_meta_data [request_chain_pid_count_index]
+					-- Search through remaining pid's to find the associating request chain node id.
+				from
+					i := request_chain_meta_data_header_size
+					l_last_pid_index := request_chain_meta_data_header_size + l_unique_pid_count - 1
+				until
+					i > l_last_pid_index
+				loop
+					if l_client_request_chain_meta_data [i] = a_supplier_processor_id then
+						l_request_chain_node_id := l_client_request_chain_meta_data [i + l_unique_pid_count]
+					elseif l_client_request_chain_meta_data [i] = a_client_processor_id then
+						l_client_is_sibling := True
+					end
+					i := i + 1
 				end
-				i := i + 1
 			end
 
 			if l_request_chain_node_id = invalid_request_chain_id then

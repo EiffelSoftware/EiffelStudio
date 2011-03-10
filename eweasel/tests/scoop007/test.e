@@ -8,7 +8,7 @@ feature {NONE} -- Creation
         make
 		do
 			f (Current)
-			f (create {TEST})
+			f (create {separate TEST})
 		end
 
 feature -- Access

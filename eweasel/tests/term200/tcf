@@ -1,0 +1,10 @@
+test_name 	 check-instruction-invalid-code
+test_description Invalid code in a check instruction should not cause an exception.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result validity_error TEST VEEN
+
+test_end

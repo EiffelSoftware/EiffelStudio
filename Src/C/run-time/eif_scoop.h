@@ -46,7 +46,7 @@ typedef struct {
 	BODY_INDEX        body_index;     /* Routine to be called */
 	EIF_NATURAL_32    count;          /* Number of arguments excluding target object */
 	EIF_TYPED_VALUE * result;         /* Address of a result for queries */
-	EIF_BOOLEAN       is_synchronous; /* Indicator of a synchronous call */
+	EIF_SCP_PID       sync_pid; /* Indicator of a synchronous call */
 	EIF_BOOLEAN	      is_lock_passing; /* Indicator of a lock passing call */
 	EIF_TYPED_VALUE   argument [1];   /* Arguments excluding target object */
 } call_data;

@@ -6468,7 +6468,7 @@ feature {NONE} -- Implementation
 			if l_needs_byte_node then
 				create b.make (a, c, l_as.end_keyword)
 				if attached l_as.start_location as l then
-					last_byte_node.set_line_number (l.line)
+					b.set_line_number (l.line)
 				end
 				b.set_line_pragma (l_as.line_pragma)
 				last_byte_node := b

@@ -12,15 +12,16 @@ inherit
 	EXTERNAL_BL
 		redefine
 			analyze_on,
+			call_kind,
 			check_dt_current,
 			free_register,
 			generate_access_on_type,
 			generate_end,
-			call_kind,
-			set_call_kind,
-			unanalyze,
+			generate_separate_call,
+			has_one_signature,
 			is_polymorphic,
-			has_one_signature
+			set_call_kind,
+			unanalyze
 		end
 
 create
@@ -70,6 +71,9 @@ feature -- Checking
 			if return_type.is_reference then
 					-- Do not use reference type because this register should not be tracked by GC.
 				result_register := context.get_argument_register (pointer_type.c_type)
+			elseif not return_type.is_void and then context_type.is_separate then
+					-- The register is used to store result of a separate feature call.
+				result_register := context.get_argument_register (return_type)
 			end
 		end
 
@@ -136,6 +140,14 @@ feature -- Code generation
 			generate_workbench_end (result_register)
 		end
 
+feature {NONE} -- Separate call
+
+	generate_separate_call (s: detachable REGISTER; r: detachable REGISTRABLE; t: REGISTRABLE)
+			-- <Precursor>
+		do
+			generate_separate_call_for_workbench (s, r, t, result_register)
+		end
+
 feature {NONE} -- Implementation
 
 	result_register: REGISTER;
@@ -143,7 +155,7 @@ feature {NONE} -- Implementation
 			-- to be normalized before use.
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -509,6 +509,50 @@ feature {NONE} -- C code generation
 			Result := [["RTWF", "RTWPF"], ["RTVF", "RTVPF"], ["RTWC", "RTWPC"]]
 		end
 
+feature {NONE} -- Separate call
+
+	separate_function_macro: TUPLE [unqualified_call, qualified_call, creation_call: TUPLE [normal, precompiled: STRING]]
+			-- Name of a macro to make a call to a function depending on the kind of a call:
+			-- See `routine_macro' for details.
+		once
+				-- There are no unqualified separate calls as well as creation function calls.
+			Result := [["ERROR", "ERROR"], ["RTS_CF", "RTS_CFP"], ["ERROR", "ERROR"]]
+		end
+
+	separate_procedure_macro: TUPLE [unqualified_call, qualified_call, creation_call: TUPLE [normal, precompiled: STRING]]
+			-- Name of a macro to make a call to a procedure depending on the kind of a call.
+			-- See `routine_macro' for details.
+		once
+				-- There are no unqualified separate calls.
+			Result := [["ERROR", "ERROR"], ["RTS_CP", "RTS_CPP"], ["RTS_CC", "RTS_CCP"]]
+		end
+
+	generate_separate_call_for_workbench (s: detachable REGISTER; r: detachable REGISTRABLE; t: REGISTRABLE; result_register: REGISTER)
+			-- <Precursor>
+		local
+			buf: like buffer
+		do
+			check attached {CL_TYPE_A} context_type as c then
+				buf := buffer
+				buf.put_new_line
+				if attached r then
+						-- Call to a function.
+					generate_call_macro (separate_function_macro, t, c, s, result_register)
+					buf.put_character (';')
+					buf.put_new_line
+					r.print_register
+					buf.put_four_character (' ', '=', ' ', '(')
+					context.print_argument_register (result_register, buf)
+					generate_return_value_conversion (result_register)
+					buf.put_character (')')
+				else
+						-- Call to a procedure.
+					generate_call_macro (separate_procedure_macro, t, c, s, Void)
+				end
+				buf.put_character (';')
+			end
+		end
+
 feature {NONE} -- Debug
 
 	debug_output: STRING
@@ -588,7 +632,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

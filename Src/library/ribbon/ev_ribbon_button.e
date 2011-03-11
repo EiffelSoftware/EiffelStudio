@@ -11,6 +11,10 @@ inherit
 
 	EV_COMMAND_HANDLER_OBSERVER
 
+	EV_RIBBON_TEXTABLE
+
+	EV_RIBBON_TOOLTIPABLE
+
 feature {NONE} -- Initialization
 
 	make_with_command_list (a_list: ARRAY [NATURAL_32])
@@ -43,24 +47,6 @@ feature -- Access
 		end
 
 feature -- Command
-
-	set_text (a_text: STRING_32)
-			-- Set `text' with `a_text'
-		local
-			l_key: EV_PROPERTY_KEY
-			l_command_id: NATURAL_32
-			l_enum: EV_UI_INVALIDATIONS_ENUM
-		do
-			l_command_id := command_list.item (command_list.lower)
-			check command_id_valid: l_command_id /= 0 end
-
-			if attached ribbon as l_ribbon then
-				create l_key.make_label
-				create l_enum
-				l_ribbon.invalidate (l_command_id, l_enum.ui_invalidations_property, l_key)
-				text_to_set := a_text
-			end
-		end
 
 	set_small_image (a_image: EV_PIXEL_BUFFER)
 			-- Set small image
@@ -122,11 +108,9 @@ feature {EV_RIBBON} -- Command
 
 				create l_key.share_from_pointer (a_property_key)
 				if l_key.is_label then
-					if attached text_to_set as l_text then
-						create l_value.share_from_pointer (a_property_new_value)
-						l_value.set_string_value (l_text)
-						text_to_set := void
-					end
+					Result := update_property_for_text (a_command_id, a_property_key, a_property_current_value, a_property_new_value)
+				elseif l_key.is_tooltip_title or l_key.is_tooltip_description then
+					Result := update_property_for_tooltip (a_command_id, a_property_key, a_property_current_value, a_property_new_value)
 				elseif l_key.is_small_image then
 					if attached small_image_to_set as l_image then
 						create l_value.share_from_pointer (a_property_new_value)
@@ -149,9 +133,6 @@ feature {NONE} -- Implementation
 
 	command_list: ARRAY [NATURAL_32]
 			-- Command ids handled by current
-
-	text_to_set: detachable STRING_32
-			-- Text will be used by `update_property'
 
 	small_image_to_set: detachable EV_PIXEL_BUFFER
 			-- Image will be used by `update_proptery'

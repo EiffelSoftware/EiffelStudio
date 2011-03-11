@@ -9,6 +9,10 @@ deferred class
 inherit
 	EV_COMMAND_HANDLER_OBSERVER
 
+	EV_RIBBON_TEXTABLE
+
+	EV_RIBBON_TOOLTIPABLE
+
 feature {NONE} -- Initialization
 
 	make_with_command_list (a_list: ARRAY [NATURAL_32])
@@ -48,6 +52,8 @@ feature {NONE}	--Action handling
 			-- <Precursor>
 		do
 			if command_list.has (a_command_id) then
+				Result := update_property_for_text (a_command_id, a_property_key, a_property_current_value, a_property_new_value)
+				Result := update_property_for_tooltip (a_command_id, a_property_key, a_property_current_value, a_property_new_value)
 			end
 		end
 

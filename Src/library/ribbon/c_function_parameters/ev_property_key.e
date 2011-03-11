@@ -31,7 +31,9 @@ create
 	make_global_text_color,
 	make_global_highlight_color,
 	make_item_image,
-	make_representative_string
+	make_representative_string,
+	make_tooltip_title,
+	make_tooltip_description
 
 feature {NONE}  -- Initialization
 
@@ -129,6 +131,18 @@ feature {NONE}  -- Initialization
 			-- Make a representative string key
 		do
 			share_from_pointer (c_ui_pkey_representative_string)
+		end
+
+	make_tooltip_title
+			-- Make a tooltip title key
+		do
+			share_from_pointer (c_ui_pkey_tooltip_title)
+		end
+
+	make_tooltip_description
+			-- Make a tooltip description key
+		do
+			share_from_pointer (c_ui_pkey_tooltip_description)
 		end
 
 feature -- Access
@@ -252,6 +266,24 @@ feature -- Status Report
 			l_tmp: EV_PROPERTY_KEY
 		do
 			create l_tmp.make_representative_string
+			Result := l_tmp.guid.is_equal (guid)
+		end
+
+	is_tooltip_title: BOOLEAN
+			-- Is current tooltip title?
+		local
+			l_tmp: EV_PROPERTY_KEY
+		do
+			create l_tmp.make_tooltip_title
+			Result := l_tmp.guid.is_equal (guid)
+		end
+
+	is_tooltip_description: BOOLEAN
+			-- Is current tooltip description?
+		local
+			l_tmp: EV_PROPERTY_KEY
+		do
+			create l_tmp.make_tooltip_description
 			Result := l_tmp.guid.is_equal (guid)
 		end
 
@@ -464,4 +496,29 @@ feature {NONE} -- Externals
 			}
 			]"
 		end
+
+	c_ui_pkey_tooltip_title: POINTER
+			--
+		external
+			"C inline use %"UIRibbon.h%""
+		alias
+			"[
+			{
+				return &UI_PKEY_TooltipTitle;
+			}
+			]"
+		end
+
+	c_ui_pkey_tooltip_description: POINTER
+			--
+		external
+			"C inline use %"UIRibbon.h%""
+		alias
+			"[
+			{
+				return &UI_PKEY_TooltipDescription;
+			}
+			]"
+		end
+
 end

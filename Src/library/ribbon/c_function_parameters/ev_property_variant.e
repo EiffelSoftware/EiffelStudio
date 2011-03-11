@@ -292,7 +292,7 @@ feature {NONE} -- Externals
 			{
 				PROPVARIANT *ppropvar = (PROPVARIANT *) $a_item;
 				ppropvar->vt = VT_UNKNOWN;
-				ppropvar->punkVal = $a_iunknown;
+				ppropvar->punkVal = (IUnknown *)$a_iunknown;
 			}
 			]"
 		end
@@ -316,7 +316,7 @@ feature {NONE} -- Externals
 		alias
 			"[
 			{
-				PropVariantClear ($a_item);
+				PropVariantClear ((PROPVARIANT *)$a_item);
 			}
 			]"
 		end

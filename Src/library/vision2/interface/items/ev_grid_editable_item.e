@@ -65,12 +65,10 @@ feature -- Action
 				if not user_cancelled_activation and then (validation_agent = Void or else (attached validation_agent as l_validation_agent and then l_validation_agent.item ([l_text_field.text]))) then
 					set_text (l_text_field.text)
 				end
-			end
-			if attached text_field as l_text_field then
 				l_text_field.destroy
 				text_field := Void
+				Precursor {EV_GRID_LABEL_ITEM}
 			end
-			Precursor {EV_GRID_LABEL_ITEM}
 		end
 
 feature {NONE} -- Implementation
@@ -152,18 +150,9 @@ feature {NONE} -- Implementation
 				-- Change `popup_window' to suit `Current'.
 			update_popup_dimensions (popup_window)
 
+				-- If the popup window loses focus, we hide the popup, which in turn will cause the text field to lose focus and deactivate.
+			popup_window.focus_out_actions.extend (agent popup_window.hide)
 			popup_window.show_actions.extend (agent initialize_actions)
-		end
-
-	deactivate_from_focus_loss
-			-- Called when the activation window has lost focus
-		local
-			l_parent: detachable EV_GRID
-		do
-			l_parent := parent
-			if l_parent = Void or else not l_parent.has_focus then
-				deactivate
-			end
 		end
 
 	initialize_actions
@@ -174,7 +163,7 @@ feature {NONE} -- Implementation
 			l_text_field := text_field
 			check l_text_field /= Void end
 			l_text_field.return_actions.extend (agent deactivate)
-			l_text_field.focus_out_actions.extend (agent deactivate_from_focus_loss)
+			l_text_field.focus_out_actions.extend (agent deactivate)
 			l_text_field.set_focus
 			l_text_field.set_caret_position (l_text_field.text.count + 1)
 			user_cancelled_activation := False

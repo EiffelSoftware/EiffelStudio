@@ -157,7 +157,7 @@ feature {NONE} -- Implementation
 	deactivate_from_focus_loss
 			-- Called when the activation window has lost focus
 		local
-			l_parent: EV_GRID
+			l_parent: detachable EV_GRID
 		do
 			l_parent := parent
 			if l_parent = Void or else not l_parent.has_focus then

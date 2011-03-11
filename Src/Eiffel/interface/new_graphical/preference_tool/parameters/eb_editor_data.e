@@ -1169,6 +1169,7 @@ feature -- Keybord shortcuts Customization
 			l_hash.put ([False,  True, False, key_strings.item (Key_h).twin.as_string_8], "show_search_and_replace_panel")
 			l_hash.put ([False,  True, False, key_strings.item (Key_k).twin.as_string_8], "comment")
 			l_hash.put ([False,  True, True, key_strings.item (Key_k).twin.as_string_8], "uncomment")
+			l_hash.put ([False,  True, True, key_strings.item (Key_p).twin.as_string_8], "prettify")
 			l_hash.put ([False,  True, False, key_strings.item (Key_u).twin.as_string_8], "set_to_uppercase")
 			l_hash.put ([False,  True, True, key_strings.item (Key_u).twin.as_string_8], "set_to_lowercase")
 

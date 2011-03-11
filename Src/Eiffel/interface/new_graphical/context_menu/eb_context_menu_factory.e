@@ -856,6 +856,11 @@ feature {NONE} -- Menu section, Granularity 1.
 				l_menu.enable_sensitive
 			end
 
+				-- Prettify Class
+			l_cmd ?= l_commands.item
+			l_menu.extend (l_cmd.new_menu_item_unmanaged)
+			l_commands.forth
+
 				-- Indent Selection
 			l_cmd ?= l_commands.item
 			l_menu.extend (l_cmd.new_menu_item_unmanaged)

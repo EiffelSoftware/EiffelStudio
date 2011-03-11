@@ -77,6 +77,20 @@ inherit
 			default_create
 		end
 
+	EB_SHARED_GRAPHICAL_COMMANDS
+		export
+			{NONE} all
+		undefine
+			default_create
+		end
+
+	ES_SHARED_DIALOG_BUTTONS
+		export
+			{NONE} all
+		undefine
+			default_create
+		end
+
 create
 	make
 
@@ -137,6 +151,13 @@ feature -- Warning messages display
 		do
 			(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_warning_prompt (a_message, reference_window, Void)
 		end
+
+	show_error_message (a_message: STRING_GENERAL)
+			-- show `a_message' in a dialog window
+		do
+			(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (a_message, reference_window, Void)
+		end
+
 
 feature -- Access
 
@@ -343,6 +364,63 @@ feature {NONE} -- Memory Management
 			Precursor
 		end
 
+feature {EB_COMMAND, EB_DEVELOPMENT_WINDOW, EB_DEVELOPMENT_WINDOW_MENU_BUILDER} -- Prettify text
+
+	prettify
+			-- Prettify class text if possible.
+		local
+			l_show_pretty: E_SHOW_PRETTY
+		do
+			if is_read_only and then not allow_edition then
+					-- Don't prettify class text if we are in a read-only view.
+				display_not_editable_warning_message
+			elseif text_displayed.is_modified then
+				save_class_before_prettifying
+			else
+				create l_show_pretty.make (file_name, file_name + ".pretty")
+
+					-- Try to prettify the class
+				l_show_pretty.execute
+
+				if not l_show_pretty.error then
+						-- Replace current class text with the prettified text.
+					text_displayed.select_all
+					text_displayed.replace_selection (l_show_pretty.prettified)
+
+						-- Refresh the editor and go to the beginning of the class text.
+					refresh_now
+					text_displayed.forget_selection
+					text_displayed.flush
+					text_displayed.start
+					text_displayed.cursor.go_start_line
+					text_displayed.cursor.go_to_position (1)
+				end
+			end
+		end
+
+feature {NONE} -- Prettify implementation
+
+	save_class_before_prettifying
+			-- Modified classes must be saved before prettifying.
+		require
+			class_modified: text_displayed.is_modified
+		local
+			l_save_request: ES_DISCARDABLE_QUESTION_PROMPT
+		do
+			create l_save_request.make_standard (warning_messages.w_Must_save_before_prettifying (stone.stone_name),
+				interface_names.l_Discard_save_before_prettifying_dialog,
+				create {ES_BOOLEAN_PREFERENCE_SETTING}.make (preferences.dialog_data.confirm_save_before_prettifying_preference, True))
+
+			l_save_request.set_title (interface_names.t_debugger_question)
+			l_save_request.set_button_action (dialog_buttons.yes_button, agent dev_window.save_text)
+			l_save_request.show_on_active_window
+
+				-- Call 'prettify' again if the class was successfully saved.
+			if not text_displayed.is_modified then
+				prettify
+			end
+		end
+
 feature {EB_COMMAND, EB_DEVELOPMENT_WINDOW, EB_DEVELOPMENT_WINDOW_MENU_BUILDER} -- Edition Operations on text
 
 	comment_selection
@@ -397,7 +475,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

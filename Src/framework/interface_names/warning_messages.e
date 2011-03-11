@@ -977,6 +977,20 @@ feature -- Warning messages
 
 	w_MakefileSH_more_recent: STRING_32 do Result := locale.translation ("The Makefile.SH is more recent than the system.") end
 
+	w_Must_save_before_prettifying (class_name: STRING_GENERAL): STRING_32
+		require
+			class_name_not_void: class_name /= Void
+		do
+			Result := locale.formatted_string (locale.translation ("You must save your changes before prettifying class $1.%N%NWould you like to continue?"), [class_name])
+		end
+
+	w_Cannot_prettify (class_name: STRING_GENERAL): STRING_32
+		require
+			class_name_not_void: class_name /= Void
+		do
+			Result := locale.formatted_string (locale.translation ("The current version of system has not been successfully compiled.%NAs a result, you cannot prettify the class $1."), [class_name])
+		end
+
 	w_Must_compile_first: STRING_32 do Result := locale.translation ("You must compile a project first.") end
 
 	w_Must_finalize_first: STRING_32 do Result := locale.translation ("You must finalize your project first.") end

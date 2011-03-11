@@ -626,6 +626,7 @@ feature -- Accelerator, focus label and menu name
 	f_Paste: STRING_32					do Result := locale.translation("Paste (Ctrl+V)")	end
 	m_Paste: STRING_32					do Result := locale.translation("&Paste%TCtrl+V")	end
 	m_Precompile_new: STRING_32			do Result := locale.translation("&Precompile")	end
+	m_prettify: STRING_32				do Result := locale.translation("&Prettify Class") end
 	f_Print: STRING_32					do Result := locale.translation("Print")	end
 	m_Print: STRING_32					do Result := locale.translation("&Print")	end
 	f_preferences: STRING_32				do Result := locale.translation("Preferences")	end
@@ -1234,6 +1235,7 @@ feature -- Label texts
 	l_Discard_freeze_dialog: STRING_32			do Result := locale.translation("always compile C/++ code.")	end
 	l_Discard_ignore_contract_violation_dialog: STRING_32 do Result := locale.translation("always break into debugger on contract violation.")	end
 	l_Discard_save_before_compile_dialog: STRING_32	do Result := locale.translation("always save files before compiling.")	end
+	l_discard_save_before_prettifying_dialog: STRING_32 do Result := locale.translation ("always save class before prettifying.") end
 	l_Discard_starting_dialog: STRING_32			do Result := locale.translation("Hide this dialog at startup")	end
 	l_Discard_replace_all_warning_dialog: STRING_32 do Result := locale.translation("always replace all.")	end
 	l_Discard_terminate_freezing: STRING_32		do Result := locale.translation("always terminate freezing when needed.")	end

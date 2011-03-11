@@ -289,7 +289,7 @@ feature -- Command
 			l_result_pointer.memory_copy (l_bitmap_data.scan_0, width * height * 4)
 			unlock_bits (l_bitmap_data)
 
-			-- WEL_BITMAP store datas bottom up, so we have to flip the datas.
+			-- WEL_BITMAP store datas bottom up, so we have to flip the data.
 			create l_helper
 			l_helper.mirror_image (Result)
 		end
@@ -588,14 +588,14 @@ feature -- C externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

@@ -134,13 +134,14 @@ feature {NONE} -- Implementation
 			create l_text_field
 			text_field := l_text_field
 
-				-- Hide the border of the text field.
-			l_text_field.implementation.hide_border
 			if attached font as l_font then
 				l_text_field.set_font (l_font)
 			end
-
 			l_text_field.set_text (text)
+
+				-- Hide the border of the text field.
+				-- This may trigger a minimum size calculation so it is performed after the contents have been updated.
+			l_text_field.implementation.hide_border
 
 			l_bg_color := implementation.displayed_background_color
 			l_text_field.set_background_color (l_bg_color)

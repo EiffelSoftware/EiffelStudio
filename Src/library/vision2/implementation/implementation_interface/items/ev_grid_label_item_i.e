@@ -149,7 +149,7 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 			text_x, text_y: INTEGER
 			pixmap_x, pixmap_y: INTEGER
 			selection_x, selection_y, selection_width, selection_height: INTEGER
-			focused: BOOLEAN
+			focused, activated: BOOLEAN
 			l_clip_width, l_clip_height: INTEGER
 			l_parent_i: like parent_i
 			l_column_i: like column_i
@@ -163,6 +163,9 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 			l_parent_i := parent_i
 			check l_parent_i /= Void end
 			focused := l_parent_i.drawables_have_focus
+			if l_parent_i.currently_active_item = l_interface and then attached l_parent_i.activate_window as l_act_window then
+				activated := l_act_window.has_focus
+			end
 			left_border := l_interface.left_border
 			right_border := l_interface.right_border
 			top_border := l_interface.top_border
@@ -187,29 +190,27 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 			space_remaining_for_text := client_width - pixmap_width - spacing_used
 			space_remaining_for_text_vertical := client_height
 
-				-- Note in the following text positioning calculations, we subtract 1 from
-				-- the calculation as this accounts for the 0-based drawing positions.
 			if l_interface.text /= Void and space_remaining_for_text > 0 then
 				if l_interface.is_left_aligned then
-					text_offset_into_available_space := 0
+					text_offset_into_available_space := 1
 				elseif l_interface.is_right_aligned then
-					text_offset_into_available_space := space_remaining_for_text - internal_text_width - 1
+					text_offset_into_available_space := space_remaining_for_text - internal_text_width
 				else
-					text_offset_into_available_space := space_remaining_for_text - internal_text_width - 1
+					text_offset_into_available_space := space_remaining_for_text - internal_text_width
 					if text_offset_into_available_space /= 0 then
 						text_offset_into_available_space := text_offset_into_available_space // 2
 					end
 				end
 					-- Ensure that the text always respect the edge of the pixmap + the spacing in all alignment modes
 					-- when the width of the column is not enough to display all of the contents
-				text_offset_into_available_space := text_offset_into_available_space.max (0)
+				text_offset_into_available_space := text_offset_into_available_space.max (1)
 
 				if l_interface.is_top_aligned then
-					vertical_text_offset_into_available_space := 0
+					vertical_text_offset_into_available_space := 1
 				elseif l_interface.is_bottom_aligned then
-					vertical_text_offset_into_available_space := space_remaining_for_text_vertical - internal_text_height - 1
+					vertical_text_offset_into_available_space := space_remaining_for_text_vertical - internal_text_height
 				else
-					vertical_text_offset_into_available_space := space_remaining_for_text_vertical - internal_text_height - 1
+					vertical_text_offset_into_available_space := space_remaining_for_text_vertical - internal_text_height
 					if vertical_text_offset_into_available_space /= 0 then
 						vertical_text_offset_into_available_space := vertical_text_offset_into_available_space // 2
 					end
@@ -217,7 +218,7 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 
 					-- Ensure that the text always respects the top edge of the row in all alignment modes
 					-- when the height of the row is not enough to display the text fully.
-				vertical_text_offset_into_available_space := vertical_text_offset_into_available_space.max (0)
+				vertical_text_offset_into_available_space := vertical_text_offset_into_available_space.max (1)
 			end
 			pixmap_x := left_border
 			pixmap_y := top_border + (client_height - pixmap_height) // 2
@@ -253,7 +254,7 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 			drawable.set_copy_mode
 			back_color := displayed_background_color
 			drawable.set_foreground_color (back_color)
-			if is_selected then
+			if is_selected and then not activated then
 				if focused then
 					drawable.set_foreground_color (l_parent_i.focused_selection_color)
 				else

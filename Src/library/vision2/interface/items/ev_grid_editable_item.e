@@ -133,6 +133,7 @@ feature {NONE} -- Implementation
 		do
 			create l_text_field
 			text_field := l_text_field
+
 				-- Hide the border of the text field.
 			l_text_field.implementation.hide_border
 			if attached font as l_font then
@@ -153,6 +154,17 @@ feature {NONE} -- Implementation
 			popup_window.show_actions.extend (agent initialize_actions)
 		end
 
+	deactivate_from_focus_loss
+			-- Called when the activation window has lost focus
+		local
+			l_parent: EV_GRID
+		do
+			l_parent := parent
+			if l_parent = Void or else not l_parent.has_focus then
+				deactivate
+			end
+		end
+
 	initialize_actions
 			-- Setup the action sequences when the item is shown.
 		local
@@ -161,8 +173,9 @@ feature {NONE} -- Implementation
 			l_text_field := text_field
 			check l_text_field /= Void end
 			l_text_field.return_actions.extend (agent deactivate)
-			l_text_field.focus_out_actions.extend (agent deactivate)
+			l_text_field.focus_out_actions.extend (agent deactivate_from_focus_loss)
 			l_text_field.set_focus
+			l_text_field.set_caret_position (l_text_field.text.count + 1)
 			user_cancelled_activation := False
 			l_text_field.key_press_actions.extend (agent handle_key)
 		end

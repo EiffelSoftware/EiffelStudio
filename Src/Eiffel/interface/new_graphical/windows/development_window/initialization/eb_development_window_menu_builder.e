@@ -503,6 +503,18 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 
 			create l_sub_menu.make_with_text (develop_window.Interface_names.m_advanced)
 
+			create l_cmd.make
+			l_cmd.set_needs_editable (True)
+			l_cmd.set_menu_name (develop_window.interface_names.m_prettify)
+			l_cmd.add_agent (agent editor_prettify)
+			l_shortcut := develop_window.preferences.editor_data.shortcuts.item ("prettify")
+			l_cmd.set_referred_shortcut (l_shortcut)
+			l_command_menu_item := l_cmd.new_menu_item
+			l_command_controller.add_edition_command (l_cmd)
+			auto_recycle (l_command_menu_item)
+			develop_window.commands.editor_commands.extend (l_cmd)
+			l_sub_menu.extend (l_command_menu_item)
+
 			create l_os_cmd.make (develop_window)
 			l_os_cmd.set_needs_editable (True)
 			l_command_controller.add_selection_command (l_os_cmd)
@@ -1367,6 +1379,14 @@ feature {NONE} -- Agents for editor
 				l_tool := develop_window.shell_tools.tool ({ES_SEARCH_TOOL})
 				l_cmd := develop_window.commands.show_shell_tool_commands.item (l_tool)
 				l_cmd.execute
+			end
+		end
+
+	editor_prettify
+			-- Prettify class in current editor.
+		do
+			if attached current_editor as l_editor then
+				l_editor.prettify
 			end
 		end
 

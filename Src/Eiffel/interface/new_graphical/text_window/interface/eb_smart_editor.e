@@ -1183,6 +1183,7 @@ feature {NONE} -- Implementation
 			customizable_commands.put (agent find_previous_selection, "search_selection_backward")
 			customizable_commands.put (agent find_next, "search_forward")
 			customizable_commands.put (agent find_previous, "search_backward")
+			customizable_commands.put (agent run_if_editable (agent prettify), "prettify")
 			customizable_commands.put (agent run_if_editable (agent comment_selection), "comment")
 			customizable_commands.put (agent run_if_editable (agent uncomment_selection), "uncomment")
 			customizable_commands.put (agent run_if_editable (agent set_selection_case (False)), "set_to_uppercase")

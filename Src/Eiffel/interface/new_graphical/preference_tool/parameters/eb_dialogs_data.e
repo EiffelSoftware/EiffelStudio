@@ -85,6 +85,13 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			Result := confirm_save_before_compile_preference.value
 		end
 
+	confirm_save_before_prettifying: BOOLEAN
+			-- Should a file be saved before prettifying without displaying
+			-- a dialog?
+		do
+			Result := confirm_save_before_prettifying_preference.value
+		end
+
 	confirm_on_exit: BOOLEAN
 			-- Should we display a dialog to confirm an exit command?
 		do
@@ -114,6 +121,12 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			-- Should we display a dialog when asked for execution ?
 		do
 			Result := confirm_always_compile_before_executing_preference.value
+		end
+
+	confirm_always_compile_before_prettifying: BOOLEAN
+			-- Should we display a dialog when asked for prettifying?
+		do
+			Result := confirm_always_compile_before_prettifying_preference.value
 		end
 
 	confirm_convert_project: BOOLEAN
@@ -256,6 +269,10 @@ feature {EB_SHARED_PREFERENCES, EB_TOOL} -- Preference
 			-- Should all files be saved before compiling without displaying
 			-- a dialog?
 
+	confirm_save_before_prettifying_preference: BOOLEAN_PREFERENCE
+			-- Should a file be saved before prettifying without displaying
+			-- a dialog?
+
 	confirm_on_exit_preference: BOOLEAN_PREFERENCE
 			-- Should we display a dialog to confirm an exit command?
 
@@ -274,6 +291,9 @@ feature {EB_SHARED_PREFERENCES, EB_TOOL} -- Preference
 
 	confirm_always_compile_before_executing_preference: BOOLEAN_PREFERENCE
 			-- Should we display a dialog when asked for execution ?
+
+	confirm_always_compile_before_prettifying_preference: BOOLEAN_PREFERENCE
+			-- Should we display a dialog when asked for prettifying?
 
 	confirm_convert_project_preference: BOOLEAN_PREFERENCE
 			-- Should we display a dialog before converting an old project?
@@ -346,12 +366,14 @@ feature -- Preference strings
 	confirm_finalize_string: STRING = "interface.dialogs.confirm_finalize"
 	confirm_freeze_string: STRING = "interface.dialogs.confirm_freeze"
 	confirm_save_before_compile_string: STRING = "interface.dialogs.confirm_save_before_compile"
+	confirm_save_before_prettifying_string: STRING = "interface.dialogs.confirm_save_before_prettifying"
 	confirm_finalize_assertions_string: STRING = "interface.dialogs.confirm_finalize_assertions"
 	confirm_clear_breakpoints_string: STRING = "interface.dialogs.confirm_clear_breakpoints"
 	confirm_ignore_all_breakpoints_string: STRING = "interface.dialogs.confirm_ignore_all_breakpoints"
 	confirm_ignore_contract_violation_string: STRING = "interface.dialogs.confirm_ignore_contract_violation"
 	confirm_always_apply_debugger_profiles_before_closing_string: STRING = "interface.dialogs.confirm_always_apply_debugger_profiles_before_closing"
 	confirm_always_compile_before_executing_string: STRING = "interface.dialogs.confirm_always_compile_before_executing"
+	confirm_always_compile_before_prettifying_string: STRING = "interface.dialogs.confirm_always_compile_before_prettifying"
 	confirm_convert_project_string: STRING = "interface.dialogs.confirm_convert_project"
 	confirm_build_precompile_string: STRING = "interface.dialogs.confirm_build_precompile"
 	confirm_delete_eis_entries_string: STRING = "interface.dialogs.confirm_delete_eis_entries"
@@ -414,6 +436,7 @@ feature {NONE} -- Implementation
 			confirm_finalize_preference := l_manager.new_boolean_preference_value (l_manager, confirm_finalize_string, True)
 			confirm_freeze_preference := l_manager.new_boolean_preference_value (l_manager, confirm_freeze_string, True)
 			confirm_save_before_compile_preference := l_manager.new_boolean_preference_value (l_manager, confirm_save_before_compile_string,True)
+			confirm_save_before_prettifying_preference := l_manager.new_boolean_preference_value (l_manager, confirm_save_before_prettifying_string, True)
 			confirm_finalize_assertions_preference := l_manager.new_boolean_preference_value (l_manager, confirm_finalize_assertions_string, True)
 			confirm_clear_breakpoints_preference := l_manager.new_boolean_preference_value (l_manager, confirm_clear_breakpoints_string, True)
 			confirm_ignore_all_breakpoints_preference := l_manager.new_boolean_preference_value (l_manager, confirm_ignore_all_breakpoints_string, True)
@@ -474,6 +497,7 @@ invariant
 	confirm_finalize_preference_not_void: confirm_finalize_preference /= Void
 	confirm_freeze_preference_not_void: confirm_freeze_preference /= Void
 	confirm_save_before_compile_preference_not_void: confirm_save_before_compile_preference /= Void
+	confirm_save_before_prettifying_preference_not_void: confirm_save_before_prettifying_preference /= Void
 	confirm_finalize_assertions_preference_not_void: confirm_finalize_assertions_preference /= Void
 	confirm_clear_breakpoints_preference_not_void: confirm_clear_breakpoints_preference /= Void
 	confirm_ignore_all_breakpoints_preference_not_void: confirm_ignore_all_breakpoints_preference /= Void

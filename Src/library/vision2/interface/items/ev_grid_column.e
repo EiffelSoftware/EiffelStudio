@@ -302,7 +302,8 @@ feature -- Status setting
 		do
 			l_parent := parent
 			check l_parent /= Void end
-			set_width (required_width_of_item_span (1, l_parent.row_count))
+			header_item.resize_to_content
+			set_width (required_width_of_item_span (1, l_parent.row_count).max (header_item.width))
 		ensure
 			width_set: attached parent as l_par and then width = required_width_of_item_span (1, l_par.row_count)
 		end

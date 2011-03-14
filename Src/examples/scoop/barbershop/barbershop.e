@@ -18,7 +18,6 @@ feature -- Initialization
 		local
 			i: INTEGER -- loop iterator
 			a_customer: separate CUSTOMER
-			l_sep_customer: SEP_CUSTOMER
 		do
 			create shop.make (number_of_chairs)
 			create barber.make (shop, time_for_hair_cut)
@@ -31,8 +30,7 @@ feature -- Initialization
 				i > number_of_customers
 			loop
 				create a_customer.make (i, barber, shop, number_of_haircuts)
-				create l_sep_customer.make (a_customer)
-				customers.extend (l_sep_customer)
+				customers.extend (a_customer)
 				i := i + 1
 			end
 
@@ -41,7 +39,7 @@ feature -- Initialization
 			until
 				customers.after
 			loop
-				launch_customer (customers.item.customer)
+				launch_customer (customers.item)
 				customers.forth
 			end
 		end
@@ -59,7 +57,7 @@ feature {NONE} -- Implementation
 	barber: separate BARBER
 	shop: separate SHOP
 
-	customers: ARRAYED_LIST [SEP_CUSTOMER]
+	customers: ARRAYED_LIST [separate CUSTOMER]
 
 	launch_customer (a_customer: separate CUSTOMER)
 			-- Launch customer in a controlled manner.

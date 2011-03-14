@@ -51,7 +51,7 @@ feature {BUS} -- Basic Operations
 				i >= 50 or
 				checked_in_list.is_empty
 			loop
-				passenger := checked_in_list.item.passenger
+				passenger := checked_in_list.item
 				get_on_passenger(passenger)
 				checked_in_list.remove
 			end
@@ -62,7 +62,7 @@ feature {BUS} -- Basic Operations
 		require
 			bus_is_waiting = true
 		local
-			passenger: SEP_PASSENGER
+			passenger: separate PASSENGER
 		do
 			from
 
@@ -88,18 +88,17 @@ feature {PASSENGER} -- Basic Operations
 			-- passenger enters the station
 		do
 			-- add passenger to the waiting list
-			waiting_list.put (
-                          create {SEP_PASSENGER}.set_passenger(a_passenger))
+			waiting_list.put (a_passenger)
 		end
 
 feature {BUS} -- Implementation
 
 	bus_is_waiting: BOOLEAN
 
-	waiting_list: LINKED_QUEUE [SEP_PASSENGER]
+	waiting_list: LINKED_QUEUE [separate PASSENGER]
 		-- each passenger will be added to this list when arrive
 
-	checked_in_list: LINKED_QUEUE [SEP_PASSENGER]
+	checked_in_list: LINKED_QUEUE [separate PASSENGER]
 		-- if the bus doesn't exist in the station, add the passengers from waiting list to this list
 
 feature {NONE}

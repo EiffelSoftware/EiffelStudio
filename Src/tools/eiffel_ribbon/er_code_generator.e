@@ -1152,7 +1152,7 @@ feature {NONE} -- Implementation
 				l_count < l_index
 			loop
 				l_generated := l_template.twin
-				if a_group_node.i_th (1).text.same_string (l_constants.button) then
+				if a_group_node.i_th (l_index).text.same_string (l_constants.button) then
 					if attached {ER_TREE_NODE_BUTTON_DATA} a_group_node.i_th (l_index).data as l_data
 						and then attached l_data.command_name as l_identify_name
 						and then not l_identify_name.is_empty then
@@ -1162,7 +1162,7 @@ feature {NONE} -- Implementation
 						l_generated.replace_substring_all ("$INDEX_1", "button_" + (button_counter + l_index).out)
 						l_generated.replace_substring_all ("$INDEX_2", "RIBBON_BUTTON_" + (button_counter + l_index).out)
 					end
-				elseif a_group_node.i_th (1).text.same_string (l_constants.check_box) then
+				elseif a_group_node.i_th (l_index).text.same_string (l_constants.check_box) then
 					if attached {ER_TREE_NODE_BUTTON_DATA} a_group_node.i_th (l_index).data as l_data
 						and then attached l_data.command_name as l_identify_name
 						and then not l_identify_name.is_empty then
@@ -1172,7 +1172,7 @@ feature {NONE} -- Implementation
 						l_generated.replace_substring_all ("$INDEX_1", "checkbox_" + (button_counter + l_index).out)
 						l_generated.replace_substring_all ("$INDEX_2", "RIBBON_CHECKBOX_" + (button_counter + l_index).out)
 					end
-				elseif a_group_node.i_th (1).text.same_string (l_constants.toggle_button) then
+				elseif a_group_node.i_th (l_index).text.same_string (l_constants.toggle_button) then
 					if attached {ER_TREE_NODE_TOGGLE_BUTTON_DATA} a_group_node.i_th (l_index).data as l_data
 						and then attached l_data.command_name as l_identify_name
 						and then not l_identify_name.is_empty then
@@ -1182,7 +1182,7 @@ feature {NONE} -- Implementation
 						l_generated.replace_substring_all ("$INDEX_1", "toggle_button_" + (button_counter + l_index).out)
 						l_generated.replace_substring_all ("$INDEX_2", "RIBBON_TOGGLE_BUTTON_" + (button_counter + l_index).out)
 					end
-				elseif a_group_node.i_th (1).text.same_string (l_constants.spinner) then
+				elseif a_group_node.i_th (l_index).text.same_string (l_constants.spinner) then
 					if attached {ER_TREE_NODE_SPINNER_DATA} a_group_node.i_th (l_index).data as l_data
 						and then attached l_data.command_name as l_identify_name
 						and then not l_identify_name.is_empty then
@@ -1192,7 +1192,7 @@ feature {NONE} -- Implementation
 						l_generated.replace_substring_all ("$INDEX_1", "spinner_button_" + (button_counter + l_index).out)
 						l_generated.replace_substring_all ("$INDEX_2", "RIBBON_SPINNER_" + (button_counter + l_index).out)
 					end
-				elseif a_group_node.i_th (1).text.same_string (l_constants.combo_box) then
+				elseif a_group_node.i_th (l_index).text.same_string (l_constants.combo_box) then
 					if attached {ER_TREE_NODE_DATA} a_group_node.i_th (l_index).data as l_data
 						and then attached l_data.command_name as l_identify_name
 						and then not l_identify_name.is_empty then
@@ -1202,7 +1202,7 @@ feature {NONE} -- Implementation
 						l_generated.replace_substring_all ("$INDEX_1", "combo_box_" + (button_counter + l_index).out)
 						l_generated.replace_substring_all ("$INDEX_2", "RIBBON_COMBO_BOX_" + (button_counter + l_index).out)
 					end
-				elseif a_group_node.i_th (1).text.same_string (l_constants.combo_box) then
+				elseif a_group_node.i_th (l_index).text.same_string (l_constants.combo_box) then
 					if attached {ER_TREE_NODE_DATA} a_group_node.i_th (l_index).data as l_data
 						and then attached l_data.command_name as l_identify_name
 						and then not l_identify_name.is_empty then
@@ -1212,7 +1212,7 @@ feature {NONE} -- Implementation
 						l_generated.replace_substring_all ("$INDEX_1", "split_button_" + (button_counter + l_index).out)
 						l_generated.replace_substring_all ("$INDEX_2", "RIBBON_SPLIT_BUTTON_" + (button_counter + l_index).out)
 					end
-				elseif a_group_node.i_th (1).text.same_string (l_constants.drop_down_gallery) then
+				elseif a_group_node.i_th (l_index).text.same_string (l_constants.drop_down_gallery) then
 					if attached {ER_TREE_NODE_DATA} a_group_node.i_th (l_index).data as l_data
 						and then attached l_data.command_name as l_identify_name
 						and then not l_identify_name.is_empty then
@@ -1221,6 +1221,16 @@ feature {NONE} -- Implementation
 					else
 						l_generated.replace_substring_all ("$INDEX_1", "drop_down_gallery_" + (button_counter + l_index).out)
 						l_generated.replace_substring_all ("$INDEX_2", "RIBBON_DROP_DOWN_GALLERY_" + (button_counter + l_index).out)
+					end
+				elseif a_group_node.i_th (l_index).text.same_string (l_constants.split_button) then
+					if attached {ER_TREE_NODE_DATA} a_group_node.i_th (l_index).data as l_data
+						and then attached l_data.command_name as l_identify_name
+						and then not l_identify_name.is_empty then
+						l_generated.replace_substring_all ("$INDEX_1", l_identify_name.as_lower)
+						l_generated.replace_substring_all ("$INDEX_2", l_identify_name.as_upper)
+					else
+						l_generated.replace_substring_all ("$INDEX_1", "split_button_" + (button_counter + l_index).out)
+						l_generated.replace_substring_all ("$INDEX_2", "RIBBON_SPLIT_BUTTON_" + (button_counter + l_index).out)
 					end
 				else
 					create l_generated.make_empty

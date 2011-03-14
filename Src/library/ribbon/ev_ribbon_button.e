@@ -94,7 +94,13 @@ feature {EV_RIBBON} -- Command
 			-- <Precursor>
 		do
 			if command_list.has (a_command_id) then
-				select_actions.call (Void)
+				if a_execution_verb = {EV_EXECUTION_VERB_CONSTANTS}.ui_executionverb_execute then
+					select_actions.call (Void)
+				elseif a_execution_verb = {EV_EXECUTION_VERB_CONSTANTS}.ui_executionverb_preview then
+
+				elseif a_execution_verb = {EV_EXECUTION_VERB_CONSTANTS}.ui_executionverb_cancelpreview then
+					
+				end
 			end
 		end
 

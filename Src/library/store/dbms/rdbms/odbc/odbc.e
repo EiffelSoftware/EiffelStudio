@@ -136,24 +136,26 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 			tmp_str := c_temp2.string.as_string_8 -- No problem, only used to find '{'.
 			tmp_str.left_adjust
 			if tmp_str.count > 1 and then (tmp_str.substring (1, 1)).is_equal ("{") then
-				if uht /= Void and then uht.count > 0 then
+				if uht /= Void then
 					if uhandle.execution_type.immediate_execution then
 						odbc_pre_immediate (descriptor, uht.count)
 					else
 						odbc_init_order (descriptor, c_temp.item, uht.count)
 					end
 					is_error_updated := False
-					l_para := para
-					if l_para /= Void then
+					if uht.count > 0 then
+						l_para := para
+						if l_para /= Void then
 -- ADDED PGC
-						l_para.release
-						l_para.resize (uht.count)
-					else
-						create l_para.make (uht.count)
-						para := l_para
-					end
+							l_para.release
+							l_para.resize (uht.count)
+						else
+							create l_para.make (uht.count)
+							para := l_para
+						end
 --
-					bind_args_value (descriptor, uht, ht_order) -- PGC: Pourquoi ???
+						bind_args_value (descriptor, uht, ht_order) -- PGC: Pourquoi ???
+					end
 				end
 --				if para /= Void then
 --					para.release

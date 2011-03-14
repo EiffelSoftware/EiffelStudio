@@ -135,22 +135,19 @@ feature {NONE} -- Tree saving
 				if a_vision_tree.count >= 2 then
 					if attached {EV_TREE_ITEM} a_vision_tree.i_th (2) as l_tree_item_menu then
 						check l_tree_item_menu.text.same_string (xml_constants.ribbon_application_menu) end
-						if attached l_tree_item_menu.i_th (1) as l_application_menu then
-							from
-								l_application_menu.start
-							until
-								l_application_menu.after
-							loop
-								if attached {EV_TREE_ITEM} l_application_menu.item as l_tree_menu_group_item then
-									check l_tree_menu_group_item.text.same_string (xml_constants.menu_group) end
-									add_xml_menu_group_node (l_tree_menu_group_item)
+						from
+							l_tree_item_menu.start
+						until
+							l_tree_item_menu.after
+						loop
+							if attached {EV_TREE_ITEM} l_tree_item_menu.item as l_tree_menu_group_item then
+								check l_tree_menu_group_item.text.same_string (xml_constants.menu_group) end
+								add_xml_menu_group_node (l_tree_menu_group_item)
 
-								end
-
-								l_application_menu.forth
 							end
-						end
 
+							l_tree_item_menu.forth
+						end
 					end
 				end
 			end

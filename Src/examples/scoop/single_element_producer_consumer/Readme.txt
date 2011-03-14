@@ -1,0 +1,1 @@
+See: http://docs.eiffel.com/book/solutions/single-element-producer-consumer

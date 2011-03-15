@@ -41,6 +41,7 @@ feature {NONE}-- Initialization
 			extend (l_ev_label_7)
 			extend (columns)
 			extend (gripper)
+			extend (l_ev_label_8)
 
 			l_ev_label_1.set_text ("Type:")
 			l_ev_label_1.align_text_left
@@ -57,6 +58,8 @@ feature {NONE}-- Initialization
 			l_ev_label_7.set_text ("Columns:")
 			l_ev_label_7.align_text_left
 			gripper.set_text ("Gripper")
+			l_ev_label_8.set_text ("Large image:")
+			l_ev_label_8.align_text_left
 			disable_item_expand (l_ev_label_1)
 			disable_item_expand (l_ev_label_2)
 			disable_item_expand (l_ev_label_3)
@@ -70,6 +73,7 @@ feature {NONE}-- Initialization
 			disable_item_expand (l_ev_label_7)
 			disable_item_expand (columns)
 			disable_item_expand (gripper)
+			disable_item_expand (l_ev_label_8)
 
 			set_all_attributes_using_constants
 			
@@ -103,6 +107,7 @@ feature {NONE}-- Initialization
 			create l_ev_label_7
 			create columns
 			create gripper
+			create l_ev_label_8
 
 			create string_constant_set_procedures.make (10)
 			create string_constant_retrieval_functions.make (10)
@@ -129,7 +134,7 @@ feature -- Access
 feature {NONE} -- Implementation
 
 	l_ev_label_1, l_ev_label_2, l_ev_label_3, l_ev_label_4, l_ev_label_5, l_ev_label_6,
-	l_ev_label_7: EV_LABEL
+	l_ev_label_7, l_ev_label_8: EV_LABEL
 	l_ev_horizontal_separator_1: EV_HORIZONTAL_SEPARATOR
 
 feature {NONE} -- Implementation

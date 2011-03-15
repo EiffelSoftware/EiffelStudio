@@ -47,9 +47,9 @@ feature {NONE} -- Creation
 				-- the user can define some variables on the command line so we do the check after we have handled this
 			set_eiffel_layout (l_layout)
 			default_create
+			uncaught_exception_actions.extend (agent handle_exceptions)
 			Precursor
 			if not is_destroyed then
-				uncaught_exception_actions.extend (agent handle_exceptions)
 				ev_launch
 			end
 		end
@@ -141,7 +141,7 @@ feature {NONE} -- Exception
 			-- Dialog used for showing uncaught exceptions.
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -38,7 +38,7 @@ feature -- Command
 
 			create l_screen
 			layered_window.set_position ((l_screen.width - l_pixel_buffer.width) // 2, (l_screen.height - l_pixel_buffer.height) // 2)
-
+			layered_window.disconnect_from_window_manager
 			layered_window.show
 		end
 

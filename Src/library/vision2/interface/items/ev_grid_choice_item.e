@@ -95,7 +95,7 @@ feature {NONE} -- Implementation
 					-- of the `text' and `pixmap' so that the pixmap appears
 					-- on the right edge of `a_item'.
 				a_layout.set_text_x (left_border)
-				a_layout.set_pixmap_x (a_item.width - l_pixmap.width - 2)
+				a_layout.set_pixmap_x (a_item.width - l_pixmap.width - right_border - 2)
 				a_layout.set_has_text_pixmap_overlapping (False)
 			end
 		end
@@ -143,53 +143,61 @@ feature {NONE} -- Implementation
 	has_user_selected_item: BOOLEAN
 		-- Did the user select an entry in the list?
 
-	activate_action (popup_window: EV_POPUP_WINDOW)
-			-- `Current' has been requested to be updated via `popup_window'.
+	activate_action (a_popup: EV_POPUP_WINDOW)
+			-- `Current' has been requested to be updated via `a_popup'.
 		local
-			l_vbox: EV_VERTICAL_BOX
-			l_maximum_height, l_maximum_width: INTEGER
+			l_width, l_height: INTEGER
 			l_screen: detachable EV_SCREEN_IMP
 			l_choice_list: EV_GRID
-			l_popup_window: detachable EV_POPUP_WINDOW
+			l_x_coord, l_y_coord: INTEGER
+			l_parent: like parent
 		do
+			l_parent := parent
+			check l_parent /= Void end
+
 			l_screen ?= (create {EV_SCREEN}).implementation
 			check l_screen_not_void: l_screen /= Void end
+
 			create l_choice_list
 			choice_list := l_choice_list
 			l_choice_list.hide_header
 			l_choice_list.enable_single_row_selection
 			l_choice_list.enable_selection_key_handling
 			l_choice_list.enable_row_height_fixed
-			l_choice_list.set_minimum_height (l_choice_list.row_height)
 
-			create l_vbox
-			l_vbox.set_border_width (1)
-			l_vbox.set_background_color ((create {EV_STOCK_COLORS}).black)
-			l_vbox.extend (l_choice_list)
-
-			l_popup_window := popup_window
-			check l_popup_window /= Void end
-
-			l_popup_window.extend (l_vbox)
-
+				-- Set the item strings.
 			set_strings
 
 				-- Compute location and size of `popup_window' and `choice_list' so that we can see most
 				-- of the items at once.
-			l_maximum_height := (l_screen.virtual_height - l_popup_window.y_position).max (0)
-			l_maximum_width := (l_screen.virtual_width - l_popup_window.x_position).max (0)
-			l_choice_list.column (1).set_width (left_border + l_maximum_width.min (
-				(popup_window.width - 2).max (l_choice_list.column (1).required_width_of_item_span (1, l_choice_list.row_count))))
-				-- +2 to take into account 2 pixels border of the vertical box.
-			l_popup_window.set_height (2 + l_maximum_height.min (l_choice_list.row_count * l_choice_list.row_height))
-			l_popup_window.set_width (l_popup_window.width.max (2 + l_choice_list.column (1).width))
+
+			l_x_coord := a_popup.x_position + left_border
+			l_y_coord := a_popup.y_position + top_border
+
+			l_width := a_popup.width - left_border - right_border
+			l_height := a_popup.height - top_border
+
+			if l_choice_list.column_count > 0 and then l_choice_list.row_count > 0 then
+				l_width := l_width.max (l_choice_list.column (1).required_width_of_item_span (1, l_choice_list.row_count))
+				l_width := (l_screen.virtual_height - l_x_coord).max (0).min (l_width)
+				l_choice_list.column (1).set_width (l_width)
+
+				l_height := (l_screen.virtual_height - l_y_coord).max (0).min (l_choice_list.virtual_height)
+			end
+
+			a_popup.set_x_position (l_x_coord)
+			a_popup.set_y_position (l_y_coord)
+			a_popup.set_height (l_height)
+			a_popup.set_width (l_width)
 
 			l_choice_list.set_background_color (implementation.displayed_background_color)
-			l_popup_window.set_background_color (implementation.displayed_background_color)
+			a_popup.set_background_color (implementation.displayed_background_color)
 			l_choice_list.set_foreground_color (implementation.displayed_foreground_color)
 
+			a_popup.extend (l_choice_list)
+
 				-- Initialize action sequences when `Current' is shown.
-			l_popup_window.show_actions.extend (agent initialize_actions)
+			a_popup.show_actions.extend (agent initialize_actions)
 		end
 
 	initialize_actions

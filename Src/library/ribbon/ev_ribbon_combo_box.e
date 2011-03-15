@@ -86,24 +86,35 @@ feature -- Command
 			--
 		require
 			not_void: a_item_source /= Void
+		do
+			item_source := a_item_source
+
+			if attached ribbon as l_ribbon then
+				invalidate_item_source
+			else
+				delayed_invalidation_actions.extend_kamikaze (agent invalidate_item_source)
+			end
+		end
+
+feature {NONE} -- Implementation
+
+	invalidate_item_source
+			--
+		require
+			not_void: ribbon /= Void
 		local
 			l_key: EV_PROPERTY_KEY
 			l_command_id: NATURAL_32
 			l_enum: EV_UI_INVALIDATIONS_ENUM
 		do
-			item_source := a_item_source
-
 			l_command_id := command_list.item (command_list.lower)
 			check command_id_valid: l_command_id /= 0 end
-
 			if attached ribbon as l_ribbon then
 				create l_key.make_items_source
 				create l_enum
 				l_ribbon.invalidate (l_command_id, l_enum.ui_invalidations_property, l_key)
 			end
 		end
-
-feature {NONE} -- Implementation
 
 	add_items_to_ui_collection (a_collection: EV_RIBBON_COLLECTION)
 			--

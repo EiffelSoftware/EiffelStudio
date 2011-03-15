@@ -18,6 +18,7 @@ feature -- Command
 			-- Creation method
 		local
 			l_resources: EV_RIBBON_RESOURCES
+			l_shared: EV_SHARED_RESOURCES
 		do
 			if attached {EV_WINDOW_IMP} a_window.implementation as l_imp then
 				com_initialize
@@ -26,6 +27,9 @@ feature -- Command
 				ui_application := get_ui_application
 				create l_resources
 				l_resources.ribbon_list.extend (Current)
+
+				create l_shared
+				l_shared.command_handler_singleton.call_delayed_invalidation_actions
 			end
 		end
 

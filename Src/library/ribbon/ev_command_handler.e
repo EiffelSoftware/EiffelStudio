@@ -38,6 +38,22 @@ feature -- Command
 			observers.prune_all (a_observer)
 		end
 
+	call_delayed_invalidation_actions
+			--
+		do
+			from
+				observers.start
+			until
+				observers.after
+			loop
+				if observers.item.has_delayed_invalidation_action then
+					observers.item.delayed_invalidation_actions.call (Void)
+				end
+
+				observers.forth
+			end
+		end
+
 feature {NONE} -- Observers
 
 	observers: ARRAYED_LIST [EV_COMMAND_HANDLER_OBSERVER]

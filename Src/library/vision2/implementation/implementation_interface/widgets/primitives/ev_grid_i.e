@@ -4851,82 +4851,80 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 			selected_item_i: detachable EV_GRID_ITEM_I
 			item_coordinates: detachable EV_COORDINATE
 		do
-
 				-- If there is a currently activated item then we must deactivate it and exit.
 			if attached currently_active_item as l_currently_active_item and then l_currently_active_item.parent = interface then
 				l_currently_active_item.deactivate
-			else
-				pointed_item := drawer.item_at_position_strict (a_x, a_y)
+			end
+			pointed_item := drawer.item_at_position_strict (a_x, a_y)
 
-					-- We fire the pointer button press actions before the node or selection actions which may occur
-					-- as a result of this press.
-				if pointer_button_press_actions_internal /= Void and then not pointer_button_press_actions_internal.is_empty then
-					pointer_button_press_actions_internal.call ([client_x_to_x (a_x), client_y_to_y (a_y), a_button, a_x_tilt, a_y_tilt, a_pressure, client_x_to_x (a_screen_x), client_y_to_y (a_screen_y)])
+				-- We fire the pointer button press actions before the node or selection actions which may occur
+				-- as a result of this press.
+			if pointer_button_press_actions_internal /= Void and then not pointer_button_press_actions_internal.is_empty then
+				pointer_button_press_actions_internal.call ([client_x_to_x (a_x), client_y_to_y (a_y), a_button, a_x_tilt, a_y_tilt, a_pressure, client_x_to_x (a_screen_x), client_y_to_y (a_screen_y)])
+			end
+			if pointer_button_press_item_actions_internal /= Void and then not pointer_button_press_item_actions_internal.is_empty then
+				if pointed_item /= Void then
+					pointed_item_interface := pointed_item.interface
 				end
-				if pointer_button_press_item_actions_internal /= Void and then not pointer_button_press_item_actions_internal.is_empty then
-					if pointed_item /= Void then
-						pointed_item_interface := pointed_item.interface
-					end
-					pointer_button_press_item_actions_internal.call ([client_x_to_virtual_x (a_x), client_y_to_virtual_y (a_y), a_button, pointed_item_interface])
+				pointer_button_press_item_actions_internal.call ([client_x_to_virtual_x (a_x), client_y_to_virtual_y (a_y), a_button, pointed_item_interface])
+			end
+			if
+				pointed_item /= Void and then not pointed_item.is_destroyed and then
+				pointed_item.parent_i = Current and then
+				pointed_item.pointer_button_press_actions_internal /= Void and then
+				not pointed_item.pointer_button_press_actions.is_empty
+			then
+				pointed_item.pointer_button_press_actions.call ([client_x_to_virtual_x(a_x) - pointed_item.virtual_x_position, client_y_to_virtual_y (a_y) - pointed_item.virtual_y_position, a_button, 0.0, 0.0, 0.0, a_screen_x, a_screen_y])
+			end
+
+
+			item_coordinates := drawer.item_coordinates_at_position (a_x, a_y)
+			if item_coordinates /= Void then
+				pointed_row_i := row_internal (item_coordinates.y)
+				current_subrow_indent := item_cell_indent (item_coordinates.x, item_coordinates.y) --item_indent (pointed_item)
+				current_item_x_position := column (item_coordinates.x).virtual_x_position - (internal_client_x - viewport_x_offset)
+				node_x_position_click_edge := current_subrow_indent + current_item_x_position
+				if pointed_row_i.subrow_count /= 0 or pointed_row_i.is_ensured_expandable then
+						-- We only include the dimensions of the node pixmap for our calculations if
+						-- one is displayed.
+					 node_x_position_click_edge := current_subrow_indent + current_item_x_position - (node_pixmap_width + (3 * tree_node_spacing))
 				end
-				if
-					pointed_item /= Void and then not pointed_item.is_destroyed and then
-					pointed_item.parent_i = Current and then
-					pointed_item.pointer_button_press_actions_internal /= Void and then
-					not pointed_item.pointer_button_press_actions.is_empty
-				then
-					pointed_item.pointer_button_press_actions.call ([client_x_to_virtual_x(a_x) - pointed_item.virtual_x_position, client_y_to_virtual_y (a_y) - pointed_item.virtual_y_position, a_button, 0.0, 0.0, 0.0, a_screen_x, a_screen_y])
-				end
 
-
-				item_coordinates := drawer.item_coordinates_at_position (a_x, a_y)
-				if item_coordinates /= Void then
-					pointed_row_i := row_internal (item_coordinates.y)
-					current_subrow_indent := item_cell_indent (item_coordinates.x, item_coordinates.y) --item_indent (pointed_item)
-					current_item_x_position := column (item_coordinates.x).virtual_x_position - (internal_client_x - viewport_x_offset)
-					node_x_position_click_edge := current_subrow_indent + current_item_x_position
-					if pointed_row_i.subrow_count /= 0 or pointed_row_i.is_ensured_expandable then
-							-- We only include the dimensions of the node pixmap for our calculations if
-							-- one is displayed.
-						 node_x_position_click_edge := current_subrow_indent + current_item_x_position - (node_pixmap_width + (3 * tree_node_spacing))
-					end
-
-					if a_x >= node_x_position_click_edge then
-						if a_button = 1 and then (pointed_row_i.subrow_count > 0 or pointed_row_i.is_ensured_expandable) and then current_subrow_indent > 0 and a_x < current_subrow_indent + current_item_x_position then
-							ignore_selection_handling := True
-							if pointed_row_i.is_expanded then
-								pointed_row_i.collapse
-							else
-								pointed_row_i.expand
-							end
-						elseif is_selection_on_click_enabled then
-							selected_item_i := item_internal (item_coordinates.x, item_coordinates.y)
-							if selected_item_i /= Void then
-								selected_item := selected_item_i.interface
-							end
+				if a_x >= node_x_position_click_edge then
+					if a_button = 1 and then (pointed_row_i.subrow_count > 0 or pointed_row_i.is_ensured_expandable) and then current_subrow_indent > 0 and a_x < current_subrow_indent + current_item_x_position then
+						ignore_selection_handling := True
+						if pointed_row_i.is_expanded then
+							pointed_row_i.collapse
+						else
+							pointed_row_i.expand
+						end
+					elseif is_selection_on_click_enabled then
+						selected_item_i := item_internal (item_coordinates.x, item_coordinates.y)
+						if selected_item_i /= Void then
+							selected_item := selected_item_i.interface
 						end
 					end
 				end
+			end
+			if
+				not ignore_selection_handling and then
+				is_selection_on_click_enabled and then
+				(not is_selection_on_single_button_click_enabled or else (is_selection_on_single_button_click_enabled and a_button = 1))
+			then
 				if
-					not ignore_selection_handling and then
-					is_selection_on_click_enabled and then
-					(not is_selection_on_single_button_click_enabled or else (is_selection_on_single_button_click_enabled and a_button = 1))
+					selected_item /= Void and then not selected_item.is_destroyed and then
+					selected_item.is_selected and then
+					ev_application.ctrl_pressed and then
+					not ev_application.shift_pressed and then
+					((is_always_selected and then (internal_selected_items.count > 1 or else internal_selected_rows.count > 1)) or not is_always_selected)
 				then
-					if
-						selected_item /= Void and then not selected_item.is_destroyed and then
-						selected_item.is_selected and then
-						ev_application.ctrl_pressed and then
-						not ev_application.shift_pressed and then
-						((is_always_selected and then (internal_selected_items.count > 1 or else internal_selected_rows.count > 1)) or not is_always_selected)
-					then
-							-- Handle Ctrl-clicking to deselect items
-						selected_item.disable_select
-						last_selected_item := selected_item.implementation
-						shift_key_start_item := Void
-					else
-						if selected_item = Void or else not selected_item.is_destroyed then
-							handle_newly_selected_item (selected_item, a_button, False)
-						end
+						-- Handle Ctrl-clicking to deselect items
+					selected_item.disable_select
+					last_selected_item := selected_item.implementation
+					shift_key_start_item := Void
+				else
+					if selected_item = Void or else not selected_item.is_destroyed then
+						handle_newly_selected_item (selected_item, a_button, False)
 					end
 				end
 			end

@@ -4005,13 +4005,12 @@ feature {ANY}
 		do
 			perform_horizontal_computation
 
-				-- Retrieve the
+				-- Retrieve the column width
 			l_total_column_width := total_column_width
 
 			l_client_width := viewable_width
 				-- Note that `width' was not used as we want it to represent only the width of
 				-- the "client area" which is `viewport'.
-
 
 			if l_total_column_width > l_client_width then
 					-- The headers are wider than the visible client area.

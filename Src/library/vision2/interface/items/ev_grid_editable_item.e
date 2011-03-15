@@ -85,14 +85,15 @@ feature {NONE} -- Implementation
 			l_parent: like parent
 		do
 			a_widget := a_popup.item
+
+			l_parent := parent
+			check l_parent /= Void end
+
 				-- Account for position of text relative to pixmap.
 			l_x_offset := left_border
 			if attached pixmap as l_pixmap then
 				l_x_offset := l_x_offset + l_pixmap.width + spacing
 			end
-
-			l_parent := parent
-			check l_parent /= Void end
 
 			l_x_coord := (virtual_x_position + l_x_offset) - l_parent.virtual_x_position
 			l_x_coord := l_x_coord.max (0).min (l_x_offset)

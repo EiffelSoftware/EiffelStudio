@@ -98,7 +98,6 @@ feature {NONE} -- Initialization
 			create view_mode_button
 			view_mode_button.set_pixmap (pixmap_by_name ("icon_icon_view_color"))
 			view_mode_button.set_tooltip ("Icon View Mode")
-			view_mode_button.select_actions.extend (agent switch_view_mode)
 			tool_bar.extend (view_mode_button)
 			if preferences.global_data.type_selector_classic_mode then
 				build_classic_view
@@ -107,8 +106,10 @@ feature {NONE} -- Initialization
 				build_icon_view
 				view_mode_button.enable_select
 				extend (drawing_area)
-
 			end
+				-- Select actions have to be set before we actually enable it when we are
+				-- in icon view mode.
+			view_mode_button.select_actions.extend (agent switch_view_mode)
 		end
 
 feature -- Access

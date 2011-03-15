@@ -160,10 +160,6 @@ feature {NONE} -- Implementation
 
 			create l_choice_list
 			choice_list := l_choice_list
-			l_choice_list.hide_header
-			l_choice_list.enable_single_row_selection
-			l_choice_list.enable_selection_key_handling
-			l_choice_list.enable_row_height_fixed
 
 				-- Set the item strings.
 			set_strings
@@ -178,9 +174,10 @@ feature {NONE} -- Implementation
 			l_height := a_popup.height - top_border
 
 			if l_choice_list.column_count > 0 and then l_choice_list.row_count > 0 then
-				l_width := l_width.max (l_choice_list.column (1).required_width_of_item_span (1, l_choice_list.row_count))
+				l_width := l_width.max (l_choice_list.column (1).required_width_of_item_span (1, l_choice_list.row_count) + 2)
 				l_width := (l_screen.virtual_height - l_x_coord).max (0).min (l_width)
 				l_choice_list.column (1).set_width (l_width)
+				l_choice_list.set_minimum_width (l_width)
 
 				l_height := (l_screen.virtual_height - l_y_coord).max (0).min (l_choice_list.virtual_height)
 			end
@@ -190,6 +187,10 @@ feature {NONE} -- Implementation
 			a_popup.set_height (l_height)
 			a_popup.set_width (l_width)
 
+
+			l_choice_list.hide_header
+			l_choice_list.enable_single_row_selection
+			l_choice_list.enable_selection_key_handling
 			l_choice_list.set_background_color (implementation.displayed_background_color)
 			a_popup.set_background_color (implementation.displayed_background_color)
 			l_choice_list.set_foreground_color (implementation.displayed_foreground_color)

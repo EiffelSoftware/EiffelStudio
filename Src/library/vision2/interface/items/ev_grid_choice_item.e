@@ -109,12 +109,13 @@ feature {NONE} -- Implementation
 			i, j, nb: INTEGER
 			l_interval: INTEGER_INTERVAL
 			l_text, l_selected_text: READABLE_STRING_GENERAL
-			l_font: EV_FONT
+			l_font, l_selected_font: detachable EV_FONT
 			l_choice_list: like choice_list
 		do
 			l_choice_list := choice_list
 			check l_choice_list /= Void end
 			l_choice_list.wipe_out
+			l_font := font
 			if attached item_strings as l_item_strings then
 				from
 					l_interval := l_item_strings.index_set
@@ -130,13 +131,33 @@ feature {NONE} -- Implementation
 					i := i + 1
 					l_choice_list.set_item (1, j, l_item)
 					j := j + 1
-					if l_text.same_string (l_selected_text) then
-						create l_font
-						l_font.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
-						l_item.set_font (l_font)
+					if l_selected_font = Void and then l_text.same_string (l_selected_text) then
+						if l_font /= Void then
+							l_selected_font := l_font.twin
+						else
+							create l_selected_font
+						end
+						l_selected_font.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
+						l_item.set_font (l_selected_font)
 						l_item.enable_select
+					else
+						if l_font /= Void then
+								-- All non selected items should be regular.
+							if l_font.shape /= {EV_FONT_CONSTANTS}.weight_regular then
+								l_font := l_font.twin
+								l_font.set_weight ({EV_FONT_CONSTANTS}.weight_regular)
+							end
+							l_item.set_font (l_font)
+						end
 					end
 				end
+			else
+					-- Add `text' is there are no strings set.
+				create l_item.make_with_text (text)
+				if l_font /= Void then
+					l_item.set_font (l_font)
+				end
+				l_choice_list.set_item (1, 1, l_item)
 			end
 		end
 
@@ -178,7 +199,6 @@ feature {NONE} -- Implementation
 				l_width := (l_screen.virtual_height - l_x_coord).max (0).min (l_width)
 				l_choice_list.column (1).set_width (l_width)
 				l_choice_list.set_minimum_width (l_width)
-
 				l_height := (l_screen.virtual_height - l_y_coord).max (0).min (l_choice_list.virtual_height)
 			end
 
@@ -194,6 +214,8 @@ feature {NONE} -- Implementation
 			l_choice_list.set_background_color (implementation.displayed_background_color)
 			a_popup.set_background_color (implementation.displayed_background_color)
 			l_choice_list.set_foreground_color (implementation.displayed_foreground_color)
+			l_choice_list.set_focused_selection_color (l_parent.focused_selection_color)
+			l_choice_list.set_focused_selection_text_color (l_parent.focused_selection_text_color)
 
 			a_popup.extend (l_choice_list)
 

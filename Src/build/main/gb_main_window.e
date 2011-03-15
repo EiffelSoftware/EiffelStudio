@@ -818,7 +818,7 @@ feature {NONE} -- Implementation
 			one_item_maximized: BOOLEAN
 		do
 			output := ""
-			create info.make (1, multiple_split_area.count)
+			create info.make_filled ("", 1, multiple_split_area.count)
 			linear_rep := multiple_split_area.linear_representation.twin
 				-- Firstly determine if one item is maximized
 			from
@@ -854,7 +854,7 @@ feature {NONE} -- Implementation
 			end
 			preferences.global_data.tool_order_preference.set_value (info)
 			linear_rep := multiple_split_area.external_representation.twin
-			create info.make (1, linear_rep.count)
+			create info.make_filled ("", 1, linear_rep.count)
 			from
 				linear_rep.start
 			until

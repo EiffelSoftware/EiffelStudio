@@ -340,8 +340,8 @@ feature {NONE} -- Update
 			-- `pixmap_name' is the core name of the pixmap.
 		do
 				-- Read the pixmaps
-			create Result.make (1,1)
-			Result.put (pixmap_file_content ("icon_" + pixmap_name + "_color"), 1)
+			create Result.make_empty
+			Result.force (pixmap_file_content ("icon_" + pixmap_name + "_color"), 1)
 		ensure
 			result_valid: Result /= Void and then Result.count = 1
 		end
@@ -355,9 +355,9 @@ feature {NONE} -- Update
 			-- `pixmap_name' is the core name of the pixmap.
 		do
 				-- Read the pixmaps
-			create Result.make (1,2)
-			Result.put (pixmap_file_content ("icon_" + pixmap_name + "_color"), 1)
-			Result.put (pixmap_file_content ("icon_" + pixmap_name + "_text_color"), 2)
+			create Result.make_empty
+			Result.force (pixmap_file_content ("icon_" + pixmap_name + "_color"), 1)
+			Result.force (pixmap_file_content ("icon_" + pixmap_name + "_text_color"), 2)
 		ensure
 			result_valid: Result /= Void and then Result.count = 2
 		end

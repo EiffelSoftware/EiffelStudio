@@ -858,7 +858,7 @@ rt_public void sp_copy_data (EIF_REFERENCE Current, EIF_REFERENCE source, EIF_IN
 	REQUIRE ("destination_index non_negative", destination_index >= 0);
 	REQUIRE ("n non_negative", n >= 0);
 	REQUIRE ("source_index_valid", source_index + n <= RT_SPECIAL_COUNT(source));
-	REQUIRE ("source_index valid for destination", destination_index + n <= RT_SPECIAL_COUNT(Current));
+	REQUIRE ("source_index valid for destination", destination_index + n <= RT_SPECIAL_CAPACITY(Current));
 
 	elem_size = RT_SPECIAL_ELEM_SIZE(source);
 	memmove(Current + ((rt_uint_ptr) destination_index * elem_size), source + ((rt_uint_ptr) source_index * elem_size), (rt_uint_ptr) n * elem_size);

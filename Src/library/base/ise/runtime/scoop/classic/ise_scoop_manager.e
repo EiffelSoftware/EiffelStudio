@@ -251,10 +251,17 @@ feature -- Request Chain Handling
 		local
 			l_request_chain_id: like invalid_request_chain_id
 			l_request_chain_id_depth: like default_request_chain_depth_value
-			l_request_chain_meta_data: like new_processor_meta_data_entry
+			l_request_chain_meta_data: detachable like new_processor_meta_data_entry
 		do
 			debug ("ISE_SCOOP_MANAGER")
 				print ("signify_start_of_request_chain for pid " + a_client_processor_id.out + " %N")
+			end
+
+			l_request_chain_meta_data := request_chain_meta_data [a_client_processor_id]
+			if l_request_chain_meta_data /= Void then
+				if l_request_chain_meta_data [request_chain_client_pid_index] /= a_client_processor_id then
+					l_request_chain_meta_data [request_chain_status_index] := request_chain_status_closed
+				end
 			end
 
 			l_request_chain_meta_data := new_request_chain_meta_data_entry
@@ -599,15 +606,6 @@ feature -- Command/Query Handling
 			"((call_data*) $a_call_data)->sync_pid"
 		end
 
-	frozen call_data_sync_pid_reset (a_call_data: like call_data)
-		require
-			a_call_data_valid: a_call_data /= default_pointer
-		external
-			"C inline use %"eif_scoop.h%""
-		alias
-			"((call_data*) $a_call_data)->sync_pid = (EIF_SCP_PID)-1;"
-		end
-
 	frozen call_data_is_lock_passing (a_call_data: like call_data): BOOLEAN
 		require
 			a_call_data_valid: a_call_data /= default_pointer
@@ -686,8 +684,8 @@ feature -- Command/Query Handling
 			end
 
 			if l_request_chain_node_id = invalid_request_chain_id then
-					-- We are logging on a processor that is lock passing.
-				l_client_sync_needed := True
+					-- We are logging either via lock passing or a sibling processor is asynchronously logging on another sibling processor.
+				l_client_sync_needed := l_is_synchronous
 				l_request_chain_node_id := (processor_meta_data [a_supplier_processor_id])[current_request_node_id_execution_index]
 				l_request_chain_node_queue_entry := l_request_chain_node_queue [l_request_chain_node_id]
 			else
@@ -743,7 +741,6 @@ feature -- Command/Query Handling
 					l_client_request_chain_node_queue_entry := l_request_chain_node_queue [(processor_meta_data [a_client_processor_id])[current_request_node_id_execution_index]]
 					check l_client_request_chain_node_queue_entry_attached: l_client_request_chain_node_queue_entry /= Void end
 
-
 						-- Wait until the request chain has started.
 					wait_for_request_chain_to_begin (a_client_processor_id, a_supplier_processor_id, l_client_request_chain_meta_data)
 						-- We make a copy of the current request chain meta data and pass to the supplier for controlled argument processing.
@@ -759,11 +756,9 @@ feature -- Command/Query Handling
 
 					if l_creation_request_chain_meta_data /= Void then
 							-- We are lock passing to a creation routine so we start the loop.
-						l_creation_request_chain_meta_data [request_chain_status_index] := request_chain_status_closed
 						start_processor_application_loop (a_supplier_processor_id)
 						wait_for_request_chain_to_begin (a_client_processor_id, a_supplier_processor_id, l_creation_request_chain_meta_data)
 					end
-
 						-- Wait for client processor to be signalled to continue.
 					processor_semaphore_wait (a_client_processor_id)
 
@@ -784,19 +779,28 @@ feature -- Command/Query Handling
 						l_client_request_chain_node_queue_entry.keep_head (l_logged_calls_count)
 							-- We must service all requests until the routine has closed its chain.
 
+						l_is_synchronous := call_data_sync_pid (l_call_ptr) /= null_processor_id
 						scoop_command_call (l_call_ptr)
-						processor_semaphore_signal (a_supplier_processor_id)
+						if l_is_synchronous then
+							processor_semaphore_signal (a_supplier_processor_id)
+						end
+						processor_semaphore_wait (a_client_processor_id)
 						scoop_command_call_cleanup (l_call_ptr)
 						l_call_ptr := default_pointer
-
-						processor_semaphore_wait (a_client_processor_id)
 					else
+						if l_creation_request_chain_meta_data /= Void then
+								-- Here we wait for the creation routine to finish.
+							l_creation_request_chain_meta_data [request_chain_status_index] := request_chain_status_waiting
+							processor_semaphore_wait (a_client_processor_id)
+							l_creation_request_chain_meta_data [request_chain_status_index] := request_chain_status_closed
+							processor_semaphore_signal (a_supplier_processor_id)
+						end
 						l_exit_loop := True
 					end
 				end
 			else
 				if l_client_sync_needed then
-					call_data_sync_pid_reset (a_call_data)
+						-- We must be a synchronous call so we need to sync up with the supplier processor.
 					l_request_chain_node_queue_entry.extend (a_call_data)
 					processor_semaphore_signal (a_supplier_processor_id)
 					processor_semaphore_wait (a_client_processor_id)

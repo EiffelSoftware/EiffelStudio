@@ -34,7 +34,11 @@ VFFD, chapter 5 (Features), page 69
           Declaration_body   describes   a  function  with
           exactly one argument.
 
-        7  If  the  Declaration_body  describes   a   once
+        7 If  the  Declaration_body   describes   a   once
           function,    the    result   type   is   not   a
           Formal_generic_name,  and  is  not  an  Anchored
           type.
+
+        8 If  the  Declaration_body   describes   a   once
+          function with a once key "PROCESS",  the  result
+          type is separate.

@@ -1,0 +1,3 @@
+Error: once function with once key "PROCESS" is not of a separate type. 
+What to do: change once function to be non-once, remove once key "PROCESS"
+  or mark its type as separate.

@@ -99,6 +99,37 @@ feature -- Query
 
 feature -- Status report
 
+	is_character_8_token (a_token: EDITOR_TOKEN; a_char_8: detachable CHARACTER_8; a_ignore_case: BOOLEAN): BOOLEAN
+			-- Detemines if a token is a specific text token.
+			--
+			-- `a_token'      : The token to determine if to be a specific keyword.
+			-- `a_char_8'     : The single-character text of the token to match or Void to just match a token.
+			-- `a_ignore_case': True to match case insensitive; False otherwise.
+			-- `Result'       : True if the supplied token is a keyword with the given text; False otherwise.
+		require
+			a_token_attached: a_token /= Void
+		local
+			l_token_text_8: like token_text_8
+			c: CHARACTER_8
+		do
+			if attached {EDITOR_TOKEN_TEXT} a_token as l_keyword then
+				Result := True
+				if a_char_8 /= Void then
+					l_token_text_8 := token_text_8 (a_token)
+					if l_token_text_8.count = 1 then
+						c := l_token_text_8.item (1)
+						if a_ignore_case then
+							Result := c.as_lower = a_char_8
+						else
+							Result := c = a_char_8
+						end
+					else
+						Result := False
+					end
+				end
+			end
+		end
+
 	is_text_token (a_token: EDITOR_TOKEN; a_text: detachable READABLE_STRING_GENERAL; a_ignore_case: BOOLEAN): BOOLEAN
 			-- Detemines if a token is a specific text token.
 			--
@@ -457,7 +488,7 @@ feature -- Query
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -50,7 +50,7 @@ feature -- Query
 			-- `a_token': Token to retrieve text for.
 			-- `Result': Token text, or an empty string if it does not have a representation.
 		require
-			a_token_attached: attached a_token
+			a_token_attached: a_token /= Void
 		do
 			if attached a_token.wide_image as l_result then
 				Result := l_result.as_string_8
@@ -99,11 +99,11 @@ feature -- Query
 
 feature -- Status report
 
-	is_character_8_token (a_token: EDITOR_TOKEN; a_char_8: detachable CHARACTER_8; a_ignore_case: BOOLEAN): BOOLEAN
+	is_character_8_token (a_token: EDITOR_TOKEN; a_char_8: CHARACTER_8; a_ignore_case: BOOLEAN): BOOLEAN
 			-- Detemines if a token is a specific text token.
 			--
 			-- `a_token'      : The token to determine if to be a specific keyword.
-			-- `a_char_8'     : The single-character text of the token to match or Void to just match a token.
+			-- `a_char_8'     : The single-character text of the token to match a token.
 			-- `a_ignore_case': True to match case insensitive; False otherwise.
 			-- `Result'       : True if the supplied token is a keyword with the given text; False otherwise.
 		require
@@ -112,19 +112,14 @@ feature -- Status report
 			l_token_text_8: like token_text_8
 			c: CHARACTER_8
 		do
-			if attached {EDITOR_TOKEN_TEXT} a_token as l_keyword then
-				Result := True
-				if a_char_8 /= Void then
-					l_token_text_8 := token_text_8 (a_token)
-					if l_token_text_8.count = 1 then
-						c := l_token_text_8.item (1)
-						if a_ignore_case then
-							Result := c.as_lower = a_char_8
-						else
-							Result := c = a_char_8
-						end
+			if attached {EDITOR_TOKEN_TEXT} a_token then
+				l_token_text_8 := token_text_8 (a_token)
+				if l_token_text_8.count = 1 then
+					c := l_token_text_8.item (1)
+					if a_ignore_case then
+						Result := c.as_lower = a_char_8
 					else
-						Result := False
+						Result := c = a_char_8
 					end
 				end
 			end
@@ -141,7 +136,7 @@ feature -- Status report
 			a_token_attached: a_token /= Void
 			not_a_text_is_empty: a_text /= Void implies not a_text.is_empty
 		do
-			if attached {EDITOR_TOKEN_TEXT} a_token as l_keyword then
+			if attached {EDITOR_TOKEN_TEXT} a_token then
 				Result := True
 				if a_text /= Void then
 					if attached {STRING_32} a_text as l_wide_string then
@@ -171,7 +166,7 @@ feature -- Status report
 			a_token_attached: a_token /= Void
 			not_a_keyword_is_empty: a_keyword /= Void implies not a_keyword.is_empty
 		do
-			if attached {EDITOR_TOKEN_KEYWORD} a_token as l_keyword then
+			if attached {EDITOR_TOKEN_KEYWORD} a_token then
 				Result := True
 				if a_keyword /= Void then
 					if attached {STRING_32} a_keyword as l_wide_string then
@@ -196,7 +191,7 @@ feature -- Status report
 				attached l_comment.wide_image as l_image and then
 				l_image.count >= 2
 			then
-				Result := l_image.substring (1, 2).same_string ("--")
+				Result := l_image.item (1) = '-' and l_image.item (2) = '-'
 			end
 		end
 
@@ -241,7 +236,7 @@ feature -- Query
 				end
 			end
 		ensure
-			result_token_attached: Result /= Void implies attached Result.token
+			result_token_attached: Result /= Void implies Result.token /= Void
 			result_line_attached: Result /= Void implies Result.line /= Void
 			result_token_belongs_on_line: Result /= Void implies Result.line.has_token (Result.token)
 			result_token_is_text: (Result /= Void and a_skip_ws) implies Result.token.is_text
@@ -359,7 +354,7 @@ feature -- Query
 			result_token_belongs_on_line: Result /= Void implies Result.line.has_token (Result.token)
 		end
 
-	previous_token_simplified (a_token: attached EDITOR_TOKEN; a_line: attached EDITOR_LINE; a_skip_ws: BOOLEAN; a_finish_token: detachable EDITOR_TOKEN; a_predicate: attached FUNCTION [ANY, TUPLE [token: EDITOR_TOKEN], BOOLEAN]): detachable TUPLE [token: attached EDITOR_TOKEN; line: attached EDITOR_LINE]
+	previous_token_simplified (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE; a_skip_ws: BOOLEAN; a_finish_token: detachable EDITOR_TOKEN; a_predicate: FUNCTION [ANY, TUPLE [token: EDITOR_TOKEN], BOOLEAN]): detachable TUPLE [token: EDITOR_TOKEN; line: EDITOR_LINE]
 			-- Searches for the previous token given a start token and line. A predicate can be used to
 			-- locate special tokens or else the previous text token will be located.
 			--
@@ -373,6 +368,7 @@ feature -- Query
 			a_token_attached: a_token /= Void
 			a_line_attached: a_line /= Void
 			a_line_has_a_token: a_line.has_token (a_token)
+			a_predicate_attached: a_predicate /= Void
 		do
 			Result := previous_token (a_token, a_line, a_skip_ws, a_finish_token,
 				agent (ia_token: EDITOR_TOKEN; ia_line: EDITOR_LINE; ia_predicate: FUNCTION [ANY, TUPLE [token: EDITOR_TOKEN], BOOLEAN]): BOOLEAN

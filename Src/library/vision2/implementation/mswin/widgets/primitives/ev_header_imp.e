@@ -72,6 +72,7 @@ inherit
 			on_left_button_double_click,
 			on_middle_button_double_click,
 			on_right_button_double_click,
+			on_erase_background,
 			on_mouse_move,
 			on_mouse_wheel,
 			on_set_focus,
@@ -485,6 +486,52 @@ feature {NONE} -- Implementation
 				l_pnd_item_source.pnd_motion (x_pos, y_pos, pt.x, pt.y)
 			end
 			Precursor {EV_PRIMITIVE_IMP} (keys, x_pos, y_pos)
+		end
+
+	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT)
+			-- <Precursor>
+		local
+			bk_brush: detachable WEL_BRUSH
+			i, nb: INTEGER
+			l_x: INTEGER
+		do
+			if Application_imp.themes_active then
+					-- It seems that the theme is handling the redraw on the WM_PAINT message
+					-- properly.
+				disable_default_processing
+				set_message_return_value (to_lresult (1))
+			else
+					-- To avoid a flickering that occurs when resizing the top level window
+					-- and refreshing the content at the same time, we only erase the part
+					-- at the right of the last column if any.
+				create bk_brush.make_solid (wel_background_color)
+				nb := count
+				if nb > 0 then
+						-- Compute the `x' coordinates at the right of the last column.
+					from
+						i := 1
+						l_x := x_position
+					until
+						i > nb
+					loop
+						if attached i_th (i) as l_item then
+							l_x := l_x + l_item.width
+						end
+						i := i + 1
+					end
+				end
+					-- We shrink the invalidation rect as it seems the border is drawn on the WM_PAINT
+					-- message by the control.
+				invalid_rect.set_left (l_x + 1)
+				invalid_rect.set_top (invalid_rect.top + 1)
+				invalid_rect.set_bottom (invalid_rect.bottom - 2)
+				paint_dc.fill_rect (invalid_rect, bk_brush)
+				bk_brush.delete
+					--| Disable the default windows processing and return correct
+					--| value to Windows, i.e. nonzero value.
+				disable_default_processing
+				set_message_return_value (to_lresult (1))
+			end
 		end
 
 	on_set_cursor (hit_code: INTEGER)

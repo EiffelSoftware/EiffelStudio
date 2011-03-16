@@ -103,7 +103,7 @@ feature -- Helper
 			from
 				create l_res
 				l_list := l_res.ribbon_list
-				check l_list.count > 0 end
+				--check l_list.count > 0 end -- Ribbon list can be empty before {EV_RIBBON}.init_with_window executed
 				l_list.start
 			until
 				l_list.after or Result /= Void

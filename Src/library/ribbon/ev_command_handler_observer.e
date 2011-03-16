@@ -20,31 +20,6 @@ feature -- Action handlers
 		deferred
 		end
 
-feature -- Query
-
-	has_delayed_invalidation_action: BOOLEAN
-			-- Has any delayed invlidation action?
-		do
-			if attached delayed_invalidation_actions_cache as l_cache and then l_cache.count > 0 then
-				Result := True
-			end
-		end
-
-	delayed_invalidation_actions: ACTION_SEQUENCE [TUPLE []]
-			-- Invalidation actions to be called after ribbon has been initialized
-		local
-			l_action: like delayed_invalidation_actions_cache
-		do
-			l_action := delayed_invalidation_actions_cache
-			if l_action /= Void then
-				Result := l_action
-			else
-				create l_action
-				delayed_invalidation_actions_cache := l_action
-				Result := l_action
-			end
-		end
-
 feature -- Command
 
 	ribbon: detachable EV_RIBBON
@@ -80,9 +55,6 @@ feature {NONE}	-- Register
 		end
 
 feature {NONE} -- Implementation
-
-	delayed_invalidation_actions_cache: detachable ACTION_SEQUENCE [TUPLE []]
-			-- Delayed invalidation actions computed by `delayed_invalidation_actions'
 
 	ribbon_cache: detachable EV_RIBBON
 			-- Ribbon computed by `ribbon'

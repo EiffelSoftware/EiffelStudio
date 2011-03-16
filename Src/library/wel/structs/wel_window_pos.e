@@ -51,6 +51,12 @@ feature -- Access
 			end
 		end
 
+	hwnd: POINTER
+			-- Identifies the window
+		do
+			Result := cwel_windowpos_get_hwnd (item)
+		end
+
 	hwindow_insert_after: POINTER
 			-- Position of the window in Z order (front-to-back
 			-- position). This window can be the window behind
@@ -137,6 +143,14 @@ feature -- Element change
 			cwel_windowpos_set_flags (item, a_flags)
 		ensure
 			flags_set: flags = a_flags
+		end
+
+	set_hwnd (a_hwnd: POINTER)
+			-- Set `hwnd' with `a_hwnd'.
+		do
+			cwel_windowpos_set_hwnd (item, a_hwnd)
+		ensure
+			hwnd_set: hwnd = a_hwnd
 		end
 
 	set_window (a_window: WEL_WINDOW)

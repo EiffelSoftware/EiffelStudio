@@ -40,6 +40,9 @@ feature -- Access
 	Swp_noreposition: INTEGER = 512
 			-- Same as `Swp_noownerzborder'.
 
+	swp_defererase: INTEGER = 0x2000
+			-- Prevents generation of the WM_SYNCPAINT message.
+
 	swp_asyncwindowpos: INTEGER = 0x4000;
 			-- If the calling thread and the thread that owns the window are attached
 			-- to different input queues, the system posts the request to the thread--

@@ -37,6 +37,20 @@ inherit
 			{NONE} all
 		end
 
+	WEL_RESIZING_SUPPORT
+		export
+			{NONE} all
+		end
+
+feature {NONE} -- Initialization
+
+	make
+		do
+				-- We ensure creation of the `silly_window' before any other WEL operation
+				-- are taking place.
+			silly_window.do_nothing
+		end
+
 feature -- Settings
 
 	set_exception_callback (an_action: like exception_callback)

@@ -2,14 +2,21 @@ test_name	 scoop-external-call
 test_description Separate call to external should produce a correct result.
 
 copy_sub	Ace	$TEST Ace
-copy_raw	test.e	$CLUSTER test.e
+copy_raw	test0.e	$CLUSTER test.e
 config Ace test
 
---compile_melted
---compile_result ok
---execute_work 	NONE 	exec_output_m
---execute_result 	ok
---compare		exec_output_m output
+compile_frozen
+compile_result ok
+c_compile_work
+c_compile_result	ok
+
+copy_raw	test.e	$CLUSTER test.e
+
+compile_melted
+compile_result ok
+execute_work 	NONE 	exec_output_m
+execute_result 	ok
+compare		exec_output_m output
 
 compile_frozen
 compile_result ok

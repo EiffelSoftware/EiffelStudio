@@ -10,6 +10,9 @@ class
 
 inherit
 	WEL_ABSTRACT_DISPATCHER
+		redefine
+			make
+		end
 
 	DISPOSABLE
 
@@ -21,6 +24,7 @@ feature {NONE} -- Initialization
 	make
 			-- Initialize the C variables
 		do
+			Precursor
 			cwel_set_window_procedure_address ($window_procedure)
 			cwel_set_dialog_procedure_address ($dialog_procedure)
 			cwel_set_dispatcher_object (Current)

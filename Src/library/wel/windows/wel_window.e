@@ -95,6 +95,11 @@ inherit
 			{ANY} valid_hwnd_constant
 		end
 
+	WEL_RESIZING_SUPPORT
+		export
+			{NONE} all
+		end
+
 	WEL_RETURN_VALUE
 
 feature -- Access
@@ -1357,6 +1362,28 @@ feature -- Removal
 			not_exists: not exists
 		end
 
+feature {WEL_WINDOW} -- Messages
+
+	on_size (size_type, a_width, a_height: INTEGER)
+			-- Wm_size message
+			-- See class WEL_SIZE_CONSTANTS for `size_type' value
+		require
+			exists: exists
+		do
+		end
+
+	on_move (x_pos, y_pos: INTEGER)
+			-- Wm_move message.
+			-- This message is sent after a window has been moved.
+			-- `x_pos' specifies the x-coordinate of the upper-left
+			-- corner of the client area of the window.
+			-- `y_pos' specifies the y-coordinate of the upper-left
+			-- corner of the client area of the window.
+		require
+			exists: exists
+		do
+		end
+
 feature {NONE} -- Messages
 
 	on_window_pos_changed (window_pos: WEL_WINDOW_POS)
@@ -1382,26 +1409,6 @@ feature {NONE} -- Messages
 			exists: exists
 			window_pos_not_void: window_pos /= Void
 			window_pos_exists: window_pos.exists
-		do
-		end
-
-	on_size (size_type, a_width, a_height: INTEGER)
-			-- Wm_size message
-			-- See class WEL_SIZE_CONSTANTS for `size_type' value
-		require
-			exists: exists
-		do
-		end
-
-	on_move (x_pos, y_pos: INTEGER)
-			-- Wm_move message.
-			-- This message is sent after a window has been moved.
-			-- `x_pos' specifies the x-coordinate of the upper-left
-			-- corner of the client area of the window.
-			-- `y_pos' specifies the y-coordinate of the upper-left
-			-- corner of the client area of the window.
-		require
-			exists: exists
 		do
 		end
 
@@ -1934,6 +1941,7 @@ feature {WEL_ABSTRACT_DISPATCHER, WEL_WINDOW} -- Implementation
 				on_size (wparam.to_integer_32,
 					cwin_lo_word (lparam),
 					cwin_hi_word (lparam))
+
 			when Wm_nccalcsize then
 			when Wm_lbuttondown then
 				on_left_button_down (wparam.to_integer_32,
@@ -2202,6 +2210,7 @@ feature {WEL_WINDOW} -- Windows bug workaround
 		local
 			l_diff: BOOLEAN
 			l_flags: INTEGER
+			l_pos: WEL_WINDOW_POS
 		do
 				-- Reset `internal_wm_size_called'. It is set to True in `process_message'
 				-- when receiving a WM_SIZE message.
@@ -2223,32 +2232,32 @@ feature {WEL_WINDOW} -- Windows bug workaround
 			end
 
 			if l_diff and then not internal_wm_size_called then
-					-- Bug showed up as we should had receive a WM_SIZE message but did not and
-					-- the previous size was different from the requested size, thus we are sending
-					-- the WM message ourself to `item'.
-					-- Thanks to `l_diff' we are able to catch cases where a WM_SIZE message
+					-- Because messaging processing is actually done in kernel mode where call stack
+					-- size is limited (and half the size on 64-bit because Microsoft did not change
+					-- the limit), when a stack overflow occurs it is silently caught by the kernel
+					-- and it simply returns without having sent either of the resizing messages:
+					-- WM_SIZE or WM_WINDOWPOSCHANGED.
+					-- To fix this, we are sending a special message to `silly_window' that contains
+					-- the requested resizing information that will be send on the next processing
+					-- of the event queue.
+					-- Thanks to `l_diff' we are able to catch cases where a resizing message
 					-- was not sent because it did not need to.
-					-- Ideally, we should hook to the WM_WINDOWPOSCHANGED in Vision2 to better bypass
-					-- this limitation.
-					-- Note the we use `a_flags', i.e. the original value, not the computed one `l_flags'
-					-- so that we can repeat the call exactly as it was requested.
-				delayed_move_and_resize_internal (a_x, a_y, a_width, a_height, repaint, a_flags)
-			end
-		end
+					-- Ideally, we should hook to the resizing to WM_WINDOWPOSCHANGED instead of
+					-- WM_SIZE because it creates less stack size in kernel mode to push the limit
+					-- slightly further.
 
-	delayed_move_and_resize_internal (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN; a_flags: INTEGER)
-			-- Call to `move_and_resize_internal' did not complete as expected. We trigger it at the next processing
-			-- of the event queue.
-		require
-			exists: exists
-		do
-			if attached parent as l_parent then
-				l_parent.invalidate
-			end
-			invalidate
-			{WEL_API}.post_message (item, wm_size, to_wparam (0), cwin_make_long (a_width, a_height))
-			if (a_flags & swp_nomove) = 0 then
-				{WEL_API}.post_message (item, wm_move, to_wparam (0), cwin_make_long (a_x, a_y))
+					-- Store the various arguments of the call.
+				create l_pos.make
+				l_pos.set_hwnd (item)
+				l_pos.set_x (a_x)
+				l_pos.set_y (a_y)
+				l_pos.set_width (a_width)
+				l_pos.set_height (a_height)
+				l_pos.set_flags (l_flags)
+					-- The receiver of the message will free the allocated memory for `l_pos'.
+				l_pos.set_shared
+					-- Post the message to `silly_window'.
+				{WEL_API}.post_message (silly_window.item, {WEL_RESIZING_SUPPORT}.wm_set_window_pos_msg, l_pos.item, to_lparam(0))
 			end
 		end
 

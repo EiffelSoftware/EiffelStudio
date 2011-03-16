@@ -1272,6 +1272,14 @@ feature -- Conveniences
 			Result := arguments /= Void
 		end
 
+	has_separate_arguments: BOOLEAN
+			-- Has current feature some arguments of separate type?
+		do
+			if attached arguments as a then
+				Result := across a as c some c.item.is_separate end
+			end
+		end
+
 	is_replicated: BOOLEAN
 			-- Is Current feature conceptually replicated?
 		do
@@ -3508,7 +3516,7 @@ invariant
 	valid_inline_agent_nr: is_inline_agent implies inline_agent_nr > 0 or is_fake_inline_agent
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

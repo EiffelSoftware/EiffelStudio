@@ -37,7 +37,9 @@ feature {NONE} -- Implementation
 	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT)
 			-- <Precursor>
 		do
-			on_size ({WEL_WINDOW_CONSTANTS}.Size_restored, width, height)
+			if is_displayed then
+				on_size ({WEL_WINDOW_CONSTANTS}.Size_restored, width, height)
+			end
 			Precursor {EV_TITLED_WINDOW_IMP}(paint_dc, invalid_rect)
 		end
 

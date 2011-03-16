@@ -18,18 +18,14 @@ feature -- Command
 			-- Creation method
 		local
 			l_resources: EV_RIBBON_RESOURCES
-			l_shared: EV_SHARED_RESOURCES
 		do
 			if attached {EV_WINDOW_IMP} a_window.implementation as l_imp then
 				com_initialize
 				set_object_and_function_address
-				item := create_ribbon_com_framework (l_imp.wel_item)
-				ui_application := get_ui_application
 				create l_resources
 				l_resources.ribbon_list.extend (Current)
-
-				create l_shared
-				l_shared.command_handler_singleton.call_delayed_invalidation_actions
+				item := create_ribbon_com_framework (l_imp.wel_item)
+				ui_application := get_ui_application
 			end
 		end
 
@@ -338,7 +334,7 @@ feature {EV_RIBBON} -- Externals callbacks
 					l_list.forth
 				end
 			end
-			Result := 0x00000000;--HRESULT S_OK, must return S_OK, otherwise IUICommandHandler.updateProperty and execute will not be called
+			Result := {EV_RIBBON_HRESULT}.s_ok;--HRESULT S_OK, must return S_OK, otherwise IUICommandHandler.updateProperty and execute will not be called
 		end
 
 	c_set_command_handler (a_iui_command_handler: POINTER; a_pointer_pointer: POINTER)

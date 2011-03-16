@@ -1,12 +1,12 @@
 ﻿note
 	description: "Class for performing Atomic Memory Operations"
-	author: ""
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
 frozen class
 	ATOMIC_MEMORY_OPERATIONS
-
 
 feature
 
@@ -56,5 +56,15 @@ feature
 		alias
 			"RTS_AA_I32"
 		end
+
+note
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
 end

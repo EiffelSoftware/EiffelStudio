@@ -20,6 +20,7 @@ feature -- Initialization
 			l_seed: INTEGER
 			l_data: separate DATA
 			l_quicksorter: separate QUICKSORTER
+			l_result_data: separate DATA
 		do
 			-- Read the data size from the console.
 			io.put_string ("Specify data size (between 2 and 1000):%N")
@@ -39,8 +40,7 @@ feature -- Initialization
 			io.put_string ("Data before sorting%N")
 			print_on_console (l_data)
 
-			-- Sort the data.
-			sort (l_data, l_quicksorter)
+			sort (l_quicksorter, l_data)
 
 			-- Print the sorted data.
 			io.put_string("Data after sorting%N")
@@ -55,25 +55,22 @@ feature {NONE} -- Implementation
 			a_data.print_on_console
 		end
 
-	sort (a_data: separate DATA; a_quicksorter: separate QUICKSORTER)
+	sort (a_quicksorter: separate QUICKSORTER; a_data: separate DATA)
 			-- Sort 'a_data' with 'a_quicksorter'.
-		local
-			l_result_data_items: separate ARRAY [INTEGER_32]
 		do
-			create l_result_data_items.make (data_items_lower (a_data.items), data_items_upper (a_data.items))
-			a_quicksorter.sort (a_data, l_result_data_items)
+			a_quicksorter.sort (a_data)
 		end
 
-	data_items_lower (a_data_items: separate ARRAY[INTEGER]): separate INTEGER
+	data_lower (a_data: separate DATA): INTEGER
 			--
 		do
-			Result := a_data_items.lower
+			Result := a_data.lower
 		end
 
-	data_items_upper (a_data_items: separate ARRAY[INTEGER]): separate INTEGER
+	data_upper (a_data: separate DATA): INTEGER
 			--
 		do
-			Result := a_data_items.upper
+			Result := a_data.upper
 		end
 
 end -- class APPLICATION	

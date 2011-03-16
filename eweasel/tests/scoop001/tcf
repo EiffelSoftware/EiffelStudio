@@ -24,13 +24,19 @@ define PRECOMP	"<precompile name="precompile" location="$TEST/precomp.ecf"/>"
 define RECURSIVE "false"
 copy_sub	Ace $TEST Ace
 
+compile_melted
+compile_result ok
+execute_work 	NONE 	exec_output_m
+execute_result 	ok
+compare		exec_output_m output
+
 compile_frozen
 compile_result 	ok
 c_compile_work
 c_compile_result ok
-execute_work	NONE exec_output
+execute_work	NONE exec_output_w
 execute_result	ok
-compare		exec_output output
+compare		exec_output_w output
 
 cleanup_compile
 
@@ -44,8 +50,8 @@ compile_frozen
 compile_result 	ok
 c_compile_work
 c_compile_result ok
-execute_work	NONE exec_output
+execute_work	NONE exec_output_w
 execute_result	ok
-compare		exec_output output
+compare		exec_output_w output
 
 test_end

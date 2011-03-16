@@ -725,6 +725,10 @@ feature {NONE} -- Implementation
 				create combo.make_with_combo (Current)
 				if private_font /= Void then
 					set_font (private_font)
+						-- This will reset the minimum size of the control.
+				else
+						-- Reset the minimum size of the control as it may have resized with the style change.
+					set_default_minimum_size
 				end
 				if not sensitive then
 					disable_sensitive

@@ -272,65 +272,48 @@ feature {NONE} -- Implementation
 	invert_split (a_dc: WEL_DC)
 			-- Invert the split on `a_dc'.
 		do
-			invert_rectangle (a_dc, internal_split_position, -1, internal_split_position +
-				splitter_width, height)
+			invert_rectangle (a_dc, internal_split_position - 1, -1, internal_split_position + splitter_width, height)
 		end
 
 	on_mouse_move (keys, x_pos, y_pos: INTEGER)
 			-- Wm_mousemove message
 		local
-			t: WEL_SYSTEM_PARAMETERS_INFO
+--			t: WEL_SYSTEM_PARAMETERS_INFO
 			new_pos: INTEGER
 			window_dc: WEL_WINDOW_DC
-			wel_cursor: WEL_CURSOR
 		do
 				-- Are we moving the splitter?
 			if has_capture then
 					-- Move the splitter to the mouse position.
 				if x_pos - click_relative_position < minimum_split_position then
 					new_pos := minimum_split_position
-				elseif x_pos - click_relative_position >
-					maximum_split_position then
+				elseif x_pos - click_relative_position > maximum_split_position then
 					new_pos := maximum_split_position
 				else
 					new_pos := x_pos - click_relative_position
 				end
 				if internal_split_position /= new_pos then
-					create t
- --|--------------------------------------------------------------
- --| Removed the "real time resizing". As soon as windows
- --| get a little complex, it blocks the system for 2 to 3 sec.
- --|
- --| Uncomment the following lines to add it again.
- --|--------------------------------------------------------------
- --|					if t.has_drag_full_windows then
- --|							-- Move the splitter to the mouse position and
- --|							-- update content when dragging.
- --|						set_split_position (new_pos)
- --|					else
+--|--------------------------------------------------------------
+--| Removed the "real time resizing". As soon as windows
+--| get a little complex, it blocks the system for 2 to 3 sec.
+--|
+--| Uncomment the following lines to add it again.
+--|--------------------------------------------------------------
+--					create t
+--					if t.has_drag_full_windows then
+--							-- Move the splitter to the mouse position and
+--							-- update content when dragging.
+--						set_split_position (new_pos)
+--					else
 							-- Move shade of splitter and do not update content.
 						create window_dc.make (Current)
 						invert_split (window_dc)
 						internal_split_position := new_pos
 						invert_split (window_dc)
 						window_dc.delete
- --|					end
+--					end
 				end
 			else
-					-- Ensure that the cursor is up to date when widgets are
-					-- contained that do not fully cover the background of `Current',
-					-- such as EV_NOTEBOOK.
-				if position_is_over_splitter (x_pos) then
-					create wel_cursor.make_by_predefined_id ((create {WEL_IDC_CONSTANTS}).Idc_sizewe)
-					wel_cursor.enable_reference_tracking
-					wel_cursor.set
-					wel_cursor.decrement_reference
-				else
-					create wel_cursor.make_by_predefined_id ((create {WEL_IDC_CONSTANTS}).Idc_arrow)
-					wel_cursor.enable_reference_tracking
-					wel_cursor.set
-					wel_cursor.decrement_reference
-				end
 				Precursor {EV_SPLIT_AREA_IMP} (keys, x_pos, y_pos)
 			end
 		end
@@ -340,9 +323,10 @@ feature {NONE} -- Implementation
 		local
 			splitter_bitmap: detachable WEL_BITMAP
 			l_top_level_window_imp: like top_level_window_imp
+			window_dc: WEL_WINDOW_DC
 		do
-			-- We have to call pointer actions here
-			-- See bug#14692
+				-- We have to call pointer actions here
+				-- See bug#14692
 			on_button_down (x_pos, y_pos, {EV_POINTER_CONSTANTS}.left)
 
 				-- Pressing the left button on the splitter to move it, was
@@ -362,7 +346,10 @@ feature {NONE} -- Implementation
 				create splitter_bitmap.make_direct (8, 8, 1, 1, splitter_string_bitmap)
 				create splitter_brush.make_by_pattern (splitter_bitmap)
 				splitter_bitmap.delete
-				splitter_bitmap := Void
+					-- Move shade of splitter and do not update content.
+				create window_dc.make (Current)
+				invert_split (window_dc)
+				window_dc.delete
 				set_click_position (x_pos, y_pos)
 				set_capture
 			end
@@ -370,10 +357,8 @@ feature {NONE} -- Implementation
 
 	position_is_over_splitter (x_pos: INTEGER): BOOLEAN
 			-- Does `x_position' fall within the splitter?
-		require
-			x_pos_valid: x_pos >= 0 and x_pos <= width
 		do
-			Result := x_pos - (internal_split_position + 1) <= splitter_width
+			Result := (first_visible and second_visible) and x_pos >= internal_split_position and (x_pos - (internal_split_position + splitter_width)) < 0
 		end
 
 	on_left_button_up (keys, x_pos, y_pos: INTEGER)
@@ -391,8 +376,7 @@ feature {NONE} -- Implementation
 				release_capture
 				if x_pos - click_relative_position < minimum_split_position then
 					new_pos := minimum_split_position
-				elseif x_pos - click_relative_position >
-					maximum_split_position then
+				elseif x_pos - click_relative_position > maximum_split_position then
 					new_pos := maximum_split_position
 				else
 					new_pos := x_pos - click_relative_position
@@ -404,8 +388,8 @@ feature {NONE} -- Implementation
 				splitter_brush := Void
 			end
 
-			-- We have to call pointer actions here
-			-- See bug#14692
+				-- We have to call pointer actions here
+				-- See bug#14692
 			on_button_up (x_pos, y_pos, {EV_POINTER_CONSTANTS}.left)
 		end
 

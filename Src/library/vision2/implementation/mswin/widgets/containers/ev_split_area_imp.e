@@ -258,24 +258,39 @@ feature {NONE} -- Implementation
 			-- See class WEL_HT_CONSTANTS for valid `hit_code' values.
 		local
 			wel_point: WEL_POINT
-			wel_window: detachable WEL_WINDOW
-			our_window: detachable WEL_WINDOW
+			l_is_cursor_on_splitter: BOOLEAN
 		do
-				--| We need to check that the cursor is currently over `Current'.
-				--| We used to query `cursor_on_widget.item', however, this is only
-				--| updated when in `on_mouse_move' which is executed after this current
-				--| feature. That meant that when leaving `Current', the cursor would
-				--| not always be updated correctly.
-			create wel_point.make (0, 0)
-			wel_point.set_cursor_position
-			wel_window := wel_point.window_at
-			our_window ?= Current
-			if our_window = wel_window then
-				class_cursor.set
-				set_message_return_value (to_lresult (1))
+				-- We must check that we are not currently executing
+				-- a pick/drag as if we are, we should not do anything.
+				-- This is because the setting of the cursor should only
+				-- be performed by us, not windows when in transport.
+			if application_imp.pick_and_drop_source /= Void then
 				disable_default_processing
-			else
-				Precursor {EV_CONTAINER_IMP} (hit_code)
+			elseif (hit_code = ({WEL_HT_CONSTANTS}.Htnowhere) or else hit_code = ({WEL_HT_CONSTANTS}.Htclient)) then
+					--| We need to check that the cursor is currently over `Current'.
+					--| We used to query `cursor_on_widget.item', however, this is only
+					--| updated when in `on_mouse_move' which is executed after this current
+					--| feature. That meant that when leaving `Current', the cursor would
+					--| not always be updated correctly.
+				create wel_point.make (0, 0)
+				wel_point.set_cursor_position
+				wel_point.screen_to_client (Current)
+
+				if attached {EV_HORIZONTAL_SPLIT_AREA_IMP} Current then
+					l_is_cursor_on_splitter := position_is_over_splitter (wel_point.x)
+				else
+					l_is_cursor_on_splitter := position_is_over_splitter (wel_point.y)
+				end
+
+				if l_is_cursor_on_splitter then
+					class_cursor.set
+					set_message_return_value (to_lresult (1))
+					disable_default_processing
+				elseif cursor_pixmap /= Void then
+					internal_on_set_cursor
+					set_message_return_value (to_lresult (1))
+					disable_default_processing
+				end
 			end
 		end
 
@@ -334,12 +349,17 @@ feature {NONE} -- Implementation
 		-- For a vertical split_area, this contains the last
 		-- height of `Current'.
 
-	splitter_width: INTEGER = 4
+	splitter_width: INTEGER = 5
 			-- `Result' is space in pixels the visible separator should occupy.
 
 	click_relative_position: INTEGER
-		-- Mouse coordinate relative to start of splitter when splitter
-		-- is clicked on.
+			-- Mouse coordinate relative to start of splitter when splitter
+			-- is clicked on.
+
+	position_is_over_splitter (a_pos: INTEGER): BOOLEAN
+			-- Does `a_pos' fall within the splitter?
+		deferred
+		end
 
 	index_of_child (child: EV_WIDGET_IMP): INTEGER
 			-- `Result' is 1 based index of `child' within `Current'.

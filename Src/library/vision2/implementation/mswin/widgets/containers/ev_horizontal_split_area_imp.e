@@ -255,15 +255,15 @@ feature {NONE} -- Implementation
 					size_change := width - last_dimension
 				end
 
-					-- Store the current size as `last_split_position'.
+					-- Store dimension for the next resize.
 				last_dimension := a_width
 
 					-- Assign the correct movement to `movement', determined
 					-- by `splitter_movement_factor' and `size_change'.
 				movement := (size_change * splitter_movement_factor).rounded
 
-					-- Move the split position.
-				set_split_position (internal_split_position + movement)
+					-- Update internal split position to the new value.
+				internal_split_position := internal_split_position + movement
 			end
 			update_split_position
 			layout_widgets (originator)

@@ -66,7 +66,7 @@ feature -- Status setting
 
 			l_ht_order := ht_order
 			check l_ht_order /= Void end -- FIXME: implied by ...? bug?
-			l_ht_order.prune (key)
+			l_ht_order.prune_all (key)
 		ensure
 			count_valid: (attached ht and old (attached ht)) and then hash_table_count (ht) = old (hash_table_count (ht)) - 1
 			count_valid: (attached ht_order and old (attached ht_order)) and then array_list_count (ht_order) = old (array_list_count (ht_order)) - 1

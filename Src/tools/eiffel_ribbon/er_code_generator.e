@@ -423,7 +423,7 @@ feature {NONE} -- Implementation
 							l_tab_creation_string := tab_creation_string (a_tabs_root_note)
 							l_tab_registry_string := tab_registry_string (a_tabs_root_note)
 							l_tab_declaration_string := tab_declaration_string (a_tabs_root_note)
-							l_set_modes_string := "%T%T%Tset_modes (" + (a_index - 1).out + ")"
+							l_set_modes_string := "%T%T%Tset_modes (<<{NATURAL_32}" + (a_index - 1).out + ">>)"
 						until
 							l_file.after
 						loop

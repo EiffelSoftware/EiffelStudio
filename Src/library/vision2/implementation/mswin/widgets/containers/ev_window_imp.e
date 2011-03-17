@@ -687,7 +687,8 @@ feature {EV_ANY_I} -- Implementation
 	default_ex_style: INTEGER
 			-- Default extended style of `Current.
 		do
-			Result := Ws_ex_controlparent
+			Result := Ws_ex_controlparent --| ws_ex_composited
+				-- Uncomment ws_ex_composited to allow for backbuffered toplevel windows.
 		end
 
 	default_process_message (msg: INTEGER; wparam, lparam: POINTER)

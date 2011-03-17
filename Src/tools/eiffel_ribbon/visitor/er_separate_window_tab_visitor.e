@@ -181,7 +181,8 @@ feature {NONE} -- Implementation
 		do
 			-- Add application menu to first
 			-- FIXME: what about application menu for other windows?
-			if attached shared.layout_constructor_list.first.widget.i_th (2) as l_application_menu then
+			if shared.layout_constructor_list.first.widget.valid_index (2) and then
+				attached shared.layout_constructor_list.first.widget.i_th (2) as l_application_menu then
 				if attached l_application_menu.parent as l_parent then
 					l_parent.prune_all (l_application_menu)
 				end

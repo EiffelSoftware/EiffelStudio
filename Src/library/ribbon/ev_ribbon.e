@@ -29,12 +29,37 @@ feature -- Command
 			end
 		end
 
-	set_modes (a_mode: INTEGER)
+	set_modes (a_modes: ITERABLE [NATURAL_32])
 			-- Set application mode for current ribbon framework
 		require
 			exists: exists
+		local
+			l_new_cursor: ITERATION_CURSOR [NATURAL_32]
+			l_modes: NATURAL_32
 		do
-			c_set_modes (a_mode, item)
+			from
+				l_new_cursor := a_modes.new_cursor
+				l_new_cursor.start
+			until
+				l_new_cursor.after
+			loop
+				l_modes := l_modes | c_ui_make_app_node(l_new_cursor.item)
+				l_new_cursor.forth
+			end
+
+			c_set_modes (l_modes, item)
+		end
+
+	c_ui_make_app_node (a_mode: NATURAL_32): NATURAL_32
+			--
+		external
+			"C inline use <ribbon.h>"
+		alias
+			"[
+			{
+				return UI_MAKEAPPMODE((INT32) $a_mode);
+			}
+			]"
 		end
 
 	set_background_color (a_color: EV_RIBBON_HSB_COLOR)
@@ -201,7 +226,7 @@ feature {EV_RIBBON_TITLED_WINDOW_IMP} -- Externals
 			}"
 		end
 
-	c_set_modes (a_mode: INTEGER; a_framework: POINTER)
+	c_set_modes (a_mode: NATURAL_32; a_framework: POINTER)
 			-- Set application mode
 		require
 			a_framework_exists: a_framework /= default_pointer
@@ -210,7 +235,7 @@ feature {EV_RIBBON_TITLED_WINDOW_IMP} -- Externals
 		alias
 			"{
 				HRESULT hr = S_OK;
-				hr = ((IUIFramework *) $a_framework)->SetModes(UI_MAKEAPPMODE((INT32) $a_mode));
+				hr = ((IUIFramework *) $a_framework)->SetModes($a_mode);
 			}"
 		end
 

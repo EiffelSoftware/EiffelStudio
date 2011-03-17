@@ -78,7 +78,7 @@ feature -- Query
 		do
 			create Result.make (200)
 			from
-				l_next := [a_start_token, a_start_line]
+				l_next := token_line_data (a_start_token, a_start_line)
 			until
 				l_next = Void
 			loop
@@ -212,7 +212,7 @@ feature -- Status setting
 
 feature -- Query
 
-	previous_text_token (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE; a_skip_ws: BOOLEAN; a_finish_token: detachable EDITOR_TOKEN): detachable TUPLE [token: EDITOR_TOKEN; line: EDITOR_LINE]
+	previous_text_token (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE; a_skip_ws: BOOLEAN; a_finish_token: detachable EDITOR_TOKEN): like next_token
 			-- Searches for the previous token given a start token and line. A predicate can be used to
 			-- locate special tokens or else the previous text token will be located.
 			--
@@ -231,7 +231,7 @@ feature -- Query
 				if attached previous_token (a_token, a_line, a_skip_ws, a_finish_token, Void) as l_result then
 					l_token := l_result.token
 					if l_token.is_text or else (not (l_token.is_blank or else l_token.is_tabulation or else l_token.is_new_line) or else not a_skip_ws) then
-						Result := [l_token, l_result.line]
+						Result := token_line_data (l_token, l_result.line)
 					end
 				end
 			end
@@ -242,7 +242,7 @@ feature -- Query
 			result_token_is_text: (Result /= Void and a_skip_ws) implies Result.token.is_text
 		end
 
-	next_text_token (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE; a_skip_ws: BOOLEAN; a_finish_token: detachable EDITOR_TOKEN): detachable TUPLE [token: EDITOR_TOKEN; line: EDITOR_LINE]
+	next_text_token (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE; a_skip_ws: BOOLEAN; a_finish_token: detachable EDITOR_TOKEN): like next_token
 			-- Searches for the previous token given a start token and line. A predicate can be used to
 			-- locate special tokens or else the previous text token will be located.
 			--
@@ -261,7 +261,7 @@ feature -- Query
 				if attached next_token (a_token, a_line, a_skip_ws, a_finish_token, Void) as l_result then
 					l_token := l_result.token
 					if l_token.is_text or else (not (l_token.is_blank or else l_token.is_tabulation or else l_token.is_new_line) or else not a_skip_ws) then
-						Result := [l_token, l_result.line]
+						Result := token_line_data (l_token, l_result.line)
 					end
 				end
 			end
@@ -274,7 +274,7 @@ feature -- Query
 
 feature -- Query
 
-	previous_token (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE; a_skip_ws: BOOLEAN; a_finish_token: detachable EDITOR_TOKEN; a_predicate: detachable FUNCTION [ANY, TUPLE [token: EDITOR_TOKEN; line: EDITOR_LINE], BOOLEAN]): detachable TUPLE [token: EDITOR_TOKEN; line: EDITOR_LINE]
+	previous_token (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE; a_skip_ws: BOOLEAN; a_finish_token: detachable EDITOR_TOKEN; a_predicate: detachable FUNCTION [ANY, like token_line_data, BOOLEAN]): like next_token
 			-- Searches for the previous token given a start token and line. A predicate can be used to
 			-- locate special tokens or else the previous text token will be located.
 			--
@@ -312,11 +312,11 @@ feature -- Query
 							if l_scan_comments or else not attached {EDITOR_TOKEN_COMMENT} l_token then
 								if a_predicate /= Void then
 									if a_predicate.item ([l_token, l_line]) then
-										Result := [l_token, l_line]
+										Result := token_line_data (l_token, l_line)
 									end
 								elseif l_token.is_text or else (not (l_token.is_blank or else l_token.is_tabulation or else l_token.is_new_line) or else not a_skip_ws) then
 										-- There is no stop condition test predicate, so just locate text tokens
-									Result := [l_token, l_line]
+									Result := token_line_data (l_token, l_line)
 								end
 								l_stop := Result /= Void
 							else
@@ -354,7 +354,7 @@ feature -- Query
 			result_token_belongs_on_line: Result /= Void implies Result.line.has_token (Result.token)
 		end
 
-	previous_token_simplified (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE; a_skip_ws: BOOLEAN; a_finish_token: detachable EDITOR_TOKEN; a_predicate: FUNCTION [ANY, TUPLE [token: EDITOR_TOKEN], BOOLEAN]): detachable TUPLE [token: EDITOR_TOKEN; line: EDITOR_LINE]
+	previous_token_simplified (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE; a_skip_ws: BOOLEAN; a_finish_token: detachable EDITOR_TOKEN; a_predicate: FUNCTION [ANY, TUPLE [token: EDITOR_TOKEN], BOOLEAN]): like next_token
 			-- Searches for the previous token given a start token and line. A predicate can be used to
 			-- locate special tokens or else the previous text token will be located.
 			--
@@ -381,7 +381,7 @@ feature -- Query
 			result_token_belongs_on_line: Result /= Void implies Result.line.has_token (Result.token)
 		end
 
-	next_token (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE; a_skip_ws: BOOLEAN; a_finish_token: detachable EDITOR_TOKEN; a_predicate: detachable FUNCTION [ANY, TUPLE [token: EDITOR_TOKEN; line: EDITOR_LINE], BOOLEAN]): detachable TUPLE [token: EDITOR_TOKEN; line: EDITOR_LINE]
+	next_token (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE; a_skip_ws: BOOLEAN; a_finish_token: detachable EDITOR_TOKEN; a_predicate: detachable FUNCTION [ANY, like token_line_data, BOOLEAN]): detachable like token_line_data
 			-- Searches for the next token given a start token and line. A predicate can be used to locate
 			-- special tokens or else the next text token will be located.
 			--
@@ -421,11 +421,11 @@ feature -- Query
 							if l_scan_comments or else (not l_in_comment and then not attached {EDITOR_TOKEN_COMMENT} l_token) then
 								if a_predicate /= Void then
 									if a_predicate.item ([l_token, l_line]) then
-										Result := [l_token, l_line]
+										Result := token_line_data (l_token, l_line)
 									end
 								elseif l_token.is_text or else (not (l_token.is_blank or else l_token.is_tabulation or else l_token.is_new_line) or else not a_skip_ws) then
 										-- There is no stop condition test predicate, so just locate text tokens
-									Result := [l_token, l_line]
+									Result := token_line_data (l_token, l_line)
 								end
 								l_stop := Result /= Void
 							else
@@ -456,7 +456,7 @@ feature -- Query
 			result_token_belongs_on_line: Result /= Void implies Result.line.has_token (Result.token)
 		end
 
-	next_token_simplified (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE; a_skip_ws: BOOLEAN; a_finish_token: detachable EDITOR_TOKEN; a_predicate: FUNCTION [ANY, TUPLE [token: EDITOR_TOKEN], BOOLEAN]): detachable TUPLE [token: EDITOR_TOKEN; line: EDITOR_LINE]
+	next_token_simplified (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE; a_skip_ws: BOOLEAN; a_finish_token: detachable EDITOR_TOKEN; a_predicate: FUNCTION [ANY, TUPLE [token: EDITOR_TOKEN], BOOLEAN]): like next_token
 			-- Searches for the next token given a start token and line. A predicate can be used to locate
 			-- special tokens or else the next text token will be located.
 			--
@@ -481,6 +481,17 @@ feature -- Query
 			result_token_attached: Result /= Void implies Result.token /= Void
 			result_line_attached: Result /= Void implies Result.line /= Void
 			result_token_belongs_on_line: Result /= Void implies Result.line.has_token (Result.token)
+		end
+
+	token_line_data (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE): TUPLE [token: EDITOR_TOKEN; line: EDITOR_LINE]
+			-- Token/line data
+		require
+			a_token_attached: a_token /= Void
+			a_line_attached: a_line /= Void
+		do
+			Result := [a_token, a_line]
+		ensure
+			Result_attached: Result /= Void
 		end
 
 ;note

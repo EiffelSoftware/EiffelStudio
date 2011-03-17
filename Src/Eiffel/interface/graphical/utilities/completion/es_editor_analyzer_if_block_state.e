@@ -86,13 +86,8 @@ feature {NONE} -- Basic operation
 			l_brace_matcher: like brace_matcher
 			l_match: like next_token
 			l_next: like next_token
-			l_next_as: like next_token
 			l_next_then: like next_token
-			l_type: like next_token
-			l_prev: like previous_token
 			l_local_list_state: like local_list_state
-			l_type_string: STRING_32
-			l_expression_string: STRING_32
 			l_stop: BOOLEAN
 		do
 			l_start_token := a_info.current_token
@@ -123,104 +118,11 @@ feature {NONE} -- Basic operation
 
 						-- Search for all object tests
 					l_local_list_state := local_list_state
-					from until l_stop loop
-							-- Check for an object test between the if...then (or the passed end token if no then was found) keywords.
-						l_next := next_token (l_start_token, l_start_line, True, l_then_token, agent is_object_test_start_token (?, ?))
-						if l_next /= Void then
-								-- Object test.
-							if is_keyword_token (l_next.token, {EIFFEL_KEYWORD_CONSTANTS}.attached_keyword) then
-									-- Attached expression.
-								l_next := next_text_token (l_next.token, l_next.line, True, l_then_token)
-								if l_next /= Void then
-										-- We have the next token, which will either be an expression or a type specifier.
-										-- Store the start token and line for expression extraction later.
-									l_start_token := l_next.token
-									l_start_line := l_next.line
+					process_next_object_test_locals (a_info, l_start_token, l_start_line, l_then_token, a_end_token, l_local_list_state)
 
-										-- We only need to examine the attached expression if there is an 'as' assignment.
-									l_next_as := next_token (l_next.token, l_next.line, True, l_then_token,
-										agent (ia_token: EDITOR_TOKEN; ia_line: EDITOR_LINE): BOOLEAN
-											do
-												Result := is_keyword_token (ia_token, {EIFFEL_KEYWORD_CONSTANTS}.as_keyword)
-											end)
+					l_start_token := a_info.current_token
+					l_start_line := a_info.current_line
 
-									if l_next_as /= Void and then is_keyword_token (l_next_as.token, {EIFFEL_KEYWORD_CONSTANTS}.as_keyword) then
-											-- The located token was an 'as' token.
-
-										l_next := next_text_token (l_next_as.token, l_next_as.line, True, l_then_token)
-										if l_next /= Void and then is_identifier_token (l_next.token, l_next.line) then
-												-- We have the identifier token to use as the local.
-
-												-- Now use the stored start token and start line to extract the expression or type declaration.
-											if is_text_token (l_start_token, "{", False) then
-													-- Type declaration - {TYPE}
-												l_type := next_text_token (l_start_token, l_start_line, True, l_next_as.token)
-												if l_type /= Void then
-													l_start_token := l_type.token
-													l_start_line := l_type.line
-													l_type := scan_for_type (l_type.token, l_type.line, l_next_as.token)
-													if l_type /= Void then
-															-- Add local
-														a_info.current_frame.add_local_string (
-															token_text (l_next.token),
-															token_range_text (l_start_token, l_start_line, l_type.token))
-													end
-												end
-											else
-													-- Expression (just prefix like)
-												l_prev := previous_text_token (l_next_as.token, l_next_as.line, True, Void)
-												check l_prev_attached: l_prev /= Void end
-
-													-- build the 'like' type string.
-												l_expression_string := token_range_text (l_start_token, l_start_line, l_prev.token)
-												if l_expression_string.has ({CHARACTER_32} '.') then
-														-- The expression is an attached factored expression, which requires an expression
-														-- evaluation. This does not work for agent expression yet.
-													l_type_string := expression_type_name_from_string (a_info, l_expression_string)
-												else
-													create l_type_string.make (30)
-													l_type_string.append_string_general ({EIFFEL_KEYWORD_CONSTANTS}.like_keyword)
-													l_type_string.append_character ({CHARACTER_32} ' ')
-													l_type_string.append (l_expression_string)
-												end
-
-													-- Add local
-												a_info.current_frame.add_local_string (token_text (l_next.token), l_type_string)
-											end
-										end
-									else
-											-- There is no as so we just continue
-										l_next := next_text_token (l_next.token, l_next.line, True, l_then_token)
-									end
-								end
-
-								if l_next /= Void then
-									l_start_token := l_next.token
-									l_start_line := l_next.line
-								else
-									l_stop := True
-								end
-							else
-									-- Old object test.
-								if l_local_list_state.is_valid_start_token (l_next.token, l_next.line) then
-									a_info.set_current_line (l_next.line, l_next.token)
-									l_local_list_state.process (a_info, l_then_token)
-									if l_then_token /~ a_end_token then
-										l_start_token := a_info.current_token
-										l_start_line := a_info.current_line
-									else
-										l_stop := True
-									end
-								else
-										-- Why is the token not a valid local list block start token?
-									check False end
-								end
-							end
-
-						else
-							l_stop := True
-						end
-					end
 					if l_then_token /~ a_end_token then
 						l_start_token := l_next_then.token
 						l_start_line := l_next_then.line
@@ -266,12 +168,15 @@ feature {NONE} -- Basic operation
 				end
 			else
 					-- There was a matching end to the if block, which means the context does not reside in this if block - skip it.
+debug ("COMPLETION")
+	print ("Matching [" + l_start_token.debug_output + "] with [" + l_match.token.debug_output + "]%N")
+end
 				a_info.set_current_line (l_match.line, l_match.token)
 			end
 		end
 
-;note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+note
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

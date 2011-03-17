@@ -32,8 +32,8 @@ feature -- Status report
 		do
 			Result := is_keyword_token (a_token, {EIFFEL_KEYWORD_CONSTANTS}.detachable_keyword) or else
 					is_keyword_token (a_token, {EIFFEL_KEYWORD_CONSTANTS}.attached_keyword) or else
-					is_text_token (a_token, "?", False) or else
-					is_text_token (a_token, "!", False)
+					is_character_8_token (a_token, '?', False) or else
+					is_character_8_token (a_token, '!', False)
 		end
 
 	is_identifier_token (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE): BOOLEAN
@@ -95,8 +95,11 @@ feature -- Basic operations
 			l_next: like next_text_token
 			l_match: like next_text_token
 		do
-			if is_attachment_token (a_start_token, a_start_line) then
-					-- Start of the type, using an attachment mark
+			if
+				is_attachment_token (a_start_token, a_start_line) or else
+				is_keyword_token (a_start_token, {EIFFEL_KEYWORD_CONSTANTS}.separate_keyword)
+			then
+					-- Start of the type, using an attachment mark and/or separate
 				l_next := next_text_token (a_start_token, a_start_line, True, a_end_token)
 			else
 				l_next := [a_start_token, a_start_line]
@@ -158,7 +161,7 @@ feature {NONE} -- Helpers
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

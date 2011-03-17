@@ -45,8 +45,8 @@ feature {NONE} -- Status report
 			a_token_attached: a_token /= Void
 		do
 			Result := is_keyword_token (a_token, {EIFFEL_KEYWORD_CONSTANTS}.local_keyword) or else
-					is_text_token (a_token, "(", False) or else
-					is_text_token (a_token, "{", False)
+					is_character_8_token (a_token, '(', False) or else
+					is_character_8_token (a_token, '{', False)
 		end
 
 	is_local_terminating_token (a_token: EDITOR_TOKEN): BOOLEAN
@@ -68,14 +68,19 @@ feature {NONE} -- Status report
 					Result := not (l_image.is_case_insensitive_equal ({EIFFEL_KEYWORD_CONSTANTS}.current_keyword) or else
 						l_image.is_case_insensitive_equal ({EIFFEL_KEYWORD_CONSTANTS}.like_keyword) or else
 						l_image.is_case_insensitive_equal ({EIFFEL_KEYWORD_CONSTANTS}.attached_keyword) or else
-						l_image.is_case_insensitive_equal ({EIFFEL_KEYWORD_CONSTANTS}.detachable_keyword))
+						l_image.is_case_insensitive_equal ({EIFFEL_KEYWORD_CONSTANTS}.detachable_keyword) or else
+						l_image.is_case_insensitive_equal ({EIFFEL_KEYWORD_CONSTANTS}.separate_keyword)
+						)
 				end
 			elseif attached {EDITOR_TOKEN_TEXT} a_token as l_text then
 					-- Check for end braces, the local could be an object test or argument list.
 				l_image := token_text_8 (l_text)
-				if not l_image.is_empty then
-					Result := l_image.is_equal (once ")") or else
-						l_image.is_equal (once "}")
+				if l_image.count = 1 then
+					inspect l_image.item (1)
+					when ')', '}' then
+						Result := True
+					else
+					end
 				end
 			end
 		end
@@ -157,7 +162,7 @@ feature {NONE} -- Basic operation
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

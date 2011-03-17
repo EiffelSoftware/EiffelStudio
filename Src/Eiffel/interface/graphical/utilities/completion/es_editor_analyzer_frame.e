@@ -168,6 +168,13 @@ feature {NONE} -- Status report
 
 feature -- Query
 
+	wipe_out_locals
+		do
+			internal_locals := Void
+			internal_ast_local_declarations := Void
+			internal_string_local_declarations := Void
+		end
+
 	locals: HASH_TABLE [TYPE_A, STRING_32]
 			-- Type evaluated local entities of the Current frame.
 			--

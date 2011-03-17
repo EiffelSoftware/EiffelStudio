@@ -433,6 +433,19 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
+	wel_system_parameters_info: WEL_SYSTEM_PARAMETERS_INFO
+			-- Used for determining
+		once
+			create Result
+		end
+
+	use_realtime_splitter_positioning: BOOLEAN
+			-- Will `Current' use realtime splitter positioning
+			-- Default is False until sizing optimizations can be found for containers with many descendents.
+		do
+--			Result := wel_system_parameters_info.has_drag_full_windows
+		end
+
 	splitter_string_bitmap: STRING
 			-- `Result' is a STRING used to generate the splitter
 			-- brush used in the redrawing of the splitter while

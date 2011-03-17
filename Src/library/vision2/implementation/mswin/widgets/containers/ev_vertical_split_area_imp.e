@@ -38,7 +38,7 @@ feature -- Status Report
 			a_sec_height: INTEGER
 		do
 				-- We force a resize of current if the split is parented but not visible and the position has never been calculated yet		
-			if not is_maximum_split_position_computed and not is_displayed and attached parent_imp as l_parent then
+			if not is_maximum_split_position_computed and then not is_displayed and then attached parent_imp as l_parent then
 				is_maximum_split_position_computed := True
 				l_parent.notify_change (nc_minheight, Current, True)
 			end
@@ -214,11 +214,6 @@ feature {NONE} -- Implementation
 						splitter_width, True)
 				end
 			end
-
-				-- Invalidate separator.
-			create rect.make (0, internal_split_position, width,
-				internal_split_position + splitter_width)
-			invalidate_rect (rect, True)
 		end
 
 	split_area_resizing (a_height: INTEGER; originator: BOOLEAN)
@@ -275,7 +270,6 @@ feature {NONE} -- Implementation
 	on_mouse_move (keys, x_pos, y_pos: INTEGER)
 			-- Wm_mousemove message
 		local
---			t: WEL_SYSTEM_PARAMETERS_INFO
 			new_pos: INTEGER
 			window_dc: WEL_WINDOW_DC
 		do
@@ -290,25 +284,18 @@ feature {NONE} -- Implementation
 					new_pos := y_pos - click_relative_position
 				end
 				if internal_split_position /= new_pos then
- --|--------------------------------------------------------------
---| Removed the "real time resizing". As soon as windows
---| get a little complex, it blocks the system for 2 to 3 sec.
---|
---| Uncomment the following lines to add it again.
---|--------------------------------------------------------------
---					create t
---					if t.has_drag_full_windows then
---							-- Move the splitter to the mouse position and
---							-- update content when dragging.
---						set_split_position (new_pos)
---					else
+					if use_realtime_splitter_positioning then
+							-- Move the splitter to the mouse position and
+							-- update content when dragging.
+						set_split_position (new_pos)
+					else
 							-- Move shade of splitter and do not update content.
 						create window_dc.make (Current)
 						invert_split (window_dc)
 						internal_split_position := new_pos
 						invert_split (window_dc)
 						window_dc.delete
---					end
+					end
 				end
 			else
 				Precursor {EV_SPLIT_AREA_IMP} (keys, x_pos, y_pos)
@@ -318,7 +305,7 @@ feature {NONE} -- Implementation
 	position_is_over_splitter (y_pos: INTEGER): BOOLEAN
 			-- Does `y_position' fall within the splitter?
 		do
-			Result := (first_visible and second_visible) and y_pos >= internal_split_position and (y_pos - (internal_split_position + splitter_width)) < 0
+			Result := (first_visible and then second_visible) and then y_pos >= internal_split_position and then (y_pos - (internal_split_position + splitter_width)) < 0
 		end
 
 	on_left_button_down (keys, x_pos, y_pos: INTEGER)
@@ -346,13 +333,15 @@ feature {NONE} -- Implementation
 				-- Start to move the splitter. We capture the mouse
 				-- message to be able to move the mouse over the
 				-- left or right control without losing the "mouse focus."
-				create splitter_bitmap.make_direct (8, 8, 1, 1, splitter_string_bitmap)
-				create splitter_brush.make_by_pattern (splitter_bitmap)
-				splitter_bitmap.delete
-					-- Move shade of splitter and do not update content.
-				create window_dc.make (Current)
-				invert_split (window_dc)
-				window_dc.delete
+				if not use_realtime_splitter_positioning then
+					create splitter_bitmap.make_direct (8, 8, 1, 1, splitter_string_bitmap)
+					create splitter_brush.make_by_pattern (splitter_bitmap)
+					splitter_bitmap.delete
+						-- Move shade of splitter and do not update content.
+					create window_dc.make (Current)
+					invert_split (window_dc)
+					window_dc.delete
+				end
 				set_click_position (x_pos, y_pos)
 				set_capture
 			end
@@ -367,21 +356,24 @@ feature {NONE} -- Implementation
 		do
 				-- Stop the splitter moving.
 			if has_capture then
-				create window_dc.make (Current)
-				invert_split (window_dc)
 				release_capture
-				if y_pos - click_relative_position < minimum_split_position then
-					new_pos := minimum_split_position
-				elseif y_pos - click_relative_position > maximum_split_position then
-					new_pos := maximum_split_position
-				else
-					new_pos := y_pos - click_relative_position
+				if not use_realtime_splitter_positioning then
+					create window_dc.make (Current)
+					invert_split (window_dc)
+
+					if y_pos - click_relative_position < minimum_split_position then
+						new_pos := minimum_split_position
+					elseif y_pos - click_relative_position > maximum_split_position then
+						new_pos := maximum_split_position
+					else
+						new_pos := y_pos - click_relative_position
+					end
+					set_split_position (new_pos)
+					l_splitter_brush := splitter_brush
+					check l_splitter_brush /= Void end
+					l_splitter_brush.delete
+					splitter_brush := Void
 				end
-				set_split_position (new_pos)
-				l_splitter_brush := splitter_brush
-				check l_splitter_brush /= Void end
-				l_splitter_brush.delete
-				splitter_brush := Void
 			end
 
 				-- We have to call pointer actions here

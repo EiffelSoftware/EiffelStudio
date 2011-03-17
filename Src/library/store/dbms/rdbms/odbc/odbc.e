@@ -1233,7 +1233,7 @@ feature {NONE} -- External features
 						if attached {STRING} l_any as l_val_string then
 							create l_c_string.make (l_val_string)
 							pointers.extend (l_c_string.item)
-							l_value_count := l_c_string.count
+							l_value_count := l_c_string.bytes_count
 							l_managed_pointer := l_c_string.managed_data
 						else
 							check False end -- implied by `obj_is_string (l_any)'
@@ -1243,7 +1243,7 @@ feature {NONE} -- External features
 						if attached {STRING_32} l_any as l_string_32 then
 							create l_c_string.make (l_string_32)
 							pointers.extend (l_c_string.item)
-							l_value_count := l_c_string.count
+							l_value_count := l_c_string.bytes_count
 							l_managed_pointer := l_c_string.managed_data
 						else
 							check False end -- implied by `obj_is_string (l_any)'

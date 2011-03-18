@@ -151,7 +151,7 @@ feature -- Access: Error handling
 feature -- Access: Cursor
 
 	execute_new: SQLITE_STATEMENT_ITERATION_CURSOR
-			-- <Precursor>
+			-- Execute the SQLite statement.
 		require
 			is_compiled: is_compiled
 			is_connected: is_connected
@@ -165,7 +165,7 @@ feature -- Access: Cursor
 		end
 
 	execute_new_with_arguments (a_arguments: TUPLE): SQLITE_STATEMENT_ITERATION_CURSOR
-			-- Executes the SQLite modification statement with bound set of arguments.
+			-- Executes the SQLite statement with bound set of arguments.
 			--
 			-- `a_arguments': The bound arguments to call the SQLite query statement with.
 			--                Valid arguments are those that descent {SQLITE_BIND_ARG} or
@@ -742,7 +742,7 @@ invariant
 	internal_thread_id_set: {PLATFORM}.is_thread_capable implies internal_thread_id /= 0
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

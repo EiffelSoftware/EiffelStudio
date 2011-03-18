@@ -1,6 +1,6 @@
 note
 	description: "[
-
+		Cursor to iterate over SQLITE_STATEMENT execution result
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,8 +18,6 @@ inherit
 		redefine
 			start, forth, after
 		end
-
-	ITERABLE [SQLITE_RESULT_ROW]
 
 	SQLITE_SHARED_API
 		export
@@ -50,16 +48,19 @@ create
 	make,
 	make_with_bindings
 
-feature {NONE} -- Iniitalization
+feature {NONE} -- Initalization
 
 	make (a_statement: SQLITE_STATEMENT)
-			--
+			-- Initialize the cursor for `a_statement'.
 		require
 			a_statement_attached: attached a_statement
 			a_statement_is_accessible: a_statement.is_accessible
 			a_statement_is_connected: a_statement.is_connected
 		do
 			statement := a_statement
+				--| Create a dummy attached `target' to satisfy void-safety
+				--| This dummy value will be overwritten by `iteration_make'
+			target := dummy_target
 			iteration_make (Current)
 			last_result := {SQLITE_RESULT_CODE}.ok
 		ensure
@@ -68,7 +69,7 @@ feature {NONE} -- Iniitalization
 		end
 
 	make_with_bindings (a_statement: SQLITE_STATEMENT; a_bindings: ARRAY [SQLITE_BIND_ARG [ANY]])
-			--
+			-- Initialize the cursor for `a_statement' using `a_binding'.
 		require
 			a_statement_attached: attached a_statement
 			a_statement_is_accessible: a_statement.is_accessible
@@ -267,8 +268,16 @@ feature {NONE} -- Implementation: Internal cache
 			-- Cached version of `item'.
 			-- Note: Do not use directly!
 
+feature {NONE} -- Implementation: void-safety helper
+
+	dummy_target: ITERABLE [SQLITE_RESULT_ROW]
+			-- Dummy object used to initialize `target' with attached value
+		once
+			create {SPECIAL [SQLITE_RESULT_ROW]} Result .make_empty (0)
+		end
+
 ;note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

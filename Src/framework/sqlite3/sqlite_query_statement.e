@@ -56,7 +56,7 @@ feature -- Query
 			if attached internal_column_names as l_internal_names then
 				l_names := l_internal_names
 			else
-				create l_names.make (1, column_count.as_integer_32)
+				create l_names.make_filled (Void, 1, column_count.as_integer_32)
 				internal_column_names := l_names
 			end
 
@@ -156,7 +156,7 @@ feature {NONE} -- Implementation
 			-- Cached column names for the query `column_name'.
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

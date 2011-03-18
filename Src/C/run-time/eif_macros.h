@@ -1450,13 +1450,13 @@ RT_LNK void eif_exit_eiffel_code(void);
  * RTS_AS(v,f,t,n,a) - same as RTS_AA except that that argument is checked if it is controlled or not that is recorded to make synchronous call if required
  */
 #define RTS_AC(n,t,a) \
-	{                                                                                \
-		a = cmalloc (sizeof (call_data) + sizeof (EIF_TYPED_VALUE) * ((n) - 1)); \
-		((call_data*)(a)) -> target = eif_protect (t);                           \
-		((call_data*)(a)) -> count = (n);                                        \
-		((call_data*)(a)) -> result = (EIF_TYPED_VALUE *) 0;                     \
-		((call_data*)(a)) -> sync_pid = (EIF_SCP_PID) -1;                         \
-		((call_data*)(a)) -> is_lock_passing = EIF_FALSE;						 \
+	{                                                                                                              \
+		a = cmalloc (sizeof (call_data) + sizeof (EIF_TYPED_VALUE) * (size_t) (n) - sizeof (EIF_TYPED_VALUE)); \
+		((call_data*)(a)) -> target = eif_protect (t);                                                         \
+		((call_data*)(a)) -> count = (n);                                                                      \
+		((call_data*)(a)) -> result = (EIF_TYPED_VALUE *) 0;                                                   \
+		((call_data*)(a)) -> sync_pid = (EIF_SCP_PID) -1;                                                      \
+		((call_data*)(a)) -> is_lock_passing = EIF_FALSE;                                                      \
 	}
 #ifdef WORKBENCH
 #	define RTS_AA(v,f,t,n,a) ((call_data*)(a)) -> argument [(n) - 1] = (v);

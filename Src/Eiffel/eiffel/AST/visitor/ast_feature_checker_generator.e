@@ -3130,8 +3130,16 @@ feature {NONE} -- Implementation
 			l_has_invalid_locals: BOOLEAN
 			l_feat_type: TYPE_A
 			precondition_scope: AST_SCOPE_COMBINED_PRECONDITION
+			f: FEATURE_I
 		do
+			f := current_feature
 			l_needs_byte_node := is_byte_node_enabled
+				-- Request freeze if there are too many arguments some of which are separate.
+				-- ("interp.c" uses "EIF_NATURAL_64" to keep track of uncontrolled arguments,
+				-- so if there are more arguments, freeze is requested.)
+			if l_needs_byte_node and then f.argument_count > 64 and then f.has_separate_arguments then
+				system.request_freeze
+			end
 			l_error_level := error_level
 
 				-- Remember current scope state
@@ -6125,13 +6133,6 @@ feature {NONE} -- Implementation
 					end
 					if l_needs_byte_node then
 						last_byte_node := l_call_access
-					end
-						-- Separate feature calls are currently supported only by frozen code.
-					if a_creation_type.is_separate then
-						debug ("to_implement")
-							to_implement ("Support separate calls in melted mode")
-						end
-						system.request_freeze
 					end
 				end
 			end
@@ -10444,11 +10445,6 @@ feature {NONE} -- Separateness
 			if not is_controlled then
 				error_handler.insert_error (create {VUTA3}.make (context, last_type, a.start_location))
 			end
-				-- Separate feature calls are currently supported only by frozen code.
-			debug ("to_implement")
-				to_implement ("Support separate calls in melted mode")
-			end
-			system.request_freeze
 		end
 
 	adapt_last_type_to_target (t: TYPE_A; c: BOOLEAN)

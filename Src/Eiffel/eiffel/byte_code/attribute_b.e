@@ -116,8 +116,12 @@ feature
 			is_initialization_required: BOOLEAN
 			p: like parent
 		do
-				-- No need to wrap a target of an attachment as well as access to an attribute of a basic type that is always initialized
-			if not is_attachment and then not type.is_basic then
+			if context_type.is_separate then
+					-- Wrap a separate call.
+				is_initialization_required := True
+			elseif not is_attachment and then not type.is_basic then
+					-- No need to wrap a target of an attachment as well as
+					-- access to an attribute of a basic type that is always initialized.
 				if context.workbench_mode then
 						-- Attribute may be redeclared to become of an attached type and to have a body.
 					is_initialization_required := True
@@ -239,7 +243,7 @@ feature -- Inlining
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

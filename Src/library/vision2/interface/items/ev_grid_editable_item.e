@@ -151,8 +151,6 @@ feature {NONE} -- Implementation
 				-- Change `popup_window' to suit `Current'.
 			update_popup_dimensions (popup_window)
 
-				-- If the popup window loses focus, we hide the popup, which in turn will cause the text field to lose focus and deactivate.
-			popup_window.focus_out_actions.extend (agent popup_window.hide)
 			popup_window.show_actions.extend (agent initialize_actions)
 		end
 

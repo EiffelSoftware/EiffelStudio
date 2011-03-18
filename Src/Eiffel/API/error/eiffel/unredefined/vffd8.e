@@ -16,9 +16,27 @@ inherit
 			subcode
 		end
 
+create
+	make
+
+feature {NONE} -- Creation
+
+	make (f: FEATURE_I)
+			-- Create an error object for feature `f'.
+		require
+			attached f
+		do
+			set_feature_name (f.feature_name_32)
+			set_class (f.written_class)
+			if attached f.body as a then
+				set_location (a.start_location)
+			end
+		end
+
 feature -- Properties
 
 	subcode: INTEGER = 8;
+			-- <Precursor>
 
 note
 	copyright:	"Copyright (c) 1984-2011, Eiffel Software"

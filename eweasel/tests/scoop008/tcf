@@ -1,0 +1,41 @@
+test_name	 scoop-freeze-condition
+test_description SCOOP system is frozen under some conditions.
+
+copy_sub	Ace	$TEST Ace
+copy_raw	test1.e	$CLUSTER test.e
+
+compile_melted
+compile_result ok
+execute_work 	NONE 	exec_output_m
+execute_result 	ok
+compare		exec_output_m output1
+
+copy_raw	test2.e	$CLUSTER test.e
+
+compile_melted
+compile_result ok
+execute_work 	NONE 	exec_output_m-1
+execute_result 	ok
+compare		exec_output_m-1 output1
+
+c_compile_work
+c_compile_result	ok
+execute_work 	NONE 	exec_output_w2
+execute_result 	ok
+compare		exec_output_w2 output2
+
+copy_raw	test3.e	$CLUSTER test.e
+
+compile_melted
+compile_result ok
+execute_work 	NONE 	exec_output_m-2
+execute_result 	ok
+compare		exec_output_m-2 output2
+
+c_compile_work
+c_compile_result	ok
+execute_work 	NONE 	exec_output_w3
+execute_result 	ok
+compare		exec_output_w3 output3
+
+test_end

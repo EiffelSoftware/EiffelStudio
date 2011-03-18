@@ -2132,6 +2132,8 @@ test	validity-vffd6-basic		vffd601	 tcf pass validity vffd
 test	validity-vffd7-once-generic	vffd701	 tcf pass validity vffd
 test	validity-vffd7-once-anchored	vffd702	 tcf pass validity vffd
 
+test	validity-vffd8-once-scoop	vffd801  tcf pass validity vffd vffd8 once scoop
+
 test	validity-vhpr1-self		vhpr101	 tcf pass validity vhpr
 test	validity-vhpr1-other		vhpr102	 tcf pass validity vhpr
 test	validity-vhpr1-long-cycle	vhpr103	 tcf pass validity vhpr

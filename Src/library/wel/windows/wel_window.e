@@ -1810,26 +1810,42 @@ feature {WEL_WINDOW} -- Implementation
 			end
 		end
 
-	on_wm_window_pos_changed (lparam: POINTER)
-			-- Wm_windowposchanged message
-		require
-			exists: exists
-		local
-			wp: WEL_WINDOW_POS
-		do
-			create wp.make_by_pointer (lparam)
-			on_window_pos_changed (wp)
-		end
-
 	on_wm_window_pos_changing (lparam: POINTER)
 			-- Wm_windowposchanging message
 		require
 			exists: exists
 		local
-			wp: WEL_WINDOW_POS
+			l_wp: WEL_WINDOW_POS
 		do
-			create wp.make_by_pointer (lparam)
-			on_window_pos_changing (wp)
+			l_wp := window_pos_internal
+				-- Try to use reuse window pos object if not already set.
+			if l_wp.item /= default_pointer then
+				create l_wp.make_by_pointer (lparam)
+			else
+				l_wp.set_item (lparam)
+			end
+			on_window_pos_changing (l_wp)
+				-- Unset the shared pointer before returning.
+			l_wp.set_item (default_pointer)
+		end
+
+	on_wm_window_pos_changed (lparam: POINTER)
+			-- Wm_windowposchanged message
+		require
+			exists: exists
+		local
+			l_wp: WEL_WINDOW_POS
+		do
+			l_wp := window_pos_internal
+				-- Try to use reuse window pos object if not already set.
+			if l_wp.item /= default_pointer then
+				create l_wp.make_by_pointer (lparam)
+			else
+				l_wp.set_item (lparam)
+			end
+			on_window_pos_changed (l_wp)
+				-- Unset the shared pointer before returning.
+			l_wp.set_item (default_pointer)
 		end
 
 	on_wm_dropfiles (wparam: POINTER)
@@ -2270,6 +2286,15 @@ feature {NONE} -- Constants
 	Wel_gcl_constants: WEL_GCL_CONSTANTS
 		once
 			create Result
+		end
+
+feature {NONE} -- Implementation
+
+	frozen window_pos_internal: WEL_WINDOW_POS
+			-- Reusable WEL_WINDOW_POS to avoid creation of a new object on each WM_WINDOWPOSCHANGING/CHANGED
+			-- Do not use.
+		once
+			create Result.make_by_pointer (default_pointer)
 		end
 
 feature {NONE} -- Externals
@@ -2717,7 +2742,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

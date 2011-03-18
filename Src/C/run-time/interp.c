@@ -530,6 +530,32 @@ rt_public void xinitint(void)
 		enomem(MTC_NOARG);
 }
 
+#ifdef EIF_THREADS
+/*
+ * Create request chain with the specified number of uncontrolled arguments
+ * and wait when they are ready.
+ */
+rt_private void initialize_request_chain (uint32 uarg, EIF_NATURAL_64 usep)
+{
+	RT_GET_CONTEXT
+	uint32 n = argnum;
+	EIF_NATURAL_64 mask = ((EIF_NATURAL_64) 1) << (n - 1);
+
+		/* Create request chain. */
+	RTS_RC(icurrent -> it_ref);
+		/* Register uncontrolled arguments. */
+	for (; uarg; n--, mask >>= 1) {
+		if (usep & mask) {
+			EIF_TYPED_VALUE *last = arg(n);
+			RTS_RS(icurrent -> it_ref, last -> it_ref);
+			uarg--;
+		}
+	}
+		/* Wait for arguments to be locked. */
+	RTS_RW(icurrent -> it_ref);
+}
+#endif /* EIF_THREADS */
+
 rt_private void interpret(int flag, int where)
 					/* Flag set to INTERP_INVA or INTERP_CMPD */
 					/* Are we checking invariant before or after compound? */
@@ -575,7 +601,12 @@ rt_private void interpret(int flag, int where)
 	MTOT OResult = (MTOT) 0;				/* Item for once data */
 #ifdef EIF_THREADS
 	EIF_process_once_value_t * POResult = NULL;	/* Process-relative once data */
-	int  volatile is_process_once = 0;		/* Is once routine process-relative? */
+	int volatile is_process_once = 0;		/* Is once routine process-relative? */
+	uint32 volatile uarg = 0;			/* Number of uncontrolled arguments */
+	EIF_NATURAL_64 volatile usep = 0;                       /* Bit mask for uncontrolled separate arguments. */
+	unsigned char * volatile pre_start = 0;		/* Start of a precondition. */
+	char volatile has_wait_condition = '\0';        /* Is there a wait condition? */
+	char volatile has_uncontrolled_argument = '\0'; /* Is uncontrolled argument used? */
 #endif
 	BODY_INDEX body_id = 0;		/* Body id of routine */
 	int volatile current_trace_level = 0;	/* Saved call level for trace, only needed when routine is retried */
@@ -668,6 +699,12 @@ rt_private void interpret(int flag, int where)
 					b_copy(ref, last->it_bit);
 					break;
 				case EIF_REFERENCE_CODE:
+#ifdef EIF_THREADS
+					if (RTS_OU(icurrent->it_ref, ref)) {
+						usep |= ((EIF_NATURAL_64) 1) << (n - 1);
+						uarg++;
+					}
+#endif
 					break;
 				case EIF_BOOLEAN_CODE:
 					if ((last->type & SK_HEAD) == SK_REF) {
@@ -839,6 +876,10 @@ rt_private void interpret(int flag, int where)
 
 		}
 		if ((*IC != BC_PRECOND) && (*IC != BC_START_CATCALL)) {
+#ifdef EIF_THREADS
+				/* Initialize request chain if required. */
+			if (uarg) initialize_request_chain (uarg, usep);
+#endif
 			goto enter_body; /* Start execution of a routine body. */
 		}
 		break;
@@ -984,9 +1025,23 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_PRECOND\n");
 #endif
+#ifdef EIF_THREADS
+			/* Initialize request chain if required. */
+		if (uarg) initialize_request_chain (uarg, usep);
+			/* Record offset of a precondition block to repeat the check
+			   for failing wait conditions. */
+		pre_start = IC - 1;
+		has_wait_condition = '\0';
+		has_uncontrolled_argument = '\0';
+#endif
 		offset = get_int32(&IC);
 		pre_success = '\01';
-		if (!(~in_assertion & ((WASC(icur_dtype) & CK_REQUIRE) | saved_caller_assertion_level))) {
+		if (
+#ifdef EIF_THREADS
+			!uarg &&
+#endif /* EIF_THREADS */
+			!(~in_assertion & ((WASC(icur_dtype) & CK_REQUIRE) | saved_caller_assertion_level))
+		) {
 				/* No precondition check? */
 			IC += offset; /* Skip preconditions */
 			goto enter_body; /* Start execution of a routine body. */
@@ -1037,6 +1092,10 @@ rt_private void interpret(int flag, int where)
 
 	case BC_END_CATCALL:
 		if (*IC != BC_PRECOND) {
+#ifdef EIF_THREADS
+				/* Initialize request chain if required. */
+			if (uarg) initialize_request_chain (uarg, usep);
+#endif
 			goto enter_body; /* Start execution of a routine body. */
 		}
 		break;
@@ -1989,10 +2048,16 @@ rt_private void interpret(int flag, int where)
 									/* Get the assertion boolean result */
 		if (!code) {
 			pre_success = '\0';
+#ifdef EIF_THREADS
+			has_wait_condition |= has_uncontrolled_argument;
+#endif /* EIF_THREADS */
 			IC += offset;
 		} else {
 			RTCK;
 		}
+#ifdef EIF_THREADS
+		has_uncontrolled_argument = '\0';
+#endif /* EIF_THREADS */
 		break;
 
 	/*
@@ -2002,11 +2067,33 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_RAISE_PREC\n");
 #endif
-		if (!pre_success) {
+		if (pre_success) {
+#ifdef EIF_THREADS
+				/* Remove precondition start entry. */
+			pre_start = 0;
+#endif /* EIF_THREADS */
+			goto enter_body; /* Start execution of a routine body. */
+		}
+#ifdef EIF_THREADS
+			/* Check if precondition is a correctness or wait condition. */
+		if (has_wait_condition) {
+				/* There is a failed wait condition. */
+				/* Repeat precondition checks. */
+				/* Remove assertion entry from the stack. */
+			RTCK;
+				/* Notify SCOOP scheduler that wait condition failed. */
+			RTS_RF(icurrent -> it_ref);
+				/* Jump to the precondition start. */
+			IC = pre_start;
+		}
+		else
+#endif /* EIF_THREADS */
+		{
+				/* This is a failed correctness condition. */
+				/* Raise an exception. */
 			RTCF;
 		}
-		goto enter_body; /* Start execution of a routine body. */
-		/* break; */
+		break;
 
 	/*
 	 * Go to the body of the routine
@@ -2024,8 +2111,10 @@ rt_private void interpret(int flag, int where)
 			}
 			else {
 				RTCK;		/* Remove failed exception from stack */
-				pre_success = '\01';
-									/* Reset success for next block */
+				pre_success = '\01'; /* Reset success for next block */
+#ifdef EIF_THREADS
+				has_uncontrolled_argument = '\0';
+#endif /* EIF_THREADS */
 			}
 			break;
 		}
@@ -2402,6 +2491,7 @@ rt_private void interpret(int flag, int where)
 	 	{
 	 			/* Variables are not used in non-SCOOP context */
 #ifdef EIF_THREADS
+			EIF_TYPED_VALUE * target;
 	 		uint32 n = 
 #endif
 	 			get_uint16 (&IC);    /* Number of arguments.  */
@@ -2409,22 +2499,53 @@ rt_private void interpret(int flag, int where)
 	 		EIF_BOOLEAN q = 
 #endif
 	 			get_bool (&IC); /* Indicator of a query. */
-			
+
+			if (*IC == BC_ROTATE) {
+				EIF_TYPED_VALUE old;			/* Save old value before copying */
+				EIF_TYPED_VALUE prev;			/* Previous value to be copied */
+				EIF_TYPED_VALUE *new;			/* Where value is to be copied */
+				struct opstack op_context;  /* To save stack's context */
+
+#ifdef DEBUG
+				dprintf(2)("BC_ROTATE\n");
+#endif
+				IC++;
+				code = get_int16(&IC) - 1;
+				new = opop();
+				memcpy (&prev, new, ITEM_SZ);
+				memcpy (&op_context, &op_stack, sizeof(struct opstack));
+				while (code-- > 0) {
+					new = opop();
+					memcpy (&old, new, ITEM_SZ);
+					memcpy (new, &prev, ITEM_SZ);
+					memcpy (&prev, &old,ITEM_SZ);
+				}
+				memcpy (&op_stack, &op_context, sizeof(struct opstack));
+				opush(&prev);
+			}
 #ifdef EIF_THREADS
-			if (otop()->it_ref == (EIF_REFERENCE) 0) /* Called on a void reference? */
+			target = otop ();
+#define Current (icurrent -> it_ref)
+			if (target -> it_ref == (EIF_REFERENCE) 0) /* Called on a void reference? */
 				eraise("", EN_VOID);	         /* Yes, raise exception */
 				/* Check if this is indeed a separate call. */
-			last = otop ();
-			if (EIF_IS_DIFFERENT_PROCESSOR (icurrent->it_ref, last->it_ref)) {
+			code = *IC;
+			if ((code == BC_CREATION) || (code ==BC_PCREATION))
+			{
+					/* Associate new processor with the target of a call. */
+				RTS_PA (target -> it_ref);
+			}
+			else if (!EIF_IS_DIFFERENT_PROCESSOR (icurrent->it_ref, target->it_ref)) {
+					/* The call is not separate, reset target to NULL */
+				target = NULL;
+			}
+			if (target) {
 					/* Perform a separate call. */
 				call_data * a;
-				EIF_TYPED_VALUE * p;
-				EIF_REFERENCE Current = last -> it_ref;
-
-				RTS_AC (n, Current, a); /* Create call structure. */
+				RTS_AC (n, target -> it_ref, a); /* Create call structure. */
 				opop ();                /* Remove target of a call. */
 				while (n > 0) {         /* Record arguments of a call. */
-					p = opop ();
+					EIF_TYPED_VALUE * p = opop ();
 					if (p -> type == SK_REF) {
 						RTS_AS(*p, "", p -> type, n, a); /* Record a possibly separate argument. */
 					}
@@ -2438,8 +2559,9 @@ rt_private void interpret(int flag, int where)
 				case BC_EXTERN_INV:
 				case BC_FEATURE_INV:
 					string = get_string8(&IC, -1); /* Get the feature name. */
-					offset = get_int32(&IC);       /* Get the feature id */
-					code = get_int16(&IC);         /* Get the static type */
+					offset = get_int32(&IC);       /* Get the feature id. */
+					code = get_int16(&IC);         /* Get the static type. */
+					GET_PTYPE;                     /* Get precursor type. */
 					if (q) {
 						last = iget ();                             /* Allocate a cell to store result of a call. */
 						last -> type = SK_POINTER;                  /* Avoid GC on result until it is ready.      */
@@ -2454,8 +2576,9 @@ rt_private void interpret(int flag, int where)
 					{
 						int32 offset, origin;
 						string = get_string8(&IC, -1); /* Get the feature name. */
-						origin = get_int32(&IC);       /* Get the origin class id */
-						offset = get_int32(&IC);       /* Get the offset in origin */
+						origin = get_int32(&IC);       /* Get the origin class id. */
+						offset = get_int32(&IC);       /* Get the offset in origin. */
+						GET_PTYPE;                     /* Get precursor type. */
 						if (q) {
 							last = iget ();                                /* Allocate a cell to store result of a call. */
 							last -> type = SK_POINTER;                     /* Avoid GC on result until it is ready. */
@@ -2469,7 +2592,7 @@ rt_private void interpret(int flag, int where)
 				case BC_CREATION:
 					offset = get_int32(&IC);           /* Get the feature id. */
 					code = get_int16(&IC);             /* Get the static type. */
-					RTS_PA (eif_access (a -> target)); /* Associate new processor with the target of a call. */
+					GET_PTYPE;                         /* Get precursor type. */
 					RTS_CC (code, offset, 0, a);       /* Make a separate call to a creation procedure. */
 					break;
 				case BC_PCREATION:
@@ -2477,7 +2600,7 @@ rt_private void interpret(int flag, int where)
 						int32 origin, offset;
 						origin = get_int32(&IC);           /* Get the origin class id. */
 						offset = get_int32(&IC);           /* Get the offset in origin. */
-						RTS_PA (eif_access (a -> target)); /* Associate new processor with the target of a call. */
+						GET_PTYPE;                         /* Get precursor type. */
 						RTS_CCP (origin, offset, 0, a);    /* Make a separate call to a creation procedure. */
 						break;
 					}
@@ -2485,6 +2608,7 @@ rt_private void interpret(int flag, int where)
 					eif_panic(MTC "illegal separate opcode");
 				}
 			}
+#undef Current
 #endif /* EIF_THREADS */
 	 	}
 	 	break;
@@ -2868,6 +2992,12 @@ rt_private void interpret(int flag, int where)
 		code = get_int16(&IC);				/* Get number (from 1 0x0000000001ee0528to argnum) */
 		last = iget();
 		memcpy (last, arg(code), ITEM_SZ);
+#ifdef EIF_THREADS
+			/* Record if an uncontrolled argument is used. */
+		if (pre_start && (usep & ((EIF_NATURAL_64) 1) << (code - 1))) {
+			has_uncontrolled_argument = '\1';
+		}
+#endif /* EIF_THREADS */
 		break;
 
 	/*
@@ -3907,6 +4037,10 @@ rt_private void interpret(int flag, int where)
 		RTDBGLE;
 
 		pop_registers();	/* Pop registers */
+#ifdef EIF_THREADS
+			/* Release request chain if required. */
+		if (uarg) RTS_RD(icurrent -> it_ref);
+#endif
 		/* leave_body: */
 			/* Exit rutine body. */
 		if (is_process_or_thread_relative_once) {

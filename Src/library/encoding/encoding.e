@@ -108,8 +108,6 @@ feature -- Conversion
 		do
 			l_unicode_conversion := unicode_conversion
 			if
-				l_unicode_conversion.is_code_page_valid (a_to_encoding.code_page) and then
-				l_unicode_conversion.is_code_page_valid (code_page) and then
 				l_unicode_conversion.is_code_page_convertable (code_page, a_to_encoding.code_page)
 			then
 				encoding_i := l_unicode_conversion
@@ -191,7 +189,7 @@ invariant
 
 note
 	library:   "Encoding: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

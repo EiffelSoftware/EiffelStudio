@@ -21,7 +21,7 @@ create {RT_EXTENSION}
 
 feature {NONE} -- Initialization
 
-	make (p: RT_DBG_EXECUTION_PARAMETERS)
+	make (p: separate RT_DBG_EXECUTION_PARAMETERS)
 			-- Creation of Current object
 		require
 			p_attached: p /= Void
@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 
 feature {RT_EXTENSION} -- Change
 
-	update_parameters (p: RT_DBG_EXECUTION_PARAMETERS)
+	update_parameters (p: separate RT_DBG_EXECUTION_PARAMETERS)
 		require
 			p_attached: p /= Void
 		do

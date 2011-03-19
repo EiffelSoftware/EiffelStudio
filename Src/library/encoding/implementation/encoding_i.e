@@ -90,9 +90,6 @@ feature {ENCODING} -- Status report
 
 	is_code_page_convertable (a_from_code_page, a_to_code_page: STRING): BOOLEAN
 			-- Is `a_from_code_page' convertable to `a_to_code_page'.
-		require
-			a_from_code_page_valid: is_code_page_valid (a_from_code_page)
-			a_to_code_page_valid: is_code_page_valid (a_to_code_page)
 		deferred
 		end
 
@@ -204,7 +201,7 @@ feature {NONE} -- Implementation
 
 note
 	library:   "Encoding: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -30,25 +30,28 @@ feature -- Query
 			-- Is `a_from_code_page' convertable to `a_to_code_page'.
 		do
 				-- We accept conversion between the same encodings to optimize.
-			if a_from_code_page.is_case_insensitive_equal ({CODE_PAGE_CONSTANTS}.utf8) then
-					-- UTF-8 to UTF-32
-				Result := a_to_code_page.is_case_insensitive_equal ({CODE_PAGE_CONSTANTS}.utf8) or else
-							a_to_code_page.is_case_insensitive_equal ({CODE_PAGE_CONSTANTS}.utf32)
-			elseif a_from_code_page.is_case_insensitive_equal ({CODE_PAGE_CONSTANTS}.utf32) then
-					-- UTF-32 to UTF-8
-					-- UTF-32 to UTF-16
-				Result := a_to_code_page.is_case_insensitive_equal ({CODE_PAGE_CONSTANTS}.utf32) or else
-							a_to_code_page.is_case_insensitive_equal ({CODE_PAGE_CONSTANTS}.utf8) or else
-							a_to_code_page.is_case_insensitive_equal ({CODE_PAGE_CONSTANTS}.utf16)
-			elseif a_from_code_page.is_case_insensitive_equal ({CODE_PAGE_CONSTANTS}.utf16) then
-					-- UTF-16 to UTF-32
-				Result := a_to_code_page.is_case_insensitive_equal ({CODE_PAGE_CONSTANTS}.utf16) or else
-							a_to_code_page.is_case_insensitive_equal ({CODE_PAGE_CONSTANTS}.utf32)
-			elseif a_from_code_page.is_case_insensitive_equal ({CODE_PAGE_CONSTANTS}.utf7) then
-					-- Do not support UTF-7 encoding conversion.
-				Result := a_to_code_page.is_case_insensitive_equal ({CODE_PAGE_CONSTANTS}.utf7)
-			--else
-					-- Neither other endian independent Unicode encodings.
+			Result := a_from_code_page = {CODE_PAGE_CONSTANTS}.utf8 and then a_to_code_page = {CODE_PAGE_CONSTANTS}.utf32
+			if not Result then
+				if a_from_code_page.is_case_insensitive_equal ({CODE_PAGE_CONSTANTS}.utf8) then
+						-- UTF-8 to UTF-32
+					Result := a_to_code_page.is_case_insensitive_equal ({CODE_PAGE_CONSTANTS}.utf8) or else
+								a_to_code_page.is_case_insensitive_equal ({CODE_PAGE_CONSTANTS}.utf32)
+				elseif a_from_code_page.is_case_insensitive_equal ({CODE_PAGE_CONSTANTS}.utf32) then
+						-- UTF-32 to UTF-8
+						-- UTF-32 to UTF-16
+					Result := a_to_code_page.is_case_insensitive_equal ({CODE_PAGE_CONSTANTS}.utf32) or else
+								a_to_code_page.is_case_insensitive_equal ({CODE_PAGE_CONSTANTS}.utf8) or else
+								a_to_code_page.is_case_insensitive_equal ({CODE_PAGE_CONSTANTS}.utf16)
+				elseif a_from_code_page.is_case_insensitive_equal ({CODE_PAGE_CONSTANTS}.utf16) then
+						-- UTF-16 to UTF-32
+					Result := a_to_code_page.is_case_insensitive_equal ({CODE_PAGE_CONSTANTS}.utf16) or else
+								a_to_code_page.is_case_insensitive_equal ({CODE_PAGE_CONSTANTS}.utf32)
+				elseif a_from_code_page.is_case_insensitive_equal ({CODE_PAGE_CONSTANTS}.utf7) then
+						-- Do not support UTF-7 encoding conversion.
+					Result := a_to_code_page.is_case_insensitive_equal ({CODE_PAGE_CONSTANTS}.utf7)
+				--else
+						-- Neither other endian independent Unicode encodings.
+				end
 			end
 		end
 
@@ -301,7 +304,7 @@ feature {NONE} -- Implementation
 
 note
 	library:   "Encoding: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

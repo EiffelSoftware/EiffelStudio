@@ -2214,6 +2214,10 @@ feature {NONE} -- Signature checking
 					Error_handler.insert_error (vffd7)
 				end
 
+				if is_once and then system.is_scoop and then is_process_relative and then not solved_type.is_separate then
+					Error_handler.insert_error (create {VFFD8}.make (Current))
+				end
+
 				if
 					is_infix and then
 					((argument_count /= 1) or else (solved_type.is_void))

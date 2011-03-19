@@ -2541,7 +2541,10 @@ rt_private void interpret(int flag, int where)
 			}
 			if (target) {
 					/* Perform a separate call. */
-				call_data * a;
+				unsigned long   stagval = tagval; /* Save tag value */
+				unsigned char * OLD_IC  = NULL;   /* Saved IC */
+				call_data *     a;                /* Call structure */
+
 				RTS_AC (n, target -> it_ref, a); /* Create call structure. */
 				opop ();                /* Remove target of a call. */
 				while (n > 0) {         /* Record arguments of a call. */
@@ -2562,6 +2565,7 @@ rt_private void interpret(int flag, int where)
 					offset = get_int32(&IC);       /* Get the feature id. */
 					code = get_int16(&IC);         /* Get the static type. */
 					GET_PTYPE;                     /* Get precursor type. */
+					OLD_IC = IC;
 					if (q) {
 						last = iget ();                             /* Allocate a cell to store result of a call. */
 						last -> type = SK_POINTER;                  /* Avoid GC on result until it is ready.      */
@@ -2579,6 +2583,7 @@ rt_private void interpret(int flag, int where)
 						origin = get_int32(&IC);       /* Get the origin class id. */
 						offset = get_int32(&IC);       /* Get the offset in origin. */
 						GET_PTYPE;                     /* Get precursor type. */
+						OLD_IC = IC;
 						if (q) {
 							last = iget ();                                /* Allocate a cell to store result of a call. */
 							last -> type = SK_POINTER;                     /* Avoid GC on result until it is ready. */
@@ -2593,6 +2598,7 @@ rt_private void interpret(int flag, int where)
 					offset = get_int32(&IC);           /* Get the feature id. */
 					code = get_int16(&IC);             /* Get the static type. */
 					GET_PTYPE;                         /* Get precursor type. */
+					OLD_IC = IC;
 					RTS_CC (code, offset, 0, a);       /* Make a separate call to a creation procedure. */
 					break;
 				case BC_PCREATION:
@@ -2601,12 +2607,17 @@ rt_private void interpret(int flag, int where)
 						origin = get_int32(&IC);           /* Get the origin class id. */
 						offset = get_int32(&IC);           /* Get the offset in origin. */
 						GET_PTYPE;                         /* Get precursor type. */
+						OLD_IC  = IC;
 						RTS_CCP (origin, offset, 0, a);    /* Make a separate call to a creation procedure. */
 						break;
 					}
 				default:
+					OLD_IC  = IC;
 					eif_panic(MTC "illegal separate opcode");
 				}
+				if (tagval != stagval)		/* Interpreted function called */
+					sync_registers(MTC scur, stop);
+				IC = OLD_IC;
 			}
 #undef Current
 #endif /* EIF_THREADS */

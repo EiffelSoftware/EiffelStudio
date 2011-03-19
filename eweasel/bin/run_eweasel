@@ -16,6 +16,7 @@ $ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/ec -config base-mt.ecf -precompile -c_
 #Performing void-safe precompilation
 cd $ISE_EIFFEL/precomp/spec/$ISE_PLATFORM
 $ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/ec -config base-safe.ecf -precompile -c_compile $2
+$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/ec -config base-scoop-safe.ecf -precompile -c_compile $2
 
 # Launch EiffelWeasel tests
 cd $EWEASEL/..

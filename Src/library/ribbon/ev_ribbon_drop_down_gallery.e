@@ -10,6 +10,7 @@ inherit
 	EV_RIBBON_BUTTON
 		redefine
 			update_property,
+			execute,
 			create_interface_objects
 		end
 
@@ -30,10 +31,23 @@ feature -- Query
 			check not_implemented: False end
 		end
 
-	selected_item
-			--
+	selected_item: NATURAL
+			-- Current selected item index (base is 0)
+		local
+			l_key: EV_PROPERTY_KEY
+			l_value: EV_PROPERTY_VARIANT
+			l_command_id: NATURAL_32
 		do
-			check not_implemented: False end
+			l_command_id := command_list.item (command_list.lower)
+			check command_id_valid: l_command_id /= 0 end
+
+			if attached ribbon as l_ribbon then
+				create l_key.make_selected_item
+				create l_value.make_empty
+				l_ribbon.get_command_property (l_command_id, l_key, l_value)
+				Result := l_value.uint32_value
+				l_value.destroy
+			end
 		end
 
 	item_source: ARRAYED_LIST [EV_RIBBON_DROP_DOWN_GALLERY_ITEM]
@@ -124,4 +138,30 @@ feature {NONE} -- Implementation
 
 			end
 		end
+
+	execute (a_command_id: NATURAL_32; a_execution_verb: INTEGER; a_property_key: POINTER; a_property_value: POINTER; a_command_execution_properties: POINTER): NATURAL_32
+			-- <Precursor>
+		local
+			l_selected: NATURAL_32
+			l_item: EV_RIBBON_DROP_DOWN_GALLERY_ITEM
+		do
+			Result := Precursor (a_command_id, a_execution_verb, a_property_key, a_property_value, a_command_execution_properties)
+			if command_list.has (a_command_id) then
+				l_selected := selected_item
+				if item_source.valid_index (l_selected.as_integer_32 + 1) then
+					l_item := item_source.i_th (l_selected.as_integer_32 + 1)
+					if a_execution_verb = {EV_EXECUTION_VERB_CONSTANTS}.ui_executionverb_execute then
+						if attached l_item.select_actions_cache as l_select_action then
+							l_select_action.call (void)
+						end
+					elseif a_execution_verb = {EV_EXECUTION_VERB_CONSTANTS}.ui_executionverb_preview then
+
+					elseif a_execution_verb = {EV_EXECUTION_VERB_CONSTANTS}.ui_executionverb_cancelpreview then
+
+					end
+
+				end
+			end
+		end
+
 end

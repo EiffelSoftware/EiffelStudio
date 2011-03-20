@@ -213,6 +213,20 @@ feature {NONE} -- Implementation
 			check a_application_menu.count = 1 end
 			if attached a_application_menu.i_th (1) as l_ribbon_menu then
 				a_application_menu.wipe_out
+
+				from
+					l_ribbon_menu.start
+				until
+					l_ribbon_menu.after
+				loop
+					if attached l_ribbon_menu.item.parent as l_parent then
+						l_parent.prune_all (l_ribbon_menu.item)
+					end
+					if not l_ribbon_menu.after then
+						l_ribbon_menu.forth
+					end
+				end
+
 				from
 					l_ribbon_menu.start
 				until

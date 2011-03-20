@@ -8,7 +8,7 @@ note
 	revision: "$Revision$"
 
 deferred class
-	CHECKBOX_1_IMP
+	CHECKBOX_IMP
 
 inherit
 	EV_RIBBON_CHECKBOX

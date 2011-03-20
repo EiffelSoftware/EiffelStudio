@@ -8,10 +8,10 @@
 	revision: "$Revision$"
 
 deferred class
-	DROP_DOWN_GALLERY_1_IMP
+	TOGGLE_BUTTON_IMP
 
 inherit
-	EV_RIBBON_DROP_DOWN_GALLERY
+	EV_RIBBON_TOGGLE_BUTTON
 
 end
 

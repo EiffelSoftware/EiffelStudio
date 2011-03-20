@@ -6,10 +6,10 @@ note
 	revision: "$Revision$"
 
 class
-	BUTTON_3
+	SPLIT_BUTTON_CHILD_2
 
 inherit
-	BUTTON_3_IMP
+	SPLIT_BUTTON_CHILD_2_IMP
 
 create
 	{EV_RIBBON_GROUP, EV_RIBBON_SPLIT_BUTTON} make_with_command_list

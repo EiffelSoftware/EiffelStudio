@@ -8,7 +8,7 @@ note
 	revision: "$Revision$"
 
 deferred class
-	TAB_1_IMP
+	TAB_IMP
 
 inherit
 	EV_RIBBON_TAB
@@ -18,15 +18,15 @@ feature {NONE} -- Initialization
 	create_interface_objects
 			-- Create objects
 		do
-			create group_1.make_with_command_list (<<{COMMAND_NAME_CONSTANTS}.group_1>>)
+			create group.make_with_command_list (<<{COMMAND_NAME_CONSTANTS}.group>>)
 
 			create groups.make (1)
-			groups.extend (group_1)
+			groups.extend (group)
 
 		end
 
 feature -- Query
-	group_1: GROUP_1
+	group: GROUP
 
 
 end

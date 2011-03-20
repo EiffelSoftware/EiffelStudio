@@ -52,7 +52,7 @@ feature {NONE} -- Implementation
 			l_item.set_label ("second item")
 			l_list.extend (l_item)
 
-			main_window.ribbon.tab_1.group_1.combobox_1.set_item_source (l_list)
+			main_window.ribbon.tab.group.combobox.set_item_source (l_list)
 		end
 
 	add_items_to_drop_down_gallery
@@ -77,7 +77,7 @@ feature {NONE} -- Implementation
 			l_item.set_label ("second item")
 			l_list.extend (l_item)
 
-			main_window.ribbon.tab_1.group_1.drop_down_gallery_1.set_item_source (l_list)
+			main_window.ribbon.tab.group.drop_down_gallery.set_item_source (l_list)
 		end
 
 	main_window: MAIN_WINDOW

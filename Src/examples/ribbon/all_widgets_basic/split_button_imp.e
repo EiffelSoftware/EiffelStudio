@@ -8,7 +8,7 @@
 	revision: "$Revision$"
 
 deferred class
-	SPLIT_BUTTON_1_IMP
+	SPLIT_BUTTON_IMP
 
 inherit
 	EV_RIBBON_SPLIT_BUTTON
@@ -22,19 +22,19 @@ feature {NONE} -- Initialization
 			-- Create objects
 		do
 			Precursor
-			create button_3.make_with_command_list (<<{COMMAND_NAME_CONSTANTS}.button_3>>)
-			create button_4.make_with_command_list (<<{COMMAND_NAME_CONSTANTS}.button_4>>)
+			create split_button_child_1.make_with_command_list (<<{COMMAND_NAME_CONSTANTS}.split_button_child_1>>)
+			create split_button_child_2.make_with_command_list (<<{COMMAND_NAME_CONSTANTS}.split_button_child_2>>)
 
 			create buttons.make (1)
-			buttons.extend (button_3)
-			buttons.extend (button_4)
+			buttons.extend (split_button_child_1)
+			buttons.extend (split_button_child_2)
 
 		end
 
 feature -- Query
 
-	button_3: BUTTON_3
-	button_4: BUTTON_4
+	split_button_child_1: SPLIT_BUTTON_CHILD_1
+	split_button_child_2: SPLIT_BUTTON_CHILD_2
 
 
 end

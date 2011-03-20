@@ -8,10 +8,11 @@
 	revision: "$Revision$"
 
 deferred class
-	TOGGLE_BUTTON_1_IMP
+	COMBOBOX_IMP
 
 inherit
-	EV_RIBBON_TOGGLE_BUTTON
+	EV_RIBBON_COMBO_BOX
+
 
 end
 

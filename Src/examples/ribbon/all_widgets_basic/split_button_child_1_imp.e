@@ -8,7 +8,7 @@ note
 	revision: "$Revision$"
 
 deferred class
-	BUTTON_4_IMP
+	SPLIT_BUTTON_CHILD_1_IMP
 
 inherit
 	EV_RIBBON_BUTTON

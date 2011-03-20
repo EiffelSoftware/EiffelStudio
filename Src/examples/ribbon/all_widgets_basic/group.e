@@ -6,13 +6,13 @@ note
 	revision: "$Revision$"
 
 class
-	TAB_1
+	GROUP
 
 inherit
-	TAB_1_IMP
+	GROUP_IMP
 
 create
-	{EV_RIBBON} make_with_command_list
+	{EV_RIBBON_TAB} make_with_command_list
 	
 end
 

@@ -30,10 +30,10 @@ feature {NONE} -- Initialization
 	create_interface_objects
 			-- Create objects
 		do
-			create tab_1.make_with_command_list (<<{COMMAND_NAME_CONSTANTS}.tab_1>>)
+			create tab.make_with_command_list (<<{COMMAND_NAME_CONSTANTS}.tab>>)
 
 			create tabs.make (1)
-			tabs.extend (tab_1)
+			tabs.extend (tab)
 
 		end
 
@@ -48,7 +48,7 @@ feature -- Command
 		end
 		
 feature -- Query
-	tab_1: TAB_1
+	tab: TAB
 
 
 end

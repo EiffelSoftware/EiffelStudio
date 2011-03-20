@@ -30,22 +30,22 @@ feature {NONE} -- Initialization
 	create_interface_objects
 			-- Create objects
 		do
-			create tab_1.make_with_command_list (<<{COMMAND_NAME_CONSTANTS}.tab_1>>)
-			create tab_2.make_with_command_list (<<{COMMAND_NAME_CONSTANTS}.tab_2>>)
-			create tab_3.make_with_command_list (<<{COMMAND_NAME_CONSTANTS}.tab_3>>)
-			create tab_4.make_with_command_list (<<{COMMAND_NAME_CONSTANTS}.tab_4>>)
-			create tab_5.make_with_command_list (<<{COMMAND_NAME_CONSTANTS}.tab_5>>)
-			create tab_6.make_with_command_list (<<{COMMAND_NAME_CONSTANTS}.tab_6>>)
-			create tab_7.make_with_command_list (<<{COMMAND_NAME_CONSTANTS}.tab_7>>)
+			create tab_button.make_with_command_list (<<{COMMAND_NAME_CONSTANTS}.tab_button>>)
+			create tab_toggle_button.make_with_command_list (<<{COMMAND_NAME_CONSTANTS}.tab_toggle_button>>)
+			create tab_check_box.make_with_command_list (<<{COMMAND_NAME_CONSTANTS}.tab_check_box>>)
+			create tab_spinner.make_with_command_list (<<{COMMAND_NAME_CONSTANTS}.tab_spinner>>)
+			create tab_combo_box.make_with_command_list (<<{COMMAND_NAME_CONSTANTS}.tab_combo_box>>)
+			create tab_split_button.make_with_command_list (<<{COMMAND_NAME_CONSTANTS}.tab_split_button>>)
+			create tab_dropdown_gallery.make_with_command_list (<<{COMMAND_NAME_CONSTANTS}.tab_dropdown_gallery>>)
 
 			create tabs.make (1)
-			tabs.extend (tab_1)
-			tabs.extend (tab_2)
-			tabs.extend (tab_3)
-			tabs.extend (tab_4)
-			tabs.extend (tab_5)
-			tabs.extend (tab_6)
-			tabs.extend (tab_7)
+			tabs.extend (tab_button)
+			tabs.extend (tab_toggle_button)
+			tabs.extend (tab_check_box)
+			tabs.extend (tab_spinner)
+			tabs.extend (tab_combo_box)
+			tabs.extend (tab_split_button)
+			tabs.extend (tab_dropdown_gallery)
 
 		end
 
@@ -60,13 +60,13 @@ feature -- Command
 		end
 		
 feature -- Query
-	tab_1: TAB_1
-	tab_2: TAB_2
-	tab_3: TAB_3
-	tab_4: TAB_4
-	tab_5: TAB_5
-	tab_6: TAB_6
-	tab_7: TAB_7
+	tab_button: TAB_BUTTON
+	tab_toggle_button: TAB_TOGGLE_BUTTON
+	tab_check_box: TAB_CHECK_BOX
+	tab_spinner: TAB_SPINNER
+	tab_combo_box: TAB_COMBO_BOX
+	tab_split_button: TAB_SPLIT_BUTTON
+	tab_dropdown_gallery: TAB_DROPDOWN_GALLERY
 
 
 end

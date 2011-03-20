@@ -7,121 +7,121 @@
 
 STRINGTABLE 
 BEGIN
-    tab_1_LabelTitle_RESID L"Button" /* LabelTitle tab_1_LabelTitle_RESID: (null) */
+    tab_button_LabelTitle_RESID L"Button" /* LabelTitle tab_button_LabelTitle_RESID: (null) */
 END
 
 STRINGTABLE 
 BEGIN
-    button_1_LabelTitle_RESID L"Change label title" /* LabelTitle button_1_LabelTitle_RESID: (null) */
+    button_change_label_title_LabelTitle_RESID L"Change label title" /* LabelTitle button_change_label_title_LabelTitle_RESID: (null) */
 END
 
 STRINGTABLE 
 BEGIN
-    button_2_LabelTitle_RESID L"Change small image" /* LabelTitle button_2_LabelTitle_RESID: (null) */
+    button_change_small_image_LabelTitle_RESID L"Change small image" /* LabelTitle button_change_small_image_LabelTitle_RESID: (null) */
 END
 
 STRINGTABLE 
 BEGIN
-    button_3_LabelTitle_RESID L"Set tooltip title" /* LabelTitle button_3_LabelTitle_RESID: (null) */
+    button_set_tooltip_title_LabelTitle_RESID L"Set tooltip title" /* LabelTitle button_set_tooltip_title_LabelTitle_RESID: (null) */
 END
 
 STRINGTABLE 
 BEGIN
-    button_4_LabelTitle_RESID L"Set tooltip description" /* LabelTitle button_4_LabelTitle_RESID: (null) */
+    button_set_tooltip_description_LabelTitle_RESID L"Set tooltip description" /* LabelTitle button_set_tooltip_description_LabelTitle_RESID: (null) */
 END
 
 STRINGTABLE 
 BEGIN
-    button_5_LabelTitle_RESID L"Set tooltip title and description" /* LabelTitle button_5_LabelTitle_RESID: (null) */
+    button_set_tooltip_title_and_description_LabelTitle_RESID L"Set tooltip title and description" /* LabelTitle button_set_tooltip_title_and_description_LabelTitle_RESID: (null) */
 END
 
 STRINGTABLE 
 BEGIN
-    button_6_LabelTitle_RESID L"Change large image" /* LabelTitle button_6_LabelTitle_RESID: (null) */
+    button_change_large_image_LabelTitle_RESID L"Change large image" /* LabelTitle button_change_large_image_LabelTitle_RESID: (null) */
 END
 
-button_6_LargeImages_RESID    BITMAP    ".\\res\\AddTableL.bmp" /* LargeImages button_6_LargeImages_RESID: (null) */
+button_change_large_image_LargeImages_RESID    BITMAP    ".\\res\\AddTableL.bmp" /* LargeImages button_change_large_image_LargeImages_RESID: (null) */
 STRINGTABLE 
 BEGIN
-    tab_2_LabelTitle_RESID L"Toggle Button" /* LabelTitle tab_2_LabelTitle_RESID: (null) */
-END
-
-STRINGTABLE 
-BEGIN
-    toggle_button_1_LabelTitle_RESID L"Check toggle button state" /* LabelTitle toggle_button_1_LabelTitle_RESID: (null) */
+    tab_toggle_button_LabelTitle_RESID L"Toggle Button" /* LabelTitle tab_toggle_button_LabelTitle_RESID: (null) */
 END
 
 STRINGTABLE 
 BEGIN
-    tab_3_LabelTitle_RESID L"Check Box" /* LabelTitle tab_3_LabelTitle_RESID: (null) */
+    toggle_button_check_state_LabelTitle_RESID L"Check toggle button state" /* LabelTitle toggle_button_check_state_LabelTitle_RESID: (null) */
 END
 
 STRINGTABLE 
 BEGIN
-    checkbox_1_LabelTitle_RESID L"Check check box state" /* LabelTitle checkbox_1_LabelTitle_RESID: (null) */
+    tab_check_box_LabelTitle_RESID L"Check Box" /* LabelTitle tab_check_box_LabelTitle_RESID: (null) */
 END
 
 STRINGTABLE 
 BEGIN
-    tab_4_LabelTitle_RESID L"Spinner" /* LabelTitle tab_4_LabelTitle_RESID: (null) */
+    checkbox_check_state_LabelTitle_RESID L"Check check box state" /* LabelTitle checkbox_check_state_LabelTitle_RESID: (null) */
 END
 
 STRINGTABLE 
 BEGIN
-    spinner_1_LabelTitle_RESID L"Spinner" /* LabelTitle spinner_1_LabelTitle_RESID: (null) */
+    tab_spinner_LabelTitle_RESID L"Spinner" /* LabelTitle tab_spinner_LabelTitle_RESID: (null) */
 END
 
 STRINGTABLE 
 BEGIN
-    button_spinner_1_LabelTitle_RESID L"Query spinner value" /* LabelTitle button_spinner_1_LabelTitle_RESID: (null) */
+    spinner_LabelTitle_RESID L"Spinner" /* LabelTitle spinner_LabelTitle_RESID: (null) */
 END
 
 STRINGTABLE 
 BEGIN
-    tab_5_LabelTitle_RESID L"Combo Box" /* LabelTitle tab_5_LabelTitle_RESID: (null) */
+    spinner_query_value_button_LabelTitle_RESID L"Query spinner value" /* LabelTitle spinner_query_value_button_LabelTitle_RESID: (null) */
 END
 
 STRINGTABLE 
 BEGIN
-    combobox_1_LabelTitle_RESID L"Combo box" /* LabelTitle combobox_1_LabelTitle_RESID: (null) */
+    tab_combo_box_LabelTitle_RESID L"Combo Box" /* LabelTitle tab_combo_box_LabelTitle_RESID: (null) */
 END
 
 STRINGTABLE 
 BEGIN
-    button_combobox_1_LabelTitle_RESID L"Query combo box selected index" /* LabelTitle button_combobox_1_LabelTitle_RESID: (null) */
+    combobox_LabelTitle_RESID L"Combo box" /* LabelTitle combobox_LabelTitle_RESID: (null) */
 END
 
 STRINGTABLE 
 BEGIN
-    tab_6_LabelTitle_RESID L"SplitButton" /* LabelTitle tab_6_LabelTitle_RESID: (null) */
+    combo_box_query_selected_index_button_LabelTitle_RESID L"Query combo box selected index" /* LabelTitle combo_box_query_selected_index_button_LabelTitle_RESID: (null) */
 END
 
 STRINGTABLE 
 BEGIN
-    split_button_1_LabelTitle_RESID L"Split button" /* LabelTitle split_button_1_LabelTitle_RESID: (null) */
+    tab_split_button_LabelTitle_RESID L"SplitButton" /* LabelTitle tab_split_button_LabelTitle_RESID: (null) */
 END
 
 STRINGTABLE 
 BEGIN
-    button_7_LabelTitle_RESID L"Split button 1" /* LabelTitle button_7_LabelTitle_RESID: (null) */
+    split_button_LabelTitle_RESID L"Split button" /* LabelTitle split_button_LabelTitle_RESID: (null) */
 END
 
 STRINGTABLE 
 BEGIN
-    button_8_LabelTitle_RESID L"Split button 2" /* LabelTitle button_8_LabelTitle_RESID: (null) */
+    split_button_child_1_LabelTitle_RESID L"Split button 1" /* LabelTitle split_button_child_1_LabelTitle_RESID: (null) */
 END
 
 STRINGTABLE 
 BEGIN
-    tab_7_LabelTitle_RESID L"Dropdown Gallery" /* LabelTitle tab_7_LabelTitle_RESID: (null) */
+    split_button_child_2_LabelTitle_RESID L"Split button 2" /* LabelTitle split_button_child_2_LabelTitle_RESID: (null) */
 END
 
 STRINGTABLE 
 BEGIN
-    drop_down_gallery_1_LabelTitle_RESID L"Dropdown Gallery" /* LabelTitle drop_down_gallery_1_LabelTitle_RESID: (null) */
+    tab_dropdown_gallery_LabelTitle_RESID L"Dropdown Gallery" /* LabelTitle tab_dropdown_gallery_LabelTitle_RESID: (null) */
 END
 
-drop_down_gallery_1_LargeImages_RESID    BITMAP    ".\\res\\Button_Image.bmp" /* LargeImages drop_down_gallery_1_LargeImages_RESID: (null) */
+STRINGTABLE 
+BEGIN
+    drop_down_gallery_LabelTitle_RESID L"Dropdown Gallery" /* LabelTitle drop_down_gallery_LabelTitle_RESID: (null) */
+END
+
+drop_down_gallery_LargeImages_RESID    BITMAP    ".\\res\\Button_Image.bmp" /* LargeImages drop_down_gallery_LargeImages_RESID: (null) */
 STRINGTABLE 
 BEGIN
     InternalCmd2_LabelTitle_RESID L"Label:InternalCmd2" /* LabelTitle InternalCmd2_LabelTitle_RESID: (null) */

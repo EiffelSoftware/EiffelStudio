@@ -3,35 +3,50 @@ class PRODUCER
 create
 	make
 
-feature
+feature -- Initialization
 
-	make
+	make (a_item_count: INTEGER; a_inventory: separate INVENTORY)
+			-- Initialize to produce `a_item_count' items.
+		require
+			valid_item_count: a_item_count > 0
 		do
-			has_something := False
+			print ("Producer: Initializing to produce " + a_item_count.out + " items.%N")
+			item_count := a_item_count
+			inventory := a_inventory
 			value := 0
 		end
 
-	has_something: BOOLEAN
+feature -- Access
 
-	make_something
-		require
-			has_nothing: not has_something
+	item_count: INTEGER
+			-- Items to produce.
+
+feature -- Basic operations
+
+	live
+			-- Lifecycle.
+		local
+			i: INTEGER
 		do
-			has_something := True
+			across (1 |..| item_count) as ic loop produce (inventory) end
+		end
+
+	produce (a_inventory: separate INVENTORY)
+			-- Produce an item into `a_inventory'.
+		require
+			empty_inventory: not a_inventory.has_item
+		do
 			value := value + 1
-			io.put_string ("Produced: " + value.out + "%N")
+			a_inventory.put (value)
+			io.put_string ("Producer: Produced " + value.out + ".%N")
 		end
 
-	get_something: INTEGER
-		require
-			is_ready: has_something
-		do
-			has_something := False
-			Result := value
-		end
+feature {NONE} -- Implementation
 
-feature {NONE}
+	inventory: separate INVENTORY
+			-- Shared inventory.
 
 	value: INTEGER
+			-- Value of current item.
 
 end

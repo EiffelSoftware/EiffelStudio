@@ -23,9 +23,9 @@ feature -- Initialization
 			l_result_data: separate DATA
 		do
 			-- Read the data size from the console.
-			io.put_string ("Specify data size (between 2 and 1000):%N")
+			io.put_string ("Specify data size (between 2 and " + max_data_size.out + "):%N")
 			io.read_integer
-			l_data_size := io.last_integer
+			l_data_size := io.last_integer.min (max_data_size)
 
 			-- Read the seed from the console.
 			io.put_string ("Specify random seed (integer):%N")
@@ -48,6 +48,9 @@ feature -- Initialization
 		end
 
 feature {NONE} -- Implementation
+
+	max_data_size: INTEGER = 100
+		-- Maximum size for data.
 
 	print_on_console (a_data: separate DATA)
 			-- Print 'a_data' to the console.

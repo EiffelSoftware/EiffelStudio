@@ -5,33 +5,47 @@ create
 
 feature
 
-	prod: separate PRODUCER
-
- 	make (a_p: separate PRODUCER)
+ 	make (a_item_count: INTEGER; a_inventory: separate INVENTORY)
+ 			-- Initialize to consume `a_item_count' items from `a_inventory'.
+ 		require
+ 			valid_item_count: a_item_count > 0
 		do
-			prod := a_p
+			print ("Consumer: Initializing to consume " + a_item_count.out + " items.%N")
+			inventory := a_inventory
+			item_count := a_item_count
 		end
 
-	run
+feature -- Access
+
+	item_count: INTEGER
+			-- Items to consume
+
+feature -- Basic operations
+
+	live
+			-- Lifecycle.
 		do
-			from
-			until
-				False
-			loop
-				take (prod)
+			across (1 |..| item_count) as ic loop
+				print ("Consumer: Attempting to consume inventory ... %N")
+				consume (inventory)
 			end
 		end
 
-feature {NONE}
-	
-	take (a_p: separate PRODUCER)
+feature {NONE} -- Implementation
+
+	consume (a_inventory: separate INVENTORY)
+			-- Consume the item held in `a_inventory'.
 		require
-			producer_ready: a_p.has_something
+			full_inventory: a_inventory.has_item
 		local
-			i: INTEGER
+			l_consumed_item: INTEGER
 		do
-			i := a_p.get_something
-			io.put_string ("Consumed: " + i.out + "%N")
+			l_consumed_item := a_inventory.item
+			a_inventory.remove
+			print ("Consumer: Consumed " + l_consumed_item.out + ".%N")
 		end
+
+	inventory: separate INVENTORY
+			-- Shared inventory.
 
 end

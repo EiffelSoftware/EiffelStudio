@@ -10,34 +10,34 @@ class
 
 feature -- Access
 
-	Swp_nosize: INTEGER = 1
+	Swp_nosize: INTEGER = 0x1
 
-	Swp_nomove: INTEGER = 2
+	Swp_nomove: INTEGER = 0x2
 
-	Swp_nozorder: INTEGER = 4
+	Swp_nozorder: INTEGER = 0x4
 
-	Swp_noredraw: INTEGER = 8
+	Swp_noredraw: INTEGER = 0x8
 
-	Swp_noactivate: INTEGER = 16
+	Swp_noactivate: INTEGER = 0x10
 
-	Swp_framechanged: INTEGER = 32
+	Swp_framechanged: INTEGER = 0x20
 			-- Frame changed: send WM_NCCALCSIZE.
 
-	Swp_showwindow: INTEGER = 64
+	Swp_showwindow: INTEGER = 0x40
 
-	Swp_hidewindow: INTEGER = 128
+	Swp_hidewindow: INTEGER = 0x80
 
-	Swp_nocopybits: INTEGER = 256
+	Swp_nocopybits: INTEGER = 0x100
 
-	Swp_noownerzorder: INTEGER = 512
+	Swp_noownerzorder: INTEGER = 0x200
 
-	Swp_drawframe: INTEGER = 32
-			-- Same as `Swp_drawframe'.
+	Swp_drawframe: INTEGER = 0x20
+			-- Same as `Swp_framechanged'.
 
-	Swp_nosendchanging: INTEGER = 1024
+	Swp_nosendchanging: INTEGER = 0x400
 			-- Don't send WM_WINDOWPOSCHANGING.
 
-	Swp_noreposition: INTEGER = 512
+	Swp_noreposition: INTEGER = 0x200
 			-- Same as `Swp_noownerzborder'.
 
 	swp_defererase: INTEGER = 0x2000

@@ -2267,7 +2267,7 @@ feature {NONE} -- Implementation
 				t := last_type.as_attached_in (context.current_class)
 				last_type := t
 				if is_byte_node_enabled then
-					l_is_string_32 := not t.same_as (string_type)
+					l_is_string_32 := t.associated_class /= string_type.associated_class
 					if not l_is_string_32 then
 							-- For STRING_8 manifest string, we keep the written value for compatibility.
 						l_value := l_as.binary_value

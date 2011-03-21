@@ -16,9 +16,6 @@ inherit
 		end
 
 	EV_CELL_IMP
-		undefine
-			default_style,
-			default_ex_style
 		redefine
 			interface,
 			old_make,
@@ -118,18 +115,6 @@ feature {NONE} -- Implementation
 
 	is_vertical_scroll_bar_visible: BOOLEAN
 		-- Should vertical scrollbar be displayed?
-
-
-	default_style: INTEGER
-		do
-			Result := Ws_child | Ws_clipchildren | Ws_clipsiblings | Ws_visible
-		end
-
-	default_ex_style: INTEGER
-			-- The default ex-style of the window.
-		do
-			Result := Ws_ex_controlparent
-		end
 
 	on_size (size_type, a_width, a_height: INTEGER)
 		local

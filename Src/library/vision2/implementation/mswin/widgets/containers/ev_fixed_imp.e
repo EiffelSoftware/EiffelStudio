@@ -36,7 +36,6 @@ inherit
 			on_wm_dropfiles
 		redefine
 			top_level_window_imp,
-			default_style,
 			on_erase_background
 		end
 
@@ -155,11 +154,6 @@ feature {EV_ANY_I} -- Implementation
 				ev_children.item.set_top_level_window_imp (a_window)
 				ev_children.forth
 			end
-		end
-
-	default_style: INTEGER
-		do
-			Result := Ws_child | Ws_visible | Ws_clipchildren | Ws_clipsiblings
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation

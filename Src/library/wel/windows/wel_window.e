@@ -1944,19 +1944,17 @@ feature {WEL_ABSTRACT_DISPATCHER, WEL_WINDOW} -- Implementation
 			when Wm_windowposchanged then
 				on_wm_window_pos_changed (lparam)
 			when Wm_move then
-					-- Set `internal_wm_size_called' for fixing
-					-- `move_and_resize_internal', `move' and `resize' by sending
-					-- a  WM_SIZE message when Windows failed to do so.
-				internal_wm_size_called := True
 				on_move (x_position_from_lparam (lparam), y_position_from_lparam (lparam))
-			when Wm_size then
 					-- Set `internal_wm_size_called' for fixing
 					-- `move_and_resize_internal', `move' and `resize' by sending
 					-- a  WM_SIZE message when Windows failed to do so.
 				internal_wm_size_called := True
-				on_size (wparam.to_integer_32,
-					cwin_lo_word (lparam),
-					cwin_hi_word (lparam))
+			when Wm_size then
+				on_size (wparam.to_integer_32, cwin_lo_word (lparam), cwin_hi_word (lparam))
+					-- Set `internal_wm_size_called' for fixing
+					-- `move_and_resize_internal', `move' and `resize' by sending
+					-- a  WM_SIZE message when Windows failed to do so.
+				internal_wm_size_called := True
 
 			when Wm_nccalcsize then
 			when Wm_lbuttondown then

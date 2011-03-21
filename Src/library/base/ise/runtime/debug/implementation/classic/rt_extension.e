@@ -105,7 +105,7 @@ feature -- Notification
 
 	cached_arguments: ARRAY [detachable TUPLE]
 			-- Cached argument to use less temporary objects
-		once
+		once ("THREAD")
 				--| Make sure, the id are contigus, and in this range !
 			create Result.make_filled (Void, Op_enter_feature, Op_rt_assign_local)
 		ensure
@@ -268,7 +268,7 @@ feature {NONE} -- Execution replay
 		end
 
 	execution_recorder_parameters: separate RT_DBG_EXECUTION_PARAMETERS
-			-- Once per thread record parameters.
+			-- Once per process record parameters.
 		once ("PROCESS")
 			create Result.make
 		ensure
@@ -307,9 +307,7 @@ feature {NONE} -- Execution replay
 
 	execution_recorder_cell: CELL [detachable RT_DBG_EXECUTION_RECORDER]
 			-- Cell containing the once per thread recorder, if activated.
-		note
-			description: "Once per thread"
-		once
+		once ("THREAD")
 			create Result.put (Void)
 		ensure
 			result_attached: Result /= Void

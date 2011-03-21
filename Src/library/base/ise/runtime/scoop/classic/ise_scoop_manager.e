@@ -648,7 +648,7 @@ feature -- Command/Query Handling
 			l_request_chain_node_meta_data_queue: detachable like new_request_chain_node_meta_data_queue
 			l_unique_pid_count, i, l_last_pid_index, l_logged_calls_count: INTEGER_32
 			l_is_synchronous, l_is_lock_passing, l_client_is_sibling, l_client_sync_needed, l_exit_loop: BOOLEAN
-			l_call_ptr: POINTER
+			l_call_ptr, l_default_ptr: POINTER
 		do
 			debug ("ISE_SCOOP_MANAGER")
 				print ("log_call_on_processor for pid " + a_client_processor_id.out + " on pid " + a_supplier_processor_id.out + "%N")
@@ -707,7 +707,14 @@ feature -- Command/Query Handling
 			if l_logged_calls_count = l_request_chain_node_queue_entry.capacity then
 					-- Resize node structure if there is not enough room for the new entry
 					--| FIXME IEK: Resizing 3 extra items may not be optimal in all cases
-				l_request_chain_node_queue_entry := l_request_chain_node_queue_entry.aliased_resized_area (l_request_chain_node_queue_entry.count + 3)
+				if l_client_request_chain_meta_data /= Void and then
+					{ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_client_request_chain_meta_data.item_address (request_chain_status_index), 0) = request_chain_status_open
+				then
+						-- We can reuse the data structure if the chain is still open.
+					l_request_chain_node_queue_entry := l_request_chain_node_queue_entry.aliased_resized_area (l_request_chain_node_queue_entry.count + 3)
+				else
+					l_request_chain_node_queue_entry := l_request_chain_node_queue_entry.resized_area (l_request_chain_node_queue_entry.count + 3)
+				end
 				l_request_chain_node_queue [l_request_chain_node_id] := l_request_chain_node_queue_entry
 					-- Readd in case we have a new structure.
 			end
@@ -780,7 +787,7 @@ feature -- Command/Query Handling
 						l_call_ptr := l_client_request_chain_node_queue_entry [l_logged_calls_count]
 
 							-- Reset call ptr from list before call in case list resizes
-						l_client_request_chain_node_queue_entry [l_logged_calls_count] := default_pointer
+						l_client_request_chain_node_queue_entry [l_logged_calls_count] := l_default_ptr
 						l_client_request_chain_node_queue_entry.keep_head (l_logged_calls_count)
 							-- We must service all requests until the routine has closed its chain.
 
@@ -975,16 +982,16 @@ feature {NONE} -- Resource Initialization
 			l_processor_exit, l_feature_application_loop_exit: BOOLEAN
 			l_processor_meta_data: like new_processor_meta_data_entry
 			l_executing_node_id: like invalid_request_chain_node_id
-			l_executing_node_id_cursor, l_blocking_pid: INTEGER_32
+			l_executing_node_id_cursor: INTEGER_32
 			l_request_chain_node_queue: detachable like new_request_chain_node_queue
 			l_executing_request_chain_node: detachable like new_request_chain_node_queue_entry
 			l_request_chain_node_meta_data_queue: detachable like new_request_chain_node_meta_data_queue
 			l_executing_request_chain_node_meta_data: detachable like new_request_chain_node_meta_data_queue_entry
-			l_head_pid: like processor_id_type
+			l_head_pid, l_sync_pid: like processor_id_type
 			l_is_head: BOOLEAN
 			l_orig_sync_count, l_temp_count: INTEGER
 			l_wait_counter: NATURAL_32
-			l_call_ptr: POINTER
+			l_call_ptr, l_default_ptr: POINTER
 		do
 			-- SCOOP Processor has been launched
 			-- We are guaranteed that at least a creation routine has been logged.
@@ -1109,14 +1116,12 @@ feature {NONE} -- Resource Initialization
 							check l_executing_request_chain_node_attached: attached l_executing_request_chain_node end
 							if l_executing_node_id_cursor < l_executing_request_chain_node.count then
 								l_call_ptr := l_executing_request_chain_node [l_executing_node_id_cursor]
-								if l_call_ptr /= default_pointer then
-										-- Reset call pointer from list in case structure structure resizes as a result of the call.
-									l_executing_request_chain_node [l_executing_node_id_cursor] := default_pointer
-										-- Code used for debugging request chain initialization.
-									l_blocking_pid := call_data_sync_pid (l_call_ptr)
+								if l_call_ptr /= l_default_ptr then
+									l_sync_pid := call_data_sync_pid (l_call_ptr)
 									scoop_command_call (l_call_ptr)
-									processor_semaphore_signal (call_data_sync_pid (l_call_ptr))
-									scoop_command_call_cleanup (l_call_ptr)
+									if l_sync_pid /= null_processor_id then
+										processor_semaphore_signal (l_sync_pid)
+									end
 									l_executing_node_id_cursor := l_executing_node_id_cursor + 1
 								end
 							elseif l_executing_request_chain_node_meta_data [request_chain_status_index] = request_chain_status_closed then
@@ -1134,6 +1139,22 @@ feature {NONE} -- Resource Initialization
 								l_wait_counter := l_wait_counter + 1
 							end
 						end
+
+							-- Clean up call data, this can only be performed when the chain is closed as logging calls may resize the request chain node queue
+							-- structure while it is being manipulated, which would break the post-condition of resize.				
+						from
+							l_executing_request_chain_node := l_request_chain_node_queue [l_executing_node_id]
+							check l_executing_request_chain_node_attached: attached l_executing_request_chain_node end
+							l_executing_node_id_cursor := 0
+						until
+							l_executing_node_id_cursor = l_executing_request_chain_node.count
+						loop
+							scoop_command_call_cleanup (l_executing_request_chain_node [l_executing_node_id_cursor])
+							l_executing_node_id_cursor := l_executing_node_id_cursor + 1
+						end
+							-- Reset execution cursor.
+						l_executing_node_id_cursor := 0
+
 							-- Increment execution cursor by one.
 						l_executing_node_id := l_executing_node_id + 1
 						if l_executing_node_id >= max_request_chain_node_queue_index then
@@ -1306,7 +1327,7 @@ feature {NONE} -- Scoop Processor Meta Data
 	call_data: POINTER do end
 	result_type: POINTER do end
 
-	max_scoop_processors_instantiable: INTEGER_32 = 256
+	max_scoop_processors_instantiable: INTEGER_32 = 1536
 		-- Total Number of SCOOP Processors that may be instantiated by Pool including Root.
 
 	processor_meta_data: SPECIAL [like new_processor_meta_data_entry]

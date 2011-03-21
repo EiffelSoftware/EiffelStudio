@@ -193,12 +193,8 @@ feature {NONE} -- Implementation
 
 	default_style: INTEGER
 		do
-			Result := Ws_child +
-				Ws_clipchildren +
-				Ws_clipsiblings +
-				Ws_visible +
-				Ws_vscroll +
-				Ws_hscroll
+			Result := Ws_child + Ws_clipchildren + Ws_clipsiblings + Ws_visible +
+				Ws_vscroll + Ws_hscroll
 		end
 
 	default_ex_style: INTEGER

@@ -173,7 +173,6 @@ feature {NONE} -- Implementation
 
 	layout_widgets (originator: BOOLEAN)
 		local
-			rect: WEL_RECT
 			l_first_imp: like first_imp
 			l_second_imp: like second_imp
 		do

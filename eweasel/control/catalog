@@ -2508,7 +2508,8 @@ test	empty-attribute-body-bogus-vevi			attach079 tcf pass attached_types validit
 test	bogus-object-test						attach080 tcf pass attached_types object_test execution
 test	nonconforming-inheritance-bogus-vevi		attach081 tcf fail attached_types non-conforming
 test	repeated-inheritance-bogus-vevi			attach082 tcf fail attached_types
-test	self-initializing-attribute-gc			attach083 tcf pass attached_types void_safe attribute self_init execution
+test	self-initializing-attribute-gc	attach083 tcf pass attached_types void_safe attribute self_init execution
+test	manifest-string-type			attach084 tcf pass attached_types void_safe execution
 
 -- Tests for conformance in general
 test	basic-conformance		conform001 tcf pass conformance

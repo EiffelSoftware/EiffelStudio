@@ -1198,7 +1198,12 @@ feature {NONE} -- Resource Initialization
 	processor_is_idle (a_client_processor_id: like processor_id_type; a_wait_counter: NATURAL_32)
 			-- Processor `a_client_processor_id' is idle.
 		do
-			processor_yield (a_client_processor_id, a_wait_counter)
+			if a_wait_counter < 2000 then
+				processor_yield (a_client_processor_id, a_wait_counter)
+			else
+					--| FIXME Implement idle semaphore wakeup for better efficiency.
+				processor_sleep (one_second_expressed_in_nanoseconds // 20)
+			end
 		end
 
 	scoop_command_call (data: like call_data)
@@ -1593,12 +1598,17 @@ feature {NONE} -- Externals
 			if l_counter < 100 then
 					-- Spin lock
 				do_nothing
-			elseif l_counter < 999 then
+			elseif l_counter < max_yield_counter then
 				processor_cpu_yield
-			elseif l_counter = 999 then
+			elseif l_counter = max_yield_counter then
 				processor_sleep (1)
 			end
 		end
+
+	processor_sleep_quantum: NATURAL_32
+
+	max_yield_counter: NATURAL_32 = 999
+		-- Maximum value of the yield counter.
 
 	frozen processor_cpu_yield
 			-- Yield processor to other threads in the processor that are on the same cpu.

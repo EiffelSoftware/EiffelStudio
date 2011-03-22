@@ -10,11 +10,10 @@ class
 
 feature -- Basic operations
 
-	sort (a_data: separate DATA)
+	sort (a_data: separate DATA; a_sorting_depth: NATURAL)
 			-- Sort `a_data'.
 		local
-			l_left_quicksorter: separate QUICKSORTER
-			l_right_quicksorter: separate QUICKSORTER
+			l_left_quicksorter, l_right_quicksorter: detachable separate QUICKSORTER
 			l_left_data: detachable separate DATA
 			l_right_data: detachable separate DATA
 
@@ -57,25 +56,39 @@ feature -- Basic operations
 			if l_left_position < l_pivot_position - 1 then
 				-- There is one.
 				-- Sort the left part with another quicksorter.
-				create l_left_quicksorter
-				create l_left_data.make_from_other_data (a_data, l_left_position, l_pivot_position - 1)
-				recursive_sort (l_left_quicksorter, l_left_data)
+				if a_sorting_depth <= max_recursion_depth then
+					create l_left_quicksorter
+					l_left_data := new_data_from_quicksorter (l_left_quicksorter, a_data, l_left_position, l_pivot_position - 1)
+				else
+					l_left_quicksorter := Current
+					create {DATA} l_left_data.make_from_other_data (a_data, l_left_position, l_pivot_position - 1)
+				end
+					-- Retrieve data from processor of left sorter.
+
+				recursive_sort (l_left_quicksorter, l_left_data, a_sorting_depth + 1)
 			end
 
 			-- Check if there is a right part with more than one item.
 			if l_pivot_position + 1 < l_right_position then
 				-- There is one.
 				-- Sort the right part with another quicksorter.
-				create l_right_quicksorter
-				create l_right_data.make_from_other_data (a_data, l_pivot_position + 1, l_right_position)
-				recursive_sort (l_right_quicksorter, l_right_data)
+				if a_sorting_depth <= max_recursion_depth then
+					create l_right_quicksorter
+					l_right_data := new_data_from_quicksorter (l_right_quicksorter, a_data, l_pivot_position + 1, l_right_position)
+				else
+					l_right_quicksorter := Current
+					create {DATA} l_right_data.make_from_other_data (a_data, l_pivot_position + 1, l_right_position)
+				end
+					-- Retrieve data from processor of right sorter.
+
+				recursive_sort (l_right_quicksorter, l_right_data, a_sorting_depth + 1)
 			end
 
 			-- Merge.
 
 			-- Merge the left part.
 			-- Check if there is a left part with more than one item.
-			if l_left_position < l_pivot_position - 1 then
+			if l_left_quicksorter /= Void then
 				-- There is one.
 				-- Populate the result from the sub quicksorter.
 				check l_left_data /= Void end
@@ -87,20 +100,33 @@ feature -- Basic operations
 
 			-- Merge the right part.
 			-- Check if there is a right part with more than one item.
-			if l_pivot_position + 1 < l_right_position then
+			if l_right_quicksorter /= Void then
 				-- There is one.
-				-- Populate the result from the sub quicksorter.
+				-- Populate the result from the sub quicksorter.				
 				check l_right_data /= Void end
 				import_data_items (l_right_data, a_data, l_pivot_position + 1)
 			end
 		end
 
-feature {NONE} -- Implementation
+	new_data_from_quicksorter (a_quicksorter: separate QUICKSORTER; a_data: separate DATA; a_left_position, a_right_position: INTEGER): separate DATA
+			-- Retrieve a subsection of `a_data' from `a_left_position' to `a_right_position' on the processor of `a_quicksorter'.
+		do
+			if a_quicksorter = Current then
+				create Result.make_from_other_data (a_data, a_left_position, a_right_position)
+			else
+				Result := a_quicksorter.new_data_from_quicksorter (a_quicksorter, a_data, a_left_position, a_right_position)
+			end
+		end
 
-	recursive_sort (a_quicksorter: separate QUICKSORTER; a_data: separate DATA)
+feature {QUICKSORTER} -- Implementation
+
+	max_recursion_depth: NATURAL = 4
+		-- Maximum depth of recursion before using the same processor for sorting.
+
+	recursive_sort (a_quicksorter: separate QUICKSORTER; a_data: separate DATA; a_sorting_depth: NATURAL)
 			-- Sort `a_data' with `a_quicksorter'.
 		do
-			a_quicksorter.sort (a_data)
+			a_quicksorter.sort (a_data, a_sorting_depth)
 		end
 
 	swap_data_items (a_data: separate DATA; a_position_1: INTEGER; a_position_2: INTEGER)

@@ -71,7 +71,8 @@ inherit
 			default_ex_style,
 			class_name,
 			class_style,
-			on_erase_background
+			on_erase_background,
+			on_window_pos_changed
 		end
 
 feature {NONE} -- Initialization
@@ -88,6 +89,24 @@ feature {NONE} -- Implementation
 			-- Top level window that contains `Current'.
 
 feature {NONE} -- WEL Implementation
+
+	on_window_pos_changed (a_wp: WEL_WINDOW_POS)
+			-- <Precursor>
+		local
+			l_width, l_height: INTEGER
+		do
+				-- We don't need to handle `on_move' as descendents do not use it.
+			if a_wp.flags & swp_nosize = 0 then
+				l_width := a_wp.width
+				l_height := a_wp.height
+				a_wp.set_item (default_pointer)
+				on_size (0, l_width, l_height)
+			end
+				-- Disabling the default processing also returns `0' to Windows.
+			disable_default_processing
+				-- To let the caller know that we have received the message
+			internal_wm_size_called := True
+ 		end
 
 	class_style: INTEGER
 			-- Standard style used to create the window class.

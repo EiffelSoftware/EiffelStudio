@@ -7,6 +7,7 @@ feature {NONE} -- Creation
 
         make
         	local
+        		b: BOOLEAN
         		t: TEST
 		do
 			t := f1
@@ -14,6 +15,11 @@ feature {NONE} -- Creation
 			t := f3
 			t := f4
 			t := f5
+			b := g1
+			b := g2
+			b := g3
+			b := g4
+			b := g5
 		end
 
 feature -- Access
@@ -43,6 +49,28 @@ feature -- Access
 			once_status: "global"
 		once
 			Result := Current
+		end
+
+	g1: BOOLEAN
+		once
+		end
+
+	g2: BOOLEAN
+		once ("OBJECT")
+		end
+
+	g3: BOOLEAN
+		once ("THREAD")
+		end
+
+	g4: BOOLEAN
+		once ("PROCESS")
+		end
+
+	g5: BOOLEAN
+		note
+			once_status: "global"
+		once
 		end
 
 end

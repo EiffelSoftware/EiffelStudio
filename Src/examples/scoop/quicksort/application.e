@@ -20,23 +20,22 @@ feature -- Initialization
 			l_seed: INTEGER
 			l_data: separate DATA
 			l_quicksorter: separate QUICKSORTER
-			l_result_data: separate DATA
 		do
-			-- Read the data size from the console.
+				-- Read the data size from the console.
 			io.put_string ("Specify data size (between 2 and " + max_data_size.out + "):%N")
 			io.read_integer
 			l_data_size := io.last_integer.min (max_data_size)
 
-			-- Read the seed from the console.
+				-- Read the seed from the console.
 			io.put_string ("Specify random seed (integer):%N")
 			io.read_integer
 			l_seed := io.last_integer
 
-			-- Create the data.
-			create l_data.make_with_random_items (l_seed, l_data_size)
+				-- Create the sorter and random data.
 			create l_quicksorter
+			create l_data.make_with_random_items (l_seed, l_data_size)
 
-			-- Print the data.
+				-- Print the data.
 			io.put_string ("Data before sorting%N")
 			print_on_console (l_data)
 
@@ -49,7 +48,7 @@ feature -- Initialization
 
 feature {NONE} -- Implementation
 
-	max_data_size: INTEGER = 100
+	max_data_size: INTEGER = 1000
 		-- Maximum size for data.
 
 	print_on_console (a_data: separate DATA)
@@ -61,19 +60,7 @@ feature {NONE} -- Implementation
 	sort (a_quicksorter: separate QUICKSORTER; a_data: separate DATA)
 			-- Sort 'a_data' with 'a_quicksorter'.
 		do
-			a_quicksorter.sort (a_data)
-		end
-
-	data_lower (a_data: separate DATA): INTEGER
-			--
-		do
-			Result := a_data.lower
-		end
-
-	data_upper (a_data: separate DATA): INTEGER
-			--
-		do
-			Result := a_data.upper
+			a_quicksorter.sort (a_data, 1)
 		end
 
 end -- class APPLICATION	

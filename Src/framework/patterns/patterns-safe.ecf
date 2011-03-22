@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="patterns" uuid="8D30ADC2-F392-4AC1-94EC-729B9D340478" library_target="patterns">
-	<target name="patterns" abstract="true">
+	<target name="patterns">
 		<description>Collection of patterns.</description>
+		<root all_classes="true"/>
 		<file_rule>
 			<exclude>/\.svn$</exclude>
 			<exclude>/EIFGENs$</exclude>

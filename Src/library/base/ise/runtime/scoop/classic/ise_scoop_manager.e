@@ -331,7 +331,7 @@ feature -- Request Chain Handling
 		do
 			signify_end_of_request_chain (a_client_processor_id)
 				-- Pause the processor a small amount so that it can attempt to reacquire a request chain.
-			processor_yield (a_client_processor_id, 0)
+			processor_sleep (processor_sleep_quantum)
 		end
 
 	assign_supplier_processor_to_request_chain (a_client_processor_id, a_supplier_processor_id: like processor_id_type)
@@ -1202,7 +1202,7 @@ feature {NONE} -- Resource Initialization
 				processor_yield (a_client_processor_id, a_wait_counter)
 			else
 					--| FIXME Implement idle semaphore wakeup for better efficiency.
-				processor_sleep (one_second_expressed_in_nanoseconds // 20)
+				processor_sleep (processor_sleep_quantum)
 			end
 		end
 
@@ -1605,7 +1605,8 @@ feature {NONE} -- Externals
 			end
 		end
 
-	processor_sleep_quantum: NATURAL_32
+	processor_sleep_quantum: NATURAL_32 = 100_000_000
+		-- Number of nanoseconds an idle processor should temporarily sleep for.
 
 	max_yield_counter: NATURAL_32 = 999
 		-- Maximum value of the yield counter.

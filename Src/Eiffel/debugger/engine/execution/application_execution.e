@@ -439,35 +439,13 @@ feature {NONE} -- Implementation: Remote
 	internal_remote_rt_execution_recorder: like remote_rt_execution_recorder
 			-- Cached value of `remote_rt_execution_recorder'
 
-feature -- Access: Remote access to ISE_SCOOP_MANAGER
-
-	remote_rt_scoop_manager: detachable DBG_RT_SCOOP_MANAGER_PROXY
-			-- Return the remote SCOOP MANAGER
-		do
-			Result := internal_remote_rt_scoop_manager
-			if Result = Void and then attached imp_remote_rt_scoop_manager as rt_scp_mnger then
-				create Result.make (rt_scp_mnger, Current)
-				internal_remote_rt_scoop_manager := Result
-			end
-		end
-
-feature {NONE} -- Implementation: Remote SCOOP MANAGER
-
-	imp_remote_rt_scoop_manager: detachable ABSTRACT_REFERENCE_VALUE
-			-- Return the remote scp_mnger
-		deferred
-		end
-
-	internal_remote_rt_scoop_manager: like remote_rt_scoop_manager
-			-- Cached value of `remote_rt_scoop_manager'
-
 feature -- Remote: execution recorder on RT_
 
 	remote_rt_execution_recorder: detachable DBG_RT_EXECUTION_RECORDER_PROXY
 			-- Return the remote rt_object.execution_recorder
 		do
 			Result := internal_remote_rt_execution_recorder
-			if Result = void and then attached remote_rt_object as rto then
+			if Result = Void and then attached remote_rt_object as rto then
 				Result := rto.execution_recorder
 				internal_remote_rt_execution_recorder := Result
 			end

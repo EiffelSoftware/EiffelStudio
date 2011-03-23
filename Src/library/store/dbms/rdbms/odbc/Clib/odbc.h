@@ -33,7 +33,7 @@ extern "C" {
 		if (x == NULL) \
 				enomem()
 
-#define ODBC_C_FREE free
+#define ODBC_C_FREE(x) if(x)free(x)
 
 #ifndef SQL_IC_UNKNOWN
 #define SQL_IC_UNKNOWN	0
@@ -87,7 +87,7 @@ extern "C" {
 #define DB_SIZEOF_INT                   sizeof(int)
 #define DB_SIZEOF_LONG                  sizeof(long)
 #define DB_SIZEOF_UDWORD				sizeof(UDWORD)
-#define DB_SIZEOF_BIGINT				sizeof (EIF_NATURAL_64)
+#define DB_SIZEOF_BIGINT				sizeof (EIF_INTEGER_64)
 #define DB_SIZEOF_MONEY                 sizeof(double)
 #define DB_SIZEOF_REAL                  sizeof(float)
 #define DB_SIZEOF_DOUBLE                sizeof(double)

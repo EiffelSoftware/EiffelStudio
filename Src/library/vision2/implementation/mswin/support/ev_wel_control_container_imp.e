@@ -127,17 +127,15 @@ feature {NONE} -- WEL Implementation
 			-- the `paint_dc'. `invalid_rect' defines
 			-- the invalid rectangle of the client area that
 			-- needs to be repainted.
-		local
-			bk_brush: detachable WEL_BRUSH
-			theme_drawer: EV_THEME_DRAWER_IMP
 		do
-			bk_brush := background_brush
-			check bk_brush /= Void end
-			theme_drawer := application_imp.theme_drawer
-			theme_drawer.draw_widget_background (current_as_container, paint_dc, invalid_rect, bk_brush)
-			disable_default_processing
-			set_message_return_value (to_lresult (1))
-			bk_brush.delete
+			if attached background_brush as bk_brush then
+				application_imp.theme_drawer.draw_widget_background (current_as_container, paint_dc, invalid_rect, bk_brush)
+				bk_brush.delete
+				disable_default_processing
+				set_message_return_value (to_lresult (1))
+			else
+				-- We let Windows handle the message.
+			end
 		end
 
 	is_resized_width_larger: BOOLEAN

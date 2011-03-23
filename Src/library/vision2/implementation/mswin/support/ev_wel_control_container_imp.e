@@ -72,6 +72,7 @@ inherit
 			class_name,
 			class_style,
 			on_erase_background,
+			on_window_pos_changing,
 			on_window_pos_changed
 		end
 
@@ -90,24 +91,6 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- WEL Implementation
 
-	on_window_pos_changed (a_wp: WEL_WINDOW_POS)
-			-- <Precursor>
-		local
-			l_width, l_height: INTEGER
-		do
-				-- We don't need to handle `on_move' as descendents do not use it.
-			if a_wp.flags & swp_nosize = 0 then
-				l_width := a_wp.width
-				l_height := a_wp.height
-				a_wp.set_item (default_pointer)
-				on_size (0, l_width, l_height)
-			end
-				-- Disabling the default processing also returns `0' to Windows.
-			disable_default_processing
-				-- To let the caller know that we have received the message
-			internal_wm_size_called := True
- 		end
-
 	class_style: INTEGER
 			-- Standard style used to create the window class.
 			-- Can be redefined to return a user-defined style.
@@ -118,8 +101,7 @@ feature {NONE} -- WEL Implementation
 	default_style: INTEGER
 			-- Default style used by windows at creation.
 		do
-			Result := Ws_child | Ws_clipchildren |
-				Ws_clipsiblings | Ws_visible
+			Result := Ws_child | Ws_clipchildren | ws_clipsiblings | Ws_visible
 		end
 
 	default_ex_style: INTEGER
@@ -156,6 +138,61 @@ feature {NONE} -- WEL Implementation
 			disable_default_processing
 			set_message_return_value (to_lresult (1))
 			bk_brush.delete
+		end
+
+	is_resized_width_larger: BOOLEAN
+			-- Is current resizing making current larger in width?
+		do
+			Result := (ev_resizing_flags & ev_resizing_width_larger_flag) /= 0
+		end
+
+	is_resized_height_larger: BOOLEAN
+			-- Is current resizing making current larger in height?	
+		do
+			Result := (ev_resizing_flags & ev_resizing_height_larger_flag) /= 0
+		end
+
+	ev_resizing_flags: NATURAL_8
+	ev_resizing_width_larger_flag: NATURAL_8 = 0x1
+	ev_resizing_height_larger_flag: NATURAL_8 = 0x2
+		-- Used by on_window_pos_changing to determine if the move and resize handling needs to be propagated.
+
+	on_window_pos_changing (a_wp: WEL_WINDOW_POS)
+			-- <Precursor>
+		local
+			l_rect: WEL_RECT
+			l_flags: like ev_resizing_flags
+		do
+				-- Reset move and resize flags
+			l_rect := client_rect
+			if a_wp.width > l_rect.width then
+				l_flags := ev_resizing_width_larger_flag
+			end
+			if a_wp.height > l_rect.height then
+				l_flags := l_flags | ev_resizing_height_larger_flag
+			end
+			ev_resizing_flags := l_flags
+				-- Disabling the default processing also returns `0' to Windows.
+			disable_default_processing
+		end
+
+	on_window_pos_changed (a_wp: WEL_WINDOW_POS)
+			-- <Precursor>
+		local
+			l_width, l_height: INTEGER
+		do
+				-- We don't need to handle `on_move' as descendents do not use it.
+			if (a_wp.flags & swp_nosize) = 0 then
+				l_width := a_wp.width
+				l_height := a_wp.height
+				a_wp.set_item (default_pointer)
+				on_size (0, l_width, l_height)
+			end
+			ev_resizing_flags := 0
+				-- Disabling the default processing also returns `0' to Windows.
+			disable_default_processing
+				-- To let the caller know that we have received the message
+			internal_wm_size_called := True
 		end
 
 	current_as_container: EV_CONTAINER_IMP

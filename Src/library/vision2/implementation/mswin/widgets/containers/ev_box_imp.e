@@ -60,7 +60,6 @@ feature -- Initialization
 		end
 
 	make
-
 		do
 			ev_wel_control_container_make
 			create ev_children.make (2)
@@ -72,6 +71,7 @@ feature -- Initialization
 			new_item_actions.extend (agent added_so_update_non_expandable_children (?))
 			set_is_initialized (True)
 		end
+
 feature -- Access
 
 	client_width: INTEGER
@@ -395,6 +395,21 @@ feature -- from EV_INVISIBLE_CONTAINER_IMP FIXME!!!
 			-- Is `a_child' a child of `Current'?
 		do
 			Result := ev_children.has (a_child)
+		end
+
+	reversed_sizing_agents: detachable ARRAYED_LIST [PROCEDURE [ANY, TUPLE]]
+			-- When a box is getting larger, we do not want the items on the left or on the top
+			-- to overlap the items next to them as it causes Window to misbehave and the drawing
+			-- is not proper.
+
+	set_item_size (a_item: EV_WIDGET_IMP; a_x_position, a_y_position, a_width, a_height: INTEGER_32; a_originator: BOOLEAN)
+			-- Wrapper to resize a child widget which is used for creating an agent when `reversed_sizing_agents' is required.
+		do
+			if a_originator then
+				a_item.set_move_and_size (a_x_position, a_y_position, a_width, a_height)
+			else
+				a_item.ev_apply_new_size (a_x_position, a_y_position, a_width, a_height, True)
+			end
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Interface

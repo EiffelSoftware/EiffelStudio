@@ -85,6 +85,7 @@ feature {NONE} -- Basic operation
 			cur: CURSOR
 			int1, int2: INTEGER
 			next_non_expandable: INTEGER
+			l_agents: like reversed_sizing_agents
 		do
 			if childvisible_nb /= 0 then
 				lchild := ev_children
@@ -94,6 +95,15 @@ feature {NONE} -- Basic operation
 				bwidth := border_width
 				space := padding
 				children_size := a_width - 2 * bwidth - total_spacing
+
+				if is_resized_width_larger then
+						-- Reuse the agent to avoid object creation
+					l_agents := reversed_sizing_agents
+					if l_agents = Void then
+						create l_agents.make (lchild.count)
+						reversed_sizing_agents := l_agents
+					end
+				end
 
 					-- Homogeneous state : only the visible children are
 					-- important.
@@ -110,12 +120,10 @@ feature {NONE} -- Basic operation
 						if litem.is_show_requested then
 							localint := rate + rest (total_rest)
 							total_rest := (total_rest - 1).max (0)
-							if originator then
-								litem.set_move_and_size
-									(mark, bwidth, localint, cheight)
+							if l_agents /= Void then
+								l_agents.extend (agent set_item_size (litem, mark, bwidth, localint, cheight, originator))
 							else
-								litem.ev_apply_new_size (mark, bwidth,
-									localint, cheight, True)
+								set_item_size (litem, mark, bwidth, localint, cheight, originator)
 							end
 							mark := mark + space + localint
 						end
@@ -175,12 +183,10 @@ feature {NONE} -- Basic operation
 									next_non_expandable := expandable.item
 								end
 							end
-							if originator then
-								litem.set_move_and_size
-									(mark, bwidth, localint, cheight)
+							if l_agents /= Void then
+								l_agents.extend (agent set_item_size (litem, mark, bwidth, localint, cheight, originator))
 							else
-								litem.ev_apply_new_size (mark, bwidth,
-									localint, cheight, True)
+								set_item_size (litem, mark, bwidth, localint, cheight, originator)
 							end
 							mark := mark + space + localint
 						elseif lchild.index = next_non_expandable then
@@ -196,6 +202,19 @@ feature {NONE} -- Basic operation
 				end -- is_homogeneous.
 				if lchild.valid_cursor (cur) then
 					lchild.go_to (cur)
+				end
+
+					-- If reversed resizing is required, process the agents
+				if l_agents /= Void then
+					from
+						l_agents.finish
+					until
+						l_agents.before
+					loop
+						l_agents.item.call (Void)
+						l_agents.back
+					end
+					l_agents.wipe_out
 				end
 			end
 		end

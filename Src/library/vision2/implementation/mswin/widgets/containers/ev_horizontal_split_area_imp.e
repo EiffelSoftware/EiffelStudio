@@ -266,7 +266,8 @@ feature {NONE} -- Implementation
 	invert_split (a_dc: WEL_DC)
 			-- Invert the split on `a_dc'.
 		do
-			invert_rectangle (a_dc, internal_split_position - 1, -1, internal_split_position + splitter_width, height)
+				-- We do `-1' and `+1' on the axis because `invert_rectangle' exclude the border.
+			invert_rectangle (a_dc, internal_split_position - 1, -1, internal_split_position + splitter_width + 1, height)
 		end
 
 	on_mouse_move (keys, x_pos, y_pos: INTEGER)

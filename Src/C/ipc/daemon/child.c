@@ -109,11 +109,11 @@
  * Attach using socket declaration.
  */
 
-#ifdef EIF_WINDOWS
 #define DEBUGGEE_IP_ADDR "127.0.0.1"  /* FIXME: future enhancement, we should let the debugger provide the IP, 
 									   * so later we might use something else than pipe for IPC 
 									   * but for now, this is same machine only
 									   */
+#ifdef EIF_WINDOWS
 rt_private unsigned int attach_debuggee(unsigned int port_number, HANDLE* pc2p, HANDLE* pp2c, HANDLE* p_event_r, HANDLE* p_event_w);
 #else
 rt_private unsigned int attach_debuggee(unsigned int port_number, int* pc2p, int* pp2c);
@@ -1293,9 +1293,9 @@ rt_private unsigned int attach_debuggee(unsigned int port_number, int* pc2p, int
 	struct sockaddr_in server_addr;     	/* Server Internet address */
 	SECURITY_ATTRIBUTES saAttr;
 #else /* non EIF_WINDOWS */
-    int sockfd;  		/* Client socket descriptor */
+	int socketfd;  		/* Client socket descriptor */
 	struct addrinfo hints, *servinfo, *p;
-    char str_port_number[5]; /* INET6_ADDRSTRLEN ; max is 65535, see http://www.iana.org/assignments/port-numbers  */
+	char str_port_number[5]; /* INET6_ADDRSTRLEN ; max is 65535, see http://www.iana.org/assignments/port-numbers  */
 #endif
 	char out_buf[4096];	/* Output buffer for data */
 	char in_buf[4096];	/* Input buffer for data */

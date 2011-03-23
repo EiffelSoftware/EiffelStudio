@@ -36,7 +36,7 @@ feature -- Initialization
 				i > upper
 			loop
 				l_random_number := l_random_generator.real_item
-				put ((l_random_number * 100).floor, i)
+				put ((l_random_number * 1000).floor, i)
 				l_random_generator.forth
 				i := i + 1
 			end

@@ -68,13 +68,18 @@
 #include "rt_dir.h"
 #include "rt_assert.h"
 
-extern unsigned int TIMEOUT;		/* Time out for interprocess communications */
 
 #ifdef EIF_VMS
 #include <starlet.h>	/* for SYS$FORCEX */
 #include <ssdef.h>	/* for SS$_ABORT */
 #include "ipcvms.h"	/* for IPCVMS_WAKE_EWB */
 #endif /* EIF_VMS */
+
+/*
+ * Declarations 
+ */
+
+extern unsigned int TIMEOUT;		/* Time out for interprocess communications */
 
 #define OTHER(x) ((x) == daemon_data.d_cs ? daemon_data.d_as : daemon_data.d_cs)
 
@@ -92,6 +97,7 @@ rt_private void run_asynchronous(EIF_PSTREAM sp, Request *rqst);	/* Run command 
 rt_private void set_ipc_ewb_pid(int pid);						/* Set IPC ewb pid value */
 rt_private void set_ipc_timeout(unsigned int t);				/* Set IPC TIMEOUT value */
 rt_private void start_app(EIF_PSTREAM sp);						/* Start Eiffel application */
+rt_private void attach_app(EIF_PSTREAM sp);						/* Attach Eiffel application */
 rt_private void get_application_cwd (EIF_PSTREAM sp);			/* Get application cwd */
 rt_private void get_application_env (EIF_PSTREAM sp);			/* Get application env */
 rt_public void drqsthandle(EIF_PSTREAM);							/* General request processor */
@@ -103,7 +109,7 @@ rt_public int dbg_recv_packet(EIF_PSTREAM sp, Request *rqst);			/* Request recep
 extern int errno;												/* System call error number */
 #endif
 
-rt_private void kill_app(void);		/* Kill Eiffel application brutally*/
+rt_private void kill_app(EIF_PSTREAM sp);		/* Kill Eiffel application brutally*/
 rt_private void detach_app(void);	/* Detach Eiffel application */
 rt_private IDRF dbg_idrf;			/* IDR filters used for serializing */
 rt_private char dbg_idrf_initialized = (char) 0;	/* IDR filter already initialized ? */
@@ -196,8 +202,12 @@ rt_private void dprocess_request(EIF_PSTREAM sp, Request *rqst)
 		interrupted = FALSE;
 		start_app(sp);
 		break;
+	case ATTACH:		/* Attach application */
+		interrupted = FALSE;
+		attach_app(sp);
+		break;
 	case KILL:				/* Kill application asynchronously */
-		kill_app();
+		kill_app(OTHER(sp));
 		break;
 #ifdef EIF_WINDOWS
 	case APP_INTERRUPT_FLAG:	/* Get the address of the interrupt flag within application space */
@@ -285,9 +295,11 @@ rt_private void write_application_interruption_flag(unsigned char value)
 	LPVOID 			addr_flag = daemon_data.d_interrupt_flag;
 	BOOL 			bResult;
 
+	/* Why don't we use daemon_data.d_app ? Only to get write access? */
 	hProcess = OpenProcess(PROCESS_VM_OPERATION | PROCESS_VM_WRITE, FALSE, daemon_data.d_app_id); 
-	if (hProcess==NULL)
+	if (hProcess==NULL) {
 		return;
+	}
 
 	bResult = WriteProcessMemory(hProcess, addr_flag, &interrupt_flag, sizeof(unsigned char), &written); 
 
@@ -335,6 +347,10 @@ rt_public int dbg_recv_packet(EIF_PSTREAM sp, Request *rqst
 				/* The connected socket */
 				/* The request received */
  {
+#ifdef USE_ADD_LOG
+	add_log (9, "In dbg_recv_packet: sp=%d", sp);
+#endif
+
 #ifdef WINDEBUG
 	printf ("In recv packet\n");
 #endif
@@ -937,18 +953,130 @@ rt_private void start_app(EIF_PSTREAM sp)
 	}
 }
 
-rt_private void kill_app (void)
+rt_private void attach_app(EIF_PSTREAM sp)
+{
+	/* Attach Eiffel application, setting up the necessary communication stream.
+	 * A positive acknowledgment is sent back if the process starts correctly.
+	 */
+
+	char *exe_path;			/* Application to be run */
+	unsigned int exe_port_number;	/* Port number to use to attach application */
+	STREAM *cp;				/* Child stream */
+	unsigned int debuggee_pid; /* debuggee's process id */
+#ifdef EIF_WINDOWS
+	HANDLE process_handle;	/* Child process handle */
+	DWORD process_id;		/* Child process id */
+#endif
+
+	/* Get Application executable path */
+	exe_path = recv_str(sp, NULL);		
+
+	/* Get port number */
+	exe_port_number = (unsigned int) atoi(recv_str(sp, NULL));
+	if (exe_port_number <= 0) {
+		send_ack(sp, AK_ERROR);	/* invalid port number */		
+		return;
+	}
+#ifdef USE_ADD_LOG
+	add_log(9, "Attaching [%s] on port [%i]\n", exe_path, exe_port_number);
+#endif
+
+	cp = new_stream_on_debuggee(exe_port_number, &debuggee_pid);
+
+	free(exe_path);
+	exe_path = NULL;
+	exe_port_number = 0;
+
+#ifdef EIF_WINDOWS
+	if (cp != (STREAM *) 0) {
+		process_id = (DWORD) debuggee_pid;
+		process_handle = OpenProcess(SYNCHRONIZE | PROCESS_QUERY_INFORMATION | PROCESS_VM_READ | PROCESS_VM_WRITE | PROCESS_TERMINATE, FALSE, process_id);
+		/* Note: 
+		 * 		SYNCHRONIZE : to be able to do WaitForSingleObject in listen.c 
+		 * 		PROCESS_TERMINATE : to be able to kill the application
+		 */
+
+		daemon_data.d_app = process_handle;			 /* Record its process handle */
+		daemon_data.d_app_id = process_id; /* Record its process id */
+		daemon_data.d_as = cp;					/* Set-up stream to talk to child */
+
+		if (-1 == add_input(cp, (STREAM_FN) drqsthandle)) {
+#ifdef USE_ADD_LOG
+			add_log(4, "add_input: %s (%s)", s_strerror(), s_strname());
+#endif
+			send_ack(sp, AK_ERROR);	/* Cannot record input */
+		} else {
+#ifdef USE_ADD_LOG
+			add_log(100, "sending ak_ok");
+#endif
+			send_ack(sp, AK_OK);		/* Application attached ok */
+			/* Send the process id to ewb */
+			twrite(sp, &(daemon_data.d_app_id), sizeof(int));
+		}
+	} else {
+#ifdef USE_ADD_LOG
+		add_log(12, "stream from attach invalid\n");
+#endif
+		send_ack(sp, AK_ERROR);	/* Could not attach application */
+
+#else /* #ifdef EIF_WINDOWS */
+	if (cp != (STREAM *) 0) {
+		daemon_data.d_app = (int) debuggee_pid;	/* Record its pid */
+		daemon_data.d_as = cp;					/* Set-up stream to talk to child */
+
+		if (-1 == add_input(cp, drqsthandle)) {
+#ifdef USE_ADD_LOG
+			add_log(4, "add_input: %s (%s)", s_strerror(), s_strname());
+#endif
+			send_ack(sp, AK_ERROR);	/* Cannot record input */
+		} else {
+#ifdef USE_ADD_LOG
+			add_log(100, "sending ak_ok");
+#endif
+			send_ack(sp, AK_OK);		/* Application attached ok */
+			/* Send the process id to ewb */
+			twrite(sp, &(daemon_data.d_app), sizeof(int));
+		}
+	} else {
+#ifdef USE_ADD_LOG
+		add_log(12, "stream from attach invalid\n");
+#endif
+		send_ack(sp, AK_ERROR);	/* Could not attach application */
+#endif
+	}
+}
+
+rt_private void kill_app (EIF_PSTREAM sp)
 {
 	/* Kill the application brutally */
+	Request rqst;					/* Request to send */
 
 	if (daemon_data.d_app != 0)		/* Check the application is still running */
+
 #ifdef USE_ADD_LOG
-	add_log(8, "killing application process %d", daemon_data.d_app);
+		add_log(8, "Ask the application to quit itself");
+#endif
+		rqst.rq_type = QUIT;		/* ask the Application to exit */
+		dbg_send_packet(sp, &rqst);	/* send to debuggee workbench */
+
+#ifdef EIF_WINDOWS
+		Sleep(100);
+#else
+		sleep(0.1);
+#endif
+
+
+#ifdef USE_ADD_LOG
+		add_log(8, "killing application process %d", daemon_data.d_app);
 #endif
 
 #ifdef EIF_WINDOWS
 	{
-		TerminateProcess (daemon_data.d_app, 0);
+		if (TerminateProcess (daemon_data.d_app, 0)) {
+#ifdef USE_ADD_LOG
+			add_log(8, "ERROR: KILL TerminateProcess return False");
+#endif
+		};
 		rem_input (daemon_data.d_as);
 	}
 #elif defined(EIF_VMS)
@@ -977,7 +1105,7 @@ rt_public void dead_app(void)
 #endif
 
 #ifdef USE_ADD_LOG
-	add_log(12, "app is dead");
+	add_log(12, "Daemon: app is dead");
 #endif
 
 	/* Eliminate the <defunct> process of the just terminated

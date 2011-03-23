@@ -47,11 +47,28 @@
 #include "ewbio.h"
 #include "ecdbgd.h"
 #include "child.h"
+#include "shared.h" /* for C2P_IPC_NAMED_PIPE_PID_APP_TPL and P2C_.. */
 
 #ifdef EIF_WINDOWS
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#include <aclapi.h> /* for socket IPC іnitialization */
 #include "uu.h"
+#else /* non EIF_WINDOWS */
+#include <unistd.h>
+#include <errno.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <sys/stat.h>
+#include <netinet/in.h>
+#include <netdb.h>
+#include <arpa/inet.h>
+#include <sys/wait.h>
+#include <signal.h>
+#include "limits.h"
+#include <ctype.h>
+#include <fcntl.h>
+#define MAX_PATH PATH_MAX
 #endif
 
 #include "rt_dir.h"
@@ -88,6 +105,23 @@
 #define PIPE_READ	0		/* File descriptor used for reading */
 #define PIPE_WRITE	1		/* File descriptor used for writing */
 
+/*
+ * Attach using socket declaration.
+ */
+
+#ifdef EIF_WINDOWS
+#define DEBUGGEE_IP_ADDR "127.0.0.1"  /* FIXME: future enhancement, we should let the debugger provide the IP, 
+									   * so later we might use something else than pipe for IPC 
+									   * but for now, this is same machine only
+									   */
+rt_private unsigned int attach_debuggee(unsigned int port_number, HANDLE* pc2p, HANDLE* pp2c, HANDLE* p_event_r, HANDLE* p_event_w);
+#else
+rt_private unsigned int attach_debuggee(unsigned int port_number, int* pc2p, int* pp2c);
+#endif
+
+/*
+ * Declarations
+ */
 
 rt_public unsigned int TIMEOUT;		/* Time out for interprocess communications */
 
@@ -384,8 +418,8 @@ rt_public STREAM *spawn_child(char* id, char *a_exe_path, char* exe_args, char *
 	}
 
 	/* Set up pipes and fork, then exec the workbench. Two pairs of pipes are
-	 * opened, one for downwards communications (ised -> ewb) and one for
-	 * upwards (ewb -> ised).
+	 * opened, one for downwards communications (ecdbgd -> ewb) and one for
+	 * upwards (ewb -> ecdbgd).
 	 */
 
 #ifdef EIF_WINDOWS
@@ -629,6 +663,7 @@ rt_public STREAM *spawn_child(char* id, char *a_exe_path, char* exe_args, char *
 		/* FIXME why is it necessary to close each twice??? -- David_sS */
 		close(pp2c[PIPE_WRITE]);
 		close(pc2p[PIPE_READ]);
+
 		close(pp2c[PIPE_WRITE]);
 		close(pc2p[PIPE_READ]);
 #endif /* EIF_VMS */
@@ -719,7 +754,7 @@ rt_public STREAM *spawn_child(char* id, char *a_exe_path, char* exe_args, char *
 		}
 #ifdef USE_ADD_LOG
 		else {
-			add_log(2, "ERROR out of memory: cannot exec '%s'", cmd);
+			add_log(2, "ERROR out of memory: cannot exec '%s'", exe_path);
 		}
 #endif
 		SPAWN_CHILD_FAILED(1);
@@ -740,8 +775,9 @@ rt_public STREAM *spawn_child(char* id, char *a_exe_path, char* exe_args, char *
 		if (new != -1 && new < pc2p[PIPE_READ]) {
 			close(pc2p[PIPE_READ]);
 			pc2p[PIPE_READ] = new;
-		} else if (new != -1)
+		} else if (new != -1) {
 			close(new);
+		}
 		/* Same thing with writing file descriptor. Note that we only keep the
 		 * new duped descriptor when it is lower than the current original.
 		 */
@@ -760,12 +796,13 @@ rt_public STREAM *spawn_child(char* id, char *a_exe_path, char* exe_args, char *
 	} /* end switch(pid) */
 #endif
 
-	/* Create a STREAM structure, which provides the illusion of bidrectional
+	/* Create a STREAM structure, which provides the illusion of bidirectional
 	 * communication through the pair of pipes. When networking is added, the
 	 * interface will remain unchanged.
 	 */
 
 #ifdef EIF_WINDOWS
+	/* note: 2^15 + 1 = 32767 */
 	sprintf (event_str, "eif_event_r%x_%s", (unsigned int) piProcInfo.dwProcessId, id);
 	child_event_r = CreateSemaphore (NULL, 0, 32767, event_str);
 	sprintf (event_str, "eif_event_w%x_%s", (unsigned int) piProcInfo.dwProcessId, id);
@@ -802,9 +839,13 @@ rt_public STREAM *spawn_child(char* id, char *a_exe_path, char* exe_args, char *
 
 	if ((!sp) || (-1 == comfort_child(sp))) {
 #ifdef USE_ADD_LOG
-		add_log(12, "could not comfort child");
+		add_log(12, "Daemon: could not comfort child");
 #endif
 		return (STREAM *) 0;		/* Wrong child */
+#ifdef USE_ADD_LOG
+    } else {
+        add_log(12, "Daemon: child comforted successfully");
+#endif
 	}
 
 	/* Record child's pid, which may be necessary to ensure it remains alive,
@@ -941,7 +982,7 @@ rt_private int comfort_child(STREAM *sp)
  	if (!FD_ISSET(readfd(sp), &mask)) {
 #endif
 #ifdef USE_ADD_LOG
-		add_log(12, "child does not answer");
+		add_log(12, "Daemon: child does not answer");
 #endif
 		return -1;
 	}
@@ -960,13 +1001,17 @@ rt_private int comfort_child(STREAM *sp)
 
 	if (c != '\01') {
 #ifdef USE_ADD_LOG
-		add_log(12, "wrong child, it would seem");
+		add_log(12, "Daemon: wrong child, it would seem");
 #endif
 		return -1;
+#ifdef USE_ADD_LOG
+	} else {
+		add_log(12, "Daemon: Ok, received \\01");
+#endif
 	}
 
 #ifdef USE_ADD_LOG
-	add_log(12, "child started ok");
+	add_log(12, "Deamon: child started ok");
 #endif
 
 	return 0;
@@ -1055,3 +1100,506 @@ void create_dummy_window (void)
 }
 
 #endif /* EIF_WINDOWS */
+
+#ifdef EIF_WINDOWS
+/* IPC Socket functions */
+
+PSECURITY_DESCRIPTOR newSecurityDescriptor()
+{
+	DWORD dwRes;
+	PSID pEveryoneSID;
+	PSECURITY_DESCRIPTOR pSD;
+	SID_IDENTIFIER_AUTHORITY SIDAuthWorld = SECURITY_WORLD_SID_AUTHORITY;
+	EXPLICIT_ACCESS ea;
+	PACL pACL;
+
+	pEveryoneSID = NULL;
+	pSD = NULL;
+	pACL = NULL;
+
+	/* Create a well-known SID for the Everyone group. */
+	if(!AllocateAndInitializeSid(&SIDAuthWorld, 1,
+					 SECURITY_WORLD_RID,
+					 0, 0, 0, 0, 0, 0, 0,
+					 &pEveryoneSID))
+	{
+#ifdef USE_ADD_LOG
+		add_log(3, "AllocateAndInitializeSid Error %u\n", GetLastError());
+#endif
+		goto Cleanup;
+	}
+
+	/* Initialize an EXPLICIT_ACCESS structure for an ACE.
+	 * The ACE will allow Everyone read access to the key. */
+	ZeroMemory(&ea, sizeof(EXPLICIT_ACCESS));
+	ea.grfAccessPermissions = STANDARD_RIGHTS_ALL | SPECIFIC_RIGHTS_ALL;
+	ea.grfAccessMode = SET_ACCESS;
+	ea.grfInheritance= NO_INHERITANCE;
+	ea.Trustee.TrusteeForm = TRUSTEE_IS_SID;
+	ea.Trustee.TrusteeType = TRUSTEE_IS_WELL_KNOWN_GROUP;
+	ea.Trustee.ptstrName  = (LPTSTR) pEveryoneSID;
+
+	/* Create a new ACL that contains the new ACE. */
+	dwRes = SetEntriesInAcl(1, &ea, NULL, &pACL);
+	if (ERROR_SUCCESS != dwRes) {
+		goto Cleanup;
+	}
+
+	/* Initialize a security descriptor. */
+	pSD = (PSECURITY_DESCRIPTOR) LocalAlloc(LPTR, SECURITY_DESCRIPTOR_MIN_LENGTH); 	
+	if (NULL == pSD) { 
+#ifdef USE_ADD_LOG
+		add_log(3, "LocalAlloc Error %u", GetLastError());
+#endif
+		goto Cleanup;
+	} 
+ 
+	if (!InitializeSecurityDescriptor(pSD, SECURITY_DESCRIPTOR_REVISION)) {  
+#ifdef USE_ADD_LOG
+		add_log(3, "InitializeSecurityDescriptor Error %u", GetLastError());
+#endif
+		goto Cleanup;
+	} 
+
+	/* Add the ACL to the security descriptor. */
+	if (!SetSecurityDescriptorDacl(pSD, 
+			TRUE,     /* bDaclPresent flag    */
+			pACL, 
+			FALSE))   /* not a default DACL  */
+	{  
+#ifdef USE_ADD_LOG
+		add_log(3, "SetSecurityDescriptorDacl Error %u", GetLastError());
+#endif
+		goto Cleanup;
+	} 
+	goto end;
+
+Cleanup:
+#ifdef USE_ADD_LOG
+	add_log(3, "Cleanup newSecurityDescriptor ...");
+#endif
+	pSD = NULL;
+end:
+	return pSD;
+}
+#endif /* not EIF_WINDOWS */
+
+
+rt_public STREAM *new_stream_on_debuggee (unsigned int port_number, unsigned int* p_debuggee_pid)
+{
+#ifdef EIF_WINDOWS
+	HANDLE pp2c[2];					/* The opened downwards file descriptors : parent to child */
+	HANDLE pc2p[2];					/* The opened upwards file descriptors : child to parent */
+	HANDLE *p_event_r, *p_event_w;	/* Event for signalling readability/writability */
+#else
+	int pp2c[2];					/* The opened downwards file descriptors : parent to child */
+	int pc2p[2];					/* The opened upwards file descriptors : child to parent */
+#endif
+
+	STREAM *sp;						/* Stream used for communications with ewb */
+	unsigned int debuggee_pid;
+
+	/* Attach */
+#ifdef EIF_WINDOWS
+	pc2p[PIPE_READ] = NULL; pc2p[PIPE_WRITE] = NULL;
+	pp2c[PIPE_READ] = NULL; pp2c[PIPE_WRITE] = NULL;
+#else
+	pc2p[PIPE_READ] = 0; pc2p[PIPE_WRITE] = 0;
+	pp2c[PIPE_READ] = 0; pp2c[PIPE_WRITE] = 0;
+#endif
+
+#ifdef EIF_WINDOWS
+	p_event_r = (HANDLE*) malloc(sizeof(HANDLE));
+	p_event_w = (HANDLE*) malloc(sizeof(HANDLE));
+	debuggee_pid = attach_debuggee(port_number, pc2p, pp2c, p_event_r, p_event_w);
+#else
+	debuggee_pid = attach_debuggee(port_number, pc2p, pp2c);
+#endif
+	if (debuggee_pid > 0){
+#ifdef USE_ADD_LOG
+		add_log(3, "Daemon: Debuggee attached [%d][%x]\n", debuggee_pid, debuggee_pid);
+#endif
+	} else {
+#ifdef USE_ADD_LOG
+		add_log(3, "Daemon: error cannot attach debuggee %d\n", GetLastError());
+#endif
+		return (STREAM *) 0;
+	}
+#ifdef EIF_WINDOWS
+	/* no need to close them, since they are not opened when attaching them
+	CloseHandle (pc2p[PIPE_WRITE]); 
+	CloseHandle (pp2c[PIPE_READ]);
+	*/
+	pc2p[PIPE_WRITE] = NULL;
+	pp2c[PIPE_READ] = NULL;
+#else
+	/* no need to close them, since they are not opened when attaching them
+	close(pc2p[PIPE_WRITE]); 
+	close(pp2c[PIPE_READ]);
+	*/
+	pc2p[PIPE_WRITE] = 0;
+	pp2c[PIPE_READ] = 0;
+#endif
+
+#ifdef EIF_WINDOWS
+	sp = new_stream(pc2p[PIPE_READ], pp2c[PIPE_WRITE], *p_event_r, *p_event_w);
+#else /* non EIF_WINDOWS */
+	sp = new_stream(pc2p[PIPE_READ], pp2c[PIPE_WRITE]);
+#endif
+#ifdef USE_ADD_LOG
+	add_log(3, "Daemon: IPC pipes: writefd(sp)=%d readfd(sp)=%d\n", writefd(sp), readfd(sp));
+#endif
+
+	/* Comfort child */
+#ifdef USE_ADD_LOG
+	add_log (3, "Try to comfort debuggee");
+#endif
+	/* Wait a little bit ... */
+#ifdef EIF_WINDOWS
+	Sleep(500);
+#else
+	sleep(0.5);
+#endif
+	if ((!sp) || (-1 == comfort_child (sp))) {
+#ifdef USE_ADD_LOG
+		add_log (1, "Daemon: error, could not comfort child");
+#endif 
+		return (STREAM *) 0;
+#ifdef USE_ADD_LOG
+	} else {
+		add_log (3, "Daemon: child comforted OK");
+#endif
+	}
+	*p_debuggee_pid = debuggee_pid;
+	return sp;
+}
+
+
+#ifdef EIF_WINDOWS
+rt_private unsigned int attach_debuggee(unsigned int port_number, HANDLE* pc2p, HANDLE* pp2c, HANDLE *p_event_r, HANDLE* p_event_w)
+#else
+rt_private unsigned int attach_debuggee(unsigned int port_number, int* pc2p, int* pp2c) /* pc2p = fd_in; pp2c = fd_out */
+#endif
+{
+	/* attach debuggee using socket communication on port_number at localhost
+	 * port_number is likely to be a dynamic and/or private ports: between 49152 to 65535
+	 *          see http://www.iana.org/assignments/port-numbers
+	 */
+
+#ifdef EIF_WINDOWS
+	WORD wVersionRequested = MAKEWORD(1,1);	/* Stuff for WSA functions */
+	WSADATA wsaData;						/* Stuff for WSA functions */
+	SOCKET socketfd;        				/* Client socket descriptor */
+	struct sockaddr_in server_addr;     	/* Server Internet address */
+	SECURITY_ATTRIBUTES saAttr;
+#else /* non EIF_WINDOWS */
+    int sockfd;  		/* Client socket descriptor */
+	struct addrinfo hints, *servinfo, *p;
+    char str_port_number[5]; /* INET6_ADDRSTRLEN ; max is 65535, see http://www.iana.org/assignments/port-numbers  */
+#endif
+	char out_buf[4096];	/* Output buffer for data */
+	char in_buf[4096];	/* Input buffer for data */
+	int retcode;		/* Return code */
+	int i;
+	unsigned int debuggee_pid;
+	char pipe_c2p_name[MAX_PATH];
+	char pipe_p2c_name[MAX_PATH];
+
+
+#ifdef EIF_WINDOWS
+	WSAStartup(wVersionRequested, &wsaData);
+
+	/* Create a client socket
+	 *   - AF_INET is Address Family Internet and SOCK_STREAM is streams
+	 */
+	socketfd = socket(AF_INET, SOCK_STREAM, 0);
+	if (socketfd < 0) {
+#ifdef USE_ADD_LOG
+		add_log(1, "Daemon: ERROR - socket() failed");
+#endif
+		return 0;
+	}
+
+	/* Fill-in the server's address information and do a connect with the
+	 * listening server using the client socket - the connect() will block.
+	 */
+	server_addr.sin_family = AF_INET;                 /* Address family to use */
+	server_addr.sin_port = htons((u_short)port_number);           /* Port num to use */
+	server_addr.sin_addr.s_addr = inet_addr(DEBUGGEE_IP_ADDR); /* IP address to use */
+	retcode = -1;
+	for (i = 0; (retcode < 0) && (i < 10); i++) {
+		retcode = connect(socketfd, (struct sockaddr *)&server_addr, sizeof(server_addr));
+		if (retcode < 0) {
+			Sleep(500);
+		}
+	}
+	if (retcode < 0) {
+#ifdef USE_ADD_LOG
+		add_log(1, "Daemon: ERROR - connect() failed");
+#endif
+		return 0;
+	}
+#else /* non EIF_WINDOWS */
+    memset(&hints, 0, sizeof hints);
+    hints.ai_family = AF_UNSPEC;
+    hints.ai_socktype = SOCK_STREAM;
+
+	sprintf (str_port_number, "%d", port_number);
+    retcode = getaddrinfo(DEBUGGEE_IP_ADDR, str_port_number, &hints, &servinfo);
+    if (retcode != 0) {
+#ifdef USE_ADD_LOG
+        add_log(1, "getaddrinfo: %s", gai_strerror(retcode));
+#endif
+        return 0;
+    }
+    /* loop through all the results and connect to the first we can */
+    for(p = servinfo; p != NULL; p = p->ai_next) {
+        if ((socketfd = socket(p->ai_family, p->ai_socktype, p->ai_protocol)) == -1) {
+#ifdef DEBUG
+            perror("client: socket");
+#endif
+            continue;
+        }
+		retcode = -1;
+		for (i = 0; (retcode < 0) && (i < 10); i++) {
+        	retcode = connect(socketfd, p->ai_addr, p->ai_addrlen);
+			if (retcode < 0) {
+#ifdef USE_ADD_LOG
+				add_log(2, "client: try connect: failed -> sleep 3 seconds ...");
+#endif
+				sleep(3);
+			}
+		}
+		if (retcode < 0) {
+			close(socketfd);
+#ifdef DEBUG
+			perror("client: connect \n");
+#endif
+			continue;
+		}
+        break;
+    }
+
+    if (p == NULL) {
+#ifdef USE_ADD_LOG
+        add_log(2, "client: failed to connect");
+#endif
+		
+        return 0;
+#ifdef USE_ADD_LOG
+	} else {
+		add_log(2, "client connected");
+#endif
+    }
+#endif
+
+#ifdef USE_ADD_LOG
+	add_log(2, "Wait message from debuggee: sizeof(in_buf) %d ", (int) sizeof(in_buf));
+#endif
+	/* Receive from the server using the client socket */
+	if (recv(socketfd, in_buf, sizeof(in_buf), 0) < 0)
+	{
+#ifdef USE_ADD_LOG
+		add_log(1, "Daemon: ERROR - recv() failed");
+#endif
+		return 0;
+	}
+
+	/* Output the received message */
+#ifdef USE_ADD_LOG
+	add_log(2, "Received from debuggee: %s", in_buf);
+#endif
+	debuggee_pid = (unsigned int) atoi(in_buf);
+
+	/* *************************************** */
+	/* Create a STREAM structure, which provides the illusion of bidirectional
+	 * communication through the pair of pipes. When networking is added, the
+	 * interface will remain unchanged.
+	 */
+#ifdef EIF_WINDOWS
+#define BUFSIZE 4096	
+	saAttr.nLength = sizeof (SECURITY_ATTRIBUTES);
+	saAttr.bInheritHandle = TRUE;
+	saAttr.lpSecurityDescriptor = NULL;
+
+	sprintf (pipe_c2p_name, C2P_IPC_NAMED_PIPE_PID_APP_TPL, debuggee_pid, "app");
+#ifdef USE_ADD_LOG
+	add_log(2, "Creation c2p pipe: %s", pipe_c2p_name);
+#endif
+	pc2p[PIPE_READ] = CreateNamedPipe(pipe_c2p_name,
+						PIPE_ACCESS_INBOUND | 
+						FILE_FLAG_OVERLAPPED,
+						PIPE_TYPE_MESSAGE | 
+						PIPE_READMODE_MESSAGE | 
+ 						PIPE_WAIT, 
+						1,	/* one instance max */
+						BUFSIZE, /* output buf size */
+						BUFSIZE, /* input buf size */
+						0, /* client timeout */
+						&saAttr);
+	if (pc2p[PIPE_READ] == INVALID_HANDLE_VALUE) {
+#ifdef USE_ADD_LOG
+		add_log(1, "Daemon: Cannot set up UPWARD pipe...");
+#endif
+		return 0;
+	}
+
+	sprintf (pipe_p2c_name, P2C_IPC_NAMED_PIPE_PID_APP_TPL, debuggee_pid, "app");
+#ifdef USE_ADD_LOG
+	add_log(2, "Creation p2c pipe: %s", pipe_p2c_name);
+#endif
+	pp2c[PIPE_WRITE] = CreateNamedPipe(pipe_p2c_name,
+						PIPE_ACCESS_OUTBOUND |  
+						FILE_FLAG_OVERLAPPED,
+						PIPE_TYPE_MESSAGE | 
+						PIPE_READMODE_MESSAGE | 
+ 						PIPE_WAIT, 
+						1,	/* one instance max */
+						BUFSIZE, /* output buf size */
+						BUFSIZE, /* input buf size */
+						0, /* client timeout */
+						&saAttr);
+
+	if (pp2c[PIPE_WRITE] == INVALID_HANDLE_VALUE) {
+#ifdef USE_ADD_LOG
+		add_log(1, "Daemon: Cannot set up DOWNWARD pipe...");
+#endif
+		return 0;
+	}
+
+	/* Create event object */
+	{
+		HANDLE child_event_r, child_event_w; 	/* Event for signalling readability/writability */
+		CHAR   event_str[128];				/* Event name */
+
+		SECURITY_ATTRIBUTES	sa;
+		
+		sa.nLength = sizeof (SECURITY_ATTRIBUTES);
+		sa.bInheritHandle = FALSE;
+		sa.lpSecurityDescriptor = newSecurityDescriptor();
+
+		/* note: 2^15 + 1 = 32767 */
+		sprintf (event_str, "eif_event_r%x_%s", debuggee_pid, "app");
+		child_event_r = CreateSemaphore (&sa, 0, 32767, event_str);
+
+		sprintf (event_str, "eif_event_w%x_%s", debuggee_pid, "app");
+		child_event_w = CreateSemaphore (&sa, 0, 32767, event_str);
+
+		*p_event_r = child_event_r;
+		*p_event_w = child_event_w;
+	}
+
+#ifdef USE_ADD_LOG
+	add_log(2, "Daemon: send ready");
+#endif
+	sprintf(out_buf, "daemon: ready");
+	if (send(socketfd, out_buf, ((unsigned int)strlen(out_buf) + 1), 0) < 0) {
+#ifdef USE_ADD_LOG
+		add_log(1, "Daemon: ERROR - send() failed");
+#endif
+		return 0;
+	}
+
+
+#else /* non EIF_WINDOWS */
+	/*  child to parent: debuggee to debugger */
+	sprintf (pipe_c2p_name, C2P_IPC_NAMED_PIPE_PID_APP_TPL, debuggee_pid, "app");
+	retcode = mkfifo(pipe_c2p_name, 0666);
+	if ((retcode == -1) && (errno != EEXIST)) {
+#ifdef USE_ADD_LOG
+		add_log(1, "Error creating the named pipe: c2p (err: %s)", strerror(errno));
+#endif
+		return 0;
+	}
+
+	/*  parent to child: debugger to debuggee */
+	sprintf (pipe_p2c_name, P2C_IPC_NAMED_PIPE_PID_APP_TPL, debuggee_pid, "app");
+	retcode = mkfifo(pipe_p2c_name, 0666);
+	if ((retcode == -1) && (errno != EEXIST)) {
+#ifdef USE_ADD_LOG
+		add_log(1, "Error creating the named pipe: p2c (err: %s)", strerror(errno));
+#endif
+		return 0;
+	}
+
+	/* Send to the app the pipe's data, so that the app start opening them 
+	 * and do not block the following p2c opening for writing
+	 */
+	sprintf(out_buf, "daemon: ready");
+	if (send(socketfd, out_buf, ((unsigned int)strlen(out_buf) + 1), 0) < 0) {
+#ifdef USE_ADD_LOG
+		add_log(1, "Daemon: ERROR - send() failed");
+#endif
+		return 0;
+	}
+
+	/* Open c2p for reading */
+	pc2p[PIPE_READ] = open(pipe_c2p_name, O_RDONLY);
+	if (pc2p[PIPE_READ] < 0) {
+#ifdef USE_ADD_LOG
+		add_log(1, "Daemon: Error opening %s c2p[PIPE_READ]=%d errno=%d", pipe_c2p_name, pc2p[PIPE_READ], errno);
+#endif
+		return 0;
+#ifdef USE_ADD_LOG
+	} else {
+		add_log(1, "Open %s c2p[PIPE_READ]=%d DONE", pipe_c2p_name, pc2p[PIPE_READ]);
+#endif
+	}
+
+	/* Open p2c writing */
+	pp2c[PIPE_WRITE] = open(pipe_p2c_name, O_WRONLY);
+	if (pp2c[PIPE_WRITE] < 0) {
+#ifdef USE_ADD_LOG
+		add_log(1, "Daemon: Error opening %s p2c[PIPE_WRITE]=%d errno=%d", pipe_p2c_name, pp2c[PIPE_WRITE], errno);
+#endif
+		return 0;
+#ifdef USE_ADD_LOG
+	} else {
+		add_log(1, "Open %s p2c[PIPE_WRITE]=%d DONE", pipe_p2c_name, pp2c[PIPE_WRITE]);
+#endif
+	}
+#endif
+
+	/* Wait for the debuggee to be ready  (get pipes and events) */
+	if (recv(socketfd, in_buf, sizeof(in_buf), 0) < 0)
+	{
+#ifdef USE_ADD_LOG
+		add_log(1, "Daemon: ERROR - recv() failed ");
+#endif
+		return 0;
+	}
+
+#ifdef EIF_WINDOWS
+#else
+	/* clean the named pipe from the filesystem */
+	if (unlink(pipe_c2p_name) == -1) {
+#ifdef USE_ADD_LOG
+		add_log(3, "Daemon: ERROR while trying to unlink %s\n",pipe_c2p_name);
+#endif
+	};
+	if (unlink(pipe_p2c_name) == -1) {
+#ifdef USE_ADD_LOG
+		add_log(3, "Daemon: ERROR while trying to unlink %s\n",pipe_p2c_name);
+#endif
+	};
+#endif
+
+
+	/* Close the client socket */
+#ifdef EIF_WINDOWS
+	if (closesocket(socketfd) < 0) {
+#else
+	if (close(socketfd) < 0) {
+#endif
+#ifdef USE_ADD_LOG
+		add_log(3, "Daemon: ERROR - closesocket() failed");
+#endif
+	}
+
+#ifdef EIF_WINDOWS
+	/* Clean-up winsock */
+	WSACleanup();
+#endif
+
+	return debuggee_pid;
+}

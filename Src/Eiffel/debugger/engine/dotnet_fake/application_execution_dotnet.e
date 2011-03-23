@@ -24,6 +24,7 @@ feature {NONE} -- Ancestor facade
 	notify_breakpoints_change do end
 	kill do end
 	detach do end
+	attach_using_port (app: STRING; a_port: INTEGER) do end 	
 	keep_only_objects (kept_objects: LIST [DBG_ADDRESS]) do end
 
 	dump_value_at_address_with_class (a_addr: DBG_ADDRESS; a_cl: CLASS_C): DUMP_VALUE do end

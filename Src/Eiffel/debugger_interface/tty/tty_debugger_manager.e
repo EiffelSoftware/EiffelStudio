@@ -60,7 +60,7 @@ feature -- Output helpers
 			append_system_info (tty_output)
 		end
 
-	display_debugger_info (param: DEBUGGER_EXECUTION_RESOLVED_PROFILE)
+	display_debugger_info (param: detachable DEBUGGER_EXECUTION_RESOLVED_PROFILE)
 		do
 			text_formatter_visitor.append_debugger_information (Current, param, tty_output)
 		end
@@ -704,7 +704,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

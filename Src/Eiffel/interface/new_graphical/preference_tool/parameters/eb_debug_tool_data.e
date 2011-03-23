@@ -54,7 +54,7 @@ feature {EB_SHARED_PREFERENCES, ES_DOCKABLE_TOOL_PANEL} -- Value
 		do
 			Result := <<"System_tool__visible", "Melt_project__visible", "Open_help_tool__visible", "System_info__visible", "Force_debug_mode__visible",
 				"Separator", "Enable_bkpt__visible", "Disable_bkpt__visible", "Clear_bkpt__visible", "Bkpt_info__visible", "Separator", "Ignore_breakpoints_cmd__hidden",
-				"Exec_debug__visible", "Exec_restart_debug__hidden", "Exec_stop__hidden", "Exec_quit__hidden", "Exec_detach__hidden", "Separator", "Exec_step__visible", "Exec_into__visible",
+				"Exec_debug__visible", "Exec_restart_debug__hidden", "Exec_stop__hidden", "Exec_quit__hidden", {EB_EXEC_DETACH_CMD}.name + "__hidden", {EB_EXEC_ATTACH_CMD}.name + "__hidden", "Separator", "Exec_step__visible", "Exec_into__visible",
 				"Exec_out__visible", "Exec_no_stop__hidden", "Assertion_checking_handler__hidden", "Run_final__hidden", "Freeze_project__hidden", "Finalize_project__hidden",
 				"Override_scan__hidden", "Discover_melt__hidden">>
 		end

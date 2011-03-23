@@ -39,4 +39,12 @@
 
 #define SERVICE		"eiffel"		/* Declared TCP service name */
 
+#ifdef EIF_WINDOWS
+#define C2P_IPC_NAMED_PIPE_PID_APP_TPL "\\\\.\\pipe\\es_c2p_%x_%s"
+#define P2C_IPC_NAMED_PIPE_PID_APP_TPL "\\\\.\\pipe\\es_p2c_%x_%s"
+#else
+#define C2P_IPC_NAMED_PIPE_PID_APP_TPL "/tmp/pipe_es_c2p_%x_%s"
+#define P2C_IPC_NAMED_PIPE_PID_APP_TPL "/tmp/pipe_es_p2c_%x_%s"
+#endif
+
 #endif

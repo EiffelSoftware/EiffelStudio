@@ -322,7 +322,7 @@ feature {NONE} -- Implementation
 		do
 			l_storage := breakable_feature_info_storage
 			if l_storage = Void then
-				create l_storage.make (1, capacity)
+				create l_storage.make_filled (Void, 1, capacity)
 				breakable_feature_info_storage := l_storage
 				breakable_feature_info_storage_index := 1
 			end
@@ -336,14 +336,14 @@ feature {NONE} -- Implementation
 			l_storage [breakable_feature_info_storage_index] := a_info
 		end
 
-	breakable_feature_info_storage: ARRAY [DBG_BREAKABLE_FEATURE_INFO]
+	breakable_feature_info_storage: ARRAY [detachable DBG_BREAKABLE_FEATURE_INFO]
 			-- storage to cache/queue results
 
 	breakable_feature_info_storage_index: INTEGER
 			-- current index for FIFO `breakable_feature_info_storage'
 
 ;note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

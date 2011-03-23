@@ -52,6 +52,7 @@
 #include "ewbio.h"
 #include "ewb_transfer.h"
 #include <string.h>
+#include "eif_logfile.h" /* for add_log() */
 
 /*
  * Protocol specific routines

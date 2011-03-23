@@ -17,8 +17,10 @@ inherit
 			is_valid_and_known_object_address,
 			update_critical_stack_depth,
 			can_not_launch_system_message,
+			can_not_attach_system_message,
 			recycle,
 			clean_on_process_termination,
+			terminate_debugging,
 			make_with_debugger,
 			activate_execution_replay_recording,
 			request_debugger_data_update
@@ -115,7 +117,6 @@ feature -- Execution
 	run_with_env_string (app, args, cwd: STRING; env: detachable STRING_GENERAL)
 			-- <Precursor>
 		local
-			l_status: APPLICATION_STATUS
 			l_env_s8: STRING_8
 		do
 			ipc_engine.launch_ec_dbg
@@ -135,8 +136,23 @@ feature -- Execution
 				run_request.set_environment_variables (l_env_s8)
 				run_request.set_ipc_timeout (ipc_engine.ise_timeout)
 				run_request.send
-				l_status := status
-				if l_status /= Void then
+				if attached status as l_status then
+						-- Application was able to be started
+					l_status.set_is_stopped (False)
+				end
+			end
+		end
+
+	attach_using_port (app: STRING; a_port: INTEGER)
+			-- <Precursor/>
+		do
+			ipc_engine.launch_ec_dbg
+			if ipc_engine.ec_dbg_launched then
+				attach_request.set_application_name (app)
+				attach_request.set_port_number (a_port)
+				attach_request.set_ipc_timeout (ipc_engine.ise_timeout)
+				attach_request.send
+				if attached status as l_status then
 						-- Application was able to be started
 					l_status.set_is_stopped (False)
 				end
@@ -187,6 +203,9 @@ feature -- Execution
 
 	kill
 			-- Ask the application to terminate itself.
+		local
+			err: INTEGER
+			b: BOOLEAN
 		do
 			ewb_request.make (Rqst_kill)
 			ewb_request.send
@@ -196,23 +215,33 @@ feature -- Execution
 				-- `recv_dead' will process all other messages sent by
 				-- the application until the application is dead.
 			from
+				b := False
+				err := 0
 			until
-				ewb_request.recv_dead
+				b or else err /= 0
 			loop
 				debug ("ipc")
 					print (generator + ".kill -> ewb_request.recv_dead ? %N")
 				end
+				b := ewb_request.recv_dead ($err)
 			end
 
-			process_termination
-
-			Ipc_engine.end_of_debugging
+			terminate_debugging
 		ensure then
 			app_is_not_running: not is_running
 		end
 
+	terminate_debugging
+		do
+			Precursor
+			Ipc_engine.end_of_debugging
+		end
+
 	detach
 			-- Ask the application to be detached from the debugger.
+		local
+			err: INTEGER
+			b: BOOLEAN
 		do
 			ewb_request.make (Rqst_detach)
 			ewb_request.send
@@ -222,12 +251,15 @@ feature -- Execution
 				-- `recv_dead' will process all other messages sent by
 				-- the application until the application is dead or detached.
 			from
+				b := False
+				err := 0
 			until
-				ewb_request.recv_dead
+				b or else err /= 0
 			loop
 				debug ("ipc")
 					print (generator + ".detach -> ewb_request.recv_dead ? %N")
 				end
+				b := ewb_request.recv_dead ($err)
 			end
 
 			process_termination
@@ -616,6 +648,48 @@ feature {APPLICATION_EXECUTION} -- Launching status
 			end
 		end
 
+	can_not_attach_system_message (a_port: INTEGER): STRING_32
+			-- Message displayed when estudio is unable to attach the application
+		do
+			Result := debugger_names.w_Cannot_attach_system (a_port)
+			Result.append_character ('%N')
+			if not ipc_engine.valid_ise_ecdbgd_executable then
+				if ipc_engine.is_vms then
+					Result.append_string_general (
+							debugger_names.w_Cannot_find_valid_ecdbgd_vms (
+									ipc_engine.ise_ecdbgd_path,
+									ipc_engine.ise_ecdbgd_varname
+								)
+						)
+				else
+					Result.append_string_general (
+							debugger_names.w_Cannot_find_valid_ecdbgd_non_vms (
+									ipc_engine.ise_ecdbgd_path,
+									ipc_engine.ise_ecdbgd_varname
+								)
+						)
+				end
+			else
+				if ipc_engine.is_vms then
+					Result.append_string_general (
+							debugger_names.w_Cannot_attach_in_allotted_time_vms (
+									ipc_engine.ise_timeout,
+									ipc_engine.ise_timeout_varname,
+									a_port
+								)
+						)
+				else
+					Result.append_string_general (
+							debugger_names.w_Cannot_attach_in_allotted_time_non_vms (
+									ipc_engine.ise_timeout,
+									ipc_engine.ise_timeout_varname,
+									a_port
+								)
+						)
+				end
+			end
+		end
+
 feature {APPLICATION_STATUS}
 
 	once_request: ONCE_REQUEST
@@ -631,6 +705,11 @@ feature {APPLICATION_STATUS}
 	run_request: RUN_REQUEST
 		once
 			create Result.make (Rqst_application)
+		end
+
+	attach_request: ATTACH_REQUEST
+		once
+			create Result.make (Rqst_attach)
 		end
 
 	cont_request: EWB_REQUEST

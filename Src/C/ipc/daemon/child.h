@@ -50,6 +50,7 @@ extern STREAM *spawn_child(char *id, int is_ec, char *exe_path, char *exe_args, 
 #else
 extern STREAM *spawn_child(char *id, char *exe_path, char *exe_args, char *cwd, char *envir, int handle_meltpath, Pid_t *child_pid);
 #endif
+extern STREAM *new_stream_on_debuggee(unsigned int port_number, unsigned int* p_debuggee_pid);
 
 #ifdef __cplusplus
 }

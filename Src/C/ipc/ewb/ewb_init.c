@@ -160,8 +160,10 @@ rt_public int launch_ecdbgd (char* progn, char* cmd, int eif_timeout)
 	 */
 
 #ifdef USE_ADD_LOG
+#ifndef EIF_WINDOWS
 	progpid = getpid();					/* Program's PID */
-	progname = egc_system_name;					/* Computed by Eiffel run-time */
+#endif
+	progname = egc_system_name;			/* Computed by Eiffel run-time */
 
 	/* Open a logfile in /tmp */
 
@@ -265,8 +267,10 @@ rt_public void init_connection(int* err)
 	ewb_tpipe(sp);				/* Initialize transfers with application */
 
 #ifdef USE_ADD_LOG
+#ifndef EIF_WINDOWS
 	progpid = getpid();					/* Program's PID */
-	progname = egc_system_name;					/* Computed by Eiffel run-time */
+#endif
+	progname = egc_system_name;			/* Computed by Eiffel run-time */
 
 	/* Open a logfile in /tmp */
 	(void) open_log("/tmp/ised.log");

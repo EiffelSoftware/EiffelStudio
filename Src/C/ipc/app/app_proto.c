@@ -67,6 +67,7 @@
 #include "rt_main.h" 	/* For debug_mode. */
 #include "eif_local.h"	/* For epop() */
 #include "eif_debug.h"	/* For rt addons */
+#include "eif_logfile.h" /* for add_log() */
 
 #ifndef WORKBENCH
 This module should not be compiled in non-workbench mode
@@ -176,7 +177,7 @@ rt_public void arqsthandle(EIF_PSTREAM sp)
 	process_request(sp, &rqst);	/* Process the received request */
 
 #ifdef USE_ADD_LOG
-		add_log(9, "app_arqsthandle done");
+	add_log(9, "app_arqsthandle done");
 #endif
 }
 
@@ -367,9 +368,11 @@ static int curr_modify = NO_CURRMODIF;
 #endif
 		break;
 	case QUIT:						/* Die, immediately */
+		(void) rem_input(sp);		/* Stop selection -> exit listening loop */
+		close_stream(sp);
 		esdie(0);
-	case HELLO:							/* Initial handshake */
-		send_ack(sp, AK_OK);	/* Ok, we're up */
+	case HELLO:						/* Initial handshake */
+		send_ack(sp, AK_OK);		/* Ok, we're up */
 		break;
 	case KPALIVE:					/* Dummy request for connection checks */
 		break;

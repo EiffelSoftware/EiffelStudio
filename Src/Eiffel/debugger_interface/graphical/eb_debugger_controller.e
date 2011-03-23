@@ -37,7 +37,7 @@ inherit
 
 feature -- Aspects
 
-	before_starting (param: DEBUGGER_EXECUTION_RESOLVED_PROFILE)
+	before_starting (param: detachable DEBUGGER_EXECUTION_RESOLVED_PROFILE)
 		do
 			if attached debugger_output as l_output then
 				l_output.lock
@@ -51,15 +51,15 @@ feature -- Aspects
 
 				--| Display information
 			debugger_formatter.add_string ("Launching system :")
-			debugger_formatter.add_new_line
-			debugger_formatter.add_comment ("  - directory = ")
-			debugger_formatter.add_quoted_text (param.working_directory)
-			debugger_formatter.add_new_line
-			debugger_formatter.add_comment_text ("  - arguments = ")
-			if param = Void or else param.arguments.is_empty then
-				debugger_formatter.add_string ("<Empty>")
-			else
-				debugger_formatter.add_quoted_text (param.arguments)
+			if param /= Void then
+				debugger_formatter.add_new_line
+				debugger_formatter.add_comment ("  - directory = ")
+				debugger_formatter.add_quoted_text (param.working_directory)
+				if not param.arguments.is_empty then
+					debugger_formatter.add_new_line
+					debugger_formatter.add_comment_text ("  - arguments = ")
+					debugger_formatter.add_quoted_text (param.arguments)
+				end
 			end
 --| For now useless since the output panel display those info just a few nanoseconds ...
 --			if environment_vars /= Void and then not environment_vars.is_empty then
@@ -131,7 +131,7 @@ feature -- {DEBUGGER_MANAGER, SHARED_DEBUGGER_MANAGER} -- Implementation
 	manager: EB_DEBUGGER_MANAGER;
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

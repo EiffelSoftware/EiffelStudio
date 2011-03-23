@@ -112,7 +112,7 @@ feature -- Basic operations
 			-- Retrieve a subsection of `a_data' from `a_left_position' to `a_right_position' on the processor of `a_quicksorter'.
 		do
 			if a_quicksorter = Current then
-				create Result.make_from_other_data (a_data, a_left_position, a_right_position)
+				create {DATA} Result.make_from_other_data (a_data, a_left_position, a_right_position)
 			else
 				Result := a_quicksorter.new_data_from_quicksorter (a_quicksorter, a_data, a_left_position, a_right_position)
 			end

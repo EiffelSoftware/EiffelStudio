@@ -40,7 +40,7 @@ BEGIN
     button_change_large_image_LabelTitle_RESID L"Change large image" /* LabelTitle button_change_large_image_LabelTitle_RESID: (null) */
 END
 
-button_change_large_image_LargeImages_RESID    BITMAP    ".\\res\\AddTableL.bmp" /* LargeImages button_change_large_image_LargeImages_RESID: (null) */
+button_change_large_image_LargeImages_RESID    BITMAP    ".\\res\\1.bmp" /* LargeImages button_change_large_image_LargeImages_RESID: (null) */
 STRINGTABLE 
 BEGIN
     tab_toggle_button_LabelTitle_RESID L"Toggle Button" /* LabelTitle tab_toggle_button_LabelTitle_RESID: (null) */
@@ -121,7 +121,7 @@ BEGIN
     drop_down_gallery_LabelTitle_RESID L"Dropdown Gallery" /* LabelTitle drop_down_gallery_LabelTitle_RESID: (null) */
 END
 
-drop_down_gallery_LargeImages_RESID    BITMAP    ".\\res\\Button_Image.bmp" /* LargeImages drop_down_gallery_LargeImages_RESID: (null) */
+drop_down_gallery_LargeImages_RESID    BITMAP    ".\\res\\2.bmp" /* LargeImages drop_down_gallery_LargeImages_RESID: (null) */
 STRINGTABLE 
 BEGIN
     InternalCmd2_LabelTitle_RESID L"Label:InternalCmd2" /* LabelTitle InternalCmd2_LabelTitle_RESID: (null) */

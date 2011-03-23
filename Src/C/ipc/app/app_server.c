@@ -163,7 +163,7 @@ rt_shared char dinterrupt(void)
 	return result;
 }
 
-rt_shared void wdbg_initialize(int a_port)
+rt_public void wdbg_initialize(int a_port)
 {
 	/* Initialize the workbench process,
 	 * if a_port > 0 then 

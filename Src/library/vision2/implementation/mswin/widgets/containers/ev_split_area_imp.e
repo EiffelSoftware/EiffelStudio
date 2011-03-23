@@ -299,8 +299,6 @@ feature {NONE} -- Implementation
 	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT)
 			-- <Precursor>
 		local
-			bk_brush: detachable WEL_BRUSH
-			theme_drawer: EV_THEME_DRAWER_IMP
 			l_first_visible, l_second_visible: BOOLEAN
 		do
 			l_first_visible := attached first_imp as l_first and then l_first.is_show_requested

@@ -115,25 +115,7 @@ feature -- Interaction
             -- Initialize workbench debugging
 		require
 			valid_port_number: a_port_number > 0
-		external
-			"C inline use %"eif_main.h%""
-		alias
-			"[
-			#ifdef WORKBENCH
-				if (!is_debug_mode() == 1) {
-					wdbg_initialize($a_port_number);
-					if (is_debug_mode() == 1) {
-						return EIF_TRUE;
-					} else {
-						return EIF_FALSE;
-					};
-				} else {
-					return EIF_FALSE;
-				}
-			#else
-				return EIF_FALSE;
-			#endif
-			]"
+		do
 		end
 
 note

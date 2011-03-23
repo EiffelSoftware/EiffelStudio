@@ -34,9 +34,9 @@ feature {NONE} -- Initialization
 										do
 											create l_pixel_buffer
 											if counter.item \\ 2 = 0 then
-												l_pixel_buffer.set_with_named_file ("./res/Button_Image.bmp")
+												l_pixel_buffer.set_with_named_file ("./res/3.bmp")
 											else
-												l_pixel_buffer.set_with_named_file ("./res/PrintRelationshipsL.bmp")
+												l_pixel_buffer.set_with_named_file ("./res/2.bmp")
 											end
 											set_large_image (l_pixel_buffer)
 											counter.put (counter.item + 1)

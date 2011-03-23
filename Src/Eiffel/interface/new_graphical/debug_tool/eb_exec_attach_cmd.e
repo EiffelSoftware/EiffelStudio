@@ -1,14 +1,14 @@
 note
 
 	description:
-		"Command to detach the debuggee from the debugger."
+		"Command to attach the debuggee from the debugger."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	EB_EXEC_DETACH_CMD
+	EB_EXEC_ATTACH_CMD
 
 inherit
 	ES_DBG_TOOLBARABLE_AND_MENUABLE_COMMAND
@@ -31,16 +31,16 @@ feature {NONE} -- Initialization
 feature -- Formatting
 
 	execute
-			-- Detach the debugger
+			-- Pause the execution.
 		do
-			if attached debugger_manager as dbg and then dbg.application_is_executing then
-				ask_and_detach
+			if attached debugger_manager as dbg and then not dbg.application_is_executing then
+				attach_debuggee
 			end
 		end
 
 feature -- Command property
 
-	name: STRING = "Exec_detach"
+	name: STRING = "Exec_attach"
 			-- Name of the command.
 
 feature {NONE} -- Attributes
@@ -54,57 +54,70 @@ feature {NONE} -- Attributes
 	tooltip: STRING_GENERAL
 			-- Tooltip displayed on `Current's buttons.
 		do
-			Result := Interface_names.e_Exec_detach
+			Result := Interface_names.e_Exec_attach
 		end
 
 	tooltext: STRING_GENERAL
 			-- Text displayed on `Current's buttons.
 		do
-			Result := Interface_names.b_Exec_detach
+			Result := Interface_names.b_Exec_attach
 		end
 
 	menu_name: STRING_GENERAL
 			-- Menu entry corresponding to `Current'.
 		do
-			Result := Interface_names.m_Debug_detach
+			Result := Interface_names.m_Debug_attach
 		end
 
 	pixmap: EV_PIXMAP
 			-- Pixmap representing `Current' on buttons.
 		do
-			Result := pixmaps.icon_pixmaps.debug_detach_icon
+			Result := pixmaps.icon_pixmaps.debug_attach_icon
 		end
 
 	pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer representing the command.
 		do
-			Result := pixmaps.icon_pixmaps.debug_detach_icon_buffer
+			Result := pixmaps.icon_pixmaps.debug_attach_icon_buffer
 		end
 
 feature {NONE} -- Implementation
 
-	ask_and_detach
-			-- Pop up a discardable confirmation dialog before detaching the debuggee.
-		local
-			l_confirm: ES_DISCARDABLE_QUESTION_PROMPT
-		do
-			create l_confirm.make_standard (interface_names.l_dbg_confirm_detach, "", create {ES_BOOLEAN_PREFERENCE_SETTING}.make (preferences.dialog_data.dbg_confirm_detach_preference, True))
-			l_confirm.set_title (interface_names.t_debugger_question)
-			l_confirm.set_button_action (l_confirm.dialog_buttons.yes_button, agent detach)
-			l_confirm.show_on_active_window
-			if attached window_manager.last_focused_window as l_window then
-				l_window.show
-			end
-		end
+--	ask_and_attach
+--			-- Pop up a discardable confirmation dialog before detaching the debuggee.
+--		local
+--			dlg: ES_QUESTION_PROMPT
+--			s: ES_SHARED_PROMPT_PROVIDER
+--		do
+------			create dlg.make ("Port?", a_buttons: [like buttons] DS_SET [INTEGER_32], a_default: [like default_button] INTEGER_32, a_default_confirm: [like default_confirm_button] INTEGER_32, a_default_cancel: [like default_cancel_button] INTEGER_32)
+----			create l_confirm.make_standard (interface_names.l_dbg_confirm_detach, "", create {ES_BOOLEAN_PREFERENCE_SETTING}.make (preferences.dialog_data.dbg_confirm_detach_preference, True))
+----			l_confirm.set_title (interface_names.t_debugger_question)
+----			l_confirm.set_button_action (l_confirm.dialog_buttons.yes_button, agent attach_debuggee)
+----			l_confirm.show_on_active_window
+--			if attached window_manager.last_focused_window as l_window then
+--				create s
+--				s.prompts.show_info_prompt ("Not yet available", l_window.window, Void)
+--			end
+--		end
 
-	detach
-			-- Effectively detach the application.
+	attach_debuggee
+			-- Effectively attach the application.
+		local
+			dlg: ES_EXEC_ATTACH_DIALOG
+			p: INTEGER
 		do
-			if attached debugger_manager as dbg and then dbg.application_is_executing then
+			if attached debugger_manager as dbg and then not dbg.application_is_executing then
 				if dbg.is_classic_project then
-					dbg.application.detach
+					create dlg.make
+					dlg.show_on_active_window
+					if dlg.attaching_confirmed then
+						p := dlg.port_field.value
+						if p >= 1000 then
+							dbg.controller.attach_application (p)
+						end
+					end
 				else
-					prompts.show_warning_prompt ("Detaching application is not yet supported for dotnet Eiffel project", Void, Void)
+					prompts.show_warning_prompt ("Attaching application supported only for classic Eiffel project", Void, Void)
 				end
 			end
 		end

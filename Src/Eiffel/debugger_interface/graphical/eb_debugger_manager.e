@@ -244,6 +244,8 @@ feature {NONE} -- Initialization
 			toolbarable_commands.extend (restart_cmd)
 			create quit_cmd.make
 			toolbarable_commands.extend (quit_cmd)
+			create attach_cmd.make
+			toolbarable_commands.extend (attach_cmd)
 			create detach_cmd.make
 			toolbarable_commands.extend (detach_cmd)
 
@@ -279,6 +281,7 @@ feature {NONE} -- Initialization
 			no_stop_cmd.enable_sensitive
 			stop_cmd.disable_sensitive
 			quit_cmd.disable_sensitive
+			attach_cmd.enable_sensitive
 			detach_cmd.disable_sensitive
 			restart_cmd.disable_sensitive
 			ignore_breakpoints_cmd.disable_sensitive
@@ -452,6 +455,9 @@ feature {EB_EXEC_FORMAT_CMD, EB_DOCKING_LAYOUT_MANAGER, ES_DBG_TOOLBARABLE_AND_M
 
 	quit_cmd: EB_EXEC_QUIT_CMD
 			-- Command that can kill the execution.
+
+	attach_cmd: EB_EXEC_ATTACH_CMD
+			-- Command that can attach the debugger to a debuggee.
 
 	detach_cmd: EB_EXEC_DETACH_CMD
 			-- Command that can detach the execution.
@@ -748,6 +754,10 @@ feature -- tools management
 			a_recycler.auto_recycle (l_item)
 
 			l_item := quit_cmd.new_menu_item
+			Result.extend (l_item)
+			a_recycler.auto_recycle (l_item)
+
+			l_item := attach_cmd.new_menu_item
 			Result.extend (l_item)
 			a_recycler.auto_recycle (l_item)
 
@@ -1168,7 +1178,7 @@ feature -- Output
 			end
 		end
 
-	display_debugger_info (param: DEBUGGER_EXECUTION_RESOLVED_PROFILE)
+	display_debugger_info (param: detachable DEBUGGER_EXECUTION_RESOLVED_PROFILE)
 			-- <Precursor>
 		local
 			l_formatter: like debugger_formatter
@@ -1268,6 +1278,7 @@ feature -- Change
 			force_debug_mode_cmd.update (w)
 			stop_cmd.update (w)
 			quit_cmd.update (w)
+			attach_cmd.update (w)
 			detach_cmd.update (w)
 			step_cmd.update (w)
 			out_cmd.update (w)
@@ -1479,6 +1490,7 @@ feature -- Status setting
 					exec_finalized_cmd.enable_sensitive
 					no_stop_cmd.enable_sensitive
 					debug_cmd.enable_sensitive
+					attach_cmd.enable_sensitive
 					ignore_breakpoints_cmd.enable_sensitive
 					enable_debug
 				end
@@ -1835,6 +1847,7 @@ feature -- Debugging events
 				-- Modify the debugging window display.
 			stop_cmd.enable_sensitive
 			quit_cmd.enable_sensitive
+			attach_cmd.disable_sensitive
 			detach_cmd.enable_sensitive
 			restart_cmd.enable_sensitive
 			no_stop_cmd.disable_sensitive
@@ -2063,6 +2076,7 @@ feature -- Debugging events
 				-- Make related buttons insensitive.
 			stop_cmd.disable_sensitive
 			quit_cmd.disable_sensitive
+			attach_cmd.enable_sensitive
 			detach_cmd.disable_sensitive
 			restart_cmd.disable_sensitive
 			debug_cmd.enable_sensitive
@@ -2280,6 +2294,7 @@ feature {NONE} -- Implementation
 				exception_handler_cmd.enable_sensitive
 
 				debug_cmd.enable_sensitive
+				attach_cmd.enable_sensitive
 				exec_workbench_cmd.enable_sensitive
 				exec_finalized_cmd.enable_sensitive
 
@@ -2298,6 +2313,7 @@ feature {NONE} -- Implementation
 			disable_bkpt.disable_sensitive
 			bkpt_info_cmd.disable_sensitive
 			debug_cmd.disable_sensitive
+			attach_cmd.disable_sensitive
 			exec_workbench_cmd.disable_sensitive
 			exec_finalized_cmd.disable_sensitive
 			no_stop_cmd.disable_sensitive
@@ -2325,6 +2341,7 @@ feature {NONE} -- Implementation
 			toggle_exec_replay_recording_mode_cmd.disable_sensitive
 
 			debug_cmd.disable_sensitive
+			attach_cmd.disable_sensitive
 			exec_workbench_cmd.disable_sensitive
 			exec_finalized_cmd.disable_sensitive
 			no_stop_cmd.disable_sensitive

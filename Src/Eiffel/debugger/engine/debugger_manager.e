@@ -217,7 +217,7 @@ feature -- Output helpers
 		do
 		end
 
-	display_debugger_info (param: DEBUGGER_EXECUTION_RESOLVED_PROFILE)
+	display_debugger_info (param: detachable DEBUGGER_EXECUTION_RESOLVED_PROFILE)
 			-- Display execution parameters information	
 		do
 		end
@@ -933,7 +933,7 @@ feature -- Settings
 			Result := 0 --| Use default settings in runtime
 		end
 
-	classic_debugger_location: STRING
+	classic_debugger_location: detachable STRING
 			-- Path to ecdbgd executable
 			-- If Void use the default executable located in ISE_EIFFEL ... bin
 		do
@@ -947,7 +947,7 @@ feature -- Settings
 			Result := True --| Default behavior for general debugging use
 		end
 
-	confirm_ignore_all_breakpoints_preference_string: STRING
+	confirm_ignore_all_breakpoints_preference_string: detachable STRING
 			-- Preference string for discardable promt related to ignore all breakpoints command
 		do
 			Result := Void

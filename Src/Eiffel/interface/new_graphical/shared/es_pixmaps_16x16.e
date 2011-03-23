@@ -3402,6 +3402,26 @@ feature -- Icons
 			debug_detach_icon_buffer_attached: Result /= Void
 		end
 
+	frozen debug_attach_icon: EV_PIXMAP
+			-- Access to 'attach' pixmap.
+		require
+			has_named_icon: has_named_icon (debug_attach_name)
+		once
+			Result := named_icon (debug_attach_name)
+		ensure
+			debug_attach_icon_attached: Result /= Void
+		end
+
+	frozen debug_attach_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'attach' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (debug_attach_name)
+		once
+			Result := named_icon_buffer (debug_attach_name)
+		ensure
+			debug_attach_icon_buffer_attached: Result /= Void
+		end
+
 	frozen general_blank_icon: EV_PIXMAP
 			-- Access to 'blank' pixmap.
 		require
@@ -8692,6 +8712,7 @@ feature -- Constants: Icon names
 	execution_ignore_contract_violation_name: STRING = "execution ignore contract violation"
 	debugger_value_routine_return_name: STRING = "debugger value routine_return"
 	debug_detach_name: STRING = "debug detach"
+	debug_attach_name: STRING = "debug attach"
 	general_blank_name: STRING = "general blank"
 	general_dialog_name: STRING = "general dialog"
 	general_open_name: STRING = "general open"
@@ -9119,6 +9140,7 @@ feature {NONE} -- Basic operations
 			a_table.put ([{NATURAL_8} 13, {NATURAL_8} 8], execution_ignore_contract_violation_name)
 			a_table.put ([{NATURAL_8} 14, {NATURAL_8} 8], debugger_value_routine_return_name)
 			a_table.put ([{NATURAL_8} 15, {NATURAL_8} 8], debug_detach_name)
+			a_table.put ([{NATURAL_8} 16, {NATURAL_8} 8], debug_attach_name)
 			a_table.put ([{NATURAL_8} 1, {NATURAL_8} 9], general_blank_name)
 			a_table.put ([{NATURAL_8} 2, {NATURAL_8} 9], general_dialog_name)
 			a_table.put ([{NATURAL_8} 3, {NATURAL_8} 9], general_open_name)

@@ -47,6 +47,7 @@ feature {IPC_ENGINE} -- Request constants
 	Rqst_last_rtcc_info: INTEGER		= 51 -- Last RunTime CatCall information (if any)
 	Rqst_ignore_assertion_violation: INTEGER  = 53 -- Set the assertion checking state. (EWB_IGN_ASSERT_VIOLATION)
 	Rqst_detach: INTEGER  				= 54 -- Detach the debugger from the debuggee
+	Rqst_attach: INTEGER  				= 55 -- Attach the debuggee with the debugger
 
 feature {IPC_ENGINE} -- Unused request constants
 

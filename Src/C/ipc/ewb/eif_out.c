@@ -38,6 +38,7 @@
 #include "eif_out.h"
 #include "eif_eiffel.h"
 #include "eproto.h"
+#include "eif_logfile.h" /* for add_log() */
 
 #include "stack.h"
 #include "stream.h"
@@ -59,8 +60,9 @@ rt_public void send_rqst_0 (long int code)
 #endif
 
 #ifdef EIF_WINDOWS
-	if (code == APPLICATION)
+	if (code == APPLICATION || code == ATTACH) {
 		start_timer();
+	}
 #endif
 
 	Request_Clean (rqst);
@@ -139,7 +141,7 @@ rt_private void send_dmpitem_request(EIF_TYPED_VALUE *ip, int a_info)
 	Request rqst;
 
 #ifdef USE_ADD_LOG
-    add_log(100, "sending specific request: %ld from ec", code);
+    add_log(100, "sending specific request: %d from ec", DUMPED);
 #endif
 
 	/* prepare the request to send */
@@ -416,7 +418,7 @@ rt_public void ewb_send_ack_ok(void)
 	pack.rq_ack.ak_type = AK_OK;		/* Report code */
 
 #ifdef USE_ADD_LOG
-	add_log(100, "sending ack %d on pipe %d", code, writefd (sp));
+	add_log(100, "sending ack %d on pipe %d", ACKNLGE, writefd(ewb_sp));
 #endif
 	ewb_send_packet (ewb_sp, &pack);
 }
@@ -457,19 +459,28 @@ rt_public EIF_BOOLEAN recv_ack (void)
 	}
 }
 
-rt_public EIF_BOOLEAN recv_dead (void)
+rt_public EIF_BOOLEAN recv_dead (EIF_INTEGER* perr)
 {
 		/* Wait for a message saying that the application is dead */
 
 	Request pack;
 
 	Request_Clean (pack);
+	*perr = 0;
+
+#ifdef USE_ADD_LOG
+    add_log(100, "in recv_dead ...");
+#endif
+
 #ifdef EIF_WINDOWS
 	if (-1 == ewb_recv_packet(ewb_sp, &pack, TRUE))
 #else
 	if (-1 == ewb_recv_packet(ewb_sp, &pack))
 #endif
+	{
+		*perr = -1;
 		return (EIF_BOOLEAN) 0;
+	}
 
 #ifdef USE_ADD_LOG
     add_log(100, "receiving request : %ld for ec", pack.rq_type);

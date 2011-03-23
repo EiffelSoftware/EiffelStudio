@@ -199,9 +199,12 @@ feature {APPLICATION_EXECUTION} -- IPC communication implementation
 			"C"
 		end;
 
-	recv_dead: BOOLEAN
+	recv_dead (p_err: TYPED_POINTER [INTEGER]): BOOLEAN
+			-- if `p_err' /= 0, then it indicates an error with IPC
 		external
-			"C"
+			"C inline"
+		alias
+			"(EIF_BOOLEAN)recv_dead($p_err)"
 		end;
 
 	c_twrite (data: POINTER; size: INTEGER)
@@ -419,7 +422,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

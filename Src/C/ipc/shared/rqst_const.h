@@ -93,9 +93,10 @@
 #define LAST_RTCC_INFO		51		/* Query last RunTime CatCall event's information */
 #define DUMPED_WITH_OFFSET	52		/* A dumped stack item with ref+offset (used for SPECIAL[Expanded].item */
 #define EWB_IGN_ASSERT_VIOLATION 53	/* Change assertion checking on the application being debugged */
-#define DETACH	 			54		/* Close ecdbgd */
+#define DETACH	 			54		/* Detach debuggee */
+#define ATTACH	 			55		/* Attach debugger to debuggee */
 
-#define MAX_REQUEST_TYPE 	54		/* To update with new value of max request type. */
+#define MAX_REQUEST_TYPE 	55		/* To update with new value of max request type. */
 
 
 /* Acknowledgments codes */

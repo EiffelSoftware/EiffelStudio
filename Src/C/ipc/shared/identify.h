@@ -39,9 +39,13 @@
 
 #ifdef EIF_WINDOWS
 #include <windows.h>
+extern int custom_identify(char* id, HANDLE *p_ewbin, HANDLE *p_ewbout, HANDLE *p_event_r, HANDLE *p_event_w, int (*get_pipe_data_func_ptr)(int, char*, HANDLE*, HANDLE*, HANDLE*, HANDLE*), int get_pipe_data_func_arg1);
 extern int identify(char* id, HANDLE *p_ewbin, HANDLE *p_ewbout, HANDLE *p_event_r, HANDLE *p_event_w);
+extern int identify_with_socket(char* id, HANDLE *p_ewbin, HANDLE *p_ewbout, HANDLE *p_event_r, HANDLE *p_event_w, int a_port_number);
 #else
+extern int custom_identify(char* id, int* p_fdr, int* p_fdw, int (*get_pipe_data_func_ptr)(int, char*, int*, int*), int get_pipe_data_func_arg1);
 extern int identify(char* id, int fdr, int fdw);
+extern int identify_with_socket(char* id, int* p_fdr, int* p_fdw, int a_port_number);
 #endif
 
 #endif /* _identify_h_ */

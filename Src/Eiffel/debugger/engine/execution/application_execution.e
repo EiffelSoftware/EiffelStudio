@@ -174,6 +174,12 @@ feature -- Access
 			Result := debugger_names.w_Cannot_launch_system
 		end
 
+	can_not_attach_system_message (a_port: INTEGER): STRING_32
+			-- Message displayed when estudio is unable to attach the system
+		do
+			Result := debugger_names.w_Cannot_attach_system (a_port)
+		end
+
 	number_of_stack_elements: INTEGER
 			-- Total number of the call stack elements in
 			-- exception stack
@@ -203,17 +209,16 @@ feature -- Access
 			Result := number_of_stack_elements = 0
 		end
 
-feature {DEAD_HDLR, STOPPED_HDLR, SHARED_DEBUGGER_MANAGER, APPLICATION_EXECUTION} -- Implemenation
+feature {DEAD_HDLR, STOPPED_HDLR, SHARED_DEBUGGER_MANAGER, APPLICATION_EXECUTION} -- Implementation
 
 	process_termination
 			-- Process the termination of the executed
 			-- application. Also execute the `termination_command'.
-		require
-			is_running: is_running
 		do
 			Debugger_manager.restore_debugger_data
-
-			clean_on_process_termination
+			if is_running then
+				clean_on_process_termination
+			end
 
 			on_application_quit
 
@@ -255,6 +260,31 @@ feature -- Execution
 
 			app := Eiffel_system.application_name (True)
 			run_with_env_string (app, params.arguments, params.working_directory, l_envstr)
+		ensure
+			successful_app_is_not_stopped: is_running implies not is_stopped
+		end
+
+	attach (a_port: INTEGER)
+			-- Attach application using port `a_port'
+			-- If `is_running' is false after the
+			-- execution of this routine, it means that
+			-- the application was unable to be attached
+			-- due to the time_out (see `eiffel_timeout_message').
+			-- Before attaching the application you must check
+			-- to see if the debugged information is up to date.
+		require
+			app_not_running: not is_running
+			application_exists: exists
+			non_negative_interrupt: debugger_manager.interrupt_number >= 0
+		local
+			app: STRING
+			ctlr: DEBUGGER_CONTROLLER
+		do
+			parameters := Void
+			ctlr := debugger_manager.controller
+
+			app := Eiffel_system.application_name (True)
+			attach_using_port (app, a_port)
 		ensure
 			successful_app_is_not_stopped: is_running implies not is_stopped
 		end
@@ -358,6 +388,12 @@ feature -- Execution
 		deferred
 		end
 
+	terminate_debugging
+			-- Terminate debugging, and clean what needs to be cleaned
+		do
+			process_termination
+		end
+
 	detach
 			-- Ask the application to detach itself.
 		require
@@ -402,6 +438,28 @@ feature {NONE} -- Implementation: Remote
 
 	internal_remote_rt_execution_recorder: like remote_rt_execution_recorder
 			-- Cached value of `remote_rt_execution_recorder'
+
+feature -- Access: Remote access to ISE_SCOOP_MANAGER
+
+	remote_rt_scoop_manager: detachable DBG_RT_SCOOP_MANAGER_PROXY
+			-- Return the remote SCOOP MANAGER
+		do
+			Result := internal_remote_rt_scoop_manager
+			if Result = Void and then attached imp_remote_rt_scoop_manager as rt_scp_mnger then
+				create Result.make (rt_scp_mnger, Current)
+				internal_remote_rt_scoop_manager := Result
+			end
+		end
+
+feature {NONE} -- Implementation: Remote SCOOP MANAGER
+
+	imp_remote_rt_scoop_manager: detachable ABSTRACT_REFERENCE_VALUE
+			-- Return the remote scp_mnger
+		deferred
+		end
+
+	internal_remote_rt_scoop_manager: like remote_rt_scoop_manager
+			-- Cached value of `remote_rt_scoop_manager'
 
 feature -- Remote: execution recorder on RT_
 
@@ -1269,7 +1327,7 @@ feature -- Environment related
 			Result = Void implies (env = Void or else env.is_empty)
 		end
 
-feature {DEAD_HDLR, RUN_REQUEST} -- Setting
+feature {DEAD_HDLR, EWB_REQUEST} -- Setting
 
 	build_status
 			-- Build associated `status'
@@ -1313,6 +1371,17 @@ feature {NONE} -- fake
 			app_not_void: app /= Void
 			args_attached: args /= Void
 			cwd_attached: cwd /= Void
+			application_not_running: not is_running
+			application_exists: exists
+			non_negative_interrupt: debugger_manager.interrupt_number >= 0
+		deferred
+		ensure
+			successful_app_is_not_stopped: is_running implies not is_stopped
+		end
+
+	attach_using_port (app: STRING; a_port: INTEGER)
+		require
+			app_not_void: app /= Void
 			application_not_running: not is_running
 			application_exists: exists
 			non_negative_interrupt: debugger_manager.interrupt_number >= 0

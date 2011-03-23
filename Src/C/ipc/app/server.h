@@ -42,5 +42,7 @@
 extern void dserver(void);		/* Main entry point into server mode */
 extern char dinterrupt(void);	/* Wonder if application has been interrupted */
 extern void winit(void);		/* Workbench debugger initialization */
+extern void wdbg_initialize(int a_port);	/* Workbench debugger initialization */
+					/* allowing argument `a_port' in case we want to init with socket */
 
 #endif

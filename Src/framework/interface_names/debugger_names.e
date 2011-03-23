@@ -47,6 +47,8 @@ feature -- warnings
 							% or during the Process creation (.NET).")
 		end
 
+	w_Cannot_attach_system (a_port: INTEGER): STRING_32
+		do Result := locale.formatted_string (locale.translation ("Could not attach application using port $1"), [a_port]) end
 	w_Cannot_launch_system: STRING_32
 		do Result := locale.translation ("Could not launch system.") end
 
@@ -91,6 +93,27 @@ feature -- warnings
 					%%NYou can change this value in the preferences%N%
 					% or restart after setting the logical name $2 %N"),
 					[a_timeout, a_env_var_name]
+				)
+		end
+	w_Cannot_attach_in_allotted_time_non_vms (a_timeout: INTEGER_32; a_env_var_name: STRING_GENERAL; a_port: INTEGER): STRING_32
+		do
+			Result := locale.formatted_string (locale.translation (
+					"The application could not be attached using port $3 in allotted time:%N%
+					%%NYour current timeout is $1 second(s) %N%
+					%%NYou can change this value in the preferences%N%
+					% or restart after setting the environment variable $2 %N"),
+					[a_timeout, a_env_var_name, a_port]
+				)
+		end
+
+	w_Cannot_attach_in_allotted_time_vms (a_timeout: INTEGER_32; a_env_var_name: STRING_GENERAL; a_port: INTEGER): STRING_32
+		do
+			Result := locale.formatted_string (locale.translation (
+					"The application could not be attached using port $3 in allotted time:%N%
+					%%NYour current timeout is $1 second(s) %N%
+					%%NYou can change this value in the preferences%N%
+					% or restart after setting the logical name $2 %N"),
+					[a_timeout, a_env_var_name, a_port]
 				)
 		end
 

@@ -23,17 +23,16 @@ feature -- Basic operation
 
 	execute
 			-- register termination of the controlled application
-		local
-			l_app: APPLICATION_EXECUTION
 		do
-			l_app := Debugger_manager.application
-			if l_app.is_running then
-				l_app.process_termination
-			end
-			if attached {APPLICATION_EXECUTION_CLASSIC} l_app as l_app_classic then
-				l_app_classic.request_ipc_end_of_debugging
-			else
-				check app_classic: False end
+			if attached Debugger_manager.application as l_app then
+				if l_app.is_running then
+					l_app.process_termination
+				end
+				if attached {APPLICATION_EXECUTION_CLASSIC} l_app as l_app_classic then
+					l_app_classic.request_ipc_end_of_debugging
+				else
+					check app_classic: False end
+				end
 			end
 		end
 

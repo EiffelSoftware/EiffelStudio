@@ -161,6 +161,7 @@ feature -- Button texts
 	b_Bkpt_remove: STRING_32						do Result := locale.translation("Remove Breakpoints")	end
 	b_Bkpt_stop_in_hole: STRING_32				do Result := locale.translation("Pause")	end
 	b_Exec_kill: STRING_32						do Result := locale.translation("Stop Application")	end
+	b_Exec_attach: STRING_32					do Result := locale.translation("Attach Debuggee")	end
 	b_Exec_detach: STRING_32					do Result := locale.translation("Detach Application")	end
 	b_Exec_into: STRING_32						do Result := locale.translation("Step Into")	end
 	b_Exec_no_stop: STRING_32					do Result := locale.translation("Run Without Breakpoints")	end
@@ -452,6 +453,7 @@ feature -- Accelerator, focus label and menu name
 	f_Debug_dynamic_eval: STRING_32		do Result := locale.translation("Dynamic feature evaluation")	end
 	m_Debug_dynamic_eval: STRING_32		do Result := locale.translation("Dynamic Feature Evaluation")	end
 	m_Debug_kill: STRING_32				do Result := locale.translation("&Stop Execution")	end
+	m_Debug_attach: STRING_32			do Result := locale.translation("&Attach Debuggee")	end
 	m_Debug_detach: STRING_32			do Result := locale.translation("&Detach Execution")	end
 	f_Debug_run: STRING_32				do Result := locale.translation("Run")	end
 	m_Debug_run: STRING_32				do Result := locale.translation("&Run")	end
@@ -2569,19 +2571,21 @@ feature -- Description texts
 										%on this button. Use right click for both%Npick and drop actions.")	end
 	e_Diagram_add_class_figure_relations: STRING_32 do Result := locale.translation("A class figure(s) must either be selected%N%
 										%or dropped on this button via right clicking.")	end
-	e_Diagram_delete_item: STRING_32		do Result := locale.translation("Please drop a class, a cluster or a link%N%
+	e_Diagram_delete_item: STRING_32	do Result := locale.translation("Please drop a class, a cluster or a link%N%
 										%on this button. Use right click for both%Npick and drop actions.")	end
 	e_Display_error_help: STRING_32		do Result := locale.translation("Give help on compilation errors")	end
-	e_Display_system_info: STRING_32		do Result := locale.translation("Display information concerning current system")	end
-	e_Drop_an_error_stone: STRING_32		do Result := locale.translation("Pick the code of a compilation error (such as VEEN, VTCT,...)%N%
+	e_Display_system_info: STRING_32	do Result := locale.translation("Display information concerning current system")	end
+	e_Drop_an_error_stone: STRING_32	do Result := locale.translation("Pick the code of a compilation error (such as VEEN, VTCT,...)%N%
 																		%and drop it here to have extended information about it.")	end
 	e_Edit_exported_feature: STRING_32	do Result := locale.translation("Edit the properties of the selected feature")	end
-	e_Edit_expression: STRING_32			do Result := locale.translation("Edit the selected expression")	end
+	e_Edit_expression: STRING_32		do Result := locale.translation("Edit the selected expression")	end
 	e_Edited: STRING_32					do Result := locale.translation("Some classes were edited since last compilation")	end
 	e_Exec_debug: STRING_32				do Result := locale.translation("Start execution and stop at breakpoints")	end
-	e_Exec_debug_continue: STRING_32		do Result := locale.translation("Continue execution and stop at breakpoints")	end
+	e_Exec_debug_continue: STRING_32	do Result := locale.translation("Continue execution and stop at breakpoints")	end
 	e_Exec_kill: STRING_32				do Result := locale.translation("Stop execution")	end
-	e_Exec_detach: STRING_32				do Result := locale.translation("Detach execution")	end
+	e_Exec_attach: STRING_32			do Result := locale.translation("Attach debuggee ...")	end
+	e_Exec_attach_on_port: STRING_32	do Result := locale.translation("Attach debuggee on port")	end
+	e_Exec_detach: STRING_32			do Result := locale.translation("Detach execution")	end
 	e_Exec_into: STRING_32				do Result := locale.translation("Step into a routine")	end
 	e_Exec_no_stop: STRING_32			do Result := locale.translation("Run without stopping at breakpoints")	end
 	e_Exec_ignore_contract_violation: STRING_32	do Result := locale.translation("Contract violation occurred. Do you want to%N - [break] into debugger,%N - or [continue] to let the application handle the violation,%N - or [ignore] the violation and continue as if it was not violated? %N%NNote: You can always ignore contract violation later using the drop down menu from %"Run%" button.")	end

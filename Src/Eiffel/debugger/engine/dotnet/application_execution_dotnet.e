@@ -272,6 +272,11 @@ feature -- Execution
 			end
 		end
 
+	attach_using_port (app: STRING; a_port: INTEGER)
+		do
+			check not_supported: False end
+		end
+
 	continue_ignoring_kept_objects
 			-- Continue the running of the application
 			-- before any debugger's operation occurred
@@ -1695,7 +1700,7 @@ feature {NONE} -- Constants for dotnet interactions
 			-- {EXCEPTION_MANAGER}.wrapped_exception feature name (for dotnet)
 
 ;note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

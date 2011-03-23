@@ -105,19 +105,20 @@ rt_public void add_log (int level, char *StrFmt, ...)
 
 	struct tm *ct;				/* Current time (pointer to static data) */
 	Time_t clock;				/* Number of seconds since the Epoch */
-	char buffer[MAX_STRING];	/* Buffer which holds the expanded %m string */
 	char message[MAX_STRING];	/* Where logging message is built */
 	FILE* out;						/* File descriptor to be used for message */
 	va_list ap;
 	int r;
 
-	if (loglvl < level)			/* Logging level is not high enough */
+	if (loglvl < level) {			/* Logging level is not high enough */
 		return;
+	}
 
-	if (logfile == NULL)			/* Logfile not opened for whatever reason */
+	if (logfile == NULL) {			/* Logfile not opened for whatever reason */
 		out = stderr;					/* Use stderr if no logfile opened */
-	else
+	} else {
 		out = logfile;			/* Thie is the normal log file */
+	}
 
 	clock = time((Time_t *) 0);	/* Number of seconds */
 	ct = localtime(&clock);		/* Get local time from amount of seconds */
@@ -125,7 +126,7 @@ rt_public void add_log (int level, char *StrFmt, ...)
 	va_start (ap, StrFmt);
 
 	r = vsprintf (message, StrFmt, ap);
-	sprintf(buffer, "%d/%.2d/%.2d %.2d:%.2d:%.2d %s[%d]: %s\n",
+	fprintf(out, "%d/%.2d/%.2d %.2d:%.2d:%.2d %s[%d]: %s\n",
 		ct->tm_year, ct->tm_mon + 1, ct->tm_mday,
 		ct->tm_hour, ct->tm_min, ct->tm_sec,
 #ifdef EIF_WINDOWS
@@ -133,7 +134,9 @@ rt_public void add_log (int level, char *StrFmt, ...)
 #else
 		progname, progpid, message);
 #endif
-	fprintf(out, buffer);
+	/* Uncomment if needed:  
+	 * fflush(out); 
+	 */
 }
 
 rt_public int open_log(char *name)
@@ -142,8 +145,9 @@ rt_public int open_log(char *name)
 	 * it is closed before. The routine returns -1 in case of error.
 	 */
 
-	if (logfile != NULL)
+	if (logfile != NULL) {
 		fclose(logfile);
+	}
 
 #ifdef __VMS	/* create a new file the first time called only */
 	{
@@ -178,8 +182,9 @@ rt_public void close_log(void)
 {
 	/* Close log file */
 
-	if (logfile != NULL)			/* File not closed */
+	if (logfile != NULL) {			/* File not closed */
 		fclose(logfile);
+	}
 
 	logfile = NULL;				/* Mark file as closed */
 }
@@ -190,8 +195,9 @@ rt_public int reopen_log(void)
 	 * with a fresh new file descriptor).
 	 */
 
-	if (logname != (char *) 0)
+	if (logname != (char *) 0) {
 		return open_log(logname);
+	}
 
 	return -1;						/* No previously opened logfile */
 }
@@ -211,8 +217,8 @@ rt_private void expand(char *from, char *to)
 
 	int len;							/* Length of substituted text */
 
-	while (*to++ = *from)
-		if (*from++ == '%')
+	while (*to++ = *from) {
+		if (*from++ == '%') {
 			switch (*from) {
 			case 'm':					/* %m is the English description */
 				len = add_error(to - 1);
@@ -225,6 +231,8 @@ rt_private void expand(char *from, char *to)
 				from++;
 				break;
 			}
+		}
+	}
 }
 
 rt_private int add_error(char *where)
@@ -235,7 +243,6 @@ rt_private int add_error(char *where)
 
 #ifdef HAS_SYS_ERRLIST
 	extern int sys_nerr;					/* Size of sys_errlist[] */
-	extern char **sys_errlist;				/* Maps error code to string */
 #endif
 
 #if defined HAS_STRERROR || defined HAS_SYS_ERRLIST
@@ -259,15 +266,16 @@ rt_private int add_errcode(char *where)
 #endif
 
 #ifdef HAS_SYS_ERRNOLIST
-	if (errno < 0 || errno >= sys_nerrno)
+	if (errno < 0 || errno >= sys_nerrno) {
 		sprintf(where, "UNKNOWN");
-	else
+	} else {
 		sprintf(where, "%s", sys_errnolist[errno]);
+	}
 #else
-		sprintf(where, "%d", errno);
+	sprintf(where, "%d", errno);
 #endif
 
-	return strlen(where);		/* FIXME */
+	return (int)strlen(where);		/* FIXME */
 }
 
 #endif

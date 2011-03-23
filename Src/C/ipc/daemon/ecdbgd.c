@@ -113,8 +113,8 @@ rt_private void init_dbg(int argc, char **argv)
 	eif_timeout = getenv ("ISE_TIMEOUT");
 #endif
 
-
 #ifdef USE_ADD_LOG
+	progname = "ecdbgd";
 #ifdef EIF_WINDOWS
 	/* Open a logfile in /tmp */
 	(void) open_log("\\tmp\\ised.log");
@@ -264,8 +264,9 @@ rt_public void daemon_exit(int code)
 		daemon_data.d_cs = NULL;
 	}
 
-	if (daemon_data.d_ewb != 0)
+	if (daemon_data.d_ewb != 0) {
 		CloseHandle (daemon_data.d_ewb);
+	}
 
 	dbg_prt_destroy();
 #endif

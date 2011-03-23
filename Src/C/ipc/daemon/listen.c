@@ -118,7 +118,7 @@ rt_public void dwide_listen(void)
 	 */
 #ifdef EIF_WINDOWS
 #ifdef USE_ADD_LOG
-		add_log(12, "In dwide listen");
+		add_log(12, "In dwide_listen");
 		close_log();
 		reopen_log();
 #endif
@@ -167,8 +167,8 @@ rt_public void dwide_listen(void)
 		}
 
 		if (daemon_data.d_app > 0 && !has_input(daemon_data.d_as)) {
-#endif
 			daemon_data.d_app = 0;
+#endif
 			close_stream(daemon_data.d_as);
 			free(daemon_data.d_as);
 			daemon_data.d_as = NULL;
@@ -196,10 +196,9 @@ rt_public void dwide_listen(void)
 #ifdef EIF_WINDOWS
 				CloseHandle (daemon_data.d_app);
 				daemon_data.d_app = NULL;
-#endif
-				daemon_data.d_app = 0;
-#ifdef EIF_WINDOWS
 				(void) rem_input(daemon_data.d_as);
+#else
+				daemon_data.d_app = 0;
 #endif
 				close_stream(daemon_data.d_as);
 				free(daemon_data.d_as);
@@ -248,12 +247,14 @@ rt_private int active_check(STREAM *sp, int pid)
 #endif
 #endif
 
-	if (pid == 0)				/* No application recorded */
+	if (pid == 0) {				/* No application recorded */
 		return 0;				/* Nothing to check */
+	}
 
 #ifdef EIF_WINDOWS
-	if (WaitForSingleObject (pid, 0) == WAIT_OBJECT_0)
+	if (WaitForSingleObject (pid, 0) == WAIT_OBJECT_0) {
   		return 1;
+	}
 #elif defined EIF_VMS
 	/* VMS does has PIDCHECK, but only on V7.0 or later, and	*/
 	/* only when the _POSIX_EXIT feature test macro is set.		*/
@@ -262,7 +263,7 @@ rt_private int active_check(STREAM *sp, int pid)
 	    /* just check to see if process is still alive. Use a datum kept in PCB */
 	    /* (in nonpaged pool) for minimum overhead */
 	    st = lib$getjpi(&JPI$_STATE, &pid, 0, &schstate, 0,0);
-	    if (st == SS$_SUSPENDED) st = 1;
+	    if (st == SS$_SUSPENDED) { st = 1; }
 	    if (!VMS_SUCCESS (st)) {
 #ifdef USE_ADD_LOG
 		if (st != SS$_NONEXPR) {
@@ -285,9 +286,10 @@ rt_private int active_check(STREAM *sp, int pid)
 #else
 	rqst.rq_type = KPALIVE;
 	dbg_send_packet(sp, &rqst);	/* Send dummy request */
-	if (!has_input(sp))			/* Failure, could not send request */
-		return 1;						/* Child is dead */
+	if (!has_input(sp)) {		/* Failure, could not send request */
+		return 1;				/* Child is dead */
 	}
+	} /*extra right curly brace? */
 #endif /* PIDCHECK */
 #endif /* (platform) */
 	return 0;		/* Ok, child still alive */

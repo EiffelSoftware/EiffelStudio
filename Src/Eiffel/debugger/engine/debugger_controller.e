@@ -203,6 +203,71 @@ feature -- Debug Operation
 			end
 		end
 
+feature -- Attach
+
+	attach_application (a_port: INTEGER)
+			-- Attach the program from the project target.
+		local
+			attach_it: BOOLEAN
+			makefile_sh_name: FILE_NAME
+			uf: RAW_FILE
+			make_f: PLAIN_TEXT_FILE
+			is_dotnet_system: BOOLEAN
+		do
+			attach_it := False
+			if  (not Eiffel_project.system_defined) or else (Eiffel_System.name = Void) then
+				warning (Warning_messages.w_No_system)
+			elseif
+				Eiffel_project.initialized and then
+				Eiffel_project.system_defined and then
+				Eiffel_system.system.il_generation and then
+				Eiffel_system.system.msil_generation_type.is_equal ("dll")
+			then
+				warning (debugger_names.m_no_debugging_for_dll_system)
+			elseif (not manager.application_is_executing) then
+					--| Application is not running |--
+				if
+					Eiffel_project.initialized and then
+					not Eiffel_project.Workbench.is_compiling
+				then
+						-- Application is not running. Attach it.
+					debug("DEBUGGER")
+						io.error.put_string (generator)
+						io.error.put_string ("(DEBUG_RUN): attach execution%N")
+					end
+					create makefile_sh_name.make_from_string (project_location.workbench_path)
+					makefile_sh_name.set_file_name (Makefile_SH)
+
+					create uf.make (Eiffel_system.application_name (True))
+					create make_f.make (makefile_sh_name)
+
+					is_dotnet_system := Eiffel_system.system.il_generation
+					if uf.exists then
+						if is_dotnet_system then
+							-- not yet supported
+						else
+							if make_f.exists and then make_f.date > uf.date then
+									-- The Makefile file is more recent than the application
+								if_confirmed_do (Warning_messages.w_Makefile_more_recent (makefile_sh_name), agent c_compile)
+							else
+								attach_it := True
+								attach_workbench_application (a_port)
+							end
+						end
+					elseif make_f.exists then
+							-- There is no application.
+						warning (Warning_messages.w_No_system_generated (uf.name))
+					elseif Eiffel_project.Lace.compile_all_classes then
+						warning (Warning_messages.w_None_system)
+					else
+						warning (Warning_messages.w_Must_compile_first)
+					end
+				end
+			else
+					--| Should not occurs
+				check application_should_not_be_running: False end
+			end
+		end
 feature {DEBUGGER_MANAGER} -- Debugging operation
 
 	debug_operate (a_exec_mode: INTEGER)
@@ -383,7 +448,7 @@ feature -- Start Operation
 
 feature {NONE} -- Callbacks
 
-	before_starting (param: DEBUGGER_EXECUTION_RESOLVED_PROFILE)
+	before_starting (param: detachable DEBUGGER_EXECUTION_RESOLVED_PROFILE)
 		do
 			manager.display_debugger_info (param)
 		end
@@ -454,10 +519,44 @@ feature {NONE} -- debugging
 				else
 						-- Something went wrong
 					warning (app_exec.can_not_launch_system_message)
-					app_exec.on_application_quit
+					app_exec.terminate_debugging
 
 					activate_debugger_environment (False)
 				end
+			end
+		end
+
+	attach_workbench_application (a_port: INTEGER)
+			-- Attach workbench application using socket connection on port `a_port'
+		local
+			app_exec: APPLICATION_EXECUTION
+		do
+			before_starting (Void)
+
+				-- Raise debugger before launching.
+			if not manager.application_initialized then
+				manager.create_application
+			end
+
+			activate_debugger_environment (True)
+			app_exec := manager.application
+			app_exec.ignore_breakpoints (manager.execution_ignoring_breakpoints)
+			app_exec.set_execution_mode ({EXEC_MODES}.Step_into)
+			manager.on_application_before_launching
+			app_exec.attach (a_port)
+			if manager.application_is_executing then
+				manager.init_application
+				if app_exec.ignoring_breakpoints then
+					manager.debugger_status_message (debugger_names.m_system_is_running_ignoring_breakpoints)
+				else
+					manager.debugger_message (debugger_names.m_system_is_running)
+				end
+				manager.on_application_launched
+			else
+					-- Something went wrong
+				warning (app_exec.can_not_attach_system_message (a_port))
+				app_exec.terminate_debugging
+				activate_debugger_environment (False)
 			end
 		end
 
@@ -562,7 +661,7 @@ invariant
 	manager_not_void: manager /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

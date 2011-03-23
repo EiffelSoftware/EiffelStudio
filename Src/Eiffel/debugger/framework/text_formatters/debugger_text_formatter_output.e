@@ -83,10 +83,10 @@ feature -- Generic
 
 feature -- Application status
 
-	append_debugger_information (dbg: DEBUGGER_MANAGER; a_params: DEBUGGER_EXECUTION_RESOLVED_PROFILE; tf: TEXT_FORMATTER)
+	append_debugger_information (dbg: DEBUGGER_MANAGER; a_params: detachable DEBUGGER_EXECUTION_RESOLVED_PROFILE; tf: TEXT_FORMATTER)
 			-- Append debugger information
 		local
-			params: DEBUGGER_EXECUTION_RESOLVED_PROFILE
+			params: detachable DEBUGGER_EXECUTION_RESOLVED_PROFILE
 			ctlr: DEBUGGER_CONTROLLER
 			app: APPLICATION_EXECUTION
 			s: STRING
@@ -102,35 +102,31 @@ feature -- Application status
 
 				--| Display information
 			tf.add_string ("Launching system :")
-			tf.add_new_line
 			if params /= Void then
+				tf.add_new_line
 				s32 := params.title
 				if s32 /= Void then
 					tf.add_comment ("  - profile = ")
 					tf.add_quoted_text (s32)
 					tf.add_new_line
 				end
+				tf.add_comment ("  - directory = ")
+				s := params.working_directory
+				if s /= Void then
+					tf.add_quoted_text (s)
+				else
+					tf.add_string ("<Empty>")
+				end
+				tf.add_new_line
+				tf.add_comment_text ("  - arguments = ")
+				s := params.arguments
+				if s = Void or else s.is_empty then
+					tf.add_string ("<Empty>")
+				else
+					tf.add_quoted_text (s)
+				end
 			end
 
-			tf.add_comment ("  - directory = ")
-			if params /= Void then
-				s := params.working_directory
-			end
-			if s /= Void then
-				tf.add_quoted_text (s)
-			else
-				tf.add_string ("<Empty>")
-			end
-			tf.add_new_line
-			tf.add_comment_text ("  - arguments = ")
-			if params /= Void then
-				s := params.arguments
-			end
-			if s = Void or else s.is_empty then
-				tf.add_string ("<Empty>")
-			else
-				tf.add_quoted_text (s)
-			end
 --| For now useless since the output panel display those info just a few nanoseconds ...
 --			if ctlr.environment_vars /= Void and then not ctlr.environment_vars.is_empty then
 --				tf.add_comment_text ("  - environment : ")
@@ -844,7 +840,7 @@ feature {NONE} -- Constants
 	Bit_label: STRING = "BIT ";
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -3,8 +3,6 @@ note
 		Set of features to access ISE debugger functionality from debuggee.	
 		
 		Note: do not try to evaluate the following feature in watch tool!
-		
-		TO BE USED AT YOUR OWN RISK.
 		]"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -41,8 +39,8 @@ feature {NONE} -- Status settings
 feature {NONE} -- Status report
 
 	debug_state: BOOLEAN
-            -- Is debugger enabled?
-            --| Warning: do not try to evaluate it in watch tool (it will always return False)
+			-- Is debugger enabled?
+			--| Warning: do not try to evaluate it in watch tool (it will always return False)
 		do
 			Result := rt_debug_mode = 1
 		end
@@ -50,37 +48,37 @@ feature {NONE} -- Status report
 feature {NONE} -- Implementation
 
 	rt_valid_debug_mode (a_mode: INTEGER): BOOLEAN
-            -- Is `a_mode' a valid runtime debug_mode value?
+			-- Is `a_mode' a valid runtime debug_mode value?
 		do
 			Result := a_mode = 0 or a_mode = 1
 		end
 
-    rt_set_debug_mode (a_mode: INTEGER)
-            -- Set runtime value for `debug_mode'
-            -- a_debug_mode = 0: disable debugger
-            -- a_debug_mode = 1: enable debugger
+	rt_set_debug_mode (a_mode: INTEGER)
+			-- Set runtime value for `debug_mode'
+			-- a_debug_mode = 0: disable debugger
+			-- a_debug_mode = 1: enable debugger
 		require
-           	a_mode_valid: rt_valid_debug_mode (a_mode)
-        external
-            "C inline use%"eif_main.h%""
-        alias
-            "[
+			a_mode_valid: rt_valid_debug_mode (a_mode)
+		external
+			"C inline use%"eif_main.h%""
+		alias
+			"[
 			#ifdef WORKBENCH
 				set_debug_mode ($a_mode);
 			#endif
 			]"
 		ensure
 			debug_mode_set: rt_debug_mode_set (a_mode)
-        end
+		end
 
-    rt_debug_mode: INTEGER
-            -- Runtime value for `debug_mode'
-            -- 0: debugger disabled
-            -- 1: debugger enabled
-            --| Warning: do not try to evaluate it in watch tool (it will always return 0)	
-        external
-            "C inline use %"eif_main.h%""
-        alias
+	rt_debug_mode: INTEGER
+			-- Runtime value for `debug_mode'
+			-- 0: debugger disabled
+			-- 1: debugger enabled
+			--| Warning: do not try to evaluate it in watch tool (it will always return 0)	
+		external
+			"C inline use %"eif_main.h%""
+		alias
 			"[
 			#ifdef WORKBENCH
 				return is_debug_mode();
@@ -89,15 +87,15 @@ feature {NONE} -- Implementation
 			#endif
 			]"
 		ensure
-           	result_mode_valid: rt_valid_debug_mode (Result)
-        end
+			result_mode_valid: rt_valid_debug_mode (Result)
+		end
 
-    rt_debug_mode_set (a_mode: INTEGER): BOOLEAN
-            -- Runtime value for `debug_mode' is set to `a_mode'?
-            --| Warning: do not try to evaluate it in watch tool
-        external
-            "C inline use %"eif_main.h%""
-        alias
+	rt_debug_mode_set (a_mode: INTEGER): BOOLEAN
+			-- Runtime value for `debug_mode' is set to `a_mode'?
+			--| Warning: do not try to evaluate it in watch tool
+		external
+			"C inline use %"eif_main.h%""
+		alias
 			"[
 			#ifdef WORKBENCH
 				if ($a_mode = is_debug_mode()) {
@@ -109,7 +107,34 @@ feature {NONE} -- Implementation
 				return EIF_TRUE;
 			#endif
 			]"
-        end
+		end
+
+feature -- Interaction
+
+    rt_workbench_initialize_debugging (a_port_number: INTEGER): BOOLEAN
+            -- Initialize workbench debugging
+		require
+			valid_port_number: a_port_number > 0
+		external
+			"C inline use %"eif_main.h%""
+		alias
+			"[
+			#ifdef WORKBENCH
+				if (!is_debug_mode() == 1) {
+					wdbg_initialize($a_port_number);
+					if (is_debug_mode() == 1) {
+						return EIF_TRUE;
+					} else {
+						return EIF_FALSE;
+					};
+				} else {
+					return EIF_FALSE;
+				}
+			#else
+				return EIF_FALSE;
+			#endif
+			]"
+		end
 
 note
 	library:   "EiffelBase: Library of reusable components for Eiffel."

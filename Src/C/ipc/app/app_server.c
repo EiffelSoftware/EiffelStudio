@@ -163,11 +163,18 @@ rt_shared char dinterrupt(void)
 	return result;
 }
 
-rt_shared void winit(void)
+rt_shared void wdbg_initialize(int a_port)
 {
-	/* Initialize the workbench process, by checking whether it has been
-	 * started under debugger control or not. This routine is called early
-	 * in the process execution by main().
+	/* Initialize the workbench process,
+	 * if a_port > 0 then 
+	 * 		initialize using socket
+	 * else
+	 * 		checking whether it has been
+	 * 		started under debugger control or not. 
+	 * This routine is called early
+	 * in the process execution by main.c.
+	 * (see C/run-time/main.c: eif_rtinit)
+	 * Or directly from RT_DEBUGGER
 	 */
 
 #ifdef EIF_WINDOWS
@@ -180,6 +187,8 @@ rt_shared void winit(void)
 	struct sigaction new_action;
 #endif
 #endif	/* EIF_WINDOWS */
+	int identify_fct_ret_code=0;
+	int port_number=0;
 
 	STREAM *sp;					/* Stream used to talk to ised */
 
@@ -200,17 +209,36 @@ rt_shared void winit(void)
 	add_log(7, "identifying...");
 #endif
 
+	port_number = a_port;
+	if (port_number <= 0) {
+		/* Port number is either provided by argument or by environment variable */
+		char* s;
+		s = getenv ("ISE_DBG_PORTNUM");
+		if (s) {
+			port_number = (int) atoi (s);
+		}
+	}
 #ifdef EIF_WINDOWS
 	p_ewbin   = (HANDLE*) malloc(sizeof(HANDLE));
 	p_ewbout  = (HANDLE*) malloc(sizeof(HANDLE));
 	p_event_r = (HANDLE*) malloc(sizeof(HANDLE));
 	p_event_w = (HANDLE*) malloc(sizeof(HANDLE));
-	if (-1 == identify("app", p_ewbin, p_ewbout, p_event_r, p_event_w))
+	if (port_number > 0) {
+		identify_fct_ret_code = identify_with_socket("app", p_ewbin, p_ewbout, p_event_r, p_event_w, port_number);
+	} else {
+		identify_fct_ret_code = identify("app", p_ewbin, p_ewbout, p_event_r, p_event_w);
+	}
+	if (-1 == identify_fct_ret_code)
 #else
 	fd_in  = DBGIN;
 	fd_out = DBGOUT;
 
-	if (-1 == identify("app", fd_in, fd_out))
+	if (port_number > 0) {
+		identify_fct_ret_code = identify_with_socket("app", &fd_in, &fd_out, port_number);
+	} else {
+		identify_fct_ret_code = identify("app", fd_in, fd_out);
+	}
+	if (-1 == identify_fct_ret_code)
 #endif
 		/* Did ised start us? */
 	{
@@ -279,4 +307,16 @@ rt_shared void winit(void)
 
 	wide_listen();				/* Listen to incoming request from ewb */
 }
+
+rt_shared void winit(void)
+{
+	/* Initialize the workbench process, by checking whether it has been
+	 * started under debugger control or not. This routine is called early
+	 * in the process execution by main.c.
+	 * (see C/run-time/main.c: eif_rtinit)
+	 */
+
+	wdbg_initialize(0);
+}
+
 

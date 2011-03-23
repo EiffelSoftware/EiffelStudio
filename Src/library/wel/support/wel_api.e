@@ -119,6 +119,16 @@ feature -- Windows
 			"return EIF_TEST(DestroyWindow((HWND) $hwnd));"
 		end
 
+feature -- Drawings
+
+	exclude_clip_rect (hdc: POINTER; left, top, right, bottom: INTEGER): INTEGER
+			-- SDK ExcludeClipRect
+		external
+			"C inline use <windows.h>"
+		alias
+			"return (EIF_INTEGER) ExcludeClipRect((HDC) $hdc, (int) $left, (int) $top, (int) $right, (int) $bottom);"
+		end
+
 feature -- Dialogs
 
 	end_dialog (hwnd, return_value: POINTER): BOOLEAN

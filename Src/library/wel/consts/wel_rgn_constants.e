@@ -10,40 +10,23 @@ class
 
 feature -- Access
 
-	frozen Rgn_and: INTEGER
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"RGN_AND"
-		end
+	error, rgn_error: INTEGER = 0
+			-- No region was created.
 
-	frozen Rgn_or: INTEGER
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"RGN_OR"
-		end
+	null_regiion: INTEGER = 1
+			-- Region is empty.
 
-	frozen Rgn_xor: INTEGER
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"RGN_XOR"
-		end
+	simple_region: INTEGER = 2
+			-- Region is a single rectangle.
 
-	frozen Rgn_diff: INTEGER
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"RGN_DIFF"
-		end
+	complex_regision: INTEGER = 3
+			-- Region is more than one rectangle.
 
-	frozen Rgn_copy: INTEGER
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"RGN_COPY"
-		end
+	rgn_and, rgn_min: INTEGER = 1
+	rgn_or: INTEGER = 2
+	rgn_xor: INTEGER = 3
+	rgn_diff: INTEGER = 4
+	rgn_copy, rgn_max: INTEGER = 5
 
 feature -- Status report
 
@@ -58,14 +41,14 @@ feature -- Status report
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

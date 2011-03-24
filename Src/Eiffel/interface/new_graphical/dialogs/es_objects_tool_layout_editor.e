@@ -174,7 +174,7 @@ feature {NONE} -- Actions
 
 				pos_entries := objects_tool.panel.position_entries
 
-				create pos_titles.make (pos_entries.lower, pos_entries.upper)
+				create pos_titles.make_filled (Interface_names.l_stack_information, pos_entries.lower, pos_entries.upper)
 				pos_titles[position_stack] := Interface_names.l_stack_information
 				pos_titles[position_current] := Interface_names.l_current_object
 				pos_titles[position_arguments] := Interface_names.l_arguments
@@ -182,7 +182,7 @@ feature {NONE} -- Actions
 				pos_titles[position_result] := Interface_names.l_result
 				pos_titles[position_dropped] := Interface_names.l_dropped_references
 
-				create pos_tooltips.make (pos_entries.lower, pos_entries.upper)
+				create pos_tooltips.make_filled (Interface_names.f_stack_information, pos_entries.lower, pos_entries.upper)
 				pos_tooltips[position_stack] := Interface_names.f_stack_information
 				pos_tooltips[position_current] := Interface_names.f_current_object
 				pos_tooltips[position_arguments] := Interface_names.f_arguments

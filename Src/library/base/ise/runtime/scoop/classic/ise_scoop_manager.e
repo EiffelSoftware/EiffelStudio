@@ -183,7 +183,7 @@ feature -- Processor Initialization
 				(create {EXCEPTIONS}).raise ("Maximum SCOOP Processor Allocation reached%N")
 			end
 
-			initialize_default_processor_meta_data (Result, False)
+			initialize_default_processor_meta_data (Result)
 
 			debug ("ISE_SCOOP_MANAGER")
 				print ("assign_free_processor_id of pid " + Result.out + "%N")
@@ -199,12 +199,14 @@ feature -- Processor Initialization
 
 	start_processor_application_loop (a_processor_id: like processor_id_type)
 			-- Start feature application loop for `a_processor_id'.
-		local
-			l_attributes: ISE_SCOOP_PROCESSOR_ATTRIBUTES
 		do
-				--!FIXME IEK: Allocate a default value for reuse.
-			create l_attributes.make_with_stack_size (1_048_576)
-			create_and_initialize_scoop_processor (Current, $scoop_processor_loop, l_attributes.item, a_processor_id)
+			create_and_initialize_scoop_processor (Current, $scoop_processor_loop, default_processor_attributes.item, a_processor_id)
+		end
+
+	default_processor_attributes: ISE_SCOOP_PROCESSOR_ATTRIBUTES
+			-- Default scoop processor thread attributes.
+		once
+			create Result.make_with_stack_size (1_048_576)
 		end
 
 	set_root_processor_has_exited
@@ -937,7 +939,7 @@ feature {NONE} -- Resource Initialization
 			l_request_chain_meta_data [request_chain_status_index] := request_chain_status_application
 		end
 
-	initialize_default_processor_meta_data (a_processor_id: like processor_id_type; a_reinitialize: BOOLEAN)
+	initialize_default_processor_meta_data (a_processor_id: like processor_id_type)
 			-- Initialize processor `a_processor_id' meta data to default values after a creation routine has been logged.
 		local
 			l_request_chain_node_meta_data_queue: detachable like new_request_chain_node_meta_data_queue
@@ -1593,13 +1595,11 @@ feature {NONE} -- Externals
 
 	frozen processor_yield (a_processor_id: like processor_id_type; a_iteration_number: NATURAL_32)
 			-- Yield processor `a_processor_id' to competing threads for an OS specific set time.
-		local
-			l_counter: NATURAL_32
 		do
-			if l_counter < processor_spin_lock_limit then
+			if a_iteration_number < processor_spin_lock_limit then
 					-- Spin lock
 				check_for_gc
-			elseif l_counter < max_yield_counter then
+			elseif a_iteration_number <= max_yield_counter then
 				processor_cpu_yield
 			else
 				processor_sleep (processor_sleep_quantum)
@@ -1607,12 +1607,13 @@ feature {NONE} -- Externals
 		end
 
 	processor_spin_lock_limit: NATURAL_32 = 100
+		-- Number of iterations to spin lock until yielding.
+
+	max_yield_counter: NATURAL_32 = 4000
+		-- Maximum value of the yield counter.
 
 	processor_sleep_quantum: NATURAL_32 = 15_000_000
 		-- Number of nanoseconds an idle processor should temporarily sleep for (15 ms)
-
-	max_yield_counter: NATURAL_32 = 1000
-		-- Maximum value of the yield counter.
 
 	frozen processor_cpu_yield
 			-- Yield processor to other threads in the processor that are on the same cpu.

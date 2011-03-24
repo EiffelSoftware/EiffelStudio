@@ -178,8 +178,9 @@ rt_public int add_input(EIF_PSTREAM sp, STREAM_FN call)
 	set_multiple_mask(sp, rd_mask);		/* Select will monitor this fd */
 	set_multiple_mask(sp, rd_tmask);	/* Also set temporary mask */
 #else
-	if ((fd + 1) > nfds)				/* Keep number of fd up-to-date */
+	if ((fd + 1) > nfds) {				/* Keep number of fd up-to-date */
 		nfds = fd + 1;					/* Fd start at 0 */
+	}
 	callback[fd] = call;				/* Record callback */
 	FD_SET(fd, &rd_mask);				/* Select will monitor this fd */
 	FD_SET(fd, &rd_tmask);				/* Also set temporary mask */
@@ -313,8 +314,9 @@ rt_public int has_input(EIF_PSTREAM sp)
 		return -1;
 	}
 
-	if (callback[fd] != NULL)
+	if (callback[fd] != NULL) {
 		return 1;
+	}
 #endif
 
 	return 0;			/* This file is not selected any more */
@@ -435,7 +437,7 @@ rt_public int do_select(struct timeval *timeout)
 #endif
 			s_errno = S_SELECT;		/* Signals: select failed */
 			return -1;				/* Propagate error status */
-			}
+		}
 
 		if (isfirst) {
 			isfirst = 0;

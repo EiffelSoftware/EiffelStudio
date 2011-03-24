@@ -1198,12 +1198,7 @@ feature {NONE} -- Resource Initialization
 	processor_is_idle (a_client_processor_id: like processor_id_type; a_wait_counter: NATURAL_32)
 			-- Processor `a_client_processor_id' is idle.
 		do
-			if a_wait_counter < 2000 then
-				processor_yield (a_client_processor_id, a_wait_counter)
-			else
-					--| FIXME Implement idle semaphore wakeup for better efficiency.
-				processor_sleep (processor_sleep_quantum)
-			end
+			processor_yield (a_client_processor_id, a_wait_counter)
 		end
 
 	scoop_command_call (data: like call_data)
@@ -1342,6 +1337,7 @@ feature {NONE} -- Scoop Processor Meta Data
 			-- Holder of Processor Synchronous Call Semaphores
 
 	new_semaphore (a_sem_count: NATURAL_8): POINTER
+			-- Return a new semaphore with an initial count of `a_sem_count'.
 		external
 			"C inline use <eif_threads.h>"
 		alias
@@ -1349,16 +1345,20 @@ feature {NONE} -- Scoop Processor Meta Data
 		end
 
 	processor_semaphore_wait (a_client_processor_id: like processor_id_type)
+			-- Make processor `a_client_processor_id' wait until its semaphore is signalled.
 		do
 			semaphore_client_wait (processor_semaphore_list [a_client_processor_id])
 		end
 
 	processor_semaphore_try_wait (a_client_processor_id: like processor_id_type): BOOLEAN
+			-- Attempt to make processor `a_client_processor_id' wait untils its semaphore is signalled.
+			-- Returns success of attempt.
 		do
 			Result := semaphore_client_trywait (processor_semaphore_list [a_client_processor_id])
 		end
 
 	processor_semaphore_signal (a_client_processor_id: like processor_id_type)
+			-- Signal processor `a_client_processor_id' to wake up.
 		do
 			if a_client_processor_id /= null_processor_id then
 				semaphore_supplier_signal (processor_semaphore_list [a_client_processor_id])
@@ -1366,6 +1366,7 @@ feature {NONE} -- Scoop Processor Meta Data
 		end
 
 	semaphore_client_wait (a_sem_address: POINTER)
+			-- Wait for semaphore `a_sem_address'.
 		require
 			a_sem_address_valid: a_sem_address /= default_pointer
 		external
@@ -1375,6 +1376,7 @@ feature {NONE} -- Scoop Processor Meta Data
 		end
 
 	semaphore_client_trywait (a_sem_address: POINTER): BOOLEAN
+			-- Attempt wait for semaphore `a_sem_address'.
 		require
 			a_sem_address_valid: a_sem_address /= default_pointer
 		external
@@ -1384,6 +1386,7 @@ feature {NONE} -- Scoop Processor Meta Data
 		end
 
 	semaphore_supplier_signal (a_sem_address: POINTER)
+			-- Signal semaphore `a_sem_address'.
 		require
 			a_sem_address_valid: a_sem_address /= default_pointer
 		external
@@ -1593,22 +1596,22 @@ feature {NONE} -- Externals
 		local
 			l_counter: NATURAL_32
 		do
-			check_for_gc
-			l_counter := a_iteration_number \\ 1000
-			if l_counter < 100 then
+			if l_counter < processor_spin_lock_limit then
 					-- Spin lock
-				do_nothing
+				check_for_gc
 			elseif l_counter < max_yield_counter then
 				processor_cpu_yield
-			elseif l_counter = max_yield_counter then
-				processor_sleep (1)
+			else
+				processor_sleep (processor_sleep_quantum)
 			end
 		end
 
-	processor_sleep_quantum: NATURAL_32 = 100_000_000
-		-- Number of nanoseconds an idle processor should temporarily sleep for.
+	processor_spin_lock_limit: NATURAL_32 = 100
 
-	max_yield_counter: NATURAL_32 = 999
+	processor_sleep_quantum: NATURAL_32 = 15_000_000
+		-- Number of nanoseconds an idle processor should temporarily sleep for (15 ms)
+
+	max_yield_counter: NATURAL_32 = 1000
 		-- Maximum value of the yield counter.
 
 	frozen processor_cpu_yield

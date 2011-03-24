@@ -794,7 +794,7 @@ rt_public void eif_retrieve_root (int *argc, char **argv)
 {
 	/*
 	 * If -eif_root is provided, record its value and decrease argument count so argument is not
-	 * visisble to users application.
+	 * visible to users application.
 	 */
 	egc_ridx = 0;
 	egc_eif_root = NULL;
@@ -876,7 +876,7 @@ rt_public void eif_rtinit(int argc, char **argv, char **envp)
 #endif
 
 	/* Check if the user wants to override the default timeout value
-	 * for interprocess communications. This new value is specified in
+	 * for interprocess communications (IPC). This new value is specified in
 	 * the ISE_TIMEOUT environment variable
 	 */
 	eif_timeout = getenv("ISE_TIMEOUT");

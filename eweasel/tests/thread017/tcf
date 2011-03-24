@@ -1,0 +1,23 @@
+test_name 	main-thread-terminates-before-child
+test_description	When the main thread of an application terminates before its child, the child process would be infinitely waiting for the main thread.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+copy_raw 	 my_thread.e  $CLUSTER my_thread.e
+
+compile_frozen
+compile_result 	 ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work	 NONE exec_output1
+execute_result	 ok
+compare		 exec_output1 output
+
+setenv      EIF_NO_RECLAIM 1
+execute_work	 NONE exec_output2
+execute_result	 ok
+compare		 exec_output2 output
+
+test_end

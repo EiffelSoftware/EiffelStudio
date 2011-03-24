@@ -14,6 +14,8 @@ inherit
 			delete_log
 		end
 
+	REPOSITORY_SVN_STORAGE
+
 create
 	make
 
@@ -26,28 +28,6 @@ feature {NONE} -- Initialization
 
 feature -- Load
 
-	last_stored_rev: INTEGER
-		local
-			d: DIRECTORY
-		do
-			create d.make (data_folder_name)
-			if d.exists then
-				d.open_read
-				from
-					d.start
-					d.readentry
-				until
-					d.lastentry = Void
-				loop
-					if attached d.lastentry as s and then s.is_integer then
-						Result := Result.max (s.to_integer)
-					end
-					d.readentry
-				end
-				d.close
-			end
-		end
-
 	archive_loaded_log (a_id: STRING; a_data: REPOSITORY_SVN_DATA): like loaded_log
 		do
 			Result := log_from_file (a_id, archive_svn_log_data_filename (a_id), a_data)
@@ -56,82 +36,6 @@ feature -- Load
 	loaded_log (a_id: STRING; a_data: REPOSITORY_SVN_DATA): detachable REPOSITORY_SVN_LOG
 		do
 			Result := log_from_file (a_id, svn_log_data_filename (a_id), a_data)
-		end
-
-	log_from_file (a_id: STRING; a_filename: STRING; a_data: REPOSITORY_SVN_DATA): like loaded_log
-		local
-			f: RAW_FILE
-			l_line,s: STRING
-			n,p: INTEGER
-			l_message: detachable STRING
-			e: detachable SVN_REVISION_INFO
-			r: INTEGER
-		do
-			create f.make (a_filename)
-			if f.exists and then f.is_readable then
-				f.open_read
-				from
-					f.start
-					check id_is_integer: a_id.is_integer end
-					r := a_id.to_integer
-					create e.make (r)
-				until
-					f.exhausted or e = Void
-				loop
-					f.read_line
-					l_line := f.last_string
-					if l_message /= Void then
-						l_message.extend ('%N')
-						l_message.append_string (l_line)
-					elseif l_line.starts_with ("revision=") then
-						l_line.remove_head (9)
-						if l_line.is_integer and then l_line.to_integer /= r then
-							e := Void
-						end
-					elseif l_line.starts_with ("date=") then
-						l_line.remove_head (5)
-						e.set_date (l_line.string)
-					elseif l_line.starts_with ("author=") then
-						l_line.remove_head (7)
-						e.set_author (l_line.string)
-					elseif l_line.starts_with ("parent=") then
---						l_line.remove_head (7)
-					elseif l_line.starts_with ("path[]") then
-						p := l_line.index_of ('=', 1)
-						if p > 0 then
-							s := l_line.substring (6, p - 1)
-							n := s.occurrences (',')
-							if n = 1 then
-								-- path[],A=
-								e.add_path (l_line.substring (p + 1, l_line.count), "", s.substring (2, s.count))
-							elseif n = 2 then
-								-- path[],K,A=
-								inspect s.item (2)
-								when 'D', 'd' then
-									e.add_dir_path (l_line.substring (p + 1, l_line.count), s.substring (5, s.count))
-								when 'F', 'f' then
-									e.add_file_path (l_line.substring (p + 1, l_line.count), s.substring (5, s.count))
-								else
-									e.add_path (l_line.substring (p + 1, l_line.count), s.substring (2,2), s.substring (5, s.count))
-								end
-							else
-								e.add_path (l_line.substring (p + 1, l_line.count), "", "")
-							end
-						else
-							check invalid_line: False end
-							print ("Invalid log line: " + l_line + "%N")
-						end
-					elseif l_line.starts_with ("message=") then
-						l_line.remove_head (8)
-						l_message := l_line.string
-						e.set_log_message (l_message)
-					end
-				end
-				f.close
-				if e /= Void then
-					Result := log_from_revision (e, a_data)
-				end
-			end
 		end
 
 
@@ -222,6 +126,28 @@ feature -- Status
 	revision_last_known: INTEGER
 
 feature -- Subversion specific
+
+	last_stored_rev: INTEGER
+		local
+			d: DIRECTORY
+		do
+			create d.make (data_folder_name)
+			if d.exists then
+				d.open_read
+				from
+					d.start
+					d.readentry
+				until
+					d.lastentry = Void
+				loop
+					if attached d.lastentry as s and then s.is_integer then
+						Result := Result.max (s.to_integer)
+					end
+					d.readentry
+				end
+				d.close
+			end
+		end
 
 	log_from_revision (r: SVN_REVISION_INFO; a_data: REPOSITORY_SVN_DATA): attached like loaded_log
 		local
@@ -361,5 +287,82 @@ feature {NONE} -- Implementation: subversion
 			Result := r.revision.out
 		end
 
+feature {NONE} -- Implementation
+
+	log_from_file (a_id: STRING; a_filename: STRING; a_data: REPOSITORY_SVN_DATA): like loaded_log
+		local
+			f: RAW_FILE
+			l_line,s: STRING
+			n,p: INTEGER
+			l_message: detachable STRING
+			e: detachable SVN_REVISION_INFO
+			r: INTEGER
+		do
+			create f.make (a_filename)
+			if f.exists and then f.is_readable then
+				f.open_read
+				from
+					f.start
+					check id_is_integer: a_id.is_integer end
+					r := a_id.to_integer
+					create e.make (r)
+				until
+					f.exhausted or e = Void
+				loop
+					f.read_line
+					l_line := f.last_string
+					if l_message /= Void then
+						l_message.extend ('%N')
+						l_message.append_string (l_line)
+					elseif l_line.starts_with ("revision=") then
+						l_line.remove_head (9)
+						if l_line.is_integer and then l_line.to_integer /= r then
+							e := Void
+						end
+					elseif l_line.starts_with ("date=") then
+						l_line.remove_head (5)
+						e.set_date (l_line.string)
+					elseif l_line.starts_with ("author=") then
+						l_line.remove_head (7)
+						e.set_author (l_line.string)
+					elseif l_line.starts_with ("parent=") then
+--						l_line.remove_head (7)
+					elseif l_line.starts_with ("path[]") then
+						p := l_line.index_of ('=', 1)
+						if p > 0 then
+							s := l_line.substring (6, p - 1)
+							n := s.occurrences (',')
+							if n = 1 then
+								-- path[],A=
+								e.add_path (l_line.substring (p + 1, l_line.count), "", s.substring (2, s.count))
+							elseif n = 2 then
+								-- path[],K,A=
+								inspect s.item (2)
+								when 'D', 'd' then
+									e.add_dir_path (l_line.substring (p + 1, l_line.count), s.substring (5, s.count))
+								when 'F', 'f' then
+									e.add_file_path (l_line.substring (p + 1, l_line.count), s.substring (5, s.count))
+								else
+									e.add_path (l_line.substring (p + 1, l_line.count), s.substring (2,2), s.substring (5, s.count))
+								end
+							else
+								e.add_path (l_line.substring (p + 1, l_line.count), "", "")
+							end
+						else
+							check invalid_line: False end
+							print ("Invalid log line: " + l_line + "%N")
+						end
+					elseif l_line.starts_with ("message=") then
+						l_line.remove_head (8)
+						l_message := l_line.string
+						e.set_log_message (l_message)
+					end
+				end
+				f.close
+				if e /= Void then
+					Result := log_from_revision (e, a_data)
+				end
+			end
+		end
 
 end

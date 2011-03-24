@@ -30,13 +30,16 @@ feature {NONE} -- Initialization
 
 feature -- Storage
 
-	storage: REPOSITORY_SVN_FILE_STORAGE
+	storage: REPOSITORY_SVN_STORAGE
 
 	create_storage
 			-- Create Storage
+		local
+			s: REPOSITORY_SVN_FILE_STORAGE
 		do
-			create storage.make
-			storage.set_data (Current)
+			create s.make
+			storage := s
+			s.initialize_with_data (Current)
 		end
 
 feature -- Access

@@ -19,20 +19,13 @@ feature -- C callback function
 
 	scoop_manager_task_callback (scoop_task: NATURAL_8; client_processor_id, supplier_processor_id: like processor_id_type; body_index: NATURAL_32; a_callback_data, a_reserved: POINTER)
 			-- Entry point to ISE_SCOOP_MANAGER from RTS SCOOP macros.
-		local
-			l_id: INTEGER_32
-			l_uncontrolled: BOOLEAN
 		do
 			inspect
 				scoop_task
-			when assign_processor_task_id then
-				l_id := assign_free_processor_id
-				set_return_value (a_callback_data, $l_id)
-			when free_processor_task_id then
-				free_processor_id (client_processor_id)
-			when start_processor_loop_task_id then
-					-- Reinstantate during optimization phase.
---				start_processor_application_loop (client_processor_id)
+			when check_uncontrolled_call_task_id then
+				set_boolean_return_value (a_callback_data, is_uncontrolled (client_processor_id, supplier_processor_id))
+			when add_call_task_id then
+				log_call_on_processor (client_processor_id, supplier_processor_id, body_index, a_callback_data)
 			when signify_start_of_new_chain_task_id then
 				signify_start_of_request_chain (client_processor_id)
 			when signify_end_of_new_chain_task_id then
@@ -45,17 +38,19 @@ feature -- C callback function
 				assign_supplier_processor_to_request_chain (client_processor_id, supplier_processor_id)
 			when wait_for_supplier_processor_locks_task_id then
 				wait_for_request_chain_supplier_processor_locks (client_processor_id)
-			when add_call_task_id then
-				log_call_on_processor (client_processor_id, supplier_processor_id, body_index, a_callback_data)
 			when wait_for_processor_redundancy_task_id then
 				set_root_processor_has_exited
+			when assign_processor_task_id then
+				set_integer_32_return_value (a_callback_data, assign_free_processor_id)
+			when free_processor_task_id then
+				free_processor_id (client_processor_id)
+			when start_processor_loop_task_id then
+					-- Reinstantate during optimization phase.
+--				start_processor_application_loop (client_processor_id)
 			when add_processor_reference_task_id then
 				add_processor_reference (supplier_processor_id)
 			when remove_processor_reference_task_id then
 				remove_processor_reference (supplier_processor_id)
-			when check_uncontrolled_call_task_id then
-				l_uncontrolled := is_uncontrolled (client_processor_id, supplier_processor_id)
-				set_return_value (a_callback_data, $l_uncontrolled)
 			else
 				check invalid_task: False end
 			end
@@ -125,48 +120,20 @@ feature -- C callback function
 		-- SCOOP Task Constants, similies of those defined in <eif_macros.h>
 		-- FIXME IEK: Use external macros when valid in an inspect statement.
 
-	set_return_value (a_typed_value: POINTER; a_value_addr: POINTER)
+feature -- EIF_TYPED_VALUE externals
+
+	set_boolean_return_value (a_boolean_typed_value: POINTER; a_boolean: BOOLEAN)
 		external
 			"C inline"
 		alias
-			"[
-				EIF_TYPED_VALUE *etval = (EIF_TYPED_VALUE*)$a_typed_value;
-				switch (etval->type)
-				{
-					case SK_REF:
-						etval->item.r = *((EIF_REFERENCE*)$a_value_addr); break;
-					case SK_POINTER:
-						etval->item.p = *((EIF_POINTER*)$a_value_addr); break;
-					case SK_BOOL:
-						etval->item.b = *((EIF_BOOLEAN*)$a_value_addr); break;
-					case SK_CHAR8:
-						etval->item.c1 = *((EIF_CHARACTER_8*)$a_value_addr); break;
-					case SK_CHAR32:
-						etval->item.c4 = *((EIF_CHARACTER_32*)$a_value_addr); break;
-					case SK_INT8:
-						etval->item.i1 = *((EIF_INTEGER_8*)$a_value_addr); break;
-					case SK_INT16:
-						etval->item.i2 = *((EIF_INTEGER_16*)$a_value_addr); break;
-					case SK_INT32:
-						etval->item.i4 = *((EIF_INTEGER_32*)$a_value_addr); break;
-					case SK_INT64:
-						etval->item.i8 = *((EIF_INTEGER_64*)$a_value_addr); break;
-					case SK_UINT8:
-						etval->item.n1 = *((EIF_NATURAL_8*)$a_value_addr); break;
-					case SK_UINT16:
-						etval->item.n2 = *((EIF_NATURAL_16*)$a_value_addr); break;
-					case SK_UINT32:
-						etval->item.n4 = *((EIF_NATURAL_32*)$a_value_addr); break;
-					case SK_UINT64:
-						etval->item.n8 = *((EIF_NATURAL_64*)$a_value_addr); break;
-					case SK_REAL32:
-						etval->item.r4 = *((EIF_REAL_32*)$a_value_addr); break;
-					case SK_REAL64:
-						etval->item.r8 = *((EIF_REAL_64*)$a_value_addr); break;
-					default:
-						;// exception;
-				}
-			]"
+			"((EIF_TYPED_VALUE *) $a_boolean_typed_value)->item.b = (EIF_BOOLEAN)$a_boolean;"
+		end
+
+	set_integer_32_return_value (a_integer_32_typed_value: POINTER; a_integer: INTEGER_32)
+		external
+			"C inline"
+		alias
+			"((EIF_TYPED_VALUE *) $a_integer_32_typed_value)->item.i4 = (EIF_INTEGER_32)$a_integer;"
 		end
 
 feature -- Processor Initialization

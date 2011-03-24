@@ -203,12 +203,6 @@ feature -- Processor Initialization
 			create_and_initialize_scoop_processor (Current, $scoop_processor_loop, default_processor_attributes.item, a_processor_id)
 		end
 
-	default_processor_attributes: ISE_SCOOP_PROCESSOR_ATTRIBUTES
-			-- Default scoop processor thread attributes.
-		once
-			create Result.make_with_stack_size (1_048_576)
-		end
-
 	set_root_processor_has_exited
 			-- Set `root_processor_has_exited' to True
 		local
@@ -903,6 +897,9 @@ feature {NONE} -- Resource Initialization
 		do
 			logical_cpu_count := available_cpus
 
+				-- Initialize the default attributes used to create each SCOOP processor.
+			create default_processor_attributes.make_with_stack_size (1_048_576)
+
 			from
 				i := 1
 				create l_processor_meta_data.make_empty (max_scoop_processors_instantiable)
@@ -1324,6 +1321,9 @@ feature {NONE} -- Atomic Access
 		-- If equal to processor_count then the system may exit,
 
 feature {NONE} -- Scoop Processor Meta Data
+
+	default_processor_attributes: ISE_SCOOP_PROCESSOR_ATTRIBUTES
+			-- Default scoop processor thread attributes.
 
 	routine_type: NATURAL_32 do end
 	call_data: POINTER do end

@@ -1,6 +1,6 @@
 note
 	description: "[
-		Base enumeration type implementation for pseduo enumeration types.
+		Base enumeration type implementation for pseudo enumeration types.
 		
 		See the written article on http://dev.eiffel.com/Enums_in_Eiffel where
 		this code was extracted and enhanced from.
@@ -56,8 +56,6 @@ feature -- Access
 			-- Access to all members of `Current'
 		local
 			l_items: ARRAY [G]
-			l_items_list: ARRAYED_LIST [like Current]
-			l_default: detachable G
 			l_internal: INTERNAL
 			l_id: INTEGER
 			l_count, i: INTEGER
@@ -72,28 +70,26 @@ feature -- Access
 				l_items := members
 				l_count := l_items.count
 				if l_count > 0 then
-					create l_items_list.make (l_count)
+					create Result.make_filled (Current, 1, l_count)
 
 					l_assert := {ISE_RUNTIME}.check_assert (False)
 					from i := 1 until i > l_count loop
 							-- Does automatic conversion
 						if attached {like Current} l_internal.new_instance_of (l_id) as l_instance then
 							l_instance.make (l_items.item (i))
-							l_items_list.extend (l_instance)
+							Result.put (l_instance, i)
 						end
 						i := i + 1
 					end
-
-					Result := l_items_list.to_array
 					l_assert := {ISE_RUNTIME}.check_assert (l_assert)
 				else
-					create Result.make (1, 0)
+					create Result.make_empty
 				end
 
 				internal_items_table.force (Result, l_id)
 			end
 		ensure
-			result_attached: attached Result
+			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty
 			internal_items_table_has_current: internal_items_table.has (
 				(create {INTERNAL}).dynamic_type (Current))
@@ -122,9 +118,9 @@ feature {ENUMERATED_TYPE} -- Access
 	frozen internal_value: G
 			-- Internal raw value (do not rename!)
 
-feature -- Status report
+feature -- Query
 
-   is_valid_value (n: G): BOOLEAN
+	is_valid_value (n: G): BOOLEAN
 			-- Determines if `n' a value associated with a member of `Current'.
 			--
 			-- `n': A numerical value to check for validity against members of `Current'.
@@ -188,10 +184,10 @@ feature -- Output
 		end
 
 invariant
-   is_valid_value: is_valid_value (internal_value)
+	is_valid_value: is_valid_value (internal_value)
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

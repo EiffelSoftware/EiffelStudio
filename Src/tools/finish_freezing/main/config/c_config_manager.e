@@ -291,13 +291,14 @@ feature {NONE} -- Access
 
 			Result.extend (create {WSDK_CONFIG}.make ("Microsoft\Microsoft SDKs\Windows\v7.1", a_use_32bit, {WSDK_CONFIG}.wsdk_71, "Microsoft Windows SDK 7.1 (Windows 7)", "2010-WSDK", False))
 			Result.extend (create {WSDK_CONFIG}.make ("Microsoft\Microsoft SDKs\Windows\v7.0", a_use_32bit, {WSDK_CONFIG}.wsdk_70, "Microsoft Windows SDK 7.0 (Windows 7)", "2009-WSDK", False))
-			Result.extend (create {WSDK_CONFIG}.make ("Microsoft\Microsoft SDKs\Windows\v6.1", a_use_32bit, {WSDK_CONFIG}.wsdk_61, "Microsoft Windows SDK 6.1 (Windows Vista)", "2008-WSDK", False))
 
 				-- VS 10.0
-			Result.extend (create {VS_CONFIG}.make ("Microsoft\VisualStudio\10.0\Setup\VC", a_use_32bit, "VC100", "Microsoft Visual Studio 2010 VC++ (10.0)", "2010-VS", False))
+			Result.extend (create {VS_NEW_CONFIG}.make ("Microsoft\VisualStudio\10.0\Setup\VC", a_use_32bit, "VC100", "Microsoft Visual Studio 2010 VC++ (10.0)", "2010-VS", False))
 			if l_32_bits then
 				Result.extend (create {VS_CONFIG}.make ("Microsoft\VCExpress\10.0\Setup\VC", True, "VC100X", "Microsoft Visual C++ 2010 Express (10.0)", "2010-VC", False))
 			end
+
+			Result.extend (create {WSDK_CONFIG}.make ("Microsoft\Microsoft SDKs\Windows\v6.1", a_use_32bit, {WSDK_CONFIG}.wsdk_61, "Microsoft Windows SDK 6.1 (Windows Vista)", "2008-WSDK", False))
 
 				-- VS 9.0
 			Result.extend (create {VS_CONFIG}.make ("Microsoft\VisualStudio\9.0\Setup\VC", a_use_32bit, "VC90", "Microsoft Visual Studio 2008 VC++ (9.0)", "2008-VS", False))
@@ -351,7 +352,7 @@ feature {NONE} -- Internal implementation cache
 			-- Note: Do not use directly
 
 ;note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

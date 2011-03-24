@@ -1,5 +1,8 @@
 class TEST
 
+inherit
+	EXECUTION_ENVIRONMENT
+
 create
 	make
 
@@ -17,6 +20,7 @@ feature -- Initialization
 			l_thread.launch
 			l_sem.wait
 			l_thread.join
+			sleep (2_000_000_000);
 		end
 
 end

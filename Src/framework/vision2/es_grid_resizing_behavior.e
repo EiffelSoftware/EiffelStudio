@@ -1,6 +1,5 @@
 note
-	description: "Objects that ..."
-	author: ""
+	description: "Resize columns using vertical separator line, and header separators."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -16,6 +15,7 @@ create
 feature {NONE} -- Resizing : initialization
 
 	make (g: EV_GRID)
+			-- Initialize Current
 		require
 			g_attached: g /= Void
 		do
@@ -275,9 +275,8 @@ feature {NONE} -- Actions
 
 	end_resizing
 		local
-			hi: detachable EV_HEADER_ITEM
-			i: like clicked_item
 			g: like grid
+			i: like resize_index
 		do
 			g := grid
 			if attached release_resize_agent as agt_r then
@@ -287,20 +286,19 @@ feature {NONE} -- Actions
 				g.pointer_leave_actions.prune_all (agt_l)
 			end
 
-			i := clicked_item
-			if i /= Void then
-				i.pointer_button_press_actions.resume
+			if attached clicked_item as l_clicked_item then
+				l_clicked_item.pointer_button_press_actions.resume
 				clicked_item := Void
 			end
 			g.pointer_button_press_item_actions.resume
 			g.pointer_button_press_actions.resume
 			is_resize_mode := False
 
-			if resize_index > 0 and resize_index < g.header.count then
-				hi := g.header.i_th (resize_index)
-			end
-			if hi /= Void then
-				header_resize_end_actions.call ([hi])
+			i := resize_index
+			if i >= 1 and i < g.header.count then
+				if attached g.header.i_th (i) as hi then
+					header_resize_end_actions.call ([hi])
+				end
 			end
 		end
 

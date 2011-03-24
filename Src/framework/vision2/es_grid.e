@@ -2,7 +2,6 @@ note
 	description: "Objects that represents a enhanced GRID"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 

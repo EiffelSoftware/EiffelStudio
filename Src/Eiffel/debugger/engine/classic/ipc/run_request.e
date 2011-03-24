@@ -6,7 +6,6 @@ note
 class RUN_REQUEST
 
 inherit
-
 	EWB_REQUEST
 		redefine
 			send
@@ -17,7 +16,6 @@ inherit
 	APPLICATION_STATUS_EXPORTER
 
 create
-
 	make
 
 feature -- Status report

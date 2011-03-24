@@ -16,27 +16,11 @@ feature {NONE} -- Initialization
 feature
 
 	execute
-		local
-			i: INTEGER
 		do
 			terminated := True
 			sem.post
-			from
-				i := 1
-			until
-				i = 10_000_000
-			loop
-				f (i)
-				i := i + 1
-			end
+			sleep (10_000_000_000)
 		end
-
-	f (i: INTEGER)
-		do
-			my_attribute := i * (i - 1) ^ 5
-		end
-		
-	my_attribute: DOUBLE
 
 	sem: SEMAPHORE
 		

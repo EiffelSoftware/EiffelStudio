@@ -29,6 +29,7 @@ feature -- Access
 
 	t_reset_layout: STRING_32 once Result := "Reset Layout" end
 
+	t_export_to: STRING_32 once Result := "Export To ..." end
 
 	d_go_to_console_tool: STRING_32 once Result := "Go To Console Tool" end
 	d_go_to_catalog_tool: STRING_32 once Result := "Go To Repositories Tool" end

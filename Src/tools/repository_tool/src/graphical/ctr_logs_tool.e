@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {CTR_LOGS_TOOL}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -43,7 +42,6 @@ feature {NONE} -- Initialization
 			grid := g
 
 			a_container.extend (g)
-
 
 			c := sd_content
 --			g.enable_single_row_selection
@@ -807,7 +805,14 @@ feature {CTR_WINDOW} -- Implementation
 			else
 				a_row.set_item (cst_revision_column, create {EV_GRID_LABEL_ITEM}.make_with_text (a_log.id))
 			end
-			create glab.make_with_text (a_log.single_line_message)
+			if attached smart_token_pixmap (a_log) as p then
+				create glab_buts.make_with_text (a_log.single_line_message)
+				glab := glab_buts
+				glab_buts.set_pixmaps_on_right_count (1)
+				glab_buts.put_pixmap_on_right (p, 1)
+			else
+				create glab.make_with_text (a_log.single_line_message)
+			end
 			a_row.set_item (cst_log_column, glab)
 			a_row.set_item (cst_author_column, create {EV_GRID_LABEL_ITEM}.make_with_text (a_log.author))
 
@@ -1405,6 +1410,58 @@ feature {CTR_WINDOW} -- Implementation
 		end
 
 	repository_colors: detachable HASH_TABLE [EV_COLOR, REPOSITORY_DATA]
+
+feature {NONE} -- Implementation: smart token
+
+	smart_token_handler: detachable CTR_SMART_TOKEN_HANDLER
+			-- Smart token handler
+
+	smart_token_pixmap (a_log: REPOSITORY_LOG): detachable EV_PIXMAP
+		local
+			hdl: like smart_token_handler
+		do
+			hdl := smart_token_handler
+			if hdl = Void then
+				create hdl
+				smart_token_handler := hdl
+			end
+			if
+				attached hdl.smart_token_occurrences (a_log, "bug", a_log.parent.tokens_keys) as ht and then
+				ht.has_key ("bug") and then attached ht.found_item as l_items
+			then
+				if l_items.count = 1 then
+					Result := token_pixmap ("bug", l_items.first)
+				elseif l_items.count > 1 then
+					Result := token_pixmap ("bug", l_items.first + "..")
+				end
+			end
+		end
+
+	token_pixmap (k,v: STRING): EV_PIXMAP
+		local
+			tcols: like token_pixmap_colors
+		do
+			tcols := token_pixmap_colors
+			Result := icons.new_custom_text_grid_icon (k+"#"+v, tcols.tc, tcols.bc, tcols.fc)
+		end
+
+	token_pixmap_colors: TUPLE [tc,bc,fc: EV_COLOR]
+		local
+			tc, bc, fc: EV_COLOR
+		once
+			create tc.make_with_8_bit_rgb (0, 90, 0)
+			create bc.make_with_8_bit_rgb (210, 255, 210)
+			create fc.make_with_8_bit_rgb (0, 0, 210)
+			Result := [tc,bc,fc]
+		end
+
+	bug_pixmap: EV_PIXMAP
+		local
+			tcols: like token_pixmap_colors
+		once
+			tcols := token_pixmap_colors
+			Result := icons.new_custom_text_grid_icon ("bug", tcols.tc, tcols.bc, tcols.fc)
+		end
 
 feature {NONE} -- Preferences
 

@@ -147,6 +147,43 @@ feature -- Access: text icon
 			Result := new_text_small_toolbar_button_standard_icon ("Diff")
 		end
 
+feature -- grid
+
+	new_custom_text_grid_icon (t: STRING_GENERAL; tc,bc,fc: EV_COLOR): EV_PIXMAP
+		local
+			mask: EV_BITMAP
+			w,h: INTEGER
+		do
+			w := icon_font.string_width (t) + 4
+			h := small_tool_bar_button_icon_height + 3
+
+			create Result.make_with_size (w, h)
+			Result.clear
+			Result.set_foreground_color (bc)
+			Result.fill_rectangle (0, 0, w, h - 1)
+
+			Result.set_foreground_color (fc)
+			Result.draw_rectangle (0, 0, w, h - 1)
+
+			Result.set_foreground_color (tc)
+			Result.set_font (icon_font)
+			Result.draw_text_top_left (2, 1, t)
+
+			create mask.make_with_size (w, h)
+			mask.set_foreground_color (colors.white)
+			mask.fill_rectangle (0, 0, w, h - 1)
+			mask.set_foreground_color (fg_mask_color)
+			mask.set_font (icon_font)
+			mask.draw_text_top_left (2, 1, t)
+			mask.draw_rectangle (0, 0, w, h - 1)
+			mask.set_foreground_color (colors.black)
+			mask.draw_point (0,0)
+			mask.draw_point (w-1,h-2)
+			mask.draw_point (w-1,0)
+			mask.draw_point (0,h-2)
+			Result.set_mask (mask)
+		end
+
 
 feature -- Catalog tool
 
@@ -245,7 +282,6 @@ feature -- Catalog tool
 		once
 			create Result.make_with_8_bit_rgb (255, 255, 255)
 		end
-
 
 	fg_mask_color: EV_COLOR
 		once

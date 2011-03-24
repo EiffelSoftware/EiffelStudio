@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	set_data (a_data: REPOSITORY_SVN_DATA)
+	initialize_with_data (a_data: REPOSITORY_DATA)
 		local
 			sep: STRING
 		do

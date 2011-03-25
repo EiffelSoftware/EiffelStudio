@@ -12,13 +12,15 @@ create
 
 feature -- Initialization
 
-	make_with_buffer (a_buffer: separate BOUNDED_BUFFER [INTEGER]; an_id: INTEGER)
-			-- Creation procedure.
+	make_with_buffer (a_buffer: separate BOUNDED_BUFFER [INTEGER]; a_id: INTEGER)
+			-- Initialize with identity `a_id' to consume from `a_buffer'.
 		require
-			a_buffer /= void
+			valid_id: a_id > 0
 		do
 			buffer := a_buffer
-			id := an_id
+			id := a_id
+		ensure
+			id_set: id = a_id
 		end
 
 feature -- Basic operations
@@ -26,37 +28,37 @@ feature -- Basic operations
 	consume (n: INTEGER)
 			-- Consume n elements.
 		local
-			i, an_element: INTEGER
+			l_element: INTEGER
 		do
-			from
-				i := 1
-			until
-				i > n
+			across (1 |..| n) as ic
 			loop
-				an_element := consumed_from_buffer (buffer)
-				io.put_string  ("%NCONSUMER " + id.out + ": I've just consumed element " + an_element.out)
-				i := i + 1
+				print ("%NCONSUMER " + id.out + ": Attempting to consume from shared buffer ... ")
+				l_element := consumed_from_buffer (buffer)
+				print ("%NCONSUMER " + id.out + ": I've just consumed element " + l_element.out + ".")
 			end
 		end
 
 	consumed_from_buffer (a_buffer: separate BOUNDED_BUFFER [INTEGER]): INTEGER
 			-- Element consumed from buffer.
 		require
-			a_buffer /= void
-			not a_buffer.is_empty
+			buffer_not_empty: not a_buffer.is_empty
 		do
-			Result := a_buffer.get
+			a_buffer.consume
+			Result := a_buffer.last_consumed_item
 		ensure
-			a_buffer.count = old a_buffer.count - 1
+			correct_buffer_count: a_buffer.count = old a_buffer.count - 1
 		end
 
 feature {NONE} -- Implementation
 
 	buffer: separate BOUNDED_BUFFER [INTEGER]
+			-- Shared product buffer.
 
 	id: INTEGER
+			-- Unique consumer identifier.
 
 invariant
-	buffer_not_void: buffer /= void
+	valid_id: id > 0
 
 end -- class CONSUMER
+

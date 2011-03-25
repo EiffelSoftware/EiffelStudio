@@ -12,32 +12,33 @@ create
 
 feature -- Initialization
 
-	make_with_buffer (a_buffer: separate BOUNDED_BUFFER [INTEGER]; an_id: INTEGER)
-			-- Creation procedure.
+	make_with_buffer (a_buffer: separate BOUNDED_BUFFER [INTEGER]; a_id: INTEGER)
+			-- Initialize with identfier `a_id' to produce into `a_buffer'.
 		require
-			a_buffer /= void
+			valid_id: a_id > 0
 		do
 			buffer := a_buffer
-			id := an_id
+			id := a_id
 			create random.make
+		ensure
+			id_set: id = a_id
 		end
 
 feature -- Basic operations
 
 	produce (n: INTEGER)
 			-- Produce n elements.
+		require
+			valid_n: n >= 0
 		local
-			i, an_element: INTEGER
+			l_element: INTEGER
 		do
-			from
-				i := 1
-			until
-				i > n
+			across (1 |..| n) as ic
 			loop
-				an_element := random.next_random (an_element + id)
-				store (buffer, an_element)
-				io.put_string  ("%NPRODUCER " + id.out + ": I've just stored element " + an_element.out)
-				i := i + 1
+				l_element := random.next_random (l_element + id)
+				print ("%NPRODUCER " + id.out + ": Attempting to store element " + l_element.out + " ...")
+				store (buffer, l_element)
+				print ("%NPRODUCER " + id.out + ": I've just stored element " + l_element.out + ".")
 			end
 		end
 
@@ -46,7 +47,6 @@ feature {NONE}
 	store (a_buffer: separate BOUNDED_BUFFER [INTEGER]; an_element: INTEGER)
 			-- Store `an_element' into `a_buffer'.
 		require
-			a_buffer /= void
 			not a_buffer.is_full
 		do
 			a_buffer.put (an_element)
@@ -58,12 +58,16 @@ feature {NONE}
 feature {NONE} -- Implementation
 
 	buffer: separate BOUNDED_BUFFER [INTEGER]
+			-- Shared product buffer.
 
 	id: INTEGER
+			-- Unique identifier.
 
 	random: RANDOM
+			-- Pseudo-random sequence.
 
 invariant
-	buffer_not_void: buffer /= void
+	valid_id: id > 0
 
 end -- class PRODUCER
+

@@ -5,7 +5,7 @@ note
 	revision	: "1.0.0"
 
 class
-	BOUNDED_BUFFER [G -> ANY]
+	BOUNDED_BUFFER [G -> ANY create default_create end]
 
 create
 	make_with_capacity
@@ -13,54 +13,62 @@ create
 feature -- Initialization
 
 	make_with_capacity (a_capacity: INTEGER)
-			-- Creation procedure.
+			-- Initialize with capacity of `a_capacity'.
 		require
-			a_capacity > 0
+			valid_capacity: a_capacity > 0
 		do
 			create storage.make
 			capacity := a_capacity
 		ensure
-			is_empty
-		end
-
-feature -- Basic operations
-
-	put (an_element: G)
-			-- Store element.
-		require
-			not is_full
-		do
-			storage.extend (an_element)
-			io.put_string ("%NBUFFER: added element " + an_element.out)
-			-- scoop_sleep (500)
-		ensure
-			count = old count + 1
-			not is_empty
-		end
-
-	get: G
-			-- Consume element.
-		require
-			not is_empty
-		do
-			Result := storage.first
-			storage.start
-			storage.remove
-			io.put_string  ("%NBUFFER: removed element " + Result.out)
-			-- scoop_sleep (500)
-		ensure
-			count = old count - 1
-			not is_full
+			capacity_set: capacity = a_capacity
+			empty: is_empty
 		end
 
 feature -- Access
+
+	last_consumed_item: detachable G
+			-- Last item removed by `consume'.
+		note
+			option: stable
+		attribute
+		end
+
+feature -- Element change
+
+	put (a_element: G)
+			-- Store element.
+		require
+			not_full: not is_full
+		do
+			storage.extend (a_element)
+			print ("%NBUFFER: added element " + a_element.out)
+		ensure
+			count_incremented: count = old count + 1
+			not_empty: not is_empty
+		end
+
+	consume
+			-- Consume an element.
+		require
+			not_empty: not is_empty
+		do
+			last_consumed_item := storage.first
+			storage.start
+			storage.remove
+			print ("%NBUFFER: removing element " + last_consumed_item.out + ".")
+		ensure
+			count_decremented: count = old count - 1
+			not_full: not is_full
+		end
+
+feature -- Status report
 
 	is_full: BOOLEAN
 			-- Is buffer full?
 		do
 			Result := (storage.count = capacity)
 		ensure
-			Result = (storage.count = capacity)
+			correct_result: Result = (storage.count = capacity)
 		end
 
 	is_empty: BOOLEAN
@@ -68,8 +76,10 @@ feature -- Access
 		do
 			Result := storage.count = 0
 		ensure
-			Result = storage.count = 0
+			correct_result: Result = storage.count = 0
 		end
+
+feature -- Measurement
 
 	capacity: INTEGER
 		-- Maximum number of elements.
@@ -79,15 +89,17 @@ feature -- Access
 		do
 			Result := storage.count
 		ensure
-			Result = storage.count
+			correct_result: Result = storage.count
 		end
 
 feature {NONE}-- Implementation
 
 	storage: LINKED_LIST [G]
+			-- Implementation.
 
 invariant
 	capacity_positive: capacity > 0
 	correct_count: storage.count <= capacity
 
 end -- class BOUNDED_BUFFER
+

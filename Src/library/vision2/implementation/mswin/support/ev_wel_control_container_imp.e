@@ -193,6 +193,19 @@ feature {NONE} -- WEL Implementation
 			internal_wm_size_called := True
 		end
 
+	ev_redraw_children
+			-- Redraw all children.  Used for resizing optimizations.
+		require
+			exists: exists
+		do
+			cwin_redraw_window (
+					wel_item,
+					default_pointer,
+					default_pointer,
+					{WEL_RDW_CONSTANTS}.rdw_allchildren | {WEL_RDW_CONSTANTS}.rdw_invalidate | {WEL_RDW_CONSTANTS}.rdw_erase | {WEL_RDW_CONSTANTS}.rdw_updatenow
+				)
+		end
+
 	current_as_container: EV_CONTAINER_IMP
 			-- Result is `Current' as a container.
 		local

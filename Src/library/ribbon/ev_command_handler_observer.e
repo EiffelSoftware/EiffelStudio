@@ -37,9 +37,17 @@ feature -- Command
 					Result := l_resource.ribbon_for_group (l_group)
 				elseif attached {EV_RIBBON_ITEM} Current as l_item then
 					Result := l_resource.ribbon_for_item (l_item)
+					If Result = void then
+						-- Maybe it's application menu's item
+						Result := l_resource.ribbon_for_application_menu_item (l_item)
+					end
+				elseif attached {EV_RIBBON_APPLICATION_MENU} Current as l_item then
+					Result := l_resource.ribbon_for_application_menu (l_item)
 				else
 					check not_possible: False end
 				end
+
+				ribbon_cache := Result
 			end
 		end
 

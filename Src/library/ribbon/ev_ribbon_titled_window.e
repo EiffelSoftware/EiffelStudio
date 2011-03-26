@@ -12,20 +12,38 @@ inherit
 	EV_TITLED_WINDOW
 		redefine
 			implementation,
-			create_implementation
+			create_implementation,
+			initialize
+		end
+
+feature {NONE} -- Initialization
+
+	initialize
+			-- <Precursor>
+		local
+			l_res: EV_RIBBON_RESOURCES
+		do
+			Precursor
+			create l_res
+			l_res.ribbon_window_list.extend (Current)
 		end
 
 feature -- Access
-	
+
 	ribbon: detachable EV_RIBBON
-			-- Associated ribbon if any.
+			-- Associated ribbon if any
+		deferred
+		end
+
+	application_menu: detachable EV_RIBBON_APPLICATION_MENU
+			-- Associated application menu if any
 		deferred
 		end
 
 feature {EV_ANY, EV_ANY_I, EV_ANY_HANDLER} -- Implementation
 
 	implementation: EV_TITLED_WINDOW_I
-			-- Responsible for interaction with native graphics toolkit.
+			-- Responsible for interaction with native graphics toolkit
 
 feature {NONE} -- Implementation
 

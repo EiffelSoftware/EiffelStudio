@@ -16,14 +16,10 @@ feature -- Command
 
 	init_with_window (a_window: EV_WINDOW)
 			-- Creation method
-		local
-			l_resources: EV_RIBBON_RESOURCES
 		do
 			if attached {EV_WINDOW_IMP} a_window.implementation as l_imp then
 				com_initialize
 				set_object_and_function_address
-				create l_resources
-				l_resources.ribbon_list.extend (Current)
 				item := create_ribbon_com_framework (l_imp.wel_item)
 				ui_application := get_ui_application
 			end
@@ -133,6 +129,7 @@ feature {EV_RIBBON_ITEM, EV_RIBBON_TEXTABLE, EV_RIBBON_TOOLTIPABLE} -- Commands
 			exists: exists
 			a_key_not_void: a_key /= Void
 			a_key_exists: a_key.exists
+			valid: (create {EV_UI_INVALIDATIONS_ENUM}).is_valid (a_flags)
 		do
 			c_invalidate_ui_command (item, a_command_id, a_flags, a_key.item)
 		end

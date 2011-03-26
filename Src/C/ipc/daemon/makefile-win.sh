@@ -31,7 +31,7 @@ DBGOBJECTS = \
 all:: ecdbgd.exe
 
 $mingwecdbgd.exe: $(LIBS) $(DBGOBJECTS)
-	$(CC) -mwindows -o $@ $(DBGOBJECTS) $(LIBS) -lgdi32 -ladvapi32 -luser32
+	$(CC) -mwindows -o $@ $(DBGOBJECTS) $(LIBS) -lgdi32 -ladvapi32 -luser32 -lwsock32
 
 $microsoftecdbgd.exe: $(LIBS) $(DBGOBJECTS)
 	link $(LDFLAGS) $(LIBS) -SUBSYSTEM:WINDOWS -OUT:$@ $(DBGOBJECTS) GDI32.lib ADVAPI32.lib USER32.lib

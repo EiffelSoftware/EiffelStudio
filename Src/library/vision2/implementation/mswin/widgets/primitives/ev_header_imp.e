@@ -97,7 +97,8 @@ inherit
 			on_hdn_track,
 			on_hdn_end_track,
 			on_hdn_item_changed,
-			on_hdn_item_changing
+			on_hdn_item_changing,
+			default_style
 		end
 
 	EV_HEADER_ACTION_SEQUENCES_IMP
@@ -144,6 +145,12 @@ feature -- Initialization
 			disable_tabable_from
 			disable_tabable_to
 			Precursor {EV_PRIMITIVE_IMP}
+		end
+
+	default_style: INTEGER
+			-- Default style used to create the control
+		do
+			Result := Ws_child | Hds_Buttons | Hds_horz | Ws_visible
 		end
 
 feature -- Status report

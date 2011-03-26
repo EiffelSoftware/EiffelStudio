@@ -55,4 +55,15 @@ feature -- Query
 			}
 			]"
 		end
+
+feature -- Contract support
+
+	is_valid (a_int: INTEGER): BOOLEAN
+			-- If `a_int' an value of Current enumeration
+		do
+			Result := a_int = ui_invalidations_state or else
+					a_int = ui_invalidations_value or else
+					a_int = ui_invalidations_property or else
+					a_int = ui_invalidations_allproperties
+		end
 end

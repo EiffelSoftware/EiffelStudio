@@ -49,10 +49,214 @@ feature -- Query
 			Result := uicc_manager.check_if_uicc_available
 		end
 
-feature {NONE} -- Constants
-
 	command_name_constants: STRING = "command_name_constants"
 			-- Constants for command name file
+
+feature {ER_CODE_GENERATOR_FOR_APPLICATION_MENU} -- Command
+
+	generate_group_class (a_group_node: EV_TREE_NODE; a_index: INTEGER; a_file_name, a_imp_file_name: STRING; a_default_name: STRING)
+			--
+		require
+			not_void: a_group_node /= void
+			valid: a_file_name /= void and then not a_file_name.is_empty
+			valid: a_imp_file_name /= void and then not a_imp_file_name.is_empty
+			valid: a_default_name /= void and then not a_default_name.is_empty
+			valid: a_group_node.text.same_string ({ER_XML_CONSTANTS}.group) or else a_group_node.text.same_string ({ER_XML_CONSTANTS}.menu_group)
+		local
+			l_button_count: INTEGER
+			l_file, l_dest_file: RAW_FILE
+			l_constants: ER_MISC_CONSTANTS
+			l_file_name, l_dest_file_name: FILE_NAME
+			l_singleton: ER_SHARED_SINGLETON
+			l_sub_dir, l_tool_bar_group_file, l_sub_imp_dir, l_tool_bar_group_imp_file: STRING
+			l_last_string: STRING
+			l_button_creation_string, l_button_registry_string, l_button_declaration_string: STRING
+			l_identifier_name: detachable STRING
+			l_gen_info: ER_CODE_GENERATOR_INFO
+			l_split_button: EV_TREE_NODE
+		do
+			-- First check how many groups
+			l_button_count := a_group_node.count
+
+			create l_singleton
+			l_sub_dir := "code_generated_once_change_by_user"
+			l_tool_bar_group_file := a_imp_file_name
+			l_sub_imp_dir := "code_generated_everytime"
+			l_tool_bar_group_imp_file := a_file_name
+
+			if attached l_singleton.project_info_cell.item as l_project_info then
+				if attached l_project_info.project_location as l_project_location then
+					create l_constants
+
+					-- Generate tool bar group class
+					create l_file_name.make_from_string (l_constants.template)
+					l_file_name.set_subdirectory (l_sub_dir)
+					l_file_name.set_file_name (l_tool_bar_group_file + ".e")
+					create l_file.make (l_file_name)
+
+					if attached {ER_TREE_NODE_DATA} a_group_node.data as l_data then
+						if attached l_data.command_name as l_command_name  and then not l_command_name.is_empty then
+							l_identifier_name := l_command_name
+						end
+					end
+
+					if l_file.exists and then l_file.is_readable then
+						create l_dest_file_name.make_from_string (l_project_location)
+						if l_identifier_name /= Void then
+							l_dest_file_name.set_file_name (l_identifier_name.as_lower + "_imp.e")
+						else
+							l_dest_file_name.set_file_name (l_tool_bar_group_file + "_" + a_index.out + ".e")
+						end
+
+						create l_dest_file.make_create_read_write (l_dest_file_name)
+
+						from
+							l_button_creation_string := button_creation_string (a_group_node)
+							l_button_registry_string := button_registry_string (a_group_node)
+							l_button_declaration_string := button_declaration_string (a_group_node)
+							l_file.open_read
+							l_file.start
+						until
+							l_file.after
+						loop
+							-- replace/add tab codes here
+							l_file.read_line
+							l_last_string := l_file.last_string
+							l_last_string.replace_substring_all ("$BUTTON_CREATION", l_button_creation_string)
+							l_last_string.replace_substring_all ("$BUTTON_REGISTRY", l_button_registry_string)
+							l_last_string.replace_substring_all ("$BUTTON_DECLARATION", l_button_declaration_string)
+							if l_identifier_name /= Void then
+								l_last_string.replace_substring_all ("$INDEX", l_identifier_name.as_upper + "_IMP")
+							else
+								l_last_string.replace_substring_all ("$INDEX", a_default_name.as_upper + "_IMP_" + a_index.out)
+							end
+
+							l_dest_file.put_string (l_last_string + "%N")
+						end
+
+						l_file.close
+						l_dest_file.close
+					end
+
+					-- Generate tool bar group imp class
+					create l_file_name.make_from_string (l_constants.template)
+					l_file_name.set_subdirectory (l_sub_imp_dir)
+					l_file_name.set_file_name (l_tool_bar_group_imp_file + ".e")
+					create l_file.make (l_file_name)
+					if l_file.exists and then l_file.is_readable then
+						create l_dest_file_name.make_from_string (l_project_location)
+						if l_identifier_name /= Void then
+							l_dest_file_name.set_file_name (l_identifier_name.as_lower + ".e")
+						else
+							l_dest_file_name.set_file_name (l_tool_bar_group_imp_file + "_" + a_index.out + ".e")
+						end
+
+						create l_dest_file.make (l_dest_file_name)
+						-- Don't replace destination file if exists
+						if not l_dest_file.exists then
+							l_dest_file.create_read_write
+							from
+								l_file.open_read
+								l_file.start
+							until
+								l_file.after
+							loop
+								-- replace/add tab codes here
+								l_file.read_line
+								l_last_string := l_file.last_string
+								if l_identifier_name /= Void then
+									l_last_string.replace_substring_all ("$INDEX_1", l_identifier_name.as_upper)
+									l_last_string.replace_substring_all ("$INDEX_2", l_identifier_name.as_upper + "_IMP")
+								else
+									l_last_string.replace_substring_all ("$INDEX_1", a_default_name.as_upper + "_" + a_index.out)
+									l_last_string.replace_substring_all ("$INDEX_2", a_default_name.as_upper + "_IMP_" + a_index.out)
+								end
+
+								l_dest_file.put_string (l_last_string + "%N")
+							end
+
+							l_file.close
+							l_dest_file.close
+						end
+
+					end
+				end
+			end
+
+			-- Generate button classes
+			from
+				a_group_node.start
+			until
+				a_group_node.after
+			loop
+				if a_group_node.item.text.is_equal ({ER_XML_CONSTANTS}.button)  then
+					create l_gen_info
+					l_gen_info.set_default_item_class_imp_name_prefix ("RIBBON_BUTTON_")
+					l_gen_info.set_default_item_class_name_prefix ("RIBBON_BUTTON_IMP_")
+					l_gen_info.set_item_file ("ribbon_button")
+					l_gen_info.set_item_imp_file ("ribbon_button_imp")
+				elseif a_group_node.item.text.is_equal ({ER_XML_CONSTANTS}.check_box) then
+					create l_gen_info
+					l_gen_info.set_default_item_class_imp_name_prefix ("RIBBON_CHECKBOX_")
+					l_gen_info.set_default_item_class_name_prefix ("RIBBON_CHECKBOX_IMP_")
+					l_gen_info.set_item_file ("ribbon_checkbox")
+					l_gen_info.set_item_imp_file ("ribbon_checkbox_imp")
+				elseif a_group_node.item.text.same_string ({ER_XML_CONSTANTS}.toggle_button) then
+					create l_gen_info
+					l_gen_info.set_default_item_class_imp_name_prefix ("RIBBON_TOGGLE_BUTTON_")
+					l_gen_info.set_default_item_class_name_prefix ("RIBBON_TOGGLE_BUTTON_IMP_")
+					l_gen_info.set_item_file ("ribbon_toggle_button")
+					l_gen_info.set_item_imp_file ("ribbon_toggle_button_imp")
+				elseif a_group_node.item.text.same_string ({ER_XML_CONSTANTS}.spinner) then
+					create l_gen_info
+					l_gen_info.set_default_item_class_imp_name_prefix ("RIBBON_SPINNER_")
+					l_gen_info.set_default_item_class_name_prefix ("RIBBON_SPINNER_IMP_")
+					l_gen_info.set_item_file ("ribbon_spinner")
+					l_gen_info.set_item_imp_file ("ribbon_spinner_imp")
+				elseif a_group_node.item.text.same_string ({ER_XML_CONSTANTS}.combo_box) then
+					create l_gen_info
+					l_gen_info.set_default_item_class_imp_name_prefix ("RIBBON_COMBO_BOX_")
+					l_gen_info.set_default_item_class_name_prefix ("RIBBON_COMBO_BOX_IMP_")
+					l_gen_info.set_item_file ("ribbon_combo_box")
+					l_gen_info.set_item_imp_file ("ribbon_combo_box_imp")
+				elseif a_group_node.item.text.same_string ({ER_XML_CONSTANTS}.split_button) then
+					from
+						create l_gen_info
+						l_gen_info.set_default_item_class_imp_name_prefix ("RIBBON_BUTTON_")
+						l_gen_info.set_default_item_class_name_prefix ("RIBBON_BUTTON_IMP_")
+						l_gen_info.set_item_file ("ribbon_button")
+						l_gen_info.set_item_imp_file ("ribbon_button_imp")
+						l_split_button := a_group_node.item
+						l_split_button.start
+					until
+						l_split_button.after
+					loop
+						generate_item_class (l_split_button.item, l_split_button.index + a_group_node.index + button_counter, l_gen_info)
+
+						l_split_button.forth
+					end
+
+					create l_gen_info
+					l_gen_info.set_default_item_class_imp_name_prefix ("RIBBON_SPLIT_BUTTON_")
+					l_gen_info.set_default_item_class_name_prefix ("RIBBON_SPLIT_BUTTON_IMP_")
+					l_gen_info.set_item_file ("ribbon_split_button")
+					l_gen_info.set_item_imp_file ("ribbon_split_button_imp")
+				elseif a_group_node.item.text.same_string ({ER_XML_CONSTANTS}.drop_down_gallery) then
+					create l_gen_info
+					l_gen_info.set_default_item_class_imp_name_prefix ("RIBBON_DROP_DOWN_GALLERY_")
+					l_gen_info.set_default_item_class_name_prefix ("RIBBON_DROP_DOWN_GALLERY_IMP_")
+					l_gen_info.set_item_file ("ribbon_drop_down_gallery")
+					l_gen_info.set_item_imp_file ("ribbon_drop_down_gallery_imp")
+				else
+					check not_implemented: False end
+					create l_gen_info
+				end
+				generate_item_class (a_group_node.item, a_group_node.index + button_counter, l_gen_info)
+
+				a_group_node.forth
+			end
+			button_counter := button_counter + a_group_node.count
+		end
 
 feature {NONE} -- Implementation
 
@@ -217,14 +421,10 @@ feature {NONE} -- Implementation
 
 	generate_readonly_classes
 			--
-		local
-			l_list: ARRAYED_LIST [ER_LAYOUT_CONSTRUCTOR]
-			l_singleton: ER_SHARED_SINGLETON
 		do
-			create l_singleton
-			l_list := l_singleton.layout_constructor_list
 			generate_window_classes
-			generate_readonly_classes_imp (l_list.first)
+			generate_readonly_classes_imp
+			generate_application_menu_classes
 		end
 
 	generate_window_classes
@@ -236,6 +436,7 @@ feature {NONE} -- Implementation
 			l_constants: ER_MISC_CONSTANTS
 			l_file_name, l_dest_file_name: FILE_NAME
 			l_file, l_dest_file: RAW_FILE
+			l_application_menu_comment: STRING
 		do
 			l_window_file := "main_window"
 			l_sub_dir := "code_generated_everytime"
@@ -273,6 +474,8 @@ feature {NONE} -- Implementation
 							loop
 								l_file.read_line
 								l_last_string := l_file.last_string
+
+								-- For ribbon
 								if attached {ER_TREE_NODE_RIBBON_DATA} l_list.item.widget.i_th (1).data as l_data
 									and then attached l_data.command_name as l_identifer_name
 									and then not l_identifer_name.is_empty then
@@ -284,6 +487,30 @@ feature {NONE} -- Implementation
 									else
 										l_last_string.replace_substring_all ("$RIBBON_NAME", "RIBBON_" + l_list.index.out)
 									end
+								end
+
+								-- For application menu
+								if l_list.item.widget.valid_index (2) then
+									l_application_menu_comment := "%N%T%T%T-- Application menu"
+									check is_application_menu: l_list.item.widget.i_th (2).text.same_string ({ER_XML_CONSTANTS}.ribbon_application_menu) end
+									if attached {ER_TREE_NODE_DATA} l_list.item.widget.i_th (2).data as l_data
+										and then attached l_data.command_name as l_identifer_name
+										and then not l_identifer_name.is_empty then
+
+										l_last_string.replace_substring_all ("$APPLICATION_MENU_NAME", "%Tapplication_menu: " + l_identifer_name.as_upper + l_application_menu_comment)
+									else
+										if l_list.index = 1 then
+											l_last_string.replace_substring_all ("$APPLICATION_MENU_NAME", "%Tapplication_menu: APPLICATION_MENU" + l_application_menu_comment)
+										else
+											l_last_string.replace_substring_all ("$APPLICATION_MENU_NAME", "%TTapplication_menu: APPLICATION_MENU_" + l_list.index.out + l_application_menu_comment)
+										end
+									end
+
+									l_last_string.replace_substring_all ("$APPLICATION_MENU_CREATION", "%T%T%Tcreate application_menu.make_with_command_list (<<>>)")
+								else
+									-- Remove $APPLICATION_MENU_NAME tag
+									l_last_string.replace_substring_all ("$APPLICATION_MENU_NAME", "")
+									l_last_string.replace_substring_all ("$APPLICATION_MENU_CREATION", "")
 								end
 
 								if l_list.index = 1 then
@@ -307,7 +534,7 @@ feature {NONE} -- Implementation
 
 		end
 
-	generate_readonly_classes_imp (a_layout_constructor: ER_LAYOUT_CONSTRUCTOR)
+	generate_readonly_classes_imp
 			-- Generate readonly ribbon widget classes
 		local
 			l_tree: EV_TREE
@@ -328,7 +555,7 @@ feature {NONE} -- Implementation
 				create l_xml
 				l_tree := l_list.item.widget
 				l_tree.start
-				l_tree_node := tree_node_with_text (l_tree.item, l_xml.ribbon_tabs)
+				l_tree_node := tree_node_with_text (l_tree, l_xml.ribbon_tabs)
 
 				if l_tree_node /= Void then
 						-- Start real generation		
@@ -340,7 +567,56 @@ feature {NONE} -- Implementation
 
 		end
 
-	tree_node_with_text (a_tree_node: EV_TREE_NODE; a_text: STRING): detachable EV_TREE_NODE
+	generate_application_menu_classes
+			--
+		local
+			l_tree: EV_TREE
+			l_tree_node: detachable EV_TREE_NODE
+			l_xml: ER_XML_CONSTANTS
+			l_singleton: ER_SHARED_SINGLETON
+			l_list: ARRAYED_LIST [ER_LAYOUT_CONSTRUCTOR]
+			l_gen: ER_CODE_GENERATOR_FOR_APPLICATION_MENU
+		do
+			from
+				create l_gen
+				create l_singleton
+				l_list := l_singleton.layout_constructor_list
+				l_list.start
+			until
+				l_list.after
+			loop
+
+				create l_xml
+				l_tree := l_list.item.widget
+				l_tree.start
+				l_tree_node := tree_node_with_text (l_tree, l_xml.ribbon_application_menu)
+
+				if l_tree_node /= Void then
+						-- Start real generation		
+					l_gen.generate_application_menu_class (l_tree_node, l_list.index)
+				end
+
+				l_list.forth
+			end
+		end
+
+	tree_node_with_text (a_tree: EV_TREE; a_text: STRING): detachable EV_TREE_NODE
+			-- Recursive find a tree node which has `a_text'
+		require
+			not_void: a_tree /= void
+			not_void: a_text /= void
+		do
+			from
+				a_tree.start
+			until
+				a_tree.after or Result /= Void
+			loop
+				Result := tree_node_with_text_imp  (a_tree.item, a_text)
+				a_tree.forth
+			end
+		end
+
+	tree_node_with_text_imp (a_tree_node: EV_TREE_NODE; a_text: STRING): detachable EV_TREE_NODE
 			-- Recursive find a tree node which has `a_text'
 		require
 			not_void: a_tree_node /= void
@@ -349,15 +625,15 @@ feature {NONE} -- Implementation
 			l_xml: ER_XML_CONSTANTS
 		do
 			create l_xml
-			if a_tree_node.text.is_equal (l_xml.ribbon_tabs) then
+			if a_tree_node.text.same_string (a_text) then
 				Result := a_tree_node
 			else
 				from
 					a_tree_node.start
 				until
-					a_tree_node.after
+					a_tree_node.after or Result /= Void
 				loop
-					Result := tree_node_with_text (a_tree_node.item, a_text)
+					Result := tree_node_with_text_imp (a_tree_node.item, a_text)
 					a_tree_node.forth
 				end
 			end
@@ -366,11 +642,11 @@ feature {NONE} -- Implementation
 	uicc_manager: ER_UICC_MANAGER
 			--
 
-	generate_tool_bar_class (a_tabs_root_note: EV_TREE_NODE; a_index: INTEGER)
+	generate_tool_bar_class (a_tabs_root_node: EV_TREE_NODE; a_index: INTEGER)
 			--
 		require
-			not_void: a_tabs_root_note /= Void
-			valid:  a_tabs_root_note.text.is_equal ({ER_XML_CONSTANTS}.ribbon_tabs)
+			not_void: a_tabs_root_node /= Void
+			valid:  a_tabs_root_node.text.is_equal ({ER_XML_CONSTANTS}.ribbon_tabs)
 		local
 			l_tab_count: INTEGER
 			l_file, l_dest_file: RAW_FILE
@@ -383,7 +659,7 @@ feature {NONE} -- Implementation
 			l_identifier_name: detachable STRING
 		do
 			-- First check how many tabs
-			l_tab_count := a_tabs_root_note.count
+			l_tab_count := a_tabs_root_node.count
 
 			create l_singleton
 			l_sub_dir := "code_generated_once_change_by_user"
@@ -393,7 +669,7 @@ feature {NONE} -- Implementation
 			if attached l_singleton.project_info_cell.item as l_project_info then
 				if attached l_project_info.project_location as l_project_location then
 					create l_constants
-					if attached {ER_TREE_NODE_RIBBON_DATA} a_tabs_root_note.data as l_data
+					if attached {ER_TREE_NODE_RIBBON_DATA} a_tabs_root_node.data as l_data
 						and then attached l_data.command_name as l_identifier
 						and then not l_identifier.is_empty then
 						l_identifier_name := l_identifier
@@ -420,9 +696,9 @@ feature {NONE} -- Implementation
 						from
 							l_file.open_read
 							l_file.start
-							l_tab_creation_string := tab_creation_string (a_tabs_root_note)
-							l_tab_registry_string := tab_registry_string (a_tabs_root_note)
-							l_tab_declaration_string := tab_declaration_string (a_tabs_root_note)
+							l_tab_creation_string := tab_creation_string (a_tabs_root_node)
+							l_tab_registry_string := tab_registry_string (a_tabs_root_node)
+							l_tab_declaration_string := tab_declaration_string (a_tabs_root_node)
 							l_set_modes_string := "%T%T%Tset_modes (<<{NATURAL_32}" + (a_index - 1).out + ">>)"
 						until
 							l_file.after
@@ -460,22 +736,22 @@ feature {NONE} -- Implementation
 
 				-- Generate tab classes
 			from
-				a_tabs_root_note.start
+				a_tabs_root_node.start
 			until
-				a_tabs_root_note.after
+				a_tabs_root_node.after
 			loop
-				check a_tabs_root_note.item.text.is_equal ({ER_XML_CONSTANTS}.tab) end
-				generate_tab_class (a_tabs_root_note.item, a_tabs_root_note.index)
-				a_tabs_root_note.forth
+				check a_tabs_root_node.item.text.is_equal ({ER_XML_CONSTANTS}.tab) end
+				generate_tab_class (a_tabs_root_node.item, a_tabs_root_node.index)
+				a_tabs_root_node.forth
 			end
 
 		end
 
-	tab_creation_string (a_tabs_root_note: EV_TREE_NODE): STRING
+	tab_creation_string (a_tabs_root_node: EV_TREE_NODE): STRING
 			--
 		require
-			not_void: a_tabs_root_note /= Void
-			valid:  a_tabs_root_note.text.is_equal ({ER_XML_CONSTANTS}.ribbon_tabs)
+			not_void: a_tabs_root_node /= Void
+			valid:  a_tabs_root_node.text.is_equal ({ER_XML_CONSTANTS}.ribbon_tabs)
 		local
 			l_count, l_index: INTEGER
 			l_template, l_command_string: STRING
@@ -486,13 +762,13 @@ feature {NONE} -- Implementation
 
 			from
 				l_index := 1
-				l_count := a_tabs_root_note.count
+				l_count := a_tabs_root_node.count
 			until
 				l_count < l_index
 			loop
 				l_generated := l_template.twin
 
-				if attached {ER_TREE_NODE_TAB_DATA} a_tabs_root_note.i_th (l_index).data as l_group_data then
+				if attached {ER_TREE_NODE_TAB_DATA} a_tabs_root_node.i_th (l_index).data as l_group_data then
 					if attached l_group_data.command_name as l_command_name and then not l_command_name.is_empty then
 						l_command_string := "<<{" + command_name_constants.as_upper + "}." + l_command_name + ">>"
 						l_generated.replace_substring_all ("$INDEX", l_command_name.as_lower)
@@ -512,11 +788,11 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	tab_registry_string (a_tabs_root_note: EV_TREE_NODE): STRING
+	tab_registry_string (a_tabs_root_node: EV_TREE_NODE): STRING
 			--
 		require
-			not_void: a_tabs_root_note /= Void
-			valid:  a_tabs_root_note.text.is_equal ({ER_XML_CONSTANTS}.ribbon_tabs)
+			not_void: a_tabs_root_node /= Void
+			valid:  a_tabs_root_node.text.is_equal ({ER_XML_CONSTANTS}.ribbon_tabs)
 		local
 			l_count, l_index: INTEGER
 			l_template: STRING
@@ -528,12 +804,12 @@ feature {NONE} -- Implementation
 
 			from
 				l_index := 1
-				l_count := a_tabs_root_note.count
+				l_count := a_tabs_root_node.count
 			until
 				l_count < l_index
 			loop
 				l_generated := l_template.twin
-				if attached {ER_TREE_NODE_TAB_DATA} a_tabs_root_note.i_th (l_index).data as l_tab_data then
+				if attached {ER_TREE_NODE_TAB_DATA} a_tabs_root_node.i_th (l_index).data as l_tab_data then
 					if attached l_tab_data.command_name as l_command_name and then not l_command_name.is_empty then
 						l_generated.replace_substring_all ("$TAB", l_command_name.as_lower)
 					else
@@ -550,11 +826,11 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	tab_declaration_string (a_tabs_root_note: EV_TREE_NODE): STRING
+	tab_declaration_string (a_tabs_root_node: EV_TREE_NODE): STRING
 			--
 		require
-			not_void: a_tabs_root_note /= Void
-			valid:  a_tabs_root_note.text.is_equal ({ER_XML_CONSTANTS}.ribbon_tabs)
+			not_void: a_tabs_root_node /= Void
+			valid:  a_tabs_root_node.text.is_equal ({ER_XML_CONSTANTS}.ribbon_tabs)
 		local
 			l_count, l_index: INTEGER
 			l_template: STRING
@@ -565,12 +841,12 @@ feature {NONE} -- Implementation
 
 			from
 				l_index := 1
-				l_count := a_tabs_root_note.count
+				l_count := a_tabs_root_node.count
 			until
 				l_count < l_index
 			loop
 				l_generated := l_template.twin
-				if attached {ER_TREE_NODE_TAB_DATA} a_tabs_root_note.i_th (l_index).data as l_tab_data then
+				if attached {ER_TREE_NODE_TAB_DATA} a_tabs_root_node.i_th (l_index).data as l_tab_data then
 					if attached l_tab_data.command_name as l_command_name and then not l_command_name.is_empty then
 						l_generated.replace_substring_all ("$INDEX_1", l_command_name.as_lower)
 						l_generated.replace_substring_all ("$INDEX_2", l_command_name.as_upper)
@@ -721,7 +997,7 @@ feature {NONE} -- Implementation
 				a_tab_node.after
 			loop
 				check a_tab_node.item.text.is_equal ({ER_XML_CONSTANTS}.group) end
-				generate_group_class (a_tab_node.item, a_tab_node.index + group_counter)
+				generate_group_class (a_tab_node.item, a_tab_node.index + group_counter, "ribbon_group", "ribbon_group_imp", "RIBBON_GROUP")
 				a_tab_node.forth
 			end
 			group_counter := group_counter + a_tab_node.count
@@ -849,212 +1125,13 @@ feature {NONE} -- Implementation
 	group_counter, button_counter: INTEGER
 			-- When generating group classes , it count how many groups totally
 
-	generate_group_class (a_group_node: EV_TREE_NODE; a_index: INTEGER)
-			--
-		require
-			not_void: a_group_node /= void
-			valid: a_group_node.text.is_equal ({ER_XML_CONSTANTS}.group)
-		local
-			l_button_count: INTEGER
-			l_file, l_dest_file: RAW_FILE
-			l_constants: ER_MISC_CONSTANTS
-			l_file_name, l_dest_file_name: FILE_NAME
-			l_singleton: ER_SHARED_SINGLETON
-			l_sub_dir, l_tool_bar_group_file, l_sub_imp_dir, l_tool_bar_group_imp_file: STRING
-			l_last_string: STRING
-			l_button_creation_string, l_button_registry_string, l_button_declaration_string: STRING
-			l_identifier_name: detachable STRING
-			l_gen_info: ER_CODE_GENERATOR_INFO
-			l_split_button: EV_TREE_NODE
-		do
-			-- First check how many groups
-			l_button_count := a_group_node.count
-
-			create l_singleton
-			l_sub_dir := "code_generated_once_change_by_user"
-			l_tool_bar_group_file := "ribbon_group_imp"
-			l_sub_imp_dir := "code_generated_everytime"
-			l_tool_bar_group_imp_file := "ribbon_group"
-
-			if attached l_singleton.project_info_cell.item as l_project_info then
-				if attached l_project_info.project_location as l_project_location then
-					create l_constants
-
-					-- Generate tool bar group class
-					create l_file_name.make_from_string (l_constants.template)
-					l_file_name.set_subdirectory (l_sub_dir)
-					l_file_name.set_file_name (l_tool_bar_group_file + ".e")
-					create l_file.make (l_file_name)
-
-					if attached {ER_TREE_NODE_GROUP_DATA} a_group_node.data as l_data then
-						if attached l_data.command_name as l_command_name  and then not l_command_name.is_empty then
-							l_identifier_name := l_command_name
-						end
-					end
-
-					if l_file.exists and then l_file.is_readable then
-						create l_dest_file_name.make_from_string (l_project_location)
-						if l_identifier_name /= Void then
-							l_dest_file_name.set_file_name (l_identifier_name.as_lower + "_imp.e")
-						else
-							l_dest_file_name.set_file_name (l_tool_bar_group_file + "_" + a_index.out + ".e")
-						end
-
-						create l_dest_file.make_create_read_write (l_dest_file_name)
-
-						from
-							l_button_creation_string := button_creation_string (a_group_node)
-							l_button_registry_string := button_registry_string (a_group_node)
-							l_button_declaration_string := button_declaration_string (a_group_node)
-							l_file.open_read
-							l_file.start
-						until
-							l_file.after
-						loop
-							-- replace/add tab codes here
-							l_file.read_line
-							l_last_string := l_file.last_string
-							l_last_string.replace_substring_all ("$BUTTON_CREATION", l_button_creation_string)
-							l_last_string.replace_substring_all ("$BUTTON_REGISTRY", l_button_registry_string)
-							l_last_string.replace_substring_all ("$BUTTON_DECLARATION", l_button_declaration_string)
-							if l_identifier_name /= Void then
-								l_last_string.replace_substring_all ("$INDEX", l_identifier_name.as_upper + "_IMP")
-							else
-								l_last_string.replace_substring_all ("$INDEX", "RIBBON_GROUP_IMP_" + a_index.out)
-							end
-
-							l_dest_file.put_string (l_last_string + "%N")
-						end
-
-						l_file.close
-						l_dest_file.close
-					end
-
-					-- Generate tool bar group imp class
-					create l_file_name.make_from_string (l_constants.template)
-					l_file_name.set_subdirectory (l_sub_imp_dir)
-					l_file_name.set_file_name (l_tool_bar_group_imp_file + ".e")
-					create l_file.make (l_file_name)
-					if l_file.exists and then l_file.is_readable then
-						create l_dest_file_name.make_from_string (l_project_location)
-						if l_identifier_name /= Void then
-							l_dest_file_name.set_file_name (l_identifier_name.as_lower + ".e")
-						else
-							l_dest_file_name.set_file_name (l_tool_bar_group_imp_file + "_" + a_index.out + ".e")
-						end
-
-						create l_dest_file.make (l_dest_file_name)
-						-- Don't replace destination file if exists
-						if not l_dest_file.exists then
-							l_dest_file.create_read_write
-							from
-								l_file.open_read
-								l_file.start
-							until
-								l_file.after
-							loop
-								-- replace/add tab codes here
-								l_file.read_line
-								l_last_string := l_file.last_string
-								if l_identifier_name /= Void then
-									l_last_string.replace_substring_all ("$INDEX_1", l_identifier_name.as_upper)
-									l_last_string.replace_substring_all ("$INDEX_2", l_identifier_name.as_upper + "_IMP")
-								else
-									l_last_string.replace_substring_all ("$INDEX_1", "RIBBON_GROUP_" + a_index.out)
-									l_last_string.replace_substring_all ("$INDEX_2", "RIBBON_GROUP_IMP_" + a_index.out)
-								end
-
-								l_dest_file.put_string (l_last_string + "%N")
-							end
-
-							l_file.close
-							l_dest_file.close
-						end
-
-					end
-				end
-			end
-
-			-- Generate button classes
-			from
-				a_group_node.start
-			until
-				a_group_node.after
-			loop
-				if a_group_node.item.text.is_equal ({ER_XML_CONSTANTS}.button)  then
-					create l_gen_info
-					l_gen_info.set_default_item_class_imp_name_prefix ("RIBBON_BUTTON_")
-					l_gen_info.set_default_item_class_name_prefix ("RIBBON_BUTTON_IMP_")
-					l_gen_info.set_item_file ("ribbon_button")
-					l_gen_info.set_item_imp_file ("ribbon_button_imp")
-				elseif a_group_node.item.text.is_equal ({ER_XML_CONSTANTS}.check_box) then
-					create l_gen_info
-					l_gen_info.set_default_item_class_imp_name_prefix ("RIBBON_CHECKBOX_")
-					l_gen_info.set_default_item_class_name_prefix ("RIBBON_CHECKBOX_IMP_")
-					l_gen_info.set_item_file ("ribbon_checkbox")
-					l_gen_info.set_item_imp_file ("ribbon_checkbox_imp")
-				elseif a_group_node.item.text.same_string ({ER_XML_CONSTANTS}.toggle_button) then
-					create l_gen_info
-					l_gen_info.set_default_item_class_imp_name_prefix ("RIBBON_TOGGLE_BUTTON_")
-					l_gen_info.set_default_item_class_name_prefix ("RIBBON_TOGGLE_BUTTON_IMP_")
-					l_gen_info.set_item_file ("ribbon_toggle_button")
-					l_gen_info.set_item_imp_file ("ribbon_toggle_button_imp")
-				elseif a_group_node.item.text.same_string ({ER_XML_CONSTANTS}.spinner) then
-					create l_gen_info
-					l_gen_info.set_default_item_class_imp_name_prefix ("RIBBON_SPINNER_")
-					l_gen_info.set_default_item_class_name_prefix ("RIBBON_SPINNER_IMP_")
-					l_gen_info.set_item_file ("ribbon_spinner")
-					l_gen_info.set_item_imp_file ("ribbon_spinner_imp")
-				elseif a_group_node.item.text.same_string ({ER_XML_CONSTANTS}.combo_box) then
-					create l_gen_info
-					l_gen_info.set_default_item_class_imp_name_prefix ("RIBBON_COMBO_BOX_")
-					l_gen_info.set_default_item_class_name_prefix ("RIBBON_COMBO_BOX_IMP_")
-					l_gen_info.set_item_file ("ribbon_combo_box")
-					l_gen_info.set_item_imp_file ("ribbon_combo_box_imp")
-				elseif a_group_node.item.text.same_string ({ER_XML_CONSTANTS}.split_button) then
-					from
-						create l_gen_info
-						l_gen_info.set_default_item_class_imp_name_prefix ("RIBBON_BUTTON_")
-						l_gen_info.set_default_item_class_name_prefix ("RIBBON_BUTTON_IMP_")
-						l_gen_info.set_item_file ("ribbon_button")
-						l_gen_info.set_item_imp_file ("ribbon_button_imp")
-						l_split_button := a_group_node.item
-						l_split_button.start
-					until
-						l_split_button.after
-					loop
-						generate_item_class (l_split_button.item, l_split_button.index + a_group_node.index + button_counter, l_gen_info)
-
-						l_split_button.forth
-					end
-
-					create l_gen_info
-					l_gen_info.set_default_item_class_imp_name_prefix ("RIBBON_SPLIT_BUTTON_")
-					l_gen_info.set_default_item_class_name_prefix ("RIBBON_SPLIT_BUTTON_IMP_")
-					l_gen_info.set_item_file ("ribbon_split_button")
-					l_gen_info.set_item_imp_file ("ribbon_split_button_imp")
-				elseif a_group_node.item.text.same_string ({ER_XML_CONSTANTS}.drop_down_gallery) then
-					create l_gen_info
-					l_gen_info.set_default_item_class_imp_name_prefix ("RIBBON_DROP_DOWN_GALLERY_")
-					l_gen_info.set_default_item_class_name_prefix ("RIBBON_DROP_DOWN_GALLERY_IMP_")
-					l_gen_info.set_item_file ("ribbon_drop_down_gallery")
-					l_gen_info.set_item_imp_file ("ribbon_drop_down_gallery_imp")
-				else
-					check not_implemented: False end
-					create l_gen_info
-				end
-				generate_item_class (a_group_node.item, a_group_node.index + button_counter, l_gen_info)
-
-				a_group_node.forth
-			end
-			button_counter := button_counter + a_group_node.count
-		end
-
 	button_creation_string (a_group_node: EV_TREE_NODE): STRING
 			--
 		require
 			not_void: a_group_node /= void
-			valid: a_group_node.text.is_equal ({ER_XML_CONSTANTS}.group) or else a_group_node.text.same_string ({ER_XML_CONSTANTS}.split_button)
+			valid: a_group_node.text.same_string ({ER_XML_CONSTANTS}.group) or else
+					a_group_node.text.same_string ({ER_XML_CONSTANTS}.split_button) or else
+					a_group_node.text.same_string ({ER_XML_CONSTANTS}.menu_group)
 		local
 			l_count, l_index: INTEGER
 			l_template, l_command_string: STRING
@@ -1099,7 +1176,9 @@ feature {NONE} -- Implementation
 			--
 		require
 			not_void: a_group_node /= void
-			valid: a_group_node.text.same_string ({ER_XML_CONSTANTS}.group) or else a_group_node.text.same_string ({ER_XML_CONSTANTS}.split_button)
+			valid: a_group_node.text.same_string ({ER_XML_CONSTANTS}.group) or else
+					 a_group_node.text.same_string ({ER_XML_CONSTANTS}.split_button) or else
+					a_group_node.text.same_string ({ER_XML_CONSTANTS}.menu_group)
 		local
 			l_count, l_index: INTEGER
 			l_template: STRING
@@ -1135,7 +1214,9 @@ feature {NONE} -- Implementation
 			--
 		require
 			not_void: a_group_node /= void
-			valid: a_group_node.text.is_equal ({ER_XML_CONSTANTS}.group) or else a_group_node.text.same_string ({ER_XML_CONSTANTS}.split_button)
+			valid: a_group_node.text.is_equal ({ER_XML_CONSTANTS}.group) or else
+					 a_group_node.text.same_string ({ER_XML_CONSTANTS}.split_button) or else
+					a_group_node.text.same_string ({ER_XML_CONSTANTS}.menu_group)
 		local
 			l_count, l_index: INTEGER
 			l_template: STRING

@@ -12,7 +12,7 @@ inherit
 	$INDEX_2
 
 create
-	{EV_RIBBON_GROUP, EV_RIBBON_SPLIT_BUTTON} make_with_command_list
+	{EV_RIBBON_GROUP, EV_RIBBON_SPLIT_BUTTON, EV_RIBBON_APPLICATION_MENU_GROUP} make_with_command_list
 
 feature -- Query
 

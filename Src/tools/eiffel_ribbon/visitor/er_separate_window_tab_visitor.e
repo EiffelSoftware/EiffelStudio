@@ -209,33 +209,30 @@ feature {NONE} -- Implementation
 		require
 			not_void: a_application_menu /= Void
 			valid: a_application_menu.text.same_string ({ER_XML_CONSTANTS}.ribbon_application_menu)
+		local
+			l_iterator: INDEXABLE_ITERATION_CURSOR [EV_TREE_NODE]
+			l_item: EV_TREE_NODE
 		do
 			check a_application_menu.count = 1 end
 			if attached a_application_menu.i_th (1) as l_ribbon_menu then
 				a_application_menu.wipe_out
 
 				from
-					l_ribbon_menu.start
+					l_iterator := l_ribbon_menu.new_cursor
+					l_iterator.start
 				until
-					l_ribbon_menu.after
+					l_iterator.after
 				loop
-					if attached l_ribbon_menu.item.parent as l_parent then
-						l_parent.prune_all (l_ribbon_menu.item)
+					l_item := l_iterator.item
+					if attached l_item.parent as l_parent then
+						l_parent.prune_all (l_item)
 					end
-					if not l_ribbon_menu.after then
-						l_ribbon_menu.forth
+					a_application_menu.extend (l_item)
+					if not l_iterator.after then
+						l_iterator.forth
 					end
 				end
 
-				from
-					l_ribbon_menu.start
-				until
-					l_ribbon_menu.after
-				loop
-					a_application_menu.extend (l_ribbon_menu.item)
-
-					l_ribbon_menu.forth
-				end
 			end
 		end
 end

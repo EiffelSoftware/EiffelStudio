@@ -109,13 +109,32 @@ feature {NONE} -- Implementation
 			]"
 		end
 
-feature -- Interaction
+feature -- Debugger: interaction with run-time
 
-    rt_workbench_initialize_debugging (a_port_number: INTEGER): BOOLEAN
-            -- Initialize workbench debugging
+    rt_workbench_wait_for_debugger (a_port_number: INTEGER): BOOLEAN
+            -- Initialize workbench debugging using socket connection
+			-- used to launch the application, and then attach the debugger.
 		require
 			valid_port_number: a_port_number > 0
-		do
+		external
+			"C inline use %"eif_main.h%""
+		alias
+			"[
+			#ifdef WORKBENCH
+				if (!is_debug_mode() == 1) {
+					wdbg_initialize($a_port_number);
+					if (is_debug_mode() == 1) {
+						return EIF_TRUE;
+					} else {
+						return EIF_FALSE;
+					};
+				} else {
+					return EIF_FALSE;
+				}
+			#else
+				return EIF_FALSE;
+			#endif
+			]"
 		end
 
 note

@@ -727,8 +727,7 @@ feature {NONE} -- Implementation
 					set_font (private_font)
 						-- This will reset the minimum size of the control.
 				else
-						-- Reset the minimum size of the control as it may have resized with the style change.
-					set_default_minimum_size
+					set_default_font
 				end
 				if not sensitive then
 					disable_sensitive
@@ -772,6 +771,8 @@ feature {NONE} -- Implementation
 				create text_field.make_with_combo (Current)
 				if private_font /= Void then
 					set_font (private_font)
+				else
+					set_default_font
 				end
 				if not sensitive then
 					disable_sensitive

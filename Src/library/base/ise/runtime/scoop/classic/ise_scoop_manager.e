@@ -1172,9 +1172,7 @@ feature {NONE} -- Resource Initialization
 			"C inline use <eif_scoop.h>"
 		alias
 			"[
-			#ifdef WORKBENCH
 				eif_try_call ($data);
-			#endif
 			]"
 		end
 
@@ -1186,9 +1184,7 @@ feature {NONE} -- Resource Initialization
 			"C inline use <eif_scoop.h>"
 		alias
 			"[
-			#ifdef WORKBENCH
 				eif_free_call ($data);
-			#endif
 			]"
 		end
 

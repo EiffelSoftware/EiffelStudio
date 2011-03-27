@@ -45,9 +45,6 @@ doc:<file name="scoop.c" header="eif_scoop.h" version="$Id$" summary="SCOOP supp
 #include "rt_wbench.h"
 #include "rt_malloc.h"
 
-
-#ifdef WORKBENCH
-
 rt_public EIF_BOOLEAN eif_is_uncontrolled (EIF_SCP_PID c, EIF_SCP_PID s)
 {
 	EIF_TYPED_VALUE ou; 
@@ -56,6 +53,8 @@ rt_public EIF_BOOLEAN eif_is_uncontrolled (EIF_SCP_PID c, EIF_SCP_PID s)
 	RTS_TCB(scoop_task_check_uncontrolled,c,s,0,&ou,NULL);
 	return EIF_TEST (ou.item.b);
 }
+
+#ifdef WORKBENCH
 
 rt_public void eif_log_call (int s, int f, EIF_SCP_PID p, call_data * a)
 {
@@ -117,6 +116,23 @@ rt_public void eif_try_call (call_data * a)
 	}
 }
 
+#else
+
+rt_public void eif_log_call (EIF_SCP_PID p, call_data * a)
+{
+	EIF_REFERENCE t = eif_access (a -> target);
+
+	CHECK("Target attached", t);
+	RTS_TCB(scoop_task_add_call,p,RTS_PID(t),0,a,NULL);
+}
+ 
+rt_public void eif_try_call (call_data * a)
+{
+	a -> pattern (a);
+}
+
+#endif /* WORKBENCH */
+
 rt_public void eif_free_call (call_data * a)
 {
 	EIF_NATURAL_32    i;
@@ -134,8 +150,6 @@ rt_public void eif_free_call (call_data * a)
 		/* Free memory, allocated for `a'. */
 	eif_rt_xfree (a);
 }
-
-#endif
 
 /*
 doc:</file>

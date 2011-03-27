@@ -179,6 +179,7 @@ MT_FINAL_OBJECTS = \
 	$(INDIR)MTgen_conf.$obj \
 	$(INDIR)MTeif_type_id.$obj \
 	$(INDIR)MTrout_obj.$obj \
+	$(INDIR)MTscoop.$obj \
 	$(TOP)$(DIR)ipc$(DIR)shared$(DIR)MTshword.$obj \
 	$(TOP)$(DIR)console$(DIR)mtwinconsole.$lib
 
@@ -677,6 +678,9 @@ $(INDIR)MTeif_type_id.$obj: $(RTSRC)eif_type_id.c
 
 $(INDIR)MTrout_obj.$obj: $(RTSRC)rout_obj.c
 	$(CC) $(JMTCFLAGS) $(RTSRC)rout_obj.c
+
+$(INDIR)MTscoop.$obj: $(RTSRC)scoop.c
+	$(CC) $(JMTCFLAGS) $(RTSRC)scoop.c
 
 $(INDIR)MThash.$obj: $(RTSRC)hash.c
 	$(CC) $(JMTCFLAGS) $(RTSRC)hash.c

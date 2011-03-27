@@ -330,7 +330,7 @@ doc:	</attribute>
 #ifdef WORKBENCH
 rt_public void (*egc_scoop_manager_task_callback)(EIF_REFERENCE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE); /* {ISE_SCOOP_MANAGER}.scoop_manager_task_callback feature */
 #else
-rt_public void (*egc_scoop_manager_task_callback)(EIF_REFERENCE, EIF_NATURAL_8, EIF_INTEGER, EIF_INTEGER, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE); /* {ISE_SCOOP_MANAGER}.scoop_manager_task_callback feature */
+rt_public void (*egc_scoop_manager_task_callback)(EIF_REFERENCE, EIF_NATURAL_8, EIF_INTEGER, EIF_INTEGER, EIF_NATURAL_32, EIF_POINTER, EIF_POINTER); /* {ISE_SCOOP_MANAGER}.scoop_manager_task_callback feature */
 #endif
 /*
 doc:	<attribute name="egc_init_exception_manager" return_type="fnptr" export="public">

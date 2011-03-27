@@ -103,7 +103,7 @@ extern "C" {
 #ifdef WORKBENCH
 	RT_LNK void (*egc_scoop_manager_task_callback)(EIF_REFERENCE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE); /* ISE_SCOOP_MANAGER `scoop_task_manager_callback' feature */
 #else
-	RT_LNK void (*egc_scoop_manager_task_callback)(EIF_REFERENCE, EIF_NATURAL_8, EIF_INTEGER_32, EIF_INTEGER_32, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE); /* ISE_SCOOP_MANAGER `scoop_task_manager_callback' feature */
+	RT_LNK void (*egc_scoop_manager_task_callback)(EIF_REFERENCE, EIF_NATURAL_8, EIF_INTEGER_32, EIF_INTEGER_32, EIF_NATURAL_32, EIF_POINTER, EIF_POINTER); /* ISE_SCOOP_MANAGER `scoop_task_manager_callback' feature */
 #endif
 
 	RT_LNK void (*egc_correct_mismatch)(EIF_REFERENCE);	/* ANY `correct_mismatch' */

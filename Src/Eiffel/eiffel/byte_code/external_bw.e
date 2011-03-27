@@ -142,7 +142,7 @@ feature -- Code generation
 
 feature {NONE} -- Separate call
 
-	generate_separate_call (s: detachable REGISTER; r: detachable REGISTRABLE; t: REGISTRABLE)
+	generate_separate_call (s: REGISTER; r: detachable REGISTRABLE; t: REGISTRABLE)
 			-- <Precursor>
 		do
 			generate_separate_call_for_workbench (s, r, t, result_register)

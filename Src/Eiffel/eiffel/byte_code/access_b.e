@@ -376,7 +376,7 @@ feature -- C generation
 
 feature {NONE} -- C code generation: separate call
 
-	generate_separate_call (s: detachable REGISTER; r: detachable REGISTRABLE; t: REGISTRABLE)
+	generate_separate_call (s: REGISTER; r: detachable REGISTRABLE; t: REGISTRABLE)
 			-- Generate a call on target register `t' using register `s' to pass arguments
 			-- and storing result (if any) in `r'.
 		do

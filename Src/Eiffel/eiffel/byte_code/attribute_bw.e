@@ -147,7 +147,7 @@ feature {NONE} -- Separate call
 			Result := [["ERROR", "ERROR"], ["RTS_CF", "RTS_CFP"], ["ERROR", "ERROR"]]
 		end
 
-	generate_separate_call (s: detachable REGISTER; r: detachable REGISTRABLE; t: REGISTRABLE)
+	generate_separate_call (s: REGISTER; r: detachable REGISTRABLE; t: REGISTRABLE)
 			-- <Precursor>
 		local
 			buf: like buffer

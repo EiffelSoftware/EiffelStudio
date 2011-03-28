@@ -116,8 +116,8 @@ feature
 			is_initialization_required: BOOLEAN
 			p: like parent
 		do
-			if context_type.is_separate then
-					-- Wrap a separate call.
+			if context.workbench_mode and then context_type.is_separate then
+					-- Wrap a separate call in workbench mode.
 				is_initialization_required := True
 			elseif not is_attachment and then not type.is_basic then
 					-- No need to wrap a target of an attachment as well as

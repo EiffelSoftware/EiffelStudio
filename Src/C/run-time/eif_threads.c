@@ -335,7 +335,10 @@ rt_shared void eif_thread_cleanup (void)
 		 * does not go through `eif_thr_exit'. See `eif_thr_exit' for explanation. */
 	if (eif_thr_context->children_mutex) {
 		EIF_ASYNC_SAFE_MUTEX_LOCK(eif_thr_context->children_mutex);
-		if (eif_thr_context->n_children == 0) destroy_mutex = 1; /* No children are alive */
+		if (eif_thr_context->n_children == 0) {
+				/* No children are alive */
+			destroy_mutex = 1;
+		}
 		EIF_ASYNC_SAFE_MUTEX_UNLOCK(eif_thr_context->children_mutex);
 	}
 	if (destroy_mutex) {
@@ -414,8 +417,10 @@ rt_public void eif_thr_register(int is_external)
 				 */
 				EIF_once_values = (EIF_once_value_t *) eif_realloc (EIF_once_values, EIF_once_count * sizeof *EIF_once_values);
 					/* needs malloc; crashes otherwise on some pure C-ansi compiler (SGI)*/
-				if (EIF_once_values == (EIF_once_value_t *) 0) /* Out of memory */
+				if (EIF_once_values == (EIF_once_value_t *) 0) {
+						/* Out of memory */
 					enomem();
+				}
 				memset ((EIF_REFERENCE) EIF_once_values, 0, EIF_once_count * sizeof *EIF_once_values);
 			}
 		} else {
@@ -809,33 +814,37 @@ rt_private void eif_thr_entry (void *arg)
 		eif_thr_context = routine_ctxt;
 		initsig();
 		initstk();
-		if (egc_prof_enabled)
+		if (egc_prof_enabled) {
 			initprf();
+		}
 		exvect = new_exset((char *) 0, 0, (char *) 0, 0, 0, 0);
 		exvect->ex_jbuf = &exenv;
 
 #ifdef _CRAY
-		if (setjmp(exenv))
+		if (setjmp(exenv)) {
 			failure();
+		}
 #else
-		if ((echval = setjmp(exenv)))
+		if ((echval = setjmp(exenv))) {
 			failure();
+		}
 #endif
 
 #ifdef WORKBENCH
 		xinitint();
 			/* Call the `execute' routine of the thread */
 		dnotify_create_thread(eif_thr_context->thread_id);
-		if (eif_thr_context->is_processor == EIF_TRUE)
-				dnotify_register_scoop_processor (eif_thr_context->thread_id, eif_thr_context->logical_id);
-
+		if (eif_thr_context->is_processor == EIF_TRUE) {
+			dnotify_register_scoop_processor (eif_thr_context->thread_id, eif_thr_context->logical_id);
+		}
 #endif
 		init_emnger(); /* Initialize objects hold by exception manager */
-		if (eif_thr_context->logical_id != -1)
+		if (eif_thr_context->logical_id != -1) {
 				// A logical ID has been set so pass to Eiffel thread init callback.
 			(FUNCTION_CAST(void,(EIF_REFERENCE, EIF_INTEGER_32)) eif_thr_context->routine)(eif_access(routine_ctxt->current), eif_thr_context->logical_id);
-		else
+		} else {
 			(FUNCTION_CAST(void,(EIF_REFERENCE)) eif_thr_context->routine)(eif_access(routine_ctxt->current));
+		}
 
 		exok();
 	}
@@ -881,8 +890,7 @@ rt_public void eif_thr_exit(void)
 
 		if (l_has_parent_thread) {
 
-			if (eif_thr_context->is_processor == EIF_FALSE)
-			{
+			if (eif_thr_context->is_processor == EIF_FALSE) {
 				// Set {THREAD}.terminated to True, not applicable to SCOOP Processors.
 
 				offset = eifaddr_offset (eif_access(eif_thr_context->current), "terminated", &ret);
@@ -986,10 +994,12 @@ rt_public void eif_thr_exit(void)
 		 */
 
 
-		if (taskVarDelete(0,(int *)&(eif_global_key))) 
-		  eif_thr_panic("Problem with taskVarDelete\n");
-		if (taskVarDelete(0,(int *)&(rt_global_key))) 
-		  eif_thr_panic("Problem with taskVarDelete\n");
+		if (taskVarDelete(0,(int *)&(eif_global_key))) {
+			eif_thr_panic("Problem with taskVarDelete\n");
+		}
+		if (taskVarDelete(0,(int *)&(rt_global_key))) {
+			eif_thr_panic("Problem with taskVarDelete\n");
+		}
 #endif	/* VXWORKS */
 
 
@@ -1140,8 +1150,9 @@ rt_private void remove_data_from_gc (struct stack_list *st_list, void *st)
 
 		/* Linear search to find `st' in `threads_stack' */
 	while (i < count) {
-		if (stack[i] == st)
+		if (stack[i] == st) {
 			break;
+		}
 		i = i + 1;
 	}
 

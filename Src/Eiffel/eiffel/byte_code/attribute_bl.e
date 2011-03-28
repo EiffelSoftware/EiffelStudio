@@ -1,7 +1,7 @@
 note
+	description: "Enlarged access to an Eiffel attribute."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
--- Enlarged access to an Eiffel attribute
 
 class ATTRIBUTE_BL
 
@@ -9,7 +9,7 @@ inherit
 	ATTRIBUTE_B
 		redefine
 			free_register,
-			basic_register, generate_access_on_type,
+			basic_register, generate_access_on_type, generate_separate_call,
 			is_polymorphic, generate_on, generate_access,
 			analyze_on, analyze, set_parent, parent, set_register, register
 		end
@@ -219,8 +219,61 @@ end
 			is_attachment := a.is_attachment
 		end
 
+feature {NONE} -- Separate call
+
+	generate_separate_call (s: REGISTER; r: detachable REGISTRABLE; t: REGISTRABLE)
+			-- <Precursor>
+		local
+			buf: GENERATION_BUFFER
+			array_index: INTEGER_32
+			target_type: TYPE_A
+			name: STRING
+		do
+			buf := buffer
+			buf.put_new_line
+			buf.put_string ("RTS_CA (")
+			target_type := context_type
+			array_index := Eiffel_table.is_polymorphic (routine_id, target_type, Context.context_class_type, True)
+			if array_index >= 0 then
+					-- The access is polymorphic, which means the offset
+					-- is not a constant and has to be computed.
+				name := Encoder.attribute_table_name (routine_id)
+					-- Generate following dispatch:
+					-- table [Actual_offset - base_offset]
+				buf.put_string (name)
+				buf.put_character ('[')
+				buf.put_string ({C_CONST}.dtype);
+				buf.put_character ('(')
+				t.print_register
+				buf.put_character (')')
+				buf.put_character ('-')
+				buf.put_integer (array_index)
+				buf.put_character (']')
+					-- Mark attribute offset table used.
+				Eiffel_table.mark_used (routine_id)
+					-- Remember external attribute offset declaration
+				Extern_declarations.add_attribute_table (name)
+			else
+					-- Hardwire the offset
+				check
+					attached {ATTR_TABLE [ATTR_ENTRY]} eiffel_table.poly_table (routine_id) as attr_table
+				then
+					attr_table.generate_attribute_offset (buf, target_type, context.context_class_type)
+				end
+			end
+			buf.put_two_character (',', ' ')
+			system.separate_patterns.put (Current)
+			buf.put_two_character (',', ' ')
+			t.print_register
+			buf.put_two_character (',', ' ')
+			s.print_register
+			buf.put_two_character (',', ' ')
+			r.print_register
+			buf.put_two_character (')', ';')
+		end
+
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

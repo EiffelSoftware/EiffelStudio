@@ -43,30 +43,33 @@ feature
 			-- Add objects specific to final C code
 			-- generation
 		local
-			file_name: STRING;
-			i, nb: INTEGER;
+			file_name: STRING
+			i, nb: INTEGER
 		do
 			if system.keep_assertions then
-				add_in_primary_system_basket (Eoption);
+				add_in_primary_system_basket (Eoption)
 			end
-			add_in_primary_system_basket (Eref);
-			add_in_primary_system_basket (Epoly);
-			add_in_primary_system_basket (Esize);
+			if system.is_scoop then
+				add_in_primary_system_basket (Epattern)
+			end
+			add_in_primary_system_basket (Eref)
+			add_in_primary_system_basket (Epoly)
+			add_in_primary_system_basket (Esize)
 
 				-- Routine tables.
 			from
-				i := 1;
-				nb := Rout_generator.file_counter - 1;
+				i := 1
+				nb := Rout_generator.file_counter - 1
 			until
 				i > nb
 			loop
-				create file_name.make (16);
-				file_name.append (Epoly);
-				file_name.append_integer (i);
-				add_in_system_basket(file_name, i // System_packet_number + 2);
-				i := i + 1;
-			end;
-		end;
+				create file_name.make (16)
+				file_name.append (Epoly)
+				file_name.append_integer (i)
+				add_in_system_basket(file_name, i // System_packet_number + 2)
+				i := i + 1
+			end
+		end
 
 	add_cecil_objects
 		local
@@ -251,7 +254,7 @@ feature
 		end;
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -15,7 +15,7 @@ inherit
 			register, analyze_on, set_register,
 			is_feature_call, generate_special_feature, set_parent,
 			generate_parameters_list, generate_access_on_type,
-			call_kind, set_call_kind
+			call_kind, set_call_kind, generate_separate_call
 		redefine
 			parent, is_feature_special, generate_end,
 			generate_metamorphose_end, analyze
@@ -164,7 +164,7 @@ feature -- Code generation
 			generate_end (gen_reg, class_type)
 		end
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

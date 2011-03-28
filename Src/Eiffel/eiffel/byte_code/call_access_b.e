@@ -13,13 +13,16 @@ inherit
 		redefine
 			enlarged,
 			enlarged_on,
-			generate_parameters
+			generate_parameters,
+			generate_separate_call
 		end
 
 	SHARED_NAMES_HEAP
 		export
 			{NONE} all
 		end
+
+	SHARED_DECLARATIONS
 
 	DEBUG_OUTPUT
 		export
@@ -301,7 +304,13 @@ feature -- Byte code generation
 									class_type, basic_type, buf)
 				end
 			else
-				class_type ?= type_i;	-- Cannot fail
+				check attached {CL_TYPE_A} type_i as c then
+					class_type := c
+				end
+					-- Use regular class rather than separate one that is handled differently.
+				if class_type.is_separate then
+					class_type := class_type.as_non_separate
+				end
 				generate_end (reg, class_type)
 			end
 		end
@@ -527,7 +536,7 @@ feature {NONE} -- Separate call
 			Result := [["ERROR", "ERROR"], ["RTS_CP", "RTS_CPP"], ["RTS_CC", "RTS_CCP"]]
 		end
 
-	generate_separate_call_for_workbench (s: detachable REGISTER; r: detachable REGISTRABLE; t: REGISTRABLE; result_register: REGISTER)
+	generate_separate_call_for_workbench (s: REGISTER; r: detachable REGISTRABLE; t: REGISTRABLE; result_register: REGISTER)
 			-- <Precursor>
 		local
 			buf: like buffer
@@ -551,6 +560,81 @@ feature {NONE} -- Separate call
 				end
 				buf.put_character (';')
 			end
+		end
+
+	generate_separate_call (s: REGISTER; r: detachable REGISTRABLE; t: REGISTRABLE)
+			-- <Precursor>
+		local
+			buf: GENERATION_BUFFER
+			array_index: INTEGER_32
+			target_type: TYPE_A
+			rout_table: ROUT_TABLE
+			name: STRING
+		do
+			buf := buffer
+			buf.put_new_line
+			if attached r then
+				buf.put_string ("RTS_CF (")
+			elseif call_kind = call_kind_creation then
+				buf.put_string ("RTS_CC (")
+			else
+				buf.put_string ("RTS_CP (")
+			end
+			target_type := context_type
+			array_index := Eiffel_table.is_polymorphic (routine_id, target_type, Context.context_class_type, True)
+			if array_index = -2 then
+					-- Call to a deferred feature without implementation
+				buf.put_string ("NULL")
+			elseif precursor_type = Void and then array_index >= 0 then
+					-- The call is polymorphic, so generate access to the
+					-- routine table.
+				name := Encoder.routine_table_name (routine_id)
+					-- Generate following dispatch:
+					-- table [Actual_offset - base_offset]
+				buf.put_string (name)
+				buf.put_character ('[')
+				buf.put_string ({C_CONST}.dtype);
+				buf.put_character ('(')
+				t.print_register
+				buf.put_two_character (')', '-')
+				buf.put_integer (array_index)
+				buf.put_character (']')
+					-- Mark routine id used
+				Eiffel_table.mark_used (routine_id)
+					-- Remember extern declaration
+				Extern_declarations.add_routine_table (name)
+			else
+					-- The call is not polymorphic in the given context,
+					-- so the name can be hardwired, unless we access a
+					-- deferred feature in which case we have to be careful
+					-- and get the routine name of the first entry in the
+					-- routine table.
+				rout_table ?= Eiffel_table.poly_table (routine_id)
+				rout_table.goto_implemented (target_type, context.context_class_type)
+				if rout_table.is_implemented then
+					name := rout_table.feature_name
+					if rout_table.item.access_type_id /= Context.original_class_type.type_id then
+							-- Remember extern routine declaration
+						Extern_declarations.add_routine_with_signature (real_type (type).c_type.c_string,
+								name, argument_types)
+					end
+					buf.put_string (name)
+				else
+						-- Call to a deferred feature without implementation
+					buf.put_string ("NULL")
+				end
+			end
+			buf.put_two_character (',', ' ')
+			system.separate_patterns.put (Current)
+			buf.put_two_character (',', ' ')
+			t.print_register
+			buf.put_two_character (',', ' ')
+			s.print_register
+			if attached r then
+				buf.put_two_character (',', ' ')
+				r.print_register
+			end
+			buf.put_two_character (')', ';')
 		end
 
 feature {NONE} -- Debug

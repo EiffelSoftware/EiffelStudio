@@ -19,8 +19,9 @@ inherit
 			generate_special_feature,
 			generate_access,
 			generate_access_on_type,
-			generate_parameters_list,
 			generate_end,
+			generate_parameters_list,
+			generate_separate_call,
 			basic_register,
 			is_feature_call,
 			analyze,
@@ -328,7 +329,7 @@ feature {NONE} --Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

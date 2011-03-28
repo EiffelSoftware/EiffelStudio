@@ -126,6 +126,7 @@ feature {NONE} -- Initialization
 
 				-- Pattern table creation
 			create pattern_table.make
+			create separate_patterns.make
 
 				-- Freeze control sets creation
 			create degree_minus_1.make
@@ -234,6 +235,9 @@ feature -- Properties
 
 	pattern_table: PATTERN_TABLE
 			-- Pattern table
+
+	separate_patterns: SEPARATE_PATTERNS
+			-- Patterns for separate feature calls
 
 	address_table: ADDRESS_TABLE
 			-- Generate encapsulation of function pointers ($ operator)
@@ -3906,6 +3910,9 @@ feature -- Generation
 				generate_option_file (False)
 			end
 
+				-- Generate stubs to perform separate calls.
+			separate_patterns.generate
+
 				-- Generation of type size table
 			deg_output.put_degree_output (degree_message, 1, 10)
 			generate_size_table
@@ -6282,7 +6289,7 @@ feature {NONE} -- External features
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

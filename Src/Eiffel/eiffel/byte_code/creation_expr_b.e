@@ -76,8 +76,13 @@ feature -- C code generation
 						-- 3 - if we cannot get the type of the creation, we do it the normal way.
 						-- 4 - if empty and it is {SPECIAL}.make we do the normal way.
 					l_type := info.type_to_create
-					if l_type = Void or else not l_type.has_associated_class or else l_type.associated_class.assertion_level.is_invariant then
-							-- Type is not fixed or class invariant should be checked.
+					if
+						l_type = Void or else
+						not l_type.has_associated_class or else
+						l_type.associated_class.assertion_level.is_invariant or else
+						l_type.is_separate
+					then
+							-- Type is not fixed, is separate or class invariant should be checked.
 							-- The latter is done inside the creation procedure.
 						Result.set_call (call.enlarged_on (context.real_type (type)))
 					elseif not l_type.associated_class.feature_of_rout_id (call.routine_id).is_empty then
@@ -407,7 +412,7 @@ feature {NONE} -- Separate feature call
 			-- Register to store data to be passed to the scheduler
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

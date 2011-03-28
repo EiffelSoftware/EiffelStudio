@@ -47,7 +47,7 @@ feature -- Access
 			-- Only cursors are used in the class STONE.
 
 
-feature -- Token type status Report
+feature -- Token Type Status Report
 
 	is_blank: BOOLEAN
 			-- Is this a blank token?
@@ -76,7 +76,19 @@ feature -- Token type status Report
 		do
 		end
 
+	may_contain_tabulation: BOOLEAN
+			-- May `Current' contain tabulation marks?
+		do
+			Result := True
+		end
+
 feature -- Status report
+
+	frozen has_tabulation: BOOLEAN
+			-- Does `Current' contain tabs?
+		do
+			Result := may_contain_tabulation and then wide_image.has ('%T')
+		end
 
 	is_selectable: BOOLEAN
 			-- Is this token part of a group of selectable tokens?

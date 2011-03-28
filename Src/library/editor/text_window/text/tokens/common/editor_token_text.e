@@ -46,23 +46,22 @@ feature -- Miscellaneous
 		local
 			i, l_font_width, l_tab_position, l_tab_width: INTEGER
 			l_string: STRING_32
-			l_is_fixed: BOOLEAN
+--			l_is_fixed: BOOLEAN
 		do
 			if n = 0 then
 				Result := 0
 			else
 					-- It seems width of Unicode chars can not be fixed width.
 				-- l_is_fixed := is_fixed_width
-				l_is_fixed := False
-				if wide_image.has ('%T') then
+				if has_tabulation then
 					if attached previous as l_previous and then not l_previous.is_margin_token then
 						l_tab_position := l_previous.position + l_previous.width
 					end
 					from
 						i := 1
-						if l_is_fixed then
-							l_font_width := font_width
-						end
+--						if l_is_fixed then
+--							l_font_width := font_width
+--						end
 						create l_string.make_filled (' ', 1)
 						l_tab_width := tabulation_width
 					until
@@ -71,21 +70,25 @@ feature -- Miscellaneous
 						if wide_image @ i = '%T' then
 							Result := ((((l_tab_position + Result) // l_tab_width) + 1 ) * l_tab_width ) - l_tab_position
 						else
-							if l_is_fixed then
-								Result := Result + l_font_width
-							else
+--							if l_is_fixed then
+--								Result := Result + l_font_width
+--							else
 								l_string.put (wide_image.item (i), 1)
 								Result := Result + font.string_width (l_string)
-							end
+--							end
 						end
 						i := i + 1
 					end
 				else
-					if l_is_fixed then
-						Result := Result + (n.min (wide_image.count) * font_width)
-					else
-						Result := font.string_width (wide_image.substring (1, n.min (wide_image.count)))
-					end
+--					if l_is_fixed then
+--						Result := Result + (n.min (wide_image.count) * font_width)
+--					else
+						if n >= wide_image.count then
+							Result := font.string_width (wide_image)
+						else
+							Result := font.string_width (wide_image.substring (1, n))
+						end
+--					end
 				end
 			end
 		end
@@ -331,7 +334,7 @@ feature {NONE} -- Implementation
 		local
 			text_to_be_drawn: STRING_32
 		do
-			if wide_image.has ('%T') then
+			if has_tabulation then
 				text_to_be_drawn := expanded_image_substring (1, wide_image.count)
 			else
 				text_to_be_drawn := wide_image
@@ -354,7 +357,7 @@ feature {NONE} -- Implementation
 		local
 			text_to_be_drawn: STRING_32
 		do
-			if wide_image.has ('%T') then
+			if has_tabulation then
 				text_to_be_drawn := expanded_image_substring (1, wide_image.count)
 			else
 				text_to_be_drawn := wide_image
@@ -378,6 +381,7 @@ feature {NONE} -- Implementation
 	expanded_image_substring (n1, n2: INTEGER): STRING_32
 		local
 			sz, i, j: INTEGER
+			l_tab_width: INTEGER
 		do
 			create Result.make (n2 - n1 + 1)
 			from
@@ -386,7 +390,10 @@ feature {NONE} -- Implementation
 				i > n2
 			loop
 				if wide_image @ i = '%T' then
-					sz := (get_substring_width (i) -  get_substring_width (i - 1)) // font.string_width(" ")
+					if l_tab_width = 0 then
+						l_tab_width := font.string_width (once " ")
+					end
+					sz := (get_substring_width (i) -  get_substring_width (i - 1)) // l_tab_width
 					from
 						j := 1
 					until
@@ -409,7 +416,7 @@ feature {NONE} -- Implementation
 			if is_fixed_width then
 				Result := editor_preferences.tabulation_spaces * font_width
 			else
-				Result := editor_preferences.tabulation_spaces * font.string_width(" ")
+				Result := editor_preferences.tabulation_spaces * font.string_width(once " ")
 			end
 		end
 

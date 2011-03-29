@@ -19,6 +19,7 @@
 		<library name="encryption" location=".\lib\eel\eel-safe.ecf"/>
 		<library name="matcher" location="$ISE_LIBRARY\library\text\regexp\kmp_matcher\kmp_matcher-safe.ecf"/>
 		<library name="process" location="$ISE_LIBRARY\library\process\process-safe.ecf"/>
+		<library name="sqlite3" location="$EIFFEL_SRC\framework\sqlite3\sqlite-safe.ecf"/>
 		<library name="svn" location="$EIFFEL_SRC\contrib\library\svn\svn-safe.ecf" readonly="false">
 			<option debug="false">
 				<debug name="svn_engine" enabled="true"/>

@@ -256,6 +256,87 @@ feature -- Diff
 
 feature -- Persistence
 
+	export_to_sqlite
+		local
+			db: detachable SQLITE_DATABASE
+			f: RAW_FILE
+			l_modify: SQLITE_MODIFY_STATEMENT
+			l_insert: SQLITE_INSERT_STATEMENT
+--			l_query: SQLITE_QUERY_STATEMENT
+			using_transaction: BOOLEAN
+			fn: FILE_NAME
+			retried: BOOLEAN
+		do
+			using_transaction := True
+
+			if not retried then
+				debug ("CTR")
+					print ("export_to_sqlite: " + uuid.out + "%N")
+				end
+				create fn.make_from_string (common_data_folder)
+				fn.extend ("db")
+				fn.set_file_name (uuid.out)
+				fn.add_extension ("sqlite")
+				create f.make (fn.string)
+				if f.exists then
+					create db.make_open_read_write (f.name)
+				else
+					create db.make_create_read_write (f.name)
+				end
+
+					-- Remove any existing table
+				create l_modify.make ("DROP TABLE IF EXISTS logs;", db)
+				l_modify.execute
+
+					-- Create a new table
+				create l_modify.make ("CREATE TABLE logs (Id TEXT PRIMARY KEY, Author TEXT, Message TEXT, Date TEXT);", db)
+				l_modify.execute
+
+				if using_transaction then
+					db.begin_transaction (False) --| FIXME: Crash when using "False"
+				end
+
+				create l_insert.make ("INSERT INTO logs (Id,Author,Message,Date) VALUES (?1, ?2, ?3, ?4);", db)
+				check l_insert_is_compiled: l_insert.is_compiled end
+
+				if attached logs as l_logs then
+					from
+						l_logs.start
+					until
+						l_logs.after
+					loop
+						if attached l_logs.item_for_iteration as l_log then
+							l_insert.execute_with_arguments ([
+									l_log.id,
+									l_log.author,
+									l_log.message,
+									l_log.date
+								])
+						end
+						l_logs.forth
+					end
+				end
+
+				if using_transaction then
+					db.commit
+				end
+				db.close
+			else
+				if attached db as l_db and then not db.is_closed then
+					if using_transaction then
+						db.rollback
+					end
+					db.close
+				end
+			end
+		rescue
+			debug ("CTR")
+				print ("ERROR during export_to_sqlite%N")
+			end
+			retried := True
+			retry
+		end
+
 	save_unread_logs
 		do
 			storage.store_unread_logs (Current)

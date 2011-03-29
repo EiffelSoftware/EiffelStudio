@@ -33,7 +33,8 @@ create
 	make_item_image,
 	make_representative_string,
 	make_tooltip_title,
-	make_tooltip_description
+	make_tooltip_description,
+	make_recent_items
 
 feature {NONE}  -- Initialization
 
@@ -143,6 +144,12 @@ feature {NONE}  -- Initialization
 			-- Make a tooltip description key
 		do
 			share_from_pointer (c_ui_pkey_tooltip_description)
+		end
+
+	make_recent_items
+			-- Make a recent items key
+		do
+			share_from_pointer (c_ui_pkey_recent_items)
 		end
 
 feature -- Access
@@ -284,6 +291,15 @@ feature -- Status Report
 			l_tmp: EV_PROPERTY_KEY
 		do
 			create l_tmp.make_tooltip_description
+			Result := l_tmp.guid.is_equal (guid)
+		end
+
+	is_recent_items: BOOLEAN
+			-- Is current recent items key?
+		local
+			l_tmp: EV_PROPERTY_KEY
+		do
+			create l_tmp.make_recent_items
 			Result := l_tmp.guid.is_equal (guid)
 		end
 
@@ -517,6 +533,18 @@ feature {NONE} -- Externals
 			"[
 			{
 				return &UI_PKEY_TooltipDescription;
+			}
+			]"
+		end
+
+	c_ui_pkey_recent_items: POINTER
+			--
+		external
+			"C inline use %"UIRibbon.h%""
+		alias
+			"[
+			{
+				return &UI_PKEY_RecentItems;
 			}
 			]"
 		end

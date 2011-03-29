@@ -2602,6 +2602,7 @@ test	scoop-separate-like-current			scoop005 tcf pass scoop execution
 test	scoop-result-validity				scoop006 tcf pass scoop validity expanded
 test	scoop-external-call				scoop007 tcf pass scoop execution
 test	scoop-freeze-condition				scoop008 tcf pass scoop execution incrementality
+test	scoop-wait-condition				scoop009 tcf pass scoop execution assertion
 
 -- Testing facility
 test	testing-with-error		testing001 tcf pass testing

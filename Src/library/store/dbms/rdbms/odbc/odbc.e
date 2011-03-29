@@ -20,6 +20,7 @@ inherit
 			hide_qualifier,
 			pre_immediate,
 			sql_adapt_db,
+			sql_adapt_db_32,
 			Max_char_size,
 			support_proc,
 			store_proc_not_supported,
@@ -368,6 +369,12 @@ feature -- For DATABASE_PROC
 			Result := sql
 		end
 
+	sql_adapt_db_32 (sql: STRING_32): STRING_32
+		do
+			sql.replace_substring_all ({STRING_32}":", {STRING_32}"@")
+			Result := sql
+		end
+
 	store_proc_not_supported
 		local
 			driver_name: STRING
@@ -437,25 +444,25 @@ feature -- For DATABASE_PROC
 
 	map_var_between: STRING = "@"
 
-	map_var_name (par_name: STRING): STRING
+	map_var_name_32 (par_name: READABLE_STRING_GENERAL): STRING_32
 			-- Map variable string for late bound stored procedure execution
 		once
-			Result := "?"
+			Result := {STRING_32}"?"
 		end
 
-	Select_text (proc_name: STRING): STRING
+	Select_text_32 (proc_name: READABLE_STRING_GENERAL): STRING_32
 			--
 		do
-			Result := "SELECT ROUTINE_DEFINITION FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_NAME = '" +
-				proc_name + "' ORDER BY ROUTINE_NAME"
+			Result := {STRING_32}"SELECT ROUTINE_DEFINITION FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_NAME = '" +
+				proc_name.as_string_32 + {STRING_32}"' ORDER BY ROUTINE_NAME"
 		end
 
-	Select_exists (name: STRING): STRING
+	Select_exists_32 (name: READABLE_STRING_GENERAL): STRING_32
 		do
 			create Result.make (10)
-			Result.append ("SQLProcedures (")
-			Result.append (name)
-			Result.extend (')')
+			Result.append ({STRING_32}"SQLProcedures (")
+			Result.append (name.as_string_32)
+			Result.extend ({CHARACTER_32}')')
 		end
 
 feature -- For DATABASE_REPOSITORY
@@ -635,7 +642,6 @@ feature -- External
 	put_data_32 (no_descriptor: INTEGER; index: INTEGER; ar: STRING_32; max_len:INTEGER): INTEGER
 		local
 			l_sql_string: SQL_STRING
-			i: INTEGER
 			l_data, l_null: POINTER
 		do
 			Result := odbc_put_data (no_descriptor, index, $l_data) // {SQL_STRING}.character_size
@@ -1187,10 +1193,10 @@ feature {NONE} -- External features
 		require
 			s_not_void: s /= Void
 		do
-			Result := s.count > 2 and then s.code (1) = ('0').code and then s.code (2) = ('x').code
+			Result := s.count > 2 and then s.code (1) = ('0').natural_32_code and then s.code (2) = ('x').natural_32_code
 		ensure
 			result_condition:
-				Result implies (s.count > 2 and then s.code (1) = ('0').code and then s.code (2) = ('x').code)
+				Result implies (s.count > 2 and then s.code (1) = ('0').natural_32_code and then s.code (2) = ('x').natural_32_code)
 		end
 
 	para: detachable DB_PARA_ODBC
@@ -1251,10 +1257,10 @@ feature {NONE} -- External features
 					elseif obj_is_integer (l_any) then
 						type := c_integer_type
 						if attached {INTEGER_REF} l_any as l_val_int then
-							create l_managed_pointer.make (l_platform.integer_bytes)
+							create l_managed_pointer.make (l_platform.integer_32_bytes)
 							l_managed_pointer.put_integer_32 (l_val_int.item, 0)
 							pointers.extend (l_managed_pointer.item)
-							l_value_count := l_platform.integer_bytes
+							l_value_count := l_platform.integer_32_bytes
 						else
 							check False end -- implied by `obj_is_integer (l_any)'
 						end
@@ -1272,30 +1278,30 @@ feature {NONE} -- External features
 					elseif obj_is_double (l_any) then
 						type := c_float_type
 						if attached {DOUBLE_REF} l_any as l_val_double then
-							create l_managed_pointer.make (l_platform.double_bytes)
+							create l_managed_pointer.make (l_platform.real_64_bytes)
 							l_managed_pointer.put_real_64 (l_val_double.item, 0)
 							pointers.extend (l_managed_pointer.item)
-							l_value_count := l_platform.double_bytes
+							l_value_count := l_platform.real_64_bytes
 						else
 							check False end -- implied by `obj_is_double (l_any)'
 						end
 					elseif obj_is_real (l_any) then
 						type := c_real_type
 						if attached {REAL_REF} l_any as l_val_real then
-							create l_managed_pointer.make (l_platform.real_bytes)
+							create l_managed_pointer.make (l_platform.real_32_bytes)
 							l_managed_pointer.put_real_32 (l_val_real.item, 0)
 							pointers.extend (l_managed_pointer.item)
-							l_value_count := l_platform.real_bytes
+							l_value_count := l_platform.real_32_bytes
 						else
 							check False end -- implied by `obj_is_real (l_any)'
 						end
 					elseif obj_is_character (l_any) then
 						type := c_character_type
 						if attached {CHARACTER_REF} l_any as l_val_char then
-							create l_managed_pointer.make (l_platform.character_bytes)
+							create l_managed_pointer.make (l_platform.character_8_bytes)
 							l_managed_pointer.put_character (l_val_char.item, 0)
 							pointers.extend (l_managed_pointer.item)
-							l_value_count := l_platform.character_bytes
+							l_value_count := l_platform.character_8_bytes
 						else
 							check False end -- implied by `obj_is_character (l_any)'
 						end

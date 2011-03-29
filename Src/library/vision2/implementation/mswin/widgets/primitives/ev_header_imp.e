@@ -136,14 +136,25 @@ feature -- Initialization
 
 	make
 			-- Initialize `Current'.
+		local
+			l_rect: WEL_RECT
 		do
 			wel_make (default_parent, 0, 0, 0, 0, 0)
 			create ev_children.make (2)
 			initialize_pixmaps
 			Precursor {EV_ITEM_LIST_IMP}
-			set_default_font
+
 			disable_tabable_from
 			disable_tabable_to
+
+			set_default_font
+
+			create l_rect.make (0, 0, 0, 0)
+
+			retrieve_and_set_windows_pos (l_rect)
+
+
+
 			Precursor {EV_PRIMITIVE_IMP}
 		end
 

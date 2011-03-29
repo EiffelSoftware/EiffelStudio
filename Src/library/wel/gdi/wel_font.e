@@ -248,20 +248,21 @@ feature -- Access
 			optimize_for_short_strings: BOOLEAN
 			standard_result: like string_size
 		do
-			if a_string.is_empty then
+			if a_string.count = 0 then
 				cur_width := 0
 				cur_height := 0
 			else
 				wel_string.set_string (a_string)
 				pointer := wel_string.item
-				create screen_dc
+				screen_dc := reusable_screen_dc
 				screen_dc.get
 				screen_dc.select_font (Current)
 				count := wel_string.count
 
-					-- Create a text metric structure from `screen_dc' providing information
+					-- Initialize a text metric structure from `screen_dc' providing information
 					-- regarding selected font.
-				create text_metric.make (screen_dc)
+				text_metric := reusable_text_metric
+				text_metric.set_from_dc (screen_dc)
 					-- We only need to perform the accurate calculations for true type fonts.
 					-- If a font is not truetype, we can simply use `string_size'.
 				if flag_set (text_metric.pitch_and_family, tmpf_truetype) then
@@ -275,7 +276,7 @@ feature -- Access
 						-- apparent. This value should not be changed without proper testing. Julian
 					optimize_for_short_strings := count < 48
 
-					create abc_struct.make
+					abc_struct := reusable_abc_struct
 					abc_struct_size := abc_struct.structure_size
 					if not optimize_for_short_strings then
 							-- If we are dealing with a large string, we retrieve
@@ -336,10 +337,6 @@ feature -- Access
 					cur_width := cur_width.max (current_width)
 					greatest_c := greatest_c.max (current_width - current_c)
 					greatest_c := cur_width - greatest_c
-
-
-					screen_dc.unselect_font
-					screen_dc.quick_release
 				else
 						-- We are not dealing with a true type font, so
 						-- use `string_size' to return the best approximation.
@@ -348,8 +345,14 @@ feature -- Access
 					cur_width := standard_result.width
 					cur_height := standard_result.height
 				end
+				screen_dc.unselect_font
+				screen_dc.quick_release
 			end
-			Result := [cur_width, cur_height, greatest_a, greatest_c]
+			Result := reusable_string_size_extended_tuple
+			Result.width := cur_width
+			Result.height := cur_height
+			Result.leading_overhang := greatest_a
+			Result.trailing_overhang := greatest_c
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -363,13 +366,12 @@ feature -- Access
 			cur_width, cur_height: INTEGER
 			screen_dc: WEL_SCREEN_DC
 		do
-			if a_string.is_empty then
+			if a_string.count = 0 then
 				cur_width := 0
 				cur_height := 0
 			else
-
 				wel_rect.set_rect (0, 0, 32767, 32767)
-				create screen_dc
+				screen_dc := reusable_screen_dc
 				screen_dc.get
 				screen_dc.select_font (Current)
 
@@ -380,8 +382,41 @@ feature -- Access
 				screen_dc.unselect_font
 				screen_dc.quick_release
 			end
+			Result := reusable_string_size_tuple
+			Result.width := cur_width
+			Result.height := cur_height
+		end
 
-			Result := [cur_width, cur_height]
+feature {NONE} -- Implementation (String Size Optimization)
+
+	reusable_screen_dc: WEL_SCREEN_DC
+			-- Reusable screen dc object for string size optimization.
+		once
+			create Result
+		end
+
+	reusable_text_metric: WEL_TEXT_METRIC
+			-- Reusable text metric object for string size optimization.
+		once
+			create Result.make_empty
+		end
+
+	reusable_abc_struct: WEL_ABC_STRUCT
+			-- Reusable abc struct for string size optimization.
+		once
+			create Result.make
+		end
+
+	reusable_string_size_extended_tuple: TUPLE [width: INTEGER; height: INTEGER; leading_overhang: INTEGER; trailing_overhang: INTEGER]
+			-- Reusable tuple for string size extended optimization.
+		once
+			Result := [0, 0, 0, 0]
+		end
+
+	reusable_string_size_tuple: TUPLE [width: INTEGER; height: INTEGER]
+			-- Reusable tuple for string size optimization.
+		once
+			Result := [0, 0]
 		end
 
 feature {NONE} -- Implementation

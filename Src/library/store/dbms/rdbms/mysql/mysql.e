@@ -165,10 +165,12 @@ feature -- DATABASE_STRING
 			Result := "VARCHAR"
 		end
 
-	map_var_name (a_para: STRING): STRING
+	map_var_name_32 (a_para: READABLE_STRING_GENERAL): STRING_32
 			-- Map `a_para' to the MySQL statement parameter representation
 		do
-			Result := ":" + a_para
+			create Result.make (a_para.count + 1)
+			Result.append ({STRING_32}":")
+			Result.append_string_general (a_para)
 		end
 
 feature -- DATABASE_REAL
@@ -289,17 +291,17 @@ feature -- For DATABASE_PROC
 
 	map_var_between : STRING = ""
 
-	Select_text (proc_name: STRING): STRING
+	Select_text_32 (proc_name: READABLE_STRING_GENERAL): STRING_32
 		do
-			Result := "select ROUTINE_DEFINITION %
+			Result := {STRING_32}"select ROUTINE_DEFINITION %
 				%from information_schema.ROUTINES %
 				%where ROUTINE_NAME = :name and %
 				%ROUTINE_TYPE = 'PROCEDURE'"
 		end
 
-	Select_exists (proc_name: STRING): STRING
+	Select_exists_32 (proc_name: READABLE_STRING_GENERAL): STRING_32
 		do
-			Result := "select count(*) from information_schema.ROUTINES %
+			Result := {STRING_32}"select count(*) from information_schema.ROUTINES %
 				%where routine_type = 'PROCEDURE' and %
 				%routine_name = :name"
 		end

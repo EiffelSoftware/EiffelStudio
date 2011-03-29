@@ -164,6 +164,9 @@ feature {NONE} -- Initialization
 			acc_n_key.register_action (k, agent show_information, [Names.t_show_information, Names.d_show_information])
 			create k.make_with_code ({EV_KEY_CONSTANTS}.key_L)
 			acc_n_key.register_action (k, agent apply_default_layout, [Names.t_reset_layout, Void])
+			create k.make_with_code ({EV_KEY_CONSTANTS}.key_X)
+			acc_n_key.register_action (k, agent export_to, [Names.t_export_to, Void])
+
 
 			acc_n_key.enable_popup
 			acc_n_key.attach_to (accelerators, True)
@@ -229,6 +232,19 @@ feature {NONE} -- Events
 			save_docking_layout
 			if attached preferences as prefs then
 				prefs.save_preferences
+			end
+		end
+
+feature -- Data
+
+	export_to
+		do
+			if attached selected_repositories as repos then
+				across
+					repos as c
+				loop
+					c.item.export_to_sqlite
+				end
 			end
 		end
 
@@ -875,6 +891,66 @@ tokens.test.url=http://svn.origo.ethz.ch/viewvc/eiffelstudio/trunk/eweasel/tests
 		end
 
 feature -- Check/Update/Refresh
+
+	selected_repositories: detachable LIST [REPOSITORY_DATA]
+		local
+			g: like catalog_grid
+			l_rows: LIST [EV_GRID_ROW]
+			r: EV_GRID_ROW
+		do
+			g := catalog_grid
+			l_rows := g.selected_rows
+			if l_rows.count = 1 then
+
+				r := l_rows.first
+				if attached r.parent_row_root as pr then
+					r := pr
+				end
+				if attached repository_from_row (r) as d then
+					create {LINKED_LIST [REPOSITORY_DATA]} Result.make
+					Result.extend (d)
+				end
+			elseif l_rows.count > 0 then
+				create {LINKED_LIST [REPOSITORY_DATA]} Result.make
+				across
+					l_rows as c
+				loop
+					r := c.item
+					if attached r.parent_row_root as pr then
+						r := pr
+					end
+					if attached repository_from_row (r) as d then
+						Result.extend (d)
+					end
+				end
+				if Result.count = 0 then
+					Result := Void
+				end
+			else
+				Result := all_repositories
+			end
+		end
+
+	all_repositories: like selected_repositories
+		local
+			g: like catalog_grid
+			r: EV_GRID_ROW
+			i: INTEGER
+		do
+			g := catalog_grid
+			create {LINKED_LIST [REPOSITORY_DATA]} Result.make
+			from
+				i := 1
+			until
+				i > g.row_count
+			loop
+				r := g.row (i)
+				if r.parent_row = Void and attached repository_from_row (r) as d then
+					Result.extend (d)
+				end
+				i := i + 1
+			end
+		end
 
 	check_selected_repositories
 		local

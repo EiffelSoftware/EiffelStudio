@@ -15,6 +15,16 @@ inherit
 create
 	make
 
+feature {NONE} -- Initialization
+
+	make
+			-- <Precursor>
+		do
+			command_name_prefix := "drop_down_gallery_"
+			xml_constants := {ER_XML_CONSTANTS}.drop_down_gallery
+			new_unique_command_name
+		end
+
 feature -- Query
 
 	rows: INTEGER
@@ -43,16 +53,6 @@ feature -- Command
 			--
 		do
 			gripper := a_gripper
-		end
-
-feature {NONE} -- Initialization
-
-	make
-			-- <Precursor>
-		do
-			command_name_prefix := "drop_down_gallery_"
-			xml_constants := {ER_XML_CONSTANTS}.drop_down_gallery
-			new_unique_command_name
 		end
 
 end

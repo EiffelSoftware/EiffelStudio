@@ -43,6 +43,8 @@ feature -- Command
 					end
 				elseif attached {EV_RIBBON_APPLICATION_MENU} Current as l_item then
 					Result := l_resource.ribbon_for_application_menu (l_item)
+				elseif attached {EV_RIBBON_APPLICATION_MENU_RECENT_ITEMS} Current as l_item then
+					Result := l_resource.ribbon_for_application_menu_recent_items (l_item)
 				else
 					check not_possible: False end
 				end

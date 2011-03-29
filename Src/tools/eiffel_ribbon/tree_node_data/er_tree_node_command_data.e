@@ -13,6 +13,19 @@ inherit
 			on_content
 		end
 
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make
+			-- <Precursor>
+		do
+			command_name_prefix := "command_"
+			xml_constants := {ER_XML_CONSTANTS}.command
+			new_unique_command_name
+		end
+		
 feature -- Command
 
 	update_for_xml_attribute (a_name, a_value: STRING)

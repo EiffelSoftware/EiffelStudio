@@ -28,4 +28,10 @@ feature -- Dropdown gallery
 
 	gripper: STRING = "Gripper"
 
+feature -- Recent items
+
+	enable_pinning: STRING = "EnablePinning"
+
+	max_count: STRING = "MaxCount"
+
 end

@@ -70,6 +70,8 @@ feature -- Element change
 		once
 			create {DATABASE_STRING [G]} a_db_type
 			register_type (a_db_type)
+			create {DATABASE_STRING_32 [G]} a_db_type
+			register_type (a_db_type)
 			create {DATABASE_CHARACTER [G]} a_db_type
 			register_type (a_db_type)
 			create {DATABASE_INTEGER [G]} a_db_type

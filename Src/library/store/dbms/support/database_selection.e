@@ -105,7 +105,7 @@ feature -- Basic operations
 			descriptor_is_available: descriptor_available
 		end
 
-	modify (s: STRING)
+	modify (s: READABLE_STRING_GENERAL)
 			-- Do nothing.
 		do
 		end

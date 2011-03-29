@@ -397,7 +397,7 @@ feature -- Basic operations
 
 feature -- Queries
 
-	load_data_with_select (s: STRING): detachable ANY
+	load_data_with_select (s: READABLE_STRING_GENERAL): detachable ANY
 			-- Load directly an integer value from the database.
 		require
 			meaningful_select: s /= Void
@@ -898,13 +898,13 @@ feature {NONE} -- SQL query construction
 
 feature {NONE} -- Error messages
 
-	selection_failed (query: STRING_32): STRING_32
+	selection_failed (query: READABLE_STRING_GENERAL): STRING_32
 			-- Database selection failed.
 		require
 			query_not_void: query /= Void
 		do
 			Result := {STRING_32}"Database selection failed:%NSQL query was: "
-					+ query + {STRING_32}"%NDatabase message is: "
+					+ query.as_string_32 + {STRING_32}"%NDatabase message is: "
 		end
 
 	Command_failed: STRING_32

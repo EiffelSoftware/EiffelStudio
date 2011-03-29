@@ -121,7 +121,7 @@ feature -- Status report
 
 feature -- Queries
 
-	load_data_with_select (s: STRING): detachable ANY
+	load_data_with_select (s: READABLE_STRING_GENERAL): detachable ANY
 			-- Load directly a single data from the database.
 			--| This can be used for instance to retrieve a table rows count or
 			--| a minimum value.
@@ -166,7 +166,7 @@ feature -- Queries
 			retry
 		end
 
-	load_list_with_select (s: STRING; an_obj: ANY): ARRAYED_LIST [like an_obj]
+	load_list_with_select (s: READABLE_STRING_GENERAL; an_obj: ANY): ARRAYED_LIST [like an_obj]
 			-- Load list of objects whose type are the same as `an_obj',
 			-- following the SQL query `s'.
 		require
@@ -217,7 +217,7 @@ feature -- Queries
 
 feature -- Queries without result to load.
 
-	execute_query (a_query: STRING)
+	execute_query (a_query: READABLE_STRING_GENERAL)
 			-- Execute `a_query' and commit changes.
 		require
 			not_void: a_query /= Void
@@ -226,7 +226,7 @@ feature -- Queries without result to load.
 			commit
 		end
 
-	execute_query_without_commit (a_query: STRING)
+	execute_query_without_commit (a_query: READABLE_STRING_GENERAL)
 				-- Execute `a_query' in the database.
 				-- Warning: query executed is not committed.
 		require
@@ -322,7 +322,16 @@ feature -- Access
 			not_void: Result /= Void
 		end
 
-	string_format (s: STRING): STRING
+	string_format (s: READABLE_STRING_GENERAL): STRING
+			-- String representation in SQL of `s'.
+		require
+			created: database_handle_created
+			s_not_void: s /= Void
+		do
+			Result := string_format_32 (s).as_string_8
+		end
+
+	string_format_32 (s: READABLE_STRING_GENERAL): STRING_32
 			-- String representation in SQL of `s'.
 		require
 			created: database_handle_created
@@ -332,7 +341,7 @@ feature -- Access
 		do
 			l_database_appl := database_appl
 			check l_database_appl /= Void end -- implied by precondition
-			Result := l_database_appl.db_spec.string_format_32 (s).as_string_8
+			Result := l_database_appl.db_spec.string_format_32 (s)
 		end
 
 	session_control: detachable DB_CONTROL
@@ -360,7 +369,7 @@ feature {NONE} -- Implementation
 		require
 			action_not_void: action /= Void
 		do
-			Result := "Unexpected error in " + action
+			Result := {STRING_32}"Unexpected error in " + action
 		end
 
 	Connection_info_name: STRING = "set_connection_information"

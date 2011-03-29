@@ -53,7 +53,7 @@ feature -- For DATABASE_CHANGE
 		do
 		end
 
-	hide_qualifier(c_temp: STRING): POINTER
+	hide_qualifier(c_temp: READABLE_STRING_GENERAL): POINTER
 			-- When "qualifier" is used to identify an database object,
 			-- we have to hide ":" in the qualifier first, otherwise, it
 			-- will be misinterpreted by feature SQL_SCAN::parse
@@ -315,6 +315,15 @@ feature -- For DATABASE_PROC
 			Result := sql
 		end
 
+	sql_adapt_db_32 (sql: STRING_32): STRING_32
+			-- Adapt the SQL string for the database
+			-- Only for Sybase and ODBC
+		require
+			sql_not_void: sql /= Void
+		do
+			Result := sql
+		end
+
 	sql_as: STRING
 			-- Creating a stored procedure "as"...
 		deferred
@@ -376,19 +385,49 @@ feature -- For DATABASE_PROC
 
 	map_var_name (par_name: STRING): STRING
 			-- Redefined for Sybase
+		obsolete
+			"Use `map_var_name_32' instead."
+		require
+			par_name_not_void: par_name /= Void
+		do
+			Result := map_var_name_32 (par_name)
+		end
+
+	Select_text (proc_name: STRING): STRING
+			-- SQL query to get stored procedure text
+		obsolete
+			"Use `Select_text_32' instead."
+		require
+			proc_name_not_void: proc_name /= Void
+		do
+			Result := Select_text_32 (proc_name)
+		end
+
+	Select_exists (name: STRING): STRING
+			-- SQL query to test stored procedure existing
+		obsolete
+			"Use `Select_exists_32' instead."
+		require
+			name_not_void: name /= Void
+		do
+			Result := Select_exists_32 (name)
+		end
+
+	map_var_name_32 (par_name: READABLE_STRING_GENERAL): STRING_32
+			-- Redefined for Sybase
 		require
 			par_name_not_void: par_name /= Void
 		deferred
 		end
 
-	Select_text (proc_name: STRING): STRING
+	Select_text_32 (proc_name: READABLE_STRING_GENERAL): STRING_32
 			-- SQL query to get stored procedure text
 		require
 			proc_name_not_void: proc_name /= Void
 		deferred
 		end
 
-	Select_exists (name: STRING): STRING
+	Select_exists_32 (name: READABLE_STRING_GENERAL): STRING_32
 			-- SQL query to test stored procedure existing
 		require
 			name_not_void: name /= Void

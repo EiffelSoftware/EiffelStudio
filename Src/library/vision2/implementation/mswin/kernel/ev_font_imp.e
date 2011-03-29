@@ -273,6 +273,12 @@ feature -- Status report
 			Result.right_offset := 0 - Result.right_offset
 		end
 
+	string_size_no_offset (a_string: READABLE_STRING_GENERAL): TUPLE [width: INTEGER; height: INTEGER]
+			-- [width, height] in pixels of `a_string' not taking left or right overhang of string in to account.
+		do
+			Result := wel_font.string_size (a_string)
+		end
+
 	horizontal_resolution: INTEGER
 			-- Horizontal resolution of screen for which the font is designed.
 		do

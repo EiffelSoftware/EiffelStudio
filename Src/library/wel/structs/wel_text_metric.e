@@ -18,18 +18,33 @@ inherit
 
 create
 	make,
-	make_by_pointer
+	make_by_pointer,
+	make_empty
 
 feature {NONE} -- Initialization
 
-	make (dc: WEL_DC)
-			-- Make a text metrics structure for `dc'.
-		require
-			dc_not_void: dc /= Void
-			dc_exists: dc.exists
+	make_empty
+			-- Create an empty text metric structure.
 		do
 			structure_make
-			cwin_get_text_metric (dc.item, item)
+		end
+
+	make (a_dc: WEL_DC)
+			-- Make a text metrics structure for `dc'.
+		require
+			a_dc_not_void: a_dc /= Void
+			a_dc_exists: a_dc.exists
+		do
+			structure_make
+			set_from_dc (a_dc)
+		end
+
+feature -- Status Setting
+
+	set_from_dc (a_dc: WEL_DC)
+			-- Set `Current' with `a_dc'
+		do
+			cwin_get_text_metric (a_dc.item, item)
 		end
 
 feature -- Access

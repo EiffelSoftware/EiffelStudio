@@ -135,6 +135,11 @@ feature {NONE} -- Tree saving
 				if a_vision_tree.count >= 2 then
 					if attached {EV_TREE_ITEM} a_vision_tree.i_th (2) as l_tree_item_menu then
 						check l_tree_item_menu.text.same_string (xml_constants.ribbon_application_menu) end
+
+						-- Add recent items xml node
+						add_xml_recent_items_node (l_tree_item_menu)
+
+						-- Add menu group xml node
 						from
 							l_tree_item_menu.start
 						until
@@ -149,6 +154,40 @@ feature {NONE} -- Tree saving
 							l_tree_item_menu.forth
 						end
 					end
+				end
+			end
+		end
+
+	add_xml_recent_items_node (a_tree_item: EV_TREE_ITEM)
+			--
+		require
+			not_void: a_tree_item /= Void
+			valid: a_tree_item.text.same_string ({ER_XML_CONSTANTS}.ribbon_application_menu)
+		local
+			l_application_menu_recent_items, l_recent_items: XML_ELEMENT
+		do
+			if attached xml_node_by_name (xml_constants.application_menu) as l_ribbon_application_menu_node then
+				create l_application_menu_recent_items.make (l_ribbon_application_menu_node, xml_constants.application_menu_recent_items, name_space)
+				l_ribbon_application_menu_node.put_last (l_application_menu_recent_items)
+
+				create l_recent_items.make (l_application_menu_recent_items, xml_constants.recent_items, name_space)
+				l_application_menu_recent_items.put_last (l_recent_items)
+
+				if attached {ER_TREE_NODE_APPLICATION_MENU_DATA} a_tree_item.data as l_data then
+					-- Add xml attribute
+					if attached l_data.command_name as l_command_name and then not l_command_name.is_empty then
+						-- FIXME: Use application menu name for recent items command name?
+						l_recent_items.add_attribute ({ER_XML_ATTRIBUTE_CONSTANTS}.command_name, name_space, l_command_name)
+						-- Add coresspond command xml node
+						add_xml_command_node (l_data)
+					end
+					if l_data.enable_pinning then
+						l_recent_items.add_attribute ({ER_XML_ATTRIBUTE_CONSTANTS}.enable_pinning, name_space, "true")
+					else
+						l_recent_items.add_attribute ({ER_XML_ATTRIBUTE_CONSTANTS}.enable_pinning, name_space, "false")
+					end
+
+					l_recent_items.add_attribute ({ER_XML_ATTRIBUTE_CONSTANTS}.max_count, name_space, l_data.max_count.out)
 				end
 			end
 		end

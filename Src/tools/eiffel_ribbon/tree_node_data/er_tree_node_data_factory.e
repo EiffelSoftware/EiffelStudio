@@ -26,17 +26,17 @@ feature -- Factory method
 			valid: (create {ER_XML_CONSTANTS}).valid (a_type)
 		do
 			if a_type.is_equal (constants.command) then
-				create {ER_TREE_NODE_COMMAND_DATA} Result
+				create {ER_TREE_NODE_COMMAND_DATA} Result.make
 			elseif a_type.is_equal (constants.group) then
-				create {ER_TREE_NODE_GROUP_DATA} Result
+				create {ER_TREE_NODE_GROUP_DATA} Result.make
 			elseif a_type.is_equal (constants.button) then
 				create {ER_TREE_NODE_BUTTON_DATA} Result.make
 			elseif a_type.is_equal (constants.tab) then
-				create {ER_TREE_NODE_TAB_DATA} Result
+				create {ER_TREE_NODE_TAB_DATA} Result.make
 			elseif a_type.same_string (constants.check_box) then
 				create {ER_TREE_NODE_CHECKBOX_DATA} Result.make
 			elseif a_type.same_string (constants.ribbon_tabs) then
-				create {ER_TREE_NODE_RIBBON_DATA} Result
+				create {ER_TREE_NODE_RIBBON_DATA} Result.make
 			elseif a_type.same_string (constants.toggle_button) then
 				create {ER_TREE_NODE_TOGGLE_BUTTON_DATA} Result.make
 			elseif a_type.same_string (constants.spinner) then
@@ -47,6 +47,10 @@ feature -- Factory method
 				create {ER_TREE_NODE_SPLIT_BUTTON_DATA} Result.make
 			elseif a_type.same_string (constants.drop_down_gallery) then
 				create {ER_TREE_NODE_DROP_DOWN_GALLERY_DATA} Result.make
+			elseif a_type.same_string (constants.ribbon_application_menu) then
+				create {ER_TREE_NODE_APPLICATION_MENU_DATA} Result.make
+			elseif a_type.same_string (constants.recent_items) then
+				create {ER_TREE_NODE_APPLICATION_MENU_DATA} Result.make
 			else
 				--no data for `a_type'
 				-- Maybe `a_type' is "Application". It should not have any tree node data

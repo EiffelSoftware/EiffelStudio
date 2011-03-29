@@ -17,7 +17,7 @@ feature {NONE} -- Initialization
 			not_void: a_list /= Void
 		do
 			command_list := a_list
-			create recent_items.make_with_command_list (<<>>)
+			create recent_items.make_with_command_list (a_list) -- Recent items use the commnand id of ApplicationMenu
 
 			create_interface_objects
 			register_observer

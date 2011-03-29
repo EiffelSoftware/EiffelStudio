@@ -498,15 +498,17 @@ feature {NONE} -- Implementation
 										and then not l_identifer_name.is_empty then
 
 										l_last_string.replace_substring_all ("$APPLICATION_MENU_NAME", "%Tapplication_menu: " + l_identifer_name.as_upper + l_application_menu_comment)
+
+										l_last_string.replace_substring_all ("$APPLICATION_MENU_CREATION", "%T%T%Tcreate application_menu.make_with_command_list (<<{COMMAND_NAME_CONSTANTS}." + l_identifer_name + ">>)")
 									else
 										if l_list.index = 1 then
 											l_last_string.replace_substring_all ("$APPLICATION_MENU_NAME", "%Tapplication_menu: APPLICATION_MENU" + l_application_menu_comment)
 										else
 											l_last_string.replace_substring_all ("$APPLICATION_MENU_NAME", "%TTapplication_menu: APPLICATION_MENU_" + l_list.index.out + l_application_menu_comment)
 										end
-									end
 
-									l_last_string.replace_substring_all ("$APPLICATION_MENU_CREATION", "%T%T%Tcreate application_menu.make_with_command_list (<<>>)")
+										l_last_string.replace_substring_all ("$APPLICATION_MENU_CREATION", "%T%T%Tcreate application_menu.make_with_command_list (<<>>)")
+									end
 								else
 									-- Remove $APPLICATION_MENU_NAME tag
 									l_last_string.replace_substring_all ("$APPLICATION_MENU_NAME", "")

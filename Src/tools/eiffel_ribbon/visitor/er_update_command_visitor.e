@@ -52,7 +52,7 @@ feature {NONE} -- Implementation
 						if l_attribute.name.same_string (atrribute.name) then
 							l_command_name := l_attribute.value
 							l_tree_nodes := shared.layout_constructor_list.first.all_items_with_command_name_in_all_constructors (l_command_name)
-							check only_one: l_tree_nodes.count = 1 end
+--							check only_one: l_tree_nodes.count = 1 end -- ApplicationMenu and ApplicationMenu share same command name
 							if attached {ER_TREE_NODE_DATA} l_tree_nodes.first.data as l_data then
 								l_current_command_data := l_data
 							end

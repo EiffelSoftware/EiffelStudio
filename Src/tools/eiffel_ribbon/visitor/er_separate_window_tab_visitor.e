@@ -212,27 +212,44 @@ feature {NONE} -- Implementation
 		local
 			l_iterator: INDEXABLE_ITERATION_CURSOR [EV_TREE_NODE]
 			l_item: EV_TREE_NODE
+			l_items: ARRAYED_LIST [EV_TREE_NODE]
 		do
 			check a_application_menu.count = 1 end
 			if attached a_application_menu.i_th (1) as l_ribbon_menu then
 				a_application_menu.wipe_out
 
 				from
+					create l_items.make (l_ribbon_menu.count)
 					l_iterator := l_ribbon_menu.new_cursor
 					l_iterator.start
 				until
 					l_iterator.after
 				loop
-					l_item := l_iterator.item
+					l_items.extend (l_iterator.item)
+
+					l_iterator.forth
+				end
+
+				from
+					l_items.start
+				until
+					l_items.after
+				loop
+					l_item := l_items.item
 					if attached l_item.parent as l_parent then
 						l_parent.prune_all (l_item)
 					end
-					a_application_menu.extend (l_item)
-					if not l_iterator.after then
-						l_iterator.forth
+
+					if l_item.text.same_string ({ER_XML_CONSTANTS}.application_menu_recent_items) then
+						-- Remove recent items node
+					else
+						a_application_menu.extend (l_item)
 					end
+
+					l_items.forth
 				end
 
 			end
 		end
+
 end

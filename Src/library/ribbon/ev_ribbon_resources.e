@@ -35,6 +35,21 @@ feature -- Query
 			create Result.make (5)
 		end
 
+	window_for_ribbon (a_ribbon: EV_RIBBON): detachable EV_RIBBON_TITLED_WINDOW
+			-- Find window which contains `a_ribbon'
+		do
+			from
+				ribbon_window_list.start
+			until
+				ribbon_window_list.after or Result /= Void
+			loop
+				if ribbon_window_list.item.ribbon = a_ribbon then
+					Result := ribbon_window_list.item
+				end
+				ribbon_window_list.forth
+			end
+		end
+
 feature -- Helper
 
 	ribbon_for_tab (a_tab: EV_RIBBON_TAB): detachable EV_RIBBON
@@ -198,6 +213,30 @@ feature -- Helper
 				l_ribbon_window := l_list.item
 				if attached l_ribbon_window.application_menu as l_menu then
 					if l_menu = a_item then
+						Result := l_ribbon_window.ribbon
+					end
+				end
+				l_list.forth
+			end
+		end
+
+	ribbon_for_application_menu_recent_items (a_item: EV_RIBBON_APPLICATION_MENU_RECENT_ITEMS): detachable EV_RIBBON
+			--
+		local
+			l_res: EV_RIBBON_RESOURCES
+			l_list: ARRAYED_LIST [EV_RIBBON_TITLED_WINDOW]
+			l_ribbon_window: EV_RIBBON_TITLED_WINDOW
+		do
+			from
+				create l_res
+				l_list := l_res.ribbon_window_list
+				l_list.start
+			until
+				l_list.after or Result /= Void
+			loop
+				l_ribbon_window := l_list.item
+				if attached l_ribbon_window.application_menu as l_menu then
+					if l_menu.recent_items = a_item then
 						Result := l_ribbon_window.ribbon
 					end
 				end

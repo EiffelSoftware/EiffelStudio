@@ -83,10 +83,14 @@ feature -- For DATABASE_FORMAT
 	string_format_32 (object: detachable READABLE_STRING_GENERAL): STRING_32
 			-- String representation in SQL of `object'
 		do
-			Result := object.as_string_32
-			if not is_binary (Result) then
-				Result.precede ('%'')
-				Result.extend ('%'')
+			if attached object as l_s then
+				Result := l_s.as_string_32
+				if not is_binary (Result) then
+					Result.precede ({CHARACTER_32}'%'')
+					Result.extend ({CHARACTER_32}'%'')
+				end
+			else
+				Result := {STRING_32}"IS NULL"
 			end
 		end
 
@@ -240,24 +244,24 @@ feature -- For DATABASE_PROC
 
 	map_var_between: STRING = " @"
 
-	map_var_name (par_name: STRING): STRING
+	map_var_name_32 (a_para: READABLE_STRING_GENERAL): STRING_32
 			-- Map variable string for late bound stored procedure execution
 		do
-			create Result.make (par_name.count + 1)
-			Result.append_character (':')
-			Result.append (par_name)
+			create Result.make (a_para.count + 1)
+			Result.append ({STRING_32}":")
+			Result.append_string_general (a_para)
 		end
 
 	map_var_after: STRING = ""
 
-	Select_text (proc_name: STRING): STRING
+	Select_text_32 (proc_name: READABLE_STRING_GENERAL): STRING_32
 		do
-			Result := "select a.text from syscomments a, sysobjects b where b.name = :name and b.id = a.id"
+			Result := {STRING_32}"select a.text from syscomments a, sysobjects b where b.name = :name and b.id = a.id"
 		end
 
-	Select_exists (name: STRING): STRING
+	Select_exists_32 (proc_name: READABLE_STRING_GENERAL): STRING_32
 		do
-			Result := "select count(*) from %
+			Result := {STRING_32}"select count(*) from %
 			%sysobjects where type = 'P' %
 			%and name = :name"
 		end

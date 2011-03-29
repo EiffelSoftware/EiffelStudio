@@ -66,7 +66,9 @@ SED = $sed
 # Automatically generated parameters -- do not edit
 
 USRINC = $usrinc
-OBJECTS =  \$(MT_LOBJ) \$(MT_WOBJ) \$(LOBJ) \$(WOBJ) x2c.o offset.o runtime_validation.o offset.o
+OBJECTS = big_file_run-time_c.o big_file_run-time_x.o 
+
+OLDOBJECTS =   \$(MT_LOBJ) \$(MT_WOBJ) \$(LOBJ) \$(WOBJ) x2c.o offset.o runtime_validation.o offset.o
 SOURCES =  \$(LSRC) \$(WADD) x2c.c runtime_validation.c
 LSCRIPTS =  eif_size.h
 
@@ -113,7 +115,7 @@ LSRC = malloc.c garcol.c local.c store.c retrieve.c \
 	hector.c cecil.c bits.c file.c dir.c misc.c \
 	error.c umain.c memory.c memory_analyzer.c argv.c boolstr.c search.c \
 	run_idr.c path_name.c object_id.c eif_threads.c eif_project.c \
-	posix_threads.c gen_conf.c eif_type_id.c rout_obj.c \
+	posix_threads.c gen_conf.c eif_type_id.c rout_obj.c scoop.c \
 	option.c compress.c console.c offset.c main.c except.c
 
 WADD = debug.c interp.c update.c wbench.c
@@ -320,6 +322,7 @@ MT_LOBJ = \
 	MTgen_conf.o \
 	MTeif_type_id.o \
 	MTrout_obj.o \
+	MTscoop.o \
 	MToption.o \
 	MTcompress.o \
 	MTconsole.o \
@@ -584,6 +587,9 @@ MTeif_type_id.o: eif_type_id.c
 	       $(CC) -c $(JMTCFLAGS) $? -o $@
 
 MTrout_obj.o: rout_obj.c
+	       $(CC) -c $(JMTCFLAGS) $? -o $@
+
+MTscoop.o: scoop.c
 	       $(CC) -c $(JMTCFLAGS) $? -o $@
 
 MToption.o: option.c
@@ -1084,3 +1090,4 @@ Makefiles.SH::
 !NO!SUBS!
 chmod 644 Makefile
 $eunicefix Makefile
+

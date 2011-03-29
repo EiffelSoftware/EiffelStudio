@@ -74,14 +74,14 @@ feature -- For DATABASE_FORMAT
 		do
 			if object /= Void and then not object.is_empty then
 				Result := object.as_string_32
-				Result.replace_substring_all ("'", "''")
+				Result.replace_substring_all ({STRING_32}"'", {STRING_32}"''")
 				if Result.count > Max_char_size then
 					Result := break (Result)
 				end
-				Result.precede ('%'')
-				Result.extend ('%'')
+				Result.precede ({CHARACTER_32}'%'')
+				Result.extend ({CHARACTER_32}'%'')
 			else
-				Result := "NULL"
+				Result := {STRING_32}"NULL"
 			end
 		end
 
@@ -165,10 +165,11 @@ feature -- DATABASE_STRING
 			Result := "VARCHAR2"
 		end
 
-	map_var_name (a_para: STRING): STRING
+	map_var_name_32 (a_para: READABLE_STRING_GENERAL): STRING_32
 		do
-		 	create Result.make_from_string (":")
-			Result.append (a_para)
+			create Result.make (a_para.count + 1)
+			Result.append ({STRING_32}":")
+			Result.append_string_general (a_para)
 		end
 
 feature -- DATABASE_REAL
@@ -283,16 +284,16 @@ feature -- For DATABASE_PROC
 
 	map_var_between: STRING = ""
 
-	Select_text (proc_name: STRING): STRING
+	Select_text_32 (proc_name: READABLE_STRING_GENERAL): STRING_32
 		do
-			Result := "select text from all_source %
+			Result := {STRING_32}"select text from all_source %
 			%where Name = :name and %
 			%Type = 'PROCEDURE'"
 		end
 
-	Select_exists (name: STRING): STRING
+	Select_exists_32 (proc_name: READABLE_STRING_GENERAL): STRING_32
 		do
-			Result := "select count (*) from all_objects %
+			Result := {STRING_32}"select count (*) from all_objects %
 			%where (object_type = 'PROCEDURE') and %
 			% (object_name = :name)"
 		end

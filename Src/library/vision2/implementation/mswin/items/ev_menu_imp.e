@@ -181,13 +181,8 @@ feature {EV_ANY_I} -- Basic operations
 				end
 				create l_popup.make_with_menu (Current, wel_win)
 				show_track (wel_point.x, wel_point.y, l_popup)
-					-- If we do not process events now, the fact we remove the
-					-- menu from `l_popup' will prevent the action to be executed.
-				application_imp.process_events
-					-- We need to remove menu from `l_popup' as destroying the
-					-- window would also destroy the menu and we do not want that.
-				l_popup.unset_menu
-				l_popup.destroy
+					-- Unset `l_popup' from `Current' on idle so that the user events may be correctly processed.
+				application_imp.add_idle_action (agent (a_popup: EV_POPUP_MENU_HANDLER) do a_popup.unset_menu; a_popup.destroy end (l_popup))
 			end
 		end
 

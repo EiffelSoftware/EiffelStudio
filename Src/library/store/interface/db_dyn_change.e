@@ -48,6 +48,8 @@ feature -- Element change
 
 	prepare (s: STRING)
 			-- Parse of the sql statement `s'
+		obsolete
+			"Use `prepare_32' instead."
 		require
 			not_void: s /= Void
 			meaning_full_sql: s.count > 0
@@ -55,7 +57,26 @@ feature -- Element change
 			is_allocatable: is_allocatable
 		do
 			implementation.prepare (s)
-			set_prepared (TRUE)
+			set_prepared (True)
+			if not is_ok and then is_tracing then
+				fixme ("Unicode support for output tracing.")
+				trace_output.putstring (error_message_32)
+				trace_output.new_line
+			end
+		ensure
+			prepared_statement: is_prepared
+		end
+
+	prepare_32 (s: STRING_32)
+			-- Parse of the sql statement `s'
+		require
+			not_void: s /= Void
+			meaning_full_sql: s.count > 0
+			is_ok: is_ok
+			is_allocatable: is_allocatable
+		do
+			implementation.prepare_32 (s)
+			set_prepared (True)
 			if not is_ok and then is_tracing then
 				fixme ("Unicode support for output tracing.")
 				trace_output.putstring (error_message_32)

@@ -42,6 +42,8 @@ feature -- Status report
 
 	text: STRING
 			-- SQL text of current procedure
+		obsolete
+			"Use `text_32' instead."
 		require
 			exists: exists
 		do
@@ -50,10 +52,28 @@ feature -- Status report
 			result_not_void: Result /= Void
 		end
 
+	text_32: STRING_32
+			-- SQL text of current procedure
+		require
+			exists: exists
+		do
+			Result := implementation.text_32
+		ensure
+			result_not_void: Result /= Void
+		end
+
 	arguments_name: detachable ARRAY [STRING]
 			-- Argument names
+		obsolete
+			"Use `arguments_name_32' instead."
 		do
 			Result := implementation.arguments_name
+		end
+
+	arguments_name_32: detachable ARRAY [STRING_32]
+			-- Argument names
+		do
+			Result := implementation.arguments_name_32
 		end
 
 	arguments_type: detachable ARRAY [ANY]
@@ -76,10 +96,10 @@ feature -- Status report
 	arguments_set: BOOLEAN
 			-- Have arguments been set?
 		do
-			Result := (arguments_name /= Void and
+			Result := (arguments_name_32 /= Void and
 					arguments_type /= Void)
 		ensure
-			Result = (arguments_name /= Void and
+			Result = (arguments_name_32 /= Void and
 					arguments_type /= Void)
 		end
 
@@ -101,7 +121,7 @@ feature -- Basic operations
 			loaded: loaded
 		end
 
-	store (sql: STRING)
+	store (sql: READABLE_STRING_GENERAL)
 			-- Store current procedure with `sql' expression.
 		require
 			sql_not_void: sql /= Void
@@ -132,7 +152,7 @@ feature -- Basic operations
 			end
 		end
 
-	execute_string (destination: DB_EXPRESSION; sql: STRING)
+	execute_string (destination: DB_EXPRESSION; sql: READABLE_STRING_GENERAL)
 			-- Execute using `sql' statement current procedure with `destination'
 			-- be a DB_SELECTION or DB_CHANGE object mapping
 			-- entity values with procedure parameter names
@@ -184,6 +204,8 @@ feature -- Status setting
 			args_type: like arguments_type)
 			-- Set `arguments_name' of current
 			-- as a variable list of argument names.
+		obsolete
+			"Use `set_arguments_32' instead."
 		require
 			args_name_not_void: args_name /= Void
 			args_type_not_void: args_type /= Void
@@ -196,12 +218,28 @@ feature -- Status setting
 			arguments_set
 		end
 
+	set_arguments_32 (args_name: like arguments_name_32;
+			args_type: like arguments_type)
+			-- Set `arguments_name_32' of current
+			-- as a variable list of argument names.
+		require
+			args_name_not_void: args_name /= Void
+			args_type_not_void: args_type /= Void
+			same_count: args_name.count = args_type.count
+		do
+			implementation.set_arguments_32 (args_name, args_type)
+		ensure
+			arguments_name_32 = args_name
+			arguments_type = args_type
+			arguments_set
+		end
+
 	set_no_arguments
 			-- No arguments for the current procedure
 		do
 			implementation.set_no_arguments
 		ensure
-			arguments_name = Void
+			arguments_name_32 = Void
 			arguments_type = Void
 			no_arguments: not arguments_set
 		end

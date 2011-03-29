@@ -138,9 +138,9 @@ feature -- Basic operations
 					end
 				elseif is_character (obj) then
 					if attached {CHARACTER_REF} obj as r_character then
-						str.extend ('%'')
+						str.extend ({CHARACTER_32}'%'')
 						str.extend (r_character.item)
-						str.extend ('%'')
+						str.extend ({CHARACTER_32}'%'')
 					else
 						check False end -- implied by `is_character'
 					end
@@ -232,7 +232,7 @@ feature -- Basic operations
 					end
 					ind := ind + 1
 					if ind <= max_index then
-						str.extend (',')
+						str.extend ({CHARACTER_32}',')
 					end
 				else
 					ind := ind + 1
@@ -258,7 +258,7 @@ feature -- Basic operations
 				search_special
 				if index <= count then
 					c := item (index)
-					if c = ':' then
+					if c = {CHARACTER_32}':' then
 						if l_new_string = Void then
 							create l_new_string.make (2 * count)
 						end
@@ -344,9 +344,9 @@ feature {NONE} -- Status setting
 				l_count := count
 			until
 				i > count
-				or else c = ':'
-				or else c = '%''
-				or else c = '"'
+				or else c = {CHARACTER_32}':'
+				or else c = {CHARACTER_32}'%''
+				or else c = {CHARACTER_32}'"'
 			loop
 				i := i + 1
 				if i <= l_count then
@@ -356,9 +356,9 @@ feature {NONE} -- Status setting
 			index := i
 		ensure
 			index > count or
-			else item (index) = ':' or
-			else item (index) = '%'' or
-			else item (index) = '"'
+			else item (index) = {CHARACTER_32}':' or
+			else item (index) = {CHARACTER_32}'%'' or
+			else item (index) = {CHARACTER_32}'"'
 		end
 
 	go_after_identifier

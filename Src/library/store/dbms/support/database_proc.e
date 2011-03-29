@@ -14,6 +14,8 @@ inherit
 
 	HANDLE_SPEC [G]
 
+	GLOBAL_SETTINGS
+
 create -- Creation procedure
 
 	make
@@ -34,10 +36,18 @@ feature -- Status report
 
 	text: STRING
 			-- SQL statement attached to stored procedure
+		obsolete
+			"Use `text_32' instead."
+		do
+			Result := text_32.as_string_8
+		end
+
+	text_32: STRING_32
+			-- SQL statement attached to stored procedure
 		local
 			tuple: DB_TUPLE
 			seq: INTEGER
-			tmp_text: STRING
+			tmp_text: STRING_32
 			l_cursor: detachable DB_RESULT
 		do
 			if db_spec.support_sql_of_proc then
@@ -49,18 +59,26 @@ feature -- Status report
 					until
 						seq > row_number
 					loop
-					private_selection.set_map_name (seq , "seq")
-					private_selection.query (Select_text (name))
-					private_selection.load_result
-					private_selection.unset_map_name ("seq")
-					l_cursor := private_selection.cursor
-					check l_cursor /= Void end -- implied by private_selection.`load_result''s postcondition
-					create tuple.copy (l_cursor)
-					if attached {STRING} tuple.item (1) as row_text then
-						tmp_text.append(row_text)
-					else
-						check False end -- implied by `private_selection.query' postcondition
-					end
+						private_selection.set_map_name (seq , "seq")
+						private_selection.query (Select_text (name))
+						private_selection.load_result
+						private_selection.unset_map_name ("seq")
+						l_cursor := private_selection.cursor
+						check l_cursor /= Void end -- implied by private_selection.`load_result''s postcondition
+						create tuple.copy (l_cursor)
+						if use_extended_types then
+							if attached {STRING_32} tuple.item (1) as row_text then
+								tmp_text.append(row_text)
+							else
+								check False end -- implied by `private_selection.query' postcondition
+							end
+						else
+							if attached {STRING} tuple.item (1) as row_text then
+								tmp_text.append(row_text)
+							else
+								check False end -- implied by `private_selection.query' postcondition
+							end
+						end
 						seq := seq + 1
 					end
 
@@ -70,11 +88,20 @@ feature -- Status report
 					l_cursor := private_selection.cursor
 				check l_cursor /= Void end -- implied by private_selection.`load_result''s postcondition					
 					create tuple.copy (l_cursor)
-					if attached {STRING} tuple.item (1) as l_item then
-						tmp_text := l_item
+					if use_extended_types then
+						if attached {STRING_32} tuple.item (1) as l_item then
+							tmp_text := l_item
+						else
+							check False end -- implied by `private_selection.query''s postcondition
+							create tmp_text.make_empty -- Satisfy compiler
+						end
 					else
-						check False end -- implied by `private_selection.query''s postcondition
-						create tmp_text.make_empty -- Satisfy compiler
+						if attached {STRING} tuple.item (1) as l_item then
+							tmp_text := l_item
+						else
+							check False end -- implied by `private_selection.query''s postcondition
+							create tmp_text.make_empty -- Satisfy compiler
+						end
 					end
 				end
 				private_selection.unset_map_name ("name")
@@ -86,6 +113,27 @@ feature -- Status report
 		end
 
 	arguments_name: detachable ARRAY [STRING]
+			-- Argument names of stored procedure
+		obsolete
+			"Use `arguments_name_32' instead."
+		local
+			i, l_upper: INTEGER_32
+		do
+			if attached arguments_name_32 as l_args then
+				create Result.make_filled (once "", l_args.lower, l_args.upper)
+				from
+					l_upper := l_args.upper
+					i := l_args.lower
+				until
+					i > l_upper
+				loop
+					Result.put (l_args.item (i).as_string_8, i)
+					i := i + 1
+				end
+			end
+		end
+
+	arguments_name_32: detachable ARRAY [STRING_32]
 			-- Argument names of stored procedure
 
 	arguments_type: detachable ARRAY [ANY]
@@ -101,15 +149,15 @@ feature -- Basic operations
 			set_p_exists
 		end
 
-	store (sql: STRING)
+	store (sql: READABLE_STRING_GENERAL)
 			-- Store current procedure performing `sql' statement.
 		require else
 			argument_not_void: sql /= Void
 		local
-			sql_temp: STRING
+			sql_temp: STRING_32
 		do
 			if db_spec.support_stored_proc then
-				sql_temp := db_spec.sql_adapt_db (sql)
+				sql_temp := db_spec.sql_adapt_db_32 (sql.as_string_32)
 				private_string.wipe_out
 				private_string.append(db_spec.sql_creation)
 				private_string.append(name)
@@ -149,11 +197,11 @@ feature -- Basic operations
 			end
 		end
 
-	execute_string (destination: DB_EXPRESSION; sql: STRING)
+	execute_string (destination: DB_EXPRESSION; sql: READABLE_STRING_GENERAL)
 			-- Execute the procedure using the sql statement `sql'
 		do
 			private_string.wipe_out
-			private_string.append (sql)
+			private_string.append (sql.as_string_32)
 			destination.set_query (private_string)
 			destination.execute_query
 		end
@@ -189,10 +237,10 @@ feature -- Status report
 	arguments_set: BOOLEAN
 			-- Have arguments been set?
 		do
-			Result := (arguments_name /= Void and arguments_type /= Void)
+			Result := (arguments_name_32 /= Void and arguments_type /= Void)
 		ensure
 			arguments_set: Result implies
-								(arguments_name /= Void and arguments_type /= Void)
+								(arguments_name_32 /= Void and arguments_type /= Void)
 		end
 
 feature -- Element change
@@ -214,16 +262,48 @@ feature -- Element change
 			-- of current as a variable list of argument
 			-- names and a variable list of argument
 			-- types, respectively.
+		obsolete
+			"Use `set_arguments_32' instead."
+		require
+			args_name_not_void: args_name /= Void
+			args_type_not_void: args_type /= Void
+			not_arguments_set: not arguments_set
+		local
+			l_args: like arguments_name_32
+			i, l_upper: INTEGER
+		do
+			create l_args.make_filled (once {STRING_32} "", args_name.lower, args_name.upper)
+			from
+				l_upper := args_name.upper
+				i := args_name.lower
+			until
+				i > l_upper
+			loop
+				l_args.put (args_name.item (i).as_string_32, i)
+				i := i + 1
+			end
+			set_arguments_32 (l_args, args_type)
+		ensure
+			arguments_set
+			set_with_input_parameter2: arguments_type = args_type
+		end
+
+	set_arguments_32 (args_name: like arguments_name_32;
+			 			args_type: like arguments_type)
+			-- Set `arguments_name_32' and `arguments_type'
+			-- of current as a variable list of argument
+			-- names and a variable list of argument
+			-- types, respectively.
 		require
 			args_name_not_void: args_name /= Void
 			args_type_not_void: args_type /= Void
 			not_arguments_set: not arguments_set
 		do
-			arguments_name := args_name
+			arguments_name_32 := args_name
 			arguments_type := args_type
 		ensure
 			arguments_set
-			set_with_input_parameter1: arguments_name = args_name
+			set_with_input_parameter1: arguments_name_32 = args_name
 			set_with_input_parameter2: arguments_type = args_type
 		end
 
@@ -231,10 +311,10 @@ feature -- Element change
 			-- No arguments for the current procedure.
 		do
 			arguments_type := Void
-			arguments_name := Void
+			arguments_name_32 := Void
 		ensure
 			arguments_type_void: arguments_type = Void
-			arguments_name_void: arguments_name = Void
+			arguments_name_void: arguments_name_32 = Void
 			no_arguments: not arguments_set
 		end
 
@@ -269,7 +349,11 @@ feature {NONE} -- Implementation
 							end
 						else
 								-- Added for ODBC, should really be abstracted
-							p_exists := attached {STRING} tuple.item (3) as temp_string and then not temp_string.is_empty
+							if use_extended_types then
+								p_exists := attached {STRING_32} tuple.item (3) as temp_string and then not temp_string.is_empty
+							else
+								p_exists := attached {STRING} tuple.item (3) as temp_string and then not temp_string.is_empty
+							end
 						end
 					end
 				else
@@ -284,7 +368,7 @@ feature {NONE} -- Implementation
 			-- Value is effective after `set_p_exists'
 			-- execution.
 
-	append_in_args_value (s: STRING)
+	append_in_args_value (s: STRING_32)
 			-- Append map variables name from `d' in `s'.
 			-- Map variables are used for set input arguments.
 		require
@@ -292,24 +376,24 @@ feature {NONE} -- Implementation
 			arguments_set: arguments_set
 		local
 			i: INTEGER
-			l_arguments_name: like arguments_name
+			l_arguments_name_32: like arguments_name_32
 		do
 			s.append (db_spec.map_var_before)
 			from
-				l_arguments_name := arguments_name
-				check l_arguments_name /= Void end -- implied by precondition `arguments_set'
-				i := l_arguments_name.lower
+				l_arguments_name_32 := arguments_name_32
+				check l_arguments_name_32 /= Void end -- implied by precondition `arguments_set'
+				i := l_arguments_name_32.lower
 			until
-				i > l_arguments_name.upper
+				i > l_arguments_name_32.upper
 			loop
 				if db_spec.proc_args then
 					s.append (db_spec.map_var_between)
-					s.append (l_arguments_name.item (i))
+					s.append (l_arguments_name_32.item (i))
 					s.append (" = ")
 				end
-				s.append (db_spec.map_var_name (l_arguments_name.item (i)))
+				s.append (db_spec.map_var_name_32 (l_arguments_name_32.item (i)))
 				i := i + 1
-				if i <= l_arguments_name.upper then
+				if i <= l_arguments_name_32.upper then
 					s.extend (',')
 				end
 			end
@@ -318,32 +402,32 @@ feature {NONE} -- Implementation
 			s_larger: s.count > old s.count
 		end
 
-	append_in_args_type (s: STRING)
+	append_in_args_type (s: STRING_32)
 			-- Append arguments type name in `s'.
 		require
 			s_not_void: s /= Void
 			arguments_set: arguments_set
 		local
 			i: INTEGER
-			l_arguments_name: like arguments_name
+			l_arguments_name_32: like arguments_name_32
 			l_arguments_type: like arguments_type
 		do
 			s.append (db_spec.map_var_before)
 			from
-				l_arguments_name := arguments_name
-				check l_arguments_name /= Void end -- implied by precondition `arguments_set'	
+				l_arguments_name_32 := arguments_name_32
+				check l_arguments_name_32 /= Void end -- implied by precondition `arguments_set'	
 				l_arguments_type := arguments_type
 				check l_arguments_type /= Void end -- implied by precondition `arguments_set'	
-				i := l_arguments_name.lower
+				i := l_arguments_name_32.lower
 			until
-				i > l_arguments_name.upper
+				i > l_arguments_name_32.upper
 			loop
 				s.append (db_spec.map_var_between)
-				s.append (l_arguments_name.item (i))
+				s.append (l_arguments_name_32.item (i))
 				s.append (db_spec.map_var_between_2)
 				s.append (handle.all_types.db_type (l_arguments_type.item (i)).sql_name)
 				i := i + 1
-				if i <= l_arguments_name.upper then
+				if i <= l_arguments_name_32.upper then
 					s.extend (',')
 				end
 			end
@@ -414,7 +498,7 @@ feature {NONE} -- Status report
 			result_not_void: Result /= Void
 		end
 
-	private_string: STRING
+	private_string: STRING_32
 			-- Constant string
 		once
 			create Result.make (50)
@@ -422,18 +506,18 @@ feature {NONE} -- Status report
 			result_not_void: Result /= Void
 		end
 
-	Select_text (a_proc_name: STRING): STRING
+	Select_text (a_proc_name: READABLE_STRING_GENERAL): STRING_32
 			-- SQL query to get procedure text.
 		require
 			a_proc_name_not_void: a_proc_name /= Void
 		do
-			Result := db_spec.Select_text (a_proc_name)
+			Result := db_spec.select_text_32 (a_proc_name.as_string_32)
 		end
 
-	Select_exists: STRING
+	Select_exists: STRING_32
 			-- SQL query to test procedure existing.
 		do
-			Result := db_spec.Select_exists (name)
+			Result := db_spec.Select_exists_32 (name)
 		end
 
 note

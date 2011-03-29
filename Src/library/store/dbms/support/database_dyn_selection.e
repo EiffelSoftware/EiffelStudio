@@ -30,6 +30,8 @@ feature
 
 	prepare (s: STRING)
 			-- Parse of the sql statement `s'
+		obsolete
+			"Use `prepare_32' instead."
 		require
 			not_void: s /= Void
 			meaning_full_statement: s.count > 0
@@ -71,6 +73,49 @@ feature
 			prepared_statement: not is_executed
 		end
 
+	prepare_32 (s: STRING_32)
+			-- Parse of the sql statement `s'
+		require
+			not_void: s /= Void
+			meaning_full_statement: s.count > 0
+		local
+			parsed_s: STRING_32
+			parsed: BOOLEAN
+			ArgNum: INTEGER
+			l_sql_string: like sql_string_32
+		do
+			l_sql_string := sql_string_32
+			if l_sql_string = Void then
+				create l_sql_string.make (s.count)
+				sql_string_32 := l_sql_string
+			else
+				l_sql_string.wipe_out
+			end
+			l_sql_string.append (s)
+			s.wipe_out
+			s.append (parse_32 (l_sql_string))
+			ArgNum := s.occurrences({CHARACTER_32}'?')
+
+			descriptor := db_spec.new_descriptor
+			if not db_spec.normal_parse then
+				parsed := db_spec.parse (descriptor, ht, ht_order, handle, s)
+			end
+			if not parsed then
+				parsed_s := s
+				if is_ok then
+					db_spec.init_order (descriptor, parsed_s)
+				end
+				if is_ok then
+					db_spec.pre_immediate (descriptor, ArgNum)
+				end
+			end
+			set_executed (False)
+			set_prepared (True)
+		ensure
+			prepared_statement: is_prepared
+			prepared_statement: not is_executed
+		end
+
 	execute
 			-- Execute the sql statement
 		require
@@ -103,6 +148,8 @@ feature
 feature {NONE} -- Implementation
 
 	sql_string: detachable STRING;
+
+	sql_string_32: detachable STRING_32;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

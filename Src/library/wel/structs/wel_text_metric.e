@@ -42,7 +42,10 @@ feature {NONE} -- Initialization
 feature -- Status Setting
 
 	set_from_dc (a_dc: WEL_DC)
-			-- Set `Current' with `a_dc'
+			-- Set `Current' with `a_dc'.
+		require
+			a_dc_not_void: a_dc /= Void
+			a_dc_exists: a_dc.exists
 		do
 			cwin_get_text_metric (a_dc.item, item)
 		end

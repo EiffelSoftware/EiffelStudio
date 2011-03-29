@@ -342,6 +342,21 @@ feature -- Processes
 			]"
 		end
 
+	msg_wait_for_multiple_objects_ex (n: INTEGER; phandles: POINTER; ms, wakemask, flags: INTEGER): INTEGER
+			-- SDK MsgWaitForMultipleObjectsEx
+		external
+			"C blocking inline use <windows.h>"
+		alias
+			"[
+				return (EIF_INTEGER) MsgWaitForMultipleObjectsEx(
+					(DWORD) $n,
+					(LPHANDLE) $phandles,
+					(DWORD) $ms,
+					(DWORD) $wakemask,
+					(DWORD) $flags);
+			]"
+		end
+
 feature -- Threads
 
 	resume_thread (a_thread: POINTER): INTEGER

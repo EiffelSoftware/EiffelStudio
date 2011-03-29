@@ -629,11 +629,13 @@ feature {NONE} -- Implementation
 		do
 			l_process := process_handle
 			if l_process /= l_null then
-				l_result := {WEL_API}.msg_wait_for_multiple_objects (1, $l_process, False, msec,
-					{WEL_QS_CONSTANTS}.qs_allinput | {WEL_QS_CONSTANTS}.qs_allpostmessage)
+				l_result := {WEL_API}.msg_wait_for_multiple_objects_ex (1, $l_process, msec, {WEL_QS_CONSTANTS}.qs_allinput | {WEL_QS_CONSTANTS}.qs_allpostmessage, mwmo_inputavailable)
 				check l_result_ok: l_result /= -1 end
 			end
 		end
+
+	mwmo_inputavailable: INTEGER_32 = 0x4
+		-- MWMO_INPUTAVAILABLE Flag for MsgWaitForMultipleObjects to return if input is available.
 
 feature -- Public constants
 

@@ -22,22 +22,4 @@ feature {NONE} -- Initialization
 			new_unique_command_name
 		end
 
-feature -- Command
-
-	update_for_xml_attribute (a_name, a_value: STRING)
-			-- <Precursor>
-		local
-			l_constants: ER_XML_ATTRIBUTE_CONSTANTS
-		do
-			create l_constants
-
-			if a_name.same_string (l_constants.command_name) then
-				command_name := a_value
-			elseif a_name.same_string (l_constants.application_mode) then
-				application_mode := a_value.to_integer
-			else
-				-- Maybe ApplicationModes, or....
-				check not_implemented: False end
-			end
-		end
 end

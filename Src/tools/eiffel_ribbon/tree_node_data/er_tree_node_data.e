@@ -8,14 +8,6 @@ deferred class
 
 feature -- Command
 
-	update_for_xml_attribute (a_name, a_value: STRING)
-			-- FIXME this feature can be removed now?
-		require
-			not_void: a_name /= Void
-			not_void: a_value /= Void
-		deferred
-		end
-
 	on_start_tag (a_namespace: detachable STRING; a_prefix: detachable STRING; a_local_part: STRING)
 			--
 		do
@@ -136,7 +128,7 @@ feature {NONE} -- Implementation
 				a_all_buttons.forth
 			end
 		end
-		
+
 	command_name_prefix: STRING
 			-- Command name prefix
 

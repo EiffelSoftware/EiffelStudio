@@ -949,7 +949,7 @@ end
 			context.add_locals (locals)
 			assert_chheck := context.workbench_mode or
 				context.system.keep_assertions
-			if assert_chheck then
+			if assert_chheck or else context.has_wait_condition then
 				Context.inherited_assertion.add_object_test_locals
 			end
 			if is_old_expression_included then

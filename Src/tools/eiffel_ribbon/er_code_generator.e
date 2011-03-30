@@ -509,10 +509,12 @@ feature {NONE} -- Implementation
 
 										l_last_string.replace_substring_all ("$APPLICATION_MENU_CREATION", "%T%T%Tcreate application_menu.make_with_command_list (<<>>)")
 									end
+									l_last_string.replace_substring_all ("$APPLICATION_MENU_REDEFINE", ",%N%T%T%Tapplication_menu")
 								else
 									-- Remove $APPLICATION_MENU_NAME tag
 									l_last_string.replace_substring_all ("$APPLICATION_MENU_NAME", "")
 									l_last_string.replace_substring_all ("$APPLICATION_MENU_CREATION", "")
+									l_last_string.replace_substring_all ("$APPLICATION_MENU_REDEFINE", "")
 								end
 
 								if l_list.index = 1 then

@@ -37,8 +37,6 @@ feature -- Access
 
 	application_menu: detachable EV_RIBBON_APPLICATION_MENU
 			-- Associated application menu if any
-		deferred
-		end
 
 feature {EV_ANY, EV_ANY_I, EV_ANY_HANDLER} -- Implementation
 

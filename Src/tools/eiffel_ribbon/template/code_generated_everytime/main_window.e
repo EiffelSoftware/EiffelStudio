@@ -14,7 +14,7 @@ inherit
 	EV_RIBBON_TITLED_WINDOW
 		redefine
 			create_interface_objects,
-			initialize
+			initialize$APPLICATION_MENU_REDEFINE
 		end
 
 	EV_SHARED_APPLICATION

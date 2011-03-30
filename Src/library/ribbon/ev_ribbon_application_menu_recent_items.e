@@ -61,10 +61,22 @@ feature {EV_RIBBON} -- Command
 
 	execute (a_command_id: NATURAL_32; a_execution_verb: INTEGER; a_property_key: POINTER; a_property_value: POINTER; a_command_execution_properties: POINTER): NATURAL_32
 			-- <Precursor>
+		local
+			l_key: EV_PROPERTY_KEY
+			l_value: EV_PROPERTY_VARIANT
+			l_selected: NATURAL_32
 		do
 			if command_list.has (a_command_id) then
 				if a_execution_verb = {EV_EXECUTION_VERB_CONSTANTS}.ui_executionverb_execute then
---					select_actions.call (Void)
+					create l_key.share_from_pointer (a_property_key)
+					if l_key.is_selected_item then
+						create l_value.share_from_pointer (a_property_value)
+						l_selected := l_value.uint32_value
+						if recent_items.valid_index (l_selected.as_integer_32 + 1) and then
+							attached recent_items.i_th (l_selected.as_integer_32 + 1).select_actions_cache as l_selected_actions then
+							l_selected_actions.call (void)
+						end
+					end
 				elseif a_execution_verb = {EV_EXECUTION_VERB_CONSTANTS}.ui_executionverb_preview then
 
 				elseif a_execution_verb = {EV_EXECUTION_VERB_CONSTANTS}.ui_executionverb_cancelpreview then

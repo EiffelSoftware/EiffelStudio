@@ -41,11 +41,6 @@ feature -- Access
 	select_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Select actions executed just after user clicked on button.
 
-	text: STRING_32
-			-- Text of button.
-		deferred
-		end
-
 feature -- Command
 
 	set_small_image (a_image: EV_PIXEL_BUFFER)
@@ -99,7 +94,7 @@ feature {EV_RIBBON} -- Command
 				elseif a_execution_verb = {EV_EXECUTION_VERB_CONSTANTS}.ui_executionverb_preview then
 
 				elseif a_execution_verb = {EV_EXECUTION_VERB_CONSTANTS}.ui_executionverb_cancelpreview then
-					
+
 				end
 			end
 		end

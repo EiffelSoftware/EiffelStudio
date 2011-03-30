@@ -142,7 +142,7 @@ feature {NONE} -- Implementation
 --			l_dropdown_color_picker: EV_TREE_ITEM
 			l_dropdown_gallery: EV_TREE_ITEM
 --			l_font_control: EV_TREE_ITEM
---			l_in_ribbon_gallery: EV_TREE_ITEM
+			l_in_ribbon_gallery: EV_TREE_ITEM
 --			l_size_definition: EV_TREE_ITEM
 			l_spinner: EV_TREE_ITEM
 			l_split_button: EV_TREE_ITEM
@@ -181,6 +181,10 @@ feature {NONE} -- Implementation
 			create l_dropdown_gallery.make_with_text (constants.drop_down_gallery)
 			l_dropdown_gallery.set_pebble (constants.drop_down_gallery)
 			a_parent.extend (l_dropdown_gallery)
+
+			create l_in_ribbon_gallery.make_with_text (constants.in_ribbon_gallery)
+			l_in_ribbon_gallery.set_pebble (constants.in_ribbon_gallery)
+			a_parent.extend (l_in_ribbon_gallery)
 		end
 
 	content: SD_CONTENT

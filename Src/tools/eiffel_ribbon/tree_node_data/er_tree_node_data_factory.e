@@ -47,6 +47,8 @@ feature -- Factory method
 				create {ER_TREE_NODE_SPLIT_BUTTON_DATA} Result.make
 			elseif a_type.same_string (constants.drop_down_gallery) then
 				create {ER_TREE_NODE_DROP_DOWN_GALLERY_DATA} Result.make
+			elseif a_type.same_string (constants.in_ribbon_gallery) then
+				create {ER_TREE_NODE_IN_RIBBON_GALLERY_DATA} Result.make
 			elseif a_type.same_string (constants.ribbon_application_menu) then
 				create {ER_TREE_NODE_APPLICATION_MENU_DATA} Result.make
 			elseif a_type.same_string (constants.recent_items) then

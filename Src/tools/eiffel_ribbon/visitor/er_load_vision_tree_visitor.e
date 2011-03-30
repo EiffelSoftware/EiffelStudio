@@ -87,6 +87,14 @@ feature {NONE} -- Implementation
 								if attached {ER_TREE_NODE_GROUP_DATA} l_new_node.data as l_data then
 									l_data.set_size_definition (l_attribute.value)
 								end
+							elseif l_attribute.name.same_string ({ER_XML_ATTRIBUTE_CONSTANTS}.max_rows) then
+								if attached {ER_TREE_NODE_IN_RIBBON_GALLERY_DATA} l_new_node.data as l_data then
+									l_data.set_max_rows (l_attribute.value.to_integer)
+								end
+							elseif l_attribute.name.same_string ({ER_XML_ATTRIBUTE_CONSTANTS}.max_columns) then
+								if attached {ER_TREE_NODE_IN_RIBBON_GALLERY_DATA} l_new_node.data as l_data then
+									l_data.set_max_columns (l_attribute.value.to_integer)
+								end	
 							end
 						elseif attached {ER_XML_TREE_ELEMENT} l_tab_item.item_for_iteration as l_child then
 							create_vision_tree_recursive (l_new_node, l_child)

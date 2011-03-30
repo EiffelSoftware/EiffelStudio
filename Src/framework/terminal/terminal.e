@@ -113,7 +113,7 @@ feature -- Measurement
 		do
 			Result := c_rows (terminal.file_pointer)
 		ensure
-			result_positive: Result > 0
+			result_positive: Result >= 0
 		end
 
 	columns: NATURAL
@@ -121,7 +121,7 @@ feature -- Measurement
 		do
 			Result := c_columns (terminal.file_pointer)
 		ensure
-			result_positive: Result > 0
+			result_positive: Result >= 0
 		end
 
 feature -- Status report
@@ -508,6 +508,8 @@ feature {NONE} -- Externals
 					struct winsize ws;
 					ioctl(fileno($a_fp), TIOCGWINSZ, &ws);
 					return ws.ws_row;
+				#else
+					return 0;
 				#endif
 			]"
 		end
@@ -526,6 +528,8 @@ feature {NONE} -- Externals
 					struct winsize ws;
 					ioctl(fileno($a_fp), TIOCGWINSZ, &ws);
 					return ws.ws_col;
+				#else
+					return 0;
 				#endif
 			]"
 		end
@@ -555,7 +559,7 @@ invariant
 	terminal_exists: terminal.exists
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -26,18 +26,6 @@ feature {NONE} -- Initialization
 			new_unique_command_name
 		end
 		
-feature -- Command
-
-	update_for_xml_attribute (a_name, a_value: STRING)
-			-- <Precursor>
-		local
-			l_constants: ER_XML_ATTRIBUTE_CONSTANTS
-		do
-			create l_constants
-			check a_name.is_equal (l_constants.name) end
-			command_name := a_value
-		end
-
 feature -- XML callbacks
 
 	on_start_tag (a_namespace: detachable STRING; a_prefix: detachable STRING; a_local_part: STRING)

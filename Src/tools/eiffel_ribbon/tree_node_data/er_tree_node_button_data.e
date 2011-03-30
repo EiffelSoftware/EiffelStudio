@@ -22,25 +22,4 @@ feature {NONE} -- Initialization
 			new_unique_command_name
 		end
 
-feature -- Command
-
-	update_for_xml_attribute (a_name, a_value: STRING)
-			-- <Precursor>
-		local
-			l_constants: ER_XML_ATTRIBUTE_CONSTANTS
-		do
-			create l_constants
---			check a_name.same_string (l_constants.command_name) end
-			if a_name.same_string (l_constants.command_name) then
-				command_name := a_value
-			elseif a_name.same_string (l_constants.text_position) then
-				-- nothing to do
-			elseif a_name.same_string (l_constants.type) then
-				-- nothing to do
-			else
-
-			end
-
-		end
-
 end

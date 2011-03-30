@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 			all_property_sets.extend (object_id)
 		end
 
-feature {EV_RIBBON_COLLECTION, EV_SIMPLE_PROPERTY_SET} -- Query
+feature {EV_RIBBON_COLLECTION, EV_SIMPLE_PROPERTY_SET, EV_RIBBON_SAFE_ARRAY} -- Query
 
 	item: MANAGED_POINTER
 			-- Item

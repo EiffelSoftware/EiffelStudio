@@ -91,6 +91,17 @@ feature -- Command
 			c_init_prop_variant_from_uint32 (item, a_natural)
 		end
 
+	set_safe_array (a_list: ARRAYED_LIST [EV_SIMPLE_PROPERTY_SET])
+			-- Set value with `a_safe_array'
+		require
+			not_void: a_list /= Void
+		local
+			l_safe_array: EV_RIBBON_SAFE_ARRAY
+		do
+			create l_safe_array.make (a_list)
+			c_init_prop_variant_from_iunknown_array (item, l_safe_array.psa)
+		end
+
 	destroy
 			-- clean up current
 		do
@@ -293,6 +304,20 @@ feature {NONE} -- Externals
 				PROPVARIANT *ppropvar = (PROPVARIANT *) $a_item;
 				ppropvar->vt = VT_UNKNOWN;
 				ppropvar->punkVal = (IUnknown *)$a_iunknown;
+			}
+			]"
+		end
+
+	c_init_prop_variant_from_iunknown_array (a_item: POINTER; a_psa: POINTER)
+			--
+		external
+			"C inline use <ribbon.h>"
+		alias
+			"[
+			{
+				PROPVARIANT *ppropvar = (PROPVARIANT *) $a_item;
+				ppropvar->vt = VT_ARRAY | VT_UNKNOWN;
+				ppropvar->punkVal = (IUnknown *)$a_psa;	
 			}
 			]"
 		end

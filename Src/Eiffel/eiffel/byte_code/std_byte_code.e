@@ -70,6 +70,57 @@ feature -- Setting
 			compound := c
 		end
 
+feature {NONE} -- Analysis
+
+	detect_request_chain
+			-- Detect if request chain is required and set `context.has_request_chain'.
+		local
+			exit: BOOLEAN
+		do
+			if system.is_scoop and then attached arguments as a then
+				across
+					a as argument
+				until
+					exit
+				loop
+					if real_type (argument.item).is_separate then
+							-- Record that a request chain is required to lock arguments.
+						context.set_has_request_chain
+						exit := True
+					end
+				end
+			end
+		end
+
+	detect_wait_condition
+			-- Check if there are wait conditions and set `context.has_wait_condition'.
+		local
+			inh_assert: INHERITED_ASSERTION
+			has_wait_condition: BOOLEAN
+		do
+			if context.has_request_chain and then context.origin_has_precondition then
+				context.set_assertion_type (In_precondition)
+				separate_target_collector.clean
+				if attached precondition as p then
+						-- There is an immediate precondition.
+					p.process (separate_target_collector)
+					has_wait_condition := separate_target_collector.has_separate_target
+				end
+				if not has_wait_condition then
+					inh_assert := Context.inherited_assertion
+					if inh_assert.has_precondition then
+							-- There are inherited preconditions.
+						inh_assert.process_precondition (separate_target_collector)
+						has_wait_condition := separate_target_collector.has_separate_target
+					end
+				end
+				if has_wait_condition then
+					context.set_has_wait_condition
+				end
+				context.set_assertion_type (0)
+			end
+		end
+
 feature -- Analyzis
 
 	analyze
@@ -87,7 +138,10 @@ feature -- Analyzis
 			workbench_mode := l_context.workbench_mode
 			keep_assertions := workbench_mode or else l_context.system.keep_assertions
 			feat := l_context.current_feature
-			if keep_assertions then
+				-- Check if request chain is required.
+			detect_request_chain
+				-- Evaluate assertions if requested or there could be wait conditions.
+			if keep_assertions or else context.has_request_chain then
 				l_context.set_origin_has_precondition (True)
 				inh_assert := l_context.inherited_assertion
 				inh_assert.init
@@ -111,10 +165,20 @@ feature -- Analyzis
 
 				-- Compute presence or not of pre/postconditions
 			if keep_assertions then
+					-- Assertions are kept on request.
 				if l_context.origin_has_precondition then
 					have_precond := precondition /= Void or else inh_assert.has_precondition
 				end
 				have_postcond := postcondition /= Void or else inh_assert.has_postcondition
+			end
+
+				-- Check if there is a wait condition.
+			detect_wait_condition
+				-- Update `have_precond' if there are wait conditions.
+			if not have_precond and then context.has_wait_condition then
+				have_precond := True
+					-- Update `keep_assertions' that is used later to compute if GC hooks are required.
+				keep_assertions := True
 			end
 
 				-- Enlarge the tree to get some attribute where we
@@ -481,11 +545,6 @@ feature -- Analyzis
 				generate_once_epilogue (generated_c_feature_name)
 			end
 
-			if context.has_request_chain then
-				buf.put_new_line
-				buf.put_string ("if (uarg) RTS_RD (Current);")
-			end
-
 			if compound = Void or else not compound.last.last_all_in_result then
 					-- Remove the GC hooks we've been generated.
 				finish_compound
@@ -725,8 +784,6 @@ end
 						l_buf.put_string ("EIF_BOOLEAN uarg")
 						l_buf.put_integer (i)
 						l_buf.put_character (';')
-							-- Record that a request chain is required to lock arguments.
-						context.set_has_request_chain
 					end
 					i := i + 1
 				end
@@ -1090,26 +1147,9 @@ end
 			context.set_assertion_type (In_precondition)
 				-- Figure out if there are preconditions and wait conditions.
 			inh_assert := Context.inherited_assertion
+			has_wait_condition := context.has_wait_condition
 			if Context.origin_has_precondition then
-				separate_target_collector.clean
-				if attached precondition as p then
-						-- There is an immediate precondition.
-					have_assert := True
-					if context.has_request_chain then
-							-- Check if there are wait conditions.
-						p.process (separate_target_collector)
-						has_wait_condition := separate_target_collector.has_separate_target
-					end
-				end
-				if not has_wait_condition and then inh_assert.has_precondition then
-						-- There are inherited preconditions.
-					have_assert := True
-					if context.has_request_chain then
-							-- Check if there are wait conditions.
-						inh_assert.process_precondition (separate_target_collector)
-						has_wait_condition := separate_target_collector.has_separate_target
-					end
-				end
+				have_assert := attached precondition or else inh_assert.has_precondition
 			end
 			if has_wait_condition then
 					-- There are wait conditions.
@@ -1618,6 +1658,9 @@ end
 				-- Stop monitoring before releasing the GC hooks
 			generate_monitoring_stop
 
+				-- Release request chain.
+			release_request_chain
+
 				-- Generate the remove of the GC hooks
 			context.remove_gc_hooks
 				-- Generate the update of the locals stack used to debug in C
@@ -1684,6 +1727,15 @@ end
 		end
 
 feature {NONE} -- C code generation
+
+	release_request_chain
+			-- Generate code to release request chain if required.
+		do
+			if context.has_request_chain then
+				buffer.put_new_line
+				buffer.put_string ("if (uarg) RTS_RD (Current);")
+			end
+		end
 
 	generate_control_information
 			-- Generate code to compute information about controlled and uncontrolled arguments.

@@ -198,6 +198,9 @@ feature -- Access
 	has_request_chain: BOOLEAN
 			-- Is a request chain created?
 
+	has_wait_condition: BOOLEAN
+			-- Are there wait conditions?
+
 	is_inside_hidden_code: BOOLEAN
 			-- Is inside hidden code?
 			--| used for sugar code such as new loop construct "across"
@@ -307,6 +310,14 @@ feature -- Setting
 			has_request_chain := True
 		ensure
 			has_request_chain: has_request_chain
+		end
+
+	set_has_wait_condition
+			-- Set `has_wait_condition' to `True'.
+		do
+			has_wait_condition := True
+		ensure
+			has_wait_condition: has_wait_condition
 		end
 
 	set_hidden_code_level (a_level: like hidden_code_level)
@@ -1134,12 +1145,9 @@ feature -- Access
 	has_chained_prec: BOOLEAN
 			-- Feature has chained preconditions?
 		do
-			Result := (byte_code.precondition /= Void
-					or else inherited_assertion.has_precondition)
-				and then
-					(	workbench_mode
-						or else
-						system.keep_assertions)
+			Result :=
+				(byte_code.precondition /= Void or else inherited_assertion.has_precondition) and then
+				(workbench_mode or else system.keep_assertions or else has_wait_condition)
 		end
 
 	has_rescue: BOOLEAN
@@ -2652,6 +2660,7 @@ feature -- Clearing
 			current_used := False
 			need_gc_hook := False
 			has_request_chain := False
+			has_wait_condition := False
 			label := 0
 			local_list.wipe_out
 			breakpoint_slots_number := 0;

@@ -153,13 +153,13 @@ feature -- Access
 			l_flags: like internal_flags
 		do
 			l_flags := internal_flags
-			if not System.keep_assertions then
+			if System.keep_assertions or else system.is_scoop then
+				Result := (l_flags & is_special_flag) = 0
+			else
 					-- Special optimization when no assertions are
 					-- generated, we only traverse code that is reachable
 					-- from outside assertions.
 				Result := ((l_flags & (is_special_flag | is_in_assertion_mask)) = 0)
-			else
-				Result := (l_flags & is_special_flag) = 0
 			end
 		end
 
@@ -255,7 +255,7 @@ invariant
 	valid_class_id: class_id > 0
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

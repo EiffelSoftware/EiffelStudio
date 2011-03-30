@@ -586,7 +586,7 @@ feature -- Command/Query Handling
 	log_call_on_processor (a_client_processor_id, a_supplier_processor_id: like processor_id_type; a_routine: like routine_type; a_call_data: like call_data)
 			-- Log call on `a_suppler_processor_id' for `a_client_processor_id'
 		local
-			l_request_chain_meta_data, l_client_request_chain_meta_data, l_creation_request_chain_meta_data: detachable like new_request_chain_meta_data_entry
+			l_client_request_chain_meta_data, l_supplier_request_chain_meta_data, l_creation_request_chain_meta_data: detachable like new_request_chain_meta_data_entry
 			l_request_chain_node_id: like invalid_request_chain_node_id
 			l_request_chain_node_queue: detachable like new_request_chain_node_queue
 			l_client_request_chain_node_queue_entry, l_request_chain_node_queue_entry: detachable like new_request_chain_node_queue_entry
@@ -702,9 +702,9 @@ feature -- Command/Query Handling
 					wait_for_request_chain_to_begin (a_client_processor_id, a_supplier_processor_id, l_client_request_chain_meta_data)
 						-- We make a copy of the current request chain meta data and pass to the supplier for controlled argument processing.
 
-						-- Pass the locks of the current processor.
-					l_request_chain_meta_data := l_client_request_chain_meta_data
-					request_chain_meta_data [a_supplier_processor_id] := l_request_chain_meta_data;
+						-- Temporarily pass the locks of the client processor to the supplier processor.
+					l_supplier_request_chain_meta_data := request_chain_meta_data [a_supplier_processor_id]
+					request_chain_meta_data [a_supplier_processor_id] := l_client_request_chain_meta_data;
 
 						-- Store current logged call count to see if any feature application requests are made by the call.
 					l_logged_calls_count := l_client_request_chain_node_queue_entry.count;
@@ -745,6 +745,9 @@ feature -- Command/Query Handling
 						scoop_command_call_cleanup (l_call_ptr)
 						l_call_ptr := default_pointer
 					else
+							-- Reset supplier processors request chain meta data to previous state.						
+						request_chain_meta_data [a_supplier_processor_id] := l_supplier_request_chain_meta_data
+
 						if l_creation_request_chain_meta_data /= Void then
 								-- Here we wait for the creation routine to finish.
 							l_creation_request_chain_meta_data [request_chain_status_index] := request_chain_status_waiting

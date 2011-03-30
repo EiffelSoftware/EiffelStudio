@@ -92,7 +92,6 @@ feature {NONE} -- Implementation
 							create_vision_tree_recursive (l_new_node, l_child)
 						end
 
-
 						l_tab_item.forth
 					end
 				end

@@ -24,9 +24,10 @@ indexing
 #include "wel_globals.h"
 #include "wel.h"
 
+#ifdef _MSC_VER
 /* Pragma for automatically linking against Common Controls 6.0 */
 #pragma comment(linker,"\"/manifestdependency:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
-
+#endif
 
 /* Temporary external used to get around genericity problem in Vision2. */
 EIF_REFERENCE generize (EIF_OBJECT g_item)

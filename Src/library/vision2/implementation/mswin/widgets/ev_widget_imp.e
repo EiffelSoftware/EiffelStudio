@@ -460,20 +460,24 @@ feature -- Element change
 	set_background_color (color: EV_COLOR)
 			-- Make `color' the new `background_color'
 		do
-			background_color_imp ?= color.implementation
-			if is_displayed then
-				-- If the widget is not hidden then invalidate.
-				invalidate
+			if background_color_imp /= color.implementation then
+				background_color_imp ?= color.implementation
+				if is_displayed then
+					-- If the widget is not hidden then invalidate.
+					invalidate
+				end
 			end
 		end
 
 	set_foreground_color (color: EV_COLOR)
 			-- Make `color' the new `foreground_color'
 		do
-			foreground_color_imp ?= color.implementation
-			if is_displayed then
-				-- If the widget is not hidden then invalidate.
-				invalidate
+			if foreground_color_imp /= color.implementation then
+				foreground_color_imp ?= color.implementation
+				if is_displayed then
+					-- If the widget is not hidden then invalidate.
+					invalidate
+				end
 			end
 		end
 
@@ -745,7 +749,9 @@ feature {NONE} -- Implementation
 			then
 					-- Only start a pick and drop if a dock is not currently executing.
 					-- It may have been started by the previous call to `dragable_motion'.
-				pnd_motion (t.x, t.y, t.screen_x, t.screen_y)
+				if l_last_coords_updated or awaiting_movement then
+					pnd_motion (t.x, t.y, t.screen_x, t.screen_y)
+				end
 			end
 			if application_imp.pointer_motion_actions_internal /= Void then
 				if l_last_coords_updated then

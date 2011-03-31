@@ -5,7 +5,8 @@ indexing
 		Because the hook processing WH_MOUSE_LL is done in the thread that installed it,
 		it means that by default it would be in the GUI thread. That would slow down
 		mouse movement if the application responds to move events (such as drawing the
-		line for pick and drop under Vista/Windows 7 and the desktop composition).
+		line for pick and drop under Vista/Windows 7 or resizing floating tool in the
+		docking library).
 		Therefore we install the hook in its own thread.
 		]"
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -36,29 +37,10 @@ static HANDLE thr_start_event = NULL;
 static HWND thr_window = NULL;
 static DWORD dwThreadId = 0;
 static DWORD hook_process_id;
-static int is_desktop_composition_active = 0;
 
 /* This variable is only accessed from the spawned thread. */
 static HHOOK mouse_hook;
 static DWORD tick_count;
-
-/* Find out if desktop windows composition is active or not. This is done dynamically since
- * the DLL does not exist on older version of Windows. */
-void compute_desktop_composition () {
-	HMODULE dwmapi;
-	is_desktop_composition_active = 0;
-	dwmapi = LoadLibrary(L"dwmapi.dll");
-	if (dwmapi) {
-		FARPROC query = GetProcAddress(dwmapi, "DwmIsCompositionEnabled");
-		if (query) {
-			BOOL val;
-			HRESULT hr;
-			hr = ((FUNCTION_CAST_TYPE (HRESULT, WINAPI, (BOOL *)) query) (&val));
-			is_desktop_composition_active = (hr == S_OK) && (val == TRUE);
-		}
-		FreeLibrary (dwmapi);
-	}
-}
 
 /*---------------------------------------------------------------------------*/
 /* FUNC: cwel_mouse_hook_proc                                                */
@@ -145,7 +127,7 @@ rt_private DWORD WINAPI cwel_main_for_capture (LPVOID param)
 	MSG Msg;
 
 		/* Get Current number of ticks to reduce the number of PostMessage posted when mouse is moving
-		 * on Windows platform with the desktop composition effect. */
+		 * on Windows platform. */
 	tick_count = GetTickCount();
 
 		/* Hook the mouse messages */
@@ -215,9 +197,6 @@ HWND cwel_captured_window(void)
 void cwel_capture (HWND hWnd) {
 
 	if (hWnd && IsWindow(hWnd)) {
-			/* Find out if we are on Vista/Windows 7 with desktop composition. */
-		compute_desktop_composition();
-
 		if (hook_window) {
 				/* The Caller did not yet call `cwel_release_capture', we do it for him. */
 			cwel_release_capture();

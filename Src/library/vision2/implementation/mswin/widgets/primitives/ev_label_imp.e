@@ -245,7 +245,11 @@ feature {EV_ANY_I} -- Initialization
 			a_width, a_height: INTEGER
 			l_angle: REAL
 		do
-			t := internal_font.string_size (a_text)
+			if attached private_wel_font as l_private_wel_font then
+				t := l_private_wel_font.string_size (a_text)
+			else
+				t := internal_font.string_size (a_text)
+			end
 			a_width := t.width
 			a_height := t.height
 

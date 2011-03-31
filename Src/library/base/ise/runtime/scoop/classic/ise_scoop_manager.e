@@ -39,14 +39,11 @@ feature -- C callback function
 			when wait_for_supplier_processor_locks_task_id then
 				wait_for_request_chain_supplier_processor_locks (client_processor_id)
 			when wait_for_processor_redundancy_task_id then
-				set_root_processor_has_exited
+				root_processor_creation_routine_exited
 			when assign_processor_task_id then
 				set_integer_32_return_value (a_callback_data, assign_free_processor_id)
 			when free_processor_task_id then
 				free_processor_id (client_processor_id)
-			when start_processor_loop_task_id then
-					-- Reinstantate during optimization phase.
---				start_processor_application_loop (client_processor_id)
 			when add_processor_reference_task_id then
 				add_processor_reference (supplier_processor_id)
 			when remove_processor_reference_task_id then
@@ -170,26 +167,18 @@ feature -- Processor Initialization
 			create_and_initialize_scoop_processor (Current, $scoop_processor_loop, default_processor_attributes.item, a_processor_id)
 		end
 
-	set_root_processor_has_exited
-			-- Root processor has exited so wait until child processors have also exited.
+	root_processor_creation_routine_exited
+			-- Root processor's creation routine has exited.
 		local
 			l_temp: INTEGER_32
 			l_wait_counter: NATURAL_32
 		do
-			--| FIXME Run through SCOOP Loop for root processor.
+				-- End request chain of root processor creation routine.
+			signify_end_of_request_chain (root_processor_id)
 
-			l_temp := {ATOMIC_MEMORY_OPERATIONS}.decrement_integer_32 ($processor_count)
-			from
-				l_wait_counter := 0
-			until
-				processor_count = 0
-			loop
-				if waiting_processor_count > 0 and then (waiting_processor_count = processor_count) then
-					(create {EXCEPTIONS}).raise ("SCOOP Deadlock Detected%N")
-				end
-				processor_yield (root_processor_id, l_wait_counter)
-				l_wait_counter := l_wait_counter + 1
-			end
+				-- Run processor loop for root processor for any pending logged calls.
+			scoop_processor_loop (root_processor_id)
+
 				-- Wait for all processors to have completely exited before exiting.
 			root_processor_wait_for_redundancy
 		end

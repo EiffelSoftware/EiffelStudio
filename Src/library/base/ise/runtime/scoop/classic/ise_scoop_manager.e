@@ -169,9 +169,6 @@ feature -- Processor Initialization
 
 	root_processor_creation_routine_exited
 			-- Root processor's creation routine has exited.
-		local
-			l_temp: INTEGER_32
-			l_wait_counter: NATURAL_32
 		do
 				-- End request chain of root processor creation routine.
 			signify_end_of_request_chain (root_processor_id)
@@ -1121,29 +1118,35 @@ feature {NONE} -- Resource Initialization
 					else
 							-- There are no request chains to be applied so processor is idle until more are added.
 						from
-							l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 ($idle_processor_count)
 							l_wait_counter := 0
 							l_idle_exit := False
-							l_temp_count := 0
+							l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 ($idle_processor_count)
 						until
 							l_idle_exit
 						loop
-							if idle_processor_count = processor_count then
-									--| FIXME Improve exiting code when we have proper GC support.
-									-- Processor now has to exit so we decrease the number of available SCOOP processors.
-								l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.decrement_integer_32 ($idle_processor_count)
-								l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.decrement_integer_32 ($processor_count)
-								l_processor_exit := True
-								l_idle_exit := True
-							else
-								if l_request_chain_node_meta_data_queue [l_processor_meta_data [Current_request_node_id_execution_index]] /= Void then
-									l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.decrement_integer_32 ($idle_processor_count)
-									l_idle_exit := True
+							l_idle_exit := l_request_chain_node_meta_data_queue [l_processor_meta_data [Current_request_node_id_execution_index]] /= Void
+							if not l_idle_exit then
+								if idle_processor_count /= processor_count then
+									l_processor_exit := False
 								else
-									processor_is_idle (a_logical_processor_id, l_wait_counter)
-									l_wait_counter := l_wait_counter + 1
+									if not l_processor_exit then
+										l_wait_counter := 0
+										l_processor_exit := True
+									end
+										--| FIXME Update exiting code when GC support is available.
+									if l_wait_counter > Processor_spin_lock_limit then
+										l_idle_exit := True
+									end
 								end
+								processor_is_idle (a_logical_processor_id, l_wait_counter)
+								l_wait_counter := l_wait_counter + 1
+							else
+								l_processor_exit := False
 							end
+						end
+						l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.decrement_integer_32 ($idle_processor_count)
+						if l_processor_exit then
+							l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.decrement_integer_32 ($processor_count)
 						end
 					end
 				elseif l_processor_meta_data [processor_status_index] = processor_status_uninitialized then

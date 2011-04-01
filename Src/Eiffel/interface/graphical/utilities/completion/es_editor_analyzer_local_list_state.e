@@ -98,6 +98,7 @@ feature {NONE} -- Basic operation
 			l_wrapper: like eiffel_parser_wrapper
 			l_type_dec: detachable TYPE_DEC_AS
 			l_current_frame: ES_EDITOR_ANALYZER_FRAME
+			l_in_brace: INTEGER
 		do
 			check
 				not_is_scanning_comments: not is_scanning_comments
@@ -113,16 +114,24 @@ feature {NONE} -- Basic operation
 				until
 					l_stop
 				loop
-					if is_local_terminating_token (l_token) then
+					if is_character_8_token (l_token, '{', False) then
+						l_in_brace := l_in_brace + 1
+						l_result.append_character ('{')
+					elseif l_in_brace > 0 and is_character_8_token (l_token, '}', False) then
+						l_in_brace := l_in_brace - 1
+						l_result.append_character ('}')
+					elseif is_local_terminating_token (l_token) then
 						a_info.set_current_line (l_line, l_token)
 						l_stop := True
 					else
 							-- Append the image data.
 						l_result.append (token_text (l_token))
+
 							-- We are skipping whitespace tokens, so add space characters to allow successful parsing.
 							-- The result string isn't pretty but it parses.
 						l_result.append_character ({CHARACTER_32} ' ')
-
+					end
+					if not l_stop then
 							-- Fetch next token data.
 						l_next := next_text_token (l_token, l_line, True, a_end_token)
 						if l_next /= Void then

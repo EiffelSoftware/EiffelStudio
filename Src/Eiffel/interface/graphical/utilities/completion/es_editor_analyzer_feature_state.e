@@ -94,7 +94,7 @@ feature {NONE} -- Basic operation
 							-- Because the argument list was completely analyzed, set the state results.
 
 							-- Check for the return type.
-						if (":").same_string (token_text_8 (l_next.token)) then
+						if is_character_8_token (l_next.token, ':', False) then
 								-- A return type is possible.
 							l_type_start := next_text_token (l_next.token, l_next.line, True, a_end_token)
 							l_next := l_type_start
@@ -178,7 +178,7 @@ feature {NONE} -- Basic operation
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

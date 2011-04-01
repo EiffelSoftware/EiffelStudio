@@ -1140,14 +1140,6 @@ feature {NONE} -- Resource Initialization
 									l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.decrement_integer_32 ($idle_processor_count)
 									l_idle_exit := True
 								else
-									if waiting_processor_count > 0 and then (waiting_processor_count + idle_processor_count = processor_count) then
-										l_temp_count := l_temp_count + 1
-									else
-										l_temp_count := 0
-									end
-									if l_temp_count > deadlock_detection_limit then
-										(create {EXCEPTIONS}).raise ("Potential SCOOP Deadlock detected")
-									end
 									processor_is_idle (a_logical_processor_id, l_wait_counter)
 									l_wait_counter := l_wait_counter + 1
 								end
@@ -1163,14 +1155,34 @@ feature {NONE} -- Resource Initialization
 			end
 		end
 
-	deadlock_detection_limit: NATURAL_16 = 10000
-		-- Number of iterations an idle processor
-
 	processor_is_idle (a_client_processor_id: like processor_id_type; a_wait_counter: NATURAL_32)
 			-- Processor `a_client_processor_id' is idle.
 		do
+				-- Check for any potential deadlock whilst the processor is idling.
+			if
+				waiting_processor_count > 0 and then
+				waiting_processor_count = previous_waiting_processor_count and then
+				(waiting_processor_count + idle_processor_count = processor_count)
+			then
+				deadlock_counter := deadlock_counter + 1
+			else
+				deadlock_counter := 0
+			end
+			previous_waiting_processor_count := waiting_processor_count
+			if deadlock_counter > deadlock_detection_limit then
+				(create {EXCEPTIONS}).raise ("SCOOP Processor Deadlock detected")
+			end
 			processor_yield (a_client_processor_id, a_wait_counter)
 		end
+
+	deadlock_counter: NATURAL_16
+		-- Counter for deadlock detection.
+
+	previous_waiting_processor_count: like waiting_processor_count
+		-- Previous number of waiting processors, used for deadlock detection.
+
+	deadlock_detection_limit: NATURAL_16 = 3000
+		-- Number of iterations an idle processor
 
 	scoop_command_call (data: like call_data)
 			-- Make scoop call from call data `data'.

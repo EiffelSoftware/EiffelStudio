@@ -1032,6 +1032,10 @@ feature {NONE} -- Resource Initialization
 								end
 							else
 									-- We are a tail node, we wait for head node to set pid count to negative value. (as we are a tail node then there must be at least two processors involved)
+
+										-- Increment waiting processor count.
+								l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 ($waiting_processor_count)
+
 								from
 									l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_executing_request_chain_node_meta_data.item_address (request_chain_sync_counter_index), 0)
 									l_wait_counter := 0
@@ -1053,6 +1057,10 @@ feature {NONE} -- Resource Initialization
 									l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_executing_request_chain_node_meta_data.item_address (request_chain_sync_counter_index), 0)
 									l_wait_counter := l_wait_counter + 1
 								end
+
+										-- Decrement waiting processor count.
+								l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.decrement_integer_32 ($waiting_processor_count)
+
 								l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 (l_executing_request_chain_node_meta_data.item_address (request_chain_sync_counter_index))
 							end
 

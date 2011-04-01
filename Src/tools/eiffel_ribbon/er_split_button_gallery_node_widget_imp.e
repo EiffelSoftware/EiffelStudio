@@ -11,7 +11,7 @@ note
 	revision: "$Revision$"
 
 deferred class
-	ER_DROP_DOWN_GALLERY_NODE_WIDGET_IMP
+	ER_SPLIT_BUTTON_GALLERY_NODE_WIDGET_IMP
 
 inherit
 	EV_VERTICAL_BOX
@@ -44,7 +44,7 @@ feature {NONE}-- Initialization
 
 			l_ev_label_1.set_text ("Type:")
 			l_ev_label_1.align_text_left
-			l_ev_label_2.set_text ("Drop-down gallery")
+			l_ev_label_2.set_text ("Split button gallery")
 			l_ev_label_2.align_text_left
 			l_ev_label_3.set_text ("Identifier:")
 			l_ev_label_3.align_text_left

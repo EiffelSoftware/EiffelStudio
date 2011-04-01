@@ -66,7 +66,11 @@ feature -- ALl types under group
 
 	in_ribbon_gallery: STRING = "InRibbonGallery"
 
+	split_button_gallery: STRING = "SplitButtonGallery"
+
 	drop_down_gallery_menu_layout: STRING = "DropDownGallery.MenuLayout"
+
+	split_button_gallery_menu_layout: STRING = "SplitButtonGallery.MenuLayout"
 
 	flow_menu_layout: STRING = "FlowMenuLayout"
 
@@ -123,7 +127,9 @@ feature -- Contract support
 					l_string.same_string (flow_menu_layout) or else
 					l_string.same_string (application_menu_recent_items) or else
 					l_string.same_string (recent_items) or else
-					l_string.same_string (in_ribbon_gallery)
+					l_string.same_string (in_ribbon_gallery) or else
+					l_string.same_string (split_button_gallery) or else
+					l_string.same_string (split_button_gallery_menu_layout)
 			end
 		end
 
@@ -138,7 +144,8 @@ feature -- Contract support
 					l_string.same_string (spinner) or else
 					l_string.same_string (split_button) or else
 					l_string.same_string (drop_down_gallery) or else
-					l_string.same_string (in_ribbon_gallery)
+					l_string.same_string (in_ribbon_gallery) or else
+					l_string.same_string (split_button_gallery)
 			end
 		end
 end

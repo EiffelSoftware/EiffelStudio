@@ -146,7 +146,7 @@ feature {NONE} -- Implementation
 --			l_size_definition: EV_TREE_ITEM
 			l_spinner: EV_TREE_ITEM
 			l_split_button: EV_TREE_ITEM
---			l_split_button_gallery: EV_TREE_ITEM
+			l_split_button_gallery: EV_TREE_ITEM
 --			l_toggle_button: EV_TREE_ITEM
 		do
 			create l_button.make_with_text (constants.button)
@@ -185,6 +185,10 @@ feature {NONE} -- Implementation
 			create l_in_ribbon_gallery.make_with_text (constants.in_ribbon_gallery)
 			l_in_ribbon_gallery.set_pebble (constants.in_ribbon_gallery)
 			a_parent.extend (l_in_ribbon_gallery)
+
+			create l_split_button_gallery.make_with_text (constants.split_button_gallery)
+			l_split_button_gallery.set_pebble (constants.split_button_gallery)
+			a_parent.extend (l_split_button_gallery)
 		end
 
 	content: SD_CONTENT

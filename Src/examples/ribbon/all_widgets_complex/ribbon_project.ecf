@@ -1,5 +1,5 @@
-﻿<?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-6-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-6-0 http://www.eiffel.com/developers/xml/configuration-1-6-0.xsd" name="eiffelribbon" uuid="8A485578-E375-45B6-91D7-DC4B2D46D7A5">
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-8-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-8-0 http://www.eiffel.com/developers/xml/configuration-1-8-0.xsd" name="all_widgets_complex" uuid="8A485578-E375-45B6-91D7-DC4B2D46D7A5">
 	<target name="ribbon_project">
 		<description>This configuration file has been generated for you by EiffelRibbon.</description>
 		<root cluster="root_cluster" class="RIBBON_APPLICATION" feature="make_and_launch"/>
@@ -21,4 +21,3 @@
 		<setting name="msil_generation" value="true"/>
 	</target>
 </system>
-

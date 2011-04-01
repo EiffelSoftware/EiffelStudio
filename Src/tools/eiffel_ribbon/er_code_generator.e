@@ -253,6 +253,12 @@ feature {ER_CODE_GENERATOR_FOR_APPLICATION_MENU} -- Command
 					l_gen_info.set_default_item_class_name_prefix ("RIBBON_IN_RIBBON_GALLERY_IMP_")
 					l_gen_info.set_item_file ("ribbon_in_ribbon_gallery")
 					l_gen_info.set_item_imp_file ("ribbon_in_ribbon_gallery_imp")
+				elseif a_group_node.item.text.same_string ({ER_XML_CONSTANTS}.split_button_gallery) then
+					create l_gen_info
+					l_gen_info.set_default_item_class_imp_name_prefix ("RIBBON_SPLIT_BUTTON_GALLERY_")
+					l_gen_info.set_default_item_class_name_prefix ("RIBBON_SPLIT_BUTTON_GALLERY_IMP_")
+					l_gen_info.set_item_file ("ribbon_split_button_gallery")
+					l_gen_info.set_item_imp_file ("ribbon_split_button_gallery_imp")
 				else
 					check not_implemented: False end
 					create l_gen_info
@@ -1322,6 +1328,16 @@ feature {NONE} -- Implementation
 					else
 						l_generated.replace_substring_all ("$INDEX_1", "in_ribbon_gallery_" + (button_counter + l_index).out)
 						l_generated.replace_substring_all ("$INDEX_2", "RIBBON_IN_RIBBON_GALLERY_" + (button_counter + l_index).out)
+					end
+				elseif a_group_node.i_th (l_index).text.same_string (l_constants.split_button_gallery) then
+					if attached {ER_TREE_NODE_DATA} a_group_node.i_th (l_index).data as l_data
+						and then attached l_data.command_name as l_identify_name
+						and then not l_identify_name.is_empty then
+						l_generated.replace_substring_all ("$INDEX_1", l_identify_name.as_lower)
+						l_generated.replace_substring_all ("$INDEX_2", l_identify_name.as_upper)
+					else
+						l_generated.replace_substring_all ("$INDEX_1", "split_button_gallery_" + (button_counter + l_index).out)
+						l_generated.replace_substring_all ("$INDEX_2", "RIBBON_SPLIT_BUTTON_GALLERY_" + (button_counter + l_index).out)
 					end
 				elseif a_group_node.i_th (l_index).text.same_string (l_constants.split_button) then
 					if attached {ER_TREE_NODE_DATA} a_group_node.i_th (l_index).data as l_data

@@ -327,6 +327,8 @@ feature {NONE} -- Tree saving
 						add_xml_drop_down_gallery_node (l_group_node, a_group_tree_node.item)
 					elseif a_group_tree_node.item.text.same_string (l_xml_constants.in_ribbon_gallery) then
 						add_xml_in_ribbon_gallery_node (l_group_node, a_group_tree_node.item)
+					elseif a_group_tree_node.item.text.same_string (l_xml_constants.split_button_gallery) then
+						add_xml_split_button_gallery_node (l_group_node, a_group_tree_node.item)
 					else
 						check not_implemented: False end
 					end
@@ -499,6 +501,63 @@ feature {NONE} -- Tree saving
 			create l_attribute
 			a_gallery_node.add_attribute (l_attribute.max_rows, name_space, a_data.max_rows.out)
 			a_gallery_node.add_attribute (l_attribute.max_columns, name_space, a_data.max_columns.out)
+		end
+
+	add_xml_split_button_gallery_node (a_group_node: XML_ELEMENT; a_button_tree_node: EV_TREE_NODE)
+			--
+		require
+			not_void: a_group_node /= Void
+			valid: a_group_node.name.same_string (xml_constants.group)
+		local
+			l_button_node: XML_ELEMENT
+			l_constants: ER_XML_ATTRIBUTE_CONSTANTS
+		do
+			if attached {EV_TREE_ITEM} a_button_tree_node as l_item then
+				check l_item.text.same_string (xml_constants.split_button_gallery) end
+
+				create l_button_node.make (a_group_node, xml_constants.split_button_gallery, name_space)
+				a_group_node.put_last (l_button_node)
+
+				if attached {ER_TREE_NODE_SPLIT_BUTTON_GALLERY_DATA} a_button_tree_node.data as l_data then
+					create l_constants
+
+					-- Add xml attribute
+					if attached l_data.command_name as l_command_name and then not l_command_name.is_empty then
+						l_button_node.add_attribute (l_constants.command_name, name_space, l_command_name)
+
+						-- Add coresspond command xml node
+						add_xml_command_node (l_data)
+					end
+
+					l_button_node.add_attribute (l_constants.type, name_space, "Items")
+
+					-- Add menu layout
+					add_xml_menu_layout_for_split_button_gallery (l_button_node, l_data)
+				end
+			end
+		end
+
+	add_xml_menu_layout_for_split_button_gallery (a_gallery_node: XML_ELEMENT; a_data: ER_TREE_NODE_SPLIT_BUTTON_GALLERY_DATA)
+			--
+		require
+			not_void: a_gallery_node /= Void
+			valid: a_gallery_node.name.same_string (xml_constants.split_button_gallery)
+			not_void: a_data /= Void
+		local
+			l_xml_node: XML_ELEMENT
+			l_flow_menu_layout: XML_ELEMENT
+			l_attribute: ER_XML_ATTRIBUTE_CONSTANTS
+		do
+			create l_xml_node.make (a_gallery_node, xml_constants.split_button_gallery_menu_layout, name_space)
+			a_gallery_node.put_last (l_xml_node)
+
+			create l_flow_menu_layout.make (l_xml_node, xml_constants.flow_menu_layout, name_space)
+			l_xml_node.put_last (l_flow_menu_layout)
+
+			create l_attribute
+			l_flow_menu_layout.add_attribute (l_attribute.rows, name_space, a_data.rows.out)
+			l_flow_menu_layout.add_attribute (l_attribute.columns, name_space, a_data.columns.out)
+			l_flow_menu_layout.add_attribute (l_attribute.gripper, name_space, "None") -- FIXME: NONE for test
 		end
 
 	add_xml_drop_down_gallery_node (a_group_node: XML_ELEMENT; a_button_tree_node: EV_TREE_NODE)

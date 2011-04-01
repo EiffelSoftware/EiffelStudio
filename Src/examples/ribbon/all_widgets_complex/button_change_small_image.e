@@ -34,9 +34,9 @@ feature {NONE} -- Initialization
 										do
 											create l_pixel_buffer
 											if counter.item \\ 2 = 0 then
-												l_pixel_buffer.set_with_named_file ("./res/1.bmp")
+												l_pixel_buffer.set_with_named_file ("./res/Copy.bmp")
 											else
-												l_pixel_buffer.set_with_named_file ("./res/8.bmp")
+												l_pixel_buffer.set_with_named_file ("./res/Cut.bmp")
 											end
 
 											set_small_image (l_pixel_buffer)

@@ -41,7 +41,7 @@ feature {NONE} -- initialization
 			create l_list.make (2)
 			create l_item
 			create l_pixel_buffer
-			l_pixel_buffer.set_with_named_file ("./res/5.bmp")
+			l_pixel_buffer.set_with_named_file ("./res/AddTableL.bmp")
 			l_item.set_image (l_pixel_buffer)
 			l_item.set_label ("first item")
 			l_item.select_actions.extend (agent do
@@ -51,7 +51,7 @@ feature {NONE} -- initialization
 
 			create l_item
 			create l_pixel_buffer
-			l_pixel_buffer.set_with_named_file ("./res/6.bmp")
+			l_pixel_buffer.set_with_named_file ("./res/Paste.bmp")
 			l_item.set_image (l_pixel_buffer)
 			l_item.set_label ("second item")
 			l_item.select_actions.extend (agent do

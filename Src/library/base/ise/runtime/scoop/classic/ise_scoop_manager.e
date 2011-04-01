@@ -653,7 +653,8 @@ feature -- Command/Query Handling
 					-- Readd in case we have a new structure.
 			end
 
-			if l_request_chain_node_id = 0 then
+			if (processor_meta_data [a_supplier_processor_id]) [processor_status_index] = processor_status_uninitialized then
+					-- We have an uninitialized processor so we must be logging the creation routine.
 
 				l_creation_request_chain_meta_data := new_request_chain_meta_data_entry
 					-- Set request chain meta data for creation routine.
@@ -673,6 +674,9 @@ feature -- Command/Query Handling
 					-- Increase request chain and request chain node id to simulate normal logging procedure
 				(processor_meta_data [a_supplier_processor_id]) [current_request_chain_id_index] := 1
 				(processor_meta_data [a_supplier_processor_id]) [current_request_chain_node_id_index] := 1
+
+					-- Flag new processor as initialized.
+				(processor_meta_data [a_supplier_processor_id]) [processor_status_index] := processor_status_initialized
 			end
 
 			if l_is_lock_passing then
@@ -754,15 +758,10 @@ feature -- Command/Query Handling
 					processor_semaphore_signal (a_supplier_processor_id)
 					processor_semaphore_wait (a_client_processor_id)
 				elseif l_is_synchronous then
-					if a_supplier_processor_id = root_processor_id then
-						scoop_command_call (a_call_data)
-						scoop_command_call_cleanup (a_call_data)
-					else
-						l_request_chain_node_queue_entry.extend (a_call_data)
-						i := {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 ($waiting_processor_count)
-						processor_semaphore_wait (a_client_processor_id)
-						i := {ATOMIC_MEMORY_OPERATIONS}.decrement_integer_32 ($waiting_processor_count)
-					end
+					l_request_chain_node_queue_entry.extend (a_call_data)
+					i := {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 ($waiting_processor_count)
+					processor_semaphore_wait (a_client_processor_id)
+					i := {ATOMIC_MEMORY_OPERATIONS}.decrement_integer_32 ($waiting_processor_count)
 				else
 						-- Asynchronous logging
 					l_request_chain_node_queue_entry.extend (a_call_data)
@@ -869,12 +868,16 @@ feature {NONE} -- Resource Initialization
 
 				-- Set up root processor and initial chain meta data.
 			root_processor_id := assign_free_processor_id
+
 			signify_start_of_request_chain (root_processor_id)
 			assign_supplier_processor_to_request_chain (root_processor_id, root_processor_id)
 			wait_for_request_chain_supplier_processor_locks (root_processor_id)
 			l_request_chain_meta_data := request_chain_meta_data [root_processor_id]
 			check l_request_chain_meta_data_attached: attached l_request_chain_meta_data end
 			l_request_chain_meta_data [request_chain_status_index] := request_chain_status_application
+
+				-- Make root processor as initialized.
+			processor_meta_data [root_processor_id].put (processor_status_initialized, processor_status_index)
 		end
 
 	initialize_default_processor_meta_data (a_processor_id: like processor_id_type)
@@ -911,9 +914,6 @@ feature {NONE} -- Resource Initialization
 
 				-- Reset execution index to `0'
 			(processor_meta_data [a_processor_id]).put (0, current_request_node_id_execution_index)
-
-				-- Mark processor as initialized.
-			(processor_meta_data [a_processor_id]).put (processor_status_initialized, processor_status_index)
 		end
 
 	scoop_processor_loop (a_logical_processor_id: like processor_id_type)

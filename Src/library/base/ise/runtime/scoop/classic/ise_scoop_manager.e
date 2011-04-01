@@ -1158,20 +1158,6 @@ feature {NONE} -- Resource Initialization
 	processor_is_idle (a_client_processor_id: like processor_id_type; a_wait_counter: NATURAL_32)
 			-- Processor `a_client_processor_id' is idle.
 		do
-				-- Check for any potential deadlock whilst the processor is idling.
-			if
-				waiting_processor_count > 0 and then
-				waiting_processor_count = previous_waiting_processor_count and then
-				(waiting_processor_count + idle_processor_count = processor_count)
-			then
-				deadlock_counter := deadlock_counter + 1
-			else
-				deadlock_counter := 0
-			end
-			previous_waiting_processor_count := waiting_processor_count
-			if deadlock_counter > deadlock_detection_limit then
-				(create {EXCEPTIONS}).raise ("SCOOP Processor Deadlock detected")
-			end
 			processor_yield (a_client_processor_id, a_wait_counter)
 		end
 
@@ -1181,7 +1167,7 @@ feature {NONE} -- Resource Initialization
 	previous_waiting_processor_count: like waiting_processor_count
 		-- Previous number of waiting processors, used for deadlock detection.
 
-	deadlock_detection_limit: NATURAL_16 = 3000
+	deadlock_detection_limit: NATURAL_16 = 1000
 		-- Number of iterations an idle processor
 
 	scoop_command_call (data: like call_data)
@@ -1582,6 +1568,20 @@ feature {NONE} -- Externals
 			elseif a_iteration_number <= max_yield_counter then
 				processor_cpu_yield
 			else
+					-- Check for any potential deadlock.
+				if
+					waiting_processor_count > 0 and then
+					waiting_processor_count = previous_waiting_processor_count and then
+					(waiting_processor_count + idle_processor_count = processor_count)
+				then
+					deadlock_counter := deadlock_counter + 1
+				else
+					deadlock_counter := 0
+				end
+				previous_waiting_processor_count := waiting_processor_count
+				if deadlock_counter > deadlock_detection_limit then
+					(create {EXCEPTIONS}).raise ("SCOOP Processor Deadlock detected")
+				end
 				processor_sleep (processor_sleep_quantum)
 			end
 		end

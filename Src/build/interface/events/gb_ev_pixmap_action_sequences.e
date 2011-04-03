@@ -8,37 +8,38 @@ note
 
 class
 	GB_EV_PIXMAP_ACTION_SEQUENCES
-	
+
 inherit
-	
+
 	GB_EV_ACTION_SEQUENCES
 
 feature -- Access
-		
+
 	names: ARRAYED_LIST [STRING]
 			-- All names of action sequences contained in `Current'.
 		once
 			create Result.make (0)
 			Result.extend ("expose_actions")
+			Result.compare_objects
 		end
-		
-	
+
+
 	types: ARRAYED_LIST [STRING]
 			-- All types of action sequences contained in `Current'.
 		once
 			create Result.make (0)
 			Result.extend ("EV_GEOMETRY_ACTION_SEQUENCE")
 		end
-	
+
 	comments: ARRAYED_LIST [STRING]
 			-- All comments of action sequences contained in `Current'.
 		once
 			create Result.make (0)
 			Result.extend ("-- Actions to be performed when an area needs to be redrawn.")
 		end
-		
+
 	connect_event_output_agent (object: EV_ANY; action_sequence: STRING; adding: BOOLEAN; string_handler: ORDERED_STRING_HANDLER)
-			-- If `adding', then connect an agent to `action_sequence' actions of `object' which will display name of 
+			-- If `adding', then connect an agent to `action_sequence' actions of `object' which will display name of
 			-- action sequence and all arguments in `string_handler'. If no `adding' then `remove_only_added' `action_sequence'.
 		local
 			geometry_sequence: GB_EV_GEOMETRY_ACTION_SEQUENCE

@@ -10,25 +10,43 @@ class
 	GB_EV_TEXT_COMPONENT_ACTION_SEQUENCES
 
 inherit
-
 	GB_EV_ACTION_SEQUENCES
+		redefine
+			action_sequence_type_name, has_name, name
+		end
+
+feature -- Status Report
+
+	has_name (a_feature_name: STRING): BOOLEAN
+		do
+			Result := a_feature_name.is_equal (change_actions_name) or
+				a_feature_name.is_equal (text_change_actions_name)
+		end
 
 feature -- Access
 
-	names: ARRAYED_LIST [STRING]
-			-- All names of action sequences contained in `Current'.
-		once
-			create Result.make (0)
-			Result.extend ("change_actions")
-			Result.extend ("text_change_actions")
+	action_sequence_type_name (a_feature_name: STRING_8): STRING_8
+			-- <Precursor>
+			--| Special implementation to handle renaming of `change_actions' into `text_change_actions' in EV_SPIN_BUTTON.
+		do
+				-- It is the same action sequence regardless of the name
+			Result := types.first
 		end
 
+	name (a_type: STRING; an_index: INTEGER): STRING
+			--| Special implementation to handle renaming of `change_actions' into `text_change_actions' in EV_SPIN_BUTTON.	
+		do
+			if a_type.is_equal ({GB_CONSTANTS}.ev_spin_button_string) then
+				Result := text_change_actions_name
+			else
+				Result := change_actions_name
+			end
+		end
 
 	types: ARRAYED_LIST [STRING]
 			-- All types of action sequences contained in `Current'.
 		once
 			create Result.make (0)
-			Result.extend ("EV_NOTIFY_ACTION_SEQUENCE")
 			Result.extend ("EV_NOTIFY_ACTION_SEQUENCE")
 		end
 
@@ -36,7 +54,6 @@ feature -- Access
 			-- All comments of action sequences contained in `Current'.
 		once
 			create Result.make (0)
-			Result.extend ("-- Actions to be performed when `text' changes.")
 			Result.extend ("-- Actions to be performed when `text' changes.")
 		end
 
@@ -52,12 +69,12 @@ feature -- Access
 			check
 				text_component_not_void: text_component /= Void
 			end
-			if action_sequence.is_equal ("change_actions") then
+			if action_sequence.is_equal (change_actions_name) then
 				if adding then
 					spin_button ?= text_component
 					notify_sequence ?= new_instance_of (dynamic_type_from_string ("GB_EV_NOTIFY_ACTION_SEQUENCE"))
 					if spin_button /= Void then
-						spin_button.text_change_actions.extend (notify_sequence.display_agent ("text_change_actions", string_handler))
+						spin_button.text_change_actions.extend (notify_sequence.display_agent (text_change_actions_name, string_handler))
 					else
 						text_component.change_actions.extend (notify_sequence.display_agent (action_sequence, string_handler))
 					end
@@ -71,6 +88,19 @@ feature -- Access
 				end
 			end
 		end
+
+feature {NONE} -- Implementation
+
+	names: ARRAYED_LIST [STRING]
+			-- All names of action sequences contained in `Current'.
+		once
+			create Result.make (0)
+			Result.extend (change_actions_name)
+			Result.compare_objects
+		end
+
+	change_actions_name: STRING = "change_actions"
+	text_change_actions_name: STRING = "text_change_actions"
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

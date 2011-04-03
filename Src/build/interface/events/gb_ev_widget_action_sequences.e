@@ -8,13 +8,13 @@ note
 
 class
 	GB_EV_WIDGET_ACTION_SEQUENCES
-	
+
 inherit
-	
+
 	GB_EV_ACTION_SEQUENCES
 
 feature -- Access
-		
+
 	names: ARRAYED_LIST [STRING]
 			-- All names of action sequences contained in `Current'.
 		once
@@ -31,9 +31,10 @@ feature -- Access
 			Result.extend ("focus_in_actions")
 			Result.extend ("focus_out_actions")
 			Result.extend ("resize_actions")
+			Result.compare_objects
 		end
-		
-	
+
+
 	types: ARRAYED_LIST [STRING]
 			-- All types of action sequences contained in `Current'.
 		once
@@ -51,7 +52,7 @@ feature -- Access
 			Result.extend ("EV_NOTIFY_ACTION_SEQUENCE")
 			Result.extend ("EV_GEOMETRY_ACTION_SEQUENCE")
 		end
-	
+
 	comments: ARRAYED_LIST [STRING]
 			-- All comments of action sequences contained in `Current'.
 		once
@@ -69,9 +70,9 @@ feature -- Access
 			Result.extend ("-- Actions to be performed when keyboard focus is lost.")
 			Result.extend ("-- Actions to be performed when size changes.")
 		end
-		
+
 	connect_event_output_agent (widget: EV_WIDGET; action_sequence: STRING; adding: BOOLEAN; string_handler: ORDERED_STRING_HANDLER)
-			-- If `adding', then connect an agent to `action_sequence' actions of `widget' which will display name of 
+			-- If `adding', then connect an agent to `action_sequence' actions of `widget' which will display name of
 			-- action sequence and all arguments in `textable'. If no `adding' then `remove_only_added' `action_sequence'.
 		local
 			notify_sequence: GB_EV_NOTIFY_ACTION_SEQUENCE
@@ -165,7 +166,7 @@ feature -- Access
 				else
 					remove_only_added (widget.resize_actions)
 				end
-			end	
+			end
 		end
 
 note

@@ -8,37 +8,38 @@ note
 
 class
 	GB_EV_CONTAINER_ACTION_SEQUENCES
-	
+
 inherit
-	
+
 	GB_EV_ACTION_SEQUENCES
 
 feature -- Access
-		
+
 	names: ARRAYED_LIST [STRING]
 			-- All names of action sequences contained in `Current'.
 		once
 			create Result.make (0)
 			Result.extend ("new_item_actions")
+			Result.compare_objects
 		end
-		
-	
+
+
 	types: ARRAYED_LIST [STRING]
 			-- All types of action sequences contained in `Current'.
 		once
 			create Result.make (0)
 			Result.extend ("EV_NEW_ITEM_ACTION_SEQUENCE")
 		end
-	
+
 	comments: ARRAYED_LIST [STRING]
 			-- All comments of action sequences contained in `Current'.
 		once
 			create Result.make (0)
 			Result.extend ("-- Actions to be performed when a new item is added.")
 		end
-		
+
 	connect_event_output_agent (widget: EV_WIDGET; action_sequence: STRING; adding: BOOLEAN; string_handler: ORDERED_STRING_HANDLER)
-			-- If `adding', then connect an agent to `action_sequence' actions of `widget' which will display name of 
+			-- If `adding', then connect an agent to `action_sequence' actions of `widget' which will display name of
 			-- action sequence and all arguments in `string_handler'. If no `adding' then `remove_only_added' `action_sequence'.
 		do
 			--| FIXME implement

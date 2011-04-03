@@ -8,11 +8,11 @@ note
 
 class
 	GB_EVENT_UTILITIES
-	
+
 inherit
-	
+
 	INTERNAL
-	
+
 	GB_CONSTANTS
 
 feature -- Basic operation.
@@ -27,7 +27,7 @@ feature -- Basic operation.
 		ensure
 			Result_not_void: Result /= Void
 		end
-		
+
 	string_to_action_sequence_info (string: STRING): GB_ACTION_SEQUENCE_INFO
 			-- `Result' is representation of `string'.
 			-- Reverse operation of `action_sequence_info_to_string'.
@@ -37,12 +37,11 @@ feature -- Basic operation.
 			first_space, second_space: INTEGER
 			a_name, a_class_name, a_feature_name, a_type: STRING
 			action_sequences: GB_EV_ACTION_SEQUENCES
-			matched_index: INTEGER
 		do
 			first_space := string.index_of (' ', 1)
 			second_space := string.index_of (' ', first_space + 1)
 			a_name := string.substring (1, first_space - 1)
-			
+
 				-- For backwards compatibility, any action sequences that have changed name
 				-- must be handled here.
 				-- "column_resize_actions" was renamed with CVS version 1.6 of this file so
@@ -51,8 +50,8 @@ feature -- Basic operation.
 			if a_name.is_equal ("column_resize_actions") then
 				a_name := "column_resized_actions"
 			end
-			
-			
+
+
 			a_class_name := string.substring (first_space + 1, second_space - 1)
 			a_feature_name := string.substring (second_space + 1, string.count)
 				-- We must build the action sequenceas class corresponding to
@@ -60,22 +59,16 @@ feature -- Basic operation.
 				-- sequence which is not kept in the string representation.
 			action_sequences ?= new_instance_of (dynamic_type_from_string ("GB_" + a_class_name))
 			check
-				action_sequences_not_void: action_sequences /= Void
+				has_actions: action_sequences /= Void
+				has_name: action_sequences.has_name (a_name)
 			end
-			action_sequences.names.compare_objects
-			
-			matched_index := action_sequences.names.index_of (a_name, 1)
-			check
-				index_matched: matched_index /= 0
-			end
-			action_sequences.names.compare_references
-			a_type := (action_sequences.types) @ matched_index
-			
+			a_type := action_sequences.action_sequence_type_name (a_name)
+
 			create Result.make_with_details (a_name, a_class_name, a_type, a_feature_name)
 		ensure
 			Result_not_void: Result /= Void
 		end
-		
+
 	modified_action_sequence_name (current_type: STRING; action_sequence_info: GB_ACTION_SEQUENCE_INFO): STRING
 			-- `Result' is action sequence name of `action_sequence_info' in class represented by
 			-- `Current_type'. This is necessayr as in some places in the Vision2 interface, the
@@ -88,7 +81,7 @@ feature -- Basic operation.
 				end
 			end
 		end
-		
+
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

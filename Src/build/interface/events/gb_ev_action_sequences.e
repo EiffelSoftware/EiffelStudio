@@ -8,36 +8,63 @@ note
 
 deferred class
 	GB_EV_ACTION_SEQUENCES
-	
+
 inherit
 	internal
 
-feature -- Access
+feature -- Status Report
 
 	count: INTEGER
 			-- Number of action sequence in Current.
 		do
-			Result := names.count		
+			Result := names.count
 		end
-		
-	names: ARRAYED_LIST [STRING]
-			-- All names of action sequences contained in `Current'.
-		deferred
+
+	has_name (a_feature_name: STRING): BOOLEAN
+			-- Is `a_feature_name' listed in `names'?
+		require
+			a_feature_name_not_void: a_feature_name /= Void
+		do
+			Result := names.has (a_feature_name)
 		end
-		
-	
+
+	valid_index (a_index: INTEGER): BOOLEAN
+			-- Is `a_index' valid for accessing the data?
+		do
+			Result := names.valid_index (a_index)
+		end
+
+feature -- Access
+
+	action_sequence_type_name (a_feature_name: STRING): STRING
+			-- Associated type for action sequence `a_feature_name'.
+		require
+			a_feature_name_not_void: a_feature_name /= Void
+			has_name: has_name (a_feature_name)
+		do
+			Result := types.i_th (names.index_of (a_feature_name, 1))
+		end
+
+	name (a_type: STRING; an_index: INTEGER): STRING
+		require
+			a_type_not_void: a_type /= Void
+			valid_index: valid_index (an_index)
+		do
+			Result := names.i_th (an_index)
+		end
+
 	types: ARRAYED_LIST [STRING]
 			-- All types of action sequences contained in `Current'.
 		deferred
 		end
-	
+
 	comments: ARRAYED_LIST [STRING]
 			-- All comments of action sequences contained in `Current'.
 		deferred
 		end
-		
+
 	connect_event_output_agent (object: EV_ANY; action_sequence: STRING; adding: BOOLEAN; string_handler: ORDERED_STRING_HANDLER)
-			-- If `adding', then connect an agent to `action_sequence' actions of `object' which will display name of 
+			-- If `adding', then connect an agent to `action_sequence' actions of `object' which will display name of
 			-- action sequence and all arguments in `textable'. If not `adding' then `remove_only_added' `action_sequence'.
 		require
 			object_not_void: object /= Void
@@ -45,7 +72,7 @@ feature -- Access
 			string_handler_not_void: string_handler /= Void
 		deferred
 		end
-		
+
 	remove_only_added (a: EV_ACTION_SEQUENCE [TUPLE []])
 			-- Remove all procedures from `a' who's `target' correponds
 			-- to GB_EV_ACTION_SEQUENCE. This allows us to selectively
@@ -61,16 +88,25 @@ feature -- Access
 			loop
 				t ?= a.item.target
 				if t /= Void then
-					a.remove	
+					a.remove
 				else
 					a.forth
 				end
 			end
 		end
-		
+
+feature {NONE} -- Access
+
+	names: ARRAYED_LIST [STRING]
+			-- All names of action sequences contained in `Current'.
+		deferred
+		ensure
+			proper_comparison: names.object_comparison
+		end
+
 invariant
 	-- Cannot be executed as the invariant will not execute the once.
-	-- Could reference each atribute in the 
+	-- Could reference each atribute in the
 	--lists_equal_in_length: (names.count = types.count) and (names.count = comments.count)
 
 note

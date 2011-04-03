@@ -8,13 +8,13 @@ note
 
 class
 	GB_EV_MULTI_COLUMN_LIST_ACTION_SEQUENCES
-	
+
 inherit
-	
+
 	GB_EV_ACTION_SEQUENCES
 
 feature -- Access
-		
+
 	names: ARRAYED_LIST [STRING]
 			-- All names of action sequences contained in `Current'.
 		once
@@ -23,9 +23,10 @@ feature -- Access
 			Result.extend ("deselect_actions")
 			Result.extend ("column_title_click_actions")
 			Result.extend ("column_resized_actions")
+			Result.compare_objects
 		end
-		
-	
+
+
 	types: ARRAYED_LIST [STRING]
 			-- All types of action sequences contained in `Current'.
 		once
@@ -35,7 +36,7 @@ feature -- Access
 			Result.extend ("EV_COLUMN_ACTION_SEQUENCE")
 			Result.extend ("EV_COLUMN_ACTION_SEQUENCE")
 		end
-	
+
 	comments: ARRAYED_LIST [STRING]
 			-- All comments of action sequences contained in `Current'.
 		once
@@ -47,7 +48,7 @@ feature -- Access
 		end
 
 	connect_event_output_agent (widget: EV_WIDGET; action_sequence: STRING; adding: BOOLEAN; string_handler: ORDERED_STRING_HANDLER)
-			-- If `adding', then connect an agent to `action_sequence' actions of `widget' which will display name of 
+			-- If `adding', then connect an agent to `action_sequence' actions of `widget' which will display name of
 			-- action sequence and all arguments in `textable'. If no `adding' then `remove_only_added' `action_sequence'.
 		local
 			multi_column_row_sequence: GB_EV_MULTI_COLUMN_LIST_ROW_SELECT_ACTION_SEQUENCE
@@ -86,9 +87,9 @@ feature -- Access
 				else
 					remove_only_added (multi_column_list.column_resized_actions)
 				end
-			end	
+			end
 		end
-		
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

@@ -304,7 +304,7 @@ feature {NONE} -- Implementation
 		require
 			action_sequence_not_void: an_action_sequence /= Void
 		local
-			counter: INTEGER
+			counter, nb: INTEGER
 			label, start_label: EV_LABEL
 			frame: EV_FRAME
 			vertical_box: EV_VERTICAL_BOX
@@ -314,13 +314,13 @@ feature {NONE} -- Implementation
 			cell: EV_CELL
 			info: GB_ACTION_SEQUENCE_INFO
 			feature_name: STRING
-			renamed_action_sequence_name: STRING
 			action_sequence_comment: STRING
 		do
 			from
 				counter := 1
+				nb := an_action_sequence.count + 1
 			until
-				counter = an_action_sequence.count + 1
+				counter = nb
 			loop
 				building_counter := building_counter + 1
 				create frame
@@ -363,10 +363,9 @@ feature {NONE} -- Implementation
 				main_vertical_box.disable_item_expand (horizontal_box)
 
 
-				create info.make_with_details (an_action_sequence.names @ counter, action_sequences_list.item, an_action_sequence.types @ counter, temp_event_string)
-					-- Adjust event names that have been renamed in Vision2 interface
-				renamed_action_sequence_name := modified_action_sequence_name (object.type, info)
-				check_button.set_text (renamed_action_sequence_name)
+				create info.make_with_details (an_action_sequence.name (object.type, counter), action_sequences_list.item,
+					an_action_sequence.types @ counter, temp_event_string)
+				check_button.set_text (an_action_sequence.name (object.type, counter))
 				feature_name := feature_name_of_object_event (info)
 					-- Display text before the check button.
 
@@ -425,7 +424,7 @@ feature {NONE} -- Implementation
 					-- dynamic object building again.
 				all_text_fields.extend (text_field)
 				all_check_buttons.extend (check_button)
-				all_names.extend (renamed_action_sequence_name)
+				all_names.extend (an_action_sequence.name (object.type, counter))
 				all_comments.extend (an_action_sequence.comments @ counter)
 				all_types.extend (an_action_sequence.types @ counter)
 				all_class_names.extend (action_sequences_list.item)

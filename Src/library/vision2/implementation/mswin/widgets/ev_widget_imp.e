@@ -360,10 +360,12 @@ feature -- Status setting
 		local
 			p_imp: like parent_imp
 		do
-			show_window (wel_item, {WEL_WINDOW_CONSTANTS}.Sw_show)
-			p_imp := parent_imp
-			if p_imp /= Void then
-				p_imp.notify_change (Nc_minsize, attached_interface.implementation, False)
+			if not is_show_requested then
+				show_window (wel_item, {WEL_WINDOW_CONSTANTS}.Sw_show)
+				p_imp := parent_imp
+				if p_imp /= Void then
+					p_imp.notify_change (Nc_minsize, attached_interface.implementation, False)
+				end
 			end
 		end
 
@@ -372,10 +374,12 @@ feature -- Status setting
 		local
 			p_imp: like parent_imp
 		do
-			show_window (wel_item, {WEL_WINDOW_CONSTANTS}.Sw_hide)
-			p_imp := parent_imp
-			if p_imp /= Void then
-				p_imp.notify_change (Nc_minsize, Current, False)
+			if is_show_requested then
+				show_window (wel_item, {WEL_WINDOW_CONSTANTS}.Sw_hide)
+				p_imp := parent_imp
+				if p_imp /= Void then
+					p_imp.notify_change (Nc_minsize, Current, False)
+				end
 			end
 		end
 

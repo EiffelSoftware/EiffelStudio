@@ -365,19 +365,21 @@ feature -- Access
 		local
 			cur_width, cur_height: INTEGER
 			screen_dc: WEL_SCREEN_DC
+			l_wel_rect: like wel_rect
 		do
 			if a_string.count = 0 then
 				cur_width := 0
 				cur_height := 0
 			else
-				wel_rect.set_rect (0, 0, 32767, 32767)
+				l_wel_rect := wel_rect
+				l_wel_rect.set_rect (0, 0, 32767, 32767)
 				screen_dc := reusable_screen_dc
 				screen_dc.get
 				screen_dc.select_font (Current)
 
-				screen_dc.draw_text (a_string, wel_rect, Dt_calcrect | Dt_expandtabs | Dt_noprefix)
-				cur_width := wel_rect.width
-				cur_height := wel_rect.height
+				screen_dc.draw_text (a_string, l_wel_rect, Dt_calcrect | Dt_expandtabs | Dt_noprefix)
+				cur_width := l_wel_rect.width
+				cur_height := l_wel_rect.height
 
 				screen_dc.unselect_font
 				screen_dc.quick_release

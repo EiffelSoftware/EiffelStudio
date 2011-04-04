@@ -10,20 +10,20 @@ class
 
 feature -- Access
 
-	gui_font: WEL_DEFAULT_GUI_FONT
+	gui_font: WEL_FONT
 			-- Default screen (WEL) font.
-		once
-			create Result.make
+		do
+			Result := message_font
 		ensure
-			font_created: Result /= Void
+			Result_exists: Result /= Void and then Result.exists
 		end
 
-	system_font: WEL_SYSTEM_FONT
+	system_font: WEL_FONT
 			-- Default system font.
-		once
-			create Result.make
+		do
+			Result := message_font
 		ensure
-			font_created: Result /= Void
+			font_created: Result /= Void and then Result.exists
 		end
 
 	message_font: WEL_FONT

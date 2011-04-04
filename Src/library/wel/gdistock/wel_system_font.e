@@ -8,6 +8,9 @@ note
 class
 	WEL_SYSTEM_FONT
 
+obsolete
+	"Access default system font via WEL_SHARED_FONTS instead (4 Apr 2011)"
+
 inherit
 	WEL_FONT
 		rename

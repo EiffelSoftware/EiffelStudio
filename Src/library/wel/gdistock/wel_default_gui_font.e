@@ -8,6 +8,9 @@ note
 class
 	WEL_DEFAULT_GUI_FONT
 
+obsolete
+	"Access default gui font via WEL_SHARED_FONTS instead (4 Apr 2011)"
+
 inherit
 	WEL_FONT
 		rename

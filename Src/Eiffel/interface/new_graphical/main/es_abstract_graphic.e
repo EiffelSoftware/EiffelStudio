@@ -203,7 +203,14 @@ feature {NONE} -- Implementation (preparation of all widgets)
 				path_index := index_of_word_option ("project_path")
 				if path_index /= 0 and argument_count >= path_index + 1 then
 					l_project_path := argument (path_index + 1)
+					from
+					until
+						l_project_path.empty or else l_project_path.item (l_project_path.count) /= '\'
+					loop
+						l_project_path.remove_tail (1)
+					end
 				end
+
 				target_index := index_of_word_option ("target")
 				if target_index /= 0 and argument_count >= target_index + 1 then
 					l_target := argument (target_index + 1)
@@ -352,7 +359,7 @@ feature {NONE} -- Factory
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

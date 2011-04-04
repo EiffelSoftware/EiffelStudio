@@ -783,7 +783,10 @@ feature {NONE} -- Settings
 				end
 				if l_path /= Void and then not l_path.is_empty then
 						-- remove trailing \ as it makes problem with the escaping of arguments
-					if l_path.item (l_path.count) = '\' then
+					from
+					until
+						l_path.empty or else l_path.item (l_path.count) /= '\'
+					loop
 						l_path.remove_tail (1)
 					end
 					l_args.extend ("-metadata_cache_path")
@@ -793,7 +796,10 @@ feature {NONE} -- Settings
 			l_args.extend ("-project_path")
 			if a_precompile.eifgens_location /= Void then
 				l_path := a_precompile.eifgens_location.evaluated_path
-				if l_path.item (l_path.count) = '\' then
+				from
+				until
+					l_path.empty or else l_path.item (l_path.count) /= '\'
+				loop
 					l_path.remove_tail (1)
 				end
 			else
@@ -1243,7 +1249,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

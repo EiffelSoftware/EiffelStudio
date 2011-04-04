@@ -97,6 +97,9 @@ feature {NONE} -- Basic operation
 					if l_agents = Void then
 						create l_agents.make (lchild.count)
 						reversed_sizing_agents := l_agents
+					elseif not l_agents.is_empty then
+							-- We are in a recursive call, so we create a temporary agent list
+						create l_agents.make (lchild.count)
 					end
 				end
 

@@ -153,13 +153,16 @@ feature -- Access
 			l_flags: like internal_flags
 		do
 			l_flags := internal_flags
-			if System.keep_assertions or else system.is_scoop then
+			if System.keep_assertions then
 				Result := (l_flags & is_special_flag) = 0
+			elseif system.is_scoop then
+					-- Include code that is used in wait conditions in traversal.
+				Result := ((l_flags & (is_special_flag | is_in_assertion_mask)) = 0)
 			else
 					-- Special optimization when no assertions are
 					-- generated, we only traverse code that is reachable
 					-- from outside assertions.
-				Result := ((l_flags & (is_special_flag | is_in_assertion_mask)) = 0)
+				Result := ((l_flags & (is_special_flag | is_in_assertion_mask | is_in_wait_condition_flag)) = 0)
 			end
 		end
 
@@ -218,6 +221,9 @@ feature -- Flags
 	is_in_assignment_flag: NATURAL_16 = 0x0040
 	is_in_creation_flag: NATURAL_16 = 0x0080
 			-- Mask used for internal property.
+
+	is_in_wait_condition_flag: NATURAL_16 = 0x0100
+			-- Flag that indicates a use in wait conditions
 
 feature -- Debug
 

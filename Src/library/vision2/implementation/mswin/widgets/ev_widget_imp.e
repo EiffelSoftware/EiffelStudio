@@ -539,6 +539,8 @@ feature {NONE} -- Implementation, mouse_button_events
 				-- transport just started. There is no need to now call
 				-- `pnd_press' as docking will override drag and drop.
 			if not is_destroyed and not is_dock_executing then
+					-- We do not call the user actions regardless of them having been called or not.
+				actions_called := actions_called or press_action = ev_pnd_end_transport
 				pnd_press (t.x, t.y, button, t.screen_x, t.screen_y)
 			end
 			if not actions_called then
@@ -578,6 +580,7 @@ feature {NONE} -- Implementation, mouse_button_events
 				actions_called := True
 			end
 
+			actions_called := actions_called or press_action = ev_pnd_end_transport
 			pnd_press (t.x, t.y, button, t.screen_x, t.screen_y)
 
 			if not actions_called then
@@ -1288,16 +1291,13 @@ feature -- Deferred features
 		deferred
 		end
 
-	on_size (size_type, a_width, a_height: INTEGER)
+	on_size, frozen trigger_resize_actions (size_type, a_width, a_height: INTEGER)
 			-- `Current' has been resized.
 		require
 			exists: exists
-		local
-			t: like resize_actions_internal
 		do
-			t := resize_actions_internal
-			if t /= Void then
-				t.call ([screen_x, screen_y, a_width, a_height])
+			if attached resize_actions_internal as l_actions then
+				l_actions.call ([screen_x, screen_y, a_width, a_height])
 			end
 		end
 

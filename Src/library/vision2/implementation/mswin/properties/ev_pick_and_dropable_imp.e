@@ -71,23 +71,10 @@ feature -- Status setting
 		do
 			inspect
 				press_action
-			when
-				Ev_pnd_start_transport
-			then
-				start_transport
-					(a_x, a_y, a_button, True, 0, 0, 0.5, a_screen_x, a_screen_y, False)
-			when
-				Ev_pnd_end_transport
-			then
-				if mode_is_configurable_target_menu then
-					erase_rubber_band
-					application_imp.do_once_on_idle (agent end_transport
-						(a_x, a_y, a_button, 0, 0, 0, a_screen_x, a_screen_y))
-				else
-					end_transport
-						(a_x, a_y, a_button, 0, 0, 0, a_screen_x, a_screen_y)
-				end
-
+			when Ev_pnd_start_transport then
+				start_transport (a_x, a_y, a_button, True, 0, 0, 0.5, a_screen_x, a_screen_y, False)
+			when Ev_pnd_end_transport then
+				end_transport (a_x, a_y, a_button, 0, 0, 0, a_screen_x, a_screen_y)
 			else
 				check
 					disabled: press_action = Ev_pnd_disabled
@@ -325,6 +312,8 @@ feature {EV_ANY_I} -- Implementation
 			l_original: detachable like original_top_level_window_imp
 		do
 			if press_action = ev_pnd_end_transport then
+				pointer_x := a_x.to_integer_16
+				pointer_y := a_y.to_integer_16
 
 				l_original := original_top_level_window_imp
 				check l_original /= Void end
@@ -341,6 +330,7 @@ feature {EV_ANY_I} -- Implementation
 
 					-- Remove the line drawn from source position to Pointer.
 				erase_rubber_band
+				application_implementation.set_pnd_pointer_coords (a_screen_x, a_screen_y)
 
 				text_component ?= Current
 					-- Restore the cursor.
@@ -375,7 +365,7 @@ feature {EV_ANY_I} -- Implementation
 					--| Drop actions only need to be called if the transport
 					--| has actually ended correctly.
 				then
-					target := pointed_target
+					target := pointed_target_from_position (a_x, a_y)
 						-- Retrieve `target'.
 					if target /= Void then
 						if target.drop_actions.accepts_pebble (l_pebble) then
@@ -439,11 +429,49 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
+	pointed_target_from_position (a_x, a_y: INTEGER): detachable EV_ABSTRACT_PICK_AND_DROPABLE
+			-- Target at mouse position (a_x, a_y), relative coordinates of the mouse compared to Current.
+		local
+			rpt: like real_pointed_target
+			widget_target: detachable EV_WIDGET
+			a: detachable FUNCTION [ANY, TUPLE [INTEGER, INTEGER], detachable EV_ABSTRACT_PICK_AND_DROPABLE]
+			widget_x, widget_y: INTEGER
+			l_point: WEL_POINT
+		do
+			create l_point.make (a_x, a_y)
+			if attached {WEL_WINDOW} Current as l_window then
+				l_point.client_to_screen (l_window)
+			else
+					-- For some reason the underlying widget is not a WEL_WINDOW, we use the
+					-- cursor position.
+				l_point.set_cursor_position
+			end
+			rpt := real_pointed_target_at (l_point)
+			Result := rpt
+			widget_target ?= rpt
+			if widget_target /= Void then
+				a := widget_target.implementation.actual_drop_target_agent
+				if a /= Void then
+					widget_x := pointer_x - widget_target.screen_x
+					widget_y := pointer_y - widget_target.screen_y
+					Result := a.item ([widget_x, widget_y])
+				end
+			end
+		end
 
 	real_pointed_target: detachable EV_PICK_AND_DROPABLE
-			-- Hole at mouse position
+			-- Hole at current mouse position.
 		local
-			wel_point: WEL_POINT
+			l_point: WEL_POINT
+		do
+			create l_point.make (0, 0)
+			l_point.set_cursor_position
+			Result := real_pointed_target_at (l_point)
+		end
+
+	real_pointed_target_at (a_point: WEL_POINT): detachable EV_PICK_AND_DROPABLE
+			-- Hole at mouse location `a_point'.
+		local
 			current_target: EV_ABSTRACT_PICK_AND_DROPABLE
 			widget_imp_at_cursor_position: detachable EV_WIDGET_IMP
 			wel_window_at_cursor_position: detachable WEL_WINDOW
@@ -458,9 +486,7 @@ feature {EV_ANY_I} -- Implementation
 			client_coordinate_point: WEL_POINT
 			win: detachable WEL_WINDOW
 		do
-			create wel_point.make (0, 0)
-			wel_point.set_cursor_position
-			wel_window_at_cursor_position := wel_point.window_at
+			wel_window_at_cursor_position := a_point.window_at
 				-- Retrieve WEL_WINDOW at cursor position
 
 			if wel_window_at_cursor_position /= Void then
@@ -472,17 +498,17 @@ feature {EV_ANY_I} -- Implementation
 
 
 					-- We must now perform special processing for widgets that have an HTTRANSPARENT
-					-- part. In this situation, the widget returned by "wel_point.window_at' may be the
+					-- part. In this situation, the widget returned by "a_point.window_at' may be the
 					-- parent of the widget that is pointed to. For example, if you place a notebook in a box
 					-- and point to the are to the right of the tabs, the widget returned is the box. Julian.
 				composite_window ?= wel_window_at_cursor_position
 				if composite_window /= Void and (widget_imp_at_cursor_position = Void or else widget_imp_at_cursor_position.parent /= Void) then
 						-- If we are pointing to a window that has children.
 					if widget_imp_at_cursor_position /= Void then
-						create client_coordinate_point.make (wel_point.x - widget_imp_at_cursor_position.screen_x,
-							wel_point.y - widget_imp_at_cursor_position.screen_y)
+						create client_coordinate_point.make (a_point.x - widget_imp_at_cursor_position.screen_x,
+							a_point.y - widget_imp_at_cursor_position.screen_y)
 					else
-						create client_coordinate_point.make (wel_point.x - composite_window.absolute_x, wel_point.y - composite_window.absolute_y)
+						create client_coordinate_point.make (a_point.x - composite_window.absolute_x, a_point.y - composite_window.absolute_y)
 					end
 						-- Convert the coordinates so that they are relative to the parent window.
 					ptr := composite_window.child_window_from_point (client_coordinate_point)
@@ -527,8 +553,8 @@ feature {EV_ANY_I} -- Implementation
 
 					item_list_imp ?= widget_imp_at_cursor_position
 					if item_list_imp /= Void then
-						item_imp ?= item_list_imp.find_item_at_position (wel_point.x
-							- item_list_imp.screen_x, wel_point.y - item_list_imp.screen_y)
+						item_imp ?= item_list_imp.find_item_at_position (a_point.x
+							- item_list_imp.screen_x, a_point.y - item_list_imp.screen_y)
 						if item_imp /= Void then
 						if not item_imp.attached_interface.drop_actions.is_empty then
 								-- If the cursor is over an item and the item is a

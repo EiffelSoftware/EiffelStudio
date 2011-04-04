@@ -8,15 +8,15 @@ note
 
 class
 	EVENT_SELECTOR
-	
+
 inherit
 	GB_SUPPORTED_EVENTS
-	
+
 	INTERNAL
-	
+
 create
 	make_with_list_and_handler
-	
+
 feature {NONE} -- Initialization
 
 	make_with_list_and_handler (a_list: EV_CHECKABLE_LIST; a_string_handler: ORDERED_STRING_HANDLER)
@@ -36,90 +36,93 @@ feature {NONE} -- Initialization
 
 feature -- Status setting
 
-		rebuild (widget: EV_WIDGET)
-				-- Rebuild `Current' for `widget'.
-			require
-				widget_not_void: widget /= Void
-			local
-				list_item: EVENT_LIST_ITEM
-				names: ARRAYED_LIST [STRING]
-				action_sequences: GB_EV_ACTION_SEQUENCES
-			do
-					-- Clear `list'.
-				list.wipe_out
-				from
-					action_sequences_list.start
-				until
-					action_sequences_list.off
-				loop
-						-- We loop through every supported action sequence type, and see if `widget' conforms to this type.
-						-- This only works in this fashion, as all supported Vision2 action sequences are inherited.
-					if type_conforms_to (dynamic_type (widget), dynamic_type_from_string (action_sequences_list.item)) then
-						action_sequences ?= new_instance_of (dynamic_type_from_string ("GB_" + action_sequences_list.item))
-						if action_sequences /= Void then
-								-- `widget' has been matched with an action sequence type.
-							  	-- We must now loop through all action sequences defined in this type class,
-							  	-- and connect the appropriate check and uncheck events.
-							names := action_sequences.names
-							from
-								names.start
-							until
-								names.off
-							loop
-								create list_item.make_with_text (names.item)
-								list_item.set_accept (agent action_sequences.connect_event_output_agent (widget, names.item, True, string_handler))
-								list_item.set_deny (agent action_sequences.connect_event_output_agent (widget, names.item, False, string_handler))
-								list.extend (list_item)
-								list.check_item (list_item)
-								names.forth
-							end
+	rebuild (widget: EV_WIDGET)
+			-- Rebuild `Current' for `widget'.
+		require
+			widget_not_void: widget /= Void
+		local
+			list_item: EVENT_LIST_ITEM
+			i, nb: INTEGER
+			names: ARRAYED_LIST [STRING]
+			l_name: STRING
+			action_sequences: GB_EV_ACTION_SEQUENCES
+		do
+				-- Clear `list'.
+			list.wipe_out
+			from
+				action_sequences_list.start
+			until
+				action_sequences_list.off
+			loop
+					-- We loop through every supported action sequence type, and see if `widget' conforms to this type.
+					-- This only works in this fashion, as all supported Vision2 action sequences are inherited.
+				if type_conforms_to (dynamic_type (widget), dynamic_type_from_string (action_sequences_list.item)) then
+					action_sequences ?= new_instance_of (dynamic_type_from_string ("GB_" + action_sequences_list.item))
+					if action_sequences /= Void then
+							-- `widget' has been matched with an action sequence type.
+						  	-- We must now loop through all action sequences defined in this type class,
+						  	-- and connect the appropriate check and uncheck events.
+						from
+							i := 1
+							nb := action_sequences.count
+						until
+							i > nb
+						loop
+							l_name := action_sequences.name (widget.generator, i)
+							create list_item.make_with_text (l_name)
+							list_item.set_accept (agent action_sequences.connect_event_output_agent (widget, l_name, True, string_handler))
+							list_item.set_deny (agent action_sequences.connect_event_output_agent (widget, l_name, False, string_handler))
+							list.extend (list_item)
+							list.check_item (list_item)
+							i := i + 1
 						end
 					end
-					action_sequences_list.forth
 				end
+				action_sequences_list.forth
 			end
+		end
 
-		item_checked (list_item: EV_LIST_ITEM)
-				-- `list_item' has been checked, so respond
-				-- by executing `check_event' of `list_item'.
-			require
-				list_item_not_void: list_item /= Void
-			local
-				event_list_item: EVENT_LIST_ITEM
-			do
-				event_list_item ?= list_item
-				check
-					item_was_event_item: event_list_item /= Void
-				end
-				event_list_item.check_event.call ([])
+	item_checked (list_item: EV_LIST_ITEM)
+			-- `list_item' has been checked, so respond
+			-- by executing `check_event' of `list_item'.
+		require
+			list_item_not_void: list_item /= Void
+		local
+			event_list_item: EVENT_LIST_ITEM
+		do
+			event_list_item ?= list_item
+			check
+				item_was_event_item: event_list_item /= Void
 			end
-			
-		item_unchecked (list_item: EV_LIST_ITEM)
-				-- `list_item' has been unchecked, so respond
-				-- by executing `uncheck_event' of `list_item'.
-			require
-				list_item_not_void: list_item /= Void
-			local
-				event_list_item: EVENT_LIST_ITEM
-			do
-				event_list_item ?= list_item
-				check
-					item_was_event_item: event_list_item /= Void
-				end
-				event_list_item.uncheck_event.call ([])
+			event_list_item.check_event.call ([])
+		end
+
+	item_unchecked (list_item: EV_LIST_ITEM)
+			-- `list_item' has been unchecked, so respond
+			-- by executing `uncheck_event' of `list_item'.
+		require
+			list_item_not_void: list_item /= Void
+		local
+			event_list_item: EVENT_LIST_ITEM
+		do
+			event_list_item ?= list_item
+			check
+				item_was_event_item: event_list_item /= Void
 			end
-			
+			event_list_item.uncheck_event.call ([])
+		end
+		
 feature {NONE} -- Implementation
 
 	list: EV_CHECKABLE_LIST
 		-- An EV_CHECKABLE_LIST which will contain item corresponding to
 		-- each action sequence of the widget currently being tested.
-		
+
 	string_handler: ORDERED_STRING_HANDLER
 
 invariant
 	list_not_void: list /= Void
-	
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

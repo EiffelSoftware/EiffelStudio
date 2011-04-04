@@ -558,8 +558,7 @@ feature {NONE} -- Implementation: State
 	is_checking_precondition: BOOLEAN
 			-- Level for analysis of precondition
 		do
-			Result := (depend_unit_level & {DEPEND_UNIT}.is_in_require_flag) =
-				{DEPEND_UNIT}.is_in_require_flag
+			Result := depend_unit_level & ({DEPEND_UNIT}.is_in_require_flag | {DEPEND_UNIT}.is_in_wait_condition_flag) /= 0
 		end
 
 	is_checking_check: BOOLEAN
@@ -769,10 +768,23 @@ feature {NONE} -- Settings
 			-- Also set `b' to check_for_vape.
 		do
 			if b then
-				depend_unit_level := depend_unit_level | {DEPEND_UNIT}.is_in_require_flag
+				if system.is_scoop and then current_feature.has_separate_arguments then
+						-- It's possible that there are no wait conditions,
+						-- but then the combined precondition should be tested for that
+						-- and this is not done at the moment.
+					debug ("to_implement")
+						to_implement ("[
+							Test if a combined precondition has a wait condition and
+							use this result to do more precise evaluation.
+						]")
+					end
+					depend_unit_level := depend_unit_level | {DEPEND_UNIT}.is_in_wait_condition_flag
+				else
+					depend_unit_level := depend_unit_level | {DEPEND_UNIT}.is_in_require_flag
+				end
 			else
 				depend_unit_level := depend_unit_level &
-					{DEPEND_UNIT}.is_in_require_flag.bit_not
+					({DEPEND_UNIT}.is_in_require_flag | {DEPEND_UNIT}.is_in_wait_condition_flag).bit_not
 			end
 		ensure
 			is_checking_precondition_set: is_checking_precondition = b

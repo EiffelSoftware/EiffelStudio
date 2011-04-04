@@ -14,53 +14,47 @@ create
 feature -- Initialization
 
 	make
-			-- Creation procedure.
+			-- Setup and execute example.
 		local
-			i: INTEGER -- loop iterator
 			a_customer: separate CUSTOMER
+			a_customer_list: ARRAYED_LIST [separate CUSTOMER]
 		do
 			create shop.make (number_of_chairs)
-			create barber.make (shop, time_for_hair_cut)
+			create barber.make (time_for_haircut)
 
-			create customers.make (number_of_customers)
+			create a_customer_list.make (number_of_customers)
 
-			from
-				i := 1
-			until
-				i > number_of_customers
-			loop
-				create a_customer.make (i, barber, shop, number_of_haircuts)
-				customers.extend (a_customer)
-				i := i + 1
+			across (1 |..| number_of_customers) as ic loop
+				create a_customer.make (ic.item, barber, shop, number_of_haircuts)
+				a_customer_list.extend (a_customer)
 			end
 
-			from
-				customers.start
-			until
-				customers.after
-			loop
-				launch_customer (customers.item)
-				customers.forth
-			end
+			across a_customer_list as ic loop launch_customer (ic.item) end
+
 		end
 
 feature {NONE} -- Implementation
 
 	number_of_customers: INTEGER = 30
+			-- Customer count.
+
 	number_of_chairs: INTEGER = 8
+			-- Chair count.
 
 	number_of_haircuts: INTEGER = 3
-			-- How many times each customer wants to get hair cut?
+			-- Haircut count per customer.
 
-	time_for_hair_cut: INTEGER = 1000
+	time_for_haircut: INTEGER = 1000
+			-- Duration of haircut.
 
 	barber: separate BARBER
-	shop: separate SHOP
+			-- Barber
 
-	customers: ARRAYED_LIST [separate CUSTOMER]
+	shop: separate SHOP
+			-- Shop
 
 	launch_customer (a_customer: separate CUSTOMER)
-			-- Launch customer in a controlled manner.
+			-- Start `a_customer's life.
 		do
 			a_customer.live
 		end

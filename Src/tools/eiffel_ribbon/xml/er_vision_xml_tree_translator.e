@@ -133,27 +133,152 @@ feature {NONE} -- Tree saving
 
 				-- Saving applicaition menu node
 				if a_vision_tree.count >= 2 then
-					if attached {EV_TREE_ITEM} a_vision_tree.i_th (2) as l_tree_item_menu then
-						check l_tree_item_menu.text.same_string (xml_constants.ribbon_application_menu) end
+					from
+						a_vision_tree.go_i_th (2)
+					until
+						a_vision_tree.after
+					loop
+						save_application_menu_node (a_vision_tree.item)
+						save_context_popup_node (a_vision_tree.item)
 
-						-- Add recent items xml node
-						add_xml_recent_items_node (l_tree_item_menu)
-
-						-- Add menu group xml node
-						from
-							l_tree_item_menu.start
-						until
-							l_tree_item_menu.after
-						loop
-							if attached {EV_TREE_ITEM} l_tree_item_menu.item as l_tree_menu_group_item then
-								check l_tree_menu_group_item.text.same_string (xml_constants.menu_group) end
-								add_xml_menu_group_node (l_tree_menu_group_item)
-
-							end
-
-							l_tree_item_menu.forth
-						end
+						a_vision_tree.forth
 					end
+
+				end
+			end
+		end
+
+	save_context_popup_node (a_tree_node: EV_TREE_NODE)
+			-- Save context popup node if possible
+		require
+			not_void: a_tree_node /= Void
+		local
+			l_xml_item, l_last_parent, l_last_parent_2: XML_ELEMENT
+		do
+			if attached {EV_TREE_ITEM} a_tree_node as l_tree_item_menu and then
+					l_tree_item_menu.text.same_string (xml_constants.context_popup) then
+
+				-- Add context popup xml node
+				if attached xml_node_by_name (xml_constants.application_views) as l_ribbon_application_views then
+					create l_xml_item.make (l_ribbon_application_views, xml_constants.context_popup, name_space)
+					l_ribbon_application_views.put_last (l_xml_item)
+					l_last_parent := l_xml_item
+					from
+						a_tree_node.start
+					until
+						a_tree_node.after
+					loop
+						if attached {EV_TREE_ITEM} a_tree_node.item as l_item then
+							check l_item.text.same_string (xml_constants.context_popup_context_menus) or else
+								l_item.text.same_string (xml_constants.context_popup_mini_toolbars) end
+
+							create l_xml_item.make (l_last_parent, l_item.text, name_space)
+							l_last_parent.put_last (l_xml_item)
+							l_last_parent_2 := l_xml_item
+
+							from
+								l_item.start
+							until
+								l_item.after
+							loop
+
+--								create l_xml_item.make (l_last_parent, l_item.text, name_space)
+--								l_last_parent.put_last (l_xml_item)
+--								l_last_parent_2 := l_xml_item		
+--							
+--								if attached l_item.item as l_context_popups then
+--									from
+--										l_context_popups.start
+--									until
+--										l_context_popups.after
+--									loop
+										save_context_menu_or_mini_toolbar_node (l_item.item, l_last_parent_2)
+--										l_context_popups.forth
+--									end
+--								end
+
+								l_item.forth
+							end
+						end
+						a_tree_node.forth
+					end
+				else
+					check not_possible: False end
+				end
+			end
+		end
+
+	save_context_menu_or_mini_toolbar_node (a_context_menu_or_mini_toolbar: EV_TREE_NODE; a_parent: XML_ELEMENT)
+			--
+		require
+			not_void: a_context_menu_or_mini_toolbar /= Void
+			valid: a_context_menu_or_mini_toolbar.text.same_string (xml_constants.context_menu) or else
+				a_context_menu_or_mini_toolbar.text.same_string (xml_constants.mini_toolbar)
+		local
+			l_xml_item: XML_ELEMENT
+			l_name: XML_ATTRIBUTE
+		do
+			create l_xml_item.make (a_parent, a_context_menu_or_mini_toolbar.text, name_space)
+			a_parent.put_last (l_xml_item)
+
+			-- Add mini toolbar/context menu name
+			if attached {ER_TREE_NODE_DATA} a_context_menu_or_mini_toolbar.data as l_data then
+				-- FIXME: use command name for mini tool bar name?
+				if attached l_data.command_name as l_command_name then
+					create l_name.make ({ER_XML_ATTRIBUTE_CONSTANTS}.name, name_space, l_command_name, l_xml_item)
+					l_xml_item.put_last (l_name)
+
+				else
+					check not_possible: False end
+				end
+
+			else
+				check not_possible: False end
+			end
+
+
+			from
+				a_context_menu_or_mini_toolbar.start
+			until
+				a_context_menu_or_mini_toolbar.after
+			loop
+				check a_context_menu_or_mini_toolbar.item.text.same_string (xml_constants.menu_group) end
+				-- Add menu group now
+				if attached {EV_TREE_ITEM} a_context_menu_or_mini_toolbar.item as l_menu_group then
+					add_xml_menu_group_node (l_menu_group, l_xml_item)
+				else
+					check not_possible: False end
+				end
+
+				a_context_menu_or_mini_toolbar.forth
+			end
+
+		end
+
+	save_application_menu_node (a_tree_node: EV_TREE_NODE)
+			-- Save application menu node if possible
+		require
+			not_void: a_tree_node /= Void
+		do
+			if attached {EV_TREE_ITEM} a_tree_node as l_tree_item_menu and then
+					l_tree_item_menu.text.same_string (xml_constants.ribbon_application_menu) then
+
+				-- Add recent items xml node
+				add_xml_recent_items_node (l_tree_item_menu)
+
+				-- Add menu group xml node
+				from
+					l_tree_item_menu.start
+				until
+					l_tree_item_menu.after
+				loop
+					if attached {EV_TREE_ITEM} l_tree_item_menu.item as l_tree_menu_group_item then
+						check l_tree_menu_group_item.text.same_string (xml_constants.menu_group) end
+						add_xml_menu_group_node (l_tree_menu_group_item, xml_node_by_name (xml_constants.application_menu))
+
+					end
+
+					l_tree_item_menu.forth
 				end
 			end
 		end
@@ -192,7 +317,7 @@ feature {NONE} -- Tree saving
 			end
 		end
 
-	add_xml_menu_group_node (a_tree_item: EV_TREE_ITEM)
+	add_xml_menu_group_node (a_tree_item: EV_TREE_ITEM; a_parent_xml: detachable XML_ELEMENT)
 			--
 		require
 			not_void: a_tree_item /= Void
@@ -201,7 +326,7 @@ feature {NONE} -- Tree saving
 			l_menu_group_node: XML_ELEMENT
 			l_constants: ER_XML_ATTRIBUTE_CONSTANTS
 		do
-			if attached xml_node_by_name (xml_constants.application_menu) as l_ribbon_application_menu_node then
+			if attached a_parent_xml as l_ribbon_application_menu_node then
 				create l_menu_group_node.make (l_ribbon_application_menu_node, xml_constants.menu_group, name_space)
 				l_ribbon_application_menu_node.put_last (l_menu_group_node)
 

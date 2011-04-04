@@ -249,6 +249,17 @@ feature {NONE} -- Action handing
 					Result := l_stone_child.same_string (constants.menu_group)
 				elseif a_parent_type.same_string (constants.menu_group) then
 					Result := l_stone_child.same_string (constants.button)
+				elseif a_parent_type.same_string (constants.context_popup) then
+					Result := l_stone_child.same_string (constants.context_popup_context_menus) or else
+						l_stone_child.same_string (constants.context_popup_mini_toolbars)
+				elseif a_parent_type.same_string (constants.context_popup_context_menus) then
+					Result := l_stone_child.same_string (constants.context_menu)
+				elseif a_parent_type.same_string (constants.context_popup_mini_toolbars) then
+					Result := l_stone_child.same_string (constants.mini_toolbar)
+				elseif a_parent_type.same_string (constants.mini_toolbar) then
+					Result := l_stone_child.same_string (constants.menu_group)
+				elseif a_parent_type.same_string (constants.context_menu) then
+					Result := l_stone_child.same_string (constants.menu_group)
 				end
 			end
 		end
@@ -281,7 +292,8 @@ feature {NONE} -- Action handing
 			l_tree_item: EV_TREE_ITEM
 		do
 			if attached {STRING} a_pebble as l_item then
-				check l_item.same_string (constants.ribbon_application_menu) end
+				check l_item.same_string (constants.ribbon_application_menu) or else
+					l_item.same_string (constants.context_popup) end
 				l_tree_item := tree_item_factory_method (l_item)
 				widget.extend (l_tree_item)
 			end
@@ -292,6 +304,8 @@ feature {NONE} -- Action handing
 		do
 			if attached {STRING} a_pebble as l_item then
 				if l_item.same_string (constants.ribbon_application_menu) then
+					Result := True
+				elseif l_item.same_string (constants.context_popup) then
 					Result := True
 				end
 			end

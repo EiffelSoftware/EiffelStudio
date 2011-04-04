@@ -35,6 +35,15 @@ feature -- Visitor commands
 
 		end
 
+	visit_context_popup (a_conotext_popups: ER_XML_TREE_ELEMENT)
+			--
+		require
+			not_void: a_conotext_popups /= Void
+			valid: is_node_with_text (a_conotext_popups, constants.context_popup)
+		do
+
+		end
+
 feature -- Query
 
 	is_node_with_text (a_xml_node: ER_XML_TREE_ELEMENT; a_text: STRING): BOOLEAN

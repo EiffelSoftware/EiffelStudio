@@ -343,6 +343,7 @@ feature -- Persistance
 			l_drop_down_gallery_visitor: ER_DROP_DOWN_GALLERY_INFO_VISITOR
 			l_update_application_menu: ER_UPDATE_APPLICATION_MENU_INFO_VISITOR
 			l_split_button_gallery_visitor: ER_SPLIT_BUTTON_GALLERY_INFO_VISITOR
+			l_update_context_popups_visitor: ER_UPDATE_CONTEXT_POPUP_VISITOR
 		do
 			l_manager := shared_singleton.xml_tree_manager.item
 			l_manager.load_tree
@@ -360,6 +361,9 @@ feature -- Persistance
 				l_root.accept (l_split_button_gallery_visitor)
 				create l_update_application_menu
 				l_root.accept (l_update_application_menu)
+				
+				create l_update_context_popups_visitor
+				l_root.accept (l_update_context_popups_visitor)
 			else
 				check False end
 			end

@@ -1,5 +1,5 @@
 note
-	description	: "Objects that describe the behaviour of a customer"
+	description	: "Objects that model barbershop customers"
 	author		: "Robin Stoll"
 	date		: "2009/5/16"
 	reviewer	: "Mohammad Seyed Alavi"
@@ -8,105 +8,111 @@ note
 class
 	CUSTOMER
 
-inherit
-	PROCESS
-
 create
 	make
 
 feature -- Initialization
 
-	make (an_id: INTEGER; a_barber: separate BARBER; a_shop: separate SHOP; haircuts: INTEGER)
+	make (a_id: INTEGER; a_barber: separate BARBER; a_shop: separate SHOP; a_haircuts: INTEGER)
 			-- Creation procedure
 		require
-			an_id >= 0
-			haircuts >= 0
-			a_shop /= void
-			a_barber /= void
+			valid_customer_id: a_id >= 0
+			valid_needed_haircuts: a_haircuts >= 0
 		do
-			id := an_id
-			needed_haircuts := haircuts
+			id := a_id
+			needed_haircuts := a_haircuts
 			shop := a_shop
 			barber := a_barber
+		ensure
+			id_set: id = a_id
+			haircut_count_set: needed_haircuts = a_haircuts
+			shop_set: shop = a_shop
+			barber_set: barber = a_barber
 		end
 
-feature {NONE} -- Process
+feature -- Basic operations
+
+	live
+			-- Lifecycle.
+		do
+			from
+			until
+				over
+			loop
+				step
+			end
+		end
+
+feature {BARBER} -- Access
+
+	id: INTEGER
+			-- Current's unique identifer
+
+feature {NONE} -- Implementation
 
 	step
-			-- Perform a customers' tasks
-		local
-			hair_cut_result: BOOLEAN
+			-- One cycle of life.
 		do
-			io.put_string ("Customer-"+id.out+" needs haircut%N")
-			-- need haircut, so enter the shop
-			if enter (shop) then
-				io.put_string ("Customer-"+id.out+" is waiting in queue ...%N")
-				-- chair is free, wait for barber to cut hair
-				hair_cut_result := get_hair_cut (barber)
-				if hair_cut_result then
-					io.put_string ("Customer-"+id.out+" hair cut finished.%N")
-					leave(shop)
-				end
+			print ("Customer-" + id.out + " needs haircut%N")
+			if entered (shop) then
+				get_hair_cut (barber)
+				print ("Customer-" + id.out + " hair cut is finished.%N")
+				leave (shop)
 			else
-				io.put_string ("Customer-"+id.out+" will come back later.%N")
-				-- no chair is free, come back later
-				(create {EXECUTION_ENVIRONMENT}).sleep(10000*1000000)
+				print ("Customer-" + id.out + " will come back later.%N")
+				(create {EXECUTION_ENVIRONMENT}).sleep (10000 * 1000000)
 			end
 		end
 
 	over: BOOLEAN
-			-- When execution will finish
+			-- Is life over?
 		do
 			Result := needed_haircuts = 0
 		end
 
-feature {NONE} -- Control Helper
-
-	enter (a_shop: separate SHOP): BOOLEAN
-			-- Enter the shop and return true if it was successful
-		require
-			a_shop /= void
+	entered (a_shop: separate SHOP): BOOLEAN
+			-- Chair available and shop entered?
 		do
-			io.put_string ("Customer-"+id.out + " entering shop...%N")
-			Result := a_shop.enter
+			print ("Customer-" + id.out + " checking waiting area...%N")
+			if a_shop.free_chairs > 0 then
+				print ("Customer-" + id.out + " free chair found...%N")
+				a_shop.enter
+				print ("Customer-" + id.out + " waiting for barber...%N")
+				Result := True
+			else
+				print ("Customer-"+ id.out + " no free chair found...%N")
+				Result := False
+			end
 		end
 
 	leave (a_shop: separate SHOP)
-			-- Leave the shop
-		require
-			a_shop /= void
+			-- Leave `a_shop'
 		do
-			io.put_string ("Customer-"+id.out + " leaving shop...%N")
+			print ("Customer-" + id.out + " leaving shop...%N")
 			a_shop.leave
 		end
 
-feature {NONE}
-
-	get_hair_cut(a_barber: separate BARBER): BOOLEAN
-			-- If the barber is available, cut my hair and decrement my needed haircuts.
-		require
-			a_barber /= void
+	get_hair_cut (a_barber: separate BARBER)
+			-- Get hair cut by `a_barber'.
 		do
-			if a_barber.do_hair_cut (id) then
-				needed_haircuts := needed_haircuts - 1
-				result := true
-			end
+			print ("Customer-" + id.out + " getting hair cut.%N")
+			a_barber.cut_hair (Current)
+			needed_haircuts := needed_haircuts - 1
 		ensure
 			needed_haircuts = old needed_haircuts - 1
 		end
 
-feature {NONE} -- Implementation
-
-	id: INTEGER
 	needed_haircuts: INTEGER
+			-- Haircut count over life.
+
 	shop: separate SHOP
+			-- Shop
+
 	barber: separate BARBER
+			-- Barber
 
 invariant
-
-	id >= 0
-	needed_haircuts >= 0
-	shop /= void
-	barber /= void
+	valid_customer_identifier: id >= 0
+	valid_number_of_haircuts_needed: needed_haircuts >= 0
 
 end

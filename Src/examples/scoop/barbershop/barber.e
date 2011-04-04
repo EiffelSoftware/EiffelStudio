@@ -13,32 +13,29 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_shop: separate SHOP; a_time: INTEGER)
-			-- Creation procedure
-		do
-			shop := a_shop
-			hair_cut_time := a_time
-		end
-
-feature {CUSTOMER} -- Basic access
-
-	do_hair_cut (an_id: INTEGER): BOOLEAN
-			-- Called from a customer who wants to get hair cut
+	make (a_time: INTEGER)
+			-- Initialize with `a_time' as haircut time
 		require
-			an_id >= 0
+			valid_time: a_time >= 0
 		do
-			(create {EXECUTION_ENVIRONMENT}).sleep (hair_cut_time * 1000000)
-			result := true
+			haircut_time := a_time
 		end
 
+feature {CUSTOMER} -- Basic operations
+
+	cut_hair (a_customer: separate CUSTOMER)
+			-- Cut `a_customer's hair
+		do
+			print ("Barber: Start cutting hair of customer " + a_customer.id.out + "%N")
+			(create {EXECUTION_ENVIRONMENT}).sleep (haircut_time * 1000000)
+			print ("Barber: Finished cutting hair of customer " + a_customer.id.out + "%N")
+		end
 
 feature {NONE} -- Implementation
 
-	shop: separate SHOP
-	hair_cut_time: INTEGER
+	haircut_time: INTEGER
 
 invariant
-
-	shop /= void
+	valid_haircut_time: haircut_time >= 0
 
 end

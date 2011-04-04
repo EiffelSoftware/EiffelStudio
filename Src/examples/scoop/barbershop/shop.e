@@ -11,31 +11,32 @@ class
 create
 	make
 
-feature -- Constructor
+feature -- Initialization
 
-	make (count_chairs: INTEGER)
-			-- Initialization.
+	make (chair_count: INTEGER)
+			-- Initialize shop with `chair_count' chairs.
 		require
-			count_chairs > 0
+			chair_count > 0
 		do
-			max_chairs := count_chairs -- used for validity check
-			free_chairs := count_chairs
+			max_chairs := chair_count
+			free_chairs := chair_count
 		end
 
-feature
+feature -- Access
 
-	enter: BOOLEAN
-			-- Enter shop and try to sit.
+	free_chairs: INTEGER
+			-- Unoccupied chairs.
+
+feature -- Basic operations
+
+	enter
+			-- Enter shop and sit.
+		require
+			an_unoccupied_chair: free_chairs > 0
 		do
-			if free_chairs > 0 then
-				free_chairs := free_chairs - 1
-				Result := true
-			else
-				Result := false
-			end
+			free_chairs := free_chairs - 1
 		ensure
-			free_chairs = 0 or free_chairs = old free_chairs - 1 -- check validity of shop state
-			(free_chairs = 0 and Result = false) or Result = true -- check validity of result
+			one_fewer_free_chairs: free_chairs = old free_chairs - 1
 		end
 
 	leave
@@ -50,11 +51,9 @@ feature
 feature {NONE} -- Implementation
 
 	max_chairs: INTEGER
-	free_chairs: INTEGER
+			-- Chairs in shop
 
 invariant
-
-	free_chairs >= 0
-	max_chairs >= free_chairs
+	valid_free_chair_count: free_chairs >= 0 and then max_chairs >= free_chairs
 
 end

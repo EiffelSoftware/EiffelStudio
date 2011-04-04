@@ -258,8 +258,9 @@ feature -- Output
 			l_date_time: DATE_TIME
 			l_now: DATE_TIME
 			l_duration: DATE_TIME_DURATION --like {DATE_TIME}.relative_duration
-			l_duration_time: like {DATE_TIME_DURATION}.time
+			l_duration_time: TIME_DURATION --like {DATE_TIME_DURATION}.time
 			y,m,w,d,h,i: INTEGER
+			w_now,w_gmt: INTEGER
 			l_s_code: NATURAL_32
 			l_space_ago_string: STRING
 		do
@@ -270,6 +271,8 @@ feature -- Output
 			y := l_duration.date.year
 			m := l_duration.date.month
 			d := l_duration.date.day
+			w_now := l_now.date.week_of_year
+			w_gmt := a_gmt_date_time.date.week_of_year
 			if y > 0 then
 				if y = 1 then
 					Result := "last year"
@@ -298,10 +301,11 @@ feature -- Output
 				end
 			elseif d >= 7 then
 				w := d // 7
-				if w = 1 then
+				if w = 1 and then w_now = w_gmt + 1 then
 					Result := "last week"
 				else
-					Result := w.out + " weeks"
+
+					Result := (w+1).out + " weeks"
 --							if d > 7 then
 --								Result.append (" and " + (d - 7).out + " day")
 --								if d - 7 > 1 then
@@ -311,22 +315,25 @@ feature -- Output
 					Result.append (l_space_ago_string)
 				end
 			elseif d > 0 then
-				check d <= 7 end
-				l_duration_time := l_duration.time
-				if d = 1 then
-					Result := "yesturday"
+				if w_now /= w_gmt then
+					Result := "last week"
 				else
-					Result := d.out + " days"
---							if d = 1 then
---								h := l_duration_time.hour
---								if h > 0 then
---									Result.append (" and " + h.out + " hour")
---									if h > 1 then
---										Result.append_code (l_s_code)
---									end
---								end
---							end
-					Result.append (l_space_ago_string)
+					l_duration_time := l_duration.time
+					if d = 1 then
+						Result := "yesturday"
+					else
+						Result := d.out + " days"
+	--							if d = 1 then
+	--								h := l_duration_time.hour
+	--								if h > 0 then
+	--									Result.append (" and " + h.out + " hour")
+	--									if h > 1 then
+	--										Result.append_code (l_s_code)
+	--									end
+	--								end
+	--							end
+						Result.append (l_space_ago_string)
+					end
 				end
 			elseif d = 0 then
 				l_duration_time := l_duration.time

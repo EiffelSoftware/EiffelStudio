@@ -38,6 +38,10 @@ feature {NONE} -- Initialization
 
 			l_ribbon: EV_TREE_ITEM
 			l_context_popup: EV_TREE_ITEM
+			l_context_popup_mini_toolbars: EV_TREE_ITEM
+			l_context_popup_context_menus: EV_TREE_ITEM
+			l_mini_toolbar: EV_TREE_ITEM
+			l_context_menu: EV_TREE_ITEM
 
 			l_ribbon_application_menu, l_ribbon_group: EV_TREE_ITEM
 			l_menu_group: EV_TREE_ITEM
@@ -99,9 +103,26 @@ feature {NONE} -- Initialization
 			l_tab.extend (l_tab_scaling_policy)
 --			l_tab_scaling_policy.set_pebble (constants.tab_scaling_policy)
 
+			-- Context popup
 			create l_context_popup.make_with_text (constants.context_popup)
 			l_tree_item_view.extend (l_context_popup)
---			l_context_popup.set_pebble (constants.context_popup)
+			l_context_popup.set_pebble (constants.context_popup)
+
+			create l_context_popup_mini_toolbars.make_with_text (constants.context_popup_mini_toolbars)
+			l_context_popup.extend (l_context_popup_mini_toolbars)
+			l_context_popup_mini_toolbars.set_pebble (constants.context_popup_mini_toolbars)
+
+			create l_context_popup_context_menus.make_with_text (constants.context_popup_context_menus)
+			l_context_popup.extend (l_context_popup_context_menus)
+			l_context_popup_context_menus.set_pebble (constants.context_popup_context_menus)
+
+			create l_mini_toolbar.make_with_text (constants.mini_toolbar)
+			l_context_popup_mini_toolbars.extend (l_mini_toolbar)
+			l_mini_toolbar.set_pebble (constants.mini_toolbar)
+
+			create l_context_menu.make_with_text (constants.context_menu)
+			l_context_popup_context_menus.extend (l_context_menu)
+			l_context_menu.set_pebble (constants.context_menu)
 
 			helper.expand_all (widget)
 		end

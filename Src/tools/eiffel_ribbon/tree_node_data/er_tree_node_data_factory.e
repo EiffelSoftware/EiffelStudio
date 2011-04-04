@@ -55,6 +55,10 @@ feature -- Factory method
 				create {ER_TREE_NODE_APPLICATION_MENU_DATA} Result.make
 			elseif a_type.same_string (constants.recent_items) then
 				create {ER_TREE_NODE_APPLICATION_MENU_DATA} Result.make
+			elseif a_type.same_string (constants.mini_toolbar) then
+				create {ER_TREE_NODE_MINI_TOOLBAR_DATA} Result.make
+			elseif a_type.same_string (constants.context_menu) then
+				create {ER_TREE_NODE_CONTEXT_MENU_DATA} Result.make
 			else
 				--no data for `a_type'
 				-- Maybe `a_type' is "Application". It should not have any tree node data

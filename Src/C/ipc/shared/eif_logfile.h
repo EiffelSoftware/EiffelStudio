@@ -58,7 +58,26 @@ extern char *progname;			/* Program name */
 extern Pid_t progpid;			/* Program PID */
 #endif
 
+/* Note[2011/03/24] We could use
+ *
+ * #define ADD_LOG(level, ...) add_log(level, __VA_ARGS__);
+ *
+ * but it is not supported by all compiler, so we decided to duplicated those macro
+ * to avoid using #ifdef USE_ADD_LOG everywhere ...
+ */
+#define ADD_LOG(lev,str) add_log(lev,str)
+#define ADD_LOG_d(lev,str,d) add_log(lev,str,d)
+#define ADD_LOG_d_d(lev,str,d1,d2) add_log(lev,str,d1,d2)
+#define ADD_LOG_s(lev,str,s) add_log(lev,str,s)
+#define ADD_LOG_s_s(lev,str,s1,s2) add_log(lev,str,s1,s2)
+#define ADD_LOG_s_d(lev,str,s,d) add_log(lev,str,s,d)
 #else
+#define ADD_LOG(lev,str) 
+#define ADD_LOG_d(lev,str,d) 
+#define ADD_LOG_d_d(lev,str,d1,d2)
+#define ADD_LOG_s(lev,str,s) 
+#define ADD_LOG_s_s(lev,str,s1,s2)
+#define ADD_LOG_s_d(lev,str,s,d)
 #endif /* USE_ADD_LOG */
 
 #endif /* _logfile_h_ */

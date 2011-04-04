@@ -1082,6 +1082,12 @@ feature -- Update
 					l_arg := argument (current_option)
 					if l_arg /= Void then
 						if not is_user_settings_requested then
+							from
+							until
+								l_arg.empty or else l_arg.item (l_arg.count) /= '\'
+							loop
+								l_arg.remove_tail (1)
+							end
 							project_path := l_arg
 							is_project_path_requested := True
 						else
@@ -1410,7 +1416,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

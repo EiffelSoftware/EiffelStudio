@@ -58,9 +58,9 @@ feature --
 			end
 		end
 
-feature {NONE} -- Implementation
+feature {ER_UPDATE_CONTEXT_POPUP_VISITOR} -- Implementation
 
-	create_vision_tree_recursive (a_parent: EV_TREE_ITEM; a_ribbon_tab_item: XML_NODE)
+	create_vision_tree_recursive (a_parent: EV_TREE_NODE_LIST; a_ribbon_tab_item: XML_NODE)
 			--
 		local
 			l_new_node: EV_TREE_ITEM

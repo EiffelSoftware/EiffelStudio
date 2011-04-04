@@ -28,6 +28,8 @@ feature -- Command
 					a_visitor.visit_ribbon_tabs (Current)
 				elseif l_name.same_string (constants.application_commands) then
 					a_visitor.visit_application_commands (Current)
+				elseif l_name.same_string (constants.context_popup) then
+					a_visitor.visit_context_popup (Current)
 				end
 			end
 

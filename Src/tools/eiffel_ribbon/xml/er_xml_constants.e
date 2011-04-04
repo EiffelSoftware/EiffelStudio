@@ -54,6 +54,8 @@ feature -- Query, the value of string is what should be written to XML
 
 	context_popup_context_menus: STRING = "ContextPopup.ContextMenus"
 
+	context_popup_context_maps: STRING = "ContextPopup.ContextMaps"
+
 	context_menu: STRING = "ContextMenu"
 
 feature -- ALl types under group

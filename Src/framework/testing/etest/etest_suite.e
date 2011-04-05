@@ -213,6 +213,7 @@ feature -- Element change
 
 			if
 				attached project_access.project as l_project and then
+				l_project.system_defined and then
 				attached l_project.system as l_esystem and then
 				attached l_esystem.system as l_systemi and then
 				attached l_systemi.test_system as l_test_system and then
@@ -355,7 +356,7 @@ feature {NONE} -- Factory
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

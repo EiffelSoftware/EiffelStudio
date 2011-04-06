@@ -92,6 +92,15 @@ feature -- Command
 			c_set_ribbon_color (item, l_key.item, a_color.value)
 		end
 
+	show_contextual_ui (a_point: EV_COORDINATE; a_command_id: NATURAL_32)
+			-- Show context menu or minitoolbar at
+		local
+			l_result: NATURAL_32
+		do
+			l_result := c_show_contextual_ui (a_point.x, a_point.y, item, a_command_id)
+			check success: l_result = {EV_RIBBON_HRESULT}.s_ok end
+		end
+
 	destroy
 			-- Clean up all ribbon related COM objects and resources
 		require
@@ -220,6 +229,30 @@ feature {EV_RIBBON_TITLED_WINDOW_IMP} -- Externals
 					pRibbon->Release();
 				}
 				return (EIF_INTEGER) val;
+			}"
+		end
+
+	c_show_contextual_ui (a_x, a_y: INTEGER_32; a_framework: POINTER; a_command_id: NATURAL_32): NATURAL_32
+			--
+		require
+			a_framework_exists: a_framework /= default_pointer
+		external
+			"C++ inline use <ribbon.h>"
+		alias
+			"{
+					HRESULT hr = E_FAIL;
+
+					IUIContextualUI* pContextualUI = NULL;
+
+					if (SUCCEEDED(((IUIFramework *)$a_framework)->GetView(
+												(UINT32)$a_command_id,
+												IID_PPV_ARGS(&pContextualUI))))
+					{
+					hr = pContextualUI->ShowAtLocation((INT32)$a_x, (INT32)$a_y);
+					pContextualUI->Release();
+					}
+
+				return hr;
 			}"
 		end
 

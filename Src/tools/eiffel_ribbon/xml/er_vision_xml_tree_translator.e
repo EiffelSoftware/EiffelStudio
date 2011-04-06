@@ -381,7 +381,13 @@ feature {NONE} -- Tree saving
 				until
 					a_tree_item.after
 				loop
-					add_xml_button_node (l_menu_group_node, a_tree_item.item)
+					if a_tree_item.item.text.same_string ({ER_XML_CONSTANTS}.button) then
+						add_xml_button_node (l_menu_group_node, a_tree_item.item)
+					elseif a_tree_item.item.text.same_string ({ER_XML_CONSTANTS}.split_button) then
+						add_xml_split_button_node (l_menu_group_node, a_tree_item.item)
+					else
+						check not_possible: False end
+					end
 
 					a_tree_item.forth
 				end
@@ -779,7 +785,7 @@ feature {NONE} -- Tree saving
 			--
 		require
 			not_void: a_group_node /= Void
-			valid: a_group_node.name.same_string (xml_constants.group)
+			valid: a_group_node.name.same_string (xml_constants.group) or else a_group_node.name.same_string (xml_constants.menu_group)
 		local
 			l_button_node: XML_ELEMENT
 			l_constants: ER_XML_ATTRIBUTE_CONSTANTS

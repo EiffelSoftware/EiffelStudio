@@ -58,8 +58,8 @@ feature {NONE} -- Basic operation
 
 	on_size (size_type, a_width, a_height: INTEGER)
 		do
-			Precursor (size_type, a_width, a_height)
 			set_children_height (client_height + 2 * border_width, True)
+			Precursor (size_type, a_width, a_height)
 		end
 
 	ev_apply_new_size (a_x_position, a_y_position, a_width, a_height: INTEGER; repaint: BOOLEAN)

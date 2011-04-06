@@ -807,10 +807,7 @@ feature {EV_ANY_I} -- Implementation
 	execute_resize_actions (a_width, a_height: INTEGER)
 			-- execute `resize_actions_internal' if not Void.
 		do
-			if resize_actions_internal /= Void then
-				resize_actions_internal.call (
-					[screen_x, screen_y, a_width, a_height])
-			end
+			trigger_resize_actions (a_width, a_height)
 		end
 
    	on_move (x_pos, y_pos: INTEGER)

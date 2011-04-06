@@ -339,8 +339,12 @@ feature {NONE} -- WEL Implementation
 			-- the invalid rectangle of the client area that
 			-- needs to be repainted.
 		do
-			disable_default_processing
-			set_message_return_value (to_lresult (1))
+			if is_theme_background_reqested then
+				clear_background (paint_dc, invalid_rect)
+			else
+				disable_default_processing
+				set_message_return_value (to_lresult (1))
+			end
 		end
 
 	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT)
@@ -479,9 +483,9 @@ feature {NONE} -- WEL Implementation
 	on_size (size_type, a_width, a_height: INTEGER)
 			-- Called when `Current' is resized.
 		do
-			Precursor {EV_SINGLE_CHILD_CONTAINER_IMP} (size_type, a_width, a_height)
 				-- Force a redraw so that the control gets updated correctly.
 			invalidate_without_background
+			Precursor {EV_SINGLE_CHILD_CONTAINER_IMP} (size_type, a_width, a_height)
 		end
 
 	on_wm_theme_changed

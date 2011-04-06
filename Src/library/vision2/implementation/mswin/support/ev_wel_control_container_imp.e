@@ -128,6 +128,16 @@ feature {NONE} -- WEL Implementation
 			-- the invalid rectangle of the client area that
 			-- needs to be repainted.
 		do
+			clear_background (paint_dc, invalid_rect)
+		end
+
+	frozen clear_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT)
+			-- Erase the background of `Current' within `invalid_rect'.
+		require
+			paint_dc_not_void: paint_dc /= Void
+			invalid_rect_not_void: invalid_rect /= Void
+			invalid_rect_exists: invalid_rect.exists
+		do
 			if attached background_brush as bk_brush then
 				application_imp.theme_drawer.draw_widget_background (current_as_container, paint_dc, invalid_rect, bk_brush)
 				bk_brush.delete
@@ -161,15 +171,19 @@ feature {NONE} -- WEL Implementation
 			l_rect: WEL_RECT
 			l_flags: like ev_resizing_flags
 		do
-				-- Reset move and resize flags
-			l_rect := client_rect
-			if a_wp.width > l_rect.width then
-				l_flags := ev_resizing_width_larger_flag
+				-- Perform some sizing recomputation only if we are handling a resizing.
+			if (a_wp.flags & swp_nosize) = 0 then
+					-- Reset move and resize flags
+				l_rect := client_rect
+				if a_wp.width > l_rect.width then
+					l_flags := ev_resizing_width_larger_flag
+				end
+				if a_wp.height > l_rect.height then
+					l_flags := l_flags | ev_resizing_height_larger_flag
+				end
+				ev_resizing_flags := l_flags
 			end
-			if a_wp.height > l_rect.height then
-				l_flags := l_flags | ev_resizing_height_larger_flag
-			end
-			ev_resizing_flags := l_flags
+
 				-- Disabling the default processing also returns `0' to Windows.
 			disable_default_processing
 		end
@@ -223,6 +237,20 @@ feature {NONE} -- Deferred features
 			-- been specified.
 		deferred
 		end
+
+feature {EV_ANY_I} -- Wel implementation
+
+	set_is_theme_background_requested (a_value: BOOLEAN)
+			-- Set `is_theme_background_requested' with `a_value'.
+		do
+			is_theme_background_reqested := a_value
+		ensure
+			is_theme_background_reqested_set: is_theme_background_reqested = a_value
+		end
+
+	is_theme_background_reqested: BOOLEAN
+			-- When executing a `on_erase_background' callback are we called by the child window to draw the proper
+			-- background even if we do not usually erase the background, e.g. when drawing buttons in an EV_FRAME.?
 
 feature {NONE} -- Features that should be directly implemented by externals.
 
@@ -280,9 +308,6 @@ note
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
 
 end -- class EV_WEL_CONTROL_CONTAINER_IMP
 

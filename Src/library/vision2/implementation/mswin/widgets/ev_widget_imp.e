@@ -1295,7 +1295,15 @@ feature -- Deferred features
 		deferred
 		end
 
-	on_size, frozen trigger_resize_actions (size_type, a_width, a_height: INTEGER)
+	on_size	(size_type, a_width, a_height: INTEGER)
+			-- `Current' has been resized.
+		require
+			exists: exists
+		do
+			trigger_resize_actions (a_width, a_height)
+		end
+
+	frozen trigger_resize_actions (a_width, a_height: INTEGER)
 			-- `Current' has been resized.
 		require
 			exists: exists

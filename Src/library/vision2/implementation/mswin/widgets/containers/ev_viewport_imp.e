@@ -23,7 +23,9 @@ inherit
 			ev_apply_new_size,
 			compute_minimum_width,
 			compute_minimum_height,
-			compute_minimum_size
+			compute_minimum_size,
+			on_erase_background,
+			default_style
 		end
 
 create
@@ -117,18 +119,9 @@ feature {NONE} -- Implementation
 		-- Should vertical scrollbar be displayed?
 
 	on_size (size_type, a_width, a_height: INTEGER)
-		local
-			t: like resize_actions_internal
 		do
-			if size_type /= Wel_window_constants.Size_minimized then
-				t := resize_actions_internal
-				if t /= Void then
-					t.call ([screen_x, screen_y, a_width, a_height])
-				end
-				if item /= Void then
-					on_size_requested (True)
-				end
-			end
+			on_size_requested (True)
+			trigger_resize_actions (a_width, a_height)
 		end
 
 	ev_apply_new_size (a_x_position, a_y_position,
@@ -136,26 +129,20 @@ feature {NONE} -- Implementation
 		do
 			ev_move_and_resize
 				(a_x_position, a_y_position, a_width, a_height, repaint)
-			if item_imp /= Void then
-				on_size_requested (False)
-			end
+			on_size_requested (False)
 		end
 
 	on_size_requested (originator: BOOLEAN)
 			-- Size has changed.
-		require
-			item_not_void: item /= Void
-		local
-			imp: like item_imp
 		do
-			imp := item_imp
-			check imp /= Void end
-			if originator then
-				imp.set_move_and_size (imp.x_position, imp.y_position,
-					imp.width, imp.height)
-			else
-				imp.ev_apply_new_size (imp.x_position ,imp.y_position,
-					imp.width, imp.height, True)
+			if attached item_imp as imp then
+				if originator then
+					imp.set_move_and_size (imp.x_position, imp.y_position,
+						imp.width, imp.height)
+				else
+					imp.ev_apply_new_size (imp.x_position ,imp.y_position,
+						imp.width, imp.height, True)
+				end
 			end
 		end
 
@@ -194,6 +181,38 @@ feature {NONE} -- Implementation
 				if is_vertical_scroll_bar_visible then
 					set_vertical_range (0, l_item_imp.height)
 				end
+			end
+		end
+
+	default_style: INTEGER
+		do
+			Result := ws_child | ws_visible
+		end
+
+	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT)
+		do
+			if not is_theme_background_reqested and attached item_imp as l_item then
+					-- If `item' is within the viewport, we need to clear the border surrounding it, otherwise nothing to be done.
+				if l_item.x_position > 0 or l_item.y_position > 0 or (l_item.width - l_item.x_position < width) or (l_item.height - l_item.y_position < height) then
+					if {WEL_API}.exclude_clip_rect (paint_dc.item, (l_item.x_position).max (0), (l_item.y_position).max (0), (l_item.width + l_item.x_position).min (width), (l_item.height + l_item.y_position).min (height)) = {WEL_RGN_CONSTANTS}.error then
+							-- There was an error trying to clip the area, the code below will erase everything as a fallback
+							-- causing most likely a flicker.
+					end
+					if attached background_brush as bk_brush then
+						application_imp.theme_drawer.draw_widget_background (current_as_container, paint_dc, invalid_rect, bk_brush)
+						bk_brush.delete
+						disable_default_processing
+						set_message_return_value (to_lresult (1))
+					else
+							-- We let Windows handle the message.
+					end
+				else
+					disable_default_processing
+					set_message_return_value (to_lresult (1))
+				end
+			else
+					-- No items, we need to clear the background completely.
+				clear_background (paint_dc, invalid_rect)
 			end
 		end
 

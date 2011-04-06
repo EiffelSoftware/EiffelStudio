@@ -36,7 +36,8 @@ inherit
 			on_wm_dropfiles
 		redefine
 			top_level_window_imp,
-			on_erase_background
+			on_erase_background,
+			default_style
 		end
 
 	WEL_RGN_CONSTANTS
@@ -268,7 +269,6 @@ feature {NONE} -- WEL Implementation
 			v_imp: EV_WIDGET_IMP
 			cur: INTEGER
 		do
-			Precursor {EV_WIDGET_LIST_IMP} (size_type, a_width, a_height)
 			cur := ev_children.index
 			from
 				ev_children.start
@@ -281,6 +281,7 @@ feature {NONE} -- WEL Implementation
 				ev_children.forth
 			end
 			ev_children.go_i_th (cur)
+			Precursor {EV_WIDGET_LIST_IMP} (size_type, a_width, a_height)
 		end
 
 	ev_apply_new_size (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN)
@@ -369,6 +370,12 @@ feature {NONE} -- WEL Implementation
 			-- Is `a_child' currently contained in `Current'.
 		do
 			Result := a_child = interface_item.implementation
+		end
+
+	default_style: INTEGER
+			-- Default style used by windows at creation.
+		do
+			Result := Ws_child | Ws_visible
 		end
 
 note

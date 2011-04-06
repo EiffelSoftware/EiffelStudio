@@ -575,8 +575,12 @@ feature {EV_ANY_I} -- Drawing implementation
 				end
 			end
 
-							-- Need to first clear the area to the background color of `parent_imp'
-			theme_drawer.draw_theme_parent_background (wel_item, memory_dc, l_rect, Void)
+				-- Need to first clear the area to the background color of `parent_imp'
+			if attached {EV_WEL_CONTROL_CONTAINER_IMP} parent_imp as l_parent then
+				l_parent.set_is_theme_background_requested (True)
+				theme_drawer.draw_theme_parent_background (wel_item, memory_dc, l_rect, Void)
+				l_parent.set_is_theme_background_requested (False)
+			end
 
 				-- We set the text color of `memory_dc' to white, so that if we are
 				-- a toggle button, and must draw the checked background, it uses white combined with
@@ -743,6 +747,7 @@ feature {EV_ANY_I} -- Drawing implementation
 			-- This causes flicker.
 		do
 			disable_default_processing
+			set_message_return_value (to_lresult (1))
 		end
 
 	white: WEL_COLOR_REF

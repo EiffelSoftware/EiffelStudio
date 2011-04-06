@@ -169,7 +169,7 @@ feature -- Execution
 					l_argument_list.force (a_system_name)
 				end
 				ec_process := process_launcher (eiffel_compiler_executable_name, l_argument_list, a_working_directory)
-				ec_process.set_buffer_size (512)
+				ec_process.set_buffer_size (4096)
 				ec_process.enable_launch_in_new_process_group
 				is_running := True
 				ec_process.set_on_exit_handler (agent unset_running)
@@ -418,7 +418,7 @@ invariant
 	ise_eiffel_edition_extension_not_void: ise_eiffel_edition_extension /= Void
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -442,10 +442,10 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

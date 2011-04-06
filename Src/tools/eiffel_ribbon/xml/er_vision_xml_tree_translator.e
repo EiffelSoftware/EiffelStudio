@@ -154,6 +154,7 @@ feature {NONE} -- Tree saving
 			not_void: a_tree_node /= Void
 		local
 			l_xml_item, l_last_parent, l_last_parent_2: XML_ELEMENT
+			l_data_list: ARRAYED_LIST [ER_TREE_NODE_DATA]
 		do
 			if attached {EV_TREE_ITEM} a_tree_node as l_tree_item_menu and then
 					l_tree_item_menu.text.same_string (xml_constants.context_popup) then
@@ -164,6 +165,7 @@ feature {NONE} -- Tree saving
 					l_ribbon_application_views.put_last (l_xml_item)
 					l_last_parent := l_xml_item
 					from
+						create l_data_list.make (10)
 						a_tree_node.start
 					until
 						a_tree_node.after
@@ -181,34 +183,64 @@ feature {NONE} -- Tree saving
 							until
 								l_item.after
 							loop
-
---								create l_xml_item.make (l_last_parent, l_item.text, name_space)
---								l_last_parent.put_last (l_xml_item)
---								l_last_parent_2 := l_xml_item		
---							
---								if attached l_item.item as l_context_popups then
---									from
---										l_context_popups.start
---									until
---										l_context_popups.after
---									loop
-										save_context_menu_or_mini_toolbar_node (l_item.item, l_last_parent_2)
---										l_context_popups.forth
---									end
---								end
+								save_context_menu_or_mini_toolbar_node (l_item.item, l_last_parent_2, l_data_list)
 
 								l_item.forth
 							end
 						end
 						a_tree_node.forth
 					end
+
+					save_context_maps (l_last_parent, l_data_list)
 				else
 					check not_possible: False end
 				end
 			end
 		end
 
-	save_context_menu_or_mini_toolbar_node (a_context_menu_or_mini_toolbar: EV_TREE_NODE; a_parent: XML_ELEMENT)
+	save_context_maps (a_parent: XML_ELEMENT; a_data_list: ARRAYED_LIST [ER_TREE_NODE_DATA])
+			--
+		require
+			not_void: a_parent /= Void
+			not_void: a_data_list /= Void
+		local
+			l_xml_item, l_child: XML_ELEMENT
+			l_attribute: XML_ATTRIBUTE
+		do
+			create l_xml_item.make (a_parent, {ER_XML_CONSTANTS}.context_popup_context_maps, name_space)
+			a_parent.put_last (l_xml_item)
+
+			from
+				a_data_list.start
+			until
+				a_data_list.after
+			loop
+				create l_child.make (l_xml_item, {ER_XML_CONSTANTS}.context_map, name_space)
+				l_xml_item.put_last (l_child)
+
+				if attached a_data_list.item.command_name as l_command_name then
+					create l_attribute.make ({ER_XML_ATTRIBUTE_CONSTANTS}.command_name, name_space, l_command_name, l_child)
+					l_child.put_last (l_attribute)
+
+					add_xml_command_node (a_data_list.item)
+
+					if attached {ER_TREE_NODE_MINI_TOOLBAR_DATA} a_data_list.item as l_mini_toolbar_data then
+						create l_attribute.make ({ER_XML_ATTRIBUTE_CONSTANTS}.mini_toolbar, name_space, l_command_name, l_child)
+						l_child.put_last (l_attribute)
+					elseif attached {ER_TREE_NODE_CONTEXT_MENU_DATA} a_data_list.item as l_context_menu_data then
+						create l_attribute.make ({ER_XML_ATTRIBUTE_CONSTANTS}.context_menu, name_space, l_command_name, l_child)
+						l_child.put_last (l_attribute)
+					else
+						check False end
+					end
+				else
+					check False end
+				end
+				a_data_list.forth
+			end
+		end
+
+	save_context_menu_or_mini_toolbar_node (a_context_menu_or_mini_toolbar: EV_TREE_NODE; a_parent: XML_ELEMENT; a_data_list: ARRAYED_LIST [ER_TREE_NODE_DATA])
 			--
 		require
 			not_void: a_context_menu_or_mini_toolbar /= Void
@@ -223,6 +255,7 @@ feature {NONE} -- Tree saving
 
 			-- Add mini toolbar/context menu name
 			if attached {ER_TREE_NODE_DATA} a_context_menu_or_mini_toolbar.data as l_data then
+				a_data_list.extend (l_data)
 				-- FIXME: use command name for mini tool bar name?
 				if attached l_data.command_name as l_command_name then
 					create l_name.make ({ER_XML_ATTRIBUTE_CONSTANTS}.name, name_space, l_command_name, l_xml_item)

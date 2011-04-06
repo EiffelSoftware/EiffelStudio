@@ -58,6 +58,8 @@ feature -- Query, the value of string is what should be written to XML
 
 	context_menu: STRING = "ContextMenu"
 
+	context_map: STRING = "ContextMap"
+
 feature -- ALl types under group
 
 	button: STRING = "Button"

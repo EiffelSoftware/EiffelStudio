@@ -40,4 +40,10 @@ feature -- Recent items
 
 	max_count: STRING = "MaxCount"
 
+feature -- Context maps
+
+	context_menu: STRING = "ContextMenu"
+
+	mini_toolbar: STRING = "MiniToolbar"
+	
 end

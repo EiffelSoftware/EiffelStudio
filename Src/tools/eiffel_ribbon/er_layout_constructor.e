@@ -352,8 +352,7 @@ feature -- Persistance
 			if attached l_manager.xml_root as l_root then
 				create l_vision2_visitor
 				l_root.accept (l_vision2_visitor)
-				create l_command_updater
-				l_root.accept (l_command_updater)
+
 				create l_separate_tab_visitor.make
 				l_root.accept (l_separate_tab_visitor)
 				create l_drop_down_gallery_visitor
@@ -365,6 +364,9 @@ feature -- Persistance
 
 				create l_update_context_popups_visitor
 				l_root.accept (l_update_context_popups_visitor)
+
+				create l_command_updater
+				l_root.accept (l_command_updater)
 			else
 				check False end
 			end

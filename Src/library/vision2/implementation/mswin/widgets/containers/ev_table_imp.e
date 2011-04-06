@@ -494,8 +494,8 @@ feature {NONE} -- Resize Implementation
 	on_size (size_type, a_width, a_height: INTEGER)
 			-- `Current' has been resized.
 		do
-			Precursor {EV_CONTAINER_IMP} (size_type, a_width, a_height)
 			set_local_size (a_width, a_height, True)
+			Precursor {EV_CONTAINER_IMP} (size_type, a_width, a_height)
 		end
 
 	ev_apply_new_size (a_x_position, a_y_position,

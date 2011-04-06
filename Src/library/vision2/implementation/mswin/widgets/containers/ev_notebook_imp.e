@@ -579,8 +579,8 @@ feature {NONE} -- WEL Implementation
 	on_size (size_type, a_width, a_height: INTEGER)
 			-- `Current' has been resized.
 		do
-			Precursor {EV_WIDGET_LIST_IMP} (size_type, a_width, a_height)
 			resize_children (True)
+			Precursor {EV_WIDGET_LIST_IMP} (size_type, a_width, a_height)
 		end
 
 	on_tcn_selchange

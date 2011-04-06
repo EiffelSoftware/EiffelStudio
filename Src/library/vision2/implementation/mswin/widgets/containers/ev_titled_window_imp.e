@@ -443,10 +443,7 @@ feature {NONE} -- WEL Implementation
 	execute_resize_actions (a_width, a_height: INTEGER)
 			-- execute `resize_actions_internal' if not Void.
 		do
-			if resize_actions_internal /= Void then
-				resize_actions.call (
-					[screen_x, screen_y, a_width, a_height])
-			end
+			trigger_resize_actions (a_width, a_height)
 				-- We must only fire restore actions if
 				-- `fire_restore_actions'.
 			if fire_restore_actions then

@@ -193,14 +193,13 @@ feature {NONE} -- Implementation
 
 	default_style: INTEGER
 		do
-			Result := Ws_child + Ws_clipchildren + Ws_clipsiblings + Ws_visible +
-				Ws_vscroll + Ws_hscroll
+			Result := Precursor | Ws_vscroll | Ws_hscroll
 		end
 
 	default_ex_style: INTEGER
 			-- The default ex-style of the window.
 		do
-			Result := Ws_ex_controlparent + Ws_ex_rightscrollbar
+			Result := Ws_ex_controlparent | Ws_ex_rightscrollbar
 		end
 
 	ev_apply_new_size (a_x_position, a_y_position,
@@ -221,13 +220,12 @@ feature {NONE} -- Implementation
 			-- Compute position of item in Current
 		local
 			ch, cw: INTEGER
-			imp: like item_imp
 			cl_width, cl_height: INTEGER
 			imp_h, imp_w: INTEGER
 			new_x, new_y: INTEGER
 			l_scroller: like scroller
 		do
-			if not is_in_size_call then
+			if attached item_imp as imp and then not is_in_size_call then
 					-- Avoid recursive call when performing resizing
 				is_in_size_call := True
 
@@ -235,8 +233,6 @@ feature {NONE} -- Implementation
 				check l_scroller /= Void end
 
 					-- Local variables for fast access later in computation
-				imp := item_imp
-				check imp /= Void end
 				imp_w := imp.width
 				imp_h := imp.height
 				cl_width := client_width
@@ -329,26 +325,13 @@ feature {NONE} -- Implementation
 							set_vertical_position (new_y.abs)
 							l_scroller.set_vertical_page (cl_height)
 						end
-
-						if originator then
-								-- Move item at new position
-							imp.set_move_and_size (new_x,
-								new_y, imp_w, imp_h)
-						else
-								-- Move item at new position
-							imp.ev_apply_new_size (new_x,
-								new_y, imp_w, imp_h, True)
-						end
 					else
-						if originator then
-							imp.set_move_and_size (new_x,
-								(-ch) // 2, imp_w, imp_h)
-						else
-							imp.ev_apply_new_size (new_x,
-							(-ch) // 2, imp_w, imp_h, True)
-						end
+							-- Scrollable area is bigger than widget, we put it in
+							-- center.
+						new_y := -ch // 2
 					end
 				else
+					new_x := -cw // 2
 					if ch > 0 then
 							-- See above comments, same implementation, but with
 							-- a different x.
@@ -363,24 +346,16 @@ feature {NONE} -- Implementation
 							set_vertical_position (new_y.abs)
 							l_scroller.set_vertical_page (cl_height)
 						end
-						if originator then
-							imp.set_move_and_size ((-cw) // 2,
-								new_y, imp_w, imp_h)
-						else
-							imp.ev_apply_new_size ((-cw) // 2,
-								new_y, imp_w, imp_h, True)
-						end
 					else
 							-- Scrollable area is bigger than widget, we put it in
 							-- center.
-						if originator then
-							imp.set_move_and_size ((-cw) // 2,
-								(-ch) // 2, imp_w, imp_h)
-						else
-							imp.ev_apply_new_size ((-cw) // 2,
-								(-ch) // 2, imp_w, imp_h, True)
-						end
+						new_y := -ch // 2
 					end
+				end
+				if originator then
+					imp.set_move_and_size (new_x, new_y, imp_w, imp_h)
+				else
+					imp.ev_apply_new_size (new_x, new_y, imp_w, imp_h, True)
 				end
 				is_in_size_call := False
 			end

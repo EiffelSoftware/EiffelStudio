@@ -38,7 +38,9 @@ inherit
 		undefine
 			on_wm_dropfiles
 		redefine
-			top_level_window_imp
+			top_level_window_imp,
+			on_erase_background,
+			default_style
 		end
 
 create
@@ -108,6 +110,28 @@ feature {EV_ANY_I} -- Implementation
 				mh := l_item_imp.minimum_height
 			end
 			ev_set_minimum_size (mw, mh, a_is_size_forced)
+		end
+
+feature {NONE} -- WEL implementation
+
+	default_style: INTEGER
+			-- <Precursor>
+		do
+				-- No need to have windows do the clipping since it is quite easy for us to handle that.
+			Result := ws_child | ws_visible
+		end
+
+	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT)
+			-- <Precursor>
+		do
+				-- Nothing to erase if there is an item.
+			if item = Void or is_theme_background_reqested then
+				clear_background (paint_dc, invalid_rect)
+			else
+					-- We let the item handle this.
+				disable_default_processing
+				set_message_return_value (to_lresult (1))
+			end
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation

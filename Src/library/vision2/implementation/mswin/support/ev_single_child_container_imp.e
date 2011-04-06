@@ -92,23 +92,21 @@ feature -- Element change
 
 	insert (v: like item)
 			-- Assign `v' to `item'.
+		require
+			v_not_void: v /= Void
+			no_item: item = Void
 		local
 			v_imp: detachable EV_WIDGET_IMP
 		do
-			if v /= Void then
-				check
-					has_no_item: item = Void
-				end
-				v.implementation.on_parented
-				v_imp ?= v.implementation
-				check
-					v_imp_not_void: v_imp /= Void
-				end
-				v_imp.set_parent_imp (Current)
-				item := v
-				notify_change (nc_minsize, Current, False)
-				new_item_actions.call ([v])
+			v.implementation.on_parented
+			v_imp ?= v.implementation
+			check
+				v_imp_not_void: v_imp /= Void
 			end
+			v_imp.set_parent_imp (Current)
+			item := v
+			notify_change (nc_minsize, Current, False)
+			new_item_actions.call ([v])
 		end
 
 	put, replace (v: like item)
@@ -216,12 +214,10 @@ feature {EV_ANY_I} -- WEL Implementation
 	on_size (size_type, a_width, a_height: INTEGER)
 			-- Called when `Current' is resized.
 		do
-			if size_type /= ({WEL_WINDOW_CONSTANTS}.Size_minimized) then
-				if attached item_imp as l_item_imp then
-					l_item_imp.set_move_and_size (client_x, client_y, client_width, client_height)
-				end
-				Precursor {EV_CONTAINER_IMP} (size_type, a_width, a_height)
+			if attached item_imp as l_item_imp then
+				l_item_imp.set_move_and_size (client_x, client_y, client_width, client_height)
 			end
+			Precursor {EV_CONTAINER_IMP} (size_type, a_width, a_height)
 		end
 
 	ev_apply_new_size (a_x_position, a_y_position, a_width, a_height: INTEGER; repaint: BOOLEAN)

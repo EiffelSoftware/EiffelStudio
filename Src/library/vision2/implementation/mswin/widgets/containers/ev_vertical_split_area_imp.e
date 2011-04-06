@@ -160,18 +160,18 @@ feature {NONE} -- Implementation
 	on_size (size_type, a_width, a_height: INTEGER)
 			-- Wm_size message
 		do
+			split_area_resizing (a_width, a_height, True)
 			Precursor {EV_SPLIT_AREA_IMP} (size_type, a_width, a_height)
-			split_area_resizing (a_height, True)
 		end
 
 	ev_apply_new_size (a_x_position, a_y_position,
 				a_width, a_height: INTEGER; repaint: BOOLEAN)
 		do
 			ev_move_and_resize (a_x_position, a_y_position, a_width, a_height, repaint)
-			split_area_resizing (a_height, False)
+			split_area_resizing (a_width, a_height, False)
 		end
 
-	layout_widgets (originator: BOOLEAN)
+	layout_widgets (a_width, a_height: INTEGER; originator: BOOLEAN)
 		local
 			l_first_imp: like first_imp
 			l_second_imp: like second_imp
@@ -180,9 +180,9 @@ feature {NONE} -- Implementation
 				l_first_imp := first_imp
 				check l_first_imp /= Void end
 				if originator then
-					l_first_imp.set_move_and_size (0, 0, width, height)
+					l_first_imp.set_move_and_size (0, 0, a_width, a_height)
 				else
-					l_first_imp.ev_apply_new_size (0, 0, width, height, True)
+					l_first_imp.ev_apply_new_size (0, 0, a_width, a_height, True)
 				end
 			end
 
@@ -190,9 +190,9 @@ feature {NONE} -- Implementation
 				l_second_imp := second_imp
 				check l_second_imp /= Void end
 				if originator then
-					l_second_imp.set_move_and_size (0, 0, width, height)
+					l_second_imp.set_move_and_size (0, 0, a_width, a_height)
 				else
-					l_second_imp.ev_apply_new_size (0, 0, width, height, True)
+					l_second_imp.ev_apply_new_size (0, 0, a_width, a_height, True)
 				end
 			end
 
@@ -201,21 +201,20 @@ feature {NONE} -- Implementation
 				l_second_imp := second_imp
 				check l_first_imp /= Void and l_second_imp /= Void end
 				if originator then
-					l_first_imp.set_move_and_size (0, 0, width, internal_split_position)
+					l_first_imp.set_move_and_size (0, 0, a_width, internal_split_position)
 					l_second_imp.set_move_and_size (0, internal_split_position +
-						splitter_width, width, height - internal_split_position -
+						splitter_width, a_width, a_height - internal_split_position -
 						splitter_width)
 				else
-					l_first_imp.ev_apply_new_size (0, 0, width, internal_split_position,
-						True)
+					l_first_imp.ev_apply_new_size (0, 0, a_width, internal_split_position, True)
 					l_second_imp.ev_apply_new_size (0, internal_split_position +
-						splitter_width, width, height - internal_split_position -
+						splitter_width, a_width, a_height - internal_split_position -
 						splitter_width, True)
 				end
 			end
 		end
 
-	split_area_resizing (a_height: INTEGER; originator: BOOLEAN)
+	split_area_resizing (a_width, a_height: INTEGER; originator: BOOLEAN)
 			-- Wm_size message
 		local
 			splitter_movement_factor: DOUBLE
@@ -256,7 +255,7 @@ feature {NONE} -- Implementation
 				internal_split_position := internal_split_position + movement
 			end
 			update_split_position
-			layout_widgets (originator)
+			layout_widgets (a_width, a_height, originator)
 		end
 
 	invert_split (a_dc: WEL_DC)
@@ -287,6 +286,8 @@ feature {NONE} -- Implementation
 							-- Move the splitter to the mouse position and
 							-- update content when dragging.
 						set_split_position (new_pos)
+							-- We need to refresh now to avoid traces of the splitter on screen.
+						cwin_redraw_window (wel_item, default_pointer, default_pointer, {WEL_RDW_CONSTANTS}.rdw_updatenow)
 					else
 							-- Move shade of splitter and do not update content.
 						create window_dc.make (Current)
@@ -351,7 +352,6 @@ feature {NONE} -- Implementation
 		local
 			new_pos: INTEGER
 			window_dc: WEL_WINDOW_DC
-			l_splitter_brush: like splitter_brush
 		do
 				-- Stop the splitter moving.
 			if has_capture then
@@ -368,8 +368,8 @@ feature {NONE} -- Implementation
 						new_pos := y_pos - click_relative_position
 					end
 					set_split_position (new_pos)
-					l_splitter_brush := splitter_brush
-					check l_splitter_brush /= Void end
+				end
+				if attached splitter_brush as l_splitter_brush then
 					l_splitter_brush.delete
 					splitter_brush := Void
 				end

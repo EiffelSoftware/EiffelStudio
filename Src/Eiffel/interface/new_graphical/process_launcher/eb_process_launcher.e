@@ -543,8 +543,8 @@ feature {NONE} -- Implementation
 	on_successful_launch_handler: ROUTINE [ANY, TUPLE]
 			-- Different agent handlers
 
-	initial_time_interval: INTEGER = 100
-	initial_buffer_size: INTEGER = 128
+	initial_time_interval: INTEGER = 250
+	initial_buffer_size: INTEGER = 4096
 
 	child_termination_timeout: INTEGER = 5000
 			-- Time in milliseconds to wait when terminating child process
@@ -574,7 +574,7 @@ invariant
 	data_storage_not_void: data_storage /= Void
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -55,7 +55,7 @@ feature -- Run
 		do
 			from
 				done := False
-				l_sleep_time := sleep_time.to_integer_64 * 1000000
+				l_sleep_time := sleep_time.to_integer_64 * one_millisecond_in_nanoseconds
 			until
 				done
 			loop
@@ -71,7 +71,7 @@ feature -- Run
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -74,7 +74,7 @@ feature -- Control
 						create l_start_time.make_now
 					end
 					from
-						l_sleep_time := sleep_time * 1000000
+						l_sleep_time := sleep_time * one_millisecond_in_nanoseconds
 					until
 						destroyed or l_timeout
 					loop
@@ -118,7 +118,7 @@ feature {NONE} -- Implementation
 		do
 			if attached {PROCESS_IMP} process_launcher as l_prc_imp then
 				from
-					l_sleep_time := sleep_time.to_integer_64 * 1_000_000
+					l_sleep_time := sleep_time.to_integer_64 * one_millisecond_in_nanoseconds
 				until
 					should_destroy
 				loop
@@ -145,14 +145,14 @@ invariant
 	mutex_not_void: mutex /= Void
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

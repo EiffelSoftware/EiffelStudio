@@ -74,7 +74,6 @@ feature	-- Basic operations
 			else
 				Result := Void
 			end
-
 			mutex.unlock
 		end
 
@@ -85,8 +84,10 @@ feature	-- Basic operations
 			is_end: BOOLEAN
 			done: BOOLEAN
 			s: STRING
+			l_data_list: like data_list
 		do
 			mutex.lock
+			l_data_list := data_list
 			if count = 0 then
 				create s.make (0)
 			else
@@ -94,39 +95,43 @@ feature	-- Basic operations
 			end
 
 			if block_to_be_removed then
+					-- As we are fully discarding the blocks we can create a new structure and release the mutex immediately.
+				create data_list.make
+				count := 0
+				mutex.unlock
 				from
-					data_list.start
+					l_data_list.start
 					is_end := False
 					done := False
 				until
-					data_list.is_empty or done
+					l_data_list.after or done
 				loop
-					if data_list.item.is_end then
+					if l_data_list.item.is_end then
 						is_end := True
 						done := True
 					end
-					s.append (data_list.item.string_representation)
-					data_list.remove
+					s.append (l_data_list.item.string_representation)
+					l_data_list.forth
 				end
-				count := 0
+				l_data_list.wipe_out
 			else
 				from
-					data_list.start
+					l_data_list.start
 					is_end := False
 					done := False
 				until
-					data_list.after or done
+					l_data_list.after or done
 				loop
-					if data_list.item.is_end then
+					if l_data_list.item.is_end then
 						is_end := True
 						done := True
 					end
-					s.append (data_list.item.string_representation)
-					data_list.forth
+					s.append (l_data_list.item.string_representation)
+					l_data_list.forth
 				end
+				mutex.unlock
 			end
 			create {EB_PROCESS_IO_STRING_BLOCK} Result.make (s, False, is_end)
-			mutex.unlock
 		end
 
 	wipe_out
@@ -213,7 +218,7 @@ invariant
 	count_not_larger_than_capacity: count <= capacity
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -226,22 +231,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

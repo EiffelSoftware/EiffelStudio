@@ -248,7 +248,8 @@ feature {NONE} -- Action handing
 				elseif a_parent_type.same_string (constants.ribbon_application_menu) then
 					Result := l_stone_child.same_string (constants.menu_group)
 				elseif a_parent_type.same_string (constants.menu_group) then
-					Result := l_stone_child.same_string (constants.button)
+					Result := l_stone_child.same_string (constants.button) or else
+						l_stone_child.same_string (constants.split_button)
 				elseif a_parent_type.same_string (constants.context_popup) then
 					Result := l_stone_child.same_string (constants.context_popup_context_menus) or else
 						l_stone_child.same_string (constants.context_popup_mini_toolbars)
@@ -361,7 +362,7 @@ feature -- Persistance
 				l_root.accept (l_split_button_gallery_visitor)
 				create l_update_application_menu
 				l_root.accept (l_update_application_menu)
-				
+
 				create l_update_context_popups_visitor
 				l_root.accept (l_update_context_popups_visitor)
 			else

@@ -1064,11 +1064,15 @@ feature {NONE} -- Implementation
 			end
 				-- process subclusters
 			if attached a_cluster.children as l_clusters then
-				l_clusters.do_all (agent (ai_cluster: CONF_CLUSTER)
-					do
-						current_is_subcluster := True
-						ai_cluster.process (Current)
-					end)
+				from
+					l_clusters.start
+				until
+					l_clusters.after
+				loop
+					current_is_subcluster := True
+					l_clusters.item.process (Current)
+					l_clusters.forth
+				end
 			end
 		end
 

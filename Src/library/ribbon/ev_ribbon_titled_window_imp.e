@@ -8,9 +8,10 @@ class
 
 inherit
 	EV_TITLED_WINDOW_IMP
+		export
+			{EV_RIBBON} on_size
 		redefine
 			client_y,
-			on_paint,
 			interface
 		end
 
@@ -32,15 +33,6 @@ feature {NONE} -- Implementation
 			if attached ribbon as l_ribbon and then l_ribbon.exists then
 				Result := l_ribbon.height
 			end
-		end
-
-	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT)
-			-- <Precursor>
-		do
-			if is_displayed then
-				on_size ({WEL_WINDOW_CONSTANTS}.Size_restored, width, height)
-			end
-			Precursor {EV_TITLED_WINDOW_IMP}(paint_dc, invalid_rect)
 		end
 
 feature -- Access

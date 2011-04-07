@@ -33,6 +33,9 @@ EIF_RIBBON_UPDATE_PROPERTY_PROC eiffel_update_property_function = NULL;
 EIF_RIBBON_ON_CREATE_UI_COMMAND_PROC eiffel_on_create_ui_command_function =  NULL;
 	/* Address of Eiffel EV_RIBBON.on_create_ui_command */
 
+EIF_RIBBON_ON_VIEW_CHANGED_PROC eiffel_on_view_changed_function =  NULL;
+	/* Address of Eiffel EV_RIBBON.on_view_changed */
+
 /* Set Eiffel EV_COMMAND_HANDLER object address */
 void c_set_command_handler_object(EIF_REFERENCE a_address)
 {
@@ -81,4 +84,10 @@ void c_release_ribbon_object()
 void c_set_on_create_ui_command_address(EIF_POINTER a_address)
 {
 	eiffel_on_create_ui_command_function = (EIF_RIBBON_ON_CREATE_UI_COMMAND_PROC) a_address;
+}
+
+/* Set EV_RIBBON.on_view_changed address */
+void c_set_on_view_changed_address (EIF_POINTER a_address)
+{
+	eiffel_on_view_changed_function = (EIF_RIBBON_ON_VIEW_CHANGED_PROC) a_address;
 }

@@ -20,28 +20,26 @@ IUICommandHandlerVtbl myCommand_Vtbl = {QueryInterface2,
 													};
 																	
 long OutstandingCommandHandlers = 0;
-//IUICommandHandler *g_commandHandler = NULL;  // Reference to the command handler
+/* IUICommandHandler *g_commandHandler = NULL;	*/ /* Reference to the command handler */
 
 EIF_POINTER c_create_ui_command_handler (EIF_POINTER a_commandHandler)
 {
-				HRESULT	hr;
-				IUICommandHandler *pCommandHandler = NULL;		
-				IUICommandHandler ** l_command_handler = (IUICommandHandler **)a_commandHandler;
-				/* allocate pApplication */
-				pCommandHandler = (IUICommandHandler *)GlobalAlloc(GMEM_FIXED, sizeof(IUICommandHandler));
-				if(!pCommandHandler) {
-				// FIXME: raise an exception here?
-				}
+	HRESULT	hr;
+	IUICommandHandler *pCommandHandler = NULL;		
+	IUICommandHandler ** l_command_handler = (IUICommandHandler **)a_commandHandler;
+	/* allocate pApplication */
+	pCommandHandler = (IUICommandHandler *)GlobalAlloc(GMEM_FIXED, sizeof(IUICommandHandler));
+	if(!pCommandHandler) {
+		/* FIXME: raise an exception here? */
+	}
 
-				/*
-				Point our pCommandHandler to myCommand_Vtbl that contains standard IUnknown method (QueryInterface, AddRef, Release)
-				and callback for our IUICommandHandler interface (Execute, UpdateProperty).
-				*/
-				(IUICommandHandlerVtbl *)pCommandHandler->lpVtbl = &myCommand_Vtbl;
+	/* Point our pCommandHandler to myCommand_Vtbl that contains standard IUnknown method (QueryInterface,
+	 * AddRef, Release) and callback for our IUICommandHandler interface (Execute, UpdateProperty). */
+	(IUICommandHandlerVtbl *)pCommandHandler->lpVtbl = &myCommand_Vtbl;
 
-				hr = pCommandHandler->lpVtbl->QueryInterface(pCommandHandler, &IID_IUICommandHandler, l_command_handler);	
+	hr = pCommandHandler->lpVtbl->QueryInterface(pCommandHandler, &IID_IUICommandHandler, l_command_handler);	
 
-				return pCommandHandler;
+	return pCommandHandler;
 }
 
 HRESULT STDMETHODCALLTYPE QueryInterface2(IUICommandHandler *This, REFIID vtblID, void **ppv)
@@ -79,20 +77,18 @@ HRESULT STDMETHODCALLTYPE UpdateProperty(IUICommandHandler *This, UINT nCmdID, R
 		Eiffel function call need first parameter as EIF_REFERENCE. */
 
 	if (eiffel_command_handler_object) {
-			return (EIF_NATURAL_32) ((eiffel_update_property_function) (
-	#ifndef EIF_IL_DLL
-				(EIF_REFERENCE) eif_access (eiffel_command_handler_object),
-	#endif
-				(EIF_POINTER) This,
-				(EIF_NATURAL_32) nCmdID,
-				(EIF_POINTER) key,
-				(EIF_POINTER) ppropvarCurrentValue,
-				(EIF_POINTER) ppropvarNewValue));
-		} else {
-			return 0;
-		}  
-	
-	//return S_OK;
+		return (EIF_NATURAL_32) ((eiffel_update_property_function) (
+#ifndef EIF_IL_DLL
+			(EIF_REFERENCE) eif_access (eiffel_command_handler_object),
+#endif
+			(EIF_POINTER) This,
+			(EIF_NATURAL_32) nCmdID,
+			(EIF_POINTER) key,
+			(EIF_POINTER) ppropvarCurrentValue,
+			(EIF_POINTER) ppropvarNewValue));
+	} else {
+		return S_OK;
+	}
 }
 
 HRESULT STDMETHODCALLTYPE Execute(IUICommandHandler *This, UINT nCmdID, UI_EXECUTIONVERB verb, const PROPERTYKEY* key, const PROPVARIANT* ppropvarValue, IUISimplePropertySet* pCommandExecutionProperties)
@@ -101,19 +97,17 @@ HRESULT STDMETHODCALLTYPE Execute(IUICommandHandler *This, UINT nCmdID, UI_EXECU
 	/* 	Eiffel function for Ribbon UICommandHandler execute
 		Eiffel function call need first parameter as EIF_REFERENCE. */	
 	if (eiffel_command_handler_object) {
-			return (EIF_NATURAL_32) ((eiffel_execute_function) (
-	#ifndef EIF_IL_DLL
-				(EIF_REFERENCE) eif_access (eiffel_command_handler_object),
-	#endif
-				(EIF_POINTER) This,
-				(EIF_NATURAL_32) nCmdID,
-				(EIF_INTEGER) verb,
-				(EIF_POINTER) key,
-				(EIF_POINTER) ppropvarValue,
-				(EIF_POINTER) pCommandExecutionProperties));
-		} else {
-			return 0;
-		} 
-		
-	//return S_OK;
+		return (EIF_NATURAL_32) ((eiffel_execute_function) (
+#ifndef EIF_IL_DLL
+			(EIF_REFERENCE) eif_access (eiffel_command_handler_object),
+#endif
+			(EIF_POINTER) This,
+			(EIF_NATURAL_32) nCmdID,
+			(EIF_INTEGER) verb,
+			(EIF_POINTER) key,
+			(EIF_POINTER) ppropvarValue,
+			(EIF_POINTER) pCommandExecutionProperties));
+	} else {
+		return S_OK;
+	} 
 }

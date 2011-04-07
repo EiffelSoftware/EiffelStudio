@@ -350,13 +350,12 @@ feature -- Element change.
 
 	show_legend
 			-- Show legend of clusters and colors.
-		local
-			bbox: like bounding_box
 		do
 			cluster_legend.update
 			cluster_legend.hide
-			bbox := calculated_bounding_box
-			cluster_legend.set_point_position (bbox.left, bbox.top)
+			if attached calculated_bounding_box as bbox then
+				cluster_legend.set_point_position (bbox.left, bbox.top)
+			end
 			cluster_legend.show
 			cluster_legend.enable_sensitive
 			if not has (cluster_legend) then

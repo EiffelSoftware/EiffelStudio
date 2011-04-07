@@ -2,7 +2,6 @@ note
 	description: "Code completable EV_ADD_REMOVE_LIST"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -69,7 +68,7 @@ feature {NONE} -- GUI
 			create hbox
 			hbox.set_border_width (5)
 			hbox.extend (create {EV_CELL})
-			create add_button.make_with_text (interface_names.b_Add)
+			create add_button.make_with_text (interface_names.b_Add_details)
 			add_button.select_actions.extend (agent add_pressed)
 			add_button.set_minimum_width (80)
 			hbox.extend (add_button)

@@ -319,6 +319,9 @@ feature {NONE} -- Action handlers
 						if l_class.is_precompiled then
 							l_class_ast := l_class.ast
 						elseif l_class.eiffel_class_c.file_is_readable then
+								-- Note that this code will perform a parsing if the file
+								-- has been modified and saved in EiffelStudio and not yet
+								-- recompiled by the compiler.
 							l_class_ast := l_class.eiffel_class_c.parsed_ast (False)
 								-- Clear error handler, as per-note in parsed_ast
 							error_handler.wipe_out
@@ -429,7 +432,7 @@ invariant
 		show_signatures_button /= Void
 
 ;note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

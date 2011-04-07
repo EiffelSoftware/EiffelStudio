@@ -103,6 +103,8 @@ feature
 
 	Precompile_abb: CHARACTER = 'p'
 
+	Pretty_abb: CHARACTER = 'p'
+
 	Finalize_precompile_abb: CHARACTER = 'd'
 
 	Profile_abb: CHARACTER = 'p'
@@ -166,7 +168,7 @@ feature
 	Version_abb: CHARACTER = 'v';
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -190,11 +192,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class SHARED_EWB_ABBREV

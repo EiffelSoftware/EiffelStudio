@@ -327,9 +327,8 @@ feature {NONE} -- Implementation
 	default_style: INTEGER
 			-- <Precursor>
 		do
-				-- We do not use `Ws_clipchildren' and `Ws_clipsiblings' because
-				-- we can do the job ourself.
-			Result := Ws_child | Ws_visible
+				-- We do not use `Ws_clipchildren' because we can do the job ourself.
+			Result := Ws_child | Ws_visible | ws_clipsiblings
 		end
 
 	invert_rectangle

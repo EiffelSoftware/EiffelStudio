@@ -186,7 +186,8 @@ feature {NONE} -- Implementation
 
 	default_style: INTEGER
 		do
-			Result := ws_child | ws_visible
+				-- We do not use `Ws_clipchildren' because we can do the job ourself.			
+			Result := ws_child | ws_visible | ws_clipsiblings
 		end
 
 	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT)

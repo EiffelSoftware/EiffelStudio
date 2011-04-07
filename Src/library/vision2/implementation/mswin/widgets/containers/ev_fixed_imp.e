@@ -375,7 +375,7 @@ feature {NONE} -- WEL Implementation
 	default_style: INTEGER
 			-- Default style used by windows at creation.
 		do
-			Result := Ws_child | Ws_visible
+			Result := Ws_child | Ws_visible | Ws_clipsiblings
 		end
 
 note

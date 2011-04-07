@@ -117,8 +117,8 @@ feature {NONE} -- WEL implementation
 	default_style: INTEGER
 			-- <Precursor>
 		do
-				-- No need to have windows do the clipping since it is quite easy for us to handle that.
-			Result := ws_child | ws_visible
+				-- We do not use `Ws_clipchildren' because we can do the job ourself.
+			Result := ws_child | ws_visible | ws_clipsiblings
 		end
 
 	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT)

@@ -191,25 +191,47 @@ feature {NONE} -- Implementation
 		end
 
 	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT)
+		local
+			l_x_pos, l_y_pos, l_right_pos, l_bottom_pos: INTEGER
+			l_width, l_height: INTEGER
+			l_brush: like background_brush
+			l_erased: BOOLEAN
 		do
 			if not is_theme_background_reqested and attached item_imp as l_item then
 					-- If `item' is within the viewport, we need to clear the border surrounding it, otherwise nothing to be done.
-				if l_item.x_position > 0 or l_item.y_position > 0 or (l_item.width - l_item.x_position < width) or (l_item.height - l_item.y_position < height) then
-					if {WEL_API}.exclude_clip_rect (paint_dc.item, (l_item.x_position).max (0), (l_item.y_position).max (0), (l_item.width + l_item.x_position).min (width), (l_item.height + l_item.y_position).min (height)) = {WEL_RGN_CONSTANTS}.error then
-							-- There was an error trying to clip the area, the code below will erase everything as a fallback
-							-- causing most likely a flicker.
+				l_x_pos := l_item.x_position
+				l_y_pos := l_item.y_position
+				l_right_pos := l_item.x_position + l_item.width
+				l_bottom_pos := l_item.y_position + l_item.height
+				l_width := invalid_rect.right
+				l_height := invalid_rect.bottom
+				l_brush := background_brush
+				if l_brush /= Void then
+					if l_y_pos > 0 then
+						invalid_rect.set_rect (0, 0, l_width , l_y_pos)
+						application_imp.theme_drawer.draw_widget_background (Current, paint_dc, invalid_rect, l_brush)
+						l_erased := True
 					end
-					if attached background_brush as bk_brush then
-						application_imp.theme_drawer.draw_widget_background (current_as_container, paint_dc, invalid_rect, bk_brush)
-						bk_brush.delete
-						disable_default_processing
-						set_message_return_value (to_lresult (1))
-					else
-							-- We let Windows handle the message.
+					if l_x_pos > 0 then
+						invalid_rect.set_rect (0, l_y_pos.max (0), l_x_pos, l_bottom_pos.min (l_height))
+						application_imp.theme_drawer.draw_widget_background (Current, paint_dc, invalid_rect, l_brush)
+						l_erased := True
 					end
-				else
+					if l_right_pos < l_width then
+						invalid_rect.set_rect (l_right_pos, l_y_pos.max (0), l_width, l_bottom_pos.min (l_height))
+						application_imp.theme_drawer.draw_widget_background (Current, paint_dc, invalid_rect, l_brush)
+						l_erased := True
+					end
+					if l_bottom_pos < l_height then
+						invalid_rect.set_rect (0, l_bottom_pos, l_width, l_height)
+						application_imp.theme_drawer.draw_widget_background (Current, paint_dc, invalid_rect, l_brush)
+						l_erased := True
+					end
 					disable_default_processing
 					set_message_return_value (to_lresult (1))
+					l_brush.delete
+				else
+						-- We let Windows handle the message.
 				end
 			else
 					-- No items, we need to clear the background completely.
@@ -232,15 +254,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EV_VIEWPORT_IMP
-
-
-
-
-
-
-
-
+end

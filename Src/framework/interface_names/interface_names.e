@@ -38,6 +38,7 @@ feature -- Button texts
 
 	b_Abort: STRING_32							do Result := locale.translation("Abort")	end
 	b_Add: STRING_32 							do Result := locale.translation("Add")	end
+	b_Add_details: STRING_32					do Result := locale.translation("Add...") end
 	b_Add_text: STRING_32 						do Result := locale.translation("Add ->")	end
 	b_alphabetical_class_list: STRING_32 		do Result := locale.translation("Alphabetical class list")	end
 	b_alphabetical_cluster_list: STRING_32 		do Result := locale.translation("Alphabetical cluster list")	end

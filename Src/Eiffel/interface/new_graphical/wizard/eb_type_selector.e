@@ -67,8 +67,10 @@ feature {NONE} -- Initialization
 
 			create detachable_check_box
 			detachable_check_box.set_text ("Detachable?")
-			l_vbox.extend (detachable_check_box)
-			l_vbox.disable_item_expand (detachable_check_box)
+			if not is_used_for_inheritance then
+				l_vbox.extend (detachable_check_box)
+				l_vbox.disable_item_expand (detachable_check_box)
+			end
 
 			selector.change_actions.extend (agent on_selection_change)
 			extend (l_vbox)

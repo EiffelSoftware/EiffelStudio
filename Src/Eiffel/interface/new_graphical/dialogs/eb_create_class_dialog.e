@@ -252,9 +252,6 @@ feature -- Status Report
 	path: STRING
 			-- Selected subfolder path
 
-	is_deferred: BOOLEAN
-			-- Is new class deferred?
-
 feature -- Status Settings
 
 	set_stone_when_finished
@@ -281,48 +278,66 @@ feature -- Basic operations
 	call_default
 			-- Create a new dialog with a pre-computed class name.
 		do
-			call ("NEW_" + new_class_counter.item.out)
-			new_class_counter.put (new_class_counter.item + 1)
+			set_default_class_name
+			select_default_cluster
+			show_modal
 		end
 
 	call_stone (a_stone: CLUSTER_STONE)
 			-- Create a new dialog with `a_stone' as parent cluster.
 		require
 			a_stone_not_void: a_stone /= Void
-		local
-			class_n, str: STRING
 		do
-			class_n := "NEW_" + new_class_counter.item.out
-			new_class_counter.put (new_class_counter.item + 1)
+			set_default_class_name
 			cluster_list.show_subfolder (a_stone.group, a_stone.path)
-			str := class_n.as_upper
-			class_entry.set_text (str)
-			show_modal_to_window (target.window)
+			show_modal
 		end
 
 	call (class_n: STRING)
 			-- Create a new dialog with `class_n' as preset class name.
 		require
 			valid_args: class_n /= Void
-		local
-			str: STRING
 		do
-			if not cluster_preset then
-				if target.stone /= Void then
-					cluster_list.show_stone (target.stone)
-				end
-			else
-				cluster_list.show_subfolder (cluster, path)
-			end
-			str := class_n.as_upper
-			class_entry.set_text (str)
-			if cluster /= Void then
-				cluster_list.show_subfolder (cluster, path)
-			end
-			show_modal_to_window (target.window)
+			set_class_name (class_n)
+			select_default_cluster
+			show_modal
 		end
 
 feature {NONE} -- Basic operations
+
+	set_default_class_name
+			-- Set class name to the automatically computed one.
+		local
+			n: INTEGER
+		do
+				-- Advance class counter.
+			n := new_class_counter.item + 1
+			new_class_counter.put (n)
+				-- Set class name to the computed one.
+			class_entry.set_text ("NEW_" + n.out)
+		end
+
+	set_class_name (n: STRING)
+			-- Set class name to `n' in upper case.
+		do
+			class_entry.set_text (n.as_upper)
+		end
+
+	select_default_cluster
+			-- Select default cluster in the cluster list.
+		do
+			if cluster /= Void then
+				cluster_list.show_subfolder (cluster, path)
+			elseif target.stone /= Void then
+				cluster_list.show_stone (target.stone)
+			end
+		end
+
+	show_modal
+			-- Show a dialog modal to the target window.
+		do
+			show_modal_to_window (target.window)
+		end
 
 	render_class_template (a_dest_file_name: attached STRING)
 			-- Renders a class name into a choose destination file
@@ -710,6 +725,9 @@ feature {NONE} -- Implementation
 			-- User pressed `cancel_b'.
 		do
 			cancelled := True
+				-- Rollback class counter.
+			new_class_counter.put (new_class_counter.item - 1)
+				-- Destroy underlying object.
 			destroy
 		ensure
 			cancelled_set: cancelled
@@ -720,18 +738,21 @@ feature {NONE} -- Implementation
 		do
 			if deferred_check.is_selected then
 				expanded_check.disable_select
-				creation_check.disable_sensitive
 				if creation_check.is_selected then
+						-- Disable text entry.
+					creation_entry.disable_sensitive
+						-- Disable surrounding box.
 					creation_entry.parent.disable_sensitive
 				end
+					-- Deselect creation check box.
 				creation_check.disable_select
-				is_deferred := True
+					-- Disable creation check box.
+				creation_check.disable_sensitive
 			else
+					-- Enable creation check box.
 				creation_check.enable_sensitive
-				if creation_check.is_selected then
-					creation_entry.parent.enable_sensitive
-				end
-				is_deferred := False
+					-- Enable text field surrounding box.
+				creation_entry.parent.enable_sensitive
 			end
 		end
 
@@ -861,9 +882,9 @@ feature {NONE} -- Constants
 		end
 
 	new_class_counter: CELL [INTEGER]
-			-- Number of classes being created so far
+			-- Number of classes being created so far.
 		once
-			create Result.put (1)
+			create Result.put (0)
 		ensure
 			new_class_counter_not_void: new_class_counter /= Void
 		end

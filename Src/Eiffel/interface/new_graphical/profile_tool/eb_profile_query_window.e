@@ -1574,7 +1574,7 @@ feature {NONE} -- Implementation
 			Result := (create {EV_LABEL}).font
 		end
 
-	record_mouse_relative_to_item (an_x, a_y: INTEGER; grid_item: EV_GRID_ITEM)
+	record_mouse_relative_to_item (an_x, a_y: INTEGER; grid_item: detachable EV_GRID_ITEM)
 			-- Store the last position of the mouse relative to an item.
 		local
 			query_grid_row: EB_PROFILE_QUERY_GRID_ROW
@@ -2001,7 +2001,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

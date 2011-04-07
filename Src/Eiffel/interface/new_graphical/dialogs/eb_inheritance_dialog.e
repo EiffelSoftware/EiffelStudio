@@ -43,17 +43,12 @@ feature {NONE} -- Initialization
 			vb.set_padding (layout_constants.small_padding_size)
 			vb.set_border_width (layout_constants.default_border_size)
 
-			create l_frame
 			create non_conformance_check_box.make_with_text ("Non Conforming?")
-			l_frame.extend (non_conformance_check_box)
-			vb.extend (l_frame)
+			vb.extend (non_conformance_check_box)
 			vb.disable_item_expand (vb.last)
 
-			create feature_editor_frame
-			vb.extend (feature_editor_frame)
-
 			create type_selector.make_for_inheritance
-			feature_editor_frame.extend (type_selector)
+			vb.extend (type_selector)
 
 			create hb
 			hb.set_padding (layout_constants.small_padding_size)
@@ -141,8 +136,6 @@ feature {NONE} -- Implementation
 			ok_clicked := True
 			if valid_content then
 				hide
-			else
---				feature_editor.show_error (Current)
 			end
 		end
 
@@ -152,9 +145,6 @@ feature {NONE} -- Implementation
 			ok_clicked := False
 			hide
 		end
-
-	feature_editor_frame: EV_FRAME;
-			-- Container of `feature_editor'.
 
 note
 	copyright:	"Copyright (c) 1984-2010, Eiffel Software"

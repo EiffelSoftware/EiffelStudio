@@ -172,6 +172,8 @@ feature {NONE} -- Implementation
 			l_choice_list: EV_GRID
 			l_x_coord, l_y_coord: INTEGER
 			l_parent: like parent
+			l_vbox: EV_VERTICAL_BOX
+			l_box_border, l_left_border, l_top_border, l_right_border: INTEGER
 		do
 			l_parent := parent
 			check l_parent /= Void end
@@ -182,24 +184,44 @@ feature {NONE} -- Implementation
 			create l_choice_list
 			choice_list := l_choice_list
 
+			create l_vbox
+
+			if left_border /= 0 and right_border /= 0 and top_border /= 0 then
+					-- A border is being used by the item so we respect its boundaries.
+				l_box_border := 0
+				l_left_border := left_border
+				l_right_border := right_border
+				l_top_border := top_border
+			else
+					-- If no border is applied on the item then we supply our own.
+				l_box_border := 1
+			end
+
+			l_vbox.set_background_color ((create {EV_STOCK_COLORS}).black)
+			l_vbox.extend (l_choice_list)
+			l_vbox.set_border_width (l_box_border)
+
 				-- Set the item strings.
 			set_strings
 
 				-- Compute location and size of `popup_window' and `choice_list' so that we can see most
 				-- of the items at once.
 
-			l_x_coord := a_popup.x_position + left_border
-			l_y_coord := a_popup.y_position + top_border
+			l_x_coord := a_popup.x_position + l_left_border
+			l_y_coord := a_popup.y_position + l_top_border
 
-			l_width := a_popup.width - left_border - right_border
-			l_height := a_popup.height - top_border
+			l_width := a_popup.width - l_left_border - l_right_border
+			l_height := a_popup.height - l_top_border
 
 			if l_choice_list.column_count > 0 and then l_choice_list.row_count > 0 then
-				l_width := l_width.max (l_choice_list.column (1).required_width_of_item_span (1, l_choice_list.row_count) + 2)
+				l_width := l_width.max (l_choice_list.column (1).required_width_of_item_span (1, l_choice_list.row_count) + 4 + (2 * l_box_border))
 				l_width := (l_screen.virtual_height - l_x_coord).max (0).min (l_width)
-				l_choice_list.column (1).set_width (l_width)
-				l_choice_list.set_minimum_width (l_width)
+
 				l_height := (l_screen.virtual_height - l_y_coord).max (0).min (l_choice_list.virtual_height)
+				l_choice_list.set_minimum_height (l_height)
+
+				l_choice_list.column (1).set_width (l_width - (2 * l_box_border))
+				l_choice_list.set_minimum_width (l_height - (2 * l_box_border))
 			end
 
 			a_popup.set_x_position (l_x_coord)
@@ -217,7 +239,7 @@ feature {NONE} -- Implementation
 			l_choice_list.set_focused_selection_color (l_parent.focused_selection_color)
 			l_choice_list.set_focused_selection_text_color (l_parent.focused_selection_text_color)
 
-			a_popup.extend (l_choice_list)
+			a_popup.extend (l_vbox)
 
 				-- Initialize action sequences when `Current' is shown.
 			a_popup.show_actions.extend (agent initialize_actions)
@@ -239,7 +261,7 @@ feature {NONE} -- Implementation
 				l_choice_list.key_press_actions.extend (agent on_key)
 				l_choice_list.hide_horizontal_scroll_bar
 			else
-					-- Something wrong happend here, we should deactivate if possible.
+					-- Something wrong occurred, we should deactivate if possible.
 				if not is_destroyed and is_parented then
 					deactivate
 				end

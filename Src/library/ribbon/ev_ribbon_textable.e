@@ -25,6 +25,7 @@ feature -- Command
 			l_command_id: NATURAL_32
 			l_enum: EV_UI_INVALIDATIONS_ENUM
 		do
+			label_title := a_text
 			if command_list.count > 0 then
 				l_command_id := command_list.item (command_list.lower)
 				check command_id_valid: l_command_id /= 0 end
@@ -33,7 +34,6 @@ feature -- Command
 					create l_key.make_label
 					create l_enum
 					l_ribbon.invalidate (l_command_id, l_enum.ui_invalidations_property, l_key)
-					label_title := a_text
 				end
 			end
 		end

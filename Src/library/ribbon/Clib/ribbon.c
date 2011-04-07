@@ -56,27 +56,36 @@ ULONG STDMETHODCALLTYPE Release(IUIApplication *This)
 
 HRESULT STDMETHODCALLTYPE OnViewChanged(IUIApplication *This, UINT32 viewId, UI_VIEWTYPE typeID, IUnknown *view, UI_VIEWVERB verb, INT32 uReasonCode)
 { 
-	return E_NOTIMPL; 
+	if (eiffel_ribbon_object) {
+		return (EIF_NATURAL_32) ((eiffel_on_view_changed_function) (
+#ifndef EIF_IL_DLL
+			(EIF_REFERENCE) eif_access (eiffel_ribbon_object),
+#endif
+			(EIF_POINTER) This,
+			(EIF_NATURAL_32) viewId,
+			(EIF_INTEGER) typeID,
+			(EIF_POINTER) view,
+			(EIF_INTEGER) verb,
+			(EIF_INTEGER) uReasonCode));
+	} else {
+		return E_NOTIMPL; 
+	}  
 }
 
 HRESULT STDMETHODCALLTYPE OnCreateUICommand(IUIApplication *This, UINT32 commandId, UI_COMMANDTYPE typeID, IUICommandHandler **commandHandler)
 { 
-	
 	if (eiffel_ribbon_object) {
-			return (EIF_NATURAL_32) ((eiffel_on_create_ui_command_function) (
-	#ifndef EIF_IL_DLL
-				(EIF_REFERENCE) eif_access (eiffel_ribbon_object),
-	#endif
-				(EIF_POINTER) This,
-				(EIF_NATURAL_32) commandId,
-				(EIF_INTEGER) typeID,
-				(EIF_POINTER) commandHandler));
-		} else {
-			return 0;
-		}  
-		/*	
-			
-*/
+		return (EIF_NATURAL_32) ((eiffel_on_create_ui_command_function) (
+#ifndef EIF_IL_DLL
+			(EIF_REFERENCE) eif_access (eiffel_ribbon_object),
+#endif
+			(EIF_POINTER) This,
+			(EIF_NATURAL_32) commandId,
+			(EIF_INTEGER) typeID,
+			(EIF_POINTER) commandHandler));
+	} else {
+		return 0;
+	}  
 }
 
 HRESULT STDMETHODCALLTYPE OnDestroyUICommand (IUIApplication *This, UINT32 commandId,  UI_COMMANDTYPE typeID, IUICommandHandler *commandHandler) 
@@ -112,8 +121,9 @@ EIF_POINTER InitializeFramework(HWND hWnd)
 		/* allocate pApplication */
 		pApplication = (IUIApplication *)GlobalAlloc(GMEM_FIXED, sizeof(IUIApplication));
 		if (pApplication) {
-				/* Point our pApplication to myRibbon_Vtbl that contains standard IUnknown method (QueryInterface, AddRef, Release)
-				 * and callback for our IUIApplication interface (OnViewChanged, OnCreateUICommand, OnDestroyUICommand).
+				/* Point our pApplication to myRibbon_Vtbl that contains standard IUnknown method
+				 * (QueryInterface, AddRef, Release) and callback for our IUIApplication interface
+				 * (OnViewChanged, OnCreateUICommand, OnDestroyUICommand).
 				 */
 			(IUIApplicationVtbl *)pApplication->lpVtbl = &myRibbon_Vtbl;
 			hr = pApplication->lpVtbl->QueryInterface(pApplication, &IID_IUIAPPLICATION, &ppvObj);

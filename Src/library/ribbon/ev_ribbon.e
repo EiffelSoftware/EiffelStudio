@@ -22,6 +22,7 @@ feature -- Command
 				set_object_and_function_address
 				item := create_ribbon_com_framework (l_imp.wel_item)
 				ui_application := get_ui_application
+				associated_window := l_imp
 			end
 		end
 
@@ -172,6 +173,11 @@ feature -- Status Report
 
 	command_handler: POINTER
 			-- Command handler C object
+
+feature {NONE} -- Access
+
+	associated_window: detachable EV_WINDOW_IMP
+			-- Window associated with Current ribbon.
 
 feature {EV_RIBBON_TITLED_WINDOW_IMP} -- Externals
 
@@ -392,6 +398,29 @@ feature {EV_RIBBON} -- Externals callbacks
 			Result := {EV_RIBBON_HRESULT}.s_ok;--HRESULT S_OK, must return S_OK, otherwise IUICommandHandler.updateProperty and execute will not be called
 		end
 
+	on_view_changed (a_iui_application: POINTER; a_view_id: NATURAL_32; a_type_id: INTEGER; a_view: POINTER; a_verb, a_reason_code: INTEGER): NATURAL_32
+			--
+		do
+			Result := {EV_RIBBON_HRESULT}.e_notimpl
+			if a_type_id = {EV_VIEW_TYPE}.ribbon then
+				inspect a_verb
+				when {EV_VIEW_VERB}.create_ then
+				when {EV_VIEW_VERB}.size then
+						-- We trigger a resizing of the window content associated manually.
+					if attached {EV_RIBBON_TITLED_WINDOW_IMP} associated_window as l_window and then not l_window.exists then
+						l_window.on_size (0, l_window.width, l_window.height)
+					end
+
+				when {EV_VIEW_VERB}.destroy then
+
+				else
+
+				end
+
+				Result := {EV_RIBBON_HRESULT}.s_ok
+			end
+		end
+
 	c_set_command_handler (a_iui_command_handler: POINTER; a_pointer_pointer: POINTER)
 			-- Call COM queryInterface to initialize `a_pointer_pointer'
 		external
@@ -413,6 +442,7 @@ feature {EV_RIBBON} -- Externals callbacks
 		do
 			c_set_ribbon_object ($Current)
 			c_set_on_create_ui_command_address ($on_create_ui_command)
+			c_set_on_view_changed_address ($on_view_changed)
 		end
 
 	c_set_ribbon_object (a_object: POINTER)
@@ -428,6 +458,12 @@ feature {EV_RIBBON} -- Externals callbacks
 		end
 
 	c_set_on_create_ui_command_address (a_address: POINTER)
+			-- Set on_create_ui_command function address
+		external
+			"C use %"eiffel_ribbon.h%""
+		end
+
+	c_set_on_view_changed_address (a_address: POINTER)
 			-- Set on_create_ui_command function address
 		external
 			"C use %"eiffel_ribbon.h%""

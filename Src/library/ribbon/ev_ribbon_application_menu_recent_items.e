@@ -67,7 +67,7 @@ feature {EV_RIBBON} -- Command
 			l_selected: NATURAL_32
 		do
 			if command_list.has (a_command_id) then
-				if a_execution_verb = {EV_EXECUTION_VERB_CONSTANTS}.ui_executionverb_execute then
+				if a_execution_verb = {EV_EXECUTION_VERB}.execute then
 					create l_key.share_from_pointer (a_property_key)
 					if l_key.is_selected_item then
 						create l_value.share_from_pointer (a_property_value)
@@ -77,9 +77,9 @@ feature {EV_RIBBON} -- Command
 							l_selected_actions.call (void)
 						end
 					end
-				elseif a_execution_verb = {EV_EXECUTION_VERB_CONSTANTS}.ui_executionverb_preview then
+				elseif a_execution_verb = {EV_EXECUTION_VERB}.preview then
 
-				elseif a_execution_verb = {EV_EXECUTION_VERB_CONSTANTS}.ui_executionverb_cancelpreview then
+				elseif a_execution_verb = {EV_EXECUTION_VERB}.cancel_preview then
 
 				end
 			end
@@ -97,7 +97,6 @@ feature {EV_RIBBON} -- Command
 
 				create l_key.share_from_pointer (a_property_key)
 				if l_key.is_recent_items then
-
 					create l_value.share_from_pointer (a_property_new_value)
 					from
 						create l_list.make (recent_items.count)

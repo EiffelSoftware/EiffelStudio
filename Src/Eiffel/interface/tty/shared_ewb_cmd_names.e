@@ -136,6 +136,8 @@ feature {NONE}
 
 	precompile_cmd_name: STRING = "precompile"
 
+	pretty_cmd_name: STRING = "pretty"
+
 	finalized_precompile_cmd_name: STRING = "finalize_precompile"
 
 	Profile_cmd_name: STRING = "profile"

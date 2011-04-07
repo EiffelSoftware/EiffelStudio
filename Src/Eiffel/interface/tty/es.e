@@ -163,55 +163,58 @@ feature -- Initialization
 						end
 						degree_output.is_verbose := verbose_option
 
-							-- Load project
-						create l_loader
-						l_loader.set_should_stop_on_prompt (stop_on_error)
-						l_loader.set_ignore_user_configuration_file (not is_user_settings_requested)
-						l_loader.set_has_library_conversion (not has_no_library_conversion)
-						if is_single_file_compilation then
-							l_loader.open_single_file_compilation_project (single_file_compilation_filename, single_file_compilation_libraries, project_path, is_clean_requested)
-						elseif old_project_file /= Void then
-							l_loader.open_project_file (old_project_file, Void, project_path, is_clean_requested)
-						elseif old_ace_file /= Void then
-							l_loader.open_project_file (old_ace_file, Void, project_path, is_clean_requested)
+						if no_project_needed then
+								-- No project needs to be loaded, we simply execute the command.
+							command.execute
 						else
-							l_loader.open_project_file (config_file_name, target_name, project_path, is_clean_requested)
-						end
-
-						if not error_occurred and not l_loader.has_error then
-							compilation ?= command
-							if compilation /= Void then
-								compilation.set_is_finish_freezing_called (is_finish_freezing_called)
+								-- Load project
+							create l_loader
+							l_loader.set_should_stop_on_prompt (stop_on_error)
+							l_loader.set_ignore_user_configuration_file (not is_user_settings_requested)
+							l_loader.set_has_library_conversion (not has_no_library_conversion)
+							if is_single_file_compilation then
+								l_loader.open_single_file_compilation_project (single_file_compilation_filename, single_file_compilation_libraries, project_path, is_clean_requested)
+							elseif old_project_file /= Void then
+								l_loader.open_project_file (old_project_file, Void, project_path, is_clean_requested)
+							elseif old_ace_file /= Void then
+								l_loader.open_project_file (old_ace_file, Void, project_path, is_clean_requested)
+							else
+								l_loader.open_project_file (config_file_name, target_name, project_path, is_clean_requested)
 							end
-							ewb_loop ?= command
-							if
-								compilation = Void and then ewb_loop = Void
-							then
-								create {EWB_QUICK_MELT} compilation
-								compilation.execute
-								if system.successful then
+
+							if not error_occurred and not l_loader.has_error then
+								compilation ?= command
+								if compilation /= Void then
+									compilation.set_is_finish_freezing_called (is_finish_freezing_called)
+								end
+								ewb_loop ?= command
+								if compilation = Void and then ewb_loop = Void then
+									create {EWB_QUICK_MELT} compilation
+									compilation.execute
+									if system.successful then
+										command.execute
+									end
+								else
 									command.execute
 								end
-							else
-								command.execute
-							end
 
-							if is_single_file_compilation and then l_loader.eiffel_project.successful then
-									-- Copy generated executable in single file compilation to project location
-								if is_finalizing then
-									create l_generated_file.make (l_loader.eiffel_project.project_directory.final_executable_file_name)
-								else
-									create l_generated_file.make (l_loader.eiffel_project.project_directory.workbench_executable_file_name)
-								end
-									-- Check if generated file exists. If the C compilation fails, the file will not be generated.
-								if l_generated_file.exists then
-									 -- If generated file exists, copy it to the target location
-									create l_target_file.make (l_loader.eiffel_project.project_directory.single_file_compilation_executable_file_name)
-									l_generated_file.open_read
-									l_target_file.open_write
-									l_generated_file.copy_to (l_target_file)
-									l_target_file.close
-									l_generated_file.close
+								if is_single_file_compilation and then l_loader.eiffel_project.successful then
+										-- Copy generated executable in single file compilation to project location
+									if is_finalizing then
+										create l_generated_file.make (l_loader.eiffel_project.project_directory.final_executable_file_name)
+									else
+										create l_generated_file.make (l_loader.eiffel_project.project_directory.workbench_executable_file_name)
+									end
+										-- Check if generated file exists. If the C compilation fails, the file will not be generated.
+									if l_generated_file.exists then
+										 -- If generated file exists, copy it to the target location
+										create l_target_file.make (l_loader.eiffel_project.project_directory.single_file_compilation_executable_file_name)
+										l_generated_file.open_read
+										l_target_file.open_write
+										l_generated_file.copy_to (l_target_file)
+										l_target_file.close
+										l_generated_file.close
+									end
 								end
 							end
 						end
@@ -262,6 +265,9 @@ feature -- Properties
 
 	retried: BOOLEAN;
 			-- For rescues
+
+	no_project_needed: BOOLEAN
+			-- Is a project needed to perform `command'?
 
 	command: EWB_CMD
 			-- Command to be executed corresponding to
@@ -361,6 +367,7 @@ feature -- Properties
 			Result.put (debug_help, debug_info_name)
 			Result.put (melt_help, melt_cmd_name)
 			Result.put (overwrite_old_project_help, overwrite_old_project_cmd_name)
+			Result.put (pretty_help, pretty_cmd_name)
 			Result.put (project_help, project_cmd_name)
 			Result.put (project_path_help, project_path_cmd_name)
 			Result.put (quick_melt_help, quick_melt_cmd_name)
@@ -447,6 +454,7 @@ feature -- Output
 					%%T-flatshort [-filter filtername] [-all | -all_and_parents | class] |%N%
 					%%T-flat [-filter filtername] [-all | -all_and_parents | class] |%N%
 					%%T-short [-filter filtername] [-all | -all_and_parents | class] | %N%
+					%%T-pretty input_filename [output_filename] |%N%
 					%%T-filter filtername [-all | class] |%N%
 					%%T-descendants [-filter filtername] class |%N")
 				io.put_string ("%
@@ -634,6 +642,7 @@ feature -- Update
 			ewb_callees: EWB_CALLEES
 			l_arg: STRING
 			l_at_args: LINKED_LIST [STRING]
+			in_filename, out_filename: STRING
 		do
 			filter_name := ""
 			option := argument (current_option);
@@ -939,6 +948,31 @@ feature -- Update
 				else
 					option_error := True
 				end
+
+			elseif eiffel_layout.has_documentation_generation and then option.is_equal ("-pretty") then
+				no_project_needed := True
+
+				if current_option + 1 < argument_count then
+						-- Input filename and output filename are given
+					in_filename := argument (current_option + 1)
+					out_filename := argument (current_option + 2)
+					current_option := current_option + 2
+
+				elseif current_option < argument_count then
+						-- Only input filename given (use STDOUT for output)
+					in_filename := argument (current_option + 1)
+					out_filename := "-"
+					current_option := current_option + 1
+
+				else
+						-- Incorrect number of options	
+					option_error := True
+				end
+
+				if not option_error then
+					create {EWB_PRETTY} command.make (in_filename, out_filename)
+				end
+
 			elseif eiffel_layout.has_documentation_generation and then option.is_equal ("-filter") then
 				if current_option + 1 < argument_count then
 					if command /= Void then

@@ -142,6 +142,8 @@ feature {NONE}
 
 	precompile_help: STRING_GENERAL do Result := locale.translation ("precompile the system") end
 
+	pretty_help: STRING_GENERAL do Result := locale.translation ("show the pretty form of a class") end
+
 	finalize_precompile_help: STRING_GENERAL do Result := locale.translation ("precompile and finalize the system") end
 
 	Profile_help: STRING_GENERAL do Result := locale.translation ("information about a profiled run") end

@@ -918,9 +918,7 @@ feature {NONE} -- Analysis
 					-- Extend the map with the removed ids
 				from l_last_map.start until l_last_map.after loop
 					l_id := l_last_map.key_for_iteration
-					if not l_map.has (l_id) then
-						l_map.extend (0, l_id)
-					end
+					l_map.put (0, l_id)
 					l_last_map.forth
 				end
 			end
@@ -1517,7 +1515,7 @@ invariant
 	filter_update_timer_attached: is_initialized and not is_recycled implies filter_update_timer /= Void
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

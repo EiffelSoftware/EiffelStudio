@@ -60,3 +60,14 @@ iff not exist eiffel_echo.exe then
 	CANCEL
 endiff
 move eiffel_echo.exe %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin
+
+remtrace Recompile po_generation_tool
+cdd %EIFFEL_SRC\tools\po_generation_tool
+clean_project
+finalize po_generation_tool.ecf
+cleanup_eiffel po_generation_tool po_generation_tool.exe
+iff not exist po_generation_tool.exe then
+	remtrace Could not finalize a new po_generation_tool
+	CANCEL
+endiff
+move po_generation_tool.exe %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin

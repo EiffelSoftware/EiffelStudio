@@ -115,9 +115,8 @@ feature -- Status Report
 
 feature {NONE} -- Implementation
 
-	sql_string: detachable STRING
-
 	sql_string_32: detachable STRING_32
+			-- Buffer for storing SQL string in `prepare_32'.
 
 	descriptor: INTEGER;
 
@@ -132,9 +131,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class DATABASE_DYN_CHANGE
-
-
+end

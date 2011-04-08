@@ -470,7 +470,7 @@ feature -- External features
 	put_data_32 (no_descriptor: INTEGER; index: INTEGER; ar: STRING_32; max_len:INTEGER): INTEGER
 		local
 			i: INTEGER
-			l_data, l_null: POINTER
+			l_data: POINTER
 			l_area: MANAGED_POINTER
 			l_str32: STRING_32
 			l_str: STRING

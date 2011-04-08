@@ -19,7 +19,7 @@ feature -- Initialization
 		do
 			create lex.make;
 			create parse;
-			create container.make (1, 5);
+			create container.make_filled (Void, 1, 5);
 			create tmps.make (0)
 		end;
 
@@ -44,7 +44,7 @@ feature -- Status report
 	descriptor: detachable EC_DESCRIPTOR
 			-- The object descriptor
 
-	container: ARRAY [ANY];
+	container: ARRAY [detachable ANY];
 			-- Objects are stored in this container which can be
 			-- saved using ENVIRONMENT facilities.
 

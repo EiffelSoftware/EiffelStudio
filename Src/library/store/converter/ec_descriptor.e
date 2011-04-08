@@ -19,7 +19,7 @@ feature  -- Initilization
 
 	make
 		do
-			create ecd_fields.make (1, 10);
+			create ecd_fields.make_filled (Void, 1, 10);
 			ecd_clear
 		end;
 
@@ -31,7 +31,7 @@ feature -- Status report
 
 	field_separator: CHARACTER
 
-	ecd_fields: ARRAY [EC_FIELD]
+	ecd_fields: ARRAY [detachable EC_FIELD]
 
 	ecd_index: INTEGER
 			-- Index of the current field
@@ -87,33 +87,38 @@ feature -- Status setting
 			if ecd_index < ecd_min_index then
 				ecd_min_index := ecd_index
 			end;
-			create f.make;
-			f.set_field (type, n);
+			create f.make (type, n)
 			ecd_fields.force (f, ecd_index)
 		end;
 
 	set_delimiters (ld, rd: CHARACTER)
 			-- Set field value delimiters with `ld' and `rd'.
 		require
-			current_field_exists: ecd_fields.item(ecd_index) /= Void
+			current_field_exists: ecd_fields.item (ecd_index) /= Void
 		do
-			ecd_fields.item (ecd_index).set_value_delimiters (ld, rd)
+			check attached ecd_fields.item (ecd_index) as l_field then
+				l_field.set_value_delimiters (ld, rd)
+			end
 		end;
 
 	set_label_separator (ls: CHARACTER)
 			-- Set label separator with `ls'.
 		require
-			current_field_exists: ecd_fields.item(ecd_index) /= Void
+			current_field_exists: ecd_fields.item (ecd_index) /= Void
 		do
-			ecd_fields.item(ecd_index).set_label_separator(ls)
+			check attached ecd_fields.item (ecd_index) as l_field then
+				l_field.set_label_separator (ls)
+			end
 		end;
 
 	set_use_label (b: BOOLEAN)
 			-- Set `use_label' with `b'.
 		require
-			current_field_exists: ecd_fields.item(ecd_index) /= Void
+			current_field_exists: ecd_fields.item (ecd_index) /= Void
 		do
-			ecd_fields.item (ecd_index).set_use_label (b)
+			check attached ecd_fields.item (ecd_index) as l_field then
+				l_field.set_use_label (b)
+			end
 		end;
 
 	check_conformity (ref: ANY)
@@ -128,7 +133,6 @@ feature -- Status setting
 			i, j, nb_fields: INTEGER;
 			tmps: STRING;
 			ra, da: ARRAY [BOOLEAN]  -- Referenced and Declared array
-			l_field_name: detachable STRING
 		do
 			ecd_error := False;
 			create tmps.make(0);
@@ -136,28 +140,27 @@ feature -- Status setting
 			if ecd_min_index /= 1 then
 				tmps.wipe_out;
 				tmps.append("Type conformity error, First field `");
-				l_field_name := ecd_fields.item(ecd_min_index).field_name
-				check l_field_name /= Void end -- FIXME: implied by... {EC_FIELD}.field_name can be void here... bug?
-				tmps.append(l_field_name);
-				tmps.append("' cannot be indexed with ");
-				tmps.append(ecd_min_index.out);
-				tmps.append(".%N");
-				set_ecd_error(tmps)
+				check attached ecd_fields.item (ecd_min_index) as l_field then
+					tmps.append(l_field.field_name);
+					tmps.append("' cannot be indexed with ");
+					tmps.append(ecd_min_index.out);
+					tmps.append(".%N");
+					set_ecd_error(tmps)
+				end
 			end;
 			if not ecd_error and then ecd_max_index /= nb_fields then
 				tmps.wipe_out;
 				tmps.append("Type conformity error, Last field `");
-				l_field_name := ecd_fields.item(ecd_max_index).field_name
-				check l_field_name /= Void end -- FIXME: implied by... {EC_FIELD}.field_name can be void here... bug?
-				tmps.append(l_field_name);
-
-				tmps.append("' cannot be indexed with ");
-				tmps.append(ecd_max_index.out);
-				tmps.append(".%N");
-				set_ecd_error(tmps)
+				check attached ecd_fields.item (ecd_max_index) as l_field then
+					tmps.append(l_field.field_name);
+					tmps.append("' cannot be indexed with ");
+					tmps.append(ecd_max_index.out);
+					tmps.append(".%N");
+					set_ecd_error(tmps)
+				end
 			end;
-			create ra.make(1,nb_fields);
-			create da.make(1,nb_fields);
+			create ra.make_filled (False, 1, nb_fields);
+			create da.make_filled (False, 1, nb_fields);
 			from
 				i:=1
 			until
@@ -168,22 +171,14 @@ feature -- Status setting
 				until
 					j > nb_fields or ecd_error
 				loop
-					if ecd_fields.item (j) = Void then
-						tmps.wipe_out;
-						tmps.append("Type conformity error, Field ");
-						tmps.append(j.out);
-						tmps.append(" has not been set.%N");
-						set_ecd_error(tmps)
-					else
-						if field_conforms (i, ref, ecd_fields.item(j)) then
+					if attached ecd_fields.item (j) as l_field then
+						if field_conforms (i, ref, l_field) then
 							if ra.item (i) then
 								tmps.wipe_out;
 								tmps.append("Type conformity error, Field ");
 								tmps.append(j.out);
 								tmps.append(":`");
-								l_field_name := ecd_fields.item(j).field_name
-								check l_field_name /= Void end -- FIXME: implied by... {EC_FIELD}.field_name can be void here... bug?
-								tmps.append(l_field_name);
+								tmps.append(l_field.field_name);
 								tmps.append("' cannot be declared twice.%N");
 								set_ecd_error(tmps)
 							elseif da.item(j) then
@@ -193,10 +188,16 @@ feature -- Status setting
 							else
 								ra.force(True,i);
 								da.force(True,j);
-								ecd_fields.item(j).set_rank(i)
+								l_field.set_rank(i)
 							end
 						end
-					end;
+					else
+						tmps.wipe_out;
+						tmps.append("Type conformity error, Field ");
+						tmps.append(j.out);
+						tmps.append(" has not been set.%N");
+						set_ecd_error(tmps)
+					end
 					j := j + 1
 				end;
 				i := i + 1
@@ -211,11 +212,11 @@ feature -- Status setting
 						tmps.append("Type conformity error, Field ");
 						tmps.append(i.out);
 						tmps.append(":`");
-						l_field_name := ecd_fields.item(i).field_name
-						check l_field_name /= Void end -- FIXME: implied by... {EC_FIELD}.field_name can be void here... bug?
-						tmps.append(l_field_name);
-						tmps.append("' does not match any reference field.%N");
-						set_ecd_error(tmps)
+						check attached ecd_fields.item (i) as l_field then
+							tmps.append(l_field.field_name)
+							tmps.append("' does not match any reference field.%N");
+							set_ecd_error(tmps)
+						end
 					end;
 					i := i + 1
 				end
@@ -258,7 +259,9 @@ feature -- Status setting
 				else
 					set_field (l_f_name, String_ttype);
 				end;
-				ecd_fields.item(i).set_rank(i);
+				check attached ecd_fields.item (i) as l_field then
+					l_field.set_rank(i)
+				end
 				i := i + 1
 			end;
 			if not ecd_error then
@@ -295,7 +298,6 @@ feature {NONE} -- Status setting
 		local
 			tmps:STRING;
 			tmpb:BOOLEAN
-			l_field_name: detachable STRING
 		do
 			create tmps.make(5);
 			f_type := field_type (i, o);
@@ -312,21 +314,14 @@ feature {NONE} -- Status setting
 					tmpb := (f_type = REFERENCE_TYPE)
 				else
 					tmpb := False;
-					tmps.append
-						("Type conformity error, Unknown declared type for field `");
-					l_field_name := f.field_name
-					check l_field_name /= Void end -- FIXME: implied by... Bug here?
-					tmps.append(l_field_name);
+					tmps.append ("Type conformity error, Unknown declared type for field `");
+					tmps.append(f.field_name);
 					tmps.append("'.%N");
 					set_ecd_error(tmps)
 				end;
 				if not tmpb and not ecd_error then
-					tmps.append
-						("Type conformity error, Invalid declared type for field `");
-
-					l_field_name := f.field_name
-					check l_field_name /= Void end -- FIXME: implied by... Bug here?
-					tmps.append(l_field_name);
+					tmps.append ("Type conformity error, Invalid declared type for field `");
+					tmps.append(f.field_name);
 					tmps.append("'.%N");
 					set_ecd_error(tmps)
 				end;
@@ -347,10 +342,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EC_DESCRIPTOR
-
-
-

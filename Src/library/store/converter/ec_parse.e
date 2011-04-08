@@ -24,7 +24,7 @@ feature -- Status report
 			create Result.make (0)
 		end
 
-	ecp_token_array: detachable ARRAY [TOKEN]
+	ecp_token_array: detachable ARRAY [detachable TOKEN]
 			-- Array of tokens
 
 	ecp_reference: detachable ANY
@@ -46,7 +46,7 @@ feature  -- Status setting
 			descriptor := e
 		end;
 
-	ecp_parse (at: ARRAY[TOKEN])
+	ecp_parse (at: ARRAY [detachable TOKEN])
 			-- Perform syntactical analysis on a lexical item list.
 		require
 			token_array_exists: at /= Void
@@ -218,15 +218,13 @@ feature {NONE} -- Implementation
 			l_token: like ecp_token
 			l_field: like ecp_field
 			l_descriptor: like descriptor
-			l_field_name: detachable STRING
 		do
 			if ecp_parsed then
 				l_token := ecp_token
 				l_field := ecp_field
 				check l_token /= Void end -- implied by invariant `ecp_token_field_not_void'
 				check l_field /= Void end -- implied by invariant `ecp_token_field_not_void'			
-				if l_token.type = Identifier_ttype and then
-					l_token.string_value ~ l_field.field_name then
+				if l_token.type = Identifier_ttype and then l_token.string_value ~ l_field.field_name then
 					ecp_remove_word
 				else
 					from
@@ -236,10 +234,12 @@ feature {NONE} -- Implementation
 					until
 						i > l_descriptor.ecd_max_index or done
 					loop
-						if l_token.string_value ~
-								(l_descriptor.ecd_fields.item(i).field_name) then
-							--descriptor.ecd_fields.item(i).set_rank (ecp_current_field);
-							l_field := l_descriptor.ecd_fields.item(i);
+						if
+							attached l_descriptor.ecd_fields.item (i) as l_ecd_field and then
+							(l_token.string_value ~ l_ecd_field.field_name)
+						then
+							--l_ecd_field.set_rank (ecp_current_field);
+							l_field := l_ecd_field
 							ecp_field := l_field
 							ecp_remove_word;
 							done := True
@@ -251,9 +251,7 @@ feature {NONE} -- Implementation
 						tmps.append("Syntax error, Field name `");
 						tmps.append(l_token.string_value);
 						tmps.append("' instead of `");
-						l_field_name :=l_field.field_name
-						check l_field_name /= Void end -- FIXME: Can be void, bug?
-						tmps.append(l_field_name);
+						tmps.append(l_field.field_name);
 						tmps.append("'.%N");
 						set_ecp_parse_error(tmps)
 					end
@@ -359,7 +357,6 @@ feature {NONE} -- Implementation
 			l_token: like ecp_token
 			l_field: like ecp_field
 			l_reference: like ecp_reference
-			l_field_name: detachable STRING
 		do
 			if  ecp_parsed then
 				l_token := ecp_token
@@ -394,9 +391,7 @@ feature {NONE} -- Implementation
 					else
 						tmps.wipe_out;
 						tmps.append("Type of attribute `");
-						l_field_name := l_field.field_name
-						check l_field_name /= Void end -- FIXME: If token_type is 0, field_name can be void here... bug?
-						tmps.append(l_field_name);
+						tmps.append(l_field.field_name);
 						tmps.append("' invalid with `");
 						tmps.append(token_string);
 						tmps.append("'.%N");
@@ -412,9 +407,7 @@ feature {NONE} -- Implementation
 				else
 					tmps.wipe_out;
 					tmps.append("Type of attribute `");
-					l_field_name := l_field.field_name
-					check l_field_name /= Void end -- FIXME: If token_type is 0, field_name can be void here... bug?
-					tmps.append(l_field_name);
+					tmps.append(l_field.field_name);
 					tmps.append("' invalid with `");
 					tmps.append(token_string);
 					tmps.append("'.%N");

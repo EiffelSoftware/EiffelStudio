@@ -22,7 +22,7 @@ create -- Creation procedure
 
 feature -- Initialization
 
-	make (a_name: STRING)
+	make (a_name: like name)
 			-- Create an interface object to create
 			-- and execute stored procedure.
 		require
@@ -187,7 +187,7 @@ feature -- Basic operations
 
 feature -- Status setting
 
-	change_name (new_name: STRING)
+	change_name (new_name: like name)
 			-- Change procedure name with `new_name'.
 		require
 			new_name_not_void: new_name /= Void

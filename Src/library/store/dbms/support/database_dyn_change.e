@@ -50,7 +50,7 @@ feature
 		local
 			parsed_s: STRING_32
 			parsed: BOOLEAN
-			ArgNum: INTEGER
+			arg_num: INTEGER
 			l_sql_string: like sql_string_32
 		do
 			l_sql_string := sql_string_32
@@ -63,7 +63,7 @@ feature
 			l_sql_string.append (s)
 			s.wipe_out
 			s.append (parse_32 (l_sql_string))
-			ArgNum := s.occurrences({CHARACTER_32}'?')
+			arg_num := s.occurrences({CHARACTER_32} '?')
 
 			descriptor := db_spec.new_descriptor
 			if not db_spec.normal_parse then
@@ -75,7 +75,7 @@ feature
 					db_spec.init_order (descriptor, parsed_s)
 				end
 				if is_ok then
-					db_spec.pre_immediate (descriptor, ArgNum)
+					db_spec.pre_immediate (descriptor, arg_num)
 				end
 			end
 			set_executed (False)

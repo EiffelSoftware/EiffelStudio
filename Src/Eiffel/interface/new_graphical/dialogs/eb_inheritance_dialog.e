@@ -34,7 +34,6 @@ feature {NONE} -- Initialization
 		local
 			vb: EV_VERTICAL_BOX
 			hb: EV_HORIZONTAL_BOX
-			l_frame: EV_FRAME
 		do
 			default_create
 			set_title (interface_names.l_diagram_add_ancestors)
@@ -147,7 +146,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

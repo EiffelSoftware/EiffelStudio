@@ -45,11 +45,11 @@ feature {NONE} -- Command handler
 			-- <Precursor>
 		do
 			if command_list.has (a_command_id) then
-				if a_execution_verb = {EV_EXECUTION_VERB_CONSTANTS}.ui_executionverb_execute then
+				if a_execution_verb = {EV_EXECUTION_VERB}.execute then
 					select_actions.call (Void)
-				elseif a_execution_verb = {EV_EXECUTION_VERB_CONSTANTS}.ui_executionverb_preview then
+				elseif a_execution_verb = {EV_EXECUTION_VERB}.preview then
 
-				elseif a_execution_verb = {EV_EXECUTION_VERB_CONSTANTS}.ui_executionverb_cancelpreview then
+				elseif a_execution_verb = {EV_EXECUTION_VERB}.cancel_preview then
 
 				end
 			end

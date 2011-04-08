@@ -27,12 +27,12 @@ feature -- Initialization
 			-- Make object.
 		do
 			-- create `input_array', `final_array' and `keywords_list'
-			create input_array.make (0, 0)
-			create final_array.make (0, 0)
+			create input_array.make_filled (Void, 0, 0)
+			create final_array.make_filled (0, 0, 0)
 			create keywords_list.make
 
 			create ecl_message.make(5)
-			array_make (1, 0)
+			make_empty
 		end;
 
 feature  -- Status report
@@ -103,11 +103,11 @@ feature -- Status setting
 				end
 			end;
 			if not ecl_error then
-				ecl_token_array.conservative_resize(1,ecl_nb_token)
+				ecl_token_array.conservative_resize_with_default (Void, 1, ecl_nb_token)
 			end
 		end;
 
-	ecl_token_array: ARRAY[TOKEN]
+	ecl_token_array: ARRAY [detachable TOKEN]
 			-- Array of tokens
 		require
 			descriptor_exists: descriptor /= Void;
@@ -117,7 +117,7 @@ feature -- Status setting
 		once
 			l_descriptor := descriptor
 			check l_descriptor /= Void end -- implied by precondition `descriptor_exists'
-			create Result.make(1,l_descriptor.ecd_index)
+			create Result.make_filled (Void, 1, l_descriptor.ecd_index)
 		end;
 
 	ecl_build (s: STRING)
@@ -134,6 +134,7 @@ feature -- Status setting
 			i:INTEGER;
 			already_done: BOOLEAN;
 			l_descriptor: like descriptor
+			l_field: detachable EC_FIELD
 		do
 			if analyzer = Void then
 	 			metalex_make
@@ -172,23 +173,23 @@ feature -- Status setting
 				until
 					i > l_descriptor.ecd_index
 				loop
-					if i > 1 then
-						tmpss.append(" | ")
-					end;
-					tmpss.append
-						(char2string(l_descriptor.ecd_fields.item(i).label_separator));
-					if l_descriptor.ecd_fields.item(i).use_value_delimiters then
-						if not already_done then
-							already_done := True
-						else
-							tmpsl.append(" | ");
-							tmpsr.append(" | ")
+					l_field := l_descriptor.ecd_fields.item (i)
+					if l_field /= Void then
+						if i > 1 then
+							tmpss.append(" | ")
 						end;
-						tmpsl.append
-							(char2string(l_descriptor.ecd_fields.item(i).left_delimiter));
-						tmpsr.append
-							(char2string(l_descriptor.ecd_fields.item(i).right_delimiter))
-					end;
+						tmpss.append (char2string(l_field.label_separator));
+						if l_field.use_value_delimiters then
+							if not already_done then
+								already_done := True
+							else
+								tmpsl.append(" | ");
+								tmpsr.append(" | ")
+							end;
+							tmpsl.append (char2string(l_field.left_delimiter));
+							tmpsr.append (char2string(l_field.right_delimiter))
+						end
+					end
 					i := i + 1
 				end;
 				if not tmpsl.is_empty then

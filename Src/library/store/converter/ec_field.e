@@ -13,15 +13,22 @@ create -- Creation procedure
 
 feature  -- Initialization
 
-	make
+	make (type: INTEGER; n: STRING)
 			-- Create object with default values.
+			-- Set field with type `type' and name `n'.
+		require
+			name_exists: n /= Void
 		do
-			field_type := -1;
+			field_type := type;
+			field_name := n.twin
 			field_rank := 0;
 			use_value_delimiters := False;
 			label_separator := ':';
 			use_label := True
-		end;
+		ensure
+			field_type_set: field_type = type
+			field_name_set: field_name ~ n
+		end
 
 feature  -- Status report
 
@@ -29,7 +36,7 @@ feature  -- Status report
 
 	field_value: detachable ANY
 
-	field_name: detachable STRING
+	field_name: STRING
 
 	field_rank: INTEGER
 			-- Index of this field in the father object.
@@ -52,7 +59,7 @@ feature -- Status setting
 			use_label = b
 		end;
 
-	set_field (type: INTEGER;n: STRING)
+	set_field (type: INTEGER; n: STRING)
 			-- Set field with type `type' and name `n'.
 		require
 			name_exists: n /= Void

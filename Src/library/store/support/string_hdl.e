@@ -13,17 +13,10 @@ feature -- Status setting
 			-- Remove all mapped keys.
 		require
 			ht_not_void: ht /= Void
-		local
-			l_ht: like ht
-			l_ht_order: like ht_order
+			ht_order_not_void: ht_order /= Void
 		do
-			l_ht := ht
-			check l_ht /= Void end -- implied by precondition `ht_not_void'
-			l_ht.wipe_out
-
-			l_ht_order := ht_order
-			check l_ht_order /= Void end -- FIXME: implied by ...? bug?
-			l_ht_order.wipe_out
+			ht.wipe_out
+			ht_order.wipe_out
 		end
 
 	set_map_name (n: ANY; key: STRING)
@@ -31,22 +24,15 @@ feature -- Status setting
 			-- `n' can be `Void'.
 		require
 			ht_not_void: ht /= Void
+			ht_order_not_void: ht_order /= Void
 			key_exists: key /= Void
 			not_key_in_table: not is_mapped (key)
-		local
-			l_ht: like ht
-			l_ht_order: like ht_order
 		do
-			l_ht := ht
-			check l_ht /= Void end -- implied by precondition `ht_not_void'
-			l_ht.put (n, key)
-
-			l_ht_order := ht_order
-			check l_ht_order /= Void end -- FIXME: Impplied by ...? bug?
-			l_ht_order.extend (key)
+			ht.put (n, key)
+			ht_order.extend (key)
 		ensure
-			count_valid: (attached ht and old (attached ht)) and then hash_table_count (ht) = old (hash_table_count (ht)) + 1
-			count_valid: (attached ht_order and old (attached ht_order)) and then array_list_count (ht_order) = old (array_list_count (ht_order)) + 1
+			count_valid: ht.count = old (ht.count) + 1
+			count_valid: ht_order.count = old (ht_order.count) + 1
 			mapped: is_mapped (key)
 		end
 
@@ -54,22 +40,15 @@ feature -- Status setting
 			-- Remove item associated with key `key'.
 		require
 			ht_not_void: ht /= Void
+			ht_order_not_void: ht_order /= Void
 			key_exists: key /= Void
 			item_exists: is_mapped (key)
-		local
-			l_ht: like ht
-			l_ht_order: like ht_order
 		do
-			l_ht := ht
-			check l_ht /= Void end -- implied by precondition `ht_not_void'
-			l_ht.remove (key)
-
-			l_ht_order := ht_order
-			check l_ht_order /= Void end -- FIXME: implied by ...? bug?
-			l_ht_order.prune_all (key)
+			ht.remove (key)
+			ht_order.prune_all (key)
 		ensure
-			count_valid: (attached ht and old (attached ht)) and then hash_table_count (ht) = old (hash_table_count (ht)) - 1
-			count_valid: (attached ht_order and old (attached ht_order)) and then array_list_count (ht_order) = old (array_list_count (ht_order)) - 1
+			count_valid: ht.count = old (ht.count) - 1
+			count_valid: ht_order.count = old (ht_order.count) - 1
 		end
 
 feature -- Status report
@@ -79,12 +58,8 @@ feature -- Status report
 		require
 			ht_not_void: ht /= Void
 			keys_exists: key /= Void
-		local
-			l_ht: like ht
 		do
-			l_ht := ht
-			check l_ht /= Void end -- implied by precondition `ht_not_void'
-			Result := l_ht.has (key)
+			Result := ht.has (key)
 		end
 
 	mapped_value (key: STRING): ANY
@@ -93,55 +68,24 @@ feature -- Status report
 			ht_not_void: ht /= Void
 			key_exists: key /= Void
 			key_mapped: is_mapped (key)
-		local
-			l_result: detachable ANY
-			l_ht: like ht
 		do
-			l_ht := ht
-			check l_ht /= Void end -- implied by precondition `ht_not_void'
-			l_result := l_ht.item (key)
-			check l_result /= Void end -- implied by precondition `key_mapped'
-			Result := l_result
+			check attached ht.item (key) as l_item then
+				Result := l_item
+			end
 		ensure
 			result_exists: Result /= Void
 		end
 
 feature -- Status report
 
-	ht: detachable DB_STRING_HASH_TABLE [ANY]
+	ht: detachable DB_STRING_HASH_TABLE [ANY] note option: stable attribute end
 		-- Correspondence table between object references
 		-- and mapped keys
 
-	ht_order: detachable ARRAYED_LIST [STRING]
+	ht_order: detachable ARRAYED_LIST [STRING] note option: stable attribute end
 		-- Keys of `ht' in order of mapping
 
-feature -- Contract support
-
-	hash_table_count (a_hash_table: detachable  HASH_TABLE [ANY, STRING]): INTEGER
-			-- Count value of `a_hash_table'
-		require
-			ready: attached a_hash_table
-		do
-			if attached a_hash_table as l_ht then
-				Result := l_ht.count
-			else
-				check False end -- Implied by precondition `ready'
-			end
-		end
-
-	array_list_count (a_list: detachable ARRAYED_LIST [STRING]): INTEGER
-			-- Count value of `a_list'
-		require
-			ready: attached a_list
-		do
-			if attached a_list as l_list then
-				Result := l_list.count
-			else
-				check False end -- Implied by precondition `ready'
-			end
-		end
-
-;note
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

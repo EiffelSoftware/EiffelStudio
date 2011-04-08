@@ -92,18 +92,13 @@ feature {NONE} -- Initialization
 
 	make
 			-- Create an interface object to change active base.
-		local
-			l_ht: like ht
-			l_ht_order: like ht_order
 		do
 			implementation := handle.database.db_change
-			create l_ht.make (name_table_size)
-			ht := l_ht
-			create l_ht_order.make (name_table_size)
-			ht_order := l_ht_order
-			l_ht_order.compare_objects
-			implementation.set_ht (l_ht)
-			implementation.set_ht_order (l_ht_order)
+			create ht.make (name_table_size)
+			create ht_order.make (name_table_size)
+			ht_order.compare_objects
+			implementation.set_ht (ht)
+			implementation.set_ht_order (ht_order)
 		end
 
 note

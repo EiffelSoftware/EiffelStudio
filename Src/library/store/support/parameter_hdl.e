@@ -23,9 +23,6 @@ feature
 
 	set_map_name (n: ANY; key: STRING)
 			-- Store item `n' whith key `key'.
-		local
-			l_ht: like ht
-			l_ht_order: like ht_order
 		do
 			check
 				key_allowed: parameter_name_exist (key)
@@ -33,33 +30,20 @@ feature
 				has_parameters: parameter_count > 0
 			end
 --			set_parameter (n, key)
-			l_ht := ht
-			check l_ht /= Void end -- implied by precursor's precondition `ht_not_void'
-			l_ht.put (n, key)
-
-			l_ht_order := ht_order
-			check l_ht_order /= Void end -- FIXME: Impplied by ...? bug?
-			l_ht_order.extend (key)
+			ht.put (n, key)
+			ht_order.extend (key)
 		end
 
 	unset_map_name (key: STRING)
 			-- Remove item associated with key `key'.
-		local
-			l_ht: like ht
-			l_ht_order: like ht_order
 		do
 			check
 				key_allowed: parameter_name_exist (key)
 				prepared_statement: is_prepared
 			end
 --			set_parameter (Void, key)
-			l_ht := ht
-			check l_ht /= Void end -- implied by precursor's precondition `ht_not_void'
-			l_ht.remove (key)
-
-			l_ht_order := ht_order
-			check l_ht_order /= Void end -- FIXME: implied by ...? bug?
-			l_ht_order.prune (key)
+			ht.remove (key)
+			ht_order.prune (key)
 		end
 
 	clear_all
@@ -76,26 +60,17 @@ feature -- Status report
 
 	is_mapped (key: STRING): BOOLEAN
 			-- Is `key' mapped to an Eiffel entity ?
-		local
-			l_ht: like ht
 		do
-			l_ht := ht
-			check l_ht /= Void end -- implied by precursor's precondition `ht_not_void'
-			Result := l_ht.has (key) -- and then mapped_value (key) /= Void
+			Result := ht.has (key) -- and then mapped_value (key) /= Void
 		end
 
 	mapped_value (key: STRING): ANY
 			-- Value mapped with `key'
-		local
-			l_result: detachable ANY
-			l_ht: like ht
 		do
 --			Result := parameters_value.item (parameter_name_to_position.item (key))
-			l_ht := ht
-			check l_ht /= Void end -- implied by precursor's precondition `ht_not_void'
-			l_result := l_ht.item (key)
-			check l_result /= Void end -- implied by precursor's precondition `key_mapped'
-			Result := l_result
+			check attached ht.item (key) as l_item then
+				Result := l_item
+			end
 		end
 
 	parameter_name_exist (key : STRING) : BOOLEAN
@@ -181,7 +156,6 @@ feature -- setting
 			l_parameters_value: like parameters_value
 		do
 			l_ht := ht
-			check l_ht /= Void end -- implied by precondition `ht_not_void'
 			from
 				l_parameters := parameters
 				check l_parameters /= Void end -- FIXME: implied by ...bug?

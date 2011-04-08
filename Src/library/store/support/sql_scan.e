@@ -395,15 +395,13 @@ feature {NONE} -- Status setting
 	replacement_string (key, destination: STRING_32)
 			-- Replace object associated with `key' in `destination'.
 		require
+			ht_not_void: ht /= Void
 			key_exists: key /= Void
 			destination_exists: destination /= Void
 		local
 			object: detachable ANY
-			l_ht: like ht
 		do
-			l_ht := ht
-			check l_ht /= Void end -- FIXME: implied by ... bug?
-			object := l_ht.item (key)
+			object := ht.item (key)
 			if object /= Void then
 				get_value (object, destination)
 			else

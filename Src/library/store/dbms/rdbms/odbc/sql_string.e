@@ -32,7 +32,7 @@ feature {NONE} -- Implementation
 		external
 			"C inline use %"odbc.h%""
 		alias
-			"return TXTLEN($ptr);"
+			"return (EIF_INTEGER_32) TXTLEN($ptr);"
 		end
 
 end

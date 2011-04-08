@@ -64,7 +64,7 @@ feature -- Basic operations
 				names_heap.put (a_id.string)
 				l_id := names_heap.found_item
 			end
-			context.locals.extend (l_local, l_id)
+			context.locals.put (l_local, l_id)
 		end
 
 	evaluate_expression (a_expr: EXPR_AS)
@@ -101,7 +101,7 @@ feature {INSPECT_CONTROL} -- AST modification
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

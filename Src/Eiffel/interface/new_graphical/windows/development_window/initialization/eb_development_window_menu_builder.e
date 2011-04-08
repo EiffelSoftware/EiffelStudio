@@ -1308,7 +1308,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			if l_cmd = Void then
 				create l_cmd.make (l_tool)
 				develop_window.auto_recycle (l_cmd)
-				develop_window.commands.show_shell_tool_commands.extend (l_cmd, l_tool)
+				develop_window.commands.show_shell_tool_commands.force (l_cmd, l_tool)
 			end
 
 			l_menu_item := l_cmd.new_menu_item
@@ -1622,7 +1622,7 @@ feature -- Docking library menu items
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

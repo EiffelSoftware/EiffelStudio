@@ -81,7 +81,7 @@ RT_LNK int eif_nCmdShow;
 RT_LNK char **eif_environ;
 RT_LNK int is_debug_mode (void);
 RT_LNK void set_debug_mode (int);
-#ifdef EIF_WORKBENCH
+#ifdef WORKBENCH
 RT_LNK void wdbg_initialize(int a_port);	/* Workbench debugger initialization with specific port number */
 #endif
 

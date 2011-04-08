@@ -36,7 +36,7 @@ feature {NONE}
 	execute
 		local
 			i:INTEGER
-			l_message: detachable STRING
+			l_message: detachable STRING_32
 		do
 			io.putstring ("First example file:%N");
 			descriptor.make_conform (book);
@@ -44,7 +44,7 @@ feature {NONE}
 			converter1.set_file_name ("example1.dat");
 			converter1.parse_file;
 			if converter1.conv_error then
-				l_message := converter1.conv_message
+				l_message := converter1.conv_message_32
 				check l_message /= Void end -- FIXME: implied by .. `conv_error'?
 				io.putstring (l_message)
 			else
@@ -80,7 +80,7 @@ feature {NONE}
 				converter2.set_file_name ("example2.dat");
 				converter2.parse_file;
 				if converter2.conv_error then
-					l_message := converter2.conv_message
+					l_message := converter2.conv_message_32
 					check l_message /= Void end -- FIXME: implied by `conv_error'?
 					io.putstring (l_message)
 				else

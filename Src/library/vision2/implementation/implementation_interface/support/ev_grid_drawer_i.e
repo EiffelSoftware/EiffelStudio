@@ -976,9 +976,7 @@ feature -- Basic operations
 										end
 
 										if is_tree_enabled then
-
 											if current_column_index = node_index then
-
 												current_tree_adjusted_item_x_position := current_tree_adjusted_item_x_position + current_subrow_indent
 												current_tree_adjusted_column_width := current_tree_adjusted_column_width - current_subrow_indent
 													-- We adjust the horizontal position and width of the current item by the space required
@@ -1051,7 +1049,6 @@ feature -- Basic operations
 																	l_visible_index := l_row_indexes_to_visible_indexes.i_th (current_row.index) + 1
 																end
 
-
 																if l_visible_index < g.visible_row_count and then attached g.visible_indexes_to_row_indexes as l_visible_indexes_to_row_indexes then
 																	l_next_visible_index := l_visible_indexes_to_row_indexes.i_th (l_visible_index + 1)
 																else
@@ -1060,7 +1057,6 @@ feature -- Basic operations
 																	-- as it is possible that the index there is corrupt as we do not clear the unused slots for speed.
 																	l_next_visible_index := 0
 																end
-
 																if (l_next_visible_index > 0) and then (parent_row_i = g.row_internal (l_next_visible_index).parent_row_i) then
 																		-- In this case we are not the final row in the parents structure, so we must draw from the top of
 																		-- the row to the bottom.
@@ -1127,6 +1123,39 @@ feature -- Basic operations
 															end
 														end
 													end
+												end
+											elseif drawing_subrow and then current_column_index < node_index then
+													-- We may have to draw grandparent connection nodes.
+												from
+													check parent_row_i /= Void end
+													loop_parent_row := parent_row_i.parent_row_i
+													Item_buffer_pixmap.set_foreground_color (tree_node_connector_color)
+												until
+													loop_parent_row = Void
+												loop
+													l_parent_row := loop_parent_row.attached_interface
+													l_subrow_index := l_parent_row.subrow_count
+													if l_subrow_index > 0 and then l_parent_row.index_of_first_item = current_column_index then
+														loop_parent_row_last_displayed_subrow := l_parent_row.subrow (l_subrow_index)
+														if not loop_parent_row_last_displayed_subrow.is_show_requested then
+																-- The final subrow of the parent row is not displayed, so we must iterate until we find the last that is.
+															from
+															until
+																loop_parent_row_last_displayed_subrow.is_show_requested
+															loop
+																l_subrow_index := l_subrow_index - 1
+																loop_parent_row_last_displayed_subrow := l_parent_row.subrow (l_subrow_index)
+															end
+														end
+														if loop_parent_row_last_displayed_subrow.index > current_row.index then
+																-- If the last displayed subrow is below us then we can drawn the connecting line.
+															l_x_start := subrow_indent (loop_parent_row) + ((node_pixmap_width) // 2)
+															item_buffer_pixmap.draw_segment (l_x_start, row_vertical_bottom, l_x_start, 0)
+																-- Draw the vertical line from the bottom of the item to the top.
+														end
+													end
+														-- Move one position upwards within the parenting node structure
+													loop_parent_row := loop_parent_row.parent_row_i
 												end
 											end
 										end

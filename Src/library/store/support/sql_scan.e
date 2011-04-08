@@ -184,7 +184,7 @@ feature -- Basic operations
 			object_exists: obj /= Void
 			str_exists: str /= Void
 		local
-			i, i_obj_type: INTEGER
+			i: INTEGER
 			r_int: INTEGER
 			r_real: REAL
 			r_bool: BOOLEAN
@@ -210,20 +210,20 @@ feature -- Basic operations
 			loop
 				i := next_index (ind)
 				if i > 0 and then l_identity_index /= i then
-					i_obj_type := field_type (i, obj)
-					if i_obj_type = Integer_type then
+					inspect field_type (i, obj)
+					when Integer_type then
 						r_int := integer_field (i, obj)
 						get_value (r_int, str)
-					elseif i_obj_type = Real_type then
+					when Real_type then
 						r_real := real_field (i, obj)
 						get_value (r_real, str)
-					elseif i_obj_type = Character_type then
+					when Character_type then
 						r_character := character_field (i, obj)
 						get_value (r_character, str)
-					elseif i_obj_type = Boolean_type then
+					when Boolean_type then
 						r_bool := boolean_field (i, obj)
 						get_value (r_bool, str)
-					elseif i_obj_type = Double_type then
+					when Double_type then
 						r_double := double_field (i, obj)
 						get_value (r_double, str)
 					else

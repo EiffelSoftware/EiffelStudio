@@ -44,6 +44,15 @@ feature -- Visitor commands
 
 		end
 
+	visit_help_button (a_help_button: ER_XML_TREE_ELEMENT)
+			--
+		require
+			not_void: a_help_button /= Void
+			valid: is_node_with_text (a_help_button, constants.ribbon_helpbutton)
+		do
+
+		end
+
 feature -- Query
 
 	is_node_with_text (a_xml_node: ER_XML_TREE_ELEMENT; a_text: STRING): BOOLEAN

@@ -140,10 +140,51 @@ feature {NONE} -- Tree saving
 					loop
 						save_application_menu_node (a_vision_tree.item)
 						save_context_popup_node (a_vision_tree.item)
+						save_help_button_node (a_vision_tree.item)
 
 						a_vision_tree.forth
 					end
 
+				end
+			end
+		end
+
+	save_help_button_node (a_tree_node: EV_TREE_NODE)
+			-- Save help button node if possible
+		require
+			not_void: a_tree_node /= Void
+		local
+			l_xml_item, l_last_parent: XML_ELEMENT
+			l_data_list: ARRAYED_LIST [ER_TREE_NODE_DATA]
+			l_attribute: XML_ATTRIBUTE
+		do
+			if attached {EV_TREE_ITEM} a_tree_node as l_tree_item_menu and then
+					l_tree_item_menu.text.same_string (xml_constants.ribbon_helpbutton) then
+
+				-- Add context popup xml node
+				if attached xml_node_by_name (xml_constants.ribbon) as l_ribbon then
+					create l_xml_item.make (l_ribbon, xml_constants.ribbon_helpbutton, name_space)
+					l_ribbon.put_last (l_xml_item)
+					l_last_parent := l_xml_item
+
+					create l_xml_item.make (l_last_parent, xml_constants.helpbutton, name_space)
+					l_last_parent.put_last (l_xml_item)
+
+					if attached {ER_TREE_NODE_DATA} a_tree_node.data as l_tree_node_data then
+						add_xml_command_node (l_tree_node_data)
+
+						if attached l_tree_node_data.command_name as l_command_name then
+							create l_attribute.make ({ER_XML_ATTRIBUTE_CONSTANTS}.command_name, name_space, l_command_name, l_xml_item)
+							l_xml_item.put_last (l_attribute)
+						else
+							check not_possible: False end
+						end
+					else
+						check not_possible: False end
+					end
+
+				else
+					check not_possible: False end
 				end
 			end
 		end

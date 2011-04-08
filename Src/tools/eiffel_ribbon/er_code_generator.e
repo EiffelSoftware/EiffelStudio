@@ -447,6 +447,7 @@ feature {NONE} -- Implementation
 			generate_window_classes
 			generate_readonly_classes_imp
 			generate_application_menu_classes
+			generate_help_button_class
 		end
 
 	generate_window_classes
@@ -458,7 +459,6 @@ feature {NONE} -- Implementation
 			l_constants: ER_MISC_CONSTANTS
 			l_file_name, l_dest_file_name: FILE_NAME
 			l_file, l_dest_file: RAW_FILE
-			l_application_menu_comment: STRING
 		do
 			l_window_file := "main_window"
 			l_sub_dir := "code_generated_everytime"
@@ -512,32 +512,8 @@ feature {NONE} -- Implementation
 								end
 
 								-- For application menu
-								if l_list.item.widget.valid_index (2) then
-									l_application_menu_comment := "%N%T%T%T-- Application menu"
-									check is_application_menu: l_list.item.widget.i_th (2).text.same_string ({ER_XML_CONSTANTS}.ribbon_application_menu) end
-									if attached {ER_TREE_NODE_DATA} l_list.item.widget.i_th (2).data as l_data
-										and then attached l_data.command_name as l_identifer_name
-										and then not l_identifer_name.is_empty then
-
-										l_last_string.replace_substring_all ("$APPLICATION_MENU_NAME", "%Tapplication_menu: " + l_identifer_name.as_upper + l_application_menu_comment)
-
-										l_last_string.replace_substring_all ("$APPLICATION_MENU_CREATION", "%T%T%Tcreate application_menu.make_with_command_list (<<{COMMAND_NAME_CONSTANTS}." + l_identifer_name + ">>)")
-									else
-										if l_list.index = 1 then
-											l_last_string.replace_substring_all ("$APPLICATION_MENU_NAME", "%Tapplication_menu: APPLICATION_MENU" + l_application_menu_comment)
-										else
-											l_last_string.replace_substring_all ("$APPLICATION_MENU_NAME", "%TTapplication_menu: APPLICATION_MENU_" + l_list.index.out + l_application_menu_comment)
-										end
-
-										l_last_string.replace_substring_all ("$APPLICATION_MENU_CREATION", "%T%T%Tcreate application_menu.make_with_command_list (<<>>)")
-									end
-									l_last_string.replace_substring_all ("$APPLICATION_MENU_REDEFINE", ",%N%T%T%Tapplication_menu")
-								else
-									-- Remove $APPLICATION_MENU_NAME tag
-									l_last_string.replace_substring_all ("$APPLICATION_MENU_NAME", "")
-									l_last_string.replace_substring_all ("$APPLICATION_MENU_CREATION", "")
-									l_last_string.replace_substring_all ("$APPLICATION_MENU_REDEFINE", "")
-								end
+								window_class_application_menu (l_list.item.widget, l_list.index, l_last_string)
+								window_class_help_button (l_list.item.widget, l_list.index, l_last_string)
 
 								if l_list.index = 1 then
 									l_last_string.replace_substring_all ("$INDEX", "")
@@ -558,6 +534,90 @@ feature {NONE} -- Implementation
 				l_list.forth
 			end
 
+		end
+
+	window_class_application_menu (a_tree: EV_TREE; a_list_index: INTEGER; a_last_string: STRING)
+			--
+		require
+			not_void: a_tree /= Void
+			not_void: a_last_string /= Void
+		local
+			l_application_menu_comment: STRING
+		do
+			if a_tree.valid_index (2) then
+				l_application_menu_comment := "%N%T%T%T-- Application menu"
+				check is_application_menu: a_tree.i_th (2).text.same_string ({ER_XML_CONSTANTS}.ribbon_application_menu) end
+				if attached {ER_TREE_NODE_DATA} a_tree.i_th (2).data as l_data
+					and then attached l_data.command_name as l_identifer_name
+					and then not l_identifer_name.is_empty then
+
+					a_last_string.replace_substring_all ("$APPLICATION_MENU_NAME", "%Tapplication_menu: " + l_identifer_name.as_upper + l_application_menu_comment)
+
+					a_last_string.replace_substring_all ("$APPLICATION_MENU_CREATION", "%T%T%Tcreate application_menu.make_with_command_list (<<{COMMAND_NAME_CONSTANTS}." + l_identifer_name + ">>)")
+				else
+					if a_list_index = 1 then
+						a_last_string.replace_substring_all ("$APPLICATION_MENU_NAME", "%Tapplication_menu: APPLICATION_MENU" + l_application_menu_comment)
+					else
+						a_last_string.replace_substring_all ("$APPLICATION_MENU_NAME", "%TTapplication_menu: APPLICATION_MENU_" + a_list_index.out + l_application_menu_comment)
+					end
+
+					a_last_string.replace_substring_all ("$APPLICATION_MENU_CREATION", "%T%T%Tcreate application_menu.make_with_command_list (<<>>)")
+				end
+				a_last_string.replace_substring_all ("$APPLICATION_MENU_REDEFINE", ",%N%T%T%Tapplication_menu")
+			else
+				-- Remove $APPLICATION_MENU_NAME tag
+				a_last_string.replace_substring_all ("$APPLICATION_MENU_NAME", "")
+				a_last_string.replace_substring_all ("$APPLICATION_MENU_CREATION", "")
+				a_last_string.replace_substring_all ("$APPLICATION_MENU_REDEFINE", "")
+			end
+		end
+
+	window_class_help_button (a_tree: EV_TREE; a_list_index: INTEGER; a_last_string: STRING)
+			--
+		require
+			not_void: a_tree /= Void
+			not_void: a_last_string /= Void
+		local
+			l_help_button_comment: STRING
+			l_found: BOOLEAN
+		do
+			from
+				a_tree.start
+			until
+				a_tree.after or l_found
+			loop
+				if a_tree.item.text.same_string ({ER_XML_CONSTANTS}.ribbon_helpbutton) then
+					l_found := True
+
+					l_help_button_comment := "%N%T%T%T-- Help button"
+
+					if attached {ER_TREE_NODE_DATA} a_tree.item.data as l_data
+						and then attached l_data.command_name as l_identifer_name
+						and then not l_identifer_name.is_empty then
+
+						a_last_string.replace_substring_all ("$HELP_BUTTON_NAME", "%N%Thelp_button: " + l_identifer_name.as_upper + l_help_button_comment)
+
+						a_last_string.replace_substring_all ("$HELP_BUTTON_CREATION", "%N%T%T%Tcreate help_button.make_with_command_list (<<{COMMAND_NAME_CONSTANTS}." + l_identifer_name + ">>)")
+					else
+						if a_list_index = 1 then
+							a_last_string.replace_substring_all ("$HELP_BUTTON_NAME", "%N%Thelp_button: HELP_BUTTON" + l_help_button_comment)
+						else
+							a_last_string.replace_substring_all ("$HELP_BUTTON_NAME", "%N%Thelp_button: HELP_BUTTON_" + a_list_index.out + l_help_button_comment)
+						end
+
+						a_last_string.replace_substring_all ("$HELP_BUTTON_CREATION", "%N%T%T%Tcreate help_button.make_with_command_list (<<>>)")
+					end
+					a_last_string.replace_substring_all ("$HELP_BUTTON_REDEFINE", ",%N%T%T%Thelp_button")
+				end
+				a_tree.forth
+			end
+
+			if not l_found then
+				-- Remove help button tags
+				a_last_string.replace_substring_all ("$HELP_BUTTON_NAME", "")
+				a_last_string.replace_substring_all ("$HELP_BUTTON_CREATION", "")
+				a_last_string.replace_substring_all ("$HELP_BUTTON_REDEFINE", "")
+			end
 		end
 
 	generate_readonly_classes_imp
@@ -589,6 +649,80 @@ feature {NONE} -- Implementation
 				end
 
 				l_list.forth
+			end
+
+		end
+
+	generate_help_button_class
+			--
+		local
+			l_file, l_dest_file: RAW_FILE
+			l_constants: ER_MISC_CONSTANTS
+			l_file_name, l_dest_file_name: FILE_NAME
+			l_singleton: ER_SHARED_SINGLETON
+			l_sub_dir, l_tool_bar_file, l_sub_imp_dir: STRING
+			l_last_string: STRING
+			l_identifier_name: detachable STRING
+			l_help_button_node: EV_TREE_NODE
+			l_list: ARRAYED_LIST [EV_TREE_NODE]
+		do
+			create l_singleton
+			l_list := l_singleton.layout_constructor_list.first.all_items_with ({ER_XML_CONSTANTS}.ribbon_helpbutton)
+			check one_help_button_at_most: l_list.count <= 1 end
+			if l_list.count = 1 then
+				l_help_button_node := l_list.first
+				l_sub_dir := "code_generated_once_change_by_user"
+				l_tool_bar_file := "ribbon_help_button"
+				l_sub_imp_dir := "code_generated_everytime"
+
+				if attached l_singleton.project_info_cell.item as l_project_info then
+					if attached l_project_info.project_location as l_project_location then
+						create l_constants
+						if attached {ER_TREE_NODE_HELP_BUTTON_DATA} l_help_button_node.data as l_data
+							and then attached l_data.command_name as l_identifier
+							and then not l_identifier.is_empty then
+							l_identifier_name := l_identifier
+						end
+
+						-- Generate tool bar class
+						create l_file_name.make_from_string (l_constants.template)
+						l_file_name.set_subdirectory (l_sub_dir)
+						l_file_name.set_file_name (l_tool_bar_file + ".e")
+						create l_file.make (l_file_name)
+						if l_file.exists and then l_file.is_readable then
+							create l_dest_file_name.make_from_string (l_project_location)
+							if l_identifier_name /= Void then
+								l_dest_file_name.set_file_name (l_identifier_name.as_lower + ".e")
+							else
+								l_dest_file_name.set_file_name ("help_button" + ".e")
+							end
+
+							create l_dest_file.make_create_read_write (l_dest_file_name)
+							from
+								l_file.open_read
+								l_file.start
+
+							until
+								l_file.after
+							loop
+								l_file.read_line
+								l_last_string := l_file.last_string
+
+								if l_identifier_name /= Void then
+									l_last_string.replace_substring_all ("$INDEX", l_identifier_name.as_upper)
+								else
+									l_last_string.replace_substring_all ("$INDEX", "HELP_BUTTON")
+								end
+
+								l_dest_file.put_string (l_last_string + "%N")
+							end
+
+							l_file.close
+							l_dest_file.close
+						end
+
+					end
+				end
 			end
 
 		end

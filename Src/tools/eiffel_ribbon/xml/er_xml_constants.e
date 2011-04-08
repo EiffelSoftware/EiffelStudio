@@ -32,6 +32,8 @@ feature -- Query, the value of string is what should be written to XML
 
 	ribbon_helpbutton: STRING = "Ribbon.HelpButton"
 
+	helpbutton: STRING = "HelpButton"
+
 	ribbon_quick_access_toolbar: STRING = "Ribbon.QuickAccessToolbar"
 
 	ribbon_size_definitions: STRING = "Ribbon.SizeDefinitions"

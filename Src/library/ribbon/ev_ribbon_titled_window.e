@@ -38,6 +38,9 @@ feature -- Access
 	application_menu: detachable EV_RIBBON_APPLICATION_MENU
 			-- Associated application menu if any
 
+	help_button: detachable EV_RIBBON_HELP_BUTTON
+			-- Associated help button if any
+
 feature {EV_ANY, EV_ANY_I, EV_ANY_HANDLER} -- Implementation
 
 	implementation: EV_TITLED_WINDOW_I

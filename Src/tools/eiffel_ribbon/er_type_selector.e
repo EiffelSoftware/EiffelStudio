@@ -74,8 +74,10 @@ feature {NONE} -- Initialization
 
 			create l_ribbon_contextual_tabs.make_with_text (constants.ribbon_contextual_tabs)
 --			l_ribbon_contextual_tabs.set_pebble (constants.ribbon_contextual_tabs)
+
 			create l_ribbon_help_button.make_with_text (constants.ribbon_helpbutton)
---			l_ribbon_help_button.set_pebble (constants.ribbon_helpbutton)
+			l_ribbon_help_button.set_pebble (constants.ribbon_helpbutton)
+
 			create l_ribbon_quick_access_toolbar.make_with_text (constants.ribbon_quick_access_toolbar)
 --			l_ribbon_quick_access_toolbar.set_pebble (constants.ribbon_quick_access_toolbar)
 

@@ -45,6 +45,8 @@ feature -- Command
 					Result := l_resource.ribbon_for_application_menu (l_item)
 				elseif attached {EV_RIBBON_APPLICATION_MENU_RECENT_ITEMS} Current as l_item then
 					Result := l_resource.ribbon_for_application_menu_recent_items (l_item)
+				elseif attached {EV_RIBBON_HELP_BUTTON} Current as l_help_button then
+					Result := l_resource.ribbon_for_help_button (l_help_button)
 				else
 					check not_possible: False end
 				end

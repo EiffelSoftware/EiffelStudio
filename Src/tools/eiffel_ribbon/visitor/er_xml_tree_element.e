@@ -30,6 +30,8 @@ feature -- Command
 					a_visitor.visit_application_commands (Current)
 				elseif l_name.same_string (constants.context_popup) then
 					a_visitor.visit_context_popup (Current)
+				elseif l_name.same_string (constants.ribbon_helpbutton) then
+					a_visitor.visit_help_button (Current)
 				end
 			end
 

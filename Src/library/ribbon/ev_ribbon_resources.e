@@ -244,6 +244,26 @@ feature -- Helper
 			end
 		end
 
+	ribbon_for_help_button (a_help_button: EV_RIBBON_HELP_BUTTON): detachable EV_RIBBON
+			--
+		local
+			l_res: EV_RIBBON_RESOURCES
+			l_list: ARRAYED_LIST [EV_RIBBON_TITLED_WINDOW]
+		do
+			from
+				create l_res
+				l_list := l_res.ribbon_window_list
+				l_list.start
+			until
+				l_list.after or Result /= Void
+			loop
+				if l_list.item.help_button = a_help_button then
+					Result := l_list.item.ribbon
+				end
+				l_list.forth
+			end
+		end
+
 	ribbon_for_application_menu_item (a_item: EV_RIBBON_ITEM): detachable EV_RIBBON
 			--
 		local

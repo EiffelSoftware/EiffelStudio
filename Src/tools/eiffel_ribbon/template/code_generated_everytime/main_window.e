@@ -14,7 +14,7 @@ inherit
 	EV_RIBBON_TITLED_WINDOW
 		redefine
 			create_interface_objects,
-			initialize$APPLICATION_MENU_REDEFINE
+			initialize$APPLICATION_MENU_REDEFINE$HELP_BUTTON_REDEFINE
 		end
 
 	EV_SHARED_APPLICATION
@@ -67,12 +67,12 @@ feature {NONE}-- Initialization
 				-- Proceed with vision2 objects creation.
 			Precursor
 			create ribbon.make
-$APPLICATION_MENU_CREATION
+$APPLICATION_MENU_CREATION$HELP_BUTTON_CREATION
 		end
 
 feature -- Access
 
 	ribbon: $RIBBON_NAME
 			-- Ribbon attached to current
-$APPLICATION_MENU_NAME
+$APPLICATION_MENU_NAME$HELP_BUTTON_NAME
 end

@@ -4857,7 +4857,7 @@ feature -- Generation
 						if cl_type /= Void and then cl_type.associated_class.has_visible then
 							cl_type.generate_cecil (buffer)
 						else
-							buffer.put_string (once "{(int32) 0, (int) 0, (char **) 0, (char *) 0}")
+							buffer.put_string (once "%N{(int32) 0, (int) 0, (char **) 0, (char *) 0}")
 						end
 						buffer.put_character (',')
 						i := i + 1

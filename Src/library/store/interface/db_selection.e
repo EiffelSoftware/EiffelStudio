@@ -37,18 +37,13 @@ feature -- Initialization
 
 	make
 			-- Create an interface objet to query active base.
-		local
-			l_ht: like ht
-			l_ht_order: like ht_order
 		do
-			create l_ht.make (name_table_size)
-			ht := l_ht
-			create l_ht_order.make (name_table_size)
-			ht_order := l_ht_order
-			l_ht_order.compare_objects
+			create ht.make (name_table_size)
+			create ht_order.make (name_table_size)
+			ht_order.compare_objects
 			implementation := handle.database.db_selection
-			implementation.set_ht (l_ht)
-			implementation.set_ht_order (l_ht_order)
+			implementation.set_ht (ht)
+			implementation.set_ht_order (ht_order)
 		end
 
 feature -- Access
@@ -379,7 +374,6 @@ feature -- Basic operations
 			-- Clear selection results.
 		local
 			l_container: like container
-			l_ht: like ht
 		do
 			l_container := container
 			if l_container /= Void then
@@ -388,9 +382,9 @@ feature -- Basic operations
 			cursor := Void
 			object := Void
 
-			l_ht := ht
-			check l_ht /= Void end -- FIXME: implied by ... bug?
-			l_ht.wipe_out
+			if ht /= Void then
+				ht.wipe_out
+			end
 		ensure
 			container_is_empty: attached container as le_container implies le_container.is_empty
 			object_model_void: object = Void

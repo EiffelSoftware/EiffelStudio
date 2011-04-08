@@ -38,13 +38,10 @@ create {DATABASE_STORE}
 feature -- Initialization
 
 	make (size: INTEGER)
-		local
-			l_ht_order: like ht_order
 		do
 			create ht.make (1)
-			create l_ht_order.make (1)
-			ht_order := l_ht_order
-			l_ht_order.compare_objects
+			create ht_order.make (1)
+			ht_order.compare_objects
 			create map_table.make (1, 10)
 			scan_make (size)
 		end

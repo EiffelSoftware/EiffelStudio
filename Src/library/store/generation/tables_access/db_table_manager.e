@@ -23,9 +23,9 @@ feature -- Initialization
 			database_manager_not_void: dbm /= Void
 		do
 			database_manager := dbm
-			create repository_table.make (1, tables.Table_number)
-			create update_parameters_table.make (1, tables.Table_number)
-			create updater_table.make (1, tables.Table_number)
+			create repository_table.make_filled (Void, 1, tables.Table_number)
+			create update_parameters_table.make_filled (Void, 1, tables.Table_number)
+			create updater_table.make_filled (Void, 1, tables.Table_number)
 			select_query_prepared := True
 			remove_order_by
 		end
@@ -467,8 +467,8 @@ feature -- Update
 				has_error := False
 				session_control.reset
 				table_descr := tablerow.table_description
-				if updater_table.item (table_descr.Table_code) /= Void then
-					updater := updater_table.item (table_descr.Table_code)
+				if attached updater_table.item (table_descr.Table_code) as l_table then
+					updater := l_table
 				else
 					create updater.make
 					updater.set_query (update_sql_query (table_descr))
@@ -664,8 +664,8 @@ feature {NONE} -- Update implementation
 		require
 			is_valid_code: is_valid_code (code)
 		do
-			if update_parameters_table.item (code) /= Void then
-				Result := update_parameters_table.item (code)
+			if attached update_parameters_table.item (code) as l_parameters then
+				Result := l_parameters
 			else
 				Result := tables.description (code).mapped_list (agent parameter)
 				update_parameters_table.put (Result, code)
@@ -735,8 +735,8 @@ feature {NONE} -- Creation implementation
 				valid_index: repository_table.valid_index (code)
 				-- `code' should be within bounds of the `repository_table'.
 			end
-			if repository_table.item (code) /= Void then
-				Result := repository_table.item (code)
+			if attached repository_table.item (code) as l_repository then
+				Result := l_repository
 			else
 				s_tmp := tables.name_list.i_th (code).as_upper
 				create Result.make (s_tmp)
@@ -852,13 +852,13 @@ feature {NONE} -- Implementation
 	result_list: detachable ARRAYED_LIST [DB_TABLE]
 			-- Last executed query result list.
 
-	repository_table: ARRAY [DB_REPOSITORY]
+	repository_table: ARRAY [detachable DB_REPOSITORY]
 			-- Table that stores loaded repository.
 
-	update_parameters_table: ARRAY [ARRAYED_LIST [STRING]]
+	update_parameters_table: ARRAY [detachable ARRAYED_LIST [STRING]]
 			-- Table that stores parameters/map names for a database update.
 
-	updater_table: ARRAY [DB_CHANGE]
+	updater_table: ARRAY [detachable DB_CHANGE]
 			-- Table that stores database table updaters.
 
 feature {NONE} -- SQL query construction

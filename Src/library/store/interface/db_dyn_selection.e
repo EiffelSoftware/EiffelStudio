@@ -10,22 +10,11 @@ class
 
 inherit
 	DB_SELECTION
-		rename
-			implementation as db_sel_imp
-		undefine
-			set_map_name, unset_map_name, is_mapped, mapped_value, clear_all
-		redefine
-			make
-		end
-
-	DB_SELECTION
 		undefine
 			set_map_name, unset_map_name, is_mapped, mapped_value, clear_all
 		redefine
 			implementation,
 			make
-		select
-			implementation
 		end
 
 	PARAMETER_HDL
@@ -46,9 +35,6 @@ feature -- Initialization
 			implementation.set_ht (ht)
 			init
 			implementation.init_implementation (parameters_value, parameters)
-
-			-- Satify compiler
-			db_sel_imp := implementation
 		end
 
 feature -- Element change
@@ -63,14 +49,7 @@ feature -- Element change
 			is_ok: is_ok
 			is_allocatable: is_allocatable
 		do
-			set_executed (FALSE)
-			implementation.prepare (s)
-			set_prepared (TRUE)
-			if not is_ok and then is_tracing then
-				fixme ("Unicode support for output tracing.")
-				trace_output.putstring (error_message_32)
-				trace_output.new_line
-			end
+			prepare_32 (s)
 		ensure
 			prepared_statement: is_prepared
 			prepared_statement: not is_executed

@@ -85,10 +85,10 @@ feature -- Element change
 			g := field_count (object)
 			l_map_table := map_table
 			if l_map_table = Void then
-				create l_map_table.make (1, count)
+				create l_map_table.make_filled (0, 1, count)
 				map_table := l_map_table
 			elseif l_map_table.count < count then
-				l_map_table.conservative_resize (1, count)
+				l_map_table.conservative_resize_with_default (0, 1, count)
 			end
 			from
 				ind := 1
@@ -154,32 +154,32 @@ feature -- Element change
 			get_metadata := False  -- do not get metadata
 			l_value := value
 			if l_value = Void then
-				create l_value.make (1, count)
+				create l_value.make_filled (Void, 1, count)
 				value := l_value
-				create value_size.make (1, count)
-				create value_max_size.make (1, count)
-				create value_type.make (1, count)
-				create select_name.make (1, count)
+				create value_size.make_filled (0, 1, count)
+				create value_max_size.make_filled (0, 1, count)
+				create value_type.make_filled (0, 1, count)
+				create select_name.make_filled (Void, 1, count)
 				get_metadata := True --PGC
 
 					-- `metadata_to_update' is True at the beginning of every new selection.
 			elseif metadata_to_update then
-				l_value.conservative_resize (1, count)
+				l_value.conservative_resize_with_default (Void, 1, count)
 				l_value_size := value_size
 				check l_value_size /= Void end -- implied by `fill_in' postcondition `set_together'
-				l_value_size.conservative_resize (1, count)
+				l_value_size.conservative_resize_with_default (0, 1, count)
 
 				l_value_max_size := value_max_size
 				check l_value_max_size /= Void end -- implied by `fill_in' postcondition `set_together'
-				l_value_max_size.conservative_resize (1, count)
+				l_value_max_size.conservative_resize_with_default (0, 1, count)
 
 				l_value_type := value_type
 				check l_value_type /= Void end -- implied by `fill_in' postcondition `set_together'
-				l_value_type.conservative_resize (1, count)
+				l_value_type.conservative_resize_with_default (0, 1, count)
 
 				l_select_name := select_name
 				check l_select_name /= Void end -- implied by `fill_in' postcondition `set_together'
-				l_select_name.conservative_resize (1, count)
+				l_select_name.conservative_resize_with_default (Void, 1, count)
 				get_metadata := True --PGC
 				metadata_to_update := False
 			end

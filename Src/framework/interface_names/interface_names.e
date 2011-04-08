@@ -975,7 +975,7 @@ feature -- Context menu
 	m_docking_lock: STRING_32			do Result := locale.translation ("Docking Lock") end
 	m_expanded_object_view: STRING_32	do Result := locale.translation ("Expanded object view") end
 	m_include_all_classes: STRING_32		do Result := locale.translation ("Include all classes") end
-	m_import_metrics_from_file: STRING_32 do Result := locale.translation("Import metrics from file") end
+	m_import_metrics_from_file: STRING_32 do Result := locale.translation("Import/Export metrics from file") end
 	m_input_domain: STRING_32			do Result := locale.translation("&Input domain") end
 	m_library: STRING_32					do Result := locale.translation ("Library") end
 	m_move_down: STRING_32				do Result := locale.translation ("Move down") end
@@ -1235,7 +1235,7 @@ feature -- Label texts
 	l_Discard_build_precompile_dialog: STRING_32 do Result := locale.translation("always build precompile.")	end
 	l_Discard_finalize_assertions: STRING_32 	do Result := locale.translation("always discard assertions when finalizing.")	end
 	l_Discard_finalize_precompile_dialog: STRING_32 do Result := locale.translation("always finalize.")	end
-	l_Discard_freeze_dialog: STRING_32			do Result := locale.translation("always compile C/++ code.")	end
+	l_Discard_freeze_dialog: STRING_32			do Result := locale.translation("always compile C/C++ code.")	end
 	l_Discard_ignore_contract_violation_dialog: STRING_32 do Result := locale.translation("always break into debugger on contract violation.")	end
 	l_Discard_save_before_compile_dialog: STRING_32	do Result := locale.translation("always save files before compiling.")	end
 	l_discard_save_before_prettifying_dialog: STRING_32 do Result := locale.translation ("always save class before prettifying.") end

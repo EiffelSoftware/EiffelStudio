@@ -109,9 +109,9 @@ feature -- Titles
 	t_close: STRING_32 do Result := locale.translation ("Close") end
 	t_metric_definition_error_wizard: STRING_32 do Result := locale.translation ("Metric definition error wizard") end
 	t_metric_archive_calculation_finished: STRING_32 do Result := locale.translation ("Metric archive calculation finished.") end
-	t_import_metric_title: STRING_32 do Result := locale.translation ("Import Metrics") end
+	t_import_metric_title: STRING_32 do Result := locale.translation ("Import/Export Metrics") end
 	t_import_selected_metrics: STRING_32 do Result := locale.translation ("Import Selected Metrics") end
-	t_backup_user_defined_metrics: STRING_32 do Result := locale.translation ("Backup User-defined Metrics") end
+	t_backup_user_defined_metrics: STRING_32 do Result := locale.translation ("Export User-defined Metrics") end
 	t_metric_definition_file: STRING_32 do Result := locale.translation ("Metric Definition File:") end
 	t_load: STRING_32 do Result := locale.translation ("Load") end
 	t_import: STRING_32 do Result := locale.translation ("Import") end
@@ -124,12 +124,12 @@ feature -- Titles
 	t_select_integral_metrics: STRING_32 do Result := locale.translation ("Select Integral Metrics") end
 	t_deselect_integral_metrics: STRING_32 do Result := locale.translation ("Deselect Integral Metrics") end
 
-	t_backup_metrics: STRING_32 do Result := locale.translation ("Backup user-defined metrics") end
-	t_select_file_for_backup: STRING_32 do Result := locale.translation ("Select a file for user-defined metrics backup:") end
-	t_backup: STRING_32 do Result := locale.translation ("Backup") end
+	t_backup_metrics: STRING_32 do Result := locale.translation ("Export user-defined metrics") end
+	t_select_file_for_backup: STRING_32 do Result := locale.translation ("Select a file to export user-defined metrics:") end
+	t_backup: STRING_32 do Result := locale.translation ("Export") end
 	t_importing_metrics: STRING_32 do Result := locale.translation ("Importing metrics...") end
 	t_metrics_imported: STRING_32 do Result := locale.translation ("Metric(s) imported.") end
-	t_metric_backuped: STRING_32 do Result := locale.translation ("User-defined metrics backup finished.") end
+	t_metric_backuped: STRING_32 do Result := locale.translation ("Export User-defined metrics finished.") end
 	t_metrics_list: STRING_32 do Result := locale.translation ("Metric List:") end
 	t_short_line: STRING_32 do Result := locale.translation ("-") end
 	t_archive_not_up_to_date: STRING_32 do Result := locale.translation ("Current archive value may not up-to-date") end
@@ -290,7 +290,7 @@ feature -- Tooltip
 	f_move_unit_down: STRING_32 do Result := locale.translation ("Move metric unit down.%N") end
 	f_rearrange_unit: STRING_32 do Result := locale.translation ("Or you can pick a metric unit and drop it on another metric to rearrange their order.") end
 	f_show_to_do_message: STRING_32 do Result := locale.translation ("Display a message about how to deal with the metric definition error") end
-	f_import_metrics: STRING_32 do Result := locale.translation ("Import metrics from file") end
+	f_import_metrics: STRING_32 do Result := locale.translation ("Import/Export metrics from file") end
 	f_clear_defined_domain: STRING_32 do Result := locale.translation ("Clear defined domain") end
 	f_check_warning: STRING_32 do Result := locale.translation ("Check defined warnings when archive is recalculated?") end
 
@@ -1445,7 +1445,7 @@ feature -- Utilities
 		end
 
 note
-        copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+        copyright:	"Copyright (c) 1984-2011, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"
         copying: "[

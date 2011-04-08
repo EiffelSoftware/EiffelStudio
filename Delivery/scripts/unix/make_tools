@@ -49,3 +49,15 @@ if [ ! -f eiffel_echo.tar.bz2 ]; then
 fi
 clean_project
 move eiffel_echo.tar.bz2 $EXPORT_DIR/bin
+
+remtrace Recompile po_generation_tool
+cd $EIFFEL_SRC/tools/po_generation_tool
+clean_project
+finalize po_generation_tool.ecf po_generation_tool
+tgz_ccode po_generation_tool po_generation_tool.tar.bz2
+if [ ! -f po_generation_tool.tar.bz2 ]; then
+	echo Could not finalize a new Eiffel Echo
+	CANCEL
+fi
+clean_project
+move po_generation_tool.tar.bz2 $EXPORT_DIR/bin

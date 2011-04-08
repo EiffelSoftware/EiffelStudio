@@ -422,7 +422,6 @@ feature -- External	features
 	put_data_32 (no_descriptor: INTEGER; index: INTEGER; ar: STRING_32; max_len:INTEGER): INTEGER
 		local
 			l_sql_string: SQL_STRING
-			i: INTEGER
 			l_area: MANAGED_POINTER
 		do
 			create l_area.make (max_len)

@@ -104,7 +104,7 @@ feature -- Status setting
 	set_ht (table: like ht)
 			-- Pass map `table' to current.
 			-- Set `ht' with `table'.
-		require else
+		require
 			table_exists: table /= Void
 		do
 			ht := table
@@ -112,10 +112,10 @@ feature -- Status setting
 			ht = table
 		end
 
-	set_ht_order (list: ARRAYED_LIST [STRING])
+	set_ht_order (list: like ht_order)
 			-- Pass map `list' to current.
 			-- Set `ht_order' with `list'.
-		require else
+		require
 			list_exists: list /= Void
 		do
 			ht_order := list

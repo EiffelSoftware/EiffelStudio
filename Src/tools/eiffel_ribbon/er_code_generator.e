@@ -219,7 +219,9 @@ feature {ER_CODE_GENERATOR_FOR_APPLICATION_MENU} -- Command
 					l_gen_info.set_default_item_class_name_prefix ("RIBBON_COMBO_BOX_IMP_")
 					l_gen_info.set_item_file ("ribbon_combo_box")
 					l_gen_info.set_item_imp_file ("ribbon_combo_box_imp")
-				elseif a_group_node.item.text.same_string ({ER_XML_CONSTANTS}.split_button) then
+				elseif a_group_node.item.text.same_string ({ER_XML_CONSTANTS}.split_button) or else
+					 a_group_node.item.text.same_string ({ER_XML_CONSTANTS}.drop_down_button) then
+
 					from
 						create l_gen_info
 						l_gen_info.set_default_item_class_imp_name_prefix ("RIBBON_BUTTON_")
@@ -235,12 +237,20 @@ feature {ER_CODE_GENERATOR_FOR_APPLICATION_MENU} -- Command
 
 						l_split_button.forth
 					end
+					if a_group_node.item.text.same_string ({ER_XML_CONSTANTS}.split_button) then
+						create l_gen_info
+						l_gen_info.set_default_item_class_imp_name_prefix ("RIBBON_SPLIT_BUTTON_")
+						l_gen_info.set_default_item_class_name_prefix ("RIBBON_SPLIT_BUTTON_IMP_")
+						l_gen_info.set_item_file ("ribbon_split_button")
+						l_gen_info.set_item_imp_file ("ribbon_split_button_imp")
+					elseif  a_group_node.item.text.same_string ({ER_XML_CONSTANTS}.drop_down_button) then
+						create l_gen_info
+						l_gen_info.set_default_item_class_imp_name_prefix ("RIBBON_DROP_DOWN_BUTTON_")
+						l_gen_info.set_default_item_class_name_prefix ("RIBBON_DROP_DOWN_BUTTON_IMP_")
+						l_gen_info.set_item_file ("ribbon_drop_down_button")
+						l_gen_info.set_item_imp_file ("ribbon_drop_down_button_imp")
+					end
 
-					create l_gen_info
-					l_gen_info.set_default_item_class_imp_name_prefix ("RIBBON_SPLIT_BUTTON_")
-					l_gen_info.set_default_item_class_name_prefix ("RIBBON_SPLIT_BUTTON_IMP_")
-					l_gen_info.set_item_file ("ribbon_split_button")
-					l_gen_info.set_item_imp_file ("ribbon_split_button_imp")
 				elseif a_group_node.item.text.same_string ({ER_XML_CONSTANTS}.drop_down_gallery) then
 					create l_gen_info
 					l_gen_info.set_default_item_class_imp_name_prefix ("RIBBON_DROP_DOWN_GALLERY_")
@@ -1147,7 +1157,8 @@ feature {NONE} -- Implementation
 			not_void: a_group_node /= void
 			valid: a_group_node.text.same_string ({ER_XML_CONSTANTS}.group) or else
 					a_group_node.text.same_string ({ER_XML_CONSTANTS}.split_button) or else
-					a_group_node.text.same_string ({ER_XML_CONSTANTS}.menu_group)
+					a_group_node.text.same_string ({ER_XML_CONSTANTS}.menu_group) or else
+					a_group_node.text.same_string ({ER_XML_CONSTANTS}.drop_down_button)
 		local
 			l_count, l_index: INTEGER
 			l_template, l_command_string: STRING
@@ -1194,7 +1205,8 @@ feature {NONE} -- Implementation
 			not_void: a_group_node /= void
 			valid: a_group_node.text.same_string ({ER_XML_CONSTANTS}.group) or else
 					 a_group_node.text.same_string ({ER_XML_CONSTANTS}.split_button) or else
-					a_group_node.text.same_string ({ER_XML_CONSTANTS}.menu_group)
+					a_group_node.text.same_string ({ER_XML_CONSTANTS}.menu_group) or else
+					a_group_node.text.same_string ({ER_XML_CONSTANTS}.drop_down_button)
 		local
 			l_count, l_index: INTEGER
 			l_template: STRING
@@ -1232,7 +1244,8 @@ feature {NONE} -- Implementation
 			not_void: a_group_node /= void
 			valid: a_group_node.text.is_equal ({ER_XML_CONSTANTS}.group) or else
 					 a_group_node.text.same_string ({ER_XML_CONSTANTS}.split_button) or else
-					a_group_node.text.same_string ({ER_XML_CONSTANTS}.menu_group)
+					a_group_node.text.same_string ({ER_XML_CONSTANTS}.menu_group) or else
+					a_group_node.text.same_string ({ER_XML_CONSTANTS}.drop_down_button)
 		local
 			l_count, l_index: INTEGER
 			l_template: STRING
@@ -1349,6 +1362,16 @@ feature {NONE} -- Implementation
 						l_generated.replace_substring_all ("$INDEX_1", "split_button_" + (button_counter + l_index).out)
 						l_generated.replace_substring_all ("$INDEX_2", "RIBBON_SPLIT_BUTTON_" + (button_counter + l_index).out)
 					end
+				elseif a_group_node.i_th (l_index).text.same_string (l_constants.drop_down_button) then
+					if attached {ER_TREE_NODE_DATA} a_group_node.i_th (l_index).data as l_data
+						and then attached l_data.command_name as l_identify_name
+						and then not l_identify_name.is_empty then
+						l_generated.replace_substring_all ("$INDEX_1", l_identify_name.as_lower)
+						l_generated.replace_substring_all ("$INDEX_2", l_identify_name.as_upper)
+					else
+						l_generated.replace_substring_all ("$INDEX_1", "drop_down_button_" + (button_counter + l_index).out)
+						l_generated.replace_substring_all ("$INDEX_2", "RIBBON_DROP_DOWN_BUTTON_" + (button_counter + l_index).out)
+					end
 				else
 					create l_generated.make_empty
 					check not_implemented: False end
@@ -1431,7 +1454,7 @@ feature {NONE} -- Implementation
 								end
 							end
 							--FIXME: need improve efficiency here?
-							generate_for_split_button_if_possible (a_item_node, l_last_string)
+							generate_for_split_or_drop_down_button_if_possible (a_item_node, l_last_string)
 							l_dest_file.put_string (l_last_string + "%N")
 						end
 
@@ -1487,7 +1510,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	generate_for_split_button_if_possible (a_item_node: EV_TREE_NODE; a_last_string: STRING)
+	generate_for_split_or_drop_down_button_if_possible (a_item_node: EV_TREE_NODE; a_last_string: STRING)
 			--
 		require
 			not_void: a_item_node /= void
@@ -1495,7 +1518,8 @@ feature {NONE} -- Implementation
 			l_button_registry_string: STRING
 			l_button_creation_string, l_button_declaration_string: STRING
 		do
-			if attached {ER_TREE_NODE_SPLIT_BUTTON_DATA} a_item_node.data as l_data then
+			if attached {ER_TREE_NODE_SPLIT_BUTTON_DATA} a_item_node.data as l_data or else
+				attached {ER_TREE_NODE_DROP_DOWN_BUTTON_DATA} a_item_node.data as l_data then
 				l_button_creation_string := button_creation_string (a_item_node)
 				l_button_registry_string := button_registry_string (a_item_node)
 				l_button_declaration_string := button_declaration_string (a_item_node)

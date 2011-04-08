@@ -249,7 +249,9 @@ feature {NONE} -- Action handing
 					Result := l_stone_child.same_string (constants.menu_group)
 				elseif a_parent_type.same_string (constants.menu_group) then
 					Result := l_stone_child.same_string (constants.button) or else
-						l_stone_child.same_string (constants.split_button)
+						l_stone_child.same_string (constants.split_button) or else
+						-- FIXME: Parent's parent must be ApplicationMenu here
+						l_stone_child.same_string (constants.drop_down_button)
 				elseif a_parent_type.same_string (constants.context_popup) then
 					Result := l_stone_child.same_string (constants.context_popup_context_menus) or else
 						l_stone_child.same_string (constants.context_popup_mini_toolbars)
@@ -261,6 +263,8 @@ feature {NONE} -- Action handing
 					Result := l_stone_child.same_string (constants.menu_group)
 				elseif a_parent_type.same_string (constants.context_menu) then
 					Result := l_stone_child.same_string (constants.menu_group)
+				elseif a_parent_type.same_string (constants.drop_down_button) then
+					Result := l_stone_child.same_string (constants.button)
 				end
 			end
 		end

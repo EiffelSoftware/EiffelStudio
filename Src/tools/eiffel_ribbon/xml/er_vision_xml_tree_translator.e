@@ -385,6 +385,8 @@ feature {NONE} -- Tree saving
 						add_xml_button_node (l_menu_group_node, a_tree_item.item)
 					elseif a_tree_item.item.text.same_string ({ER_XML_CONSTANTS}.split_button) then
 						add_xml_split_button_node (l_menu_group_node, a_tree_item.item)
+					elseif a_tree_item.item.text.same_string ({ER_XML_CONSTANTS}.drop_down_button) then
+						add_xml_drop_down_button_node (l_menu_group_node, a_tree_item.item)
 					else
 						check not_possible: False end
 					end
@@ -393,6 +395,48 @@ feature {NONE} -- Tree saving
 				end
 			else
 				check False end
+			end
+		end
+
+	add_xml_drop_down_button_node (a_group_node: XML_ELEMENT; a_button_tree_node: EV_TREE_NODE)
+			--
+		require
+			not_void: a_group_node /= Void
+			valid: a_group_node.name.same_string (xml_constants.menu_group)
+		local
+			l_button_node: XML_ELEMENT
+			l_constants: ER_XML_ATTRIBUTE_CONSTANTS
+		do
+			if attached {EV_TREE_ITEM} a_button_tree_node as l_item then
+				check l_item.text.same_string (xml_constants.drop_down_button) end
+
+				create l_button_node.make (a_group_node, xml_constants.drop_down_button, name_space)
+				a_group_node.put_last (l_button_node)
+
+				if attached {ER_TREE_NODE_DROP_DOWN_BUTTON_DATA} a_button_tree_node.data as l_data then
+					create l_constants
+
+					-- Add xml attribute
+					if attached l_data.command_name as l_command_name and then not l_command_name.is_empty then
+						l_button_node.add_attribute (l_constants.command_name, name_space, l_command_name)
+
+						-- Add coresspond command xml node
+						add_xml_command_node (l_data)
+
+						-- We can adding one more level <MenuGroup Class='MajorItems'> here--
+
+						--***  Add sub item nodes for split button ***
+						from
+							a_button_tree_node.start
+						until
+							a_button_tree_node.after
+						loop
+							add_xml_button_node (l_button_node, a_button_tree_node.item)
+
+							a_button_tree_node.forth
+						end
+					end
+				end
 			end
 		end
 
@@ -506,8 +550,11 @@ feature {NONE} -- Tree saving
 			--
 		require
 			not_void: a_group_node /= Void
-			valid: a_group_node.name.same_string (xml_constants.group) or else a_group_node.name.same_string (xml_constants.split_button)
-					or else a_group_node.name.same_string (xml_constants.menu_group)
+			valid: a_group_node.name.same_string (xml_constants.group) or else
+					a_group_node.name.same_string (xml_constants.split_button) or else
+					a_group_node.name.same_string (xml_constants.menu_group) or else
+					a_group_node.name.same_string (xml_constants.drop_down_button)
+
 		local
 			l_button_node: XML_ELEMENT
 			l_constants: ER_XML_ATTRIBUTE_CONSTANTS

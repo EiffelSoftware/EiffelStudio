@@ -54,6 +54,7 @@ feature {NONE} -- Initialization
 			l_tab: EV_TREE_ITEM
 			l_group: EV_TREE_ITEM
 			l_tab_scaling_policy: EV_TREE_ITEM
+
 		do
 			create widget
 
@@ -169,6 +170,7 @@ feature {NONE} -- Implementation
 			l_split_button: EV_TREE_ITEM
 			l_split_button_gallery: EV_TREE_ITEM
 --			l_toggle_button: EV_TREE_ITEM
+			l_drop_down_button: EV_TREE_ITEM
 		do
 			create l_button.make_with_text (constants.button)
 			l_button.set_pebble (constants.button)
@@ -210,6 +212,10 @@ feature {NONE} -- Implementation
 			create l_split_button_gallery.make_with_text (constants.split_button_gallery)
 			l_split_button_gallery.set_pebble (constants.split_button_gallery)
 			a_parent.extend (l_split_button_gallery)
+
+			create l_drop_down_button.make_with_text (constants.drop_down_button)
+			l_drop_down_button.set_pebble (constants.drop_down_button)
+			a_parent.extend (l_drop_down_button)
 		end
 
 	content: SD_CONTENT

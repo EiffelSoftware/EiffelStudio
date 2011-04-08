@@ -323,7 +323,7 @@ feature -- Status setting
 			request_create.modify (r_string)
 		end
 
-	change_name (new_name: STRING)
+	change_name (new_name: like repository_name)
 			-- Set repository name with `repository_name'.
 		require else
 			new_name_not_void: new_name /= Void

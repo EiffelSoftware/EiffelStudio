@@ -385,7 +385,7 @@ feature {NONE} -- Implementation
 					"BINARY_SEARCH_TREE [ ... ]",
 					"FUNCTION [ ... ]",
 					"PROCEDURE [ ... ]",
-					"MANAGED_POINTER [ ... ]",
+					"MANAGED_POINTER",
 					"POINTER",
 					"TUPLE [ ... ]"
 				>>

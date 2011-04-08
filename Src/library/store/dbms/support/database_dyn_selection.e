@@ -113,9 +113,8 @@ feature
 
 feature {NONE} -- Implementation
 
-	sql_string: detachable STRING;
-
 	sql_string_32: detachable STRING_32;
+			-- Buffer for storing SQL string in `prepare_32'.
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -128,9 +127,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class DATABASE_DYN_SELECTION
-
-
+end

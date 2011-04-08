@@ -38,42 +38,8 @@ feature
 		require
 			not_void: s /= Void
 			meaning_full_statement: s.count > 0
-		local
-			parsed_s: STRING
-			parsed: BOOLEAN
-			ArgNum: INTEGER
-			l_sql_string: like sql_string
 		do
-			l_sql_string := sql_string
-			if l_sql_string = Void then
-				create l_sql_string.make (s.count)
-				sql_string := l_sql_string
-			else
-				l_sql_string.wipe_out
-			end
-			l_sql_string.append (s)
-			s.wipe_out
-			s.append (parse_32 (l_sql_string))
-			ArgNum := s.occurrences('?')
-
-			descriptor := db_spec.new_descriptor
-			if not db_spec.normal_parse then
-				parsed := db_spec.parse (descriptor, ht, ht_order, handle, s)
-			end
-			if not parsed then
-				parsed_s := s
-				if is_ok then
-					db_spec.init_order (descriptor, parsed_s)
-				end
-				if is_ok then
-					db_spec.pre_immediate (descriptor, ArgNum)
-				end
-			end
-			set_executed (FALSE)
-			set_prepared (TRUE)
-		ensure
-			prepared_statement: is_prepared
-			prepared_statement: not is_executed
+			prepare_32 (s)
 		end
 
 	prepare_32 (s: STRING_32)

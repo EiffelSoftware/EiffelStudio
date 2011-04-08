@@ -76,6 +76,8 @@ feature -- ALl types under group
 
 	drop_down_gallery: STRING = "DropDownGallery"
 
+	drop_down_button: STRING = "DropDownButton"
+
 	in_ribbon_gallery: STRING = "InRibbonGallery"
 
 	split_button_gallery: STRING = "SplitButtonGallery"
@@ -146,7 +148,8 @@ feature -- Contract support
 					l_string.same_string (context_popup_context_menus) or else
 					l_string.same_string (context_popup_mini_toolbars) or else
 					l_string.same_string (mini_toolbar) or else
-					l_string.same_string (context_menu)
+					l_string.same_string (context_menu) or else
+					l_string.same_string (drop_down_button)
 			end
 		end
 
@@ -162,7 +165,8 @@ feature -- Contract support
 					l_string.same_string (split_button) or else
 					l_string.same_string (drop_down_gallery) or else
 					l_string.same_string (in_ribbon_gallery) or else
-					l_string.same_string (split_button_gallery)
+					l_string.same_string (split_button_gallery) or else
+					l_string.same_string (drop_down_button)
 			end
 		end
 end

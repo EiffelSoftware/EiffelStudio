@@ -18,7 +18,7 @@ feature -- Initialization
 
 	make ( size: INTEGER)
 		do
-			create ptr.make(1, size)
+			create ptr.make_filled (Void, 1, size)
 			count := size
 		end
 
@@ -28,7 +28,7 @@ feature -- Status Setting
 		require
 			array_exist: ptr /= Void
 		do
-			ptr.conservative_resize (1, size)
+			ptr.conservative_resize_with_default (Void, 1, size)
 			count := size
 		end
 
@@ -67,7 +67,7 @@ feature  -- Status
 
 	count: INTEGER
 
-	ptr: ARRAY[detachable MANAGED_POINTER]
+	ptr: ARRAY [detachable MANAGED_POINTER]
 
 
 feature { NONE} -- External Features

@@ -42,7 +42,7 @@ feature -- Initialization
 			create ht.make (1)
 			create ht_order.make (1)
 			ht_order.compare_objects
-			create map_table.make (1, 10)
+			create map_table.make_filled (0, 1, 10)
 			scan_make (size)
 		end
 
@@ -82,7 +82,7 @@ feature -- Basic operations
 			owns_repository: owns_repository
 			repository_exists: attached repository as lr_repository and then lr_repository.exists
 		local
-			tmp_string: STRING_32
+			tmp_string: like parse_32
 			temp_descriptor: INTEGER
 			quoter: STRING_32
 			sep: STRING_32
@@ -110,7 +110,7 @@ feature -- Basic operations
 				sql_string.append(quoter)
 			end
 			if ((l_repository.rep_owner /= Void and then l_repository.rep_owner.count > 0) or (l_repository.rep_qualifier /= Void and then l_repository.rep_qualifier.count > 0)) then
-				sql_string.append({STRING_32} ".")
+				sql_string.append_character ({CHARACTER_32} '.')
 			end
 			sql_string.append(quoter)
 			sql_string.append (l_repository.repository_name)
@@ -119,9 +119,9 @@ feature -- Basic operations
 			check l_map_table /= Void end -- FIXME: implied by ...bug?			
 			sql_string.append(db_spec.put_column_name(l_repository, l_map_table, object))
 			sql_string.append ({STRING_32} " VALUES ( :XZ7Hj0sb5UU )")
-			set_map_name (object, "XZ7Hj0sb5UU")
+			set_map_name (object, {STRING_32} "XZ7Hj0sb5UU")
 			tmp_string := parse_32 (sql_string)
-			unset_map_name ("XZ7Hj0sb5UU")
+			unset_map_name ({STRING_32} "XZ7Hj0sb5UU")
 			if tmp_string /= Void then
 				temp_descriptor := db_spec.new_descriptor
 				if immediate_execution then
@@ -214,7 +214,7 @@ feature {NONE} -- Status setting
 					make_default_table (g)
 				else
 					if l_map_table.count < f then
-						l_map_table.conservative_resize (1, f)
+						l_map_table.conservative_resize_with_default (0, 1, f)
 					end
 					from
 						ind := 1
@@ -255,10 +255,10 @@ feature {NONE} -- Status setting
 		do
 			l_map_table := map_table
 			if l_map_table = Void then
-				create l_map_table.make (1, i)
+				create l_map_table.make_filled (0, 1, i)
 				map_table := l_map_table
 			elseif l_map_table.count < i then
-				l_map_table.conservative_resize (1, i)
+				l_map_table.conservative_resize_with_default (0, 1, i)
 			end
 			from
 				j := 1

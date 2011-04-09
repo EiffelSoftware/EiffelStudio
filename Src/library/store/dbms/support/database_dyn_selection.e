@@ -60,7 +60,7 @@ feature
 			l_sql_string.append (s)
 			s.wipe_out
 			s.append (parse_32 (l_sql_string))
-			arg_num := s.occurrences({CHARACTER_32} '?')
+			arg_num := s.occurrences ({CHARACTER_32} '?')
 
 			descriptor := db_spec.new_descriptor
 			if not db_spec.normal_parse then

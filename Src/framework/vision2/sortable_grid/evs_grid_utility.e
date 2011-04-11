@@ -49,6 +49,7 @@ feature -- Resizeing
 		local
 			l_size_range: TUPLE [min_width, max_width: INTEGER]
 			l_column: EV_GRID_COLUMN
+			l_column_header: EV_GRID_HEADER_ITEM
 			l_row_count: INTEGER
 			l_required_width: INTEGER
 		do
@@ -61,11 +62,11 @@ feature -- Resizeing
 				loop
 					l_column := a_grid.column (a_size_table.key_for_iteration)
 					l_size_range := a_size_table.item_for_iteration
-					check
-						l_column /= Void
-					end
-					l_column.resize_to_content
-					l_required_width := l_column.width
+					l_required_width := l_column.required_width_of_item_span (1, l_row_count)
+					l_column_header := l_column.header_item
+							-- Make sure that the column header is set at its ideal width
+					l_column.header_item.resize_to_content
+					l_required_width := l_column.header_item.width.max (l_required_width)
 					if l_size_range /= Void then
 						l_column.set_width (l_required_width.max (l_size_range.min_width).min (l_size_range.max_width))
 					else

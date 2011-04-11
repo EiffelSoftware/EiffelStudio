@@ -21,12 +21,12 @@ create {FANEUIL_HALL}
 feature -- Access
 
 	out: STRING = "Judge"
-			-- How to print the judge?
+			-- Printable representation
 
 feature {NONE} -- Implementation
 
 	type: STRING = "Judge"
-			-- What's the type?
+			-- Actor type
 
 	step
 			-- Do a process step.
@@ -34,7 +34,7 @@ feature {NONE} -- Implementation
 			random.forth;
 			(create {EXECUTION_ENVIRONMENT}).sleep (1000000 * random_integer (1000, 2000))
 			enter (hall)
-			take_place(hall)
+			take_place (hall)
 			confirm (hall)
 			random.forth;
 			(create {EXECUTION_ENVIRONMENT}).sleep (1000000 * random_integer (250, 500))
@@ -45,37 +45,37 @@ feature {NONE} -- Implementation
 	enter (a_hall: separate HALL)
 			-- Enter the hall.
 		require
-			not a_hall.judge_present
-			a_hall.immigrants > 0
-			a_hall.judge_enterance_ready
+			not_present: not a_hall.judge_present
+			immigrants_present: a_hall.immigrant_count > 0
+			no_sworn_immigrants_present: not a_hall.has_sworn_immigrants
 		do
-			io.put_string (out + " entering%N")
-			a_hall.set_judge (True)
+			print (out + " entering%N")
+			a_hall.set_judge_presence (True)
 		end
 
-	take_place(a_hall: separate HALL)
-			-- Sit in judgment position
+	take_place (a_hall: separate HALL)
+			-- Prepare to confirm.
 		require
-			a_hall.immigrants_ready
+			immigrants_ready: a_hall.immigrants_ready
 		do
-			io.put_string (out + " taking place%N")
+			print (out + " taking place%N")
 			a_hall.sit_judge
 		end
 
 	confirm (a_hall: separate HALL)
 			-- Confirm.
 		require
-			a_hall.immigrants_swear_done
+			a_hall.all_immigrants_sworn
 		do
-			io.put_string (out + " confirming%N")
+			print (out + " confirming%N")
 			a_hall.confirm
 		end
 
 	leave (a_hall: separate HALL)
-			-- Leave the hall.
+			-- Leave hall.
 		do
-			io.put_string (out + " leaving%N")
-			a_hall.set_judge (False)
+			print (out + " leaving%N")
+			a_hall.set_judge_presence (False)
 		end
 
 end

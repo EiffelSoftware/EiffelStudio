@@ -17,7 +17,7 @@ create
 feature {NONE} -- Implementation
 
 	type: STRING = "Spectator"
-			-- What's the type?
+			-- Actor type
 
 	step
 			-- Do a process step.
@@ -33,7 +33,7 @@ feature {NONE} -- Implementation
 		require
 			not a_hall.judge_present
 		do
-			io.put_string (out + " entering%N")
+			print (out + " entering%N")
 		end
 
 	spectate
@@ -41,7 +41,7 @@ feature {NONE} -- Implementation
 		do
 			random.forth;
 			(create {EXECUTION_ENVIRONMENT}).sleep (1000000 * random_integer (500, 1000))
-			io.put_string (out + " spectating%N")
+			print (out + " spectating%N")
 			random.forth;
 			(create {EXECUTION_ENVIRONMENT}).sleep (1000000 * random_integer (500, 1000))
 		end
@@ -49,7 +49,7 @@ feature {NONE} -- Implementation
 	leave (a_hall: separate HALL)
 			-- Leave.
 		do
-			io.put_string (out + " leaving%N")
+			print (out + " leaving%N")
 		end
 
 end

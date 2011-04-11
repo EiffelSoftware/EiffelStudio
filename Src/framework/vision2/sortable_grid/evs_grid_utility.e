@@ -64,7 +64,8 @@ feature -- Resizeing
 					check
 						l_column /= Void
 					end
-					l_required_width := l_column.required_width_of_item_span (1, l_row_count)
+					l_column.resize_to_content
+					l_required_width := l_column.width
 					if l_size_range /= Void then
 						l_column.set_width (l_required_width.max (l_size_range.min_width).min (l_size_range.max_width))
 					else

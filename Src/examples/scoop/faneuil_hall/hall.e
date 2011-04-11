@@ -8,35 +8,39 @@ note
 class
 	HALL
 
-feature {ACTOR} -- Access
+feature {ACTOR} -- Status report
 
 	judge_present: BOOLEAN
 			-- Is judge present?
 
-feature {JUDGE} -- Judge operations
+feature {JUDGE} -- Status report
 
 	immigrants_ready: BOOLEAN
 			-- Are immigrants ready?
 		do
-			Result := immigrants = ready_immigrants
+			Result := immigrant_count = ready_immigrant_count
 		end
 
-	immigrants_swear_done: BOOLEAN
-			-- Did all of immigrants swear
+	all_immigrants_sworn: BOOLEAN
+			-- Have all immigrants taken oath?
 		do
-			Result := sweared_immigrants = ready_immigrants
+			Result := sworn_immigrant_count = ready_immigrant_count
 		end
 
-	judge_enterance_ready: BOOLEAN
-			-- Did all the sweared immigrants leave the hall
+	has_sworn_immigrants: BOOLEAN
+			-- Have any immigrants present already taken oath?
 		do
-			Result := sweared_immigrants = 0
+			Result := sworn_immigrant_count > 0
 		end
 
-	immigrants: INTEGER
-			-- How many immigrants are present?
+feature {JUDGE} -- Access
 
-	set_judge (a_bool: BOOLEAN)
+	immigrant_count: INTEGER
+			-- How many immigrants present?
+
+feature {JUDGE} -- Status setting
+
+	set_judge_presence (a_bool: BOOLEAN)
 			-- Set judge status.
 		do
 			judge_present := a_bool
@@ -56,65 +60,64 @@ feature {JUDGE} -- Judge operations
 			-- Confirm immigrants.
 		do
 			judge_ready := False
-			ready_immigrants := 0
+			ready_immigrant_count := 0
 		ensure
 			not_judge_ready: not judge_ready
 		end
 
-feature {IMMIGRANT} -- Immigrants operations
+feature {IMMIGRANT} -- Status report
 
 	judge_ready: BOOLEAN
 			-- Is judge ready?
 
+feature {IMMIGRANT} -- Basic operations
+
 	enter_immigrant
 			-- Enter immigrant.
 		do
-			immigrants := immigrants + 1
+			immigrant_count := immigrant_count + 1
 		ensure
-			immigrants_incremented: immigrants = old immigrants + 1
+			immigrants_incremented: immigrant_count = old immigrant_count + 1
 		end
 
 	check_in
 			-- Check in.
-			-- Update ready immigrants.
 		do
-			ready_immigrants := ready_immigrants + 1
+			ready_immigrant_count := ready_immigrant_count + 1
 		ensure
-			ready_immigrants_incremented: ready_immigrants = old ready_immigrants + 1
+			ready_immigrants_incremented: ready_immigrant_count = old ready_immigrant_count + 1
 		end
 
-	swear
-			-- Swear infront of Judge.
+	take_oath
+			-- Take oath in front of Judge.
 		do
-			sweared_immigrants := sweared_immigrants + 1
+			sworn_immigrant_count := sworn_immigrant_count + 1
 		ensure
-			sweared_immigrants_incremented: sweared_immigrants = old sweared_immigrants + 1
+			sweared_immigrants_incremented: sworn_immigrant_count = old sworn_immigrant_count + 1
 		end
 
 	leave_immigrant
 			-- Leave immigrant.
 		do
-			immigrants := immigrants - 1
-			sweared_immigrants := sweared_immigrants - 1
+			immigrant_count := immigrant_count - 1
+			sworn_immigrant_count := sworn_immigrant_count - 1
 		ensure
-			immigrants_decremented: immigrants = old immigrants - 1
-			sweared_immigrants = old sweared_immigrants - 1
+			immigrants_decremented: immigrant_count = old immigrant_count - 1
+			sworn_immigrant_count = old sworn_immigrant_count - 1
 		end
 
 feature {NONE} -- Implementation
 
-	ready_immigrants: INTEGER
-			-- Ready immigrants
+	ready_immigrant_count: INTEGER
+			-- How many immigrants are checked in and ready for oath?
 
-	sweared_immigrants: INTEGER
-			-- Immigrants who did their swear
+	sworn_immigrant_count: INTEGER
+			-- How many immigrants have taken oath?
 
 invariant
 
-	ready_immigrants_bounds: ready_immigrants >= 0 and ready_immigrants <= immigrants
-
-	immigrants_ready: immigrants_ready = (immigrants = ready_immigrants)
-
-	judge_present: judge_present implies immigrants > 0
+	ready_immigrants_bounds: ready_immigrant_count >= 0 and ready_immigrant_count <= immigrant_count
+	immigrants_ready: immigrants_ready = (immigrant_count = ready_immigrant_count)
+	judge_present: judge_present implies immigrant_count > 0
 
 end

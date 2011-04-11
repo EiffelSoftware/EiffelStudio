@@ -11,7 +11,7 @@ deferred class
 feature -- Access
 
 	random_integer(a_min, a_max: INTEGER): INTEGER
-			-- What's the current random integer between a_min and a_max?
+			-- Random integer between `a_min' and `a_max'
 		require
 			a_max > a_min
 			a_min > 0
@@ -24,11 +24,6 @@ feature -- Access
 		end
 
 	random: RANDOM
-			-- Reference to the random number generator
-
-invariant
-
-	-- random_not_void: random /= Void
-	-- Doesn't work... even if correctly initialized in subclasses
+			-- Random sequence
 
 end

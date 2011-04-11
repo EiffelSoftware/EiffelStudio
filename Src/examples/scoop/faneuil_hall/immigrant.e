@@ -18,7 +18,7 @@ create {FANEUIL_HALL}
 feature {NONE} -- Implementation
 
 	type: STRING = "Immigrant"
-			-- What's the type?
+			-- Actor type
 
 	step
 			-- Do a process step.
@@ -28,7 +28,7 @@ feature {NONE} -- Implementation
 			(create {EXECUTION_ENVIRONMENT}).sleep (1000000 * random_integer (250, 500))
 			check_in (hall)
 			sit_down (hall)
-			swear(hall)
+			take_oath (hall)
 			get_certificate (hall)
 			leave (hall)
 			over := True
@@ -37,48 +37,48 @@ feature {NONE} -- Implementation
 	enter (a_hall: separate HALL)
 			-- Enter the hall.
 		require
-			not a_hall.judge_present
+			judge_not_in_hall: not a_hall.judge_present
 		do
-			io.put_string (out + " entering%N")
+			print (out + " entering%N")
 			a_hall.enter_immigrant
 		end
 
 	check_in (a_hall: separate HALL)
 			-- Check in.
 		do
-			io.put_string (out + " checking in%N")
+			print (out + " checking in%N")
 			a_hall.check_in
 		end
 
 	sit_down (a_hall: separate HALL)
 			-- Sit down.
 		require
-			a_hall.judge_ready
+			judge_ready: a_hall.judge_ready
 		do
-			io.put_string (out + " taking place%N")
+			print (out + " taking place%N")
 		end
 
-	swear (a_hall: separate HALL)
-			-- Swear.
+	take_oath (a_hall: separate HALL)
+			-- Take oath.
 		do
-			io.put_string (out + " swearing%N")
-			a_hall.swear
+			print (out + " taking oath%N")
+			a_hall.take_oath
 		end
 
 	get_certificate (a_hall: separate HALL)
-			-- Get the certificate.
+			-- Get certificate.
 		require
-			not a_hall.judge_ready
+			judge_not_ready: not a_hall.judge_ready
 		do
-			io.put_string (out + " getting certificate%N")
+			print (out + " getting certificate%N")
 		end
 
 	leave (a_hall: separate HALL)
 			-- Leave the hall.
 		require
-			not a_hall.judge_present
+			judge_not_present: not a_hall.judge_present
 		do
-			io.put_string (out + " leaving%N")
+			print (out + " leaving%N")
 			a_hall.leave_immigrant
 		end
 

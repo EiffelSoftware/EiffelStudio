@@ -17,36 +17,35 @@ create
 feature -- Initialization
 
 	make
-			-- Creation procedure.
+			-- Create and launch actors.
 		local
-			t_judge: separate JUDGE
-			t_spectator: separate SPECTATOR
-			t_immigrant: separate IMMIGRANT
-			i: INTEGER
+			l_judge: separate JUDGE
+			l_spectator: separate SPECTATOR
+			l_spectator_index: INTEGER
+			l_immigrant: separate IMMIGRANT
+			l_immigrant_index: INTEGER
+			l_seed: INTEGER
 		do
-			create random.set_seed (max_actors + 2)
-			create t_judge.make_with_hall (max_actors + 1, hall)
-			launch_actor (t_judge)
+			l_seed := (create {TIME}.make_now).seconds
+			create random.set_seed (max_actors + l_seed)
+			create l_judge.make_with_hall (max_actors + 1, hall)
+			launch_actor (l_judge)
+			across (1 |..| max_actors) as ic
 			from
-				i := 1
-			invariant
-				min_i: i >= 1
-				max_i: i <= max_actors + 1
-			variant
-				var_i: max_actors - i + 1
-			until
-				i > max_actors
+				l_spectator_index := 1
+				l_immigrant_index := 1
 			loop
 				random.forth
 				inspect random_integer (1, 2)
 				when 1 then
-					create t_spectator.make_with_hall (i, hall)
-					launch_actor (t_spectator)
+					create l_spectator.make_with_hall (l_spectator_index, hall)
+					l_spectator_index := l_spectator_index + 1
+					launch_actor (l_spectator)
 				when 2 then
-					create t_immigrant.make_with_hall (i, hall)
-					launch_actor (t_immigrant)
+					create l_immigrant.make_with_hall (l_immigrant_index, hall)
+					l_immigrant_index := l_immigrant_index + 1
+					launch_actor (l_immigrant)
 				end
-				i := i + 1
 			end
 		end
 
@@ -57,7 +56,7 @@ feature {NONE} -- Implementation
 			create Result
 		end
 
-	max_actors: INTEGER = 3
+	max_actors: INTEGER = 5
 			-- Maximum number of actors
 
 	launch_actor (a_actor: separate ACTOR)

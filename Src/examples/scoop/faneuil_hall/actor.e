@@ -36,7 +36,7 @@ feature -- Access
 			-- Id of the actor
 
 	out: STRING
-			-- How to print actor?
+			-- Printable representation
 		once
 			Result := type + "-" + id.out
 		end
@@ -47,9 +47,6 @@ feature {FANEUIL_HALL} -- Basic operations
 			-- Live.
 		do
 			from
-
-			invariant
-				-- This loop is intended to loop forever, invariant and variant are not useful.
 			until
 				over
 			loop
@@ -60,10 +57,10 @@ feature {FANEUIL_HALL} -- Basic operations
 feature {NONE} -- Implementation
 
 	hall: separate HALL
-			-- Reference to the attached separate hall
+			-- Faneuil Hall
 
 	type: STRING
-			-- What's the type of this object?
+			-- Actor type
 		deferred
 		end
 
@@ -78,7 +75,5 @@ feature {NONE} -- Implementation
 invariant
 
 	id_positive: id > 0
-
-	hall_not_void: hall /= Void
 
 end

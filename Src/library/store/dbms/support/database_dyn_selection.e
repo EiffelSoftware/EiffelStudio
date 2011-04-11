@@ -35,8 +35,13 @@ feature
 		require
 			not_void: s /= Void
 			meaning_full_statement: s.count > 0
+		local
+			l_s: STRING_32
 		do
-			prepare_32 (s)
+			l_s := s.as_string_32
+			prepare_32 (l_s)
+			s.wipe_out
+			s.append (l_s)
 		end
 
 	prepare_32 (s: STRING_32)

@@ -742,9 +742,11 @@ feature{NONE} -- Grid binding
 						add_trailer (a_referenced_class, pixmaps.icon_pixmaps.class_supliers_icon, interface_names.l_syntactical_supplier_of, a_row_node.data.grid_item)
 					end
 				end
-				if a_row_node.data.grid_row.subrow_count > 0 then
-					grid.remove_row (a_row_node.data.grid_row.subrow (1).index)
-				end
+			end
+
+				-- Clear dummy expandable item child if present.
+			if a_row_node.data.grid_row.subrow_count > 0 then
+				grid.remove_row (a_row_node.data.grid_row.subrow (1).index)
 			end
 
 				-- Bind retrieved rows in grid.
@@ -1686,7 +1688,7 @@ feature{NONE} -- Implementation/Stone
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

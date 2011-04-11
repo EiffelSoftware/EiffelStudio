@@ -629,6 +629,7 @@ feature{NONE} -- Grid binding
 			l_row, l_dependency_row: EB_CLASS_BROWSER_DEPENDENCY_ROW
 			l_grid_has_been_binded_for_current_data: BOOLEAN
 			l_post_row_bind_action: PROCEDURE [ANY, TUPLE [EV_GRID_ROW]]
+			l_row_count: INTEGER
 		do
 			l_rows := a_level.children
 			if not l_rows.is_empty then
@@ -640,7 +641,14 @@ feature{NONE} -- Grid binding
 					l_rows.after
 				loop
 					if l_rows.item_for_iteration.data.should_current_row_be_displayed then
-						a_base_row.insert_subrow (a_base_row.subrow_count + 1)
+						l_row_count := l_row_count + 1
+						if l_row_count > a_base_row.subrow_count then
+							a_base_row.insert_subrow (l_row_count)
+						else
+								-- We can reuse an existing row.
+							a_base_row.subrow (l_row_count).clear
+						end
+
 						l_grid_row := a_base_row.subrow (a_base_row.subrow_count)
 						l_starting_column := level_starting_column_index.i_th (a_level_index)
 							-- Bind subrows.
@@ -742,11 +750,6 @@ feature{NONE} -- Grid binding
 						add_trailer (a_referenced_class, pixmaps.icon_pixmaps.class_supliers_icon, interface_names.l_syntactical_supplier_of, a_row_node.data.grid_item)
 					end
 				end
-			end
-
-				-- Clear dummy expandable item child if present.
-			if a_row_node.data.grid_row.subrow_count > 0 then
-				grid.remove_row (a_row_node.data.grid_row.subrow (1).index)
 			end
 
 				-- Bind retrieved rows in grid.

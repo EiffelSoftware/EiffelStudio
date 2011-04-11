@@ -755,7 +755,13 @@ feature{NONE} -- Grid binding
 				-- Bind retrieved rows in grid.
 			l_grid_row := a_row_node.data.grid_row
 			bind_row_level (l_grid_row, a_row_node, l_level_index, False)
-			a_row_node.data.set_row_count (l_grid_row.subrow_count)
+			if a_row_node.children.count > 0 then
+				a_row_node.data.set_row_count (l_grid_row.subrow_count)
+			else
+					-- We have no result to display so we set the count to zero.
+				a_row_node.data.set_row_count (0)
+			end
+
 			a_row_node.data.refresh_row
 
 				-- Highlight selected rows (if any)

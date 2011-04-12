@@ -150,13 +150,13 @@ feature {NONE} -- Implementation
 				l_selected := selected_item
 				if item_source.valid_index (l_selected.as_integer_32 + 1) then
 					l_item := item_source.i_th (l_selected.as_integer_32 + 1)
-					if a_execution_verb = {EV_EXECUTION_VERB_CONSTANTS}.ui_executionverb_execute then
+					if a_execution_verb = {EV_EXECUTION_VERB}.execute then
 						if attached l_item.select_actions_cache as l_select_action then
 							l_select_action.call (void)
 						end
-					elseif a_execution_verb = {EV_EXECUTION_VERB_CONSTANTS}.ui_executionverb_preview then
+					elseif a_execution_verb = {EV_EXECUTION_VERB}.preview then
 
-					elseif a_execution_verb = {EV_EXECUTION_VERB_CONSTANTS}.ui_executionverb_cancelpreview then
+					elseif a_execution_verb = {EV_EXECUTION_VERB}.cancel_preview then
 
 					end
 

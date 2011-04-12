@@ -1379,9 +1379,7 @@ feature -- Removal
 			end
 			make (fn)
 			last_integer := 0
-			if attached last_string as l_last_string then
-				l_last_string.wipe_out
-			end
+			last_string.wipe_out
 			last_real := 0.0
 			last_character := '%U'
 			last_double := 0.0

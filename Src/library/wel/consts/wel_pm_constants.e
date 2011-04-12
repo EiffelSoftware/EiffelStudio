@@ -16,9 +16,13 @@ feature -- Access
 
 	Pm_noyield: INTEGER = 2;
 
+	Pm_qs_input: INTEGER = 0x4070000;
+
 	Pm_qs_paint: INTEGER = 0x200000
 
 	Pm_qs_postmessage: INTEGER = 0x980000;
+
+	Pm_qs_sendmessage: INTEGER = 0x400000;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

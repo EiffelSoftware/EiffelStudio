@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			-- Make a pen using `a_style', `a_width' and `a_color'.
 			-- See class WEL_PS_CONSTANTS for `a_style' values.
 		require
-			valid_pen_style_constant: valid_pen_style_constant (a_style)
+			valid_pen_style: valid_pen_style_constant (a_style)
 			positive_width: a_width >= 0
 			color_not_void: a_color /= Void
 		local
@@ -79,6 +79,7 @@ feature {NONE} -- Initialization
 		require
 			a_log_brush_not_void: a_log_brush /= Void
 			a_log_brush_exists: a_log_brush.exists
+			valid_extended_pen_style: valid_extended_pen_style (a_style)
 		do
 			item := cwin_ext_create_pen (a_style, a_width, a_log_brush.item, 0 , default_pointer)
 			gdi_make

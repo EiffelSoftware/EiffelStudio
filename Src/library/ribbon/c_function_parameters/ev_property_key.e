@@ -34,7 +34,8 @@ create
 	make_representative_string,
 	make_tooltip_title,
 	make_tooltip_description,
-	make_recent_items
+	make_recent_items,
+	make_color
 
 feature {NONE}  -- Initialization
 
@@ -150,6 +151,12 @@ feature {NONE}  -- Initialization
 			-- Make a recent items key
 		do
 			share_from_pointer (c_ui_pkey_recent_items)
+		end
+
+	make_color
+			-- Make a color key
+		do
+			share_from_pointer (c_ui_pkey_color)
 		end
 
 feature -- Access
@@ -300,6 +307,15 @@ feature -- Status Report
 			l_tmp: EV_PROPERTY_KEY
 		do
 			create l_tmp.make_recent_items
+			Result := l_tmp.guid.is_equal (guid)
+		end
+
+	is_color: BOOLEAN
+			-- Is current color key?
+		local
+			l_tmp: EV_PROPERTY_KEY
+		do
+			create l_tmp.make_color
 			Result := l_tmp.guid.is_equal (guid)
 		end
 
@@ -549,4 +565,15 @@ feature {NONE} -- Externals
 			]"
 		end
 
+	c_ui_pkey_color: POINTER
+			--
+		external
+			"C inline use %"UIRibbon.h%""
+		alias
+			"[
+			{
+				return &UI_PKEY_Color;
+			}
+			]"
+		end
 end

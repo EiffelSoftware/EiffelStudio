@@ -242,7 +242,8 @@ feature {NONE} -- Action handing
 						l_stone_child.same_string (constants.split_button) or else
 						l_stone_child.same_string (constants.drop_down_gallery) or else
 						l_stone_child.same_string (constants.in_ribbon_gallery) or else
-						l_stone_child.same_string (constants.split_button_gallery)
+						l_stone_child.same_string (constants.split_button_gallery) or else
+						l_stone_child.same_string (constants.drop_down_color_picker)
 				elseif a_parent_type.same_string (constants.split_button) then
 					Result := l_stone_child.same_string (constants.button)
 				elseif a_parent_type.same_string (constants.ribbon_application_menu) then

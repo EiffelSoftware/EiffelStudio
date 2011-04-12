@@ -44,7 +44,6 @@ feature {NONE} -- Initialization
 			l_context_menu: EV_TREE_ITEM
 
 			l_ribbon_application_menu, l_ribbon_group: EV_TREE_ITEM
-			l_menu_group: EV_TREE_ITEM
 			l_ribbon_contextual_tabs: EV_TREE_ITEM
 			l_ribbon_help_button: EV_TREE_ITEM
 			l_ribbon_quick_access_toolbar: EV_TREE_ITEM
@@ -173,6 +172,7 @@ feature {NONE} -- Implementation
 			l_split_button_gallery: EV_TREE_ITEM
 --			l_toggle_button: EV_TREE_ITEM
 			l_drop_down_button: EV_TREE_ITEM
+			l_drop_down_color_picker: EV_TREE_ITEM
 		do
 			create l_button.make_with_text (constants.button)
 			l_button.set_pebble (constants.button)
@@ -218,6 +218,10 @@ feature {NONE} -- Implementation
 			create l_drop_down_button.make_with_text (constants.drop_down_button)
 			l_drop_down_button.set_pebble (constants.drop_down_button)
 			a_parent.extend (l_drop_down_button)
+
+			create l_drop_down_color_picker.make_with_text (constants.drop_down_color_picker)
+			l_drop_down_color_picker.set_pebble (constants.drop_down_color_picker)
+			a_parent.extend (l_drop_down_color_picker)
 		end
 
 	content: SD_CONTENT

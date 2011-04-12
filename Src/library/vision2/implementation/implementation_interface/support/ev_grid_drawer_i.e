@@ -936,7 +936,7 @@ feature -- Basic operations
 												-- the row list is resized, which produces a new object.
 											current_row_list := grid_rows_data_list @ (current_row_index)
 										end
-											-- Resize the bufer if required. The buffer is only every increased and never decreased
+											-- Resize the buffer if required. The buffer is only every increased and never decreased
 											-- as this prevents us from having to continuously change its size, which is an
 											-- unecessary overhead.
 										if item_buffer_pixmap.width < current_column_width or item_buffer_pixmap.height < current_row_height then
@@ -961,8 +961,6 @@ feature -- Basic operations
 										else
 											item_buffer_pixmap.set_foreground_color (g.displayed_background_color (current_column_index, current_row_index))
 										end
-											-- Now draw the complete background area for the cell in the grid that is currently being drawn.
-											fixme (Once "For drawable grid items, there is no need to do this, preventing overdraw.")
 										item_buffer_pixmap.fill_rectangle (0, 0, current_column_width, current_row_height)
 
 											-- Fire the `pre_draw_overlay_actions' which enable a user to draw on top of the background
@@ -1431,7 +1429,6 @@ feature {NONE} -- Implementation
 		once
 			Result := (create {EV_STOCK_COLORS}).gray
 		end
-
 
 	horizontal_border_width: INTEGER = 3
 		-- Border from edge of text to edge of grid items.

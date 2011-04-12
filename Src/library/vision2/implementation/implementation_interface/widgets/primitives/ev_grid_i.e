@@ -2219,23 +2219,29 @@ feature -- Status report
 		local
 			l_result: detachable EV_COLOR
 			l_column_i: detachable EV_GRID_COLUMN_I
+			l_row_i: EV_GRID_ROW_I
 		do
 			if are_columns_drawn_above_rows then
 				l_column_i := (columns @ (a_column))
 				check l_column_i /= Void end
 				l_result := l_column_i.background_color
-				if l_result = Void then
-					l_result := row_internal (a_row).background_color
-					if l_result = Void then
-						l_result := background_color
+			end
+
+			if l_result = Void then
+				l_row_i := row_internal (a_row)
+				l_result := l_row_i.background_color
+				if l_result /= Void and then is_tree_enabled and then (l_row_i.parent_row_i /= Void or l_row_i.subrow_count > 0) then
+						-- We are a tree row so we discard the row color if less than the first item index.
+					if a_column < l_row_i.index_of_first_item then
+						l_result := Void
 					end
 				end
-			else
-				l_result := row_internal (a_row).background_color
 				if l_result = Void then
-					l_column_i := (columns @ (a_column))
-					check l_column_i /= Void end
-					l_result := l_column_i.background_color
+					if not are_columns_drawn_above_rows then
+						l_column_i := (columns @ (a_column))
+						check l_column_i /= Void end
+						l_result := l_column_i.background_color
+					end
 					if l_result = Void then
 						l_result := background_color
 					end
@@ -3742,7 +3748,6 @@ feature {EV_GRID_DRAWER_I, EV_GRID_COLUMN_I, EV_GRID_ROW_I, EV_GRID_ITEM_I, EV_G
 			create Result
 		end
 
-
 	node_pixmap_width: INTEGER
 		-- Width of node pixmaps.
 
@@ -4174,18 +4179,21 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 			vertical_scroll_bar.hide
 			vertical_scroll_bar.set_leap (default_scroll_bar_leap)
 			vertical_scroll_bar.set_step (default_scroll_bar_step)
-			vertical_scroll_bar.change_actions.extend (agent vertical_scroll_bar_changed)
+
+
 			create horizontal_scroll_bar
 			horizontal_scroll_bar.set_step (default_scroll_bar_step)
 			horizontal_scroll_bar.set_leap (default_scroll_bar_leap)
-			horizontal_scroll_bar.change_actions.extend (agent horizontal_scroll_bar_changed)
+
 			create horizontal_box
 			create vertical_box
 			horizontal_box.extend (vertical_box)
+
 			create l_vertical_box
 			horizontal_box.extend (l_vertical_box)
 			l_vertical_box.extend (vertical_scroll_bar)
 			horizontal_box.disable_item_expand (l_vertical_box)
+
 			create scroll_bar_spacer
 			l_vertical_box.extend (scroll_bar_spacer)
 			l_vertical_box.disable_item_expand (scroll_bar_spacer)
@@ -4198,6 +4206,7 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 
 			create static_fixed
 			static_fixed.set_minimum_size (static_fixed_x_offset * 2, static_fixed_y_offset * 2)
+
 			create static_fixed_viewport
 			static_fixed_viewport.resize_actions.extend (agent resize_viewport_in_static_fixed)
 			vertical_box.extend (static_fixed_viewport)
@@ -4215,9 +4224,6 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 			create header
 				-- Now connect events to `header' which are used to update the "physical size" of
 				-- Current in response to their re-sizing.
-			header.item_resize_start_actions.extend (agent header_item_resize_started)
-			header.item_resize_actions.extend (agent header_item_resizing)
-			header.item_resize_end_actions.extend (agent header_item_resize_ended)
 
 			header_viewport.extend (header)
 			header_viewport.set_minimum_height (header.height)
@@ -4255,24 +4261,12 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 				-- Note that not all events must be connected, only those that are not dependent on the widget having the
 				-- focus, such as mouse events. For those that rely on the focus, only `drawable' will be able to receive the
 				-- focus so is the only widget to which they must be connected.
-			header.pointer_motion_actions.extend (agent pointer_motion_received_header (?, ?, ?, ?, ?, ?, ?))
-			header.pointer_button_press_actions.extend (agent pointer_button_press_received_header (?, ?, ?, ?, ?, ?, ?, ?))
-			header.pointer_double_press_actions.extend (agent pointer_double_press_received_header (?, ?, ?, ?, ?, ?, ?, ?))
-			header.pointer_button_release_actions.extend (agent pointer_button_release_received_header (?, ?, ?, ?, ?, ?, ?, ?))
-			header.pointer_enter_actions.extend (agent pointer_enter_received)
-			header.pointer_leave_actions.extend (agent pointer_leave_received)
 
-			vertical_scroll_bar.pointer_motion_actions.extend (agent pointer_motion_received_vertical_scroll_bar (?, ?, ?, ?, ?, ?, ?))
-			vertical_scroll_bar.pointer_enter_actions.extend (agent pointer_enter_received)
-			vertical_scroll_bar.pointer_leave_actions.extend (agent pointer_leave_received)
 
-			horizontal_scroll_bar.pointer_motion_actions.extend (agent pointer_motion_received_horizontal_scroll_bar (?, ?, ?, ?, ?, ?, ?))
-			horizontal_scroll_bar.pointer_enter_actions.extend (agent pointer_enter_received)
-			horizontal_scroll_bar.pointer_leave_actions.extend (agent pointer_leave_received)
-
-			scroll_bar_spacer.pointer_motion_actions.extend (agent pointer_motion_received_scroll_bar_spacer (?, ?, ?, ?, ?, ?, ?))
-			scroll_bar_spacer.pointer_enter_actions.extend (agent pointer_enter_received)
-			scroll_bar_spacer.pointer_leave_actions.extend (agent pointer_leave_received)
+			initialize_header_events (header)
+			initialize_vertical_scroll_bar_events (vertical_scroll_bar)
+			initialize_horizontal_scroll_bar_events (horizontal_scroll_bar)
+			initialize_scroll_bar_spacer_events (scroll_bar_spacer)
 
 
 
@@ -4307,6 +4301,46 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 			header.set_grid (Current)
 			extend (horizontal_box)
 			set_state_flag (interface_is_initialized_flag, False)
+		end
+
+	initialize_header_events (a_header: like header)
+			-- Initialize events for `a_header'.
+		do
+			a_header.item_resize_start_actions.extend (agent header_item_resize_started)
+			a_header.item_resize_actions.extend (agent header_item_resizing)
+			a_header.item_resize_end_actions.extend (agent header_item_resize_ended)
+			a_header.pointer_motion_actions.extend (agent pointer_motion_received_header (?, ?, ?, ?, ?, ?, ?))
+			a_header.pointer_button_press_actions.extend (agent pointer_button_press_received_header (?, ?, ?, ?, ?, ?, ?, ?))
+			a_header.pointer_double_press_actions.extend (agent pointer_double_press_received_header (?, ?, ?, ?, ?, ?, ?, ?))
+			a_header.pointer_button_release_actions.extend (agent pointer_button_release_received_header (?, ?, ?, ?, ?, ?, ?, ?))
+			a_header.pointer_enter_actions.extend (agent pointer_enter_received)
+			a_header.pointer_leave_actions.extend (agent pointer_leave_received)
+		end
+
+	initialize_vertical_scroll_bar_events (a_vertical_scroll_bar: like vertical_scroll_bar)
+			-- Initialize events for `a_vertical_scroll_bar'.
+		do
+			a_vertical_scroll_bar.change_actions.extend (agent vertical_scroll_bar_changed)
+			a_vertical_scroll_bar.pointer_motion_actions.extend (agent pointer_motion_received_vertical_scroll_bar (?, ?, ?, ?, ?, ?, ?))
+			a_vertical_scroll_bar.pointer_enter_actions.extend (agent pointer_enter_received)
+			a_vertical_scroll_bar.pointer_leave_actions.extend (agent pointer_leave_received)
+		end
+
+	initialize_horizontal_scroll_bar_events (a_horizontal_scroll_bar: like horizontal_scroll_bar)
+			-- Initialize events for `a_horizontal_scroll_bar'.
+		do
+			a_horizontal_scroll_bar.change_actions.extend (agent horizontal_scroll_bar_changed)
+			a_horizontal_scroll_bar.pointer_motion_actions.extend (agent pointer_motion_received_horizontal_scroll_bar (?, ?, ?, ?, ?, ?, ?))
+			a_horizontal_scroll_bar.pointer_enter_actions.extend (agent pointer_enter_received)
+			a_horizontal_scroll_bar.pointer_leave_actions.extend (agent pointer_leave_received)
+		end
+
+	initialize_scroll_bar_spacer_events (a_scroll_bar_spacer: like scroll_bar_spacer)
+			-- Initialize events for `a_scroll_bar_spacer'.
+		do
+			a_scroll_bar_spacer.pointer_motion_actions.extend (agent pointer_motion_received_scroll_bar_spacer (?, ?, ?, ?, ?, ?, ?))
+			a_scroll_bar_spacer.pointer_enter_actions.extend (agent pointer_enter_received)
+			a_scroll_bar_spacer.pointer_leave_actions.extend (agent pointer_leave_received)
 		end
 
 	resize_viewport_in_static_fixed (an_x, a_y, a_width, a_height: INTEGER)
@@ -5207,7 +5241,7 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 			pointed_item: detachable EV_GRID_ITEM
 		do
 			pointed_widget := screen.widget_at_mouse_pointer
-			if pointed_widget /= drawable and then pointed_widget /= horizontal_scroll_bar and then pointed_widget /= vertical_scroll_bar and then pointed_widget /= header then
+			if pointed_widget /= drawable and then (is_horizontal_scroll_bar_show_requested implies pointed_widget /= horizontal_scroll_bar) and then (is_vertical_scroll_bar_show_requested implies pointed_widget /= vertical_scroll_bar) and then (is_header_displayed implies pointed_widget /= header) then
 				if pointer_leave_actions_internal /= Void then
 					pointer_leave_actions.call (Void)
 				end
@@ -5232,7 +5266,7 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 		do
 			l_last_pointed_item := last_pointed_item
 			pointed_widget := screen.widget_at_mouse_pointer
-			if pointed_widget /= horizontal_scroll_bar and pointed_widget /= vertical_scroll_bar and pointed_widget /= header then
+			if (is_horizontal_scroll_bar_show_requested implies pointed_widget /= horizontal_scroll_bar) and then (is_vertical_scroll_bar_show_requested implies pointed_widget /= vertical_scroll_bar) and then (is_header_displayed implies pointed_widget /= header) then
 				if pointer_leave_actions_internal /= Void then
 					pointer_leave_actions.call (Void)
 				end
@@ -5438,12 +5472,12 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 						a_key.code
 					when {EV_KEY_CONSTANTS}.Key_down then
 						a_sel_item := find_next_item_in_column (prev_sel_item.column, prev_sel_item.row.index, True, is_row_selection_enabled or else ((a_sel_row.subrow_count > 0 or else a_sel_row.parent_row /= Void) and then a_sel_row.index_of_first_item = prev_sel_item.column.index))
-						l_make_item_visible := vertical_scroll_bar.is_displayed
+						l_make_item_visible := is_vertical_scroll_bar_show_requested and then vertical_scroll_bar.is_displayed
 					when {EV_KEY_CONSTANTS}.Key_up then
 						a_sel_item := find_next_item_in_column (prev_sel_item.column, prev_sel_item.row.index, False, is_row_selection_enabled or else ((a_sel_row.subrow_count > 0 or else a_sel_row.parent_row /= Void) and then a_sel_row.index_of_first_item = prev_sel_item.column.index))
-						l_make_item_visible := vertical_scroll_bar.is_displayed
+						l_make_item_visible := is_vertical_scroll_bar_show_requested and then vertical_scroll_bar.is_displayed
 					when {EV_KEY_CONSTANTS}.Key_right then
-						l_make_item_visible := horizontal_scroll_bar.is_displayed
+						l_make_item_visible := is_horizontal_scroll_bar_show_requested and then horizontal_scroll_bar.is_displayed
 						if not is_row_selection_enabled then
 								-- Key right shouldn't affect row selection
 							if not is_item_navigatable_to (prev_sel_item) then

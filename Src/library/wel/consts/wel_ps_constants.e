@@ -23,7 +23,7 @@ feature -- Access (Extended Style constants for use in conjunction with {WEL_PEN
 
 	Ps_userstyle: INTEGER = 	0x00000007
 	Ps_alternate: INTEGER = 	0x00000008
-		-- Mutually exclusive pen style constants for use with {WEL_PEN}.make_from_brush.
+		-- Mutually exclusive pen style constants.
 
 	Ps_cosmetic: INTEGER = 		0x00000000
 	Ps_geometric: INTEGER = 	0x00010000

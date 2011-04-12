@@ -49,10 +49,10 @@ feature -- Access
 
 feature {EXCEPTION_MANAGER} -- Status setting
 
-	set_error_code (a_code: like Error_code)
-			-- Set `Error_code' with `a_code'
+	set_error_code (a_code: like error_code)
+			-- Set `error_code' with `a_code'
 		do
-			Error_code := a_code
+			error_code := a_code
 		end
 
 feature {NONE} -- Accesss

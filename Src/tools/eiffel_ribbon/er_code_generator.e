@@ -257,6 +257,12 @@ feature {ER_CODE_GENERATOR_FOR_APPLICATION_MENU} -- Command
 					l_gen_info.set_default_item_class_name_prefix ("RIBBON_DROP_DOWN_GALLERY_IMP_")
 					l_gen_info.set_item_file ("ribbon_drop_down_gallery")
 					l_gen_info.set_item_imp_file ("ribbon_drop_down_gallery_imp")
+				elseif a_group_node.item.text.same_string ({ER_XML_CONSTANTS}.drop_down_color_picker) then
+					create l_gen_info
+					l_gen_info.set_default_item_class_imp_name_prefix ("RIBBON_DROP_DOWN_COLOR_PICKER_")
+					l_gen_info.set_default_item_class_name_prefix ("RIBBON_DROP_DOWN_COLOR_PICKER_IMP_")
+					l_gen_info.set_item_file ("ribbon_drop_down_color_picker")
+					l_gen_info.set_item_imp_file ("ribbon_drop_down_color_picker_imp")
 				elseif a_group_node.item.text.same_string ({ER_XML_CONSTANTS}.in_ribbon_gallery) then
 					create l_gen_info
 					l_gen_info.set_default_item_class_imp_name_prefix ("RIBBON_IN_RIBBON_GALLERY_")
@@ -1465,6 +1471,16 @@ feature {NONE} -- Implementation
 					else
 						l_generated.replace_substring_all ("$INDEX_1", "drop_down_gallery_" + (button_counter + l_index).out)
 						l_generated.replace_substring_all ("$INDEX_2", "RIBBON_DROP_DOWN_GALLERY_" + (button_counter + l_index).out)
+					end
+				elseif a_group_node.i_th (l_index).text.same_string (l_constants.drop_down_color_picker) then
+					if attached {ER_TREE_NODE_DATA} a_group_node.i_th (l_index).data as l_data
+						and then attached l_data.command_name as l_identify_name
+						and then not l_identify_name.is_empty then
+						l_generated.replace_substring_all ("$INDEX_1", l_identify_name.as_lower)
+						l_generated.replace_substring_all ("$INDEX_2", l_identify_name.as_upper)
+					else
+						l_generated.replace_substring_all ("$INDEX_1", "drop_down_color_picker_" + (button_counter + l_index).out)
+						l_generated.replace_substring_all ("$INDEX_2", "RIBBON_DROP_DOWN_COLOR_PICKER_" + (button_counter + l_index).out)
 					end
 				elseif a_group_node.i_th (l_index).text.same_string (l_constants.in_ribbon_gallery) then
 					if attached {ER_TREE_NODE_DATA} a_group_node.i_th (l_index).data as l_data

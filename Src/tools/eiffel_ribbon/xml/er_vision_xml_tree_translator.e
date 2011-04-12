@@ -155,7 +155,6 @@ feature {NONE} -- Tree saving
 			not_void: a_tree_node /= Void
 		local
 			l_xml_item, l_last_parent: XML_ELEMENT
-			l_data_list: ARRAYED_LIST [ER_TREE_NODE_DATA]
 			l_attribute: XML_ATTRIBUTE
 		do
 			if attached {EV_TREE_ITEM} a_tree_node as l_tree_item_menu and then
@@ -574,6 +573,8 @@ feature {NONE} -- Tree saving
 						add_xml_split_button_node (l_group_node, a_group_tree_node.item)
 					elseif a_group_tree_node.item.text.same_string (l_xml_constants.drop_down_gallery) then
 						add_xml_drop_down_gallery_node (l_group_node, a_group_tree_node.item)
+					elseif a_group_tree_node.item.text.same_string (l_xml_constants.drop_down_color_picker) then
+						add_xml_drop_down_color_picker_node (l_group_node, a_group_tree_node.item)
 					elseif a_group_tree_node.item.text.same_string (l_xml_constants.in_ribbon_gallery) then
 						add_xml_in_ribbon_gallery_node (l_group_node, a_group_tree_node.item)
 					elseif a_group_tree_node.item.text.same_string (l_xml_constants.split_button_gallery) then
@@ -810,6 +811,38 @@ feature {NONE} -- Tree saving
 			l_flow_menu_layout.add_attribute (l_attribute.rows, name_space, a_data.rows.out)
 			l_flow_menu_layout.add_attribute (l_attribute.columns, name_space, a_data.columns.out)
 			l_flow_menu_layout.add_attribute (l_attribute.gripper, name_space, "None") -- FIXME: NONE for test
+		end
+
+	add_xml_drop_down_color_picker_node (a_group_node: XML_ELEMENT; a_button_tree_node: EV_TREE_NODE)
+			--
+		require
+			not_void: a_group_node /= Void
+			valid: a_group_node.name.same_string (xml_constants.group)
+		local
+			l_button_node: XML_ELEMENT
+			l_constants: ER_XML_ATTRIBUTE_CONSTANTS
+		do
+			if attached {EV_TREE_ITEM} a_button_tree_node as l_item then
+				check l_item.text.same_string (xml_constants.drop_down_color_picker) end
+
+				create l_button_node.make (a_group_node, xml_constants.drop_down_color_picker, name_space)
+				a_group_node.put_last (l_button_node)
+
+				if attached {ER_TREE_NODE_DROP_DOWN_COLOR_PICKER_DATA} a_button_tree_node.data as l_data then
+					create l_constants
+
+					-- Add xml attribute
+					if attached l_data.command_name as l_command_name and then not l_command_name.is_empty then
+						l_button_node.add_attribute (l_constants.command_name, name_space, l_command_name)
+
+						-- Add coresspond command xml node
+						add_xml_command_node (l_data)
+					end
+					if attached l_data.color_template as l_color_template and then not l_color_template.is_empty then
+						l_button_node.add_attribute (l_constants.color_template, name_space, l_color_template)
+					end
+				end
+			end
 		end
 
 	add_xml_drop_down_gallery_node (a_group_node: XML_ELEMENT; a_button_tree_node: EV_TREE_NODE)

@@ -63,6 +63,8 @@ feature -- Factory method
 				create {ER_TREE_NODE_DROP_DOWN_BUTTON_DATA} Result.make
 			elseif a_type.same_string (constants.ribbon_helpbutton) then
 				create {ER_TREE_NODE_HELP_BUTTON_DATA} Result.make
+			elseif a_type.same_string (constants.drop_down_color_picker) then
+				create {ER_TREE_NODE_DROP_DOWN_COLOR_PICKER_DATA} Result.make
 			else
 				--no data for `a_type'
 				-- Maybe `a_type' is "Application". It should not have any tree node data

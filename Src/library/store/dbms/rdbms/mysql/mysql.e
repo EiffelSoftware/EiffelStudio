@@ -161,7 +161,7 @@ feature -- DATABASE_STRING
 	sql_name_string: STRING
 			-- The name of the MySQL type that represents a string
 		do
-			Result := "VARCHAR"
+			Result := "VARCHAR (255)"
 		end
 
 	map_var_name_32 (a_para: READABLE_STRING_GENERAL): STRING_32
@@ -274,7 +274,7 @@ feature -- For DATABASE_PROC
 
 	support_stored_proc: BOOLEAN = True
 
-	sql_as: STRING = " AS BEGIN "
+	sql_as: STRING = " BEGIN "
 
 	sql_end: STRING = "; END;"
 

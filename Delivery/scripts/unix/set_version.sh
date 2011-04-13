@@ -5,7 +5,7 @@
 # $2 = pattern to transform
 # $3 = file to process if any, otherwise display version on output
 
-computed_svn_revision=`until svn info $1; do echo ""; done | grep "Last Changed Rev" | sed -e "s/Last Changed Rev: //"`
+computed_svn_revision=`until svn info $1; do sleep 10; done | grep "Last Changed Rev" | sed -e "s/Last Changed Rev: //"`
 if [ "$2" = "" -o "$3" = "" ]; then
 	echo $computed_svn_revision
 else

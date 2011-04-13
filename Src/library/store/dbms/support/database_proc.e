@@ -341,6 +341,12 @@ feature {NONE} -- Implementation
 						if db_spec.has_row_number then
 							row_number := temp_int.item
 						end
+					elseif attached {INTEGER_64_REF} tuple.item (1) as temp_int64 then
+							-- MySQL returns an integer_64 for count(*).
+						p_exists := temp_int64.item > 0
+						if db_spec.has_row_number then
+							row_number := temp_int64.item.as_integer_32
+						end
 					else
 						if attached {DOUBLE_REF} tuple.item (1) as temp_dble then
 							p_exists := temp_dble > 0.0

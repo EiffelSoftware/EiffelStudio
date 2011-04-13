@@ -1,4 +1,4 @@
-note
+﻿note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -8,6 +8,10 @@ class RUNNER_MYSQL
 
 inherit
 	RDB_HANDLE
+
+	GLOBAL_SETTINGS
+
+	LOCALIZED_PRINTER
 
 create
 	make
@@ -24,7 +28,7 @@ feature {NONE}
 
 	data_file: detachable PLAIN_TEXT_FILE
 
-	book: BOOK2
+	book: BOOK3
 
 feature
 
@@ -34,6 +38,9 @@ feature
 			l_laststring: detachable STRING
 			l_repository: like repository
 		do
+					-- Use extended types, so that Unicode is supported.
+			set_use_extended_types (True)
+
 			io.putstring ("Database user authentication:%N")
 
 			io.putstring ("Schema Name: ")
@@ -82,69 +89,66 @@ feature {NONE}
 
 	make_change_ing
 		local
-			author: STRING
+			title: STRING_32
 			price: REAL
 			pub_date: DATE_TIME
 			l_proc: like proc
-			l_laststring: detachable STRING
 		do
-			create author.make (10)
+			create title.make (10)
 			price := 222
 			create pub_date.make_now
 
 			create l_proc.make (Proc_name)
 			proc := l_proc
 			l_proc.load
-			l_proc.set_arguments (<<"new_author", "new_price", "new_date">>,
-						<<author, price, pub_date >>)
+			l_proc.set_arguments_32 (<<{STRING_32}"new_title", {STRING_32}"new_price", {STRING_32}"new_date">>,
+						<<title, price, pub_date >>)
 
 			if l_proc.exists then
-				io.putstring ("Stored procedure text: ")
-				io.putstring (l_proc.text)
-				io.new_line
+				if attached l_proc.text_32 as l_text then
+					io.putstring ("Stored procedure text: ")
+					io.putstring (l_text)
+					io.new_line
+				end
 			else
 				l_proc.store (Select_text)
-				io.putstring ("Procedure created.%N")
-				l_proc.load
+				if l_proc.is_ok then
+					l_proc.load
+					io.putstring ("Procedure created.%N")
+				else
+					io.putstring ("Procedure creation failed.%N")
+				end
 			end
 
-			from
-				io.putstring ("Author? ('exit' to terminate):")
-				io.readline
-			until
-				io.laststring ~ ("exit")
-			loop
-				l_laststring := io.laststring
-				check l_laststring /= Void end -- implied by `readline' postcondition
-				author := l_laststring.twin
-				io.putstring ("Updating books whose author's name match: ")
-				io.putstring (author)
-				io.new_line
+			if l_proc.exists then
+
+				title := {STRING_32}"面向对象软件构造"
+				io.putstring ("Updating for books whose title's name match: ")
+				localized_print (title)
 				io.new_line
 
-				base_change.set_map_name (pub_date, "new_date")
+				base_change.set_map_name (title, "new_title")
 				base_change.set_map_name (price, "new_price")
-				base_change.set_map_name (author, "new_author")
+				base_change.set_map_name (pub_date, "new_date")
+
 
 				l_proc.execute (base_change)
 
-				base_change.unset_map_name ("new_author")
+				base_change.unset_map_name ("new_title")
 				base_change.unset_map_name ("new_price")
 				base_change.unset_map_name ("new_date")
 
 				io.new_line
-				io.putstring ("Author? ('exit' to terminate):")
-				io.readline
 			end
 		end
 
 feature {NONE}
 
-	Select_text: STRING = "update DB_BOOK set price = new_price, year = new_date where author = new_author"
+	Select_text: STRING_32 = "update DB_BOOK_EXTENDED set year = new_date, price = new_price where title = new_title"
 
-	Table_name: STRING = "DB_BOOK"
+	Table_name: STRING_32 = "DB_BOOK_EXTENDED"
 
-	Proc_name: STRING = "DB_BOOK_PROC";
+	Proc_name: STRING_32 = "DB_BOOK_PROC_2";
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

@@ -202,9 +202,9 @@ feature {APPLICATION_EXECUTION} -- IPC communication implementation
 	recv_dead (p_err: TYPED_POINTER [INTEGER]): BOOLEAN
 			-- if `p_err' /= 0, then it indicates an error with IPC
 		external
-			"C inline"
+			"C"
 		alias
-			"(EIF_BOOLEAN)recv_dead($p_err)"
+			"recv_dead"
 		end;
 
 	c_twrite (data: POINTER; size: INTEGER)

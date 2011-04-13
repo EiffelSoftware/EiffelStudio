@@ -138,7 +138,9 @@ feature {NONE} -- Basic operations
 						l_error.associated_feature := l_feature
 					end
 
+					event_list.service.lock
 					event_list.service.put_event_item (c_compiler_context, l_item)
+					event_list.service.unlock
 				end
 			end
 
@@ -228,7 +230,7 @@ invariant
 	error_list_preferences_attached: attached error_list_preferences
 
 ;note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

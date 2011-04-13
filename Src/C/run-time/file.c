@@ -154,6 +154,21 @@ rt_private int unlink(char *path);
 #endif
 #endif
 
+/* Some system routine calls can be interrupted by a signal, we reemit
+ * them until they are not interrupted anymore . */
+#define EIF_REPEAT_INTERRUPTED_CALL(status,func) \
+	for (;;) { \
+		errno = 0;					/* Reset error condition */ \
+		status = (func);			/* Attempt function call */ \
+		if (status == - 1) {		/* An error occurred */ \
+			if (errno == EINTR) {	/* Interrupted by signal */ \
+				continue;			/* Re-issue system call */ \
+			} else { \
+				esys();				/* Raise exception */ \
+			} \
+		} \
+		break; \
+	}
 
 /*
  * Opening a file.
@@ -910,17 +925,7 @@ rt_public void file_chown(char *name, int uid)
 	file_stat(name, &buf);
 	gid = buf.st_gid;					/* Get GID on file */
 
-	for (;;) {
-		errno = 0;						/* Reset error condition */
-		status = chown(name, uid, gid);	/* Attempt change */
-		if (status == -1) {				/* An error occurred */
-			if (errno == EINTR)			/* Interrupted by signal */
-				continue;				/* Re-issue system call */
-			else
-				esys();					/* Raise exception */
-		}
-		break;
-	}
+	EIF_REPEAT_INTERRUPTED_CALL(status, chown(name, uid, gid));
 #endif
 }
 
@@ -936,59 +941,61 @@ rt_public void file_chgrp(char *name, int gid)
 	file_stat(name, &buf);
 	uid = buf.st_uid;					/* Get UID on file */
 
-	for (;;) {
-		errno = 0;						/* Reset error condition */
-		status = chown(name, uid, gid);	/* Attempt change */
-		if (status == -1) {				/* An error occurred */
-			if (errno == EINTR)			/* Interrupted by signal */
-				continue;				/* Re-issue system call */
-			else
-				esys();					/* Raise exception */
-		}
-		break;
-	}
+	EIF_REPEAT_INTERRUPTED_CALL(status, chown(name, uid, gid));
 #endif
 }
 
-rt_public void file_stat (char *path, struct stat *buf)
-           				/* Path name */
-                 		/* Structure to fill in */
-{
-	/* This is an encapsulation of the stat() system call. The routine either
-	 * succeeds and returns or fails and raises the appropriate exception.
-	 */
-
+/*
+doc:	<routine name="eif_file_stat" return_type="int" export="public">
+doc:		<summary>Query information about a file. If `follow' is non-zero then it tries to follow the symbolic link, otherwise it doesn't.</>
+doc:		<param name="path" type="char *">Name of the file we need info.</param>
+doc:		<param name="buf" type="struct stat *">Buffer collecting the info about the file.</param>
+doc:		<param name="follow" type="int">Should we follow symbolic links?</param>
+doc:		<return>0 if it succeeds, -1 otherwise. Upon failure `errno' is set with the reason code.</return>
+doc:		<thread_safety>Re-entrant</thread_safety>
+doc:	</routine>
+*/
+rt_public int eif_file_stat (char *path, struct stat *buf, int follow) {
 	int status;			/* System call status */
 	
 	for (;;) {
 		errno = 0;						/* Reset error condition */
 #ifdef HAS_LSTAT
 		status = lstat(path, buf);
-		if (status == 0) {
-			/* We found a file, not let's check if it is not a symbolic link,
-			 * if it is the case, we need to call `stat' to make sure the link
-			 * is valid. It is going to slow down current call by stating twice
-			 * the info, but this case is quite rare and there is a benefit
-			 * in using `lstat' over `stat' the first time as more than 90%
-			 * of the files we stat are not symlink. */
-			if (S_ISLNK(buf->st_mode)) {
-				status = stat (path, buf);
-			}
+		if ((status == 0) && (follow) && (S_ISLNK(buf->st_mode))) {
+				/* We found a file which is a symbolic link and we are asked to
+				 * follow the link to fetch properties on the link location.
+				 * We call `stat' to make sure the link is valid. It is going to
+				 * slow down current call by stating twice the info, but this
+				 * case is quite rare and there is a benefit in using `lstat'
+				 * over `stat' the first time as more than 90% of the files
+				 * we stat are not symlink. */
+			status = stat (path, buf);
 		}
 #else
 		status = stat(path, buf);		/* Get file statistics */
 #endif
-		if (status == -1) {				/* An error occurred */
-			if (errno == EINTR)			/* Interrupted by signal */
-				continue;				/* Re-issue system call */
-			else
-				esys();					/* Raise exception */
+		if ((status == -1) && (errno == EINTR)) {
+				/* Call was interrupted by a signal we re-issue it. */
+			continue;
 		}
 		break;
 	}
 #if defined EIF_VMS && defined _VMS_V6_SOURCE
 	buf->st_uid &= 0x0000FFFF ;		/* VMS: mask out group id */
 #endif
+
+	return status;
+}
+
+rt_public void file_stat (char *path, struct stat *buf)
+           				/* Path name */
+                 		/* Structure to fill in */
+{
+		/* To preserve compatibility we always follow symbolic links and raise an exception upon failure. */
+	if (eif_file_stat(path, buf, 1) == -1) {
+		esys();
+	}
 }
 
 rt_public EIF_INTEGER file_info (struct stat *buf, int op)
@@ -1201,21 +1208,9 @@ rt_public EIF_BOOLEAN file_exists(char *name)
 
 	int status;					/* System call status */
 	struct stat buf;			/* Buffer to get file statistics */
-	
-#ifdef HAS_LSTAT
-	status = lstat(name, &buf);	/* Attempt to stat file */
-	if (status == 0) {
-		/* We found a file, not let's check if it is not a symbolic link,
-		 * if it is the case, we need to call `stat' to make sure the link
-		 * is valid. */
-		if (S_ISLNK(buf.st_mode)) {
-			status = stat (name, &buf);
-		}
-	}
-#else
-	status = stat (name, &buf);
-#endif
 
+	status = eif_file_stat (name, &buf, 1);
+	
 #if (EIF_OS == EIF_OS_SUNOS) || (EIF_OS == EIF_OS_LINUX)
 	if (status == -1) {
 			/* If the file is larger than what our file routines can handle
@@ -1241,13 +1236,9 @@ rt_public EIF_BOOLEAN file_path_exists(char *name)
 
 	int status;
 	struct stat buf;			/* Buffer to get file statistics */
-	
-#ifdef HAS_LSTAT
-	status = lstat(name, &buf);
-#else
-	status = stat(name, &buf);
-#endif
 
+	status = eif_file_stat (name, &buf, 0);
+	
 #if (EIF_OS == EIF_OS_SUNOS) || (EIF_OS == EIF_OS_LINUX)
 	if (status == -1) {
 			/* If the file is larger than what our file routines can handle
@@ -1276,78 +1267,67 @@ rt_public void file_rename(char *from, char *to)
 
 	int status;			/* System call status */
 	
-	for (;;) {
 #if defined EIF_WINDOWS || defined EIF_OS2
-		if (file_exists (to)) {
-				/* To have the same behavior as Unix, we need to remove the destination file if it exists.
-				 * Of course we can do this only if `from' and `to' do not represent the same file.
-				 * To check this, we use `CreateFile' to open both file, and then using the information
-				 * returned by `GetFileInformationByHandle' we can check whether or not they are indeed
-				 * the same. */
-			BY_HANDLE_FILE_INFORMATION l_to_info, l_from_info;
-			HANDLE l_from_file = CreateFile (from, GENERIC_READ, FILE_SHARE_READ, NULL,
+	if (file_exists (to)) {
+			/* To have the same behavior as Unix, we need to remove the destination file if it exists.
+			 * Of course we can do this only if `from' and `to' do not represent the same file.
+			 * To check this, we use `CreateFile' to open both file, and then using the information
+			 * returned by `GetFileInformationByHandle' we can check whether or not they are indeed
+			 * the same. */
+		BY_HANDLE_FILE_INFORMATION l_to_info, l_from_info;
+		HANDLE l_from_file = CreateFile (from, GENERIC_READ, FILE_SHARE_READ, NULL,
+			OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+		HANDLE l_to_file = CreateFile (to, GENERIC_READ, FILE_SHARE_READ, NULL,
 				OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-			HANDLE l_to_file = CreateFile (to, GENERIC_READ, FILE_SHARE_READ, NULL,
-					OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 
-			if ((l_from_file == INVALID_HANDLE_VALUE) || (l_to_file == INVALID_HANDLE_VALUE)) {
-					/* We do not need the handles anymore, simply close them. Since Microsoft
-					 * API accepts INVALID_HANDLE_VALUE we don't check the validity of arguments. */
+		if ((l_from_file == INVALID_HANDLE_VALUE) || (l_to_file == INVALID_HANDLE_VALUE)) {
+				/* We do not need the handles anymore, simply close them. Since Microsoft
+				 * API accepts INVALID_HANDLE_VALUE we don't check the validity of arguments. */
+			CloseHandle(l_from_file);
+			CloseHandle(l_to_file);
+
+				/* For some reasons we cannot open the file. This should not happen, maybe the OS has
+				 * removed `from' or `to'. In that case, we simply try to remove destination as we were
+				 * doing in former revision of `file_rename'. */
+			remove (to);
+		} else {
+			BOOL success = GetFileInformationByHandle (l_from_file, &l_from_info);
+			if (success) {
+				success = GetFileInformationByHandle (l_to_file, &l_to_info);
+					/* We do not need the handles anymore, simply close them. */
 				CloseHandle(l_from_file);
 				CloseHandle(l_to_file);
-
-					/* For some reasons we cannot open the file. This should not happen, maybe the OS has
-					 * removed `from' or `to'. In that case, we simply try to remove destination as we were
-					 * doing in former revision of `file_rename'. */
-				remove (to);
-			} else {
-				BOOL success = GetFileInformationByHandle (l_from_file, &l_from_info);
 				if (success) {
-					success = GetFileInformationByHandle (l_to_file, &l_to_info);
-						/* We do not need the handles anymore, simply close them. */
-					CloseHandle(l_from_file);
-					CloseHandle(l_to_file);
-					if (success) {
-							/* Check that `from' and `to' do not represent the same file. */
-						if
-							((l_from_info.dwVolumeSerialNumber != l_to_info.dwVolumeSerialNumber) ||
-							(l_from_info.nFileIndexLow != l_to_info.nFileIndexLow) ||
-							(l_from_info.nFileIndexHigh != l_to_info.nFileIndexHigh))
-						{
-							remove (to);
-						} else {
-								/* Files are identical, nothing to be done apart from */
-							break;
-						}
-					} else {
-							/* An error occurred while retrieving the information about `from' and `to'. Like
-							 * for the case where `l_from_file' and `l_to_file' are invalid, we try to remove
-							 * the file. */
+						/* Check that `from' and `to' do not represent the same file. */
+					if
+						((l_from_info.dwVolumeSerialNumber != l_to_info.dwVolumeSerialNumber) ||
+						(l_from_info.nFileIndexLow != l_to_info.nFileIndexLow) ||
+						(l_from_info.nFileIndexHigh != l_to_info.nFileIndexHigh))
+					{
 						remove (to);
+					} else {
+							/* Files are identical, nothing to be done */
+						return;
 					}
 				} else {
-						/* We do not need the handles anymore, simply close them. */
-					CloseHandle(l_from_file);
-					CloseHandle(l_to_file);
 						/* An error occurred while retrieving the information about `from' and `to'. Like
 						 * for the case where `l_from_file' and `l_to_file' are invalid, we try to remove
 						 * the file. */
 					remove (to);
 				}
-			}
-		}
-#endif
-		errno = 0;						/* Reset error condition */
-		status = rename(from, to);		/* Rename file or directory */
-		if (status == -1) {				/* An error occurred */
-			if (errno == EINTR) {		/* Interrupted by signal */
-				continue;				/* Re-issue system call */
 			} else {
-				esys();					/* Raise exception */
+					/* We do not need the handles anymore, simply close them. */
+				CloseHandle(l_from_file);
+				CloseHandle(l_to_file);
+					/* An error occurred while retrieving the information about `from' and `to'. Like
+					 * for the case where `l_from_file' and `l_to_file' are invalid, we try to remove
+					 * the file. */
+				remove (to);
 			}
 		}
-		break;
 	}
+#endif
+	EIF_REPEAT_INTERRUPTED_CALL(status, rename(from, to));
 }
 
 rt_public void file_link(char *from, char *to)
@@ -1356,18 +1336,7 @@ rt_public void file_link(char *from, char *to)
 	/* Link file `from' into `to' */
 
 	int status;			/* System call status */
-	
-	for (;;) {
-		errno = 0;						/* Reset error condition */
-		status = link(from, to);		/* Make both files the same */
-		if (status == -1) {				/* An error occurred */
-			if (errno == EINTR)			/* Interrupted by signal */
-				continue;				/* Re-issue system call */
-			else
-				esys();					/* Raise exception */
-		}
-		break;
-	}
+	EIF_REPEAT_INTERRUPTED_CALL(status, link(from, to));
 #endif
 }
 
@@ -1376,23 +1345,22 @@ rt_public void file_mkdir(char *path)
 	/* Create directory `path' */
 
 	int status;			/* System call status */
-#ifdef EIF_VMS
+
+#if defined EIF_WINDOWS || defined VXWORKS || defined EIF_OS2
+	EIF_REPEAT_INTERRUPTED_CALL(status, mkdir(path));
+#elif !defined EIF_VMS
+	EIF_REPEAT_INTERRUPTED_CALL(status, mkdir(path, 0777));
+#else
+
 	char vms_path [PATH_MAX +1];
 #ifdef EIF_VMS_V6_ONLY
 	char duplicate[PATH_MAX];
 	strcpy(duplicate,path);
 #endif
-#endif
 	
 	for (;;) {
 		errno = 0;			/* Reset error condition */
-#ifdef EIF_OS2 
-		status = mkdir(path);		/* Create directory `path' */
-#elif defined EIF_WINDOWS || defined VXWORKS
-		status = mkdir(path);		/* Create directory `path' */ /* %%ss above line added */
-#else
 		status = mkdir(path, 0777);	/* Create directory `path' */
-#endif
 		if (status == -1) {		/* An error occurred */
 			if (errno == EINTR)	/* Interrupted by signal */
 				continue;	/* Re-issue system call */
@@ -1400,7 +1368,6 @@ rt_public void file_mkdir(char *path)
 				esys();		/* Raise exception */
 		}
 
-#ifdef EIF_VMS
 		/* Under VMS, mkdir will not grant delete privelege by default
 		 * on directory just created. However if no delete priv then
 		 * then VMS access() thinks the project isn't writable. 
@@ -1420,11 +1387,10 @@ rt_public void file_mkdir(char *path)
 		    status = chmod (vms_path, 0777);
 		    err = (errno == EVMSERR ? vaxc$errno : errno);
 		}
-
 #endif
-#endif	/* vms */
 		break;
 	}
+#endif	/* vms */
 }
 
 rt_public void file_unlink(char *name)
@@ -1434,21 +1400,17 @@ rt_public void file_unlink(char *name)
 	struct stat buf;				/* File statistics */
 	int status;						/* Status from system call */
 
-	file_stat(name, &buf);				/* Side effect: ensure file exists */
-
-	for (;;) {
-		errno = 0;						/* Reset error condition */
-		if (S_ISDIR(buf.st_mode))		/* Directory */
-			status = rmdir(name);		/* Remove only if empty */
-		else
-			status = unlink(name);		/* Not a directory */
-		if (status == -1) {				/* An error occurred */
-			if (errno == EINTR)			/* Interrupted by signal */
-				continue;				/* Re-issue system call */
-			else
-				esys();					/* Raise exception */
+		/* No need to follow links since `unlink' does not follow them anyway. */
+	status = eif_file_stat(name, &buf, 0);
+	if (status == -1 ) {
+		esys();
+	} else {
+		if (S_ISDIR(buf.st_mode)) {		/* Directory */
+				/* Remove directory only if it is empty. */
+			EIF_REPEAT_INTERRUPTED_CALL(status, rmdir(name));
+		} else {
+			EIF_REPEAT_INTERRUPTED_CALL(status, unlink(name));
 		}
-		break;
 	}
 }
 
@@ -1495,17 +1457,7 @@ rt_public void file_utime(char *name, time_t stamp, int how)
 	} else
 		tp.actime = tp.modtime = stamp;	/* Change both access and modification times */
 	
-	for (;;) {
-		errno = 0;						/* Reset error condition */
-		status = utime(name, &tp);		/* Attempt time stamp change */
-		if (status == -1) {				/* An error occurred */
-			if (errno == EINTR)			/* Interrupted by signal */
-				continue;				/* Re-issue system call */
-			else
-				esys();					/* Raise exception */
-		}
-		break;
-	}
+	EIF_REPEAT_INTERRUPTED_CALL(status,utime(name, &tp));
 }
 
 rt_public void file_perm(char *name, char *who, char *what, int flag)
@@ -1525,123 +1477,113 @@ rt_public void file_perm(char *name, char *who, char *what, int flag)
 	int fmode;					/* File mode to be altered */
 	struct stat buf;			/* File statistics */
 
-	file_stat(name, &buf);
-	fmode = (int) buf.st_mode;	/* Fetch current file mode */
+		/* We need to follow links since `chmod' does follow them to change the permissions. */
+	if (eif_file_stat(name, &buf, 1)) {
+		esys();
+	} else {
+		fmode = (int) buf.st_mode;	/* Fetch current file mode */
 
-	switch (*who) {
-	case 'u':
-		while (*what)
-			switch (*what++) {
+		switch (*who) {
+		case 'u':
+			while (*what)
+				switch (*what++) {
 #if defined EIF_WINDOWS
-			case 's': break;
-			case 'r': break;
-			case 'w': break;
-			case 'x': break;
+				case 's': break;
+				case 'r': break;
+				case 'w': break;
+				case 'x': break;
 #elif defined EIF_OS2
-			case 's': break;
-			case 'r': break;
-			case 'w': break;
-			case 'x': break;
+				case 's': break;
+				case 'r': break;
+				case 'w': break;
+				case 'x': break;
 #else
-			case 's':
-				if (flag) fmode |= S_ISUID; else fmode &= ~S_ISUID;
-				break;
-			case 'r':
-				if (flag) fmode |= S_IRUSR; else fmode &= ~S_IRUSR;
-				break;
-			case 'w':
-				if (flag) fmode |= S_IWUSR; else fmode &= ~S_IWUSR;
-				break;
-			case 'x':
-				if (flag) fmode |= S_IXUSR; else fmode &= ~S_IXUSR;
-				break;
+				case 's':
+					if (flag) fmode |= S_ISUID; else fmode &= ~S_ISUID;
+					break;
+				case 'r':
+					if (flag) fmode |= S_IRUSR; else fmode &= ~S_IRUSR;
+					break;
+				case 'w':
+					if (flag) fmode |= S_IWUSR; else fmode &= ~S_IWUSR;
+					break;
+				case 'x':
+					if (flag) fmode |= S_IXUSR; else fmode &= ~S_IXUSR;
+					break;
 #endif
-			default:
-				eraise("invalid user permission", EN_EXT);
-			}
-		break;
-	case 'g':
-		while (*what)
-			switch (*what++) {
-			case 's':
+				default:
+					eraise("invalid user permission", EN_EXT);
+				}
+			break;
+		case 'g':
+			while (*what)
+				switch (*what++) {
+				case 's':
 #ifdef S_ISGID
-				if (flag) fmode |= S_ISGID; else fmode &= ~S_ISGID;
+					if (flag) fmode |= S_ISGID; else fmode &= ~S_ISGID;
 #endif
-				break;
-			case 'r':
+					break;
+				case 'r':
 #ifdef S_IRGRP
-				if (flag) fmode |= S_IRGRP; else fmode &= ~S_IRGRP;
+					if (flag) fmode |= S_IRGRP; else fmode &= ~S_IRGRP;
 #endif
-				break;
-			case 'w':
+					break;
+				case 'w':
 #ifdef S_IWGRP
-				if (flag) fmode |= S_IWGRP; else fmode &= ~S_IWGRP;
+					if (flag) fmode |= S_IWGRP; else fmode &= ~S_IWGRP;
 #endif
-				break;
-			case 'x':
+					break;
+				case 'x':
 #ifdef S_IXGRP
-				if (flag) fmode |= S_IXGRP; else fmode &= ~S_IXGRP;
+					if (flag) fmode |= S_IXGRP; else fmode &= ~S_IXGRP;
 #endif
-				break;
-			default:
-				eraise("invalid group permission", EN_EXT);
-			}
-		break;
-	case 'o':
-		while (*what)
-			switch (*what++) {
-			case 't':
+					break;
+				default:
+					eraise("invalid group permission", EN_EXT);
+				}
+			break;
+		case 'o':
+			while (*what)
+				switch (*what++) {
+				case 't':
 #ifdef S_ISVTX
-				if (flag) fmode |= S_ISVTX; else fmode &= ~S_ISVTX;
+					if (flag) fmode |= S_ISVTX; else fmode &= ~S_ISVTX;
 #endif
-				break;
-			case 'r':
+					break;
+				case 'r':
 #ifdef S_IROTH
-				if (flag) fmode |= S_IROTH; else fmode &= ~S_IROTH;
+					if (flag) fmode |= S_IROTH; else fmode &= ~S_IROTH;
 #endif
-				break;
-			case 'w':
+					break;
+				case 'w':
 #ifdef S_IWOTH
-				if (flag) fmode |= S_IWOTH; else fmode &= ~S_IWOTH;
+					if (flag) fmode |= S_IWOTH; else fmode &= ~S_IWOTH;
 #endif
-				break;
-			case 'x':
+					break;
+				case 'x':
 #ifdef S_IXOTH
-				if (flag) fmode |= S_IXOTH; else fmode &= ~S_IXOTH;
+					if (flag) fmode |= S_IXOTH; else fmode &= ~S_IXOTH;
 #endif
-				break;
-			default:
-				eraise("invalid other permission", EN_EXT);
-			}
-		break;
-	default:
-		eraise("invalid permission target", EN_EXT);
+					break;
+				default:
+					eraise("invalid other permission", EN_EXT);
+				}
+			break;
+		default:
+			eraise("invalid permission target", EN_EXT);
+		}
+		file_chmod(name, fmode);
 	}
-#ifndef VXWORKS
-    file_chmod(name, fmode);
-#endif
 }
 
-#ifndef VXWORKS
 rt_public void file_chmod(char *path, int mode)
 {
-	/* Change permission mode on file `path' */
-
+#ifndef VXWORKS
+		/* Change permission mode on file `path' */
 	int status;				/* Status from system call */
-
-	for (;;) {
-		errno = 0;						/* Reset error condition */
-		status = chmod(path, mode);		/* Change permissions on file */
-		if (status == -1) {				/* An error occurred */
-			if (errno == EINTR)			/* Interrupted by signal */
-				continue;				/* Re-issue system call */
-			else
-				esys();					/* Raise exception */
-		}
-		break;
-	}
-}
+	EIF_REPEAT_INTERRUPTED_CALL(status, chmod(path, mode));
 #endif
+}
 
 /*
  * File cursor management.

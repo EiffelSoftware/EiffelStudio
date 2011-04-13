@@ -43,7 +43,6 @@
 extern "C" {
 #endif
 
-RT_LNK void esys(void);				/* Raise 'Operating system error' exception */
 extern void eise_io(char *tag);		/* Raise an Eiffel 'I/O error' exception with `tag' */
 extern char *error_tag(int code);	/* English description out of errno code */
 

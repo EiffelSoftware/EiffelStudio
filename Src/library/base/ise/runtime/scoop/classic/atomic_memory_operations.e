@@ -18,7 +18,7 @@ feature
 			-- Atomic Compare and Swap Operation value `a_destination' value with `a_setter_value' if value at `a_destination' = `a_comparison_value'.
 			-- Return initial value at `a_destination', this value is used to determine if swap occurred.
 		external
-			"C macro use <eif_scoop.h>"
+			"C macro use <eif_atomops.h>"
 		alias
 			"RTS_ACAS_I32"
 		end
@@ -27,7 +27,7 @@ feature
 			-- Atomic Swap Operation value `a_destination' value with `a_setter_value'.
 			-- Return initial value at `a_destination', this value is used to determine if swap occurred.
 		external
-			"C macro use <eif_scoop.h>"
+			"C macro use <eif_atomops.h>"
 		alias
 			"RTS_AS_I32"
 		end
@@ -35,7 +35,7 @@ feature
 	frozen increment_integer_32 (a_destination: like destination_type): INTEGER_32
 			-- Atomic INTEGER_32 Increment of `a_destination' value.
 		external
-			"C macro use <eif_scoop.h>"
+			"C macro use <eif_atomops.h>"
 		alias
 			"RTS_AI_I32"
 		end
@@ -52,7 +52,7 @@ feature
 			-- Atomic INTEGER_32 Add of `a_destination' value with `a_value'.
 			-- Returns initial value of `a_destination'.
 		external
-			"C macro use <eif_scoop.h>"
+			"C macro use <eif_atomops.h>"
 		alias
 			"RTS_AA_I32"
 		end

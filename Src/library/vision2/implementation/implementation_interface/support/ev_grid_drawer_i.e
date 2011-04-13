@@ -632,7 +632,7 @@ feature -- Basic operations
 			v_y: INTEGER
 			locked_column: detachable EV_GRID_LOCKED_COLUMN_I
 			locked_row: detachable EV_GRID_LOCKED_ROW_I
-			l_visible_index, l_next_visible_index, l_subrow_index: INTEGER
+			l_subrow_index: INTEGER
 			l_parent_row: EV_GRID_ROW
 			g: like grid
 		do

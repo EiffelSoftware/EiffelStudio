@@ -17,7 +17,7 @@
 				<platform value="windows"/>
 			</condition>
 		</external_object>
-		<external_object location="$(MYSQL)\lib\opt\mysqlclient.lib">
+		<external_object location="$(MYSQL)\lib\mysqlclient.lib">
 			<condition>
 				<platform value="windows"/>
 			</condition>

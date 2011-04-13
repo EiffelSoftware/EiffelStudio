@@ -93,6 +93,8 @@ extern "C" {
  */
 #define eio()	eraise(NULL, EN_IO)
 
+RT_LNK void esys(void);				/* Raise 'Operating system error' exception */
+
 #ifdef __cplusplus
 }
 #endif

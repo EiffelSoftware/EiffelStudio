@@ -115,6 +115,7 @@ RT_LNK EIF_CHARACTER_8 file_lh(FILE *f);
 RT_LNK void file_chown(char *name, int uid);
 RT_LNK void file_chgrp(char *name, int gid);
 RT_LNK void file_stat(char *path, struct stat *buf);
+RT_LNK int eif_file_stat(char *path, struct stat *buf, int follow);
 RT_LNK EIF_INTEGER file_info(struct stat *buf, int op);
 RT_LNK EIF_BOOLEAN file_eaccess(struct stat *buf, int op);
 RT_LNK EIF_BOOLEAN file_access(char *name, EIF_INTEGER op);

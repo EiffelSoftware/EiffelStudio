@@ -205,7 +205,7 @@ feature {NONE} -- Implementation (preparation of all widgets)
 					l_project_path := argument (path_index + 1)
 					from
 					until
-						l_project_path.empty or else l_project_path.item (l_project_path.count) /= '\'
+						l_project_path.is_empty or else l_project_path.item (l_project_path.count) /= '\'
 					loop
 						l_project_path.remove_tail (1)
 					end

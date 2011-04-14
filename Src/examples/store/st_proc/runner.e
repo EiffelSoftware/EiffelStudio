@@ -143,7 +143,12 @@ feature {NONE}
 					base_selection.set_map_name (pub_date, "pub_date")
 
 					l_proc.execute (base_selection)
-					base_selection.load_result
+					if base_selection.is_ok then
+						base_selection.load_result
+					else
+						io.put_string ("Error occurred ")
+						io.put_string (session_control.error_message_32.as_string_8)
+					end
 
 					base_selection.unset_map_name ("author")
 					base_selection.unset_map_name ("price")
@@ -185,7 +190,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-end -- class RUNNER
-
-
+end

@@ -7,11 +7,7 @@ script that calls `set_aliases'. Otherwise, it won't work because
 `set_aliases' won't be found or some scripts used by `set_aliases'
 won't be found too.
 
-Create a file `.doc_builder' in your home directory so that documentation
-is generated in /tmp/doc_builder. The content of the file should be:
-<EIFFEL_DOCUMENT>
-    <PREFERENCE NAME="general.output_directory" VALUE="/tmp/doc_builder" />
-</EIFFEL_DOCUMENT>
+Make sure you have `pax' installed (See http://www.odi.ch/weblog/posting.php?posting=458) for more details on why we use it versus GNU tar).
 
 1 - Preparing a delivery:
 

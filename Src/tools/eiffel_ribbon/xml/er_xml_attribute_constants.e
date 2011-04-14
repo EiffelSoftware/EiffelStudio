@@ -32,6 +32,10 @@ feature -- Dropdown color picker
 
 	color_template: STRING = "ColorTemplate"
 
+feature -- Font control
+
+	font_type: STRING = "FontType"
+
 feature -- In ribbon gallery
 
 	max_rows: STRING = "MaxRows"

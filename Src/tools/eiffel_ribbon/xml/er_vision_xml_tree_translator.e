@@ -575,6 +575,8 @@ feature {NONE} -- Tree saving
 						add_xml_drop_down_gallery_node (l_group_node, a_group_tree_node.item)
 					elseif a_group_tree_node.item.text.same_string (l_xml_constants.drop_down_color_picker) then
 						add_xml_drop_down_color_picker_node (l_group_node, a_group_tree_node.item)
+					elseif a_group_tree_node.item.text.same_string (l_xml_constants.font_control) then
+						add_xml_font_control_node (l_group_node, a_group_tree_node.item)
 					elseif a_group_tree_node.item.text.same_string (l_xml_constants.in_ribbon_gallery) then
 						add_xml_in_ribbon_gallery_node (l_group_node, a_group_tree_node.item)
 					elseif a_group_tree_node.item.text.same_string (l_xml_constants.split_button_gallery) then
@@ -811,6 +813,38 @@ feature {NONE} -- Tree saving
 			l_flow_menu_layout.add_attribute (l_attribute.rows, name_space, a_data.rows.out)
 			l_flow_menu_layout.add_attribute (l_attribute.columns, name_space, a_data.columns.out)
 			l_flow_menu_layout.add_attribute (l_attribute.gripper, name_space, "None") -- FIXME: NONE for test
+		end
+
+	add_xml_font_control_node (a_group_node: XML_ELEMENT; a_button_tree_node: EV_TREE_NODE)
+			--
+		require
+			not_void: a_group_node /= Void
+			valid: a_group_node.name.same_string (xml_constants.group)
+		local
+			l_button_node: XML_ELEMENT
+			l_constants: ER_XML_ATTRIBUTE_CONSTANTS
+		do
+			if attached {EV_TREE_ITEM} a_button_tree_node as l_item then
+				check l_item.text.same_string (xml_constants.font_control) end
+
+				create l_button_node.make (a_group_node, xml_constants.font_control, name_space)
+				a_group_node.put_last (l_button_node)
+
+				if attached {ER_TREE_NODE_FONT_CONTROL_DATA} a_button_tree_node.data as l_data then
+					create l_constants
+
+					-- Add xml attribute
+					if attached l_data.command_name as l_command_name and then not l_command_name.is_empty then
+						l_button_node.add_attribute (l_constants.command_name, name_space, l_command_name)
+
+						-- Add coresspond command xml node
+						add_xml_command_node (l_data)
+					end
+					if attached l_data.font_type as l_font_type and then not l_font_type.is_empty then
+						l_button_node.add_attribute (l_constants.font_type, name_space, l_font_type)
+					end
+				end
+			end
 		end
 
 	add_xml_drop_down_color_picker_node (a_group_node: XML_ELEMENT; a_button_tree_node: EV_TREE_NODE)

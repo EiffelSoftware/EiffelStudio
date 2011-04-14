@@ -1,0 +1,46 @@
+﻿#!/bin/sh
+
+
+TMP_OP=$1
+if [ "$TMP_OP" = "update_all" ]; then
+  git stash
+  git svn rebase
+  git submodule update
+  git submodule foreach git pull
+  git stash apply
+  git stash clear
+  exit
+fi
+if [ "$TMP_OP" = "update" ]; then
+  git stash
+  git svn rebase
+  git stash apply
+  git stash clear
+  exit
+fi
+if [ "$TMP_OP" = "branch" ]; then
+  git branch -v -a
+  exit
+fi
+if [ "$TMP_OP" = "status" ]; then
+  git status
+  exit
+fi
+if [ "$TMP_OP" = "info" ]; then
+  git config -l
+  exit
+fi
+
+if [ "$TMP_OP" = "commit" ]; then
+  git stash
+  git svn dcommit
+  git stash apply
+  git stash clear
+  exit
+fi
+echo Usage:
+echo  - update: stash handle and svn rebase, and apply recorded stash
+echo  - update_all: same as 'update', but also update submodules
+echo  - commit: stash, svn dcommit, and apply recorded stash
+
+exit 1

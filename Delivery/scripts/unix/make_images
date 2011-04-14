@@ -57,7 +57,7 @@ mv Eiffel68 cdrom
 bzip2 Eiffel68_gpl.iso
 mv Eiffel68_gpl.iso.bz2 Eiffel68_gpl_$FILE_SVN_REVISION-$ISE_PLATFORM.iso.bz2
 mv cdrom/Eiffel68 Eiffel68
-tar -cf Eiffel68_gpl_$FILE_SVN_REVISION-$ISE_PLATFORM.tar Eiffel68
+pax -w -f Eiffel68_gpl_$FILE_SVN_REVISION-$ISE_PLATFORM.tar Eiffel68
 bzip2 Eiffel68_gpl_$FILE_SVN_REVISION-$ISE_PLATFORM.tar
 
 if [ "$MULTIPLE_EDITIONS" ]; then
@@ -82,7 +82,7 @@ if [ "$MULTIPLE_EDITIONS" ]; then
 	bzip2 Eiffel68_ent.iso
 	mv Eiffel68_ent.iso.bz2 Eiffel68_ent_$FILE_SVN_REVISION-$ISE_PLATFORM.iso.bz2
 	mv cdrom/Eiffel68 Eiffel68
-	tar -cf Eiffel68_ent_$FILE_SVN_REVISION-$ISE_PLATFORM.tar Eiffel68 
+	pax -w -f Eiffel68_ent_$FILE_SVN_REVISION-$ISE_PLATFORM.tar Eiffel68 
 	bzip2 Eiffel68_ent_$FILE_SVN_REVISION-$ISE_PLATFORM.tar
 fi
 

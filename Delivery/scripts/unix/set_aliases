@@ -51,7 +51,7 @@ mkdir -p $*
 # Compress a file and move it to $EXPORT_DIR
 tgz ()
 {
-tar -cf $1.tar $1
+pax -w -f $1.tar $1
 bzip2 $1.tar
 }
 # Completely remove a directory
@@ -153,7 +153,7 @@ tgz_ccode ()
 {
 if [ -d EIFGENs/$1/F_code ]; then
 cd EIFGENs/$1
-tar -cf F_code.tar F_code >> $INSTALL_LOG
+pax -w -f F_code.tar F_code >> $INSTALL_LOG
 bzip2 F_code.tar
 mv F_code.tar.bz2 ../../$2
 cd ../..

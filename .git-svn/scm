@@ -1,4 +1,4 @@
-﻿#!/bin/sh
+#!/bin/sh
 
 
 TMP_OP=$1

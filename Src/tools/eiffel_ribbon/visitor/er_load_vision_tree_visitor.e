@@ -99,6 +99,10 @@ feature {ER_UPDATE_CONTEXT_POPUP_VISITOR} -- Implementation
 								if attached {ER_TREE_NODE_DROP_DOWN_COLOR_PICKER_DATA} l_new_node.data as l_data then
 									l_data.set_color_template (l_attribute.value)
 								end
+							elseif l_attribute.name.same_string ({ER_XML_ATTRIBUTE_CONSTANTS}.font_type) then
+								if attached {ER_TREE_NODE_FONT_CONTROL_DATA} l_new_node.data as l_data then
+									l_data.set_font_type (l_attribute.value)
+								end
 							end
 						elseif attached {ER_XML_TREE_ELEMENT} l_tab_item.item_for_iteration as l_child then
 							create_vision_tree_recursive (l_new_node, l_child)

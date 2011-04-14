@@ -173,6 +173,7 @@ feature {NONE} -- Implementation
 --			l_toggle_button: EV_TREE_ITEM
 			l_drop_down_button: EV_TREE_ITEM
 			l_drop_down_color_picker: EV_TREE_ITEM
+			l_font_control: EV_TREE_ITEM
 		do
 			create l_button.make_with_text (constants.button)
 			l_button.set_pebble (constants.button)
@@ -222,6 +223,10 @@ feature {NONE} -- Implementation
 			create l_drop_down_color_picker.make_with_text (constants.drop_down_color_picker)
 			l_drop_down_color_picker.set_pebble (constants.drop_down_color_picker)
 			a_parent.extend (l_drop_down_color_picker)
+
+			create l_font_control.make_with_text (constants.font_control)
+			l_font_control.set_pebble (constants.font_control)
+			a_parent.extend (l_font_control)
 		end
 
 	content: SD_CONTENT

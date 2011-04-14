@@ -82,6 +82,8 @@ feature -- ALl types under group
 
 	drop_down_color_picker: STRING = "DropDownColorPicker"
 
+	font_control: STRING = "FontControl"
+
 	in_ribbon_gallery: STRING = "InRibbonGallery"
 
 	split_button_gallery: STRING = "SplitButtonGallery"
@@ -154,7 +156,8 @@ feature -- Contract support
 					l_string.same_string (mini_toolbar) or else
 					l_string.same_string (context_menu) or else
 					l_string.same_string (drop_down_button) or else
-					l_string.same_string (drop_down_color_picker)
+					l_string.same_string (drop_down_color_picker) or else
+					l_string.same_string (font_control)
 			end
 		end
 
@@ -172,7 +175,8 @@ feature -- Contract support
 					l_string.same_string (in_ribbon_gallery) or else
 					l_string.same_string (split_button_gallery) or else
 					l_string.same_string (drop_down_button) or else
-					l_string.same_string (drop_down_color_picker)
+					l_string.same_string (drop_down_color_picker) or else
+					l_string.same_string (font_control)
 			end
 		end
 end

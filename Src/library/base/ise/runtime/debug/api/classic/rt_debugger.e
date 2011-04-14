@@ -111,11 +111,10 @@ feature {NONE} -- Implementation
 
 feature -- Debugger: interaction with run-time
 
-    rt_workbench_wait_for_debugger (a_port_number: INTEGER): BOOLEAN
+    frozen rt_workbench_wait_for_debugger (a_port_number: INTEGER): BOOLEAN
             -- Initialize workbench debugging using socket connection
 			-- used to launch the application, and then attach the debugger.
-		require
-			valid_port_number: a_port_number > 0
+			-- if `a_port_number' <= 0 then check for ISE_DBG_PORTNUM environment variable.
 		external
 			"C inline use %"eif_main.h%""
 		alias

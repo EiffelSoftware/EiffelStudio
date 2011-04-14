@@ -15,6 +15,11 @@ feature -- Initialization
 	make
 			-- Creation procedure
 		do
+			is_following_symlinks := True
+			exists := False
+		ensure
+			not_exists: not exists
+			is_following_symlinks_set: is_following_symlinks
 		end
 
 feature -- Access

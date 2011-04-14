@@ -17,17 +17,17 @@ ever, the full svn repository is huged ...)
   cd trunk.git
 
 Create the git local repository from svn repository
-  svn cat -r 86251 https://svn.eiffel.com/eiffelstudio/trunk/.git-svn/users.txt > users.txt
+  svn cat -r 86252 https://svn.eiffel.com/eiffelstudio/trunk/.git-svn/users.txt > users.txt
   git svn init https://svn.eiffel.com/eiffelstudio/trunk 
-  git svn --authors-file=users.txt fetch -r 86251 
+  git svn --authors-file=users.txt fetch -r 86252 
 
 The previous command will download the full source code related to revision
-86251 and then, it will fetch all the more recent revisions incrementally.
+86252 and then, it will fetch all the more recent revisions incrementally.
 Note: you can fetch from older revision, if you want to have older history. A
 good habit would be to fetch from the revision of previous release.
 
 
-Once you get at least revision 86251
+Once you get at least revision 86252
 You can use the committed .git-svn/users.txt file
 Clean temporary users.txt, to use a better solution, see 2 lines below
   del users.txt
@@ -100,7 +100,7 @@ script
 
 == Miscellanious ==
 === Windows instructions to create your git local repository ===
-	set TMP_REV_GIT_SVN=86251
+	set TMP_REV_GIT_SVN=86252
 	set TMP_REV=%TMP_REV_GIT_SVN%
 	mkdir trunk.git
 	cd trunk.git
@@ -129,7 +129,7 @@ script
 === Linux script ===
  Adapt the Windows script for your shell, this is pretty straight forward
  for instance with bash
-	TMP_REV_GIT_SVN=86251
+	TMP_REV_GIT_SVN=86252
 	TMP_REV=$TMP_REV_GIT_SVN
 	mkdir trunk.git
 	cd trunk.git
@@ -137,8 +137,8 @@ script
 	git svn init https://svn.eiffel.com/eiffelstudio/trunk 
 
 	git svn --authors-file=users.txt fetch -r $TMP_REV 
-	del users.txt
-	git config --local --add svn.authorsfile .git-svn/users.txt
+	rm users.txt
+	git config --add svn.authorsfile .git-svn/users.txt
 
 	git stash
 	git svn rebase

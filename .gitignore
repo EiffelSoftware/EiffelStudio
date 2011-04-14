@@ -1,8 +1,4 @@
 EIFGENs/
-Src/contrib/library/ejson/
-Src/library/base/elks/
-Src/library/gobo/svn/
-.git-svn
 *.swp
 *.swo
 *.obj

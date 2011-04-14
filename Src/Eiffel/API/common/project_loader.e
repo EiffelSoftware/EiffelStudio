@@ -785,7 +785,7 @@ feature {NONE} -- Settings
 						-- remove trailing \ as it makes problem with the escaping of arguments
 					from
 					until
-						l_path.empty or else l_path.item (l_path.count) /= '\'
+						l_path.is_empty or else l_path.item (l_path.count) /= '\'
 					loop
 						l_path.remove_tail (1)
 					end
@@ -798,7 +798,7 @@ feature {NONE} -- Settings
 				l_path := a_precompile.eifgens_location.evaluated_path
 				from
 				until
-					l_path.empty or else l_path.item (l_path.count) /= '\'
+					l_path.is_empty or else l_path.item (l_path.count) /= '\'
 				loop
 					l_path.remove_tail (1)
 				end

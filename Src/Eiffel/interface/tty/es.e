@@ -1118,7 +1118,7 @@ feature -- Update
 						if not is_user_settings_requested then
 							from
 							until
-								l_arg.empty or else l_arg.item (l_arg.count) /= '\'
+								l_arg.is_empty or else l_arg.item (l_arg.count) /= '\'
 							loop
 								l_arg.remove_tail (1)
 							end

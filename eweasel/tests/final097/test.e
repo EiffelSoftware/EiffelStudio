@@ -16,7 +16,7 @@ feature
 			u: USABLE
 		do
 			create t1
-			t1.bind_help_shortcut ("")
+			t1.f
 
 			u := t1
 			if attached {RECYCLABLE} t1 as r then

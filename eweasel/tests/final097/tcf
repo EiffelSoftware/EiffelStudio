@@ -1,0 +1,18 @@
+test_name 	inline-deferred-with-one-implementation
+test_description Finalizing with inlining enabled it crashes the compiler when handling the inlining of a routine which is deferred in the class where the inlined is done but that only has one implementation in a generic class.
+
+copy_sub 	Ace $TEST Ace
+copy_sub 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+copy_raw 	test2.e $CLUSTER test2.e
+copy_raw	recyclable.e $CLUSTER recyclable.e
+copy_raw	test5.e $CLUSTER test5.e
+copy_raw	usable.e $CLUSTER usable.e
+
+compile_final
+compile_result 	ok
+
+c_compile_final
+c_compile_result ok
+
+test_end

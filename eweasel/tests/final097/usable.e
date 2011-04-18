@@ -1,9 +1,3 @@
-note
-	description: "Summary description for {TEST1}."
-	author: ""
-	date: "$Date$"
-	revision: "$Revision$"
-
 deferred class
 	USABLE
 

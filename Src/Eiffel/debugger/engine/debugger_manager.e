@@ -1175,13 +1175,13 @@ feature -- Change
 
 	update_rt_extension_available
 			-- Update value of `rt_extension_available'
-		local
-			cl_i: detachable CLASS_I
 		do
 				--| Check if RT_EXTENSION is available
-			if Eiffel_project.system_defined then
-				cl_i := Eiffel_system.system.rt_extension_class
-				rt_extension_available := cl_i /= Void and then	cl_i.is_compiled
+			if
+				Eiffel_project.system_defined and then
+				attached Eiffel_system.system as syst
+			then
+				rt_extension_available := attached syst.rt_extension_class as cl_i and then	cl_i.is_compiled
 			else
 				rt_extension_available := False
 			end

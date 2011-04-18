@@ -15,46 +15,40 @@ create
 
 feature {NONE} -- Initiaization
 
-	make (an_identifier: INTEGER_32; a_speed: INTEGER_64)
-			-- Creation
+	make (a_identifier: INTEGER_32; a_speed: INTEGER_64)
+			-- Initialize with `a_identifier' and `a_speed'.
 		require
-			a_counter_number_valid: an_identifier >= 0
+			a_counter_number_valid: a_identifier >= 0
 			a_speed_valid: a_speed >= 0
 		do
-			identifier := an_identifier
+			identifier := a_identifier
 			speed := a_speed
 		ensure
-			an_identifier_set: identifier = an_identifier
-			a_speed_set: speed = a_speed
+			identifier_set: identifier = a_identifier
+			speed_set: speed = a_speed
 		end
 
 feature -- Access
 
 	identifier: INTEGER_32
-			-- Identifier of counter
+			-- Identifier
 
 	value: INTEGER_32
-			-- Value of counter
+			-- Value
 
 	speed: INTEGER_64
-			-- Speed of counter in nanoseconds
+			-- Speed in nanoseconds
 
-feature -- Element change
+feature -- Basic operations
 
 	run (a_count: INTEGER)
-			-- Run counter infinitely long.
-		local
-			i: INTEGER
+			-- Increment counter `a_count' times.
 		do
-			from
-
-			until
-				i = a_count
+			across (1 |..| a_count) as ic
 			loop
 				increment
 				output
 				sleep (speed)
-				i := i + 1
 			end
 		end
 
@@ -65,7 +59,7 @@ feature -- Element change
 		do
 			create res.make_empty
 			res.append ("Value of counter " + identifier.out + " with speed " + (speed // 1_000_000).out + " ms is: " + value.out + "%N")
-			io.put_string (res)
+			print (res)
 			res.clear_all
 		end
 

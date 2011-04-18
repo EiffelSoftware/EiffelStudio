@@ -1,8 +1,3 @@
-note
-	description: ""
-	date: "$Date$"
-	revision: "$Revision$"
-
 class
 	TEST
 

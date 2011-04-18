@@ -1,9 +1,3 @@
-note
-	description: "Summary description for {TEST3}."
-	author: ""
-	date: "$Date$"
-	revision: "$Revision$"
-
 class
 	RECYCLABLE
 

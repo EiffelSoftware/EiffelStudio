@@ -11,16 +11,6 @@
 		<option warning="true" namespace="EiffelSoftware.Library">
 		</option>
 		<external_include location="$(ISE_LIBRARY)/library/runtime/logging/Clib"/>
-		<external_object location="$(ISE_LIBRARY)\library\runtime\logging\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\eiflogging.lib">
-			<condition>
-				<platform value="windows"/>
-			</condition>
-		</external_object>
-		<external_object location="$(ISE_LIBRARY)/library/runtime/logging/spec/$(ISE_PLATFORM)/lib/libeiflogging.a">
-			<condition>
-				<platform excluded_value="windows"/>
-			</condition>
-		</external_object>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<cluster name="logging" location=".\" recursive="true">

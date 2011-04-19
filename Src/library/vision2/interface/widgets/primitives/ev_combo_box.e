@@ -95,7 +95,13 @@ feature -- Element change
 			loop
 				l_str := item.text
 				if l_str /= Void and then l_str.is_equal (a_text.as_string_32) then
-					item.enable_select
+					if is_sensitive then
+						item.enable_select
+					else
+						enable_sensitive
+						item.enable_select
+						disable_sensitive
+					end
 					l_found := True
 				end
 				forth

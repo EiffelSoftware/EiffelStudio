@@ -41,14 +41,11 @@ feature {NONE} -- Implementation
 				if l_pos.hwnd /= default_pointer and is_window (l_pos.hwnd) then
 					l_window := window_of_item (l_pos.hwnd)
 					if l_window /= Void and then l_window.exists then
-						if attached {WEL_COMBO_BOX} l_window then
-								-- Combo boxes are special because they are made of several widgets and trying to resize it again
-								-- with the same size doesn't do much, so we shrink the combo by one pixel.
+						if attached {WEL_COMBO_BOX} l_window  or attached {WEL_EDIT} l_window then
+								-- Combo boxes and edit controls are special because they are made of several widgets/abstractions
+								-- and trying to resize it again with the same size doesn't do much, so we shrink the window by one pixel.
 								-- The side effect is that if you are refreshing the content of a window while resizing
-								-- you will see the comboboxes shrink and grow by one pixel width during the resizing.
-								-- Note that we often come here because the size of a combo box is limited in size even when
-								-- put in a larger container; also we found that often there is a difference of one pixel between
-								-- the minimum size and the actual size of the combo box (usually 23 vs 22).
+								-- you will see those windows shrink and grow by one pixel width during the resizing.
 							l_window.move_and_resize (l_pos.x, l_pos.y, l_pos.width - 1, l_pos.height, False )
 							l_window.move_and_resize (l_pos.x, l_pos.y, l_pos.width, l_pos.height, (l_pos.flags & swp_noredraw) = 0)
 							l_is_refresh_required := True

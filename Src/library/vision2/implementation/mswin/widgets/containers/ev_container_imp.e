@@ -211,7 +211,6 @@ feature {NONE} -- WEL Implementation
 			-- information about the item to be drawn and the type
 			-- of drawing required.
 		local
-			label_imp: detachable EV_LABEL_IMP
 			item_type: INTEGER
 			button_imp: detachable EV_BUTTON_IMP
 		do
@@ -219,8 +218,7 @@ feature {NONE} -- WEL Implementation
 			if item_type = ({WEL_ODT_CONSTANTS}.Odt_menu) then
 				Precursor {EV_MENU_CONTAINER_IMP} (control_id, draw_item)
 			elseif item_type = ({WEL_ODT_CONSTANTS}.Odt_static) then
-				label_imp ?= draw_item.window_item
-				if label_imp /= Void then
+				if attached {EV_LABEL_IMP} draw_item.window_item as label_imp then
 					label_imp.on_draw_item (draw_item)
 				end
 			elseif item_type = ({WEL_ODT_CONSTANTS}.odt_button) then
@@ -241,40 +239,35 @@ feature {NONE} -- WEL Implementation
 			-- 2. a backgound brush to be returned to the system.
 		local
 			brush: detachable WEL_BRUSH
-			w: detachable EV_WIDGET_IMP
 			theme_drawer: EV_THEME_DRAWER_IMP
-			label: detachable EV_LABEL_IMP
 		do
 			theme_drawer := application_imp.theme_drawer
-
-			w ?= control
-			check
-					-- Everything inherits from EV_WIDGET.
-				is_a_widget: w /= Void
-			end
-			label ?= w
-			if label /= Void and then application_imp.themes_active then
-				disable_default_processing
-				brush := background_brush
-				check brush /= Void end
-				theme_drawer.draw_widget_background (label, paint_dc, create {WEL_RECT}.make (0, 0, w.width, w.height), brush)
-					-- Set background of `paint_dc' to transparant so that Windows does not draw
-					-- over the background we have just drawn.
-				paint_dc.set_background_transparent
-				brush.delete
-			elseif w.background_color_imp /= Void or
-				w.foreground_color_imp /= Void
-			then
-					-- Not the default color, we need to do something here
-					-- to apply `background_color' to `control'.
-				paint_dc.set_text_color (control.foreground_color)
-				paint_dc.set_background_color (control.background_color)
-				brush := allocated_brushes.get (Void, control.background_color)
-				debug ("WEL")
-					io.put_string ("Warning, there is no `decrement_reference'%Nfor the previous brush%N")
+				-- Not all controls are descendant of EV_WIDGET_IMP, for example
+				-- the EV_INTERNAL_XXX classes used in combo box or toolbars.
+			if attached {EV_WIDGET_IMP} control as w then
+				if application_imp.themes_active and then attached {EV_LABEL_IMP} w as label then
+					disable_default_processing
+					brush := background_brush
+					check brush /= Void end
+					theme_drawer.draw_widget_background (label, paint_dc, create {WEL_RECT}.make (0, 0, w.width, w.height), brush)
+						-- Set background of `paint_dc' to transparant so that Windows does not draw
+						-- over the background we have just drawn.
+					paint_dc.set_background_transparent
+					brush.delete
+				elseif w.background_color_imp /= Void or
+					w.foreground_color_imp /= Void
+				then
+						-- Not the default color, we need to do something here
+						-- to apply `background_color' to `control'.
+					paint_dc.set_text_color (control.foreground_color)
+					paint_dc.set_background_color (control.background_color)
+					brush := allocated_brushes.get (Void, control.background_color)
+					debug ("WEL")
+						io.put_string ("Warning, there is no `decrement_reference'%Nfor the previous brush%N")
+					end
+					set_message_return_value (brush.item)
+					disable_default_processing
 				end
-				set_message_return_value (brush.item)
-				disable_default_processing
 			end
 		end
 

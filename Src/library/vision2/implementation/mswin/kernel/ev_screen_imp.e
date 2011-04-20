@@ -11,7 +11,7 @@ class
 inherit
 	EV_SCREEN_I
 		redefine
-			interface, virtual_width, virtual_height, virtual_x, virtual_y
+			interface, virtual_width, virtual_height, virtual_x, virtual_y, refresh_graphics_context
 		end
 
 	EV_DRAWABLE_IMP
@@ -265,6 +265,26 @@ feature -- Status setting
 		end
 
 feature -- Implementation
+
+	refresh_graphics_context
+			-- <Precursor>
+		do
+				-- Reacquire the dc and reset any set values.
+			dc.release
+			dc.get
+			set_drawing_mode (drawing_mode)
+			if dashed_line_style then
+				enable_dashed_line_style
+			else
+				disable_dashed_line_style
+			end
+			if background_color_internal /= Void then
+				set_background_color (background_color)
+			end
+			if foreground_color_internal /= Void then
+				set_foreground_color (foreground_color)
+			end
+		end
 
 	interface: detachable EV_SCREEN
 		note

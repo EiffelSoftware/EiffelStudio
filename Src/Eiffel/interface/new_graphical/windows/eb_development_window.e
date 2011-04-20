@@ -2592,11 +2592,12 @@ feature {NONE} -- Window management
 			Result := window_id_counter.item
 			window_id_counter.put (Result + 1)
 		ensure
-			window_manager.windows.for_all (agent (a_window: EB_DEVELOPMENT_WINDOW; a_id: like window_id): BOOLEAN
+			window_manager.windows.for_all (agent (a_window: EB_WINDOW; a_id: like window_id): BOOLEAN
 				require
 					a_window_attached: a_window /= Void
 				do
-					Result := a_window.window_id /= a_id or else a_window = Current
+					Result := a_window = Current or else
+						(attached {EB_DEVELOPMENT_WINDOW} a_window as l_window and then l_window.window_id /= a_id)
 				end (?, Result))
 		end
 

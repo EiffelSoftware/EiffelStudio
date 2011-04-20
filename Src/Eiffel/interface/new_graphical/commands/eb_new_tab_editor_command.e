@@ -63,31 +63,31 @@ feature -- Execution
 			creating_empty_tab := False
 		end
 
-	execute_with_stone (a_stone: STONE)
+	execute_with_stone (a_stone: ANY)
 			-- Execute with `a_stone'.
 		do
 			execute_with_stone_content (a_stone, Void)
 		end
 
-	execute_with_stone_content (a_stone: STONE; a_content: SD_CONTENT)
+	execute_with_stone_content (a_stone: ANY; a_content: SD_CONTENT)
 			-- Create a new tab which stone is `a_stone' and create at side of `a_content' if exists.
 		local
 			l_editor : EB_SMART_EDITOR
 		do
-			if is_sensitive then
-				if editors_manager.stone_acceptable (a_stone) or creating_empty_tab then
-					l_editor := editors_manager.editor_with_stone (a_stone)
+			if is_sensitive and attached {STONE} a_stone as l_stone then
+				if editors_manager.stone_acceptable (l_stone) or creating_empty_tab then
+					l_editor := editors_manager.editor_with_stone (l_stone)
 					if l_editor = Void and a_content = Void then
 						editors_manager.create_editor
 						editors_manager.select_editor (editors_manager.last_created_editor, True)
 					elseif l_editor = Void and a_content /= Void then
-						editors_manager.create_editor_beside_content (a_stone, a_content, False)
+						editors_manager.create_editor_beside_content (l_stone, a_content, False)
 						editors_manager.select_editor (editors_manager.last_created_editor, True)
 					else
 						editors_manager.select_editor (l_editor, True)
 					end
 
-					development_window.set_stone (a_stone)
+					development_window.set_stone (l_stone)
 					development_window.address_manager.on_new_tab_command
 				end
 			end
@@ -168,7 +168,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

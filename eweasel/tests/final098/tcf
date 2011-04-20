@@ -1,0 +1,17 @@
+test_name 	inline-with-generic-argument
+test_description Inlining a routine which involves a formal generic parameter in a non-generic class causes the compiler to crash.
+
+copy_sub 	Ace $TEST Ace
+copy_sub 	test.e $CLUSTER test.e
+copy_raw 	test2.e $CLUSTER test2.e
+copy_raw 	test3.e $CLUSTER test3.e
+copy_raw	x.e $CLUSTER x.e
+copy_raw	y.e $CLUSTER y.e
+
+compile_final
+compile_result 	ok
+
+c_compile_final
+c_compile_result ok
+
+test_end

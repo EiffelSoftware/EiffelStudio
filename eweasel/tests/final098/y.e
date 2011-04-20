@@ -1,0 +1,4 @@
+class
+	Y [G]
+
+end

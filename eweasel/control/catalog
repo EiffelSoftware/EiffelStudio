@@ -511,6 +511,7 @@ test	bogus-vdrd2-error				valid267 tcf fail validity
 test	crash-on-veen2a					valid268 tcf pass validity
 test	bogus-vsrp3-with-require-else-false	valid269 tcf pass validity
 test	spurious-vuot-in-assertion		valid270 tcf pass validity object_test
+test	spurious-vweq				valid271 tcf pass validity
 
 -- Multiple error reporting tests
 test	multi-error-degree-4	multierr001 tcf pass multi-errors
@@ -1220,6 +1221,7 @@ test	finalize-static-access-multicon-formal	final094 tcf fail finalizing
 test	finalize-generic-once-per-object	final095 tcf fail finalizing once
 test	finalize-qat-object-test-2		final096 tcf fail finalizing anchored_type
 test	inline-deferred-with-one-implementation	final097 tcf fail finalizing inlining
+test	inline-with-generic-argument	final098 tcf fail finalizing inlining
 
 -- Runtime
 test	gc-tracking-001					runtime001	tcf pass runtime

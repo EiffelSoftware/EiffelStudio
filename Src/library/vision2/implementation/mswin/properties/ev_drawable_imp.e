@@ -1142,8 +1142,9 @@ feature {NONE} -- Implementation
 	reset_pen
 			-- Restore pen to correct line width and color
 		local
-			dmode: INTEGER
+			l_style: INTEGER
 			l_internal_pen: like internal_pen
+			l_brush: WEL_LOG_BRUSH
 		do
 			get_dc
 			if line_width = 0 then
@@ -1155,22 +1156,25 @@ feature {NONE} -- Implementation
 				end
 				l_internal_pen := internal_pen
 				if not internal_initialized_pen then
-
 						-- Reset `internal_pen'.
-
 					l_internal_pen := internal_pen
 					if l_internal_pen /= Void then
 						l_internal_pen.decrement_reference
 						internal_pen := Void
 					end
-
 					if dashed_line_style then
-						dmode := Ps_dot
+						l_style := ps_dash
 					else
-						dmode := Ps_solid
+						l_style := ps_solid
 					end
+
+					l_brush := reusable_log_brush
+					l_brush.set_hatch (0)
+					l_brush.set_style (0)
+					l_brush.set_color (wel_fg_color)
+
 					l_internal_pen := allocated_pens.get (
-						dmode, line_width, wel_fg_color)
+						l_style, line_width, l_brush)
 					internal_pen := l_internal_pen
 					internal_initialized_pen := True
 				end
@@ -1309,6 +1313,15 @@ feature {EV_DRAWABLE_IMP} -- Internal datas.
 			-- a figure without outlining it)
 		once
 			create Result.make (Ps_null, 1, wel_fg_color)
+		end
+
+	reusable_log_brush: WEL_LOG_BRUSH
+			-- Reusable logical brush for pen cache lookup.
+		local
+			l_color_ref: WEL_COLOR_REF
+		once
+			create l_color_ref.make
+			create Result.make (0, l_color_ref, 0)
 		end
 
 feature {NONE} -- Non-applicable

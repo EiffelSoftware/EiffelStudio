@@ -12,7 +12,7 @@ class
 	EV_GDI_ALLOCATED_PENS
 
 inherit
-	EV_GDI_ALLOCATED_OBJECTS [detachable EV_GDI_PEN]
+	EV_GDI_ALLOCATED_OBJECTS [EV_GDI_PEN, WEL_PEN]
 
 	WEL_PS_CONSTANTS
 		export
@@ -26,38 +26,38 @@ create
 
 feature -- Access
 
-	get (a_dashed_mode: INTEGER; a_width: INTEGER; a_color: WEL_COLOR_REF): WEL_PEN
+	get (a_style: INTEGER; a_width: INTEGER; a_brush: WEL_LOG_BRUSH): WEL_PEN
 			-- `Result' is WEL_PEN with `a_dashed_mode' as mode, `a_width' as
-			-- width, and `a_color' as color.
+			-- width, and `a_brush' as brush.
 			--| If an identical pen exists in our system then we return that
 			--| pen, otherwise we create a new pen and return that.
 			--| This stops multiple instances of the same WEL_PEN being
 			--| created.
 		local
-			fake_object: EV_GDI_PEN
-			l_result: detachable WEL_PEN
+			l_search_object: EV_GDI_PEN
 		do
 			debug("VISION2_WINDOWS_GDI")
 				io.put_string ("getting a pen...")
 			end
 			cache_time := cache_time + 1
 
-				-- Create a fake pen with the same hash code as the one we
-				-- want to retrieve.
-			create fake_object.make_with_values (a_dashed_mode, a_width, a_color)
+				-- Set reusable search object with the same hash values as the pen we wish to receive.
+			l_search_object := reusable_search_object
+			l_search_object.set_values (a_style, a_width, a_brush)
 
-			if has_object (fake_object) then
-				l_result ?= get_previously_allocated_object (found_object_index)
-				check l_result /= Void end
-				Result := l_result
+			if has_object (l_search_object) then
+				Result := get_previously_allocated_object (found_object_index)
 			else
 					-- New pen, not already in our table. So we create it...
-				create Result.make(a_dashed_mode, a_width, a_color)
+				create Result.make_from_brush (a_style, a_width, a_brush)
 				Result.enable_reference_tracking
-				fake_object.set_item (Result)
-				fake_object.update (cache_time)
+					-- Twin search object as it already has the correct values set.
+				l_search_object := l_search_object.twin
+				l_search_object.set_item (Result)
+				l_search_object.update (cache_time)
 
-				add_to_allocated_objects (fake_object)
+					-- Add container object to hash table.
+				add_to_allocated_objects (l_search_object)
 			end
 			debug("VISION2_WINDOWS_GDI")
 				io.put_string (" / Cache Stat: "
@@ -65,6 +65,19 @@ feature -- Access
 			end
 		ensure
 			Result_exists: Result /= Void and then Result.exists
+		end
+
+feature {NONE} -- Implementation
+
+	reusable_search_object: EV_GDI_PEN
+			-- Reusable pen object for hash table lookup
+		local
+			l_color_ref: WEL_COLOR_REF
+			l_log_brush: WEL_LOG_BRUSH
+		once
+			create l_color_ref.make
+			create l_log_brush.make (0, l_color_ref, 0)
+			create Result.make_with_values (0, 1, l_log_brush)
 		end
 
 note

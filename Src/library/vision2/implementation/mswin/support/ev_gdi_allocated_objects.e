@@ -9,7 +9,7 @@ note
 	revision: "$Revision:"
 
 class
-	EV_GDI_ALLOCATED_OBJECTS [G -> detachable EV_GDI_OBJECT]
+	EV_GDI_ALLOCATED_OBJECTS [G -> EV_GDI_OBJECT, H -> WEL_GDI_ANY]
 
 inherit
 	ANY
@@ -140,11 +140,11 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	get_previously_allocated_object (real_object_index: INTEGER): WEL_GDI_ANY
+	get_previously_allocated_object (real_object_index: INTEGER): H
 			-- Retrieve the WEL object located in the array at index `real_object_index'.
 		local
 			real_object: detachable G
-			l_result: detachable WEL_GDI_ANY
+			l_result: detachable H
 		do
 				-- Requested pen has been already allocated. We return the
 				-- item found in our table.
@@ -155,7 +155,7 @@ feature {NONE} -- Implementation
 				l_result ?= real_object.item
 				check l_result /= Void end
 				Result := l_result
-				Result.increment_reference
+				l_result.increment_reference
 
 				debug("VISION2_WINDOWS_GDI")
 					successful_cache := successful_cache + 1
@@ -186,7 +186,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	Max_allocated_objects: INTEGER = 15;
+	Max_allocated_objects: INTEGER = 32;
 			-- Maximum number of allocated objects we keep.
 
 note

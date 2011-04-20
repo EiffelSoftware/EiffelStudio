@@ -12,7 +12,7 @@ class
 	EV_GDI_ALLOCATED_BRUSHES
 
 inherit
-	EV_GDI_ALLOCATED_OBJECTS [detachable EV_GDI_BRUSH]
+	EV_GDI_ALLOCATED_OBJECTS [EV_GDI_BRUSH, WEL_BRUSH]
 
 	WEL_PS_CONSTANTS
 		export
@@ -35,8 +35,7 @@ feature -- Access
 			--| created.
 
 		local
-			fake_object: EV_GDI_BRUSH
-			l_result: detachable WEL_BRUSH
+			l_search_object: EV_GDI_BRUSH
 			l_color: detachable WEL_COLOR_REF
 		do
 			debug("VISION2_WINDOWS_GDI")
@@ -44,16 +43,17 @@ feature -- Access
 			end
 			cache_time := cache_time + 1
 
-				-- Create a fake brush with the same hash code as the one we
-				-- want to retrieve.
-			create fake_object.make_with_values(a_pattern, a_color)
+				-- Update searcher object with the same hash values as the brush we want to retrieve.
+			l_search_object := reusable_search_object
+			l_search_object.set_values (a_pattern, a_color)
 
-			if has_object (fake_object) then
-				l_result ?= get_previously_allocated_object (found_object_index)
-				check l_result /= Void end
-				Result := l_result
+			if has_object (l_search_object) then
+				Result := get_previously_allocated_object (found_object_index)
 			else
-					-- New object, not already in our table. So we create it...
+					-- Brush is not found so we need to create a new one and add to the hash table.
+
+					-- Twin search object as it already has the correct values set.
+				l_search_object := l_search_object.twin
 				if a_pattern /= Void then
 					create Result.make_by_pattern(a_pattern)
 				else
@@ -62,10 +62,10 @@ feature -- Access
 					create Result.make_solid(l_color)
 				end
 				Result.enable_reference_tracking
-				fake_object.set_item (Result)
-				fake_object.update (cache_time)
+				l_search_object.set_item (Result)
+				l_search_object.update (cache_time)
 
-				add_to_allocated_objects (fake_object)
+				add_to_allocated_objects (l_search_object)
 			end
 			debug("VISION2_WINDOWS_GDI")
 				io.put_string ("Cache Stat: "
@@ -73,6 +73,14 @@ feature -- Access
 			end
 		ensure
 			Result_exists: Result /= Void and then Result.exists
+		end
+
+feature {NONE} -- Implementation
+
+	reusable_search_object: EV_GDI_BRUSH
+			-- Reusable brush object for hash table lookup.
+		once
+			create Result.make_with_values (Void, Void)
 		end
 
 note

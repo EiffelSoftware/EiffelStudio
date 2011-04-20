@@ -20,13 +20,13 @@ create
 
 feature -- Initialization
 
-	make_with_values (a_dashed_mode: INTEGER; a_width: INTEGER;
-		a_color: WEL_COLOR_REF)
+	make_with_values (a_style: INTEGER; a_width: INTEGER;
+		a_brush: WEL_LOG_BRUSH)
 			-- Set the style of the pen to `a_dashed_mode',
-			-- the line width to `a_width' and the color
-			-- to `a_color'.
+			-- the line width to `a_width' and the brush
+			-- to `a_brush'.
 		do
-			set_values(a_dashed_mode, a_width, a_color)
+			set_values (a_style, a_width, a_brush)
 		end
 
 feature -- Access
@@ -44,13 +44,13 @@ feature -- Access
 				computed_hash_code := (
 					color_hash_value.abs.floor +
 					line_width * 2 +
-					dashed_line_mode
+					style
 				).abs
 			end
 			Result := computed_hash_code
 		end
 
-	dashed_line_mode: INTEGER
+	style: INTEGER
 			-- Style of the pen.
 
 	line_width: INTEGER
@@ -70,11 +70,11 @@ feature -- Access
 
 feature -- Comparison
 
-	is_equal(other: like Current): BOOLEAN
+	is_equal (other: like Current): BOOLEAN
 			-- Does `Current' look the same as `other'?
 		do
 			Result :=
-				dashed_line_mode = other.dashed_line_mode and then
+				style = other.style and then
 				line_width = other.line_width and then
 				color_red = other.color_red and then
 				color_green = other.color_green and then
@@ -83,17 +83,23 @@ feature -- Comparison
 
 feature -- Element change
 
-	set_values (a_dashed_mode: INTEGER; a_width: INTEGER;
-		a_color: WEL_COLOR_REF)
-			-- Set the style of the pen to `a_dashed_mode',
+	set_values (a_style: INTEGER; a_width: INTEGER;
+		a_brush: WEL_LOG_BRUSH)
+			-- Set the style of the pen to `a_style',
 			-- the line width to `a_width' and the color
 			-- to `a_color'.
+		local
+			l_color: WEL_COLOR_REF
 		do
-			dashed_line_mode := a_dashed_mode
+			style := a_style
 			line_width := a_width
-			color_red := a_color.red
-			color_blue := a_color.blue
-			color_green := a_color.green
+			l_color := a_brush.color
+			color_red := l_color.red
+			color_blue := l_color.blue
+			color_green := l_color.green
+
+				-- Reset hash code so that it may be recomputed.
+			computed_hash_code := 0
 		end
 
 note

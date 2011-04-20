@@ -113,6 +113,12 @@ feature -- Basic operation
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
+	refresh_graphics_context
+			-- Refresh the graphics context in case it is no longer valid.
+		do
+			-- Redefined by descendent.
+		end
+
 	interface: detachable EV_SCREEN note option: stable attribute end;
 
 note

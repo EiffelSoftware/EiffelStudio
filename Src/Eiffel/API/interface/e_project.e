@@ -535,11 +535,18 @@ feature -- Update
 				Compilation_modes.set_is_finalizing
 				set_error_status (Ok_status)
 				is_compiling_ref.put (True)
+				if comp_system.automatic_backup then
+					workbench.create_backup_directory
+					workbench.save_starting_backup_info
+				end
 				Comp_system.finalize_system (keep_assertions)
 				if successful then
 						-- No point on trying to save a cancelled (i.e. non successful compilation).
 						-- False because we are not precompiling here.
 					Workbench.save_project (False)
+				end
+				if comp_system.automatic_backup then
+					workbench.save_ending_backup_info
 				end
 				is_compiling_ref.put (False)
 				Compilation_modes.reset_modes
@@ -1050,7 +1057,7 @@ invariant
 	degree_output_not_void: degree_output /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

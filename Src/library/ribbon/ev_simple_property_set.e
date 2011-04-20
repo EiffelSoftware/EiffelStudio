@@ -33,6 +33,18 @@ feature {NONE} -- Initialization
 			all_property_sets.extend (object_id)
 		end
 
+feature -- Query
+
+	value (a_property_key: EV_PROPERTY_KEY): EV_PROPERTY_VARIANT
+			-- Retrieves the value identified by a property key.
+		local
+			l_result: NATURAL_32
+		do
+			create Result.make_empty
+			l_result := c_get_value (item.item, a_property_key.item, Result.item)
+			check l_result = {EV_RIBBON_HRESULT}.s_ok end
+		end
+
 feature {EV_RIBBON_COLLECTION, EV_SIMPLE_PROPERTY_SET, EV_RIBBON_SAFE_ARRAY} -- Query
 
 	item: MANAGED_POINTER
@@ -64,7 +76,7 @@ feature -- Command
 
 feature {EV_SIMPLE_PROPERTY_SET} -- Implementation
 
-	get_value (a_simple_property_set: POINTER; a_property_key: POINTER; a_property_value: POINTER): NATURAL_32
+	get_value_for_c (a_simple_property_set: POINTER; a_property_key: POINTER; a_property_value: POINTER): NATURAL_32
 			--
 		local
 			l_key: EV_PROPERTY_KEY
@@ -86,7 +98,7 @@ feature {EV_SIMPLE_PROPERTY_SET} -- Implementation
 			else
 				-- Pass it to correspond {EV_SIMPLE_PROPERTY_SET} object
 				if attached find_property_set_for (a_simple_property_set) as l_property_set then
-					Result := l_property_set.get_value (a_simple_property_set, a_property_key, a_property_value)
+					Result := l_property_set.get_value_for_c (a_simple_property_set, a_property_key, a_property_value)
 				end
 			end
 		end
@@ -146,12 +158,26 @@ feature {NONE} -- Externals
 			]"
 		end
 
+	c_get_value (a_item: POINTER; a_property_key: POINTER; a_property_value: POINTER): NATURAL_32
+			--
+		external
+			"C++ inline use %"simple_property_set.h%""
+		alias
+			"[
+			{
+				IUISimplePropertySet *l_set = (IUISimplePropertySet *)$a_item;
+				return l_set->GetValue((REFPROPERTYKEY)$a_property_key,
+										(PROPVARIANT *)$a_property_value);
+			}
+			]"
+		end
+
 	set_object_and_function_address
 			-- Set object and function addresses
 			-- This set callbacks in C codes, so `execute' and `update_property' can be called in C codes.
 		do
 			c_set_simple_property_set_object ($Current)
-			c_set_get_value_address ($get_value)
+			c_set_get_value_address ($get_value_for_c)
 		end
 
 	c_set_simple_property_set_object (a_object: POINTER)

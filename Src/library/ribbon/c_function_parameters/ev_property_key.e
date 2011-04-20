@@ -16,6 +16,7 @@ class
 	EV_PROPERTY_KEY
 
 create
+	make_emtpy,
 	share_from_pointer,
 	make_boolean,
 	make_label,
@@ -35,14 +36,34 @@ create
 	make_tooltip_title,
 	make_tooltip_description,
 	make_recent_items,
-	make_color
+	make_color,
+	make_font_properties,
+	make_font_properties_backgroundcolor,
+	make_font_properties_backgroundcolor_type,
+	make_font_properties_bold,
+	make_font_properties_changed_properties,
+	make_font_properties_delta_size,
+	make_font_properties_family,
+	make_font_properties_foregroundcolor,
+	make_font_properties_foregroundcolor_type,
+	make_font_properties_italic,
+	make_font_properties_size,
+	make_font_properties_strikethrough,
+	make_font_properties_underline,
+	make_font_properties_vertical_positioning
 
 feature {NONE}  -- Initialization
+
+	make_emtpy
+			-- Make a empty property key
+		do
+			create pointer.make (c_size)
+		end
 
 	share_from_pointer (a_property_key: POINTER)
 			-- Creation method
 		do
-			item := a_property_key
+			create pointer.share_from_pointer (a_property_key, c_size)
 		end
 
 	make_boolean
@@ -159,6 +180,92 @@ feature {NONE}  -- Initialization
 			share_from_pointer (c_ui_pkey_color)
 		end
 
+feature {NONE} -- Font properties creation methods
+
+	make_font_properties
+			-- Make a font properties
+		do
+			share_from_pointer (c_ui_pkey_font_properties)
+		end
+
+	make_font_properties_backgroundcolor
+			-- Make a font properties backgroundcolor
+		do
+			share_from_pointer (c_ui_pkey_font_properties_backgroundcolor)
+		end
+
+	make_font_properties_backgroundcolor_type
+			-- Make a font properties backgroundcolor tyep
+		do
+			share_from_pointer (c_ui_pkey_font_properties_backgroundcolor_type)
+		end
+
+	make_font_properties_bold
+			-- Make a font properties bold
+		do
+			share_from_pointer (c_ui_pkey_font_properties_bold)
+		end
+
+	make_font_properties_changed_properties
+			-- Make a font properties changed properties
+		do
+			share_from_pointer (c_ui_pkey_font_properties_changed_properties)
+		end
+
+	make_font_properties_delta_size
+			-- Make a font properties delta size
+		do
+			share_from_pointer (c_ui_pkey_font_properties_delta_size)
+		end
+
+	make_font_properties_family
+			-- Make a font properties family
+		do
+			share_from_pointer (c_ui_pkey_font_properties_family)
+		end
+
+	make_font_properties_foregroundcolor
+			-- Make a font properties foregroundcolor
+		do
+			share_from_pointer (c_ui_pkey_font_properties_foregroundcolor)
+		end
+
+	make_font_properties_foregroundcolor_type
+			-- Make a font properties foregroundcolor type
+		do
+			share_from_pointer (c_ui_pkey_font_properties_foregroundcolor_type)
+		end
+
+	make_font_properties_italic
+			-- Make a font properties italic
+		do
+			share_from_pointer (c_ui_pkey_font_properties_italic)
+		end
+
+	make_font_properties_size
+			-- Make a font properties size
+		do
+			share_from_pointer (c_ui_pkey_font_properties_size)
+		end
+
+	make_font_properties_strikethrough
+			-- Make a font properties strikethrough
+		do
+			share_from_pointer (c_ui_pkey_font_properties_strikethrough)
+		end
+
+	make_font_properties_underline
+			-- Make a font properties underline
+		do
+			share_from_pointer (c_ui_pkey_font_properties_underline)
+		end
+
+	make_font_properties_vertical_positioning
+			-- Make a font properties vertical positioning
+		do
+			share_from_pointer (c_ui_pkey_font_properties_vertical_positioning)
+		end
+
 feature -- Access
 
 	guid: WEL_GUID
@@ -173,8 +280,14 @@ feature -- Access
 			Result := c_pid (item)
 		end
 
+	pointer: MANAGED_POINTER
+			--
+
 	item: POINTER
 			--
+		do
+			Result := pointer.item
+		end
 
 feature -- Status Report
 
@@ -319,7 +432,147 @@ feature -- Status Report
 			Result := l_tmp.guid.is_equal (guid)
 		end
 
+feature -- Font properties
+
+	is_font_properties: BOOLEAN
+			-- Is current font properties?
+		local
+			l_tmp: EV_PROPERTY_KEY
+		do
+			create l_tmp.make_font_properties
+			Result := l_tmp.guid.is_equal (guid)
+		end
+
+	is_font_properties_backgroundcolor: BOOLEAN
+			-- Is current font properties background color?
+		local
+			l_tmp: EV_PROPERTY_KEY
+		do
+			create l_tmp.make_font_properties_backgroundcolor
+			Result := l_tmp.guid.is_equal (guid)
+		end
+
+	is_font_properties_backgroundcolor_type: BOOLEAN
+			-- Is current font properties background color color?
+		local
+			l_tmp: EV_PROPERTY_KEY
+		do
+			create l_tmp.make_font_properties_backgroundcolor_type
+			Result := l_tmp.guid.is_equal (guid)
+		end
+
+	is_font_properties_bold: BOOLEAN
+			-- Is current font properties bold?
+		local
+			l_tmp: EV_PROPERTY_KEY
+		do
+			create l_tmp.make_font_properties_bold
+			Result := l_tmp.guid.is_equal (guid)
+		end
+
+	is_font_properties_changed_properties: BOOLEAN
+			-- Is current font properties changed properties?
+		local
+			l_tmp: EV_PROPERTY_KEY
+		do
+			create l_tmp.make_font_properties_changed_properties
+			Result := l_tmp.guid.is_equal (guid)
+		end
+
+	is_font_properties_delta_size: BOOLEAN
+			-- Is current font properties delta size?
+		local
+			l_tmp: EV_PROPERTY_KEY
+		do
+			create l_tmp.make_font_properties_delta_size
+			Result := l_tmp.guid.is_equal (guid)
+		end
+
+	is_font_properties_family: BOOLEAN
+			-- Is current font properties family?
+		local
+			l_tmp: EV_PROPERTY_KEY
+		do
+			create l_tmp.make_font_properties_family
+			Result := l_tmp.guid.is_equal (guid)
+		end
+
+	is_font_properties_foreground_color: BOOLEAN
+			-- Is current font properties foregroundcolor?
+		local
+			l_tmp: EV_PROPERTY_KEY
+		do
+			create l_tmp.make_font_properties_foregroundcolor
+			Result := l_tmp.guid.is_equal (guid)
+		end
+
+	is_font_properties_foregroundcolor_type: BOOLEAN
+			-- Is current font properties foregroundcolor type?
+		local
+			l_tmp: EV_PROPERTY_KEY
+		do
+			create l_tmp.make_font_properties_foregroundcolor_type
+			Result := l_tmp.guid.is_equal (guid)
+		end
+
+	is_font_properties_italic: BOOLEAN
+			-- Is current font properties italic?
+		local
+			l_tmp: EV_PROPERTY_KEY
+		do
+			create l_tmp.make_font_properties_italic
+			Result := l_tmp.guid.is_equal (guid)
+		end
+
+	is_font_properties_size: BOOLEAN
+			-- Is current font properties size?
+		local
+			l_tmp: EV_PROPERTY_KEY
+		do
+			create l_tmp.make_font_properties_size
+			Result := l_tmp.guid.is_equal (guid)
+		end
+
+	is_font_properties_strikethrough: BOOLEAN
+			-- Is current font properties strikethrough?
+		local
+			l_tmp: EV_PROPERTY_KEY
+		do
+			create l_tmp.make_font_properties_strikethrough
+			Result := l_tmp.guid.is_equal (guid)
+		end
+
+	is_font_properties_underline: BOOLEAN
+			-- Is current font properties underline?
+		local
+			l_tmp: EV_PROPERTY_KEY
+		do
+			create l_tmp.make_font_properties_underline
+			Result := l_tmp.guid.is_equal (guid)
+		end
+
+	is_font_properties_vertical_positioning: BOOLEAN
+			-- Is current font properties Vertical Positioning?
+		local
+			l_tmp: EV_PROPERTY_KEY
+		do
+			create l_tmp.make_font_properties_vertical_positioning
+			Result := l_tmp.guid.is_equal (guid)
+		end
+
 feature {NONE} -- Externals
+
+	c_size: INTEGER
+			--
+		external
+			"C inline use <ribbon.h>"
+		alias
+			"[
+			{
+				return sizeof (PROPERTYKEY);
+			}
+			]"
+		end
 
 	c_guid_pointer (a_property_key: POINTER): POINTER
 			--
@@ -576,4 +829,175 @@ feature {NONE} -- Externals
 			}
 			]"
 		end
+
+feature {NONE} -- Font control properties
+
+	c_ui_pkey_font_properties: POINTER
+			--
+		external
+			"C inline use %"UIRibbon.h%""
+		alias
+			"[
+			{
+				return &UI_PKEY_FontProperties;
+			}
+			]"
+		end
+
+	c_ui_pkey_font_properties_backgroundcolor: POINTER
+			--
+		external
+			"C inline use %"UIRibbon.h%""
+		alias
+			"[
+			{
+				return &UI_PKEY_FontProperties_BackgroundColor;
+			}
+			]"
+		end
+
+	c_ui_pkey_font_properties_backgroundcolor_type: POINTER
+			--
+		external
+			"C inline use %"UIRibbon.h%""
+		alias
+			"[
+			{
+				return &UI_PKEY_FontProperties_BackgroundColorType;
+			}
+			]"
+		end
+
+	c_ui_pkey_font_properties_bold: POINTER
+			--
+		external
+			"C inline use %"UIRibbon.h%""
+		alias
+			"[
+			{
+				return &UI_PKEY_FontProperties_Bold;
+			}
+			]"
+		end
+
+	c_ui_pkey_font_properties_changed_properties: POINTER
+			--
+		external
+			"C inline use %"UIRibbon.h%""
+		alias
+			"[
+			{
+				return &UI_PKEY_FontProperties_ChangedProperties;
+			}
+			]"
+		end
+
+	c_ui_pkey_font_properties_delta_size: POINTER
+			--
+		external
+			"C inline use %"UIRibbon.h%""
+		alias
+			"[
+			{
+				return &UI_PKEY_FontProperties_DeltaSize;
+			}
+			]"
+		end
+
+	c_ui_pkey_font_properties_family: POINTER
+			--
+		external
+			"C inline use %"UIRibbon.h%""
+		alias
+			"[
+			{
+				return &UI_PKEY_FontProperties_Family;
+			}
+			]"
+		end
+
+	c_ui_pkey_font_properties_foregroundcolor: POINTER
+			--
+		external
+			"C inline use %"UIRibbon.h%""
+		alias
+			"[
+			{
+				return &UI_PKEY_FontProperties_ForegroundColor;
+			}
+			]"
+		end
+
+	c_ui_pkey_font_properties_foregroundcolor_type: POINTER
+			--
+		external
+			"C inline use %"UIRibbon.h%""
+		alias
+			"[
+			{
+				return &UI_PKEY_FontProperties_ForegroundColorType;
+			}
+			]"
+		end
+
+	c_ui_pkey_font_properties_italic: POINTER
+			--
+		external
+			"C inline use %"UIRibbon.h%""
+		alias
+			"[
+			{
+				return &UI_PKEY_FontProperties_Italic;
+			}
+			]"
+		end
+
+	c_ui_pkey_font_properties_size: POINTER
+			--
+		external
+			"C inline use %"UIRibbon.h%""
+		alias
+			"[
+			{
+				return &UI_PKEY_FontProperties_Size;
+			}
+			]"
+		end
+
+	c_ui_pkey_font_properties_strikethrough: POINTER
+			--
+		external
+			"C inline use %"UIRibbon.h%""
+		alias
+			"[
+			{
+				return &UI_PKEY_FontProperties_Strikethrough;
+			}
+			]"
+		end
+
+	c_ui_pkey_font_properties_underline: POINTER
+			--
+		external
+			"C inline use %"UIRibbon.h%""
+		alias
+			"[
+			{
+				return &UI_PKEY_FontProperties_Underline;
+			}
+			]"
+		end
+
+	c_ui_pkey_font_properties_vertical_positioning: POINTER
+			--
+		external
+			"C inline use %"UIRibbon.h%""
+		alias
+			"[
+			{
+				return &UI_PKEY_FontProperties_VerticalPositioning;
+			}
+			]"
+		end
+
 end

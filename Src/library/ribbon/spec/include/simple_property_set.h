@@ -41,7 +41,7 @@ IUISimplePropertySet * CreateInstanceSimplePropertySet ();
 
 extern void c_set_simple_property_set_object(EIF_REFERENCE a_address);
 extern void c_release_simple_property_set_object (void);
-extern void c_set_get_value_address (EIF_RIBBON_SIMPLE_PROPERTY_SET_GET_VALUE_PROC a_address);
+extern void c_set_get_value_address (EIF_POINTER a_address);
 
 extern EIF_OBJECT eiffel_simple_property_set_object;
 	/* Address of Eiffel object EV_SIMPLE_PROPERTY_SET */

@@ -564,7 +564,7 @@ feature -- Actions
 	focus_in_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when keyboard focus just gained
 		do
-			if not is_ignore_actions then
+			if not are_actions_ignored then
 				if attached internal_focus_in_actions as l_actions then
 					Result := l_actions
 				else
@@ -581,7 +581,7 @@ feature -- Actions
 	focus_out_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when keyboard focus just lost
 		do
-			if not is_ignore_actions then
+			if not are_actions_ignored then
 				if attached internal_focus_out_actions as l_actions then
 					Result := l_actions
 				else
@@ -598,7 +598,7 @@ feature -- Actions
 	close_request_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to perfrom when close requested
 		do
-			if not is_ignore_actions then
+			if not are_actions_ignored then
 				if attached internal_close_request_actions as l_actions then
 					Result := l_actions
 				else
@@ -615,7 +615,7 @@ feature -- Actions
 	drop_actions: EV_PND_ACTION_SEQUENCE
 			-- Drop actions to performed when user drop a pebble on notebook tab
 		do
-			if not is_ignore_actions then
+			if not are_actions_ignored then
 				if attached internal_drop_actions as l_actions then
 					Result := l_actions
 				else
@@ -632,7 +632,7 @@ feature -- Actions
 	show_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to perform when `user_widget' just shown
 		do
-			if not is_ignore_actions then
+			if not are_actions_ignored then
 				if attached internal_show_actions as l_actions then
 					Result := l_actions
 				else
@@ -650,7 +650,7 @@ feature -- Actions
 			-- Actions to perform when user double click on notebook tab bar right side blank area
 			-- Only work for up-side notebook tab bar
 		do
-			if not is_ignore_actions then
+			if not are_actions_ignored then
 				if attached internal_tab_bar_right_blank_area_double_click_actions as l_actions then
 					Result := l_actions
 				else
@@ -932,10 +932,10 @@ feature {SD_STATE, SD_OPEN_CONFIG_MEDIATOR}
 
 feature {NONE}  -- Implemention
 
-	is_ignore_actions: BOOLEAN
+	are_actions_ignored: BOOLEAN
 			-- Ignore actions?
 		do
-			Result := is_docking_manager_attached and then docking_manager.is_closing_all
+			Result := not is_docking_manager_attached or else docking_manager.is_closing_all
 		end
 
 	internal_user_widget: detachable like user_widget

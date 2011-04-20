@@ -547,7 +547,11 @@ feature -- Command/Query Handling
 		external
 			"C inline use %"eif_scoop.h%""
 		alias
-			"((call_data*) $a_call_data)->body_index"
+			"[
+				#ifdef WORKBENCH
+					return ((call_data*) $a_call_data)->body_index;
+				#endif
+			]"
 		end
 
 	frozen call_data_sync_pid (a_call_data: like call_data): INTEGER_16

@@ -25,13 +25,13 @@ feature {NONE}  -- Initialization
 	share_from_pointer (a_property_variant: POINTER)
 			-- Creation method
 		do
-			create internal_data.share_from_pointer (a_property_variant, size)
+			create managed_pointer.share_from_pointer (a_property_variant, size)
 		end
 
 	make_empty
 			--
 		do
-			create internal_data.make (size)
+			create managed_pointer.make (size)
 		end
 
 feature -- Access
@@ -39,7 +39,22 @@ feature -- Access
 	item: POINTER
 			-- Associated C memory.
 		do
-			Result := internal_data.item
+			Result := managed_pointer.item
+		end
+
+	managed_pointer: MANAGED_POINTER
+			-- The property variant structure.
+
+	size: INTEGER
+			--
+		external
+			"C inline use <ribbon.h>"
+		alias
+			"[
+			{
+				return sizeof (PROPVARIANT);
+			}
+			]"
 		end
 
 feature -- Command
@@ -145,10 +160,11 @@ feature -- Query
 			Result := c_read_uint32 (item)
 		end
 
-feature {NONE} -- Implementation
-
-	internal_data: MANAGED_POINTER
-			-- The property variant structure.
+	iunknown_value: POINTER
+			-- IUnknown value
+		do
+			Result := c_read_iunknown (item)
+		end
 
 feature {NONE} -- Externals
 
@@ -220,6 +236,17 @@ feature {NONE} -- Externals
 			"{
 				PROPVARIANT *ppropvar = (PROPVARIANT *) $a_item;
 				return ppropvar->ulVal;
+			}"
+		end
+
+	c_read_iunknown (a_item: POINTER): POINTER
+			--
+		external
+			"C inline use <ribbon.h>"
+		alias
+			"{
+				PROPVARIANT *ppropvar = (PROPVARIANT *) $a_item;
+				return ppropvar->punkVal;
 			}"
 		end
 
@@ -318,18 +345,6 @@ feature {NONE} -- Externals
 				PROPVARIANT *ppropvar = (PROPVARIANT *) $a_item;
 				ppropvar->vt = VT_ARRAY | VT_UNKNOWN;
 				ppropvar->punkVal = (IUnknown *)$a_psa;	
-			}
-			]"
-		end
-
-	size: INTEGER
-			--
-		external
-			"C inline use <ribbon.h>"
-		alias
-			"[
-			{
-				return sizeof (PROPVARIANT);
 			}
 			]"
 		end

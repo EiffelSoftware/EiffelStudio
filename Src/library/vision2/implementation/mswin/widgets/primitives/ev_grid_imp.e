@@ -66,30 +66,62 @@ feature {NONE} -- Initialization
 
 	make
 			-- Initialize `Current'.
-		local
-			color_imp: detachable EV_COLOR_IMP
 		do
-			create focused_selection_color
-			color_imp ?= focused_selection_color.implementation
-			check color_imp /= Void end
-			color_imp.set_with_system_id (wel_color_constants.color_highlight)
-			create non_focused_selection_color
-			color_imp ?= non_focused_selection_color.implementation
-			check color_imp /= Void end
-			color_imp.set_with_system_id (wel_color_constants.color_btnface)
-			create focused_selection_text_color
-			color_imp ?= focused_selection_text_color.implementation
-			check color_imp /= Void end
-			color_imp.set_with_system_id (wel_color_constants.color_highlighttext)
-			create non_focused_selection_text_color
-			color_imp ?= non_focused_selection_text_color.implementation
-			check color_imp /= Void end
-			color_imp.set_with_system_id (wel_color_constants.color_btntext)
+			focused_selection_color := default_focused_selection_color
+			non_focused_selection_color := default_non_focused_selection_color
+			focused_selection_text_color := default_focused_selection_text_color
+			non_focused_selection_text_color := default_non_focused_selection_text_color
 
 			Precursor {EV_CELL_IMP}
 			initialize_grid
 
 			set_is_initialized (True)
+		end
+
+feature {NONE} -- Implementation
+
+	default_focused_selection_color: EV_COLOR
+			-- Default focused selection color.
+		local
+			color_imp: detachable EV_COLOR_IMP
+		once
+			create Result
+			color_imp ?= Result.implementation
+			check color_imp /= Void end
+			color_imp.set_with_system_id (wel_color_constants.color_highlight)
+		end
+
+	default_non_focused_selection_color: EV_COLOR
+			-- Default non-focused selection color.
+		local
+			color_imp: detachable EV_COLOR_IMP
+		once
+			create Result
+			color_imp ?= Result.implementation
+			check color_imp /= Void end
+			color_imp.set_with_system_id (wel_color_constants.color_btnface)
+		end
+
+	default_focused_selection_text_color: EV_COLOR
+			-- Default focused selection text color.
+		local
+			color_imp: detachable EV_COLOR_IMP
+		once
+			create Result
+			color_imp ?= Result.implementation
+			check color_imp /= Void end
+			color_imp.set_with_system_id (wel_color_constants.color_highlighttext)
+		end
+
+	default_non_focused_selection_text_color: EV_COLOR
+			-- Default non-focused selection text color.
+		local
+			color_imp: detachable EV_COLOR_IMP
+		once
+			create Result
+			color_imp ?= Result.implementation
+			check color_imp /= Void end
+			color_imp.set_with_system_id (wel_color_constants.color_btntext)
 		end
 
 feature -- Access
@@ -103,26 +135,17 @@ feature -- Access
 			-- make quite a difference on certain platforms.
 		local
 			font_imp: detachable EV_FONT_IMP
-			screen_dc: WEL_SCREEN_DC
-			bounding_rect: WEL_RECT
+			l_size_tuple: TUPLE [width: INTEGER; height: INTEGER]
 		do
-
-			if s.is_empty then
+			if s.count = 0 then
 				tuple.width := 0
 				tuple.height := 0
 			else
 				font_imp ?= f.implementation
 				check font_imp /= Void end
-				bounding_rect := wel_rect
-				bounding_rect.set_rect (0, 0, 32767, 32767)
-				create screen_dc
-				screen_dc.get
-				screen_dc.select_font (font_imp.wel_font)
-				screen_dc.draw_text (s, bounding_rect, {WEL_DT_CONSTANTS}.dt_calcrect | {WEL_DT_CONSTANTS}.dt_expandtabs | {WEL_DT_CONSTANTS}.dt_noprefix)
-				tuple.width := bounding_rect.width
-				tuple.height := bounding_rect.height
-				screen_dc.unselect_font
-				screen_dc.quick_release
+				l_size_tuple := font_imp.string_size_no_offset (s)
+				tuple.width := l_size_tuple.width
+				tuple.height := l_size_tuple.height
 			end
 		end
 

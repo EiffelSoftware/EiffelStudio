@@ -137,7 +137,7 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 			Result := False
 		end
 
-	parse (descriptor: INTEGER; uht: detachable DB_STRING_HASH_TABLE [ANY]; ht_order: detachable ARRAYED_LIST [STRING]; uhandle: HANDLE; sql: READABLE_STRING_GENERAL): BOOLEAN
+	parse (descriptor: INTEGER; uht: detachable DB_STRING_HASH_TABLE [detachable ANY]; ht_order: detachable ARRAYED_LIST [STRING]; uhandle: HANDLE; sql: READABLE_STRING_GENERAL): BOOLEAN
 			-- ???
 		do
 		end
@@ -148,7 +148,7 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 		do
 		end
 
-	bind_args_value (descriptor: INTEGER; uht: DB_STRING_HASH_TABLE [ANY]
+	bind_args_value (descriptor: INTEGER; uht: DB_STRING_HASH_TABLE [detachable ANY]
 		sql: STRING)
 			-- Append map variables name from to `s'.
 			-- Map variables are used for set input arguments. `uht' can be

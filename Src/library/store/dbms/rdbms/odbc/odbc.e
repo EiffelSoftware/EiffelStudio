@@ -125,7 +125,7 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 
 	normal_parse: BOOLEAN = False
 
-	parse (descriptor: INTEGER; uht: detachable DB_STRING_HASH_TABLE [ANY]; ht_order: detachable ARRAYED_LIST [STRING]; uhandle: HANDLE; sql: READABLE_STRING_GENERAL): BOOLEAN
+	parse (descriptor: INTEGER; uht: detachable DB_STRING_HASH_TABLE [detachable ANY]; ht_order: detachable ARRAYED_LIST [STRING]; uhandle: HANDLE; sql: READABLE_STRING_GENERAL): BOOLEAN
 		local
 			tmp_str: STRING_32
 			c_temp, c_temp2: SQL_STRING
@@ -1201,7 +1201,7 @@ feature {NONE} -- External features
 
 	para: detachable DB_PARA_ODBC
 
-	bind_args_value (descriptor: INTEGER; uht: DB_STRING_HASH_TABLE [ANY]; ht_order: detachable ARRAYED_LIST [STRING])
+	bind_args_value (descriptor: INTEGER; uht: DB_STRING_HASH_TABLE [detachable ANY]; ht_order: detachable ARRAYED_LIST [STRING])
 			-- Append map variables name from to `s'.
 			-- Map variables are used for set input arguments.
 		require

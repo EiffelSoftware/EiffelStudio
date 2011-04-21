@@ -20,7 +20,8 @@ inherit
 			process_access_feat_as,
 			process_access_id_as,
 			process_feature_clause_as,
-			process_string_as
+			process_string_as,
+			process_agent_routine_creation_as
 		end
 
 	CHARACTER_ROUTINES
@@ -124,22 +125,13 @@ feature {NONE} -- Implementation
 			l_feature_name: STRING
 			param1: STRING_AS
 			param2: STRING_AS
-			plural_entry: PO_FILE_ENTRY_PLURAL
-			singular_entry: PO_FILE_ENTRY_SINGULAR
-			temp:  STRING
 		do
 			l_feature_name := node.access_name
 			if l_feature_name /= Void and then l_feature_name.is_case_insensitive_equal (translate_feature) then
 				if node.parameters /= Void then
 					param1 ?= node.parameters.first
 					if param1 /= Void then
-						temp := param1.value.as_string_32
-						handle_special_chars (temp)
-						if (not po_file.has_entry (temp)) then
-							create singular_entry.make (utf8_string (temp))
-							append_comments (param1, singular_entry)
-							po_file.add_entry (singular_entry)
-						end
+						add_singular_entry (param1)
 					end
 				end
 			elseif l_feature_name /= Void and then l_feature_name.is_case_insensitive_equal (translate_plural_feature) then
@@ -147,23 +139,14 @@ feature {NONE} -- Implementation
 					param1 ?= node.parameters.first
 					param2 ?= node.parameters.i_th (node.parameters.index_set.lower+1) --should be 2d item :)
 					if param1 /= Void and then param2 /= Void then
-						temp := param1.value
-						handle_special_chars (temp)
-						if (not po_file.has_entry(temp)) then
-							create plural_entry.make (utf8_string (temp))
-							temp := param2.value
-							handle_special_chars (temp)
-							plural_entry.set_msgid_plural (utf8_string (temp))
-							append_comments (param1, plural_entry)
-							po_file.add_entry (plural_entry)
-						end
+						add_plural_entry (param1, param2)
 					end
 				end
 			end
 		end
 
 	analyse_feature_clause (node: FEATURE_CLAUSE_AS)
-			-- Analyze iif a feature clause is an internationalized feature clause.
+			-- Analyze if a feature clause is an internationalized feature clause.
 			--
 			-- `node': AST node of a feature clause which is analyzed
 		local
@@ -202,14 +185,44 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	analyse_agent_routine_creation (node: AGENT_ROUTINE_CREATION_AS)
+			-- Analyze if agent creation AS contain something like:
+			-- agent translation_manager.translation ("Name"))
+			-- or
+			-- agent translation ("Name"))
+			--
+			-- `node': AST node of a agent routine creation
+		local
+			l_feature_name: STRING
+		do
+				-- Case: agent translation ("Name")) and agent target.translation ("Name"))
+			if attached node.feature_name as l_f then
+				l_feature_name := l_f.name
+				if attached node.operands as l_operands then
+					if l_feature_name.is_case_insensitive_equal (translate_feature) then
+						if l_operands.count = 1 and then attached {STRING_AS} l_operands.first.expression as l_param then
+							add_singular_entry (l_param)
+						end
+					elseif l_feature_name.is_case_insensitive_equal (translate_plural_feature) then
+						if
+							l_operands.count = 3 and then
+							attached {STRING_AS} l_operands.i_th (1).expression as l_param1 and then
+							attached {STRING_AS} l_operands.i_th (2).expression as l_param2
+						then
+							add_plural_entry (l_param1, l_param2)
+						end
+					end
+				end
+			end
+		end
+
 	process_access_id_as (l_as: ACCESS_ID_AS)
 			-- Process `l_as'.
 			--
 			-- `l_as': AST node representing an access on an identifier
 		do
 			analyse_call(l_as)
-			safe_process (l_as.feature_name)
-			safe_process (l_as.internal_parameters)
+			Precursor (l_as)
 		end
 
 	process_access_feat_as (l_as: ACCESS_FEAT_AS)
@@ -218,8 +231,14 @@ feature {NONE} -- Implementation
 			-- `l_as': AST node representing an access on a feature
 		do
 			analyse_call(l_as)
-			safe_process (l_as.feature_name)
-			safe_process (l_as.internal_parameters)
+			Precursor (l_as)
+		end
+
+	process_agent_routine_creation_as (l_as: AGENT_ROUTINE_CREATION_AS)
+			-- Process `l_as'.
+		do
+			analyse_agent_routine_creation (l_as)
+			Precursor (l_as)
 		end
 
 	process_feature_clause_as (l_as: FEATURE_CLAUSE_AS)
@@ -234,18 +253,9 @@ feature {NONE} -- Implementation
 
 	process_string_as (l_as: STRING_AS)
 			-- <Precursor>
-		local
-			singular_entry: PO_FILE_ENTRY_SINGULAR
-			temp: STRING
 		do
 			if is_extracting_strings then
-				temp := l_as.value
-				handle_special_chars (temp)
-				if (not po_file.has_entry (temp)) then
-					create singular_entry.make (utf8_string (temp))
-					append_comments (l_as, singular_entry)
-					po_file.add_entry (singular_entry)
-				end
+				add_singular_entry (l_as)
 			end
 			Precursor (l_as)
 		end
@@ -297,6 +307,11 @@ feature {NONE} -- Implementation
 			else
 				Result := a_text.substring (l_start + 1, l_end - 1)
 			end
+				-- We need to do this for the moment, because the source comes from the file directly.
+				-- Nothing guarentee UTF-8 encoding. There can be source converted into wrong character
+				-- because of encoding mismatching. But it is not that important in comment for now.
+				-- And it is much better than producing invalid text. (non-utf-8)
+			Result := utf8_string (Result)
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -314,11 +329,48 @@ feature {NONE} -- Implementation
 				l_line := current_line (a_as.position, source_text)
 				l_line.left_adjust
 				l_line.right_adjust
-				a_node.add_automatic_comment (utf8_string ("Source code: " + l_line))
+				a_node.add_automatic_comment ("Source code: " + l_line)
 			end
 				-- Append location.
 			if source_file_name /= Void then
-				a_node.add_reference_comment (utf8_string (source_file_name + ":" + a_as.line.out))
+				a_node.add_reference_comment (source_file_name + ":" + a_as.line.out)
+			end
+		end
+
+	add_singular_entry (l_as: STRING_AS)
+			-- Add singular entry into the po file, if possible
+		require
+			l_as_not_void: attached l_as
+		local
+			singular_entry: PO_FILE_ENTRY_SINGULAR
+			temp: STRING -- utf8
+		do
+			temp := l_as.value
+			handle_special_chars (temp)
+			if (not po_file.has_entry (temp)) then
+				create singular_entry.make (temp)
+				append_comments (l_as, singular_entry)
+				po_file.add_entry (singular_entry)
+			end
+		end
+
+	add_plural_entry (l_as_1, l_as_2: STRING_AS)
+			-- Add single entry into the po file, if possible
+		require
+			l_as_not_void: attached l_as_1 and attached l_as_2
+		local
+			plural_entry: PO_FILE_ENTRY_PLURAL
+			temp: STRING -- utf8
+		do
+			temp := l_as_1.value
+			handle_special_chars (temp)
+			if (not po_file.has_entry(temp)) then
+				create plural_entry.make (temp)
+				temp := l_as_2.value
+				handle_special_chars (temp)
+				plural_entry.set_msgid_plural (temp)
+				append_comments (l_as_1, plural_entry)
+				po_file.add_entry (plural_entry)
 			end
 		end
 
@@ -336,7 +388,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

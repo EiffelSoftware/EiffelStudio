@@ -101,7 +101,7 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 			end
 		end
 
-	parse (descriptor: INTEGER; uht: detachable DB_STRING_HASH_TABLE [ANY]; ht_order: detachable ARRAYED_LIST [STRING]; uhandle: HANDLE; sql: READABLE_STRING_GENERAL): BOOLEAN
+	parse (descriptor: INTEGER; uht: detachable DB_STRING_HASH_TABLE [detachable ANY]; ht_order: detachable ARRAYED_LIST [STRING]; uhandle: HANDLE; sql: READABLE_STRING_GENERAL): BOOLEAN
 		do
 			if uhandle.execution_type.immediate_execution then
 				Result := True
@@ -131,7 +131,7 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 			is_error_updated := False
 		end
 
-	bind_args_value (descriptor: INTEGER; uht: detachable DB_STRING_HASH_TABLE [ANY]; sql: READABLE_STRING_GENERAL)
+	bind_args_value (descriptor: INTEGER; uht: detachable DB_STRING_HASH_TABLE [detachable ANY]; sql: READABLE_STRING_GENERAL)
 			-- Append map variables name from to `s'.
 			-- Map variables are used for set input arguments.
 			-- `uht' can be empty (for stored procedures).
@@ -147,8 +147,10 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 				loop
 					if attached {STRING_32} l_u.item_for_iteration as l_s32 then
 						create tmp_c.make (database_format (l_s32))
+					elseif attached l_u.item_for_iteration as l_item then
+						create tmp_c.make (l_item.out)
 					else
-						create tmp_c.make (l_u.item_for_iteration.out)
+						create tmp_c.make ("NULL")
 					end
 					create tmp_c2.make (l_u.key_for_iteration)
 					ora_set_parameter (descriptor, c_temp.item, tmp_c2.item, tmp_c.item)

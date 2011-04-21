@@ -19,7 +19,7 @@ feature -- Status setting
 			ht_order.wipe_out
 		end
 
-	set_map_name (n: ANY; key: STRING)
+	set_map_name (n: detachable ANY; key: STRING)
 			-- Store item `n' with key `key'.
 			-- `n' can be `Void'.
 		require
@@ -78,7 +78,7 @@ feature -- Status report
 
 feature -- Status report
 
-	ht: detachable DB_STRING_HASH_TABLE [ANY] note option: stable attribute end
+	ht: detachable DB_STRING_HASH_TABLE [detachable ANY] note option: stable attribute end
 		-- Correspondence table between object references
 		-- and mapped keys
 

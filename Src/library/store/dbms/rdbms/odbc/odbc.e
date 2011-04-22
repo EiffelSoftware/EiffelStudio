@@ -1215,7 +1215,8 @@ feature {NONE} -- External features
 			l_any: detachable ANY
 			tmp_date: DATE_TIME
 			l_managed_pointer: detachable MANAGED_POINTER
-			l_c_string: SQL_STRING
+			l_sql_string: SQL_STRING -- UCS-2, two byte
+			l_c_string: C_STRING -- single byte
 			l_platform: PLATFORM
 			l_value_count: INTEGER
 			l_para: like para
@@ -1247,10 +1248,10 @@ feature {NONE} -- External features
 					elseif obj_is_string_32 (l_any) then
 						type := c_wstring_type
 						if attached {STRING_32} l_any as l_string_32 then
-							create l_c_string.make (l_string_32)
-							pointers.extend (l_c_string.item)
-							l_value_count := l_c_string.bytes_count
-							l_managed_pointer := l_c_string.managed_data
+							create l_sql_string.make (l_string_32)
+							pointers.extend (l_sql_string.item)
+							l_value_count := l_sql_string.bytes_count
+							l_managed_pointer := l_sql_string.managed_data
 						else
 							check False end -- implied by `obj_is_string (l_any)'
 						end

@@ -5,7 +5,7 @@ create
 
 feature
 
-	f is
+	f 
 		local
 			retried: BOOLEAN
 			old_exception: OLD_VIOLATION
@@ -14,12 +14,14 @@ feature
 				h := h + 1
 			end
 		ensure
-			old_g: h = old g - s.count		-- 2. Raise an OLD_VIOLATION.
+				-- 2. Raise an OLD_VIOLATION on first execution.
+			old_g: s /= Void or else h = old g - s.count
 		rescue
 			old_exception ?= (create {EXCEPTION_MANAGER_FACTORY}).exception_manager.last_exception
 			if old_exception /= Void then
 				print ("True%N")
-				print_exception (old_exception)
+				print (old_exception.recipient_name + "%N")
+				print (old_exception.type_name + "%N")
 			else
 				print ("False%N")
 			end
@@ -28,21 +30,14 @@ feature
 			retry
 		end
 
-	g: INTEGER is
+	g: INTEGER
 		do
-				-- 1. An exception is raised, since `s' is not initialized.
+				-- 1. Raise an exception when `s' is void.
 			Result := s.count + h
 		end
 
 	h: INTEGER
 
 	s: STRING
-
-	print_exception (a_ex: EXCEPTION) is
-			-- Print exception
-		do
-			print (a_ex.recipient_name + "%N")
-			print (a_ex.type_name + "%N")
-		end
 
 end

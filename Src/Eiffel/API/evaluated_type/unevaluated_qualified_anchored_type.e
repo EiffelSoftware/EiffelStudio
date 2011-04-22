@@ -15,6 +15,7 @@ inherit
 			conform_to,
 			evaluated_type_in_descendant,
 			has_associated_class,
+			formal_instantiated_in,
 			instantiated_in,
 			instantiation_in,
 			internal_is_valid_for_class,
@@ -176,7 +177,7 @@ feature {NONE} -- Implementation
 		do
 		end
 
-	instantiated_in (class_type: TYPE_A): like Current
+	formal_instantiated_in, instantiated_in (class_type: TYPE_A): like Current
 		do
 		end
 
@@ -189,7 +190,7 @@ invariant
 	chain_attached: chain /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1326,10 +1326,11 @@ feature -- Access
 				Result := a_context_type
 			elseif type.is_like then
 				Result := real_type_in (type.actual_type, a_context_type)
-			elseif type.is_formal then
-				Result := constrained_type_in (type, a_context_type)
 			else
-				Result := type
+				Result := type.formal_instantiated_in (a_context_type)
+				if Result.is_formal then
+					Result := constrained_type_in (Result, a_context_type)
+				end
 			end
 		ensure
 			result_not_void: Result /= Void

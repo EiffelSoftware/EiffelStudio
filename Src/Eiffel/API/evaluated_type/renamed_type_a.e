@@ -21,6 +21,7 @@ inherit
 	TYPE_A
 		redefine
 			renaming, is_renamed_type, has_renaming, instantiated_in,
+			formal_instantiated_in,
 			instantiation_in, has_associated_class, formal_instantiation_in,
 			to_type_set, conformance_type, actual_type,
 			same_as
@@ -81,6 +82,14 @@ feature -- Access
 	--| Martins 1/23/07: instantiation*
 	--| Should we return RENAMED_TYPE_A [TYPE_A]?
 	--| Currently there seems no need for it and it might most likeley introduce bugs.
+
+	formal_instantiated_in (a_class_type: TYPE_A): TYPE_A
+			-- Instantiation of Current in the context of `class_type'
+			-- assuming that Current is written in the associated class
+			-- of `class_type'.
+		do
+			Result := type.formal_instantiated_in (a_class_type)
+		end
 
 	instantiated_in (a_class_type: TYPE_A): TYPE_A
 			-- Instantiation of Current in the context of `class_type'

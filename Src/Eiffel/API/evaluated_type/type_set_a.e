@@ -29,6 +29,7 @@ inherit
 			has_expanded,
 			has_formal_generic,
 			instantiation_in,
+			formal_instantiated_in,
 			instantiated_in,
 			internal_is_valid_for_class,
 			is_attached,
@@ -146,6 +147,33 @@ feature -- Access
 					Result.extend (create {RENAMED_TYPE_A [TYPE_A]}.make (l_instantiated_type, item.renaming))
 				end
 				forth
+			end
+		end
+
+	formal_instantiated_in (class_type: TYPE_A): TYPE_SET_A
+		local
+			l_instantiated_type, l_item_type: TYPE_A
+			i: INTEGER
+		do
+			from
+				start
+				i := lower
+			until
+				after
+			loop
+				l_item_type := item.type
+				l_instantiated_type := l_item_type.formal_instantiated_in (class_type)
+				if l_instantiated_type /= l_item_type then
+					if Result = Void then
+						Result := twin
+					end
+					Result.put_i_th (create {RENAMED_TYPE_A [TYPE_A]}.make (l_instantiated_type, item.renaming), i)
+				end
+				i := i + 1
+				forth
+			end
+			if Result = Void then
+				Result := Current
 			end
 		end
 
@@ -1780,7 +1808,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

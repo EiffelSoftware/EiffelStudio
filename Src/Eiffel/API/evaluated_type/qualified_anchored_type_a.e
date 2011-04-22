@@ -19,6 +19,7 @@ inherit
 			has_formal_generic,
 			has_like,
 			initialize_info,
+			formal_instantiated_in,
 			instantiated_in,
 			instantiation_in,
 			is_explicit,
@@ -387,6 +388,17 @@ feature -- Output
 		end
 
 feature -- Primitives
+
+	formal_instantiated_in (class_type: TYPE_A): TYPE_A
+			-- <Precursor>
+		local
+			t: like Current
+		do
+			t := twin
+			t.set_actual_type (actual_type.formal_instantiated_in (class_type).actual_type)
+			t.set_qualifier (qualifier.formal_instantiated_in (class_type))
+			Result := t
+		end
 
 	instantiated_in (class_type: TYPE_A): TYPE_A
 			-- <Precursor>

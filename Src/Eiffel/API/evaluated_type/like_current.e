@@ -13,7 +13,8 @@ inherit
 		redefine
 			actual_type, deep_actual_type, context_free_type,
 			associated_class, associated_class_type, conform_to, conformance_type, convert_to,
-			generics, has_associated_class, has_associated_class_type, instantiated_in, duplicate,
+			generics, has_associated_class, has_associated_class_type, formal_instantiated_in,
+			instantiated_in, duplicate,
 			is_basic, is_expanded, is_external, is_like_current, is_none, is_reference, is_ephemeral,
 			meta_type, set_actual_type, evaluated_type_in_descendant, is_tuple,
 			set_attached_mark, set_detachable_mark, set_is_implicitly_attached,
@@ -493,6 +494,24 @@ feature {COMPILER_EXPORTER} -- Primitives
 			else
 				Result := a_class_type.type
 			end
+		end
+
+	formal_instantiated_in (class_type: TYPE_A): TYPE_A
+			-- Instantiation of Current in the context of `class_type'
+			-- assuming that Current is written in the associated class
+			-- of `class_type'.
+		local
+			t: like Current
+		do
+			t := twin
+			if conformance_type = Void then
+					-- When you create an instance of Current, `conformance_type' is not set
+					-- and this is what we do when generating the code of CURRENT_B.
+				t.set_actual_type (class_type)
+			else
+				t.set_actual_type (conformance_type.formal_instantiated_in (class_type))
+			end
+			Result := t
 		end
 
 	instantiated_in (class_type: TYPE_A): TYPE_A

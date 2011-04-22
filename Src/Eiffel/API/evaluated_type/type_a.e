@@ -1262,6 +1262,18 @@ feature -- Access
 			Result := Current
 		end
 
+	formal_instantiated_in (a_type: TYPE_A): TYPE_A
+			-- Instantiation of formals, if any, of Current in the context of `a_type'.
+			--| Unlike `instantiated_in' it preserves the anchors while updating 
+			--| the `actual_type'/`conformance_type'. 
+		require
+			valid: is_valid
+			a_type_valid: a_type /= Void
+			a_type_valid: a_type.is_valid
+		do
+			Result := Current
+		end
+
 	instantiated_in (class_type: TYPE_A): TYPE_A
 			-- Instantiation of Current in the context of `class_type'
 			-- assuming that Current is written in the associated class

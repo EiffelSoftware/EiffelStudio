@@ -508,15 +508,17 @@ feature -- Analyzis
 					-- once if it has already been done. Preconditions,
 					-- if any, are tested for all calls.
 				generate_once_prologue (internal_name)
+			end
 
+				-- Generate old variables
+			generate_old_variables
+
+			if not is_object_relative_once then
 				generate_rescue_prologue
 			end
 
 				-- Generate local expanded variable creations
 			generate_expanded_variables
-
-				-- Generate old variables
-			generate_old_variables
 
 				-- Now we want the body
 			generate_compound
@@ -991,6 +993,8 @@ end
 
 			generate_argument_initialization
 
+			context.generate_request_chain_declaration
+
 				-- Generate temporary locals under the control of the GC
 			context.generate_temporary_ref_variables
 
@@ -1161,7 +1165,7 @@ end
 					--       ... // Evaluate preconditions and set has_wait_condition if wait conditions are involved.
 					--       if (!has_wait_condition) break;
 					--       RTCK; // Remove a stack item pushed when entering a precondition.
-					--       RTS_RF (Current); // Free request chain to let the scheduler reschedule this call.
+					--       RTS_SRF (Current); // Free request chain to let the scheduler reschedule this call.
 					--    }
 					--    RTCF; // Raise exception
 				buf.put_new_line
@@ -1178,7 +1182,7 @@ end
 					-- If argument is controlled, there is no need to lock it again.
 					-- The generated code looks like
 					--    if (uarg) {
-					--       RTS_RC (Current);                  // Create request chain.
+					--       RTS_SRC (Current);                 // Create request chain.
 					--       if (uargN) RTS_RS (Current, argN); // Register uncontrolled argument in the chain.
 					--       ...                                // Repeat for other arguments.
 					--       if (uarg) RTS_RW (Current);        // Wait until all arguments are locked.
@@ -1186,8 +1190,7 @@ end
 				buf.put_new_line
 				buf.put_string ("if (uarg) {")
 				buf.indent
-				buf.put_new_line
-				buf.put_string ("RTS_RC (Current);");
+				context.generate_request_chain_creation
 				from
 					i := a.count
 				until
@@ -1245,8 +1248,7 @@ end
 					buf.put_string ("if (!has_wait_condition) break;")
 					buf.put_new_line
 					buf.put_string ("RTCK;")
-					buf.put_new_line
-					buf.put_string ("RTS_RF (Current);")
+					context.generate_request_chain_wait_condition_failure
 					buf.generate_block_close
 				end
 				buf.put_new_line
@@ -1385,6 +1387,7 @@ end
 					buf.put_integer (nb_refs)
 					buf.put_two_character (')', ';')
 				end
+				context.generate_request_chain_restore
 				rescue_clause.generate
 				generate_monitoring_stop
 				buf.put_new_line
@@ -1733,7 +1736,8 @@ feature {NONE} -- C code generation
 		do
 			if context.has_request_chain then
 				buffer.put_new_line
-				buffer.put_string ("if (uarg) RTS_RD (Current);")
+				buffer.put_string ("if (uarg) ")
+				context.generate_request_chain_removal
 			end
 		end
 
@@ -1864,6 +1868,9 @@ feature -- Byte code generation
 				context.set_assertion_type (0)
 			end
 				-- Go to point for old expressions
+
+				-- Record position to retry in case of rescue.
+			ba.mark_retry
 
 			if compound /= Void then
 				a_generator.generate (ba, compound)

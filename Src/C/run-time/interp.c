@@ -535,14 +535,18 @@ rt_public void xinitint(void)
  * Create request chain with the specified number of uncontrolled arguments
  * and wait when they are ready.
  */
-rt_private void initialize_request_chain (uint32 uarg, EIF_NATURAL_64 usep)
+rt_private void initialize_request_chain (uint32 uarg, EIF_NATURAL_64 usep, EIF_REFERENCE * volatile * qq, EIF_REFERENCE * volatile * qqt)
 {
+	/* Define indirect variable that is used to keep track of request chain stack. */
+#define q (*qq)
+#define qt (*qqt)
 	RT_GET_CONTEXT
+	EIF_GET_CONTEXT
 	uint32 n = argnum;
 	EIF_NATURAL_64 mask = ((EIF_NATURAL_64) 1) << (n - 1);
 
 		/* Create request chain. */
-	RTS_RC(icurrent -> it_ref);
+	RTS_SRCX(icurrent -> it_ref);
 		/* Register uncontrolled arguments. */
 	for (; uarg; n--, mask >>= 1) {
 		if (usep & mask) {
@@ -553,6 +557,8 @@ rt_private void initialize_request_chain (uint32 uarg, EIF_NATURAL_64 usep)
 	}
 		/* Wait for arguments to be locked. */
 	RTS_RW(icurrent -> it_ref);
+#undef q
+#undef qt
 }
 #endif /* EIF_THREADS */
 
@@ -607,6 +613,7 @@ rt_private void interpret(int flag, int where)
 	unsigned char * volatile pre_start = 0;		/* Start of a precondition. */
 	char volatile has_wait_condition = '\0';        /* Is there a wait condition? */
 	char volatile has_uncontrolled_argument = '\0'; /* Is uncontrolled argument used? */
+	RTS_SDX                                         /* Declarations for request chain */
 #endif
 	BODY_INDEX body_id = 0;		/* Body id of routine */
 	int volatile current_trace_level = 0;	/* Saved call level for trace, only needed when routine is retried */
@@ -878,7 +885,7 @@ rt_private void interpret(int flag, int where)
 		if ((*IC != BC_PRECOND) && (*IC != BC_START_CATCALL)) {
 #ifdef EIF_THREADS
 				/* Initialize request chain if required. */
-			if (uarg) initialize_request_chain (uarg, usep);
+			if (uarg) initialize_request_chain (uarg, usep, &q, &qt);
 #endif
 			goto enter_body; /* Start execution of a routine body. */
 		}
@@ -996,6 +1003,9 @@ rt_private void interpret(int flag, int where)
 		RESTORE(loc_stack, ls_cur, ls_top);
 		RESTORE(hec_stack, h_cur, h_top);
 #endif
+#ifdef EIF_THREADS
+		RTS_SRR;
+#endif
 		sync_registers(MTC scur, stop);
 		CHECK("exvect not null", exvect);
 		RTEU;
@@ -1016,6 +1026,8 @@ rt_private void interpret(int flag, int where)
 		offset = get_int32(&IC);				/* Get the retry offset */
 		IC += offset;
 		exvect = exret(MTC exvect);			/* Retries a routine */
+			/* Set rescue handler that was reset by the exception. */
+		SET_RESCUE(rescue,exenv);
 		break;
 
 	/*
@@ -1027,7 +1039,7 @@ rt_private void interpret(int flag, int where)
 #endif
 #ifdef EIF_THREADS
 			/* Initialize request chain if required. */
-		if (uarg) initialize_request_chain (uarg, usep);
+		if (uarg) initialize_request_chain (uarg, usep, &q, &qt);
 			/* Record offset of a precondition block to repeat the check
 			   for failing wait conditions. */
 		pre_start = IC - 1;
@@ -1094,7 +1106,7 @@ rt_private void interpret(int flag, int where)
 		if (*IC != BC_PRECOND) {
 #ifdef EIF_THREADS
 				/* Initialize request chain if required. */
-			if (uarg) initialize_request_chain (uarg, usep);
+			if (uarg) initialize_request_chain (uarg, usep, &q, &qt);
 #endif
 			goto enter_body; /* Start execution of a routine body. */
 		}
@@ -2082,7 +2094,7 @@ rt_private void interpret(int flag, int where)
 				/* Remove assertion entry from the stack. */
 			RTCK;
 				/* Notify SCOOP scheduler that wait condition failed. */
-			RTS_RF(icurrent -> it_ref);
+			RTS_SRF(icurrent -> it_ref);
 				/* Jump to the precondition start. */
 			IC = pre_start;
 		}
@@ -4050,7 +4062,7 @@ rt_private void interpret(int flag, int where)
 		pop_registers();	/* Pop registers */
 #ifdef EIF_THREADS
 			/* Release request chain if required. */
-		if (uarg) RTS_RD(icurrent -> it_ref);
+		if (uarg) RTS_SRD (icurrent -> it_ref);
 #endif
 		/* leave_body: */
 			/* Exit rutine body. */

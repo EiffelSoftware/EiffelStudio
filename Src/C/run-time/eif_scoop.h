@@ -41,6 +41,8 @@
 extern "C" {
 #endif
 
+/* Separate calls */
+
 typedef struct call_data {
 	EIF_OBJECT        target;          /* Target of a call */
 #ifdef WORKBENCH
@@ -71,6 +73,11 @@ rt_public void eif_try_call (call_data * a);
 rt_public void eif_free_call (call_data * a);
 rt_public EIF_BOOLEAN eif_is_uncontrolled (EIF_SCP_PID c, EIF_SCP_PID s);
 
+/* Request chain stack */
+
+rt_public void eif_request_chain_push (EIF_REFERENCE c, struct stack * stk);      /* Push client `c' on the request chain stack `stk' without notifying SCOOP mananger. */
+rt_public void eif_request_chain_pop (struct stack * stk);                        /* Pop one element from the request chain stack `stk' without notifying SCOOP mananger. */
+rt_public void eif_request_chain_restore (EIF_REFERENCE * t, struct stack * stk); /* Restore request chain stack `stk' to have the top `t' notifying SCOOP manager about all removed request chains. */
 
 #ifdef __cplusplus
 }

@@ -799,8 +799,12 @@ rt_private EIF_REFERENCE matching (void (*action_fnptr) (EIF_REFERENCE, EIF_REFE
 
 	for (i = 0; i < once_set_list.count; i++)
 		match_simple_stack(once_set_list.threads.sstack[i], action_fnptr);
+
+	for (i = 0; i < sep_stack_list.count; i++)
+		match_simple_stack(sep_stack_list.threads.sstack[i], action_fnptr);
+
 #ifdef WORKBENCH
-	for (i = 0; i < once_set_list.count; i++)
+	for (i = 0; i < opstack_list.count; i++)
 		match_op_stack(opstack_list.threads.opstack[i], action_fnptr);
 #endif
 #endif

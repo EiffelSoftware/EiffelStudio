@@ -921,6 +921,97 @@ feature {NONE} -- Setting: once manifest strings
 			once_manifest_string_count_set: once_manifest_string_count = number
 		end
 
+feature -- C code generation: request chain
+
+	generate_request_chain_declaration
+			-- Generate declarations required to use request chain.
+		do
+			if has_request_chain then
+					-- Generate declaration to use request chain.
+				buffer.put_new_line
+				if has_rescue then
+						-- Generate declaration to use and restore request chain on exception.
+					buffer.put_string ("RTS_SDX")
+				else
+					buffer.put_string ("RTS_SD")
+				end
+			elseif has_rescue and then system.is_scoop then
+					-- Generate declaration to restore request chain on exception.
+				buffer.put_new_line
+				buffer.put_string ("RTS_SDR")
+			end
+		end
+
+	generate_request_chain_creation
+			-- Generate creation of a request chain.
+		require
+			has_request_chain
+		do
+			buffer.put_new_line
+			buffer.put_string (request_chain_creation)
+			buffer.put_string (" (Current);")
+		end
+
+	generate_request_chain_wait_condition_failure
+			-- Generate removal of a request chain on wait condition failure.
+		require
+			has_request_chain
+		do
+			buffer.put_new_line
+			buffer.put_string (request_chain_wait_condition_failure)
+			buffer.put_string (" (Current);")
+		end
+
+	generate_request_chain_removal
+			-- Generate removal of a request chain on routine completion.
+		require
+			has_request_chain
+		do
+			buffer.put_string (request_chain_removal)
+			buffer.put_string (" (Current);")
+		end
+
+	generate_request_chain_restore
+			-- Generate restore of a request chain on entering into a rescue clause (if required).
+		do
+			if system.is_scoop then
+				buffer.put_new_line
+				buffer.put_string (request_chain_restore)
+			end
+		end
+
+feature {NONE} -- C code generation: request chain
+
+	initialize_request_chain_macros
+			-- Initialize macros to work with request chain.
+		do
+			if has_rescue then
+				request_chain_declaration := once "RTS_SDX"
+				request_chain_creation := once "RTS_SRCX"
+			else
+				request_chain_declaration := once "RTS_SD"
+				request_chain_creation := once "RTS_SRC"
+			end
+		end
+
+	request_chain_declaration: STRING
+			-- Macro to declare request chain.
+
+	request_chain_safety_declaration: STRING = "RTS_SDR"
+			-- Macro to declare request chain for saving in presence of rescue clause.
+
+	request_chain_creation: STRING
+			-- Macro to create request chain.
+
+	request_chain_wait_condition_failure: STRING = "RTS_SRF"
+			-- Macro to relase request chain when wait condition evaluates to false.
+
+	request_chain_removal: STRING = "RTS_SRD"
+			-- Macro to relase request chain on routine completion.
+
+	request_chain_restore: STRING = "RTS_SRR"
+			-- Macro to restore request chain on entering a rescue clause.
+
 feature -- Registers
 
 	Current_register: REGISTRABLE
@@ -1318,6 +1409,7 @@ feature -- Access
 			good_argument: bc /= Void
 		do
 			byte_code := bc
+			initialize_request_chain_macros
 		end
 
 	init (t: CLASS_TYPE)

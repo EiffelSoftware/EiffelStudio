@@ -25,6 +25,7 @@ inherit
 			formal_instantiation_in,
 			good_generics,
 			error_generics,
+			formal_instantiated_in,
 			instantiated_in,
 			is_class_valid,
 			is_explicit,
@@ -301,6 +302,18 @@ feature -- Primitives
 	skeleton_adapted_in (a_class_type: CLASS_TYPE): TYPE_A
 		do
 			Result := actual_type.skeleton_adapted_in (a_class_type)
+		end
+
+	formal_instantiated_in (class_type: TYPE_A): TYPE_A
+			-- Instantiation of Current in the context of `class_type'
+			-- assuming that Current is written in the associated class
+			-- of `class_type'.
+		local
+			t: like Current
+		do
+			t := twin
+			t.set_actual_type (actual_type.formal_instantiated_in (class_type).actual_type)
+			Result := t
 		end
 
 	instantiated_in (class_type: TYPE_A): TYPE_A

@@ -28,6 +28,7 @@ inherit
 			generate_gen_type_il,
 			generic_il_type_name,
 			has_formal_generic,
+			formal_instantiated_in,
 			instantiated_in,
 			instantiation_in,
 			internal_is_valid_for_class,
@@ -670,7 +671,7 @@ feature -- Access
 			end
 		end
 
-	instantiated_in (class_type: TYPE_A): TYPE_A
+	formal_instantiated_in, instantiated_in (class_type: TYPE_A): TYPE_A
 			-- Instantiation of Current in the context of `class_type'
 			-- assuming that Current is written in the associated class
 			-- of `class_type'.

@@ -1,10 +1,5 @@
 #include "ipv6.h"
 
-#if defined(__MINGW32__) && !defined(__MINGW64__)
-#define s6_words	_s6_words
-#define s6_bytes	_s6_bytes
-#endif
-
 /* Here are some declarations that strangely are not defined when we set for compiling for Win2k and above 
  * even if they don't use any features from those OSes. */
 static void NET_IN6_SET_ADDR_LOOPBACK(PIN6_ADDR a)

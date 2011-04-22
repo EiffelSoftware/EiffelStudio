@@ -453,7 +453,7 @@ feature -- Inlining
 							-- Now try to find a proper descendant type for the candidate for inlining.
 						cl_type := cl_type.find_descendant_type (system.class_of_id (entry.class_id))
 
-						if cl_type = Void then
+						if cl_type = Void or else not cl_type.is_valid_for_class (context.context_cl_type.associated_class) then
 								-- No valid descendant was found, therefore we cancel inlining (see
 								-- eweasel test#final083).
 								-- Note: This case means that the descendant is adding some new formal
@@ -461,6 +461,8 @@ feature -- Inlining
 								-- If the routine being inlined had no reference to the new formals
 								-- then we could ideally allow it, but this is quite difficult at this
 								-- time to perform this check.
+								-- Another failures are test#final091 and test#final097 which we test
+								-- by checking' the precondition of `associated_class_type'.
 							inline := False
 						else
 								-- We could find a descendant type, thus we can try to inline.
@@ -524,7 +526,9 @@ feature -- Inlining
 						check cl_type.class_id /= entry.class_id end
 							-- Using the example above, we get `C [G]'
 						cl_type := cl_type.find_descendant_type (system.class_of_id (entry.class_id))
-						if cl_type = Void then
+						if cl_type = Void or else not cl_type.is_valid_for_class (context.context_cl_type.associated_class) then
+								-- Another failures are test#final091 and test#final097 which we test
+								-- by checking' the precondition of `associated_class_type'.
 							inline := False
 						else
 								-- `f' cannot be implemented in the descendant version for which the first
@@ -637,7 +641,7 @@ feature {NONE} -- Normalization of types
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

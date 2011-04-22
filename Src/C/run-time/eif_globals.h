@@ -87,6 +87,9 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 	struct stack once_set_cx;	/* Once functions */
 	struct stack oms_set_cx;	/* Once manifest strings */
 
+		/* scoop.c */
+	struct stack sep_stack_cx;		/* Clients of request chains created to perform separate calls. */
+
 		/* option.c */
 	int trace_call_level_cx;
 	struct stack *prof_stack_cx;
@@ -215,8 +218,9 @@ rt_private eif_global_context_t * eif_thr_getspecific (EIF_TSD_TYPE global_key) 
 #define oms_set				(eif_globals->oms_set_cx) /* rt_public */
 
 #ifdef ISE_GC
-#define hec_stack			(eif_globals->hec_stack_cx)		/* rt_public */
+#define hec_stack			(eif_globals->hec_stack_cx)	/* rt_public */
 #endif
+#define sep_stack			(eif_globals->sep_stack_cx)	/* rt_public */
 
 #define trace_call_level	(eif_globals->trace_call_level_cx)
 #define prof_stack			(eif_globals->prof_stack_cx)

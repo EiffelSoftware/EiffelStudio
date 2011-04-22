@@ -300,6 +300,20 @@ rt_public struct stack_list hec_stack_list = {
 	{NULL}		/* threads_stack */
 };
 #endif
+
+/*
+doc:	<attribute name="sep_stack_list" return_type="struct stack_list" export="public">
+doc:		<summary>List of all `sep_stack'. There is one per thread.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>eif_gc_mutex</synchronization>
+doc:	</attribute>
+*/
+rt_public struct stack_list sep_stack_list = {
+	(int) 0,	/* count */
+	(int) 0,	/* capacity */
+	{NULL}		/* threads_stack */
+};
+
 /*
 doc:	<attribute name="eif_stack_list" return_type="struct stack_list" export="public">
 doc:		<summary>List of all `eif_stack'. There is one per thread.</summary>
@@ -655,7 +669,7 @@ rt_public EIF_REFERENCE scp_mnger = NULL;
 
 /*
 doc:	<attribute name="has_reclaim_been_called" return_type="EIF_BOOLEAN" export="private">
-doc:		<summary>Flag to prevent multiple calls to `reclaim' which could occur if for some reasons `reclaim´ failed, then the `main' routine of the Eiffel program will call `failure' which calls `reclaim' again. So if it failed the first time around it is going to fail a second time and therefore it is useless to call `reclaim' again.</summary>
+doc:		<summary>Flag to prevent multiple calls to `reclaim' which could occur if for some reasons `reclaim failed, then the `main' routine of the Eiffel program will call `failure' which calls `reclaim' again. So if it failed the first time around it is going to fail a second time and therefore it is useless to call `reclaim' again.</summary>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>None</synchronization>
 doc:	</attribute>
@@ -1583,6 +1597,9 @@ rt_private void internal_marking(MARKER marking, int moving)
 	for (i = 0; i < hec_stack_list.count; i++)
 		mark_simple_stack(hec_stack_list.threads.sstack[i], marking, moving);
 	mark_simple_stack(&eif_hec_saved, marking, moving);
+
+	for (i = 0; i < sep_stack_list.count; i++)
+		mark_simple_stack(sep_stack_list.threads.sstack[i], marking, moving);
 
 #ifdef WORKBENCH
 	for (i = 0; i < opstack_list.count; i++)

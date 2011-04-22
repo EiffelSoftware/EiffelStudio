@@ -814,7 +814,7 @@ feature {TYPE_A} -- Helpers
 						l_formal ?= l_type.actual_type
 						l_type := current_type.generics.item (l_formal.position)
 					end
-					if current_type /= Void and then attached {LIKE_CURRENT} l_type as l_like_current then
+					if current_type /= Void and then attached {LIKE_CURRENT} l_type.actual_type as l_like_current then
 							-- If actual generic parameter is `like Current' and that we have a context type, then
 							-- its type is clearly the context type `current_type'.
 						l_type := current_type
@@ -1903,7 +1903,7 @@ invariant
 	generics_not_void: generics /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

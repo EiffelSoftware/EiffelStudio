@@ -113,13 +113,12 @@ feature -- Access
 
 	value: G
 			-- Actual value.
-		local
-			l_auto_preference: like auto_preference
 		do
 			if is_auto then
-				l_auto_preference := auto_preference
-				check attached l_auto_preference end -- implied by `is_auto' and code from `update_is_auto'
-				Result := l_auto_preference.value
+					-- implied by `is_auto' and code from `update_is_auto'
+				check attached auto_preference as l_auto_preference then
+					Result := l_auto_preference.value
+				end
 			else
 				Result := internal_value
 			end
@@ -189,7 +188,7 @@ invariant
 	attached_auto_preference_has_value: (attached auto_preference as l_auto_preference) implies l_auto_preference.has_value
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

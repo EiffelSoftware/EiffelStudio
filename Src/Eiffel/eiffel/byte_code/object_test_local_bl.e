@@ -81,9 +81,18 @@ feature -- Code generation
 
 	analyze
 			-- Register object test local.
+		local
+			l_reg: NAMED_REGISTER
+			l_c_type: like c_type
 		do
-			if c_type.is_reference then
-				context.set_local_index (register_name, Current)
+			l_c_type := c_type
+			if l_c_type.is_reference then
+					-- Fixed eweasel test#svalid025 where if the object test locals is defined
+					-- in an inherited assertion we do not want to store the type from the
+					-- ancestor in the descandant for its locals, because the local list types
+					-- are always analyzed in the descendant context never in the ancestor.
+				create l_reg.make (register_name, l_c_type)
+				context.set_local_index (l_reg.register_name, l_reg)
 			end
 		end
 

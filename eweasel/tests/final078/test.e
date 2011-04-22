@@ -9,7 +9,7 @@ create
 	make, default_create
 feature
 	
-	make is
+	make
 		do
 			create x
 			x.try

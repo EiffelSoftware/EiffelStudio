@@ -198,15 +198,9 @@ feature -- Request Chain Handling
 				-- Increment current request chain id depth
 			l_request_chain_id_depth := {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 (processor_meta_data [a_client_processor_id].item_address (current_request_chain_id_depth_index));
 
-			l_request_chain_meta_data := request_chain_meta_data [a_client_processor_id]
-			if l_request_chain_meta_data /= Void then
-					-- Close off any existing non-initializing request chain.
-				if l_request_chain_id_depth > 1 or else (processor_meta_data [a_client_processor_id]) [processor_status_index] = processor_status_initialized then
-					l_request_chain_meta_data [request_chain_status_index] := request_chain_status_closed
-				end
-			end
-
+				-- Create new request chain structure.
 			l_request_chain_meta_data := new_request_chain_meta_data_entry
+
 				-- Reset node count to default values	
 			l_request_chain_meta_data [request_chain_pid_count_index] := 0
 			l_request_chain_meta_data [request_chain_client_pid_index] := a_client_processor_id
@@ -241,15 +235,12 @@ feature -- Request Chain Handling
 
 			if l_request_chain_id_depth > default_request_chain_depth_value then
 				l_new_request_chain_meta_data := (request_chain_meta_data_stack_list [a_client_processor_id]) [l_request_chain_id_depth]
-				if l_request_chain_id_depth > 0 or else (processor_meta_data [a_client_processor_id]) [processor_status_index] = processor_status_initialized then
-					check l_new_request_chain_meta_data_attached: l_new_request_chain_meta_data /= Void end
-					if l_new_request_chain_meta_data [request_chain_status_index] = request_chain_status_closed then
-						l_new_request_chain_meta_data := l_new_request_chain_meta_data.twin
-							 -- Make sure that the sync counter matches the pid count so that it may be reused.
-						l_new_request_chain_meta_data [request_chain_sync_counter_index] := l_new_request_chain_meta_data [request_chain_pid_count_index]
-					else
-						check invalid_request_chain: False end
-					end
+				check l_new_request_chain_meta_data_attached: l_new_request_chain_meta_data /= Void end
+				if l_new_request_chain_meta_data [request_chain_status_index] = request_chain_status_closed then
+						-- The previous chain was closed so we need to recreate it and regain the locks.
+					l_new_request_chain_meta_data := l_new_request_chain_meta_data.twin
+						-- Make sure that the sync counter matches the pid count so that it may be reused.
+					l_new_request_chain_meta_data [request_chain_sync_counter_index] := l_new_request_chain_meta_data [request_chain_pid_count_index]
 					request_chain_meta_data [a_client_processor_id] := l_new_request_chain_meta_data
 						-- Regain the locks for the parent chain
 					wait_for_request_chain_supplier_processor_locks (a_client_processor_id)
@@ -328,19 +319,14 @@ feature -- Request Chain Handling
 			end
 		end
 
-	update_request_chain_meta_data (a_client_processor_id: like processor_id_type; a_request_chain_meta_data: detachable like new_request_chain_meta_data_entry)
+	update_request_chain_meta_data (a_client_processor_id: like processor_id_type; a_request_chain_meta_data: like new_request_chain_meta_data_entry)
 			-- Update request chain meta data for `a_client_processor_id'.
 		local
 			l_request_chain_depth: INTEGER
 		do
-			if a_request_chain_meta_data = Void then
-				print ("Error: void meta data in update_request_chain_meta_data%N")
-			end
 			l_request_chain_depth := (processor_meta_data [a_client_processor_id]) [Current_request_chain_id_depth_index]
 			(request_chain_meta_data_stack_list [a_client_processor_id]) [l_request_chain_depth] := a_request_chain_meta_data
-			if request_chain_meta_data [a_client_processor_id] /= a_request_chain_meta_data then
-				request_chain_meta_data [a_client_processor_id] := a_request_chain_meta_data
-			end
+			request_chain_meta_data [a_client_processor_id] := a_request_chain_meta_data
 		end
 
 	wait_for_request_chain_supplier_processor_locks (a_client_processor_id: like processor_id_type)
@@ -348,14 +334,15 @@ feature -- Request Chain Handling
 		local
 			l_request_chain_id: like invalid_request_chain_id
 			l_request_chain_node_id: like invalid_request_chain_node_id
-			l_request_chain_meta_data: detachable like new_request_chain_meta_data_entry
+			l_request_chain_meta_data, l_previous_request_chain_meta_data: detachable like new_request_chain_meta_data_entry
 			l_request_chain_node_meta_data_queue: detachable like new_request_chain_node_meta_data_queue
 			l_request_chain_node_queue: detachable like new_request_chain_node_queue
 			l_request_chain_node_queue_entry: detachable like new_request_chain_node_queue_entry
-			l_sorted, l_swap_occurred: BOOLEAN
-			i, l_container_count, l_unique_pid_count: INTEGER
+			l_exit, l_swap_occurred: BOOLEAN
+			i, j, l_container_count, l_pid_count, l_previous_container_pid_count_upper, l_previous_pid_count: INTEGER
 			l_pid: like processor_id_type
 			l_lock_request_return: NATURAL_8
+			l_request_chain_depth: INTEGER
 		do
 			-- Sort unique processor id's by order of priority, then wait for locks on each processor so that a new request chain node can be initialized.
 			debug ("ISE_SCOOP_MANAGER")
@@ -366,25 +353,61 @@ feature -- Request Chain Handling
 			l_request_chain_meta_data := request_chain_meta_data [a_client_processor_id]
 			check l_request_chain_meta_data_attached: attached l_request_chain_meta_data end
 
+			l_pid_count := l_request_chain_meta_data [request_chain_pid_count_index]
+			l_container_count := request_chain_meta_data_header_size + l_pid_count
+				-- Number of processor ids in new structure
+
 						-- Retrieve request chain meta data structure
 				-- Sort unique pid values by logical order
 			l_request_chain_id := (processor_meta_data [a_client_processor_id])[current_request_chain_id_index]
 
+			l_request_chain_depth := (processor_meta_data [a_client_processor_id])[current_request_chain_id_depth_index]
+			if l_request_chain_depth > 0 then
+					-- Iterate parent chain to see if there are common processors, if there are then we need to close it.
+				from
+					l_previous_request_chain_meta_data := (request_chain_meta_data_stack_list [a_client_processor_id]) [l_request_chain_depth - 1]
+					check l_previous_request_chain_attached: l_previous_request_chain_meta_data /= Void end
+					i := request_chain_meta_data_header_size
+					l_previous_pid_count := l_previous_request_chain_meta_data [request_chain_pid_count_index]
+					l_previous_container_pid_count_upper := i + l_previous_pid_count
+					l_exit := i = l_previous_container_pid_count_upper
+				until
+					l_exit
+				loop
+					from
+						j := request_chain_meta_data_header_size
+					until
+						j = l_container_count
+					loop
+						if l_request_chain_meta_data [j] = l_previous_request_chain_meta_data [i] then
+								-- A processor in the new chain exists in the previous chain so we must close the previous chain.
+							l_previous_request_chain_meta_data [request_chain_status_index] := request_chain_status_closed
+								-- Flag both inner loop and outer loop to exit.							
+							j := l_container_count - 1
+							l_exit := True
+						end
+						j := j + 1
+					end
+					i := i + 1
+					if i = l_previous_container_pid_count_upper then
+						l_exit := True
+					end
+				end
+			end
+
 			from
 					-- Start at first PID value, with zero based SPECIAL this equals the header size.
 				i := request_chain_meta_data_header_size
-				l_unique_pid_count := l_request_chain_meta_data [request_chain_pid_count_index]
-				l_container_count := i + l_unique_pid_count
-				l_sorted := l_unique_pid_count <= 1
+				l_exit := l_pid_count <= 1
 			until
-				l_sorted
+				l_exit
 			loop
 					-- Sort Unique PID Values by order of priority (in this case the lowest PID value takes preference)
 				l_pid := l_request_chain_meta_data [i]
 				if l_pid > l_request_chain_meta_data [i + 1] then
 					l_request_chain_meta_data [i] := l_request_chain_meta_data [i + 1]
 					l_request_chain_meta_data [i + 1] := l_pid
-					l_swap_occurred := l_unique_pid_count > 2
+					l_swap_occurred := l_pid_count > 2
 						-- If we swap with two unique values then there is no need to reiterate
 						-- as this is the only operation that can occur.
 				end
@@ -397,7 +420,7 @@ feature -- Request Chain Handling
 						l_swap_occurred := False
 						i := request_chain_meta_data_header_size
 					else
-						l_sorted := True
+						l_exit := True
 					end
 				else
 					i := i + 1
@@ -405,15 +428,15 @@ feature -- Request Chain Handling
 			end
 
 				-- Reformulate meta data structure with unique pid count as the first value followed by the unique sorted pid values
-			l_request_chain_meta_data [request_chain_pid_count_index] := l_unique_pid_count
+			l_request_chain_meta_data [request_chain_pid_count_index] := l_pid_count
 			l_request_chain_meta_data [request_chain_client_pid_index] := a_client_processor_id
 			l_request_chain_meta_data [request_chain_client_pid_request_chain_id_index] := l_request_chain_id
 			l_request_chain_meta_data [request_chain_status_index] := request_chain_status_uninitialized
-			l_request_chain_meta_data [request_chain_sync_counter_index] := l_unique_pid_count
+			l_request_chain_meta_data [request_chain_sync_counter_index] := l_pid_count
 
 				-- Resize meta data to allow for supplier processor meta data.
-			if (l_container_count + l_unique_pid_count) > l_request_chain_meta_data.capacity  then
-				l_request_chain_meta_data := l_request_chain_meta_data.aliased_resized_area (l_container_count + l_unique_pid_count)
+			if (l_container_count + l_pid_count) > l_request_chain_meta_data.capacity  then
+				l_request_chain_meta_data := l_request_chain_meta_data.aliased_resized_area (l_container_count + l_pid_count)
 				update_request_chain_meta_data (a_client_processor_id, l_request_chain_meta_data)
 			end
 
@@ -468,7 +491,7 @@ feature -- Request Chain Handling
 				end
 
 					-- Extend value to request chain node meta data.
-				l_request_chain_meta_data.force (l_request_chain_node_id, i + l_unique_pid_count)
+				l_request_chain_meta_data.force (l_request_chain_node_id, i + l_pid_count)
 				l_request_chain_node_id := {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 (processor_meta_data [l_pid].item_address (current_request_chain_node_id_index))
 				i := i + 1
 			end
@@ -498,7 +521,7 @@ feature -- Request Chain Handling
 				i = l_container_count
 			loop
 				l_pid := l_request_chain_meta_data [i]
-				l_request_chain_node_id := l_request_chain_meta_data [i + l_unique_pid_count]
+				l_request_chain_node_id := l_request_chain_meta_data [i + l_pid_count]
 
 					-- Set meta data for the request node of `l_pid'
 					-- This is used for both `head' and `tail' request chain nodes.

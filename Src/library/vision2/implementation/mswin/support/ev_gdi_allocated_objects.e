@@ -142,20 +142,16 @@ feature {NONE} -- Implementation
 
 	get_previously_allocated_object (real_object_index: INTEGER): H
 			-- Retrieve the WEL object located in the array at index `real_object_index'.
-		local
-			real_object: detachable G
-			l_result: detachable H
 		do
 				-- Requested pen has been already allocated. We return the
 				-- item found in our table.
-			real_object := allocated_objects.item (real_object_index)
-			check real_object /= Void then
+			check attached allocated_objects.item (real_object_index) as real_object then
 				real_object.update (cache_time)
 
-				l_result ?= real_object.item
-				check l_result /= Void end
-				Result := l_result
-				l_result.increment_reference
+				check attached {H} real_object.item as l_result then
+					Result := l_result
+					l_result.increment_reference
+				end
 
 				debug("VISION2_WINDOWS_GDI")
 					successful_cache := successful_cache + 1

@@ -13,7 +13,7 @@ inherit
 		redefine
 			same, is_external, set_parameters, parameters, enlarged, enlarged_on,
 			is_feature_special, is_unsafe, optimized_byte_node,
-			calls_special_features, size,
+			calls_special_features, size, context_type,
 			pre_inlined_code, inlined_byte_code,
 			need_target, is_constant_expression, has_call, allocates_memory
 		end
@@ -117,6 +117,24 @@ feature -- Status report
 	allocates_memory: BOOLEAN = True
 			-- <Precursor>
 			-- An external is a black box that may allocate Eiffel memory when called.
+
+feature -- Context type
+
+	context_type: TYPE_A
+			-- Context type of the access (properly instantiated)
+		do
+			if static_class_type = Void then
+				Result := Precursor {CALL_ACCESS_B}
+			else
+				Result := Context.real_type (static_class_type)
+				if Result.is_multi_constrained then
+					check
+						has_multi_constraint_static: has_multi_constraint_static
+					end
+					Result := context.real_type (multi_constraint_static)
+				end
+			end
+		end
 
 feature -- Routines for externals
 
@@ -362,10 +380,13 @@ feature -- Inlining
 			if parameters /= Void then
 				parameters := parameters.inlined_byte_code
 			end
+			if has_multi_constraint_static then
+				multi_constraint_static := real_type (multi_constraint_static)
+			end
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

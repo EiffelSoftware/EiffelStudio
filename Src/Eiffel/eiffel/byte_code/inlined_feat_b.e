@@ -10,7 +10,7 @@ inherit
 			generate_end, fill_from,
 			generate_parameters,
 			unanalyze, perused,
-			free_register
+			free_register, is_polymorphic
 		end
 
 feature
@@ -21,6 +21,9 @@ feature
 		--| l[3] = l[2]
 		--| l[5] = l[3]
 		--| i.e. we lose the value of l[3]
+
+	is_polymorphic: BOOLEAN = False
+			-- Optimization as all inlined calls are definitely not polymorphic.
 
 	is_current_temporary: BOOLEAN;
 			-- Is Current a temporary register?
@@ -44,13 +47,22 @@ feature
 
 	fill_from (f: FEATURE_B)
 		do
-			feature_name_id := f.feature_name_id;
-			feature_id := f.feature_id;
-			type := real_type (f.type);
+			call_kind := Call_kind_qualified
+			feature_name_id := f.feature_name_id
+			feature_id := f.feature_id
+			type := real_type (f.type)
 			routine_id := f.routine_id
-			parameters := f.parameters;
+			parameters := f.parameters
 			if parameters /= Void then
 				set_parameters (parameters.inlined_byte_code)
+			end
+			precursor_type := f.precursor_type
+			body_index := f.body_index
+			is_once := f.is_once
+			is_process_relative := f.is_process_relative
+			is_object_relative := f.is_object_relative
+			if f.has_multi_constraint_static then
+				multi_constraint_static := real_type (f.multi_constraint_static)
 			end
 		end
 
@@ -601,7 +613,7 @@ feature -- Code to inline
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

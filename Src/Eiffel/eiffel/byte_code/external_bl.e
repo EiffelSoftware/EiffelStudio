@@ -249,15 +249,7 @@ feature
 					-- encapsulation.
 				if is_encapsulation_required or else extension.is_inline then
 					rout_table ?= Eiffel_table.poly_table (routine_id)
-					if is_static_call then
-						l_typ ?= real_type (static_class_type)
-						check
-							l_typ_not_void: l_typ /= Void
-						end
-						rout_table.goto_implemented (l_typ, context.context_class_type)
-					else
-						rout_table.goto_implemented (typ, context.context_class_type)
-					end
+					rout_table.goto_implemented (typ, context.context_class_type)
 					check
 						is_valid_routine: rout_table.is_implemented
 					end
@@ -488,7 +480,7 @@ feature {NONE} -- Status report
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

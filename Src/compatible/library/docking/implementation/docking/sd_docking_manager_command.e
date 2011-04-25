@@ -31,7 +31,7 @@ feature {NONE}  -- Initlization
 			l_window: EV_TITLED_WINDOW
 		do
 			internal_docking_manager := a_docking_manager
-			create locked_windows.make_default
+			create locked_windows.make (10)
 
 			create internal_shared
 			-- Initialize zone navigation accelerator key.
@@ -608,12 +608,13 @@ feature {NONE}  -- Implementation
 			a_zone_not_void_when_not_main_window: not a_main_window implies a_widget /= Void
 		local
 			l_lock_window: EV_WINDOW
+			l_last: detachable EV_WINDOW
 		do
 			if lock_call_time = 0 then
 				if a_main_window then
-					locked_windows.force_last (internal_docking_manager.main_window, 0)
+					locked_windows.extend (internal_docking_manager.main_window, 0)
 				else
-					locked_windows.force_last (internal_docking_manager.query.find_window_by_widget (a_widget), 0)
+					locked_windows.extend (internal_docking_manager.query.find_window_by_widget (a_widget), 0)
 				end
 				locked_windows.item (0).lock_update
 			else
@@ -622,32 +623,63 @@ feature {NONE}  -- Implementation
 				else
 					l_lock_window := internal_docking_manager.query.find_window_by_widget (a_widget)
 				end
-				if  l_lock_window /= locked_windows.last then
-					locked_windows.last.unlock_update
-					locked_windows.force_last (l_lock_window, lock_call_time)
-					locked_windows.last.lock_update
+				from
+					locked_windows.start
+				until
+					locked_windows.after
+				loop
+					l_last := locked_windows.item_for_iteration
+				end
+				check l_last /= Void end	-- Implied by
+				if  l_lock_window /= l_last then
+					l_last.unlock_update
+					locked_windows.extend (l_lock_window, lock_call_time)
+					l_lock_window.lock_update
 				end
 			end
 		end
 
 	unlock_update_internal
 			-- Unlock window update.
+		local
+			l_item: detachable EV_WINDOW
+			l_last: detachable EV_WINDOW
 		do
 			if lock_call_time = 0 then
-				if not locked_windows.last.is_destroyed then
-					locked_windows.last.unlock_update
+				from
+					locked_windows.start
+				until
+					locked_windows.after
+				loop
+					l_last := locked_windows.item_for_iteration
+					locked_windows.forth
 				end
+				check l_last /= Void end -- Implied by `lock_call_time = 0', there is a window stored
+				if not l_last.is_destroyed then
+					l_last.unlock_update
+				end
+
 				locked_windows.remove (0)
 				remove_empty_split_area
 				check no_windows_in_locked_window: locked_windows.count = 0 end
 			else
 				if locked_windows.has (lock_call_time) then
-					if not locked_windows.item (lock_call_time).is_destroyed then
-						locked_windows.item (lock_call_time).unlock_update
+					l_item := locked_windows.item (lock_call_time)
+					check l_item /= Void end -- Implied by `has'
+					if not l_item.is_destroyed then
+						l_item.unlock_update
 					end
 					locked_windows.remove (lock_call_time)
-					if not locked_windows.last.is_destroyed then
-						locked_windows.last.lock_update
+					from
+						locked_windows.start
+					until
+						locked_windows.after
+					loop
+						l_last := locked_windows.item_for_iteration
+					end
+					check l_last /= Void end -- Implied by `has (lock_call_time)', so at least one window stored
+					if not l_last.is_destroyed then
+						l_last.lock_update
 					end
 				end
 			end
@@ -686,7 +718,7 @@ feature {NONE}  -- Implementation
 			end
 		end
 
-	locked_windows: DS_HASH_TABLE [EV_WINDOW, INTEGER]
+	locked_windows: HASH_TABLE [EV_WINDOW, INTEGER]
 			-- Which window is locked. Works like a stack. Used by lock_update and unlock_update.
 
 	internal_docking_manager: SD_DOCKING_MANAGER
@@ -703,14 +735,14 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

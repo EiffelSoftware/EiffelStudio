@@ -114,9 +114,10 @@ feature -- Redefine
 	set_rectangle (a_rect: EV_RECTANGLE)
 			-- <Precursor>
 		local
-			l_tabs: DS_HASH_TABLE [SD_NOTEBOOK_TAB, INTEGER]
+			l_tabs: HASH_TABLE [SD_NOTEBOOK_TAB, INTEGER]
 			l_tab_behind_last: EV_RECTANGLE
 			l_tab_zone: SD_TAB_ZONE
+			l_last: detachable EV_RECTANGLE
 		do
 			Precursor {SD_HOT_ZONE_OLD_DOCKING} (a_rect)
 			l_tab_zone ?= internal_zone
@@ -124,33 +125,34 @@ feature -- Redefine
 			l_tabs := l_tab_zone.tabs_shown
 			from
 				l_tabs.start
-				create internal_tab_area.make_default
+				create internal_tab_area.make (10)
 			until
 				l_tabs.after
 			loop
-				internal_tab_area.force_last (create {EV_RECTANGLE}.make (l_tabs.item_for_iteration.screen_x, l_tabs.item_for_iteration.screen_y, l_tabs.item_for_iteration.width, l_tabs.item_for_iteration.height), l_tabs.key_for_iteration)
+				l_last := create {EV_RECTANGLE}.make (l_tabs.item_for_iteration.screen_x, l_tabs.item_for_iteration.screen_y, l_tabs.item_for_iteration.width, l_tabs.item_for_iteration.height)
+				internal_tab_area.extend (create {EV_RECTANGLE}.make (l_tabs.item_for_iteration.screen_x, l_tabs.item_for_iteration.screen_y, l_tabs.item_for_iteration.width, l_tabs.item_for_iteration.height), l_tabs.key_for_iteration)
 				l_tabs.forth
 			end
-			create l_tab_behind_last.make (internal_tab_area.last.right + 1, internal_tab_area.last.top, internal_shared.feedback_tab_width, internal_tab_area.last.height)
-			internal_tab_area.finish
-			internal_tab_area.force_last (l_tab_behind_last, internal_tab_area.key_for_iteration + 1)
+			check l_last /= Void end -- Implied by tab zone at least has one tab
+			create l_tab_behind_last.make (l_last.right + 1, l_last.top, internal_shared.feedback_tab_width, l_last.height)
+			internal_tab_area.extend (l_tab_behind_last, internal_tab_area.count + 1)
 		end
 
 feature {NONE} -- Implementation
 
-	internal_tab_area: DS_HASH_TABLE [EV_RECTANGLE, INTEGER];
+	internal_tab_area: HASH_TABLE [EV_RECTANGLE, INTEGER];
 			-- Tab area's rectangle
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

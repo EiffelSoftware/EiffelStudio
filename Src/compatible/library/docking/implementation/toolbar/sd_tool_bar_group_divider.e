@@ -74,7 +74,7 @@ feature {NONE} -- Initlization
 			l_count: INTEGER
 			l_max_group_count: INTEGER
 		do
-			create grouping_algorithm.make_default
+			create grouping_algorithm.make (10)
 			from
 				l_count := 1
 				l_max_group_count := content.item_count_except_sep (False)
@@ -289,7 +289,7 @@ feature {NONE} -- Implementation
 		local
 			l_one_group: ARRAYED_LIST [INTEGER]
 			l_group_width: INTEGER
-			l_item: DS_HASH_TABLE [INTEGER, INTEGER]
+			l_item: HASH_TABLE [INTEGER, INTEGER]
 			l_item_count: INTEGER
 		do
 			from
@@ -301,7 +301,7 @@ feature {NONE} -- Implementation
 			loop
 				from
 					l_one_group := a_list.item
-					create l_item.make_default
+					create l_item.make (10)
 					l_group_width := 0
 					if a_count_clear then
 						l_item_count := 1
@@ -310,7 +310,7 @@ feature {NONE} -- Implementation
 				until
 					l_one_group.after
 				loop
-					l_item.force_new (a_items_width.item (l_one_group.item), l_item_count)
+					l_item.extend (a_items_width.item (l_one_group.item), l_item_count)
 					l_group_width := l_one_group.item + l_group_width
 
 					l_item_count := l_item_count + 1
@@ -361,7 +361,7 @@ feature {NONE} -- Implementation
 				l_sub_group_item_count := content.group_items (a_max_width_group_index, False).count
 				create Result.make (l_sub_group_item_count)
 				Result.set_items_width (group_item_width (content.group_items (a_max_width_group_index, False)))
-				grouping_algorithm.put_last (Result, a_max_width_group_index)
+				grouping_algorithm.extend (Result, a_max_width_group_index)
 			end
 		ensure
 			not_void: Result /= Void
@@ -434,7 +434,7 @@ feature {NONE} -- Implementation
 	group_infos: HASH_TABLE [SD_TOOL_BAR_GROUP_INFO, INTEGER]
 			-- Group informations.
 
-	grouping_algorithm: DS_HASH_TABLE [SD_HUFFMAN_ALGORITHM, INTEGER]
+	grouping_algorithm: HASH_TABLE [SD_HUFFMAN_ALGORITHM, INTEGER]
 			-- We store algorithm here, so it'll not need recompute.
 			-- 2nd INTEGER is sub group index count
 
@@ -447,14 +447,14 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

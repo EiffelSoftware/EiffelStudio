@@ -237,7 +237,7 @@ feature -- Command
 			-- Maximum x position.
 		local
 			l_tool_bar_row: SD_TOOL_BAR_ROW
-			l_zones: DS_ARRAYED_LIST [SD_TOOL_BAR_ZONE]
+			l_zones: ARRAYED_LIST [SD_TOOL_BAR_ZONE]
 			l_found, l_is_end: BOOLEAN
 			l_next_tool_bar: SD_GENERIC_TOOL_BAR
 		do
@@ -655,14 +655,14 @@ feature {NONE} -- Implementation
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

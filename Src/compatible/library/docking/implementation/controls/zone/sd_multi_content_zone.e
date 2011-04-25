@@ -56,19 +56,19 @@ feature -- Query
 			not_void: Result /= Void
 		end
 
-	tabs_shown: DS_HASH_TABLE [SD_NOTEBOOK_TAB, INTEGER]
+	tabs_shown: HASH_TABLE [SD_NOTEBOOK_TAB, INTEGER]
 			-- Tabs which is shown
 		local
 			l_tabs: ARRAYED_LIST [SD_NOTEBOOK_TAB]
 		do
-			create Result.make_default
+			create Result.make (10)
 			l_tabs ?= internal_notebook.tabs_shown
 			from
 				l_tabs.start
 			until
 				l_tabs.after
 			loop
-				Result.force_last (l_tabs.item, internal_notebook.index_of_tab (l_tabs.item))
+				Result.extend (l_tabs.item, internal_notebook.index_of_tab (l_tabs.item))
 				l_tabs.forth
 			end
 		end
@@ -218,14 +218,14 @@ feature {NONE} -- Implementation
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

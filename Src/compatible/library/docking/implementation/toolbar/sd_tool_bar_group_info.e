@@ -24,7 +24,7 @@ feature {NONE} -- Initlization
 		do
 			create internal_group_info.make (1)
 			create internal_is_new_group.make (1)
-			create sub_grouping.make_default
+			create sub_grouping.make (10)
 		end
 
 feature -- Query
@@ -89,7 +89,7 @@ feature -- Query
 			l_snapshot: like internal_group_info
 			l_new_group_snapshot: like internal_is_new_group
 			l_temp_size: INTEGER
-			l_item: DS_HASH_TABLE [INTEGER_32, INTEGER_32]
+			l_item: HASH_TABLE [INTEGER_32, INTEGER_32]
 			l_item_count: INTEGER
 		do
 			from
@@ -254,7 +254,7 @@ feature -- Query
 		require
 			valid: a_row_index > 0 and a_row_index <= row_count
 		local
-			l_row: DS_HASH_TABLE [INTEGER, INTEGER]
+			l_row: HASH_TABLE [INTEGER, INTEGER]
 		do
 			l_row := internal_group_info.i_th (a_row_index)
 			from
@@ -262,7 +262,7 @@ feature -- Query
 			until
 				l_row.after
 			loop
-				Result := l_row.value (l_row.key_for_iteration) + Result
+				Result := l_row.item (l_row.key_for_iteration) + Result
 				l_row.forth
 			end
 		ensure
@@ -367,7 +367,7 @@ feature -- Query
 		require
 			valid: a_group_index > 0 and a_group_index <= group_count
 		local
-			l_item: DS_HASH_TABLE [INTEGER, INTEGER]
+			l_item: HASH_TABLE [INTEGER, INTEGER]
 		do
 			go_group_i_th (a_group_index)
 			l_item := item
@@ -375,7 +375,7 @@ feature -- Query
 			Result := l_item.key_for_iteration
 		end
 
-	sub_grouping: DS_HASH_TABLE [SD_TOOL_BAR_GROUP_INFO ,INTEGER]
+	sub_grouping: HASH_TABLE [SD_TOOL_BAR_GROUP_INFO ,INTEGER]
 			-- SD_TOOL_BAR`_GROUP_INFO is grouping info of items in one tool bar items group.
 			-- INTEGER is tool bar items group id. It is INTEGER in `internal_group_info'.
 
@@ -443,7 +443,7 @@ feature -- Query for iteration
 			Result := internal_group_info.index
 		end
 
-	item: DS_HASH_TABLE [INTEGER, INTEGER]
+	item: HASH_TABLE [INTEGER, INTEGER]
 			-- One row info.
 		do
 			Result := internal_group_info.item
@@ -461,7 +461,7 @@ feature -- Query for iteration
 			Result := sub_grouping.has (index)
 		end
 
-	i_th (a_index: INTEGER): DS_HASH_TABLE [INTEGER, INTEGER]
+	i_th (a_index: INTEGER): HASH_TABLE [INTEGER, INTEGER]
 			-- Item at a_index.
 		do
 			Result := internal_group_info.i_th (a_index)
@@ -503,7 +503,7 @@ feature -- Command for iteration
 			internal_is_new_group.back
 		end
 
-	extend (a_group_index_info: DS_HASH_TABLE [INTEGER, INTEGER]; a_new_group: BOOLEAN)
+	extend (a_group_index_info: HASH_TABLE [INTEGER, INTEGER]; a_new_group: BOOLEAN)
 			-- Extend a_group_info
 		require
 			not_void:a_group_index_info /= Void
@@ -521,7 +521,7 @@ feature -- Command for iteration
 			internal_is_new_group.go_i_th (a_index)
 		end
 
-	replace (a_item: DS_HASH_TABLE [INTEGER, INTEGER]; a_new_group: BOOLEAN)
+	replace (a_item: HASH_TABLE [INTEGER, INTEGER]; a_new_group: BOOLEAN)
 			-- Replace current item by a_item.
 		do
 			internal_group_info.replace (a_item)
@@ -557,7 +557,7 @@ feature {NONE} -- Implementation
 			not_after: not after
 		end
 
-	internal_group_info: ARRAYED_LIST [DS_HASH_TABLE [INTEGER, INTEGER]]
+	internal_group_info: ARRAYED_LIST [HASH_TABLE [INTEGER, INTEGER]]
 			-- Grouping formation.
 			-- The order of items in arrayed list is the same order as ..........
 			-- 1st INTEGER store each item in `internal_group_info's width or it's serval SD_TOOL_BAR_ITEMs' width.			
@@ -572,14 +572,14 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

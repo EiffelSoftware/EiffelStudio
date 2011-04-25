@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 		do
 			default_create
 			create internal_shared
-			create internal_zones.make_default
+			create internal_zones.make (10)
 			create internal_positioner.make (Current)
 			is_vertical := a_vertical
 			docking_manager := a_manager
@@ -94,7 +94,7 @@ feature -- Command
 					end
 				end
 				a_zone.assistant.update_indicator
-				internal_zones.force_last (a_zone)
+				internal_zones.extend (a_zone)
 			else
 				check not_possible: False end
 			end
@@ -116,7 +116,7 @@ feature -- Command
 				check not_possible: False end
 			end
 
-			internal_zones.delete (a_zone)
+			internal_zones.prune_all (a_zone)
 			internal_positioner.position_resize_on_prune
 		ensure
 			pruned: not internal_zones.has (a_zone)
@@ -234,16 +234,39 @@ feature -- Query
 	is_vertical: BOOLEAN
 			-- If `Current' is_vertical?
 
-	zones: DS_ARRAYED_LIST [SD_TOOL_BAR_ZONE]
-			-- All tool bar zone in Current. Order is from left to right (top to bottom).
+	zones: ARRAYED_LIST [SD_TOOL_BAR_ZONE]
+			-- All tool bar zone in Current. Order is from left to right (top to bottom)
 		local
-			l_sorter: DS_QUICK_SORTER [SD_TOOL_BAR_ZONE]
-			l_agent_sorter: AGENT_BASED_EQUALITY_TESTER [SD_TOOL_BAR_ZONE]
+			l_sortable_array: SORTED_TWO_WAY_LIST [SD_TOOL_BAR_ZONE]
+			l_zones: ARRAYED_LIST [SD_TOOL_BAR_ZONE]
+			l_item: SD_TOOL_BAR_ZONE
 		do
-			Result := internal_zones.twin
-			create l_agent_sorter.make (agent sort_by_position)
-			create l_sorter.make (l_agent_sorter)
-			l_sorter.sort (Result)
+			l_zones := internal_zones.twin
+
+			from
+				l_zones.start
+				create l_sortable_array.make
+			until
+				l_zones.after
+			loop
+				l_item := l_zones.item
+
+				l_sortable_array.search_before (l_item)
+				l_sortable_array.put_right (l_item)
+
+				l_zones.forth
+			end
+
+			from
+				l_sortable_array.start
+				create Result.make (l_sortable_array.count)
+			until
+				l_sortable_array.after
+			loop
+				Result.extend (l_sortable_array.item)
+
+				l_sortable_array.forth
+			end
 		end
 
 	size: INTEGER
@@ -270,7 +293,7 @@ feature -- Query
 	hidden_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- All hideen items in row.
 		local
-			l_tool_bars: DS_ARRAYED_LIST [SD_TOOL_BAR_ZONE]
+			l_tool_bars: ARRAYED_LIST [SD_TOOL_BAR_ZONE]
 			l_temp_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 		do
 			create Result.make (1)
@@ -330,7 +353,7 @@ feature {SD_TOOL_BAR_ROW_POSITIONER} -- Implementation
 	internal_shared: SD_SHARED;
 			-- All singletons.
 
-	internal_zones: DS_ARRAYED_LIST [SD_TOOL_BAR_ZONE];
+	internal_zones: ARRAYED_LIST [SD_TOOL_BAR_ZONE];
 			-- All tool bar zones in Current.
 
 invariant
@@ -339,14 +362,14 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

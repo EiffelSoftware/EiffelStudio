@@ -19,19 +19,19 @@ feature -- Initialization
 			a_texts_attached: a_texts /= Void
 		do
 			texts := a_texts
-			init_pcre_re
+			init_wild_matcher
+
+			create texts_found_internal.make (10)
+			create found_indexs_in_texts_internal.make (10)
 		ensure
 			texts_not_void: texts = a_texts
-			pcre_re_not_void: pcre_re /= Void
 		end
 
-	init_pcre_re
-			-- Initialize `pcre_re'
+	init_wild_matcher
+			-- Initialize `wild_matcher'
 		do
-			create pcre_re.make
-			pcre_re.set_caseless (True)
-			pcre_re.set_empty_allowed (false)
-			pcre_re.set_multiline (false)
+			create wild_matcher.make_empty
+			wild_matcher.disable_case_sensitive
 		end
 
 feature -- Access
@@ -86,19 +86,20 @@ feature -- Behavior
 
 feature {NONE} -- Implementation
 
-	search_perform (a_str: STRING_GENERAL)
-			-- Perform searching.
+	search_perform (a_str: READABLE_STRING_GENERAL)
+			-- Perform searching
 		do
-			create texts_found_internal.make (10)
-			create found_indexs_in_texts_internal.make (10)
-			pcre_re.compile (a_str.as_string_8)
+			texts_found_internal.wipe_out
+			found_indexs_in_texts_internal.wipe_out
+
+			wild_matcher.set_pattern (a_str.as_string_8)
 			from
 				texts.start
 			until
-				texts.after or not pcre_re.is_compiled
+				texts.after
 			loop
-				pcre_re.match (texts.item.as_string_8)
-				if pcre_re.has_matched then
+				wild_matcher.set_text (texts.item.as_string_8)
+				if wild_matcher.search_for_pattern then
 					texts_found_internal.extend (texts.item)
 					found_indexs_in_texts_internal.extend (texts.index)
 				end
@@ -112,23 +113,22 @@ feature {NONE} -- Implementation
 	found_indexs_in_texts_internal: like found_indexs_in_texts
 			-- `found_indexs_in_texts'
 
-	pcre_re: RX_PCRE_REGULAR_EXPRESSION
-			-- Regular expression matcher.
+	wild_matcher: KMP_WILD
+			-- Wild card matcher
 
 invariant
 	texts_not_void: texts /= Void
-	pcre_re_not_void: pcre_re /= Void
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

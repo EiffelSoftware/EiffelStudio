@@ -18,13 +18,9 @@ feature {NONE}  -- Initlization
 	make
 			-- Creation method
 		local
---			l_tool_bars: DS_ARRAYED_LIST [SD_TOOL_BAR_ZONE]
 			l_shared: SD_SHARED
 		do
 			create l_shared
-
---			l_tool_bars := a_tool_bar_row.zones
-
 			internal_mediator := l_shared.tool_bar_docker_mediator_cell.item
 			-- Because tool bar row may be created when dragging. `on_pointer_motion' will call `positions_and_sizes_try'
 			create positions_and_sizes_try.make (1)
@@ -829,7 +825,7 @@ feature {NONE}  -- Implementation
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

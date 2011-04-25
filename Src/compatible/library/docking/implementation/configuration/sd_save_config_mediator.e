@@ -469,7 +469,7 @@ feature {NONE} -- Implementation
 		local
 			l_tool_bar_area: EV_CONTAINER
 			l_rows: LINEAR [EV_WIDGET]
-			l_tool_bars: DS_ARRAYED_LIST [SD_TOOL_BAR_ZONE]
+			l_tool_bars: ARRAYED_LIST [SD_TOOL_BAR_ZONE]
 			l_zone: SD_TOOL_BAR_ZONE
 			l_tool_bar: SD_TOOL_BAR_ROW
 			l_row_data: ARRAYED_LIST [TUPLE [STRING_GENERAL, INTEGER, SD_TOOL_BAR_ZONE_STATE]]
@@ -587,7 +587,7 @@ feature {NONE} -- Implementation attributes
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

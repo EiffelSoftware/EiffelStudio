@@ -736,7 +736,7 @@ feature {NONE}  -- Implementation
 			not_void: Result /= Void
 		end
 
-	tabs_rects: DS_HASH_TABLE [EV_RECTANGLE, SD_NOTEBOOK_TAB]
+	tabs_rects: HASH_TABLE [EV_RECTANGLE, SD_NOTEBOOK_TAB]
 			-- We remember orignal tab position each time before start dragging, otherwise
 			-- it will cause tab jumping if a tab is very narrow and a tab is very wide.
 
@@ -782,14 +782,14 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

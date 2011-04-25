@@ -13,6 +13,8 @@ inherit
 	HASHABLE
 		export
 			{NONE} all
+		undefine
+			is_equal
 		end
 
 	SD_WIDGETS_LISTS
@@ -22,6 +24,15 @@ inherit
 		end
 
 	SD_ACCESS
+		undefine
+			is_equal
+		end
+		
+	COMPARABLE
+		undefine
+			is_equal,
+			copy
+		end
 
 create
 	make
@@ -135,7 +146,7 @@ feature -- Command
 
 				l_widget_button ?= l_items.item
 				if not a_horizontal and l_widget_button /= Void then
-					internal_hidden_widget_items.force_last (l_widget_button, l_items.index)
+					internal_hidden_widget_items.extend (l_widget_button, l_items.index)
 					tool_bar.prune (l_widget_button)
 				end
 				l_items.forth
@@ -586,6 +597,20 @@ feature -- Query
 			end
 		end
 
+	is_less alias "<" (a_other: SD_TOOL_BAR_ZONE): BOOLEAN
+			-- <Precursor>
+			-- Only compare position, used by {SD_TOOL_BAR_ROW}.zones
+		do
+			Result := position < a_other.position
+		end
+
+	is_equal (a_other: SD_TOOL_BAR_ZONE): BOOLEAN
+			-- <Precursor>
+			-- Only compare position, used by {SD_TOOL_BAR_ROW}.zones
+		do
+			Result := position = a_other.position
+		end
+
 feature {NONE} -- Agents
 
 	on_redraw_drag_area (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER)
@@ -667,7 +692,7 @@ feature {NONE} -- Implmentation
 	internal_text: ARRAYED_LIST [STRING_GENERAL]
 			-- When `is_vertical' we hide all texts, store orignal texts here.
 
-	internal_hidden_widget_items: DS_HASH_TABLE [SD_TOOL_BAR_WIDGET_ITEM, INTEGER]
+	internal_hidden_widget_items: HASH_TABLE [SD_TOOL_BAR_WIDGET_ITEM, INTEGER]
 			-- When `is_vertical' we hide all widget tool bar items, store orignal items here.
 
 	is_need_restore_hidden_items: BOOLEAN
@@ -679,7 +704,8 @@ feature {NONE} -- Implmentation
 		do
 			if internal_hidden_widget_items /= Void and tool_bar /= Void then
 				if not internal_hidden_widget_items.is_empty then
-					l_item := internal_hidden_widget_items.first
+					internal_hidden_widget_items.start
+					l_item := internal_hidden_widget_items.item_for_iteration
 					if not tool_bar.has (l_item)  then
 						Result := True
 					end
@@ -772,7 +798,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

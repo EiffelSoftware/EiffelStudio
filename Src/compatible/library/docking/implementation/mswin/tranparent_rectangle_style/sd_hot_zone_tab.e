@@ -132,9 +132,10 @@ feature {NONE} -- Implementation
 	set_rectangle (a_rect: EV_RECTANGLE)
 			-- <Precursor>
 		local
-			l_tabs: DS_HASH_TABLE [SD_NOTEBOOK_TAB, INTEGER]
+			l_tabs: HASH_TABLE [SD_NOTEBOOK_TAB, INTEGER]
 			l_rect: EV_RECTANGLE
 			l_tab_behind_last: EV_RECTANGLE
+			l_last_key_for_iteration: INTEGER
 		do
 
 			l_tabs := tab_zone_of (internal_zone).tabs_shown
@@ -145,13 +146,21 @@ feature {NONE} -- Implementation
 				l_tabs.after
 			loop
 				create l_rect.make (l_tabs.item_for_iteration.screen_x, l_tabs.item_for_iteration.screen_y, l_tabs.item_for_iteration.width, l_tabs.item_for_iteration.height)
-				internal_tab_area.force_last (l_rect, l_tabs.key_for_iteration)
+				internal_tab_area.extend (l_rect, l_tabs.key_for_iteration)
 				l_tabs.forth
 			end
 
-			create l_tab_behind_last.make (internal_tab_area.last.right + 1, internal_tab_area.last.top, internal_shared.feedback_tab_width, internal_tab_area.last.height)
-			internal_tab_area.finish
-			internal_tab_area.force_last (l_tab_behind_last, internal_tab_area.key_for_iteration + 1)
+			check l_rect /= Void end -- Implied by tab zone at least has one tab
+			create l_tab_behind_last.make (l_rect.right + 1, l_rect.top, internal_shared.feedback_tab_width, l_rect.height)
+			from
+				internal_tab_area.start
+			until
+				internal_tab_area.after
+			loop
+				l_last_key_for_iteration := internal_tab_area.key_for_iteration
+				internal_tab_area.forth
+			end
+			internal_tab_area.extend (l_tab_behind_last, l_last_key_for_iteration + 1)
 
 			internal_rectangle := a_rect
 			create internal_rectangle_left.make (internal_rectangle.left + internal_rectangle.width // 2 - pixmap_center_width // 2 - pixmap_corner_width, internal_rectangle.top + internal_rectangle.height // 2 - pixmap_corner_width // 2, pixmap_corner_width, pixmap_corner_width)
@@ -171,19 +180,19 @@ feature {NONE} -- Implementation
 			internal_rectangle_title_area := tab_zone_of (internal_zone).title_area
 		end
 
-	internal_tab_area: DS_HASH_TABLE [EV_RECTANGLE, INTEGER];
+	internal_tab_area: HASH_TABLE [EV_RECTANGLE, INTEGER];
 			-- Tab area's rectangle
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

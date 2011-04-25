@@ -178,7 +178,7 @@ feature {NONE} -- Implementation functions
 				end
 
 				check count_right: l_last_best_grouping.count = l_group_count end
-				all_best_grouping.force_last (l_last_best_grouping, l_group_count)
+				all_best_grouping.extend (l_last_best_grouping, l_group_count)
 
 				l_group_count := l_group_count - 1
 			end
@@ -205,7 +205,7 @@ feature {NONE} -- Implementation functions
 			group_count_right: Result.count = a_previous_info.count - 1
 		end
 
-	all_best_grouping: DS_HASH_TABLE [like best_grouping, INTEGER]
+	all_best_grouping: HASH_TABLE [like best_grouping, INTEGER]
 			-- 2nd INTEGER parameter is group count.
 
 	start_condition: like best_grouping
@@ -319,14 +319,14 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

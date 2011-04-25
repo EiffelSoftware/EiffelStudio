@@ -46,7 +46,7 @@ feature -- Basic operations
 				on_locked
 				l_events := internal_locked_event
 				if l_events /= Void then
-						-- Only publish events if Curren is locked, because a event handler may cause an unlock to be
+						-- Only publish events if Current is locked, because a event handler may cause an unlock to be
 						-- performed.
 					l_events.publish_if ([Current], agent {LOCKABLE_I}.is_locked)
 				end
@@ -168,7 +168,7 @@ feature {NONE} -- Implementation: Internal cache
 			-- Note: Do not use directly!			
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1789,7 +1789,8 @@ feature -- Access
 				-- If there are some pre/post conditions to check, we choose
 				-- to be safe by encapsulating even when not needed if the checks
 				-- are generated.
-			tmp := has_rescue or byte_code.has_inlined_code or has_assertions_checking_enabled
+				-- If there is a request chain then when will need to generate hooks as creating a new chain may trigger a GC cycle.
+			tmp := has_rescue or byte_code.has_inlined_code or has_assertions_checking_enabled or has_request_chain
 
 			if not tmp and then assertion_type /= In_invariant then
 				tmp := True

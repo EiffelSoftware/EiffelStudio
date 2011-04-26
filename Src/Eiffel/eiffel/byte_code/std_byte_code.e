@@ -305,16 +305,25 @@ feature -- Analyzis
 			l_arg: ARGUMENT_BL
 			l_is_catcall_checking_enabled, l_enable_hooks: BOOLEAN
 			l_name_id, l_any_class_id: INTEGER
+			l_context: like context
+			l_has_request_chain: BOOLEAN
 		do
 			args := arguments
 			if args /= Void then
 				from
+					l_context := context
+					if l_context.has_request_chain then
+							-- We must make sure that `Current' is marked if there is a request chain.
+						l_has_request_chain := True
+						l_context.mark_current_used
+					end
+
 					i := args.lower
 					nb := args.count
-					if context.workbench_mode or system.check_for_catcall_at_runtime then
-						l_name_id := context.current_feature.feature_name_id
+					if l_context.workbench_mode or system.check_for_catcall_at_runtime then
+						l_name_id := l_context.current_feature.feature_name_id
 						l_any_class_id := system.any_id
-						l_is_catcall_checking_enabled := (context.current_feature.written_in /= l_any_class_id or else
+						l_is_catcall_checking_enabled := (l_context.current_feature.written_in /= l_any_class_id or else
 							(l_name_id /= {PREDEFINED_NAMES}.equal_name_id or
 							l_name_id /= {PREDEFINED_NAMES}.standard_equal_name_id))
 					end
@@ -322,29 +331,33 @@ feature -- Analyzis
 					i > nb
 				loop
 					arg := real_type (args.item (i))
-					if l_is_catcall_checking_enabled and then arg.c_type.is_reference then
-						l_cl_type ?= args.item (i)
-								-- Only generate a catcall detection if the expected argument is different
-								-- than ANY since ANY is the ancestor to all types.
-						if l_cl_type = Void or else l_cl_type.class_id /= l_any_class_id then
-							l_enable_hooks := True
+					l_enable_hooks := l_has_request_chain and then arg.c_type.is_reference
+						-- If we have a request chain then we need to protect references as a request chain may trigger a GC cycle.
+					if not l_enable_hooks then
+						if l_is_catcall_checking_enabled and then arg.c_type.is_reference then
+							l_cl_type ?= args.item (i)
+									-- Only generate a catcall detection if the expected argument is different
+									-- than ANY since ANY is the ancestor to all types.
+							if l_cl_type = Void or else l_cl_type.class_id /= l_any_class_id then
+								l_enable_hooks := True
+							else
+								l_enable_hooks := False
+							end
 						else
-							l_enable_hooks := False
+								-- See FIXME of `generate_expanded_initialization'
+								-- for possible improvement in the case of `true_expanded'.
+							l_enable_hooks := arg.is_true_expanded
 						end
-					else
-							-- See FIXME of `generate_expanded_initialization'
-							-- for possible improvement in the case of `true_expanded'.
-						l_enable_hooks := arg.is_true_expanded
 					end
 					if l_enable_hooks then
 							-- Force GC hook and its usage even if not used within
 							-- body of current routine.
-						context.force_gc_hooks
+						l_context.force_gc_hooks
 						if l_arg = Void then
 							create l_arg
 						end
 						l_arg.set_position (i)
-						context.set_local_index (l_arg.register_name, l_arg)
+						l_context.set_local_index (l_arg.register_name, l_arg)
 					end
 					i := i + 1
 				end
@@ -1182,10 +1195,10 @@ end
 					-- If argument is controlled, there is no need to lock it again.
 					-- The generated code looks like
 					--    if (uarg) {
-					--       RTS_SRC (Current);                 // Create request chain.
-					--       if (uargN) RTS_RS (Current, argN); // Register uncontrolled argument in the chain.
-					--       ...                                // Repeat for other arguments.
-					--       if (uarg) RTS_RW (Current);        // Wait until all arguments are locked.
+					--       RTS_SRC (Current);      // Create request chain.
+					--       RTS_RS (Current, argN); // Register argument in the chain.
+					--       ...                     // Repeat for other arguments.
+					--       RTS_RW (Current);       // Wait until all arguments are locked.
 					--    }
 				buf.put_new_line
 				buf.put_string ("if (uarg) {")
@@ -1199,9 +1212,7 @@ end
 					if real_type (a [i]).is_separate then
 							-- Register uncontrolled argument in the request chain.
 						buf.put_new_line
-						buf.put_string ("if (uarg")
-						buf.put_integer (i)
-						buf.put_string (") RTS_RS (Current, arg")
+						buf.put_string ("RTS_RS (Current, arg")
 						buf.put_integer (i)
 						buf.put_two_character (')', ';')
 					end

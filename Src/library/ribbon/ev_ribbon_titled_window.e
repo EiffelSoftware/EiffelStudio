@@ -41,6 +41,9 @@ feature -- Access
 	help_button: detachable EV_RIBBON_HELP_BUTTON
 			-- Associated help button if any
 
+	quick_access_toolbar: detachable EV_RIBBON_QUICK_ACCESS_TOOLBAR
+			-- Associated quick access toolbar if any
+
 feature {EV_ANY, EV_ANY_I, EV_ANY_HANDLER} -- Implementation
 
 	implementation: EV_TITLED_WINDOW_I

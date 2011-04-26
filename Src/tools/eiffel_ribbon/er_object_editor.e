@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {ER_OBJECT_EDITOR}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -70,6 +69,7 @@ feature -- Command
 			l_help_button_widget: ER_HELP_BUTTON_NODE_WIDGET
 			l_drop_down_color_picker_widget: ER_DROP_DOWN_COLOR_PICKER_NODE_WIDGET
 			l_font_control_widget: ER_FONT_CONTROL_NODE_WIDGET
+			l_quick_access_toolbar_widget: ER_QUICK_ACCESS_TOOLBAR_NODE_WIDGET
 		do
 			widget.wipe_out
 			if attached a_node.text as l_text then
@@ -194,6 +194,12 @@ feature -- Command
 						l_font_control_widget.set_tree_node_data (l_data)
 					end
 					widget.extend (l_font_control_widget)
+				elseif l_text.same_string (constants.ribbon_quick_access_toolbar) then
+					create l_quick_access_toolbar_widget
+					if attached {ER_TREE_NODE_QUICK_ACCESS_TOOLBAR_DATA} a_node.data as l_data then
+						l_quick_access_toolbar_widget.set_tree_node_data (l_data)
+					end
+					widget.extend (l_quick_access_toolbar_widget)
 				end
 			end
 

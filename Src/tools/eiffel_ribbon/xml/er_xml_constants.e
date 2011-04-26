@@ -36,6 +36,10 @@ feature -- Query, the value of string is what should be written to XML
 
 	ribbon_quick_access_toolbar: STRING = "Ribbon.QuickAccessToolbar"
 
+	quick_access_toolbar: STRING = "QuickAccessToolbar"
+
+	quick_access_toolbar_application_defaults: STRING = "QuickAccessToolbar.ApplicationDefaults"
+
 	ribbon_size_definitions: STRING = "Ribbon.SizeDefinitions"
 
 	ribbon_tabs: STRING = "Ribbon.Tabs"

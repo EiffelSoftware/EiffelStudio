@@ -32,6 +32,8 @@ feature -- Command
 					a_visitor.visit_context_popup (Current)
 				elseif l_name.same_string (constants.ribbon_helpbutton) then
 					a_visitor.visit_help_button (Current)
+				elseif l_name.same_string (constants.ribbon_quick_access_toolbar) then
+					a_visitor.visit_quick_access_toolbar (Current)
 				end
 			end
 

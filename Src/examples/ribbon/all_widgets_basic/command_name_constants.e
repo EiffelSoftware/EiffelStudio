@@ -31,7 +31,16 @@ feature -- Access
 	split_button_child_2_LabelTitle_RESID: NATURAL_32 = 60010
 	drop_down_gallery: NATURAL_32 = 12 
 	drop_down_gallery_LabelTitle_RESID: NATURAL_32 = 60011
-	InternalCmd2_LabelTitle_RESID: NATURAL_32 = 60012
+	group_in_ribbon_gallery: NATURAL_32 = 13 
+	in_ribbon_gallery: NATURAL_32 = 14 
+	group_drop_down_color_picker: NATURAL_32 = 15 
+	drop_down_color_picker: NATURAL_32 = 16 
+	drop_down_color_picker_LabelTitle_RESID: NATURAL_32 = 60012
+	drop_down_color_picker_LargeImages_RESID: NATURAL_32 = 60013
+	group_font_control: NATURAL_32 = 17 
+	font_control: NATURAL_32 = 18 
+	applicaton_menu: NATURAL_32 = 19 
+	InternalCmd2_LabelTitle_RESID: NATURAL_32 = 60014
 
 
 end -- class COMMAND_NAME_CONSTANTS

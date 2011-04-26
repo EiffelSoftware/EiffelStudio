@@ -15,7 +15,9 @@ inherit
 		redefine
 			create_interface_objects,
 			initialize,
-			application_menu
+			application_menu,
+			help_button,
+			quick_access_toolbar
 		end
 
 	EV_SHARED_APPLICATION
@@ -69,6 +71,8 @@ feature {NONE}-- Initialization
 			Precursor
 			create ribbon.make
 			create application_menu.make_with_command_list (<<{COMMAND_NAME_CONSTANTS}.applicaton_menu>>)
+			create help_button.make_with_command_list (<<{COMMAND_NAME_CONSTANTS}.help_button>>)
+			create quick_access_toolbar.make_with_command_list (<<{COMMAND_NAME_CONSTANTS}.quick_access_toolbar>>)
 		end
 
 feature -- Access
@@ -77,5 +81,9 @@ feature -- Access
 			-- Ribbon attached to current
 	application_menu: APPLICATON_MENU
 			-- Application menu
+	help_button: HELP_BUTTON
+			-- Help button
+	quick_access_toolbar: QUICK_ACCESS_TOOLBAR
+			-- Quick access toolbar
 end
 

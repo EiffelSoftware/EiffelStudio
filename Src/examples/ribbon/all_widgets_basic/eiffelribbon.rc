@@ -64,6 +64,32 @@ END
 drop_down_color_picker_LargeImages_RESID    BITMAP    ".\\res\\Paste.bmp" /* LargeImages drop_down_color_picker_LargeImages_RESID: (null) */
 STRINGTABLE 
 BEGIN
+    button_in_app_menu_LabelTitle_RESID L"Button in app menu" /* LabelTitle button_in_app_menu_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    drop_down_button_in_app_menu_LabelTitle_RESID L"Drop down button in app menu" /* LabelTitle drop_down_button_in_app_menu_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    button_of_drop_down_button_LabelTitle_RESID L"Button of drop down button" /* LabelTitle button_of_drop_down_button_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    button_2_of_drop_down_button_LabelTitle_RESID L"Button 2  of drop down button" /* LabelTitle button_2_of_drop_down_button_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    button_in_quick_access_toolbar_LabelTitle_RESID L"Button in quick access tool bar" /* LabelTitle button_in_quick_access_toolbar_LabelTitle_RESID: (null) */
+END
+
+button_in_quick_access_toolbar_SmallImages_RESID    BITMAP    ".\\res\\PrintRelationshipsS.bmp" /* SmallImages button_in_quick_access_toolbar_SmallImages_RESID: (null) */
+STRINGTABLE 
+BEGIN
     InternalCmd2_LabelTitle_RESID L"Label:InternalCmd2" /* LabelTitle InternalCmd2_LabelTitle_RESID: (null) */
 END
 

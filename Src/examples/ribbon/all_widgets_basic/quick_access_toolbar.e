@@ -8,10 +8,10 @@
 	revision: "$Revision$"
 
 class
-	APPLICATON_MENU
+	QUICK_ACCESS_TOOLBAR
 
 inherit
-	EV_RIBBON_APPLICATION_MENU
+	EV_RIBBON_QUICK_ACCESS_TOOLBAR
 		redefine
 			create_interface_objects
 		end
@@ -24,16 +24,14 @@ feature {NONE} -- Initialization
 	create_interface_objects
 			-- Create objects
 		do
-			create menu_group_1.make_with_command_list (<<>>)
+			create select_actions
+			create button_in_quick_access_toolbar.make_with_command_list (<<{COMMAND_NAME_CONSTANTS}.button_in_quick_access_toolbar>>)
 
-			create groups.make (1)
-			groups.extend (menu_group_1)
-
+			default_buttons.extend (button_in_quick_access_toolbar)
+			
 		end
-		
-feature -- Query
-	menu_group_1: RIBBON_APPLICATION_MENU_GROUP_1
 
+feature -- Query
+	button_in_quick_access_toolbar: BUTTON_IN_QUICK_ACCESS_TOOLBAR
 
 end
-

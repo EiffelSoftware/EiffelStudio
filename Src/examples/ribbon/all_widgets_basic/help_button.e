@@ -8,10 +8,10 @@
 	revision: "$Revision$"
 
 class
-	APPLICATON_MENU
+	HELP_BUTTON
 
 inherit
-	EV_RIBBON_APPLICATION_MENU
+	EV_RIBBON_HELP_BUTTON
 		redefine
 			create_interface_objects
 		end
@@ -24,16 +24,10 @@ feature {NONE} -- Initialization
 	create_interface_objects
 			-- Create objects
 		do
-			create menu_group_1.make_with_command_list (<<>>)
-
-			create groups.make (1)
-			groups.extend (menu_group_1)
-
+			create select_actions
 		end
 		
-feature -- Query
-	menu_group_1: RIBBON_APPLICATION_MENU_GROUP_1
-
+feature {NONE} -- Implementation
 
 end
 

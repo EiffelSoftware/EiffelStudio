@@ -40,7 +40,20 @@ feature -- Access
 	group_font_control: NATURAL_32 = 17 
 	font_control: NATURAL_32 = 18 
 	applicaton_menu: NATURAL_32 = 19 
-	InternalCmd2_LabelTitle_RESID: NATURAL_32 = 60014
+	button_in_app_menu: NATURAL_32 = 20 
+	button_in_app_menu_LabelTitle_RESID: NATURAL_32 = 60014
+	drop_down_button_in_app_menu: NATURAL_32 = 21 
+	drop_down_button_in_app_menu_LabelTitle_RESID: NATURAL_32 = 60015
+	button_of_drop_down_button: NATURAL_32 = 22 
+	button_of_drop_down_button_LabelTitle_RESID: NATURAL_32 = 60016
+	button_2_of_drop_down_button: NATURAL_32 = 23 
+	button_2_of_drop_down_button_LabelTitle_RESID: NATURAL_32 = 60017
+	help_button: NATURAL_32 = 24 
+	quick_access_toolbar: NATURAL_32 = 25 
+	button_in_quick_access_toolbar: NATURAL_32 = 26 
+	button_in_quick_access_toolbar_LabelTitle_RESID: NATURAL_32 = 60018
+	button_in_quick_access_toolbar_SmallImages_RESID: NATURAL_32 = 60019
+	InternalCmd2_LabelTitle_RESID: NATURAL_32 = 60020
 
 
 end -- class COMMAND_NAME_CONSTANTS

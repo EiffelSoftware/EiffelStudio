@@ -289,10 +289,10 @@ feature -- Basic operations
 				if l_cursor = Void then
 					create l_cursor.make
 					cursor := l_cursor
-					l_cursor.set_descriptor (active_selection_number)
 				else
 					l_cursor.update_metadata
 				end
+				l_cursor.set_descriptor (active_selection_number)
 				if handle.status.found then
 					l_cursor.fill_in
 					l_object := object

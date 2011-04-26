@@ -356,7 +356,6 @@ feature -- Status report
 			-- to A [TUPLE [INTEGER]].
 		require
 			a_type_not_void: a_type /= Void
-			a_context_type_not_void: a_context_type /= Void
 			a_context_type_valid: a_type.is_valid_context_type (a_context_type)
 			a_type_has_class_type: a_type.has_associated_class_type (a_context_type)
 			a_type_id_valid: a_type_id >= 0
@@ -2088,7 +2087,7 @@ invariant
 	valid_implementation_id: System.il_generation implies implementation_id > 0
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

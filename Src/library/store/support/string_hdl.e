@@ -51,6 +51,16 @@ feature -- Status setting
 			count_valid: ht_order.count = old (ht_order.count) - 1
 		end
 
+	unset_all_map_names
+			-- Remove all map names
+		require
+			ht_not_void: ht /= Void
+			ht_order_not_void: ht_order /= Void
+		do
+			ht.wipe_out
+			ht_order.wipe_out
+		end
+
 feature -- Status report
 
 	is_mapped (key: STRING): BOOLEAN

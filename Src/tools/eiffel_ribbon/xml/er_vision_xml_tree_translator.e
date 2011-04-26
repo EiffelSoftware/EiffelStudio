@@ -141,6 +141,7 @@ feature {NONE} -- Tree saving
 						save_application_menu_node (a_vision_tree.item)
 						save_context_popup_node (a_vision_tree.item)
 						save_help_button_node (a_vision_tree.item)
+						save_quick_access_toolbar_node (a_vision_tree.item)
 
 						a_vision_tree.forth
 					end
@@ -186,6 +187,71 @@ feature {NONE} -- Tree saving
 					check not_possible: False end
 				end
 			end
+		end
+
+	save_quick_access_toolbar_node (a_tree_node: EV_TREE_NODE)
+			-- Save quick access toolbar node if possible
+		require
+			not_void: a_tree_node /= Void
+		local
+			l_xml_item, l_last_parent: XML_ELEMENT
+			l_attribute: XML_ATTRIBUTE
+		do
+			if attached {EV_TREE_ITEM} a_tree_node as l_tree_item_menu and then
+					l_tree_item_menu.text.same_string (xml_constants.ribbon_quick_access_toolbar) then
+
+				-- Add context popup xml node
+				if attached xml_node_by_name (xml_constants.ribbon) as l_ribbon then
+					create l_xml_item.make (l_ribbon, xml_constants.ribbon_quick_access_toolbar, name_space)
+					l_ribbon.put_last (l_xml_item)
+					l_last_parent := l_xml_item
+
+					create l_xml_item.make (l_last_parent, xml_constants.quick_access_toolbar, name_space)
+					l_last_parent.put_last (l_xml_item)
+
+					if attached {ER_TREE_NODE_DATA} a_tree_node.data as l_tree_node_data then
+						add_xml_command_node (l_tree_node_data)
+
+						if attached l_tree_node_data.command_name as l_command_name then
+							create l_attribute.make ({ER_XML_ATTRIBUTE_CONSTANTS}.command_name, name_space, l_command_name, l_xml_item)
+							l_xml_item.put_last (l_attribute)
+						else
+							check not_possible: False end
+						end
+					else
+						check not_possible: False end
+					end
+
+					-- Add default buttons
+					add_quick_access_toolbar_application_defaults (l_xml_item, a_tree_node)
+				else
+					check not_possible: False end
+				end
+			end
+		end
+
+	add_quick_access_toolbar_application_defaults (a_quick_access_toolbar: XML_ELEMENT; a_tree_node: EV_TREE_NODE)
+			-- Add default buttons for quick access toolbar
+		require
+			valid: attached a_quick_access_toolbar as l_toolbar and then l_toolbar.name.same_string ({ER_XML_CONSTANTS}.quick_access_toolbar)
+			not_void: a_tree_node /= Void
+		local
+			l_xml_item: XML_ELEMENT
+		do
+			create l_xml_item.make (a_quick_access_toolbar, xml_constants.quick_access_toolbar_application_defaults, name_space)
+			a_quick_access_toolbar.put_last (l_xml_item)
+
+			from
+				a_tree_node.start
+			until
+				a_tree_node.after
+			loop
+				add_xml_button_node (l_xml_item, a_tree_node.item)
+
+				a_tree_node.forth
+			end
+
+			-- FIXME: need iteration again to add attributes like "ApplicationDefaults.IsChecked"
 		end
 
 	save_context_popup_node (a_tree_node: EV_TREE_NODE)
@@ -597,7 +663,8 @@ feature {NONE} -- Tree saving
 			valid: a_group_node.name.same_string (xml_constants.group) or else
 					a_group_node.name.same_string (xml_constants.split_button) or else
 					a_group_node.name.same_string (xml_constants.menu_group) or else
-					a_group_node.name.same_string (xml_constants.drop_down_button)
+					a_group_node.name.same_string (xml_constants.drop_down_button) or else
+					a_group_node.name.same_string (xml_constants.quick_access_toolbar_application_defaults)
 
 		local
 			l_button_node: XML_ELEMENT

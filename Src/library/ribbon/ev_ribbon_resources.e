@@ -264,6 +264,56 @@ feature -- Helper
 			end
 		end
 
+	ribbon_for_quick_access_toolbar (a_qat: EV_RIBBON_QUICK_ACCESS_TOOLBAR): detachable EV_RIBBON
+			--
+		local
+			l_res: EV_RIBBON_RESOURCES
+			l_list: ARRAYED_LIST [EV_RIBBON_TITLED_WINDOW]
+		do
+			from
+				create l_res
+				l_list := l_res.ribbon_window_list
+				l_list.start
+			until
+				l_list.after or Result /= Void
+			loop
+				if l_list.item.quick_access_toolbar = a_qat then
+					Result := l_list.item.ribbon
+				end
+				l_list.forth
+			end
+		end
+
+	ribbon_for_qat_item (a_item: EV_RIBBON_ITEM): detachable EV_RIBBON
+			--
+		local
+			l_res: EV_RIBBON_RESOURCES
+			l_list: ARRAYED_LIST [EV_RIBBON_TITLED_WINDOW]
+		do
+			from
+				create l_res
+				l_list := l_res.ribbon_window_list
+				l_list.start
+			until
+				l_list.after or Result /= Void
+			loop
+				if attached l_list.item.quick_access_toolbar as l_qat then
+					from
+						l_qat.default_buttons.start
+					until
+						l_qat.default_buttons.after or Result /= Void
+					loop
+						if l_qat.default_buttons.item = a_item then
+							Result := l_list.item.ribbon
+						end
+
+						l_qat.default_buttons.forth
+					end
+				end
+				l_list.forth
+			end
+		end
+
 	ribbon_for_application_menu_item (a_item: EV_RIBBON_ITEM): detachable EV_RIBBON
 			--
 		local
@@ -297,9 +347,13 @@ feature -- Helper
 							end
 
 							-- Find Dropdown button and splitbutton child items
-							if find_in_split_or_drop_button_child_items (l_menu_group.buttons.item, a_item) then
-								Result := l_ribbon_window.ribbon
+							if attached {EV_RIBBON_SPLIT_BUTTON} l_menu_group.buttons.item or else
+								attached {EV_RIBBON_DROP_DOWN_BUTTON} l_menu_group.buttons.item then
+								if find_in_split_or_drop_button_child_items (l_menu_group.buttons.item, a_item) then
+									Result := l_ribbon_window.ribbon
+								end
 							end
+
 							l_menu_group.buttons.forth
 						end
 						l_menu.groups.forth

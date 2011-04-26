@@ -53,6 +53,15 @@ feature -- Visitor commands
 
 		end
 
+	visit_quick_access_toolbar (a_quick_access_toolbar: ER_XML_TREE_ELEMENT)
+			--
+		require
+			not_void: a_quick_access_toolbar /= Void
+			valid: is_node_with_text (a_quick_access_toolbar, constants.ribbon_quick_access_toolbar)
+		do
+
+		end
+
 feature -- Query
 
 	is_node_with_text (a_xml_node: ER_XML_TREE_ELEMENT; a_text: STRING): BOOLEAN

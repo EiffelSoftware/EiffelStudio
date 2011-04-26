@@ -137,10 +137,10 @@ feature -- Status report
 			type_id: INTEGER
 		do
 			nb := max_position
-			type_id := a_type.type_id (a_context_type.type)
 
 			if nb > 1 then
 				old_position := position
+				type_id := a_type.type_id (a_context_type.type)
 				system_i := System
 
 				from
@@ -178,6 +178,77 @@ feature -- Status report
 			else
 					-- Only one entry, it is clearly non-polymorphic.
 				Result := False
+			end
+		end
+
+	is_inlinable (a_type: TYPE_A; a_context_type: CLASS_TYPE): BOOLEAN
+			-- Even if a routine is not polymorphic, it is possible that a call
+			-- cannot be inlined if the same body is used in two different descendants
+			-- without relationship (See eweasel test#final087).
+			-- We assume that `position' is the first implementation of the deferred routine
+			-- in `a_type'.
+		require
+			a_type_not_void: a_type /= Void
+			a_context_type_not_void: a_context_type /= Void
+			valid_position: valid_index (position)
+		local
+			entry: ROUT_ENTRY;
+			i, nb, old_position: INTEGER
+			system_i: SYSTEM_I
+			type_id: INTEGER
+			l_parent_type, l_child_type: CLASS_TYPE
+		do
+				-- We assume True by default
+			Result := True
+
+			nb := max_position
+			if nb > 1 then
+				old_position := position
+				type_id := a_type.type_id (a_context_type.type)
+				system_i := System
+
+					-- Go to the entry of type id equal to `type_id' to check if
+					-- the original entry was deferred.
+				goto (type_id)
+				i := position
+				if array_item (i).is_deferred then
+						-- This is a deferred entry so we need to check
+						-- that all descendant of the first implemetnation are in one single
+						-- branch of inheritance. To do so we check that two consecutive
+						-- types (`l_parent_type' and `l_child_type') conforming to `a_type'
+						-- are conforming.
+						-- We can do consecutive types because the table is sorted in topological order.
+					from
+							-- Restore the position to go to the first implemented routine.
+						i := old_position
+						l_parent_type := system_i.class_type_of_id (array_item (i).type_id)
+							-- We have computed the first element, we go directly to the next one.
+						i := i + 1
+					until
+						i > nb
+					loop
+						entry := array_item (i)
+						if entry.used then
+							l_child_type := system.class_type_of_id (entry.type_id)
+								-- First check we conform to `a_type'.
+							if l_child_type.dynamic_conform_to (a_type, type_id, a_context_type.type) then
+									-- Then check we conform to `l_parent_type'.
+								if l_child_type.dynamic_conform_to (l_parent_type.type, l_parent_type.type_id, Void) then
+										-- Types are still conformant, we continue our descent, and use `l_child_type'
+										-- as our new parent.
+									l_parent_type := l_child_type
+								else
+										-- No conformance here, we cannot inline a call to a deferred routine that
+										-- has only one implementation.
+									i := nb + 1
+									Result := False
+								end
+							end
+						end
+						i := i + 1
+					end
+				end
+				position := old_position
 			end
 		end
 
@@ -678,7 +749,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

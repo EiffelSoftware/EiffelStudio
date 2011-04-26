@@ -379,7 +379,7 @@ feature -- Inlining
 	inlined_byte_code: ACCESS_B
 		local
 			inlined_feat_b: INLINED_FEAT_B
-			inline: BOOLEAN
+			inline, l_is_deferred_inlinable: BOOLEAN
 			inliner: INLINER
 			type_i: TYPE_A
 			cl_type, written_cl_type: CL_TYPE_A
@@ -390,6 +390,8 @@ feature -- Inlining
 			f: FEATURE_I
 			context_class_type, written_class_type: CLASS_TYPE
 		do
+				-- We have to disable inlining if target is a multi constraint. This fixes eweasel
+				-- test#final0978 and test#final094.
 			if not is_once then
 				type_i := context_type
 				if not type_i.is_basic then
@@ -403,7 +405,23 @@ feature -- Inlining
 							entry := l_rout_table.item
 							l_body_index := entry.body_index
 								-- We need to instantiate `type' in current context to fix eweasel test#final065.
-							inline := inliner.inline (type.instantiated_in (context.context_cl_type), l_body_index)
+							inline := inliner.inline (context.real_type (type), l_body_index)
+
+								-- Special handling of deferred routine with one implementation in more than one
+								-- descendants which do not conform to each other. To avoid the expensive cost of
+								-- the computation we check first that the context type is deferred. This fixes
+								-- eweasel test#final087.
+							if inline and type_i.associated_class.is_deferred then
+									-- The routine in the deferred class could be deferred and we need to
+									-- ensure that all implementations of Current are forming an inheritance
+									-- line, not a tree as if it is a tree, inlining has to be done from the top
+									-- of the tree not from the first implemented version we found.
+									-- Ideally we could figure it out, but it is more complicated, for the time
+									-- being we disallow inlining in those rare cases. See eweasel test#final087.
+								l_is_deferred_inlinable := l_rout_table.is_inlinable (type_i, context.context_class_type)
+							else
+								l_is_deferred_inlinable := True
+							end
 						end
 					end
 				end
@@ -428,7 +446,7 @@ feature -- Inlining
 				elseif f.is_external or else f.is_constant then
 						-- Create new byte node and process it instead of the current one
 					Result := byte_node (f, type_i).inlined_byte_code
-				else
+				elseif l_is_deferred_inlinable then
 						-- Adapt context type `cl_type' to the appropriate context.
 						-- For example, inlining SPECIAL [G#2] from HASH_TABLE [G#1, G#2] when
 						-- the class is generated for HASH_TABLE [G#1, INTEGER] should yield
@@ -584,6 +602,9 @@ feature -- Inlining
 
 						Result := inlined_feat_b
 					end
+				else
+						-- Case of an inline deferred routine that we cannot really inlined.
+					inline := False
 				end
 			end
 

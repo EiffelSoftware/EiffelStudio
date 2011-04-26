@@ -542,17 +542,15 @@ rt_private void initialize_request_chain (uint32 uarg, EIF_NATURAL_64 usep, EIF_
 #define qt (*qqt)
 	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
-	uint32 n = argnum;
-	EIF_NATURAL_64 mask = ((EIF_NATURAL_64) 1) << (n - 1);
+	uint32 n;
 
 		/* Create request chain. */
 	RTS_SRCX(icurrent -> it_ref);
-		/* Register uncontrolled arguments. */
-	for (; uarg; n--, mask >>= 1) {
-		if (usep & mask) {
-			EIF_TYPED_VALUE *last = arg(n);
+		/* Register reference arguments. */
+	for (n = argnum; n > 0; n--) {
+		EIF_TYPED_VALUE *last = arg(n);
+		if (last -> type == SK_REF && EIF_IS_DIFFERENT_PROCESSOR(icurrent -> it_ref, last -> it_ref)) {
 			RTS_RS(icurrent -> it_ref, last -> it_ref);
-			uarg--;
 		}
 	}
 		/* Wait for arguments to be locked. */

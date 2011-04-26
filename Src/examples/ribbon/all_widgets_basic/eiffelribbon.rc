@@ -58,6 +58,12 @@ END
 
 STRINGTABLE 
 BEGIN
+    drop_down_color_picker_LabelTitle_RESID L"Color picker" /* LabelTitle drop_down_color_picker_LabelTitle_RESID: (null) */
+END
+
+drop_down_color_picker_LargeImages_RESID    BITMAP    ".\\res\\Paste.bmp" /* LargeImages drop_down_color_picker_LargeImages_RESID: (null) */
+STRINGTABLE 
+BEGIN
     InternalCmd2_LabelTitle_RESID L"Label:InternalCmd2" /* LabelTitle InternalCmd2_LabelTitle_RESID: (null) */
 END
 

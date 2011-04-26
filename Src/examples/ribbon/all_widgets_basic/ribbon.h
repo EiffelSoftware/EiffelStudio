@@ -27,4 +27,13 @@
 #define split_button_child_2_LabelTitle_RESID 60010
 #define drop_down_gallery 12 
 #define drop_down_gallery_LabelTitle_RESID 60011
-#define InternalCmd2_LabelTitle_RESID 60012
+#define group_in_ribbon_gallery 13 
+#define in_ribbon_gallery 14 
+#define group_drop_down_color_picker 15 
+#define drop_down_color_picker 16 
+#define drop_down_color_picker_LabelTitle_RESID 60012
+#define drop_down_color_picker_LargeImages_RESID 60013
+#define group_font_control 17 
+#define font_control 18 
+#define applicaton_menu 19 
+#define InternalCmd2_LabelTitle_RESID 60014

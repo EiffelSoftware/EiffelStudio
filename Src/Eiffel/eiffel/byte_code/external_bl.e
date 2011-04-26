@@ -172,7 +172,6 @@ feature
 			table_name: STRING;
 			type_c: TYPE_C
 			l_type_i: TYPE_A
-			l_typ: CL_TYPE_A
 			buf: GENERATION_BUFFER
 			array_index: INTEGER
 			local_argument_types, real_arg_types: like argument_types

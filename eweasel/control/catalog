@@ -1222,6 +1222,7 @@ test	finalize-generic-once-per-object	final095 tcf fail finalizing once
 test	finalize-qat-object-test-2		final096 tcf fail finalizing anchored_type
 test	inline-deferred-with-one-implementation	final097 tcf fail finalizing inlining
 test	inline-with-generic-argument	final098 tcf fail finalizing inlining
+test	finalize-inline-merged-routine-2	final099 tcf fail finalizing
 
 -- Runtime
 test	gc-tracking-001					runtime001	tcf pass runtime

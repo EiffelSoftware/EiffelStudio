@@ -1201,7 +1201,7 @@ test	finalize-bogus-invariant-violation	final074 tcf fail finalizing
 test	finalize-external-creation-procedure	final075 tcf fail finalizing
 test	finalize-inline-attribute-body	final076 tcf fail finalizing
 test	finalize-creation-expression-corruption	final077 tcf pass finalizing
-test	finalize-inline-precursor-2	final078 tcf fail finalizing
+test	finalize-inline-precursor-2	final078 tcf fail finalizing multiconstraint
 test	finalize-attribute-access-crash	final079 tcf pass finalizing
 test	finalize-inline-attribute-body-2	final080 tcf pass finalizing
 test	finalize-inline-external-redef-constant	final081 tcf pass finalizing
@@ -1217,7 +1217,7 @@ test	finalize-attached-dcr-missing	final090 tcf pass finalizing
 test	finalize-inline-same-generic-derivation-crash	final091 tcf fail finalizing
 test	finalize-c-code-redeclared-identifier	final092 tcf fail finalizing
 test	finalize-create-expanded-generic	final093 tcf fail finalizing
-test	finalize-static-access-multicon-formal	final094 tcf fail finalizing
+test	finalize-static-access-multicon-formal	final094 tcf fail finalizing multiconstraint
 test	finalize-generic-once-per-object	final095 tcf fail finalizing once
 test	finalize-qat-object-test-2		final096 tcf fail finalizing anchored_type
 test	inline-deferred-with-one-implementation	final097 tcf fail finalizing inlining
@@ -2591,7 +2591,7 @@ test	qat-c-compile-failure			anchor051 tcf fail anchored_type generic
 test	qat-anchored-to-redefined-descendant	anchor052 tcf fail anchored_type
 test	qat-inlining-bug			anchor053 tcf fail anchored_type generic
 test	qat-instantiated-in-crash-3		anchor054 tcf fail anchored_type formal generic
-test	qat-static-type-id-crash-2		anchor055 tcf fail anchored_type formal generic
+test	qat-static-type-id-crash-2		anchor055 tcf fail anchored_type formal generic multiconstraint
 test	qat-generic-constrained-by-self		anchor056 tcf fail anchored_type formal generic manual
 test	qat-multi-constraint-type		anchor057 tcf fail anchored_type multiconstraint formal generic renaming creation
 test	qat-invalid-vffd-2			anchor058 tcf fail anchored_type

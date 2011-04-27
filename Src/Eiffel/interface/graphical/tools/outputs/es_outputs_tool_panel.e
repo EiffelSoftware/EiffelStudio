@@ -591,15 +591,16 @@ feature {NONE} -- Basic operations
 		require
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
-		local
-			l_timer: like icon_animation_timer
 		do
 				-- Remove timer.
-			l_timer := icon_animation_timer
-			check l_timer_attached: l_timer /= Void end
-			l_timer.set_interval (0)
-			unregister_action (l_timer.actions, agent on_icon_animation_timeout)
-			l_timer.destroy
+			if attached icon_animation_timer as l_timer then
+				l_timer.set_interval (0)
+				unregister_action (l_timer.actions, agent on_icon_animation_timeout)
+				l_timer.destroy
+			else
+				check l_timer_attached: False end
+			end
+
 			icon_animation_timer := Void
 			icon_animations := Void
 			icon_pixmap_animations := Void
@@ -995,7 +996,7 @@ feature {NONE} -- Internationalization
 	tt_show_modified_output_1: STRING = "Show the modified $1 output"
 
 ;note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

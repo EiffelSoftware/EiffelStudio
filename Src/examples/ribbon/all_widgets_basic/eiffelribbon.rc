@@ -64,6 +64,16 @@ END
 drop_down_color_picker_LargeImages_RESID    BITMAP    ".\\res\\Paste.bmp" /* LargeImages drop_down_color_picker_LargeImages_RESID: (null) */
 STRINGTABLE 
 BEGIN
+    button_show_mini_toolbar_LabelTitle_RESID L"Show mini toolbar" /* LabelTitle button_show_mini_toolbar_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    button_show_context_menu_LabelTitle_RESID L"Show context menu" /* LabelTitle button_show_context_menu_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
     button_in_app_menu_LabelTitle_RESID L"Button in app menu" /* LabelTitle button_in_app_menu_LabelTitle_RESID: (null) */
 END
 
@@ -80,6 +90,18 @@ END
 STRINGTABLE 
 BEGIN
     button_2_of_drop_down_button_LabelTitle_RESID L"Button 2  of drop down button" /* LabelTitle button_2_of_drop_down_button_LabelTitle_RESID: (null) */
+END
+
+button_in_mini_toolbar_SmallImages_RESID    BITMAP    ".\\res\\PrintRelationshipsS.bmp" /* SmallImages button_in_mini_toolbar_SmallImages_RESID: (null) */
+button_2_in_mini_toolbar_SmallImages_RESID    BITMAP    ".\\res\\Copy.bmp" /* SmallImages button_2_in_mini_toolbar_SmallImages_RESID: (null) */
+STRINGTABLE 
+BEGIN
+    button_in_context_menu_LabelTitle_RESID L"One" /* LabelTitle button_in_context_menu_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    button_2_in_context_menu_LabelTitle_RESID L"Two" /* LabelTitle button_2_in_context_menu_LabelTitle_RESID: (null) */
 END
 
 STRINGTABLE 

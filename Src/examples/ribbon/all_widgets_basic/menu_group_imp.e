@@ -8,7 +8,7 @@
 	revision: "$Revision$"
 
 deferred class
-	RIBBON_APPLICATION_MENU_GROUP_IMP_1
+	MENU_GROUP_IMP
 
 inherit
 	EV_RIBBON_APPLICATION_MENU_GROUP

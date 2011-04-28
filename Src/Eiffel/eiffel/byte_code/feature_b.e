@@ -382,7 +382,7 @@ feature -- Inlining
 			inline, l_is_deferred_inlinable: BOOLEAN
 			inliner: INLINER
 			type_i: TYPE_A
-			cl_type, written_cl_type: CL_TYPE_A
+			cl_type, desc_cl_type, written_cl_type: CL_TYPE_A
 			bc: STD_BYTE_CODE
 			l_rout_table: ROUT_TABLE
 			l_body_index: INTEGER
@@ -469,9 +469,11 @@ feature -- Inlining
 						f.written_class.simple_conform_to (cl_type.associated_class)
 					then
 							-- Now try to find a proper descendant type for the candidate for inlining.
-						cl_type := cl_type.find_descendant_type (system.class_of_id (entry.class_id))
-
-						if cl_type = Void or else not cl_type.is_valid_for_class (context.context_cl_type.associated_class) then
+						desc_cl_type := cl_type.find_descendant_type (system.class_of_id (entry.class_id))
+						if 
+							desc_cl_type = Void or else
+							not same_for_generics (desc_cl_type.associated_class, cl_type.associated_class)
+						then
 								-- No valid descendant was found, therefore we cancel inlining (see
 								-- eweasel test#final083).
 								-- Note: This case means that the descendant is adding some new formal
@@ -484,6 +486,7 @@ feature -- Inlining
 							inline := False
 						else
 								-- We could find a descendant type, thus we can try to inline.
+							cl_type := desc_cl_type
 
 								-- Get the CLASS_TYPE from `cl_type'.
 							context_class_type := cl_type.associated_class_type (context.context_cl_type)
@@ -543,8 +546,11 @@ feature -- Inlining
 							-- if then else.
 						check cl_type.class_id /= entry.class_id end
 							-- Using the example above, we get `C [G]'
-						cl_type := cl_type.find_descendant_type (system.class_of_id (entry.class_id))
-						if cl_type = Void or else not cl_type.is_valid_for_class (context.context_cl_type.associated_class) then
+						desc_cl_type := cl_type.find_descendant_type (system.class_of_id (entry.class_id))
+						if 
+							desc_cl_type = Void or else
+							not same_for_generics (desc_cl_type.associated_class, cl_type.associated_class)
+						then
 								-- Another failures are test#final091 and test#final097 which we test
 								-- by checking' the precondition of `associated_class_type'.
 							inline := False
@@ -552,6 +558,7 @@ feature -- Inlining
 								-- `f' cannot be implemented in the descendant version for which the first
 								-- implementation of `f' appears, otherwise we would go via the `then' part
 								-- of the current if then else.
+							cl_type := desc_cl_type
 							check cl_type.class_id /= f.written_in end
 								-- Get the CLASS_TYPE corresponding to `C [G#1]'.
 							context_class_type := cl_type.associated_class_type (context.context_cl_type)

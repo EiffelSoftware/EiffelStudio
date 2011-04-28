@@ -89,7 +89,6 @@ feature -- Query
 						l_file.close
 						l_dest_file.close
 					end
-
 				end
 			end
 
@@ -110,7 +109,9 @@ feature -- Query
 			--
 		require
 			not_void: a_tabs_root_note /= Void
-			valid:  a_tabs_root_note.text.is_equal ({ER_XML_CONSTANTS}.ribbon_application_menu)
+			valid: a_tabs_root_note.text.same_string ({ER_XML_CONSTANTS}.ribbon_application_menu) or else
+				a_tabs_root_note.text.same_string ({ER_XML_CONSTANTS}.mini_toolbar) or else
+				a_tabs_root_note.text.same_string ({ER_XML_CONSTANTS}.context_menu)
 		local
 			l_count, l_index: INTEGER
 			l_template, l_command_string: STRING
@@ -127,7 +128,7 @@ feature -- Query
 			loop
 				l_generated := l_template.twin
 
-				if attached {ER_TREE_NODE_TAB_DATA} a_tabs_root_note.i_th (l_index).data as l_group_data then
+				if attached {ER_TREE_NODE_DATA} a_tabs_root_note.i_th (l_index).data as l_group_data then
 					if attached l_group_data.command_name as l_command_name and then not l_command_name.is_empty then
 						l_command_string := "<<{" + {ER_CODE_GENERATOR}.command_name_constants.as_upper + "}." + l_command_name + ">>"
 						l_generated.replace_substring_all ("$INDEX", l_command_name.as_lower)
@@ -151,7 +152,9 @@ feature -- Query
 			--
 		require
 			not_void: a_tabs_root_note /= Void
-			valid:  a_tabs_root_note.text.is_equal ({ER_XML_CONSTANTS}.ribbon_application_menu)
+			valid: a_tabs_root_note.text.same_string ({ER_XML_CONSTANTS}.ribbon_application_menu) or else
+				a_tabs_root_note.text.same_string ({ER_XML_CONSTANTS}.mini_toolbar) or else
+				a_tabs_root_note.text.same_string ({ER_XML_CONSTANTS}.context_menu)
 		local
 			l_count, l_index: INTEGER
 			l_template: STRING
@@ -168,7 +171,7 @@ feature -- Query
 				l_count < l_index
 			loop
 				l_generated := l_template.twin
-				if attached {ER_TREE_NODE_TAB_DATA} a_tabs_root_note.i_th (l_index).data as l_tab_data then
+				if attached {ER_TREE_NODE_DATA} a_tabs_root_note.i_th (l_index).data as l_tab_data then
 					if attached l_tab_data.command_name as l_command_name and then not l_command_name.is_empty then
 						l_generated.replace_substring_all ("$MENU_GROUP", l_command_name.as_lower)
 					else
@@ -189,7 +192,9 @@ feature -- Query
 			--
 		require
 			not_void: a_tabs_root_note /= Void
-			valid:  a_tabs_root_note.text.is_equal ({ER_XML_CONSTANTS}.ribbon_application_menu)
+			valid: a_tabs_root_note.text.same_string ({ER_XML_CONSTANTS}.ribbon_application_menu) or else
+				a_tabs_root_note.text.same_string ({ER_XML_CONSTANTS}.mini_toolbar) or else
+				a_tabs_root_note.text.same_string ({ER_XML_CONSTANTS}.context_menu)
 		local
 			l_count, l_index: INTEGER
 			l_template: STRING
@@ -205,7 +210,7 @@ feature -- Query
 				l_count < l_index
 			loop
 				l_generated := l_template.twin
-				if attached {ER_TREE_NODE_TAB_DATA} a_tabs_root_note.i_th (l_index).data as l_tab_data then
+				if attached {ER_TREE_NODE_DATA} a_tabs_root_note.i_th (l_index).data as l_tab_data then
 					if attached l_tab_data.command_name as l_command_name and then not l_command_name.is_empty then
 						l_generated.replace_substring_all ("$INDEX_1", l_command_name.as_lower)
 						l_generated.replace_substring_all ("$INDEX_2", l_command_name.as_upper)
@@ -224,7 +229,7 @@ feature -- Query
 			end
 		end
 
-feature {NONE} -- Menu group generating
+feature {ER_CODE_GENERATOR_FOR_CONTEXT_POPUP} -- Menu group generating
 
 	generate_menu_group_class (a_group_node: EV_TREE_NODE; a_index: INTEGER_32)
 			--

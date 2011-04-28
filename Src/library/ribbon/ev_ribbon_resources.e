@@ -284,6 +284,46 @@ feature -- Helper
 			end
 		end
 
+	ribbon_for_mini_toolbar (a_mini_toolbar: EV_RIBBON_MINI_TOOLBAR): detachable EV_RIBBON
+			--
+		local
+			l_res: EV_RIBBON_RESOURCES
+			l_list: ARRAYED_LIST [EV_RIBBON_TITLED_WINDOW]
+		do
+			from
+				create l_res
+				l_list := l_res.ribbon_window_list
+				l_list.start
+			until
+				l_list.after or Result /= Void
+			loop
+				if l_list.item.mini_toolbars.has (a_mini_toolbar) then
+					Result := l_list.item.ribbon
+				end
+				l_list.forth
+			end
+		end
+
+	ribbon_for_context_menu (a_context_menu: EV_RIBBON_CONTEXT_MENU): detachable EV_RIBBON
+			--
+		local
+			l_res: EV_RIBBON_RESOURCES
+			l_list: ARRAYED_LIST [EV_RIBBON_TITLED_WINDOW]
+		do
+			from
+				create l_res
+				l_list := l_res.ribbon_window_list
+				l_list.start
+			until
+				l_list.after or Result /= Void
+			loop
+				if l_list.item.context_menus.has (a_context_menu) then
+					Result := l_list.item.ribbon
+				end
+				l_list.forth
+			end
+		end
+
 	ribbon_for_qat_item (a_item: EV_RIBBON_ITEM): detachable EV_RIBBON
 			--
 		local

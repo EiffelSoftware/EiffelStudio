@@ -12,6 +12,6 @@ inherit
 	$INDEX_2
 
 create
-	{EV_RIBBON_APPLICATION_MENU} make_with_command_list
+	{EV_RIBBON_APPLICATION_MENU, EV_RIBBON_MINI_TOOLBAR, EV_RIBBON_CONTEXT_MENU} make_with_command_list
 	
 end

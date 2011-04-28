@@ -53,6 +53,10 @@ feature -- Command
 					Result := l_resource.ribbon_for_help_button (l_help_button)
 				elseif attached {EV_RIBBON_QUICK_ACCESS_TOOLBAR} Current as l_quick_access_toolbar then
 					Result := l_resource.ribbon_for_quick_access_toolbar (l_quick_access_toolbar)
+				elseif attached {EV_RIBBON_MINI_TOOLBAR} Current as l_mini_toolbar then
+					Result := l_resource.ribbon_for_mini_toolbar (l_mini_toolbar)
+				elseif attached {EV_RIBBON_CONTEXT_MENU} Current as l_context_menu then
+					Result := l_resource.ribbon_for_context_menu (l_context_menu)
 				else
 					check not_possible: False end
 				end

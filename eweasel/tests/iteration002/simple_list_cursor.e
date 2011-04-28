@@ -14,7 +14,6 @@ feature -- Cursor movement
 
 	move_to (new_index: INTEGER)
 	do
-		cursor_index := new_index
 	end
 
 feature -- Changes

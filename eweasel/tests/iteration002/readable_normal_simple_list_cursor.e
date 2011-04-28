@@ -12,12 +12,17 @@ inherit
 			forbidden_item,
 			forbidden_move_to,
 			forbidden_replace
-		redefine
-			target
 		end
 
 create
 	make
+
+feature {NONE} -- Creation
+
+	make (t: READABLE_SIMPLE_LIST[READABLE_G, G])
+		do
+			target := t
+		end
 
 feature -- Access
 
@@ -25,6 +30,16 @@ feature -- Access
 	do
 		result := target.first
 	end
+
+feature -- Traversal
+
+	start
+		do
+		end
+
+	forth
+		do
+		end
 
 feature -- Status report
 

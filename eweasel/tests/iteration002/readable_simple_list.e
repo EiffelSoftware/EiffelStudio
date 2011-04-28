@@ -25,7 +25,7 @@ feature -- Iteration
 
 	new_cursor: READABLE_NORMAL_SIMPLE_LIST_CURSOR[READABLE_G, G]
 	do
-		result := create {READABLE_NORMAL_SIMPLE_LIST_CURSOR[READABLE_G, G]}.make(current)
+		create Result.make(current)
 	end
 
 end

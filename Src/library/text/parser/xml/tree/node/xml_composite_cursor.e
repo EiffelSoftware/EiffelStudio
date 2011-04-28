@@ -8,9 +8,6 @@ class
 
 inherit
 	ITERATION_CURSOR [XML_NODE]
-		redefine
-			make, target, start, forth
-		end
 
 create
 	make
@@ -20,9 +17,8 @@ feature {NONE} -- Initialization
 	make (s: like target)
 			-- Initialize `Current'.
 		do
-			Precursor (s)
+			target := s
 			internal_cursor := s.nodes.new_cursor
-			cursor_index := internal_cursor.cursor_index
 		end
 
 feature -- Access
@@ -39,15 +35,12 @@ feature -- Cursor movement
 			-- <Precursor>
 		do
 			internal_cursor.start
-			cursor_index := internal_cursor.cursor_index
-			is_set := True
 		end
 
 	forth
 			-- <Precursor>
 		do
 			internal_cursor.forth
-			cursor_index := internal_cursor.cursor_index
 		end
 
 	remove
@@ -76,7 +69,6 @@ feature -- Cursor movement
 			loop
 				internal_cursor.forth
 			end
-			cursor_index := internal_cursor.cursor_index
 		end
 
 feature -- Status report
@@ -99,7 +91,7 @@ invariant
 	target_attached: target /= Void
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

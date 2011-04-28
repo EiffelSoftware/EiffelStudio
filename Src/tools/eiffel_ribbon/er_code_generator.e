@@ -302,7 +302,7 @@ feature {ER_CODE_GENERATOR_FOR_QAT} -- Command
 		do
 			button_counter := button_counter + a_item
 		end
-		
+
 	generate_item_class (a_item_node: EV_TREE_NODE; a_index: INTEGER; a_gen_data: ER_CODE_GENERATOR_INFO)
 			--
 		require
@@ -598,6 +598,7 @@ feature {NONE} -- Implementation
 			generate_application_menu_classes
 			generate_help_button_class
 			generate_quick_access_toolbar_class
+			generate_context_popup_class
 		end
 
 	generate_window_classes
@@ -609,6 +610,7 @@ feature {NONE} -- Implementation
 			l_constants: ER_MISC_CONSTANTS
 			l_file_name, l_dest_file_name: FILE_NAME
 			l_file, l_dest_file: RAW_FILE
+			l_context_popup_gen: ER_CODE_GENERATOR_FOR_CONTEXT_POPUP
 		do
 			l_window_file := "main_window"
 			l_sub_dir := "code_generated_everytime"
@@ -639,6 +641,7 @@ feature {NONE} -- Implementation
 
 							create l_dest_file.make_create_read_write (l_dest_file_name)
 							from
+								create l_context_popup_gen
 								l_file.open_read
 								l_file.start
 							until
@@ -661,10 +664,11 @@ feature {NONE} -- Implementation
 									end
 								end
 
-								-- For application menu
+								-- For application menu and other widgets except button items
 								window_class_application_menu (l_list.item.widget, l_list.index, l_last_string)
 								window_class_help_button (l_list.item.widget, l_list.index, l_last_string)
 								window_class_quick_access_toolbar (l_list.item.widget, l_list.index, l_last_string)
+								l_context_popup_gen.window_context_popups (l_list.item.widget, l_list.index, l_last_string)
 
 								if l_list.index = 1 then
 									l_last_string.replace_substring_all ("$INDEX", "")
@@ -924,6 +928,39 @@ feature {NONE} -- Implementation
 				end
 			end
 
+		end
+
+	generate_context_popup_class
+			--
+		local
+			l_gen: ER_CODE_GENERATOR_FOR_CONTEXT_POPUP
+			l_tree: EV_TREE
+			l_tree_node: detachable EV_TREE_NODE
+			l_xml: ER_XML_CONSTANTS
+			l_singleton: ER_SHARED_SINGLETON
+			l_list: ARRAYED_LIST [ER_LAYOUT_CONSTRUCTOR]
+		do
+			from
+				create l_gen
+				create l_singleton
+				l_list := l_singleton.layout_constructor_list
+				l_list.start
+			until
+				l_list.after
+			loop
+
+				create l_xml
+				l_tree := l_list.item.widget
+				l_tree.start
+				l_tree_node := tree_node_with_text (l_tree, l_xml.context_popup)
+
+				if attached {EV_TREE_ITEM} l_tree_node as l_tree_item then
+						-- Start real generation		
+					l_gen.generate_context_popup_class (l_tree_item)
+				end
+
+				l_list.forth
+			end
 		end
 
 	generate_quick_access_toolbar_class

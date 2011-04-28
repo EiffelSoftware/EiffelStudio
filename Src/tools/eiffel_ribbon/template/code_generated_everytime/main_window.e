@@ -55,7 +55,7 @@ feature {NONE}-- Initialization
 										if attached ev_application as l_app then
 											l_app.destroy_actions.extend (agent ribbon.destroy)
 										end
-									end)
+									end)$CONTEXT_POPUPS_REGISTER
 		end
 
 	create_interface_objects
@@ -67,12 +67,12 @@ feature {NONE}-- Initialization
 				-- Proceed with vision2 objects creation.
 			Precursor
 			create ribbon.make
-$APPLICATION_MENU_CREATION$HELP_BUTTON_CREATION$QUICK_ACCESS_TOOLBAR_CREATION
+$APPLICATION_MENU_CREATION$HELP_BUTTON_CREATION$QUICK_ACCESS_TOOLBAR_CREATION$CONTEXT_POPUPS_CREATION
 		end
 
 feature -- Access
 
 	ribbon: $RIBBON_NAME
 			-- Ribbon attached to current
-$APPLICATION_MENU_NAME$HELP_BUTTON_NAME$QUICK_ACCESS_TOOLBAR_NAME
+$APPLICATION_MENU_NAME$HELP_BUTTON_NAME$QUICK_ACCESS_TOOLBAR_NAME$CONTEXT_POPUPS_NAME
 end

@@ -79,6 +79,14 @@ feature {ER_UPDATE_CONTEXT_POPUP_VISITOR, ER_LOAD_QUICK_ACCESS_TOOLBAR_VISITOR} 
 								if attached {ER_TREE_NODE_DATA} l_new_node.data as l_data then
 									l_data.set_command_name (l_attribute.value)
 								end
+							elseif l_attribute.name.same_string ({ER_XML_ATTRIBUTE_CONSTANTS}.name) then
+								-- For context popup's command name
+								-- Context popup's command name in ContextMap is same as name attribute here
+								check l_tab_item.name.same_string ({ER_XML_CONSTANTS}.mini_toolbar) or else
+									 l_tab_item.name.same_string ({ER_XML_CONSTANTS}.context_menu) end
+								if attached {ER_TREE_NODE_DATA} l_new_node.data as l_data then
+									l_data.set_command_name (l_attribute.value)
+								end
 							elseif l_attribute.name.same_string ({ER_XML_ATTRIBUTE_CONSTANTS}.application_mode) then
 								if attached {ER_TREE_NODE_DATA} l_new_node.data as l_data then
 									l_data.set_application_mode (l_attribute.value.to_integer)

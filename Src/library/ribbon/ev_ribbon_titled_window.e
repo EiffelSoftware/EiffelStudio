@@ -11,6 +11,7 @@ deferred class
 inherit
 	EV_TITLED_WINDOW
 		redefine
+			create_interface_objects,
 			implementation,
 			create_implementation,
 			initialize
@@ -28,6 +29,13 @@ feature {NONE} -- Initialization
 			l_res.ribbon_window_list.extend (Current)
 		end
 
+	create_interface_objects
+			-- <Precursor>
+		do
+			create mini_toolbars.make (5)
+			create context_menus.make (5)
+		end
+
 feature -- Access
 
 	ribbon: detachable EV_RIBBON
@@ -43,6 +51,12 @@ feature -- Access
 
 	quick_access_toolbar: detachable EV_RIBBON_QUICK_ACCESS_TOOLBAR
 			-- Associated quick access toolbar if any
+
+	mini_toolbars: ARRAYED_LIST [EV_RIBBON_MINI_TOOLBAR]
+			-- Associated mini toolbars if any
+
+	context_menus: ARRAYED_LIST [EV_RIBBON_CONTEXT_MENU]
+			-- Associated context menu if any
 
 feature {EV_ANY, EV_ANY_I, EV_ANY_HANDLER} -- Implementation
 

@@ -1,0 +1,17 @@
+test_name 	inline-deferred-with-generic-descendant-2
+test_description Inlining a deferred routine with one implementation in a generic descendant in a class that is also generics should not be done since we do not know which generic derivation to take even if they have a generic class in common.
+
+copy_sub 	Ace $TEST Ace
+copy_sub 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+copy_raw 	test2.e $CLUSTER test2.e
+copy_raw 	test3.e $CLUSTER test3.e
+copy_raw 	test4.e $CLUSTER test4.e
+
+compile_final
+compile_result 	ok
+
+c_compile_final
+c_compile_result ok
+
+test_end

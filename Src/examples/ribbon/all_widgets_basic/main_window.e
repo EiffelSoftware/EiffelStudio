@@ -59,6 +59,9 @@ feature {NONE}-- Initialization
 											l_app.destroy_actions.extend (agent ribbon.destroy)
 										end
 									end)
+			mini_toolbars.extend (mini_toolbar)
+			context_menus.extend (context_menu)
+
 		end
 
 	create_interface_objects
@@ -73,6 +76,9 @@ feature {NONE}-- Initialization
 			create application_menu.make_with_command_list (<<{COMMAND_NAME_CONSTANTS}.applicaton_menu>>)
 			create help_button.make_with_command_list (<<{COMMAND_NAME_CONSTANTS}.help_button>>)
 			create quick_access_toolbar.make_with_command_list (<<{COMMAND_NAME_CONSTANTS}.quick_access_toolbar>>)
+			create mini_toolbar.make_with_command_list (<<{COMMAND_NAME_CONSTANTS}.mini_toolbar>>)
+			create context_menu.make_with_command_list (<<{COMMAND_NAME_CONSTANTS}.context_menu>>)
+
 		end
 
 feature -- Access
@@ -85,5 +91,10 @@ feature -- Access
 			-- Help button
 	quick_access_toolbar: QUICK_ACCESS_TOOLBAR
 			-- Quick access toolbar
+	mini_toolbar: MINI_TOOLBAR
+			-- Mini toolbar
+	context_menu: CONTEXT_MENU
+			-- Context popup
+
 end
 

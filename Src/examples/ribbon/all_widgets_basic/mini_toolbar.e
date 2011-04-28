@@ -8,10 +8,10 @@
 	revision: "$Revision$"
 
 class
-	APPLICATON_MENU
+	MINI_TOOLBAR
 
 inherit
-	EV_RIBBON_APPLICATION_MENU
+	EV_RIBBON_MINI_TOOLBAR
 		redefine
 			create_interface_objects
 		end
@@ -24,15 +24,15 @@ feature {NONE} -- Initialization
 	create_interface_objects
 			-- Create objects
 		do
-			create menu_group_1.make_with_command_list (<<>>)
+			create minitool_bar_menu_group.make_with_command_list (<<{COMMAND_NAME_CONSTANTS}.minitool_bar_menu_group>>)
 
 			create groups.make (1)
-			groups.extend (menu_group_1)
+			groups.extend (minitool_bar_menu_group)
 
 		end
 		
 feature -- Query
-	menu_group_1: RIBBON_APPLICATION_MENU_GROUP_1
+	minitool_bar_menu_group: MINITOOL_BAR_MENU_GROUP
 
 
 end

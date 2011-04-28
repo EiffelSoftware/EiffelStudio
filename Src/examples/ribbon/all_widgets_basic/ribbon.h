@@ -40,7 +40,7 @@
 #define button_show_mini_toolbar_LabelTitle_RESID 60014
 #define button_show_context_menu 21 
 #define button_show_context_menu_LabelTitle_RESID 60015
-#define applicaton_menu 22 
+#define application_menu 22 
 #define menu_group 23 
 #define button_in_app_menu 24 
 #define button_in_app_menu_LabelTitle_RESID 60016

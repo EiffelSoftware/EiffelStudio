@@ -44,7 +44,7 @@ feature -- Access
 	button_show_mini_toolbar_LabelTitle_RESID: NATURAL_32 = 60014
 	button_show_context_menu: NATURAL_32 = 21 
 	button_show_context_menu_LabelTitle_RESID: NATURAL_32 = 60015
-	applicaton_menu: NATURAL_32 = 22 
+	application_menu: NATURAL_32 = 22 
 	menu_group: NATURAL_32 = 23 
 	button_in_app_menu: NATURAL_32 = 24 
 	button_in_app_menu_LabelTitle_RESID: NATURAL_32 = 60016

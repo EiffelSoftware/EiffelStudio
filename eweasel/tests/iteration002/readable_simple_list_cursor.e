@@ -14,8 +14,6 @@ feature -- Access
 	item: READABLE_G
 		-- Item at current cursor position
 	require
-		is_valid: is_valid
-		is_set: is_set
 		valid_position: not after
 	deferred
 	end

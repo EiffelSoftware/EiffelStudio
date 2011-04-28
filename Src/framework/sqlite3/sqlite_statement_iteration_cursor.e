@@ -12,12 +12,8 @@ class
 
 inherit
 	ITERATION_CURSOR [SQLITE_RESULT_ROW]
-		rename
-			make as iteration_make,
-			cursor_index as index
-		redefine
-			start, forth, after
-		end
+
+	ITERABLE [SQLITE_RESULT_ROW]
 
 	SQLITE_SHARED_API
 		export
@@ -60,8 +56,6 @@ feature {NONE} -- Initalization
 			statement := a_statement
 				--| Create a dummy attached `target' to satisfy void-safety
 				--| This dummy value will be overwritten by `iteration_make'
-			target := dummy_target
-			iteration_make (Current)
 			last_result := {SQLITE_RESULT_CODE}.ok
 		ensure
 			statement_statement: statement = a_statement
@@ -102,6 +96,13 @@ feature -- Access
 			check l_result_attached: attached l_result end
 			Result := l_result
 		end
+		feature -- Access
+
+	new_cursor: ITERATION_CURSOR [SQLITE_RESULT_ROW]
+			-- Fresh cursor associated with current structure
+		do
+			Result := Current
+		end
 
 feature {NONE} -- Access
 
@@ -135,7 +136,6 @@ feature -- Cursor movement
 			l_arg_id: C_STRING
 			l_arg_index: INTEGER
 		do
-			Precursor
 				-- Reset the iternal item
 			internal_item := Void
 
@@ -189,9 +189,6 @@ feature -- Cursor movement
 
 			last_result := l_result
 
-				-- Reset index, because `forth' will increase it.
-			index := 0
-
 				-- Raise an exception, if there was an exception case.
 			sqlite_raise_on_failure (l_result)
 
@@ -201,8 +198,6 @@ feature -- Cursor movement
 
 					-- Go to first element.
 				forth
-			else
-				index := 1
 			end
 		end
 
@@ -217,8 +212,6 @@ feature -- Cursor movement
 			l_done: BOOLEAN
 			l_locked: BOOLEAN
 		do
-			Precursor
-
 			l_api := sqlite_api
 			l_stmt := statement.internal_stmt
 			l_db := statement.database

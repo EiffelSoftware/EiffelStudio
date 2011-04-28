@@ -1357,6 +1357,7 @@ RT_LNK void eif_exit_eiffel_code(void);
 #define scoop_task_add_processor_reference 11
 #define scoop_task_remove_processor_reference 12
 #define scoop_task_check_uncontrolled 13
+#define scoop_task_flag_processor_dirty 14
 
 #ifdef WORKBENCH
 #define RTS_TCB(t,c,s,b,a,r) \
@@ -1419,6 +1420,7 @@ RT_LNK void eif_exit_eiffel_code(void);
 #define RTS_RS(p,s) RTS_TCB(scoop_task_add_supplier_to_request_chain,RTS_PID(p),RTS_PID(s),0,NULL,NULL)
 #define RTS_RW(p) RTS_TCB(scoop_task_wait_for_supplier_processor_locks,RTS_PID(p),0,0,NULL,NULL)
 
+
 /*
  * Request chain stack:
  * RTS_SD - declare variables that are used to track request chain stack without rescue clause.
@@ -1429,6 +1431,7 @@ RT_LNK void eif_exit_eiffel_code(void);
  * RTS_SRF(p) - release request chain for the processor identified by object p when wait condition fails.
  * RTS_SRD(p) - release request chain for the processor identified by object p when routine exits normally.
  * RTS_SRR - release request chains (if any) when entering a rescue clause because of an exception.
+ * RTS_FPD(p) - flag processor as dirty with respect to its current request chain due to an exception. 
  */
 #define RTS_SD \
 	EIF_REFERENCE * q = sep_stack.st_top;
@@ -1463,6 +1466,8 @@ RT_LNK void eif_exit_eiffel_code(void);
 	if (sep_stack.st_top != qt) {                       \
 		eif_request_chain_restore (qt, &sep_stack); \
 	}
+
+#define RTS_FPD(p) RTS_TCB(scoop_task_flag_processor_dirty,RTS_PID(p),0,0,NULL,NULL)
 
 /*
  * Separate call (versions ending with P stand for calls to precompiled routines, the first two arguments to them have a different meaning):

@@ -1199,22 +1199,22 @@ test	finalize-self-init-attribute	final072 tcf fail finalizing
 test	finalize-invariant-wrong-class-name	final073 tcf fail finalizing
 test	finalize-bogus-invariant-violation	final074 tcf fail finalizing
 test	finalize-external-creation-procedure	final075 tcf fail finalizing
-test	finalize-inline-attribute-body	final076 tcf fail finalizing
+test	finalize-inline-attribute-body	final076 tcf fail finalizing inlining
 test	finalize-creation-expression-corruption	final077 tcf pass finalizing
-test	finalize-inline-precursor-2	final078 tcf fail finalizing multiconstraint
+test	finalize-inline-precursor-2	final078 tcf fail finalizing multiconstraint inlining
 test	finalize-attribute-access-crash	final079 tcf pass finalizing
-test	finalize-inline-attribute-body-2	final080 tcf pass finalizing
-test	finalize-inline-external-redef-constant	final081 tcf pass finalizing
+test	finalize-inline-attribute-body-2	final080 tcf pass finalizing inlining
+test	finalize-inline-external-redef-constant	final081 tcf pass finalizing inlining
 test	finalize-inherited-agent-redef-routine	final082 tcf pass finalizing
-test	finalize-inline-with-generic	final083 tcf pass finalizing
+test	finalize-inline-with-generic	final083 tcf pass finalizing inlining
 test	finalize-wrong-type			final084 tcf pass finalizing
 test	finalize-min-used-crash		final085 tcf pass finalizing
 test	finalize-object-test-side-effects	final086 tcf pass finalizing
-test	finalize-inline-merged-routine	final087 tcf fail finalizing
-test	finalize-inline-check-void-target	final088 tcf fail finalizing
+test	finalize-inline-merged-routine	final087 tcf fail finalizing inlining
+test	finalize-inline-check-void-target	final088 tcf fail finalizing inlining
 test	finalize-qat-object-test		final089 tcf fail finalizing anchored_type
 test	finalize-attached-dcr-missing	final090 tcf pass finalizing
-test	finalize-inline-same-generic-derivation-crash	final091 tcf fail finalizing
+test	finalize-inline-same-generic-derivation-crash	final091 tcf fail finalizing inlining
 test	finalize-c-code-redeclared-identifier	final092 tcf fail finalizing
 test	finalize-create-expanded-generic	final093 tcf fail finalizing
 test	finalize-static-access-multicon-formal	final094 tcf fail finalizing multiconstraint
@@ -1222,10 +1222,11 @@ test	finalize-generic-once-per-object	final095 tcf fail finalizing once
 test	finalize-qat-object-test-2		final096 tcf fail finalizing anchored_type
 test	inline-deferred-with-one-implementation	final097 tcf fail finalizing inlining
 test	inline-with-generic-argument	final098 tcf fail finalizing inlining
-test	finalize-inline-merged-routine-2	final099 tcf fail finalizing
-test	inline-deferred-with-generic-descendant	final100 tcf fail finalizing
-test	inline-deferred-with-generic-descendant-2	final101 tcf fail finalizing
-test	inline-inherited-routine-with-less-generics	final102 tcf fail finalizing
+test	finalize-inline-merged-routine-2	final099 tcf fail finalizing inlining
+test	inline-deferred-with-generic-descendant	final100 tcf fail finalizing inlining
+test	inline-deferred-with-generic-descendant-2	final101 tcf fail finalizing inlining
+test	inline-inherited-routine-with-less-generics	final102 tcf fail finalizing inlining
+test	inline-inherited-routine-with-less-generics-2	final103 tcf fail finalizing inlining
 
 -- Runtime
 test	gc-tracking-001					runtime001	tcf pass runtime
@@ -2592,7 +2593,7 @@ test	qat-process-formal-as-crash		anchor049 tcf fail anchored_type formal generi
 test	qat-invalid-vffd			anchor050 tcf fail anchored_type
 test	qat-c-compile-failure			anchor051 tcf fail anchored_type generic
 test	qat-anchored-to-redefined-descendant	anchor052 tcf fail anchored_type
-test	qat-inlining-bug			anchor053 tcf fail anchored_type generic
+test	qat-inlining-bug			anchor053 tcf fail anchored_type generic inlining
 test	qat-instantiated-in-crash-3		anchor054 tcf fail anchored_type formal generic
 test	qat-static-type-id-crash-2		anchor055 tcf fail anchored_type formal generic multiconstraint
 test	qat-generic-constrained-by-self		anchor056 tcf fail anchored_type formal generic manual

@@ -97,8 +97,10 @@ feature -- For DATABASE_FORMAT
 	date_to_str (object: DATE_TIME): STRING
 			-- String representation in MySQL of `object'
 		do
-			Result := "'" + object.date.year.out + "-" + object.date.month.out +
-				"-" + object.date.day.out + "'"
+			create Result.make (21) -- At most 21 chars.
+			Result.append_character ('%'')
+			Result.append (object.formatted_out ("yyyy-[0]mm-[0]dd [0]hh:[0]mi:[0]ss"))
+			Result.append_character ('%'')
 		end
 
 	string_format (object: detachable STRING): STRING

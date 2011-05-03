@@ -1163,7 +1163,7 @@ feature {NONE} -- Implementation
 						internal_pen := Void
 					end
 					if dashed_line_style then
-						l_style := ps_dash
+						l_style := ps_dot
 					else
 						l_style := ps_solid
 					end

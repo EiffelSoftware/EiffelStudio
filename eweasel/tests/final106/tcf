@@ -1,0 +1,12 @@
+test_name 	inlining-in-parent-with-child-with-less-formals
+test_description Inlining a routine coming from a descendant that has only one formal while the parent has two causes the compiler to crash while trying to find out if the routine can be inlined.
+
+copy_sub 	Ace $TEST Ace
+copy_sub 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+copy_raw 	test2.e $CLUSTER test2.e
+
+compile_final
+compile_result 	ok
+
+test_end

@@ -86,11 +86,11 @@ LSRC =	ipcvms.c    \
 #	transfer.obj rqst_idrs.obj
 
 LOBJ = $(patsubst %.c,%.obj,$(LSRC))
-MT_LOBJ = $(patsubst %.c,MT%.obj,$(LSRC))
+#MT_LOBJ = $(patsubst %.c,MT%.obj,$(LSRC))
 
 $(OBJECTS) : ipcvms.h $(EXTRA_DEPENDENCIES)
 
-LIBS	= ipc.olb MTipc.olb
+LIBS	= ipc.olb # MTipc.olb
 
 all :: $(LIBS)
 

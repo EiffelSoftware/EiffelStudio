@@ -1,0 +1,15 @@
+test_name 	inlining-parent-with-less-formals
+test_description Inlining a routine coming from a parent with one formal in a descendant with 3 formals and the inherited formal is the 3 formal for the descendant causes the compiler to crash.
+
+copy_sub 	Ace $TEST Ace
+copy_sub 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+copy_raw 	test2.e $CLUSTER test2.e
+
+compile_final
+compile_result 	ok
+
+c_compile_final
+c_compile_result ok
+
+test_end

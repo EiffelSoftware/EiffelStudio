@@ -1,0 +1,25 @@
+test_name	system-change-crash
+test_description Changing a system from one set of classes to another causes a crash during degree -1.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+copy_raw 	test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result 	ok
+
+copy_raw 	test1_rev1.e $CLUSTER test1.e
+
+compile_melted
+compile_result 	ok
+
+copy_raw 	test_rev2.e $CLUSTER test.e
+copy_raw 	test1_rev2.e $CLUSTER test1.e
+copy_raw 	test2_rev2.e $CLUSTER test2.e
+copy_raw 	test3_rev2.e $CLUSTER test3.e
+
+compile_melted
+compile_result 	ok
+
+test_end

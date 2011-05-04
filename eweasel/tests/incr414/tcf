@@ -1,0 +1,24 @@
+test_name	removing-descendant-crash
+test_description Changing a system so that a descendant class is removed causes the compiler to crash at the end of degree 4 during the topological sort because the direct descendants of TEST1 are still referring to TEST2 eventhough TEST2 is not in the system anymore.
+
+define		TEST_CLASS "TEST2 [INTEGER]"
+define		PARENT_CLASS "ANY"
+copy_sub 	Ace $TEST Ace
+copy_sub 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+copy_raw 	test2.e $CLUSTER test2.e
+copy_sub 	test3.e $CLUSTER test3.e
+
+compile_melted
+compile_result 	ok
+
+define		TEST_CLASS "TEST1 [INTEGER]"
+define		PARENT_CLASS "TEST"
+copy_sub 	test.e $CLUSTER test.e
+copy_sub 	test3.e $CLUSTER test3.e
+delete $CLUSTER test2.e
+
+compile_melted
+compile_result 	ok
+
+test_end

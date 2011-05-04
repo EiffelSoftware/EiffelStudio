@@ -1089,12 +1089,12 @@ iconv_t eifrt_vms_iconv_open (const char *tocode, const char *fromcode)
     if (result == (iconv_t)-1) {
 	err = errno;
 	erv = vaxc$errno;
-	if (!strcasecmp (fromcode, "ASCII")) {
+	if (!strcasecmp (fromcode,"ASCII") || !strcasecmp (fromcode,"ISO-8859-1")) {
 #ifdef VMS_TRACE_ICONV_OPEN
 	    printf (" %sfailed, retrying with (\"%s\", \"%s\")\n", spaces(level), safe_string (tocode), safe_string (altcode));
 #endif
 	    result = eifrt_vms_iconv_open (tocode, altcode);
-	} else if (!strcasecmp (tocode, "ASCII")) {
+	} else if (!strcasecmp (tocode,"ASCII") || !strcasecmp (tocode,"ISO-8859-1") ) {
 #ifdef VMS_TRACE_ICONV_OPEN
 	    printf (" %sfailed, retrying with (\"%s\", \"%s\")\n", spaces(level), safe_string (tocode), safe_string (altcode));
 #endif

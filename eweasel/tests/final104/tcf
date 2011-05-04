@@ -1,0 +1,35 @@
+
+test_name 	finalize-wrong-generating-type
+test_description An expanded class TEST which creates an object of type `like Current' via several levels of anchoring incorrectly displays the generating type as "reference TEST" if system is finalized
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+
+compile_melted
+compile_result 	ok
+
+execute_work	NONE exec_output_m
+execute_result ok
+compare		exec_output_m output
+
+compile_frozen
+compile_result 	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work	NONE exec_output_w
+execute_result 	ok
+compare		exec_output_w output
+
+compile_final
+compile_result 	ok
+
+c_compile_final
+c_compile_result ok
+
+execute_final	NONE exec_output_f
+execute_result ok
+compare		exec_output_f output
+
+test_end

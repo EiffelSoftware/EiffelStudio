@@ -1227,6 +1227,7 @@ test	inline-deferred-with-generic-descendant	final100 tcf fail finalizing inlini
 test	inline-deferred-with-generic-descendant-2	final101 tcf fail finalizing inlining
 test	inline-inherited-routine-with-less-generics	final102 tcf fail finalizing inlining
 test	inline-inherited-routine-with-less-generics-2	final103 tcf fail finalizing inlining
+test	finalize-wrong-generating-type		final104 tcf fail finalizing expanded
 
 -- Runtime
 test	gc-tracking-001					runtime001	tcf pass runtime

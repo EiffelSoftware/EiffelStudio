@@ -1228,6 +1228,7 @@ test	inline-deferred-with-generic-descendant-2	final101 tcf fail finalizing inli
 test	inline-inherited-routine-with-less-generics	final102 tcf fail finalizing inlining
 test	inline-inherited-routine-with-less-generics-2	final103 tcf fail finalizing inlining
 test	finalize-wrong-generating-type		final104 tcf fail finalizing expanded
+test	inlining-parent-with-less-formals	final105 tcf fail finalizing inlining
 
 -- Runtime
 test	gc-tracking-001					runtime001	tcf pass runtime
@@ -1415,7 +1416,7 @@ test	is-special-any-type-lies	exec143  tcf pass execution special
 test	indep-store-big-array		exec144  tcf pass execution storable
 test	recursive-once-create-result	exec145  tcf pass execution
 test	frozen-floor-ceiling		exec146  tcf pass execution
-test	special-of-expanded		exec147  tcf pass execution special
+test	special-of-expanded		exec147  tcf pass execution special finalization
 test	generic-conformance-two-params	exec148  tcf pass execution conformance
 test	real-const-with-underscores	exec149  tcf pass execution
 test	interior-null-in-debug-key	exec150  tcf fail execution

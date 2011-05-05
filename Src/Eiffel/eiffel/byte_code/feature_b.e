@@ -651,7 +651,6 @@ feature {NONE} -- Normalization of types
 							l_new_generics := Result.generics
 						end
 						l_new_generics.put (a_sanitized_type.generics.item (i), i)
-						i := nb
 					end
 					i := i + 1
 				end

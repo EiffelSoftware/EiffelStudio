@@ -234,7 +234,6 @@ feature -- Inlining
 	pre_inlined_code: ATTRIBUTE_B
 		do
 				-- Adapt type in current context for better results.
-			type := type.instantiated_in (context.current_type)
 			if parent /= Void then
 				Result := Current
 			else

@@ -177,9 +177,7 @@ feature
 			expr_b: EXPR_B
 			saved_context: like context
 		do
-			target_type := target.type
-			check not target_type.is_multi_constrained end
-			target_type := context.real_type_fixed (target_type)
+			target_type := context.real_type (target.type)
 
 				-- The target is always expanded in-line for de-referencing.
 			context.init_propagation
@@ -199,7 +197,7 @@ feature
 			create saved_context.make_from_context (context)
 
 			if simple_op_assignment = No_simple_op then
-				source_type := context.real_type_fixed (source.type)
+				source_type := context.real_type (source.type)
 				if target.is_predefined then
 					result_used := target.is_result
 						-- We won't attempt a propagation of the target if the
@@ -744,7 +742,7 @@ feature
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

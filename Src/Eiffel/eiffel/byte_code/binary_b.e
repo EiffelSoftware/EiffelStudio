@@ -65,7 +65,7 @@ feature -- Access
 	type: TYPE_A
 			-- Type of the infixed feature
 		do
-			Result := context.real_type (access.type)
+			Result := access.type
 		end
 
 feature -- Settings
@@ -293,7 +293,7 @@ feature -- C code generation
 			buf: GENERATION_BUFFER
 		do
 			buf := buffer
-			type.c_type.generate_cast (buf)
+			real_type (type).c_type.generate_cast (buf)
 			if is_real_comparison then
 					-- Add "eif_helpers.h" for C declaration of the various comparison routine.
 				shared_include_queue_put ({PREDEFINED_NAMES}.eif_helpers_header_name_id)
@@ -381,7 +381,7 @@ feature -- Inlining
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

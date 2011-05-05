@@ -828,52 +828,88 @@ feature {COMPILER_EXPORTER} -- Instantiation of a type in the context of a desce
 			good_argument: c /= Void
 			conformance: c.inherits_from (associated_class)
 		local
-			l_generics, l_result_generics: like generics
 			l_class: like associated_class
-			i, nb: INTEGER
-			l_new_type: TYPE_A
+			i, nb, l_pos: INTEGER
+			l_type_feat: TYPE_FEATURE_I
+			l_result_generics: like generics
+			l_generic_features: HASH_TABLE [TYPE_FEATURE_I, INTEGER]
+			l_quick_positions: NATURAL_64
+			l_slow_positions: PACKED_BOOLEANS
 		do
-			if associated_class = c then
+			l_class := associated_class
+			if l_class = c then
 					-- Same class, nothing to do.
 				Result := Current
 			else
 				Result := c.actual_type
-				if generics /= Void and Result.generics /= Void then
-					from
-						l_class := associated_class
-						l_generics := generics
-
-						l_result_generics := Result.generics
-						i := l_result_generics.lower
-						nb := l_result_generics.upper
-					until
-						i > nb
-					loop
-							-- Try to find in ancestor `l_class' a feature matching the `i'-th formal
-							-- generic parameter of `c'. If none is found, then we stop.
-							-- Note: the search via `feature_of_rout_id_set' is expensive because we look
-							-- for all kinds of routines, whereas we could just look for features in
-							-- `generic_features', but we use it because the search through the `rout_id_set'
-							-- is critical here. Indeed, current class could be A [G], descendant class could
-							-- be "C [G, H] inherit X [H] A [H]" and if the first element of the rout_id_set
-							-- for H in C is the one coming from X, we would not find the match with A when
-							-- we should have.
-						if attached {TYPE_FEATURE_I} l_class.feature_of_rout_id_set (c.formal_rout_id_set_at_position (i)) as l_type_feat then
-							l_new_type := l_generics.item (l_type_feat.position)
-							if l_new_type /= l_result_generics.item (i) then
-									-- Because `Result' is originally `c.actua_type', we are not allowed
-									-- to modify it there otherwise it would be the compiler, see eweasel
-									-- test#ccomp086 and test#incr405.
-								Result := Result.duplicate_for_instantiation
-								l_result_generics := Result.generics
-								l_result_generics.put (l_new_type, i)
+				l_result_generics := Result.generics
+				if l_result_generics /= Void then
+					nb := l_result_generics.count
+						-- To verify that all the positions have been processed we use a bit flag if there is less
+						-- than 64 formal generics, otherwise we use a PACKED_BOOLEAN structure.
+					if nb >= 64 then
+						create l_slow_positions.make (nb + 1)
+					end
+					if not attached generics as l_parent_generics then
+							-- Descendant is generic but not parent, clearly we have to exclude it.
+						Result := Void
+					else
+						from
+								-- We reset `l_result_generics' to Void since we are using Void as a signaling
+								-- value to duplicate `Result.generics' in case we perform a substitution.
+							l_result_generics := Void
+							l_generic_features := c.generic_features
+							l_generic_features.start
+						until
+							l_generic_features.after
+						loop
+							l_type_feat := l_generic_features.item_for_iteration
+								-- When we encounter a formal generic parameter in the descendant,
+								-- we search for it in the ancestor, if none is found, we continue,
+								-- otherwise we replace the descendant formal generic with the parent one.
+							if attached {FORMAL_A} l_type_feat.type as l_formal then
+								if
+									attached l_class.generic_features.item (l_generic_features.key_for_iteration) as l_feat and then
+									attached {FORMAL_A} l_feat.type as l_parent_formal
+								then
+										-- We cannot override `Result' because it is coming from {CLASS_C}.actual_type
+										-- and this is an attribute that is set only once.
+									if l_result_generics = Void then
+										Result := Result.duplicate_for_instantiation
+										l_result_generics := Result.generics
+									end
+									l_pos := l_formal.position
+									l_result_generics.put (l_parent_generics.item (l_parent_formal.position), l_pos)
+										-- Mark that we have done `l_pos'.
+									if nb < 64 then
+										l_quick_positions := l_quick_positions | ({NATURAL_64} 1 |<< l_pos)
+									else
+										l_slow_positions.put (True, l_pos)
+									end
+								end
+							end
+							l_generic_features.forth
+						end
+							-- Check now that all the bits are set.
+						if nb < 64 then
+							if (l_quick_positions |>> 1) /= ({NATURAL_64} 1 |<< nb)  - {NATURAL_64} 1 then
+									-- Some formal generics of `Result' were not found in Current, we have to exclude it.
+								Result := Void
 							end
 						else
-								-- No match.
-							Result := Void
-							i := nb + 1
+							from
+								i := 1
+								nb := l_slow_positions.count
+							until
+								i > nb
+							loop
+								if not l_slow_positions.item (i) then
+									Result := Void
+									i := nb
+								end
+								i := i + 1
+							end
 						end
-						i := i + 1
 					end
 				end
 			end
@@ -886,10 +922,10 @@ feature {COMPILER_EXPORTER} -- Instantiation of a type in the context of a desce
 
 	find_class_type (c: CLASS_C): CL_TYPE_A
 			-- Actual type of class of id `class_id' in current
-			-- context
+			-- context. If `c' does not inherit from `associated_class',
+			-- we simply return Void.
 		require
 			good_argument: c /= Void
-			conformance: c.conform_to (associated_class) or else True --| FIXME Manu Add CLASS_C.ancestors_from routine for non-conforming inheritance.
 		local
 			parents: FIXED_LIST [CL_TYPE_A]
 			parent: CL_TYPE_A

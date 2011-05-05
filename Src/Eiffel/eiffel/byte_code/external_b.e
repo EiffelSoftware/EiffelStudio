@@ -360,11 +360,6 @@ feature -- Inlining
 
 				Result := parent;
 			end
-				-- Adapt type in current context for better results.
-			type := type.instantiated_in (context.current_type)
-			if static_class_type /= Void then
-				static_class_type ?= real_type (static_class_type)
-			end
 			if parameters /= Void then
 				parameters := parameters.pre_inlined_code
 			end

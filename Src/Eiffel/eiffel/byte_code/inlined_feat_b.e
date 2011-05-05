@@ -42,7 +42,7 @@ feature
 	result_type: TYPE_A
 			-- Type of an inlined feature
 		do
-			Result := real_type (byte_code.result_type)
+			Result := byte_code.result_type
 		end
 
 	fill_from (f: FEATURE_B)
@@ -140,26 +140,24 @@ feature
 		do
 				-- First, standard analysis of the call
 			Precursor {FEATURE_BL} (reg)
-
-			local_regs := get_inlined_registers (byte_code.locals)
-			argument_regs := get_inlined_param_registers (byte_code.arguments)
-
-			r_type := result_type
-			if not r_type.is_void then
-				result_reg := get_inline_register (r_type)
-			end
-
 			reg_type := reg.c_type
-
-				-- Instantiation of the result type (used by INLINED_RESULT_B)
-			type := real_type (type)
-			local_inliner := inliner
-			local_inliner.set_inlined_feature (Current)
 
 			cl_type_i ?= context_type
 			Context.change_class_type_context
 				(system.class_type_of_id (context_type_id), context_cl_type,
 				system.class_type_of_id (written_type_id), written_cl_type)
+
+			local_regs := get_inlined_registers (byte_code.locals)
+			argument_regs := get_inlined_param_registers (byte_code.arguments)
+
+			r_type := real_type (result_type)
+			if not r_type.is_void then
+				result_reg := get_inline_register (r_type)
+			end
+
+				-- Instantiation of the result type (used by INLINED_RESULT_B)
+			local_inliner := inliner
+			local_inliner.set_inlined_feature (Current)
 
 			local_is_current_temporary := reg.is_temporary or reg.is_predefined
 
@@ -305,7 +303,7 @@ feature -- Generation
 
 			if result_reg /= Void then
 					-- Set the value of the result register to the default
-				reset_register_value (result_type, result_reg)
+				reset_register_value (real_type (result_type), result_reg)
 			end
 
 			if not is_current_temporary then
@@ -524,7 +522,7 @@ feature {NONE} -- Registers
 					if is_param_temporary_reg then
 						Result.put (local_reg, i)
 					else
-						Result.put (get_inline_register(a.item (i)), i)
+						Result.put (get_inline_register(real_type (a.item (i))), i)
 					end;
 
 					i := i + 1;

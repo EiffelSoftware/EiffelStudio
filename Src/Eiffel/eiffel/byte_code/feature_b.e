@@ -366,11 +366,6 @@ feature -- Inlining
 
 				Result := parent
 			end
-				-- Adapt type in current context for better results.
-			type := type.instantiated_in (context.current_type)
-			if precursor_type /= Void then
-				precursor_type ?= real_type (precursor_type)
-			end
 			if parameters /= Void then
 				set_parameters (parameters.pre_inlined_code)
 			end
@@ -468,12 +463,12 @@ feature -- Inlining
 						cl_type.associated_class.simple_conform_to (f.written_class) or
 						f.written_class.simple_conform_to (cl_type.associated_class)
 					then
-							-- Now try to find a proper descendant type for the candidate for inlining.
+							-- Now try to find a proper descendant type for the candidate for inlining. There is
+							-- two possibility here: The class associated with `entry' is the same as `cl_type'
+							-- (case of a routine implemented in an ancestor), or `entry' is a descendant of `cl_type'
+							-- (case of a deferred routine of `cl_type' with one implementation in descendant).
 						desc_cl_type := cl_type.find_descendant_type (system.class_of_id (entry.class_id))
-						if 
-							desc_cl_type = Void or else
-							not same_for_generics (desc_cl_type.associated_class, cl_type.associated_class)
-						then
+						if desc_cl_type = Void then
 								-- No valid descendant was found, therefore we cancel inlining (see
 								-- eweasel test#final083).
 								-- Note: This case means that the descendant is adding some new formal
@@ -481,8 +476,6 @@ feature -- Inlining
 								-- If the routine being inlined had no reference to the new formals
 								-- then we could ideally allow it, but this is quite difficult at this
 								-- time to perform this check.
-								-- Another failures are test#final091 and test#final097 which we test
-								-- by checking' the precondition of `associated_class_type'.
 							inline := False
 						else
 								-- We could find a descendant type, thus we can try to inline.
@@ -493,34 +486,32 @@ feature -- Inlining
 
 								-- If `cl_type' has some formals, then they are formals that make sense for
 								-- `context.context_class_type', but clearly not for `context_class_type'
-								-- (see eweasel test#fina061 when inlining `set_value' in TEST1 [G]). In this
-								-- scenario, we have no choice to take the least optimized type from `context_class_type.
-							if cl_type.has_formal_generic then
-								cl_type := context_class_type.type
+								-- (see eweasel test#fina061 when inlining `set_value' in TEST1 [G]). Whenever
+								-- possible we sanitize `cl_type' but worst case scenario it is `context_class_type.type'.
+							cl_type := sanitized_type (cl_type, context_class_type.type)
+
+								-- Get the actual type for code generation. At this stage we know for sure
+								-- that it is either written in `cl_type' or one of its ancestor. It cannot
+								-- be a descendant since we have already computed it above with `find_descendant_type'
+							if cl_type.class_id = f.written_in then
+									-- Optimization if this is the same class.
+								written_cl_type := cl_type
+							else
+									-- Find the ancestor type.
+								check
+									ancestor: cl_type.associated_class.inherits_from (f.written_class)
+								end
+								written_cl_type := cl_type.find_class_type (f.written_class)
 							end
 
 								-- Get the CLASS_TYPE for the class defining `f'.
 							written_class_type := context_class_type.type.implemented_type (f.written_in).associated_class_type (Void)
 
-								-- Get the actual type for code generation.
-								-- Below, optimization if `f' is written in `cl_type'.
-							if cl_type.class_id = f.written_in then
-								written_cl_type := cl_type
-							else
-								written_cl_type := cl_type.find_class_type (f.written_class)
-							end
-
-								-- We have to limit the inlining here because of eweasel test#final060 or
-								-- test#final062 when we have formal generics. In this case we do as if
-								-- the code was actually coming from `written_class_type'.
-							if
-								(cl_type.has_formal_generic or written_cl_type.has_formal_generic) and
-								not same_for_generics (cl_type.associated_class, written_cl_type.associated_class)
-							then
-								written_cl_type := written_class_type.type
-								context_class_type := written_class_type
-								cl_type := written_cl_type
-							end
+								-- If `written_cl_type' has some formals, then they are formals that make sense for
+								-- `context.context_class_type', but clearly not for `written_class_type'
+								-- (see eweasel test#fina062 when inlining `set_value' in TEST1 [G]). In this
+								-- scenario, we have no choice to take the least optimized type from `written_class_type'.
+							written_cl_type := sanitized_type (written_cl_type, written_class_type.type)
 						end
 					else
 							-- We are going to perform the inlining as if we were generating the class in
@@ -547,7 +538,7 @@ feature -- Inlining
 						check cl_type.class_id /= entry.class_id end
 							-- Using the example above, we get `C [G]'
 						desc_cl_type := cl_type.find_descendant_type (system.class_of_id (entry.class_id))
-						if 
+						if
 							desc_cl_type = Void or else
 							not same_for_generics (desc_cl_type.associated_class, cl_type.associated_class)
 						then
@@ -625,6 +616,47 @@ feature -- Inlining
 		end
 
 feature {NONE} -- Normalization of types
+
+	sanitized_type (a_type, a_sanitized_type: CL_TYPE_A): CL_TYPE_A
+			-- If `a_type' is generic, ensures that all the formals referenced in `a_type'
+			-- are mapped to the proper formal generic parameter of `a_sanitized_type'.
+		local
+			i, nb: INTEGER
+			l_generics, l_new_generics: ARRAY [TYPE_A]
+			l_type: TYPE_A
+		do
+			Result := a_type
+			if attached {GEN_TYPE_A} a_type as l_gen_type then
+				from
+					l_generics := a_type.generics
+					i := l_generics.lower
+					nb := l_generics.upper
+				until
+					i > nb
+				loop
+					l_type := l_generics.item (i).actual_type
+					if attached {FORMAL_A} l_type as l_formal then
+						if l_formal.position /= i then
+							if l_new_generics = Void then
+								Result := Result.duplicate_for_instantiation
+								l_new_generics := Result.generics
+							end
+							l_new_generics.put (a_sanitized_type.generics.item (i), i)
+						end
+					elseif l_type.has_formal_generic then
+							-- There is a formal generic, but then it becomes harder to substitute that formal
+							-- generic parameter with the correct one, we use `a_sanitized_type'.
+						if l_new_generics = Void then
+							Result := Result.duplicate_for_instantiation
+							l_new_generics := Result.generics
+						end
+						l_new_generics.put (a_sanitized_type.generics.item (i), i)
+						i := nb
+					end
+					i := i + 1
+				end
+			end
+		end
 
 	same_for_generics (a_current_class, a_class: CLASS_C): BOOLEAN
 			-- Is `a_current_class' using the same sets of generics as `a_class'.

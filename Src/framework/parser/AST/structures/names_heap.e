@@ -396,6 +396,7 @@ feature {NONE} -- Implementation: access
 			put ("fill_with") check found_item = fill_with_name_id end
 			put ("init_scoop_manager") check found_item = init_scoop_manager_name_id end
 			put ("scoop_manager_task_callback") check found_item = scoop_manager_task_callback_name_id end
+			put ("start") check found_item = start_name_id end
 		end
 
 invariant
@@ -405,7 +406,7 @@ invariant
 	found_item_positive: found_item >= 0
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -166,15 +166,15 @@ feature -- Access
 			end
 		end
 
-	editor_with_stone (a_stone: STONE) : like current_editor
+	editor_with_stone (a_stone: ANY) : like current_editor
 			-- Editor that has `a_stone', or editing the same path file.
 		local
 			l_fake_editor: EB_FAKE_SMART_EDITOR
 		do
-			if a_stone /= Void then
-				Result := editor_with_stone_internal (editors, a_stone)
+			if attached {STONE} a_stone as l_stone then
+				Result := editor_with_stone_internal (editors, l_stone)
 				if Result = Void and then fake_editors /= Void then
-					Result := editor_with_stone_internal (fake_editors, a_stone)
+					Result := editor_with_stone_internal (fake_editors, l_stone)
 					l_fake_editor ?= Result
 					if l_fake_editor /= Void then
 						init_editor
@@ -708,7 +708,7 @@ feature -- Element change
 			create_editor_beside_content (Void, exist_content, False)
 		end
 
-	create_editor_beside_content (a_stone: STONE; a_content: SD_CONTENT; a_force_right_side: BOOLEAN)
+	create_editor_beside_content (a_stone: ANY; a_content: SD_CONTENT; a_force_right_side: BOOLEAN)
 			-- Create an editor beside `a_content'. Meanwile set `a_stone' to the editor if `a_stone' is not void.
 			-- Set top if the a_content is void.
 		local
@@ -720,8 +720,8 @@ feature -- Element change
 				l_content := create_docking_content (editor_number_factory.new_editor_name, last_created_editor, a_content, a_force_right_side)
 				last_created_editor.set_docking_content (l_content)
 			end
-			if a_stone /= Void then
-				on_drop (a_stone, last_created_editor)
+			if attached {STONE} a_stone as l_stone then
+				on_drop (l_stone, last_created_editor)
 			end
 		end
 
@@ -1830,7 +1830,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

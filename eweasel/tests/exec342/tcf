@@ -1,0 +1,25 @@
+
+test_name 	generating-type-on-typed-pointer
+test_description A call to `generating_type' called on TYPED_POINTER (or any other expanded generic class) seg faults when a frozen or finalized system is executed
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+execute_work	NONE exec_output_m
+execute_result	ok
+compare		exec_output_m output
+
+compile_frozen
+compile_result	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work	NONE exec_output_w
+execute_result	ok
+compare		exec_output_w output
+
+test_end

@@ -1615,6 +1615,7 @@ test	compare-generic-to-basic		exec338 tcf fail execution
 test	standard-twin-correctness		exec339 tcf pass execution
 test	plus-with-mixed-types			exec340 tcf pass execution
 test	static-assigner					exec341 tcf pass execution
+test	generating-type-on-typed-pointer	exec342 tcf pass execution expanded generic
 
 -- Once specific
 

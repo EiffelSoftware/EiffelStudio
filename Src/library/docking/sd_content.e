@@ -561,104 +561,80 @@ feature -- Set Position
 
 feature -- Actions
 
-	focus_in_actions: EV_NOTIFY_ACTION_SEQUENCE
+	focus_in_actions: SD_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when keyboard focus just gained
 		do
-			if not are_actions_ignored then
-				if attached internal_focus_in_actions as l_actions then
-					Result := l_actions
-				else
-					create Result
-					internal_focus_in_actions := Result
-				end
+			if attached internal_focus_in_actions as l_actions then
+				Result := l_actions
 			else
-				create Result
+				create Result.make_with_content (Current)
+				internal_focus_in_actions := Result
 			end
 		ensure
 			not_void: Result /= Void
 		end
 
-	focus_out_actions: EV_NOTIFY_ACTION_SEQUENCE
+	focus_out_actions: SD_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when keyboard focus just lost
 		do
-			if not are_actions_ignored then
-				if attached internal_focus_out_actions as l_actions then
-					Result := l_actions
-				else
-					create Result
-					internal_focus_out_actions := Result
-				end
+			if attached internal_focus_out_actions as l_actions then
+				Result := l_actions
 			else
-				create Result
+				create Result.make_with_content (Current)
+				internal_focus_out_actions := Result
 			end
 		ensure
 			not_void: Result /= Void
 		end
 
-	close_request_actions: EV_NOTIFY_ACTION_SEQUENCE
+	close_request_actions: SD_NOTIFY_ACTION_SEQUENCE
 			-- Actions to perfrom when close requested
 		do
-			if not are_actions_ignored then
-				if attached internal_close_request_actions as l_actions then
-					Result := l_actions
-				else
-					create Result
-					internal_close_request_actions := Result
-				end
+			if attached internal_close_request_actions as l_actions then
+				Result := l_actions
 			else
-				create Result
+				create Result.make_with_content (Current)
+				internal_close_request_actions := Result
 			end
 		ensure
 			not_void: Result /= Void
 		end
 
-	drop_actions: EV_PND_ACTION_SEQUENCE
+	drop_actions: SD_CONTENT_PND_ACTION_SEQUENCE
 			-- Drop actions to performed when user drop a pebble on notebook tab
 		do
-			if not are_actions_ignored then
-				if attached internal_drop_actions as l_actions then
-					Result := l_actions
-				else
-					create Result
-					internal_drop_actions := Result
-				end
+			if attached internal_drop_actions as l_actions then
+				Result := l_actions
 			else
-				create Result
+				create Result.make_with_content (Current)
+				internal_drop_actions := Result
 			end
 		ensure
 			not_void: Result /= Void
 		end
 
-	show_actions: EV_NOTIFY_ACTION_SEQUENCE
+	show_actions: SD_NOTIFY_ACTION_SEQUENCE
 			-- Actions to perform when `user_widget' just shown
 		do
-			if not are_actions_ignored then
-				if attached internal_show_actions as l_actions then
-					Result := l_actions
-				else
-					create Result
-					internal_show_actions := Result
-				end
+			if attached internal_show_actions as l_actions then
+				Result := l_actions
 			else
-				create Result
+				create Result.make_with_content (Current)
+				internal_show_actions := Result
 			end
 		ensure
 			not_void: Result /= Void
 		end
 
-	tab_bar_right_blank_area_double_click_actions: EV_NOTIFY_ACTION_SEQUENCE
+	tab_bar_right_blank_area_double_click_actions: SD_NOTIFY_ACTION_SEQUENCE
 			-- Actions to perform when user double click on notebook tab bar right side blank area
 			-- Only work for up-side notebook tab bar
 		do
-			if not are_actions_ignored then
-				if attached internal_tab_bar_right_blank_area_double_click_actions as l_actions then
-					Result := l_actions
-				else
-					create Result
-					internal_tab_bar_right_blank_area_double_click_actions := Result
-				end
+			if attached internal_tab_bar_right_blank_area_double_click_actions as l_actions then
+				Result := l_actions
 			else
-				create Result
+				create Result.make_with_content (Current)
+				internal_tab_bar_right_blank_area_double_click_actions := Result
 			end
 		ensure
 			not_void: Result /= Void
@@ -930,13 +906,15 @@ feature {SD_STATE, SD_OPEN_CONFIG_MEDIATOR}
 			set: is_visible = a_bool
 		end
 
-feature {NONE}  -- Implemention
+feature {SD_NOTIFY_ACTION_SEQUENCE, SD_CONTENT_PND_ACTION_SEQUENCE}  -- Implementation
 
 	are_actions_ignored: BOOLEAN
 			-- Ignore actions?
 		do
 			Result := not is_docking_manager_attached or else docking_manager.is_closing_all
 		end
+
+feature {NONE}  -- Implementation
 
 	internal_user_widget: detachable like user_widget
 			-- Client programmer's main widget managed by Current
@@ -959,22 +937,22 @@ feature {NONE}  -- Implemention
 	internal_type: INTEGER
 			-- Type of `Current'. One value from {SD_ENUMERATION}
 
-	internal_focus_out_actions: detachable EV_NOTIFY_ACTION_SEQUENCE
+	internal_focus_out_actions: detachable SD_NOTIFY_ACTION_SEQUENCE
 			-- Keyboard focus out actions
 
-	internal_drop_actions: detachable EV_PND_ACTION_SEQUENCE
+	internal_drop_actions: detachable SD_CONTENT_PND_ACTION_SEQUENCE
 			-- Drop actions to perform just after user drop a pebble on notebook tab
 
-	internal_show_actions: detachable EV_NOTIFY_ACTION_SEQUENCE
+	internal_show_actions: detachable SD_NOTIFY_ACTION_SEQUENCE
 			-- Actions to perform just `user_widget' shown
 
-	internal_focus_in_actions: detachable EV_NOTIFY_ACTION_SEQUENCE
+	internal_focus_in_actions: detachable SD_NOTIFY_ACTION_SEQUENCE
 			-- Keyboard focus in actions
 
-	internal_close_request_actions: detachable EV_NOTIFY_ACTION_SEQUENCE
+	internal_close_request_actions: detachable SD_NOTIFY_ACTION_SEQUENCE
 			-- Actions to perfrom when close requested
 
-	internal_tab_bar_right_blank_area_double_click_actions: detachable EV_NOTIFY_ACTION_SEQUENCE
+	internal_tab_bar_right_blank_area_double_click_actions: detachable SD_NOTIFY_ACTION_SEQUENCE
 			-- Actions to perform when user double click on notebook tab bar's right side blank area
 
 	internal_clear_docking_manager_property

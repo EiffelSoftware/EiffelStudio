@@ -254,12 +254,9 @@ feature {NONE} --Implementation
 			l_first_parameter, l_parameter: PARAMETER_B
 			l_exprs: BYTE_LIST [EXPR_B]
 			l_expr: EXPR_B
-			l_tuple_type: TUPLE_TYPE_A
 			l_cl_type: CL_TYPE_A
 		do
 			l_first_parameter := parameters.first
-			l_tuple_type ?= context.real_type_in (l_first_parameter.attachment_type, cl_type.associated_class_type (context.context_class_type.type).type)
-
 			l_void ?= l_first_parameter.expression
 			if l_void /= Void then
 				is_manifest_optimizable := True

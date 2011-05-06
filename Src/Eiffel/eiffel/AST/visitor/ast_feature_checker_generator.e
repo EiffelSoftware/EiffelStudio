@@ -7182,9 +7182,12 @@ feature {NONE} -- Implementation
 						end
 							-- Make iteration variable visible to the loop.
 						context.add_object_test_instruction_scope (local_id)
-							-- Process AST tree that initializes the iteration.
-						local_info.set_type (iteration_cursor_type)
-						l_as.initialization.process (Current)
+							-- Check if feature "start" to initialize a cursor object is available.
+						if attached c.feature_of_name_id (names_heap.start_name_id) then
+								-- Process AST tree that initializes the iteration.
+							local_info.set_type (iteration_cursor_type)
+							l_as.initialization.process (Current)
+						end
 						local_info.set_type (local_type)
 						if is_byte_node_enabled then
 							if attached {INSTR_B} last_byte_node as b then

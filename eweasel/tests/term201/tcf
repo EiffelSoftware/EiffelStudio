@@ -1,0 +1,12 @@
+
+test_name 	 inherit-generic-with-self-as-formal
+test_description A generic class TEST1 [G, H] that inherits LIST [TEST1 [G, H]} crashes the compiler.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test1.e $CLUSTER test1.e
+
+compile_melted
+compile_result ok
+
+test_end

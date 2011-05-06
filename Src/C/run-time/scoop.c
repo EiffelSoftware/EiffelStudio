@@ -199,6 +199,9 @@ rt_public void eif_request_chain_pop (struct stack * stk)
 rt_public void eif_request_chain_restore (EIF_REFERENCE * t, struct stack * stk)
 {
 	EIF_REFERENCE * top = stk->st_top;
+	if (!t) {
+		t = stk->st_hd->sk_arena; /* Use the beginning of the stack in case stack was empty. */
+	}
 	while (top != t) {
 		eif_request_chain_pop (stk); /* Pop one element. */
 		top = stk->st_top;

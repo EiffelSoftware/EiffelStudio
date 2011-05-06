@@ -2661,7 +2661,7 @@ feature -- Meta-type
 			-- of descendant type `class_type'.
 		require
 			good_argument: class_type /= Void
-			conformance: class_type.associated_class.conform_to (Current) or else True --| FIXME IEK: Create inherits_from routine in CLASS_C for non-conforming inheritance.
+			conformance: class_type.associated_class.inherits_from (Current)
 		local
 			actual_class_type, written_actual_type: CL_TYPE_A
 			associated_class: CLASS_C

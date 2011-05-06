@@ -24,6 +24,10 @@ inherit
 create
 	make_with_content
 
+create {SD_CONTENT_PND_ACTION_SEQUENCE}
+	make_filled
+
+
 feature {NONE} -- Initialization
 
 	make_with_content (a_content: SD_CONTENT)
@@ -37,7 +41,7 @@ feature {NONE} -- Initialization
 		end
 feature -- Command
 
-	call (event_data: detachable TUPLE [detachable ANY])
+	call (event_data: detachable TUPLE [ANY])
 			-- <Precursor>
 		do
 			if not content.are_actions_ignored then

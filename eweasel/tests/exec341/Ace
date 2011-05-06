@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-6" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-6 http://www.eiffel.com/developers/xml/configuration-1-0-6.xsd" name="test">
+	<target name="test">
+		<root class="TEST" feature="make"/>
+		<option warning="true" full_class_checking="true" is_attached_by_default="false" void_safety="none">
+			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false" supplier_precondition="true"/>
+		</option>
+		<precompile name="precompile" location="$PRECOMPILED_BASE"/>
+		$EWEASEL_DOTNET_SETTING
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" use_application_options="true"/>
+		<cluster name="root_cluster" location="$CLUSTER\"/>
+	</target>
+</system>

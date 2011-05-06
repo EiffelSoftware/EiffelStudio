@@ -49,7 +49,7 @@ feature -- C callback function
 			when remove_processor_reference_task_id then
 				remove_processor_reference (supplier_processor_id)
 			else
-				check invalid_task: False end
+--				check invalid_task: False end
 			end
 		end
 
@@ -71,18 +71,82 @@ feature -- C callback function
 			l_ref := {ATOMIC_MEMORY_OPERATIONS}.decrement_integer_32 (processor_meta_data [a_processor_id].item_address (processor_reference_count_index))
 		end
 
+	maximum_dirty_processor_client_count: INTEGER = 16
+		-- Maximum number of client processors a supplier processor may be dirty to.
+
+	flag_processor_dirty (
+			a_logical_processor_id: like processor_id_type;
+			a_executing_request_chain_node_meta_data: like new_request_chain_node_meta_data_queue_entry
+			a_executing_request_chain_node: like new_request_chain_node_queue_entry
+			a_executing_request_chain_node_cursor: INTEGER)
+		local
+			l_dirty_flag_count: INTEGER
+			l_dirty_processor_client_list: detachable like new_request_chain_meta_data_entry
+			l_client_processor_id: like processor_id_type
+			i: INTEGER
+			l_lock_request_return: INTEGER
+		do
+				-- Signal the request chain as dirty so that any other processors in the request chain cease applying calls.
+			a_executing_request_chain_node_meta_data [request_chain_status_index] := request_chain_status_dirty
+
+				-- Retrieve currently executing request chain so that we can flag the client processor as dirty with regards to `a_processor_id'.
+			l_dirty_processor_client_list := (request_chain_meta_data_stack_list [a_logical_processor_id]) [max_request_chain_depth]
+			if l_dirty_processor_client_list = Void then
+				create l_dirty_processor_client_list.make_filled (null_processor_id, maximum_dirty_processor_client_count)
+					-- Set count to zero.
+				(request_chain_meta_data_stack_list [a_logical_processor_id]) [max_request_chain_depth] := l_dirty_processor_client_list
+			end
+
+			l_client_processor_id := a_executing_request_chain_node_meta_data [request_chain_client_pid_index]
+				-- Find the next available slot to add `l_client_processor_id'.
+
+			l_lock_request_return := request_processor_resource (
+				processor_dirty_processor_client_list_lock_index,
+				a_logical_processor_id,
+				l_client_processor_id,
+				True, -- Wait until granted, we cannot continue until we have control over the value.
+				True  -- High Priority, wait is minimal as this is a temporary lock value
+			)
+			check resource_attained: l_lock_request_return = resource_lock_newly_attained end
+
+			from
+				i := 0
+			until
+				i >= maximum_dirty_processor_client_count
+			loop
+				if l_dirty_processor_client_list [i] = null_processor_id then
+					l_dirty_processor_client_list [i] := l_client_processor_id
+					i := maximum_dirty_processor_client_count
+				end
+				i := i + 1
+			end
+
+			relinquish_processor_resource (
+				processor_meta_data [a_logical_processor_id].item_address (processor_dirty_processor_client_list_lock_index),
+				l_client_processor_id,
+				True  -- High Priority
+			)
+
+			if i = maximum_dirty_processor_client_count then
+					-- There were no available slots for `l_client_processor_id'.
+				(create {EXCEPTIONS}).raise ("Maximum SCOOP dirty processor count reached")
+			end
+
+				-- Update dirty flag count for the client processor.
+			l_dirty_flag_count := {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 (processor_meta_data [l_client_processor_id].item_address (processor_dirty_flag_count_index))
+				--| FIXME A check may be needed should the number of dirty processors for a client go above a certain limit.
+		end
+
 	is_uncontrolled (a_client_processor_id, a_supplier_processor_id: like processor_id_type): BOOLEAN
 			-- Is `a_supplier_processor_id' uncontrolled in the current context of `a_client_processor_id'.
 		local
-			l_current_request_chain: detachable like new_request_chain_meta_data_entry
 			l_end_index, i: INTEGER
 		do
-			l_current_request_chain := request_chain_meta_data [a_client_processor_id]
-			if l_current_request_chain /= Void then
+			if request_chain_meta_data [a_client_processor_id] /= default_request_chain_meta_data_entry then
 					-- Check first if we are lock passing, if not then we check the entire chain.
-				Result := l_current_request_chain [request_chain_client_pid_index] /= a_supplier_processor_id
+				Result := (request_chain_meta_data [a_client_processor_id]) [request_chain_client_pid_index] /= a_supplier_processor_id
 				if Result then
-					l_end_index := l_current_request_chain [request_chain_pid_count_index]
+					l_end_index := (request_chain_meta_data [a_client_processor_id]) [request_chain_pid_count_index]
 					if l_end_index > 0 then
 						from
 							i := request_chain_meta_data_header_size
@@ -90,7 +154,7 @@ feature -- C callback function
 						until
 							i = l_end_index or else not Result
 						loop
-							Result := l_current_request_chain [i] /= a_supplier_processor_id
+							Result := (request_chain_meta_data [a_client_processor_id]) [i] /= a_supplier_processor_id
 							i := i + 1
 						end
 					end
@@ -115,22 +179,18 @@ feature -- C callback function
 	frozen remove_processor_reference_task_id: NATURAL_8 = 12
 	frozen check_uncontrolled_call_task_id: NATURAL_8 = 13
 		-- SCOOP Task Constants, similies of those defined in <eif_macros.h>
-		-- FIXME IEK: Use external macros when valid in an inspect statement.
+		--| FIXME: Use external macros when valid in an inspect statement.
 
 feature -- EIF_TYPED_VALUE externals
 
 	set_boolean_return_value (a_boolean_typed_value: POINTER; a_boolean: BOOLEAN)
 		external
-			"C inline"
-		alias
-			"((EIF_TYPED_VALUE *) $a_boolean_typed_value)->item.b = (EIF_BOOLEAN)$a_boolean;"
+			"C macro use %"eif_scoop.h%""
 		end
 
 	set_integer_32_return_value (a_integer_32_typed_value: POINTER; a_integer: INTEGER_32)
 		external
-			"C inline"
-		alias
-			"((EIF_TYPED_VALUE *) $a_integer_32_typed_value)->item.i4 = (EIF_INTEGER_32)$a_integer;"
+			"C macro use %"eif_scoop.h%""
 		end
 
 feature -- Processor Initialization
@@ -144,7 +204,7 @@ feature -- Processor Initialization
 			if Result = max_scoop_processors_instantiable then
 				-- Perform processor cleanup.
 				-- Raise Exception if no free processor could not be found, or block until there is one.
-				(create {EXCEPTIONS}).raise ("Maximum SCOOP Processor Allocation reached%N")
+				(create {EXCEPTIONS}).raise ("Maximum SCOOP Processor Allocation reached")
 			end
 
 			initialize_default_processor_meta_data (Result)
@@ -188,26 +248,19 @@ feature -- Request Chain Handling
 	signify_start_of_request_chain (a_client_processor_id: like processor_id_type)
 			-- Signify the start of a new request chain on `a_client_processor_id'
 		local
-			l_request_chain_id: like invalid_request_chain_id
-			l_request_chain_meta_data: detachable like new_processor_meta_data_entry
+			l_temp_value: INTEGER_32
 		do
-				-- Increase request chain id.
-			l_request_chain_id := {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 (processor_meta_data [a_client_processor_id].item_address (current_request_chain_id_index));
-
 				-- Increment current request chain id depth
-			increase_request_chain_depth (a_client_processor_id)
+			l_temp_value := {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 (processor_meta_data [a_client_processor_id].item_address (current_request_chain_id_depth_index));
+			if l_temp_value = max_request_chain_depth then
+				(create {EXCEPTIONS}).raise ("SCOOP request chain stack overflow")
+			end
 
-				-- Create new request chain structure.
-			l_request_chain_meta_data := new_request_chain_meta_data_entry
+				-- Increase request chain id.
+			l_temp_value := {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 (processor_meta_data [a_client_processor_id].item_address (current_request_chain_id_index));
 
-				-- Reset node count to default values	
-			l_request_chain_meta_data [request_chain_pid_count_index] := 0
-			l_request_chain_meta_data [request_chain_client_pid_index] := a_client_processor_id
-			l_request_chain_meta_data [request_chain_client_pid_request_chain_id_index] := invalid_request_chain_id
-			l_request_chain_meta_data [request_chain_status_index] := request_chain_status_uninitialized
-			l_request_chain_meta_data [request_chain_sync_counter_index] := 0
-
-			update_request_chain_meta_data (a_client_processor_id, l_request_chain_meta_data)
+				-- Update `a_client_processor_id' with a new request chain.
+			update_request_chain_meta_data (a_client_processor_id, new_request_chain_meta_data_entry (a_client_processor_id))
 
 			debug ("ISE_SCOOP_MANAGER")
 				print ("signify_start_of_request_chain for pid " + a_client_processor_id.out + " %N")
@@ -233,35 +286,49 @@ feature -- Request Chain Handling
 	signify_end_of_request_chain (a_client_processor_id: like processor_id_type)
 			-- Signal the end of a request chain for `a_client_processor_id'.
 		local
-			l_request_chain_id_depth: like default_request_chain_depth_value
-			l_previous_request_chain_meta_data, l_new_request_chain_meta_data: detachable like new_request_chain_meta_data_entry
+			l_request_chain_depth: like default_request_chain_depth_value
+			l_request_chain_meta_data: detachable like new_request_chain_meta_data_entry
+			l_wait_condition_counter: INTEGER
 		do
-				-- Retrieve existing meta data chain.
-			l_previous_request_chain_meta_data := request_chain_meta_data [a_client_processor_id]
-			check l_previous_chain_meta_data_entry_attached: attached l_previous_request_chain_meta_data end
-
 				-- Reset request chain values
-			update_request_chain_meta_data (a_client_processor_id, Void)
-			decrease_request_chain_depth (a_client_processor_id)
-			l_request_chain_id_depth := (processor_meta_data [a_client_processor_id])[current_request_chain_id_depth_index]
+			l_request_chain_depth := {ATOMIC_MEMORY_OPERATIONS}.decrement_integer_32 (processor_meta_data [a_client_processor_id].item_address (Current_request_chain_id_depth_index))
 
-			if l_request_chain_id_depth > default_request_chain_depth_value then
-				l_new_request_chain_meta_data := (request_chain_meta_data_stack_list [a_client_processor_id]) [l_request_chain_id_depth]
+				-- Retrieve existing meta data chain and close it		
+			l_request_chain_meta_data := (request_chain_meta_data_stack_list [a_client_processor_id]) [l_request_chain_depth + 1]
+			(request_chain_meta_data_stack_list [a_client_processor_id]) [l_request_chain_depth + 1] := Void
+			check l_previous_chain_meta_data_entry_attached: attached l_request_chain_meta_data end
+			l_request_chain_meta_data [request_chain_status_index] := request_chain_status_closed;
+
+			if l_request_chain_depth > default_request_chain_depth_value then
+				l_request_chain_meta_data := (request_chain_meta_data_stack_list [a_client_processor_id]) [l_request_chain_depth]
+				check l_request_chain_meta_data_attached: l_request_chain_meta_data /= Void end
+				request_chain_meta_data [a_client_processor_id] := l_request_chain_meta_data
+			else
+					-- We are fully closing off the chain so we set the request chain to the default value.
+				request_chain_meta_data [a_client_processor_id] := default_request_chain_meta_data_entry
 			end
-			request_chain_meta_data [a_client_processor_id] := l_new_request_chain_meta_data
-			l_previous_request_chain_meta_data [request_chain_status_index] := request_chain_status_closed;
+				-- Reset the wait condition counter to zero.
+			l_wait_condition_counter := {ATOMIC_MEMORY_OPERATIONS}.swap_integer_32 (processor_meta_data [a_client_processor_id].item_address (processor_wait_condition_counter_index), 0)
 
 			debug ("ISE_SCOOP_MANAGER")
-				print ("signify_end_of_request_chain for pid " + a_client_processor_id.out + " with depth " + l_request_chain_id_depth.out + "%N")
+				print ("signify_end_of_request_chain for pid " + a_client_processor_id.out + "%N")
 			end
 		end
 
 	signify_end_of_wait_condition_chain (a_client_processor_id: like processor_id_type)
-			-- Signal the end of a failed wait_condition
+			-- Signal the end of a failed wait_condition.
+		local
+			l_wait_condition_counter: INTEGER_32
 		do
+				-- End request chain and make sure that the wait condition counter is incremented.
+			l_wait_condition_counter := {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 (processor_meta_data [a_client_processor_id].item_address (processor_wait_condition_counter_index))
+
+				-- Yield processor temporarily based on the number of wait condition attempts.
+			processor_yield (a_client_processor_id, Max_yield_counter + l_wait_condition_counter.as_natural_16)
+
 			signify_end_of_request_chain (a_client_processor_id)
-				-- Pause the processor a small amount so that it can attempt to reacquire a request chain.
-			processor_sleep (processor_sleep_quantum)
+				-- Set the wait counter to the incremented value as ending the request chain always resets it back to zero.
+			l_wait_condition_counter := {ATOMIC_MEMORY_OPERATIONS}.swap_integer_32 (processor_meta_data [a_client_processor_id].item_address (processor_wait_condition_counter_index), l_wait_condition_counter)
 		end
 
 	assign_supplier_processor_to_request_chain (a_client_processor_id, a_supplier_processor_id: like processor_id_type)
@@ -317,7 +384,7 @@ feature -- Request Chain Handling
 			end
 		end
 
-	update_request_chain_meta_data (a_client_processor_id: like processor_id_type; a_request_chain_meta_data: detachable like new_request_chain_meta_data_entry)
+	update_request_chain_meta_data (a_client_processor_id: like processor_id_type; a_request_chain_meta_data: like new_request_chain_meta_data_entry)
 			-- Update request chain meta data for `a_client_processor_id'.
 		local
 			l_request_chain_depth: INTEGER
@@ -341,10 +408,18 @@ feature -- Request Chain Handling
 			l_pid: like processor_id_type
 			l_lock_request_return: NATURAL_8
 			l_request_chain_depth: INTEGER
+			l_wait_condition_counter: INTEGER
 		do
 			-- Sort unique processor id's by order of priority, then wait for locks on each processor so that a new request chain node can be initialized.
 			debug ("ISE_SCOOP_MANAGER")
 				print ("wait_for_request_chain_supplier_processor_locks for pid " + a_client_processor_id.out + "%N")
+			end
+
+				-- Retrieve wait condition counter for determining priority of processor request.
+			l_wait_condition_counter := (processor_meta_data [a_client_processor_id]) [processor_wait_condition_counter_index]
+
+			if l_wait_condition_counter > max_wait_condition_retry_limit then
+				(create {EXCEPTIONS}).raise ("SCOOP Wait Condition Retry Limit Reached")
 			end
 
 				-- Retrieve request chain meta data structure.
@@ -462,7 +537,7 @@ feature -- Request Chain Handling
 					l_pid,
 					a_client_processor_id,
 					True, -- Wait until granted, we cannot continue until we have control over the value.
-					True  -- Low Priority, wait is minimal as this is a temporary lock value
+					l_wait_condition_counter = 0  -- Low Priority if there was a previous wait condition failure.
 				)
 				check resource_attained: l_lock_request_return = resource_lock_newly_attained end
 
@@ -533,7 +608,7 @@ feature -- Request Chain Handling
 				relinquish_processor_resource (
 					processor_meta_data [l_pid].item_address (current_request_chain_node_id_lock_index),
 					a_client_processor_id,
-					True  -- High Priority
+					l_wait_condition_counter = 0  -- High Priority
 				)
 
 				i := i + 1
@@ -573,71 +648,43 @@ feature -- Request Chain Handling
 
 feature -- Command/Query Handling
 
-	frozen call_data_result (a_call_data: like call_data): POINTER
-		require
-			a_call_data_valid: a_call_data /= default_pointer
-		external
-			"C inline use %"eif_scoop.h%""
-		alias
-			"((call_data*) $a_call_data)->result"
-		end
+	is_processor_dirty (a_client_processor_id, a_supplier_processor_id: like processor_id_type): BOOLEAN
+			-- Is `a_supplier_processor_id' dirty with respect to `a_client_processor_id'.
+		local
+			l_dirty_processor_client_list: detachable like new_request_chain_meta_data_entry
+			i: INTEGER
+			l_lock_request_return: INTEGER
+		do
+			l_dirty_processor_client_list := (request_chain_meta_data_stack_list [a_supplier_processor_id]) [Max_request_chain_depth]
+			if l_dirty_processor_client_list /= Void then
+				l_lock_request_return := request_processor_resource (
+					processor_dirty_processor_client_list_lock_index,
+					a_supplier_processor_id,
+					a_client_processor_id,
+					True, -- Wait until granted, we cannot continue until we have control over the value.
+					False  -- Low Priority, wait is minimal as this is a temporary lock value
+				)
+				check resource_attained: l_lock_request_return = resource_lock_newly_attained end
 
-	frozen call_data_count (a_call_data: like call_data): NATURAL_32
-		require
-			a_call_data_valid: a_call_data /= default_pointer
-		external
-			"C inline use %"eif_scoop.h%""
-		alias
-			"((call_data*) $a_call_data)->count"
-		end
+					-- An uncaught exception has occurred on `a_supplier_processor_id' so we must check if `a_client_processor_id' is involved.
+				from
+					i := 0
+				until
+					i >= maximum_dirty_processor_client_count
+				loop
+					if l_dirty_processor_client_list [i] = a_client_processor_id then
+						Result := True
+						i := maximum_dirty_processor_client_count
+					end
+					i := i + 1
+				end
 
-	frozen call_data_body_index (a_call_data: like call_data): INTEGER_32
-		require
-			a_call_data_valid: a_call_data /= default_pointer
-		external
-			"C inline use %"eif_scoop.h%""
-		alias
-			"[
-				#ifdef WORKBENCH
-					return ((call_data*) $a_call_data)->body_index;
-				#endif
-			]"
-		end
-
-	frozen call_data_sync_pid (a_call_data: like call_data): INTEGER_16
-		require
-			a_call_data_valid: a_call_data /= default_pointer
-		external
-			"C inline use %"eif_scoop.h%""
-		alias
-			"((call_data*) $a_call_data)->sync_pid"
-		end
-
-	frozen call_data_is_lock_passing (a_call_data: like call_data): BOOLEAN
-		require
-			a_call_data_valid: a_call_data /= default_pointer
-		external
-			"C inline use %"eif_scoop.h%""
-		alias
-			"((call_data*) $a_call_data)->is_lock_passing"
-		end
-
-	frozen call_data_target (a_call_data: like call_data): POINTER
-		require
-			a_call_data_valid: a_call_data /= default_pointer
-		external
-			"C inline use %"eif_scoop.h%""
-		alias
-			"((call_data*) $a_call_data)->target"
-		end
-
-	frozen call_data_argument (a_call_data: like call_data; i_th: NATURAL_32): POINTER
-		require
-			a_call_data_valid: a_call_data /= default_pointer
-		external
-			"C inline use %"eif_scoop.h%""
-		alias
-			"&((call_data*) $a_call_data)->argument [$i_th]"
+				relinquish_processor_resource (
+					processor_meta_data [a_supplier_processor_id].item_address (processor_dirty_processor_client_list_lock_index),
+					a_client_processor_id,
+					False
+				)
+			end
 		end
 
 	log_call_on_processor (a_client_processor_id, a_supplier_processor_id: like processor_id_type; a_routine: like routine_type; a_call_data: like call_data)
@@ -648,8 +695,8 @@ feature -- Command/Query Handling
 			l_request_chain_node_queue: detachable like new_request_chain_node_queue
 			l_client_request_chain_node_queue_entry, l_request_chain_node_queue_entry: detachable like new_request_chain_node_queue_entry
 			l_unique_pid_count, i, l_last_pid_index, l_logged_calls_original_count, l_logged_calls_current_count: INTEGER_32
-			l_is_synchronous, l_is_lock_passing, l_client_is_sibling, l_client_sync_needed, l_exit_loop: BOOLEAN
-			l_call_ptr, l_default_ptr: POINTER
+			l_is_synchronous, l_client_is_sibling, l_client_sync_needed, l_exit_loop: BOOLEAN
+			l_call_ptr: POINTER
 		do
 			debug ("ISE_SCOOP_MANAGER")
 				print ("log_call_on_processor for pid " + a_client_processor_id.out + " on pid " + a_supplier_processor_id.out + "%N")
@@ -659,7 +706,6 @@ feature -- Command/Query Handling
 			l_request_chain_node_queue := request_chain_node_queue_list [a_supplier_processor_id]
 			check l_request_chain_node_queue_attached: attached l_request_chain_node_queue end
 
-			l_is_lock_passing := call_data_is_lock_passing (a_call_data)
 			l_is_synchronous := call_data_sync_pid (a_call_data) /= null_processor_id
 
 				-- Initially mark the request chain node as invalid if not a creation routine
@@ -667,6 +713,13 @@ feature -- Command/Query Handling
 				l_request_chain_node_id := 0
 			else
 				l_request_chain_node_id := invalid_request_chain_node_id
+			end
+
+			if {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 ((processor_meta_data [a_client_processor_id]).item_address (processor_dirty_flag_count_index), 0) > 0  then
+					-- We need to check if `a_client_processor_id' is dirty with respect to `a_supplier_processor_id'.
+				if is_processor_dirty (a_client_processor_id, a_supplier_processor_id) then
+					(create {EXCEPTIONS}).raise ("SCOOP Supplier Processor Dirty")
+				end
 			end
 
 			l_client_request_chain_meta_data := request_chain_meta_data [a_client_processor_id]
@@ -707,7 +760,7 @@ feature -- Command/Query Handling
 			l_logged_calls_original_count := l_request_chain_node_queue_entry.count
 			if l_logged_calls_original_count = l_request_chain_node_queue_entry.capacity then
 					-- Resize node structure if there is not enough room for the new entry
-					--| FIXME IEK: Resizing 3 extra items may not be optimal in all cases
+					--| FIXME: Resizing 3 extra items may not be optimal in all cases
 				if l_client_request_chain_meta_data /= Void and then
 					{ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_client_request_chain_meta_data.item_address (request_chain_status_index), 0) = request_chain_status_open
 				then
@@ -737,7 +790,7 @@ feature -- Command/Query Handling
 				(processor_meta_data [a_supplier_processor_id]) [processor_status_index] := processor_status_initializing
 			end
 
-			if l_is_lock_passing then
+			if call_data_is_lock_passing (a_call_data) then
 					-- Retrieve the node queue list for the client processor.
 				l_request_chain_node_queue := request_chain_node_queue_list [a_client_processor_id]
 				check l_request_chain_node_queue_attached: attached l_request_chain_node_queue end
@@ -790,11 +843,11 @@ feature -- Command/Query Handling
 						from
 							i := l_logged_calls_original_count
 						until
-							l_call_ptr /= l_default_ptr
+							l_call_ptr /= null_pointer
 						loop
 							l_call_ptr := l_client_request_chain_node_queue_entry [i]
-							if l_call_ptr /= l_default_ptr then
-								l_client_request_chain_node_queue_entry [i] := l_default_ptr
+							if l_call_ptr /= null_pointer then
+								l_client_request_chain_node_queue_entry [i] := null_pointer
 							end
 							i := i + 1
 						end
@@ -814,10 +867,10 @@ feature -- Command/Query Handling
 							processor_wait (a_client_processor_id, a_supplier_processor_id)
 						end
 						scoop_command_call_cleanup (l_call_ptr)
-						l_call_ptr := l_default_ptr
+						l_call_ptr := null_pointer
 					else
 							-- Reset supplier processors request chain meta data to previous state.
-						update_request_chain_meta_data (a_supplier_processor_id, Void)
+						update_request_chain_meta_data (a_supplier_processor_id, default_request_chain_meta_data_entry)
 						decrease_request_chain_depth (a_supplier_processor_id)
 						request_chain_meta_data [a_supplier_processor_id] := l_supplier_request_chain_meta_data
 
@@ -909,6 +962,18 @@ feature -- Command/Query Handling
 			end
 		end
 
+feature {NONE} -- Implementation
+
+	frozen call_data_sync_pid (a_call_data: like call_data): INTEGER_16
+		external
+			"C macro use %"eif_scoop.h%""
+		end
+
+	frozen call_data_is_lock_passing (a_call_data: like call_data): BOOLEAN
+		external
+			"C macro use %"eif_scoop.h%""
+		end
+
 feature {NONE} -- Resource Initialization
 
 	init_scoop_manager
@@ -924,17 +989,19 @@ feature {NONE} -- Resource Initialization
 				-- Initialize the default attributes used to create each SCOOP processor.
 			create default_processor_attributes.make_with_stack_size (1_048_576)
 
+			default_request_chain_meta_data_entry := new_request_chain_meta_data_entry (null_processor_id)
+
 			from
 				i := 1
 				create l_processor_meta_data.make_empty (max_scoop_processors_instantiable)
-				create request_chain_meta_data.make_filled (Void, max_scoop_processors_instantiable)
+				create request_chain_meta_data.make_filled (default_request_chain_meta_data_entry, max_scoop_processors_instantiable)
 				create l_request_chain_meta_data_stack_list.make_empty (max_scoop_processors_instantiable)
 			until
 				i > Max_scoop_processors_instantiable
 			loop
 				l_request_chain_meta_data_stack_list.extend (new_request_chain_meta_data_stack_list_entry)
 				l_processor_meta_data.extend (new_processor_meta_data_entry)
-					-- FIXME IEK Free semaphore list when application exits
+					--| FIXME: Free semaphore list when application exits
 				i := i + 1
 			end
 			processor_meta_data := l_processor_meta_data
@@ -990,11 +1057,13 @@ feature {NONE} -- Resource Initialization
 
 				-- Initialize processor semaphore with a count of zero for client - supplier processor notification.
 
-				-- FIXME IEK Destroy processor semaphore when resources are freed.
+				--| FIXME: Destroy processor semaphore when resources are freed.
 			processor_semaphore_list [a_processor_id] := new_semaphore (0)
 
 			(processor_meta_data [a_processor_id]).put (0, current_request_chain_id_index)
 			(processor_meta_data [a_processor_id]).put (0, current_request_chain_node_id_index)
+			(processor_meta_data [a_processor_id]).put (0, processor_dirty_flag_count_index)
+			(processor_meta_data [a_processor_id]).put (0, processor_wait_condition_counter_index)
 
 				-- Reset execution index to `0'
 			(processor_meta_data [a_processor_id]).put (0, current_request_node_id_execution_index)
@@ -1003,7 +1072,7 @@ feature {NONE} -- Resource Initialization
 	scoop_processor_loop (a_logical_processor_id: like processor_id_type)
 			-- Entry point for all scoop processors, each unique identified by `a_logical_processor_id'.
 		local
-			l_idle_exit, l_processor_exit, l_feature_application_loop_exit: BOOLEAN
+			l_loop_exit: BOOLEAN
 			l_processor_meta_data: like new_processor_meta_data_entry
 			l_executing_node_id: like invalid_request_chain_node_id
 			l_executing_node_id_cursor: INTEGER_32
@@ -1011,11 +1080,10 @@ feature {NONE} -- Resource Initialization
 			l_executing_request_chain_node: detachable like new_request_chain_node_queue_entry
 			l_request_chain_node_meta_data_queue: detachable like new_request_chain_node_meta_data_queue
 			l_executing_request_chain_node_meta_data: detachable like new_request_chain_node_meta_data_queue_entry
-			l_head_pid, l_sync_pid: like processor_id_type
-			l_is_head: BOOLEAN
+			l_exception_caught: BOOLEAN
 			l_orig_sync_count, l_temp_count: INTEGER
 			l_wait_counter: NATURAL_32
-			l_call_ptr, l_default_ptr: POINTER
+			l_call_ptr: POINTER
 		do
 			-- SCOOP Processor has been launched
 			-- We are guaranteed that at least a creation routine has been logged.
@@ -1027,7 +1095,8 @@ feature {NONE} -- Resource Initialization
 				l_request_chain_node_meta_data_queue := request_chain_node_meta_data_queue_list [a_logical_processor_id]
 				check l_request_chain_node_meta_data_queue_attached: attached l_request_chain_node_meta_data_queue end
 			until
-				l_processor_exit
+				l_processor_meta_data [processor_status_index] = processor_status_redundant
+					-- Loop until the processor is marked as surplus to requirements.
 			loop
 					--| This is needed so that any pending gc cycles are correctly handled
 					--| as this is a tight loop without any call to RTGC
@@ -1046,10 +1115,7 @@ feature {NONE} -- Resource Initialization
 					then
 							-- We are in a valid feature application position as the request chain has been initialized.
 						from
-							l_head_pid := l_executing_request_chain_node_meta_data [request_chain_meta_data_header_size]
-							l_is_head := l_head_pid = a_logical_processor_id
-
-							if l_is_head then
+							if a_logical_processor_id = l_executing_request_chain_node_meta_data [request_chain_meta_data_head_pid_index] then
 								l_orig_sync_count := {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_executing_request_chain_node_meta_data.item_address (request_chain_sync_counter_index), 0)
 									-- We are a head node, set sync count to minus original sync count
 								if l_orig_sync_count > 1 then
@@ -1140,33 +1206,49 @@ feature {NONE} -- Resource Initialization
 
 							l_executing_node_id_cursor := 0
 							l_wait_counter := 0
-							l_feature_application_loop_exit := False
+							l_loop_exit := False
+							l_exception_caught := False
 						until
-							l_feature_application_loop_exit
+							l_loop_exit
 						loop
 							l_executing_request_chain_node := l_request_chain_node_queue [l_executing_node_id]
 							check l_executing_request_chain_node_attached: attached l_executing_request_chain_node end
-							if l_executing_node_id_cursor < l_executing_request_chain_node.count then
+							l_temp_count := l_executing_request_chain_node.count
+							if l_exception_caught then
+									-- If an exception has occurred then we must not continue applying calls and exit immediately.
+								l_loop_exit := True
+								l_request_chain_node_meta_data_queue [l_executing_node_id] := Void
+							elseif l_executing_node_id_cursor < l_temp_count then
 								l_call_ptr := l_executing_request_chain_node [l_executing_node_id_cursor]
-								if l_call_ptr /= l_default_ptr then
-									l_sync_pid := call_data_sync_pid (l_call_ptr)
-									scoop_command_call (l_call_ptr)
-									if l_sync_pid /= null_processor_id then
-										processor_wake_up (l_sync_pid, a_logical_processor_id)
+								if l_call_ptr /= null_pointer then
+									l_exception_caught := scoop_command_call_with_exception_check (l_call_ptr)
+									if l_exception_caught then
+										-- An exception was raised during application of `l_call_ptr'.
+										-- We need to flag `a_logical_processor_id' dirty with respect to the client of the chain.
+										flag_processor_dirty (a_logical_processor_id, l_executing_request_chain_node_meta_data, l_executing_request_chain_node, l_executing_node_id_cursor)
+									end
+									if (l_executing_node_id_cursor + 1) = l_temp_count then
+											-- Check for a query if we are at the last index.
+										if call_data_sync_pid (l_call_ptr) /= null_processor_id then
+											processor_wake_up (call_data_sync_pid (l_call_ptr), a_logical_processor_id)
+										end
 									end
 									l_executing_node_id_cursor := l_executing_node_id_cursor + 1
 								end
 							elseif l_executing_request_chain_node_meta_data [request_chain_status_index] = request_chain_status_closed then
 									-- Request chain has been fully closed therefore we can exit if all calls have been applied.
-								if l_executing_node_id_cursor >= l_executing_request_chain_node.count then
-									l_feature_application_loop_exit := True
+								if l_executing_node_id_cursor >= l_temp_count then
+									l_loop_exit := True
 									l_request_chain_node_meta_data_queue [l_executing_node_id] := Void
 								end
-							elseif l_executing_request_chain_node_meta_data [request_chain_status_index] = request_chain_status_waiting then
-								if l_is_head then
-									processor_wake_up (l_executing_request_chain_node_meta_data [request_chain_client_pid_index], a_logical_processor_id)
-									processor_wait (a_logical_processor_id, l_executing_request_chain_node_meta_data [request_chain_client_pid_index])
-								end
+							elseif
+								l_executing_request_chain_node_meta_data [request_chain_status_index] = request_chain_status_waiting and then
+								a_logical_processor_id = l_executing_request_chain_node_meta_data [request_chain_meta_data_header_size]
+							then
+									-- The chain status is set to waiting and we are the head pid so we must be a creation routine
+									-- Signal client processor to wake up and wait until signalled to continue.
+								processor_wake_up (l_executing_request_chain_node_meta_data [request_chain_client_pid_index], a_logical_processor_id)
+								processor_wait (a_logical_processor_id, l_executing_request_chain_node_meta_data [request_chain_client_pid_index])
 							else
 									-- We are in an idle state, waiting for the request chain to close or to have more calls logged so we yield to another thread.
 								processor_yield (a_logical_processor_id, l_wait_counter)
@@ -1203,33 +1285,35 @@ feature {NONE} -- Resource Initialization
 							-- There are no request chains to be applied so processor is idle until more are added.
 						from
 							l_wait_counter := 0
-							l_idle_exit := False
+							l_loop_exit := False
 							l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 ($idle_processor_count)
 						until
-							l_idle_exit
+							l_loop_exit
 						loop
-							l_idle_exit := l_request_chain_node_meta_data_queue [l_processor_meta_data [Current_request_node_id_execution_index]] /= Void
-							if not l_idle_exit then
+							l_loop_exit := l_request_chain_node_meta_data_queue [l_processor_meta_data [Current_request_node_id_execution_index]] /= Void
+							if not l_loop_exit then
 								if idle_processor_count /= processor_count then
-									l_processor_exit := False
+										-- Make sure that the processor stays in the feature application loop.
+									l_processor_meta_data [processor_status_index] := processor_status_initialized
 								else
-									if not l_processor_exit then
+									if l_processor_meta_data [processor_status_index] /= processor_status_redundant then
 										l_wait_counter := 0
-										l_processor_exit := True
+										l_processor_meta_data [processor_status_index] := processor_status_redundant
 									end
 										--| FIXME Update exiting code when GC support is available.
 									if l_wait_counter > Processor_spin_lock_limit then
-										l_idle_exit := True
+										l_loop_exit := True
 									end
 								end
 								processor_is_idle (a_logical_processor_id, l_wait_counter)
 								l_wait_counter := l_wait_counter + 1
 							else
-								l_processor_exit := False
+									-- Make sure the the processor stays in the feature application loop.
+								l_processor_meta_data [processor_status_index] := processor_status_initialized
 							end
 						end
 						l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.decrement_integer_32 ($idle_processor_count)
-						if l_processor_exit then
+						if l_processor_meta_data [processor_status_index] = processor_status_redundant then
 							l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.decrement_integer_32 ($processor_count)
 						end
 					end
@@ -1257,24 +1341,39 @@ feature {NONE} -- Resource Initialization
 	deadlock_detection_limit: NATURAL_16 = 1000
 		-- Number of iterations an idle processor
 
-	scoop_command_call (data: like call_data)
-			-- Make scoop call from call data `data'.
-		require
-			data_not_null: data /= default_pointer
+	scoop_command_call_with_exception_check (a_data: like call_data): BOOLEAN
+			-- Apply scoop call represented by `a_data'.
+			-- Return `True' if an exception was raised.
+		do
+			if not Result then
+				scoop_command_call (a_data)
+			end
+		rescue
+			Result := True
+			retry
+		end
+
+	scoop_command_call (a_data: like call_data)
+			-- Make scoop call from call data `a_data'.
 		external
-			"C macro use <eif_scoop.h>"
+			"C macro use %"eif_scoop.h%""
 		alias
 			"eif_try_call"
 		end
 
-	scoop_command_call_cleanup (data: like call_data)
-			-- Free scoop call data in `data'.
-		require
-			data_not_null: data /= default_pointer
+	scoop_command_call_cleanup (a_data: like call_data)
+			-- Free scoop call data in `a_data'.
 		external
-			"C macro use <eif_scoop.h>"
+			"C macro use %"eif_scoop.h%""
 		alias
 			"eif_free_call"
+		end
+
+	null_pointer: POINTER
+		external
+			"C macro use %"eif_scoop.h%""
+		alias
+			"NULL"
 		end
 
 	request_processor_resource (a_resource_index: INTEGER_32; a_resource_processor, a_requesting_processor: like processor_id_type; a_block_until_request_granted, a_high_priority: BOOLEAN): NATURAL_8
@@ -1324,7 +1423,7 @@ feature {NONE} -- Resource Initialization
 	frozen check_for_gc
 			-- Hack needed to force the gc to kick in when code is in a tight loop.
 		external
-			"C macro use <eif_scoop.h>"
+			"C macro use %"eif_scoop.h%""
 		alias
 			"RTGC"
 		end
@@ -1384,6 +1483,9 @@ feature {NONE} -- Scoop Processor Meta Data
 	max_scoop_processors_instantiable: INTEGER_32 = 1536
 		-- Total Number of SCOOP Processors that may be instantiated by Pool including Root.
 
+	max_wait_condition_retry_limit: INTEGER_32 = 1000
+		-- Maximum number of retries a wait condition may have before raising an exception.
+
 	processor_meta_data: SPECIAL [like new_processor_meta_data_entry]
 			-- Holder of Processor Meta Data (indexed by logical processor ID)
 
@@ -1442,9 +1544,9 @@ feature {NONE} -- Scoop Processor Meta Data
 		require
 			a_sem_address_valid: a_sem_address /= default_pointer
 		external
-			"C inline use <eif_threads.h>"
+			"C macro use <eif_threads.h>"
 		alias
-			"eif_thr_sem_post ($a_sem_address);"
+			"eif_thr_sem_post"
 		end
 
 	new_processor_meta_data_entry: SPECIAL [INTEGER_32]
@@ -1453,7 +1555,7 @@ feature {NONE} -- Scoop Processor Meta Data
 			create Result.make_filled (null_processor_id, processor_meta_data_index_count)
 		end
 
-	request_chain_meta_data: SPECIAL [detachable like new_request_chain_meta_data_entry]
+	request_chain_meta_data: SPECIAL [like new_request_chain_meta_data_entry]
 			-- Holder of Processor Request Chain Meta Data (indexed by logical processor ID)
 
 	request_chain_meta_data_stack_list: SPECIAL [like new_request_chain_meta_data_stack_list_entry]
@@ -1465,15 +1567,28 @@ feature {NONE} -- Scoop Processor Meta Data
 		end
 
 	request_chain_meta_data_stack_list_entry_size: NATURAL_8 = 16
+		-- Default depth of the request chain meta data stack.
 
-	new_request_chain_meta_data_entry: SPECIAL [INTEGER_32]
+	max_request_chain_depth: INTEGER = 15
+		-- Maximum request chain depth.
+		-- `request_chain_meta_data_stack_list_entry_size' - 1
+
+	new_request_chain_meta_data_entry (a_client_processor_id: like processor_id_type): SPECIAL [INTEGER_32]
 			-- New Request Chain Meta Data
 		do
 			create Result.make_empty (request_chain_meta_data_default_size)
-				-- Add meta data header null values.
-			Result.fill_with (null_processor_id, 0, 4)
-			-- Format = {pid_count, client pid, client pid request chain id, node status, head_pid, tailx_pid, head request chain node id, tail request chain node id}
+				-- Add meta data header default values.
+			Result.extend (0) -- pid count
+			Result.extend (a_client_processor_id)
+			Result.extend (invalid_request_chain_id)
+			Result.extend (request_chain_status_uninitialized)
+			Result.extend (0) -- sync count
+			check request_chain_header_set: Result.count = request_chain_meta_data_header_size end
+			-- Format = {pid_count, client pid, client pid request chain id, node status, sync count, head_pid, tailx_pid, head request chain node id, tail request chain node id}
 		end
+
+	default_request_chain_meta_data_entry: like new_request_chain_meta_data_entry
+		-- Default request chain meta data entry.
 
 	request_chain_pid_count_index: NATURAL_8 = 0
 	request_chain_client_pid_index: NATURAL_8 = 1
@@ -1487,12 +1602,16 @@ feature {NONE} -- Scoop Processor Meta Data
 	request_chain_status_application: INTEGER_8 = 1
 	request_chain_status_waiting: INTEGER_8 = 2
 	request_chain_status_closed: INTEGER_8 = 3
+	request_chain_status_dirty: INTEGER_8 = 4
 		-- Various state constants for a request chain.
 
-	request_chain_meta_data_default_size: INTEGER_32 = 9
-		-- meta data header + (2 * supplier PID request chain meta data)
+	request_chain_meta_data_default_size: INTEGER_32 = 11
+		-- meta data header + (3 * supplier PID request chain meta data)
 	request_chain_meta_data_header_size: INTEGER_32 = 5
 		-- Size of request chain meta data header {pid_count, client pid, client pid request chain id, node status}
+
+	request_chain_meta_data_head_pid_index: INTEGER_32 = 5
+		-- Index of head processor id in the request chain.
 
 	request_chain_meta_data_supplier_pid_meta_data_size: INTEGER_32 = 2
 		-- {Supplier PID, Supplier Request Chain Node ID}
@@ -1540,12 +1659,21 @@ feature {NONE} -- Scoop Processor Meta Data
 	invalid_request_chain_node_id: INTEGER_32 = -1
 
 	current_request_chain_node_id_lock_index: INTEGER_32 = 6
-		-- Index to value containing current request chain node id.
+		-- Lock index used for accessing current request chain node id.
 
 	processor_reference_count_index: INTEGER_32 = 7
 		-- Current reference count of the processor
 
-	processor_meta_data_index_count: INTEGER_32 = 8
+	processor_dirty_flag_count_index: INTEGER_32 = 8
+		-- Number of processors that are dirty with respect to `Current'.
+
+	processor_dirty_processor_client_list_lock_index: INTEGER_32 = 9
+		-- Lock index used for accessing the dirty processor client list.
+
+	processor_wait_condition_counter_index: INTEGER_32 = 10
+		-- Index of the number of times a wait condition has failed.
+
+	processor_meta_data_index_count: INTEGER_32 = 11
 		-- Number of items in the SCOOP Processor Meta Data structure.
 
 
@@ -1706,6 +1834,64 @@ feature {NONE} -- Externals
 			"C blocking use %"eif_threads.h%""
 		alias
 			"eif_thr_join_all"
+		end
+
+feature {NONE} -- Debugger Helpers
+
+	frozen processor_id_from_object (a_object: ANY): like processor_id_type
+		external
+			"C inline use %"eif_scoop.h%""
+		alias
+			"RTS_PID($a_object)"
+		end
+
+	frozen call_data_result (a_call_data: like call_data): POINTER
+		require
+			a_call_data_valid: a_call_data /= default_pointer
+		external
+			"C inline use %"eif_scoop.h%""
+		alias
+			"((call_data*) $a_call_data)->result"
+		end
+
+	frozen call_data_count (a_call_data: like call_data): NATURAL_32
+		require
+			a_call_data_valid: a_call_data /= default_pointer
+		external
+			"C inline use %"eif_scoop.h%""
+		alias
+			"((call_data*) $a_call_data)->count"
+		end
+
+	frozen call_data_body_index (a_call_data: like call_data): INTEGER_32
+		require
+			a_call_data_valid: a_call_data /= default_pointer
+		external
+			"C inline use %"eif_scoop.h%""
+		alias
+			"[
+				#ifdef WORKBENCH
+					return ((call_data*) $a_call_data)->body_index;
+				#endif
+			]"
+		end
+
+	frozen call_data_target (a_call_data: like call_data): POINTER
+		require
+			a_call_data_valid: a_call_data /= default_pointer
+		external
+			"C inline use %"eif_scoop.h%""
+		alias
+			"((call_data*) $a_call_data)->target"
+		end
+
+	frozen call_data_argument (a_call_data: like call_data; i_th: NATURAL_32): POINTER
+		require
+			a_call_data_valid: a_call_data /= default_pointer
+		external
+			"C inline use %"eif_scoop.h%""
+		alias
+			"&((call_data*) $a_call_data)->argument [$i_th]"
 		end
 
 note

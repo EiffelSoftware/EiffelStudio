@@ -24,6 +24,9 @@ inherit
 create
 	make_with_content
 
+create {SD_NOTIFY_ACTION_SEQUENCE}
+	make_filled
+
 feature {NONE} -- Initialization
 
 	make_with_content (a_content: SD_CONTENT)

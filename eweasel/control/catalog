@@ -1613,6 +1613,7 @@ test	gc-after-rescue-in-attribute		exec337 tcf fail execution
 test	compare-generic-to-basic		exec338 tcf fail execution
 test	standard-twin-correctness		exec339 tcf pass execution
 test	plus-with-mixed-types			exec340 tcf pass execution
+test	static-assigner					exec341 tcf pass execution
 
 -- Once specific
 

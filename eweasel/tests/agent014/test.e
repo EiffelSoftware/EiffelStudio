@@ -9,6 +9,6 @@ feature {NONE}
 			create t1.make
 		end
 
-	t1: detachable TEST1 [STRING, STRING, STRING, STRING, STRING, STRING]
+	t1: detachable TEST1 [STRING, STRING, STRING]
 
 end

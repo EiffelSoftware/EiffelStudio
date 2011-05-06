@@ -323,9 +323,6 @@ feature -- Request Chain Handling
 				-- End request chain and make sure that the wait condition counter is incremented.
 			l_wait_condition_counter := {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 (processor_meta_data [a_client_processor_id].item_address (processor_wait_condition_counter_index))
 
-				-- Yield processor temporarily based on the number of wait condition attempts.
-			processor_yield (a_client_processor_id, Max_yield_counter + l_wait_condition_counter.as_natural_16)
-
 			signify_end_of_request_chain (a_client_processor_id)
 				-- Set the wait counter to the incremented value as ending the request chain always resets it back to zero.
 			l_wait_condition_counter := {ATOMIC_MEMORY_OPERATIONS}.swap_integer_32 (processor_meta_data [a_client_processor_id].item_address (processor_wait_condition_counter_index), l_wait_condition_counter)
@@ -420,6 +417,9 @@ feature -- Request Chain Handling
 
 			if l_wait_condition_counter > max_wait_condition_retry_limit then
 				(create {EXCEPTIONS}).raise ("SCOOP Wait Condition Retry Limit Reached")
+			elseif l_wait_condition_counter > 0 then
+					-- Yield processor if we are retrying a wait condition.
+				processor_cpu_yield
 			end
 
 				-- Retrieve request chain meta data structure.

@@ -56,7 +56,7 @@ feature {NONE}  -- Initlization
 
 feature -- Command
 
-	set_drop_actions (a_actions: EV_PND_ACTION_SEQUENCE)
+	set_drop_actions (a_actions: SD_CONTENT_PND_ACTION_SEQUENCE)
 			-- Set drop actions to Current
 		require
 			not_destroyed: not is_destroyed
@@ -156,7 +156,7 @@ feature -- Command
 
 feature -- Query
 
-	drop_actions: detachable EV_PND_ACTION_SEQUENCE
+	drop_actions: detachable SD_CONTENT_PND_ACTION_SEQUENCE
 			-- Drop actions
 
 	internal_draw_pixmap: BOOLEAN

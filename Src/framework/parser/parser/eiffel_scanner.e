@@ -935,7 +935,7 @@ end
 					if has_syntax_warning and then syntax_version /= obsolete_64_syntax then
 						report_one_warning (
 							create {SYNTAX_WARNING}.make (line, column, filename,
-								once "Usage of `indexing' has been replace by `note'."))
+								once "Usage of `indexing' has been replaced by `note'."))
 					end
 
 				end

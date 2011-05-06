@@ -49,7 +49,7 @@ feature -- C callback function
 			when remove_processor_reference_task_id then
 				remove_processor_reference (supplier_processor_id)
 			else
---				check invalid_task: False end
+				check invalid_task: False end
 			end
 		end
 

@@ -1,0 +1,11 @@
+test_name 	agent-third-formal-finalization
+test_description Finalizing a system where you call an agent with a manifest tuple involving the third or more generic parameter of the current class would cause the compiler to crash when trying to optimize the manifest tuple.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+
+compile_final
+compile_result 	ok
+
+test_end

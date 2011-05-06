@@ -130,11 +130,6 @@ rt_public void eif_log_call (EIF_SCP_PID p, call_data * a)
 	CHECK("Target attached", t);
 	RTS_TCB(scoop_task_add_call,p,RTS_PID(t),0,a,NULL);
 }
- 
-rt_public void eif_try_call (call_data * a)
-{
-	a -> pattern (a);
-}
 
 #endif /* WORKBENCH */
 

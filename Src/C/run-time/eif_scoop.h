@@ -65,11 +65,13 @@ typedef struct call_data {
 #ifdef WORKBENCH
 rt_public void eif_log_call (int static_type_id, int feature_id, EIF_SCP_PID current_pid, call_data * data);
 rt_public void eif_log_callp (int origin, int offset, EIF_SCP_PID current_pid, call_data * data);
+rt_public void eif_try_call (call_data * a);
 #else
 rt_public void eif_log_call (EIF_SCP_PID p, call_data * a);
+#define eif_try_call(a) ((call_data *)a)->pattern (a);
 #endif
 
-rt_public void eif_try_call (call_data * a);
+
 rt_public void eif_free_call (call_data * a);
 rt_public EIF_BOOLEAN eif_is_uncontrolled (EIF_SCP_PID c, EIF_SCP_PID s);
 
@@ -78,6 +80,15 @@ rt_public EIF_BOOLEAN eif_is_uncontrolled (EIF_SCP_PID c, EIF_SCP_PID s);
 rt_public void eif_request_chain_push (EIF_REFERENCE c, struct stack * stk);      /* Push client `c' on the request chain stack `stk' without notifying SCOOP mananger. */
 rt_public void eif_request_chain_pop (struct stack * stk);                        /* Pop one element from the request chain stack `stk' without notifying SCOOP mananger. */
 rt_public void eif_request_chain_restore (EIF_REFERENCE * t, struct stack * stk); /* Restore request chain stack `stk' to have the top `t' notifying SCOOP manager about all removed request chains. */
+
+/* Scoop Macros */
+
+#define set_boolean_return_value(a_boolean_typed_value,a_boolean) ((EIF_TYPED_VALUE *) a_boolean_typed_value)->item.b = a_boolean;
+#define set_integer_32_return_value(a_integer_32_typed_value,a_integer) ((EIF_TYPED_VALUE *) a_integer_32_typed_value)->item.i4 = a_integer;
+
+#define call_data_sync_pid(a_call_data) ((call_data*) a_call_data)->sync_pid
+#define call_data_is_lock_passing(a_call_data) ((call_data*) a_call_data)->is_lock_passing
+
 
 #ifdef __cplusplus
 }

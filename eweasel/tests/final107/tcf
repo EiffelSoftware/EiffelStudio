@@ -1,0 +1,19 @@
+
+test_name 	finalize-argument-anchors-formal
+test_description Finalizing a system with a function whose return type is anchored to an argument, where the actual argument is a formal generic, generates C code that won't compile due to a redeclared identifier
+
+copy_sub 	Ace $TEST Ace
+copy_sub 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+copy_raw 	test2.e $CLUSTER test2.e
+
+compile_final
+compile_result 	ok
+
+c_compile_final
+c_compile_result ok
+
+execute_final	NONE exec_output
+compare		exec_output output
+
+test_end

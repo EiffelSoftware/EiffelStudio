@@ -1232,6 +1232,7 @@ test	inline-inherited-routine-with-less-generics-2	final103 tcf fail finalizing 
 test	finalize-wrong-generating-type		final104 tcf fail finalizing expanded
 test	inlining-parent-with-less-formals	final105 tcf fail finalizing inlining
 test	inlining-in-parent-with-child-with-less-formals final106 tcf fail finalizing inlining
+test	finalize-argument-anchors-formal	final107 tcf fail finalizing anchored_type
 
 -- Runtime
 test	gc-tracking-001					runtime001	tcf pass runtime

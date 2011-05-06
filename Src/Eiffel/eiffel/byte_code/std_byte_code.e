@@ -2009,7 +2009,6 @@ feature -- Inlining
 	pre_inlined_code: like Current
 		local
 			old_bc: BYTE_CODE
-			i, nb: INTEGER
 		do
 			check
 				no_rescue: rescue_clause = Void

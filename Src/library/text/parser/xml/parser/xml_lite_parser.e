@@ -289,9 +289,6 @@ feature {NONE} -- Implementation: parse
 			att: like next_attribute_data
 			done: BOOLEAN
 			l_callbacks: like callbacks
-			p: INTEGER
-			l_prefix: detachable STRING
-			l_localname: STRING
 		do
 			t := next_tag
 			l_callbacks := callbacks
@@ -353,7 +350,6 @@ feature {NONE} -- Implementation: parse
 		local
 			t: like next_tag
 			c: CHARACTER
-			p: INTEGER
 		do
 			t := next_tag
 			c := current_character
@@ -1335,7 +1331,7 @@ feature {NONE} -- Factory: cache
 
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

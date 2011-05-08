@@ -11,7 +11,7 @@ inherit
 
 	ACTION
 		redefine
-			execute, init
+			execute, start
 		end
 
 create
@@ -142,8 +142,8 @@ feature {NONE}
 				session_control.reset
 				io.new_line
 			else
-				if session_control.warning_message.count /= 0 then
-					io.putstring (session_control.warning_message)
+				if session_control.warning_message_32.count /= 0 then
+					io.putstring (session_control.warning_message_32)
 					io.new_line
 				end
 			end
@@ -187,7 +187,7 @@ feature {NONE}
 			end
 		end
 
-	init
+	start
 			-- This method is used by the class DB_SELECTION, and is executed after the first
 			-- iteration step of 'load_result', it provides some facilities to control, manage, and/or
 			-- display data resulting of a query.

@@ -31,6 +31,7 @@ feature
 		end
 
 	next_parser: separate EIFFEL_PARSER
+			-- Retrieve next parser.
 		local
 			l_index: INTEGER
 		do
@@ -39,6 +40,7 @@ feature
 			end
 
 			l_index := current_parser_index + 1
+			current_parser_index := l_index
 			if l_index < parsers.count then
 				Result := parsers.i_th (l_index)
 			else

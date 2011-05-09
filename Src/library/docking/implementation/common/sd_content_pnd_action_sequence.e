@@ -44,14 +44,17 @@ feature -- Command
 	call (event_data: detachable TUPLE [ANY])
 			-- <Precursor>
 		do
-			if not content.are_actions_ignored then
+			if attached content as l_content and then
+				not l_content.are_actions_ignored then
 				Precursor (event_data)
+			else
+				check should_not_happen: False end
 			end
 		end
 
 feature {NONE} -- Implementation
 
-	content: SD_CONTENT
+	content: detachable SD_CONTENT
 			-- Associate content
 
 ;note

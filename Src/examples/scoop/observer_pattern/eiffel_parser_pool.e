@@ -41,7 +41,7 @@ feature
 
 			l_index := current_parser_index + 1
 			current_parser_index := l_index
-			if l_index < parsers.count then
+			if l_index <= parsers.count then
 				Result := parsers.i_th (l_index)
 			else
 				parser_creation.apply

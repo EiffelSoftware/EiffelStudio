@@ -36,7 +36,6 @@ feature -- Command
 		do
 			from
 				l_new_cursor := a_modes.new_cursor
-				l_new_cursor.start
 			until
 				l_new_cursor.after
 			loop

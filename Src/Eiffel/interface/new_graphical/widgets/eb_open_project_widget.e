@@ -547,7 +547,7 @@ feature {NONE} -- Initialization
 			create li
 			l_row.set_item (name_column_index, li)
 			create lc
-			lc.pointer_button_press_actions.force_extend (agent on_choose_target (lc))
+			lc.pointer_button_release_actions.force_extend (agent on_choose_target (lc))
 			l_row.set_item (target_column_index, lc)
 			create li.make_with_text (a_project_file.as_string_32)
 			l_row.set_item (path_column_index, li)
@@ -723,8 +723,8 @@ feature {NONE} -- Implementation
 				if is_new_selection or is_initializing then
 					ln.set_text (last_state.system.name)
 					if not last_state.has_missing_target_error then
-						lt.pointer_button_press_actions.wipe_out
-						lt.pointer_button_press_actions.force_extend (agent on_choose_target (lt))
+						lt.pointer_button_release_actions.wipe_out
+						lt.pointer_button_release_actions.force_extend (agent on_choose_target (lt))
 						lt.deactivate_actions.wipe_out
 						lt.deactivate_actions.extend (agent on_target_selected (lt.row))
 						update_targets (lt)
@@ -1292,7 +1292,7 @@ invariant
 	post_project_selected_actions_not_void: post_project_selected_actions /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

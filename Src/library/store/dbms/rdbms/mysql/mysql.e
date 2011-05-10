@@ -540,6 +540,7 @@ feature -- External features
 				l_count <= max_len
 			end
 			create l_str.make (l_count)
+			l_str.set_count (l_count)
 			from
 				i := 1
 			until
@@ -548,7 +549,6 @@ feature -- External features
 				l_str.put (l_area.read_integer_8 (i - 1).to_character_8, i)
 				i := i + 1
 			end
-			l_str.set_count (l_count)
 			l_str32 := utf8_to_utf32 (l_str)
 			ar.wipe_out
 			ar.append (l_str32)

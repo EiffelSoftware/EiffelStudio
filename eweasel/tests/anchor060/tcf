@@ -1,0 +1,17 @@
+test_name 	 qat-in-creation-procedure
+test_description Calling a creation procedure where one of the argument is anchored to a type which involves a qat on a formal generic parameter violates a precondition at degree 3 and a crash at degree -1.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test1.e $CLUSTER test1.e
+
+compile_melted
+compile_result	ok
+
+compile_frozen
+compile_result	ok
+
+compile_final
+compile_result	ok
+
+test_end

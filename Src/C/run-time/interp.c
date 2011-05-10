@@ -532,10 +532,9 @@ rt_public void xinitint(void)
 
 #ifdef EIF_THREADS
 /*
- * Create request chain with the specified number of uncontrolled arguments
- * and wait when they are ready.
+ * Create request chain wait until they are ready.
  */
-rt_private void initialize_request_chain (uint32 uarg, EIF_NATURAL_64 usep, EIF_REFERENCE * volatile * qq, EIF_REFERENCE * volatile * qqt)
+rt_private void initialize_request_chain (EIF_REFERENCE * volatile * qq, EIF_REFERENCE * volatile * qqt)
 {
 	/* Define indirect variable that is used to keep track of request chain stack. */
 #define q (*qq)
@@ -883,7 +882,7 @@ rt_private void interpret(int flag, int where)
 		if ((*IC != BC_PRECOND) && (*IC != BC_START_CATCALL)) {
 #ifdef EIF_THREADS
 				/* Initialize request chain if required. */
-			if (uarg) initialize_request_chain (uarg, usep, &q, &qt);
+			if (uarg) initialize_request_chain (&q, &qt);
 #endif
 			goto enter_body; /* Start execution of a routine body. */
 		}
@@ -1037,7 +1036,7 @@ rt_private void interpret(int flag, int where)
 #endif
 #ifdef EIF_THREADS
 			/* Initialize request chain if required. */
-		if (uarg) initialize_request_chain (uarg, usep, &q, &qt);
+		if (uarg) initialize_request_chain (&q, &qt);
 			/* Record offset of a precondition block to repeat the check
 			   for failing wait conditions. */
 		pre_start = IC - 1;
@@ -1104,7 +1103,7 @@ rt_private void interpret(int flag, int where)
 		if (*IC != BC_PRECOND) {
 #ifdef EIF_THREADS
 				/* Initialize request chain if required. */
-			if (uarg) initialize_request_chain (uarg, usep, &q, &qt);
+			if (uarg) initialize_request_chain (&q, &qt);
 #endif
 			goto enter_body; /* Start execution of a routine body. */
 		}
@@ -3010,16 +3009,26 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_ARG\n");
 #endif
-		code = get_int16(&IC);				/* Get number (from 1 0x0000000001ee0528to argnum) */
+		code = get_int16(&IC);				/* Get number (from 1 to argnum) */
 		last = iget();
 		memcpy (last, arg(code), ITEM_SZ);
+		break;
+
 #ifdef EIF_THREADS
+	/*
+	 * Argument that may trigger a wait condition.
+	 */
+	case BC_WAIT_ARG:
+#ifdef DEBUG
+		dprintf(2)("BC_WAIT_ARG\n");
+#endif
+		code = get_int16(&IC);				/* Get number (from 1 to argnum) */
 			/* Record if an uncontrolled argument is used. */
 		if (pre_start && (usep & ((EIF_NATURAL_64) 1) << (code - 1))) {
 			has_uncontrolled_argument = '\1';
 		}
-#endif /* EIF_THREADS */
 		break;
+#endif /* EIF_THREADS */
 
 	/*
 	 * And then operator (left value).

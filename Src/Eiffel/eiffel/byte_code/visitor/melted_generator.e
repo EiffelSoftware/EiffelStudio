@@ -2214,6 +2214,7 @@ feature {NONE} -- Implementation
 		local
 			l_context: like context
 			l_ba: like ba
+			s: TRAVERSABLE_SUBSET [INTEGER_32]
 		do
 			l_context := context
 			l_ba := ba
@@ -2244,7 +2245,25 @@ feature {NONE} -- Implementation
 				l_ba.append (Bc_tag)
 				l_ba.append_raw_string (a_node.tag)
 			end
-
+				-- It's possible that there is a wait condition.
+				-- Whether this is true or not is detected at run-time
+				-- by inspecting if the argument used in the precondition
+				-- as a separate target is controlled or not.
+			separate_target_collector.clean
+			a_node.expr.process (separate_target_collector)
+			if separate_target_collector.has_separate_target then
+					-- Enumerate all separate arguments used as a target of a call.
+				s := separate_target_collector.target
+				from
+					s.start
+				until
+					s.after
+				loop
+					l_ba.append (bc_wait_arg)
+					l_ba.append_short_integer (s.item)
+					s.forth
+				end
+			end
 				-- Assertion byte code
 			a_node.expr.process (Current)
 			l_ba.append (Bc_end_pre)
@@ -2578,6 +2597,14 @@ feature -- Type information
 					-- Generate full type info.
 				t.make_full_type_byte_code (b, context.context_class_type.type)
 			end
+		end
+
+feature {NONE} -- SCOOP
+
+	separate_target_collector: SEPARATE_TARGET_COLLECTOR
+			-- Visitor to detect wait conditions.
+		once
+			create Result
 		end
 
 note

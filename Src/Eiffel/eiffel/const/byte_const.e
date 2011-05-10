@@ -242,8 +242,11 @@ feature -- Access
 	Bc_creation:		CHARACTER = '%/164/';
 	Bc_pcreation:		CHARACTER = '%/165/';
 
+		-- Wait conditions
+	Bc_wait_arg:		CHARACTER = '%/166/'
+			-- Argument that may trigger a wait condition if it is uncontrolled.
+
 		-- Unused opcode
-	Bc_notused_166:		CHARACTER = '%/166/';
 	Bc_notused_167:		CHARACTER = '%/167/';
 
 		-- Manifest tuple

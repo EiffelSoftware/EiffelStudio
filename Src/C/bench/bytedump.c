@@ -212,7 +212,7 @@ static  char    *names [] = {
 "BC_GUARD" ,
 "BC_CREATION" ,
 "BC_PCREATION" ,
-"BC_NOTUSED_166" ,
+"BC_WAIT_ARG" ,
 "BC_NOTUSED_167" ,
 "BC_TUPLE",
 "BC_PTUPLE",
@@ -1075,6 +1075,7 @@ static  void    print_instructions (void)
 				fprintf (ofp,"%d", (int) get_int16(&ip));
 				break;
 			case  BC_ARG :
+			case  BC_WAIT_ARG :
 				/* Access to argument */
 				/* Argument index */
 				fprintf (ofp,"%d ", (int) get_int16(&ip));

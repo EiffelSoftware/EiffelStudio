@@ -41,7 +41,7 @@ create
 feature {NONE} -- Initialization and reinitialization
 
 	make (q: like qualifier; c: like chain; w: like class_id)
-			-- Cr
+			-- Create descriptor with qualifier `q' and feature names `c' written in class `w'.
 		require
 			q_attached: attached q
 			c_attached: attached c

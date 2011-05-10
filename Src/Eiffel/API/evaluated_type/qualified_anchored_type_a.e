@@ -20,6 +20,7 @@ inherit
 			has_like,
 			initialize_info,
 			formal_instantiated_in,
+			formal_instantiation_in,
 			instantiated_in,
 			instantiation_in,
 			is_explicit,
@@ -74,7 +75,7 @@ feature -- Properties
 			-- Feature name IDs of the second part of the type, after the `qualifier'
 
 	class_id: INTEGER
-			-- ID if a class where this type is written
+			-- ID of a class where this type is written
 
 feature {TYPE_A_CHECKER} -- Properties
 
@@ -411,6 +412,17 @@ feature -- Primitives
 			Result := t
 		end
 
+	formal_instantiation_in (type: TYPE_A; constraint: TYPE_A; written_id: INTEGER): TYPE_A
+			-- <Precursor>
+		local
+			t: like Current
+		do
+			t := twin
+			t.set_actual_type (actual_type.formal_instantiation_in (type, constraint, written_id).actual_type)
+			t.set_qualifier (qualifier.formal_instantiation_in (type, constraint, written_id))
+			Result := t
+		end
+
 	instantiation_in (type: TYPE_A; written_id: INTEGER): TYPE_A
 			-- <Precursor>
 		local
@@ -496,7 +508,7 @@ feature {NONE} -- Lookup
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

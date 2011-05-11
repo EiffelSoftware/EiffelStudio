@@ -17,12 +17,18 @@ feature {NONE} -- Creation
 feature -- Access
 
 	item: INTEGER
-			-- Current value
+			-- Current value.
 
 	next: INTEGER
-			-- Next value
+			-- Next value.
 		do
 			Result := item + 1
+		end
+
+	real_value: REAL_64
+			-- `item' as {REAL_64}.
+		do
+			Result := item
 		end
 
 feature -- Modification

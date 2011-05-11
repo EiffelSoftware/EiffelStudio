@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-7-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-7-0 http://www.eiffel.com/developers/xml/configuration-1-7-0.xsd" name="search_insert_delete" uuid="9DC8A4DC-A1D0-4801-BBD2-7E154188E486">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-8-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-8-0 http://www.eiffel.com/developers/xml/configuration-1-8-0.xsd" name="search_insert_delete" uuid="9DC8A4DC-A1D0-4801-BBD2-7E154188E486">
 	<target name="search_insert_delete">
+		<note>
+			<eis name="Search-insert-delete" protocol="" src="$(ISE_DOC)/book/solutions/Search-insert-delete"/>
+		</note>
 		<root class="SEARCH_INSERT_DELETE" feature="make"/>
 		<option is_attached_by_default="true" void_safety="all">
 		</option>

@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-8-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-8-0 http://www.eiffel.com/developers/xml/configuration-1-8-0.xsd" name="faneuil_hall" uuid="E3698390-50F1-4BE2-8768-F4060DB3228D">
 	<target name="faneuil_hall">
+		<note>
+			<eis name="Faneuil Hall" protocol="" src="$(ISE_DOC)/book/solutions/faneuil-hall"/>
+		</note>
 		<root class="FANEUIL_HALL" feature="make"/>
 		<option is_attached_by_default="true" void_safety="all" syntax="provisional">
 		</option>

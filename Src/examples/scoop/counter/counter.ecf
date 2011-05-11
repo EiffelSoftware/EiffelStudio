@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-8-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-8-0 http://www.eiffel.com/developers/xml/configuration-1-8-0.xsd" name="counter" uuid="214B5C83-F1DC-43E0-8C41-58C0397436C7">
 	<target name="counter">
+		<note>
+			<eis name="Counter" protocol="" src="$(ISE_DOC)/book/solutions/counter"/>
+		</note>
 		<root class="APPLICATION" feature="make"/>
 		<option is_attached_by_default="true" void_safety="all" syntax="provisional">
 		</option>

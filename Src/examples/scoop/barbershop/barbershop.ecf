@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-8-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-8-0 http://www.eiffel.com/developers/xml/configuration-1-8-0.xsd" name="barbershop" uuid="33DF365C-9B25-4F7B-8574-C4E480DAD8FA">
 	<target name="barbershop">
+		<note>
+			<eis name="Barbershop" protocol="" src="$(ISE_DOC)/book/solutions/Barbershop"/>
+		</note>
 		<root class="BARBERSHOP" feature="make"/>
 		<option is_attached_by_default="true" void_safety="all" syntax="provisional">
 		</option>

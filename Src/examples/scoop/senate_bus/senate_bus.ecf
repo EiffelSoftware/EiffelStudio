@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-7-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-7-0 http://www.eiffel.com/developers/xml/configuration-1-7-0.xsd" name="senate_bus" uuid="6652B9FA-75F0-469A-89CC-227AC33680AA">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-8-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-8-0 http://www.eiffel.com/developers/xml/configuration-1-8-0.xsd" name="senate_bus" uuid="6652B9FA-75F0-469A-89CC-227AC33680AA">
 	<target name="senate_bus">
+		<note>
+			<eis name="Senate Bus" src="$(ISE_DOC)/book/solutions/senate-bus"/>
+		</note>
 		<root class="SENATE_BUS" feature="make"/>
 		<option cat_call_detection="false" is_attached_by_default="true" void_safety="all">
 		</option>

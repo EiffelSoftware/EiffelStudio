@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-7-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-7-0 http://www.eiffel.com/developers/xml/configuration-1-7-0.xsd" name="dining_philosophers" uuid="270908EC-27F2-43B8-AA3C-83A3A5F5269D">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-8-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-8-0 http://www.eiffel.com/developers/xml/configuration-1-8-0.xsd" name="dining_philosophers" uuid="270908EC-27F2-43B8-AA3C-83A3A5F5269D">
 	<target name="dining_philosophers">
+		<note>
+			<eis name="Dining Philosophers" protocol="" src="$(ISE_DOC)/book/solutions/dining-philosophers"/>
+		</note>
 		<root class="APPLICATION" feature="make"/>
 		<option full_class_checking="true" is_attached_by_default="true" void_safety="all">
 		</option>

@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-8-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-8-0 http://www.eiffel.com/developers/xml/configuration-1-8-0.xsd" name="producer_consumer" uuid="88EF0D25-EB19-4ECA-8F71-403887FC8075">
 	<target name="producer_consumer">
+		<note>
+			<eis name="Producer-consumer" protocol="" src="$(ISE_DOC)/book/solutions/Producer-consumer"/>
+		</note>
 		<root class="PRODUCER_CONSUMER" feature="make"/>
 		<option is_attached_by_default="true" void_safety="all" syntax="provisional">
 		</option>
@@ -17,4 +20,3 @@
 		</cluster>
 	</target>
 </system>
-

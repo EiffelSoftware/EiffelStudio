@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-7-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-7-0 http://www.eiffel.com/developers/xml/configuration-1-7-0.xsd" name="quicksort" uuid="C6F5412E-6850-47DA-921D-655121272996">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-8-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-8-0 http://www.eiffel.com/developers/xml/configuration-1-8-0.xsd" name="quicksort" uuid="C6F5412E-6850-47DA-921D-655121272996">
 	<target name="quicksort">
+		<note>
+			<eis name="Quicksort" protocol="" src="$(ISE_DOC)/book/solutions/Quicksort"/>
+		</note>
 		<root class="APPLICATION" feature="make"/>
 		<option is_attached_by_default="true" void_safety="all">
 		</option>

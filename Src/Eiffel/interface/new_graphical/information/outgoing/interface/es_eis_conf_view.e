@@ -128,7 +128,10 @@ feature -- Operation
 					create {ES_BOOLEAN_PREFERENCE_SETTING}.make (preferences.dialog_data.confirm_delete_eis_entries_prefernce, True))
 				l_request.set_title (interface_names.t_eiffelstudio_question)
 				l_request.show_on_active_window
-				if l_request.dialog_result = dialog_buttons.cancel_button then
+				if
+					l_request.dialog_result = dialog_buttons.cancel_button or else
+					l_request.dialog_result = dialog_buttons.no_button
+				then
 					l_cancelled := True
 				end
 

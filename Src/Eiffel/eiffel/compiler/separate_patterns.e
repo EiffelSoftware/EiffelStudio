@@ -111,8 +111,9 @@ feature -- Generation
 						-- This pattern may fit attribute call stub.
 					is_attribute := True
 				end
+				buffer.put_character ('(')
 				p.result_type.generate_function_cast (buffer, p.argument_type_array, False)
-				buffer.put_string ("(a -> feature.address) (eif_access (a -> target)")
+				buffer.put_string ("(a -> feature.address)) (eif_access (a -> target)")
 				if attached p.argument_types as a then
 						-- This pattern cannot be used for attribute call stub.
 					is_attribute := False

@@ -38,9 +38,9 @@ feature -- Waiting
 
 	wait (a: separate A)
 		local
-			i: INTEGER
+			r: REAL_64
 		do
-			i := a.item
+			r := a.real_value
 		end
 
 end

@@ -1233,6 +1233,7 @@ test	finalize-wrong-generating-type		final104 tcf fail finalizing expanded
 test	inlining-parent-with-less-formals	final105 tcf fail finalizing inlining
 test	inlining-in-parent-with-child-with-less-formals final106 tcf fail finalizing inlining
 test	finalize-argument-anchors-formal	final107 tcf fail finalizing anchored_type
+test	finalize-external-invariant-skipped	final108 tcf fail finalizing assertions external
 
 -- Runtime
 test	gc-tracking-001					runtime001	tcf pass runtime

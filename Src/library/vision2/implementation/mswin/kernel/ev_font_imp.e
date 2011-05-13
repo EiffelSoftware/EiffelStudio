@@ -306,16 +306,19 @@ feature {EV_FONTABLE_IMP, EV_FONT_DIALOG_IMP, EV_CHARACTER_FORMAT_IMP, EV_ENVIRO
 
 	set_by_wel_font (wf: WEL_FONT)
 			-- Set state by passing an already created WEL_FONT.
+		local
+			l_log_font: like wel_log_font
 		do
 			wel_font := wf
-			Wel_log_font.update_by_font (wel_font)
-			shape := convert_font_shape(Wel_log_font.italic)
-			weight := convert_font_weight(Wel_log_font.weight)
-			family := convert_font_family(Wel_log_font.family,
-				Wel_log_font.pitch)
+			l_log_font := wel_log_font
+			l_log_font.update_by_font (wf)
+			shape := convert_font_shape (l_log_font.italic)
+			weight := convert_font_weight (l_log_font.weight)
+			family := convert_font_family (l_log_font.family,
+				l_log_font.pitch)
 			preferred_families.wipe_out
-			preferred_families.extend (Wel_log_font.face_name.twin)
-			internal_face_name := Wel_log_font.face_name.twin
+			internal_face_name := l_log_font.face_name
+			preferred_families.extend (internal_face_name)
 		end
 
 feature {EV_ANY_I} -- Implementation

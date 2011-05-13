@@ -16,7 +16,6 @@ class
 inherit
 	WEL_CHARACTER_FORMAT
 		redefine
-			c_size_of_charformat,
 			structure_size
 		end
 
@@ -28,8 +27,10 @@ feature -- Measurement
 
 	structure_size: INTEGER
 			-- Size to allocate (in bytes)
-		once
-			Result := c_size_of_charformat
+		external
+			"C [macro %"redit.h%"]"
+		alias
+			"sizeof (CHARFORMAT2)"
 		end
 
 feature -- Status report
@@ -87,6 +88,7 @@ feature -- Status setting
 			color_ref_not_void: color_ref /= Void
 		do
 			add_mask (cfm_backcolor)
+			remove_effects (cfe_autobackcolor)
 			cwel_charformat_set_crbackcolor (item, color_ref.item)
 		end
 
@@ -127,13 +129,6 @@ feature -- Status setting
 		end
 
 feature {NONE} -- Externals
-
-	c_size_of_charformat: INTEGER
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"sizeof (CHARFORMAT2)"
-		end
 
 	cwel_charformat_get_crbackcolor (ptr: POINTER): INTEGER
 		external
@@ -206,14 +201,14 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

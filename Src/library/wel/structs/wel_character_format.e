@@ -324,6 +324,7 @@ feature -- Element change
 			a_color_not_void: a_color /= Void
 		do
 			add_mask (Cfm_color)
+			remove_effects (cfe_autocolor)
 			cwel_charformat_set_crtextcolor (item, a_color.item)
 		ensure
 			text_color_set: text_color.item = a_color.item
@@ -520,18 +521,13 @@ feature -- Measurement
 
 	structure_size: INTEGER
 			-- Size to allocate (in bytes)
-		once
-			Result := c_size_of_charformat
-		end
-
-feature {NONE} -- Externals
-
-	c_size_of_charformat: INTEGER
 		external
 			"C [macro <charfmt.h>]"
 		alias
 			"sizeof (CHARFORMAT)"
 		end
+
+feature {NONE} -- Externals
 
 	cwel_charformat_set_cbsize (ptr: POINTER; value: INTEGER)
 		external
@@ -626,7 +622,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

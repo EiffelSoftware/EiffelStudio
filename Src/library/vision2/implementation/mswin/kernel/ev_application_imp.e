@@ -244,8 +244,8 @@ feature {NONE} -- Implementation
 	Application_windows_id: ARRAYED_LIST [POINTER]
 			-- All user created windows in the application.
 			--| For internal use only.
-		once ("PROCESS")
-			create Result.make (5)
+		once
+			create {ARRAYED_LIST [POINTER]} Result.make (5)
 		ensure
 			not_void: Result /= Void
 		end
@@ -262,6 +262,14 @@ feature {EV_ANY_I}-- Status report
 			-- List of current EV_WINDOWs.
 			--| This was introduced to allow the previous internal
 			--| implementation to be kept although changing the interface.
+		do
+			Result := windows_internal (True)
+		end
+
+feature {EV_WIDGET_IMP} -- Implementation
+
+	windows_internal (a_include_hidden: BOOLEAN): LINEAR [EV_WINDOW]
+			-- Implementation for `windows', use `a_include_hidden' to include hidden Windows in result.
 		local
 			ev_win: detachable EV_WINDOW_IMP
 			res: ARRAYED_LIST [EV_WINDOW]
@@ -276,7 +284,10 @@ feature {EV_ANY_I}-- Status report
 				if is_window (Application_windows_id.item) then
 					ev_win ?= window_of_item (Application_windows_id.item)
 					if ev_win /= Void then
-						res.extend (ev_win.attached_interface)
+						if (not a_include_hidden) implies ev_win.is_displayed then
+								-- If not including hidden then we only want displayed windows.
+							res.extend (ev_win.attached_interface)
+						end
 						Application_windows_id.forth
 					else
 							-- Object has been collected, we remove it
@@ -405,10 +416,11 @@ feature {EV_PICK_AND_DROPABLE_IMP, EV_DOCKABLE_SOURCE_IMP} -- Status Report
 		-- really starts?
 		--| This allows us to check globally.
 
-
 	start_awaiting_movement
 			-- Assign `True' to `awaiting_movement'.
 		do
+				-- Update screen dc of pnd screen in case it has changed.
+			pnd_screen.implementation.refresh_graphics_context
 			awaiting_movement := True
 		end
 
@@ -524,20 +536,30 @@ feature -- Tooltips
 			internal_tooltip_not_void: Result /= Void
 		end
 
-feature {NONE} -- WEL Implemenation
+feature {NONE} -- WEL Implementation
 
 	controls_dll: WEL_INIT_COMMCTRL_EX
 			-- Needed for loading the common controls dlls.
-
-	rich_edit_dll: WEL_RICH_EDIT_DLL
-			-- Needed if the user want to open a rich edit control.
 
 	init_application
 			-- Load the dll needed sometimes.
 		do
 			create controls_dll.make_with_flags (Icc_win95_classes |
 				Icc_date_classes | Icc_userex_classes | Icc_cool_classes)
-			create rich_edit_dll.make
+		end
+
+feature {EV_RICH_TEXT_I} -- WEL Rich Text Initialization
+
+	rich_edit_dll: detachable WEL_RICH_EDIT_DLL
+		-- DLL needed for rich edit control.
+
+	initialize_rich_text_control
+			-- Initialize dll for rich edit control.
+		do
+				-- Load the dll if not already done so.
+			if rich_edit_dll = Void then
+				create rich_edit_dll.make
+			end
 		end
 
 feature {NONE} -- Implementation

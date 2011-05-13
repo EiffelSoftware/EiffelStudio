@@ -90,8 +90,10 @@ feature -- Initialization
 			wel_make
 			set_default_format
 			set_text_color (create {WEL_COLOR_REF}.make_rgb (0, 0, 0))
-			wel_set_background_color (create {WEL_COLOR_REF}.make_rgb (255, 255, 255))
-				-- Retreive default font into `log_font' to ensure  `wel_screen_font_family'
+				-- Internally set the background color to its default.
+				-- Set default background color to white without altering masks or effects.
+			cwel_charformat_set_crbackcolor (item, (create {WEL_COLOR_REF}.make_rgb (255, 255, 255)).item)
+				-- Retrieve default font into `log_font' to ensure  `wel_screen_font_family'
 				-- is set correctly.
 			l_font := default_wel_log_font
 			set_is_initialized (True)
@@ -219,7 +221,6 @@ feature -- Status setting
 			color_imp ?= a_color.implementation
 			check color_imp /= Void end
 			wel_set_background_color (color_imp)
-			bcolor_set := True
 		end
 
 	set_effects (an_effect: EV_CHARACTER_FORMAT_EFFECTS)
@@ -346,6 +347,12 @@ feature {EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Implementation
 			-- Blue, Green, Red
 		do
 			Result := wel_background_color.item
+		end
+
+	bcolor_set: BOOLEAN
+			-- Has `bcolor' been set explicitly via `bcolor_set'?
+		do
+			Result := flag_set (mask, Cfm_backcolor) and then not flag_set (wel_effects, cfe_autobackcolor)
 		end
 
 	is_striked_out: BOOLEAN

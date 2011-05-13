@@ -222,6 +222,8 @@ feature -- Initialization
 			screen_dc: WEL_SCREEN_DC
 			logical_pixels: INTEGER
 		do
+				-- Make sure that the rich text control dll is loaded.
+			application_imp.initialize_rich_text_control
 				-- Connect events to `tab_positions' to update `Current' as values
 				-- change.
 			create tab_positions
@@ -311,24 +313,17 @@ feature -- Status report
 			Result := internal_selected_character_format
 		end
 
-	reusable_character_format: EV_CHARACTER_FORMAT
-			-- Reusable character format for querying `Current'.
-		once
-			create Result
-		end
-
 	internal_selected_character_format: EV_CHARACTER_FORMAT
 			-- Implementation for `selected_character_format'. No preconditions permit
 			-- calling even when there is no selection as required by some implementation
 			-- features.
 		local
-			char_imp: detachable EV_CHARACTER_FORMAT_IMP
+			l_char_format: detachable EV_CHARACTER_FORMAT_IMP
 		do
-			Result := reusable_character_format
-			char_imp ?= Result.implementation
-			check char_imp /= Void end
-			{WEL_API}.send_message (wel_item, em_getcharformat, to_wparam (1), char_imp.item)
-			Result := Result.twin
+			create Result
+			l_char_format ?= Result.implementation
+			check l_char_format /= Void end
+			{WEL_API}.send_message (wel_item, em_getcharformat, to_wparam (scf_selection), l_char_format.item)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -416,7 +411,7 @@ feature -- Status report
 				set_selection (start_index, end_index - 1)
 			end
 			create wel_character_format.make
-			{WEL_API}.send_message (wel_item, em_getcharformat, to_wparam (1), wel_character_format.item)
+			{WEL_API}.send_message (wel_item, em_getcharformat, to_wparam (scf_selection), wel_character_format.item)
 			mask := wel_character_format.mask
 			Result := flag_set (mask, cfm_color | cfm_bold | cfm_face | cfm_size | cfm_strikeout | cfm_underline | cfm_italic | cfm_offset | cfm_backcolor)
 			if not range_already_selected then

@@ -29,16 +29,16 @@ feature -- Access
 	Cfm_protected: INTEGER = 16
 			-- The CFE_PROTECTED value of the dwEffects member is
 			-- valid.
-	
+
 	Cfm_revauthor: INTEGER = 32768
 			-- The bRevAuthor member is valid.
-			
+
 	Cfm_spacing: INTEGER = 2097152
 			-- The sSpacing member is valid.
-			
+
 	Cfm_weight: INTEGER = 4194304
 			-- The wWeight member is valid.
-			
+
 	Cfm_underlinetype: INTEGER = 8388608
 			-- The bUnderlineType member is valid.
 
@@ -53,8 +53,8 @@ feature -- Access
 			-- The yOffset member is valid.
 
 	Cfm_size: INTEGER = -2147483648
-			-- The yHeight member is valid.
-			
+			-- The size member is valid.
+
 	Cfm_backcolor: INTEGER = 67108864
 			-- The crBackColor member is valid
 
@@ -62,14 +62,14 @@ feature -- Access
 			-- The bCharSet member is valid.
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

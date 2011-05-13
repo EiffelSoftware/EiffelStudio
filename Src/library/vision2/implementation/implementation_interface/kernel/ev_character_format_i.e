@@ -193,6 +193,8 @@ feature {EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Implementation
 
 	bcolor_set: BOOLEAN
 			-- Has `bcolor' been set explicitly via `bcolor_set'?
+		deferred
+		end
 
 feature {EV_ANY, EV_ANY_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Implementation
 

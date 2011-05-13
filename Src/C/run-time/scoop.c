@@ -95,7 +95,7 @@ rt_public void eif_try_call (call_data * a)
 	for (n = a -> count, i = 0; i < n; i++) {
 		v = iget ();
 		* v = a -> argument [i];
-		if (v -> type == SK_REF) {
+		if ((v -> type & SK_HEAD) == SK_REF) {
 			v -> it_r = eif_access (v -> it_r);
 		}
 	}
@@ -141,7 +141,7 @@ rt_public void eif_free_call (call_data * a)
 		/* Unprotect arguments from being garbage-collected. */
 	for (i = a -> count; i > 0;) {
 		v = &(a -> argument [--i]);
-		if (v -> type == SK_REF) {
+		if ((v -> type & SK_HEAD) == SK_REF) {
 			eif_wean ((EIF_OBJECT) v -> it_r);
 		}
 	}

@@ -548,7 +548,7 @@ rt_private void initialize_request_chain (EIF_REFERENCE * volatile * qq, EIF_REF
 		/* Register reference arguments. */
 	for (n = argnum; n > 0; n--) {
 		EIF_TYPED_VALUE *last = arg(n);
-		if (last -> type == SK_REF && EIF_IS_DIFFERENT_PROCESSOR(icurrent -> it_ref, last -> it_ref)) {
+		if ((last -> type & SK_HEAD) == SK_REF && EIF_IS_DIFFERENT_PROCESSOR(icurrent -> it_ref, last -> it_ref)) {
 			RTS_RS(icurrent -> it_ref, last -> it_ref);
 		}
 	}
@@ -2558,7 +2558,7 @@ rt_private void interpret(int flag, int where)
 				opop ();                /* Remove target of a call. */
 				while (n > 0) {         /* Record arguments of a call. */
 					EIF_TYPED_VALUE * p = opop ();
-					if (p -> type == SK_REF) {
+					if ((p -> type & SK_HEAD) == SK_REF) {
 						RTS_AS(*p, "", p -> type, n, a); /* Record a possibly separate argument. */
 					}
 					else {

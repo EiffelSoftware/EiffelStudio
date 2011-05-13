@@ -14,7 +14,7 @@ create
 feature -- Initialization
 
 	make
-			-- Creation procedure.
+			-- Set up and start quick sort.
 		local
 			l_data_size: INTEGER
 			l_seed: INTEGER
@@ -52,13 +52,13 @@ feature {NONE} -- Implementation
 		-- Maximum size for data.
 
 	print_on_console (a_data: separate DATA)
-			-- Print 'a_data' to the console.
+			-- Print `a_data' to the console.
 		do
 			a_data.print_on_console
 		end
 
 	sort (a_quicksorter: separate QUICKSORTER; a_data: separate DATA)
-			-- Sort 'a_data' with 'a_quicksorter'.
+			-- Sort `a_data' with `a_quicksorter'.
 		do
 			a_quicksorter.sort (a_data, 1)
 		end

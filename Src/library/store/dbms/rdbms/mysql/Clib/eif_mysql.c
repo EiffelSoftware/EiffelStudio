@@ -114,10 +114,10 @@ int eif_mysql_column_type(MYSQL_RES *result_ptr, int ind)
 	field = mysql_fetch_field_direct(result_ptr, ind - 1);
 	type = field->type;
 
-	/* We use charsetnr to determine if the type is binary or nonbinary
-	 * 63 indicate a binary value.
+	/* We use `charsetnr' to determine if the type is binary or nonbinary.
+	 * 63 indicates a binary value.
 	 * See http://dev.mysql.com/doc/refman/5.5/en/c-api-data-structures.html for more detail 
-	*/
+	 */
 	charsetnr = field->charsetnr;
 
 	switch(type) {

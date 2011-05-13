@@ -141,11 +141,60 @@ feature -- Basic operations
 				default_pointer, 0, 0)
 		end
 
+	peek_input_messages
+			-- Peek all mouse and keyboard messages.
+		do
+			last_boolean_result := cwin_peek_message (item,
+				default_pointer, 0, 0, Pm_qs_input | Pm_remove)
+		end
+
+	peek_sent_messages
+			-- Peek all posted messages.
+		do
+			last_boolean_result := cwin_peek_message (item,
+				default_pointer, 0, 0, Pm_qs_sendmessage | Pm_remove)
+		end
+
+	peek_posted_messages
+			-- Peek all posted messages.
+		do
+			last_boolean_result := cwin_peek_message (item,
+				default_pointer, 0, 0, Pm_qs_postmessage | Pm_remove)
+		end
+
 	peek_paint_messages
-			-- Peel all paint messages.
+			-- Peek all paint messages.
 		do
 			last_boolean_result := cwin_peek_message (item,
 				default_pointer, 0, 0, Pm_qs_paint | Pm_remove)
+		end
+
+	peek_input_messages_noremove
+			-- Peek all mouse and keyboard messages.
+		do
+			last_boolean_result := cwin_peek_message (item,
+				default_pointer, 0, 0, Pm_qs_input)
+		end
+
+	peek_sent_messages_noremove
+			-- Peek all posted messages.
+		do
+			last_boolean_result := cwin_peek_message (item,
+				default_pointer, 0, 0, Pm_qs_sendmessage)
+		end
+
+	peek_posted_messages_noremove
+			-- Peek all posted messages.
+		do
+			last_boolean_result := cwin_peek_message (item,
+				default_pointer, 0, 0, Pm_qs_postmessage)
+		end
+
+	peek_paint_messages_noremove
+			-- Peek all paint messages.
+		do
+			last_boolean_result := cwin_peek_message (item,
+				default_pointer, 0, 0, Pm_qs_paint)
 		end
 
 	peek_all

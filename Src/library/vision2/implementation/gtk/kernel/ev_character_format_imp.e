@@ -569,6 +569,9 @@ feature {NONE} -- Implementation
 	bcolor: INTEGER
 			-- background color BGR packed into 24 bit.
 
+	bcolor_set: BOOLEAN
+			-- <Precursor>
+
 	destroy
 			-- Clean up
 		do

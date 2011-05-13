@@ -1058,8 +1058,8 @@ feature {EV_ANY_I} -- Implementation
 			l_test ?= interface
 			if l_test /= Void then
 				l_syn_others := True
-
-				l_windows := application_imp.windows
+					-- Retrieve a list of all visible windows.
+				l_windows := application_imp.windows_internal (False)
 				from
 					l_windows.start
 				until

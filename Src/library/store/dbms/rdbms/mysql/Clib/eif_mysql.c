@@ -36,8 +36,6 @@
  */
 int eif_mysql_column_data(MYSQL_ROW row_ptr, int ind, char *ar, int len)
 {
-	int length;
-
 	if(row_ptr[ind - 1] == NULL)
 		return 0;
 	else {

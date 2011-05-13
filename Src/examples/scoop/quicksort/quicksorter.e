@@ -25,8 +25,6 @@ feature -- Basic operations
 			-- elements
 			l_pivot_element: INTEGER
 
-			-- indices
-			i: INTEGER
 		do
 			-- Initialize.
 
@@ -37,17 +35,14 @@ feature -- Basic operations
 			-- Partition.
 			swap_data_items (a_data, l_left_position, l_pivot_position)
 			l_pivot_position := l_left_position
-			from
-				i := l_left_position + 1
-			until
-				i > l_right_position
+			across ((l_left_position + 1) |..| l_right_position) as ic
 			loop
-				if a_data [i] < a_data [l_left_position] then
+				if a_data [ic.item] < a_data [l_left_position] then
 					l_pivot_position := l_pivot_position + 1
-					swap_data_items (a_data, i, l_pivot_position)
+					swap_data_items (a_data, ic.item, l_pivot_position)
 				end
-				i := i + 1
 			end
+
 			swap_data_items (a_data, l_left_position, l_pivot_position)
 			l_pivot_element := a_data [l_pivot_position]
 
@@ -56,10 +51,13 @@ feature -- Basic operations
 			if l_left_position < l_pivot_position - 1 then
 				-- There is one.
 				-- Sort the left part with another quicksorter.
+				print ("Sorting the left side, " +l_left_position.out+ " to " +(l_pivot_position - 1).out+ " with ")
 				if a_sorting_depth <= max_recursion_depth then
+					print ("a separate quicksorter.%N")
 					create l_left_quicksorter
 					l_left_data := new_data_from_quicksorter (l_left_quicksorter, a_data, l_left_position, l_pivot_position - 1)
 				else
+					print ("the current quicksorter.%N")
 					l_left_quicksorter := Current
 					create {DATA} l_left_data.make_from_other_data (a_data, l_left_position, l_pivot_position - 1)
 				end
@@ -72,10 +70,13 @@ feature -- Basic operations
 			if l_pivot_position + 1 < l_right_position then
 				-- There is one.
 				-- Sort the right part with another quicksorter.
+				print ("Sorting the right side, " +(l_pivot_position + 1).out+ " to " +l_right_position.out+ " with ")
 				if a_sorting_depth <= max_recursion_depth then
+					print ("a separate quicksorter.%N")
 					create l_right_quicksorter
 					l_right_data := new_data_from_quicksorter (l_right_quicksorter, a_data, l_pivot_position + 1, l_right_position)
 				else
+					print ("the current quicksorter.%N")
 					l_right_quicksorter := Current
 					create {DATA} l_right_data.make_from_other_data (a_data, l_pivot_position + 1, l_right_position)
 				end
@@ -147,18 +148,12 @@ feature {QUICKSORTER} -- Implementation
 		require
 			a_output_data_is_big_enough: a_output_data.upper - a_left_position + 1 >= a_input_data.capacity
 		local
-			i: INTEGER
 			l_lower, l_upper: INTEGER
 		do
-			from
-				l_lower := a_input_data.lower
-				l_upper := a_input_data.upper
-				i := l_lower
-			until
-				i > l_upper
-			loop
-				a_output_data.put (a_input_data [i], a_left_position + i - l_lower)
-				i := i + 1
+			l_lower := a_input_data.lower
+			l_upper := a_input_data.upper
+			across (l_lower |..| l_upper) as ic loop
+				a_output_data.put (a_input_data [ic.item], a_left_position + ic.item - l_lower)
 			end
 		end
 

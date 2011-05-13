@@ -458,7 +458,7 @@ feature -- API
 			"return (BOOL) FreeLibrary ((HMODULE) $a_module);"
 		end
 
-	loal_api (a_module: POINTER; a_name: POINTER): POINTER
+	load_api (a_module: POINTER; a_name: POINTER): POINTER
 			-- Load api which name is `a_name' in `a_module'
 		external
 			"C inline use <windows.h>"

@@ -109,15 +109,26 @@ int eif_mysql_column_type(MYSQL_RES *result_ptr, int ind)
 	MYSQL_FIELD *field = (MYSQL_FIELD *) 0;
 	int result = 0;
 	int type = 0;
+	unsigned int charsetnr = 0;
 
 	field = mysql_fetch_field_direct(result_ptr, ind - 1);
 	type = field->type;
+
+	/* We use charsetnr to determine if the type is binary or nonbinary
+	 * 63 indicate a binary value.
+	 * See http://dev.mysql.com/doc/refman/5.5/en/c-api-data-structures.html for more detail 
+	*/
+	charsetnr = field->charsetnr;
 
 	switch(type) {
 		case MYSQL_TYPE_VARCHAR:
 		case MYSQL_TYPE_VAR_STRING:
 		case MYSQL_TYPE_STRING:
-			result = EIF_MYSQL_C_WSTRING_TYPE;
+			if (charsetnr == 63) {
+				result = EIF_MYSQL_C_STRING_TYPE;
+			} else {
+				result = EIF_MYSQL_C_WSTRING_TYPE;
+			}
 			break;
 		case MYSQL_TYPE_DATETIME:
 			result = EIF_MYSQL_C_DATE_TYPE;
@@ -131,7 +142,11 @@ int eif_mysql_column_type(MYSQL_RES *result_ptr, int ind)
 			result = EIF_MYSQL_C_DOUBLE_TYPE;
 			break;
 		case MYSQL_TYPE_BLOB:
-			result = EIF_MYSQL_C_STRING_TYPE;
+			if (charsetnr == 63) {
+				result = EIF_MYSQL_C_STRING_TYPE;
+			} else {
+				result = EIF_MYSQL_C_WSTRING_TYPE;
+			}
 			break;
 		case MYSQL_TYPE_TINY:
 		case MYSQL_TYPE_SHORT:

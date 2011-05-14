@@ -390,7 +390,7 @@ feature -- Inlining
 				-- test#final0978 and test#final094.
 			has_separate_formal_arguments :=
 				attached parameters as p and then
-				across p as parameter some context.real_type (parameter.item.type).is_separate end
+				across p as parameter some context.real_type (parameter.item.attachment_type).is_separate end
 			if not is_once and then not has_separate_formal_arguments then
 				type_i := context_type
 				if not type_i.is_basic then

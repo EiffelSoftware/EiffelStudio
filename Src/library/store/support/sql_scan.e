@@ -44,6 +44,11 @@ inherit
 			is_equal, copy, out
 		end
 
+	GLOBAL_SETTINGS
+		undefine
+			is_equal, copy, out
+		end
+
 create -- Creation procedure
 	make
 
@@ -108,7 +113,7 @@ feature -- Basic operations
 			else
 				if is_integer (obj) then
 					if attached {INTEGER_REF} obj as r_int then
-						if r_int.item = numeric_null_value.truncated_to_integer then
+						if map_zero_null_value and then r_int.item = numeric_null_value.truncated_to_integer then
 							str.append (null_string)
 						else
 							str.append (r_int.out)
@@ -118,7 +123,7 @@ feature -- Basic operations
 					end
 				elseif is_double (obj) then
 					if attached {DOUBLE_REF} obj as r_double then
-						if r_double.item = numeric_null_value then
+						if map_zero_null_value and then r_double.item = numeric_null_value then
 							str.append (null_string)
 						else
 							str.append (r_double.out)
@@ -128,7 +133,7 @@ feature -- Basic operations
 					end
 				elseif is_real (obj) then
 					if attached {REAL_REF} obj as r_real then
-						if r_real.item = numeric_null_value.truncated_to_real then
+						if map_zero_null_value and then r_real.item = numeric_null_value.truncated_to_real then
 							str.append (null_string)
 						else
 							str.append (r_real.out)

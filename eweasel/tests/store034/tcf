@@ -1,0 +1,22 @@
+test_name old-hashtable-retrieval
+test_description Retrieving a HASH_TABLE from pre void-safety era fails with a mismatch when it should not.
+
+define_directory EIFGEN $TEST EIFGENs
+define_directory TARGET $EIFGEN test
+define_directory WCODE $TARGET W_code
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	hash_table_comparator.e $CLUSTER hash_table_comparator.e
+
+compile_melted
+compile_result ok
+
+copy_bin	data $WCODE data
+
+execute_work NONE exec_output
+execute_result ok
+compare		exec_output output
+
+test_end
+

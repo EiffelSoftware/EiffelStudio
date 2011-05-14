@@ -384,10 +384,14 @@ feature -- Inlining
 			entry: ROUT_ENTRY
 			f: FEATURE_I
 			context_class_type, written_class_type: CLASS_TYPE
+			has_separate_formal_arguments: BOOLEAN
 		do
 				-- We have to disable inlining if target is a multi constraint. This fixes eweasel
 				-- test#final0978 and test#final094.
-			if not is_once then
+			has_separate_formal_arguments :=
+				attached parameters as p and then
+				across p as parameter some context.real_type (parameter.item.type).is_separate end
+			if not is_once and then not has_separate_formal_arguments then
 				type_i := context_type
 				if not type_i.is_basic then
 						-- Inline only if it is not polymorphic and if it can be inlined.

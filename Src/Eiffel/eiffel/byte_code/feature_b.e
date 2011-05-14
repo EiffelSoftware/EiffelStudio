@@ -389,6 +389,7 @@ feature -- Inlining
 				-- We have to disable inlining if target is a multi constraint. This fixes eweasel
 				-- test#final0978 and test#final094.
 			has_separate_formal_arguments :=
+				system.is_scoop and then
 				attached parameters as p and then
 				across p as parameter some context.real_type (parameter.item.attachment_type).is_separate end
 			if not is_once and then not has_separate_formal_arguments then

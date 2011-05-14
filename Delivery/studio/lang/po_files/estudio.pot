@@ -24995,9 +24995,9 @@ msgstr ""
 msgid "S&ystem Info"
 msgstr ""
 
-#. Source code: target_concurrency_scoop_name: STRING_GENERAL do Result := locale.translation ("SCOOP (not supported yet)") end
+#. Source code: target_concurrency_scoop_name: STRING_GENERAL do Result := locale.translation ("SCOOP") end
 #: conf_interface_names.e:128
-msgid "SCOOP (not supported yet)"
+msgid "SCOOP"
 msgstr ""
 
 #. Source code: w_source_name_attribute_expected: STRING_32 do Result := locale.translation ("SOURCE name attribute expected") end

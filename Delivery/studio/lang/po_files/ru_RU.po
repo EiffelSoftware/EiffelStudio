@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: EiffelStudio $Revision$\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2011-05-12 09:42+0300\n"
+"PO-Revision-Date: 2011-05-14 10:35+0300\n"
 "Last-Translator: Alexander Kogtenkov <alexk@eiffel.com>\n"
 "Language-Team: Eiffel Software and others <support@eiffel.com>\n"
 "MIME-Version: 1.0\n"
@@ -25283,10 +25283,10 @@ msgstr "Синхронизироват панель контекста"
 msgid "S&ystem Info"
 msgstr "&Информация о системе"
 
-#. Source code: target_concurrency_scoop_name: STRING_GENERAL do Result := locale.translation ("SCOOP (not supported yet)") end
+#. Source code: target_concurrency_scoop_name: STRING_GENERAL do Result := locale.translation ("SCOOP") end
 #: conf_interface_names.e:128
-msgid "SCOOP (not supported yet)"
-msgstr "SCOOP (пока не поддерживается)"
+msgid "SCOOP"
+msgstr "SCOOP"
 
 #. Source code: w_source_name_attribute_expected: STRING_32 do Result := locale.translation ("SOURCE name attribute expected") end
 #: warning_messages.e:942
@@ -34763,14 +34763,14 @@ msgstr "{$1} уже содержит компонент с именем $2."
 msgid "{SPECIAL} is not yet supported"
 msgstr "{SPECIAL} ещё не поддерживается"
 
+#~ msgid "SCOOP (not supported yet)"
+#~ msgstr "SCOOP (пока не поддерживается)"
+
 #~ msgid "Backup"
 #~ msgstr "Резервное копирование"
 
 #~ msgid "Multithreaded"
 #~ msgstr "Многопоточный"
-
-#~ msgid "SCOOP"
-#~ msgstr "SCOOP"
 
 #~ msgid "Edit Execution Parameters"
 #~ msgstr "Редактировать параметры выполнения"

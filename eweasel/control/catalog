@@ -2006,6 +2006,7 @@ test	store-retrieve-transient-attributes	store030 tcf pass storable transient
 test	store-retrieve-with-version	store031 tcf pass storable
 test	store-in-different-thread	store032 tcf pass storable multithreaded
 test	store-bounded-queues-stacks	store033 tcf pass storable
+test	old-hashtable-retrieval		store034 tcf pass storable table
 
 -- Flat, short, flatshort tests
 

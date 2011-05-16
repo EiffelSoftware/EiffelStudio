@@ -319,7 +319,7 @@ rt_public void rout_obj_call_function_dynamic (
 	switch (it->type)
 	{
 		case SK_BOOL: *((EIF_BOOLEAN *) res) = it->it_bool; break;
-		case SK_CHAR8: *((EIF_CHARACTER_32 *) res) = it->it_char; break;
+		case SK_CHAR8: *((EIF_CHARACTER_8 *) res) = it->it_char; break;
 		case SK_REAL64: *((EIF_REAL_64 *)res) = it->it_real64; break;
 		case SK_UINT8: *((EIF_NATURAL_8* )res) = it->it_uint8; break;
 		case SK_UINT16: *((EIF_NATURAL_16 *)res) = it->it_uint16; break;

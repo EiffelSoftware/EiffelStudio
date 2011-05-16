@@ -136,7 +136,7 @@ feature -- Initialization/Checking
 										l_named_type.reset_constraint_error_list
 										 	-- Check creation readyness because if we convert we need to create an object.
 										 	-- Pass `Void' for context feature as we don't have one.
-										l_named_type.check_constraints (a_class, Void, true)
+										l_named_type.check_constraints (a_class, Void, True)
 										if not l_named_type.constraint_error_list.is_empty then
 											create l_vncp.make ("Invalid generic type.")
 											l_vncp.set_class (a_class)
@@ -146,8 +146,10 @@ feature -- Initialization/Checking
 										else
 											l_named_type.check_for_obsolete_class (a_class, Void)
 
+												-- We request that conversion type is attached only for the highest level
+												-- of void-safety.
 											if
-												not a_class.lace_class.is_void_unsafe and then
+												a_class.lace_class.is_void_safe_call and then
 												not l_named_type.is_attached
 											then
 												create l_vncp.make ("Type of conversion should always be attached.")

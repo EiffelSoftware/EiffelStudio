@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2011-05-12 10:46+0800\n"
+"PO-Revision-Date: 2011-05-16 14:51+0800\n"
 "Last-Translator: Ted <tedf@eiffel.com>\n"
 "Language-Team: Eiffel Software and others\n"
 "MIME-Version: 1.0\n"
@@ -25197,10 +25197,10 @@ msgstr "同步上下文(&Y)"
 msgid "S&ystem Info"
 msgstr "系统信息(&Y)"
 
-#. Source code: target_concurrency_scoop_name: STRING_GENERAL do Result := locale.translation ("SCOOP (not supported yet)") end
+#. Source code: target_concurrency_scoop_name: STRING_GENERAL do Result := locale.translation ("SCOOP") end
 #: conf_interface_names.e:128
-msgid "SCOOP (not supported yet)"
-msgstr "SCOOP (尚未支持)"
+msgid "SCOOP"
+msgstr "SCOOP"
 
 #. Source code: w_source_name_attribute_expected: STRING_32 do Result := locale.translation ("SOURCE name attribute expected") end
 #: warning_messages.e:942
@@ -34624,14 +34624,14 @@ msgstr "{$1}已经包含名为$2的方法名。"
 msgid "{SPECIAL} is not yet supported"
 msgstr "尚未支持{SPECIAL}"
 
+#~ msgid "SCOOP (not supported yet)"
+#~ msgstr "SCOOP (尚未支持)"
+
 #~ msgid "Backup"
 #~ msgstr "备份"
 
 #~ msgid "Multithreaded"
 #~ msgstr "多线程"
-
-#~ msgid "SCOOP"
-#~ msgstr "SCOOP"
 
 #~ msgid "Edit Execution Parameters"
 #~ msgstr "编辑运行参数"

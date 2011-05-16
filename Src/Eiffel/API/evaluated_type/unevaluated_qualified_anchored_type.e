@@ -16,6 +16,7 @@ inherit
 			evaluated_type_in_descendant,
 			has_associated_class,
 			formal_instantiated_in,
+			formal_instantiation_in,
 			instantiated_in,
 			instantiation_in,
 			internal_is_valid_for_class,
@@ -179,6 +180,11 @@ feature {NONE} -- Implementation
 
 	formal_instantiated_in, instantiated_in (class_type: TYPE_A): like Current
 		do
+		end
+
+	formal_instantiation_in (type, constraint: TYPE_A; written_id: INTEGER_32): like Current
+		do
+
 		end
 
 	evaluated_type_in_descendant (a_ancestor, a_descendant: CLASS_C; a_feature: FEATURE_I): like Current

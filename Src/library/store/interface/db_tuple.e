@@ -12,10 +12,10 @@ inherit
 
 	DB_RESULT
 		redefine
-			implementation, data
+			data
 		end
 
-create -- Creation procedures
+create
 
 	copy, make
 
@@ -72,11 +72,6 @@ feature -- Status report
 			end
 		end
 
-feature {NONE} -- Implementation
-
-	implementation: DATABASE_TUPLE [DATABASE];
-			-- Handle reference to specific database implementation
-
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
@@ -88,10 +83,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class DB_TUPLE
-
-
-

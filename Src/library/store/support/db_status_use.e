@@ -13,7 +13,7 @@ inherit
 
 	REFACTORING_HELPER
 
-feature {NONE} -- Status report
+feature -- Status report
 
 	exhausted: BOOLEAN
 			-- Is there any more resulting row?
@@ -67,7 +67,7 @@ feature {NONE} -- Status report
 			Result := handle.status.error_message_32
 		end
 
-feature {NONE} -- Status setting
+feature -- Status setting
 
 	reset
 			-- Reset `is_ok', `error_code_stored',`error_message_stored' and `warning_message' after error occurred.

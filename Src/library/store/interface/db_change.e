@@ -12,10 +12,6 @@ class DB_CHANGE
 inherit
 
 	DB_STATUS_USE
-		export
-			{ANY} is_connected
-			{ANY} is_ok
-		end
 
 	DB_EXEC_USE
 		export

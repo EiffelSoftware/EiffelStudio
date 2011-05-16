@@ -261,7 +261,7 @@ feature -- Element change
 								l_value.put (l_string_32.as_string_8, ind)
 							else
 								l_value.put (l_string_32.as_string_8, ind)
-								fixme ("Report data lose.")
+								fixme ("Report data loss.")
 							end
 						end
 
@@ -323,7 +323,7 @@ feature -- Element change
 						if not use_extended_types then
 							l_value.put (l_integer_64.item.as_integer_32.to_reference, ind)
 							if (l_integer_64.item > {INTEGER_32}.max_value or l_integer_64.item < {INTEGER_32}.min_value) then
-								fixme ("Report data lose.")
+								fixme ("Report data loss.")
 							end
 						end
 

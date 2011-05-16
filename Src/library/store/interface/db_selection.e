@@ -11,9 +11,6 @@ class DB_SELECTION
 
 inherit
 	DB_STATUS_USE
-		export
-			{ANY} is_ok, is_connected
-		end
 
 	DB_EXEC_USE
 

@@ -19,7 +19,7 @@ feature -- Status setting
 			ht_order.wipe_out
 		end
 
-	set_map_name (n: detachable ANY; key: STRING)
+	set_map_name (n: detachable ANY; key: STRING_32)
 			-- Store item `n' with key `key'.
 			-- `n' can be `Void'.
 		require
@@ -36,7 +36,7 @@ feature -- Status setting
 			mapped: is_mapped (key)
 		end
 
-	unset_map_name (key: STRING)
+	unset_map_name (key: STRING_32)
 			-- Remove item associated with key `key'.
 		require
 			ht_not_void: ht /= Void
@@ -53,7 +53,7 @@ feature -- Status setting
 
 feature -- Status report
 
-	is_mapped (key: STRING): BOOLEAN
+	is_mapped (key: STRING_32): BOOLEAN
 			-- Is `key' mapped to an Eiffel entity?
 		require
 			ht_not_void: ht /= Void
@@ -62,13 +62,14 @@ feature -- Status report
 			Result := ht.has (key)
 		end
 
-	mapped_value (key: STRING): ANY
+	mapped_value (key: STRING_32): ANY
 			-- Value mapped with `key'
 		require
 			ht_not_void: ht /= Void
 			key_exists: key /= Void
 			key_mapped: is_mapped (key)
 		do
+				-- Per precondition `is_mapped' this should always succeed.
 			check attached ht.item (key) as l_item then
 				Result := l_item
 			end
@@ -82,7 +83,7 @@ feature -- Status report
 		-- Correspondence table between object references
 		-- and mapped keys
 
-	ht_order: detachable ARRAYED_LIST [STRING] note option: stable attribute end
+	ht_order: detachable ARRAYED_LIST [STRING_32] note option: stable attribute end
 		-- Keys of `ht' in order of mapping
 
 note
@@ -96,9 +97,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class STRING_HDL
-
-
+end

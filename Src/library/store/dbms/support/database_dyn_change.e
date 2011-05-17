@@ -10,12 +10,8 @@ class
 
 inherit
 	DATABASE_CHANGE [G]
-
 		rename
 			put as normal_put
-		undefine
-			set_map_name, unset_map_name, is_mapped, mapped_value, clear_all,
-			replacement_string
 		end
 
 	PARAMETER_HDL

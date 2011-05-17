@@ -125,7 +125,7 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 
 	normal_parse: BOOLEAN = False
 
-	parse (descriptor: INTEGER; uht: detachable DB_STRING_HASH_TABLE [detachable ANY]; ht_order: detachable ARRAYED_LIST [STRING]; uhandle: HANDLE; sql: READABLE_STRING_GENERAL): BOOLEAN
+	parse (descriptor: INTEGER; uht: detachable DB_STRING_HASH_TABLE [detachable ANY]; ht_order: detachable ARRAYED_LIST [STRING_32]; uhandle: HANDLE; sql: READABLE_STRING_GENERAL): BOOLEAN
 		local
 			tmp_str: STRING_32
 			c_temp, c_temp2: SQL_STRING
@@ -134,9 +134,9 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 			create c_temp.make (sql)
 			create tmp_str.make (1)
 			create c_temp2.make_by_pointer (odbc_hide_qualifier (c_temp.item))
-			tmp_str := c_temp2.string.as_string_8 -- No problem, only used to find '{'.
+			tmp_str := c_temp2.string
 			tmp_str.left_adjust
-			if tmp_str.count > 1 and then (tmp_str.substring (1, 1)).is_equal ("{") then
+			if tmp_str.count > 1 and then (tmp_str.item (1) = {CHARACTER_32} '{') then
 				if uht /= Void then
 					if uhandle.execution_type.immediate_execution then
 						odbc_pre_immediate (descriptor, uht.count)
@@ -660,13 +660,13 @@ feature -- External
 			Result := odbc_sensitive_mixed
 		end
 
-	identifier_quoter: STRING
+	identifier_quoter: STRING_32
 		do
 			create Result.make (1)
 			Result.from_c (odbc_identifier_quoter)
 		end
 
-	qualifier_seperator: STRING
+	qualifier_seperator: STRING_32
 		do
 			create Result.make (1)
 			Result.from_c (odbc_qualifier_seperator)
@@ -1201,7 +1201,7 @@ feature {NONE} -- External features
 
 	para: detachable DB_PARA_ODBC
 
-	bind_args_value (descriptor: INTEGER; uht: DB_STRING_HASH_TABLE [detachable ANY]; ht_order: detachable ARRAYED_LIST [STRING])
+	bind_args_value (descriptor: INTEGER; uht: DB_STRING_HASH_TABLE [detachable ANY]; ht_order: detachable ARRAYED_LIST [STRING_32])
 			-- Append map variables name from to `s'.
 			-- Map variables are used for set input arguments.
 		require

@@ -111,7 +111,7 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 		deferred
 		end
 
-	parse (descriptor: INTEGER; uht: detachable DB_STRING_HASH_TABLE [detachable ANY]; ht_order: detachable ARRAYED_LIST [STRING]; uhandle: HANDLE; sql: READABLE_STRING_GENERAL): BOOLEAN
+	parse (descriptor: INTEGER; uht: detachable DB_STRING_HASH_TABLE [detachable ANY]; ht_order: detachable ARRAYED_LIST [STRING_32]; uhandle: HANDLE; sql: READABLE_STRING_GENERAL): BOOLEAN
 			-- Prepare string `sql' by appending map
 			-- variables name from to `sql'. Map variables are used
 			-- for set input arguments
@@ -833,23 +833,23 @@ feature -- External features
 			Result := True
 		end
 
-	identifier_quoter: STRING
+	identifier_quoter: STRING_32
 			-- Return the string used to quote identifiers in SQL command,
 			-- for example, if the quoter is `, and we want to select on
 			-- table "my table", we should express the query as:
 			-- select * from `My table`
 			-- Only for ODBC
 		do
-			Result := ""
+			Result := {STRING_32} ""
 		end
 
-	qualifier_seperator: STRING
+	qualifier_seperator: STRING_32
 			-- When "qualifier" and "owner" are used to identifier
 			-- a database object, they should be seperated by a string called
 			-- "qualifier seperator"
 			-- Only for ODBC
 		do
-			Result := ""
+			Result := {STRING_32} ""
 		end
 
 	conv_type (indicator: INTEGER; index: INTEGER): INTEGER
@@ -1045,9 +1045,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class DATABASE
-
-

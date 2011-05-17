@@ -10,17 +10,11 @@ class
 
 inherit
 	DB_SELECTION
-		undefine
-			set_map_name, unset_map_name, is_mapped, mapped_value, clear_all
 		redefine
-			implementation,
-			make
+			make, implementation
 		end
 
 	PARAMETER_HDL
-		redefine
-			parameter_count
-		end
 
 create
 	make
@@ -33,8 +27,6 @@ feature -- Initialization
 			create ht.make (name_table_size)
 			implementation := handle.database.db_dyn_selection
 			implementation.set_ht (ht)
-			init
-			implementation.init_implementation (parameters_value, parameters)
 		end
 
 feature -- Element change
@@ -98,11 +90,6 @@ feature -- Element change
 			prepared_statement: is_executed
 		end
 
-	parameter_count : INTEGER
-		do
-			Result := implementation.parameter_count
-		end
-
 feature {NONE} -- Implementation
 
 	implementation: DATABASE_DYN_SELECTION [DATABASE];
@@ -119,9 +106,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class DB_DYN_SELECTION
-
-

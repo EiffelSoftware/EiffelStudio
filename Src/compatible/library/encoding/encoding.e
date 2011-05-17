@@ -50,6 +50,20 @@ feature -- Access
 			last_converted_stream_not_void: Result /= Void
 		end
 
+	last_converted_string_32: STRING_32
+			-- Last converted string.
+			-- Note: Original string object could be returned directly.
+		require
+			last_conversion_successful: last_conversion_successful
+		do
+			check attached encoding_i.last_converted_string as l_str then
+					-- Implied from the precondition and postcondition of `encoding_i.convert_to'
+				Result := l_str.as_string_32
+			end
+		ensure
+			last_converted_string_not_void: Result /= Void
+		end
+
 	last_converted_string: STRING_GENERAL
 			-- Last converted string.
 			-- Note: Original string object could be returned directly.
@@ -164,7 +178,7 @@ invariant
 
 note
 	library:   "Encoding: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

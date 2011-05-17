@@ -134,12 +134,14 @@ feature -- Status setting
 					l_map_table := database_data.map_table
 					check l_map_table /= Void end -- FIXME: implied by ... bug?
 					pos := l_map_table.item (i)
-					if r_any /= Void and pos > 0 then
-						tst := field_copy (pos, object,
-							db_spec.convert_string_type (r_any,
-							field_name (pos, object), r_any.generator))
-					elseif pos > 0 then
-						tst := field_clean (pos, object)
+					if pos > 0 then
+						if r_any /= Void then
+							tst := field_copy (pos, object,
+								db_spec.convert_string_type (r_any,
+								field_name (pos, object), r_any.generator))
+						else
+							tst := field_clean (pos, object)
+						end
 					end
 					i := i + 1
 				end

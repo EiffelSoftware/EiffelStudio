@@ -46,8 +46,6 @@ feature -- Command
 		do
 			if attached content as l_content and then not l_content.are_actions_ignored then
 				Precursor (event_data)
-			else
-				check should_not_happen: False end
 			end
 		end
 

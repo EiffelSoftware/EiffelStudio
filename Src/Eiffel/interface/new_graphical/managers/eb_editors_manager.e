@@ -1527,8 +1527,37 @@ feature {NONE} -- Implementation
 			if editors_internal.is_empty then
 				last_created_editor := Void
 			end
-			if last_focused_editor /= Void then
+			if last_focused_editor /= Void and then
+				editors_internal.has (last_focused_editor) then
 				select_editor (last_focused_editor, True)
+			else
+				if attached previous_clicked_editor as l_previous_clicked_editor then
+					select_editor (l_previous_clicked_editor, True)
+				end
+			end
+		end
+
+	previous_clicked_editor: like last_focused_editor
+			-- Find previous clicked editor base on docking library
+		local
+			l_list: ARRAYED_LIST [SD_CONTENT]
+			l_editor_content: detachable SD_CONTENT
+		do
+			l_list := docking_manager.property.contents_by_click_order
+			from
+				l_list.start
+			until
+				l_list.after or l_editor_content /= Void
+			loop
+				if l_list.item.type = {SD_ENUMERATION}.editor then
+					l_editor_content := l_list.item
+				end
+
+				l_list.forth
+			end
+
+			if l_editor_content /= Void then
+				Result := editor_with_content (l_editor_content)
 			end
 		end
 

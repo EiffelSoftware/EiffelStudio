@@ -57,6 +57,7 @@ feature
 			Result.put (create {EW_EXECUTE_FINAL_INST}, Execute_final_keyword)
 			Result.put (create {EW_EXECUTE_RESULT_INST}, Execute_result_keyword)
 			Result.put (create {EW_COMPARE_INST}, Compare_keyword)
+			Result.put (create {EW_PRETTIFY_INST}, Prettify_keyword)
 			Result.put (create {EW_TEST_END_INST}, Test_end_keyword)
 		end
 

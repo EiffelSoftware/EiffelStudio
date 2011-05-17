@@ -2,11 +2,12 @@ note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "Eiffel test";
-	date: "93/08/30"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class EW_KEYWORD_CONST
 
-feature -- Properties
+feature
 
 	Abort_compile_keyword: 		STRING = "abort_compile"
 	Ace_keyword: 			STRING = "ace"
@@ -39,6 +40,7 @@ feature -- Properties
 	If_keyword: 			STRING = "if"
 	Include_keyword: 		STRING = "include"
 	Not_keyword: 			STRING = "not"
+	Prettify_keyword:		STRING = "prettify"
 	Resume_compile_keyword: 	STRING = "resume_compile"
 	Setenv_keyword: 		STRING = "setenv"
 	Source_path_keyword: 		STRING = "source_path"
@@ -53,9 +55,9 @@ feature -- Properties
 
 note
 	copyright: "[
-			Copyright (c) 1984-2007, University of Southern California and contributors.
+			Copyright (c) 1984-2011, University of Southern California and contributors.
 			All rights reserved.
-			]"
+		]"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.

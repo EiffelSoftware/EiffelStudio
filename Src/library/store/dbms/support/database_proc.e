@@ -141,6 +141,8 @@ feature -- Basic operations
 				private_string.append(name)
 				if arguments_set then
 					append_in_args_type (private_string)
+				else
+					append_no_args (private_string)
 				end
 				private_string.append (db_spec.sql_as)
 				private_string.append (sql_temp)
@@ -414,6 +416,12 @@ feature {NONE} -- Implementation
 			s.append (db_spec.map_var_after)
 		ensure
 			s_larger: s.count > old s.count
+		end
+
+	append_no_args (s: STRING_32)
+			-- Append no argument
+		do
+			s.append (db_spec.no_args)
 		end
 
 feature {NONE} -- Status report

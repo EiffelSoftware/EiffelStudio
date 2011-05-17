@@ -14,7 +14,8 @@ inherit
 			default_create,
 			normal_parse,
 			parse,
-			convert_string_type
+			convert_string_type,
+			no_args
 		end
 
 	STRING_HANDLER
@@ -291,6 +292,8 @@ feature -- For DATABASE_PROC
 	name_proc_lower: BOOLEAN = True
 
 	map_var_between : STRING = ""
+
+	no_args: STRING = " () "
 
 	Select_text_32 (proc_name: READABLE_STRING_GENERAL): STRING_32
 		do

@@ -383,6 +383,13 @@ feature -- For DATABASE_PROC
 			Result := ")"
 		end
 
+	no_args: STRING
+			-- No augument. i.e. "()"
+			-- Redefined for MySQL
+		do
+			create Result.make_empty
+		end
+
 	map_var_name (par_name: STRING): STRING
 			-- Redefined for Sybase
 		obsolete

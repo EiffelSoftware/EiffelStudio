@@ -9,7 +9,7 @@ class
 	DB_STRING_HASH_TABLE [G]
 
 inherit
-	HASH_TABLE [G, STRING]
+	HASH_TABLE [G, STRING_32]
 		redefine
 			same_keys
 		end
@@ -19,13 +19,10 @@ create
 
 feature -- Comparison
 
-	same_keys (a_search_key, a_key: STRING_8): BOOLEAN
+	same_keys (a_search_key, a_key: STRING_32): BOOLEAN
 			-- See if `a_search_key' and `a_key' have the same content.
 		do
-				-- When code is completely void-safe we can remove the check.
-			if a_search_key /= Void and a_key /= Void then
-				Result := a_search_key.same_string (a_key)
-			end
+			Result := a_search_key.same_string (a_key)
 		end
 
 note

@@ -10,21 +10,12 @@ class
 
 inherit
 	DB_CHANGE
-		undefine
-			set_map_name,
-			unset_map_name,
-			is_mapped,
-			mapped_value,
-			clear_all
 		redefine
 			implementation,
 			make
 		end
 
 	PARAMETER_HDL
-		redefine
-			parameter_count
-		end
 
 create
 	make
@@ -37,8 +28,6 @@ feature -- Initialization
 			implementation := handle.database.db_dyn_change
 			create ht.make (name_table_size)
 			implementation.set_ht (ht)
-			init
-			implementation.init_implementation (parameters_value, parameters)
 		end
 
 feature -- Element change
@@ -96,11 +85,6 @@ feature -- Element change
 				trace_output.putstring (error_message_32)
 				trace_output.new_line
 			end
-		end
-
-	parameter_count : INTEGER
-		do
-			Result := implementation.parameter_count
 		end
 
 feature -- Status Report

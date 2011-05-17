@@ -10,7 +10,7 @@ note
 	Database: All_Bases
 
 class
-	DB_ACTION [G -> ANY]
+	DB_ACTION [G -> ANY create default_create end]
 
 inherit
 	ACTION
@@ -26,13 +26,12 @@ feature -- Creation
 	make (a_selection: like selection; an_item: G)
 			-- Initialize.
 		require
-			not_void: a_selection /= Void and an_item /= Void
+			not_void: a_selection /= Void
 		do
 			selection := a_selection
-			item := an_item
 			create list.make (50)
 		ensure
-			set: selection = a_selection and item = an_item
+			set: selection = a_selection
 		end
 
 feature -- Actions
@@ -40,27 +39,18 @@ feature -- Actions
 	execute
 			-- Update item with current
 			-- selected item in the container.
-		local
-			l_item: like item
 		do
 			selection.cursor_to_object
-			l_item := item
-			check l_item /= Void end -- FIXME: implied by nothing... bug?
-			list.extend (l_item.deep_twin)
+			if attached {G} selection.object as l_object then
+				list.extend (l_object)
+			end
+			selection.object_convert (create {G})
 		end
 
 feature -- Access
 
 	selection: DB_SELECTION
 			-- Current selection.
-
-	item: G
-			-- Current found item in `selection'.
-			-- Must be a reference on `selection.object',
-			-- thus `selection.cursor_to_object' updates it.
-			--| `selection.object' is not used directly to avoid
-			--| reversed assignment/to have static type checking
-			--| on `list'.
 
 	list: ARRAYED_LIST [G];
 			-- Result list.

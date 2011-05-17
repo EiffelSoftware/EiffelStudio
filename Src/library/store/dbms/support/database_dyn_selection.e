@@ -10,10 +10,6 @@ class
 
 inherit
 	DATABASE_SELECTION [G]
-		undefine
-			set_map_name, unset_map_name, is_mapped, mapped_value, clear_all,
-			replacement_string
-		end
 
 	PARAMETER_HDL
 		undefine

@@ -47,13 +47,12 @@ feature -- Status report
 		local
 			tuple: DB_TUPLE
 			seq: INTEGER
-			tmp_text: STRING_32
 			l_cursor: detachable DB_RESULT
 		do
 			if db_spec.support_sql_of_proc then
 					private_selection.set_map_name (name, "name")
 				if db_spec.has_row_number then
-					create tmp_text.make(1024)
+					create Result.make(1024)
 					from
 						seq := 1
 					until
@@ -64,20 +63,11 @@ feature -- Status report
 						private_selection.load_result
 						private_selection.unset_map_name ("seq")
 						l_cursor := private_selection.cursor
-						check l_cursor /= Void end -- implied by private_selection.`load_result''s postcondition
+							-- implied by private_selection.`load_result''s postcondition
+						check l_cursor /= Void end
 						create tuple.copy (l_cursor)
-						if use_extended_types then
-							if attached {STRING_32} tuple.item (1) as row_text then
-								tmp_text.append(row_text)
-							else
-								check False end -- implied by `private_selection.query' postcondition
-							end
-						else
-							if attached {STRING} tuple.item (1) as row_text then
-								tmp_text.append(row_text)
-							else
-								check False end -- implied by `private_selection.query' postcondition
-							end
+						check attached {READABLE_STRING_GENERAL} tuple.item (1) as row_text then
+							Result.append_string_general (row_text)
 						end
 						seq := seq + 1
 					end
@@ -86,26 +76,14 @@ feature -- Status report
 					private_selection.query (Select_text (name))
 					private_selection.load_result
 					l_cursor := private_selection.cursor
-				check l_cursor /= Void end -- implied by private_selection.`load_result''s postcondition					
+
+					check l_cursor /= Void end -- implied by private_selection.`load_result''s postcondition					
 					create tuple.copy (l_cursor)
-					if use_extended_types then
-						if attached {STRING_32} tuple.item (1) as l_item then
-							tmp_text := l_item
-						else
-							check False end -- implied by `private_selection.query''s postcondition
-							create tmp_text.make_empty -- Satisfy compiler
-						end
-					else
-						if attached {STRING} tuple.item (1) as l_item then
-							tmp_text := l_item
-						else
-							check False end -- implied by `private_selection.query''s postcondition
-							create tmp_text.make_empty -- Satisfy compiler
-						end
+					check attached {READABLE_STRING_GENERAL} tuple.item (1) as l_item then
+						Result := l_item.as_string_32
 					end
 				end
 				private_selection.unset_map_name ("name")
-				Result := tmp_text
 				private_selection.terminate
 			else
 				Result := db_spec.text_not_supported
@@ -248,12 +226,12 @@ feature -- Element change
 	change_name (new_name: STRING)
 			-- Change procedure name with `new_name'.
 		do
-			name := new_name
 			if db_spec.name_proc_lower then
-				name.to_lower
+				new_name.to_lower
 			end
+			name := new_name.as_string_32
 		ensure then
-			name_changed: name = new_name
+			name_changed: name.same_string_general (new_name) or else name.same_string_general (new_name.as_lower)
 		end
 
 	set_arguments (args_name: like arguments_name;
@@ -327,11 +305,11 @@ feature {NONE} -- Implementation
 			l_cursor: detachable DB_RESULT
 		do
 			if db_spec.support_proc then
-				private_selection.set_map_name (name, "name")
+				private_selection.set_map_name (name, {STRING_32} "name")
 				private_selection.query (Select_exists)
 				p_exists := handle.status.found
 				private_selection.load_result
-				private_selection.unset_map_name ("name")
+				private_selection.unset_map_name ({STRING_32} "name")
 				l_cursor := private_selection.cursor
 				check l_cursor /= Void end -- implied by `private_selection.query''s postcondition
 				create tuple.copy (l_cursor)
@@ -355,11 +333,7 @@ feature {NONE} -- Implementation
 							end
 						else
 								-- Added for ODBC, should really be abstracted
-							if use_extended_types then
-								p_exists := attached {STRING_32} tuple.item (3) as temp_string and then not temp_string.is_empty
-							else
-								p_exists := attached {STRING} tuple.item (3) as temp_string and then not temp_string.is_empty
-							end
+							p_exists := attached {READABLE_STRING_GENERAL} tuple.item (3) as temp_string and then not temp_string.is_empty
 						end
 					end
 				else
@@ -448,20 +422,20 @@ feature {NONE} -- Status report
 			-- record the number of segments into which the stored
 			-- procedure is divided by INGRES
 
-	name: STRING
+	name: STRING_32
 			-- Stored procedure name
 
-	qualifier: detachable STRING
+	qualifier: detachable STRING_32
 			-- the qualifier of the procedure
 
-	owner: detachable STRING
+	owner: detachable STRING_32
 			-- the owner of the procedure
 
-	proc_name: STRING
+	proc_name: STRING_32
 			-- Name of the procedure
 		local
-			quoter: STRING
-			sep: STRING
+			quoter: STRING_32
+			sep: STRING_32
 		do
 			create Result.make (100)
 
@@ -512,12 +486,12 @@ feature {NONE} -- Status report
 			result_not_void: Result /= Void
 		end
 
-	Select_text (a_proc_name: READABLE_STRING_GENERAL): STRING_32
+	Select_text (a_proc_name: STRING_32): STRING_32
 			-- SQL query to get procedure text.
 		require
 			a_proc_name_not_void: a_proc_name /= Void
 		do
-			Result := db_spec.select_text_32 (a_proc_name.as_string_32)
+			Result := db_spec.select_text_32 (a_proc_name)
 		end
 
 	Select_exists: STRING_32

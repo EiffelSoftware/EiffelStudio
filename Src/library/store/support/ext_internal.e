@@ -151,7 +151,7 @@ feature -- Basic operations
 						Result := False
 					end
 				elseif ftype = Reference_type and then field_conforms_to (dynamic_type (value), field_static_type_of_type (i, dynamic_type (object))) then
-					set_reference_field (i, object, value)
+					set_reference_field (i, object, value.twin)
 				else
 					Result := False
 				end
@@ -176,12 +176,12 @@ feature -- Basic operations
 						Result := False
 					end
 				elseif ftype = Reference_type and then field_conforms_to (dynamic_type (value), field_static_type_of_type (i, dynamic_type (object))) then
-					set_reference_field (i, object, value)
+					set_reference_field (i, object, value.twin)
 				else
 					Result := False
 				end
 			elseif ftype = Reference_type and then field_conforms_to (dynamic_type (value), field_static_type_of_type (i, dynamic_type (object))) then
-				set_reference_field (i, object, value)
+				set_reference_field (i, object, value.twin)
 			else
 				Result := False
 			end
@@ -193,29 +193,43 @@ feature -- Basic operations
 		require
 			object_not_void: object /= Void
 		local
-			ftype: INTEGER
-			fname: STRING
+			dftype: INTEGER
 		do
-			ftype := field_type (i, object)
-			fname := field_name (i, object)
+			dftype := dynamic_type (object)
 			Result := True
-
-			if ftype = Integer_type then
+			inspect field_type_of_type (i, dftype)
+			when Integer_type then
 				set_integer_field (i, object, numeric_null_value.truncated_to_integer)
-			elseif ftype = Integer_16_type then
+			when Integer_16_type then
 				set_integer_16_field (i, object, numeric_null_value.truncated_to_integer.as_integer_16)
-			elseif ftype = Integer_64_type then
+			when Integer_64_type then
 				set_integer_64_field (i, object, numeric_null_value.truncated_to_integer_64)
-			elseif ftype = Real_type then
+			when Real_type then
 				set_real_field (i, object, numeric_null_value.truncated_to_real)
-			elseif ftype = Double_type then
+			when Double_type then
 				set_double_field (i, object, numeric_null_value)
-			elseif ftype = Character_type then
+			when Character_type then
 				set_character_field (i, object, ' ')
-			elseif ftype = Boolean_type then
+			when Boolean_type then
 				set_boolean_field (i, object, False)
-			elseif ftype = Reference_type then
-				set_reference_field (i, object, Void)
+			when Reference_type then
+				if not is_attached_type (field_static_type_of_type (i, dftype)) then
+						-- We can safely set it to Void
+					set_reference_field (i, object, Void)
+				elseif attached field (i, object) as l_data then
+						-- Object field is attached but got NULL from the database, we reset the field
+						-- with its arbitrary default value based on the type of the object currently
+						-- associated with the field: empty strings or date 0/1/1 0:0:0.
+					if is_string (l_data) then
+						set_reference_field (i, object, "")
+					elseif is_string32 (l_data) then
+						set_reference_field (i, object, {STRING_32} "")
+					elseif is_date (l_data) then
+						set_reference_field (i, object, create {DATE_TIME}.make (0, 1, 1, 0, 0, 0))
+					else
+						Result := False
+					end
+				end
 			else
 				Result := False
 			end

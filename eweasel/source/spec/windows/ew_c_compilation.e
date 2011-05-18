@@ -34,7 +34,6 @@ feature
 			create args.make
 			args.extend ("-location")
 			args.extend (dir)
-			args.extend ("-silent")
 			if max_procs > 0 then
 				args.extend ("-nproc");
 				args.extend (max_procs.out);

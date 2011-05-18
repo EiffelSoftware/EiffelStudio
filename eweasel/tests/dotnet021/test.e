@@ -19,15 +19,15 @@ feature {NONE} -- Creation
 			aa: ARRAY [A]
 			a: A
 		do
-			create aa.make (1, 2)
+			create aa.make_filled (a, 1, 2)
 			a := aa.item (1).default.default
-			create ae2.make (1, 2)
+			create ae2.make_filled (e2, 1, 2)
 			e2 := ae2.item (1).default.default
-			create ae4.make (1, 2)
+			create ae4.make_filled (e4, 1, 2)
 			e4 := ae4.item (1).default.default
-			create av1.make (1, 2)
+			create av1.make_filled (v1, 1, 2)
 			v1 := av1.item (1).default.default
-			create av2.make (1, 2)
+			create av2.make_filled (v2, 1, 2)
 			v2 := av2.item (1).default.default
 			io.put_new_line
 		end

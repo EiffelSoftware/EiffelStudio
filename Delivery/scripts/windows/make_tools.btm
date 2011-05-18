@@ -71,3 +71,14 @@ iff not exist po_generation_tool.exe then
 	CANCEL
 endiff
 move po_generation_tool.exe %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin
+
+remtrace Recompile eiffel_ribbon
+cdd %EIFFEL_SRC\tools\eiffel_ribbon
+clean_project
+finalize eiffel_ribbon.ecf
+cleanup_eiffel eiffel_ribbon eiffel_ribbon.exe
+iff not exist eiffel_ribbon.exe then
+	remtrace Could not finalize a new eiffel_ribbon
+	CANCEL
+endiff
+move eiffel_ribbon.exe %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin

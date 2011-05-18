@@ -114,7 +114,13 @@ feature {NONE} -- Implementation
 		do
 			l_choice_list := choice_list
 			check l_choice_list /= Void end
-			l_choice_list.wipe_out
+
+				-- Reset choice list to a 1x1 grid with no item
+				-- We do not use wipeout as this has the side effect of resizing any previously set column widths.
+			l_choice_list.set_row_count_to (1)
+			l_choice_list.set_column_count_to (1)
+			l_choice_list.set_item (1, 1, Void)
+
 			l_font := font
 			if attached item_strings as l_item_strings then
 				from
@@ -159,6 +165,7 @@ feature {NONE} -- Implementation
 				end
 				l_choice_list.set_item (1, 1, l_item)
 			end
+
 		end
 
 	has_user_selected_item: BOOLEAN
@@ -183,6 +190,9 @@ feature {NONE} -- Implementation
 
 			create l_choice_list
 			choice_list := l_choice_list
+
+			l_choice_list.hide_header
+			l_choice_list.hide_horizontal_scroll_bar
 
 			create l_vbox
 
@@ -229,8 +239,6 @@ feature {NONE} -- Implementation
 			a_popup.set_height (l_height)
 			a_popup.set_width (l_width)
 
-
-			l_choice_list.hide_header
 			l_choice_list.enable_single_row_selection
 			l_choice_list.enable_selection_key_handling
 			l_choice_list.set_background_color (implementation.displayed_background_color)
@@ -259,7 +267,6 @@ feature {NONE} -- Implementation
 				l_choice_list.pointer_double_press_item_actions.extend (agent on_mouse_click)
 				l_choice_list.pointer_motion_actions.force_extend (agent on_mouse_move)
 				l_choice_list.key_press_actions.extend (agent on_key)
-				l_choice_list.hide_horizontal_scroll_bar
 			else
 					-- Something wrong occurred, we should deactivate if possible.
 				if not is_destroyed and is_parented then

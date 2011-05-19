@@ -147,6 +147,10 @@ feature -- Initialization
 					-- Make the application return a non-zero value to OS to flag an error
 					-- to calling process.
 				create l_exception
+					-- Display the exception trace in case of a failure.
+				if not c_error and then attached l_exception.exception_trace as l_trace then
+					io.put_string (l_trace)
+				end
 				l_exception.die (1)
 			end
 		rescue
@@ -232,7 +236,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

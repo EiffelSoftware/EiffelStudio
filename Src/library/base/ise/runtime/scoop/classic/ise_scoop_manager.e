@@ -129,7 +129,7 @@ feature -- C callback function
 
 			if i = maximum_dirty_processor_client_count then
 					-- There were no available slots for `l_client_processor_id'.
-				(create {EXCEPTIONS}).raise ("Maximum SCOOP dirty processor count reached")
+				raise_scoop_exception ("Maximum SCOOP dirty processor count reached")
 			end
 
 				-- Update dirty flag count for the client processor.
@@ -204,7 +204,7 @@ feature -- Processor Initialization
 			if Result = max_scoop_processors_instantiable then
 				-- Perform processor cleanup.
 				-- Raise Exception if no free processor could not be found, or block until there is one.
-				(create {EXCEPTIONS}).raise ("Maximum SCOOP Processor Allocation reached")
+				raise_scoop_exception ("Maximum SCOOP Processor Allocation reached")
 			end
 
 			initialize_default_processor_meta_data (Result)
@@ -253,7 +253,7 @@ feature -- Request Chain Handling
 				-- Increment current request chain id depth
 			l_temp_value := {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 (processor_meta_data [a_client_processor_id].item_address (current_request_chain_id_depth_index));
 			if l_temp_value = max_request_chain_depth then
-				(create {EXCEPTIONS}).raise ("SCOOP request chain stack overflow")
+				raise_scoop_exception ("SCOOP request chain stack overflow")
 			end
 
 				-- Increase request chain id.
@@ -414,12 +414,13 @@ feature -- Request Chain Handling
 
 				-- Retrieve wait condition counter for determining priority of processor request.
 			l_wait_condition_counter := (processor_meta_data [a_client_processor_id]) [processor_wait_condition_counter_index]
-
-			if l_wait_condition_counter > max_wait_condition_retry_limit then
-				(create {EXCEPTIONS}).raise ("SCOOP Wait Condition Retry Limit Reached")
-			elseif l_wait_condition_counter > 0 then
-					-- Yield processor if we are retrying a wait condition.
-				processor_cpu_yield
+			if l_wait_condition_counter > 0 then
+				if l_wait_condition_counter > max_wait_condition_retry_limit then
+					raise_scoop_exception ("SCOOP Wait Condition Retry Limit Reached")
+				elseif l_wait_condition_counter > 1 then
+						-- Yield processor if we are retrying a wait condition.
+					processor_cpu_yield
+				end
 			end
 
 				-- Retrieve request chain meta data structure.
@@ -646,6 +647,17 @@ feature -- Request Chain Handling
 			l_request_chain_meta_data [request_chain_status_index] := request_chain_status_open
 		end
 
+feature {NONE} -- Exceptions
+
+	raise_scoop_exception (a_exception_message: STRING)
+			-- Raise a SCOOP Exception using `a_exception_message'.
+		do
+			exception_helper.raise (a_exception_message)
+		end
+
+	exception_helper: EXCEPTIONS
+		-- Helper object for exceptions.
+
 feature -- Command/Query Handling
 
 	is_processor_dirty (a_client_processor_id, a_supplier_processor_id: like processor_id_type): BOOLEAN
@@ -715,10 +727,11 @@ feature -- Command/Query Handling
 				l_request_chain_node_id := invalid_request_chain_node_id
 			end
 
+				-- Check if `a_supplier_processor_id' is dirty with respect to `a_client_processor_id'.
 			if {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 ((processor_meta_data [a_client_processor_id]).item_address (processor_dirty_flag_count_index), 0) > 0  then
 					-- We need to check if `a_client_processor_id' is dirty with respect to `a_supplier_processor_id'.
 				if is_processor_dirty (a_client_processor_id, a_supplier_processor_id) then
-					(create {EXCEPTIONS}).raise ("SCOOP Supplier Processor Dirty")
+					raise_scoop_exception (scoop_dirty_processor_exception_message)
 				end
 			end
 
@@ -913,6 +926,14 @@ feature -- Command/Query Handling
 					end
 				end
 			end
+
+				-- If we are a synchronous call and we have a dirty flag set then we should check if `a_supplier_processor_id' is dirty with respect to `a_client_processor_id'.
+			if l_is_synchronous and then {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 ((processor_meta_data [a_client_processor_id]).item_address (processor_dirty_flag_count_index), 0) > 0  then
+				if is_processor_dirty (a_client_processor_id, a_supplier_processor_id) then
+						-- Fire exception in client
+					raise_scoop_exception (scoop_dirty_processor_exception_message)
+				end
+			end
 		end
 
 	wait_for_request_chain_to_begin (a_client_processor_id, a_supplier_processor_id: like processor_id_type; a_request_chain_meta_data: like new_request_chain_meta_data_entry)
@@ -985,6 +1006,9 @@ feature {NONE} -- Resource Initialization
 			l_request_chain_meta_data: detachable like new_request_chain_meta_data_entry
 		do
 			logical_cpu_count := available_cpus
+
+				-- Initialize exception handling helper object.
+			create exception_helper
 
 				-- Initialize the default attributes used to create each SCOOP processor.
 			create default_processor_attributes.make_with_stack_size (1_048_576)
@@ -1225,6 +1249,8 @@ feature {NONE} -- Resource Initialization
 									if l_exception_caught then
 										-- An exception was raised during application of `l_call_ptr'.
 										-- We need to flag `a_logical_processor_id' dirty with respect to the client of the chain.
+
+											-- We have caught an assertion violation so we flag the processor as dirty
 										flag_processor_dirty (a_logical_processor_id, l_executing_request_chain_node_meta_data, l_executing_request_chain_node, l_executing_node_id_cursor)
 									end
 									if (l_executing_node_id_cursor + 1) = l_temp_count then
@@ -1456,6 +1482,9 @@ feature {NONE} -- Resource Initialization
 	root_processor_id: like processor_id_type
 			-- ID of root processor.
 
+	scoop_dirty_processor_exception_message: STRING = "SCOOP Processor Dirty Exception"
+		-- Exception message when a client processor has logged a call on a supplier processor that raises an exception.
+
 feature {NONE} -- Atomic Access
 
 	processor_count: INTEGER_32
@@ -1509,7 +1538,7 @@ feature {NONE} -- Scoop Processor Meta Data
 			if a_supplier_processor_id /= a_client_processor_id then
 				l_waiting_semaphore_count := {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 ($waiting_semaphore_count)
 				if l_waiting_semaphore_count = processor_count then
-					(create {EXCEPTIONS}).raise ("SCOOP Processor Deadlock detected")
+					raise_scoop_exception ("SCOOP Processor Deadlock detected")
 				end
 				semaphore_client_wait (processor_semaphore_list [a_client_processor_id])
 			end
@@ -1796,7 +1825,7 @@ feature {NONE} -- Externals
 				end
 				previous_waiting_processor_count := waiting_processor_count
 				if deadlock_counter > deadlock_detection_limit then
-					(create {EXCEPTIONS}).raise ("SCOOP Processor Deadlock detected")
+					raise_scoop_exception ("SCOOP Processor Deadlock detected")
 				end
 				processor_sleep (processor_sleep_quantum)
 			end

@@ -495,7 +495,7 @@ feature {NONE} -- Implementation
 			if l_open_types = Void then
 				l_open_map := open_map
 				check l_open_map_attached: l_open_map /= Void end
-				create l_open_types.make (1, l_open_map.count)
+				create l_open_types.make_filled (0, 1, l_open_map.count)
 				open_types := l_open_types
 			end
 			Result := l_open_types.item (i)

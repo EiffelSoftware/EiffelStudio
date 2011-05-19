@@ -37,11 +37,8 @@ feature {NONE} -- Initialization
 			-- Initialize space for `n' bits.
 		require
 			positive_n: n > 0
-		local
-			tmp_values: ARRAY [INTEGER]
 		do
-			create tmp_values.make (0, n |>> 5)
-			values := tmp_values.area
+			create values.make_filled (0, (n |>> 5) + 1)
 			count := n
 		end
 
@@ -73,7 +70,7 @@ feature -- Access
 			n := count |>> 5
 			Result := count = other.count
 			from
-				
+
 			until
 				i = n or not Result
 			loop
@@ -131,7 +128,7 @@ feature -- Basic operations
 		do
 			n := count |>> 5
 			left := 31 - (count & 31)
-			tmp_values := (create {ARRAY [INTEGER]}.make (0, n)).area
+			create tmp_values.make_filled (0, n + 1)
 			if s > 0 then
 					--| Make sure there are 0's in the undefined bits at the end.
 				tmp := count & 31
@@ -139,7 +136,7 @@ feature -- Basic operations
 					tmp := 32
 				end
 				values.put ((values @ n) & (31 |<< tmp).bit_not, n)
-				
+
 				f_shift := s & 31
 				int_shift := s |<< 5
 				if f_shift = 0 then
@@ -241,7 +238,7 @@ feature -- Basic operations
 			n, i, tmp, xb: INTEGER
 		do
 			n := count |>> 5
-			tmp_values := (create {ARRAY [INTEGER]}.make (0, n)).area
+			create tmp_values.make_filled (0, n + 1)
 			if s > 0 then
 				f_shift := s & 31
 				int_shift := s |<< 5
@@ -280,7 +277,7 @@ feature -- Basic operations
 					tmp := tmp | ((values @ 0) |<< (32 - f_shift))
 					tmp_values.put (tmp, 0)
 				end
-					
+
 				from
 					i := 0
 				until
@@ -316,11 +313,11 @@ feature -- Basic operations
 				n := oc
 				m := c
 			end
-			tmp_values := (create {ARRAY [INTEGER]}.make (0, n)).area
+			create tmp_values.make_filled (0, n + 1)
 			from
-				
+
 			until
-				i > m 
+				i > m
 			loop
 				tmp_values.put ((values @ i) & (other.values @ i), i)
 				i := i + 1
@@ -347,18 +344,18 @@ feature -- Basic operations
 			else
 				n := oc
 				m := c
-				tmp_values := (create {ARRAY [INTEGER]}.make (0, n)).area
+				create tmp_values.make_filled (0, n + 1)
 			end
 			from
-				
+
 			until
-				i > m 
+				i > m
 			loop
 				tmp_values.put ((values @ i).bit_not | (other.values @ i), i)
 				i := i + 1
 			end
 			from
-				
+
 			until
 				i > n
 			loop
@@ -390,9 +387,9 @@ feature -- Basic operations
 				tmp_values := other.values.twin
 			end
 			from
-				
+
 			until
-				i > m 
+				i > m
 			loop
 				tmp_values.put ((values @ i) | (other.values @ i), i)
 				i := i + 1
@@ -422,9 +419,9 @@ feature -- Basic operations
 				tmp_values := other.values.twin
 			end
 			from
-				
+
 			until
-				i > m 
+				i > m
 			loop
 				tmp_values.put ((values @ i).bit_xor (other.values @ i), i)
 				i := i + 1
@@ -439,11 +436,11 @@ feature -- Basic operations
 			tmp_values: SPECIAL [INTEGER]
 		do
 			n := count |>> 5
-			tmp_values := (create {ARRAY [INTEGER]}.make (0, n)).area
+			create tmp_values.make_filled (0, n + 1)
 			from
-				
+
 			until
-				i > n 
+				i > n
 			loop
 				tmp_values.put ((values @ i).bit_not, i)
 				i := i + 1
@@ -461,7 +458,7 @@ feature -- Output
 			n := count |>> 5
 			create Result.make (count)
 			from
-				
+
 			until
 				i = n
 			loop
@@ -503,7 +500,7 @@ feature -- Conversion
 		do
 			create Result.make_initialized (values.twin, count)
 		end
-	
+
 feature {BIT_REF} -- Implementation
 
 	values: SPECIAL [INTEGER]
@@ -511,7 +508,7 @@ feature {BIT_REF} -- Implementation
 
 invariant
 	valid_count: count > 0
-	
+
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

@@ -1,0 +1,14 @@
+test_name 	 inherit-formal-as-second-formal
+test_description A generic class TEST1 [G, H] that inherits TEST3 [H] crashes the compiler when generating inherited assertions in .NET code generation.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test1.e $CLUSTER test1.e
+copy_raw	test2.e $CLUSTER test2.e
+copy_raw	test3.e $CLUSTER test3.e
+copy_raw	test4.e $CLUSTER test4.e
+
+compile_melted
+compile_result ok
+
+test_end

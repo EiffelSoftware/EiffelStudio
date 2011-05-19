@@ -266,8 +266,8 @@ feature -- Generation
 			-- copy configuration file to load local assemblies.
 		local
 			l_source, l_target: RAW_FILE
-			l_source_name, l_target_name: FILE_NAME
-			l_file_name: STRING
+			l_source_name: FILE_NAME
+			l_target_name: STRING
 			l_has_local, retried: BOOLEAN
 			l_precomp: REMOTE_PROJECT_DIRECTORY
 			l_viop: VIOP
@@ -277,6 +277,9 @@ feature -- Generation
 			l_state: CONF_STATE
 		do
 			if not retried then
+					-- Create the Assemblies directory if it does not already exist
+				project_location.create_local_assemblies_directory (is_finalizing)
+
 					-- Copy referenced local assemblies
 				l_state := universe.conf_state
 				from
@@ -290,7 +293,7 @@ feature -- Generation
 						physical_assembly: l_as /= Void
 					end
 					if l_as.is_enabled (l_state) and then not l_as.is_in_gac then
-						copy_to_local (l_as.location.build_path ("", l_as.location.original_file))
+						copy_to_local (l_as.location.build_path ("", l_as.location.original_file), assembly_location (is_finalizing), Void)
 						l_has_local := True
 					end
 					l_assemblies.forth
@@ -318,10 +321,10 @@ feature -- Generation
 							error_handler.insert_warning (l_viop)
 						end
 
-						copy_to_local (l_precomp.assembly_driver (l_use_optimized_precomp))
-						copy_to_local (l_precomp.assembly_helper_driver (l_use_optimized_precomp))
+						copy_to_local (l_precomp.assembly_driver (l_use_optimized_precomp), assembly_location (is_finalizing), Void)
+						copy_to_local (l_precomp.assembly_helper_driver (l_use_optimized_precomp), assembly_location (is_finalizing), Void)
 						if not l_use_optimized_precomp or l_precomp.line_generation then
-							copy_to_local (l_precomp.assembly_debug_info (l_use_optimized_precomp))
+							copy_to_local (l_precomp.assembly_debug_info (l_use_optimized_precomp), assembly_location (is_finalizing), Void)
 						end
 
 						Workbench.Precompilation_directories.forth
@@ -330,25 +333,17 @@ feature -- Generation
 
 					-- Copy configuration file to be able to load up local assembly.
 				if l_has_local then
-						-- Compute name of configuration file: It is `system_name.xxx.config'
-						-- where `xxx' is either `exe' or `dll'.
-					l_file_name := System.name + "." + System.msil_generation_type + ".config"
-
 					create l_source_name.make_from_string (eiffel_layout.Generation_templates_path)
 					l_source_name.set_file_name ("assembly_config.xml")
 
 					if is_finalizing then
-						create l_target_name.make_from_string (project_location.final_path)
+						l_target_name := project_location.final_path
 					else
-						create l_target_name.make_from_string (project_location.workbench_path)
+						l_target_name := project_location.workbench_path
 					end
-					l_target_name.set_file_name (l_file_name)
-
-					create l_source.make_open_read (l_source_name)
-					create l_target.make_open_write (l_target_name)
-					l_source.copy_to (l_target)
-					l_target.close
-					l_source.close
+						-- Compute name of configuration file: It is `system_name.xxx.config'
+						-- where `xxx' is either `exe' or `dll'.
+					copy_to_local (l_source_name, l_target_name, System.name + "." + System.msil_generation_type + ".config")
 				end
 			else
 					-- An error occurred, let's raise an Eiffel compilation
@@ -1068,13 +1063,27 @@ feature {NONE} -- Sort
 
 feature {NONE} -- File copying
 
-	copy_to_local (a_source: STRING)
-			-- Copy `a_source' into `Assemblies' directory.
+	assembly_location (a_is_finalizing: BOOLEAN): DIRECTORY_NAME
+			-- Location of `Assemblies' directory in W_code or F_code depending
+			-- on compilation type `a_is_finalizing'.
+		do
+			if a_is_finalizing then
+				Result := project_location.final_assemblies_path
+			else
+				Result := project_location.workbench_assemblies_path
+			end
+		end
+
+	copy_to_local (a_source: STRING; a_target_directory: STRING; a_destination_name: detachable STRING)
+			-- Copy `a_source' into `a_target_directory' directory under `a_destination_name' if specified,
+			-- or under the same name as `a_source'.
 		require
 			a_source_not_void: a_source /= Void
 			a_source_not_empty: not a_source.is_empty
+			a_target_directory_not_void: a_target_directory /= Void
+			a_target_directory_not_empty: not a_target_directory.is_empty
+			a_destination_name_valid: a_destination_name /= Void implies not a_destination_name.is_empty
 		local
-			l_path: STRING
 			l_source, l_target: RAW_FILE
 			l_target_name: FILE_NAME
 			l_pos: INTEGER
@@ -1082,31 +1091,28 @@ feature {NONE} -- File copying
 			l_retried: BOOLEAN
 		do
 			if not l_retried then
-				project_location.create_local_assemblies_directory (is_finalizing)
-				l_path := a_source
+				create l_source.make (a_source)
+				create l_target_name.make_from_string (a_target_directory)
 
-				create l_source.make (l_path)
-				if is_finalizing then
-					create l_target_name.make_from_string (project_location.final_assemblies_path)
+				if a_destination_name /= Void then
+					l_target_name.set_file_name (a_destination_name)
 				else
-					create l_target_name.make_from_string (project_location.workbench_assemblies_path)
-				end
-
-				if platform_constants.is_windows then
-						-- Small trick for Windows were both / and \ are accepted.
-						-- The last one of the / or \ will indicate the start of the
-						-- file name
-					l_pos := l_path.last_index_of ('\', l_path.count)
-					l_pos := l_pos.max (l_path.last_index_of ('/', l_path.count))
-				else
-					l_pos := l_path.last_index_of (
-						operating_environment.directory_separator, l_path.count)
-				end
-				if l_pos > 0 then
-					l_target_name.set_file_name (l_path.substring (l_pos + 1,
-						l_path.count))
-				else
-					l_target_name.set_file_name (l_path)
+						-- Let's find the file name in the source file `a_source'.
+					if platform_constants.is_windows then
+							-- Small trick for Windows were both / and \ are accepted.
+							-- The last one of the / or \ will indicate the start of the
+							-- file name
+						l_pos := a_source.last_index_of ('\', a_source.count)
+						l_pos := l_pos.max (a_source.last_index_of ('/', a_source.count))
+					else
+						l_pos := a_source.last_index_of (
+							operating_environment.directory_separator, a_source.count)
+					end
+					if l_pos > 0 then
+						l_target_name.set_file_name (a_source.substring (l_pos + 1, a_source.count))
+					else
+						l_target_name.set_file_name (a_source)
+					end
 				end
 
 				create l_target.make (l_target_name)
@@ -1114,18 +1120,31 @@ feature {NONE} -- File copying
 					-- Only copy the file if it is not already there or if the original
 					-- file is more recent.
 				if not l_target.exists or else l_target.date < l_source.date then
-					l_source.open_read
-					l_target.open_write
-					l_source.copy_to (l_target)
-					l_source.close
-					l_target.close
-					l_target.set_date (l_source.date)
+					if l_source.exists then
+						l_source.open_read
+						l_target.open_write
+						l_source.copy_to (l_target)
+						l_source.close
+						l_target.close
+						l_target.set_date (l_source.date)
+					else
+							-- Source does not exist, report the error.
+						create l_vicf.make (a_source, l_target_name)
+						error_handler.insert_warning (l_vicf)
+					end
 				end
 			else
+					-- An exception occurred, report the error.
+				if l_source /= Void and then not l_source.is_closed then
+					l_source.close
+				end
+				if l_target /= Void and then not l_target.is_closed then
+					l_target.close
+				end
 				if l_target_name /= Void then
 					create l_vicf.make (a_source, l_target_name)
 				else
-					create l_vicf.make (a_source, "Unknown target")
+					create l_vicf.make (a_source, "Target not yet computed")
 				end
 				error_handler.insert_warning (l_vicf)
 			end
@@ -1160,7 +1179,7 @@ invariant
 	system_exists: System /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

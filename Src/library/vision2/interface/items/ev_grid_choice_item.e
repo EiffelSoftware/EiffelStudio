@@ -177,7 +177,7 @@ feature {NONE} -- Implementation
 			l_width, l_height: INTEGER
 			l_screen: detachable EV_SCREEN_IMP
 			l_choice_list: EV_GRID
-			l_x_coord, l_y_coord: INTEGER
+			l_x_coord, l_y_coord, l_x_offset, l_y_offset, l_ideal_width, l_ideal_height: INTEGER
 			l_parent: like parent
 			l_vbox: EV_VERTICAL_BOX
 			l_box_border, l_left_border, l_top_border, l_right_border: INTEGER
@@ -217,19 +217,40 @@ feature {NONE} -- Implementation
 				-- Compute location and size of `popup_window' and `choice_list' so that we can see most
 				-- of the items at once.
 
-			l_x_coord := a_popup.x_position + l_left_border
-			l_y_coord := a_popup.y_position + l_top_border
+			l_x_coord := (a_popup.x_position + l_left_border)
+			l_x_offset := (l_screen.virtual_x - l_x_coord).max (0)
+			l_x_coord := l_x_coord + l_x_offset
 
-			l_width := a_popup.width - l_left_border - l_right_border
-			l_height := a_popup.height - l_top_border
+			l_y_coord := (a_popup.y_position + l_top_border)
+			l_y_offset := (l_screen.virtual_y - l_y_coord).max (0)
+			l_y_coord := l_y_coord + l_y_offset
+
+			l_width := a_popup.width - l_left_border - l_right_border - l_x_offset
+			l_height := a_popup.height - l_top_border - l_y_offset
 
 			if l_choice_list.column_count > 0 and then l_choice_list.row_count > 0 then
-				l_width := l_width.max (l_choice_list.column (1).required_width_of_item_span (1, l_choice_list.row_count) + 4 + (2 * l_box_border))
-				l_width := (l_screen.virtual_height - l_x_coord).max (0).min (l_width)
 
-				l_height := (l_screen.virtual_height - l_y_coord).max (0).min (l_choice_list.virtual_height)
+				l_ideal_width := l_choice_list.column (1).required_width_of_item_span (1, l_choice_list.row_count) + 4 + (2 * l_box_border)
+				l_ideal_height := l_choice_list.virtual_height
+
+				l_width := l_width.max (l_ideal_width)
+				l_height := l_height.max (l_ideal_height)
+
+					-- Constrain width and height within virtual dimensions of screen.
+				l_width := (l_screen.virtual_width - (l_x_coord - l_screen.virtual_x)).min (l_width)
+				l_height := (l_screen.virtual_height - (l_y_coord - l_screen.virtual_y)).min (l_height)
+
+				if (l_x_coord + l_ideal_width) > (l_screen.virtual_x + l_screen.virtual_width) then
+					l_x_coord := (l_screen.virtual_x + l_screen.virtual_width) - l_ideal_width
+					l_width := l_ideal_width
+				end
+
+				if (l_y_coord + l_ideal_height) > (l_screen.virtual_y + l_screen.virtual_height) then
+					l_y_coord := (l_screen.virtual_y + l_screen.virtual_height) - l_ideal_height
+					l_height := l_ideal_height
+				end
+
 				l_choice_list.set_minimum_height (l_height)
-
 				l_choice_list.column (1).set_width (l_width - (2 * l_box_border))
 				l_choice_list.set_minimum_width (l_height - (2 * l_box_border))
 			end

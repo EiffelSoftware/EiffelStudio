@@ -85,6 +85,9 @@ test	iteration-cursor-two-generics	iteration002 tcf pass iteration formal generi
 test	net-out-of-descriptor	net001 tcf pass net
 test	net-connect-failure		net002 tcf pass net multithreaded
 
+-- EiffelStore test
+test	eiffelstore_various_functions eiffelstore001 tcf pass eiffelstore
+
 -- Exceptions
 test	old-expression-exception	except001 tcf pass exception
 test	invariant-violation-on-entry	except002 tcf pass exception

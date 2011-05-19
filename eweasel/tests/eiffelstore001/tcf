@@ -1,0 +1,20 @@
+test_name eiffelstore_various_functions
+test_description Test various functions in EiffelStore
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	change_action.e $CLUSTER change_action.e
+copy_raw 	database_storage_manager.e $CLUSTER database_storage_manager.e
+copy_raw 	no_args_stored_procedure_test.e $CLUSTER no_args_stored_procedure_test.e
+
+compile_melted
+compile_result ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work 	NONE exec_output_m
+execute_result 	ok
+compare		exec_output_m output
+
+test_end

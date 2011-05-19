@@ -8,7 +8,7 @@
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2-safe.ecf"/>
-		<library name="ribbon" location="$EIFFEL_SRC\library\ribbon\ribbon-safe.ecf"/>
+		<library name="ribbon" location="$ISE_LIBRARY\library\ribbon\ribbon-safe.ecf"/>
 		<cluster name="root_cluster" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/EIFGENs$</exclude>

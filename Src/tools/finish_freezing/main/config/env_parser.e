@@ -291,25 +291,11 @@ feature {NONE} -- Basic operations
 			result_compares_objects: Result.object_comparison
 		end
 
-	temp_batch_file_name: STRING
+	temp_batch_file_name: STRING = "tmp_espawn.bat"
 			-- File name of evaluated environment variables.
-		once
-			Result := (create {FILE_NAME}.make_temporary_name).out
-			Result.append ("_espawn.bat")
-		ensure
-			result_attached: Result /= Void
-			not_result_is_empty: not Result.is_empty
-		end
 
-	env_eval_tmp_file_name: STRING
+	env_eval_tmp_file_name: STRING = "tmp_espawn.tmp"
 			-- File name of evaluated environment variables.
-		once
-			Result := (create {FILE_NAME}.make_temporary_name).out
-			Result.append ("_espawn.tmp")
-		ensure
-			result_attached: Result /= Void
-			not_result_is_empty: not Result.is_empty
-		end
 
 	cmd_exe_file_name: STRING
 			-- File name of Command exe.

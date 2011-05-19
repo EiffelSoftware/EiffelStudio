@@ -2631,6 +2631,9 @@ test	scoop-wait-condition				scoop009 tcf pass scoop execution assertion
 test	scoop-request-chain-exception			scoop011 tcf pass scoop execution exception
 test	scoop-false-wait-condition			scoop012 tcf pass scoop execution assertion exception
 
+-- Prettity
+test	pretty-smoke-test			pretty001 tcf pass pretty
+
 -- Testing facility
 test	testing-with-error		testing001 tcf pass testing
 

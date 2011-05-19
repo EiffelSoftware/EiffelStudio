@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-8-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-8-0 http://www.eiffel.com/developers/xml/configuration-1-8-0.xsd" name="test" uuid="4FB0DD13-903C-4F2F-BF60-C6D3BC42FCD5">
+	<target name="test">
+		<root cluster="root_cluster" class="test" feature="make"/>
+		<option warning="true" is_attached_by_default="true" void_safety="all">
+			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
+		<warning name="syntax" enabled="false"/></option>
+		<precompile name="precompile" location="$PRECOMPILED_BASE_SAFE"/>
+		$EWEASEL_DOTNET_SETTING
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf" use_application_options="true"/>
+		<cluster name="root_cluster" location="$CLUSTER\"/>
+		<library name="mysql" location="$ISE_LIBRARY\library\store\dbms\rdbms\mysql\mysql-safe.ecf" readonly="false"/>
+		<library name="store" location="$ISE_LIBRARY\library\store\store-safe.ecf"/>
+	</target>
+</system>

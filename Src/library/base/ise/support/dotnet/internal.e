@@ -2244,14 +2244,14 @@ feature {TYPE, INTERNAL} -- Implementation
 			if max_type_id > l_new_count then
 				l_new_count := (max_type_id).max (l_new_count * 2)
 				array_upper_cell.put (l_new_count)
-				id_to_eiffel_type.conservative_resize (0, l_new_count)
-				id_to_eiffel_implementation_type.conservative_resize (0, l_new_count)
-				id_to_storable_version.conservative_resize (0, l_new_count)
-				id_to_fields.conservative_resize (0, l_new_count)
-				id_to_fields_static_type.conservative_resize (0, l_new_count)
-				id_to_fields_abstract_type.conservative_resize (0, l_new_count)
-				id_to_fields_name.conservative_resize (0, l_new_count)
-				id_to_fields_transient.conservative_resize (0, l_new_count)
+				id_to_eiffel_type.conservative_resize_with_default (Void, 0, l_new_count)
+				id_to_eiffel_implementation_type.conservative_resize_with_default (Void, 0, l_new_count)
+				id_to_storable_version.conservative_resize_with_default (Void, 0, l_new_count)
+				id_to_fields.conservative_resize_with_default (Void, 0, l_new_count)
+				id_to_fields_static_type.conservative_resize_with_default (Void, 0, l_new_count)
+				id_to_fields_abstract_type.conservative_resize_with_default (Void, 0, l_new_count)
+				id_to_fields_name.conservative_resize_with_default (Void, 0, l_new_count)
+				id_to_fields_transient.conservative_resize_with_default (Void, 0, l_new_count)
 				persistent_field_counts.conservative_resize_with_default (-1, 0, l_new_count)
 			end
 		end
@@ -2259,7 +2259,7 @@ feature {TYPE, INTERNAL} -- Implementation
 	id_to_eiffel_type: ARRAY [detachable RT_CLASS_TYPE]
 			-- Mapping between dynamic type id and Eiffel types.
 		once
-			create Result.make (min_predefined_type, array_upper_cell.item)
+			create Result.make_filled (Void, min_predefined_type, array_upper_cell.item)
 		ensure
 			id_to_eiffel_type_not_void: Result /= Void
 		end
@@ -2267,7 +2267,7 @@ feature {TYPE, INTERNAL} -- Implementation
 	id_to_eiffel_implementation_type: ARRAY [detachable RT_CLASS_TYPE]
 			-- Mapping between dynamic type id and Eiffel implementation types.
 		once
-			create Result.make (min_predefined_type, array_upper_cell.item)
+			create Result.make_filled (Void, min_predefined_type, array_upper_cell.item)
 		ensure
 			id_to_eiffel_type_not_void: Result /= Void
 		end
@@ -2275,7 +2275,7 @@ feature {TYPE, INTERNAL} -- Implementation
 	id_to_storable_version: ARRAY [detachable IMMUTABLE_STRING_8]
 			-- Buffer for `storable_version_of_type' lookups index by type_id.
 		once
-			create Result.make (min_predefined_type, array_upper_cell.item)
+			create Result.make_filled (Void, min_predefined_type, array_upper_cell.item)
 		ensure
 			id_to_storable_version_not_void: Result /= Void
 		end
@@ -2283,7 +2283,7 @@ feature {TYPE, INTERNAL} -- Implementation
 	id_to_fields: ARRAY [detachable ARRAYED_LIST [FIELD_INFO]]
 			-- Buffer for `get_members' lookups index by type_id.
 		once
-			create Result.make (min_predefined_type, array_upper_cell.item)
+			create Result.make_filled (Void, min_predefined_type, array_upper_cell.item)
 		ensure
 			id_to_fields_not_void: Result /= Void
 		end
@@ -2291,7 +2291,7 @@ feature {TYPE, INTERNAL} -- Implementation
 	id_to_fields_abstract_type: ARRAY [detachable NATIVE_ARRAY [INTEGER]]
 			-- Buffer for `field_type_of_type' lookups index by type_id.
 		once
-			create Result.make (min_predefined_type, array_upper_cell.item)
+			create Result.make_filled (Void, min_predefined_type, array_upper_cell.item)
 		ensure
 			id_to_fields_abstract_type_not_void: Result /= Void
 		end
@@ -2299,7 +2299,7 @@ feature {TYPE, INTERNAL} -- Implementation
 	id_to_fields_static_type: ARRAY [detachable NATIVE_ARRAY [INTEGER]]
 			-- Buffer for `field_static_type_of_type' lookups index by type_id.
 		once
-			create Result.make (min_predefined_type, array_upper_cell.item)
+			create Result.make_filled (Void, min_predefined_type, array_upper_cell.item)
 		ensure
 			id_to_fields_static_type_not_void: Result /= Void
 		end
@@ -2307,7 +2307,7 @@ feature {TYPE, INTERNAL} -- Implementation
 	id_to_fields_name: ARRAY [detachable ARRAYED_LIST [STRING]]
 			-- Buffer for `field_name_of_type' lookups index by type_id.
 		once
-			create Result.make (min_predefined_type, array_upper_cell.item)
+			create Result.make_filled (Void, min_predefined_type, array_upper_cell.item)
 		ensure
 			id_to_fields_name_not_void: Result /= Void
 		end
@@ -2315,7 +2315,7 @@ feature {TYPE, INTERNAL} -- Implementation
 	id_to_fields_transient: ARRAY [detachable ARRAYED_LIST [BOOLEAN]]
 			-- Buffer for `is_field_transient_of_type' lookups index by type_id.
 		once
-			create Result.make (min_predefined_type, array_upper_cell.item)
+			create Result.make_filled (Void, min_predefined_type, array_upper_cell.item)
 		ensure
 			id_to_fields_name_not_void: Result /= Void
 		end

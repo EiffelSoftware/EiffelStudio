@@ -48,7 +48,6 @@ feature {NONE} -- Execution
 		require else
 			True -- We don't need a compiled workbench!
 		local
-			i: INTEGER
 			e: ERROR
 		do
 			show_pretty.execute
@@ -56,14 +55,13 @@ feature {NONE} -- Execution
 			if show_pretty.error then
 				io.error.put_string ("Prettifyer: Unable to prettify.%N")
 				from
-					i := Error_handler.error_list.lower
+					error_handler.error_list.start
 				until
-					i > Error_handler.error_list.upper
+					error_handler.error_list.after
 				loop
-					e := error_handler.error_list.i_th (i)
-
+					e := error_handler.error_list.item
 					io.error.put_string ("- Syntax error at line " + e.line.out + "%N")
-					i := i+1
+					error_handler.error_list.forth
 				end
 
 			end

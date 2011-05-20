@@ -265,7 +265,6 @@ feature -- Generation
 			-- Copy local assemblies if needed to `Generation_directory/Assemblies' and
 			-- copy configuration file to load local assemblies.
 		local
-			l_source, l_target: RAW_FILE
 			l_source_name: FILE_NAME
 			l_target_name: STRING
 			l_has_local, retried: BOOLEAN

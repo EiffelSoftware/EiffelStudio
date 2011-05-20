@@ -6,10 +6,10 @@ note description: "[
 class			TEST inherit ANY ANY ANY
 
 feature
-	f	local a: like Current
+	f	local a:detachable separate like Current
 	b: like twin.twin
 c: like {ANY}.out x, y  : INTEGER
 s
-:STRING_32
+:attached STRING_32
 do                            	s := {STRING_32} "foo"
 end end 

@@ -1,10 +1,15 @@
+note description: "[
+		Test of prettify command
+	]"
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
---| All rights reserved.
---| Your use of this work is governed under the terms of the GNU General
---| Public License version 2.
 
-indexing
-	abcde, text_processing, TeX
-class TEST
-end 
+class			TEST inherit ANY ANY ANY
+
+feature
+	f	local a:detachable separate like Current
+	b: like twin.twin
+c: like {ANY}.out x, y  : INTEGER
+s
+:attached STRING_32
+do                            	s := {STRING_32} "foo"
+end end 

@@ -18,11 +18,11 @@ feature
 
 	f
 		local
-			a: like Current
+			a: detachable separate like Current
 			b: like twin.twin
 			c: like {ANY}.out
 			x, y: INTEGER
-			s: STRING_32
+			s: attached STRING_32
 		do
 			s := {STRING_32} "foo"
 		end

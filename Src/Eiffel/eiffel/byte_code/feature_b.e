@@ -86,29 +86,38 @@ feature -- Visitor
 			f: FEATURE_I
 			l_node: ACCESS_B
 		do
-			if not context.is_written_context or (system.il_generation and then context_type.is_expanded) then
-					-- Ensure the feature is not redeclared into attribute.
-				c ?= context_type
-				f := c.associated_class.feature_of_rout_id (routine_id)
-				debug ("fixme")
-					(create {REFACTORING_HELPER}).fixme ("Correct evaluation of context type of an operator call.")
-				end
-				if attached f and then not f.is_attribute then
-					if not system.il_generation or else not c.is_expanded then
-						f := Void
-					end
-				end
-			end
-			if f = Void then
-					-- Process feature as an internal routine.
+			c ?= context_type
+			if system.il_generation and then not (c.is_expanded and c.is_basic) then
+					-- We cannot optimize .NET feature calls at this point. See eweasel test#term202
+					-- for an example where trying to optimize is not working properly: the issue is
+					-- that the typing gets confused between inherited context and descendant context
+					-- we do call `{BYTE_CONTEXT}.real_type.
+					-- We only optimize calls on basic expanded type.
 				v.process_feature_b (Current)
 			else
-					-- Create new byte node and process it instead of the current one.
-				l_node := byte_node (f, c)
-				if attached {like Current} l_node as l_feat then
-					v.process_feature_b (l_feat)
+				if not context.is_written_context then
+						-- Ensure the feature is not redeclared into attribute.
+					f := c.associated_class.feature_of_rout_id (routine_id)
+					debug ("fixme")
+						(create {REFACTORING_HELPER}).fixme ("Correct evaluation of context type of an operator call.")
+					end
+					if attached f and then not f.is_attribute then
+						if not system.il_generation or else not c.is_expanded then
+							f := Void
+						end
+					end
+				end
+				if f = Void then
+						-- Process feature as an internal routine.
+					v.process_feature_b (Current)
 				else
-					l_node.process (v)
+						-- Create new byte node and process it instead of the current one.
+					l_node := byte_node (f, c)
+					if attached {like Current} l_node as l_feat then
+						v.process_feature_b (l_feat)
+					else
+						l_node.process (v)
+					end
 				end
 			end
 		end

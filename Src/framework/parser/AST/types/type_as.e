@@ -22,7 +22,7 @@ feature -- Roundtrip
 	separate_mark_index: INTEGER
 			-- Index of separate symbol (if any)
 
-	lcurly_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS
+	lcurly_symbol (a_list: LEAF_AS_LIST): detachable SYMBOL_AS
 			-- Left curly symbol(s) associated with this structure if any.
 		require
 			a_list_not_void: a_list /= Void
@@ -35,7 +35,7 @@ feature -- Roundtrip
 			end
 		end
 
-	rcurly_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS
+	rcurly_symbol (a_list: LEAF_AS_LIST): detachable SYMBOL_AS
 			-- Right curly symbol(s) associated with this structure
 			-- Maybe none, or maybe only left curly appears.
 		require
@@ -49,34 +49,53 @@ feature -- Roundtrip
 			end
 		end
 
-	attachment_mark (a_list: LEAF_AS_LIST): SYMBOL_AS
-			-- Attachment symbol (if any)
+	attachment_mark (a_list: LEAF_AS_LIST): detachable LEAF_AS
+			-- Attachment mark (if any).
+			-- Use `attachment_symbol' or `attachment_keyword' for specific representation.
 		require
 			a_list_not_void: a_list /= Void
 		local
 			i: INTEGER
 		do
 			i := attachment_mark_index
-			if a_list.valid_index (i) then
-				Result ?= a_list.i_th (i)
+			if a_list.valid_index (i) and then attached {LEAF_AS} a_list.i_th (i) as m then
+				Result := m
 			end
+		ensure
+			result_attached: (attached Result) = (attached attachment_symbol (a_list) or attached attachment_keyword (a_list))
+			result_consistent: Result = attachment_symbol (a_list) or Result = attachment_keyword (a_list)
 		end
 
-	attachment_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
-			-- Attachment symbol (if any)
+	attachment_symbol (a_list: LEAF_AS_LIST): detachable SYMBOL_AS
+			-- Attachment symbol (if any).
+			-- Use `attachment_mark' if attachment status in a form of keyword is respected.
 		require
 			a_list_not_void: a_list /= Void
 		local
 			i: INTEGER
 		do
 			i := attachment_mark_index
-			if a_list.valid_index (i) then
-				Result ?= a_list.i_th (i)
+			if a_list.valid_index (i) and then attached {SYMBOL_AS} a_list.i_th (i) as s then
+				Result := s
 			end
 		end
 
-	separate_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
-			-- Separate keyword (if any)
+	attachment_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
+			-- Attachment keyword (if any).
+			-- Use `attachment_mark' if attachment status in a form of symbol is respected.
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := attachment_mark_index
+			if a_list.valid_index (i) and then attached {KEYWORD_AS} a_list.i_th (i) as k then
+				Result := k
+			end
+		end
+
+	separate_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
+			-- Separate keyword (if any).
 		require
 			a_list_attached: attached a_list
 		local
@@ -118,11 +137,7 @@ feature -- Roundtrip/Token
 				if lcurly_symbol_index /= 0 then
 					Result := lcurly_symbol (a_list)
 				elseif attachment_mark_index /= 0 then
-					if has_new_attachment_mark_syntax then
-						Result := attachment_keyword (a_list)
-					else
-						Result := attachment_mark (a_list)
-					end
+					Result := attachment_mark (a_list)
 				elseif separate_mark_index /= 0 then
 					Result := separate_keyword (a_list)
 				end
@@ -145,10 +160,10 @@ feature -- Status
 			-- Is detachable mark specified?
 
 	has_new_attachment_mark_syntax: BOOLEAN
-			-- Does Current using `attached' and `detached_keyword'?
+			-- Are `attached' and `detachable' keywords used?
 
 	has_separate_mark: BOOLEAN
-			-- Is attached mark specified?
+			-- Is separate mark specified?
 
 	has_anchor: BOOLEAN
 			-- Does this type involve an anchor?
@@ -225,7 +240,7 @@ feature -- Output
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

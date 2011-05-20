@@ -667,7 +667,7 @@ feature {NONE} -- Implementation
 					-- handling a FEATURE_B which is actually an ATTRIBUTE_I, then we would be
 					-- regenerating a FEATURE_B object if it was `parent /= Void' and thus in
 					-- enlarged_on we would recurse.
-				Result := f.access (real_type (f.type.instantiation_in (a_context_type, f.written_in)), False)
+				Result := f.access (f.type.instantiation_in (a_context_type, f.written_in), False)
 				p := parent
 				if p /= Void then
 					Result.set_parent (p)

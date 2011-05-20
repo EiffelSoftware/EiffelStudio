@@ -35,21 +35,31 @@ feature -- Visitor
 			c: CL_TYPE_A
 			f: FEATURE_I
 		do
-			if not is_static_call and then not context.is_written_context then
-					-- Ensure the feature is not redeclared into attribute or internal routine.
-					-- and if redeclared as an external, make sure it is not redeclared differently.
-				c ?= context_type
-				f := c.associated_class.feature_of_rout_id (routine_id)
-				if equal (f.extension, extension) then
-					f := Void
-				end
-			end
-			if f = Void then
-					-- Process feature as an external routine.
+			c ?= context_type
+			if system.il_generation and then not (c.is_expanded and c.is_basic) then
+					-- We cannot optimize .NET feature calls at this point. See eweasel test#term202
+					-- for an example where trying to optimize is not working properly: the issue is
+					-- that the typing gets confused between inherited context and descendant context
+					-- we do call `{BYTE_CONTEXT}.real_type
+					-- We only optimize external calls on basic expanded type.
 				v.process_external_b (Current)
 			else
-					-- Create new byte node and process it instead of the current one.
-				byte_node (f, c).process (v)
+
+				if not is_static_call and then not context.is_written_context then
+						-- Ensure the feature is not redeclared into attribute or internal routine.
+						-- and if redeclared as an external, make sure it is not redeclared differently.
+					f := c.associated_class.feature_of_rout_id (routine_id)
+					if equal (f.extension, extension) then
+						f := Void
+					end
+				end
+				if f = Void then
+						-- Process feature as an external routine.
+					v.process_external_b (Current)
+				else
+						-- Create new byte node and process it instead of the current one.
+					byte_node (f, c).process (v)
+				end
 			end
 		end
 

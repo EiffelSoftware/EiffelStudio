@@ -830,6 +830,7 @@ feature {NONE} -- Implementation
 			l_group: CONF_GROUP
 			l_library: CONF_LIBRARY
 			l_done: BOOLEAN
+			l_classes: HASH_TABLE [CONF_CLASS, STRING]
 		do
 			if a_groups /= Void then
 				from
@@ -864,10 +865,16 @@ feature {NONE} -- Implementation
 							if l_library.library_target /= Void and then all_libraries.has (l_library.library_target.system.uuid) then
 								l_done := True
 								if l_library.classes_set then
-									across l_library.classes as l_item loop
-										if l_item.item.is_compiled then
-											partly_removed_classes.force ([l_item.item, current_system])
+									from
+										l_classes := l_library.classes
+										l_classes.start
+									until
+										l_classes.after
+									loop
+										if l_classes.item_for_iteration.is_compiled then
+											partly_removed_classes.force ([l_classes.item_for_iteration, current_system])
 										end
+										l_classes.forth
 									end
 								end
 							end
@@ -1100,7 +1107,7 @@ invariant
 	last_warnings_not_void: last_warnings /= Void
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

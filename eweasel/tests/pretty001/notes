@@ -1,0 +1,3 @@
+An Index_clause without an Index tag is still reported as a syntax error.
+Prerelease 92.12.08.
+Still not fixed - prerelease 93.02.17.

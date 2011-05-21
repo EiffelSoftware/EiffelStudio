@@ -220,7 +220,6 @@ feature {NONE} -- Implementation
 				end
 
 				l_as.process (Current)
-				--process_ast_node (l_as)
 
 				if post /= Void then
 					print_string (post)
@@ -364,7 +363,7 @@ feature {NONE} -- Implementation
 						if attached {BREAK_AS}l_as as break_as then
 							safe_process (break_as)
 						else
-							safe_process_and_print (l_as, "", " ", False)
+							safe_process_and_print (l_as, "", "", False)
 						end
 						i := i + 1
 					end
@@ -518,19 +517,62 @@ feature {CLASS_AS} -- Process leafs
 	process_string_as (l_as: STRING_AS)
 			-- Process `l_as'.
 		do
-			process_leading_leaves (l_as.index)
-			last_index := l_as.index
 			if l_as.is_once_string then
 				safe_process_and_print (l_as.once_string_keyword (match_list), "", " ", False)
 			end
 			safe_process_and_print (l_as.type, "", " ", False)
-			print_string (l_as.text_32 (match_list))
+			process_leading_leaves (l_as.index)
+			last_index := l_as.index
+			print_string (l_as.string_value_32)
 		end
 
 	process_verbatim_string_as (l_as: VERBATIM_STRING_AS)
 			-- Process `l_as'.
+		local
+			s: STRING_32
+			i, j, n: INTEGER
 		do
-			process_string_as (l_as)
+			if l_as.is_once_string then
+				safe_process_and_print (l_as.once_string_keyword (match_list), "", " ", False)
+			end
+			safe_process_and_print (l_as.type, "", " ", False)
+			process_leading_leaves (l_as.index)
+			last_index := l_as.index
+			print_string ("%"")
+			print_string (l_as.verbatim_marker)
+			s := l_as.value_32
+			if l_as.is_indentable then
+				print_string ("[")
+				print_new_line
+				indent.append_character ('%T')
+				from
+					i := 1
+					n := s.count
+				until
+					i > n
+				loop
+					j := s.index_of ('%N', i)
+					if j = 0 then
+						j := n + 1
+					end
+					print_string (indent)
+					print_string (s.substring (i, j - 1))
+					print_new_line
+					i := j + 1
+				end
+				indent.remove_tail (1)
+				print_string (indent)
+				print_string ("]")
+			else
+				print_string ("{")
+				print_new_line
+				print_string (s)
+				print_new_line
+				print_string (indent)
+				print_string ("}")
+			end
+			print_string (l_as.verbatim_marker)
+			print_string ("%"")
 		end
 
 	process_current_as (l_as: CURRENT_AS)
@@ -626,6 +668,9 @@ feature {CLASS_AS} -- Class Declarations
 				end_index := match_list.count+1
 				process_leading_leaves (match_list.count+1)
 			end
+			if last_printed /= '%N' then
+				print_new_line
+			end
 		end
 
 	process_invariant_as (l_as: INVARIANT_AS)
@@ -641,7 +686,9 @@ feature {CLASS_AS} -- Indexing
 			-- Process indexing clause `l_as'
 		do
 			safe_process (l_as.indexing_keyword (match_list))
-			process_and_print_eiffel_list (l_as, "%T", "", False, True)
+			indent.append_character ('%T')
+			process_and_print_eiffel_list (l_as, indent, "", False, True)
+			indent.remove_tail (1)
 			safe_process (l_as.end_keyword (match_list))
 		end
 
@@ -876,34 +923,11 @@ feature {CLASS_AS} -- Features
 
 	process_type_dec_as (l_as: TYPE_DEC_AS)
 			-- Process type declaration `l_as'.
-		local
-			i: INTEGER
 		do
 			process_and_print_identifier_list (l_as.id_list, "", " ", True, False)
 			safe_process (l_as.colon_symbol (match_list))
-
-			-- If there is a 'detachable'...
-			if last_index < l_as.type.first_token (match_list).index then
-				-- Print it after a ' '.
-				print_string (" ")
-				--process_leading_leaves (l_as.type.first_token (match_list).index)
-				i := l_as.type.first_token (match_list).index - last_index
-				i := i.min (4)
-				process_leading_leaves (last_index + i - 1)
-				last_index := l_as.type.first_token (match_list).index
-				-- Print the typename.
-				safe_process (l_as.type)
-			else
-				-- Print the typename after a ' '.
-				safe_process_and_print (l_as.type, " ", "", False)
-			end
-
-			-- The following parameter could be on a separate line, without a semicolon.
-			if attached {BREAK_AS} match_list.i_th (l_as.type.last_token (match_list).index+1) as b then
-				if b.text_32 (match_list).has ('%N') then
-					print_string ("%N" + indent)
-				end
-			end
+			print_string (" ")
+			safe_process (l_as.type)
 		end
 
 	process_constant_as (l_as: CONSTANT_AS)
@@ -1496,9 +1520,8 @@ feature {CLASS_AS} -- Types
 			-- Process class type `l_as'.
 		do
 			safe_process (l_as.lcurly_symbol (match_list))
-			safe_process_and_print (l_as.attachment_mark (match_list), "", " ", False)
+			process_type_marks (l_as)
 			safe_process_and_print (l_as.expanded_keyword (match_list), "", " ", False)
-			safe_process_and_print (l_as.separate_keyword (match_list), "", " ", False)
 			safe_process (l_as.class_name)
 			safe_process (l_as.rcurly_symbol (match_list))
 		end
@@ -1507,9 +1530,8 @@ feature {CLASS_AS} -- Types
 			-- Process generic class type `l_as'.
 		do
 			safe_process (l_as.lcurly_symbol (match_list))
-			safe_process_and_print (l_as.attachment_mark (match_list), "", " ", False)
+			process_type_marks (l_as)
 			safe_process_and_print (l_as.expanded_keyword (match_list), "", " ", False)
-			safe_process_and_print (l_as.separate_keyword (match_list), "", " ", False)
 			safe_process (l_as.class_name)
 			safe_process_and_print (l_as.internal_generics, " ", "", False)
 			safe_process (l_as.rcurly_symbol (match_list))
@@ -1519,7 +1541,7 @@ feature {CLASS_AS} -- Types
 			-- Process formal type `l_as'.
 		do
 			safe_process (l_as.lcurly_symbol (match_list))
-			safe_process_and_print (l_as.attachment_mark (match_list), "", " ", False)
+			process_type_marks (l_as)
 			safe_process_and_print (l_as.reference_or_expanded_keyword (match_list), "", " ", False)
 			safe_process (l_as.name)
 			safe_process (l_as.rcurly_symbol (match_list))
@@ -1529,7 +1551,7 @@ feature {CLASS_AS} -- Types
 			-- Process 'like Current' type `l_as'.
 		do
 			safe_process (l_as.lcurly_symbol (match_list))
-			safe_process_and_print (l_as.attachment_mark (match_list), "", " ", False)
+			process_type_marks (l_as)
 			safe_process (l_as.like_keyword (match_list))
 			safe_process_and_print (l_as.current_keyword, " ", "", False)
 			safe_process (l_as.rcurly_symbol (match_list))
@@ -1539,7 +1561,7 @@ feature {CLASS_AS} -- Types
 			-- Process 'like id' type `l_as'.
 		do
 			safe_process (l_as.lcurly_symbol (match_list))
-			safe_process_and_print (l_as.attachment_mark (match_list), "", " ", False)
+			process_type_marks (l_as)
 			safe_process (l_as.like_keyword (match_list))
 			safe_process_and_print (l_as.anchor, " ", "", False)
 			safe_process (l_as.rcurly_symbol (match_list))
@@ -1549,8 +1571,7 @@ feature {CLASS_AS} -- Types
 			-- Process named tuple type `l_as'.
 		do
 			safe_process (l_as.lcurly_symbol (match_list))
-			safe_process_and_print (l_as.attachment_mark (match_list), "", " ", False)
-			safe_process_and_print (l_as.separate_keyword (match_list), "", " ", False)
+			process_type_marks (l_as)
 			safe_process (l_as.class_name)
 			safe_process_and_print (l_as.parameters, " ", "", False)
 			safe_process (l_as.rcurly_symbol (match_list))
@@ -1560,7 +1581,7 @@ feature {CLASS_AS} -- Types
 			-- Process qualified anchored type `l_as'.
 		do
 			safe_process (l_as.lcurly_symbol (match_list))
-			safe_process_and_print (l_as.attachment_mark (match_list), "", " ", False)
+			process_type_marks (l_as)
 			safe_process_and_print (l_as.like_keyword (match_list), "", " ", False)
 			safe_process (l_as.qualifier)
 			safe_process (l_as.chain)
@@ -1583,8 +1604,17 @@ feature {CLASS_AS} -- Types
 			safe_process (l_as.closing_bracket_as (match_list))
 		end
 
+feature {NONE} -- Visitor: type
+
+	process_type_marks (a: TYPE_AS)
+			-- Process types attachment and separateness marks (if any) associated with type `a'.
+		do
+			safe_process_and_print (a.attachment_mark (match_list), "", " ", False)
+			safe_process_and_print (a.separate_keyword (match_list), "", " ", False)
+		end
+
 invariant
-	out_stream_valid: out_stream /= Void
+	out_stream_attached: out_stream /= Void
 
 note
 	copyright: "Copyright (c) 1984-2011, Eiffel Software"

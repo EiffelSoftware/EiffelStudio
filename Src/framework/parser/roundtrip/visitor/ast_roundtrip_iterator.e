@@ -485,25 +485,40 @@ feature
 
 	process_eiffel_list (l_as: EIFFEL_LIST [AST_EIFFEL])
 		local
-			i, l_count: INTEGER
+			i: INTEGER
+			j: INTEGER
+			n: INTEGER
+			m: INTEGER
 		do
-			if l_as.count > 0 then
-				from
-					l_as.start
-					i := 1
-					if l_as.separator_list /= Void then
-						l_count := l_as.separator_list.count
-					end
-				until
-					l_as.after
-				loop
-					safe_process (l_as.item)
-					if i <= l_count then
-						safe_process (l_as.separator_list_i_th (i, match_list))
-						i := i + 1
-					end
-					l_as.forth
+			from
+				n := l_as.count
+				i := 1
+				check
+					consistent_separator_count: attached l_as.separator_list as l implies l.count = n or else l.count = n - 1
 				end
+				if l_as.separator_list = Void then
+					m := 0
+				else
+					m := l_as.separator_list.count
+					if m >= n then
+							-- There is a leading separator, start from index 1.
+						j := 1
+					end
+				end
+			until
+				i > n
+			loop
+				if j = 0 then
+						-- There is no leading separator, advance to the next one.
+					j := 1
+				elseif j <= m then
+						-- There is a separator, process it.
+					safe_process (l_as.separator_list_i_th (j, match_list))
+					j := j + 1
+				end
+					-- Process list element.
+				safe_process (l_as [i])
+				i := i + 1
 			end
 		end
 
@@ -1474,7 +1489,7 @@ feature{NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

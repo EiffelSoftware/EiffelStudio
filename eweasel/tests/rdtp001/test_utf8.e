@@ -3,7 +3,7 @@
 	test: "Test 测试 Test"
 
 class
-	TEST
+	TEST_UTF8
 
 create
 	make

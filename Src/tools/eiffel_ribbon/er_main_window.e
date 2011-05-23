@@ -79,7 +79,6 @@ feature {NONE} -- Initialization
 			create type_selector.make
 
 			create layout_constructor.make
-			shared_singleton.layout_constructor_list.extend (layout_constructor)
 
 			create object_editor.make
 

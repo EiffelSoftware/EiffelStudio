@@ -231,6 +231,8 @@ feature -- Basic Operations
 									feat := described_feature (token, line, ft)
 								when local_part then
 									feat := described_feature (token, line, ft)
+								when signature_part then
+									feat := described_feature (token, line, ft)
 								else
 								end
 							end
@@ -638,7 +640,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

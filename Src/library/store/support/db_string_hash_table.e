@@ -1,5 +1,5 @@
 note
-	description: "HASH_TABLE where keys are of type STRING."
+	description: "HASH_TABLE where keys are of type READABLE_STRING_32."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$"

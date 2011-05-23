@@ -19,6 +19,10 @@ feature {NONE} -- Initialization
 			create shared_singleton
 			create tree_node_factory.make
 			create vision_xml_translator.make
+			create widget
+			create content.make_with_widget (widget, "ER_LAYOUT_CONSTRUCTOR")
+
+			shared_singleton.layout_constructor_list.extend (Current)
 
 			build_ui
 			build_docking_content
@@ -33,7 +37,7 @@ feature {NONE} -- Initialization
 			l_count: INTEGER
 		do
 			l_count := shared_singleton.layout_constructor_list.count
-			create content.make_with_widget (widget, "ER_LAYOUT_CONSTRUCTOR")
+
 			content.set_long_title ("Layout Constructor " + l_count.out)
 			content.set_short_title ("Layout Constructor " + l_count.out)
 			content.set_type ({SD_ENUMERATION}.editor)
@@ -44,14 +48,11 @@ feature {NONE} -- Initialization
 		local
 			l_tree_item_app: EV_TREE_ITEM
 		do
-			create widget
 			widget.key_press_actions.extend (agent on_tree_key_press)
 
 			-- Ribbon tabs
-			create l_tree_item_app.make_with_text (constants.ribbon_tabs)
-			l_tree_item_app.pointer_button_press_actions.extend (agent on_pointer_press (?, ?, ?, ?, ?, ?, ?, ?, l_tree_item_app))
-			l_tree_item_app.drop_actions.set_veto_pebble_function (agent on_veto_pebble_function (?, constants.ribbon_tabs))
-			l_tree_item_app.drop_actions.extend (agent on_drop (?, l_tree_item_app))
+			l_tree_item_app := tree_item_factory_method (constants.ribbon_tabs)
+
 			widget.extend (l_tree_item_app)
 
 			helper.expand_all (widget)
@@ -109,16 +110,17 @@ feature -- Query
 			not_void: a_text /= Void
 		do
 			create Result.make (50)
-			check widget.count >= 1 end
-			from
-				widget.start
-			until
-				widget.after
-			loop
-				recrusive_all_items_with (a_text, widget.item, Result)
-				widget.forth
-			end
 
+			if widget.count >= 1 then
+				from
+					widget.start
+				until
+					widget.after
+				loop
+					recrusive_all_items_with (a_text, widget.item, Result)
+					widget.forth
+				end
+			end
 		end
 
 	all_items_in_all_constructors (a_text: STRING): ARRAYED_LIST [EV_TREE_NODE]

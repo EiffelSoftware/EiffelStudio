@@ -140,7 +140,7 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 			Result := False
 		end
 
-	parse (descriptor: INTEGER; uht: detachable DB_STRING_HASH_TABLE [detachable ANY]; ht_order: detachable ARRAYED_LIST [STRING_32]; uhandle: HANDLE; sql: READABLE_STRING_GENERAL): BOOLEAN
+	parse (descriptor: INTEGER; uht: detachable DB_STRING_HASH_TABLE [detachable ANY]; ht_order: detachable ARRAYED_LIST [READABLE_STRING_32]; uhandle: HANDLE; sql: READABLE_STRING_GENERAL): BOOLEAN
 			-- ???
 		do
 		end

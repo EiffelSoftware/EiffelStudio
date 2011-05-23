@@ -101,7 +101,7 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 			end
 		end
 
-	parse (descriptor: INTEGER; uht: detachable DB_STRING_HASH_TABLE [detachable ANY]; ht_order: detachable ARRAYED_LIST [STRING_32]; uhandle: HANDLE; sql: READABLE_STRING_GENERAL): BOOLEAN
+	parse (descriptor: INTEGER; uht: detachable DB_STRING_HASH_TABLE [detachable ANY]; ht_order: detachable ARRAYED_LIST [READABLE_STRING_32]; uhandle: HANDLE; sql: READABLE_STRING_GENERAL): BOOLEAN
 		do
 			if uhandle.execution_type.immediate_execution then
 				Result := True

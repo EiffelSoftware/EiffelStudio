@@ -111,7 +111,7 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 		deferred
 		end
 
-	parse (descriptor: INTEGER; uht: detachable DB_STRING_HASH_TABLE [detachable ANY]; ht_order: detachable ARRAYED_LIST [STRING_32]; uhandle: HANDLE; sql: READABLE_STRING_GENERAL): BOOLEAN
+	parse (descriptor: INTEGER; uht: detachable DB_STRING_HASH_TABLE [detachable ANY]; ht_order: detachable ARRAYED_LIST [READABLE_STRING_32]; uhandle: HANDLE; sql: READABLE_STRING_GENERAL): BOOLEAN
 			-- Prepare string `sql' by appending map
 			-- variables name from to `sql'. Map variables are used
 			-- for set input arguments

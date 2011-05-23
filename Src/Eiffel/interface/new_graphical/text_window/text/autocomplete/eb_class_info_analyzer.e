@@ -491,7 +491,7 @@ feature {NONE} -- Implementation (`type_from')
 				l_current_class_c := current_class_c
 				written_class := current_class_c
 				type := l_current_class_c.actual_type
-				if token_image_is_same_as_word (current_token, "create") then
+				if token_image_is_same_as_word (current_token, {STRING_32}"create") then
 					go_to_next_token
 					is_create := True
 					error := not token_image_is_same_as_word (current_token, opening_brace)
@@ -976,7 +976,7 @@ feature {NONE}-- Implementation
 	feature_part_at (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE): INTEGER
 			-- find in which part of the feature body `a_token' is
 		local
-			found: BOOLEAN
+			done: BOOLEAN
 			token: EDITOR_TOKEN
 			line: EDITOR_LINE
 		do
@@ -985,11 +985,11 @@ feature {NONE}-- Implementation
 				token := a_token
 				line := a_line
 			until
-				token = Void or found
+				token = Void or done
 			loop
 				if is_keyword (token) then
 					if token_image_is_in_array (token, feature_body_keywords) then
-						found := True
+						done := True
 						if token_image_is_in_array (token, feature_contract_keywords) then
 							Result := assertion_part
 						elseif token_image_is_in_array (token, feature_executable_keywords) then
@@ -997,6 +997,10 @@ feature {NONE}-- Implementation
 						elseif token_image_is_in_array (token, feature_local_keywords) then
 							Result := local_part
 						end
+					elseif token_image_is_same_as_word (token, {STRING_32} "feature") then
+							-- Not found, but done
+						Result := signature_part
+						done := True
 					end
 				end
 				if token = line.first_token then
@@ -1018,7 +1022,9 @@ feature {NONE}-- Implementation
 
 	local_part: INTEGER = 3
 
-	no_interesting_part: INTEGER = 4
+	signature_part: INTEGER = 4
+
+	no_interesting_part: INTEGER = 5
 
 	find_expression_start
 			-- find where to begin the analysis (set current_token/line)

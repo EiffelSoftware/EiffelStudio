@@ -477,6 +477,14 @@ feature -- Remote access to RT_
 			end
 		end
 
+feature -- Remote access to SCOOP MANAGER
+
+	imp_remote_rt_scoop_manager: detachable ABSTRACT_REFERENCE_VALUE
+			-- Return the remote scp_mnger
+		do
+			to_implement ("SCOOP: not yet implemented/supported in debugger for .Net")
+		end
+
 feature -- Remote access to Exceptions
 
 	remote_exception_manager_icd_value: ICOR_DEBUG_VALUE
@@ -1129,6 +1137,7 @@ feature -- Breakpoints controller
 				inspect a_execution_mode
 				when {EXEC_MODES}.Run then
 					-- do nothing
+					Precursor (a_execution_mode, ign_bp)
 				else
 					l_entry_fi := Il_debug_info_recorder.entry_point_feature_i
 					if l_entry_fi /= Void then

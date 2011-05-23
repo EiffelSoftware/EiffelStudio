@@ -225,13 +225,12 @@ feature -- Basic Operations
 								ft := l_content.feat_as
 								inspect
 									feature_part_at (token, line)
-								when instruction_part then
-									feat := described_feature (token, line, ft)
-								when assertion_part then
-									feat := described_feature (token, line, ft)
-								when local_part then
-									feat := described_feature (token, line, ft)
-								when signature_part then
+								when
+									instruction_part,
+									assertion_part,
+									local_part,
+									signature_part
+								then
 									feat := described_feature (token, line, ft)
 								else
 								end

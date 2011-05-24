@@ -43,7 +43,7 @@ feature
 	frozen decrement_integer_32 (a_destination: like destination_type): INTEGER_32
 			-- Atomic INTEGER_32 Decrement of `a_destination' value.
 		external
-			"C macro use <eif_scoop.h>"
+			"C macro use <eif_atomops.h>"
 		alias
 			"RTS_AD_I32"
 		end

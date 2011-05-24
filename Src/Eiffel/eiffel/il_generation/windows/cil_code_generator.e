@@ -7827,7 +7827,7 @@ feature -- Mapping between Eiffel compiler and generated tokens
 				l_output.set_file_name (l_module_name)
 				create Result.make (
 					l_module_name,
-					l_output,
+					l_output.string,
 					c_module_name,
 					Void,
 					Current,
@@ -8286,7 +8286,7 @@ feature -- Inline agents
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

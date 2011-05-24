@@ -7,6 +7,8 @@ feature
 			t: like Current
 			g: TEST3 [G]
 		do
+			t.do_nothing
+			g.do_nothing
 			Result := Current
 		end
 

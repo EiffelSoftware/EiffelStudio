@@ -1201,7 +1201,7 @@ feature {NONE} -- External features
 
 	para: detachable DB_PARA_ODBC
 
-	bind_args_value (descriptor: INTEGER; uht: DB_STRING_HASH_TABLE [detachable ANY]; ht_order: detachable ARRAYED_LIST [STRING_32])
+	bind_args_value (descriptor: INTEGER; uht: DB_STRING_HASH_TABLE [detachable ANY]; ht_order: detachable ARRAYED_LIST [READABLE_STRING_32])
 			-- Append map variables name from to `s'.
 			-- Map variables are used for set input arguments.
 		require

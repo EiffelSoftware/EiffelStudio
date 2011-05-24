@@ -850,6 +850,17 @@ feature {NONE} -- Implementations: signatures
 			l_type := a_type.actual_type
 			if (l_type.is_basic and not l_type.is_bit) or l_type.is_none then
 				a_sig.set_type (l_type.element_type, 0)
+			elseif l_type.is_formal then
+				l_formal ?= l_type
+				check
+					l_formal_not_void: l_formal /= Void
+				end
+				l_other_type := a_context_type.type.generics.item (l_formal.position)
+				if l_other_type.is_formal then
+					a_sig.set_type (l_type.element_type, 0)
+				else
+					set_signature_type (a_sig, l_other_type, a_context_type)
+				end
 			elseif l_type.is_expanded then
 					-- Correctly process classes mapped to built-in .NET types.
 				l_exp_type ?= l_type
@@ -866,17 +877,6 @@ feature {NONE} -- Implementations: signatures
 				else
 					a_sig.set_type (l_type.element_type,
 						actual_class_type_token (l_type.implementation_id (a_context_type.type)))
-				end
-			elseif l_type.is_formal then
-				l_formal ?= l_type
-				check
-					l_formal_not_void: l_formal /= Void
-				end
-				l_other_type := a_context_type.type.generics.item (l_formal.position)
-				if l_other_type.is_formal then
-					a_sig.set_type (l_type.element_type, 0)
-				else
-					set_signature_type (a_sig, l_other_type, a_context_type)
 				end
 			else
 				l_native_array_type ?= l_type
@@ -3694,7 +3694,7 @@ invariant
 	dll_or_console_valid: not is_assembly_module implies (is_dll and is_console_application)
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

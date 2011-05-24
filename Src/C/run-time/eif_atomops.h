@@ -38,7 +38,7 @@
 #define _eif_atomops_h_
 
 #if defined(__SUNPRO_C)
-#if defined(__SunOS_5_9)
+#if defined (__SunOS_5_9)
 // Atomic Operations are for Solaris 10 and above
 #else
 #include <sys/atomic.h>
@@ -79,7 +79,7 @@ static EIF_ATOMIC_INLINE EIF_INTEGER_32 eif_atomic_compare_and_swap_integer_32 (
 #elif defined (__EIF_GNUC_ATOMOPS__)
 		return (EIF_INTEGER_32) __sync_val_compare_and_swap (dest, compare, setter);
 #elif defined (__EIF_SUNPRO_C_ATOMOPS__)
-		return (EIF_INTEGER_32) atomic_cas_32 (dest, compare, setter);
+		return (EIF_INTEGER_32) atomic_cas_32 ((volatile uint32_t *)dest, compare, setter);
 #else
 		return (EIF_INTEGER_32)0;
 #endif
@@ -93,7 +93,7 @@ static EIF_ATOMIC_INLINE EIF_INTEGER_32 eif_atomic_swap_integer_32 (EIF_INTEGER_
 #elif defined (__EIF_GNUC_ATOMOPS__)
 		return (EIF_INTEGER_32) __sync_val_compare_and_swap (dest, *dest, setter);
 #elif defined (__EIF_SUNPRO_C_ATOMOPS__)
-		return (EIF_INTEGER_32) atomic_swap_32 (dest, setter);
+		return (EIF_INTEGER_32) atomic_swap_32 ((volatile uint32_t*)dest, setter);
 #else
 		return (EIF_INTEGER_32)0;
 #endif
@@ -107,7 +107,7 @@ static EIF_ATOMIC_INLINE EIF_INTEGER_32 eif_atomic_add_integer_32 (EIF_INTEGER_3
 #elif defined (__EIF_GNUC_ATOMOPS__)
 		return (EIF_INTEGER_32) __sync_add_and_fetch (dest, val);
 #elif defined (__EIF_SUNPRO_C_ATOMOPS__)
-		return (EIF_INTEGER_32) atomic_add_32_nv (dest, val);
+		return (EIF_INTEGER_32) atomic_add_32_nv ((volatile uint32_t*)dest, val);
 #else  
 		return (EIF_INTEGER_32)0;
 #endif

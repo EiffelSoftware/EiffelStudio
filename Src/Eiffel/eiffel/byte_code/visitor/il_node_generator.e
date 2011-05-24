@@ -591,6 +591,8 @@ feature {NONE} -- Implementation
 				-- Do we generate debug information for local variables.
 			debug_generation := System.line_generation or context.workbench_mode
 
+			i := 1
+
 			if debug_generation then
 				l_body := context.current_feature.real_body
 				if l_body /= Void then
@@ -613,13 +615,13 @@ feature {NONE} -- Implementation
 								until
 									id_list.after
 								loop
-									il_generator.put_local_info (local_list.item, id_list.item)
+									il_generator.put_local_info (context.real_type (local_list.item), id_list.item)
 									local_list.forth
 									id_list.forth
 								end
 								rout_locals.forth
 							else
-								il_generator.put_dummy_local_info (local_list.item, i)
+								il_generator.put_dummy_local_info (context.real_type (local_list.item), i)
 								i := i + 1
 								local_list.forth
 							end
@@ -645,7 +647,7 @@ feature {NONE} -- Implementation
 				until
 					local_list.after
 				loop
-					il_generator.put_nameless_local_info (local_list.item, i)
+					il_generator.put_nameless_local_info (context.real_type (local_list.item), i)
 					i := i + 1
 					local_list.forth
 				end
@@ -660,46 +662,26 @@ feature {NONE} -- Implementation
 			local_list_not_void: local_list /= Void
 			local_list_not_empty: not local_list.is_empty
 		local
-			routine_as: ROUTINE_AS
-			id_list: IDENTIFIER_LIST
-			rout_locals: EIFFEL_LIST [TYPE_DEC_AS]
-			local_type: CL_TYPE_A
-			i: INTEGER
-			l_body: BODY_AS
+			i, nb: INTEGER
 		do
-			l_body := context.current_feature.real_body
-			if l_body /= Void then
-				routine_as ?= l_body.content
-				if routine_as /= Void and then routine_as.locals /= Void then
-						-- `local_list' is in the same order as `routine_as.locals'
-						-- so this is easy to find for each element of `local_list'
-						-- its name in `routine_as.locals'.
-					rout_locals := routine_as.locals
-					from
-						rout_locals.start
-						local_list.start
-						i := 1
-					until
-						rout_locals.after
-					loop
-						from
-							id_list := rout_locals.item.id_list
-							id_list.start
-						until
-							id_list.after
-						loop
-							local_type ?= context.real_type (local_list.item)
-							if local_type /= Void and then local_type.is_true_expanded and then not local_type.is_external then
-								il_generator.create_expanded_object (local_type)
-								il_generator.generate_local_assignment (i)
-							end
-							i := i + 1
-							local_list.forth
-							id_list.forth
-						end
-						rout_locals.forth
-					end
+				-- We only initialize expanded locals defined by user
+				-- not the intermediate one required for the code generation.
+			from
+				local_list.start
+				i := 1
+				nb := context.byte_code.local_count
+			until
+				local_list.after or i > nb
+			loop
+				if
+					attached {CL_TYPE_A} context.real_type (local_list.item) as l_local_type and then
+					l_local_type.is_true_expanded and then not l_local_type.is_external
+				then
+					il_generator.create_expanded_object (l_local_type)
+					il_generator.generate_local_assignment (i)
 				end
+				i := i + 1
+				local_list.forth
 			end
 		end
 
@@ -4901,7 +4883,7 @@ feature {NONE} -- Convenience
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

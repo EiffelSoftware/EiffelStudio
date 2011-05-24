@@ -346,20 +346,18 @@ feature -- IL Code generation
 	generate_il
 			-- Generate IL code for constant.
 		local
-			type_i: TYPE_A
 			l_byte_context: like byte_context
 		do
 			l_byte_context := byte_context
 			l_byte_context.set_byte_code (create {STD_BYTE_CODE})
 			l_byte_context.set_current_feature (Current)
-			type_i := type
 			if is_once then
 				il_generator.generate_once_prologue
 				value.generate_il
 				il_generator.generate_once_store_result
 				il_generator.generate_once_epilogue
 			else
-				il_generator.put_result_info (type_i)
+				il_generator.put_result_info (l_byte_context.real_type (type))
 				value.generate_il
 				il_generator.generate_return (True)
 			end

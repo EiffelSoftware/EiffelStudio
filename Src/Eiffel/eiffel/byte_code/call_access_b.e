@@ -657,60 +657,19 @@ feature {NONE} -- Implementation
 			f_not_void: f /= Void
 		local
 			p: like parent
-			l_type: TYPE_A
-			l_params: like parameters
-			i: INTEGER
 		do
-			if system.il_generation then
-					-- We use `False' for the qualified boolean value of `access' otherwise
-					-- we get a stack overflow in test#valid120. The reason is that if we are
-					-- handling a FEATURE_B which is actually an ATTRIBUTE_I, then we would be
-					-- regenerating a FEATURE_B object if it was `parent /= Void' and thus in
-					-- enlarged_on we would recurse.
-				Result := f.access (f.type.instantiation_in (a_context_type, f.written_in), False)
-				p := parent
-				if p /= Void then
-					Result.set_parent (p)
-					if p.message = Current then
-						p.set_message (Result)
-					else
-						check p.target = Current end
-						p.set_target (Result)
-					end
+			Result := f.access (type, p/= Void)
+			p := parent
+			if p /= Void then
+				Result.set_parent (p)
+				if p.message = Current then
+					p.set_message (Result)
+				else
+					check p.target = Current end
+					p.set_target (Result)
 				end
-					-- Adapt attachement type to what `f' expects.
-				l_params := parameters
-				if l_params /= Void then
-					from
-						l_params := l_params.deep_twin
-						l_params.start
-						i := 1
-					until
-						l_params.after
-					loop
-						l_type := f.arguments.i_th (i)
-							-- Instantiate and also discard anchors are they are not needed
-						l_type := l_type.instantiation_in (a_context_type, f.written_in).deep_actual_type
-						l_params.item.set_attachment_type (l_type)
-						l_params.forth
-						i := i + 1
-					end
-					Result.set_parameters (l_params)
-				end
-			else
-				Result := f.access (type, p/= Void)
-				p := parent
-				if p /= Void then
-					Result.set_parent (p)
-					if p.message = Current then
-						p.set_message (Result)
-					else
-						check p.target = Current end
-						p.set_target (Result)
-					end
-				end
-				Result.set_parameters (parameters)
 			end
+			Result.set_parameters (parameters)
 		ensure
 			result_not_void: Result /= Void
 		end

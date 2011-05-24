@@ -934,7 +934,6 @@ end
 			nb, i, position: INTEGER
 			item: UN_OLD_B
 			l_old_expressions: like old_expressions
-			l_type: TYPE_A
 			l_il_generation: BOOLEAN
 			assert_chheck: BOOLEAN
 		do
@@ -961,8 +960,7 @@ end
 						i > nb
 					loop
 						item := l_old_expressions.item
-						l_type := context.real_type (item.type)
-						Context.add_local (l_type)
+						Context.add_local (item.type)
 						item.set_position (position)
 						position := position + 1
 						Context.add_local (item.exception_type)

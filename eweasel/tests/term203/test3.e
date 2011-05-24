@@ -10,6 +10,8 @@ feature
 			t.do_nothing
 			g.do_nothing
 			Result := Current
+		ensure
+			using_twin: old twin = twin
 		end
 
 end

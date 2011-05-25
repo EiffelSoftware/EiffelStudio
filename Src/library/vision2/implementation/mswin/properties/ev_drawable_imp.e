@@ -1145,9 +1145,11 @@ feature {NONE} -- Implementation
 			l_style: INTEGER
 			l_internal_pen: like internal_pen
 			l_brush: WEL_LOG_BRUSH
+			l_line_width: INTEGER
 		do
 			get_dc
-			if line_width = 0 then
+			l_line_width := line_width
+			if l_line_width = 0 then
 				remove_pen
 			else
 					-- unselect currently selected pen.
@@ -1157,24 +1159,26 @@ feature {NONE} -- Implementation
 				l_internal_pen := internal_pen
 				if not internal_initialized_pen then
 						-- Reset `internal_pen'.
-					l_internal_pen := internal_pen
 					if l_internal_pen /= Void then
 						l_internal_pen.decrement_reference
 						internal_pen := Void
 					end
-					if dashed_line_style then
-						l_style := ps_dot
+					if l_line_width = 1 then
+							-- Ps_cosmetic pens can only handle line widths of 1, however they are a lot faster to render.
+						l_style := ps_cosmetic
 					else
-						l_style := ps_solid
+						l_style := ps_geometric
 					end
-
+					if dashed_line_style then
+						l_style := l_style | ps_dot
+					end
 					l_brush := reusable_log_brush
 					l_brush.set_hatch (0)
 					l_brush.set_style (0)
 					l_brush.set_color (wel_fg_color)
 
 					l_internal_pen := allocated_pens.get (
-						l_style, line_width, l_brush)
+						l_style, l_line_width, l_brush)
 					internal_pen := l_internal_pen
 					internal_initialized_pen := True
 				end

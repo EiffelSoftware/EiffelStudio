@@ -165,18 +165,12 @@ feature -- Screen
 			if l_area = Void then
 					-- Use full screen coords
 				create l_screen
-				Result := [0, 0, l_screen.virtual_width, l_screen.virtual_height]
+				Result := [l_screen.virtual_x, l_screen.virtual_y, l_screen.virtual_width, l_screen.virtual_height]
 			else
 				Result := l_area
 			end
 		ensure
 			result_attached: Result /= Void
-			not_result_x_negative: Result.x >= 0
-			not_result_y_negative: Result.y >= 0
-			result_width_big_enough: Result.width > Result.x
-			result_height_big_enough: Result.height > Result.y
-			result_width_small_enough: Result.width <= (create {SD_SCREEN}).virtual_width
-			result_height_small_enough: Result.height <= (create {SD_SCREEN}).virtual_height
 		end
 
 feature -- Widget
@@ -269,7 +263,9 @@ feature -- Placement
 			l_top_area: detachable like window_working_area
 			l_new_x: INTEGER
 			l_new_y: INTEGER
+			l_screen: SD_SCREEN
 		do
+			create l_screen
 			l_top_window := widget_top_level_window (a_widget, True)
 			l_current_window := widget_top_level_window (a_widget, False)
 			if l_current_window /= Void and l_top_window /= Void then
@@ -292,25 +288,17 @@ feature -- Placement
 				end
 
 					-- Adjust X position
-				if a_screen_x + a_width > l_area.x + l_area.width then
+				if (a_screen_x + a_width) > (l_area.x + l_area.width) then
 						-- Out of space, given width
-					l_new_x := 	(l_area.x + l_area.width) - a_width
-					if l_new_x < 0 then
-							-- Off screen, so use original
-						l_new_x := a_screen_x
-					end
+					l_new_x := 	((l_area.x + l_area.width) - a_width).max (l_screen.virtual_x)
 				else
 					l_new_x := a_screen_x
 				end
 
 					-- Adjust Y position
-				if a_screen_y + a_height > l_area.y + l_area.height then
+				if (a_screen_y + a_height) > (l_area.y + l_area.height) then
 						-- Out of space, given height
-					l_new_y := 	(l_area.y + l_area.height) - a_height
-					if l_new_y < 0 then
-							-- Off screen, so use original
-						l_new_y := a_screen_y
-					end
+					l_new_y := 	((l_area.y + l_area.height) - a_height).max (l_screen.virtual_y)
 				else
 					l_new_y := a_screen_y
 				end
@@ -319,15 +307,11 @@ feature -- Placement
 				l_new_y := a_screen_y
 			end
 
-			l_new_x := l_new_x.max (0)
-			l_new_y := l_new_y.max (0)
+			l_new_x := l_new_x.max (l_screen.virtual_x)
+			l_new_y := l_new_y.max (l_screen.virtual_y)
 			Result := [l_new_x, l_new_y]
 		ensure
 			result_attached: Result /= Void
-			result_x_non_negative: Result.x >= 0
-			result_y_non_negative: Result.y >= 0
-			result_x_on_screen: Result.x <= (create {EV_SCREEN}).width
-			result_y_on_screen: Result.y <= (create {EV_SCREEN}).height
 		end
 
 ;note

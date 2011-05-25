@@ -109,8 +109,7 @@ feature {NONE} -- Basic operations
 			-- Using a batch file provided by `vsvars_batch_file'
 		local
 			l_result: like internal_variables_via_evaluation
-			l_file_name: STRING
-			l_eval_file_name: STRING
+			l_file_name, l_eval_file_name: STRING
 			l_file: detachable PLAIN_TEXT_FILE
 			l_com_spec: detachable STRING
 			l_cmd: STRING
@@ -128,8 +127,8 @@ feature {NONE} -- Basic operations
 				l_result.compare_objects
 
 				if retry_count < 2 then
-					l_file_name := temp_batch_file_name
-					l_eval_file_name := env_eval_tmp_file_name
+					l_file_name := new_temp_file (temp_batch_file_name)
+					l_eval_file_name := new_temp_file (env_eval_tmp_file_name)
 
 						-- Create batch file for environment variable evaluation
 					create l_file.make_open_write (l_file_name)
@@ -289,6 +288,33 @@ feature {NONE} -- Basic operations
 			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty
 			result_compares_objects: Result.object_comparison
+		end
+
+	new_temp_file (a_temp_name: STRING): STRING
+			-- Create a temporary file.
+		local
+			retried: BOOLEAN
+			l_file_name: FILE_NAME
+			l_file: PLAIN_TEXT_FILE
+		do
+			if not retried then
+					-- Create file in the current working directory if possible
+				Result := a_temp_name
+				create l_file.make_open_write (Result)
+				l_file.close
+			else
+					-- We could not create our temporary file,
+					-- let's create one in the temporary directory of the OS.
+				Result := (create {FILE_NAME}.make_temporary_name).out + "_" + a_temp_name
+				create l_file.make_open_write (Result)
+				l_file.close
+			end
+		rescue
+				-- We only allow one failure
+			if not retried then
+				retried := True
+				retry
+			end
 		end
 
 	temp_batch_file_name: STRING = "tmp_espawn.bat"

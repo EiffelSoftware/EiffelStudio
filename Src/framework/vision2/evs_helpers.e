@@ -290,7 +290,7 @@ feature -- Placement
 					-- Adjust X position
 				if (a_screen_x + a_width) > (l_area.x + l_area.width) then
 						-- Out of space, given width
-					l_new_x := 	((l_area.x + l_area.width) - a_width).max (l_screen.virtual_x)
+					l_new_x := 	(l_area.x + l_area.width) - a_width
 				else
 					l_new_x := a_screen_x
 				end
@@ -298,7 +298,7 @@ feature -- Placement
 					-- Adjust Y position
 				if (a_screen_y + a_height) > (l_area.y + l_area.height) then
 						-- Out of space, given height
-					l_new_y := 	((l_area.y + l_area.height) - a_height).max (l_screen.virtual_y)
+					l_new_y := 	(l_area.y + l_area.height) - a_height
 				else
 					l_new_y := a_screen_y
 				end

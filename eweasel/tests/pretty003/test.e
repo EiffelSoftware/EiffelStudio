@@ -22,4 +22,8 @@ feature
 		do
 		end
 
+	try4 (a,b:INTEGER c,d:STRING ;e,f:BOOLEAN g,h: ANY ; i,k:   INTEGER)
+		do
+		end
+
 end

@@ -26,4 +26,6 @@ feature
 		do
 		end
 
+	x: TUPLE [a,b:INTEGER c,d:STRING ;e,f:BOOLEAN g,h: ANY ; i,k:   INTEGER]
+
 end

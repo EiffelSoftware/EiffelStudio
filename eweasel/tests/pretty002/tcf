@@ -1,5 +1,5 @@
 test_name pretty-explicit-creation-space
-test_description Smoke test for the prettify command.
+test_description Creation with an explicit type should include a space after the type: "create {X} y".
 
 copy_sub Ace $TEST Ace
 copy_raw test.e $CLUSTER test.e

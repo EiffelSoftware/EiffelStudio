@@ -1,0 +1,11 @@
+test_name pretty-argument-list-separators
+test_description Multiple arguments should be formatted as "(a, b: X; c, d: Y e, f: Z)".
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+
+prettify	test.e prettify_output
+compile_result ok
+compare		prettify_output output
+
+test_end

@@ -2637,6 +2637,7 @@ test	scoop-false-wait-condition			scoop012 tcf pass scoop execution assertion ex
 test	pretty-smoke-test			pretty001 tcf pass pretty
 test	pretty-explicit-creation-space		pretty002 tcf pass pretty
 test	pretty-argument-list-separators		pretty003 tcf pass pretty
+test	pretty-class-note-indentation		pretty004 tcf pass pretty
 
 -- Testing facility
 test	testing-with-error		testing001 tcf pass testing

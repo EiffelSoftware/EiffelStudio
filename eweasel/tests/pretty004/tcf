@@ -1,0 +1,11 @@
+test_name pretty-class-note-indentation
+test_description Final class note clause should be indented like the leading one.
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+
+prettify	test.e prettify_output
+compile_result ok
+compare		prettify_output output
+
+test_end

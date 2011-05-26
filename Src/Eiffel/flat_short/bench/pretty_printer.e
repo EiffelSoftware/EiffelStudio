@@ -231,59 +231,68 @@ feature {NONE} -- Implementation
 			-- Process an eiffel list while printing `pre' and `post' before and after
 			-- processing of a list element.
 		local
-			i, l_count: INTEGER
+			i: INTEGER
+			n: INTEGER
+			m: INTEGER
+			a: AST_EIFFEL
 			l_token: LEAF_AS
 		do
-			if l_as /= Void and then l_as.count > 0 then
+			if l_as /= Void then
+				n := l_as.count
+				if n > 0 then
 
-				l_token := l_as.first_token (match_list)
-				if l_token /= Void then
-					process_leading_leaves (l_token.index)
-				end
-
-				from
-					l_as.start
-					i := 1
-					if l_as.separator_list /= Void then
-						l_count := l_as.separator_list.count
-					end
-				until
-					l_as.after
-				loop
-					l_token := l_as.item.first_token (match_list)
+					l_token := l_as.first_token (match_list)
 					if l_token /= Void then
 						process_leading_leaves (l_token.index)
 					end
 
-					if add_new_line and last_printed /= '%N' then
-						print_new_line
-					end
+					from
+						l_as.start
+						i := 1
+						if l_as.separator_list /= Void then
+							m := l_as.separator_list.count
+						end
+					until
+						i > n
+					loop
+						a := l_as.i_th (i)
+						l_token := a.first_token (match_list)
 
-					if pre /= Void then
-						print_string (pre)
-					end
-
-					safe_process (l_as.item)
-					if i <= l_count then
-						safe_process (l_as.separator_list_i_th (i, match_list))
-						i := i+1
-					end
-
-					l_token := l_as.item.last_token (match_list)
-					if l_token /= Void then
-						process_leading_leaves (l_token.index)
-					end
-
-					l_as.forth
-
-					if post /= Void then
-						if not l_as.after or not exclude_last then
+						if l_token /= Void then
+							process_leading_leaves (l_token.index)
+						end
+							-- Leading leaves may include optional delimiters such as semicolons,
+							-- so `post' should be printed after them.
+						if post /= Void and then i > 1 then
 							print_string (post)
 						end
+
+						if add_new_line and last_printed /= '%N' then
+							print_new_line
+						end
+
+						if pre /= Void then
+							print_string (pre)
+						end
+
+						safe_process (a)
+						if i <= m then
+							safe_process (l_as.separator_list_i_th (i, match_list))
+						end
+
+						l_token := a.last_token (match_list)
+						if l_token /= Void then
+							process_leading_leaves (l_token.index)
+						end
+
+						i := i + 1
+					end
+					process_leading_leaves (l_as.last_token (match_list).index)
+						-- Print `post' for the last item.
+					if post /= Void and then not exclude_last then
+						print_string (post)
 					end
 				end
-
-				process_leading_leaves (l_as.last_token (match_list).index)
 			end
 		end
 
@@ -657,10 +666,10 @@ feature {CLASS_AS} -- Class Declarations
 			safe_process_and_print (l_as.internal_invariant, "%N", "", True)
 
 			-- Indexes
+			indent := ""
 			safe_process_and_print (l_as.internal_bottom_indexes, "%N", "", True)
 
 			-- End keyword
-			indent := ""
 			safe_process_and_print (l_as.end_keyword, "%N", "", True)
 
 			-- Ending comments
@@ -903,6 +912,7 @@ feature {CLASS_AS} -- Features
 			if attached {CONSTANT_AS}l_as.content as c_as then
 				print_string (" ")
 				process_leading_leaves (c_as.first_token (match_list).index)
+				print_string (" ")
 				last_index := c_as.first_token (match_list).index
 
 				safe_process (c_as)
@@ -917,7 +927,7 @@ feature {CLASS_AS} -- Features
 			-- Process argument declaration list `l_as'.
 		do
 			safe_process (l_as.lparan_symbol (match_list))
-			process_and_print_eiffel_list (l_as.arguments, "", "", True, False)
+			process_and_print_eiffel_list (l_as.arguments, "", " ", True, False)
 			safe_process (l_as.rparan_symbol (match_list))
 		end
 
@@ -1104,7 +1114,7 @@ feature {CLASS_AS} -- Instructions
 			-- Process create creation instruction `l_as'.
 		do
 			safe_process_and_print (l_as.create_keyword (match_list), indent, " ", True)
-			safe_process (l_as.type)
+			safe_process_and_print (l_as.type, "", " ", False)
 			safe_process (l_as.target)
 			safe_process (l_as.call)
 		end

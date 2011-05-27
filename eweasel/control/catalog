@@ -240,6 +240,7 @@ test	across-loop-syntax		syntax059 tcf pass syntax loop variant invariant across
 test	object-test-expression	syntax060 tcf pass syntax object_test
 test	constrained-generic-without-type	syntax061 tcf fail syntax formal generic
 test	loop-instruction-as-expression	syntax062 tcf pass syntax loop instruction expression across iteration
+test	non-conforming-inheritance-empty-select	syntax063 tcf fail syntax non-conforming
 
 
 -- Validity tests

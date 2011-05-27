@@ -2640,6 +2640,7 @@ test	pretty-explicit-creation-space		pretty002 tcf pass pretty
 test	pretty-argument-list-separators		pretty003 tcf pass pretty
 test	pretty-class-note-indentation		pretty004 tcf pass pretty
 test	pretty-constant-attribute-space		pretty005 tcf pass pretty
+test	pretty-obsolete-and-external		pretty006 tcf pass pretty
 
 -- Testing facility
 test	testing-with-error		testing001 tcf pass testing

@@ -644,8 +644,10 @@ feature {CLASS_AS} -- Class Declarations
 			safe_process_and_print (l_as.external_class_name, " ", "", False)
 
 			-- Obsolete
-			safe_process_and_print (l_as.obsolete_keyword (match_list), "%T%T", "", True)
-			safe_process_and_print (l_as.obsolete_message, " ", "", False)
+			safe_process_and_print (l_as.obsolete_keyword (match_list), "%N", "", True)
+			increase_indent
+			safe_process_and_print (l_as.obsolete_message, indent, "", True)
+			decrease_indent
 
 			-- Conforming inheritance
 			safe_process_and_print (l_as.internal_conforming_parents, "%N", "", True)
@@ -952,7 +954,9 @@ feature {CLASS_AS} -- Routine
 			-- Process routine feature `l_as'.
 		do
 			safe_process_and_print (l_as.obsolete_keyword (match_list), indent, "", True)
-			safe_process_and_print (l_as.obsolete_message, " ", "", False)
+			increase_indent
+			safe_process_and_print (l_as.obsolete_message, indent, "", True)
+			decrease_indent
 			safe_process (l_as.precondition)
 			safe_process (l_as.internal_locals)
 			safe_process (l_as.routine_body)
@@ -1012,9 +1016,13 @@ feature {CLASS_AS} -- Routine
 			-- Process external routine `l_as'.
 		do
 			safe_process_and_print (l_as.external_keyword (match_list), indent, "", True)
-			safe_process_and_print (l_as.language_name, " ", "", False)
-			safe_process_and_print (l_as.alias_keyword (match_list), " ", "", False)
-			safe_process_and_print (l_as.alias_name_literal, " ", "", False)
+			increase_indent
+			safe_process_and_print (l_as.language_name, indent, "", True)
+			decrease_indent
+			safe_process_and_print (l_as.alias_keyword (match_list), indent, "", True)
+			increase_indent
+			safe_process_and_print (l_as.alias_name_literal, indent, "", True)
+			decrease_indent
 		end
 
 	process_attribute_as (l_as: ATTRIBUTE_AS)
@@ -1621,6 +1629,20 @@ feature {NONE} -- Visitor: type
 		do
 			safe_process_and_print (a.attachment_mark (match_list), "", " ", False)
 			safe_process_and_print (a.separate_keyword (match_list), "", " ", False)
+		end
+
+feature {NONE} -- Modification
+
+	increase_indent
+			-- Add one space element to `indent'.
+		do
+			indent.append_character ('%T')
+		end
+
+	decrease_indent
+			-- Remove one space element from `indent'.
+		do
+			indent.remove_tail (1)
 		end
 
 invariant

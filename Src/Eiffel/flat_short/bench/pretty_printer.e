@@ -553,7 +553,7 @@ feature {CLASS_AS} -- Process leafs
 			if l_as.is_indentable then
 				print_string ("[")
 				print_new_line
-				indent.append_character ('%T')
+				increase_indent
 				from
 					i := 1
 					n := s.count
@@ -569,7 +569,7 @@ feature {CLASS_AS} -- Process leafs
 					print_new_line
 					i := j + 1
 				end
-				indent.remove_tail (1)
+				decrease_indent
 				print_string (indent)
 				print_string ("]")
 			else
@@ -697,9 +697,9 @@ feature {CLASS_AS} -- Indexing
 			-- Process indexing clause `l_as'
 		do
 			safe_process (l_as.indexing_keyword (match_list))
-			indent.append_character ('%T')
+			increase_indent
 			process_and_print_eiffel_list (l_as, indent, "", False, True)
-			indent.remove_tail (1)
+			decrease_indent
 			safe_process (l_as.end_keyword (match_list))
 		end
 
@@ -963,9 +963,9 @@ feature {CLASS_AS} -- Routine
 			safe_process (l_as.postcondition)
 
 			safe_process_and_print (l_as.rescue_keyword (match_list), indent, "", True)
-			indent.append ("%T")
+			increase_indent
 			safe_process (l_as.rescue_clause)
-			indent.remove_tail (1)
+			decrease_indent
 
 			safe_process_and_print (l_as.end_keyword, indent, "", True)
 		end
@@ -974,7 +974,9 @@ feature {CLASS_AS} -- Routine
 			-- Process precondition clause `l_as'.
 		do
 			safe_process_and_print (l_as.require_keyword (match_list), indent, "", True)
-			process_and_print_eiffel_list (l_as.full_assertion_list, "%T" + indent, "", False, True)
+			increase_indent
+			process_and_print_eiffel_list (l_as.full_assertion_list, indent, "", False, True)
+			decrease_indent
 		end
 
 	process_require_else_as (l_as: REQUIRE_ELSE_AS)
@@ -982,7 +984,9 @@ feature {CLASS_AS} -- Routine
 		do
 			safe_process_and_print (l_as.require_keyword (match_list), indent, "", True)
 			safe_process_and_print (l_as.else_keyword (match_list), " ", "", False)
-			process_and_print_eiffel_list (l_as.full_assertion_list, "%T" + indent, "", False, True)
+			increase_indent
+			process_and_print_eiffel_list (l_as.full_assertion_list, indent, "", False, True)
+			decrease_indent
 		end
 
 	process_tagged_as (l_as: TAGGED_AS)
@@ -997,7 +1001,9 @@ feature {CLASS_AS} -- Routine
 			-- Process local declaration list `l_as'.
 		do
 			safe_process_and_print (l_as.local_keyword (match_list), indent, "", True)
-			process_and_print_eiffel_list (l_as.locals, "%T" + indent, "", False, True)
+			increase_indent
+			process_and_print_eiffel_list (l_as.locals, indent, "", False, True)
+			decrease_indent
 		end
 
 	process_deferred_as (l_as: DEFERRED_AS)
@@ -1029,18 +1035,18 @@ feature {CLASS_AS} -- Routine
 			-- Process attribute routine `l_as'
 		do
 			safe_process_and_print (l_as.attribute_keyword (match_list), indent, "", True)
-			indent.append ("%T")
+			increase_indent
 			safe_process (l_as.compound)
-			indent.remove_tail (1)
+			decrease_indent
 		end
 
 	process_do_as (l_as: DO_AS)
 			-- Process do routine `l_as'.
 		do
 			safe_process_and_print (l_as.do_keyword (match_list), indent, "", True)
-			indent.append ("%T")
+			increase_indent
 			safe_process (l_as.compound)
-			indent.remove_tail (1)
+			decrease_indent
 		end
 
 	process_once_as (l_as: ONCE_AS)
@@ -1048,9 +1054,9 @@ feature {CLASS_AS} -- Routine
 		do
 			safe_process_and_print (l_as.once_keyword (match_list), indent, "", True)
 			safe_process_and_print (l_as.internal_keys, " ", "", False)
-			indent.append ("%T")
+			increase_indent
 			safe_process (l_as.compound)
-			indent.remove_tail (1)
+			decrease_indent
 		end
 
 	process_key_list_as (l_as: KEY_LIST_AS)
@@ -1065,7 +1071,9 @@ feature {CLASS_AS} -- Routine
 			-- Process postcondition `l_as'.
 		do
 			safe_process_and_print (l_as.ensure_keyword (match_list), indent, "", True)
-			process_and_print_eiffel_list (l_as.full_assertion_list, "%T" + indent, "", False, True)
+			increase_indent
+			process_and_print_eiffel_list (l_as.full_assertion_list, indent, "", False, True)
+			decrease_indent
 		end
 
 	process_ensure_then_as (l_as: ENSURE_THEN_AS)
@@ -1073,7 +1081,9 @@ feature {CLASS_AS} -- Routine
 		do
 			safe_process_and_print (l_as.ensure_keyword (match_list), indent, "", True)
 			safe_process_and_print (l_as.then_keyword (match_list), " ", "", False)
-			process_and_print_eiffel_list (l_as.full_assertion_list, "%T" + indent, "", False, True)
+			increase_indent
+			process_and_print_eiffel_list (l_as.full_assertion_list, indent, "", False, True)
+			decrease_indent
 		end
 
 feature {CLASS_AS} -- Instructions
@@ -1104,7 +1114,9 @@ feature {CLASS_AS} -- Instructions
 			-- Process check instruction `l_as'.
 		do
 			safe_process_and_print (l_as.check_keyword (match_list), indent, "", True)
-			process_and_print_eiffel_list (l_as.full_assertion_list, "%T" + indent, "", False, True)
+			increase_indent
+			process_and_print_eiffel_list (l_as.full_assertion_list, indent, "", False, True)
+			decrease_indent
 			safe_process_and_print (l_as.end_keyword, indent, "", True)
 		end
 
@@ -1132,9 +1144,9 @@ feature {CLASS_AS} -- Instructions
 		do
 			safe_process_and_print (l_as.debug_keyword (match_list), indent, "", True)
 			safe_process_and_print (l_as.internal_keys, " ", "", False)
-			indent.append ("%T")
+			increase_indent
 			safe_process (l_as.compound)
-			indent.remove_tail (1)
+			decrease_indent
 			safe_process_and_print (l_as.end_keyword, indent, "", True)
 		end
 
@@ -1142,11 +1154,13 @@ feature {CLASS_AS} -- Instructions
 			-- Process guard instruction `l_as'.
 		do
 			safe_process_and_print (l_as.check_keyword (match_list), indent, "", True)
-			process_and_print_eiffel_list (l_as.full_assertion_list, "%T" + indent, "", False, True)
+			increase_indent
+			process_and_print_eiffel_list (l_as.full_assertion_list, indent, "", False, True)
+			decrease_indent
 			safe_process_and_print (l_as.then_keyword (match_list), indent, "", True)
-			indent.append ("%T")
+			increase_indent
 			safe_process (l_as.compound)
-			indent.remove_tail (1)
+			decrease_indent
 			safe_process_and_print (l_as.end_keyword, indent, "", True)
 		end
 
@@ -1157,16 +1171,16 @@ feature {CLASS_AS} -- Instructions
 			safe_process_and_print (l_as.condition, " ", "", False)
 			safe_process_and_print (l_as.then_keyword (match_list), " ", "", False)
 
-			indent.append ("%T")
+			increase_indent
 			safe_process (l_as.compound)
-			indent.remove_tail (1)
+			decrease_indent
 
 			safe_process (l_as.elsif_list)
 
 			safe_process_and_print (l_as.else_keyword (match_list), indent, "", True)
-			indent.append ("%T")
+			increase_indent
 			safe_process (l_as.else_part)
-			indent.remove_tail (1)
+			decrease_indent
 
 			safe_process_and_print (l_as.end_keyword, indent, "", True)
 		end
@@ -1178,9 +1192,9 @@ feature {CLASS_AS} -- Instructions
 			safe_process_and_print (l_as.expr, " ", "", False)
 			safe_process_and_print (l_as.then_keyword (match_list), " ", "", False)
 
-			indent.append ("%T")
+			increase_indent
 			safe_process (l_as.compound)
-			indent.remove_tail (1)
+			decrease_indent
 		end
 
 	process_inspect_as (l_as: INSPECT_AS)
@@ -1193,9 +1207,9 @@ feature {CLASS_AS} -- Instructions
 
 			safe_process_and_print (l_as.else_keyword (match_list), indent, "", True)
 
-			indent.append ("%T")
+			increase_indent
 			safe_process (l_as.else_part)
-			indent.remove_tail (1)
+			decrease_indent
 
 			safe_process_and_print (l_as.end_keyword, indent, "", True)
 		end
@@ -1207,9 +1221,9 @@ feature {CLASS_AS} -- Instructions
 			safe_process_and_print (l_as.interval, " ", "", False)
 			safe_process_and_print (l_as.then_keyword (match_list), " ", "", False)
 
-			indent.append ("%T")
+			increase_indent
 			safe_process (l_as.compound)
-			indent.remove_tail (1)
+			decrease_indent
 		end
 
 	process_instr_call_as (l_as: INSTR_CALL_AS)
@@ -1228,12 +1242,14 @@ feature {CLASS_AS} -- Instructions
 			safe_process_and_print (l_as.iteration, indent, "", True)
 
 			safe_process_and_print (l_as.from_keyword (match_list), indent, "", True)
-			indent.append ("%T")
+			increase_indent
 			safe_process (l_as.from_part)
-			indent.remove_tail (1)
+			decrease_indent
 
 			safe_process_and_print (l_as.invariant_keyword (match_list), indent, "", True)
-			process_and_print_eiffel_list (l_as.full_invariant_list, "%T" + indent, "", False, True)
+			increase_indent
+			process_and_print_eiffel_list (l_as.full_invariant_list, indent, "", False, True)
+			decrease_indent
 
 				-- Special code to handle the old or new ordering of the `variant'
 				-- clause in a loop.
@@ -1249,13 +1265,15 @@ feature {CLASS_AS} -- Instructions
 			end
 
 			safe_process_and_print (l_until, indent, "", True)
-			safe_process_and_print (l_as.stop, "%T" + indent, "", True)
+			increase_indent
+			safe_process_and_print (l_as.stop, indent, "", True)
+			decrease_indent
 
 			safe_process_and_print (l_as.loop_keyword (match_list), indent, "", True)
 
-			indent.append ("%T")
+			increase_indent
 			safe_process (l_as.compound)
-			indent.remove_tail (1)
+			decrease_indent
 
 			if l_variant_processing_after then
 				safe_process_and_print (l_as.variant_part, indent, "", True)
@@ -1273,7 +1291,9 @@ feature {CLASS_AS} -- Instructions
 			if is_expr_iteration then
 				safe_process_and_print (l_as.expression, " ", "", False)
 			else
-				safe_process_and_print (l_as.expression, "%T" + indent, "", True)
+				increase_indent
+				safe_process_and_print (l_as.expression, indent, "", True)
+				decrease_indent
 			end
 
 			safe_process_and_print (l_as.as_keyword (match_list), " ", "", False)
@@ -1285,7 +1305,9 @@ feature {CLASS_AS} -- Instructions
 		do
 			safe_process_and_print (l_as.variant_keyword (match_list), "", " ", False)
 			if l_as.expr /= Void then
-				safe_process_and_print (l_as.tag, "%T" + indent, "", True)
+				increase_indent
+				safe_process_and_print (l_as.tag, indent, "", True)
+				decrease_indent
 				safe_process_and_print (l_as.colon_symbol (match_list), "", " ", False)
 				safe_process (l_as.expr)
 			end
@@ -1367,9 +1389,9 @@ feature {CLASS_AS} -- Expressions
 			-- Process inline agent expression `l_as'.
 		do
 			safe_process_and_print (l_as.agent_keyword (match_list), "", " ", False)
-			indent.append ("%T")
+			increase_indent
 			safe_process (l_as.body)
-			indent.remove_tail (1)
+			decrease_indent
 			safe_process_and_print (l_as.internal_operands, " ", "", False)
 		end
 

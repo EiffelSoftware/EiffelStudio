@@ -1,0 +1,45 @@
+class TEST
+
+feature
+
+	make
+		do
+			from
+			invariant
+				True
+			until
+				False
+			loop
+			variant
+				1
+			end
+			from
+			invariant
+				True
+			variant
+				2
+			until
+				False
+			loop
+			end
+			from
+			invariant
+				a: True
+			until
+				False
+			loop
+			variant
+				b: 1
+			end
+			from
+			invariant
+				a: True
+			variant
+				b: 2
+			until
+				False
+			loop
+			end
+		end
+
+end

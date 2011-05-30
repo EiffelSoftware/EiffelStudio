@@ -1315,11 +1315,13 @@ feature {CLASS_AS} -- Instructions
 	process_variant_as (l_as: VARIANT_AS)
 			-- Process variant `l_as'.
 		do
-			safe_process_and_print (l_as.variant_keyword (match_list), "", " ")
-			if l_as.expr /= Void then
-				print_on_new_line_indented (l_as.tag)
+			process_keyword_as (l_as.variant_keyword (match_list))
+			if attached l_as.tag as t then
+				print_on_new_line_indented (t)
 				safe_process_and_print (l_as.colon_symbol (match_list), "", " ")
 				safe_process (l_as.expr)
+			elseif attached l_as.expr as e then
+				print_on_new_line_indented (e)
 			end
 		end
 

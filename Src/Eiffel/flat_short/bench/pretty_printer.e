@@ -634,9 +634,11 @@ feature {CLASS_AS} -- Process leafs
 	process_integer_as (l_as: INTEGER_AS)
 			-- Process `l_as'.
 		do
-		--	process_leading_leaves (l_as.index)
+			safe_process_and_print (l_as.constant_type, "", " ")
+			safe_process (l_as.sign_symbol (match_list))
+			process_leading_leaves (l_as.index)
 			last_index := l_as.index
-			print_string (l_as.text_32 (match_list))
+			print_string (l_as.number_text (match_list))
 		end
 
 	process_real_as (l_as: REAL_AS)

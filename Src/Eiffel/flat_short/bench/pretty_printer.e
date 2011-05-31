@@ -1325,10 +1325,19 @@ feature {CLASS_AS} -- Instructions
 			end
 		end
 
-	process_retry_as (l_as: RETRY_AS)
+	process_retry_as (a: RETRY_AS)
 			-- Process retry instruction `l_as'.
 		do
-			process_keyword_as (l_as)
+			if attached a then
+				if attached a.first_token (match_list) as t then
+					process_leading_leaves (t.index)
+				end
+				if last_printed /= '%N' then
+					print_new_line
+				end
+				print_string (indent)
+				process_keyword_as (a)
+			end
 		end
 
 feature {CLASS_AS} -- Expressions

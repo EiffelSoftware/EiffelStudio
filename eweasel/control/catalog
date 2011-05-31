@@ -242,6 +242,7 @@ test	constrained-generic-without-type	syntax061 tcf fail syntax formal generic
 test	loop-instruction-as-expression	syntax062 tcf pass syntax loop instruction expression across iteration
 test	non-conforming-inheritance-empty-select	syntax063 tcf fail syntax non-conforming
 test	multiple-semicolons-after-feature	syntax064 tcf fail syntax
+test	non-decimal-percent-char-codes		syntax065 tcf fail syntax
 
 
 -- Validity tests

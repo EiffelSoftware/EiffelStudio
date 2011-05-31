@@ -1,0 +1,22 @@
+
+test_name 	number-end-without-break
+test_description A number must be separated from the following token by a special symbol or a break.
+
+define		INSTRUCTION "n := 0x1000x100"
+copy_sub 	Ace $TEST Ace
+copy_sub 	test.e $CLUSTER test.e
+compile_melted
+compile_result	syntax_error TEST 11
+
+define		INSTRUCTION "d := 3.140x100"
+copy_sub 	test.e $CLUSTER test.e
+resume_compile
+compile_result	syntax_error TEST 11
+
+define		INSTRUCTION "d := 3.14E-15x100"
+copy_sub 	test.e $CLUSTER test.e
+resume_compile
+compile_result	syntax_error TEST 11
+
+test_end
+

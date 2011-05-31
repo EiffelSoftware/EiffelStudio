@@ -243,6 +243,7 @@ test	loop-instruction-as-expression	syntax062 tcf pass syntax loop instruction e
 test	non-conforming-inheritance-empty-select	syntax063 tcf fail syntax non-conforming
 test	multiple-semicolons-after-feature	syntax064 tcf fail syntax
 test	non-decimal-percent-char-codes		syntax065 tcf fail syntax
+test	number-end-without-break	syntax066 tcf fail syntax
 
 
 -- Validity tests

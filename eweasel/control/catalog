@@ -2642,6 +2642,7 @@ test	pretty-class-note-indentation		pretty004 tcf pass pretty
 test	pretty-constant-attribute-space		pretty005 tcf pass pretty
 test	pretty-obsolete-and-external		pretty006 tcf pass pretty
 test	pretty-loop-variant			pretty007 tcf pass pretty
+test	pretty-retry-instruction		pretty008 tcf pass pretty
 
 -- Testing facility
 test	testing-with-error		testing001 tcf pass testing

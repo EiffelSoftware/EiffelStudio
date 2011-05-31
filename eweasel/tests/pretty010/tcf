@@ -1,0 +1,11 @@
+test_name pretty-inspect-cases
+test_description Cases in inspect instruction should be delimited with comma and white space.
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+
+prettify	test.e prettify_output
+compile_result ok
+compare		prettify_output output
+
+test_end

@@ -2,7 +2,7 @@
 test_name 	multiple-semicolons-after-feature
 test_description The parser should not allow more than one semicolon after a feature.
 
-define		FEATURES ";"
+define		FEATURES "x: INTEGER;"
 copy_sub 	Ace $TEST Ace
 copy_sub 	test.e $CLUSTER test.e
 compile_melted

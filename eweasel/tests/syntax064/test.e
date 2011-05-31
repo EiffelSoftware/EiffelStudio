@@ -8,6 +8,7 @@ feature
 		do
 		end
 
+feature
 	$(FEATURES)
 end
 

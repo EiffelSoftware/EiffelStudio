@@ -1,0 +1,37 @@
+
+test_name 	multiple-semicolons-after-feature
+test_description The parser should not allow more than one semicolon after a feature.
+
+define		FEATURES ";"
+copy_sub 	Ace $TEST Ace
+copy_sub 	test.e $CLUSTER test.e
+compile_melted
+compile_result	ok
+
+define		FEATURES "x: INTEGER;;"
+copy_sub 	test.e $CLUSTER test.e
+compile_melted
+compile_result	syntax_error TEST 12
+
+define		FEATURES "x: INTEGER = 13;;"
+copy_sub 	test.e $CLUSTER test.e
+resume_compile
+compile_result	syntax_error TEST 12
+
+define		FEATURES "x: INTEGER do end;;"
+copy_sub 	test.e $CLUSTER test.e
+resume_compile
+compile_result	syntax_error TEST 12
+
+define		FEATURES "; x: INTEGER do end"
+copy_sub 	test.e $CLUSTER test.e
+resume_compile
+compile_result	syntax_error TEST 12
+
+define		FEATURES "x: INTEGER do end;"
+copy_sub 	test.e $CLUSTER test.e
+resume_compile
+compile_result	ok
+
+test_end
+

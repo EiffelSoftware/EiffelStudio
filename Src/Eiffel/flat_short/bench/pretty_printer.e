@@ -1238,7 +1238,7 @@ feature {CLASS_AS} -- Instructions
 			-- Process inspect case `l_as'
 		do
 			print_on_new_line (l_as.when_keyword (match_list))
-			safe_process_and_print (l_as.interval, " ", "")
+			process_and_print_eiffel_list (l_as.interval, " ", "", True, False)
 			safe_process_and_print (l_as.then_keyword (match_list), " ", "")
 
 			increase_indent

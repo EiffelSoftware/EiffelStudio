@@ -6,43 +6,43 @@ class
 
 feature
 
-	Table_start: STRING = "<TABLE";
-	Table_end  : STRING = "</TABLE>";
+	Table_start: STRING = "<TABLE"
+	Table_end  : STRING = "</TABLE>"
 
-	Caption_start: STRING = "<CAPTION";
-	Caption_end  : STRING = "</CAPTION>";
+	Caption_start: STRING = "<CAPTION"
+	Caption_end  : STRING = "</CAPTION>"
 
-	Colspan: STRING = " COLSPAN=";
-	Rowspan: STRING = " ROWSPAN=";
-	Border : STRING = " BORDER=";
+	Colspan: STRING = " COLSPAN="
+	Rowspan: STRING = " ROWSPAN="
+	Border : STRING = " BORDER="
 
-	Col_start: STRING = "<TD";
-	Col_end  : STRING = "</TD>";
+	Col_start: STRING = "<TD"
+	Col_end  : STRING = "</TD>"
 
-	Row_start: STRING = "<TR";
-	Row_end  : STRING = "</TR>";
+	Row_start: STRING = "<TR"
+	Row_end  : STRING = "</TR>"
 
-	Tag_start: STRING = "<";
-	Tag_end  : STRING = ">";
+	Tag_start: STRING = "<"
+	Tag_end  : STRING = ">"
 
-	NewLine: STRING = "%N";
+	NewLine: STRING = "%N"
 
-	Top   : STRING = "TOP";
-	Bottom: STRING = "BOTTOM";
-	Left  : STRING = "LEFT";
-	Right : STRING = "RIGHT";
-	Center: STRING = "CENTER";
+	Top   : STRING = "TOP"
+	Bottom: STRING = "BOTTOM"
+	Left  : STRING = "LEFT"
+	Right : STRING = "RIGHT"
+	Center: STRING = "CENTER"
 
-	Width : STRING = " WIDTH=";
-	Align : STRING = " ALIGN=";
-	Valign: STRING = " VALIGN=";
-	NoWrap: STRING = " NOWRAP";
+	Width : STRING = " WIDTH="
+	Align : STRING = " ALIGN="
+	Valign: STRING = " VALIGN="
+	NoWrap: STRING = " NOWRAP"
 
-	BgColor   : STRING = " BGCOLOR=";
-	BackGround: STRING = " BACKGROUND=";
-	BorderColor     : STRING = " BORDERCOLOR=";
-	BorderColorLight: STRING = " BORDERCOLORLIGHT=";
-	BorderColorDark : STRING = " BORDERCOLORDARK=";;
+	BgColor   : STRING = " BGCOLOR="
+	BackGround: STRING = " BACKGROUND="
+	BorderColor     : STRING = " BORDERCOLOR="
+	BorderColorLight: STRING = " BORDERCOLORLIGHT="
+	BorderColorDark : STRING = " BORDERCOLORDARK=";
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

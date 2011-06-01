@@ -9,7 +9,7 @@ feature
 	make
 		do
 		end
-		
+
 	weasel: STRING
 		note
 			option: stable

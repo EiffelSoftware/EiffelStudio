@@ -2651,6 +2651,7 @@ test	pretty-inspect-cases			pretty010 tcf pass pretty
 test	pretty-note-on-attribute		pretty011 tcf pass pretty
 test	pretty-convert-clause			pretty012 tcf pass pretty
 test	pretty-multiconstrained-generics	pretty013 tcf pass pretty
+test	pretty-formal-renaming			pretty014 tcf pass pretty
 
 -- Testing facility
 test	testing-with-error		testing001 tcf pass testing

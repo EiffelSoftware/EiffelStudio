@@ -64,6 +64,7 @@ inherit
 
 			-- Converters
 			process_convert_feat_list_as,
+			process_convert_feat_as,
 
 			-- Features
 			process_feature_clause_as,
@@ -915,8 +916,19 @@ feature {CLASS_AS} -- Convertors
 				print_new_line
 			end
 
-			print_indent
-			process_and_print_eiffel_list (l_as, "", " ", True, False)
+			print_list_indented (l_as)
+		end
+
+	process_convert_feat_as (l_as: CONVERT_FEAT_AS)
+		do
+			safe_process (l_as.feature_name)
+			safe_process (l_as.colon_symbol (match_list))
+			print_string (" ")
+			safe_process (l_as.lparan_symbol (match_list))
+			safe_process (l_as.lcurly_symbol (match_list))
+			safe_process (l_as.conversion_types)
+			safe_process (l_as.rcurly_symbol (match_list))
+			safe_process (l_as.rparan_symbol (match_list))
 		end
 
 feature {CLASS_AS} -- Features

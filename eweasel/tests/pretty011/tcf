@@ -1,0 +1,11 @@
+test_name pretty-note-on-attribute
+test_description Note clauses on attributes should be formatted on a separate line.
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+
+prettify	test.e prettify_output
+compile_result ok
+compare		prettify_output output
+
+test_end

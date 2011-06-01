@@ -44,14 +44,14 @@ feature -- Variable names
 
 feature -- Version
 
-	major_version: NATURAL_16 = 6
+	major_version: NATURAL_16 = 7
 			-- Major release version.
 
-	minor_version: NATURAL_16 = 8
+	minor_version: NATURAL_16 = 0
 			-- Minor release version.
 
 ;note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

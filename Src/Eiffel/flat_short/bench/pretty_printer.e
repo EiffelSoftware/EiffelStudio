@@ -1667,8 +1667,11 @@ feature {CLASS_AS} -- Types
 			-- Process constraining type `l_as'.
 		do
 			l_as.type.process (Current)
-			safe_process_and_print (l_as.renaming, "", " ")
-			safe_process (l_as.end_keyword (match_list))
+			if attached l_as.renaming as r then
+				safe_process_and_print (r.rename_keyword (match_list), " ", " ")
+				process_and_print_eiffel_list (r.content, "", " ", True, False)
+			end
+			safe_process_and_print (l_as.end_keyword (match_list), " ", "")
 		end
 
 	process_type_list_as (l_as: TYPE_LIST_AS)

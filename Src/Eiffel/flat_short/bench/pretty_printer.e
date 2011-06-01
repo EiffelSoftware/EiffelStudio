@@ -879,9 +879,9 @@ feature {CLASS_AS} -- Generics
 		do
 			safe_process (l_as.formal)
 			safe_process_and_print (l_as.constrain_symbol (match_list), " ", " ")
-			safe_process (l_as.constraints)
+			process_and_print_eiffel_list (l_as.constraints, "", " ", True, False)
 			safe_process_and_print (l_as.create_keyword (match_list), " ", "")
-			safe_process_and_print (l_as.creation_feature_list, " ", "")
+			process_and_print_eiffel_list (l_as.creation_feature_list, " ", "", True, False)
 			safe_process_and_print (l_as.end_keyword (match_list), " ", "")
 		end
 

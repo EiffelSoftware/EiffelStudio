@@ -959,7 +959,7 @@ feature {CLASS_AS} -- Features
 				safe_process (c_as)
 				safe_process (l_as.indexing_clause)
 			else
-				safe_process (l_as.indexing_clause)
+				print_on_new_line (l_as.indexing_clause)
 				safe_process (l_as.content)
 			end
 		end

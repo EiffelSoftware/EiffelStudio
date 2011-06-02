@@ -85,8 +85,10 @@ feature {NONE} -- Access
 			create Result.put (0)
 		end
 
-	min_port: INTEGER = 49152
-			-- Smallest valid port number
+	min_port: INTEGER = 49200
+			-- Smallest valid port number.
+			-- The smallest port is 49152, but some program are using
+			-- them. To make debugging easier we start at 49200.
 
 	max_port: INTEGER = 65535
 			-- Largest valid port number
@@ -217,7 +219,7 @@ invariant
 	valid_port: not has_connection_died implies (min_port <= current_port and current_port <= max_port)
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

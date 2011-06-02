@@ -23,6 +23,7 @@ copy_raw 	xy2.e $CLUSTER xy2.e
 compile_melted
 compile_result 	ok
 execute_work NONE melted_output1
+execute_result ok
 compare melted_output1 output1
 
 compile_frozen
@@ -30,6 +31,7 @@ compile_result 	ok
 c_compile_work
 c_compile_result ok
 execute_work NONE frozen_output1
+execute_result ok
 compare frozen_output1 output1
 
 compile_final
@@ -37,6 +39,7 @@ compile_result 	ok
 c_compile_final
 c_compile_result ok
 execute_work NONE final_output1
+execute_result ok
 compare final_output1 output1
 
 

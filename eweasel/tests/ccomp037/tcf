@@ -19,6 +19,7 @@ c_compile_final
 c_compile_result ok
 
 execute_final 	NONE exec_output1
+execute_result 	ok
 compare		exec_output1 output
 
 test_end

@@ -22,6 +22,7 @@ copy_raw 	abc.e $CLUSTER abc.e
 compile_melted
 compile_result 	validity_warning MULTI VJRV(2)
 execute_work NONE exec_output1
+execute_result ok
 compare exec_output1 output1
 
 compile_frozen
@@ -29,6 +30,7 @@ compile_result 	ok
 c_compile_work
 c_compile_result ok
 execute_work NONE exec_output1
+execute_result ok
 compare exec_output1 output1
 
 compile_final
@@ -36,6 +38,7 @@ compile_result 	ok
 c_compile_final
 c_compile_result ok
 execute_final NONE exec_output1
+execute_result ok
 compare exec_output1 output1
 
 

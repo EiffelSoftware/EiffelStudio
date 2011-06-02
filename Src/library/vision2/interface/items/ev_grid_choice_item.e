@@ -282,7 +282,9 @@ feature {NONE} -- Implementation
 
 			if attached choice_list as l_choice_list and then not l_choice_list.is_destroyed then
 					-- Initialize actions.
-				l_choice_list.set_focus
+				if l_choice_list.is_displayed and then l_choice_list.is_sensitive then
+					l_choice_list.set_focus
+				end
 				l_choice_list.focus_out_actions.extend (agent deactivate)
 				l_choice_list.pointer_button_press_item_actions.extend (agent on_mouse_click)
 				l_choice_list.pointer_double_press_item_actions.extend (agent on_mouse_click)

@@ -835,7 +835,7 @@ feature{NONE} -- Implementation
 			-- Internal `required_width'
 
 	adapted_tokens: like tokens
-			-- Adapted tokesn for ellipsis display
+			-- Adapted tokens for ellipsis display
 		do
 			if adapted_tokens_internal = Void then
 				create adapted_tokens_internal.make
@@ -936,8 +936,8 @@ feature{NONE} -- Implementation
 						else
 								-- Current token `l_token' must be placed in current line.
 							if x + l_ellipsis_width > l_max_width and then l_token_in_current_line > 0 then
-									-- If there is not enough space for display any part of current token plus ellipsis,
-									-- we search backward to find a token to adapt.
+									-- If there is not enough space for display any part of current token plus
+									-- ellipsis, we search backward to find a token to adapt.
 								from
 									l_position.finish
 									l_adapted_tokens.finish
@@ -946,19 +946,22 @@ feature{NONE} -- Implementation
 									l_done or else l_position.before
 								loop
 									l_split_token_pos := l_position.item
-									if l_position.item.x + l_ellipsis_width <= l_max_width or else l_position.item.x = 0 then
-											-- We found the token which will be splited.
-										l_split_token := l_adapted_tokens.item
-										l_done := True
-									end
+										-- We found the token which will be splited.
+									l_done := l_position.item.x + l_ellipsis_width <= l_max_width or else l_position.item.x = 0
+										-- Store the token regardless, even if not `l_done' that way
+										-- we still return the last token in case we do not find a match, this happens
+										-- when the previous token is a small string, i.e. smaller than `l_ellipsis_width'.
+									l_split_token := l_adapted_tokens.item
+
 									l_position.back
 									l_adapted_tokens.back
 									l_adapted_tokens.remove_right
 									l_position.remove_right
 								end
 							else
-									-- If left space is enough for display part of current token and ellipsis, or current token
-									-- is the only token in that line, we just chop current token apart and display ellipsis after the left part.
+									-- If left space is enough for display part of current token and ellipsis,
+									-- or current token is the only token in that line, we just chop current
+									-- token apart and display ellipsis after the left part.
 								l_split_token := l_token
 								create l_split_token_pos.make (x, y, l_width, l_line_height)
 							end
@@ -1026,15 +1029,14 @@ feature{NONE} -- Implementation
 			l_editor_token: EDITOR_TOKEN_TEXT
 			l_splited_token_position: EV_RECTANGLE
 			l_ellipsis_position: EV_RECTANGLE
-			l_image: STRING_32
-			l_min_count: INTEGER
-			l_image_count: INTEGER
+			l_image: IMMUTABLE_STRING_32
+			l_min_count, l_max_count: INTEGER
 			l_start_x: INTEGER
 			l_ellipsis_width: INTEGER
 			l_line_height: INTEGER
-			l_x_offset: INTEGER
 			l_token_width: INTEGER
 			l_ellipsis_token: like ellipsis_token
+			l_mid: INTEGER
 		do
 			l_editor_token ?= a_token.twin
 			l_start_x := a_position.x
@@ -1042,23 +1044,33 @@ feature{NONE} -- Implementation
 			l_ellipsis_token := ellipsis_token
 			l_ellipsis_width := token_width (l_ellipsis_token, l_ellipsis_token.wide_image)
 			if l_editor_token /= Void and then not l_editor_token.wide_image.is_empty then
-					-- For text editor token								
-				from
-					l_x_offset := x_offset
-					l_image := l_editor_token.wide_image.twin
-					l_image_count := l_image.count
-					if a_position.x = l_x_offset then
-						l_min_count := 1
+				l_token_width := token_width (l_editor_token, l_editor_token.wide_image)
+				if l_start_x + l_token_width + l_ellipsis_width > a_max_width then
+					from
+						create l_image.make_from_string_32 (l_editor_token.wide_image)
+							-- If this is the first token we always keep its first letter, otherwise
+							-- it is ignored.
+						if a_position.x = x_offset then
+							l_min_count := 2
+						else
+							l_min_count := 1
+						end
+						l_max_count := l_image.count
+					until
+						l_max_count < l_min_count
+					loop
+						l_mid := (l_min_count + l_max_count) // 2
+						l_token_width := token_width (l_editor_token, l_image.shared_substring (1, l_mid))
+						if l_start_x + l_token_width + l_ellipsis_width <= a_max_width then
+							l_min_count := l_mid + 1
+						else
+							l_max_count := l_mid - 1
+						end
 					end
-					l_token_width := token_width (l_editor_token, l_image)
-				until
-					l_image_count = l_min_count or else l_start_x + l_token_width + l_ellipsis_width <= a_max_width
-				loop
-					l_image_count := l_image_count - 1
-					l_image.keep_head (l_image_count)
+					l_image := l_image.shared_substring (1, l_max_count)
+					l_editor_token.set_image (l_image.as_string_32)
 					l_token_width := token_width (l_editor_token, l_image)
 				end
-				l_editor_token.set_image (l_image)
 				create l_splited_token_position.make (l_start_x, a_position.y, l_token_width, l_line_height)
 				create l_ellipsis_position.make (l_start_x + l_token_width, a_position.y, l_ellipsis_width, l_line_height)
 			else
@@ -1081,7 +1093,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	token_width (a_token: EDITOR_TOKEN; a_image: STRING_32): INTEGER
+	token_width (a_token: EDITOR_TOKEN; a_image: READABLE_STRING_32): INTEGER
 			-- Width in pixel of `a_image' using font in `a_token' or `overriden_fonts' if `is_overriden_font_set'.
 		require
 			a_token_attached: a_token /= Void
@@ -1106,7 +1118,7 @@ feature{NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -1130,11 +1142,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

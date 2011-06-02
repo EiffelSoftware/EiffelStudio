@@ -17,6 +17,7 @@ copy_sub 	test.e $CLUSTER test.e
 compile_melted
 compile_result 	ok
 execute_work NONE melted_output1
+execute_result ok
 compare melted_output1 output_integer_32_ref
 
 compile_frozen
@@ -25,6 +26,7 @@ c_compile_work
 c_compile_result ok
 
 execute_work NONE frozen_output1
+execute_result ok
 compare frozen_output1 output_integer_32_ref
 
 compile_final
@@ -33,6 +35,7 @@ c_compile_final
 c_compile_result ok
 
 execute_final NONE final_output1
+execute_result ok
 compare final_output1 output_integer_32_ref
 ---------------------------------------------
 define TYPE "INTEGER_32"
@@ -42,6 +45,7 @@ copy_sub 	Ace $TEST Ace
 compile_melted
 compile_result 	ok
 execute_work NONE melted_output2
+execute_result ok
 compare melted_output2 output_integer_32
 
 compile_frozen
@@ -50,6 +54,7 @@ c_compile_work
 c_compile_result ok
 
 execute_work NONE frozen_output2
+execute_result ok
 compare frozen_output2 output_integer_32
 
 compile_final
@@ -58,6 +63,7 @@ c_compile_final
 c_compile_result ok
 
 execute_final NONE final_output2
+execute_result ok
 compare final_output2 output_integer_32
 ---------------------------------------------
 define TYPE "REAL_64"
@@ -67,6 +73,7 @@ copy_sub 	Ace $TEST Ace
 compile_melted
 compile_result 	ok
 execute_work NONE melted_output3
+execute_result ok
 compare melted_output3 output_real_64
 
 compile_frozen
@@ -75,6 +82,7 @@ c_compile_work
 c_compile_result ok
 
 execute_work NONE frozen_output3
+execute_result ok
 compare frozen_output3 output_real_64
 
 compile_final
@@ -83,6 +91,7 @@ c_compile_final
 c_compile_result ok
 
 execute_final NONE final_output3
+execute_result ok
 compare final_output3 output_real_64
 
 

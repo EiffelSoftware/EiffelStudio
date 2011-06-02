@@ -10,15 +10,15 @@ compile_melted
 compile_result ok
 c_compile_work
 c_compile_result ok
-execute_work NONE exec_outpu1
+execute_work NONE exec_output1
 execute_result ok
-compare exec_outpu1 output
+compare exec_output1 output
 
 compile_frozen
 compile_result ok
-execute_work NONE exec_output2
 c_compile_work
 c_compile_result ok
+execute_work NONE exec_output2
 execute_result ok
 compare exec_output2 output
 

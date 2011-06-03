@@ -73,6 +73,9 @@ endiff
 move po_generation_tool.exe %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin
 
 remtrace Recompile eiffel_ribbon
+safe_md %STUDIO_DIR\tools\ribbon
+cdd %STUDIO_DIR\tools\ribbon
+exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/tools/eiffel_ribbon/template template
 cdd %EIFFEL_SRC\tools\eiffel_ribbon
 clean_project
 finalize eiffel_ribbon.ecf

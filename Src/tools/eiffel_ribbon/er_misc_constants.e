@@ -6,6 +6,9 @@ note
 class
 	ER_MISC_CONSTANTS
 
+inherit
+	EIFFEL_ENV
+
 feature -- Query
 
 	xml_file_name: STRING = "eiffel_ribbon.xml"
@@ -26,8 +29,33 @@ feature -- Query
 	tool_info_file_name: STRING = "eiffel_ribbon_info.sed"
 			--
 
-	template: STRING = "template"
+	images: DIRECTORY_NAME
+			-- Image folder
+		do
+			Result := eiffel_ribbon
+			Result.set_subdirectory ("images")
+		end
+
+	eiffel_ribbon: DIRECTORY_NAME
+			-- Eiffel ribbon tool folder
+		do
+			if not is_valid_environment then
+				check_environment_variable
+			end
+			create Result.make_from_string (eiffel_library)
+			Result.set_subdirectory ("tools")
+			Result.set_subdirectory ("eiffel_ribbon")
+		end
+
+	template: DIRECTORY_NAME
 			-- Template folder name
+		local
+			l_path: DIRECTORY_NAME
+			l_string: STRING
+		do
+			Result := eiffel_ribbon
+			Result.set_subdirectory ("template")
+		end
 
 	xml_full_file_name: detachable STRING_8
 			-- (export status {NONE})
@@ -61,5 +89,13 @@ feature -- Query
 				end
 			end
 			Result := l_file_name
+		end
+
+feature {NONE} -- Implementation
+
+	application_name: STRING
+			-- <Precursor>
+		do
+			Result := "eiffelribbon"
 		end
 end

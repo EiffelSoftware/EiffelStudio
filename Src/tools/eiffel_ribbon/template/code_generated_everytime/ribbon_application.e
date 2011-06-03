@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 		do
 			create l_app
 			create_interface_objects
-			main_window.show
+			main_window.show$SHOW_OTHER_WINDOWS
 			l_app.launch
 		end
 
@@ -32,11 +32,10 @@ feature {NONE} -- Implementation
 	create_interface_objects
 			-- <Precursor>
 		do
-			create main_window
-
+			create main_window$CREATE_OTHER_WINDOWS
 		end
 
 	main_window: MAIN_WINDOW
-		-- Main window of `Current'
+		-- Main window of `Current'$REGISTER_OTHER_WINDOWS
 
 end

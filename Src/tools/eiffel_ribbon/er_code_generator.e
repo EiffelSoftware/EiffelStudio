@@ -630,7 +630,7 @@ feature {NONE} -- Implementation
 				loop
 					l_show_window_string.append ("%N%T%T%Tmain_window_" + l_list.index.out + ".show")
 					l_create_window_string.append ("%N%T%T%Tcreate main_window_" + l_list.index.out)
-					l_register_window_string.append ("%N%Tmain_window_" + l_list.index.out + ": MAIN_WINDOW_" + l_list.index.out + "%N%T%T%T-- Ribbon window " + l_list.index.out)
+					l_register_window_string.append ("%N%Tmain_window_" + l_list.index.out + ": MAIN_WINDOW_" + l_list.index.out + "%N%T%T%T-- Ribbon window " + l_list.index.out + ".%N")
 
 					l_list.forth
 				end
@@ -647,12 +647,7 @@ feature {NONE} -- Implementation
 					create l_file.make (l_file_name)
 					if l_file.exists and then l_file.is_readable then
 						create l_dest_file_name.make_from_string (l_project_location)
-						if l_list.index /= 1 then
-							l_dest_file_name.set_file_name (l_window_file + "_" + l_list.index.out + ".e")
-						else
-							l_dest_file_name.set_file_name (l_window_file + ".e")
-						end
-
+						l_dest_file_name.set_file_name (l_window_file + ".e")
 						create l_dest_file.make_create_read_write (l_dest_file_name)
 						from
 							l_file.open_read

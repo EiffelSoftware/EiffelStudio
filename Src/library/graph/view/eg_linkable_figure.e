@@ -184,49 +184,9 @@ feature -- Access
 	minimum_size: EV_RECTANGLE
 			-- `Current' has to be of `Result' size
 			-- to include all visible elements starting from `number_of_figures' + 1.
-		local
-			l_area: like area
-			l_item: EV_MODEL
-			i, nb: INTEGER
-			l_bbox: like bounding_box
-			res: detachable like minimum_size
 		do
-			if count > number_of_figures then
-				from
-					l_area := area
-					i := number_of_figures
-					nb := count - 1
-				until
-					i > nb or else l_area.item (i).is_show_requested
-				loop
-					i := i + 1
-				end
-				if i <= nb then
-					from
-						create l_bbox
-					until
-						i > nb
-					loop
-						l_item := l_area.item (i)
-						if l_item.is_show_requested then
-							l_item.update_rectangle_to_bounding_box (l_bbox)
-							if l_bbox.height > 0 and then l_bbox.width > 0 then
-								if res = Void then
-									res := l_bbox.twin
-								else
-									res.merge (l_bbox)
-								end
-							end
-						end
-						i := i + 1
-					end
-				end
-			end
-			if res /= Void then
-				Result := res
-			else
-				create Result
-			end
+			create Result
+			update_rectangle_to_minimum_size (Result)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -398,11 +358,47 @@ feature {NONE} -- Implementation
 
 	was_fixed: BOOLEAN
 
+	update_rectangle_to_minimum_size (a_rect: EV_RECTANGLE)
+			-- `Current' has to be of `Result' size
+			-- to include all visible elements starting from `number_of_figures' + 1.
+		local
+			l_area: like area
+			i, nb: INTEGER
+			l_bbox: like bounding_box
+		do
+				-- Reset `a_bbox' to zero dimension.
+			a_rect.move_and_resize (0, 0, 0, 0)
+			if count > number_of_figures then
+				from
+					l_area := area
+					i := number_of_figures
+					nb := count - 1
+				until
+					i > nb
+				loop
+					if l_area [i].is_show_requested then
+						l_bbox := temp_minimum_size_bounding_box
+						l_area [i].update_rectangle_to_bounding_box (l_bbox)
+						if l_bbox.height > 0 and then l_bbox.width > 0 then
+							a_rect.merge (l_bbox)
+						end
+					end
+					i := i + 1
+				end
+			end
+		end
+
+	temp_minimum_size_bounding_box: EV_RECTANGLE
+			-- Temporary box used for calculating minimum size.
+		once
+			create Result
+		end
+
 invariant
 	links_not_void: links /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

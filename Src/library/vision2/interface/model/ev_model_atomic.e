@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 		do
 			Precursor {EV_MODEL}
 			set_foreground_color (Default_colors.Black)
-			line_width := 1
+			line_width := default_line_width
 		end
 
 feature -- Access
@@ -93,12 +93,12 @@ feature -- Events
 			l_point_array: SPECIAL [EV_COORDINATE]
 			i, nb: INTEGER
 			min_x, min_y, max_x, max_y, val: DOUBLE
-			ax, ay, w, h, lw: INTEGER
+			ax, ay, w, h, lw, l_border: INTEGER
 			l_item: EV_COORDINATE
 			grow: INTEGER
 		do
-			if attached internal_bounding_box as l_internal_bounding_box and then l_internal_bounding_box.has_area then
-				Result := l_internal_bounding_box.twin
+			if internal_bounding_box /= Void and then internal_bounding_box.has_area then
+				Result := internal_bounding_box.twin
 			else
 				if point_count = 0 then
 					create Result
@@ -125,20 +125,35 @@ feature -- Events
 						i := i + 1
 					end
 
+					l_border := border_width
 					lw := line_width
-					grow := as_integer (lw / 2) + 1
-					ax := as_integer (min_x)--.truncated_to_integer
-					ay := as_integer (min_y)--.truncated_to_integer
-					w := as_integer (max_x) - ax + lw + 2--.truncated_to_integer - ax + lw + 2
-					h := as_integer (max_y) - ay + lw + 2--.truncated_to_integer - ay + lw + 2
+					grow := as_integer (lw / 2) + l_border
+					ax := as_integer (min_x)
+					ay := as_integer (min_y)
+					w := as_integer (max_x) - ax + lw + (2 * l_border)
+					h := as_integer (max_y) - ay + lw + (2 * l_border)
 					create Result.make (ax - grow, ay - grow, w, h)
 				end
-				if attached internal_bounding_box as l_internal_bounding_box then
-					l_internal_bounding_box.copy (Result)
+				if internal_bounding_box /= Void then
+					internal_bounding_box.copy (Result)
 				else
 					internal_bounding_box := Result.twin
 				end
 			end
+		end
+
+feature {NONE} -- Implementation
+
+	default_line_width: INTEGER
+			-- Initial line width of `Current'.
+		do
+			Result := 1
+		end
+
+	border_width: INTEGER
+			-- Border width of `Current'.
+		do
+			Result := 1
 		end
 
 invariant

@@ -868,39 +868,43 @@ feature {NONE} -- Implementation
 
 	calculated_bounding_box: detachable EV_RECTANGLE
 			-- Smallest orthogonal rectangular area `Current' fits in.
+		do
+			if is_grouped then
+				create Result
+				update_rectangle_to_calculated_bounding_box (Result)
+			end
+		end
+
+	update_rectangle_to_calculated_bounding_box (a_rectangle: EV_RECTANGLE)
+			-- Smallest orthogonal rectangular area `Current' fits in.
 		local
 			l_area: like area
 			i, nb: INTEGER
 			l_bbox: like internal_bounding_box
+			l_initial: BOOLEAN
 		do
 			if is_grouped then
 				from
+					create l_bbox
+					l_initial := True
 					l_area := area
 					i := 0
 					nb := count - 1
 				until
-					i > nb or else l_area.item (i).is_show_requested
+					i > nb
 				loop
-					i := i + 1
-				end
-				if i <= nb then
-					from
-						create l_bbox
-					until
-						i > nb
-					loop
-						if l_area.item (i).is_show_requested then
-							l_area [i].update_rectangle_to_bounding_box (l_bbox)
-							if l_bbox.has_area then
-								if Result = Void then
-									Result := l_bbox.twin
-								else
-									Result.merge (l_bbox)
-								end
+					if l_area.item (i).is_show_requested then
+						l_area [i].update_rectangle_to_bounding_box (l_bbox)
+						if l_bbox.width > 0 and then l_bbox.height > 0 then
+							if l_initial then
+								a_rectangle.copy (l_bbox)
+								l_initial := False
+							else
+								a_rectangle.merge (l_bbox)
 							end
 						end
-						i := i + 1
 					end
+					i := i + 1
 				end
 			end
 		end

@@ -24,7 +24,9 @@ inherit
 	EV_MODEL_ATOMIC
 		redefine
 			default_create,
-			recursive_transform
+			recursive_transform,
+			default_line_width,
+			border_width
 		end
 
 	EV_MODEL_SINGLE_POINTED
@@ -240,6 +242,11 @@ feature {NONE} -- Implementation
 				scaled_pixmap := pixmap_factory.scaled_pixmap (id_pixmap, width.max (1), height.max (1))
 			end
 		end
+
+	default_line_width: INTEGER = 0
+		-- <Precursor>
+	border_width: INTEGER = 0
+		-- <Precursor>
 
 invariant
 	pixmap_exists: pixmap /= Void

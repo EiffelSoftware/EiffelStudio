@@ -690,8 +690,8 @@ feature -- Events
 			ax, ay, w, h: INTEGER
 			l_item: EV_COORDINATE
 		do
-			if attached internal_bounding_box as l_internal_bounding_box and then l_internal_bounding_box.has_area then
-				Result := l_internal_bounding_box.twin
+			if internal_bounding_box /= Void and then internal_bounding_box.has_area then
+				Result := internal_bounding_box.twin
 			else
 				if point_count = 0 then
 					create Result
@@ -724,7 +724,11 @@ feature -- Events
 					h := as_integer (max_y) - ay + 1
 					create Result.make (ax, ay, w, h)
 				end
-				internal_bounding_box := Result.twin
+				if internal_bounding_box /= Void then
+					internal_bounding_box.copy (Result)
+				else
+					internal_bounding_box := Result.twin
+				end
 			end
 		ensure
 			Result_not_void: Result /= Void
@@ -733,15 +737,12 @@ feature -- Events
 
 	update_rectangle_to_bounding_box (a_bbox: EV_RECTANGLE)
 			-- Update `a_bbox' to match `bounding_box' of `Current'.
-		local
-			l_bbox: like internal_bounding_box
 		do
-			l_bbox := internal_bounding_box
-			if l_bbox = Void or else not l_bbox.has_area then
-				l_bbox := bounding_box
+			if internal_bounding_box /= Void and then internal_bounding_box.has_area then
+				a_bbox.copy (internal_bounding_box)
+			else
+				a_bbox.copy (bounding_box)
 			end
-				-- Make sure that `a_bbox' is a complete copy of `bounding_box'
-			a_bbox.copy (l_bbox)
 		end
 
 feature --{EV_FIGURE} -- Status settings
@@ -765,12 +766,12 @@ feature {EV_MODEL, EV_MODEL_DRAWER} -- Access
 	invalidate
 			-- Some property of `Current' has changed.
 		do
-			if attached internal_bounding_box as l_bbox then
+			if attached internal_bounding_box then
 					-- Reset to a zero size so that calls to `bounding_box' will recalculate.
-				l_bbox.move_and_resize (0, 0, 0, 0)
+				internal_bounding_box.move_and_resize (0, 0, 0, 0)
 			end
-			if attached last_update_rectangle as l_rect then
-				l_rect.move_and_resize (0, 0, 0, 0)
+			if attached last_update_rectangle then
+				last_update_rectangle.move_and_resize (0, 0, 0, 0)
 			end
 
 			if valid then

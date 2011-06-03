@@ -29,7 +29,9 @@ inherit
 			is_equal
 		redefine
 			default_create,
-			recursive_transform
+			recursive_transform,
+			default_line_width,
+			border_width
 		end
 
 	EV_FONT_CONSTANTS
@@ -72,9 +74,9 @@ feature {NONE} -- Initialization
 		do
 			Precursor {EV_MODEL_ATOMIC}
 			create point_array.make_empty (4)
-			point_array.extend (create {EV_COORDINATE}.make (0, 0))
-			point_array.extend (create {EV_COORDINATE}.make (0, 0))
-			point_array.extend (create {EV_COORDINATE}.make (0, 0))
+			point_array.extend (create {EV_COORDINATE})
+			point_array.extend (create {EV_COORDINATE})
+			point_array.extend (create {EV_COORDINATE})
 			create {STRING_32} text.make_empty
 			id_font := default_font
 			scaled_font := font
@@ -333,6 +335,11 @@ feature {NONE} -- Implementation
 			center.set_precise ((p1.x_precise + p2.x_precise) / 2, (p1.y_precise + p2.y_precise) / 2)
 			is_center_valid := True
 		end
+
+	default_line_width: INTEGER = 0
+		-- <Precursor>
+	border_width: INTEGER = 0
+		-- <Precursor>
 
 invariant
 	text_exists: text /= Void

@@ -46,10 +46,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_test_suite: like test_suite; a_etest_suite: like etest_suite)
+	make (a_test_suite: like test_suite; a_etest_suite: like etest_suite; a_is_gui: BOOLEAN)
 			-- <Precursor>
 		do
-			Precursor (a_test_suite, a_etest_suite)
+			Precursor (a_test_suite, a_etest_suite, a_is_gui)
 			create output_stream.make_empty
 
 
@@ -487,7 +487,7 @@ feature {NONE} -- Constants
 			-- Maximal number of test routines in a single class
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

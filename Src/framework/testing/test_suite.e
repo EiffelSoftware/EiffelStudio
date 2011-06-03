@@ -275,7 +275,7 @@ feature -- Element change
 
 feature -- Basic operations
 
-	new_session (a_type: TYPE [TEST_SESSION_I]): detachable TEST_SESSION_I
+	new_session (a_type: TYPE [TEST_SESSION_I]; a_is_gui: BOOLEAN): detachable TEST_SESSION_I
 			-- <Precursor>
 		local
 			l_list: like factories
@@ -289,7 +289,7 @@ feature -- Basic operations
 			loop
 				l_factory := l_list.item_for_iteration
 				if l_factory.type.conforms_to (a_type) then
-					Result := l_factory.new_session (Current)
+					Result := l_factory.new_session (Current, a_is_gui)
 				end
 				l_list.forth
 			end
@@ -359,7 +359,7 @@ invariant
 	test_map_contains_usables: test_map.linear_representation.for_all (agent {TEST_I}.is_interface_usable)
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

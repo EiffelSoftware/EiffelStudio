@@ -37,10 +37,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_test_suite: like test_suite)
+	make (a_test_suite: like test_suite; a_is_gui: BOOLEAN)
 			-- Initizialize `Current'.
 		do
-			Precursor (a_test_suite)
+			Precursor (a_test_suite, a_is_gui)
 			test_suite.test_suite_connection.connect_events (Current)
 
 				-- Task data structures
@@ -495,7 +495,9 @@ feature {NONE} -- Basic operations
 			a_result.print_result (a_formatter)
 			a_formatter.add_new_line
 			if not a_result.is_pass then
-				a_result.print_details_indented (a_formatter, False, 1)
+					-- We only print out the details in batch mode since in UI
+					-- mode the details go directly to another tool window.
+				a_result.print_details_indented (a_formatter, not is_gui, 1)
 			end
 		end
 
@@ -596,7 +598,7 @@ invariant
 			end)
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

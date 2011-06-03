@@ -16,7 +16,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_test_suite: like test_suite)
+	make (a_test_suite: like test_suite; a_is_gui: BOOLEAN)
 			-- Initizialize `Current'.
 			--
 			-- `a_test_suite': Test suite instanciating `Current'.
@@ -25,10 +25,12 @@ feature {NONE} -- Initialization
 			a_test_suite_usable: a_test_suite.is_interface_usable
 		do
 			test_suite := a_test_suite
+			is_gui := a_is_gui
 			create proceeded_event
 			create error_event
 		ensure
 			test_suite_set: test_suite = a_test_suite
+			is_gui_set: is_gui = a_is_gui
 		end
 
 feature -- Access
@@ -55,6 +57,11 @@ feature -- Access
 			end
 			Result := l_result
 		end
+
+feature -- Status report
+
+	is_gui: BOOLEAN
+			-- Are we launched from the UI or from batch?
 
 feature {NONE} -- Status setting
 
@@ -113,7 +120,7 @@ feature {NONE} -- Events
 			-- <Precursor>
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

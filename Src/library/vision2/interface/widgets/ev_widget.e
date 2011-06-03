@@ -394,11 +394,6 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			-- See `{EV_ANY}.implementation'.
 
 invariant
-	pointer_position_not_void: is_usable and is_show_requested implies
-		pointer_position /= Void
-
-	--| VB size can be less than minimum size, if parent is smaller.
-
 	is_displayed_implies_show_requested:
 		is_usable and then is_displayed implies is_show_requested
 	parent_contains_current:

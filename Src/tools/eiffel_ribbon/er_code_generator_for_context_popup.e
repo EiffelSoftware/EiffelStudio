@@ -58,7 +58,7 @@ feature -- For EV_RIBBON_TITLED_WIDNOW_CLASS
 		local
 			l_found: BOOLEAN
 			l_creation_string, l_register_string,l_declaration_string: STRING
-			l_toolbars_or_menus, l_list: EV_TREE_NODE
+			l_toolbars_or_menus: EV_TREE_NODE
 		do
 			from
 				a_tree.start

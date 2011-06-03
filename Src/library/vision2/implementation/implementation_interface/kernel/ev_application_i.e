@@ -88,6 +88,8 @@ feature {EV_ANY_I} -- Implementation
 		attribute
 		end
 
+feature {EV_APPLICATION, EV_ANY_HANDLER, EV_ANY_I} -- Implementation
+
 	process_event_queue (a_relinquish_cpu: BOOLEAN)
 			-- Process all posted events on the event queue.
 			-- CPU will be relinquished if `a_relinquish_cpu' and idle actions are successfully executed.
@@ -608,31 +610,23 @@ feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 
 	draw_rubber_band
 			-- Draw a segment between initial pick point and `destination'.
-		local
-			l_screen: like pnd_screen
 		do
-			l_screen := pnd_screen
-			l_screen.draw_segment (x_origin, y_origin, pnd_pointer_x, pnd_pointer_y)
-			l_screen.destroy
+			pnd_screen.draw_segment (x_origin, y_origin, pnd_pointer_x, pnd_pointer_y)
 			rubber_band_is_drawn := True
 		end
 
 	erase_rubber_band
 			-- Erase previously drawn rubber band.
-		local
-			l_screen: like pnd_screen
 		do
 			if rubber_band_is_drawn then
-				l_screen := pnd_screen
-				l_screen.draw_segment (x_origin, y_origin, pnd_pointer_x, pnd_pointer_y)
-				l_screen.destroy
+				pnd_screen.draw_segment (x_origin, y_origin, pnd_pointer_x, pnd_pointer_y)
 				rubber_band_is_drawn := False
 			end
 		end
 
 	pnd_screen: EV_SCREEN
-			-- Screen object used for drawing PND transport line
-		do
+			-- Screen object used for drawing PND transport line.
+		once
 			create Result
 			Result.enable_dashed_line_style
 			Result.set_foreground_color ((create {EV_STOCK_COLORS}).white)

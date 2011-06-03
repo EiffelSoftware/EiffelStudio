@@ -49,9 +49,6 @@ feature -- Query
 
 	template: DIRECTORY_NAME
 			-- Template folder name
-		local
-			l_path: DIRECTORY_NAME
-			l_string: STRING
 		do
 			Result := eiffel_ribbon
 			Result.set_subdirectory ("template")

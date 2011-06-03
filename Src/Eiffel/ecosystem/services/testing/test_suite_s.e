@@ -173,15 +173,18 @@ feature -- Element change
 		deferred
 		ensure
 				-- Note: this will instanciate a new session
-			factory_registered: new_session (a_factory.type) /= Void
+				-- Note: We use `False' as argument for `a_is_gui' but that does not matter,
+				-- it is just to show that the type is properly registered.
+			factory_registered: new_session (a_factory.type, False) /= Void
 		end
 
 feature -- Basic operations
 
-	new_session (a_type: TYPE [TEST_SESSION_I]): detachable TEST_SESSION_I
+	new_session (a_type: TYPE [TEST_SESSION_I]; a_is_gui: BOOLEAN): detachable TEST_SESSION_I
 			-- Create new session of given type.
 			--
 			-- `a_type': Type specifiying what session should be created.
+			-- `a_is_gui': Is session created for a UI or for batch?
 		require
 			a_type_attached: a_type /= Void
 		deferred
@@ -229,7 +232,7 @@ feature {NONE} -- Events
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

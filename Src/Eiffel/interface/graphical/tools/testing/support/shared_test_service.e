@@ -12,6 +12,11 @@ inherit
 
 	EC_SHARED_PROJECT_ACCESS
 
+	SHARED_FLAGS
+		export
+			{NONE} all
+		end
+
 feature {NONE} -- Access
 
 	test_suite: SERVICE_CONSUMER [TEST_SUITE_S]
@@ -42,7 +47,7 @@ feature {NONE} -- Access
 		local
 			l_helper: ES_TEST_PROJECT_HELPER
 		once
-			if (create {SHARED_FLAGS}).is_gui then
+			if is_gui then
 				create l_helper
 			else
 				create {TEST_PROJECT_HELPER} l_helper
@@ -98,7 +103,7 @@ feature {NONE} -- Basic operations
 				local
 					l_tuple: TUPLE [TEST_SESSION_I]
 				do
-					if attached a_ts.new_session (a_t) as l_session then
+					if attached a_ts.new_session (a_t, is_gui) as l_session then
 						if a_p /= Void then
 							l_tuple := a_p.empty_operands
 							check
@@ -429,7 +434,7 @@ feature {NONE} -- Internationalization
 	e_unkonwn_error: STRING = "Unable to launch processor"
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

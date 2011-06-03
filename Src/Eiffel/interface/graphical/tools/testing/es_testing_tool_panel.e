@@ -469,7 +469,7 @@ feature {NONE} -- Events: test execution
 		local
 			l_executor: TEST_EXECUTION
 		do
-			create l_executor.make (test_suite.service)
+			create l_executor.make (test_suite.service, is_gui)
 			test_suite.service.tests.do_all (agent l_executor.queue_test)
 			test_suite.service.launch_session (l_executor)
 			--launch_executor (Void, a_type)
@@ -751,7 +751,7 @@ feature {NONE} -- Internationalization
 	tt_debug_selected: STRING = "Run selected tests"
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

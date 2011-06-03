@@ -19,8 +19,9 @@ feature -- Type
 
 feature {TEST_SUITE_S} -- Factory
 
-	new_session (a_test_suite: TEST_SUITE_S): G
+	new_session (a_test_suite: TEST_SUITE_S; a_is_gui: BOOLEAN): G
 			-- Create new session.
+			-- `a_is_gui': Is session created for a UI or for batch?			
 		require
 			a_test_suite_attached: a_test_suite /= Void
 			a_test_suite_usable: a_test_suite.is_interface_usable
@@ -31,7 +32,7 @@ feature {TEST_SUITE_S} -- Factory
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

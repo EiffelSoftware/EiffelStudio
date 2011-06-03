@@ -24,10 +24,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_test_suite: like test_suite; a_etest_suite: like etest_suite)
+	make (a_test_suite: like test_suite; a_etest_suite: like etest_suite; a_is_gui: BOOLEAN)
 			-- <Precursor>
 		do
-			Precursor (a_test_suite, a_etest_suite)
+			Precursor (a_test_suite, a_etest_suite, a_is_gui)
 			create capturer.make
 			create internal_call_stack_levels.make (10)
 		end
@@ -208,7 +208,7 @@ feature {NONE} -- Constants
 	e_no_application_status: STRING = "Could not retrieve application status"
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

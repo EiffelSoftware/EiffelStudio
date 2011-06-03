@@ -85,7 +85,7 @@ feature -- Execution
 				create l_ap.make_with_arguments (l_args, l_error_handler)
 				--l_ap.process_arguments (l_args)
 
-				create l_generator.make (a_test_suite, etest_suite)
+				create l_generator.make (a_test_suite, etest_suite, is_gui)
 
 					-- Types
 				create l_types.make (200)
@@ -186,7 +186,7 @@ feature -- Execution
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

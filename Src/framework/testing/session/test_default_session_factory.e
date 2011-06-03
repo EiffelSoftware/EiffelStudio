@@ -12,14 +12,14 @@ inherit
 
 feature -- Factory
 
-	new_session (a_test_suite: TEST_SUITE_S): G
+	new_session (a_test_suite: TEST_SUITE_S; a_is_gui: BOOLEAN): G
 			-- <Precursor>
 		do
-			create Result.make (a_test_suite)
+			create Result.make (a_test_suite, a_is_gui)
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

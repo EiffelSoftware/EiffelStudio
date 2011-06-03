@@ -286,13 +286,14 @@ feature {NONE} -- Status setting
 				else
 					l_last_output := l_controller.last_output
 					if l_last_output.is_empty then
-						create {TEST_UNRESOLVED_RESULT} l_result.make (e_evaluator_died_tag, e_evaluator_died_details, e_evaluator_died_details, [l_test.name, l_controller.last_exit_code])
-					else
-						create {TEST_UNRESOLVED_RESULT} l_result.make (e_evaluator_died_tag, e_evaluator_died_details, e_evaluator_died_details + "%N%N$3", [l_test.name, l_controller.last_exit_code, l_last_output])
+						l_last_output := "No Output Available"
 					end
+					create {TEST_UNRESOLVED_RESULT} l_result.make (e_evaluator_died_tag, e_evaluator_died_details, e_evaluator_died_details + "%N%N$3", [l_test.name, l_controller.last_exit_code, l_last_output])
 				end
-				remove_testing_directory (l_test, l_result)
 			end
+				-- Removed created directory regardless of the presence or obsence of the controller which
+				-- could have died unexpectly.
+			remove_testing_directory (l_test, l_result)
 
 				-- Remove controller from `occupied_controllers'
 			Precursor (a_force)
@@ -525,7 +526,7 @@ invariant
 	empty_tasks_empty: empty_tasks.is_empty
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -328,7 +328,6 @@ feature {EV_ANY_I} -- Implementation
 				if attached accept_cursor as l_accept_cursor then
 					internal_set_pointer_style (l_accept_cursor)
 				else
-
 					internal_set_pointer_style (default_accept_cursor)
 				end
 			else

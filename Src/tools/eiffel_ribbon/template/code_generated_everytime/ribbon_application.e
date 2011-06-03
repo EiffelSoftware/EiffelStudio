@@ -36,6 +36,6 @@ feature {NONE} -- Implementation
 		end
 
 	main_window: MAIN_WINDOW
-		-- Main window of `Current'$REGISTER_OTHER_WINDOWS
-
+		-- Main window of `Current'.
+$REGISTER_OTHER_WINDOWS
 end

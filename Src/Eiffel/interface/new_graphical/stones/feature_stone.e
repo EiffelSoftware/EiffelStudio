@@ -268,7 +268,7 @@ feature -- dragging
 			fok: BOOLEAN
 		do
 			if e_class /= Void then
-				if e_feature /= Void then
+				if e_feature /= Void and then e_feature.is_valid then
 					new_e_feature := e_feature.updated_version
 					if new_e_feature /= Void then
 						create {FEATURE_STONE} Result.make (new_e_feature)
@@ -304,7 +304,7 @@ feature {NONE} -- Implementation
 			-- Line number of `internal_start_position'.
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

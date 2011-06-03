@@ -101,7 +101,7 @@ feature -- Dragging
 				if classc_stone /= Void then
 						-- Class is still valid
 						-- Check feature
-					if attached e_feature as l_feat then
+					if attached e_feature as l_feat and then l_feat.is_valid then
 						new_e_feature := l_feat.updated_version
 						if new_e_feature /= Void then
 							create {FEATURE_NAME_STONE} Result.make (feature_name, classc_stone.e_class)
@@ -112,7 +112,7 @@ feature -- Dragging
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

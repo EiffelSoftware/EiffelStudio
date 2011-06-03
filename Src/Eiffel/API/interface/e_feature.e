@@ -751,6 +751,8 @@ feature -- Access
 			-- (First it checks if the `associated_class' is valid and
 			-- retrieves the feature using `name' from the
 			-- `associated_class' feature table)
+		require
+			is_valid: is_valid
 		local
 			class_c: CLASS_C
 		do
@@ -1295,7 +1297,7 @@ invariant
 	written_class_not_void: is_valid implies written_class /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

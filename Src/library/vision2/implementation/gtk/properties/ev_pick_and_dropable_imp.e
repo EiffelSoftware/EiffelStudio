@@ -400,12 +400,8 @@ feature -- Implementation
 			erase_rubber_band
 			modify_widget_appearance (False)
 			if not is_destroyed then
-				if pointer_style /= Void then
-					internal_set_pointer_style (pointer_style)
-				else
-						-- Reset the cursors.
-					{EV_GTK_EXTERNALS}.gdk_window_set_cursor ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), default_pointer)
-				end
+					-- Reset the cursor.
+				internal_set_pointer_style (pointer_style)
 			end
 
 			l_pebble := pebble
@@ -433,8 +429,6 @@ feature -- Implementation
 					pick_ended_actions_internal.call ([target])
 				end
 			end
-
-
 			enable_transport
 			post_drop_steps (a_button)
 		end

@@ -9,6 +9,13 @@ inherit
 
 feature
 
+	frozen null_pointer: POINTER
+		external
+			"C macro use <glib.h>"
+		alias
+			"NULL"
+		end
+
 	frozen set_gtk_allocation_struct_width (a_c_struct: POINTER; a_width: INTEGER)
 		external
 			"C [struct <gtk/gtk.h>] (GtkAllocation, gint)"

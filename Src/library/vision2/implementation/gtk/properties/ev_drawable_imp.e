@@ -302,8 +302,8 @@ feature -- Element change
 		do
 			gc_clip_area := an_area.twin
 			rectangle_struct := {EV_GTK_EXTERNALS}.c_gdk_rectangle_struct_allocate
-			{EV_GTK_DEPENDENT_EXTERNALS}.set_gdk_rectangle_struct_x (rectangle_struct, an_area.x)
-			{EV_GTK_DEPENDENT_EXTERNALS}.set_gdk_rectangle_struct_y (rectangle_struct, an_area.y)
+			{EV_GTK_DEPENDENT_EXTERNALS}.set_gdk_rectangle_struct_x (rectangle_struct, an_area.x + device_x_offset)
+			{EV_GTK_DEPENDENT_EXTERNALS}.set_gdk_rectangle_struct_y (rectangle_struct, an_area.y + device_y_offset)
 			{EV_GTK_DEPENDENT_EXTERNALS}.set_gdk_rectangle_struct_width (rectangle_struct, an_area.width)
 			{EV_GTK_DEPENDENT_EXTERNALS}.set_gdk_rectangle_struct_height (rectangle_struct, an_area.height)
 			{EV_GTK_EXTERNALS}.gdk_gc_set_clip_region (gc, default_pointer)
@@ -323,8 +323,8 @@ feature -- Element change
 			{EV_GTK_EXTERNALS}.gdk_region_get_clipbox (a_region_imp.gdk_region, rectangle_struct)
 				-- Set the gc clip area.
 			create gc_clip_area.make (
-				{EV_GTK_EXTERNALS}.gdk_rectangle_struct_x (rectangle_struct),
-				{EV_GTK_EXTERNALS}.gdk_rectangle_struct_y (rectangle_struct),
+				{EV_GTK_EXTERNALS}.gdk_rectangle_struct_x (rectangle_struct) + device_x_offset,
+				{EV_GTK_EXTERNALS}.gdk_rectangle_struct_y (rectangle_struct) + device_y_offset,
 				{EV_GTK_EXTERNALS}.gdk_rectangle_struct_width (rectangle_struct),
 				{EV_GTK_EXTERNALS}.gdk_rectangle_struct_height (rectangle_struct)
 			)
@@ -395,8 +395,8 @@ feature -- Clearing operations
 				tmp_fg_color := foreground_color
 				set_foreground_color (background_color)
 				{EV_GTK_EXTERNALS}.gdk_draw_rectangle (drawable, gc, 1,
-					x.max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
-					y.max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
+					(x + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
+					(y + device_y_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
 					a_width,
 					a_height)
 				set_foreground_color (tmp_fg_color)
@@ -413,8 +413,8 @@ feature -- Drawing operations
 	 			{EV_GTK_EXTERNALS}.gdk_draw_point (
 	 				drawable,
 	 				gc,
-	 				x.max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
-	 				y.max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value)
+	 				(x + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
+	 				(y + device_y_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value)
 	 			)
 	 			update_if_needed
 			end
@@ -495,7 +495,7 @@ feature -- Drawing operations
 		local
 			a_cs: EV_GTK_C_STRING
 			a_pango_layout: POINTER
-			a_x, a_y: INTEGER
+			x_orig, y_orig, a_x, a_y: INTEGER
 			a_clip_area: detachable EV_RECTANGLE
 			a_pango_matrix, a_pango_context: POINTER
 			l_app_imp: like App_implementation
@@ -504,16 +504,22 @@ feature -- Drawing operations
 		do
 			if drawable /= default_pointer then
 				l_app_imp := App_implementation
-				a_x := x
+
+					-- Set x_orig and y_orig to be the device translated values which must be used for the rest of the routine.
+				x_orig := x + device_x_offset
+				y_orig := y + device_y_offset
+
+				a_x := x_orig
 				if draw_from_baseline then
 					if internal_font_imp /= Void then
-						a_y := y - internal_font_imp.ascent
+						a_y := y_orig - internal_font_imp.ascent
 					else
-						a_y := y - l_app_imp.default_font_ascent
+						a_y := y_orig - l_app_imp.default_font_ascent
 					end
 				else
-					a_y := y
+					a_y := y_orig
 				end
+
 				a_cs := l_app_imp.c_string_from_eiffel_string (a_text)
 					-- Replace when we have UTF16 support
 				a_pango_layout := l_app_imp.pango_layout
@@ -532,7 +538,7 @@ feature -- Drawing operations
 					else
 							-- Previous code for gtk 2.4 that set a clip area for text rendering.						
 						a_clip_area := gc_clip_area
-						set_clip_area (create {EV_RECTANGLE}.make (x, y, a_width, 10000))
+						set_clip_area (create {EV_RECTANGLE}.make (x_orig, y_orig, a_width, 10000))
 						{EV_GTK_EXTERNALS}.pango_layout_set_width (a_pango_layout, 10000 * {EV_GTK_EXTERNALS}.pango_scale)
 					end
 				end
@@ -550,11 +556,11 @@ feature -- Drawing operations
 
 					{EV_GTK_EXTERNALS}.pango_matrix_translate (
 						a_pango_matrix,
-						x.max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
-						y.max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value)
+						x_orig.max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
+						y_orig.max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value)
 					)
 					{EV_GTK_EXTERNALS}.pango_matrix_rotate (a_pango_matrix, a_angle / Pi.truncated_to_real * 180)
-					{EV_GTK_EXTERNALS}.pango_matrix_translate (a_pango_matrix, 0, -(y - a_y))
+					{EV_GTK_EXTERNALS}.pango_matrix_translate (a_pango_matrix, 0, -(y_orig - a_y))
 
 					{EV_GTK_EXTERNALS}.pango_context_set_matrix (a_pango_context, a_pango_matrix)
 
@@ -617,10 +623,10 @@ feature -- Drawing operations
 				{EV_GTK_EXTERNALS}.gdk_draw_line (
 					drawable,
 					gc,
-					x1.max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
-					y1.max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
-					x2.max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
-					y2.max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value)
+					(x1 + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
+					(y1 + device_y_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
+					(x2 + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
+					(y2 + device_y_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value)
 				)
 				update_if_needed
 			end
@@ -640,8 +646,8 @@ feature -- Drawing operations
 					drawable,
 					gc,
 					0,
-					x.max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
-					y.max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
+					(x + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
+					(y + device_y_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
 					a_width,
 					a_height,
 					(a_start_angle * a_radians + 0.5).truncated_to_integer,
@@ -662,14 +668,14 @@ feature -- Drawing operations
 			a_pixbuf_imp ?= a_pixel_buffer.implementation
 			check a_pixbuf_imp /= Void end
 			if supports_pixbuf_alpha then
-				{EV_GTK_EXTERNALS}.gdk_draw_pixbuf (drawable, gc, a_pixbuf_imp.gdk_pixbuf, area.x, area.y, a_x, a_y, area.width, area.height, 0, 0, 0)
+				{EV_GTK_EXTERNALS}.gdk_draw_pixbuf (drawable, gc, a_pixbuf_imp.gdk_pixbuf, area.x, area.y, a_x + device_x_offset, a_y + device_y_offset, area.width, area.height, 0, 0, 0)
 			else
 					-- We need to retrieve the source pixmap, composite and then reblit to the same area.
 				l_back_buffer := pixbuf_from_drawable_at_position (a_x, a_y, 0, 0, area.width, area.height)
 				{EV_GTK_EXTERNALS}.gdk_pixbuf_composite (a_pixbuf_imp.gdk_pixbuf, l_back_buffer, 0, 0, area.width, area.height, 0, 0, 1, 1, 0, 255)
 				l_pixels := {EV_GTK_EXTERNALS}.gdk_pixbuf_get_pixels (l_back_buffer)
 				l_rowstride := {EV_GTK_EXTERNALS}.gdk_pixbuf_get_rowstride (l_back_buffer)
-				{EV_GTK_EXTERNALS}.gdk_draw_rgb_32_image (drawable, gc, a_x, a_y, area.width, area.height, 0, l_pixels, l_rowstride.as_integer_32)
+				{EV_GTK_EXTERNALS}.gdk_draw_rgb_32_image (drawable, gc, a_x + device_x_offset, a_y + device_y_offset, area.width, area.height, 0, l_pixels, l_rowstride.as_integer_32)
 				{EV_GTK_EXTERNALS}.object_unref (l_back_buffer)
 			end
 		end
@@ -678,7 +684,7 @@ feature -- Drawing operations
 			-- Does drawable support direct GdkPixbuf alpha blending?
 		do
 				-- For the moment EV_SCREEN doesn't support direct alpha blending.
-			Result := drawable /= {EV_GTK_EXTERNALS}.gdk_root_parent
+			Result := True
 		end
 
 	draw_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP)
@@ -751,7 +757,7 @@ feature -- Drawing operations
 
 						if pixmap_imp.mask /= default_pointer then
 							{EV_GTK_EXTERNALS}.gdk_gc_set_clip_mask (gc, pixmap_imp.mask)
-							{EV_GTK_EXTERNALS}.gdk_gc_set_clip_origin (gc, l_dest_clip.x - l_source_clip.x, l_dest_clip.y - l_source_clip.y)
+							{EV_GTK_EXTERNALS}.gdk_gc_set_clip_origin (gc, l_dest_clip.x + device_x_offset - l_source_clip.x, l_dest_clip.y + device_y_offset - l_source_clip.y)
 						end
 						{EV_GTK_DEPENDENT_EXTERNALS}.gdk_draw_drawable (
 							drawable,
@@ -759,8 +765,8 @@ feature -- Drawing operations
 							pixmap_imp.drawable,
 							l_source_clip.x,
 							l_source_clip.y,
-							l_dest_clip.x,
-							l_dest_clip.y,
+							l_dest_clip.x + device_x_offset,
+							l_dest_clip.y + device_y_offset,
 							l_source_clip.width,
 							l_source_clip.height
 						)
@@ -805,8 +811,8 @@ feature -- Drawing operations
 						drawable,
 						gc,
 						0,
-						x.max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
-						y.max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
+						(x + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
+						(y + device_y_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
 						a_width - 1,
 						a_height - 1
 					)
@@ -825,8 +831,8 @@ feature -- Drawing operations
 						drawable,
 						gc,
 						0,
-						x.max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
-						y.max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
+						(x + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
+						(y + device_y_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
 						(a_width - 1),
 						(a_height - 1),
 						0,
@@ -921,8 +927,8 @@ feature -- filling operations
 					drawable,
 					gc,
 					1,
-					x.max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
-					y.max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
+					(x + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
+					(y + device_y_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
 					a_width,
 					a_height
 				)
@@ -940,8 +946,8 @@ feature -- filling operations
 				if tile /= Void then
 					{EV_GTK_EXTERNALS}.gdk_gc_set_fill (gc, {EV_GTK_EXTERNALS}.Gdk_tiled_enum)
 				end
-				{EV_GTK_EXTERNALS}.gdk_draw_arc (drawable, gc, 1, x.max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
-					y.max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value), a_width,
+				{EV_GTK_EXTERNALS}.gdk_draw_arc (drawable, gc, 1, (x + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
+					(y + device_y_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value), a_width,
 					a_height, 0, whole_circle)
 				update_if_needed
 				{EV_GTK_EXTERNALS}.gdk_gc_set_fill (gc, {EV_GTK_EXTERNALS}.Gdk_solid_enum)
@@ -980,11 +986,11 @@ feature -- filling operations
 					drawable,
 					gc,
 					1,
-					x.max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
-					y.max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
+					(x + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
+					(y + device_y_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
 					a_width,
 					a_height,
-					(a_start_angle * radians_to_gdk_angle).truncated_to_integer ,
+					(a_start_angle * radians_to_gdk_angle).truncated_to_integer,
 					(an_aperture * radians_to_gdk_angle).truncated_to_integer
 				)
 				{EV_GTK_EXTERNALS}.gdk_gc_set_fill (gc, {EV_GTK_EXTERNALS}.Gdk_solid_enum)
@@ -1014,9 +1020,9 @@ feature {NONE} -- Implemention
 			until
 				i < 0
 			loop
-				l_area [j] := (l_coord_area @ i).y
+				l_area [j] := (l_coord_area @ i).y + device_y_offset
 				j := j - 1
-				l_area [j] := (l_coord_area @ i).x
+				l_area [j] := (l_coord_area @ i).x + device_x_offset
 				i := i - 1
 				j := j - 1
 			end
@@ -1039,8 +1045,7 @@ feature {EV_GTK_DEPENDENT_APPLICATION_IMP, EV_ANY_I} -- Implementation
 			new_pix, new_mask_pix, l_image, l_mask_image, a_pix, a_mask_pix, l_temp_pix: POINTER
 		do
 			new_pix := {EV_GTK_EXTERNALS}.gdk_pixbuf_new (0, True, 8, a_width, a_height)
-			l_image := {EV_GTK_EXTERNALS}.gdk_drawable_copy_to_image (drawable, default_pointer, src_x, src_y, dest_x, dest_y, a_width, a_height)
-
+			l_image := {EV_GTK_EXTERNALS}.gdk_drawable_copy_to_image (drawable, default_pointer, src_x + device_x_offset, src_y + device_y_offset, dest_x, dest_y, a_width, a_height)
 
 			a_pix := {EV_GTK_EXTERNALS}.gdk_pixbuf_get_from_image (new_pix, l_image, default_pointer, 0, 0, 0, 0, a_width, a_height)
 				-- We do not unref new_pix as it is being reused
@@ -1082,6 +1087,12 @@ feature {EV_GTK_DEPENDENT_APPLICATION_IMP, EV_ANY_I} -- Implementation
 		end
 
 feature {NONE} -- Implementation
+
+	device_x_offset: INTEGER_16
+			-- Number of pixels to offset the x coord to get correct device placement
+
+	device_y_offset: INTEGER_16
+			-- Number of pixels to offset to y coord to get correct device placement.
 
 	fg_color: POINTER
 			-- Default allocated background color.
@@ -1178,7 +1189,6 @@ feature {NONE} -- Implementation
 			option: stable
 		attribute
 		end
-
 
 	gdk_gc_unref (a_gc: POINTER)
 			-- void   gdk_gc_unref		  (GdkGC	    *gc);

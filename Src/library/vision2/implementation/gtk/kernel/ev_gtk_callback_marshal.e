@@ -321,9 +321,7 @@ feature {EV_ANY_IMP, EV_GTK_CALLBACK_MARSHAL} -- Externals
 				-- Store Eiffel object_id in `gtk_object'.
 				-- Set up signal handlers.
 		external
-			"C inline use %"ev_any_imp.h%""
-		alias
-			"c_ev_any_imp_set_eif_oid_in_c_object ((GtkWidget*) $a_c_object, (int) $eif_oid, (void(*) (EIF_REFERENCE)) $c_object_dispose_address);"
+			"C macro use %"ev_any_imp.h%""
 		end
 
 	frozen c_signal_connect (a_c_object: POINTER; a_signal_name: POINTER;

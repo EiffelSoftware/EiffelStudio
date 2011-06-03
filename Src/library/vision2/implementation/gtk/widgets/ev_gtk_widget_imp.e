@@ -28,7 +28,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 				| {EV_GTK_EXTERNALS}.GDK_LEAVE_NOTIFY_MASK_ENUM
 				| {EV_GTK_EXTERNALS}.GDK_FOCUS_CHANGE_MASK_ENUM
 				| {EV_GTK_EXTERNALS}.GDK_VISIBILITY_NOTIFY_MASK_ENUM
---				| {EV_GTK_EXTERNALS}.GDK_POINTER_MOTION_HINT_MASK_ENUM
+				| {EV_GTK_EXTERNALS}.GDK_POINTER_MOTION_HINT_MASK_ENUM
 		end
 
 feature {NONE} -- Implementation
@@ -73,6 +73,7 @@ feature {EV_ANY_I, EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Position retrieval
 					Result := {EV_GTK_EXTERNALS}.gtk_widget_aux_info_struct_x (a_aux_info)
 				end
 			end
+			Result := Result + app_implementation.screen_virtual_x
 		end
 
 	screen_y: INTEGER
@@ -94,6 +95,7 @@ feature {EV_ANY_I, EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Position retrieval
 					Result := {EV_GTK_EXTERNALS}.gtk_widget_aux_info_struct_y (a_aux_info)
 				end
 			end
+			Result := Result +  + app_implementation.screen_virtual_y
 		end
 
 feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
@@ -205,11 +207,11 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			-- Assign `a_pointer' to `pointer_style'.
 		do
 			if a_pointer /= pointer_style then
-				pointer_style := a_pointer
-				if is_displayed or else previous_gdk_cursor /= default_pointer then
+				if is_displayed then
 					internal_set_pointer_style (a_pointer)
 						-- `internal_set_pointer_style' will get called in `on_widget_mapped'				
 				end
+				pointer_style := a_pointer
 			end
 		end
 
@@ -220,23 +222,22 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			a_window: POINTER
 			a_cursor_imp: detachable EV_POINTER_STYLE_IMP
 		do
-			if a_cursor /= Void then
-				a_cursor_imp ?= a_cursor.implementation
-				check a_cursor_imp /= Void end
-				a_cursor_ptr := a_cursor_imp.gdk_cursor_from_pointer_style
+			if a_cursor /= previously_set_pointer_style then
+				if a_cursor /= Void then
+					a_cursor_imp ?= a_cursor.implementation
+					check a_cursor_imp /= Void end
+					a_cursor_ptr := a_cursor_imp.gdk_cursor_from_pointer_style
+				end
+				a_window := {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object)
+				if a_window /= default_pointer then
+					{EV_GTK_EXTERNALS}.gdk_window_set_cursor (a_window, a_cursor_ptr)
+				end
 			end
-			a_window := {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object)
-			if a_window /= default_pointer then
-				{EV_GTK_EXTERNALS}.gdk_window_set_cursor (a_window, a_cursor_ptr)
-			end
-			if previous_gdk_cursor /= default_pointer then
-				{EV_GTK_EXTERNALS}.gdk_cursor_destroy (previous_gdk_cursor)
-			end
-			previous_gdk_cursor := a_cursor_ptr
+			previously_set_pointer_style := a_cursor
 		end
 
-	previous_gdk_cursor: POINTER
-			-- Pointer to the previously create GdkCursor.
+	previously_set_pointer_style: detachable EV_POINTER_STYLE
+			-- Previously set pointer style, separate from `pointer_style' to incorporate Pick and Drop handling.
 
 	pointer_style: detachable EV_POINTER_STYLE
 			-- Cursor displayed when the pointer is over this widget.

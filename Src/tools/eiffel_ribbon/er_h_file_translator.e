@@ -101,7 +101,7 @@ feature {NONE} -- Implementation
 		do
 			create Result.make_empty
 
-			create l_template.make_from_string ({ER_MISC_CONSTANTS}.template)
+			create l_template.make_from_string ((create {ER_MISC_CONSTANTS}).template)
 			l_template.set_file_name ("header_file_template.e")
 
 			create l_template_file.make (l_template)

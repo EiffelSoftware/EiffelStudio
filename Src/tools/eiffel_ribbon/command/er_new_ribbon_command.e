@@ -32,7 +32,6 @@ feature -- Command
 			if attached main_window as l_win then
 				if attached l_win.docking_manager as l_dock then
 					create layout_constructor.make
-					shared_singleton.layout_constructor_list.extend (layout_constructor)
 
 					layout_constructor.attach_to_docking_manager (l_dock)
 				end

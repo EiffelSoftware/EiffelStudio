@@ -148,7 +148,7 @@ feature {NONE} -- Implementation
 			-- Set horizontal offset to parent to `a_x'.
 			-- Set vertical offset to parent to `a_y'.
 		do
-			{EV_GTK_EXTERNALS}.gtk_window_move (c_object, a_x, a_y)
+			{EV_GTK_EXTERNALS}.gtk_window_move (c_object, a_x - app_implementation.screen_virtual_x, a_y - app_implementation.screen_virtual_y)
 		end
 
 	configure_event_pending: BOOLEAN
@@ -160,6 +160,7 @@ feature {NONE} -- Implementation
 			temp_y: INTEGER
 		do
 			{EV_GTK_EXTERNALS}.gtk_window_get_position (c_object, $Result, $temp_y)
+			Result := Result + app_implementation.screen_virtual_x
 		end
 
 	y_position, screen_y: INTEGER
@@ -168,6 +169,7 @@ feature {NONE} -- Implementation
 			temp_x: INTEGER
 		do
 			{EV_GTK_EXTERNALS}.gtk_window_get_position (c_object, $temp_x, $Result)
+			Result := Result + app_implementation.screen_virtual_y
 		end
 
 	default_wm_decorations: INTEGER

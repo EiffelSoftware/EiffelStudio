@@ -61,13 +61,15 @@ feature -- Status setting
 	set_background_color (a_color: EV_COLOR)
 			-- Assign `a_color' to `background_color'
 		do
-			if needs_event_box then
-				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_event_box_set_visible_window (c_object, True)
-			end
-			background_color_imp ?= a_color.implementation
-			real_set_background_color (visual_widget, a_color)
-			if visual_widget /= c_object then
-				real_set_background_color (c_object, a_color)
+			if background_color_imp /= a_color.implementation then
+				if needs_event_box then
+					{EV_GTK_DEPENDENT_EXTERNALS}.gtk_event_box_set_visible_window (c_object, True)
+				end
+				background_color_imp ?= a_color.implementation
+				real_set_background_color (visual_widget, a_color)
+				if visual_widget /= c_object then
+					real_set_background_color (c_object, a_color)
+				end
 			end
 		end
 
@@ -155,10 +157,12 @@ feature -- Status setting
 	set_foreground_color (a_color: EV_COLOR)
 			-- Assign `a_color' to `foreground_color'
 		do
-			foreground_color_imp ?= a_color.implementation
-			real_set_foreground_color (visual_widget, a_color)
-			if visual_widget /= c_object then
-				real_set_foreground_color (c_object, a_color)
+			if foreground_color_imp /= a_color.implementation then
+				foreground_color_imp ?= a_color.implementation
+				real_set_foreground_color (visual_widget, a_color)
+				if visual_widget /= c_object then
+					real_set_foreground_color (c_object, a_color)
+				end
 			end
 		end
 

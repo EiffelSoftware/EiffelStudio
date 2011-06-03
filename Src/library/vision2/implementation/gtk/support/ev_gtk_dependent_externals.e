@@ -435,6 +435,36 @@ feature -- Externals
 
 -- ***********************************************************
 
+-- Gtk 2.6+ Specific Implementations *********************************************
+
+	frozen gdk_screen_get_resolution (a_screen: POINTER): INTEGER
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"[
+				#if GTK_MINOR_VERSION >= 10
+					return gdk_screen_get_resolution ((GdkScreen*)$a_screen);
+				#else
+					return 96; // Default Gnome Logical DPI on older systems.
+				#endif
+			]"
+		end
+
+	frozen gdk_screen_get_primary_monitor (a_screen: POINTER): INTEGER
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"[
+				#if GTK_MINOR_VERSION >= 20
+					return gdk_screen_get_primary_monitor ((GdkScreen*)$a_screen);
+				#else
+					return 0; // Default Primary Monitor is the first monitor.
+				#endif
+			]"
+		end
+
+-- **********************************************************
+
 	frozen gdk_draw_drawable (a_drawable: POINTER; a_gc: POINTER; a_src: POINTER; a_xsrc: INTEGER; a_ysrc: INTEGER; a_xdest: INTEGER; a_ydest: INTEGER; a_width: INTEGER; a_height: INTEGER)
 		external
 			"C (GdkDrawable*, GdkGC*, GdkDrawable*, gint, gint, gint, gint, gint, gint) | <gtk/gtk.h>"
@@ -2315,6 +2345,11 @@ feature -- Externals
 			"C signature (): GdkScreen* use <gtk/gtk.h>"
 		end
 
+	frozen gdk_screen_get_root_window (a_screen: POINTER): POINTER
+		external
+			"C signature (GdkScreen*): GdkWindow* use <gtk/gtk.h>"
+		end
+
 	frozen gdk_screen_get_width_mm (a_screen: POINTER): INTEGER
 		external
 			"C signature (GdkScreen*): gint use <gtk/gtk.h>"
@@ -2325,6 +2360,15 @@ feature -- Externals
 			"C signature (GdkScreen*): gint use <gtk/gtk.h>"
 		end
 
+	frozen gdk_screen_get_n_monitors (a_screen: POINTER): INTEGER
+		external
+			"C signature (GdkScreen*): gint use <gtk/gtk.h>"
+		end
+
+	frozen gdk_screen_get_monitor_geometry (a_screen: POINTER; a_monitor_number: INTEGER; a_rect: POINTER)
+		external
+			"C signature (GdkScreen*, gint, GdkRectangle*) use <gtk/gtk.h>"
+		end
 
 	frozen gdk_window_get_frame_extents (a_window, a_rect: POINTER)
 		external
@@ -2442,28 +2486,28 @@ feature -- Externals
 
 	frozen gdk_interp_bilinear: INTEGER
 		external
-			"C inline use <gtk/gtk.h>"
+			"C macro use <gtk/gtk.h>"
 		alias
 			"GDK_INTERP_BILINEAR"
 		end
 
 	frozen gdk_interp_hyper: INTEGER
 		external
-			"C inline use <gtk/gtk.h>"
+			"C macro use <gtk/gtk.h>"
 		alias
 			"GDK_INTERP_HYPER"
 		end
 
 	frozen gdk_interp_nearest: INTEGER
 		external
-			"C inline use <gtk/gtk.h>"
+			"C macro use <gtk/gtk.h>"
 		alias
 			"GDK_INTERP_NEAREST"
 		end
 
 	frozen gdk_interp_tiles: INTEGER
 		external
-			"C inline use <gtk/gtk.h>"
+			"C macro use <gtk/gtk.h>"
 		alias
 			"GDK_INTERP_TILES"
 		end
@@ -2647,20 +2691,6 @@ feature -- Externals
 
 		end
 
-	frozen g_utf8_strlen (a_utf8_string: POINTER; maximum: INTEGER): INTEGER
-		external
-			"C inline use <gtk/gtk.h>"
-		alias
-			"g_utf8_strlen ((gchar*) $a_utf8_string, (gssize) $maximum)"
-		end
-
-	frozen g_utf8_validate (a_utf8_string: POINTER; maximum: INTEGER; a_end: TYPED_POINTER [POINTER]): BOOLEAN
-		external
-			"C inline use <gtk/gtk.h>"
-		alias
-			"g_utf8_validate ((gchar*) $a_utf8_string, (gssize) $maximum, (const gchar**) $a_end)"
-		end
-
 	frozen g_locale_from_utf8 (a_string: POINTER; a_length: INTEGER; bytes_read, bytes_written: TYPED_POINTER [INTEGER]; gerror: TYPED_POINTER [POINTER]; a_result: TYPED_POINTER [POINTER])
 		external
 			"C inline use <gtk/gtk.h>"
@@ -2695,49 +2725,49 @@ feature -- Externals
 	frozen gtk_value_pointer (arg: POINTER): POINTER
 			-- Pointer to the value of a GtkArg.
 		external
-			"C inline use <gtk/gtk.h>"
+			"C signature (GValue*): EIF_POINTER use <gtk/gtk.h>"
 		alias
-			"g_value_peek_pointer ((GValue*) $arg)"
+			"g_value_peek_pointer"
 		end
 
 	frozen gtk_value_int (arg: POINTER): INTEGER
 			-- Integer value from a GtkArg.
 		external
-			"C inline use <gtk/gtk.h>"
+			"C signature (GValue*): EIF_INTEGER use <gtk/gtk.h>"
 		alias
-			"g_value_get_int ((GValue*) $arg)"
+			"g_value_get_int"
 		end
 
 	frozen gtk_value_uchar (arg: POINTER): INTEGER
 			-- Integer value from a GtkArg.
 		external
-			"C inline use <gtk/gtk.h>"
+			"C signature (GValue*): EIF_INTEGER use <gtk/gtk.h>"
 		alias
-			"g_value_get_uchar ((GValue*) $arg)"
+			"g_value_get_uchar"
 		end
 
 	frozen gtk_value_enum (arg: POINTER): INTEGER
 			-- Integer value from a GtkArg.
 		external
-			"C inline use <gtk/gtk.h>"
+			"C signature (GValue*): EIF_INTEGER use <gtk/gtk.h>"
 		alias
-			"g_value_get_enum ((GValue*) $arg)"
+			"g_value_get_enum"
 		end
 
 	frozen gtk_value_flags (arg: POINTER): INTEGER
 			-- Integer value from a GtkArg.
 		external
-			"C inline use <gtk/gtk.h>"
+			"C signature (GValue*): EIF_INTEGER use <gtk/gtk.h>"
 		alias
-			"g_value_get_flags ((GValue*) $arg)"
+			"g_value_get_flags"
 		end
 
 	frozen gtk_value_uint (arg: POINTER): NATURAL_32
 			-- Integer value from a GtkArg.
 		external
-			"C inline use <gtk/gtk.h>"
+			"C signature (GValue*): EIF_NATURAL use <gtk/gtk.h>"
 		alias
-			"g_value_get_uint ((GValue*) $arg)"
+			"g_value_get_uint"
 		end
 
 	frozen gtk_widget_get_pango_context (a_widget: POINTER): POINTER

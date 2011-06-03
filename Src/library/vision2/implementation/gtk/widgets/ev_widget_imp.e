@@ -396,8 +396,10 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP} -- Implementation
 	on_widget_mapped
 			-- `Current' has been mapped on to the screen.
 		do
-			if attached pointer_style as l_pointer_style and then previous_gdk_cursor = default_pointer then
-				internal_set_pointer_style (l_pointer_style)
+				-- Make sure that the pointer style is correctly set when the widget is mapped.
+				-- This is needed for gtkwidgets that have not yet been realized.
+			if previously_set_pointer_style = Void and then pointer_style /= Void then
+				internal_set_pointer_style (pointer_style)
 			end
 		end
 

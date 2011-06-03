@@ -80,14 +80,18 @@ feature -- Basic operations
 		local
 			l_x, l_y: INTEGER
 		do
-			if a_widget /= Void then
-				l_x := a_widget.screen_x + a_x
-				l_y := a_widget.screen_y + a_y
-			else
-				l_x := a_x
-				l_y := a_y
-			end
+
 			if count > 0 then
+				if a_widget /= Void then
+					l_x := a_widget.screen_x + a_x
+					l_y := a_widget.screen_y + a_y
+				else
+					l_x := a_x
+					l_y := a_y
+				end
+					-- Change from logical to physical screen coordinates.
+				l_x := l_x - app_implementation.screen_virtual_x
+				l_y := l_y - app_implementation.screen_virtual_y
 					-- This is needed so that we can retrieve `Current' from the
 					-- GdkEvent when it is unmapped to remove the reference
 					-- of {EV_APPLICATION_IMP}.currently_shown_control
@@ -101,6 +105,20 @@ feature -- Basic operations
 		end
 
 feature {NONE} -- Externals
+
+	frozen couple_object_id_with_gtk_object (a_gtk_object: POINTER; a_object_id: INTEGER)
+			-- Associate GtkObject `a_gtk_object' with object id `a_object_id'
+		external
+			"C inline use %"ev_any_imp.h%""
+		alias
+			"[
+	            g_object_set_data (
+	                G_OBJECT ($a_gtk_object),
+	                "eif_oid",
+	                (gpointer) (rt_int_ptr) $a_object_id
+	            );
+			]"
+		end
 
 	frozen c_gtk_menu_popup (a_menu: POINTER; a_x, a_y, a_button: INTEGER; a_event_time: NATURAL_32)
 		external

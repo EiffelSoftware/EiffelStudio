@@ -15,13 +15,18 @@ inherit
 	EV_SCREEN_I
 		redefine
 			interface,
-			widget_at_mouse_pointer
+			widget_at_mouse_pointer,
+			virtual_x,
+			virtual_y,
+			virtual_width,
+			virtual_height
 		end
 
 	EV_DRAWABLE_IMP
 		redefine
 			interface,
-			make
+			make,
+			supports_pixbuf_alpha
 		end
 
 	EV_GTK_DEPENDENT_ROUTINES
@@ -40,9 +45,16 @@ feature {NONE} -- Initialization
 	make
 			-- Set up action sequence connections and create graphics context.
 		do
+			drawable := {EV_GTK_EXTERNALS}.gdk_screen_get_root_window ({EV_GTK_EXTERNALS}.gdk_screen_get_default)
+
 			gc := {EV_GTK_EXTERNALS}.gdk_gc_new (drawable)
 			{EV_GTK_EXTERNALS}.gdk_gc_set_subwindow (gc, {EV_GTK_EXTERNALS}.gdk_include_inferiors_enum)
 			init_default_values
+
+				-- Set offset values to match Win32 implementation.
+			device_x_offset := -app_implementation.screen_virtual_x.as_integer_16
+			device_y_offset := -app_implementation.screen_virtual_y.as_integer_16
+
 			set_is_initialized (True)
 		end
 
@@ -54,6 +66,7 @@ feature -- Status report
 			l_display_data: TUPLE [a_window: POINTER; a_x: INTEGER; a_y: INTEGER; a_mask: NATURAL_32]
 		do
 			l_display_data := app_implementation.retrieve_display_data
+				-- Logical offset is taken in to account in `retrieve_display_data'.
 			create Result.set (l_display_data.a_x, l_display_data.a_y)
 		end
 
@@ -93,10 +106,11 @@ feature -- Status report
 	widget_imp_at_pointer_position: detachable EV_WIDGET_IMP
 			-- Widget implementation at current mouse pointer position (if any)
 		local
-			a_x, a_y: INTEGER
 			gdkwin, gtkwid: POINTER
+			l_display_data: TUPLE [a_window: POINTER; a_x: INTEGER; a_y: INTEGER; a_mask: NATURAL_32]
 		do
-			gdkwin := {EV_GTK_EXTERNALS}.gdk_window_at_pointer ($a_x, $a_y)
+			l_display_data := app_implementation.retrieve_display_data
+			gdkwin := l_display_data.a_window
 			if gdkwin /= default_pointer then
 				from
 					{EV_GTK_EXTERNALS}.gdk_window_get_user_data (gdkwin, $gtkwid)
@@ -136,17 +150,25 @@ feature -- Basic operation
 			a_success_flag: BOOLEAN
 			l_display, l_screen: POINTER
 			l_gdk_display_warp_pointer_symbol, l_x_test_fake_motion_event_symbol: POINTER
+			l_x, l_y: INTEGER
 		do
+				-- Update logical coords to device coords
+			l_x := a_x + device_x_offset
+			l_y := a_y + device_y_offset
 			l_gdk_display_warp_pointer_symbol := gdk_display_warp_pointer_symbol
 			if l_gdk_display_warp_pointer_symbol /= default_pointer then
 				l_display := {EV_GTK_EXTERNALS}.gdk_display_get_default
 				l_screen := {EV_GTK_EXTERNALS}.gdk_display_get_default_screen (l_display)
-				gdk_display_warp_pointer_call (l_gdk_display_warp_pointer_symbol, l_display, l_screen, a_x, a_y)
+				gdk_display_warp_pointer_call (l_gdk_display_warp_pointer_symbol, l_display, l_screen, l_x, l_y)
 			else
 				l_x_test_fake_motion_event_symbol := x_test_fake_motion_event_symbol
 				if l_x_test_fake_motion_event_symbol /= default_pointer then
-					a_success_flag := x_test_fake_motion_event_call (l_x_test_fake_motion_event_symbol, gdk_x_display, -1, a_x, a_y, 0)
+					a_success_flag := x_test_fake_motion_event_call (l_x_test_fake_motion_event_symbol, gdk_x_display, -1, l_x, l_y, 0)
 				end
+			end
+			if app_implementation.use_stored_display_data then
+					-- If we are set to using the stored display data then it needs to be updated.
+				app_implementation.update_display_data
 			end
 		end
 
@@ -271,27 +293,51 @@ feature -- Basic operation
 feature -- Measurement
 
 	horizontal_resolution: INTEGER
-			-- Number of pixels per inch along horizontal axis
+			-- Number of logical pixels per inch along horizontal axis
 		do
-			Result := horizontal_resolution_internal
+			Result := {EV_GTK_EXTERNALS}.gdk_screen_get_resolution ({EV_GTK_EXTERNALS}.gdk_screen_get_default)
 		end
 
 	vertical_resolution: INTEGER
-			-- Number of pixels per inch along vertical axis
+			-- Number of logical pixels per inch along vertical axis
 		do
-			Result := vertical_resolution_internal
+			Result := {EV_GTK_EXTERNALS}.gdk_screen_get_resolution ({EV_GTK_EXTERNALS}.gdk_screen_get_default)
 		end
 
 	height: INTEGER
 			-- Vertical size in pixels.
 		do
-			Result := {EV_GTK_EXTERNALS}.gdk_screen_height
+			Result := app_implementation.screen_height
 		end
 
 	width: INTEGER
 			-- Horizontal size in pixels.
 		do
-			Result := {EV_GTK_EXTERNALS}.gdk_screen_width
+			Result := app_implementation.screen_width
+		end
+
+	virtual_x: INTEGER
+			-- <Precursor>
+		do
+			Result := app_implementation.screen_virtual_x
+		end
+
+	virtual_y: INTEGER
+			-- <Precursor>
+		do
+			Result := app_implementation.screen_virtual_y
+		end
+
+	virtual_height: INTEGER
+			-- <Precursor>
+		do
+			Result := app_implementation.screen_virtual_height
+		end
+
+	virtual_width: INTEGER
+			-- <Precursor>
+		do
+			Result := app_implementation.screen_virtual_width
 		end
 
 feature {NONE} -- Externals (XTEST extension)
@@ -375,6 +421,13 @@ feature {NONE} -- Externals (XTEST extension)
 
 feature {NONE} -- Implementation
 
+	supports_pixbuf_alpha: BOOLEAN
+			-- <Precursor>
+		do
+				-- For the moment EV_SCREEN doesn't support direct alpha blending.
+			Result := False
+		end
+
 	frozen gdk_x_display: POINTER
 		local
 			l_symbol: POINTER
@@ -437,9 +490,6 @@ feature {NONE} -- Implementation
 
 	drawable: POINTER
 			-- Pointer to the screen (root window)
-		do
-			Result := {EV_GTK_EXTERNALS}.gdk_root_parent
-		end
 
 	mask: POINTER
 			-- Mask of `Current', which is always NULL

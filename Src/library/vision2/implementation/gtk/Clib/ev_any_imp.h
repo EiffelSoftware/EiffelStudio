@@ -20,6 +20,8 @@ indexing
 #include <eif_eiffel.h>
 #include <gtk/gtk.h>
 
+#define set_eif_oid_in_c_object(cobj,eifoid,cobjdisp) c_ev_any_imp_set_eif_oid_in_c_object ((GtkWidget*)cobj,(int)eifoid, (void (*) (EIF_REFERENCE))cobjdisp)
+
 void c_ev_any_imp_set_eif_oid_in_c_object
 	(GtkWidget*, int, void (*) (EIF_REFERENCE));
 

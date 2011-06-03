@@ -453,10 +453,13 @@ feature -- Comparison
 
 	is_equal (other: like Current): BOOLEAN
 			-- Does `Current' look the same color as `other'?
+		local
+			l_delta: like delta
 		do
-			Result := (other.red - red).abs < delta and then
-				(other.green - green).abs < delta and then
-				(other.blue - blue).abs < delta
+			l_delta := delta
+			Result := (other.red - red).abs < l_delta and then
+				(other.green - green).abs < l_delta and then
+				(other.blue - blue).abs < l_delta
 		end
 
 	copy (other: like Current)

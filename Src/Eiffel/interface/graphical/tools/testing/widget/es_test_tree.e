@@ -31,7 +31,7 @@ feature {NONE} -- Initialization: pre
 			                      tag_filter,
 			                      create {ES_TEST_TAG_TREE_GRID_LAYOUT}.make (a_icon_provider))
 			tag_tree.set_hide_outside_nodes (True)
-			tag_tree.set_update_timer (2)
+			tag_tree.set_update_timer (5)
 			make_session_widget (a_window)
 		end
 
@@ -302,7 +302,7 @@ invariant
 	predefined_view_count_correct: view_template_descriptions.count = view_templates.count
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

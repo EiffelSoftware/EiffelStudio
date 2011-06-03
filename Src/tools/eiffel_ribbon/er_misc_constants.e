@@ -42,9 +42,9 @@ feature -- Query
 			if not is_valid_environment then
 				check_environment_variable
 			end
-			create Result.make_from_string (eiffel_library)
+			create Result.make_from_string (eiffel_install)
 			Result.set_subdirectory ("tools")
-			Result.set_subdirectory ("eiffel_ribbon")
+			Result.set_subdirectory ("ribbon")
 		end
 
 	template: DIRECTORY_NAME

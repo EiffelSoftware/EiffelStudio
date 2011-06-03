@@ -71,10 +71,8 @@ feature {NONE} -- Initialization
 			create ellipse
 			extend (ellipse)
 
-
-
 			create anchor
-			create circl.make_with_positions (-2, -2, 18, 18)
+			create circl.make_with_positions (-2, -4, 18, 16)
 			circl.set_foreground_color (default_colors.black)
 			circl.set_background_color (default_colors.white)
 			anchor.extend (circl)
@@ -472,7 +470,7 @@ feature {NONE} -- Implementation
 			if is_selected /= an_is_selected then
 				is_selected := an_is_selected
 				if is_selected then
-					ellipse.set_line_width (bon_class_line_width * 2)
+					ellipse.set_line_width (bon_class_selected_line_width)
 				else
 					ellipse.set_line_width (bon_class_line_width)
 				end
@@ -495,7 +493,7 @@ feature {NONE} -- Implementation
 	icon_figures: EV_MODEL_GROUP
 			-- Optional icon for class types deferred, effective, persistent, interfaced.
 
-	icon_spacing: INTEGER = 2
+	icon_spacing: INTEGER = 1
 			-- Space in pixel between icons in `icon_figures'.
 
 	name_labels: EV_MODEL_GROUP
@@ -514,7 +512,9 @@ feature {NONE} -- Implementation
 		local
 			icon: EV_MODEL_PICTURE
 			hw: INTEGER
+			l_bbox: EV_RECTANGLE
 		do
+			l_bbox := temp_bounding_box
 			icon_figures.wipe_out
 			icon_figures.set_point_position (0, 0)
 			if model.is_deferred then
@@ -524,33 +524,39 @@ feature {NONE} -- Implementation
 			if model.is_effective then
 				create icon.make_with_identified_pixmap (bon_effective_icon)
 				if icon_figures.count > 0 then
-					icon.set_point_position (icon_figures.bounding_box.width + icon_spacing, 0)
+					icon_figures.update_rectangle_to_bounding_box (l_bbox)
+					icon.set_point_position (l_bbox.width + icon_spacing, 0)
 				end
 				icon_figures.extend (icon)
 			end
 			if model.is_persistent then
 				create icon.make_with_identified_pixmap (bon_persistent_icon)
 				if icon_figures.count > 0 then
-					icon.set_point_position (icon_figures.bounding_box.width + icon_spacing, 0)
+					icon_figures.update_rectangle_to_bounding_box (l_bbox)
+					icon.set_point_position (l_bbox.width + icon_spacing, 0)
 				end
 				icon_figures.extend (icon)
 			end
 			if model.is_interfaced then
 				create icon.make_with_identified_pixmap (bon_interfaced_icon)
 				if icon_figures.count > 0 then
-					icon.set_point_position (icon_figures.bounding_box.width + icon_spacing, 0)
+					icon_figures.update_rectangle_to_bounding_box (l_bbox)
+					icon.set_point_position (l_bbox.width + icon_spacing, 0)
 				end
 				icon_figures.extend (icon)
 			end
 
-			from
-				hw := as_integer (icon_figures.bounding_box.width / 2)
-				icon_figures.start
-			until
-				icon_figures.after
-			loop
-				icon_figures.item.set_x (icon_figures.item.x - hw)
-				icon_figures.forth
+			if icon_figures.count > 0 then
+				from
+					icon_figures.update_rectangle_to_bounding_box (l_bbox)
+					hw := as_integer (l_bbox.width / 2)
+					icon_figures.start
+				until
+					icon_figures.after
+				loop
+					icon_figures.item.set_x (icon_figures.item.x - hw)
+					icon_figures.forth
+				end
 			end
 
 			if world /= Void then
@@ -579,11 +585,13 @@ feature {NONE} -- Implementation
 			s, rest: STRING
 			i: INTEGER
 			part_text: EV_MODEL_TEXT
+			l_bbox: EV_RECTANGLE
 		do
 			name_labels.wipe_out
 			name_labels.set_point_position (0, 0)
 			if a_text.count > max_class_name_length then
 				from
+					l_bbox := temp_bounding_box
 					rest := a_text
 					i := a_text.last_index_of ('_', max_class_name_length)
 				until
@@ -602,14 +610,16 @@ feature {NONE} -- Implementation
 					if world /= Void then
 						part_text.scale (world.scale_factor)
 					end
-					part_text.set_point_position (0, name_labels.bounding_box.height)
+					name_labels.update_rectangle_to_bounding_box (l_bbox)
+					part_text.set_point_position (0, l_bbox.height)
 					part_text.set_x (0)
 					name_labels.extend (part_text)
 				end
 				s := rest
 				create part_text.make_with_text (s)
 				assign_class_name_properties_to_text (part_text)
-				part_text.set_point_position (0, name_labels.bounding_box.height)
+				name_labels.update_rectangle_to_bounding_box (l_bbox)
+				part_text.set_point_position (0, l_bbox.height)
 				part_text.set_x (0)
 				name_labels.extend (part_text)
 			else
@@ -662,7 +672,6 @@ feature {NONE} -- Implementation
 					else
 						l_max_generics_name_length := max_generics_name_length
 						from
-							s := ""
 							rest := a_text
 							i := rest.last_index_of (' ', l_max_generics_name_length)
 							j := rest.last_index_of ('_', l_max_generics_name_length)
@@ -726,91 +735,89 @@ feature {NONE} -- Implementation
 	update_information_positions
 			-- Set positions of `name_labels', `bon_icons' and `generics_label'.
 		local
-			cur_pos: INTEGER
-			h: INTEGER
-			l_ibbox_height, l_nbbox_height, l_gbbox_height: INTEGER
+			cur_pos, l_label_pos: INTEGER
+			h, w: INTEGER
+			l_ibbox_height, l_ibbox_width, l_nbbox_height, l_nbbox_width, l_gbbox_height, l_gbbox_width: INTEGER
 			l_bbox: EV_RECTANGLE
+			l_single_line_label: BOOLEAN
+			l_min_size_left, l_min_size_top: INTEGER
+			r, omega, l_sine_omega, l_cosine_omega: REAL_64
+			l_r1_changed, l_r2_changed: BOOLEAN
 		do
+			l_bbox := temp_bounding_box
 			if is_high_quality then
-				create l_bbox
 				if icon_figures.is_show_requested and then icon_figures.count > 0 then
 					icon_figures.update_rectangle_to_bounding_box (l_bbox)
 					l_ibbox_height := l_bbox.height
+					l_ibbox_width := l_bbox.width
+				else
+					l_ibbox_height := 10
+					l_ibbox_width := 10
 				end
 				if generics_label.is_show_requested and then generics_label.count > 0 then
 					generics_label.update_rectangle_to_bounding_box (l_bbox)
 					l_gbbox_height := l_bbox.height
+					l_gbbox_width := l_bbox.width
 				end
 				name_labels.update_rectangle_to_bounding_box (l_bbox)
 				l_nbbox_height := l_bbox.height
+				l_nbbox_width := l_bbox.width
 
-				h := l_ibbox_height + l_nbbox_height + l_gbbox_height
+				l_single_line_label := name_labels.count = 1 and then generics_label.count = 1
 
+				if l_single_line_label then
+					h := l_nbbox_height.max (l_gbbox_height)
+				else
+					h := l_nbbox_height + l_gbbox_height
+				end
 				cur_pos := port_y - as_integer (h / 2)
+				icon_figures.set_point_position (port_x, cur_pos - l_ibbox_height)
+				h := h + l_ibbox_height
 
-				icon_figures.set_point_position (port_x, cur_pos)
-				cur_pos := cur_pos + l_ibbox_height
-
-				name_labels.set_point_position (port_x, cur_pos)
-				cur_pos := cur_pos + l_nbbox_height
-
-				generics_label.set_point_position (port_x, cur_pos)
+				if l_single_line_label then
+						-- Put both name label and generic label on the same line if both single lined.
+					w := (l_nbbox_width + l_gbbox_width + 4)
+					l_label_pos := (l_nbbox_width // 2) - ((w + 2) // 2)
+					name_labels.set_point_position (port_x + l_label_pos, cur_pos)
+					l_label_pos := (l_gbbox_width // 2) - ((w + 2) // 2) + l_nbbox_width + 4
+					generics_label.set_point_position (port_x + l_label_pos, cur_pos)
+				else
+					w := l_nbbox_width.max (l_gbbox_width)
+					name_labels.set_point_position (port_x, cur_pos)
+					cur_pos := cur_pos + l_nbbox_height
+					generics_label.set_point_position (port_x, cur_pos)
+				end
+				w := w.max (l_ibbox_width)
+				l_min_size_top := -(w // 2)
+				l_min_size_left := -(h // 2)
 			else
 				name_labels.set_x_y (port_x, port_y)
+				name_labels.update_rectangle_to_bounding_box (l_bbox)
+				w := l_bbox.width
+				h := l_bbox.height
+				l_min_size_left := l_bbox.x
+				l_min_size_top := l_bbox.y
 			end
 
-			update_radius
-		end
+				-- Make sure than an oval shape is maintained.
+			w := w.max (h * 16 // 10)
 
-	names_label_scale: REAL_32 = 2.0
+			r := distance (l_min_size_left, l_min_size_top, l_min_size_left + w / 2, l_min_size_top + h / 2)
+			omega := line_angle (l_min_size_left + w / 2, l_min_size_top + h / 2, l_min_size_left + w, l_min_size_top)
 
-	update_radius
-			-- Update `ellipse_radius_1' and `ellipse_radius_2'.
-		local
-			l_min_size: EV_RECTANGLE
-			w, h: INTEGER
-			r, omega: DOUBLE
-		do
-			if is_high_quality then
-				if model.generics /= Void and then model.generics.count + model.name.count <= max_class_name_length  then
-					l_min_size := minimum_size
+			l_sine_omega := sine (omega)
+			l_cosine_omega := cosine (omega)
 
-					w := l_min_size.width
-					h := l_min_size.height
-					if icon_figures.bounding_box.height = 0 then
-						h := as_integer (h * names_label_scale)
-					end
-				else
-					l_min_size := minimum_size
-
-					w := l_min_size.width
-					h := l_min_size.height
-					if icon_figures.bounding_box.height = 0 and then generics_label.bounding_box.height = 0 and then name_labels.count = 1 then
-						h := as_integer (h * names_label_scale)
-					end
-				end
-			else
-				l_min_size := name_labels.bounding_box
-
-				w := l_min_size.width
-				h := l_min_size.height
-				if name_labels.count = 1 then
-					h := as_integer (h * names_label_scale)
-				end
-			end
-
-				-- We need to make sure that the width is at least 1.6 times greater than height to maintain the ovalness.
-			w := w.max ((h * 16) // 10)
-
-			r := distance (l_min_size.left, l_min_size.top, l_min_size.left + w / 2, l_min_size.top + h / 2)
-			omega := line_angle (l_min_size.left + w / 2, l_min_size.top + h / 2, l_min_size.left + w, l_min_size.top)
-			ellipse_radius_2 := sqrt (r^2*sine(omega)^2*(1 + (cosine(omega)^2/(sine(omega)^2*(w^2/h^2)))))
+			ellipse_radius_2 := sqrt (r^2*l_sine_omega^2*(1 + (l_cosine_omega^2/(l_sine_omega^2*(w^2/h^2))))) + 2
 			ellipse_radius_1 := w * ellipse_radius_2 / h
 
-			if ellipse.radius1 /= as_integer (ellipse_radius_1) then
+			l_r1_changed := ellipse.radius1 /= as_integer (ellipse_radius_1)
+			l_r2_changed := ellipse.radius2 /= as_integer (ellipse_radius_2)
+			if l_r1_changed and then l_r2_changed then
+				ellipse.set_radius1_and_radius2 (as_integer (ellipse_radius_1), as_integer (ellipse_radius_2))
+			elseif l_r1_changed then
 				ellipse.set_radius1 (as_integer (ellipse_radius_1))
-			end
-			if ellipse.radius2 /= as_integer (ellipse_radius_2) then
+			elseif l_r2_changed then
 				ellipse.set_radius2 (as_integer (ellipse_radius_2))
 			end
 		end
@@ -831,7 +838,7 @@ feature {NONE} -- Implementation
 			end
 			ellipse.set_foreground_color (bon_class_line_color)
 			if is_selected = True then
-				ellipse.set_line_width (bon_class_line_width * 2)
+				ellipse.set_line_width (bon_class_selected_line_width)
 			else
 				ellipse.set_line_width (bon_class_line_width)
 			end
@@ -943,6 +950,12 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
+	temp_bounding_box: EV_RECTANGLE
+			-- Temporary bounding box used for dimension calculation.
+		once
+			create Result
+		end
+
 	new_filled_list (n: INTEGER): like Current
 			-- New list with `n' elements.
 		do
@@ -958,7 +971,7 @@ invariant
 	generics_label_not_void: generics_label /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

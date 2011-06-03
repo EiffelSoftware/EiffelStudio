@@ -44,6 +44,7 @@ feature {NONE} -- Bon class
 		end
 
 	bon_class_line_width: INTEGER = 2
+	bon_class_selected_line_width: INTEGER = 3
 
 	bon_generics_font: EV_IDENTIFIED_FONT
 		do
@@ -55,9 +56,9 @@ feature {NONE} -- Bon class
 			Result := preferences.diagram_tool_data.bon_generics_color
 		end
 
-	max_class_name_length: INTEGER = 10
+	max_class_name_length: INTEGER = 20
 
-	max_generics_name_length: INTEGER = 10
+	max_generics_name_length: INTEGER = 25
 
 	bon_deferred_icon: EV_IDENTIFIED_PIXMAP
 		local
@@ -172,7 +173,7 @@ feature {NONE} -- Inheritance link
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

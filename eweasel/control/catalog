@@ -519,6 +519,7 @@ test	crash-on-veen2a					valid268 tcf pass validity
 test	bogus-vsrp3-with-require-else-false	valid269 tcf pass validity
 test	spurious-vuot-in-assertion		valid270 tcf pass validity object_test
 test	spurious-vweq-warning			valid271 tcf pass validity
+test	non-conforming-missing-vmss3		valid272 tcf fail validity non-conforming
 
 -- Multiple error reporting tests
 test	multi-error-degree-4	multierr001 tcf pass multi-errors

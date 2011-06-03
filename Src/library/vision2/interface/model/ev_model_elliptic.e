@@ -153,7 +153,7 @@ feature -- Element change
 		end
 
 	set_radius2 (radius: INTEGER)
-			-- Set `radius2' to `radius'
+			-- Set `radius2' to `radius'.
 		require
 			radius_positive: radius >= 0
 		local
@@ -171,6 +171,31 @@ feature -- Element change
 			center_invalidate
 		ensure
 			set: radius2 = radius
+		end
+
+	set_radius1_and_radius2 (a_radius1, a_radius2: INTEGER)
+			-- Set `radius1' to `a_radius1' and `radius2` to `a_radius2'.
+		require
+			radius1_positive: a_radius1 >= 0
+			radius2_positive: a_radius2 >= 0
+		local
+			l_point_array: like point_array
+			p0, p1: EV_COORDINATE
+			cx, cy: DOUBLE
+		do
+			l_point_array := point_array
+			p0 := l_point_array.item (0)
+			p1 := l_point_array.item (1)
+			cx := (p0.x_precise + p1.x_precise) / 2
+			cy := (p0.y_precise + p1.y_precise) / 2
+			p0.set_x_precise (cx - a_radius1)
+			p1.set_x_precise (cx + a_radius1)
+			p0.set_y_precise (cy - a_radius2)
+			p1.set_y_precise (cy + a_radius2)
+			invalidate
+			center_invalidate
+		ensure
+			set: radius1 = a_radius1 and radius2 = a_radius2
 		end
 
 	set_point_a_position (ax, ay: INTEGER)

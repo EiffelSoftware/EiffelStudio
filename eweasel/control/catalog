@@ -2066,6 +2066,7 @@ test	file-read-write-access		lib033	 tcf fail library file
 test	file-flush			lib034	 tcf pass library file
 test	file-position-bad-file-pointer	lib035	 tcf fail library file
 test	format-double-crash				lib036	 tcf fail library ieee
+test	ptf-file-read-to-string		lib037	 tcf pass library file
 
 
 -- TUPLE tests

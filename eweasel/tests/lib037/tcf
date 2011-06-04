@@ -1,0 +1,18 @@
+test_name 	ptf-file-read-to-string
+test_description Test `read_to_string' on plaint text file and raw file.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	plain_text_file_bis.e $CLUSTER plain_text_file_bis.e
+copy_raw 	raw_file_bis.e $CLUSTER raw_file_bis.e
+
+compile_melted
+compile_result 	ok
+
+copy_raw	file.txt $EXEC_WORK file.txt
+
+execute_work 	NONE exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+test_end

@@ -1,0 +1,12 @@
+
+test_name 	 ise-ec-flags-missing-final-quote	
+test_description Passing options to the compiler via the ISE_EC_FLAGS environment variable crashes the compiler if the value of the variable has an quoted value with a missing final double quote
+
+setenv		 ISE_EC_FLAGS ""-full"
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+
+compile_melted
+compile_result 	 ok
+
+test_end

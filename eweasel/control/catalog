@@ -1846,7 +1846,8 @@ test	expanded-constrained-generic-root-crash	term199 tcf fail termination expand
 test	check-instruction-invalid-code		term200 tcf pass termination check instruction validity
 test	inherit-generic-with-self-as-formal	term201 tcf pass termination 
 test	inherit-formal-as-second-formal		term202 tcf pass termination dotnet
-test	 inherit-generic-of-expanded		term203 tcf pass termination dotnet
+test	inherit-generic-of-expanded		term203 tcf pass termination dotnet
+test	ise-ec-flags-missing-final-quote	term204 tcf fail termination
 
 -- Config
 

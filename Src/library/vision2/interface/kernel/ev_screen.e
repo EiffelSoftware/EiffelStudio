@@ -20,6 +20,56 @@ inherit
 create
 	default_create
 
+feature -- Measurement
+
+	virtual_width: INTEGER
+			-- Virtual width of screen
+		do
+			Result := implementation.virtual_width
+		end
+
+	virtual_height: INTEGER
+			-- Virtual height of screen
+		do
+			Result := implementation.virtual_height
+		end
+
+	virtual_x: INTEGER
+			-- X position of virtual screen in main display coordinates
+		do
+			Result := implementation.virtual_x
+		end
+
+	virtual_y: INTEGER
+			-- Y position of virtual screen in main display coordinates
+		do
+			Result := implementation.virtual_y
+		end
+
+	virtual_left: INTEGER
+			-- Left position of virtual screen in main display coordinates
+		do
+			Result := virtual_x
+		end
+
+	virtual_top: INTEGER
+			-- Top position of virtual screen in main display coordinates
+		do
+			Result := virtual_y
+		end
+
+	virtual_right: INTEGER
+			-- Right position of virtual screen in main display coordinates
+		do
+			Result := virtual_x + virtual_width
+		end
+
+	virtual_bottom: INTEGER
+			-- Bottom position of virtual screen in main display coordinates
+		do
+			Result := virtual_y + virtual_height
+		end
+
 feature -- Status report
 
 	pointer_position: EV_COORDINATE

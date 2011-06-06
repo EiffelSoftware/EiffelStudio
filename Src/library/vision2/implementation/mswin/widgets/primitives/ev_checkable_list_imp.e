@@ -22,8 +22,7 @@ inherit
 			interface,
 			default_ex_style,
 			on_lvn_itemchanged,
-			insert_i_th--,
-			--on_erase_background
+			insert_i_th
 		end
 
 	EV_CHECKABLE_LIST_ACTION_SEQUENCES_IMP
@@ -58,7 +57,6 @@ feature -- Status setting
 			check item_imp /= Void end
 			i := ev_children.index_of (item_imp, 1) - 1
 			cwin_listview_setcheckstate (wel_item, i, True)
-
 		end
 
 	uncheck_item (list_item: EV_LIST_ITEM)
@@ -75,14 +73,6 @@ feature -- Status setting
 		end
 
 feature {NONE} -- Implementation
-
---	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
---			--
---		do
---			-- Do nothing here.
---			-- To reduce flickering, call `disable_default_processing' and
---			-- redraw only the parts that need redrawing.
---		end
 
 	insert_i_th (v: attached like item; i: INTEGER)
 			-- Insert `v' at position `i'.
@@ -143,7 +133,7 @@ feature {NONE} -- Implementation
 	default_ex_style: INTEGER
 			-- Default extended style for `Current'.
 		once
-			Result := Precursor {EV_LIST_IMP} + Lvs_ex_checkboxes
+			Result := Precursor {EV_LIST_IMP} | Lvs_ex_checkboxes
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation

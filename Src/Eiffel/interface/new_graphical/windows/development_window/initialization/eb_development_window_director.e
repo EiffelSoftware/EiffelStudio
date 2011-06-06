@@ -40,7 +40,10 @@ feature -- Command
 
 			l_x := l_window.x_position
 			l_y := l_window.y_position
-			l_window.set_position ({INTEGER_16}.min_value, {INTEGER_16}.min_value)
+			if {PLATFORM}.is_windows then
+					-- Offscreen setting is only guaranteed with MS Windows Manager.
+				l_window.set_position ({INTEGER_16}.min_value, {INTEGER_16}.min_value)
+			end
 			l_window.show
 
 			l_debugger_manager ?= develop_window.debugger_manager
@@ -311,7 +314,7 @@ feature{NONE} -- Implementation
 			-- Builder which build toolbars.
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

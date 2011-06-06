@@ -61,7 +61,7 @@ inherit
 			default_process_message, on_mouse_wheel, on_getdlgcode,
 			on_wm_dropfiles
 		redefine
-			on_lvn_itemchanged, on_size, on_erase_background, default_style,
+			on_lvn_itemchanged, on_size, default_style,
 			default_ex_style
 		end
 
@@ -649,7 +649,7 @@ feature {EV_ANY_I} -- Implementation
 
 	default_ex_style: INTEGER
 		once
-			Result := Lvs_ex_infotip
+			Result := Lvs_ex_infotip | lvs_ex_doublebuffer
 		end
 
 	on_lvn_itemchanged (info: WEL_NM_LIST_VIEW)
@@ -728,91 +728,6 @@ feature {EV_ANY_I} -- Implementation
 				l_pnd_item_source.pnd_motion (x_pos, y_pos, pt.x, pt.y)
 			end
 			Precursor {EV_PRIMITIVE_IMP} (keys, x_pos, y_pos)
-		end
-
-	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT)
-			-- Wm_erasebkgnd message.
-			-- May be redefined to paint something on
-			-- the `paint_dc'. `invalid_rect' defines
-			-- the invalid rectangle of the client area that
-			-- needs to be repainted.
-			--| `Current' no longer re-draws the background and draws the
-			--| items on top. We must now calculate the area which will not be
-			--|re-drawn by the items and now draw that ourseleves first.
-		local
-			bkg_color: detachable WEL_COLOR_REF
-			brush: WEL_BRUSH
-			rect1, rect2: WEL_RECT
-			reg, temp_reg, new_reg: WEL_REGION
-			counter: INTEGER
-			pixmap_line_length: INTEGER
-		do
-			disable_default_processing
-			set_message_return_value (to_lresult (1))
-				-- Create a brush corresponding to the background color.
-			if is_sensitive then
-				if background_color_imp = Void then
-					bkg_color := get_background_color
-				else
-					bkg_color := background_color_imp
-				end
-			else
-				create bkg_color.make_system (Color_btnface)
-			end
-			check bkg_color /= Void end
-			create brush.make_solid (bkg_color)
-				-- Create a region coresponding to `invalid_rect'.
-			create reg.make_rect_indirect (invalid_rect)
-				-- If `Current' is not empty then.
-				-- We check to see if there are children, as if `Current' is
-				-- empty, we simply fill the whole of `reg'
-			if ev_children.count /= 0 then
-					-- If the visible children do not reach to the bottom
-					-- of `Current'.
-				if top_index + visible_count + 1 > ev_children.count then
-					rect1 := get_item_rect (ev_children.count - 1)
-					create temp_reg.make_rect (rect1.left, 0, rect1.right,
-						rect1.bottom)
-				else
-					rect1 := get_item_rect (top_index)
-					create temp_reg.make_rect (rect1.left, 0, rect1.right,
-						wel_height)
-				end
-				new_reg := reg.combine (temp_reg, Rgn_diff)
-				temp_reg.delete
-						-- Erase the background in `new_reg'.
-				paint_dc.fill_region (new_reg, brush)
-				new_reg.delete
-					-- Fill in left side of `paint_dc'.
-				create rect2.make (client_rect.left, client_rect.top,
-					client_rect.left + 2, client_rect.bottom)
-				paint_dc.fill_rect (rect2, brush)
-					-- Fill in top of `paint_dc'
-				create rect2.make (client_rect.left, client_rect.top,
-					client_rect.right, client_rect.top + 2)
-				paint_dc.fill_rect (rect2, brush)
-					-- Fill in areas of `paint_dc' around images contained.
-				from
-					counter:= top_index
-				until
-					counter = top_index + visible_count or
-					counter > ev_children.count - 1
-				loop
-					rect1 := get_item_rect (counter)
-					pixmap_line_length := pixmaps_width + 2
-					create rect2.make (rect1.left, rect1.top +
-						pixmaps_height, pixmap_line_length, rect1.bottom)
-					paint_dc.fill_rect (rect2, brush)
-					counter := counter + 1
-				end
-					-- Delete windows GDI objects.
-				brush.delete
-			else
-					-- There are no children , so erase all of `reg'.
-				paint_dc.fill_region (reg, brush)
-			end
-			reg.delete
-			brush.delete
 		end
 
 	background_color_internal: EV_COLOR

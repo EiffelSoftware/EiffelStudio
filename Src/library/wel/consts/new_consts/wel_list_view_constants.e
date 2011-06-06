@@ -11,7 +11,7 @@ class
 feature -- Style
 
 	Lvs_icon: INTEGER = 0
-			-- This style specifies icon view. 
+			-- This style specifies icon view.
 			--
 			-- Declared in Windows as LVS_ICON
 
@@ -20,56 +20,56 @@ feature -- Style
 			-- style with a list view control, the first column is always
 			-- left-aligned. You cannot use LVCFMT_RIGHT to change this
 			-- alignment. See LVCOLUMN for further information on column
-			-- alignment. 
+			-- alignment.
 			--
 			-- Declared in Windows as LVS_REPORT
 
 	Lvs_smallicon: INTEGER = 2
-			-- This style specifies small icon view. 
+			-- This style specifies small icon view.
 			--
 			-- Declared in Windows as LVS_SMALLICON
 
 	Lvs_list: INTEGER = 3
-			-- This style specifies list view. 
+			-- This style specifies list view.
 			--
 			-- Declared in Windows as LVS_LIST
 
 	Lvs_alignleft: INTEGER = 2048
-			-- Items are left-aligned in icon and small icon view. 
+			-- Items are left-aligned in icon and small icon view.
 			--
 			-- Declared in Windows as LVS_ALIGNLEFT
 
 	Lvs_aligntop: INTEGER = 0
 			-- Items are aligned with the top of the list view control in
-			-- icon and small icon view. 
+			-- icon and small icon view.
 			--
 			-- Declared in Windows as LVS_ALIGNTOP
 
 	Lvs_autoarrange: INTEGER = 256
 			-- Icons are automatically kept arranged in icon and small icon
-			-- view. 
+			-- view.
 			--
 			-- Declared in Windows as LVS_AUTOARRANGE
 
 	Lvs_editlabels: INTEGER = 512
 			-- Item text can be edited in place. The parent window must
-			-- process the LVN_ENDLABELEDIT notification message. 
+			-- process the LVN_ENDLABELEDIT notification message.
 			--
 			-- Declared in Windows as LVS_EDITLABELS
 
 	Lvs_nocolumnheader: INTEGER = 16384
 			-- Declared in Windows as LVS_NOCOLUMNHEADER
-	
+
 	Lvs_nosortheader: INTEGER = 32768
 			-- Column headers do not work like buttons. This style can be
 			-- used if clicking a column header in report view does not
-			-- carry out an action, such as sorting. 
+			-- carry out an action, such as sorting.
 			--
 			-- Declared in Windows as LVS_NOSORTHEADER
 
 	Lvs_nolabelwrap: INTEGER = 128
 			-- Item text is displayed on a single line in icon view. By
-			-- default, item text may wrap in icon view. 
+			-- default, item text may wrap in icon view.
 			--
 			-- Declared in Windows as LVS_NOLABELWRAP
 
@@ -77,7 +77,7 @@ feature -- Style
 			-- Scrolling is disabled. All items must be within the client
 			-- area. This style is not compatible with the LVS_LIST or
 			-- LVS_REPORT styles.
-			-- 
+			--
 			-- Declared in Windows as LVS_NOSCROLL
 
 	Lvs_ownerdrawfixed: INTEGER = 1024
@@ -85,38 +85,38 @@ feature -- Style
 			-- view control sends a WM_DRAWITEM message to paint each item;
 			-- it does not send separate messages for each subitem. The
 			-- itemData member of the DRAWITEMSTRUCT structure contains the
-			-- item data for the specified list view item. 
+			-- item data for the specified list view item.
 			--
 			-- Declared in Windows as LVS_OWNERDRAWFIXED
 
 	Lvs_shareimagelists: INTEGER = 64
 			-- The image list will not be deleted when the control is
 			-- destroyed. This style enables the use of the same image lists
-			-- with multiple list view controls. 
+			-- with multiple list view controls.
 			--
 			-- Declared in Windows as LVS_SHAREIMAGELISTS
 
 	Lvs_showselalways: INTEGER = 8
 			-- The selection, if any, is always shown, even if the control
-			-- does not have the focus. 
+			-- does not have the focus.
 			--
 			-- Declared in Windows as LVS_SHOWSELALWAYS
 
 	Lvs_singlesel: INTEGER = 4
 			-- Only one item at a time can be selected. By default, multiple
-			-- items may be selected. 
+			-- items may be selected.
 			--
 			-- Declared in Windows as LVS_SINGLESEL
 
 	Lvs_sortascending: INTEGER = 16
 			-- Item indices are sorted based on item text in ascending
-			-- order. 
+			-- order.
 			--
 			-- Declared in Windows as LVS_SORTASCENDING
 
 	Lvs_sortdescending: INTEGER = 32
 			-- Item indices are sorted based on item text in descending
-			-- order. 
+			-- order.
 			--
 			-- Declared in Windows as LVS_SORTDESCENDING
 
@@ -125,108 +125,111 @@ feature -- Extended Style
 	Lvs_ex_checkboxes: INTEGER = 4
 			-- Version 4.70.
 			-- Enables check boxes for items in a list view
-			-- control. Effectively, when set to this style, the control 
-			-- will create and set a state image list using 
-			-- DrawFrameControl. Check boxes are visible and functional 
-			-- with all list view modes. You can obtain the state of the 
-			-- check box for a given item with ListView_GetCheckState. To 
-			-- set the check state, use ListView_SetCheckState. 
+			-- control. Effectively, when set to this style, the control
+			-- will create and set a state image list using
+			-- DrawFrameControl. Check boxes are visible and functional
+			-- with all list view modes. You can obtain the state of the
+			-- check box for a given item with ListView_GetCheckState. To
+			-- set the check state, use ListView_SetCheckState.
 
 	Lvs_ex_flatsb: INTEGER = 256
-			-- Version 4.71. 
-			-- Enables flat scroll bars in the list view. 
+			-- Version 4.71.
+			-- Enables flat scroll bars in the list view.
 			-- If you need more control over the appearance of the list
-			-- view's scroll bars, you should manipulate the list view's 
+			-- view's scroll bars, you should manipulate the list view's
 			-- scroll bars directly using the Flat Scroll Bar APIs. If
 			-- the system metrics change, you are responsible for adjusting
 			-- the scrollbar metrics with FlatSB_SetScrollProp. See Flat
-			-- Scroll Bars for further details. 
+			-- Scroll Bars for further details.
 
 	Lvs_ex_fullrowselect: INTEGER = 32
 			-- Version 4.70.
 			-- When an item is selected, the item and all its subitems are
 			-- highlighted. This style is available only in conjunction
-			-- with the LVS_REPORT style. 
+			-- with the LVS_REPORT style.
 
 	Lvs_ex_gridlines: INTEGER = 1
 			-- Version 4.70. Displays gridlines around items and subitems.
 			-- This style is available only in conjunction with the LVS_REPORT
-			-- style. 
+			-- style.
 
 	Lvs_ex_headerdragdrop: INTEGER = 16
 			-- Version 4.70. Enables drag-and-drop reordering of columns in
 			-- a list view control. This style is only available to list
-			-- view controls that use the LVS_REPORT style. 
+			-- view controls that use the LVS_REPORT style.
 
 	Lvs_ex_infotip: INTEGER = 1024
-			-- Version 4.71. When a list view control uses the 
+			-- Version 4.71. When a list view control uses the
 			-- LVS_EX_INFOTIP style, the LVN_GETINFOTIP notification message
 			-- is sent to the parent window before displaying an item's
-			-- tooltip. 
+			-- tooltip.
 
 	Lvs_ex_labeltip: INTEGER = 16384
 			-- Version 5.80. If a partially hidden label in any list view
 			-- mode lacks tooltip text, the list view control will unfold
 			-- the label. If this style is not set, the list view control
-			-- will unfold partly hidden labels only for the large icon mode. 
+			-- will unfold partly hidden labels only for the large icon mode.
 
 	Lvs_ex_multiworkareas: INTEGER = 8192
 			-- Version 4.71. If the list view control has the LVS_AUTOARRANGE
 			-- style, the control will not autoarrange its icons until one or
 			-- more work areas are defined (see LVM_SETWORKAREAS). To be
-			-- effective, this style must be set before any work areas are 
-			-- defined and any items have been added to the control. 
+			-- effective, this style must be set before any work areas are
+			-- defined and any items have been added to the control.
 
 	Lvs_ex_oneclickactivate: INTEGER = 64
-			-- Version 4.70. The list view control sends an LVN_ITEMACTIVATE 
+			-- Version 4.70. The list view control sends an LVN_ITEMACTIVATE
 			-- notification message to the parent window when the user clicks
 			-- an item. This style also enables hot tracking in the list view
 			-- control. Hot tracking means that when the cursor moves over an
-			-- item, it is highlighted but not selected. See the Remarks for a 
-			-- discussion of item activation. 
+			-- item, it is highlighted but not selected. See the Remarks for a
+			-- discussion of item activation.
 
 	Lvs_ex_regional: INTEGER = 512
-			-- Version 4.71. The list view will create a region that includes 
-			-- only the item icons and text and set its window region to that 
+			-- Version 4.71. The list view will create a region that includes
+			-- only the item icons and text and set its window region to that
 			-- using SetWindowRgn. This will exclude any area that is not part
 			-- of an item from the window region. This style is only available
-			-- to list view controls that use the LVS_ICON style. 
+			-- to list view controls that use the LVS_ICON style.
 
 	Lvs_ex_subitemimages: INTEGER = 2
-			-- Version 4.70. Allows images to be displayed for subitems. 
-			-- This style is available only in conjunction with the LVS_REPORT 
-			-- style. 
+			-- Version 4.70. Allows images to be displayed for subitems.
+			-- This style is available only in conjunction with the LVS_REPORT
+			-- style.
 
 	Lvs_ex_trackselect: INTEGER = 8
-			-- Version 4.70. Enables hot-track selection in a list view 
-			-- control. Hot track selection means that an item is 
-			-- automatically selected when the cursor remains over the item 
-			-- for a certain period of time. The delay can be changed from 
-			-- the default system setting with a LVM_SETHOVERTIME message. 
-			-- This style applies to all styles of list view control. You 
-			-- can check whether or not hot-track selection is enabled by 
-			-- calling SystemParametersInfo. 
+			-- Version 4.70. Enables hot-track selection in a list view
+			-- control. Hot track selection means that an item is
+			-- automatically selected when the cursor remains over the item
+			-- for a certain period of time. The delay can be changed from
+			-- the default system setting with a LVM_SETHOVERTIME message.
+			-- This style applies to all styles of list view control. You
+			-- can check whether or not hot-track selection is enabled by
+			-- calling SystemParametersInfo.
 
 	Lvs_ex_twoclickactivate: INTEGER = 128
-			-- Version 4.70. The list view control sends an LVN_ITEMACTIVATE 
-			-- notification message to the parent window when the user 
-			-- double-clicks an item. This style also enables hot tracking 
-			-- in the list view control. Hot tracking means that when the 
-			-- cursor moves over an item, it is highlighted but not 
-			-- selected. See the Remarks for a discussion of item 
-			-- activation. 
+			-- Version 4.70. The list view control sends an LVN_ITEMACTIVATE
+			-- notification message to the parent window when the user
+			-- double-clicks an item. This style also enables hot tracking
+			-- in the list view control. Hot tracking means that when the
+			-- cursor moves over an item, it is highlighted but not
+			-- selected. See the Remarks for a discussion of item
+			-- activation.
 
 	Lvs_ex_underlinecold: INTEGER = 4096
-			-- Version 4.71. Causes non-hot items that are activatable to be 
-			-- displayed with underlined text. This style requires that 
-			-- LVS_EX_TWOCLICKACTIVATE also be set. See the Remarks for a 
-			-- discussion of item activation. 
+			-- Version 4.71. Causes non-hot items that are activatable to be
+			-- displayed with underlined text. This style requires that
+			-- LVS_EX_TWOCLICKACTIVATE also be set. See the Remarks for a
+			-- discussion of item activation.
 
 	Lvs_ex_underlinehot: INTEGER = 2048
-			-- Version 4.71. Causes hot items that are activatable to be 
-			-- displayed with underlined text. This style requires that 
-			-- LVS_EX_ONECLICKACTIVATE or LVS_EX_TWOCLICKACTIVATE also be 
-			-- set. See the Remarks for a discussion of item activation. 
+			-- Version 4.71. Causes hot items that are activatable to be
+			-- displayed with underlined text. This style requires that
+			-- LVS_EX_ONECLICKACTIVATE or LVS_EX_TWOCLICKACTIVATE also be
+			-- set. See the Remarks for a discussion of item activation.
+
+	Lvs_ex_doublebuffer: INTEGER = 0x10000
+			-- Version 6.00. Uses double buffering for rendering items.
 
 feature -- Messages
 
@@ -429,7 +432,7 @@ feature -- Messages
 
 	Lvm_getheader: INTEGER = 4127
 			-- Version 4.70. Retrieves the handle to the header control used
-			-- by the list view control. 
+			-- by the list view control.
 			--
 			-- Declared in Windows as LVM_GETHEADER
 
@@ -440,7 +443,7 @@ feature -- Messages
 			-- Declared in Windows as LVM_GETHOTCURSOR
 
 	Lvm_gethotitem: INTEGER = 4157
-			-- Version 4.70. Retrieves the index of the hot item. 
+			-- Version 4.70. Retrieves the index of the hot item.
 			--
 			-- Declared in Windows as LVM_GETHOTITEM
 
@@ -452,15 +455,15 @@ feature -- Messages
 
 	Lvm_getnumberofworkareas: INTEGER = 4169
 			-- Version 4.71. Retrieves the number of working areas in a list
-			-- view control. 
+			-- view control.
 			--
 			-- Declared in Windows as LVM_GETNUMBEROFWORKAREAS
 
 	Lvm_getsubitemrect: INTEGER = 4152
 			-- Version 4.70. Retrieves information about the bounding
-			-- rectangle for a subitem in a list view control. 
+			-- rectangle for a subitem in a list view control.
 			-- This message is intended to be used only with list view
-			-- controls that use the Lvs_report style. 
+			-- controls that use the Lvs_report style.
 			--
 			-- Declared in Windows as LVM_GETSUBITEMRECT
 
@@ -480,23 +483,23 @@ feature -- Messages
 			-- Version 4.70. Sets the HCURSOR value that the list view
 			-- control uses when the pointer is over an item while hot
 			-- tracking is enabled. To check whether or not
-			-- hot tracking is enabled, call SystemParametersInfo. 
+			-- hot tracking is enabled, call SystemParametersInfo.
 			--
 			-- Declared in Windows as LVM_SETHOTCURSOR
 
 	Lvm_sethotitem: INTEGER = 4156
-			-- Version 4.70. 
+			-- Version 4.70.
 			--
 			-- Declared in Windows as LVM_SETHOTITEM
 
 	Lvm_sethovertime: INTEGER = 4167
-			-- Version 4.71. Sets the hot item for a list view control. 
+			-- Version 4.71. Sets the hot item for a list view control.
 			--
 			-- Declared in Windows as LVM_SETHOVERTIME
 
 	Lvm_setworkareas: INTEGER = 4161
 			-- Version 4.71. Sets the working areas within a list view
-			-- control. 
+			-- control.
 			--
 			-- Declared in Windows as LVM_SETWORKAREAS
 
@@ -507,7 +510,7 @@ feature -- Messages
 
 	Lvm_subitemhittest: INTEGER = 4153
 			-- Version 4.70. Determines which list view item or subitem is
-			-- at a given position. 
+			-- at a given position.
 			--
 			-- Declared in Windows as LVM_SUBITEMHITTEST
 
@@ -569,95 +572,95 @@ feature -- Header Notifications.
 
 	Hdn_itemchanging, Hdn_itemchanginga: INTEGER = -300
 	Hdn_itemchangingw: INTEGER = -320
-			-- Notifies a header control's parent window that the attributes 
-			-- of a header item are about to change. This notification 
-			-- message is sent in the form of a WM_NOTIFY message. 
+			-- Notifies a header control's parent window that the attributes
+			-- of a header item are about to change. This notification
+			-- message is sent in the form of a WM_NOTIFY message.
 			--
 			-- Declared in Windows as HDN_ITEMCHANGING
 
 	Hdn_itemchanged, Hdn_itemchangeda: INTEGER = -301
 	Hdn_itemchangedw: INTEGER = -321
-			-- Notifies a header control's parent window that the attributes 
-			-- of a header item have changed. This notification message is 
-			-- sent in the form of a WM_NOTIFY message. 
+			-- Notifies a header control's parent window that the attributes
+			-- of a header item have changed. This notification message is
+			-- sent in the form of a WM_NOTIFY message.
 			--
 			-- Declared in Windows as HDN_ITEMCHANGED
 
 	Hdn_itemclick, Hdn_itemclicka: INTEGER = -302
 	Hdn_itemclickw: INTEGER = -322
-			-- Notifies a header control's parent window that the user 
-			-- clicked the control. This notification message is sent in the 
-			-- form of a WM_NOTIFY message. 
+			-- Notifies a header control's parent window that the user
+			-- clicked the control. This notification message is sent in the
+			-- form of a WM_NOTIFY message.
 			--
 			-- Declared in Windows as HDN_ITEMCLICK
 
 	Hdn_itemdblclick, Hdn_itemdblclicka: INTEGER = -303
 	Hdn_itemdblclickw: INTEGER = -323
-			-- Notifies a header control's parent window that the user 
-			-- double-clicked the control. This notification message is sent 
-			-- in the form of a WM_NOTIFY message. Only header controls that 
-			-- are set to the HDS_BUTTONS style send this notification. 
+			-- Notifies a header control's parent window that the user
+			-- double-clicked the control. This notification message is sent
+			-- in the form of a WM_NOTIFY message. Only header controls that
+			-- are set to the HDS_BUTTONS style send this notification.
 			--
 			-- Declared in Windows as HDN_ITEMDBLCLICK
 
 	Hdn_dividerdblclick, Hdn_dividerdblclicka: INTEGER = -305
 	Hdn_dividerdblclickw: INTEGER = -325
-			-- Notifies a header control's parent window that the user 
-			-- double-clicked the divider area of the control. This 
-			-- notification message is sent in the form of a WM_NOTIFY 
-			-- message. 
+			-- Notifies a header control's parent window that the user
+			-- double-clicked the divider area of the control. This
+			-- notification message is sent in the form of a WM_NOTIFY
+			-- message.
 			--
 			-- Declared in Windows as HDN_DIVIDERDBLCLICK
 
 	Hdn_begintrack, Hdn_begintracka: INTEGER = -306
 	Hdn_begintrackw: INTEGER = -326
-			-- Notifies a header control's parent window that the user has 
-			-- begun dragging a divider in the control (that is, the user 
-			-- has pressed the left mouse button while the mouse cursor is 
-			-- on a divider in the header control). This notification 
-			-- message is sent in the form of a WM_NOTIFY message. 
+			-- Notifies a header control's parent window that the user has
+			-- begun dragging a divider in the control (that is, the user
+			-- has pressed the left mouse button while the mouse cursor is
+			-- on a divider in the header control). This notification
+			-- message is sent in the form of a WM_NOTIFY message.
 			--
 			-- Declared in Windows as HDN_BEGINTRACK
 
 	Hdn_endtrack, Hdn_endtracka: INTEGER = -307
 	Hdn_endtrackw: INTEGER = -327
-			-- Notifies a header control's parent window that the user has 
-			-- finished dragging a divider. This notification message sent 
-			-- in the form of a WM_NOTIFY message. 
+			-- Notifies a header control's parent window that the user has
+			-- finished dragging a divider. This notification message sent
+			-- in the form of a WM_NOTIFY message.
 			--
 			-- Declared in Windows as HDN_ENDTRACK
 
 	Hdn_track, Hdn_tracka: INTEGER = -308
 	Hdn_trackw: INTEGER = -328
-			-- Notifies a header control's parent window that the user is 
-			-- dragging a divider in the header control. This notification 
-			-- message is sent in the form of a WM_NOTIFY message. 
+			-- Notifies a header control's parent window that the user is
+			-- dragging a divider in the header control. This notification
+			-- message is sent in the form of a WM_NOTIFY message.
 			--
 			-- Declared in Windows as HDN_TRACK
 
 	Hdn_getdispinfo, Hdn_getdispinfoa: INTEGER = -309
 	Hdn_getdispinfow: INTEGER = -329
 			-- Version 4.70 and later of Comctl32.dll
-			-- Notifies the header control's parent window when the filter 
-			-- button is clicked or in response to an HDM_SETITEM message. 
-			-- 
+			-- Notifies the header control's parent window when the filter
+			-- button is clicked or in response to an HDM_SETITEM message.
+			--
 			-- Declared in Windows as HDN_GETDISPINFO
 
 	Hdn_begindrag: INTEGER = -310
 			-- Version 4.70 and later of Comctl32.dll
-			-- Sent by a header control when a drag operation has begun on 
-			-- one of its items. This notification message is sent only by 
-			-- header controls that are set to the HDS_DRAGDROP style. This 
-			-- notification is sent in the form of a WM_NOTIFY message. 
+			-- Sent by a header control when a drag operation has begun on
+			-- one of its items. This notification message is sent only by
+			-- header controls that are set to the HDS_DRAGDROP style. This
+			-- notification is sent in the form of a WM_NOTIFY message.
 			--
 			-- Declared in Windows as HDN_BEGINDRAG
 
 	Hdn_enddrag: INTEGER = -311
 			-- Version 4.70 and later of Comctl32.dll
-			-- Sent by a header control when a drag operation has ended on 
-			-- one of its items. This notification is sent as a WM_NOTIFY 
-			-- message. Only header controls that are set to the 
-			-- HDS_DRAGDROP style send this notification. 
+			-- Sent by a header control when a drag operation has ended on
+			-- one of its items. This notification is sent as a WM_NOTIFY
+			-- message. Only header controls that are set to the
+			-- HDS_DRAGDROP style send this notification.
 			--
 			-- Declared in Windows as HDN_ENDDRAG
 
@@ -769,9 +772,9 @@ feature -- Column Flags (Width)
 			-- Declared in Windows as LVSCW_AUTOSIZE
 
 	Lvscw_autosize_useheader: INTEGER = -2
-			-- Automatically sizes the column to fit the 
-			-- header text. If you use this value with the last 
-			-- column, its width is set to fill the remaining 
+			-- Automatically sizes the column to fit the
+			-- header text. If you use this value with the last
+			-- column, its width is set to fill the remaining
 			-- width of the list view control.
 			--
 			-- Declared in Windows as LVSCW_AUTOSIZE_USEHEADER
@@ -870,7 +873,7 @@ feature -- Next item flags
 feature -- ImageList State
 
 	Lvsil_normal: INTEGER = 0
-			-- Indicates the normal image list, which contains 
+			-- Indicates the normal image list, which contains
 			-- selected, nonselected, and overlay images for the
 			-- items of a list view control.
 			-- This image list represents the large icons.
@@ -878,7 +881,7 @@ feature -- ImageList State
 			-- Declared in Windows as LVSIL_NORMAL
 
 	Lvsil_small: INTEGER = 1
-			-- Indicates the normal image list, which contains 
+			-- Indicates the normal image list, which contains
 			-- selected, nonselected, and overlay images for the
 			-- items of a list view control.
 			-- This image list represents the small icons.
@@ -886,14 +889,14 @@ feature -- ImageList State
 			-- Declared in Windows as LVSIL_SMALL
 
 	Lvsil_state: INTEGER = 2
-			-- Indicates the state image list. You can use state 
-			-- images to indicate application-defined item states. 
+			-- Indicates the state image list. You can use state
+			-- images to indicate application-defined item states.
 			-- A state image is displayed to the left of an item's
 			-- selected or nonselected image.
 			--
 			-- Declared in Windows as LVSIL_STATE
 
-feature -- Flags defining search in a list view. 
+feature -- Flags defining search in a list view.
 		--| Used in WEL_LIST_VIEW_SEARCH_INFO
 
 	Lvfi_param: INTEGER = 1
@@ -924,24 +927,24 @@ feature -- Flags defining search in a list view.
 feature -- List View Item Rectangle constants.
 
 	Lvir_bounds: INTEGER = 0
-			-- Returns the bounding rectangle of the entire item, including 
-			-- the icon and label. 
+			-- Returns the bounding rectangle of the entire item, including
+			-- the icon and label.
 			--
 			-- Declared in Windows as LVIR_BOUNDS
 
 	Lvir_icon: INTEGER = 1
-			-- Returns the bounding rectangle of the icon or small icon. 
+			-- Returns the bounding rectangle of the icon or small icon.
 			--
 			-- Declared in Windows as LVIR_ICON
 
 	Lvir_label: INTEGER = 2
-			-- Returns the bounding rectangle of the item text. 
+			-- Returns the bounding rectangle of the item text.
 			--
 			-- Declared in Windows as LVIR_LABEL
 
 	Lvir_selectbounds: INTEGER = 3
-			-- Returns the union of the LVIR_ICON and LVIR_LABEL rectangles, 
-			-- but excludes columns in report view. 
+			-- Returns the union of the LVIR_ICON and LVIR_LABEL rectangles,
+			-- but excludes columns in report view.
 			--
 			-- Declared in Windows as LVIR_SELECTBOUNDS
 
@@ -954,7 +957,7 @@ feature -- Validation
 						or a_flag = Lvfi_string or a_flag = Lvfi_wrap
 						or a_flag = Lvfi_nearestxy
 		end
-						
+
 	valid_lvcfmt_constant (value: INTEGER): BOOLEAN
 			-- Is `value' a valid lvcfmt constant?
 		do
@@ -964,24 +967,33 @@ feature -- Validation
 				value = Lvcfmt_justifymask
 		end
 
-	valid_lvis_constants (value: INTEGER): BOOLEAN
+	valid_lvis_constant (value: INTEGER): BOOLEAN
 			-- Is `value' a valid "Item Styles" constant?
 		do
 			Result := value = Lvis_cut or else
 				value = Lvis_drophilited or else
 				value = Lvis_focused or else
 				value = Lvis_selected
-		end 
+		end
+
+	valid_lvir_constant (value: INTEGER): BOOLEAN
+			-- Is `value' a valid item lvir item bounding constant?
+		do
+			Result := value = lvir_bounds or else
+				value = lvir_icon or else
+				value = lvir_label or else
+				value = lvir_selectbounds
+		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

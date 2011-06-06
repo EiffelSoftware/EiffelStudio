@@ -56,7 +56,7 @@ feature {NONE} -- Bon class
 			Result := preferences.diagram_tool_data.bon_generics_color
 		end
 
-	max_class_name_length: INTEGER = 20
+	max_class_name_length: INTEGER = 25
 
 	max_generics_name_length: INTEGER = 25
 

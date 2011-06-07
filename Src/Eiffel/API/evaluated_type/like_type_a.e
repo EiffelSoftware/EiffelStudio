@@ -46,6 +46,7 @@ inherit
 			set_attached_mark,
 			set_detachable_mark,
 			set_is_implicitly_attached,
+			set_separate_mark,
 			unset_is_implicitly_attached,
 			description, description_with_detachable_type,
 			c_type,
@@ -161,12 +162,6 @@ feature -- Status report
 			Result := attached actual_type as a and then a.is_ephemeral
 		end
 
-	is_separate: BOOLEAN
-			-- Is current actual type a separate one?
-		do
-			Result := Precursor or else conformance_type.is_separate
-		end
-
 	is_none: BOOLEAN
 			-- Is current actual type NONE?
 		do
@@ -182,6 +177,16 @@ feature -- Status report
 	same_as (other: TYPE_A): BOOLEAN
 			-- Is the current type the same as `other' ?
 		deferred
+		end
+
+	is_separate: BOOLEAN
+			-- Is type separate?
+		do
+			if Precursor then
+				Result := True
+			elseif attached conformance_type as t then
+				Result := t.is_separate
+			end
 		end
 
 	is_attached: BOOLEAN
@@ -270,7 +275,12 @@ feature -- Primitives
 				-- since it can be used to compute attachment properties
 				-- and give wrong results.
 			actual_type := Void
-			actual_type := a.to_other_immediate_attachment (Current)
+				-- Promote separateness status if present.
+			if has_separate_mark then
+				actual_type := a.to_other_immediate_attachment (Current).to_other_separateness (Current)
+			else
+				actual_type := a.to_other_immediate_attachment (Current)
+			end
 		end
 
 	formal_instantiation_in (type: TYPE_A; constraint: TYPE_A; written_id: INTEGER): TYPE_A
@@ -392,6 +402,15 @@ feature -- Modification
 			a := actual_type
 			if a /= Void then
 				actual_type := a.to_other_immediate_attachment (Current)
+			end
+		end
+
+	set_separate_mark
+			-- <Precursor>
+		do
+			Precursor
+			if attached actual_type as a then
+				actual_type := a.to_other_separateness (Current)
 			end
 		end
 
@@ -543,7 +562,7 @@ feature {TYPE_A} -- Helpers
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

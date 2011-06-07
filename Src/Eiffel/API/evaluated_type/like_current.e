@@ -3,7 +3,7 @@ note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 class
 	LIKE_CURRENT
@@ -14,7 +14,7 @@ inherit
 			actual_type, deep_actual_type, context_free_type,
 			associated_class, associated_class_type, conform_to, conformance_type, convert_to,
 			generics, has_associated_class, has_associated_class_type, formal_instantiated_in,
-			instantiated_in, duplicate,
+			instantiated_in, duplicate, set_separate_mark,
 			is_basic, is_expanded, is_external, is_like_current, is_none, is_reference, is_ephemeral,
 			meta_type, set_actual_type, evaluated_type_in_descendant, is_tuple,
 			set_attached_mark, set_detachable_mark, set_is_implicitly_attached,
@@ -387,7 +387,12 @@ feature {COMPILER_EXPORTER} -- Modification
 	set_actual_type (a: TYPE_A)
 			-- Assign `a' to `conformance_type'.
 		do
-			conformance_type := a.to_other_immediate_attachment (Current)
+				-- Promote separateness status if present.
+			if has_separate_mark then
+				conformance_type := a.to_other_immediate_attachment (Current).to_other_separateness (Current)
+			else
+				conformance_type := a.to_other_immediate_attachment (Current)
+			end
 			actual_type := Current
 		end
 
@@ -424,6 +429,15 @@ feature {COMPILER_EXPORTER} -- Modification
 			a := conformance_type
 			if a /= Void then
 				conformance_type := a.to_other_immediate_attachment (Current)
+			end
+		end
+
+	set_separate_mark
+			-- <Precursor>
+		do
+			Precursor
+			if attached conformance_type as a then
+				conformance_type := a.to_other_separateness (Current)
 			end
 		end
 
@@ -484,6 +498,10 @@ feature {COMPILER_EXPORTER} -- Primitives
 			elseif Result.is_implicitly_attached then
 				Result := Result.as_implicitly_detachable
 			end
+				-- Promote separateness status if present.
+			if is_separate then
+				Result := Result.to_other_separateness (Current)
+			end
 		end
 
 	adapted_in, skeleton_adapted_in (a_class_type: CLASS_TYPE): CL_TYPE_A
@@ -531,6 +549,10 @@ feature {COMPILER_EXPORTER} -- Primitives
 				Result := l_like
 			end
 			Result := Result.to_other_attachment (Current)
+				-- Promote separateness status if present.
+			if is_separate then
+				Result := Result.to_other_separateness (Current)
+			end
 		end
 
 	evaluated_type_in_descendant (a_ancestor, a_descendant: CLASS_C; a_feature: FEATURE_I): LIKE_CURRENT
@@ -539,6 +561,10 @@ feature {COMPILER_EXPORTER} -- Primitives
 				create Result
 				Result.set_actual_type (a_descendant.actual_type)
 				Result := Result.to_other_attachment (Current)
+					-- Promote separateness status if present.
+				if is_separate then
+					Result := Result.to_other_separateness (Current)
+				end
 			else
 				Result := Current
 			end
@@ -575,7 +601,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

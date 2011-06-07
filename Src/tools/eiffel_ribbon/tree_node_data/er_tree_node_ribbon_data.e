@@ -31,7 +31,6 @@ feature -- Implementation
 			-- Initialize a command name automatically
 		local
 			l_shared: ER_SHARED_SINGLETON
-			l_list: ARRAYED_LIST [EV_TREE_NODE]
 			l_command_name: STRING
 			l_count: INTEGER
 		do

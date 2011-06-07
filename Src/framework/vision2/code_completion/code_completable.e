@@ -386,7 +386,8 @@ feature {CODE_COMPLETION_WINDOW} -- Interact with code complete window.
 						Result := Result.max (l_name.grid_item.required_width)
 						i := i + 1
 					end
-					Result := Result + completion_border_size
+						-- Make sure border and any potential vertical scrollbar is taken in to account.
+					Result := Result + (completion_border_size * 2) + l_grid.vertical_scroll_bar.width
 				end
 			else
 				Result := default_window_width

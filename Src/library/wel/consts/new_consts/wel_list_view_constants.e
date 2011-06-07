@@ -967,7 +967,7 @@ feature -- Validation
 				value = Lvcfmt_justifymask
 		end
 
-	valid_lvis_constant (value: INTEGER): BOOLEAN
+	valid_lvis_constants (value: INTEGER): BOOLEAN
 			-- Is `value' a valid "Item Styles" constant?
 		do
 			Result := value = Lvis_cut or else

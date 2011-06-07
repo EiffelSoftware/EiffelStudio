@@ -1324,6 +1324,12 @@ feature -- Access
 		do
 			if type.is_like_current then
 				Result := a_context_type
+					-- Promote separateness status.
+				if type.is_separate then
+					check attached {LIKE_CURRENT} type as t then
+						Result := Result.to_other_separateness (t)
+					end
+				end
 			elseif type.is_like then
 				Result := real_type_in (type.actual_type, a_context_type)
 			else

@@ -185,7 +185,7 @@ feature -- Access
 	xml_node_name: STRING
 			-- Name of the xml node returned by `xml_element'.
 		do
-			Result := once "BON_CLASS_FIGURE"
+			Result := {BON_FACTORY}.xml_class_figure_node_name
 		end
 
 	is_default_bg_color_used_string: STRING = "IS_DEFAULT_BG_COLOR_USED"

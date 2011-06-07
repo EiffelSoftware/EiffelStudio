@@ -2479,8 +2479,17 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 			-- Maximum width of a label when set with text `a_text'
 		require
 			a_text_not_void: a_text /= Void
+		local
+			l_string_size_default, l_string_size_big: TUPLE [width, height, left_offset, right_offset: INTEGER]
+			l_width_default, l_width_big: INTEGER
 		do
-			Result := Default_font.string_width (a_text).max (big_font.string_width (a_text))
+			l_string_size_default := Default_font.string_size (a_text)
+			l_string_size_big := big_font.string_size (a_text)
+
+			l_width_default := l_string_size_default.width - l_string_size_default.left_offset + l_string_size_default.right_offset
+			l_width_big := l_string_size_big.width - l_string_size_big.left_offset + l_string_size_big.right_offset
+
+			Result := l_width_default.max (l_width_big) + (2 * layout_constants.small_border_size)
 		end
 
 	unhighlight_label (lab: EV_LABEL)
@@ -2551,8 +2560,6 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 
 	l_From: STRING = " from "
 
-	bold_ratio: DOUBLE = 1.19;
-
 	associated_stone (a_label: EV_LABEL): STONE
 			-- Associated stone which is `a_stone' for normal pick and drop and Ctrl+Right click.
 		require
@@ -2569,7 +2576,7 @@ feature {NONE} -- Choice Positioning
 			-- Size in pixels that the pop up window can go to (virtual border)
 
 	position_choice_window (a_choice: like choice; a_positioned: EV_POSITIONED)
-			-- Position `a_choice' at a proper place arround `a_positioned'
+			-- Position `a_choice' at a proper place around `a_positioned'
 		require
 			a_choice_not_void: a_choice /= Void
 			a_positioned_not_void: a_positioned /= Void
@@ -2683,7 +2690,7 @@ feature {NONE} -- Choice Positioning
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

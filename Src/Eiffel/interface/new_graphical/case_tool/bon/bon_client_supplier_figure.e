@@ -197,7 +197,7 @@ feature -- Access
 	xml_node_name: STRING
 			-- Name of the node returned by `xml_element'.
 		do
-			Result := once "BON_CLIENT_SUPPLIER_FIGURE"
+			Result := {BON_FACTORY}.xml_client_supplier_figure_node_name
 		end
 
 feature -- Element change
@@ -795,7 +795,7 @@ invariant
 	aggregate_figure_not_void: aggregate_figure /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

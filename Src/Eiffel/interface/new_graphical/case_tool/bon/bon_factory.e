@@ -30,7 +30,7 @@ feature -- Basic operations
 				Result := create {EG_SIMPLE_NODE}.make_with_model (a_node)
 			end
 		end
-		
+
 	new_cluster_figure (a_cluster: EG_CLUSTER): EG_CLUSTER_FIGURE
 			-- Create a cluster figure for `a_cluster'.
 		local
@@ -47,7 +47,7 @@ feature -- Basic operations
 				Result := create {EG_SIMPLE_CLUSTER}.make_with_model (a_cluster)
 			end
 		end
-		
+
 	new_link_figure (a_link: EG_LINK): EG_LINK_FIGURE
 			-- Create a link figure for `a_link'.
 		local
@@ -76,7 +76,7 @@ feature -- Basic operations
 		end
 
 feature {NONE} -- Implementation
-		
+
 	new_inheritance_figure (eih: ES_INHERITANCE_LINK): BON_INHERITANCE_FIGURE
 			-- Create an inheritance figure.
 		require
@@ -86,7 +86,7 @@ feature {NONE} -- Implementation
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 	new_client_supplier_figure (ecs: ES_CLIENT_SUPPLIER_LINK): BON_CLIENT_SUPPLIER_FIGURE
 			-- Create a client supplier figure.
 		require
@@ -96,21 +96,23 @@ feature {NONE} -- Implementation
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
+feature {BON_FIGURE} -- Constants
+
 	xml_class_figure_node_name: STRING = "BON_CLASS_FIGURE"
 			-- Name of xml nodes describing class figures.
-		
+
 	xml_cluster_figure_node_name: STRING = "BON_CLUSTER_FIGURE"
 			-- Name of xml nodes describing cluster figures.
-			
+
 	xml_client_supplier_figure_node_name: STRING = "BON_CLIENT_SUPPLIER_FIGURE"
 			-- Name of xml nodes describing client supplier links.
-		
+
 	xml_inheritance_figure_node_name: STRING = "BON_INHERITANCE_FIGURE";
 			-- Name of xml nodes describing inheritance links.
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -123,22 +125,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class BON_FACTORY

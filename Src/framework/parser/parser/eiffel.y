@@ -188,7 +188,7 @@ create
 %type <CREATION_CONSTRAIN_TRIPLE>	Creation_constraint
 %type <UNDEFINE_CLAUSE_AS>	Undefine Undefine_opt
 %type <REDEFINE_CLAUSE_AS> Redefine Redefine_opt
-%type <SELECT_CLAUSE_AS>	Select Select_opt
+%type <PAIR [KEYWORD_AS, SELECT_CLAUSE_AS]>	Select Select_opt
 %type <FORMAL_GENERIC_LIST_AS>		Formal_generics Formal_generic_list
 %type <CLASS_LIST_AS>					Client_list Class_list
 
@@ -1047,37 +1047,37 @@ Parent_clause: Parent_class_type
 	|	Parent_class_type Select TE_END
 			{
 				if non_conforming_inheritance_flag then
-					report_one_error (create {SYNTAX_ERROR}.make (token_line ($2), token_column ($2), filename, "Non-conforming inheritance may not use select clause"))
+					report_one_error (create {SYNTAX_ERROR}.make (token_line ($2.first), token_column ($2.first), filename, "Non-conforming inheritance may not use select clause"))
 				end
-				$$ := ast_factory.new_parent_as ($1, Void, Void, Void, Void, $2, $3)
+				$$ := ast_factory.new_parent_as ($1, Void, Void, Void, Void, $2.second, $3)
 			}
 	|	Parent_class_type Redefine Select_opt TE_END
 			{
 				if non_conforming_inheritance_flag and then $3 /= Void then
-					report_one_error (create {SYNTAX_ERROR}.make (token_line ($3), token_column ($3), filename, "Non-conforming inheritance may not use select clause"))
+					report_one_error (create {SYNTAX_ERROR}.make (token_line ($3.first), token_column ($3.first), filename, "Non-conforming inheritance may not use select clause"))
 				end
-				$$ := ast_factory.new_parent_as ($1, Void, Void, Void, $2, $3, $4)
+				$$ := ast_factory.new_parent_as ($1, Void, Void, Void, $2, $3.second, $4)
 			}
 	|	Parent_class_type Undefine Redefine_opt Select_opt TE_END
 			{
 				if non_conforming_inheritance_flag and then $4 /= Void then
-					report_one_error (create {SYNTAX_ERROR}.make (token_line ($4), token_column ($4), filename, "Non-conforming inheritance may not use select clause"))
+					report_one_error (create {SYNTAX_ERROR}.make (token_line ($4.first), token_column ($4.first), filename, "Non-conforming inheritance may not use select clause"))
 				end
-				$$ := ast_factory.new_parent_as ($1, Void, Void, $2, $3, $4, $5)
+				$$ := ast_factory.new_parent_as ($1, Void, Void, $2, $3, $4.second, $5)
 			}
 	|	Parent_class_type New_exports Undefine_opt Redefine_opt Select_opt TE_END
 			{
 				if non_conforming_inheritance_flag and then $5 /= Void then
-					report_one_error (create {SYNTAX_ERROR}.make (token_line ($5), token_column ($5), filename, "Non-conforming inheritance may not use select clause"))
+					report_one_error (create {SYNTAX_ERROR}.make (token_line ($5.first), token_column ($5.first), filename, "Non-conforming inheritance may not use select clause"))
 				end
-				$$ := ast_factory.new_parent_as ($1, Void, $2, $3, $4, $5, $6)
+				$$ := ast_factory.new_parent_as ($1, Void, $2, $3, $4, $5.second, $6)
 			}
 	|	Parent_class_type Rename New_exports_opt Undefine_opt Redefine_opt Select_opt TE_END
 			{
 				if non_conforming_inheritance_flag and then $6 /= Void then
-					report_one_error (create {SYNTAX_ERROR}.make (token_line ($6), token_column ($6), filename, "Non-conforming inheritance may not use select clause"))
+					report_one_error (create {SYNTAX_ERROR}.make (token_line ($6.first), token_column ($6.first), filename, "Non-conforming inheritance may not use select clause"))
 				end
-				$$ := ast_factory.new_parent_as ($1, $2, $3, $4, $5, $6, $7)
+				$$ := ast_factory.new_parent_as ($1, $2, $3, $4, $5, $6.second, $7)
 			}
 	;
 
@@ -1233,9 +1233,9 @@ Undefine_opt: -- Empty
 
 Undefine: TE_UNDEFINE
 			--- { $$ := Void }
-		{
-			$$ := ast_factory.new_undefine_clause_as (Void, $1)
-		}
+			{
+				$$ := ast_factory.new_undefine_clause_as (Void, $1)
+			}
 	|	TE_UNDEFINE Feature_list
 			{
 				$$ := ast_factory.new_undefine_clause_as ($2, $1)
@@ -1250,9 +1250,9 @@ Redefine_opt: -- Empty
 
 Redefine: TE_REDEFINE
 			--- { $$ := Void }
-		{
-			$$ := ast_factory.new_redefine_clause_as (Void, $1)
-		}
+			{
+				$$ := ast_factory.new_redefine_clause_as (Void, $1)
+			}
 	|	TE_REDEFINE Feature_list
 			{
 				$$ := ast_factory.new_redefine_clause_as ($2, $1)				
@@ -1267,12 +1267,12 @@ Select_opt: -- Empty
 
 Select: TE_SELECT
 			--- { $$ := Void }
-		{
-			$$ := ast_factory.new_select_clause_as (Void, $1)
-		}
+			{
+				create $$.make ($1, ast_factory.new_select_clause_as (Void, $1))
+			}
 	|	TE_SELECT Feature_list
 			{
-				$$ := ast_factory.new_select_clause_as ($2, $1)
+				create $$.make ($1, ast_factory.new_select_clause_as ($2, $1))
 			}
 	;
 

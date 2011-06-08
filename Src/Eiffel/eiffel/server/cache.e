@@ -8,7 +8,10 @@ note
 class CACHE [T -> IDABLE]
 
 inherit
-	TO_SPECIAL [detachable ARRAY [H_CELL[T]]]
+	TO_SPECIAL [detachable SPECIAL [H_CELL [T]]]
+		export
+			{NONE} all
+		end
 
 	SHARED_CONFIGURE_RESOURCES
 
@@ -20,16 +23,26 @@ feature -- Initialisation
 	make
 			-- Creates a table of Cache_size hash_entry
 		local
-			s: INTEGER
+			s, i: INTEGER
+			l_special: like last_item_special
 		do
 			s := Cache_size
 			count := 0
 			size := s
-			set_internal_items (s)
+			make_filled_area (Void, s)
+			create history.make (s)
+			create index.make_filled (0, s)
+			create free_h_cells.make_empty (1)
+			from
+			until
+				i = s
+			loop
+					-- Hard coded size for initial setup.
+				create l_special.make_empty (5)
+				area.put (l_special, i)
+				i := i + 1
+			end
 		end
-
-	array_count: ARRAY [INTEGER]
-		-- number of element in each sub-array
 
 feature -- Cache manipulations
 
@@ -38,22 +51,19 @@ feature -- Cache manipulations
 		require
 			not_void: id /= 0
 		local
-			i, j, k: INTEGER
-			found: BOOLEAN
-			l_array: ARRAY [H_CELL[T]]
+			i, j: INTEGER
+			l_special: like last_item_special
 		do
-			k := id
-			i := k \\ Size
+			i := id \\ Size
 			from
-				l_array := area.item (i)
-				j := array_count.item (i)
+				l_special := area.item (i)
+				j := l_special.count
 			until
-				j = 0 or else found
+				j = 0 or else Result
 			loop
-				found := l_array.item(j).item.id = id
 				j := j - 1
+				Result := l_special.item (j).item.id = id
 			end
-			Result := found
 
 			debug ("CACHE")
 				if Size < 500 then
@@ -63,11 +73,11 @@ feature -- Cache manipulations
 					until
 						i = j
 					loop
-						io.put_integer (array_count.item (i))
+						io.put_integer (area.item (i).count)
 						if i /= 0 and then i \\ 80 = 0 then
 							io.put_string (" \%N")
 						else
-							io.put_string("-")
+							io.put_string ("-")
 						end
 						i := i + 1
 					end
@@ -79,13 +89,13 @@ feature -- Cache manipulations
 				io.put_integer (Count)
 				io.put_string ("%N")
 				io.put_string ("Result of the has_id: ")
-				io.put_boolean (found)
+				io.put_boolean (Result)
 				io.put_string ("%N%N")
 			end
 
 			debug ("CACHE_STAT")
 				nb_has_id := nb_has_id + 1
-				if found then
+				if Result then
 					nb_has_id_succeded := nb_has_id_succeded + 1
 				end
 				success_has_id := (nb_has_id_succeded / nb_has_id).truncated_to_real
@@ -107,31 +117,28 @@ feature -- Cache manipulations
 		require
 			not_void: id /= 0
 		local
-			i, j, k: INTEGER
+			i, j: INTEGER
+			l_special: like last_item_special
+			tmp: H_CELL [T]
 			found: BOOLEAN
-			l_array: ARRAY [H_CELL[T]]
-			tmp: H_CELL[T]
 		do
-			k := id
-			i := k \\ Size
+			i := id \\ Size
 			from
-				l_array := area.item (i)
-				k := array_count.item (i)
-				j := k
+				l_special := area.item (i)
+				j := l_special.count
 			until
 				j = 0 or else found
 			loop
-				found := l_array.item (j).item.id = id
 				j := j - 1
+				found := l_special.item (j).item.id = id
 			end
 			if found then
 					-- we make the accessed item younger
-				j := j + 1
-				tmp := l_array.item (j)
+				tmp := l_special.item (j)
 				Result := tmp.item
 				history.make_younger (tmp.index)
 				tmp.set_index (history.younger)
-				last_item_array := l_array
+				last_item_special := l_special
 				last_item_pos := j
 			end
 
@@ -143,11 +150,11 @@ feature -- Cache manipulations
 					until
 						i = j
 					loop
-						io.put_integer (array_count.item (i))
+						io.put_integer (area.item (i).count)
 						if i /= 0 and then i \\ 80 = 0 then
 							io.put_string (" \%N")
 						else
-							io.put_string("-")
+							io.put_string ("-")
 						end
 						i := i + 1
 					end
@@ -185,39 +192,40 @@ feature -- Cache manipulations
 		require
 			not_void: id /= 0
 		local
-			i, j, k: INTEGER
+			i, j, nb: INTEGER
 			found: BOOLEAN
-			l_array: ARRAY [H_CELL[T]]
-			tmp: H_CELL[T]
+			l_special: like last_item_special
+			tmp: H_CELL [T]
 		do
-			k := id
-			i := k \\ Size
+			i := id \\ Size
 			from
-				l_array := area.item (i)
-				j := array_count.item (i)
+				l_special := area.item (i)
+				nb := l_special.count
+				j := nb
 			until
 				j = 0 or else found
 			loop
-				found := l_array.item (j).item.id = id
 				j := j - 1
+				found := l_special.item (j).item.id = id
+			end
+			debug ("CACHE_RESEARCH")
+				if not found then
+					io.put_string ("Be carefull: object not found%N")
+				end
 			end
 			if found then
 				count := count - 1
-				j := j + 1
-				tmp := l_array.item (j)
+				tmp := l_special.item (j)
+				last_removed_item := tmp.item
 				history.remove (tmp.index)
-				from
-					k := j
-					last_removed_item := tmp.item
-					j := array_count.item (i)
-					array_count.put (j - 1, i)
-				until
-					k = j
-				loop
-					l_array.put (l_array.item (k+1), k)
-					k := k + 1
+				if j < nb - 1 then
+					l_special.overlapping_move (j + 1, j, nb - j - 1)
 				end
-				l_array.put (Void, j)
+				if free_h_cells.count = free_h_cells.capacity then
+					free_h_cells := free_h_cells.aliased_resized_area (free_h_cells.count * 2)
+				end
+				free_h_cells.extend (tmp)
+				l_special.remove_tail (1)
 			end
 		end
 
@@ -229,15 +237,14 @@ feature -- Cache manipulations
 			not_has_id: not has_id (e.id)
 		local
 			i, t: INTEGER
-			l_array: array [H_CELL[T]]
-			h_cell: H_CELL[T]
+			l_special: like last_item_special
+			h_cell: H_CELL [T]
 			to_remove: T
 			l_default: T
 		do
 			i := e.id \\ Size
-			l_array := area.item (i)
+			l_special := area.item (i)
 			history.add (e)
-			create h_cell.make (e, history.younger)
 			to_remove := history.to_remove
 			if to_remove /= Void then
 				internal_remove (to_remove)
@@ -245,12 +252,19 @@ feature -- Cache manipulations
 				last_removed_item := l_default
 				count := count + 1
 			end
-			t := array_count.item (i)
-			if l_array.count = t then
-				l_array.grow (2 * t)
+			if free_h_cells.count >= 1 then
+				h_cell := free_h_cells.item (free_h_cells.count - 1)
+				free_h_cells.remove_tail (1)
+				h_cell.make (e, history.younger)
+			else
+				create h_cell.make (e, history.younger)
 			end
-			array_count.put (t + 1, i)
-			l_array.put (h_cell, t + 1)
+			t := l_special.capacity
+			if l_special.count = t then
+				l_special := l_special.aliased_resized_area (2 * t)
+				area.put (l_special, i)
+			end
+			l_special.extend (h_cell)
 		end
 
 	is_full: BOOLEAN
@@ -265,39 +279,42 @@ feature -- Cache manipulations
 			Result := count = 0
 		end
 
-	clear_all, wipe_out
+	wipe_out
 			-- wipe all out
 		local
 			s: INTEGER
+			l_area: like area
 		do
 			from
 				s := Size
+				l_area := area
 			until
 				s = 0
 			loop
 				s := s - 1
-				area.item(s).discard_items
+				l_area.item (s).wipe_out
 			end
 			history.wipe_out
-			array_count.discard_items
 			count := 0
 			after := True
+			free_h_cells.wipe_out
+			free_h_cells := free_h_cells.aliased_resized_area (5)
 		end
 
 	change_last_item (e: T)
 			-- make e take the place of the last item consulted
 		local
-			tmp: H_CELL[T]
+			tmp: H_CELL [T]
 		do
-			tmp := last_item_array.item (last_item_pos)
+			tmp := last_item_special.item (last_item_pos)
 			tmp.set_item (e)
 			history.set_item (e,tmp.index)
 		end
 
-	history: CACHE_HISTORY[T]
+	history: CACHE_HISTORY [T]
 			-- history of the arrivals in the cache
 
-	index: ARRAY[INTEGER]
+	index: SPECIAL [INTEGER]
 			-- index of each item in the history
 
 	count: INTEGER
@@ -313,27 +330,14 @@ feature -- linear iteration
 
 	start
 			-- put item_for_iteration on the first element of the cache
-		local
-			item_array: INTEGER
 		do
 			if is_empty then
 				after := True
 			else
-				from
-					item_array := 0
-				until
-					item_array = size or else area.item (item_array).item (1) /= Void
-				loop
-					item_array := item_array + 1
-				end
-				if item_array = Size then
-					after := True
-				else
-					after := False
-					last_item_array := area.item (item_array)
-					last_item_array_number := item_array
-					last_item_pos := 1
-				end
+				last_item_array_number := 0
+				last_item_pos := -1
+				after := False
+				forth
 			end
 		end
 
@@ -342,37 +346,29 @@ feature -- linear iteration
 	forth
 			-- put item_for_iteration on the next element of the cache
 		local
-			item_array, item_number, limit: INTEGER
-			array_current: ARRAY [H_CELL[T]]
+			item_array, item_number: INTEGER
+			l_special: like last_item_special
+			l_area: like area
 			found: BOOLEAN
 		do
 			from
+				l_area := area
 				item_array := last_item_array_number
 				item_number := last_item_pos + 1
-				array_current := last_item_array
 			until
 				found or else item_array = size
 			loop
-				from
-					limit := array_count.item (item_array)
-					array_current:= area.item (item_array)
-				until
-					found or else item_number > limit
-				loop
-					found := array_current.item (item_number) /= Void
-					if not found then
-						item_number := item_number + 1
-					end
-				end
+				l_special:= l_area.item (item_array)
+				found := item_number < l_special.count
 				if not found then
 					item_array := item_array + 1
-					item_number := 1
+					item_number := 0
 				end
 			end
 			if not found then
 				after := True
 			else
-				last_item_array := area.item (item_array)
+				last_item_special := l_special
 				last_item_array_number := item_array
 				last_item_pos := item_number
 			end
@@ -381,30 +377,10 @@ feature -- linear iteration
 	item_for_iteration: T
 			-- give the item in a linear ?????
 		do
-			Result := last_item_array.item (last_item_pos).item
+			Result := last_item_special.item (last_item_pos).item
 		end
 
 feature {NONE} -- Implementation
-
-	set_internal_items (s: INTEGER)
-			-- Set up items for `cache'.
-		local
-			i: INTEGER
-			array: ARRAY [H_CELL[T]]
-		do
-			make_filled_area (Void, s)
-			create array_count.make (0, s - 1)
-			create history.make (s)
-			create index.make (0, s - 1)
-			from
-			until
-				i = s
-			loop
-				create array.make (1, 5)
-				area.put (array, i)
-				i := i + 1
-			end
-		end
 
 	cache_size: INTEGER
 			-- Cache size
@@ -433,10 +409,10 @@ feature {NONE} -- Implementation
 	default_value: INTEGER
 			-- Default value of cache
 		do
-			Result :=  Configure_resources.get_integer (r_Cache_size, 20)
+			Result :=  Configure_resources.get_integer (r_cache_size, 20)
 		end;
 
-	last_item_array: ARRAY [H_CELL[T]]
+	last_item_special: SPECIAL [detachable H_CELL [T]]
 		-- the array in which the last searched item
 		-- was found
 
@@ -445,31 +421,33 @@ feature {NONE} -- Implementation
 		-- searched item was found
 
 	last_item_array_number: INTEGER
-		-- the number of last_item_array	
+		-- the number of last_item_special	
 
 feature {NONE} -- to implement force
 
 	internal_remove (e: T)
 			-- Remove item of id `i' from cache.
-			-- but do not touch to history nor count
+			-- but do not touch the history nor count
 		require
 			not_void: e /= Void
 		local
-			i, j, k: INTEGER
+			i, j, nb: INTEGER
 			found: BOOLEAN
 			id: INTEGER
-			l_array: ARRAY [H_CELL[T]]
+			l_special: like last_item_special
+			tmp: H_CELL [T]
 		do
 			id := e.id
 			i := id \\ Size
 			from
-				l_array := area.item (i)
-				j := array_count.item (i)
+				l_special := area.item (i)
+				nb := l_special.count
+				j := nb
 			until
 				j = 0 or else found
 			loop
-				found := l_array.item (j).item.id = id
 				j := j - 1
+				found := l_special.item (j).item.id = id
 			end
 			debug ("CACHE_RESEARCH")
 				if not found then
@@ -480,19 +458,17 @@ feature {NONE} -- to implement force
 				-- found IS true
 				-- the if is to avoid a bug I didn't find (yet)
 				-- in the cache history
-				j := j + 1
-				from
-					k := j
-					last_removed_item := l_array.item (j).item
-					j := array_count.item (i)
-					array_count.put (j - 1, i)
-				until
-					k = j
-				loop
-					l_array.put (l_array.item (k+1), k)
-					k := k + 1
+				tmp := l_special.item (j)
+				last_removed_item := tmp.item
+				if j < nb - 1 then
+						-- Shift right elements to the left only if they are right elements
+					l_special.overlapping_move (j + 1, j, nb - j - 1)
 				end
-				l_array.put (Void, j)
+				if free_h_cells.count = free_h_cells.capacity then
+					free_h_cells := free_h_cells.aliased_resized_area (free_h_cells.count * 2)
+				end
+				free_h_cells.extend (tmp)
+				l_special.remove_tail (1)
 			end
 		end
 
@@ -516,11 +492,14 @@ feature {NONE} -- statistics
 	success_item_id: REAL
 		-- proportion of successful calls to item_id
 
-	success: REAL;
+	success: REAL
 		-- proportion of successful researchs in the cache
 
+	free_h_cells: SPECIAL [H_CELL [T]];
+			-- Buffer for unused H_CELL instances.
+
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

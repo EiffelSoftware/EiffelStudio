@@ -9,7 +9,8 @@ class
 inherit
 	ER_VISITOR
 		redefine
-			visit_ribbon_tabs
+			visit_ribbon_tabs,
+			visit_ribbon_application_menu
 		end
 
 create
@@ -21,6 +22,7 @@ feature {NONE} -- Initialization
 			-- Creation method
 		do
 			create application_modes.make
+
 		end
 
 feature -- Command
@@ -43,7 +45,75 @@ feature -- Command
 			build_layout_constructors (l_root_items)
 		end
 
+	visit_ribbon_application_menu (a_ribbon_application_menu: ER_XML_TREE_ELEMENT)
+			--
+		local
+			l_ribbon_menu_groups: ARRAYED_LIST [EV_TREE_NODE]
+			l_one_group: EV_TREE_NODE
+			l_stop: BOOLEAN
+		do
+			l_ribbon_menu_groups := shared.layout_constructor_list.first.all_items_with (constants.menu_group)
+			from
+				l_ribbon_menu_groups.start
+			until
+				l_ribbon_menu_groups.after
+			loop
+				from
+					l_stop := False
+					l_one_group := l_ribbon_menu_groups.item
+					l_one_group.start
+				until
+					l_one_group.after or l_stop
+				loop
+					if attached {ER_TREE_NODE_BUTTON_DATA} l_one_group.item.data as l_data then
+						if l_data.application_mode /= 0 then
+							l_stop := True
+							move_menu_group_to_other_window (l_one_group, l_data.application_mode)
+						end
+					end
+					if not l_stop then
+						l_one_group.forth
+					end
+				end
+
+				l_ribbon_menu_groups.forth
+			end
+		end
+
 feature {NONE} -- Implementation
+
+	move_menu_group_to_other_window (a_menu_group: EV_TREE_NODE; a_target_application_mode: INTEGER)
+			--
+		require
+			only_for_other_window: a_target_application_mode /= 0
+		local
+			l_list: ARRAYED_LIST [ER_LAYOUT_CONSTRUCTOR]
+			l_target: ER_LAYOUT_CONSTRUCTOR
+			l_root: ARRAYED_LIST [EV_TREE_NODE]
+			l_new_root: EV_TREE_NODE
+		do
+			l_list := shared.layout_constructor_list
+			if l_list.valid_index (a_target_application_mode + 1) then
+				if attached a_menu_group.parent as l_parent then
+					l_parent.prune_all (a_menu_group)
+				end
+
+				l_target := l_list.i_th (a_target_application_mode + 1)
+				l_root := l_target.all_items_with (constants.ribbon_application_menu)
+				if l_root.count = 0 then
+					l_new_root := l_target.tree_item_factory_method (constants.ribbon_application_menu)
+					l_target.widget.extend (l_new_root)
+
+					l_new_root.extend (a_menu_group)
+				else
+					check l_root.count = 1 end
+					l_root.first.extend (a_menu_group)
+				end
+
+				l_target.expand_tree
+			end
+
+		end
 
 	separate_different_ribbon_tabs (a_root_ribbon_tabs: ARRAYED_LIST [EV_TREE_ITEM]; a_ribbon_tabs: EV_TREE_NODE)
 			--

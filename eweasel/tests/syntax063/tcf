@@ -7,12 +7,12 @@ copy_sub 	Ace $TEST Ace
 define		SELECTED_FEATURES "weasel, marten"
 copy_sub 	test.e $CLUSTER test.e
 compile_melted
-compile_result	syntax_error TEST 10
+compile_result	syntax_error TEST 9
 
 define		SELECTED_FEATURES ""
 copy_sub 	test.e $CLUSTER test.e
 resume_compile
-compile_result	syntax_error TEST 10
+compile_result	syntax_error TEST 9
 
 test_end
 

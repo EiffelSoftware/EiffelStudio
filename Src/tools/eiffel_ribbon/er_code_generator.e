@@ -688,7 +688,7 @@ feature {NONE} -- Implementation
 
 			from
 				create l_singleton
-				l_list := l_singleton.layout_constructor_list
+				l_list := l_singleton.layout_constructor_list.twin
 				l_list.start
 			until
 				l_list.after
@@ -769,17 +769,19 @@ feature {NONE} -- Implementation
 			not_void: a_last_string /= Void
 		local
 			l_application_menu_comment: STRING
+			l_first_application_menu_identifer_name: detachable STRING
 		do
 			if a_tree.valid_index (2) then
 				l_application_menu_comment := "%N%T%T%T-- Application menu"
+				l_first_application_menu_identifer_name := first_application_menu_identifer_name
 				check is_application_menu: a_tree.i_th (2).text.same_string ({ER_XML_CONSTANTS}.ribbon_application_menu) end
 				if attached {ER_TREE_NODE_DATA} a_tree.i_th (2).data as l_data
 					and then attached l_data.command_name as l_identifer_name
 					and then not l_identifer_name.is_empty then
-
+					check l_first_application_menu_identifer_name /= void end
 					a_last_string.replace_substring_all ("$APPLICATION_MENU_NAME", "%Tapplication_menu: " + l_identifer_name.as_upper + l_application_menu_comment)
 
-					a_last_string.replace_substring_all ("$APPLICATION_MENU_CREATION", "%T%T%Tcreate application_menu.make_with_command_list (<<{COMMAND_NAME_CONSTANTS}." + l_identifer_name + ">>)")
+					a_last_string.replace_substring_all ("$APPLICATION_MENU_CREATION", "%T%T%Tcreate application_menu.make_with_command_list (<<{COMMAND_NAME_CONSTANTS}." + l_first_application_menu_identifer_name + ">>)")
 				else
 					if a_list_index = 1 then
 						a_last_string.replace_substring_all ("$APPLICATION_MENU_NAME", "%Tapplication_menu: APPLICATION_MENU" + l_application_menu_comment)
@@ -796,6 +798,26 @@ feature {NONE} -- Implementation
 				a_last_string.replace_substring_all ("$APPLICATION_MENU_CREATION", "")
 				a_last_string.replace_substring_all ("$APPLICATION_MENU_REDEFINE", "")
 			end
+		end
+
+	first_application_menu_identifer_name: detachable STRING
+			--
+		local
+			l_shared: ER_SHARED_SINGLETON
+			l_list: ARRAYED_LIST [ER_LAYOUT_CONSTRUCTOR]
+			l_items: ARRAYED_LIST [EV_TREE_NODE]
+		do
+			create l_shared
+			l_list := l_shared.layout_constructor_list
+			if not l_list.is_empty then
+				l_items := l_list.first.all_items_in_all_constructors ({ER_XML_CONSTANTS}.ribbon_application_menu)
+				if not l_items.is_empty then
+					if attached {ER_TREE_NODE_APPLICATION_MENU_DATA} l_items.last.data as l_data then
+						Result := l_data.command_name
+					end
+				end
+			end
+
 		end
 
 	window_class_quick_access_toolbar (a_tree: EV_TREE; a_list_index: INTEGER; a_last_string: STRING)

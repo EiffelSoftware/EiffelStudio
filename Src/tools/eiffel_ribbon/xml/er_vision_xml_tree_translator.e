@@ -246,7 +246,7 @@ feature {NONE} -- Tree saving
 			until
 				a_tree_node.after
 			loop
-				add_xml_button_node (l_xml_item, a_tree_node.item)
+				add_xml_button_node (l_xml_item, a_tree_node.item, true)
 
 				a_tree_node.forth
 			end
@@ -403,7 +403,11 @@ feature {NONE} -- Tree saving
 					l_tree_item_menu.text.same_string (xml_constants.ribbon_application_menu) then
 
 				-- Add recent items xml node
-				add_xml_recent_items_node (l_tree_item_menu)
+				-- Only save one recent items node, otherwise uicc compiler error
+				-- It means, all generated ribbon windows have to share one recent items CommandName
+				if is_first_ribbon_application_menu then
+					add_xml_recent_items_node (l_tree_item_menu)
+				end
 
 				-- Add menu group xml node
 				from
@@ -420,6 +424,15 @@ feature {NONE} -- Tree saving
 					l_tree_item_menu.forth
 				end
 			end
+		end
+
+	is_first_ribbon_application_menu: BOOLEAN
+			--
+		local
+			l_application_menu: detachable XML_ELEMENT
+		do
+			l_application_menu := xml_node_by_name (xml_constants.application_menu_recent_items)
+			Result := l_application_menu = Void
 		end
 
 	add_xml_recent_items_node (a_tree_item: EV_TREE_ITEM)
@@ -477,9 +490,6 @@ feature {NONE} -- Tree saving
 						-- Add coresspond command xml node
 						add_xml_command_node (l_data)
 					end
-					if application_mode /= 0 then
-						l_menu_group_node.add_attribute (l_constants.application_mode, name_space, application_mode.out)
-					end
 				end
 
 				from
@@ -488,9 +498,9 @@ feature {NONE} -- Tree saving
 					a_tree_item.after
 				loop
 					if a_tree_item.item.text.same_string ({ER_XML_CONSTANTS}.button) then
-						add_xml_button_node (l_menu_group_node, a_tree_item.item)
+						add_xml_button_node (l_menu_group_node, a_tree_item.item, true)
 					elseif a_tree_item.item.text.same_string ({ER_XML_CONSTANTS}.split_button) then
-						add_xml_split_button_node (l_menu_group_node, a_tree_item.item)
+						add_xml_split_button_node (l_menu_group_node, a_tree_item.item, true)
 					elseif a_tree_item.item.text.same_string ({ER_XML_CONSTANTS}.drop_down_button) then
 						add_xml_drop_down_button_node (l_menu_group_node, a_tree_item.item)
 					else
@@ -537,7 +547,7 @@ feature {NONE} -- Tree saving
 						until
 							a_button_tree_node.after
 						loop
-							add_xml_button_node (l_button_node, a_button_tree_node.item)
+							add_xml_button_node (l_button_node, a_button_tree_node.item, true)
 
 							a_button_tree_node.forth
 						end
@@ -626,7 +636,7 @@ feature {NONE} -- Tree saving
 					a_group_tree_node.after
 				loop
 					if a_group_tree_node.item.text.same_string (l_xml_constants.button) then
-						add_xml_button_node (l_group_node, a_group_tree_node.item)
+						add_xml_button_node (l_group_node, a_group_tree_node.item, False)
 					elseif a_group_tree_node.item.text.same_string (l_xml_constants.toggle_button) then
 						add_xml_toggle_button_node (l_group_node, a_group_tree_node.item)
 					elseif a_group_tree_node.item.text.same_string (l_xml_constants.check_box) then
@@ -636,7 +646,7 @@ feature {NONE} -- Tree saving
 					elseif a_group_tree_node.item.text.same_string (l_xml_constants.combo_box) then
 						add_xml_combo_box_node (l_group_node, a_group_tree_node.item)
 					elseif a_group_tree_node.item.text.same_string (l_xml_constants.split_button) then
-						add_xml_split_button_node (l_group_node, a_group_tree_node.item)
+						add_xml_split_button_node (l_group_node, a_group_tree_node.item, False)
 					elseif a_group_tree_node.item.text.same_string (l_xml_constants.drop_down_gallery) then
 						add_xml_drop_down_gallery_node (l_group_node, a_group_tree_node.item)
 					elseif a_group_tree_node.item.text.same_string (l_xml_constants.drop_down_color_picker) then
@@ -656,7 +666,7 @@ feature {NONE} -- Tree saving
 			end
 		end
 
-	add_xml_button_node (a_group_node: XML_ELEMENT; a_button_tree_node: EV_TREE_NODE)
+	add_xml_button_node (a_group_node: XML_ELEMENT; a_button_tree_node: EV_TREE_NODE; a_is_menu_button: BOOLEAN)
 			--
 		require
 			not_void: a_group_node /= Void
@@ -682,6 +692,10 @@ feature {NONE} -- Tree saving
 					-- Add xml attribute
 					if attached l_data.command_name as l_command_name and then not l_command_name.is_empty then
 						l_button_node.add_attribute (l_constants.command_name, name_space, l_command_name)
+
+						if a_is_menu_button and then application_mode /= 0 then
+							l_button_node.add_attribute (l_constants.application_mode, name_space, application_mode.out)
+						end
 
 						-- Add coresspond command xml node
 						add_xml_command_node (l_data)
@@ -1003,7 +1017,7 @@ feature {NONE} -- Tree saving
 			l_flow_menu_layout.add_attribute (l_attribute.gripper, name_space, "None") -- FIXME: NONE for test
 		end
 
-	add_xml_split_button_node (a_group_node: XML_ELEMENT; a_button_tree_node: EV_TREE_NODE)
+	add_xml_split_button_node (a_group_node: XML_ELEMENT; a_button_tree_node: EV_TREE_NODE; a_is_menu_button: BOOLEAN)
 			--
 		require
 			not_void: a_group_node /= Void
@@ -1034,7 +1048,7 @@ feature {NONE} -- Tree saving
 						until
 							a_button_tree_node.after
 						loop
-							add_xml_button_node (l_button_node, a_button_tree_node.item)
+							add_xml_button_node (l_button_node, a_button_tree_node.item, a_is_menu_button)
 
 							a_button_tree_node.forth
 						end

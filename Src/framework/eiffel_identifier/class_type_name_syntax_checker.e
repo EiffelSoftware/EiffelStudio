@@ -35,7 +35,9 @@ feature -- Status report
 			current_parsed_string := a_class_type
 			current_token := tkn_start
 			consume_start
-			Result := is_end_of_input and not (current_token = tkn_error)
+				-- Ensures that there is not more token after the end of input
+				-- and that there were no errors (i.e. current_token /= tkn_error).
+			Result := is_end_of_input and current_token = tkn_empty
 		end
 
 feature {NONE} -- Implementation of is_valid_class_type
@@ -202,7 +204,7 @@ feature {NONE} -- Implementation of is_valid_class_type
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

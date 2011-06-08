@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 			-- <Precursor>
 		do
 			command_name_prefix := "menu_group_"
-			xml_constants := {ER_XML_CONSTANTS}.check_box
+			xml_constants := {ER_XML_CONSTANTS}.menu_group
 			new_unique_command_name
 		end
 

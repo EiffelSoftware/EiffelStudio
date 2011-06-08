@@ -34,7 +34,7 @@ feature {NONE} -- Access
 		local
 			l_result: detachable STRING
 		do
-			if attached {FINISH_FREEZING_EIFFEL_LAYOUT} eiffel_layout as l_layout and then l_layout.is_valid_environment then
+			if is_eiffel_layout_defined and then attached {FINISH_FREEZING_EIFFEL_LAYOUT} eiffel_layout as l_layout and then l_layout.is_valid_environment then
 				create l_result.make (256)
 				l_result.append (l_layout.config_eif_path)
 				if code.is_equal (wsdk_60) then
@@ -67,7 +67,7 @@ feature {NONE} -- Access
 		do
 			create Result.make (10)
 
-			if attached {FINISH_FREEZING_EIFFEL_LAYOUT} eiffel_layout as l_layout and then l_layout.is_valid_environment then
+			if is_eiffel_layout_defined and then attached {FINISH_FREEZING_EIFFEL_LAYOUT} eiffel_layout as l_layout and then l_layout.is_valid_environment then
 				if
 					code.is_equal (wsdk_60) or
 					code.is_equal (wsdk_61) or

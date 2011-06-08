@@ -10,29 +10,31 @@ class H_CELL [T]
 create
 		make
 
-feature
+feature -- Access
 
 	item: T
-		-- item of the cache itself
+			-- item of the cache itself
 
 	index: INTEGER
-		-- index of the item in the cache
+			-- index of the item in the cache
+
+feature -- Element change
 
 	make (e: T; i: INTEGER)
-		-- creation of a filled cell
+			-- creation of a filled cell
 		do
 			item := e
 			index := i
 		end
 
 	set_item (e: T)
-		-- set item to e
+			-- set item to e
 		do
 			item := e
 		end
 
 	set_index (i: INTEGER)
-		-- set index to i
+			-- set index to i
 		do
 			index := i
 		end

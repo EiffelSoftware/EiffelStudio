@@ -1950,7 +1950,7 @@ feature -- Access
 		do
 			if inlined_dftype_current > 1 then
 				buffer.put_string ({C_CONST}.inlined_dftype_name)
-			elseif dftype_current > 1 then
+			elseif dftype_current > 1 and then not in_inlined_code then
 				buffer.put_string ({C_CONST}.dftype_name)
 			else
 				buffer.put_string ({C_CONST}.dftype)

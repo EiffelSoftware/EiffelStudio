@@ -138,11 +138,11 @@ feature {NONE} -- Implementation
 			end
 			if l_flags /= Void and then not l_flags.is_empty then
 				from
-					r := base_arguments.argument_count + 1
+					r := base_arguments.argument_count
 					i := 1
 					n := l_flags.count
 					create s.make_empty
-					create Result.make_filled (s.string, r, r + 5)
+					create Result.make_filled (s.string, r + 1, r + 6)
 				until
 					i > n
 				loop
@@ -159,8 +159,8 @@ feature {NONE} -- Implementation
 							l_in_quote := True
 						when ' ', '%T' then
 							if not s.is_empty then
-								Result.force (s.string, r)
 								r := r + 1
+								Result.force (s.string, r)
 								s.wipe_out
 							end
 						else
@@ -170,8 +170,11 @@ feature {NONE} -- Implementation
 					i := i + 1
 				end
 				if l_in_quote then
-					Result.discard_items
+						-- Quote was not terminated, we simply ignore everything after
+						-- the last non-closed quote.
+					Result := Result.subarray (Result.lower, r)
 				elseif not s.is_empty then
+					r := r + 1
 					Result.force (s.string, r)
 					Result := Result.subarray (Result.lower, r)
 				end

@@ -22,6 +22,7 @@ feature {NONE} -- Initialization
 		do
 			command_list := a_list
 			create default_buttons.make (10)
+			create items_source.make (10)
 
 			create_interface_objects
 			register_observer
@@ -34,10 +35,35 @@ feature {NONE} -- Initialization
 		deferred
 		end
 
+feature -- Command
+
+	set_items_source (a_items_source: like items_source)
+			--
+		require
+			not_void: a_items_source /= Void
+		local
+			l_key: EV_PROPERTY_KEY
+			l_command_id: NATURAL_32
+			l_enum: EV_UI_INVALIDATIONS_ENUM
+		do
+			items_source := a_items_source
+			if attached ribbon as l_ribbon then
+				l_command_id := command_list.item (command_list.lower)
+				check command_id_valid: l_command_id /= 0 end
+
+				create l_key.make_items_source
+				create l_enum
+				l_ribbon.invalidate (l_command_id, l_enum.ui_invalidations_property, l_key)
+			end
+		end
+
 feature -- Query
 
 	default_buttons: ARRAYED_LIST [EV_RIBBON_ITEM]
-			-- Default buttons
+			-- Default buttons (in "Customize Quick Access Toolbar" context menu)
+
+	items_source: ARRAYED_LIST [EV_RIBBON_ITEM]
+			-- Buttons showing on QAT
 
 	select_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Select actions executed just after user clicked on button.
@@ -65,7 +91,50 @@ feature {NONE} -- Command handler
 
 	update_property (a_command_id: NATURAL_32; a_property_key: POINTER; a_property_current_value: POINTER; a_property_new_value: POINTER): NATURAL_32
 			-- <Precursor>
+		local
+			l_collection: EV_RIBBON_COLLECTION
+			l_key: EV_PROPERTY_KEY
+			l_value: EV_PROPERTY_VARIANT
 		do
+			if command_list.has (a_command_id) then
+				create l_key.share_from_pointer (a_property_key)
+				if l_key.is_items_source then
+					create l_value.share_from_pointer (a_property_current_value)
+					create l_collection.make_with_prop_variant (l_value)
+
+					l_collection.clear
+
+					add_items_to_ui_collection (l_collection) -- FIXME: similiar to EV_RIBBON_COMBO_BOX's, merge?
+					l_collection.release -- Release COM object here
+				end
+
+			end
 		end
 
+	add_items_to_ui_collection (a_collection: EV_RIBBON_COLLECTION)
+			-- FIXME: same as EV_RIBBON_COMBO_BOX's, merge?
+		require
+			not_void: a_collection /= Void
+		local
+			l_property_set: EV_SIMPLE_PROPERTY_SET
+			l_command_id: NATURAL_32
+			l_item: EV_RIBBON_ITEM
+		do
+			from
+				items_source.start
+			until
+				items_source.after
+			loop
+				l_item := items_source.item
+				if l_item.command_list.count > 0 then
+					l_command_id := l_item.command_list.item (l_item.command_list.lower)
+
+					create l_property_set.make
+					l_property_set.set_command_id (l_command_id)
+					a_collection.add (l_property_set)
+				end
+
+				items_source.forth
+			end
+		end
 end

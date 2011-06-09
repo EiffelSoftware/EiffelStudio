@@ -3,7 +3,14 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	EV_RIBBON_ITEM
 
+feature -- Query
+
+	command_list: ARRAY [NATURAL_32]
+			-- Command ids handled by current
+		deferred
+		end
+		
 end

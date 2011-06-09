@@ -51,7 +51,8 @@ create
 	make_font_properties_strikethrough,
 	make_font_properties_underline,
 	make_font_properties_vertical_positioning,
-	make_command_id
+	make_command_id,
+	make_quick_access_toolbar_dock
 
 feature {NONE}  -- Initialization
 
@@ -182,9 +183,15 @@ feature {NONE}  -- Initialization
 		end
 
 	make_command_id
-			-- Make a command id
+			-- Make a command id key
 		do
 			share_from_pointer (c_ui_pkey_command_id)
+		end
+
+	make_quick_access_toolbar_dock
+			-- Make a quick access toolbar dock key
+		do
+			share_from_pointer (c_ui_pkey_quick_access_toolbar_dock)
 		end
 
 feature {NONE} -- Font properties creation methods
@@ -440,11 +447,20 @@ feature -- Status Report
 		end
 
 	is_command_id: BOOLEAN
-			-- Is current command id?
+			-- Is current command id key?
 		local
 			l_tmp: EV_PROPERTY_KEY
 		do
 			create l_tmp.make_command_id
+			Result := l_tmp.guid.is_equal (guid)
+		end
+
+	is_quick_access_toolbar_dock: BOOLEAN
+			-- Is current quick access toolbar dock key?
+		local
+			l_tmp: EV_PROPERTY_KEY
+		do
+			create l_tmp.make_quick_access_toolbar_dock
 			Result := l_tmp.guid.is_equal (guid)
 		end
 
@@ -1024,6 +1040,18 @@ feature {NONE} -- Font control properties
 			"[
 			{
 				return &UI_PKEY_CommandId;
+			}
+			]"
+		end
+
+	c_ui_pkey_quick_access_toolbar_dock: POINTER
+			--
+		external
+			"C inline use %"UIRibbon.h%""
+		alias
+			"[
+			{
+				return &UI_PKEY_QuickAccessToolbarDock;
 			}
 			]"
 		end

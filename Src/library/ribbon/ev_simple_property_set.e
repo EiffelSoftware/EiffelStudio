@@ -56,7 +56,10 @@ feature -- Command
 			-- string used when key is label
 
 	item_image: detachable EV_PIXEL_BUFFER
-			-- string used when key is image
+			-- image used when key is image
+
+	command_id: NATURAL_32
+			-- command id used when key is command id
 
 	set_string (a_string: like string)
 			-- Set `string' with `a_string'
@@ -72,6 +75,14 @@ feature -- Command
 			item_image := a_image
 		ensure
 			set: a_image = item_image
+		end
+
+	set_command_id (a_command_id: like command_id)
+			-- Set `command_id' with `a_command_id'
+		do
+			command_id := a_command_id
+		ensure
+			set: a_command_id = command_id
 		end
 
 feature {EV_SIMPLE_PROPERTY_SET} -- Implementation
@@ -93,6 +104,11 @@ feature {EV_SIMPLE_PROPERTY_SET} -- Implementation
 					if attached item_image as l_image then
 						create l_value.share_from_pointer (a_property_value)
 						l_value.set_image (l_image)
+					end
+				elseif l_key.is_command_id then
+					if command_id /= 0 then
+						create l_value.share_from_pointer (a_property_value)
+						l_value.set_uint32 (command_id)
 					end
 				end
 			else

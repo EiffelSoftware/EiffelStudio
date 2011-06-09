@@ -201,7 +201,7 @@ feature -- DYNAMIC_LIB Exports processing.
 
 				if class_i /= Void then
 					dl_class := class_i.compiled_class
-					if not dl_class.is_precompiled then
+					if not dl_class.is_precompiled and then dl_class.has_types then
 						api_feature_table:= dl_class.api_feature_table
 						if api_feature_table.has_key (t_routine) then
 							dl_routine:= api_feature_table.found_item
@@ -552,7 +552,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

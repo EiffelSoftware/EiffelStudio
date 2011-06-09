@@ -119,6 +119,32 @@ feature -- Windows
 			"return EIF_TEST(DestroyWindow((HWND) $hwnd));"
 		end
 
+feature -- Multi-monitor
+
+	monitor_from_rect (a_rect: POINTER; a_flags: INTEGER_32): POINTER
+			-- SDK MonitorFromRect
+		external
+			"C inline use <windows.h>"
+		alias
+			"MonitorFromRect((LPCRECT) $a_rect, (DWORD) $a_flags)"
+		end
+
+	monitor_from_window (a_hwnd: POINTER; a_flags: INTEGER_32): POINTER
+			-- SDK MonitorFromWindow
+		external
+			"C inline use <windows.h>"
+		alias
+			"MonitorFromWindow((HWND) $a_hwnd, (DWORD) $a_flags)"
+		end
+
+	get_monitor_info (a_monitor_handle: POINTER; a_monitor_info: POINTER): BOOLEAN
+			-- SDK GetMonitorInfo
+		external
+			"C inline use <windows.h>"
+		alias
+			"GetMonitorInfo ((HMONITOR) $a_monitor_handle, (LPMONITORINFO) $a_monitor_info)"
+		end
+
 feature -- Drawings
 
 	exclude_clip_rect (hdc: POINTER; left, top, right, bottom: INTEGER): INTEGER

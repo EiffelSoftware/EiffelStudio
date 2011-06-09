@@ -19,7 +19,7 @@ inherit
 	WEL_REFERENCE_TRACKABLE
 
 feature {NONE} -- Creation
-	
+
 	make_by_pointer (a_pointer: POINTER)
 			-- Set `item' with `a_pointer'.
 			-- Since `item' is shared, it does not need
@@ -106,7 +106,7 @@ feature {NONE} -- Implementation
 		end
 
 	gdi_objects_count_cell: CELL [INTEGER]
-			-- Cell to store the number of GDI objects allocated by this progran.
+			-- Cell to store the number of GDI objects allocated.
 		once
 			create Result.put (0)
 		end

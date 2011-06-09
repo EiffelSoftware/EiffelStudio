@@ -11,10 +11,14 @@ class
 inherit
 	EV_SCREEN_I
 		redefine
-			interface, virtual_width, virtual_height, virtual_x, virtual_y, refresh_graphics_context
+			interface, virtual_width, virtual_height, virtual_x, virtual_y,
+			monitor_count, monitor_area_from_position, monitor_area_from_window, refresh_graphics_context,
+			widget_at_mouse_pointer
 		end
 
 	EV_DRAWABLE_IMP
+		rename
+			cwin_set_cursor_position as set_pointer_position
 		redefine
 			interface, destroy,
 			make
@@ -70,9 +74,19 @@ feature -- Status report
 		local
 			wel_point: WEL_POINT
 		do
-			create wel_point.make (0, 0)
+			wel_point := reusable_wel_point
 			wel_point.set_cursor_position
 			create Result.set (wel_point.x, wel_point.y)
+		end
+
+	widget_at_mouse_pointer: detachable EV_WIDGET
+			-- <Precursor>
+		local
+			wel_point: WEL_POINT
+		do
+			wel_point := reusable_wel_point
+			wel_point.set_cursor_position
+			Result := widget_at_position (wel_point.x, wel_point.y)
 		end
 
 	widget_at_position (x, y: INTEGER): detachable EV_WIDGET
@@ -85,7 +99,8 @@ feature -- Status report
 			internal_combo_field: detachable EV_INTERNAL_COMBO_FIELD_IMP
 		do
 				-- Assign the cursor position to `wel_point'.
-			create wel_point.make (x, y)
+			wel_point := reusable_wel_point
+			wel_point.set_x_y (x, y)
 				-- Retrieve WEL_WINDOW at `wel_point'.
 			l_window := wel_point.window_at
 
@@ -109,13 +124,56 @@ feature -- Status report
 			end
 		end
 
-feature -- Basic operation
-
-	set_pointer_position (x, y: INTEGER)
-			-- Set `pointer_position' to (`x',`y`).
+	monitor_area_from_position (a_x, a_y: INTEGER): EV_RECTANGLE
+			-- <Precursor>
+		local
+			l_wel_mon: POINTER
+			l_mon_info: WEL_MONITOR_INFO
+			l_rect: WEL_RECT
+			l_success: BOOLEAN
 		do
-			cwin_set_cursor_position (x, y)
+			create l_rect.make (a_x, a_y, 0, 0)
+			l_wel_mon := {WEL_API}.monitor_from_rect (l_rect.item, monitor_defaulttonearest)
+			create l_mon_info.make
+			l_success := {WEL_API}.get_monitor_info (l_wel_mon, l_mon_info.item)
+			if l_success then
+				l_rect := l_mon_info.monitor_area
+				create Result.make (l_rect.x, l_rect.y, l_rect.width, l_rect.height)
+			else
+					-- Use fallback implementation to return the primary monitor.
+				Result := Precursor (a_x, a_y)
+			end
 		end
+
+	monitor_area_from_window (a_window: EV_WINDOW): EV_RECTANGLE
+			-- <Precursor>
+		local
+			l_wel_mon: POINTER
+			l_mon_info: WEL_MONITOR_INFO
+			l_window_imp: detachable EV_WINDOW_IMP
+			l_rect: WEL_RECT
+			l_success: BOOLEAN
+		do
+			l_window_imp ?= a_window.implementation
+			check l_window_imp_attached: l_window_imp /= Void end
+			l_wel_mon := {WEL_API}.monitor_from_window (l_window_imp.wel_item, monitor_defaulttonearest)
+			create l_mon_info.make
+			l_success := {WEL_API}.get_monitor_info (l_wel_mon, l_mon_info.item)
+			if l_success then
+				l_rect := l_mon_info.monitor_area
+				create Result.make (l_rect.x, l_rect.y, l_rect.width, l_rect.height)
+			else
+					-- Use fallback implementation to return the primary monitor.
+				Result := Precursor (a_window)
+			end
+		end
+
+	monitor_defaulttonull: INTEGER = 0
+	monitor_defaulttoprimary: INTEGER = 1
+	monitor_defaulttonearest: INTEGER = 2
+		-- Win32 API Monitor default return constant values.
+
+feature -- Basic operation
 
 	set_default_colors
 			-- Set foreground and background color to their default values.
@@ -201,38 +259,32 @@ feature -- Measurement
 
 	virtual_width: INTEGER
 			-- Virtual width of `Current'
-		local
-			l_metrics: WEL_SYSTEM_METRICS
 		do
-			create l_metrics
-			Result := l_metrics.virtual_screen_width
+			Result := system_metrics_constants.virtual_screen_width
 		end
 
 	virtual_height: INTEGER
 			-- Virtual height of `Current'
-		local
-			l_metrics: WEL_SYSTEM_METRICS
 		do
-			create l_metrics
-			Result := l_metrics.virtual_screen_height
+			Result := system_metrics_constants.virtual_screen_height
 		end
 
 	virtual_x: INTEGER
 			-- X position of virtual screen in main display coordinates
-		local
-			l_metrics: WEL_SYSTEM_METRICS
 		do
-			create l_metrics
-			Result := l_metrics.virtual_screen_x
+			Result := system_metrics_constants.virtual_screen_x
 		end
 
 	virtual_y: INTEGER
 			-- Y position of virtual screen in main display coordinates
-		local
-			l_metrics: WEL_SYSTEM_METRICS
 		do
-			create l_metrics
-			Result := l_metrics.virtual_screen_y
+			Result := system_metrics_constants.virtual_screen_y
+		end
+
+	monitor_count: INTEGER
+			-- Number of monitors used for displaying the screen.
+		do
+			Result := system_metrics_constants.monitor_count
 		end
 
 	vertical_resolution: INTEGER
@@ -304,6 +356,14 @@ feature {NONE} -- Constants
 			-- Key conversion routines.
 		once
 			create Result
+		end
+
+feature {NONE} -- Implementation
+
+	reusable_wel_point: WEL_POINT
+			-- Reusable wel point object to avoid creating a new object for temporary use.
+		once
+			create Result.make (0, 0)
 		end
 
 invariant

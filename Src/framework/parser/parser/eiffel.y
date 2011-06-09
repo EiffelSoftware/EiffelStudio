@@ -1056,28 +1056,44 @@ Parent_clause: Parent_class_type
 				if non_conforming_inheritance_flag and then $3 /= Void then
 					report_one_error (create {SYNTAX_ERROR}.make (token_line ($3.first), token_column ($3.first), filename, "Non-conforming inheritance may not use select clause"))
 				end
-				$$ := ast_factory.new_parent_as ($1, Void, Void, Void, $2, $3.second, $4)
+				if $3 /= Void then
+					$$ := ast_factory.new_parent_as ($1, Void, Void, Void, $2, $3.second, $4)
+				else
+					$$ := ast_factory.new_parent_as ($1, Void, Void, Void, $2, Void, $4)
+				end
 			}
 	|	Parent_class_type Undefine Redefine_opt Select_opt TE_END
 			{
 				if non_conforming_inheritance_flag and then $4 /= Void then
 					report_one_error (create {SYNTAX_ERROR}.make (token_line ($4.first), token_column ($4.first), filename, "Non-conforming inheritance may not use select clause"))
 				end
-				$$ := ast_factory.new_parent_as ($1, Void, Void, $2, $3, $4.second, $5)
+				if $4 /= Void then
+					$$ := ast_factory.new_parent_as ($1, Void, Void, $2, $3, $4.second, $5)
+				else
+					$$ := ast_factory.new_parent_as ($1, Void, Void, $2, $3, Void, $5)
+				end
 			}
 	|	Parent_class_type New_exports Undefine_opt Redefine_opt Select_opt TE_END
 			{
 				if non_conforming_inheritance_flag and then $5 /= Void then
 					report_one_error (create {SYNTAX_ERROR}.make (token_line ($5.first), token_column ($5.first), filename, "Non-conforming inheritance may not use select clause"))
 				end
-				$$ := ast_factory.new_parent_as ($1, Void, $2, $3, $4, $5.second, $6)
+				if $5 /= Void then
+					$$ := ast_factory.new_parent_as ($1, Void, $2, $3, $4, $5.second, $6)
+				else
+					$$ := ast_factory.new_parent_as ($1, Void, $2, $3, $4, Void, $6)
+				end
 			}
 	|	Parent_class_type Rename New_exports_opt Undefine_opt Redefine_opt Select_opt TE_END
 			{
 				if non_conforming_inheritance_flag and then $6 /= Void then
 					report_one_error (create {SYNTAX_ERROR}.make (token_line ($6.first), token_column ($6.first), filename, "Non-conforming inheritance may not use select clause"))
 				end
-				$$ := ast_factory.new_parent_as ($1, $2, $3, $4, $5, $6.second, $7)
+				if $6 /= Void then
+					$$ := ast_factory.new_parent_as ($1, $2, $3, $4, $5, $6.second, $7)
+				else
+					$$ := ast_factory.new_parent_as ($1, $2, $3, $4, $5, Void, $7)
+				end
 			}
 	;
 
@@ -1260,7 +1276,7 @@ Redefine: TE_REDEFINE
 	;
 
 Select_opt: -- Empty
-			-- { $$ := Void }
+		--	{ $$ := Void }
 	|	Select
 			{ $$ := $1 }
 	;

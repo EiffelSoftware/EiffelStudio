@@ -50,7 +50,8 @@ create
 	make_font_properties_size,
 	make_font_properties_strikethrough,
 	make_font_properties_underline,
-	make_font_properties_vertical_positioning
+	make_font_properties_vertical_positioning,
+	make_command_id
 
 feature {NONE}  -- Initialization
 
@@ -178,6 +179,12 @@ feature {NONE}  -- Initialization
 			-- Make a color key
 		do
 			share_from_pointer (c_ui_pkey_color)
+		end
+
+	make_command_id
+			-- Make a command id
+		do
+			share_from_pointer (c_ui_pkey_command_id)
 		end
 
 feature {NONE} -- Font properties creation methods
@@ -429,6 +436,15 @@ feature -- Status Report
 			l_tmp: EV_PROPERTY_KEY
 		do
 			create l_tmp.make_color
+			Result := l_tmp.guid.is_equal (guid)
+		end
+
+	is_command_id: BOOLEAN
+			-- Is current command id?
+		local
+			l_tmp: EV_PROPERTY_KEY
+		do
+			create l_tmp.make_command_id
 			Result := l_tmp.guid.is_equal (guid)
 		end
 
@@ -1000,4 +1016,15 @@ feature {NONE} -- Font control properties
 			]"
 		end
 
+	c_ui_pkey_command_id: POINTER
+			--
+		external
+			"C inline use  %"UIRibbon.h%""
+		alias
+			"[
+			{
+				return &UI_PKEY_CommandId;
+			}
+			]"
+		end
 end

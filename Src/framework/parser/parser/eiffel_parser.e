@@ -7067,7 +7067,11 @@ end
 				if non_conforming_inheritance_flag and then yyvs106.item (yyvsp106) /= Void then
 					report_one_error (create {SYNTAX_ERROR}.make (token_line (yyvs106.item (yyvsp106).first), token_column (yyvs106.item (yyvsp106).first), filename, "Non-conforming inheritance may not use select clause"))
 				end
-				yyval72 := ast_factory.new_parent_as (yyvs86.item (yyvsp86), Void, Void, Void, yyvs104.item (yyvsp104), yyvs106.item (yyvsp106).second, yyvs12.item (yyvsp12))
+				if yyvs106.item (yyvsp106) /= Void then
+					yyval72 := ast_factory.new_parent_as (yyvs86.item (yyvsp86), Void, Void, Void, yyvs104.item (yyvsp104), yyvs106.item (yyvsp106).second, yyvs12.item (yyvsp12))
+				else
+					yyval72 := ast_factory.new_parent_as (yyvs86.item (yyvsp86), Void, Void, Void, yyvs104.item (yyvsp104), Void, yyvs12.item (yyvsp12))
+				end
 			
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 4
@@ -7109,7 +7113,11 @@ end
 				if non_conforming_inheritance_flag and then yyvs106.item (yyvsp106) /= Void then
 					report_one_error (create {SYNTAX_ERROR}.make (token_line (yyvs106.item (yyvsp106).first), token_column (yyvs106.item (yyvsp106).first), filename, "Non-conforming inheritance may not use select clause"))
 				end
-				yyval72 := ast_factory.new_parent_as (yyvs86.item (yyvsp86), Void, Void, yyvs103.item (yyvsp103), yyvs104.item (yyvsp104), yyvs106.item (yyvsp106).second, yyvs12.item (yyvsp12))
+				if yyvs106.item (yyvsp106) /= Void then
+					yyval72 := ast_factory.new_parent_as (yyvs86.item (yyvsp86), Void, Void, yyvs103.item (yyvsp103), yyvs104.item (yyvsp104), yyvs106.item (yyvsp106).second, yyvs12.item (yyvsp12))
+				else
+					yyval72 := ast_factory.new_parent_as (yyvs86.item (yyvsp86), Void, Void, yyvs103.item (yyvsp103), yyvs104.item (yyvsp104), Void, yyvs12.item (yyvsp12))
+				end
 			
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 5
@@ -7152,7 +7160,11 @@ end
 				if non_conforming_inheritance_flag and then yyvs106.item (yyvsp106) /= Void then
 					report_one_error (create {SYNTAX_ERROR}.make (token_line (yyvs106.item (yyvsp106).first), token_column (yyvs106.item (yyvsp106).first), filename, "Non-conforming inheritance may not use select clause"))
 				end
-				yyval72 := ast_factory.new_parent_as (yyvs86.item (yyvsp86), Void, yyvs96.item (yyvsp96), yyvs103.item (yyvsp103), yyvs104.item (yyvsp104), yyvs106.item (yyvsp106).second, yyvs12.item (yyvsp12))
+				if yyvs106.item (yyvsp106) /= Void then
+					yyval72 := ast_factory.new_parent_as (yyvs86.item (yyvsp86), Void, yyvs96.item (yyvsp96), yyvs103.item (yyvsp103), yyvs104.item (yyvsp104), yyvs106.item (yyvsp106).second, yyvs12.item (yyvsp12))
+				else
+					yyval72 := ast_factory.new_parent_as (yyvs86.item (yyvsp86), Void, yyvs96.item (yyvsp96), yyvs103.item (yyvsp103), yyvs104.item (yyvsp104), Void, yyvs12.item (yyvsp12))
+				end
 			
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 6
@@ -7196,7 +7208,11 @@ end
 				if non_conforming_inheritance_flag and then yyvs106.item (yyvsp106) /= Void then
 					report_one_error (create {SYNTAX_ERROR}.make (token_line (yyvs106.item (yyvsp106).first), token_column (yyvs106.item (yyvsp106).first), filename, "Non-conforming inheritance may not use select clause"))
 				end
-				yyval72 := ast_factory.new_parent_as (yyvs86.item (yyvsp86), yyvs116.item (yyvsp116), yyvs96.item (yyvsp96), yyvs103.item (yyvsp103), yyvs104.item (yyvsp104), yyvs106.item (yyvsp106).second, yyvs12.item (yyvsp12))
+				if yyvs106.item (yyvsp106) /= Void then
+					yyval72 := ast_factory.new_parent_as (yyvs86.item (yyvsp86), yyvs116.item (yyvsp116), yyvs96.item (yyvsp96), yyvs103.item (yyvsp103), yyvs104.item (yyvsp104), yyvs106.item (yyvsp106).second, yyvs12.item (yyvsp12))
+				else
+					yyval72 := ast_factory.new_parent_as (yyvs86.item (yyvsp86), yyvs116.item (yyvsp116), yyvs96.item (yyvsp96), yyvs103.item (yyvsp103), yyvs104.item (yyvsp104), Void, yyvs12.item (yyvsp12))
+				end
 			
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 7

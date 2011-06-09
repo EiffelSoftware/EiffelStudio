@@ -74,6 +74,29 @@ feature -- Status report
 			Result := 0
 		end
 
+	monitor_count: INTEGER
+			-- Number of monitors used for displaying virtual screen.
+		do
+			Result := 1
+		end
+
+	monitor_area_from_position (a_x, a_y: INTEGER): EV_RECTANGLE
+			-- Full area of monitor nearest to coordinates (a_x, a_y)
+		do
+				-- Default implementation always returns the primary monitor area.
+				-- Redefined by descendents for multi-monitor support.
+			create Result.make (0, 0, width, height)
+		end
+
+	monitor_area_from_window (a_window: EV_WINDOW): EV_RECTANGLE
+			-- Full area of monitor of which most of `a_window' is located.
+			-- Returns nearest monitor area if `a_window' does not overlap any monitors.
+		do
+				-- Default implementation always returns the primary monitor area.
+				-- Redefined by descendents for multi-monitor support.
+			create Result.make (0, 0, width, height)
+		end
+
 feature -- Basic operation
 
 	set_pointer_position (a_x, a_y: INTEGER)

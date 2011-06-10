@@ -1036,10 +1036,19 @@ feature {CLASS_AS} -- Routine
 
 	process_tagged_as (l_as: TAGGED_AS)
 			-- Process tagged `l_as'.
+		local
+			e: EXPR_AS
 		do
 			safe_process (l_as.tag)
-			safe_process_and_print (l_as.colon_symbol (match_list), "", " ")
-			safe_process (l_as.expr)
+			e := l_as.expr
+			if attached l_as.colon_symbol (match_list) as t then
+				process_leading_leaves (t.index)
+				t.process (Current)
+				if attached e then
+					print_string (" ")
+				end
+			end
+			safe_process (e)
 		end
 
 	process_local_dec_list_as (l_as: LOCAL_DEC_LIST_AS)
@@ -1186,10 +1195,27 @@ feature {CLASS_AS} -- Instructions
 
 	process_guard_as (l_as: GUARD_AS)
 			-- Process guard instruction `l_as'.
+		local
+			check_list: EIFFEL_LIST [TAGGED_AS]
 		do
 			print_on_new_line (l_as.check_keyword (match_list))
-			print_list_indented (l_as.full_assertion_list)
-			print_on_new_line (l_as.then_keyword (match_list))
+			check_list := l_as.full_assertion_list
+			if
+				attached check_list and then
+				check_list.count = 1 and then
+				not attached check_list [1].tag and then
+				attached check_list [1].expr as e and then
+				attached l_as.then_keyword (match_list) as t and then
+				not match_list.has_comment (create {ERT_TOKEN_REGION}.make (last_index, t.index))
+			then
+					-- Use "if" style of output for the condition.
+				safe_process_and_print (e, " ", "")
+				safe_process_and_print (t, " ", "")
+			else
+					-- Use multiline output.
+				print_list_indented (check_list)
+				print_on_new_line (l_as.then_keyword (match_list))
+			end
 			increase_indent
 			safe_process (l_as.compound)
 			decrease_indent

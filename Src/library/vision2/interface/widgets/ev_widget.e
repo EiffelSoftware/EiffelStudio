@@ -202,13 +202,14 @@ feature -- Status setting
 		end
 
 	set_focus
-			-- Grab keyboard focus.
+			-- Grab keyboard focus if `is_displayed'.
 		require
 			not_destroyed: not is_destroyed
-			is_displayed: is_displayed
 			is_sensitive: is_sensitive
 		do
-			implementation.set_focus
+			if is_displayed then
+				implementation.set_focus
+			end
 		end
 
 	enable_capture

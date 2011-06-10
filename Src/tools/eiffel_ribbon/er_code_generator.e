@@ -475,6 +475,10 @@ feature {NONE} -- Implementation
 			l_file, l_dest_file: RAW_FILE
 			l_singleton: ER_SHARED_SINGLETON
 			l_file_name: FILE_NAME
+
+			l_shared: ER_SHARED_SINGLETON
+			l_error: EV_ERROR_DIALOG
+			l_interface_names: ER_INTERFACE_NAMES
 		do
 			-- Copy template ecf
 			create l_file.make (ecf_template_file_path)
@@ -506,10 +510,16 @@ feature {NONE} -- Implementation
 				end
 
 			else
-				check corrupted_installation: False end
+				create l_shared
+				create l_interface_names
+				create l_error.make_with_text (l_interface_names.cannot_find_templates)
+				l_error.set_buttons (<<l_interface_names.ok>>)
+				if attached l_shared.main_window_cell.item as l_win then
+					l_error.show_modal_to_window (l_win)
+				else
+					l_error.show
+				end
 			end
-
-			--
 		end
 
 	copy_predefine_classes

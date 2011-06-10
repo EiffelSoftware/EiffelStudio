@@ -447,12 +447,12 @@ feature {CLASS_AS} -- Process leafs
 			l_start_idx, l_end_idx: INTEGER
 			inline_comment: BOOLEAN
 		do
-			-- The string can hold multiple comments, starting with '--'.
-			-- Remove all '%N' and '%R' characters before and after each comment line.
-			-- If there is a '%N' before a comment, it is printed on a new line with the
-			-- current indent.
-			--
-			-- Check the preceding characters for newlines characters.
+				-- The string can hold multiple comments, starting with '--'.
+				-- Remove all '%N' and '%R' characters before and after each comment line.
+				-- If there is a '%N' before a comment, it is printed on a new line with the
+				-- current indent.
+				--
+				-- Check the preceding characters for newlines characters.
 			inline_comment := True
 			l_start_idx := l_as_string.substring_index ("--", 1)
 			Result := ""
@@ -494,7 +494,16 @@ feature {CLASS_AS} -- Process leafs
 					i := i+1
 				end
 
---				if inline_comment and l_end_idx > l_as_string.count then
+					-- Remove trailing white spaces.
+				from
+					i := Result.count
+				until
+					i = 0 or else not white_space.has (Result [i])
+				loop
+					Result.remove_tail (1)
+					i := i - 1
+				end
+
 				if l_end_idx > l_as_string.count then
 					Result.append_character ('%N')
 				end
@@ -1728,8 +1737,26 @@ feature {NONE} -- Modification
 	decrease_indent
 			-- Remove one space element from `indent'.
 		do
+				-- Process all breaks before decreasing indentation.
+			process_trailing_breaks
 			indent.remove_tail (1)
 		end
+
+feature {NONE} -- Comments
+
+	process_trailing_breaks
+			-- Process trailing breaks (if any).
+		do
+			from
+			until
+				not match_list.valid_index (last_index + 1) or else not attached {BREAK_AS} match_list [last_index + 1] as b
+			loop
+				safe_process (b)
+			end
+		end
+
+	white_space: STRING = " %T"
+			-- Characters that can be safely removed when they appear at end of a line.
 
 invariant
 	out_stream_attached: out_stream /= Void

@@ -2370,6 +2370,16 @@ feature -- Externals
 			"C signature (GdkScreen*, gint, GdkRectangle*) use <gtk/gtk.h>"
 		end
 
+	frozen gdk_screen_get_monitor_at_point (a_screen: POINTER; a_x, a_y: INTEGER): INTEGER
+		external
+			"C signature (GdkScreen*, gint, gint): gint use <gtk/gtk.h>"
+		end
+
+	frozen gdk_screen_get_monitor_at_window (a_screen: POINTER; a_window: POINTER): INTEGER
+		external
+			"C signature (GdkScreen*, GdkWindow*): gint use <gtk/gtk.h>"
+		end
+
 	frozen gdk_window_get_frame_extents (a_window, a_rect: POINTER)
 		external
 			"C signature (GdkWindow*, GdkRectangle*) use <gtk/gtk.h>"

@@ -162,6 +162,7 @@ feature -- Status report
 			l_x, l_y, l_width, l_height: INTEGER
 		do
 			l_window_imp ?= a_window.implementation
+			check l_window_imp /= Void end
 			l_mon_num := {EV_GTK_EXTERNALS}.gdk_screen_get_monitor_at_window ({EV_GTK_EXTERNALS}.gdk_screen_get_default, {EV_GTK_EXTERNALS}.gtk_widget_struct_window (l_window_imp.c_object))
 
 			l_rect := {EV_GTK_EXTERNALS}.c_gdk_rectangle_struct_allocate
@@ -523,7 +524,8 @@ feature {NONE} -- Implementation
 	update_if_needed
 			-- Update `Current' if needed
 		do
-			-- By default do nothing
+			device_x_offset := -app_implementation.screen_virtual_x.as_integer_16
+			device_y_offset := -app_implementation.screen_virtual_y.as_integer_16
 		end
 
 	destroy

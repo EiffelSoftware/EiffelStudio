@@ -130,10 +130,10 @@ extern "C" {
  * Global variables, not in a per thread basis.
  */
 
-extern int	eif_scavenge_size;				/* Size of GSZ. */
-extern int	eif_tenure_max;					/* Maximum tenuring age. */
-extern int	eif_gs_limit;					/* Maximum size of object in GSZ. */
-extern int	eif_stack_chunk;				/* Size of local stack chunk. */
+extern size_t	eif_scavenge_size;				/* Size of GSZ. */
+extern size_t	eif_tenure_max;					/* Maximum tenuring age. */
+extern size_t	eif_gs_limit;					/* Maximum size of object in GSZ. */
+extern size_t	eif_stack_chunk;				/* Size of local stack chunk. */
 extern size_t	eif_chunk_size;					/* Size of chunk. */
 
 #ifdef ISE_GC

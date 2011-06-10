@@ -152,7 +152,7 @@ rt_public void epop(struct stack *stk, rt_uint_ptr nb_items)
 
 
 #ifdef ISE_GC
-rt_public char **eget(register int num)
+rt_public char **eget(register size_t num)
 {
 	/* Get 'num' entries in the 'loc_set' stack to hold Eiffel local reference
 	 * variables in the current feature. Usually, the generated C code takes
@@ -223,7 +223,7 @@ rt_public char **eget(register int num)
 			top = loc_set.st_cur->sk_arena;				/* Recompute base arena */
 			loc_set.st_top = top;						/* Chunk is empty */
 
-			if (num > (loc_set.st_end - top)) {	/* Not enough room in chunk */
+			if (top + num > loc_set.st_end) {	/* Not enough room in chunk */
 					/* Perform a recursive call until we either find a block which
 					 * has at least `num' entries, or until we do not find anymore blocks
 					 * in which case we will allocate a new one.

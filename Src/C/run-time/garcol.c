@@ -545,13 +545,13 @@ doc:	</attribute>
 rt_private rt_uint_ptr size_table[TENURE_MAX];		/* Amount of bytes/age */
 
 /*
-doc:	<attribute name="tenure" return_type="int" export="shared">
+doc:	<attribute name="tenure" return_type="size_t" export="private">
 doc:		<summary>Maximum age for tenuring.</summary>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>None while initialized in `main.c' but use `eif_gc_mutex' when updating its value.</synchronization>
 doc:	</attribute>
 */
-rt_shared int tenure;
+rt_private size_t tenure;
 
 /*
 doc:	<attribute name="plsc_per" return_type="long" export="public">
@@ -746,10 +746,10 @@ rt_shared void gfree(register union overhead *zone);				/* Free object, eventual
 #endif
 /* Stack handling routines */
 rt_shared int epush(register struct stack *stk, register void *value);				/* Push value on stack */
-rt_shared EIF_REFERENCE *st_alloc(register struct stack *stk, register int size);		/* Creates an empty stack */
+rt_shared EIF_REFERENCE *st_alloc(register struct stack *stk, register size_t size);		/* Creates an empty stack */
 rt_shared void st_truncate(register struct stack *stk);		/* Truncate stack if necessary */
 rt_shared void st_wipe_out(register struct stchunk *chunk);		/* Remove unneeded chunk from stack */
-rt_shared int st_extend(register struct stack *stk, register int size);			/* Extends size of stack */
+rt_shared int st_extend(register struct stack *stk, register size_t size);			/* Extends size of stack */
 rt_shared int st_has (register struct stack *stck, register void *);
 #ifdef ISE_GC
 
@@ -3731,7 +3731,7 @@ rt_private int generational_collect(void)
 	 */
 
 	RT_GET_CONTEXT
-	int age;			/* Computed tenure age */
+	size_t age;			/* Computed tenure age */
 	rt_uint_ptr overused;		/* Amount of data over watermark */
 	EIF_REFERENCE watermark;			/* Watermark in generation zone */
 
@@ -3834,7 +3834,7 @@ rt_private int generational_collect(void)
 	 * the tenure limit by one, in not at eif_tenure_max - 1 or above.
 	 */
 
-	if (tenure < eif_tenure_max - 1)
+	if (tenure + 1 < eif_tenure_max)
 		tenure++;
 
 #ifdef DEBUG
@@ -5231,7 +5231,7 @@ rt_shared int epush(register struct stack *stk, register void *value)
 	return 0;		/* Value was successfully pushed on the stack */
 }
 
-rt_shared EIF_REFERENCE *st_alloc(register struct stack *stk, register int size)
+rt_shared EIF_REFERENCE *st_alloc(register struct stack *stk, register size_t size)
 									/* The stack */
 				 					/* Initial size */
 {
@@ -5263,7 +5263,7 @@ rt_shared EIF_REFERENCE *st_alloc(register struct stack *stk, register int size)
 	return arena;			/* Stack allocated */
 }
 
-rt_shared int st_extend(register struct stack *stk, register int size)
+rt_shared int st_extend(register struct stack *stk, register size_t size)
 									/* The stack */
 				 					/* Size of new chunk to be added */
 {

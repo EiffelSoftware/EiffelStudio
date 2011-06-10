@@ -107,7 +107,6 @@ extern struct gacstat rt_g_stat[GST_NBR];	/* Collection statistics */
 /* Exported data-structure declarations */
 extern struct stack memory_set;	/* Memory set stack.	*/
 extern struct stack moved_set;	/* Describes the new generation */
-extern int tenure;			/* Tenure value for next generation cycle */
 extern long plsc_per;			/* Period of plsc() in acollect() */
 extern long force_plsc;
 
@@ -153,8 +152,8 @@ extern char *to_chunk(void);			/* Base address of partial 'to' chunk */
 
 RT_LNK int epush(register struct stack *stk, register void *value);	/* Push an addess on a run-time stack */
 
-extern EIF_REFERENCE *st_alloc(register struct stack *stk, register int size);	/* Creates an empty stack */
-extern int st_extend(register struct stack *stk, register int size);	/* Extends a stack */
+extern EIF_REFERENCE *st_alloc(register struct stack *stk, register size_t size);	/* Creates an empty stack */
+extern int st_extend(register struct stack *stk, register size_t size);	/* Extends a stack */
 extern void st_truncate(register struct stack *stk);	/* Truncate stack if necessary */
 extern void st_wipe_out(register struct stchunk *chunk);/* Remove unneeded chunk from stack */
 extern void st_reset(register struct stack *stk);/* Clean stack */

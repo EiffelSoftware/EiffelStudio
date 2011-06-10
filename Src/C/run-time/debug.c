@@ -248,8 +248,8 @@ rt_private int should_be_interrupted(void);
 rt_public struct dcall *dpush(register struct dcall *val);			/* Push value on stack */
 rt_public struct dcall *dpop(void);			/* Pop value off stack */
 rt_public struct dcall *dtop(void);			/* Current top value */
-rt_private struct dcall *dbstack_allocate(register int size);	/* Allocate first chunk */
-rt_private int dbstack_extend(register int size);				/* Extend stack size */
+rt_private struct dcall *dbstack_allocate(register size_t size);	/* Allocate first chunk */
+rt_private int dbstack_extend(register size_t size);				/* Extend stack size */
 rt_private void npop(register int nb_items);					/* Pop 'n' items */
 rt_private int nb_calls(void);					/* Number of calls registered */
 
@@ -1287,7 +1287,7 @@ rt_shared void esresume(EIF_CONTEXT_NOARG)
  * Context stack handling.
  */
 
-rt_private struct dcall *dbstack_allocate(register int size)
+rt_private struct dcall *dbstack_allocate(register size_t size)
                    					/* Initial size */
 {
 	/* The debugging stack is created, with size 'size'.
@@ -1393,7 +1393,7 @@ rt_public struct dcall *dpush(register struct dcall *val)
 	return top;				/* Address of allocated item */
 }
 
-rt_private int dbstack_extend(register int size)
+rt_private int dbstack_extend(register size_t size)
                    					/* Size of new chunk to be added */
 {
 	/* The debugging stack is extended and the stack structure is updated.
@@ -1828,7 +1828,7 @@ rt_public EIF_TYPED_VALUE *docall(EIF_CONTEXT register BODY_INDEX body_id, regis
  * AUTHOR:  Jerome BOUAZIZ - Arnaud PICHERY
  ************************************************************************/
 
-rt_public EIF_TYPED_ADDRESS *c_stack_allocate(EIF_CONTEXT register int size)
+rt_public EIF_TYPED_ADDRESS *c_stack_allocate(EIF_CONTEXT register size_t size)
 				   					/* Initial size */
 {
 	/* The operational stack is created, with size 'size'.
@@ -1924,7 +1924,7 @@ rt_public EIF_TYPED_ADDRESS *c_opush(EIF_CONTEXT register EIF_TYPED_ADDRESS *val
 	return top;				/* Address of allocated item */
 }
 
-rt_public int c_stack_extend(EIF_CONTEXT register int size)
+rt_public int c_stack_extend(EIF_CONTEXT register size_t size)
 				   					/* Size of new chunk to be added */
 {
 	/* The operational stack is extended and the stack structure is updated.

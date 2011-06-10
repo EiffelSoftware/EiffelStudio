@@ -338,45 +338,45 @@ doc:	</attribute>
 rt_shared size_t eif_max_mem = 0;
 
 /*
-doc:	<attribute name="eif_tenure_max" return_type="int" export="shared">
+doc:	<attribute name="eif_tenure_max" return_type="size_t" export="shared">
 doc:		<summary>Maximum age of tenuring.</summary>
 doc:		<access>Read/Write once</access>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>None since initialized in `eif_alloc_init' (main.c)</synchronization>
 doc:	</attribute>
 */
-rt_shared int eif_tenure_max;
+rt_shared size_t eif_tenure_max;
 
 /*
-doc:	<attribute name="eif_gs_limit" return_type="int" export="shared">
+doc:	<attribute name="eif_gs_limit" return_type="size_t" export="shared">
 doc:		<summary>Maximum size of object in GSZ.</summary>
 doc:		<access>Read/Write once</access>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>None since initialized in `eif_alloc_init' (main.c)</synchronization>
 doc:	</attribute>
 */
-rt_shared int eif_gs_limit;
+rt_shared size_t eif_gs_limit;
 
 /*
-doc:	<attribute name="eif_scavenge_size" return_type="int" export="shared">
+doc:	<attribute name="eif_scavenge_size" return_type="size_t" export="shared">
 doc:		<summary>Size of scavenge zones. Should be a multiple of ALIGNMAX.</summary>
 doc:		<access>Read/Write once</access>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>None since initialized in `eif_alloc_init' (main.c)</synchronization>
 doc:	</attribute>
 */
-rt_shared int eif_scavenge_size;
+rt_shared size_t eif_scavenge_size;
 #endif
 
 /*
-doc:	<attribute name="eif_stack_chunk" return_type="int" export="shared">
+doc:	<attribute name="eif_stack_chunk" return_type="size_t" export="shared">
 doc:		<summary>Size of local stack chunk. Should be a multiple of ALIGNMAX.</summary>
 doc:		<access>Read/Write once</access>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>None since initialized in `eif_alloc_init' (main.c)</synchronization>
 doc:	</attribute>
 */
-rt_shared int eif_stack_chunk;
+rt_shared size_t eif_stack_chunk;
 
 /*
 doc:	<attribute name="eif_chunk_size" return_type="size_t" export="shared">
@@ -738,7 +738,7 @@ rt_public EIF_REFERENCE emalloc_size(EIF_TYPE_INDEX ftype, EIF_TYPE_INDEX type, 
 	 * in the the GSZ, otherwise they are allocated in the free-list.
 	 */
 
-	if ((gen_scavenge == GS_ON) && (nbytes <= (unsigned int) eif_gs_limit)) {
+	if ((gen_scavenge == GS_ON) && (nbytes <= eif_gs_limit)) {
 		object = malloc_from_zone(nbytes);
 		if (object) {
 			return eif_set(object, 0, ftype, type);	/* Set for Eiffel use */
@@ -1232,7 +1232,7 @@ rt_shared EIF_REFERENCE spmalloc(EIF_INTEGER nb, uint32 element_size, EIF_BOOLEA
 	if (mod != 0)
 		nbytes += ALIGNMAX - mod;
 
-	if ((gen_scavenge == GS_ON) && (nbytes <= (unsigned int) eif_gs_limit)) {
+	if ((gen_scavenge == GS_ON) && (nbytes <= eif_gs_limit)) {
 		object = malloc_from_zone (nbytes);	/* allocate it in scavenge zone. */
 		if (object) {
 			return  eif_spset(object, EIF_TRUE);

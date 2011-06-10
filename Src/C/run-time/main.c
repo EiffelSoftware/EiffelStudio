@@ -661,7 +661,7 @@ rt_public void eif_alloc_init(void)
 			scavenge_size += ALIGNMAX - mod;
 		}
 	}
-	eif_scavenge_size = scavenge_size >= GS_SZ_MIN ? scavenge_size : GS_SZ_MIN;
+	eif_scavenge_size = (scavenge_size >= GS_SZ_MIN ? scavenge_size : GS_SZ_MIN);
 								/* Reasonable GSZ size. */	
 
 	/* Set maximum tenuring age. */
@@ -672,15 +672,16 @@ rt_public void eif_alloc_init(void)
 			tenure_max = atoi (env_var);
 
 			/* Must be in bounds. */
-			if (tenure_max < 0)		
+			if (tenure_max < 0) {
 				tenure_max = 0;		/* Mimimun is 0. */
-			else if (tenure_max > TENURE_MAX)
+			} else if (tenure_max > TENURE_MAX) {
 				tenure_max = TENURE_MAX;	/* Maximum is TENURE_MAX. */
+			}
 		} else {
 			tenure_max = TENURE_MAX;	/* RT default setting. */
 		}
 	}
-	eif_tenure_max = tenure_max;	
+	eif_tenure_max = tenure_max;
 
 	/* Set maximum size of objects in GSZ. */
 	if (!gs_limit)	/* Is maximum size of objects in GSZ not set yet? */
@@ -689,24 +690,26 @@ rt_public void eif_alloc_init(void)
 		if ((env_var != NULL) && (strlen(env_var) > 0)) {	/* Has user specified it? */
 			gs_limit = atoi (env_var);
 			/* Must be in bounds. */
-			if (gs_limit < 0)		
+			if (gs_limit < 0) {
 				gs_limit = 0;		/* Mimimun is 0. */
-			else if (gs_limit > GS_FLOATMARK)
-				gs_limit = GS_FLOATMARK;	/* Maximum we allow, may crash 
-											 * otherwise. */
+			}
 		} else {
 			gs_limit = GS_LIMIT;	/* RT default setting. */
 		}
 	}
-	eif_gs_limit = gs_limit;	
-								/* Reasonable gs_limit. */
+		/* Reasonable gs_limit. */
+	eif_gs_limit = (gs_limit > GS_FLOATMARK ? GS_FLOATMARK : gs_limit);	
+
 #endif /* ISE GC */
 
 	/* Set Size of local stack chunk. */
-	if (!stack_chunk) {	/* Is maximum size of objects in GSZ not set yet? */
+	if (!stack_chunk) {	/* Is maximum size of local stack chunk not set yet? */
 		env_var = getenv ("EIF_STACK_CHUNK");
 		if ((env_var != NULL) && (strlen(env_var) > 0)) {	/* Has user specified it? */
 			stack_chunk = atoi (env_var);
+			if (stack_chunk <= 0) {
+				stack_chunk = STACK_CHUNK;
+			}
 		} else {
 			stack_chunk = STACK_CHUNK;	/* RT default setting. */
 		}

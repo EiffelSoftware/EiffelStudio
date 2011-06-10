@@ -260,8 +260,8 @@ rt_private void create_expanded_locals (struct stochunk * scur, EIF_TYPED_VALUE 
 /* Operational stack handling routines */
 rt_public EIF_TYPED_VALUE *opush(register EIF_TYPED_VALUE *val);	/* Push one value on op stack */
 rt_public EIF_TYPED_VALUE *opop(void);							/* Pop last item */
-rt_private EIF_TYPED_VALUE *stack_allocate(register int size);	/* Allocates first chunk */
-rt_private int stack_extend(register int size);				/* Extend stack's size */
+rt_private EIF_TYPED_VALUE *stack_allocate(register size_t size);	/* Allocates first chunk */
+rt_private int stack_extend(register size_t size);				/* Extend stack's size */
 rt_private void npop(rt_uint_ptr nb);				/* Pop 'nb' items */
 rt_public EIF_TYPED_VALUE *otop(void);							/* Pointer to value at the top */
 rt_private EIF_TYPED_VALUE *oitem(uint32 n);					/* Pointer to value at position `n' down the stack */
@@ -6603,7 +6603,7 @@ rt_private void create_expanded_locals (
  * Operational stack handling.
  */
 
-rt_private EIF_TYPED_VALUE *stack_allocate(register int size)
+rt_private EIF_TYPED_VALUE *stack_allocate(register size_t size)
 				   					/* Initial size */
 {
 	/* The operational stack is created, with size 'size'.
@@ -6688,7 +6688,7 @@ rt_public EIF_TYPED_VALUE *opush(register EIF_TYPED_VALUE *val)
 	return top;				/* Address of allocated item */
 }
 
-rt_private int stack_extend(register int size)
+rt_private int stack_extend(register size_t size)
 				   					/* Size of new chunk to be added */
 {
 	/* The operational stack is extended and the stack structure is updated.

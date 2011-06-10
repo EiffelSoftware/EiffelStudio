@@ -241,8 +241,8 @@ rt_private void expop_helper(struct xstack *stk, int is_truncated);
 rt_private void stack_truncate(struct xstack *stk);		/* Truncate stack if necessary */
 rt_private void stack_wipe_out(register struct stxchunk *chunk);			/* Remove unneeded chunk from stack */
 rt_shared struct ex_vect *exget(struct xstack *stk);		/* Get a new vector on stack */
-rt_private int stack_extend(struct xstack *stk, rt_uint_ptr size);			/* Extends size of stack */
-rt_private struct ex_vect *stack_allocate(struct xstack *stk, int size);	/* Creates an empty stack */
+rt_private int stack_extend(struct xstack *stk, size_t size);			/* Extends size of stack */
+rt_private struct ex_vect *stack_allocate(struct xstack *stk, size_t size);	/* Creates an empty stack */
 rt_shared struct ex_vect *extop(struct xstack *stk);		/* Top of Eiffel stack */
 rt_shared struct ex_vect *exnext(void);	/* Next item at bottom of trace stack */
 rt_private int exend(void);				/* True if end of trace stack reached */
@@ -3171,7 +3171,7 @@ rt_shared struct ex_vect *exget(struct xstack *stk)
 	return top - 1;			/* Address of new available execution vector */
 }
 
-rt_private struct ex_vect *stack_allocate(struct xstack *stk, int size)
+rt_private struct ex_vect *stack_allocate(struct xstack *stk, size_t size)
 		/* The stack */
 		/* Initial size */
 {
@@ -3207,7 +3207,7 @@ rt_private struct ex_vect *stack_allocate(struct xstack *stk, int size)
 	return arena;			/* Stack allocated */
 }
 
-rt_private int stack_extend(struct xstack *stk, rt_uint_ptr size)
+rt_private int stack_extend(struct xstack *stk, size_t size)
 			/* The stack */
 			/* Size of new chunk to be added */
 {

@@ -225,7 +225,7 @@ rt_public void eif_mem_coalesc(void)
 rt_public EIF_INTEGER eif_mem_tget(void)
 {
 #ifdef ISE_GC
-	return th_alloc;			/* Current allocation threshold */
+	return (EIF_INTEGER) th_alloc;			/* Current allocation threshold */
 #else
 	return 0;
 #endif
@@ -381,7 +381,7 @@ rt_public EIF_INTEGER eif_tenure (void)
 	/* Not in per thread basis. */
 
 #ifdef ISE_GC
-	return eif_tenure_max;
+	return (EIF_INTEGER) eif_tenure_max;
 #else
 	return 0;
 #endif

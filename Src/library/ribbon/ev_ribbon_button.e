@@ -41,7 +41,45 @@ feature -- Access
 	select_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Select actions executed just after user clicked on button.
 
+	is_enabled: BOOLEAN
+			-- If current has been checked?
+		local
+			l_key: EV_PROPERTY_KEY
+			l_value: EV_PROPERTY_VARIANT
+			l_command_id: NATURAL_32
+		do
+			l_command_id := command_list.item (command_list.lower)
+			check command_id_valid: l_command_id /= 0 end
+
+			if attached ribbon as l_ribbon then
+				create l_key.make_enabled
+				create l_value.make_empty
+				l_ribbon.get_command_property (l_command_id, l_key, l_value)
+				Result := l_value.boolean_value
+				l_value.destroy
+			end
+		end
+
 feature -- Command
+
+	set_enabled (a_bool: BOOLEAN)
+			-- Set `is_enabled' with `a_bool'
+		local
+			l_key: EV_PROPERTY_KEY
+			l_value: EV_PROPERTY_VARIANT
+			l_command_id: NATURAL_32
+		do
+			l_command_id := command_list.item (command_list.lower)
+			check command_id_valid: l_command_id /= 0 end
+
+			if attached ribbon as l_ribbon then
+				create l_key.make_enabled
+				create l_value.make_empty
+				l_value.set_boolean_value (a_bool)
+				l_ribbon.set_command_property (l_command_id, l_key, l_value)
+				l_value.destroy
+			end
+		end
 
 	set_small_image (a_image: EV_PIXEL_BUFFER)
 			-- Set small image

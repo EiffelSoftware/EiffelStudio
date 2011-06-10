@@ -1,0 +1,11 @@
+test_name pretty-comment-indentation
+test_description Comments in a routine body should be indented by the same amount all the time.
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+
+prettify	test.e prettify_output
+compile_result ok
+compare		prettify_output output
+
+test_end

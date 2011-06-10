@@ -19,7 +19,10 @@ inherit
 			virtual_x,
 			virtual_y,
 			virtual_width,
-			virtual_height
+			virtual_height,
+			monitor_count,
+			monitor_area_from_position,
+			monitor_area_from_window
 		end
 
 	EV_DRAWABLE_IMP
@@ -73,19 +76,19 @@ feature -- Status report
 	widget_at_position (x, y: INTEGER): detachable EV_WIDGET
 			-- Widget at position ('x', 'y') if any.
 		local
-			l_pointer_position: like pointer_position
+			l_pointer_position: TUPLE [a_window: POINTER; a_x: INTEGER; a_y: INTEGER; a_mask: NATURAL_32]
 			l_widget_imp: detachable EV_WIDGET_IMP
 			l_change: BOOLEAN
 		do
-			l_pointer_position := pointer_position
+			l_pointer_position := app_implementation.retrieve_display_data
 				-- If `x' and `y' are at the pointer position then as an optimization we do not change the position of the mouse.
-			l_change := l_pointer_position.x /= x or else l_pointer_position.y /= y
+			l_change := l_pointer_position.a_x /= x or else l_pointer_position.a_y /= y
 			if l_change then
 				set_pointer_position (x, y)
 			end
 			l_widget_imp := widget_imp_at_pointer_position
 			if l_change then
-				set_pointer_position (l_pointer_position.x, l_pointer_position.y)
+				set_pointer_position (l_pointer_position.a_x, l_pointer_position.a_y)
 			end
 			if l_widget_imp /= Void then
 				Result := l_widget_imp.interface
@@ -121,6 +124,56 @@ feature -- Status report
 					gtkwid := {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (gtkwid)
 				end
 			end
+		end
+
+	monitor_count: INTEGER
+			-- Number of monitors used for displaying virtual screen.
+		do
+			Result := app_implementation.screen_monitor_count
+		end
+
+	monitor_area_from_position (a_x, a_y: INTEGER): EV_RECTANGLE
+			-- Full area of monitor nearest to coordinates (a_x, a_y)
+		local
+			l_mon_num: INTEGER
+			l_rect: POINTER
+			l_x, l_y, l_width, l_height: INTEGER
+		do
+			l_mon_num := {EV_GTK_EXTERNALS}.gdk_screen_get_monitor_at_point ({EV_GTK_EXTERNALS}.gdk_screen_get_default, a_x + device_x_offset, a_y + device_y_offset)
+			l_rect := {EV_GTK_EXTERNALS}.c_gdk_rectangle_struct_allocate
+			{EV_GTK_EXTERNALS}.gdk_screen_get_monitor_geometry ({EV_GTK_EXTERNALS}.gdk_screen_get_default, l_mon_num, l_rect)
+
+			l_x := {EV_GTK_EXTERNALS}.gdk_rectangle_struct_x (l_rect) - device_x_offset
+			l_y := {EV_GTK_EXTERNALS}.gdk_rectangle_struct_y (l_rect) - device_y_offset
+			l_width := {EV_GTK_EXTERNALS}.gdk_rectangle_struct_width (l_rect)
+			l_height := {EV_GTK_EXTERNALS}.gdk_rectangle_struct_height (l_rect)
+			l_rect.memory_free
+
+			create Result.make (l_x, l_y, l_width, l_height)
+		end
+
+	monitor_area_from_window (a_window: EV_WINDOW): EV_RECTANGLE
+			-- Full area of monitor of which most of `a_window' is located.
+			-- Returns nearest monitor area if `a_window' does not overlap any monitors.
+		local
+			l_mon_num: INTEGER
+			l_window_imp: detachable EV_WINDOW_IMP
+			l_rect: POINTER
+			l_x, l_y, l_width, l_height: INTEGER
+		do
+			l_window_imp ?= a_window.implementation
+			l_mon_num := {EV_GTK_EXTERNALS}.gdk_screen_get_monitor_at_window ({EV_GTK_EXTERNALS}.gdk_screen_get_default, {EV_GTK_EXTERNALS}.gtk_widget_struct_window (l_window_imp.c_object))
+
+			l_rect := {EV_GTK_EXTERNALS}.c_gdk_rectangle_struct_allocate
+			{EV_GTK_EXTERNALS}.gdk_screen_get_monitor_geometry ({EV_GTK_EXTERNALS}.gdk_screen_get_default, l_mon_num, l_rect)
+
+			l_x := {EV_GTK_EXTERNALS}.gdk_rectangle_struct_x (l_rect) - device_x_offset
+			l_y := {EV_GTK_EXTERNALS}.gdk_rectangle_struct_y (l_rect) - device_y_offset
+			l_width := {EV_GTK_EXTERNALS}.gdk_rectangle_struct_width (l_rect)
+			l_height := {EV_GTK_EXTERNALS}.gdk_rectangle_struct_height (l_rect)
+			l_rect.memory_free
+
+			create Result.make (l_x, l_y, l_width, l_height)
 		end
 
 feature -- Status setting

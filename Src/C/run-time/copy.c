@@ -291,58 +291,61 @@ rt_public EIF_REFERENCE edclone(EIF_CONTEXT EIF_REFERENCE source)
 	 */
 
 	{
-	RTYD;							/* Save stack contexts */
-	EIF_EO_STORE_LOCK;				/* Because we perform a traversal that marks
-									   objects, we need to be sure we are the
-									   only one doing it. */
-	excatch(&exenv);		/* Record pseudo-execution vector */
-	if (setjmp(exenv)) {
-		RTXSC;						/* Restore stack contexts */
-		map_reset(1);				/* Reset in emergency situation */
-		EIF_EO_STORE_UNLOCK;		/* Free marking mutex */
-		ereturn(MTC_NOARG);					/* And propagate the exception */
-	}
+		RTYD;							/* Save stack contexts */
+		EIF_EO_STORE_LOCK;				/* Because we perform a traversal that marks
+										   objects, we need to be sure we are the
+										   only one doing it. */
+		excatch(&exenv);		/* Record pseudo-execution vector */
+		if (setjmp(exenv)) {
+			RTXSC;						/* Restore stack contexts */
+			map_reset(1);				/* Reset in emergency situation */
+			EIF_EO_STORE_UNLOCK;		/* Free marking mutex */
+			ereturn(MTC_NOARG);					/* And propagate the exception */
+		}
 
-	/* Now start the traversal of the source, allocating all the objects as
-	 * needed and stuffing them into a FIFO stack for later perusal by the
-	 * cloning process.
-	 */
+		/* Now start the traversal of the source, allocating all the objects as
+		 * needed and stuffing them into a FIFO stack for later perusal by the
+		 * cloning process.
+		 */
 
-	obj_nb = 0;						/* Mark objects */
-	traversal(source, 0, TR_MAP);		/* Object traversal, mark with EO_STORE */
-	hash_malloc(&hclone, obj_nb);	/* Hash table allocation */
-	map_start();					/* Restart at bottom of FIFO stack */
-
-#ifdef DEBUG
-	printf("Computed %x %d objects\n\n", source, obj_nb);
-#endif
-
-	/* Throughout the deep cloning process, we need to maintain the notion of
-	 * enclosing object for GC aging tests. The enclosing object is defined as
-	 * being the object to which the currently cloned tree will be attached.
-	 *
-	 * We need to initialize the cloning process by computing a valid reference
-	 * into the root variable. That will be the enclosing object, and of course
-	 * it cannot be void, ever, or something really really weird is happening.
-	 *
-	 * To get rid of code duplication, I am initially calling rdeepclone with
-	 * an enclosing object address set to anchor.boot. The anchor structure
-	 * represents a pseudo anchor object for the object hierarchy being cloned.
-	 */
-
-	rdeepclone(source, (EIF_REFERENCE) &anchor.boot, 0);	/* Recursive clone */
-	hash_free(&hclone);						/* Free hash table */
-	map_reset(0);							/* And eif_free maping table */
+		obj_nb = 0;						/* Mark objects */
+		traversal(source, 0, TR_MAP);		/* Object traversal, mark with EO_STORE */
+		hash_malloc(&hclone, obj_nb);	/* Hash table allocation */
+		map_start();					/* Restart at bottom of FIFO stack */
 
 #ifdef DEBUG
-	xobjs= nomark(source);
-	printf("Source now has %d objects\n", xobjs);
-	xobjs = nomark(anchor.boot);
-	printf("Result has %d objects\n", xobjs);
+		printf("Computed %x %d objects\n\n", source, obj_nb);
 #endif
 
-	RT_GC_WEAN(source);			/* Release GC protection */
-	expop(&eif_stack);			/* Remove pseudo execution vector */
+		/* Throughout the deep cloning process, we need to maintain the notion of
+		 * enclosing object for GC aging tests. The enclosing object is defined as
+		 * being the object to which the currently cloned tree will be attached.
+		 *
+		 * We need to initialize the cloning process by computing a valid reference
+		 * into the root variable. That will be the enclosing object, and of course
+		 * it cannot be void, ever, or something really really weird is happening.
+		 *
+		 * To get rid of code duplication, I am initially calling rdeepclone with
+		 * an enclosing object address set to anchor.boot. The anchor structure
+		 * represents a pseudo anchor object for the object hierarchy being cloned.
+		 */
+
+		rdeepclone(source, (EIF_REFERENCE) &anchor.boot, 0);	/* Recursive clone */
+		hash_free(&hclone);						/* Free hash table */
+		map_reset(0);							/* And eif_free maping table */
+			/* Release all the hector pointers asked for during the map table
+			 * construction (obj_nb exactly) */
+		epop(&hec_stack, obj_nb);
+
+#ifdef DEBUG
+		xobjs= nomark(source);
+		printf("Source now has %d objects\n", xobjs);
+		xobjs = nomark(anchor.boot);
+		printf("Result has %d objects\n", xobjs);
+#endif
+
+		RT_GC_WEAN(source);			/* Release GC protection */
+		expop(&eif_stack);			/* Remove pseudo execution vector */
 	}
 
 	EIF_EO_STORE_UNLOCK;		/* Free marking mutex */

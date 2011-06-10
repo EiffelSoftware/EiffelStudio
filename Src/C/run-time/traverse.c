@@ -482,7 +482,6 @@ doc:	</routine>
 rt_shared void map_reset(int emergency)
 			  		/* Need to reset due to emergency (exception) */
 {
-	EIF_GET_CONTEXT
 	RT_GET_CONTEXT
 	struct stchunk *next;	/* Next chunk in stack list */
 	struct stchunk *cur;	/* Current chunk in stack list */
@@ -501,19 +500,12 @@ rt_shared void map_reset(int emergency)
 			next = next->sk_next;			/* Compute next chunk... */
 			eif_rt_xfree((char *) cur);			/* ...before freeing it */
 		}
-	} else
+	} else {
 		eif_rt_xfree((char *) (map_stack.st_cur));	/* Free last chunk in stack */
+	}
 
 	memset (&map_stack, 0, sizeof(map_stack));	/* Reset an empty stack */
-	/* Release all the hector pointers asked for during the map table
-	 * construction (obj_nb exactly, even if we were interrupted by an
-	 * exception in the middle of the traversal...
-	 */
 	SIGRESUME;
-
-#ifdef ISE_GC
-	epop(&hec_stack, obj_nb);		/* Remove stacked EIF_OBJECT pointers */
-#endif
 }
 
 /*

@@ -1,0 +1,17 @@
+
+class TEST
+feature
+	make
+		require
+			abc:good
+			def:valid
+			ghi:-- x > 0
+			ok
+		do
+		ensure
+			abc:good
+			def:valid
+			ghi:-- x > 0
+		end
+
+end

@@ -2659,6 +2659,7 @@ test	pretty-multiconstrained-generics	pretty013 tcf pass pretty
 test	pretty-formal-renaming			pretty014 tcf pass pretty
 test	pretty-comment-indentation		pretty015 tcf pass pretty
 test	pretty-check-instruction		pretty016 tcf pass pretty
+test	pretty-nested-comment			pretty017 tcf pass pretty
 
 -- Testing facility
 test	testing-with-error		testing001 tcf pass testing

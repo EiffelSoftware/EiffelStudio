@@ -1,0 +1,11 @@
+test_name pretty-assertion-clause
+test_description Assertion clauses are subject to difference formatting when tag is not present and when expression is missing.
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+
+prettify	test.e prettify_output
+compile_result ok
+compare		prettify_output output
+
+test_end

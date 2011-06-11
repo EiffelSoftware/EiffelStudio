@@ -202,7 +202,7 @@ feature {NONE} -- Implementation
 	print_indent
 			-- Print an indent to the output stream.
 		do
-			print_string ("%T")
+			print_string (indent)
 		end
 
 	safe_process_and_print (l_as: AST_EIFFEL; pre, post: STRING)
@@ -232,10 +232,12 @@ feature {NONE} -- Implementation
 				if attached a.first_token (match_list) as t then
 					process_leading_leaves (t.index)
 				end
-				if last_printed /= '%N' then
+				if last_printed /= '%N' and last_printed /= '%T' then
 					print_new_line
 				end
-				print_string (indent)
+				if last_printed /= '%T' then
+					print_indent
+				end
 				a.process (Current)
 			end
 		end
@@ -311,11 +313,11 @@ feature {NONE} -- Implementation
 							print_string (post)
 						end
 
-						if add_new_line and last_printed /= '%N' then
+						if add_new_line and last_printed /= '%N' and last_printed /= '%T' then
 							print_new_line
 						end
 
-						if pre /= Void then
+						if pre /= Void and last_printed /= '%T' then
 							print_string (pre)
 						end
 
@@ -399,6 +401,21 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	prepare_inline (t: detachable LEAF_AS)
+			-- Get ready to process `t' that is usually formatted inline.
+		local
+			c: CHARACTER
+		do
+			if attached t then
+				c := last_printed
+				process_leading_leaves (t.index)
+				if last_printed = '%N' and then c /= '%N' then
+						-- Add indentation because a new line has been added.
+					print_indent
+				end
+			end
+		end
+
 	process_leading_leaves (ind: INTEGER_32)
 			-- Process all not-processed leading leaves in `match_list' before index `ind'.
 		local
@@ -429,7 +446,7 @@ feature {CLASS_AS} -- Process leafs
 	process_keyword_as (l_as: KEYWORD_AS)
 			-- Process `l_as'.
 		do
-			process_leading_leaves (l_as.index)
+			prepare_inline (l_as)
 			last_index := l_as.index
 			print_string (l_as.text_32 (match_list))
 		end
@@ -437,7 +454,7 @@ feature {CLASS_AS} -- Process leafs
 	process_symbol_as (l_as: SYMBOL_AS)
 			-- Process `l_as'.
 		do
-			process_leading_leaves (l_as.index)
+			prepare_inline (l_as)
 			last_index := l_as.index
 			print_string (l_as.text_32 (match_list))
 		end
@@ -485,7 +502,7 @@ feature {CLASS_AS} -- Process leafs
 				elseif last_index <= 1 then
 						-- This is the first token in the source, it is not inline.
 					Result.append ("%T" + indent)
-				else
+				elseif last_printed /= ' ' then
 					Result.append_character (' ')
 				end
 
@@ -535,7 +552,7 @@ feature {CLASS_AS} -- Process leafs
 	process_leaf_stub_as (l_as: LEAF_STUB_AS)
 			-- Process `l_as'.
 		do
-			process_leading_leaves (l_as.index)
+			prepare_inline (l_as)
 			last_index := l_as.index
 			print_string (l_as.text_32 (match_list))
 		end
@@ -555,7 +572,7 @@ feature {CLASS_AS} -- Process leafs
 	process_char_as (l_as: CHAR_AS)
 			-- Process `l_as'.
 		do
-			process_leading_leaves (l_as.index)
+			prepare_inline (l_as)
 			last_index := l_as.index
 			print_string (l_as.text_32 (match_list))
 		end
@@ -585,7 +602,7 @@ feature {CLASS_AS} -- Process leafs
 				safe_process_and_print (l_as.once_string_keyword (match_list), "", " ")
 			end
 			safe_process_and_print (l_as.type, "", " ")
-			process_leading_leaves (l_as.index)
+			prepare_inline (l_as)
 			last_index := l_as.index
 			print_string (l_as.string_value_32)
 		end
@@ -600,7 +617,7 @@ feature {CLASS_AS} -- Process leafs
 				safe_process_and_print (l_as.once_string_keyword (match_list), "", " ")
 			end
 			safe_process_and_print (l_as.type, "", " ")
-			process_leading_leaves (l_as.index)
+			prepare_inline (l_as)
 			last_index := l_as.index
 			print_string ("%"")
 			print_string (l_as.verbatim_marker)
@@ -650,7 +667,7 @@ feature {CLASS_AS} -- Process leafs
 		do
 			safe_process_and_print (l_as.constant_type, "", " ")
 			safe_process (l_as.sign_symbol (match_list))
-			process_leading_leaves (l_as.index)
+			prepare_inline (l_as)
 			last_index := l_as.index
 			print_string (l_as.number_text (match_list))
 		end
@@ -667,7 +684,7 @@ feature {CLASS_AS} -- Process leafs
 	process_id_as (l_as: ID_AS)
 			-- Process `l_as'.
 		do
-			process_leading_leaves (l_as.index)
+			prepare_inline (l_as)
 			last_index := l_as.index
 			print_string (l_as.text_32 (match_list))
 		end
@@ -912,9 +929,11 @@ feature {CLASS_AS} -- Creators
 			if last_printed /= '%N' then
 				print_new_line
 			end
-			print_indent
 
+			increase_indent
+			print_indent
 			process_and_print_eiffel_list (l_as.feature_list, "", " ", True, False)
+			decrease_indent
 		end
 
 feature {CLASS_AS} -- Convertors
@@ -1055,13 +1074,15 @@ feature {CLASS_AS} -- Routine
 			safe_process (l_as.tag)
 			e := l_as.expr
 			if attached l_as.colon_symbol (match_list) as t then
-				process_leading_leaves (t.index)
+				prepare_inline (t)
 				t.process (Current)
 				if attached e then
 					print_string (" ")
 				end
 			end
+			increase_indent
 			safe_process (e)
+			decrease_indent
 		end
 
 	process_local_dec_list_as (l_as: LOCAL_DEC_LIST_AS)

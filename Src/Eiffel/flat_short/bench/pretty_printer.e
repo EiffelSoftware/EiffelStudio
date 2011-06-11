@@ -442,11 +442,14 @@ feature {CLASS_AS} -- Process leafs
 			print_string (l_as.text_32 (match_list))
 		end
 
-	format_comment_string (l_as_string: STRING): STRING
-			-- Formats the comment string `l_as_string' into a printable format.
+	format_comment_string (s: STRING): STRING
+			-- Formats the comment string `s' into a printable format.
+		require
+			has_comment: s.has_substring ("--")
 		local
 			i: INTEGER
-			l_start_idx, l_end_idx: INTEGER
+			n: INTEGER
+			l_start_idx: INTEGER
 			inline_comment: BOOLEAN
 		do
 				-- The string can hold multiple comments, starting with '--'.
@@ -456,7 +459,8 @@ feature {CLASS_AS} -- Process leafs
 				--
 				-- Check the preceding characters for newlines characters.
 			inline_comment := True
-			l_start_idx := l_as_string.substring_index ("--", 1)
+			n := s.count
+			l_start_idx := s.substring_index ("--", 1)
 			Result := ""
 
 			from
@@ -464,7 +468,7 @@ feature {CLASS_AS} -- Process leafs
 			until
 				i >= l_start_idx
 			loop
-				if l_as_string [i] = '%N' then
+				if s [i] = '%N' then
 					inline_comment := False
 					i := l_start_idx
 				end
@@ -474,7 +478,7 @@ feature {CLASS_AS} -- Process leafs
 			from
 				i := l_start_idx
 			until
-				i >= l_as_string.count
+				i >= n
 			loop
 				if not inline_comment then
 					Result.append ("%N%T" + indent)
@@ -485,38 +489,33 @@ feature {CLASS_AS} -- Process leafs
 					Result.append_character (' ')
 				end
 
-				l_end_idx := l_as_string.substring_index ("--", l_start_idx+2)
-				if l_end_idx = 0 then
-					l_end_idx := l_as_string.count + 1
-				end
-
+					-- Look for end of line.
 				from
-					i := l_start_idx
 				until
-					i >= l_end_idx or l_as_string[i] = '%N' or l_as_string[i] = '%R'
+					i > n or new_line_chars.has (s [i])
 				loop
-					Result.append_character (l_as_string[i])
-					i := i+1
+					Result.append_character (s [i])
+					i := i + 1
 				end
 
 					-- Remove trailing white spaces.
 				from
-					i := Result.count
 				until
-					i = 0 or else not white_space.has (Result [i])
+					Result.is_empty or else not white_space_chars.has (Result [Result.count])
 				loop
 					Result.remove_tail (1)
-					i := i - 1
 				end
 
-				if l_end_idx > l_as_string.count then
-					Result.append_character ('%N')
+					-- Advance to the next line of a comment.
+				i := s.substring_index ("--", i)
+				if i = 0 then
+					i := n
 				end
-
-				i := l_end_idx
-				l_start_idx := l_end_idx
+				l_start_idx := i
 				inline_comment := False
 			end
+				-- Put new line after the comment end.
+			Result.append_character ('%N')
 		end
 
 	process_break_as (l_as: BREAK_AS)
@@ -1760,8 +1759,11 @@ feature {NONE} -- Comments
 			end
 		end
 
-	white_space: STRING = " %T"
+	white_space_chars: STRING = " %T"
 			-- Characters that can be safely removed when they appear at end of a line.
+
+	new_line_chars: STRING = "%N%R"
+			-- Characters that denote an end of a line.
 
 invariant
 	out_stream_attached: out_stream /= Void

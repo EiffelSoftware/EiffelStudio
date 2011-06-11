@@ -162,6 +162,8 @@ feature {NONE} -- Initialization
 			out_stream := a_out_stream
 			indent := ""
 			set_will_process_leading_leaves (True)
+			last_index := 0
+			last_printed := '%U'
 		end
 
 feature -- Access
@@ -474,10 +476,13 @@ feature {CLASS_AS} -- Process leafs
 			until
 				i >= l_as_string.count
 			loop
-				if inline_comment then
-					Result.append_character (' ')
-				else
+				if not inline_comment then
 					Result.append ("%N%T" + indent)
+				elseif last_index <= 1 then
+						-- This is the first token in the source, it is not inline.
+					Result.append ("%T" + indent)
+				else
+					Result.append_character (' ')
 				end
 
 				l_end_idx := l_as_string.substring_index ("--", l_start_idx+2)

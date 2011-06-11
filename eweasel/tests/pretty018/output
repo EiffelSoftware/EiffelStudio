@@ -8,7 +8,7 @@ feature
 			abc: good
 			def: valid
 			ghi: -- x > 0
-			ok
+				ok
 		do
 		ensure
 			abc: good

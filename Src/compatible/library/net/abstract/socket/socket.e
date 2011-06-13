@@ -682,7 +682,7 @@ feature -- Input
 			read_character
 			from
 			until
-				last_character = '%N'
+				last_character = '%N' or else was_error
 			loop
 				l_last_string.extend (last_character)
 				read_character

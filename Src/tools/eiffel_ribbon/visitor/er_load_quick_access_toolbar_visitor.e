@@ -41,8 +41,11 @@ feature -- Command
 								l_element.after
 							loop
 								if attached {XML_ATTRIBUTE} l_element.item_for_iteration as l_attribute then
-									check l_attribute.name.same_string ({ER_XML_ATTRIBUTE_CONSTANTS}.command_name) end
-									l_data.set_command_name (l_attribute.value)
+									if l_attribute.name.same_string ({ER_XML_ATTRIBUTE_CONSTANTS}.command_name) then
+										l_data.set_command_name (l_attribute.value)
+									else
+										check invalid_tag: False end
+									end
 								elseif attached {XML_ELEMENT}l_element.item_for_iteration as l_sub_element and then
 									l_sub_element.name.same_string (constants.quick_access_toolbar_application_defaults) then
 

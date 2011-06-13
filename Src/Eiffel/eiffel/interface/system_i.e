@@ -4022,7 +4022,7 @@ feature -- Generation
 			class_list: ARRAY [CLASS_C]
 			a_class: CLASS_C
 			types: TYPE_LIST
-			l_type_id, i, nb: INTEGER
+			i, nb: INTEGER
 			l_class_is_finalized: BOOLEAN
 		do
 			if is_restoring then
@@ -4043,7 +4043,6 @@ feature -- Generation
 						until
 							types.after
 						loop
-							l_type_id := a_backup [types.item.static_type_id]
 							reset_type_id (types.item, a_backup [types.item.static_type_id])
 							types.forth
 						end

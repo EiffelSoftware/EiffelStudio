@@ -44,7 +44,6 @@ feature -- Command
 						l_layout_constructor.load_tree
 					end
 
-					load_project_info
 					if attached shared_singleton.project_info_cell.item as l_info then
 						l_info.update_ribbon_names_to_ui
 					end
@@ -113,8 +112,10 @@ feature {NONE}	-- Implementation
 				if attached shared_singleton.project_info_cell.item as l_project_info then
 					l_project_info.set_project_location (l_dir)
 					load_project_info
-						-- Again, to update project location now
-					l_project_info.set_project_location (l_dir)
+						-- Again, to update project location now after retrieved old project info object from disk
+					if attached shared_singleton.project_info_cell.item as l_new_project_info then
+						l_new_project_info.set_project_location (l_dir)
+					end
 				end
 			end
 		end

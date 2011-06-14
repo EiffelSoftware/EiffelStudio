@@ -2665,6 +2665,7 @@ test	pretty-assertion-clause			pretty018 tcf pass pretty
 test	pretty-feature-adaptation		pretty019 tcf pass pretty
 test	pretty-bracket-expression		pretty020 tcf pass pretty
 test	pretty-attribute-comment		pretty021 tcf pass pretty
+test	pretty-expression-comment		pretty022 tcf pass pretty
 
 -- Testing facility
 test	testing-with-error		testing001 tcf pass testing

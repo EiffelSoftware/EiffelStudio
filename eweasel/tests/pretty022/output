@@ -17,6 +17,20 @@ feature
 				the_ifi.has_fab_id -- is in fab
 			then
 				the_reported_ifi := the_ifi
+			elseif -- Let's try a new condition
+				good
+			then
+				do_something
+			elseif
+					-- A comment on a new string
+				good
+			then
+				do_something
+			elseif good -- An inline comment
+			then
+				do_something
+			else -- whatever
+				do_nothing
 			end
 			x := ok -- OK so far
 				and valid -- No errors found

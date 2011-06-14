@@ -265,6 +265,12 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	print_list_inline (l: EIFFEL_LIST [AST_EIFFEL])
+			-- Output `l' with items separated by associated separators and a space.
+		do
+			process_and_print_eiffel_list (l, "", " ", True, False)
+		end
+
 	print_list_indented (l: EIFFEL_LIST [AST_EIFFEL])
 			-- Output `l' with items starting of new lines with indent increased by one level.
 		do
@@ -348,9 +354,8 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_and_print_identifier_list (l_as: IDENTIFIER_LIST; pre, post: STRING; exclude_last, add_new_line: BOOLEAN)
-			-- Process the identifier list `l_as' while printing `pre' and `post' before and after
-			-- each item.
+	process_and_print_identifier_list (l_as: IDENTIFIER_LIST)
+			-- Process the identifier list `l_as'.
 		local
 			i, l_count: INTEGER
 			l_index: INTEGER
@@ -374,15 +379,6 @@ feature {NONE} -- Implementation
 					loop
 						l_index := l_ids.item
 						if match_list.valid_index (l_index) then
-
-							if add_new_line and last_printed /= '%N' then
-								print_new_line
-							end
-
-							if pre /= Void then
-								print_string (pre)
-							end
-
 							l_leaf := match_list.i_th (l_index)
 								-- Note that we do not set the `name_id' for `l_id_as' since it will require
 								-- updating the NAMES_HEAP and we do not want to do that. It is assumed in roundtrip
@@ -397,10 +393,8 @@ feature {NONE} -- Implementation
 						end
 						l_ids.forth
 
-						if post /= Void then
-							if not l_ids.after or not exclude_last then
-								print_string (post)
-							end
+						if not l_ids.after then
+							print_string (" ")
 						end
 					end
 				end
@@ -849,13 +843,13 @@ feature {CLASS_AS} -- Inheritance
 			-- Process `l_as'.
 		do
 			safe_process (l_as.lcurly_symbol (match_list))
-			process_and_print_eiffel_list (l_as, "", " ", True, False)
+			print_list_inline (l_as)
 			safe_process (l_as.rcurly_symbol (match_list))
 		end
 
 	process_feature_list_as (l_as: FEATURE_LIST_AS)
 		do
-			process_and_print_eiffel_list (l_as.features, "", " ", True, False)
+			print_list_inline (l_as.features)
 		end
 
 	process_undefine_clause_as (l_as: UNDEFINE_CLAUSE_AS)
@@ -908,7 +902,7 @@ feature {CLASS_AS} -- Generics
 			-- Process generic list `l_as'.
 		do
 			safe_process (l_as.lsqure_symbol (match_list))
-			process_and_print_eiffel_list (l_as, "", " ", True, False)
+			print_list_inline (l_as)
 			safe_process (l_as.rsqure_symbol (match_list))
 		end
 
@@ -917,7 +911,7 @@ feature {CLASS_AS} -- Generics
 		do
 			safe_process (l_as.formal)
 			safe_process_and_print (l_as.constrain_symbol (match_list), " ", " ")
-			process_and_print_eiffel_list (l_as.constraints, "", " ", True, False)
+			print_list_inline (l_as.constraints)
 			safe_process_and_print (l_as.create_keyword (match_list), " ", "")
 			process_and_print_eiffel_list (l_as.creation_feature_list, " ", "", True, False)
 			safe_process_and_print (l_as.end_keyword (match_list), " ", "")
@@ -940,7 +934,7 @@ feature {CLASS_AS} -- Creators
 
 			increase_indent
 			print_indent
-			process_and_print_eiffel_list (l_as.feature_list, "", " ", True, False)
+			print_list_inline (l_as.feature_list)
 			decrease_indent
 		end
 
@@ -984,8 +978,7 @@ feature {CLASS_AS} -- Features
 	process_feature_as (l_as: FEATURE_AS)
 			-- Process feature `l_as'.
 		do
-			process_and_print_eiffel_list (l_as.feature_names, "", " ", True, False)
-
+			print_list_inline (l_as.feature_names)
 			indent := "%T%T"
 			safe_process (l_as.body)
 		end
@@ -1020,14 +1013,14 @@ feature {CLASS_AS} -- Features
 			-- Process argument declaration list `l_as'.
 		do
 			safe_process (l_as.lparan_symbol (match_list))
-			process_and_print_eiffel_list (l_as.arguments, "", " ", True, False)
+			print_list_inline (l_as.arguments)
 			safe_process (l_as.rparan_symbol (match_list))
 		end
 
 	process_type_dec_as (l_as: TYPE_DEC_AS)
 			-- Process type declaration `l_as'.
 		do
-			process_and_print_identifier_list (l_as.id_list, "", " ", True, False)
+			process_and_print_identifier_list (l_as.id_list)
 			safe_process (l_as.colon_symbol (match_list))
 			print_string (" ")
 			safe_process (l_as.type)
@@ -1153,7 +1146,7 @@ feature {CLASS_AS} -- Routine
 			-- Process key list `l_as'.
 		do
 			safe_process (l_as.lparan_symbol (match_list))
-			process_and_print_eiffel_list (l_as.keys, "", " ", True, False)
+			print_list_inline (l_as.keys)
 			safe_process (l_as.rparan_symbol (match_list))
 		end
 
@@ -1470,7 +1463,7 @@ feature {CLASS_AS} -- Expressions
 		do
 			safe_process (l_as.target)
 			safe_process_and_print (l_as.lbracket_symbol, " ", "")
-			safe_process (l_as.operands)
+			print_list_inline (l_as.operands)
 			safe_process (l_as.rbracket_symbol)
 		end
 
@@ -1502,7 +1495,7 @@ feature {CLASS_AS} -- Expressions
 			-- Process delayed parameter list `l_as'.
 		do
 			safe_process (l_as.lparan_symbol (match_list))
-			process_and_print_eiffel_list (l_as.operands, "", " ", True, False)
+			print_list_inline (l_as.operands)
 			safe_process (l_as.rparan_symbol (match_list))
 		end
 
@@ -1510,7 +1503,7 @@ feature {CLASS_AS} -- Expressions
 			-- Process tuple expression `l_as'.
 		do
 			safe_process (l_as.lbracket_symbol (match_list))
-			process_and_print_eiffel_list (l_as.expressions, "", " ", True, False)
+			print_list_inline (l_as.expressions)
 			safe_process (l_as.rbracket_symbol (match_list))
 		end
 
@@ -1533,7 +1526,7 @@ feature {CLASS_AS} -- Expressions
 		do
 			safe_process_and_print (l_as.strip_keyword (match_list), "", " ")
 			safe_process (l_as.lparan_symbol (match_list))
-			process_and_print_identifier_list (l_as.id_list, "", " ", True, False)
+			process_and_print_identifier_list (l_as.id_list)
 			safe_process (l_as.rparan_symbol (match_list))
 		end
 
@@ -1573,7 +1566,7 @@ feature {CLASS_AS} -- Expressions
 			-- Process array expression `l_as'.
 		do
 			safe_process (l_as.larray_symbol (match_list))
-			process_and_print_eiffel_list (l_as.expressions, "", " ", True, False)
+			print_list_inline (l_as.expressions)
 			safe_process (l_as.rarray_symbol (match_list))
 		end
 
@@ -1593,7 +1586,7 @@ feature {CLASS_AS} -- Calls
 			if l_as.parameters /= Void and then l_as.parameters.first_token (match_list) /= Void then
 				last_index := l_as.parameters.first_token (match_list).index
 			end
-			process_and_print_eiffel_list (l_as.parameters, "", " ", True, False)
+			print_list_inline (l_as.parameters)
 			last_index := l_as.rparan_symbol (match_list).index
 			safe_process (l_as.rparan_symbol (match_list))
 		end
@@ -1737,7 +1730,7 @@ feature {CLASS_AS} -- Types
 			l_as.type.process (Current)
 			if attached l_as.renaming as r then
 				safe_process_and_print (r.rename_keyword (match_list), " ", " ")
-				process_and_print_eiffel_list (r.content, "", " ", True, False)
+				print_list_inline (r.content)
 			end
 			safe_process_and_print (l_as.end_keyword (match_list), " ", "")
 		end
@@ -1746,7 +1739,7 @@ feature {CLASS_AS} -- Types
 			-- Process type list `l_as'.
 		do
 			safe_process (l_as.opening_bracket_as (match_list))
-			process_and_print_eiffel_list (l_as, "", " ", True, False)
+			print_list_inline (l_as)
 			safe_process (l_as.closing_bracket_as (match_list))
 		end
 

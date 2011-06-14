@@ -974,7 +974,7 @@ int odbc_next_row (int no_des)
 							SetDbColLength(dap, i, old_length + additional_length - 1);
 								/* Reissue the call, this time starting from the end of `l_buf_namefer' since we want to get
 								 * the remaining data. */
-							rc = SQLGetData(hstmt[no_des], i+1, GetDbCType(dap, i), l_buffer + old_length - 1,
+							rc = SQLGetData(hstmt[no_des], i+1, GetDbCType(dap, i), l_buffer + old_length,
 								additional_length + 1, NULL);
 						}
 					}

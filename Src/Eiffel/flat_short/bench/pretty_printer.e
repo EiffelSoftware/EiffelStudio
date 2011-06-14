@@ -273,6 +273,12 @@ feature {NONE} -- Implementation
 			decrease_indent
 		end
 
+	print_list_separated (l: EIFFEL_LIST [AST_EIFFEL])
+			-- Output `l' with items starting of new lines with a blank line between items.
+		do
+			process_and_print_eiffel_list (l, "%N" + indent, "", False, True)
+		end
+
 	process_and_print_eiffel_list (l_as: EIFFEL_LIST [AST_EIFFEL]; pre, post: STRING; exclude_last, add_new_line: BOOLEAN)
 			-- Process an eiffel list while printing `pre' and `post' before and after
 			-- processing of a list element.
@@ -790,7 +796,9 @@ feature {CLASS_AS} -- Inheritance
 			safe_process_and_print (l_as.lcurly_symbol (match_list), " ", "")
 			safe_process (l_as.none_id_as (match_list))
 			safe_process (l_as.rcurly_symbol (match_list))
-			process_and_print_eiffel_list (l_as, "%N%T", "", False, True)
+			increase_indent
+			print_list_separated (l_as)
+			decrease_indent
 		end
 
 	process_parent_as (l_as: PARENT_AS)

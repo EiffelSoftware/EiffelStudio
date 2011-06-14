@@ -972,7 +972,9 @@ feature {CLASS_AS} -- Features
 		do
 			safe_process (l_as.feature_keyword)
 			safe_process_and_print (l_as.clients, " ", "")
-			process_and_print_eiffel_list (l_as.features, "%N%T", "", False, True)
+			increase_indent
+			print_list_separated (l_as.features)
+			decrease_indent
 		end
 
 	process_feature_as (l_as: FEATURE_AS)

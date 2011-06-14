@@ -401,18 +401,68 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	prepare_inline (t: detachable LEAF_AS)
-			-- Get ready to process `t' that is usually formatted inline.
-		local
-			c: CHARACTER
+	print_inline (t: detachable AST_EIFFEL)
+			-- Print `t' that is usually formatted inline.
 		do
 			if attached t then
-				c := last_printed
+				prepare_inline (t.first_token (match_list))
+				t.process (Current)
+			end
+		end
+
+	print_inline_indented (t: detachable AST_EIFFEL)
+			-- Print `t' that is usually formatted inline with a leading blank.
+			-- Use increased indentation if it cannot be formatted inline.
+		do
+			if attached t then
+				prepare_inline_indented (t.first_token (match_list))
+				if not white_space_chars.has (last_printed) then
+						-- Add a leading white space.
+					print_string (" ")
+				end
+				t.process (Current)
+			end
+		end
+
+	print_inline_unindented  (t: detachable AST_EIFFEL)
+			-- Print `t' that is usually formatted inline with a leading blank.
+			-- Use current indentation if it cannot be formatted inline.
+		do
+			if attached t then
+				prepare_inline (t.first_token (match_list))
+				if not white_space_chars.has (last_printed) then
+						-- Add a leading white space.
+					print_string (" ")
+				end
+				t.process (Current)
+			end
+		end
+
+	prepare_inline (t: detachable LEAF_AS)
+			-- Get ready to process `t' that is usually formatted inline.
+			-- Use current indentation if it cannot be formatted inline.
+		do
+			if attached t then
 				process_leading_leaves (t.index)
-				if last_printed = '%N' and then c /= '%N' then
+				if last_printed = '%N' then
 						-- Add indentation because a new line has been added.
 					print_indent
 				end
+			end
+		end
+
+	prepare_inline_indented (t: detachable LEAF_AS)
+			-- Get ready to process `t' that is usually formatted inline.
+			-- Use additional indentation if it cannot be formatted inline.
+		do
+			if attached t then
+				increase_indent
+				process_leading_leaves (t.index)
+				if last_printed = '%N' then
+						-- Add indentation because a new line has been added.
+					print_indent
+				end
+				decrease_indent
 			end
 		end
 
@@ -454,7 +504,7 @@ feature {CLASS_AS} -- Process leafs
 	process_symbol_as (l_as: SYMBOL_AS)
 			-- Process `l_as'.
 		do
-			prepare_inline (l_as)
+			prepare_inline_indented (l_as)
 			last_index := l_as.index
 			print_string (l_as.text_32 (match_list))
 		end
@@ -552,7 +602,7 @@ feature {CLASS_AS} -- Process leafs
 	process_leaf_stub_as (l_as: LEAF_STUB_AS)
 			-- Process `l_as'.
 		do
-			prepare_inline (l_as)
+			prepare_inline_indented (l_as)
 			last_index := l_as.index
 			print_string (l_as.text_32 (match_list))
 		end
@@ -572,7 +622,7 @@ feature {CLASS_AS} -- Process leafs
 	process_char_as (l_as: CHAR_AS)
 			-- Process `l_as'.
 		do
-			prepare_inline (l_as)
+			prepare_inline_indented (l_as)
 			last_index := l_as.index
 			print_string (l_as.text_32 (match_list))
 		end
@@ -602,7 +652,7 @@ feature {CLASS_AS} -- Process leafs
 				safe_process_and_print (l_as.once_string_keyword (match_list), "", " ")
 			end
 			safe_process_and_print (l_as.type, "", " ")
-			prepare_inline (l_as)
+			prepare_inline_indented (l_as)
 			last_index := l_as.index
 			print_string (l_as.string_value_32)
 		end
@@ -617,7 +667,7 @@ feature {CLASS_AS} -- Process leafs
 				safe_process_and_print (l_as.once_string_keyword (match_list), "", " ")
 			end
 			safe_process_and_print (l_as.type, "", " ")
-			prepare_inline (l_as)
+			prepare_inline_indented (l_as)
 			last_index := l_as.index
 			print_string ("%"")
 			print_string (l_as.verbatim_marker)
@@ -667,7 +717,7 @@ feature {CLASS_AS} -- Process leafs
 		do
 			safe_process_and_print (l_as.constant_type, "", " ")
 			safe_process (l_as.sign_symbol (match_list))
-			prepare_inline (l_as)
+			prepare_inline_indented (l_as)
 			last_index := l_as.index
 			print_string (l_as.number_text (match_list))
 		end
@@ -684,7 +734,7 @@ feature {CLASS_AS} -- Process leafs
 	process_id_as (l_as: ID_AS)
 			-- Process `l_as'.
 		do
-			prepare_inline (l_as)
+			prepare_inline_indented (l_as)
 			last_index := l_as.index
 			print_string (l_as.text_32 (match_list))
 		end
@@ -1071,21 +1121,10 @@ feature {CLASS_AS} -- Routine
 
 	process_tagged_as (l_as: TAGGED_AS)
 			-- Process tagged `l_as'.
-		local
-			e: EXPR_AS
 		do
-			safe_process (l_as.tag)
-			e := l_as.expr
-			if attached l_as.colon_symbol (match_list) as t then
-				prepare_inline (t)
-				t.process (Current)
-				if attached e then
-					print_string (" ")
-				end
-			end
-			increase_indent
-			safe_process (e)
-			decrease_indent
+			print_inline (l_as.tag)
+			print_inline (l_as.colon_symbol (match_list))
+			print_inline_indented (l_as.expr)
 		end
 
 	process_local_dec_list_as (l_as: LOCAL_DEC_LIST_AS)
@@ -1261,10 +1300,19 @@ feature {CLASS_AS} -- Instructions
 
 	process_if_as (l_as: IF_AS)
 			-- Process if instruction `l_as'.
+		local
+			t: detachable KEYWORD_AS
+			n: BOOLEAN
 		do
 			print_on_new_line (l_as.if_keyword (match_list))
-			safe_process_and_print (l_as.condition, " ", "")
-			safe_process_and_print (l_as.then_keyword (match_list), " ", "")
+			t := l_as.then_keyword (match_list)
+			n := has_new_line (t)
+			print_inline_indented (l_as.condition)
+			if n then
+				print_on_new_line (t)
+			else
+				print_inline_unindented (t)
+			end
 
 			increase_indent
 			safe_process (l_as.compound)
@@ -1282,10 +1330,19 @@ feature {CLASS_AS} -- Instructions
 
 	process_elseif_as (l_as: ELSIF_AS)
 			-- Process elseif-clause `l_as'.
+		local
+			t: detachable KEYWORD_AS
+			n: BOOLEAN
 		do
 			print_on_new_line (l_as.elseif_keyword (match_list))
-			safe_process_and_print (l_as.expr, " ", "")
-			safe_process_and_print (l_as.then_keyword (match_list), " ", "")
+			t := l_as.then_keyword (match_list)
+			n := has_new_line (t)
+			print_inline_indented (l_as.expr)
+			if n then
+				print_on_new_line (t)
+			else
+				print_inline_unindented (t)
+			end
 
 			increase_indent
 			safe_process (l_as.compound)
@@ -1437,36 +1494,36 @@ feature {CLASS_AS} -- Expressions
 	process_binary_as (l_as: BINARY_AS)
 			-- Process binary expression `l_as'.
 		do
-			safe_process (l_as.left)
-			safe_process_and_print (l_as.operator (match_list), " ", " ")
-			safe_process (l_as.right)
+			print_inline (l_as.left)
+			print_inline_indented (l_as.operator (match_list))
+			print_inline_indented (l_as.right)
 		end
 
 	process_bin_and_then_as (l_as: BIN_AND_THEN_AS)
 			-- Process 'and then' expression `l_as'.
 		do
-			safe_process (l_as.left)
-			safe_process_and_print (l_as.and_keyword (match_list), " ", " ")
-			safe_process_and_print (l_as.then_keyword (match_list), "", " ")
-			safe_process (l_as.right)
+			print_inline (l_as.left)
+			print_inline_indented (l_as.and_keyword (match_list))
+			print_inline_indented (l_as.then_keyword (match_list))
+			print_inline_indented (l_as.right)
 		end
 
 	process_bin_or_else_as (l_as: BIN_OR_ELSE_AS)
 			-- Process 'or else' expression `l_as'.
 		do
-			safe_process (l_as.left)
-			safe_process_and_print (l_as.or_keyword (match_list), " ", " ")
-			safe_process_and_print (l_as.else_keyword (match_list), "", " ")
-			safe_process (l_as.right)
+			print_inline (l_as.left)
+			print_inline_indented (l_as.or_keyword (match_list))
+			print_inline_indented (l_as.else_keyword (match_list))
+			print_inline_indented (l_as.right)
 		end
 
 	process_bracket_as (l_as: BRACKET_AS)
 			-- Process bracket expression `l_as'.
 		do
-			safe_process (l_as.target)
-			safe_process_and_print (l_as.lbracket_symbol, " ", "")
+			print_inline (l_as.target)
+			print_inline_indented (l_as.lbracket_symbol)
 			print_list_inline (l_as.operands)
-			safe_process (l_as.rbracket_symbol)
+			print_inline (l_as.rbracket_symbol)
 		end
 
 	process_agent_routine_creation_as (l_as: AGENT_ROUTINE_CREATION_AS)
@@ -1768,6 +1825,17 @@ feature {NONE} -- Modification
 				-- Process all breaks before decreasing indentation.
 			process_trailing_breaks
 			indent.remove_tail (1)
+		end
+
+feature {NONE} -- New lines
+
+	has_new_line (t: detachable AST_EIFFEL): BOOLEAN
+			-- Are there new lines between current position and `t'?
+		do
+			if attached t and then attached t.first_token (match_list) as f then
+				Result := match_list.has_comment
+					(create {ERT_TOKEN_REGION}.make (last_index, f.index))
+			end
 		end
 
 feature {NONE} -- Comments

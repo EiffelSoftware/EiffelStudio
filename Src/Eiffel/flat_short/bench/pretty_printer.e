@@ -149,6 +149,8 @@ inherit
 			process_type_list_as
 		end
 
+	INTERNAL_COMPILER_STRING_EXPORTER
+
 create
 	make
 
@@ -625,6 +627,18 @@ feature {CLASS_AS} -- Process leafs
 			prepare_inline_indented (l_as)
 			last_index := l_as.index
 			print_string (l_as.text_32 (match_list))
+		end
+
+	process_typed_char_as (l_as: TYPED_CHAR_AS)
+			-- Process typed char `l_as'.
+		do
+			print_inline (l_as.type)
+			prepare_inline_indented (l_as)
+			if not white_space_chars.has (last_printed) then
+				print_string (" ")
+			end
+			last_index := l_as.index
+			print_string (l_as.character_text (match_list))
 		end
 
 	process_result_as (l_as: RESULT_AS)
@@ -1475,13 +1489,6 @@ feature {CLASS_AS} -- Instructions
 		end
 
 feature {CLASS_AS} -- Expressions
-
-	process_typed_char_as (l_as: TYPED_CHAR_AS)
-			-- Process typed char expression `l_as'.
-		do
-			safe_process (l_as.type)
-			process_char_as (l_as)
-		end
 
 	process_custom_attribute_as (l_as: CUSTOM_ATTRIBUTE_AS)
 			-- Process custom attribute expression `l_as'.

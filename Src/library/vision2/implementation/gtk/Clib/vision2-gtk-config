@@ -17,7 +17,28 @@ if test $# -eq 0; then
 	usage 1 1>&2
 fi
 
-gtk_package_string='gtk+-2.0 gmodule-2.0'
+true_val=1
+false_val=0
+
+pkg_config_string="pkg-config"
+gtk_package_string="gtk+-2.0"
+gmodule_package_string="gmodule-2.0"
+gthread_package_string="gthread-2.0"
+
+prefix_path=""
+packages_list=""
+postfix_path=""
+
+pkg_manager_name=$pkg_config_string
+pkg_manager_options=""
+
+packages_list="$gtk_package_string $gmodule_package_string"
+xtst_string=" -L/usr/X11R6/lib -L/usr/X11R6/lib64 -lXtst -lX11 "
+
+needs_include_path=$false_val
+needs_object_path=$false_val
+needs_library_path=$false_val
+needs_xtst=$true_val
 
 #Check if ISE_LIBRARY is defined, if not we use ISE_EIFFEL.
 if [ -z "$ISE_LIBRARY" ]; then
@@ -27,20 +48,40 @@ fi
 while test $# -gt 0; do
 	case $1 in
 		--object)
-		echo $ISE_LIBRARY/library/vision2/spec/$ISE_PLATFORM/lib/gtk_eiffel.o
+		if [ $needs_object_path = $false_val ]; then
+			needs_object_path=$true_val
+			postfix_path=" $postfix_path $ISE_LIBRARY/library/vision2/spec/$ISE_PLATFORM/lib/gtk_eiffel.o"
+		fi
 		;;
 		--library)
-		if echo "$ISE_PLATFORM" | grep "macosx" >/dev/null 2>&1; then
-			echo `pkg-config $gtk_package_string $thread_string --libs` -L/usr/X11R6/lib -L/usr/X11R6/lib64 -lXtst -lX11
-		else
-			echo -L/usr/X11R6/lib -L/usr/X11R6/lib64 -lXtst -lX11 `pkg-config $gtk_package_string $thread_string --libs`
- 		fi
+		if [ $needs_library_path = $false_val ]; then
+			needs_library_path=$true_val
+
+			# Check if Xtst is needed for EV_SCREEN fake mouse/key support
+			$pkg_manager_name $gtk_package_string --atleast-version="2.14.0"
+			if [ $? = 1 ]; then 	
+				if echo "$ISE_PLATFORM" | grep "macosx" >/dev/null 2>&1; then
+					postfix_path=" $postfix_path $xtst_string"
+				else
+					prefix_path=" $prefix_path $xtst_string"
+ 				fi
+			fi
+			packages_list=" $packages_list $gtk_package_string $gmodule_package_string"
+			pkg_manager_options=" $pkg_manager_options --libs"
+		fi
 		;;
 		--threads)
-		thread_string=gthread-2.0
+		if [ $needs_threads = $false_val ]; then
+			needs_threads=$true_val
+			packages_list=" $packages_list $gthread_package_string"
+		fi
 		;;
 		--include_path)
-		echo `pkg-config $gtk_package_string $thread_string --cflags`
+		if [ $needs_include_path = $false_val ]; then
+			needs_include_path=$true_val
+			packages_list=" $packages_list $gtk_package_string $gmodule_package_string"
+			pkg_manager_options=" $pkg_manager_options --cflags"
+		fi
 		;;
 		*)
 		usage 1 1>&2
@@ -49,3 +90,4 @@ while test $# -gt 0; do
 	shift
 done
 
+echo $prefix_path `$pkg_manager_name $packages_list $pkg_manager_options` $postfix_path

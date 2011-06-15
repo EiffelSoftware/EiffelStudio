@@ -17,6 +17,11 @@ indexing
 #ifndef _EV_C_UTIL_H_INCLUDED_
 #define _EV_C_UTIL_H_INCLUDED_
 #include <gtk/gtk.h>
+
+#ifdef GDK_WINDOWING_X11
+#include <gdk/gdkx.h>
+#endif
+
 #include <eif_eiffel.h>
 
 extern void (*eif_on_event) (EIF_REFERENCE, EIF_INTEGER);

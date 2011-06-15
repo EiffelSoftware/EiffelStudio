@@ -107,21 +107,8 @@ feature
 			"C inline use <gtk/gtk.h>"
 		alias
 			"[
-				#if GTK_MAJOR_VERSION == 2
+				#if GTK_MAJOR_VERSION > 1
 					return gtk_settings_get_default();
-				#endif
-			]"
-		end
-
-	frozen gdk_x11_screen_get_window_manager_name (a_screen: POINTER): POINTER
-		external
-			"C inline use <gdk/gdkx.h>"
-		alias
-			"[
-				#if GTK_MAJOR_VERSION == 2
-					return (EIF_POINTER) gdk_x11_screen_get_window_manager_name ((GdkScreen*) $a_screen);
-				#else
-					return "unknown";
 				#endif
 			]"
 		end
@@ -131,7 +118,7 @@ feature
 			"C inline use <gtk/gtk.h>"
 		alias
 			"[
-				#if GTK_MAJOR_VERSION == 2
+				#if GTK_MAJOR_VERSION > 1
 					gtk_settings_set_string_property ((GtkSettings*) $a_settings, (gchar*) $a_property, (gchar*) $a_value, (gchar*) $a_origin);
 				#endif
 			]"
@@ -142,7 +129,7 @@ feature
 			"C inline use <gtk/gtk.h>"
 		alias
 			"[
-				#if GTK_MAJOR_VERSION == 2
+				#if GTK_MAJOR_VERSION > 1
 					gtk_window_set_keep_above ((GtkWindow*) $a_window, (gboolean) $a_setting);
 				#endif
 			]"
@@ -153,7 +140,7 @@ feature
 			"C inline use <gtk/gtk.h>"
 		alias
 			"[
-				#if GTK_MAJOR_VERSION == 2
+				#if GTK_MAJOR_VERSION > 1
 					gtk_window_set_keep_below ((GtkWindow*) $a_window, (gboolean) $a_setting);
 				#endif
 			]"
@@ -164,7 +151,7 @@ feature
 			"C inline use <gtk/gtk.h>"
 		alias
 			"[
-				#if GTK_MAJOR_VERSION == 2
+				#if GTK_MAJOR_VERSION > 1
 					gdk_window_process_all_updates();
 				#endif
 			]"
@@ -175,7 +162,7 @@ feature
 			"C inline use <gtk/gtk.h>"
 		alias
 			"[
-				#if GTK_MAJOR_VERSION == 2
+				#if GTK_MAJOR_VERSION > 1
 					gtk_window_set_skip_taskbar_hint ((GtkWindow*) $a_window, (gboolean) $a_setting);
 				#endif
 			]"
@@ -186,7 +173,7 @@ feature
 			"C inline use <gtk/gtk.h>"
 		alias
 			"[
-				#if GTK_MAJOR_VERSION == 2
+				#if GTK_MAJOR_VERSION > 1
 					gtk_window_set_skip_pager_hint ((GtkWindow*) $a_window, (gboolean) $a_setting);
 				#endif
 			]"
@@ -197,7 +184,7 @@ feature
 			"C inline use <gtk/gtk.h>"
 		alias
 			"[
-				#if GTK_MAJOR_VERSION == 2
+				#if GTK_MAJOR_VERSION > 1
 					return GDK_COLORSPACE_RGB;
 				#endif
 			]"
@@ -208,7 +195,7 @@ feature
 			"C inline use <gtk/gtk.h>"
 		alias
 			"[
-				#if GTK_MAJOR_VERSION == 2
+				#if GTK_MAJOR_VERSION > 1
 					return gdk_pixbuf_get_pixels ((GdkPixbuf*) $a_pixbuf);
 				#endif
 			]"
@@ -219,7 +206,7 @@ feature
 			"C inline use <gtk/gtk.h>"
 		alias
 			"[
-				#if GTK_MAJOR_VERSION == 2
+				#if GTK_MAJOR_VERSION > 1
 					return gdk_pixbuf_copy ((GdkPixbuf*)$a_pixbuf);
 				#endif
 			]"
@@ -230,7 +217,7 @@ feature
 			"C inline use <gtk/gtk.h>"
 		alias
 			"[
-				#if GTK_MAJOR_VERSION == 2
+				#if GTK_MAJOR_VERSION > 1
 					return gdk_pixbuf_get_width ((GdkPixbuf*)$a_pixbuf);
 				#endif
 			]"
@@ -241,7 +228,7 @@ feature
 			"C inline use <gtk/gtk.h>"
 		alias
 			"[
-				#if GTK_MAJOR_VERSION == 2
+				#if GTK_MAJOR_VERSION > 1
 					return gdk_pixbuf_get_height ((GdkPixbuf*)$a_pixbuf);
 				#endif
 			]"
@@ -252,7 +239,7 @@ feature
 			"C inline use <gtk/gtk.h>"
 		alias
 			"[
-				#if GTK_MAJOR_VERSION == 2
+				#if GTK_MAJOR_VERSION > 1
 					return gdk_pixbuf_get_rowstride ((GdkPixbuf*)$a_pixbuf);
 				#endif
 			]"
@@ -263,7 +250,7 @@ feature
 			"C inline use <gtk/gtk.h>"
 		alias
 			"[
-				#if GTK_MAJOR_VERSION == 2
+				#if GTK_MAJOR_VERSION > 1
 					return gdk_pixbuf_get_n_channels ((GdkPixbuf*)$a_pixbuf);
 				#endif
 			]"
@@ -274,7 +261,7 @@ feature
 			"C inline use <gtk/gtk.h>"
 		alias
 			"[
-				#if GTK_MAJOR_VERSION == 2
+				#if GTK_MAJOR_VERSION > 1
 					return gdk_pixbuf_get_bits_per_sample ((GdkPixbuf*)$a_pixbuf);
 				#endif
 			]"
@@ -285,7 +272,7 @@ feature
 			"C inline use <gtk/gtk.h>"
 		alias
 			"[
-				#if GTK_MAJOR_VERSION == 2
+				#if GTK_MAJOR_VERSION > 1
 					return gdk_pixbuf_new_from_file ((char*) $a_filename, (GError**) $a_error);
 				#endif
 			]"
@@ -296,7 +283,7 @@ feature
 			"C inline use <gtk/gtk.h>"
 		alias
 			"[
-				#if GTK_MAJOR_VERSION == 2
+				#if GTK_MAJOR_VERSION > 1
 					return gdk_pixbuf_new_from_xpm_data ((const char**) $a_data);
 				#endif
 			]"
@@ -307,7 +294,7 @@ feature
 			"C inline use <gtk/gtk.h>"
 		alias
 			"[
-				#if GTK_MAJOR_VERSION == 2
+				#if GTK_MAJOR_VERSION > 1
 					gdk_pixbuf_render_pixmap_and_mask ((GdkPixbuf*) $a_pixbuf, (GdkPixmap**) $a_pixmap, (GdkBitmap**) $a_mask, (int) $alpha_threshold);
 				#endif
 			]"
@@ -318,7 +305,7 @@ feature
 			"C inline use <gtk/gtk.h>"
 		alias
 			"[
-				#if GTK_MAJOR_VERSION == 2
+				#if GTK_MAJOR_VERSION > 1
 					return gdk_pixbuf_new ((GdkColorspace) $a_colorspace, (gboolean) $a_has_alpha, (int) $a_bits_per_sample, (int) $a_width, (int) $a_height);
 				#endif
 			]"
@@ -329,7 +316,7 @@ feature
 			"C inline use <gtk/gtk.h>"
 		alias
 			"[
-				#if GTK_MAJOR_VERSION == 2
+				#if GTK_MAJOR_VERSION > 1
 						return gdk_pixbuf_new_subpixbuf ((GdkPixbuf*)$a_pixbuf, (int) $src_x, (int) $src_y, (int) $width, (int) $height);
 				#endif
 			]"
@@ -696,13 +683,6 @@ feature
 			"C [macro <gtk/gtk.h>] (GtkWidget *): EIF_BOOLEAN"
 		alias
 			"GTK_WIDGET_HAS_FOCUS"
-		end
-
-	frozen gdk_root_parent: POINTER
-		external
-			"C [macro <gdk/gdkx.h>]"
-		alias
-			"GDK_ROOT_PARENT()"
 		end
 
 	frozen gtk_is_container (w: POINTER): BOOLEAN
@@ -6498,7 +6478,7 @@ feature
 			"C inline use <gtk/gtk.h>"
 		alias
 			"[
-				#if GTK_MAJOR_VERSION == 2
+				#if GTK_MAJOR_VERSION > 1
 					gtk_menu_shell_cancel((GtkMenuShell*)$a_menu_shell);
 				#endif
 			]"

@@ -336,7 +336,6 @@ feature -- Implementation
 
 	default_gtk_window: POINTER deferred end
 
-
 	window_manager_name: STRING
 			-- Name of Window Manager currently running.
 		local
@@ -344,11 +343,24 @@ feature -- Implementation
 		do
 			l_display := {EV_GTK_EXTERNALS}.gdk_display_get_default
 			l_screen := {EV_GTK_EXTERNALS}.gdk_display_get_default_screen (l_display)
-			l_wm_name := {EV_GTK_EXTERNALS}.gdk_x11_screen_get_window_manager_name (l_screen)
+			l_wm_name := gdk_x11_screen_get_window_manager_name (l_screen)
 			create Result.make_from_c (l_wm_name)
 		end
 
 feature {NONE} -- Externals
+
+	frozen gdk_x11_screen_get_window_manager_name (a_screen: POINTER): POINTER
+		external
+			"C inline use %"ev_c_util.h%""
+		alias
+			"[
+				#ifdef GDK_WINDOWING_X11
+					return (EIF_POINTER) gdk_x11_screen_get_window_manager_name ((GdkScreen*) $a_screen);
+				#else
+					return "unknown";
+				#endif
+			]"
+		end
 
 	initialize_combo_box_style
 			-- Set the combo box style so that they appear as lists and not menus.

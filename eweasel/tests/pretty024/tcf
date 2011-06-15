@@ -1,0 +1,12 @@
+
+test_name 	pretty-multiple-feature-clauses
+test_description A class with multiple feature clauses should be pretty printed correctly.
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+
+prettify	test.e prettify_output
+compile_result ok
+compare		prettify_output output
+
+test_end

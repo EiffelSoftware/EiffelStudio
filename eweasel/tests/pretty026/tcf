@@ -1,0 +1,12 @@
+
+test_name 	pretty-constant-attribute-comment
+test_description Comments on constant attributes should be indented correctly when pretty printed.
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+
+prettify	test.e prettify_output
+compile_result ok
+compare		prettify_output output
+
+test_end

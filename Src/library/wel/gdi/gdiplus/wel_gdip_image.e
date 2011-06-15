@@ -317,6 +317,35 @@ feature {NONE} -- C externals
 			]"
 		end
 
+	c_gdip_load_image_from_stream (a_gdiplus_handle: POINTER; a_stream: POINTER; a_result_status: TYPED_POINTER [INTEGER]): POINTER
+			-- Create a Gdi+ bitmap object name from `a_stream'.
+		require
+			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
+			a_stream_not_null: a_stream /= default_pointer
+		external
+			"C inline use %"wel_gdi_plus.h%""
+		alias
+			"[
+			{
+				static FARPROC GdipLoadImageFromStream = NULL;
+				GpImage *l_result = NULL;
+				*(EIF_INTEGER *) $a_result_status = 1;
+				
+				if (!GdipLoadImageFromStream) {
+					GdipLoadImageFromStream = GetProcAddress ((HMODULE) $a_gdiplus_handle, "GdipLoadImageFromStream");
+				}	
+				
+				if (GdipLoadImageFromStream) {
+					*(EIF_INTEGER *)$a_result_status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (IStream *, GpImage **)) GdipLoadImageFromStream)
+								((IStream *) $a_stream,
+								(GpBitmap **) &l_result);
+				}				
+				
+				return (EIF_POINTER) l_result;
+			}
+			]"
+		end
+
 	c_gdip_save_image_to_file (a_gdiplus_handle: POINTER; a_gdip_image: POINTER; a_wchar_file_name, a_clsid_encoder, a_encoder_params: POINTER; a_result_status: TYPED_POINTER [INTEGER])
 			-- Save `a_gdip_image' to `a_wchar_file_name'
 			-- Pixmap format include BMP, GIF, JPEG, PNG, TIFF, and EMF.
@@ -341,6 +370,37 @@ feature {NONE} -- C externals
 					*(EIF_INTEGER *)$a_result_status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (GpImage *, GDIPCONST  WCHAR *, GDIPCONST CLSID *, GDIPCONST EncoderParameters *)) GdipSaveImageToFile)
 								((GpImage *) $a_gdip_image,
 								(GDIPCONST  WCHAR *) $a_wchar_file_name,
+								(GDIPCONST CLSID*) $a_clsid_encoder,
+								(GDIPCONST EncoderParameters *) $a_encoder_params);
+				}				
+			}
+			]"
+		end
+
+	c_gdip_save_image_to_stream (a_gdiplus_handle: POINTER; a_gdip_image: POINTER; a_stream, a_clsid_encoder, a_encoder_params: POINTER; a_result_status: TYPED_POINTER [INTEGER])
+			-- Save `a_gdip_image' to `a_wchar_file_name'
+			-- Pixmap format include BMP, GIF, JPEG, PNG, TIFF, and EMF.
+		require
+			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
+			a_stream_not_null: a_stream /= default_pointer
+			a_clsid_encoder_not_null: a_clsid_encoder /= default_pointer
+		external
+			"C inline use %"wel_gdi_plus.h%""
+		alias
+			"[
+			{
+				static FARPROC GdipSaveImageToStream = NULL;
+				GpImage *l_result = NULL;
+				*(EIF_INTEGER *) $a_result_status = 100;
+				
+				if (!GdipSaveImageToStream) {
+					GdipSaveImageToStream = GetProcAddress ((HMODULE) $a_gdiplus_handle, "GdipSaveImageToStream");
+				}	
+				
+				if (GdipSaveImageToStream) {
+					*(EIF_INTEGER *)$a_result_status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (GpImage *, IStream *, GDIPCONST CLSID *, GDIPCONST EncoderParameters *)) GdipSaveImageToStream)
+								((GpImage *) $a_gdip_image,
+								(IStream *) $a_stream,
 								(GDIPCONST CLSID*) $a_clsid_encoder,
 								(GDIPCONST EncoderParameters *) $a_encoder_params);
 				}				

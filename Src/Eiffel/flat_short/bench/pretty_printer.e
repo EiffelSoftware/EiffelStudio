@@ -1653,7 +1653,6 @@ feature {CLASS_AS} -- Calls
 				last_index := l_as.parameters.first_token (match_list).index
 			end
 			print_list_inline (l_as.parameters)
-			last_index := l_as.rparan_symbol (match_list).index
 			safe_process (l_as.rparan_symbol (match_list))
 		end
 

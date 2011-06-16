@@ -247,9 +247,11 @@ feature {NONE} -- Implementation
 	print_on_new_line_indented (a: AST_EIFFEL)
 			-- Same as `print_on_new_line', but adds one indentation level.
 		do
-			increase_indent
-			print_on_new_line (a)
-			decrease_indent
+			if attached a then
+				increase_indent
+				print_on_new_line (a)
+				decrease_indent
+			end
 		end
 
 	print_on_new_line_separated (a: AST_EIFFEL)
@@ -276,9 +278,11 @@ feature {NONE} -- Implementation
 	print_list_indented (l: EIFFEL_LIST [AST_EIFFEL])
 			-- Output `l' with items starting of new lines with indent increased by one level.
 		do
-			increase_indent
-			process_and_print_eiffel_list (l, indent, "", False, True)
-			decrease_indent
+			if attached l then
+				increase_indent
+				process_and_print_eiffel_list (l, indent, "", False, True)
+				decrease_indent
+			end
 		end
 
 	print_list_separated (l: EIFFEL_LIST [AST_EIFFEL])

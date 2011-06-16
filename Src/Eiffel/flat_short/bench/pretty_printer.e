@@ -1063,18 +1063,13 @@ feature {CLASS_AS} -- Features
 			safe_process_and_print (l_as.assign_keyword (match_list), " ", "")
 			safe_process_and_print (l_as.assigner, " ", "")
 
-			-- Ignore the 'is' keyword
-			-- safe_process (l_as.is_keyword (match_list))
-
-			if attached {CONSTANT_AS}l_as.content as c_as then
-				print_string (" ")
-				process_leading_leaves (c_as.first_token (match_list).index)
-				print_string (" ")
-				last_index := c_as.first_token (match_list).index
-
-				safe_process (c_as)
-				safe_process (l_as.indexing_clause)
+			if attached {CONSTANT_AS} l_as.content as c then
+					-- Note clause is printed after body.
+				print_inline_indented (l_as.is_keyword (match_list))
+				print_inline_indented (c)
+				print_on_new_line (l_as.indexing_clause)
 			else
+					-- Note clause is printed before body.
 				print_on_new_line (l_as.indexing_clause)
 				safe_process (l_as.content)
 			end

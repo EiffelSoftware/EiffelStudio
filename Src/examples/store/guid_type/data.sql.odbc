@@ -1,0 +1,2 @@
+create table DB_GUID_TYPE (uuid_t uniqueidentifier)
+insert into DB_GUID_TYPE (uuid_t) values ('6F9619FF-8B86-D011-B42D-00C04FC964FF')

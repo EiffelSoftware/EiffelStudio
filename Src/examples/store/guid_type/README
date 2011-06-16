@@ -1,0 +1,10 @@
+The example shows EiffelStore maps ODBC SQL_GUID to STRING_8.
+The example uses SQL Server 2010 as database which supports `uniqueidentifier' type. The type is used when creating demo data.
+
+Before running the sample on Unix, one must do
+link a specific file to data.sql as follows:
+
+With ODBC:
+
+	ln data.sql.odbc data.sql
+

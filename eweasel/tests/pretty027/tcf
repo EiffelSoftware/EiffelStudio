@@ -1,0 +1,11 @@
+test_name 	pretty-feature-call-comment
+test_description Comments after feature calls should be indented correctly when pretty printed.
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+
+prettify	test.e prettify_output
+compile_result ok
+compare		prettify_output output
+
+test_end

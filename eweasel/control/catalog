@@ -2670,6 +2670,7 @@ test	pretty-typed-character			pretty023 tcf pass pretty
 test	pretty-multiple-feature-clauses		pretty024 tcf pass pretty
 test	pretty-routine-comment-indentation	pretty025 tcf pass pretty
 test	pretty-constant-attribute-comment	pretty026 tcf pass pretty
+test	pretty-feature-call-comment		pretty027 tcf pass pretty
 
 -- Testing facility
 test	testing-with-error		testing001 tcf pass testing

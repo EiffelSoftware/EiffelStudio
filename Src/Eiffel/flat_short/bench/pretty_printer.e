@@ -1049,8 +1049,9 @@ feature {CLASS_AS} -- Features
 			-- Process feature `l_as'.
 		do
 			print_list_inline (l_as.feature_names)
-			indent := "%T%T"
+			increase_indent
 			safe_process (l_as.body)
+			decrease_indent
 		end
 
 	process_body_as (l_as: BODY_AS)

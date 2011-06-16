@@ -38,6 +38,7 @@ xtst_string=" -L/usr/X11R6/lib -L/usr/X11R6/lib64 -lXtst -lX11 "
 needs_include_path=$false_val
 needs_object_path=$false_val
 needs_library_path=$false_val
+needs_threads=$false_val
 needs_xtst=$true_val
 
 #Check if ISE_LIBRARY is defined, if not we use ISE_EIFFEL.

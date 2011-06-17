@@ -54,6 +54,7 @@ feature {NONE} -- Initialization
 			l_group: EV_TREE_ITEM
 			l_tab_scaling_policy: EV_TREE_ITEM
 
+			l_items: EV_TREE_ITEM
 		do
 			create widget
 
@@ -99,8 +100,6 @@ feature {NONE} -- Initialization
 			l_tab.extend (l_group)
 			l_group.set_pebble (constants.group)
 
-			extend_all_buttons (l_group)
-
 			create l_tab_scaling_policy.make_with_text (constants.tab_scaling_policy)
 			l_tab.extend (l_tab_scaling_policy)
 --			l_tab_scaling_policy.set_pebble (constants.tab_scaling_policy)
@@ -125,6 +124,10 @@ feature {NONE} -- Initialization
 			create l_context_menu.make_with_text (constants.context_menu)
 			l_context_popup_context_menus.extend (l_context_menu)
 			l_context_menu.set_pebble (constants.context_menu)
+
+			create l_items.make_with_text ("Items")
+			widget.extend (l_items)
+			extend_all_buttons (l_items)
 
 			helper.expand_all (widget)
 		end
@@ -154,7 +157,7 @@ feature {NONE} -- Implementation
 			--
 		require
 			not_void: a_parent /= Void
-			valid: a_parent.text.is_equal ((create {ER_XML_CONSTANTS}).group)
+--			valid: a_parent.text.is_equal ((create {ER_XML_CONSTANTS}).group)
 		local
 			l_button: EV_TREE_ITEM
 			l_toggle_button: EV_TREE_ITEM

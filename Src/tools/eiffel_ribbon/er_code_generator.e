@@ -479,6 +479,7 @@ feature {NONE} -- Implementation
 			l_shared: ER_SHARED_SINGLETON
 			l_error: EV_ERROR_DIALOG
 			l_interface_names: ER_INTERFACE_NAMES
+			l_misc_constants: ER_MISC_CONSTANTS
 		do
 			-- Copy template ecf
 			create l_file.make (ecf_template_file_path)
@@ -512,7 +513,13 @@ feature {NONE} -- Implementation
 			else
 				create l_shared
 				create l_interface_names
-				create l_error.make_with_text (l_interface_names.cannot_find_templates)
+				create l_misc_constants
+				if attached l_misc_constants.ise_eiffel as l_ise_eiffel then
+					create l_error.make_with_text (l_interface_names.cannot_find_templates (l_ise_eiffel))
+				else
+					create l_error.make_with_text (l_interface_names.ise_eiffel_not_defined)
+				end
+
 				l_error.set_buttons (<<l_interface_names.ok>>)
 				if attached l_shared.main_window_cell.item as l_win then
 					l_error.show_modal_to_window (l_win)

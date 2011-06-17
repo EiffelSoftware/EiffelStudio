@@ -62,7 +62,12 @@ feature -- Query
 			 l_retried := True
 			create l_shared
 			create l_interface_names
-			create l_error.make_with_text (l_interface_names.cannot_find_ribbon_folders)
+			if attached ise_eiffel as l_ise_eiffel then
+				create l_error.make_with_text (l_interface_names.cannot_find_ribbon_folders (l_ise_eiffel))
+			else
+				create l_error.make_with_text (l_interface_names.ise_eiffel_not_defined)
+			end
+
 			l_error.set_buttons (<<l_interface_names.ok>>)
 			if attached l_shared.main_window_cell.item as l_win then
 				l_error.show_modal_to_window (l_win)
@@ -71,6 +76,12 @@ feature -- Query
 			end
 
 			retry
+		end
+
+	ise_eiffel: detachable STRING
+			-- $ISE_EIFFEL value if exists
+		do
+			Result := get_environment ({EIFFEL_ENVIRONMENT_CONSTANTS}.ise_eiffel_env)
 		end
 
 	template: DIRECTORY_NAME

@@ -754,6 +754,9 @@ void setup_result_space (int no_desc)
 					SQLSetDescField (hdesc,i+1,SQL_DESC_SCALE,(VOID*) 8,0); /* presision of 64bits */
 					SetDbColLength(dap, i, sizeof (SQL_NUMERIC_STRUCT));
 					break;
+				case SQL_C_GUID:
+					SetDbColLength(dap, i, sizeof (SQLGUID));
+					break;
 				default:
 					break;
 			}
@@ -1630,6 +1633,8 @@ int odbc_get_data_len (int no_des, int index)
 		else {
 			return odbc_indicator[no_des][i];
  		}
+	case SQL_C_GUID:
+		return 36; /* Length of this format: "958F6235-7877-433A-A1A7-809913122C1E" */
     default:
       return length;
     }
@@ -1646,6 +1651,7 @@ int odbc_conv_type (int typeCode)
 		case SQL_BINARY:
 		case SQL_VARBINARY:
 		case SQL_LONGVARBINARY:
+		case SQL_C_GUID:
 			return STRING_TYPE;
 		case SQL_WCHAR:
 		case SQL_WVARCHAR:
@@ -1689,6 +1695,7 @@ int odbc_get_col_type (int no_des, int index)
 int odbc_put_data (int no_des, int index, char **result)
 {
   int i = index -1;
+  SQLGUID *g;
   ODBCSQLDA * dap = odbc_descriptor[no_des];
   data_type = GetDbCType (dap, i);
 
@@ -1697,9 +1704,22 @@ int odbc_put_data (int no_des, int index, char **result)
 	return 0;
   }
 
-  *result = malloc(odbc_tmp_indicator);
-  memcpy(*result, GetDbColPtr(dap, i), odbc_tmp_indicator);
-  return(odbc_tmp_indicator);
+  switch (data_type) {
+		case SQL_C_GUID:
+			g = (SQLGUID *)GetDbColPtr(dap, i);
+			*result = (char *)malloc(36);
+			sprintf (*result,
+				"%08lX-%04X-%04X-%02X%02X-%02X%02X%02X%02X%02X%02X",
+				(unsigned long) g->Data1,
+				g->Data2, g->Data3,
+				g->Data4[0], g->Data4[1], g->Data4[2], g->Data4[3],
+				g->Data4[4], g->Data4[5], g->Data4[6], g->Data4[7]);
+			return 36; /* Length of format "958F6235-7877-433A-A1A7-809913122C1E" */
+		default:
+			*result = malloc(odbc_tmp_indicator);
+			memcpy(*result, GetDbColPtr(dap, i), odbc_tmp_indicator);
+			return(odbc_tmp_indicator);
+  }
 }
 
 SQLINTEGER odbc_get_integer_data (int no_des, int index)
@@ -2191,6 +2211,8 @@ int odbc_c_type(int odbc_type) {
 		case SQL_VARBINARY:
 		case SQL_LONGVARBINARY:
 			return SQL_C_BINARY;
+		case SQL_GUID:
+			return SQL_C_GUID;
 		default:
 			return SQL_C_DEFAULT;
 	}

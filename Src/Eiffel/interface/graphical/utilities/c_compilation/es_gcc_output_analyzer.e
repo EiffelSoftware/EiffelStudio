@@ -71,8 +71,23 @@ feature {NONE} -- Basic operations
 							string_general_left_adjust (l_message_type)
 							string_general_right_adjust (l_message_type)
 								-- Before looking for "warning", converting to STRING_8 is fine.
+							if l_message_type.is_integer_8 then
+									-- It is a column string so we check after the next colon.
+								j := i + 1
+								i := a_line.index_of (':', j)
+								if i > j then
+									l_message_type := a_line.substring (j, i - 1)
+									string_general_left_adjust (l_message_type)
+									string_general_right_adjust (l_message_type)
+								end
+							end
 							if l_message_type.as_string_8.as_lower.substring_index (once "warning", 1) > 0 then
 								is_error := False
+							elseif l_message_type.as_string_8.as_lower.substring_index (once "error", 1) > 0 then
+								is_error := True
+							else
+									-- It is neither a warning nor an error.
+								l_message_type := Void
 							end
 						end
 					else
@@ -80,6 +95,11 @@ feature {NONE} -- Basic operations
 							-- Before looking for "warning", converting to STRING_8 is fine.
 						if l_position.as_string_8.as_lower.substring_index (once "warning", 1) > 0 then
 							is_error := False
+						elseif l_position.as_string_8.as_lower.substring_index (once "error", 1) > 0 then
+							is_error := True
+						else
+								-- It is neither a warning nor an error.
+							l_message_type := Void
 						end
 
 							-- Not a line number.
@@ -127,7 +147,7 @@ feature {NONE} -- Constants
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

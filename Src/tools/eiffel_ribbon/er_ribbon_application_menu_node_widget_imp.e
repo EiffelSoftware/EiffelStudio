@@ -18,6 +18,11 @@ inherit
 		redefine
 			create_interface_objects, initialize, is_in_default_state
 		end
+			
+	CONSTANTS
+		undefine
+			is_equal, default_create, copy
+		end
 
 feature {NONE}-- Initialization
 
@@ -25,6 +30,7 @@ feature {NONE}-- Initialization
 			-- Initialize `Current'.
 		do
 			Precursor {EV_VERTICAL_BOX}
+			initialize_constants
 
 			
 				-- Build widget structure.
@@ -49,6 +55,10 @@ feature {NONE}-- Initialization
 			enable_pinning.set_text ("Enable Pinning?")
 			l_ev_label_5.set_text ("Max count")
 			l_ev_label_5.align_text_left
+			integer_constant_set_procedures.extend (agent set_padding (?))
+			integer_constant_retrieval_functions.extend (agent default_padding)
+			integer_constant_set_procedures.extend (agent set_border_width (?))
+			integer_constant_retrieval_functions.extend (agent default_border_width)
 			disable_item_expand (l_ev_label_1)
 			disable_item_expand (l_ev_label_2)
 			disable_item_expand (l_ev_label_3)

@@ -957,7 +957,7 @@ feature {NONE} -- Implementation
 				l_tree_node := tree_node_with_text (l_tree, l_xml.ribbon_tabs)
 
 				if l_tree_node /= Void then
-						-- Start real generation		
+						-- Start real generation
 					generate_tool_bar_class (l_tree_node, l_list.index)
 				end
 

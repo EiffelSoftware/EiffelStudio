@@ -62,6 +62,15 @@ feature -- Visitor commands
 
 		end
 
+	visit_size_definitions (a_ribbon_size_definitions: ER_XML_TREE_ELEMENT)
+			--
+		require
+			not_void: a_ribbon_size_definitions /= Void
+			valid: is_node_with_text (a_ribbon_size_definitions, constants.ribbon_size_definitions)
+		do
+			
+		end
+
 feature -- Query
 
 	is_node_with_text (a_xml_node: ER_XML_TREE_ELEMENT; a_text: STRING): BOOLEAN

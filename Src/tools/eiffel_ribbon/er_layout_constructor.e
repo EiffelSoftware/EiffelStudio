@@ -360,6 +360,7 @@ feature -- Persistance
 			l_update_context_popups_visitor: ER_UPDATE_CONTEXT_POPUP_VISITOR
 			l_load_help_button_visitor: ER_LOAD_HELP_BUTTON_VISITOR
 			l_load_quick_access_toolbar_visitor: ER_LOAD_QUICK_ACCESS_TOOLBAR_VISITOR
+			l_size_definition_visitor: ER_SIZE_DEFINITION_VISITOR
 		do
 			l_manager := shared_singleton.xml_tree_manager.item
 			l_manager.load_tree
@@ -388,6 +389,9 @@ feature -- Persistance
 
 				create l_command_updater
 				l_root.accept (l_command_updater)
+
+				create l_size_definition_visitor
+				l_root.accept (l_size_definition_visitor)
 			else
 				check False end
 			end

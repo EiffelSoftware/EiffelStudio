@@ -57,6 +57,7 @@ feature {NONE} -- Initialization
 			type_selector.attach_to_docking_manager (l_docking_manager)
 			layout_constructor.attach_to_docking_manager (l_docking_manager)
 			object_editor.attach_to_docking_manager (l_docking_manager)
+			size_definition_editor.attach_to_docking_manager (l_docking_manager)
 			l_tool_bar := build_tool_bar
 			l_docking_manager.tool_bar_manager.contents.extend (l_tool_bar)
 			l_tool_bar.set_top ({SD_ENUMERATION}.top)
@@ -93,6 +94,9 @@ feature {NONE} -- Initialization
 			create gen_code_command.make
 			create recent_project_command.make (recent_projects)
 			create new_ribbon_command.make
+
+			create size_definition_editor.make
+			shared_singleton.size_definition_cell.put (size_definition_editor)
 		end
 
 	build_tool_bar: SD_TOOL_BAR_CONTENT
@@ -213,6 +217,9 @@ feature {NONE} -- Implementation
 			--
 
 	object_editor: ER_OBJECT_EDITOR
+			--
+
+	size_definition_editor: ER_SIZE_DEFINITION_EDITOR
 			--
 
 	shared_singleton: ER_SHARED_SINGLETON

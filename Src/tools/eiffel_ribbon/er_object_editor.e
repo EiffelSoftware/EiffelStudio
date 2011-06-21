@@ -12,7 +12,7 @@ create
 feature {NONE} -- Initialization
 
 	make
-			--
+			-- Creation method
 		do
 			create constants
 			build_ui
@@ -211,14 +211,6 @@ feature -- Command
 			end
 
 		end
-
---feature {NONE} -- Dynamic GUI
-
---	widgets_for_command_node: EV_WIDGET
---			--
---		do
---			create {ER_COMMAND_NODE_WIDGET} Result
---		end
 
 feature {NONE} -- Implementation
 

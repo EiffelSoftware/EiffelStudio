@@ -42,6 +42,18 @@ feature -- Query, the value of string is what should be written to XML
 
 	ribbon_size_definitions: STRING = "Ribbon.SizeDefinitions"
 
+	size_definition: STRING = "SizeDefinition"
+
+	control_name_map: STRING = "ControlNameMap"
+
+	control_named_efinition: STRING = "ControlNameDefinition"
+
+	group_size_definition: STRING = "GroupSizeDefinition"
+
+	control_size_definition: STRING = "ControlSizeDefinition"
+
+	row: STRING = "Row"
+
 	ribbon_tabs: STRING = "Ribbon.Tabs"
 
 	tab: STRING = "Tab"

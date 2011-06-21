@@ -18,6 +18,11 @@ inherit
 		redefine
 			create_interface_objects, initialize, is_in_default_state
 		end
+			
+	CONSTANTS
+		undefine
+			is_equal, default_create, copy
+		end
 
 feature {NONE}-- Initialization
 
@@ -25,6 +30,7 @@ feature {NONE}-- Initialization
 			-- Initialize `Current'.
 		do
 			Precursor {EV_TITLED_WINDOW}
+			initialize_constants
 
 			
 				-- Build widget structure.

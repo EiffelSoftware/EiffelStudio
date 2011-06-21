@@ -11,7 +11,7 @@ feature -- Query
 	cannot_find_images (a_ise_eiffel: STRING_32): STRING_32
 			--
 		do
-			Result := "Cannot find images in $ISE_EIFFEL\tools\ribbon\images"
+			Result := "Cannot find images in " + a_ise_eiffel + "\tools\ribbon\images"
 		end
 
 	cannot_find_templates (a_ise_eiffel: STRING_32): STRING_32

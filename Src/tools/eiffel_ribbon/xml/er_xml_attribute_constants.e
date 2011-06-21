@@ -54,4 +54,26 @@ feature -- Context maps
 
 	mini_toolbar: STRING = "MiniToolbar"
 
+feature -- Size definition
+
+	size: STRING = "Size"
+
+	large: STRING = "Large"
+
+	medium: STRING = "Medium"
+
+	small: STRING = "Small"
+
+	button_prefix: STRING = "button"
+
+	control_name: STRING = "ControlName"
+
+	image_size: STRING = "ImageSize"
+
+	is_label_visible: STRING = "IsLabelVisible"
+
+	true_value: STRING = "true"
+
+	false_value: STRING = "false"
+
 end

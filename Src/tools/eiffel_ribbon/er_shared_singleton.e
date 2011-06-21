@@ -32,6 +32,12 @@ feature -- Query
 			create Result.put (void)
 		end
 
+	size_definition_cell: CELL [detachable ER_SIZE_DEFINITION_EDITOR]
+			--
+		once
+			create Result.put (void)
+		end
+
 	main_window_cell: CELL [detachable ER_MAIN_WINDOW]
 			--
 		once

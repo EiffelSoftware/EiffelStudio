@@ -77,6 +77,7 @@ feature -- Command
 
 				l_list.forth
 			end
+			save_size_definitions
 		end
 
 feature -- Tree loading
@@ -107,6 +108,26 @@ feature -- Tree loading
 		end
 
 feature {NONE} -- Tree saving
+
+	save_size_definitions
+			--
+		local
+			l_ribbon_xml: detachable XML_ELEMENT
+			l_shared: ER_SHARED_SINGLETON
+			l_root_xml_size_definition: XML_ELEMENT
+		do
+			l_ribbon_xml := xml_node_by_name (xml_constants.ribbon)
+			check l_ribbon_xml /= Void end
+			if l_ribbon_xml /= Void then
+				create l_shared
+				if attached l_shared.size_definition_cell.item as l_size_definition then
+					l_root_xml_size_definition := l_size_definition.size_definition_writer.root_xml_for_saving
+--					l_root_xml_size_definition.set_parent (l_ribbon_xml)
+					l_ribbon_xml.put_last (l_root_xml_size_definition)
+
+				end
+			end
+		end
 
 	add_xml_nodes_by_vision_tree (a_vision_tree: EV_TREE)
 			-- Add xml nodes by querying info from `a_vision_tree'

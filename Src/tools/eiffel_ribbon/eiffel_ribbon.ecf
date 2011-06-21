@@ -12,6 +12,7 @@
 		<library name="c_config_library" location="$EIFFEL_SRC\tools\finish_freezing\finish_freezing-safe.ecf"/>
 		<library name="docking" location="$ISE_LIBRARY\library\docking\docking-safe.ecf"/>
 		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment-safe.ecf"/>
+		<library name="graph" location="$ISE_LIBRARY\library\graph\graph-safe.ecf"/>
 		<library name="process" location="$ISE_LIBRARY\library\process\process-safe.ecf"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2-safe.ecf"/>
 		<library name="xml_parser" location="$EIFFEL_SRC\library\text\parser\xml\parser\xml_parser-safe.ecf"/>

@@ -440,33 +440,29 @@ feature -- Primitives
 			i: INTEGER
 			c: like chain
 			q: TYPE_A
-			d: TYPE_A
 		do
 			if a_ancestor /= a_descendant then
 					-- Compute new feature names.
 				create c.make_filled (0, chain.count)
 				from
-					q := qualifier
-					d := q.evaluated_type_in_descendant (a_ancestor, a_descendant, a_feature)
-					create Result.make (d, c, a_descendant.class_id)
+					q := qualifier.evaluated_type_in_descendant (a_ancestor, a_descendant, a_feature)
+					create Result.make (q, c, a_descendant.class_id)
 				until
 					i >= chain.count
 				loop
-						-- Find a corresponding feature in the current class and in the descendant.
-					feature_finder.find (chain [i], q, a_ancestor)
+						-- Find a corresponding feature in the descendant.
+					feature_finder.find_by_routine_id (routine_id [i], q, a_descendant)
 					check
-						is_ancestor_feature_found: attached feature_finder.found_feature as f
-						is_descendant_feature_found: attached q.evaluated_type_in_descendant (a_ancestor, a_descendant, a_feature).associated_class.feature_of_rout_id (f.rout_id_set.first) as g
+						is_descendant_feature_found: attached feature_finder.found_feature as f
 					then
-						c [i] := g.feature_name_id
+						c [i] := f.feature_name_id
 						q := f.type.instantiated_in (q)
-						d := g.type.instantiated_in (d)
 					end
 					i := i + 1
 				end
-					-- `q' holds the type relative to `a_ancestor'.
-					-- `d' holds the type relative to `a_descendant'.
-				Result.set_actual_type (d)
+					-- It's possible that `q' is an anchored type.
+					-- Its actual type should be used to set the actual type of the result.
+				Result.set_actual_type (q.actual_type)
 				Result.set_marks_from (Current)
 			else
 				Result := Current

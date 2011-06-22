@@ -55,7 +55,7 @@ feature {NONE} -- Initialization
 			set_c_object (text_label)
 			align_text_center
 			a_cs := app_implementation.c_string_from_eiffel_string (once "justify")
-			{EV_GTK_EXTERNALS}.g_object_get_integer (text_label, a_cs.item, $int_value)
+			{GTK2}.g_object_get_integer (text_label, a_cs.item, $int_value)
 			Precursor
 			set_is_initialized (True)
 		end
@@ -68,7 +68,7 @@ feature -- Access
 	set_angle (a_angle: REAL)
 			--
 		do
-			{EV_GTK_EXTERNALS}.gtk_label_set_angle (text_label, a_angle / {REAL_32} 3.14 * {REAL_32} 180.0)
+			{GTK2}.gtk_label_set_angle (text_label, a_angle / {REAL_32} 3.14 * {REAL_32} 180.0)
 			angle := a_angle
 		end
 

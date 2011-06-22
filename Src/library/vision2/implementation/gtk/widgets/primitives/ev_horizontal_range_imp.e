@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 	make
 			-- Create and initialize `Current'.
 		do
-			set_c_object ({EV_GTK_EXTERNALS}.gtk_hscale_new (adjustment))
+			set_c_object ({GTK}.gtk_hscale_new (adjustment))
 			Precursor
 		end
 

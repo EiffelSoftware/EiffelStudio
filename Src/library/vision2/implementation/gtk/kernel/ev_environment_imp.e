@@ -60,13 +60,13 @@ feature -- Access
 	default_pointer_style_width: INTEGER
 			-- Default pointer style width.
 		do
-			Result := {EV_GTK_EXTERNALS}.gdk_display_get_default_cursor_size ({EV_GTK_EXTERNALS}.gdk_display_get_default)
+			Result := {GTK2}.gdk_display_get_default_cursor_size ({GTK2}.gdk_display_get_default)
 		end
 
 	default_pointer_style_height: INTEGER
 			-- Default pointer style height.
 		do
-			Result := {EV_GTK_EXTERNALS}.gdk_display_get_default_cursor_size ({EV_GTK_EXTERNALS}.gdk_display_get_default)
+			Result := {GTK2}.gdk_display_get_default_cursor_size ({GTK2}.gdk_display_get_default)
 		end
 
 	has_printer: BOOLEAN

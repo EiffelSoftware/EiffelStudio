@@ -33,8 +33,8 @@ feature -- Initialization
 	make
 			-- Set up action sequence connections and create graphics context.
 		do
-			drawable := {EV_GTK_EXTERNALS}.gdk_pixmap_new (default_pointer, 1, 1, 1)
-			gc := {EV_GTK_EXTERNALS}.gdk_gc_new (drawable)
+			drawable := {GTK}.gdk_pixmap_new (default_pointer, 1, 1, 1)
+			gc := {GTK}.gdk_gc_new (drawable)
 			set_default_colors
 			init_default_values
 			set_is_initialized (True)
@@ -54,22 +54,22 @@ feature -- Status Setting
 				l_height := height
 			end
 
-			drawable := {EV_GTK_EXTERNALS}.gdk_pixmap_new (oldpix, a_width, a_height, 1)
+			drawable := {GTK}.gdk_pixmap_new (oldpix, a_width, a_height, 1)
 			clear
 
 			if oldpix /= default_pointer then
-				{EV_GTK_EXTERNALS}.gdk_draw_pixmap (drawable, gc, oldpix, 0, 0, 0, 0, l_width, l_height)
-				{EV_GTK_EXTERNALS}.gdk_bitmap_unref (oldpix)
+				{GTK}.gdk_draw_pixmap (drawable, gc, oldpix, 0, 0, 0, 0, l_width, l_height)
+				{GTK}.gdk_bitmap_unref (oldpix)
 			end
 		end
 
 	clear_rectangle (a_x, a_y, a_width, a_height: INTEGER)
 			-- Erase rectangle specified with `background_color'.
 		do
-			{EV_GTK_EXTERNALS}.gdk_gc_set_foreground (gc, fg_color)
-			{EV_GTK_EXTERNALS}.gdk_gc_set_background (gc, bg_color)
+			{GTK}.gdk_gc_set_foreground (gc, fg_color)
+			{GTK}.gdk_gc_set_background (gc, bg_color)
 
-			{EV_GTK_EXTERNALS}.gdk_draw_rectangle (drawable, gc, 1, a_x, a_y, a_width, a_height)
+			{GTK}.gdk_draw_rectangle (drawable, gc, 1, a_x, a_y, a_width, a_height)
 
 			set_default_colors
 		end
@@ -82,7 +82,7 @@ feature -- Access
 			a_y: INTEGER
 		do
 			if drawable /= default_pointer then
-				{EV_GTK_EXTERNALS}.gdk_window_get_size (drawable, $Result, $a_y)
+				{GTK}.gdk_window_get_size (drawable, $Result, $a_y)
 			end
 		end
 
@@ -92,7 +92,7 @@ feature -- Access
 			a_x: INTEGER
 		do
 			if drawable /= default_pointer then
-				{EV_GTK_EXTERNALS}.gdk_window_get_size (drawable, $a_x, $Result)
+				{GTK}.gdk_window_get_size (drawable, $a_x, $Result)
 			end
 		end
 
@@ -124,14 +124,14 @@ feature {NONE} -- Implementation
 	set_default_colors
 			-- Set foreground and background color to their default values.
 		do
-			{EV_GTK_EXTERNALS}.gdk_gc_set_foreground (gc, bg_color)
-			{EV_GTK_EXTERNALS}.gdk_gc_set_background (gc, fg_color)
+			{GTK}.gdk_gc_set_foreground (gc, bg_color)
+			{GTK}.gdk_gc_set_background (gc, fg_color)
 		end
 
 	destroy
 		do
 			if drawable /= default_pointer then
-				{EV_GTK_EXTERNALS}.gdk_bitmap_unref (drawable)
+				{GTK}.gdk_bitmap_unref (drawable)
 				drawable := default_pointer
 			end
 			set_is_destroyed (True)
@@ -141,7 +141,7 @@ feature {NONE} -- Implementation
 			-- Cleanup
 		do
 			if drawable /= default_pointer then
-				{EV_GTK_EXTERNALS}.gdk_bitmap_unref (drawable)
+				{GTK}.gdk_bitmap_unref (drawable)
 			end
 		end
 

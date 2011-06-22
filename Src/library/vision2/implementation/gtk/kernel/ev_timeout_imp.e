@@ -60,7 +60,7 @@ feature -- Access
 		do
 			interval := an_interval
 			if timeout_connection_id > 0 then
-				{EV_GTK_EXTERNALS}.gtk_timeout_remove (timeout_connection_id)
+				{GTK}.gtk_timeout_remove (timeout_connection_id)
 				timeout_connection_id := 0
 			end
 
@@ -115,7 +115,7 @@ feature {NONE} -- Implementation
 			-- Clean up
 		do
 			if timeout_connection_id > 0 then
-				{EV_GTK_EXTERNALS}.gtk_timeout_remove (timeout_connection_id)
+				{GTK}.gtk_timeout_remove (timeout_connection_id)
 			end
 			Precursor
 		end

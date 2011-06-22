@@ -49,8 +49,8 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP} -- Implemen
 		local
 			l_call_restore: BOOLEAN
 		do
-			if a_changed_mask & {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_state_iconified_enum = {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_state_iconified_enum then
-				if a_new_state & {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_state_iconified_enum = {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_state_iconified_enum then
+			if a_changed_mask & {GTK2}.gdk_window_state_iconified_enum = {GTK2}.gdk_window_state_iconified_enum then
+				if a_new_state & {GTK2}.gdk_window_state_iconified_enum = {GTK2}.gdk_window_state_iconified_enum then
 					is_minimized := True
 					is_maximized := False
 					if minimize_actions_internal /= Void then
@@ -59,8 +59,8 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP} -- Implemen
 				else
 					l_call_restore := True
 				end
-			elseif a_changed_mask & {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_state_maximized_enum = {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_state_maximized_enum then
-				if a_new_state & {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_state_maximized_enum = {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_state_maximized_enum then
+			elseif a_changed_mask & {GTK2}.gdk_window_state_maximized_enum = {GTK2}.gdk_window_state_maximized_enum then
+				if a_new_state & {GTK2}.gdk_window_state_maximized_enum = {GTK2}.gdk_window_state_maximized_enum then
 					is_maximized := True
 					is_minimized := False
 					if maximize_actions_internal /= Void then
@@ -131,13 +131,13 @@ feature -- Status setting
 			elseif is_minimized then
 				restore
 			end
-			{EV_GTK_EXTERNALS}.gdk_window_raise ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object))
+			{GTK}.gdk_window_raise ({GTK}.gtk_widget_struct_window (c_object))
 		end
 
 	lower
 			-- Request that window be displayed below all other windows.
 		do
-			{EV_GTK_EXTERNALS}.gdk_window_lower ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object))
+			{GTK}.gdk_window_lower ({GTK}.gtk_widget_struct_window (c_object))
 		end
 
 	minimize
@@ -145,7 +145,7 @@ feature -- Status setting
 		do
 			is_minimized := True
 			is_maximized := False
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_window_iconify (c_object)
+			{GTK2}.gtk_window_iconify (c_object)
 		end
 
 	maximize
@@ -153,7 +153,7 @@ feature -- Status setting
 		do
 			is_maximized := True
 			is_minimized := False
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_window_maximize (c_object)
+			{GTK2}.gtk_window_maximize (c_object)
 		end
 
 	restore
@@ -161,10 +161,10 @@ feature -- Status setting
 		do
 			if is_maximized then
 				is_maximized := False
-				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_window_unmaximize (c_object)
+				{GTK2}.gtk_window_unmaximize (c_object)
 			elseif is_minimized then
 				is_minimized := False
-				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_window_deiconify (c_object)
+				{GTK2}.gtk_window_deiconify (c_object)
 			end
 		end
 
@@ -176,8 +176,8 @@ feature -- Element change
 			a_cs: EV_GTK_C_STRING
 		do
 			a_cs := an_icon_name
-			{EV_GTK_EXTERNALS}.gdk_window_set_icon_name (
-				{EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), a_cs.item)
+			{GTK}.gdk_window_set_icon_name (
+				{GTK}.gtk_widget_struct_window (c_object), a_cs.item)
 			icon_name_holder := an_icon_name.as_string_32.twin
 		end
 
@@ -191,7 +191,7 @@ feature -- Element change
 				icon_implementation_exists: pixmap_imp /= Void
 			end
 			icon_pixmap_internal := pixmap_imp.interface
-			{EV_GTK_EXTERNALS}.gdk_window_set_icon ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), NULL, pixmap_imp.drawable, pixmap_imp.mask)
+			{GTK}.gdk_window_set_icon ({GTK}.gtk_widget_struct_window (c_object), NULL, pixmap_imp.drawable, pixmap_imp.mask)
 		end
 
 feature {NONE} -- Implementation
@@ -199,7 +199,7 @@ feature {NONE} -- Implementation
 	default_wm_decorations: INTEGER
 			-- Default WM decorations of `Current'.?
 		do
-			Result := {EV_GTK_EXTERNALS}.gdk_decor_all_enum
+			Result := {GTK}.gdk_decor_all_enum
 		end
 
 feature {EV_ANY_I} -- Implementation

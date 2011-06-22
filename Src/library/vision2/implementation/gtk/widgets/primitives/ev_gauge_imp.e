@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 		do
 			Precursor {EV_PRIMITIVE_IMP}
 			ev_gauge_imp_initialize
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_set_redraw_on_allocate (c_object, True)
+			{GTK2}.gtk_widget_set_redraw_on_allocate (c_object, True)
 		end
 
 	ev_gauge_imp_initialize
@@ -59,19 +59,19 @@ feature -- Access
 	value: INTEGER
 			-- Current value of the gauge.
 		do
-			Result := {EV_GTK_EXTERNALS}.gtk_adjustment_struct_value (adjustment).rounded
+			Result := {GTK}.gtk_adjustment_struct_value (adjustment).rounded
 		end
 
 	step: INTEGER
 			-- Value by which `value' is increased after `step_forward'.
 		do
-			Result := {EV_GTK_EXTERNALS}.gtk_adjustment_struct_step_increment (adjustment).rounded
+			Result := {GTK}.gtk_adjustment_struct_step_increment (adjustment).rounded
 		end
 
 	leap: INTEGER
 			-- Value by which `value' is increased after `leap_forward'.
 		do
-			Result := {EV_GTK_EXTERNALS}.gtk_adjustment_struct_page_increment (adjustment).rounded
+			Result := {GTK}.gtk_adjustment_struct_page_increment (adjustment).rounded
 		end
 
 	page_size: INTEGER
@@ -79,7 +79,7 @@ feature -- Access
 			--| We define it here to add to the internal maximum.
 			--| Value should be zero for ranges but not for scrollbars.
 		do
-			Result := {EV_GTK_EXTERNALS}.gtk_adjustment_struct_page_size (adjustment).rounded
+			Result := {GTK}.gtk_adjustment_struct_page_size (adjustment).rounded
 		end
 
 feature -- Status setting
@@ -124,8 +124,8 @@ feature -- Element change
 			-- Set `step' to `a_step'.
 		do
 			if step /= a_step then
-				{EV_GTK_EXTERNALS}.set_gtk_adjustment_struct_step_increment (adjustment, a_step)
-				{EV_GTK_EXTERNALS}.gtk_adjustment_changed (adjustment)
+				{GTK}.set_gtk_adjustment_struct_step_increment (adjustment, a_step)
+				{GTK}.gtk_adjustment_changed (adjustment)
 			end
 		ensure then
 			value_same: value = old value
@@ -137,9 +137,9 @@ feature -- Element change
 			-- Set `leap' to `a_leap'.
 		do
 			if leap /= a_leap then
-				{EV_GTK_EXTERNALS}.set_gtk_adjustment_struct_upper (adjustment, value_range.upper)
-				{EV_GTK_EXTERNALS}.set_gtk_adjustment_struct_page_increment (adjustment, a_leap)
-				{EV_GTK_EXTERNALS}.gtk_adjustment_changed (adjustment)
+				{GTK}.set_gtk_adjustment_struct_upper (adjustment, value_range.upper)
+				{GTK}.set_gtk_adjustment_struct_page_increment (adjustment, a_leap)
+				{GTK}.gtk_adjustment_changed (adjustment)
 			end
 		end
 
@@ -154,10 +154,10 @@ feature -- Element change
 			elseif temp_value < value_range.lower then
 				temp_value := value_range.lower
 			end
-			{EV_GTK_EXTERNALS}.set_gtk_adjustment_struct_lower (adjustment, value_range.lower.to_real)
+			{GTK}.set_gtk_adjustment_struct_lower (adjustment, value_range.lower.to_real)
 			internal_set_upper
 			internal_set_value (temp_value)
-			{EV_GTK_EXTERNALS}.gtk_adjustment_changed (adjustment)
+			{GTK}.gtk_adjustment_changed (adjustment)
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
@@ -169,7 +169,7 @@ feature {NONE} -- Implementation
 	internal_set_upper
 			-- Set the upper value of the adjustment struct
 		do
-			{EV_GTK_EXTERNALS}.set_gtk_adjustment_struct_upper (
+			{GTK}.set_gtk_adjustment_struct_upper (
 				adjustment,
 				value_range.upper.to_real
 			)
@@ -180,7 +180,7 @@ feature {NONE} -- Implementation
 		do
 				-- If adjustment hasn't already been preset then we create a default one.
 			if adjustment_internal = default_pointer then
-				adjustment_internal := {EV_GTK_EXTERNALS}.gtk_adjustment_new ({REAL_32} 0.0, {REAL_32} 0.0, {REAL_32} 100.0, {REAL_32} 1.0, {REAL_32} 10.0, {REAL_32} 0.0)
+				adjustment_internal := {GTK}.gtk_adjustment_new ({REAL_32} 0.0, {REAL_32} 0.0, {REAL_32} 100.0, {REAL_32} 1.0, {REAL_32} 10.0, {REAL_32} 0.0)
 			end
 			Result := adjustment_internal
 		ensure
@@ -197,7 +197,7 @@ feature {NONE} -- Implementation
 			-- Set `value' to `a_value'.
 		do
 			if value /= a_value then
-				{EV_GTK_EXTERNALS}.gtk_adjustment_set_value (adjustment, a_value.to_real)
+				{GTK}.gtk_adjustment_set_value (adjustment, a_value.to_real)
 				if is_displayed then
 					refresh_now
 				end

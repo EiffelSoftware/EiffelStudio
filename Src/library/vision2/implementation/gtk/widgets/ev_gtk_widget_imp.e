@@ -18,17 +18,17 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 			-- Mask of all the gdk events the gdkwindow shall receive.
 		once
 			Result :=
-				{EV_GTK_EXTERNALS}.GDK_EXPOSURE_MASK_ENUM
-				| {EV_GTK_EXTERNALS}.GDK_POINTER_MOTION_MASK_ENUM
-				| {EV_GTK_EXTERNALS}.GDK_BUTTON_PRESS_MASK_ENUM
-				| {EV_GTK_EXTERNALS}.GDK_BUTTON_RELEASE_MASK_ENUM
-				| {EV_GTK_EXTERNALS}.GDK_KEY_PRESS_MASK_ENUM
-				| {EV_GTK_EXTERNALS}.GDK_KEY_RELEASE_MASK_ENUM
-				| {EV_GTK_EXTERNALS}.GDK_ENTER_NOTIFY_MASK_ENUM
-				| {EV_GTK_EXTERNALS}.GDK_LEAVE_NOTIFY_MASK_ENUM
-				| {EV_GTK_EXTERNALS}.GDK_FOCUS_CHANGE_MASK_ENUM
-				| {EV_GTK_EXTERNALS}.GDK_VISIBILITY_NOTIFY_MASK_ENUM
-				| {EV_GTK_EXTERNALS}.GDK_POINTER_MOTION_HINT_MASK_ENUM
+				{GTK}.GDK_EXPOSURE_MASK_ENUM
+				| {GTK}.GDK_POINTER_MOTION_MASK_ENUM
+				| {GTK}.GDK_BUTTON_PRESS_MASK_ENUM
+				| {GTK}.GDK_BUTTON_RELEASE_MASK_ENUM
+				| {GTK}.GDK_KEY_PRESS_MASK_ENUM
+				| {GTK}.GDK_KEY_RELEASE_MASK_ENUM
+				| {GTK}.GDK_ENTER_NOTIFY_MASK_ENUM
+				| {GTK}.GDK_LEAVE_NOTIFY_MASK_ENUM
+				| {GTK}.GDK_FOCUS_CHANGE_MASK_ENUM
+				| {GTK}.GDK_VISIBILITY_NOTIFY_MASK_ENUM
+				| {GTK}.GDK_POINTER_MOTION_HINT_MASK_ENUM
 		end
 
 feature {NONE} -- Implementation
@@ -40,14 +40,14 @@ feature {NONE} -- Implementation
 		do
 			l_visual_widget := visual_widget
 			l_c_object := c_object
-			{EV_GTK_EXTERNALS}.gtk_widget_add_events (l_visual_widget, gdk_events_mask)
+			{GTK}.gtk_widget_add_events (l_visual_widget, gdk_events_mask)
 			if l_visual_widget /= l_c_object then
-				{EV_GTK_EXTERNALS}.gtk_widget_add_events (l_c_object, gdk_events_mask)
+				{GTK}.gtk_widget_add_events (l_c_object, gdk_events_mask)
 			end
-			if {EV_GTK_EXTERNALS}.gtk_is_window (l_c_object) then
-				{EV_GTK_EXTERNALS}.gtk_widget_realize (l_c_object)
+			if {GTK}.gtk_is_window (l_c_object) then
+				{GTK}.gtk_widget_realize (l_c_object)
 			else
-				{EV_GTK_EXTERNALS}.gtk_widget_show (l_c_object)
+				{GTK}.gtk_widget_show (l_c_object)
 			end
 			set_is_initialized (True)
 		end
@@ -63,14 +63,14 @@ feature {EV_ANY_I, EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Position retrieval
 			l_null: POINTER
 		do
 			if is_displayed then
-					i := {EV_GTK_EXTERNALS}.gdk_window_get_origin (
-						{EV_GTK_EXTERNALS}.gtk_widget_struct_window (visual_widget),
+					i := {GTK}.gdk_window_get_origin (
+						{GTK}.gtk_widget_struct_window (visual_widget),
 				    	$a_x, l_null)
 					Result := a_x
 			else
 				a_aux_info := aux_info_struct
 				if a_aux_info /= l_null then
-					Result := {EV_GTK_EXTERNALS}.gtk_widget_aux_info_struct_x (a_aux_info)
+					Result := {GTK}.gtk_widget_aux_info_struct_x (a_aux_info)
 				end
 			end
 			Result := Result + app_implementation.screen_virtual_x
@@ -85,14 +85,14 @@ feature {EV_ANY_I, EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Position retrieval
 			l_null: POINTER
 		do
 			if is_displayed then
-					i := {EV_GTK_EXTERNALS}.gdk_window_get_origin (
-						{EV_GTK_EXTERNALS}.gtk_widget_struct_window (visual_widget),
+					i := {GTK}.gdk_window_get_origin (
+						{GTK}.gtk_widget_struct_window (visual_widget),
 				    	l_null, $a_y)
 					Result := a_y
 			else
 				a_aux_info := aux_info_struct
 				if a_aux_info /= l_null then
-					Result := {EV_GTK_EXTERNALS}.gtk_widget_aux_info_struct_y (a_aux_info)
+					Result := {GTK}.gtk_widget_aux_info_struct_y (a_aux_info)
 				end
 			end
 			Result := Result +  + app_implementation.screen_virtual_y
@@ -107,10 +107,10 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			a_aux_info, l_null: POINTER
 			tmp_struct_x: INTEGER
 		do
-			Result := {EV_GTK_EXTERNALS}.gtk_allocation_struct_x ({EV_GTK_EXTERNALS}.gtk_widget_struct_allocation (c_object))
+			Result := {GTK}.gtk_allocation_struct_x ({GTK}.gtk_widget_struct_allocation (c_object))
 			a_aux_info := aux_info_struct
 			if a_aux_info /= l_null then
-				tmp_struct_x := {EV_GTK_EXTERNALS}.gtk_widget_aux_info_struct_x (a_aux_info)
+				tmp_struct_x := {GTK}.gtk_widget_aux_info_struct_x (a_aux_info)
 				if tmp_struct_x >= 0 then
 					Result := tmp_struct_x
 				end
@@ -125,10 +125,10 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			a_aux_info, l_null: POINTER
 			tmp_struct_y: INTEGER
 		do
-			Result := {EV_GTK_EXTERNALS}.gtk_allocation_struct_y ({EV_GTK_EXTERNALS}.gtk_widget_struct_allocation (c_object))
+			Result := {GTK}.gtk_allocation_struct_y ({GTK}.gtk_widget_struct_allocation (c_object))
 			a_aux_info := aux_info_struct
 			if a_aux_info /= l_null then
-				tmp_struct_y := {EV_GTK_EXTERNALS}.gtk_widget_aux_info_struct_y (a_aux_info)
+				tmp_struct_y := {GTK}.gtk_widget_aux_info_struct_y (a_aux_info)
 				if tmp_struct_y >= 0 then
 					Result := tmp_struct_y
 				end
@@ -160,11 +160,11 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			gr: POINTER
 		do
 			if not is_destroyed then
-				{EV_GTK_EXTERNALS}.g_object_get_integer (c_object, width_request_string.item, $Result)
+				{GTK2}.g_object_get_integer (c_object, width_request_string.item, $Result)
 				if Result = -1 then
 					gr := reusable_requisition_struct.item
-					{EV_GTK_EXTERNALS}.gtk_widget_size_request (c_object, gr)
-					Result := {EV_GTK_EXTERNALS}.gtk_requisition_struct_width (gr)
+					{GTK}.gtk_widget_size_request (c_object, gr)
+					Result := {GTK}.gtk_requisition_struct_width (gr)
 				end
 			end
 		end
@@ -172,7 +172,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 	reusable_requisition_struct: MANAGED_POINTER
 			-- Reusable GtkRequisition struct.
 		once
-			create Result.make ({EV_GTK_EXTERNALS}.c_gtk_requisition_struct_size)
+			create Result.make ({GTK}.c_gtk_requisition_struct_size)
 		end
 
 	minimum_height, real_minimum_height: INTEGER
@@ -181,11 +181,11 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			gr: POINTER
 		do
 			if not is_destroyed then
-				{EV_GTK_EXTERNALS}.g_object_get_integer (c_object, height_request_string.item, $Result)
+				{GTK2}.g_object_get_integer (c_object, height_request_string.item, $Result)
 				if Result = -1 then
 					gr := reusable_requisition_struct.item
-					{EV_GTK_EXTERNALS}.gtk_widget_size_request (c_object, gr)
-					Result := {EV_GTK_EXTERNALS}.gtk_requisition_struct_height (gr)
+					{GTK}.gtk_widget_size_request (c_object, gr)
+					Result := {GTK}.gtk_requisition_struct_height (gr)
 				end
 			end
 		end
@@ -196,7 +196,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			a_visual_widget: POINTER
 		do
 			a_visual_widget := visual_widget
-			if not {EV_GTK_EXTERNALS}.gtk_widget_no_window (a_visual_widget) then
+			if not {GTK}.gtk_widget_no_window (a_visual_widget) then
 				Result := a_visual_widget
 			else
 				Result := c_object
@@ -228,9 +228,9 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 					check a_cursor_imp /= Void end
 					a_cursor_ptr := a_cursor_imp.gdk_cursor_from_pointer_style
 				end
-				a_window := {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object)
+				a_window := {GTK}.gtk_widget_struct_window (c_object)
 				if a_window /= default_pointer then
-					{EV_GTK_EXTERNALS}.gdk_window_set_cursor (a_window, a_cursor_ptr)
+					{GTK}.gdk_window_set_cursor (a_window, a_cursor_ptr)
 				end
 			end
 			previously_set_pointer_style := a_cursor
@@ -267,17 +267,17 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 					l_captured_widget.disable_capture
 				end
 			end
-			if {EV_GTK_EXTERNALS}.gtk_is_window (c_object) then
+			if {GTK}.gtk_is_window (c_object) then
 				l_window := c_object
 --					l_widget := default_pointer -- This will unset any previous focused widget.
 			else
-				l_window := {EV_GTK_EXTERNALS}.gtk_widget_get_toplevel (c_object)
+				l_window := {GTK}.gtk_widget_get_toplevel (c_object)
 				l_widget := visual_widget
-				if {EV_GTK_EXTERNALS}.gtk_object_struct_flags (l_widget) & {EV_GTK_EXTERNALS}.gtk_can_focus_enum /= {EV_GTK_EXTERNALS}.gtk_can_focus_enum then
+				if {GTK}.gtk_object_struct_flags (l_widget) & {GTK}.gtk_can_focus_enum /= {GTK}.gtk_can_focus_enum then
 					l_widget := default_pointer
 				end
 			end
-			{EV_GTK_EXTERNALS}.gtk_window_set_focus (l_window, l_widget)
+			{GTK}.gtk_window_set_focus (l_window, l_widget)
 		end
 
 	has_focus: BOOLEAN
@@ -286,10 +286,10 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			l_window, l_widget: POINTER
 			l_widget_imp: detachable EV_WIDGET_IMP
 		do
-			l_window := {EV_GTK_EXTERNALS}.gtk_widget_get_toplevel (c_object)
+			l_window := {GTK}.gtk_widget_get_toplevel (c_object)
 				-- This will return `c_object' if not toplevel window is found in hierarchy.
-			if l_window /= default_pointer and then {EV_GTK_EXTERNALS}.gtk_widget_toplevel (l_window) and then {EV_GTK_EXTERNALS}.gtk_window_is_active (l_window) then
-				l_widget := {EV_GTK_EXTERNALS}.gtk_window_get_focus (l_window)
+			if l_window /= default_pointer and then {GTK2}.gtk_widget_toplevel (l_window) and then {GTK2}.gtk_window_is_active (l_window) then
+				l_widget := {GTK2}.gtk_window_get_focus (l_window)
 				if l_widget /= default_pointer then
 					l_widget_imp ?= app_implementation.eif_object_from_gtk_object (l_widget)
 					if l_widget_imp /= Void then
@@ -306,11 +306,11 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			l_allocated_width: INTEGER
 		do
 			l_minimum_width := real_minimum_width
-			if is_show_requested or not {EV_GTK_EXTERNALS}.gtk_is_window (c_object) then
-				l_allocated_width := {EV_GTK_EXTERNALS}.gtk_allocation_struct_width ({EV_GTK_EXTERNALS}.gtk_widget_struct_allocation (c_object))
-				if is_displayed and then {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (c_object) /= default_pointer and then l_allocated_width < l_minimum_width then
-					{EV_GTK_EXTERNALS}.gtk_container_check_resize ({EV_GTK_EXTERNALS}.gtk_widget_struct_parent (c_object))
-					l_allocated_width := {EV_GTK_EXTERNALS}.gtk_allocation_struct_width ({EV_GTK_EXTERNALS}.gtk_widget_struct_allocation (c_object))
+			if is_show_requested or not {GTK}.gtk_is_window (c_object) then
+				l_allocated_width := {GTK}.gtk_allocation_struct_width ({GTK}.gtk_widget_struct_allocation (c_object))
+				if is_displayed and then {GTK}.gtk_widget_struct_parent (c_object) /= default_pointer and then l_allocated_width < l_minimum_width then
+					{GTK}.gtk_container_check_resize ({GTK}.gtk_widget_struct_parent (c_object))
+					l_allocated_width := {GTK}.gtk_allocation_struct_width ({GTK}.gtk_widget_struct_allocation (c_object))
 				end
 			end
 			Result := l_minimum_width.max (l_allocated_width)
@@ -323,11 +323,11 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			l_allocated_height: INTEGER
 		do
 			l_minimum_height := real_minimum_height
-			if is_show_requested or not {EV_GTK_EXTERNALS}.gtk_is_window (c_object) then
-				l_allocated_height := {EV_GTK_EXTERNALS}.gtk_allocation_struct_height ({EV_GTK_EXTERNALS}.gtk_widget_struct_allocation (c_object))
-				if is_displayed and then {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (c_object) /= default_pointer and then l_allocated_height < l_minimum_height then
-					{EV_GTK_EXTERNALS}.gtk_container_check_resize ({EV_GTK_EXTERNALS}.gtk_widget_struct_parent (c_object))
-					l_allocated_height := {EV_GTK_EXTERNALS}.gtk_allocation_struct_height ({EV_GTK_EXTERNALS}.gtk_widget_struct_allocation (c_object))
+			if is_show_requested or not {GTK}.gtk_is_window (c_object) then
+				l_allocated_height := {GTK}.gtk_allocation_struct_height ({GTK}.gtk_widget_struct_allocation (c_object))
+				if is_displayed and then {GTK}.gtk_widget_struct_parent (c_object) /= default_pointer and then l_allocated_height < l_minimum_height then
+					{GTK}.gtk_container_check_resize ({GTK}.gtk_widget_struct_parent (c_object))
+					l_allocated_height := {GTK}.gtk_allocation_struct_height ({GTK}.gtk_widget_struct_allocation (c_object))
 				end
 			end
 			Result := l_minimum_height.max (l_allocated_height)
@@ -336,7 +336,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 	aux_info_struct: POINTER
 			-- Pointer to the auxillary information struct used for retrieving when widget is unmapped
 		do
-			Result := {EV_GTK_EXTERNALS}.gtk_object_get_data (
+			Result := {GTK}.gtk_object_get_data (
 				c_object,
 				aux_info_string.item
 			)
@@ -345,7 +345,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 	show
 			-- Request that `Current' be displayed when its parent is.
 		do
-			{EV_GTK_EXTERNALS}.gtk_widget_show (c_object)
+			{GTK}.gtk_widget_show (c_object)
 		end
 
 feature -- Status report
@@ -354,7 +354,7 @@ feature -- Status report
 			-- Will `Current' be displayed when its parent is?
 			-- See also `is_displayed'.
 		do
-			Result := {EV_GTK_EXTERNALS}.gtk_object_struct_flags (c_object) & {EV_GTK_EXTERNALS}.GTK_VISIBLE_ENUM = {EV_GTK_EXTERNALS}.GTK_VISIBLE_ENUM
+			Result := {GTK}.gtk_object_struct_flags (c_object) & {GTK}.GTK_VISIBLE_ENUM = {GTK}.GTK_VISIBLE_ENUM
 		end
 
 	is_displayed: BOOLEAN
@@ -362,12 +362,12 @@ feature -- Status report
 		local
 			l_win: detachable EV_WINDOW_IMP
 		do
-			Result := {EV_GTK_EXTERNALS}.gtk_object_struct_flags (c_object) & {EV_GTK_EXTERNALS}.GTK_MAPPED_ENUM = {EV_GTK_EXTERNALS}.GTK_MAPPED_ENUM
+			Result := {GTK}.gtk_object_struct_flags (c_object) & {GTK}.GTK_MAPPED_ENUM = {GTK}.GTK_MAPPED_ENUM
 				-- If Current is shown, let's check that it's top parent window is shown too.
 			if Result then
 				l_win := top_level_window_imp
 				if l_win /= Void then
-					Result := {EV_GTK_EXTERNALS}.gtk_object_struct_flags (l_win.c_object) & {EV_GTK_EXTERNALS}.GTK_MAPPED_ENUM = {EV_GTK_EXTERNALS}.GTK_MAPPED_ENUM
+					Result := {GTK}.gtk_object_struct_flags (l_win.c_object) & {GTK}.GTK_MAPPED_ENUM = {GTK}.GTK_MAPPED_ENUM
 				end
 			end
 		end
@@ -379,7 +379,7 @@ feature {EV_ANY_I} -- Implementation
 		local
 			wind_ptr: POINTER
 		do
-			wind_ptr := {EV_GTK_EXTERNALS}.gtk_widget_get_toplevel (c_object)
+			wind_ptr := {GTK}.gtk_widget_get_toplevel (c_object)
 			if wind_ptr /= NULL then
 				Result ?= eif_object_from_c (wind_ptr)
 			end

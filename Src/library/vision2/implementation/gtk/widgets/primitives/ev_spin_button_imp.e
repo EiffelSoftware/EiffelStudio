@@ -68,13 +68,13 @@ feature {NONE} -- Implementation
 		do
 			Precursor {EV_TEXT_FIELD_IMP} (a_text)
 				-- Make sure the spin button updates the internal value
-			{EV_GTK_EXTERNALS}.gtk_spin_button_update (entry_widget)
+			{GTK}.gtk_spin_button_update (entry_widget)
 		end
 
 	new_entry_widget: POINTER
 			-- <Precursor>
 		do
-			Result := {EV_GTK_EXTERNALS}.gtk_spin_button_new (adjustment, 0, 0)
+			Result := {GTK}.gtk_spin_button_new (adjustment, 0, 0)
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation

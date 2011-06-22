@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 	make
 			-- Create an initialize GTK horizontal box.
 		do
-			set_c_object ({EV_GTK_EXTERNALS}.gtk_hbox_new (Default_homogeneous, Default_spacing))
+			set_c_object ({GTK}.gtk_hbox_new (Default_homogeneous, Default_spacing))
 			Precursor
 		end
 

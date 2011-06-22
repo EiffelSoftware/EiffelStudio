@@ -51,19 +51,19 @@ feature {NONE} -- Initialization
 	make
 			-- Initialize `Current'.
 		do
-			client_area := {EV_GTK_EXTERNALS}.gtk_event_box_new
+			client_area := {GTK}.gtk_event_box_new
 			Precursor {EV_WINDOW_IMP}
-			{EV_GTK_EXTERNALS}.gtk_widget_show (client_area)
-			{EV_GTK_EXTERNALS}.gtk_container_add (c_object, client_area)
+			{GTK}.gtk_widget_show (client_area)
+			{GTK}.gtk_container_add (c_object, client_area)
 
 			if not override_redirect then
 --				{EV_GTK_EXTERNALS}.gtk_window_set_type_hint (c_object, {EV_GTK_ENUMS}.gdk_window_type_hint_popup_menu_enum)
-				{EV_GTK_EXTERNALS}.gtk_window_set_skip_taskbar_hint (c_object, True)
+				{GTK}.gtk_window_set_skip_taskbar_hint (c_object, True)
 			end
 
 				-- This completely disconnects the window from the window manager.
 			if override_redirect then
-				{EV_GTK_EXTERNALS}.gdk_window_set_override_redirect ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), True)
+				{GTK}.gdk_window_set_override_redirect ({GTK}.gtk_widget_struct_window (c_object), True)
 			end
 
 			disable_border
@@ -126,13 +126,13 @@ feature {NONE} -- implementation
 	internal_enable_border
 			-- Ensure a border is displayed around Current.
 		do
-			{EV_GTK_EXTERNALS}.gtk_container_set_border_width (c_object, border_width)
+			{GTK}.gtk_container_set_border_width (c_object, border_width)
 		end
 
 	internal_disable_border
 			-- Ensure no border is displayed around Current.
 		do
-			{EV_GTK_EXTERNALS}.gtk_container_set_border_width (c_object, 0)
+			{GTK}.gtk_container_set_border_width (c_object, 0)
 		end
 
 feature {EV_APPLICATION_IMP} -- Implementation
@@ -168,7 +168,7 @@ feature {EV_APPLICATION_IMP} -- Implementation
 			-- A mouse event has occurred.
 		do
 			if override_redirect then
-				if a_type = {EV_GTK_EXTERNALS}.gdk_button_press_enum then
+				if a_type = {GTK}.gdk_button_press_enum then
 					if
 						a_screen_x >= x_position and then
 						a_screen_x <= (x_position + width) and then

@@ -58,10 +58,10 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'.
 		do
 			create tooltip_repeater
-			set_c_object ({EV_GTK_EXTERNALS}.gtk_drawing_area_new)
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_set_redraw_on_allocate (c_object, False)
+			set_c_object ({GTK}.gtk_drawing_area_new)
+			{GTK2}.gtk_widget_set_redraw_on_allocate (c_object, False)
 				-- When false, this means that when the drawing area is resized, only the new portions are redrawn
-			gc := {EV_GTK_EXTERNALS}.gdk_gc_new (App_implementation.default_gdk_window)
+			gc := {GTK}.gdk_gc_new (App_implementation.default_gdk_window)
 			init_default_values
 			disable_double_buffering
 
@@ -79,13 +79,13 @@ feature -- Status setting
 	enable_double_buffering
 			-- Allow `Current' to have all exposed area double buffered.
 		do
-			{EV_GTK_EXTERNALS}.gtk_widget_set_double_buffered (visual_widget, True)
+			{GTK2}.gtk_widget_set_double_buffered (visual_widget, True)
 		end
 
 	disable_double_buffering
 			-- Disable double buffering for exposed areas.
 		do
-			{EV_GTK_EXTERNALS}.gtk_widget_set_double_buffered (visual_widget, False)
+			{GTK2}.gtk_widget_set_double_buffered (visual_widget, False)
 		end
 
 feature {NONE} -- Implementation
@@ -128,15 +128,15 @@ feature {NONE} -- Implementation
 			gr: POINTER
 		do
 			if needs_custom_tooltip_implementation then
-				a_window := {EV_GTK_EXTERNALS}.gdk_window_at_pointer ($a_x, $a_y)
-				a_tip_win := {EV_GTK_EXTERNALS}.gtk_tooltips_struct_tip_window (tooltips_pointer)
+				a_window := {GTK}.gdk_window_at_pointer ($a_x, $a_y)
+				a_tip_win := {GTK}.gtk_tooltips_struct_tip_window (tooltips_pointer)
 				if a_window = drawable and then show_tooltips_if_activated and then not has_capture then
 					if reset_tooltip_position then
-						i := {EV_GTK_EXTERNALS}.gdk_window_get_origin (a_window, $a_screen_x, $a_screen_y)
+						i := {GTK}.gdk_window_get_origin (a_window, $a_screen_x, $a_screen_y)
 						gr := reusable_requisition_struct.item
-						{EV_GTK_EXTERNALS}.gtk_widget_size_request (a_tip_win, gr)
-						l_width := {EV_GTK_EXTERNALS}.gtk_requisition_struct_width (gr)
-						l_height := {EV_GTK_EXTERNALS}.gtk_requisition_struct_height (gr)
+						{GTK}.gtk_widget_size_request (a_tip_win, gr)
+						l_width := {GTK}.gtk_requisition_struct_width (gr)
+						l_height := {GTK}.gtk_requisition_struct_height (gr)
 						create l_screen
 						tooltip_initial_x := a_screen_x + a_x
 						tooltip_initial_y := a_screen_y + a_y + tooltip_window_y_offset
@@ -154,10 +154,10 @@ feature {NONE} -- Implementation
 					tooltip_repeater.set_interval (0)
 				end
 				if l_show_tooltips and then not internal_tooltip.is_empty then
-					{EV_GTK_EXTERNALS}.gtk_window_move (a_tip_win, tooltip_initial_x, tooltip_initial_y)
-					{EV_GTK_EXTERNALS}.gtk_widget_show (a_tip_win)
+					{GTK2}.gtk_window_move (a_tip_win, tooltip_initial_x, tooltip_initial_y)
+					{GTK}.gtk_widget_show (a_tip_win)
 				else
-					{EV_GTK_EXTERNALS}.gtk_widget_hide (a_tip_win)
+					{GTK}.gtk_widget_hide (a_tip_win)
 				end
 			end
 
@@ -169,7 +169,7 @@ feature {NONE} -- Implementation
 	tooltip_window_y_offset: INTEGER
 			-- Amount of pixels tooltip window is offset down from the mouse pointer when shown.
 		do
-			Result := {EV_GTK_EXTERNALS}.gdk_display_get_default_cursor_size ({EV_GTK_EXTERNALS}.gdk_display_get_default)
+			Result := {GTK2}.gdk_display_get_default_cursor_size ({GTK2}.gdk_display_get_default)
 		end
 
 	tooltip_repeater: EV_TIMEOUT
@@ -184,7 +184,7 @@ feature {NONE} -- Implementation
 	needs_custom_tooltip_implementation: BOOLEAN
 			-- Does `Current' need a custom tooltip implementation?
 		do
-			Result := {EV_GTK_EXTERNALS}.gtk_maj_ver = 2 and then {EV_GTK_EXTERNALS}.gtk_min_ver < 12
+			Result := {GTK}.gtk_maj_ver = 2 and then {GTK}.gtk_min_ver < 12
 			--| FIXME Version when tooltips were fixed for 2.2.x needs to be investigated, 12 is a certainty.
 		end
 
@@ -197,10 +197,10 @@ feature {NONE} -- Implementation
 		do
 			if tooltips_pointer = default_pointer then
 				if needs_custom_tooltip_implementation then
-					tooltips_pointer := {EV_GTK_EXTERNALS}.gtk_tooltips_new
-					{EV_GTK_EXTERNALS}.gtk_tooltips_force_window (tooltips_pointer)
-					a_tip_win := {EV_GTK_EXTERNALS}.gtk_tooltips_struct_tip_window (tooltips_pointer)
-					{EV_GTK_EXTERNALS}.gtk_window_set_position (a_tip_win, {EV_GTK_EXTERNALS}.gtk_win_pos_mouse_enum)
+					tooltips_pointer := {GTK}.gtk_tooltips_new
+					{GTK}.gtk_tooltips_force_window (tooltips_pointer)
+					a_tip_win := {GTK}.gtk_tooltips_struct_tip_window (tooltips_pointer)
+					{GTK}.gtk_window_set_position (a_tip_win, {GTK}.gtk_win_pos_mouse_enum)
 					create tooltip_repeater
 					tooltip_repeater.actions.extend (agent update_tooltip_window)
 				else
@@ -210,10 +210,10 @@ feature {NONE} -- Implementation
 			if needs_custom_tooltip_implementation then
 				internal_tooltip := a_text.as_string_32.twin
 				a_cs := App_implementation.c_string_from_eiffel_string (internal_tooltip)
-				a_tip_label := {EV_GTK_EXTERNALS}.gtk_tooltips_struct_tip_label (tooltips_pointer)
-				a_tip_win := {EV_GTK_EXTERNALS}.gtk_tooltips_struct_tip_window (tooltips_pointer)
-				{EV_GTK_EXTERNALS}.gtk_label_set_text (a_tip_label, a_cs.item)
-				{EV_GTK_EXTERNALS}.gtk_widget_hide (a_tip_win)
+				a_tip_label := {GTK2}.gtk_tooltips_struct_tip_label (tooltips_pointer)
+				a_tip_win := {GTK}.gtk_tooltips_struct_tip_window (tooltips_pointer)
+				{GTK}.gtk_label_set_text (a_tip_label, a_cs.item)
+				{GTK}.gtk_widget_hide (a_tip_win)
 				if not a_text.is_empty and then is_displayed then
 					update_tooltip (True)
 				else
@@ -240,7 +240,7 @@ feature {NONE} -- Implementation
 	redraw
 			-- Redraw the entire area.
 		do
-			{EV_GTK_EXTERNALS}.gtk_widget_queue_draw (c_object)
+			{GTK}.gtk_widget_queue_draw (c_object)
 		end
 
 	redraw_rectangle (a_x, a_y, a_width, a_height: INTEGER)
@@ -251,15 +251,15 @@ feature {NONE} -- Implementation
 		do
 			a_drawable := drawable
 			if a_drawable /= NULL and then is_displayed then
-				if {EV_GTK_EXTERNALS}.gtk_maj_ver > 1 then
+				if {GTK}.gtk_maj_ver > 1 then
 					a_rectangle := app_implementation.reusable_rectangle_struct
-					{EV_GTK_EXTERNALS}.set_gdk_rectangle_struct_width (a_rectangle, a_width)
-					{EV_GTK_EXTERNALS}.set_gdk_rectangle_struct_height (a_rectangle, a_height)
-					{EV_GTK_EXTERNALS}.set_gdk_rectangle_struct_x (a_rectangle, a_x)
-					{EV_GTK_EXTERNALS}.set_gdk_rectangle_struct_y  (a_rectangle, a_y)
-					{EV_GTK_EXTERNALS}.gdk_window_invalidate_rect (a_drawable, a_rectangle, False)
+					{GTK2}.set_gdk_rectangle_struct_width (a_rectangle, a_width)
+					{GTK2}.set_gdk_rectangle_struct_height (a_rectangle, a_height)
+					{GTK2}.set_gdk_rectangle_struct_x (a_rectangle, a_x)
+					{GTK2}.set_gdk_rectangle_struct_y  (a_rectangle, a_y)
+					{GTK2}.gdk_window_invalidate_rect (a_drawable, a_rectangle, False)
 				else
-					{EV_GTK_EXTERNALS}.gtk_widget_queue_draw_area (visual_widget, a_x, a_y, a_width, a_height)
+					{GTK}.gtk_widget_queue_draw_area (visual_widget, a_x, a_y, a_width, a_height)
 				end
 			end
 		end
@@ -297,7 +297,7 @@ feature {EV_DRAWABLE_IMP} -- Implementation
 	drawable: POINTER
 			-- Pointer to the drawable object for `Current'.
 		do
-			Result := {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object)
+			Result := {GTK}.gtk_widget_struct_window (c_object)
 		end
 
 	mask: POINTER
@@ -327,14 +327,14 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 		local
 			l_can_focus: BOOLEAN
 		do
-			l_can_focus := {EV_GTK_EXTERNALS}.gtk_object_struct_flags (visual_widget) & {EV_GTK_EXTERNALS}.GTK_CAN_FOCUS_ENUM /= 0
+			l_can_focus := {GTK}.gtk_object_struct_flags (visual_widget) & {GTK}.GTK_CAN_FOCUS_ENUM /= 0
 			if not l_can_focus then
-				{EV_GTK_EXTERNALS}.gtk_widget_set_flags (visual_widget, {EV_GTK_EXTERNALS}.GTK_CAN_FOCUS_ENUM)
+				{GTK}.gtk_widget_set_flags (visual_widget, {GTK}.GTK_CAN_FOCUS_ENUM)
 			end
 			Precursor {EV_PRIMITIVE_IMP}
 				-- Reset focus handling.
 			if not l_can_focus then
-				{EV_GTK_EXTERNALS}.gtk_widget_unset_flags (visual_widget, {EV_GTK_EXTERNALS}.GTK_CAN_FOCUS_ENUM)
+				{GTK}.gtk_widget_unset_flags (visual_widget, {GTK}.GTK_CAN_FOCUS_ENUM)
 			end
 		end
 
@@ -354,7 +354,7 @@ feature {NONE} -- Implementation
 		do
 				-- Make sure the tooltip is hidden if any button events occur.
 			update_tooltip (False)
-			if a_type = {EV_GTK_ENUMS}.gdk_button_press_enum and then {EV_GTK_EXTERNALS}.gtk_object_struct_flags (visual_widget) & {EV_GTK_EXTERNALS}.gtk_has_focus_enum = 0 and then (a_button = 1 and then a_button <= 3) and then not focus_on_press_disabled then
+			if a_type = {EV_GTK_ENUMS}.gdk_button_press_enum and then {GTK}.gtk_object_struct_flags (visual_widget) & {GTK}.gtk_has_focus_enum = 0 and then (a_button = 1 and then a_button <= 3) and then not focus_on_press_disabled then
 					-- As a button has been pressed on the drawing area then
 				set_focus
 			end
@@ -367,7 +367,7 @@ feature {NONE} -- Implementation
 			update_tooltip (False)
 			Precursor {EV_PRIMITIVE_IMP}
 			if gc /= NULL then
-				{EV_GTK_EXTERNALS}.gdk_gc_unref (gc)
+				{GTK}.gdk_gc_unref (gc)
 				gc := NULL
 			end
 		end

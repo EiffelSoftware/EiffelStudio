@@ -19,7 +19,7 @@ AR = ar rc
 CC = $cc
 CTAGS = ctags
 INCLUDE = -I$rt_include
-CFLAGS = $optimize $ccflags $large -g `pkg-config gtk+-2.0 --cflags` \$(INCLUDE)
+CFLAGS = $optimize $ccflags $large `./vision2-gtk-config --include_path` \$(INCLUDE)
 SHAREDLINK = $sharedlink
 LDSHAREDFLAGS = $ldsharedflags
 LDFLAGS = $ldflags
@@ -43,7 +43,7 @@ $spitshell >>Makefile <<'!NO!SUBS!'
 
 OBJECTS = gtk_eiffel.o 
 
-VISION_OBJECTS = ev_any_imp.o ev_c_util.o ev_gtk_callback_marshal.o 
+VISION_OBJECTS = io_watcher.o ev_any_imp.o ev_c_util.o ev_gtk_callback_marshal.o 
 
 ALL_OBJECTS = $(OBJECTS)
 
@@ -62,7 +62,7 @@ emptyrule::
 
 clean: local_clean
 realclean: local_realclean
-clobber: local_clobber
+clobber: #local_clobber 
 
 local_clean::
 	$(RM) core *~ *.o *.so *.a

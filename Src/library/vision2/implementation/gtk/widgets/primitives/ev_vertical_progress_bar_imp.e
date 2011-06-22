@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'.
 		do
 			Precursor {EV_PROGRESS_BAR_IMP}
-			{EV_GTK_EXTERNALS}.gtk_progress_bar_set_orientation (gtk_progress_bar, gtk_progress_bottom_to_top_enum)
+			{GTK}.gtk_progress_bar_set_orientation (gtk_progress_bar, gtk_progress_bottom_to_top_enum)
 		end
 
 feature {EV_ANY_I} -- Implementation

@@ -48,10 +48,10 @@ feature {NONE} -- Initialization
 	make
 			-- Set up action sequence connections and create graphics context.
 		do
-			drawable := {EV_GTK_EXTERNALS}.gdk_screen_get_root_window ({EV_GTK_EXTERNALS}.gdk_screen_get_default)
+			drawable := {GTK2}.gdk_screen_get_root_window ({GTK2}.gdk_screen_get_default)
 
-			gc := {EV_GTK_EXTERNALS}.gdk_gc_new (drawable)
-			{EV_GTK_EXTERNALS}.gdk_gc_set_subwindow (gc, {EV_GTK_EXTERNALS}.gdk_include_inferiors_enum)
+			gc := {GTK}.gdk_gc_new (drawable)
+			{GTK}.gdk_gc_set_subwindow (gc, {GTK}.gdk_include_inferiors_enum)
 			init_default_values
 
 				-- Set offset values to match Win32 implementation.
@@ -116,12 +116,12 @@ feature -- Status report
 			gdkwin := l_display_data.a_window
 			if gdkwin /= default_pointer then
 				from
-					{EV_GTK_EXTERNALS}.gdk_window_get_user_data (gdkwin, $gtkwid)
+					{GTK}.gdk_window_get_user_data (gdkwin, $gtkwid)
 				until
 					Result /= Void or else gtkwid = default_pointer
 				loop
 					Result ?= {EV_GTK_CALLBACK_MARSHAL}.c_get_eif_reference_from_object_id (gtkwid)
-					gtkwid := {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (gtkwid)
+					gtkwid := {GTK}.gtk_widget_struct_parent (gtkwid)
 				end
 			end
 		end
@@ -139,14 +139,14 @@ feature -- Status report
 			l_rect: POINTER
 			l_x, l_y, l_width, l_height: INTEGER
 		do
-			l_mon_num := {EV_GTK_EXTERNALS}.gdk_screen_get_monitor_at_point ({EV_GTK_EXTERNALS}.gdk_screen_get_default, a_x + device_x_offset, a_y + device_y_offset)
-			l_rect := {EV_GTK_EXTERNALS}.c_gdk_rectangle_struct_allocate
-			{EV_GTK_EXTERNALS}.gdk_screen_get_monitor_geometry ({EV_GTK_EXTERNALS}.gdk_screen_get_default, l_mon_num, l_rect)
+			l_mon_num := {GTK2}.gdk_screen_get_monitor_at_point ({GTK2}.gdk_screen_get_default, a_x + device_x_offset, a_y + device_y_offset)
+			l_rect := {GTK}.c_gdk_rectangle_struct_allocate
+			{GTK2}.gdk_screen_get_monitor_geometry ({GTK2}.gdk_screen_get_default, l_mon_num, l_rect)
 
-			l_x := {EV_GTK_EXTERNALS}.gdk_rectangle_struct_x (l_rect) - device_x_offset
-			l_y := {EV_GTK_EXTERNALS}.gdk_rectangle_struct_y (l_rect) - device_y_offset
-			l_width := {EV_GTK_EXTERNALS}.gdk_rectangle_struct_width (l_rect)
-			l_height := {EV_GTK_EXTERNALS}.gdk_rectangle_struct_height (l_rect)
+			l_x := {GTK}.gdk_rectangle_struct_x (l_rect) - device_x_offset
+			l_y := {GTK}.gdk_rectangle_struct_y (l_rect) - device_y_offset
+			l_width := {GTK}.gdk_rectangle_struct_width (l_rect)
+			l_height := {GTK}.gdk_rectangle_struct_height (l_rect)
 			l_rect.memory_free
 
 			create Result.make (l_x, l_y, l_width, l_height)
@@ -163,15 +163,15 @@ feature -- Status report
 		do
 			l_window_imp ?= a_window.implementation
 			check l_window_imp /= Void end
-			l_mon_num := {EV_GTK_EXTERNALS}.gdk_screen_get_monitor_at_window ({EV_GTK_EXTERNALS}.gdk_screen_get_default, {EV_GTK_EXTERNALS}.gtk_widget_struct_window (l_window_imp.c_object))
+			l_mon_num := {GTK2}.gdk_screen_get_monitor_at_window ({GTK2}.gdk_screen_get_default, {GTK}.gtk_widget_struct_window (l_window_imp.c_object))
 
-			l_rect := {EV_GTK_EXTERNALS}.c_gdk_rectangle_struct_allocate
-			{EV_GTK_EXTERNALS}.gdk_screen_get_monitor_geometry ({EV_GTK_EXTERNALS}.gdk_screen_get_default, l_mon_num, l_rect)
+			l_rect := {GTK}.c_gdk_rectangle_struct_allocate
+			{GTK2}.gdk_screen_get_monitor_geometry ({GTK2}.gdk_screen_get_default, l_mon_num, l_rect)
 
-			l_x := {EV_GTK_EXTERNALS}.gdk_rectangle_struct_x (l_rect) - device_x_offset
-			l_y := {EV_GTK_EXTERNALS}.gdk_rectangle_struct_y (l_rect) - device_y_offset
-			l_width := {EV_GTK_EXTERNALS}.gdk_rectangle_struct_width (l_rect)
-			l_height := {EV_GTK_EXTERNALS}.gdk_rectangle_struct_height (l_rect)
+			l_x := {GTK}.gdk_rectangle_struct_x (l_rect) - device_x_offset
+			l_y := {GTK}.gdk_rectangle_struct_y (l_rect) - device_y_offset
+			l_width := {GTK}.gdk_rectangle_struct_width (l_rect)
+			l_height := {GTK}.gdk_rectangle_struct_height (l_rect)
 			l_rect.memory_free
 
 			create Result.make (l_x, l_y, l_width, l_height)
@@ -194,8 +194,8 @@ feature -- Basic operation
 	redraw
 			-- Redraw the entire area.
 		do
-			{EV_GTK_EXTERNALS}.gdk_window_invalidate_rect (drawable, default_pointer, True)
-			{EV_GTK_EXTERNALS}.gdk_window_process_updates (drawable, True)
+			{GTK2}.gdk_window_invalidate_rect (drawable, default_pointer, True)
+			{GTK2}.gdk_window_process_updates (drawable, True)
 		end
 
 	set_pointer_position (a_x, a_y: INTEGER)
@@ -211,8 +211,8 @@ feature -- Basic operation
 			l_y := a_y + device_y_offset
 			l_gdk_display_warp_pointer_symbol := gdk_display_warp_pointer_symbol
 			if l_gdk_display_warp_pointer_symbol /= default_pointer then
-				l_display := {EV_GTK_EXTERNALS}.gdk_display_get_default
-				l_screen := {EV_GTK_EXTERNALS}.gdk_display_get_default_screen (l_display)
+				l_display := {GTK2}.gdk_display_get_default
+				l_screen := {GTK2}.gdk_display_get_default_screen (l_display)
 				gdk_display_warp_pointer_call (l_gdk_display_warp_pointer_symbol, l_display, l_screen, l_x, l_y)
 			else
 				l_x_test_fake_motion_event_symbol := x_test_fake_motion_event_symbol
@@ -237,7 +237,7 @@ feature -- Basic operation
 		do
 			l_p_b_press_symbol := gdk_test_simulate_button_symbol
 			if l_p_b_press_symbol /= default_pointer then
-				l_window := {EV_GTK_EXTERNALS}.gdk_window_at_pointer ($l_x, $l_y)
+				l_window := {GTK}.gdk_window_at_pointer ($l_x, $l_y)
 				a_success_flag := gdk_test_simulate_call (l_p_b_press_symbol, l_window, l_x, l_y, a_button, 0, {EV_GTK_ENUMS}.gdk_button_press_enum)
 			end
 			if not a_success_flag then
@@ -259,7 +259,7 @@ feature -- Basic operation
 		do
 			l_p_b_release_symbol := gdk_test_simulate_button_symbol
 			if l_p_b_release_symbol /= default_pointer then
-				l_window := {EV_GTK_EXTERNALS}.gdk_window_at_pointer ($l_x, $l_y)
+				l_window := {GTK}.gdk_window_at_pointer ($l_x, $l_y)
 				a_success_flag := gdk_test_simulate_call (l_p_b_release_symbol, l_window, l_x, l_y, a_button, 0, {EV_GTK_ENUMS}.gdk_button_release_enum)
 			end
 			if not a_success_flag then
@@ -305,8 +305,8 @@ feature -- Basic operation
 				a_key_code := key_conversion.key_code_to_gtk (a_key.code).to_integer_32
 				l_gdk_test_simulate_key_symbol := gdk_test_simulate_key_symbol
 				if l_gdk_test_simulate_key_symbol /= default_pointer then
-					l_window := {EV_GTK_EXTERNALS}.gdk_window_at_pointer ($l_x, $l_y)
-					a_success_flag := gdk_test_simulate_call (l_gdk_test_simulate_key_symbol, l_window, l_x, l_y, a_key_code, 0, {EV_GTK_EXTERNALS}.gdk_key_press_enum)
+					l_window := {GTK}.gdk_window_at_pointer ($l_x, $l_y)
+					a_success_flag := gdk_test_simulate_call (l_gdk_test_simulate_key_symbol, l_window, l_x, l_y, a_key_code, 0, {GTK}.gdk_key_press_enum)
 				end
 			end
 		end
@@ -332,8 +332,8 @@ feature -- Basic operation
 				a_key_code := key_conversion.key_code_to_gtk (a_key.code).to_integer_32
 				l_gdk_test_simulate_key_symbol := gdk_test_simulate_key_symbol
 				if l_gdk_test_simulate_key_symbol /= default_pointer then
-					l_window := {EV_GTK_EXTERNALS}.gdk_window_at_pointer ($l_x, $l_y)
-					a_success_flag := gdk_test_simulate_call (l_gdk_test_simulate_key_symbol, l_window, l_x, l_y, a_key_code, 0, {EV_GTK_EXTERNALS}.gdk_key_release_enum)
+					l_window := {GTK}.gdk_window_at_pointer ($l_x, $l_y)
+					a_success_flag := gdk_test_simulate_call (l_gdk_test_simulate_key_symbol, l_window, l_x, l_y, a_key_code, 0, {GTK}.gdk_key_release_enum)
 				end
 			end
 		end
@@ -349,13 +349,13 @@ feature -- Measurement
 	horizontal_resolution: INTEGER
 			-- Number of logical pixels per inch along horizontal axis
 		do
-			Result := {EV_GTK_EXTERNALS}.gdk_screen_get_resolution ({EV_GTK_EXTERNALS}.gdk_screen_get_default)
+			Result := {GTK2}.gdk_screen_get_resolution ({GTK2}.gdk_screen_get_default)
 		end
 
 	vertical_resolution: INTEGER
 			-- Number of logical pixels per inch along vertical axis
 		do
-			Result := {EV_GTK_EXTERNALS}.gdk_screen_get_resolution ({EV_GTK_EXTERNALS}.gdk_screen_get_default)
+			Result := {GTK2}.gdk_screen_get_resolution ({GTK2}.gdk_screen_get_default)
 		end
 
 	height: INTEGER
@@ -488,7 +488,7 @@ feature {NONE} -- Implementation
 		do
 			l_symbol := gdk_x11_display_get_xdisplay_symbol
 			if l_symbol /= default_pointer then
-				Result := gdk_x11_display_get_xdisplay_call (l_symbol, {EV_GTK_EXTERNALS}.gdk_display_get_default)
+				Result := gdk_x11_display_get_xdisplay_call (l_symbol, {GTK2}.gdk_display_get_default)
 			end
 		end
 

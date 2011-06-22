@@ -60,11 +60,11 @@ feature -- Initialization
 			dummy_imp: detachable EV_HEADER_ITEM_IMP
 			a_tree_view: POINTER
 		do
-			a_tree_view := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_new
+			a_tree_view := {GTK2}.gtk_tree_view_new
 			set_c_object (a_tree_view)
 				-- We don't want the header to steal focus.
-			{EV_GTK_EXTERNALS}.gtk_widget_unset_flags (visual_widget, {EV_GTK_EXTERNALS}.gtk_can_focus_enum)
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_set_headers_visible (visual_widget, True)
+			{GTK}.gtk_widget_unset_flags (visual_widget, {GTK}.gtk_can_focus_enum)
+			{GTK2}.gtk_tree_view_set_headers_visible (visual_widget, True)
 			Precursor {EV_ITEM_LIST_IMP}
 			Precursor {EV_PRIMITIVE_IMP}
 
@@ -72,12 +72,12 @@ feature -- Initialization
 			create dummy_item
 			dummy_imp ?= dummy_item.implementation
 			check dummy_imp /= Void end
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_min_width (dummy_imp.c_object, 0)
+			{GTK2}.gtk_tree_view_column_set_min_width (dummy_imp.c_object, 0)
 			dummy_imp.set_width (1)
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_clickable (dummy_imp.c_object, False)
+			{GTK2}.gtk_tree_view_column_set_clickable (dummy_imp.c_object, False)
 
 			resize_model (100)
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_insert_column (visual_widget, dummy_imp.c_object, 0)
+			{GTK2}.gtk_tree_view_insert_column (visual_widget, dummy_imp.c_object, 0)
 
 			set_pixmaps_size (16, 16)
 
@@ -96,20 +96,20 @@ feature -- Initialization
 			list_store: POINTER
 			l_gtype_size: INTEGER
 		do
-			l_gtype_size := {EV_GTK_DEPENDENT_EXTERNALS}.sizeof_gtype
+			l_gtype_size := {GTK2}.sizeof_gtype
 			create a_type_array.make ((a_columns) * l_gtype_size)
 			from
 				i := 1
 			until
 				i > a_columns
 			loop
-				{EV_GTK_DEPENDENT_EXTERNALS}.add_g_type_string (a_type_array.item, (i - 1)  * l_gtype_size)
+				{GTK2}.add_g_type_string (a_type_array.item, (i - 1)  * l_gtype_size)
 				i := i + 1
 			end
 
 			list_store :=  new_list_store (1) --{EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_newv (a_columns, a_type_array.item)
 
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_set_model (visual_widget, list_store)
+			{GTK2}.gtk_tree_view_set_model (visual_widget, list_store)
 			model_count := a_columns
 		end
 
@@ -135,7 +135,7 @@ feature -- Element change
 			check item_imp /= Void end
 			child_array.go_i_th (i)
 			child_array.put_left (v)
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_insert_column (visual_widget, item_imp.c_object, i - 1)
+			{GTK2}.gtk_tree_view_insert_column (visual_widget, item_imp.c_object, i - 1)
 			item_imp.set_parent_imp (Current)
 		end
 
@@ -148,7 +148,7 @@ feature -- Element change
 			item_imp ?= child_array.item.implementation
 			check item_imp /= Void end
 			item_imp.set_parent_imp (Void)
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_remove_column (visual_widget, item_imp.c_object)
+			{GTK2}.gtk_tree_view_remove_column (visual_widget, item_imp.c_object)
 			child_array.remove
 		end
 
@@ -202,7 +202,7 @@ feature {NONE} -- Implementation
 			a_item_imp: detachable EV_HEADER_ITEM_IMP
 			a_cursor: like cursor
 		do
-			gdkwin := {EV_GTK_EXTERNALS}.gdk_window_at_pointer ($a_pointer_x, $a_pointer_y)
+			gdkwin := {GTK}.gdk_window_at_pointer ($a_pointer_x, $a_pointer_y)
 			if gdkwin /= default_pointer then
 				from
 					a_cursor := cursor
@@ -212,7 +212,7 @@ feature {NONE} -- Implementation
 				loop
 					a_item_imp ?= interface_item.implementation
 					check a_item_imp /= Void end
-					if {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_struct_window (a_item_imp.c_object) = gdkwin then
+					if {GTK2}.gtk_tree_view_column_struct_window (a_item_imp.c_object) = gdkwin then
 						Result := index
 					end
 					forth
@@ -239,16 +239,16 @@ feature {NONE} -- Implementation
 			Precursor {EV_PRIMITIVE_IMP} (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 
 				-- If we are clicking on the Void area then we the item events passing Void items.
-			if a_type = {EV_GTK_EXTERNALS}.gdk_button_press_enum or a_type = {EV_GTK_EXTERNALS}.gdk_2button_press_enum then
-				gdkwin := {EV_GTK_EXTERNALS}.gdk_window_at_pointer ($a_pointer_x, $a_pointer_y)
+			if a_type = {GTK}.gdk_button_press_enum or a_type = {GTK}.gdk_2button_press_enum then
+				gdkwin := {GTK}.gdk_window_at_pointer ($a_pointer_x, $a_pointer_y)
 				if gdkwin /= default_pointer then
-					{EV_GTK_EXTERNALS}.gdk_window_get_user_data (gdkwin, $l_widget)
-					l_last_column := {EV_GTK_EXTERNALS}.gtk_tree_view_get_column (c_object, count)
-					if l_widget = {EV_GTK_EXTERNALS}.gtk_tree_view_column_struct_button (l_last_column) then
+					{GTK}.gdk_window_get_user_data (gdkwin, $l_widget)
+					l_last_column := {GTK2}.gtk_tree_view_get_column (c_object, count)
+					if l_widget = {GTK2}.gtk_tree_view_column_struct_button (l_last_column) then
 							-- Fire item press actions with a Void item.
-						if a_type = {EV_GTK_EXTERNALS}.gdk_button_press_enum and then item_pointer_button_press_actions_internal /= Void then
+						if a_type = {GTK}.gdk_button_press_enum and then item_pointer_button_press_actions_internal /= Void then
 							item_pointer_button_press_actions_internal.call ([Void, a_x, a_y, a_button])
-						elseif a_type = {EV_GTK_EXTERNALS}.gdk_2button_press_enum and then item_pointer_double_press_actions_internal /= Void then
+						elseif a_type = {GTK}.gdk_2button_press_enum and then item_pointer_double_press_actions_internal /= Void then
 							item_pointer_double_press_actions_internal.call ([Void, a_x, a_y, a_button])
 						end
 					end

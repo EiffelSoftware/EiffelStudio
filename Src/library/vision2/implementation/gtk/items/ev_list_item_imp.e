@@ -249,9 +249,9 @@ feature -- Measurement
 				l_list_imp ?= l_parent_imp
 				if l_list_imp /= Void then
 						--| FIXME Combo box list needs to be attained somehow
-					l_h_adjust := {EV_GTK_EXTERNALS}.gtk_scrolled_window_get_hadjustment (l_list_imp.scrollable_area)
+					l_h_adjust := {GTK}.gtk_scrolled_window_get_hadjustment (l_list_imp.scrollable_area)
 					if l_h_adjust /= default_pointer then
-						Result := - {EV_GTK_EXTERNALS}.gtk_adjustment_struct_value (l_h_adjust).rounded
+						Result := - {GTK}.gtk_adjustment_struct_value (l_h_adjust).rounded
 					end
 				end
 			end
@@ -271,9 +271,9 @@ feature -- Measurement
 				l_list_imp ?= l_parent_imp
 				if l_list_imp /= Void then
 						--| FIXME Combo box list needs to be attained somehow
-					l_v_adjust := {EV_GTK_EXTERNALS}.gtk_scrolled_window_get_hadjustment (l_list_imp.scrollable_area)
+					l_v_adjust := {GTK}.gtk_scrolled_window_get_hadjustment (l_list_imp.scrollable_area)
 					if l_v_adjust /= default_pointer then
-						Result := Result - {EV_GTK_EXTERNALS}.gtk_adjustment_struct_value (l_v_adjust).rounded
+						Result := Result - {GTK}.gtk_adjustment_struct_value (l_v_adjust).rounded
 					end
 				end
 			end

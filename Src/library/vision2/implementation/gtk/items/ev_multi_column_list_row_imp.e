@@ -205,9 +205,9 @@ feature -- Measurement
 		do
 			-- Return parents horizontal scrollbar offset.
 			if attached parent_imp as l_parent_imp then
-				l_h_adjust := {EV_GTK_EXTERNALS}.gtk_scrolled_window_get_hadjustment (l_parent_imp.scrollable_area)
+				l_h_adjust := {GTK}.gtk_scrolled_window_get_hadjustment (l_parent_imp.scrollable_area)
 				if l_h_adjust /= default_pointer then
-					Result := - {EV_GTK_EXTERNALS}.gtk_adjustment_struct_value (l_h_adjust).rounded
+					Result := - {GTK}.gtk_adjustment_struct_value (l_h_adjust).rounded
 				end
 			end
 		end
@@ -219,9 +219,9 @@ feature -- Measurement
 		do
 			if attached parent_imp as l_parent_imp then
 				Result := (index - 1) * l_parent_imp.row_height
-				l_v_adjust := {EV_GTK_EXTERNALS}.gtk_scrolled_window_get_vadjustment (l_parent_imp.scrollable_area)
+				l_v_adjust := {GTK}.gtk_scrolled_window_get_vadjustment (l_parent_imp.scrollable_area)
 				if l_v_adjust /= default_pointer then
-					Result := Result - {EV_GTK_EXTERNALS}.gtk_adjustment_struct_value (l_v_adjust).rounded
+					Result := Result - {GTK}.gtk_adjustment_struct_value (l_v_adjust).rounded
 				end
 			end
 		end

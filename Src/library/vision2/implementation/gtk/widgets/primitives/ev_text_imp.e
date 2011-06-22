@@ -50,16 +50,16 @@ feature {NONE} -- Initialization
 	make
 			-- Create and initialize `Current'.
 		do
-			set_c_object ({EV_GTK_EXTERNALS}.gtk_event_box_new)
-			scrolled_window := {EV_GTK_EXTERNALS}.gtk_scrolled_window_new (NULL, NULL)
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_scrolled_window_set_shadow_type (scrolled_window, {EV_GTK_EXTERNALS}.gtk_shadow_in_enum)
-			{EV_GTK_EXTERNALS}.gtk_widget_show (scrolled_window)
-			{EV_GTK_EXTERNALS}.gtk_container_add (c_object, scrolled_window)
-			text_view := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_new
-			text_buffer := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_get_buffer (text_view)
-			{EV_GTK_EXTERNALS}.gtk_widget_show (text_view)
-			{EV_GTK_EXTERNALS}.gtk_container_add (scrolled_window, text_view)
-			{EV_GTK_EXTERNALS}.gtk_widget_set_usize (text_view, 1, 1)
+			set_c_object ({GTK}.gtk_event_box_new)
+			scrolled_window := {GTK}.gtk_scrolled_window_new (NULL, NULL)
+			{GTK2}.gtk_scrolled_window_set_shadow_type (scrolled_window, {GTK}.gtk_shadow_in_enum)
+			{GTK}.gtk_widget_show (scrolled_window)
+			{GTK}.gtk_container_add (c_object, scrolled_window)
+			text_view := {GTK2}.gtk_text_view_new
+			text_buffer := {GTK2}.gtk_text_view_get_buffer (text_view)
+			{GTK}.gtk_widget_show (text_view)
+			{GTK}.gtk_container_add (scrolled_window, text_view)
+			{GTK}.gtk_widget_set_usize (text_view, 1, 1)
 				-- This is needed so the text doesn't influence the size of the whole widget itself.
 
 			enable_word_wrapping
@@ -98,9 +98,9 @@ feature -- Status report
 		do
 			from
 				create a_text_iter.make
-				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_offset (text_buffer, a_text_iter.item, i - 1)
+				{GTK2}.gtk_text_buffer_get_iter_at_offset (text_buffer, a_text_iter.item, i - 1)
 			until
-				not {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_backward_display_line (text_view, a_text_iter.item)
+				not {GTK2}.gtk_text_view_backward_display_line (text_view, a_text_iter.item)
 			loop
 				Result := Result + 1
 			end
@@ -113,7 +113,7 @@ feature -- Status report
 	has_selection: BOOLEAN
 			-- Does `Current' have a selection?
 		do
-			Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_selection_bounds (text_buffer, NULL, NULL)
+			Result := {GTK2}.gtk_text_buffer_get_selection_bounds (text_buffer, NULL, NULL)
 		end
 
 	selection_start: INTEGER
@@ -137,9 +137,9 @@ feature -- Status report
 		do
 			create a_start_iter.make
 			create a_end_iter.make
-			a_selected := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_selection_bounds (text_buffer, a_start_iter.item, a_end_iter.item)
+			a_selected := {GTK2}.gtk_text_buffer_get_selection_bounds (text_buffer, a_start_iter.item, a_end_iter.item)
 			if a_selected then
-				l_char := {EV_GTK_EXTERNALS}.gtk_text_iter_get_text (a_start_iter.item, a_end_iter.item)
+				l_char := {GTK2}.gtk_text_iter_get_text (a_start_iter.item, a_end_iter.item)
 				if l_char /= default_pointer then
 					create Result.make_from_c (l_char)
 				else
@@ -157,7 +157,7 @@ feature -- Status setting
 			-- if not `flag' then make the component read-only.
 		do
 			is_editable := flag
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_set_editable (text_view, flag)
+			{GTK2}.gtk_text_view_set_editable (text_view, flag)
 		end
 
 	set_caret_position (pos: INTEGER)
@@ -177,16 +177,16 @@ feature -- Basic operation
 		do
 			create a_start_iter.make
 			create a_end_iter.make
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_offset (text_buffer, a_start_iter.item, start_pos - 1)
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_offset (text_buffer, a_end_iter.item, end_pos)
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_move_mark (
+			{GTK2}.gtk_text_buffer_get_iter_at_offset (text_buffer, a_start_iter.item, start_pos - 1)
+			{GTK2}.gtk_text_buffer_get_iter_at_offset (text_buffer, a_end_iter.item, end_pos)
+			{GTK2}.gtk_text_buffer_move_mark (
 										text_buffer,
-										{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_selection_bound (text_buffer),
+										{GTK2}.gtk_text_buffer_get_selection_bound (text_buffer),
 										a_start_iter.item
 			)
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_move_mark (
+			{GTK2}.gtk_text_buffer_move_mark (
 										text_buffer,
-										{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_insert (text_buffer),
+										{GTK2}.gtk_text_buffer_get_insert (text_buffer),
 										a_end_iter.item
 			)
 		end
@@ -197,14 +197,14 @@ feature -- Basic operation
 			a_iter: EV_GTK_TEXT_ITER_STRUCT
 		do
 			create a_iter.make
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_mark (
+			{GTK2}.gtk_text_buffer_get_iter_at_mark (
 											text_buffer,
 											a_iter.item,
-											{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_insert (text_buffer)
+											{GTK2}.gtk_text_buffer_get_insert (text_buffer)
 			)
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_move_mark (
+			{GTK2}.gtk_text_buffer_move_mark (
 										text_buffer,
-										{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_selection_bound (text_buffer),
+										{GTK2}.gtk_text_buffer_get_selection_bound (text_buffer),
 										a_iter.item
 			)
 		end
@@ -212,7 +212,7 @@ feature -- Basic operation
 	delete_selection
 			-- Delete the current selection.
 		do
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_delete_selection (text_buffer, True, True)
+			{GTK2}.gtk_text_buffer_delete_selection (text_buffer, True, True)
 		end
 
 	cut_selection
@@ -225,7 +225,7 @@ feature -- Basic operation
 			if has_selection then
 				clip_imp ?= App_implementation.clipboard.implementation
 				check clip_imp /= Void end
-				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_cut_clipboard (text_buffer, clip_imp.clipboard, True)
+				{GTK2}.gtk_text_buffer_cut_clipboard (text_buffer, clip_imp.clipboard, True)
 			end
 		end
 
@@ -238,7 +238,7 @@ feature -- Basic operation
 			if has_selection then
 				clip_imp ?= App_implementation.clipboard.implementation
 				check clip_imp /= Void end
-				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_copy_clipboard (text_buffer, clip_imp.clipboard)
+				{GTK2}.gtk_text_buffer_copy_clipboard (text_buffer, clip_imp.clipboard)
 			end
 		end
 
@@ -255,8 +255,8 @@ feature -- Basic operation
 			check clip_imp /= Void end
 			create a_iter.make
 			a_text := clip_imp.text
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_offset (text_buffer, a_iter.item, index - 1)
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_insert (text_buffer, a_iter.item, a_text.item, -1)
+			{GTK2}.gtk_text_buffer_get_iter_at_offset (text_buffer, a_iter.item, index - 1)
+			{GTK2}.gtk_text_buffer_insert (text_buffer, a_iter.item, a_text.item, -1)
 			a_text.set_with_eiffel_string (once "")
 		end
 
@@ -270,8 +270,8 @@ feature -- Access
 		do
 			create a_start_iter.make
 			create a_end_iter.make
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_bounds (text_buffer, a_start_iter.item, a_end_iter.item)
-			temp_text := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_text (text_buffer, a_start_iter.item, a_end_iter.item, False)
+			{GTK2}.gtk_text_buffer_get_bounds (text_buffer, a_start_iter.item, a_end_iter.item)
+			temp_text := {GTK2}.gtk_text_buffer_get_text (text_buffer, a_start_iter.item, a_end_iter.item, False)
 			create a_cs.make_from_pointer (temp_text)
 			Result := a_cs.string
 			a_cs.set_with_eiffel_string (once "")
@@ -289,12 +289,12 @@ feature -- Access
 			first_pos := first_position_from_line_number (a_line)
 			create start_iter.make
 			create end_iter.make
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_offset (text_buffer, start_iter.item, first_pos -1)
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_offset (text_buffer, end_iter.item, first_pos -1)
+			{GTK2}.gtk_text_buffer_get_iter_at_offset (text_buffer, start_iter.item, first_pos -1)
+			{GTK2}.gtk_text_buffer_get_iter_at_offset (text_buffer, end_iter.item, first_pos -1)
 
-			a_success := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_forward_display_line (text_view, end_iter.item)
+			a_success := {GTK2}.gtk_text_view_forward_display_line (text_view, end_iter.item)
 
-			text_ptr := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_text (text_buffer, start_iter.item, end_iter.item, False)
+			text_ptr := {GTK2}.gtk_text_buffer_get_text (text_buffer, start_iter.item, end_iter.item, False)
 
 			create a_cs.make_from_pointer (text_ptr)
 			Result := a_cs.string
@@ -309,16 +309,16 @@ feature -- Access
 			i: INTEGER
 		do
 			create a_iter.make
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_start_iter (text_buffer, a_iter.item)
+			{GTK2}.gtk_text_buffer_get_start_iter (text_buffer, a_iter.item)
 			from
 				i := 1
 			until
 				i = a_line
 			loop
-				a_success := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_forward_display_line (text_view, a_iter.item)
+				a_success := {GTK2}.gtk_text_view_forward_display_line (text_view, a_iter.item)
 				i := i + 1
 			end
-			Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_iter_get_offset (a_iter.item) + 1
+			Result := {GTK2}.gtk_text_iter_get_offset (a_iter.item) + 1
 		end
 
 	last_position_from_line_number (a_line: INTEGER): INTEGER
@@ -329,16 +329,16 @@ feature -- Access
 			i: INTEGER
 		do
 			create a_iter.make
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_start_iter (text_buffer, a_iter.item)
+			{GTK2}.gtk_text_buffer_get_start_iter (text_buffer, a_iter.item)
 			from
 				i := 1
 			until
 				i > a_line
 			loop
-				a_success := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_forward_display_line (text_view, a_iter.item)
+				a_success := {GTK2}.gtk_text_view_forward_display_line (text_view, a_iter.item)
 				i := i + 1
 			end
-			Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_iter_get_offset (a_iter.item)
+			Result := {GTK2}.gtk_text_iter_get_offset (a_iter.item)
 		end
 
 feature -- Status report
@@ -346,7 +346,7 @@ feature -- Status report
 	text_length: INTEGER
 			-- Number of characters in `Current'
 		do
-			Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_char_count (text_buffer)
+			Result := {GTK2}.gtk_text_buffer_get_char_count (text_buffer)
 		end
 
 	line_count: INTEGER
@@ -358,14 +358,14 @@ feature -- Status report
 				from
 					Result := 1
 					create a_iter.make
-					{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_start_iter (text_buffer, a_iter.item)
+					{GTK2}.gtk_text_buffer_get_start_iter (text_buffer, a_iter.item)
 				until
-					not {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_forward_display_line (text_view, a_iter.item)
+					not {GTK2}.gtk_text_view_forward_display_line (text_view, a_iter.item)
 				loop
 					Result := Result + 1
 				end
 			else
-				Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_line_count (text_buffer)
+				Result := {GTK2}.gtk_text_buffer_get_line_count (text_buffer)
 			end
 		end
 
@@ -378,13 +378,13 @@ feature -- Status report
 			-- Count the number of iterations from insert marker to end of text.
 			from
 				create a_iter.make
-				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_mark (
+				{GTK2}.gtk_text_buffer_get_iter_at_mark (
 									text_buffer,
 									a_iter.item,
-									{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_insert (text_buffer)
+									{GTK2}.gtk_text_buffer_get_insert (text_buffer)
 				)
 			until
-				not {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_backward_display_line (text_view, a_iter.item)
+				not {GTK2}.gtk_text_view_backward_display_line (text_view, a_iter.item)
 			loop
 				Result := Result + 1
 			end
@@ -398,12 +398,12 @@ feature -- Status report
 		do
 			create a_iter.make
 			-- Initialize out iter with the current caret/insert position.
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_mark (
+			{GTK2}.gtk_text_buffer_get_iter_at_mark (
 								text_buffer,
 								a_iter.item,
-								{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_insert (text_buffer)
+								{GTK2}.gtk_text_buffer_get_insert (text_buffer)
 			)
-			Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_iter_get_offset (a_iter.item) + 1
+			Result := {GTK2}.gtk_text_iter_get_offset (a_iter.item) + 1
 		end
 
 	has_word_wrapping: BOOLEAN
@@ -419,12 +419,12 @@ feature -- Status setting
 			a_cs := a_text
 			create a_iter.make
 			-- Initialize out iter with the current caret/insert position.
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_mark (
+			{GTK2}.gtk_text_buffer_get_iter_at_mark (
 								text_buffer,
 								a_iter.item,
-								{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_insert (text_buffer)
+								{GTK2}.gtk_text_buffer_get_insert (text_buffer)
 			)
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_insert (text_buffer, a_iter.item, a_cs.item, -1)
+			{GTK2}.gtk_text_buffer_insert (text_buffer, a_iter.item, a_cs.item, -1)
 		end
 
 	set_text (a_text: READABLE_STRING_GENERAL)
@@ -433,7 +433,7 @@ feature -- Status setting
 			a_cs: EV_GTK_C_STRING
 		do
 			a_cs := a_text
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_set_text (text_buffer, a_cs.item, -1)
+			{GTK2}.gtk_text_buffer_set_text (text_buffer, a_cs.item, -1)
 		end
 
 	append_text (a_text: READABLE_STRING_GENERAL)
@@ -451,8 +451,8 @@ feature -- Status setting
 			a_cs := a_text
 			create a_iter.make
 			-- Initialize out iter with the current caret/insert position.
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_start_iter (text_buffer, a_iter.item)
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_insert (text_buffer, a_iter.item, a_cs.item, -1)
+			{GTK2}.gtk_text_buffer_get_start_iter (text_buffer, a_iter.item)
+			{GTK2}.gtk_text_buffer_insert (text_buffer, a_iter.item, a_cs.item, -1)
 		end
 
 	delete_text (start, finish: INTEGER)
@@ -463,9 +463,9 @@ feature -- Status setting
 		do
 			create a_start_iter.make
 			create a_end_iter.make
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_offset (text_buffer, a_start_iter.item, start - 1)
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_offset (text_buffer, a_end_iter.item, finish - 1)
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_delete (text_buffer, a_start_iter.item, a_end_iter.item)
+			{GTK2}.gtk_text_buffer_get_iter_at_offset (text_buffer, a_start_iter.item, start - 1)
+			{GTK2}.gtk_text_buffer_get_iter_at_offset (text_buffer, a_end_iter.item, finish - 1)
+			{GTK2}.gtk_text_buffer_delete (text_buffer, a_start_iter.item, a_end_iter.item)
 		end
 
 feature -- Basic operation
@@ -482,21 +482,21 @@ feature -- Basic operation
 			create a_iter.make
 			if has_word_wrapping then
 				from
-					{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_start_iter (text_buffer, a_iter.item)
+					{GTK2}.gtk_text_buffer_get_start_iter (text_buffer, a_iter.item)
 					i := 1
 				until
 					i = a_line
 				loop
-					l_success := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_forward_display_line (text_view, a_iter.item)
+					l_success := {GTK2}.gtk_text_view_forward_display_line (text_view, a_iter.item)
 					i := i + 1
 				end
 			else
-				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_line (text_buffer, a_iter.item, a_line - 1)
+				{GTK2}.gtk_text_buffer_get_iter_at_line (text_buffer, a_iter.item, a_line - 1)
 			end
 			a_mark_name := "scroll_to_line"
-			a_mark := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_create_mark (text_buffer, a_mark_name.item, a_iter.item, True)
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_scroll_to_mark (text_view, a_mark, 0.0, True, 0.0, 0.0)
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_delete_mark (text_buffer, a_mark)
+			a_mark := {GTK2}.gtk_text_buffer_create_mark (text_buffer, a_mark_name.item, a_iter.item, True)
+			{GTK2}.gtk_text_view_scroll_to_mark (text_view, a_mark, 0.0, True, 0.0, 0.0)
+			{GTK2}.gtk_text_buffer_delete_mark (text_buffer, a_mark)
 		end
 
 	scroll_to_end
@@ -507,23 +507,23 @@ feature -- Basic operation
 			a_mark: POINTER
 		do
 			create a_iter.make
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_end_iter (text_buffer, a_iter.item)
+			{GTK2}.gtk_text_buffer_get_end_iter (text_buffer, a_iter.item)
 			a_mark_name := "scroll_to_end"
-			a_mark := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_create_mark (text_buffer, a_mark_name.item, a_iter.item, True)
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_scroll_to_mark (text_view, a_mark, 0.0, True, 0.0, 1.0)
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_delete_mark (text_buffer, a_mark)
+			a_mark := {GTK2}.gtk_text_buffer_create_mark (text_buffer, a_mark_name.item, a_iter.item, True)
+			{GTK2}.gtk_text_view_scroll_to_mark (text_view, a_mark, 0.0, True, 0.0, 1.0)
+			{GTK2}.gtk_text_buffer_delete_mark (text_buffer, a_mark)
 		end
 
 	enable_word_wrapping
 			-- Enable word wrapping for `Current'
 		do
 			-- Make sure only vertical scrollbar is showing
-			{EV_GTK_EXTERNALS}.gtk_scrolled_window_set_policy (
+			{GTK}.gtk_scrolled_window_set_policy (
 				scrolled_window,
-				{EV_GTK_EXTERNALS}.GTK_POLICY_AUTOMATIC_ENUM,
-				{EV_GTK_EXTERNALS}.GTK_POLICY_ALWAYS_ENUM
+				{GTK}.GTK_POLICY_AUTOMATIC_ENUM,
+				{GTK}.GTK_POLICY_ALWAYS_ENUM
 			)
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_set_wrap_mode (text_view, {EV_GTK_DEPENDENT_EXTERNALS}.gtk_wrap_word_enum)
+			{GTK2}.gtk_text_view_set_wrap_mode (text_view, {GTK2}.gtk_wrap_word_enum)
 			has_word_wrapping := True
 		end
 
@@ -531,12 +531,12 @@ feature -- Basic operation
 			-- Disable word wrapping for `Current'
 		do
 			-- Make sure both scrollbars are showing
-			{EV_GTK_EXTERNALS}.gtk_scrolled_window_set_policy (
+			{GTK}.gtk_scrolled_window_set_policy (
 				scrolled_window,
-				{EV_GTK_EXTERNALS}.GTK_POLICY_ALWAYS_ENUM,
-				{EV_GTK_EXTERNALS}.GTK_POLICY_ALWAYS_ENUM
+				{GTK}.GTK_POLICY_ALWAYS_ENUM,
+				{GTK}.GTK_POLICY_ALWAYS_ENUM
 			)
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_set_wrap_mode (text_view, {EV_GTK_DEPENDENT_EXTERNALS}.gtk_wrap_none_enum)
+			{GTK2}.gtk_text_view_set_wrap_mode (text_view, {GTK2}.gtk_wrap_none_enum)
 			has_word_wrapping := False
 		end
 
@@ -557,10 +557,10 @@ feature {NONE} -- Implementation
 		do
 			create a_start_iter.make
 			create a_end_iter.make
-			a_selected := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_selection_bounds (text_buffer, a_start_iter.item, a_end_iter.item)
+			a_selected := {GTK2}.gtk_text_buffer_get_selection_bounds (text_buffer, a_start_iter.item, a_end_iter.item)
 			if a_selected then
-				a_start_offset := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_iter_get_offset (a_start_iter.item)
-				a_end_offset := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_iter_get_offset (a_end_iter.item)
+				a_start_offset := {GTK2}.gtk_text_iter_get_offset (a_start_iter.item)
+				a_end_offset := {GTK2}.gtk_text_iter_get_offset (a_end_iter.item)
 				Result := a_start_offset.min (a_end_offset) + 1
 			end
 		end
@@ -574,10 +574,10 @@ feature {NONE} -- Implementation
 		do
 			create a_start_iter.make
 			create a_end_iter.make
-			a_selected := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_selection_bounds (text_buffer, a_start_iter.item, a_end_iter.item)
+			a_selected := {GTK2}.gtk_text_buffer_get_selection_bounds (text_buffer, a_start_iter.item, a_end_iter.item)
 			if a_selected then
-				a_start_offset := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_iter_get_offset (a_start_iter.item)
-				a_end_offset := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_iter_get_offset (a_end_iter.item)
+				a_start_offset := {GTK2}.gtk_text_iter_get_offset (a_start_iter.item)
+				a_end_offset := {GTK2}.gtk_text_iter_get_offset (a_end_iter.item)
 				Result := a_start_offset.max (a_end_offset)
 			end
 		end
@@ -607,8 +607,8 @@ feature {NONE} -- Implementation
 			a_cs := a_text
 			create a_iter.make
 			-- Initialize out iter with the current caret/insert position.
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_end_iter (a_text_buffer, a_iter.item)
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_insert (a_text_buffer, a_iter.item, a_cs.item, -1)
+			{GTK2}.gtk_text_buffer_get_end_iter (a_text_buffer, a_iter.item)
+			{GTK2}.gtk_text_buffer_insert (a_text_buffer, a_iter.item, a_cs.item, -1)
 			internal_set_caret_position (a_car_pos)
 		end
 
@@ -618,8 +618,8 @@ feature {NONE} -- Implementation
 			a_iter: EV_GTK_TEXT_ITER_STRUCT
 		do
 			create a_iter.make
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_offset (text_buffer, a_iter.item, pos - 1)
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_place_cursor (text_buffer, a_iter.item)
+			{GTK2}.gtk_text_buffer_get_iter_at_offset (text_buffer, a_iter.item, pos - 1)
+			{GTK2}.gtk_text_buffer_place_cursor (text_buffer, a_iter.item)
 		end
 
 	text_view: POINTER

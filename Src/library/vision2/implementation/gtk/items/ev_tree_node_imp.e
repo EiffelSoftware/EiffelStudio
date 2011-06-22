@@ -89,9 +89,9 @@ feature -- Status report
 			check par_tree /= Void end
 			l_list_iter := list_iter
 			check l_list_iter /= Void end
-			a_tree_path := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_model_get_path (par_tree.tree_store, l_list_iter.item)
-			Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_row_expanded (par_tree.tree_view, a_tree_path)
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_free (a_tree_path)
+			a_tree_path := {GTK2}.gtk_tree_model_get_path (par_tree.tree_store, l_list_iter.item)
+			Result := {GTK2}.gtk_tree_view_row_expanded (par_tree.tree_view, a_tree_path)
+			{GTK2}.gtk_tree_path_free (a_tree_path)
 		end
 
 feature -- Measurement
@@ -105,9 +105,9 @@ feature -- Measurement
 			-- Return parents horizontal scrollbar offset.
 			l_tree_imp := parent_tree_imp
 			if l_tree_imp /= Void then
-				l_h_adjust := {EV_GTK_EXTERNALS}.gtk_scrolled_window_get_hadjustment (l_tree_imp.scrollable_area)
+				l_h_adjust := {GTK}.gtk_scrolled_window_get_hadjustment (l_tree_imp.scrollable_area)
 				if l_h_adjust /= default_pointer then
-					Result := - {EV_GTK_EXTERNALS}.gtk_adjustment_struct_value (l_h_adjust).rounded
+					Result := - {GTK}.gtk_adjustment_struct_value (l_h_adjust).rounded
 				end
 			end
 		end
@@ -121,9 +121,9 @@ feature -- Measurement
 			l_tree_imp := parent_tree_imp
 			if l_tree_imp /= Void then
 				Result := (index - 1) * l_tree_imp.row_height
-				l_v_adjust := {EV_GTK_EXTERNALS}.gtk_scrolled_window_get_vadjustment (l_tree_imp.scrollable_area)
+				l_v_adjust := {GTK}.gtk_scrolled_window_get_vadjustment (l_tree_imp.scrollable_area)
 				if l_v_adjust /= default_pointer then
-					Result := Result - {EV_GTK_EXTERNALS}.gtk_adjustment_struct_value (l_v_adjust).rounded
+					Result := Result - {GTK}.gtk_adjustment_struct_value (l_v_adjust).rounded
 				end
 			end
 		end
@@ -207,8 +207,8 @@ feature {EV_ANY_I} -- Status setting
 			if par_tree /= Void then
 				l_list_iter := list_iter
 				check l_list_iter /= Void end
-				a_selection := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_selection (par_tree.tree_view)
-				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_selection_select_iter (a_selection, l_list_iter.item)
+				a_selection := {GTK2}.gtk_tree_view_get_selection (par_tree.tree_view)
+				{GTK2}.gtk_tree_selection_select_iter (a_selection, l_list_iter.item)
 				par_tree.ensure_item_visible (attached_interface)
 			end
 		end
@@ -224,8 +224,8 @@ feature {EV_ANY_I} -- Status setting
 			if par_tree /= Void then
 				l_list_iter := list_iter
 				check l_list_iter /= Void end
-				a_selection := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_selection (par_tree.tree_view)
-				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_selection_unselect_iter (a_selection, l_list_iter.item)
+				a_selection := {GTK2}.gtk_tree_view_get_selection (par_tree.tree_view)
+				{GTK2}.gtk_tree_selection_unselect_iter (a_selection, l_list_iter.item)
 			end
 		end
 
@@ -241,13 +241,13 @@ feature {EV_ANY_I} -- Status setting
 			check par_tree /= Void end
 			l_list_iter := list_iter
 			check l_list_iter /= Void end
-			a_tree_path := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_model_get_path (par_tree.tree_store, l_list_iter.item)
+			a_tree_path := {GTK2}.gtk_tree_model_get_path (par_tree.tree_store, l_list_iter.item)
 			if a_flag then
-				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_expand_to_path (par_tree.tree_view, a_tree_path)
+				{GTK2}.gtk_tree_view_expand_to_path (par_tree.tree_view, a_tree_path)
 			else
-				a_success := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_collapse_row (par_tree.tree_view, a_tree_path)
+				a_success := {GTK2}.gtk_tree_view_collapse_row (par_tree.tree_view, a_tree_path)
 			end
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_free (a_tree_path)
+			{GTK2}.gtk_tree_path_free (a_tree_path)
 		end
 
 	set_text (a_text: READABLE_STRING_GENERAL)
@@ -437,7 +437,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 			end
 			create a_tree_iter.make
 			set_list_iter (a_tree_iter)
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_store_insert (a_parent_tree.tree_store, a_tree_iter.item, a_parent_iter, a_index - 1)
+			{GTK2}.gtk_tree_store_insert (a_parent_tree.tree_store, a_tree_iter.item, a_parent_iter, a_index - 1)
 			a_parent_tree.set_text_on_position (Current, text)
 			a_parent_tree.update_row_pixmap (Current)
 			from
@@ -559,7 +559,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 			par_tree: detachable EV_TREE_IMP
 		do
 			if gdk_pixbuf /= default_pointer then
-				{EV_GTK_EXTERNALS}.object_unref (gdk_pixbuf)
+				{GTK2}.object_unref (gdk_pixbuf)
 				gdk_pixbuf := default_pointer
 			end
 			par_tree := parent_tree_imp
@@ -637,7 +637,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 			if par_tree_imp /= Void then
 				l_list_iter := item_imp.list_iter
 				check l_list_iter /= Void end
-				{EV_GTK_EXTERNALS}.gtk_tree_store_remove (par_tree_imp.tree_store, l_list_iter.item)
+				{GTK2}.gtk_tree_store_remove (par_tree_imp.tree_store, l_list_iter.item)
 			end
 			item_imp.set_parent_imp (Void)
 			child_array.go_i_th (a_position)
@@ -664,7 +664,7 @@ feature {NONE} -- Implementation
 			-- Clean up
 		do
 			if not is_in_final_collect and then gdk_pixbuf /= default_pointer then
-					{EV_GTK_EXTERNALS}.object_unref (gdk_pixbuf)
+					{GTK2}.object_unref (gdk_pixbuf)
 					gdk_pixbuf := default_pointer
 			end
 		end

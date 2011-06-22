@@ -41,8 +41,8 @@ feature -- Initialize
 	gtk_dependent_launch_initialize
 			-- Gtk dependent code for `launch'
 		do
-			if {EV_GTK_EXTERNALS}.gtk_maj_ver = 1 and then {EV_GTK_EXTERNALS}.gtk_min_ver <= 2 and then {EV_GTK_EXTERNALS}.gtk_mic_ver < 8 then
-				print ("This application is designed for Gtk 1.2.8 and above, your current version is 1.2." + {EV_GTK_EXTERNALS}.gtk_mic_ver.out + " and may cause some unexpected behavior%N")
+			if {GTK}.gtk_maj_ver = 1 and then {GTK}.gtk_min_ver <= 2 and then {GTK}.gtk_mic_ver < 8 then
+				print ("This application is designed for Gtk 1.2.8 and above, your current version is 1.2." + {GTK}.gtk_mic_ver.out + " and may cause some unexpected behavior%N")
 			end
 		end
 
@@ -63,13 +63,13 @@ feature -- Implementation
 	pango_layout: POINTER
 			-- PangoLayout structure used for rendering fonts
 		once
-			Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_create_pango_layout (default_gtk_window, default_pointer)
+			Result := {GTK2}.gtk_widget_create_pango_layout (default_gtk_window, default_pointer)
 		end
 
 	pango_iter: POINTER
 			-- Retrieve PangoLayoutIter from our default layout object, Result must be freed when not needed
 		do
-			Result := {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_get_iter (pango_layout)
+			Result := {GTK2}.pango_layout_get_iter (pango_layout)
 		end
 
 	writeable_pixbuf_formats: ARRAYED_LIST [STRING_32]
@@ -95,8 +95,8 @@ feature -- Implementation
 			pixbuf_format: POINTER
 			a_cs: EV_GTK_C_STRING
 		do
-			formats := {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_get_formats
-			format_count := {EV_GTK_EXTERNALS}.g_slist_length (formats)
+			formats := {GTK2}.gdk_pixbuf_get_formats
+			format_count := {GTK}.g_slist_length (formats)
 			from
 				i := 0
 				create Result.make (0)
@@ -104,14 +104,14 @@ feature -- Implementation
 			until
 				i = format_count
 			loop
-				pixbuf_format := {EV_GTK_EXTERNALS}.g_slist_nth_data (formats, i)
-				a_cs.share_from_pointer ({EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_format_get_name (pixbuf_format))
+				pixbuf_format := {GTK}.g_slist_nth_data (formats, i)
+				a_cs.share_from_pointer ({GTK2}.gdk_pixbuf_format_get_name (pixbuf_format))
 				format_name := a_cs.string
 				if format_name.is_equal (once "jpeg") then
 					format_name := once "jpg"
 				end
 				if a_writeable then
-					if {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_format_is_writable (pixbuf_format) then
+					if {GTK2}.gdk_pixbuf_format_is_writable (pixbuf_format) then
 						Result.extend (format_name.as_upper)
 					end
 				else
@@ -119,7 +119,7 @@ feature -- Implementation
 				end
 				i := i + 1
 			end
-			{EV_GTK_EXTERNALS}.g_slist_free (formats)
+			{GTK}.g_slist_free (formats)
 		end
 
 	initialize_default_font_values
@@ -226,17 +226,17 @@ feature -- Implementation
 		local
 			font_name_ptr: POINTER
 		do
-			{EV_GTK_EXTERNALS}.g_object_get_string (default_gtk_settings, gtk_font_name_setting.item, $font_name_ptr)
+			{GTK2}.g_object_get_string (default_gtk_settings, gtk_font_name_setting.item, $font_name_ptr)
 			if font_name_ptr /= default_pointer then
 				if previous_font_settings /= default_pointer then
 					Result := c_strcmp (previous_font_settings, font_name_ptr) /= 0
 					if Result then
 							-- Font settings have changed
-						{EV_GTK_EXTERNALS}.g_free (previous_font_settings)
+						{GTK}.g_free (previous_font_settings)
 						previous_font_settings := font_name_ptr
 					else
 							-- Font settings have not changed so we free font_name_ptr.
-						{EV_GTK_EXTERNALS}.g_free (font_name_ptr)
+						{GTK}.g_free (font_name_ptr)
 					end
 				else
 					Result := True
@@ -260,7 +260,7 @@ feature -- Implementation
 	default_gtk_settings: POINTER
 			-- Default GtkSettings
 		once
-			Result := {EV_GTK_EXTERNALS}.gtk_settings_get_default
+			Result := {GTK}.gtk_settings_get_default
 		end
 
 	default_font_description: STRING_32
@@ -270,7 +270,7 @@ feature -- Implementation
 			a_cs: EV_GTK_C_STRING
 			l_result: detachable STRING_32
 		do
-			{EV_GTK_EXTERNALS}.g_object_get_string (default_gtk_settings, gtk_font_name_setting.item, $font_name_ptr)
+			{GTK2}.g_object_get_string (default_gtk_settings, gtk_font_name_setting.item, $font_name_ptr)
 			if font_name_ptr /= default_pointer then
 				create a_cs.make_from_pointer (font_name_ptr)
 				l_result := a_cs.string
@@ -341,8 +341,8 @@ feature -- Implementation
 		local
 			l_display, l_screen, l_wm_name: POINTER
 		do
-			l_display := {EV_GTK_EXTERNALS}.gdk_display_get_default
-			l_screen := {EV_GTK_EXTERNALS}.gdk_display_get_default_screen (l_display)
+			l_display := {GTK2}.gdk_display_get_default
+			l_screen := {GTK2}.gdk_display_get_default_screen (l_display)
 			l_wm_name := gdk_x11_screen_get_window_manager_name (l_screen)
 			create Result.make_from_c (l_wm_name)
 		end

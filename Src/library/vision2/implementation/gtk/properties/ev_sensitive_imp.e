@@ -23,7 +23,7 @@ feature -- Status report
 		do
 			-- Shift to put bit in least significant place then take mod 2
 			if not is_destroyed then
-				Result := {EV_GTK_EXTERNALS}.gtk_widget_is_sensitive (c_object)
+				Result := {GTK}.gtk_widget_is_sensitive (c_object)
 			end
 		end
 
@@ -32,20 +32,20 @@ feature -- Status setting
 	enable_sensitive
 			-- Allow the object to be sensitive to user input.
 		do
-			{EV_GTK_EXTERNALS}.gtk_widget_set_sensitive (c_object, True)
-			if {EV_GTK_EXTERNALS}.gtk_is_event_box (c_object) then
+			{GTK}.gtk_widget_set_sensitive (c_object, True)
+			if {GTK}.gtk_is_event_box (c_object) then
 					-- Restore visible window for event box.
-				{EV_GTK_EXTERNALS}.gtk_event_box_set_visible_window (c_object, True)
+				{GTK2}.gtk_event_box_set_visible_window (c_object, True)
 			end
 		end
 
 	disable_sensitive
 			-- Set the object to ignore all user input.
 		do
-			{EV_GTK_EXTERNALS}.gtk_widget_set_sensitive (c_object, False)
-			if {EV_GTK_EXTERNALS}.gtk_is_event_box (c_object) then
+			{GTK}.gtk_widget_set_sensitive (c_object, False)
+			if {GTK}.gtk_is_event_box (c_object) then
 					-- We hide the event box Window so that it cannot be seen disabled.
-				{EV_GTK_EXTERNALS}.gtk_event_box_set_visible_window (c_object, False)
+				{GTK2}.gtk_event_box_set_visible_window (c_object, False)
 			end
 		end
 

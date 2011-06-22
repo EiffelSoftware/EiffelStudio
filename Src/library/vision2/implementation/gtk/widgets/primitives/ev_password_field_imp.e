@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 			-- Create password field with `*'.
 		do
 			Precursor {EV_TEXT_FIELD_IMP}
-			{EV_GTK_EXTERNALS}.gtk_entry_set_visibility (entry_widget, False)
+			{GTK}.gtk_entry_set_visibility (entry_widget, False)
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation

@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 	make
 		do
 			--| Hack to prevent invariant violation
-			set_c_object ({EV_GTK_EXTERNALS}.gtk_label_new (NULL))
+			set_c_object ({GTK}.gtk_label_new (NULL))
 
 				-- World needs resetting on project
 			set_is_initialized (True)

@@ -65,8 +65,8 @@ feature -- Implementation
 			a_mcl ?= eif_id_object (a_object_id)
 			if a_mcl /= Void and then a_mcl.column_resized_actions_internal /= Void then
 				if a_column > 0 then
-					a_column_ptr := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_column (a_mcl.tree_view, a_column - 1)
-					temp_width := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_get_width (a_column_ptr)
+					a_column_ptr := {GTK2}.gtk_tree_view_get_column (a_mcl.tree_view, a_column - 1)
+					temp_width := {GTK2}.gtk_tree_view_column_get_width (a_column_ptr)
 					if (a_column) <= a_mcl.column_count and then a_mcl.column_widths /= Void and then a_mcl.column_width (a_column) /= temp_width then
 						a_mcl.update_column_width (temp_width, a_column)
 						if attached a_mcl.column_resized_actions_internal as l_mcl_column_resized_actions then
@@ -85,8 +85,8 @@ feature -- Implementation
 		do
 			a_rich_text ?= eif_id_object (a_object_id)
 			if a_rich_text /= Void and then not a_rich_text.is_destroyed then
-				a_text_iter := {EV_GTK_EXTERNALS}.gtk_value_pointer ({EV_GTK_DEPENDENT_EXTERNALS}.g_value_array_i_th (args, 1))
-				a_text_mark := {EV_GTK_EXTERNALS}.gtk_value_pointer ({EV_GTK_DEPENDENT_EXTERNALS}.g_value_array_i_th (args, 2))
+				a_text_iter := {GTK2}.gtk_value_pointer ({GTK2}.g_value_array_i_th (args, 1))
+				a_text_mark := {GTK2}.gtk_value_pointer ({GTK2}.g_value_array_i_th (args, 2))
 				a_rich_text.on_text_mark_changed (a_text_iter, a_text_mark )
 			end
 		end
@@ -100,7 +100,7 @@ feature -- Implementation
 		do
 			a_tree_imp ?= eif_id_object (a_object_id)
 			if a_tree_imp /= Void and then not a_tree_imp.is_destroyed then
-				a_tree_path := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_pointer ({EV_GTK_DEPENDENT_EXTERNALS}.gtk_args_array_i_th (args, 1))
+				a_tree_path := {GTK2}.gtk_value_pointer ({GTK2}.gtk_args_array_i_th (args, 1))
 				a_tree_node := a_tree_imp.node_from_tree_path (a_tree_path)
 				if is_expanded then
 					-- Call tree node expand actions
@@ -124,7 +124,7 @@ feature -- Implementation
 		do
 			a_list_imp ?= eif_id_object (a_object_id)
 			if a_list_imp /= Void and then not a_list_imp.is_destroyed then
-				a_tree_path_str := {EV_GTK_EXTERNALS}.gtk_value_pointer ({EV_GTK_EXTERNALS}.gtk_args_array_i_th (args, 0))
+				a_tree_path_str := {GTK2}.gtk_value_pointer ({GTK2}.gtk_args_array_i_th (args, 0))
 				a_list_imp.on_tree_path_toggle (a_tree_path_str)
 			end
 		end
@@ -134,8 +134,8 @@ feature -- Implementation
 		local
 			gtkarg2: POINTER
 		do
-			gtkarg2 := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_args_array_i_th (args, 1)
-			Result := [{EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_uint (gtkarg2)]
+			gtkarg2 := {GTK2}.gtk_args_array_i_th (args, 1)
+			Result := [{GTK2}.gtk_value_uint (gtkarg2)]
 		end
 
 	on_pnd_deferred_item_parent_selection_change (a_object_id: INTEGER)

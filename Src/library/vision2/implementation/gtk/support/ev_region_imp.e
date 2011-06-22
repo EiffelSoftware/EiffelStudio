@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 	make
 			-- Initialize `Current'.
 		do
-			gdk_region := {EV_GTK_EXTERNALS}.gdk_region_new
+			gdk_region := {GTK}.gdk_region_new
 			set_is_initialized (True)
 		end
 
@@ -37,20 +37,20 @@ feature -- Element Change
 		local
 			rectangle_struct: POINTER
 		do
-			rectangle_struct := {EV_GTK_EXTERNALS}.c_gdk_rectangle_struct_allocate
-			{EV_GTK_DEPENDENT_EXTERNALS}.set_gdk_rectangle_struct_x (rectangle_struct, a_rectangle.x)
-			{EV_GTK_DEPENDENT_EXTERNALS}.set_gdk_rectangle_struct_y (rectangle_struct, a_rectangle.y)
-			{EV_GTK_DEPENDENT_EXTERNALS}.set_gdk_rectangle_struct_width (rectangle_struct, a_rectangle.width)
-			{EV_GTK_DEPENDENT_EXTERNALS}.set_gdk_rectangle_struct_height (rectangle_struct, a_rectangle.height)
+			rectangle_struct := {GTK}.c_gdk_rectangle_struct_allocate
+			{GTK2}.set_gdk_rectangle_struct_x (rectangle_struct, a_rectangle.x)
+			{GTK2}.set_gdk_rectangle_struct_y (rectangle_struct, a_rectangle.y)
+			{GTK2}.set_gdk_rectangle_struct_width (rectangle_struct, a_rectangle.width)
+			{GTK2}.set_gdk_rectangle_struct_height (rectangle_struct, a_rectangle.height)
 			dispose
-			gdk_region := {EV_GTK_EXTERNALS}.gdk_region_rectangle (rectangle_struct)
+			gdk_region := {GTK2}.gdk_region_rectangle (rectangle_struct)
 			rectangle_struct.memory_free
 		end
 
 	offset (a_horizontal_offset, a_vertical_offset: INTEGER)
 			-- Move `Current' a `a_horizontal_offset' horizontally and `a_vertical_offset' vertically.
 		do
-			{EV_GTK_EXTERNALS}.gdk_region_offset (gdk_region, a_horizontal_offset, a_vertical_offset)
+			{GTK}.gdk_region_offset (gdk_region, a_horizontal_offset, a_vertical_offset)
 		end
 
 feature -- Access
@@ -65,7 +65,7 @@ feature -- Access
 			check l_result_imp /= Void end
 			l_region_imp ?= a_region.implementation
 			check l_region_imp /= Void end
-			{EV_GTK_EXTERNALS}.gdk_region_intersect (l_result_imp.gdk_region, l_region_imp.gdk_region)
+			{GTK2}.gdk_region_intersect (l_result_imp.gdk_region, l_region_imp.gdk_region)
 		end
 
 	union (a_region: EV_REGION): EV_REGION
@@ -78,7 +78,7 @@ feature -- Access
 			check l_result_imp /= Void end
 			l_region_imp ?= a_region.implementation
 			check l_region_imp /= Void end
-			{EV_GTK_EXTERNALS}.gdk_region_union (l_result_imp.gdk_region, l_region_imp.gdk_region)
+			{GTK2}.gdk_region_union (l_result_imp.gdk_region, l_region_imp.gdk_region)
 		end
 
 	subtract (a_region: EV_REGION): EV_REGION
@@ -91,7 +91,7 @@ feature -- Access
 			check l_result_imp /= Void end
 			l_region_imp ?= a_region.implementation
 			check l_region_imp /= Void end
-			{EV_GTK_EXTERNALS}.gdk_region_subtract (l_result_imp.gdk_region, l_region_imp.gdk_region)
+			{GTK2}.gdk_region_subtract (l_result_imp.gdk_region, l_region_imp.gdk_region)
 		end
 
 	exclusive_or (a_region: EV_REGION): EV_REGION
@@ -104,7 +104,7 @@ feature -- Access
 			check l_result_imp /= Void end
 			l_region_imp ?= a_region.implementation
 			check l_region_imp /= Void end
-			{EV_GTK_EXTERNALS}.gdk_region_xor (l_result_imp.gdk_region, l_region_imp.gdk_region)
+			{GTK2}.gdk_region_xor (l_result_imp.gdk_region, l_region_imp.gdk_region)
 		end
 
 feature -- Duplication
@@ -117,7 +117,7 @@ feature -- Duplication
 			dispose
 			l_region_imp ?= other.implementation
 			check l_region_imp /= Void end
-			gdk_region := {EV_GTK_EXTERNALS}.gdk_region_copy (l_region_imp.gdk_region)
+			gdk_region := {GTK2}.gdk_region_copy (l_region_imp.gdk_region)
 		end
 
 feature {EV_DRAWABLE_IMP, EV_REGION_IMP} -- Access
@@ -135,7 +135,7 @@ feature {NONE} -- Implementation
 			if other /= Void then
 				l_region_imp ?= other.implementation
 				check l_region_imp /= Void end
-				Result := {EV_GTK_EXTERNALS}.gdk_region_equal (gdk_region, l_region_imp.gdk_region)
+				Result := {GTK}.gdk_region_equal (gdk_region, l_region_imp.gdk_region)
 			end
 		end
 
@@ -151,7 +151,7 @@ feature {NONE} -- Implementation
 			-- Clean up `Current'.
 		do
 			if gdk_region /= default_pointer then
-				{EV_GTK_EXTERNALS}.gdk_region_destroy (gdk_region)
+				{GTK}.gdk_region_destroy (gdk_region)
 				gdk_region := default_pointer
 			end
 		end

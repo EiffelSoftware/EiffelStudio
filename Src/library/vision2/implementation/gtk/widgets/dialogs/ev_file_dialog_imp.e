@@ -38,18 +38,18 @@ feature {NONE} -- Initialization
 		do
 			a_cs := "Select file"
 			set_c_object
-				({EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_dialog_new (a_cs.item, NULL, file_chooser_action))
+				({GTK2}.gtk_file_chooser_dialog_new (a_cs.item, NULL, file_chooser_action))
 			create filters.make (0)
 			Precursor {EV_STANDARD_DIALOG_IMP}
 			set_is_initialized (False)
 
 			filter := "*.*"
 
-			a_cancel_button := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_dialog_add_button (c_object, {EV_GTK_DEPENDENT_EXTERNALS}.gtk_stock_cancel_enum, {EV_GTK_EXTERNALS}.gtk_response_cancel_enum)
-			a_ok_button := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_dialog_add_button (c_object, {EV_GTK_DEPENDENT_EXTERNALS}.gtk_stock_ok_enum, {EV_GTK_EXTERNALS}.gtk_response_accept_enum)
+			a_cancel_button := {GTK2}.gtk_dialog_add_button (c_object, {GTK2}.gtk_stock_cancel_enum, {GTK2}.gtk_response_cancel_enum)
+			a_ok_button := {GTK2}.gtk_dialog_add_button (c_object, {GTK2}.gtk_stock_ok_enum, {GTK2}.gtk_response_accept_enum)
 
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_set_local_only (c_object, True)
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_dialog_set_default_response (c_object, {EV_GTK_EXTERNALS}.gtk_response_accept_enum)
+			{GTK2}.gtk_file_chooser_set_local_only (c_object, True)
+			{GTK2}.gtk_dialog_set_default_response (c_object, {GTK2}.gtk_response_accept_enum)
 
 			real_signal_connect (
 				a_ok_button,
@@ -78,7 +78,7 @@ feature -- Access
 			if
 				attached selected_button as l_selected_button and then l_selected_button.is_equal (internal_accept)
 			then
-				create a_cs.share_from_pointer ({EV_GTK_EXTERNALS}.gtk_file_chooser_get_filename (c_object))
+				create a_cs.share_from_pointer ({GTK2}.gtk_file_chooser_get_filename (c_object))
 				Result := a_cs.string
 			else
 				Result := ""
@@ -95,17 +95,17 @@ feature -- Access
 			a_current_filter, a_filter_list: POINTER
 			i: INTEGER
 		do
-			a_current_filter := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_get_filter (c_object)
-			a_filter_list := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_list_filters (c_object)
+			a_current_filter := {GTK2}.gtk_file_chooser_get_filter (c_object)
+			a_filter_list := {GTK2}.gtk_file_chooser_list_filters (c_object)
 			if a_current_filter /= NULL and then a_filter_list /= NULL then
 				from
 					i := 0
 				until
-					{EV_GTK_EXTERNALS}.g_slist_nth_data (a_filter_list, i) = a_current_filter
+					{GTK}.g_slist_nth_data (a_filter_list, i) = a_current_filter
 				loop
 					i := i + 1
 				end
-				{EV_GTK_EXTERNALS}.g_slist_free (a_filter_list)
+				{GTK}.g_slist_free (a_filter_list)
 				Result := i + 1
 			end
 
@@ -166,21 +166,21 @@ feature -- Element change
 			remove_file_filters
 
 			if not a_filter.is_equal ("*.*") then
-				a_filter_ptr := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_filter_new
+				a_filter_ptr := {GTK2}.gtk_file_filter_new
 				a_cs :=  (a_filter)
-				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_filter_add_pattern (a_filter_ptr, a_cs.item)
+				{GTK2}.gtk_file_filter_add_pattern (a_filter_ptr, a_cs.item)
 				a_cs :=  (filter_name)
-				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_filter_set_name (a_filter_ptr, a_cs.item)
-				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_add_filter (c_object, a_filter_ptr)
+				{GTK2}.gtk_file_filter_set_name (a_filter_ptr, a_cs.item)
+				{GTK2}.gtk_file_chooser_add_filter (c_object, a_filter_ptr)
 			end
 
 			a_cs :=  ("*")
 					-- File filter uses a globbing pattern so this is the only filter that can show all files
-			a_filter_ptr := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_filter_new
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_filter_add_pattern (a_filter_ptr, a_cs.item)
+			a_filter_ptr := {GTK2}.gtk_file_filter_new
+			{GTK2}.gtk_file_filter_add_pattern (a_filter_ptr, a_cs.item)
 			a_cs :=  ("All files *.*")
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_filter_set_name (a_filter_ptr, a_cs.item)
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_add_filter (c_object, a_filter_ptr)
+			{GTK2}.gtk_file_filter_set_name (a_filter_ptr, a_cs.item)
+			{GTK2}.gtk_file_chooser_add_filter (c_object, a_filter_ptr)
 		end
 
 	set_file_name (a_name: READABLE_STRING_GENERAL)
@@ -189,7 +189,7 @@ feature -- Element change
 			a_cs: EV_GTK_C_STRING
 		do
 			a_cs := a_name
-			{EV_GTK_EXTERNALS}.gtk_file_chooser_set_filename (c_object, a_cs.item)
+			{GTK2}.gtk_file_chooser_set_filename (c_object, a_cs.item)
 		end
 
 	set_start_directory (a_path: READABLE_STRING_GENERAL)
@@ -199,7 +199,7 @@ feature -- Element change
 		do
 			start_directory := a_path.as_string_32.twin
 			a_cs := start_directory + "/"
-			{EV_GTK_EXTERNALS}.gtk_file_chooser_set_current_folder (
+			{GTK2}.gtk_file_chooser_set_current_folder (
 				c_object,
 				a_cs.item
 			)
@@ -216,7 +216,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 			a_cs: EV_GTK_C_STRING
 		do
 			create temp_filename.make (0)
-			a_filename := {EV_GTK_EXTERNALS}.gtk_file_chooser_get_filename (c_object)
+			a_filename := {GTK2}.gtk_file_chooser_get_filename (c_object)
 			if a_filename /= NULL then
 				create a_cs.share_from_pointer (a_filename)
 				temp_filename := a_cs.string
@@ -237,18 +237,18 @@ feature {NONE} -- Implementation
 			a_filter: POINTER
 			i: INTEGER
 		do
-			a_filter_list := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_list_filters (c_object)
+			a_filter_list := {GTK2}.gtk_file_chooser_list_filters (c_object)
 			if a_filter_list /= NULL then
 				from
-					a_filter := {EV_GTK_EXTERNALS}.g_slist_nth_data (a_filter_list, i)
+					a_filter := {GTK}.g_slist_nth_data (a_filter_list, i)
 				until
 					a_filter = NULL
 				loop
-					{EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_remove_filter (c_object, a_filter)
+					{GTK2}.gtk_file_chooser_remove_filter (c_object, a_filter)
 					i := i + 1
-					a_filter := {EV_GTK_EXTERNALS}.g_slist_nth_data (a_filter_list, i)
+					a_filter := {GTK}.g_slist_nth_data (a_filter_list, i)
 				end
-				{EV_GTK_EXTERNALS}.g_slist_free (a_filter_list)
+				{GTK}.g_slist_free (a_filter_list)
 			end
 		end
 
@@ -273,9 +273,9 @@ feature {NONE} -- Implementation
 				if current_filter_string /= Void then
 					filter_string_list := current_filter_string.to_string_32.split (';')
 					if current_filter_description /= Void then
-						filter_ptr := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_filter_new
+						filter_ptr := {GTK2}.gtk_file_filter_new
 						create a_cs.set_with_eiffel_string (current_filter_description)
-						{EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_filter_set_name (filter_ptr, a_cs.item)
+						{GTK2}.gtk_file_filter_set_name (filter_ptr, a_cs.item)
 						from
 							filter_string_list.start
 						until
@@ -286,10 +286,10 @@ feature {NONE} -- Implementation
 							else
 								a_cs := filter_string_list.item
 							end
-							{EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_filter_add_pattern (filter_ptr, a_cs.item)
+							{GTK2}.gtk_file_filter_add_pattern (filter_ptr, a_cs.item)
 							filter_string_list.forth
 						end
-						{EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_add_filter (c_object, filter_ptr)
+						{GTK2}.gtk_file_chooser_add_filter (c_object, filter_ptr)
 					end
 				end
 				filters.forth

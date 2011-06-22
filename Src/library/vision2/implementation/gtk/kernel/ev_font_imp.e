@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			l_app_imp: like app_implementation
 		do
 			l_app_imp := app_implementation
-			font_description := {EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_new
+			font_description := {GTK2}.pango_font_description_new
 			create preferred_families
 			family := Family_sans
 			set_face_name (l_app_imp.default_font_name)
@@ -101,7 +101,7 @@ feature -- Element change
 		do
 			name := a_face.as_string_32
 			propvalue := app_implementation.c_string_from_eiffel_string (a_face)
-			{EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_set_family (font_description, propvalue.item)
+			{GTK2}.pango_font_description_set_family (font_description, propvalue.item)
 			calculate_font_metrics
 		end
 
@@ -109,7 +109,7 @@ feature -- Element change
 			-- Set `a_weight' as preferred font thickness.
 		do
 			weight := a_weight
-			{EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_set_weight (font_description, pango_weight)
+			{GTK2}.pango_font_description_set_weight (font_description, pango_weight)
 			calculate_font_metrics
 		end
 
@@ -117,7 +117,7 @@ feature -- Element change
 			-- Set `a_shape' as preferred font slant.
 		do
 			shape := a_shape
-			{EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_set_style (font_description, pango_style)
+			{GTK2}.pango_font_description_set_style (font_description, pango_style)
 			calculate_font_metrics
 		end
 
@@ -126,7 +126,7 @@ feature -- Element change
 		do
 			height_in_points := app_implementation.point_value_from_pixel_value (a_height)
 			height  := a_height
-			{EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_set_size (font_description, height_in_points * {EV_GTK_DEPENDENT_EXTERNALS}.pango_scale)
+			{GTK2}.pango_font_description_set_size (font_description, height_in_points * {GTK2}.pango_scale)
 			calculate_font_metrics
 		end
 
@@ -135,7 +135,7 @@ feature -- Element change
 		do
 			height_in_points := a_height
 			height := app_implementation.pixel_value_from_point_value (a_height)
-			{EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_set_size (font_description, height_in_points * {EV_GTK_DEPENDENT_EXTERNALS}.pango_scale)
+			{GTK2}.pango_font_description_set_size (font_description, height_in_points * {GTK2}.pango_scale)
 			calculate_font_metrics
 		end
 
@@ -223,26 +223,26 @@ feature -- Status report
 			a_cs := l_app_imp.c_string_from_eiffel_string (a_string)
 
 			a_pango_layout := l_app_imp.pango_layout
-			{EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_text (a_pango_layout, a_cs.item, a_cs.string_length)
-			{EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_font_description (a_pango_layout, font_description)
+			{GTK2}.pango_layout_set_text (a_pango_layout, a_cs.item, a_cs.string_length)
+			{GTK2}.pango_layout_set_font_description (a_pango_layout, font_description)
 
-			ink_rect := {EV_GTK_DEPENDENT_EXTERNALS}.c_pango_rectangle_struct_allocate
+			ink_rect := {GTK2}.c_pango_rectangle_struct_allocate
 			log_rect := reusable_pango_rectangle_struct
-			{EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_get_pixel_extents (a_pango_layout, ink_rect, log_rect)
+			{GTK2}.pango_layout_get_pixel_extents (a_pango_layout, ink_rect, log_rect)
 
 			a_pango_iter := l_app_imp.pango_iter
-			a_baseline := {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_iter_get_baseline (a_pango_iter) // {EV_GTK_DEPENDENT_EXTERNALS}.pango_scale
-			{EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_iter_free (a_pango_iter)
+			a_baseline := {GTK2}.pango_layout_iter_get_baseline (a_pango_iter) // {GTK2}.pango_scale
+			{GTK2}.pango_layout_iter_free (a_pango_iter)
 
-			log_x := {EV_GTK_DEPENDENT_EXTERNALS}.pango_rectangle_struct_x (log_rect)
-			log_y := {EV_GTK_DEPENDENT_EXTERNALS}.pango_rectangle_struct_y (log_rect)
-			log_width := {EV_GTK_DEPENDENT_EXTERNALS}.pango_rectangle_struct_width (log_rect)
-			log_height := {EV_GTK_DEPENDENT_EXTERNALS}.pango_rectangle_struct_height (log_rect)
+			log_x := {GTK2}.pango_rectangle_struct_x (log_rect)
+			log_y := {GTK2}.pango_rectangle_struct_y (log_rect)
+			log_width := {GTK2}.pango_rectangle_struct_width (log_rect)
+			log_height := {GTK2}.pango_rectangle_struct_height (log_rect)
 
-			ink_x := {EV_GTK_DEPENDENT_EXTERNALS}.pango_rectangle_struct_x (ink_rect)
-			ink_y := {EV_GTK_DEPENDENT_EXTERNALS}.pango_rectangle_struct_y (ink_rect)
-			ink_width := {EV_GTK_DEPENDENT_EXTERNALS}.pango_rectangle_struct_width (ink_rect)
-			ink_height := {EV_GTK_DEPENDENT_EXTERNALS}.pango_rectangle_struct_height (ink_rect)
+			ink_x := {GTK2}.pango_rectangle_struct_x (ink_rect)
+			ink_y := {GTK2}.pango_rectangle_struct_y (ink_rect)
+			ink_width := {GTK2}.pango_rectangle_struct_width (ink_rect)
+			ink_height := {GTK2}.pango_rectangle_struct_height (ink_rect)
 
 			a_width := log_width
 			a_height := log_height
@@ -267,7 +267,7 @@ feature -- Status report
 			Result.put_integer (bottom_off, 7)
 
 			ink_rect.memory_free
-			{EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_font_description (a_pango_layout, default_pointer)
+			{GTK2}.pango_layout_set_font_description (a_pango_layout, default_pointer)
 		end
 
 	reusable_string_size_tuple: TUPLE [INTEGER, INTEGER, INTEGER, INTEGER, INTEGER, INTEGER, INTEGER]
@@ -287,16 +287,16 @@ feature -- Status report
 			l_app_imp := App_implementation
 			a_cs := l_app_imp.c_string_from_eiffel_string (a_string)
 			a_pango_layout := l_app_imp.pango_layout
-			{EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_text (a_pango_layout, a_cs.item, a_cs.string_length)
-			{EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_font_description (a_pango_layout, font_description)
-			{EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_get_pixel_size (a_pango_layout, $Result, $temp_height)
-			{EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_font_description (a_pango_layout, default_pointer)
+			{GTK2}.pango_layout_set_text (a_pango_layout, a_cs.item, a_cs.string_length)
+			{GTK2}.pango_layout_set_font_description (a_pango_layout, font_description)
+			{GTK2}.pango_layout_get_pixel_size (a_pango_layout, $Result, $temp_height)
+			{GTK2}.pango_layout_set_font_description (a_pango_layout, default_pointer)
 		end
 
 	reusable_pango_rectangle_struct: POINTER
 			-- PangoRectangle that may be reused to prevent memory allocation, must not be freed
 		once
-			Result := {EV_GTK_DEPENDENT_EXTERNALS}.c_pango_rectangle_struct_allocate
+			Result := {GTK2}.c_pango_rectangle_struct_allocate
 		end
 
 	horizontal_resolution: INTEGER
@@ -483,8 +483,8 @@ feature {EV_ANY_I} -- Implementation
 	dispose
 			-- Clean up `Current'
 		do
-			{EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_set_family (font_description, default_pointer)
-			{EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_free (font_description)
+			{GTK2}.pango_font_description_set_family (font_description, default_pointer)
+			{GTK2}.pango_font_description_free (font_description)
 		end
 
 note

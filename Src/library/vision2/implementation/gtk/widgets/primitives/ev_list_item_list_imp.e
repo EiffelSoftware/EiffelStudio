@@ -284,19 +284,19 @@ feature -- Insertion
 			a_cs := App_implementation.reusable_gtk_c_string
 			a_cs.share_with_eiffel_string (a_text)
 			str_value := g_value_string_struct
-			{EV_GTK_DEPENDENT_EXTERNALS}.g_value_take_string (str_value, a_cs.item)
+			{GTK2}.g_value_take_string (str_value, a_cs.item)
 			a_list_item_imp ?= child_array.i_th (a_row).implementation
 			check a_list_item_imp /= Void end
 			l_list_iter := a_list_item_imp.list_iter
 			check l_list_iter /= Void end
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_set_value (list_store, l_list_iter.item, 1, str_value)
+			{GTK2}.gtk_list_store_set_value (list_store, l_list_iter.item, 1, str_value)
 		end
 
 	g_value_string_struct: POINTER
 			-- Optimization for GValue struct access
 		once
-			Result := {EV_GTK_DEPENDENT_EXTERNALS}.c_g_value_struct_allocate
-			{EV_GTK_DEPENDENT_EXTERNALS}.g_value_init_string (Result)
+			Result := {GTK2}.c_g_value_struct_allocate
+			{GTK2}.g_value_init_string (Result)
 		end
 
 	set_row_pixmap (a_row: INTEGER; a_pixmap: EV_PIXMAP)
@@ -314,8 +314,8 @@ feature -- Insertion
 			check a_list_item_imp /= Void end
 			a_list_iter := a_list_item_imp.list_iter
 			check a_list_iter /= Void end
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_set_pixbuf (list_store, a_list_iter.item, 0, a_pixbuf)
-			{EV_GTK_EXTERNALS}.object_unref (a_pixbuf)
+			{GTK2}.gtk_list_store_set_pixbuf (list_store, a_list_iter.item, 0, a_pixbuf)
+			{GTK2}.object_unref (a_pixbuf)
 		end
 
 	remove_row_pixmap (a_row: INTEGER)
@@ -328,7 +328,7 @@ feature -- Insertion
 			check a_list_item_imp /= Void end
 			l_list_iter := a_list_item_imp.list_iter
 			check l_list_iter /= Void end
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_set_pixbuf (list_store, l_list_iter.item, 0, NULL)
+			{GTK2}.gtk_list_store_set_pixbuf (list_store, l_list_iter.item, 0, NULL)
 		end
 
 	insert_i_th (v: attached like item; i: INTEGER)
@@ -347,7 +347,7 @@ feature -- Insertion
 				-- Add row to model
 			create a_tree_iter.make
 			item_imp.set_list_iter (a_tree_iter)
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_insert (list_store, a_tree_iter.item, i - 1)
+			{GTK2}.gtk_list_store_insert (list_store, a_tree_iter.item, i - 1)
 			set_text_on_position (i, v.text)
 
 			if attached v.pixmap as l_pixmap then
@@ -381,7 +381,7 @@ feature {NONE} -- Implementation
 			item_imp.set_parent_imp (Void)
 			l_list_iter := item_imp.list_iter
 			check l_list_iter /= Void end
-			{EV_GTK_EXTERNALS}.gtk_list_store_remove (list_store, l_list_iter.item)
+			{GTK2}.gtk_list_store_remove (list_store, l_list_iter.item)
 			-- remove the row from the `ev_children'
 			child_array.go_i_th (an_index)
 			child_array.remove

@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 
 	new_gtk_button: POINTER
 		do
-			Result := {EV_GTK_EXTERNALS}.gtk_toggle_button_new
+			Result := {GTK}.gtk_toggle_button_new
 		end
 
 feature -- Status setting
@@ -44,7 +44,7 @@ feature -- Status setting
 			-- Set `is_selected' `True'.
 		do
 			if not is_selected then
-				{EV_GTK_EXTERNALS}.gtk_toggle_button_set_active (visual_widget, True)
+				{GTK}.gtk_toggle_button_set_active (visual_widget, True)
 			end
 		end
 
@@ -52,7 +52,7 @@ feature -- Status setting
 				-- Set `is_selected' `False'.
 		do
 			if is_selected then
-				{EV_GTK_EXTERNALS}.gtk_toggle_button_set_active (visual_widget, False)
+				{GTK}.gtk_toggle_button_set_active (visual_widget, False)
 			end
 		end
 
@@ -61,7 +61,7 @@ feature -- Status report
 	is_selected: BOOLEAN
 			-- Is toggle button pressed?
 		do
-			Result := {EV_GTK_EXTERNALS}.gtk_toggle_button_get_active (visual_widget)
+			Result := {GTK}.gtk_toggle_button_get_active (visual_widget)
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation

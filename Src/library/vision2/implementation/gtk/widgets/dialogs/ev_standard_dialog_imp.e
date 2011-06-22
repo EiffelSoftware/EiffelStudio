@@ -37,7 +37,7 @@ feature -- Access
 			a_cs: EV_GTK_C_STRING
 		do
 			a_cs := app_implementation.reusable_gtk_c_string
-			a_cs.share_from_pointer ({EV_GTK_EXTERNALS}.gtk_window_struct_title (c_object))
+			a_cs.share_from_pointer ({GTK}.gtk_window_struct_title (c_object))
 			Result := a_cs.string
 		end
 
@@ -71,7 +71,7 @@ feature -- Status setting
 			a_cs: EV_GTK_C_STRING
 		do
 			a_cs := a_title
-			{EV_GTK_EXTERNALS}.gtk_window_set_title (c_object, a_cs.item)
+			{GTK}.gtk_window_set_title (c_object, a_cs.item)
 		end
 
 feature {EV_GTK_WIDGET_IMP} -- Implementation
@@ -106,11 +106,11 @@ feature {NONE} -- Implementation
 		local
 			close_fct: INTEGER
 		do
-			close_fct := {EV_GTK_EXTERNALS}.Gdk_func_close_enum
-			close_fct := close_fct.bit_or ({EV_GTK_EXTERNALS}.Gdk_func_move_enum)
-			close_fct := close_fct.bit_or ({EV_GTK_EXTERNALS}.Gdk_func_resize_enum)
-			{EV_GTK_EXTERNALS}.gdk_window_set_functions (
-				{EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object),
+			close_fct := {GTK}.Gdk_func_close_enum
+			close_fct := close_fct.bit_or ({GTK}.Gdk_func_move_enum)
+			close_fct := close_fct.bit_or ({GTK}.Gdk_func_resize_enum)
+			{GTK}.gdk_window_set_functions (
+				{GTK}.gtk_widget_struct_window (c_object),
 				close_fct
 			)
 		end
@@ -127,7 +127,7 @@ feature {NONE} -- Implementation
 	default_wm_decorations: INTEGER
 			-- Default Window Manager decorations of `Current'.
 		do
-			Result := {EV_GTK_EXTERNALS}.gdk_decor_all_enum
+			Result := {GTK}.gdk_decor_all_enum
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation

@@ -54,9 +54,9 @@ feature {NONE} -- Initialization
 	initialize_menu_item
 			-- Create and initialize gtk menu object.
 		do
-			set_c_object ({EV_GTK_DEPENDENT_EXTERNALS}.gtk_image_menu_item_new)
+			set_c_object ({GTK2}.gtk_image_menu_item_new)
 			pixmapable_imp_initialize
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_image_menu_item_set_image (menu_item, pixmap_box)
+			{GTK2}.gtk_image_menu_item_set_image (menu_item, pixmap_box)
 		end
 
 	make
@@ -69,22 +69,22 @@ feature {NONE} -- Initialization
 			real_signal_connect_after (menu_item, once "activate", agent (App_implementation.gtk_marshal).menu_item_activate_intermediary (c_object), Void)
 			textable_imp_initialize
 
-			box := {EV_GTK_EXTERNALS}.gtk_hbox_new (False, 0)
-			{EV_GTK_EXTERNALS}.gtk_container_add (menu_item, box)
-			{EV_GTK_EXTERNALS}.gtk_widget_show (box)
+			box := {GTK}.gtk_hbox_new (False, 0)
+			{GTK}.gtk_container_add (menu_item, box)
+			{GTK}.gtk_widget_show (box)
 
 			if pixmap_box = default_pointer then
 				pixmapable_imp_initialize
-				{EV_GTK_EXTERNALS}.gtk_box_pack_start (box, pixmap_box, False, True, 0)
+				{GTK}.gtk_box_pack_start (box, pixmap_box, False, True, 0)
 			end
-			{EV_GTK_EXTERNALS}.gtk_box_pack_start (box, text_label, False, True, 0)
+			{GTK}.gtk_box_pack_start (box, text_label, False, True, 0)
 
-			accel_label := {EV_GTK_EXTERNALS}.gtk_label_new (default_pointer)
+			accel_label := {GTK}.gtk_label_new (default_pointer)
 				-- We right align accelerator text.
-			{EV_GTK_EXTERNALS}.gtk_misc_set_alignment (accel_label, {REAL_32} 1.0, {REAL_32} 0.5)
-			{EV_GTK_EXTERNALS}.gtk_misc_set_padding (accel_label, 0, 0)
-			{EV_GTK_EXTERNALS}.gtk_box_pack_start (box, accel_label, True, True, 2)
-			{EV_GTK_EXTERNALS}.gtk_label_set_justify (accel_label, {EV_GTK_EXTERNALS}.gtk_justify_right_enum)
+			{GTK}.gtk_misc_set_alignment (accel_label, {REAL_32} 1.0, {REAL_32} 0.5)
+			{GTK}.gtk_misc_set_padding (accel_label, 0, 0)
+			{GTK}.gtk_box_pack_start (box, accel_label, True, True, 2)
+			{GTK}.gtk_label_set_justify (accel_label, {GTK}.gtk_justify_right_enum)
 		end
 
 		accel_label: POINTER
@@ -104,13 +104,13 @@ feature -- Element change
 				Precursor {EV_TEXTABLE_IMP} (l_split_list @ 1)
 				real_text := a_text
 				a_cs :=  "            " + l_split_list @ 2
-				{EV_GTK_EXTERNALS}.gtk_widget_show (accel_label)
+				{GTK}.gtk_widget_show (accel_label)
 			else
 				Precursor {EV_TEXTABLE_IMP} (a_text)
 				a_cs := ""
-				{EV_GTK_EXTERNALS}.gtk_widget_hide (accel_label)
+				{GTK}.gtk_widget_hide (accel_label)
 			end
-			{EV_GTK_EXTERNALS}.gtk_label_set_text (accel_label, a_cs.item)
+			{GTK}.gtk_label_set_text (accel_label, a_cs.item)
 		end
 
 feature {EV_MENU_ITEM_LIST_IMP} -- Implementation
@@ -134,9 +134,9 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 				if p_imp.item_select_actions_internal /= Void then
 					p_imp.item_select_actions.call ([attached_interface])
 				end
-				{EV_GTK_EXTERNALS}.gtk_menu_shell_deactivate (p_imp.list_widget)
+				{GTK}.gtk_menu_shell_deactivate (p_imp.list_widget)
 			end
-			{EV_GTK_EXTERNALS}.gtk_menu_item_deselect (menu_item)
+			{GTK}.gtk_menu_item_deselect (menu_item)
 			if select_actions_internal /= Void then
 				select_actions_internal.call (Void)
 			end

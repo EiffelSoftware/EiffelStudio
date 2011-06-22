@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 			-- Connect action sequences to GTK signals.
 		do
 			Precursor {EV_PICK_AND_DROPABLE_IMP}
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_set_redraw_on_allocate (c_object, False)
+			{GTK2}.gtk_widget_set_redraw_on_allocate (c_object, False)
 			set_is_initialized (True)
 		end
 
@@ -172,13 +172,13 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			t := [a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure,
 				a_screen_x, a_screen_y]
 				-- Mouse Wheel implementation.
-			if a_type /= {EV_GTK_EXTERNALS}.GDK_BUTTON_RELEASE_ENUM then
+			if a_type /= {GTK}.GDK_BUTTON_RELEASE_ENUM then
 					-- A button press must have occurred
-				if a_type = {EV_GTK_EXTERNALS}.GDK_BUTTON_PRESS_ENUM then
+				if a_type = {GTK}.GDK_BUTTON_PRESS_ENUM then
 					mouse_wheel_delta := 1
-				elseif a_type = {EV_GTK_EXTERNALS}.GDK_2BUTTON_PRESS_ENUM then
+				elseif a_type = {GTK}.GDK_2BUTTON_PRESS_ENUM then
 					mouse_wheel_delta := 1
-				elseif a_type = {EV_GTK_EXTERNALS}.GDK_3BUTTON_PRESS_ENUM then
+				elseif a_type = {GTK}.GDK_3BUTTON_PRESS_ENUM then
 					mouse_wheel_delta := 1
 				end
 				if a_button = 4 and mouse_wheel_delta > 0 then
@@ -200,14 +200,14 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 				end
 
 				if a_button >= 1 and then a_button <= 3 then
-					if a_type = {EV_GTK_EXTERNALS}.GDK_BUTTON_PRESS_ENUM then
+					if a_type = {GTK}.GDK_BUTTON_PRESS_ENUM then
 						if app_implementation.pointer_button_press_actions_internal /= Void then
 							app_implementation.pointer_button_press_actions.call ([attached_interface, a_button, a_screen_x, a_screen_y])
 						end
 						if pointer_button_press_actions_internal /= Void then
 							pointer_button_press_actions_internal.call (t)
 						end
-					elseif a_type = {EV_GTK_EXTERNALS}.GDK_2BUTTON_PRESS_ENUM then
+					elseif a_type = {GTK}.GDK_2BUTTON_PRESS_ENUM then
 						if app_implementation.pointer_double_press_actions_internal /= Void then
 							app_implementation.pointer_double_press_actions.call ([attached_interface, a_button, a_screen_x, a_screen_y])
 						end
@@ -248,7 +248,7 @@ feature -- Status setting
 	hide
 			-- Request that `Current' not be displayed even when its parent is.
 		do
-			{EV_GTK_EXTERNALS}.gtk_widget_hide (c_object)
+			{GTK}.gtk_widget_hide (c_object)
 		end
 
 feature -- Element change
@@ -260,8 +260,8 @@ feature -- Element change
 			l_viewport_parent: detachable EV_VIEWPORT_IMP
 			l_fixed_parent: detachable EV_FIXED_IMP
 		do
-			{EV_GTK_EXTERNALS}.g_object_get_integer (c_object, height_request_string.item, $l_height)
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_set_minimum_size (c_object, a_minimum_width, l_height)
+			{GTK2}.g_object_get_integer (c_object, height_request_string.item, $l_height)
+			{GTK2}.gtk_widget_set_minimum_size (c_object, a_minimum_width, l_height)
 
 				-- If the parent is a fixed or scrollable area we need to update the item size.
 			l_viewport_parent ?= parent_imp
@@ -282,8 +282,8 @@ feature -- Element change
 			l_viewport_parent: detachable EV_VIEWPORT_IMP
 			l_fixed_parent: detachable EV_FIXED_IMP
 		do
-			{EV_GTK_EXTERNALS}.g_object_get_integer (c_object, width_request_string.item, $l_width)
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_set_minimum_size (c_object, l_width, a_minimum_height)
+			{GTK2}.g_object_get_integer (c_object, width_request_string.item, $l_width)
+			{GTK2}.gtk_widget_set_minimum_size (c_object, l_width, a_minimum_height)
 
 				-- If the parent is a fixed or scrollable area we need to update the item size.
 			l_viewport_parent ?= parent_imp
@@ -304,7 +304,7 @@ feature -- Element change
 			l_viewport_parent: detachable EV_VIEWPORT_IMP
 			l_fixed_parent: detachable EV_FIXED_IMP
 		do
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_set_minimum_size (c_object, a_minimum_width, a_minimum_height)
+			{GTK2}.gtk_widget_set_minimum_size (c_object, a_minimum_width, a_minimum_height)
 
 				-- If the parent is a fixed or scrollable area we need to update the item size.
 			l_viewport_parent ?= parent_imp
@@ -353,15 +353,15 @@ feature {EV_ANY_I} -- Implementation
 	refresh_now
 			-- Flush any pending redraws due for `Current'.
 		do
-			if {EV_GTK_EXTERNALS}.gtk_maj_ver > 1 then
-				if {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object) /= default_pointer then
-					{EV_GTK_EXTERNALS}.gdk_window_process_updates (
-						{EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object),
+			if {GTK}.gtk_maj_ver > 1 then
+				if {GTK}.gtk_widget_struct_window (c_object) /= default_pointer then
+					{GTK2}.gdk_window_process_updates (
+						{GTK}.gtk_widget_struct_window (c_object),
 						False
 					)
 				end
 			else
-				{EV_GTK_EXTERNALS}.gdk_flush
+				{GTK}.gdk_flush
 			end
 		end
 
@@ -418,22 +418,22 @@ feature {NONE} -- Implementation
 			fg: detachable EV_COLOR
 			a_child_list: POINTER
 		do
-			if {EV_GTK_EXTERNALS}.gtk_is_container (a_c_object) then
+			if {GTK}.gtk_is_container (a_c_object) then
 				from
 					fg := a_color
-					a_child_list := {EV_GTK_EXTERNALS}.gtk_container_children (a_c_object)
+					a_child_list := {GTK}.gtk_container_children (a_c_object)
 					l := a_child_list
 				until
 					l = NULL
 				loop
-					child := {EV_GTK_EXTERNALS}.glist_struct_data (l)
+					child := {GTK}.glist_struct_data (l)
 					real_set_foreground_color (child, fg)
-					if {EV_GTK_EXTERNALS}.gtk_is_container (child) then
+					if {GTK}.gtk_is_container (child) then
 						propagate_foreground_color_internal (fg, child)
 					end
-					l := {EV_GTK_EXTERNALS}.glist_struct_next (l)
+					l := {GTK}.glist_struct_next (l)
 				end
-				{EV_GTK_EXTERNALS}.g_list_free (a_child_list)
+				{GTK}.g_list_free (a_child_list)
 			else
 				real_set_foreground_color (a_c_object, fg)
 			end
@@ -448,23 +448,23 @@ feature {NONE} -- Implementation
 			a_child_list: POINTER
 		do
 			if
-				{EV_GTK_EXTERNALS}.gtk_is_container (a_c_object)
+				{GTK}.gtk_is_container (a_c_object)
 			then
 				from
 					bg := a_color
-					a_child_list := {EV_GTK_EXTERNALS}.gtk_container_children (a_c_object)
+					a_child_list := {GTK}.gtk_container_children (a_c_object)
 					l := a_child_list
 				until
 					l = NULL
 				loop
-					child := {EV_GTK_EXTERNALS}.glist_struct_data (l)
+					child := {GTK}.glist_struct_data (l)
 					real_set_background_color (child, bg)
-					if {EV_GTK_EXTERNALS}.gtk_is_container (child) then
+					if {GTK}.gtk_is_container (child) then
 						propagate_background_color_internal (bg, child)
 					end
-					l := {EV_GTK_EXTERNALS}.glist_struct_next (l)
+					l := {GTK}.glist_struct_next (l)
 				end
-				{EV_GTK_EXTERNALS}.g_list_free (a_child_list)
+				{GTK}.g_list_free (a_child_list)
 			else
 				real_set_background_color (a_c_object, bg)
 			end

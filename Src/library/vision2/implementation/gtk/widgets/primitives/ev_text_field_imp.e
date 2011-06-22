@@ -62,11 +62,11 @@ feature {NONE} -- Initialization
 		local
 			a_vbox: POINTER
 		do
-			a_vbox := {EV_GTK_EXTERNALS}.gtk_vbox_new (False, 0)
+			a_vbox := {GTK}.gtk_vbox_new (False, 0)
 			set_c_object (a_vbox)
 			entry_widget := new_entry_widget
-			{EV_GTK_EXTERNALS}.gtk_widget_show (entry_widget)
-			{EV_GTK_EXTERNALS}.gtk_box_pack_start (a_vbox, entry_widget, False, False, 0)
+			{GTK}.gtk_widget_show (entry_widget)
+			{GTK}.gtk_box_pack_start (a_vbox, entry_widget, False, False, 0)
 			set_text (once "")
 			align_text_left
 			Precursor
@@ -79,7 +79,7 @@ feature -- Access
 		local
 			a_cs: EV_GTK_C_STRING
 		do
-			create a_cs.share_from_pointer ({EV_GTK_EXTERNALS}.gtk_entry_get_text (entry_widget))
+			create a_cs.share_from_pointer ({GTK}.gtk_entry_get_text (entry_widget))
 			Result := a_cs.string
 		end
 
@@ -88,7 +88,7 @@ feature -- Status setting
 	set_minimum_width_in_characters (nb: INTEGER)
 			-- Make `nb' characters visible on one line.
 		do
-			{EV_GTK_EXTERNALS}.gtk_widget_set_minimum_size (entry_widget, (nb + 1) * maximum_character_width, -1)
+			{GTK2}.gtk_widget_set_minimum_size (entry_widget, (nb + 1) * maximum_character_width, -1)
 		end
 
 	set_text (a_text: READABLE_STRING_GENERAL)
@@ -97,7 +97,7 @@ feature -- Status setting
 			a_cs: EV_GTK_C_STRING
 		do
 			a_cs := a_text
-			{EV_GTK_EXTERNALS}.gtk_entry_set_text (entry_widget, a_cs.item)
+			{GTK}.gtk_entry_set_text (entry_widget, a_cs.item)
 			on_change_actions
 		end
 
@@ -107,7 +107,7 @@ feature -- Status setting
 			a_cs: EV_GTK_C_STRING
 		do
 			a_cs := a_text
-			{EV_GTK_EXTERNALS}.gtk_entry_append_text (entry_widget, a_cs.item)
+			{GTK}.gtk_entry_append_text (entry_widget, a_cs.item)
 			on_change_actions
 		end
 
@@ -117,35 +117,35 @@ feature -- Status setting
 			a_cs: EV_GTK_C_STRING
 		do
 			a_cs := a_text
-			{EV_GTK_EXTERNALS}.gtk_entry_prepend_text (entry_widget, a_cs.item)
+			{GTK}.gtk_entry_prepend_text (entry_widget, a_cs.item)
 			on_change_actions
 		end
 
 	set_capacity (len: INTEGER)
 			-- Set the maximum number of characters that `Current' can hold to `len'.
 		do
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_entry_set_max_length (entry_widget, len)
+			{GTK2}.gtk_entry_set_max_length (entry_widget, len)
 		end
 
 	align_text_left
 			-- Make text left aligned.
 		do
 			text_alignment := {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_left
-			{EV_GTK_EXTERNALS}.gtk_entry_set_alignment (entry_widget, {REAL_32} 0.0)
+			{GTK2}.gtk_entry_set_alignment (entry_widget, {REAL_32} 0.0)
 		end
 
 	align_text_right
 			-- Make text right aligned.
 		do
 			text_alignment := {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_right
-			{EV_GTK_EXTERNALS}.gtk_entry_set_alignment (entry_widget, {REAL_32} 1.0)
+			{GTK2}.gtk_entry_set_alignment (entry_widget, {REAL_32} 1.0)
 		end
 
 	align_text_center
 			-- Make text center aligned.
 		do
 			text_alignment := {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_center
-			{EV_GTK_EXTERNALS}.gtk_entry_set_alignment (entry_widget, {REAL_32} 0.5)
+			{GTK2}.gtk_entry_set_alignment (entry_widget, {REAL_32} 0.5)
 		end
 
 feature -- Status Report
@@ -156,14 +156,14 @@ feature -- Status Report
 	caret_position: INTEGER
 			-- Current position of the caret.
 		do
-			Result := {EV_GTK_EXTERNALS}.gtk_editable_get_position (entry_widget) + 1
+			Result := {GTK}.gtk_editable_get_position (entry_widget) + 1
 		end
 
 	capacity: INTEGER
 			-- Return the maximum number of characters that the
 			-- user may enter.
 		do
-			Result := {EV_GTK_EXTERNALS}.gtk_entry_struct_text_max_length (entry_widget)
+			Result := {GTK}.gtk_entry_struct_text_max_length (entry_widget)
 		end
 
 feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
@@ -188,7 +188,7 @@ feature -- Status report
 	is_editable: BOOLEAN
 			-- Is the text editable.
 		do
-			Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_editable_get_editable (entry_widget)
+			Result := {GTK2}.gtk_editable_get_editable (entry_widget)
 		end
 
 	has_selection: BOOLEAN
@@ -196,7 +196,7 @@ feature -- Status report
 		local
 			a_start, a_end: INTEGER
 		do
-			Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_editable_get_selection_bounds (entry_widget, $a_start, $a_end)
+			Result := {GTK2}.gtk_editable_get_selection_bounds (entry_widget, $a_start, $a_end)
 		end
 
 	selection_start: INTEGER
@@ -205,7 +205,7 @@ feature -- Status report
 			a_start, a_end: INTEGER
 			has_sel: BOOLEAN
 		do
-			has_sel := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_editable_get_selection_bounds (entry_widget, $a_start, $a_end)
+			has_sel := {GTK2}.gtk_editable_get_selection_bounds (entry_widget, $a_start, $a_end)
 			Result := a_start + 1
 		end
 
@@ -215,7 +215,7 @@ feature -- Status report
 			a_start, a_end: INTEGER
 			has_sel: BOOLEAN
 		do
-			has_sel := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_editable_get_selection_bounds (entry_widget, $a_start, $a_end)
+			has_sel := {GTK2}.gtk_editable_get_selection_bounds (entry_widget, $a_start, $a_end)
 			Result := a_end
 		end
 
@@ -230,19 +230,19 @@ feature -- status settings
 	hide_border
 			-- Hide the border of `Current'.
 		do
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_entry_set_has_frame (entry_widget, False)
+			{GTK2}.gtk_entry_set_has_frame (entry_widget, False)
 		end
 
 	set_editable (a_editable: BOOLEAN)
 			-- Set editable state to `a_editable'.
 		do
-			{EV_GTK_EXTERNALS}.gtk_editable_set_editable (entry_widget, a_editable)
+			{GTK}.gtk_editable_set_editable (entry_widget, a_editable)
 		end
 
 	set_caret_position (pos: INTEGER)
 			-- Set the position of the caret to `pos'.
 		do
-			{EV_GTK_EXTERNALS}.gtk_editable_set_position (entry_widget, pos - 1)
+			{GTK}.gtk_editable_set_position (entry_widget, pos - 1)
 		end
 
 feature -- Basic operation
@@ -262,7 +262,7 @@ feature -- Basic operation
 		do
 			pos := a_pos - 1
 			a_cs := txt
-			{EV_GTK_EXTERNALS}.gtk_editable_insert_text (
+			{GTK}.gtk_editable_insert_text (
 				entry_widget,
 				a_cs.item,
 				txt.count,
@@ -274,19 +274,19 @@ feature -- Basic operation
 			-- Select (highlight) the text between
 			-- 'start_pos' and 'end_pos'.
 		do
-			{EV_GTK_EXTERNALS}.gtk_editable_select_region (entry_widget, start_pos.min (end_pos) - 1, end_pos.max (start_pos))
+			{GTK}.gtk_editable_select_region (entry_widget, start_pos.min (end_pos) - 1, end_pos.max (start_pos))
 		end
 
 	deselect_all
 			-- Unselect the current selection.
 		do
-			{EV_GTK_EXTERNALS}.gtk_editable_select_region (entry_widget, 0, 0)
+			{GTK}.gtk_editable_select_region (entry_widget, 0, 0)
 		end
 
 	delete_selection
 			-- Delete the current selection.
 		do
-			{EV_GTK_EXTERNALS}.gtk_editable_delete_selection (entry_widget)
+			{GTK}.gtk_editable_delete_selection (entry_widget)
 			on_change_actions
 		end
 
@@ -297,7 +297,7 @@ feature -- Basic operation
 			-- If the `selected_region' is empty, it does
 			-- nothing.
 		do
-			{EV_GTK_EXTERNALS}.gtk_editable_cut_clipboard (entry_widget)
+			{GTK}.gtk_editable_cut_clipboard (entry_widget)
 			on_change_actions
 		end
 
@@ -307,7 +307,7 @@ feature -- Basic operation
 			-- If the `selected_region' is empty, it does
 			-- nothing.
 		do
-			{EV_GTK_EXTERNALS}.gtk_editable_copy_clipboard (entry_widget)
+			{GTK}.gtk_editable_copy_clipboard (entry_widget)
 		end
 
 	paste (index: INTEGER)
@@ -358,7 +358,7 @@ feature {NONE} -- Implementation
 	new_entry_widget: POINTER
 			-- Create an uninitialized entry widget.
 		do
-			Result := {EV_GTK_EXTERNALS}.gtk_entry_new
+			Result := {GTK}.gtk_entry_new
 		end
 
 	entry_widget: POINTER

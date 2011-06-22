@@ -36,11 +36,11 @@ feature {NONE} -- Initialization
 		local
 			p: POINTER
 		do
-			set_c_object ({EV_GTK_EXTERNALS}.gtk_event_box_new)
-			p := {EV_GTK_EXTERNALS}.gtk_vseparator_new
-			{EV_GTK_EXTERNALS}.gtk_widget_show (p)
-			{EV_GTK_EXTERNALS}.gtk_container_add (c_object, p)
-			{EV_GTK_EXTERNALS}.gtk_widget_set_usize (c_object, 1, -1)
+			set_c_object ({GTK}.gtk_event_box_new)
+			p := {GTK}.gtk_vseparator_new
+			{GTK}.gtk_widget_show (p)
+			{GTK}.gtk_container_add (c_object, p)
+			{GTK}.gtk_widget_set_usize (c_object, 1, -1)
 			Precursor
 		end
 

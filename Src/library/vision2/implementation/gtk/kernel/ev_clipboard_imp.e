@@ -37,12 +37,12 @@ feature {NONE}-- Initialization
 			cs: EV_GTK_C_STRING
 		do
 			cs := once "CLIPBOARD"
-			clipboard := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_clipboard_get (
-							{EV_GTK_EXTERNALS}.gdk_atom_intern (cs.item, 1)
+			clipboard := {GTK2}.gtk_clipboard_get (
+							{GTK}.gdk_atom_intern (cs.item, 1)
 			)
 			cs := once "PRIMARY"
-			primary := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_clipboard_get (
-							{EV_GTK_EXTERNALS}.gdk_atom_intern (cs.item, 1)
+			primary := {GTK2}.gtk_clipboard_get (
+							{GTK}.gdk_atom_intern (cs.item, 1)
 			)
 			set_is_initialized (True)
 		end
@@ -55,7 +55,7 @@ feature -- Access
 				-- The query may trigger pending signals which may cause side-effects so
 				-- we disable the marshaller.
 			{EV_GTK_CALLBACK_MARSHAL}.c_ev_gtk_callback_marshal_set_is_enabled (False)
-			Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_clipboard_wait_is_text_available (clipboard)
+			Result := {GTK2}.gtk_clipboard_wait_is_text_available (clipboard)
 			{EV_GTK_CALLBACK_MARSHAL}.c_ev_gtk_callback_marshal_set_is_enabled (True)
 		end
 
@@ -68,7 +68,7 @@ feature -- Access
 				-- The query may trigger pending signals which may cause side-effects so
 				-- we disable the marshaller.
 			{EV_GTK_CALLBACK_MARSHAL}.c_ev_gtk_callback_marshal_set_is_enabled (False)
-			text_ptr := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_clipboard_wait_for_text (clipboard)
+			text_ptr := {GTK2}.gtk_clipboard_wait_for_text (clipboard)
 			{EV_GTK_CALLBACK_MARSHAL}.c_ev_gtk_callback_marshal_set_is_enabled (True)
 			if text_ptr /= Default_pointer then
 				create utf8_string.make_from_pointer (text_ptr)
@@ -89,8 +89,8 @@ feature -- Status Setting
 			a_cs: EV_GTK_C_STRING
 		do
 			a_cs := a_text
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_clipboard_set_text (clipboard, a_cs.item, a_cs.string_length)
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_clipboard_set_text (primary, a_cs.item, a_cs.string_length)
+			{GTK2}.gtk_clipboard_set_text (clipboard, a_cs.item, a_cs.string_length)
+			{GTK2}.gtk_clipboard_set_text (primary, a_cs.item, a_cs.string_length)
 				-- We also set the primary selection as there is no windows equivalent.
 
 				-- Free existing string by resetting with a new string.

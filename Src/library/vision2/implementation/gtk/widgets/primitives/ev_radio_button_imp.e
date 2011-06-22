@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 
 	new_gtk_button: POINTER
 		do
-			Result := {EV_GTK_EXTERNALS}.gtk_radio_button_new (NULL)
+			Result := {GTK}.gtk_radio_button_new (NULL)
 		end
 
 	make
@@ -64,7 +64,7 @@ feature -- Status report
 	is_selected: BOOLEAN
 			-- Is toggle button pressed?
 		do
-			Result := {EV_GTK_EXTERNALS}.gtk_toggle_button_get_active (visual_widget)
+			Result := {GTK}.gtk_toggle_button_get_active (visual_widget)
 		end
 
 feature -- Status setting
@@ -73,7 +73,7 @@ feature -- Status setting
 			-- Set `is_selected' `True'.
 		do
 			if not is_selected then
-				{EV_GTK_EXTERNALS}.gtk_toggle_button_set_active (visual_widget, True)
+				{GTK}.gtk_toggle_button_set_active (visual_widget, True)
 			end
 		end
 
@@ -82,13 +82,13 @@ feature {EV_ANY_I} -- Implementation
 	widget_object (a_list: POINTER): POINTER
 			-- Returns c_object relative to a_list data.
 		do
-			Result := {EV_GTK_EXTERNALS}.gslist_struct_data (a_list)
-			Result := {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (Result)
+			Result := {GTK}.gslist_struct_data (a_list)
+			Result := {GTK}.gtk_widget_struct_parent (Result)
 		end
 
 	radio_group: POINTER
 		do
-			Result := {EV_GTK_EXTERNALS}.gtk_radio_button_group (visual_widget)
+			Result := {GTK}.gtk_radio_button_group (visual_widget)
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation

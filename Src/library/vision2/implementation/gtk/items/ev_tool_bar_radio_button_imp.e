@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 
 	new_tool_bar_button: POINTER
 		do
-			Result := {EV_GTK_EXTERNALS}.gtk_radio_tool_button_new (NULL)
+			Result := {GTK2}.gtk_radio_tool_button_new (NULL)
 		end
 
 feature -- Status setting
@@ -46,7 +46,7 @@ feature -- Status setting
 			-- Select `Current'.
 		do
 			if not is_selected then
-				{EV_GTK_EXTERNALS}.gtk_toggle_tool_button_set_active (visual_widget, True)
+				{GTK2}.gtk_toggle_tool_button_set_active (visual_widget, True)
 			end
 		end
 
@@ -55,7 +55,7 @@ feature -- Status report
 	is_selected: BOOLEAN
 			-- Is `Current' selected.
 		do
-			Result := {EV_GTK_EXTERNALS}.gtk_toggle_tool_button_get_active (visual_widget)
+			Result := {GTK2}.gtk_toggle_tool_button_get_active (visual_widget)
 		end
 
 feature {EV_ANY_I, EV_GTK_CALLBACK_MARSHAL} -- Implementation
@@ -76,7 +76,7 @@ feature {NONE} -- Implementation
 			Precursor {EV_TOOL_BAR_BUTTON_IMP} (a_container_imp)
 			if a_container_imp = Void then
 				-- `Current' is being unparented so we unset the radio group
-				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_radio_tool_button_set_group (visual_widget, NULL)
+				{GTK2}.gtk_radio_tool_button_set_group (visual_widget, NULL)
 			end
 		end
 
@@ -85,14 +85,14 @@ feature {EV_ANY_I} -- Implementation
 	widget_object (a_list: POINTER): POINTER
 			-- Returns c_object relative to a_list data.
 		do
-			Result := {EV_GTK_EXTERNALS}.gslist_struct_data (a_list)
-			Result := {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (Result)
+			Result := {GTK}.gslist_struct_data (a_list)
+			Result := {GTK}.gtk_widget_struct_parent (Result)
 		end
 
 	radio_group: POINTER
 			-- Pointer to the GSList used for holding the radio grouping of `Current'
 		do
-			Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_radio_tool_button_get_group (visual_widget)
+			Result := {GTK2}.gtk_radio_tool_button_get_group (visual_widget)
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: EiffelStudio $Revision$\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2011-05-14 10:35+0300\n"
+"PO-Revision-Date: 2011-06-22 07:58+0300\n"
 "Last-Translator: Alexander Kogtenkov <alexk@eiffel.com>\n"
 "Language-Team: Eiffel Software and others <support@eiffel.com>\n"
 "MIME-Version: 1.0\n"
@@ -33723,7 +33723,7 @@ msgstr "добавить подзапрос"
 #. Source code: l_Discard_ignore_contract_violation_dialog: STRING_32 do Result := locale.translation("always break into debugger on contract violation.")	end
 #: interface_names.e:1239
 msgid "always break into debugger on contract violation."
-msgstr "всегда останавливаться в отладчике при нарушении контракта"
+msgstr "Всегда останавливаться в отладчике при нарушении контракта"
 
 #. Source code: l_Discard_build_precompile_dialog: STRING_32 do Result := locale.translation("always build precompile.")	end
 #: interface_names.e:1235
@@ -33733,7 +33733,7 @@ msgstr "Всегда выполнять прекомпиляцию"
 #. Source code: l_discard_cancel_c_compilation: STRING_32	do Result := locale.translation("always cancel C/C++ compilation when exiting.")	end
 #: interface_names.e:1248
 msgid "always cancel C/C++ compilation when exiting."
-msgstr "Всегда отменять компиляцию C/C++ при выходе."
+msgstr "Всегда отменять компиляцию C/C++ при выходе"
 
 #. Source code: l_discard_cancel_c_compilation_and_external_command: STRING_32 do Result := locale.translation("always cancel C/C++ compilation, terminate external command when exiting.")	end
 #: interface_names.e:1247
@@ -33743,7 +33743,7 @@ msgstr "Всегда отменять компиляцию C/C++, прерыва
 #. Source code: l_Discard_freeze_dialog: STRING_32			do Result := locale.translation("always compile C/C++ code.")	end
 #: interface_names.e:1238
 msgid "always compile C/C++ code."
-msgstr "Всегда компилировать код C/C++."
+msgstr "Всегда компилировать код C/C++"
 
 #. Source code: l_always_compile_before_debug:STRING_32 	do Result := locale.translation ("always compile before executing.") end
 #: interface_names.e:2074
@@ -33758,7 +33758,7 @@ msgstr "Всегда преобразовывать старые проекты"
 #. Source code: l_always_delete_without_asking:STRING_32 do Result := locale.translation ("always delete without asking.") end
 #: interface_names.e:2075
 msgid "always delete without asking."
-msgstr "Всегда удалять, не спрашивая."
+msgstr "Всегда удалять, не спрашивая"
 
 #. Source code: l_Discard_finalize_assertions: STRING_32 	do Result := locale.translation("always discard assertions when finalizing.")	end
 #: interface_names.e:1236
@@ -33773,7 +33773,7 @@ msgstr "Всегда выполнять окончательную компил�
 #. Source code: l_confirm_always_reload_profile: STRING_32			do Result := locale.translation("always reload")	end
 #: interface_names.e:1145
 msgid "always reload"
-msgstr "всегда перезагружать"
+msgstr "Всегда перезагружать"
 
 #. Source code: t_discard_remove_prompt: STRING_32 do Result := locale.translation ("always remove selected metric") end
 #: eb_metric_names.e:56

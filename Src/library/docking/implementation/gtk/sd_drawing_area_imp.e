@@ -35,7 +35,7 @@ feature -- Initialize
 		do
 			Precursor
 			enable_double_buffering
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_set_redraw_on_allocate (c_object, False)
+			{GTK2}.gtk_widget_set_redraw_on_allocate (c_object, False)
 		end
 
 feature {NONE} -- Implementation
@@ -43,7 +43,7 @@ feature {NONE} -- Implementation
 	Gdk_events_mask: INTEGER
 			-- Mask of all the gdk events the gdkwindow shall receive
 		once
-			Result := Precursor | {EV_GTK_EXTERNALS}.GDK_POINTER_MOTION_HINT_MASK_ENUM
+			Result := Precursor | {GTK}.GDK_POINTER_MOTION_HINT_MASK_ENUM
 				-- This is needed so that we only retrieve motion events when requested.
 		end
 

@@ -60,28 +60,12 @@ feature {NONE} -- Initialization
 
 	default_create
 			-- Create a BON_CLASS_FIGURE
-		local
-			anchor_pix: EV_MODEL_PICTURE
-			circl: EV_MODEL_ELLIPSE
-
 		do
 			Precursor {EIFFEL_CLASS_FIGURE}
 			prune_all (name_label)
 
 			create ellipse
 			extend (ellipse)
-
-			create anchor
-			create circl.make_with_positions (-2, -4, 18, 16)
-			circl.set_foreground_color (default_colors.black)
-			circl.set_background_color (default_colors.white)
-			anchor.extend (circl)
-			create anchor_pix.make_with_identified_pixmap (bon_anchor)
-			anchor.extend (anchor_pix)
-			anchor.hide
-			anchor.disable_sensitive
-			is_anchor_shown := False
-			extend (anchor)
 
 			create name_labels
 			extend (name_labels)
@@ -202,13 +186,13 @@ feature -- Access
 			l_xml_routines: like xml_routines
 			l_model: like model
 		do
-			colon_string := ";"
 			l_xml_routines := xml_routines
 			l_model := model
 			Result := Precursor {EIFFEL_CLASS_FIGURE} (node)
 			Result.add_attribute (cluster_name_string, xml_namespace, l_model.class_i.group.name)
 			Result.put_last (l_xml_routines.xml_node (Result, is_default_bg_color_used_string, boolean_representation (is_default_background_color_used)))
 			if not is_default_background_color_used then
+				colon_string := ";"
 				l_color := background_color
 				Result.put_last (l_xml_routines.xml_node (Result, background_color_string,
 					l_color.red_8_bit.out + colon_string +
@@ -265,6 +249,9 @@ feature -- Status settings
 			-- Show anchor, if `is_fixed'.
 		do
 			if is_fixed then
+				if anchor = Void then
+					create_anchor
+				end
 				anchor.show
 				anchor.set_x_y (ellipse.point_a_x + 3, ellipse.point_a_y + 3)
 				is_anchor_shown := True
@@ -277,7 +264,7 @@ feature -- Status settings
 	hide_anchor
 			-- Hide anchor.
 		do
-			if anchor.is_show_requested then
+			if anchor /= Void and then anchor.is_show_requested then
 				anchor.hide
 				is_anchor_shown := False
 				request_update
@@ -502,7 +489,7 @@ feature {NONE} -- Implementation
 	generics_label: EV_MODEL_GROUP
 			-- All parts of `model'.`generics' name.
 
-	anchor: EV_MODEL_GROUP
+	anchor: detachable EV_MODEL_GROUP note option: stable attribute end
 			-- Anchor indicating that `Current' `is_fixed'.
 
 	set_bon_icons
@@ -949,6 +936,27 @@ feature {NONE} -- Implementation
 		end
 
 feature {NONE} -- Implementation
+
+	create_anchor
+			-- Create and initialize `anchor'.
+		require
+			anchor_void: anchor = Void
+		local
+			anchor_pix: EV_MODEL_PICTURE
+			circl: EV_MODEL_ELLIPSE
+		do
+			create anchor
+			create circl.make_with_positions (-2, -4, 18, 16)
+			circl.set_foreground_color (default_colors.black)
+			circl.set_background_color (default_colors.white)
+			anchor.extend (circl)
+			create anchor_pix.make_with_identified_pixmap (bon_anchor)
+			anchor.extend (anchor_pix)
+			anchor.hide
+			anchor.disable_sensitive
+			is_anchor_shown := False
+			extend (anchor)
+		end
 
 	temp_bounding_box: EV_RECTANGLE
 			-- Temporary bounding box used for dimension calculation.

@@ -31,6 +31,17 @@ feature {NONE}
 
 	book: BOOK2
 
+	filled_book: BOOK2
+			-- Filled book to put into database
+		do
+			create Result.make
+			Result.set_author ("Paul")
+			Result.set_price (4.0)
+			Result.set_quantity (50)
+			Result.set_title ("Yangzi River")
+			Result.set_double_value (2.3)
+		end
+
 feature
 
 	make
@@ -135,6 +146,7 @@ feature {NONE}
 			l_laststring: detachable STRING
 			l_repository: like repository
 			l_data_file: like data_file
+			l_store: DB_STORE
 		do
 				-- Create the table for book-objects.
 				-- The name of this table has already been set to "DB_BOOK"
@@ -160,6 +172,11 @@ feature {NONE}
 				end
 			end
 			l_data_file.close
+
+			l_repository.load
+			create l_store.make
+			l_store.set_repository (l_repository)
+			l_store.put (filled_book)
 
 				-- Commit work
 			session_control.commit

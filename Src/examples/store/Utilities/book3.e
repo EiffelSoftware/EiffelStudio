@@ -15,7 +15,7 @@ create
 
 feature
 
-	title: STRING_32
+	title: IMMUTABLE_STRING_32
 
 	author: STRING_32
 
@@ -160,7 +160,7 @@ feature
 			end
 			if title /= Void then
 				Result.append ("Title:")
-				Result.append (title)
+				Result.append (title.as_string_8)
 				Result.extend ('%N')
 			end
 			Result.append ("Quantity:")

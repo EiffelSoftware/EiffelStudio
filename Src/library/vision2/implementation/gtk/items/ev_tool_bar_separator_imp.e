@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 	make
 			-- Create and initialize `Current'.
 		do
-			set_c_object ({EV_GTK_EXTERNALS}.gtk_separator_tool_item_new)
+			set_c_object ({GTK2}.gtk_separator_tool_item_new)
 			Precursor
 		end
 

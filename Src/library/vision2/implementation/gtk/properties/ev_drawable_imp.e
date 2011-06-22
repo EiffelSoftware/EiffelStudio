@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 		do
 			l_mem := {INTEGER_16} 3 | ({INTEGER_16} 3 |<< integer_8_bits)
 			set_dashes_pattern (gc, $l_mem)
-			line_style := {EV_GTK_EXTERNALS}.Gdk_line_solid_enum
+			line_style := {GTK}.Gdk_line_solid_enum
 			set_drawing_mode (drawing_mode_copy)
 			set_line_width (1)
 		end
@@ -76,13 +76,13 @@ feature {EV_DRAWABLE_IMP} -- Implementation
 	cap_style: INTEGER
 			-- Style used for drawing end of lines.
 		do
-			Result := {EV_GTK_EXTERNALS}.gdk_cap_round_enum
+			Result := {GTK}.gdk_cap_round_enum
 		end
 
 	join_style: INTEGER
 			-- Way in which lines are joined together.				
 		do
-			Result := {EV_GTK_EXTERNALS}.Gdk_join_bevel_enum
+			Result := {GTK}.Gdk_join_bevel_enum
 		end
 
 	gc_clip_area: detachable EV_RECTANGLE
@@ -147,9 +147,9 @@ feature -- Access
 	line_width: INTEGER
 			-- Line thickness.
 		do
-			gcvalues := {EV_GTK_EXTERNALS}.c_gdk_gcvalues_struct_allocate
-			{EV_GTK_EXTERNALS}.gdk_gc_get_values (gc, gcvalues)
-			Result := {EV_GTK_EXTERNALS}.gdk_gcvalues_struct_line_width (gcvalues)
+			gcvalues := {GTK}.c_gdk_gcvalues_struct_allocate
+			{GTK}.gdk_gc_get_values (gc, gcvalues)
+			Result := {GTK}.gdk_gcvalues_struct_line_width (gcvalues)
 			gcvalues.memory_free
 		end
 
@@ -158,20 +158,20 @@ feature -- Access
 		local
 			gdk_drawing_mode: INTEGER
 		do
-			gcvalues := {EV_GTK_EXTERNALS}.c_gdk_gcvalues_struct_allocate
-			{EV_GTK_EXTERNALS}.gdk_gc_get_values (gc, gcvalues)
-			gdk_drawing_mode := {EV_GTK_EXTERNALS}.gdk_gcvalues_struct_function (gcvalues)
+			gcvalues := {GTK}.c_gdk_gcvalues_struct_allocate
+			{GTK}.gdk_gc_get_values (gc, gcvalues)
+			gdk_drawing_mode := {GTK}.gdk_gcvalues_struct_function (gcvalues)
 			gcvalues.memory_free
 
-			if gdk_drawing_mode = {EV_GTK_EXTERNALS}.Gdk_copy_enum then
+			if gdk_drawing_mode = {GTK}.Gdk_copy_enum then
 				Result := drawing_mode_copy
-			elseif gdk_drawing_mode = {EV_GTK_EXTERNALS}.Gdk_xor_enum then
+			elseif gdk_drawing_mode = {GTK}.Gdk_xor_enum then
 				Result := drawing_mode_xor
-			elseif gdk_drawing_mode = {EV_GTK_EXTERNALS}.Gdk_invert_enum then
+			elseif gdk_drawing_mode = {GTK}.Gdk_invert_enum then
 				Result := drawing_mode_invert
-			elseif gdk_drawing_mode = {EV_GTK_EXTERNALS}.Gdk_and_enum then
+			elseif gdk_drawing_mode = {GTK}.Gdk_and_enum then
 				Result := drawing_mode_and
-			elseif gdk_drawing_mode = {EV_GTK_EXTERNALS}.Gdk_or_enum then
+			elseif gdk_drawing_mode = {GTK}.Gdk_or_enum then
 				Result := drawing_mode_or
 			else
 				check
@@ -198,11 +198,11 @@ feature -- Access
 		local
 			style: INTEGER
 		do
-			gcvalues := {EV_GTK_EXTERNALS}.c_gdk_gcvalues_struct_allocate
-			{EV_GTK_EXTERNALS}.gdk_gc_get_values (gc, gcvalues)
-			style := {EV_GTK_EXTERNALS}.gdk_gcvalues_struct_line_style (gcvalues)
+			gcvalues := {GTK}.c_gdk_gcvalues_struct_allocate
+			{GTK}.gdk_gc_get_values (gc, gcvalues)
+			style := {GTK}.gdk_gcvalues_struct_line_style (gcvalues)
 			gcvalues.memory_free
-			Result := style = {EV_GTK_EXTERNALS}.Gdk_line_on_off_dash_enum
+			Result := style = {GTK}.Gdk_line_on_off_dash_enum
 		end
 
 feature -- Element change
@@ -233,10 +233,10 @@ feature -- Element change
 				l_internal_background_color.set_green_with_8_bit (a_color.green_8_bit)
 				l_internal_background_color.set_blue_with_8_bit (a_color.blue_8_bit)
 				color_struct := App_implementation.reusable_color_struct
-				{EV_GTK_EXTERNALS}.set_gdk_color_struct_red (color_struct, a_color.red_16_bit)
-				{EV_GTK_EXTERNALS}.set_gdk_color_struct_green (color_struct, a_color.green_16_bit)
-				{EV_GTK_EXTERNALS}.set_gdk_color_struct_blue (color_struct, a_color.blue_16_bit)
-				{EV_GTK_EXTERNALS}.gdk_gc_set_rgb_bg_color (gc, color_struct)
+				{GTK}.set_gdk_color_struct_red (color_struct, a_color.red_16_bit)
+				{GTK}.set_gdk_color_struct_green (color_struct, a_color.green_16_bit)
+				{GTK}.set_gdk_color_struct_blue (color_struct, a_color.blue_16_bit)
+				{GTK2}.gdk_gc_set_rgb_bg_color (gc, color_struct)
 			end
 		end
 
@@ -256,17 +256,17 @@ feature -- Element change
 				l_internal_foreground_color.set_green_with_8_bit (a_color.green_8_bit)
 				l_internal_foreground_color.set_blue_with_8_bit (a_color.blue_8_bit)
 				color_struct := App_implementation.reusable_color_struct
-				{EV_GTK_EXTERNALS}.set_gdk_color_struct_red (color_struct, a_color.red_16_bit)
-				{EV_GTK_EXTERNALS}.set_gdk_color_struct_green (color_struct, a_color.green_16_bit)
-				{EV_GTK_EXTERNALS}.set_gdk_color_struct_blue (color_struct, a_color.blue_16_bit)
-				{EV_GTK_EXTERNALS}.gdk_gc_set_rgb_fg_color (gc, color_struct)
+				{GTK}.set_gdk_color_struct_red (color_struct, a_color.red_16_bit)
+				{GTK}.set_gdk_color_struct_green (color_struct, a_color.green_16_bit)
+				{GTK}.set_gdk_color_struct_blue (color_struct, a_color.blue_16_bit)
+				{GTK2}.gdk_gc_set_rgb_fg_color (gc, color_struct)
 			end
 		end
 
 	set_line_width (a_width: INTEGER)
 			-- Assign `a_width' to `line_width'.
 		do
-			{EV_GTK_EXTERNALS}.gdk_gc_set_line_attributes (gc, a_width,
+			{GTK}.gdk_gc_set_line_attributes (gc, a_width,
 				line_style, cap_style, join_style)
 		end
 
@@ -279,15 +279,15 @@ feature -- Element change
 			inspect
 				a_mode
 			when drawing_mode_copy then
-				{EV_GTK_EXTERNALS}.gdk_gc_set_function (l_gc, {EV_GTK_EXTERNALS}.Gdk_copy_enum)
+				{GTK}.gdk_gc_set_function (l_gc, {GTK}.Gdk_copy_enum)
 			when drawing_mode_xor then
-				{EV_GTK_EXTERNALS}.gdk_gc_set_function (l_gc, {EV_GTK_EXTERNALS}.Gdk_xor_enum)
+				{GTK}.gdk_gc_set_function (l_gc, {GTK}.Gdk_xor_enum)
 			when drawing_mode_invert then
-				{EV_GTK_EXTERNALS}.gdk_gc_set_function (l_gc, {EV_GTK_EXTERNALS}.Gdk_invert_enum)
+				{GTK}.gdk_gc_set_function (l_gc, {GTK}.Gdk_invert_enum)
 			when drawing_mode_and then
-				{EV_GTK_EXTERNALS}.gdk_gc_set_function (l_gc, {EV_GTK_EXTERNALS}.Gdk_and_enum)
+				{GTK}.gdk_gc_set_function (l_gc, {GTK}.Gdk_and_enum)
 			when drawing_mode_or then
-				{EV_GTK_EXTERNALS}.gdk_gc_set_function (l_gc, {EV_GTK_EXTERNALS}.Gdk_or_enum)
+				{GTK}.gdk_gc_set_function (l_gc, {GTK}.Gdk_or_enum)
 			else
 				check
 					drawing_mode_existent: False
@@ -301,13 +301,13 @@ feature -- Element change
 			rectangle_struct: POINTER
 		do
 			gc_clip_area := an_area.twin
-			rectangle_struct := {EV_GTK_EXTERNALS}.c_gdk_rectangle_struct_allocate
-			{EV_GTK_DEPENDENT_EXTERNALS}.set_gdk_rectangle_struct_x (rectangle_struct, an_area.x + device_x_offset)
-			{EV_GTK_DEPENDENT_EXTERNALS}.set_gdk_rectangle_struct_y (rectangle_struct, an_area.y + device_y_offset)
-			{EV_GTK_DEPENDENT_EXTERNALS}.set_gdk_rectangle_struct_width (rectangle_struct, an_area.width)
-			{EV_GTK_DEPENDENT_EXTERNALS}.set_gdk_rectangle_struct_height (rectangle_struct, an_area.height)
-			{EV_GTK_EXTERNALS}.gdk_gc_set_clip_region (gc, default_pointer)
-			{EV_GTK_EXTERNALS}.gdk_gc_set_clip_rectangle (gc, rectangle_struct)
+			rectangle_struct := {GTK}.c_gdk_rectangle_struct_allocate
+			{GTK2}.set_gdk_rectangle_struct_x (rectangle_struct, an_area.x + device_x_offset)
+			{GTK2}.set_gdk_rectangle_struct_y (rectangle_struct, an_area.y + device_y_offset)
+			{GTK2}.set_gdk_rectangle_struct_width (rectangle_struct, an_area.width)
+			{GTK2}.set_gdk_rectangle_struct_height (rectangle_struct, an_area.height)
+			{GTK}.gdk_gc_set_clip_region (gc, default_pointer)
+			{GTK}.gdk_gc_set_clip_rectangle (gc, rectangle_struct)
 			rectangle_struct.memory_free
 		end
 
@@ -317,19 +317,19 @@ feature -- Element change
 			a_region_imp: detachable EV_REGION_IMP
 			rectangle_struct: POINTER
 		do
-			rectangle_struct := {EV_GTK_EXTERNALS}.c_gdk_rectangle_struct_allocate
+			rectangle_struct := {GTK}.c_gdk_rectangle_struct_allocate
 			a_region_imp ?= a_region.implementation
 			check a_region_imp /= Void end
-			{EV_GTK_EXTERNALS}.gdk_region_get_clipbox (a_region_imp.gdk_region, rectangle_struct)
+			{GTK}.gdk_region_get_clipbox (a_region_imp.gdk_region, rectangle_struct)
 				-- Set the gc clip area.
 			create gc_clip_area.make (
-				{EV_GTK_EXTERNALS}.gdk_rectangle_struct_x (rectangle_struct) + device_x_offset,
-				{EV_GTK_EXTERNALS}.gdk_rectangle_struct_y (rectangle_struct) + device_y_offset,
-				{EV_GTK_EXTERNALS}.gdk_rectangle_struct_width (rectangle_struct),
-				{EV_GTK_EXTERNALS}.gdk_rectangle_struct_height (rectangle_struct)
+				{GTK}.gdk_rectangle_struct_x (rectangle_struct) + device_x_offset,
+				{GTK}.gdk_rectangle_struct_y (rectangle_struct) + device_y_offset,
+				{GTK}.gdk_rectangle_struct_width (rectangle_struct),
+				{GTK}.gdk_rectangle_struct_height (rectangle_struct)
 			)
-			{EV_GTK_EXTERNALS}.gdk_gc_set_clip_rectangle (gc, default_pointer)
-			{EV_GTK_EXTERNALS}.gdk_gc_set_clip_region (gc, a_region_imp.gdk_region)
+			{GTK}.gdk_gc_set_clip_rectangle (gc, default_pointer)
+			{GTK}.gdk_gc_set_clip_region (gc, a_region_imp.gdk_region)
 			rectangle_struct.memory_free
 		end
 
@@ -337,8 +337,8 @@ feature -- Element change
 			-- Do not apply any clipping.
 		do
 			gc_clip_area := Void
-			{EV_GTK_EXTERNALS}.gdk_gc_set_clip_rectangle (gc, default_pointer)
-			{EV_GTK_EXTERNALS}.gdk_gc_set_clip_region (gc, default_pointer)
+			{GTK}.gdk_gc_set_clip_rectangle (gc, default_pointer)
+			{GTK}.gdk_gc_set_clip_region (gc, default_pointer)
 		end
 
 	set_tile (a_pixmap: EV_PIXMAP)
@@ -353,7 +353,7 @@ feature -- Element change
 			l_tile.copy (a_pixmap)
 			tile_imp ?= l_tile.implementation
 			check tile_imp /= Void end
-			{EV_GTK_EXTERNALS}.gdk_gc_set_tile (gc, tile_imp.drawable)
+			{GTK}.gdk_gc_set_tile (gc, tile_imp.drawable)
 		end
 
 	remove_tile
@@ -365,16 +365,16 @@ feature -- Element change
 	enable_dashed_line_style
 			-- Draw lines dashed.
 		do
-			line_style := {EV_GTK_EXTERNALS}.Gdk_line_on_off_dash_enum
-			{EV_GTK_EXTERNALS}.gdk_gc_set_line_attributes (gc, line_width,
+			line_style := {GTK}.Gdk_line_on_off_dash_enum
+			{GTK}.gdk_gc_set_line_attributes (gc, line_width,
 				line_style, cap_style, join_style)
 		end
 
 	disable_dashed_line_style
 			-- Draw lines solid.
 		do
-			line_style := {EV_GTK_EXTERNALS}.Gdk_line_solid_enum
-			{EV_GTK_EXTERNALS}.gdk_gc_set_line_attributes (gc, line_width,
+			line_style := {GTK}.Gdk_line_solid_enum
+			{GTK}.gdk_gc_set_line_attributes (gc, line_width,
 				line_style, cap_style, join_style)
 		end
 
@@ -394,7 +394,7 @@ feature -- Clearing operations
 			if drawable /= default_pointer then
 				tmp_fg_color := foreground_color
 				set_foreground_color (background_color)
-				{EV_GTK_EXTERNALS}.gdk_draw_rectangle (drawable, gc, 1,
+				{GTK}.gdk_draw_rectangle (drawable, gc, 1,
 					(x + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
 					(y + device_y_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
 					a_width,
@@ -410,7 +410,7 @@ feature -- Drawing operations
 			-- Draw point at (`x', `y').
 		do
 			if drawable /= default_pointer then
-	 			{EV_GTK_EXTERNALS}.gdk_draw_point (
+	 			{GTK}.gdk_draw_point (
 	 				drawable,
 	 				gc,
 	 				(x + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
@@ -524,9 +524,9 @@ feature -- Drawing operations
 					-- Replace when we have UTF16 support
 				a_pango_layout := l_app_imp.pango_layout
 
-				{EV_GTK_EXTERNALS}.pango_layout_set_text (a_pango_layout, a_cs.item, a_cs.string_length)
+				{GTK2}.pango_layout_set_text (a_pango_layout, a_cs.item, a_cs.string_length)
 				if internal_font_imp /= Void then
-					{EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_font_description (a_pango_layout, internal_font_imp.font_description)
+					{GTK2}.pango_layout_set_font_description (a_pango_layout, internal_font_imp.font_description)
 				end
 
 				if a_width /= -1 then
@@ -534,43 +534,43 @@ feature -- Drawing operations
 					l_ellipsize_symbol := pango_layout_set_ellipsize_symbol
 					if l_ellipsize_symbol /= default_pointer then
 						pango_layout_set_ellipsize_call (l_ellipsize_symbol, a_pango_layout, 3)
-						{EV_GTK_EXTERNALS}.pango_layout_set_width (a_pango_layout, a_width * {EV_GTK_EXTERNALS}.pango_scale)
+						{GTK2}.pango_layout_set_width (a_pango_layout, a_width * {GTK2}.pango_scale)
 					else
 							-- Previous code for gtk 2.4 that set a clip area for text rendering.						
 						a_clip_area := gc_clip_area
 						set_clip_area (create {EV_RECTANGLE}.make (x_orig, y_orig, a_width, 10000))
-						{EV_GTK_EXTERNALS}.pango_layout_set_width (a_pango_layout, 10000 * {EV_GTK_EXTERNALS}.pango_scale)
+						{GTK2}.pango_layout_set_width (a_pango_layout, 10000 * {GTK2}.pango_scale)
 					end
 				end
 
 				if a_angle /= 0 then
-					l_pango_renderer := {EV_GTK_EXTERNALS}.gdk_pango_renderer_get_default ({EV_GTK_EXTERNALS}.gdk_screen_get_default)
+					l_pango_renderer := {GTK2}.gdk_pango_renderer_get_default ({GTK2}.gdk_screen_get_default)
 						-- This is reusable so do not free the renderer.
 						-- Renderer is needed to rotate text without a bounding box
-					{EV_GTK_EXTERNALS}.gdk_pango_renderer_set_drawable (l_pango_renderer, drawable)
-					{EV_GTK_EXTERNALS}.gdk_pango_renderer_set_gc (l_pango_renderer, gc)
+					{GTK2}.gdk_pango_renderer_set_drawable (l_pango_renderer, drawable)
+					{GTK2}.gdk_pango_renderer_set_gc (l_pango_renderer, gc)
 
-					a_pango_context := {EV_GTK_EXTERNALS}.pango_layout_get_context (a_pango_layout)
+					a_pango_context := {GTK2}.pango_layout_get_context (a_pango_layout)
 
-					{EV_GTK_EXTERNALS}.pango_matrix_init ($a_pango_matrix)
+					{GTK2}.pango_matrix_init ($a_pango_matrix)
 
-					{EV_GTK_EXTERNALS}.pango_matrix_translate (
+					{GTK2}.pango_matrix_translate (
 						a_pango_matrix,
 						x_orig.max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
 						y_orig.max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value)
 					)
-					{EV_GTK_EXTERNALS}.pango_matrix_rotate (a_pango_matrix, a_angle / Pi.truncated_to_real * 180)
-					{EV_GTK_EXTERNALS}.pango_matrix_translate (a_pango_matrix, 0, -(y_orig - a_y))
+					{GTK2}.pango_matrix_rotate (a_pango_matrix, a_angle / Pi.truncated_to_real * 180)
+					{GTK2}.pango_matrix_translate (a_pango_matrix, 0, -(y_orig - a_y))
 
-					{EV_GTK_EXTERNALS}.pango_context_set_matrix (a_pango_context, a_pango_matrix)
+					{GTK2}.pango_context_set_matrix (a_pango_context, a_pango_matrix)
 
-					{EV_GTK_EXTERNALS}.pango_renderer_draw_layout (l_pango_renderer, a_pango_layout, 0, 0)
+					{GTK2}.pango_renderer_draw_layout (l_pango_renderer, a_pango_layout, 0, 0)
 
 						-- Clean up Pango renderer.
-					{EV_GTK_EXTERNALS}.gdk_pango_renderer_set_drawable (l_pango_renderer, default_pointer)
-					{EV_GTK_EXTERNALS}.gdk_pango_renderer_set_gc (l_pango_renderer, default_pointer)
+					{GTK2}.gdk_pango_renderer_set_drawable (l_pango_renderer, default_pointer)
+					{GTK2}.gdk_pango_renderer_set_gc (l_pango_renderer, default_pointer)
 				else
-					{EV_GTK_EXTERNALS}.gdk_draw_layout (
+					{GTK2}.gdk_draw_layout (
 						drawable,
 						gc,
 						a_x.max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
@@ -593,12 +593,12 @@ feature -- Drawing operations
 					end
 				end
 
-				{EV_GTK_EXTERNALS}.pango_layout_set_width (a_pango_layout, -1)
-				{EV_GTK_EXTERNALS}.pango_layout_set_font_description (a_pango_layout, default_pointer)
+				{GTK2}.pango_layout_set_width (a_pango_layout, -1)
+				{GTK2}.pango_layout_set_font_description (a_pango_layout, default_pointer)
 
 				if a_pango_context /= default_pointer then
-					{EV_GTK_EXTERNALS}.pango_context_set_matrix (a_pango_context, default_pointer)
-					{EV_GTK_EXTERNALS}.pango_matrix_free (a_pango_matrix)
+					{GTK2}.pango_context_set_matrix (a_pango_context, default_pointer)
+					{GTK2}.pango_matrix_free (a_pango_matrix)
 				end
 			end
 		end
@@ -620,7 +620,7 @@ feature -- Drawing operations
 			-- Draw line segment from (`x1', 'y1') to (`x2', 'y2').
 		do
 			if drawable /= default_pointer then
-				{EV_GTK_EXTERNALS}.gdk_draw_line (
+				{GTK}.gdk_draw_line (
 					drawable,
 					gc,
 					(x1 + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
@@ -642,7 +642,7 @@ feature -- Drawing operations
 		do
 			if drawable /= default_pointer then
 				a_radians := radians_to_gdk_angle
-				{EV_GTK_EXTERNALS}.gdk_draw_arc (
+				{GTK}.gdk_draw_arc (
 					drawable,
 					gc,
 					0,
@@ -668,15 +668,15 @@ feature -- Drawing operations
 			a_pixbuf_imp ?= a_pixel_buffer.implementation
 			check a_pixbuf_imp /= Void end
 			if supports_pixbuf_alpha then
-				{EV_GTK_EXTERNALS}.gdk_draw_pixbuf (drawable, gc, a_pixbuf_imp.gdk_pixbuf, area.x, area.y, a_x + device_x_offset, a_y + device_y_offset, area.width, area.height, 0, 0, 0)
+				{GTK2}.gdk_draw_pixbuf (drawable, gc, a_pixbuf_imp.gdk_pixbuf, area.x, area.y, a_x + device_x_offset, a_y + device_y_offset, area.width, area.height, 0, 0, 0)
 			else
 					-- We need to retrieve the source pixmap, composite and then reblit to the same area.
 				l_back_buffer := pixbuf_from_drawable_at_position (a_x, a_y, 0, 0, area.width, area.height)
-				{EV_GTK_EXTERNALS}.gdk_pixbuf_composite (a_pixbuf_imp.gdk_pixbuf, l_back_buffer, 0, 0, area.width, area.height, 0, 0, 1, 1, 0, 255)
-				l_pixels := {EV_GTK_EXTERNALS}.gdk_pixbuf_get_pixels (l_back_buffer)
-				l_rowstride := {EV_GTK_EXTERNALS}.gdk_pixbuf_get_rowstride (l_back_buffer)
-				{EV_GTK_EXTERNALS}.gdk_draw_rgb_32_image (drawable, gc, a_x + device_x_offset, a_y + device_y_offset, area.width, area.height, 0, l_pixels, l_rowstride.as_integer_32)
-				{EV_GTK_EXTERNALS}.object_unref (l_back_buffer)
+				{GTK2}.gdk_pixbuf_composite (a_pixbuf_imp.gdk_pixbuf, l_back_buffer, 0, 0, area.width, area.height, 0, 0, 1, 1, 0, 255)
+				l_pixels := {GTK}.gdk_pixbuf_get_pixels (l_back_buffer)
+				l_rowstride := {GTK}.gdk_pixbuf_get_rowstride (l_back_buffer)
+				{GTK}.gdk_draw_rgb_32_image (drawable, gc, a_x + device_x_offset, a_y + device_y_offset, area.width, area.height, 0, l_pixels, l_rowstride.as_integer_32)
+				{GTK2}.object_unref (l_back_buffer)
 			end
 		end
 
@@ -756,10 +756,10 @@ feature -- Drawing operations
 						check pixmap_imp /= Void end
 
 						if pixmap_imp.mask /= default_pointer then
-							{EV_GTK_EXTERNALS}.gdk_gc_set_clip_mask (gc, pixmap_imp.mask)
-							{EV_GTK_EXTERNALS}.gdk_gc_set_clip_origin (gc, l_dest_clip.x + device_x_offset - l_source_clip.x, l_dest_clip.y + device_y_offset - l_source_clip.y)
+							{GTK}.gdk_gc_set_clip_mask (gc, pixmap_imp.mask)
+							{GTK}.gdk_gc_set_clip_origin (gc, l_dest_clip.x + device_x_offset - l_source_clip.x, l_dest_clip.y + device_y_offset - l_source_clip.y)
 						end
-						{EV_GTK_DEPENDENT_EXTERNALS}.gdk_draw_drawable (
+						{GTK2}.gdk_draw_drawable (
 							drawable,
 							gc,
 							pixmap_imp.drawable,
@@ -772,8 +772,8 @@ feature -- Drawing operations
 						)
 						update_if_needed
 						if pixmap_imp.mask /= default_pointer then
-							{EV_GTK_EXTERNALS}.gdk_gc_set_clip_mask (gc, default_pointer)
-							{EV_GTK_EXTERNALS}.gdk_gc_set_clip_origin (gc, 0, 0)
+							{GTK}.gdk_gc_set_clip_mask (gc, default_pointer)
+							{GTK}.gdk_gc_set_clip_origin (gc, 0, 0)
 						end
 					end
 				end
@@ -791,7 +791,7 @@ feature -- Drawing operations
 			check pix_imp /= Void end
 			a_pix := pixbuf_from_drawable_at_position (area.x, area.y, 0, 0, area.width, area.height)
 			pix_imp.set_pixmap_from_pixbuf (a_pix)
-			{EV_GTK_EXTERNALS}.object_unref (a_pix)
+			{GTK2}.object_unref (a_pix)
 		end
 
 	draw_sub_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP; area: EV_RECTANGLE)
@@ -807,7 +807,7 @@ feature -- Drawing operations
 			if drawable /= default_pointer then
 				if a_width > 0 and then a_height > 0 then
 						-- If width or height are zero then nothing will be rendered.
-					{EV_GTK_EXTERNALS}.gdk_draw_rectangle (
+					{GTK}.gdk_draw_rectangle (
 						drawable,
 						gc,
 						0,
@@ -827,7 +827,7 @@ feature -- Drawing operations
 		do
 			if drawable /= default_pointer then
 				if (a_width > 0 and a_height > 0 ) then
-					{EV_GTK_EXTERNALS}.gdk_draw_arc (
+					{GTK}.gdk_draw_arc (
 						drawable,
 						gc,
 						0,
@@ -853,10 +853,10 @@ feature -- Drawing operations
 			if drawable /= default_pointer then
 				tmp := coord_array_to_gdkpoint_array (points).area
 				if is_closed then
-					{EV_GTK_EXTERNALS}.gdk_draw_polygon (drawable, gc, 0, $tmp, points.count)
+					{GTK}.gdk_draw_polygon (drawable, gc, 0, $tmp, points.count)
 					update_if_needed
 				else
-					{EV_GTK_EXTERNALS}.gdk_draw_lines (drawable, gc, $tmp, points.count)
+					{GTK}.gdk_draw_lines (drawable, gc, $tmp, points.count)
 					update_if_needed
 				end
 			end
@@ -921,9 +921,9 @@ feature -- filling operations
 		do
 			if drawable /= default_pointer then
 				if tile /= Void then
-					{EV_GTK_EXTERNALS}.gdk_gc_set_fill (gc, {EV_GTK_EXTERNALS}.Gdk_tiled_enum)
+					{GTK}.gdk_gc_set_fill (gc, {GTK}.Gdk_tiled_enum)
 				end
-				{EV_GTK_EXTERNALS}.gdk_draw_rectangle (
+				{GTK}.gdk_draw_rectangle (
 					drawable,
 					gc,
 					1,
@@ -932,7 +932,7 @@ feature -- filling operations
 					a_width,
 					a_height
 				)
-				{EV_GTK_EXTERNALS}.gdk_gc_set_fill (gc, {EV_GTK_EXTERNALS}.Gdk_solid_enum)
+				{GTK}.gdk_gc_set_fill (gc, {GTK}.Gdk_solid_enum)
 				update_if_needed
 			end
 		end
@@ -944,13 +944,13 @@ feature -- filling operations
 		do
 			if drawable /= default_pointer then
 				if tile /= Void then
-					{EV_GTK_EXTERNALS}.gdk_gc_set_fill (gc, {EV_GTK_EXTERNALS}.Gdk_tiled_enum)
+					{GTK}.gdk_gc_set_fill (gc, {GTK}.Gdk_tiled_enum)
 				end
-				{EV_GTK_EXTERNALS}.gdk_draw_arc (drawable, gc, 1, (x + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
+				{GTK}.gdk_draw_arc (drawable, gc, 1, (x + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
 					(y + device_y_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value), a_width,
 					a_height, 0, whole_circle)
 				update_if_needed
-				{EV_GTK_EXTERNALS}.gdk_gc_set_fill (gc, {EV_GTK_EXTERNALS}.Gdk_solid_enum)
+				{GTK}.gdk_gc_set_fill (gc, {GTK}.Gdk_solid_enum)
 			end
 		end
 
@@ -963,10 +963,10 @@ feature -- filling operations
 			if drawable /= default_pointer then
 				tmp := coord_array_to_gdkpoint_array (points).area
 				if tile /= Void then
-					{EV_GTK_EXTERNALS}.gdk_gc_set_fill (gc, {EV_GTK_EXTERNALS}.Gdk_tiled_enum)
+					{GTK}.gdk_gc_set_fill (gc, {GTK}.Gdk_tiled_enum)
 				end
-				{EV_GTK_EXTERNALS}.gdk_draw_polygon (drawable, gc, 1, $tmp, points.count)
-				{EV_GTK_EXTERNALS}.gdk_gc_set_fill (gc, {EV_GTK_EXTERNALS}.Gdk_solid_enum)
+				{GTK}.gdk_draw_polygon (drawable, gc, 1, $tmp, points.count)
+				{GTK}.gdk_gc_set_fill (gc, {GTK}.Gdk_solid_enum)
 				update_if_needed
 			end
 		end
@@ -980,9 +980,9 @@ feature -- filling operations
 		do
 			if drawable /= default_pointer then
 				if tile /= Void then
-					{EV_GTK_EXTERNALS}.gdk_gc_set_fill (gc, {EV_GTK_EXTERNALS}.Gdk_tiled_enum)
+					{GTK}.gdk_gc_set_fill (gc, {GTK}.Gdk_tiled_enum)
 				end
-				{EV_GTK_EXTERNALS}.gdk_draw_arc (
+				{GTK}.gdk_draw_arc (
 					drawable,
 					gc,
 					1,
@@ -993,7 +993,7 @@ feature -- filling operations
 					(a_start_angle * radians_to_gdk_angle).truncated_to_integer,
 					(an_aperture * radians_to_gdk_angle).truncated_to_integer
 				)
-				{EV_GTK_EXTERNALS}.gdk_gc_set_fill (gc, {EV_GTK_EXTERNALS}.Gdk_solid_enum)
+				{GTK}.gdk_gc_set_fill (gc, {GTK}.Gdk_solid_enum)
 				update_if_needed
 			end
 		end
@@ -1044,31 +1044,31 @@ feature {EV_GTK_DEPENDENT_APPLICATION_IMP, EV_ANY_I} -- Implementation
 		local
 			new_pix, new_mask_pix, l_image, l_mask_image, a_pix, a_mask_pix, l_temp_pix: POINTER
 		do
-			new_pix := {EV_GTK_EXTERNALS}.gdk_pixbuf_new (0, True, 8, a_width, a_height)
-			l_image := {EV_GTK_EXTERNALS}.gdk_drawable_copy_to_image (drawable, default_pointer, src_x + device_x_offset, src_y + device_y_offset, dest_x, dest_y, a_width, a_height)
+			new_pix := {GTK}.gdk_pixbuf_new (0, True, 8, a_width, a_height)
+			l_image := {GTK2}.gdk_drawable_copy_to_image (drawable, default_pointer, src_x + device_x_offset, src_y + device_y_offset, dest_x, dest_y, a_width, a_height)
 
-			a_pix := {EV_GTK_EXTERNALS}.gdk_pixbuf_get_from_image (new_pix, l_image, default_pointer, 0, 0, 0, 0, a_width, a_height)
+			a_pix := {GTK2}.gdk_pixbuf_get_from_image (new_pix, l_image, default_pointer, 0, 0, 0, 0, a_width, a_height)
 				-- We do not unref new_pix as it is being reused
 
-			{EV_GTK_EXTERNALS}.object_unref (l_image)
+			{GTK2}.object_unref (l_image)
 			l_image := default_pointer
 
 			if mask /= default_pointer then
-				new_mask_pix := {EV_GTK_EXTERNALS}.gdk_pixbuf_new (0, True, 8, a_width, a_height)
-				l_mask_image := {EV_GTK_EXTERNALS}.gdk_drawable_copy_to_image (mask, default_pointer, src_x, src_y, dest_x, dest_y, a_width, a_height)
-				a_mask_pix := {EV_GTK_EXTERNALS}.gdk_pixbuf_get_from_image (new_mask_pix, l_mask_image, default_pointer, 0, 0, 0, 0, a_width, a_height)
-				{EV_GTK_EXTERNALS}.object_unref (l_mask_image)
+				new_mask_pix := {GTK}.gdk_pixbuf_new (0, True, 8, a_width, a_height)
+				l_mask_image := {GTK2}.gdk_drawable_copy_to_image (mask, default_pointer, src_x, src_y, dest_x, dest_y, a_width, a_height)
+				a_mask_pix := {GTK2}.gdk_pixbuf_get_from_image (new_mask_pix, l_mask_image, default_pointer, 0, 0, 0, 0, a_width, a_height)
+				{GTK2}.object_unref (l_mask_image)
 				l_mask_image := default_pointer
 
 				l_temp_pix := a_mask_pix
-				a_mask_pix := {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_add_alpha (l_temp_pix, True, 255, 255, 255)
-				{EV_GTK_EXTERNALS}.object_unref (l_temp_pix)
+				a_mask_pix := {GTK2}.gdk_pixbuf_add_alpha (l_temp_pix, True, 255, 255, 255)
+				{GTK2}.object_unref (l_temp_pix)
 					-- Draw mask on top of pixbuf.
-				{EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_composite (a_mask_pix, a_pix, 0, 0, a_width, a_height, 0, 0, 1, 1, {EV_GTK_DEPENDENT_EXTERNALS}.gdk_interp_bilinear, 255)
+				{GTK2}.gdk_pixbuf_composite (a_mask_pix, a_pix, 0, 0, a_width, a_height, 0, 0, 1, 1, {GTK2}.gdk_interp_bilinear, 255)
 				draw_mask_on_pixbuf (a_pix, a_mask_pix)
 
 				 -- Clean up
-				{EV_GTK_EXTERNALS}.object_unref (a_mask_pix)
+				{GTK2}.object_unref (a_mask_pix)
 
 				Result := a_pix
 			else
@@ -1082,8 +1082,8 @@ feature {EV_GTK_DEPENDENT_APPLICATION_IMP, EV_ANY_I} -- Implementation
 			a_pixbuf: POINTER
 		do
 			a_pixbuf := pixbuf_from_drawable
-			Result := {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_scale_simple (a_pixbuf, a_width, a_height, {EV_GTK_DEPENDENT_EXTERNALS}.gdk_interp_bilinear)
-			{EV_GTK_EXTERNALS}.object_unref (a_pixbuf)
+			Result := {GTK2}.gdk_pixbuf_scale_simple (a_pixbuf, a_width, a_height, {GTK2}.gdk_interp_bilinear)
+			{GTK2}.object_unref (a_pixbuf)
 		end
 
 feature {NONE} -- Implementation
@@ -1099,8 +1099,8 @@ feature {NONE} -- Implementation
 		local
 			a_success: BOOLEAN
 		once
-			Result := {EV_GTK_EXTERNALS}.c_gdk_color_struct_allocate
-			a_success := {EV_GTK_EXTERNALS}.gdk_colormap_alloc_color ({EV_GTK_EXTERNALS}.gdk_rgb_get_cmap, Result, False, True)
+			Result := {GTK}.c_gdk_color_struct_allocate
+			a_success := {GTK}.gdk_colormap_alloc_color ({GTK}.gdk_rgb_get_cmap, Result, False, True)
 		end
 
 	bg_color: POINTER
@@ -1108,11 +1108,11 @@ feature {NONE} -- Implementation
 		local
 			a_success: BOOLEAN
 		once
-			Result := {EV_GTK_EXTERNALS}.c_gdk_color_struct_allocate
-			{EV_GTK_EXTERNALS}.set_gdk_color_struct_red (Result, 65535)
-			{EV_GTK_EXTERNALS}.set_gdk_color_struct_green (Result, 65535)
-			{EV_GTK_EXTERNALS}.set_gdk_color_struct_blue (Result, 65535)
-			a_success := {EV_GTK_EXTERNALS}.gdk_colormap_alloc_color ({EV_GTK_EXTERNALS}.gdk_rgb_get_cmap, Result, False, True)
+			Result := {GTK}.c_gdk_color_struct_allocate
+			{GTK}.set_gdk_color_struct_red (Result, 65535)
+			{GTK}.set_gdk_color_struct_green (Result, 65535)
+			{GTK}.set_gdk_color_struct_blue (Result, 65535)
+			a_success := {GTK}.gdk_colormap_alloc_color ({GTK}.gdk_rgb_get_cmap, Result, False, True)
 		end
 
 	draw_mask_on_pixbuf (a_pixbuf_ptr, a_mask_ptr: POINTER)

@@ -41,8 +41,8 @@ feature {NONE} -- Initialization
 	make
 			-- Create and initialize `Current'.
 		do
-			set_c_object ({EV_GTK_EXTERNALS}.gtk_menu_bar_new)
-			{EV_GTK_EXTERNALS}.gtk_widget_show (c_object)
+			set_c_object ({GTK}.gtk_menu_bar_new)
+			{GTK}.gtk_widget_show (c_object)
 			Precursor
 		end
 

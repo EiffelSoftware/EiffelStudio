@@ -54,7 +54,7 @@ feature -- Status report
 	is_tabable_to: BOOLEAN
 			-- Is Current able to be tabbed to?
 		do
-			Result := {EV_GTK_EXTERNALS}.gtk_widget_flags (visual_widget) & {EV_GTK_EXTERNALS}.GTK_CAN_FOCUS_ENUM = {EV_GTK_EXTERNALS}.GTK_CAN_FOCUS_ENUM
+			Result := {GTK}.gtk_widget_flags (visual_widget) & {GTK}.GTK_CAN_FOCUS_ENUM = {GTK}.GTK_CAN_FOCUS_ENUM
 		end
 
 	is_tabable_from: BOOLEAN
@@ -63,13 +63,13 @@ feature -- Status report
 	enable_tabable_to
 			-- Make `is_tabable_to' `True'.
 		do
-			{EV_GTK_EXTERNALS}.gtk_widget_set_flags (visual_widget, {EV_GTK_EXTERNALS}.GTK_CAN_FOCUS_ENUM)
+			{GTK}.gtk_widget_set_flags (visual_widget, {GTK}.GTK_CAN_FOCUS_ENUM)
 		end
 
 	disable_tabable_to
 			-- Make `is_tabable_to' `False'.
 		do
-			{EV_GTK_EXTERNALS}.gtk_widget_unset_flags (visual_widget, {EV_GTK_EXTERNALS}.GTK_CAN_FOCUS_ENUM)
+			{GTK}.gtk_widget_unset_flags (visual_widget, {GTK}.GTK_CAN_FOCUS_ENUM)
 		end
 
 	enable_tabable_from

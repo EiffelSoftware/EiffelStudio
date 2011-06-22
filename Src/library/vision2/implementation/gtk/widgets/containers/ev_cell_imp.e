@@ -45,7 +45,7 @@ feature -- initialization
 		do
 			if c_object = default_pointer then
 					-- Only set c_object if not already set by a descendent.
-				set_c_object ({EV_GTK_EXTERNALS}.gtk_event_box_new)
+				set_c_object ({GTK}.gtk_event_box_new)
 			end
 			Precursor
 		end

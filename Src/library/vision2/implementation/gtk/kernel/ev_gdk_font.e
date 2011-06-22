@@ -32,13 +32,13 @@ feature {NONE} -- Implementation
 			a_cs: EV_GTK_C_STRING
 		do
 			a_cs := full_name
-			c_object := {EV_GTK_EXTERNALS}.gdk_font_load (a_cs.item)
+			c_object := {GTK}.gdk_font_load (a_cs.item)
 		end
 
 	destroy
 			-- Unreference font.
 		do
-			{EV_GTK_EXTERNALS}.gdk_font_unref (c_object)
+			{GTK}.gdk_font_unref (c_object)
 		end
 
 feature -- Access

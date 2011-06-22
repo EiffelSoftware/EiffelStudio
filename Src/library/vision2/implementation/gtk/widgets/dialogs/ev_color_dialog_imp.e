@@ -40,12 +40,12 @@ feature {NONE} -- Initialization
 				-- Create the gtk object.
 			a_cs := "Color selection dialog"
 			set_c_object (
-				{EV_GTK_EXTERNALS}.gtk_color_selection_dialog_new (
+				{GTK}.gtk_color_selection_dialog_new (
 					a_cs.item
 				)
 			)
-			{EV_GTK_EXTERNALS}.gtk_widget_hide (
-				{EV_GTK_EXTERNALS}.gtk_color_selection_dialog_struct_help_button (c_object)
+			{GTK}.gtk_widget_hide (
+				{GTK}.gtk_color_selection_dialog_struct_help_button (c_object)
 			)
 			Precursor {EV_STANDARD_DIALOG_IMP}
 			set_is_initialized (False)
@@ -76,15 +76,15 @@ feature -- Access
 			if not user_clicked_ok and then attached internal_set_color as l_internal_set_color then
 				Result := l_internal_set_color.twin
 			else
-				color_struct := {EV_GTK_EXTERNALS}.c_gdk_color_struct_allocate
-				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_color_selection_get_current_color (
-					{EV_GTK_DEPENDENT_EXTERNALS}.gtk_color_selection_dialog_struct_color_selection (c_object),
+				color_struct := {GTK}.c_gdk_color_struct_allocate
+				{GTK2}.gtk_color_selection_get_current_color (
+					{GTK2}.gtk_color_selection_dialog_struct_color_selection (c_object),
 					color_struct
 				)
 				create Result.make_with_8_bit_rgb (
-					{EV_GTK_EXTERNALS}.gdk_color_struct_red (color_struct) // 256,
-					{EV_GTK_EXTERNALS}.gdk_color_struct_green (color_struct) // 256,
-					{EV_GTK_EXTERNALS}.gdk_color_struct_blue (color_struct) // 256
+					{GTK}.gdk_color_struct_red (color_struct) // 256,
+					{GTK}.gdk_color_struct_green (color_struct) // 256,
+					{GTK}.gdk_color_struct_blue (color_struct) // 256
 				)
 				color_struct.memory_free
 			end
@@ -98,12 +98,12 @@ feature -- Element change
 			color_struct: POINTER
 		do
 			internal_set_color := a_color.twin
-			color_struct := {EV_GTK_EXTERNALS}.c_gdk_color_struct_allocate
-			{EV_GTK_EXTERNALS}.set_gdk_color_struct_red (color_struct, a_color.red_16_bit)
-			{EV_GTK_EXTERNALS}.set_gdk_color_struct_green (color_struct, a_color.green_16_bit)
-			{EV_GTK_EXTERNALS}.set_gdk_color_struct_blue (color_struct, a_color.blue_16_bit)
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_color_selection_set_current_color (
-				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_color_selection_dialog_struct_color_selection (c_object),
+			color_struct := {GTK}.c_gdk_color_struct_allocate
+			{GTK}.set_gdk_color_struct_red (color_struct, a_color.red_16_bit)
+			{GTK}.set_gdk_color_struct_green (color_struct, a_color.green_16_bit)
+			{GTK}.set_gdk_color_struct_blue (color_struct, a_color.blue_16_bit)
+			{GTK2}.gtk_color_selection_set_current_color (
+				{GTK2}.gtk_color_selection_dialog_struct_color_selection (c_object),
 				color_struct
 			)
 			color_struct.memory_free

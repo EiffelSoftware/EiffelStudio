@@ -42,7 +42,7 @@ feature {NONE} -- Implementation
 	file_chooser_action: INTEGER
 			-- Action constant of the file chooser, ie: to open or save files, etc.
 		do
-			Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_action_save_enum
+			Result := {GTK2}.gtk_file_chooser_action_save_enum
 		end
 
 note

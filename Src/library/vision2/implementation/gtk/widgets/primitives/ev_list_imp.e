@@ -54,44 +54,44 @@ feature -- Initialize
 			a_gtk_c_str: EV_GTK_C_STRING
 			a_selection: POINTER
 		do
-			scrollable_area := {EV_GTK_EXTERNALS}.gtk_scrolled_window_new (NULL, NULL)
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_scrolled_window_set_shadow_type (scrollable_area, {EV_GTK_EXTERNALS}.gtk_shadow_in_enum)
+			scrollable_area := {GTK}.gtk_scrolled_window_new (NULL, NULL)
+			{GTK2}.gtk_scrolled_window_set_shadow_type (scrollable_area, {GTK}.gtk_shadow_in_enum)
 			set_c_object (scrollable_area)
 
-			tree_view := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_new
-			{EV_GTK_EXTERNALS}.gtk_container_add (scrollable_area, tree_view)
+			tree_view := {GTK2}.gtk_tree_view_new
+			{GTK}.gtk_container_add (scrollable_area, tree_view)
 			Precursor {EV_LIST_ITEM_LIST_IMP}
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_set_model (tree_view, list_store)
-			{EV_GTK_EXTERNALS}.gtk_scrolled_window_set_policy (
+			{GTK2}.gtk_tree_view_set_model (tree_view, list_store)
+			{GTK}.gtk_scrolled_window_set_policy (
 				scrollable_area,
-				{EV_GTK_EXTERNALS}.GTK_POLICY_AUTOMATIC_ENUM,
-				{EV_GTK_EXTERNALS}.GTK_POLICY_AUTOMATIC_ENUM
+				{GTK}.GTK_POLICY_AUTOMATIC_ENUM,
+				{GTK}.GTK_POLICY_AUTOMATIC_ENUM
 			)
 
-			{EV_GTK_EXTERNALS}.gtk_widget_show (tree_view)
+			{GTK}.gtk_widget_show (tree_view)
 
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_set_headers_visible (tree_view, False)
+			{GTK2}.gtk_tree_view_set_headers_visible (tree_view, False)
 
-			a_column := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_new
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_resizable (a_column, True)
+			a_column := {GTK2}.gtk_tree_view_column_new
+			{GTK2}.gtk_tree_view_column_set_resizable (a_column, True)
 
-			a_cell_renderer := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_renderer_text_new
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_pack_end (a_column, a_cell_renderer, True)
+			a_cell_renderer := {GTK2}.gtk_cell_renderer_text_new
+			{GTK2}.gtk_tree_view_column_pack_end (a_column, a_cell_renderer, True)
 			a_gtk_c_str := "text"
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_add_attribute (a_column, a_cell_renderer, a_gtk_c_str.item, 1)
+			{GTK2}.gtk_tree_view_column_add_attribute (a_column, a_cell_renderer, a_gtk_c_str.item, 1)
 
 
-			a_cell_renderer := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_renderer_pixbuf_new
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_pack_end (a_column, a_cell_renderer, False)
+			a_cell_renderer := {GTK2}.gtk_cell_renderer_pixbuf_new
+			{GTK2}.gtk_tree_view_column_pack_end (a_column, a_cell_renderer, False)
 			a_gtk_c_str := "pixbuf"
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_add_attribute (a_column, a_cell_renderer, a_gtk_c_str.item, 0)
+			{GTK2}.gtk_tree_view_column_add_attribute (a_column, a_cell_renderer, a_gtk_c_str.item, 0)
 
 
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_insert_column (tree_view, a_column, 1)
+			{GTK2}.gtk_tree_view_insert_column (tree_view, a_column, 1)
 
 			previous_selection := selected_items
 
-			a_selection := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
+			a_selection := {GTK2}.gtk_tree_view_get_selection (tree_view)
 			real_signal_connect (a_selection, "changed", agent (app_implementation.gtk_marshal).on_pnd_deferred_item_parent_selection_change (internal_id), Void)
 			initialize_pixmaps
 		end
@@ -112,16 +112,16 @@ feature -- Access
 			a_int_ptr: POINTER
 			mp: MANAGED_POINTER
 		do
-			a_selection := {EV_GTK_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
-			a_tree_path_list := {EV_GTK_EXTERNALS}.gtk_tree_selection_get_selected_rows (a_selection, $a_model)
+			a_selection := {GTK2}.gtk_tree_view_get_selection (tree_view)
+			a_tree_path_list := {GTK2}.gtk_tree_selection_get_selected_rows (a_selection, $a_model)
 
 			if a_tree_path_list /= NULL then
-					a_tree_path := {EV_GTK_EXTERNALS}.glist_struct_data (a_tree_path_list)
-					a_int_ptr := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_get_indices (a_tree_path)
+					a_tree_path := {GTK}.glist_struct_data (a_tree_path_list)
+					a_int_ptr := {GTK2}.gtk_tree_path_get_indices (a_tree_path)
 					create mp.share_from_pointer (a_int_ptr, {PLATFORM}.integer_32_bytes)
 					Result := (child_array @ (mp.read_integer_32 (0) + 1))
-					{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_list_free_contents (a_tree_path_list)
-					{EV_GTK_EXTERNALS}.g_list_free (a_tree_path_list)
+					{GTK2}.gtk_tree_path_list_free_contents (a_tree_path_list)
+					{GTK}.g_list_free (a_tree_path_list)
 			end
 		end
 
@@ -140,21 +140,21 @@ feature -- Access
 			mp: MANAGED_POINTER
 		do
 			create Result.make (0)
-			a_selection := {EV_GTK_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
-			a_tree_path_list := {EV_GTK_EXTERNALS}.gtk_tree_selection_get_selected_rows (a_selection, $a_model)
+			a_selection := {GTK2}.gtk_tree_view_get_selection (tree_view)
+			a_tree_path_list := {GTK2}.gtk_tree_selection_get_selected_rows (a_selection, $a_model)
 			if a_tree_path_list /= NULL then
 				from
 				until
 					a_tree_path_list = NULL
 				loop
-					a_tree_path := {EV_GTK_EXTERNALS}.glist_struct_data (a_tree_path_list)
-					a_int_ptr := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_get_indices (a_tree_path)
+					a_tree_path := {GTK}.glist_struct_data (a_tree_path_list)
+					a_int_ptr := {GTK2}.gtk_tree_path_get_indices (a_tree_path)
 					create mp.share_from_pointer (a_int_ptr, {PLATFORM}.integer_32_bytes)
 					Result.extend ((child_array @ (mp.read_integer_32 (0) + 1)))
-					a_tree_path_list := {EV_GTK_EXTERNALS}.glist_struct_next (a_tree_path_list)
+					a_tree_path_list := {GTK}.glist_struct_next (a_tree_path_list)
 				end
-				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_list_free_contents (a_tree_path_list)
-				{EV_GTK_EXTERNALS}.g_list_free (a_tree_path_list)
+				{GTK2}.gtk_tree_path_list_free_contents (a_tree_path_list)
+				{GTK}.g_list_free (a_tree_path_list)
 			end
 		end
 
@@ -166,8 +166,8 @@ feature -- Status Report
 		local
 			a_selection: POINTER
 		do
-			a_selection := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
-			Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_selection_get_mode (a_selection) = {EV_GTK_EXTERNALS}.gtk_selection_multiple_enum
+			a_selection := {GTK2}.gtk_tree_view_get_selection (tree_view)
+			Result := {GTK2}.gtk_tree_selection_get_mode (a_selection) = {GTK}.gtk_selection_multiple_enum
 		end
 
 feature -- Status setting
@@ -183,9 +183,9 @@ feature -- Status setting
 			check list_item_imp /= Void end
 			l_list_iter := list_item_imp.list_iter
 			check l_list_iter /= Void end
-			a_path := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_model_get_path (list_store, l_list_iter.item)
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_scroll_to_cell (tree_view, a_path, NULL, False, 0, 0)
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_free (a_path)
+			a_path := {GTK2}.gtk_tree_model_get_path (list_store, l_list_iter.item)
+			{GTK2}.gtk_tree_view_scroll_to_cell (tree_view, a_path, NULL, False, 0, 0)
+			{GTK2}.gtk_tree_path_free (a_path)
 		end
 
 	enable_multiple_selection
@@ -194,8 +194,8 @@ feature -- Status setting
 		local
 			a_selection: POINTER
 		do
-			a_selection := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_selection_set_mode (a_selection, {EV_GTK_EXTERNALS}.gtk_selection_multiple_enum)
+			a_selection := {GTK2}.gtk_tree_view_get_selection (tree_view)
+			{GTK2}.gtk_tree_selection_set_mode (a_selection, {GTK}.gtk_selection_multiple_enum)
 		end
 
 	disable_multiple_selection
@@ -204,8 +204,8 @@ feature -- Status setting
 		local
 			a_selection: POINTER
 		do
-			a_selection := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_selection_set_mode (a_selection, {EV_GTK_EXTERNALS}.gtk_selection_single_enum)
+			a_selection := {GTK2}.gtk_tree_view_get_selection (tree_view)
+			{GTK2}.gtk_tree_selection_set_mode (a_selection, {GTK}.gtk_selection_single_enum)
 		end
 
 	select_item (an_index: INTEGER)
@@ -215,12 +215,12 @@ feature -- Status setting
 			a_item_imp: detachable EV_LIST_ITEM_IMP
 			l_list_iter: detachable EV_GTK_TREE_ITER_STRUCT
 		do
-			a_selection := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
+			a_selection := {GTK2}.gtk_tree_view_get_selection (tree_view)
 			a_item_imp ?= (child_array @ an_index).implementation
 			check a_item_imp /= Void end
 			l_list_iter := a_item_imp.list_iter
 			check l_list_iter /= Void end
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_selection_select_iter (a_selection, l_list_iter.item)
+			{GTK2}.gtk_tree_selection_select_iter (a_selection, l_list_iter.item)
 		end
 
 	deselect_item (an_index: INTEGER)
@@ -230,12 +230,12 @@ feature -- Status setting
 			a_item_imp: detachable EV_LIST_ITEM_IMP
 			l_list_iter: detachable EV_GTK_TREE_ITER_STRUCT
 		do
-			a_selection := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
+			a_selection := {GTK2}.gtk_tree_view_get_selection (tree_view)
 			a_item_imp ?= (child_array @ an_index).implementation
 			check a_item_imp /= Void end
 			l_list_iter := a_item_imp.list_iter
 			check l_list_iter /= Void end
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_selection_unselect_iter (a_selection, l_list_iter.item)
+			{GTK2}.gtk_tree_selection_unselect_iter (a_selection, l_list_iter.item)
 		end
 
 	clear_selection
@@ -243,8 +243,8 @@ feature -- Status setting
 		local
 			a_selection: POINTER
 		do
-			a_selection := {EV_GTK_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
-			{EV_GTK_EXTERNALS}.gtk_tree_selection_unselect_all (a_selection)
+			a_selection := {GTK2}.gtk_tree_view_get_selection (tree_view)
+			{GTK2}.gtk_tree_selection_unselect_all (a_selection)
 		end
 
 feature -- PND
@@ -257,12 +257,12 @@ feature -- PND
 			a_int_ptr: POINTER
 			mp: MANAGED_POINTER
 		do
-			a_success := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_path_at_pos (tree_view, 1, a_y, $a_tree_path, $a_tree_column, NULL, NULL)
+			a_success := {GTK2}.gtk_tree_view_get_path_at_pos (tree_view, 1, a_y, $a_tree_path, $a_tree_column, NULL, NULL)
 			if a_success then
-				a_int_ptr := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_get_indices (a_tree_path)
+				a_int_ptr := {GTK2}.gtk_tree_path_get_indices (a_tree_path)
 				create mp.share_from_pointer (a_int_ptr, {PLATFORM}.integer_32_bytes)
 				Result := mp.read_integer_32 (0) + 1
-				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_free (a_tree_path)
+				{GTK2}.gtk_tree_path_free (a_tree_path)
 			end
 		end
 
@@ -302,12 +302,12 @@ feature -- PND
 			a_gtk_c_str: EV_GTK_C_STRING
 			a_vert_sep: INTEGER
 		do
-			a_column_ptr := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_column (tree_view, 0)
-			a_cell_rend_list := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_get_cell_renderers (a_column_ptr)
-			a_cell_rend := {EV_GTK_EXTERNALS}.g_list_nth_data (a_cell_rend_list, 0)
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_renderer_get_fixed_size (a_cell_rend, null, $Result)
+			a_column_ptr := {GTK2}.gtk_tree_view_get_column (tree_view, 0)
+			a_cell_rend_list := {GTK2}.gtk_tree_view_column_get_cell_renderers (a_column_ptr)
+			a_cell_rend := {GTK}.g_list_nth_data (a_cell_rend_list, 0)
+			{GTK2}.gtk_cell_renderer_get_fixed_size (a_cell_rend, null, $Result)
 			a_gtk_c_str := once "vertical-separator"
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_style_get_integer (tree_view, a_gtk_c_str.item, $a_vert_sep)
+			{GTK2}.gtk_widget_style_get_integer (tree_view, a_gtk_c_str.item, $a_vert_sep)
 			Result := Result + a_vert_sep
 		end
 
@@ -386,7 +386,7 @@ feature {NONE} -- Implementation
 			-- Ensure default key processing is not performed.
 		do
 			Precursor {EV_LIST_I}
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_set_enable_search (tree_view, False)
+			{GTK2}.gtk_tree_view_set_enable_search (tree_view, False)
 		end
 
 	tree_view: POINTER
@@ -403,7 +403,7 @@ feature {NONE} -- Implementation
 	vertical_adjustment_struct: POINTER
 			-- Pointer to vertical adjustment struct use in the scrollbar.
 		do
-			Result := {EV_GTK_EXTERNALS}.gtk_range_struct_adjustment ({EV_GTK_EXTERNALS}.gtk_scrolled_window_struct_vscrollbar (scrollable_area))
+			Result := {GTK}.gtk_range_struct_adjustment ({GTK}.gtk_scrolled_window_struct_vscrollbar (scrollable_area))
 		end
 
 note

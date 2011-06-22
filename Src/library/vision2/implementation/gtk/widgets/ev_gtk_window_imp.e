@@ -66,10 +66,10 @@ feature {NONE} -- Implementation
 			-- GtkWindow positioning enum.
 		do
 			if blocking_window /= Void then
-				Result := {EV_GTK_EXTERNALS}.Gtk_win_pos_center_on_parent_enum
+				Result := {GTK2}.Gtk_win_pos_center_on_parent_enum
 			else
 					-- We let the Window Manager decide where the window should be positioned.
-				Result := {EV_GTK_EXTERNALS}.gtk_win_pos_none_enum
+				Result := {GTK}.gtk_win_pos_none_enum
 			end
 		end
 
@@ -98,8 +98,8 @@ feature {NONE} -- Implementation
 				-- Set constraints so that resize does not break existing minimum sizing.
 			l_width := a_width.max (minimum_width)
 			l_height := a_height.max (minimum_height)
-			{EV_GTK_EXTERNALS}.gtk_window_resize (c_object, l_width, l_height)
-			{EV_GTK_EXTERNALS}.gtk_window_set_default_size (c_object, l_width, l_height)
+			{GTK2}.gtk_window_resize (c_object, l_width, l_height)
+			{GTK}.gtk_window_set_default_size (c_object, l_width, l_height)
 
 				-- Set configure_event_pending to True so that dimensions are updated immediately.
 			configure_event_pending := True
@@ -114,7 +114,7 @@ feature {NONE} -- Implementation
 			-- Width of `Current'.
 		do
 			if configure_event_pending or not is_displayed then
-				{EV_GTK_EXTERNALS}.gtk_window_get_default_size (c_object, $Result, default_pointer)
+				{GTK}.gtk_window_get_default_size (c_object, $Result, default_pointer)
 				Result := Result.max (minimum_width)
 			else
 				Result := Precursor
@@ -125,7 +125,7 @@ feature {NONE} -- Implementation
 			-- Height of `Current'.
 		do
 			if configure_event_pending or not is_displayed then
-				{EV_GTK_EXTERNALS}.gtk_window_get_default_size (c_object, default_pointer, $Result)
+				{GTK}.gtk_window_get_default_size (c_object, default_pointer, $Result)
 				Result := Result.max (minimum_height)
 			else
 				Result := Precursor
@@ -148,7 +148,7 @@ feature {NONE} -- Implementation
 			-- Set horizontal offset to parent to `a_x'.
 			-- Set vertical offset to parent to `a_y'.
 		do
-			{EV_GTK_EXTERNALS}.gtk_window_move (c_object, a_x - app_implementation.screen_virtual_x, a_y - app_implementation.screen_virtual_y)
+			{GTK2}.gtk_window_move (c_object, a_x - app_implementation.screen_virtual_x, a_y - app_implementation.screen_virtual_y)
 		end
 
 	configure_event_pending: BOOLEAN
@@ -159,7 +159,7 @@ feature {NONE} -- Implementation
 		local
 			temp_y: INTEGER
 		do
-			{EV_GTK_EXTERNALS}.gtk_window_get_position (c_object, $Result, $temp_y)
+			{GTK2}.gtk_window_get_position (c_object, $Result, $temp_y)
 			Result := Result + app_implementation.screen_virtual_x
 		end
 
@@ -168,7 +168,7 @@ feature {NONE} -- Implementation
 		local
 			temp_x: INTEGER
 		do
-			{EV_GTK_EXTERNALS}.gtk_window_get_position (c_object, $temp_x, $Result)
+			{GTK2}.gtk_window_get_position (c_object, $temp_x, $Result)
 			Result := Result + app_implementation.screen_virtual_y
 		end
 
@@ -182,8 +182,8 @@ feature {NONE} -- Implementation
 			-- Request that `Current' be displayed when its parent is.
 		do
 			if not is_show_requested then
-				{EV_GTK_EXTERNALS}.gtk_window_set_position (c_object, window_position_enum)
-				{EV_GTK_EXTERNALS}.gtk_widget_show (c_object)
+				{GTK}.gtk_window_set_position (c_object, window_position_enum)
+				{GTK}.gtk_widget_show (c_object)
 			end
 		end
 
@@ -210,13 +210,13 @@ feature {NONE} -- Implementation
 				is_modal := False
 				set_blocking_window (Void)
 					-- Set the default size so that the
-				{EV_GTK_EXTERNALS}.gtk_widget_hide (c_object)
+				{GTK}.gtk_widget_hide (c_object)
 					-- Force an immediate hide so that the event loop is not relied upon to unmap `Current'.
-				{EV_GTK_EXTERNALS}.gdk_window_hide ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object))
+				{GTK}.gdk_window_hide ({GTK}.gtk_widget_struct_window (c_object))
 
 					-- Reset the size and position to emulate Win32 behavior.
-				{EV_GTK_EXTERNALS}.gtk_window_set_default_size (c_object, l_width, l_height)
-				{EV_GTK_EXTERNALS}.gtk_window_move (c_object, l_x_pos, l_y_pos)
+				{GTK}.gtk_window_set_default_size (c_object, l_width, l_height)
+				{GTK2}.gtk_window_move (c_object, l_x_pos, l_y_pos)
 			end
 		end
 
@@ -245,7 +245,7 @@ feature {NONE} -- Implementation
 						-- by the modal dialog, when closed the window managed would restore the
 						-- focus to the previously focused window which may or may not be `l_window_imp',
 						-- this leads to odd behavior when closing the modal dialog so we always raise the window.
-					{EV_GTK_EXTERNALS}.gdk_window_raise ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (l_window_imp.c_object))
+					{GTK}.gdk_window_raise ({GTK}.gtk_widget_struct_window (l_window_imp.c_object))
 				end
 			end
 		end
@@ -316,7 +316,7 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP}
 		do
 			l_app_imp := app_implementation
 				-- Perform translation on key values from gdk.
-			keyval := {EV_GTK_EXTERNALS}.gdk_event_key_struct_keyval (a_key_event)
+			keyval := {GTK}.gdk_event_key_struct_keyval (a_key_event)
 			if keyval > 0 then
 				if not valid_gtk_code (keyval) then
 						-- We perform mapping for F11 and F12 keys on Solaris with Type 4 keyboards.
@@ -334,7 +334,7 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP}
 					create a_key.make_with_code (key_code_from_gtk (keyval))
 				end
 			end
-			if {EV_GTK_EXTERNALS}.gdk_event_key_struct_type (a_key_event) = {EV_GTK_EXTERNALS}.gdk_key_press_enum then
+			if {GTK}.gdk_event_key_struct_type (a_key_event) = {GTK}.gdk_key_press_enum then
 				a_key_press := True
 				l_window_imp ?= Current
 
@@ -359,7 +359,7 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP}
 				if not l_accel_called then
 						-- We only fire key_string actions if no accelerators were called.
 					if keyval > 0 then
-						l_unicode_value := {EV_GTK_EXTERNALS}.gdk_keyval_to_unicode (keyval)
+						l_unicode_value := {GTK2}.gdk_keyval_to_unicode (keyval)
 						if l_unicode_value > 0 then
 							create a_key_string.make (0)
 							a_key_string.append_character (l_unicode_value.to_character_32)
@@ -389,7 +389,7 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP}
 				end
 			end
 
-			a_focus_widget ?= l_app_imp.eif_object_from_gtk_object ({EV_GTK_EXTERNALS}.gtk_window_struct_focus_widget (c_object))
+			a_focus_widget ?= l_app_imp.eif_object_from_gtk_object ({GTK}.gtk_window_struct_focus_widget (c_object))
 			l_any := Current
 			if a_focus_widget = Void then
 					-- If the focus widget is not available then set it to the current window.
@@ -408,7 +408,7 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP}
 						end
 					end
 					if not l_disable_default_processing then
-						{EV_GTK_EXTERNALS}.gtk_main_do_event (a_key_event)
+						{GTK}.gtk_main_do_event (a_key_event)
 					end
 				end
 				if attached l_app_imp.pick_and_drop_source as l_pick_and_drop_source and then a_key_press and then a_key /= Void and then (a_key.code = {EV_KEY_CONSTANTS}.key_escape or a_key.code = {EV_KEY_CONSTANTS}.key_alt) then
@@ -442,7 +442,7 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP}
 					l_standard_dialog.on_key_event (a_key, a_key_string, a_key_press)
 				end
 					-- Execute the gdk event as normal.
-				{EV_GTK_EXTERNALS}.gtk_main_do_event (a_key_event)
+				{GTK}.gtk_main_do_event (a_key_event)
 			end
 		end
 
@@ -465,14 +465,14 @@ feature {EV_ANY_I} -- Implementation
 			l_geometry: POINTER
 			l_width, l_height: INTEGER
 		do
-			l_geometry := {EV_GTK_EXTERNALS}.c_gdk_geometry_struct_allocate
+			l_geometry := {GTK}.c_gdk_geometry_struct_allocate
 			l_width := width
 			l_height := height
-			{EV_GTK_EXTERNALS}.set_gdk_geometry_struct_max_width (l_geometry, l_width)
-			{EV_GTK_EXTERNALS}.set_gdk_geometry_struct_max_height (l_geometry, l_height)
-			{EV_GTK_EXTERNALS}.set_gdk_geometry_struct_min_width (l_geometry, l_width)
-			{EV_GTK_EXTERNALS}.set_gdk_geometry_struct_min_height (l_geometry, l_height)
-			{EV_GTK_EXTERNALS}.gtk_window_set_geometry_hints (c_object, NULL, l_geometry, {EV_GTK_EXTERNALS}.Gdk_hint_max_size_enum | {EV_GTK_EXTERNALS}.gdk_hint_min_size_enum)
+			{GTK}.set_gdk_geometry_struct_max_width (l_geometry, l_width)
+			{GTK}.set_gdk_geometry_struct_max_height (l_geometry, l_height)
+			{GTK}.set_gdk_geometry_struct_min_width (l_geometry, l_width)
+			{GTK}.set_gdk_geometry_struct_min_height (l_geometry, l_height)
+			{GTK}.gtk_window_set_geometry_hints (c_object, NULL, l_geometry, {GTK}.Gdk_hint_max_size_enum | {GTK}.gdk_hint_min_size_enum)
 			l_geometry.memory_free
 		end
 

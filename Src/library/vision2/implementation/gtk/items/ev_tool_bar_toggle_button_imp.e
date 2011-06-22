@@ -29,7 +29,7 @@ feature -- Initialization
 	new_tool_bar_button: POINTER
 			-- <Precursor>
 		do
-			Result := {EV_GTK_EXTERNALS}.gtk_toggle_tool_button_new
+			Result := {GTK2}.gtk_toggle_tool_button_new
 		end
 
 feature -- Status setting
@@ -38,7 +38,7 @@ feature -- Status setting
 			-- Unselect `Current'.
 		do
 			if is_selected then
-				{EV_GTK_EXTERNALS}.gtk_toggle_tool_button_set_active (visual_widget, False)
+				{GTK2}.gtk_toggle_tool_button_set_active (visual_widget, False)
 			end
 		end
 
@@ -46,7 +46,7 @@ feature -- Status setting
 			-- Select `Current'.
 		do
 			if not is_selected then
-				{EV_GTK_EXTERNALS}.gtk_toggle_tool_button_set_active (visual_widget, True)
+				{GTK2}.gtk_toggle_tool_button_set_active (visual_widget, True)
 			end
 		end
 
@@ -55,7 +55,7 @@ feature -- Status report
 	is_selected: BOOLEAN
 			-- Is `Current' selected.
 		do
-			Result := {EV_GTK_EXTERNALS}.gtk_toggle_tool_button_get_active (visual_widget)
+			Result := {GTK2}.gtk_toggle_tool_button_get_active (visual_widget)
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation

@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 			a_cs: EV_GTK_C_STRING
 		do
 			a_cs := "Font Selection Dialog"
-			set_c_object ({EV_GTK_EXTERNALS}.gtk_font_selection_dialog_new (
+			set_c_object ({GTK}.gtk_font_selection_dialog_new (
 						a_cs.item
 					))
 			Precursor {EV_STANDARD_DIALOG_IMP}
@@ -78,7 +78,7 @@ feature -- Access
 			font_imp ?= Result.implementation
 			check font_imp /= Void end
 
-			a_utf8_ptr := {EV_GTK_EXTERNALS}.gtk_font_selection_dialog_get_font_name (c_object)
+			a_utf8_ptr := {GTK}.gtk_font_selection_dialog_get_font_name (c_object)
 			create a_cs.share_from_pointer (a_utf8_ptr)
 			font_desc := a_cs.string.as_lower
 			font_names := App_implementation.font_names_on_system
@@ -136,13 +136,13 @@ feature -- Element change
 		do
 			font_imp ?= a_font.implementation
 			check font_imp /= Void end
-			a_font_des_str := {EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_to_string (font_imp.font_description)
+			a_font_des_str := {GTK2}.pango_font_description_to_string (font_imp.font_description)
 			if a_font_des_str /= default_pointer then
 				create a_cs.make_from_pointer (a_font_des_str)
 			else
 				a_cs := font_imp.name + " " + font_imp.height_in_points.out
 			end
-			a_success_flag := {EV_GTK_EXTERNALS}.gtk_font_selection_dialog_set_font_name (
+			a_success_flag := {GTK}.gtk_font_selection_dialog_set_font_name (
 							c_object,
 							a_cs.item
 						)

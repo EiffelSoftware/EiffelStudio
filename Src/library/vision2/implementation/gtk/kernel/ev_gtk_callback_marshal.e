@@ -120,7 +120,7 @@ feature -- Agent functions.
 			agent (n: INTEGER; p: POINTER): TUPLE
 					-- Converted GtkWidget* to tuple.
 				do
-					Result := [{EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_pointer (p)]
+					Result := [{GTK2}.gtk_value_pointer (p)]
 				end
 		end
 
@@ -132,12 +132,12 @@ feature -- Agent functions.
 				local
 					gdk_configure: POINTER
 				do
-					gdk_configure := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_pointer (p)
+					gdk_configure := {GTK2}.gtk_value_pointer (p)
 					Result := dimension_tuple (
-						{EV_GTK_EXTERNALS}.gdk_event_configure_struct_x (gdk_configure),
-						{EV_GTK_EXTERNALS}.gdk_event_configure_struct_y (gdk_configure),
-						{EV_GTK_EXTERNALS}.gdk_event_configure_struct_width (gdk_configure),
-						{EV_GTK_EXTERNALS}.gdk_event_configure_struct_height (gdk_configure)
+						{GTK}.gdk_event_configure_struct_x (gdk_configure),
+						{GTK}.gdk_event_configure_struct_y (gdk_configure),
+						{GTK}.gdk_event_configure_struct_width (gdk_configure),
+						{GTK}.gdk_event_configure_struct_height (gdk_configure)
 					)
 			end
 		end
@@ -150,12 +150,12 @@ feature -- Agent functions.
 				local
 					gtk_alloc: POINTER
 				do
-					gtk_alloc := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_pointer (p)
+					gtk_alloc := {GTK2}.gtk_value_pointer (p)
 					Result := dimension_tuple (
-						{EV_GTK_EXTERNALS}.gtk_allocation_struct_x (gtk_alloc),
-						{EV_GTK_EXTERNALS}.gtk_allocation_struct_y (gtk_alloc),
-						{EV_GTK_EXTERNALS}.gtk_allocation_struct_width (gtk_alloc),
-						{EV_GTK_EXTERNALS}.gtk_allocation_struct_height (gtk_alloc)
+						{GTK}.gtk_allocation_struct_x (gtk_alloc),
+						{GTK}.gtk_allocation_struct_y (gtk_alloc),
+						{GTK}.gtk_allocation_struct_width (gtk_alloc),
+						{GTK}.gtk_allocation_struct_height (gtk_alloc)
 					)
 				end
 		end
@@ -169,13 +169,13 @@ feature -- Agent functions.
 					gdk_expose_event: POINTER
 					l_rect: POINTER
 				do
-					gdk_expose_event := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_pointer (p)
-					l_rect := {EV_GTK_EXTERNALS}.gdk_event_expose_struct_area (gdk_expose_event)
+					gdk_expose_event := {GTK2}.gtk_value_pointer (p)
+					l_rect := {GTK}.gdk_event_expose_struct_area (gdk_expose_event)
 					Result := dimension_tuple (
-						{EV_GTK_EXTERNALS}.gdk_rectangle_struct_x (l_rect),
-						{EV_GTK_EXTERNALS}.gdk_rectangle_struct_y (l_rect),
-						{EV_GTK_EXTERNALS}.gdk_rectangle_struct_width (l_rect),
-						{EV_GTK_EXTERNALS}.gdk_rectangle_struct_height (l_rect)
+						{GTK}.gdk_rectangle_struct_x (l_rect),
+						{GTK}.gdk_rectangle_struct_y (l_rect),
+						{GTK}.gdk_rectangle_struct_width (l_rect),
+						{GTK}.gdk_rectangle_struct_height (l_rect)
 					)
 				end
 		end
@@ -186,7 +186,7 @@ feature {EV_ANY_IMP} -- Agent implementation routines
 			-- Tuple containing integer value from first of `args'.
 		do
 			Result := integer_tuple
-			Result.put_integer ({EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_int (args), 1)
+			Result.put_integer ({GTK2}.gtk_value_int (args), 1)
 		end
 
 	column_resize_callback_translate (n: INTEGER; args: POINTER): TUPLE [INTEGER, INTEGER]
@@ -194,8 +194,8 @@ feature {EV_ANY_IMP} -- Agent implementation routines
 		local
 			gtkarg2: POINTER
 		do
-			gtkarg2 := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_args_array_i_th (args, 1)
-			Result := [{EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_int (args) + 1, {EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_int (gtkarg2)]
+			gtkarg2 := {GTK2}.gtk_args_array_i_th (args, 1)
+			Result := [{GTK2}.gtk_value_int (args) + 1, {GTK2}.gtk_value_int (gtkarg2)]
 			-- Column is zero based in gtk.
 		end
 
@@ -284,7 +284,7 @@ feature {NONE} -- Tuple optimizations.
 			-- Tuple containing integer value from first of `args'.
 		do
 			Result := pointer_tuple
-			Result.pointer := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_pointer (args)
+			Result.pointer := {GTK2}.gtk_value_pointer (args)
 		end
 
 feature {EV_GTK_CALLBACK_MARSHAL} -- Externals

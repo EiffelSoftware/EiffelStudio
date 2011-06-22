@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 
 	make
 		do
-			set_c_object ({EV_GTK_EXTERNALS}.gtk_vbox_new (Default_homogeneous, Default_spacing))
+			set_c_object ({GTK}.gtk_vbox_new (Default_homogeneous, Default_spacing))
 			Precursor
 		end
 

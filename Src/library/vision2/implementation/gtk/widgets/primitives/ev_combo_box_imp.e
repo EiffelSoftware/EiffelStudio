@@ -96,7 +96,7 @@ feature {NONE} -- Initialization
 			l_previous_selected_item_imp := previous_selected_item_imp
 			if is_list_shown then
 					-- Make sure that the list is hidden from the screen before calling selection actions.
-				{EV_GTK_EXTERNALS}.gtk_combo_box_popdown (container_widget)
+				{GTK2}.gtk_combo_box_popdown (container_widget)
 			end
 			if l_selected_item /= Void then
 				l_selected_item_imp ?= l_selected_item.implementation
@@ -135,17 +135,17 @@ feature {NONE} -- Initialization
 			a_focus_list: POINTER
 		do
 
-			a_vbox := {EV_GTK_EXTERNALS}.gtk_vbox_new (False, 0)
+			a_vbox := {GTK}.gtk_vbox_new (False, 0)
 			set_c_object (a_vbox)
-			container_widget := {EV_GTK_EXTERNALS}.gtk_combo_box_entry_new
-			{EV_GTK_EXTERNALS}.gtk_widget_show (container_widget)
-			{EV_GTK_EXTERNALS}.gtk_box_pack_start (a_vbox, container_widget, False, False, 0)
-			entry_widget := {EV_GTK_EXTERNALS}.gtk_combo_box_get_entry (container_widget)
+			container_widget := {GTK2}.gtk_combo_box_entry_new
+			{GTK}.gtk_widget_show (container_widget)
+			{GTK}.gtk_box_pack_start (a_vbox, container_widget, False, False, 0)
+			entry_widget := {GTK2}.gtk_combo_box_get_entry (container_widget)
 
 				-- Alter focus chain so that button cannot be selected via the keyboard.
-			a_focus_list := {EV_GTK_EXTERNALS}.g_list_append (default_pointer, entry_widget)
-			{EV_GTK_EXTERNALS}.gtk_container_set_focus_chain (container_widget, a_focus_list)
-			{EV_GTK_EXTERNALS}.g_list_free (a_focus_list)
+			a_focus_list := {GTK}.g_list_append (default_pointer, entry_widget)
+			{GTK2}.gtk_container_set_focus_chain (container_widget, a_focus_list)
+			{GTK}.g_list_free (a_focus_list)
 
 				-- This is a hack, remove when the toggle button can be retrieved via the API.
 			real_signal_connect (container_widget, once "realize", agent (app_implementation.gtk_marshal).on_combo_box_toggle_button_event (internal_id, 1), Void)
@@ -154,28 +154,28 @@ feature {NONE} -- Initialization
 
 			Precursor {EV_LIST_ITEM_LIST_IMP}
 			align_text_left
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_combo_box_set_model (container_widget, list_store)
+			{GTK2}.gtk_combo_box_set_model (container_widget, list_store)
 
 				-- Set widget name so that the style can be used as set in EV_GTK_DEPENDENT_APPLICATION_IMP
 			a_cs := once "v2combobox"
-			{EV_GTK_EXTERNALS}.gtk_widget_set_name (container_widget, a_cs.item)
+			{GTK}.gtk_widget_set_name (container_widget, a_cs.item)
 
 				-- The combo box is already initialized with a text cell renderer at position 0, that is why we reorder the pixbuf cell renderer to position 0 and set the text column to 1
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_combo_box_entry_set_text_column (container_widget, 1)
+			{GTK2}.gtk_combo_box_entry_set_text_column (container_widget, 1)
 
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_layout_clear (container_widget)
+			{GTK2}.gtk_cell_layout_clear (container_widget)
 
-			a_cell_renderer := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_renderer_text_new
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_layout_pack_start (container_widget, a_cell_renderer, True)
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_layout_reorder (container_widget, a_cell_renderer, 0)
+			a_cell_renderer := {GTK2}.gtk_cell_renderer_text_new
+			{GTK2}.gtk_cell_layout_pack_start (container_widget, a_cell_renderer, True)
+			{GTK2}.gtk_cell_layout_reorder (container_widget, a_cell_renderer, 0)
 			a_attribute := once "text"
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_layout_set_attribute (container_widget, a_cell_renderer, a_attribute.item, 1)
+			{GTK2}.gtk_cell_layout_set_attribute (container_widget, a_cell_renderer, a_attribute.item, 1)
 
-			a_cell_renderer := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_renderer_pixbuf_new
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_layout_pack_start (container_widget, a_cell_renderer, False)
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_layout_reorder (container_widget, a_cell_renderer, 0)
+			a_cell_renderer := {GTK2}.gtk_cell_renderer_pixbuf_new
+			{GTK2}.gtk_cell_layout_pack_start (container_widget, a_cell_renderer, False)
+			{GTK2}.gtk_cell_layout_reorder (container_widget, a_cell_renderer, 0)
 			a_attribute := once "pixbuf"
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_layout_set_attribute (container_widget, a_cell_renderer, a_attribute.item, 0)
+			{GTK2}.gtk_cell_layout_set_attribute (container_widget, a_cell_renderer, a_attribute.item, 0)
 
 			set_minimum_width_in_characters (4)
 
@@ -203,7 +203,7 @@ feature -- Status report
 		local
 			a_active: INTEGER
 		do
-			a_active := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_combo_box_get_active (container_widget)
+			a_active := {GTK2}.gtk_combo_box_get_active (container_widget)
 			if a_active >= 0 then
 				Result := child_array @ (a_active + 1)
 			end
@@ -224,19 +224,19 @@ feature -- Status report
 	select_item (an_index: INTEGER)
 			-- Select an item at the one-based `index' of the list.
 		do
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_combo_box_set_active (container_widget, an_index - 1)
+			{GTK2}.gtk_combo_box_set_active (container_widget, an_index - 1)
 		end
 
 	deselect_item (an_index: INTEGER)
 			-- Unselect the item at the one-based `index'.
 		do
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_combo_box_set_active (container_widget, -1)
+			{GTK2}.gtk_combo_box_set_active (container_widget, -1)
 		end
 
 	clear_selection
 			-- Clear the item selection of `Current'.
 		do
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_combo_box_set_active (container_widget, -1)
+			{GTK2}.gtk_combo_box_set_active (container_widget, -1)
 		end
 
 feature -- Status setting
@@ -244,7 +244,7 @@ feature -- Status setting
 	set_maximum_text_length (len: INTEGER)
 			-- Set the length of the longest text size in characters that `Current' can display.
 		do
-			{EV_GTK_EXTERNALS}.gtk_entry_set_max_length (entry_widget, len)
+			{GTK2}.gtk_entry_set_max_length (entry_widget, len)
 		end
 
 feature {NONE} -- Implementation
@@ -274,7 +274,7 @@ feature {NONE} -- Implementation
 				end
 			else
 				return_combo_toggle (container_widget, $a_toggle)
-				if a_toggle /= default_pointer and then {EV_GTK_EXTERNALS}.gtk_toggle_button_get_active (a_toggle) then
+				if a_toggle /= default_pointer and then {GTK}.gtk_toggle_button_get_active (a_toggle) then
 						-- We have a "popup" action.
 					is_list_shown := True
 				else
@@ -302,11 +302,11 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Event handling
 				toggle_button_set: a_toggle /= default_pointer
 			end
 				-- Set the size of the toggle so that it isn't bigger than the entry size
-			{EV_GTK_EXTERNALS}.gtk_widget_set_usize (a_toggle, -1, 1)
-			{EV_GTK_EXTERNALS}.gtk_widget_unset_flags (a_toggle, {EV_GTK_EXTERNALS}.gtk_can_focus_enum)
+			{GTK}.gtk_widget_set_usize (a_toggle, -1, 1)
+			{GTK}.gtk_widget_unset_flags (a_toggle, {GTK}.gtk_can_focus_enum)
 
 			real_signal_connect (a_toggle, once "toggled", agent (app_implementation.gtk_marshal).on_combo_box_toggle_button_event (internal_id, 2), Void)
-			{EV_GTK_DEPENDENT_EXTERNALS}.g_signal_handler_disconnect (container_widget, retrieve_toggle_button_signal_connection_id)
+			{GTK2}.g_signal_handler_disconnect (container_widget, retrieve_toggle_button_signal_connection_id)
 			retrieve_toggle_button_signal_connection_id := 0
 		end
 
@@ -317,7 +317,7 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Event handling
 		do
 			return_combo_toggle (container_widget, $a_toggle)
 			if a_toggle /= default_pointer then
-				if {EV_GTK_EXTERNALS}.gtk_toggle_button_get_active (a_toggle) then
+				if {GTK}.gtk_toggle_button_get_active (a_toggle) then
 					if not has_focus then
 						is_list_shown := True
 					end
@@ -326,7 +326,7 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Event handling
 					end
 				else
 						-- Make sure that the combo box is fully popped down.
-					{EV_GTK_EXTERNALS}.gtk_combo_box_popdown (container_widget)
+					{GTK2}.gtk_combo_box_popdown (container_widget)
 					if not has_focus then
 						is_list_shown := False
 						if list_hidden_actions_internal /= Void then

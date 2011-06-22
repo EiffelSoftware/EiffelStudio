@@ -38,10 +38,10 @@ feature {NONE} -- Initialization
 	make
 			-- Do nothing because an empty GtkMenuItem is a separator.
 		do
-			set_c_object ({EV_GTK_EXTERNALS}.gtk_menu_item_new)
-			{EV_GTK_EXTERNALS}.gtk_widget_show (c_object)
-			{EV_GTK_EXTERNALS}.gtk_widget_set_sensitive (c_object, False)
-			{EV_GTK_EXTERNALS}.gtk_widget_set_usize (c_object, -1, 8)
+			set_c_object ({GTK}.gtk_menu_item_new)
+			{GTK}.gtk_widget_show (c_object)
+			{GTK}.gtk_widget_set_sensitive (c_object, False)
+			{GTK}.gtk_widget_set_usize (c_object, -1, 8)
 			real_text := ""
 			pixmapable_imp_initialize
 			textable_imp_initialize
@@ -55,11 +55,11 @@ feature {NONE} -- Initialization
 			-- Create and initialize menu item box.
 			--| This is just to satisfy pixmapable and textable contracts.
 		do
-			box := {EV_GTK_EXTERNALS}.gtk_hbox_new (False, 0)
-			{EV_GTK_DEPENDENT_EXTERNALS}.object_ref (box)
-			{EV_GTK_EXTERNALS}.gtk_object_sink (box)
-			{EV_GTK_EXTERNALS}.gtk_box_pack_start (box, text_label, True, True, 0)
-			{EV_GTK_EXTERNALS}.gtk_box_pack_start (box, pixmap_box, True, True, 0)
+			box := {GTK}.gtk_hbox_new (False, 0)
+			{GTK2}.object_ref (box)
+			{GTK}.gtk_object_sink (box)
+			{GTK}.gtk_box_pack_start (box, text_label, True, True, 0)
+			{GTK}.gtk_box_pack_start (box, pixmap_box, True, True, 0)
 		end
 
 feature {NONE} -- Implementation
@@ -83,7 +83,7 @@ feature {EV_MENU_ITEM_LIST_IMP} -- Implementation
 	dispose
 			-- Unreference unwanted gtk widgets.
 		do
-			{EV_GTK_DEPENDENT_EXTERNALS}.object_unref (box)
+			{GTK2}.object_unref (box)
 			Precursor
 		end
 

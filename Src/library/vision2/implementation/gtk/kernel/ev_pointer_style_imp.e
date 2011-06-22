@@ -46,7 +46,7 @@ feature {NONE} -- Initlization
 		do
 			l_pix_buf_imp ?= a_pixel_buffer.implementation
 			check l_pix_buf_imp /= Void end
-			set_gdkpixbuf ({EV_GTK_EXTERNALS}.gdk_pixbuf_copy (l_pix_buf_imp.gdk_pixbuf))
+			set_gdkpixbuf ({GTK}.gdk_pixbuf_copy (l_pix_buf_imp.gdk_pixbuf))
 			set_x_hotspot (a_x_hotspot)
 			set_y_hotspot (a_x_hotspot)
 		end
@@ -173,9 +173,9 @@ feature -- Query
 			-- Width of pointer style.
 		do
 			if gdk_pixbuf /= default_pointer then
-				Result := {EV_GTK_EXTERNALS}.gdk_pixbuf_get_width (gdk_pixbuf)
+				Result := {GTK}.gdk_pixbuf_get_width (gdk_pixbuf)
 			else
-				Result := {EV_GTK_EXTERNALS}.gdk_display_get_default_cursor_size ({EV_GTK_EXTERNALS}.gdk_display_get_default)
+				Result := {GTK2}.gdk_display_get_default_cursor_size ({GTK2}.gdk_display_get_default)
 			end
 		end
 
@@ -183,9 +183,9 @@ feature -- Query
 			-- Height of pointer style.
 		do
 			if gdk_pixbuf /= default_pointer then
-				Result := {EV_GTK_EXTERNALS}.gdk_pixbuf_get_height (gdk_pixbuf)
+				Result := {GTK}.gdk_pixbuf_get_height (gdk_pixbuf)
 			else
-				Result := {EV_GTK_EXTERNALS}.gdk_display_get_default_cursor_size ({EV_GTK_EXTERNALS}.gdk_display_get_default)
+				Result := {GTK2}.gdk_display_get_default_cursor_size ({GTK2}.gdk_display_get_default)
 			end
 		end
 
@@ -206,23 +206,23 @@ feature -- Implementation
 				predefined_cursor_code
 					-- Return a predefined cursor if available.
 			when {EV_POINTER_STYLE_CONSTANTS}.busy_cursor then
-				Result := {EV_GTK_EXTERNALS}.gdk_cursor_new ({EV_GTK_ENUMS}.gdk_watch_enum)
+				Result := {GTK}.gdk_cursor_new ({EV_GTK_ENUMS}.gdk_watch_enum)
 			when {EV_POINTER_STYLE_CONSTANTS}.standard_cursor then
-				Result := {EV_GTK_EXTERNALS}.gdk_cursor_new ({EV_GTK_ENUMS}.gdk_left_ptr_enum)
+				Result := {GTK}.gdk_cursor_new ({EV_GTK_ENUMS}.gdk_left_ptr_enum)
 			when {EV_POINTER_STYLE_CONSTANTS}.crosshair_cursor then
-				Result := {EV_GTK_EXTERNALS}.gdk_cursor_new ({EV_GTK_ENUMS}.gdk_crosshair_enum)
+				Result := {GTK}.gdk_cursor_new ({EV_GTK_ENUMS}.gdk_crosshair_enum)
 			when {EV_POINTER_STYLE_CONSTANTS}.ibeam_cursor then
-				Result := {EV_GTK_EXTERNALS}.gdk_cursor_new ({EV_GTK_ENUMS}.gdk_xterm_enum)
+				Result := {GTK}.gdk_cursor_new ({EV_GTK_ENUMS}.gdk_xterm_enum)
 			when {EV_POINTER_STYLE_CONSTANTS}.sizeall_cursor then
-				Result := {EV_GTK_EXTERNALS}.gdk_cursor_new ({EV_GTK_ENUMS}.gdk_fleur_enum)
+				Result := {GTK}.gdk_cursor_new ({EV_GTK_ENUMS}.gdk_fleur_enum)
 			when {EV_POINTER_STYLE_CONSTANTS}.sizens_cursor then
-				Result := {EV_GTK_EXTERNALS}.gdk_cursor_new ({EV_GTK_ENUMS}.Gdk_size_sb_v_double_arrow_enum)
+				Result := {GTK}.gdk_cursor_new ({EV_GTK_ENUMS}.Gdk_size_sb_v_double_arrow_enum)
 			when {EV_POINTER_STYLE_CONSTANTS}.wait_cursor then
-				Result := {EV_GTK_EXTERNALS}.gdk_cursor_new ({EV_GTK_ENUMS}.gdk_watch_enum)
+				Result := {GTK}.gdk_cursor_new ({EV_GTK_ENUMS}.gdk_watch_enum)
 			when {EV_POINTER_STYLE_CONSTANTS}.help_cursor then
-				Result := {EV_GTK_EXTERNALS}.gdk_cursor_new ({EV_GTK_ENUMS}.gdk_question_arrow_enum)
+				Result := {GTK}.gdk_cursor_new ({EV_GTK_ENUMS}.gdk_question_arrow_enum)
 			when {EV_POINTER_STYLE_CONSTANTS}.hyperlink_cursor then
-				Result := {EV_GTK_EXTERNALS}.gdk_cursor_new (60) -- GDK_HAND2
+				Result := {GTK}.gdk_cursor_new (60) -- GDK_HAND2
 			when {EV_POINTER_STYLE_CONSTANTS}.no_cursor then
 				a_image := image_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.no_cursor_xpm)
 			when {EV_POINTER_STYLE_CONSTANTS}.sizenwse_cursor then
@@ -237,20 +237,20 @@ feature -- Implementation
 				a_image := image_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.sizewe_cursor_xpm)
 			else
 				a_image := gdk_pixbuf
-				{EV_GTK_EXTERNALS}.object_ref (a_image)
+				{GTK2}.object_ref (a_image)
 			end
 
 			if Result = default_pointer and then predefined_cursor_code /= {EV_POINTER_STYLE_CONSTANTS}.standard_cursor then
 				check
 					a_image_not_null: a_image /= default_pointer
 				end
-				Result := {EV_GTK_DEPENDENT_EXTERNALS}.gdk_cursor_new_from_pixbuf (
-					{EV_GTK_DEPENDENT_EXTERNALS}.gdk_display_get_default,
+				Result := {GTK2}.gdk_cursor_new_from_pixbuf (
+					{GTK2}.gdk_display_get_default,
 					a_image,
 					attached_interface.x_hotspot,
 					attached_interface.y_hotspot
 				)
-				{EV_GTK_EXTERNALS}.object_unref (a_image)
+				{GTK2}.object_unref (a_image)
 			end
 		end
 
@@ -259,14 +259,14 @@ feature -- Implementation
 		require
 			a_xpm_not_null: a_xpm_data /= default_pointer
 		do
-			Result := {EV_GTK_EXTERNALS}.gdk_pixbuf_new_from_xpm_data (a_xpm_data)
+			Result := {GTK}.gdk_pixbuf_new_from_xpm_data (a_xpm_data)
 		end
 
 	set_gdkpixbuf (a_pixbuf: POINTER)
 			-- Set gdk_pixbuf to `a_pixbuf'.
 		do
 			if gdk_pixbuf /= default_pointer then
-				{EV_GTK_EXTERNALS}.object_unref (gdk_pixbuf)
+				{GTK2}.object_unref (gdk_pixbuf)
 			end
 			gdk_pixbuf := a_pixbuf
 		end
@@ -284,7 +284,7 @@ feature -- Duplication
 			l_pointer_style_imp ?= a_pointer_style.implementation
 			check l_pointer_style_imp /= Void end
 			if l_pointer_style_imp.gdk_pixbuf /= default_pointer then
-				set_gdkpixbuf ({EV_GTK_EXTERNALS}.gdk_pixbuf_copy (l_pointer_style_imp.gdk_pixbuf))
+				set_gdkpixbuf ({GTK}.gdk_pixbuf_copy (l_pointer_style_imp.gdk_pixbuf))
 			end
 			predefined_cursor_code := l_pointer_style_imp.predefined_cursor_code
 		end

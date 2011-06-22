@@ -38,7 +38,7 @@ feature -- initialization
 	make
 			-- Create and initialize `Current'.
 		do
-			container_widget := {EV_GTK_EXTERNALS}.gtk_hpaned_new
+			container_widget := {GTK}.gtk_hpaned_new
 			set_c_object (container_widget)
 			Precursor
 		end

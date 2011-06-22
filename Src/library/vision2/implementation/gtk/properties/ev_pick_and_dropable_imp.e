@@ -118,10 +118,10 @@ feature {NONE} -- Implementation
 					-- On Solaris, if a menu is selected, then `enable_capture' will not close the menu
 					-- as GTK does on other platforms. Note that `gtk_menu_shell_cancel' will only
 					-- work on GTK 2.4 or above, it is a no-op otherwise.
-				l_grab_widget := {EV_GTK_EXTERNALS}.gtk_grab_get_current
+				l_grab_widget := {GTK}.gtk_grab_get_current
 				if l_grab_widget /= default_pointer then
-					if {EV_GTK_EXTERNALS}.gtk_is_menu (l_grab_widget) then
-						{EV_GTK_EXTERNALS}.gtk_menu_shell_cancel (l_grab_widget)
+					if {GTK}.gtk_is_menu (l_grab_widget) then
+						{GTK}.gtk_menu_shell_cancel (l_grab_widget)
 					end
 				end
 				if not has_focus then
@@ -130,7 +130,7 @@ feature {NONE} -- Implementation
 				l_interface ?= interface
 				check l_interface /= Void end
 				app_implementation.set_captured_widget (l_interface)
-				{EV_GTK_EXTERNALS}.gtk_grab_add (event_widget)
+				{GTK}.gtk_grab_add (event_widget)
 				if app_implementation.focused_popup_window /= top_level_window_imp then
 					grab_keyboard_and_mouse
 				end
@@ -143,7 +143,7 @@ feature {NONE} -- Implementation
 			--| Used by pick and drop.
 		do
 			if has_capture then
-				{EV_GTK_EXTERNALS}.gtk_grab_remove (event_widget)
+				{GTK}.gtk_grab_remove (event_widget)
 				if app_implementation.focused_popup_window /= top_level_window_imp then
 					release_keyboard_and_mouse
 				end
@@ -165,29 +165,29 @@ feature {NONE} -- Implementation
 			l_gdk_window: POINTER
 		do
 			App_implementation.disable_debugger
-			l_gdk_window := {EV_GTK_EXTERNALS}.gtk_widget_struct_window (event_widget)
-			i := {EV_GTK_EXTERNALS}.gdk_pointer_grab (
+			l_gdk_window := {GTK}.gtk_widget_struct_window (event_widget)
+			i := {GTK}.gdk_pointer_grab (
 				l_gdk_window,
 				1,
-				{EV_GTK_EXTERNALS}.gdk_button_release_mask_enum |
-				{EV_GTK_EXTERNALS}.gdk_button_press_mask_enum |
-				{EV_GTK_EXTERNALS}.gdk_pointer_motion_mask_enum |
-				{EV_GTK_EXTERNALS}.gdk_pointer_motion_hint_mask_enum
+				{GTK}.gdk_button_release_mask_enum |
+				{GTK}.gdk_button_press_mask_enum |
+				{GTK}.gdk_pointer_motion_mask_enum |
+				{GTK}.gdk_pointer_motion_hint_mask_enum
 				,
 				null,
 				null,
 				0
 			)
-			i := {EV_GTK_EXTERNALS}.gdk_keyboard_grab (l_gdk_window, True, 0)
+			i := {GTK}.gdk_keyboard_grab (l_gdk_window, True, 0)
 		end
 
 	release_keyboard_and_mouse
 			-- Release mouse and keyboard grab.
 		do
-			{EV_GTK_EXTERNALS}.gdk_pointer_ungrab (
+			{GTK}.gdk_pointer_ungrab (
 				0 -- guint32 time
 			)
-			{EV_GTK_EXTERNALS}.gdk_keyboard_ungrab (0) -- guint32 time
+			{GTK}.gdk_keyboard_ungrab (0) -- guint32 time
 			app_implementation.enable_debugger
 		end
 
@@ -226,7 +226,7 @@ feature -- Implementation
 			l_pebble: like pebble
 		do
 				-- Force any pending graphics calls.
-			{EV_GTK_EXTERNALS}.gdk_flush
+			{GTK}.gdk_flush
 			update_pointer_style (pointed_target)
 			l_pebble := pebble
 			if l_pebble /= Void then
@@ -284,7 +284,7 @@ feature -- Implementation
 			l_current: detachable EV_PICK_AND_DROPABLE_IMP
 			l_press: BOOLEAN
 		do
-			l_press := a_type /= {EV_GTK_EXTERNALS}.gdk_button_release_enum
+			l_press := a_type /= {GTK}.gdk_button_release_enum
 			app_imp := app_implementation
 			l_call_events := not app_imp.is_in_transport
 			l_top_level_window_imp := top_level_window_imp
@@ -292,14 +292,14 @@ feature -- Implementation
 				if not app_imp.is_in_transport then
 					if a_button = 1 then
 						l_dockable_source ?= Current
-						if a_type = {EV_GTK_EXTERNALS}.gdk_button_press_enum and then l_dockable_source /= Void and then (is_dockable or else able_to_transport (a_button)) then
+						if a_type = {GTK}.gdk_button_press_enum and then l_dockable_source /= Void and then (is_dockable or else able_to_transport (a_button)) then
 							l_dockable_source.start_dragable_filter (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 						end
-						if l_dockable_source /= Void and then a_type = {EV_GTK_EXTERNALS}.gdk_button_release_enum then
+						if l_dockable_source /= Void and then a_type = {GTK}.gdk_button_release_enum then
 								-- Here we make sure that any pending drag and drops or docks are cancelled as transport was never establised.
 							l_dockable_source.end_dragable (a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 						end
-					elseif (a_type = {EV_GTK_EXTERNALS}.gdk_button_release_enum and then (mode_is_pick_and_drop and then a_button = 3 and then not mode_is_configurable_target_menu)) or else ready_for_pnd_menu (a_button, l_press) then
+					elseif (a_type = {GTK}.gdk_button_release_enum and then (mode_is_pick_and_drop and then a_button = 3 and then not mode_is_configurable_target_menu)) or else ready_for_pnd_menu (a_button, l_press) then
 						start_transport (a_x, a_y, a_button, l_press, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y, False)
 						l_call_events := pebble = Void
 							-- If a pick and drop has initiated then we dont want button events firing.
@@ -307,10 +307,10 @@ feature -- Implementation
 				else
 					l_current := Current
 					l_dockable_source ?= l_current
-					if l_dockable_source /= Void and then a_type = {EV_GTK_EXTERNALS}.gdk_button_release_enum then
+					if l_dockable_source /= Void and then a_type = {GTK}.gdk_button_release_enum then
 						l_dockable_source.end_dragable (a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 					end
-					if a_type = {EV_GTK_EXTERNALS}.gdk_button_release_enum and then app_imp.pick_and_drop_source = l_current then
+					if a_type = {GTK}.gdk_button_release_enum and then app_imp.pick_and_drop_source = l_current then
 						end_transport (a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 					end
 				end
@@ -464,7 +464,7 @@ feature -- Implementation
 				a_wid_imp ?= l_app_imp.gtk_widget_from_gdk_window (gdkwin)
 				if
 					a_wid_imp /= Void and then
-					{EV_GTK_EXTERNALS}.gtk_object_struct_flags (a_wid_imp.c_object) & {EV_GTK_EXTERNALS}.GTK_SENSITIVE_ENUM = {EV_GTK_EXTERNALS}.GTK_SENSITIVE_ENUM and then
+					{GTK}.gtk_object_struct_flags (a_wid_imp.c_object) & {GTK}.GTK_SENSITIVE_ENUM = {GTK}.GTK_SENSITIVE_ENUM and then
 					not a_wid_imp.is_destroyed
 				then
 					if l_app_imp.pnd_targets.has (a_wid_imp.attached_interface.object_id) then
@@ -474,7 +474,7 @@ feature -- Implementation
 					if a_pnd_deferred_item_parent /= Void then
 							-- We need to explicitly search for PND deferred items
 							-- A server roundtrip is needed to get the coordinates relative to the PND target parent..
-						gdkwin := {EV_GTK_EXTERNALS}.gdk_window_get_pointer ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (a_wid_imp.c_object), $a_x, $a_y, default_pointer)
+						gdkwin := {GTK}.gdk_window_get_pointer ({GTK}.gtk_widget_struct_window (a_wid_imp.c_object), $a_x, $a_y, default_pointer)
 						a_pnd_item := a_pnd_deferred_item_parent.item_from_coords (a_x, a_y)
 						if a_pnd_item /= Void and then l_app_imp.pnd_targets.has (a_pnd_item.attached_interface.object_id) then
 							Result := a_pnd_item.interface
@@ -497,7 +497,7 @@ feature -- Implementation
 			x, y, s: INTEGER
 			child: POINTER
 		do
-			child := {EV_GTK_EXTERNALS}.gdk_window_get_pointer ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), $x, $y, $s)
+			child := {GTK}.gdk_window_get_pointer ({GTK}.gtk_widget_struct_window (c_object), $x, $y, $s)
 			create Result.set (x, y)
 		end
 

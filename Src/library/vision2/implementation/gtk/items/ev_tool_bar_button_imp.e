@@ -77,7 +77,7 @@ feature {NONE} -- Initialization
 	new_tool_bar_button: POINTER
 			-- Create a new gtk tool bar button item.
 		do
-			Result := {EV_GTK_EXTERNALS}.gtk_tool_button_new (NULL, NULL)
+			Result := {GTK2}.gtk_tool_button_new (NULL, NULL)
 		end
 
 	make
@@ -86,19 +86,19 @@ feature {NONE} -- Initialization
 			set_c_object (new_tool_bar_button)
 			Precursor {EV_ITEM_IMP}
 			pixmapable_imp_initialize
-			{EV_GTK_EXTERNALS}.gtk_tool_button_set_icon_widget (visual_widget, pixmap_box)
+			{GTK2}.gtk_tool_button_set_icon_widget (visual_widget, pixmap_box)
 
 				-- Initialize gtk events
-			{EV_GTK_EXTERNALS}.gtk_widget_add_events (visual_widget, gdk_events_mask)
+			{GTK}.gtk_widget_add_events (visual_widget, gdk_events_mask)
 
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tool_item_set_is_important (visual_widget, True)
+			{GTK2}.gtk_tool_item_set_is_important (visual_widget, True)
 			set_is_initialized (True)
 		end
 
 	event_widget: POINTER
 			-- Pointer to the Gtk widget that handles the events
 		do
-			Result := {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (pixmap_box)
+			Result := {GTK}.gtk_widget_struct_parent (pixmap_box)
 		end
 
 feature -- Access
@@ -109,7 +109,7 @@ feature -- Access
 			a_txt: POINTER
 			a_cs: EV_GTK_C_STRING
 		do
-			a_txt := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tool_button_get_label (visual_widget)
+			a_txt := {GTK2}.gtk_tool_button_get_label (visual_widget)
 			if a_txt /= Default_pointer then
 				create a_cs.share_from_pointer (a_txt)
 				Result := a_cs.string
@@ -143,7 +143,7 @@ feature -- Element change
 			a_cs: EV_GTK_C_STRING
 		do
 			a_cs := App_implementation.c_string_from_eiffel_string (a_text)
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tool_button_set_label (visual_widget, a_cs.item)
+			{GTK2}.gtk_tool_button_set_label (visual_widget, a_cs.item)
 			a_parent_imp ?= parent_imp
 			if a_parent_imp /= Void and then a_parent_imp.parent_imp /= Void then
 				a_parent_imp.update_toolbar_style
@@ -169,7 +169,7 @@ feature -- Element change
 		do
 			internal_tooltip := a_text.as_string_32.twin
 			a_cs := App_implementation.c_string_from_eiffel_string (a_text)
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tool_item_set_tooltip (
+			{GTK2}.gtk_tool_item_set_tooltip (
 				visual_widget,
 				app_implementation.tooltips,
 				a_cs.item,
@@ -211,17 +211,17 @@ feature -- Element change
 			l_gdkwin: POINTER
 			i, l_screen_x, l_screen_y, l_x, l_y: INTEGER
 		do
-			{EV_GTK_EXTERNALS}.gtk_widget_set_sensitive (c_object, True)
-			if {EV_GTK_EXTERNALS}.gtk_is_event_box (c_object) then
+			{GTK}.gtk_widget_set_sensitive (c_object, True)
+			if {GTK}.gtk_is_event_box (c_object) then
 					-- Restore visible window for event box.
-				{EV_GTK_EXTERNALS}.gtk_event_box_set_visible_window (c_object, True)
+				{GTK2}.gtk_event_box_set_visible_window (c_object, True)
 			end
 				--| This is a hack for gtk 2.6.x that renders the button unusable if the mouse pointer is over `Current' when `enable_sensitive' is called.
 			if is_displayed then
-				l_gdkwin := {EV_GTK_EXTERNALS}.gdk_window_at_pointer ($l_x, $l_y)
+				l_gdkwin := {GTK}.gdk_window_at_pointer ($l_x, $l_y)
 				if l_gdkwin /= default_pointer then
 					if Current = app_implementation.gtk_widget_from_gdk_window (l_gdkwin) then
-						i := {EV_GTK_EXTERNALS}.gdk_window_get_origin (l_gdkwin, $l_screen_x, $l_screen_y)
+						i := {GTK}.gdk_window_get_origin (l_gdkwin, $l_screen_x, $l_screen_y)
 						app_implementation.pnd_screen.set_pointer_position (l_screen_x + l_x + width + 10, l_screen_y + l_y + height + 10)
 						app_implementation.pnd_screen.set_pointer_position (l_screen_x + l_x, l_screen_y + l_y)
 					end
@@ -232,10 +232,10 @@ feature -- Element change
 	disable_sensitive_internal
 			-- Set the object to ignore all user input.
 		do
-			{EV_GTK_EXTERNALS}.gtk_widget_set_sensitive (c_object, False)
-			if {EV_GTK_EXTERNALS}.gtk_is_event_box (c_object) then
+			{GTK}.gtk_widget_set_sensitive (c_object, False)
+			if {GTK}.gtk_is_event_box (c_object) then
 					-- We hide the event box Window so that it cannot be seen disabled.
-				{EV_GTK_EXTERNALS}.gtk_event_box_set_visible_window (c_object, False)
+				{GTK2}.gtk_event_box_set_visible_window (c_object, False)
 			end
 		end
 
@@ -246,7 +246,7 @@ feature -- Status report
 		do
 			-- Shift to put bit in least significant place then take mod 2
 			if not is_destroyed then
-				Result := {EV_GTK_EXTERNALS}.gtk_widget_is_sensitive (c_object)
+				Result := {GTK}.gtk_widget_is_sensitive (c_object)
 			end
 		end
 

@@ -71,8 +71,8 @@ feature {NONE} -- Implementation
 	foreground_color_pointer: POINTER
 			-- Pointer to fg color for `a_widget'.
 		do
-			Result := {EV_GTK_EXTERNALS}.gtk_style_struct_text (
-				{EV_GTK_EXTERNALS}.gtk_rc_get_style (visual_widget)
+			Result := {GTK}.gtk_style_struct_text (
+				{GTK}.gtk_rc_get_style (visual_widget)
 			)
 		end
 

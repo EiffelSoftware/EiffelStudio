@@ -44,16 +44,16 @@ feature {EV_ANY_I} -- Access
 			l_c_object: POINTER
 		do
 			if needs_event_box then
-				l_c_object := {EV_GTK_EXTERNALS}.gtk_event_box_new
-				{EV_GTK_EXTERNALS}.gtk_container_add (l_c_object, a_c_object)
-				{EV_GTK_EXTERNALS}.gtk_widget_show (a_c_object)
+				l_c_object := {GTK}.gtk_event_box_new
+				{GTK}.gtk_container_add (l_c_object, a_c_object)
+				{GTK}.gtk_widget_show (a_c_object)
 			else
 				l_c_object := a_c_object
 			end
 
 				-- Remove floating state.
-			{EV_GTK_EXTERNALS}.object_ref (l_c_object)
-			{EV_GTK_EXTERNALS}.gtk_object_sink (l_c_object)
+			{GTK2}.object_ref (l_c_object)
+			{GTK}.gtk_object_sink (l_c_object)
 
 			debug ("EV_GTK_CREATION")
 				print (generator + " created%N")
@@ -176,13 +176,13 @@ feature {NONE} -- Implementation
 			l_c_object := c_object
 			if l_c_object /= l_null then
 					-- Disconnect dispose signal for `c_object'.
-				{EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect_by_data (l_c_object, internal_id)
+				{GTK2}.signal_disconnect_by_data (l_c_object, internal_id)
 					-- Unref `c_object' so that is may get collected by gtk.
-				if {EV_GTK_EXTERNALS}.gtk_is_window (l_c_object) then
+				if {GTK}.gtk_is_window (l_c_object) then
 						-- Windows need to be explicitly destroyed.
-					{EV_GTK_DEPENDENT_EXTERNALS}.object_destroy (l_c_object)
+					{GTK2}.object_destroy (l_c_object)
 				end
-				{EV_GTK_DEPENDENT_EXTERNALS}.object_unref (l_c_object)
+				{GTK2}.object_unref (l_c_object)
 			end
 			Precursor {IDENTIFIED}
 
@@ -203,7 +203,7 @@ feature {NONE} -- Implementation
 
 				-- The object has been marked for destruction from its parent so we unref
 				-- so that gtk will reap back the memory.
-			{EV_GTK_DEPENDENT_EXTERNALS}.object_unref (c_object)
+			{GTK2}.object_unref (c_object)
 			c_object := l_null
 			set_is_destroyed (True)
 
@@ -228,7 +228,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Access
 			-- Pointer to the widget viewed by user.
 		do
 			if needs_event_box then
-				Result := {EV_GTK_EXTERNALS}.gtk_bin_struct_child (c_object)
+				Result := {GTK}.gtk_bin_struct_child (c_object)
 			else
 				Result := c_object
 			end

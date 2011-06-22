@@ -49,16 +49,16 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'.
 		do
 			Precursor {EV_MENU_ITEM_IMP}
-			list_widget := {EV_GTK_EXTERNALS}.gtk_menu_new
-			{EV_GTK_EXTERNALS}.gtk_widget_show (list_widget)
-			{EV_GTK_EXTERNALS}.gtk_widget_show (menu_item)
-			{EV_GTK_EXTERNALS}.gtk_menu_item_set_submenu (
+			list_widget := {GTK}.gtk_menu_new
+			{GTK}.gtk_widget_show (list_widget)
+			{GTK}.gtk_widget_show (menu_item)
+			{GTK}.gtk_menu_item_set_submenu (
 				menu_item, list_widget
 			)
 			Precursor {EV_MENU_ITEM_LIST_IMP}
 				-- We set the image here for the image menu item instead of packing it in a box.
 			pixmapable_imp_initialize
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_image_menu_item_set_image (menu_item, pixmap_box)
+			{GTK2}.gtk_image_menu_item_set_image (menu_item, pixmap_box)
 		end
 
 feature -- Basic operations
@@ -70,7 +70,7 @@ feature -- Basic operations
 			bw: INTEGER
 		do
 			pc := (create {EV_SCREEN}).pointer_position
-			bw := {EV_GTK_EXTERNALS}.gtk_container_struct_border_width (list_widget)
+			bw := {GTK}.gtk_container_struct_border_width (list_widget)
 			show_at (Void, pc.x + bw, pc.y + bw)
 		end
 
@@ -99,7 +99,7 @@ feature -- Basic operations
 				app_implementation.set_currently_shown_control (interface)
 				app_implementation.do_once_on_idle (agent
 					c_gtk_menu_popup (list_widget,
-							l_x, l_y, 0, {EV_GTK_EXTERNALS}.gtk_get_current_event_time)
+							l_x, l_y, 0, {GTK2}.gtk_get_current_event_time)
 				)
 			end
 		end

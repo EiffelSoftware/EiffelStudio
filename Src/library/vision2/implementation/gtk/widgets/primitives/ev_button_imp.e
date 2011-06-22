@@ -68,7 +68,7 @@ feature {NONE} -- Initialization
 
 	new_gtk_button: POINTER
 		do
-			Result := {EV_GTK_EXTERNALS}.gtk_button_new
+			Result := {GTK}.gtk_button_new
 		end
 
 	make
@@ -89,15 +89,15 @@ feature {NONE} -- Initialization
 			box: POINTER
 			hbox: POINTER
 		do
-			box := {EV_GTK_EXTERNALS}.gtk_alignment_new (0, 0, 0, 0)
-			{EV_GTK_EXTERNALS}.gtk_container_add (visual_widget, box)
-			hbox := {EV_GTK_EXTERNALS}.gtk_hbox_new (False, 0)
-			{EV_GTK_EXTERNALS}.gtk_widget_show (hbox)
-			{EV_GTK_EXTERNALS}.gtk_container_add (box, hbox)
-			{EV_GTK_EXTERNALS}.gtk_container_add (hbox, pixmap_box)
-			{EV_GTK_EXTERNALS}.gtk_misc_set_padding (text_label, 4, 0)
-			{EV_GTK_EXTERNALS}.gtk_container_add (hbox, text_label)
-			{EV_GTK_EXTERNALS}.gtk_widget_show (box)
+			box := {GTK}.gtk_alignment_new (0, 0, 0, 0)
+			{GTK}.gtk_container_add (visual_widget, box)
+			hbox := {GTK}.gtk_hbox_new (False, 0)
+			{GTK}.gtk_widget_show (hbox)
+			{GTK}.gtk_container_add (box, hbox)
+			{GTK}.gtk_container_add (hbox, pixmap_box)
+			{GTK}.gtk_misc_set_padding (text_label, 4, 0)
+			{GTK}.gtk_container_add (hbox, text_label)
+			{GTK}.gtk_widget_show (box)
 		ensure
 			button_box /= default_pointer
 		end
@@ -132,21 +132,21 @@ feature -- Status Setting
 			-- Display `text' centered.
 		do
 			Precursor {EV_TEXTABLE_IMP}
-			{EV_GTK_EXTERNALS}.gtk_alignment_set (button_box, {REAL_32} 0.5, {REAL_32} 0.5, 0, 0)
+			{GTK}.gtk_alignment_set (button_box, {REAL_32} 0.5, {REAL_32} 0.5, 0, 0)
 		end
 
 	align_text_left
 			-- Display `text' left aligned.
 		do
 			Precursor {EV_TEXTABLE_IMP}
-			{EV_GTK_EXTERNALS}.gtk_alignment_set (button_box, {REAL_32} 0.0, {REAL_32} 0.5, 0, 0)
+			{GTK}.gtk_alignment_set (button_box, {REAL_32} 0.0, {REAL_32} 0.5, 0, 0)
 		end
 
 	align_text_right
 			-- Display `text' right aligned.
 		do
 			Precursor {EV_TEXTABLE_IMP}
-			{EV_GTK_EXTERNALS}.gtk_alignment_set (button_box, {REAL_32} 1.0, {REAL_32} 0.5, 0, 0)
+			{GTK}.gtk_alignment_set (button_box, {REAL_32} 1.0, {REAL_32} 0.5, 0, 0)
 		end
 
 	enable_default_push_button
@@ -161,16 +161,16 @@ feature -- Status Setting
 			-- to the default push button.
 		do
 			is_default_push_button := False
-			{EV_GTK_EXTERNALS}.gtk_widget_unset_flags (visual_widget, {EV_GTK_ENUMS}.gtk_has_default_enum)
-			{EV_GTK_EXTERNALS}.gtk_widget_queue_draw (visual_widget)
+			{GTK}.gtk_widget_unset_flags (visual_widget, {EV_GTK_ENUMS}.gtk_has_default_enum)
+			{GTK}.gtk_widget_queue_draw (visual_widget)
 		end
 
 	enable_can_default
 			-- Allow the style of the button to be the default push button.
 		do
 			is_default_push_button := True
-			{EV_GTK_EXTERNALS}.gtk_widget_set_flags (visual_widget, {EV_GTK_ENUMS}.gtk_has_default_enum)
-			{EV_GTK_EXTERNALS}.gtk_widget_queue_draw (visual_widget)
+			{GTK}.gtk_widget_set_flags (visual_widget, {EV_GTK_ENUMS}.gtk_has_default_enum)
+			{GTK}.gtk_widget_queue_draw (visual_widget)
 		end
 
 	set_foreground_color (a_color: EV_COLOR)
@@ -208,8 +208,8 @@ feature {NONE} -- implementation
 	foreground_color_pointer: POINTER
 			-- Pointer to fg color for `Current'.
 		do
-			Result := {EV_GTK_EXTERNALS}.gtk_style_struct_text (
-				{EV_GTK_EXTERNALS}.gtk_rc_get_style (text_label)
+			Result := {GTK}.gtk_style_struct_text (
+				{GTK}.gtk_rc_get_style (text_label)
 			)
 		end
 
@@ -217,7 +217,7 @@ feature {NONE} -- implementation
 			-- GtkHBox in button.
 			-- Holds label and pixmap.
 		do
-			Result := {EV_GTK_EXTERNALS}.gtk_bin_struct_child (visual_widget)
+			Result := {GTK}.gtk_bin_struct_child (visual_widget)
 		end
 
 feature {EV_ANY, EV_ANY_I} -- implementation

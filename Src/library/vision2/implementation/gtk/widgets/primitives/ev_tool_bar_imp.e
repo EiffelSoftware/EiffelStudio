@@ -57,15 +57,15 @@ feature {NONE} -- Implementation
 		local
 			a_cs: EV_GTK_C_STRING
 		do
-			set_c_object ({EV_GTK_EXTERNALS}.gtk_toolbar_new)
+			set_c_object ({GTK2}.gtk_toolbar_new)
 			Precursor {EV_ITEM_LIST_IMP}
 			Precursor {EV_PRIMITIVE_IMP}
 
 				-- Set widget name so that the style can be used as set in EV_GTK_DEPENDENT_APPLICATION_IMP
 			a_cs := once "v2toolbar"
-			{EV_GTK_EXTERNALS}.gtk_widget_set_name (list_widget, a_cs.item)
+			{GTK}.gtk_widget_set_name (list_widget, a_cs.item)
 
-			{EV_GTK_EXTERNALS}.gtk_toolbar_set_show_arrow (list_widget, False)
+			{GTK2}.gtk_toolbar_set_show_arrow (list_widget, False)
 			has_vertical_button_style := True
 			disable_vertical
 		end
@@ -113,14 +113,14 @@ feature -- Status setting
 			-- Enable vertical toolbar style.
 		do
 			is_vertical := True
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_set_orientation (list_widget, 1)
+			{GTK2}.gtk_toolbar_set_orientation (list_widget, 1)
 		end
 
 	disable_vertical
 			-- Disable vertical toolbar style (ie: Horizontal).
 		do
 			is_vertical := False
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_set_orientation (list_widget, 0)
+			{GTK2}.gtk_toolbar_set_orientation (list_widget, 0)
 		end
 
 feature {EV_DOCKABLE_SOURCE_I} -- Implementation
@@ -180,16 +180,16 @@ feature -- Implementation
 
 				if has_text and has_pixmap then
 					if has_vertical_button_style then
-						a_style := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_both_enum
+						a_style := {GTK2}.gtk_toolbar_both_enum
 					else
-						a_style := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_both_horiz_enum
+						a_style := {GTK2}.gtk_toolbar_both_horiz_enum
 					end
 				elseif has_text then
-					a_style := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_text_enum
+					a_style := {GTK2}.gtk_toolbar_text_enum
 				else -- has_pixmap
-					a_style := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_icons_enum
+					a_style := {GTK2}.gtk_toolbar_icons_enum
 				end
-				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_set_style (visual_widget, a_style)
+				{GTK2}.gtk_toolbar_set_style (visual_widget, a_style)
 			end
 		end
 
@@ -220,11 +220,11 @@ feature -- Implementation
 			v_imp ?= v.implementation
 			check v_imp /= Void end
 			v_imp.set_item_parent_imp (Current)
-			{EV_GTK_EXTERNALS}.gtk_toolbar_insert (visual_widget, v_imp.c_object, i - 1)
+			{GTK2}.gtk_toolbar_insert (visual_widget, v_imp.c_object, i - 1)
 
 			r ?= v_imp
 			if r /= Void then
-				{EV_GTK_EXTERNALS}.gtk_radio_tool_button_set_group (r.visual_widget, radio_group)
+				{GTK2}.gtk_radio_tool_button_set_group (r.visual_widget, radio_group)
 				radio_group := r.radio_group
 			end
 
@@ -250,18 +250,18 @@ feature -- Implementation
 			r ?= imp
 			if r /= Void then
 				-- We are removing a radio button from `Current' so we make sure the radio group is valid.
-				l_radio_group := {EV_GTK_EXTERNALS}.gtk_radio_tool_button_get_group (r.visual_widget)
+				l_radio_group := {GTK2}.gtk_radio_tool_button_get_group (r.visual_widget)
 				check
 					radio_button_not_null: l_radio_group /= default_pointer
 				end
-				if {EV_GTK_EXTERNALS}.g_slist_length (l_radio_group) = 1 then
+				if {GTK}.g_slist_length (l_radio_group) = 1 then
 					-- This is the last radio button in the group so we set `radio_group' to null.
 					radio_group := default_pointer
 				end
 			end
 
 			item_ptr := imp.c_object
-			{EV_GTK_EXTERNALS}.gtk_container_remove (list_widget, item_ptr)
+			{GTK}.gtk_container_remove (list_widget, item_ptr)
 			child_array.remove
 			imp.set_item_parent_imp (Void)
 		end

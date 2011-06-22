@@ -53,8 +53,8 @@ feature {NONE} -- Initialization
 	make
 			-- Initialize `Current'.
 		do
-			set_c_object ({EV_GTK_EXTERNALS}.gtk_frame_new (NULL))
-			{EV_GTK_EXTERNALS}.gtk_frame_set_label (container_widget, NULL)
+			set_c_object ({GTK}.gtk_frame_new (NULL))
+			{GTK}.gtk_frame_set_label (container_widget, NULL)
 			set_style (Ev_frame_etched_in)
 			align_text_left
 			Precursor {EV_CELL_IMP}
@@ -67,14 +67,14 @@ feature -- Access
 		local
 			gtk_style: INTEGER
 		do
-			gtk_style := {EV_GTK_EXTERNALS}.gtk_frame_struct_shadow_type (container_widget)
-			if gtk_style = {EV_GTK_EXTERNALS}.gtk_shadow_in_enum then
+			gtk_style := {GTK}.gtk_frame_struct_shadow_type (container_widget)
+			if gtk_style = {GTK}.gtk_shadow_in_enum then
 				Result := Ev_frame_lowered
-			elseif gtk_style = {EV_GTK_EXTERNALS}.gtk_shadow_out_enum then
+			elseif gtk_style = {GTK}.gtk_shadow_out_enum then
 				Result := Ev_frame_raised
-			elseif gtk_style = {EV_GTK_EXTERNALS}.gtk_shadow_etched_in_enum then
+			elseif gtk_style = {GTK}.gtk_shadow_etched_in_enum then
 				Result := Ev_frame_etched_in
-			elseif gtk_style = {EV_GTK_EXTERNALS}.gtk_shadow_etched_out_enum then
+			elseif gtk_style = {GTK}.gtk_shadow_etched_out_enum then
 				Result := Ev_frame_etched_out
 			else
 				check
@@ -92,19 +92,19 @@ feature -- Element change
 		do
 			inspect a_style
 				when Ev_frame_lowered then
-					gtk_style := {EV_GTK_EXTERNALS}.gtk_shadow_in_enum
+					gtk_style := {GTK}.gtk_shadow_in_enum
 				when Ev_frame_raised then
-					gtk_style := {EV_GTK_EXTERNALS}.gtk_shadow_out_enum
+					gtk_style := {GTK}.gtk_shadow_out_enum
 				when Ev_frame_etched_in then
-					gtk_style := {EV_GTK_EXTERNALS}.gtk_shadow_etched_in_enum
+					gtk_style := {GTK}.gtk_shadow_etched_in_enum
 				when Ev_frame_etched_out then
-					gtk_style := {EV_GTK_EXTERNALS}.gtk_shadow_etched_out_enum
+					gtk_style := {GTK}.gtk_shadow_etched_out_enum
 			else
 				check
 					valid_value: False
 				end
 			end
-			{EV_GTK_EXTERNALS}.gtk_frame_set_shadow_type (container_widget, gtk_style)
+			{GTK}.gtk_frame_set_shadow_type (container_widget, gtk_style)
 		end
 
 feature -- Status setting
@@ -112,22 +112,22 @@ feature -- Status setting
 	align_text_left
 			-- Display `text' left aligned.
 		do
-			{EV_GTK_EXTERNALS}.gtk_frame_set_label_align (container_widget, {REAL_32} 0.0, {REAL_32} 0.5)
-			internal_alignment_code := {EV_GTK_EXTERNALS}.gtk_justify_left_enum
+			{GTK}.gtk_frame_set_label_align (container_widget, {REAL_32} 0.0, {REAL_32} 0.5)
+			internal_alignment_code := {GTK}.gtk_justify_left_enum
 		end
 
 	align_text_right
 			-- Display `text' right aligned.
 		do
-			{EV_GTK_EXTERNALS}.gtk_frame_set_label_align (container_widget, {REAL_32} 1.0, {REAL_32} 0.5)
-			internal_alignment_code := {EV_GTK_EXTERNALS}.gtk_justify_right_enum
+			{GTK}.gtk_frame_set_label_align (container_widget, {REAL_32} 1.0, {REAL_32} 0.5)
+			internal_alignment_code := {GTK}.gtk_justify_right_enum
 		end
 
 	align_text_center
 			-- Display `text' centered.
 		do
-			{EV_GTK_EXTERNALS}.gtk_frame_set_label_align (container_widget, {REAL_32} 0.5, {REAL_32} 0.5)
-			internal_alignment_code := {EV_GTK_EXTERNALS}.gtk_justify_center_enum
+			{GTK}.gtk_frame_set_label_align (container_widget, {REAL_32} 0.5, {REAL_32} 0.5)
+			internal_alignment_code := {GTK}.gtk_justify_center_enum
 		end
 
 feature -- Access
@@ -135,11 +135,11 @@ feature -- Access
 	text_alignment: INTEGER
 			-- Alignment of the text in the label.
 		do
-			if internal_alignment_code = {EV_GTK_EXTERNALS}.gtk_justify_center_enum then
+			if internal_alignment_code = {GTK}.gtk_justify_center_enum then
 				Result := {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_center
-			elseif internal_alignment_code = {EV_GTK_EXTERNALS}.gtk_justify_left_enum then
+			elseif internal_alignment_code = {GTK}.gtk_justify_left_enum then
 				Result := {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_left
-			elseif internal_alignment_code = {EV_GTK_EXTERNALS}.gtk_justify_right_enum then
+			elseif internal_alignment_code = {GTK}.gtk_justify_right_enum then
 				Result := {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_right
 			else
 				check alignment_code_not_set: False end
@@ -166,7 +166,7 @@ feature -- Element change
 		do
 			internal_text := a_text.as_string_32.twin
 			a_cs := a_text
-			{EV_GTK_EXTERNALS}.gtk_frame_set_label (container_widget, a_cs.item)
+			{GTK}.gtk_frame_set_label (container_widget, a_cs.item)
 		end
 
 feature {NONE} -- Implementation

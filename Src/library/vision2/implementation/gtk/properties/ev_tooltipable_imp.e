@@ -25,9 +25,9 @@ feature -- Initialization
 			a_cs: EV_GTK_C_STRING
 		do
 			a_cs := app_implementation.reusable_gtk_c_string
-			tip_ptr := {EV_GTK_EXTERNALS}.gtk_tooltips_data_get (visual_widget)
+			tip_ptr := {GTK}.gtk_tooltips_data_get (visual_widget)
 			if tip_ptr /= l_null then
-				a_cs.share_from_pointer ({EV_GTK_EXTERNALS}.gtk_tooltips_data_struct_tip_text (tip_ptr))
+				a_cs.share_from_pointer ({GTK}.gtk_tooltips_data_struct_tip_text (tip_ptr))
 				Result := a_cs.string
 			else
 				Result := ""
@@ -43,7 +43,7 @@ feature -- Element change
 			a_win, l_null: POINTER
 		do
 			a_cs := app_implementation.c_string_from_eiffel_string (a_text)
-			{EV_GTK_EXTERNALS}.gtk_tooltips_set_tip (
+			{GTK}.gtk_tooltips_set_tip (
 				tooltips_pointer,
 				visual_widget,
 				a_cs.item,
@@ -51,9 +51,9 @@ feature -- Element change
 			)
 			if a_text.is_empty then
 					-- Hide the existing tooltip window.
-				a_win := {EV_GTK_EXTERNALS}.gtk_tooltips_struct_tip_window (tooltips_pointer)
+				a_win := {GTK}.gtk_tooltips_struct_tip_window (tooltips_pointer)
 				if a_win /= default_pointer then
-					{EV_GTK_EXTERNALS}.gtk_widget_hide (a_win)
+					{GTK}.gtk_widget_hide (a_win)
 				end
 			end
 		end

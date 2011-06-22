@@ -72,7 +72,7 @@ feature {NONE} -- Initialization
 	new_gtk_window: POINTER
 			-- Return a new gtk window object for `Current'
 		do
-			Result := {EV_GTK_EXTERNALS}.gtk_window_new ({EV_GTK_EXTERNALS}.Gtk_window_toplevel_enum)
+			Result := {GTK}.gtk_window_new ({GTK}.Gtk_window_toplevel_enum)
 		end
 
 	make
@@ -105,10 +105,10 @@ feature {NONE} -- Initialization
 			l_gtk_marshal.signal_connect (l_c_object, app_imp.set_focus_event_string, agent (l_gtk_marshal).on_set_focus_event_intermediary (internal_id, ?), l_gtk_marshal.set_focus_event_translate_agent, True)
 				-- Used to propagate focus events between internal gtk widgets.
 
-			{EV_GTK_EXTERNALS}.gtk_window_set_default_size (l_c_object, 1, 1)
+			{GTK}.gtk_window_set_default_size (l_c_object, 1, 1)
 			Precursor {EV_CELL_IMP}
 				-- Need to set decorations after window is realized.
-			{EV_GTK_EXTERNALS}.gdk_window_set_decorations ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (l_c_object), default_wm_decorations)
+			{GTK}.gdk_window_set_decorations ({GTK}.gtk_widget_struct_window (l_c_object), default_wm_decorations)
 			internal_is_border_enabled := True
 			configure_event_pending := True
 			user_can_resize := True
@@ -138,7 +138,7 @@ feature  -- Access
 			p : POINTER
 			a_cs: EV_GTK_C_STRING
 		do
-			p := {EV_GTK_EXTERNALS}.gtk_window_struct_title (c_object)
+			p := {GTK}.gtk_window_struct_title (c_object)
 			if p /= NULL then
 				create a_cs.share_from_pointer (p)
 				Result := a_cs.string
@@ -160,7 +160,7 @@ feature -- Status setting
 		require
 			a_child_not_void: a_child /= Void
 		do
-			{EV_GTK_EXTERNALS}.gtk_window_set_transient_for (a_child.c_object, c_object)
+			{GTK}.gtk_window_set_transient_for (a_child.c_object, c_object)
 		end
 
 	remove_transient_child (a_child: EV_GTK_WINDOW_IMP)
@@ -168,7 +168,7 @@ feature -- Status setting
 		require
 			a_child_not_void: a_child /= Void
 		do
-			{EV_GTK_EXTERNALS}.gtk_window_set_transient_for (a_child.c_object, default_pointer)
+			{GTK}.gtk_window_set_transient_for (a_child.c_object, default_pointer)
 		end
 
 	internal_disable_border
@@ -180,8 +180,8 @@ feature -- Status setting
 				-- We are disabling the border so we need to reset the position in the exact place
 			l_x := x_position
 			l_y := y_position
-			l_decor := default_wm_decorations.bit_and ({EV_GTK_EXTERNALS}.gdk_decor_border_enum.bit_not)
-			{EV_GTK_EXTERNALS}.gdk_window_set_decorations ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), l_decor)
+			l_decor := default_wm_decorations.bit_and ({GTK}.gdk_decor_border_enum.bit_not)
+			{GTK}.gdk_window_set_decorations ({GTK}.gtk_widget_struct_window (c_object), l_decor)
 			set_position (l_x, l_y)
 		end
 
@@ -190,8 +190,8 @@ feature -- Status setting
 		local
 			l_decor: INTEGER
 		do
-			l_decor := default_wm_decorations.bit_or ({EV_GTK_EXTERNALS}.gdk_decor_border_enum)
-			{EV_GTK_EXTERNALS}.gdk_window_set_decorations ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), l_decor)
+			l_decor := default_wm_decorations.bit_or ({GTK}.gdk_decor_border_enum)
+			{GTK}.gdk_window_set_decorations ({GTK}.gtk_widget_struct_window (c_object), l_decor)
 		end
 
 	disable_user_resize_called: BOOLEAN
@@ -224,12 +224,12 @@ feature -- Status setting
 		local
 			l_geometry: POINTER
 		do
-			l_geometry := {EV_GTK_EXTERNALS}.c_gdk_geometry_struct_allocate
-			{EV_GTK_EXTERNALS}.set_gdk_geometry_struct_max_width (l_geometry, maximum_width)
-			{EV_GTK_EXTERNALS}.set_gdk_geometry_struct_max_height (l_geometry, maximum_height)
-			{EV_GTK_EXTERNALS}.set_gdk_geometry_struct_min_width (l_geometry, minimum_width)
-			{EV_GTK_EXTERNALS}.set_gdk_geometry_struct_min_height (l_geometry, minimum_height)
-			{EV_GTK_EXTERNALS}.gtk_window_set_geometry_hints (c_object, NULL, l_geometry, {EV_GTK_EXTERNALS}.Gdk_hint_max_size_enum | {EV_GTK_EXTERNALS}.gdk_hint_min_size_enum)
+			l_geometry := {GTK}.c_gdk_geometry_struct_allocate
+			{GTK}.set_gdk_geometry_struct_max_width (l_geometry, maximum_width)
+			{GTK}.set_gdk_geometry_struct_max_height (l_geometry, maximum_height)
+			{GTK}.set_gdk_geometry_struct_min_width (l_geometry, minimum_width)
+			{GTK}.set_gdk_geometry_struct_min_height (l_geometry, minimum_height)
+			{GTK}.gtk_window_set_geometry_hints (c_object, NULL, l_geometry, {GTK}.Gdk_hint_max_size_enum | {GTK}.gdk_hint_min_size_enum)
 			l_geometry.memory_free
 			internal_enable_border
 		end
@@ -299,7 +299,7 @@ feature -- Element change
 				a_title := "%T"
 			end
 			a_cs := a_title
-			{EV_GTK_EXTERNALS}.gtk_window_set_title (c_object, a_cs.item)
+			{GTK}.gtk_window_set_title (c_object, a_cs.item)
 		end
 
 	set_menu_bar (a_menu_bar: EV_MENU_BAR)
@@ -311,8 +311,8 @@ feature -- Element change
 			mb_imp ?= a_menu_bar.implementation
 			check mb_imp /= Void end
 			mb_imp.set_parent_window_imp (Current)
-			{EV_GTK_EXTERNALS}.gtk_box_pack_start (vbox, mb_imp.list_widget, False, True, 0)
-			{EV_GTK_EXTERNALS}.gtk_box_reorder_child (vbox, mb_imp.list_widget, 0)
+			{GTK}.gtk_box_pack_start (vbox, mb_imp.list_widget, False, True, 0)
+			{GTK}.gtk_box_reorder_child (vbox, mb_imp.list_widget, 0)
 		end
 
 	remove_menu_bar
@@ -324,7 +324,7 @@ feature -- Element change
 				mb_imp ?= l_menu_bar.implementation
 				check mb_imp /= Void end
 				mb_imp.remove_parent_window
-				{EV_GTK_EXTERNALS}.gtk_container_remove (vbox, mb_imp.list_widget)
+				{GTK}.gtk_container_remove (vbox, mb_imp.list_widget)
 			end
 			menu_bar := Void
 		end
@@ -354,7 +354,7 @@ feature {NONE} -- Accelerators
 				a_value := once "<Shift><Control><Mod1><Mod2><Mod3><Mod4><Mod5>" + l_override_key
 					-- This is a value that is highly unlikely to be used
 				a_origin := once "Vision2"
-				{EV_GTK_EXTERNALS}.gtk_settings_set_string_property (app_implementation.default_gtk_settings, a_property.item, a_value.item, a_origin.item)
+				{GTK}.gtk_settings_set_string_property (app_implementation.default_gtk_settings, a_property.item, a_value.item, a_origin.item)
 			end
 		end
 
@@ -409,10 +409,10 @@ feature {NONE} -- Implementation
 		local
 			l_geometry: POINTER
 		do
-			l_geometry := {EV_GTK_EXTERNALS}.c_gdk_geometry_struct_allocate
-			{EV_GTK_EXTERNALS}.set_gdk_geometry_struct_max_width (l_geometry, a_max_width)
-			{EV_GTK_EXTERNALS}.set_gdk_geometry_struct_max_height (l_geometry, a_max_height)
-			{EV_GTK_EXTERNALS}.gtk_window_set_geometry_hints (c_object, NULL, l_geometry, {EV_GTK_EXTERNALS}.Gdk_hint_max_size_enum)
+			l_geometry := {GTK}.c_gdk_geometry_struct_allocate
+			{GTK}.set_gdk_geometry_struct_max_width (l_geometry, a_max_width)
+			{GTK}.set_gdk_geometry_struct_max_height (l_geometry, a_max_height)
+			{GTK}.gtk_window_set_geometry_hints (c_object, NULL, l_geometry, {GTK}.Gdk_hint_max_size_enum)
 			l_geometry.memory_free
 			maximum_width := a_max_width
 			maximum_height := a_max_height
@@ -445,23 +445,23 @@ feature {NONE} -- Implementation
 		local
 			bar_imp: detachable EV_VERTICAL_BOX_IMP
 		do
-			vbox := {EV_GTK_EXTERNALS}.gtk_vbox_new (False, 0)
+			vbox := {GTK}.gtk_vbox_new (False, 0)
 
-			{EV_GTK_EXTERNALS}.gtk_widget_show (vbox)
-			{EV_GTK_EXTERNALS}.gtk_container_add (client_area, vbox)
-			container_widget := {EV_GTK_EXTERNALS}.gtk_hbox_new (False, 0)
-			{EV_GTK_EXTERNALS}.gtk_widget_show (container_widget)
+			{GTK}.gtk_widget_show (vbox)
+			{GTK}.gtk_container_add (client_area, vbox)
+			container_widget := {GTK}.gtk_hbox_new (False, 0)
+			{GTK}.gtk_widget_show (container_widget)
 
 			bar_imp ?= upper_bar.implementation
 			check bar_imp /= Void end
 
-			{EV_GTK_EXTERNALS}.gtk_box_pack_start (vbox, bar_imp.c_object, False, True, 0)
-			{EV_GTK_EXTERNALS}.gtk_box_pack_start (vbox, container_widget, True, True, 0)
+			{GTK}.gtk_box_pack_start (vbox, bar_imp.c_object, False, True, 0)
+			{GTK}.gtk_box_pack_start (vbox, container_widget, True, True, 0)
 
 			bar_imp ?= lower_bar.implementation
 			check bar_imp /= Void end
 
-			{EV_GTK_EXTERNALS}.gtk_box_pack_start (vbox, bar_imp.c_object, False, True, 0)
+			{GTK}.gtk_box_pack_start (vbox, bar_imp.c_object, False, True, 0)
 
 			app_implementation.window_oids.extend (internal_id)
 		end
@@ -544,13 +544,13 @@ feature {EV_GTK_WINDOW_IMP, EV_PICK_AND_DROPABLE_IMP, EV_APPLICATION_IMP} -- Imp
 	allow_window_manager_focus
 			-- Allow the window manager to give the focus to `Current'.
 		do
-			{EV_GTK_EXTERNALS}.gtk_window_set_accept_focus (c_object, True)
+			{GTK2}.gtk_window_set_accept_focus (c_object, True)
 		end
 
 	disallow_window_manager_focus
 			-- Disallow the window manager to give the focus to `Current'.
 		do
-			{EV_GTK_EXTERNALS}.gtk_window_set_accept_focus (c_object, False)
+			{GTK2}.gtk_window_set_accept_focus (c_object, False)
 		end
 
 feature {NONE} -- Composite handling
@@ -603,7 +603,7 @@ feature {EV_MENU_BAR_IMP, EV_ACCELERATOR_IMP, EV_APPLICATION_IMP} -- Implementat
 			internal_has_focus := a_has_focus
 			Precursor {EV_CELL_IMP} (a_has_focus)
 			if a_has_focus then
-				on_set_focus_event ({EV_GTK_EXTERNALS}.gtk_window_struct_focus_widget (c_object))
+				on_set_focus_event ({GTK}.gtk_window_struct_focus_widget (c_object))
 			else
 				on_set_focus_event (default_pointer)
 			end

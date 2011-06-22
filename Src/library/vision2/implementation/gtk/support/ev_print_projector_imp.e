@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 		local
 			l_filename: like filename
 		do
-			set_c_object ({EV_GTK_EXTERNALS}.gtk_label_new (NULL))
+			set_c_object ({GTK}.gtk_label_new (NULL))
 
 			if a_context.output_to_file then
 				create l_filename.make_from_string (a_context.file_name.as_string_8)

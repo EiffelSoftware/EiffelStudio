@@ -25,8 +25,8 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'
 		do
 			Precursor {EV_DIALOG_IMP}
-			{EV_GTK_EXTERNALS}.gtk_window_set_skip_pager_hint (c_object, True)
-			{EV_GTK_EXTERNALS}.gtk_window_set_skip_taskbar_hint (c_object, True)
+			{GTK}.gtk_window_set_skip_pager_hint (c_object, True)
+			{GTK}.gtk_window_set_skip_taskbar_hint (c_object, True)
 		end
 
 feature {NONE} -- Implementation

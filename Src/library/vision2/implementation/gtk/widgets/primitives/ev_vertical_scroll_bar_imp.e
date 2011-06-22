@@ -35,8 +35,8 @@ feature {NONE} -- Initialization
 	make
 			-- Create and initialize `Current'.
 		do
-			adjustment_internal := {EV_GTK_EXTERNALS}.gtk_adjustment_new (0, 0, 100 + 10, 1, 10, 10)
-			set_c_object ({EV_GTK_EXTERNALS}.gtk_vscrollbar_new (adjustment))
+			adjustment_internal := {GTK}.gtk_adjustment_new (0, 0, 100 + 10, 1, 10, 10)
+			set_c_object ({GTK}.gtk_vscrollbar_new (adjustment))
 			Precursor
 		end
 

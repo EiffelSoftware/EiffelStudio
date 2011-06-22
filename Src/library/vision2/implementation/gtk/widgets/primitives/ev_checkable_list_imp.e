@@ -44,12 +44,12 @@ feature -- Initialization
 			a_gtk_c_str: EV_GTK_C_STRING
 		do
 			Precursor {EV_LIST_IMP}
-			a_column := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_column (tree_view, 0)
+			a_column := {GTK2}.gtk_tree_view_get_column (tree_view, 0)
 
-			a_cell_renderer := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_renderer_toggle_new
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_pack_start (a_column, a_cell_renderer, False)
+			a_cell_renderer := {GTK2}.gtk_cell_renderer_toggle_new
+			{GTK2}.gtk_tree_view_column_pack_start (a_column, a_cell_renderer, False)
 			a_gtk_c_str :=  "active"
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_add_attribute (a_column, a_cell_renderer, a_gtk_c_str.item, boolean_tree_model_column)
+			{GTK2}.gtk_tree_view_column_add_attribute (a_column, a_cell_renderer, a_gtk_c_str.item, boolean_tree_model_column)
 
 			real_signal_connect (a_cell_renderer, "toggled", agent (app_implementation.gtk_marshal).boolean_cell_renderer_toggle_intermediary (internal_id, ?, ?), Void)
 		end
@@ -68,18 +68,18 @@ feature -- Initialization
 			a_gvalue: POINTER
 		do
 			create a_tree_iter.make
-			a_tree_path := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_new_from_string (a_tree_path_str)
-			a_success := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_model_get_iter (list_store, a_tree_iter.item, a_tree_path)
+			a_tree_path := {GTK2}.gtk_tree_path_new_from_string (a_tree_path_str)
+			a_success := {GTK2}.gtk_tree_model_get_iter (list_store, a_tree_iter.item, a_tree_path)
 			if a_success then
-				a_int_ptr := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_get_indices (a_tree_path)
+				a_int_ptr := {GTK2}.gtk_tree_path_get_indices (a_tree_path)
 				create mp.share_from_pointer (a_int_ptr, {PLATFORM}.integer_32_bytes)
 				a_list_item := child_array @ (mp.read_integer_32 (0) + 1)
-				a_gvalue := {EV_GTK_DEPENDENT_EXTERNALS}.c_g_value_struct_allocate
-				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_model_get_value (list_store, a_tree_iter.item, boolean_tree_model_column,  a_gvalue)
-				a_selected := {EV_GTK_DEPENDENT_EXTERNALS}.g_value_get_boolean (a_gvalue)
+				a_gvalue := {GTK2}.c_g_value_struct_allocate
+				{GTK2}.gtk_tree_model_get_value (list_store, a_tree_iter.item, boolean_tree_model_column,  a_gvalue)
+				a_selected := {GTK2}.g_value_get_boolean (a_gvalue)
 					-- Toggle the currently selected value
-				{EV_GTK_DEPENDENT_EXTERNALS}.g_value_set_boolean (a_gvalue, not a_selected)
-				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_set_value (list_store, a_tree_iter.item, boolean_tree_model_column,  a_gvalue)
+				{GTK2}.g_value_set_boolean (a_gvalue, not a_selected)
+				{GTK2}.gtk_list_store_set_value (list_store, a_tree_iter.item, boolean_tree_model_column,  a_gvalue)
 
 				if a_selected then
 						-- We are toggling so `a_selected' is status before toggle
@@ -94,7 +94,7 @@ feature -- Initialization
 
 				a_gvalue.memory_free
 			end
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_free (a_tree_path)
+			{GTK2}.gtk_tree_path_free (a_tree_path)
 		end
 
 	initialize_model
@@ -102,11 +102,11 @@ feature -- Initialization
 		local
 			a_type_array: MANAGED_POINTER
 		do
-			create a_type_array.make (3 * {EV_GTK_DEPENDENT_EXTERNALS}.sizeof_gtype)
-			{EV_GTK_DEPENDENT_EXTERNALS}.add_gdk_type_pixbuf (a_type_array.item, 0)
-			{EV_GTK_DEPENDENT_EXTERNALS}.add_g_type_string (a_type_array.item, 1 * {EV_GTK_DEPENDENT_EXTERNALS}.sizeof_gtype)
-			{EV_GTK_DEPENDENT_EXTERNALS}.add_g_type_boolean (a_type_array.item, 2 * {EV_GTK_DEPENDENT_EXTERNALS}.sizeof_gtype)
-			list_store := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_newv (3, a_type_array.item)
+			create a_type_array.make (3 * {GTK2}.sizeof_gtype)
+			{GTK2}.add_gdk_type_pixbuf (a_type_array.item, 0)
+			{GTK2}.add_g_type_string (a_type_array.item, 1 * {GTK2}.sizeof_gtype)
+			{GTK2}.add_g_type_boolean (a_type_array.item, 2 * {GTK2}.sizeof_gtype)
+			list_store := {GTK2}.gtk_list_store_newv (3, a_type_array.item)
 		end
 
 feature -- Access
@@ -122,9 +122,9 @@ feature -- Access
 			check item_imp /= Void end
 			l_list_iter := item_imp.list_iter
 			check l_list_iter /= Void end
-			a_gvalue := {EV_GTK_DEPENDENT_EXTERNALS}.c_g_value_struct_allocate
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_model_get_value (list_store, l_list_iter.item, boolean_tree_model_column,  a_gvalue)
-			Result := {EV_GTK_DEPENDENT_EXTERNALS}.g_value_get_boolean (a_gvalue)
+			a_gvalue := {GTK2}.c_g_value_struct_allocate
+			{GTK2}.gtk_tree_model_get_value (list_store, l_list_iter.item, boolean_tree_model_column,  a_gvalue)
+			Result := {GTK2}.g_value_get_boolean (a_gvalue)
 			a_gvalue.memory_free
 		end
 
@@ -142,10 +142,10 @@ feature -- Status setting
 			check item_imp /= Void end
 			l_list_iter := item_imp.list_iter
 			check l_list_iter /= Void end
-			a_gvalue := {EV_GTK_DEPENDENT_EXTERNALS}.c_g_value_struct_allocate
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_model_get_value (list_store, l_list_iter.item, boolean_tree_model_column,  a_gvalue)
-			{EV_GTK_DEPENDENT_EXTERNALS}.g_value_set_boolean (a_gvalue, True)
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_set_value (list_store, l_list_iter.item, boolean_tree_model_column, a_gvalue)
+			a_gvalue := {GTK2}.c_g_value_struct_allocate
+			{GTK2}.gtk_tree_model_get_value (list_store, l_list_iter.item, boolean_tree_model_column,  a_gvalue)
+			{GTK2}.g_value_set_boolean (a_gvalue, True)
+			{GTK2}.gtk_list_store_set_value (list_store, l_list_iter.item, boolean_tree_model_column, a_gvalue)
 			a_gvalue.memory_free
 			if check_actions_internal /= Void then
 				check_actions_internal.call ([list_item])
@@ -164,10 +164,10 @@ feature -- Status setting
 			check item_imp /= Void end
 			l_list_iter := item_imp.list_iter
 			check l_list_iter /= Void end
-			a_gvalue := {EV_GTK_DEPENDENT_EXTERNALS}.c_g_value_struct_allocate
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_model_get_value (list_store, l_list_iter.item, boolean_tree_model_column,  a_gvalue)
-			{EV_GTK_DEPENDENT_EXTERNALS}.g_value_set_boolean (a_gvalue, False)
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_set_value (list_store, l_list_iter.item, boolean_tree_model_column, a_gvalue)
+			a_gvalue := {GTK2}.c_g_value_struct_allocate
+			{GTK2}.gtk_tree_model_get_value (list_store, l_list_iter.item, boolean_tree_model_column,  a_gvalue)
+			{GTK2}.g_value_set_boolean (a_gvalue, False)
+			{GTK2}.gtk_list_store_set_value (list_store, l_list_iter.item, boolean_tree_model_column, a_gvalue)
 			a_gvalue.memory_free
 			if uncheck_actions_internal /= Void then
 				uncheck_actions_internal.call ([list_item])

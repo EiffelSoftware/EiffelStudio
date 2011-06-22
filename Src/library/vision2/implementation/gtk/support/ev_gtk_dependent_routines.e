@@ -56,7 +56,7 @@ feature -- Implementation
 	create_gtk_dialog: POINTER
 			-- Create and initialize a gtk dialog
 		do
-			Result := {EV_GTK_EXTERNALS}.gtk_window_new ({EV_GTK_EXTERNALS}.gtk_window_toplevel_enum)
+			Result := {GTK}.gtk_window_new ({GTK}.gtk_window_toplevel_enum)
 		end
 
 	client_area_from_c_object (a_c_object: POINTER): POINTER
@@ -68,13 +68,13 @@ feature -- Implementation
 	horizontal_resolution_internal: INTEGER
 			-- Number of pixels per inch along horizontal axis
 		once
-			Result := ({EV_GTK_EXTERNALS}.gdk_screen_width / {EV_GTK_EXTERNALS}.gdk_screen_get_width_mm ({EV_GTK_EXTERNALS}.gdk_screen_get_default) * 25.4).rounded
+			Result := ({GTK}.gdk_screen_width / {GTK2}.gdk_screen_get_width_mm ({GTK2}.gdk_screen_get_default) * 25.4).rounded
 		end
 
 	vertical_resolution_internal: INTEGER
 			-- Number of pixels per inch along vertical axis
 		once
-			Result := ({EV_GTK_EXTERNALS}.gdk_screen_height / {EV_GTK_EXTERNALS}.gdk_screen_get_height_mm ({EV_GTK_EXTERNALS}.gdk_screen_get_default) * 25.4).rounded
+			Result := ({GTK}.gdk_screen_height / {GTK2}.gdk_screen_get_height_mm ({GTK2}.gdk_screen_get_default) * 25.4).rounded
 		end
 
 note

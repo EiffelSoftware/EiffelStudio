@@ -36,14 +36,14 @@ feature {NONE} -- Initialization
 			-- <Precursor>
 		do
 			Precursor {EV_MENU_ITEM_IMP}
-			{EV_GTK_EXTERNALS}.gtk_check_menu_item_set_show_toggle (menu_item, True)
+			{GTK}.gtk_check_menu_item_set_show_toggle (menu_item, True)
 			enable_select
 		end
 
 	initialize_menu_item
 			-- <Precursor>
 		do
-			set_c_object ({EV_GTK_EXTERNALS}.gtk_radio_menu_item_new (NULL))
+			set_c_object ({GTK}.gtk_radio_menu_item_new (NULL))
 		end
 
 feature -- Status report
@@ -51,7 +51,7 @@ feature -- Status report
 	is_selected: BOOLEAN
 			-- Is this menu item checked?
 		do
-			Result := {EV_GTK_EXTERNALS}.gtk_check_menu_item_struct_active (menu_item).to_boolean
+			Result := {GTK}.gtk_check_menu_item_struct_active (menu_item).to_boolean
 		end
 
 feature -- Status setting
@@ -62,7 +62,7 @@ feature -- Status setting
 			if not is_selected then
 				-- We do not want select actions to be called.
 				ignore_select_actions := True
-				{EV_GTK_EXTERNALS}.gtk_check_menu_item_set_active (menu_item, True)
+				{GTK}.gtk_check_menu_item_set_active (menu_item, True)
 				ignore_select_actions := False
 			end
 		end
@@ -74,7 +74,7 @@ feature {EV_ANY_I} -- Implementation
 		do
 			if is_selected then
 				ignore_select_actions := True
-				{EV_GTK_EXTERNALS}.gtk_check_menu_item_set_active (menu_item, False)
+				{GTK}.gtk_check_menu_item_set_active (menu_item, False)
 				ignore_select_actions := False
 			end
 		end
@@ -92,12 +92,12 @@ feature {EV_ANY_I} -- Implementation
 	set_radio_group (a_gslist: POINTER)
 			-- Make current a member of `a_gslist' radio group.
 		do
-			{EV_GTK_EXTERNALS}.gtk_radio_menu_item_set_group (menu_item, a_gslist)
+			{GTK}.gtk_radio_menu_item_set_group (menu_item, a_gslist)
 		end
 
 	radio_group: POINTER
 		do
-			Result := {EV_GTK_EXTERNALS}.gtk_radio_menu_item_group (menu_item)
+			Result := {GTK}.gtk_radio_menu_item_group (menu_item)
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation

@@ -24,10 +24,6 @@ indexing
 
 #include <eif_eiffel.h>
 
-extern void (*eif_on_event) (EIF_REFERENCE, EIF_INTEGER);
-extern void add_watch_callback (EIF_OBJECT io_watcher, gint handle, GIOCondition condition, gint* connection_id);
-extern gboolean c_io_watcher_marshal (GIOChannel* source, GIOCondition condition, gpointer io_watcher);
-
 typedef struct {
 	gint x_position;
 	gint y_position;

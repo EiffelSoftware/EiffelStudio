@@ -50,10 +50,10 @@ feature {NONE} -- Initialization
 
 	make
 		do
-			viewport := {EV_GTK_EXTERNALS}.gtk_viewport_new (NULL, NULL)
+			viewport := {GTK}.gtk_viewport_new (NULL, NULL)
 			set_c_object (viewport)
-			{EV_GTK_EXTERNALS}.gtk_viewport_set_shadow_type (viewport, {EV_GTK_EXTERNALS}.Gtk_shadow_none_enum)
-			{EV_GTK_EXTERNALS}.gtk_widget_set_minimum_size (viewport, 1, 1) -- Hack needed to prevent viewport resize on item resize.
+			{GTK}.gtk_viewport_set_shadow_type (viewport, {GTK}.Gtk_shadow_none_enum)
+			{GTK2}.gtk_widget_set_minimum_size (viewport, 1, 1) -- Hack needed to prevent viewport resize on item resize.
 			container_widget := viewport
 			Precursor
 		end
@@ -123,15 +123,15 @@ feature -- Element change
 					-- Code below is to ensure that if the widget is visible then
 					-- we only move the window, and not call the `expose_actions' on `item'
 					-- as it is the case when calling `gtk_adjustment_value_changed'.
-				if {EV_GTK_EXTERNALS}.gtk_viewport_struct_bin_window (viewport) /= l_null then
-					{EV_GTK_EXTERNALS}.gdk_window_move (
-						{EV_GTK_EXTERNALS}.gtk_viewport_struct_bin_window (viewport), -a_x, -a_y)
+				if {GTK}.gtk_viewport_struct_bin_window (viewport) /= l_null then
+					{GTK}.gdk_window_move (
+						{GTK}.gtk_viewport_struct_bin_window (viewport), -a_x, -a_y)
 				else
 					if l_x_offset_changed then
-						{EV_GTK_EXTERNALS}.gtk_adjustment_value_changed (horizontal_adjustment)
+						{GTK}.gtk_adjustment_value_changed (horizontal_adjustment)
 					end
 					if l_y_offset_changed then
-						{EV_GTK_EXTERNALS}.gtk_adjustment_value_changed (vertical_adjustment)
+						{GTK}.gtk_adjustment_value_changed (vertical_adjustment)
 					end
 				end
 				unblock_resize_actions
@@ -158,9 +158,9 @@ feature -- Element change
 			w_imp ?= l_item.implementation
 			check w_imp /= Void end
 			l_c_object := w_imp.c_object
-			l_parent_box := {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (l_c_object)
-			{EV_GTK_EXTERNALS}.gtk_widget_set_minimum_size (l_parent_box, a_width, a_height)
-			{EV_GTK_EXTERNALS}.gtk_container_check_resize (viewport)
+			l_parent_box := {GTK}.gtk_widget_struct_parent (l_c_object)
+			{GTK2}.gtk_widget_set_minimum_size (l_parent_box, a_width, a_height)
+			{GTK}.gtk_container_check_resize (viewport)
 		end
 
 feature {NONE} -- Implementation
@@ -173,11 +173,11 @@ feature {NONE} -- Implementation
 				-- We add a parent box to `a_child' and control its size via this as
 				-- GtkViewport updates the childs requisition upon allocation which
 				-- affects the minimum size of the `a_child'.
-			l_parent_box := {EV_GTK_EXTERNALS}.gtk_event_box_new
-			{EV_GTK_EXTERNALS}.gtk_event_box_set_visible_window (l_parent_box, False)
-			{EV_GTK_EXTERNALS}.gtk_widget_show (l_parent_box)
-			{EV_GTK_EXTERNALS}.gtk_container_add (l_parent_box, a_child)
-			{EV_GTK_EXTERNALS}.gtk_container_add (a_container, l_parent_box)
+			l_parent_box := {GTK}.gtk_event_box_new
+			{GTK2}.gtk_event_box_set_visible_window (l_parent_box, False)
+			{GTK}.gtk_widget_show (l_parent_box)
+			{GTK}.gtk_container_add (l_parent_box, a_child)
+			{GTK}.gtk_container_add (a_container, l_parent_box)
 		end
 
 	gtk_container_remove (a_container, a_child: POINTER)
@@ -185,9 +185,9 @@ feature {NONE} -- Implementation
 		local
 			l_parent_box: POINTER
 		do
-			l_parent_box := {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (a_child)
-			{EV_GTK_EXTERNALS}.gtk_container_remove (l_parent_box, a_child)
-			{EV_GTK_EXTERNALS}.gtk_container_remove (a_container, l_parent_box)
+			l_parent_box := {GTK}.gtk_widget_struct_parent (a_child)
+			{GTK}.gtk_container_remove (l_parent_box, a_child)
+			{GTK}.gtk_container_remove (a_container, l_parent_box)
 		end
 
 	container_widget: POINTER
@@ -211,12 +211,12 @@ feature {NONE} -- Implementation
 
 	horizontal_adjustment: POINTER
 		do
-			Result := {EV_GTK_EXTERNALS}.gtk_viewport_get_hadjustment (viewport)
+			Result := {GTK}.gtk_viewport_get_hadjustment (viewport)
 		end
 
 	vertical_adjustment: POINTER
 		do
-			Result := {EV_GTK_EXTERNALS}.gtk_viewport_get_vadjustment (viewport)
+			Result := {GTK}.gtk_viewport_get_vadjustment (viewport)
 		end
 
 	internal_set_value_from_adjustment (l_adj: POINTER; a_value: INTEGER)
@@ -224,14 +224,14 @@ feature {NONE} -- Implementation
 		require
 			l_adj_not_null: l_adj /= default_pointer
 		do
-			if {EV_GTK_EXTERNALS}.gtk_adjustment_struct_lower (l_adj) > a_value then
-				{EV_GTK_EXTERNALS}.set_gtk_adjustment_struct_lower (l_adj, a_value)
-			elseif {EV_GTK_EXTERNALS}.gtk_adjustment_struct_upper (l_adj) < a_value then
-				{EV_GTK_EXTERNALS}.set_gtk_adjustment_struct_upper (l_adj, a_value)
+			if {GTK}.gtk_adjustment_struct_lower (l_adj) > a_value then
+				{GTK}.set_gtk_adjustment_struct_lower (l_adj, a_value)
+			elseif {GTK}.gtk_adjustment_struct_upper (l_adj) < a_value then
+				{GTK}.set_gtk_adjustment_struct_upper (l_adj, a_value)
 			end
-			{EV_GTK_EXTERNALS}.set_gtk_adjustment_struct_value (l_adj, a_value)
+			{GTK}.set_gtk_adjustment_struct_value (l_adj, a_value)
 		ensure
-			value_set: {EV_GTK_EXTERNALS}.gtk_adjustment_struct_value (l_adj) = a_value
+			value_set: {GTK}.gtk_adjustment_struct_value (l_adj) = a_value
   		end
 
 	viewport: POINTER

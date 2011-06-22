@@ -59,23 +59,23 @@ feature -- Initialization
 		local
 			l_label_ellipsize_symbol: POINTER
 		do
-			set_c_object  ({EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_new)
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_resizable (c_object, True)
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_sizing (c_object, {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_fixed_enum)
-			{EV_GTK_EXTERNALS}.gtk_tree_view_column_set_clickable (c_object, True)
+			set_c_object  ({GTK2}.gtk_tree_view_column_new)
+			{GTK2}.gtk_tree_view_column_set_resizable (c_object, True)
+			{GTK2}.gtk_tree_view_column_set_sizing (c_object, {GTK2}.gtk_tree_view_column_fixed_enum)
+			{GTK2}.gtk_tree_view_column_set_clickable (c_object, True)
 			pixmapable_imp_initialize
 			textable_imp_initialize
 			l_label_ellipsize_symbol := gtk_label_set_ellipsize_symbol
 			if l_label_ellipsize_symbol /= default_pointer then
 				gtk_label_set_ellipsize_call (l_label_ellipsize_symbol, text_label, 3)
 			else
-				{EV_GTK_EXTERNALS}.gtk_label_set_ellipsize (text_label, 3)
+				{GTK2}.gtk_label_set_ellipsize (text_label, 3)
 			end
-			box := {EV_GTK_EXTERNALS}.gtk_hbox_new (False, 0)
-			{EV_GTK_EXTERNALS}.gtk_widget_show (box)
-			{EV_GTK_EXTERNALS}.gtk_box_pack_start (box, pixmap_box, False, False, 0)
-			{EV_GTK_EXTERNALS}.gtk_box_pack_end (box, text_label, True, True, 0)
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_widget (c_object, box)
+			box := {GTK}.gtk_hbox_new (False, 0)
+			{GTK}.gtk_widget_show (box)
+			{GTK}.gtk_box_pack_start (box, pixmap_box, False, False, 0)
+			{GTK}.gtk_box_pack_end (box, text_label, True, True, 0)
+			{GTK2}.gtk_tree_view_column_set_widget (c_object, box)
 
 			set_minimum_width (0)
 			maximum_width := 32000
@@ -110,7 +110,7 @@ feature -- Initialization
 				width := a_width
 				if attached parent_imp as l_parent_imp and then (l_parent_imp.call_item_resize_start_actions or else l_parent_imp.item_resize_tuple /= Void) then
 						-- Always make sure that the event box is the same size as the header item.
-					{EV_GTK_EXTERNALS}.gtk_widget_set_minimum_size (box, a_width, -1)
+					{GTK2}.gtk_widget_set_minimum_size (box, a_width, -1)
 					l_parent_imp.on_resize (attached_interface)
 				end
 			end
@@ -135,14 +135,14 @@ feature -- Access
 			-- Prevent `Current' from being resized by users.
 		do
 			user_can_resize := False
-			{EV_GTK_EXTERNALS}.gtk_tree_view_column_set_resizable (c_object, False)
+			{GTK2}.gtk_tree_view_column_set_resizable (c_object, False)
 		end
 
 	enable_user_resize
 			-- Permit `Current' to be resized by users.
 		do
 			user_can_resize := True
-			{EV_GTK_EXTERNALS}.gtk_tree_view_column_set_resizable (c_object, True)
+			{GTK2}.gtk_tree_view_column_set_resizable (c_object, True)
 		end
 
 feature -- Status setting
@@ -152,7 +152,7 @@ feature -- Status setting
 			-- If `width' is greater than `a_maximum_width', resize.
 		do
 			maximum_width := a_width
-			{EV_GTK_EXTERNALS}.gtk_tree_view_column_set_max_width (c_object, a_width)
+			{GTK2}.gtk_tree_view_column_set_max_width (c_object, a_width)
 		end
 
 	set_minimum_width (a_width: INTEGER)
@@ -160,15 +160,15 @@ feature -- Status setting
 			-- If `width' is less than `a_minimum_width', resize.
 		do
 			minimum_width := a_width
-			{EV_GTK_EXTERNALS}.gtk_tree_view_column_set_min_width (c_object, a_width)
+			{GTK2}.gtk_tree_view_column_set_min_width (c_object, a_width)
 		end
 
 	set_width (a_width: INTEGER)
 			-- Assign `a_width' to `width'.
 		do
 			width := a_width
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_fixed_width (c_object, a_width.max (1))
-			{EV_GTK_EXTERNALS}.gtk_widget_set_minimum_size (box, a_width, -1)
+			{GTK2}.gtk_tree_view_column_set_fixed_width (c_object, a_width.max (1))
+			{GTK2}.gtk_widget_set_minimum_size (box, a_width, -1)
 		end
 
 	resize_to_content
@@ -179,10 +179,10 @@ feature -- Status setting
 			a_req_struct: POINTER
 			a_width, a_height: INTEGER
 		do
-			{EV_GTK_EXTERNALS}.gtk_widget_size_request (box, default_pointer)
-			a_req_struct := {EV_GTK_EXTERNALS}.gtk_widget_struct_requisition (box)
-			a_height := {EV_GTK_EXTERNALS}.gtk_requisition_struct_height (a_req_struct)
-			a_width := {EV_GTK_EXTERNALS}.gtk_requisition_struct_width (a_req_struct)
+			{GTK}.gtk_widget_size_request (box, default_pointer)
+			a_req_struct := {GTK}.gtk_widget_struct_requisition (box)
+			a_height := {GTK}.gtk_requisition_struct_height (a_req_struct)
+			a_width := {GTK}.gtk_requisition_struct_width (a_req_struct)
 			set_width (a_width)
 		end
 
@@ -307,25 +307,25 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Event handling
 			l_motion_tuple: TUPLE [INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]
 			l_parent_imp: like parent_imp
 		do
-			a_button := {EV_GTK_EXTERNALS}.gtk_tree_view_column_struct_button (c_object)
+			a_button := {GTK2}.gtk_tree_view_column_struct_button (c_object)
 
 			l_parent_imp := parent_imp
 					-- We don't want the button stealing focus.
-			{EV_GTK_EXTERNALS}.gtk_widget_unset_flags (a_button, {EV_GTK_EXTERNALS}.gtk_can_focus_enum)
+			{GTK}.gtk_widget_unset_flags (a_button, {GTK}.gtk_can_focus_enum)
 			if n_args > 0 then
-				gdk_event := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_pointer (args)
+				gdk_event := {GTK2}.gtk_value_pointer (args)
 				if gdk_event /= NULL then
-					event_type := {EV_GTK_EXTERNALS}.gdk_event_any_struct_type (gdk_event)
+					event_type := {GTK}.gdk_event_any_struct_type (gdk_event)
 					if event_type = {EV_GTK_ENUMS}.gdk_motion_notify_enum then
 						if pointer_motion_actions_internal /= Void then
 							l_motion_tuple := app_implementation.motion_tuple
-							l_motion_tuple.put_integer ({EV_GTK_EXTERNALS}.gdk_event_motion_struct_x (gdk_event).truncated_to_integer, 1)
-							l_motion_tuple.put_integer ({EV_GTK_EXTERNALS}.gdk_event_motion_struct_y (gdk_event).truncated_to_integer, 2)
+							l_motion_tuple.put_integer ({GTK}.gdk_event_motion_struct_x (gdk_event).truncated_to_integer, 1)
+							l_motion_tuple.put_integer ({GTK}.gdk_event_motion_struct_y (gdk_event).truncated_to_integer, 2)
 							l_motion_tuple.put_double (0.5, 3)
 							l_motion_tuple.put_double (0.5, 4)
 							l_motion_tuple.put_double (0.5, 5)
-							l_motion_tuple.put_integer ({EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer, 6)
-							l_motion_tuple.put_integer ({EV_GTK_EXTERNALS}.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer, 7)
+							l_motion_tuple.put_integer ({GTK}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer, 6)
+							l_motion_tuple.put_integer ({GTK}.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer, 7)
 							pointer_motion_actions_internal.call (
 								l_motion_tuple
 							)
@@ -334,37 +334,37 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Event handling
 						event_type = {EV_GTK_ENUMS}.gdk_button_press_enum
 					then
 						if pointer_button_press_actions_internal /= Void then
-							pointer_button_press_actions_internal.call ([{EV_GTK_EXTERNALS}.gdk_event_button_struct_x (gdk_event).truncated_to_integer, {EV_GTK_EXTERNALS}.gdk_event_button_struct_y (gdk_event).truncated_to_integer, {EV_GTK_EXTERNALS}.gdk_event_button_struct_button (gdk_event), 0.5, 0.5, 0.5, {EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer, {EV_GTK_EXTERNALS}.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer])
+							pointer_button_press_actions_internal.call ([{GTK}.gdk_event_button_struct_x (gdk_event).truncated_to_integer, {GTK}.gdk_event_button_struct_y (gdk_event).truncated_to_integer, {GTK}.gdk_event_button_struct_button (gdk_event), 0.5, 0.5, 0.5, {GTK}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer, {GTK}.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer])
 						end
 						if l_parent_imp /= Void then
-							l_x := {EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer - l_parent_imp.screen_x - l_parent_imp.item_x_offset (attached_interface)
+							l_x := {GTK}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer - l_parent_imp.screen_x - l_parent_imp.item_x_offset (attached_interface)
 							if l_parent_imp.pointer_button_press_actions_internal /= Void then
-								l_parent_imp.pointer_button_press_actions.call ([l_x, {EV_GTK_EXTERNALS}.gdk_event_button_struct_y (gdk_event).truncated_to_integer, {EV_GTK_EXTERNALS}.gdk_event_button_struct_button (gdk_event), 0.5, 0.5, 0.5, {EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer, {EV_GTK_EXTERNALS}.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer])
+								l_parent_imp.pointer_button_press_actions.call ([l_x, {GTK}.gdk_event_button_struct_y (gdk_event).truncated_to_integer, {GTK}.gdk_event_button_struct_button (gdk_event), 0.5, 0.5, 0.5, {GTK}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer, {GTK}.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer])
 							end
 							if l_parent_imp.item_pointer_button_press_actions_internal /= Void then
-								l_parent_imp.item_pointer_button_press_actions.call ([interface, l_x, {EV_GTK_EXTERNALS}.gdk_event_button_struct_y (gdk_event).truncated_to_integer, {EV_GTK_EXTERNALS}.gdk_event_button_struct_button (gdk_event)])
+								l_parent_imp.item_pointer_button_press_actions.call ([interface, l_x, {GTK}.gdk_event_button_struct_y (gdk_event).truncated_to_integer, {GTK}.gdk_event_button_struct_button (gdk_event)])
 							end
 						end
 					elseif
 						event_type = {EV_GTK_ENUMS}.gdk_button_release_enum
 					then
 						if l_parent_imp /= Void and then l_parent_imp.pointer_button_release_actions_internal /= Void then
-							l_x := {EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer - l_parent_imp.screen_x - l_parent_imp.item_x_offset (attached_interface)
-							l_parent_imp.pointer_button_release_actions.call ([l_x, {EV_GTK_EXTERNALS}.gdk_event_button_struct_y (gdk_event).truncated_to_integer, {EV_GTK_EXTERNALS}.gdk_event_button_struct_button (gdk_event), 0.5, 0.5, 0.5, {EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer, {EV_GTK_EXTERNALS}.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer])
+							l_x := {GTK}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer - l_parent_imp.screen_x - l_parent_imp.item_x_offset (attached_interface)
+							l_parent_imp.pointer_button_release_actions.call ([l_x, {GTK}.gdk_event_button_struct_y (gdk_event).truncated_to_integer, {GTK}.gdk_event_button_struct_button (gdk_event), 0.5, 0.5, 0.5, {GTK}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer, {GTK}.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer])
 						end
 					elseif
 						event_type = {EV_GTK_ENUMS}.gdk_2button_press_enum
 					then
 						if pointer_double_press_actions_internal /= Void then
-							pointer_double_press_actions_internal.call ([{EV_GTK_EXTERNALS}.gdk_event_button_struct_x (gdk_event).truncated_to_integer, {EV_GTK_EXTERNALS}.gdk_event_button_struct_y (gdk_event).truncated_to_integer, {EV_GTK_EXTERNALS}.gdk_event_button_struct_button (gdk_event), 0.5, 0.5, 0.5, {EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer, {EV_GTK_EXTERNALS}.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer])
+							pointer_double_press_actions_internal.call ([{GTK}.gdk_event_button_struct_x (gdk_event).truncated_to_integer, {GTK}.gdk_event_button_struct_y (gdk_event).truncated_to_integer, {GTK}.gdk_event_button_struct_button (gdk_event), 0.5, 0.5, 0.5, {GTK}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer, {GTK}.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer])
 						end
 						if l_parent_imp /= Void then
-							l_x := {EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer - l_parent_imp.screen_x - l_parent_imp.item_x_offset (attached_interface)
+							l_x := {GTK}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer - l_parent_imp.screen_x - l_parent_imp.item_x_offset (attached_interface)
 							if l_parent_imp.pointer_double_press_actions_internal /= Void then
-								l_parent_imp.pointer_double_press_actions.call ([l_x, {EV_GTK_EXTERNALS}.gdk_event_button_struct_y (gdk_event).truncated_to_integer, {EV_GTK_EXTERNALS}.gdk_event_button_struct_button (gdk_event), 0.5, 0.5, 0.5, {EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer, {EV_GTK_EXTERNALS}.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer])
+								l_parent_imp.pointer_double_press_actions.call ([l_x, {GTK}.gdk_event_button_struct_y (gdk_event).truncated_to_integer, {GTK}.gdk_event_button_struct_button (gdk_event), 0.5, 0.5, 0.5, {GTK}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer, {GTK}.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer])
 							end
 							if l_parent_imp.item_pointer_double_press_actions_internal /= Void then
-								l_parent_imp.item_pointer_double_press_actions.call ([attached_interface, l_x, {EV_GTK_EXTERNALS}.gdk_event_button_struct_y (gdk_event).truncated_to_integer, {EV_GTK_EXTERNALS}.gdk_event_button_struct_button (gdk_event)])
+								l_parent_imp.item_pointer_double_press_actions.call ([attached_interface, l_x, {GTK}.gdk_event_button_struct_y (gdk_event).truncated_to_integer, {GTK}.gdk_event_button_struct_button (gdk_event)])
 							end
 						end
 					elseif
@@ -388,23 +388,23 @@ feature {EV_HEADER_IMP} -- Implementation
 
 			if par_imp /= Void then
 					-- If this is the first time it is parented then there is no need to set the column widget.
-				if {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (box) = default_pointer then
-					{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_widget (c_object, box)
+				if {GTK}.gtk_widget_struct_parent (box) = default_pointer then
+					{GTK2}.gtk_tree_view_column_set_widget (c_object, box)
 				end
 					-- The button gets recreated everytime it is parented so the events need to be hooked up to the new button.
-				a_button := {EV_GTK_EXTERNALS}.gtk_tree_view_column_struct_button (c_object)
+				a_button := {GTK2}.gtk_tree_view_column_struct_button (c_object)
 					-- We don't want the button stealing focus.
-				{EV_GTK_EXTERNALS}.gtk_widget_unset_flags (a_button, {EV_GTK_EXTERNALS}.gtk_can_focus_enum)
+				{GTK}.gtk_widget_unset_flags (a_button, {GTK}.gtk_can_focus_enum)
 				real_signal_connect (a_button, once "event", agent (App_implementation.gtk_marshal).gdk_event_dispatcher (internal_id, ? , ?), Void)
 				item_event_id := last_signal_connection_id
 			else
 				if item_event_id /= 0 then
-					a_button := {EV_GTK_EXTERNALS}.gtk_tree_view_column_struct_button (c_object)
-					{EV_GTK_EXTERNALS}.signal_disconnect (a_button, item_event_id)
+					a_button := {GTK2}.gtk_tree_view_column_struct_button (c_object)
+					{GTK2}.signal_disconnect (a_button, item_event_id)
 					item_event_id := 0
 				end
-				{EV_GTK_EXTERNALS}.object_ref (box)
-				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_widget (c_object, {EV_GTK_EXTERNALS}.gtk_label_new (default_pointer))
+				{GTK2}.object_ref (box)
+				{GTK2}.gtk_tree_view_column_set_widget (c_object, {GTK}.gtk_label_new (default_pointer))
 			end
 		end
 
@@ -420,7 +420,7 @@ feature {NONE} -- Implementation
 			-- `Result' is width of `Current' used
 			-- while parented.
 		do
-			Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_get_width (c_object)
+			Result := {GTK2}.gtk_tree_view_column_get_width (c_object)
 		end
 
 	box: POINTER
@@ -444,7 +444,7 @@ feature {NONE} -- Implementation
 	destroy
 			-- Destroy `c_object'.
 		do
-			{EV_GTK_EXTERNALS}.object_unref (c_object)
+			{GTK2}.object_unref (c_object)
 			c_object := default_pointer
 			set_is_destroyed (True)
 		end

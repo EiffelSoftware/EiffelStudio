@@ -938,7 +938,7 @@ feature -- Element change
 
 				create f.make (diagram_file_name (class_graph))
 
-				if load_when_possible and then is_valide_diagram_file (f) then
+				if load_when_possible and then is_valid_diagram_file (f) then
 					a_class_view.retrieve (f)
 					if class_graph.is_empty then
 						class_graph.explore_center_class
@@ -946,7 +946,7 @@ feature -- Element change
 					end
 				else
 					class_graph.explore_center_class
-					if is_valide_diagram_file (f) then
+					if is_valid_diagram_file (f) then
 						world.load_available_views (f)
 					end
 					world.set_current_view (view_selector.text)
@@ -1084,7 +1084,7 @@ feature -- Element change
 
 				create f.make (diagram_file_name (cluster_graph))
 
-				if load_when_possible and then is_valide_diagram_file (f) then
+				if load_when_possible and then is_valid_diagram_file (f) then
 					l_cluster_view.retrieve (f)
 					if cluster_graph.is_empty then
 						cluster_graph.explore_center_cluster
@@ -1093,7 +1093,7 @@ feature -- Element change
 					end
 				else
 					cluster_graph.explore_center_cluster
-					if is_valide_diagram_file (f) then
+					if is_valid_diagram_file (f) then
 						world.load_available_views (f)
 					end
 					world.set_current_view (view_selector.text)
@@ -2295,7 +2295,7 @@ feature {EIFFEL_WORLD} -- XML Output
 			Result.add_extension ("xml")
 		end
 
-	is_valide_diagram_file (f: RAW_FILE): BOOLEAN
+	is_valid_diagram_file (f: RAW_FILE): BOOLEAN
 			-- Is `f' referencing a valid diagram file?
 		require
 			f_not_void: f /= Void
@@ -2504,7 +2504,7 @@ invariant
 	shortcut_table_not_void: shortcut_table /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

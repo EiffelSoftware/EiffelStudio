@@ -25,6 +25,7 @@ feature {NONE} -- Initialization
 			-- Create action sequences.
 		do
 			create read_actions
+			create write_actions
 			create error_actions
 			create exception_actions
 		end
@@ -44,7 +45,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	medium: IO_MEDIUM
+	medium: detachable IO_MEDIUM
 			-- Medium watched for state changes.
 
 	set_medium (a_medium: IO_MEDIUM)
@@ -56,14 +57,16 @@ feature -- Access
 			a_medium_not_void: a_medium /= Void
 		local
 			l_condition: INTEGER
+			l_handle: INTEGER
 		do
 			medium := a_medium
 			initialize_c_callback ($on_event)
 			check
 				callback_handle_zero: callback_handle = 0
 			end
-			l_condition := G_io_hup | G_io_err | G_io_nval | G_io_pri | G_io_in
-			add_watch_callback (Current, medium.handle, l_condition, $callback_handle)
+			l_condition := G_io_hup | G_io_err | G_io_nval | G_io_pri | G_io_in | G_io_out
+			l_handle := a_medium.handle
+			add_watch_callback (Current, l_handle, l_condition, $callback_handle)
 		ensure
 			medium_assigned: a_medium = medium
 		end
@@ -92,6 +95,10 @@ feature -- Event handling
 			-- Actions to be performed when `medium' has become
 			-- available for reading.
 
+	write_actions: ACTION_SEQUENCE [TUPLE []]
+			-- Actions to be performed when `medium' has become
+			-- available for non-blocking writing.			
+
 	error_actions: ACTION_SEQUENCE [TUPLE []]
 			-- Actions to be performed when `medium' is in an
 			-- error state.
@@ -105,25 +112,24 @@ feature {NONE} -- Implementation
 	on_event (condition: INTEGER)
 			-- Call action sequence corresponding to `condition'.
 		do
-			if condition & G_io_in /= 0 then
-				read_actions.call (Void)
-			end
-			if condition & G_io_pri /= 0 then
-				read_actions.call (Void)
-			end
-			if condition & G_io_out /= 0 then
-				-- Do nothing as we do not care about writing.
-			end
-			if condition & G_io_err /= 0 then
-				error_actions.call (Void)
-			end
-			if condition & G_io_hup /= 0 then
-				exception_actions.call (Void)
-			end
-			if condition & G_io_nval /= 0 then
-				error_actions.call (Void)
+			if condition & (G_io_err | G_io_nval | G_io_hup) /= 0 then
+					-- An error or exception has occured.
+				if condition & G_io_hup /= 0 then
+					exception_actions.call (Void)
+				else
+					error_actions.call (Void)
+				end
+			else
+				if condition & (G_io_in | G_io_pri) /= 0 then
+					read_actions.call (Void)
+				end
+				if condition & G_io_out /= 0 then
+					write_actions.call (Void)
+				end
 			end
 		end
+
+feature {NONE} -- Externals
 
 	G_io_in: INTEGER
 			-- There is data to be read.
@@ -178,13 +184,13 @@ feature {NONE} -- Implementation
 			-- on medium referenced by `handle'.
 		external
 			--| FIXME Make this inline when built in object protection for inline code is added to compiler.
-			"C signature (EIF_OBJECT, EIF_INTEGER, GIOCondition, gint*) use %"ev_c_util.h%""
+			"C signature (EIF_OBJECT, EIF_INTEGER, GIOCondition, gint*) use %"io_watcher.h%""
 		end
 
 	initialize_c_callback (on_event_address: POINTER)
 			-- Pass `on_event_address' to C side to enable callbacks.
 		external
-			"C inline use %"ev_c_util.h%""
+			"C inline use %"io_watcher.h%""
 		alias
 			"eif_on_event = (void (*) (EIF_REFERENCE, EIF_INTEGER)) $on_event_address"
 		end
@@ -195,7 +201,7 @@ feature {NONE} -- Implementation
 	g_source_remove (a_tag: NATURAL_32): BOOLEAN
 			-- gboolean g_source_remove (guint tag);
 		external
-			"C (guint): gboolean | <gtk/gtk.h>"
+			"C (guint): gboolean | <glib.h>"
 		end
 
 invariant

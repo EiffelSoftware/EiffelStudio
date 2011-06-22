@@ -27,7 +27,7 @@ feature
 
 	double_value: DOUBLE
 
- 	set_title (t: STRING_32)
+ 	set_title (t: like title)
 			-- Set `title' with `t'
 		require
 			argument_exists: not (t = Void)
@@ -37,7 +37,7 @@ feature
 			title = t
 		end
 
-	set_author (a: STRING_32)
+	set_author (a: like author)
 			-- Set `author' with `a'
 		require
 			argument_exists: not (a = Void)
@@ -47,7 +47,7 @@ feature
 			author = a
 		end
 
-	set_quantity (q: INTEGER)
+	set_quantity (q: like quantity)
 			-- Set `quantity' with `q'
 		do
 			quantity := q
@@ -62,13 +62,13 @@ feature
 			year.set_date(date)
 		end
 
-	set_price (p: DOUBLE)
-            		-- Set `price' with `p'
-	        do
+	set_price (p: like price)
+			-- Set `price' with `p'
+		do
 			price := p
-        	end
+		end
 
-	set_double_value (d: DOUBLE)
+	set_double_value (d: like double_value)
 			-- set `double_value' with `d'
 		do
 			double_value := d
@@ -113,7 +113,7 @@ feature
 
 	make
 		do
-			create title.make (80)
+			create title.make_filled ('x', 80)
 			create author.make (80)
 			create year.make_now
 		end

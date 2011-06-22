@@ -1,4 +1,4 @@
-note
+﻿note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -36,6 +36,17 @@ feature {NONE}
 	data_file: detachable PLAIN_TEXT_FILE
 
 	book: BOOK3
+
+	filled_book: BOOK3
+			-- Filled book to put into database
+		do
+			create Result.make
+			Result.set_author ("Paul")
+			Result.set_price (4.0)
+			Result.set_quantity (50)
+			Result.set_title ({STRING_32} "长江")
+			Result.set_double_value (2.3)
+		end
 
 feature
 
@@ -144,6 +155,7 @@ feature {NONE}
 			l_repository: like repository
 			l_data_file: like data_file
 			l_string: STRING_32
+			l_store: DB_STORE
 		do
 				-- Create the table for book-objects.
 				-- The name of this table has already been set to "DB_BOOK_EXTENDED"
@@ -174,6 +186,11 @@ feature {NONE}
 				end
 			end
 			l_data_file.close
+
+			l_repository.load
+			create l_store.make
+			l_store.set_repository (l_repository)
+			l_store.put (filled_book)
 
 				-- Commit work
 			session_control.commit

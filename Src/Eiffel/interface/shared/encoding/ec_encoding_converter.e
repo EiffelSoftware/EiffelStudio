@@ -22,13 +22,6 @@ inherit
 			encoding_from_class
 		end
 
-	EC_ENCODINGS
-		export
-			{NONE} all
-		undefine
-			default_create
-		end
-
 create
 	make
 
@@ -43,7 +36,7 @@ feature -- Access
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

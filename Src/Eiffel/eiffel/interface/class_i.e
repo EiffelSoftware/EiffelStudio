@@ -608,6 +608,14 @@ feature {COMPILER_EXPORTER} -- Setting
 			set_compiled_class (cl)
 		end
 
+	set_encoding_and_bom (a_encoding: like ENCODING; a_bom: like bom)
+			-- Set `encoding' with `a_encoding'
+			-- Set `bom' with `a_bom'
+		do
+			encoding := a_encoding
+			bom := a_bom
+		end
+
 feature {NONE} -- Implementation
 
 	no_debug: DEBUG_I
@@ -622,7 +630,7 @@ invariant
 	compiled_class_connection: is_compiled implies compiled_class.original_class = Current
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -294,6 +294,9 @@ feature -- Parsing (Unknown encoding)
 				detected_encoding := encoding_converter.detected_encoding
 				detected_bom := encoding_converter.last_bom
 			end
+			if attached a_class as l_class then
+				l_class.set_encoding_and_bom (detected_encoding, detected_bom)
+			end
 			input_buffer := l_input_buffer
 
 				-- Abstracted from 'yy_load_input_buffer' to reuse local
@@ -341,6 +344,9 @@ feature -- Parsing (Unknown encoding)
 				detected_encoding := encoding_converter.detected_encoding
 				detected_bom := encoding_converter.last_bom
 			end
+			if attached a_class as l_class then
+				l_class.set_encoding_and_bom (detected_encoding, detected_bom)
+			end
 			input_buffer := l_input_buffer
 
 				-- Abstracted from 'yy_load_input_buffer' to reuse local.
@@ -380,6 +386,9 @@ feature -- Parsing (Known encoding)
 			input_buffer := l_input_buffer
 			detected_encoding := encoding_converter.detected_encoding
 			detected_bom := encoding_converter.last_bom
+			if attached a_class as l_class then
+				l_class.set_encoding_and_bom (detected_encoding, detected_bom)
+			end
 
 				-- Abstracted from 'yy_load_input_buffer' to reuse local
 			yy_set_content (l_input_buffer.content)
@@ -416,6 +425,9 @@ feature -- Parsing (Known encoding)
 
 			detected_encoding := utf8
 			detected_bom := Void
+			if attached a_class as l_class then
+				l_class.set_encoding_and_bom (detected_encoding, detected_bom)
+			end
 
 				-- Abstracted from 'yy_load_input_buffer' to reuse local
 			yy_set_content (l_input_buffer.content)
@@ -1111,7 +1123,7 @@ invariant
 	once_manifest_string_counters_not_empty: not once_manifest_string_counters.is_empty
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

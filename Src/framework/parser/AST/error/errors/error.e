@@ -16,6 +16,11 @@ inherit
 			{NONE} all
 		end
 
+	SYSTEM_ENCODINGS
+		export
+			{NONE} all
+		end
+
 feature -- Access
 
 	line: INTEGER
@@ -141,6 +146,7 @@ feature {ERROR_VISITOR} -- Compute surrounding text around error
 			l_line: INTEGER
 			l_fn: like file_name
 			l_file: detachable CACHED_PLAIN_TEXT_FILE_READER
+			l_encoding: ENCODING
 		do
 			l_fn := file_name
 			l_file := cached_file.item
@@ -161,6 +167,33 @@ feature {ERROR_VISITOR} -- Compute surrounding text around error
 				current_line := l_file.last_string
 			end
 			next_line := l_file.peek_read_line (l_line + 1)
+
+				-- Convert lines read from source encoding to UTF-8
+			if attached associated_class as l_class then
+				if attached l_class.encoding as l_e then
+					l_encoding := l_e
+				else
+					l_encoding := encoding_converter.default_encoding
+				end
+				if attached previous_line as l_pre then
+					l_encoding.convert_to (utf8, l_pre)
+					if l_encoding.last_conversion_successful then
+						previous_line := l_encoding.last_converted_string_8
+					end
+				end
+				if attached current_line as l_cur then
+					l_encoding.convert_to (utf8, l_cur)
+					if l_encoding.last_conversion_successful then
+						current_line := l_encoding.last_converted_string_8
+					end
+				end
+				if attached next_line as l_nex then
+					l_encoding.convert_to (utf8, l_nex)
+					if l_encoding.last_conversion_successful then
+						next_line := l_encoding.last_converted_string_8
+					end
+				end
+			end
 		end
 
 	previous_line_32: detachable STRING_32
@@ -246,7 +279,7 @@ invariant
 	non_void_help_file_name: help_file_name /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

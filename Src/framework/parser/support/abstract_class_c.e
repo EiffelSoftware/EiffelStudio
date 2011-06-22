@@ -50,8 +50,16 @@ feature -- Access: Encoding
 		deferred
 		end
 
+feature -- Element Change
+
+	set_encoding_and_bom (a_encoding: like ENCODING; a_bom: like bom)
+			-- Set `encoding' with `a_encoding'
+			-- Set `bom' with `a_bom'
+		deferred
+		end
+
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

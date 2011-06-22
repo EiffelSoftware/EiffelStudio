@@ -91,7 +91,7 @@ feature -- Buffer
 					l_ascii_buffer := ascii_to_utf8_file_buffer
 					l_ascii_buffer.make_from_file_buffer (l_buffer)
 					Result := l_ascii_buffer
-					detected_encoding := iso_8859_1
+					detected_encoding := default_encoding
 				end
 			end
 		ensure
@@ -125,7 +125,7 @@ feature -- Buffer
 			a_string_not_void: a_string /= Void
 		do
 			create Result.make (a_string)
-			detected_encoding := iso_8859_1
+			detected_encoding := default_encoding
 			last_bom := Void
 		ensure
 			buffer_attached: Result /= Void
@@ -173,6 +173,14 @@ feature -- Buffer
 			detected_encoding := l_encoding
 		end
 
+	default_encoding: ENCODING
+			-- Default encoding
+		do
+			Result := iso_8859_1
+		ensure
+			Result_set: Result /= Void
+		end
+
 feature -- Conversion
 
 	utf8_string (a_stream: STRING; a_class: detachable ANY): STRING
@@ -204,7 +212,7 @@ feature -- Conversion
 				else
 					Result := a_stream
 				end
-				detected_encoding := iso_8859_1
+				detected_encoding := default_encoding
 			end
 		ensure
 			utf32_string_attached: Result /= Void
@@ -436,7 +444,7 @@ invariant
 	string_buffer_not_void: string_buffer /= Void
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

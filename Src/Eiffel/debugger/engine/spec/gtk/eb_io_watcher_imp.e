@@ -1,6 +1,6 @@
 note
 	description	: "Mechanism to call an action when a file/pipe is changed.%N%
-				  %GTK Implementation."
+				  %Glib Implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date		: "$Date$"
@@ -25,6 +25,7 @@ feature {NONE} -- Initialization
 			-- Create and initialize current to monitor file descriptor `listen_to_pipe_fd'.
 		local
 			l_condition: INTEGER
+			l_file_fd: INTEGER
 		do
 				-- Open file descriptor for debugger pipe and set up polling.
 			file_descriptor_pointer := file_binary_dopen (listen_to_pipe_fd, 0)
@@ -32,15 +33,18 @@ feature {NONE} -- Initialization
 			check
 				callback_handle_zero: callback_handle = 0
 			end
-			l_condition := 	{EV_GTK_EXTERNALS}.g_io_hup | {EV_GTK_EXTERNALS}.g_io_err |
-							{EV_GTK_EXTERNALS}.g_io_nval | {EV_GTK_EXTERNALS}.g_io_pri | {EV_GTK_EXTERNALS}.g_io_in
-			add_watch_callback (Current, file_fd (file_descriptor_pointer), l_condition, $callback_handle)
+			l_condition := 	g_io_hup | g_io_err | g_io_nval | g_io_pri | g_io_in
+			l_file_fd := file_fd (file_descriptor_pointer)
+			add_watch_callback (Current, l_file_fd, l_condition, $callback_handle)
 		end
 
 feature -- Access
 
 	action: PROCEDURE [ANY, TUPLE]
-			-- Callback feature called with the file/pipe is changed.
+			-- Callback feature called when the file/pipe is changed.
+
+	exception_action: detachable PROCEDURE [ANY, TUPLE]
+			-- Callback feature called when an exceptions occurs on the file/pipe.
 
 	destroy
 			-- Clean up `Current'.
@@ -48,7 +52,7 @@ feature -- Access
 			l_res: BOOLEAN
 		do
 			if not is_destroyed then
-				l_res := {EV_GTK_EXTERNALS}.g_source_remove (callback_handle)
+				l_res := g_source_remove (callback_handle)
 				check
 					removed: l_res
 				end
@@ -76,6 +80,16 @@ feature -- Element change
 			agent_set: action = an_action
 		end
 
+	set_exception_action (an_action: like exception_action)
+			-- Set `an_action' as exception callback feature.
+		require
+			an_agent_not_void: an_action /= Void
+		do
+			exception_action := an_action
+		ensure
+			agent_set: exception_action = an_action
+		end
+
 	remove_action
 			-- Remove the current action.
 		do
@@ -92,31 +106,15 @@ feature {NONE} -- Implementation
 			destroy
 		end
 
-	on_event (condition: INTEGER)
-			-- Call action sequence corresponding to `condition'.
-		local
-			l_call_actions: BOOLEAN
+	on_event (a_condition: INTEGER)
+			-- Call action sequence corresponding to `a_condition'.
 		do
-			if action /= Void then
-				if condition & {EV_GTK_EXTERNALS}.G_io_in = {EV_GTK_EXTERNALS}.G_io_in then
-					l_call_actions := True
+			if a_condition & (g_io_err | g_io_hup | g_io_nval) /= 0 then
+				if exception_action /= Void then
+					exception_action.call (Void)
 				end
-				if condition & {EV_GTK_EXTERNALS}.G_io_pri = {EV_GTK_EXTERNALS}.G_io_pri then
-					l_call_actions := True
-				end
-				if condition & {EV_GTK_EXTERNALS}.G_io_out = {EV_GTK_EXTERNALS}.G_io_out then
-					-- Do nothing as we do not care about writing.
-				end
-				if condition & {EV_GTK_EXTERNALS}.G_io_err = {EV_GTK_EXTERNALS}.G_io_err then
-					l_call_actions := True
-				end
-				if condition & {EV_GTK_EXTERNALS}.G_io_hup = {EV_GTK_EXTERNALS}.G_io_hup then
-					l_call_actions := True
-				end
-				if condition & {EV_GTK_EXTERNALS}.G_io_nval = {EV_GTK_EXTERNALS}.G_io_nval then
-					l_call_actions := True
-				end
-				if l_call_actions then
+			elseif a_condition & (g_io_in | g_io_pri) /= 0 then
+				if action /= Void then
 					action.call (Void)
 				end
 			end
@@ -130,18 +128,31 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
+	g_io_in: INTEGER = 1
+	g_io_pri: INTEGER = 2
+	g_io_out: INTEGER = 4
+	g_io_err: INTEGER = 8
+	g_io_hup: INTEGER = 16
+	g_io_nval: INTEGER = 32
+		-- G_IO status flags.
+
 	add_watch_callback (io_watcher: EB_IO_WATCHER_IMP; handle: INTEGER; condition: INTEGER; connection_id: TYPED_POINTER [NATURAL_32])
 			-- Set up `on_event' callback for `io_watcher' when an event occurs
 			-- on medium referenced by `handle'.
 		external
 			--| FIXME Make this inline when built in object protection for inline code is added to compiler.
-			"C signature (EIF_OBJECT, EIF_INTEGER, GIOCondition, gint*) use %"ev_c_util.h%""
+			"C signature (EIF_OBJECT, EIF_INTEGER, GIOCondition, gint*) use %"io_watcher.h%""
+		end
+
+	g_source_remove (a_tag: NATURAL_32): BOOLEAN
+		external
+			"C (guint): gboolean | %"io_watcher.h%""
 		end
 
 	initialize_c_callback (on_event_address: POINTER)
 			-- Pass `on_event_address' to C side to enable callbacks.
 		external
-			"C inline use %"ev_c_util.h%""
+			"C inline use %"io_watcher.h%""
 		alias
 			"eif_on_event = (void (*) (EIF_REFERENCE, EIF_INTEGER)) $on_event_address"
 		end
@@ -175,7 +186,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -188,22 +199,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- EB_IO_WATCHER_IMP

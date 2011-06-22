@@ -188,7 +188,7 @@ feature -- Command
 
 			check not_void: l_imp /= Void end
 
-			c_gtk_paint_focus (l_imp.c_object, {EV_GTK_EXTERNALS}.gtk_rc_get_style (l_imp.c_object), a_rect.x, a_rect.y, a_rect.width, a_rect.height)
+			c_gtk_paint_focus (l_imp.c_object, {GTK}.gtk_rc_get_style (l_imp.c_object), a_rect.x, a_rect.y, a_rect.width, a_rect.height)
 		end
 
 	pixmap_y_position: INTEGER
@@ -229,7 +229,7 @@ feature {NONE}  -- Implementation
 	notebook_style: POINTER
 			-- Default theme style from resource.
 		do
-			Result := {EV_GTK_EXTERNALS}.gtk_rc_get_style (style_source)
+			Result := {GTK}.gtk_rc_get_style (style_source)
 		ensure
 			not_void: Result /= default_pointer
 		end
@@ -237,7 +237,7 @@ feature {NONE}  -- Implementation
 	style_source: POINTER
 			-- Notebook for query theme style.
 		once
-			Result := {EV_GTK_EXTERNALS}.gtk_notebook_new
+			Result := {GTK}.gtk_notebook_new
 		end
 
 	internal_expose (a_width: INTEGER; a_x: INTEGER; a_is_selected: BOOLEAN)
@@ -250,7 +250,7 @@ feature {NONE}  -- Implementation
 				l_imp ?= l_parent.implementation
 				check not_void: l_imp /= Void end
 
-				if {EV_GTK_EXTERNALS}.gtk_widget_struct_window (l_imp.c_object) /= default_pointer then
+				if {GTK}.gtk_widget_struct_window (l_imp.c_object) /= default_pointer then
 					c_gtk_paint_extension (l_imp.c_object, notebook_style, a_is_selected,
 											 a_x, 0 ,a_width, tab.height, is_top_side_tab)
 					if a_is_selected then

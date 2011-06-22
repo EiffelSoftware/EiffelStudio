@@ -24,7 +24,7 @@ feature {NONE} -- Initlization
 		do
 			Precursor;
 			-- Don't show window tab in system task bar.
-			{EV_GTK_EXTERNALS}.gtk_window_set_skip_taskbar_hint (c_object, True)
+			{GTK}.gtk_window_set_skip_taskbar_hint (c_object, True)
 		end
 
 note

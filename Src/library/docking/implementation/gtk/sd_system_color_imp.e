@@ -117,10 +117,10 @@ feature {NONE} -- GTK text_aa colors.
 			r, g, b: INTEGER
 			color: POINTER
 		do
-			color := normal_bg_color({EV_GTK_EXTERNALS}.gtk_style_struct_bg ({EV_GTK_EXTERNALS}.gtk_rc_get_style (tree_view)))
-			r := {EV_GTK_EXTERNALS}.gdk_color_struct_red (color)
-			g := {EV_GTK_EXTERNALS}.gdk_color_struct_green (color)
-			b := {EV_GTK_EXTERNALS}.gdk_color_struct_blue (color)
+			color := normal_bg_color({GTK}.gtk_style_struct_bg ({GTK}.gtk_rc_get_style (tree_view)))
+			r := {GTK}.gdk_color_struct_red (color)
+			g := {GTK}.gdk_color_struct_green (color)
+			b := {GTK}.gdk_color_struct_blue (color)
 			create Result
 			Result.set_rgb_with_16_bit (r, g, b)
 		end
@@ -131,10 +131,10 @@ feature {NONE} -- GTK text_aa colors.
 			r, g, b: INTEGER
 			color: POINTER
 		do
-			color := active_bg_color({EV_GTK_EXTERNALS}.gtk_style_struct_bg ({EV_GTK_EXTERNALS}.gtk_rc_get_style (tree_view)))
-			r := {EV_GTK_EXTERNALS}.gdk_color_struct_red (color)
-			g := {EV_GTK_EXTERNALS}.gdk_color_struct_green (color)
-			b := {EV_GTK_EXTERNALS}.gdk_color_struct_blue (color)
+			color := active_bg_color({GTK}.gtk_style_struct_bg ({GTK}.gtk_rc_get_style (tree_view)))
+			r := {GTK}.gdk_color_struct_red (color)
+			g := {GTK}.gdk_color_struct_green (color)
+			b := {GTK}.gdk_color_struct_blue (color)
 			create Result
 			Result.set_rgb_with_16_bit (r, g, b)
 		end
@@ -145,10 +145,10 @@ feature {NONE} -- GTK text_aa colors.
 			r, g, b: INTEGER
 			color: POINTER
 		do
-			color := normal_bg_color({EV_GTK_EXTERNALS}.gtk_style_struct_dark ({EV_GTK_EXTERNALS}.gtk_rc_get_style (tree_view)))
-			r := {EV_GTK_EXTERNALS}.gdk_color_struct_red (color)
-			g := {EV_GTK_EXTERNALS}.gdk_color_struct_green (color)
-			b := {EV_GTK_EXTERNALS}.gdk_color_struct_blue (color)
+			color := normal_bg_color({GTK}.gtk_style_struct_dark ({GTK}.gtk_rc_get_style (tree_view)))
+			r := {GTK}.gdk_color_struct_red (color)
+			g := {GTK}.gdk_color_struct_green (color)
+			b := {GTK}.gdk_color_struct_blue (color)
 			create Result
 			Result.set_rgb_with_16_bit (r, g, b)
 		end
@@ -159,10 +159,10 @@ feature {NONE} -- GTK text_aa colors.
 			r, g, b: INTEGER
 			color: POINTER
 		do
-			color := prelight_bg_color({EV_GTK_EXTERNALS}.gtk_style_struct_bg ({EV_GTK_EXTERNALS}.gtk_rc_get_style (tree_view)))
-			r := {EV_GTK_EXTERNALS}.gdk_color_struct_red (color)
-			g := {EV_GTK_EXTERNALS}.gdk_color_struct_green (color)
-			b := {EV_GTK_EXTERNALS}.gdk_color_struct_blue (color)
+			color := prelight_bg_color({GTK}.gtk_style_struct_bg ({GTK}.gtk_rc_get_style (tree_view)))
+			r := {GTK}.gdk_color_struct_red (color)
+			g := {GTK}.gdk_color_struct_green (color)
+			b := {GTK}.gdk_color_struct_blue (color)
 			create Result
 			Result.set_rgb_with_16_bit (r, g, b)
 		end
@@ -173,10 +173,10 @@ feature {NONE} -- GTK text_aa colors.
 			r, g, b: INTEGER
 			color: POINTER
 		do
-			color := selected_bg_color({EV_GTK_EXTERNALS}.gtk_style_struct_bg ({EV_GTK_EXTERNALS}.gtk_rc_get_style (tree_view)))
-			r := {EV_GTK_EXTERNALS}.gdk_color_struct_red (color)
-			g := {EV_GTK_EXTERNALS}.gdk_color_struct_green (color)
-			b := {EV_GTK_EXTERNALS}.gdk_color_struct_blue (color)
+			color := selected_bg_color({GTK}.gtk_style_struct_bg ({GTK}.gtk_rc_get_style (tree_view)))
+			r := {GTK}.gdk_color_struct_red (color)
+			g := {GTK}.gdk_color_struct_green (color)
+			b := {GTK}.gdk_color_struct_blue (color)
 			create Result
 			Result.set_rgb_with_16_bit (r, g, b)
 		end
@@ -187,10 +187,10 @@ feature {NONE} -- GTK text_aa colors.
 			r, g, b: INTEGER
 			color: POINTER
 		do
-			color := insesitive_bg_color({EV_GTK_EXTERNALS}.gtk_style_struct_bg ({EV_GTK_EXTERNALS}.gtk_rc_get_style (tree_view)))
-			r := {EV_GTK_EXTERNALS}.gdk_color_struct_red (color)
-			g := {EV_GTK_EXTERNALS}.gdk_color_struct_green (color)
-			b := {EV_GTK_EXTERNALS}.gdk_color_struct_blue (color)
+			color := insesitive_bg_color({GTK}.gtk_style_struct_bg ({GTK}.gtk_rc_get_style (tree_view)))
+			r := {GTK}.gdk_color_struct_red (color)
+			g := {GTK}.gdk_color_struct_green (color)
+			b := {GTK}.gdk_color_struct_blue (color)
 			create Result
 			Result.set_rgb_with_16_bit (r, g, b)
 		end
@@ -236,19 +236,19 @@ feature {NONE} -- Implementation
 
 	frozen tree_view : POINTER
 		once
-			Result := {EV_GTK_EXTERNALS}.gtk_tree_view_new
+			Result := {GTK2}.gtk_tree_view_new
 		end
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

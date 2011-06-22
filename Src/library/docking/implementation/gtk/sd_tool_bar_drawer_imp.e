@@ -157,7 +157,7 @@ feature {NONE} -- Implementation
 	button_style: POINTER
 			-- Default theme style from resource.
 		do
-			Result := {EV_GTK_EXTERNALS}.gtk_rc_get_style (style_source)
+			Result := {GTK}.gtk_rc_get_style (style_source)
 		ensure
 			not_void: Result /= default_pointer
 		end
@@ -165,7 +165,7 @@ feature {NONE} -- Implementation
 	style_source: POINTER
 			-- Button for query theme style.
 		once
-			Result := {EV_GTK_EXTERNALS}.gtk_button_new
+			Result := {GTK}.gtk_button_new
 		end
 
 	gtk_shadow_type (a_state: INTEGER): INTEGER
@@ -174,17 +174,17 @@ feature {NONE} -- Implementation
 			inspect
 				a_state
 			when {SD_TOOL_BAR_ITEM_STATE}.checked then
-				Result := {EV_GTK_EXTERNALS}.gtk_shadow_in_enum
+				Result := {GTK}.gtk_shadow_in_enum
 			when {SD_TOOL_BAR_ITEM_STATE}.disabled then
-				Result := {EV_GTK_EXTERNALS}.gtk_shadow_none_enum
+				Result := {GTK}.gtk_shadow_none_enum
 			when {SD_TOOL_BAR_ITEM_STATE}.hot then
-				Result := {EV_GTK_EXTERNALS}.gtk_shadow_out_enum
+				Result := {GTK}.gtk_shadow_out_enum
 			when {SD_TOOL_BAR_ITEM_STATE}.hot_checked then
-				Result := {EV_GTK_EXTERNALS}.gtk_shadow_out_enum
+				Result := {GTK}.gtk_shadow_out_enum
 			when {SD_TOOL_BAR_ITEM_STATE}.normal then
-				Result := {EV_GTK_EXTERNALS}.gtk_shadow_none_enum
+				Result := {GTK}.gtk_shadow_none_enum
 			when {SD_TOOL_BAR_ITEM_STATE}.pressed then
-				Result := {EV_GTK_EXTERNALS}.gtk_shadow_in_enum
+				Result := {GTK}.gtk_shadow_in_enum
 			end
 		end
 
@@ -194,17 +194,17 @@ feature {NONE} -- Implementation
 			inspect
 				a_state
 			when {SD_TOOL_BAR_ITEM_STATE}.checked then
-				Result := {EV_GTK_EXTERNALS}.gtk_state_active_enum
+				Result := {GTK}.gtk_state_active_enum
 			when {SD_TOOL_BAR_ITEM_STATE}.disabled then
-				Result := {EV_GTK_EXTERNALS}.gtk_state_insensitive_enum
+				Result := {GTK}.gtk_state_insensitive_enum
 			when {SD_TOOL_BAR_ITEM_STATE}.hot then
-				Result := {EV_GTK_EXTERNALS}.gtk_state_prelight_enum
+				Result := {GTK}.gtk_state_prelight_enum
 			when {SD_TOOL_BAR_ITEM_STATE}.hot_checked then
-				Result := {EV_GTK_EXTERNALS}.gtk_state_prelight_enum
+				Result := {GTK}.gtk_state_prelight_enum
 			when {SD_TOOL_BAR_ITEM_STATE}.normal then
-				Result := {EV_GTK_EXTERNALS}.gtk_state_normal_enum
+				Result := {GTK}.gtk_state_normal_enum
 			when {SD_TOOL_BAR_ITEM_STATE}.pressed then
-				Result := {EV_GTK_EXTERNALS}.gtk_state_active_enum
+				Result := {GTK}.gtk_state_active_enum
 			end
 		end
 
@@ -249,7 +249,7 @@ feature {NONE} -- Implementation
 					c_gdk_desatuate (l_temp_imp.pixbuf_from_drawable, $l_pixbuf)
 					check exist: l_pixbuf /= default_pointer end
 					l_temp_imp.set_pixmap_from_pixbuf (l_pixbuf)
-					{EV_GTK_EXTERNALS}.object_unref (l_pixbuf)
+					{GTK2}.object_unref (l_pixbuf)
 					l_argument_tool_bar.draw_pixmap (l_position.x, l_position.y, l_temp_pixmap)
 				end
 			end
@@ -297,13 +297,13 @@ feature {NONE} -- Implementation
 				l_c_string := l_app_imp.c_string_from_eiffel_string (l_text_3)
 				l_pango_layout := l_app_imp.pango_layout
 
-				{EV_GTK_EXTERNALS}.pango_layout_set_text (l_pango_layout, l_c_string.item, l_c_string.string_length)
+				{GTK2}.pango_layout_set_text (l_pango_layout, l_c_string.item, l_c_string.string_length)
 
 				l_text_rect := l_button.text_rectangle
 				if l_button.is_sensitive then
 					l_state := to_gtk_state (l_button.state)
 				else
-					l_state := {EV_GTK_EXTERNALS}.gtk_state_insensitive_enum
+					l_state := {GTK}.gtk_state_insensitive_enum
 				end
 				c_gtk_paint_layout (a_gtk_object, l_state, l_text_rect.left, l_text_rect.top, l_text_rect.width, l_text_rect.height, l_pango_layout)
 			end
@@ -416,14 +416,14 @@ feature {NONE} -- Externals
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

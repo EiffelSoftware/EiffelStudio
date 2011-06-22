@@ -3995,6 +3995,13 @@ feature {COMPILER_EXPORTER} -- Setting
 			generic_features_set: generic_features = f
 		end
 
+	set_encoding_and_bom (a_encoding: like ENCODING; a_bom: like bom)
+			-- Set `encoding' with `a_encoding'
+			-- Set `bom' with `a_bom'
+		do
+			lace_class.set_encoding_and_bom (a_encoding, a_bom)
+		end
+
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Setting
 
 	set_obsolete_message (m: like obsolete_message)

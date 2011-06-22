@@ -17,7 +17,7 @@ feature
 
 	title: STRING
 
-	author: STRING
+	author: IMMUTABLE_STRING_8
 
 	quantity: INTEGER
 

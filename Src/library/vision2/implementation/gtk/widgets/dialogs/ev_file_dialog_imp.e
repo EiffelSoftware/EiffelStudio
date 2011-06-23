@@ -302,12 +302,10 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-	valid_file_name, valid_file_title (a_name: STRING_32): BOOLEAN
+	valid_file_name, valid_file_title (a_name: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `a_name' a valid file_name on the current platform?
 		do
-			if a_name /= Void then
-				Result := not a_name.has ('*')
-			end
+			Result := not a_name.as_string_8.has ('*')
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation

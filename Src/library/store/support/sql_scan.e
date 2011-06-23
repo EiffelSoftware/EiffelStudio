@@ -149,16 +149,9 @@ feature -- Basic operations
 					else
 						check False end -- implied by `is_character'
 					end
-				elseif is_string (obj) then
-					if attached {STRING} obj as r_string then
+				elseif is_readable_string_general (obj) then
+					if attached {READABLE_STRING_GENERAL} obj as r_string then
 						buffer.copy (r_string.as_string_32)
-						str.append (string_format_32 (buffer))
-					else
-						check False end -- implied by `is_string'
-					end
-				elseif is_string32 (obj) then
-					if attached {STRING_32} obj as r_string then
-						buffer.copy (r_string)
 						str.append (string_format_32 (buffer))
 					else
 						check False end -- implied by `is_string'

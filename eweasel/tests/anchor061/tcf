@@ -1,0 +1,13 @@
+
+test_name 	 qat-generic-with-rename
+test_description A qualified anchored type that references the original name of a renamed feature of a formal generic should be a validity error
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result	validity_error TEST2 VEEN
+
+test_end
+

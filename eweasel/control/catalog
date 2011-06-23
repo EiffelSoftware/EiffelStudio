@@ -2629,6 +2629,7 @@ test	qat-multi-constraint-type		anchor057 tcf fail anchored_type multiconstraint
 test	qat-invalid-vffd-2			anchor058 tcf fail anchored_type
 test	qat-using-generic-feature-finalized	anchor059 tcf fail anchored_type
 test	qat-in-creation-procedure	anchor060 tcf fail anchored_type finalizing
+test	qat-generic-with-rename		anchor061 tcf fail anchored_type
 
 -- SCOOP
 test	scoop-access-smoke					scoop001 tcf pass scoop execution

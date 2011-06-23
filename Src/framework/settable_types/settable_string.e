@@ -18,7 +18,7 @@ create
 
 convert
 	set_value ({STRING}),
-	value: {STRING}
+	value: {STRING,READABLE_STRING_8}
 
 feature -- Element change
 

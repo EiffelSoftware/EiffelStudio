@@ -197,6 +197,9 @@ feature -- Status setting
 			t_int: INTEGER
 			quoter: STRING
 			sep: STRING
+			l_obj: detachable ANY
+			l_string_count, l_string_capacity: INTEGER
+			l_is_string_8: BOOLEAN
 		do
 			create r_string.make (512)
 			create quoter.make(1)
@@ -264,49 +267,38 @@ feature -- Status setting
 					r_string.append (" ")
 					r_string.append (db_spec.sql_name_boolean)
 				else
-					if is_string (field (i, object)) then
+					l_obj := field (i, object)
+					if is_readable_string_general (l_obj) then
 						r_string.append (field_name (i, object))
-						if attached {STRING} field (i, object) as t_string then
-							if t_string.count < Max_char_size then
-								r_string.append (" ")
-								r_string.append (db_spec.sql_string)
-								t_int := t_string.capacity
-								if t_int = 0 then
-									t_int := 10
-								elseif t_int > Max_char_size then
-									t_int := Max_char_size - 1
-								end
-								r_string.append (t_int.out)
-								r_string.append (")")
-							else
-								r_string.append (" ")
-								r_string.append (db_spec.sql_string2 (Max_char_size))
-							end
-						else
-							check False end -- implied by `is_string (field (i, object))'
+						check attached {READABLE_STRING_GENERAL} l_obj as l_string then
+							l_string_count := l_string.count
+							l_string_capacity := l_string.capacity
+							l_is_string_8 := attached {STRING_8} l_string or attached {IMMUTABLE_STRING_8} l_string
 						end
-					elseif is_string32 (field (i, object)) then
-						r_string.append (field_name (i, object))
-						if attached {STRING_32} field (i, object) as t_string_32 then
-							if t_string_32.count < Max_char_size then
-								r_string.append (" ")
-								r_string.append (db_spec.sql_wstring)
-								t_int := t_string_32.capacity
-								if t_int = 0 then
-									t_int := 10
-								elseif t_int > Max_char_size then
-									t_int := Max_char_size - 1
-								end
-								r_string.append (t_int.out)
-								r_string.append (")")
+						if l_string_count < Max_char_size then
+							r_string.append (" ")
+							if l_is_string_8 then
+								r_string.append (db_spec.sql_string)
 							else
-								r_string.append (" ")
+								r_string.append (db_spec.sql_wstring)
+							end
+							t_int := l_string_capacity
+							if t_int = 0 then
+								t_int := 10
+							elseif t_int > Max_char_size then
+								t_int := Max_char_size - 1
+							end
+							r_string.append (t_int.out)
+							r_string.append (")")
+						else
+							r_string.append (" ")
+							if l_is_string_8 then
+								r_string.append (db_spec.sql_string2 (Max_char_size))
+							else
 								r_string.append (db_spec.sql_wstring2 (Max_char_size))
 							end
-						else
-							check False end -- implied by `is_string (field (i, object))'
 						end
-					elseif is_date (field (i, object)) then
+					elseif is_date (l_obj) then
 						r_string.append (field_name (i, object))
 						r_string.append (" ")
 						r_string.append (db_spec.sql_name_datetime)

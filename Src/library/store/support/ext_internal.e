@@ -31,6 +31,7 @@ feature -- Basic operations
 			local_double: DOUBLE
 			local_boolean: BOOLEAN
 			local_char: CHARACTER
+			l_type: INTEGER
 		do
 			ftype := field_type (i, object)
 			fname := field_name (i, object)
@@ -129,54 +130,49 @@ feature -- Basic operations
 				else
 					check False end -- implied by ftype = Boolean_type
 				end
-			elseif is_string (value) then
+			elseif is_string_general (value) then
 				if ftype = Character_8_type then
-					if attached {STRING} value as local_string1 and then local_string1.count = 1 then
-						set_character_8_field (i, object, local_string1.item (1))
+					if attached {STRING_GENERAL} value as local_string1 and then local_string1.count = 1 then
+						set_character_8_field (i, object, local_string1.code (1).to_character_8)
 					else
 						Result := False
 					end
 				elseif ftype = Character_32_type then
-					if attached {STRING} value as local_string1 and then local_string1.count = 1 then
-						set_character_32_field (i, object, local_string1.item (1).to_character_32)
+					if attached {STRING_GENERAL} value as local_string1 and then local_string1.count = 1 then
+						set_character_32_field (i, object, local_string1.code (1).to_character_32)
 					else
 						Result := False
 					end
 				elseif ftype = Boolean_type then
-					if attached {STRING} value as local_string1 and then local_string1.count = 1 then
-						local_char := local_string1.item (1)
+					if attached {STRING_GENERAL} value as local_string1 and then local_string1.count = 1 then
+						local_char := local_string1.code (1).to_character_8
 						local_boolean := 'T' = local_char
 						set_boolean_field (i, object, local_boolean)
 					else
 						Result := False
 					end
-				elseif ftype = Reference_type and then field_conforms_to (dynamic_type (value), field_static_type_of_type (i, dynamic_type (object))) then
-					set_reference_field (i, object, value.twin)
-				else
-					Result := False
-				end
-			elseif is_string32 (value) then
-				if ftype = Character_8_type then
-					if attached {STRING_32} value as local_string1 and then local_string1.count = 1 then
-						set_character_8_field (i, object, local_string1.item (1).to_character_8)
-					else
-						Result := False
+				elseif ftype = Reference_type then
+					l_type := field_static_type_of_type (i, dynamic_type (object))
+					if field_conforms_to (dynamic_type (value), l_type) then
+							-- Proper conformance, let's go for it.
+						set_reference_field (i, object, value.twin)
+					elseif field_conforms_to (immutable_string_8_dtype, l_type) then
+							-- Field is compatible with IMMUTABLE_STRING_8, let's go for it.
+						check attached {STRING_GENERAL} value as l_value then
+								-- We already know that `value' is a STRING_GENERAL, we just need to do
+								-- the type check to make the compiler happy when creating the
+								-- IMMUTABLE_STRING_8 instance.
+							set_reference_field (i, object, create {IMMUTABLE_STRING_8}.make_from_string (l_value.as_string_8))
+						end
+					elseif field_conforms_to (immutable_string_32_dtype, l_type) then
+							-- Field is compatible with IMMUTABLE_STRING_32, let's go for it.
+						check attached {STRING_GENERAL} value as l_value then
+								-- We already know that `value' is a STRING_GENERAL, we just need to do
+								-- the type check to make the compiler happy when creating the
+								-- IMMUTABLE_STRING_32 instance.
+							set_reference_field (i, object, create {IMMUTABLE_STRING_32}.make_from_string (l_value))
+						end
 					end
-				elseif ftype = Character_32_type then
-					if attached {STRING_32} value as local_string1 and then local_string1.count = 1 then
-						set_character_32_field (i, object, local_string1.item (1))
-					else
-						Result := False
-					end
-				elseif ftype = Boolean_type then
-					if attached {STRING_32} value as local_string1 and then local_string1.count = 1 then
-						local_boolean := ({CHARACTER_32}'T' = local_string1.item (1))
-						set_boolean_field (i, object, local_boolean)
-					else
-						Result := False
-					end
-				elseif ftype = Reference_type and then field_conforms_to (dynamic_type (value), field_static_type_of_type (i, dynamic_type (object))) then
-					set_reference_field (i, object, value.twin)
 				else
 					Result := False
 				end
@@ -224,6 +220,10 @@ feature -- Basic operations
 						set_reference_field (i, object, "")
 					elseif is_string32 (l_data) then
 						set_reference_field (i, object, {STRING_32} "")
+					elseif is_immutable_string (l_data) then
+						set_reference_field (i, object, create {IMMUTABLE_STRING_8}.make_empty)
+					elseif is_immutable_string_32 (l_data) then
+						set_reference_field (i, object, create {IMMUTABLE_STRING_32}.make_empty)
 					elseif is_date (l_data) then
 						set_reference_field (i, object, create {DATE_TIME}.make (0, 1, 1, 0, 0, 0))
 					else
@@ -284,10 +284,60 @@ feature {NONE} -- Status report
 			Result := attached {STRING_32} obj
 		end
 
+	is_string_general (obj: detachable ANY): BOOLEAN
+			-- Is `obj' string general?
+		do
+			Result := attached {STRING_GENERAL} obj
+		end
+
+	is_immutable_string (obj: detachable ANY): BOOLEAN
+			-- Is `obj' a string value?
+		do
+			Result := attached {IMMUTABLE_STRING_8} obj
+		end
+
+	is_immutable_string_32 (obj: detachable ANY): BOOLEAN
+			-- Is `obj' a string value?
+		do
+			Result := attached {IMMUTABLE_STRING_32} obj
+		end
+
+	is_immutable_string_general (obj: detachable ANY): BOOLEAN
+			-- Is `obj' string general?
+		do
+			Result := attached {IMMUTABLE_STRING_GENERAL} obj
+		end
+
+	is_readable_string_general (obj: detachable ANY): BOOLEAN
+			-- Is `obj' readable string general?
+		do
+			Result := attached {READABLE_STRING_GENERAL} obj
+		end
+
 	is_date (obj: detachable ANY): BOOLEAN
 			-- Is `obj' a date object?
 		do
 			Result := attached {DATE_TIME} obj
+		end
+
+feature {NONE} -- Implementation
+
+	immutable_string_8_dtype: INTEGER_32
+			-- Dynamic type of IMMUTABLE_STRING_8
+		local
+			l_s: IMMUTABLE_STRING_8
+		once
+			create l_s.make_empty
+			Result :=  dynamic_type (l_s)
+		end
+
+	immutable_string_32_dtype: INTEGER_32
+			-- Dynamic type of IMMUTABLE_STRING_32
+		local
+			l_s: IMMUTABLE_STRING_32
+		once
+			create l_s.make_empty
+			Result :=  dynamic_type (l_s)
 		end
 
 feature {NONE} -- Obsolete (Use class INTERNAL instead)

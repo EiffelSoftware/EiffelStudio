@@ -217,7 +217,7 @@ feature -- Helper
 			until
 				l_i > a_new_start
 			loop
-				if base_string [l_i].is_equal ('%N') then
+				if base_string.valid_index (l_i) and then base_string [l_i].is_equal ('%N') then
 					Result.line := Result.line + 1
 					Result.colon := 1
 				else

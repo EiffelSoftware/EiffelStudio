@@ -273,7 +273,7 @@ feature -- Status setting
 						check attached {READABLE_STRING_GENERAL} l_obj as l_string then
 							l_string_count := l_string.count
 							l_string_capacity := l_string.capacity
-							l_is_string_8 := attached {STRING_8} l_string or attached {IMMUTABLE_STRING_8} l_string
+							l_is_string_8 := l_string.is_string_8
 						end
 						if l_string_count < Max_char_size then
 							r_string.append (" ")

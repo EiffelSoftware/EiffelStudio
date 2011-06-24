@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 
 	initialize_file_drop (a_widget: POINTER)
 		external
-			"C inline use <gtk/gtk.h>"
+			"C inline use <ev_gtk.h>"
 		alias
 			"[
 				GtkTargetEntry target_entry[1];

@@ -17,8 +17,7 @@ indexing
 #ifndef _EV_GTK_CALLBACK_MARSHAL_H_INCLUDED_
 #define _EV_GTK_CALLBACK_MARSHAL_H_INCLUDED_
 
-#include <eif_eiffel.h>
-#include <gtk/gtk.h>
+#include <ev_gtk.h>
 
 void c_ev_gtk_callback_marshal_init
 	(EIF_REFERENCE, void (*) (

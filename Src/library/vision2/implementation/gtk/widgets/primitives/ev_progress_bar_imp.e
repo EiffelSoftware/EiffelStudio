@@ -71,14 +71,14 @@ feature {EV_ANY_I} -- Implementation
 
 	gtk_progress_discrete_enum: INTEGER
 		external
-			"C inline use <gtk/gtk.h>"
+			"C inline use <ev_gtk.h>"
 		alias
 			"GTK_PROGRESS_DISCRETE"
 		end
 
 	gtk_progress_continuous_enum: INTEGER
 		external
-			"C inline use <gtk/gtk.h>"
+			"C inline use <ev_gtk.h>"
 		alias
 			"GTK_PROGRESS_CONTINUOUS"
 		end

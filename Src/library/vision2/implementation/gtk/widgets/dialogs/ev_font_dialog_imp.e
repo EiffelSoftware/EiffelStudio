@@ -153,14 +153,14 @@ feature {NONE} -- Implementation
 
 	gtk_font_selection_dialog_struct_ok_button (a_c_struct: POINTER): POINTER
 		external
-			"C [struct <gtk/gtk.h>] (GtkFontSelectionDialog): EIF_POINTER"
+			"C [struct <ev_gtk.h>] (GtkFontSelectionDialog): EIF_POINTER"
 		alias
 			"ok_button"
 		end
 
 	gtk_font_selection_dialog_struct_cancel_button (a_c_struct: POINTER): POINTER
 		external
-			"C [struct <gtk/gtk.h>] (GtkFontSelectionDialog): EIF_POINTER"
+			"C [struct <ev_gtk.h>] (GtkFontSelectionDialog): EIF_POINTER"
 		alias
 			"cancel_button"
 		end

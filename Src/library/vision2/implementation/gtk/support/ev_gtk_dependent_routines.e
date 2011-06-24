@@ -18,7 +18,7 @@ feature -- Implementation
 			an_array_not_null: an_array /= default_pointer
 			a_pos_nonnegative: a_pos >= 0
 		external
-			"C inline use <gtk/gtk.h>"
+			"C inline use <ev_gtk.h>"
 		alias
 			"[
 				{
@@ -35,7 +35,7 @@ feature -- Implementation
 			an_array_not_null: an_array /= default_pointer
 			a_pos_nonnegative: a_pos >= 0
 		external
-			"C inline use <gtk/gtk.h>"
+			"C inline use <ev_gtk.h>"
 		alias
 			"[
 				{
@@ -48,7 +48,7 @@ feature -- Implementation
 	frozen sizeof_gtype: INTEGER
 			-- Size of the `GType' C type
 		external
-			"C inline use <gtk/gtk.h>"
+			"C inline use <ev_gtk.h>"
 		alias
 			"sizeof(GType)"
 		end

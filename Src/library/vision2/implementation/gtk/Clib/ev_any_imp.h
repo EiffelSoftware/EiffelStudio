@@ -17,8 +17,7 @@ indexing
 #ifndef _EV_ANY_IMP_H_INCLUDED_
 #define _EV_ANY_IMP_H_INCLUDED_
 
-#include <eif_eiffel.h>
-#include <gtk/gtk.h>
+#include <ev_gtk.h>
 
 #define set_eif_oid_in_c_object(cobj,eifoid,cobjdisp) c_ev_any_imp_set_eif_oid_in_c_object ((GtkWidget*)cobj,(int)eifoid, (void (*) (EIF_REFERENCE))cobjdisp)
 

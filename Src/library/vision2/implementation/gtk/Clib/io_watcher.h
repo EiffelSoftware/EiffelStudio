@@ -17,8 +17,9 @@ indexing
 #ifndef _IO_WATCHER_INCLUDED_
 #define _IO_WATCHER_INCLUDED_
 
-#include <glib.h>
-#include <eif_eiffel.h>
+/* #include <glib.h>
+#include <eif_eiffel.h> */
+#include <ev_gtk.h>
 
 extern void (*eif_on_event) (EIF_REFERENCE, EIF_INTEGER);
 extern void add_watch_callback (EIF_OBJECT io_watcher, gint handle, GIOCondition condition, gint* connection_id);

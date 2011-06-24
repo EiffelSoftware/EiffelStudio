@@ -434,14 +434,14 @@ feature {NONE} -- Externals (XTEST extension)
 
 	gdk_test_simulate_call (a_function, a_window: POINTER; a_x, a_y: INTEGER; a_button, a_modifiers: INTEGER; a_press_release: INTEGER): BOOLEAN
 		external
-			"C inline use <gtk/gtk.h>"
+			"C inline use <ev_gtk.h>"
 		alias
 			"return (FUNCTION_CAST(gboolean, (GdkWindow*, gint, gint, guint, GdkModifierType, GdkEventType)) $a_function) ((GdkWindow*) $a_window, (gint) $a_x, (gint) $a_y, (guint) $a_button, (GdkModifierType) $a_modifiers, (GdkEventType) $a_press_release)"
 		end
 
 	gdk_display_warp_pointer_call (a_function, a_display, a_screen: POINTER; a_x, a_y: INTEGER)
 		external
-			"C inline use <gtk/gtk.h>"
+			"C inline use <ev_gtk.h>"
 		alias
 			"(FUNCTION_CAST(void, (GdkDisplay*, GdkScreen*, gint, gint)) $a_function) ((GdkDisplay*) $a_display, (GdkScreen*) $a_screen, (gint) $a_x, (gint) $a_y)"
 		end
@@ -454,21 +454,21 @@ feature {NONE} -- Externals (XTEST extension)
 
 	x_keysym_to_keycode_call (a_function, a_display: POINTER; a_keycode: INTEGER): INTEGER
 		external
-			"C inline use <gtk/gtk.h>"
+			"C inline use <ev_gtk.h>"
 		alias
 			"return (FUNCTION_CAST(EIF_INTEGER, (EIF_POINTER, EIF_INTEGER)) $a_function) ((EIF_POINTER) $a_display, (EIF_INTEGER) $a_keycode)"
 		end
 
 	x_test_fake_key_button_event_call (a_function, a_display: POINTER; a_keycode_or_button: INTEGER; a_is_press: BOOLEAN; a_delay: INTEGER): BOOLEAN
 		external
-			"C inline use <gtk/gtk.h>"
+			"C inline use <ev_gtk.h>"
 		alias
 			"return (FUNCTION_CAST(EIF_BOOLEAN, (EIF_POINTER, EIF_INTEGER, EIF_BOOLEAN, EIF_INTEGER)) $a_function) ((EIF_POINTER) $a_display, (EIF_INTEGER) $a_keycode_or_button, (EIF_BOOLEAN) $a_is_press, (EIF_INTEGER) $a_delay)"
 		end
 
 	x_test_fake_motion_event_call (a_function, a_display: POINTER; a_scr_num, a_x, a_y, a_delay: INTEGER): BOOLEAN
 		external
-			"C inline use <gtk/gtk.h>"
+			"C inline use <ev_gtk.h>"
 		alias
 			"return (FUNCTION_CAST(EIF_BOOLEAN, (EIF_POINTER, EIF_INTEGER, EIF_INTEGER, EIF_INTEGER, EIF_INTEGER)) $a_function) ((EIF_POINTER) $a_display, (EIF_INTEGER) $a_scr_num, (EIF_INTEGER) $a_x, (EIF_INTEGER) $a_x, (EIF_INTEGER) $a_delay)"
 		end
@@ -500,7 +500,7 @@ feature {NONE} -- Implementation
 
 	gdk_x11_display_get_xdisplay_call (a_function, a_display: POINTER): POINTER
 		external
-			"C inline use <gtk/gtk.h>"
+			"C inline use <ev_gtk.h>"
 		alias
 			"return (FUNCTION_CAST(EIF_POINTER, (GdkDisplay*)) $a_function) ((GdkDisplay*) $a_display)"
 		end

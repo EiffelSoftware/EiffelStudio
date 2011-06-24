@@ -744,128 +744,128 @@ feature {NONE} -- Implementation
 
 	gtk_text_view_set_tabs (a_text_view, a_pango_tab_array: POINTER)
 			external
-				"C signature (GtkTextView*, PangoTabArray*) use <gtk/gtk.h>"
+				"C signature (GtkTextView*, PangoTabArray*) use <ev_gtk.h>"
 			end
 
 	pango_tab_array_new (initial_size: INTEGER; dimension_in_pixels: BOOLEAN): POINTER
 			external
-				"C inline use <gtk/gtk.h>"
+				"C inline use <ev_gtk.h>"
 			alias
 				"pango_tab_array_new ((gint) $initial_size, (gboolean) $dimension_in_pixels)"
 			end
 
 	gtk_text_attributes_struct_font_description (a_text_attributes: POINTER): POINTER
 			external
-				"C struct GtkTextAttributes access font use <gtk/gtk.h>"
+				"C struct GtkTextAttributes access font use <ev_gtk.h>"
 			end
 
 	gtk_text_attributes_struct_text_appearance (a_text_attributes: POINTER): POINTER
 			external
-				"C struct GtkTextAttributes access &appearance use <gtk/gtk.h>"
+				"C struct GtkTextAttributes access &appearance use <ev_gtk.h>"
 			end
 
 	gtk_text_attributes_struct_justification (a_text_attributes: POINTER): INTEGER
 			external
-				"C struct GtkTextAttributes access justification use <gtk/gtk.h>"
+				"C struct GtkTextAttributes access justification use <ev_gtk.h>"
 			end
 
 	gtk_text_attributes_struct_left_margin (a_text_attributes: POINTER): INTEGER
 			external
-				"C struct GtkTextAttributes access left_margin use <gtk/gtk.h>"
+				"C struct GtkTextAttributes access left_margin use <ev_gtk.h>"
 			end
 
 	gtk_text_attributes_struct_right_margin (a_text_attributes: POINTER): INTEGER
 			external
-				"C struct GtkTextAttributes access right_margin use <gtk/gtk.h>"
+				"C struct GtkTextAttributes access right_margin use <ev_gtk.h>"
 			end
 
 	gtk_text_attributes_struct_pixels_above_lines (a_text_attributes: POINTER): INTEGER
 			external
-				"C struct GtkTextAttributes access pixels_above_lines use <gtk/gtk.h>"
+				"C struct GtkTextAttributes access pixels_above_lines use <ev_gtk.h>"
 			end
 
 	gtk_text_attributes_struct_pixels_below_lines (a_text_attributes: POINTER): INTEGER
 			external
-				"C struct GtkTextAttributes access pixels_below_lines use <gtk/gtk.h>"
+				"C struct GtkTextAttributes access pixels_below_lines use <ev_gtk.h>"
 			end
 
 	gtk_text_appearance_struct_rise (a_text_appearance: POINTER): INTEGER
 			external
-				"C struct GtkTextAppearance access rise use <gtk/gtk.h>"
+				"C struct GtkTextAppearance access rise use <ev_gtk.h>"
 			end
 
 	gtk_text_appearance_struct_bg_color (a_text_appearance: POINTER): POINTER
 			external
-				"C struct GtkTextAppearance access &bg_color use <gtk/gtk.h>"
+				"C struct GtkTextAppearance access &bg_color use <ev_gtk.h>"
 			end
 
 	gtk_text_appearance_struct_underline (a_text_appearance: POINTER): INTEGER
 			external
-				"C struct GtkTextAppearance access underline use <gtk/gtk.h>"
+				"C struct GtkTextAppearance access underline use <ev_gtk.h>"
 			end
 
 	gtk_text_appearance_struct_strikethrough (a_text_appearance: POINTER): INTEGER
 			external
-				"C struct GtkTextAppearance access strikethrough use <gtk/gtk.h>"
+				"C struct GtkTextAppearance access strikethrough use <ev_gtk.h>"
 			end
 
 	gtk_text_appearance_struct_fg_color (a_text_appearance: POINTER): POINTER
 			external
-				"C struct GtkTextAppearance access &fg_color use <gtk/gtk.h>"
+				"C struct GtkTextAppearance access &fg_color use <ev_gtk.h>"
 			end
 
 	gtk_text_iter_get_attributes (a_text_iter: POINTER; a_text_values: POINTER): BOOLEAN
 			external
-				"C inline use <gtk/gtk.h>"
+				"C inline use <ev_gtk.h>"
 			alias
 				"gtk_text_iter_get_attributes ((GtkTextIter*) $a_text_iter, (GtkTextAttributes*) $a_text_values )"
 			end
 
 	gtk_text_view_get_default_attributes (a_text_view: POINTER): POINTER
 			external
-				"C inline use <gtk/gtk.h>"
+				"C inline use <ev_gtk.h>"
 			alias
 				"gtk_text_view_get_default_attributes ((GtkTextView*) $a_text_view)"
 			end
 
 	gtk_text_attributes_free (a_text_attributes: POINTER)
 			external
-				"C inline use <gtk/gtk.h>"
+				"C inline use <ev_gtk.h>"
 			alias
 				"free ((GtkTextAttributes*) $a_text_attributes)"
 			end
 
 	gtk_text_attributes_copy_values (a_text_attributes_src, a_text_attributes_dest: POINTER)
 			external
-				"C inline use <gtk/gtk.h>"
+				"C inline use <ev_gtk.h>"
 			alias
 				"gtk_text_attributes_copy_values ((GtkTextAttributes*) $a_text_attributes_src, (GtkTextAttributes*) $a_text_attributes_dest)"
 			end
 
 	gtk_text_attributes_copy (a_text_attributes_src: POINTER): POINTER
 			external
-				"C inline use <gtk/gtk.h>"
+				"C inline use <ev_gtk.h>"
 			alias
 				"gtk_text_attributes_copy ((GtkTextAttributes*) $a_text_attributes_src)"
 			end
 
 	gtk_text_view_get_iter_at_location (a_text_view,  a_text_iter: POINTER; buffer_x, buffer_y: INTEGER)
 			external
-				"C inline use <gtk/gtk.h>"
+				"C inline use <ev_gtk.h>"
 			alias
 				"gtk_text_view_get_iter_at_location ((GtkTextView*) $a_text_view, (GtkTextIter*) $a_text_iter, (gint) $buffer_x, (gint) $buffer_y)"
 			end
 
 	gtk_text_view_window_to_buffer_coords (a_text_view: POINTER; window_x, window_y: INTEGER; buffer_x, buffer_y: POINTER)
 			external
-				"C inline use <gtk/gtk.h>"
+				"C inline use <ev_gtk.h>"
 			alias
 				"gtk_text_view_window_to_buffer_coords ((GtkTextView*) $a_text_view, GTK_TEXT_WINDOW_TEXT, (gint) $window_x, (gint) $window_y, (gint *) $buffer_x, (gint *) $buffer_y)"
 			end
 
 	gtk_text_view_buffer_to_window_coords (a_text_view: POINTER; buffer_x, buffer_y: INTEGER; window_x, window_y: POINTER)
 			external
-				"C inline use <gtk/gtk.h>"
+				"C inline use <ev_gtk.h>"
 			alias
 				"gtk_text_view_buffer_to_window_coords ((GtkTextView*) $a_text_view, GTK_TEXT_WINDOW_TEXT, (gint) $buffer_x, (gint) $buffer_y, (gint *) $window_x, (gint *) $window_y)"
 			end

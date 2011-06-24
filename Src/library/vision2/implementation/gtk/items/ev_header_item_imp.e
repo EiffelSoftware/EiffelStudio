@@ -95,7 +95,7 @@ feature -- Initialization
 
 	gtk_label_set_ellipsize_call (a_function: POINTER; a_label: POINTER; a_ellipsize_mode: INTEGER)
 		external
-			"C inline use <gtk/gtk.h>"
+			"C inline use <ev_gtk.h>"
 		alias
 			"(FUNCTION_CAST(void, (GtkLabel*, gint)) $a_function)((GtkLabel*) $a_label, (gint) $a_ellipsize_mode);"
 		end

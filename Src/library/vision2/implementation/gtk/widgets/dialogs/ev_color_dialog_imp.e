@@ -118,28 +118,28 @@ feature {NONE} -- Externals
 
 	gtk_color_selection_dialog_struct_colorsel (a_c_struct: POINTER): POINTER
 		external
-			"C [struct <gtk/gtk.h>] (GtkColorSelectionDialog): EIF_POINTER"
+			"C [struct <ev_gtk.h>] (GtkColorSelectionDialog): EIF_POINTER"
 		alias
 			"colorsel"
 		end
 
 	gtk_color_selection_dialog_struct_ok_button (a_c_struct: POINTER): POINTER
 		external
-			"C [struct <gtk/gtk.h>] (GtkColorSelectionDialog): EIF_POINTER"
+			"C [struct <ev_gtk.h>] (GtkColorSelectionDialog): EIF_POINTER"
 		alias
 			"ok_button"
 		end
 
 	gtk_color_selection_dialog_struct_cancel_button (a_c_struct: POINTER): POINTER
 		external
-			"C [struct <gtk/gtk.h>] (GtkColorSelectionDialog): EIF_POINTER"
+			"C [struct <ev_gtk.h>] (GtkColorSelectionDialog): EIF_POINTER"
 		alias
 			"cancel_button"
 		end
 
 	gtk_color_selection_dialog_struct_help_button (a_c_struct: POINTER): POINTER
 		external
-			"C [struct <gtk/gtk.h>] (GtkColorSelectionDialog): EIF_POINTER"
+			"C [struct <ev_gtk.h>] (GtkColorSelectionDialog): EIF_POINTER"
 		alias
 			"help_button"
 		end

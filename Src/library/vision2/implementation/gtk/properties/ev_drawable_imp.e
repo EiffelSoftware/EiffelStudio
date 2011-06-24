@@ -611,7 +611,7 @@ feature -- Drawing operations
 
 	pango_layout_set_ellipsize_call (a_function: POINTER; a_layout: POINTER; a_ellipsize_mode: INTEGER)
 		external
-			"C inline use <gtk/gtk.h>"
+			"C inline use <ev_gtk.h>"
 		alias
 			"(FUNCTION_CAST(void, (PangoLayout*, gint)) $a_function)((PangoLayout*) $a_layout, (gint) $a_ellipsize_mode);"
 		end
@@ -1117,7 +1117,7 @@ feature {NONE} -- Implementation
 
 	draw_mask_on_pixbuf (a_pixbuf_ptr, a_mask_ptr: POINTER)
 		external
-			"C inline use <gtk/gtk.h>"
+			"C inline use <ev_gtk.h>"
 		alias
 			"[
 				{
@@ -1193,13 +1193,13 @@ feature {NONE} -- Implementation
 	gdk_gc_unref (a_gc: POINTER)
 			-- void   gdk_gc_unref		  (GdkGC	    *gc);
 		external
-			"C (GdkGC*) | <gtk/gtk.h>"
+			"C (GdkGC*) | <ev_gtk.h>"
 		end
 
 	set_dashes_pattern (a_gc, dash_pattern: POINTER)
 			-- Set the dashes pattern for gc `a_gc', `dash_pattern' is a pointer to a two count gint8[]] denoting the pattern.
 		external
-			"C inline use <gtk/gtk.h>"
+			"C inline use <ev_gtk.h>"
 		alias
 			"gdk_gc_set_dashes ((GdkGC*) $a_gc, 0, (gint8*) $dash_pattern, 2)"
 		end

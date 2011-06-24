@@ -75,7 +75,7 @@ feature {EV_ANY_I} -- Access
 
 	frozen gtk_is_object (a_c_object: POINTER): BOOLEAN
 		external
-			"C inline use <gtk/gtk.h>"
+			"C inline use <ev_gtk.h>"
 		alias
 			"GTK_IS_OBJECT ($a_c_object)"
 		end

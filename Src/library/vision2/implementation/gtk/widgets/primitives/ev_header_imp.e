@@ -115,7 +115,7 @@ feature -- Initialization
 
 	new_list_store (a_columns: INTEGER): POINTER
 		external
-			"C inline use <gtk/gtk.h>"
+			"C inline use <ev_gtk.h>"
 		alias
 			"gtk_list_store_new ((gint) $a_columns, G_TYPE_STRING)"
 		end

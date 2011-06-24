@@ -20,7 +20,7 @@ feature -- Externals
 
 	frozen structure_size: INTEGER
 		external
-			"C [macro <gtk/gtk.h>]"
+			"C [macro <ev_gtk.h>]"
 		alias
 			"sizeof(GtkTreeIter)"
 		end

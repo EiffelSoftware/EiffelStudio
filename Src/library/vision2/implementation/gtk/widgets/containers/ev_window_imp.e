@@ -576,7 +576,7 @@ feature {NONE} -- Composite handling
 
 	gtk_window_set_opacity_call (a_function: POINTER; a_window: POINTER; a_opacity: REAL_32)
 		external
-			"C inline use <gtk/gtk.h>"
+			"C inline use <ev_gtk.h>"
 		alias
 			"(FUNCTION_CAST(void, (GtkWidget*, gdouble)) $a_function)((GtkWidget*) $a_window, (gdouble) $a_opacity);"
 		end
@@ -589,7 +589,7 @@ feature {NONE} -- Composite handling
 
 	gtk_widget_is_composited_call (a_function: POINTER; a_widget: POINTER): BOOLEAN
 		external
-			"C inline use <gtk/gtk.h>"
+			"C inline use <ev_gtk.h>"
 		alias
 			"return (FUNCTION_CAST(gboolean, (GtkWidget*)) $a_function)((GtkWidget*) $a_widget);"
 		end

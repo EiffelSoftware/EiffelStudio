@@ -165,7 +165,6 @@ feature {NONE} -- Implementation
 			bytes_written: INTEGER
 			i: INTEGER
 			l_code: NATURAL_32
-			a_string_size: INTEGER
 			l_string_length: INTEGER
 			l_ptr: MANAGED_POINTER
 		do
@@ -174,7 +173,6 @@ feature {NONE} -- Implementation
 				-- First compute how many bytes we need to convert `a_string' to UTF-8.
 			from
 				i := l_string_length
-				bytes_written := 0
 			until
 				i = 0
 			loop
@@ -241,8 +239,7 @@ feature {NONE} -- Implementation
 			l_ptr.put_integer_8 (0, bytes_written)
 
 				-- The value of bytes_written doesn't take the null character in to account.
-			a_string_size := bytes_written + 1
-			set_from_pointer (utf8_ptr, a_string_size, a_shared)
+			set_from_pointer (utf8_ptr, bytes_written + 1, a_shared)
 
 				-- Reset shared pointer helper.
 			l_ptr.set_from_pointer (default_pointer, 0)

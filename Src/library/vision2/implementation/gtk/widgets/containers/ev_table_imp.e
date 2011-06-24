@@ -277,7 +277,7 @@ feature {NONE} -- Externals
 	c_gtk_table_row_spacing (a_table_struct: POINTER): INTEGER
 			-- Spacing between two rows.
 		external
-			"C [struct <gtk/gtk.h>] (GtkTable): EIF_INTEGER"
+			"C [struct <ev_gtk.h>] (GtkTable): EIF_INTEGER"
 		alias
 			"row_spacing"
 		end
@@ -285,7 +285,7 @@ feature {NONE} -- Externals
 	c_gtk_table_column_spacing (a_table_struct: POINTER): INTEGER
 			-- Spacing between two columns.
 		external
-			"C [struct <gtk/gtk.h>] (GtkTable): EIF_INTEGER"
+			"C [struct <ev_gtk.h>] (GtkTable): EIF_INTEGER"
 		alias
 			"column_spacing"
 		end

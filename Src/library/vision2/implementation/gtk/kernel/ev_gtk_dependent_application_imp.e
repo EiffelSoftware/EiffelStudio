@@ -365,7 +365,7 @@ feature {NONE} -- Externals
 	initialize_combo_box_style
 			-- Set the combo box style so that they appear as lists and not menus.
 		external
-			"C inline use <gtk/gtk.h>"
+			"C inline use <ev_gtk.h>"
 		alias
 			"[
 				{
@@ -377,7 +377,7 @@ feature {NONE} -- Externals
 	initialize_tool_bar_style
 			-- Remove the default shadow from the toolbar.
 		external
-			"C inline use <gtk/gtk.h>"
+			"C inline use <ev_gtk.h>"
 		alias
 			"[
 				{
@@ -389,7 +389,7 @@ feature {NONE} -- Externals
 	retrieve_available_fonts (a_widget: POINTER; name_array: TYPED_POINTER [POINTER]; number_elements: TYPED_POINTER [INTEGER])
 			-- Retrieve all available fonts present on the system
 		external
-			"C inline use <gtk/gtk.h>"
+			"C inline use <ev_gtk.h>"
 		alias
 			"[
 			{
@@ -419,7 +419,7 @@ feature {NONE} -- Externals
 			an_index_valid: an_index > 0
 			array_valid: a_gchar_array /= default_pointer
 		external
-			"C inline use <gtk/gtk.h>"
+			"C inline use <ev_gtk.h>"
 		alias
 			"(EIF_POINTER) *((gchar**) $a_gchar_array + (int) ($an_index - 1))"
 		end

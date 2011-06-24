@@ -344,7 +344,7 @@ feature -- Status setting
 
 	bg_pixmap (p: POINTER): POINTER
 		external
-			"C [struct <gtk/gtk.h>] (GtkStyle): POINTER"
+			"C [struct <ev_gtk.h>] (GtkStyle): POINTER"
 		alias
 			"&bg_pixmap"
 		end

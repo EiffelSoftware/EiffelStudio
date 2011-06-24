@@ -36,7 +36,7 @@ feature {EV_ANY_I} -- Implementation
 
 	gtk_progress_bottom_to_top_enum: INTEGER
 		external
-			"C inline use <gtk/gtk.h>"
+			"C inline use <ev_gtk.h>"
 		alias
 			"GTK_PROGRESS_BOTTOM_TO_TOP"
 		end

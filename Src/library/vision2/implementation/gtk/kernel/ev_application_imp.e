@@ -149,7 +149,7 @@ feature {NONE} -- Initialization
 
 	gdk_display_supports_composite_call (a_function: POINTER; a_display: POINTER): BOOLEAN
 		external
-			"C inline use <gtk/gtk.h>"
+			"C inline use <ev_gtk.h>"
 		alias
 			"return (FUNCTION_CAST(gboolean, (GdkDisplay*)) $a_function)((GdkDisplay*) $a_display);"
 		end
@@ -1350,14 +1350,14 @@ feature {NONE} -- External implementation
 
 	gtk_init
 		external
-			"C [macro <gtk/gtk.h>] | %"eif_argv.h%""
+			"C [macro <ev_gtk.h>] | %"eif_argv.h%""
 		alias
     		"gtk_init (&eif_argc, &eif_argv)"
 		end
 
 	gtk_init_check: BOOLEAN
 		external
-			"C [macro <gtk/gtk.h>] | %"eif_argv.h%""
+			"C [macro <ev_gtk.h>] | %"eif_argv.h%""
 		alias
     		"gtk_init_check (&eif_argc, &eif_argv)"
 		end

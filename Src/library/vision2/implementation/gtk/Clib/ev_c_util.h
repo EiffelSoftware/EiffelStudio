@@ -16,13 +16,8 @@ indexing
 
 #ifndef _EV_C_UTIL_H_INCLUDED_
 #define _EV_C_UTIL_H_INCLUDED_
-#include <gtk/gtk.h>
+#include <ev_gtk.h>
 
-#ifdef GDK_WINDOWING_X11
-#include <gdk/gdkx.h>
-#endif
-
-#include <eif_eiffel.h>
 
 typedef struct {
 	gint x_position;

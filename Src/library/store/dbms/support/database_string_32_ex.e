@@ -28,7 +28,7 @@ feature -- Status setting
 		do
 			set_count (db_spec.put_data_32 (no_descriptor, index, Current, capacity))
 		ensure
-			capacity_unchanged: capacity = old capacity
+			capacity_unchanged: capacity >= old capacity
 		end
 
 feature -- Element Change

@@ -5,10 +5,10 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class 
+class
 	DATABASE_STRING_EX [G -> DATABASE create default_create end]
 
-inherit 
+inherit
 
 	STRING
 
@@ -36,7 +36,7 @@ feature -- Status setting
 		do
 			set_count (db_spec.put_data (no_descriptor, index, Current, capacity))
 		ensure
-			capacity_unchanged: capacity = old capacity
+			capacity_unchanged: capacity >= old capacity
 		end
 
 note

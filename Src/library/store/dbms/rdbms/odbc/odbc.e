@@ -602,7 +602,7 @@ feature -- External
 			create l_area.make (max_len)
 			Result := odbc_put_col_name (no_descriptor, index, l_area.item)
 
-			create l_str.make_shared_from_pointer_and_count (l_area.item, Result)
+			create l_str.make_shared_from_pointer_and_count (l_area.item, Result * {SQL_STRING}.character_size)
 
 			check
 				Result <= max_len
@@ -647,7 +647,7 @@ feature -- External
 			Result := odbc_put_data (no_descriptor, index, $l_data) // {SQL_STRING}.character_size
 			ar.grow (Result)
 			ar.set_count (Result)
-			create l_sql_string.make_shared_from_pointer_and_count (l_data, Result)
+			create l_sql_string.make_shared_from_pointer_and_count (l_data, Result * {SQL_STRING}.character_size)
 			l_sql_string.read_substring_into (ar, 1, Result)
 			if l_data /= l_null then
 					-- `odbc_put_data' allocate some memory, we need to free it.

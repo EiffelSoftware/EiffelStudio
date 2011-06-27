@@ -16,7 +16,7 @@ create
 
 feature -- Initialization
 
-	make (dbm: DATABASE_MANAGER [DATABASE])
+	make (dbm: like database_manager)
 			-- Set `dbm' to manage database
 			-- interactions.
 		require
@@ -972,9 +972,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class DATABASE_MANAGER
-
-

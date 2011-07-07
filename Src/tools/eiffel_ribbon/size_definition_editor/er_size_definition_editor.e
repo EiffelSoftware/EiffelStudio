@@ -360,7 +360,6 @@ feature {NONE} -- Figure handling
 			--
 		local
 			l_result: EV_FIGURE_PICTURE
-			l_pixmap: EV_PIXMAP
 		do
 			create l_result
 
@@ -530,7 +529,6 @@ feature {NONE} -- Figure handling
 			--
 		local
 			l_figure: EV_FIGURE
-			l_point_1, l_point_2: EV_RELATIVE_POINT
 			l_background: EV_FIGURE_PICTURE
 		do
 			model_world.wipe_out
@@ -586,7 +584,6 @@ feature {NONE} -- Figure handling
 	on_pointer_press (a_x: INTEGER_32; a_y: INTEGER_32; a_button: INTEGER_32; a_x_tilt: REAL_64; a_y_tilt: REAL_64; a_pressure: REAL_64; a_screen_x: INTEGER_32; a_screen_y: INTEGER_32)
 			--
 		local
-			l_point: EV_RELATIVE_POINT
 			l_found: BOOLEAN
 		do
 			from
@@ -674,8 +671,6 @@ feature {NONE} -- Figure handling
 
 	on_pointer_release (a_x: INTEGER_32; a_y: INTEGER_32; a_button: INTEGER_32; a_x_tilt: REAL_64; a_y_tilt: REAL_64; a_pressure: REAL_64; a_screen_x: INTEGER_32; a_screen_y: INTEGER_32)
 			--
-		local
-			l_point: EV_RELATIVE_POINT
 		do
 			is_pointer_pressed := False
 			if is_select_moving then

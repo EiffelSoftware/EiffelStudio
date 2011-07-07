@@ -39,7 +39,7 @@ feature -- Command
 			l_sorted_rows: SORTED_TWO_WAY_LIST [ER_FIGURE_ROW]
 
 			l_attribute: XML_ATTRIBUTE
-			l_root_xml: XML_ELEMENT
+--			l_root_xml: XML_ELEMENT
 		do
 			sub_root_element := root_xml_for_name (a_name)
 			sub_root_element.wipe_out
@@ -221,7 +221,6 @@ feature {NONE} -- Figure XML loading to GUI
 		require
 			not_void: a_row /= Void
 		local
-			l_current_y: INTEGER
 			l_count: INTEGER
 			l_row_changed: BOOLEAN
 		do

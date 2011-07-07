@@ -76,7 +76,6 @@ SQLLEN *pcbValue[MAX_DESCRIPTOR];
 HENV    henv;
 HDBC    hdbc;
 SQLLEN *odbc_indicator[MAX_DESCRIPTOR];
-SQLLEN odbc_tmp_indicator;
 RETCODE rc;
 TIMESTAMP_STRUCT odbc_date;
 SQLTCHAR odbc_date_string[DB_DATE_LEN];
@@ -107,8 +106,6 @@ SQLTCHAR odbc_user_name[40];
 short odbc_tranNumber=0; /* number of transaction opened at present */
 
 rt_private void change_to_low(SQLTCHAR *buf, int length);
-
-int is_null_data;
 
 char charBuf[255];
 
@@ -532,9 +529,9 @@ void odbc_start_order (int no_desc)
 	SQLINTEGER  ColumnSize, BufferLength;
 	SQLSMALLINT DataType, DecimalDigits, NumPrecRadix, Nullable;
 
-	SQLINTEGER cbCatalog, cbSchema, cbTableName, cbColumnName;
-	SQLINTEGER cbDataType, cbTypeName, cbColumnSize, cbBufferLength;
-	SQLINTEGER cbDecimalDigits, cbNumPrecRadix, cbNullable;
+	SQLLEN cbCatalog, cbSchema, cbTableName, cbColumnName;
+	SQLLEN cbDataType, cbTypeName, cbColumnSize, cbBufferLength;
+	SQLLEN cbDecimalDigits, cbNumPrecRadix, cbNullable;
 
 	if (flag[no_desc] == ODBC_CATALOG_COL) {
 			SQLBindCol(hstmt, 1, SQL_C_TCHAR, szCatalog, DB_REP_LEN,&cbCatalog);
@@ -788,8 +785,13 @@ void setup_result_space (int no_desc)
 			/* Allocate for each column the buffer that will hold its value. */
 		for (i=0; i<colNum; i++) {
 			l_length = GetDbColLength(dap, i);
+				/* The underlying API will require an extra character for the null terminating character
+				 * of string data. */
+			if ((GetDbCType(dap, i) == SQL_C_WCHAR) || (GetDbCType(dap, i) == SQL_C_CHAR)) {
+				l_length = l_length + sizeof(TCHAR);
+			}
 			dataBuf = GetDbColPtr(dap, i);
-			ODBC_SAFE_ALLOC(dataBuf, (char *) realloc(dataBuf, l_length + sizeof (SQLTCHAR)));
+			ODBC_SAFE_ALLOC(dataBuf, (char *) realloc(dataBuf, l_length));
 			SetDbColPtr(dap, i, dataBuf);
 		}
 	}
@@ -947,9 +949,15 @@ int odbc_next_row (int no_des)
 	}
 	else {
 		for (i=0; i<colNum && error_number == 0; i++) {
-			SQLINTEGER old_length = GetDbColLength(dap, i) + sizeof (SQLTCHAR);
+			SQLINTEGER old_length = GetDbColLength(dap, i);
 			char *l_buffer = GetDbColPtr(dap, i);
+			SQLINTEGER l_terminator_size = 0;
 			odbc_indicator[no_des][i] = 0;
+				/* String data have an extra character for the null terminating character. */
+			if ((GetDbCType(dap, i) == SQL_C_WCHAR) || (GetDbCType(dap, i) == SQL_C_CHAR)) {
+				l_terminator_size = sizeof(TCHAR);
+				old_length += l_terminator_size;
+			}
 			if (GetDbCType(dap, i) == SQL_C_NUMERIC){
 				/* Use SQL_ARD_TYPE to force the driver to use data in the row descriptor */
 				rc = SQLGetData(hstmt[no_des], i+1, SQL_ARD_TYPE, l_buffer, old_length, &(odbc_indicator[no_des][i]));
@@ -970,15 +978,19 @@ int odbc_next_row (int no_des)
 							((tmpSQLSTATE[0] == TXTC('0')) && (tmpSQLSTATE[1] == TXTC('1')) && (tmpSQLSTATE[2] == TXTC('0')) &&
 							(tmpSQLSTATE[3] == TXTC('0')) && (tmpSQLSTATE[4] == TXTC('4')))
 						{
-							SQLINTEGER additional_length = odbc_indicator[no_des][i] - old_length + 1;
-							/* Reuse old memory if possible */
+							SQLINTEGER additional_length;
+								/* We remove the null character from the previous call made to SQLGetData
+								 * because when data is truncated SQLGetData it always add the null character.*/
+							old_length -= l_terminator_size;
+							additional_length = odbc_indicator[no_des][i] - old_length + l_terminator_size;
+								/* Reuse old memory if possible */
 							ODBC_SAFE_ALLOC(l_buffer, (char *) realloc (l_buffer, old_length + additional_length));
 							SetDbColPtr(dap, i, l_buffer);
-							SetDbColLength(dap, i, old_length + additional_length - 1);
-								/* Reissue the call, this time starting from the end of `l_buf_namefer' since we want to get
+							SetDbColLength(dap, i, old_length + additional_length - l_terminator_size);
+								/* Reissue the call, this time starting from the end of `l_buffer' since we want to get
 								 * the remaining data. */
 							rc = SQLGetData(hstmt[no_des], i+1, GetDbCType(dap, i), l_buffer + old_length,
-								additional_length + 1, NULL);
+								additional_length, NULL);
 						}
 					}
 				}
@@ -1696,18 +1708,20 @@ int odbc_put_data (int no_des, int index, char **result)
 {
   int i = index -1;
   SQLGUID *g;
+  SQLLEN odbc_tmp_indicator;
   ODBCSQLDA * dap = odbc_descriptor[no_des];
   data_type = GetDbCType (dap, i);
 
-  memcpy((char *)(&odbc_tmp_indicator), (char *)(&(odbc_indicator[no_des][i])), DB_SIZEOF_UDWORD);
-  if ((is_null_data = (odbc_tmp_indicator == SQL_NULL_DATA))) {
+  odbc_tmp_indicator = odbc_indicator[no_des][i];
+  if (odbc_tmp_indicator == SQL_NULL_DATA) {
 	return 0;
   }
 
   switch (data_type) {
 		case SQL_C_GUID:
 			g = (SQLGUID *)GetDbColPtr(dap, i);
-			*result = (char *)malloc(36);
+				/* We allocate 37 because `sprintf' will add a null terminating character. */
+			*result = (char *)malloc(37);
 			sprintf (*result,
 				"%08lX-%04X-%04X-%02X%02X-%02X%02X%02X%02X%02X%02X",
 				(unsigned long) g->Data1,
@@ -1731,8 +1745,7 @@ SQLINTEGER odbc_get_integer_data (int no_des, int index)
 
 	data_type = GetDbCType(dbp, i);
 
-	memcpy((char *)(&odbc_tmp_indicator), (char *)(&(odbc_indicator[no_des][i])), DB_SIZEOF_UDWORD);
-	if ((is_null_data = (odbc_tmp_indicator == SQL_NULL_DATA))) {
+	if (odbc_indicator[no_des][i] == SQL_NULL_DATA) {
 	/* the retrieved value is NULL, we use 0 to be NULL value */
 		return 0;
 	}
@@ -1763,8 +1776,7 @@ SQLSMALLINT odbc_get_integer_16_data (int no_des, int index)
 
 	data_type = GetDbCType(dbp, i);
 
-	memcpy((char *)(&odbc_tmp_indicator), (char *)(&(odbc_indicator[no_des][i])), DB_SIZEOF_UDWORD);
-	if ((is_null_data = (odbc_tmp_indicator == SQL_NULL_DATA))) {
+	if (odbc_indicator[no_des][i] == SQL_NULL_DATA) {
 	/* the retrieved value is NULL, we use 0 to be NULL value */
 		return 0;
 	}
@@ -1798,8 +1810,7 @@ EIF_INTEGER_64 odbc_get_integer_64_data (int no_des, int index)
 
 	data_type = GetDbCType(dbp, i);
 
-	memcpy((char *)(&odbc_tmp_indicator), (char *)(&(odbc_indicator[no_des][i])), DB_SIZEOF_UDWORD);
-	if ((is_null_data = (odbc_tmp_indicator == SQL_NULL_DATA))) {
+	if (odbc_indicator[no_des][i] == SQL_NULL_DATA) {
 	/* the retrieved value is NULL, we use 0 to be NULL value */
 		return 0;
 	}
@@ -1828,10 +1839,8 @@ int odbc_get_boolean_data (int no_des, int index)
 
   data_type = GetDbCType (dbp,i);
 
-  if (data_type == SQL_C_BIT)
-    {
-	memcpy((char *)(&odbc_tmp_indicator), (char *)(&(odbc_indicator[no_des][i])), DB_SIZEOF_UDWORD);
-	if ((is_null_data = (odbc_tmp_indicator == SQL_NULL_DATA))) {
+  if (data_type == SQL_C_BIT) {
+	if (odbc_indicator[no_des][i] == SQL_NULL_DATA) {
 	/* the retrived value is NULL, we use false to be NULL value */
 		return 0;
 	}
@@ -1860,8 +1869,7 @@ double odbc_get_float_data (int no_des, int index)
 	data_type = GetDbCType (dbp, i);
 
 	if ( data_type == SQL_C_DOUBLE ) {
-		memcpy((char *)(&odbc_tmp_indicator), (char *)(&(odbc_indicator[no_des][i])), DB_SIZEOF_UDWORD);
-		if ((is_null_data = (odbc_tmp_indicator == SQL_NULL_DATA))) {
+		if (odbc_indicator[no_des][i] == SQL_NULL_DATA) {
 			/* the retrieved value is NULL, we use 0.0 to be NULL value and we indicate it*/
 			return 0.0;
 		}
@@ -1869,8 +1877,7 @@ double odbc_get_float_data (int no_des, int index)
 		/* result = *(double *)(dbp->sqlvar)[i].sqldata; */
 		return  result_double;
 	} else if (data_type == SQL_C_NUMERIC){
-		memcpy((char *)(&odbc_tmp_indicator), (char *)(&(odbc_indicator[no_des][i])), DB_SIZEOF_UDWORD);
-		if ((is_null_data = (odbc_tmp_indicator == SQL_NULL_DATA))) {
+		if (odbc_indicator[no_des][i] == SQL_NULL_DATA) {
 			/* the retrieved value is NULL, we use 0.0 to be NULL value and we indicate it*/
 			return 0.0;
 		}
@@ -1907,8 +1914,7 @@ float odbc_get_real_data (int no_des, int index)
 
   data_type = GetDbCType (dbp, i);
   if (data_type == SQL_C_FLOAT)  {
-	memcpy((char *)(&odbc_tmp_indicator), (char *)(&(odbc_indicator[no_des][i])), DB_SIZEOF_UDWORD);
-	if ((is_null_data = (odbc_tmp_indicator == SQL_NULL_DATA))) {
+	if (odbc_indicator[no_des][i] == SQL_NULL_DATA) {
 	/* the retrieved value is NULL, we use 0.0 to be NULL value */
 		return 0.0;
 	}
@@ -1949,8 +1955,7 @@ int odbc_get_date_data (int no_des, int index)
   //if (data_type == SQL_C_DATE || data_type == SQL_C_TIMESTAMP || data_type == SQL_C_TIME)
   if (data_type == SQL_C_TYPE_DATE || data_type == SQL_C_TYPE_TIMESTAMP || data_type == SQL_C_TYPE_TIME)
     {
-	memcpy((char *)(&odbc_tmp_indicator), (char *)(&(odbc_indicator[no_des][i])), DB_SIZEOF_UDWORD);
-	if ((is_null_data = (odbc_tmp_indicator == SQL_NULL_DATA))) {
+	if (odbc_indicator[no_des][i] == SQL_NULL_DATA) {
 	/* the retrived value is NULL, we use 01/01/1991 0:0:0 to be NULL value */
 		//odbc_date.year = 1991;
 		//odbc_date.month = 1;

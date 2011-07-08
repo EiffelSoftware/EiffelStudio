@@ -25,13 +25,13 @@ feature -- Command
 	reset
 			--
 		do
-			create sub_root_element.make (void, constants.size_definition, name_space)
+			create sub_root_element.make (Void, constants.size_definition, name_space)
 		end
 
 	save (a_figures: ARRAYED_LIST [ER_FIGURE]; a_name: STRING)
 			--
 		require
-			valid: a_name /= void and then not a_name.is_empty
+			valid: a_name /= Void and then not a_name.is_empty
 		local
 			l_line_1, l_line_2, l_line_3: SORTED_TWO_WAY_LIST [ER_FIGURE]
 			l_items: SORTED_TWO_WAY_LIST [ER_FIGURE]
@@ -152,8 +152,10 @@ feature -- Query
 
 	root_xml_for_saving: XML_ELEMENT
 			-- Root size definition xml for saving
+		require
+			not_empty: not is_empty
 		do
-			create Result.make (void, constants.ribbon_size_definitions, name_space)
+			create Result.make (Void, constants.ribbon_size_definitions, name_space)
 			from
 				sub_root_xml_hash_table.start
 			until
@@ -173,9 +175,7 @@ feature -- Query
 	is_empty: BOOLEAN
 			-- If size definition codes not generated?
 		do
-			if sub_root_xml_hash_table.count = 0 then
-				Result := True
-			end
+			Result := sub_root_xml_hash_table.is_empty
 		end
 
 	all_generated_figures: ARRAYED_LIST [ER_FIGURE]
@@ -392,7 +392,7 @@ feature {NONE} -- Figure implementation
 			--
 		require
 			valid: a_row.name.same_string ({ER_XML_CONSTANTS}.row)
-			set: figures /= void
+			set: figures /= Void
 		local
 			l_item: XML_ELEMENT
 			l_attribute: XML_ATTRIBUTE
@@ -571,7 +571,7 @@ feature {NONE} -- Implementation
 				check not_void: l_result /= Void end
 				Result := l_result
 			else
-				create Result.make (void, constants.size_definition, name_space)
+				create Result.make (Void, constants.size_definition, name_space)
 				sub_root_xml_hash_table.extend (Result, a_name)
 			end
 		end

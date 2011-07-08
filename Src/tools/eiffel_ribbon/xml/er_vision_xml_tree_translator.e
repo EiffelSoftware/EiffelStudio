@@ -117,14 +117,12 @@ feature {NONE} -- Tree saving
 			l_root_xml_size_definition: XML_ELEMENT
 		do
 			l_ribbon_xml := xml_node_by_name (xml_constants.ribbon)
-			check l_ribbon_xml /= Void end
 			if l_ribbon_xml /= Void then
 				create l_shared
-				if attached l_shared.size_definition_cell.item as l_size_definition then
+				if attached l_shared.size_definition_cell.item as l_size_definition and then not l_size_definition.size_definition_writer.is_empty then
 					l_root_xml_size_definition := l_size_definition.size_definition_writer.root_xml_for_saving
 --					l_root_xml_size_definition.set_parent (l_ribbon_xml)
 					l_ribbon_xml.put_last (l_root_xml_size_definition)
-
 				end
 			end
 		end

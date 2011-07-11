@@ -601,9 +601,6 @@ feature {NONE} -- Implementation: parse
 								s.append_character (c)
 								c := next_character
 							end
-						elseif c = '&' then
-							s.append_string (next_entity)
-							c := next_character
 						else
 							s.append_character (c)
 							c := next_character

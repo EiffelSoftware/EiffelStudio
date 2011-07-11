@@ -512,7 +512,7 @@ feature {NONE} -- Figure handling
 			create l_interface_names
 			create l_misc_constants
 			if attached l_misc_constants.ise_eiffel as l_ise_eiffel then
-				create l_error.make_with_text (l_interface_names.cannot_find_templates (l_ise_eiffel))
+				create l_error.make_with_text (l_interface_names.cannot_find_images (l_ise_eiffel))
 			else
 				create l_error.make_with_text (l_interface_names.ise_eiffel_not_defined)
 			end

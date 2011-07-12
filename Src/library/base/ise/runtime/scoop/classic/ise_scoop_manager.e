@@ -253,7 +253,7 @@ feature -- Request Chain Handling
 				-- Increment current request chain id depth
 			l_temp_value := {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 (processor_meta_data [a_client_processor_id].item_address (current_request_chain_id_depth_index));
 			if l_temp_value = max_request_chain_depth then
-				raise_scoop_exception ("SCOOP request chain stack overflow")
+				raise_scoop_exception (scoop_request_chain_stack_overflow_message)
 			end
 
 				-- Increase request chain id.
@@ -417,13 +417,8 @@ feature -- Request Chain Handling
 
 				-- Retrieve wait condition counter for determining priority of processor request.
 			l_wait_condition_counter := (processor_meta_data [a_client_processor_id]) [processor_wait_condition_counter_index]
-			if l_wait_condition_counter > 0 then
-				if l_wait_condition_counter > max_wait_condition_retry_limit then
-					raise_scoop_exception ("SCOOP Wait Condition Retry Limit Reached")
-				elseif l_wait_condition_counter > 1 then
-						-- Yield processor if we are retrying a wait condition.
-					processor_cpu_yield
-				end
+			if l_wait_condition_counter > max_wait_condition_retry_limit then
+				raise_scoop_exception ("SCOOP Wait Condition Retry Limit Reached")
 			end
 
 				-- Retrieve request chain meta data structure.
@@ -612,7 +607,7 @@ feature -- Request Chain Handling
 				relinquish_processor_resource (
 					processor_meta_data [l_pid].item_address (current_request_chain_node_id_lock_index),
 					a_client_processor_id,
-					l_wait_condition_counter = 0  -- High Priority
+					l_wait_condition_counter = 0  -- Low priority if there is a wait condition failure.
 				)
 
 				i := i + 1
@@ -1011,7 +1006,7 @@ feature {NONE} -- Resource Initialization
 			create exception_helper
 
 				-- Initialize the default attributes used to create each SCOOP processor.
-			create default_processor_attributes.make_with_stack_size (1_048_576)
+			create default_processor_attributes.make_with_stack_size (processor_default_stack_size)
 
 			default_request_chain_meta_data_entry := new_request_chain_meta_data_entry (null_processor_id)
 
@@ -1421,11 +1416,20 @@ feature {NONE} -- Resource Initialization
 		do
 			from
 				l_processor_resource := processor_meta_data [a_resource_processor]
+				if not a_high_priority then
+						-- Make sure processors yield CPU if low priority
+					l_wait_counter := processor_spin_lock_limit
+				end
 			until
 				l_exit
 			loop
 					-- Use `a_resource_type' to determine what kind of resource of `a_requesting_processor' needs from `a_resource_processor'.
 					-- Be it exclusive access to request queue, or for access to processor locks for lock passing.
+				if not a_high_priority then
+						-- Yield before attempting request for low priority attempts.
+					processor_yield (a_requesting_processor, l_wait_counter)
+				end
+
 				l_original_value := {ATOMIC_MEMORY_OPERATIONS}.compare_and_swap_integer_32 (l_processor_resource.item_address (a_resource_index), a_requesting_processor, null_processor_id)
 				if l_original_value = null_processor_id then
 						-- The value has been correctly set so Return True and Exit
@@ -1440,16 +1444,13 @@ feature {NONE} -- Resource Initialization
 						Result := resource_lock_previously_attained
 						l_exit := True
 					elseif a_block_until_request_granted then
-							-- If high priority then we perform a spin lock.
 						processor_yield (a_requesting_processor, l_wait_counter)
 						l_wait_counter := l_wait_counter + 1
 					else
 						-- We don't have the lock and we do not block so we exit and return False.
 						Result := resource_lock_unattained
+						processor_yield (a_requesting_processor, l_wait_counter)
 						l_exit := True
-						if not a_high_priority then
-							processor_yield (a_requesting_processor, l_wait_counter)
-						end
 					end
 				end
 			end
@@ -1476,7 +1477,7 @@ feature {NONE} -- Resource Initialization
 			l_original_value := {ATOMIC_MEMORY_OPERATIONS}.compare_and_swap_integer_32 (a_resource_address, null_processor_id, a_requesting_processor)
 			check resource_relinquished: l_original_value = a_requesting_processor end
 			if not a_high_priority then
-				processor_yield (a_requesting_processor, 0)
+				processor_yield (a_requesting_processor, processor_spin_lock_limit)
 			end
 		end
 
@@ -1495,6 +1496,8 @@ feature {NONE} -- Resource Initialization
 		-- Exception message when a client processor has logged a call on a supplier processor that raises an exception.
 
 	scoop_processor_deadlock_detected_message: STRING = "SCOOP Processor Deadlock Detected"
+
+	scoop_request_chain_stack_overflow_message: STRING = "SCOOP Request Chain Stack Overflow"
 
 feature {NONE} -- Atomic Access
 
@@ -1522,6 +1525,9 @@ feature {NONE} -- Scoop Processor Meta Data
 
 	max_scoop_processors_instantiable: INTEGER_32 = 1536
 		-- Total Number of SCOOP Processors that may be instantiated by Pool including Root.
+
+	processor_default_stack_size: INTEGER_32 = 1_048_576
+		-- Size in bytes of stack size of processor.
 
 	max_wait_condition_retry_limit: INTEGER_32 = 10000
 		-- Maximum number of retries a wait condition may have before raising an exception.

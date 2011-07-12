@@ -326,6 +326,9 @@ feature -- Request Chain Handling
 			signify_end_of_request_chain (a_client_processor_id)
 				-- Set the wait counter to the incremented value as ending the request chain always resets it back to zero.
 			l_wait_condition_counter := {ATOMIC_MEMORY_OPERATIONS}.swap_integer_32 (processor_meta_data [a_client_processor_id].item_address (processor_wait_condition_counter_index), l_wait_condition_counter)
+
+				-- Yield processor temporarily (no spin locking as a failed wait condition is lower priority).
+			processor_yield (a_client_processor_id, Processor_spin_lock_limit + l_wait_condition_counter.as_natural_32)
 		end
 
 	assign_supplier_processor_to_request_chain (a_client_processor_id, a_supplier_processor_id: like processor_id_type)

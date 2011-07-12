@@ -583,18 +583,19 @@ feature {TYPE_A} -- Helpers
 	internal_generic_derivation (a_level: INTEGER): CL_TYPE_A
 		local
 			l_attachment: like attachment_bits
+			s: like has_separate_mark
 		do
-			if attachment_bits = 0 then
+			if attachment_bits = 0 and then not has_separate_mark then
 				Result := Current
 			else
-					-- Clear the attachment mark.
+					-- Clear the attachment and separate mark.
 				l_attachment := attachment_bits
 				attachment_bits := 0
+				s := has_separate_mark
+				has_separate_mark := False
 				Result := twin
+				has_separate_mark := s
 				attachment_bits := l_attachment
-			end
-			if Result.is_separate then
-				Result := Result.as_non_separate
 			end
 		end
 

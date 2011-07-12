@@ -1,0 +1,11 @@
+test_name	validity-vffd8-once-proc-scoop
+test_description All types of once procedures are allowed in SCOOP.
+
+copy_sub	Ace	$TEST Ace
+copy_raw	test.e	$CLUSTER test.e
+config Ace test
+
+compile_melted
+compile_result	ok
+
+test_end

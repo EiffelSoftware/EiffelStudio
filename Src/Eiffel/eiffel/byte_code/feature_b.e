@@ -393,44 +393,46 @@ feature -- Inlining
 			entry: ROUT_ENTRY
 			f: FEATURE_I
 			context_class_type, written_class_type: CLASS_TYPE
-			has_separate_formal_arguments: BOOLEAN
+			has_separate: BOOLEAN
 		do
 				-- We have to disable inlining if target is a multi constraint. This fixes eweasel
 				-- test#final0978 and test#final094.
-			has_separate_formal_arguments :=
-				system.is_scoop and then
-				attached parameters as p and then
-				across p as parameter some context.real_type (parameter.item.attachment_type).is_separate end
-			if not is_once and then not has_separate_formal_arguments then
-				type_i := context_type
-				if not type_i.is_basic then
-						-- Inline only if it is not polymorphic and if it can be inlined.
-					if Eiffel_table.is_polymorphic (routine_id, type_i, context.context_class_type, True) = -1 then
-						l_rout_table ?= eiffel_table.poly_table (routine_id)
-						l_rout_table.goto_implemented (type_i, context.context_class_type)
-							-- Only if it is implemented that we can inline it.
-						if l_rout_table.is_implemented then
-							inliner := System.remover.inliner
-							entry := l_rout_table.item
-							l_body_index := entry.body_index
-								-- We need to instantiate `type' in current context to fix eweasel test#final065.
-							inline := inliner.inline (context.real_type (type), l_body_index)
+			type_i := context_type
+			if system.is_scoop then
+					-- Evaluate if the feature is called on a separate target
+					-- or some arguments are separate.
+				has_separate :=
+					type_i.is_separate or else
+					attached parameters as p and then
+					across p as parameter some context.real_type (parameter.item.attachment_type).is_separate end
+			end
+			if not is_once and then not has_separate and then not type_i.is_basic then
+					-- Inline only if it is not polymorphic and if it can be inlined.
+				if Eiffel_table.is_polymorphic (routine_id, type_i, context.context_class_type, True) = -1 then
+					l_rout_table ?= eiffel_table.poly_table (routine_id)
+					l_rout_table.goto_implemented (type_i, context.context_class_type)
+						-- Only if it is implemented that we can inline it.
+					if l_rout_table.is_implemented then
+						inliner := System.remover.inliner
+						entry := l_rout_table.item
+						l_body_index := entry.body_index
+							-- We need to instantiate `type' in current context to fix eweasel test#final065.
+						inline := inliner.inline (context.real_type (type), l_body_index)
 
-								-- Special handling of deferred routine with one implementation in more than one
-								-- descendants which do not conform to each other. To avoid the expensive cost of
-								-- the computation we check first that the context type is deferred. This fixes
-								-- eweasel test#final087.
-							if inline and type_i.associated_class.is_deferred then
-									-- The routine in the deferred class could be deferred and we need to
-									-- ensure that all implementations of Current are forming an inheritance
-									-- line, not a tree as if it is a tree, inlining has to be done from the top
-									-- of the tree not from the first implemented version we found.
-									-- Ideally we could figure it out, but it is more complicated, for the time
-									-- being we disallow inlining in those rare cases. See eweasel test#final087.
-								l_is_deferred_inlinable := l_rout_table.is_inlinable (type_i, context.context_class_type)
-							else
-								l_is_deferred_inlinable := True
-							end
+							-- Special handling of deferred routine with one implementation in more than one
+							-- descendants which do not conform to each other. To avoid the expensive cost of
+							-- the computation we check first that the context type is deferred. This fixes
+							-- eweasel test#final087.
+						if inline and type_i.associated_class.is_deferred then
+								-- The routine in the deferred class could be deferred and we need to
+								-- ensure that all implementations of Current are forming an inheritance
+								-- line, not a tree as if it is a tree, inlining has to be done from the top
+								-- of the tree not from the first implemented version we found.
+								-- Ideally we could figure it out, but it is more complicated, for the time
+								-- being we disallow inlining in those rare cases. See eweasel test#final087.
+							l_is_deferred_inlinable := l_rout_table.is_inlinable (type_i, context.context_class_type)
+						else
+							l_is_deferred_inlinable := True
 						end
 					end
 				end

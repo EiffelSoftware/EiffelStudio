@@ -947,7 +947,7 @@ feature -- Command/Query Handling
 			from
 				l_counter := 0
 			until
-				l_chain_status > request_chain_status_open or else l_counter = 100
+				l_chain_status > request_chain_status_open or else l_counter > Max_yield_counter
 			loop
 				processor_yield (a_client_processor_id, l_counter)
 				l_counter := l_counter + 1
@@ -1277,6 +1277,7 @@ feature {NONE} -- Resource Initialization
 								processor_wait (a_logical_processor_id, l_executing_request_chain_node_meta_data [request_chain_client_pid_index])
 							else
 									-- We are in an idle state, waiting for the request chain to close or to have more calls logged so we yield to another thread.
+									-- Make sure that we only yield and not fully sleep.								
 								processor_yield (a_logical_processor_id, l_wait_counter)
 								l_wait_counter := l_wait_counter + 1
 							end
@@ -1356,6 +1357,10 @@ feature {NONE} -- Resource Initialization
 			-- Processor `a_client_processor_id' is idle.
 		do
 			processor_yield (a_client_processor_id, a_wait_counter)
+			if a_wait_counter > max_yield_counter then
+					-- Fully relinquish processor.
+				processor_sleep (processor_sleep_quantum)
+			end
 		end
 
 	deadlock_counter: NATURAL_16
@@ -1485,6 +1490,8 @@ feature {NONE} -- Resource Initialization
 	scoop_dirty_processor_exception_message: STRING = "SCOOP Processor Dirty Exception"
 		-- Exception message when a client processor has logged a call on a supplier processor that raises an exception.
 
+	scoop_processor_deadlock_detected_message: STRING = "SCOOP Processor Deadlock Detected"
+
 feature {NONE} -- Atomic Access
 
 	processor_count: INTEGER_32
@@ -1538,7 +1545,7 @@ feature {NONE} -- Scoop Processor Meta Data
 			if a_supplier_processor_id /= a_client_processor_id then
 				l_waiting_semaphore_count := {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 ($waiting_semaphore_count)
 				if l_waiting_semaphore_count = processor_count then
-					raise_scoop_exception ("SCOOP Processor Deadlock detected")
+					raise_scoop_exception (scoop_processor_deadlock_detected_message)
 				end
 				semaphore_client_wait (processor_semaphore_list [a_client_processor_id])
 			end
@@ -1810,7 +1817,7 @@ feature {NONE} -- Externals
 			if a_iteration_number < processor_spin_lock_limit then
 					-- Spin lock
 				check_for_gc
-			elseif a_iteration_number <= max_yield_counter then
+			elseif a_iteration_number < max_yield_counter then
 				processor_cpu_yield
 			else
 					-- Check for any potential deadlock.
@@ -1825,16 +1832,17 @@ feature {NONE} -- Externals
 				end
 				previous_waiting_processor_count := waiting_processor_count
 				if deadlock_counter > deadlock_detection_limit then
-					raise_scoop_exception ("SCOOP Processor Deadlock detected")
+					raise_scoop_exception (scoop_processor_deadlock_detected_message)
+				else
+					processor_cpu_yield
 				end
-				processor_sleep (processor_sleep_quantum)
 			end
 		end
 
 	processor_spin_lock_limit: NATURAL_32 = 100
 		-- Number of iterations to spin lock until yielding.
 
-	max_yield_counter: NATURAL_32 = 4000
+	max_yield_counter: NATURAL_32 = 10_000
 		-- Maximum value of the yield counter.
 
 	processor_sleep_quantum: NATURAL_32 = 15_000_000

@@ -730,18 +730,19 @@ feature {TYPE_A} -- Helpers
 			i, count: INTEGER
 			l_generics, l_new_generics: like generics
 			l_attachment_bits: like attachment_bits
+			s: like has_separate_mark
 			l_type: TYPE_A
 		do
 			from
-					-- Duplicate current without the attachment information
+					-- Duplicate current without the attachment and separateness information
 					-- since it does not matter for a generic derivation.
 				l_attachment_bits := attachment_bits
 				attachment_bits := 0
+				s := has_separate_mark
+				has_separate_mark := False
 				Result := duplicate_for_instantiation
+				has_separate_mark := s
 				attachment_bits := l_attachment_bits
-				if Result.is_separate then
-					Result := Result.as_non_separate
-				end
 
 				l_generics := generics
 				l_new_generics := Result.generics

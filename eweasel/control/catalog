@@ -2644,8 +2644,9 @@ test	scoop-wait-condition				scoop009 tcf pass scoop execution assertion
 test	scoop-request-chain-exception			scoop011 tcf pass scoop execution exception
 test	scoop-false-wait-condition			scoop012 tcf pass scoop execution assertion exception
 test	scoop-inline-separate-call			scoop013 tcf fail scoop finalizing inlining
+test	scoop-separate-expanded				scoop014 tcf fail scoop expanded
 
--- Prettity
+-- Prettify
 test	pretty-smoke-test			pretty001 tcf pass pretty
 test	pretty-explicit-creation-space		pretty002 tcf pass pretty
 test	pretty-argument-list-separators		pretty003 tcf pass pretty

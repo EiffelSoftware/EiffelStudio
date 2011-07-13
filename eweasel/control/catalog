@@ -2647,6 +2647,7 @@ test	scoop-false-wait-condition			scoop012 tcf pass scoop execution assertion ex
 test	scoop-inline-separate-call			scoop013 tcf fail scoop finalizing inlining
 test	scoop-separate-expanded				scoop014 tcf pass scoop expanded
 test	scoop-separate-patterns-crash			scoop015 tcf pass scoop finalizing
+test	scoop-finalize-c-failure			scoop016 tcf pass scoop finalizing c_compilation
 
 -- Prettify
 test	pretty-smoke-test			pretty001 tcf pass pretty

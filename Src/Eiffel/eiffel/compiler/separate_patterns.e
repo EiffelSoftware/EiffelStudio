@@ -36,19 +36,19 @@ feature -- Modification
 		require
 			f_attached: attached f
 		local
-			a: detachable ARRAY [TYPE_C]
+			a: detachable SPECIAL [TYPE_C]
 			i: C_PATTERN_INFO
 			buffer: GENERATION_BUFFER
 			is_attribute: BOOLEAN
 		do
 			if attached f.parameters as p then
-				create a.make_empty
+				create a.make_empty (p.count)
 				from
 					p.start
 				until
 					p.after
 				loop
-					a.force (p.item.c_type, a.upper + 1)
+					a.extend (p.item.c_type)
 					p.forth
 				end
 			end

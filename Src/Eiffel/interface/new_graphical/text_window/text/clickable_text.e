@@ -147,6 +147,11 @@ feature {EB_CLICKABLE_EDITOR} -- Load Text handling
 				block_counter := 0
 				no_processed_line := True
 			end
+			if attached current_string as l_t then
+				l_t.wipe_out
+			else
+				create current_string.make_empty
+			end
 		end
 
 	end_processing
@@ -287,6 +292,12 @@ feature {NONE} -- Load Text handling
 				line_read := 0
 				block_counter := block_counter + 1
 			end
+				-- Save the text for later use.
+			if attached text_loaded as l_t and then attached last_processed_line as l_l then
+				l_t.append_string (encoding_converter.utf32_to_utf8 (l_l.wide_image))
+				l_t.append_string ("%N")
+			end
+
 			new_line
 			append_line (last_processed_line)
 			eol_reached := False
@@ -405,7 +416,7 @@ feature {NONE} -- Private Constants
 	from_text: INTEGER = 2;
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

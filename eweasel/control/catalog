@@ -2646,6 +2646,7 @@ test	scoop-request-chain-exception			scoop011 tcf pass scoop execution exception
 test	scoop-false-wait-condition			scoop012 tcf pass scoop execution assertion exception
 test	scoop-inline-separate-call			scoop013 tcf fail scoop finalizing inlining
 test	scoop-separate-expanded				scoop014 tcf pass scoop expanded
+test	scoop-separate-patterns-crash			scoop015 tcf pass scoop finalizing
 
 -- Prettify
 test	pretty-smoke-test			pretty001 tcf pass pretty

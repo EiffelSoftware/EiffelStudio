@@ -6,7 +6,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class C_PATTERN
+frozen class C_PATTERN
 
 inherit
 
@@ -37,7 +37,7 @@ inherit
 create
 	make
 
-feature {NONE} -- Initialization
+feature {PATTERN} -- Initialization
 
 	make (t: TYPE_C; a_args: like argument_types)
 			-- Creation of a pattern with a result meta type
@@ -53,10 +53,23 @@ feature {NONE} -- Initialization
 
 feature
 
+	duplicate: C_PATTERN
+			-- Duplicate of `Current'.
+		local
+			l_arg_types: like argument_types
+		do
+			l_arg_types := argument_types
+			if l_arg_types /= Void and then l_arg_types.count > 0 then
+				create Result.make (result_type, argument_types.resized_area (l_arg_types.count))
+			else
+				create Result.make (result_type, Void)
+			end
+		end
+
 	result_type: TYPE_C;
 			-- Meta type of the result
 
-	argument_types: ARRAY [TYPE_C];
+	argument_types: SPECIAL [TYPE_C];
 			-- Meta types of the arguments
 
 	argument_count: INTEGER
@@ -72,17 +85,20 @@ feature
 		local
 			n, i: INTEGER;
 		do
-			n := argument_count;
-			Result :=  n = other.argument_count and then
-					equivalent_type (result_type, other.result_type)
-			from
-				i := 1;
-			until
-				i > n or else not Result
-			loop
-				Result := equivalent_type (argument_types.item (i), (other.argument_types.item (i)));
-				i := i + 1;
-			end;
+			Result := other = Current
+			if not Result then
+				n := argument_count;
+				Result :=  n = other.argument_count and then
+						result_type.same_as (other.result_type)
+				from
+					i := 0;
+				until
+					i = n or else not Result
+				loop
+					Result := argument_types [i].same_as (other.argument_types [i]);
+					i := i + 1;
+				end
+			end
 		end;
 
 	hash_code: INTEGER
@@ -96,15 +112,15 @@ feature
 			n := argument_count
 			if n > 0 then
 				from
-					i := 1
+					i := 0
 				until
-					i > n
+					i = n
 				loop
 						-- Perform a rotation of the hash_code value every 4 bytes.
 					l_rotate := argument_types.item (i).hash_code
-					l_bytes := 4 * (i \\ 8)
+					l_bytes := 4 * (i + 1 \\ 8)
 					l_rotate := (l_rotate |<< l_bytes) | (l_rotate |>> (32 - l_bytes))
-					Result := Result.bit_xor(l_rotate)
+					Result := Result.bit_xor (l_rotate)
 					i := i + 1
 				end
 					-- To prevent negative values.
@@ -121,10 +137,10 @@ feature -- Pattern generation
 		do
 			from
 				Result := 1;
-				i := 1;
+				i := 0;
 				nb := argument_count;
 			until
-				i > nb
+				i = nb
 			loop
 				if argument_types.item (i).is_reference then
 					Result := Result + 1;
@@ -146,9 +162,9 @@ feature -- Pattern generation
 			i: INTEGER;
 		do
 			from
-				i := 1;
+				i := 0;
 			until
-				i > j
+				i = j
 			loop
 				if argument_types.item (i).is_reference then
 					Result := Result + 1;
@@ -212,9 +228,9 @@ feature -- Pattern generation
 			Result.put ("EIF_REFERENCE", 1)
 			j := 2
 			from
-				i := 1;
+				i := 0;
 			until
-				i > nb
+				i = nb
 			loop
 				Result.put (argument_types.item (i).c_string, j)
 				i := i + 1;
@@ -364,7 +380,7 @@ feature -- Pattern generation
 			until
 				i > nb
 			loop
-				arg := argument_types.item (i);
+				arg := argument_types [i - 1]
 				buffer.put_new_line
 				if arg.is_reference then
 						-- Reference value can be used as it is.
@@ -456,24 +472,12 @@ feature -- Pattern generation
 			buffer.put_string (");")
 		end
 
-feature {NONE} -- Implemantation
-
-	equivalent_type (first_type, other_type: TYPE_C): BOOLEAN
-			-- Are `first_type' and `other_type' equivalent regarding C types
-			-- used for generation.
-		require
-			first_type_not_void: first_type /= Void
-			other_type_not_void: other_type /= Void
-		do
-			Result := first_type.same_as (other_type)
-		end
-
 invariant
 
 	result_type_exists: result_type /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -486,22 +490,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

@@ -4908,6 +4908,7 @@ feature -- Generation
 			class_type: CLASS_TYPE
 			l_void: VOID_A
 			l_c_pattern_id: INTEGER
+			l_arg_types: SPECIAL [TYPE_C]
 		do
 			if remover /= Void then
 					-- Ensure that initialization routines are marked `used'.
@@ -4917,9 +4918,12 @@ feature -- Generation
 			nb := Type_id_counter.value
 			if i <= nb then
 					-- Fetch the C pattern ID of the initialization routine.
+				create l_arg_types.make_empty (2)
+				l_arg_types.extend (create {REFERENCE_I})
+				l_arg_types.extend (create {REFERENCE_I})
 				l_c_pattern_id := pattern_table.c_pattern_id (
 					create {C_PATTERN}.make (create {VOID_I},
-						<< create {REFERENCE_I}, create {REFERENCE_I} >>))
+						l_arg_types))
 				from
 					create rout_table.make (routine_id_counter.initialization_rout_id)
 					create l_void

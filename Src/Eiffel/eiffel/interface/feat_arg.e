@@ -7,8 +7,6 @@ note
 
 class FEAT_ARG
 
--- FIXME: redefine is_equivalent
-
 inherit
 	ARRAYED_LIST [TYPE_A]
 		rename
@@ -358,7 +356,7 @@ invariant
 	argument_names_not_void: argument_names /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

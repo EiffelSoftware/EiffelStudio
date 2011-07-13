@@ -608,9 +608,9 @@ feature {NONE} -- Implementation
 				i > nb
 			loop
 				buffer.put_two_character (',', ' ')
-					-- It is `i - 1' because they do not include Current.
-				l_seed_type := l_seed_c_pattern.argument_types.item (i - 1)
-				l_type := l_c_pattern.argument_types.item (i - 1)
+					-- It is `i - 2' because they do not include Current and is zero-based indexing.
+				l_seed_type := l_seed_c_pattern.argument_types.item (i - 2)
+				l_type := l_c_pattern.argument_types.item (i - 2)
 				if not l_seed_type.same_as (l_type) then
 						-- The declaration are different, we need to adapt the argument.
 						-- Currently we can only accept that the seed type is a reference
@@ -711,8 +711,8 @@ feature {NONE} -- Implementation
 					-- of `i'. It might be slightly slower but it is barely noticeable.
 					-- So as soon as we do not need to support VC6++, then we can restore
 					-- the next line.
---				buffer.put_string ("{long i; for (i = ")
-				buffer.put_string ("{volatile long i; for (i = ")
+--				buffer.put_string ("{volatile long i; for (i = ")
+				buffer.put_string ("{long i; for (i = ")
 				buffer.put_integer (a_lower)
 				buffer.put_string ("; i < ")
 				buffer.put_integer (a_upper + 1)

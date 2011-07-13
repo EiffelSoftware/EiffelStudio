@@ -1,0 +1,22 @@
+
+test_name	 scoop-separate-patterns-crash			
+test_description Finalizing the SCOOP producer_consumer system crashes the compiler with a call on Void target in {SEPARATE_PATTERNS}.put
+
+copy_sub	Ace	$TEST Ace
+copy_raw	producer_consumer.e $CLUSTER producer_consumer.e
+copy_raw	producer.e $CLUSTER producer.e
+copy_raw	consumer.e $CLUSTER consumer.e
+copy_raw	bounded_buffer.e $CLUSTER bounded_buffer.e
+
+compile_frozen
+compile_result ok
+c_compile_work
+c_compile_result	ok
+
+compile_final
+compile_result ok
+c_compile_final
+c_compile_result	ok
+
+test_end
+

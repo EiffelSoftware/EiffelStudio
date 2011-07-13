@@ -118,7 +118,7 @@ feature
 				loop
 						-- Perform a rotation of the hash_code value every 4 bytes.
 					l_rotate := argument_types.item (i).hash_code
-					l_bytes := 4 * (i + 1 \\ 8)
+					l_bytes := 4 * ((i + 1) \\ 8)
 					l_rotate := (l_rotate |<< l_bytes) | (l_rotate |>> (32 - l_bytes))
 					Result := Result.bit_xor (l_rotate)
 					i := i + 1

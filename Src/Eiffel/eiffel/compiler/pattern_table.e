@@ -55,24 +55,35 @@ feature -- Access
 	last_pattern_id: INTEGER
 			-- Pattern id processed after last insertion
 
-	pattern_of_id (i: INTEGER; type: CLASS_TYPE): PATTERN
-			-- Pattern information of id `i'.
-		require
-			i_positive: i > 0
-			valid_id: has_pattern_of_id (i)
-			type_not_void: type /= Void
-		do
-			Result := info_array.item (i).instantiation_in (type)
-		end
-
 	c_pattern_id_in (pattern_id: INTEGER; cl_type: CLASS_TYPE): INTEGER
 			-- C pattern ID of pattern `pattern_id' instantiated in `cl_type'.
 		require
 			pattern_id_positive: pattern_id > 0
 			has_pattern_id: has_pattern_of_id (pattern_id)
 			good_type: cl_type /= Void
+		local
+			l_c_pattern: C_PATTERN
+			l_c_pattern_marker: like c_pattern_marker
+			l_c_patterns: like c_patterns
 		do
-			Result := c_pattern_id (pattern_of_id (pattern_id, cl_type).c_pattern)
+				-- Reuse pattern marker pattern to avoid creating any unnecessary objects.
+			l_c_pattern_marker := c_pattern_marker
+			l_c_pattern := l_c_pattern_marker.pattern
+			l_c_patterns := c_patterns
+
+			info_array.item (pattern_id).pattern.update_c_pattern_with_instantiation_in (l_c_pattern, cl_type)
+
+			l_c_patterns.search (l_c_pattern_marker)
+			if l_c_patterns.found then
+				Result := l_c_patterns.found_item.c_pattern_id
+			else
+				insert_c_pattern (l_c_pattern.duplicate)
+					-- Optimization to avoid searching again
+				Result := c_pattern_id_counter.value
+				check
+					optimization_ok: Result = c_pattern_id (l_c_pattern)
+				end
+			end
 		ensure
 			c_pattern_id_in_positive: Result > 0
 		end
@@ -138,6 +149,7 @@ feature -- Processing
 		do
 			from
 				info_array.start
+				c_pattern := c_pattern_marker.pattern
 			until
 				info_array.after
 			loop
@@ -150,9 +162,9 @@ feature -- Processing
 					until
 						types.after
 					loop
-						c_pattern := info.instantiation_in (types.item).c_pattern
+						info.pattern.update_c_pattern_with_instantiation_in (c_pattern, types.item)
 						if not has_c_pattern (c_pattern) then
-							insert_c_pattern (c_pattern)
+							insert_c_pattern (c_pattern.duplicate)
 						end
 						types.forth
 					end
@@ -166,33 +178,65 @@ feature -- Processing
 
 feature -- Element change
 
-	insert (written_in: INTEGER; pattern: PATTERN)
-		require
-			good_argument: pattern /= Void
+	reusable_arguments_array: SPECIAL [TYPE_A]
+		once
+			create Result.make_empty (10)
+		end
+
+	insert_pattern_from_feature_i (a_feature_i: FEATURE_I)
+			-- Insert new pattern using `a_feature_i'.
 		local
-			other_pattern: PATTERN
-			info, other_info: PATTERN_INFO
+			pattern: PATTERN
+			info: PATTERN_INFO
+			new_pattern: PATTERN
+			new_info: PATTERN_INFO
+			l_arguments_array: SPECIAL [TYPE_A]
+			l_feature_args: SPECIAL [TYPE_A]
+			l_arguments_count: INTEGER
+			i: INTEGER
 		do
 				-- Set pattern marker for search.
 			info := pattern_marker
-			info.set_pattern (pattern)
-			info.set_written_in (written_in)
-			other_info := item (info)
-			if other_info = Void then
-				create info.make (written_in, pattern)
-				other_pattern := patterns.item (pattern)
-				if other_pattern = Void then
-					patterns.put (pattern)
-				else
-					info.set_pattern (other_pattern)
+			pattern := info.pattern
+			l_arguments_count := a_feature_i.argument_count
+			if l_arguments_count > 0 then
+				l_arguments_array := reusable_arguments_array
+				l_arguments_array.keep_head (0)
+				if l_arguments_array.capacity < l_arguments_count then
+					l_arguments_array := l_arguments_array.aliased_resized_area (l_arguments_count)
 				end
-				put (info)
-
-				last_pattern_id := pattern_id_counter.next_id
-				info.set_pattern_id (last_pattern_id)
-				info_array.put (info, last_pattern_id)
+				from
+					i := 0
+					l_feature_args := a_feature_i.arguments.area_v2
+				until
+					i = l_arguments_count
+				loop
+					l_arguments_array.extend (l_feature_args [i].meta_type)
+					i := i + 1
+				end
+				pattern.make_with_arguments (a_feature_i.type.meta_type, l_arguments_array)
 			else
-				last_pattern_id := other_info.pattern_id
+				pattern.make (a_feature_i.type.meta_type)
+			end
+			info.set_pattern (pattern)
+			info.set_written_in (a_feature_i.generation_class_id)
+
+				-- Set pattern marker for search.
+			new_info := item (info)
+			if new_info = Void then
+				new_pattern := patterns.item (info.pattern)
+				if new_pattern = Void then
+						-- This is a brand new pattern so we add it to the patterns search table.
+					new_pattern := info.pattern.duplicate
+					patterns.put (new_pattern)
+				end
+				create new_info.make (info.written_in, new_pattern)
+				put (new_info)
+				last_pattern_id := pattern_id_counter.next_id
+				new_info.set_pattern_id (last_pattern_id)
+				info_array.put (new_info, last_pattern_id)
+			else
+				last_pattern_id := new_info.pattern_id
 			end
 		ensure
 			inserted: has_pattern_of_id (last_pattern_id)
@@ -301,8 +345,14 @@ feature {NONE} -- Impementation: Access
 
 	pattern_marker: PATTERN_INFO
 			-- Marker for search in `Current'.
+		local
+			l_pattern: PATTERN
+			l_shared_types: SHARED_TYPES
 		once
-			create Result.make (0, Void)
+				-- Create reusable pattern for use in searching.
+			create l_shared_types
+			create l_pattern.make (l_shared_types.void_type)
+			create Result.make (0, l_pattern)
 		end
 
 	c_pattern_marker: C_PATTERN_INFO
@@ -323,7 +373,7 @@ invariant
 	info_array_exists: info_array /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

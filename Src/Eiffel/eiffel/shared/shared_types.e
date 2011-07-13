@@ -3,7 +3,7 @@ note
 	status: "See notice at end of class."
 class SHARED_TYPES
 
-feature {NONE}
+feature -- Access
 
 	natural_8_type: NATURAL_A
 			-- Actual integer type of 8 bits
@@ -111,7 +111,7 @@ feature {NONE}
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -6,7 +6,7 @@ extern "C" {
 
 extern IUIFramework *g_pFramework;
 
-extern EIF_POINTER InitializeFramework(HWND hWnd);
+extern EIF_POINTER InitializeFramework(HWND hWnd, EIF_POINTER a_ribbon_resource_handle);
 extern IUIApplication *GetUIApplication();
 extern BOOL CreateIUIImageFromBitmap (HBITMAP bitmap, IUIImage **image);
 extern HRESULT QueryInterfaceIUICollectionWithPropVariant (PROPVARIANT * a_prop_variant);

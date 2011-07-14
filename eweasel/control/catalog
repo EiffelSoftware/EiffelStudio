@@ -2648,6 +2648,7 @@ test	scoop-inline-separate-call			scoop013 tcf fail scoop finalizing inlining
 test	scoop-separate-expanded				scoop014 tcf pass scoop expanded
 test	scoop-separate-patterns-crash			scoop015 tcf pass scoop finalizing
 test	scoop-finalize-c-failure			scoop016 tcf pass scoop finalizing c_compilation
+test	scoop-separate-call-to-constant			scoop017 tcf pass scoop execution
 
 -- Prettify
 test	pretty-smoke-test			pretty001 tcf pass pretty

@@ -110,14 +110,15 @@ BOOL CreateIUIImageFromBitmap (HBITMAP bitmap, IUIImage **image)
 	return TRUE;
 }
 
-EIF_POINTER InitializeFramework(HWND hWnd)
+EIF_POINTER InitializeFramework(HWND hWnd, EIF_POINTER a_ribbon_resource_handle)
 {
 	HRESULT hr;
 
 	hr = CoCreateInstance(&CLSID_UIRibbonFramework, NULL, CLSCTX_INPROC_SERVER, &IID_IUIFRAMEWORK, (VOID **)&g_pFramework);
 	if (SUCCEEDED(hr)) {
 		VOID *ppvObj = NULL;
-
+		HINSTANCE l_resouce_handle = (HINSTANCE)a_ribbon_resource_handle;
+		
 		/* allocate pApplication */
 		pApplication = (IUIApplication *)GlobalAlloc(GMEM_FIXED, sizeof(IUIApplication));
 		if (pApplication) {
@@ -137,7 +138,14 @@ EIF_POINTER InitializeFramework(HWND hWnd)
 					 * 2. Initiate callbacks to the IUIApplication
 					 * 3. Bind command handler(s)
 					 */
-				hr = g_pFramework->lpVtbl->LoadUI(g_pFramework, GetModuleHandle(NULL), L"APPLICATION_RIBBON");
+				if (l_resouce_handle == (HINSTANCE)NULL)
+				{
+					hr = g_pFramework->lpVtbl->LoadUI(g_pFramework, GetModuleHandle(NULL), L"APPLICATION_RIBBON");
+				}else
+				{
+					hr = g_pFramework->lpVtbl->LoadUI(g_pFramework, l_resouce_handle, L"APPLICATION_RIBBON");
+				}
+					
 				if (SUCCEEDED(hr)) {
 					return (EIF_POINTER) g_pFramework;
 				}

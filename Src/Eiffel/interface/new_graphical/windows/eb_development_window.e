@@ -1738,7 +1738,6 @@ feature {EB_STONE_CHECKER, EB_STONE_FIRST_CHECKER, EB_DEVELOPMENT_WINDOW_PART} -
 				if l_feature = Void then
 					l_feature := feat_as
 				end
-				editors_manager.current_editor.find_feature_named (l_feature.name_32)
 			else
 				if displayed_class.is_compiled then
 						-- We need to adapt E_FEATURE to the current displayed class
@@ -1753,45 +1752,8 @@ feature {EB_STONE_CHECKER, EB_STONE_FIRST_CHECKER, EB_DEVELOPMENT_WINDOW_PART} -
 				else
 					l_feature := feat_as
 				end
-				l_feat_as := l_feature.ast
-					-- Do nothing if the class has been deleted.
-				if l_feat_as /= Void then
-					from
-						l_names := l_feat_as.feature_names
-						l_names.start
-					until
-						l_names.after or else
-						string_32_is_caseless_equal (l_feature.name_32, l_names.item.internal_name.name_32)
-					loop
-						l_names.forth
-					end
-					if
-						l_feature.is_valid and then
-						attached l_feature.associated_class.lace_class as l_lace and then
-						attached l_lace.text_8 as l_text
-					then
-						create l_mapper.make (l_text)
-						if not l_names.after then
-							begin_index := l_mapper.utf32_pos_from_utf8_pos (l_names.item.start_position)
-						else
-								-- Something wrong happened, the feature does not exist anymore.
-								-- We simply take the position of the first one.
-							begin_index := l_mapper.utf32_pos_from_utf8_pos (l_names.start_position)
-						end
-					else
-							-- Did not find the source.
-						if not l_names.after then
-							begin_index := l_names.item.start_position
-						else
-								-- Something wrong happened, the feature does not exist anymore.
-								-- We simply take the position of the first one.
-							begin_index := l_names.start_position
-						end
-					end
-					offset := relative_location_offset ([begin_index, 0], displayed_class)
-					editors_manager.current_editor.scroll_to_when_ready (begin_index - offset.start_offset)
-				end
 			end
+			editors_manager.current_editor.find_feature_named (l_feature.name_32)
 		end
 
 	scroll_to_ast (a_ast: AST_EIFFEL; displayed_class: CLASS_I; a_selected: BOOLEAN)

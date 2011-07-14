@@ -1327,7 +1327,8 @@ feature {UNDO_CMD} -- Basic Text changes
 					create new_line.make_from_lexer (lexer)
 				end
 				cline.add_right (new_line)
-				on_line_modified (new_line.index)
+					-- A new line has been inserted.
+				on_line_inserted (new_line.index)
 				end_pos := aux.count - i + 1
 
 					-- reset pos_in_file values of tokens if possible

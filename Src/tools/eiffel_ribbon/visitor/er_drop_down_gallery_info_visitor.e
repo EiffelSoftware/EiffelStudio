@@ -14,7 +14,7 @@ inherit
 
 feature -- Command
 
-	visit_ribbon_tabs (a_ribbon_tabs: ER_XML_TREE_ELEMENT)
+	visit_ribbon_tabs (a_ribbon_tabs: ER_XML_TREE_ELEMENT; a_layout_constructor_index: INTEGER)
 				--
 		do
 			visit_drop_down_gallery_recursive (a_ribbon_tabs)

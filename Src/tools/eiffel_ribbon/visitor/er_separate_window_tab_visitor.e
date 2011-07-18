@@ -27,25 +27,16 @@ feature {NONE} -- Initialization
 
 feature -- Command
 
-	visit_ribbon_tabs (a_ribbon_tabs: ER_XML_TREE_ELEMENT)
+	visit_ribbon_tabs (a_ribbon_tabs: ER_XML_TREE_ELEMENT; a_layout_constructor_index: INTEGER)
 			--
 		local
 			l_root_items: ARRAYED_LIST [EV_TREE_ITEM]
 			l_ribbon_tabs: ARRAYED_LIST [EV_TREE_NODE]
 		do
-				-- First find out how many application modes
-			find_out_total_application_modes (a_ribbon_tabs)
-				-- Prepare root node Ribbon.Tabs for each ribbon
-			l_root_items := prepare_root_nodes
-				-- Separate application mode to different ribbon_tabs
-			l_ribbon_tabs := shared.layout_constructor_list.first.all_items_with (constants.ribbon_tabs)
-			check l_ribbon_tabs.count = 1 end
-			separate_different_ribbon_tabs (l_root_items, l_ribbon_tabs.first)
-
-			build_layout_constructors (l_root_items)
+			build_layout_constructors (a_layout_constructor_index)
 		end
 
-	visit_ribbon_application_menu (a_ribbon_application_menu: ER_XML_TREE_ELEMENT)
+	visit_ribbon_application_menu (a_ribbon_application_menu: ER_XML_TREE_ELEMENT; a_layout_constructor_index: INTEGER)
 			--
 		local
 			l_ribbon_menu_groups: ARRAYED_LIST [EV_TREE_NODE]
@@ -206,68 +197,47 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	build_layout_constructors (a_root_ribbon_tabs: ARRAYED_LIST [EV_TREE_NODE])
+	build_layout_constructors (a_layout_constructor_index: INTEGER)
 			--
-		require
-			not_void: a_root_ribbon_tabs /= Void
 		local
 			l_layout_constructor: ER_LAYOUT_CONSTRUCTOR
 			l_application_menu: detachable EV_TREE_NODE
 		do
-			check a_root_ribbon_tabs.count >= 1 end
 
-			l_layout_constructor := shared.layout_constructor_list.first
-			l_application_menu := record_application_menu
-			l_layout_constructor.widget.wipe_out
-			l_layout_constructor.widget.extend (a_root_ribbon_tabs.first)
-			separate_application_menu (l_application_menu)
+			l_layout_constructor := shared.layout_constructor_list.i_th (a_layout_constructor_index)
+			l_application_menu := record_application_menu (a_layout_constructor_index)
+			separate_application_menu (l_application_menu, a_layout_constructor_index)
 			l_layout_constructor.expand_tree
 
-			if a_root_ribbon_tabs.count > 1 then
-				-- Need to create new layout constructors
-				from
-					a_root_ribbon_tabs.go_i_th (2)
-				until
-					a_root_ribbon_tabs.after
-				loop
-					if attached shared.main_window_cell.item as l_win then
-						l_win.new_ribbon_command.execute
-
-						l_layout_constructor := shared.layout_constructor_list.i_th (a_root_ribbon_tabs.index)
-						l_layout_constructor.widget.wipe_out
-						l_layout_constructor.widget.extend (a_root_ribbon_tabs.item)
-						l_layout_constructor.expand_tree
-					end
-
-					a_root_ribbon_tabs.forth
-				end
+			if a_layout_constructor_index <= 1 then -- Only build new layout constructors when using ApplicationMode for separated ribbons
+			
 			end
 		end
 
-	record_application_menu: detachable EV_TREE_NODE
+	record_application_menu (a_layout_constructor_index: INTEGER): detachable EV_TREE_NODE
 			--
 		local
 			l_layout_constructor: ER_LAYOUT_CONSTRUCTOR
 		do
 			-- Add application menu to first
 			-- FIXME: what about application menu for other windows?
-			if shared.layout_constructor_list.first.widget.valid_index (2) and then
-				attached shared.layout_constructor_list.first.widget.i_th (2) as l_application_menu then
+			if shared.layout_constructor_list.i_th (a_layout_constructor_index).widget.valid_index (2) and then
+				attached shared.layout_constructor_list.i_th (a_layout_constructor_index).widget.i_th (2) as l_application_menu then
 				if attached l_application_menu.parent as l_parent then
 					l_parent.prune_all (l_application_menu)
 				end
-				l_layout_constructor := shared.layout_constructor_list.first
+				l_layout_constructor := shared.layout_constructor_list.i_th (a_layout_constructor_index)
 				Result := l_application_menu
 			end
 		end
 
-	separate_application_menu (a_application_menu: detachable EV_TREE_NODE)
+	separate_application_menu (a_application_menu: detachable EV_TREE_NODE; a_layout_constructor_index: INTEGER)
 			--
 		local
 			l_layout_constructor: ER_LAYOUT_CONSTRUCTOR
 		do
 			if attached a_application_menu as l_application_menu then
-				l_layout_constructor := shared.layout_constructor_list.first
+				l_layout_constructor := shared.layout_constructor_list.i_th (a_layout_constructor_index)
 				remove_application_menu_node (a_application_menu)
 				l_layout_constructor.widget.extend (l_application_menu)
 				l_layout_constructor.expand_tree
@@ -284,8 +254,9 @@ feature {NONE} -- Implementation
 			l_item: EV_TREE_NODE
 			l_items: ARRAYED_LIST [EV_TREE_NODE]
 		do
-			check a_application_menu.count = 1 end
-			if attached a_application_menu.i_th (1) as l_ribbon_menu then
+--			check a_application_menu.count = 1 end
+			if a_application_menu.valid_index (1) and then
+				attached a_application_menu.i_th (1) as l_ribbon_menu then
 				a_application_menu.wipe_out
 
 				from

@@ -29,8 +29,6 @@ feature -- Command
 			l_xml_element: XML_ELEMENT
 			l_parent: XML_ELEMENT
 		do
-			application_mode := 0
-
 			create xml_document.make
 			create name_space.make_default
 			create root_xml_element.make_root (xml_document, "Application", name_space)
@@ -58,8 +56,10 @@ feature -- Command
 			l_parent.put_last (l_xml_element)
 		end
 
-	save_xml_nodes_for_all_layout_constructors
-			--
+	save_xml_nodes_for_one_layout_constructors (a_index: INTEGER): BOOLEAN
+			-- Result true means layout saved successfully
+		require
+			valid: a_index >= 1
 		local
 			l_shared: ER_SHARED_SINGLETON
 			l_list: ARRAYED_LIST [ER_LAYOUT_CONSTRUCTOR]
@@ -70,10 +70,12 @@ feature -- Command
 				l_list := l_shared.layout_constructor_list
 				l_list.start
 			until
-				l_list.after
+				l_list.after or Result
 			loop
-				application_mode := l_list.index - 1
-				add_xml_nodes_by_vision_tree (l_list.item.widget)
+				if l_list.index = a_index then
+					add_xml_nodes_by_vision_tree (l_list.item.widget)
+					Result := True
+				end
 
 				l_list.forth
 			end
@@ -122,7 +124,9 @@ feature {NONE} -- Tree saving
 				if attached l_shared.size_definition_cell.item as l_size_definition and then not l_size_definition.size_definition_writer.is_empty then
 					l_root_xml_size_definition := l_size_definition.size_definition_writer.root_xml_for_saving
 --					l_root_xml_size_definition.set_parent (l_ribbon_xml)
-					l_ribbon_xml.put_last (l_root_xml_size_definition)
+					if l_root_xml_size_definition.count /= 0 then
+						l_ribbon_xml.put_last (l_root_xml_size_definition)
+					end
 				end
 			end
 		end
@@ -596,9 +600,6 @@ feature {NONE} -- Tree saving
 						-- Add coresspond command xml node
 						add_xml_command_node (l_data)
 					end
-					if application_mode /= 0 then
-						l_tab_node.add_attribute (l_constants.application_mode, name_space, application_mode.out)
-					end
 				end
 
 				from
@@ -638,9 +639,6 @@ feature {NONE} -- Tree saving
 						l_group_node.add_attribute (l_constants.command_name, name_space, l_command_name)
 						-- Add coresspond command xml node
 						add_xml_command_node (l_data)
-					end
-					if application_mode /= 0 then
-						l_group_node.add_attribute (l_constants.application_mode, name_space, application_mode.out)
 					end
 
 					if attached l_data.size_definition as l_size_definition and then not l_size_definition.is_empty then
@@ -711,10 +709,6 @@ feature {NONE} -- Tree saving
 					-- Add xml attribute
 					if attached l_data.command_name as l_command_name and then not l_command_name.is_empty then
 						l_button_node.add_attribute (l_constants.command_name, name_space, l_command_name)
-
-						if a_is_menu_button and then application_mode /= 0 then
-							l_button_node.add_attribute (l_constants.application_mode, name_space, application_mode.out)
-						end
 
 						-- Add coresspond command xml node
 						add_xml_command_node (l_data)
@@ -1136,11 +1130,6 @@ feature -- Query
 
 	name_space: XML_NAMESPACE
 			--
-
- 	application_mode: INTEGER
- 			-- 0 means first layout constructor
- 			-- 1 means second layout constructor
- 			-- 2 means third...
 
 feature {NONE} -- implementation
 

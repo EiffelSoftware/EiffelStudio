@@ -21,11 +21,43 @@ feature -- Command
 
 	generate_all_codes
 			--
+		local
+			l_index: INTEGER
+			l_stop: BOOLEAN
+			l_constants: ER_MISC_CONSTANTS
+			l_file: RAW_FILE
+			l_singleton: ER_SHARED_SINGLETON
+			l_max_count: INTEGER
+			l_translator: ER_H_FILE_TRANSLATOR
 		do
 			group_counter := 0
 			button_counter := 0
+			create l_singleton
+			if attached l_singleton.project_info_cell.item as l_project_info then
+				l_max_count := l_project_info.ribbon_window_count
+				from
+					create l_constants
+					l_index := 1
+					l_stop := False
+				until
+					l_index > l_max_count or l_stop
+				loop
+					if attached l_constants.xml_full_file_name (l_index) as l_file_name then
+						create l_file.make (l_file_name)
+						if l_file.exists then
+							uicc_manager.compile (l_index)
+							uicc_manager.rc_to_res (l_index)
+							uicc_manager.res_to_dll (l_index)
+						else
+							l_stop := True
+						end
+					else
+						l_stop := True
+					end
 
-			uicc_manager.compile
+					l_index := l_index + 1
+				end
+			end
 
 			-- FIXME: how to detect where EIFGENs folder (for generated project) is?
 			-- Otherwise users have to copy generated ribbon.h, ribbon.bml and eiffelribbon.rc to one-level up folder of "EIFGENs" folder
@@ -37,7 +69,37 @@ feature -- Command
 			copy_predefine_classes
 			generate_readonly_classes
 
-			generate_eiffel_class_for_header_file
+			if attached l_singleton.project_info_cell.item as l_project_info then
+				if attached l_project_info.project_location as l_project_location then
+					create l_translator.make (l_project_location, command_name_constants)
+
+					from
+						create l_constants
+						l_index := 1
+						l_stop := False
+
+						l_translator.reset
+					until
+						l_index > l_max_count or l_stop
+					loop
+						if attached l_constants.header_full_file_name (l_index) as l_header_file_name then
+							create l_file.make (l_header_file_name)
+							if l_file.exists then
+								generate_eiffel_class_for_header_file (l_index, l_translator)
+							else
+								l_stop := True
+							end
+						else
+							l_stop := True
+						end
+
+						l_index := l_index + 1
+					end
+
+					l_translator.save_to_disk
+
+				end
+			end
 		end
 
 feature -- Query
@@ -577,7 +639,6 @@ feature {NONE} -- Implementation
 								l_file.close
 								l_dest_file.close
 							end
-
 						end
 
 						l_sub_files.forth
@@ -587,20 +648,23 @@ feature {NONE} -- Implementation
 
 		end
 
-	generate_eiffel_class_for_header_file
+	generate_eiffel_class_for_header_file (a_index: INTEGER; a_translator: ER_H_FILE_TRANSLATOR)
 			--
+		require
+			not_void: a_translator /= Void
 		local
-			l_translator: ER_H_FILE_TRANSLATOR
 			l_singleton: ER_SHARED_SINGLETON
 			l_source_header: FILE_NAME
+			l_constants: ER_MISC_CONSTANTS
 		do
 			create l_singleton
 			if attached l_singleton.project_info_cell.item as l_project_info then
 				if attached l_project_info.project_location as l_project_location then
 					create l_source_header.make_from_string (l_project_location)
-					l_source_header.set_file_name ({ER_MISC_CONSTANTS}.header_file_name)
-					create l_translator.make (l_source_header, l_project_location, command_name_constants)
-					l_translator.translate
+					create l_constants
+					l_source_header.set_file_name (l_constants.header_file_name (a_index))
+
+					a_translator.translate (l_source_header)
 				end
 			end
 
@@ -756,6 +820,7 @@ feature {NONE} -- Implementation
 								window_class_application_menu (l_list.item.widget, l_list.index, l_last_string)
 								window_class_help_button (l_list.item.widget, l_list.index, l_last_string)
 								window_class_quick_access_toolbar (l_list.item.widget, l_list.index, l_last_string)
+								window_class_dll_file_name (l_list.index, l_last_string)
 								l_context_popup_gen.window_context_popups (l_list.item.widget, l_list.index, l_last_string)
 
 								if l_list.index = 1 then
@@ -835,6 +900,17 @@ feature {NONE} -- Implementation
 				end
 			end
 
+		end
+
+	window_class_dll_file_name (a_list_index: INTEGER; a_last_string: STRING)
+			--
+		local
+			l_shared: ER_MISC_CONSTANTS
+		do
+			-- FIXME: should check if using DLL for separate Ribbon Window here
+			create l_shared
+
+			a_last_string.replace_substring_all ("$DLL_FILE_NAME", "%"" + {ER_MISC_CONSTANTS}.dll_file_name_prefix + a_list_index.out + "%"")
 		end
 
 	window_class_quick_access_toolbar (a_tree: EV_TREE; a_list_index: INTEGER; a_last_string: STRING)
@@ -1099,7 +1175,7 @@ feature {NONE} -- Implementation
 
 				if attached {EV_TREE_ITEM} l_tree_node as l_qat_tree_item then
 						-- Start real generation		
-					l_qat_gen.generate_quick_access_toolbar_class (l_qat_tree_item)
+					l_qat_gen.generate_quick_access_toolbar_class (l_qat_tree_item, l_list.index)
 				end
 
 				l_list.forth
@@ -1256,11 +1332,16 @@ feature {NONE} -- Implementation
 									l_last_string.replace_substring_all ("$INDEX", "RIBBON_" + a_index.out)
 								end
 							end
-							if a_index = 1 then
-								l_last_string.replace_substring_all ("$SET_MODES", "")
-							else
-								l_last_string.replace_substring_all ("$SET_MODES", l_set_modes_string)
-							end
+
+							-- When using ApplicationMode for separate Ribbon Windows
+--							if a_index = 1 then
+--								l_last_string.replace_substring_all ("$SET_MODES", "")
+--							else
+--								l_last_string.replace_substring_all ("$SET_MODES", l_set_modes_string)
+--							end
+
+							-- When using DLL for separate Ribbon Windows
+							l_last_string.replace_substring_all ("$SET_MODES", "")
 
 							l_dest_file.put_string (l_last_string + "%N")
 						end

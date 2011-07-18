@@ -12,19 +12,42 @@ deferred class
 inherit
 	EV_ANY_HANDLER
 
-feature -- Command
+feature -- Initialization
 
-	init_with_window (a_window: EV_WINDOW)
+	init_with_window (a_window: EV_WINDOW; a_ribbon_dll_name: detachable STRING_32)
 			-- Creation method
 		do
 			if attached {EV_WINDOW_IMP} a_window.implementation as l_imp then
 				com_initialize
 				set_object_and_function_address
-				item := create_ribbon_com_framework (l_imp.wel_item)
+
+				create_ribbon_com_framework_from_dll (l_imp.wel_item, a_ribbon_dll_name)
+
 				ui_application := get_ui_application
 				associated_window := l_imp
 			end
 		end
+
+	create_ribbon_com_framework_from_dll (a_hwnd: POINTER; a_ribbon_dll_name: detachable STRING_32)
+			--
+		require
+			valid: a_hwnd /= default_pointer
+		local
+			l_loader: DYNAMIC_API_LOADER
+			l_res_dll: POINTER
+		do
+			create l_loader
+			if a_ribbon_dll_name /= Void and then not a_ribbon_dll_name.is_empty then
+				 -- Load Ribbon resouce from eiffel.ribbon.dll
+				l_res_dll := l_loader.load_library (a_ribbon_dll_name, void)
+				item := create_ribbon_com_framework (a_hwnd, l_res_dll)
+			else
+				item := create_ribbon_com_framework (a_hwnd, default_pointer)
+			end
+
+		end
+
+feature -- Command
 
 	set_modes (a_modes: ITERABLE [NATURAL_32])
 			-- Set application mode for current ribbon framework
@@ -196,12 +219,14 @@ feature {EV_RIBBON_TITLED_WINDOW_IMP} -- Externals
 			"CoUninitialize();"
 		end
 
-	create_ribbon_com_framework (a_hwnd: POINTER): POINTER
+	create_ribbon_com_framework (a_hwnd: POINTER; a_resource_handle: POINTER): POINTER
 			-- Create Ribbon framework, attach ribbon to `a_hwnd'
+			-- `a_resource_handle' is a pointer returned by LoadLibrary, the value can be void
+			-- If `a_resouce_hanlde' is null, then current executable handle will be used
 		external
 			"C++ inline use <ribbon.h>"
 		alias
-			"return InitializeFramework ((HWND) $a_hwnd);"
+			"return InitializeFramework ((HWND) $a_hwnd, (EIF_POINTER)$a_resource_handle);"
 		end
 
 	destroy_ribbon_com_framwork (a_framework: POINTER)

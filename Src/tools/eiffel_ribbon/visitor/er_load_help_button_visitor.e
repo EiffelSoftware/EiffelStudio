@@ -14,13 +14,13 @@ inherit
 
 feature -- Command
 
-	visit_help_button (a_help_button: ER_XML_TREE_ELEMENT)
+	visit_help_button (a_help_button: ER_XML_TREE_ELEMENT; a_layout_constructor_index: INTEGER)
 			-- <Precursor>
 		local
 			l_data: ER_TREE_NODE_HELP_BUTTON_DATA
 			l_tree_item: EV_TREE_ITEM
 		do
-			if attached shared.layout_constructor_list.i_th (1) as l_layout_constructor then
+			if attached shared.layout_constructor_list.i_th (a_layout_constructor_index) as l_layout_constructor then
 				-- FIXME: multi-window support? But.... only 32 application modes, we have to use application modes to show/hide group/tab also...
 
 				create l_data.make

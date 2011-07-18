@@ -54,7 +54,7 @@ feature -- Command
 
 						a_ribbon_size_definitions.forth
 					end
-
+-- FIXME: we should handle different size definitions from different Ribbon markup XML here
 					l_size_definition_tool.size_definition_writer.update_combo_box (l_size_definition_tool.name_combo_box, void)
 				end
 

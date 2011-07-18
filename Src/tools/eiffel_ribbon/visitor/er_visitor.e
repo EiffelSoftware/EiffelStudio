@@ -17,7 +17,7 @@ feature -- Visitor commands
 
 		end
 
-	visit_ribbon_tabs (a_ribbon_tabs: ER_XML_TREE_ELEMENT)
+	visit_ribbon_tabs (a_ribbon_tabs: ER_XML_TREE_ELEMENT; a_layout_constructor_index: INTEGER)
 			--
 		require
 			not_void: a_ribbon_tabs /= Void
@@ -26,7 +26,7 @@ feature -- Visitor commands
 
 		end
 
-	visit_ribbon_application_menu (a_ribbon_application_menu: ER_XML_TREE_ELEMENT)
+	visit_ribbon_application_menu (a_ribbon_application_menu: ER_XML_TREE_ELEMENT; a_layout_constructor_index: INTEGER)
 			--
 		require
 			not_void: a_ribbon_application_menu /= Void
@@ -35,7 +35,7 @@ feature -- Visitor commands
 
 		end
 
-	visit_context_popup (a_conotext_popups: ER_XML_TREE_ELEMENT)
+	visit_context_popup (a_conotext_popups: ER_XML_TREE_ELEMENT; a_layout_constructor_index: INTEGER)
 			--
 		require
 			not_void: a_conotext_popups /= Void
@@ -44,7 +44,7 @@ feature -- Visitor commands
 
 		end
 
-	visit_help_button (a_help_button: ER_XML_TREE_ELEMENT)
+	visit_help_button (a_help_button: ER_XML_TREE_ELEMENT; a_layout_constructor_index: INTEGER)
 			--
 		require
 			not_void: a_help_button /= Void
@@ -53,7 +53,7 @@ feature -- Visitor commands
 
 		end
 
-	visit_quick_access_toolbar (a_quick_access_toolbar: ER_XML_TREE_ELEMENT)
+	visit_quick_access_toolbar (a_quick_access_toolbar: ER_XML_TREE_ELEMENT; a_layout_constructor_index: INTEGER)
 			--
 		require
 			not_void: a_quick_access_toolbar /= Void
@@ -68,7 +68,7 @@ feature -- Visitor commands
 			not_void: a_ribbon_size_definitions /= Void
 			valid: is_node_with_text (a_ribbon_size_definitions, constants.ribbon_size_definitions)
 		do
-			
+
 		end
 
 feature -- Query

@@ -14,17 +14,38 @@ inherit
 
 feature -- Query
 
-	xml_file_name: STRING = "eiffel_ribbon.xml"
+	xml_file_name (a_index: INTEGER): STRING
 			-- File name for saving ribbon makrup xml file
+		do
+			Result := "eiffel_ribbon_" + a_index.out + ".xml"
+		end
 
-	bml_file_name: STRING = "ribbon.bml"
+	bml_file_name(a_index: INTEGER): STRING
 			--
+		do
+			Result := "ribbon_" + a_index.out + ".bml"
+		end
 
-	header_file_name: STRING = "ribbon.h"
+	header_file_name(a_index: INTEGER): STRING
 			--
+		do
+			Result := "ribbon_" + a_index.out + ".h"
+		end
 
-	rc_file_name: STRING = "eiffelribbon.rc"
+	rc_file_name (a_index: INTEGER): STRING
 			--
+		do
+			Result := "eiffelribbon" + a_index.out + ".rc"
+		end
+
+	res_file_name (a_index: INTEGER): STRING
+			--
+		do
+			Result := "eiffelribbon" + a_index.out + ".res"
+		end
+
+	dll_file_name_prefix: STRING = "eiffel_ribbon_"
+			-- DLL file name prefix
 
 	project_configuration_file_name: STRING = "ribbon_project.er"
 			--
@@ -91,8 +112,10 @@ feature -- Query
 			Result.set_subdirectory ("template")
 		end
 
-	xml_full_file_name: detachable STRING_8
+	xml_full_file_name (a_ribbon_index: INTEGER): detachable STRING_8
 			-- (export status {NONE})
+		require
+			valid: a_ribbon_index >= 1
 		local
 			l_singleton: ER_SHARED_SINGLETON
 			l_file_name: detachable FILE_NAME
@@ -103,7 +126,7 @@ feature -- Query
 				if attached l_info.project_location as l_location then
 					create l_file_name.make_from_string (l_location)
 					create l_constants
-					l_file_name.set_file_name (l_constants.Xml_file_name)
+					l_file_name.set_file_name (l_constants.Xml_file_name (a_ribbon_index))
 					Result := l_file_name
 				end
 			end
@@ -120,6 +143,22 @@ feature -- Query
 				if attached l_info.project_location as l_location and then not l_location.is_empty then
 					create l_file_name.make_from_string (l_location)
 					l_file_name.set_file_name (project_configuration_file_name)
+				end
+			end
+			Result := l_file_name
+		end
+
+	header_full_file_name (a_index: INTEGER): detachable STRING
+			--
+		local
+			l_singleton: ER_SHARED_SINGLETON
+			l_file_name: detachable FILE_NAME
+		do
+			create l_singleton
+			if attached l_singleton.project_info_cell.item as l_info then
+				if attached l_info.project_location as l_location and then not l_location.is_empty then
+					create l_file_name.make_from_string (l_location)
+					l_file_name.set_file_name (header_file_name (a_index))
 				end
 			end
 			Result := l_file_name

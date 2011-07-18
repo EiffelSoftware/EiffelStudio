@@ -8,7 +8,7 @@ class
 
 feature -- Command
 
-	load_tree
+	load_tree (a_index: INTEGER)
 			-- Load from Microsoft XML ribbon markup tree
 		local
 			l_callback: ER_XML_CALLBACKS
@@ -17,7 +17,7 @@ feature -- Command
 			l_constants: ER_MISC_CONSTANTS
 		do
 			create l_constants
-			if attached l_constants.xml_full_file_name as l_file_name then
+			if attached l_constants.xml_full_file_name (a_index) as l_file_name then
 				create l_factory
 				l_parser := l_factory.new_parser
 

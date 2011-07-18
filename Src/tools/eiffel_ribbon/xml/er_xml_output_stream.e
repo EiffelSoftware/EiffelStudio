@@ -14,14 +14,16 @@ create
 
 feature {NONE} -- Initialization
 
-	make
+	make (a_index: INTEGER)
 			-- Create stream
+		require
+			valid: a_index >= 1
 		local
 			l_file: like file
 			l_constants: ER_MISC_CONSTANTS
 		do
 			create l_constants
-			if attached l_constants.xml_full_file_name as l_file_name then
+			if attached l_constants.xml_full_file_name (a_index) as l_file_name then
 				create l_file.make (l_file_name)
 				file := l_file
 				l_file.create_read_write

@@ -15,12 +15,12 @@ inherit
 
 feature --
 
-	visit_ribbon_tabs (a_ribbon_tabs: ER_XML_TREE_ELEMENT)
+	visit_ribbon_tabs (a_ribbon_tabs: ER_XML_TREE_ELEMENT; a_layout_constructor_index: INTEGER)
 			-- <Precursor>
 		local
 			l_new_node: EV_TREE_ITEM
 		do
-			if attached shared.layout_constructor_list.i_th (1) as l_layout_constructor then
+			if attached shared.layout_constructor_list.i_th (a_layout_constructor_index) as l_layout_constructor then
 				l_new_node := l_layout_constructor.tree_item_factory_method (a_ribbon_tabs.name)
 				from
 					a_ribbon_tabs.start
@@ -37,12 +37,12 @@ feature --
 			end
 		end
 
-	visit_ribbon_application_menu (a_ribbon_application_menu: ER_XML_TREE_ELEMENT)
+	visit_ribbon_application_menu (a_ribbon_application_menu: ER_XML_TREE_ELEMENT; a_layout_constructor_index: INTEGER)
 			-- <Precursor>
 		local
 			l_new_node: EV_TREE_ITEM
 		do
-			if attached shared.layout_constructor_list.i_th (1) as l_layout_constructor then
+			if attached shared.layout_constructor_list.i_th (a_layout_constructor_index) as l_layout_constructor then
 				l_new_node := l_layout_constructor.tree_item_factory_method (a_ribbon_application_menu.name)
 				from
 					a_ribbon_application_menu.start

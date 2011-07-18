@@ -14,13 +14,13 @@ inherit
 
 feature -- Command
 
-	visit_context_popup (a_context_popups: ER_XML_TREE_ELEMENT)
+	visit_context_popup (a_context_popups: ER_XML_TREE_ELEMENT; a_layout_constructor_index: INTEGER)
 			-- <Precursor>
 		local
 			l_tree_item: EV_TREE_ITEM
 			l_helper: ER_LOAD_VISION_TREE_VISITOR
 		do
-			if attached shared.layout_constructor_list.i_th (1) as l_layout_constructor then
+			if attached shared.layout_constructor_list.i_th (a_layout_constructor_index) as l_layout_constructor then
 				l_tree_item := l_layout_constructor.tree_item_factory_method (a_context_popups.name)
 				-- Add root "Context Popup" node to first layout constructor
 				l_layout_constructor.widget.extend (l_tree_item)

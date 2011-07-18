@@ -36,12 +36,16 @@ feature -- Command
 			--
 		local
 			l_warn: EV_WARNING_DIALOG
+			l_singleton: ER_SHARED_SINGLETON
 		do
 			if attached a_project_file as l_file and then not l_file.is_empty then
 				open_project_file (l_file)
 				if is_open_file_successed then
 					if attached shared_singleton.layout_constructor_list.first as l_layout_constructor then
-						l_layout_constructor.load_tree
+						create l_singleton
+						if attached l_singleton.project_info_cell.item as l_project_info then
+							l_layout_constructor.load_tree (l_project_info.ribbon_window_count)
+						end
 					end
 
 					if attached shared_singleton.project_info_cell.item as l_info then

@@ -14,7 +14,7 @@ inherit
 
 feature -- Command
 
-	visit_ribbon_application_menu (a_ribbon_application_menu: ER_XML_TREE_ELEMENT)
+	visit_ribbon_application_menu (a_ribbon_application_menu: ER_XML_TREE_ELEMENT; a_layout_constructor_index: INTEGER)
 			-- <Precursor>
 		local
 			l_enable_pinning: BOOLEAN
@@ -84,7 +84,7 @@ feature -- Command
 			end
 
 			-- Update values to GUI
-			l_ribbon_application_menus := shared.layout_constructor_list.first.all_items_with ({ER_XML_CONSTANTS}.ribbon_application_menu)
+			l_ribbon_application_menus := shared.layout_constructor_list.i_th(a_layout_constructor_index).all_items_with ({ER_XML_CONSTANTS}.ribbon_application_menu)
 			check l_ribbon_application_menus.count <= 1 end
 			if l_ribbon_application_menus.valid_index (1) then
 				if attached l_ribbon_application_menus.first as l_application_menu then

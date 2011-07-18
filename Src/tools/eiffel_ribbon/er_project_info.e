@@ -18,6 +18,9 @@ feature {NONE} -- Initialization
 			-- Creation method
 		do
 			create ribbon_names.make (10)
+
+			-- Default value
+			ribbon_window_count := 1
 		end
 
 feature -- Query
@@ -28,6 +31,9 @@ feature -- Query
 	ribbon_names: ARRAYED_LIST [detachable STRING]
 			-- Names for different ribbons
 
+	ribbon_window_count: INTEGER
+			-- How many ribbon windows in current application
+
 feature -- Command
 
 	set_project_location (a_location: like project_location)
@@ -36,6 +42,12 @@ feature -- Command
 			project_location := a_location
 		ensure
 			set: project_location = a_location
+		end
+
+	set_ribbon_window_count (a_count: INTEGER)
+			-- Set `ribbon_window_count' with `a_count'
+		do
+			ribbon_window_count := a_count
 		end
 
 	update_ribbon_names_from_ui

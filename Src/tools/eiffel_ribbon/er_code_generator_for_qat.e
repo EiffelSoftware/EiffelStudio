@@ -10,7 +10,7 @@ class
 
 feature -- Command
 
-	generate_quick_access_toolbar_class (a_qat_root: EV_TREE_ITEM)
+	generate_quick_access_toolbar_class (a_qat_root: EV_TREE_ITEM; a_layout_contructor_index: INTEGER)
 			--
 		require
 			not_void: a_qat_root /= Void
@@ -27,10 +27,16 @@ feature -- Command
 			l_creation_string, l_registry_string, l_declaration_string: STRING
 		do
 			create l_singleton
-			l_list := l_singleton.layout_constructor_list.first.all_items_with ({ER_XML_CONSTANTS}.ribbon_quick_access_toolbar)
+			l_list := l_singleton.layout_constructor_list.i_th (a_layout_contructor_index).all_items_with ({ER_XML_CONSTANTS}.ribbon_quick_access_toolbar)
 			check one_quick_access_toolbar_at_most: l_list.count <= 1 end
 			if l_list.count = 1 then
-				l_quick_access_toolbar_node := l_list.first
+
+			from
+				l_list.start
+			until
+				l_list.after
+			loop
+				l_quick_access_toolbar_node := l_list.item
 				l_sub_dir := "code_generated_once_change_by_user"
 				l_tool_bar_file := "ribbon_quick_access_toolbar"
 				l_sub_imp_dir := "code_generated_everytime"
@@ -87,9 +93,11 @@ feature -- Command
 							l_file.close
 							l_dest_file.close
 						end
-
 					end
 				end
+
+				l_list.forth
+			end
 
 				generate_sub_items (a_qat_root)
 			end

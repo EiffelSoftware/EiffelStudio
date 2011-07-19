@@ -52,4 +52,5 @@ feature -- Query
 			create l_manger
 			create Result.put (l_manger)
 		end
+	
 end

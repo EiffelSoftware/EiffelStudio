@@ -97,6 +97,8 @@ feature {NONE} -- Initialization
 
 			create size_definition_editor.make
 			shared_singleton.size_definition_cell.put (size_definition_editor)
+
+			create using_application_mode_command.make (using_application_mode)
 		end
 
 	build_tool_bar: SD_TOOL_BAR_CONTENT
@@ -154,6 +156,12 @@ feature {NONE} -- Agents
 			if attached l_env.application as l_app then
 				l_app.destroy
 			end
+		end
+
+	on_using_application_mode_selected
+			-- <Precursor>
+		do
+			using_application_mode_command.execute
 		end
 
 feature {NONE} -- Implementation
@@ -243,6 +251,9 @@ feature -- Commands
 			--
 
 	new_ribbon_command: ER_NEW_RIBBON_COMMAND
+			--
+
+	using_application_mode_command: ER_USING_APPLICATION_MODE_COMMAND
 			--
 
 feature -- Query

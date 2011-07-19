@@ -35,7 +35,13 @@ feature -- Query
 	rc_file_name (a_index: INTEGER): STRING
 			--
 		do
-			Result := "eiffelribbon" + a_index.out + ".rc"
+			if is_using_application_mode.item then
+				check a_index = 1 end
+				Result := "eiffelribbon.rc"
+			else
+				Result := "eiffelribbon" + a_index.out + ".rc"
+			end
+
 		end
 
 	res_file_name (a_index: INTEGER): STRING
@@ -162,6 +168,15 @@ feature -- Query
 				end
 			end
 			Result := l_file_name
+		end
+
+feature -- Settings query
+
+	is_using_application_mode: CELL [BOOLEAN]
+			-- If using application mode for multi windows support?
+			-- Otherwise it's using DLL
+		once
+			create Result.put (False)
 		end
 
 feature {NONE} -- Implementation

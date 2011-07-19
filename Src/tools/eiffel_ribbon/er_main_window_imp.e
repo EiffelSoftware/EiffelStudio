@@ -44,6 +44,8 @@ feature {NONE}-- Initialization
 			l_ev_menu_2.extend (recent_projects)
 			l_ev_menu_2.extend (l_ev_menu_separator_2)
 			l_ev_menu_2.extend (exit_menu)
+			l_ev_menu_bar_1.extend (l_ev_menu_5)
+			l_ev_menu_5.extend (using_application_mode)
 
 			l_ev_menu_2.set_text ("File")
 			new_project_menu.set_text ("New Project")
@@ -52,6 +54,8 @@ feature {NONE}-- Initialization
 			new_ribbon_menu.set_text ("New Ribbon")
 			recent_projects.set_text ("Recent Projects")
 			exit_menu.set_text ("Exit")
+			l_ev_menu_5.set_text ("Project")
+			using_application_mode.set_text ("Using Application Mode")
 			set_title ("EiffelRibbon")
 
 			set_all_attributes_using_constants
@@ -62,6 +66,7 @@ feature {NONE}-- Initialization
 			save_project_menu.select_actions.extend (agent on_save_project_selected)
 			new_ribbon_menu.select_actions.extend (agent on_new_ribbon_selected)
 			exit_menu.select_actions.extend (agent on_exit_selected)
+			using_application_mode.select_actions.extend (agent on_using_application_mode_selected)
 				-- Close the application when an interface close
 				-- request is recieved on `Current'. i.e. the cross is clicked.
 			close_request_actions.extend (agent destroy_and_exit_if_last)
@@ -85,6 +90,8 @@ feature {NONE}-- Initialization
 			create recent_projects
 			create l_ev_menu_separator_2
 			create exit_menu
+			create l_ev_menu_5
+			create using_application_mode
 
 			create string_constant_set_procedures.make (10)
 			create string_constant_retrieval_functions.make (10)
@@ -107,11 +114,12 @@ feature -- Access
 
 	new_project_menu, open_project_menu, save_project_menu, new_ribbon_menu, exit_menu: EV_MENU_ITEM
 	recent_projects: EV_MENU
+	using_application_mode: EV_CHECK_MENU_ITEM
 
 feature {NONE} -- Implementation
 
 	l_ev_menu_bar_1: EV_MENU_BAR
-	l_ev_menu_2: EV_MENU
+	l_ev_menu_2, l_ev_menu_5: EV_MENU
 	l_ev_menu_separator_1, l_ev_menu_separator_2: EV_MENU_SEPARATOR
 
 feature {NONE} -- Implementation
@@ -154,6 +162,11 @@ feature {NONE} -- Implementation
 	
 	on_exit_selected
 			-- Called by `select_actions' of `exit_menu'.
+		deferred
+		end
+	
+	on_using_application_mode_selected
+			-- Called by `select_actions' of `using_application_mode'.
 		deferred
 		end
 	

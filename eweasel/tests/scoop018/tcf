@@ -1,0 +1,30 @@
+
+test_name	 scoop-once-per-object
+test_description Changing a boolean attribute to a once-per-object function and melting causes execution of a SCOOP system to crash with an "illegal value type" panic.
+
+define		ONCE_BODY ""
+copy_sub	Ace	$TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test1.e $CLUSTER test1.e
+copy_sub	test2.e $CLUSTER test2.e
+
+compile_frozen
+compile_result	ok
+c_compile_work
+c_compile_result ok
+
+execute_work 	NONE 	exec_output_1
+execute_result 	ok
+compare		exec_output_1 output
+
+define		ONCE_BODY "once ("OBJECT") Result := False end"
+copy_sub	test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result ok
+
+execute_work 	NONE 	exec_output_2
+execute_result 	ok
+compare		exec_output_2 output
+
+test_end

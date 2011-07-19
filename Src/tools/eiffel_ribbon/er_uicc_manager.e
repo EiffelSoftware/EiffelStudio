@@ -186,7 +186,7 @@ feature -- Command
 						l_process.redirect_output_to_agent (agent on_output)
 						l_process.launch
 						l_process.wait_for_exit
-						
+
 						debug ("Ribbon")
 							if not l_process.launched or else l_process.exit_code /= 0 then
 									-- Display error
@@ -378,24 +378,6 @@ feature -- C compiler
 
 								create uicc_full_path.make_from_string (l_config.install_path + "Bin\UICC.exe")
 								create rc_full_path.make_from_string (l_config.install_path + "Bin\rc.exe")
-							else
-								check False end
-							end
-						end
-					elseif l_code.starts_with ("VC") and l_code.count > 4 then
-						-- Check if greater or equal 90
-						l_ver := l_code.substring (5, l_code.count)
-						if l_ver.to_integer >= 90 then
-							l_config := l_manager.config_from_code (l_codes.item, False)
-							if l_config /= Void then
-								check l_config_exists: l_config.exists end
-								debug ("Ribbon")
-									print ("Using " + l_code+ "'s line.exe%N")
-									print ("installed at: " + l_config.install_path + "%N")
-								end
-
-								create vcvars_full_path.make_from_string (l_config.install_path + "Bin\UICC.exe")
-								create link_full_path.make_from_string (l_config.install_path + "Bin\rc.exe")
 							else
 								check False end
 							end

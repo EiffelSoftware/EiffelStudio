@@ -19,7 +19,6 @@ feature {NONE} -- Initlization
 		do
 			init
 			create shared_singleton
-			create code_generator.make
 		end
 
 feature -- Command
@@ -28,9 +27,12 @@ feature -- Command
 			-- <Precursor>
 		local
 			l_warning: EV_WARNING_DIALOG
+			l_code_generator: like code_generator
 		do
-			if code_generator.is_uicc_available then
-				code_generator.generate_all_codes
+			-- Must use local here, since `is_uicc_available' will initialize `uicc_full_path'
+			l_code_generator := code_generator
+			if l_code_generator.is_uicc_available then
+				l_code_generator.generate_all_codes
 			else
 				if attached main_window as l_win then
 					create l_warning.make_with_text ("Windows SDK 7.0 (or higher) not found, nothing generated.")
@@ -59,8 +61,14 @@ feature {NONE} -- Implementation
 	shared_singleton: ER_SHARED_SINGLETON
 			--
 
-	code_generator: ER_CODE_GENERATOR
+	code_generator: ER_COMMON_CODE_GENERATOR
 			--		
+		local
+			l_factory: ER_CODE_GENERATOR_FACTORY
+		do
+			create l_factory
+			Result := l_factory.code_generator
+		end
 
 	main_window: detachable ER_MAIN_WINDOW
 			--

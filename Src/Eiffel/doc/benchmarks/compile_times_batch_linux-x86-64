@@ -1,5 +1,13 @@
 Ubuntu Server 8.04 (2 Intel Xeon Quad Core E5420  @ 2.50GHz with 6MB cache)
 
+7.0
+===
+7.0.8.6860 non-RTEA, non-MT, inlining_size = 8, full class checking (exe size = 17274920):
+118.340u 4.900s 2:03.63 99.6%        0+0k 80+832616io 0pf+0w
+
+7.0.8.6860 non-RTEA, non-MT, inlining_size = 0, full class checking (exe size = 15839848):
+110.100u 5.270s 1:56.27 99.2%        0+0k 16+815720io 0pf+0w
+
 6.8
 ===
 

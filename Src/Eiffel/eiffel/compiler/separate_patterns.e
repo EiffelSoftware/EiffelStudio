@@ -127,7 +127,8 @@ feature -- Generation
 							buffer.put_string ("eif_access (")
 						end
 						buffer.put_string ("a -> argument [")
-						buffer.put_integer (x.target_index - 1)
+							-- `x' is a SPECIAL so it is already zero-indexed.
+						buffer.put_integer (x.target_index)
 						buffer.put_two_character (']', '.')
 						value.generate_typed_field (buffer)
 						if is_reference then

@@ -14,7 +14,13 @@ inherit
 
 feature -- Initialization
 
-	init_with_window (a_window: EV_WINDOW; a_ribbon_dll_name: detachable STRING_32)
+	init_with_window (a_window: EV_WINDOW)
+			-- Creation method
+		do
+			init_with_window_and_dll (a_window, void)
+		end
+
+	init_with_window_and_dll (a_window: EV_WINDOW; a_ribbon_dll_name: detachable STRING_32)
 			-- Creation method
 		do
 			if attached {EV_WINDOW_IMP} a_window.implementation as l_imp then

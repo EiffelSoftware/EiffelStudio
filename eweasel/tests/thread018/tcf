@@ -1,0 +1,18 @@
+test_name 	shared-mutex-blocks-exit	
+test_description 	When a mutex is shared between two or more threads and they are constantly locking and unlocking, when the root process attempts to exit and reclaim, a thread may exit while having a lock on the mutex which leaves the system hanging in limbo.	
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+
+compile_frozen
+compile_result 	 ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work	 NONE exec_output1
+execute_result	 ok
+compare		 exec_output1 output
+
+
+test_end

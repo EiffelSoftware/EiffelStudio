@@ -1723,12 +1723,7 @@ feature {EB_STONE_CHECKER, EB_STONE_FIRST_CHECKER, EB_DEVELOPMENT_WINDOW_PART} -
 			class_is_not_void: displayed_class /= Void
 			feat_as_is_not_void: feat_as /= Void
 		local
-			begin_index: INTEGER
-			l_feat_as: FEATURE_AS
 			l_feature: E_FEATURE
-			l_names: EIFFEL_LIST [FEATURE_NAME]
-			offset: TUPLE [start_offset: INTEGER; end_offset: INTEGER]
-			l_mapper: UNICODE_POSITION_MAPPER
 		do
 			if not managed_main_formatters.first.selected then
 					-- We are either in clickable mode or looking at a .NET class.

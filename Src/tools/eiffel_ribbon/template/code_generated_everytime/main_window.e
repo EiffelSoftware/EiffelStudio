@@ -47,8 +47,7 @@ feature {NONE}-- Initialization
 		do
 			set_size (800, 400)
 
-				-- Attach Ribbon by COM here
-			ribbon.init_with_window (Current, $DLL_FILE_NAME)
+				-- Attach Ribbon by COM here$INIT_WITH_WINDOW
 			close_request_actions.extend (agent ev_application.destroy)
 			show_actions.extend_kamikaze (agent
 									do

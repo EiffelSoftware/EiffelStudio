@@ -37,10 +37,10 @@ $TAB_REGISTRY
 
 feature -- Command
 
-	init_with_window (a_window: EV_WINDOW; a_ribbon_dll_name: detachable STRING_32)
+	init_with_window (a_window: EV_WINDOW)
 			-- <Precursor>
 		do
-			Precursor (a_window, a_ribbon_dll_name)
+			Precursor (a_window)
 			-- You could call setModes here
 $SET_MODES
 		end

@@ -897,7 +897,7 @@ feature {NONE} -- Implementation
 			-- FIXME: should check if using DLL for separate Ribbon Window here
 			create l_shared
 
-			a_last_string.replace_substring_all ("$DLL_FILE_NAME", "%"" + {ER_MISC_CONSTANTS}.dll_file_name_prefix + a_list_index.out + "%"")
+			a_last_string.replace_substring_all ("$INIT_WITH_WINDOW", "%N%T%T%Tribbon.init_with_window_and_dll (Current, %"" + {ER_MISC_CONSTANTS}.dll_file_name_prefix + a_list_index.out + "%")")
 		end
 
 	window_class_quick_access_toolbar (a_tree: EV_TREE; a_list_index: INTEGER; a_last_string: STRING)

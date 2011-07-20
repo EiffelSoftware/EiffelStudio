@@ -17,6 +17,9 @@ feature -- Command
 
 	visit_size_definitions (a_ribbon_size_definitions: ER_XML_TREE_ELEMENT)
 			-- <Precursor>
+			-- When using DLL for saving, size definitions in different Ribbon markup XML are same.
+			-- When loading size definitions, `sub_root_xml_hash_table' only has size definitions loaded from last file.
+			-- This is OK, since the size definitions in all Ribbon markup XMLs are same.
 		local
 			l_singleton: ER_SHARED_SINGLETON
 			l_size_definition_tool: detachable ER_SIZE_DEFINITION_EDITOR
@@ -54,7 +57,7 @@ feature -- Command
 
 						a_ribbon_size_definitions.forth
 					end
--- FIXME: we should handle different size definitions from different Ribbon markup XML here
+
 					l_size_definition_tool.size_definition_writer.update_combo_box (l_size_definition_tool.name_combo_box, void)
 				end
 

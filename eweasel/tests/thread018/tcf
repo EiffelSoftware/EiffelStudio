@@ -14,5 +14,41 @@ execute_work	 NONE exec_output1
 execute_result	 ok
 compare		 exec_output1 output
 
+execute_work	 NONE exec_output2
+execute_result	 ok
+compare		 exec_output2 output
+
+execute_work	 NONE exec_output3
+execute_result	 ok
+compare		 exec_output3 output
+
+execute_work	 NONE exec_output4
+execute_result	 ok
+compare		 exec_output4 output
+
+execute_work	 NONE exec_output5
+execute_result	 ok
+compare		 exec_output5 output
+
+execute_work	 NONE exec_output6
+execute_result	 ok
+compare		 exec_output6 output
+
+execute_work	 NONE exec_output7
+execute_result	 ok
+compare		 exec_output7 output
+
+execute_work	 NONE exec_output8
+execute_result	 ok
+compare		 exec_output8 output
+
+execute_work	 NONE exec_output9
+execute_result	 ok
+compare		 exec_output9 output
+
+execute_work	 NONE exec_output10
+execute_result	 ok
+compare		 exec_output10 output
+
 
 test_end

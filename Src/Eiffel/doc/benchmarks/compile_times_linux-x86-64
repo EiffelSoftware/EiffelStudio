@@ -1,5 +1,19 @@
 Ubuntu 8.10 (dual quad-core Xeon E5420 at 2.5GHz and 6MB of cache per CPU)
 
+7.0
+===
+7.0.86860 compiled with ecb (with fill class checking and inlining size = 0);
+363.970u 14.290s 6:24.57 98.3%       0+0k 64+2191016io 0pf+0w
+
+7.0.86860 compiled with ecb (with fill class checking and inlining size = 8);
+503.390u 16.340s 9:10.88 94.3%       0+0k 70632+2240168io 0pf+0w
+
+7.0.86860 RTEA (MT with fill class checking and inlining size = 0);
+746.260u 15.290s 12:45.70 99.4%      0+0k 616+2192448io 0pf+0w
+
+7.0.86860 RTEA (MT with fill class checking and inlining size = 8);
+777.230u 17.120s 13:18.75 99.4%      0+0k 1408+2241360io 0pf+0w
+
 6.8
 ===
 

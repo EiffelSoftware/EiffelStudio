@@ -510,6 +510,7 @@ feature {NONE} -- Implementation
 			Result.put ("SYSTEM_TYPE", "System.Type")
 			Result.put ("SYSTEM_VOID", "System.Void")
 			Result.put ("SYSTEM_POINTER", "System.Reflection.Pointer")
+			Result.put ("SYSTEM_TUPLE", "System.Tuple")
 
 				-- Specialize implementations
 			Result.put ("NATIVE_ATTRIBUTE", "System.Attribute")

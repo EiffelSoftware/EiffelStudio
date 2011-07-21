@@ -1,0 +1,17 @@
+test_name 	thread-join-crash
+test_description 	When an application is waiting for a child thread to terminate and that child thread is performing a GC collection we are using the wrong object in our `eif_thr_wait' routine and this is causing a failure (crash or hang).
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+
+compile_frozen
+compile_result 	 ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work	 NONE exec_output1 10000
+execute_result	 ok
+compare		 exec_output1 output
+
+test_end

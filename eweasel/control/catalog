@@ -1283,6 +1283,7 @@ test	join-with-timeout-failure			thread015	tcf pass multithreaded
 test	multithreaded-bogus-catcall			thread016	tcf pass multithreaded
 test	main-thread-terminates-before-child	thread017	tcf pass multithreaded
 test    shared-mutex-hang		thread018	tcf pass multithreaded manual
+test	thread-join-crash			thread019	tcf pass multithreaded
 
 -- Execution
 

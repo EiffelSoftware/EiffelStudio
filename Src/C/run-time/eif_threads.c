@@ -328,24 +328,28 @@ rt_shared void eif_thread_cleanup (void)
 {
 	RT_GET_CONTEXT
 	int destroy_mutex = 0;
+	EIF_MUTEX_TYPE *l_children_mutex;
 
 	REQUIRE("is_root", eif_thr_context->is_root);
 
 		/* Free per thread data which is not free because root thread
 		 * does not go through `eif_thr_exit'. See `eif_thr_exit' for explanation. */
-	if (eif_thr_context->children_mutex) {
-		EIF_ASYNC_SAFE_MUTEX_LOCK(eif_thr_context->children_mutex);
-		if (eif_thr_context->n_children == 0) {
-				/* No children are alive */
-			destroy_mutex = 1;
-		}
-		EIF_ASYNC_SAFE_MUTEX_UNLOCK(eif_thr_context->children_mutex);
+	l_children_mutex = eif_thr_context->children_mutex;
+	if (l_children_mutex) {
+		EIF_ASYNC_SAFE_MUTEX_LOCK(l_children_mutex);
+			/* Find out if there are still some children running. */
+		destroy_mutex = eif_thr_context->n_children == 0;
+		EIF_ASYNC_SAFE_MUTEX_UNLOCK(l_children_mutex);
+	} else {
+		destroy_mutex = 1;
 	}
 	if (destroy_mutex) {
-		RT_TRACE(eif_pthread_mutex_destroy(eif_thr_context->children_mutex));
-		eif_thr_context->children_mutex = NULL;
-		RT_TRACE(eif_pthread_cond_destroy(eif_thr_context->children_cond));
-		eif_thr_context->children_cond = NULL;
+		if (l_children_mutex) {
+			RT_TRACE(eif_pthread_mutex_destroy(l_children_mutex));
+			eif_thr_context->children_mutex = NULL;
+			RT_TRACE(eif_pthread_cond_destroy(eif_thr_context->children_cond));
+			eif_thr_context->children_cond = NULL;
+		}
 			/* Context data if any */
 		eif_thr_context->thread_id = (EIF_THR_TYPE) 0;
 		eif_free (eif_thr_context);		/* Thread context passed by parent */

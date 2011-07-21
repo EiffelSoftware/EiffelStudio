@@ -432,7 +432,7 @@ feature {NONE} -- Constants
 	base_types: ARRAY [STRING]
 			-- base types.
 		once
-			create Result.make (1, 15)
+			create Result.make_filled ("", 1, 15)
 			Result.put ("System.Byte", 1)
 			Result.put ("System.Int16", 2)
 			Result.put ("System.Int32", 3)

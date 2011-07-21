@@ -1323,7 +1323,7 @@ feature {NONE} -- Added features for ENUM types.
 		local
 			l_args: ARRAY [CONSUMED_ARGUMENT]
 		do
-			create l_args.make (1, 0)
+			create l_args.make_empty
 			create Result.make ("to_integer", "to_integer", "to_integer", l_args, a_underlying_enum_type,
 				True,	-- is_frozen
 				False,	-- is_static

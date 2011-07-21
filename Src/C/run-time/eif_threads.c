@@ -943,13 +943,15 @@ rt_public void eif_thr_exit(void)
 			destroy_mutex = eif_thr_context->n_children == 0;
 			EIF_ASYNC_SAFE_MUTEX_UNLOCK(l_children_mutex);
 		} else {
-			destroy_mutex = 0;
+			destroy_mutex = 1;
 		}
 		if (destroy_mutex) {
-			RT_TRACE(eif_pthread_mutex_destroy(l_children_mutex));
-			eif_thr_context->children_mutex = NULL;
-			RT_TRACE(eif_pthread_cond_destroy(eif_thr_context->children_cond));
-			eif_thr_context->children_cond = NULL;
+			if (l_children_mutex) {
+				RT_TRACE(eif_pthread_mutex_destroy(l_children_mutex));
+				eif_thr_context->children_mutex = NULL;
+				RT_TRACE(eif_pthread_cond_destroy(eif_thr_context->children_cond));
+				eif_thr_context->children_cond = NULL;
+			}
 				/* Context data if any */
 			eif_thr_context->thread_id = (EIF_THR_TYPE) 0;
 			eif_free (eif_thr_context);		/* Thread context passed by parent */
@@ -1653,9 +1655,15 @@ rt_public void eif_thr_wait (EIF_OBJECT Current)
 
 		/* If no thread has been launched, the mutex isn't initialized */
 	if (eif_thr_context->children_mutex) {
+		EIF_ENTER_C;
 		EIF_ASYNC_SAFE_MUTEX_LOCK(eif_thr_context->children_mutex);
+		EIF_EXIT_C;
+		RTGC;
 		while (*(EIF_BOOLEAN *) (thread_object + offset) == EIF_FALSE) {
+			EIF_ENTER_C;
 			RT_TRACE(eif_pthread_cond_wait(eif_thr_context->children_cond, eif_thr_context->children_mutex));
+			EIF_EXIT_C;
+			RTGC;
 		}
 		EIF_ASYNC_SAFE_MUTEX_UNLOCK(eif_thr_context->children_mutex);
 	}
@@ -1687,9 +1695,15 @@ rt_public EIF_BOOLEAN eif_thr_wait_with_timeout (EIF_OBJECT Current, EIF_NATURAL
 		/* If no thread has been launched, the mutex isn't initialized */
 	res = T_OK;
 	if (eif_thr_context->children_mutex) {
+		EIF_ENTER_C;
 		EIF_ASYNC_SAFE_MUTEX_LOCK(eif_thr_context->children_mutex);
+		EIF_EXIT_C;
+		RTGC;
 		while ((*(EIF_BOOLEAN *) (thread_object + offset) == EIF_FALSE) && (res == T_OK)) {
+			EIF_ENTER_C;
 			RT_TRACE_KEEP(res,eif_pthread_cond_wait_with_timeout(eif_thr_context->children_cond, eif_thr_context->children_mutex, a_timeout_ms));
+			EIF_EXIT_C;
+			RTGC;
 		}
 		EIF_ASYNC_SAFE_MUTEX_UNLOCK(eif_thr_context->children_mutex);
 	}

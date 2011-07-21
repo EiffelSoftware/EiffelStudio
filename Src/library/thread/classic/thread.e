@@ -201,7 +201,7 @@ feature {NONE} -- Externals
 			-- The calling C thread waits for the current Eiffel thread to
 			-- terminate.
 		external
-			"C blocking use %"eif_threads.h%""
+			"C use %"eif_threads.h%""
 		alias
 			"eif_thr_wait"
 		end
@@ -210,7 +210,7 @@ feature {NONE} -- Externals
 			-- The calling C thread waits for the current Eiffel thread to
 			-- terminate.
 		external
-			"C blocking use %"eif_threads.h%""
+			"C use %"eif_threads.h%""
 		alias
 			"eif_thr_wait_with_timeout"
 		end

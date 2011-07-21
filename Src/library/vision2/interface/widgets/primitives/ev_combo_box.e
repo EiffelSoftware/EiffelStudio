@@ -75,7 +75,6 @@ feature -- Element change
 			not_destroyed: not is_destroyed
 			text_not_void: a_text /= Void
 			no_carriage_returns: not a_text.has_code (('%R').natural_32_code)
-			combo_box_is_editable: is_editable
 		local
 			l_cursor: like cursor
 			l_str: STRING_32

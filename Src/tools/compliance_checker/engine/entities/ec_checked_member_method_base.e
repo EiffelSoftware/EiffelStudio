@@ -77,7 +77,7 @@ feature -- Access
 		do
 			if attached member.get_parameters as l_params then
 				i := l_params.count
-				create Result.make (1, i)
+				create Result.make_empty
 				if i > 0 then
 					from
 					until
@@ -88,13 +88,13 @@ feature -- Access
 							attached l_info.parameter_type as l_sys_type
 						then
 							l_type := checked_type (l_sys_type)
-							Result.put (l_type, i)
+							Result.force (l_type, i)
 						end
 						i := i - 1
 					end
 				end
 			else
-				create Result.make (1, 0)
+				create Result.make_empty
 			end
 		ensure
 			result_not_void: Result /= Void

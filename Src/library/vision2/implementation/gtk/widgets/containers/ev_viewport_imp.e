@@ -21,7 +21,6 @@ inherit
 	EV_CELL_IMP
 		redefine
 			interface,
-			old_make,
 			container_widget,
 			visual_widget,
 			on_removed_item,
@@ -36,27 +35,22 @@ create
 
 feature {NONE} -- Initialization
 
-	needs_event_box: BOOLEAN
-			-- Does `a_widget' need an event box?
-		do
-			Result := False
-		end
-
-	old_make (an_interface: like interface)
-			-- Initialize.
-		do
-			assign_interface (an_interface)
-		end
-
 	make
+			-- <Precursor>
 		do
-			viewport := {GTK}.gtk_viewport_new (NULL, NULL)
-			set_c_object (viewport)
-			{GTK}.gtk_viewport_set_shadow_type (viewport, {GTK}.Gtk_shadow_none_enum)
-			{GTK2}.gtk_widget_set_minimum_size (viewport, 1, 1) -- Hack needed to prevent viewport resize on item resize.
-			container_widget := viewport
+			if c_object = default_pointer then
+					-- Only set c_object if not already set by a descendent.
+				viewport := {GTK}.gtk_viewport_new ({GTK}.null_pointer, {GTK}.null_pointer)
+				set_c_object (viewport)
+				{GTK}.gtk_viewport_set_shadow_type (viewport, {GTK}.GTK_SHADOW_NONE_ENUM)
+				{GTK2}.gtk_widget_set_minimum_size (viewport, 1, 1) -- Hack needed to prevent viewport resize on item resize.
+				container_widget := viewport
+			end
 			Precursor
 		end
+
+	needs_event_box: BOOLEAN do end
+			-- Does `a_widget' need an event box?
 
 feature -- Access
 

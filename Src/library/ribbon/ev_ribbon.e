@@ -17,7 +17,7 @@ feature -- Initialization
 	init_with_window (a_window: EV_WINDOW)
 			-- Creation method
 		do
-			init_with_window_and_dll (a_window, void)
+			init_with_window_and_dll (a_window, Void)
 		end
 
 	init_with_window_and_dll (a_window: EV_WINDOW; a_ribbon_dll_name: detachable STRING_32)

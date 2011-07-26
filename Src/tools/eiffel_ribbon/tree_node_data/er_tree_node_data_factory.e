@@ -71,6 +71,8 @@ feature -- Factory method
 				create {ER_TREE_NODE_QUICK_ACCESS_TOOLBAR_DATA} Result.make
 			elseif a_type.same_string (constants.menu_group) then
 				create {ER_TREE_NODE_MENU_GROUP_DATA} Result.make
+			elseif a_type.same_string (constants.tab_group) then
+				create {ER_TREE_NODE_TAB_GROUP_DATA} Result.make
 			else
 				--no data for `a_type'
 				-- Maybe `a_type' is "Application". It should not have any tree node data

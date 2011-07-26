@@ -34,6 +34,7 @@ feature {NONE} -- Initialization
 		do
 			create mini_toolbars.make (5)
 			create context_menus.make (5)
+			create contextual_tabs.make (5)
 		end
 
 feature -- Access
@@ -57,6 +58,9 @@ feature -- Access
 
 	context_menus: ARRAYED_LIST [EV_RIBBON_CONTEXT_MENU]
 			-- Associated context menu if any
+
+	contextual_tabs: ARRAYED_LIST [EV_RIBBON_TAB_GROUP]
+			-- Associated contextual tabs if any
 
 feature {EV_ANY, EV_ANY_I, EV_ANY_HANDLER} -- Implementation
 

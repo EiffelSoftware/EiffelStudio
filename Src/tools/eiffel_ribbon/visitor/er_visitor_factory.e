@@ -85,6 +85,7 @@ feature {NONE} -- Implementation
 			l_load_help_button_visitor: ER_LOAD_HELP_BUTTON_VISITOR
 			l_load_quick_access_toolbar_visitor: ER_LOAD_QUICK_ACCESS_TOOLBAR_VISITOR
 			l_size_definition_visitor: ER_SIZE_DEFINITION_VISITOR
+			l_contextual_tabs_visitor: ER_CONTEXTUAL_TABS_VISITOR
 		do
 			create Result.make (10)
 
@@ -112,11 +113,15 @@ feature {NONE} -- Implementation
 			create l_load_quick_access_toolbar_visitor
 			Result.extend (l_load_quick_access_toolbar_visitor)
 
+			create l_contextual_tabs_visitor
+			Result.extend (l_contextual_tabs_visitor)
+
 			create l_command_updater
 			Result.extend (l_command_updater)
 
 			create l_size_definition_visitor
 			Result.extend (l_size_definition_visitor)
+
 		end
 
 end

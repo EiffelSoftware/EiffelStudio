@@ -6,13 +6,13 @@ note
 class
 	ER_CODE_GENERATOR_FOR_APPLICATION_MENU
 
-feature -- Query
+feature -- Command
 
 	generate_application_menu_class (a_applitcation_menu_node: EV_TREE_NODE; a_index: INTEGER)
 			--
 		require
 			not_void: a_applitcation_menu_node /= Void
-			valid:  a_applitcation_menu_node.text.same_string ({ER_XML_CONSTANTS}.ribbon_application_menu)
+			valid: a_applitcation_menu_node.text.same_string ({ER_XML_CONSTANTS}.ribbon_application_menu)
 		local
 			l_tab_count: INTEGER
 			l_file, l_dest_file: RAW_FILE
@@ -104,6 +104,8 @@ feature -- Query
 			end
 
 		end
+
+feature -- Query
 
 	menu_group_creation_string (a_tabs_root_note: EV_TREE_NODE): STRING
 			--

@@ -36,6 +36,8 @@ feature -- Command
 					a_visitor.visit_quick_access_toolbar (Current, a_layout_constructor_index)
 				elseif l_name.same_string (constants.ribbon_size_definitions) then
 					a_visitor.visit_size_definitions (Current)
+				elseif l_name.same_string (constants.ribbon_contextual_tabs) then
+					a_visitor.visit_contextual_tabs (Current, a_layout_constructor_index)
 				end
 			end
 

@@ -71,6 +71,7 @@ feature -- Command
 			l_font_control_widget: ER_FONT_CONTROL_NODE_WIDGET
 			l_quick_access_toolbar_widget: ER_QUICK_ACCESS_TOOLBAR_NODE_WIDGET
 			l_menu_group_widget: ER_MENU_GROUP_NODE_WIDGET
+			l_tab_group_widget: ER_TAB_GROUP_NODE_WIDGET
 		do
 			widget.wipe_out
 			if attached a_node.text as l_text then
@@ -207,6 +208,12 @@ feature -- Command
 						l_menu_group_widget.set_tree_node_data (l_data)
 					end
 					widget.extend (l_menu_group_widget)
+				elseif l_text.same_string (constants.tab_group) then
+					create l_tab_group_widget
+					if attached {ER_TREE_NODE_TAB_GROUP_DATA} a_node.data as l_data then
+						l_tab_group_widget.set_tree_node_data (l_data)
+					end
+					widget.extend (l_tab_group_widget)
 				end
 			end
 

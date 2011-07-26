@@ -53,7 +53,8 @@ create
 	make_font_properties_vertical_positioning,
 	make_command_id,
 	make_quick_access_toolbar_dock,
-	make_enabled
+	make_enabled,
+	make_context_avaiable
 
 feature {NONE}  -- Initialization
 
@@ -200,6 +201,13 @@ feature {NONE}  -- Initialization
 		do
 			share_from_pointer (c_ui_pkey_enabled)
 		end
+
+	make_context_avaiable
+			-- Make a context aviable key
+		do
+			share_from_pointer (c_ui_pkey_context_available)
+		end
+
 feature {NONE} -- Font properties creation methods
 
 	make_font_properties
@@ -476,6 +484,15 @@ feature -- Status Report
 			l_tmp: EV_PROPERTY_KEY
 		do
 			create l_tmp.make_enabled
+			Result := l_tmp.guid.is_equal (guid)
+		end
+
+	is_context_available: BOOLEAN
+			-- Is current context available key?
+		local
+			l_tmp: EV_PROPERTY_KEY
+		do
+			create l_tmp.make_context_avaiable
 			Result := l_tmp.guid.is_equal (guid)
 		end
 
@@ -1082,4 +1099,17 @@ feature {NONE} -- Font control properties
 			}
 			]"
 		end
+
+	c_ui_pkey_context_available: POINTER
+			--
+		external
+			"C inline use %"UIRibbon.h%""
+		alias
+			"[
+			{
+				return &UI_PKEY_ContextAvailable;
+			}
+			]"
+		end
+
 end

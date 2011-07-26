@@ -57,6 +57,8 @@ feature -- Command
 					Result := l_resource.ribbon_for_mini_toolbar (l_mini_toolbar)
 				elseif attached {EV_RIBBON_CONTEXT_MENU} Current as l_context_menu then
 					Result := l_resource.ribbon_for_context_menu (l_context_menu)
+				elseif attached {EV_RIBBON_TAB_GROUP} Current as l_tab_group then
+					Result := l_resource.ribbon_for_contextual_tabs (l_tab_group)
 				else
 					check not_possible: False end
 				end

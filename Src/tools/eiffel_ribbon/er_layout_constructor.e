@@ -274,7 +274,11 @@ feature {NONE} -- Action handing
 				elseif a_parent_type.same_string (constants.drop_down_button) then
 					Result := l_stone_child.same_string (constants.button)
 				elseif a_parent_type.same_string (constants.ribbon_quick_access_toolbar) then
-					Result := l_stone_child.same_string (constants.button)	-- FIXME: It can be toggle button and check box also				
+					Result := l_stone_child.same_string (constants.button)	-- FIXME: It can be toggle button and check box also	
+				elseif a_parent_type.same_string (constants.ribbon_contextual_tabs) then
+					Result := l_stone_child.same_string (constants.tab_group)
+				elseif a_parent_type.same_string (constants.tab_group) then
+					Result := l_stone_child.same_string (constants.tab)
 				end
 			end
 		end
@@ -310,7 +314,8 @@ feature {NONE} -- Action handing
 				check l_item.same_string (constants.ribbon_application_menu) or else
 					l_item.same_string (constants.context_popup) or else
 					l_item.same_string (constants.ribbon_quick_access_toolbar) or else
-					l_item.same_string (constants.ribbon_helpbutton) end
+					l_item.same_string (constants.ribbon_helpbutton) or else
+					l_item.same_string (constants.ribbon_contextual_tabs) end
 				l_tree_item := tree_item_factory_method (l_item)
 				widget.extend (l_tree_item)
 			end
@@ -323,7 +328,8 @@ feature {NONE} -- Action handing
 				if l_item.same_string (constants.ribbon_application_menu) or else
 					l_item.same_string (constants.context_popup) or else
 					l_item.same_string (constants.ribbon_quick_access_toolbar) or else
-					l_item.same_string (constants.ribbon_helpbutton) then
+					l_item.same_string (constants.ribbon_helpbutton) or else
+					l_item.same_string (constants.ribbon_contextual_tabs) then
 					Result := True
 				end
 			end

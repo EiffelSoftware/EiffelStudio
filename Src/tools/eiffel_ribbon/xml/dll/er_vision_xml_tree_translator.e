@@ -147,14 +147,16 @@ feature {NONE} -- Tree saving
 				loop
 					if attached {EV_TREE_ITEM} l_tree_item.item as l_tree_tab_item then
 						check l_tree_tab_item.text.same_string (xml_constants.tab) end
-						add_xml_tab_node (l_tree_tab_item)
 
+						if attached xml_node_by_name (xml_constants.ribbon_tabs) as l_ribbon_tab_node then
+							add_xml_tab_node (l_tree_tab_item, l_ribbon_tab_node)
+						end
 					end
 
 					l_tree_item.forth
 				end
 
-				-- Saving applicaition menu node
+				-- Saving applicaition menu node and other top level nodes
 				if a_vision_tree.count >= 2 then
 					from
 						a_vision_tree.go_i_th (2)
@@ -165,6 +167,7 @@ feature {NONE} -- Tree saving
 						save_context_popup_node (a_vision_tree.item)
 						save_help_button_node (a_vision_tree.item)
 						save_quick_access_toolbar_node (a_vision_tree.item)
+						save_contextual_tabs_node (a_vision_tree.item)
 
 						a_vision_tree.forth
 					end
@@ -208,6 +211,35 @@ feature {NONE} -- Tree saving
 
 				else
 					check not_possible: False end
+				end
+			end
+		end
+
+	save_contextual_tabs_node (a_tree_node: EV_TREE_NODE)
+			-- Save Ribbon.ContextualTabs node if possible
+		require
+			not_void: a_tree_node /= Void
+		local
+			l_xml_item: XML_ELEMENT
+		do
+			if attached {EV_TREE_ITEM} a_tree_node as l_tree_item_menu and then
+					l_tree_item_menu.text.same_string (xml_constants.ribbon_contextual_tabs) then
+				-- Add contextual tabs node
+				if attached xml_node_by_name (xml_constants.ribbon) as l_ribbon then
+					create l_xml_item.make (l_ribbon, xml_constants.ribbon_contextual_tabs, name_space)
+					l_ribbon.put_last (l_xml_item)
+
+					from
+						a_tree_node.start
+					until
+						a_tree_node.after
+					loop
+						if attached {EV_TREE_ITEM} a_tree_node.item as l_item and then
+							l_item.text.same_string (xml_constants.tab_group) then
+							add_xml_tab_group_node (l_item, l_xml_item)
+						end
+						a_tree_node.forth
+					end
 				end
 			end
 		end
@@ -579,18 +611,58 @@ feature {NONE} -- Tree saving
 			end
 		end
 
-	add_xml_tab_node (a_tree_item: EV_TREE_ITEM)
+	add_xml_tab_group_node (a_tree_item: EV_TREE_ITEM; a_xml_parent: XML_ELEMENT)
 			--
 		require
 			not_void: a_tree_item /= Void
+			not_void: a_xml_parent /= Void
+		local
+			l_tab_group_item: XML_ELEMENT
+			l_constants: ER_XML_ATTRIBUTE_CONSTANTS
+		do
+			if a_tree_item.text.same_string (xml_constants.tab_group) then
+				create l_tab_group_item.make (a_xml_parent, xml_constants.tab_group, name_space)
+				a_xml_parent.put_last (l_tab_group_item)
+
+				if attached {ER_TREE_NODE_TAB_GROUP_DATA} a_tree_item.data as l_data then
+					-- Add xml attribute
+					create l_constants
+					if attached l_data.command_name as l_command_name and then not l_command_name.is_empty then
+						l_tab_group_item.add_attribute (l_constants.command_name, name_space, l_command_name)
+						-- Add coresspond command xml node
+						add_xml_command_node (l_data)
+					end
+				end
+
+				from
+					a_tree_item.start
+				until
+					a_tree_item.after
+				loop
+					if attached {EV_TREE_ITEM} a_tree_item.item as l_sub_item and then
+						l_sub_item.text.same_string (xml_constants.tab) then
+							add_xml_tab_node (l_sub_item, l_tab_group_item)
+					end
+
+					a_tree_item.forth
+				end
+			end
+
+		end
+
+	add_xml_tab_node (a_tree_item: EV_TREE_ITEM; a_xml_parent: XML_ELEMENT)
+			--
+		require
+			not_void: a_tree_item /= Void
+			not_void: a_xml_parent /= Void
 			valid: a_tree_item.text.same_string (xml_constants.tab)
 		local
 			l_tab_node: XML_ELEMENT
 			l_constants: ER_XML_ATTRIBUTE_CONSTANTS
 		do
-			if attached xml_node_by_name (xml_constants.ribbon_tabs) as l_ribbon_tab_node then
-				create l_tab_node.make (l_ribbon_tab_node, xml_constants.tab, name_space)
-				l_ribbon_tab_node.put_last (l_tab_node)
+			if a_xml_parent /= Void then
+				create l_tab_node.make (a_xml_parent, xml_constants.tab, name_space)
+				a_xml_parent.put_last (l_tab_node)
 
 				if attached {ER_TREE_NODE_TAB_DATA} a_tree_item.data as l_data then
 					create l_constants

@@ -123,8 +123,6 @@ feature -- Access
 			i, n: INTEGER;
 			l_arg_types: like argument_types
 			new_arguments: SPECIAL [TYPE_C];
-			type: TYPE_A;
-			argument_type: TYPE_A
 		do
 			n := argument_count;
 			if n > 0 then

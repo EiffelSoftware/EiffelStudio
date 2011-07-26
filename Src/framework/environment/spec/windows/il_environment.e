@@ -135,6 +135,14 @@ feature -- Access
 							create l_file.make (l_file_name)
 							if l_file.exists then
 								Result.put_right (l_content.item)
+							else
+								create l_file_name.make_from_string (l_runtime_path)
+								l_file_name.extend (l_content.item)
+								l_file_name.set_file_name ("clr.dll")
+								l_file.make (l_file_name)
+								if l_file.exists then
+									Result.put_right (l_content.item)
+								end
 							end
 						end
 						l_content.forth
@@ -302,7 +310,7 @@ invariant
 	version_not_void: version /= Void
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

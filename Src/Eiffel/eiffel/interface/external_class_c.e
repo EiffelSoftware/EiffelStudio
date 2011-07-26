@@ -1153,7 +1153,7 @@ feature {NONE} -- Initialization
 				l_type ?= l_feat.type
 				check
 					l_type_attached: l_type /= Void
-					l_type_is_integer: l_type.is_integer
+					l_type_is_integer_or_natural: l_type.is_integer or l_type.is_natural
 				end
 				if l_type /= Void then
 					create {HASH_TABLE_EX [INTEGER, NAMED_TYPE_A]} convert_to.make_with_key_tester (1, create {CONVERTIBILITY_CHECKER})
@@ -1697,7 +1697,7 @@ invariant
 	valid_enclosing_class: is_nested implies enclosing_class /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -48,7 +48,7 @@ feature -- Access
 	namespaces: ARRAY [STRING]
 			-- Namespaces
 		local
-			i, l_index, namespace_count, l_count: INTEGER
+			i, l_index, l_count: INTEGER
 			namespace: detachable STRING
 			name: detachable STRING
 			l_namespaces: ARRAYED_LIST [STRING]
@@ -74,21 +74,12 @@ feature -- Access
 				end
 				if namespace /= Void and then not l_namespaces.has (namespace) then
 					l_namespaces.extend (namespace)
-					namespace_count := namespace_count + 1
 				end
 				i := i + 1
 			end
-			create Result.make (1, namespace_count)
-			from
-				l_namespaces.start
-			until
-				l_namespaces.after
-			loop
-				Result.put (l_namespaces.item, l_namespaces.index)
-				l_namespaces.forth
-			end
+			Result := l_namespaces.to_array
+				-- We compare by object to satisfy assertions.
 			Result.compare_objects
-			-- We compare by object to satisfy assertions.
 		end
 
 	namespace_types (namespace_name: STRING): ARRAY [INTEGER]
@@ -97,7 +88,7 @@ feature -- Access
 			non_void_name: namespace_name /= Void
 			valid_name: namespaces.has (namespace_name)
 		local
-			i, l_index, types_count, l_count: INTEGER
+			i, l_index, l_count: INTEGER
 			name: detachable STRING
 			l_types_index: ARRAYED_LIST [INTEGER]
 		do
@@ -113,20 +104,11 @@ feature -- Access
 					l_index := name.substring_index (namespace_name, 1)
 					if l_index = 1 and then name.substring (namespace_name.count, name.count).occurrences ('.') = 1 then
 						l_types_index.extend (i)
-						types_count := types_count + 1
 					end
 				end
 				i := i + 1
 			end
-			create Result.make (1, types_count)
-			from
-				l_types_index.start
-			until
-				l_types_index.after
-			loop
-				Result.put (l_types_index.item, l_types_index.index)
-				l_types_index.forth
-			end
+			Result := l_types_index.to_array
 		end
 
 feature -- Element Settings	

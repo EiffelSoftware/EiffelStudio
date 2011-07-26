@@ -30,7 +30,7 @@ feature -- Access
 		do
 			params := info.get_parameters
 			check params_attached: params /= Void end
-			create Result.make (1, params.count)
+			create Result.make_empty
 			from
 				i := 0
 				count := params.count
@@ -51,7 +51,7 @@ feature -- Access
 				end
 				t := p.parameter_type
 				check t_attached: t /= Void end
-				Result.put (create {CONSUMED_ARGUMENT}.make (dn, en,
+				Result.force (create {CONSUMED_ARGUMENT}.make (dn, en,
 					referenced_type_from_type (t)), i + 1)
 				i := i + 1
 			end

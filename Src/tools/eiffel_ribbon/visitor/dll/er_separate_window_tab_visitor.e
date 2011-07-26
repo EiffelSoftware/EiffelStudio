@@ -29,9 +29,6 @@ feature -- Command
 
 	visit_ribbon_tabs (a_ribbon_tabs: ER_XML_TREE_ELEMENT; a_layout_constructor_index: INTEGER)
 			--
-		local
-			l_root_items: ARRAYED_LIST [EV_TREE_ITEM]
-			l_ribbon_tabs: ARRAYED_LIST [EV_TREE_NODE]
 		do
 			build_layout_constructors (a_layout_constructor_index)
 		end
@@ -210,7 +207,7 @@ feature {NONE} -- Implementation
 			l_layout_constructor.expand_tree
 
 			if a_layout_constructor_index <= 1 then -- Only build new layout constructors when using ApplicationMode for separated ribbons
-			
+
 			end
 		end
 

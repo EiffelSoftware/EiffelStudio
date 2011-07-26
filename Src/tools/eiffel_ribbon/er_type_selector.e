@@ -45,6 +45,7 @@ feature {NONE} -- Initialization
 
 			l_ribbon_application_menu, l_ribbon_group: EV_TREE_ITEM
 			l_ribbon_contextual_tabs: EV_TREE_ITEM
+			l_tab_group: EV_TREE_ITEM
 			l_ribbon_help_button: EV_TREE_ITEM
 			l_ribbon_quick_access_toolbar: EV_TREE_ITEM
 			l_ribbon_size_definitions: EV_TREE_ITEM
@@ -73,7 +74,11 @@ feature {NONE} -- Initialization
 			l_ribbon_application_menu.extend (l_ribbon_group)
 
 			create l_ribbon_contextual_tabs.make_with_text (constants.ribbon_contextual_tabs)
---			l_ribbon_contextual_tabs.set_pebble (constants.ribbon_contextual_tabs)
+			l_ribbon_contextual_tabs.set_pebble (constants.ribbon_contextual_tabs)
+
+			create l_tab_group.make_with_text (constants.tab_group)
+			l_tab_group.set_pebble (constants.tab_group)
+			l_ribbon_contextual_tabs.extend (l_tab_group)
 
 			create l_ribbon_help_button.make_with_text (constants.ribbon_helpbutton)
 			l_ribbon_help_button.set_pebble (constants.ribbon_helpbutton)

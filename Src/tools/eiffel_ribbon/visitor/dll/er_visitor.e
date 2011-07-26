@@ -71,6 +71,15 @@ feature -- Visitor commands
 
 		end
 
+	visit_contextual_tabs (a_contextual_tabs: ER_XML_TREE_ELEMENT; a_layout_constructor_index: INTEGER)
+			--
+		require
+			not_void: a_contextual_tabs /= Void
+			valid: is_node_with_text (a_contextual_tabs, constants.ribbon_contextual_tabs)
+		do
+
+		end
+
 feature -- Query
 
 	is_node_with_text (a_xml_node: ER_XML_TREE_ELEMENT; a_text: STRING): BOOLEAN

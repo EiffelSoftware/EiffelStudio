@@ -58,6 +58,8 @@ feature -- Query, the value of string is what should be written to XML
 
 	tab: STRING = "Tab"
 
+	tab_group: STRING = "TabGroup"
+
 	group: STRING = "Group"
 
 	tab_scaling_policy: STRING = "Tab.ScalingPolicy"
@@ -173,7 +175,8 @@ feature -- Contract support
 					l_string.same_string (context_menu) or else
 					l_string.same_string (drop_down_button) or else
 					l_string.same_string (drop_down_color_picker) or else
-					l_string.same_string (font_control)
+					l_string.same_string (font_control) or else
+					l_string.same_string (tab_group)
 			end
 		end
 

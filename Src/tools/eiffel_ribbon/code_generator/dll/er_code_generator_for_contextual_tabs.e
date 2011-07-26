@@ -413,7 +413,7 @@ feature {NONE} -- Implementation for main window
 			not_void: a_tabs_root_note /= Void
 			valid: a_tabs_root_note.text.same_string ({ER_XML_CONSTANTS}.tab_group)
 		local
-			l_count, l_index: INTEGER
+			l_index: INTEGER
 			l_template: STRING
 			l_generated: detachable STRING
 			l_gen_default: BOOLEAN

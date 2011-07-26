@@ -552,27 +552,33 @@ rt_public void dnotify_create_thread(EIF_THR_TYPE tid)
 {
 	if (debug_mode) {
 		RT_GET_CONTEXT
-		DBGMTX_LOCK;	/* Enter critical section */
-		dnotify(THR_CREATED, (rt_uint_ptr) tid, (rt_uint_ptr) 0);
-		DBGMTX_UNLOCK; /* Leave critical section */
+		if (!gc_stop_thread_request) {
+			DBGMTX_LOCK;	/* Enter critical section */
+			dnotify(THR_CREATED, (rt_uint_ptr) tid, (rt_uint_ptr) 0);
+			DBGMTX_UNLOCK; /* Leave critical section */
+		}
 	}
 }
 rt_public void dnotify_exit_thread(EIF_THR_TYPE tid)
 {
 	if (debug_mode) {
 		RT_GET_CONTEXT
-		DBGMTX_LOCK;	/* Enter critical section */
-		dnotify(THR_EXITED, (rt_uint_ptr) tid, (rt_uint_ptr) 0);
-		DBGMTX_UNLOCK; /* Leave critical section */
+		if (!gc_stop_thread_request) {
+			DBGMTX_LOCK;	/* Enter critical section */
+			dnotify(THR_EXITED, (rt_uint_ptr) tid, (rt_uint_ptr) 0);
+			DBGMTX_UNLOCK; /* Leave critical section */
+		}
 	}
 }
 rt_public void dnotify_register_scoop_processor(EIF_THR_TYPE tid, uint32 scp_proc_id)
 {
 	if (debug_mode) {
 		RT_GET_CONTEXT
-		DBGMTX_LOCK;	/* Enter critical section */
-		dnotify(SCP_PROC_REGISTERED, (rt_uint_ptr) tid, (rt_uint_ptr) scp_proc_id);
-		DBGMTX_UNLOCK; /* Leave critical section */
+		if (!gc_stop_thread_request) {
+			DBGMTX_LOCK;	/* Enter critical section */
+			dnotify(SCP_PROC_REGISTERED, (rt_uint_ptr) tid, (rt_uint_ptr) scp_proc_id);
+			DBGMTX_UNLOCK; /* Leave critical section */
+		}
 	}
 }
 #endif

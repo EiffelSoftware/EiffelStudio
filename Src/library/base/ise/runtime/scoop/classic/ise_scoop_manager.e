@@ -1103,6 +1103,7 @@ feature {NONE} -- Resource Initialization
 			l_orig_sync_count, l_temp_count: INTEGER
 			l_wait_counter: NATURAL_32
 			l_call_ptr: POINTER
+			l_pid: like processor_id_type
 		do
 			-- SCOOP Processor has been launched
 			-- We are guaranteed that at least a creation routine has been logged.
@@ -1248,15 +1249,22 @@ feature {NONE} -- Resource Initialization
 											-- We have caught an assertion violation so we flag the processor as dirty
 										flag_processor_dirty (a_logical_processor_id, l_executing_request_chain_node_meta_data, l_executing_request_chain_node, l_executing_node_id_cursor)
 									end
-									if (l_executing_node_id_cursor + 1) = l_temp_count then
+									l_executing_node_id_cursor := l_executing_node_id_cursor + 1
+									if l_executing_node_id_cursor = l_temp_count then
 											-- Check for a query if we are at the last index.
-										if call_data_sync_pid (l_call_ptr) /= null_processor_id then
-											processor_wake_up (call_data_sync_pid (l_call_ptr), a_logical_processor_id)
+										l_pid := call_data_sync_pid (l_call_ptr)
+										if l_pid /= null_processor_id then
+												-- The client processor is waiting so we can clean up the call data here.
+											scoop_command_call_cleanup (l_call_ptr)
+											l_executing_request_chain_node [l_executing_node_id_cursor - 1] := null_pointer
+
+												-- Wake up client processor.							
+											processor_wake_up (l_pid, a_logical_processor_id)
 												-- Reset yielding.
 											l_wait_counter := 0
 										end
 									end
-									l_executing_node_id_cursor := l_executing_node_id_cursor + 1
+
 								end
 							elseif l_executing_request_chain_node_meta_data [request_chain_status_index] = request_chain_status_closed then
 									-- Request chain has been fully closed therefore we can exit if all calls have been applied.
@@ -1282,20 +1290,22 @@ feature {NONE} -- Resource Initialization
 							end
 						end
 
-							-- Clean up call data, this can only be performed when the chain is closed as logging calls may resize the request chain node queue
+							-- Clean up call data, this can only be performed when the chain is closed or the client is waiting as logging calls may resize the request chain node queue
 							-- structure while it is being manipulated, which would break the post-condition of resize.				
 						from
 							l_executing_request_chain_node := l_request_chain_node_queue [l_executing_node_id]
 							check l_executing_request_chain_node_attached: attached l_executing_request_chain_node end
-							l_executing_node_id_cursor := 0
+							l_executing_node_id_cursor := l_executing_request_chain_node.count
 						until
-							l_executing_node_id_cursor = l_executing_request_chain_node.count
+							l_executing_node_id_cursor = 0
 						loop
-							scoop_command_call_cleanup (l_executing_request_chain_node [l_executing_node_id_cursor])
-							l_executing_node_id_cursor := l_executing_node_id_cursor + 1
+							l_executing_node_id_cursor := l_executing_node_id_cursor - 1
+							l_call_ptr := l_executing_request_chain_node [l_executing_node_id_cursor]
+							if l_call_ptr /= null_pointer then
+								scoop_command_call_cleanup (l_call_ptr)
+								l_executing_request_chain_node [l_executing_node_id_cursor] := null_pointer
+							end
 						end
-							-- Reset execution cursor.
-						l_executing_node_id_cursor := 0
 
 							-- Increment execution cursor by one.
 						l_executing_node_id := l_executing_node_id + 1

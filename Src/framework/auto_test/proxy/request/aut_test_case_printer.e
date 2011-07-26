@@ -343,7 +343,7 @@ feature {AUT_REQUEST} -- Processing
 			output_stream.put_line (")")
 			dedent
 			print_indentation
-			output_stream.put_string ("if attached {")
+			output_stream.put_string ("check attached {")
 			output_stream.put_string (l_type)
 			--output_stream.put_string (variable_type_name (a_request.target))
 			output_stream.put_string ("} last_object as l_ot")
@@ -379,7 +379,7 @@ feature {AUT_REQUEST} -- Processing
 				l_rec_type := variable_type (a_request.receiver)
 				l_use_ot := (l_rec_type /= Void and then l_rec_type.associated_class.original_class /= system.any_class)
 				if l_use_ot then
-					output_stream.put_string ("if attached {")
+					output_stream.put_string ("check attached {")
 					output_stream.put_string (effective_type_name (l_rec_type))
 					output_stream.put_string ("} ")
 				else
@@ -451,7 +451,7 @@ feature {AUT_REQUEST} -- Processing
 			end
 			print_indentation
 			if l_use_ot then
-				output_stream.put_string ("if attached {")
+				output_stream.put_string ("check attached {")
 				if l_rtype = Void then
 					output_stream.put_string (effective_type_name (any_type))
 				else
@@ -621,7 +621,7 @@ invariant
 	valid_expression_printer_output_stream: expression_printer.output_stream = output_stream
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

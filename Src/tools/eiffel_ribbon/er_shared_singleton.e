@@ -40,7 +40,7 @@ feature -- Query
 
 	main_window_cell: CELL [detachable ER_MAIN_WINDOW]
 			--
-		once
+		once ("PROCESS")
 			create Result.put (void)
 		end
 
@@ -52,5 +52,5 @@ feature -- Query
 			create l_manger
 			create Result.put (l_manger)
 		end
-	
+
 end

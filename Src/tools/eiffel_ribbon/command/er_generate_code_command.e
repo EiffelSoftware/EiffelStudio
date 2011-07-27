@@ -32,6 +32,9 @@ feature -- Command
 			-- Must use local here, since `is_uicc_available' will initialize `uicc_full_path'
 			l_code_generator := code_generator
 			if l_code_generator.is_uicc_available then
+				if attached shared_singleton.main_window_cell.item as l_main_window then
+					l_main_window.output_tool.show
+				end
 				l_code_generator.generate_all_codes
 			else
 				if attached main_window as l_win then

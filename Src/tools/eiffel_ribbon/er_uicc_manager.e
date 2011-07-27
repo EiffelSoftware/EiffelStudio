@@ -54,12 +54,14 @@ feature -- Command
 						l_process.launch
 						l_process.wait_for_exit
 
+						l_process.set_separate_console (True)
+						l_process.set_hidden (True)
 						debug ("Ribbon")
 							if not l_process.launched or else l_process.exit_code /= 0 then
 									-- Display error
-								print ("%N uicc launched failed%N")
+								on_output ("%N uicc launched failed%N")
 							else
-								print ("%N uicc launched successfully%N")
+								on_output ("%N uicc launched successfully%N")
 							end
 						end
 					end
@@ -94,9 +96,9 @@ feature -- Command
 					debug ("Ribbon")
 						if not l_process.launched or else l_process.exit_code /= 0 then
 								-- Display error
-							print ("%N chcp launched failed%N")
+							on_output ("%N chcp launched failed%N")
 						else
-							print ("%N chcp launched successfully%N")
+							on_output ("%N chcp launched successfully%N")
 						end
 					end
 				end
@@ -133,12 +135,14 @@ feature -- Command
 						l_process.launch
 						l_process.wait_for_exit
 
+						l_process.set_separate_console (True)
+						l_process.set_hidden (True)
 						debug ("Ribbon")
 							if not l_process.launched or else l_process.exit_code /= 0 then
 									-- Display error
-								print ("%N rc (rc_to_res) launched failed%N")
+								on_output ("%N rc (rc_to_res) launched failed%N")
 							else
-								print ("%N rc (rc_to_res) launched successfully%N")
+								on_output ("%N rc (rc_to_res) launched successfully%N")
 							end
 						end
 					end
@@ -187,12 +191,14 @@ feature -- Command
 						l_process.launch
 						l_process.wait_for_exit
 
+						l_process.set_separate_console (True)
+						l_process.set_hidden (True)
 						debug ("Ribbon")
 							if not l_process.launched or else l_process.exit_code /= 0 then
 									-- Display error
-								print ("%N vcvars launched failed%N")
+								on_output ("%N vcvars launched failed%N")
 							else
-								print ("%N vcvars launched successfully%N")
+								on_output ("%N vcvars launched successfully%N")
 							end
 						end
 					end
@@ -200,11 +206,14 @@ feature -- Command
 			end
 		end
 
-	on_output (a_string: STRING)
+	on_output (a_string: STRING) --FIXME: For non-English characters?
 			--
+		local
+			l_singleton: ER_SHARED_SINGLETON
 		do
-			debug ("Ribbon")
-				print (a_string)
+			create l_singleton
+			if attached l_singleton.main_window_cell.item as l_main_window then
+				l_main_window.output_tool.append_output (a_string)
 			end
 		end
 
@@ -269,14 +278,14 @@ feature -- C compiler
 			l_code, l_ver: STRING
 		do
 			debug ("Ribbon")
-				print ("Available C/C++ compilers:%N%N")
+				on_output ("Available C/C++ compilers:%N%N")
 			end
 			create l_manager.make (a_for_32bits)
 			l_codes := l_manager.applicable_config_codes
 
 			if l_codes.is_empty then
 				debug ("Ribbon")
-					print ("   No applicable compilers could be found.%N")
+					on_output ("   No applicable compilers could be found.%N")
 				end
 			else
 				from
@@ -296,8 +305,8 @@ feature -- C compiler
 							if l_config /= Void then
 								check l_config_exists: l_config.exists end
 								debug ("Ribbon")
-									print ("Using " + l_code+ "'s line.exe%N")
-									print ("installed at: " + l_config.install_path + "%N")
+									on_output ("Using " + l_code+ "'s line.exe%N")
+									on_output ("installed at: " + l_config.install_path + "%N")
 								end
 								if a_for_32bits then
 									create vcvars_full_path.make_from_string (l_config.install_path + "bin\vcvars32.bat")
@@ -315,8 +324,8 @@ feature -- C compiler
 							if l_config /= Void then
 								check l_config_exists: l_config.exists end
 								debug ("Ribbon")
-									print ("Using " + l_code+ "'s line.exe%N")
-									print ("installed at: " + l_config.install_path + "%N")
+									on_output ("Using " + l_code+ "'s line.exe%N")
+									on_output ("installed at: " + l_config.install_path + "%N")
 								end
 								if a_for_32bits then
 									create vcvars_full_path.make_from_string (l_config.install_path + "bin\vcvars32.bat")
@@ -345,14 +354,14 @@ feature -- C compiler
 			l_code, l_ver: STRING
 		do
 			debug ("Ribbon")
-				print ("Available C/C++ compilers:%N%N")
+				on_output ("Available C/C++ compilers:%N%N")
 			end
 			create l_manager.make (a_for_32bits)
 			l_codes := l_manager.applicable_config_codes
 
 			if l_codes.is_empty then
 				debug ("Ribbon")
-					print ("   No applicable compilers could be found.%N")
+					on_output ("   No applicable compilers could be found.%N")
 				end
 			else
 				from
@@ -372,8 +381,8 @@ feature -- C compiler
 							if l_config /= Void then
 								check l_config_exists: l_config.exists end
 								debug ("Ribbon")
-									print ("Using " + l_code+ "%N")
-									print ("installed at: " + l_config.install_path + "%N")
+									on_output ("Using " + l_code+ "%N")
+									on_output ("installed at: " + l_config.install_path + "%N")
 								end
 
 								create uicc_full_path.make_from_string (l_config.install_path + "Bin\UICC.exe")

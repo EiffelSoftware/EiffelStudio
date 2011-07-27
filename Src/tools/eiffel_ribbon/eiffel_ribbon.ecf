@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-7-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-7-0 http://www.eiffel.com/developers/xml/configuration-1-7-0.xsd" name="eiffel_ribbon" uuid="8A485578-E375-45B6-91D7-DC4B2D46D7A5">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-8-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-8-0 http://www.eiffel.com/developers/xml/configuration-1-8-0.xsd" name="eiffel_ribbon" uuid="8A485578-E375-45B6-91D7-DC4B2D46D7A5">
 	<target name="eiffel_ribbon">
 		<root cluster="root_cluster" class="ER_RIBBON_TOOL_APPLICATION" feature="make_and_launch"/>
 		<option debug="true" warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all">
@@ -14,6 +14,7 @@
 		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment-safe.ecf"/>
 		<library name="graph" location="$ISE_LIBRARY\library\graph\graph-safe.ecf"/>
 		<library name="process" location="$ISE_LIBRARY\library\process\process-safe.ecf"/>
+		<library name="thread" location="$ISE_LIBRARY\library\thread\thread-safe.ecf"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2-safe.ecf"/>
 		<library name="xml_parser" location="$EIFFEL_SRC\library\text\parser\xml\parser\xml_parser-safe.ecf"/>
 		<library name="xml_tree" location="$EIFFEL_SRC\library\text\parser\xml\tree\xml_tree-safe.ecf"/>

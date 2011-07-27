@@ -58,6 +58,7 @@ feature {NONE} -- Initialization
 			layout_constructor.attach_to_docking_manager (l_docking_manager)
 			object_editor.attach_to_docking_manager (l_docking_manager)
 			size_definition_editor.attach_to_docking_manager (l_docking_manager)
+			output_tool.attach_to_docking_manager (l_docking_manager)
 			l_tool_bar := build_tool_bar
 			l_docking_manager.tool_bar_manager.contents.extend (l_tool_bar)
 			l_tool_bar.set_top ({SD_ENUMERATION}.top)
@@ -97,6 +98,8 @@ feature {NONE} -- Initialization
 
 			create size_definition_editor.make
 			shared_singleton.size_definition_cell.put (size_definition_editor)
+
+			create output_tool.make
 
 			create using_application_mode_command.make (using_application_mode)
 		end
@@ -164,7 +167,7 @@ feature {NONE} -- Agents
 			using_application_mode_command.execute
 		end
 
-feature {NONE} -- Implementation
+feature {ER_UICC_MANAGER, ER_GENERATE_CODE_COMMAND} -- Implementation
 
 	restore_tool_info_from_disk
 			--
@@ -228,6 +231,9 @@ feature {NONE} -- Implementation
 			--
 
 	size_definition_editor: ER_SIZE_DEFINITION_EDITOR
+			--
+
+	output_tool: ER_OUTPUT_TOOL
 			--
 
 	shared_singleton: ER_SHARED_SINGLETON

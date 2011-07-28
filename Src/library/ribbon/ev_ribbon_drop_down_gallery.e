@@ -155,9 +155,13 @@ feature {NONE} -- Implementation
 							l_select_action.call (void)
 						end
 					elseif a_execution_verb = {EV_EXECUTION_VERB}.preview then
-
+						if attached l_item.preview_actions_cache as l_preview_action then
+							l_preview_action.call (void)
+						end
 					elseif a_execution_verb = {EV_EXECUTION_VERB}.cancel_preview then
-
+						if attached l_item.cancel_preview_actions_cache as l_cancel_preview_action then
+							l_cancel_preview_action.call (void)
+						end
 					end
 
 				end

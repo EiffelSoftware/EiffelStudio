@@ -2653,6 +2653,7 @@ test	scoop-separate-patterns-crash			scoop015 tcf pass scoop finalizing
 test	scoop-finalize-c-failure			scoop016 tcf pass scoop finalizing c_compilation
 test	scoop-separate-call-to-constant			scoop017 tcf pass scoop execution
 test	scoop-once-per-object				scoop018 tcf pass scoop execution incrementality once
+test	scoop-top-exception				scoop019 tcf pass scoop
 
 -- Prettify
 test	pretty-smoke-test			pretty001 tcf pass pretty

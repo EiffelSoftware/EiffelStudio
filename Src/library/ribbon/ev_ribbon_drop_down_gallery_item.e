@@ -27,6 +27,32 @@ feature -- Query
 			Result := l_cache
 		end
 
+	preview_actions: EV_NOTIFY_ACTION_SEQUENCE
+			-- Show a preview of a visual element.
+		local
+			l_cache: like preview_actions_cache
+		do
+			l_cache := preview_actions_cache
+			if l_cache = Void then
+				create l_cache
+				preview_actions_cache := l_cache
+			end
+			Result := l_cache
+		end
+
+	cancel_preview_actions: EV_NOTIFY_ACTION_SEQUENCE
+			-- Cancel a preview of a visual element.
+		local
+			l_cache: like cancel_preview_actions_cache
+		do
+			l_cache := cancel_preview_actions_cache
+			if l_cache = Void then
+				create l_cache
+				cancel_preview_actions_cache := l_cache
+			end
+			Result := l_cache
+		end
+
 feature -- Command
 
 	set_image (a_image: like image)
@@ -47,7 +73,7 @@ feature -- Command
 
 feature {EV_RIBBON_DROP_DOWN_GALLERY} -- Implementation
 
-	select_actions_cache: detachable EV_NOTIFY_ACTION_SEQUENCE
+	select_actions_cache, preview_actions_cache, cancel_preview_actions_cache: detachable EV_NOTIFY_ACTION_SEQUENCE
 			-- Lazy initialization
 
 end

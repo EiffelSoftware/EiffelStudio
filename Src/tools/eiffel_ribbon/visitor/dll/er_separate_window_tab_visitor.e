@@ -236,8 +236,10 @@ feature {NONE} -- Implementation
 			if attached a_application_menu as l_application_menu then
 				l_layout_constructor := shared.layout_constructor_list.i_th (a_layout_constructor_index)
 				remove_application_menu_node (a_application_menu)
-				l_layout_constructor.widget.extend (l_application_menu)
-				l_layout_constructor.expand_tree
+				if not is_application_menu_empty (l_application_menu) then
+					l_layout_constructor.widget.extend (l_application_menu)
+					l_layout_constructor.expand_tree
+				end
 			end
 		end
 
@@ -287,6 +289,25 @@ feature {NONE} -- Implementation
 					l_items.forth
 				end
 
+			end
+		end
+
+	is_application_menu_empty (a_application_menu: EV_TREE_NODE): BOOLEAN
+			--
+		require
+			not_void: a_application_menu /= Void
+		local
+			l_child: EV_TREE_NODE
+		do
+			if a_application_menu.count = 1 then
+				l_child := a_application_menu.first
+				if l_child.count = 0 then
+					Result := True
+				end
+			elseif a_application_menu.count = 0 then
+				Result := True
+			else
+				check not_possible: False end
 			end
 		end
 

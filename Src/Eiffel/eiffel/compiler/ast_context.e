@@ -502,6 +502,13 @@ feature {AST_SCOPE_MATCHER, AST_FEATURE_CHECKER_GENERATOR} -- Local scopes: modi
 			local_initialization.set_result
 		end
 
+	set_all
+			-- Mark that all variables as initialized.
+		do
+			local_initialization.set_all
+			attribute_initialization.set_all
+		end
+
 feature {AST_SCOPE_MATCHER, SHARED_AST_CONTEXT, AST_FEATURE_CHECKER_GENERATOR} -- Local scopes: modification
 
 	add_object_test_expression_scope (id: ID_AS)

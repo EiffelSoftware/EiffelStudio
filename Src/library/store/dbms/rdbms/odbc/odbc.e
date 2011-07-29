@@ -880,7 +880,10 @@ feature {NONE} -- Disposal
 	dispose
 			-- Free allocated memory.
 		do
-			odbc_free_connection (con_context_pointer)
+			if con_context_pointer /= default_pointer then
+				odbc_free_connection (con_context_pointer)
+				con_context_pointer := default_pointer
+			end
 		end
 
 feature {NONE} -- External features

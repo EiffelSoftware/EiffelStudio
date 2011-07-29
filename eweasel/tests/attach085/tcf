@@ -1,0 +1,12 @@
+test_name 	 initialized-after-unreachable
+test_description The entities can be treated as initialized if they appear in the unreachable code.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_frozen
+compile_result ok
+c_compile_work
+c_compile_result	ok
+
+test_end

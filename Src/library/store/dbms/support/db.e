@@ -5,7 +5,7 @@ note
 	date: "$Date$";
 	revision: "$Revision$"
 
-class 
+class
 	DB [reference G -> DATABASE create default_create end]
 
 inherit
@@ -16,87 +16,89 @@ inherit
 			{NONE} all
 		end
 
+	HANDLE_USE
+		export
+			{NONE} all
+		end
+
 feature -- Status report
 
 	db_control: DATABASE_CONTROL [G]
-			-- DATABASE_CONTROL handle 
+			-- DATABASE_CONTROL handle
 		do
 			create Result
 		end
 
 	db_status: DATABASE_STATUS [G]
-			-- DATABASE_STATUS handle 
+			-- DATABASE_STATUS handle
 		do
 			create Result
 		end
 
 	db_selection: DATABASE_SELECTION [G]
-			-- DATABASE_SELECTION handle 
+			-- DATABASE_SELECTION handle
 		do
 			create Result.make (parsed_string_size)
 		end
 
 	db_change: DATABASE_CHANGE [G]
-			-- DATABASE_CHANGE handle 
+			-- DATABASE_CHANGE handle
 		do
 			create Result.make (parsed_string_size)
 		end
 
 	db_repository: DATABASE_REPOSITORY [G]
-			-- DATABASE_REPOSITORY handle 
+			-- DATABASE_REPOSITORY handle
 		do
 			create Result.make
 		end
 
 	db_result: DATABASE_TUPLE [G]
-			-- DATABASE_TUPLE handle 
+			-- DATABASE_TUPLE handle
 		do
 			create Result.make
 		end
 
 	db_store: DATABASE_STORE [G]
-			-- DATABASE_STORE handle 
+			-- DATABASE_STORE handle
 		do
 			create Result.make (parsed_string_size)
 		end
 
 	db_format: DATABASE_FORMAT [G]
-			-- DATABASE_FORMAT handle 
+			-- DATABASE_FORMAT handle
 		do
 			create Result
 		end
 
 	db_proc: DATABASE_PROC [G]
-			-- DATABASE_PROC handle 
+			-- DATABASE_PROC handle
 		do
 			create Result.make
 		end
 
 	db_all_types: DATABASE_ALL_TYPES [G]
-			-- DATABASE_ALL_TYPES handle 
+			-- DATABASE_ALL_TYPES handle
 		do
 			create Result.make
 		end
 
 	db_dyn_selection: DATABASE_DYN_SELECTION [G]
-			-- DATABASE_DYN_SELECTION handle 
+			-- DATABASE_DYN_SELECTION handle
 		do
 			create Result.make (parsed_string_size)
 		end
-		
+
 	db_dyn_change: DATABASE_DYN_CHANGE [G]
-			-- DATABASE_DYN_CHANGE handle 
+			-- DATABASE_DYN_CHANGE handle
 		do
 			create Result.make (parsed_string_size)
 		end
-	
+
 	name: STRING
 			-- Database name
-		local
-			l: G
-		once
-			create l
-			Result := l.generator
+		do
+			Result := handle.database.generator
 		end
 
 feature {NONE} -- Status report

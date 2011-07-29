@@ -90,13 +90,16 @@ feature -- Basic operations
 			-- also matches "<name>".
 		require
 			s_not_void: s /= Void
+		local
+			l_exe_type: like handle.execution_type
 		do
 			wipe_out
 			append (s.as_string_32)
 			replace
-			if handle.execution_type.is_tracing then
-				handle.execution_type.trace_output.putstring (Current.as_string_8)
-				handle.execution_type.trace_output.new_line
+			l_exe_type := handle.execution_type
+			if l_exe_type.is_tracing then
+				l_exe_type.trace_output.putstring (Current.as_string_8)
+				l_exe_type.trace_output.new_line
 			end
 			Result := Current
 		end

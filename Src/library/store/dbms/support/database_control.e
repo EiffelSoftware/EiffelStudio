@@ -26,15 +26,17 @@ feature -- Status setting and report
 		local
 			temp1, temp2, temp3, temp4, temp5, temp6, temp8: STRING
 			temp7: detachable STRING
+			l_login: like handle.login
 		do
-			temp1 := handle.login.name
-			temp2 := handle.login.passwd
-			temp3 := handle.login.data_source
-			temp4 := handle.login.application
-			temp5 := handle.login.hostname
-			temp6 := handle.login.roleId
-			temp7 := handle.login.rolePassWd
-			temp8 := handle.login.groupId
+			l_login := handle.login
+			temp1 := l_login.name
+			temp2 := l_login.passwd
+			temp3 := l_login.data_source
+			temp4 := l_login.application
+			temp5 := l_login.hostname
+			temp6 := l_login.roleId
+			temp7 := l_login.rolePassWd
+			temp8 := l_login.groupId
 
 			db_spec.connect (temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8)
 		end

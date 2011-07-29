@@ -10,7 +10,6 @@ class
 
 inherit
 	DATABASE
-
 		redefine
 			sensitive_mixed,
 			identifier_quoter,
@@ -30,9 +29,11 @@ inherit
 			unset_catalog_flag
 		end
 
+	DISPOSABLE
+
 	STRING_HANDLER
 
-feature
+feature -- Access
 
 	database_handle_name: STRING = "ODBC"
 
@@ -49,7 +50,7 @@ feature -- For DATABASE_STATUS
 	clear_error
 			-- Reset database error status.
 		do
-			odbc_clear_error
+			odbc_clear_error (con_context_pointer)
 		end
 
 	insert_auto_identity_column: BOOLEAN = False
@@ -57,12 +58,10 @@ feature -- For DATABASE_STATUS
 
 feature -- For DATABASE_CHANGE
 
-
 	descriptor_is_available: BOOLEAN
 		do
-			Result := odbc_available_descriptor /= 0
+			Result := odbc_available_descriptor (con_context_pointer) /= 0
 		end
-
 
 	hide_qualifier (tmp_strg: STRING): POINTER
 		local
@@ -74,7 +73,7 @@ feature -- For DATABASE_CHANGE
 
 	pre_immediate (descriptor, i: INTEGER)
 		do
-			odbc_pre_immediate (descriptor, i)
+			odbc_pre_immediate (con_context_pointer, descriptor, i)
 			is_error_updated := False
 		end
 
@@ -139,9 +138,9 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 			if tmp_str.count > 1 and then (tmp_str.item (1) = {CHARACTER_32} '{') then
 				if uht /= Void then
 					if uhandle.execution_type.immediate_execution then
-						odbc_pre_immediate (descriptor, uht.count)
+						odbc_pre_immediate (con_context_pointer, descriptor, uht.count)
 					else
-						odbc_init_order (descriptor, c_temp.item, uht.count)
+						odbc_init_order (con_context_pointer, descriptor, c_temp.item, uht.count)
 					end
 					is_error_updated := False
 					if uht.count > 0 then
@@ -230,7 +229,7 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 						l_para.set (tmp_c.managed_data, i)
 					end
 				end -- Null value
-				odbc_set_parameter (descriptor, i, 1, type,  odbc_get_col_len (descriptor, i), 0, l_para.get (i))
+				odbc_set_parameter (con_context_pointer, descriptor, i, 1, type,  odbc_get_col_len (con_context_pointer, descriptor, i), 0, l_para.get (i))
 				is_error_updated := False
 				i := i + 1
 			end
@@ -505,46 +504,46 @@ feature -- For DATABASE_DYN_STORE
 
 	unset_catalog_flag (desc:INTEGER)
 		do
-			odbc_unset_catalog_flag (desc)
+			odbc_unset_catalog_flag (con_context_pointer, desc)
 		end
 
 feature -- External
 
 	get_error_message: POINTER
 		do
-			Result := odbc_get_error_message
+			Result := odbc_get_error_message (con_context_pointer)
 		end
 
 	get_error_message_string: STRING_32
 		local
 			l_s: SQL_STRING
 		do
-			create l_s.make_by_pointer (odbc_get_error_message)
+			create l_s.make_by_pointer (odbc_get_error_message (con_context_pointer))
 			Result := l_s.string
 		end
 
 	get_error_code: INTEGER
 		do
-			Result := odbc_get_error_code
+			Result := odbc_get_error_code (con_context_pointer)
 			is_error_updated := True
 		end
 
 	get_warn_message: POINTER
 		do
-			Result := odbc_get_warn_message
+			Result := odbc_get_warn_message (con_context_pointer)
 		end
 
 	get_warn_message_string: STRING_32
 		local
 			l_s: SQL_STRING
 		do
-			create l_s.make_by_pointer (odbc_get_warn_message)
+			create l_s.make_by_pointer (odbc_get_warn_message (con_context_pointer))
 			Result := l_s.string
 		end
 
 	new_descriptor: INTEGER
 		do
-			Result := odbc_new_descriptor
+			Result := odbc_new_descriptor (con_context_pointer)
 		end
 
 	init_order (no_descriptor: INTEGER; command: READABLE_STRING_GENERAL)
@@ -552,25 +551,25 @@ feature -- External
 			c_temp: SQL_STRING
 		do
 			create c_temp.make (command)
-			odbc_init_order (no_descriptor, c_temp.item, 0)
+			odbc_init_order (con_context_pointer, no_descriptor, c_temp.item, 0)
 			is_error_updated := False
 		end
 
 	start_order (no_descriptor: INTEGER)
 		do
-			odbc_start_order (no_descriptor)
+			odbc_start_order (con_context_pointer, no_descriptor)
 			is_error_updated := False
 		end
 
 	next_row (no_descriptor: INTEGER)
 		do
-			found := odbc_next_row (no_descriptor) = 0
+			found := odbc_next_row (con_context_pointer, no_descriptor) = 0
 			is_error_updated := False
 		end
 
 	close_cursor (no_descriptor: INTEGER)
 		do
-			odbc_close_cursor (no_descriptor)
+			odbc_close_cursor (con_context_pointer, no_descriptor)
 		end
 
 	terminate_order (no_descriptor: INTEGER)
@@ -581,7 +580,7 @@ feature -- External
 			if l_para /= Void then
 				l_para.release
 			end
-			odbc_terminate_order (no_descriptor)
+			odbc_terminate_order (con_context_pointer, no_descriptor)
 			is_error_updated := False
 		end
 
@@ -590,7 +589,7 @@ feature -- External
 			c_temp: SQL_STRING
 		do
 			create c_temp.make (command)
-			odbc_exec_immediate (no_descriptor, c_temp.item)
+			odbc_exec_immediate (con_context_pointer, no_descriptor, c_temp.item)
 			is_error_updated := False
 		end
 
@@ -600,7 +599,7 @@ feature -- External
 			l_str: SQL_STRING
 		do
 			create l_area.make (max_len)
-			Result := odbc_put_col_name (no_descriptor, index, l_area.item)
+			Result := odbc_put_col_name (con_context_pointer, no_descriptor, index, l_area.item)
 
 			create l_str.make_shared_from_pointer_and_count (l_area.item, Result * {SQL_STRING}.character_size)
 
@@ -619,7 +618,7 @@ feature -- External
 			i: INTEGER
 			l_data, l_null: POINTER
 		do
-			Result := odbc_put_data (no_descriptor, index, $l_data)
+			Result := odbc_put_data (con_context_pointer, no_descriptor, index, $l_data)
 			ar.grow (Result)
 			ar.set_count (Result)
 			if Result > 0 then
@@ -644,7 +643,7 @@ feature -- External
 			l_sql_string: SQL_STRING
 			l_data, l_null: POINTER
 		do
-			Result := odbc_put_data (no_descriptor, index, $l_data) // {SQL_STRING}.character_size
+			Result := odbc_put_data (con_context_pointer, no_descriptor, index, $l_data) // {SQL_STRING}.character_size
 			ar.grow (Result)
 			ar.set_count (Result)
 			create l_sql_string.make_shared_from_pointer_and_count (l_data, Result * {SQL_STRING}.character_size)
@@ -679,93 +678,93 @@ feature -- External
 
 	get_count (no_descriptor: INTEGER): INTEGER
 		do
-			Result := odbc_get_count (no_descriptor)
+			Result := odbc_get_count (con_context_pointer, no_descriptor)
 		end
 
 	get_data_len (no_descriptor: INTEGER; ind: INTEGER): INTEGER
 		do
-			Result := odbc_get_data_len (no_descriptor, ind)
+			Result := odbc_get_data_len (con_context_pointer, no_descriptor, ind)
 		end
 
 	get_col_len (no_descriptor: INTEGER; ind: INTEGER): INTEGER
 		do
-			Result := odbc_get_col_len (no_descriptor, ind)
+			Result := odbc_get_col_len (con_context_pointer, no_descriptor, ind)
 		end
 
 	get_col_type (no_descriptor: INTEGER; ind: INTEGER): INTEGER
 		do
-			Result := odbc_get_col_type (no_descriptor,ind)
+			Result := odbc_get_col_type (con_context_pointer, no_descriptor,ind)
 		end
 
 	get_integer_data (no_descriptor: INTEGER; ind: INTEGER): INTEGER
 		do
-			Result := odbc_get_integer_data (no_descriptor, ind)
+			Result := odbc_get_integer_data (con_context_pointer, no_descriptor, ind)
 		end
 
 	get_integer_16_data (no_descriptor: INTEGER; ind: INTEGER): INTEGER_16
 		do
-			Result := odbc_get_integer_16_data (no_descriptor, ind)
+			Result := odbc_get_integer_16_data (con_context_pointer, no_descriptor, ind)
 		end
 
 	get_integer_64_data (no_descriptor: INTEGER; ind: INTEGER): INTEGER_64
 		do
-			Result := odbc_get_integer_64_data (no_descriptor, ind)
+			Result := odbc_get_integer_64_data (con_context_pointer, no_descriptor, ind)
 		end
 
 	get_float_data (no_descriptor: INTEGER; ind: INTEGER): DOUBLE
 		do
-			Result := odbc_get_float_data (no_descriptor, ind)
+			Result := odbc_get_float_data (con_context_pointer, no_descriptor, ind)
 		end
 
 	get_real_data (no_descriptor: INTEGER; ind: INTEGER): REAL
 		do
-			Result := odbc_get_real_data (no_descriptor, ind).truncated_to_real
+			Result := odbc_get_real_data (con_context_pointer, no_descriptor, ind).truncated_to_real
 		end
 
 	get_boolean_data (no_descriptor: INTEGER; ind: INTEGER): BOOLEAN
 		do
-			Result := odbc_get_boolean_data (no_descriptor, ind)
+			Result := odbc_get_boolean_data (con_context_pointer, no_descriptor, ind)
 		end
 
 	is_null_data (no_descriptor: INTEGER; ind: INTEGER): BOOLEAN
 			-- Is last retrieved data null?
 		do
-			Result := odbc_is_null_data (no_descriptor, ind)
+			Result := odbc_is_null_data (con_context_pointer, no_descriptor, ind)
 		end
 
 	get_date_data (no_descriptor: INTEGER; ind: INTEGER): INTEGER
 		do
-			Result := odbc_get_date_data (no_descriptor, ind)
+			Result := odbc_get_date_data (con_context_pointer, no_descriptor, ind)
 		end
 
 	get_hour (no_descriptor: INTEGER; ind: INTEGER): INTEGER
 		do
-			Result := odbc_get_hour
+			Result := odbc_get_hour (con_context_pointer)
 		end
 
 	get_sec (no_descriptor: INTEGER; ind: INTEGER): INTEGER
 		do
-			Result := odbc_get_sec
+			Result := odbc_get_sec (con_context_pointer)
 		end
 
 	get_min (no_descriptor: INTEGER; ind: INTEGER): INTEGER
 		do
-			Result := odbc_get_min
+			Result := odbc_get_min (con_context_pointer)
 		end
 
 	get_year (no_descriptor: INTEGER; ind: INTEGER): INTEGER
 		do
-			Result := odbc_get_year
+			Result := odbc_get_year (con_context_pointer)
 		end
 
 	get_day (no_descriptor: INTEGER; ind: INTEGER): INTEGER
 		do
-			Result := odbc_get_day
+			Result := odbc_get_day (con_context_pointer)
 		end
 
 	get_month (no_descriptor: INTEGER; ind: INTEGER): INTEGER
 		do
-			Result := odbc_get_month
+			Result := odbc_get_month (con_context_pointer)
 		end
 
 	c_string_type: INTEGER
@@ -820,7 +819,7 @@ feature -- External
 
 	database_make (i: INTEGER)
 		do
-			c_odbc_make (i)
+			con_context_pointer := c_odbc_make (i)
 		end
 
 	connect (user_name, user_passwd, data_source, application, hostname, roleId, rolePassWd, groupId: STRING)
@@ -832,38 +831,38 @@ feature -- External
 			create c_temp1.make (user_name)
 			create c_temp2.make (user_passwd)
 			create c_temp3.make (data_source)
-			odbc_connect (c_temp1.item, c_temp2.item, c_temp3.item)
+			odbc_connect (con_context_pointer, c_temp1.item, c_temp2.item, c_temp3.item)
 			is_error_updated := False
 --			initialize_date_type_values
 		end
 
 	disconnect
 		do
-			odbc_disconnect
+			odbc_disconnect (con_context_pointer)
 			is_error_updated := False
 			found := False
 		end
 
 	commit
 		do
-			odbc_commit
+			odbc_commit (con_context_pointer)
 			is_error_updated := False
 		end
 
 	rollback
 		do
-			odbc_rollback
+			odbc_rollback (con_context_pointer)
 			is_error_updated := False
 		end
 
 	trancount: INTEGER
 		do
-			Result := odbc_trancount
+			Result := odbc_trancount (con_context_pointer)
 		end
 
 	begin
 		do
-			odbc_begin
+			odbc_begin (con_context_pointer)
 		end
 
 	support_proc: BOOLEAN
@@ -871,68 +870,79 @@ feature -- External
 			Result := odbc_support_proc = 1
 		end
 
+feature {NONE} -- Access
+
+	con_context_pointer: POINTER
+			-- Pointer to C structure of CON_CONTEXT
+
+feature {NONE} -- Disposal
+
+	dispose
+			-- Free allocated memory.
+		do
+			odbc_free_connection (con_context_pointer)
+		end
+
 feature {NONE} -- External features
 
-	odbc_get_error_message: POINTER
+	odbc_get_error_message (a_con: POINTER): POINTER
 			-- C buffer which contains the error_message.
 		external
 			"C use %"odbc.h%""
 		end
 
-	odbc_get_error_code: INTEGER
+	odbc_get_error_code (a_con: POINTER): INTEGER
 			-- C buffer which contains the error code.
 		external
 			"C use %"odbc.h%""
 		end
 
-	odbc_get_warn_message: POINTER
+	odbc_get_warn_message (a_con: POINTER): POINTER
 		external
 			"C use %"odbc.h%""
 		end
 
-	odbc_new_descriptor: INTEGER
+	odbc_new_descriptor (a_con: POINTER): INTEGER
 		external
 			"C use %"odbc.h%""
 		end
 
-	odbc_init_order (no_descriptor: INTEGER; command: POINTER; argnum: INTEGER)
+	odbc_init_order (a_con: POINTER; no_descriptor: INTEGER; command: POINTER; argnum: INTEGER)
 		external
 			"C use %"odbc.h%""
 		end
 
-	odbc_start_order (no_descriptor: INTEGER)
+	odbc_start_order (a_con: POINTER; no_descriptor: INTEGER)
 		external
 			"C use %"odbc.h%""
 		end
 
-	odbc_next_row (no_descriptor: INTEGER): INTEGER
+	odbc_next_row (a_con: POINTER; no_descriptor: INTEGER): INTEGER
 		external
 			"C use %"odbc.h%""
 		end
 
-	odbc_terminate_order (no_descriptor: INTEGER)
+	odbc_terminate_order (a_con: POINTER; no_descriptor: INTEGER)
 		external
 			"C use %"odbc.h%""
 		end
 
-
-	odbc_close_cursor (no_descriptor: INTEGER)
+	odbc_close_cursor (a_con: POINTER; no_descriptor: INTEGER)
 		external
 			"C use %"odbc.h%""
 		end
 
-
-	odbc_exec_immediate (no_descriptor: INTEGER; command: POINTER)
+	odbc_exec_immediate (a_con: POINTER; no_descriptor: INTEGER; command: POINTER)
 		external
 			"C use %"odbc.h%""
 		end
 
-	odbc_put_col_name (no_descriptor: INTEGER; index: INTEGER; ar: POINTER): INTEGER
+	odbc_put_col_name (a_con: POINTER; no_descriptor: INTEGER; index: INTEGER; ar: POINTER): INTEGER
 		external
 			"C use %"odbc.h%""
 		end
 
-	odbc_put_data (no_descriptor: INTEGER; index: INTEGER; ar: TYPED_POINTER [POINTER]): INTEGER
+	odbc_put_data (a_con: POINTER; no_descriptor: INTEGER; index: INTEGER; ar: TYPED_POINTER [POINTER]): INTEGER
 		external
 			"C use %"odbc.h%""
 		end
@@ -957,92 +967,92 @@ feature {NONE} -- External features
 			"C use %"odbc.h%""
 		end
 
-	odbc_get_count (no_descriptor: INTEGER): INTEGER
+	odbc_get_count (a_con: POINTER; no_descriptor: INTEGER): INTEGER
 		external
 			"C use %"odbc.h%""
 		end
 
-	odbc_get_data_len (no_descriptor: INTEGER ind: INTEGER): INTEGER
+	odbc_get_data_len (a_con: POINTER; no_descriptor: INTEGER ind: INTEGER): INTEGER
 		external
 			"C use %"odbc.h%""
 		end
 
-	odbc_get_col_len (no_descriptor: INTEGER ind: INTEGER): INTEGER
+	odbc_get_col_len (a_con: POINTER; no_descriptor: INTEGER ind: INTEGER): INTEGER
 		external
 			"C use %"odbc.h%""
 		end
 
-	odbc_get_col_type (no_descriptor: INTEGER ind: INTEGER): INTEGER
+	odbc_get_col_type (a_con: POINTER; no_descriptor: INTEGER ind: INTEGER): INTEGER
 		external
 			"C use %"odbc.h%""
 		end
 
-	odbc_get_integer_data (no_descriptor: INTEGER ind: INTEGER): INTEGER
+	odbc_get_integer_data (a_con: POINTER; no_descriptor: INTEGER ind: INTEGER): INTEGER
 		external
 			"C use %"odbc.h%""
 		end
 
-	odbc_get_integer_16_data (no_descriptor: INTEGER ind: INTEGER): INTEGER_16
+	odbc_get_integer_16_data (a_con: POINTER; no_descriptor: INTEGER ind: INTEGER): INTEGER_16
 		external
 			"C use %"odbc.h%""
 		end
 
-	odbc_get_integer_64_data (no_descriptor: INTEGER ind: INTEGER): INTEGER_64
+	odbc_get_integer_64_data (a_con: POINTER; no_descriptor: INTEGER ind: INTEGER): INTEGER_64
 		external
 			"C use %"odbc.h%""
 		end
 
-	odbc_get_float_data (no_descriptor: INTEGER ind: INTEGER): DOUBLE
+	odbc_get_float_data (a_con: POINTER; no_descriptor: INTEGER ind: INTEGER): DOUBLE
 		external
 			"C use %"odbc.h%""
 		end
 
-	odbc_get_real_data (no_descriptor: INTEGER ind: INTEGER): DOUBLE
+	odbc_get_real_data (a_con: POINTER; no_descriptor: INTEGER ind: INTEGER): DOUBLE
 		external
 			"C use %"odbc.h%""
 		end
 
-	odbc_get_boolean_data (no_descriptor: INTEGER ind: INTEGER): BOOLEAN
+	odbc_get_boolean_data (a_con: POINTER; no_descriptor: INTEGER ind: INTEGER): BOOLEAN
 		external
 			"C use %"odbc.h%""
 		end
 
-	odbc_is_null_data (no_descriptor: INTEGER ind: INTEGER): BOOLEAN
+	odbc_is_null_data (a_con: POINTER; no_descriptor: INTEGER ind: INTEGER): BOOLEAN
 		external
 			"C use %"odbc.h%""
 		end
 
-	odbc_get_date_data (no_descriptor: INTEGER ind: INTEGER): INTEGER
+	odbc_get_date_data (a_con: POINTER; no_descriptor: INTEGER ind: INTEGER): INTEGER
 		external
 			"C use %"odbc.h%""
 		end
 
-	odbc_get_hour: INTEGER
+	odbc_get_hour (a_con: POINTER): INTEGER
 		external
 			"C use %"odbc.h%""
 		end
 
-	odbc_get_sec: INTEGER
+	odbc_get_sec (a_con: POINTER): INTEGER
 		external
 			"C use %"odbc.h%""
 		end
 
-	odbc_get_min: INTEGER
+	odbc_get_min (a_con: POINTER): INTEGER
 		external
 			"C use %"odbc.h%""
 		end
 
-	odbc_get_year: INTEGER
+	odbc_get_year (a_con: POINTER): INTEGER
 		external
 			"C use %"odbc.h%""
 		end
 
-	odbc_get_day: INTEGER
+	odbc_get_day (a_con: POINTER): INTEGER
 		external
 			"C use %"odbc.h%""
 		end
 
-	odbc_get_month: INTEGER
+	odbc_get_month (a_con: POINTER): INTEGER
 		external
 			"C use %"odbc.h%""
 		end
@@ -1117,36 +1127,36 @@ feature {NONE} -- External features
 			"DATE_TYPE"
 		end
 
-	c_odbc_make (i: INTEGER)
+	c_odbc_make (i: INTEGER): POINTER
 		external
 			"C use %"odbc.h%""
 		end
 
-	odbc_disconnect
+	odbc_disconnect (a_con: POINTER)
 		external
 			"C use %"odbc.h%""
 		end
 
-	odbc_commit
+	odbc_commit (a_con: POINTER)
 		external
 			"C use %"odbc.h%""
 		end
 
-	odbc_rollback
+	odbc_rollback (a_con: POINTER)
 		external
 			"C use %"odbc.h%""
 		alias
 			"odbc_rollback"
 		end
 
-	odbc_trancount: INTEGER
+	odbc_trancount (a_con: POINTER): INTEGER
 		external
 			"C use %"odbc.h%""
 		alias
 			"odbc_trancount"
 		end
 
-	odbc_begin
+	odbc_begin (a_con: POINTER)
 		external
 			"C use %"odbc.h%""
 		alias
@@ -1158,7 +1168,7 @@ feature {NONE} -- External features
 			"C use %"odbc.h%""
 		end
 
-	odbc_connect (user_name, user_passwd, dbName: POINTER)
+	odbc_connect (a_con, user_name, user_passwd, dbName: POINTER)
 		external
 			"C use %"odbc.h%""
 		end
@@ -1173,7 +1183,7 @@ feature {NONE} -- External features
 			"C use %"odbc.h%""
 		end
 
-	odbc_unset_catalog_flag (desc: INTEGER)
+	odbc_unset_catalog_flag (a_con: POINTER; desc: INTEGER)
 		external
 			"C use %"odbc.h%""
 		end
@@ -1183,7 +1193,12 @@ feature {NONE} -- External features
 			"C use %"odbc.h%""
 		end
 
-	odbc_pre_immediate (desc, argNum: INTEGER)
+	odbc_pre_immediate (a_con: POINTER; desc, argNum: INTEGER)
+		external
+		    "C use %"odbc.h%""
+		end
+
+	odbc_free_connection (a_con: POINTER)
 		external
 		    "C use %"odbc.h%""
 		end
@@ -1335,7 +1350,7 @@ feature {NONE} -- External features
 						l_value_count := 1
 					end
 
-					odbc_set_parameter (descriptor, i, 1, type, 100, l_value_count, l_para.get (i))
+					odbc_set_parameter (con_context_pointer, descriptor, i, 1, type, 100, l_value_count, l_para.get (i))
 
 					is_error_updated := False
 					i := i + 1
@@ -1354,7 +1369,7 @@ feature {NONE} -- External features
 
 feature {NONE} -- External features
 
-   	odbc_set_parameter (no_desc, seri, direction, type, collength, value_count: INTEGER; value: POINTER)
+   	odbc_set_parameter (a_con: POINTER; no_desc, seri, direction, type, collength, value_count: INTEGER; value: POINTER)
 		external
 		    "C use %"odbc.h%""
 		end
@@ -1389,11 +1404,6 @@ feature {NONE} -- External features
 		end
 
 	odbc_str_len (val: POINTER): INTEGER
-		external
-		    "C use %"odbc.h%""
-		end
-
-	odbc_str_value (val: POINTER): POINTER
 		external
 		    "C use %"odbc.h%""
 		end
@@ -1475,12 +1485,12 @@ feature {NONE} -- External features
 		end
 
 
-	odbc_available_descriptor : INTEGER
+	odbc_available_descriptor (a_con: POINTER) : INTEGER
 		external
 			"C use %"odbc.h%""
 		end
 
-	odbc_clear_error
+	odbc_clear_error (a_con: POINTER)
 		external
 			"C use %"odbc.h%""
 		end

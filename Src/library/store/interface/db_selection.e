@@ -34,13 +34,16 @@ feature -- Initialization
 
 	make
 			-- Create an interface objet to query active base.
+		local
+			l_imp: like implementation
 		do
 			create ht.make (name_table_size)
 			create ht_order.make (name_table_size)
 			ht_order.compare_objects
-			implementation := handle.database.db_selection
-			implementation.set_ht (ht)
-			implementation.set_ht_order (ht_order)
+			l_imp := handle.database.db_selection
+			l_imp.set_ht (ht)
+			l_imp.set_ht_order (ht_order)
+			implementation := l_imp
 		end
 
 feature -- Access

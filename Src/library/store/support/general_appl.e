@@ -16,17 +16,21 @@ feature {NONE} -- Status report
 
 	session_database: detachable DB [DATABASE]
 			-- Data base handle
-		deferred
+		do
+			Result := manager.current_session.session_database
 		end
-
-	session_process: detachable POINTER_REF
-			-- A reference to a pointer object
 
 	session_status: detachable DB_STATUS
 			-- A session management object reference
+		do
+			Result := manager.current_session.session_status
+		end
 
-	session_execution_type: detachable DB_EXEC;
+	session_execution_type: detachable DB_EXEC
 			-- An execution status object reference
+		do
+			Result := manager.current_session.session_execution_type
+		end
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

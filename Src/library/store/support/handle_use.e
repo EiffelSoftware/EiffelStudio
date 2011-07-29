@@ -8,12 +8,15 @@ note
 
 class HANDLE_USE
 
+inherit
+	DATABASE_SESSION_MANAGER_ACCESS
+
 feature {NONE} -- Status report
 
 	handle: HANDLE
 			-- Shared handle to switchable database implementations
-		once
-			create Result
+		do
+			Result := manager.current_session.handle
 		end
 
 note

@@ -39,7 +39,7 @@ feature -- Basic operations
 		do
 			implementation.connect
 			if is_ok then
-				handle.status.set_connect (true)
+				handle.status.set_connect (True)
 			end
 		ensure
 			not is_ok or else is_connected
@@ -52,7 +52,7 @@ feature -- Basic operations
 		do
 			handle.status.reset
 			implementation.disconnect
-			handle.status.set_connect (false)
+			handle.status.set_connect (False)
 		ensure
 			no_connection: not is_connected
 			all_transaction_ended: transaction_count = 0

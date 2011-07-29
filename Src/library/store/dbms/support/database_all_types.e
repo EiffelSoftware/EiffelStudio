@@ -67,7 +67,7 @@ feature -- Element change
 			count = 0
 		local
 			a_db_type: DB_TYPE
-		once
+		do
 			create {DATABASE_STRING [G]} a_db_type
 			register_type (a_db_type)
 			create {DATABASE_STRING_32 [G]} a_db_type

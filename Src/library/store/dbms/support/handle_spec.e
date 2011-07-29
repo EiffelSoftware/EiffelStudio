@@ -8,34 +8,27 @@ note
 class
 	HANDLE_SPEC [G -> DATABASE create default_create end]
 
+inherit
+	DATABASE_SESSION_MANAGER_ACCESS
+
 feature -- Access
 
 	db_spec: DATABASE
 			-- Handle to actual database
+		local
+			l_database: detachable G
+			l_session: DATABASE_SESSION
 		do
-			Result := db_spec_impl.item
+			l_session := Manager.current_session
+			if attached l_session.database as l_d then
+				Result := l_d
+			else
+				create l_database
+				l_session.set_database (l_database)
+				Result := l_database
+			end
 		ensure
 			not_void: Result /= Void
-		end
-
-feature {NONE} -- Implementation
-
-	update_handle
-			-- Update handle according to current connection.
-		local
-			obj: G
-		do
-			create obj
-			db_spec_impl.replace (obj)
-		end
-
-	db_spec_impl : CELL [DATABASE]
-			-- Unique reference to application database handle.
-		local
-			obj: G
-		once
-			create obj
-			create Result.put (obj)
 		end
 
 note

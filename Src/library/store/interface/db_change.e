@@ -82,19 +82,22 @@ feature -- Basic operations
 feature {NONE} -- Implementation
 
 	implementation: DATABASE_CHANGE [DATABASE]
-		-- Handle reference to specific database implementation
+			-- Handle reference to specific database implementation
 
 feature {NONE} -- Initialization
 
 	make
 			-- Create an interface object to change active base.
+		local
+			l_imp: like implementation
 		do
-			implementation := handle.database.db_change
 			create ht.make (name_table_size)
 			create ht_order.make (name_table_size)
 			ht_order.compare_objects
-			implementation.set_ht (ht)
-			implementation.set_ht_order (ht_order)
+			l_imp := handle.database.db_change
+			l_imp.set_ht (ht)
+			l_imp.set_ht_order (ht_order)
+			implementation := l_imp
 		end
 
 note

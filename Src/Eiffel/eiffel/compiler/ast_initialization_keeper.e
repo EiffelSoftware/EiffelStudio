@@ -35,6 +35,15 @@ feature {AST_ATTRIBUTE_INITIALIZATION_TRACKER, AST_LOCAL_INITIALIZATION_TRACKER}
 			index_large_enough: index > 0
 			index_small_enough: index <= count
 		deferred
+		ensure
+			is_set: is_set (index)
+		end
+
+	set_all
+			-- Mark all variables as set.
+		deferred
+		ensure
+			across 1 |..| count as c all is_set (c.item) end
 		end
 
 feature -- Status report: nesting

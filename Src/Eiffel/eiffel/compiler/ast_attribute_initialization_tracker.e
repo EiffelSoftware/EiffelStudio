@@ -59,17 +59,8 @@ feature {AST_CONTEXT, AST_CREATION_PROCEDURE_CHECKER, AST_SCOPE_COMBINED_PRECOND
 
 	set_all
 			-- Mark that all attributes are set.
-		local
-			position: like attribute_count
 		do
-			from
-				position := attribute_count
-			until
-				position <= 0
-			loop
-				keeper.set (position)
-				position := position - 1
-			end
+			keeper.set_all
 		ensure
 			all_set: (1 |..| attribute_count).for_all (agent is_attribute_set (?))
 		end

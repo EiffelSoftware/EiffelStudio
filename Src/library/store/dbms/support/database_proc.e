@@ -393,6 +393,7 @@ feature {NONE} -- Implementation
 			i: INTEGER
 			l_arguments_name_32: like arguments_name_32
 			l_arguments_type: like arguments_type
+			l_all_types: DB_ALL_TYPES
 		do
 			s.append (db_spec.map_var_before)
 			from
@@ -401,13 +402,14 @@ feature {NONE} -- Implementation
 				l_arguments_type := arguments_type
 				check l_arguments_type /= Void end -- implied by precondition `arguments_set'	
 				i := l_arguments_name_32.lower
+				l_all_types := handle.all_types
 			until
 				i > l_arguments_name_32.upper
 			loop
 				s.append (db_spec.map_var_between)
 				s.append (l_arguments_name_32.item (i))
 				s.append (db_spec.map_var_between_2)
-				s.append (handle.all_types.db_type (l_arguments_type.item (i)).sql_name)
+				s.append (l_all_types.db_type (l_arguments_type.item (i)).sql_name)
 				i := i + 1
 				if i <= l_arguments_name_32.upper then
 					s.extend (',')

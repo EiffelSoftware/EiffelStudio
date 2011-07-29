@@ -34,17 +34,43 @@
 #include "odbc.h"
 #include <ctype.h>
 
-void odbc_error_handler (HSTMT,int);
-void odbc_clear_error (void);
-void odbc_unhide_qualifier(SQLTCHAR *);
-int	 odbc_c_type(int odbc_type);
+/*
+** Data used by a single connection
+*/
+typedef struct con_context_ {
+		/* ODBC connection handle, A connection consists of a driver and a data source.
+		 * A connection handle identifies each connection. The connection handle defines not only which driver to use 
+		 * but which data source to use with that driver. */
+	HDBC    hdbc;
+	ODBCSQLDA *odbc_descriptor[MAX_DESCRIPTOR];
+	short   flag[MAX_DESCRIPTOR];
+	SQLHSTMT   hstmt[MAX_DESCRIPTOR];
+	SQLLEN *pcbValue[MAX_DESCRIPTOR]; /* Used by SQLBindParameter. Pointers to a buffer for the parameter's length. */
+	SQLLEN *odbc_indicator[MAX_DESCRIPTOR];
+	RETCODE rc; /* Return code */
+	TIMESTAMP_STRUCT odbc_date; /* Date data for temporary use */
+		/* Messages: Are not exported to Eiffel due to
+		 * merge with Oracle variables when using both files.
+		 * Wrapping functions are used.*/
+	SQLTCHAR *error_message; 
+	SQLTCHAR *warn_message;
+	int error_number;
+	short odbc_tranNumber; /* number of transaction opened at present */
+} CON_CONTEXT;
 
-void odbc_close_cursor (int no_des);
+
+void odbc_error_handler (CON_CONTEXT *con, HSTMT,int);
+void odbc_clear_error (void *);
+void odbc_unhide_qualifier(SQLTCHAR *);
+SQLSMALLINT	 odbc_c_type(SQLSMALLINT odbc_type);
+
 EIF_NATURAL_64 strhextoval(SQL_NUMERIC_STRUCT *NumStr);
 rt_private SQLTCHAR *sqlstrcpy(SQLTCHAR *strDestination, int pos, const char *strSource);
 rt_private int find_name (SQLTCHAR *buf, SQLTCHAR * sqlStat);
-void setup_result_space (int no_desc);
+void setup_result_space (void *con, int no_desc);
 void free_sqldata (ODBCSQLDA *dap);
+int odbc_first_descriptor_available (void *con);
+rt_private void change_to_low(SQLTCHAR *buf, size_t length);
 
 /* Safe allocation and memory reset */\
 #define ODBC_SAFE_CLEAN_ALLOC(p,function,size) \
@@ -63,22 +89,16 @@ ATSTXTCAT	- ASCII to SQL text cat
 #define SQLTXTCPY(s1,s2)	 (memcpy(s1, s2, (TXTLEN(s2)+1)*sizeof(SQLTCHAR)))
 #define ATSTXTCPY(s1,s2)	 (sqlstrcpy(s1, 0, s2))
 #define SQLTXTCAT(s1,s2)	(SQLTXTCPY((SQLTCHAR *)s1+TXTLEN(s1), s2))
-#define ATSTXTCAT(s1,s2)	(sqlstrcpy(s1, TXTLEN(s1), s2))
+#define ATSTXTCAT(s1,s2)	(sqlstrcpy(s1, (int)(TXTLEN(s1)), s2))
 
 #define TXTC(x)  ((SQLTCHAR) x)
 
-
-ODBCSQLDA * odbc_descriptor[MAX_DESCRIPTOR];
-short   flag[MAX_DESCRIPTOR];
-SQLHSTMT   hstmt[MAX_DESCRIPTOR];
-SQLHDESC	hdesc = NULL;
-SQLLEN *pcbValue[MAX_DESCRIPTOR];
-HENV    henv;
-HDBC    hdbc;
-SQLLEN *odbc_indicator[MAX_DESCRIPTOR];
-RETCODE rc;
-TIMESTAMP_STRUCT odbc_date;
-SQLTCHAR odbc_date_string[DB_DATE_LEN];
+/* Global ODBC environment, 
+ * for the moment we only allow single environment in one process.
+ * Mutex is needed later for multithreading support.
+ */
+HENV    henv = NULL; 
+short number_connection;
 
 SQLTCHAR odbc_qualifier[DB_MAX_QUALIFIER_LEN];
 SQLTCHAR odbc_owner[DB_MAX_USER_NAME_LEN];
@@ -90,24 +110,6 @@ SQLTCHAR storedProc[2];
 SQLTCHAR CreateStoredProc[DB_MAX_NAME_LEN];
 SQLTCHAR dbmsName[DB_MAX_NAME_LEN];
 SQLTCHAR dbmsVer[DB_MAX_NAME_LEN];
-// Added for multiple connection
-short number_connection=0;
-
-/* Messages: Are not exported to Eiffel due to
-merge with Oracle variables when using both files.
-Wrapping functions are used.*/
-rt_private SQLTCHAR *error_message = NULL;
-rt_private SQLTCHAR *warn_message = NULL;
-rt_private int error_number = 0;
-
-static int data_type = 0, size = 0, max_size = 0;
-SQLTCHAR odbc_user_name[40];
-
-short odbc_tranNumber=0; /* number of transaction opened at present */
-
-rt_private void change_to_low(SQLTCHAR *buf, int length);
-
-char charBuf[255];
 
 /* each function return 0 in case of success */
 /* and database error code ( >= 1) else */
@@ -116,20 +118,42 @@ char charBuf[255];
 /* initialise ODBC   c-module                                    */
 /*****************************************************************/
 
-void c_odbc_make (int m_size)
+void *c_odbc_make (int m_size)
 {
-  int count;
+	CON_CONTEXT *l_res;
+	int count;
 
-  if (error_message == NULL) {
-	 ODBC_SAFE_ALLOC(error_message, (SQLTCHAR *) malloc (sizeof (SQLTCHAR) * (m_size + ERROR_MESSAGE_SIZE)));
-	 ODBC_SAFE_ALLOC(warn_message, (SQLTCHAR *) malloc (sizeof (SQLTCHAR) * (m_size + WARN_MESSAGE_SIZE)));
-  }
+	ODBC_SAFE_ALLOC(l_res, (CON_CONTEXT *) malloc (sizeof (CON_CONTEXT)));
+	memset (l_res, 0, sizeof (CON_CONTEXT));
+	number_connection++;
 
-  odbc_clear_error ();
-  max_size = m_size;
+	/* Allocate memory for error and warning message */
+	ODBC_SAFE_ALLOC(l_res->error_message, (SQLTCHAR *) malloc (sizeof (SQLTCHAR) * (m_size + ERROR_MESSAGE_SIZE)));
+	ODBC_SAFE_ALLOC(l_res->warn_message, (SQLTCHAR *) malloc (sizeof (SQLTCHAR) * (m_size + WARN_MESSAGE_SIZE)));
 
-  for (count = 0; count < MAX_DESCRIPTOR; count++)
-      odbc_descriptor[count] = NULL;
+	if (!henv)
+	{
+		/* Even though the error message is not related to current connection,
+		 * but the global environment handle.
+		 * We still store the message in it due to the way on Eiffel side of 
+		 * retrieving error message.
+		 */
+		l_res->rc = SQLAllocHandle(SQL_HANDLE_ENV,SQL_NULL_HANDLE,&henv);
+		if (l_res->rc) {
+			odbc_error_handler(l_res, NULL,10);
+			return l_res;
+		}
+	}
+	l_res->rc = SQLSetEnvAttr(henv,SQL_ATTR_ODBC_VERSION,(SQLPOINTER)SQL_OV_ODBC3,0);
+	if (l_res->rc) {
+		odbc_error_handler(l_res, NULL,910);
+		return l_res;
+	}
+
+	for (count = 0; count < MAX_DESCRIPTOR; count++) {
+		l_res->odbc_descriptor[count] = NULL;
+	}
+	return l_res;
 }
 
 
@@ -156,35 +180,35 @@ void c_odbc_make (int m_size)
 /*    size of memory space).                                     */
 /*                                                               */
 /*****************************************************************/
-int odbc_new_descriptor ()
+int odbc_new_descriptor (void *con)
 {
-  int result = odbc_first_descriptor_available ();
+	CON_CONTEXT *l_con = (CON_CONTEXT *)con;
+	int result = odbc_first_descriptor_available (con);
 
-  if (result != NO_MORE_DESCRIPTOR)
-    {
-      //rc = SQLAllocStmt(hdbc, &(hstmt[result]));
-      rc = SQLAllocHandle (SQL_HANDLE_STMT, hdbc, &(hstmt[result]));
-      if (rc) {
-		odbc_error_handler(NULL, 0);
-		return NO_MORE_DESCRIPTOR;
-      }
+	if (result != NO_MORE_DESCRIPTOR)
+	{
+		l_con->rc = SQLAllocHandle (SQL_HANDLE_STMT, l_con->hdbc, &(l_con->hstmt[result]));
+		if (l_con->rc) {
+			odbc_error_handler(con, NULL, 0);
+			return NO_MORE_DESCRIPTOR;
+		}
 
-      /* malloc area for the descriptor and then initialize it */
-	  /* Initially allocate head size plus one var size. 
-	   * Previously we set odbc_descriptor[result] as arbitary pointer 0x1 which is not good */
-      ODBC_SAFE_ALLOC(odbc_descriptor[result], (ODBCSQLDA *) calloc(IISQDA_HEAD_SIZE + IISQDA_VAR_SIZE, 1));
-	  SetVarNum(odbc_descriptor[result], 1);
-	  ODBC_C_FREE (pcbValue[result]);
-      pcbValue[result] = NULL;
-	  ODBC_C_FREE (odbc_indicator[result]);
-      odbc_indicator[result] = NULL;
-      flag[result] = ODBC_SQL;
-    }
-  else {
-	odbc_error_handler(NULL, 201);
-	ATSTXTCPY(error_message, " No available descriptor\n");
-  }
-  return result;
+		/* malloc area for the descriptor and then initialize it */
+		/* Initially allocate head size plus one var size. 
+		* Previously we set odbc_descriptor[result] as arbitary pointer 0x1 which is not good */
+		ODBC_SAFE_ALLOC(l_con->odbc_descriptor[result], (ODBCSQLDA *) calloc(IISQDA_HEAD_SIZE + IISQDA_VAR_SIZE, 1));
+		SetVarNum(l_con->odbc_descriptor[result], 1);
+		ODBC_C_FREE (l_con->pcbValue[result]);
+		l_con->pcbValue[result] = NULL;
+		ODBC_C_FREE (l_con->odbc_indicator[result]);
+		l_con->odbc_indicator[result] = NULL;
+		l_con->flag[result] = ODBC_SQL;
+	}
+	else {
+		odbc_error_handler(con, NULL, 201);
+		ATSTXTCPY(l_con->error_message, " No available descriptor\n");
+	}
+	return result;
 }
 
 /*****************************************************************/
@@ -197,27 +221,27 @@ int odbc_new_descriptor ()
 /*return NO_MORE_DESCRIPTOR.                                     */
 /*                                                               */
 /*****************************************************************/
-int odbc_first_descriptor_available (void)
+int odbc_first_descriptor_available (void *con)
 {
-  int no_descriptor;
+	int no_descriptor;
+	CON_CONTEXT *l_con = (CON_CONTEXT *)con;
 
+	for (no_descriptor = 0;
+		no_descriptor < MAX_DESCRIPTOR &&
+		l_con->odbc_descriptor[no_descriptor] != NULL;
+	no_descriptor++)
+	{
+		/* empty */
+	}
 
-  for (no_descriptor = 0;
-       no_descriptor < MAX_DESCRIPTOR &&
-       odbc_descriptor[no_descriptor] != NULL;
-       no_descriptor++)
-    {
-      /* empty */
-    }
-
-  if (no_descriptor < MAX_DESCRIPTOR)
-    {
-      return no_descriptor;
-    }
-  else
-    {
-      return NO_MORE_DESCRIPTOR;
-    }
+	if (no_descriptor < MAX_DESCRIPTOR)
+	{
+		return no_descriptor;
+	}
+	else
+	{
+		return NO_MORE_DESCRIPTOR;
+	}
 }
 
 /*****************************************************************/
@@ -230,9 +254,9 @@ int odbc_first_descriptor_available (void)
 /* if answer is YES, return 1; otherwise return 0.               */
 /*                                                               */
 /*****************************************************************/
-int odbc_available_descriptor ()
+int odbc_available_descriptor (void *con)
 {
-  return odbc_first_descriptor_available () != NO_MORE_DESCRIPTOR;
+	return odbc_first_descriptor_available (con) != NO_MORE_DESCRIPTOR;
 }
 
 /*****************************************************************/
@@ -246,9 +270,8 @@ int odbc_available_descriptor ()
 /*****************************************************************/
 int odbc_max_descriptor ()
 {
-  return MAX_DESCRIPTOR;
+	return MAX_DESCRIPTOR;
 }
-
 
 /*****************************************************************/
 /*  The following functions perform SQL statement in 2 ways:     */
@@ -271,22 +294,23 @@ int odbc_max_descriptor ()
 /* stored procedure.                                             */
 /*                                                               */
 /*****************************************************************/
-void odbc_pre_immediate(int no_desc, int argNum) {
+void odbc_pre_immediate(void *con, int no_desc, int argNum) 
+{
+	CON_CONTEXT *l_con = (CON_CONTEXT *)con;
 
-
-	odbc_clear_error();
+	odbc_clear_error(con);
 
 	if (no_desc < 0 || no_desc > MAX_DESCRIPTOR) {
-		odbc_error_handler(NULL, 202);
-		ATSTXTCAT(error_message, "\nInvalid Descriptor Number!");
+		odbc_error_handler(con, NULL, 202);
+		ATSTXTCAT(l_con->error_message, "\nInvalid Descriptor Number!");
 		return;
 	}
 	if (argNum > 0) {
 		/* Reset memory to be safe */
-		ODBC_SAFE_ALLOC(pcbValue[no_desc], (SQLLEN *) calloc(argNum, sizeof(SQLLEN)));
+		ODBC_SAFE_ALLOC(l_con->pcbValue[no_desc], (SQLLEN *) calloc(argNum, sizeof(SQLLEN)));
 	} else {
-		ODBC_C_FREE (pcbValue[no_desc]);
-		pcbValue[no_desc] = NULL;
+		ODBC_C_FREE (l_con->pcbValue[no_desc]);
+		l_con->pcbValue[no_desc] = NULL;
 	}
 }
 
@@ -302,30 +326,29 @@ void odbc_pre_immediate(int no_desc, int argNum) {
 /* and finally return error number.                              */
 /*                                                               */
 /*****************************************************************/
-void odbc_exec_immediate (int no_desc, SQLTCHAR *order)
+void odbc_exec_immediate (void *con, int no_desc, SQLTCHAR *order)
 {
-
+	CON_CONTEXT *l_con = (CON_CONTEXT *)con;
 
 	odbc_unhide_qualifier(order);
-	odbc_tranNumber = 1;
-	warn_message[0] = (SQLTCHAR)0;
+	l_con->odbc_tranNumber = 1;
+	l_con->warn_message[0] = (SQLTCHAR)0;
 
-	rc = SQLExecDirect(hstmt[no_desc], order, SQL_NTS);
-	free_sqldata (odbc_descriptor[no_desc]);
-	odbc_descriptor[no_desc] = NULL;
-	if (rc) {
-		odbc_error_handler(hstmt[no_desc], 2);
+	l_con->rc = SQLExecDirect(l_con->hstmt[no_desc], order, SQL_NTS);
+	free_sqldata (l_con->odbc_descriptor[no_desc]);
+	l_con->odbc_descriptor[no_desc] = NULL;
+	if (l_con->rc) {
+		odbc_error_handler(con, l_con->hstmt[no_desc], 2);
 	}
-	//rc = SQLFreeStmt(hstmt[no_desc], SQL_DROP);
-	rc = SQLFreeHandle (SQL_HANDLE_STMT, hstmt[no_desc]);
-	if (rc) {
-		odbc_error_handler(hstmt[no_desc],3);
+	l_con->rc = SQLFreeHandle (SQL_HANDLE_STMT, l_con->hstmt[no_desc]);
+	if (l_con->rc) {
+		odbc_error_handler(con, l_con->hstmt[no_desc],3);
 	}
-	free_sqldata (odbc_descriptor[no_desc]);
-	odbc_descriptor[no_desc] = NULL;
-	if (pcbValue[no_desc] != NULL) {
-		ODBC_C_FREE(pcbValue[no_desc]);
-		pcbValue[no_desc] = NULL;
+	free_sqldata (l_con->odbc_descriptor[no_desc]);
+	l_con->odbc_descriptor[no_desc] = NULL;
+	if (l_con->pcbValue[no_desc] != NULL) {
+		ODBC_C_FREE(l_con->pcbValue[no_desc]);
+		l_con->pcbValue[no_desc] = NULL;
 	}
 }
 
@@ -347,10 +370,11 @@ void odbc_exec_immediate (int no_desc, SQLTCHAR *order)
 /*   3. return error number.                                     */
 /*                                                               */
 /*****************************************************************/
-void odbc_init_order (int no_desc, SQLTCHAR *order, int argNum)
+void odbc_init_order (void *con, int no_desc, SQLTCHAR *order, int argNum)
 {
 	int is_as_primary = 0;
 	size_t order_count, buf_count;
+	CON_CONTEXT *l_con = (CON_CONTEXT *)con;
 
 #define COMPARED_BTYES	(9 * sizeof (SQLTCHAR))
 #define COMPARED_LENGTH	(9)
@@ -372,17 +396,17 @@ void odbc_init_order (int no_desc, SQLTCHAR *order, int argNum)
 
 
 	if (no_desc < 0 || no_desc > MAX_DESCRIPTOR) {
-		odbc_error_handler(NULL, 203);
-		ATSTXTCAT(error_message, "\nInvalid Descriptor Number!");
+		odbc_error_handler(con, NULL, 203);
+		ATSTXTCAT(l_con->error_message, "\nInvalid Descriptor Number!");
 		return;
 	}
 	odbc_unhide_qualifier(order);
-	odbc_tranNumber = 1;
-	odbc_clear_error();
-	warn_message[0] = (SQLTCHAR)0;
+	l_con->odbc_tranNumber = 1;
+	odbc_clear_error(con);
+	l_con->warn_message[0] = (SQLTCHAR)0;
 
 
-	flag[no_desc] = ODBC_SQL;
+	l_con->flag[no_desc] = ODBC_SQL;
 	order_count = TXTLEN(order);
 	buf_count = (DB_MAX_TABLE_LEN > order_count ? order_count : DB_MAX_TABLE_LEN);
 
@@ -392,21 +416,21 @@ void odbc_init_order (int no_desc, SQLTCHAR *order, int argNum)
 		change_to_low(tmpBuf, buf_count);
 		if (memcmp(tmpBuf, sqltab, COMPARED_BTYES) == 0)
 		{
-			flag[no_desc] = ODBC_CATALOG_TAB;
+			l_con->flag[no_desc] = ODBC_CATALOG_TAB;
 			if (find_name (tmpBuf, order))
 			{
 				if (TXTLEN(odbc_qualifier) > 0 && TXTLEN(odbc_owner) > 0)
-					rc = SQLTables(hstmt[no_desc], odbc_qualifier, SQL_NTS, odbc_owner, SQL_NTS, tmpBuf, SQL_NTS, NULL, 0);
+					l_con->rc = SQLTables(l_con->hstmt[no_desc], odbc_qualifier, SQL_NTS, odbc_owner, SQL_NTS, tmpBuf, SQL_NTS, NULL, 0);
 				if (TXTLEN(odbc_qualifier) == 0 && TXTLEN(odbc_owner) > 0)
-					rc = SQLTables(hstmt[no_desc], NULL, 0, odbc_owner, SQL_NTS, tmpBuf, SQL_NTS, NULL, 0);
+					l_con->rc = SQLTables(l_con->hstmt[no_desc], NULL, 0, odbc_owner, SQL_NTS, tmpBuf, SQL_NTS, NULL, 0);
 				if (TXTLEN(odbc_qualifier) > 0 && TXTLEN(odbc_owner) == 0)
-					rc = SQLTables(hstmt[no_desc], odbc_qualifier, SQL_NTS, NULL, 0, tmpBuf, SQL_NTS, NULL, 0);
+					l_con->rc = SQLTables(l_con->hstmt[no_desc], odbc_qualifier, SQL_NTS, NULL, 0, tmpBuf, SQL_NTS, NULL, 0);
 				if (TXTLEN(odbc_qualifier) == 0 && TXTLEN(odbc_owner) == 0)
-					rc = SQLTables(hstmt[no_desc], NULL, 0, NULL, 0, tmpBuf, SQL_NTS, NULL, 0);
+					l_con->rc = SQLTables(l_con->hstmt[no_desc], NULL, 0, NULL, 0, tmpBuf, SQL_NTS, NULL, 0);
 			}
 			else
 			{
-				rc = SQLTables(hstmt[no_desc], NULL, 0, NULL, 0, NULL, 0, NULL, 0);
+				l_con->rc = SQLTables(l_con->hstmt[no_desc], NULL, 0, NULL, 0, NULL, 0, NULL, 0);
 				odbc_qualifier[0] = (SQLTCHAR)0;
 				odbc_owner[0] =(SQLTCHAR)0;
 			}
@@ -415,47 +439,47 @@ void odbc_init_order (int no_desc, SQLTCHAR *order, int argNum)
 		{
 			if (memcmp(tmpBuf, sqlcol, COMPARED_BTYES) == 0)
 			{
-				flag[no_desc] = ODBC_CATALOG_COL;
+				l_con->flag[no_desc] = ODBC_CATALOG_COL;
 				if (find_name (tmpBuf, order)) {
-					rc = SQLColumns(hstmt[no_desc], NULL, 0, NULL, 0, tmpBuf, SQL_NTS, NULL, 0);
+					l_con->rc = SQLColumns(l_con->hstmt[no_desc], NULL, 0, NULL, 0, tmpBuf, SQL_NTS, NULL, 0);
 				} else {
-					rc = SQLColumns(hstmt[no_desc], NULL, 0, NULL, 0, NULL, 0, NULL, 0);
+					l_con->rc = SQLColumns(l_con->hstmt[no_desc], NULL, 0, NULL, 0, NULL, 0, NULL, 0);
 				}
 			}
 			else
 			{
 				if (memcmp(tmpBuf, sqlproc, COMPARED_BTYES) == 0)
 				{
-					flag[no_desc] = ODBC_CATALOG_PROC;
+					l_con->flag[no_desc] = ODBC_CATALOG_PROC;
 					if (find_name (tmpBuf, order)){
-						rc = SQLProcedures(hstmt[no_desc], NULL, 0, NULL, 0, tmpBuf, SQL_NTS);
+						l_con->rc = SQLProcedures(l_con->hstmt[no_desc], NULL, 0, NULL, 0, tmpBuf, SQL_NTS);
 					}
 					else{
-						rc = SQLProcedures(hstmt[no_desc], NULL, 0, NULL, 0, NULL, 0);
+						l_con->rc = SQLProcedures(l_con->hstmt[no_desc], NULL, 0, NULL, 0, NULL, 0);
 					}
 				}
 				else
 				{
 					if (memcmp(tmpBuf, sqlpk, COMPARED_BTYES) == 0)
 					{
-						flag[no_desc] = ODBC_PK;
+						l_con->flag[no_desc] = ODBC_PK;
 						if (find_name (tmpBuf, order)) {
-							rc = SQLPrimaryKeys(hstmt[no_desc], NULL, 0, NULL, 0, tmpBuf, SQL_NTS);
+							l_con->rc = SQLPrimaryKeys(l_con->hstmt[no_desc], NULL, 0, NULL, 0, tmpBuf, SQL_NTS);
 						}
 						else {
-							rc = SQLPrimaryKeys(hstmt[no_desc], NULL, 0, NULL, 0, NULL, 0);
+							l_con->rc = SQLPrimaryKeys(l_con->hstmt[no_desc], NULL, 0, NULL, 0, NULL, 0);
 						}
 					}
 					else {
 						if (memcmp(tmpBuf, sqlfk, COMPARED_BTYES) == 0) {
 							is_as_primary = (memcmp(tmpBuf, sqlfk_as_primary, 21) ? 0 : 1);
-							flag[no_desc] = ODBC_FK;
+							l_con->flag[no_desc] = ODBC_FK;
 							find_name (tmpBuf, order);
 								/* Now let's find what type of primary keys we are looking for. */
 							if (is_as_primary) {
-								rc = SQLForeignKeys(hstmt[no_desc], NULL, 0, NULL, 0, tmpBuf, SQL_NTS, NULL, 0, NULL, 0, NULL, 0);
+								l_con->rc = SQLForeignKeys(l_con->hstmt[no_desc], NULL, 0, NULL, 0, tmpBuf, SQL_NTS, NULL, 0, NULL, 0, NULL, 0);
 							} else {
-								rc = SQLForeignKeys(hstmt[no_desc], NULL, 0, NULL, 0, NULL, 0, NULL, 0, NULL, 0, tmpBuf, SQL_NTS);
+								l_con->rc = SQLForeignKeys(l_con->hstmt[no_desc], NULL, 0, NULL, 0, NULL, 0, NULL, 0, NULL, 0, tmpBuf, SQL_NTS);
 							}
 						}
 					}
@@ -464,29 +488,27 @@ void odbc_init_order (int no_desc, SQLTCHAR *order, int argNum)
 		}
 	}
 
-	if (rc) {
-		odbc_error_handler(hstmt[no_desc],100);
-		if (error_number) {
-			free_sqldata (odbc_descriptor[no_desc]);
-			odbc_descriptor[no_desc] = NULL;
-			//rc = SQLFreeStmt(hstmt[no_desc], SQL_DROP);
-			rc = SQLFreeHandle (SQL_HANDLE_STMT, hstmt[no_desc]);
+	if (l_con->rc) {
+		odbc_error_handler(con, l_con->hstmt[no_desc],100);
+		if (l_con->error_number) {
+			free_sqldata (l_con->odbc_descriptor[no_desc]);
+			l_con->odbc_descriptor[no_desc] = NULL;
+			l_con->rc = SQLFreeHandle (SQL_HANDLE_STMT, l_con->hstmt[no_desc]);
 		}
 	}
 
 
 
-	if (flag[no_desc] == ODBC_SQL) {
+	if (l_con->flag[no_desc] == ODBC_SQL) {
 	/* Process general ODBC SQL statements    */
 
-		rc = SQLPrepare(hstmt[no_desc], order, SQL_NTS);
-		if (rc) {
-			odbc_error_handler(hstmt[no_desc],4);
-			if (error_number) {
-				free_sqldata (odbc_descriptor[no_desc]);
-				odbc_descriptor[no_desc] = NULL;
-				//rc = SQLFreeStmt(hstmt[no_desc], SQL_DROP);
-				rc = SQLFreeHandle (SQL_HANDLE_STMT, hstmt[no_desc]);
+		l_con->rc = SQLPrepare(l_con->hstmt[no_desc], order, SQL_NTS);
+		if (l_con->rc) {
+			odbc_error_handler(con, l_con->hstmt[no_desc],4);
+			if (l_con->error_number) {
+				free_sqldata (l_con->odbc_descriptor[no_desc]);
+				l_con->odbc_descriptor[no_desc] = NULL;
+				l_con->rc = SQLFreeHandle (SQL_HANDLE_STMT, l_con->hstmt[no_desc]);
 				return;
 			}
 		}
@@ -494,10 +516,10 @@ void odbc_init_order (int no_desc, SQLTCHAR *order, int argNum)
 
 	if (argNum > 0) {
 		/* Reset memory to be safe */
-		ODBC_SAFE_ALLOC(pcbValue[no_desc], (SQLLEN *) calloc(argNum, sizeof(SQLLEN)));
+		ODBC_SAFE_ALLOC(l_con->pcbValue[no_desc], (SQLLEN *) calloc(argNum, sizeof(SQLLEN)));
 	} else {
-		ODBC_C_FREE (pcbValue[no_desc]);
-		pcbValue[no_desc] = NULL;
+		ODBC_C_FREE (l_con->pcbValue[no_desc]);
+		l_con->pcbValue[no_desc] = NULL;
 	}
 }
 
@@ -518,11 +540,12 @@ void odbc_init_order (int no_desc, SQLTCHAR *order, int argNum)
 /*                                                               */
 /*****************************************************************/
 
-void odbc_start_order (int no_desc)
+void odbc_start_order (void *con, int no_desc)
 {
 	short colNum = 0;
+	CON_CONTEXT *l_con = (CON_CONTEXT *)con;
 
-	// Added by Jacques. 5/14/98
+	/* Added by Jacques. 5/14/98 */
 	SQLTCHAR     szCatalog[DB_REP_LEN], szSchema[DB_REP_LEN];
 	SQLTCHAR     szTableName[DB_REP_LEN], szColumnName[DB_REP_LEN];
 	SQLTCHAR     szTypeName[DB_REP_LEN];
@@ -533,60 +556,60 @@ void odbc_start_order (int no_desc)
 	SQLLEN cbDataType, cbTypeName, cbColumnSize, cbBufferLength;
 	SQLLEN cbDecimalDigits, cbNumPrecRadix, cbNullable;
 
-	if (flag[no_desc] == ODBC_CATALOG_COL) {
-			SQLBindCol(hstmt, 1, SQL_C_TCHAR, szCatalog, DB_REP_LEN,&cbCatalog);
-			SQLBindCol(hstmt, 2, SQL_C_TCHAR, szSchema, DB_REP_LEN, &cbSchema);
-			SQLBindCol(hstmt, 3, SQL_C_TCHAR, szTableName, DB_REP_LEN,&cbTableName);
-			SQLBindCol(hstmt, 4, SQL_C_TCHAR, szColumnName, DB_REP_LEN, &cbColumnName);
-			SQLBindCol(hstmt, 5, SQL_C_SSHORT, &DataType, 0, &cbDataType);
-			SQLBindCol(hstmt, 6, SQL_C_TCHAR, szTypeName, DB_REP_LEN, &cbTypeName);
-			SQLBindCol(hstmt, 7, SQL_C_SLONG, &ColumnSize, 0, &cbColumnSize);
-			SQLBindCol(hstmt, 8, SQL_C_SLONG, &BufferLength, 0, &cbBufferLength);
-			SQLBindCol(hstmt, 9, SQL_C_SSHORT, &DecimalDigits, 0, &cbDecimalDigits);
-			SQLBindCol(hstmt, 10, SQL_C_SSHORT, &NumPrecRadix, 0, &cbNumPrecRadix);
-			SQLBindCol(hstmt, 11, SQL_C_SSHORT, &Nullable, 0, &cbNullable);
+	if (l_con->flag[no_desc] == ODBC_CATALOG_COL) {
+			SQLBindCol(l_con->hstmt, 1, SQL_C_TCHAR, szCatalog, DB_REP_LEN,&cbCatalog);
+			SQLBindCol(l_con->hstmt, 2, SQL_C_TCHAR, szSchema, DB_REP_LEN, &cbSchema);
+			SQLBindCol(l_con->hstmt, 3, SQL_C_TCHAR, szTableName, DB_REP_LEN,&cbTableName);
+			SQLBindCol(l_con->hstmt, 4, SQL_C_TCHAR, szColumnName, DB_REP_LEN, &cbColumnName);
+			SQLBindCol(l_con->hstmt, 5, SQL_C_SSHORT, &DataType, 0, &cbDataType);
+			SQLBindCol(l_con->hstmt, 6, SQL_C_TCHAR, szTypeName, DB_REP_LEN, &cbTypeName);
+			SQLBindCol(l_con->hstmt, 7, SQL_C_SLONG, &ColumnSize, 0, &cbColumnSize);
+			SQLBindCol(l_con->hstmt, 8, SQL_C_SLONG, &BufferLength, 0, &cbBufferLength);
+			SQLBindCol(l_con->hstmt, 9, SQL_C_SSHORT, &DecimalDigits, 0, &cbDecimalDigits);
+			SQLBindCol(l_con->hstmt, 10, SQL_C_SSHORT, &NumPrecRadix, 0, &cbNumPrecRadix);
+			SQLBindCol(l_con->hstmt, 11, SQL_C_SSHORT, &Nullable, 0, &cbNullable);
 			while(1) {
-				rc = SQLFetch(hstmt);
-				if (rc == SQL_ERROR || rc == SQL_SUCCESS_WITH_INFO) {
-					odbc_error_handler(hstmt[no_desc],7);
-					if (error_number > 0) {
-						free_sqldata (odbc_descriptor[no_desc]);
-						odbc_descriptor[no_desc] = NULL;
-						if (pcbValue[no_desc] != NULL) {
-							ODBC_C_FREE(pcbValue[no_desc]);
-							pcbValue[no_desc] = NULL;
+				l_con->rc = SQLFetch(l_con->hstmt);
+				if (l_con->rc == SQL_ERROR || l_con->rc == SQL_SUCCESS_WITH_INFO) {
+					odbc_error_handler(con, l_con->hstmt[no_desc],7);
+					if (l_con->error_number > 0) {
+						free_sqldata (l_con->odbc_descriptor[no_desc]);
+						l_con->odbc_descriptor[no_desc] = NULL;
+						if (l_con->pcbValue[no_desc] != NULL) {
+							ODBC_C_FREE(l_con->pcbValue[no_desc]);
+							l_con->pcbValue[no_desc] = NULL;
 						}
-						rc = SQLFreeHandle (SQL_HANDLE_STMT, hstmt[no_desc]);
+						l_con->rc = SQLFreeHandle (SQL_HANDLE_STMT, l_con->hstmt[no_desc]);
 						return;
 					}
 				}
-				if (rc == SQL_SUCCESS || rc == SQL_SUCCESS_WITH_INFO){
-					rc = SQLNumResultCols(hstmt[no_desc], &colNum);
-					if (rc) {
-						odbc_error_handler(hstmt[no_desc],5);
-						if (error_number) {
-							free_sqldata (odbc_descriptor[no_desc]);
-							odbc_descriptor[no_desc] = NULL;
-							if (pcbValue[no_desc] != NULL) {
-								ODBC_C_FREE(pcbValue[no_desc]);
-								pcbValue[no_desc] = NULL;
+				if (l_con->rc == SQL_SUCCESS || l_con->rc == SQL_SUCCESS_WITH_INFO){
+					l_con->rc = SQLNumResultCols(l_con->hstmt[no_desc], &colNum);
+					if (l_con->rc) {
+						odbc_error_handler(con, l_con->hstmt[no_desc],5);
+						if (l_con->error_number) {
+							free_sqldata (l_con->odbc_descriptor[no_desc]);
+							l_con->odbc_descriptor[no_desc] = NULL;
+							if (l_con->pcbValue[no_desc] != NULL) {
+								ODBC_C_FREE(l_con->pcbValue[no_desc]);
+								l_con->pcbValue[no_desc] = NULL;
 							}
-							rc = SQLFreeHandle (SQL_HANDLE_STMT, hstmt[no_desc]);
+							l_con->rc = SQLFreeHandle (SQL_HANDLE_STMT, l_con->hstmt[no_desc]);
 							return;
 						}
 					}
 
 				}
-				else if (rc == SQL_ROW_UPDATED) {
+				else if (l_con->rc == SQL_ROW_UPDATED) {
 						break;
 				}
-				else if (rc == SQL_ROW_DELETED) {
+				else if (l_con->rc == SQL_ROW_DELETED) {
 						break;
 				}
-				else if (rc == SQL_ROW_ADDED) {
+				else if (l_con->rc == SQL_ROW_ADDED) {
 						break;
 				}
-				else if (rc == SQL_ROW_NOROW) {
+				else if (l_con->rc == SQL_ROW_NOROW) {
 						break;
 				}
 				else {
@@ -597,79 +620,77 @@ void odbc_start_order (int no_desc)
 
 
 
-	if (flag[no_desc] == ODBC_SQL) {
+	if (l_con->flag[no_desc] == ODBC_SQL) {
 	/* Process general ODBC SQL statements    */
-		rc = SQLExecute(hstmt[no_desc]);
-		if (rc) {
-			odbc_error_handler(hstmt[no_desc],7);
-			if (error_number > 0) {
-				free_sqldata (odbc_descriptor[no_desc]);
-				odbc_descriptor[no_desc] = NULL;
-				if (pcbValue[no_desc] != NULL) {
-					ODBC_C_FREE(pcbValue[no_desc]);
-					pcbValue[no_desc] = NULL;
+		l_con->rc = SQLExecute(l_con->hstmt[no_desc]);
+		if (l_con->rc) {
+			odbc_error_handler(con, l_con->hstmt[no_desc],7);
+			if (l_con->error_number > 0) {
+				free_sqldata (l_con->odbc_descriptor[no_desc]);
+				l_con->odbc_descriptor[no_desc] = NULL;
+				if (l_con->pcbValue[no_desc] != NULL) {
+					ODBC_C_FREE(l_con->pcbValue[no_desc]);
+					l_con->pcbValue[no_desc] = NULL;
 				}
-				//rc = SQLFreeStmt(hstmt[no_desc], SQL_DROP);
-				rc = SQLFreeHandle (SQL_HANDLE_STMT, hstmt[no_desc]);
+				l_con->rc = SQLFreeHandle (SQL_HANDLE_STMT, l_con->hstmt[no_desc]);
 				return;
 			}
 		}
 	}
-	setup_result_space (no_desc);
+	setup_result_space (con, no_desc);
 }
 
 /* Setup/describe result space and fill some necessary info. */
-void setup_result_space (int no_desc)
+void setup_result_space (void *con, int no_desc)
 {
-	ODBCSQLDA *dap=odbc_descriptor[no_desc];
-	short colNum = 0;
-	short oldVarNum = 0;
-	int i;
-	long l_length;
-	//int j;
+	CON_CONTEXT *l_con = (CON_CONTEXT *)con;
+	ODBCSQLDA *dap=l_con->odbc_descriptor[no_desc];
+	SQLSMALLINT colNum = 0;
+	SQLSMALLINT oldVarNum = 0;
+	SQLSMALLINT i;
+	SQLULEN l_length;
 	SQLSMALLINT type;
 	SQLSMALLINT indColName;
 	SQLSMALLINT tmpScale;
 	SQLSMALLINT tmpNullable;
 	char *dataBuf;
+	SQLHDESC hdesc = NULL;
 	
 	/* Save old val numbers */
 	oldVarNum = GetVarNum(dap);
 
 	/* Get the old number of var */
-	rc = SQLNumResultCols(hstmt[no_desc], &colNum);
-	if (rc) {
-		odbc_error_handler(hstmt[no_desc],5);
-		if (error_number) {
-			free_sqldata (odbc_descriptor[no_desc]);
-			odbc_descriptor[no_desc] = NULL;
-			if (pcbValue[no_desc] != NULL) {
-				ODBC_C_FREE(pcbValue[no_desc]);
-				pcbValue[no_desc] = NULL;
+	l_con->rc = SQLNumResultCols(l_con->hstmt[no_desc], &colNum);
+	if (l_con->rc) {
+		odbc_error_handler(con, l_con->hstmt[no_desc],5);
+		if (l_con->error_number) {
+			free_sqldata (l_con->odbc_descriptor[no_desc]);
+			l_con->odbc_descriptor[no_desc] = NULL;
+			if (l_con->pcbValue[no_desc] != NULL) {
+				ODBC_C_FREE(l_con->pcbValue[no_desc]);
+				l_con->pcbValue[no_desc] = NULL;
 			}
-			//rc = SQLFreeStmt(hstmt[no_desc], SQL_DROP);
-			rc = SQLFreeHandle (SQL_HANDLE_STMT, hstmt[no_desc]);
+			l_con->rc = SQLFreeHandle (SQL_HANDLE_STMT, l_con->hstmt[no_desc]);
 			return;
 		}
 	}
 
 
 	if (colNum > DB_MAX_COLS) {
-		if (error_number) {
-			ATSTXTCAT(error_message, "\n Number of selected columns exceed max number(300) ");
+		if (l_con->error_number) {
+			ATSTXTCAT(l_con->error_message, "\n Number of selected columns exceed max number(300) ");
 		}
 		else {
-			ATSTXTCPY(error_message, "\n Number of selected columns exceed max number(300) ");
-			error_number = -DB_TOO_MANY_COL;
+			ATSTXTCPY(l_con->error_message, "\n Number of selected columns exceed max number(300) ");
+			l_con->error_number = -DB_TOO_MANY_COL;
 		}
-		free_sqldata (odbc_descriptor[no_desc]);
-		odbc_descriptor[no_desc] = NULL;
-		if (pcbValue[no_desc] != NULL) {
-			ODBC_C_FREE(pcbValue[no_desc]);
-			pcbValue[no_desc] = NULL;
+		free_sqldata (l_con->odbc_descriptor[no_desc]);
+		l_con->odbc_descriptor[no_desc] = NULL;
+		if (l_con->pcbValue[no_desc] != NULL) {
+			ODBC_C_FREE(l_con->pcbValue[no_desc]);
+			l_con->pcbValue[no_desc] = NULL;
 		}
-		//rc = SQLFreeStmt(hstmt[no_desc], SQL_DROP);
-		rc = SQLFreeHandle (SQL_HANDLE_STMT, hstmt[no_desc]);
+		l_con->rc = SQLFreeHandle (SQL_HANDLE_STMT, l_con->hstmt[no_desc]);
 		return;
 	}
 
@@ -678,24 +699,24 @@ void setup_result_space (int no_desc)
 	else
 		i = 1;
 	/* Reallocate the DESCRIPTOR area.   */
-	ODBC_SAFE_ALLOC(odbc_descriptor[no_desc], (ODBCSQLDA *) realloc(odbc_descriptor[no_desc], IISQDA_HEAD_SIZE + i * IISQDA_VAR_SIZE));
+	ODBC_SAFE_ALLOC(l_con->odbc_descriptor[no_desc], (ODBCSQLDA *) realloc(l_con->odbc_descriptor[no_desc], IISQDA_HEAD_SIZE + i * IISQDA_VAR_SIZE));
 	/* If there is resizing, we only clean up the new space, because some memory referenced by old space for var can be reused.*/
 	if (i > oldVarNum)	{
-		memset (odbc_descriptor[no_desc]->sqlvar + oldVarNum, 0, (i - oldVarNum) * IISQDA_VAR_SIZE);
+		memset (l_con->odbc_descriptor[no_desc]->sqlvar + oldVarNum, 0, (i - oldVarNum) * IISQDA_VAR_SIZE);
 	}
 
-	dap = odbc_descriptor[no_desc];
+	dap = l_con->odbc_descriptor[no_desc];
 	SetVarNum(dap,i);
 	SetColNum(dap, colNum);
 
 	/* For numeric type */
-	SQLGetStmtAttr(hstmt[no_desc], SQL_ATTR_APP_ROW_DESC,&hdesc, 0, NULL);
+	SQLGetStmtAttr(l_con->hstmt[no_desc], SQL_ATTR_APP_ROW_DESC, &hdesc, 0, NULL);
 
-	for (i=0; i < colNum && !error_number; i++) {
+	for (i=0; i < colNum && !l_con->error_number; i++) {
 	/* fill in the describing information for each column, and calculate */
 	/* the total length of the data buffer                               */
-		rc = SQLDescribeCol(
-					hstmt[no_desc],
+		l_con->rc = SQLDescribeCol(
+					l_con->hstmt[no_desc],
 					(SQLSMALLINT) i+1,
 					(dap->sqlvar)[i].sqlname.sqlnamec,
 					DB_MAX_NAME_LEN,
@@ -704,23 +725,23 @@ void setup_result_space (int no_desc)
 					&((dap->sqlvar)[i].sqllen),
 					&tmpScale,
 					&tmpNullable);
-		if (rc)
-			odbc_error_handler(hstmt[no_desc],6);
-		if (error_number == 0) {
+		if (l_con->rc)
+			odbc_error_handler(con, l_con->hstmt[no_desc],6);
+		if (l_con->error_number == 0) {
 			(dap->sqlvar)[i].sqlname.sqlnamec[indColName] = (SQLTCHAR)0;
 			(dap->sqlvar)[i].sqlname.sqlnamel = TXTLEN((dap->sqlvar)[i].sqlname.sqlnamec);
 			dap->sqlvar[i].c_type = odbc_c_type(dap->sqlvar[i].sqltype);
 			type = dap->sqlvar[i].c_type;
 			switch(type) {
-				//case SQL_C_DATE:
+				/* case SQL_C_DATE: */
 				case SQL_C_TYPE_DATE:
 					SetDbColLength(dap, i, sizeof(DATE_STRUCT));
 					break;
-				//case SQL_C_TIME:
+				/* case SQL_C_TIME: */
 				case SQL_C_TYPE_TIME:
 					SetDbColLength(dap, i, sizeof(TIME_STRUCT));
 					break;
-				//case SQL_C_TIMESTAMP:
+				/* case SQL_C_TIMESTAMP: */
 				case SQL_C_TYPE_TIMESTAMP:
 					SetDbColLength(dap, i, sizeof(TIMESTAMP_STRUCT));
 					break;
@@ -746,9 +767,9 @@ void setup_result_space (int no_desc)
 					SetDbColLength(dap, i, sizeof (SQLTCHAR) * GetDbColLength(dap, i));
 					break;
 				case SQL_C_NUMERIC:
-					SQLSetDescField (hdesc,i+1,SQL_DESC_TYPE,(VOID*)SQL_C_NUMERIC,0);
-					SQLSetDescField (hdesc,i+1,SQL_DESC_PRECISION,(VOID*) 19,0); /* presision of 64bits */
-					SQLSetDescField (hdesc,i+1,SQL_DESC_SCALE,(VOID*) 8,0); /* presision of 64bits */
+					SQLSetDescField (hdesc,i+1,SQL_DESC_TYPE,(SQLPOINTER)SQL_C_NUMERIC,0);
+					SQLSetDescField (hdesc,i+1,SQL_DESC_PRECISION,(SQLPOINTER) 19,0); /* presision of 64bits */
+					SQLSetDescField (hdesc,i+1,SQL_DESC_SCALE,(SQLPOINTER) 8,0); /* presision of 64bits */
 					SetDbColLength(dap, i, sizeof (SQL_NUMERIC_STRUCT));
 					break;
 				case SQL_C_GUID:
@@ -769,15 +790,14 @@ void setup_result_space (int no_desc)
 	}
 
 
-	if (error_number) {
+	if (l_con->error_number) {
 		free_sqldata(dap);
-		odbc_descriptor[no_desc] = NULL;
-		if (pcbValue[no_desc] != NULL) {
-			ODBC_C_FREE(pcbValue[no_desc]);
-			pcbValue[no_desc] = NULL;
+		l_con->odbc_descriptor[no_desc] = NULL;
+		if (l_con->pcbValue[no_desc] != NULL) {
+			ODBC_C_FREE(l_con->pcbValue[no_desc]);
+			l_con->pcbValue[no_desc] = NULL;
 		}
-		//rc = SQLFreeStmt(hstmt[no_desc], SQL_DROP);
-		rc = SQLFreeHandle (SQL_HANDLE_STMT, hstmt[no_desc]);
+		l_con->rc = SQLFreeHandle (SQL_HANDLE_STMT, l_con->hstmt[no_desc]);
 		return;
 	}
 
@@ -797,7 +817,7 @@ void setup_result_space (int no_desc)
 	}
 
 	/* allocate buffer for INDICATORs of the output fields, reuse old memory if possible. */
-	ODBC_SAFE_ALLOC(odbc_indicator[no_desc], (SQLLEN *) realloc(odbc_indicator[no_desc], (colNum+1)*sizeof(SQLLEN)));
+	ODBC_SAFE_ALLOC(l_con->odbc_indicator[no_desc], (SQLLEN *) realloc(l_con->odbc_indicator[no_desc], (colNum+1)*sizeof(SQLLEN)));
 }
 
 
@@ -817,21 +837,21 @@ void setup_result_space (int no_desc)
 /*   2. return error number.                                     */
 /*                                                               */
 /*****************************************************************/
-void odbc_terminate_order (int no_des)
+void odbc_terminate_order (void *con, int no_des)
 {
-	ODBCSQLDA *dap = odbc_descriptor[no_des];
+	CON_CONTEXT *l_con = (CON_CONTEXT *)con;
+	ODBCSQLDA *dap = l_con->odbc_descriptor[no_des];
 
 	if (dap) {
 		free_sqldata (dap);
-		odbc_descriptor[no_des] = NULL;
-		ODBC_C_FREE (odbc_indicator[no_des]);
-		odbc_indicator[no_des] = NULL;
-		if (pcbValue[no_des] != NULL) {
-			ODBC_C_FREE(pcbValue[no_des]);
-			pcbValue[no_des] = NULL;
+		l_con->odbc_descriptor[no_des] = NULL;
+		ODBC_C_FREE (l_con->odbc_indicator[no_des]);
+		l_con->odbc_indicator[no_des] = NULL;
+		if (l_con->pcbValue[no_des] != NULL) {
+			ODBC_C_FREE(l_con->pcbValue[no_des]);
+			l_con->pcbValue[no_des] = NULL;
 		}
-		//rc = SQLFreeStmt(hstmt[no_des], SQL_DROP);
-		rc = SQLFreeHandle (SQL_HANDLE_STMT, hstmt[no_des]);
+		l_con->rc = SQLFreeHandle (SQL_HANDLE_STMT, l_con->hstmt[no_des]);
 	}
 }
 
@@ -870,9 +890,10 @@ void free_sqldata (ODBCSQLDA *dap)
 /*   2. return error number.                                     */
 /*                                                               */
 /*****************************************************************/
-void odbc_close_cursor (int no_des)
+void odbc_close_cursor (void *con, int no_des)
 {
-    rc = SQLFreeStmt(hstmt[no_des], SQL_CLOSE);
+	CON_CONTEXT *l_con = (CON_CONTEXT *)con;
+    l_con->rc = SQLFreeStmt(l_con->hstmt[no_des], SQL_CLOSE);
 }
 
 /*****************************************************************/
@@ -888,22 +909,22 @@ void odbc_close_cursor (int no_des)
 /*                                                               */
 /*****************************************************************/
 
-int odbc_next_row (int no_des)
+int odbc_next_row (void *con, int no_des)
      /* move to the next row of selection */
      /* return 0 if there is a next row, 1 if no row left */
 {
-
-	ODBCSQLDA *dap = odbc_descriptor[no_des];
+	CON_CONTEXT *l_con = (CON_CONTEXT *)con;
+	ODBCSQLDA *dap = l_con->odbc_descriptor[no_des];
 	short colNum = GetColNum(dap);
 	UWORD i;
 
 
-	odbc_clear_error ();
-	rc = SQLFetch(hstmt[no_des]);
-	if (rc && rc != NO_MORE_ROWS) {
+	odbc_clear_error (con);
+	l_con->rc = SQLFetch(l_con->hstmt[no_des]);
+	if (l_con->rc && l_con->rc != NO_MORE_ROWS) {
 		SQLTCHAR tmpSQLSTATE[6];
 		if
-			(SQLGetDiagRec(SQL_HANDLE_STMT, hstmt[no_des], 1, tmpSQLSTATE,
+			(SQLGetDiagRec(SQL_HANDLE_STMT, l_con->hstmt[no_des], 1, tmpSQLSTATE,
 				NULL, NULL, 0, NULL) != SQL_NO_DATA)
 		{
 				/* If `tmpSQLSTATE' is 24000, we try to go to next result set. */
@@ -911,48 +932,48 @@ int odbc_next_row (int no_des)
 				((tmpSQLSTATE[0] == TXTC('2')) && (tmpSQLSTATE[1] == TXTC('4')) && (tmpSQLSTATE[2] == TXTC('0')) &&
 				(tmpSQLSTATE[3] == TXTC('0')) && (tmpSQLSTATE[4] == TXTC('0')))
 			{
-				rc = SQLMoreResults(hstmt[no_des]);
+				l_con->rc = SQLMoreResults(l_con->hstmt[no_des]);
 
-				while (rc != SQL_SUCCESS && rc != SQL_SUCCESS_WITH_INFO && rc != SQL_NO_DATA && rc != SQL_ERROR)
+				while (l_con->rc != SQL_SUCCESS && l_con->rc != SQL_SUCCESS_WITH_INFO && l_con->rc != SQL_NO_DATA && l_con->rc != SQL_ERROR)
 				{
-					rc = SQLMoreResults(hstmt[no_des]);
+					l_con->rc = SQLMoreResults(l_con->hstmt[no_des]);
 				};
-				if (rc != SQL_NO_DATA && rc != SQL_ERROR)
+				if (l_con->rc != SQL_NO_DATA && l_con->rc != SQL_ERROR)
 				{
-					setup_result_space (no_des);
-					dap = odbc_descriptor[no_des];
+					setup_result_space (con, no_des);
+					dap = l_con->odbc_descriptor[no_des];
 					colNum = GetColNum(dap);
-					rc = SQLFetch(hstmt[no_des]);
+					l_con->rc = SQLFetch(l_con->hstmt[no_des]);
 				}
-				if (rc == SQL_NO_DATA)
+				if (l_con->rc == SQL_NO_DATA)
 				{
 					/* We do the same thing later as SQLFetch returns NO_MORE_ROWS
 					 * if SQLMoreResults returns SQL_NO_DATA
 					 */
-					rc = NO_MORE_ROWS;
+					l_con->rc = NO_MORE_ROWS;
 				}
 			}
 		}
-		if (rc && rc != NO_MORE_ROWS)
+		if (l_con->rc && l_con->rc != NO_MORE_ROWS)
 		{
-			odbc_error_handler(hstmt[no_des],8);
-			if (error_number) {
-				odbc_terminate_order(no_des);
+			odbc_error_handler(con, l_con->hstmt[no_des],8);
+			if (l_con->error_number) {
+				odbc_terminate_order(con, no_des);
 				return 1;
 			}
 		}
 	}
 
 
-	if (rc == NO_MORE_ROWS) /* NO_MORE_ROWS */ {
+	if (l_con->rc == NO_MORE_ROWS) /* NO_MORE_ROWS */ {
 		return 1;
 	}
 	else {
-		for (i=0; i<colNum && error_number == 0; i++) {
-			SQLINTEGER old_length = GetDbColLength(dap, i);
+		for (i=0; i<colNum && l_con->error_number == 0; i++) {
+			SQLULEN old_length = GetDbColLength(dap, i);
 			char *l_buffer = GetDbColPtr(dap, i);
-			SQLINTEGER l_terminator_size = 0;
-			odbc_indicator[no_des][i] = 0;
+			SQLULEN l_terminator_size = 0;
+			l_con->odbc_indicator[no_des][i] = 0;
 				/* String data have an extra character for the null terminating character. */
 			if ((GetDbCType(dap, i) == SQL_C_WCHAR) || (GetDbCType(dap, i) == SQL_C_CHAR)) {
 				l_terminator_size = sizeof(TCHAR);
@@ -960,16 +981,16 @@ int odbc_next_row (int no_des)
 			}
 			if (GetDbCType(dap, i) == SQL_C_NUMERIC){
 				/* Use SQL_ARD_TYPE to force the driver to use data in the row descriptor */
-				rc = SQLGetData(hstmt[no_des], i+1, SQL_ARD_TYPE, l_buffer, old_length, &(odbc_indicator[no_des][i]));
+				l_con->rc = SQLGetData(l_con->hstmt[no_des], i+1, SQL_ARD_TYPE, l_buffer, old_length, &(l_con->odbc_indicator[no_des][i]));
 			} else {
-				rc = SQLGetData(hstmt[no_des], i+1, GetDbCType(dap, i), l_buffer, old_length, &(odbc_indicator[no_des][i]));
+				l_con->rc = SQLGetData(l_con->hstmt[no_des], i+1, GetDbCType(dap, i), l_buffer, old_length, &(l_con->odbc_indicator[no_des][i]));
 			}
-			if (rc) {
+			if (l_con->rc) {
 					/* Check if it failed because we did not have enough space to store the data. */
-				if (rc == SQL_SUCCESS_WITH_INFO) {
+				if (l_con->rc == SQL_SUCCESS_WITH_INFO) {
 					SQLTCHAR tmpSQLSTATE[6];
 					if
-						(SQLGetDiagRec(SQL_HANDLE_STMT, hstmt[no_des], 1, tmpSQLSTATE,
+						(SQLGetDiagRec(SQL_HANDLE_STMT, l_con->hstmt[no_des], 1, tmpSQLSTATE,
 							NULL, NULL, 0, NULL) != SQL_NO_DATA)
 					{
 							/* If `tmpSQLSTATE' is 01004 then we just make our buffer bigger and
@@ -978,38 +999,38 @@ int odbc_next_row (int no_des)
 							((tmpSQLSTATE[0] == TXTC('0')) && (tmpSQLSTATE[1] == TXTC('1')) && (tmpSQLSTATE[2] == TXTC('0')) &&
 							(tmpSQLSTATE[3] == TXTC('0')) && (tmpSQLSTATE[4] == TXTC('4')))
 						{
-							SQLINTEGER additional_length;
+							SQLULEN additional_length;
 								/* We remove the null character from the previous call made to SQLGetData
 								 * because when data is truncated SQLGetData it always add the null character.*/
 							old_length -= l_terminator_size;
-							additional_length = odbc_indicator[no_des][i] - old_length + l_terminator_size;
+							additional_length = l_con->odbc_indicator[no_des][i] - old_length + l_terminator_size;
 								/* Reuse old memory if possible */
 							ODBC_SAFE_ALLOC(l_buffer, (char *) realloc (l_buffer, old_length + additional_length));
 							SetDbColPtr(dap, i, l_buffer);
 							SetDbColLength(dap, i, old_length + additional_length - l_terminator_size);
 								/* Reissue the call, this time starting from the end of `l_buffer' since we want to get
 								 * the remaining data. */
-							rc = SQLGetData(hstmt[no_des], i+1, GetDbCType(dap, i), l_buffer + old_length,
+							l_con->rc = SQLGetData(l_con->hstmt[no_des], i+1, GetDbCType(dap, i), l_buffer + old_length,
 								additional_length, NULL);
 						}
 					}
 				}
 			}
-			if (rc) {
+			if (l_con->rc) {
 				SQLTCHAR	  SqlState[6], Msg[SQL_MAX_MESSAGE_LENGTH];
 				SQLINTEGER    NativeError;
 				SQLSMALLINT   MsgLen;
 
 				/* Get the status records. */
-				if ((SQLGetDiagRec(SQL_HANDLE_STMT, hstmt[no_des], 1, SqlState, &NativeError,
+				if ((SQLGetDiagRec(SQL_HANDLE_STMT, l_con->hstmt[no_des], 1, SqlState, &NativeError,
 					Msg, sizeof(Msg), &MsgLen)) != SQL_NO_DATA) {
 						/* DisplayError(SqlState,NativeError,Msg,MsgLen); */
 				}
 
-				odbc_error_handler(hstmt[no_des],9);
+				odbc_error_handler(con, l_con->hstmt[no_des],9);
 			}
 		}
-		if (error_number)
+		if (l_con->error_number)
 			return 1;
 		else
 			return 0;
@@ -1118,55 +1139,56 @@ int odbc_insensitive_mixed() {
 	return odbc_case == SQL_IC_MIXED;
 }
 
-void odbc_set_parameter(int no_desc, int seri, int dir, int eifType, int collen, int value_count, void *value) {
+void odbc_set_parameter(void *con, int no_desc, int seri, int dir, int eifType, int collen, int value_count, void *value) {
 
-	int seriNumber = seri;
-	SQLSMALLINT direction = dir;
+	SQLUSMALLINT seriNumber = (SQLUSMALLINT)seri;
+	SQLSMALLINT direction = (SQLSMALLINT)dir;
 	SQLLEN len;
+	CON_CONTEXT *l_con = (CON_CONTEXT *)con;
 
-	pcbValue[no_desc][seriNumber-1] = len = value_count;
-	rc = 0;
+	l_con->pcbValue[no_desc][seriNumber-1] = len = value_count;
+	l_con->rc = 0;
 	direction = SQL_PARAM_INPUT;
 	switch (eifType) {
 		case CHARACTER_TYPE:
 		case STRING_TYPE:
-			rc = SQLBindParameter(hstmt[no_desc], seriNumber, direction, SQL_C_CHAR, SQL_CHAR, value_count, DB_SIZEOF_CHAR, value, value_count, &(pcbValue[no_desc][seriNumber-1]));
+			l_con->rc = SQLBindParameter(l_con->hstmt[no_desc], seriNumber, direction, SQL_C_CHAR, SQL_CHAR, value_count, DB_SIZEOF_CHAR, value, value_count, &(l_con->pcbValue[no_desc][seriNumber-1]));
 			break;
 		case WSTRING_TYPE:
-			rc = SQLBindParameter(hstmt[no_desc], seriNumber, direction, SQL_C_WCHAR, SQL_WCHAR, value_count, DB_SIZEOF_WCHAR, value, 0, &(pcbValue[no_desc][seriNumber-1]));
+			l_con->rc = SQLBindParameter(l_con->hstmt[no_desc], seriNumber, direction, SQL_C_WCHAR, SQL_WCHAR, value_count, DB_SIZEOF_WCHAR, value, 0, &(l_con->pcbValue[no_desc][seriNumber-1]));
 			break;
 		case INTEGER_TYPE:
-			rc = SQLBindParameter(hstmt[no_desc], seriNumber, direction, SQL_C_SLONG, SQL_INTEGER, value_count, DB_SIZEOF_INT, value, 0, &(pcbValue[no_desc][seriNumber-1]));
+			l_con->rc = SQLBindParameter(l_con->hstmt[no_desc], seriNumber, direction, SQL_C_SLONG, SQL_INTEGER, value_count, DB_SIZEOF_INT, value, 0, &(l_con->pcbValue[no_desc][seriNumber-1]));
 			break;
 		case INTEGER_16_TYPE:
-			rc = SQLBindParameter(hstmt[no_desc], seriNumber, direction, SQL_C_SSHORT, SQL_SMALLINT, value_count, DB_SIZEOF_SHORT, value, 0, &(pcbValue[no_desc][seriNumber-1]));
+			l_con->rc = SQLBindParameter(l_con->hstmt[no_desc], seriNumber, direction, SQL_C_SSHORT, SQL_SMALLINT, value_count, DB_SIZEOF_SHORT, value, 0, &(l_con->pcbValue[no_desc][seriNumber-1]));
 			break;
 		case INTEGER_64_TYPE:
-			rc = SQLBindParameter(hstmt[no_desc], seriNumber, direction, SQL_C_SBIGINT, SQL_BIGINT, value_count, DB_SIZEOF_BIGINT, value, 0, &(pcbValue[no_desc][seriNumber-1]));
+			l_con->rc = SQLBindParameter(l_con->hstmt[no_desc], seriNumber, direction, SQL_C_SBIGINT, SQL_BIGINT, value_count, DB_SIZEOF_BIGINT, value, 0, &(l_con->pcbValue[no_desc][seriNumber-1]));
 			break;
 		case FLOAT_TYPE:
 			/* See example: http://msdn.microsoft.com/en-us/library/ms710963%28v=VS.85%29.aspx */
-			rc = SQLBindParameter(hstmt[no_desc], seriNumber, direction, SQL_C_DOUBLE, SQL_DOUBLE, 0, 0, value, 0, &(pcbValue[no_desc][seriNumber-1]));
+			l_con->rc = SQLBindParameter(l_con->hstmt[no_desc], seriNumber, direction, SQL_C_DOUBLE, SQL_DOUBLE, 0, 0, value, 0, &(l_con->pcbValue[no_desc][seriNumber-1]));
 			break;
 		case REAL_TYPE:
 			/* See example: http://msdn.microsoft.com/en-us/library/ms710963%28v=VS.85%29.aspx */
-			rc = SQLBindParameter(hstmt[no_desc], seriNumber, direction, SQL_C_FLOAT, SQL_REAL, 0, 0, value, 0, &(pcbValue[no_desc][seriNumber-1]));
+			l_con->rc = SQLBindParameter(l_con->hstmt[no_desc], seriNumber, direction, SQL_C_FLOAT, SQL_REAL, 0, 0, value, 0, &(l_con->pcbValue[no_desc][seriNumber-1]));
 			break;
 		case BOOLEAN_TYPE:
-			rc = SQLBindParameter(hstmt[no_desc], seriNumber, direction, SQL_C_BIT, SQL_BIT, value_count, DB_SIZEOF_INT, value, 0, &(pcbValue[no_desc][seriNumber-1]));
+			l_con->rc = SQLBindParameter(l_con->hstmt[no_desc], seriNumber, direction, SQL_C_BIT, SQL_BIT, value_count, DB_SIZEOF_INT, value, 0, &(l_con->pcbValue[no_desc][seriNumber-1]));
 			break;
 		case DATE_TYPE:
-			len = pcbValue[no_desc][seriNumber-1] = sizeof(TIMESTAMP_STRUCT);
-			rc = SQLBindParameter(hstmt[no_desc], seriNumber, direction, SQL_C_TIMESTAMP, SQL_TYPE_TIMESTAMP, 23, 3, value, 0, &(pcbValue[no_desc][seriNumber-1]));
+			len = l_con->pcbValue[no_desc][seriNumber-1] = sizeof(TIMESTAMP_STRUCT);
+			l_con->rc = SQLBindParameter(l_con->hstmt[no_desc], seriNumber, direction, SQL_C_TIMESTAMP, SQL_TYPE_TIMESTAMP, 23, 3, value, 0, &(l_con->pcbValue[no_desc][seriNumber-1]));
 			break;
 		default:
-			odbc_error_handler(NULL, 204);
-			ATSTXTCAT(error_message, "\nInvalid Data Type in odbc_set_parameter");
-			odbc_error_handler(NULL, 110);
+			odbc_error_handler(con, NULL, 204);
+			ATSTXTCAT(l_con->error_message, "\nInvalid Data Type in odbc_set_parameter");
+			odbc_error_handler(con, NULL, 110);
 			return;
 	}
-	if (rc) {
-		odbc_error_handler(hstmt[no_desc], rc);
+	if (l_con->rc) {
+		odbc_error_handler(con, l_con->hstmt[no_desc], l_con->rc);
 		return;
 	}
 }
@@ -1182,8 +1204,9 @@ void odbc_set_parameter(int no_desc, int seri, int dir, int eifType, int collen,
 /* get column(s) (of a special table or whole data source).      */
 /*                                                               */
 /*****************************************************************/
-void odbc_set_col_flag(int no_desc) {
-	flag[no_desc] = ODBC_CATALOG_COL;
+void odbc_set_col_flag(void *con, int no_desc) {
+	CON_CONTEXT *l_con = (CON_CONTEXT *)con;
+	l_con->flag[no_desc] = ODBC_CATALOG_COL;
 }
 
 /*****************************************************************/
@@ -1197,8 +1220,9 @@ void odbc_set_col_flag(int no_desc) {
 /* get  table(s) in the current Data Source.                     */
 /*                                                               */
 /*****************************************************************/
-void odbc_set_tab_flag(int no_desc) {
-	flag[no_desc] = ODBC_CATALOG_TAB;
+void odbc_set_tab_flag(void *con, int no_desc) {
+	CON_CONTEXT *l_con = (CON_CONTEXT *)con;
+	l_con->flag[no_desc] = ODBC_CATALOG_TAB;
 }
 
 /*****************************************************************/
@@ -1212,8 +1236,9 @@ void odbc_set_tab_flag(int no_desc) {
 /* get stored procedure(s) in the current Data Source.           */
 /*                                                               */
 /*****************************************************************/
-void odbc_set_proc_flag(int no_desc) {
-	flag[no_desc] = ODBC_CATALOG_PROC;
+void odbc_set_proc_flag(void *con, int no_desc) {
+	CON_CONTEXT *l_con = (CON_CONTEXT *)con;
+	l_con->flag[no_desc] = ODBC_CATALOG_PROC;
 }
 
 /*****************************************************************/
@@ -1229,8 +1254,8 @@ void odbc_set_proc_flag(int no_desc) {
 /*                                                               */
 /*****************************************************************/
 SQLTCHAR *odbc_hide_qualifier(SQLTCHAR *buf) {
-	int i;
-	int len = TXTLEN(buf);
+	size_t i;
+	size_t len = TXTLEN(buf);
 
 	for (i=0; i < len; i++) {
 		if (buf[i] == TXTC(':') && i > 0 && ((buf[i-1] >= TXTC('a') && buf[i-1] <= TXTC('z')) || (buf[i-1] >=TXTC('A') && buf[i-1] <= TXTC('Z'))))
@@ -1254,9 +1279,8 @@ SQLTCHAR *odbc_hide_qualifier(SQLTCHAR *buf) {
 /*                                                               */
 /*****************************************************************/
 void odbc_unhide_qualifier(SQLTCHAR *buf) {
-	int i;
-	int len = TXTLEN(buf);
-
+	size_t i;
+	size_t len = TXTLEN(buf);
 
 	for (i=0; i < len; i++) {
 		if (buf[i] == 0x1 && i > 0 && ((buf[i-1] >= TXTC('a') && buf[i-1] <= TXTC('z')) || (buf[i-1] >=TXTC('A') && buf[i-1] <= TXTC('Z'))))
@@ -1343,8 +1367,9 @@ void odbc_set_owner(SQLTCHAR *owner) {
 /* general ODBC SQL statement.                                   */
 /*                                                               */
 /*****************************************************************/
-void odbc_unset_catalog_flag(int no_desc) {
-	flag[no_desc] = ODBC_SQL;
+void odbc_unset_catalog_flag(void *con, int no_desc) {
+	CON_CONTEXT *l_con = (CON_CONTEXT *)con;
+	l_con->flag[no_desc] = ODBC_SQL;
 }
 
 /*****************************************************************/
@@ -1369,69 +1394,53 @@ void odbc_unset_catalog_flag(int no_desc) {
 /* NOTE: Only the name is mandatory.                             */
 /*                                                               */
 /*****************************************************************/
-void odbc_connect (SQLTCHAR *name, SQLTCHAR *passwd, SQLTCHAR *dsn)
+void odbc_connect (void *con, SQLTCHAR *name, SQLTCHAR *passwd, SQLTCHAR *dsn)
 {
 	SQLSMALLINT indColName;
-	//int i;
+	CON_CONTEXT *l_con = (CON_CONTEXT *)con;
 
-	odbc_clear_error ();
-	SQLTXTCPY(odbc_user_name, name);
-	rc = SQLAllocHandle(SQL_HANDLE_ENV,SQL_NULL_HANDLE,&henv);
-	if (rc) {
-		odbc_error_handler(NULL,10);
-		return;
-	}
-	//rc = SQLSetEnvAttr(henv,SQL_ATTR_ODBC_VERSION,(SQLPOINTER)SQL_OV_ODBC2,0);
-	rc = SQLSetEnvAttr(henv,SQL_ATTR_ODBC_VERSION,(SQLPOINTER)SQL_OV_ODBC3,0);
-	if (rc) {
-		odbc_error_handler(NULL,910);
-		rc = SQLFreeHandle(SQL_HANDLE_ENV,henv);
-		return;
-	}
-	rc = SQLAllocHandle(SQL_HANDLE_DBC,henv, &hdbc);
-	if (rc) {
-		odbc_error_handler(NULL,11);
-		rc = SQLFreeHandle(SQL_HANDLE_ENV,henv);
+	odbc_clear_error (con);
+
+	l_con->rc = SQLAllocHandle(SQL_HANDLE_DBC,henv, &l_con->hdbc);
+	if (l_con->rc) {
+		odbc_error_handler(con, NULL,11);
 		return;
 	}
 
-	rc = SQLConnect(hdbc, dsn, SQL_NTS, name, SQL_NTS, passwd, SQL_NTS);
-	if (rc<0) {
-		odbc_error_handler(NULL,12);
-		rc = SQLFreeHandle(SQL_HANDLE_DBC,hdbc);
-		rc = SQLFreeHandle(SQL_HANDLE_ENV,henv);
+	l_con->rc = SQLConnect(l_con->hdbc, dsn, SQL_NTS, name, SQL_NTS, passwd, SQL_NTS);
+	if (l_con->rc<0) {
+		odbc_error_handler(con, NULL,12);
+		l_con->rc = SQLFreeHandle(SQL_HANDLE_DBC,l_con->hdbc);
 		return;
 	}
-	// Added for multiple connection
-	number_connection = number_connection + 1;
-	//odbc_tranNumber=odbc_tranNumber + 1;
-	rc = SQLGetInfo(hdbc, SQL_PROCEDURES, dbmsName, sizeof(dbmsName), &indColName);
+
+	l_con->rc = SQLGetInfo(l_con->hdbc, SQL_PROCEDURES, dbmsName, sizeof(dbmsName), &indColName);
 	SQLTXTCPY(storedProc, dbmsName);
-	rc = SQLGetInfo(hdbc, SQL_PROCEDURE_TERM, dbmsName, sizeof(dbmsName), &indColName);
+	l_con->rc = SQLGetInfo(l_con->hdbc, SQL_PROCEDURE_TERM, dbmsName, sizeof(dbmsName), &indColName);
 	SQLTXTCPY(CreateStoredProc, dbmsName);
-	rc = SQLGetInfo(hdbc, SQL_DBMS_NAME, dbmsName, sizeof(dbmsName), &indColName);
-	rc = SQLGetInfo(hdbc, SQL_DBMS_VER, dbmsVer, sizeof(dbmsVer), &indColName);
-	rc = SQLGetInfo(hdbc, SQL_IDENTIFIER_QUOTE_CHAR, idQuoter, sizeof(idQuoter), &indColName);
-	rc = SQLGetInfo(hdbc, SQL_QUOTED_IDENTIFIER_CASE, &odbc_case, sizeof(odbc_case), &indColName);
-	rc = SQLGetInfo(hdbc, SQL_INFO_SCHEMA_VIEWS, &odbc_info_schema, sizeof(odbc_info_schema), &indColName);
+	l_con->rc = SQLGetInfo(l_con->hdbc, SQL_DBMS_NAME, dbmsName, sizeof(dbmsName), &indColName);
+	l_con->rc = SQLGetInfo(l_con->hdbc, SQL_DBMS_VER, dbmsVer, sizeof(dbmsVer), &indColName);
+	l_con->rc = SQLGetInfo(l_con->hdbc, SQL_IDENTIFIER_QUOTE_CHAR, idQuoter, sizeof(idQuoter), &indColName);
+	l_con->rc = SQLGetInfo(l_con->hdbc, SQL_QUOTED_IDENTIFIER_CASE, &odbc_case, sizeof(odbc_case), &indColName);
+	l_con->rc = SQLGetInfo(l_con->hdbc, SQL_INFO_SCHEMA_VIEWS, &odbc_info_schema, sizeof(odbc_info_schema), &indColName);
 
 	if (indColName == 1 && idQuoter[0] == TXTC(' '))
 		idQuoter[0] = (SQLTCHAR)0;
 	else
 		idQuoter[indColName] = (SQLTCHAR)0;
 
-	//rc = SQLGetInfo(hdbc, SQL_QUALIFIER_NAME_SEPARATOR, quaNameSep, sizeof(quaNameSep), &indColName);
-	rc = SQLGetInfo(hdbc, SQL_CATALOG_NAME_SEPARATOR, quaNameSep, sizeof(quaNameSep), &indColName);
+	/* l_con->rc = SQLGetInfo(l_con->hdbc, SQL_QUALIFIER_NAME_SEPARATOR, quaNameSep, sizeof(quaNameSep), &indColName);*/
+	l_con->rc = SQLGetInfo(l_con->hdbc, SQL_CATALOG_NAME_SEPARATOR, quaNameSep, sizeof(quaNameSep), &indColName);
 	if (indColName == 1 && quaNameSep[0] == TXTC(' '))
 		quaNameSep[0] = (SQLTCHAR)0;
 	else
 		quaNameSep[indColName] = (SQLTCHAR)0;
 
 /*
-	for (i=0; i< MAX_DESCRIPTOR && error_number == 0; i++) {
-		rc = SQLAllocStmt(hdbc, &(hstmt[i]));
-		if (rc) {
-			odbc_error_handler(NULL, 101);
+	for (i=0; i< MAX_DESCRIPTOR && l_con->error_number == 0; i++) {
+		l_con->rc = SQLAllocStmt(l_con->hdbc, &(l_con->hstmt[i]));
+		if (l_con->rc) {
+			odbc_error_handler(con, NULL, 101);
 		}
 	}
 */
@@ -1446,41 +1455,63 @@ void odbc_connect (SQLTCHAR *name, SQLTCHAR *passwd, SQLTCHAR *dsn)
 /*   Disconnect the current connection with an  ODBC  database.  */
 /*                                                               */
 /*****************************************************************/
-void odbc_disconnect ()
+void odbc_disconnect (void *con)
 {
-  int count;
+	int count;
+	CON_CONTEXT *l_con = (CON_CONTEXT *)con;
 
-  odbc_clear_error ();
-  //rc = SQLTransact(henv, SQL_NULL_HDBC, SQL_COMMIT);
-  rc = SQLEndTran(SQL_HANDLE_ENV, henv, SQL_COMMIT);
-  if (rc) {
-	odbc_error_handler(NULL,13);
-  }
-  for (count = 0; count < MAX_DESCRIPTOR; count++)
-    {
-      odbc_terminate_order (count);
-    }
-  rc = SQLDisconnect(hdbc);
+	odbc_clear_error (con);
+	/* l_con->rc = SQLTransact(henv, SQL_NULL_HDBC, SQL_COMMIT); */
+	/* Call SQLEndTran on connection level rather than environment level.
+	* Because we don't want to EndTran on other connections in current enviroment */
+	l_con->rc = SQLEndTran(SQL_HANDLE_DBC, l_con->hdbc, SQL_COMMIT);
+	if (l_con->rc) {
+		odbc_error_handler(con, NULL,13);
+	}
+	for (count = 0; count < MAX_DESCRIPTOR; count++)
+	{
+		odbc_terminate_order(con, count);
+	}
 
-  // Added for multiple connection
-  number_connection=number_connection-1;
-  // odbc_tranNumber was originally set to 0 only if number_connection <= 1:
-  // this is not consistent with EiffelStore  so all transactions are ended
-  // when disconnecting. Anyway, odbc_tranNumber <= 1.
-  // Cedric
-  odbc_tranNumber = 0;
-  if (number_connection <= 1) {
-	  if (rc)
-		odbc_error_handler(NULL,14);
-	  //rc = SQLFreeConnect(hdbc);
-	  rc = SQLFreeHandle (SQL_HANDLE_DBC, hdbc);
-	  if (rc)
-		odbc_error_handler(NULL,15);
-	  //rc = SQLFreeEnv(henv);
-	  rc = SQLFreeHandle (SQL_HANDLE_ENV, henv);
-	  if (rc)
-		odbc_error_handler(NULL,16);
-	  }
+	l_con->rc = SQLDisconnect(l_con->hdbc);
+	if (l_con->rc) {
+		odbc_error_handler(con, NULL,14);
+	}
+
+	/* odbc_tranNumber was originally set to 0 only if l_con->number_connection <= 1:
+	 * this is not consistent with EiffelStore  so all transactions are ended
+	 * when disconnecting. Anyway, odbc_tranNumber <= 1.
+	 * Cedric */
+	l_con->odbc_tranNumber = 0;
+}
+
+/*****************************************************************/
+/*                                                               */
+/*                     ROUTINE  DESCRIPTION                      */
+/*                                                               */
+/* NAME: odbc_free_connection()                                  */
+/* DESCRIPTION:                                                  */
+/*   Free odbc connection, if there is no more connection,       */
+/*	 free the odbc environment.									 */
+/*                                                               */
+/*****************************************************************/
+void odbc_free_connection (void *con)
+{
+	CON_CONTEXT *l_con = (CON_CONTEXT *)con;
+
+	/* Error is not accessible by Eiffel */
+	SQLFreeHandle (SQL_HANDLE_DBC, l_con->hdbc);
+	number_connection--;
+
+	ODBC_C_FREE (l_con->error_message);
+	ODBC_C_FREE (l_con->warn_message);
+	ODBC_C_FREE (l_con);
+
+	/* When there is no connection any more, we free the environment handle */
+	if (number_connection <= 0) {
+		/* Error is not accessible by Eiffel */
+		SQLFreeHandle (SQL_HANDLE_ENV, henv);
+	}
 }
 
 /*****************************************************************/
@@ -1492,26 +1523,28 @@ void odbc_disconnect ()
 /*   Roll back the current transaction .                         */
 /*                                                               */
 /*****************************************************************/
-void odbc_rollback ()
+void odbc_rollback (void *con)
 {
-  int count;
+	int count;
+	CON_CONTEXT *l_con = (CON_CONTEXT *)con;
 
-  odbc_clear_error ();
-  //rc = SQLTransact(SQL_NULL_HENV, hdbc, SQL_ROLLBACK);
-  rc = SQLEndTran(SQL_HANDLE_DBC, hdbc, SQL_ROLLBACK);
-  if (rc)
-odbc_error_handler(NULL,17);
-  /* Command ROLLBACK closes all open cursors; discards all statements */
-  /* that were prepared in the current transaction.                    */
-  for (count = 0; count < MAX_DESCRIPTOR; count++)
-    {
-      odbc_terminate_order (count);
-    }
-  odbc_tranNumber = 0;
+	odbc_clear_error (con);
+	l_con->rc = SQLEndTran(SQL_HANDLE_DBC, l_con->hdbc, SQL_ROLLBACK);
+	if (l_con->rc) {
+		odbc_error_handler(con, NULL,17);
+	}
+	/* Command ROLLBACK closes all open cursors; discards all statements */
+	/* that were prepared in the current transaction.                    */
+	for (count = 0; count < MAX_DESCRIPTOR; count++)
+	{
+		odbc_terminate_order(con, count);
+	}
+	l_con->odbc_tranNumber = 0;
 
-  rc = SQLSetConnectOption(hdbc, SQL_AUTOCOMMIT, SQL_AUTOCOMMIT_ON);
-  if (rc)
-odbc_error_handler(NULL, 12);
+	l_con->rc = SQLSetConnectOption(l_con->hdbc, SQL_AUTOCOMMIT, SQL_AUTOCOMMIT_ON);
+	if (l_con->rc) {
+		odbc_error_handler(con, NULL, 12);
+	}
 }
 
 /*****************************************************************/
@@ -1523,25 +1556,28 @@ odbc_error_handler(NULL, 12);
 /*   Commit the current transaction.                             */
 /*                                                               */
 /*****************************************************************/
-void odbc_commit ()
+void odbc_commit (void *con)
 {
-  int count;
-  odbc_clear_error ();
-  //rc = SQLTransact(SQL_NULL_HENV, hdbc, SQL_COMMIT);
-  rc = SQLEndTran(SQL_HANDLE_DBC, hdbc, SQL_COMMIT);
-  if (rc)
-odbc_error_handler(NULL,18);
-  /* Command  COMMIT  closes all open cursors; discards all statements */
-  /* that were prepared in the current transaction.                    */
-  for (count = 0; count < MAX_DESCRIPTOR; count++)
-    {
-      odbc_terminate_order (count);
-    }
-  odbc_tranNumber = 0;
+	int count;
+	CON_CONTEXT *l_con = (CON_CONTEXT *)con;
 
-  rc = SQLSetConnectOption(hdbc, SQL_AUTOCOMMIT, SQL_AUTOCOMMIT_ON);
-  if (rc)
-odbc_error_handler(NULL, 12);
+	odbc_clear_error (con);
+	l_con->rc = SQLEndTran(SQL_HANDLE_DBC, l_con->hdbc, SQL_COMMIT);
+	if (l_con->rc) {
+		odbc_error_handler(con, NULL,18);
+	}
+	/* Command  COMMIT  closes all open cursors; discards all statements */
+	/* that were prepared in the current transaction.                    */
+	for (count = 0; count < MAX_DESCRIPTOR; count++)
+	{
+		odbc_terminate_order(con, count);
+	}
+	l_con->odbc_tranNumber = 0;
+
+	l_con->rc = SQLSetConnectOption(l_con->hdbc, SQL_AUTOCOMMIT, SQL_AUTOCOMMIT_ON);
+	if (l_con->rc) {
+		odbc_error_handler(con, NULL, 12);
+	}
 }
 
 /*****************************************************************/
@@ -1553,14 +1589,15 @@ odbc_error_handler(NULL, 12);
 /*   Begin a data base transaction.                              */
 /*                                                               */
 /*****************************************************************/
-void odbc_begin ()
+void odbc_begin (void *con)
 {
-  odbc_clear_error ();
+	CON_CONTEXT *l_con = (CON_CONTEXT *)con;
+	odbc_clear_error (con);
 
-  rc = SQLSetConnectOption(hdbc, SQL_AUTOCOMMIT, SQL_AUTOCOMMIT_OFF);
-  if (rc)
-odbc_error_handler(NULL, 12);
-
+	l_con->rc = SQLSetConnectOption(l_con->hdbc, SQL_AUTOCOMMIT, SQL_AUTOCOMMIT_OFF);
+	if (l_con->rc) {
+		odbc_error_handler(con, NULL, 12);
+	}
 }
 
 /*****************************************************************/
@@ -1572,9 +1609,10 @@ odbc_error_handler(NULL, 12);
 /*   Return the number of transactions now active.               */
 /*                                                               */
 /*****************************************************************/
-int odbc_trancount ()
+int odbc_trancount (void *con)
 {
-  return odbc_tranNumber;
+	CON_CONTEXT *l_con = (CON_CONTEXT *)con;
+	return l_con->odbc_tranNumber;
 }
 
 /*****************************************************************/
@@ -1583,7 +1621,7 @@ int odbc_trancount ()
 /*****************************************************************/
 /*                                                               */
 void cut_tail_blank(SQLTCHAR *buf) {
-	int j;
+	size_t j;
 
 	if (buf != NULL) {
 		for(j=TXTLEN(buf)-1;j>=0 && buf[j]==TXTC(' '); j--);
@@ -1592,28 +1630,24 @@ void cut_tail_blank(SQLTCHAR *buf) {
 	}
 }
 
-int odbc_get_user  (SQLTCHAR *result)
+int odbc_get_count (void *con, int no_des)
 {
-	size = TXTLEN(odbc_user_name);
-	memcpy(result, odbc_user_name, size * sizeof (SQLTCHAR));
-	return(size);
-}
-
-int odbc_get_count (int no_des)
-{
-	if (odbc_descriptor[no_des] == NULL)
+	CON_CONTEXT *l_con = (CON_CONTEXT *)con;
+	if (l_con->odbc_descriptor[no_des] == NULL)
 		return -1;
 
-	return GetColNum(odbc_descriptor[no_des]);
+	return GetColNum(l_con->odbc_descriptor[no_des]);
 }
 
-int odbc_put_col_name (int no_des, int index, SQLTCHAR *result)
+size_t odbc_put_col_name (void *con, int no_des, int index, SQLTCHAR *result)
 {
+	size_t size;
 	int i = index - 1;
 	SQLTCHAR buf[DB_MAX_NAME_LEN+1];
+	CON_CONTEXT *l_con = (CON_CONTEXT *)con;
 
-	size = (((odbc_descriptor[no_des])->sqlvar)[i]).sqlname.sqlnamel;
-	memcpy(buf, (((odbc_descriptor[no_des])->sqlvar)[i]).sqlname.sqlnamec, size * sizeof (SQLTCHAR));
+	size = (((l_con->odbc_descriptor[no_des])->sqlvar)[i]).sqlname.sqlnamel;
+	memcpy(buf, (((l_con->odbc_descriptor[no_des])->sqlvar)[i]).sqlname.sqlnamec, size * sizeof (SQLTCHAR));
 	buf[size] = (SQLTCHAR)0;
 	cut_tail_blank(buf);
 	size = TXTLEN(buf);
@@ -1621,29 +1655,30 @@ int odbc_put_col_name (int no_des, int index, SQLTCHAR *result)
 	return(size);
 }
 
-int odbc_get_col_len (int no_des, int index)
+SQLULEN odbc_get_col_len (void *con, int no_des, int index)
 {
+	CON_CONTEXT *l_con = (CON_CONTEXT *)con;
 	int i = index - 1;
-	int length = GetDbColLength(odbc_descriptor[no_des], i);
-
+	SQLULEN length = GetDbColLength(l_con->odbc_descriptor[no_des], i);
 
 	return length;
 }
 
-int odbc_get_data_len (int no_des, int index)
+SQLULEN odbc_get_data_len (void *con, int no_des, int index)
 {
   int i = index - 1;
-  int type = GetDbCType(odbc_descriptor[no_des], i);
-  int length = GetDbColLength(odbc_descriptor[no_des], i);
+  CON_CONTEXT *l_con = (CON_CONTEXT *)con;
+  int type = GetDbCType(l_con->odbc_descriptor[no_des], i);
+  SQLULEN length = GetDbColLength(l_con->odbc_descriptor[no_des], i);
 
   switch (type)
     {
     case SQL_C_TCHAR:
-		if (odbc_indicator[no_des][i] == SQL_NULL_DATA) {
+		if (l_con->odbc_indicator[no_des][i] == SQL_NULL_DATA) {
 			return 0;
 		}
 		else {
-			return odbc_indicator[no_des][i];
+			return l_con->odbc_indicator[no_des][i];
  		}
 	case SQL_C_GUID:
 		return 36; /* Length of this format: "958F6235-7877-433A-A1A7-809913122C1E" */
@@ -1697,22 +1732,24 @@ int odbc_conv_type (int typeCode)
 	}
 }
 
-int odbc_get_col_type (int no_des, int index)
+int odbc_get_col_type (void *con, int no_des, int index)
 {
-  int i = index - 1;
+	CON_CONTEXT *l_con = (CON_CONTEXT *)con;
+	int i = index - 1;
 
-  return odbc_conv_type (GetDbColType(odbc_descriptor[no_des], i));
+	return odbc_conv_type (GetDbColType(l_con->odbc_descriptor[no_des], i));
 }
 
-int odbc_put_data (int no_des, int index, char **result)
+SQLULEN odbc_put_data (void *con, int no_des, int index, char **result)
 {
   int i = index -1;
   SQLGUID *g;
   SQLLEN odbc_tmp_indicator;
-  ODBCSQLDA * dap = odbc_descriptor[no_des];
-  data_type = GetDbCType (dap, i);
+  CON_CONTEXT *l_con = (CON_CONTEXT *)con;
+  ODBCSQLDA * dap = l_con->odbc_descriptor[no_des];
+  int data_type = GetDbCType (dap, i);
 
-  odbc_tmp_indicator = odbc_indicator[no_des][i];
+  odbc_tmp_indicator = l_con->odbc_indicator[no_des][i];
   if (odbc_tmp_indicator == SQL_NULL_DATA) {
 	return 0;
   }
@@ -1736,16 +1773,18 @@ int odbc_put_data (int no_des, int index, char **result)
   }
 }
 
-SQLINTEGER odbc_get_integer_data (int no_des, int index)
+SQLINTEGER odbc_get_integer_data (void *con, int no_des, int index)
 {
   int i  = index - 1;
   int result;
-  ODBCSQLDA * dbp = odbc_descriptor[no_des];
+  CON_CONTEXT *l_con = (CON_CONTEXT *)con;
+  ODBCSQLDA * dbp = l_con->odbc_descriptor[no_des];
   long  lint;
+  int data_type;
 
 	data_type = GetDbCType(dbp, i);
 
-	if (odbc_indicator[no_des][i] == SQL_NULL_DATA) {
+	if (l_con->odbc_indicator[no_des][i] == SQL_NULL_DATA) {
 	/* the retrieved value is NULL, we use 0 to be NULL value */
 		return 0;
 	}
@@ -1756,27 +1795,29 @@ SQLINTEGER odbc_get_integer_data (int no_des, int index)
 			result = lint;
 			return result;
 		default:
-			ATSTXTCAT(error_message, "\nError INTEGER type or data length in odbc_get_integer_data. ");
-			if (error_number) {
+			ATSTXTCAT(l_con->error_message, "\nError INTEGER type or data length in odbc_get_integer_data. ");
+			if (l_con->error_number) {
 				return 0;
 			}
 			else {
-				error_number = -DB_ERROR-1;
+				l_con->error_number = -DB_ERROR-1;
 				return 0;
 			}
 	}
 }
 
-SQLSMALLINT odbc_get_integer_16_data (int no_des, int index)
+SQLSMALLINT odbc_get_integer_16_data (void *con, int no_des, int index)
 {
   int i  = index - 1;
   SQLSMALLINT result;
-  ODBCSQLDA * dbp = odbc_descriptor[no_des];
+  CON_CONTEXT *l_con = (CON_CONTEXT *)con;
+  ODBCSQLDA * dbp = l_con->odbc_descriptor[no_des];
   SQLSMALLINT sint = 0;
+  int data_type;
 
 	data_type = GetDbCType(dbp, i);
 
-	if (odbc_indicator[no_des][i] == SQL_NULL_DATA) {
+	if (l_con->odbc_indicator[no_des][i] == SQL_NULL_DATA) {
 	/* the retrieved value is NULL, we use 0 to be NULL value */
 		return 0;
 	}
@@ -1790,27 +1831,29 @@ SQLSMALLINT odbc_get_integer_16_data (int no_des, int index)
 			result = sint;
 			return result;
 		default:
-			ATSTXTCAT(error_message, "\nError INTEGER_16 type or data length in odbc_get_integer_data. ");
-			if (error_number) {
+			ATSTXTCAT(l_con->error_message, "\nError INTEGER_16 type or data length in odbc_get_integer_data. ");
+			if (l_con->error_number) {
 				return 0;
 			}
 			else {
-				error_number = -DB_ERROR-1;
+				l_con->error_number = -DB_ERROR-1;
 				return 0;
 			}
 	}
 }
 
-EIF_INTEGER_64 odbc_get_integer_64_data (int no_des, int index)
+EIF_INTEGER_64 odbc_get_integer_64_data (void *con, int no_des, int index)
 {
   int i  = index - 1;
   EIF_INTEGER_64 result;
-  ODBCSQLDA * dbp = odbc_descriptor[no_des];
+  CON_CONTEXT *l_con = (CON_CONTEXT *)con;
+  ODBCSQLDA * dbp = l_con->odbc_descriptor[no_des];
   EIF_INTEGER_64 bint;
+  int data_type;
 
 	data_type = GetDbCType(dbp, i);
 
-	if (odbc_indicator[no_des][i] == SQL_NULL_DATA) {
+	if (l_con->odbc_indicator[no_des][i] == SQL_NULL_DATA) {
 	/* the retrieved value is NULL, we use 0 to be NULL value */
 		return 0;
 	}
@@ -1821,55 +1864,57 @@ EIF_INTEGER_64 odbc_get_integer_64_data (int no_des, int index)
 			result = bint;
 			return result;
 		default:
-			ATSTXTCAT(error_message, "\nError INTEGER_64 type or data length in odbc_get_integer_data. ");
-			if (error_number) {
+			ATSTXTCAT(l_con->error_message, "\nError INTEGER_64 type or data length in odbc_get_integer_data. ");
+			if (l_con->error_number) {
 				return 0;
 			}
 			else {
-				error_number = -DB_ERROR-1;
+				l_con->error_number = -DB_ERROR-1;
 				return 0;
 			}
 	}
 }
 
-int odbc_get_boolean_data (int no_des, int index)
+int odbc_get_boolean_data (void *con, int no_des, int index)
 {
   int i = index - 1;
-  ODBCSQLDA * dbp = odbc_descriptor[no_des];
-
-  data_type = GetDbCType (dbp,i);
+  CON_CONTEXT *l_con = (CON_CONTEXT *)con;
+  ODBCSQLDA * dbp = l_con->odbc_descriptor[no_des];
+  int data_type = GetDbCType (dbp,i);
 
   if (data_type == SQL_C_BIT) {
-	if (odbc_indicator[no_des][i] == SQL_NULL_DATA) {
+	if (l_con->odbc_indicator[no_des][i] == SQL_NULL_DATA) {
 	/* the retrived value is NULL, we use false to be NULL value */
 		return 0;
 	}
 	return *((char *)(GetDbColPtr(dbp, i))) != 0;
     }
-  ATSTXTCAT(error_message, "\nError BOOLEAN type in odbc_get_boolean_data. ");
-  if (error_number) {
+  ATSTXTCAT(l_con->error_message, "\nError BOOLEAN type in odbc_get_boolean_data. ");
+  if (l_con->error_number) {
 		return 0;
   }
   else {
-		error_number = -DB_ERROR-2;
+		l_con->error_number = -DB_ERROR-2;
 		return 0;
   }
 }
 
-double odbc_get_float_data (int no_des, int index)
+double odbc_get_float_data (void *con, int no_des, int index)
 {
 	int i = index - 1;
 	double result_double;
-	ODBCSQLDA * dbp = odbc_descriptor[no_des];
+	CON_CONTEXT *l_con = (CON_CONTEXT *)con;
+	ODBCSQLDA * dbp = l_con->odbc_descriptor[no_des];
 	SQL_NUMERIC_STRUCT NumStr;
 	int j,sign =1;
 	EIF_NATURAL_64 myvalue, divisor;
 	double final_val;
+	int data_type;
 
 	data_type = GetDbCType (dbp, i);
 
 	if ( data_type == SQL_C_DOUBLE ) {
-		if (odbc_indicator[no_des][i] == SQL_NULL_DATA) {
+		if (l_con->odbc_indicator[no_des][i] == SQL_NULL_DATA) {
 			/* the retrieved value is NULL, we use 0.0 to be NULL value and we indicate it*/
 			return 0.0;
 		}
@@ -1877,7 +1922,7 @@ double odbc_get_float_data (int no_des, int index)
 		/* result = *(double *)(dbp->sqlvar)[i].sqldata; */
 		return  result_double;
 	} else if (data_type == SQL_C_NUMERIC){
-		if (odbc_indicator[no_des][i] == SQL_NULL_DATA) {
+		if (l_con->odbc_indicator[no_des][i] == SQL_NULL_DATA) {
 			/* the retrieved value is NULL, we use 0.0 to be NULL value and we indicate it*/
 			return 0.0;
 		}
@@ -1896,25 +1941,27 @@ double odbc_get_float_data (int no_des, int index)
 		final_val *= sign;
 		return final_val;
 	}
-	ATSTXTCAT(error_message, "\nError  FLOAT  type in odbc_get_float_data. ");
-	if (error_number) {
+	ATSTXTCAT(l_con->error_message, "\nError  FLOAT  type in odbc_get_float_data. ");
+	if (l_con->error_number) {
 		return 0.0;
 	}
 	else {
-		error_number = -DB_ERROR-3;
+		l_con->error_number = -DB_ERROR-3;
 		return 0.0;
 	}
 }
 
-float odbc_get_real_data (int no_des, int index)
+float odbc_get_real_data (void *con, int no_des, int index)
 {
   int i = index - 1;
   float result_real;
-  ODBCSQLDA * dbp = odbc_descriptor[no_des];
+  CON_CONTEXT *l_con = (CON_CONTEXT *)con;
+  ODBCSQLDA * dbp = l_con->odbc_descriptor[no_des];
+  int data_type;
 
   data_type = GetDbCType (dbp, i);
   if (data_type == SQL_C_FLOAT)  {
-	if (odbc_indicator[no_des][i] == SQL_NULL_DATA) {
+	if (l_con->odbc_indicator[no_des][i] == SQL_NULL_DATA) {
 	/* the retrieved value is NULL, we use 0.0 to be NULL value */
 		return 0.0;
 	}
@@ -1922,196 +1969,197 @@ float odbc_get_real_data (int no_des, int index)
 	/* result_real = *(float *)(dbp->sqlvar)[i].sqldata; */
 	return   result_real;
   }
-  ATSTXTCAT(error_message, "\nError  REAL   type in odbc_get_real_data. ");
-  if (error_number) {
+  ATSTXTCAT(l_con->error_message, "\nError  REAL   type in odbc_get_real_data. ");
+  if (l_con->error_number) {
 		return 0.0;
   }
   else {
-		error_number = -DB_ERROR-4;
+		l_con->error_number = -DB_ERROR-4;
 		return 0.0;
   }
 }
 
-// The following function tell whether the retrieved data is null or not
-
-int odbc_is_null_data(int no_des, int index)
+/* The following function tell whether the retrieved data is null or not */
+int odbc_is_null_data(void *con, int no_des, int index)
 {
-  return (odbc_indicator[no_des][index-1] == SQL_NULL_DATA);
+	CON_CONTEXT *l_con = (CON_CONTEXT *)con;
+	return (l_con->odbc_indicator[no_des][index-1] == SQL_NULL_DATA);
 }
 
 /*****************************************************************/
 /*  The following function deal with the DATE data of  ODBC      */
 /*****************************************************************/
 
-int odbc_get_date_data (int no_des, int index)
+int odbc_get_date_data (void *con, int no_des, int index)
 {
   int i = index - 1;
-  ODBCSQLDA   * dbp = odbc_descriptor[no_des];
+  CON_CONTEXT *l_con = (CON_CONTEXT *)con;
+  ODBCSQLDA   * dbp = l_con->odbc_descriptor[no_des];
   DATE_STRUCT *dateP;
   TIMESTAMP_STRUCT *stampP;
   TIME_STRUCT *timeP;
+  int data_type;
 
   data_type = GetDbCType(dbp, i);
-  //if (data_type == SQL_C_DATE || data_type == SQL_C_TIMESTAMP || data_type == SQL_C_TIME)
+  /* if (data_type == SQL_C_DATE || data_type == SQL_C_TIMESTAMP || data_type == SQL_C_TIME) */
   if (data_type == SQL_C_TYPE_DATE || data_type == SQL_C_TYPE_TIMESTAMP || data_type == SQL_C_TYPE_TIME)
     {
-	if (odbc_indicator[no_des][i] == SQL_NULL_DATA) {
-	/* the retrived value is NULL, we use 01/01/1991 0:0:0 to be NULL value */
-		//odbc_date.year = 1991;
-		//odbc_date.month = 1;
-		//odbc_date.day = 1;
-		//odbc_date.hour = 0;
-		//odbc_date.minute = 0;
-		//odbc_date.second = 0;
+	if (l_con->odbc_indicator[no_des][i] == SQL_NULL_DATA) {
+	/* the retrived value is NULL, we use 01/01/1991 0:0:0 to be NULL value
+		l_con->odbc_date.year = 1991;
+		l_con->odbc_date.month = 1;
+		l_con->odbc_date.day = 1;
+		l_con->odbc_date.hour = 0;
+		l_con->odbc_date.minute = 0;
+		l_con->odbc_date.second = 0;
+	*/
 		return 0;
 	}
-	//if (data_type == SQL_C_DATE) {
+	/* if (data_type == SQL_C_DATE) { */
 	if (data_type == SQL_C_TYPE_DATE) {
 		dateP = (DATE_STRUCT *)(GetDbColPtr(dbp, i));
-		odbc_date.year = dateP->year;
-		odbc_date.month = dateP->month;
-		odbc_date.day = dateP->day;
-		odbc_date.hour = 0;
-		odbc_date.minute = 0;
-		odbc_date.second = 0;
+		l_con->odbc_date.year = dateP->year;
+		l_con->odbc_date.month = dateP->month;
+		l_con->odbc_date.day = dateP->day;
+		l_con->odbc_date.hour = 0;
+		l_con->odbc_date.minute = 0;
+		l_con->odbc_date.second = 0;
 		return 1;
 	}
-	//if (data_type == SQL_C_TIMESTAMP) {
+	/* if (data_type == SQL_C_TIMESTAMP) { */
 	if (data_type == SQL_C_TYPE_TIMESTAMP) {
 		stampP = (TIMESTAMP_STRUCT *)(GetDbColPtr(dbp, i));
-		odbc_date.year = stampP->year;
-		odbc_date.month = stampP->month;
-		odbc_date.day = stampP->day;
-		odbc_date.hour = stampP->hour;
-		odbc_date.minute = stampP->minute;
-		odbc_date.second = stampP->second;
+		l_con->odbc_date.year = stampP->year;
+		l_con->odbc_date.month = stampP->month;
+		l_con->odbc_date.day = stampP->day;
+		l_con->odbc_date.hour = stampP->hour;
+		l_con->odbc_date.minute = stampP->minute;
+		l_con->odbc_date.second = stampP->second;
 		return 1;
 	}
-	//if (data_type == SQL_C_TIME) {
+	/* if (data_type == SQL_C_TIME) { */
 	if (data_type == SQL_C_TYPE_TIME) {
 		timeP = (TIME_STRUCT *)(GetDbColPtr(dbp, i));
-		odbc_date.year = 1991;
-		odbc_date.month = 1;
-		odbc_date.day = 1;
-		odbc_date.hour = timeP->hour;
-		odbc_date.minute = timeP->minute;
-		odbc_date.second = timeP->second;
+		l_con->odbc_date.year = 1991;
+		l_con->odbc_date.month = 1;
+		l_con->odbc_date.day = 1;
+		l_con->odbc_date.hour = timeP->hour;
+		l_con->odbc_date.minute = timeP->minute;
+		l_con->odbc_date.second = timeP->second;
 		return 1;
 	}
 
     }
-  ATSTXTCAT(error_message, "\nError DATE type in odbc_get_date_data. ");
-  if (error_number) {
+  ATSTXTCAT(l_con->error_message, "\nError DATE type in odbc_get_date_data. ");
+  if (l_con->error_number) {
 		return 0;
   }
   else {
-		error_number = -DB_ERROR-5;
+		l_con->error_number = -DB_ERROR-5;
 		return 0;
   }
 }
 
-int odbc_get_year()
+int odbc_get_year(void *con)
 {
-	return odbc_date.year;
+	return ((CON_CONTEXT *)con)->odbc_date.year;
 }
 
-int odbc_get_month()
+int odbc_get_month(void *con)
 {
-	return odbc_date.month;
+	return ((CON_CONTEXT *)con)->odbc_date.month;
 }
 
-int odbc_get_day()
+int odbc_get_day(void *con)
 {
-	return odbc_date.day;
+	return ((CON_CONTEXT *)con)->odbc_date.day;
 }
 
-int odbc_get_hour()
+int odbc_get_hour(void *con)
 {
-	return odbc_date.hour;
+	return ((CON_CONTEXT *)con)->odbc_date.hour;
 }
 
-int odbc_get_min()
+int odbc_get_min(void *con)
 {
-	return odbc_date.minute;
+	return ((CON_CONTEXT *)con)->odbc_date.minute;
 }
 
-int odbc_get_sec()
+int odbc_get_sec(void *con)
 {
-	return odbc_date.second;
+	return ((CON_CONTEXT *)con)->odbc_date.second;
 }
 
-int odbc_str_len(SQLTCHAR *val) {
+size_t odbc_str_len(SQLTCHAR *val) {
 	return TXTLEN(val);
-}
-
-SQLTCHAR *odbc_str_value(SQLTCHAR *val) {
-    	SQLTXTCPY(odbc_date_string, val);
-	return odbc_date_string;
 }
 
 /*****************************************************************/
 /*  The following functions are related with the error processing*/
 /*****************************************************************/
 
-int odbc_get_error_code ()
+int odbc_get_error_code (void *con)
 {
-	return error_number;
+	return ((CON_CONTEXT *)con)->error_number;
 }
 
-SQLTCHAR * odbc_get_error_message ()
+SQLTCHAR * odbc_get_error_message (void *con)
 {
-	return error_message;
+	return ((CON_CONTEXT *)con)->error_message;
 }
 
-SQLTCHAR * odbc_get_warn_message ()
+SQLTCHAR * odbc_get_warn_message (void *con)
 {
-	return warn_message;
+	return ((CON_CONTEXT *)con)->warn_message;
 }
 
-void odbc_clear_error ()
+void odbc_clear_error (void *con)
 {
-  error_number = 0;
-  error_message[0] = (SQLTCHAR)0;
-  warn_message[0] = (SQLTCHAR)0;
+	CON_CONTEXT *l_con = (CON_CONTEXT *)con;
+	l_con->error_number = 0;
+	l_con->error_message[0] = (SQLTCHAR)0;
+	l_con->warn_message[0] = (SQLTCHAR)0;
 }
 
-void odbc_error_handler(HSTMT h_err_stmt, int code) {
+void odbc_error_handler(CON_CONTEXT *con, HSTMT h_err_stmt, int code) {
 	SQLINTEGER nErr;
 	SQLTCHAR msg[MAX_ERROR_MSG +1];
 	SQLTCHAR tmpMsg[2 * MAX_ERROR_MSG];
 	SQLSMALLINT cbMsg;
 	SQLTCHAR tmpSQLSTATE[6];
 	SQLSMALLINT msg_number;
+	CON_CONTEXT *l_con = con;
+	char charBuf[255];
 
 	if (h_err_stmt == NULL) {
-		error_number = DB_ERROR;
-		sprintf(charBuf, "ODBC ERROR: <%d>, Inter code: <%d>\n", error_number, code);
+		l_con->error_number = DB_ERROR;
+		sprintf(charBuf, "ODBC ERROR: <%d>, Inter code: <%d>\n", l_con->error_number, code);
 		ATSTXTCPY(msg, charBuf);
-		SQLTXTCPY(error_message, msg);
+		SQLTXTCPY(l_con->error_message, msg);
 
 		if (code == 12) {
-			ATSTXTCAT(error_message, "\n Can't Connect to the assigned Data Source!");
-			ATSTXTCAT(error_message, "\n The name may be misspelled or \n The data source is being used by someone else exclusively!");
+			ATSTXTCAT(l_con->error_message, "\n Can't Connect to the assigned Data Source!");
+			ATSTXTCAT(l_con->error_message, "\n The name may be misspelled or \n The data source is being used by someone else exclusively!");
 		}
 		return ;
 	}
 
-	switch(rc) {
+	switch(l_con->rc) {
 	case SQL_INVALID_HANDLE:
-		error_number = DB_SQL_INVALID_HANDLE;
-		sprintf(charBuf, "ODBC ERROR: <%d>, Inter code: <%d>", error_number, code);
+		l_con->error_number = DB_SQL_INVALID_HANDLE;
+		sprintf(charBuf, "ODBC ERROR: <%d>, Inter code: <%d>", l_con->error_number, code);
 		ATSTXTCPY(msg, charBuf);
-		SQLTXTCAT(error_message, msg);
-		ATSTXTCAT(error_message, "\n An Application programming error occurred: maybe passed ");
-		ATSTXTCAT(error_message, "\n invalid environment, connection or statement handle to ");
-		ATSTXTCAT(error_message, "\n Driver Manager of ODBC. \n");
+		SQLTXTCAT(l_con->error_message, msg);
+		ATSTXTCAT(l_con->error_message, "\n An Application programming error occurred: maybe passed ");
+		ATSTXTCAT(l_con->error_message, "\n invalid environment, connection or statement handle to ");
+		ATSTXTCAT(l_con->error_message, "\n Driver Manager of ODBC. \n");
 
 		break;
 	case SQL_ERROR:
-		error_number = DB_SQL_ERROR;
-		sprintf(charBuf, "ODBC ERROR: <%d>, Inter code: <%d>", error_number, code);
+		l_con->error_number = DB_SQL_ERROR;
+		sprintf(charBuf, "ODBC ERROR: <%d>, Inter code: <%d>", l_con->error_number, code);
 		ATSTXTCPY(msg, charBuf);
-		SQLTXTCAT(error_message, msg);
+		SQLTXTCAT(l_con->error_message, msg);
 		msg_number = 1;
 		while (SQLGetDiagRec(SQL_HANDLE_STMT, h_err_stmt, msg_number++, tmpSQLSTATE, &nErr, msg, sizeof(msg), &cbMsg) != SQL_NO_DATA) {
 			sprintf (charBuf, "\n Native Err#=%d , SQLSTATE=", (int) nErr);
@@ -2121,21 +2169,21 @@ void odbc_error_handler(HSTMT h_err_stmt, int code) {
 			SQLTXTCAT (tmpMsg, msg);
 			ATSTXTCAT (tmpMsg, "'");
 	
-			if (TXTLEN(error_message) + TXTLEN(tmpMsg) + 8 > ERROR_MESSAGE_SIZE) {
-				if (TXTLEN(error_message) + 8 <= ERROR_MESSAGE_SIZE) {
-					ATSTXTCAT(error_message, "......");
+			if (TXTLEN(l_con->error_message) + TXTLEN(tmpMsg) + 8 > ERROR_MESSAGE_SIZE) {
+				if (TXTLEN(l_con->error_message) + 8 <= ERROR_MESSAGE_SIZE) {
+					ATSTXTCAT(l_con->error_message, "......");
 				}
 			}
 			else {
-				SQLTXTCAT(error_message, tmpMsg);
+				SQLTXTCAT(l_con->error_message, tmpMsg);
 			}
 		}
-		ATSTXTCAT(error_message, "\n");
+		ATSTXTCAT(l_con->error_message, "\n");
 		break;
 	case SQL_SUCCESS_WITH_INFO:
 		sprintf (charBuf, "\nODBC WARNING Inter code: <%d>", code);
 		ATSTXTCPY (msg, charBuf);
-		SQLTXTCAT(warn_message, msg);
+		SQLTXTCAT(l_con->warn_message, msg);
 		msg_number = 1;
 		while (SQLGetDiagRec(SQL_HANDLE_STMT, h_err_stmt, msg_number++, tmpSQLSTATE, &nErr, msg, sizeof(msg), &cbMsg) != SQL_NO_DATA) {
 			sprintf (charBuf, "\n Native Err#=%d , SQLSTATE=", (int) nErr);
@@ -2145,21 +2193,21 @@ void odbc_error_handler(HSTMT h_err_stmt, int code) {
 			SQLTXTCAT (tmpMsg, msg);
 			ATSTXTCAT (tmpMsg, "'");
 
-			if (TXTLEN(warn_message) + TXTLEN(tmpMsg) + 8 > WARN_MESSAGE_SIZE) {
-				if (TXTLEN(warn_message) + 8 <= WARN_MESSAGE_SIZE) {
-					ATSTXTCAT(warn_message, "......");
+			if (TXTLEN(l_con->warn_message) + TXTLEN(tmpMsg) + 8 > WARN_MESSAGE_SIZE) {
+				if (TXTLEN(l_con->warn_message) + 8 <= WARN_MESSAGE_SIZE) {
+					ATSTXTCAT(l_con->warn_message, "......");
 				}
 			}
 			else {
-				SQLTXTCAT(warn_message, tmpMsg);
+				SQLTXTCAT(l_con->warn_message, tmpMsg);
 			}
 		}
-		ATSTXTCAT(warn_message,"\n");
+		ATSTXTCAT(l_con->warn_message,"\n");
 		break;
 	default:
 		sprintf (charBuf, "\nODBC WARNING Inter code: <%d>", code);
 		ATSTXTCPY (msg, charBuf);
-		SQLTXTCAT(warn_message, msg);
+		SQLTXTCAT(l_con->warn_message, msg);
 		break;
 	}
 }
@@ -2172,7 +2220,7 @@ SQLTCHAR *odbc_str_from_str(SQLTCHAR *ptr) {
 	return val;
 }
 
-int odbc_c_type(int odbc_type) {
+SQLSMALLINT odbc_c_type(SQLSMALLINT odbc_type) {
 	switch(odbc_type) {
 		case SQL_CHAR:
 		case SQL_VARCHAR:
@@ -2182,17 +2230,17 @@ int odbc_c_type(int odbc_type) {
 		case SQL_WVARCHAR:
 		case SQL_WLONGVARCHAR:
 			return SQL_C_WCHAR;
-		//case SQL_DATE:
+		/* case SQL_DATE: */
 		case SQL_TYPE_DATE:
-			//return SQL_C_DATE;
+			/* return SQL_C_DATE; */
 			return SQL_C_TYPE_DATE;
-		//case SQL_TIME:
+		/* case SQL_TIME: */
 		case SQL_TYPE_TIME:
-			//return SQL_C_TIME;
+			/* return SQL_C_TIME; */
 			return SQL_C_TYPE_TIME;
-		//case SQL_TIMESTAMP:
+		/* case SQL_TIMESTAMP:*/
 		case SQL_TYPE_TIMESTAMP:
-			//return SQL_C_TIMESTAMP;
+			/* return SQL_C_TIMESTAMP; */
 			return SQL_C_TYPE_TIMESTAMP;
 		case SQL_BIT:
 			return SQL_C_BIT;
@@ -2223,10 +2271,11 @@ int odbc_c_type(int odbc_type) {
 	}
 }
 
-rt_private void change_to_low (SQLTCHAR *buf, int length) {
+rt_private void change_to_low (SQLTCHAR *buf, size_t length) {
 	/* Do not care about non-ASCII characters. */
-	for (; length >= 0; length--)
-		buf[length] = (buf[length] > 0xFF) ? buf[length] : tolower(buf[length]);
+	size_t i = length;
+	for (i = length; i >= 0 && i <= length; i--)
+		buf[i] = (buf[i] > 0xFF) ? buf[i] : (SQLTCHAR) tolower(buf[i]);
 }
 
 size_t sqlstrlen(const SQLTCHAR *str)
@@ -2279,8 +2328,8 @@ EIF_NATURAL_64 strhextoval(SQL_NUMERIC_STRUCT *NumStr)
 
     for(i=0;i<=15;i++){
 		current = (EIF_NATURAL_64) NumStr->val[i];
-		a= current % 16; //Obtain LSD
-		b= current / 16; //Obtain MSD
+		a= current % 16; /* Obtain LSD */
+		b= current / 16; /* Obtain MSD */
 
 		value += last* a;	
 		last = last * 16;

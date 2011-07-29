@@ -31,12 +31,12 @@ feature -- Initialization
 			user_name_ok: db_spec.user_name_ok (user_name)
 			password_ok: db_spec.password_ok (password)
 		local
-			l_session_login: like session_login
+			l_session_login: detachable LOGIN [DATABASE]
 		do
-			l_session_login := session_login
+			l_session_login := manager.current_session.session_login
 			if not is_logged_to_base then
-				create l_session_login.make
-				session_login := l_session_login
+				create {LOGIN [G]} l_session_login.make
+				manager.current_session.set_session_login (l_session_login)
 			end
 			check l_session_login /= Void end -- implied by previous if clause
 			l_session_login.set (user_name, password)
@@ -67,14 +67,14 @@ feature -- Status setting
 		require
 			argument_exist: roleId /= Void
 		local
-			l_session_login: like session_login
+			l_session_login: detachable LOGIN [DATABASE]
 		do
-			l_session_login := session_login
-			if not is_logged_to_base then
-				create l_session_login.make
-				session_login := l_session_login
+			if attached manager.current_session.session_login as l_login then
+				l_session_login := l_login
+			else
+				create {LOGIN [G]} l_session_login.make
+				manager.current_session.set_session_login (l_session_login)
 			end
-			check l_session_login /= Void end -- implied by previous if clause
 			l_session_login.set_role (roleId, rolePassWd)
 		ensure
 			is_logged_to_base: is_logged_to_base
@@ -85,32 +85,32 @@ feature -- Status setting
 		require
 			argument_exist: dsn /= Void
 		local
-			l_session_login: like session_login
+			l_session_login: detachable LOGIN [DATABASE]
 		do
-			l_session_login := session_login
-			if not is_logged_to_base then
-				create l_session_login.make
-				session_login := l_session_login
+			if attached manager.current_session.session_login as l_login then
+				l_session_login := l_login
+			else
+				create {LOGIN [G]} l_session_login.make
+				manager.current_session.set_session_login (l_session_login)
 			end
-			check l_session_login /= Void end -- implied by previous if clause
 			l_session_login.set_data_source (dsn)
 		ensure
 			is_logged_to_base: is_logged_to_base
 		end
 
-	set_group(groupId: STRING)
+	set_group (groupId: STRING)
 			-- Set database group  with `groupId'.
 		require
 			argument_exist: groupId /= Void
 		local
-			l_session_login: like session_login
+			l_session_login: detachable LOGIN [DATABASE]
 		do
-			l_session_login := session_login
-			if not is_logged_to_base then
-				create l_session_login.make
-				session_login := l_session_login
+			if attached manager.current_session.session_login as l_login then
+				l_session_login := l_login
+			else
+				create {LOGIN [G]} l_session_login.make
+				manager.current_session.set_session_login (l_session_login)
 			end
-			check l_session_login /= Void end -- implied by previous if clause
 			l_session_login.set_group (groupId)
 		ensure
 			is_logged_to_base: is_logged_to_base
@@ -121,45 +121,29 @@ feature -- Status setting
 			-- after a handle change.
 		require
 			is_logged_to_base: is_logged_to_base
-		local
-			l_session_database: like session_database
-			l_session_status: like session_status
-			l_session_execution_type: like session_execution_type
-			l_session_login: like session_login
 		do
-			update_handle
 			database_make (Selection_string_size)
 
-			l_session_database := session_database
-			if l_session_database = Void then
-				create l_session_database
-				session_database := l_session_database
+			if not attached manager.current_session.session_database then
+				manager.current_session.set_session_database (create {DB [G]})
 			end
-			handle.set_database (l_session_database)
 
-			l_session_status := session_status
-			if l_session_status = Void then
-				create l_session_status.make
-				session_status := l_session_status
+			if not attached manager.current_session.session_status then
+				manager.current_session.set_session_status (create {DB_STATUS}.make)
 			end
-			handle.set_status (l_session_status)
 
-			l_session_execution_type := session_execution_type
-			if l_session_execution_type = Void then
-				create l_session_execution_type.make
-				session_execution_type := l_session_execution_type
+			if not attached manager.current_session.session_execution_type then
+				manager.current_session.set_session_execution_type (create {DB_EXEC}.make)
 			end
-			handle.set_execution_type (l_session_execution_type)
 
-			l_session_login := session_login
-			check l_session_login /= Void end -- implied by precondition `is_logged_to_base'
-			handle.set_login (l_session_login)
+			if not attached manager.current_session.all_types then
+				manager.current_session.set_all_types (create {DB_ALL_TYPES}.make)
+			end
 		ensure
 			handle.database = session_database
-			handle.process = session_process
 			handle.status = session_status
 			handle.execution_type = session_execution_type
-			handle.login = session_login
+			handle.login = manager.current_session.session_login
 		end
 
 	set_application (application_name: STRING)
@@ -167,14 +151,14 @@ feature -- Status setting
 		require
 			argument_exist: application_name /= Void
 		local
-			l_session_login: like session_login
+			l_session_login: detachable LOGIN [DATABASE]
 		do
-			l_session_login := session_login
-			if not is_logged_to_base then
-				create l_session_login.make
-				session_login := l_session_login
+			if attached manager.current_session.session_login as l_login then
+				l_session_login := l_login
+			else
+				create {LOGIN [G]} l_session_login.make
+				manager.current_session.set_session_login (l_session_login)
 			end
-			check l_session_login /= Void end -- implied by previsous if clause
 			l_session_login.set_application (application_name)
 		ensure
 			is_logged_to_base: is_logged_to_base
@@ -185,14 +169,14 @@ feature -- Status setting
 		require
 			argument_exist: host_name /= Void
 		local
-			l_session_login: like session_login
+			l_session_login: detachable LOGIN [DATABASE]
 		do
-			l_session_login := session_login
-			if not is_logged_to_base then
-				create l_session_login.make
-				session_login := l_session_login
+			if attached manager.current_session.session_login as l_login then
+				l_session_login := l_login
+			else
+				create {LOGIN [G]} l_session_login.make
+				manager.current_session.set_session_login (l_session_login)
 			end
-			check l_session_login /= Void end -- implied by previsous if clause
 			l_session_login.set_hostname (host_name)
 		ensure
 			is_logged_to_base: is_logged_to_base
@@ -203,22 +187,15 @@ feature -- Status report
 	is_logged_to_base: BOOLEAN
 			-- Is current handle logged to Ingres server?
 		do
-			Result := session_login /= Void
+			Result := attached manager.current_session.session_login
 		ensure
-			test_condition: Result implies (session_login /= Void)
+			test_condition: Result implies (attached manager.current_session.session_login)
 		end
-
-feature {NONE} -- Status report
-
-	session_database: detachable DB [G]
-			-- Data Base
-
-	session_login: detachable LOGIN [G]
-		-- Login information
 
 feature {NONE} -- Status setting
 
 	database_make (i: INTEGER)
+			-- Initialization in the database object.
 		do
 			db_spec.database_make (i)
 		end

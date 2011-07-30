@@ -1959,6 +1959,14 @@ feature {NONE} -- Implementation
 					error_handler.insert_error (create {VUER}.make (context, last_type, l_feature_name))
 				end
 			end
+			if attached l_feature and then not l_feature.has_return_value and then l_feature.is_failing then
+					-- This is a procedure that fails, so the code after it is unreachable.
+					-- The cases of unreachable queries are not handled yet.
+				debug ("to_implement")
+					to_implement ("Detect unreachable code after failing queries.")
+				end
+				context.set_all
+			end
 		ensure
 			last_calls_target_type_proper_set: (error_level = old error_level and not is_last_access_tuple_access) implies last_calls_target_type /= Void
 		end
@@ -6697,6 +6705,7 @@ feature {NONE} -- Implementation
 			local_info: LOCAL_INFO
 			local_type: TYPE_A
 			iteration_cursor_type: TYPE_A
+			is_infinite: BOOLEAN
 		do
 			has_loop := True
 			l_needs_byte_node := is_byte_node_enabled
@@ -6795,6 +6804,9 @@ feature {NONE} -- Implementation
 						l_loop.set_stop (ec)
 					end
 					break_point_slot_count := break_point_slot_count + 1
+						-- Mark loop as an infinite if it has no iteration part
+						-- and the exit condition is constant false.
+					is_infinite := i = Void and then attached {BOOL_AS} exit_as as b and then not b.value
 				end
 			end
 
@@ -6872,6 +6884,11 @@ feature {NONE} -- Implementation
 			system.optimization_tables.force (
 				create {OPTIMIZE_UNIT}.make (context.current_class.class_id,
 					current_feature.body_index))
+
+				-- Mark the code after the loop unreachable if the loop is infinite.
+			if is_infinite then
+				context.set_all
+			end
 		end
 
 	process_loop_expr_as (l_as: LOOP_EXPR_AS)
@@ -7221,6 +7238,7 @@ feature {NONE} -- Implementation
 				l_retry_b.set_line_pragma (l_as.line_pragma)
 				last_byte_node := l_retry_b
 			end
+			context.set_all
 		end
 
 	process_external_as (l_as: EXTERNAL_AS)

@@ -12,6 +12,7 @@ inherit
 	AST_ITERATOR
 		redefine
 			process_access_assert_as,
+			process_access_feat_as,
 			process_access_id_as,
 			process_access_inv_as,
 			process_assign_as,
@@ -226,43 +227,67 @@ feature {AST_EIFFEL} -- Visitor: access to features
 
 	process_access_assert_as (a: ACCESS_ASSERT_AS)
 		do
-			process_access_inv_as (a)
+			process_access_feat_as (a)
 		end
 
 	process_access_id_as (a: ACCESS_ID_AS)
 		do
-			process_access_inv_as (a)
+			process_access_feat_as (a)
 		end
 
 	process_access_inv_as (a: ACCESS_INV_AS)
+		do
+			process_access_feat_as (a)
+		end
+
+	process_access_feat_as (a: ACCESS_FEAT_AS)
+			-- <Precursor>
 		local
 			f: FEATURE_I
+			i: INTEGER
 		do
 			safe_process (a.internal_parameters)
-			if not is_qualified and then not a.is_local and then not a.is_argument then
-				f := written_class.feature_of_name_id (a.feature_name.name_id)
-				if f /= Void then
-						-- This is indeed a feature rather than a local or an argument.
-						-- Find it in the current class.
-					if current_class /= written_class then
-						f := current_class.feature_of_rout_id (f.rout_id_set.first)
-					end
-					if not bodies.has (f.body_index) then
-							-- This feature has not been processed yet.
-						if f.is_failing then
-								-- The feature never exits, all bets after calling it are off.
-								-- In particular all the attributes may be considered initialized.
-							attribute_initialization.set_all
-						elseif f.is_routine then
-							process (f)
-						elseif f.is_attribute then
-							if is_attachment then
-								attribute_initialization.set_attribute (context.attributes.item (f.feature_id))
-							else
-								check_attribute (f, a.feature_name)
+			if not a.is_local and then not a.is_argument then
+				if not is_qualified then
+					f := written_class.feature_of_name_id (a.feature_name.name_id)
+					if attached f then
+							-- This is indeed a feature rather than a local or an argument.
+							-- Find it in the current class.
+						if current_class /= written_class then
+							f := current_class.feature_of_rout_id (f.rout_id_set.first)
+						end
+						if not bodies.has (f.body_index) then
+								-- This feature has not been processed yet.
+							if f.is_routine then
+								process (f)
+							elseif f.is_attribute then
+								if is_attachment then
+									attribute_initialization.set_attribute (context.attributes.item (f.feature_id))
+								else
+									check_attribute (f, a.feature_name)
+								end
 							end
 						end
 					end
+				else
+					i := a.class_id
+					if system.classes.valid_index (i) and then
+						attached system.class_of_id (i) as c
+					then
+							-- Look for the feature in the recorded class.
+						f := c.feature_of_name_id (a.feature_name.name_id)
+							-- `f' is the feature in the ancestor class.
+							-- Evaluating the corresponding descendant version can improve
+							-- the reachability analysis.
+						debug ("to_implement")
+							;(create {REFACTORING_HELPER}).to_implement ("Find version of the feature in a descendant class")
+						end
+					end
+				end
+				if attached f and then not f.has_return_value and then f.is_failing then
+						-- The feature never exits, all bets after calling it are off.
+						-- In particular all the attributes may be considered initialized.
+					attribute_initialization.set_all
 				end
 			end
 		end
@@ -448,6 +473,11 @@ feature {AST_EIFFEL} -- Visitor: compound
 				attribute_initialization.keeper.leave_realm
 			end
 			safe_process (a.variant_part)
+			if not attached a.iteration and then attached {BOOL_AS} a.stop as b and then not b.value then
+					-- The loop never terminates.
+					-- All the variables may be considered properly initialized.
+				attribute_initialization.set_all
+			end
 		end
 
 	process_retry_as (a: RETRY_AS)

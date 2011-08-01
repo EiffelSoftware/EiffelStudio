@@ -280,15 +280,14 @@ feature -- Generic conformance
 			an_info.make (Current, system.class_of_id (class_id))
 		end
 
-	create_info: CREATE_QUALIFIED
+	shared_create_info, create_info: CREATE_QUALIFIED
+			-- <Precursor>
 		do
-			initialize_info (shared_create_info)
-			Result := shared_create_info.twin
-		end
-
-	shared_create_info: CREATE_QUALIFIED
-		once
-			create Result
+				--| Unlike its precursor, we cannot use a shared structure because unlike traditional
+				--| anchors, qualified anchors can be nested, therefore we cannot reuse the same object
+				--| as its value would be overridden while processing the nested definitions.
+				--| See eweasel test#anchor042 and test#anchor051 for test cases.
+			create Result.make (Current, system.class_of_id (class_id))
 		end
 
 feature -- IL code generation

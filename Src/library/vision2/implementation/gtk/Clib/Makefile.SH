@@ -62,7 +62,7 @@ emptyrule::
 
 clean: local_clean
 realclean: local_realclean
-clobber: #local_clobber 
+clobber: local_clobber 
 
 local_clean::
 	$(RM) core *~ *.o *.so *.a

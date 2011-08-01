@@ -6,4 +6,4 @@ if [ $# -ne 3 ]; then
     exit
 fi
 
-mkisofs -R -v -l -d -D -L -p "ISE 356 Storke Road, Goleta, CA 93117 (805) 685 1006,info@eiffel.com" -P "ISE 356 Storke Road, Goleta, CA 93117 (805) 685 1006,info@eiffel.com" -A $1 -o $2 $3
+mkisofs -R -v -l -d -D -L -p "Eiffel Software 5949 Hollister Avenue, Goleta, CA 93117 (805) 685 1006,info@eiffel.com" -P "Eiffel Software 5949 Hollister Avenue, Goleta, CA 93117 (805) 685 1006, http://www.eiffel.com" -A $1 -o $2 $3

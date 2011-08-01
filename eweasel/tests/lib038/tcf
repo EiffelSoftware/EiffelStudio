@@ -1,4 +1,3 @@
-
 test_name 	managed-pointer-invariant	
 test_description Violation of invariant of MANAGED_POINTER
 

@@ -410,6 +410,43 @@ Test across-loop-syntax (syntax059): passed
 Test object-test-expression (syntax060): passed
 Test constrained-generic-without-type (syntax061): passed
 Test loop-instruction-as-expression (syntax062): passed
+Test non-conforming-inheritance-empty-select (syntax063): passed
+Test multiple-semicolons-after-feature (syntax064): failed
+	Description: The parser should not allow more than one semicolon after a feature.
+	Execution error in file /home/manus/local/eweasel/eweasel/tests/syntax064/tcf at line 14
+	Original text:    compile_result syntax_error TEST 12
+	Substituted text: compile_result syntax_error TEST 12
+	Reason: actual compilation result does not match expected result
+	Actual result:
+		Final status:  completed 
+	Expected result:
+		Syntax error in class TEST at line 12
+		Final status:  paused 
+
+Test non-decimal-percent-char-codes (syntax065): failed
+	Description: The compiler should accept characters such as '%/0x57/' in manifest strings as well as in manifest characters.
+	Execution error in file /home/manus/local/eweasel/eweasel/tests/syntax065/tcf at line 8
+	Original text:    compile_result ok
+	Substituted text: compile_result ok
+	Reason: actual compilation result does not match expected result
+	Actual result:
+		Syntax error in class TEST at line 15
+		Final status:  paused 
+	Expected result:
+		Final status:  completed 
+
+Test number-end-without-break (syntax066): failed
+	Description: A number must be separated from the following token by a special symbol or a break.
+	Execution error in file /home/manus/local/eweasel/eweasel/tests/syntax066/tcf at line 9
+	Original text:    compile_result syntax_error TEST 11
+	Substituted text: compile_result syntax_error TEST 11
+	Reason: actual compilation result does not match expected result
+	Actual result:
+		Final status:  completed 
+	Expected result:
+		Syntax error in class TEST at line 11
+		Final status:  paused 
+
 Test bad-class-end-comment (valid001): passed
 Test bad-infix-feature (valid002): passed
 Test class-not-in-universe (valid003): passed
@@ -1263,6 +1300,18 @@ Test spurious-vweq-warning (valid271): failed
 	Expected result:
 		Final status:  completed 
 
+Test non-conforming-missing-vmss3 (valid272): failed
+	Description: Compiler should report a VMSS(3) error (select clause not needed) on a class that inherits from a parent class via both conforming and non-conforming inheritance and renames a feature and selects the feature in the conforming inheritance clause
+	Execution error in file /home/manus/local/eweasel/eweasel/tests/valid272/tcf at line 9
+	Original text:    compile_result validity_error TEST VMSS(3)
+	Substituted text: compile_result validity_error TEST VMSS(3)
+	Reason: actual compilation result does not match expected result
+	Actual result:
+		Final status:  completed 
+	Expected result:
+		Validity error in class TEST code VMSS(3)
+		Final status:  paused 
+
 Test multi-error-degree-4 (multierr001): passed
 Test degree-5-forget-error (multierr002): passed
 Test degree-5-infinite-loop (multierr003): passed
@@ -1798,7 +1847,7 @@ Test precompile-again (incr226): failed
 		Final status:  unknown	
 	Raw compiler output:
 	Eiffel Compilation Manager
-	Version 6.8.0.0 GPL Edition - linux-x86-64
+	Version 7.0.0.0 GPL Edition - linux-x86-64
 	
 	There is already a project compiled in "/home/manus/local/eweasel/eweasel/../test_dir/incr226"
 	It needs to be deleted before a precompilation.
@@ -2841,11 +2890,13 @@ Test finalize-argument-anchors-formal (final107): failed
 
 Test finalize-external-invariant-skipped (final108): failed
 	Description: A finalized system with assertions kept that has qualified calls to external routines does not check the class invariant.  Preconditions and postconditions are checked.
-	Execution error in file /home/manus/local/eweasel/eweasel/tests/final108/tcf at line 24
+	Execution error in file /home/manus/local/eweasel/eweasel/tests/final108/tcf at line 26
 	Original text:    compare exec_output_f output
 	Substituted text: compare exec_output_f output
 	Reason: files being compared do not have identical contents
 
+Test inline-manifest-type (final109): passed
+Test profile-once-per-process-function (final110): passed
 Test gc-tracking-001 (runtime001): passed
 Test gc-tracking-002 (runtime002): passed
 Test gc-expanded-in-special (runtime003): passed
@@ -2895,6 +2946,8 @@ Test launching-n-threads-on-same-object (thread014): passed
 Test join-with-timeout-failure (thread015): passed
 Test multithreaded-bogus-catcall (thread016): passed
 Test main-thread-terminates-before-child (thread017): passed
+Test shared-mutex-hang (thread018): manual
+Test thread-join-crash (thread019): passed
 Test print-double (exec001): passed
 Test bit-out-wrong (exec002): passed
 Test real-conform-double (exec003): passed
@@ -3657,6 +3710,7 @@ Test generating-type-on-typed-pointer (exec342): failed
 	Expected result:
 		Final status:  completed 
 
+Test deep-twin-control-c (exec343): passed
 Test once-per-object-exec (once001): passed
 Test once-per-object-exec-with-exception (once002): passed
 Test once-per-object-redefinition (once003): passed
@@ -3970,7 +4024,7 @@ Test create-generic-constrained-by-none (term174): failed
 Test create-constrained-generic-crash (term175): passed
 Test remove-syntax-error-crash (term176): passed
 Test argument-anchors-formal-crash (term177): passed
-Test small-eif-stack-chunk (term178): skipped
+Test small-eif-stack-chunk (term178): passed
 Test inherit-inline-agent-with-formal (term179): passed
 Test infix-prefix-alias-compatibility-crash (term180): passed
 Test create-constrained-generic-crash-2 (term181): passed
@@ -4077,6 +4131,7 @@ Test inherit-generic-with-self-as-formal (term201): failed
 
 Test inherit-formal-as-second-formal (term202): passed
 Test inherit-generic-of-expanded (term203): passed
+Test ise-ec-flags-missing-final-quote (term204): passed
 Test config-override (config001): passed
 Test config-debug-disabled (config002): passed
 Test config-quick-melt-override (config003): passed
@@ -4132,19 +4187,7 @@ Test config-invalid-vsrt2 (config022): failed
 	Expected result:
 		Final status:  completed 
 
-Test config-generic-root-type-extra-chars (config023): failed
-	Description: A generic root type which is valid except that it has extra characters at the end should be a VD00 error but is reported as a syntax error on an unnamed file.
-	Execution error in file /home/manus/local/eweasel/eweasel/tests/config023/tcf at line 10
-	Original text:    compile_result validity_error NONE VD00
-	Substituted text: compile_result validity_error NONE VD00
-	Reason: actual compilation result does not match expected result
-	Actual result:
-		Syntax error in class "UNKNOWN" at line 1
-		Final status:  paused 
-	Expected result:
-		Validity error code VD00
-		Final status:  paused 
-
+Test config-generic-root-type-extra-chars (config023): passed
 Test config-generic-root-with-expanded (config024): failed
 	Description: A generic root type with an expanded type as actual generic compiles fine when frozen or finalized but system execution crashes with a panic if the root class has an attribute of the formal generic type.
 	Execution error in file /home/manus/local/eweasel/eweasel/tests/config024/tcf at line 24
@@ -4458,6 +4501,8 @@ Test file-read-write-access (lib033): passed
 Test file-flush (lib034): passed
 Test file-position-bad-file-pointer (lib035): passed
 Test format-double-crash (lib036): passed
+Test ptf-file-read-to-string (lib037): passed
+Test managed-pointer-invariant (lib038): passed
 Test tuple-manipulation (tuple001): passed
 Test named-tuple-validation (tuple002): passed
 Test named-tuple-as-argument (tuple003): passed
@@ -4532,6 +4577,7 @@ Test validity-vffd6-basic (vffd601): passed
 Test validity-vffd7-once-generic (vffd701): passed
 Test validity-vffd7-once-anchored (vffd702): passed
 Test validity-vffd8-once-scoop (vffd801): passed
+Test validity-vffd8-once-proc-scoop (vffd802): passed
 Test validity-vhpr1-self (vhpr101): passed
 Test validity-vhpr1-other (vhpr102): passed
 Test validity-vhpr1-long-cycle (vhpr103): passed
@@ -5011,6 +5057,32 @@ Test repeated-inheritance-bogus-vevi (attach082): failed
 
 Test self-initializing-attribute-gc (attach083): passed
 Test manifest-string-type (attach084): passed
+Test initialized-after-unreachable (attach085): failed
+	Description: The entities can be treated as initialized if they appear in the unreachable code.
+	Execution error in file /home/manus/local/eweasel/eweasel/tests/attach085/tcf at line 8
+	Original text:    compile_result ok
+	Substituted text: compile_result ok
+	Reason: actual compilation result does not match expected result
+	Actual result:
+		Validity error in class TEST code VEVI
+		Validity error in class TEST code VEVI
+		Validity error in class TEST code VEVI
+		Validity error in class TEST code VEVI
+		Validity error in class TEST code VEVI
+		Validity error in class TEST code VEVI
+		Validity error in class TEST code VEVI
+		Validity error in class TEST code VEVI
+		Validity error in class TEST code VEVI
+		Validity error in class TEST code VEVI
+		Validity error in class TEST code VEVI
+		Validity error in class TEST code VEVI
+		Validity error in class TEST code VEVI
+		Validity error in class TEST code VEVI
+		Validity error in class TEST code VEVI
+		Final status:  paused 
+	Expected result:
+		Final status:  completed 
+
 Test basic-conformance (conform001): passed
 Test formal-conformance (conform002): passed
 Test catcall-checking-conformance (conform003): passed
@@ -5090,29 +5162,9 @@ Test qat-hash-code-crash (anchor038): passed
 Test qat-vmfn-compiler-error (anchor039): passed
 Test qat-finalized-wrong-type (anchor040): passed
 Test qat-constrained-type-in-crash (anchor041): passed
-Test qat-same-generic-derivation-crash (anchor042): failed
-	Description: System that uses qualified anchored types and expanded classes that are generic crashes compiler in {GEN_TYPE_A}.internal_same_generic_derivation_as.
-	Execution error in file /home/manus/local/eweasel/eweasel/tests/anchor042/tcf at line 15
-	Original text:    execute_result ok
-	Substituted text: execute_result ok
-	Reason: actual execution result does not match expected result
-	Actual result:
-		Final status:  system_failed 
-	Expected result:
-		Final status:  completed 
-
+Test qat-same-generic-derivation-crash (anchor042): passed
 Test qat-invalid-vgcc (anchor043): passed
-Test qat-evaluated-type-in-descendant-crash (anchor044): failed
-	Description: Creation of a local with qualified anchored type `like {G}.default' in a generic class with formal generic G that has a generic descendant crashes the compiler in {QUALIFIED_ANCHORED_TYPE_A}.evaluated_type_in_descendant.
-	Execution error in file /home/manus/local/eweasel/eweasel/tests/anchor044/tcf at line 13
-	Original text:    compile_result ok
-	Substituted text: compile_result ok
-	Reason: actual compilation result does not match expected result
-	Actual result:
-		Final status:  aborted had_exception (Segmentation fault) 
-	Expected result:
-		Final status:  completed 
-
+Test qat-evaluated-type-in-descendant-crash (anchor044): passed
 Test qat-invalid-veen-in-generic-descendant (anchor045): passed
 Test qat-instantiated-in-crash-2 (anchor046): failed
 	Description: A set of classes using qualified anchored types crashes the compiler in {FORMAL_A}.instantiated_in
@@ -5129,25 +5181,9 @@ Test qat-constrained-types-crash (anchor047): passed
 Test qat-conformance-type-crash-2 (anchor048): passed
 Test qat-process-formal-as-crash (anchor049): passed
 Test qat-invalid-vffd (anchor050): passed
-Test qat-c-compile-failure (anchor051): failed
-	Description: A generic class TEST1 [G] with a function whose return type is `ARRAY [like {TEST1 [like {G}.out]}.default]' compiles fine but system execution fails with a seg fault.  Freezing or finalizing generates C code that won't compile.
-	Execution error in file /home/manus/local/eweasel/eweasel/tests/anchor051/tcf at line 13
-	Original text:    execute_result ok
-	Substituted text: execute_result ok
-	Reason: actual execution result does not match expected result
-	Actual result:
-		Final status:  system_failed 
-	Expected result:
-		Final status:  completed 
-
+Test qat-c-compile-failure (anchor051): passed
 Test qat-anchored-to-redefined-descendant (anchor052): passed
-Test qat-inlining-bug (anchor053): failed
-	Description: A system that uses qualified anchored types in generic classes and prints `{like {G}.default}' in a redefined routine and its precursor produces incorrect output when finalized with inlining.
-	Execution error in file /home/manus/local/eweasel/eweasel/tests/anchor053/tcf at line 37
-	Original text:    compare exec_output_f output
-	Substituted text: compare exec_output_f output
-	Reason: files being compared do not have identical contents
-
+Test qat-inlining-bug (anchor053): passed
 Test qat-instantiated-in-crash-3 (anchor054): passed
 Test qat-static-type-id-crash-2 (anchor055): failed
 	Description: A set of classes with a qualified anchored type involving a formal generic parameter that is multi-constrained crashes the compiler in {MULTI_FORMAL_A}.static_type_id.
@@ -5185,24 +5221,83 @@ Test qat-using-generic-feature-finalized (anchor059): failed
 		Final status:  completed 
 
 Test qat-in-creation-procedure (anchor060): passed
+Test qat-generic-with-rename (anchor061): passed
 Test scoop-access-smoke (scoop001): passed
 Test scoop-argument-validity (scoop002): passed
 Test scoop-hanging-1 (scoop003): passed
 Test scoop-basic-argument-formal-nested (scoop004): passed
-Test scoop-separate-like-current (scoop005): failed
-	Description: When `separate like Current' is used as argument, calls on that argument are not separate.
-	Execution error in file /home/manus/local/eweasel/eweasel/tests/scoop005/tcf at line 14
-	Original text:    compare exec_output output
-	Substituted text: compare exec_output output
-	Reason: files being compared do not have identical contents
-
+Test scoop-separate-like-current (scoop005): passed
 Test scoop-result-validity (scoop006): passed
 Test scoop-external-call (scoop007): passed
 Test scoop-freeze-condition (scoop008): passed
 Test scoop-wait-condition (scoop009): passed
 Test scoop-request-chain-exception (scoop011): passed
 Test scoop-false-wait-condition (scoop012): passed
+Test scoop-inline-separate-call (scoop013): passed
+Test scoop-separate-expanded (scoop014): passed
+Test scoop-separate-patterns-crash (scoop015): passed
+Test scoop-finalize-c-failure (scoop016): failed
+	Description: Finalizing a particular SCOOP system without inling generates C code that won't compile
+	Execution error in file /home/manus/local/eweasel/eweasel/tests/scoop016/tcf at line 18
+	Original text:    c_compile_result ok
+	Substituted text: c_compile_result ok
+	Reason: actual C compilation result does not match expected result
+	Actual result: failure C_compilation_not_completed
+	Expected result: no_failure C_compilation_completed
+
+Test scoop-separate-call-to-constant (scoop017): failed
+	Description: A separate call to a constant feature does not produce correct output for frozen or finalized code
+	Execution error in file /home/manus/local/eweasel/eweasel/tests/scoop017/tcf at line 21
+	Original text:    compare exec_output_w output
+	Substituted text: compare exec_output_w output
+	Reason: files being compared do not have identical contents
+
+Test scoop-once-per-object (scoop018): failed
+	Description: Changing a boolean attribute to a once-per-object function and melting causes execution of a SCOOP system to crash with an "illegal value type" panic.
+	Execution error in file /home/manus/local/eweasel/eweasel/tests/scoop018/tcf at line 27
+	Original text:    execute_result ok
+	Substituted text: execute_result ok
+	Reason: actual execution result does not match expected result
+	Actual result:
+		Final status:  system_failed had_panic 
+	Expected result:
+		Final status:  completed 
+
+Test scoop-top-exception (scoop019): passed
 Test pretty-smoke-test (pretty001): passed
+Test pretty-explicit-creation-space (pretty002): passed
+Test pretty-argument-list-separators (pretty003): passed
+Test pretty-class-note-indentation (pretty004): passed
+Test pretty-constant-attribute-space (pretty005): passed
+Test pretty-obsolete-and-external (pretty006): passed
+Test pretty-loop-variant (pretty007): passed
+Test pretty-retry-instruction (pretty008): passed
+Test pretty-integer-constant (pretty009): passed
+Test pretty-inspect-cases (pretty010): passed
+Test pretty-note-on-attribute (pretty011): passed
+Test pretty-convert-clause (pretty012): passed
+Test pretty-multiconstrained-generics (pretty013): passed
+Test pretty-formal-renaming (pretty014): passed
+Test pretty-comment-indentation (pretty015): passed
+Test pretty-check-instruction (pretty016): passed
+Test pretty-nested-comment (pretty017): passed
+Test pretty-assertion-clause (pretty018): passed
+Test pretty-feature-adaptation (pretty019): passed
+Test pretty-bracket-expression (pretty020): passed
+Test pretty-attribute-comment (pretty021): passed
+Test pretty-expression-comment (pretty022): passed
+Test pretty-typed-character (pretty023): passed
+Test pretty-multiple-feature-clauses (pretty024): passed
+Test pretty-routine-comment-indentation (pretty025): passed
+Test pretty-constant-attribute-comment (pretty026): passed
+Test pretty-feature-call-comment (pretty027): passed
+Test pretty-comments-between-features (pretty028): failed
+	Description: Comments between features within one section should have consistent indentation.
+	Execution error in file /home/manus/local/eweasel/eweasel/tests/pretty028/tcf at line 10
+	Original text:    compare prettify_output output
+	Substituted text: compare prettify_output output
+	Reason: files being compared do not have identical contents
+
 Test testing-with-error (testing001): passed
 Test tuple-insertions-assertions (dotnet002): passed
 Test copy-infinite-recursion (dotnet003): passed
@@ -5236,8 +5331,8 @@ Test dotnet-polymorphism (dotnet110): failed
 Test dotnet-special-handling-crash (dotnet112): passed
 Test dotnet-static-access-on-deferred (dotnet115): passed
 
-Passed:  2166 / 2481  (88%)
-Failed:  286 / 2481  (12%)
-Manual:  23 / 2481  (1%)
-Skipped:  6 / 2481  (1%)
+Passed:  2213 / 2531  (88%)
+Failed:  289 / 2531  (12%)
+Manual:  24 / 2531  (1%)
+Skipped:  5 / 2531  (1%)
 

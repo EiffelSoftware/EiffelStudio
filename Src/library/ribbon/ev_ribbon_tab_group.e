@@ -68,7 +68,6 @@ feature -- Command
 			l_key: EV_PROPERTY_KEY
 			l_valie: EV_PROPERTY_VARIANT
 			l_command_id: NATURAL_32
-			l_resource: EV_RIBBON_RESOURCES
 		do
 			if not command_list.is_empty then
 				l_command_id := command_list.item (command_list.lower)

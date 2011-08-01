@@ -222,12 +222,28 @@ feature -- C code generation
 					buffer.put_string ("RTWCTT(")
 					buffer.put_static_type_id (qualifier_static_type_id)
 					buffer.put_string ({C_CONST}.comma_space)
-					buffer.put_integer (feature_id)
+					buffer.put_integer (real_feature_id)
 				end
 
 				buffer.put_string ({C_CONST}.comma_space)
 				qualifier_creation.generate_type_id (buffer, final_mode, a_level + 1)
 				buffer.put_character (')')
+			end
+		end
+
+	real_feature_id: INTEGER
+			-- Actual `feature_id' of the anchors.
+		do
+				-- When the base class of the qualified anchors is the same as the one we recorded
+				-- during creation of the anchor, we can use the stored `feature_id'.
+				-- Otherwise, we have to fetch it via the `routine_id'.
+				-- This fixes eweasel test#anchor042 and test#anchor051.
+			if not attached Context.real_type (qualifier).associated_class as l_class or else l_class.class_id = context.current_type.class_id then
+					-- Code is processed in the context where it is written
+				Result := feature_id
+			else
+					-- Code is processed in the context different from the one where it is written
+				Result := l_class.feature_of_rout_id (routine_id).feature_id
 			end
 		end
 
@@ -285,7 +301,7 @@ feature -- Byte code generation
 				ba.append (Bc_qlike)
 				qualifier_creation.make_byte_code (ba)
 				ba.append_type_id (qualifier_static_type_id)
-				ba.append_integer (feature_id)
+				ba.append_integer (real_feature_id)
 			end
 		end
 
@@ -383,7 +399,7 @@ feature -- Genericity
 					buffer.put_string ("RTWCTT(")
 					buffer.put_static_type_id (qualifier_static_type_id)
 					buffer.put_string ({C_CONST}.comma_space)
-					buffer.put_integer (feature_id)
+					buffer.put_integer (real_feature_id)
 				end
 				buffer.put_string ({C_CONST}.comma_space)
 				qualifier_creation.generate_type_id (buffer, final_mode, 0)
@@ -493,7 +509,7 @@ feature -- Genericity
 				ba.append_natural_16 ({SHARED_GEN_CONF_LEVEL}.qualified_feature_type)
 				qualifier.make_full_type_byte_code (ba, context.context_class_type.type)
 				ba.append_type_id (qualifier_static_type_id)
-				ba.append_integer (feature_id)
+				ba.append_integer (real_feature_id)
 			end
 		end
 
@@ -523,7 +539,7 @@ feature {NONE} -- Lookup
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

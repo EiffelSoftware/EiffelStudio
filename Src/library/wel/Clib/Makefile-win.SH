@@ -17,12 +17,12 @@ LINK = $link32
 DLL_FLAGS = $dll_flags
 DLL_LIBS = $dll_libs
 OBJECTS = disptchr.$obj enumfont.$obj enum_child_windows.$obj estream.$obj msgboxpa.$obj \
-		diskspace.$obj drawstate.$obj dynload.$obj choose_folder.$obj capture.$obj
+		diskspace.$obj drawstate.$obj dynload.$obj choose_folder.$obj capture.$obj user_validation.$obj
 MT_OBJECTS = MTdisptchr.$obj MTenumfont.$obj MTenum_child_windows.$obj MTestream.$obj MTmsgboxpa.$obj \
 		MTdiskspace.$obj MTdrawstate.$obj MTdynload.$obj MTchoose_folder.$obj MTcapture.$obj \
-		MTwel_thr_init.$obj
+		MTwel_thr_init.$obj MTuser_validation.$obj
 IL_OBJECTS = ILdisptchr.$obj ILenumfont.$obj ILenum_child_windows.$obj ILestream.$obj ILmsgboxpa.$obj \
-		ILdiskspace.$obj ILdrawstate.$obj ILdynload.$obj ILchoose_folder.$obj ILcapture.$obj
+		ILdiskspace.$obj ILdrawstate.$obj ILdynload.$obj ILchoose_folder.$obj ILcapture.$obj ILuser_validation.$obj
 
 
 .c.$obj:
@@ -94,6 +94,9 @@ MTcapture.$obj: capture.c
 MTwel_thr_init.$obj: wel_thr_init.c
 	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $?
 
+MTuser_validation.$obj: user_validation.c
+	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $?
+
 
 #.NET targets.
 ILnetwork.$obj: network.c
@@ -127,4 +130,7 @@ ILchoose_folder.$obj: choose_folder.c
 	$(CC) $(JILCFLAGS) $(OUTPUT_CMD)$@ -c $?
 
 ILcapture.$obj: capture.c
+	$(CC) $(JILCFLAGS) $(OUTPUT_CMD)$@ -c $?
+
+ILuser_validation.$obj: user_validation.c
 	$(CC) $(JILCFLAGS) $(OUTPUT_CMD)$@ -c $?

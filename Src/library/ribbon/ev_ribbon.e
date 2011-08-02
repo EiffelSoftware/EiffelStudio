@@ -140,6 +140,34 @@ feature -- Command
 			com_uninitialize
 		end
 
+	save_settings_to_file (a_file_name: READABLE_STRING_GENERAL)
+			-- Writes ribbon settings to a binary stream
+		local
+			l_f_stream: COM_ISTREAM
+			l_result: NATURAL_32
+		do
+			create l_f_stream
+			l_f_stream.create_istream_from_file (a_file_name)
+
+			l_result := c_save_settings_to_stream (item, l_f_stream.item)
+
+			check l_result = {EV_RIBBON_HRESULT}.s_ok end
+		end
+
+	load_settings_from_file (a_file_name: READABLE_STRING_GENERAL)
+			-- Load ribbon settings from a binary stream
+		local
+			l_f_stream: COM_ISTREAM
+			l_result: NATURAL_32
+		do
+			create l_f_stream
+			l_f_stream.create_istream_from_file (a_file_name)
+
+			l_result := c_load_settings_from_stream (item, l_f_stream.item)
+
+			check l_result = {EV_RIBBON_HRESULT}.s_ok end
+		end
+
 feature {EV_RIBBON_ITEM, EV_RIBBON_TEXTABLE, EV_RIBBON_TOOLTIPABLE, EV_RIBBON_APPLICATION_MENU_RECENT_ITEMS, EV_RIBBON_QUICK_ACCESS_TOOLBAR} -- Commands
 
 	get_command_property (a_command_id: NATURAL_32; a_key: EV_PROPERTY_KEY; a_variant: EV_PROPERTY_VARIANT)
@@ -503,6 +531,51 @@ feature {EV_RIBBON} -- Externals callbacks
 			--
 		external
 			"C use %"Uiribbon.h%""
+		end
+
+	c_load_settings_from_stream (a_framework: POINTER; a_i_stream: POINTER): NATURAL_32
+			-- Reads ribbon settings from a binary stream.
+		require
+			a_framework_exists: a_framework /= default_pointer
+			a_i_stream_exists: a_i_stream /= default_pointer
+		external
+			"C++ inline use %"eiffel_ribbon.h%""
+		alias
+			"{
+				HRESULT hr = S_OK;
+
+				IUIRibbon* pRibbon = NULL;
+				IStream* l_stream = (IStream *)$a_i_stream;					
+				if (SUCCEEDED(((IUIFramework *) $a_framework)->GetView(0, IID_IUIRIBBON, (void **) &pRibbon))) {
+					hr = pRibbon->LoadSettingsFromStream(l_stream);
+		
+					pRibbon->Release();
+					return hr;
+				}
+
+			}"
+		end
+
+	c_save_settings_to_stream (a_framework: POINTER; a_i_stream: POINTER): NATURAL_32
+			-- Writes ribbon settings to a binary stream.
+		require
+			a_framework_exists: a_framework /= default_pointer
+			a_i_stream_exists: a_i_stream /= default_pointer
+		external
+			"C++ inline use %"eiffel_ribbon.h%""
+		alias
+			"{
+				HRESULT hr = S_OK;
+
+				IUIRibbon* pRibbon = NULL;
+				IStream* l_stream = (IStream *)$a_i_stream;
+				if (SUCCEEDED(((IUIFramework *) $a_framework)->GetView(0, IID_IUIRIBBON, (void **) &pRibbon))) {
+					hr = pRibbon->SaveSettingsToStream(l_stream);			
+					pRibbon->Release();
+					return hr;
+				}
+
+			}"
 		end
 end
 

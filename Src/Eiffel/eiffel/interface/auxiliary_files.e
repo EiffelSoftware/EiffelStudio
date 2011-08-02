@@ -812,7 +812,7 @@ feature -- Plug and Makefile file
 			if scoop_manager_task_callback_name /= Void then
 				--| FIXME IEK: Function Pointer Signature cast should be C macro so that it only needs to be maintained in one place.
 				if final_mode then
-					buffer.put_string ("%Tegc_scoop_manager_task_callback = (void (*)(EIF_REFERENCE, EIF_NATURAL_8, EIF_INTEGER, EIF_INTEGER, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE)) ")
+					buffer.put_string ("%Tegc_scoop_manager_task_callback = (void (*)(EIF_REFERENCE, EIF_NATURAL_8, EIF_INTEGER, EIF_INTEGER, EIF_NATURAL, EIF_POINTER, EIF_POINTER)) ")
 				else
 					buffer.put_string ("%Tegc_scoop_manager_task_callback = (void (*)(EIF_REFERENCE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE)) ")
 				end

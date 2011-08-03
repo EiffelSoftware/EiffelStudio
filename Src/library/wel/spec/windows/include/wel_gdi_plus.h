@@ -36,7 +36,7 @@ typedef void GpSolidFill;
 typedef void GpPath;
 typedef GUID CLSID;
 typedef void  EncoderParameters;
-typedef int GpMatrixOrder;  
+typedef int GpMatrixOrder;
 
 typedef int PixelFormat;
 typedef unsigned short UINT16;

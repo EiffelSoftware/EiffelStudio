@@ -60,7 +60,7 @@ feature {NONE} --Implementation
 					-- Don't clear `label_title' after set, since Microsoft Ribbon framework maybe query it twice
 					-- If `a_property_new_value' not set, then it means empty string
 					-- label_title := void
-					Result := {EV_RIBBON_HRESULT}.s_ok
+					Result := {WEL_COM_HRESULT}.s_ok
 				end
 			end
 		end

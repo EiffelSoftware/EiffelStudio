@@ -42,7 +42,7 @@ feature -- Query
 		do
 			create Result.make_empty
 			l_result := c_get_value (item.item, a_property_key.item, Result.item)
-			check l_result = {EV_RIBBON_HRESULT}.s_ok end
+			check l_result = {WEL_COM_HRESULT}.s_ok end
 		end
 
 feature {EV_RIBBON_COLLECTION, EV_SIMPLE_PROPERTY_SET, EV_RIBBON_SAFE_ARRAY} -- Query

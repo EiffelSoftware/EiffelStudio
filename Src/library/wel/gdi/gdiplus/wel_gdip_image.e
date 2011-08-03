@@ -48,6 +48,19 @@ feature -- Command
 			load_image_from_file_original (a_file_name)
 		end
 
+	load_image_from_stream (a_stream: WEL_COM_ISTREAM)
+			-- Load image from `a_stream'
+		require
+			not_void: a_stream /= Void
+		local
+			l_result: INTEGER_32
+		do
+			item := c_gdip_load_image_from_stream (gdi_plus_handle, a_stream.item, $l_result)
+			if l_result /= {WEL_GDIP_STATUS}.ok then
+				(create {EXCEPTIONS}).raise ("Could not load image from stream.")
+			end
+		end
+
 	save_image_to_file (a_file_name: STRING)
 			-- Save data to a file.
 		require
@@ -100,6 +113,59 @@ feature -- Command
 			check not_void: l_encoder_info /= Void end
 			c_gdip_save_image_to_file (gdi_plus_handle, item, l_wel_string.item, l_encoder_info.cls_id.item, l_parameters, $l_result)
 			check ok: l_result = {WEL_GDIP_STATUS}.ok end
+		end
+
+	save_image_to_stream (a_stream: WEL_COM_ISTREAM)
+			-- Save data to a file.
+		require
+			not_void: a_stream /= Void
+		local
+			l_format: WEL_GDIP_IMAGE_ENCODER
+		do
+			l_format := format_for_save_file
+
+			save_image_to_stream_with_encoder (a_stream, l_format)
+		end
+
+	save_image_to_stream_with_parameters (a_stream: WEL_COM_ISTREAM; a_parameters: detachable WEL_GDIP_IMAGE_ENCODER_PARAMETERS)
+			-- Save data to a stream with `a_parameters' options
+		require
+			not_void: a_stream /= Void
+		local
+			l_format: WEL_GDIP_IMAGE_ENCODER
+		do
+			l_format := format_for_save_file
+
+			save_image_to_stream_with_encoder_and_parameters (a_stream, l_format, a_parameters)
+		end
+
+	save_image_to_stream_with_encoder (a_stream: WEL_COM_ISTREAM; a_format: WEL_GDIP_IMAGE_ENCODER)
+			-- Save data to a stream with image encoder parameter
+		require
+			not_void: a_stream /= Void
+			not_void: a_format /= Void
+		do
+			save_image_to_stream_with_encoder_and_parameters (a_stream, a_format, Void)
+		end
+
+	save_image_to_stream_with_encoder_and_parameters (a_stream: WEL_COM_ISTREAM; a_format: WEL_GDIP_IMAGE_ENCODER; a_parameters: detachable WEL_GDIP_IMAGE_ENCODER_PARAMETERS)
+			-- Save image to `a_stream'
+		require
+			not_void: a_stream /= Void
+			not_void: a_format /= Void
+		local
+			l_result: INTEGER
+			l_wel_string: WEL_STRING
+			l_parameters: POINTER
+			l_encoder_info: detachable WEL_GDIP_IMAGE_CODEC_INFO
+		do
+			if a_parameters /= Void then
+				l_parameters := a_parameters.item.item
+			end
+			l_encoder_info := a_format.find_encoder
+			check not_void: l_encoder_info /= Void end
+			c_gdip_save_image_to_stream (gdi_plus_handle, item, a_stream.item, l_encoder_info.cls_id.item, l_parameters, $l_result)
+			check l_result = {WEL_GDIP_STATUS}.ok end
 		end
 
 	clone_rectangle_pixel_format (a_rectangle: WEL_GDIP_RECT; a_format: INTEGER): WEL_GDIP_BITMAP
@@ -638,7 +704,7 @@ feature -- Obsolete
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

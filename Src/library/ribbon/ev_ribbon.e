@@ -127,7 +127,7 @@ feature -- Command
 			l_result: NATURAL_32
 		do
 			l_result := c_show_contextual_ui (a_point.x, a_point.y, item, a_command_id)
-			check success: l_result = {EV_RIBBON_HRESULT}.s_ok end
+			check success: l_result = {WEL_COM_HRESULT}.s_ok end
 		end
 
 	destroy
@@ -143,29 +143,27 @@ feature -- Command
 	save_settings_to_file (a_file_name: READABLE_STRING_GENERAL)
 			-- Writes ribbon settings to a binary stream
 		local
-			l_f_stream: COM_ISTREAM
+			l_f_stream: WEL_COM_ISTREAM
 			l_result: NATURAL_32
 		do
-			create l_f_stream
-			l_f_stream.create_istream_from_file (a_file_name)
+			create l_f_stream.create_istream_from_file (a_file_name)
 
 			l_result := c_save_settings_to_stream (item, l_f_stream.item)
 
-			check l_result = {EV_RIBBON_HRESULT}.s_ok end
+			check l_result = {WEL_COM_HRESULT}.s_ok end
 		end
 
 	load_settings_from_file (a_file_name: READABLE_STRING_GENERAL)
 			-- Load ribbon settings from a binary stream
 		local
-			l_f_stream: COM_ISTREAM
+			l_f_stream: WEL_COM_ISTREAM
 			l_result: NATURAL_32
 		do
-			create l_f_stream
-			l_f_stream.create_istream_from_file (a_file_name)
+			create l_f_stream.create_istream_from_file (a_file_name)
 
 			l_result := c_load_settings_from_stream (item, l_f_stream.item)
 
-			check l_result = {EV_RIBBON_HRESULT}.s_ok end
+			check l_result = {WEL_COM_HRESULT}.s_ok end
 		end
 
 feature {EV_RIBBON_ITEM, EV_RIBBON_TEXTABLE, EV_RIBBON_TOOLTIPABLE, EV_RIBBON_APPLICATION_MENU_RECENT_ITEMS, EV_RIBBON_QUICK_ACCESS_TOOLBAR} -- Commands
@@ -453,13 +451,13 @@ feature {EV_RIBBON} -- Externals callbacks
 					l_list.forth
 				end
 			end
-			Result := {EV_RIBBON_HRESULT}.s_ok;--HRESULT S_OK, must return S_OK, otherwise IUICommandHandler.updateProperty and execute will not be called
+			Result := {WEL_COM_HRESULT}.s_ok;--HRESULT S_OK, must return S_OK, otherwise IUICommandHandler.updateProperty and execute will not be called
 		end
 
 	on_view_changed (a_iui_application: POINTER; a_view_id: NATURAL_32; a_type_id: INTEGER; a_view: POINTER; a_verb, a_reason_code: INTEGER): NATURAL_32
 			--
 		do
-			Result := {EV_RIBBON_HRESULT}.e_notimpl
+			Result := {WEL_COM_HRESULT}.e_not_impl
 			if a_type_id = {EV_VIEW_TYPE}.ribbon then
 				inspect a_verb
 				when {EV_VIEW_VERB}.create_ then
@@ -475,7 +473,7 @@ feature {EV_RIBBON} -- Externals callbacks
 
 				end
 
-				Result := {EV_RIBBON_HRESULT}.s_ok
+				Result := {WEL_COM_HRESULT}.s_ok
 			end
 		end
 

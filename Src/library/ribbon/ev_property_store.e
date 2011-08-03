@@ -32,7 +32,7 @@ feature -- Query
 			l_h_result: NATURAL_32
 		do
 			l_h_result := c_get_count (pointer.item, $Result)
-			check l_h_result = {EV_RIBBON_HRESULT}.s_ok end
+			check l_h_result = {WEL_COM_HRESULT}.s_ok end
 		end
 
 	value (a_property_key: EV_PROPERTY_KEY): EV_PROPERTY_VARIANT
@@ -44,7 +44,7 @@ feature -- Query
 		do
 			create Result.make_empty
 			l_h_result := c_get_value (pointer.item, a_property_key.item, Result.item)
-			check l_h_result = {EV_RIBBON_HRESULT}.s_ok end
+			check l_h_result = {WEL_COM_HRESULT}.s_ok end
 		end
 
 	key_at (a_index: NATURAL_32): EV_PROPERTY_KEY
@@ -54,7 +54,7 @@ feature -- Query
 		do
 			create Result.make_emtpy
 			l_h_result := c_get_at (pointer.item, a_index, Result.item)
-			check l_h_result = {EV_RIBBON_HRESULT}.s_ok end
+			check l_h_result = {WEL_COM_HRESULT}.s_ok end
 		end
 
 feature -- Command
@@ -65,7 +65,7 @@ feature -- Command
 			l_h_result: NATURAL_32
 		do
 			l_h_result := c_commit (pointer.item)
-			check l_h_result = {EV_RIBBON_HRESULT}.s_ok end
+			check l_h_result = {WEL_COM_HRESULT}.s_ok end
 		end
 
 	set_value (a_key: EV_PROPERTY_KEY; a_value: EV_PROPERTY_VARIANT)
@@ -74,7 +74,7 @@ feature -- Command
 			l_h_result: NATURAL_32
 		do
 			l_h_result := c_set_value (pointer.item, a_key.item, a_value.item)
-			check l_h_result = {EV_RIBBON_HRESULT}.s_ok end
+			check l_h_result = {WEL_COM_HRESULT}.s_ok end
 		end
 
 feature {NONE} -- C externals

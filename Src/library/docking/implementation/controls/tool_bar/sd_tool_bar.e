@@ -20,7 +20,8 @@ inherit
 		rename
 			has_capture as has_capture_vision2,
 			enable_capture as enable_capture_vision2,
-			disable_capture as disable_capture_vision2
+			disable_capture as disable_capture_vision2,
+			clear_and_redraw as refresh
 		export
 			{NONE} all
 			{ANY} width, height, minimum_width, minimum_height,
@@ -29,7 +30,7 @@ inherit
 					pointer_motion_actions, pointer_button_release_actions,
 					x_position, y_position, destroy, out,
 					set_minimum_width, set_minimum_height, is_destroyed,
-					object_id, is_sensitive
+					object_id, is_sensitive, refresh
 			{SD_TOOL_BAR_DRAWER_I, SD_TOOL_BAR_ZONE, SD_GENERIC_TOOL_BAR} implementation, draw_pixmap, clear_rectangle
 			{SD_TOOL_BAR_ITEM, SD_GENERIC_TOOL_BAR} tooltip, set_tooltip, remove_tooltip, font
 			{SD_TOOL_BAR_DRAGGING_AGENTS, SD_TOOL_BAR_DOCKER_MEDIATOR, SD_GENERIC_TOOL_BAR, SD_TOOL_BAR_ITEM} set_pointer_style
@@ -260,7 +261,7 @@ feature -- Command
 			Precursor (a_color)
 
 			if l_old_background /= void and then not l_old_background.is_equal (background_color) then
-				clear_and_redraw
+				refresh
 			end
 		end
 
@@ -979,7 +980,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

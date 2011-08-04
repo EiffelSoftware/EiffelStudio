@@ -405,6 +405,13 @@ feature -- Element Change
 					buffer.put_string (typed_field)
 					buffer.put_character (';')
 					buffer.put_new_line
+					buffer.put_string ("RTAR(")
+					buffer.put_string ({C_CONST}.current_name)
+					buffer.put_two_character (',', ' ')
+					buffer.put_character ('r')
+					buffer.put_string (typed_field)
+					buffer.put_two_character (')', ';')
+					buffer.put_new_line
 					buffer.put_string ("RTLE;")
 					if create_info /= Void then
 						buffer.generate_block_close

@@ -61,6 +61,31 @@ feature -- Command
 			end
 		end
 
+	load_image_from_raw_file (a_file: RAW_FILE)
+			-- Load image from `a_file'
+		require
+			not_void: a_file /= Void
+			ready_for_read: a_file.is_open_read
+		local
+			l_pointer: MANAGED_POINTER
+		do
+			create l_pointer.make (a_file.count)
+			a_file.read_to_managed_pointer (l_pointer, 0, a_file.count)
+			load_image_from_memory (l_pointer.item, l_pointer.count.as_natural_32)
+		end
+
+	load_image_from_memory (a_pointer: POINTER; a_byte_counts: NATURAL_32)
+			-- Load image from `a_pointer'
+		require
+			valid: a_pointer /= default_pointer
+		local
+			l_stream: WEL_COM_ISTREAM
+		do
+			create l_stream.create_istream_from_memory (a_pointer, a_byte_counts)
+
+			load_image_from_stream (l_stream)
+		end
+
 	save_image_to_file (a_file_name: STRING)
 			-- Save data to a file.
 		require
@@ -155,7 +180,6 @@ feature -- Command
 			not_void: a_format /= Void
 		local
 			l_result: INTEGER
-			l_wel_string: WEL_STRING
 			l_parameters: POINTER
 			l_encoder_info: detachable WEL_GDIP_IMAGE_CODEC_INFO
 		do

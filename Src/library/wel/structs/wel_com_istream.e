@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 	create_istream_from_file (a_file_name: READABLE_STRING_GENERAL)
 			-- Opens or creates a file and retrieves a stream to read or write to that file.
 		require
-			not_void: a_file_name /= void
+			not_void: a_file_name /= Void
 		local
 			l_string: WEL_STRING
 			l_result: POINTER
@@ -55,7 +55,6 @@ feature -- Query
 		require
 			valid: item /= default_pointer
 		local
-			l_stat_stg: POINTER
 			l_result: NATURAL_32
 		do
 			create Result.make_empty

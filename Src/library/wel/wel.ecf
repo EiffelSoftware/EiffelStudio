@@ -33,6 +33,11 @@
 				<dotnet value="true"/>
 			</condition>
 		</external_object>
+		<external_object location="Shlwapi.lib">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</external_object>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
 		<assembly name="drawing" location="$ISE_DOTNET_FRAMEWORK\System.Drawing.dll" prefix="DRAWING_"/>
 		<assembly name="eiffelsoftware_runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\EiffelSoftware.Runtime.dll"/>

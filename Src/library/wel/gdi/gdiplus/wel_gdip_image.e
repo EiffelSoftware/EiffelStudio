@@ -192,6 +192,40 @@ feature -- Command
 			check l_result = {WEL_GDIP_STATUS}.ok end
 		end
 
+	save_image_to_memory: MANAGED_POINTER
+			-- Save image data to result pointer
+		local
+			l_stream: WEL_COM_ISTREAM
+			l_pointer: POINTER
+			l_size: NATURAL_64
+		do
+			-- IStream will alloc memory itself when passing default_pointer
+			create l_stream.create_istream_from_memory (l_pointer, 0)
+			save_image_to_stream (l_stream)
+
+			l_size := l_stream.stat.cb_size
+
+			if l_size > 0 then
+				Result := l_stream.read_all
+			else
+				check nothing_in_stream: False end
+				create Result.make (0)
+			end
+		end
+
+	save_image_to_raw_file (a_file: RAW_FILE)
+			-- Write image data to `a_file'
+		require
+			not_void: a_file /= Void
+			valid: a_file.is_open_write
+		local
+			l_memory: MANAGED_POINTER
+		do
+			l_memory := save_image_to_memory
+			a_file.start
+			a_file.put_managed_pointer (l_memory, 0, l_memory.count)
+		end
+
 	clone_rectangle_pixel_format (a_rectangle: WEL_GDIP_RECT; a_format: INTEGER): WEL_GDIP_BITMAP
 			-- Close Current with option `a_rectangle' and `a_format'
 		require

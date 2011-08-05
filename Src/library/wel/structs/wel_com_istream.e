@@ -50,7 +50,70 @@ feature -- Query
 	item: POINTER
 			-- IStream object
 
+	stat: WEL_STAT_STG
+			-- The Stat method retrieves the STATSTG structure for this stream.
+		require
+			valid: item /= default_pointer
+		local
+			l_stat_stg: POINTER
+			l_result: NATURAL_32
+		do
+			create Result.make_empty
+			l_result := c_stat (item, Result.item.item)
+			check l_result = {WEL_COM_HRESULT}.s_ok end
+		end
+
 feature -- Command
+
+	commit
+			-- The Commit method ensures that any changes made to a stream object open in transacted mode are reflected
+			-- in the parent storage.
+		local
+			l_result: NATURAL_32
+		do
+			if item /= default_pointer then
+				l_result := c_commit (item)
+				check l_result = {WEL_COM_HRESULT}.s_ok end
+			end
+		end
+
+	set_size (a_new_size: NATURAL_64)
+			-- The SetSize method changes the size of the stream object.
+		local
+			l_result: NATURAL_32
+		do
+			if item /= default_pointer then
+				l_result := c_set_size (item, a_new_size)
+				check l_result = {WEL_COM_HRESULT}.s_ok end
+			end
+		end
+
+	read_all: MANAGED_POINTER
+			-- Reads all bytes from a specified stream to result pointer
+		local
+			l_bytes_count: NATURAL_64
+			l_com_result: NATURAL_32
+		do
+			l_bytes_count := stat.cb_size
+			check not_too_big: l_bytes_count <= {INTEGER_32}.max_value.as_natural_64 end
+			create Result.make (l_bytes_count.as_integer_32)
+
+			seek_from_beginning (0)
+			l_com_result := c_istream_read (item, Result.item, l_bytes_count.as_natural_32)
+			check l_com_result = {WEL_COM_HRESULT}.s_ok end
+		end
+
+	seek_from_beginning (a_position: INTEGER_64)
+			-- The Seek method changes the seek pointer to a new location.
+		local
+			l_new_position: NATURAL_64
+			l_result: NATURAL_32
+		do
+			if item /= default_pointer then
+				l_result := c_seek (item, a_position, stream_seek_set, $l_new_position)
+				check l_result = {WEL_COM_HRESULT}.s_ok end
+			end
+		end
 
 	dispose
 			-- <Precursor>
@@ -131,12 +194,129 @@ feature {NONE} -- Implementation
 			]"
 		end
 
-	c_copy_to
+-- FIXME: OK to convert NATURAL_64 with C union ULARGE_INTEGER.QuadPart?
+	c_copy_to (a_item: POINTER; a_stream: POINTER; a_bytes_count: NATURAL_64; a_actual_read, a_actual_write: TYPED_POINTER [NATURAL_64]): NATURAL_32
 			-- The CopyTo method copies a specified number of bytes from the current seek pointer in the stream to
 			-- the current seek pointer in another stream.
-		do
-
+			-- `a_bytes_count' The number of bytes to copy from the source stream.
+		external
+			"C++ inline use <Objidl.h>"
+		alias
+			"[
+			{
+				HRESULT l_result;
+				IStream *l_item = (IStream *)$a_stream;
+				ULARGE_INTEGER l_cb;
+				l_cb.QuadPart = (ULONGLONG) $a_bytes_count;
+				ULARGE_INTEGER l_pcbRead; 
+				ULARGE_INTEGER l_pcbWritten;
+				
+				l_result = l_item->CopyTo((IStream *)l_item, l_cb, &l_pcbRead, &l_pcbWritten);
+				
+				*((ULONGLONG *)$a_actual_read) = l_pcbRead.QuadPart;
+				*((ULONGLONG *)$a_actual_write) = l_pcbWritten.QuadPart;
+				
+				return l_result;
+			}
+			]"
 		end
+
+	c_set_size (a_item: POINTER; a_size: NATURAL_64): NATURAL_32
+			-- The SetSize method changes the size of the stream object.
+		external
+			"C++ inline use <Objidl.h>"
+		alias
+			"[
+			{
+				IStream *l_item = (IStream *)$a_item;
+				ULARGE_INTEGER libNewSize;
+				libNewSize.QuadPart = (ULONGLONG) $a_size;
+				
+				return l_item->SetSize(libNewSize);
+			}
+			]"
+		end
+
+	c_stat (a_item: POINTER; a_result: POINTER): NATURAL_32
+			-- The Stat method retrieves the STATSTG structure for this stream.
+		external
+			"C++ inline use <Objidl.h>"
+		alias
+			"[
+			{
+				HRESULT l_result;
+				IStream *l_item = (IStream *)$a_item;
+				STATSTG *l_pstatstg = (STATSTG *)$a_result;
+
+				return l_item->Stat(l_pstatstg, STATFLAG_DEFAULT);
+			}
+			]"
+		end
+
+	c_istream_read (a_item: POINTER; a_pointer_to_write: POINTER; a_cb: NATURAL_32): NATURAL_32
+			-- Reads bytes from a specified stream and returns a value that indicates whether all bytes were successfully read.
+			-- `a_pointer_to_write' A pointer to a buffer to receive the stream data from pstm. This buffer must be at least cb bytes in size.
+			-- `a_cb' The number of bytes of data that the function should attempt to read from the input stream.
+		external
+			"C++ inline use <Objidl.h>"
+		alias
+			"[
+			{
+				HRESULT l_result;
+				IStream *l_item = (IStream *)$a_item;
+				VOID *l_pointer_to_write = (VOID *)$a_pointer_to_write;
+				ULONG l_cb = (ULONG)$a_cb;
+
+				return IStream_Read (l_item, l_pointer_to_write, l_cb);
+			}
+			]"
+		end
+
+	c_istream_write
+			--
+		do
+			check not_implemented: False end
+		end
+
+	c_seek (a_item: POINTER; a_dlib_move: INTEGER_64; a_dw_origin: NATURAL_32; a_plib_new_position: TYPED_POINTER [NATURAL_64]): NATURAL_32
+			-- The Seek method changes the seek pointer to a new location.
+			-- The new location is relative to either the beginning of the stream,
+			-- the end of the stream, or the current seek pointer.
+		external
+			"C++ inline use <Objidl.h>"
+		alias
+			"[
+			{
+				IStream *l_item = (IStream *)$a_item;
+				DWORD l_dwOrigin = (DWORD)$a_dw_origin;
+				LARGE_INTEGER l_dlibMove;
+				HRESULT l_result;
+				ULARGE_INTEGER l_plibNewPosition;
+				
+				l_dlibMove.QuadPart = (LONGLONG)$a_dlib_move;
+				
+				l_result = l_item->Seek (l_dlibMove, l_dwOrigin, &l_plibNewPosition);
+				
+				*((ULONGLONG *)($a_plib_new_position)) = l_plibNewPosition.QuadPart;
+				
+				return l_result;
+			}
+			]"
+		end
+
+feature -- STREAM_SEEK Enumeration
+
+	stream_seek_set: NATURAL_32 = 0
+			-- The new seek pointer is an offset relative to the beginning of the stream. In this case,
+			-- the dlibMove parameter is the new seek position relative to the beginning of the stream.
+
+	stream_seek_cur: NATURAL_32 = 1
+			-- The new seek pointer is an offset relative to the current seek pointer location. In this
+			-- case, the dlibMove parameter is the signed displacement from the current seek position.
+
+	stream_seek_end: NATURAL_32 = 2
+			-- The new seek pointer is an offset relative to the end of the stream. In this case, the
+			-- dlibMove parameter is the new seek position relative to the end of the stream.
 
 note
 	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"

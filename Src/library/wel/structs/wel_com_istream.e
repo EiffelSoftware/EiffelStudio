@@ -140,11 +140,26 @@ feature {NONE} -- Implementation
 	c_sh_create_mem_stream (a_const_byte: POINTER; a_size: NATURAL_32): POINTER
 			-- Creates a memory stream using a similar process to CreateStreamOnHGlobal, but with less functionality.
 		external
-			"C++ inline use <Shlwapi.h>"
+			"C++ inline use <windows.h>"
 		alias
 			"[
 			{
-				return SHCreateMemStream ((const BYTE *)$a_const_byte, (UINT)$a_size);
+				typedef IStream* (__stdcall *tSHCreateMemStream)(const BYTE *, UINT);
+
+				HMODULE hShlWapi = LoadLibrary(L"shlwapi.dll");
+
+				if (hShlWapi != NULL) {
+
+						tSHCreateMemStream pSHCreateMemStream = (tSHCreateMemStream) GetProcAddress(hShlWapi, "SHCreateMemStream");
+
+						if (pSHCreateMemStream == NULL) {
+							tSHCreateMemStream pSHCreateMemStream = (tSHCreateMemStream) GetProcAddress(hShlWapi, (LPCSTR) 12);
+						}
+
+						if (pSHCreateMemStream != NULL) {
+							return pSHCreateMemStream ((const BYTE *)$a_const_byte, (UINT)$a_size);
+						}
+				}
 			}
 			]"
 		end

@@ -898,19 +898,11 @@ feature -- Status setting
 	close
 			-- Close file.
 		do
-			if attached internal_sread as l_sread then
-				l_sread.close
-			end
-			if attached internal_swrite as l_swrite then
-				l_swrite.close
-			end
 			if attached internal_stream as l_stream then
 				l_stream.close
 			end
 			mode := Closed_file
 			descriptor_available := False
-			internal_sread := Void
-			internal_swrite := Void
 			internal_end_of_file := False
 		ensure then
 			is_closed: is_closed
@@ -1128,21 +1120,18 @@ feature -- Element change
 		local
 			i: INTEGER
 			l_count: INTEGER
-			str_area: NATIVE_ARRAY [NATURAL_8]
 		do
 			l_count := s.count
-			if l_count /= 0 then
-				create str_area.make (l_count)
-				from
-					i := 1
-				until
-					i > l_count
-				loop
-					str_area.put (i-1, s.item (i).code.to_natural_8)
-					i := i + 1
-				end
-				if attached internal_stream as l_stream then
-					l_stream.write (str_area, 0, l_count)
+			if l_count > 0 then
+				check attached internal_stream as l_stream then
+					from
+						i := 1
+					until
+						i > l_count
+					loop
+						l_stream.write_byte (s.item (i).code.to_natural_8)
+						i := i + 1
+					end
 				end
 			end
 		end
@@ -1698,12 +1687,6 @@ feature {NONE} -- Implementation
 			nb_char_read_small_enough: Result <= nb
 			character_read: not end_of_file implies Result > 0
 		end
-
-	internal_sread: detachable STREAM_READER
-			-- Stream reader used to read in `Current' (if any).
-
-	internal_swrite: detachable STREAM_WRITER
-			-- Stream writer used to write in `Current' (if any).
 
 	true_string: STRING
 			-- Character string "true"

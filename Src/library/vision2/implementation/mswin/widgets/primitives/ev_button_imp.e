@@ -694,7 +694,7 @@ feature {EV_ANY_I} -- Drawing implementation
 					check
 						color_imp_not_void: color_imp /= Void
 					end
-					l_disabled_image.draw_grayscale_bitmap_or_icon_with_memory_buffer (wel_bitmap, l_icon, dc, coordinate.x, coordinate.y, color_imp, internal_pixmap_state.has_mask)
+					l_disabled_image.draw_grayscale_bitmap_or_icon_with_memory_buffer (wel_bitmap, l_icon, memory_dc, coordinate.x, coordinate.y, color_imp, internal_pixmap_state.has_mask)
 					l_icon.dispose
 				else
 					theme_drawer.draw_bitmap_on_dc (memory_dc, wel_bitmap, mask_bitmap, coordinate.x, coordinate.y, is_sensitive)

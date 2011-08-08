@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 		require
 			valid: a_pointer /= default_pointer
 		do
-			item := c_sh_create_mem_stream (a_pointer, a_size)
+			item := c_sh_create_mem_stream (shlwapi_handle, a_pointer, a_size)
 			check success: item /= default_pointer end
 		end
 
@@ -124,6 +124,25 @@ feature -- Command
 
 feature {NONE} -- Implementation
 
+	shlwapi_handle: POINTER
+			--
+		local
+			l_dll: detachable WEL_DLL
+		do
+			l_dll := shlwapi_dll
+			if l_dll = Void then
+				create l_dll.make ("shlwapi.dll")
+				shlwapi_dll := l_dll
+			end
+
+			Result := l_dll.item
+		end
+
+	shlwapi_dll: detachable WEL_DLL
+			-- DLL helper for `shalwapi.dll'
+
+feature {NONE} -- Externals
+
 	c_sh_create_stream_on_file (a_wchar_file_name: POINTER; a_result_istream: TYPED_POINTER[POINTER]): NATURAL_32
 			-- Opens or creates a file and retrieves a stream to read or write to that file.
 		external
@@ -137,7 +156,7 @@ feature {NONE} -- Implementation
 			]"
 		end
 
-	c_sh_create_mem_stream (a_const_byte: POINTER; a_size: NATURAL_32): POINTER
+	c_sh_create_mem_stream (a_shlwpai_handle: POINTER; a_const_byte: POINTER; a_size: NATURAL_32): POINTER
 			-- Creates a memory stream using a similar process to CreateStreamOnHGlobal, but with less functionality.
 		external
 			"C++ inline use <windows.h>"
@@ -145,15 +164,17 @@ feature {NONE} -- Implementation
 			"[
 			{
 				typedef IStream* (__stdcall *tSHCreateMemStream)(const BYTE *, UINT);
-
-				HMODULE hShlWapi = LoadLibrary(L"shlwapi.dll");
+				static tSHCreateMemStream pSHCreateMemStream;
+				HMODULE hShlWapi = (HMODULE)$a_shlwpai_handle;
 
 				if (hShlWapi != NULL) {
-
-						tSHCreateMemStream pSHCreateMemStream = (tSHCreateMemStream) GetProcAddress(hShlWapi, "SHCreateMemStream");
-
+						
 						if (pSHCreateMemStream == NULL) {
-							tSHCreateMemStream pSHCreateMemStream = (tSHCreateMemStream) GetProcAddress(hShlWapi, (LPCSTR) 12);
+							pSHCreateMemStream = (tSHCreateMemStream) GetProcAddress(hShlWapi, "SHCreateMemStream");
+						}
+						
+						if (pSHCreateMemStream == NULL) {
+							pSHCreateMemStream = (tSHCreateMemStream) GetProcAddress(hShlWapi, (LPCSTR) 12);
 						}
 
 						if (pSHCreateMemStream != NULL) {

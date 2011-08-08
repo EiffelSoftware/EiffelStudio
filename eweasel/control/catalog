@@ -990,6 +990,7 @@ test 	create-qualified-explicit-crash		incr412 tcf fail incrementality anchored_
 test 	adding-removing-transient			incr413 tcf fail incrementality transient
 test 	removing-descendant-crash	incr414 tcf fail incrementality
 test 	system-change-crash			incr415 tcf fail incrementality
+test 	recompilation-forces-freeze	incr416 tcf fail incrementality
 
 
 -- Melting

@@ -1,0 +1,28 @@
+test_name	recompilation-forces-freeze
+test_description A system that has an external involving an implicit conversion causes a freeze even if no changes occurred.
+
+define STRING_OUTPUT	"1"
+copy_sub 	Ace $TEST Ace
+copy_sub 	test.e $CLUSTER test.e
+
+compile_frozen
+compile_result 	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work	NONE exec_output_1
+execute_result	ok
+compare	exec_output_1 output1
+
+define STRING_OUTPUT "2"
+copy_sub 	test.e $CLUSTER test.e
+
+compile_melted
+compile_result 	ok
+
+execute_work	NONE exec_output_2
+execute_result	ok
+compare	exec_output_2 output2
+
+test_end

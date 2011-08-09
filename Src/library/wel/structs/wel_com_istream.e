@@ -301,9 +301,13 @@ feature {NONE} -- Externals
 				IStream *l_item = (IStream *)$a_item;
 				VOID *l_pointer_to_write = (VOID *)$a_pointer_to_write;
 				ULONG l_cb = (ULONG)$a_cb;
-				ULONG *l_pcbRead = (ULONG *)$a_actual_read;
+				ULONG l_pcbRead;
+				HRESULT l_result;
 
-				return l_item->Read (l_pointer_to_write, l_cb, l_pcbRead);
+				l_result = l_item->Read (l_pointer_to_write, l_cb, &l_pcbRead);
+				*((ULONG *)$a_actual_read) = l_pcbRead;
+
+				return l_result;
 			}
 			]"
 		end

@@ -58,7 +58,7 @@ feature {LOG_LOGGING_FACILITY} -- Initialization
 		end
 
 feature -- Access
-	
+
 	set_file_name (a_file_name: FILE_NAME)
 			-- Set the file name of the log file to `a_file_name'
 		require
@@ -83,17 +83,17 @@ feature {LOG_LOGGING_FACILITY} -- Output
 	write (priority: INTEGER; msg: STRING)
 			-- Write `msg' under `priority' to the `log_file' also noting the
 			-- current date and time, and adding a newline character if needed
-		local
-			l_has_newline: BOOLEAN
 		do
 			date_time.make_now_utc
-			l_has_newline := (msg.index_of ('%N', 1) = msg.count)
-			if not l_has_newline then
-				log_file.putstring (date_time.out + " - " + priority_tag (priority) +
-					" - " + msg + "%N")
-			else
-				log_file.putstring (date_time.out + " - " + priority_tag (priority) +
-					" - " + msg)
+
+			log_file.put_string (date_time.out)
+			log_file.put_string (space_dash_space)
+			log_file.put_string (priority_tag (priority))
+			log_file.put_string (space_dash_space)
+			log_file.put_string (msg)
+			if msg [msg.count] /= '%N' then
+					-- Append a new line if not present.
+				log_file.put_character ('%N')
 			end
 			log_file.flush
 		end
@@ -110,6 +110,11 @@ feature {NONE} -- Attributes
 		once
 			create Result.make_now_utc
 		end
+
+feature {NONE} -- Constants
+
+	space_dash_space: STRING = " - "
+		-- " - " constant for writing log data.
 
 note
 	copyright:	"Copyright (C) 2010 by ITPassion Ltd, Eiffel Software and others"

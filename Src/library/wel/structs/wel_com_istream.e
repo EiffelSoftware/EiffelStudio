@@ -305,7 +305,7 @@ feature {NONE} -- Externals
 				HRESULT l_result;
 
 				l_result = l_item->Read (l_pointer_to_write, l_cb, &l_pcbRead);
-				*((ULONG *)$a_actual_read) = l_pcbRead;
+				*((EIF_NATURAL_32 *)$a_actual_read) = (EIF_NATURAL_32)l_pcbRead;
 
 				return l_result;
 			}

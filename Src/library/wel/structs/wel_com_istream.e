@@ -92,14 +92,16 @@ feature -- Command
 		local
 			l_bytes_count: NATURAL_64
 			l_com_result: NATURAL_32
+			l_acutal_read: NATURAL_32
 		do
 			l_bytes_count := stat.cb_size
 			check not_too_big: l_bytes_count <= {INTEGER_32}.max_value.as_natural_64 end
 			create Result.make (l_bytes_count.as_integer_32)
 
 			seek_from_beginning (0)
-			l_com_result := c_istream_read (item, Result.item, l_bytes_count.as_natural_32)
+			l_com_result := c_read (item, Result.item, l_bytes_count.as_natural_32, $l_acutal_read)
 			check l_com_result = {WEL_COM_HRESULT}.s_ok end
+			check l_acutal_read = l_bytes_count.as_natural_32 end
 		end
 
 	seek_from_beginning (a_position: INTEGER_64)
@@ -288,21 +290,20 @@ feature {NONE} -- Externals
 			]"
 		end
 
-	c_istream_read (a_item: POINTER; a_pointer_to_write: POINTER; a_cb: NATURAL_32): NATURAL_32
-			-- Reads bytes from a specified stream and returns a value that indicates whether all bytes were successfully read.
-			-- `a_pointer_to_write' A pointer to a buffer to receive the stream data from pstm. This buffer must be at least cb bytes in size.
-			-- `a_cb' The number of bytes of data that the function should attempt to read from the input stream.
+	c_read (a_item: POINTER; a_pointer_to_write: POINTER; a_cb: NATURAL_32; a_actual_read: TYPED_POINTER [NATURAL_32]): NATURAL_32
+			-- The Read method reads a specified number of bytes from the stream
+			-- object into memory, starting at the current seek pointer.
 		external
 			"C++ inline use <Objidl.h>"
 		alias
 			"[
 			{
-				HRESULT l_result;
 				IStream *l_item = (IStream *)$a_item;
 				VOID *l_pointer_to_write = (VOID *)$a_pointer_to_write;
 				ULONG l_cb = (ULONG)$a_cb;
+				ULONG *l_pcbRead = (ULONG *)$a_actual_read;
 
-				return IStream_Read (l_item, l_pointer_to_write, l_cb);
+				return l_item->Read (l_pointer_to_write, l_cb, l_pcbRead);
 			}
 			]"
 		end

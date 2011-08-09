@@ -318,8 +318,6 @@ feature {NONE} -- Query
 				l_window.height)
 		ensure
 			result_attached: Result /= Void
-			result_x_non_negative: Result.x >= 0
-			result_y_non_negative: Result.y >= 0
 		end
 
 feature -- Basic operations
@@ -811,7 +809,7 @@ invariant
 	border_widget_attached: has_border implies border_widget /= Void
 
 ;note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

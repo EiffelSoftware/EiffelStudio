@@ -131,11 +131,14 @@ feature -- Initialization
 	make
 			-- Initialize `Current'.
 		do
-			wel_make (default_parent, "", 0, 0, 0, 0, 0)
-			align_text_center
+			wel_make (default_parent, once "", 0, 0, 0, 0, 0)
 			set_default_font
 			disable_tabable_from
 			disable_tabable_to
+
+			text_alignment := {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_center
+			vertical_text_alignment := ev_text_alignment_vertical_center
+
 			Precursor {EV_PRIMITIVE_IMP}
 		end
 
@@ -175,32 +178,33 @@ feature -- Element change
 	set_text (a_text: READABLE_STRING_GENERAL)
 			-- Assign `a_text' to `text'.
 		do
-			if not text.same_string_general (a_text) then
-				if a_text.is_empty then
+			if attached internal_text as l_text implies not l_text.same_string_general (a_text) then
+				if a_text.count = 0 then
 					set_default_minimum_size
 				else
 					accomodate_text (a_text)
 				end
 				Precursor {EV_TEXT_ALIGNABLE_IMP} (a_text)
-				invalidate
+				if is_displayed then
+					invalidate
+				end
 			end
 		end
 
 	set_font (ft: EV_FONT)
 			-- Make `ft' new font of `Current'.
-		local
-			l_text: like text
 		do
 				-- Optimization, instead of computing the `private_font' in `internal_font'
 				-- we go directly and let the precursor version do it for us. This saves
 				-- a comparison and a useless creation of `private_font'.
 			if private_font = Void or else not internal_font.is_equal (ft) then
 				Precursor {EV_FONTABLE_IMP} (ft)
-				l_text := text
-				if not l_text.is_empty then
-					accomodate_text (l_text)
+				if text_length > 0 then
+					accomodate_text (text)
 				end
-				invalidate
+				if is_displayed then
+					invalidate
+				end
 			end
 		end
 
@@ -210,29 +214,70 @@ feature -- Status setting
 			-- Set text alignment of current label to center.
 		do
 			Precursor {EV_TEXT_ALIGNABLE_IMP}
-			invalidate
+			if is_displayed then
+				invalidate
+			end
 		end
 
 	align_text_right
 			-- Set text alignment of current label to right.
 		do
 			Precursor {EV_TEXT_ALIGNABLE_IMP}
-			invalidate
+			if is_displayed then
+				invalidate
+			end
 		end
 
 	align_text_left
 			-- Set text alignment of current label to left.
 		do
 			Precursor {EV_TEXT_ALIGNABLE_IMP}
-			invalidate
+			if is_displayed then
+				invalidate
+			end
 		end
+
+	align_text_top
+			-- Set vertical text alignment of current label to top.
+		do
+			vertical_text_alignment := ev_text_alignment_top
+			if is_displayed then
+				invalidate
+			end
+		end
+
+	align_text_vertical_center
+			-- Set text alignment of current label to be in the center vertically.
+		do
+			vertical_text_alignment := ev_text_alignment_vertical_center
+			if is_displayed then
+				invalidate
+			end
+		end
+
+	align_text_bottom
+			-- Set vertical text alignment of current label to bottom.
+		do
+			vertical_text_alignment := ev_text_alignment_bottom
+			if is_displayed then
+				invalidate
+			end
+		end
+
+	vertical_text_alignment: INTEGER
+		-- Current vertical alignment of `Current' be it top, center or bottom.
+
+	ev_text_alignment_top: INTEGER = 1
+	ev_text_alignment_vertical_center: INTEGER = 0
+	ev_text_alignment_bottom: INTEGER = 2
+		-- Vertical Text Alignment Constants.
 
 feature {EV_ANY_I} -- Initialization
 
 	set_default_minimum_size
 			-- Resize to a default size.
 		do
-			accomodate_text (" ")
+			accomodate_text (once " ")
 		end
 
 	accomodate_text (a_text: READABLE_STRING_GENERAL)
@@ -288,6 +333,7 @@ feature {EV_CONTAINER_IMP} -- WEL Implementation
 			l_color_imp: detachable EV_COLOR_IMP
 			l_bitmap: WEL_BITMAP
 			l_is_remote: BOOLEAN
+			l_is_singleline: BOOLEAN
 		do
 			l_wel_color := wel_background_color
 			create l_bk_brush.make_solid (l_wel_color)
@@ -298,6 +344,10 @@ feature {EV_CONTAINER_IMP} -- WEL Implementation
 
 			if attached internal_text as l_internal_text then
 				l_is_remote := metrics.is_remote_session
+
+					-- Label is multi-line if it has a carraige return
+				l_is_singleline := l_internal_text.occurrences ('%N') = 0
+
 				if l_is_remote then
 					l_mem_dc := l_draw_dc
 				else
@@ -307,28 +357,52 @@ feature {EV_CONTAINER_IMP} -- WEL Implementation
 					l_bitmap.dispose
 				end
 
+					-- Start off with `Dt_expandtabs'
+				l_draw_flags := Dt_expandtabs
+
 					-- Set the flag for the forthcoming call to
 					-- `draw_text'.
-				inspect text_alignment
-				when {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_center then
-					l_draw_flags := Dt_center
+				inspect
+					text_alignment
 				when {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_left then
-					l_draw_flags := Dt_left
+					l_draw_flags := l_draw_flags | Dt_left
 				when {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_right then
-					l_draw_flags := Dt_right
+					l_draw_flags := l_draw_flags | Dt_right
 				else
-					check
-						Unexpected_alignment: False
+						-- Center horizontal alignment by default
+					l_draw_flags := l_draw_flags | Dt_center
+				end
+
+				if l_is_singleline then
+					l_draw_flags := l_draw_flags | dt_singleline
+						-- Add vertical text alignment flags if set.
+					inspect
+						vertical_text_alignment
+					when ev_text_alignment_top then
+						l_draw_flags := l_draw_flags | dt_top
+					when ev_text_alignment_bottom then
+						l_draw_flags := l_draw_flags | dt_bottom
+					else
+							-- Center Vertical Alignment by default.
+						l_draw_flags := l_draw_flags | dt_vcenter
+					end
+					l_draw_text_rect := l_rect
+				else
+					inspect
+						vertical_text_alignment
+					when ev_text_alignment_top then
+						l_draw_text_rect := l_rect
+					when ev_text_alignment_bottom then
+						create l_draw_text_rect.make (
+							l_rect.left, l_rect.bottom - text_height,
+							l_rect.right, l_rect.bottom)
+					else
+						-- Center alignment
+						create l_draw_text_rect.make (
+							l_rect.left, l_rect.top + (l_rect.height - text_height) // 2,
+							l_rect.right, l_rect.bottom)
 					end
 				end
-				l_draw_flags := l_draw_flags | Dt_expandtabs | dt_vcenter
-
-				-- Compute the bounding rectangle where the text need
-				-- to be displayed.
-
-				create l_draw_text_rect.make (
-					l_rect.left, l_rect.top + (l_rect.height - text_height) // 2,
-					l_rect.right, l_rect.bottom)
 
 					-- Need to first clear the area to the background color of `parent_imp'
 				application_imp.theme_drawer.draw_widget_background (Current, l_mem_dc, l_rect, l_bk_brush)

@@ -43,6 +43,23 @@ inherit
 --		deferred
 --		end
 
+feature -- Status Setting
+
+	align_text_top
+			-- Set vertical text alignment of current label to top.
+		deferred
+		end
+
+	align_text_vertical_center
+			-- Set text alignment of current label to be in the center vertically.
+		deferred
+		end
+
+	align_text_bottom
+			-- Set vertical text alignment of current label to bottom.
+		deferred
+		end
+
 feature {EV_ANY, EV_ANY_I} -- implementation
 
 	interface: detachable EV_LABEL note option: stable attribute end;

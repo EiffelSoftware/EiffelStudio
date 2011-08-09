@@ -72,6 +72,26 @@ feature -- Access
 			angle := a_angle
 		end
 
+feature -- Status Setting
+
+	align_text_top
+			-- Set vertical text alignment of current label to top.
+		do
+			--{GTK}.gtk_misc_set_alignment (text_label, 0, 0.5)
+		end
+
+	align_text_vertical_center
+			-- Set text alignment of current label to be in the center vertically.
+		do
+			--{GTK}.gtk_misc_set_alignment (text_label, 0.5, 0.5)
+		end
+
+	align_text_bottom
+			-- Set vertical text alignment of current label to bottom.
+		do
+			--{GTK}.gtk_misc_set_alignment (text_label, 0.5, 0.5)
+		end
+
 feature {NONE} -- Implementation
 
 	needs_event_box: BOOLEAN = True

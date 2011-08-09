@@ -12,13 +12,13 @@ feature -- Constants
 
 	Ev_text_alignment_left: INTEGER = 1
 		-- Aligned left.
-		
+
 	Ev_text_alignment_center: INTEGER = 2
 		-- Aligned center.
-		
+
 	Ev_text_alignment_right: INTEGER = 3
 		-- Aligned right.
-		
+
 feature -- Contract support
 
 	valid_alignment (an_alignment: INTEGER): BOOLEAN
@@ -26,7 +26,7 @@ feature -- Contract support
 		do
 			Result := an_alignment = Ev_text_alignment_left or else
 				an_alignment = Ev_text_alignment_center or else
-				an_alignment = Ev_text_alignment_right	
+				an_alignment = Ev_text_alignment_right
 		end
 
 note

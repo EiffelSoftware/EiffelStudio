@@ -492,15 +492,9 @@ feature {EV_CONTAINER_IMP, EV_PRIMITIVE_IMP, EV_INTERNAL_COMBO_BOX_IMP, EV_WEL_C
 
 	parent_imp: detachable EV_CONTAINER_IMP
 			-- Parent container of `Current'.
-		local
-			l_wel_parent: like wel_parent
 		do
-			l_wel_parent := wel_parent
-			if wel_parent = Default_parent then
-				Result := Void
-			else
-				Result ?= l_wel_parent
-			end
+			Result ?= wel_parent
+				-- `default_parent' is not a descendent of EV_CONTAINER_IMP so Result will be void on assignment attempt.
 		end
 
 feature {NONE} -- Implementation, mouse_button_events

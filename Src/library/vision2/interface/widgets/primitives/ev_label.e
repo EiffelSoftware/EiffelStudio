@@ -57,6 +57,31 @@ feature {NONE} -- Contract support
 			Result := not is_tabable_from and not is_tabable_to
 		end
 
+feature -- Status setting
+
+	align_text_top
+			-- Display `text' vertically aligned at the top.
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.align_text_top
+		end
+
+	align_text_vertical_center
+			-- Display `text' vertically aligned at the center.
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.align_text_vertical_center
+		end
+
+	align_text_bottom
+			-- Display `text' vertically aligned at the bottom.
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.align_text_bottom
+		end
 
 --feature -- Element change
 --

@@ -21,8 +21,7 @@ feature -- Access
 	text: STRING_32
 			-- Text displayed in `Current'.
 		do
-			Result := wel_text
-			unescape_ampersands (Result)
+			Result := unescaped_text (wel_text)
 		end
 
 feature -- Element change
@@ -37,42 +36,44 @@ feature {NONE} -- Implementation
 
 	escaped_text (s: READABLE_STRING_GENERAL): STRING_32
 			-- `text' with doubled ampersands.
-		do
-			Result := s.as_string_32
-			if Result = s then
-				create Result.make_from_string (Result)
-			end
-			escape_ampersands (Result)
-		end
-
-	escape_ampersands (s: STRING_32)
-			-- Replace all occurrences of "&" with "&&".
-			--| Cannot be replaced with `{STRING_32}.replace_substring_all' because
-			--| we only want it to happen once, not forever.
-		require
-			s_not_void: s /= Void
 		local
-			n: INTEGER
+			n, l_count: INTEGER
+			l_amp_code: NATURAL_32
 		do
-			from
-				n := 1
-			until
-				n > s.count
-			loop
-				n := s.index_of ('&', n)
-				if n > 0 then
-					s.insert_string ("&", n)
-					n := n + 2
-				else
-					n := s.count + 1
+			l_amp_code := ('&').code.as_natural_32
+			l_count := s.count
+			n := s.index_of_code (l_amp_code, 1)
+
+			if n > 0 then
+					-- There is an ampersand present in `s'.
+					-- Replace all occurrences of "&" with "&&".
+					--| Cannot be replaced with `{STRING_32}.replace_substring_all' because
+					--| we only want it to happen once, not forever.
+				from
+					create Result.make (l_count + 1)
+					Result.append_string_general (s)
+				until
+					n > l_count
+				loop
+					n := Result.index_of_code (l_amp_code, n)
+					if n > 0 then
+						Result.insert_character ('&', n)
+							-- Increase count local by one as a character has been inserted.
+						l_count := l_count + 1
+						n := n + 2
+					else
+						n := l_count + 1
+					end
 				end
+			else
+				Result := s.as_string_32
 			end
 		ensure
-			ampersand_occurrences_doubled: s.occurrences ('&') =
-				(old s.twin).occurrences ('&') * 2
+			ampersand_occurrences_doubled: s.as_string_32.occurrences ('&') =
+				(old s.twin.as_string_32).occurrences ('&') * 2
 		end
 
-	unescape_ampersands (s: STRING_32)
+	unescaped_text (s: STRING_32): STRING_32
 			-- Replace all occurrences of "&&" with "&".
 			--| Cannot be replaced with {STRING_32}.replace_substring_all because
 			--| it will replace any number of ampersands with only one.
@@ -81,24 +82,24 @@ feature {NONE} -- Implementation
 		require
 			s_not_void: s /= Void
 		local
-			n: INTEGER
+			n, l_count: INTEGER
 		do
 			from
 				n := 1
+				l_count := s.count
 			until
-				n > s.count
+				n > l_count
 			loop
 				n := s.index_of ('&', n)
 				if n > 0 then
 					s.remove (n)
-					check
-						is_escaped_string: (s.item (n)) = '&'
-					end
+					l_count := l_count - 1
 					n := n + 1
 				else
-					n := s.count + 1
+					n := l_count + 1
 				end
 			end
+			Result := s
 		ensure
 			ampersand_occurrences_halved: old s.twin.occurrences ('&') = s.occurrences ('&') * 2
 		end

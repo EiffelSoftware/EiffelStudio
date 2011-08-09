@@ -60,7 +60,11 @@ feature {NONE} -- Implementation
 	header: STRING_GENERAL
 			-- Header displayed when current formatter is selected.
 		do
-			if associated_feature /= Void and then associated_feature.associated_class /= Void then
+			if
+				associated_feature /= Void and then
+				associated_feature.is_valid and then
+				associated_feature.associated_class /= Void
+			then
 				Result := Interface_names.l_Header_feature (capital_command_name, associated_feature.name_32, associated_feature.associated_class.name_in_upper)
 			else
 				Result := Interface_names.l_No_feature
@@ -71,7 +75,7 @@ feature {NONE} -- Implementation
 		-- Does it make sense to show line numbers in Current?
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

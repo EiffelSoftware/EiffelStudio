@@ -11,11 +11,11 @@ deferred class
 
 inherit
 	EV_TEXTABLE_I
-	
+
 feature -- Access
 
 	text_alignment: INTEGER
-			-- Current text positioning.
+			-- Current horizontal text positioning.
 		deferred
 		end
 
@@ -35,7 +35,7 @@ feature -- Status setting
 			-- Display `text' right aligned.
 		deferred
 		end
-		
+
 feature {NONE} -- Implementation
 
 	default_alignment: INTEGER
@@ -45,9 +45,9 @@ feature {NONE} -- Implementation
 			-- common. Descendents need to redefine this if their
 			-- default alignment is different.
 		do
-			Result := {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_center 
+			Result := {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_center
 		end
-		
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

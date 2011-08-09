@@ -191,11 +191,10 @@ feature -- Basic operations
 			if not is_displayed then
 				set_text (internal_title)
 				update_style
-				if parent_window /= Void and then apply_center_dialog then
+				if apply_center_dialog then
 					center_dialog
 				end
 				apply_center_dialog := False
-
 
 					-- Set the focus to the `default_push_button' if any
 				if attached default_push_button as l_default_push_button and then
@@ -292,9 +291,7 @@ feature {NONE} -- Implementation
 		end
 
 	center_dialog
-				-- Center the dialog relative to the parent window.
-		require
-			parent_window /= Void
+				-- Center the dialog relative to the parent window (or root window if no explicit parent).
 		local
 			x_pos, y_pos: INTEGER
 			l_screen: EV_SCREEN

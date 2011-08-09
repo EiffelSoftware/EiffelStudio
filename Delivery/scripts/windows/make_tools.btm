@@ -76,6 +76,7 @@ remtrace Recompile eiffel_ribbon
 safe_md %STUDIO_DIR\tools\ribbon
 cdd %STUDIO_DIR\tools\ribbon
 exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/tools/eiffel_ribbon/template template
+exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/tools/eiffel_ribbon/images images
 cdd %EIFFEL_SRC\tools\eiffel_ribbon
 clean_project
 finalize eiffel_ribbon.ecf

@@ -49,13 +49,11 @@ feature -- Command
 					create l_singleton
 					if attached l_singleton.project_info_cell.item as l_info then
 						l_process := l_process_factory.process_launcher (l_uicc, l_list, l_info.project_location)
-
+						l_process.set_separate_console (True)
+						l_process.set_hidden (True)
 						l_process.redirect_output_to_agent (agent on_output)
 						l_process.launch
 						l_process.wait_for_exit
-
-						l_process.set_separate_console (True)
-						l_process.set_hidden (True)
 						debug ("Ribbon")
 							if not l_process.launched or else l_process.exit_code /= 0 then
 									-- Display error
@@ -89,7 +87,8 @@ feature -- Command
 				create l_singleton
 				if attached l_singleton.project_info_cell.item as l_info then
 					l_process := l_process_factory.process_launcher ("chcp", l_list, l_info.project_location)
-
+					l_process.set_separate_console (True)
+					l_process.set_hidden (True)
 					l_process.redirect_output_to_agent (agent on_output)
 					l_process.launch
 
@@ -130,13 +129,11 @@ feature -- Command
 					create l_singleton
 					if attached l_singleton.project_info_cell.item as l_info then
 						l_process := l_process_factory.process_launcher (l_rc, l_list, l_info.project_location)
-
+						l_process.set_separate_console (True)
+						l_process.set_hidden (True)
 						l_process.redirect_output_to_agent (agent on_output)
 						l_process.launch
 						l_process.wait_for_exit
-
-						l_process.set_separate_console (True)
-						l_process.set_hidden (True)
 						debug ("Ribbon")
 							if not l_process.launched or else l_process.exit_code /= 0 then
 									-- Display error
@@ -186,13 +183,12 @@ feature -- Command
 					create l_singleton
 					if attached l_singleton.project_info_cell.item as l_info then
 						l_process := l_process_factory.process_launcher ("cmd", l_list, l_info.project_location)
-
+						l_process.set_separate_console (True)
+						l_process.set_hidden (True)
 						l_process.redirect_output_to_agent (agent on_output)
 						l_process.launch
 						l_process.wait_for_exit
 
-						l_process.set_separate_console (True)
-						l_process.set_hidden (True)
 						debug ("Ribbon")
 							if not l_process.launched or else l_process.exit_code /= 0 then
 									-- Display error

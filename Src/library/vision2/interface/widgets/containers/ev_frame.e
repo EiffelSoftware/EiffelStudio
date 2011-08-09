@@ -80,6 +80,19 @@ feature -- Access
 			end
 		end
 
+feature -- Status Report
+
+	border_width: INTEGER
+			-- Width of border around container in pixels.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.border_width
+		ensure
+			bridge_ok: Result = implementation.border_width
+			positive: Result >= 0
+		end
+
 feature -- Element change
 
 	set_style (a_style: INTEGER)
@@ -91,6 +104,19 @@ feature -- Element change
 			implementation.set_style (a_style)
 		ensure
 			style_assigned: style = a_style
+		end
+
+feature -- Status Setting
+
+	set_border_width (value: INTEGER)
+			-- Assign `value' to `border_width'.
+		require
+			not_destroyed: not is_destroyed
+			positive_value: value >= 0
+		do
+			implementation.set_border_width (value)
+		ensure
+			border_width_assigned: border_width = value
 		end
 
 feature {NONE} -- Contract support

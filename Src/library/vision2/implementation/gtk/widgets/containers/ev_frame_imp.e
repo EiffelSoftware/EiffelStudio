@@ -169,6 +169,13 @@ feature -- Element change
 			{GTK}.gtk_frame_set_label (container_widget, a_cs.item)
 		end
 
+	set_border_width (value: INTEGER)
+			-- Make `value' the new border width of `Current'.
+		do
+			border_width := value
+			{GTK}.gtk_container_set_border_width (container_widget, value)
+		end
+
 feature {NONE} -- Implementation
 
 	internal_text: detachable STRING_32

@@ -15,11 +15,11 @@ inherit
 		redefine
 			implementation
 		end
-	
+
 feature -- Access
 
 	text_alignment: INTEGER
-			-- Current alignment.
+			-- Current horizontal text alignment.
 			-- See class EV_TEXT_ALIGNABLE_CONSTANTS for
 			-- possible values.
 		require
@@ -39,7 +39,7 @@ feature -- Status report
 		do
 			Result := text_alignment = {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_left
 		end
-		
+
 	is_center_aligned: BOOLEAN
 			-- Is `Current' center aligned?
 		require
@@ -77,7 +77,7 @@ feature -- Status setting
 		ensure
 			alignment_set: is_right_aligned
 		end
-        
+
 	align_text_left
 			-- Display `text' left aligned.
 		require
@@ -91,7 +91,7 @@ feature -- Status setting
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_TEXT_ALIGNABLE_I
-	
+
 invariant
 
 	valid_alignment: (create {EV_TEXT_ALIGNMENT_CONSTANTS}).valid_alignment (text_alignment)

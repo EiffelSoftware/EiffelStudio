@@ -126,25 +126,25 @@ feature -- Access
 	client_x: INTEGER
 			-- Left of the client area.
 		do
-			Result := Border_width
+			Result := total_border_width
 		end
 
 	client_y: INTEGER
 			-- Top of the client area.
 		do
-			Result := text_height.max (Border_width)
+			Result := text_height.max (frame_style_border_width) + border_width
 		end
 
 	client_width: INTEGER
 			-- Width of the client area.
 		do
-			Result := (ev_width - client_x - Border_width).max (0)
+			Result := (ev_width - client_x - total_border_width).max (0)
 		end
 
 	client_height: INTEGER
 			-- Height of the client area.
 		do
-			Result := (height - client_y - Border_width).max (0)
+			Result := (height - client_y - frame_style_border_width - (2 * border_width)).max (0)
 		end
 
 feature -- Element change
@@ -228,7 +228,14 @@ feature -- Status setting
 	set_default_minimum_size
 			-- Initialize the size of `Current'.
 		do
-			ev_set_minimum_size (2 * Text_padding, 2 * Border_width, False)
+			ev_set_minimum_size (2 * Text_padding, 2 * total_border_width, False)
+		end
+
+	set_border_width (value: INTEGER)
+			-- Make `value' the new border width of `Current'.
+		do
+			border_width := value
+			notify_change (Nc_minsize, Current, False)
 		end
 
 	align_text_center
@@ -274,7 +281,7 @@ feature {NONE} -- Implementation for automatic size compute.
 			if attached item_imp as l_item_imp and then l_item_imp.is_show_requested then
 				minwidth := l_item_imp.minimum_width
 			end
-			minwidth := minwidth + client_x + Border_width
+			minwidth := minwidth + client_x + total_border_width
 			minwidth := minwidth.max (text_width + 2 * Text_padding)
 			ev_set_minimum_width (minwidth, a_is_size_forced)
 		end
@@ -287,7 +294,7 @@ feature {NONE} -- Implementation for automatic size compute.
 			if attached item_imp as l_item_imp and then l_item_imp.is_show_requested then
 				minheight := l_item_imp.minimum_height
 			end
-			minheight := minheight + client_y + Border_width
+			minheight := minheight + client_y + total_border_width
 			ev_set_minimum_height (minheight, a_is_size_forced)
 		end
 
@@ -301,8 +308,8 @@ feature {NONE} -- Implementation for automatic size compute.
 				minwidth := l_item_imp.minimum_width
 				minheight := l_item_imp.minimum_height
 			end
-			minwidth := minwidth + client_x + Border_width
-			minheight := minheight + client_y + Border_width
+			minwidth := minwidth + client_x + total_border_width
+			minheight := minheight + client_y + total_border_width
 			minwidth := minwidth.max (text_width + 2 * Text_padding)
 			ev_set_minimum_size (minwidth, minheight, a_is_size_forced)
 		end
@@ -312,8 +319,13 @@ feature {NONE} -- WEL Implementation
 	top_level_window_imp: detachable EV_WINDOW_IMP
 			-- Top level window that contains `Current'.
 
-	border_width: INTEGER
-			-- Number of pixels taken up by border.
+	total_border_width: INTEGER
+		do
+			Result := frame_style_border_width + border_width
+		end
+
+	frame_style_border_width: INTEGER
+			-- Number of pixels taken up by frame style.
 		do
 			inspect frame_style
 				when Ev_frame_lowered then Result := 1

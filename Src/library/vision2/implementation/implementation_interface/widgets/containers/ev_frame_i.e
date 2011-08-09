@@ -35,7 +35,19 @@ feature -- Access
 		deferred
 		end
 
+	border_width: INTEGER
+		-- Width of border around container in pixels.
+
 feature -- Element change
+
+	set_border_width (value: INTEGER)
+			-- Assign `value' to `border_width'.
+		require
+			positive_value: value >= 0
+		deferred
+		ensure
+			border_assigned: border_width = value
+		end
 
 	set_style (a_style: INTEGER)
 			-- Assign `a_style' to `style'.

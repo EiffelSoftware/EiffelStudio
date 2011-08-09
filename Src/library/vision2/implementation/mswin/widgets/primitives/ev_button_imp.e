@@ -220,7 +220,7 @@ feature -- Status setting
 				h := h + internal_default_height
 			end
 
-				-- Finaly, we set the minimum values.
+				-- Finally, we set the minimum values.
 			ev_set_minimum_size (w, h, False)
 		end
 

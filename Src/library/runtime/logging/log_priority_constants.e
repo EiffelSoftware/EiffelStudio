@@ -78,23 +78,23 @@ feature {NONE} -- Implementation
 	priority_tag (priority: INTEGER): STRING
 			-- The human-readable priority tag for `priority'
 		do
-			Result := "UNKNO"
+			Result := once "UNKNO"
 			if priority = Log_emergency then
-				Result := "EMERG"
+				Result := once "EMERG"
 			elseif priority = Log_alert then
-				Result := "ALERT"
+				Result := once "ALERT"
 			elseif priority = Log_critical then
-				Result := "CRIT "
+				Result := once "CRIT "
 			elseif priority = Log_error then
-				Result := "ERROR"
+				Result := once "ERROR"
 			elseif priority = Log_warning then
-				Result := "WARN "
+				Result := once "WARN "
 			elseif priority = Log_notice then
-				Result := "NOTIC"
+				Result := once "NOTIC"
 			elseif priority = Log_information then
-				Result := "INFO "
+				Result := once "INFO "
 			elseif priority = Log_debug then
-				Result := "DEBUG"
+				Result := once "DEBUG"
 			end
 		end
 

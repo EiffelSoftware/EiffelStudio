@@ -58,7 +58,6 @@ feature -- Command
 		require
 			not_void: a_string /= Void
 		local
-			l_index: INTEGER
 			l_list: LIST [STRING_32]
 			l_sub_string: STRING_32
 		do

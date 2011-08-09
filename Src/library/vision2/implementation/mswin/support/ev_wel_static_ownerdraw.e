@@ -41,7 +41,7 @@ feature -- Access
 			if attached internal_text as l_internal_text then
 				Result := l_internal_text.twin
 			else
-				Result := ""
+				Result := {STRING_32} ""
 			end
 		end
 

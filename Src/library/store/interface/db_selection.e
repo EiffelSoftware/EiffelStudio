@@ -339,7 +339,7 @@ feature -- Basic operations
 		do
 			last_query_32 := s.as_string_32
 			implementation.query (s)
-			if not is_ok and then is_tracing then
+			if is_tracing and then not is_ok then
 				fixme ("Unicode support for output tracing.")
 				trace_output.putstring (error_message_32)
 				trace_output.new_line

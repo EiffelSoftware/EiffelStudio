@@ -610,6 +610,9 @@ feature -- External
 			ar.set_count (Result)
 
 			l_str.read_substring_into (ar, 1, Result)
+
+				-- Free buffer immediately.
+			l_area.resize (0)
 		end
 
 	put_data (no_descriptor: INTEGER; index: INTEGER; ar: STRING; max_len:INTEGER): INTEGER

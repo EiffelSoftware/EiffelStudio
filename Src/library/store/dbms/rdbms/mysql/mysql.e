@@ -382,7 +382,6 @@ feature -- External features
 			-- This feature also sets is_error_updated to True
 		do
 			Result := eif_mysql_get_warn_message (mysql_pointer)
-			is_error_updated := True
 		end
 
 	get_warn_message_string: STRING_32

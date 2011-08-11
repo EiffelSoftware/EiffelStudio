@@ -301,7 +301,7 @@ feature {NONE} -- Implementation
 			-- Handle OLE IE resize actions
 		do
 			Precursor {EV_PRIMITIVE_IMP}(size_type, a_width, a_height)
-			if is_displayed and then attached ole_ie_window as l_ole_window then
+			if attached ole_ie_window as l_ole_window then
 
 				-- We must resize both `ole_ie_window' and `ole_ie_window.item'
 				l_ole_window.resize (a_width, a_height)

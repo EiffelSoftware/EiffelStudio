@@ -1,0 +1,30 @@
+test_name  melted-special-creation-crash-2
+test_description A special creation of expanded where the creation routine of the expanded types invovles the execution of melted code causes a crash.
+
+define DO_NOTHING ""
+copy_sub	Ace $TEST Ace
+copy_sub	test.e $CLUSTER test.e
+copy_sub	exp4.e $CLUSTER exp4.e
+
+compile_melted
+compile_result	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work	NONE exec_output_w
+execute_result	ok
+compare		exec_output_w output
+
+define DO_NOTHING "do_nothing"
+copy_sub	test.e $CLUSTER test.e
+copy_sub	exp4.e $CLUSTER exp4.e
+
+compile_melted
+compile_result	ok
+
+execute_work	NONE exec_output_w2
+execute_result	ok
+compare		exec_output_w2 output
+
+test_end

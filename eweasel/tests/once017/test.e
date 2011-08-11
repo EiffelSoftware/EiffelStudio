@@ -1,12 +1,12 @@
 
 class TEST
 create
-        make
+	make
 feature
-        make
+	make
 		local
 			tried: BOOLEAN
-                do
+		do
 			if not tried then
 				create b
 				print (b.to_val1); io.new_line
@@ -14,7 +14,7 @@ feature
 		rescue
 			tried := True
 			retry
-                end
+		end
 
 	b: TEST2
 

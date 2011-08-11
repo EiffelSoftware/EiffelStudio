@@ -19,7 +19,7 @@ feature -- For DATABASE_STATUS
 
 	is_error_updated: BOOLEAN
 			-- Has a database function been called since last update which may have
-			-- updated error code, error message or warning message?
+			-- updated error code, error message?
 		deferred
 		end
 
@@ -744,6 +744,13 @@ feature -- External features
 	get_error_code: INTEGER
 			-- Function related with the error processing
 		deferred
+		end
+
+	no_error_code: INTEGER
+			-- Code indicating no error
+			-- In ODBC, MySQL, Oracle, Sybase, zero means no error. It may vary in coming implementations.
+		do
+			Result := 0
 		end
 
 	get_warn_message: POINTER

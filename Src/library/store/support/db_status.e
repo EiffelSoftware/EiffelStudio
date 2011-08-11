@@ -73,10 +73,7 @@ feature -- Status report
 	warning_message_32: STRING_32
 			-- SQL warning message prompted by database server
 		do
-			if not handle.status.is_error_updated then
-				update_error_status
-			end
-			Result := warning_message_stored
+			Result := implementation.warning_message_32
 		end
 
 feature -- Status setting
@@ -96,11 +93,9 @@ feature -- Status setting
 			implementation.reset
 			error_code_stored := 0
 			create error_message_stored.make_empty
-			create warning_message_stored.make_empty
 		ensure
 			no_error: error_code_stored = 0
 			no_message_error: error_message_stored.is_empty
-			no_message_warning: warning_message_stored.is_empty
 		end
 
 feature {NONE} -- Implementation
@@ -112,19 +107,19 @@ feature {NONE} -- error status implementation
 	error_message_stored: STRING_32
 			-- error message
 
-	warning_message_stored: STRING_32
-			-- warning message
-
 	error_code_stored: INTEGER
 			-- error code
 
 	update_error_status
-			-- set `error_message_stored', `error_code_stored', `warning_message_stored' with
+			-- set `error_message_stored', `error_code_stored', with
 			-- error_status from the database server.
 		do
-			error_message_stored := implementation.error_message_32
 			error_code_stored := implementation.error_code
-			warning_message_stored := implementation.warning_message_32
+			if error_code_stored /= implementation.no_error_code then
+				error_message_stored := implementation.error_message_32
+			else
+				error_message_stored := once {STRING_32}""
+			end
 		ensure
 			is_error_updated
 		end
@@ -136,7 +131,6 @@ feature {NONE} -- Initialization
 		do
 			implementation := handle.database.db_status
 			create error_message_stored.make_empty
-			create warning_message_stored.make_empty
 		end
 
 invariant

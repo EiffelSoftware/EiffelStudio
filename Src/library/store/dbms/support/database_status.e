@@ -40,6 +40,12 @@ feature -- Status report
 			Result := db_spec.get_error_code
 		end
 
+	no_error_code: INTEGER
+			-- Code indicating no error
+		do
+			Result := db_spec.no_error_code
+		end
+
 	warning_message_32: STRING_32
 			-- Warning message from database server
 		do

@@ -1,14 +1,14 @@
 
 class TEST
 create
-        make
+	make
 feature
-        make
+	make
 		local
 			x: TEST2
-                do
+		do
 			create x.make
-                end
+		end
 
 end
 

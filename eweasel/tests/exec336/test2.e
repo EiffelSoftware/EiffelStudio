@@ -11,20 +11,20 @@ feature
 		end
 
 	value: STRING
-	       local
+		local
 			tried: BOOLEAN
-	       once
+		once
 			if not tried then
-			   	try
-			   	Result := "Ermine"
+				try
+				Result := "Ermine"
 			else
 				full_collect
 				Result := "Weasel"
 			end
-	       rescue
+		rescue
 			tried := true
 			retry
-	       end
+		end
 
 	 try
 		do

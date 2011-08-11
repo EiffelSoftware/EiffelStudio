@@ -301,7 +301,7 @@ feature -- C compiler
 							if l_config /= Void then
 								check l_config_exists: l_config.exists end
 								debug ("Ribbon")
-									on_output ("Using " + l_code+ "'s line.exe%N")
+									on_output ("Using " + l_code+ "'s link.exe%N")
 									on_output ("installed at: " + l_config.install_path + "%N")
 								end
 								if a_for_32bits then
@@ -320,7 +320,7 @@ feature -- C compiler
 							if l_config /= Void then
 								check l_config_exists: l_config.exists end
 								debug ("Ribbon")
-									on_output ("Using " + l_code+ "'s line.exe%N")
+									on_output ("Using " + l_code+ "'s link.exe%N")
 									on_output ("installed at: " + l_config.install_path + "%N")
 								end
 								if a_for_32bits then

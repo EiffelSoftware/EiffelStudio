@@ -1,0 +1,38 @@
+test_name 	wrong-attribute-type-in-tuple
+test_description When using an attribute as expression in a manifest tuple in the body or the assertion clauses of a routine we should get the type evaluated in descendants at runtime but it was not always the case.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	foo.e $CLUSTER foo.e
+copy_raw	bar.e $CLUSTER bar.e
+copy_raw	x.e $CLUSTER x.e
+copy_raw	y.e $CLUSTER y.e
+
+compile_melted
+compile_result	ok
+
+execute_work	NONE exec_output_m
+execute_result	ok
+compare		exec_output_m output
+
+compile_frozen
+compile_result	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work	NONE exec_output_w
+execute_result	ok
+compare		exec_output_w output
+
+compile_final_keep
+compile_result	ok
+
+c_compile_final
+c_compile_result ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+compare		exec_output_f output
+
+test_end

@@ -1633,6 +1633,7 @@ test	static-assigner					exec341 tcf pass execution
 test	generating-type-on-typed-pointer	exec342 tcf pass execution expanded generic
 test	deep-twin-control-c				exec343 tcf pass execution manual
 test	wrong-argument-type-in-tuple	exec344 tcf pass execution
+test	wrong-attribute-type-in-tuple	exec345 tcf pass execution
 
 -- Once specific
 

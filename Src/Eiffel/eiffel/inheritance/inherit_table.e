@@ -1232,6 +1232,15 @@ end;
 						changed_features.extend (feature_name_id)
 					end
 						-- Routine id set for the redefinition
+					if
+						 attached feature_i.rout_id_set as l_id_set and then
+						 not l_id_set.same_as (new_rout_id_set)
+					then
+							-- The routine is not exactly the same even if it has kept
+							-- its original implementation. Most likely new routines
+							-- have been merged resulting in a different ROUT_ID_SET.
+						changed_features.extend (feature_name_id)
+					end
 					feature_i.set_rout_id_set (new_rout_id_set);
 						-- Mark the redefinition to be done.
 						-- We pass `feature_i' as creation routine to
@@ -1997,7 +2006,7 @@ feature {NONE} -- Temporary body index
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

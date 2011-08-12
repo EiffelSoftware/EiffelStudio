@@ -2325,6 +2325,8 @@ rt_private void interpret(int flag, int where)
 			uint16 flags = 0;
 			EIF_TYPED_VALUE nb_item, default_item;
 			uint32 nb = 0;
+			unsigned long stagval;
+			unsigned char *OLD_IC;
 
 			is_make_filled = EIF_TEST(*IC++);
 			is_make_empty = EIF_TEST(*IC++);
@@ -2380,10 +2382,26 @@ rt_private void interpret(int flag, int where)
 			} else if (is_ref || is_bit) {
 				flags = EO_REF;
 			}
-			new_obj = special_malloc (flags, type, nb, elem_size, is_basic);	/* Create new object */
+				/* The allocation of the SPECIAL may callback some melted code when creating
+				 * special of expanded where the call to the creation procedure goes back to
+				 * the interpreter. */
+			stagval = tagval;
+			OLD_IC = IC;
+			new_obj = special_malloc (flags, type, nb, elem_size, is_basic); /* Create new object */
+
 			last = iget();				/* Push a new value onto the stack */
 			last->type = SK_REF;
 			last->it_ref = new_obj;		/* Now it's safe for GC to see it */
+
+			if (stagval != tagval) {
+					/* If type is expanded we may need to sync the registers if it
+					 * called the interpreter for the creation routine.
+					 * Also if the creation causes melted.
+					 * Dispose to be called then sync_regs has to be called.
+					 */
+				sync_registers (scur, stop);
+			}
+			IC = OLD_IC;
 
 			if (is_make_filled) {
 					/* Prepare the call to `make_filled'. By pushing the computed arguments starting

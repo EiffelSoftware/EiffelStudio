@@ -86,7 +86,8 @@ feature -- Command
 			until
 				l_list.after
 			loop
-				if attached {EV_TREE_NODE} l_list.item.widget.i_th (1) as l_tree_node then
+				if l_list.item.widget.valid_index (1) and then
+					 attached {EV_TREE_NODE} l_list.item.widget.i_th (1) as l_tree_node then
 					if attached {ER_TREE_NODE_RIBBON_DATA} l_tree_node.data as l_data then
 						if ribbon_names.valid_index (l_list.index) then
 							l_data.set_command_name (ribbon_names.i_th (l_list.index))

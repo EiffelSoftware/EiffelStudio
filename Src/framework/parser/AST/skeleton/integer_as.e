@@ -319,7 +319,7 @@ feature -- Comparison
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := value = other.value and then default_type = other.default_type and then
-				types = other.types
+				types = other.types and then equivalent (constant_type, other.constant_type)
 		end
 
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Output

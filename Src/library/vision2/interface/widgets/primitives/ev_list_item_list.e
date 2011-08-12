@@ -125,7 +125,6 @@ feature -- Status setting
 		local
 			i, nb: INTEGER
 			l_set: INTEGER_INTERVAL
-			li: EV_LIST_ITEM
 		do
 			wipe_out
 			l_set := a_string_array.index_set
@@ -135,8 +134,7 @@ feature -- Status setting
 			until
 				i > nb
 			loop
-				create li.make_with_text (a_string_array.item (i))
-				extend (li)
+				extend (create {EV_LIST_ITEM}.make_with_text (a_string_array [i]))
 				i := i + 1
 			end
 

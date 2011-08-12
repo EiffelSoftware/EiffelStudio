@@ -14,7 +14,7 @@ inherit
 		rename
 			initialize as char_initialize
 		redefine
-			first_token, process, type
+			first_token, process, type, is_equivalent
 		end
 
 create
@@ -43,6 +43,14 @@ feature -- Roundtrip
 
 	type: TYPE_AS
 		-- Type associated with this node.
+
+feature -- Comparison
+
+	is_equivalent (other: like Current): BOOLEAN
+			-- Is `other' equivalent to the current object ?
+		do
+			Result := Precursor (other) and then type.is_equivalent (other.type)
+		end
 
 feature -- Roundtrip/Token
 

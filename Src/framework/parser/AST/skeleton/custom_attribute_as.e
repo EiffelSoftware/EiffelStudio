@@ -91,7 +91,7 @@ feature -- Comparison
 	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
-			Result := creation_expr.is_equivalent (other.creation_expr)
+			Result := creation_expr.is_equivalent (other.creation_expr) and then equivalent (tuple, other.tuple)
 		end
 
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Output

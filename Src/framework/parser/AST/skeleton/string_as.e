@@ -101,7 +101,8 @@ feature -- Comparison
 			-- Is `other' equivalent to the current object ?
 		do
 				-- `value' cannot be Void
-			Result := is_once_string = other.is_once_string and then value.is_equal (other.value)
+			Result := is_once_string = other.is_once_string and then value.is_equal (other.value) and then
+				equivalent (type, other.type)
 		end
 
 feature -- Output

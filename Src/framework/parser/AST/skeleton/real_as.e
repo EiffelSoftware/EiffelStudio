@@ -122,7 +122,7 @@ feature -- Comparison
 	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
-			Result := value.is_equal (other.value) and then equal (constant_type, other.constant_type)
+			Result := value.is_equal (other.value) and then equivalent (constant_type, other.constant_type)
 		end
 
 feature {AST_EIFFEL} -- Output

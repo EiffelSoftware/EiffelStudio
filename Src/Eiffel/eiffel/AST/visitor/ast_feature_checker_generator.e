@@ -2653,7 +2653,7 @@ feature {NONE} -- Implementation
 					-- Arguments are controlled.
 				is_controlled := True
 				l_type := l_feature.arguments.i_th (l_arg_pos)
-				l_type := l_type.actual_type.instantiation_in (last_type.as_implicitly_detachable, l_last_id)
+				l_type := l_type.instantiation_in (last_type.as_implicitly_detachable, l_last_id)
 				l_has_vuar_error := l_as.parameters /= Void
 				if l_needs_byte_node then
 					create l_argument
@@ -2812,7 +2812,7 @@ feature {NONE} -- Implementation
 				is_controlled := True
 				l_arg_type := l_feature.arguments.i_th (l_arg_pos)
 
-				last_type := l_arg_type.actual_type.instantiation_in (last_type.as_implicitly_detachable, l_last_id)
+				last_type := l_arg_type.instantiation_in (last_type.as_implicitly_detachable, l_last_id)
 				if l_as.parameters /= Void then
 					create l_vuar1
 					context.init_error (l_vuar1)
@@ -3710,7 +3710,7 @@ feature {NONE} -- Implementation
 			if l_arg_pos /= 0 then
 					-- Found argument
 				l_type := l_feature.arguments.i_th (l_arg_pos)
-				l_type := l_type.actual_type.instantiation_in (last_type.as_implicitly_detachable, l_last_id)
+				l_type := l_type.instantiation_in (last_type.as_implicitly_detachable, l_last_id)
 				create {TYPED_POINTER_A} last_type.make_typed (l_type)
 				if l_needs_byte_node then
 					create l_argument

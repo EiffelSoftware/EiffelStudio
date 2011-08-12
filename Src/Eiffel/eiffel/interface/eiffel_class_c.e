@@ -536,6 +536,7 @@ feature -- Third pass: byte code production and type check
 			byte_code_generated: BOOLEAN
 			inline_agent_byte_code: LINKED_LIST [BYTE_CODE]
 			old_inline_agent_table: like inline_agent_table
+			l_old_ast: FEATURE_AS
 
 				-- Invariant
 			invar_clause: INVARIANT_AS
@@ -669,8 +670,8 @@ feature -- Third pass: byte code production and type check
 						end
 
 						if feature_i.is_attribute then
-								-- Redefinitions of functions into attributes are
-								-- always melted
+								-- We always generate a wrapper for attributes which requires
+								-- a body, thus we mark it as changed.
 							feature_changed := True
 						end
 
@@ -815,11 +816,17 @@ feature -- Third pass: byte code production and type check
 							feature_checker.type_check_only (feature_i, is_safe_to_check_ancestor, not l_feature_written_in_current, feature_i.is_replicated_directly)
 							if feature_checker.is_ast_modified then
 								if error_handler.error_level = l_error_level then
-										-- Regenerate code for this feature only when there are no errors.
-									changed_features.force (feature_name_id)
-									i := i + 1
-										-- Discard any warnings as they will be reported again at code generation time.
-									error_handler.set_warning_level (warning_level)
+									l_old_ast := tmp_ast_server.body_item (class_id, feature_i.body_index)
+										-- If there were not body before, or if it is not the same, we need to regenerate the code
+										-- FIXME: Once per object do not reuse their IDs during code generation, therefore we need
+										-- to regenerate them as well (see eweasel test#once001).
+									if l_old_ast = Void or else not l_old_ast.is_equivalent (feature_i.body) or else feature_i.is_object_relative_once then
+											-- Regenerate code for this feature only when there are no errors.
+										changed_features.force (feature_name_id)
+										i := i + 1
+											-- Discard any warnings as they will be reported again at code generation time.
+										error_handler.set_warning_level (warning_level)
+									end
 								end
 									-- Regenerate code for descendants that have replicated features.
 								debug ("to_implement")

@@ -65,7 +65,7 @@ feature {NONE} -- Implementation
 			output: STRING
 			file_system: KL_SHARED_FILE_SYSTEM
 			fn: STRING
-			l_class1, l_class2: CLASS_AS
+			l_class2: CLASS_AS
 		do
 			if equal (file_name.substring (file_name.count - 1, file_name.count), ".e") then
 					-- Set for `IL' parsing since it accepts more classes.
@@ -80,12 +80,11 @@ feature {NONE} -- Implementation
 							-- We ignore syntax errors since we want to test roundtrip parsing
 							-- on valid Eiffel classes.
 						parser.error_handler.wipe_out
-					else
-						l_class1 := parser.root_node
+					elseif attached parser.root_node as l_class1 then
 						parse_eiffel_class (scanner, parser, file.last_string)
 						l_class2 := parser.root_node
 
-						if (l_class1 = Void or l_class2 = Void) or else not l_class1.is_equivalent (l_class2) then
+						if not l_class1.is_equivalent (l_class2) then
 							create fault.make_open_append ("errors")
 							fault.put_string (file_name)
 							fault.put_new_line

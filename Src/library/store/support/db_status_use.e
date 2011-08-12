@@ -76,9 +76,7 @@ feature -- Status setting
 			handle.status.reset
 		ensure
 			is_ok: is_ok
-			no_error: error_code = 0
-			no_message_error: error_message_32.same_string ({STRING_32}"")
-			no_message_warning: warning_message_32.same_string ({STRING_32}"")
+			no_error: error_code = 0 and error_message_32.is_empty and warning_message_32.is_empty
 		end
 
 note

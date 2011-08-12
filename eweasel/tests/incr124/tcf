@@ -29,16 +29,16 @@ compile_result 	 ok
 
 execute_work 	NONE exec_output2
 execute_result 	ok
-compare		exec_output2 output2
+compare		exec_output2 output1
 
 cleanup_compile
 
 compile_melted
 compile_result 	 ok
 
-execute_work 	NONE exec_output2
+execute_work 	NONE exec_output3
 execute_result 	ok
-compare		exec_output2 output2
+compare		exec_output3 output2
 
 
 

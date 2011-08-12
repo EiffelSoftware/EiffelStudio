@@ -49,9 +49,18 @@ feature -- Comparison
 		do
 			if o1 = Void then
 				Result := o2 = Void
-			else
-				Result := o2 /= Void and then o2.same_type (o1) and then
-					o1.is_equivalent (o2)
+			elseif o2 /= Void then
+				if o2.same_type (o1) then
+					Result := o1.is_equivalent (o2)
+				else
+						-- Check if one of the operands is an expression that was converted and if so
+						-- we use the original expression to perform the comparison.
+					if attached {CONVERTED_EXPR_AS} o2 as l_converted then
+						Result := equivalent (o1, l_converted.expr)
+					elseif attached {CONVERTED_EXPR_AS} o1 as l_converted then
+						Result := equivalent (l_converted.expr, o2)
+					end
+				end
 			end
 		end
 

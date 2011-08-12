@@ -227,7 +227,7 @@ feature -- Element change
 			implementation.replace (v)
 		ensure
 			has_v: has (v)
-			not_has_old_item: not has (old item)
+			not_has_old_item: old readable implies not has (old item)
 		end
 
 	prune (v: like item)

@@ -17,7 +17,12 @@ feature -- Query
 	xml_file_name (a_index: INTEGER): STRING
 			-- File name for saving ribbon makrup xml file
 		do
-			Result := "eiffel_ribbon_" + a_index.out + ".xml"
+			if a_index = 0 then
+				Result := "eiffel_ribbon.xml"
+			else
+				Result := "eiffel_ribbon_" + a_index.out + ".xml"
+			end
+
 		end
 
 	bml_file_name(a_index: INTEGER): STRING
@@ -88,7 +93,7 @@ feature -- Query
 	xml_full_file_name (a_ribbon_index: INTEGER): detachable STRING_8
 			-- (export status {NONE})
 		require
-			valid: a_ribbon_index >= 1
+			valid: a_ribbon_index >= 0
 		local
 			l_singleton: ER_SHARED_SINGLETON
 			l_file_name: detachable FILE_NAME

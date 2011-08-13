@@ -95,6 +95,12 @@ feature -- Command
 			content.show
 		end
 
+	wipe_out
+			-- Clear output
+		do
+			widget.set_text ("")
+		end
+
 feature -- Query
 
 	widget: EV_RICH_TEXT

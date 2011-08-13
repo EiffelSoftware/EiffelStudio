@@ -29,6 +29,11 @@ feature -- Command
 			l_warning: EV_WARNING_DIALOG
 			l_code_generator: like code_generator
 		do
+			-- First clear output
+			if attached shared_singleton.main_window_cell.item as l_main_window_1 then
+				l_main_window_1.output_tool.wipe_out
+			end
+
 			-- Must use local here, since `is_uicc_available' will initialize `uicc_full_path'
 			l_code_generator := code_generator
 			if l_code_generator.is_uicc_available then

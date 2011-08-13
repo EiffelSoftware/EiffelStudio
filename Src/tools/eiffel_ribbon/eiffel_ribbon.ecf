@@ -16,6 +16,7 @@
 		<library name="process" location="$ISE_LIBRARY\library\process\process-safe.ecf"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread-safe.ecf"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2-safe.ecf"/>
+		<library name="wel" location="$ISE_LIBRARY\library\wel\wel-safe.ecf"/>
 		<library name="xml_parser" location="$EIFFEL_SRC\library\text\parser\xml\parser\xml_parser-safe.ecf"/>
 		<library name="xml_tree" location="$EIFFEL_SRC\library\text\parser\xml\tree\xml_tree-safe.ecf"/>
 		<cluster name="root_cluster" location=".\" recursive="true">

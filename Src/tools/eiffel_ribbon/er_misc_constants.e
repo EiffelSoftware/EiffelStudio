@@ -68,41 +68,8 @@ feature -- Query
 
 	eiffel_ribbon: DIRECTORY_NAME
 			-- Eiffel ribbon tool folder
-		local
-			l_retried: BOOLEAN
-			l_shared: ER_SHARED_SINGLETON
-			l_error: EV_ERROR_DIALOG
-			l_interface_names: ER_INTERFACE_NAMES
 		do
-			if not l_retried then
-				if not is_valid_environment then
-					check_environment_variable
-				end
-				create Result.make_from_string (eiffel_install)
-				Result.set_subdirectory ("tools")
-				Result.set_subdirectory ("ribbon")
-			else
-				create Result.make
-			end
-		rescue
-			-- `check_environment_variable' may raise exception if environment variable not valid
-			 l_retried := True
-			create l_shared
-			create l_interface_names
-			if attached ise_eiffel as l_ise_eiffel then
-				create l_error.make_with_text (l_interface_names.cannot_find_ribbon_folders (l_ise_eiffel))
-			else
-				create l_error.make_with_text (l_interface_names.ise_eiffel_not_defined)
-			end
-
-			l_error.set_buttons (<<l_interface_names.ok>>)
-			if attached l_shared.main_window_cell.item as l_win then
-				l_error.show_modal_to_window (l_win)
-			else
-				l_error.show
-			end
-
-			retry
+			Result := eiffel_ribbon_imp.twin
 		end
 
 	ise_eiffel: detachable STRING
@@ -306,4 +273,44 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
+
+	eiffel_ribbon_imp: DIRECTORY_NAME
+			-- Eiffel ribbon tool folder
+		local
+			l_retried: BOOLEAN
+			l_shared: ER_SHARED_SINGLETON
+			l_error: EV_ERROR_DIALOG
+			l_interface_names: ER_INTERFACE_NAMES
+		once
+			if not l_retried then
+				if not is_valid_environment then
+					check_environment_variable
+				end
+				create Result.make_from_string (eiffel_install)
+				Result.set_subdirectory ("tools")
+				Result.set_subdirectory ("ribbon")
+			else
+				create Result.make
+			end
+		rescue
+			-- `check_environment_variable' may raise exception if environment variable not valid
+			 l_retried := True
+			create l_shared
+			create l_interface_names
+			if attached ise_eiffel as l_ise_eiffel then
+				create l_error.make_with_text (l_interface_names.cannot_find_ribbon_folders (l_ise_eiffel))
+			else
+				create l_error.make_with_text (l_interface_names.ise_eiffel_not_defined)
+			end
+
+			l_error.set_buttons (<<l_interface_names.ok>>)
+			if attached l_shared.main_window_cell.item as l_win then
+				l_error.show_modal_to_window (l_win)
+			else
+				l_error.show
+			end
+
+			retry
+		end
+
 end

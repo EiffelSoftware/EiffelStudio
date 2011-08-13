@@ -51,7 +51,7 @@ feature -- Command
 			l_visitors: ARRAYED_LIST [ER_VISITOR]
 		do
 			l_manager := shared_singleton.xml_tree_manager.item
-			l_manager.load_tree (1)
+			l_manager.load_tree (0)
 
 			if attached l_manager.xml_root as l_root then
 				create l_factory

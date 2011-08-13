@@ -23,6 +23,8 @@ feature {NONE} -- Initialization
 		do
 			set_size (1280, 600)
 
+			close_request_actions.extend (agent on_exit_selected)
+
 			show_actions.extend_kamikaze (agent init_after_shown)
 
 			show_actions.extend_kamikaze (agent

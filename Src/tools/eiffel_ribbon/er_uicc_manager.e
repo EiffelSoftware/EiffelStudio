@@ -6,6 +6,9 @@ note
 class
 	ER_UICC_MANAGER
 
+inherit
+	EIFFEL_LAYOUT
+
 feature -- Command
 
 	check_if_uicc_available: BOOLEAN
@@ -13,11 +16,19 @@ feature -- Command
 		local
 			l_platform: PLATFORM_CONSTANTS
 			l_dummy: BOOLEAN
+			l_c_compiler_env: ER_VS_SETUP
+			l_layout: ER_ENVIRONMENT_LAYOUT
 		do
 			create l_platform
 			Result := if_winsdk70_available (not l_platform.is_64_bits)
 
 			l_dummy := if_vc_available (not l_platform.is_64_bits)
+
+			if Result then -- Setup C compiler enviroment
+				create l_layout
+				set_eiffel_layout (l_layout)
+				create l_c_compiler_env.make (void, not {PLATFORM_CONSTANTS}.is_64_bits)
+			end
 		end
 
 	compile (a_index: INTEGER)
@@ -251,16 +262,16 @@ feature {NONE} -- Implementation
 			Result := l_constants.header_file_name (a_index)
 		end
 
-	uicc_full_path: detachable STRING
+	uicc_full_path: STRING = "UICC.exe"
 			--
 
-	rc_full_path: detachable STRING
+	rc_full_path: STRING = "rc.exe"
 			--
 
 	vcvars_full_path: detachable STRING
 			--
 
-	link_full_path: detachable STRING
+	link_full_path: STRING = "link.exe"
 			--
 
 feature -- C compiler
@@ -274,7 +285,7 @@ feature -- C compiler
 			l_code, l_ver: STRING
 		do
 			debug ("Ribbon")
-				on_output ("Available C/C++ compilers:%N%N")
+				on_output ("Checking available C/C++ compilers:%N%N")
 			end
 			create l_manager.make (a_for_32bits)
 			l_codes := l_manager.applicable_config_codes
@@ -296,42 +307,13 @@ feature -- C compiler
 						l_ver := l_code.substring (3, l_code.count)
 						if l_ver.to_integer = 90 then
 							Result := True
-
-							l_config := l_manager.config_from_code (l_codes.item, False)
-							if l_config /= Void then
-								check l_config_exists: l_config.exists end
-								debug ("Ribbon")
-									on_output ("Using " + l_code+ "'s link.exe%N")
-									on_output ("installed at: " + l_config.install_path + "%N")
-								end
-								if a_for_32bits then
-									create vcvars_full_path.make_from_string (l_config.install_path + "bin\vcvars32.bat")
-								else
-									create vcvars_full_path.make_from_string (l_config.install_path + "bin\vcvars64.bat")
-								end
-								create link_full_path.make_from_string (l_config.install_path + "bin\link.exe")
-							else
-								check False end
-							end
 						elseif l_ver.to_integer = 100 then
 							Result := True
-
-							l_config := l_manager.config_from_code (l_codes.item, False)
-							if l_config /= Void then
-								check l_config_exists: l_config.exists end
-								debug ("Ribbon")
-									on_output ("Using " + l_code+ "'s link.exe%N")
-									on_output ("installed at: " + l_config.install_path + "%N")
-								end
-								if a_for_32bits then
-									create vcvars_full_path.make_from_string (l_config.install_path + "bin\vcvars32.bat")
-								else
-									create vcvars_full_path.make_from_string (l_config.install_path + "bin\amd64\vcvars64.bat") -- Only this path is different from vc90
-								end
-								create link_full_path.make_from_string (l_config.install_path + "bin\link.exe")
-							else
-								check False end
-							end
+						end
+						if a_for_32bits then
+							create vcvars_full_path.make_from_string ("vcvars32.bat")
+						else
+							create vcvars_full_path.make_from_string ("vcvars64.bat") -- Only this path is different from vc90
 						end
 					end
 					l_codes.forth
@@ -350,9 +332,10 @@ feature -- C compiler
 			l_code, l_ver: STRING
 		do
 			debug ("Ribbon")
-				on_output ("Available C/C++ compilers:%N%N")
+				on_output ("Checking available C/C++ compilers:%N%N")
 			end
 			create l_manager.make (a_for_32bits)
+
 			l_codes := l_manager.applicable_config_codes
 
 			if l_codes.is_empty then
@@ -380,9 +363,6 @@ feature -- C compiler
 									on_output ("Using " + l_code+ "%N")
 									on_output ("installed at: " + l_config.install_path + "%N")
 								end
-
-								create uicc_full_path.make_from_string (l_config.install_path + "Bin\UICC.exe")
-								create rc_full_path.make_from_string (l_config.install_path + "Bin\rc.exe")
 							else
 								check False end
 							end

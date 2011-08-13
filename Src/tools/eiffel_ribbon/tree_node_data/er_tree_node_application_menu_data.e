@@ -17,7 +17,7 @@ feature {NONE} -- Initialization
 	make
 			-- <Precursor>
 		do
-			command_name_prefix := "applicaton_menu_"
+			command_name_prefix := "application_menu_"
 			xml_constants := {ER_XML_CONSTANTS}.ribbon_application_menu
 			new_unique_command_name
 

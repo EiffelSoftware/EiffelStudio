@@ -749,6 +749,7 @@ feature {NONE} -- Implementation
 								window_class_quick_access_toolbar (l_list.item.widget, l_list.index, l_last_string)
 								window_class_dll_file_name (l_list.index, l_last_string)
 								l_context_popup_gen.window_context_popups (l_list.item.widget, l_list.index, l_last_string)
+								window_contextual_tabs (l_list.item.widget, l_list.index, l_last_string)
 
 								if l_list.index = 1 then
 									l_last_string.replace_substring_all ("$INDEX", "")
@@ -838,6 +839,16 @@ feature {NONE} -- Implementation
 			create l_shared
 
 			a_last_string.replace_substring_all ("$INIT_WITH_WINDOW", "%N%T%T%Tribbon.init_with_window (Current)")
+		end
+
+	window_contextual_tabs (a_tree: EV_TREE; a_list_index: INTEGER_32; a_last_string: STRING_8)
+			--
+		do
+				-- FIXME: do not support contextual tabs when using Application Modes? since
+				-- contextual tabs do not support application modes.
+			a_last_string.replace_substring_all ("$TAB_GROUP_NAME", "")
+			a_last_string.replace_substring_all ("$TAB_GROUP_CREATION", "")
+			a_last_string.replace_substring_all ("$TAB_GROUP_REGISTER", "")
 		end
 
 	window_class_quick_access_toolbar (a_tree: EV_TREE; a_list_index: INTEGER; a_last_string: STRING)

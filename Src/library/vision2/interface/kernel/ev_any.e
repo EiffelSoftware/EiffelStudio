@@ -72,7 +72,7 @@ feature {EV_ANY_HANDLER} -- Initialization
 feature -- Access
 
 	data: detachable ANY
-		-- Arbitrary user data may be stored here.
+			-- Arbitrary user data may be stored here.
 
 feature -- Element change
 

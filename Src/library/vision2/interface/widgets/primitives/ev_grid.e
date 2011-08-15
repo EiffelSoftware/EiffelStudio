@@ -856,7 +856,7 @@ feature -- Access
 			viewable_y_offset_valid: Result >=0 and Result <= height
 		end
 
-	item_pebble_function: detachable FUNCTION [ANY, TUPLE [detachable EV_GRID_ITEM], ANY]
+	item_pebble_function: detachable FUNCTION [ANY, TUPLE [detachable EV_GRID_ITEM], detachable ANY]
 			-- Returns data to be transported by pick and drop mechanism.
 			-- It will be called once each time a pick on the item area of the grid occurs, the result
 			-- will be assigned to `pebble' for the duration of transport.
@@ -1016,7 +1016,7 @@ feature -- Status setting
 			item_veto_pebble_function_set: item_veto_pebble_function = a_function
 		end
 
-	set_item_pebble_function (a_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM], ANY])
+	set_item_pebble_function (a_function: FUNCTION [ANY, TUPLE [detachable EV_GRID_ITEM], detachable ANY])
 			-- Assign `a_function' to `item_pebble_function'.
 		require
 			not_destroyed: not is_destroyed

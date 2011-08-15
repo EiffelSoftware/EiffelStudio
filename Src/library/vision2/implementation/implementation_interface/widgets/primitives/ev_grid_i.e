@@ -833,7 +833,7 @@ feature -- Pick and Drop
 			end
 		end
 
-	set_item_pebble_function (a_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM], ANY])
+	set_item_pebble_function (a_function: FUNCTION [ANY, TUPLE [detachable EV_GRID_ITEM], detachable ANY])
 			-- Set `a_function' to compute `pebble'.
 			-- It will be called once each time a pick on the item area of the grid occurs, the result
 			-- will be assigned to `pebble' for the duration of transport.
@@ -933,7 +933,7 @@ feature -- Pick and Drop
 
 feature -- Status setting
 
-	item_pebble_function: detachable FUNCTION [ANY, TUPLE [detachable EV_GRID_ITEM], ANY]
+	item_pebble_function: detachable FUNCTION [ANY, TUPLE [detachable EV_GRID_ITEM], detachable ANY]
 		-- User pebble function
 
 	activate_window: detachable EV_POPUP_WINDOW

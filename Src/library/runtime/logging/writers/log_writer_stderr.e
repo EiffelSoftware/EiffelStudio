@@ -28,17 +28,23 @@ feature {LOG_LOGGING_FACILITY} -- Output
 			l_has_newline: BOOLEAN
 		do
 			date_time.make_now_utc
-			l_has_newline := (msg.index_of ('%N', 1) = msg.count)
-			if not l_has_newline then
-				io.error.putstring (date_time.out + " - " + priority_tag (priority) + " - " + msg +
-					"%N")
-			else
-				io.error.putstring (date_time.out + " - " + priority_tag (priority) + " - " + msg)
+
+			io.error.putstring (date_time.out)
+			io.error.putstring (space_dash_space)
+			io.error.putstring (priority_tag (priority))
+			io.error.putstring (space_dash_space)
+			io.error.putstring (msg)
+			if msg [msg.count] /= '%N' then
+					-- Append a new line if not present.
+				io.error.put_character ('%N')
 			end
 			io.error.flush
 		end
 
-feature {NONE} -- Attributes
+feature {NONE} -- Implementation
+
+	space_dash_space: STRING = " - "
+		-- " - " constant for writing log data.
 
 	date_time: DATE_TIME
 			-- Date/time object that is reseeded to now every time `write' is called

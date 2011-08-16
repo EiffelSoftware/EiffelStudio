@@ -690,7 +690,7 @@ feature {EV_ANY_I} -- Drawing implementation
 				theme_drawer.update_button_pixmap_coordinates_for_state (open_theme, state, coordinate)
 
 				if attached disabled_image as l_disabled_image then
-						-- GDI+ is installed, convert image to WEL_ICON and use icon rendering as this handle alpha data.
+						-- GDI+ is installed, convert image to WEL_ICON and use icon rendering as this handles alpha data.
 					l_icon := internal_pixmap_state.build_icon
 					color_imp ?= background_color.implementation
 					check

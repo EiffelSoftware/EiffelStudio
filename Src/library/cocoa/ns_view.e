@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Wrapper for NSView. An Eiffel abstraction for a Cocoa widget"
 	author: "Daniel Furrer <daniel.furrer@gmail.com>"
 	date: "$Date$"

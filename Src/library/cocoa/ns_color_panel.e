@@ -22,7 +22,7 @@ feature {NONE} -- Creation
 
 feature {NONE} -- Objective-C implementation
 
-	frozen color_panel_shared_color_panel: POINTER is
+	frozen color_panel_shared_color_panel: POINTER
 			-- Create a new NSWindow
 		external
 			"C inline use <Cocoa/Cocoa.h>"

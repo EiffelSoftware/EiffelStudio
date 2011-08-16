@@ -78,7 +78,7 @@ feature -- Finding Menu Items
 
 feature {NONE} -- Objective-C implementation
 
-	frozen menu_new: POINTER is
+	frozen menu_new: POINTER
 		external
 			"C inline use <Cocoa/Cocoa.h>"
 		alias
@@ -96,7 +96,7 @@ feature {NONE} -- Objective-C implementation
 
 --- (id)initWithTitle:(NSString *)aTitle;
 
-	frozen menu_set_title (a_menu: POINTER; a_nsstring: POINTER) is
+	frozen menu_set_title (a_menu: POINTER; a_nsstring: POINTER)
 			-- - (void)setTitle:(NSString *)aString;
 		external
 			"C inline use <Cocoa/Cocoa.h>"

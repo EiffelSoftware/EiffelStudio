@@ -396,41 +396,41 @@ feature {EV_ANY, EV_ANY_I} -- Status settings
 			table_tall_enough: item_row_position (v) + row_span - 1 <= rows
 			table_area_clear:
 				area_clear_excluding_widget (v, item_column_position (v), item_row_position (v), column_span, row_span)
-			local
-				a_col_ctr, a_row_ctr, a_cell_index: INTEGER
-				original_item_row_position, original_item_column_position: INTEGER
-			do
-				original_item_row_position := item_row_position (v)
-				original_item_column_position := item_column_position (v)
-				from
-					a_cell_index := 1
-				until
-					a_cell_index > internal_array.count
-				loop
-					if internal_array.item (a_cell_index) = v then
-						internal_array.put (Void, a_cell_index)
-					end
-					a_cell_index := a_cell_index + 1
+		local
+			a_col_ctr, a_row_ctr, a_cell_index: INTEGER
+			original_item_row_position, original_item_column_position: INTEGER
+		do
+			original_item_row_position := item_row_position (v)
+			original_item_column_position := item_column_position (v)
+			from
+				a_cell_index := 1
+			until
+				a_cell_index > internal_array.count
+			loop
+				if internal_array.item (a_cell_index) = v then
+					internal_array.put (Void, a_cell_index)
 				end
-				from
-					a_row_ctr := original_item_row_position
-				until
-					a_row_ctr = original_item_row_position + row_span
-				loop
-					from
-						a_col_ctr := original_item_column_position
-					until
-						a_col_ctr = original_item_column_position + column_span
-					loop
-						a_cell_index := (a_row_ctr - 1) * columns + a_col_ctr
-						internal_array.put (v, a_cell_index)
-						a_col_ctr := a_col_ctr + 1
-					end
-					a_row_ctr := a_row_ctr + 1
-				end
-					-- Now update out internal representation of `Current'.
-				rebuild_internal_item_list
+				a_cell_index := a_cell_index + 1
 			end
+			from
+				a_row_ctr := original_item_row_position
+			until
+				a_row_ctr = original_item_row_position + row_span
+			loop
+				from
+					a_col_ctr := original_item_column_position
+				until
+					a_col_ctr = original_item_column_position + column_span
+				loop
+					a_cell_index := (a_row_ctr - 1) * columns + a_col_ctr
+					internal_array.put (v, a_cell_index)
+					a_col_ctr := a_col_ctr + 1
+				end
+				a_row_ctr := a_row_ctr + 1
+			end
+				-- Now update out internal representation of `Current'.
+			rebuild_internal_item_list
+		end
 
 	set_item_position_and_span (v: EV_WIDGET; a_column, a_row, column_span, row_span: INTEGER)
 			-- Move `v' to `a_column', `a_row', and resize to occupy `column_span' columns and `row_span' rows.
@@ -445,38 +445,38 @@ feature {EV_ANY, EV_ANY_I} -- Status settings
 			table_tall_enough: a_row + (row_span - 1) <= rows
 			table_area_clear:
 				area_clear_excluding_widget (v, a_column, a_row, column_span, row_span)
-			local
-				a_col_ctr, a_row_ctr, a_cell_index: INTEGER
-			do
-				from
-					a_cell_index := 1
-				until
-					a_cell_index > internal_array.count
-				loop
-					if internal_array.item (a_cell_index) = v then
-						internal_array.put (Void, a_cell_index)
-					end
-					a_cell_index := a_cell_index + 1
+		local
+			a_col_ctr, a_row_ctr, a_cell_index: INTEGER
+		do
+			from
+				a_cell_index := 1
+			until
+				a_cell_index > internal_array.count
+			loop
+				if internal_array.item (a_cell_index) = v then
+					internal_array.put (Void, a_cell_index)
 				end
-				from
-					a_row_ctr := a_row
-				until
-					a_row_ctr = a_row + row_span
-				loop
-					from
-						a_col_ctr := a_column
-					until
-						a_col_ctr = a_column + column_span
-					loop
-						a_cell_index := (a_row_ctr - 1) * columns + a_col_ctr
-						internal_array.put (v, a_cell_index)
-						a_col_ctr := a_col_ctr + 1
-					end
-					a_row_ctr := a_row_ctr + 1
-				end
-				set_item_position (v, a_column, a_row)
-				set_item_span (v, column_span, row_span)
+				a_cell_index := a_cell_index + 1
 			end
+			from
+				a_row_ctr := a_row
+			until
+				a_row_ctr = a_row + row_span
+			loop
+				from
+					a_col_ctr := a_column
+				until
+					a_col_ctr = a_column + column_span
+				loop
+					a_cell_index := (a_row_ctr - 1) * columns + a_col_ctr
+					internal_array.put (v, a_cell_index)
+					a_col_ctr := a_col_ctr + 1
+				end
+				a_row_ctr := a_row_ctr + 1
+			end
+			set_item_position (v, a_column, a_row)
+			set_item_span (v, column_span, row_span)
+		end
 
 feature -- Element change
 

@@ -488,8 +488,8 @@ feature {EV_ANY_I} -- Drawing implementation
 				-- the top of `Current' to where the pixmap should be drawn.
 			color_imp: detachable EV_COLOR_IMP
 				-- Temporary color implementation.
-			image_width: INTEGER
-				-- Width of current image, or 0 when `internal_pixmap_state' is Void.
+			image_width, image_height: INTEGER
+				-- Width/height of current image, or 0 when `internal_pixmap_state' is Void.
 			text_width: INTEGER
 				-- Width of text on `Current', or 0 if there is no text.
 			image_pixmap_space: INTEGER
@@ -599,7 +599,7 @@ feature {EV_ANY_I} -- Drawing implementation
 			focus_rect.inflate (-focus_rect_border, -focus_rect_border)
 
 			if has_pushed_appearence (state) then
-					drawstate := ods_selected
+				drawstate := ods_selected
 			else
 				if is_default_push_button then
 					drawstate := ods_default
@@ -618,6 +618,7 @@ feature {EV_ANY_I} -- Drawing implementation
 				check internal_pixmap_state /= Void end
 					-- Compute values for re-sizing
 				image_width := internal_pixmap_state.width
+				image_height := internal_pixmap_state.height
 			end
 
 				-- Compute width required to display `text' of `Current', and
@@ -688,13 +689,19 @@ feature {EV_ANY_I} -- Drawing implementation
 				create coordinate.make (left_position, pixmap_border + height_offset)
 				theme_drawer.update_button_pixmap_coordinates_for_state (open_theme, state, coordinate)
 
-				if not is_sensitive and attached disabled_image as l_disabled_image then
+				if attached disabled_image as l_disabled_image then
+						-- GDI+ is installed, convert image to WEL_ICON and use icon rendering as this handle alpha data.
 					l_icon := internal_pixmap_state.build_icon
 					color_imp ?= background_color.implementation
 					check
 						color_imp_not_void: color_imp /= Void
 					end
-					l_disabled_image.draw_grayscale_bitmap_or_icon_with_memory_buffer (wel_bitmap, l_icon, memory_dc, coordinate.x, coordinate.y, color_imp, internal_pixmap_state.has_mask)
+					if not is_sensitive then
+						l_disabled_image.draw_grayscale_bitmap_or_icon_with_memory_buffer (wel_bitmap, l_icon, memory_dc, coordinate.x, coordinate.y, color_imp, internal_pixmap_state.has_mask)
+					else
+							-- FIXME IEK: This could be optimized to use GDI+ features directly to avoid creating the icon resource on each draw.
+						memory_dc.draw_icon_ex (l_icon, coordinate.x, coordinate.y, image_width, image_height, 0, Void, 0x3) -- 0x3 = DI_NORMAL (DI_IMAGE | DI_MASK)
+					end
 					l_icon.dispose
 				else
 					theme_drawer.draw_bitmap_on_dc (memory_dc, wel_bitmap, mask_bitmap, coordinate.x, coordinate.y, is_sensitive)

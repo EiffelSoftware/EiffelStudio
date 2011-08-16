@@ -78,25 +78,37 @@ feature {NONE} -- Implementation
 	priority_tag (priority: INTEGER): STRING
 			-- The human-readable priority tag for `priority'
 		do
-			Result := once "UNKNO"
-			if priority = Log_emergency then
-				Result := once "EMERG"
+			if priority = log_debug then
+				Result := debug_str
+			elseif priority = Log_emergency then
+				Result := emerg_str
 			elseif priority = Log_alert then
-				Result := once "ALERT"
+				Result := alert_str
 			elseif priority = Log_critical then
-				Result := once "CRIT "
+				Result := crit_str
 			elseif priority = Log_error then
-				Result := once "ERROR"
+				Result := error_str
 			elseif priority = Log_warning then
-				Result := once "WARN "
+				Result := warn_str
 			elseif priority = Log_notice then
-				Result := once "NOTIC"
+				Result := notic_str
 			elseif priority = Log_information then
-				Result := once "INFO "
-			elseif priority = Log_debug then
-				Result := once "DEBUG"
+				Result := info_str
+			else
+				Result := unkno_str
 			end
 		end
+
+	unkno_str: STRING = "UNKNO"
+	emerg_str: STRING = "EMERG"
+	alert_str: STRING = "ALERT"
+	crit_str: STRING  = "CRIT "
+	error_str: STRING = "ERROR"
+	warn_str: STRING  = "WARN "
+	notic_str: STRING = "NOTIC"
+	info_str: STRING  = "INFO "
+	debug_str: STRING = "DEBUG"
+		-- 5 character length priority tag constants.
 
 note
 	copyright:	"Copyright (C) 2010 by ITPassion Ltd, Eiffel Software and others"

@@ -14,7 +14,7 @@ inherit
 feature {LOG_LOGGING_FACILITY} -- Initialization
 
 	initialize
-			-- Initialize this FILE_LOG_WRITER instance
+			-- Initialize this LOG_WRITER_STDERR instance
 		do
 			is_initialized := not io.error.is_closed
 		end
@@ -24,8 +24,6 @@ feature {LOG_LOGGING_FACILITY} -- Output
 	write (priority: INTEGER; msg: STRING)
 			-- Write `msg' under `priority' to `io.error' also noting the current date and time,
 			-- and adding a newline character if needed
-		local
-			l_has_newline: BOOLEAN
 		do
 			date_time.make_now_utc
 

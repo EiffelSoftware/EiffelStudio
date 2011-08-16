@@ -123,7 +123,7 @@ feature {EV_APPLICATION, EV_ANY_HANDLER, EV_ANY_I} -- Implementation
 						-- Reset idle iteration counter if CPU is not relinquished.
 				end
 				l_idle_actions_internal := idle_actions_internal
-				if not is_destroyed and then l_idle_actions_internal /= Void and then not idle_actions_executing then
+				if not is_destroyed and then l_idle_actions_internal /= Void then
 					lock
 					l_is_locked := True
 						-- Make a snapshot of the idle actions to avoid side effects.
@@ -134,7 +134,12 @@ feature {EV_APPLICATION, EV_ANY_HANDLER, EV_ANY_I} -- Implementation
 								l_kamikaze_idle_actions_snapshot := kamikaze_idle_actions_snapshot
 							end
 						else
-							kamikaze_idle_actions_snapshot := kamikaze_idle_actions_snapshot.aliased_resized_area (l_kamikazes_internal.count)
+							if idle_actions_executing and kamikaze_idle_actions_snapshot.count > 0 then
+									-- We are doing a recursive call to the idle actions, we need to create a copy.
+								kamikaze_idle_actions_snapshot := kamikaze_idle_actions_snapshot.resized_area (l_kamikazes_internal.count)
+							else
+								kamikaze_idle_actions_snapshot := kamikaze_idle_actions_snapshot.aliased_resized_area (l_kamikazes_internal.count)
+							end
 							kamikaze_idle_actions_snapshot.copy_data (l_kamikazes_internal.area, 0, 0, l_kamikazes_internal.count)
 							l_kamikaze_idle_actions_snapshot := kamikaze_idle_actions_snapshot
 						end
@@ -160,7 +165,12 @@ feature {EV_APPLICATION, EV_ANY_HANDLER, EV_ANY_I} -- Implementation
 							l_idle_actions_snapshot := idle_actions_snapshot
 						end
 					else
-						idle_actions_snapshot := idle_actions_snapshot.aliased_resized_area (l_idle_actions_internal.count)
+						if idle_actions_executing and idle_actions_snapshot.count > 0 then
+								-- We are doing a recursive call to the idle actions, we need to create a copy.
+							idle_actions_snapshot := idle_actions_snapshot.resized_area (l_idle_actions_internal.count)
+						else
+							idle_actions_snapshot := idle_actions_snapshot.aliased_resized_area (l_idle_actions_internal.count)
+						end
 						idle_actions_snapshot.copy_data (l_idle_actions_internal.area, 0, 0, l_idle_actions_internal.count)
 						l_idle_actions_snapshot := idle_actions_snapshot
 					end

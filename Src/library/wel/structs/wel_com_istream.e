@@ -166,22 +166,20 @@ feature {NONE} -- Externals
 			"[
 			{
 				typedef IStream* (__stdcall *tSHCreateMemStream)(const BYTE *, UINT);
-				static tSHCreateMemStream pSHCreateMemStream;
+				static tSHCreateMemStream pSHCreateMemStream = NULL;
 				HMODULE hShlWapi = (HMODULE)$a_shlwpai_handle;
+				IStream *Result = NULL;
 
-				if (hShlWapi != NULL) {
-						
-						if (pSHCreateMemStream == NULL) {
-							pSHCreateMemStream = (tSHCreateMemStream) GetProcAddress(hShlWapi, "SHCreateMemStream");
-						}
-						
-						if (pSHCreateMemStream == NULL) {
-							pSHCreateMemStream = (tSHCreateMemStream) GetProcAddress(hShlWapi, (LPCSTR) 12);
-						}
-
-						if (pSHCreateMemStream != NULL) {
-							return pSHCreateMemStream ((const BYTE *)$a_const_byte, (UINT)$a_size);
-						}
+				if ((!pSHCreateMemStream) && hShlWapi) {
+					pSHCreateMemStream = (tSHCreateMemStream) GetProcAddress(hShlWapi, "SHCreateMemStream");
+					if (!pSHCreateMemStream) {
+						pSHCreateMemStream = (tSHCreateMemStream) GetProcAddress(hShlWapi, (LPCSTR) 12);
+					}
+				}
+				if (pSHCreateMemStream) {
+					return pSHCreateMemStream ((const BYTE *)$a_const_byte, (UINT)$a_size);
+				} else {
+					return NULL;
 				}
 			}
 			]"
@@ -281,7 +279,6 @@ feature {NONE} -- Externals
 		alias
 			"[
 			{
-				HRESULT l_result;
 				IStream *l_item = (IStream *)$a_item;
 				STATSTG *l_pstatstg = (STATSTG *)$a_result;
 

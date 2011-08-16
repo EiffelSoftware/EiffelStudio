@@ -21,12 +21,10 @@ inherit
 			default_create
 		end
 
-create
-	default_create
-
 feature {NONE} -- Creation
 
 	default_create
+			-- Create an instance of {LOG_WRITER_FILE}.
 		local
 			l_exec_env: EXECUTION_ENVIRONMENT
 		do

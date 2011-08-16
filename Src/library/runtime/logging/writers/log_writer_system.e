@@ -39,12 +39,10 @@ inherit
 			default_create
 		end
 
-create
-	default_create
-
 feature {NONE} -- Creation
 
 	default_create
+			-- Create system logger.
 		do
 				-- This is the default name for logging.
 			application_name := "EiffelSyslog"
@@ -59,7 +57,7 @@ feature {NONE} -- Creation
 feature {LOG_LOGGING_FACILITY} -- Initialization
 
 	initialize
-			-- Initialize this FILE_LOG_WRITER instance
+			-- Initialize this LOG_WRITER_SYSTEM instance
 		require else
 			valid_application_name: application_name /= Void and then not application_name.is_empty
 			valid_options: is_windows or else options > 0

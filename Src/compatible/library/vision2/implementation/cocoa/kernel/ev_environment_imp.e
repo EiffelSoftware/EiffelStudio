@@ -67,7 +67,7 @@ feature -- Access
 			-- Is a default printer available?
 			-- `Result' is `True' if at least one printer is installed.
 		do
-			system ("which lpr >& /dev/null")
+			system ("which lpr > /dev/null 2>&1")
 			Result := return_code = 0
 		end
 

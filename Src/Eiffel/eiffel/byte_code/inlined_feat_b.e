@@ -258,6 +258,10 @@ feature -- Generation
 			buf.put_string (feature_name);
 			buf.put_string (") */");
 
+				-- We disable the generation of the RTHOOK so that the
+				-- callstack is easy to debug.			
+			context.enter_hidden_code
+
 			if parameters /= Void then
 					-- Assign the parameter values to the registers
 				from
@@ -369,6 +373,10 @@ feature -- Generation
 					context.set_inlined_dftype_current (0);
 				end
 			end
+
+				-- We restore the generation of RTHOOK now that we done
+				-- with inlining.
+			context.exit_hidden_code
 
 			buf.put_new_line
 			buf.put_string ("/* END INLINED CODE */");

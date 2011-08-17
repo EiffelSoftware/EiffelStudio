@@ -56,7 +56,9 @@ feature {NONE} -- Implementation
 		do
 			if attached {H} interface_i_th (i).implementation as v_imp then
 				v_imp.on_orphaned
-				remove_item_actions.call ([v_imp.attached_interface])
+				if remove_item_actions.count > 0 then
+					remove_item_actions.call ([v_imp.attached_interface])
+				end
 				remove_item (v_imp)
 				v_imp.set_parent_imp (Void)
 			end

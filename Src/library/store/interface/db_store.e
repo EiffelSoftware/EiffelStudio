@@ -55,7 +55,7 @@ feature -- Basic operations
 			owns_repository: owns_repository
 		do
 			implementation.put (object)
-			if not is_ok and then is_tracing then
+			if is_tracing and then not is_ok then
 				fixme ("Unicode support for output tracing.")
 				trace_output.putstring (error_message_32.as_string_8)
 				trace_output.new_line
@@ -71,7 +71,7 @@ feature -- Basic operations
 			owns_repository: owns_repository
 		do
 			implementation.force (object)
-			if not is_ok and then is_tracing then
+			if is_tracing and then not is_ok then
 				fixme ("Unicode support for output tracing.")
 				trace_output.putstring (error_message_32.as_string_8)
 				trace_output.new_line

@@ -42,9 +42,7 @@ feature {NONE} -- Initialization
 
 	initialize
 			-- Initialize callbacks - only once
-		note
-			once_status: global
-		once
+		once ("PROCESS")
 			connect_callbacks (Current, $callback_void, $callback_bool, $callback_void_ptr, $callback_void_ptr_ptr, $callback_void_general)
 		end
 
@@ -66,7 +64,6 @@ feature {OBJC_CLASS} -- Eiffel interaction
 
 	get_agent (a_object: POINTER; a_selector: POINTER): detachable ROUTINE [ANY, TUPLE]
 		local
-			l_object: NS_OBJECT
 			l_class: detachable OBJC_CLASS
 		do
 			from
@@ -262,9 +259,7 @@ feature {NONE} -- Implementation
 
 	selector_to_agent_map: HASH_TABLE [HASH_TABLE [ROUTINE [ANY, TUPLE], POINTER], POINTER]
 			-- Maps to store an eiffel agent per selector for a class
-		note
-			once_status: global
-		once
+		once ("PROCESS")
 			create Result.make (10000)
 		end
 

@@ -90,12 +90,12 @@ feature -- Accessing Data
 -- Error generating rangeValue: Message signature for feature not set
 -- Error generating rectValue: Message signature for feature not set
 
---	size_value: NS_SIZE
---			-- Returns the receiver`s value as a pointer to void.
---		do
---			create Result.make
---			{NS_VALUE_API}.size_value (item, Result.item)
---		end
+	size_value: NS_SIZE
+			-- Returns the receiver`s value as a pointer to void.
+		do
+			create Result.make
+			{NS_VALUE_API}.size_value (item, Result.item)
+		end
 
 feature -- Comparing Objects
 

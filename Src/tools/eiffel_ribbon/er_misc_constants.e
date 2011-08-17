@@ -144,11 +144,29 @@ feature -- Query
 
 feature -- Settings query
 
-	is_using_application_mode: CELL [BOOLEAN]
+	is_using_application_mode: BOOLEAN
 			-- If using application mode for multi windows support?
 			-- Otherwise it's using DLL
-		once
-			create Result.put (False)
+		local
+			l_shared_singleton: ER_SHARED_SINGLETON
+		do
+			create l_shared_singleton
+			if attached l_shared_singleton.tool_info_cell.item as l_tool_info then
+				Result := l_tool_info.is_using_application_modes
+			end
+		end
+
+feature -- Command
+
+	set_using_application_mode (a_bool: BOOLEAN)
+			-- Set `is_using_application_mode' with `a_bool'
+		local
+			l_shared_singleton: ER_SHARED_SINGLETON
+		do
+			create l_shared_singleton
+			if attached l_shared_singleton.tool_info_cell.item as l_tool_info then
+				l_tool_info.set_using_application_modes (a_bool)
+			end
 		end
 
 feature {NONE} -- Implementation

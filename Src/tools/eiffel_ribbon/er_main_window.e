@@ -201,6 +201,10 @@ feature {ER_UICC_MANAGER, ER_GENERATE_CODE_COMMAND} -- Implementation
 			shared_singleton.tool_info_cell.put (l_tool_info)
 
 			recent_project_command.restore_recent_item_menu
+
+			if attached shared_singleton.main_window_cell.item as l_main_window then
+				l_main_window.using_application_mode_command.update_gui
+			end
 		end
 
 	save_tool_info_when_exit

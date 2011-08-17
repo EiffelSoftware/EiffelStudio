@@ -26,17 +26,14 @@ feature -- Basic operations
 			ftype, local_int: INTEGER
 			local_int16: INTEGER_16
 			local_int64: INTEGER_64
-			fname: STRING
 			local_real: REAL
 			local_double: DOUBLE
 			local_boolean: BOOLEAN
 			local_char: CHARACTER
 			l_type: INTEGER
 		do
-			ftype := field_type (i, object)
-			fname := field_name (i, object)
 			Result := True
-
+			ftype := field_type (i, object)
 			if ftype = Integer_type then
 				if attached {DOUBLE_REF} value as double_ref then
 					local_int := double_ref.item.truncated_to_integer
@@ -112,40 +109,32 @@ feature -- Basic operations
 					Result := False
 				end
 				set_double_field (i, object, local_double)
-			elseif is_character (value) and then (ftype = Character_8_type or ftype = Character_32_type) then
-				if attached {CHARACTER_REF} value as char_ref then
-					local_char := char_ref.item
-					if ftype = Character_8_type then
-						set_character_8_field (i, object, local_char)
-					elseif ftype = Character_32_type then
-						set_character_32_field (i, object, local_char)
-					end
-				else
-					check False end -- implied by ftype = Character_type
-				end
-			elseif is_boolean (value) and then ftype = Boolean_type then
-				if attached {BOOLEAN_REF} value as boolean_ref then
-					local_boolean := boolean_ref.item
-					set_boolean_field (i, object, local_boolean)
-				else
-					check False end -- implied by ftype = Boolean_type
-				end
-			elseif is_string_general (value) then
+			elseif (ftype = Character_8_type or ftype = Character_32_type) and then attached {CHARACTER_REF} value as char_ref then
+				local_char := char_ref.item
 				if ftype = Character_8_type then
-					if attached {STRING_GENERAL} value as local_string1 and then local_string1.count = 1 then
-						set_character_8_field (i, object, local_string1.code (1).to_character_8)
+					set_character_8_field (i, object, local_char)
+				elseif ftype = Character_32_type then
+					set_character_32_field (i, object, local_char)
+				end
+			elseif ftype = Boolean_type and then attached {BOOLEAN_REF} value as boolean_ref then
+				local_boolean := boolean_ref.item
+				set_boolean_field (i, object, local_boolean)
+			elseif attached {STRING_GENERAL} value as string_general then
+				if ftype = Character_8_type then
+					if string_general.count = 1 then
+						set_character_8_field (i, object, string_general.code (1).to_character_8)
 					else
 						Result := False
 					end
 				elseif ftype = Character_32_type then
-					if attached {STRING_GENERAL} value as local_string1 and then local_string1.count = 1 then
-						set_character_32_field (i, object, local_string1.code (1).to_character_32)
+					if string_general.count = 1 then
+						set_character_32_field (i, object, string_general.code (1).to_character_32)
 					else
 						Result := False
 					end
 				elseif ftype = Boolean_type then
-					if attached {STRING_GENERAL} value as local_string1 and then local_string1.count = 1 then
-						local_char := local_string1.code (1).to_character_8
+					if string_general.count = 1 then
+						local_char := string_general.code (1).to_character_8
 						local_boolean := 'T' = local_char
 						set_boolean_field (i, object, local_boolean)
 					else
@@ -153,25 +142,16 @@ feature -- Basic operations
 					end
 				elseif ftype = Reference_type then
 					l_type := field_static_type_of_type (i, dynamic_type (object))
-					if field_conforms_to (dynamic_type (value), l_type) then
-							-- Proper conformance, let's go for it.
-						set_reference_field (i, object, value.twin)
-					elseif field_conforms_to (immutable_string_8_dtype, l_type) then
+					if field_conforms_to (immutable_string_8_dtype, l_type) then
 							-- Field is compatible with IMMUTABLE_STRING_8, let's go for it.
-						check attached {STRING_GENERAL} value as l_value then
-								-- We already know that `value' is a STRING_GENERAL, we just need to do
-								-- the type check to make the compiler happy when creating the
-								-- IMMUTABLE_STRING_8 instance.
-							set_reference_field (i, object, create {IMMUTABLE_STRING_8}.make_from_string (l_value.as_string_8))
-						end
+						set_reference_field (i, object, create {IMMUTABLE_STRING_8}.make_from_string (string_general.as_string_8))
 					elseif field_conforms_to (immutable_string_32_dtype, l_type) then
 							-- Field is compatible with IMMUTABLE_STRING_32, let's go for it.
-						check attached {STRING_GENERAL} value as l_value then
-								-- We already know that `value' is a STRING_GENERAL, we just need to do
-								-- the type check to make the compiler happy when creating the
-								-- IMMUTABLE_STRING_32 instance.
-							set_reference_field (i, object, create {IMMUTABLE_STRING_32}.make_from_string (l_value))
-						end
+						set_reference_field (i, object, create {IMMUTABLE_STRING_32}.make_from_string (string_general.as_string_32))
+					elseif field_conforms_to (dynamic_type (value), l_type) then
+						set_reference_field (i, object, value.twin)
+					else
+						Result := False
 					end
 				else
 					Result := False
@@ -181,7 +161,6 @@ feature -- Basic operations
 			else
 				Result := False
 			end
-
 		end
 
 	field_clean (i: INTEGER; object: ANY): BOOLEAN

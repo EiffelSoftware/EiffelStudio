@@ -520,6 +520,9 @@ feature {EV_ANY_I} -- Drawing implementation
 			l_internal_brush: WEL_BRUSH
 			l_is_remote: BOOLEAN
 			l_icon: WEL_ICON
+			l_gdip_graphcis: WEL_GDIP_GRAPHICS
+			l_gdip_image: WEL_GDIP_BITMAP
+			l_dest_rect, l_src_rect: WEL_RECT
 		do
 			theme_drawer := application_imp.theme_drawer
 			l_is_remote := metrics.is_remote_session
@@ -690,19 +693,30 @@ feature {EV_ANY_I} -- Drawing implementation
 				theme_drawer.update_button_pixmap_coordinates_for_state (open_theme, state, coordinate)
 
 				if attached disabled_image as l_disabled_image then
-						-- GDI+ is installed, convert image to WEL_ICON and use icon rendering as this handles alpha data.
-					l_icon := internal_pixmap_state.build_icon
-					color_imp ?= background_color.implementation
-					check
-						color_imp_not_void: color_imp /= Void
-					end
+						-- GDI+ is installed
+						-- when not sensitive, convert image to WEL_ICON and use icon rendering as this handles alpha data
+						-- when sensitive, using GDI+ features directly as it handles alpha data
 					if not is_sensitive then
+						l_icon := internal_pixmap_state.build_icon
+						color_imp ?= background_color.implementation
+						check
+							color_imp_not_void: color_imp /= Void
+						end
 						l_disabled_image.draw_grayscale_bitmap_or_icon_with_memory_buffer (wel_bitmap, l_icon, memory_dc, coordinate.x, coordinate.y, color_imp, internal_pixmap_state.has_mask)
+						l_icon.dispose
 					else
-							-- FIXME IEK: This could be optimized to use GDI+ features directly to avoid creating the icon resource on each draw.
-						memory_dc.draw_icon_ex (l_icon, coordinate.x, coordinate.y, image_width, image_height, 0, Void, 0x3) -- 0x3 = DI_NORMAL (DI_IMAGE | DI_MASK)
+						create l_gdip_image.make_from_bitmap_with_alpha (internal_pixmap_state.get_bitmap)
+						create l_src_rect.make (0, 0, image_width, image_height)
+						create l_dest_rect.make (coordinate.x, coordinate.y, coordinate.x + image_width, coordinate.y + image_height)
+						create l_gdip_graphcis.make_from_dc (memory_dc)
+						l_gdip_graphcis.draw_image_with_dest_rect_src_rect (l_gdip_image, l_dest_rect, l_src_rect)
+
+						l_gdip_graphcis.dispose
+						l_dest_rect.dispose
+						l_src_rect.dispose
+						l_gdip_image.dispose
 					end
-					l_icon.dispose
+
 				else
 					theme_drawer.draw_bitmap_on_dc (memory_dc, wel_bitmap, mask_bitmap, coordinate.x, coordinate.y, is_sensitive)
 				end

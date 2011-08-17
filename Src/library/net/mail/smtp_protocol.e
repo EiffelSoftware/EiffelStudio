@@ -23,7 +23,9 @@ feature -- Initialization
 			-- Create an smtp protocol with 'host, 'user' and default port.
 		require
 			host_not_void: host /= Void
+			host_not_empty: not host.is_empty
 			user_not_void: user /= Void
+			user_not_empty: not user.is_empty
 		do
 			hostname:= host
 			username:= user

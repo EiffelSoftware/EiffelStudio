@@ -38,7 +38,9 @@ feature -- Query
 			--
 		do
 			create Result.make
-			Result.set_text ("Save")
+			Result.set_text ("Save Project")
+			Result.set_name ("Save Project")
+			Result.set_description ("Save Project")
 			Result.select_actions.extend (agent execute)
 			tool_bar_items.extend (Result)
 		end

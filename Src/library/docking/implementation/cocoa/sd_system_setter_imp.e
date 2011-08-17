@@ -26,6 +26,11 @@ feature -- Command
 		do
 		end
 
+	is_during_pnd: BOOLEAN
+			-- If mouse is in Pick and Drop mode now?
+		do
+		end
+
 	clear_background_for_theme (a_widget: EV_DRAWING_AREA; a_rect: EV_RECTANGLE)
 		local
 			l_widget_imp: EV_DRAWING_AREA_IMP

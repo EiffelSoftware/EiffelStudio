@@ -1497,6 +1497,7 @@ Test catcall-generic-numeric (catcall005): passed
 Test catcall-at-runtime-detection (catcall006): passed
 Test wrong-catcall-reported-on-generic-expanded (catcall007): passed
 Test wrong-catcall-on-function-tuple (catcall008): passed
+Test catcall-on-tuple-insertion (catcall009): passed
 Test vlec-sneak (incr001): passed
 Test chg-inspect-const-type (incr002): passed
 Test vscn-sneak (incr003): passed
@@ -2412,6 +2413,7 @@ Test system-change-crash (incr415): failed
 	Expected result:
 		Final status:  completed 
 
+Test recompilation-forces-freeze (incr416): passed
 Test divide-melt-panic (melt001): passed
 Test bit-melt-metamorphose (melt002): passed
 Test manifest-array-with-old (melt003): passed
@@ -2625,6 +2627,7 @@ Test melted-once-creation-of-generic (melt101): failed
 	Substituted text: compare exec_output1 output
 	Reason: files being compared do not have identical contents
 
+Test melted-special-creation-crash-2 (melt102): passed
 Test bit-arg-extend-frozen (freez001): failed
 	Description: A call to a routine whose formal argument is a BIT type with a larger number of bits than the actual argument.  The actual argument should be extended with trailing zeros
 	Execution error in file /home/manus/local/eweasel/eweasel/tests/freez001/tcf at line 28
@@ -2981,7 +2984,7 @@ Test very-deep-clone (exec021): failed
 	Substituted text: execute_result ok
 	Reason: actual execution result does not match expected result
 	Actual result:
-		Final status:  system_failed had_panic 
+		Final status:  system_failed 
 	Expected result:
 		Final status:  completed 
 
@@ -3710,7 +3713,15 @@ Test generating-type-on-typed-pointer (exec342): failed
 	Expected result:
 		Final status:  completed 
 
-Test deep-twin-control-c (exec343): passed
+Test deep-twin-control-c (exec343): manual
+Test wrong-argument-type-in-tuple (exec344): passed
+Test wrong-attribute-type-in-tuple (exec345): failed
+	Description: When using an attribute as expression in a manifest tuple in the body or the assertion clauses of a routine we should get the type evaluated in descendants at runtime but it was not always the case.
+	Execution error in file /home/manus/local/eweasel/eweasel/tests/exec345/tcf at line 16
+	Original text:    compare exec_output_m output
+	Substituted text: compare exec_output_m output
+	Reason: files being compared do not have identical contents
+
 Test once-per-object-exec (once001): passed
 Test once-per-object-exec-with-exception (once002): passed
 Test once-per-object-redefinition (once003): passed
@@ -4744,6 +4755,7 @@ Test generic-constraint-to-none (fixed133): passed
 Test crash-degree-minus-1 (fixed134): passed
 Test roundtrip-test (rdtp001): passed
 Test roundtrip-number-denoted-character (rdtp002): passed
+Test roundtrip-equivalence (rdtp003): passed
 Test supplier-preconditions (assert001): passed
 Test use-application-options-assertions (assert002): passed
 Test undefined-assertion-merge (assert003): failed
@@ -5057,32 +5069,8 @@ Test repeated-inheritance-bogus-vevi (attach082): failed
 
 Test self-initializing-attribute-gc (attach083): passed
 Test manifest-string-type (attach084): passed
-Test initialized-after-unreachable (attach085): failed
-	Description: The entities can be treated as initialized if they appear in the unreachable code.
-	Execution error in file /home/manus/local/eweasel/eweasel/tests/attach085/tcf at line 8
-	Original text:    compile_result ok
-	Substituted text: compile_result ok
-	Reason: actual compilation result does not match expected result
-	Actual result:
-		Validity error in class TEST code VEVI
-		Validity error in class TEST code VEVI
-		Validity error in class TEST code VEVI
-		Validity error in class TEST code VEVI
-		Validity error in class TEST code VEVI
-		Validity error in class TEST code VEVI
-		Validity error in class TEST code VEVI
-		Validity error in class TEST code VEVI
-		Validity error in class TEST code VEVI
-		Validity error in class TEST code VEVI
-		Validity error in class TEST code VEVI
-		Validity error in class TEST code VEVI
-		Validity error in class TEST code VEVI
-		Validity error in class TEST code VEVI
-		Validity error in class TEST code VEVI
-		Final status:  paused 
-	Expected result:
-		Final status:  completed 
-
+Test initialized-after-unreachable (attach085): passed
+Test self-initializing-attribute-gc-2 (attach086): passed
 Test basic-conformance (conform001): passed
 Test formal-conformance (conform002): passed
 Test catcall-checking-conformance (conform003): passed
@@ -5331,8 +5319,8 @@ Test dotnet-polymorphism (dotnet110): failed
 Test dotnet-special-handling-crash (dotnet112): passed
 Test dotnet-static-access-on-deferred (dotnet115): passed
 
-Passed:  2213 / 2531  (88%)
-Failed:  289 / 2531  (12%)
-Manual:  24 / 2531  (1%)
-Skipped:  5 / 2531  (1%)
+Passed:  2219 / 2538  (88%)
+Failed:  289 / 2538  (12%)
+Manual:  25 / 2538  (1%)
+Skipped:  5 / 2538  (1%)
 

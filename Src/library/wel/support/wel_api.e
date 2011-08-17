@@ -251,6 +251,14 @@ feature -- Messages
 			"PostMessage ((HWND) $hwnd, (UINT) $msg, (WPARAM) $wparam, (LPARAM) $lparam)"
 		end
 
+	post_thread_message (idthread: INTEGER; msg: INTEGER; wparam, lparam: POINTER)
+			-- SDK PostThreadMessage (without the result)
+		external
+			"C inline use <windows.h>"
+		alias
+			"PostThreadMessage ((DWORD) $idthread, (UINT) $msg, (WPARAM) $wparam, (LPARAM) $lparam)"
+		end
+
 	register_window_message (a_message_name: POINTER): INTEGER
 			-- Register a custom window message named `message_name'.
 			-- `Result' is id of new message.

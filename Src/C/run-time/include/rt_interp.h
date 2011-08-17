@@ -278,7 +278,7 @@ extern struct opstack op_stack;               /* Operational stack */
 #define BC_CREATION		(unsigned char) 164
 #define BC_PCREATION		(unsigned char) 165
 #define BC_WAIT_ARG		(unsigned char) 166
-#define BC_NOTUSED_167		(unsigned char) 167
+#define BC_TUPLE_CATCALL	(unsigned char) 167
 
 /* Manifest tuple */
 #define BC_TUPLE	(unsigned char) 168

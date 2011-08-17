@@ -2239,6 +2239,37 @@ feature -- Access
 			end
 		end
 
+	generate_tuple_catcall_check (a_tuple_register, a_source_register: REGISTRABLE; a_pos: INTEGER)
+			-- Generate catcall check for tuple assignment at runtime for the entry  at position `a_pos' against
+			-- the dynamic type of `a_tuple'.
+		require
+			a_tuple_register_not_void: a_tuple_register /= Void
+			a_source_register_not_void: a_source_register /= Void
+			a_pos_positive: a_pos > 0
+		local
+			buf: like buffer
+		do
+				-- We do not check if `a_pos' is valid for `a_tuple'. If it is not, then the catcall
+				-- should have been caught earlier in the process and no need to report it again here even
+				-- though the assignment is most likely to crash.
+			buf := buffer
+			buf.put_new_line
+			buf.put_string ("RTCC(")
+			a_source_register.print_register
+			buf.put_two_character (',', ' ')
+			byte_code.feature_origin (buf)
+			buf.put_two_character (',', ' ')
+			generate_feature_name (buf)
+			buf.put_two_character (',', ' ')
+			buf.put_integer (a_pos)
+			buf.put_two_character (',', ' ')
+			buf.put_string ("eif_gen_param_id(Dftype(")
+			a_tuple_register.print_register
+			buf.put_three_character (')', ',', ' ')
+			buf.put_integer (a_pos)
+			buf.put_three_character (')', ')', ';')
+		end
+
 	make_catcall_check (ba: BYTE_ARRAY; a_type: TYPE_A; a_pos: INTEGER; a_like_current_optimization_ok: BOOLEAN)
 			-- Generate catcall check at runtime for the argument at position `a_pos' against the static
 			-- type `a_type'.
@@ -2287,6 +2318,26 @@ feature -- Access
 				ba.append_raw_string (l_name)
 				ba.append_integer (a_pos)
 			end
+		end
+
+	make_tuple_catcall_check (ba: BYTE_ARRAY; a_pos: INTEGER)
+			-- Generate catcall check at runtime for the argument at position `a_pos' against the static
+			-- type `a_type'.
+		require
+			ba_not_void: ba /= Void
+			a_pos_positive: a_pos > 0
+		local
+			l_name: STRING
+		do
+				-- We do not check if `a_pos' is valid for `a_tuple'. If it is not, then the catcall
+				-- should have been caught earlier in the process and no need to report it again here even
+				-- though the assignment is most likely to crash.
+			ba.append ({BYTE_CONST}.bc_tuple_catcall)
+			ba.append_type_id (class_type.static_type_id)
+			l_name := current_feature.feature_name
+			ba.append_integer (l_name.count)
+			ba.append_raw_string (l_name)
+			ba.append_integer (a_pos)
 		end
 
 	expanded_number (arg_pos: INTEGER): INTEGER

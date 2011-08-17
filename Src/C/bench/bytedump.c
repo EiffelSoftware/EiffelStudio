@@ -213,7 +213,7 @@ static  char    *names [] = {
 "BC_CREATION" ,
 "BC_PCREATION" ,
 "BC_WAIT_ARG" ,
-"BC_NOTUSED_167" ,
+"BC_TUPLE_CATCALL" ,
 "BC_TUPLE",
 "BC_PTUPLE",
 "BC_STRING32",
@@ -701,6 +701,13 @@ static  void    print_instructions (void)
 				if (get_bool(&ip)) {
 					(void) get_bool(&ip);
 				}
+					/* Static type of class */
+				print_ctype (get_int16(&ip));
+				fprintf (ofp, ".%s", get_string8(&ip, get_int32(&ip)));
+				fprintf (ofp, " @ %d", get_int32(&ip));
+				break;
+
+			case BC_TUPLE_CATCALL :
 					/* Static type of class */
 				print_ctype (get_int16(&ip));
 				fprintf (ofp, ".%s", get_string8(&ip, get_int32(&ip)));

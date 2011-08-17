@@ -1,2 +1,2 @@
-Catcall detected in {TEST}.make for arg#1: expected Y but got X
+Catcall detected in {TEST}.make for arg#1: expected STRING_8 but got ANY
 Execution completed

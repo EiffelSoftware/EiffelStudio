@@ -30,10 +30,12 @@ feature {NONE} -- Initialization
 			-- Initialize file from `a_path'.
 			--
 			-- `a_path': File path of a valid mo file
+		local
+			l_list: detachable LIST [STRING_32]
 		do
 			create {RAW_FILE} file.make (a_path.to_string_8)
-			last_translated := [0, Void]
-			last_original := [0, Void]
+			last_translated := [0, l_list]
+			last_original := [0, l_list]
 		ensure then
 			last_translated /= Void
 			last_original /= Void
@@ -185,8 +187,8 @@ feature -- Access
 
 feature --Entries
 
-	last_original: TUPLE[i:INTEGER; list: detachable LIST[STRING_32]]
-	last_translated: TUPLE[i:INTEGER; list: detachable LIST[STRING_32]]
+	last_original: TUPLE [i:INTEGER; list: detachable LIST [STRING_32]]
+	last_translated: TUPLE [i:INTEGER; list: detachable LIST [STRING_32]]
 
 	get_original_entries (i_th: INTEGER)
 			-- get `i_th' original entry in the file
@@ -422,7 +424,7 @@ invariant
 
 note
 	library:   "Internationalization library"
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

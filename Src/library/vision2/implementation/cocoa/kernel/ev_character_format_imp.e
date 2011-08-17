@@ -33,6 +33,11 @@ feature {NONE} -- Initialization
 	make
 			-- Do nothing
 		do
+			bcolor := 0xFFFFFF -- White
+			fcolor := 0 -- Black
+			name := ""
+
+			set_is_initialized (True)
 		end
 
 feature -- Access
@@ -45,17 +50,39 @@ feature -- Access
 
 	color: EV_COLOR
 			-- Color of the current format
+		local
+			a_color: INTEGER
 		do
+			a_color := fcolor
+			create Result
+			Result.set_red_with_8_bit (a_color & 0x000000FF)
+			Result.set_green_with_8_bit ((a_color & 0x0000FF00) |>> 8)
+			Result.set_blue_with_8_bit (a_color |>> 16)
 		end
 
 	background_color: EV_COLOR
 			-- Background Color of the current format
+		local
+			a_color: INTEGER
 		do
+			a_color := bcolor
+			create Result
+			Result.set_red_with_8_bit (a_color & 0x000000FF)
+			Result.set_green_with_8_bit ((a_color & 0x0000FF00) |>> 8)
+			Result.set_blue_with_8_bit (a_color |>> 16)
 		end
 
 	effects: EV_CHARACTER_FORMAT_EFFECTS
 			-- Character format effects applicable to `font'
 		do
+			create Result
+			if is_underlined then
+				Result.enable_underlined
+			end
+			if is_striked_out then
+				Result.enable_striked_out
+			end
+			Result.set_vertical_offset (vertical_offset)
 		end
 
 feature -- Status setting
@@ -102,10 +129,6 @@ feature -- Status setting
 
 feature {EV_RICH_TEXT_IMP} -- Implementation
 
-	dummy_character_format_range_information: EV_CHARACTER_FORMAT_RANGE_INFORMATION
-		once
-		end
-
 	apply_character_format_to_text_buffer (applicable_attributes: EV_CHARACTER_FORMAT_RANGE_INFORMATION; a_text_buffer, a_start_iter, a_end_iter: POINTER)
 			-- Apply `Current' to `a_text_buffer' to the region bounded by `a_start_iter' and `a_end_iter'
 		do
@@ -117,56 +140,16 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 		do
 		end
 
-	family_string: STRING
-			-- String optimization
-		once
-		end
-
-	size_string: STRING
-			-- String optimization
-		once
-		end
-
-	style_string: STRING
-			-- String optimization
-		once
-		end
-
-	weight_string: STRING
-			-- String optimization
-		once
-		end
-
-	foreground_string: STRING
-			-- String optimization
-		once
-		end
-
-	background_string: STRING
-			-- String optimization
-		once
-		end
-
-	underline_string: STRING
-			-- String optimization
-		once
-		end
-
-	strikethrough_string: STRING
-			-- String optimization
-		once
-		end
-
-	rise_string: STRING
-			-- String optimization
-		once
-		end
-
 feature {NONE} -- Implementation
 
 	app_implementation: EV_APPLICATION_IMP
-			--
+			-- App implementation object
+		local
+			l_result: detachable EV_APPLICATION_IMP
 		once
+			l_result ?= (create {EV_ENVIRONMENT}).implementation.application_i
+			check l_result /= Void end
+			Result := l_result
 		end
 
 	name: STRING_32
@@ -211,6 +194,11 @@ feature {NONE} -- Implementation
 
 	bcolor: INTEGER
 			-- background color BGR packed into 24 bit.
+
+	bcolor_set: BOOLEAN
+			-- Has `bcolor' been set explicitly via `bcolor_set'?
+		do
+		end
 
 	destroy
 			-- Clean up

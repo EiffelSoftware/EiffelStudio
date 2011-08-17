@@ -122,11 +122,11 @@ feature -- Basic operation
 			-- Process Cocoa events
 		local
 			event: detachable NS_EVENT
-			view: detachable NS_VIEW
-			l_window: detachable NS_WINDOW
-			pointer_button_action: TUPLE [x: INTEGER; y: INTEGER; button: INTEGER; x_tilt: DOUBLE; y_tilt: DOUBLE; pressure: DOUBLE; screen_x: INTEGER; screen_y: INTEGER]
-			pointer_motion_action: TUPLE [x: INTEGER; y: INTEGER; x_tilt: DOUBLE; y_tilt: DOUBLE; pressure: DOUBLE; screen_x: INTEGER; screen_y: INTEGER]
-			point: NS_POINT
+--			view: detachable NS_VIEW
+--			l_window: detachable NS_WINDOW
+--			pointer_button_action: TUPLE [x: INTEGER; y: INTEGER; button: INTEGER; x_tilt: DOUBLE; y_tilt: DOUBLE; pressure: DOUBLE; screen_x: INTEGER; screen_y: INTEGER]
+--			pointer_motion_action: TUPLE [x: INTEGER; y: INTEGER; x_tilt: DOUBLE; y_tilt: DOUBLE; pressure: DOUBLE; screen_x: INTEGER; screen_y: INTEGER]
+--			point: NS_POINT
 			l_loop_pool: NS_AUTORELEASE_POOL
 		do
 			create l_loop_pool.make
@@ -272,21 +272,8 @@ feature -- Thread Handling.
 	lock
 			-- Lock the Mutex.
 		do
---			if attached idle_action_mutex then
---				idle_action_mutex.lock
---			end
--- DEADLOCK in TEXT_PANEL.update_scroll_agent because the agent is an idle action (lock acquired before execution) and calls remove_idle_action which tries to acquire the lock again
--- FIXME: This is because MUTEX is reentrant on windows, but not so on Unix
-		end
-
-	try_lock: BOOLEAN
-			-- Try to see if we can lock, False means no lock could be attained
-		do
-			if idle_action_mutex /= Void then
-				Result := idle_action_mutex.try_lock
-			else
-				-- Return true if mono-threaded.
-				Result := True
+			if attached idle_action_mutex then
+				idle_action_mutex.lock
 			end
 		end
 

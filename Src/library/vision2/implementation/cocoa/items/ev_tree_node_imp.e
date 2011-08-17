@@ -115,7 +115,7 @@ feature {EV_ANY_I} -- Status setting
 	set_text (a_text: READABLE_STRING_GENERAL)
 			-- Set 'text' to 'a_text'
 		do
-			internal_text := a_text -- .twin??
+			internal_text := a_text.as_string_32.twin
 			if attached parent_tree_imp as l_tree then
 				l_tree.outline_view.reload_item_reload_children (default_pointer, True)
 			end
@@ -179,7 +179,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 	set_internal_text (a_text: READABLE_STRING_GENERAL)
 			-- Set `internal_text' to `a_text'
 		do
-			internal_text := a_text
+			internal_text := a_text.as_string_32
 		end
 
 	internal_text: detachable STRING_32
@@ -191,7 +191,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 	set_tooltip (a_text: READABLE_STRING_GENERAL)
 			-- Set `a_text' to `tooltip'.
 		do
-			internal_tooltip := a_text
+			internal_tooltip := a_text.as_string_32
 		end
 
 	remove_tooltip

@@ -199,7 +199,7 @@ feature -- Query
 	data_ptr: POINTER
 			-- A pointer to the byte-data. Accessed by classes in the Smart Docking library
 		local
-			l_image_rep: NS_BITMAP_IMAGE_REP
+--			l_image_rep: NS_BITMAP_IMAGE_REP
 		do
 --			create l_image_rep.make_with_data (image.tiff_representation)
 --			Result := l_image_rep.bitmap_data

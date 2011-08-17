@@ -330,7 +330,7 @@ feature {NONE} -- Implementation
 	append_buffer: POINTER
 		-- Pointer to the GtkTextBuffer used for append buffering.	
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: EV_RICH_TEXT;
 

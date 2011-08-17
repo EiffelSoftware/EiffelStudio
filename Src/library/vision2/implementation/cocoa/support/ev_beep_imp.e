@@ -18,13 +18,13 @@ create
 
 feature {NONE} -- Initlization
 
-	make (an_interface: EV_BEEP)
+	old_make (an_interface: EV_BEEP)
 			-- Create `Current' with interface `an_interface'.
 		do
-			base_make (an_interface)
+			assign_interface (an_interface)
 		end
 
-	initialize
+	make
 			-- Initialize `Current'.
 		do
 			set_is_initialized (True)

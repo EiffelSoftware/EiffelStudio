@@ -140,7 +140,7 @@ feature -- Status setting
 			l_text: STRING_32
 		do
 			l_text := text
-			l_text.insert_string (a_text, caret_position)
+			l_text.insert_string (a_text.as_string_32, caret_position)
 			text_view.set_string (l_text)
 			text_view.size_to_fit
 		end
@@ -159,7 +159,7 @@ feature -- Status setting
 			range, l_range: NS_RANGE
 		do
 			l_text := text
-			l_text.append (a_text)
+			l_text.append (a_text.as_string_32)
 
 			create l_range.make_range (a_text.count, text_view.string.to_string_8.count)
 
@@ -179,7 +179,7 @@ feature -- Status setting
 			l_text: STRING_32
 		do
 			l_text := text
-			l_text.prepend (a_text)
+			l_text.prepend (a_text.as_string_32)
 			text_view.set_string (l_text)
 			text_view.size_to_fit
 		end

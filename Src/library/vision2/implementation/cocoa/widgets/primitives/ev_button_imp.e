@@ -158,7 +158,7 @@ feature -- Status Setting
 	set_text (a_text: READABLE_STRING_GENERAL)
 			-- <Precursor>
 		do
-			if not text.is_equal (a_text) then
+			if not a_text.same_string (text) then
 				if a_text.is_empty then
 					set_default_minimum_size
 				else

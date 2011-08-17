@@ -25,7 +25,7 @@ inherit
 	EXECUTION_ENVIRONMENT
 
 create
-	make
+	make_with_context
 
 feature {NONE} -- Initialization
 
@@ -34,7 +34,13 @@ feature {NONE} -- Initialization
 			set_is_initialized (True)
 		end
 
-feature {EV_ANY_I} -- Implementation
+	make
+			-- <Precursor>
+		do
+			set_is_initialized (True)
+		end
+
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: EV_PRINT_PROJECTOR;
 

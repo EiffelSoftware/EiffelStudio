@@ -276,7 +276,7 @@ feature {NONE} -- Graphical view
 			end
 		end
 
-	max_depth: INTEGER is 10
+	max_depth: INTEGER = 10
 
 	add_recursive (a_node: EV_TREE_NODE; a_widget: detachable EV_WIDGET; a_depth: INTEGER)
 			-- Add all the children of a_container to a_node (and then the children of the children, etc.)

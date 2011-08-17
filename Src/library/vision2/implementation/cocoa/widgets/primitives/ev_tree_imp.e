@@ -82,9 +82,9 @@ feature {NONE} -- Initialization
 			initialize_item_list
 
 			create_data_source
-			outline_view.set_data_source (current)
-
 			create_delegate
+
+			outline_view.set_data_source (current)
 			outline_view.set_delegate (current)
 
 			Precursor {EV_PRIMITIVE_IMP}

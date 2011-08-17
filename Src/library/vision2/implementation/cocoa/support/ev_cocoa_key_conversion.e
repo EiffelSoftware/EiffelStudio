@@ -41,7 +41,7 @@ feature {NONE} -- Implementation
 	v2_to_cocoa_table: ARRAY [NATURAL_16]
 			-- Cocoa keycodes indexed by Vision2 key code.
 		once
-			create Result.make (Key_0, Key_menu)
+			create Result.make_filled (0, Key_0, Key_menu)
 			Result.put (('0').code.to_natural_16, Key_0)
 			Result.put (('1').code.to_natural_16, Key_1)
 			Result.put (('2').code.to_natural_16, Key_2)

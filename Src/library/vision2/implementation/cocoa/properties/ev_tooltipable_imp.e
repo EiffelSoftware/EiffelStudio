@@ -28,7 +28,7 @@ feature -- Element change
 	set_tooltip (a_tooltip: READABLE_STRING_GENERAL)
 			-- Set `tooltip' to `a_text'.
 		do
-			internal_tooltip_string := a_tooltip.twin
+			internal_tooltip_string := a_tooltip.as_string_32.twin
 		end
 
 feature {NONE} -- Implementation

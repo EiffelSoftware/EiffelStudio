@@ -163,4 +163,8 @@
 	<target name="vision2_dotnet" extends="vision2">
 		<setting name="msil_generation" value="true"/>
 	</target>
+	<target name="vision2_cocoa" extends="vision2">
+		<setting name="platform" value="macintosh"/>
+		<variable name="vision_implementation" value="cocoa"/>
+	</target>
 </system>

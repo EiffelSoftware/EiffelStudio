@@ -88,7 +88,7 @@ feature -- Element Change
 	set_tooltip (a_tooltip: READABLE_STRING_GENERAL)
 			-- Assign `a_tooltip' to `tooltip'.
 		do
-			tooltip := a_tooltip.twin
+			tooltip := a_tooltip.as_string_32.twin
 		end
 
 	tooltip: STRING_32

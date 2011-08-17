@@ -80,7 +80,7 @@ feature -- Element change
 	set_start_directory (a_path: READABLE_STRING_GENERAL)
 			-- Make `a_path' the base directory.
 		do
-			start_directory := a_path
+			start_directory := a_path.as_string_32.twin
 			set_directory (create {NS_STRING}.make_with_string (a_path))
 		end
 
@@ -90,17 +90,17 @@ feature {NONE} -- Implementation
 			-- Show the
 		local
 			button: INTEGER
-			l_window: NS_WINDOW
 		do
-			l_window ?= a_window.implementation
-			begin_sheet (void, void, void, l_window, delegate_class.create_instance, default_pointer, default_pointer)
-			button := run_modal
-			if button =  {NS_PANEL}.ok_button then
-				selected_button := internal_accept
-				ok_actions.call ([])
-			elseif button = {NS_PANEL}.cancel_button then
-				selected_button := ev_cancel
-				cancel_actions.call ([])
+			check attached {EV_WINDOW_IMP} a_window.implementation as l_window then
+				begin_sheet (void, void, void, l_window, delegate_class.create_instance, default_pointer, default_pointer)
+				button := run_modal
+				if button =  {NS_PANEL}.ok_button then
+					selected_button := internal_accept
+					ok_actions.call ([])
+				elseif button = {NS_PANEL}.cancel_button then
+					selected_button := ev_cancel
+					cancel_actions.call ([])
+				end
 			end
 		end
 
@@ -116,6 +116,8 @@ feature {NONE} -- Implementation
 			Precursor {EV_STANDARD_DIALOG_IMP}
 			Precursor {NS_OPEN_PANEL}
 		end
+
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: EV_DIRECTORY_DIALOG;
 

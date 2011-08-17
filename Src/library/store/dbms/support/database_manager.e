@@ -181,7 +181,7 @@ feature -- Queries
 		do
 			if not rescued then
 				l_session_control := session_control
-				check l_session_control /= Void end -- implied by preconditon `created'
+				check l_session_control /= Void end -- implied by precondition `created'
 				has_error := False
 				l_session_control.reset
 				db_selection.object_convert (an_obj)
@@ -206,7 +206,7 @@ feature -- Queries
 				error_message_32 := unexpected_error (list_select_name)
 				create l_result.make (0)
 			end
-			check l_result /= Void end -- FIXME: implied by previous if caluse, bug here? `l_result' can be void if rescued
+			check l_result /= Void end -- FIXME: implied by previous if clause, bug here? `l_result' can be void if rescued
 			Result := l_result
 		ensure
 			result_not_void: Result /= Void
@@ -248,7 +248,7 @@ feature -- Queries without result to load.
 				error_message_32 := unexpected_error (Execute_query_name)
 			end
 		rescue
-			rescued := TRUE
+			rescued := True
 			retry
 		end
 

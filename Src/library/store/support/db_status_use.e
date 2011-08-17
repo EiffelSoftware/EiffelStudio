@@ -36,7 +36,7 @@ feature -- Status report
 	is_ok: BOOLEAN
 			-- Is last SQL statement ok ?
 		do
-			Result := error_code = 0
+			Result := handle.status.is_ok
 		end
 
 	error_message: STRING
@@ -64,7 +64,7 @@ feature -- Status report
 	warning_message_32: STRING_32
 			-- SQL warning message prompted by database server
 		do
-			Result := handle.status.error_message_32
+			Result := handle.status.warning_message_32
 		end
 
 feature -- Status setting

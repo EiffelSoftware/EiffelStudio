@@ -96,7 +96,7 @@ feature -- Redefine
 					draw_pixmap (a_arguments)
 					draw_text (a_arguments)
 				elseif attached {SD_TOOL_BAR_SEPARATOR} a_arguments.item as l_separator then
-					tool_bar_imp.set_foreground_color (create {EV_COLOR}.make_with_rgb ({REAL_32}1.0, {REAL_32}1.0, {REAL_32}1.0)
+					tool_bar_imp.set_foreground_color (create {EV_COLOR}.make_with_rgb ({REAL_32}1.0, {REAL_32}1.0, {REAL_32}1.0))
 					tool_bar_imp.fill_rectangle (l_rect.x, l_rect.y, l_rect.width, l_rect.height)
 					if l_rect.width < l_rect.height then
 						l_rect.move_and_resize (l_rect.x + l_rect.width // 2, l_rect.y + 1, 1, l_rect.height - 1)

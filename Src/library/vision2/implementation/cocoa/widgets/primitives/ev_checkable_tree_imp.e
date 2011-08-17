@@ -24,8 +24,7 @@ inherit
 
 	EV_TREE_IMP
 		redefine
-			interface,
-			make
+			interface
 		end
 
 	EV_CHECKABLE_TREE_ACTION_SEQUENCES_IMP
@@ -34,12 +33,6 @@ create
 	make
 
 feature {NONE} -- Initialization
-
-	make
-			-- Setup `Current'
-		do
-			Precursor {EV_TREE_IMP}
-		end
 
 	boolean_tree_model_column: INTEGER = 2
 
@@ -75,7 +68,7 @@ feature -- Status setting
 		end
 
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: EV_CHECKABLE_TREE;
 

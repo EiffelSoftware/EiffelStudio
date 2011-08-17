@@ -84,7 +84,7 @@ feature -- Element change
 	set_tooltip (a_tooltip: READABLE_STRING_GENERAL)
 			-- Assign `a_tooltip' to `tooltip'.
 		do
-			internal_tooltip := a_tooltip.twin
+			internal_tooltip := a_tooltip.as_string_32.twin
 		end
 
 	tooltip: STRING_32
@@ -100,7 +100,7 @@ feature -- Element change
 	set_text (a_text: READABLE_STRING_GENERAL)
 			-- Set current button text to `txt'.
 		do
-			internal_text := a_text.twin
+			internal_text := a_text.as_string_32.twin
 		end
 
 	set_pointer_style (a_cursor: EV_POINTER_STYLE)

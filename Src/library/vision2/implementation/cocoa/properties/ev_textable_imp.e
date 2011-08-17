@@ -109,7 +109,7 @@ feature {EV_ANY_IMP} -- Implementation
 		require
 			s_not_void: s /= Void
 		do
-			Result := s.twin
+			Result := s.as_string_32
 			Result.replace_substring_all (once  "_", once  "__")
 			if s.has_code (('&').natural_32_code) then
 				filter_ampersand (Result, '_')

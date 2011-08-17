@@ -83,10 +83,34 @@ feature -- Minimum size
 
 feature -- Status setting
 
+	align_text_top
+			-- Set vertical text alignment of current label to top.
+		do
+			check
+				not_implemented: False
+			end
+		end
+
+	align_text_vertical_center
+			-- Set text alignment of current label to be in the center vertically.
+		do
+			check
+				not_implemented: False
+			end
+		end
+
+	align_text_bottom
+			-- Set vertical text alignment of current label to bottom.
+		do
+			check
+				not_implemented: False
+			end
+		end
+
 	set_text (a_text: READABLE_STRING_GENERAL)
 			-- Assign `a_text' to `text'.
 		do
-			if not text.is_equal (a_text) then
+			if not a_text.same_string (text) then
 				if a_text.is_empty then
 					set_default_minimum_size
 				else

@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 			Precursor {EV_DIALOG_IMP}
 		end
 
-feature {NONE} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: EV_UNTITLED_DIALOG;
 			-- Provides a common user interface to platform dependent

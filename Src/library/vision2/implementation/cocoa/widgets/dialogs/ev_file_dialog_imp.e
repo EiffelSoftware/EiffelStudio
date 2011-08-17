@@ -85,9 +85,9 @@ feature -- Element change
 		local
 			filter_name: STRING_32
 		do
-			filter := a_filter.twin
+			filter := a_filter.as_string_32.twin
 
-			filter_name := a_filter.twin
+			filter_name := a_filter.as_string_32.twin
 			if
 				filter_name.count >= 3 and
 				filter_name.item (1) = '*' and
@@ -96,7 +96,7 @@ feature -- Element change
 				filter_name.remove_head (2)
 				filter_name.put (filter_name.item (1).upper, 1)
 				filter_name.append (" Files (")
-				filter_name.append (a_filter)
+				filter_name.append_string_general (a_filter)
 				filter_name.append (")")
 			end
 
@@ -114,7 +114,7 @@ feature -- Element change
 	set_start_directory (a_path: READABLE_STRING_GENERAL)
 			-- Make `a_path' the base directory.
 		do
-			start_directory := a_path
+			start_directory := a_path.as_string_32.twin
 			save_panel.set_directory (create {NS_STRING}.make_with_string (a_path))
 		end
 

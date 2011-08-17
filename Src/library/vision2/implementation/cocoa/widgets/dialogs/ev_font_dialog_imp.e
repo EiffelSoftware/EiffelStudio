@@ -63,7 +63,7 @@ feature {NONE} -- Implementation
 
 	font_panel: NS_FONT_PANEL
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: EV_FONT_DIALOG;
 

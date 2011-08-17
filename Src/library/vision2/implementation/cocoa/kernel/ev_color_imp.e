@@ -81,7 +81,8 @@ feature -- Element change
 	set_name (a_name: READABLE_STRING_GENERAL)
 			-- Assign `a_name' to `name'.
 		do
-			name.copy (a_name)
+			name.wipe_out
+			name.append_string_general (a_name)
 		end
 
 feature -- Conversion

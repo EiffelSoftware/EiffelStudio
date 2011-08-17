@@ -91,6 +91,11 @@ feature -- Element change
 			end
 		end
 
+	set_border_width (value: INTEGER)
+			-- Make `value' the new border width of `Current'.
+		do
+			border_width := value
+		end
 
 feature -- Layout
 

@@ -1949,7 +1949,7 @@ feature {NONE} -- Visitors
 				generate_melted_debugger_hook
 				a_node.source.process (Current)
 				if l_tuple_type.c_type.is_reference then
-					context.make_catcall_check (ba, a_node.tuple_type.generics.item (a_node.position), a_node.position, False)
+					context.make_tuple_catcall_check (ba, a_node.position)
 				end
 				ba.append (bc_tuple_assign)
 			else

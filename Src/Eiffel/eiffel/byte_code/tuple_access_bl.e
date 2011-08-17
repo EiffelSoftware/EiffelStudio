@@ -78,7 +78,7 @@ feature -- C Code generation
 				if context.workbench_mode or system.check_for_catcall_at_runtime then
 					l_target_type := real_type (tuple_element_type)
 					if l_target_type.c_type.is_reference then
-						context.generate_catcall_check (source, l_target_type, position, False)
+						context.generate_tuple_catcall_check (a_register, source, position)
 					end
 				end
 					-- Make sure to call RTCV to verify that TUPLE is not Void.				
@@ -152,7 +152,7 @@ feature -- C Code generation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

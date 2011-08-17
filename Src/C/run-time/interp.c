@@ -1099,6 +1099,29 @@ rt_private void interpret(int flag, int where)
 		}
 		break;
 
+	case BC_TUPLE_CATCALL:
+		{
+			EIF_TYPED_VALUE *l_elem;
+			EIF_TYPE_INDEX l_written_dtype;
+			int l_pos;
+
+				/* Get the routine were the TUPLE assignment is done and at which position. */
+			l_written_dtype = get_int16(&IC);
+			string = get_string8(&IC, get_int32(&IC));
+			l_pos = get_int32(&IC);
+
+				/* Pop the element we want to insert to get to the TUPLE object. */
+			l_elem = opop();
+				/* The TUPLE object. */
+			last = otop();
+				/* We put back the element on the stack. */
+			opush (l_elem);
+			CHECK("last not null", last);
+
+			RTCC(l_elem->it_ref, l_written_dtype, (char *) string, l_pos, eif_gen_param_id(Dftype(last->it_ref), l_pos));
+		}
+		break;
+
 	case BC_END_CATCALL:
 		if (*IC != BC_PRECOND) {
 #ifdef EIF_THREADS

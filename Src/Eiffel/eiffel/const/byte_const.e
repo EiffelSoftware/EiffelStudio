@@ -247,7 +247,7 @@ feature -- Access
 			-- Argument that may trigger a wait condition if it is uncontrolled.
 
 		-- Unused opcode
-	Bc_notused_167:		CHARACTER = '%/167/';
+	Bc_tuple_catcall:		CHARACTER = '%/167/';
 
 		-- Manifest tuple
 	Bc_tuple:				CHARACTER = '%/168/'

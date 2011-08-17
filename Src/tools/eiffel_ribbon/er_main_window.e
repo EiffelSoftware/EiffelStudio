@@ -23,6 +23,10 @@ feature {NONE} -- Initialization
 		do
 			set_size (1280, 600)
 
+			 -- We have wipe out EiffelBuild generated `close_request_actions' first,
+			 -- otherwise, docking library cannot save widget's state since some widgets
+			 -- already destroyed by the generated `close_request_actions'
+			close_request_actions.wipe_out
 			close_request_actions.extend (agent on_exit_selected)
 
 			show_actions.extend_kamikaze (agent init_after_shown)
@@ -67,6 +71,8 @@ feature {NONE} -- Initialization
 
 			save_project_command.disable
 			gen_code_command.disable
+
+			restore_tools_layout
 		end
 
 	user_create_interface_objects
@@ -157,6 +163,7 @@ feature {NONE} -- Agents
 		local
 			l_env: EV_ENVIRONMENT
 		do
+			save_tools_layout -- GUI is not visible when saving
 			create l_env
 			if attached l_env.application as l_app then
 				l_app.destroy
@@ -170,6 +177,26 @@ feature {NONE} -- Agents
 		end
 
 feature {ER_UICC_MANAGER, ER_GENERATE_CODE_COMMAND} -- Implementation
+
+	restore_tools_layout
+			--
+		local
+			l_result: BOOLEAN
+		do
+			if attached docking_manager as l_manager then
+				l_result := l_manager.open_tools_config ({ER_MISC_CONSTANTS}.docking_tools_layout_file_name)
+			end
+		end
+
+	save_tools_layout
+			--
+		local
+			l_result: BOOLEAN
+		do
+			if attached docking_manager as l_manager then
+				l_result := l_manager.save_tools_data ({ER_MISC_CONSTANTS}.docking_tools_layout_file_name)
+			end
+		end
 
 	restore_tool_info_from_disk
 			--

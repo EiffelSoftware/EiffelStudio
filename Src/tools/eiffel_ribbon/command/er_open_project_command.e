@@ -74,7 +74,9 @@ feature -- Command
 		do
 			create Result.make
 			if attached shared_singleton.layout_constructor_list.first as l_layout_constructor then
-				Result.set_text ("Open")
+				Result.set_text ("Open Project")
+				Result.set_text ("Open Project")
+				Result.set_description ("Open Project")
 				Result.select_actions.extend (agent execute)
 
 				tool_bar_items.extend (Result)

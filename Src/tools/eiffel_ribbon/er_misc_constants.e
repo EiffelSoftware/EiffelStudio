@@ -142,6 +142,9 @@ feature -- Query
 			Result := l_file_name
 		end
 
+	docking_tools_layout_file_name: STRING = "docking_tools_layout"
+			--
+			
 feature -- Settings query
 
 	is_using_application_mode: BOOLEAN

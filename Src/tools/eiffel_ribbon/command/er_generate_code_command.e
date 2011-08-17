@@ -54,6 +54,8 @@ feature -- Command
 		do
 			create Result.make
 			Result.set_text ("Generate Code")
+			Result.set_name ("Generate Code")
+			Result.set_description ("Generate Code")
 			Result.select_actions.extend (agent execute)
 			tool_bar_items.extend (Result)
 		end

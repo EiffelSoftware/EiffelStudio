@@ -17,10 +17,26 @@ create -- Creation procedure
 
 	make
 
+feature {NONE} -- Initialization
+
+	make
+			-- Create `implementation' handle.
+		do
+			implementation := handle.database.db_status
+			error_message_stored := empty_string
+			no_error_code_stored := implementation.no_error_code
+		end
+
 feature -- Status report
 
 	is_connected: BOOLEAN
 			-- Has connection to the data base server succeeded?
+
+	is_ok: BOOLEAN
+			-- Is last SQL statement ok ?
+		do
+			Result := error_code = no_error_code_stored
+		end
 
 	is_error_updated: BOOLEAN
 			-- Has an Oracle/ODBC function been called since last update which may have
@@ -59,7 +75,8 @@ feature -- Status report
 			if not handle.status.is_error_updated then
 				update_error_status
 			end
-			Result := error_message_stored
+				-- Return a copy of the stored error string for safety.
+			create Result.make_from_string (error_message_stored)
 		end
 
 	warning_message: STRING
@@ -88,11 +105,10 @@ feature -- Status setting
 
 	reset
 			-- Reset database error status.
-
 		do
 			implementation.reset
 			error_code_stored := 0
-			create error_message_stored.make_empty
+			error_message_stored := empty_string
 		ensure
 			no_error: error_code_stored = 0
 			no_message_error: error_message_stored.is_empty
@@ -110,28 +126,27 @@ feature {NONE} -- error status implementation
 	error_code_stored: INTEGER
 			-- error code
 
+	no_error_code_stored: INTEGER
+			-- Default value of `error_code' from database (ie: no error).
+
 	update_error_status
 			-- set `error_message_stored', `error_code_stored', with
 			-- error_status from the database server.
 		do
 			error_code_stored := implementation.error_code
-			if error_code_stored /= implementation.no_error_code then
+			if error_code_stored /= no_error_code_stored then
 				error_message_stored := implementation.error_message_32
 			else
-				error_message_stored := once {STRING_32}""
+				error_message_stored := empty_string
 			end
 		ensure
 			is_error_updated
 		end
 
-feature {NONE} -- Initialization
+feature {NONE} -- Implementation
 
-	make
-			-- Create `implementation' handle.
-		do
-			implementation := handle.database.db_status
-			create error_message_stored.make_empty
-		end
+	empty_string: STRING_32 = ""
+		-- Empty string constant.
 
 invariant
 

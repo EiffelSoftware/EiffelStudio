@@ -1,0 +1,14 @@
+test_name 	 like-current-default-attachment
+test_description Default attachment status of `like Current' should be taken into account correctly.
+
+copy_sub	Ace $TEST Ace
+copy_raw	a.e $CLUSTER a.e
+copy_raw	b.e $CLUSTER b.e
+copy_raw	test.e $CLUSTER test.e
+
+compile_frozen
+compile_result ok
+c_compile_work
+c_compile_result	ok
+
+test_end

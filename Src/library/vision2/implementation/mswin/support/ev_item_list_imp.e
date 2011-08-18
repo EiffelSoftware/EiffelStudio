@@ -32,8 +32,6 @@ feature {NONE} -- Initialization
 	make
 			-- Initialize `Current'.
 		do
-			create new_item_actions
-			create remove_item_actions
 			set_is_initialized (True)
 		end
 
@@ -56,8 +54,8 @@ feature {NONE} -- Implementation
 		do
 			if attached {H} interface_i_th (i).implementation as v_imp then
 				v_imp.on_orphaned
-				if remove_item_actions.count > 0 then
-					remove_item_actions.call ([v_imp.attached_interface])
+				if remove_item_actions_internal /= Void and then remove_item_actions_internal.count > 0 then
+					remove_item_actions_internal.call ([v_imp.attached_interface])
 				end
 				remove_item (v_imp)
 				v_imp.set_parent_imp (Void)
@@ -86,10 +84,21 @@ feature -- Event handling
 
 	new_item_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_ITEM]]
 			-- Actions to be performed after an item is added.
-
+		do
+			if new_item_actions_internal = Void then
+				create new_item_actions_internal
+			end
+			Result := new_item_actions_internal
+		end
 
 	remove_item_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_ITEM]]
 			-- Actions to be performed before an item is removed.
+		do
+			if remove_item_actions_internal = Void then
+				create remove_item_actions_internal
+			end
+			Result := remove_item_actions_internal
+		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
@@ -112,9 +121,11 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Implementation
 		deferred
 		end
 
-invariant
-	new_item_actions_not_void: is_usable implies new_item_actions /= Void
-	remove_item_actions_not_void: is_usable implies remove_item_actions /= Void
+feature {NONE} -- Implementation
+
+	new_item_actions_internal: detachable like new_item_actions note option: stable attribute end
+	remove_item_actions_internal: detachable like remove_item_actions note option: stable attribute end
+		-- Internal storage for `new_item_actions' and `remove_item_actions'.
 
 note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"

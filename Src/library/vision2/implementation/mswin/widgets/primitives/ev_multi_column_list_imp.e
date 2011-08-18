@@ -920,7 +920,9 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- Implementation, Pixmap handling
 			loop
 				child_imp := ev_children.item
 				child_imp.on_orphaned
-				remove_item_actions.call ([child_imp.attached_interface])
+				if remove_item_actions_internal /= Void and then remove_item_actions_internal.count > 0 then
+					remove_item_actions_internal.call ([child_imp.attached_interface])
+				end
 				child_imp.set_parent_imp (Void)
 				if internal_selected_items.has (child_imp.attached_interface) then
 					if child_imp.deselect_actions_internal /= Void then

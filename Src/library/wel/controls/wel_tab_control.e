@@ -173,6 +173,9 @@ feature -- Status report
 			Result.set_text (buffer)
 			Result.set_cchtextmax (buffer_size)
 			{WEL_API}.send_message (item, Tcm_getitem, to_wparam (index), Result.item)
+				-- Release buffer memory immediately.
+			buffer.wipe_out
+			buffer.adapt_size
 		end
 
 	background_region (invalid_rect: WEL_RECT): WEL_REGION

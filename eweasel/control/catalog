@@ -2559,6 +2559,7 @@ test	self-initializing-attribute-gc	attach083 tcf pass attached_types void_safe 
 test	manifest-string-type			attach084 tcf pass attached_types void_safe execution
 test	initialized-after-unreachable		attach085 tcf pass attached_types void_safe unreachable_code
 test	self-initializing-attribute-gc-2	attach086 tcf pass attached_types void_safe attribute self_init execution
+test	like-current-default-attachment		attach087 tcf pass attached_types void_safe attribute validity
 
 -- Tests for conformance in general
 test	basic-conformance		conform001 tcf pass conformance

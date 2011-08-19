@@ -93,7 +93,6 @@ feature -- Basic operations
 			end
 		end
 
-
 	terminate
 			-- Release cursor descriptor used with last query.
 		require else
@@ -123,22 +122,32 @@ feature -- Status setting
 			r_any: detachable ANY
 			tst : BOOLEAN
 			l_map_table: detachable ARRAY [INTEGER]
+			l_db_count: INTEGER
+			l_is_convert_string_type_required: BOOLEAN
 		do
 			if attached {DATABASE_DATA [G]} cursor.data as database_data then
 				from
 					i := 1
-				until
-					i > database_data.count or not is_ok
-				loop
-					r_any := database_data.item (i)
+					l_db_count := database_data.count
+					l_is_convert_string_type_required := db_spec.is_convert_string_type_required
+						-- Does a database field need conversion to an Eiffel object?
 					l_map_table := database_data.map_table
 					check l_map_table /= Void end -- FIXME: implied by ... bug?
+				until
+					i > l_db_count
+				loop
 					pos := l_map_table.item (i)
 					if pos > 0 then
+						r_any := database_data.item (i)
 						if r_any /= Void then
-							tst := field_copy (pos, object,
-								db_spec.convert_string_type (r_any,
-								field_name (pos, object), r_any.generator))
+								-- Convert string type if backend requires it.
+							if l_is_convert_string_type_required then
+								tst := field_copy (pos, object,
+									db_spec.convert_string_type (r_any,
+									field_name (pos, object), r_any.generator))
+							else
+								tst := field_copy (pos, object, r_any)
+							end
 						else
 							tst := field_clean (pos, object)
 						end
@@ -168,7 +177,6 @@ feature -- Status setting
 		ensure
 			ht_order_set: ht_order = table
 		end
-
 
 feature -- Status report
 

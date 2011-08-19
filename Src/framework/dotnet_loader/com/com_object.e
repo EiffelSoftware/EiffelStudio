@@ -29,6 +29,12 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
+	exists: BOOLEAN
+			-- Is Current properly associated to a COM object?
+		do
+			Result := item /= default_pointer
+		end
+
 	is_successful: BOOLEAN
 			-- Was last call to a COM routine of `Current' successful?
 		do
@@ -50,15 +56,15 @@ feature {NONE} -- Disposal
 		local
 			l_nb_ref: INTEGER
 		do
-			debug ("COM_OBJECT")
-				dispose_debug_output (1, item, $Current, 0)
-			end
 			if item /= Default_pointer then
+				debug ("COM_OBJECT")
+					dispose_debug_output (1, item, $Current, 0)
+				end
 				l_nb_ref := {CLI_COM}.release (item)
 				item := default_pointer
-			end
-			debug ("COM_OBJECT")
-				dispose_debug_output (2, item, $Current, l_nb_ref)
+				debug ("COM_OBJECT")
+					dispose_debug_output (2, item, $Current, l_nb_ref)
+				end
 			end
 		ensure then
 			item_null: item = default_pointer

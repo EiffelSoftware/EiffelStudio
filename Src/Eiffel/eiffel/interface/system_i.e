@@ -871,10 +871,17 @@ end
 			end
 		end
 
+	has_class_of_id (id: INTEGER): BOOLEAN
+			-- Is `id' a valid class ID?
+		do
+			Result := classes.valid_index (id)
+		end
+
 	class_of_id (id: INTEGER): CLASS_C
 			-- Class of id `id'
 		require
 			id_not_void: id /= 0
+			is_valid_class_id: has_class_of_id (id)
 		do
 			Result := classes.item (id)
 debug ("CLASS_OF_ID")

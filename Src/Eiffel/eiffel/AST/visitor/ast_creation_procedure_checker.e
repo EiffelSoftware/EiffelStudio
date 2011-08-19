@@ -271,9 +271,7 @@ feature {AST_EIFFEL} -- Visitor: access to features
 					end
 				else
 					i := a.class_id
-					if system.classes.valid_index (i) and then
-						attached system.class_of_id (i) as c
-					then
+					if system.has_class_of_id (i) and then attached system.class_of_id (i) as c then
 							-- Look for the feature in the recorded class.
 						f := c.feature_of_name_id (a.feature_name.name_id)
 							-- `f' is the feature in the ancestor class.

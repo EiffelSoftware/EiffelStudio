@@ -96,7 +96,10 @@ feature {BREAK_LIST, BREAKPOINT} -- Copy for saving
 	routine_from_ids: detachable E_FEATURE
 			-- Routine computed from saved ids
 		do
-			if routine_written_in > 0 and then attached system.class_of_id (routine_written_in) as cl then
+			if
+				routine_written_in > 0 and then system.has_class_of_id (routine_written_in) and then
+				attached system.class_of_id (routine_written_in) as cl
+			then
 				Result := cl.feature_with_body_index (body_index)
 			end
 		end
@@ -319,7 +322,7 @@ feature {NONE} -- Private constants
 	Application_breakpoint_not_set: INTEGER = 1
 
 ;note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

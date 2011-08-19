@@ -81,6 +81,7 @@ feature -- Element change
 			g: INTEGER
 			ind, index: INTEGER
 			l_map_table: like map_table
+			l_buffer: like buffer
 		do
 			g := field_count (object)
 			l_map_table := map_table
@@ -91,18 +92,19 @@ feature -- Element change
 				l_map_table.conservative_resize_with_default (0, 1, count)
 			end
 			from
+				l_buffer := buffer
 				ind := 1
 			until
 				ind > count
 			loop
-				buffer.wipe_out
-				buffer.append_string (column_name (ind))
-				buffer.to_lower
-				buffer.right_adjust
+				l_buffer.wipe_out
+				l_buffer.append_string (column_name (ind))
+				l_buffer.right_adjust
+				l_buffer.to_lower
 				from
 					index := 1
 				until
-					index > g or else field_name (index, object).is_equal (buffer)
+					index > g or else field_name (index, object).is_equal (l_buffer)
 				loop
 					index := index + 1
 				end

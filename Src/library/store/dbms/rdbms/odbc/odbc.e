@@ -26,7 +26,8 @@ inherit
 			drop_proc_not_supported,
 			text_not_supported,
 			exec_proc_not_supported,
-			unset_catalog_flag
+			unset_catalog_flag,
+			is_convert_string_type_required
 		end
 
 	DISPOSABLE
@@ -36,6 +37,9 @@ inherit
 feature -- Access
 
 	database_handle_name: STRING = "ODBC"
+
+	is_convert_string_type_required: BOOLEAN = False
+		-- <Precursor>
 
 feature -- For DATABASE_STATUS
 

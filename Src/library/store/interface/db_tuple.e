@@ -9,14 +9,12 @@ note
 class DB_TUPLE
 
 inherit
-
 	DB_RESULT
 		redefine
 			data
 		end
 
 create
-
 	copy, make
 
 feature -- Status report
@@ -54,7 +52,7 @@ feature -- Status report
 		end
 
 	empty: BOOLEAN
-			-- Is Curren tuple empty?
+			-- Is Current tuple empty?
 		obsolete
 			"Please use `is_empty' instead to remain %
 			%consistant with CONTAINER `is_empty' feature."
@@ -63,13 +61,9 @@ feature -- Status report
 		end
 
 	is_empty: BOOLEAN
-			-- Is Curren tuple empty?
+			-- Is Current tuple empty?
 		do
-			if implementation = Void then
-				Result := true
-			else
-				Result := (count = 0)
-			end
+			Result := implementation.count = 0
 		end
 
 note

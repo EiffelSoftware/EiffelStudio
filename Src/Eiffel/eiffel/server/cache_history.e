@@ -190,8 +190,8 @@ feature -- Element change
 				i := i + 1
 			end
 			to_remove := l_default
-			next.clear_all
-			previous.clear_all
+			next.fill_with (0, 0, next.upper)
+			previous.fill_with (0, 0, previous.upper)
 		end
 
 	set_item (e: G; i: INTEGER)

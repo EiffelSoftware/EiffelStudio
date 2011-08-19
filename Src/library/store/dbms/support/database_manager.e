@@ -133,27 +133,29 @@ feature -- Queries
 			tuple: DB_TUPLE
 			l_session_control: like session_control
 			l_cursor: detachable DB_RESULT
+			l_db_selection: like db_selection
 		do
 			if not rescued then
 				has_error := False
 				l_session_control := session_control
 				check l_session_control /= Void end -- implied by precondition `created'
 				l_session_control.reset
-				db_selection.no_object_convert
-				db_selection.unset_action
-				db_selection.set_query (s)
-				db_selection.execute_query
-				if db_selection.is_ok then
-					db_selection.load_result
-					if db_selection.is_ok then
-						l_cursor := db_selection.cursor
+				l_db_selection := db_selection
+				l_db_selection.no_object_convert
+				l_db_selection.unset_action
+				l_db_selection.set_query (s)
+				l_db_selection.execute_query
+				if l_db_selection.is_ok then
+					l_db_selection.load_result
+					if l_db_selection.is_ok then
+						l_cursor := l_db_selection.cursor
 						check l_cursor /= Void end -- implied by `load_result''s postcondition
 						create tuple.copy (l_cursor)
 						Result := tuple.item (1)
 					end
 				end
-				db_selection.terminate
-				if not db_selection.is_ok then
+				l_db_selection.terminate
+				if not l_db_selection.is_ok then
 					has_error := True
 					error_message_32 := l_session_control.error_message_32
 				end
@@ -178,25 +180,27 @@ feature -- Queries
 			rescued: BOOLEAN
 			l_session_control: like session_control
 			l_result: detachable ARRAYED_LIST [like an_obj]
+			l_db_selection: like db_selection
 		do
 			if not rescued then
 				l_session_control := session_control
 				check l_session_control /= Void end -- implied by precondition `created'
 				has_error := False
 				l_session_control.reset
-				db_selection.object_convert (an_obj)
-				db_selection.set_query (s)
-				create db_actions.make (db_selection, an_obj)
-				db_selection.set_action (db_actions)
-				db_selection.execute_query
-				if db_selection.is_ok then
-					db_selection.load_result
-					if db_selection.is_ok then
+				l_db_selection := db_selection
+				l_db_selection.object_convert (an_obj)
+				l_db_selection.set_query (s)
+				create db_actions.make (l_db_selection, an_obj)
+				l_db_selection.set_action (db_actions)
+				l_db_selection.execute_query
+				if l_db_selection.is_ok then
+					l_db_selection.load_result
+					if l_db_selection.is_ok then
 						l_result := db_actions.list
 					end
 				end
-				db_selection.terminate
-				if not db_selection.is_ok then
+				l_db_selection.terminate
+				if not l_db_selection.is_ok then
 					has_error := True
 					error_message_32 := l_session_control.error_message_32
 					create l_result.make (0)
@@ -211,7 +215,7 @@ feature -- Queries
 		ensure
 			result_not_void: Result /= Void
 		rescue
-			rescued := TRUE
+			rescued := True
 			retry
 		end
 

@@ -12,10 +12,31 @@ inherit
 	DISPOSABLE
 
 create
+	make_from_string,
+	make_by_wel_string,
 	make_by_uni_string,
 	make_by_pointer
-	
+
 feature {NONE} -- Initialization
+
+	make_from_string (a_string: READABLE_STRING_GENERAL)
+			-- Creates a new isntance of BSTR_STRING from `a_string'
+		require
+			a_string_not_void: a_string /= Void
+		local
+			l_str: WEL_STRING
+		do
+			create l_str.make (a_string)
+			item := c_get_bstr (l_str.item)
+		end
+
+	make_by_wel_string (a_string: WEL_STRING)
+			-- Creates a new instance from a WEL_STRING
+		require
+			a_string_not_void: a_string /= Void
+		do
+			item := c_get_bstr (a_string.item)
+		end
 
 	make_by_uni_string (astring: UNI_STRING)
 			-- creates new instance from a unistring
@@ -26,7 +47,7 @@ feature {NONE} -- Initialization
 		ensure
 			string_created: item /= default_pointer
 		end
-		
+
 	make_by_pointer (p: POINTER)
 			-- create a BSTR from a pointer
 		require
@@ -34,12 +55,12 @@ feature {NONE} -- Initialization
 		do
 			item := p
 		end
-		
+
 feature -- Access
 
 	item: POINTER
 		-- pointer to the BSTR string
-		
+
 feature -- Basic Oprtations
 
 	string: STRING
@@ -47,13 +68,19 @@ feature -- Basic Oprtations
 		do
 			Result := uni_string.string
 		end
-		
+
 	uni_string: UNI_STRING
 			-- returns a UNI_STRING
 		do
 			create Result.make_by_pointer (item)
 		end
-		
+
+	wel_string: WEL_STRING
+			-- returns a WEL_STRING
+		do
+			create Result.make_by_pointer (item)
+		end
+
 feature -- Destruction
 
 	dispose
@@ -61,7 +88,7 @@ feature -- Destruction
 		do
 			c_free_bstr (item)
 		end
-		
+
 feature {NONE} -- Implementation
 
 	c_get_bstr (astring: POINTER): POINTER
@@ -71,7 +98,7 @@ feature {NONE} -- Implementation
 		alias
 			"SysAllocString"
 		end
-		
+
 	c_free_bstr (abstr: POINTER)
 			-- frees a BSTR
 		external
@@ -79,7 +106,7 @@ feature {NONE} -- Implementation
 		alias
 			"SysFreeString"
 		end
-		
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

@@ -531,6 +531,13 @@ feature -- For DATABASE_DYN_STORE
 
 feature -- For database types
 
+	is_convert_string_type_required: BOOLEAN
+			-- Is `convert_string_type' required to be called on `Current' when converting database field to an Eiffel object.
+			-- Currently used in {DATABASE_SELECTION}.cursor_to_object.
+		do
+			Result := True
+		end
+
 	convert_string_type (r_any: ANY; field_name, class_name: STRING): ANY
 			-- Convert `r_any' to the expected object.
 			-- By default returns `r_any', redefined in ORACLE to return

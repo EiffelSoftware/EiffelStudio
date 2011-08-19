@@ -33,7 +33,7 @@ create -- Creation procedure
 feature -- Initialization
 
 	make
-			-- Create an interface objet to query active base.
+			-- Create an interface object to query active base.
 		local
 			l_imp: like implementation
 		do

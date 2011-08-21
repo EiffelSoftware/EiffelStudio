@@ -3,9 +3,19 @@ test_description Ensures like Current is considered attached by default.
 
 copy_sub	Ace $TEST Ace
 copy_raw	test.e $CLUSTER test.e
-copy_raw	a.e $CLUSTER a.e
+copy_raw	a0.e $CLUSTER a.e
 
 compile_melted
-compile_result validity_error TEST VJAR
+compile_result	validity_error A VJAR
+
+copy_raw	a1.e $CLUSTER a.e
+
+resume_compile
+compile_result	ok
+
+copy_raw	a2.e $CLUSTER a.e
+
+compile_melted
+compile_result	validity_error TEST VJAR
 
 test_end

@@ -14,6 +14,9 @@ create
 feature
 
 	d: like Current
-			-- detachable B
+
+	q (x: like Current)
+		do
+		end
 
 end

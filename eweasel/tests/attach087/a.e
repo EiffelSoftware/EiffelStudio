@@ -11,7 +11,6 @@ feature
 		end
 
 	d: like Current
-			-- attached A
 		attribute
 			create Result.make
 		end
@@ -26,4 +25,8 @@ feature
 			print ("g")
 		end
 		
+	p (x: like Current)
+		do
+		end
+
 end

@@ -12,6 +12,8 @@ feature
 		do
 			create b.make
 			b.f
+			b.p (Void)
+			b.q (Void)
 		end
 
 end

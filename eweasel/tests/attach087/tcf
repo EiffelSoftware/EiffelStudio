@@ -7,6 +7,6 @@ copy_raw	b.e $CLUSTER b.e
 copy_raw	test.e $CLUSTER test.e
 
 compile_frozen
-compile_result validity_error B VEVI
+compile_result validity_error B VEVI; TEST VUAR(2) VUAR(2)
 
 test_end

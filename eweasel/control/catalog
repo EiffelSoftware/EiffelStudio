@@ -244,6 +244,7 @@ test	non-conforming-inheritance-empty-select	syntax063 tcf fail syntax non-confo
 test	multiple-semicolons-after-feature	syntax064 tcf fail syntax
 test	non-decimal-percent-char-codes		syntax065 tcf fail syntax
 test	number-end-without-break	syntax066 tcf fail syntax
+test	empty-array-tuple-wrong-error-line	syntax067 tcf pass syntax
 
 
 -- Validity tests

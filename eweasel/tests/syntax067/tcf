@@ -1,0 +1,13 @@
+test_name 	empty-array-tuple-wrong-error-line
+test_description An object test using an empty manifest tuple or array should not yield a line 0 syntax error but the proper line.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+copy_raw 	test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result	syntax_error TEST1 5; TEST2 5
+
+test_end
+

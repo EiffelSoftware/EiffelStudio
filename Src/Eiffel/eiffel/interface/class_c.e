@@ -2093,7 +2093,7 @@ feature -- Convenience features
 			-- Do we perform a flat checking on the class, i.e. checking
 			-- inherited routines in the context of the descendant class?
 		do
-			Result := lace_class.is_full_class_checking
+			Result := lace_class.is_full_class_checking or else not lace_class.is_void_unsafe
 		end
 
 	is_cat_call_detection: BOOLEAN
@@ -2151,12 +2151,8 @@ feature {EXTERNAL_CLASS_C} -- Initialization
 				end
 				a := create_generic_type (t)
 			end
-			if lace_class.is_attached_by_default then
-				a.set_is_attached
-			else
-				a.set_is_implicitly_attached
-			end
-			actual_type := a
+				-- Associated actual type is always attached.
+			actual_type := a.as_attached_in (Current)
 		end
 
 	create_generic_type (g: ARRAY [TYPE_A]): GEN_TYPE_A

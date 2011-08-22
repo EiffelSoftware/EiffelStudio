@@ -177,9 +177,11 @@ feature {NONE} -- Status
 feature -- Convenience
 
 	token_line (a_node: AST_EIFFEL): like line
-			-- Line of `a_node' if not Void, `line' otherwise.
+			-- Line of `a_node' if possible, `line' otherwise.
 		do
-			if a_node /= Void then
+				-- Not all nodes may have a proper location, in which case, we
+				-- use the parser `line'.
+			if a_node /= Void and then not a_node.start_location.is_null then
 				Result := a_node.start_location.line
 			else
 				Result := line
@@ -187,9 +189,11 @@ feature -- Convenience
 		end
 
 	token_column (a_node: AST_EIFFEL): like column
-			-- Line of `a_node' if not Void, `column' otherwise.
+			-- Column of `a_node' if possible, `column' otherwise.
 		do
-			if a_node /= Void then
+				-- Not all nodes may have a proper location, in which case, we
+				-- use the parser `column'.
+			if a_node /= Void and then not a_node.start_location.is_null then
 				Result := a_node.start_location.column
 			else
 				Result := column
@@ -671,7 +675,7 @@ invariant
 	filename_not_void: filename /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

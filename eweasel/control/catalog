@@ -980,7 +980,7 @@ test	renaming-class-in-constraint-crash	incr401 tcf fail incrementality renaming
 test	fix-expanded-generic-vlec-infinite-loop	incr402	tcf fail incrementality expanded manual
 test	qat-change-agent-target-type		incr403	tcf fail incrementality anchored_type
 test 	once-per-object-link-failure		incr404 tcf fail incrementality once
-test 	is-expanded-crash-2			incr405 tcf fail incrementality
+test 	is-expanded-crash-2			incr405 tcf pass incrementality
 test 	once-per-object-add-attributes		incr406 tcf fail incrementality once
 test 	once-per-object-to-attribute		incr407 tcf fail incrementality once
 test 	non-conforming-remove-precondition	incr408 tcf fail incrementality non-conforming
@@ -988,10 +988,10 @@ test 	has-stable-attribute-crash		incr409 tcf fail incrementality stable attache
 test 	type-to-create-crash			incr410 tcf fail incrementality attached_types
 test 	rout-entry-crash-3			incr411 tcf fail incrementality
 test 	create-qualified-explicit-crash		incr412 tcf fail incrementality anchored_types
-test 	adding-removing-transient			incr413 tcf fail incrementality transient
-test 	removing-descendant-crash	incr414 tcf fail incrementality
+test 	adding-removing-transient			incr413 tcf pass incrementality transient
+test 	removing-descendant-crash	incr414 tcf pass incrementality
 test 	system-change-crash			incr415 tcf fail incrementality
-test 	recompilation-forces-freeze	incr416 tcf fail incrementality
+test 	recompilation-forces-freeze	incr416 tcf pass incrementality
 
 
 -- Melting

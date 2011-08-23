@@ -104,7 +104,7 @@ feature -- Initialization
 feature -- Command
 
 	set_with_named_file (a_file_name: STRING)
-			-- Load pixel datas from a file.
+			-- Load pixel data from a file.
 		local
 			l_gdip_bitmap: like gdip_bitmap
 			l_pixmap: like pixmap
@@ -117,6 +117,20 @@ feature -- Command
 				l_pixmap := pixmap
 				check l_pixmap /= Void end
 				l_pixmap.set_with_named_file (a_file_name)
+			end
+		end
+
+	set_with_pointer (a_pointer: POINTER; a_size: INTEGER)
+			-- <Precursor>
+		local
+			l_gdip_bitmap: like gdip_bitmap
+		do
+			if is_gdi_plus_installed then
+				l_gdip_bitmap := gdip_bitmap
+				check l_gdip_bitmap /= Void end
+				l_gdip_bitmap.load_image_from_memory (a_pointer, a_size.as_natural_32)
+			else
+				check not_supported: False end
 			end
 		end
 

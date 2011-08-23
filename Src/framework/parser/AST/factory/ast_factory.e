@@ -645,10 +645,10 @@ feature -- Access
 			create Result.initialize (a_as)
 		end
 
-	new_array_as (exp: EIFFEL_LIST [EXPR_AS]; l_as, r_as: SYMBOL_AS): ARRAY_AS
+	new_array_as (exp: EIFFEL_LIST [EXPR_AS]; l_as: SYMBOL_AS; r_as: detachable SYMBOL_AS): ARRAY_AS
 			-- New Manifest ARRAY AST node
 		do
-			if exp /= Void then
+			if exp /= Void and l_as /= Void then
 				create Result.initialize (exp, l_as, r_as)
 			end
 		end
@@ -1827,10 +1827,10 @@ feature -- Access
 			create Result.initialize (t, e, s_as)
 		end
 
-	new_tuple_as (exp: EIFFEL_LIST [EXPR_AS]; l_as, r_as: SYMBOL_AS): TUPLE_AS
+	new_tuple_as (exp: EIFFEL_LIST [EXPR_AS]; l_as: SYMBOL_AS; r_as: detachable SYMBOL_AS): TUPLE_AS
 			-- New Manifest TUPLE AST node
 		do
-			if exp /= Void then
+			if exp /= Void and l_as /= Void then
 				create Result.initialize (exp, l_as, r_as)
 			end
 		end
@@ -2029,7 +2029,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -18,21 +18,19 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (exp: like expressions; l_as, r_as: like lbracket_symbol)
+	initialize (exp: like expressions; l_as: like lbracket_symbol; r_as: like rbracket_symbol)
 			-- Create a new Manifest TUPLE AST node.
 		require
 			exp_not_void: exp /= Void
 		do
 			expressions := exp
-			if l_as /= Void then
-				lbracket_symbol_index := l_as.index
-			end
+			internal_lbracket_symbol := l_as
 			if r_as /= Void then
 				rbracket_symbol_index := r_as.index
 			end
 		ensure
 			expressions_set: expressions = exp
-			lbracket_symbol_set: l_as /= Void implies lbracket_symbol_index = l_as.index
+			lbracket_symbol_set: internal_lbracket_symbol = l_as
 			rbracket_symbol_set: r_as /= Void implies rbracket_symbol_index = r_as.index
 		end
 
@@ -45,11 +43,7 @@ feature -- Roundtrip/Token
 
 	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
-			if a_list /= Void and lbracket_symbol_index /= 0 then
-				Result := lbracket_symbol (a_list)
-			else
-				Result := expressions.first_token (a_list)
-			end
+			Result := internal_lbracket_symbol
 		end
 
 	last_token (a_list: LEAF_AS_LIST): LEAF_AS
@@ -71,20 +65,19 @@ feature -- Visitor
 
 feature -- Roundtrip
 
-	lbracket_symbol_index, rbracket_symbol_index: INTEGER
-			-- Index of symbol "<<" and ">>" associated with this structure
+	lbracket_symbol_index: INTEGER
+			-- Index of symbol "[" associated with this structure
+		do
+			Result := internal_lbracket_symbol.index
+		end
+
+	rbracket_symbol_index: INTEGER
+			-- Index of symbol "]" associated with this structure
 
 	lbracket_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS
 			-- Symbol "[" associated with this structure
-		require
-			a_list_not_void: a_list /= Void
-		local
-			i: INTEGER
 		do
-			i := lbracket_symbol_index
-			if a_list.valid_index (i) then
-				Result ?= a_list.i_th (i)
-			end
+			Result := internal_lbracket_symbol
 		end
 
 	rbracket_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS
@@ -112,11 +105,18 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Output
 
 	string_value: STRING = ""
 
+feature {NONE} -- Implementation
+
+	internal_lbracket_symbol: SYMBOL_AS
+			-- Symbol "[" associated with this structure
+			--| It is an attribute for accurate error messages.
+
 invariant
 	expressions_not_void: expressions /= Void
+	internal_lbracket_symbol_not_void: internal_lbracket_symbol /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

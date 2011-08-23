@@ -30,9 +30,9 @@ feature {NONE} -- Implementation
 	c_strlen (ptr: POINTER): INTEGER
 			-- | FIXME: This should be refactored into odbc implementation.
 		external
-			"C inline use %"odbc.h%""
+			"C macro use %"odbc.h%""
 		alias
-			"return (EIF_INTEGER_32) TXTLEN($ptr);"
+			"TXTLEN"
 		end
 
 end

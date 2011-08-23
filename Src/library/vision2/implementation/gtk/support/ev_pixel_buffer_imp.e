@@ -104,6 +104,24 @@ feature -- Command
 			end
 		end
 
+	set_with_pointer (a_pointer: POINTER; a_size: INTEGER)
+			-- Load pixel data from `a_pointer'
+			-- `a_size' size in bytes
+		local
+			l_pixel_buf: POINTER
+			l_error: POINTER
+			l_stream: EV_G_INPUT_STREAM
+		do
+			create l_stream.new_from_data (a_pointer, a_size)
+			l_pixel_buf := {GTK}.gdk_pixbuf_new_from_stream (l_stream.item, default_pointer, $l_error)
+			if l_error /= default_pointer then
+					-- GdkPixbuf could not load the image so we raise an exception.
+				(create {EXCEPTIONS}).raise ("Could not load image from stream.")
+			else
+				set_gdkpixbuf (l_pixel_buf)
+			end
+		end
+
 	save_to_named_file (a_file_name: STRING)
 			-- Save pixel data to file `a_file_name'.
 		local
@@ -156,7 +174,6 @@ feature -- Command
 				(create {EXCEPTIONS}).raise ("Could not save image file.")
 			end
 		end
-
 
 	sub_pixmap (a_rect: EV_RECTANGLE): EV_PIXMAP
 			-- Draw Current to `a_drawable'

@@ -188,6 +188,14 @@ feature
 			]"
 		end
 
+	frozen gdk_pixbuf_new_from_stream (a_input_stream: POINTER; a_cancellable: POINTER; a_error: TYPED_POINTER [POINTER]): POINTER
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"[
+				return gdk_pixbuf_new_from_stream ((GInputStream *)$a_input_stream, (GCancellable *)$a_cancellable, (GError **)$a_error);
+			]"
+		end
 	frozen gdk_pixbuf_new_from_xpm_data (a_data: POINTER): POINTER
 		external
 			"C inline use <ev_gtk.h>"

@@ -54,6 +54,16 @@ feature -- Command
 			implementation.set_with_named_file (a_file_name)
 		end
 
+	set_with_pointer (a_pointer: POINTER; a_size: INTEGER)
+			-- Load pixel data from `a_pointer'
+			-- `a_size': size in bytes
+		require
+			not_void: a_pointer /= default_pointer
+			valid: a_size > 0
+		do
+			implementation.set_with_pointer (a_pointer, a_size)
+		end
+
 	save_to_named_file (a_file_name: STRING)
 			-- Save pixel data to file `a_file_name'.
 		require

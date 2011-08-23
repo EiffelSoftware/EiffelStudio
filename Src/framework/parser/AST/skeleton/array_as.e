@@ -22,6 +22,7 @@ feature {NONE} -- Initialization
 			-- Create a new Manifest ARRAY AST node.
 		require
 			exp_not_void: exp /= Void
+			l_as_not_void: l_as /= Void
 		do
 			expressions := exp
 			internal_larray_symbol := l_as

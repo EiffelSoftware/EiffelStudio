@@ -591,7 +591,7 @@ feature {NONE} -- Implementation: State
 	old_expressions: LINKED_LIST [UN_OLD_B]
 			-- List of old expressions found during feature type checking
 
-	is_type_compatible: TUPLE [is_compatible: BOOLEAN; conversion_info: CONVERSION_INFO]
+	is_type_compatible: TUPLE [is_compatible: BOOLEAN; conversion_info: detachable CONVERSION_INFO]
 			-- Result of computation of `process_type_compatibility'. If `last_type' is
 			-- compatible then `is_compatible' is set, if there is a conversion, then
 			-- `conversion_info' is set?
@@ -692,6 +692,8 @@ feature {NONE} -- Settings
 
 	reset
 			-- Reset all attributes to their default value
+		local
+			l_conv_info: detachable CONVERSION_INFO
 		do
 			old_expressions := Void
 			reset_types
@@ -706,7 +708,7 @@ feature {NONE} -- Settings
 			last_original_feature_name_id := 0
 			last_feature_name_id := 0
 			last_calls_target_type := Void
-			is_type_compatible := [False, Void]
+			is_type_compatible := [False, l_conv_info]
 			last_assigner_command := Void
 			last_assigner_type := Void
 			set_is_inherited (False)

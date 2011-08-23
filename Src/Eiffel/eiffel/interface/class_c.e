@@ -3158,6 +3158,7 @@ feature -- Properties
 			l_cache: like constraint_cache
 			l_formal_cache: like formal_constraint_cache
 			l_pos: INTEGER
+			l_default_array: detachable like constraint_renaming
 		do
 				-- Check if `constraint_cache' has been created.
 			l_cache := constraint_cache
@@ -3179,7 +3180,7 @@ feature -- Properties
 			else
 					-- Insert `a_formal_dec'.
 				create Result.make (1, a_formal_dec.constraints.count)
-				l_cache.put ([Result, Void], l_pos)
+				l_cache.put ([Result, l_default_array], l_pos)
 			end
 		ensure
 			constraint_classes_not_void: Result /= Void
@@ -3195,6 +3196,7 @@ feature -- Properties
 			l_cache: like constraint_cache
 			l_formal_cache: like formal_constraint_cache
 			l_pos: INTEGER
+			l_default_array: detachable like constraint_classes
 		do
 				-- Check if `constraint_cache' has been created.
 			l_cache := constraint_cache
@@ -3216,7 +3218,7 @@ feature -- Properties
 			else
 					-- Insert `a_formal_dec'.
 				create Result.make (1, a_formal_dec.constraints.count)
-				l_cache.put ([Void, Result], l_pos)
+				l_cache.put ([l_default_array, Result], l_pos)
 			end
 		ensure
 			constraint_renaming_not_void: Result /= Void
@@ -3254,8 +3256,8 @@ feature {NONE} -- Implementation: Properties
 			-- To store computed information about generic constraints of Current.
 
 	formal_constraint_cache: TUPLE [
-			constraint_classes: ARRAY [CLASS_C];
-			constraint_renaming: ARRAY [RENAMING_A]]
+			constraint_classes: detachable ARRAY [CLASS_C];
+			constraint_renaming: detachable ARRAY [RENAMING_A]]
 
 			-- For easy type checking of `constraint_cache'.
 		do

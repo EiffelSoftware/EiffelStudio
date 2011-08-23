@@ -924,7 +924,7 @@ feature {NONE} -- External features
 
 	odbc_start_order (a_con: POINTER; no_descriptor: INTEGER)
 		external
-			"C use %"odbc.h%""
+			"C blocking use %"odbc.h%""
 		end
 
 	odbc_next_row (a_con: POINTER; no_descriptor: INTEGER): INTEGER
@@ -934,7 +934,7 @@ feature {NONE} -- External features
 
 	odbc_terminate_order (a_con: POINTER; no_descriptor: INTEGER)
 		external
-			"C use %"odbc.h%""
+			"C blocking use %"odbc.h%""
 		end
 
 	odbc_close_cursor (a_con: POINTER; no_descriptor: INTEGER)
@@ -1144,17 +1144,17 @@ feature {NONE} -- External features
 
 	odbc_disconnect (a_con: POINTER)
 		external
-			"C use %"odbc.h%""
+			"C blocking use %"odbc.h%""
 		end
 
 	odbc_commit (a_con: POINTER)
 		external
-			"C use %"odbc.h%""
+			"C blocking use %"odbc.h%""
 		end
 
 	odbc_rollback (a_con: POINTER)
 		external
-			"C use %"odbc.h%""
+			"C blocking use %"odbc.h%""
 		alias
 			"odbc_rollback"
 		end
@@ -1180,7 +1180,7 @@ feature {NONE} -- External features
 
 	odbc_connect (a_con, user_name, user_passwd, dbName: POINTER)
 		external
-			"C use %"odbc.h%""
+			"C blocking use %"odbc.h%""
 		end
 
 	odbc_driver_name: POINTER
@@ -1493,7 +1493,6 @@ feature {NONE} -- External features
 		external
 			"C use %"odbc.h%""
 		end
-
 
 	odbc_available_descriptor (a_con: POINTER) : INTEGER
 		external

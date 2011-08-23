@@ -22,6 +22,7 @@ feature {NONE} -- Initialization
 			-- Create a new Manifest TUPLE AST node.
 		require
 			exp_not_void: exp /= Void
+			l_as_not_void: l_as /= Void
 		do
 			expressions := exp
 			internal_lbracket_symbol := l_as

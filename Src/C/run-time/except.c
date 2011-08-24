@@ -4130,9 +4130,7 @@ rt_public void init_emnger (void)
 	DISCARD_BREAKPOINTS; /* prevent the debugger from stopping in the following functions */
 #endif
 	eif_disable_tracing(); /* Disable tracing to not clobber the output. */
-	egc_prof_enabled = 0; /* Disable profiling to be safe. */
 	(egc_init_exception_manager)(except_mnger);
-	egc_prof_enabled = pf_status; /* Resume profiling status. */
 	if (!tr_status) {
 			/* Resume tracing if it was previously enabled. */
 		eif_enable_tracing();

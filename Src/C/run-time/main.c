@@ -964,6 +964,7 @@ rt_public void eif_rtinit(int argc, char **argv, char **envp)
 #if defined(EIF_THREADS) && defined(WORKBENCH)
 	notify_root_thread();
 #endif
+	initprf();						/* Initialize profiler. */
 	init_emnger();					/* Initialize ISE_EXCEPTION_MANAGER */
 	init_scp_manager();				/* Initialize ISE_SCOOP_MANAGER */
 }

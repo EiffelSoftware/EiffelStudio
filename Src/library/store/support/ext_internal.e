@@ -142,14 +142,14 @@ feature -- Basic operations
 					end
 				elseif ftype = Reference_type then
 					l_type := field_static_type_of_type (i, dynamic_type (object))
-					if field_conforms_to (immutable_string_8_dtype, l_type) then
+					if field_conforms_to (dynamic_type (value), l_type) then
+						set_reference_field (i, object, value.twin)
+					elseif field_conforms_to (immutable_string_8_dtype, l_type) then
 							-- Field is compatible with IMMUTABLE_STRING_8, let's go for it.
 						set_reference_field (i, object, create {IMMUTABLE_STRING_8}.make_from_string (string_general.as_string_8))
 					elseif field_conforms_to (immutable_string_32_dtype, l_type) then
 							-- Field is compatible with IMMUTABLE_STRING_32, let's go for it.
 						set_reference_field (i, object, create {IMMUTABLE_STRING_32}.make_from_string (string_general.as_string_32))
-					elseif field_conforms_to (dynamic_type (value), l_type) then
-						set_reference_field (i, object, value.twin)
 					else
 						Result := False
 					end

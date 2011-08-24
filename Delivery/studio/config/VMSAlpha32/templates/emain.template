@@ -84,7 +84,6 @@ int main (int argc, char ** argvxx, char ** envpxx)
 		failure();
 
 	eif_rtinit(argc, argv, envp);
-	if (egc_prof_enabled) initprf();
 	egc_rcdt_init();
 	emain(argc, argv);
 	reclaim();

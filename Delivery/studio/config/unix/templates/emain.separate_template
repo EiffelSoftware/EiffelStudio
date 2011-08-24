@@ -35,7 +35,6 @@ int main (int argc, char ** argv, char ** envp)
 		default_rescue();
 
 	eif_rtinit(argc, argv, envp);
-	if (egc_prof_enabled) initprf();
 	egc_rcdt_init();
 	emain(argc, argv);
 	reclaim();

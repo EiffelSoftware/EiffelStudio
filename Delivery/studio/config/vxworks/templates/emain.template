@@ -57,7 +57,6 @@ void eiffel_main ()
 		failure();
 
 	eif_rtinit(0, NULL, NULL);
-	if (egc_prof_enabled) initprf();
 	egc_rcdt_init();
 	emain(0, NULL);
 	reclaim();

@@ -41,7 +41,6 @@ int main (int argc, char ** argv, char ** envp)
 	eif_retrieve_root (&eif_argc, argv);
 	eif_rtinit(eif_argc, argv, envp);
 	eif_init_root();
-	if (egc_prof_enabled) initprf();
 	egc_rcdt_init (); 
 	emain(eif_argc, argv);
 	reclaim();

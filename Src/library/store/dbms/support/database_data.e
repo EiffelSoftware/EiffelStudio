@@ -82,6 +82,8 @@ feature -- Element change
 			ind, index: INTEGER
 			l_map_table: like map_table
 			l_buffer: like buffer
+			l_obj_dyn_type: INTEGER
+			l_field_list: SPECIAL [STRING_8]
 		do
 			g := field_count (object)
 			l_map_table := map_table
@@ -92,6 +94,20 @@ feature -- Element change
 				l_map_table.conservative_resize_with_default (0, 1, count)
 			end
 			from
+				from
+						-- Prepopulate object field list for faster lookup.
+					l_obj_dyn_type := dynamic_type (object)
+					create l_field_list.make_empty (g + 1)
+						-- Add empty string at zero index.
+					l_field_list.extend ("")
+					ind := 1
+				until
+					ind > g
+				loop
+					l_field_list.extend (field_name_of_type (ind, l_obj_dyn_type))
+					ind := ind + 1
+				end
+
 				l_buffer := buffer
 				ind := 1
 			until
@@ -104,11 +120,14 @@ feature -- Element change
 				from
 					index := 1
 				until
-					index > g or else field_name (index, object).is_equal (l_buffer)
+					index > g or else l_field_list [index].is_equal (l_buffer)
 				loop
 					index := index + 1
 				end
 				if index <= g then
+						-- Free field list entry memory.
+					l_field_list [index].resize (0)
+					l_field_list [index].adapt_size
 					l_map_table.put (index, ind)
 				else
 					db_spec.update_map_table_error (handle, l_map_table, ind)

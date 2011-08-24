@@ -13,7 +13,8 @@ inherit
 	EV_APPLICATION_I
 		redefine
 			wait_for_input,
-			make
+			make,
+			wake_up_gui_thread
 		end
 
  	WEL_APPLICATION
@@ -70,9 +71,6 @@ feature -- Initialization
 			l_process: POINTER
 		do
 			Precursor
-			if {PLATFORM}.is_thread_capable then
-				create idle_action_mutex.make
-			end
 			create blocking_windows_stack.make (5)
 			init_instance
 			init_application
@@ -92,6 +90,9 @@ feature -- Initialization
 			create reusable_message.make
 			set_capture_type ({EV_APPLICATION_IMP}.capture_heavy)
 			set_application_main_window (silly_main_window)
+
+				-- Set the main application window handle for thread communication facilities.
+			main_application_window_handle := silly_main_window.item
 
 				-- Get HANDLE to current process.
 				-- 0x2 stands for `DUPLICATE_SAME_ACCESS'.
@@ -173,27 +174,6 @@ feature -- Basic operation
 		do
 			c_sleep (msec)
 		end
-
-	lock
-			-- Lock the Mutex.
-		do
-			if idle_action_mutex /= Void then
-				idle_action_mutex.lock
-			end
-		end
-
-	unlock
-			-- Unlock the Mutex.
-		do
-			if idle_action_mutex /= Void then
-				idle_action_mutex.unlock
-			end
-		end
-
-feature {NONE} -- Thread implementation
-
-	idle_action_mutex: detachable MUTEX note option: stable attribute end
-			-- Mutex used to access idle_actions.
 
 feature -- Root window
 
@@ -564,6 +544,15 @@ feature {EV_RICH_TEXT_I} -- WEL Rich Text Initialization
 
 feature {NONE} -- Implementation
 
+	wake_up_gui_thread
+			-- Wake up the GUI thread if sleeping.
+		local
+			l_success: BOOLEAN
+		do
+				-- Post a null message to the main application window.
+			l_success := {WEL_API}.post_message_result_boolean (main_application_window_handle, {WEL_WM_CONSTANTS}.wm_null, to_wparam (0), to_lparam (0))
+		end
+
 	theme_window: EV_THEME_WINDOW
 			-- Window with responsibility for notify `theme_changed_actions'.
 		once
@@ -588,20 +577,21 @@ feature {NONE} -- Implementation
 			-- Process event queue from underlying toolkit.
 		local
 			msg: WEL_MSG
+			l_any_event, l_user_event: BOOLEAN
 		do
 			from
 				msg := reusable_message
 				msg.peek_all
-				user_events_processed_from_underlying_toolkit := False
 			until
 				not msg.last_boolean_result or else is_destroyed
 			loop
-				if not user_events_processed_from_underlying_toolkit then
-					user_events_processed_from_underlying_toolkit := msg.user_generated
-				end
+				l_any_event := True
+				l_user_event := l_user_event or else msg.user_generated
 				process_message (msg)
 				msg.peek_all
 			end
+			events_processed_from_underlying_toolkit := l_any_event
+			user_events_processed_from_underlying_toolkit := l_user_event
 		end
 
 	process_message (msg: WEL_MSG)
@@ -658,6 +648,9 @@ feature {NONE} -- Implementation
 
 	mwmo_inputavailable: INTEGER_32 = 0x4
 		-- MWMO_INPUTAVAILABLE Flag for MsgWaitForMultipleObjects to return if input is available.
+
+	main_application_window_handle: POINTER
+		-- HANDLE for main application window.
 
 feature -- Public constants
 

@@ -37,7 +37,7 @@ feature -- Event handling
 			-- Actions to be performed when the application is otherwise idle.
 			-- Use of `idle_actions' is not thread-safe.  For thread-safe idle
 			-- actions handling use 'add_idle_action', `remove_idle_action'
-			-- or `do_once_on_idle' in conjunction with EV_THREAD_APPLICATION.
+			-- or `do_once_on_idle'.
 		obsolete
 			"Use add_idle_action, do_once_on_idle or remove_idle_action instead"
 		require

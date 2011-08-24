@@ -258,11 +258,11 @@ feature {EV_ANY_I} -- Implementation
 			l_has_grab_widget: BOOLEAN
 			l_event_string: detachable STRING
 			l_call_theme_events: BOOLEAN
+			l_any_event, l_user_event: BOOLEAN
 		do
 			from
 				l_motion_tuple := motion_tuple
 				l_app_motion_tuple := app_motion_tuple
-				user_events_processed_from_underlying_toolkit := False
 			until
 				l_no_more_events or else is_destroyed
 			loop
@@ -271,6 +271,7 @@ feature {EV_ANY_I} -- Implementation
 						-- GDK events are always handled before gtk events.
 					event_widget := {GTK}.gtk_get_event_widget (gdk_event)
 						-- event_widget may be null.
+					l_any_event := True
 					l_call_event := True
 					l_propagate_event := False
 
@@ -293,7 +294,7 @@ feature {EV_ANY_I} -- Implementation
 						debug ("GDK_EVENT")
 							print ("GDK_MOTION_NOTIFY%N")
 						end
-						user_events_processed_from_underlying_toolkit := True
+						l_user_event := True
 							-- Set up storage to avoid server roundtrips.
 						use_stored_display_data := True
 						l_widget_x := {GTK}.gdk_event_motion_struct_x (gdk_event).truncated_to_integer
@@ -370,7 +371,7 @@ feature {EV_ANY_I} -- Implementation
 						debug ("GDK_EVENT")
 							print ("GDK_BUTTON_EVENT%N")
 						end
-						user_events_processed_from_underlying_toolkit := True
+						l_user_event := True
 						l_call_event := False
 						process_button_event (gdk_event)
 					when GDK_SCROLL then
@@ -399,7 +400,7 @@ feature {EV_ANY_I} -- Implementation
 						else
 							l_call_event := False
 						end
-						user_events_processed_from_underlying_toolkit := True
+						l_user_event := True
 					when GDK_PROXIMITY_IN, GDK_PROXIMITY_OUT then
 						debug ("GDK_EVENT")
 							print ("GDK_PROXIMITY_IN%N")
@@ -563,7 +564,7 @@ feature {EV_ANY_I} -- Implementation
 						debug ("GDK_EVENT")
 							print ("GDK_KEY_EVENT%N")
 						end
-						user_events_processed_from_underlying_toolkit := True
+						l_user_event := True
 						l_propagate_event := True
 						if attached focused_popup_window as l_focused_popup_window then
 							l_gtk_widget_imp := l_focused_popup_window
@@ -598,7 +599,7 @@ feature {EV_ANY_I} -- Implementation
 						debug ("GDK_EVENT")
 							print ("GDK_DELETE%N")
 						end
-						user_events_processed_from_underlying_toolkit := True
+						l_user_event := True
 						l_call_event := False
 						l_gtk_window_imp ?= eif_object_from_gtk_object (event_widget)
 						if l_gtk_window_imp /= Void then
@@ -671,10 +672,15 @@ feature {EV_ANY_I} -- Implementation
 					end
 					{GTK}.gdk_event_free (gdk_event)
 				else
+					l_any_event := l_any_event or else {GTK2}.events_pending
 					{GTK2}.dispatch_events
 					l_no_more_events := not {GTK2}.events_pending
 				end
 			end
+
+				-- Set event status flags.
+			events_processed_from_underlying_toolkit := l_any_event
+			user_events_processed_from_underlying_toolkit := l_user_event
 		end
 
 feature -- Implementation
@@ -1311,27 +1317,6 @@ feature -- Thread Handling.
 				create idle_action_mutex.make
 			end
 		end
-
-	lock
-			-- Lock the Mutex.
-		do
-			if idle_action_mutex /= Void then
-				idle_action_mutex.lock
-			end
-		end
-
-	unlock
-			-- Unlock the Mutex.
-		do
-			if idle_action_mutex /= Void then
-				idle_action_mutex.unlock
-			end
-		end
-
-feature {NONE} -- Thread implementation
-
-	idle_action_mutex: detachable MUTEX note option: stable attribute end
-			-- Mutex used to access idle_actions.
 
 feature {NONE} -- External implementation
 

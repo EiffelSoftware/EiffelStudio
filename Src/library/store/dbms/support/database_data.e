@@ -126,7 +126,7 @@ feature -- Element change
 				end
 				if index <= g then
 						-- Free field list entry memory.
-					l_field_list [index].resize (0)
+					l_field_list [index].wipe_out
 					l_field_list [index].adapt_size
 					l_map_table.put (index, ind)
 				else

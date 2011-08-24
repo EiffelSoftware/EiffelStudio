@@ -131,13 +131,15 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 	parse (descriptor: INTEGER; uht: detachable DB_STRING_HASH_TABLE [detachable ANY]; ht_order: detachable ARRAYED_LIST [READABLE_STRING_32]; uhandle: HANDLE; sql: READABLE_STRING_GENERAL): BOOLEAN
 		local
 			tmp_str: STRING_32
-			c_temp, c_temp2: SQL_STRING
+			c_temp: SQL_STRING
+			l_ptr: POINTER
 			l_para: like para
 		do
 			create c_temp.make (sql)
-			create tmp_str.make (1)
-			create c_temp2.make_by_pointer (odbc_hide_qualifier (c_temp.item))
-			tmp_str := c_temp2.string
+				-- This routine manipulates buffer information but does not allocate memory.
+			l_ptr := odbc_hide_qualifier (c_temp.item)
+
+			tmp_str := c_temp.string
 			tmp_str.left_adjust
 			if tmp_str.count > 1 and then (tmp_str.item (1) = {CHARACTER_32} '{') then
 				if uht /= Void then
@@ -168,6 +170,11 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 			else
  				Result := False
 			end
+
+				-- Clean up memory
+			c_temp.set_count (0)
+			tmp_str.resize (0)
+			tmp_str.adapt_size
 		end
 
 	bind_parameter (table: ARRAY [ANY]; parameters: ARRAY [ANY]; descriptor: INTEGER; sql: STRING)
@@ -1168,7 +1175,7 @@ feature {NONE} -- External features
 
 	odbc_begin (a_con: POINTER)
 		external
-			"C use %"odbc.h%""
+			"C blocking use %"odbc.h%""
 		alias
 			"odbc_begin"
 		end
@@ -1210,7 +1217,7 @@ feature {NONE} -- External features
 
 	odbc_free_connection (a_con: POINTER)
 		external
-		    "C use %"odbc.h%""
+		    "C blocking use %"odbc.h%""
 		end
 
 	is_binary (s: READABLE_STRING_GENERAL): BOOLEAN
@@ -1369,13 +1376,11 @@ feature {NONE} -- External features
 			end
 		end
 
-
 	pointers: ARRAYED_LIST [POINTER]
 			--
 		do
 			create Result.make (10)
 		end
-
 
 feature {NONE} -- External features
 

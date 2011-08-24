@@ -49,9 +49,10 @@ feature -- Event handling
 					 create_idle_actions
 			end
 			Result := idle_actions_internal
-		ensure
-			not_void: Result /= Void
 		end
+
+	kamikaze_actions: ARRAYED_LIST [PROCEDURE [ANY, TUPLE]]
+			-- Actions to be performed once when the application is otherwise idle.
 
 feature {EV_ANY_I} -- Implementation
 

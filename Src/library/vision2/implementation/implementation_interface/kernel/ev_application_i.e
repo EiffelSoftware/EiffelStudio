@@ -39,6 +39,13 @@ feature -- Initialization
 		local
 			f1_key: EV_KEY
 		do
+			create kamikaze_actions.make (25)
+			if {PLATFORM}.is_thread_capable then
+					-- Create the idle action mutexes if target is thread capable.
+				create idle_action_mutex.make
+				create kamikaze_action_mutex.make
+			end
+
 				-- Initialize contextual help.
 			create f1_key.make_with_code ({EV_KEY_CONSTANTS}.Key_f1)
 			set_help_accelerator (create {EV_ACCELERATOR}.make_with_key_combination (f1_key, False, False, False))
@@ -48,6 +55,9 @@ feature -- Initialization
 				-- Create and initialize action sequences.
 			create pnd_targets.make (8)
 			create dockable_targets.make (8)
+
+				-- Set this thread as the gui thread.
+			is_gui_thread_cell.put (True)
 
 				-- Create idle actions as this is called in the event loop.
 			idle_actions.call (Void)
@@ -95,10 +105,9 @@ feature {EV_APPLICATION, EV_ANY_HANDLER, EV_ANY_I} -- Implementation
 			-- CPU will be relinquished if `a_relinquish_cpu' and idle actions are successfully executed.
 		local
 			l_idle_actions_internal: like idle_actions_internal
-			l_is_locked: BOOLEAN
+			l_idle_is_locked, l_kamikaze_is_locked: BOOLEAN
 			l_retry_count: INTEGER
 			l_idle_actions_snapshot, l_kamikaze_idle_actions_snapshot: detachable SPECIAL [PROCEDURE [ANY, TUPLE]]
-			l_action, l_kamikaze_action: detachable PROCEDURE [ANY, TUPLE]
 			i, l_count: INTEGER
 		do
 			if l_retry_count = 0 then
@@ -124,60 +133,57 @@ feature {EV_APPLICATION, EV_ANY_HANDLER, EV_ANY_I} -- Implementation
 				end
 				l_idle_actions_internal := idle_actions_internal
 				if not is_destroyed and then l_idle_actions_internal /= Void then
-					lock
-					l_is_locked := True
-						-- Make a snapshot of the idle actions to avoid side effects.
-					if attached l_idle_actions_internal.kamikazes_internal as l_kamikazes_internal then
+					if try_kamikaze_lock then
+						l_kamikaze_is_locked := True
+							-- Make a snapshot of the idle actions to avoid side effects.
+
 						if kamikaze_idle_actions_snapshot = Void then
-							if l_kamikazes_internal.count > 0 then
-								kamikaze_idle_actions_snapshot := l_kamikazes_internal.area.twin
+							if kamikaze_actions.count > 0 then
+								kamikaze_idle_actions_snapshot := kamikaze_actions.area.twin
 								l_kamikaze_idle_actions_snapshot := kamikaze_idle_actions_snapshot
 							end
 						else
 							if idle_actions_executing and kamikaze_idle_actions_snapshot.count > 0 then
 									-- We are doing a recursive call to the idle actions, we need to create a copy.
-								kamikaze_idle_actions_snapshot := kamikaze_idle_actions_snapshot.resized_area (l_kamikazes_internal.count)
+								kamikaze_idle_actions_snapshot := kamikaze_idle_actions_snapshot.resized_area (kamikaze_actions.count)
 							else
-								kamikaze_idle_actions_snapshot := kamikaze_idle_actions_snapshot.aliased_resized_area (l_kamikazes_internal.count)
+								kamikaze_idle_actions_snapshot := kamikaze_idle_actions_snapshot.aliased_resized_area (kamikaze_actions.count)
 							end
-							kamikaze_idle_actions_snapshot.copy_data (l_kamikazes_internal.area, 0, 0, l_kamikazes_internal.count)
+							kamikaze_idle_actions_snapshot.copy_data (kamikaze_actions.area, 0, 0, kamikaze_actions.count)
 							l_kamikaze_idle_actions_snapshot := kamikaze_idle_actions_snapshot
 						end
 
-							-- Wipe out the kamikaze actions from the idle actions as we now have a snapshot.
+							-- Wipe out the kamikaze actions as we now have a snapshot.
 						if l_kamikaze_idle_actions_snapshot /= Void then
-							from
-								i := 0
-								l_count := l_kamikaze_idle_actions_snapshot.count
-							until
-								i = l_count
-							loop
-								l_idle_actions_internal.prune_all (l_kamikaze_idle_actions_snapshot @ i)
-								i := i + 1
-							end
-							l_kamikazes_internal.wipe_out
+							kamikaze_actions.wipe_out
 						end
+
+						kamikaze_unlock
+						l_kamikaze_is_locked := False
 					end
 
-					if idle_actions_snapshot = Void then
-						if l_idle_actions_internal.count > 0 then
-							idle_actions_snapshot := l_idle_actions_internal.area.twin
+					if try_idle_lock then
+						l_idle_is_locked := True
+						if idle_actions_snapshot = Void then
+							if l_idle_actions_internal.count > 0 then
+								idle_actions_snapshot := l_idle_actions_internal.area.twin
+								l_idle_actions_snapshot := idle_actions_snapshot
+							end
+						else
+							if idle_actions_executing and idle_actions_snapshot.count > 0 then
+									-- We are doing a recursive call to the idle actions, we need to create a copy.
+								idle_actions_snapshot := idle_actions_snapshot.resized_area (l_idle_actions_internal.count)
+							else
+								idle_actions_snapshot := idle_actions_snapshot.aliased_resized_area (l_idle_actions_internal.count)
+							end
+							idle_actions_snapshot.copy_data (l_idle_actions_internal.area, 0, 0, l_idle_actions_internal.count)
 							l_idle_actions_snapshot := idle_actions_snapshot
 						end
-					else
-						if idle_actions_executing and idle_actions_snapshot.count > 0 then
-								-- We are doing a recursive call to the idle actions, we need to create a copy.
-							idle_actions_snapshot := idle_actions_snapshot.resized_area (l_idle_actions_internal.count)
-						else
-							idle_actions_snapshot := idle_actions_snapshot.aliased_resized_area (l_idle_actions_internal.count)
-						end
-						idle_actions_snapshot.copy_data (l_idle_actions_internal.area, 0, 0, l_idle_actions_internal.count)
-						l_idle_actions_snapshot := idle_actions_snapshot
-					end
 
-						-- We can now unlock the resource as we have our own local copy.
-					l_is_locked := False
-					unlock
+							-- We can now unlock the resource as we have our own local copy.
+						idle_unlock
+						l_idle_is_locked := False
+					end
 
 
 						-- Set `idle_actions_executing' flag to avoid recursive idle actions execution.
@@ -189,13 +195,9 @@ feature {EV_APPLICATION, EV_ANY_HANDLER, EV_ANY_I} -- Implementation
 						until
 							i = l_count or else is_destroyed
 						loop
-							l_kamikaze_action := l_kamikaze_idle_actions_snapshot @ i
-							if l_kamikaze_action /= Void then
-								l_kamikaze_action.call (Void)
-							end
+							l_kamikaze_idle_actions_snapshot [i].apply
 							i := i + 1
 						end
-						l_kamikaze_action := Void
 							-- Wipeout snapshot list to signify that that any nested idle calls do not have to clone the snapshot
 						l_kamikaze_idle_actions_snapshot.wipe_out
 					end
@@ -206,21 +208,20 @@ feature {EV_APPLICATION, EV_ANY_HANDLER, EV_ANY_I} -- Implementation
 						until
 							i = l_count or else is_destroyed
 						loop
-							l_action := l_idle_actions_snapshot @ i
-							if l_action /= Void then
-								l_action.call (Void)
-							end
+							l_idle_actions_snapshot [i].apply
 							i := i + 1
 						end
-						l_action := Void
 							-- Clear snapshot list.
 						l_idle_actions_snapshot.wipe_out
 					end
 					idle_actions_executing := False
 
 					if a_relinquish_cpu and then not is_destroyed then
-							-- We only relinquish CPU if requested and a lock for the idle actions has been attained.
-						wait_for_input (cpu_relinquishment_time)
+							-- Relinquish CPU if requested and no more events are available to be processed.
+						process_underlying_toolkit_event_queue
+						if not events_processed_from_underlying_toolkit and then kamikaze_actions.count = 0 then
+							wait_for_input (cpu_relinquishment_time)
+						end
 					end
 				end
 			else
@@ -230,9 +231,13 @@ feature {EV_APPLICATION, EV_ANY_HANDLER, EV_ANY_I} -- Implementation
 			end
 		rescue
 			idle_actions_executing := False
-			if l_is_locked then
-				l_is_locked := False
-				unlock
+			if l_kamikaze_is_locked then
+				l_kamikaze_is_locked := False
+				kamikaze_unlock
+			end
+			if l_idle_is_locked then
+				l_idle_is_locked := False
+				idle_unlock
 			end
 			if l_retry_count = 0 then
 				l_retry_count := l_retry_count + 1
@@ -252,8 +257,11 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
+	events_processed_from_underlying_toolkit: BOOLEAN
+		-- Were any events processed in previous call to `process_underlying_toolkit_event_queue'?
+
 	user_events_processed_from_underlying_toolkit: BOOLEAN
-		-- Were user generated events processed in previous call to `process_underlying_toolkit_event_queue'.
+		-- Were user generated events processed in previous call to `process_underlying_toolkit_event_queue'?
 
 feature {EV_DOCKABLE_SOURCE_I, EV_DOCKABLE_TARGET_I, EV_SHARED_TRANSPORT_I} -- Access
 
@@ -476,11 +484,11 @@ feature -- Basic operation
 		require
 			a_idle_action_not_void: a_idle_action /= Void
 		do
-			lock
+			idle_lock
 			if not idle_actions.has (a_idle_action) and then idle_actions_internal /= Void then
 				idle_actions_internal.extend (a_idle_action)
 			end
-			unlock
+			idle_unlock
 		end
 
 	remove_idle_action (a_idle_action: PROCEDURE [ANY, TUPLE])
@@ -492,36 +500,90 @@ feature -- Basic operation
 			l_cursor: CURSOR
 			l_idle_actions: like idle_actions
 		do
-			lock
+			idle_lock
 			l_idle_actions := idle_actions
 			l_cursor := l_idle_actions.cursor
 			l_idle_actions.prune_all (a_idle_action)
 			if l_idle_actions.valid_cursor (l_cursor) then
 				l_idle_actions.go_to (l_cursor)
 			end
-			unlock
+			idle_unlock
 		end
 
-	lock
-			-- Lock the Mutex.
-		deferred
+	idle_lock
+			-- Lock the Idle Actions Mutex.
+		do
+			if idle_action_mutex /= Void then
+				idle_action_mutex.lock
+			end
 		end
 
-	unlock
-			-- Unlock the Mutex.
-		deferred
+	try_idle_lock: BOOLEAN
+			-- Attempt to lock the Idle Actions Mutex. True if successful.
+		do
+			if idle_action_mutex /= Void then
+				Result := idle_action_mutex.try_lock
+			else
+				Result := True
+			end
 		end
+
+	idle_unlock
+			-- Unlock the Idle Actions Mutex.
+		do
+			if idle_action_mutex /= Void then
+				idle_action_mutex.unlock
+			end
+		end
+
+	kamikaze_lock
+			-- Lock the Kamikaze Actions Mutex.
+		do
+			if kamikaze_action_mutex /= Void then
+				kamikaze_action_mutex.lock
+			end
+		end
+
+	try_kamikaze_lock: BOOLEAN
+			-- Attempt to lock the Kamikaze Actions Mutex. True if successful.
+		do
+			if kamikaze_action_mutex /= Void then
+				Result := kamikaze_action_mutex.try_lock
+			else
+				Result := True
+			end
+		end
+
+	kamikaze_unlock
+			-- Unlock the Kamikaze Actions Mutex.
+		do
+			if kamikaze_action_mutex /= Void then
+				kamikaze_action_mutex.unlock
+			end
+		end
+
+feature {NONE} -- Thread implementation
+
+	idle_action_mutex: detachable MUTEX note option: stable attribute end
+			-- Mutex used to access idle_actions.
+
+	kamikaze_action_mutex: detachable MUTEX note option: stable attribute end
+			-- Mutex used to access kamikaze_actions.
 
 feature -- Events
 
 	do_once_on_idle (an_action: PROCEDURE [ANY, TUPLE])
 			-- Perform `an_action' one time only on idle.
 		do
-			lock
-			if not idle_actions.has (an_action) and then idle_actions_internal /= Void then
-				idle_actions_internal.extend_kamikaze (an_action)
+			kamikaze_lock
+			if not kamikaze_actions.has (an_action) then
+				kamikaze_actions.extend (an_action)
 			end
-			unlock
+				-- Wake up GUI thread if sleeping.
+			if not is_gui_thread then
+				wake_up_gui_thread
+			end
+			kamikaze_unlock
 		end
 
 	actions_are_callable: BOOLEAN
@@ -603,6 +665,17 @@ feature -- Implementation
             -- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 
+feature {EV_APPLICATION, EV_PICK_AND_DROPABLE_I} -- Pick and drop
+
+	pnd_screen: EV_SCREEN
+			-- Screen object used for drawing PND transport line.
+		once
+			create Result
+			Result.enable_dashed_line_style
+			Result.set_foreground_color ((create {EV_STOCK_COLORS}).white)
+			Result.set_invert_mode
+		end
+
 feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 
 	x_origin, y_origin: INTEGER
@@ -632,15 +705,6 @@ feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 				pnd_screen.draw_segment (x_origin, y_origin, pnd_pointer_x, pnd_pointer_y)
 				rubber_band_is_drawn := False
 			end
-		end
-
-	pnd_screen: EV_SCREEN
-			-- Screen object used for drawing PND transport line.
-		once
-			create Result
-			Result.enable_dashed_line_style
-			Result.set_foreground_color ((create {EV_STOCK_COLORS}).white)
-			Result.set_invert_mode
 		end
 
 	pnd_pointer_x,
@@ -979,6 +1043,24 @@ feature -- Implementation
 
 feature {NONE} -- Implementation
 
+	wake_up_gui_thread
+			-- Wake up the GUI thread if sleeping.
+		do
+			-- By default do nothing, redefined in descendents.
+		end
+
+	is_gui_thread: BOOLEAN
+			-- Is the currently executing thread a gui thread?
+		do
+			Result := is_gui_thread_cell.item
+		end
+
+	is_gui_thread_cell: CELL [BOOLEAN]
+			-- Cell holder for `is_gui_thread'.
+		once
+			create Result.put (False)
+		end
+
 	stop_processing_requested: BOOLEAN
 			-- Has 'stop_processing' been called?
 
@@ -990,12 +1072,6 @@ feature {NONE} -- Implementation
 
  	old_pointer_button_press_actions: detachable EV_POINTER_BUTTON_ACTION_SEQUENCE
 			-- Button press actions of window being used whie contextual help is enabled
-
-	screen: EV_SCREEN
-			-- Screen object used to retrieve widget under mouse pointer
-		once
-			create Result
-		end
 
 	help_handler_procedure: PROCEDURE [ANY, TUPLE]
 			-- Help handler procedure associated with help accelerator
@@ -1034,7 +1110,7 @@ feature {NONE} -- Implementation
 		do
 			if button = 1 then
 				disable_contextual_help
-				w := screen.widget_at_mouse_pointer
+				w := pnd_screen.widget_at_mouse_pointer
 				if w /= Void then
 					display_help_for_widget (w)
 				end

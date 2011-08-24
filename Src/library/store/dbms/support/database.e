@@ -53,7 +53,7 @@ feature -- For DATABASE_CHANGE
 		do
 		end
 
-	hide_qualifier(c_temp: READABLE_STRING_GENERAL): POINTER
+	hide_qualifier (c_temp: READABLE_STRING_GENERAL): POINTER
 			-- When "qualifier" is used to identify an database object,
 			-- we have to hide ":" in the qualifier first, otherwise, it
 			-- will be misinterpreted by feature SQL_SCAN::parse
@@ -142,8 +142,8 @@ feature -- For DATABASE_STORE
 			l_identity_index: INTEGER
 			l_column_name: detachable STRING
 		do
-			create Result.make (1)
-			Result.append (" (")
+			create Result.make (25)
+			Result.append_character (' '); Result.append_character ('(')
 			if attached {DB_TABLE} obj as table and then not insert_auto_identity_column then
 					-- There was an explicit requirement from the database to exclude
 					-- the identity column from the statement.
@@ -162,7 +162,8 @@ feature -- For DATABASE_STORE
 			loop
 				if map_table.item (j) > 0 then
 					if i /= 0 then
-						Result.append (", ")
+						Result.append_character (',')
+						Result.append_character (' ')
 					end
 					if l_identity_index /= j then
 						l_column_name := repository.column_name (j)
@@ -173,7 +174,7 @@ feature -- For DATABASE_STORE
 				end
 				j := j + 1
  			end
-			Result.append (") ")
+			Result.append_character (')'); Result.append_character (' ')
 		end
 
 	dim_rep_diff (repository_dimension, db_field_count: INTEGER): BOOLEAN

@@ -60,23 +60,29 @@ feature -- Basic operations
 		local
 			parsed_s: detachable STRING_32
 			parsed: BOOLEAN
+			l_db_spec: like db_spec
+			l_status: DB_STATUS
 		do
-			descriptor := db_spec.new_descriptor
-			if not db_spec.normal_parse then
-				parsed := db_spec.parse (descriptor, ht, ht_order, handle, s)
+			l_db_spec := db_spec
+			l_status := handle.status
+			descriptor := l_db_spec.new_descriptor
+			if not l_db_spec.normal_parse then
+				parsed := l_db_spec.parse (descriptor, ht, ht_order, handle, s)
 			end
 			if not parsed then
 				parsed_s := parse_32 (s)
-				db_spec.init_order (descriptor, parsed_s)
+				l_db_spec.init_order (descriptor, parsed_s)
 			end
 			last_parsed_query_32 := parsed_s
-			if is_ok then
-				db_spec.start_order (descriptor)
+			if l_status.is_ok then
+				l_db_spec.start_order (descriptor)
 			end
-			if is_ok then
-				db_spec.result_order (descriptor)
+			if l_status.is_ok then
+				l_db_spec.result_order (descriptor)
+
+					-- Move to next row.
+				l_db_spec.next_row (descriptor)
 			end
-			next
 		end
 
 	next

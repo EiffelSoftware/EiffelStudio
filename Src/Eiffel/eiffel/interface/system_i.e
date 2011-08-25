@@ -319,7 +319,7 @@ feature -- Properties
 			-- List of removed classes form configuration system.
 			-- ie. classes that have been removed from disk.
 
-	missing_classes: HASH_TABLE [SEARCH_TABLE [CLASS_C], STRING]
+	missing_classes: HASH_TABLE [ARRAYED_LIST [TUPLE [CLASS_C, LOCATION_AS]], INTEGER]
 			-- Table indexed by missing classnames where elements are
 			-- classes referencing the missing classname.
 
@@ -329,7 +329,7 @@ feature -- Properties
 			Result := unref_classes.twin
 		end
 
-	missing_classes_warning: HASH_TABLE [SEARCH_TABLE [CLASS_C], STRING]
+	missing_classes_warning: like missing_classes
 			-- Table indexed by missing classnames for which we only generate a
 			-- warning where elements are classes referencing the missing classname.
 
@@ -681,55 +681,59 @@ end
 			end
 		end
 
-	record_potential_vtct_error (a_class: CLASS_C; a_name: STRING)
+	record_potential_vtct_error (a_class: CLASS_C; a_name: ID_AS)
 			-- Record missing class name `a_name' in `a_class'.
 		require
 			a_class_not_void: a_class /= Void
 			a_name_not_void: a_name /= Void
 		local
-			l_table: SEARCH_TABLE [CLASS_C]
+			locations: ARRAYED_LIST [TUPLE [CLASS_C, LOCATION_AS]]
+			name_id: INTEGER
 		do
 			if missing_classes = Void then
 				create missing_classes.make (5)
 			end
-			missing_classes.search (a_name)
+			name_id := a_name.name_id
+			missing_classes.search (name_id)
 			if missing_classes.found then
-				l_table := missing_classes.found_item
+				locations := missing_classes.found_item
 			else
-				create l_table.make (1)
-				missing_classes.put (l_table, a_name)
+				create locations.make (1)
+				missing_classes.put (locations, name_id)
 			end
-			l_table.put (a_class)
+			locations.extend ([a_class, a_name])
 		end
 
-	record_potential_vtcm_warning (a_class: CLASS_C; a_name: STRING)
+	record_potential_vtcm_warning (a_class: CLASS_C; a_name: ID_AS)
 			-- Record missing class name `a_name' in `a_class'.
 		require
 			a_class_not_void: a_class /= Void
 			a_name_not_void: a_name /= Void
 		local
-			l_table: SEARCH_TABLE [CLASS_C]
+			locations: ARRAYED_LIST [TUPLE [CLASS_C, LOCATION_AS]]
+			name_id: INTEGER
 		do
 			if missing_classes_warning = Void then
 				create missing_classes_warning.make (5)
 			end
-			missing_classes_warning.search (a_name)
+			name_id := a_name.name_id
+			missing_classes_warning.search (name_id)
 			if missing_classes_warning.found then
-				l_table := missing_classes_warning.found_item
+				locations := missing_classes_warning.found_item
 			else
-				create l_table.make (1)
-				missing_classes_warning.put (l_table, a_name)
+				create locations.make (1)
+				missing_classes_warning.put (locations, name_id)
 			end
-			l_table.put (a_class)
+			locations.extend ([a_class, a_name])
 		end
 
 	report_vtct_errors
 			-- Report any remaining VTCT errors at the end of degree 5
 		local
-			l_vtct: VTCT
 			l_name: STRING
 			l_class: CLASS_C
-			l_table: SEARCH_TABLE [CLASS_C]
+			locations: ARRAYED_LIST [TUPLE [c: CLASS_C; l: LOCATION_AS]]
+			location: TUPLE [c: CLASS_C; l: LOCATION_AS]
 			l_has_error: BOOLEAN
 			l_agent_sorter: AGENT_EQUALITY_TESTER [VTCT]
 			l_sorter: QUICK_SORTER [VTCT]
@@ -746,14 +750,15 @@ end
 				until
 					missing_classes.after
 				loop
-					l_table := missing_classes.item_for_iteration
-					l_name := missing_classes.key_for_iteration
+					locations := missing_classes.item_for_iteration
+					l_name := names.item (missing_classes.key_for_iteration)
 					from
-						l_table.start
+						locations.start
 					until
-						l_table.after
+						locations.after
 					loop
-						l_class := l_table.item_for_iteration
+						location := locations.item_for_iteration
+						l_class := location.c
 							-- At this stage classes have not yet been removed, so we simply
 							-- look into `removed_classes'.
 						if
@@ -764,10 +769,7 @@ end
 								same_compiled_class: l_class.original_class.compiled_class = l_class
 							end
 								-- If class is still compiled then we should report the error.
-							create l_vtct
-							l_vtct.set_class (l_class)
-							l_vtct.set_class_name (l_name)
-							l_list.extend (l_vtct)
+							l_list.extend (create {VTCT}.make (l_name, location.l, l_class))
 
 								-- But since it is an invalid class, then we need to force
 								-- a compilation again to check for the VTCT error again.
@@ -775,7 +777,7 @@ end
 							l_class.set_changed (True)
 							l_has_error := True
 						end
-						l_table.forth
+						locations.forth
 					end
 					missing_classes.forth
 				end
@@ -803,10 +805,10 @@ end
 	report_vtcm_warnings
 			-- Report any remaining VTCM warnings at the end of degree 5
 		local
-			l_vtcm: VTCM
 			l_name: STRING
 			l_class: CLASS_C
-			l_table: SEARCH_TABLE [CLASS_C]
+			locations: ARRAYED_LIST [TUPLE [c: CLASS_C; l: LOCATION_AS]]
+			location: TUPLE [c: CLASS_C; l: LOCATION_AS]
 			l_has_error: BOOLEAN
 			l_agent_sorter: AGENT_EQUALITY_TESTER [VTCM]
 			l_sorter: QUICK_SORTER [VTCM]
@@ -823,14 +825,15 @@ end
 				until
 					missing_classes_warning.after
 				loop
-					l_table := missing_classes_warning.item_for_iteration
-					l_name := missing_classes_warning.key_for_iteration
+					locations := missing_classes_warning.item_for_iteration
+					l_name := names.item (missing_classes_warning.key_for_iteration)
 					from
-						l_table.start
+						locations.start
 					until
-						l_table.after
+						locations.after
 					loop
-						l_class := l_table.item_for_iteration
+						location := locations.item_for_iteration
+						l_class := location.c
 							-- At this stage classes have not yet been removed, so we simply
 							-- look into `removed_classes'.
 						if
@@ -841,14 +844,10 @@ end
 								same_compiled_class: l_class.original_class.compiled_class = l_class
 							end
 								-- If class is still compiled then we should report the error.
-							create l_vtcm
-							l_vtcm.set_class (l_class)
-							l_vtcm.set_class_name (l_name)
-							l_list.extend (l_vtcm)
-
+							l_list.extend (create {VTCM}.make (l_name, location.l, l_class))
 							l_has_error := True
 						end
-						l_table.forth
+						locations.forth
 					end
 					missing_classes_warning.forth
 				end
@@ -1680,7 +1679,7 @@ feature -- Recompilation
 	recheck_missing_classes
 			-- Recheck the classes that produced a missing class error and wipe out the list of missing classes.
 		local
-			l_classes: SEARCH_TABLE [CLASS_C]
+			locations: ARRAYED_LIST [TUPLE [c: CLASS_C; l: LOCATION_AS]]
 			l_cl: CLASS_C
 		do
 			if missing_classes /= Void then
@@ -1689,18 +1688,18 @@ feature -- Recompilation
 				until
 					missing_classes.after
 				loop
-					l_classes := missing_classes.item_for_iteration
+					locations := missing_classes.item_for_iteration
 					from
-						l_classes.start
+						locations.start
 					until
-						l_classes.after
+						locations.after
 					loop
-						l_cl := l_classes.item_for_iteration
+						l_cl := locations.item_for_iteration.c
 						if removed_classes = Void or else not removed_classes.has (l_cl) then
 							workbench.add_class_to_recompile (l_cl.original_class)
 							l_cl.set_changed (True)
 						end
-						l_classes.forth
+						locations.forth
 					end
 					missing_classes.forth
 				end

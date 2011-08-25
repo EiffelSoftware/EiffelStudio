@@ -1896,7 +1896,7 @@ feature -- Supplier checking
 				supplier_list.after
 			loop
 					-- Check supplier class_name `supplier_list.item_for_iteration' of the class
-				check_one_supplier (supplier_list.item_for_iteration.name, a_light_suppliers)
+				check_one_supplier (supplier_list.item_for_iteration, a_light_suppliers)
 				supplier_list.forth
 			end
 		end
@@ -1916,31 +1916,31 @@ feature -- Supplier checking
 			until
 				i = nb
 			loop
-				check_one_supplier (l_area.item (i).type.class_name.name, False)
+				check_one_supplier (l_area.item (i).type.class_name, False)
 				i := i + 1
 			end
 		end
 
-	check_one_supplier (cl_name: STRING; a_light_supplier: BOOLEAN)
-			-- Check if supplier class named `cl_name' is in the
+	check_one_supplier (class_name: ID_AS; a_light_supplier: BOOLEAN)
+			-- Check if supplier class named `class_name' is in the
 			-- universe.
 			-- `a_light_supplier' indicates that we only record it if it is already compiled but don't add it.
 			-- We also only generate a warning if the class cannot be found.
 		require
-			good_argument: cl_name /= Void
+			class_name_attached: class_name /= Void
 		local
+			class_name_id: INTEGER
 			supplier_class: CLASS_I
 			comp_class: CLASS_C
-			l_none: STRING
 			l_syntactical_suppliers: like syntactical_suppliers
 		do
+			class_name_id := class_name.name_id
 				-- 1.	Check if the supplier class is in the universe
 				--		associated to `cluster'.
 				-- 2.	Check if the supplier class is a new class
 				--		for the system.
-			supplier_class := Universe.class_named (cl_name, cluster)
-			l_none := once "NONE"
-			if supplier_class /= Void and then not cl_name.is_equal (l_none) then
+			supplier_class := Universe.class_named (class_name.name, cluster)
+			if supplier_class /= Void and then class_name_id /= {PREDEFINED_NAMES}.none_class_name_id then
 					-- The supplier class is in the universe associated
 					-- to `cluster'.
 				if not a_light_supplier then
@@ -1974,14 +1974,14 @@ feature -- Supplier checking
 					end
 				end
 			elseif a_light_supplier then
-				if not cl_name.is_equal (l_none) then
-					system.record_potential_vtcm_warning (Current, cl_name)
+				if class_name_id /= {PREDEFINED_NAMES}.none_class_name_id then
+					system.record_potential_vtcm_warning (Current, class_name)
 				end
 			else
-					-- We could not find class of name `cl_name', but it does not mean
+					-- We could not find class of name `class_name', but it does not mean
 					-- that we actually need the class, as maybe, at the end of
 					-- the compilation, Current might not be needed anymore.
-				system.record_potential_vtct_error (Current, cl_name)
+				system.record_potential_vtct_error (Current, class_name)
 			end
 		end
 

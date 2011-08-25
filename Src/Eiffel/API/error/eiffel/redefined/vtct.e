@@ -11,7 +11,25 @@ inherit
 	EIFFEL_ERROR
 		redefine
 			build_explain,
-			print_single_line_error_message
+			print_single_line_error_message,
+			trace
+		end
+
+create
+	default_create, make
+
+feature {NONE} -- Creation
+
+	make (name: STRING; location: LOCATION_AS; context: CLASS_C)
+			-- Create an error object for missing class `name' at `location' in class `context'.
+		require
+			name_attached: attached name
+			location_attached: attached location
+			context_attached: attached context
+		do
+			set_class (context)
+			set_location (location)
+			set_class_name (name)
 		end
 
 feature -- Properties
@@ -34,14 +52,27 @@ feature -- Status report
 
 feature -- Output
 
+	trace (f: TEXT_FORMATTER)
+			-- <Precursor>
+		do
+			Precursor (f)
+			if line > 0 then
+				print_context_of_error (class_c, f)
+			end
+		end
+
 	build_explain (a_text_formatter: TEXT_FORMATTER)
 			-- Build specific explanation explain for current error
 			-- in `a_text_formatter'.
 		do
 			a_text_formatter.add ("Unknown class name: ")
-			a_text_formatter.add (class_name)
-			a_text_formatter.add (" in ")
-			a_text_formatter.add (class_c.group.target.name)
+			if line > 0 then
+				a_text_formatter.add_class_syntax (Current, class_c, class_name)
+			else
+				a_text_formatter.add (class_name)
+				a_text_formatter.add (" in ")
+				a_text_formatter.add (class_c.group.target.name)
+			end
 			a_text_formatter.add_new_line
 		end
 
@@ -54,7 +85,11 @@ feature {NONE} -- Output
 			if class_name /= Void then
 				a_text_formatter.add_space
 				a_text_formatter.add ("Unknown class ")
-				a_text_formatter.add (class_name)
+				if line > 0 then
+					a_text_formatter.add_class_syntax (Current, class_c, class_name)
+				else
+					a_text_formatter.add (class_name)
+				end
 				a_text_formatter.add (".")
 			end
 		end
@@ -82,7 +117,7 @@ feature {COMPILER_EXPORTER} -- Setting
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -95,22 +130,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class VTCT

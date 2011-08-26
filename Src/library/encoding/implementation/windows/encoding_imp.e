@@ -27,98 +27,98 @@ feature -- String encoding convertion
 			l_converted_32: STRING_32
 			l_converted_8: STRING_8
 		do
-		last_conversion_lost_data := False
-		if a_from_string.is_empty then
-			last_conversion_successful := True
-			if a_from_string.is_string_8 then
-				last_converted_string := a_from_string.as_string_8.twin
+			last_conversion_lost_data := False
+			if a_from_string.is_empty then
+				last_conversion_successful := True
+				if a_from_string.is_string_8 then
+					last_converted_string := a_from_string.as_string_8.twin
+				else
+					last_converted_string := a_from_string.as_string_32.twin
+				end
+				last_was_wide_string := a_from_string.is_string_32
 			else
-				last_converted_string := a_from_string.as_string_32.twin
-			end
-			last_was_wide_string := a_from_string.is_string_32
-		else
-			l_from_code_page := platfrom_code_page_from_name (a_from_code_page)
-			l_to_code_page := platfrom_code_page_from_name (a_to_code_page)
+				l_from_code_page := platfrom_code_page_from_name (a_from_code_page)
+				l_to_code_page := platfrom_code_page_from_name (a_to_code_page)
 
-			l_from_be := is_big_endian_code_page (a_from_code_page)
-			l_to_be := is_big_endian_code_page (a_to_code_page)
+				l_from_be := is_big_endian_code_page (a_from_code_page)
+				l_to_be := is_big_endian_code_page (a_to_code_page)
 
-			last_conversion_successful := True
-			if is_two_byte_code_page (a_from_code_page) then
-				l_string_32 := a_from_string.as_string_32
-				if l_from_be = is_little_endian then
-					l_string_32 := string_16_switch_endian (l_string_32)
-				end
-				if is_four_bype_code_page (a_to_code_page) then
-					l_string_32 := utf16_to_utf32 (l_string_32)
-					if l_to_be = is_little_endian then
-						l_converted_32 := string_32_switch_endian (l_string_32)
-					else
-						l_converted_32 := l_string_32
+				last_conversion_successful := True
+				if is_two_byte_code_page (a_from_code_page) then
+					l_string_32 := a_from_string.as_string_32
+					if l_from_be = is_little_endian then
+						l_string_32 := string_16_switch_endian (l_string_32)
 					end
-					last_converted_string := l_converted_32
-				elseif is_two_byte_code_page (a_to_code_page) then
-					if l_to_be = is_little_endian then
-						l_converted_32 := string_16_switch_endian (l_string_32)
+					if is_four_bype_code_page (a_to_code_page) then
+						l_string_32 := utf16_to_utf32 (l_string_32)
+						if l_to_be = is_little_endian then
+							l_converted_32 := string_32_switch_endian (l_string_32)
+						else
+							l_converted_32 := l_string_32
+						end
+						last_converted_string := l_converted_32
+					elseif is_two_byte_code_page (a_to_code_page) then
+						if l_to_be = is_little_endian then
+							l_converted_32 := string_16_switch_endian (l_string_32)
+						else
+							l_converted_32 := l_string_32
+						end
+						last_converted_string := l_converted_32
+						last_was_wide_string := True
 					else
-						l_converted_32 := l_string_32
+						l_converted_8 := wide_char_to_multi_byte (l_to_code_page, l_string_32)
+						last_converted_string := l_converted_8
 					end
-					last_converted_string := l_converted_32
-					last_was_wide_string := True
+				elseif is_four_bype_code_page (a_from_code_page) then
+					l_string_32 := a_from_string.as_string_32
+					if l_from_be = is_little_endian then
+						l_string_32 := string_32_switch_endian (l_string_32)
+					end
+					if is_two_byte_code_page (a_to_code_page) then
+						l_string_32 := utf32_to_utf16 (l_string_32)
+						if l_to_be = is_little_endian then
+							l_converted_32 := string_16_switch_endian (l_string_32)
+						else
+							l_converted_32 := l_string_32
+						end
+						last_converted_string := l_converted_32
+						last_was_wide_string := True
+					elseif is_four_bype_code_page (a_to_code_page) then
+						if l_to_be = is_little_endian then
+							l_converted_32 := string_32_switch_endian (l_string_32)
+						else
+							l_converted_32 := l_string_32.twin
+						end
+						last_converted_string := l_converted_32
+					else
+						l_converted_32 := utf32_to_utf16 (l_string_32)
+						l_converted_8 := wide_char_to_multi_byte (l_to_code_page, l_converted_32)
+						last_converted_string := l_converted_8
+					end
 				else
-					l_converted_8 := wide_char_to_multi_byte (l_to_code_page, l_string_32)
-					last_converted_string := l_converted_8
-				end
-			elseif is_four_bype_code_page (a_from_code_page) then
-				l_string_32 := a_from_string.as_string_32
-				if l_from_be = is_little_endian then
-					l_string_32 := string_32_switch_endian (l_string_32)
-				end
-				if is_two_byte_code_page (a_to_code_page) then
-					l_string_32 := utf32_to_utf16 (l_string_32)
-					if l_to_be = is_little_endian then
-						l_converted_32 := string_16_switch_endian (l_string_32)
+					l_string_32 := multi_byte_to_wide_char (l_from_code_page, a_from_string.as_string_8)
+					if is_two_byte_code_page (a_to_code_page) then
+						if l_to_be = is_little_endian then
+							l_converted_32 := string_16_switch_endian (l_string_32)
+						else
+							l_converted_32 := l_string_32
+						end
+						last_converted_string := l_converted_32
+						last_was_wide_string := True
+					elseif is_four_bype_code_page (a_to_code_page) then
+						l_string_32 := utf16_to_utf32 (l_string_32)
+						if l_to_be = is_little_endian then
+							l_converted_32 := string_32_switch_endian (l_string_32)
+						else
+							l_converted_32 := l_string_32
+						end
+						last_converted_string := l_converted_32
 					else
-						l_converted_32 := l_string_32
+						l_converted_8 := wide_char_to_multi_byte (l_to_code_page, l_string_32)
+						last_converted_string := l_converted_8
 					end
-					last_converted_string := l_converted_32
-					last_was_wide_string := True
-				elseif is_four_bype_code_page (a_to_code_page) then
-					if l_to_be = is_little_endian then
-						l_converted_32 := string_32_switch_endian (l_string_32)
-					else
-						l_converted_32 := l_string_32.twin
-					end
-					last_converted_string := l_converted_32
-				else
-					l_converted_32 := utf32_to_utf16 (l_string_32)
-					l_converted_8 := wide_char_to_multi_byte (l_to_code_page, l_converted_32)
-					last_converted_string := l_converted_8
-				end
-			else
-				l_string_32 := multi_byte_to_wide_char (l_from_code_page, a_from_string.as_string_8)
-				if is_two_byte_code_page (a_to_code_page) then
-					if l_to_be = is_little_endian then
-						l_converted_32 := string_16_switch_endian (l_string_32)
-					else
-						l_converted_32 := l_string_32
-					end
-					last_converted_string := l_converted_32
-					last_was_wide_string := True
-				elseif is_four_bype_code_page (a_to_code_page) then
-					l_string_32 := utf16_to_utf32 (l_string_32)
-					if l_to_be = is_little_endian then
-						l_converted_32 := string_32_switch_endian (l_string_32)
-					else
-						l_converted_32 := l_string_32
-					end
-					last_converted_string := l_converted_32
-				else
-					l_converted_8 := wide_char_to_multi_byte (l_to_code_page, l_string_32)
-					last_converted_string := l_converted_8
 				end
 			end
-		end
 		end
 
 	wide_char_to_multi_byte (a_code_page: STRING; a_string: STRING_32): STRING_8
@@ -295,7 +295,7 @@ feature {NONE} -- Implementation
 
 note
 	library:   "Encoding: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -73,6 +73,12 @@ feature -- Command
 			implementation.save_to_named_file (a_file_name)
 		end
 
+	save_to_pointer: detachable MANAGED_POINTER
+			-- Save pixel data to Result pointer
+		do
+			Result := implementation.save_to_pointer
+		end
+
 	sub_pixmap (a_rect: EV_RECTANGLE): EV_PIXMAP
 			-- Return a pixmap region of `Current' represented by area `a_rect'.
 		require

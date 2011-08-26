@@ -1,7 +1,7 @@
 note
 	description: "[
-					Wrapper class fr GInputStream
-					http://developer.gnome.org/gio/unstable/GInputStream.html#GInputStream.object-hierarchy
+					Wrapper class for GInputStream
+					http://developer.gnome.org/gio/unstable/GInputStream.html
 																											]"
 	date: "$Date$"
 	revision: "$Revision$"

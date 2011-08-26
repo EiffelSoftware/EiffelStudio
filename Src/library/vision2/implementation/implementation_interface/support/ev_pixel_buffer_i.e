@@ -55,6 +55,11 @@ feature -- Command
 		deferred
 		end
 
+	save_to_pointer: MANAGED_POINTER
+			-- Save pixel data to `a_pointer'
+		deferred
+		end
+
 	sub_pixmap (a_rect: EV_RECTANGLE): EV_PIXMAP
 			-- Create a new sub pixmap from Current.
 		deferred

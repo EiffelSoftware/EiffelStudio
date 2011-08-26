@@ -159,7 +159,7 @@ feature -- Command
 					l_file_type := l_format
 					{GTK2}.gdk_pixbuf_save (gdk_pixbuf, l_cs.item, l_file_type.item, $g_error)
 					if g_error /= default_pointer then
-							-- GdkPixbuf could not load the image so we raise an exception.
+							-- GdkPixbuf could not save the image so we raise an exception.
 						(create {EXCEPTIONS}).raise ("Could not save image file.")
 					end
 				else
@@ -172,6 +172,27 @@ feature -- Command
 				end
 			else
 				(create {EXCEPTIONS}).raise ("Could not save image file.")
+			end
+		end
+
+
+
+	save_to_pointer: MANAGED_POINTER
+			-- <Precursor>
+		local
+			l_result: INTEGER
+			l_file_type: EV_GTK_C_STRING
+			l_buffer_size: INTEGER
+			l_error: POINTER
+			l_pointer: POINTER
+		do
+			-- Same as Windows {EV_PIXEL_BUFFER_IMP} implementation, using PNG format as default
+			create l_file_type.set_with_eiffel_string ("png")
+
+			l_result := {GTK}.gdk_pixbuf_save_to_buffer (gdk_pixbuf, $l_pointer, $l_buffer_size, l_file_type.item, $l_error)
+			check success: l_result /= 0 end
+			if l_result /= 0 then
+				create Result.own_from_pointer (l_pointer, l_buffer_size)
 			end
 		end
 

@@ -604,7 +604,8 @@ feature -- External
 			is_error_updated := False
 		end
 
-	put_col_name (no_descriptor: INTEGER; index: INTEGER; ar: STRING; max_len:INTEGER): INTEGER
+	put_col_name (no_descriptor: INTEGER; index: INTEGER; ar: STRING; max_len: INTEGER): INTEGER
+			-- <Precursor>
 		local
 			l_area: MANAGED_POINTER
 			l_str: SQL_STRING
@@ -612,7 +613,8 @@ feature -- External
 			create l_area.make (max_len)
 			Result := odbc_put_col_name (con_context_pointer, no_descriptor, index, l_area.item)
 
-			create l_str.make_shared_from_pointer_and_count (l_area.item, Result * {SQL_STRING}.character_size)
+			l_str := temporary_reusable_sql_string
+			l_str.set_shared_from_pointer_and_count (l_area.item, Result * {SQL_STRING}.character_size)
 
 			check
 				Result <= max_len
@@ -626,7 +628,8 @@ feature -- External
 			l_area.resize (0)
 		end
 
-	put_data (no_descriptor: INTEGER; index: INTEGER; ar: STRING; max_len:INTEGER): INTEGER
+	put_data (no_descriptor: INTEGER; index: INTEGER; ar: STRING; max_len: INTEGER): INTEGER
+			-- <Precursor>
 		local
 			l_area: MANAGED_POINTER
 			i: INTEGER
@@ -636,7 +639,8 @@ feature -- External
 			ar.grow (Result)
 			ar.set_count (Result)
 			if Result > 0 then
-				create l_area.share_from_pointer (l_data, Result)
+				l_area := temporary_reusable_managed_pointer
+				l_area.set_from_pointer (l_data, Result)
 				from
 					i := 1
 				until
@@ -652,7 +656,8 @@ feature -- External
 			end
 		end
 
-	put_data_32 (no_descriptor: INTEGER; index: INTEGER; ar: STRING_32; max_len:INTEGER): INTEGER
+	put_data_32 (no_descriptor: INTEGER; index: INTEGER; ar: STRING_32; max_len: INTEGER): INTEGER
+			-- <Precursor>
 		local
 			l_sql_string: SQL_STRING
 			l_data, l_null: POINTER
@@ -660,7 +665,10 @@ feature -- External
 			Result := odbc_put_data (con_context_pointer, no_descriptor, index, $l_data) // {SQL_STRING}.character_size
 			ar.grow (Result)
 			ar.set_count (Result)
-			create l_sql_string.make_shared_from_pointer_and_count (l_data, Result * {SQL_STRING}.character_size)
+
+			l_sql_string := temporary_reusable_sql_string
+			l_sql_string.set_shared_from_pointer_and_count (l_data, Result * {SQL_STRING}.character_size)
+
 			l_sql_string.read_substring_into (ar, 1, Result)
 			if l_data /= l_null then
 					-- `odbc_put_data' allocate some memory, we need to free it.
@@ -888,6 +896,19 @@ feature {NONE} -- Access
 
 	con_context_pointer: POINTER
 			-- Pointer to C structure of CON_CONTEXT
+
+feature {NONE} -- Implementation
+
+	temporary_reusable_sql_string: SQL_STRING
+			-- Reusable sql string for temporary data manipulation.
+		once
+			create Result.make_empty (0)
+		end
+
+	temporary_reusable_managed_pointer: MANAGED_POINTER
+		once
+			create Result.share_from_pointer (default_pointer, 0)
+		end
 
 feature {NONE} -- Disposal
 

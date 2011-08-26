@@ -1,0 +1,17 @@
+test_name 	 none-attachment-mark
+test_description Attachment mark on NONE type should be preserved.
+
+copy_sub	Ace $TEST Ace
+define	C	""
+copy_sub	test.e $CLUSTER test.e
+
+compile_melted
+compile_result validity_error TEST VJAR VJAR VJAR VJAR VJAR VJAR VJAR VJAR VJAR VJAR VJAR VJAR VJAR VJAR VJAR VJAR VJAR
+
+define	C	"-- "
+copy_sub	test.e $CLUSTER test.e
+
+resume_compile
+compile_result validity_error TEST VEVI VEVI VEVI VEVI VEVI VEVI VEVI VJAR VJAR VJAR VJAR VJAR VJAR VJAR VJAR VJAR VJAR
+
+test_end

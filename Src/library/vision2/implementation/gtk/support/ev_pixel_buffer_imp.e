@@ -177,7 +177,7 @@ feature -- Command
 
 
 
-	save_to_pointer: MANAGED_POINTER
+	save_to_pointer: detachable MANAGED_POINTER
 			-- <Precursor>
 		local
 			l_result: INTEGER

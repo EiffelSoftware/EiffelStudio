@@ -55,7 +55,7 @@ feature -- Command
 		deferred
 		end
 
-	save_to_pointer: MANAGED_POINTER
+	save_to_pointer: detachable MANAGED_POINTER
 			-- Save pixel data to `a_pointer'
 		deferred
 		end

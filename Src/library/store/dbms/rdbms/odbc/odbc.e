@@ -634,6 +634,7 @@ feature -- External
 			l_area: MANAGED_POINTER
 			i: INTEGER
 			l_data, l_null: POINTER
+			l_str_area: SPECIAL [CHARACTER_8]
 		do
 			Result := odbc_put_data (con_context_pointer, no_descriptor, index, $l_data)
 			ar.grow (Result)
@@ -641,12 +642,14 @@ feature -- External
 			if Result > 0 then
 				l_area := temporary_reusable_managed_pointer
 				l_area.set_from_pointer (l_data, Result)
+
+				l_str_area := ar.area
 				from
-					i := 1
+					i := 0
 				until
-					i > Result
+					i = Result
 				loop
-					ar.put (l_area.read_integer_8 (i - 1).to_character_8, i)
+					l_str_area [i] := l_area.read_integer_8 (i).to_character_8
 					i := i + 1
 				end
 			end

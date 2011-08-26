@@ -217,7 +217,7 @@ feature -- Command
 		end
 
 	save_to_named_file (a_file_name: STRING)
-			-- Save pixel datas to `a_file_name'
+			-- Save pixel data to `a_file_name'
 		local
 			l_file_name: FILE_NAME
 			l_gdip_bitmap: like gdip_bitmap
@@ -233,6 +233,20 @@ feature -- Command
 				l_pixmap := pixmap
 				check l_pixmap /= Void end
 				l_pixmap.save_to_named_file (create {EV_PNG_FORMAT}, l_file_name)
+			end
+		end
+
+	save_to_pointer: detachable MANAGED_POINTER
+			-- Save pixel data to Result managed pointer
+		local
+			l_gdip_bitmap: like gdip_bitmap
+		do
+			if is_gdi_plus_installed then
+				l_gdip_bitmap := gdip_bitmap
+				check l_gdip_bitmap /= Void end
+				Result := l_gdip_bitmap.save_image_to_memory
+			else
+				check not_supported: False end
 			end
 		end
 

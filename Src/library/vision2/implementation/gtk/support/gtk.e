@@ -207,6 +207,20 @@ feature
 			]"
 		end
 
+	frozen gdk_pixbuf_save_to_buffer (a_pixbuf: POINTER; a_buffer: TYPED_POINTER[POINTER]; a_buffer_size: TYPED_POINTER[INTEGER]; a_type: POINTER; a_error: TYPED_POINTER [POINTER]): INTEGER
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"[
+				return (EIF_INTEGER)gdk_pixbuf_save_to_buffer ((GdkPixbuf *)$a_pixbuf,
+                                                         (gchar **)$a_buffer,
+                                                         (gsize *)$a_buffer_size,
+                                                         (const char *)$a_type,
+                                                         (GError **)$a_error,
+                                                         NULL);
+			]"
+		end
+
 	frozen gdk_pixbuf_render_pixmap_and_mask (a_pixbuf: POINTER; a_pixmap, a_mask: TYPED_POINTER [POINTER]; alpha_threshold: INTEGER_32)
 		external
 			"C inline use <ev_gtk.h>"

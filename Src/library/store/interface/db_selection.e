@@ -336,9 +336,12 @@ feature -- Basic operations
 			argument_is_not_empty: not s.is_empty
 			is_ok: is_ok
 			is_allocatable: is_allocatable
+		local
+			l_last_query_32: STRING_32
 		do
-			last_query_32 := s.as_string_32
-			implementation.query (s)
+			l_last_query_32 := s.as_string_32
+			last_query_32 := l_last_query_32
+			implementation.query (l_last_query_32)
 			if is_tracing and then not is_ok then
 				fixme ("Unicode support for output tracing.")
 				trace_output.putstring (error_message_32)

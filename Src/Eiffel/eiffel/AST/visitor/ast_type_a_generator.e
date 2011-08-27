@@ -357,43 +357,15 @@ feature {NONE} -- Visitor implementation
 						l_actual_generic.put (last_type, i)
 						i := i + 1
 					end
-					if l_has_error then
-						check failure_enabled: is_failure_enabled end
-						last_type := Void
-					else
-						last_type := l_type
-					end
 				else
 					l_type := l_class_c.partial_actual_type (Void, l_as.is_expanded, l_as.has_separate_mark)
-					last_type := l_type
 				end
-				if l_type /= Void then
-					if l_as.has_attached_mark then
-						if l_type.is_basic then
-								-- Avoid modifying once values
-							l_type := l_type.duplicate
-							last_type := l_type
-						end
-						l_type.set_attached_mark
-						check l_type.is_attached end
-					elseif l_as.has_detachable_mark then
-						if l_type.is_basic then
-								-- Avoid modifying once values
-							l_type := l_type.duplicate
-							last_type := l_type
-						end
-						l_type.set_detachable_mark
-					elseif current_class.lace_class.is_attached_by_default then
-						if l_type.is_basic then
-								-- Avoid modifying once values
-							l_type := l_type.duplicate
-							last_type := l_type
-						end
-						l_type.set_is_attached
-					end
-					if l_as.has_separate_mark then
-						l_type.set_separate_mark
-					end
+				if l_has_error then
+					check failure_enabled: is_failure_enabled end
+					last_type := Void
+				else
+					check attached l_type end
+					last_type := set_class_type_marks (l_as, l_type)
 				end
 			else
 				check failure_enabled: is_failure_enabled end
@@ -452,19 +424,8 @@ feature {NONE} -- Visitor implementation
 					check failure_enabled: is_failure_enabled end
 					last_type := Void
 				else
-					if l_type /= Void then
-						if l_as.has_attached_mark then
-							l_type.set_attached_mark
-						elseif l_as.has_detachable_mark then
-							l_type.set_detachable_mark
-						elseif current_class.lace_class.is_attached_by_default then
-							l_type.set_is_attached
-						end
-						if l_as.has_separate_mark then
-							l_type.set_separate_mark
-						end
-					end
-					last_type := l_type
+					check attached l_type end
+					last_type := set_class_type_marks (l_as, l_type)
 				end
 			else
 				check failure_enabled: is_failure_enabled end
@@ -479,7 +440,7 @@ feature {NONE} -- Visitor implementation
 
 	process_none_type_as (l_as: NONE_TYPE_AS)
 		do
-			last_type := none_type
+			last_type := set_class_type_marks (l_as, none_type)
 		end
 
 	process_bits_as (l_as: BITS_AS)
@@ -492,8 +453,53 @@ feature {NONE} -- Visitor implementation
 			create {UNEVALUATED_BITS_SYMBOL_A} last_type.make (l_as.bits_symbol.name)
 		end
 
+feature {NONE} -- Type marks
+
+	set_class_type_marks (a: TYPE_AS; t: ATTACHABLE_TYPE_A): ATTACHABLE_TYPE_A
+			-- Type `t' or its duplicate if `t' may be a result of a once funtion
+			-- with type marks specified in `a'.
+		require
+			a_attached: attached a
+			t_attached: attached t
+		local
+			is_shared: BOOLEAN
+		do
+				-- Basic and NONE type descriptors may be shared.
+			is_shared := t.is_basic or else t.is_none
+			Result := t
+			if a.has_attached_mark then
+				if is_shared then
+						-- Avoid modifying once values.
+					Result := Result.duplicate
+				end
+				Result.set_attached_mark
+				check Result.is_attached end
+			elseif a.has_detachable_mark then
+				if is_shared then
+						-- Avoid modifying once values.
+					Result := Result.duplicate
+				end
+				Result.set_detachable_mark
+			elseif current_class.lace_class.is_attached_by_default then
+				if is_shared then
+						-- Avoid modifying once values.
+					Result := Result.duplicate
+				end
+				Result.set_is_attached
+			end
+			if a.has_separate_mark then
+				if is_shared then
+						-- Avoid modifying once values.
+					Result := Result.duplicate
+				end
+				Result.set_separate_mark
+			end
+		ensure
+			result_attached: attached Result
+		end
+
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -9,7 +9,7 @@ class
 	NONE_A
 
 inherit
-	TYPE_A
+	ATTACHABLE_TYPE_A
 		redefine
 			is_none, dump, c_type, same_as, is_full_named_type, generated_id,
 			generate_gen_type_il
@@ -103,19 +103,25 @@ feature {COMPILER_EXPORTER}
 
 	conform_to (a_context_class: CLASS_C; other: TYPE_A): BOOLEAN
 			-- Does Current conform to `other'?
-		local
-			l_type: TYPE_A
 		do
-				-- If `other' is attached, then NONE does not conform to it.
-				-- But it should not be `VOID_A' since VOID_A is only used as
-				-- return type for procedure
-			l_type := other.conformance_type
-			Result := not l_type.is_expanded and not l_type.is_void and then not l_type.is_attached and then
-				(l_type.is_formal implies l_type.is_reference)
+				-- Apply the same conformance rules as for a class type.
+			if
+				attached {ATTACHABLE_TYPE_A} other.conformance_type as other_attachable_type and then
+				not other_attachable_type.is_expanded and then
+				(other_attachable_type.is_formal implies other_attachable_type.is_reference)
+			then
+				Result := True
+				if a_context_class.lace_class.is_void_safe_conformance then
+					Result := is_attachable_to (other_attachable_type)
+				end
+				if Result then
+					Result := is_processor_attachable_to (other)
+				end
+			end
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

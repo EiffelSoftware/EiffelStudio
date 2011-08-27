@@ -1,4 +1,3 @@
-
 class TEST
 
 create
@@ -14,8 +13,8 @@ feature
 			end
 		end
 	
-	n: NONE
+	n: detachable NONE
 	
-	s:  detachable STRING
+	s: detachable STRING
 
 end

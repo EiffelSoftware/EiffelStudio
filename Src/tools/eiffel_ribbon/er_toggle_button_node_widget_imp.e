@@ -40,6 +40,8 @@ feature {NONE}-- Initialization
 			extend (command_name)
 			extend (l_ev_label_4)
 			extend (label)
+			extend (l_ev_label_5)
+			extend (l_ev_label_6)
 
 			l_ev_label_1.set_text ("Type:")
 			l_ev_label_1.align_text_left
@@ -49,6 +51,10 @@ feature {NONE}-- Initialization
 			l_ev_label_3.align_text_left
 			l_ev_label_4.set_text ("Label title:")
 			l_ev_label_4.align_text_left
+			l_ev_label_5.set_text ("Small image:")
+			l_ev_label_5.align_text_left
+			l_ev_label_6.set_text ("Large image:")
+			l_ev_label_6.align_text_left
 			integer_constant_set_procedures.extend (agent set_padding (?))
 			integer_constant_retrieval_functions.extend (agent default_padding)
 			integer_constant_set_procedures.extend (agent set_border_width (?))
@@ -59,6 +65,8 @@ feature {NONE}-- Initialization
 			disable_item_expand (command_name)
 			disable_item_expand (l_ev_label_4)
 			disable_item_expand (label)
+			disable_item_expand (l_ev_label_5)
+			disable_item_expand (l_ev_label_6)
 
 			set_all_attributes_using_constants
 			
@@ -82,6 +90,8 @@ feature {NONE}-- Initialization
 			create command_name
 			create l_ev_label_4
 			create label
+			create l_ev_label_5
+			create l_ev_label_6
 
 			create string_constant_set_procedures.make (10)
 			create string_constant_retrieval_functions.make (10)
@@ -106,7 +116,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	l_ev_label_1, l_ev_label_2, l_ev_label_3, l_ev_label_4: EV_LABEL
+	l_ev_label_1, l_ev_label_2, l_ev_label_3, l_ev_label_4, l_ev_label_5, l_ev_label_6: EV_LABEL
 
 feature {NONE} -- Implementation
 

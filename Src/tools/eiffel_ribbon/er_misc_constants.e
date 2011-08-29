@@ -17,12 +17,11 @@ feature -- Query
 	xml_file_name (a_index: INTEGER): STRING
 			-- File name for saving ribbon makrup xml file
 		do
-			if a_index = 0 then
+			if a_index <= 1 then
 				Result := "eiffel_ribbon.xml"
 			else
 				Result := "eiffel_ribbon_" + a_index.out + ".xml"
 			end
-
 		end
 
 	bml_file_name(a_index: INTEGER): STRING
@@ -144,7 +143,7 @@ feature -- Query
 
 	docking_tools_layout_file_name: STRING = "docking_tools_layout"
 			--
-			
+
 feature -- Settings query
 
 	is_using_application_mode: BOOLEAN

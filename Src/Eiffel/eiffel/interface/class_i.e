@@ -264,6 +264,19 @@ feature -- Access
 			Result := options.void_safety.index = {CONF_OPTION}.void_safety_index_none
 		end
 
+	is_void_safety_supported (other: CLASS_I): BOOLEAN
+			-- Does class provide the same or better void-safety level than `other'?
+		do
+			inspect other.options.void_safety.index
+			when {CONF_OPTION}.void_safety_index_none then
+				Result := True
+			when {CONF_OPTION}.void_safety_index_initialization then
+				Result := options.void_safety.index /= {CONF_OPTION}.void_safety_index_none
+			else
+				Result := options.void_safety.index = other.options.void_safety.index
+			end
+		end
+
 	is_syntax_obsolete: BOOLEAN
 			-- Is obsolete syntax used in the source code?
 		do

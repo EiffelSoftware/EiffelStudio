@@ -1960,6 +1960,11 @@ feature -- Supplier checking
 							supplier_class.compiled_class.record_precompiled_class_in_system
 						end
 					end
+					if not supplier_class.is_void_safety_supported (original_class) then
+							-- Report an error that `supplier_class' is less void-safe
+							-- than the class that replies on it.
+						error_handler.insert_error (create {VD88}.make (supplier_class, class_name, Current))
+					end
 				end
 				comp_class := supplier_class.compiled_class
 				check

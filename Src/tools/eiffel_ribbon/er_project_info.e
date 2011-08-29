@@ -17,7 +17,7 @@ feature {NONE} -- Initialization
 	make
 			-- Creation method
 		do
-			create ribbon_names.make (10)
+			reset_ribbon_names
 		end
 
 feature -- Query
@@ -86,6 +86,10 @@ feature -- Command
 				if l_list.item.widget.valid_index (1) and then
 					 attached {EV_TREE_NODE} l_list.item.widget.i_th (1) as l_tree_node then
 					if attached {ER_TREE_NODE_RIBBON_DATA} l_tree_node.data as l_data then
+						-- SED fail will make ribbon_names.area_v2 void sometimes
+						if ribbon_names.area_v2 = void then
+							reset_ribbon_names
+						end
 						if ribbon_names.valid_index (l_list.index) then
 							l_data.set_command_name (ribbon_names.i_th (l_list.index))
 						end
@@ -95,4 +99,11 @@ feature -- Command
 			end
 		end
 
+feature {NONE} -- Implementation
+
+	reset_ribbon_names
+			--
+		do
+			create ribbon_names.make (10)
+		end
 end

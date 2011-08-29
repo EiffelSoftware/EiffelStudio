@@ -8,7 +8,7 @@
 		$EWEASEL_DOTNET_SETTING
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf" use_application_options="true"/>
 		<cluster name="root_cluster" location="$CLUSTER\">
-			<class_option class="PARENT" full_class_checking="false" is_attached_by_default="false" is_void_safe="false">
+			<class_option class="PARENT" full_class_checking="false" is_attached_by_default="false" is_void_safe="$IS_VOID_SAFE">
 			</class_option>
 			<class_option class="CHILD" full_class_checking="true" is_attached_by_default="true" is_void_safe="true">
 			</class_option>

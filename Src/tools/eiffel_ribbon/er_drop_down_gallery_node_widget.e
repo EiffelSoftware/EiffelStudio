@@ -21,6 +21,7 @@ feature {NONE} -- Initialization
 				-- Create attached types defined in class here, initialize them in `user_initialization'.
 			create checker
 			create large_image.make
+			create small_image.make
 		end
 
 	user_initialization
@@ -28,9 +29,17 @@ feature {NONE} -- Initialization
 			-- and from within current class itself.
 		do
 				-- Initialize types defined in current class
-			large_image.set_browse_for_open_file ("")
+			go_i_th (7) -- Go to "small image" EV_LABEL
 
-			go_i_th (7) -- Go to "large image" EV_LABEL
+			small_image.set_browse_for_open_file ("")
+			put_right (small_image)
+			disable_item_expand (small_image)
+			if attached small_image.field as l_field then
+				l_field.change_actions.extend (agent on_small_image_change)
+			end
+
+			large_image.set_browse_for_open_file ("")
+			go_i_th (9)
 			put_right (large_image)
 			disable_item_expand (large_image)
 			if attached large_image.field as l_field then
@@ -57,11 +66,11 @@ feature -- Command
 					label.remove_text
 				end
 
---				if attached a_data.small_image as l_small_image then
---					small_image.set_text (l_small_image)
---				else
---					small_image.remove_text
---				end
+				if attached a_data.small_image as l_small_image then
+					small_image.set_text (l_small_image)
+				else
+					small_image.remove_text
+				end
 
 				if attached a_data.large_image as l_large_image then
 					large_image.set_text (l_large_image)
@@ -76,7 +85,7 @@ feature -- Command
 
 feature {NONE} -- Implementation
 
-	large_image: EV_PATH_FIELD
+	small_image, large_image: EV_PATH_FIELD
 			--
 
 	checker: ER_IDENTIFIER_UNIQUENESS_CHECKER
@@ -102,6 +111,14 @@ feature {NONE} -- Implementation
 		do
 			if attached tree_node_data as l_data then
 				l_data.set_label_title (label.text)
+			end
+		end
+
+	on_small_image_change
+			-- Called by `change_actions' of `small_image'.
+		do
+			if attached tree_node_data as l_data then
+				l_data.set_small_image (small_image.text)
 			end
 		end
 

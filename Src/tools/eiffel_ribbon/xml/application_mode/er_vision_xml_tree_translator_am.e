@@ -554,7 +554,9 @@ feature {NONE} -- Tree saving
 					-- Add xml attribute
 					if attached l_data.command_name as l_command_name and then not l_command_name.is_empty then
 						l_button_node.add_attribute (l_constants.command_name, name_space, l_command_name)
-
+						if application_mode /= 0 then
+							l_button_node.add_attribute (l_constants.application_mode, name_space, application_mode.out)
+						end
 						-- Add coresspond command xml node
 						add_xml_command_node (l_data)
 
@@ -566,7 +568,7 @@ feature {NONE} -- Tree saving
 						until
 							a_button_tree_node.after
 						loop
-							add_xml_button_node (l_button_node, a_button_tree_node.item, true)
+							add_xml_button_node (l_button_node, a_button_tree_node.item, False)
 
 							a_button_tree_node.forth
 						end

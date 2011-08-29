@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 
 			create widget
 			create content.make_with_widget (widget, "ER_LAYOUT_CONSTRUCTOR")
-
+			content.close_request_actions.extend (agent on_close_content)
 			shared_singleton.layout_constructor_list.extend (Current)
 
 			build_ui
@@ -29,7 +29,6 @@ feature {NONE} -- Initialization
 
 			widget.drop_actions.extend (agent on_root_tree_drop)
 			widget.drop_actions.set_veto_pebble_function (agent on_veto_root_tree_drop)
-
 		end
 
 	build_docking_content
@@ -330,6 +329,37 @@ feature {NONE} -- Action handing
 					Result := True
 				end
 			end
+		end
+
+	on_close_content
+			-- Handle close SD_CONTENT request action
+		local
+			l_warning: EV_WARNING_DIALOG
+			l_question: EV_QUESTION_DIALOG
+		do
+			if attached shared_singleton.main_window_cell.item as l_win then
+				if shared_singleton.layout_constructor_list.count <= 1 then
+					create l_warning.make_with_text ("Only one ribbon window left, cannot close")
+					l_warning.show_modal_to_window (l_win)
+				else
+					create l_question.make_with_text ("Closing tab will delete the ribbon window data. Are you sure?")
+					l_question.set_buttons_and_actions (<<"Yes", "No">>, <<agent on_close_content_imp, agent on_cancel>>)
+					l_question.show_modal_to_window (l_win)
+				end
+			end
+		end
+
+	on_close_content_imp
+			--
+		do
+			shared_singleton.layout_constructor_list.prune_all (Current)
+			content.close
+		end
+
+	on_cancel
+			--
+		do
+			-- Do nothing
 		end
 
 feature -- Persistance

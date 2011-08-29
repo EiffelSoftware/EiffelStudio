@@ -1157,7 +1157,7 @@
    <Border>
     <Constant>default_border_width</Constant>
    </Border>
-   <Is_item_expanded>0000000000000</Is_item_expanded>
+   <Is_item_expanded>00000000000000</Is_item_expanded>
   </EV_BOX>
   <EV_PIXMAPABLE>
   </EV_PIXMAPABLE>
@@ -1303,6 +1303,28 @@
    <Events>
     <Event>change_actions EV_TEXT_COMPONENT_ACTION_SEQUENCES on_label_text_change</Event>
    </Events>
+  </item>
+  <item type="EV_LABEL">
+   <Internal_properties>
+    <id>206</id>
+    <Expanded>0</Expanded>
+   </Internal_properties>
+   <EV_COLORIZABLE>
+   </EV_COLORIZABLE>
+   <EV_FONTABLE>
+   </EV_FONTABLE>
+   <EV_SENSITIVE>
+   </EV_SENSITIVE>
+   <EV_TEXTABLE>
+    <Text>Small image:</Text>
+   </EV_TEXTABLE>
+   <EV_TOOLTIPABLE>
+   </EV_TOOLTIPABLE>
+   <EV_WIDGET>
+   </EV_WIDGET>
+   <EV_TEXT_ALIGNABLE>
+    <Text_alignment>Left</Text_alignment>
+   </EV_TEXT_ALIGNABLE>
   </item>
   <item type="EV_LABEL">
    <Internal_properties>

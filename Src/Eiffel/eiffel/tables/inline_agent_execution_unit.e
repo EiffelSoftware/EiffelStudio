@@ -36,29 +36,30 @@ feature -- Access
 	is_valid: BOOLEAN
 			-- Is the execution unit still valid ?
 		local
-			written_type: CLASS_TYPE
-			written_class: EIFFEL_CLASS_C
-			f: FEATURE_AS
+			f: FEATURE_I
+			l_same_class: BOOLEAN
 		do
-			written_class ?= System.class_of_id (written_in)
+				-- Verify if classes involved in Current are still in system, and that
+				-- `class_type' is still in system and still inherits from the class where
+				-- it was originally written.
+			l_same_class := written_in = access_in
 			if
-				written_class /= Void and then
-				written_class.has_inline_agent_with_body_index (body_index) and then
-				System.class_type_of_id (type_id) = class_type
+				(attached {EIFFEL_CLASS_C} system.class_of_id (written_in) as l_written_class and
+					(l_same_class or else system.has_class_of_id (access_in))) and then
+				System.class_type_of_id (type_id) = class_type and then
+				class_type.associated_class.inherits_from (l_written_class) and then
+				l_written_class.has_inline_agent_with_body_index (body_index)
 			then
-				written_type :=	class_type.written_type (written_class)
-				if written_in = access_in and then written_type.is_precompiled then
-						-- If routine id is from precompiled class then it must be valid.
+				if l_same_class and then class_type.written_type (l_written_class).is_precompiled then
+						-- If feature's routine id is generated from the written class
+						-- and it is precompiled then it must be valid.
 					Result := True
 				else
-						-- Feature may have disappeared from system and
-						-- we need to detect it.
-					Result := Body_server.server_has (access_in, enclosing_feature.body_index)
+						-- Feature may have disappeared from system and we need to detect it.
+					f := system.class_of_id (access_in).feature_of_body_index (enclosing_feature.body_index)
+					Result := f /= Void
 					if Result then
-						if System.execution_table.has_dead_function (enclosing_feature.body_index) then
-
-							f := Body_server.server_item (access_in, enclosing_feature.body_index)
-
+						if system.execution_table.has_dead_function (enclosing_feature.body_index) then
 								-- This is an attribute that was a function before, so
 								-- it is not a valid `execution_unit' anymore if after
 								-- all recompilation it is still an attribute.
@@ -79,7 +80,7 @@ feature	{NONE}-- Implementation
 	enclosing_feature: FEATURE_I
 
 ;note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

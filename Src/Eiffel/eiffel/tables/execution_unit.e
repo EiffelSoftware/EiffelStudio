@@ -133,35 +133,37 @@ feature -- Access
 	is_valid: BOOLEAN
 			-- Is the execution unit still valid ?
 		local
-			written_class: CLASS_C
-			f: FEATURE_AS
+			f: FEATURE_I
+			l_same_class: BOOLEAN
 		do
-			written_class := System.class_of_id (written_in)
+				-- Verify if classes involved in Current are still in system, and that
+				-- `class_type' is still in system and still inherits from the class where
+				-- it was originally written.
+			l_same_class := written_in = access_in
 			if
-				written_class /= Void and then
+				(attached system.class_of_id (written_in) as l_written_class and
+					(l_same_class or else system.has_class_of_id (access_in))) and then
 				System.class_type_of_id (type_id) = class_type and then
-				class_type.associated_class.inherits_from (written_class)
+				class_type.associated_class.inherits_from (l_written_class)
 			then
-				if access_in = written_in and then class_type.written_type (written_class).is_precompiled then
-						-- If feature's routine id is generated from the written class 
+				if l_same_class and then class_type.written_type (l_written_class).is_precompiled then
+						-- If feature's routine id is generated from the written class
 						-- and it is precompiled then it must be valid.
 					Result := True
 				else
-						-- Feature may have disappeared from system and
-						-- we need to detect it.
-					Result := Body_server.server_has (access_in, body_index)
+						-- Feature may have disappeared from system and we need to detect it.
+					f := system.class_of_id (access_in).feature_of_body_index (body_index)
+					Result := f /= Void
 					if
 						Result and then
 						System.execution_table.has_dead_function (body_index)
 					then
-						if is_encapsulated then
+						if is_encapsulated and then attached {ENCAPSULATED_I} f as l_encapsulated then
 								-- If this was a unit for keeping access to
-								-- an encapsulated feature or if the attribute is directly 
+								-- an encapsulated feature or if the attribute is directly
 								-- replicated, we need to check if encapsulation is still needed.
-							Result := is_attribute_needed
+							Result := l_encapsulated.generate_in > 0 or else l_encapsulated.is_replicated_directly
 						else
-							f := Body_server.server_item (access_in, body_index)
-
 								-- This is an attribute that was a function before, so
 								-- it is not a valid `execution_unit' anymore if after
 								-- all recompilation it is still an attribute.
@@ -177,18 +179,6 @@ feature -- Access
 						Result := True
 					end
 				end
-			end
-		end
-
-	is_attribute_needed: BOOLEAN
-			-- Check if an attribute is still needed?
-		require
-			is_encapsulated: is_encapsulated
-		do
-				-- Slow part, but we do not have any other way to find the
-				-- associated feature with current information.
-			if attached {ENCAPSULATED_I} system.class_of_id (access_in).feature_of_body_index (body_index) as l_encapsulated_feat then
-				Result := l_encapsulated_feat.generate_in > 0 or else l_encapsulated_feat.is_replicated_directly
 			end
 		end
 
@@ -335,7 +325,7 @@ invariant
 	class_type_not_void: class_type /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

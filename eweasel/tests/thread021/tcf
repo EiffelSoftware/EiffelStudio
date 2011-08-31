@@ -1,0 +1,17 @@
+test_name 	thread-crashes-on-die
+test_description 	When a multithreaded application calls die in one of the threads and that the other threads are busy doing some GC collection, the application crashes instead of terminating with an exit code.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+
+compile_frozen
+compile_result 	 ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work	 NONE exec_output
+execute_result	 failed_silently
+compare		 exec_output output
+
+test_end

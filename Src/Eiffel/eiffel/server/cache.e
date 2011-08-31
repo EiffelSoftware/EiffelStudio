@@ -196,6 +196,7 @@ feature -- Cache manipulations
 			found: BOOLEAN
 			l_special: like last_item_special
 			tmp: H_CELL [T]
+			l_default: T
 		do
 			i := id \\ Size
 			from
@@ -224,6 +225,7 @@ feature -- Cache manipulations
 				if free_h_cells.count = free_h_cells.capacity then
 					free_h_cells := free_h_cells.aliased_resized_area (free_h_cells.count * 2)
 				end
+				tmp.set_item (l_default)
 				free_h_cells.extend (tmp)
 				l_special.remove_tail (1)
 			end
@@ -436,6 +438,7 @@ feature {NONE} -- to implement force
 			id: INTEGER
 			l_special: like last_item_special
 			tmp: H_CELL [T]
+			l_default: T
 		do
 			id := e.id
 			i := id \\ Size
@@ -455,9 +458,9 @@ feature {NONE} -- to implement force
 				end
 			end
 			if found then
-				-- found IS true
-				-- the if is to avoid a bug I didn't find (yet)
-				-- in the cache history
+					-- found IS true
+					-- the if is to avoid a bug I didn't find (yet)
+					-- in the cache history
 				tmp := l_special.item (j)
 				last_removed_item := tmp.item
 				if j < nb - 1 then
@@ -467,6 +470,7 @@ feature {NONE} -- to implement force
 				if free_h_cells.count = free_h_cells.capacity then
 					free_h_cells := free_h_cells.aliased_resized_area (free_h_cells.count * 2)
 				end
+				tmp.set_item (l_default)
 				free_h_cells.extend (tmp)
 				l_special.remove_tail (1)
 			end

@@ -24,6 +24,7 @@ feature
 			loop
 				create l_worker_thread.make (agent execute)
 				l_worker_thread.launch
+				i := i + 1
 			end
 			l_crash_thread.join
 		end
@@ -44,9 +45,10 @@ feature
 			from
 				i := 1
 			until
-				i = 3
+				i = 10_0000
 			loop
 				l_mem.collect
+				i := i + 1
 			end
 		end
 

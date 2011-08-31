@@ -65,8 +65,8 @@ feature -- Access
 	found_feature: detachable FEATURE_I
 			-- Feature found by `find' (if any) which is called on the class identified by `found_site'
 
-	found_site: INTEGER
-			-- Class ID on which `found_feature' is called
+	found_site: CL_TYPE_A
+			-- Class type on which `found_feature' is called
 
 	has_multiple: BOOLEAN
 			-- Were multiple call sites found?
@@ -136,7 +136,7 @@ feature -- Search
 			valid_t: is_type_valid_for_class (t, c)
 		do
 			found_feature := Void
-			found_site := 0
+			found_site := Void
 			context_class := c
 			formal_generics := Void
 			feature_in_class := agent feature_in_class_by_name (n, ?)
@@ -145,18 +145,18 @@ feature -- Search
 			if has_multiple then
 					-- More than one feature is found.
 				found_feature := Void
-				found_site := 0
+				found_site := Void
 			end
 		ensure
 			same_name:
 				attached found_feature as f implies
 				(f.feature_name_id = n or else True) -- Feature can be renamed in formal constraints
 			valid_site:
-				attached found_feature as f implies system.classes.has (found_site)
+				attached found_feature as f implies attached found_site
 			feature_from_class:
 				attached found_feature as f implies
-				attached system.class_of_id (found_site) as s and then
-				(s.feature_of_name_id (n) ~ f or else True) -- Feature can be renamed in formal constraints
+				attached found_site as s and then
+				(s.associated_class.feature_of_name_id (n) ~ f or else True) -- Feature can be renamed in formal constraints
 		end
 
 	find_by_routine_id (r: INTEGER; t: TYPE_A; c: CLASS_C)
@@ -169,7 +169,7 @@ feature -- Search
 			valid_t: is_type_valid_for_class (t, c)
 		do
 			found_feature := Void
-			found_site := 0
+			found_site := Void
 			context_class := c
 			formal_generics := Void
 			feature_in_class := agent (f: INTEGER; s: CLASS_C): detachable FEATURE_I
@@ -192,11 +192,11 @@ feature -- Search
 				attached found_feature as f implies
 				(f.rout_id_set.has (r))
 			valid_site:
-				attached found_feature as f implies system.classes.has (found_site)
+				attached found_feature as f implies attached found_site
 			feature_from_class:
 				attached found_feature as f implies
-				attached system.class_of_id (found_site) as s and then
-				(s.feature_of_rout_id (r) ~ f)
+				attached found_site as s and then
+				(s.associated_class.feature_of_rout_id (r) ~ f)
 		end
 
 feature {TYPE_A} -- Visitor
@@ -232,7 +232,7 @@ feature {TYPE_A} -- Visitor
 				attached t.associated_class as c and then
 				attached feature_in_class.item ([c]) as f
 			then
-				found_site := c.class_id
+				found_site := t
 				found_feature := f
 			end
 		end
@@ -247,7 +247,7 @@ feature {TYPE_A} -- Visitor
 			-- <Precursor>
 		local
 			last_feature: detachable FEATURE_I
-			last_site: INTEGER
+			last_site: like found_site
 			g: like formal_generics
 		do
 			g := formal_generics
@@ -414,7 +414,7 @@ feature {TYPE_A} -- Visitor
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

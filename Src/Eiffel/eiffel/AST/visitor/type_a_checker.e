@@ -917,7 +917,8 @@ feature {NONE} -- Implementation
 						feature_finder.find (t.chain [i], q, current_class)
 						if
 							attached feature_finder.found_feature as f and then
-							attached system.class_of_id (feature_finder.found_site) as c
+							attached feature_finder.found_site as p and then
+							attached p.associated_class as c
 						then
 							saved_class := current_class
 							saved_actual_type := current_actual_type
@@ -941,7 +942,9 @@ feature {NONE} -- Implementation
 							current_feature := saved_feature
 							if attached last_type as r then
 									-- Evaluate type of `f' in the current context.
-								q := r.instantiated_in (q)
+									-- Use formal generic constraint instead of the formal general itself.
+									-- Avoid using `instantiated_in' to preserve `like Current' status.
+								q := r.formal_instantiation_in (q, p, c.class_id)
 									-- Record supplier for recompilation.
 								degree_4.add_qualified_supplier (f, c, current_class)
 									-- Register intermediate type with instantiator.
@@ -1013,7 +1016,8 @@ feature {NONE} -- Implementation
 					feature_finder.find_by_routine_id (t.routine_id [i], q, current_class)
 					if
 						attached feature_finder.found_feature as f and then
-						attached system.class_of_id (feature_finder.found_site) as c
+						attached feature_finder.found_site as p and then
+						attached p.associated_class as c
 					then
 						saved_class := current_class
 						saved_actual_type := current_actual_type
@@ -1037,7 +1041,9 @@ feature {NONE} -- Implementation
 						current_feature := saved_feature
 						if attached last_type as r then
 								-- Evaluate type of `f' in the current context.
-							q := r.instantiated_in (q)
+								-- Use formal generic constraint instead of the formal general itself.
+								-- Avoid using `instantiated_in' to preserve `like Current' status.
+							q := r.formal_instantiation_in (q, p, c.class_id)
 								-- Record supplier for recompilation.
 							degree_4.add_qualified_supplier (f, c, current_class)
 								-- Register intermediate type with instantiator.
@@ -1150,7 +1156,7 @@ invariant
 	is_current_actual_type_correct: attached current_class as c implies attached current_actual_type as t and then t.same_as (current_class.actual_type)
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

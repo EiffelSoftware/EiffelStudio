@@ -49,7 +49,7 @@ feature {QUALIFIED_ANCHORED_TYPE_A} -- Initialization
 			feature_finder.find (t.chain [i], q, c)
 			check attached feature_finder.found_feature as f1 then
 				f := f1
-				make_explicit (q.create_info, q, feature_finder.found_site, f)
+				make_explicit (q.create_info, q, feature_finder.found_site.class_id, f)
 				from
 					n := t.chain.upper
 				until
@@ -60,7 +60,7 @@ feature {QUALIFIED_ANCHORED_TYPE_A} -- Initialization
 					feature_finder.find (t.chain [i], q, c)
 					check attached feature_finder.found_feature as fn then
 						f := fn
-						make_explicit (twin, q, feature_finder.found_site, f)
+						make_explicit (twin, q, feature_finder.found_site.class_id, f)
 					end
 				end
 			end

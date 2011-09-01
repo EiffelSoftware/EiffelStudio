@@ -1590,9 +1590,9 @@ feature {NONE} -- Scoop Processor Meta Data
 		require
 			a_sem_address_valid: a_sem_address /= default_pointer
 		external
-			"C blocking inline use <eif_threads.h>"
+			"C macro use %"eif_scoop.h%""
 		alias
-			"eif_thr_sem_wait ($a_sem_address);"
+			"RTS_SEMAPHORE_CLIENT_WAIT"
 		end
 
 	semaphore_supplier_signal (a_sem_address: POINTER)
@@ -1600,9 +1600,9 @@ feature {NONE} -- Scoop Processor Meta Data
 		require
 			a_sem_address_valid: a_sem_address /= default_pointer
 		external
-			"C macro use <eif_threads.h>"
+			"C macro use %"eif_scoop.h%""
 		alias
-			"eif_thr_sem_post"
+			"RTS_SEMAPHORE_SUPPLIER_SIGNAL"
 		end
 
 	new_processor_meta_data_entry: SPECIAL [INTEGER_32]
@@ -1819,7 +1819,6 @@ feature {NONE} -- Externals
 	frozen processor_sleep (nanoseconds: INTEGER_64)
 			-- Suspend thread execution for interval specified in
 			-- `nanoseconds' (1 nanosecond = 10^(-9) second).
-			-- FIXME: Check that inlining retains blocking status
 		require
 			non_negative_nanoseconds: nanoseconds >= 0
 		external
@@ -1870,11 +1869,10 @@ feature {NONE} -- Externals
 
 	frozen processor_cpu_yield
 			-- Yield processor to other threads in the processor that are on the same cpu.
-			-- FIXME: Check that inlining retains blocking status
 		external
-			"C blocking use %"eif_threads.h%""
+			"C macro use %"eif_scoop.h%""
 		alias
-			"eif_thr_yield"
+			"RTS_PROCESSOR_CPU_YIELD"
 		end
 
 	frozen native_thread_id: POINTER

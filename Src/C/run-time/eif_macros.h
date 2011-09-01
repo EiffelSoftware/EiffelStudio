@@ -1472,6 +1472,7 @@ RT_LNK void eif_exit_eiffel_code(void);
  * RTS_CC(s,f,d,a)     - call a creation procedure (asynchronous) on a static type s with a feature id f on a target of dynamic type d and arguments a
  * RTS_CA(o,p,t,a,r)   - call an attribute at offset o using pattern p on target t with arguments a and result r
  */
+
 #ifdef WORKBENCH
 #define RTS_CF(s,f,n,t,a,r) \
 	{                                                         \
@@ -1497,7 +1498,7 @@ RT_LNK void eif_exit_eiffel_code(void);
 		((call_data*)(a)) -> pattern = p;                 \
 		((call_data*)(a)) -> result = &(r);               \
 		((call_data*)(a)) -> sync_pid = RTS_PID(Current); \
-		eif_log_call (RTS_PID(Current), a);               \
+		eif_log_call (((call_data*)(a))->sync_pid, a);               \
 	}
 #define RTS_CP(f,p,t,a) \
 	{                                                         \
@@ -1512,7 +1513,7 @@ RT_LNK void eif_exit_eiffel_code(void);
 		((call_data*)(a)) -> pattern = p;                 \
 		((call_data*)(a)) -> result = &(r);               \
 		((call_data*)(a)) -> sync_pid = RTS_PID(Current); \
-		eif_log_call (RTS_PID(Current), a);               \
+		eif_log_call (((call_data*)(a))->sync_pid, a);               \
 	}
 #endif /* WORKBENCH */
 
@@ -1562,6 +1563,11 @@ RT_LNK void eif_exit_eiffel_code(void);
 #endif /* WORKBENCH */
 
 #define RTS_WPR RTS_TCB(scoop_task_wait_for_processor_redundancy,0,0,0,NULL,NULL)
+
+#define RTS_SEMAPHORE_CLIENT_WAIT(semaddr) EIF_ENTER_C; eif_pthread_sem_wait(semaddr); EIF_EXIT_C; RTGC;
+#define RTS_SEMAPHORE_SUPPLIER_SIGNAL(semaddr) eif_pthread_sem_post(semaddr);
+
+#define RTS_PROCESSOR_CPU_YIELD EIF_ENTER_C; eif_pthread_yield(); EIF_EXIT_C; RTGC;
 
  /*
  * Macros for workbench

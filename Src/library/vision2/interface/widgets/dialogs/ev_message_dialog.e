@@ -20,7 +20,8 @@ inherit
 			set_foreground_color,
 			foreground_color,
 			background_color,
-			default_identifier_name
+			default_identifier_name,
+			user_can_resize_default_state
 		end
 
 	EV_DIALOG_CONSTANTS
@@ -94,6 +95,7 @@ feature {NONE} -- Initialization
 			create buttons.make (5)
 			create button_box
 			create pixmap_box
+			create scrollable_area
 			create label
 			create l_stock_colors
 			foreground_color := l_stock_colors.default_foreground_color
@@ -107,6 +109,7 @@ feature {NONE} -- Initialization
 			vb: EV_VERTICAL_BOX
 			hb2: EV_HORIZONTAL_BOX
 			vb2: EV_VERTICAL_BOX
+			l_screen: EV_SCREEN
 		do
 			foreground_color := implementation.foreground_color
 			background_color := implementation.background_color
@@ -117,11 +120,17 @@ feature {NONE} -- Initialization
 
 			Precursor
 
+			create l_screen
+			maximum_label_width := l_screen.width - 200
+			maximum_label_height := l_screen.height - 200
+
 			vb2.extend (pixmap_box)
 			vb2.disable_item_expand (pixmap_box)
 			vb2.extend (create {EV_CELL})
 
 			hb.extend (vb2)
+--			hb.disable_item_expand (vb2)
+
 			hb.extend (label)
 			hb.set_padding (10)
 
@@ -144,6 +153,7 @@ feature {NONE} -- Initialization
 			set_text ("Use `set_text' to modify this message.")
 
 			key_press_actions.extend (agent on_key_press)
+			disable_user_resize
 		end
 
 feature -- Access
@@ -251,8 +261,51 @@ feature -- Status setting
 		require
 			not_destroyed: not is_destroyed
 			a_text_not_void: a_text /= Void
+		local
+			l_label_width, l_label_height: INTEGER
+			l_scrollbar_needed: BOOLEAN
+			l_dialog_parent: detachable EV_CONTAINER
 		do
+				-- Unparent scrollable area
+			if attached scrollable_area.parent as l_scroll_parent then
+				l_scroll_parent.prune (scrollable_area)
+				scrollable_area.prune (label)
+				l_dialog_parent := l_scroll_parent
+			elseif attached label.parent as l_label_parent then
+				l_label_parent.prune (label)
+				l_dialog_parent := l_label_parent
+			end
+
 			label.set_text (a_text)
+			l_label_width := label.width
+			l_label_height := label.height
+			if l_label_width > maximum_label_width then
+				l_scrollbar_needed := True
+				scrollable_area.show_horizontal_scroll_bar
+				l_label_width := maximum_label_width
+			else
+				scrollable_area.hide_vertical_scroll_bar
+			end
+			if l_label_height > maximum_label_height then
+				l_scrollbar_needed := True
+				scrollable_area.show_vertical_scroll_bar
+				l_label_height := maximum_label_height
+			else
+				scrollable_area.hide_vertical_scroll_bar
+			end
+			scrollable_area.set_minimum_width (l_label_width)
+			scrollable_area.set_minimum_height (l_label_height)
+
+			if l_scrollbar_needed then
+				scrollable_area.extend (label)
+				if l_dialog_parent /= Void then
+					l_dialog_parent.extend (scrollable_area)
+				end
+			else
+				if l_dialog_parent /= Void then
+					l_dialog_parent.extend (label)
+				end
+			end
 		ensure
 			assigned: text.same_string_general (a_text)
 			cloned: text /= a_text
@@ -343,8 +396,20 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
+	maximum_label_width: INTEGER
+			-- Maximum width the label can be before scrollbar is enabled.
+
+	maximum_label_height: INTEGER
+			-- Maximum height the label can be before scrollbar is enabled.
+
+	user_can_resize_default_state: BOOLEAN = False
+		-- <Precursor>
+
 	button_box: EV_HORIZONTAL_BOX
 			-- Bar with all buttons of the dialog.
+
+	scrollable_area: EV_SCROLLABLE_AREA
+			-- Scrollable area in which `label' resides.
 
 	label: EV_LABEL
 			-- Text label where `text' is displayed.

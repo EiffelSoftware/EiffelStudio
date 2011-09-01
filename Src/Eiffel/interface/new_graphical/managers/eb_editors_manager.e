@@ -723,6 +723,7 @@ feature -- Element change
 			if attached {STONE} a_stone as l_stone then
 				on_drop (l_stone, last_created_editor)
 			end
+			check no_duplicated: not has_duplicated_stone end
 		end
 
 	close_editor (a_editor: like current_editor)
@@ -1858,6 +1859,45 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	has_duplicated_stone: BOOLEAN
+			-- Is there duplicated stones in all real and fake editors?
+		local
+			l_all: ARRAYED_LIST [EB_SMART_EDITOR]
+		do
+			l_all := editors
+			if attached fake_editors as l_fake_editors then
+				l_all.merge_right (l_fake_editors.twin)
+			end
+			
+			Result := has_duplicated_stone_imp (l_all)
+		end
+
+	has_duplicated_stone_imp (a_editors: ARRAYED_LIST [EB_SMART_EDITOR]): BOOLEAN
+			-- Is `a_editors' contain duplicated stones?
+		require
+			not_void: a_editors /= Void
+		local
+			l_current_editor: EB_SMART_EDITOR
+			l_copy, l_another: ARRAYED_LIST [EB_SMART_EDITOR]
+		do
+			from
+				l_copy := a_editors.twin
+				a_editors.start
+			until
+				a_editors.after or Result
+			loop
+				l_current_editor := a_editors.item
+				if attached l_current_editor.stone as l_stone then
+					l_another := l_copy.twin
+					l_another.prune_all (l_current_editor)
+					if attached editor_with_stone_internal (l_another, l_stone) then
+						Result := True
+					end
+				end
+
+				a_editors.forth
+			end
+		end
 note
 	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

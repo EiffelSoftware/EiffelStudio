@@ -121,16 +121,6 @@ rt_public void eif_try_call (call_data * a)
 	}
 }
 
-#else
-
-rt_public void eif_log_call (EIF_SCP_PID p, call_data * a)
-{
-	EIF_REFERENCE t = eif_access (a -> target);
-
-	CHECK("Target attached", t);
-	RTS_TCB(scoop_task_add_call,p,RTS_PID(t),0,a,NULL);
-}
-
 #endif /* WORKBENCH */
 
 rt_public void eif_free_call (call_data * a)

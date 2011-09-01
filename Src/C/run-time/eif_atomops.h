@@ -71,53 +71,40 @@ extern "C" {
 #endif
 
 
-static EIF_ATOMIC_INLINE EIF_INTEGER_32 eif_atomic_compare_and_swap_integer_32 (EIF_INTEGER_32 *dest, EIF_INTEGER_32 setter, EIF_INTEGER_32 compare)
-	{
-		// Atomically update dest contents to setter if original contents were equal to compare, return original value, caller checks if value equals compare value, if so then dest must now equal setter, if not then no operation occurred.
 #if defined(_WIN32)
-		return (EIF_INTEGER_32) InterlockedCompareExchange((long *)dest, setter, compare);
+#define RTS_ACAS_I32(dest,setter,compare) InterlockedCompareExchange((long *)dest, setter, compare)
 #elif defined (__EIF_GNUC_ATOMOPS__)
-		return (EIF_INTEGER_32) __sync_val_compare_and_swap (dest, compare, setter);
+#define RTS_ACAS_I32(dest,setter,compare) __sync_val_compare_and_swap (dest, compare, setter)
 #elif defined (__EIF_SUNPRO_C_ATOMOPS__)
-		return (EIF_INTEGER_32) atomic_cas_32 ((volatile uint32_t *)dest, compare, setter);
+#define RTS_ACAS_I32(dest,setter,compare) atomic_cas_32 ((volatile uint32_t *)dest, compare, setter)
 #else
-		return (EIF_INTEGER_32)0;
+#define RTS_ACAS_I32(dest,setter,compare) 0
 #endif
-	}
 
-static EIF_ATOMIC_INLINE EIF_INTEGER_32 eif_atomic_swap_integer_32 (EIF_INTEGER_32 *dest, EIF_INTEGER_32 setter)
-	{
-		// Atomically update contents of dest to setter, return original value of dest.
-#if defined(_WIN32)
-		return (EIF_INTEGER_32) InterlockedExchange((long *)dest, setter);
+
+#if defined(_WIN32) 
+#define RTS_AS_I32(dest, setter) InterlockedExchange((long *)dest, setter)
 #elif defined (__EIF_GNUC_ATOMOPS__)
-		return (EIF_INTEGER_32) __sync_val_compare_and_swap (dest, *dest, setter);
+#define RTS_AS_I32(dest, setter) __sync_val_compare_and_swap (dest, *dest, setter)
 #elif defined (__EIF_SUNPRO_C_ATOMOPS__)
-		return (EIF_INTEGER_32) atomic_swap_32 ((volatile uint32_t*)dest, setter);
+#define RTS_AS_I32(dest, setter) atomic_swap_32 ((volatile uint32_t*)dest, setter)
 #else
-		return (EIF_INTEGER_32)0;
+#define RTS_AS_I32(dest, setter) 0
 #endif
-	}
 
-static EIF_ATOMIC_INLINE EIF_INTEGER_32 eif_atomic_add_integer_32 (EIF_INTEGER_32 *dest, EIF_INTEGER_32 val)
-	{
-		// Atomically update dest target to original value plus val, return this new value.
+
 #if defined(_WIN32)
-		return (EIF_INTEGER_32) (InterlockedExchangeAdd((long *)dest, val) + val); // Add val to return new value.
+#define RTS_AA_I32(dest, val) (InterlockedExchangeAdd((long *)dest, val) + val) // Add val to return new value.
 #elif defined (__EIF_GNUC_ATOMOPS__)
-		return (EIF_INTEGER_32) __sync_add_and_fetch (dest, val);
+#define RTS_AA_I32(dest, val) __sync_add_and_fetch (dest, val)
 #elif defined (__EIF_SUNPRO_C_ATOMOPS__)
-		return (EIF_INTEGER_32) atomic_add_32_nv ((volatile uint32_t*)dest, val);
+#define RTS_AA_I32(dest, val) atomic_add_32_nv ((volatile uint32_t*)dest, val)
 #else  
-		return (EIF_INTEGER_32)0;
+#define RTS_AA_I32(dest, val) 0
 #endif
-	}
 
-#define RTS_ACAS_I32(dest,setter,compare) eif_atomic_compare_and_swap_integer_32((EIF_INTEGER_32 *)dest,setter,compare)
-#define RTS_AS_I32(dest, setter) eif_atomic_swap_integer_32((EIF_INTEGER_32 *)dest,setter)
-#define RTS_AI_I32(dest) eif_atomic_add_integer_32((EIF_INTEGER_32 *)dest, 1)
-#define RTS_AD_I32(dest) eif_atomic_add_integer_32((EIF_INTEGER_32 *)dest, -1)
-#define RTS_AA_I32(dest, val) eif_atomic_add_integer_32((EIF_INTEGER_32 *)dest,val)
+#define RTS_AI_I32(dest) RTS_AA_I32(dest, 1)
+#define RTS_AD_I32(dest) RTS_AA_I32(dest, -1)
 
 
 #ifdef __cplusplus

@@ -13,7 +13,7 @@ inherit
 
 feature -- Access
 
-	runtime_host (version: STRING): CLR_HOST
+	runtime_host (version: STRING): detachable CLR_HOST
 			-- CLR runtime version currently loaded in process.
 			-- Check documentation available at:
 			-- http://msdn.microsoft.com/library/default.asp?url=/library/en-us/cpgenref/html/grfuncorbindtoruntimeex.asp

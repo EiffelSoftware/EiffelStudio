@@ -68,9 +68,14 @@ feature {NONE} -- Implementation
 			if blocking_window /= Void then
 				Result := {GTK2}.Gtk_win_pos_center_on_parent_enum
 			else
-					-- We let the Window Manager decide where the window should be positioned.
-				Result := {GTK}.gtk_win_pos_none_enum
+				Result := default_window_position
 			end
+		end
+
+	default_window_position: INTEGER
+			-- Default Window Manager Position for `Current'.
+		do
+			Result := {GTK}.gtk_win_pos_none_enum
 		end
 
 	internal_blocking_window: detachable EV_WINDOW_IMP

@@ -26,7 +26,8 @@ inherit
 			call_close_request_actions,
 			make,
 			client_area,
-			new_gtk_window
+			new_gtk_window,
+			default_window_position
 		end
 
 	EV_GTK_DEPENDENT_ROUTINES
@@ -85,6 +86,12 @@ feature -- Status Setting
 		end
 
 feature {NONE} -- Implementation
+
+	default_window_position: INTEGER
+			-- <Precursor>
+		do
+			Result := {GTK}.gtk_win_pos_center_enum
+		end
 
 	client_area: POINTER
 			-- Pointer to the widget that is treated as the main holder of the client area within the window.

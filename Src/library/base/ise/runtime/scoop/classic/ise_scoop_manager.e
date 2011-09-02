@@ -38,6 +38,16 @@ feature -- C callback function
 				assign_supplier_processor_to_request_chain (client_processor_id, supplier_processor_id)
 			when wait_for_supplier_processor_locks_task_id then
 				wait_for_request_chain_supplier_processor_locks (client_processor_id)
+
+				debug ("ETH_SCOOP")
+						-- Make client wait until supplier processors are at the top of their respective queues.
+					wait_for_request_chain_to_begin (
+						client_processor_id,
+						(request_chain_meta_data [client_processor_id]) [request_chain_meta_data_header_size],
+						request_chain_meta_data [client_processor_id]
+					)
+				end
+
 			when wait_for_processor_redundancy_task_id then
 				root_processor_creation_routine_exited
 			when assign_processor_task_id then
@@ -417,8 +427,11 @@ feature -- Request Chain Handling
 
 				-- Retrieve wait condition counter for determining priority of processor request.
 			l_wait_condition_counter := (processor_meta_data [a_client_processor_id]) [processor_wait_condition_counter_index]
-			if l_wait_condition_counter > max_wait_condition_retry_limit then
-				raise_scoop_exception ("SCOOP Wait Condition Retry Limit Reached")
+
+			debug ("SCOOP_Wait_Condition_Retry_Limit_Check")
+				if l_wait_condition_counter > max_wait_condition_retry_limit then
+					raise_scoop_exception ("SCOOP Wait Condition Retry Limit Reached")
+				end
 			end
 
 				-- Retrieve request chain meta data structure.
@@ -569,7 +582,6 @@ feature -- Request Chain Handling
 						l_request_chain_node_id := {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (processor_meta_data [l_pid].item_address (current_request_chain_node_id_index), 0)
 					end
 					-- Processor `a_client_processor_id' has to wait for `l_pid' to reset its application queue.
-					--| FIXME: We may have to force iteration of application loop to allow for reset.
 				end
 
 					-- Extend value to request chain node meta data.
@@ -771,7 +783,6 @@ feature -- Command/Query Handling
 			l_logged_calls_original_count := l_request_chain_node_queue_entry.count
 			if l_logged_calls_original_count = l_request_chain_node_queue_entry.capacity then
 					-- Resize node structure if there is not enough room for the new entry.
-					--| FIXME Current resizing of 25% larger may not be optimal.
 				if
 					l_client_request_chain_meta_data /= Void and then
 					{ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_client_request_chain_meta_data.item_address (request_chain_status_index), 0) = request_chain_status_open
@@ -1103,7 +1114,8 @@ feature {NONE} -- Resource Initialization
 			l_orig_sync_count, l_temp_count: INTEGER
 			l_wait_counter: NATURAL_32
 			l_call_ptr: POINTER
-			l_pid: like processor_id_type
+			l_is_head: BOOLEAN
+			l_pid, l_client_pid: like processor_id_type
 		do
 			-- SCOOP Processor has been launched
 			-- We are guaranteed that at least a creation routine has been logged.
@@ -1135,15 +1147,20 @@ feature {NONE} -- Resource Initialization
 					then
 							-- We are in a valid feature application position as the request chain has been initialized.
 						from
-							if a_logical_processor_id = l_executing_request_chain_node_meta_data [request_chain_meta_data_head_pid_index] then
-								l_orig_sync_count := {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_executing_request_chain_node_meta_data.item_address (request_chain_sync_counter_index), 0)
-									-- We are a head node, set sync count to minus original sync count
-								if l_orig_sync_count > 1 then
-										-- We only need synchronization if there are tail nodes involved.
+								-- Set whether the current processor is the head of the request chain.
+							l_is_head := a_logical_processor_id = l_executing_request_chain_node_meta_data [request_chain_meta_data_head_pid_index]
 
+								-- Store the client processor id for synchronization.
+							l_client_pid := l_executing_request_chain_node_meta_data [request_chain_client_pid_index]
+
+							if l_is_head then
+								l_orig_sync_count := {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_executing_request_chain_node_meta_data.item_address (request_chain_sync_counter_index), 0)
+									-- We only need synchronization if there are tail nodes involved.
+								if l_orig_sync_count > 1 then
 										-- Flag `a_logical_processor_id' as waiting.
 									processor_wait (a_logical_processor_id, a_logical_processor_id)
 
+										-- We are a head node, set sync count to minus original sync count
 									from
 										l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.swap_integer_32 (l_executing_request_chain_node_meta_data.item_address (request_chain_sync_counter_index), -l_orig_sync_count)
 										l_wait_counter := 0
@@ -1185,9 +1202,9 @@ feature {NONE} -- Resource Initialization
 								else
 									if l_temp_count = request_chain_status_application then
 											-- The client processor is waiting to be synced.
-										processor_wake_up (l_executing_request_chain_node_meta_data [request_chain_client_pid_index], a_logical_processor_id)
+										processor_wake_up (l_client_pid, a_logical_processor_id)
 									else
-										check request_chain_status_closed: l_temp_count = request_chain_status_closed end
+									--	check request_chain_status_closed: l_temp_count = request_chain_status_closed end
 									end
 								end
 							else
@@ -1254,35 +1271,34 @@ feature {NONE} -- Resource Initialization
 											-- Check for a query if we are at the last index.
 										l_pid := call_data_sync_pid (l_call_ptr)
 										if l_pid /= null_processor_id then
-												-- The client processor is waiting so we can clean up the call data here.
+												-- Wake up client processor.							
+											processor_wake_up (l_pid, a_logical_processor_id)
+
+												-- Clean up call data.
 											scoop_command_call_cleanup (l_call_ptr)
 											l_executing_request_chain_node [l_executing_node_id_cursor - 1] := null_pointer
 
-												-- Wake up client processor.							
-											processor_wake_up (l_pid, a_logical_processor_id)
 												-- Reset yielding.
 											l_wait_counter := 0
 										end
 									end
-
 								end
+							elseif
+								l_is_head and then l_executing_request_chain_node_meta_data [request_chain_status_index] = request_chain_status_waiting
+							then
+									-- The chain status is set to waiting and we are the head pid so we must be a creation routine
+									-- Signal client processor to wake up and wait until signalled to continue.
+								processor_wake_up (l_client_pid, a_logical_processor_id)
+								processor_wait (a_logical_processor_id, l_client_pid)
+
+									-- Reset yielding.
+								l_wait_counter := 0
 							elseif l_executing_request_chain_node_meta_data [request_chain_status_index] = request_chain_status_closed then
 									-- Request chain has been fully closed therefore we can exit if all calls have been applied.
 								if l_executing_node_id_cursor >= l_temp_count then
 									l_loop_exit := True
 									l_request_chain_node_meta_data_queue [l_executing_node_id] := Void
 								end
-							elseif
-								l_executing_request_chain_node_meta_data [request_chain_status_index] = request_chain_status_waiting and then
-								a_logical_processor_id = l_executing_request_chain_node_meta_data [request_chain_meta_data_header_size]
-							then
-									-- The chain status is set to waiting and we are the head pid so we must be a creation routine
-									-- Signal client processor to wake up and wait until signalled to continue.
-								processor_wake_up (l_executing_request_chain_node_meta_data [request_chain_client_pid_index], a_logical_processor_id)
-								processor_wait (a_logical_processor_id, l_executing_request_chain_node_meta_data [request_chain_client_pid_index])
-
-									-- Reset yielding.
-								l_wait_counter := 0
 							else
 									-- We are in an idle state, waiting for the request chain to close or to have more calls logged so we yield to another thread.								
 								processor_yield (a_logical_processor_id, l_wait_counter)
@@ -1389,6 +1405,7 @@ feature {NONE} -- Resource Initialization
 				scoop_command_call (a_data)
 			end
 		rescue
+				-- Return True to signify that an exception was caught.
 			Result := True
 			retry
 		end
@@ -1551,15 +1568,17 @@ feature {NONE} -- Scoop Processor Meta Data
 	new_semaphore (a_sem_count: NATURAL_8): POINTER
 			-- Return a new semaphore with an initial count of `a_sem_count'.
 		external
-			"C inline use <eif_threads.h>"
+			"C macro use <eif_threads.h>"
 		alias
-			"eif_thr_sem_create ($a_sem_count)"
+			"eif_thr_sem_create"
 		end
 
 	processor_wait (a_client_processor_id, a_supplier_processor_id: like processor_id_type)
 			-- Make processor `a_client_processor_id' wait until its semaphore is signalled.
 		local
 			l_waiting_count, l_waiting_semaphore_count: INTEGER
+--			l_processor_meta_data: like new_processor_meta_data_entry
+--			l_wait_counter: INTEGER
 		do
 			l_waiting_count := {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 ($waiting_processor_count)
 			if a_supplier_processor_id /= a_client_processor_id then
@@ -1567,42 +1586,39 @@ feature {NONE} -- Scoop Processor Meta Data
 				if l_waiting_semaphore_count = processor_count then
 					raise_scoop_exception (scoop_processor_deadlock_detected_message)
 				end
-				semaphore_client_wait (processor_semaphore_list [a_client_processor_id])
+--				from
+--					l_processor_meta_data := processor_meta_data [a_client_processor_id]
+--				until
+--					{ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_processor_meta_data.item_address (processor_semaphore_status_index), 0) = processor_semaphore_status_signalled
+--				loop
+--					if l_wait_counter < 1000 then
+--						l_wait_counter := l_wait_counter + 1
+--					else
+--				    	processor_cpu_yield
+--				    	check_for_gc
+--				    end
+--				end
+--				l_processor_meta_data [processor_semaphore_status_index] := processor_semaphore_status_running
+--				semaphore_client_wait (processor_semaphore_list [a_client_processor_id])
 			end
 		end
 
 	processor_wake_up (a_client_processor_id, a_supplier_processor_id: like processor_id_type)
 			-- Signal processor `a_client_processor_id' to wake up for `a_supplier_processor_id'
 		local
-			l_waiting_count, l_waiting_semaphore_count: INTEGER
+			l_waiting_count: INTEGER
+			l_waiting_semaphore_count: INTEGER
 		do
+			l_waiting_count := {ATOMIC_MEMORY_OPERATIONS}.decrement_integer_32 ($waiting_processor_count)
 			if a_client_processor_id /= null_processor_id then
-				l_waiting_count := {ATOMIC_MEMORY_OPERATIONS}.decrement_integer_32 ($waiting_processor_count)
 				if a_client_processor_id /= a_supplier_processor_id then
 					l_waiting_semaphore_count := {ATOMIC_MEMORY_OPERATIONS}.decrement_integer_32 ($waiting_semaphore_count)
+
+--					l_waiting_semaphore_count := {ATOMIC_MEMORY_OPERATIONS}.swap_integer_32 ((processor_meta_data [a_client_processor_id]).item_address (processor_semaphore_status_index), processor_semaphore_status_signalled)
+
 					semaphore_supplier_signal (processor_semaphore_list [a_client_processor_id])
 				end
 			end
-		end
-
-	semaphore_client_wait (a_sem_address: POINTER)
-			-- Wait for semaphore `a_sem_address'.
-		require
-			a_sem_address_valid: a_sem_address /= default_pointer
-		external
-			"C macro use %"eif_scoop.h%""
-		alias
-			"RTS_SEMAPHORE_CLIENT_WAIT"
-		end
-
-	semaphore_supplier_signal (a_sem_address: POINTER)
-			-- Signal semaphore `a_sem_address'.
-		require
-			a_sem_address_valid: a_sem_address /= default_pointer
-		external
-			"C macro use %"eif_scoop.h%""
-		alias
-			"RTS_SEMAPHORE_SUPPLIER_SIGNAL"
 		end
 
 	new_processor_meta_data_entry: SPECIAL [INTEGER_32]
@@ -1729,7 +1745,16 @@ feature {NONE} -- Scoop Processor Meta Data
 	processor_wait_condition_counter_index: INTEGER_32 = 10
 		-- Index of the number of times a wait condition has failed.
 
-	processor_meta_data_index_count: INTEGER_32 = 11
+	processor_semaphore_status_index: INTEGER_32 = 11
+		-- Index of the quick semaphore for the processor.
+
+	processor_semaphore_status_running: INTEGER = 0
+	processor_semaphore_status_busy_waiting: INTEGER = 1
+	processor_semaphore_status_waiting: INTEGER = 2
+	processor_semaphore_status_signalled: INTEGER = 3
+		-- Various status's for processor semaphores.
+
+	processor_meta_data_index_count: INTEGER_32 = 12
 		-- Number of items in the SCOOP Processor Meta Data structure.
 
 
@@ -1767,6 +1792,22 @@ feature {NONE} -- Scoop Processor Meta Data
 		-- Number of processors available on the system.
 
 feature {NONE} -- Externals
+
+	semaphore_client_wait (a_sem_address: POINTER)
+			-- Wait for semaphore `a_sem_address'.
+		external
+			"C macro use %"eif_scoop.h%""
+		alias
+			"RTS_SEMAPHORE_CLIENT_WAIT"
+		end
+
+	semaphore_supplier_signal (a_sem_address: POINTER)
+			-- Signal semaphore `a_sem_address'.
+		external
+			"C macro use %"eif_scoop.h%""
+		alias
+			"RTS_SEMAPHORE_SUPPLIER_SIGNAL"
+		end
 
 	frozen available_cpus: NATURAL_8
 			--| FIXME: Not Currently used: Implemented for future pooling optimizations
@@ -1835,7 +1876,6 @@ feature {NONE} -- Externals
 		do
 			if a_iteration_number < processor_spin_lock_limit then
 					-- Spin lock
-				check_for_gc
 			elseif a_iteration_number < max_yield_counter then
 				processor_cpu_yield
 			else
@@ -1856,6 +1896,7 @@ feature {NONE} -- Externals
 					processor_cpu_yield
 				end
 			end
+			check_for_gc
 		end
 
 	processor_spin_lock_limit: NATURAL_32 = 100
@@ -1878,7 +1919,7 @@ feature {NONE} -- Externals
 	frozen native_thread_id: POINTER
 			-- Native Thread ID of the `Current' SCOOP Processor
 		external
-			"C inline use <eif_threads.h>"
+			"C inline use %"eif_threads.h%""
 		alias
 			"return eif_thr_thread_id();"
 		end

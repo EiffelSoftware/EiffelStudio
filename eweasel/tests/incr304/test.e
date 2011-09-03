@@ -20,5 +20,5 @@ feature {NONE}
 			end
 		end
 
-	x: NONE
+	x: detachable NONE
 end

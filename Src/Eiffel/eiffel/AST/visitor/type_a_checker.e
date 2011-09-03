@@ -205,11 +205,34 @@ feature -- Special checking
 				if a_type.has_expanded then
 					if a_type.expanded_deferred then
 						create {VTEC1} l_vtec
-					elseif not a_type.valid_expanded_creation (current_class) then
-						create {VTEC2} l_vtec
 					elseif system.il_generation and then not a_type.is_ancestor_valid then
 							-- Expanded type cannot be based on a class with external ancestor.
 						create {VTEC3} l_vtec
+					elseif is_delayed implies system.any_class.compiled_class.degree_4_processed then
+							-- Class ANY needs to have an up-to-date feature table,
+							-- so that the feature "default_create" can be looked up.
+						if not a_type.valid_expanded_creation (current_class) then
+							create {VTEC2} l_vtec
+						end
+					else
+							-- Check `VTEC2' when class "ANY" is ready.
+						degree_4.put_action (
+							agent (t: TYPE_A; f: like current_feature; c: like current_class; l: TYPE_AS)
+								local
+									v: VTEC2
+								do
+									if not t.valid_expanded_creation (c) then
+										create v
+										v.set_class (c)
+										v.set_feature (f)
+										if l /= Void then
+											v.set_location (l.start_location)
+										end
+										error_handler.insert_error (v)
+									end
+								end
+							(a_type, current_feature, current_class, a_type_node)
+						)
 					end
 					if l_vtec /= Void then
 							-- Report error.
@@ -587,15 +610,28 @@ feature {TYPE_A} -- Visitors
 		local
 			l_anchor_feature, l_orig_feat: FEATURE_I
 			l_veen: VEEN
+			l_orig_class_id: INTEGER
+			is_postponed: BOOLEAN
 		do
 				-- Find feature associated with `a_type'. It might not be
 				-- found in case anchors has disappeared. It might also
-				-- be invalid (check done in `update_like_feature' in case
+				-- be invalid (check done in `update_like_feature') in case
 				-- it is not a function anymore.
-			if current_class.class_id /= a_type.class_id then
-				l_orig_feat := System.class_of_id (a_type.class_id).feature_table.item_id (a_type.feature_name_id)
-				if l_orig_feat /= Void then
-					l_anchor_feature := current_feature_table.feature_of_rout_id (l_orig_feat.rout_id_set.first)
+			l_orig_class_id := a_type.class_id
+			if current_class.class_id /= l_orig_class_id then
+				check attached System.class_of_id (l_orig_class_id) as c then
+						-- Make sure the feature table of `c' is up-to-date.
+					if is_delayed implies c.degree_4_processed then
+							-- Feature table is ready.
+						l_orig_feat := c.feature_table.item_id (a_type.feature_name_id)
+						if l_orig_feat /= Void then
+							l_anchor_feature := current_feature_table.feature_of_rout_id (l_orig_feat.rout_id_set.first)
+						end
+					else
+							-- Postpone type evaluation.
+						last_type := Void
+						is_postponed := True
+					end
 				end
 			else
 				l_anchor_feature := current_feature_table.item_id (a_type.feature_name_id)
@@ -604,7 +640,7 @@ feature {TYPE_A} -- Visitors
 					-- Update `a_type' with new information.
 				a_type.make (l_anchor_feature, current_class.class_id)
 				update_like_feature (l_anchor_feature, a_type)
-			else
+			elseif not is_postponed then
 				last_type := Void
 				if has_error_reporting then
 					create l_veen
@@ -763,30 +799,40 @@ feature {TYPE_A} -- Visitors
 			l_like_feature: LIKE_FEATURE
 			l_veen: VEEN
 		do
-			l_anchor_feature := current_feature_table.item_id (a_type.anchor_name_id)
-			if l_anchor_feature /= Void then
-					-- Create instance of LIKE_FEATURE
-				create l_like_feature.make (l_anchor_feature, current_class.class_id)
-				l_like_feature.set_marks_from (a_type)
-				update_like_feature (l_anchor_feature, l_like_feature)
+				-- Check if the parent's feature table is up-to-date.
+			if
+				is_delayed and then
+				current_feature.written_in /= current_class.class_id and then
+				not current_feature.written_class.degree_4_processed
+			then
+					-- Delay type evaluation because.
+				last_type := Void
 			else
-				l_argument_position := current_feature.argument_position (a_type.anchor_name_id)
-				if l_argument_position /= 0 then
-					create l_like_argument
-					l_like_argument.set_position (l_argument_position)
-					l_like_argument.set_marks_from (a_type)
-					update_like_argument (current_feature, l_like_argument)
+				l_anchor_feature := current_feature_table.item_id (a_type.anchor_name_id)
+				if l_anchor_feature /= Void then
+						-- Create instance of LIKE_FEATURE
+					create l_like_feature.make (l_anchor_feature, current_class.class_id)
+					l_like_feature.set_marks_from (a_type)
+					update_like_feature (l_anchor_feature, l_like_feature)
 				else
-					last_type := Void
-					if has_error_reporting then
-						create l_veen
-						l_veen.set_class (current_class)
-						l_veen.set_feature (current_feature)
-						l_veen.set_identifier (a_type.anchor)
-						if associated_type_ast /= Void then
-							l_veen.set_location (associated_type_ast.start_location)
+					l_argument_position := current_feature.argument_position (a_type.anchor_name_id)
+					if l_argument_position /= 0 then
+						create l_like_argument
+						l_like_argument.set_position (l_argument_position)
+						l_like_argument.set_marks_from (a_type)
+						update_like_argument (current_feature, l_like_argument)
+					else
+						last_type := Void
+						if has_error_reporting then
+							create l_veen
+							l_veen.set_class (current_class)
+							l_veen.set_feature (current_feature)
+							l_veen.set_identifier (a_type.anchor)
+							if associated_type_ast /= Void then
+								l_veen.set_location (associated_type_ast.start_location)
+							end
+							error_handler.insert_error (l_veen)
 						end
-						error_handler.insert_error (l_veen)
 					end
 				end
 			end

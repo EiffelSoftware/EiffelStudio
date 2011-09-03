@@ -25,17 +25,19 @@ inherit
 
 	CONF_CLASS
 		rename
-			file_name as base_name,
 			check_changed as set_date,
+			file_name as base_name,
 			group as cluster
 		export
 			{COMPILER_EXPORTER} set_date
 		undefine
 			is_compiled
 		redefine
-			cluster,
 			class_type,
-			options
+			cluster,
+			options,
+			rebuild,
+			set_date
 		end
 
 	CLASS_I
@@ -46,6 +48,8 @@ inherit
 			reset_options,
 			reset_class_c_information
 		end
+
+	SHARED_DEGREES
 
 create {CONF_COMP_FACTORY}
 	make
@@ -178,7 +182,7 @@ feature {COMPILER_EXPORTER} -- Setting
 	reset_options
 			-- <Precursor>
 		do
-			options_internal := Void
+				-- Preserve `options_internal' for recompilation.
 		end
 
 	reset_class_c_information (cl: CLASS_C)
@@ -191,6 +195,60 @@ feature {COMPILER_EXPORTER} -- Setting
 				-- This fixes eweasel test#config009.
 			if overriden_by /= Void then
 				overriden_by.reset_compiled_class
+			end
+		end
+
+	set_date
+		local
+			new_options: like options
+			c: like compiled_class
+		do
+			Precursor
+			c := compiled_class
+				-- Take new options into account.
+			if not is_removed and then attached options_internal as old_options then
+					-- `options_internal' will be set on the next access to `options'.
+				options_internal := Void
+					-- Do not trigger recompilation for precompiled classes,
+					-- but allow `options' to be recomputed to take assertion settings into account.
+				if attached c implies not c.is_precompiled then
+					new_options := options
+					if
+						new_options.is_attached_by_default /= old_options.is_attached_by_default or else
+						new_options.syntax.index /= old_options.syntax.index
+					then
+							-- Class should be reparsed.
+						is_modified := True
+					end
+					if new_options.void_safety.index /= old_options.void_safety.index then
+							-- Class should be reparsed and rechecked for validity of interface and code.
+						is_modified := True
+						if attached c then
+							degree_4.insert_class (c)
+							degree_3.insert_class (c)
+						end
+					end
+					if
+						new_options.is_full_class_checking and then
+						not old_options.is_full_class_checking and then
+						attached c
+					then
+							-- Class should be rechecked.
+						degree_3.insert_class (c)
+					end
+				end
+			end
+		end
+
+feature {CONF_ACCESS} -- Recompilation
+
+	rebuild (a_file_name: STRING; a_group: like cluster; a_path: STRING)
+			-- <Precursor>
+		do
+			Precursor (a_file_name, a_group, a_path)
+			if old_overriden_by /= overriden_by then
+					-- Options may be taken from a different source.
+				options_internal := Void
 			end
 		end
 
@@ -211,7 +269,7 @@ invariant
 	name_in_upper: name.as_upper.is_equal (name)
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -224,22 +282,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class CLASS_I

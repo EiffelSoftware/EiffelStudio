@@ -4540,7 +4540,7 @@ feature {DEGREE_5} -- Degree 5
 			parsing_needed_set: parsing_needed = b
 		end
 
-feature {DEGREE_4, NAMED_TUPLE_TYPE_A} -- Degree 4
+feature {DEGREE_4, NAMED_TUPLE_TYPE_A, TYPE_A_CHECKER} -- Degree 4
 
 	add_to_degree_4
 			-- Add current class to Degree 4.

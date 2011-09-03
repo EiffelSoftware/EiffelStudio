@@ -19,7 +19,7 @@ compile_result 	ok
 define EXPANDED "expanded"
 copy_sub 	test.e $CLUSTER test.e
 compile_melted
-compile_result 	validity_error TEST VTEC(2)
+compile_result 	validity_error TEST VGCP(4)
 
 define DEFAULT_CREATE ", default_create"
 copy_sub 	test.e $CLUSTER test.e

@@ -14,7 +14,7 @@ copy_raw 	 test.e  $CLUSTER test.e
 define		 ATTR_TYPE "expanded TEST"
 copy_sub 	 test1.e  $CLUSTER test1.e
 compile_melted
-compile_result 	 validity_error TEST VLEC
+compile_result 	 validity_error TEST1 VTEC(2)
 
 define		 ATTR_TYPE "expanded TEST1"
 copy_sub 	 test1.e  $CLUSTER test1.e

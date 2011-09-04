@@ -119,7 +119,9 @@ feature {COMPILER_EXPORTER}
 			if
 				attached {ATTACHABLE_TYPE_A} other.conformance_type as other_attachable_type and then
 				not other_attachable_type.is_expanded and then
-				(other_attachable_type.is_formal implies other_attachable_type.is_reference)
+				(other_attachable_type.is_formal implies
+					(other_attachable_type.is_reference and then
+					(other_attachable_type.has_detachable_mark or else is_implicitly_attached)))
 			then
 				Result := True
 				if a_context_class.lace_class.is_void_safe_conformance then

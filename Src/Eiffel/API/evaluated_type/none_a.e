@@ -119,13 +119,14 @@ feature {COMPILER_EXPORTER}
 			if
 				attached {ATTACHABLE_TYPE_A} other.conformance_type as other_attachable_type and then
 				not other_attachable_type.is_expanded and then
-				(other_attachable_type.is_formal implies
-					(other_attachable_type.is_reference and then
-					(other_attachable_type.has_detachable_mark or else is_implicitly_attached)))
+				(other_attachable_type.is_formal implies other_attachable_type.is_reference)
 			then
 				Result := True
 				if a_context_class.lace_class.is_void_safe_conformance then
-					Result := is_attachable_to (other_attachable_type)
+					Result :=
+						is_attachable_to (other_attachable_type) and then
+						(other_attachable_type.is_formal implies
+							(other_attachable_type.has_detachable_mark or else is_implicitly_attached))
 				end
 				if Result then
 					Result := is_processor_attachable_to (other)

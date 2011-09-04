@@ -6698,10 +6698,12 @@ feature {NONE} -- Implementation
 			l_list: BYTE_LIST [BYTE_NODE]
 			l_loop: LOOP_B
 			l_variant: VARIANT_B
-			s: INTEGER
+			s, q: INTEGER
 			iteration_cursor_scope: INTEGER
 			scope_matcher: AST_SCOPE_MATCHER
 			e: like error_level
+			invariant_as: like {LOOP_AS}.invariant_part
+			variant_as: VARIANT_AS
 			exit_as: EXPR_AS
 			i: detachable ITERATION_AS
 			local_info: LOCAL_INFO
@@ -6749,26 +6751,6 @@ feature {NONE} -- Implementation
 					l_loop.set_from_part (from_part)
 				end
 			end
-			if l_as.invariant_part /= Void then
-					-- Type check the invariant loop
-				context.enter_realm
-				s := context.scope
-				process_eiffel_list_with_matcher (l_as.invariant_part, create {AST_SCOPE_ASSERTION}.make (context), Void)
-				context.set_scope (s)
-				context.leave_optional_realm
-				if l_needs_byte_node then
-					l_list ?= last_byte_node
-					l_loop.set_invariant_part (l_list)
-				end
-			end
-			if l_as.variant_part /= Void then
-					-- Type check th variant loop
-				l_as.variant_part.process (Current)
-				if l_needs_byte_node then
-					l_variant ?= last_byte_node
-					l_loop.set_variant_part (l_variant)
-				end
-			end
 
 			if i /= Void then
 					-- Check iteration exit condition assuming the cursor is of ITERATION_CURSOR type.
@@ -6790,66 +6772,88 @@ feature {NONE} -- Implementation
 				end
 			end
 
-				-- Type check the exit test.
+			invariant_as := l_as.invariant_part
+			variant_as := l_as.variant_part
 			exit_as := l_as.stop
-			if exit_as /= Void then
-				exit_as.process (Current)
-				if last_type /= Void then
-						-- Check if it is a boolean expression
-					if not last_type.actual_type.is_boolean then
-						create l_vwbe4
-						context.init_error (l_vwbe4)
-						l_vwbe4.set_type (last_type)
-						l_vwbe4.set_location (exit_as.end_location)
-						error_handler.insert_error (l_vwbe4)
-					elseif l_needs_byte_node and then attached {EXPR_B} last_byte_node as ec then
-						l_loop.set_stop (ec)
-					end
-					break_point_slot_count := break_point_slot_count + 1
-						-- Mark loop as an infinite if it has no iteration part
-						-- and the exit condition is constant false.
-					is_infinite := i = Void and then attached {BOOL_AS} exit_as as b and then not b.value
-				end
-			end
 
-			if l_as.compound = Void then
-					-- Make sure the compound byte code is empty in case we have Iteration part.
-				l_list := Void
-			else
-					-- Type check the loop compound
-				context.enter_realm
-				from
-					e := error_level
-					create {AST_SCOPE_DISJUNCTIVE_CONDITION} scope_matcher.make (context)
-					s := context.scope
-					check
-						has_at_least_one_iteration: not context.is_sibling_dominating
+				-- Type check the loop invariant, variant, exit condition and compound
+				-- in a loop that computes new attachment information at every iteration.
+			context.enter_realm
+			from
+				e := error_level
+				create {AST_SCOPE_DISJUNCTIVE_CONDITION} scope_matcher.make (context)
+				s := context.scope
+				check
+					has_at_least_one_iteration: not context.is_sibling_dominating
+				end
+			until
+				context.is_sibling_dominating or else e /= error_level
+			loop
+					-- Record most recent scope information before the loop, so that
+					-- it can be compared with the information after the loop on next iteration.
+				context.update_sibling
+				if attached invariant_as then
+						-- Type check the invariant loop
+					context.enter_realm
+					q := context.scope
+					process_eiffel_list_with_matcher (invariant_as, create {AST_SCOPE_ASSERTION}.make (context), Void)
+					context.set_scope (q)
+					context.leave_optional_realm
+					if is_byte_node_enabled then
+						l_list ?= last_byte_node
+						l_loop.set_invariant_part (l_list)
 					end
-				until
-					context.is_sibling_dominating or else e /= error_level
-				loop
-						-- Record most recent scope information before the loop body, so that
-						-- it can be compared with the information after the loop body on next iteration.
-					context.update_sibling
-					if exit_as /= Void then
-							-- It's safe to take loop exit condition into account even when iteration is present,
-							-- because if the loop is entered neither iteration nor loop exit conditions are True.
-						scope_matcher.add_scopes (exit_as)
+				end
+				if attached variant_as then
+						-- Type check th variant loop
+					variant_as.process (Current)
+					if is_byte_node_enabled then
+						l_variant ?= last_byte_node
+						l_loop.set_variant_part (l_variant)
 					end
-					process_compound (l_as.compound)
-						-- Save byte code if `is_byte_node_enabled' is set to `True'
-						-- and set it to `False' to avoid regenerating it next time.
-						-- The original value will be restored from `l_needs_byte_node'.
+				end
+					-- Type check the exit test.
+				if exit_as /= Void then
+					exit_as.process (Current)
+					if last_type /= Void then
+							-- Check if it is a boolean expression
+						if not last_type.actual_type.is_boolean then
+							create l_vwbe4
+							context.init_error (l_vwbe4)
+							l_vwbe4.set_type (last_type)
+							l_vwbe4.set_location (exit_as.end_location)
+							error_handler.insert_error (l_vwbe4)
+						elseif is_byte_node_enabled and then attached {EXPR_B} last_byte_node as ec then
+							l_loop.set_stop (ec)
+						end
+						break_point_slot_count := break_point_slot_count + 1
+							-- Mark loop as an infinite if it has no iteration part
+							-- and the exit condition is constant false.
+						is_infinite := i = Void and then attached {BOOL_AS} exit_as as b and then not b.value
+					end
+						-- It's safe to take loop exit condition into account even when iteration is present,
+						-- because if the loop is entered neither iteration nor loop exit conditions are True.
+					scope_matcher.add_scopes (exit_as)
+				end
+				if attached l_as.compound as c then
+					process_compound (c)
+						-- Save byte code if required.
 					if is_byte_node_enabled then
 						l_list ?= last_byte_node
 						l_loop.set_compound (l_list)
-						is_byte_node_enabled := False
 					end
-					context.set_scope (s)
+				else
+						-- Make sure the compound byte code is empty in case we have Iteration part.
+					l_list := Void
 				end
-				is_byte_node_enabled := l_needs_byte_node
-				context.leave_realm
+					-- Set `is_byte_node_enabled' to `False' to avoid regenerating
+					-- the code next time.
+					-- The original value will be restored from `l_needs_byte_node'.
+				is_byte_node_enabled := False
+				context.set_scope (s)
 			end
+			is_byte_node_enabled := l_needs_byte_node
+			context.leave_realm
 
 			if i /= Void then
 					-- Generate cursor movement assuming the cursor is of ITERATION_CURSOR type.

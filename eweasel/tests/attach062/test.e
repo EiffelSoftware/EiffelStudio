@@ -15,17 +15,21 @@ feature
 			from
 				s := "abc"
 				i := s.count
+			invariant
+				i <= s.count
 			until
-				i <= 0
+				s.count = 1 or else i <= 0
 			loop
 				if s.item (i) = 'b' then
-					s := Void
+					s := $VOID
 				elseif attached s as v then
 					v.put ('b', i)
 				elseif attached {TEST} s then
 					(agent do end).call ([])
 				end
 				i := i - 1
+			variant
+				s.count + i
 			end
 		end
 

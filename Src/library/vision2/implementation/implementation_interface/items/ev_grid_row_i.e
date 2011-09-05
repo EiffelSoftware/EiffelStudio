@@ -1326,7 +1326,7 @@ feature {EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I} -- Implementation
 			from
 				parent_row_imp := Current
 			until
-				(parent_row_imp = Void) or (parent_row_imp /= Current and not parent_row_imp.is_expanded)
+				(parent_row_imp = Void) or else (parent_row_imp /= Current and not parent_row_imp.is_expanded)
 			loop
 				check parent_row_imp /= Void end
 				parent_row_imp.set_expanded_subrow_count_recursive (parent_row_imp.expanded_subrow_count_recursive + adjustment_value)
@@ -1484,15 +1484,15 @@ invariant
 	hash_code_valid: is_initialized implies ((parent = Void and then hash_code = 0) or else (parent /= Void and then hash_code > 0))
 
 note
-	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-		Eiffel Software
-		356 Storke Road, Goleta, CA 93117 USA
-		Telephone 805-685-1006, Fax 805-685-6869
-		Website http://www.eiffel.com
-		Customer support http://support.eiffel.com
-	]"
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
 end
 

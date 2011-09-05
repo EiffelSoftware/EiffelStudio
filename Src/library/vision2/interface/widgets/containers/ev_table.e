@@ -288,16 +288,17 @@ feature -- Status report
 			Result := not full
 		end
 
-	duplicate (n: INTEGER): detachable like Current
+	duplicate (n: INTEGER): like Current
 			-- Copy of sub-chain beginning at current position
 			-- and having min (`n', `from_here') items,
 			-- where `from_here' is the number of items
 			-- at or to the right of current position.
 
 			-- This is not implementable in Vision2 as a widget may
-			-- only be parented in one container at once. Hence, the
-			-- `Void' `Result'.
+			-- only be parented in one container at once.
 		do
+			check applicable: False then
+			end
 		end
 
 feature -- Status settings
@@ -609,28 +610,14 @@ invariant
 	rows_positive: rows >= 1
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EV_TABLE
-
-
-
-
-
-
-
-
-
-
-
+end

@@ -11,7 +11,8 @@ create
 	creation_retry,
 	creation_if,
 	creation_inspect,
-	creation_inspect_else
+	creation_inspect_else,
+	creation_check
 
 feature {NONE} -- Attribute initialization
 
@@ -78,6 +79,12 @@ feature {NONE} -- Attribute initialization
 			end
 		end
 
+	creation_check
+		do
+			check False then
+			end
+		end
+
 feature {NONE} -- Result initialization
 
 	result_unqualified: TEST
@@ -126,6 +133,12 @@ feature {NONE} -- Result initialization
 				die (0)
 			else
 				die (0)
+			end
+		end
+
+	result_check: TEST
+		do
+			check False then
 			end
 		end
 
@@ -191,6 +204,16 @@ feature {NONE} -- Result initialization
 				die (0)
 			else
 				die (0)
+			end
+			x := t
+		end
+
+	local_check
+		local
+			t: TEST
+		do
+			check False then
+				x := t
 			end
 			x := t
 		end

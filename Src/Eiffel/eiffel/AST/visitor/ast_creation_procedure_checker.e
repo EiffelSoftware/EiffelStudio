@@ -427,7 +427,21 @@ feature {AST_EIFFEL} -- Visitor: compound
 
 	process_guard_as (a: GUARD_AS)
 		do
-			safe_process (a.check_list)
+			if attached a.check_list as l then
+				safe_process (l)
+				if
+					l.there_exists (
+						agent (t: TAGGED_AS): BOOLEAN
+							do
+								Result := attached {BOOL_AS} t.expr as b and then not b.value
+							end
+					)
+				then
+						-- The check always fails.
+						-- All the variables may be considered properly initialized.
+					attribute_initialization.set_all
+				end
+			end
 			attribute_initialization.keeper.enter_realm
 			process_compound (a.compound)
 			attribute_initialization.keeper.leave_realm

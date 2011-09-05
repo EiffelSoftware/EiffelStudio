@@ -6464,7 +6464,7 @@ feature {NONE} -- Implementation
 		local
 			a: BYTE_LIST [BYTE_NODE]
 			c: BYTE_LIST [BYTE_NODE]
-			b: GUARD_B
+			g: GUARD_B
 			s: INTEGER
 			l_needs_byte_node: BOOLEAN
 		do
@@ -6476,6 +6476,17 @@ feature {NONE} -- Implementation
 				process_eiffel_list_with_matcher (l, create {AST_SCOPE_ASSERTION}.make (context), Void)
 				if l_needs_byte_node then
 					a ?= last_byte_node
+				end
+					-- If there is a false value, the instruction always fails.
+				if
+					l.there_exists (
+						agent (t: TAGGED_AS): BOOLEAN
+							do
+								Result := attached {BOOL_AS} t.expr as b and then not b.value
+							end
+					)
+				then
+					context.set_all
 				end
 			end
 			if attached l_as.compound as l then
@@ -6489,12 +6500,12 @@ feature {NONE} -- Implementation
 			context.leave_realm
 
 			if l_needs_byte_node then
-				create b.make (a, c, l_as.end_keyword)
+				create g.make (a, c, l_as.end_keyword)
 				if attached l_as.start_location as l then
-					b.set_line_number (l.line)
+					g.set_line_number (l.line)
 				end
-				b.set_line_pragma (l_as.line_pragma)
-				last_byte_node := b
+				g.set_line_pragma (l_as.line_pragma)
+				last_byte_node := g
 			end
 		end
 

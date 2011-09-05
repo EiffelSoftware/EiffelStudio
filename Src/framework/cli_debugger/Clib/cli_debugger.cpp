@@ -870,17 +870,26 @@ rt_public EIF_INTEGER get_cordebug (LPWSTR a_dbg_version, EIF_POINTER ** icd)
 		/*
 		 * from cordebug.idl :
 		 *	CorDebugInvalidVersion = 0,
-		 *	CorDebugVersion_1_0 = CorDebugInvalidVersion + 1,
-		 *	CorDebugVersion_1_1 = CorDebugVersion_1_0 + 1,
-		 *	CorDebugVersion_2_0 = CorDebugVersion_1_1 + 1,
+		 *	CorDebugVersion_1_0 = CorDebugInvalidVersion + 1, = 1
+		 *	CorDebugVersion_1_1 = CorDebugVersion_1_0 + 1,    = 2
+		 *	CorDebugVersion_2_0 = CorDebugVersion_1_1 + 1,    = 3
+		 *	CorDebugVersion_3_0 = CorDebugVersion_2_0 + 1,    = 4
 		 *
 		 */
 		hr = (FUNCTION_CAST_TYPE(HRESULT, WINAPI, (int, LPCWSTR, IUnknown**)) create_debug_address)(
-					3, /* ie CorDebugLatestVersion */
+					4, /* ie CorDebugLatestVersion */
 					a_dbg_version,
 					(IUnknown**) icd
 				);
-		DBGTRACE_HR("[DEBUGGER] CreateDebuggingInterfaceFromVersion : hr = ", hr);
+		DBGTRACE_HR("[DEBUGGER] CreateDebuggingInterfaceFromVersion CorDebugVersion_3_0 : hr = ", hr);
+		if (hr != S_OK) {
+			hr = (FUNCTION_CAST_TYPE(HRESULT, WINAPI, (int, LPCWSTR, IUnknown**)) create_debug_address)(
+						3, /* ie CorDebugLatestVersion */
+						a_dbg_version,
+						(IUnknown**) icd
+					);
+			DBGTRACE_HR("[DEBUGGER] CreateDebuggingInterfaceFromVersion CorDebugVersion_2_0 : hr = ", hr);
+		}
 	} else { 
 		hr = CoCreateInstance (
 					CLSID_CorDebug, 

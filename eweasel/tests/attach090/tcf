@@ -1,0 +1,19 @@
+test_name 	 like-current-attachment-redeclaration
+test_description Attachment status of `like Current' should be taken into account when checking redeclaration.
+
+copy_raw	a.e $CLUSTER a.e
+copy_sub	Ace $TEST Ace
+
+define DETACHABLE ""
+copy_sub	test.e $CLUSTER test.e
+
+compile_melted
+compile_result ok
+
+define DETACHABLE "detachable"
+copy_sub	test.e $CLUSTER test.e
+
+compile_melted
+compile_result validity_error TEST VDRD(2)
+
+test_end

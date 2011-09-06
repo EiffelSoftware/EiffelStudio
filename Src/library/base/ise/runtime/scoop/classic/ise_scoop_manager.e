@@ -1599,7 +1599,7 @@ feature {NONE} -- Scoop Processor Meta Data
 --				    end
 --				end
 --				l_processor_meta_data [processor_semaphore_status_index] := processor_semaphore_status_running
---				semaphore_client_wait (processor_semaphore_list [a_client_processor_id])
+				semaphore_client_wait (processor_semaphore_list [a_client_processor_id])
 			end
 		end
 

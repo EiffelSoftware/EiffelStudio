@@ -579,7 +579,11 @@ feature {COMPILER_EXPORTER} -- Primitives
 	conform_to (a_context_class: CLASS_C; other: TYPE_A): BOOLEAN
 			-- Does `Current' conform to `other'?
 		do
-			Result := other.is_like_current or else conformance_type.conform_to (a_context_class, other.conformance_type)
+			Result :=
+				(attached {LIKE_CURRENT} other as a and then
+					(a_context_class.lace_class.is_void_safe_conformance implies is_attachable_to (a)) and then
+					is_processor_attachable_to (a)) or else
+				conformance_type.conform_to (a_context_class, other.conformance_type)
 		end
 
 	convert_to (a_context_class: CLASS_C; a_target_type: TYPE_A): BOOLEAN

@@ -310,9 +310,9 @@ feature -- Basic operations
 		ensure
 			intersects_validity: intersects (other) implies Result /= Void
 			result_is_included_by_current: intersects (other) implies
-				includes (Result)
+				(Result /= Void and then includes (Result))
 			result_is_included_by_other: intersects (other) implies
-				other.includes (Result)
+				(Result /= Void and then other.includes (Result))
 		end
 
 	gather (other: like Current): like Current
@@ -351,7 +351,7 @@ invariant
 	between_bound: after (start_bound) and before (end_bound)
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
@@ -361,9 +361,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class INTERVAL
-
-
+end

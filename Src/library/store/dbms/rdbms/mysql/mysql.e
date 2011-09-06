@@ -35,9 +35,9 @@ feature {NONE} -- Initialization
 	default_create
 			-- Initialize Current
 		do
-			create descriptors.make_filled (Void, 1, 20)
-			create result_pointers.make_filled (default_pointer, 1, 20)
-			create row_pointers.make_filled (default_pointer, 1, 20)
+			create descriptors.make_filled (Void, 1, max_descriptor_number)
+			create result_pointers.make_filled (default_pointer, 1, max_descriptor_number)
+			create row_pointers.make_filled (default_pointer, 1, max_descriptor_number)
 			create last_date_data.make (0)
 			last_descriptor := 0
 		end
@@ -72,26 +72,21 @@ feature -- For DATABASE_CHANGE
 		local
 			l_descriptor_index: INTEGER
 		do
-			if descriptors = Void then
-					-- If we have not yet created the descriptors array, we
-					-- must assume the creation thereof will make descriptors
-					-- available
-				Result := True
-			else
-				from
-					Result := False
-					l_descriptor_index := 1
-				until
-					Result or else l_descriptor_index = 20
-				loop
-					if descriptors.item (l_descriptor_index) = Void then
-						Result := True
-					else
-						l_descriptor_index := l_descriptor_index + 1
-					end
+			from
+				Result := False
+				l_descriptor_index := 1
+			until
+				Result or else l_descriptor_index > max_descriptor_number
+			loop
+				if descriptors.item (l_descriptor_index) = Void then
+					Result := True
+				else
+					l_descriptor_index := l_descriptor_index + 1
 				end
 			end
 		end
+
+	max_descriptor_number: INTEGER = 20
 
 feature -- For DATABASE_FORMAT
 

@@ -1507,14 +1507,16 @@ feature -- Status setting
 			is_row_height_fixed: is_row_height_fixed
 			a_row_height_positive: a_row_height >= 1
 		do
-			row_height := a_row_height
-			if is_row_height_fixed or is_tree_enabled then
-				-- Note that if we are not using fixed row heights then
-				-- there is no need to perform anything here. This is because the
-				-- size is dependent on the rows and `row_height' is currently ignored.
-				set_vertical_computation_required (1)
-				restrict_virtual_y_position_to_maximum
-				redraw_client_area
+			if row_height /= a_row_height then
+				row_height := a_row_height
+				if is_row_height_fixed or is_tree_enabled then
+					-- Note that if we are not using fixed row heights then
+					-- there is no need to perform anything here. This is because the
+					-- size is dependent on the rows and `row_height' is currently ignored.
+					set_vertical_computation_required (1)
+					restrict_virtual_y_position_to_maximum
+					redraw_client_area
+				end
 			end
 		ensure
 			row_height_set: row_height = a_row_height

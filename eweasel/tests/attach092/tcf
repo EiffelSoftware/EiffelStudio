@@ -1,0 +1,11 @@
+test_name 	 mutual-self-init-attribute
+test_description It should be allowed to have mutually dependent self-initializing attributes.
+
+copy_raw	a.e $CLUSTER a.e
+copy_raw	test.e $CLUSTER test.e
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result	ok
+
+test_end

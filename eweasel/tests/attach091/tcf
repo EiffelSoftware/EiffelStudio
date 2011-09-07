@@ -1,0 +1,28 @@
+test_name 	 stable-attribute-assigner
+test_description Assigner of stable attributes has special treatment for attachment status.
+
+copy_raw	a.e $CLUSTER a.e
+copy_raw	b.e $CLUSTER b.e
+copy_raw	c.e $CLUSTER c.e
+copy_raw	test.e $CLUSTER test.e
+
+define ATTACHED_BY_DEFAULT "false"
+define VOID_SAFETY "none"
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result	ok
+
+define VOID_SAFETY "all"
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result	validity_error TEST VBAC(3) VBAC(3) VBAC(3) VBAC(3) VBAC(3) VBAC(3) VBAC(3) VBAC(3) VBAC(3) VBAC(3) VBAC(3) VBAC(3) VBAC(3) VBAC(3) VBAC(3) VBAC(3) VBAC(3) VBAC(3) VBAC(3) VBAC(3) VBAC(3) VBAC(3) VBAC(3) VBAC(3) VBAC(3) VBAC(3) VBAC(3)
+
+define ATTACHED_BY_DEFAULT "true"
+copy_sub	Ace $TEST Ace
+
+resume_compile
+compile_result	validity_error TEST VBAC(3) VBAC(3) VBAC(3) VBAC(3) VBAC(3) VBAC(3) VBAC(3) VBAC(3) VBAC(3) VBAC(3) VBAC(3) VBAC(3) VBAC(3) VBAC(3) VBAC(3) VBAC(3) VBAC(3) VBAC(3) VBAC(3) VBAC(3) VBAC(3) VBAC(3) VBAC(3) VBAC(3) VBAC(3) VBAC(3) VBAC(3)
+
+test_end

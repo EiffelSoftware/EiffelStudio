@@ -2567,6 +2567,7 @@ test	none-attachment-mark			attach088 tcf pass attached_types void_safe validity
 test	none-to-reference-formal		attach089 tcf pass attached_types void_safe formal generic conformance validity
 test	like-current-attachment-redeclaration	attach090 tcf pass attached_types void_safe conformance validity
 test	stable-attribute-assigner		attach091 tcf pass attached_types void_safe conformance stable attribute validity
+test	mutual-self-init-attribute		attach092 tcf pass attached_types void_safe self_init attribute validity
 
 -- Tests for conformance in general
 test	basic-conformance		conform001 tcf pass conformance

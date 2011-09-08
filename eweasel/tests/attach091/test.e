@@ -25,15 +25,15 @@ feature {NONE} -- Creation
 			a.dy := Current
 			a.dz := Current
 				-- Invalid cases.
-			a.x := Void
-			a.y := Void
-			a.z := Void
-			a.ax := Void
-			a.ay := Void
-			a.az := Void
-			a.dx := Void
-			a.dy := Void
-			a.dz := Void
+			a.x := Void  -- VBAC(1/3)
+			a.y := Void  -- VBAC(1/3)
+			a.z := Void  -- VBAC(1/3)
+			a.ax := Void -- VBAC(1)
+			a.ay := Void -- VBAC(1)
+			a.az := Void -- VBAC(1)
+			a.dx := Void -- VBAC(3)
+			a.dy := Void -- VBAC(3)
+			a.dz := Void -- VBAC(3)
 
 			create b
 				-- Valid cases.
@@ -47,15 +47,15 @@ feature {NONE} -- Creation
 			b.dy := b
 			b.dz := b
 				-- Invalid cases.
-			b.x := Void
-			b.y := Void
-			b.z := Void
-			b.ax := Void
-			b.ay := Void
-			b.az := Void
-			b.dx := Void
-			b.dy := Void
-			b.dz := Void
+			b.x := Void  -- VBAC(1)
+			b.y := Void  -- VBAC(1)
+			b.z := Void  -- VBAC(1)
+			b.ax := Void -- VBAC(1)  
+			b.ay := Void -- VBAC(1)  
+			b.az := Void -- VBAC(1)  
+			b.dx := Void -- VBAC(3)  
+			b.dy := Void -- VBAC(3)  
+			b.dz := Void -- VBAC(3)  
 
 			create c.make (Current)
 				-- Valid cases.
@@ -69,15 +69,15 @@ feature {NONE} -- Creation
 			c.dy := Current
 			c.dz := Current
 				-- Invalid cases.
-			c.x := Void
-			c.y := Void
-			c.z := Void
-			c.ax := Void
-			c.ay := Void
-			c.az := Void
-			c.dx := Void
-			c.dy := Void
-			c.dz := Void
+			c.x := Void  -- VBAC(1/3)
+			c.y := Void  -- VBAC(1/3)
+			c.z := Void  -- VBAC(1/3)
+			c.ax := Void -- VBAC(1)  
+			c.ay := Void -- VBAC(1)  
+			c.az := Void -- VBAC(1)  
+			c.dx := Void -- VBAC(3)  
+			c.dy := Void -- VBAC(3)  
+			c.dz := Void -- VBAC(3)  
 		end
 
 end

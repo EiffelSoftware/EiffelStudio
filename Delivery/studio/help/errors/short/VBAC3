@@ -1,0 +1,2 @@
+Error: source type of assigner call where target is a stable query is not attached.
+What to do: ensure that source type is attached.

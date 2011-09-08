@@ -12,3 +12,6 @@ VBAC, section 8.22.11
         2 The Equivalent Dot Form of target is a qualified
           Object_call whose feature has an assigner
           command.
+
+        3 If the query of the Object_call is stable, then
+          the type of the source is attached.

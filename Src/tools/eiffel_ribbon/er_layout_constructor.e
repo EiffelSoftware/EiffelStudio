@@ -29,6 +29,10 @@ feature {NONE} -- Initialization
 
 			widget.drop_actions.extend (agent on_root_tree_drop)
 			widget.drop_actions.set_veto_pebble_function (agent on_veto_root_tree_drop)
+
+			if attached shared_singleton.project_info_cell.item as l_project_info then
+				l_project_info.set_ribbon_window_count (shared_singleton.layout_constructor_list.count)
+			end
 		end
 
 	build_docking_content

@@ -18,6 +18,9 @@ feature {NONE} -- Initialization
 			-- Creation method
 		do
 			reset_ribbon_names
+
+			-- Default value
+			ribbon_window_count := 1
 		end
 
 feature -- Query
@@ -25,17 +28,14 @@ feature -- Query
 	project_location: detachable STRING
 			--
 
+	is_using_application_mode: BOOLEAN
+			-- If current project using Application Mode or DLL mode for different ribbon windows?
+
 	ribbon_names: ARRAYED_LIST [detachable STRING]
 			-- Names for different ribbons
 
 	ribbon_window_count: INTEGER
 			-- How many ribbon windows in current application
-		local
-			l_shared: ER_SHARED_SINGLETON
-		do
-			create l_shared
-			Result := l_shared.layout_constructor_list.count
-		end
 
 feature -- Command
 
@@ -45,6 +45,18 @@ feature -- Command
 			project_location := a_location
 		ensure
 			set: project_location = a_location
+		end
+
+	set_ribbon_window_count (a_count: INTEGER)
+			-- Set `ribbon_window_count' with `a_count'
+		do
+			ribbon_window_count := a_count
+		end
+
+	set_using_applicaiton_mode (a_bool: BOOLEAN)
+			-- Set `is_using_application_mode' with `a_bool'
+		do
+			is_using_application_mode := a_bool
 		end
 
 	update_ribbon_names_from_ui
@@ -75,6 +87,7 @@ feature -- Command
 		local
 			l_shared: ER_SHARED_SINGLETON
 			l_list: ARRAYED_LIST [ER_LAYOUT_CONSTRUCTOR]
+			l_widget: EV_TREE
 		do
 			from
 				create l_shared

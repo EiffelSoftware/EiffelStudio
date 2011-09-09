@@ -6,32 +6,38 @@ feature {NONE} -- Tests
 	a: A
 		attribute
 			a := Current
+			Result := a
 		end
 
 	b: A
 		attribute
 			b := c
+			Result := b
 		end
 
 	c: A
 		attribute
 			c := b
+			Result := c
 		end
 
 	d: A
 		attribute
 			e := d
+			Result := e
 		end
 
 	e: A
 		attribute
 			d := e
+			Result := d
 		end
 
 	f: A
 		attribute
 			if out ~ "" then
 				f := Current
+				Result := f
 			else
 				Result := Current
 			end
@@ -61,6 +67,7 @@ feature {NONE} -- Tests
 		attribute
 			if out ~ "" then
 				k := l
+				Result := k
 			else
 				Result := l
 			end
@@ -69,7 +76,8 @@ feature {NONE} -- Tests
 	l: A
 		attribute
 			if out ~ "" then
-				k := k
+				l := k
+				Result := l
 			else
 				Result := k
 			end
@@ -83,11 +91,18 @@ feature {NONE} -- Tests
 	n: A
 		attribute
 			n := x (Current)
+			Result := n
 		end
 
 	o: A
 		attribute
 			y
+			Result := o
+		end
+
+	p: A
+		attribute
+			Result := p
 		end
 
 feature {NONE} -- Helpers

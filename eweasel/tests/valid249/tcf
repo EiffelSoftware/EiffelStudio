@@ -30,14 +30,14 @@ define FORMAL_TYPE "TEST2"
 copy_sub	test.e $CLUSTER test.e
 
 compile_melted
-compile_result 	ok
+compile_result 	validity_error TEST VFAC(3)
 
 -- Testing argument checking of source.
-define ACTUAL_TYPE "TEST1"
-define FORMAL_TYPE "TEST2"
+define ACTUAL_TYPE "TEST3"
+define FORMAL_TYPE "TEST1"
 copy_sub	test.e $CLUSTER test.e
 
-compile_melted
+resume_compile
 compile_result 	validity_error TEST VBAC(1)
 
 -- Testing argument checking of source.

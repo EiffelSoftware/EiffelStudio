@@ -30,9 +30,7 @@ feature {NONE} -- Initialization
 			widget.drop_actions.extend (agent on_root_tree_drop)
 			widget.drop_actions.set_veto_pebble_function (agent on_veto_root_tree_drop)
 
-			if attached shared_singleton.project_info_cell.item as l_project_info then
-				l_project_info.set_ribbon_window_count (shared_singleton.layout_constructor_list.count)
-			end
+			update_project_info_window_count
 		end
 
 	build_docking_content
@@ -358,6 +356,8 @@ feature {NONE} -- Action handing
 		do
 			shared_singleton.layout_constructor_list.prune_all (Current)
 			content.close
+
+			update_project_info_window_count
 		end
 
 	on_cancel
@@ -388,6 +388,14 @@ feature -- Persistance
 		end
 
 feature {NONE} -- Implementation
+
+	update_project_info_window_count
+			--
+		do
+			if attached shared_singleton.project_info_cell.item as l_project_info then
+				l_project_info.set_ribbon_window_count (shared_singleton.layout_constructor_list.count)
+			end
+		end
 
 	recursive_all_items_with (a_text: STRING; a_tree_node: EV_TREE_NODE; a_list: ARRAYED_LIST [EV_TREE_NODE])
 			-- Recursive find tree node which text is same as `a_text'

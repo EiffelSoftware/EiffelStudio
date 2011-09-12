@@ -183,6 +183,10 @@ feature {COMPILER_EXPORTER} -- Setting
 			-- <Precursor>
 		do
 				-- Preserve `options_internal' for recompilation.
+			if attached compiled_class as c and then c.is_precompiled then
+					-- But for precompiled classes there is nothing to recompile.
+				options_internal := Void
+			end
 		end
 
 	reset_class_c_information (cl: CLASS_C)

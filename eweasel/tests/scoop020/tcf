@@ -1,0 +1,11 @@
+test_name	 scoop-separate-formal
+test_description Separateness status of a formal should be taken into account when checking for conformance.
+
+copy_sub	Ace	$TEST Ace
+copy_raw	a.e	$CLUSTER a.e
+copy_raw	test.e	$CLUSTER test.e
+
+compile_frozen
+compile_result validity_error A VJAR VJAR; TEST VUAR(2) VUAR(2)
+
+test_end

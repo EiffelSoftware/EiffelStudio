@@ -30,10 +30,13 @@ feature -- Access
 			-- Breakable nested index	
 
 	class_c: CLASS_C assign set_class_c
+			-- Associated CLASS_C
 
 	line: INTEGER assign set_line
+			-- Related line number from the Eiffel code
 
 	text: STRING assign set_text
+			-- Associated line of code
 
 feature -- Change
 
@@ -87,7 +90,7 @@ feature -- Status report
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

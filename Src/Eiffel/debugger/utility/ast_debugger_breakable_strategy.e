@@ -286,11 +286,6 @@ feature {NONE} -- Element change
 					else
 						s := s.string
 					end
-					s.right_adjust
-					if s.count > 50 then
-						s.keep_head (47)
-						s.append_string ("...")
-					end
 				end
 				create fi.make (3)
 				l_line := a_line
@@ -324,8 +319,6 @@ feature {NONE} -- Element change
 					else
 						s := s.string
 					end
-					s.right_adjust
-					s.keep_head (50)
 				end
 				l_line := a_line
 				if l_line = 0 then
@@ -707,7 +700,7 @@ feature {NONE} -- Implementation: Iteration
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

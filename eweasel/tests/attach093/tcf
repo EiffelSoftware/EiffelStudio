@@ -1,0 +1,10 @@
+test_name 	 indirect-self-init-attribute
+test_description Attribute initialization by calling self-initializing attributes is optional and should be flagged as error. Similarly access to attributes initialized by the creation procedure should still be checked in self-initializing attribute bodies.
+
+copy_raw	test.e $CLUSTER test.e
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result	validity_error TEST VEVI VEVI
+
+test_end

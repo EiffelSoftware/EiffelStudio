@@ -203,12 +203,14 @@ feature -- Comparison
 	is_equivalent (other: FORMAL_A): BOOLEAN
 			-- Is `other' equivalent to the current object?
 		do
-			Result := is_equivalent_excluding_attachment (other) and then
-				is_attached = other.is_attached
+			Result := is_equivalent_excluding_status (other) and then
+				is_attached = other.is_attached and then
+				has_separate_mark = other.has_separate_mark
 		end
 
-	is_equivalent_excluding_attachment (other: FORMAL_A): BOOLEAN
-			-- Is `other' equivalent to the current object without taking attachment status into account?
+	is_equivalent_excluding_status (other: FORMAL_A): BOOLEAN
+			-- Is `other' equivalent to the current object without
+			-- taking attachment and separateness status into account?
 		do
 			Result := position = other.position and then
 				is_reference = other.is_reference and then
@@ -508,7 +510,8 @@ feature {FORMAL_A} -- Conformance
 			a_context_class_attached: attached a_context_class
 			other_attached: attached other
 		do
-			if is_equivalent_excluding_attachment (other) then
+			if is_equivalent_excluding_status (other) then
+					-- Test attachment status.
 					-- The rules are as follows, but we need to take care about implicit attachment status:
     				-- 1. !G conforms to G, ?G and !G.
 					-- 2. G conforms to G and ?G.
@@ -528,6 +531,10 @@ feature {FORMAL_A} -- Conformance
 						-- Case 2.
 						-- A type without the detachable mark conforms to the one without the detachable mark.
 					Result := not other.is_attached
+				end
+				if Result then
+						-- Test separateness status.
+					Result := has_separate_mark implies other.has_separate_mark
 				end
 			end
 		end
@@ -635,7 +642,7 @@ feature -- Access
 				-- The type should be evaluated in the context of the associated conformance type.
 				-- `type.conformance_type' is used because `type.actual_type' does not work for {LIKE_CURRENT}.
 			if attached {CL_TYPE_A} type.conformance_type as l_cl_type then
-				Result := l_cl_type.instantiation_of (Current, written_id).to_other_attachment (Current)
+				Result := separate_adapted (l_cl_type.instantiation_of (Current, written_id).to_other_attachment (Current))
 			else
 				Result := Current
 			end
@@ -676,7 +683,7 @@ feature -- Access
 			-- assuming that Current is written in the associated class
 			-- of `class_type'.
 		do
-			Result := class_type.generics.item (position).to_other_attachment (Current)
+			Result := separate_adapted (class_type.generics.item (position).to_other_attachment (Current))
 		end
 
 	evaluated_type_in_descendant (a_ancestor, a_descendant: CLASS_C; a_feature: FEATURE_I): TYPE_A
@@ -688,7 +695,7 @@ feature -- Access
 				-- Get associated feature in descendant.
 			l_feat := a_descendant.generic_features.item (l_feat.rout_id_set.first)
 			check l_feat_not_void: l_feat /= Void end
-			Result := l_feat.type.actual_type.to_other_attachment (Current)
+			Result := separate_adapted (l_feat.type.actual_type.to_other_attachment (Current))
 		end
 
 	create_info: CREATE_FORMAL_TYPE
@@ -711,8 +718,22 @@ feature -- Access
 			an_info.make (Current)
 		end
 
+feature {NONE} -- Status adaptation
+
+	separate_adapted (other: TYPE_A): TYPE_A
+			-- `other' with separateness status adapted from `Current'.
+		do
+				-- If a formal has "separate" mark, it should be applied to `other'.
+				-- Otherwise `other' is used without any changes.
+			if has_separate_mark then
+				Result := other.to_other_separateness (Current)
+			else
+				Result := other
+			end
+		end
+
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

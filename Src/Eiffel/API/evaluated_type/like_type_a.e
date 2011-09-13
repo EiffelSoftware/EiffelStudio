@@ -34,6 +34,7 @@ inherit
 			is_expanded,
 			is_ephemeral,
 			is_external,
+			is_implicitly_attached,
 			is_initialization_required,
 			is_like,
 			is_loose,
@@ -190,12 +191,22 @@ feature -- Status report
 		end
 
 	is_attached: BOOLEAN
-			-- Is type attached?
+			-- <Precursor>
 		do
-			if Precursor then
+			if is_directly_attached then
 				Result := True
-			elseif not has_detachable_mark then
-				Result := conformance_type.is_attached
+			elseif not has_detachable_mark and then attached actual_type as t then
+				Result := t.is_attached
+			end
+		end
+
+	is_implicitly_attached: BOOLEAN
+			-- <Precursor>
+		do
+			if is_directly_implicitly_attached then
+				Result := True
+			elseif not has_detachable_mark and then attached actual_type as t then
+				Result := t.is_implicitly_attached
 			end
 		end
 
@@ -385,23 +396,27 @@ feature -- Modification
 
 	set_is_implicitly_attached
 		local
-			a: like actual_type
+			t: TYPE_A
 		do
+				-- Make sure `actual_type' does not affect attachment status.
+			t := actual_type
+			actual_type := Void
 			Precursor
-			a := actual_type
-			if a /= Void then
-				actual_type := a.to_other_immediate_attachment (Current)
+			if attached t then
+				actual_type := t.to_other_immediate_attachment (Current)
 			end
 		end
 
 	unset_is_implicitly_attached
 		local
-			a: like actual_type
+			t: TYPE_A
 		do
+				-- Make sure `actual_type' does not affect attachment status.
+			t := actual_type
+			actual_type := Void
 			Precursor
-			a := actual_type
-			if a /= Void then
-				actual_type := a.to_other_immediate_attachment (Current)
+			if attached t then
+				actual_type := t.to_other_immediate_attachment (Current)
 			end
 		end
 

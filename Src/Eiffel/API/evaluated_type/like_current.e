@@ -19,7 +19,7 @@ inherit
 			meta_type, set_actual_type, evaluated_type_in_descendant, is_tuple,
 			set_attached_mark, set_detachable_mark, set_is_implicitly_attached,
 			unset_is_implicitly_attached, description, description_with_detachable_type,
-			c_type, is_explicit, formal_instantiation_in,
+			c_type, is_explicit, formal_instantiation_in, is_implicitly_attached, is_attached,
 			generated_id, generate_cid, generate_cid_array, generate_cid_init,
 			make_type_byte_code, generate_gen_type_il, internal_is_valid_for_class,
 			maximum_interval_value, minimum_interval_value, is_optimized_as_frozen,
@@ -142,6 +142,26 @@ feature -- Properties
 		do
 			if conformance_type /= Void then
 				Result := conformance_type.is_basic
+			end
+		end
+
+	is_attached: BOOLEAN
+			-- Is type attached?
+		do
+			if is_directly_attached then
+				Result := True
+			elseif not has_detachable_mark and then attached conformance_type as t then
+				Result := t.is_attached
+			end
+		end
+
+	is_implicitly_attached: BOOLEAN
+			-- <Precursor>
+		do
+			if is_directly_implicitly_attached then
+				Result := True
+			elseif not has_detachable_mark and then attached conformance_type as t then
+				Result := t.is_implicitly_attached
 			end
 		end
 
@@ -387,6 +407,11 @@ feature {COMPILER_EXPORTER} -- Modification
 	set_actual_type (a: TYPE_A)
 			-- Assign `a' to `conformance_type'.
 		do
+				-- Remove any previously recorded actual type first
+				-- since it can be used to compute attachment properties
+				-- and give wrong results.
+			conformance_type := Void
+			actual_type := Void
 				-- Promote separateness status if present.
 			if has_separate_mark then
 				conformance_type := a.to_other_immediate_attachment (Current).to_other_separateness (Current)
@@ -412,23 +437,27 @@ feature {COMPILER_EXPORTER} -- Modification
 
 	set_is_implicitly_attached
 		local
-			a: like conformance_type
+			t: TYPE_A
 		do
+				-- Make sure `conformance_type' does not affect attachment status.
+			t := conformance_type
+			conformance_type := Void
 			Precursor
-			a := conformance_type
-			if a /= Void then
-				conformance_type := a.to_other_immediate_attachment (Current)
+			if attached t then
+				conformance_type := t.to_other_immediate_attachment (Current)
 			end
 		end
 
 	unset_is_implicitly_attached
 		local
-			a: like conformance_type
+			t: TYPE_A
 		do
+				-- Make sure `conformance_type' does not affect attachment status.
+			t := conformance_type
+			conformance_type := Void
 			Precursor
-			a := conformance_type
-			if a /= Void then
-				conformance_type := a.to_other_immediate_attachment (Current)
+			if attached t then
+				conformance_type := t.to_other_immediate_attachment (Current)
 			end
 		end
 

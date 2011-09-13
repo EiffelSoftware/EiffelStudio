@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {EV_RIBBON_SPLIT_BUTTON_GALLERY_ITEM}."
+	description: "[
+					Represent one item in {EV_RIBBON_SPLIT_BUTTON_GALLERY}
+																									]"
 	date: "$Date$"
 	revision: "$Revision$"
 

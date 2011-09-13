@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {EV_RIBBON_RESOURCES}."
+	description: "[
+					Ribbon resources such as instances, window lists
+																					]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -244,7 +246,7 @@ feature -- Helper
 		end
 
 	ribbon_for_application_menu_recent_items (a_item: EV_RIBBON_APPLICATION_MENU_RECENT_ITEMS): detachable EV_RIBBON
-			--
+			-- Find parent ribbon for application menu recent items
 		local
 			l_res: EV_RIBBON_RESOURCES
 			l_list: ARRAYED_LIST [EV_RIBBON_TITLED_WINDOW]
@@ -268,7 +270,7 @@ feature -- Helper
 		end
 
 	ribbon_for_help_button (a_help_button: EV_RIBBON_HELP_BUTTON): detachable EV_RIBBON
-			--
+			-- Find parent ribbon for help button
 		local
 			l_res: EV_RIBBON_RESOURCES
 			l_list: ARRAYED_LIST [EV_RIBBON_TITLED_WINDOW]
@@ -288,7 +290,7 @@ feature -- Helper
 		end
 
 	ribbon_for_quick_access_toolbar (a_qat: EV_RIBBON_QUICK_ACCESS_TOOLBAR): detachable EV_RIBBON
-			--
+			-- Find parent ribbon for quick access toolbar
 		local
 			l_res: EV_RIBBON_RESOURCES
 			l_list: ARRAYED_LIST [EV_RIBBON_TITLED_WINDOW]
@@ -308,7 +310,7 @@ feature -- Helper
 		end
 
 	ribbon_for_mini_toolbar (a_mini_toolbar: EV_RIBBON_MINI_TOOLBAR): detachable EV_RIBBON
-			--
+			-- Find parent ribbon for mini toolbar
 		local
 			l_res: EV_RIBBON_RESOURCES
 			l_list: ARRAYED_LIST [EV_RIBBON_TITLED_WINDOW]
@@ -328,7 +330,7 @@ feature -- Helper
 		end
 
 	ribbon_for_context_menu (a_context_menu: EV_RIBBON_CONTEXT_MENU): detachable EV_RIBBON
-			--
+			-- Find parent ribbon for context menu
 		local
 			l_res: EV_RIBBON_RESOURCES
 			l_list: ARRAYED_LIST [EV_RIBBON_TITLED_WINDOW]
@@ -348,7 +350,7 @@ feature -- Helper
 		end
 
 	ribbon_for_qat_item (a_item: EV_RIBBON_ITEM): detachable EV_RIBBON
-			--
+			-- Find parent ribbon for quick access tool bar items
 		local
 			l_res: EV_RIBBON_RESOURCES
 			l_list: ARRAYED_LIST [EV_RIBBON_TITLED_WINDOW]
@@ -378,7 +380,7 @@ feature -- Helper
 		end
 
 	ribbon_for_application_menu_item (a_item: EV_RIBBON_ITEM): detachable EV_RIBBON
-			--
+			-- Find parent ribbon for application menu items
 		local
 			l_res: EV_RIBBON_RESOURCES
 			l_list: ARRAYED_LIST [EV_RIBBON_TITLED_WINDOW]
@@ -427,7 +429,7 @@ feature -- Helper
 		end
 
 	find_in_split_or_drop_button_child_items (a_split_or_drop_down_item: EV_RIBBON_ITEM; a_item_to_compare: EV_RIBBON_ITEM): BOOLEAN
-			--
+			-- Find parent ribbon for buttons in split button oro drop-down button
 		require
 			not_void: a_split_or_drop_down_item /= Void
 			not_void: a_item_to_compare /= Void

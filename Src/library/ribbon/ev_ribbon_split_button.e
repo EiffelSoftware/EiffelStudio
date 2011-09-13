@@ -1,5 +1,9 @@
 note
-	description: "Summary description for {EV_RIBBON_SPLIT_BUTTON}."
+	description: "[
+					The Split Button is a composite control with which the user can select a
+					default value bound to a primary button, or select from a list of mutually
+					exclusive values displayed in a drop-down list bound to a secondary button.
+																								]"
 	date: "$Date$"
 	revision: "$Revision$"
 

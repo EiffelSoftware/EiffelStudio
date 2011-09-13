@@ -1,8 +1,8 @@
 note
 	description: "[
-						The Quick Access Toolbar (QAT) is a small, customizable toolbar
-					 that exposes a set of Commands that are specified by the application
-					  or selected by the user.
+					The Quick Access Toolbar (QAT) is a small, customizable toolbar
+					that exposes a set of Commands that are specified by the application
+					or selected by the user.
 																							 ]"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 feature -- Command
 
 	set_items_source (a_items_source: like items_source)
-			--
+			-- Set `item_source' with `a_items_source'
 		require
 			not_void: a_items_source /= Void
 		local

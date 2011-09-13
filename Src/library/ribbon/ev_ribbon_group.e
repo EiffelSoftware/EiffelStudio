@@ -1,5 +1,7 @@
 ﻿note
-	description: "Summary description for EV_RIBBON_GROUP."
+	description: "[
+					The Group organizes related Commands and controls within a Tab.
+																										]"
 	date: "$Date$"
 	revision: "$Revision$"
 

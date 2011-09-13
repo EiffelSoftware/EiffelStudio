@@ -1,5 +1,9 @@
 ﻿note
-	description: "Summary description for EV_RIBBON_TAB_GROUP."
+	description: "[
+					A Tab Group is a contextual control that is hidden or displayed at run time, 
+					based on a document or workspace state. The Tab Group contains a set of 
+					context-related Tab controls.
+																									]"
 	date: "$Date$"
 	revision: "$Revision$"
 

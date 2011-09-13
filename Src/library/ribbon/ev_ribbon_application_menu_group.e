@@ -1,5 +1,9 @@
 note
-	description: "Summary description for {EV_RIBBON_APPLICATION_MENU_GROUP}."
+	description: "[
+					The ApplicationMenu element must contain at least one MenuGroup child element that
+					exposes a list of application-level commands. If multiple MenuGroup elements are declared,
+					a divider line is drawn between the groups
+																												]"
 	date: "$Date$"
 	revision: "$Revision$"
 

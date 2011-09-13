@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {EV_RIBBON_TOOLTIPABLE}."
+	description: "[
+					Ribbon items with abilities to set and query tooltips
+																									]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -69,7 +71,7 @@ feature {NONE} --Implementation
 		end
 
 	update_property_for_tooltip (a_command_id: NATURAL_32; a_property_key: POINTER; a_property_current_value: POINTER; a_property_new_value: POINTER): NATURAL_32
-			--
+			-- Update tooltip in `update_property'
 		local
 			l_key: EV_PROPERTY_KEY
 			l_value: EV_PROPERTY_VARIANT

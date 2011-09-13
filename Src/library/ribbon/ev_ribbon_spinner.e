@@ -1,5 +1,9 @@
 note
-	description: "Summary description for {EV_RIBBON_SPINNER}."
+	description: "[
+					The Spinner is a composite control that consists of an increment button,
+					a decrement button, and an edit control, all of which are used to provide
+					decimal values to the application.
+																								]"
 	date: "$Date$"
 	revision: "$Revision$"
 

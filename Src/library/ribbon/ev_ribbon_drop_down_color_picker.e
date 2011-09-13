@@ -1,5 +1,9 @@
 note
-	description: "Summary description for {EV_RIBBON_DROP_DOWN_COLOR_PICKER}."
+	description: "[
+					The Windows Ribbon framework provides a specialized Drop-Down Color Picker control 
+					that exposes a variety of color settings through a split button and customizable 
+					drop-down color selector.
+																										]"
 	date: "$Date$"
 	revision: "$Revision$"
 

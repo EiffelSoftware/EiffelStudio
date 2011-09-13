@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {EV_RIBBON_IN_RIBBON_GALLERY_ITEM}."
+	description: "[
+					Represent one item in {EV_RIBBON_IN_RIBBON_GALLERY}
+																										]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -8,5 +10,5 @@ class
 
 inherit
 	EV_RIBBON_DROP_DOWN_GALLERY_ITEM
-	
+
 end

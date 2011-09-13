@@ -1,6 +1,8 @@
 note
-	description: "Summary description for {EV_RIBBON_DROP_DOWN_BUTTON}."
-	author: ""
+	description: "[
+					The Drop-Down Button consists of a button that when clicked displays 
+					a drop-down list of mutually exclusive items.
+																						]"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -1,5 +1,7 @@
 ﻿note
-	description: "Summary description for EV_RIBBON_TAB."
+	description: "[
+					A Tab contains groups of related controls.
+																									]"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {EV_RIBBON_COMBO_BOX_ITEM}."
+	description: "[
+					Represent one item in {EV_RIBBON_COMBO_BOX}.
+																					]"
 	date: "$Date$"
 	revision: "$Revision$"
 

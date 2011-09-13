@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {EV_RIBBON_APPLICATION_MENU}."
+	description: "[
+					The Application Menu is the main menu for an application that implements the Windows Ribbon framework.
+																															]"
 	date: "$Date$"
 	revision: "$Revision$"
 

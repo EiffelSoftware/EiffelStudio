@@ -1,5 +1,8 @@
 note
-	description: "Summary description for {EV_RIBBON_APPLICATION_MENU_RECENT_ITEMS}."
+	description: "[
+					The Recent Items list is a pane in the Application Menu that displays the most recently 
+					used (MRU) items for an application.
+																												]"
 	date: "$Date$"
 	revision: "$Revision$"
 

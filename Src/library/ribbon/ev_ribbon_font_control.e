@@ -31,48 +31,48 @@ feature -- Command
 feature -- Query
 
 	background_color: detachable EV_COLOR
-			--
+			-- Background color
 
 	background_color_type: NATURAL_32
-			--
+			-- Background color type
 
 	bold: NATURAL_32
-			--
+			-- Bold
 
 	changed_properties: detachable EV_PROPERTY_STORE
-			--
+			-- List of changed properties
 
 	delta_size: NATURAL_32
-			--
+			-- Delta size
 
 	family: detachable STRING_32
-			--
+			-- Family
 
 	foreground_color: detachable EV_COLOR
-			--
+			-- Foreground color
 
 	foreground_color_type: INTEGER
-			--
+			-- Foreground color type
 
 	italic: INTEGER
-			--
+			-- Italic
 
 	size: REAL_64
-			--
+			-- Size
 
 	strikethrough: INTEGER
-			--
+			-- Strikethrough
 
 	underline: INTEGER
-			--
+			-- Underline
 
 	vertical_positioning: INTEGER
-			--
+			-- Vertical positioning
 
 feature {NONE} -- Implementation
 
 	font_control_properties
-			--
+			-- Query font control properties
 		local
 			l_command_id: NATURAL_32
 			l_enum: EV_UI_INVALIDATIONS_ENUM
@@ -110,7 +110,6 @@ feature {NONE} -- Implementation
 						if a_command_execution_properties /= default_pointer then
 --							create l_property_set.share_with_pointer (a_command_execution_properties)
 --							l_property_value := l_property_set.value (l_sub_key)
-
 						end
 					end
 				else
@@ -128,7 +127,7 @@ feature {NONE} -- Implementation
 		end
 
 	update_with_property_store (a_property_store: EV_PROPERTY_STORE)
-			--
+			-- Update font control property with `a_property_store'
 		local
 			l_count, l_max: NATURAL_32
 			l_property_value: EV_PROPERTY_VARIANT

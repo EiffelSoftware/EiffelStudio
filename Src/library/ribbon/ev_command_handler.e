@@ -27,13 +27,13 @@ feature {NONE} -- Initialization
 feature -- Command
 
 	add_observer (a_observer: EV_COMMAND_HANDLER_OBSERVER)
-			--
+			-- Add `a_observer' to `observers'
 		do
 			observers.extend (a_observer)
 		end
 
 	remove_observer (a_observer: EV_COMMAND_HANDLER_OBSERVER)
-			--
+			-- Remove `a_observer' from `obervers'
 		do
 			observers.prune_all (a_observer)
 		end
@@ -41,7 +41,8 @@ feature -- Command
 feature {NONE} -- Observers
 
 	observers: ARRAYED_LIST [EV_COMMAND_HANDLER_OBSERVER]
-			--
+			-- Observer pattern
+			-- All Observers of `execute' and `update_property'
 
 feature {NONE} -- Implementation
 

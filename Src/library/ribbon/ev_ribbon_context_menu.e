@@ -1,6 +1,9 @@
 note
-	description: "Summary description for {EV_RIBBON_CONTEXT_MENU}."
-	author: ""
+	description: "[
+					A Context Popup is the principal control in the ContextPopup View of the Windows Ribbon framework.
+					It is a rich context menu system that is only exposed by the framework as an extension to a Ribbon
+					implementation-the framework does not expose the Context Popup as an independent control.
+					 																									]"
 	date: "$Date$"
 	revision: "$Revision$"
 

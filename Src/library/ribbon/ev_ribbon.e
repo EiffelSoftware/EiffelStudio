@@ -35,7 +35,7 @@ feature -- Initialization
 		end
 
 	create_ribbon_com_framework_from_dll (a_hwnd: POINTER; a_ribbon_dll_name: detachable STRING_32)
-			--
+			-- Create ribbon framework from a DLL which named `a_ribbon_dll_name'
 		require
 			valid: a_hwnd /= default_pointer
 		local
@@ -68,15 +68,15 @@ feature -- Command
 			until
 				l_new_cursor.after
 			loop
-				l_modes := l_modes | c_ui_make_app_node(l_new_cursor.item)
+				l_modes := l_modes | c_ui_make_app_mode(l_new_cursor.item)
 				l_new_cursor.forth
 			end
 
 			c_set_modes (l_modes, item)
 		end
 
-	c_ui_make_app_node (a_mode: NATURAL_32): NATURAL_32
-			--
+	c_ui_make_app_mode (a_mode: NATURAL_32): NATURAL_32
+			-- Combine application modes
 		external
 			"C inline use <common.h>"
 		alias
@@ -169,6 +169,7 @@ feature -- Command
 feature {EV_RIBBON_ITEM, EV_RIBBON_TEXTABLE, EV_RIBBON_TOOLTIPABLE, EV_RIBBON_APPLICATION_MENU_RECENT_ITEMS, EV_RIBBON_QUICK_ACCESS_TOOLBAR} -- Commands
 
 	get_command_property (a_command_id: NATURAL_32; a_key: EV_PROPERTY_KEY; a_variant: EV_PROPERTY_VARIANT)
+			-- Retrieves a command property, value, or state.
 		require
 			exists: exists
 			a_key_not_void: a_key /= Void
@@ -179,6 +180,7 @@ feature {EV_RIBBON_ITEM, EV_RIBBON_TEXTABLE, EV_RIBBON_TOOLTIPABLE, EV_RIBBON_AP
 		end
 
 	set_command_property (a_command_id: NATURAL_32; a_key: EV_PROPERTY_KEY; a_variant: EV_PROPERTY_VARIANT)
+			-- Sets a command property, value, or state.
 		require
 			exists: exists
 			a_key_not_void: a_key /= Void
@@ -189,6 +191,7 @@ feature {EV_RIBBON_ITEM, EV_RIBBON_TEXTABLE, EV_RIBBON_TOOLTIPABLE, EV_RIBBON_AP
 		end
 
 	invalidate (a_command_id: NATURAL_32; a_flags: INTEGER_32; a_key: EV_PROPERTY_KEY)
+			-- Invalidates a Windows Ribbon framework Command property, value, or state.
 		require
 			exists: exists
 			a_key_not_void: a_key /= Void
@@ -295,7 +298,8 @@ feature {EV_RIBBON_TITLED_WINDOW_IMP} -- Externals
 		end
 
 	c_show_contextual_ui (a_x, a_y: INTEGER_32; a_framework: POINTER; a_command_id: NATURAL_32): NATURAL_32
-			--
+			-- The IUIContextualUI interface is implemented by the Ribbon framework and provides the core functionality
+			-- for the Context Popup View.
 		require
 			a_framework_exists: a_framework /= default_pointer
 		external
@@ -342,6 +346,7 @@ feature {EV_RIBBON_TITLED_WINDOW_IMP} -- Externals
 feature {NONE} -- Implementation
 
 	c_get_ui_command_property (a_framework: POINTER; a_command_id: NATURAL_32; a_key, a_variant: POINTER)
+			-- Retrieves a command property, value, or state.
 		require
 			a_framework_not_null: a_framework /= default_pointer
 			a_key_not_null: a_key /= default_pointer
@@ -359,7 +364,7 @@ feature {NONE} -- Implementation
 		end
 
 	c_set_ui_command_property (a_framework: POINTER; a_command_id: NATURAL_32; a_key, a_variant: POINTER)
-			--
+			-- Sets a command property, value, or state.
 		require
 			a_framework_exists: a_framework /= default_pointer
 		external
@@ -375,7 +380,7 @@ feature {NONE} -- Implementation
 		end
 
 	c_invalidate_ui_command (a_framework: POINTER; a_command_id: NATURAL_32; a_flags: INTEGER; a_key: POINTER)
-			--
+			-- Invalidates a Windows Ribbon framework Command property, value, or state.
 		require
 			a_framework_exists: a_framework /= default_pointer
 		external
@@ -391,7 +396,7 @@ feature {NONE} -- Implementation
 		end
 
 	c_set_ribbon_color (a_ribbon_framework: POINTER; a_key: POINTER; a_color_value: NATURAL_32)
-			-- Set ribbon color
+			-- Set ribbon background color
 		external
 			"C++ inline use <Propvarutil.h>"
 		alias
@@ -419,7 +424,7 @@ feature {NONE} -- Implementation
 feature {EV_RIBBON} -- Externals callbacks
 
 	on_create_ui_command (a_iui_application: POINTER; a_command_id: NATURAL_32; a_ui_command_type: INTEGER; a_iui_command_handler: POINTER): NATURAL_32
-			--
+			-- Called for each Command specified in the Windows Ribbon framework markup to bind the Command to an IUICommandHandler.
 		local
 			l_pointer: POINTER
 			l_res: EV_RIBBON_RESOURCES
@@ -455,7 +460,7 @@ feature {EV_RIBBON} -- Externals callbacks
 		end
 
 	on_view_changed (a_iui_application: POINTER; a_view_id: NATURAL_32; a_type_id: INTEGER; a_view: POINTER; a_verb, a_reason_code: INTEGER): NATURAL_32
-			--
+			-- Called when the state of a View changes.
 		do
 			Result := {WEL_COM_HRESULT}.e_not_impl
 			if a_type_id = {EV_VIEW_TYPE}.ribbon then
@@ -526,7 +531,7 @@ feature {EV_RIBBON} -- Externals callbacks
 		end
 
 	c_create_ui_command_handler (a_iui_command_handler: POINTER): POINTER
-			--
+			-- Called for each Command specified in the Windows Ribbon framework markup to bind the Command to an IUICommandHandler.
 		external
 			"C use %"Uiribbon.h%""
 		end

@@ -36,19 +36,19 @@ feature -- Query
 			-- Color value
 
 	hue: NATURAL_8
-			--
+			-- Hue
 		do
 			Result := value.as_natural_8
 		end
 
 	saturation: NATURAL_8
-			--
+			-- Saturation
 		do
 			Result := (value |>> 8).as_natural_8
 		end
 
 	brightness: NATURAL_8
-			--
+			-- Brightness
 		do
 			Result := (value |>> 16).as_natural_8
 		end

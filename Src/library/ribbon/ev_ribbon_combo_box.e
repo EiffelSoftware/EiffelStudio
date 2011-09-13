@@ -1,5 +1,10 @@
 note
-	description: "Summary description for {EV_RIBBON_COMBO_BOX}."
+	description: "[
+					The Combo Box consists of a single-column list box that contains a 
+					collection of mutually exclusive items or Commands combined with a static
+					or edit control and a drop-down arrow. The list box portion of the control
+					is displayed when the user clicks the drop-down arrow.
+																								]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -26,7 +31,7 @@ feature {NONE} -- Initialziation
 feature -- Query
 
 	string_value
-			--
+			-- Query the value in the Combo Box control.
 		do
 			check not_implemented: False end
 		end
@@ -51,12 +56,12 @@ feature -- Query
 		end
 
 	item_source: ARRAYED_LIST [EV_RIBBON_COMBO_BOX_ITEM]
-			--
+			-- Query the collection of items in Current
 
 feature -- Command
 
 	set_string_value
-			--
+			-- Set the value in the Combo Box control.
 		do
 			check not_implemented: False end
 		end
@@ -83,7 +88,7 @@ feature -- Command
 		end
 
 	set_item_source (a_item_source: like item_source)
-			--
+			-- Set `item_source' with `a_item_source'
 		require
 			not_void: a_item_source /= Void
 		local
@@ -106,7 +111,7 @@ feature -- Command
 feature {NONE} -- Implementation
 
 	add_items_to_ui_collection (a_collection: EV_RIBBON_COLLECTION)
-			--
+			-- Add items to `a_collection'
 		require
 			not_void: a_collection /= Void
 		local

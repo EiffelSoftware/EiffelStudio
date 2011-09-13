@@ -36,7 +36,7 @@ feature -- Query
 		end
 
 	value (a_property_key: EV_PROPERTY_KEY): EV_PROPERTY_VARIANT
-			--
+			-- Gets data for a specific property.
 		require
 			not_void: a_property_key /= Void
 		local
@@ -48,7 +48,7 @@ feature -- Query
 		end
 
 	key_at (a_index: NATURAL_32): EV_PROPERTY_KEY
-			--
+			-- Gets a property key from an item's array of properties.
 		local
 			l_h_result: NATURAL_32
 		do
@@ -80,7 +80,7 @@ feature -- Command
 feature {NONE} -- C externals
 
 	c_size: INTEGER
-			--
+			-- C size of IPropertyStore
 		external
 			"C++ inline use <Propsys.h>"
 		alias

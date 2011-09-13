@@ -20,6 +20,9 @@ inherit
 		end
 
 	DB_EXPRESSION
+		redefine
+			is_executable
+		end
 
 	DB_CONSTANT
 
@@ -77,6 +80,17 @@ feature -- Basic operations
 			l_query := last_query_32
 			check l_query /= Void end -- implied by precursor's precondition `last_query_not_void'
 			modify (l_query)
+		end
+
+feature -- Query
+
+	is_executable: BOOLEAN
+			-- <Precursor>
+		do
+			Result := attached last_query_32 as l_s and then
+						not l_s.is_empty and then
+						is_connected and then
+						is_ok
 		end
 
 feature {NONE} -- Implementation

@@ -6,6 +6,6 @@ copy_raw	a.e	$CLUSTER a.e
 copy_raw	test.e	$CLUSTER test.e
 
 compile_frozen
-compile_result validity_error A VJAR VJAR; TEST VUAR(2) VUAR(2)
+compile_result validity_error A VJAR VJAR VJAR VJAR VJAR VJAR VJAR; TEST VUAR(2) VUAR(2)
 
 test_end

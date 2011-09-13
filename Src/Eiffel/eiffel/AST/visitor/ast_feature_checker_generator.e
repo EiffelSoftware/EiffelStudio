@@ -596,11 +596,14 @@ feature {NONE} -- Implementation: State
 			-- compatible then `is_compatible' is set, if there is a conversion, then
 			-- `conversion_info' is set?
 
-	last_assigner_command: FEATURE_I
-			-- Last assigner command associated with a feature
+	last_assigner_command: detachable FEATURE_I
+			-- Last assigner command associated with a feature.
 
-	last_assigner_type: TYPE_A
+	last_assigner_type: detachable TYPE_A
 			-- Type of the expected type for source of assigner call.
+
+	last_assigner_query: detachable FEATURE_I
+			-- Query of the assigner command.
 
 	is_assigner_call: BOOLEAN
 			-- Is an assigner call being processed?
@@ -711,6 +714,7 @@ feature {NONE} -- Settings
 			is_type_compatible := [False, l_conv_info]
 			last_assigner_command := Void
 			last_assigner_type := Void
+			last_assigner_query := Void
 			set_is_inherited (False)
 			inline_agent_byte_codes := Void
 		end
@@ -5418,6 +5422,7 @@ feature {NONE} -- Implementation
 			target_byte_node: like last_byte_node
 			target_type: like last_type
 			target_assigner: like last_assigner_command
+			target_query: like last_assigner_query
 			source_byte_node: EXPR_B
 			source_type: like last_type
 			vbac1: VBAC1
@@ -5440,8 +5445,9 @@ feature {NONE} -- Implementation
 		do
 			break_point_slot_count := break_point_slot_count + 1
 
-				-- Set assigner call flag for target expression
 			last_assigner_command := Void
+			last_assigner_query := Void
+				-- Set assigner call flag for target expression
 			is_assigner_call := True
 			l_as.target.process (Current)
 			l_is_tuple_access := is_last_access_tuple_access
@@ -5453,6 +5459,7 @@ feature {NONE} -- Implementation
 			target_type := last_type
 			if target_type /= Void then
 				target_assigner := last_assigner_command
+				target_query := last_assigner_query
 				if target_assigner = Void and then not l_is_tuple_access then
 						-- If we have no `target_assigner' and the last access is not a tuple access
 						-- then we have an error.
@@ -5466,9 +5473,6 @@ feature {NONE} -- Implementation
 						l_warning_count := error_handler.warning_list.count
 							-- Now we check that if there is an assigner, that the type of the `source'
 							-- matches the type of the first argument of the assigner.
-						if target_assigner /= Void then
-							target_type := last_assigner_type
-						end
 						process_type_compatibility (target_type)
 						source_type := last_type
 						if not is_type_compatible.is_compatible then
@@ -5478,6 +5482,14 @@ feature {NONE} -- Implementation
 							vbac1.set_target_type (target_type)
 							vbac1.set_location (l_as.start_location)
 							error_handler.insert_error (vbac1)
+						elseif
+							attached target_query and then
+							target_query.is_stable and then
+							not source_type.is_implicitly_attached and then
+							context.current_class.lace_class.is_void_safe_conformance
+						then
+							error_handler.insert_error
+								(create {VBAC3}.make (source_type, target_query, l_as.start_location, context))
 						else
 							if l_warning_count /= error_handler.warning_list.count then
 								error_handler.warning_list.last.set_location (l_as.start_location)
@@ -8617,6 +8629,7 @@ feature {NONE} -- Implementation
 			l_type: TYPE_A
 			l_target_class_id: INTEGER
 		do
+			last_assigner_query := target_query
 			l_assigner_name := target_query.assigner_name
 			if l_assigner_name = Void then
 				last_assigner_command := Void

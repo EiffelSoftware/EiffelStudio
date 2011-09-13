@@ -109,9 +109,8 @@ feature -- previously in POLY_UNIT
 			if Result.is_like_current then
 					-- We need to instantiate `like Current' in the context of `class_type'
 					-- to fix eweasel test#exec035.
-				create l_type
-				l_type.set_actual_type (class_type.type)
-				Result := l_type
+					-- Associated actual type is always attached.
+				Result := Result.instantiated_in (class_type.type.as_attached_in (class_type.associated_class))
 			end
 		end
 
@@ -196,7 +195,7 @@ feature -- Status report
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

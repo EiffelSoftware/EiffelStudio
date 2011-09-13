@@ -159,23 +159,31 @@ feature {NONE} -- Processing
 			s: GENERIC_SKELETON
 			i: INTEGER
 		do
-				-- Make sure attribute initialization checks do not affect each other.
-				-- Treat each attribute initialization in its own section that does not interfere with the other one.
-			attribute_initialization.keeper.enter_realm
-			from
-				s := current_class.skeleton
-				i := s.count
-			until
-				i <= 0
-			loop
-				check_attribute (current_class.feature_of_feature_id (s [i].feature_id), l)
-				i := i - 1
-				if i > 0 then
-						-- Move to the next independent section of checks.
-					attribute_initialization.keeper.save_sibling
+			if not is_checking_all then
+					-- Avoid recursion because all attributes will be checked anyway.
+				is_checking_all := True
+					-- Make sure attribute initialization checks do not affect each other.
+					-- Treat each attribute initialization in its own section that does not interfere with the other one.
+				attribute_initialization.keeper.enter_realm
+				from
+					s := current_class.skeleton
+					i := s.count
+				until
+					i <= 0
+				loop
+					check_attribute (current_class.feature_of_feature_id (s [i].feature_id), l)
+					i := i - 1
+					if i > 0 then
+							-- Move to the next independent section of checks.
+						attribute_initialization.keeper.save_sibling
+					end
+						-- It's safe to assume that the attribute that was checked, is initialized.
+					attribute_initialization.set_attribute (i + 1)
 				end
+				attribute_initialization.keeper.leave_realm
+					-- All attributes are checked.
+				is_checking_all := False
 			end
-			attribute_initialization.keeper.leave_realm
 		end
 
 	check_attribute (f: FEATURE_I; l: LOCATION_AS)
@@ -187,22 +195,40 @@ feature {NONE} -- Processing
 			l_attached: l /= Void
 		local
 			i: INTEGER
+			is_processed: BOOLEAN
 		do
-			i := context.attributes.item (f.feature_id)
-			if f.type.is_initialization_required and then not attribute_initialization.is_attribute_set (i) then
-				if attached {ATTRIBUTE_I} f as d and then d.has_body and then not bodies.has (d.body_index) then
-						-- Attribute is self-initializing and not processed yet
-						-- (there is no recursion for an uninitialized self-initializing attribute).
-					process (f)
-				end
-					-- Attribute might have been initialized by the associated body (if any).
-				if not attribute_initialization.is_attribute_set (i) then
-						-- Attribute is not properly initialized.
-					error_handler.insert_error (create {VEVI}.make_attribute (f, current_class.class_id, creation_procedure, context, l))
+			if not is_checking_one then
+					-- It's OK to check an attribute.
+					-- Block recursion if all attributes are going to be checked anyway.
+				is_checking_one := is_checking_all
+				i := context.attributes.item (f.feature_id)
+				if
+					f.type.is_initialization_required and then
+					not attribute_initialization.is_attribute_set (i) and then
+					attached {ATTRIBUTE_I} f as a
+				then
+					if a.has_body then
+							-- Attribute might be self-initializing.
+						if bodies.has (a.body_index) then
+								-- It is being processed.
+							is_processed := True
+						else
+								-- It has to be processed.
+							process (f)
+						end
+					end
+						-- Recheck if attribute is set that could happen when
+					if not is_processed and then not attribute_initialization.is_attribute_set (i) then
+							-- Attribute is not properly initialized.
+						error_handler.insert_error (create {VEVI}.make_attribute
+							(f, current_class.class_id, creation_procedure, context, l))
+					end
 						-- Mark that the attribute is initialized because it is self-initializing
 						-- or just to avoid repeated errors.
 					attribute_initialization.set_attribute (i)
 				end
+					-- Unblock recursion for single attribute checks.
+				is_checking_one := False
 			end
 		end
 
@@ -256,16 +282,18 @@ feature {AST_EIFFEL} -- Visitor: access to features
 						if current_class /= written_class then
 							f := current_class.feature_of_rout_id (f.rout_id_set.first)
 						end
-						if not bodies.has (f.body_index) then
+							-- Check whether this is an attachment or a call.
+						if f.is_attribute and then is_attachment then
+								-- Mark attribute as set.
+							attribute_initialization.set_attribute (context.attributes.item (f.feature_id))
+						elseif not bodies.has (f.body_index) then
 								-- This feature has not been processed yet.
 							if f.is_routine then
+									-- Evaluate routine body.
 								process (f)
 							elseif f.is_attribute then
-								if is_attachment then
-									attribute_initialization.set_attribute (context.attributes.item (f.feature_id))
-								else
-									check_attribute (f, a.feature_name)
-								end
+									-- Check attribute initialization.
+								check_attribute (f, a.feature_name)
 							end
 						end
 					end
@@ -501,7 +529,6 @@ feature {AST_EIFFEL} -- Visitor: compound
 
 	process_routine_as (a: ROUTINE_AS)
 		local
-			i: INTEGER
 			f: FEATURE_I
 		do
 			if a.is_attribute then
@@ -517,27 +544,22 @@ feature {AST_EIFFEL} -- Visitor: compound
 			safe_process (a.rescue_clause)
 			attribute_initialization.keeper.leave_realm
 			if a.is_attribute then
-					-- Copy result initialization status to the status of the associated attribute.
+					-- Check if "Result" is properly set.
 				if attribute_initialization.is_attribute_set (result_position) then
+						-- Record attribute as initialized one
+						-- because "Result" is properly set at the end of the body.
 					f := context.current_feature
 					if current_class /= written_class then
 						f := current_class.feature_of_rout_id (f.rout_id_set.first)
 					end
-					attribute_initialization.set_attribute (context.attributes.item (f.feature_id))
-						-- Propagate current initialization information to the outer realm.
-					attribute_initialization.keeper.save_sibling
-						-- Set all attributes except for the position of the result.
-					from
-						i := context.attributes.count
-					until
-						i <= 0
-					loop
-						attribute_initialization.set_attribute (i)
-						i := i - 1
-					end
 				end
-					-- Leave current scope cleaning result initialization information if requried.
-				attribute_initialization.keeper.leave_realm
+					-- Discard any initialization information because
+					-- execution of attribute body is not guaranteed.
+				attribute_initialization.keeper.leave_optional_realm
+				if attached f then
+						-- Mark attribute as initialized.
+					attribute_initialization.set_attribute (context.attributes.item (f.feature_id))
+				end
 			end
 		end
 
@@ -592,6 +614,12 @@ feature {NONE} -- Status report
 
 	is_qualified: BOOLEAN
 			-- Is qualified call being performed?
+
+	is_checking_all: BOOLEAN
+			-- Are all attributes being checked?
+
+	is_checking_one: BOOLEAN
+			-- Is an attribute being checked?
 
 feature {NONE} -- Access
 

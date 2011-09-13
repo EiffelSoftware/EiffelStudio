@@ -12,7 +12,7 @@ inherit
 		redefine
 			assigner_name_id, transfer_to, unselected, extension,
 			new_attr_entry, new_rout_entry, melt, access_for_feature, generate, new_rout_id,
-			set_type, type, is_attribute, is_stable, is_transient, is_hidden,
+			set_type, type, is_attribute, is_transient, is_hidden,
 			undefinable, check_expanded, transfer_from,
 			assert_id_set, set_assert_id_set
 		end
@@ -109,13 +109,6 @@ feature -- Status report
 			Result := feature_flags & has_body_mask = has_body_mask
 		end
 
-	is_stable: BOOLEAN
-			-- Is feature stable, i.e. never gets Void after returning a non-void value?
-			-- (Usually applies to attributes.)
-		do
-			Result := feature_flags & is_stable_mask = is_stable_mask
-		end
-
 	is_transient: BOOLEAN
 			-- <Precursor>
 		do
@@ -144,14 +137,6 @@ feature -- Status setting
 			feature_flags := feature_flags.set_bit_with_mask (b, has_body_mask)
 		ensure
 			has_body_set: has_body = b
-		end
-
-	set_is_stable (v: BOOLEAN)
-			-- Set `is_stable' to `v'.
-		do
-			feature_flags := feature_flags.set_bit_with_mask (v, is_stable_mask)
-		ensure
-			is_stable_set: is_stable = v
 		end
 
 	set_is_transient (v: BOOLEAN)
@@ -564,7 +549,6 @@ feature -- Element Change
 			other.set_assert_id_set (assert_id_set)
 			other.set_has_rescue_clause (has_rescue_clause)
 			other.set_is_transient (is_transient)
-			other.set_is_stable (is_stable)
 		end
 
 	transfer_from (other: like Current)
@@ -578,7 +562,6 @@ feature -- Element Change
 			assert_id_set := other.assert_id_set
 			extension := other.extension
 			set_is_transient (other.is_transient)
-			set_is_stable (other.is_stable)
 		end
 
 	melt (exec: EXECUTION_UNIT)

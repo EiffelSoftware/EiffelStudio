@@ -13,9 +13,9 @@ indexing
 */
 
 #include "eiffel_ribbon.h"
-#include "ribbon.h"
-#include "command.c"
-#include "ribbon.c"
+#include "common.h"
+#include "iui_command_handler.c"
+#include "iui_application.c"
 #include "simple_property_set.c"
 
 EIF_OBJECT eiffel_command_handler_object = NULL;

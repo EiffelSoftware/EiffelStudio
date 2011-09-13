@@ -1,4 +1,4 @@
-#include "ribbon.h"
+#include "common.h"
 
 HRESULT STDMETHODCALLTYPE QueryInterface(IUIApplication *This, REFIID vtblID, void **ppv);
 ULONG STDMETHODCALLTYPE AddRef(IUIApplication *This);

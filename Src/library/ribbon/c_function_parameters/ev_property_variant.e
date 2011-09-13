@@ -48,7 +48,7 @@ feature -- Access
 	size: INTEGER
 			--
 		external
-			"C inline use <ribbon.h>"
+			"C inline use <common.h>"
 		alias
 			"[
 			{
@@ -171,7 +171,7 @@ feature {NONE} -- Externals
 	c_var_type (a_property_variant: POINTER): NATURAL_16
 			--
 		external
-			"C inline use <ribbon.h>"
+			"C inline use <common.h>"
 		alias
 			"[
 			{
@@ -185,7 +185,7 @@ feature {NONE} -- Externals
 	c_read_boolean (a_item: POINTER; a_result: TYPED_POINTER [BOOLEAN])
 			--
 		external
-			"C inline use <ribbon.h>"
+			"C inline use <common.h>"
 		alias
 			"[
 			{
@@ -205,7 +205,7 @@ feature {NONE} -- Externals
 	c_read_string (a_item: POINTER; a_pwstr: TYPED_POINTER [POINTER])
 			--
 		external
-			"C inline use <ribbon.h>"
+			"C inline use <common.h>"
 		alias
 			"[
 			{
@@ -219,7 +219,7 @@ feature {NONE} -- Externals
 	c_read_decimal (a_item: POINTER): REAL_64
 			--
 		external
-			"C inline use <ribbon.h>"
+			"C inline use <common.h>"
 		alias
 			"{
 				DOUBLE val;
@@ -231,7 +231,7 @@ feature {NONE} -- Externals
 	c_read_uint32 (a_item: POINTER): NATURAL_32
 			--
 		external
-			"C inline use <ribbon.h>"
+			"C inline use <common.h>"
 		alias
 			"{
 				PROPVARIANT *ppropvar = (PROPVARIANT *) $a_item;
@@ -242,7 +242,7 @@ feature {NONE} -- Externals
 	c_read_iunknown (a_item: POINTER): POINTER
 			--
 		external
-			"C inline use <ribbon.h>"
+			"C inline use <common.h>"
 		alias
 			"{
 				PROPVARIANT *ppropvar = (PROPVARIANT *) $a_item;
@@ -261,7 +261,7 @@ feature {NONE} -- Externals
 	c_init_prop_variant_from_boolean (a_item: POINTER; a_value: BOOLEAN)
 			--
 		external
-			"C inline use <ribbon.h>"
+			"C inline use <common.h>"
 		alias
 			"[
 			{
@@ -276,7 +276,7 @@ feature {NONE} -- Externals
 	c_init_prop_variant_from_string (a_item: POINTER; a_string: POINTER)
 			--
 		external
-			"C inline use <ribbon.h>"
+			"C inline use <common.h>"
 		alias
 			"[
 			{
@@ -295,7 +295,7 @@ feature {NONE} -- Externals
 	c_init_prop_variant_from_decimal (a_item: POINTER; a_value: REAL_64)
 			--
 		external
-			"C inline use <ribbon.h>"
+			"C inline use <common.h>"
 		alias
 			"[
 			{
@@ -309,7 +309,7 @@ feature {NONE} -- Externals
 	c_init_prop_variant_from_uint32 (a_item: POINTER; a_value: NATURAL_32)
 			--
 		external
-			"C inline use <ribbon.h>"
+			"C inline use <common.h>"
 		alias
 			"[
 			{
@@ -324,7 +324,7 @@ feature {NONE} -- Externals
 	c_init_prop_variant_from_iunknown (a_item: POINTER; a_iunknown: POINTER)
 			--
 		external
-			"C inline use <ribbon.h>"
+			"C inline use <common.h>"
 		alias
 			"[
 			{
@@ -338,7 +338,7 @@ feature {NONE} -- Externals
 	c_init_prop_variant_from_iunknown_array (a_item: POINTER; a_psa: POINTER)
 			--
 		external
-			"C inline use <ribbon.h>"
+			"C inline use <common.h>"
 		alias
 			"[
 			{
@@ -352,7 +352,7 @@ feature {NONE} -- Externals
 	c_prop_variant_clear (a_item: POINTER)
 			--
 		external
-			"C inline use <ribbon.h>"
+			"C inline use <common.h>"
 		alias
 			"[
 			{
@@ -364,7 +364,7 @@ feature {NONE} -- Externals
 	c_create_iui_image (a_hbitmap: POINTER; a_result_iui_image: TYPED_POINTER [POINTER])
 			--
 		external
-			"C inline use %"ribbon.h%""
+			"C inline use %"common.h%""
 		alias
 			"[
 			{

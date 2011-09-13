@@ -629,7 +629,7 @@ feature {NONE} -- Externals
 	c_size: INTEGER
 			--
 		external
-			"C inline use <ribbon.h>"
+			"C inline use <common.h>"
 		alias
 			"[
 			{

@@ -2,9 +2,9 @@ class B
 
 feature {TEST} -- Tests
 
-	x: like Current assign set_x
+	x: like Current assign set_x -- VFAC(3)
 		note
-			option: stable
+			$STABLE
 		attribute
 			Result := Current
 		end
@@ -15,7 +15,7 @@ feature {TEST} -- Tests
 
 	y: like Current assign set_y
 		note
-			option: stable
+			$STABLE
 		attribute
 			Result := Current
 		end
@@ -26,7 +26,7 @@ feature {TEST} -- Tests
 
 	z: like Current assign set_z
 		note
-			option: stable
+			$STABLE
 		attribute
 			Result := Current
 		end
@@ -35,9 +35,9 @@ feature {TEST} -- Tests
 		do
 		end
 
-	ax: attached like Current assign set_ax
+	ax: attached like Current assign set_ax -- VFAC(3)
 		note
-			option: stable
+			$STABLE
 		attribute
 			Result := Current
 		end
@@ -48,7 +48,7 @@ feature {TEST} -- Tests
 
 	ay: attached like Current assign set_ay
 		note
-			option: stable
+			$STABLE
 		attribute
 			Result := Current
 		end
@@ -59,7 +59,7 @@ feature {TEST} -- Tests
 
 	az: attached like Current assign set_az
 		note
-			option: stable
+			$STABLE
 		attribute
 			Result := Current
 		end
@@ -70,7 +70,7 @@ feature {TEST} -- Tests
 
 	dx: detachable like Current assign set_dx
 		note
-			option: stable
+			$STABLE
 		attribute
 		end
 
@@ -78,9 +78,9 @@ feature {TEST} -- Tests
 		do
 		end
 
-	dy: detachable like Current assign set_dy
+	dy: detachable like Current assign set_dy -- VFAC(3)
 		note
-			option: stable
+			$STABLE
 		attribute
 		end
 
@@ -88,9 +88,9 @@ feature {TEST} -- Tests
 		do
 		end
 
-	dz: detachable like Current assign set_dz
+	dz: detachable like Current assign set_dz -- VFAC(3)
 		note
-			option: stable
+			$STABLE
 		attribute
 		end
 

@@ -22,7 +22,7 @@ feature {TEST} -- Tests
 
 	x: G assign set_x -- VFAC(3)
 		note
-			option: stable
+			$STABLE
 		attribute
 		end
 
@@ -30,9 +30,9 @@ feature {TEST} -- Tests
 		do
 		end
 
-	y: G assign set_y -- VFAC(3)
+	y: G assign set_y
 		note
-			option: stable
+			$STABLE
 		attribute
 		end
 
@@ -40,9 +40,9 @@ feature {TEST} -- Tests
 		do
 		end
 
-	z: G assign set_z
+	z: G assign set_z -- VFAC(3)
 		note
-			option: stable
+			$STABLE
 		attribute
 		end
 
@@ -52,7 +52,7 @@ feature {TEST} -- Tests
 
 	ax: attached G assign set_ax -- VFAC(3)
 		note
-			option: stable
+			$STABLE
 		attribute
 		end
 
@@ -62,7 +62,7 @@ feature {TEST} -- Tests
 
 	ay: attached G assign set_ay -- VFAC(3)
 		note
-			option: stable
+			$STABLE
 		attribute
 		end
 
@@ -72,7 +72,7 @@ feature {TEST} -- Tests
 
 	az: attached G assign set_az
 		note
-			option: stable
+			$STABLE
 		attribute
 		end
 
@@ -80,9 +80,9 @@ feature {TEST} -- Tests
 		do
 		end
 
-	dx: detachable G assign set_dx -- VFAC(3)
+	dx: detachable G assign set_dx
 		note
-			option: stable
+			$STABLE
 		attribute
 		end
 
@@ -92,7 +92,7 @@ feature {TEST} -- Tests
 
 	dy: detachable G assign set_dy -- VFAC(3)
 		note
-			option: stable
+			$STABLE
 		attribute
 		end
 
@@ -100,9 +100,9 @@ feature {TEST} -- Tests
 		do
 		end
 
-	dz: detachable G assign set_dz
+	dz: detachable G assign set_dz -- VFAC(3)
 		note
-			option: stable
+			$STABLE
 		attribute
 		end
 

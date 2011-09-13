@@ -981,6 +981,14 @@ feature -- Setting
 			has_property_setter_set: has_property_setter = v
 		end
 
+	set_is_stable (v: BOOLEAN)
+			-- Set `is_stable' to `v'.
+		do
+			feature_flags := feature_flags.set_bit_with_mask (v, is_stable_mask)
+		ensure
+			is_stable_set: is_stable = v
+		end
+
 	set_rout_id_set (an_id_set: like rout_id_set)
 			-- Assign `an_id_set' to `rout_id_set'.
 		require
@@ -1409,10 +1417,10 @@ feature -- Conveniences
 		end
 
 	is_stable: BOOLEAN
-			-- Is feature stable, i.e. never gets Void after returning a non-void value?
-			-- (Usually applies to attributes.)
+			-- Is feature stable, i.e. cannot be a target of an assignment with void value?
+			-- (Usually applies to queries.)
 		do
-			-- False by default
+			Result := feature_flags & is_stable_mask = is_stable_mask
 		end
 
 	is_transient: BOOLEAN
@@ -2852,6 +2860,8 @@ end
 			assigner_arguments: like arguments
 			query_arguments: like arguments
 			vfac: VFAC
+			query_type: TYPE_A
+			assigner_type: TYPE_A
 		do
 			if feature_table.feat_tbl_id = written_in then
 					-- Lookup feature in `feature_table' as feature table in the current class is not set yet.
@@ -2864,7 +2874,13 @@ end
 				create {VFAC1} vfac.make (system.current_class, Current)
 			elseif assigner.argument_count /= argument_count + 1 then
 				create {VFAC2} vfac.make (system.current_class, Current)
-			elseif not assigner.arguments.first.actual_type.conform_to (system.current_class, type.actual_type) then
+			elseif
+				(is_stable and then
+				not assigner.arguments.first.actual_type.as_attachment_mark_free.same_as
+					(type.actual_type.as_attachment_mark_free)) or else
+				(not is_stable and then
+				not assigner.arguments.first.actual_type.same_as (type.actual_type))
+			then
 				create {VFAC3} vfac.make (system.current_class, Current)
 			elseif argument_count > 0 then
 				assigner_arguments := assigner.arguments
@@ -3056,6 +3072,7 @@ feature -- Replication
 			other.set_is_unary (is_unary)
 			other.set_has_convert_mark (has_convert_mark)
 			other.set_has_replicated_ast (has_replicated_ast)
+			other.set_is_stable (is_stable)
 			other.set_body_index (body_index)
 			other.set_is_type_evaluation_delayed (is_type_evaluation_delayed)
 		end

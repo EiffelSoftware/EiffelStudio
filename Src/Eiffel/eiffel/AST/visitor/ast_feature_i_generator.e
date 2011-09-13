@@ -74,14 +74,12 @@ feature -- Factory
 					fixme ("support process-relative constants (e.g., string constants)")
 				end
 			end
-			if a_node.indexes /= Void then
-				if attached {ATTRIBUTE_I} Result as a then
-					if a_node.indexes.is_stable then
-						a.set_is_stable (True)
-					end
-					if a_node.indexes.is_transient then
-						a.set_is_transient (True)
-					end
+			if attached a_node.indexes as i then
+				if i.is_stable then
+					Result.set_is_stable (True)
+				end
+				if attached {ATTRIBUTE_I} Result as a and then i.is_transient then
+					a.set_is_transient (True)
 				end
 				if a_node.property_name /= Void then
 					Result.set_has_property (True)

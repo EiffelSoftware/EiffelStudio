@@ -23,6 +23,12 @@ extern "C" {
 
 extern HRESULT SHStrDupW_eiffel(LPCWSTR src, LPWSTR * dest);
 EIF_POINTER c_create_ui_command_handler (EIF_POINTER a_commandHandler);
+extern IUIFramework *g_pFramework;
+extern EIF_POINTER InitializeFramework(HWND hWnd, EIF_POINTER a_ribbon_resource_handle);
+extern IUIApplication *GetUIApplication();
+extern BOOL CreateIUIImageFromBitmap (HBITMAP bitmap, IUIImage **image);
+extern HRESULT QueryInterfaceIUICollectionWithPropVariant (PROPVARIANT * a_prop_variant);
+extern IUICollection * GetUICollection ();
 
 #ifdef __cplusplus
 }

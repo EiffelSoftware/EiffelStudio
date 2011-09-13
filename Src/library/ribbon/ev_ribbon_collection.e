@@ -101,7 +101,7 @@ feature {NONE} -- C external
 	size: INTEGER
 			--
 		external
-			"C inline use <ribbon.h>"
+			"C inline use <common.h>"
 		alias
 			"return sizeof(IUICollection);"
 		end
@@ -109,7 +109,7 @@ feature {NONE} -- C external
 	query_interface_with_prop_variant (a_item: POINTER)
 			--
 		external
-			"C inline use <ribbon.h>"
+			"C inline use <common.h>"
 		alias
 			"[
 			{
@@ -121,7 +121,7 @@ feature {NONE} -- C external
 	get_ui_collection: POINTER
 			--
 		external
-			"C inline use <ribbon.h>"
+			"C inline use <common.h>"
 		alias
 			"[
 			{
@@ -133,7 +133,7 @@ feature {NONE} -- C external
 	c_release (a_item: POINTER)
 			--
 		external
-			"C++ inline use <ribbon.h>"
+			"C++ inline use <common.h>"
 		alias
 			"((IUICollection *) $a_item)->Release();"
 		end
@@ -141,7 +141,7 @@ feature {NONE} -- C external
 	c_add (a_collection_item: POINTER; a_item: POINTER)
 			--
 		external
-			"C++ inline use <ribbon.h>"
+			"C++ inline use <common.h>"
 		alias
 			"((IUICollection *) $a_collection_item)->Add ((IUnknown *) $a_item);"
 		end
@@ -149,7 +149,7 @@ feature {NONE} -- C external
 	c_clear (a_collection_item: POINTER)
 			--
 		external
-			"C++ inline use <ribbon.h>"
+			"C++ inline use <common.h>"
 		alias
 			"((IUICollection *) $a_collection_item)->Clear ();"
 		end
@@ -157,7 +157,7 @@ feature {NONE} -- C external
 	c_get_count (a_collection_item: POINTER; a_result: TYPED_POINTER [NATURAL_32])
 			--
 		external
-			"C++ inline use <ribbon.h>"
+			"C++ inline use <common.h>"
 		alias
 			"((IUICollection *) $a_collection_item)->GetCount ($a_result);"
 		end
@@ -165,7 +165,7 @@ feature {NONE} -- C external
 	c_get_item (a_collection_item: POINTER; a_index: NATURAL_32; a_result: TYPED_POINTER [POINTER])
 			--
 		external
-			"C++ inline use <ribbon.h>"
+			"C++ inline use <common.h>"
 		alias
 			"((IUICollection *) $a_collection_item)->GetItem ($a_index, (IUnknown **)$a_result);"
 		end
@@ -173,7 +173,7 @@ feature {NONE} -- C external
 	c_insert (a_collection_item: POINTER; a_index: NATURAL_32; a_item: POINTER)
 			--
 		external
-			"C++ inline use <ribbon.h>"
+			"C++ inline use <common.h>"
 		alias
 			"((IUICollection *) $a_collection_item)->Insert ($a_index, (IUnknown *) $a_item);"
 		end
@@ -181,7 +181,7 @@ feature {NONE} -- C external
 	c_remove_at (a_collection_item: POINTER; a_index: NATURAL_32)
 			--
 		external
-			"C++ inline use <ribbon.h>"
+			"C++ inline use <common.h>"
 		alias
 			"((IUICollection *) $a_collection_item)->RemoveAt ($a_index);"
 		end
@@ -189,7 +189,7 @@ feature {NONE} -- C external
 	c_replace (a_collection_item: POINTER; a_index: NATURAL_32; a_item: POINTER)
 			--
 		external
-			"C++ inline use <ribbon.h>"
+			"C++ inline use <common.h>"
 		alias
 			"((IUICollection *) $a_collection_item)->Replace ($a_index, (IUnknown *) $a_item);"
 		end

@@ -16,7 +16,7 @@ indexing
 #define _simple_property_set_h_
 
 #include "eif_eiffel.h"
-#include "ribbon.h"
+#include "common.h"
 
 /* unix-specific */
 #ifndef EIF_WINDOWS 

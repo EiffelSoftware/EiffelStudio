@@ -78,7 +78,7 @@ feature -- Command
 	c_ui_make_app_node (a_mode: NATURAL_32): NATURAL_32
 			--
 		external
-			"C inline use <ribbon.h>"
+			"C inline use <common.h>"
 		alias
 			"[
 			{
@@ -256,7 +256,7 @@ feature {EV_RIBBON_TITLED_WINDOW_IMP} -- Externals
 			-- `a_resource_handle' is a pointer returned by LoadLibrary, the value can be void
 			-- If `a_resouce_hanlde' is null, then current executable handle will be used
 		external
-			"C++ inline use <ribbon.h>"
+			"C++ inline use <common.h>"
 		alias
 			"return InitializeFramework ((HWND) $a_hwnd, (EIF_POINTER)$a_resource_handle);"
 		end
@@ -266,7 +266,7 @@ feature {EV_RIBBON_TITLED_WINDOW_IMP} -- Externals
 		require
 			a_framework_exists: a_framework /= default_pointer
 		external
-			"C++ inline use <ribbon.h>"
+			"C++ inline use <common.h>"
 		alias
 			"{
 				HRESULT hr = S_OK;
@@ -279,7 +279,7 @@ feature {EV_RIBBON_TITLED_WINDOW_IMP} -- Externals
 		require
 			a_framework_exists: a_framework /= default_pointer
 		external
-			"C++ inline use <ribbon.h>"
+			"C++ inline use <common.h>"
 		alias
 			"{
 				UINT32 val;
@@ -299,7 +299,7 @@ feature {EV_RIBBON_TITLED_WINDOW_IMP} -- Externals
 		require
 			a_framework_exists: a_framework /= default_pointer
 		external
-			"C++ inline use <ribbon.h>"
+			"C++ inline use <common.h>"
 		alias
 			"{
 					HRESULT hr = E_FAIL;
@@ -323,7 +323,7 @@ feature {EV_RIBBON_TITLED_WINDOW_IMP} -- Externals
 		require
 			a_framework_exists: a_framework /= default_pointer
 		external
-			"C++ inline use <ribbon.h>"
+			"C++ inline use <common.h>"
 		alias
 			"{
 				HRESULT hr = S_OK;
@@ -334,7 +334,7 @@ feature {EV_RIBBON_TITLED_WINDOW_IMP} -- Externals
 	get_ui_application: POINTER
 			-- Get Ribbon IUIApplication C object
 		external
-			"C inline use <ribbon.h>"
+			"C inline use <common.h>"
 		alias
 			"return GetUIApplication ();"
 		end
@@ -347,7 +347,7 @@ feature {NONE} -- Implementation
 			a_key_not_null: a_key /= default_pointer
 			a_variant_not_null: a_variant /= default_pointer
 		external
-			"C++ inline use <ribbon.h>"
+			"C++ inline use <common.h>"
 		alias
 			"{
 				HRESULT hr = S_OK;
@@ -363,7 +363,7 @@ feature {NONE} -- Implementation
 		require
 			a_framework_exists: a_framework /= default_pointer
 		external
-			"C++ inline use <ribbon.h>"
+			"C++ inline use <common.h>"
 		alias
 			"{
 				HRESULT hr = S_OK;
@@ -379,7 +379,7 @@ feature {NONE} -- Implementation
 		require
 			a_framework_exists: a_framework /= default_pointer
 		external
-			"C++ inline use <ribbon.h>"
+			"C++ inline use <common.h>"
 		alias
 			"{
 				HRESULT hr = S_OK;

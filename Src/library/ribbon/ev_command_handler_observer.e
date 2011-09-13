@@ -70,7 +70,7 @@ feature -- Command
 feature {NONE}	-- Register
 
 	register_observer
-			--
+			-- Add current to observer list
 		local
 			l_shared: EV_SHARED_RESOURCES
 		do

@@ -1,5 +1,9 @@
 note
-	description: "Summary description for {EV_RIBBON_IN_GALLERY_GALLERY}."
+	description: "[
+					The In-Ribbon Gallery is a control that displays a collection of related items or
+					Commands in the Ribbon. If there are too many items in the gallery, an expand arrow
+					is provided to display the rest of the collection in an expanded pane.
+																										]"
 	date: "$Date$"
 	revision: "$Revision$"
 

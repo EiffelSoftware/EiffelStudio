@@ -1,5 +1,8 @@
 note
-	description: "Summary description for {EV_RIBBON_HELP_BUTTON}."
+	description: "[
+					The Help Button is a control that the user can click to display the application
+					help system.
+																										]"
 	date: "$Date$"
 	revision: "$Revision$"
 

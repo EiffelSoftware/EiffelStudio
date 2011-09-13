@@ -1,7 +1,7 @@
 note
 	description: "[
 					Ribbon shared resources
-																]"
+																			]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -11,7 +11,7 @@ class
 feature -- Factory methods
 
 	command_handler_singleton: EV_COMMAND_HANDLER
-			--
+			-- Command handler singleton
 		local
 			l_result: detachable EV_COMMAND_HANDLER
 		do
@@ -26,7 +26,7 @@ feature -- Factory methods
 feature {NONE} -- Implementation
 
 	global_command_handler_cell: CELL [detachable EV_COMMAND_HANDLER]
-			--
+			-- Singleton cell for command handler
 		once
 			create Result.put (void)
 		end

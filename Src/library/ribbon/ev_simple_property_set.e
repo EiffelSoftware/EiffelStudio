@@ -1,5 +1,11 @@
 note
-	description: "Summary description for {EV_SIMPLE_PROPERTY_SET}."
+	description: "[
+					IUISimplePropertySet is a read-only interface that defines a method for
+					retrieving the value identified by a property key. This interface is
+					implemented by the Windows Ribbon framework and is also implemented by 
+					the host application for each item in the IUICollection object of an 
+					item gallery.
+																							]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -24,7 +30,7 @@ feature {NONE} -- Initialization
 		end
 
 	share_with_pointer (a_pointer: POINTER)
-			--
+			-- Create current with shared pointer
 		require
 			valid: a_pointer /= default_pointer
 		do
@@ -88,7 +94,7 @@ feature -- Command
 feature {EV_SIMPLE_PROPERTY_SET} -- Implementation
 
 	get_value_for_c (a_simple_property_set: POINTER; a_property_key: POINTER; a_property_value: POINTER): NATURAL_32
-			--
+			-- Get value function used as C callback
 		local
 			l_key: EV_PROPERTY_KEY
 			l_value: EV_PROPERTY_VARIANT
@@ -126,7 +132,7 @@ feature {EV_SIMPLE_PROPERTY_SET} -- Implementation
 		end
 
 	find_property_set_for (a_pointer: POINTER): detachable EV_SIMPLE_PROPERTY_SET
-			--
+			-- Find `a_pointer' in all property sets
 		require
 			valid: a_pointer /= default_pointer
 		do
@@ -151,7 +157,7 @@ feature {EV_SIMPLE_PROPERTY_SET} -- Implementation
 feature {NONE} -- Externals
 
 	size: INTEGER
-			--
+			-- C size of IUISimplePropertySet
 		external
 			"C inline use %"simple_property_set.h%""
 		alias
@@ -163,7 +169,7 @@ feature {NONE} -- Externals
 		end
 
 	c_create_instance: POINTER
-			--
+			-- Create an instanse of simple property set
 		external
 			"C inline use %"simple_property_set.h%""
 		alias
@@ -175,7 +181,7 @@ feature {NONE} -- Externals
 		end
 
 	c_get_value (a_item: POINTER; a_property_key: POINTER; a_property_value: POINTER): NATURAL_32
-			--
+			-- Retrieves the value identified by a property key.
 		external
 			"C++ inline use %"simple_property_set.h%""
 		alias

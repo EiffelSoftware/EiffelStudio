@@ -1,5 +1,7 @@
 note
-	description: "Abstract representation of an item of a ribbon."
+	description: "[
+					Abstract representation of an item of a ribbon.
+																							]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -12,5 +14,5 @@ feature -- Query
 			-- Command ids handled by current
 		deferred
 		end
-		
+
 end

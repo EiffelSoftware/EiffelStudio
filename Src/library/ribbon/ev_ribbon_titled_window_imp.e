@@ -1,5 +1,7 @@
 note
-	description: "Summary description for EV_RIBBON_TITLED_WINDOW_IMP."
+	description: "[
+					EV_RIBBON_TITLED_WINDOW's windows implementation
+																									]"
 	date: "$Date$"
 	revision: "$Revision$"
 

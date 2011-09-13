@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {EV_RIBBON_APPLICATION_MENU_RECENT_ITEM}."
+	description: "[
+					Represent one item in {EV_RIBBON_APPLICATION_MENU_RECENT_ITEMS}
+																									]"
 	date: "$Date$"
 	revision: "$Revision$"
 

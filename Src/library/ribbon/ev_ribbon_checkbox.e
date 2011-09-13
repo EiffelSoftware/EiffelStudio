@@ -1,5 +1,9 @@
 note
-	description: "Abstract representation of a checkbox in a ribbon"
+	description: "[
+					Abstract representation of a checkbox in a ribbon
+					The Check Box is a control the user can click to provide input to an application. 
+					The control provides a toggle state that is represented visually.
+																										]"
 	date: "$Date$"
 	revision: "$Revision$"
 

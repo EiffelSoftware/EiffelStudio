@@ -1,5 +1,8 @@
 ﻿note
-	description: "Abstract representation of a button in a ribbon."
+	description: "[
+					Abstract representation of a button in a ribbon.
+					The Button is a control the user can click to provide input to an application.
+																								]"
 	date: "$Date$"
 	revision: "$Revision$"
 

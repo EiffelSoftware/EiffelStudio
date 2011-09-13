@@ -1,5 +1,8 @@
 note
-	description: "Summary description for {EV_RIBBON_MINI_TOOLBAR}."
+	description: "[
+					The MiniToolbar exposes a floating toolbar of various Commands, galleries, 
+					and complex controls such as the Font Control and the Combo Box.
+																										]"
 	date: "$Date$"
 	revision: "$Revision$"
 

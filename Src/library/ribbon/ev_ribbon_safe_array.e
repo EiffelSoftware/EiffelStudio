@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {EV_RIBBON_SAFE_ARRAY}."
+	description: "[
+					This C structure holds a safe array and its attributes.
+																					]"
 	date: "$Date$"
 	revision: "$Revision$"
 

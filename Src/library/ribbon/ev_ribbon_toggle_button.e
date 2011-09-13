@@ -1,5 +1,8 @@
 note
-	description: "Summary description for {EV_RIBBON_TOGGLE_BUTTON}."
+	description: "[
+					The Toggle Button when clicked provides input to an application. The control
+					represents a mutually exclusive toggle state.
+																									]"
 	date: "$Date$"
 	revision: "$Revision$"
 

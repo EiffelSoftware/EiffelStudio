@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {EV_UI_INVALIDATIONS_ENUM}."
+	description: "[
+					Specifies values that identify the aspect of a Command to invalidate.
+																							]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -9,7 +11,7 @@ class
 feature -- Query
 
 	ui_invalidations_state: INTEGER
-			--
+			-- A state property, such as UI_PKEY_Enabled.
 		external
 			"C inline use %"Uiribbon.h%""
 		alias
@@ -21,7 +23,7 @@ feature -- Query
 		end
 
 	ui_invalidations_value: INTEGER
-			--
+			-- The value property of a Command.
 		external
 			"C inline use %"Uiribbon.h%""
 		alias
@@ -33,7 +35,7 @@ feature -- Query
 		end
 
 	 ui_invalidations_property: INTEGER
-			--
+			-- Any property.
 		external
 			"C inline use %"Uiribbon.h%""
 		alias
@@ -45,7 +47,7 @@ feature -- Query
 		end
 
 	ui_invalidations_allproperties: INTEGER
-			--
+			-- All properties.
 		external
 			"C inline use %"Uiribbon.h%""
 		alias

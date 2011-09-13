@@ -41,19 +41,33 @@ feature -- Status report
 	is_attached: BOOLEAN
 			-- Is the type attached?
 		do
-			Result := (attachment_bits & is_attached_mask /= 0) or else is_expanded
+			Result := is_directly_attached or else is_expanded
+		end
+
+	is_directly_attached: BOOLEAN
+			-- Is type attached because of its declaration
+			-- without checking its anchor (if any)?
+		do
+			Result := attachment_bits & is_attached_mask /= 0
+		end
+
+	is_implicitly_attached: BOOLEAN
+			-- Is type (implicitly) attached?
+		do
+			Result := is_directly_implicitly_attached or else is_expanded
+		end
+
+	is_directly_implicitly_attached: BOOLEAN
+			-- Is type implicitly attached because of its use
+			-- without checking its anchor (if any)?
+		do
+			Result := attachment_bits & (is_attached_mask | is_implicitly_attached_mask) /= {NATURAL_8} 0
 		end
 
 	is_attachable_to (other: ATTACHABLE_TYPE_A): BOOLEAN
 			-- Does type preserve attachment status of other?
 		do
 			Result := other.is_attached implies is_implicitly_attached
-		end
-
-	is_implicitly_attached: BOOLEAN
-			-- Is type (implicitly) attached?
-		do
-			Result := (attachment_bits & (is_attached_mask | is_implicitly_attached_mask) /= {NATURAL_8} 0) or else is_expanded
 		end
 
 	has_separate_mark: BOOLEAN
@@ -385,7 +399,7 @@ invariant
 	separate_mark_consistency: not is_expanded implies (has_separate_mark implies is_separate)
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -20,6 +20,9 @@ inherit
 		end
 
 	DB_EXPRESSION
+		redefine
+			is_executable
+		end
 
 	DB_CONSTANT
 		export
@@ -94,6 +97,16 @@ feature -- Status report
 			-- Can `Current' be added to other concurrently opened selections?
 		do
 			Result := implementation.descriptor_available
+		end
+
+	is_executable: BOOLEAN
+			-- <Precursor>
+		do
+			Result := attached last_query_32 as l_s and then
+						not l_s.is_empty and then
+						is_connected and then
+						is_ok and then
+						is_allocatable
 		end
 
 	after: BOOLEAN
@@ -396,7 +409,7 @@ feature -- Basic operations
 			l_query: like last_query_32
 		do
 			l_query := last_query_32
-			check l_query /= Void end -- implied by precursor's precondition `last_query_not_void'
+			check l_query /= Void end -- implied by precursor's precondition `is_executable'
 			query (l_query)
 		end
 

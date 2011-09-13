@@ -25,6 +25,12 @@ feature -- Status report
 	last_query_32: detachable STRING_32
 			-- Last SQL statement used
 
+	is_executable: BOOLEAN
+			-- Is the query executable?
+		do
+			Result := attached last_query_32
+		end
+
 feature -- Status setting
 
 	set_query (query: READABLE_STRING_GENERAL)
@@ -42,7 +48,7 @@ feature -- Basic operations
 	execute_query
 			-- Execute `last_query'.
 		require
-			last_query_not_void: last_query_32 /= Void
+			is_executable: is_executable
 		deferred
 		end
 

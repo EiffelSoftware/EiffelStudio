@@ -182,7 +182,7 @@ feature {EV_ANY_I} -- Basic operations
 				create l_popup.make_with_menu (Current, wel_win)
 				show_track (wel_point.x, wel_point.y, l_popup)
 					-- Unset `l_popup' from `Current' on idle so that the user events may be correctly processed.
-				application_imp.add_idle_action (agent (a_popup: EV_POPUP_MENU_HANDLER) do a_popup.unset_menu; a_popup.destroy end (l_popup))
+				application_imp.do_once_on_idle (agent (a_popup: EV_POPUP_MENU_HANDLER) do a_popup.unset_menu; a_popup.destroy end (l_popup))
 			end
 		end
 

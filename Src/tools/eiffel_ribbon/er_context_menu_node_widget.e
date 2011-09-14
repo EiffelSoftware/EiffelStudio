@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 feature -- Command
 
 	set_tree_node_data (a_data: detachable ER_TREE_NODE_CONTEXT_MENU_DATA)
-			--
+			-- Update GUI with tree node data
 		do
 			tree_node_data := a_data
 			if attached a_data as l_data then
@@ -73,10 +73,10 @@ feature -- Command
 feature {NONE} -- Implementation
 
 	tree_node_data: detachable ER_TREE_NODE_CONTEXT_MENU_DATA
-			--
+			-- Context menu tree node data
 
 	checker: ER_IDENTIFIER_UNIQUENESS_CHECKER
-			--
+			-- Identifier uniqueness checker
 
 	on_command_name_change
 			-- Called by `change_actions' of `command_name'.

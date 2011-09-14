@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 feature -- Query
 
 	set_tree_node_data (a_data: detachable ER_TREE_NODE_APPLICATION_MENU_DATA)
-			--
+			-- Update GUI with tree node data
 		do
 			tree_node_data := a_data
 			if attached a_data as l_data then
@@ -73,7 +73,7 @@ feature -- Query
 feature {NONE} -- Implementation
 
 	checker: ER_IDENTIFIER_UNIQUENESS_CHECKER
-			--
+			-- Identifier uniqueness checker
 
 	on_command_name_text_change
 			-- Called by `change_actions' of `command_name'.
@@ -108,7 +108,7 @@ feature {NONE} -- Implementation
 		end
 
 	tree_node_data: detachable ER_TREE_NODE_APPLICATION_MENU_DATA
-			--
+			-- Application menu tree node data
 
 
 end

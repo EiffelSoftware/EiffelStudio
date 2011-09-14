@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 feature -- Command
 
 	set_tree_node_data (a_data: detachable ER_TREE_NODE_COMBO_BOX_DATA)
-			--
+			-- Update GUI with tree node data
 		do
 			tree_node_data := a_data
 			if attached a_data as l_data then
@@ -81,13 +81,13 @@ feature -- Command
 feature {NONE} -- Implementation
 
 	checker: ER_IDENTIFIER_UNIQUENESS_CHECKER
-			--
+			-- Identifier uniqueness checker
 
 	small_image, large_image: EV_PATH_FIELD
-			--
+			-- Small and large image path field
 
-	tree_node_data: detachable ER_TREE_NODE_BUTTON_DATA
-			--
+	tree_node_data: detachable ER_TREE_NODE_COMBO_BOX_DATA
+			-- Combo box tree node data
 
 	on_command_name_focus_out
 			-- <Precursor>
@@ -124,5 +124,5 @@ feature {NONE} -- Implementation
 				l_data.set_large_image (large_image.text)
 			end
 		end
-		
+
 end

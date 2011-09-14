@@ -1,5 +1,9 @@
 note
-	description: "Summary description for {ER_LAYOUT_CONSTRUCTOR}."
+	description: "[
+					EiffelRibbon Layout Constructor Tool with responsibility for creating target
+					ribbon window's widget layout
+					Users can pick and drop on it
+																						]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -12,7 +16,7 @@ create
 feature {NONE} -- Initialization
 
 	make
-			--
+			-- Creation method
 		do
 			create helper
 			create constants
@@ -34,7 +38,7 @@ feature {NONE} -- Initialization
 		end
 
 	build_docking_content
-			--
+			-- Build docking content
 		local
 			l_count: INTEGER
 		do
@@ -46,7 +50,7 @@ feature {NONE} -- Initialization
 		end
 
 	build_ui
-			--
+			-- Build GUI
 		local
 			l_tree_item_app: EV_TREE_ITEM
 		do
@@ -63,7 +67,7 @@ feature {NONE} -- Initialization
 feature -- Command
 
 	attach_to_docking_manager (a_docking_manager: SD_DOCKING_MANAGER)
-			--
+			-- Attach to docking manager
 		require
 			not_void: a_docking_manager /= Void
 		local
@@ -96,7 +100,7 @@ feature -- Command
 		end
 
 	expand_tree
-			--
+			-- Expand Vision2 Tree
 		do
 			helper.expand_all (widget)
 		end
@@ -181,7 +185,7 @@ feature -- Query
 feature -- Factory
 
 	tree_item_factory_method (a_item_text: STRING): EV_TREE_ITEM
-			--
+			-- Tree item factory method
 		require
 			not_void: a_item_text /= Void
 		do
@@ -195,7 +199,7 @@ feature -- Factory
 feature {NONE} -- Action handing
 
 	on_drop (a_stone: ANY; a_parent: EV_TREE_ITEM)
-			--
+			-- Handle drop action
 		require
 			not_void: a_stone /= Void
 			not_void: a_parent /= Void
@@ -212,7 +216,7 @@ feature {NONE} -- Action handing
 		end
 
 	on_veto_pebble_function (a_stone: ANY; a_parent_type: STRING): BOOLEAN
-			--
+			-- Veto pebble function
 		do
 			if attached {STRING} a_stone as l_stone_child then
 				if a_parent_type.same_string (constants.application_commands) then
@@ -282,7 +286,7 @@ feature {NONE} -- Action handing
 		end
 
 	on_pointer_press (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER; l_child: EV_TREE_NODE)
-			--
+			-- Handle pointer press
 		do
 			if attached l_child as l_type then
 				if attached {ER_OBJECT_EDITOR} shared_singleton.object_editor_cell.item as l_object_editor then
@@ -292,7 +296,7 @@ feature {NONE} -- Action handing
 		end
 
 	on_tree_key_press (a_key: EV_KEY)
-			--
+			-- Handle key press on tree
 		do
 			if a_key.code = {EV_KEY_CONSTANTS}.Key_delete then
 				if attached widget.selected_item as l_selected_node then
@@ -304,7 +308,7 @@ feature {NONE} -- Action handing
 		end
 
 	on_root_tree_drop (a_pebble: ANY)
-			--
+			-- Handle pebble drop on tree
 		local
 			l_tree_item: EV_TREE_ITEM
 		do
@@ -320,7 +324,7 @@ feature {NONE} -- Action handing
 		end
 
 	on_veto_root_tree_drop (a_pebble: ANY): BOOLEAN
-			--
+			-- Veto pebble drop function
 		do
 			if attached {STRING} a_pebble as l_item then
 				if l_item.same_string (constants.ribbon_application_menu) or else
@@ -352,7 +356,7 @@ feature {NONE} -- Action handing
 		end
 
 	on_close_content_imp
-			--
+			-- Close current tool
 		do
 			shared_singleton.layout_constructor_list.prune_all (Current)
 			content.close
@@ -361,7 +365,7 @@ feature {NONE} -- Action handing
 		end
 
 	on_cancel
-			--
+			-- Handle cancel action
 		do
 			-- Do nothing
 		end
@@ -379,7 +383,7 @@ feature -- Persistance
 		end
 
 	load_tree (a_ribbon_window_count: INTEGER)
-			--
+			-- Load a ribbon tree into GUI
 		local
 			l_factory: ER_CODE_GENERATOR_FACTORY
 		do
@@ -390,7 +394,7 @@ feature -- Persistance
 feature {NONE} -- Implementation
 
 	update_project_info_window_count
-			--
+			-- Update project info data with window's count
 		do
 			if attached shared_singleton.project_info_cell.item as l_project_info then
 				l_project_info.set_ribbon_window_count (shared_singleton.layout_constructor_list.count)
@@ -442,7 +446,7 @@ feature {NONE} -- Implementation
 		end
 
 	content: SD_CONTENT
-			--
+			-- Docking content
 
 	helper: ER_HELPER
 			-- Helper
@@ -451,9 +455,9 @@ feature {NONE} -- Implementation
 			-- Constants	
 
 	shared_singleton: ER_SHARED_SINGLETON
-			--			
+			-- Shared singleton
 
 	tree_node_factory: ER_TREE_NODE_DATA_FACTORY
-			--
+			-- Tree node factory
 
 end

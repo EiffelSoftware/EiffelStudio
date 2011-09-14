@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 feature -- Query
 
 	recent_projects: ARRAYED_LIST [STRING]
-			--
+			-- Recent projects
 
 	is_using_application_modes: BOOLEAN
 			-- If using application mode for multi windows support?

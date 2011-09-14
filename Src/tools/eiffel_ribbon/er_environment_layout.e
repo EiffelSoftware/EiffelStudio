@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {ER_ENVIRONMENT_LAYOUT}."
+	description: "[
+					EiffelRibbon tool enviroments layout
+																		]"
 	date: "$Date$"
 	revision: "$Revision$"
 

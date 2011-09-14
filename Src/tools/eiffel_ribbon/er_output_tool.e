@@ -1,5 +1,8 @@
 note
-	description: "Summary description for ER_OUTPUT_TOOL."
+	description: "[
+					EiffelRibbon output tool
+					It display outputs from UICC.exe, link.exe etc
+																								]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -12,7 +15,7 @@ create
 feature {NONE} -- Initialization
 
 	make
-			--
+			-- Creation method
 		do
 			create widget
 			create content.make_with_widget (widget, "ER_OUTPUT_TOOL")
@@ -21,7 +24,7 @@ feature {NONE} -- Initialization
 		end
 
 	build_docking_content
-			--
+			-- Build docking content
 		do
 			content.set_long_title ("Output")
 			content.set_short_title ("Output")
@@ -29,7 +32,7 @@ feature {NONE} -- Initialization
 		end
 
 	build_ui
-			--
+			-- Build GUI
 		do
 			build_docking_content
 			widget.disable_edit
@@ -38,7 +41,7 @@ feature {NONE} -- Initialization
 feature -- Command
 
 	attach_to_docking_manager (a_docking_manager: SD_DOCKING_MANAGER)
-			--
+			-- Attach to docking manager
 		require
 			not_void: a_docking_manager /= Void
 		local
@@ -54,7 +57,7 @@ feature -- Command
 		end
 
 	append_output (a_string: STRING_32)
-			--
+			-- Append output
 		require
 			not_void: a_string /= Void
 		local
@@ -109,7 +112,7 @@ feature -- Query
 feature {NONE} -- Implementation
 
 	content: SD_CONTENT
-			--
+			-- Docking content
 
 feature {NONE} -- Multi threading
 
@@ -120,7 +123,7 @@ feature {NONE} -- Multi threading
 		end
 
 	output_string: ARRAYED_LIST [STRING_32]
-			--
+			-- Global output string among threads
 		once ("PROCESS")
 			create Result.make (100)
 		end

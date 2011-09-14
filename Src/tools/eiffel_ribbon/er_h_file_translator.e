@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 feature -- Command
 
 	reset
-			--
+			-- Reset internal data
 		do
 			name_value.wipe_out
 		end
@@ -72,7 +72,7 @@ feature -- Command
 feature {NONE} -- Implementation
 
 	parse_c_header_file
-			--
+			-- Parse C header file
 		local
 			l_source_file: RAW_FILE
 			l_first_blank, l_second_blank: INTEGER
@@ -130,7 +130,7 @@ feature {NONE} -- Implementation
 		end
 
 	generate_eiffel_class: STRING
-			--
+			-- Generate Eiffel class for C header file
 		local
 			l_template: FILE_NAME
 			l_template_file: RAW_FILE
@@ -170,7 +170,7 @@ feature {NONE} -- Implementation
 		end
 
 	prepare_name_value_for_eiffel: STRING
-			--
+			-- Prepare name value pairs for Eiffel
 		require
 			valid: not name_value.is_empty
 		local

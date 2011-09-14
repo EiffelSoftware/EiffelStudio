@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 		end
 
 	init_after_shown
-			--
+			-- Initialization after GUI displayed
 		local
 			l_docking_manager: like docking_manager
 			l_tool_bar: SD_TOOL_BAR_CONTENT
@@ -113,7 +113,7 @@ feature {NONE} -- Initialization
 		end
 
 	build_tool_bar: SD_TOOL_BAR_CONTENT
-			--
+			-- Build tool bar
 		local
 			l_list: ARRAYED_SET [SD_TOOL_BAR_ITEM]
 			l_item: SD_TOOL_BAR_BUTTON
@@ -179,7 +179,7 @@ feature {NONE} -- Agents
 feature {ER_UICC_MANAGER, ER_GENERATE_CODE_COMMAND} -- Implementation
 
 	restore_tools_layout
-			--
+			-- Restore docking tool's layout
 		local
 			l_result: BOOLEAN
 		do
@@ -189,7 +189,7 @@ feature {ER_UICC_MANAGER, ER_GENERATE_CODE_COMMAND} -- Implementation
 		end
 
 	save_tools_layout
-			--
+			-- Save docking tool's layout
 		local
 			l_result: BOOLEAN
 		do
@@ -199,7 +199,7 @@ feature {ER_UICC_MANAGER, ER_GENERATE_CODE_COMMAND} -- Implementation
 		end
 
 	restore_tool_info_from_disk
-			--
+			-- Restore tool info from file
 		local
 			l_tool_info: detachable ER_TOOL_INFO
 
@@ -235,7 +235,7 @@ feature {ER_UICC_MANAGER, ER_GENERATE_CODE_COMMAND} -- Implementation
 		end
 
 	save_tool_info_when_exit
-			--
+			-- Save tool info when exiting
 		local
 			l_file: RAW_FILE
 			l_writer: SED_MEDIUM_READER_WRITER
@@ -255,48 +255,49 @@ feature {ER_UICC_MANAGER, ER_GENERATE_CODE_COMMAND} -- Implementation
 		end
 
 	type_selector: ER_TYPE_SELECTOR
-			--
+			-- Type selector tool
 
 	layout_constructor: ER_LAYOUT_CONSTRUCTOR
-			--
+			-- Layout constructor tool
+			-- FIXME: remove this and only use {ER_SHARED_SINGLETON}.layout_constructor_list ?
 
 	object_editor: ER_OBJECT_EDITOR
-			--
+			-- Object editor tool
 
 	size_definition_editor: ER_SIZE_DEFINITION_EDITOR
-			--
+			-- Size definition editor tool
 
 	output_tool: ER_OUTPUT_TOOL
-			--
+			-- Output tool
 
 	shared_singleton: ER_SHARED_SINGLETON
-			--
+			-- shared singleton
 
 feature -- Commands
 
 	new_project_command: ER_NEW_PROJECT_COMMAND
-			--
+			-- New project command
 
 	open_project_command: ER_OPEN_PROJECT_COMMAND
-			--
+			-- Open project command
 
 	save_project_command: ER_SAVE_PROJECT_COMMAND
-			--
+			-- Save project command
 
 	gen_code_command: ER_GENERATE_CODE_COMMAND
-			--
+			-- Generate code command
 
 	recent_project_command: ER_RECENT_PROJECT_COMMAND
-			--
+			-- Recent project command
 
 	new_ribbon_command: ER_NEW_RIBBON_COMMAND
-			--
+			-- New ribbon command
 
 	using_application_mode_command: ER_USING_APPLICATION_MODE_COMMAND
-			--
+			-- Using application mode command
 
 feature -- Query
 
 	docking_manager: detachable SD_DOCKING_MANAGER
-			--			
+			-- Docking manager
 end

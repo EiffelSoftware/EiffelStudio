@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {ER_NEW_RIBBON_COMMAND}."
+	description: "[
+					Command to create a new ribbon (a new layout constructor)
+																				]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -39,7 +41,7 @@ feature -- Command
 		end
 
 	new_tool_bar_item: SD_TOOL_BAR_BUTTON
-			--
+			-- Create a new tool bar item
 		do
 			create Result.make
 			Result.set_text ("New Ribbon")
@@ -48,7 +50,7 @@ feature -- Command
 		end
 
 	set_main_window (a_main_window: ER_MAIN_WINDOW)
-			--
+			-- Set `main_window' with `a_main_window'
 		do
 			main_window := a_main_window
 		end
@@ -56,9 +58,9 @@ feature -- Command
 feature {NONE} -- Implementation
 
 	shared_singleton: ER_SHARED_SINGLETON
-			--
+			-- Shared singleton
 
 	main_window: detachable ER_MAIN_WINDOW
-			--
+			-- Tool's main window
 
 end

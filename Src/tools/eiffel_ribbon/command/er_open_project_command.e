@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {ER_OPEN_PROJECT_COMMAND}."
+	description: "[
+					Command to open a ribbon project
+																			]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -33,7 +35,7 @@ feature -- Command
 		end
 
 	execute_with_file_name (a_project_file: STRING)
-			--
+			-- Execute current command with `a_project_file'
 		local
 			l_warn: EV_WARNING_DIALOG
 			l_singleton: ER_SHARED_SINGLETON
@@ -70,7 +72,7 @@ feature -- Command
 		end
 
 	new_menu_item: SD_TOOL_BAR_BUTTON
-			--
+			-- Create a menu item
 		do
 			create Result.make
 			if attached shared_singleton.layout_constructor_list.first as l_layout_constructor then
@@ -86,7 +88,7 @@ feature -- Command
 feature {NONE}	-- Implementation
 
 	open_project_file (a_eiffel_ribbon_file: STRING)
-			--
+			-- Open project file
 		require
 			not_void: a_eiffel_ribbon_file /= Void
 		local
@@ -127,7 +129,7 @@ feature {NONE}	-- Implementation
 		end
 
 	load_project_info
-			--
+			-- Load project info
 		local
 			l_sed: SED_MEDIUM_READER_WRITER
 			l_sed_utility: SED_STORABLE_FACILITIES
@@ -165,6 +167,6 @@ feature {NONE}	-- Implementation
 		end
 
 	is_open_file_successed: BOOLEAN
-			--
+			-- Is open project successed?
 
 end

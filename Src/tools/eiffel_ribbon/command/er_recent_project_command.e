@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {ER_RECENT_PROJECT_COMMAND}."
+	description: "[
+					Command for recent items
+																			]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -24,13 +26,13 @@ feature {NONE} -- Initlization
 feature -- Command
 
 	execute
-			--
+			-- <Precursor>
 		do
 			-- Nothing to do
 		end
 
 	restore_recent_item_menu
-			--
+			-- Restore recent item menu
 		local
 			l_menu_item: EV_MENU_ITEM
 			l_projects: ARRAYED_LIST [STRING]
@@ -52,7 +54,7 @@ feature -- Command
 		end
 
 	set_main_window (a_main_window: ER_MAIN_WINDOW)
-			--
+			-- Set `main_window' with `a_main_window'
 		do
 			main_window := a_main_window
 		end
@@ -60,9 +62,9 @@ feature -- Command
 feature {NONE}	-- Implementation
 
 	main_window: detachable ER_MAIN_WINDOW
-			--
+			-- Tool's main window
 
 	shared_singleton: ER_SHARED_SINGLETON
-			--
+			-- Shared singleton
 
 end

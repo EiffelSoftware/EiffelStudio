@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {ER_NEW_PROJECT_COMMAND}."
+	description: "[
+					Command to create a new ribbon project
+																		]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -64,7 +66,7 @@ feature -- Command
 		end
 
 	set_main_window (a_main_window: ER_MAIN_WINDOW)
-			--
+			-- Set `main_window' with `a_main_window'
 		do
 			main_window := a_main_window
 		end
@@ -72,9 +74,9 @@ feature -- Command
 feature {NONE} -- Implementation
 
 	main_window: detachable ER_MAIN_WINDOW
-			--
+			-- Tool's main window
 
 	shared_singleton: ER_SHARED_SINGLETON
-			--
+			-- Shared singleton
 
 end

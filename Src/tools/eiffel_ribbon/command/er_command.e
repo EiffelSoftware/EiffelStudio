@@ -12,7 +12,7 @@ deferred class
 feature {NONE} -- Initialization
 
 	init
-			--
+			-- Initialization
 		do
 			create menu_items.make (1)
 			create tool_bar_items.make (1)
@@ -21,12 +21,12 @@ feature {NONE} -- Initialization
 feature -- Command
 
 	execute
-			--
+			-- Execute current command
 		deferred
 		end
 
 	disable
-			--
+			-- Disable current command
 		do
 			from
 				menu_items.start
@@ -48,7 +48,7 @@ feature -- Command
 		end
 
 	enable
-			--
+			-- Enable current command
 		do
 			from
 				menu_items.start

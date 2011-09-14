@@ -1,5 +1,8 @@
 note
-	description: "Summary description for {ER_CONSTANTS}."
+	description: "[
+					Microsoft Ribbon makrup XML constants
+
+																					]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -117,13 +120,10 @@ feature -- ALl types under group
 feature -- Types under command node
 
 	command_small_images: STRING = "Command.SmallImages"
-			--
 
 	command_large_images: STRING = "Command.LargeImages"
-			--
 
 	command_label_title: STRING = "Command.LabelTitle"
-			--
 
 	string: STRING = "String"
 
@@ -131,8 +131,8 @@ feature -- Types under command node
 
 feature -- Contract support
 
-	valid (a_string: STRING): BOOLEAN
-			--
+	is_valid (a_string: STRING): BOOLEAN
+			-- Is `a_string' valid?
 		do
 			if attached a_string as l_string then
 				Result := l_string.same_string (application) or else
@@ -181,7 +181,7 @@ feature -- Contract support
 		end
 
 	is_valid_ribbon_item (a_string: STRING): BOOLEAN
-			--
+			-- Is `a_string' valid ribbon item, such as button, checkbox or spinner etc
 		do
 			if attached a_string as l_string then
 				Result := l_string.same_string (button) or else

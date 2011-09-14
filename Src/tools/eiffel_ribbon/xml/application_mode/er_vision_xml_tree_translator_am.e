@@ -1,6 +1,7 @@
 note
 	description: "[
-					Summary description for {ER_VISION_XML_TREE_TRANSLATOR}.
+					Vision2 tree to Ribbon markup XML tree translator
+					when using application modes
 
 																					]"
 	date: "$Date$"
@@ -59,7 +60,7 @@ feature -- Command
 		end
 
 	save_xml_nodes_for_all_layout_constructors
-			--
+			-- Save XML nodes for all layout constructors
 		local
 			l_shared: ER_SHARED_SINGLETON
 			l_list: ARRAYED_LIST [ER_LAYOUT_CONSTRUCTOR]
@@ -83,7 +84,7 @@ feature -- Command
 feature -- Tree loading
 
 	command_tree_node_with_command_name (a_command_name: STRING; a_app_commands: EV_TREE_NODE): detachable EV_TREE_NODE
-			--
+			-- Find out command tree node which name is `a_command_name'
 		require
 			not_void: a_command_name /= Void
 		do
@@ -110,7 +111,7 @@ feature -- Tree loading
 feature {NONE} -- Tree saving
 
 	save_size_definitions
-			--
+			-- Save size definitions
 		local
 			l_ribbon_xml: detachable XML_ELEMENT
 			l_shared: ER_SHARED_SINGLETON
@@ -324,7 +325,7 @@ feature {NONE} -- Tree saving
 		end
 
 	save_context_maps (a_parent: XML_ELEMENT; a_data_list: ARRAYED_LIST [ER_TREE_NODE_DATA])
-			--
+			-- Save context maps
 		require
 			not_void: a_parent /= Void
 			not_void: a_data_list /= Void
@@ -366,7 +367,7 @@ feature {NONE} -- Tree saving
 		end
 
 	save_context_menu_or_mini_toolbar_node (a_context_menu_or_mini_toolbar: EV_TREE_NODE; a_parent: XML_ELEMENT; a_data_list: ARRAYED_LIST [ER_TREE_NODE_DATA])
-			--
+			-- Save context menu or mini toolbar node
 		require
 			not_void: a_context_menu_or_mini_toolbar /= Void
 			valid: a_context_menu_or_mini_toolbar.text.same_string (xml_constants.context_menu) or else
@@ -393,7 +394,6 @@ feature {NONE} -- Tree saving
 			else
 				check not_possible: False end
 			end
-
 
 			from
 				a_context_menu_or_mini_toolbar.start
@@ -446,7 +446,7 @@ feature {NONE} -- Tree saving
 		end
 
 	is_first_ribbon_application_menu: BOOLEAN
-			--
+			-- Is first ribbon application menu?
 		local
 			l_application_menu: detachable XML_ELEMENT
 		do
@@ -455,7 +455,7 @@ feature {NONE} -- Tree saving
 		end
 
 	add_xml_recent_items_node (a_tree_item: EV_TREE_ITEM)
-			--
+			-- Add XML recent items node
 		require
 			not_void: a_tree_item /= Void
 			valid: a_tree_item.text.same_string ({ER_XML_CONSTANTS}.ribbon_application_menu)
@@ -489,7 +489,7 @@ feature {NONE} -- Tree saving
 		end
 
 	add_xml_menu_group_node (a_tree_item: EV_TREE_ITEM; a_parent_xml: detachable XML_ELEMENT)
-			--
+			-- Add XML menu group node
 		require
 			not_void: a_tree_item /= Void
 			valid: a_tree_item.text.same_string (xml_constants.menu_group)
@@ -534,7 +534,7 @@ feature {NONE} -- Tree saving
 		end
 
 	add_xml_drop_down_button_node (a_group_node: XML_ELEMENT; a_button_tree_node: EV_TREE_NODE)
-			--
+			-- Add dropdown button XML nodes
 		require
 			not_void: a_group_node /= Void
 			valid: a_group_node.name.same_string (xml_constants.menu_group)
@@ -578,7 +578,7 @@ feature {NONE} -- Tree saving
 		end
 
 	add_xml_tab_node (a_tree_item: EV_TREE_ITEM)
-			--
+			-- Add tab XML node
 		require
 			not_void: a_tree_item /= Void
 			valid: a_tree_item.text.same_string (xml_constants.tab)
@@ -618,7 +618,7 @@ feature {NONE} -- Tree saving
 		end
 
 	add_xml_group_node (a_parent_tab: XML_ELEMENT; a_group_tree_node: EV_TREE_NODE)
-			--
+			-- Add group XML node
 		require
 			not_void: a_parent_tab /= Void
 			valid: a_parent_tab.name.same_string (xml_constants.tab)
@@ -688,7 +688,7 @@ feature {NONE} -- Tree saving
 		end
 
 	add_xml_button_node (a_group_node: XML_ELEMENT; a_button_tree_node: EV_TREE_NODE; a_is_menu_button: BOOLEAN)
-			--
+			-- Add button XML node
 		require
 			not_void: a_group_node /= Void
 			valid: a_group_node.name.same_string (xml_constants.group) or else
@@ -726,7 +726,7 @@ feature {NONE} -- Tree saving
 		end
 
 	add_xml_toggle_button_node (a_group_node: XML_ELEMENT; a_button_tree_node: EV_TREE_NODE)
-			--
+			-- Add toggle button XML node
 		require
 			not_void: a_group_node /= Void
 			valid: a_group_node.name.same_string (xml_constants.group)
@@ -755,7 +755,7 @@ feature {NONE} -- Tree saving
 		end
 
 	add_xml_spinner_node (a_group_node: XML_ELEMENT; a_button_tree_node: EV_TREE_NODE)
-			--
+			-- Add spinner XML node
 		require
 			not_void: a_group_node /= Void
 			valid: a_group_node.name.same_string (xml_constants.group)
@@ -784,7 +784,7 @@ feature {NONE} -- Tree saving
 		end
 
 	add_xml_combo_box_node (a_group_node: XML_ELEMENT; a_button_tree_node: EV_TREE_NODE)
-			--
+			-- Add combo box XML node
 		require
 			not_void: a_group_node /= Void
 			valid: a_group_node.name.same_string (xml_constants.group)
@@ -813,7 +813,7 @@ feature {NONE} -- Tree saving
 		end
 
 	add_xml_in_ribbon_gallery_node (a_group_node: XML_ELEMENT; a_button_tree_node: EV_TREE_NODE)
-			--
+			-- Add in-ribbon gallery XML node
 		require
 			not_void: a_group_node /= Void
 			valid: a_group_node.name.same_string (xml_constants.group)
@@ -847,7 +847,7 @@ feature {NONE} -- Tree saving
 		end
 
 	add_xml_menu_layout_for_in_ribbon_gallery (a_gallery_node: XML_ELEMENT; a_data: ER_TREE_NODE_IN_RIBBON_GALLERY_DATA)
-			--
+			-- Add meuu layout XML nodes for in-ribbon gallery
 		require
 			not_void: a_gallery_node /= Void
 			valid: a_gallery_node.name.same_string (xml_constants.in_ribbon_gallery)
@@ -861,7 +861,7 @@ feature {NONE} -- Tree saving
 		end
 
 	add_xml_split_button_gallery_node (a_group_node: XML_ELEMENT; a_button_tree_node: EV_TREE_NODE)
-			--
+			-- Add split button gallery XML node
 		require
 			not_void: a_group_node /= Void
 			valid: a_group_node.name.same_string (xml_constants.group)
@@ -895,7 +895,7 @@ feature {NONE} -- Tree saving
 		end
 
 	add_xml_menu_layout_for_split_button_gallery (a_gallery_node: XML_ELEMENT; a_data: ER_TREE_NODE_SPLIT_BUTTON_GALLERY_DATA)
-			--
+			-- Add menu layout XML nodes for split button gallery
 		require
 			not_void: a_gallery_node /= Void
 			valid: a_gallery_node.name.same_string (xml_constants.split_button_gallery)
@@ -918,7 +918,7 @@ feature {NONE} -- Tree saving
 		end
 
 	add_xml_font_control_node (a_group_node: XML_ELEMENT; a_button_tree_node: EV_TREE_NODE)
-			--
+			-- Add Font Control XML nodes
 		require
 			not_void: a_group_node /= Void
 			valid: a_group_node.name.same_string (xml_constants.group)
@@ -950,7 +950,7 @@ feature {NONE} -- Tree saving
 		end
 
 	add_xml_drop_down_color_picker_node (a_group_node: XML_ELEMENT; a_button_tree_node: EV_TREE_NODE)
-			--
+			-- Add dropdown color picker XML nodes
 		require
 			not_void: a_group_node /= Void
 			valid: a_group_node.name.same_string (xml_constants.group)
@@ -982,7 +982,7 @@ feature {NONE} -- Tree saving
 		end
 
 	add_xml_drop_down_gallery_node (a_group_node: XML_ELEMENT; a_button_tree_node: EV_TREE_NODE)
-			--
+			-- Add dropdown gallery XML nodes
 		require
 			not_void: a_group_node /= Void
 			valid: a_group_node.name.same_string (xml_constants.group)
@@ -1016,7 +1016,7 @@ feature {NONE} -- Tree saving
 		end
 
 	add_xml_menu_layout_for_drop_down_gallery (a_gallery_node: XML_ELEMENT; a_data: ER_TREE_NODE_DROP_DOWN_GALLERY_DATA)
-			--
+			-- Add menu layout XML nodes for dropdown gallery
 		require
 			not_void: a_gallery_node /= Void
 			valid: a_gallery_node.name.same_string (xml_constants.drop_down_gallery)
@@ -1039,7 +1039,7 @@ feature {NONE} -- Tree saving
 		end
 
 	add_xml_split_button_node (a_group_node: XML_ELEMENT; a_button_tree_node: EV_TREE_NODE; a_is_menu_button: BOOLEAN)
-			--
+			-- Add split button XML nodes
 		require
 			not_void: a_group_node /= Void
 			valid: a_group_node.name.same_string (xml_constants.group) or else a_group_node.name.same_string (xml_constants.menu_group)
@@ -1079,7 +1079,7 @@ feature {NONE} -- Tree saving
 		end
 
 	add_xml_checkbox_node (a_group_node: XML_ELEMENT; a_button_tree_node: EV_TREE_NODE)
-			--
+			-- Add checkbox XML nodes
 		require
 			not_void: a_group_node /= Void
 			valid: a_group_node.name.same_string (xml_constants.group)
@@ -1108,7 +1108,7 @@ feature {NONE} -- Tree saving
 		end
 
 	add_xml_command_node (a_tree_node_data: ER_TREE_NODE_DATA)
-			--
+			-- Add command XML nodes
 		require
 			not_void: a_tree_node_data /= Void
 		local
@@ -1131,13 +1131,13 @@ feature {NONE} -- Tree saving
 feature -- Query
 
 	xml_constants: ER_XML_CONSTANTS
-			--
+			-- XML constants
 
 	xml_document: XML_DOCUMENT
-			--
+			-- XML document
 
 	name_space: XML_NAMESPACE
-			--
+			-- Default XML namespace
 
  	application_mode: INTEGER
  			-- 0 means first layout constructor
@@ -1211,7 +1211,7 @@ feature {NONE} -- implementation
 		end
 
 	recursive_tree_node_by_name (a_tree_node_name: STRING; a_tree_node: EV_TREE_NODE): detachable EV_TREE_NODE
-			--
+			-- Find a tree node which name is `a_tree_node_name' recursively
 		do
 			if attached {EV_TREE_ITEM} a_tree_node as l_node then
 				if l_node.text.same_string (a_tree_node_name) then
@@ -1236,7 +1236,7 @@ feature {NONE} -- implementation
 			-- Find a xml node by its node name
 		require
 			not_void: a_xml_node_name /= Void
-			valid: xml_constants.valid (a_xml_node_name)
+			valid: xml_constants.is_valid (a_xml_node_name)
 		do
 			if attached {XML_ELEMENT} recursive_xml_node_by_name (a_xml_node_name, root_xml_element) as l_result then
 				Result := l_result
@@ -1247,7 +1247,7 @@ feature {NONE} -- implementation
 			-- Find a xml node by its node name
 		require
 			not_void: a_xml_node_name /= Void
-			valid: xml_constants.valid (a_xml_node_name)
+			valid: xml_constants.is_valid (a_xml_node_name)
 			not_void: a_xml_element /= Void
 		do
 			if attached {XML_ELEMENT} a_xml_element as l_element then
@@ -1272,6 +1272,6 @@ feature {NONE} -- implementation
 		end
 
 	root_xml_element: XML_ELEMENT
-			--
+			-- Root XML element
 
 end

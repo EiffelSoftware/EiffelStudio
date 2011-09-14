@@ -1,5 +1,8 @@
 note
-	description: "Summary description for {ER_XML_TREE_MANAGER}."
+	description: "[
+					XML tree manager when using application modes
+
+																					]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -33,5 +36,5 @@ feature -- Command
 		end
 
 	xml_root: detachable ER_XML_TREE_ELEMENT
-			--
+			-- XML root element
 end

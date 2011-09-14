@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {ER_FIGURE_ROW}."
+	description: "[
+					Collect figures in one row
+																		]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -54,7 +56,7 @@ feature -- Compare
 		end
 
 	first_item: detachable ER_FIGURE
-			--
+			-- First item if exists
 		do
 			if count >= 1 then
 				Result := first

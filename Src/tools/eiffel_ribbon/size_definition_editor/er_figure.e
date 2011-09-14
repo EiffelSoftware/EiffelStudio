@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {ER_FIGURE}."
+	description: "[
+					Ribbon figure used by Size Definition Editor tool
+																			]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -10,7 +12,6 @@ inherit
 	COMPARABLE
 		undefine
 			is_equal
---			copy
 		end
 
 create
@@ -31,7 +32,7 @@ feature -- Command
 			-- FIXME: use Object id instead?
 
 	set_highlight (a_bool: BOOLEAN)
-			--
+			-- Set `is_highlight' with `a_bool'
 		do
 			is_highlight := a_bool
 			update_pixmap
@@ -40,7 +41,7 @@ feature -- Command
 		end
 
 	set_is_valid_position (a_bool: BOOLEAN)
-			--
+			-- Set `is_valid_position' with `a_bool'
 		do
 			is_valid_position := a_bool
 			update_pixmap
@@ -49,7 +50,7 @@ feature -- Command
 		end
 
 	set_x (a_x: INTEGER)
-			--
+			-- Set `x' with `a_x'
 		do
 			x := a_x
 		ensure
@@ -57,7 +58,7 @@ feature -- Command
 		end
 
 	set_y (a_y: INTEGER)
-			--
+			-- Set `y' with `a_y'
 		do
 			y := a_y
 		ensure
@@ -65,7 +66,7 @@ feature -- Command
 		end
 
 	set_label_visible (a_bool: BOOLEAN)
-			--
+			-- Set `is_label_visible' with `a_bool'
 		do
 			is_label_visible := a_bool
 			update_pixmap
@@ -74,7 +75,7 @@ feature -- Command
 		end
 
 	set_is_large_image_size (a_large: BOOLEAN)
-			--
+			-- Set `is_large_image_size' with `a_large'
 		do
 			is_large_image_size := a_large
 			update_pixmap
@@ -88,38 +89,38 @@ feature -- Query
 			-- If figer position valid? eg, it can be used for Size Definition
 
 	pixmap: EV_PIXMAP
-			--
+			-- Pixmap represent current
 
 	is_highlight: BOOLEAN
-			--
+			-- Is current highlighted?
 
 	x: INTEGER
-			--
+			-- X position
 
 	y: INTEGER
-			--
+			-- Y position
 
 	width: INTEGER
-			--
+			-- Width of current
 		do
 			Result := pixmap.width
 		end
 
 	height: INTEGER
-			--
+			-- Height of current
 		do
 			Result := pixmap.height
 		end
 
 	is_label_visible: BOOLEAN
-			--
+			-- Is text label visible?
 
 	is_large_image_size: BOOLEAN
 			-- True means large
 			-- False means small
 
 	has_point (a_x, a_y: INTEGER): BOOLEAN
-			--
+			-- Does current area contain `a_x' and `a_y' ?
 		do
 			Result := x <= a_x and y <= a_y and a_x <= (x + width) and a_y <= (y + height)
 		end
@@ -143,19 +144,19 @@ feature -- Compare
 feature {NONE} -- Implementation
 
 	constants: ER_MISC_CONSTANTS
-			--
+			-- Constants
 		once
 			create Result
 		end
 
 	update_pixmap
-			--
+			-- Update current's pixmap
 		do
 			pixmap := calculate_pixmap
 		end
 
 	calculate_pixmap: EV_PIXMAP
-			--
+			-- Calculate pixmap base on current statues
 		local
 			l_path: FILE_NAME
 			l_retried: BOOLEAN

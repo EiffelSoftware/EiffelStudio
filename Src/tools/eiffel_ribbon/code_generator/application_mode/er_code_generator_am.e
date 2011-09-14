@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {ER_CODE_GENERATOR}."
+	description: "[
+					Code generator using application modes
+																					]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -23,7 +25,8 @@ feature {NONE} -- Initialization
 feature -- Command
 
 	generate_all_codes
-			--
+			-- Generating all codes in target project's folder
+			-- Including saving project info
 		do
 			group_counter := 0
 			button_counter := 0
@@ -46,7 +49,7 @@ feature -- Command
 feature -- Query
 
 	is_uicc_available: BOOLEAN
-			--
+			-- <Precursor>
 		do
 			Result := uicc_manager.check_if_uicc_available
 		end
@@ -288,7 +291,7 @@ feature {ER_CODE_GENERATOR_FOR_APPLICATION_MENU_AM} -- Command
 feature {ER_CODE_GENERATOR_FOR_QAT_AM} -- Command
 
 	increase_button_counter (a_item: INTEGER)
-			--
+			--  <Precursor>
 		do
 			button_counter := button_counter + a_item
 		end
@@ -418,7 +421,7 @@ feature {ER_CODE_GENERATOR_FOR_QAT_AM} -- Command
 feature {NONE} -- Implementation
 
 	ecf_template_file_path: STRING
-			--
+			-- ECF template file path
 		local
 			l_file_name: FILE_NAME
 			l_constants: ER_MISC_CONSTANTS
@@ -430,7 +433,7 @@ feature {NONE} -- Implementation
 		end
 
 	save_project_info
-			--
+			-- Save project info
 		local
 			l_sed: SED_MEDIUM_READER_WRITER
 			l_sed_utility: SED_STORABLE_FACILITIES
@@ -457,7 +460,7 @@ feature {NONE} -- Implementation
 		end
 
 	generate_ecf
-			--
+			-- Generate ECF
 		local
 			l_file, l_dest_file: RAW_FILE
 			l_singleton: ER_SHARED_SINGLETON
@@ -517,7 +520,7 @@ feature {NONE} -- Implementation
 		end
 
 	copy_predefine_classes
-			--
+			-- Copy predefine classes
 		local
 			l_file, l_dest_file: RAW_FILE
 			l_dir: DIRECTORY
@@ -575,7 +578,7 @@ feature {NONE} -- Implementation
 		end
 
 	generate_eiffel_class_for_header_file
-			--
+			-- Generate Eiffel class from C header file
 		local
 			l_translator: ER_H_FILE_TRANSLATOR
 			l_singleton: ER_SHARED_SINGLETON
@@ -598,7 +601,7 @@ feature {NONE} -- Implementation
 		end
 
 	generate_readonly_classes
-			--
+			-- Generate readonly classes
 		do
 			generate_application_class
 			generate_window_classes
@@ -773,7 +776,7 @@ feature {NONE} -- Implementation
 		end
 
 	window_class_application_menu (a_tree: EV_TREE; a_list_index: INTEGER; a_last_string: STRING)
-			--
+			-- Generate application menu related codes for main window class
 		require
 			not_void: a_tree /= Void
 			not_void: a_last_string /= Void
@@ -811,7 +814,7 @@ feature {NONE} -- Implementation
 		end
 
 	first_application_menu_identifer_name: detachable STRING
-			--
+			-- First application menu's identifer name
 		local
 			l_shared: ER_SHARED_SINGLETON
 			l_list: ARRAYED_LIST [ER_LAYOUT_CONSTRUCTOR]
@@ -831,7 +834,7 @@ feature {NONE} -- Implementation
 		end
 
 	window_class_dll_file_name (a_list_index: INTEGER; a_last_string: STRING)
-			--
+			-- Generate ribbon intialization codes for main window class
 		local
 			l_shared: ER_MISC_CONSTANTS
 		do
@@ -842,7 +845,7 @@ feature {NONE} -- Implementation
 		end
 
 	window_contextual_tabs (a_tree: EV_TREE; a_list_index: INTEGER_32; a_last_string: STRING_8)
-			--
+			-- Remove contextual tabs for main window class
 		do
 				-- FIXME: do not support contextual tabs when using Application Modes? since
 				-- contextual tabs do not support application modes.
@@ -852,7 +855,7 @@ feature {NONE} -- Implementation
 		end
 
 	window_class_quick_access_toolbar (a_tree: EV_TREE; a_list_index: INTEGER; a_last_string: STRING)
-			--
+			-- Generate quick access toolbar codes for main window class
 		require
 			not_void: a_tree /= Void
 			not_void: a_last_string /= Void
@@ -900,7 +903,7 @@ feature {NONE} -- Implementation
 		end
 
 	window_class_help_button (a_tree: EV_TREE; a_list_index: INTEGER; a_last_string: STRING)
-			--
+			-- Generate help button codes for main window
 		require
 			not_void: a_tree /= Void
 			not_void: a_last_string /= Void
@@ -981,7 +984,7 @@ feature {NONE} -- Implementation
 		end
 
 	generate_help_button_class
-			--
+			-- Generate help button class
 		local
 			l_file, l_dest_file: RAW_FILE
 			l_constants: ER_MISC_CONSTANTS
@@ -1055,7 +1058,7 @@ feature {NONE} -- Implementation
 		end
 
 	generate_context_popup_class
-			--
+			-- Generate context popup class
 		local
 			l_gen: ER_CODE_GENERATOR_FOR_CONTEXT_POPUP_AM
 			l_tree: EV_TREE
@@ -1088,7 +1091,7 @@ feature {NONE} -- Implementation
 		end
 
 	generate_quick_access_toolbar_class
-			--
+			-- Generate quick access toolbar class
 		local
 			l_qat_gen: ER_CODE_GENERATOR_FOR_QAT_AM
 			l_tree: EV_TREE
@@ -1121,7 +1124,7 @@ feature {NONE} -- Implementation
 		end
 
 	generate_application_menu_classes
-			--
+			-- Generate application menu class
 		local
 			l_tree: EV_TREE
 			l_tree_node: detachable EV_TREE_NODE
@@ -1193,10 +1196,10 @@ feature {NONE} -- Implementation
 		end
 
 	uicc_manager: ER_UICC_MANAGER
-			--
+			-- UICC.exe's manager
 
 	generate_tool_bar_class (a_tabs_root_node: EV_TREE_NODE; a_index: INTEGER)
-			--
+			-- Generate toolbar class
 		require
 			not_void: a_tabs_root_node /= Void
 			valid:  a_tabs_root_node.text.is_equal ({ER_XML_CONSTANTS}.ribbon_tabs)
@@ -1286,7 +1289,6 @@ feature {NONE} -- Implementation
 				end
 			end
 
-
 				-- Generate tab classes
 			from
 				a_tabs_root_node.start
@@ -1301,7 +1303,7 @@ feature {NONE} -- Implementation
 		end
 
 	tab_creation_string (a_tabs_root_node: EV_TREE_NODE): STRING
-			--
+			-- Generate tab creation string
 		require
 			not_void: a_tabs_root_node /= Void
 			valid:  a_tabs_root_node.text.is_equal ({ER_XML_CONSTANTS}.ribbon_tabs)
@@ -1342,7 +1344,7 @@ feature {NONE} -- Implementation
 		end
 
 	tab_registry_string (a_tabs_root_node: EV_TREE_NODE): STRING
-			--
+			-- Generate tab registry string
 		require
 			not_void: a_tabs_root_node /= Void
 			valid:  a_tabs_root_node.text.is_equal ({ER_XML_CONSTANTS}.ribbon_tabs)
@@ -1380,7 +1382,7 @@ feature {NONE} -- Implementation
 		end
 
 	tab_declaration_string (a_tabs_root_node: EV_TREE_NODE): STRING
-			--
+			-- Generate tab declaration string
 		require
 			not_void: a_tabs_root_node /= Void
 			valid:  a_tabs_root_node.text.is_equal ({ER_XML_CONSTANTS}.ribbon_tabs)
@@ -1419,7 +1421,7 @@ feature {NONE} -- Implementation
 		end
 
 	generate_tab_class (a_tab_node: EV_TREE_NODE; a_index: INTEGER)
-			--
+			-- Generate tab class
 		require
 			not_void: a_tab_node /= void
 			valid: a_tab_node.text.is_equal ({ER_XML_CONSTANTS}.tab)
@@ -1557,7 +1559,7 @@ feature {NONE} -- Implementation
 		end
 
 	group_creation_string (a_tab_node: EV_TREE_NODE): STRING
-			--
+			-- Generate group creation string
 		require
 			not_void: a_tab_node /= void
 			valid: a_tab_node.text.is_equal ({ER_XML_CONSTANTS}.tab)
@@ -1602,7 +1604,7 @@ feature {NONE} -- Implementation
 		end
 
 	group_registry_string (a_tab_node: EV_TREE_NODE): STRING
-			--
+			-- Generate group registry string
 		require
 			not_void: a_tab_node /= void
 			valid: a_tab_node.text.is_equal ({ER_XML_CONSTANTS}.tab)
@@ -1638,7 +1640,7 @@ feature {NONE} -- Implementation
 		end
 
 	group_declaration_string (a_tab_node: EV_TREE_NODE): STRING
-			--
+			-- Generate group declaration string
 		require
 			not_void: a_tab_node /= void
 			valid: a_tab_node.text.is_equal ({ER_XML_CONSTANTS}.tab)
@@ -1676,7 +1678,7 @@ feature {NONE} -- Implementation
 		end
 
 	button_creation_string (a_group_node: EV_TREE_NODE): STRING
-			--
+			-- Generate button creation string
 		require
 			not_void: a_group_node /= void
 			valid: a_group_node.text.same_string ({ER_XML_CONSTANTS}.group) or else
@@ -1724,7 +1726,7 @@ feature {NONE} -- Implementation
 		end
 
 	button_registry_string (a_group_node: EV_TREE_NODE): STRING
-			--
+			-- Generate button registry string
 		require
 			not_void: a_group_node /= void
 			valid: a_group_node.text.same_string ({ER_XML_CONSTANTS}.group) or else
@@ -1763,7 +1765,7 @@ feature {NONE} -- Implementation
 		end
 
 	button_declaration_string (a_group_node: EV_TREE_NODE): STRING
-			--
+			-- Generate button declaration string
 		require
 			not_void: a_group_node /= void
 			valid: a_group_node.text.is_equal ({ER_XML_CONSTANTS}.group) or else
@@ -1929,7 +1931,7 @@ feature {NONE} -- Implementation
 		end
 
 	generate_for_split_or_drop_down_button_if_possible (a_item_node: EV_TREE_NODE; a_last_string: STRING)
-			--
+			-- Generate split button or drop down button's codes if possible
 		require
 			not_void: a_item_node /= void
 		local

@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {ER_LAYOUT_CONSTRUCTOR_TREE_MANAGER_AM}."
+	description: "[
+					Layout Contructor's tree manager when using application modes
+																						]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -72,5 +74,5 @@ feature -- Command
 feature {NONE}	-- Implementation
 
 	vision_xml_translator: ER_VISION_XML_TREE_TRANSLATOR_AM
-			--	
+			-- Vision2 tree to Ribbon markup XML tree translator
 end

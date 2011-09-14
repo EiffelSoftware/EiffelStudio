@@ -1,5 +1,8 @@
 note
-	description: "Summary description for {ER_CODE_GENERATOR_FACTORY}."
+	description: "[
+					Code generater and tree manager factory for different generating modes:
+					Application Modes or DLL
+																							]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -9,7 +12,7 @@ class
 feature -- factory method
 
 	code_generator: ER_COMMON_CODE_GENERATOR
-			--
+			-- Code generator factory method
 		local
 			l_misc: ER_MISC_CONSTANTS
 		do
@@ -22,7 +25,7 @@ feature -- factory method
 		end
 
 	tree_manager: ER_LAYOUT_CONSTRUCTOR_TREE_MANAGER
-			--
+			-- Tree manager factory method
 		local
 			l_misc: ER_MISC_CONSTANTS
 		do

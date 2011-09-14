@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {ER_LAYOUT_CONSTRUCTOR_TREE_MANAGER_DLL}."
+	description: "[
+					Layout Contructor's tree manager when using DLL
+																						]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -60,7 +62,7 @@ feature -- Command
 		end
 
 	load_tree (a_ribbon_window_count: INTEGER)
-			--
+			-- <Precursor>
 		local
 			l_file: RAW_FILE
 			l_index: INTEGER
@@ -93,10 +95,10 @@ feature -- Command
 feature {NONE} -- Implementation
 
 	vision_xml_translator: ER_VISION_XML_TREE_TRANSLATOR
-			--
+			-- Vision2 tree to Ribbon markup XML tree translator
 
 	prepare_layout_constructors (a_ribbon_window_count: INTEGER)
-			--
+			-- Prepare Layout Constructor Tools
 		local
 			l_index: INTEGER
 			l_layout_constructor: ER_LAYOUT_CONSTRUCTOR
@@ -124,7 +126,7 @@ feature {NONE} -- Implementation
 		end
 
 	load_tree_imp (a_index: INTEGER)
-			--
+			-- Load XML tree
 		require
 			valid: a_index >= 1
 		local

@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {ER_COMMON_CODE_GENERATOR}."
+	description: "[
+					Code generator's common ancestor
+																						]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -16,7 +18,7 @@ feature -- Command
 feature -- Query
 
 	is_uicc_available: BOOLEAN
-			--
+			-- Is UICC.exe available?
 		deferred
 		end
 
@@ -29,7 +31,7 @@ feature -- Query
 feature {ER_CODE_GENERATOR_FOR_APPLICATION_MENU} -- Command
 
 	generate_group_class (a_group_node: EV_TREE_NODE; a_index: INTEGER; a_file_name, a_imp_file_name: STRING; a_default_name: STRING)
-			--
+			-- Generate ribbon group codes
 		require
 			not_void: a_group_node /= void
 			valid: a_file_name /= void and then not a_file_name.is_empty
@@ -42,12 +44,12 @@ feature {ER_CODE_GENERATOR_FOR_APPLICATION_MENU} -- Command
 feature {ER_CODE_GENERATOR_FOR_QAT} -- Command
 
 	increase_button_counter (a_item: INTEGER)
-			--
+			-- Increase `button_counter'
 		deferred
 		end
 
 	generate_item_class (a_item_node: EV_TREE_NODE; a_index: INTEGER; a_gen_data: ER_CODE_GENERATOR_INFO)
-			--
+			-- Generate ribbon item codes
 		require
 			not_void: a_item_node /= void
 			valid: ((create {ER_XML_CONSTANTS}).is_valid_ribbon_item (a_item_node.text))

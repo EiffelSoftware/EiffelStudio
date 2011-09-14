@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {ER_CODE_GENERATOR_FOR_APPLICATION_MENU}."
+	description: "[
+					Code generator for application menu when using application modes
+																						]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -9,7 +11,7 @@ class
 feature -- Query
 
 	generate_application_menu_class (a_applitcation_menu_node: EV_TREE_NODE; a_index: INTEGER)
-			--
+			-- Generate application menu class
 		require
 			not_void: a_applitcation_menu_node /= Void
 			valid:  a_applitcation_menu_node.text.same_string ({ER_XML_CONSTANTS}.ribbon_application_menu)
@@ -106,7 +108,7 @@ feature -- Query
 		end
 
 	menu_group_creation_string (a_tabs_root_note: EV_TREE_NODE): STRING
-			--
+			-- Generate menu grou creation codes
 		require
 			not_void: a_tabs_root_note /= Void
 			valid: a_tabs_root_note.text.same_string ({ER_XML_CONSTANTS}.ribbon_application_menu) or else
@@ -149,7 +151,7 @@ feature -- Query
 		end
 
 	menu_group_registry_string (a_tabs_root_note: EV_TREE_NODE): STRING
-			--
+			-- Generate menu group registry codes
 		require
 			not_void: a_tabs_root_note /= Void
 			valid: a_tabs_root_note.text.same_string ({ER_XML_CONSTANTS}.ribbon_application_menu) or else
@@ -189,7 +191,7 @@ feature -- Query
 		end
 
 	menu_group_declaration_string (a_tabs_root_note: EV_TREE_NODE): STRING
-			--
+			-- Generate menu group declaration codes
 		require
 			not_void: a_tabs_root_note /= Void
 			valid: a_tabs_root_note.text.same_string ({ER_XML_CONSTANTS}.ribbon_application_menu) or else
@@ -232,7 +234,7 @@ feature -- Query
 feature {ER_CODE_GENERATOR_FOR_CONTEXT_POPUP_AM} -- Menu group generating
 
 	generate_menu_group_class (a_group_node: EV_TREE_NODE; a_index: INTEGER_32)
-			--
+			-- Generate menu group class
 		local
 			l_code_generator: ER_CODE_GENERATOR_AM
 		do

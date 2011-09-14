@@ -236,7 +236,10 @@ feature -- Comparison
 	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
-			Result := same_as (other)
+				-- Do not compare `has_attached_mark' because "like Current" is attached by default.
+			Result :=
+				other.has_detachable_mark = has_detachable_mark and then
+				other.has_separate_mark = has_separate_mark
 		end
 
 feature -- Output

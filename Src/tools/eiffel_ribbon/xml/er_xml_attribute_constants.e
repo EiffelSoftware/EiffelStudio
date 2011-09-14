@@ -1,5 +1,8 @@
 note
-	description: "Summary description for {ER_XML_ATTRIBUTE_CONSTANTS}."
+	description: "[
+					Microsoft Ribbon makrup XML attribute constants
+
+																					]"
 	date: "$Date$"
 	revision: "$Revision$"
 

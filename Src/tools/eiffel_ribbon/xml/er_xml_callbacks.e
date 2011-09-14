@@ -1,5 +1,8 @@
 note
-	description: "Summary description for {ER_XML_CALLBACKS}."
+	description: "[
+					Microsoft Ribbon makrup XML callbacks when loading XML
+
+																					]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -15,7 +18,7 @@ create
 feature {NONE} -- Initialization
 
 	make
-			--
+			-- Creation method
 		do
 			create last_node.make (50)
 			create shared_singleton
@@ -29,15 +32,15 @@ feature {NONE}	-- Implementation
 			-- Last node stack
 
 	shared_singleton: ER_SHARED_SINGLETON
-			--
+			-- Shared singleton
 
 	name_space: XML_NAMESPACE
-			--
+			-- Default name space
 
 feature -- Query
 
 	xml_root: detachable ER_XML_TREE_ELEMENT
-			--
+			-- XML root element
 
 feature -- Document
 
@@ -168,7 +171,7 @@ feature -- Content
 feature {NONE} -- Implementation
 
 	remove_last_node
-			--
+			-- Remove last XML node
 		do
 			if last_node.count >= 1 then
 				last_node.finish
@@ -179,5 +182,5 @@ feature {NONE} -- Implementation
 		end
 
 	constants: ER_XML_CONSTANTS
-			--
+			-- XML constants
 end

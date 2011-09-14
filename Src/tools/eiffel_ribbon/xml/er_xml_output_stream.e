@@ -1,5 +1,8 @@
 note
-	description: "Summary description for {ER_OUTPUT_STREAM}."
+	description: "[
+					Microsoft Ribbon makrup XML callbacks when saving XML
+
+																					]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -40,6 +43,7 @@ feature -- Access
 feature -- Status report
 
 	is_open_write: BOOLEAN = True
+			-- <Precursor>
 
 feature -- Basic operation
 
@@ -52,7 +56,7 @@ feature -- Basic operation
 		end
 
 	close
-			--
+			-- Close file handle
 		do
 			if attached file as l_file then
 				l_file.close
@@ -62,7 +66,7 @@ feature -- Basic operation
 feature -- Output
 
 	put_character (c: CHARACTER)
-			--
+			-- <Precursor>
 		do
 			if attached file as l_file then
 				l_file.put_character (c)
@@ -80,6 +84,6 @@ feature -- Output
 feature {NONE} -- Implementation
 
 	file: detachable RAW_FILE
-			--
+			-- XML file
 
 end

@@ -204,8 +204,10 @@ feature -- Comparison
 			-- Is `other' equivalent to the current object?
 		do
 			Result := is_equivalent_excluding_status (other) and then
-				is_attached = other.is_attached and then
-				has_separate_mark = other.has_separate_mark
+				other.is_attached = is_attached and then
+				other.has_attached_mark = has_attached_mark and then
+				other.has_detachable_mark = has_detachable_mark and then
+				other.has_separate_mark = has_separate_mark
 		end
 
 	is_equivalent_excluding_status (other: FORMAL_A): BOOLEAN

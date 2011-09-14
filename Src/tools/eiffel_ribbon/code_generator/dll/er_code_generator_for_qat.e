@@ -1,6 +1,6 @@
 note
 	description: "[
-					Code generator for Quick Access Toolbar
+					Code generator for Quick Access Toolbar when using DLL
 																						]"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -11,7 +11,7 @@ class
 feature -- Command
 
 	generate_quick_access_toolbar_class (a_qat_root: EV_TREE_ITEM; a_layout_contructor_index: INTEGER)
-			--
+			-- Generate quick access toolbar class
 		require
 			not_void: a_qat_root /= Void
 		local
@@ -107,7 +107,7 @@ feature -- Command
 feature {NONE} -- Implementation
 
 	generate_sub_items (a_qat_root: EV_TREE_ITEM)
-			--
+			-- Generate quick access toolbar's buttons
 		require
 			not_void: a_qat_root /= Void
 		local
@@ -136,7 +136,7 @@ feature {NONE} -- Implementation
 		end
 
 	creation_string (a_tabs_root_note: EV_TREE_NODE): STRING
-			--
+			-- Generate creation codes
 		require
 			not_void: a_tabs_root_note /= Void
 			valid:  a_tabs_root_note.text.is_equal ({ER_XML_CONSTANTS}.ribbon_quick_access_toolbar)
@@ -177,7 +177,7 @@ feature {NONE} -- Implementation
 		end
 
 	registry_string (a_tabs_root_note: EV_TREE_NODE): STRING
-			--
+			-- Generate registry codes
 		require
 			not_void: a_tabs_root_note /= Void
 			valid:  a_tabs_root_note.text.is_equal ({ER_XML_CONSTANTS}.ribbon_quick_access_toolbar)
@@ -215,7 +215,7 @@ feature {NONE} -- Implementation
 		end
 
 	declaration_string (a_tabs_root_note: EV_TREE_NODE): STRING
-			--
+			-- Generate declaration codes
 		require
 			not_void: a_tabs_root_note /= Void
 			valid:  a_tabs_root_note.text.is_equal ({ER_XML_CONSTANTS}.ribbon_quick_access_toolbar)

@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {ER_CODE_GENERATOR_FOR_CONTEXTUAL_TABS}."
+	description: "[
+					Code generator for contextual tabs when using DLL
+																						]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -9,7 +11,7 @@ class
 feature -- Command
 
 	generate_contextual_tabs_class (a_ribbon_contextual_tabs: EV_TREE_NODE)
-			--
+			-- Generate contextual tab codes
 		require
 			not_void: a_ribbon_contextual_tabs /= Void
 			valid: a_ribbon_contextual_tabs.text.same_string ({ER_XML_CONSTANTS}.ribbon_contextual_tabs)
@@ -31,7 +33,7 @@ feature -- Command
 		end
 
 	window_contextual_tabs (a_tree: EV_TREE; a_list_index: INTEGER; a_last_string: STRING)
-			-- For EV_RIBBON_TITLED_WIDNOW_CLASS
+			-- Generate contextual tabs codes For EV_RIBBON_TITLED_WIDNOW_CLASS
 		require
 			not_void: a_tree /= Void
 			not_void: a_last_string /= Void
@@ -85,7 +87,7 @@ feature -- Command
 feature {NONE} -- Implemenation
 
 	generate_contextual_tabs_class_tab_group (a_tab_group: EV_TREE_NODE; a_index: INTEGER)
-			--
+			-- Generate contextual tab's tab group codes
 		require
 			not_void: a_tab_group /= Void
 			valid: a_tab_group.text.same_string ({ER_XML_CONSTANTS}.tab_group)
@@ -230,7 +232,7 @@ feature {NONE} -- Implemenation
 		end
 
 	generate_tab_group_tab_class (a_tab_tree_node: EV_TREE_NODE; a_index: INTEGER)
-			--
+			-- Generate tab group's tab codes
 		local
 			l_helper: ER_CODE_GENERATOR
 		do
@@ -239,7 +241,7 @@ feature {NONE} -- Implemenation
 		end
 
 	tab_creation_string (a_tabs_root_note: EV_TREE_NODE): STRING
-			--
+			-- Generate tab creation codes
 		require
 			not_void: a_tabs_root_note /= Void
 			valid: a_tabs_root_note.text.same_string ({ER_XML_CONSTANTS}.ribbon_application_menu) or else
@@ -283,7 +285,7 @@ feature {NONE} -- Implemenation
 		end
 
 	tab_registry_string (a_tabs_root_note: EV_TREE_NODE): STRING
-			--
+			-- Generate tab registry codes
 		require
 			not_void: a_tabs_root_note /= Void
 			valid: a_tabs_root_note.text.same_string ({ER_XML_CONSTANTS}.ribbon_application_menu) or else
@@ -324,7 +326,7 @@ feature {NONE} -- Implemenation
 		end
 
 	tab_declaration_string (a_tabs_root_note: EV_TREE_NODE): STRING
-			--
+			-- Generate tab declaration codes
 		require
 			not_void: a_tabs_root_note /= Void
 			valid: a_tabs_root_note.text.same_string ({ER_XML_CONSTANTS}.ribbon_application_menu) or else
@@ -368,7 +370,7 @@ feature {NONE} -- Implemenation
 feature {NONE} -- Implementation for main window
 
 	tab_group_creation_string (a_tabs_root_note: EV_TREE_NODE; a_index: INTEGER): STRING
-			--
+			-- Generate tab group creation codes
 		require
 			not_void: a_tabs_root_note /= Void
 			valid: a_tabs_root_note.text.same_string ({ER_XML_CONSTANTS}.tab_group)
@@ -408,7 +410,7 @@ feature {NONE} -- Implementation for main window
 		end
 
 	tab_group_registry_string (a_tabs_root_note: EV_TREE_NODE): STRING
-			--
+			-- Generate tab group registry codes
 		require
 			not_void: a_tabs_root_note /= Void
 			valid: a_tabs_root_note.text.same_string ({ER_XML_CONSTANTS}.tab_group)
@@ -445,7 +447,7 @@ feature {NONE} -- Implementation for main window
 		end
 
 	tab_group_declaration_string (a_tabs_root_note: EV_TREE_NODE; a_index: INTEGER): STRING
-			--
+			-- Generate tab group declaration codes
 		require
 			not_void: a_tabs_root_note /= Void
 			valid: a_tabs_root_note.text.same_string ({ER_XML_CONSTANTS}.tab_group)

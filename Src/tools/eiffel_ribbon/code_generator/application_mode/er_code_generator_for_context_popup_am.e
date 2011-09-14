@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {ER_CODE_GENERATOR_FOR_CONTEXT_POPUP}."
+	description: "[
+					Code generator for context popup when using application modes
+																						]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -9,7 +11,7 @@ class
 feature -- Command
 
 	generate_context_popup_class (a_context_popup_root: EV_TREE_ITEM)
-			--
+			-- Generate context popup class
 		do
 			from
 				a_context_popup_root.start
@@ -51,7 +53,7 @@ feature -- Command
 feature -- For EV_RIBBON_TITLED_WIDNOW_CLASS
 
 	window_context_popups (a_tree: EV_TREE; a_list_index: INTEGER; a_last_string: STRING)
-			--
+			-- Generate context popups codes for main window
 		require
 			not_void: a_tree /= Void
 			not_void: a_last_string /= Void
@@ -111,7 +113,7 @@ feature -- For EV_RIBBON_TITLED_WIDNOW_CLASS
 feature {NONE} -- Implementation
 
 	generate_context_minitoolbar_or_menu_class (a_context_minitoolbar_root: EV_TREE_ITEM; a_index: INTEGER; a_template: STRING)
-			--
+			-- Generate context minitoolbar or menu codes
 		require
 			not_void: a_context_minitoolbar_root /= Void
 			valid: a_context_minitoolbar_root.text.same_string ({ER_XML_CONSTANTS}.mini_toolbar) or else
@@ -212,13 +214,13 @@ feature {NONE} -- Implementation
 feature {NONE} -- Implementation
 
 	helper: ER_CODE_GENERATOR_FOR_APPLICATION_MENU_AM
-			--
+			-- Code generation helper
 		once
 			create Result
 		end
 
 	context_popup_creation_string (a_tabs_root_note: EV_TREE_NODE; a_is_mini_toolbar: BOOLEAN): STRING
-			--
+			-- Generate context popup creation codes
 		require
 			not_void: a_tabs_root_note /= Void
 			valid: a_tabs_root_note.text.same_string ({ER_XML_CONSTANTS}.context_popup_mini_toolbars) or else
@@ -272,7 +274,7 @@ feature {NONE} -- Implementation
 		end
 
 	context_popup_registry_string (a_tabs_root_note: EV_TREE_NODE; a_is_mini_toolbar: BOOLEAN): STRING
-			--
+			-- Generate context popup registry codes
 		require
 			not_void: a_tabs_root_note /= Void
 			valid: a_tabs_root_note.text.same_string ({ER_XML_CONSTANTS}.context_popup_mini_toolbars) or else
@@ -323,7 +325,7 @@ feature {NONE} -- Implementation
 		end
 
 	context_popup_declaration_string (a_tabs_root_note: EV_TREE_NODE; a_is_mini_toolbar: BOOLEAN): STRING
-			--
+			-- Generate context popup declaration codes
 		require
 			not_void: a_tabs_root_note /= Void
 			valid: a_tabs_root_note.text.same_string ({ER_XML_CONSTANTS}.context_popup_mini_toolbars) or else

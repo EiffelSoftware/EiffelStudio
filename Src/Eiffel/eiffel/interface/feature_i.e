@@ -2879,7 +2879,7 @@ end
 				not assigner.arguments.first.actual_type.as_attachment_mark_free.same_as
 					(type.actual_type.as_attachment_mark_free)) or else
 				(not is_stable and then
-				not assigner.arguments.first.actual_type.same_as (type.actual_type))
+				not assigner.arguments.first.actual_type.is_safe_equivalent (type.actual_type))
 			then
 				create {VFAC3} vfac.make (system.current_class, Current)
 			elseif argument_count > 0 then

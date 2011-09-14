@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {ER_SIZE_DEFINITION_WRITER}."
+	description: "[
+					Manager that convert EV_FIGUREs to ribbon markup XML
+																			]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -23,13 +25,13 @@ feature {NONE} -- Initialization
 feature -- Command
 
 	reset
-			--
+			-- Reset XML
 		do
 			create sub_root_element.make (Void, constants.size_definition, name_space)
 		end
 
 	save (a_figures: ARRAYED_LIST [ER_FIGURE]; a_name: STRING)
-			--
+			-- Start converting EV_FIGURE in GUI to ribbon makrup XML
 		require
 			valid: a_name /= Void and then not a_name.is_empty
 		local
@@ -140,7 +142,7 @@ feature -- Combo box handling
 		end
 
 	on_combo_box_select (a_combo_box: EV_COMBO_BOX)
-			--
+			-- Handle combo box select event
 		require
 			not_void: a_combo_box /= Void
 		do
@@ -170,7 +172,7 @@ feature -- Query
 		end
 
 	sub_root_xml_hash_table: HASH_TABLE [XML_ELEMENT, STRING]
-			--
+			-- XML root for different size definitions
 
 	is_empty: BOOLEAN
 			-- If size definition codes not generated?
@@ -184,7 +186,7 @@ feature -- Query
 feature {NONE} -- Figure XML loading to GUI
 
 	load_size_definition (a_group_size_definition: XML_ELEMENT)
-			--
+			-- Load size definition
 			-- FIXME: handle medium and small size definition here
 		require
 			not_void: a_group_size_definition /= Void
@@ -217,7 +219,7 @@ feature {NONE} -- Figure XML loading to GUI
 		end
 
 	load_row (a_row: XML_ELEMENT)
-			--
+			-- Load row
 		require
 			not_void: a_row /= Void
 		local
@@ -268,7 +270,7 @@ feature {NONE} -- Figure XML loading to GUI
 		end
 
 	last_row_first_item: detachable ER_FIGURE
-			--
+			-- First item in last row
 
 	current_row_y: INTEGER
 			-- Current y position
@@ -277,7 +279,7 @@ feature {NONE} -- Figure XML loading to GUI
 			-- Current x position
 
 	right_most_x (a_figures: ARRAYED_LIST [ER_FIGURE]): INTEGER
-			--
+			-- Most right X position in `a_figures'
 		local
 			l_right: INTEGER
 		do
@@ -295,7 +297,7 @@ feature {NONE} -- Figure XML loading to GUI
 		end
 
 	load_control_size_definition (a_size_definition: XML_ELEMENT; a_row_changed: BOOLEAN)
-			--
+			-- Load control (button) size definition
 		require
 			not_void: a_size_definition /= Void
 		local
@@ -357,7 +359,7 @@ feature {NONE} -- Figure implementation
 			-- Current sub root element used for `save'
 
 	add_group_size_definitions (a_rows: LIST [ER_FIGURE_ROW]; a_size: STRING)
-			--
+			-- Save group size definitions
 		require
 			valid: a_size.same_string ({ER_XML_ATTRIBUTE_CONSTANTS}.large) or else
 				a_size.same_string ({ER_XML_ATTRIBUTE_CONSTANTS}.medium) or else
@@ -389,7 +391,7 @@ feature {NONE} -- Figure implementation
 		end
 
 	add_control_size_definitions (a_row: XML_ELEMENT; a_items: ER_FIGURE_ROW)
-			--
+			-- Save button size definitions
 		require
 			valid: a_row.name.same_string ({ER_XML_CONSTANTS}.row)
 			set: figures /= Void
@@ -453,7 +455,7 @@ feature {NONE} -- Figure implementation
 			-- Large buttons' x position that cross three rows
 
 	break_into_rows (a_figures: LIST [ER_FIGURE]; a_record_large_buttons_x: BOOLEAN): ARRAYED_LIST [ER_FIGURE_ROW]
-			--
+			-- Break figures into different rows
 		local
 			l_item: ER_FIGURE_ROW
 			l_is_last_large_image: BOOLEAN
@@ -513,7 +515,7 @@ feature {NONE} -- Figure implementation
 		end
 
 	add_control_name_maps (a_figures: LIST [ER_FIGURE])
-			--
+			-- Add button name mappings
 		require
 			not_already_called: True
 		local
@@ -540,7 +542,7 @@ feature {NONE} -- Figure implementation
 		end
 
 	buttons_on_y (a_y_position: INTEGER; a_figures: ARRAYED_LIST [ER_FIGURE]): SORTED_TWO_WAY_LIST [ER_FIGURE]
-			-- Ordered
+			-- Buttons ordered by y position
 		do
 			from
 				create Result.make
@@ -577,13 +579,13 @@ feature {NONE} -- Implementation
 		end
 
 	name_space: XML_NAMESPACE
-			--
+			-- Default namespace
 		once
 			create Result.make_default
 		end
 
 	constants: ER_XML_CONSTANTS
-			--
+			-- Constants
 		once
 			create Result
 		end

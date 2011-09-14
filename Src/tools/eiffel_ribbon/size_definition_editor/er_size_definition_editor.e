@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 		end
 
 	build_docking_content
-			--
+			-- Build docking library content
 		do
 			create content.make_with_widget (widget, "ER_SIZE_DEFINITION_EDITOR")
 			content.set_long_title ("Size Definition Editor")
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 		end
 
 	build_ui
-			--
+			-- Build GUI
 		local
 			l_vertical_box: EV_VERTICAL_BOX
 			l_hor_box: EV_HORIZONTAL_BOX
@@ -137,7 +137,7 @@ feature {NONE} -- Initialization
 feature -- Command
 
 	attach_to_docking_manager (a_docking_manager: SD_DOCKING_MANAGER)
-			--
+			-- Attach current to `a_docking_manager'
 		require
 			not_void: a_docking_manager /= Void
 		do
@@ -156,59 +156,59 @@ feature -- Command
 feature -- Query
 
 	size_definition_writer: ER_SIZE_DEFINITION_WRITER
-				--
+			-- Size definition writer
 		once
 			create Result.make
 		end
 
 	name_combo_box: EV_COMBO_BOX
-			--
+			-- Combo box that contain size definition name
 
 feature {NONE} -- Implementation
 
 	content: SD_CONTENT
-			--
+			-- Docking content
 
 	widget: EV_HORIZONTAL_BOX
 			-- Main dockig content widget
 
 	drawing_area: EV_DRAWING_AREA
-			--
+			-- Main drawing area
 
 	drawing_area_buffer: EV_PIXMAP
 			-- `drawing_area' buffer
 
 	add_button: EV_BUTTON
-			--
+			-- Add figure button
 
 	remove_button: EV_BUTTON
-			--
+			-- Remove figure button
 
 	group_button: EV_BUTTON
-			--
+			-- Group figures button
 
 	label_visible_checker: EV_CHECK_BUTTON
-			--
+			-- Checker to show/hide button label
 
 	image_size_large_radio: EV_RADIO_BUTTON
-			--
+			-- Radio button to using large size image for button
 
 	image_size_small_radio: EV_RADIO_BUTTON
-			--
+			-- Radio button to using small size image for button
 
 	save_button: EV_BUTTON
-			--
+			-- Save size definition button
 
 	snap_to_lines_checker: EV_CHECK_BUTTON
-			--
+			-- snap to assist lines checker
 
 	auto_group_checker: EV_CHECK_BUTTON
-			--
+			-- auto group buttons checker
 
 feature {NONE} -- GUI implementation
 
 	on_add_button_select
-			--
+			-- Handle add figure event
 		local
 			l_figure: ER_FIGURE
 		do
@@ -219,7 +219,7 @@ feature {NONE} -- GUI implementation
 		end
 
 	all_highlight_figures: ARRAYED_LIST [ER_FIGURE]
-			--
+			-- Query all hilighted figures
 		do
 			from
 				create Result.make (figures.count)
@@ -235,7 +235,7 @@ feature {NONE} -- GUI implementation
 		end
 
 	on_remove_button_select
-			--
+			-- Hanlde remove figure event
 		local
 			l_all_selected: ARRAYED_LIST [ER_FIGURE]
 		do
@@ -261,7 +261,7 @@ feature {NONE} -- GUI implementation
 		end
 
 	on_label_visible_checker_select
-			--
+			-- Handle label visible checker select event
 		do
 			if attached focus_figure as l_figure then
 				l_figure.set_label_visible (label_visible_checker.is_selected)
@@ -271,7 +271,7 @@ feature {NONE} -- GUI implementation
 		end
 
 	on_drawing_area_resize (a_x: INTEGER_32; a_y: INTEGER_32; a_width: INTEGER_32; a_height: INTEGER_32)
-			--
+			-- Handle draw area resize event
 		do
 			if a_width > 0 and a_height > 0 then
 				drawing_area_buffer.set_size (a_width, a_height)
@@ -280,7 +280,7 @@ feature {NONE} -- GUI implementation
 		end
 
 	on_group_buttons_select
-			--
+			-- Handle group buttons event
 		local
 			l_buttons_by_x_position: ARRAYED_LIST [ER_FIGURE]
 			l_first_y, l_last_x: INTEGER
@@ -323,7 +323,7 @@ feature {NONE} -- GUI implementation
 		end
 
 	on_image_size_select
-			--
+			-- Handle selecting button image size event
 		do
 			if attached focus_figure as l_figure then
 				l_figure.set_is_large_image_size (image_size_large_radio.is_selected)
@@ -333,7 +333,7 @@ feature {NONE} -- GUI implementation
 		end
 
 	on_save_button_select
-			--
+			-- Handle saving size definition event
 		do
 			check_for_invalid_buttons
 
@@ -344,7 +344,7 @@ feature {NONE} -- GUI implementation
 		end
 
 	on_name_combo_box_select
-			--
+			-- Handle select a name of size definition event
 		do
 			if attached name_combo_box.selected_item as l_selected_item then
 				size_definition_writer.load (l_selected_item.text)
@@ -357,7 +357,7 @@ feature {NONE} -- GUI implementation
 feature {NONE} -- Figure handling
 
 	ev_figure_by_info (a_info: ER_FIGURE): EV_FIGURE
-			--
+			-- Query a figure by `a_info'
 		local
 			l_result: EV_FIGURE_PICTURE
 		do
@@ -369,13 +369,13 @@ feature {NONE} -- Figure handling
 		end
 
 	is_close_to_assist_line (a_y: INTEGER; a_horizontal_line_y: INTEGER): BOOLEAN
-			--
+			-- Is `a_y' close to `a_horizontal_line_y'?
 		do
 			Result := a_y >= (a_horizontal_line_y - {ER_SIZE_DEFINITION_CONSTANTS}.sensitive_offset) and a_y <= (a_horizontal_line_y + {ER_SIZE_DEFINITION_CONSTANTS}.sensitive_offset)
 		end
 
 	snap_to_assist_line_if_possible
-			--
+			-- Snap to assist line if possible
 		do
 			if snap_to_lines_checker.is_selected then
 				if attached focus_figure as l_figure then
@@ -390,8 +390,8 @@ feature {NONE} -- Figure handling
 			end
 		end
 
-	auto_group_is_possible
-			--
+	auto_group_if_possible
+			-- Auto group buttons if possible
 		local
 			l_found: BOOLEAN
 			l_figure_right: INTEGER
@@ -427,7 +427,7 @@ feature {NONE} -- Figure handling
 		end
 
 	check_for_invalid_buttons
-			--
+			-- Check for invalid buttons
 		do
 			from
 				focus_figure := void
@@ -450,7 +450,7 @@ feature {NONE} -- Figure handling
 		end
 
 	add_assist_lines
-			--
+			-- Add assist lines if possible
 		local
 			l_line: EV_FIGURE_LINE
 		do
@@ -474,7 +474,7 @@ feature {NONE} -- Figure handling
 		end
 
 	update_for_select_moving
-			--
+			-- Update selecting rectangle when moving mouse
 		local
 			l_rect: EV_FIGURE_RECTANGLE
 			l_point_1, l_point_2: EV_RELATIVE_POINT
@@ -488,7 +488,7 @@ feature {NONE} -- Figure handling
 		end
 
 	background_pic: EV_PIXMAP
-			--
+			-- Background pixmap
 		local
 			l_path: FILE_NAME
 			l_retried: BOOLEAN
@@ -526,7 +526,7 @@ feature {NONE} -- Figure handling
 		end
 
 	update_figure_world
-			--
+			-- Update figure world
 		local
 			l_figure: EV_FIGURE
 			l_background: EV_FIGURE_PICTURE
@@ -560,16 +560,13 @@ feature {NONE} -- Figure handling
 		end
 
 	figures: ARRAYED_LIST [ER_FIGURE]
-			--
+			-- All figures
 
 	focus_figure: detachable ER_FIGURE
-			--
-
-	last_x, last_y: INTEGER
-			--
+			-- Current focused figure
 
 	is_pointer_pressed: BOOLEAN
-			--
+			-- Is pointer pressed now?
 
 	offset_x, offset_y: INTEGER
 			-- Recorded by `on_pointer_press'
@@ -577,12 +574,12 @@ feature {NONE} -- Figure handling
 	is_select_moving: BOOLEAN
 			-- If moving selected figure now?
 	select_moving_start_x, select_moving_start_y: INTEGER
-			--
+			-- Just after user pressed pointer button, the X, Y position
 	select_moving_end_x, select_moving_end_y: INTEGER
-			--
+			-- Just after user release pointer button, the X, Y position
 
 	on_pointer_press (a_x: INTEGER_32; a_y: INTEGER_32; a_button: INTEGER_32; a_x_tilt: REAL_64; a_y_tilt: REAL_64; a_pressure: REAL_64; a_screen_x: INTEGER_32; a_screen_y: INTEGER_32)
-			--
+			-- Handle pointer press event
 		local
 			l_found: BOOLEAN
 		do
@@ -636,7 +633,7 @@ feature {NONE} -- Figure handling
 		end
 
 	clear_invalid_figure_states
-			--
+			-- Clear invalid figure statues
 		do
 			from
 				figures.start
@@ -650,7 +647,7 @@ feature {NONE} -- Figure handling
 		end
 
 	set_focus_figure (a_focus_figure: detachable ER_FIGURE)
-			--
+			-- Set focus figure state flag
 		do
 			from
 				figures.start
@@ -670,7 +667,7 @@ feature {NONE} -- Figure handling
 		end
 
 	on_pointer_release (a_x: INTEGER_32; a_y: INTEGER_32; a_button: INTEGER_32; a_x_tilt: REAL_64; a_y_tilt: REAL_64; a_pressure: REAL_64; a_screen_x: INTEGER_32; a_screen_y: INTEGER_32)
-			--
+			-- Handle pointer release event
 		do
 			is_pointer_pressed := False
 			if is_select_moving then
@@ -685,7 +682,7 @@ feature {NONE} -- Figure handling
 		end
 
 	calculate_selected_figures
-			--
+			-- Calculate selected figures
 		local
 			l_item: ER_FIGURE
 			l_rect_item: EV_RECTANGLE
@@ -709,7 +706,7 @@ feature {NONE} -- Figure handling
 		end
 
 	on_pointer_motion (a_x: INTEGER_32; a_y: INTEGER_32; a_x_tilt: REAL_64; a_y_tilt: REAL_64; a_pressure: REAL_64; a_screen_x: INTEGER_32; a_screen_y: INTEGER_32)
-			--
+			-- Handle pointer motion event
 		do
 			if attached focus_figure as l_figure and then is_pointer_pressed then
 				l_figure.set_x (a_x - offset_x)
@@ -717,7 +714,7 @@ feature {NONE} -- Figure handling
 
 				snap_to_assist_line_if_possible
 
-				auto_group_is_possible
+				auto_group_if_possible
 
 				update_figure_world
 			elseif is_select_moving then
@@ -732,13 +729,13 @@ feature {NONE} -- Figure handling
 feature {NONE} -- Implementation
 
 	model_world: EV_FIGURE_WORLD
-			--
+			-- Figure world
 
 	projector: EV_DRAWING_AREA_PROJECTOR
-		-- Projector used for `world'
+			-- Projector used for `world'
 
 	constants: ER_MISC_CONSTANTS
-			--
+			-- Constants
 		once
 			create Result
 		end

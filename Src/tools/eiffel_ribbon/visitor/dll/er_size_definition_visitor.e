@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {ER_SIZE_DEFINITION_VISITOR}."
+	description: "[
+					Size definition vistor when using DLL
+																				]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -11,7 +13,6 @@ inherit
 		redefine
 			visit_size_definitions
 		end
-
 
 feature -- Command
 

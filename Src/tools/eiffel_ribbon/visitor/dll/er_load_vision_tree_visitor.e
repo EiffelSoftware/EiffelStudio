@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {ER_LOAD_VISION_TREE_VISITOR}."
+	description: "[
+					Vision2 tree loader vistor when using DLL
+																				]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -13,7 +15,7 @@ inherit
 			visit_ribbon_application_menu
 		end
 
-feature --
+feature -- Command
 
 	visit_ribbon_tabs (a_ribbon_tabs: ER_XML_TREE_ELEMENT; a_layout_constructor_index: INTEGER)
 			-- <Precursor>
@@ -61,7 +63,7 @@ feature --
 feature {ER_VISITOR} -- Implementation
 
 	create_vision_tree_recursive (a_parent: EV_TREE_NODE_LIST; a_ribbon_tab_item: XML_NODE)
-			--
+			-- Create Vision2 tree recursively
 		local
 			l_new_node: EV_TREE_ITEM
 		do

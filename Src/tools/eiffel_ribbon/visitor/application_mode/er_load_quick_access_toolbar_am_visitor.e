@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {ER_LOAD_QUICK_ACCESS_TOOLBAR_VISITOR}."
+	description: "[
+					Quick Access Toolbar loader vistor when using application mode
+																					]"
 	date: "$Date$"
 	revision: "$Revision$"
 

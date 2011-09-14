@@ -26,7 +26,7 @@ feature -- Factory methods
 feature {NONE} -- Implementation
 
 	visitors_for_application_modes: ARRAYED_LIST [ER_VISITOR]
-			--
+			-- All visitors when using applicaiton mode
 		local
 			l_vision2_visitor: ER_LOAD_VISION_TREE_AM_VISITOR
 			l_command_updater: ER_UPDATE_COMMAND_AM_VISITOR
@@ -73,7 +73,7 @@ feature {NONE} -- Implementation
 		end
 
 	visitors_for_dll: ARRAYED_LIST [ER_VISITOR]
-			--
+			-- All visitors when using DLL
 		local
 			l_vision2_visitor: ER_LOAD_VISION_TREE_VISITOR
 			l_command_updater: ER_UPDATE_COMMAND_VISITOR

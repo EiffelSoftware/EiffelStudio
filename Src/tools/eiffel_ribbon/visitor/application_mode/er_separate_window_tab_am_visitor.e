@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {ER_SEPARATE_WINDOW_TAB_VISITOR}."
+	description: "[
+					Different window tab vistor when using application mode
+																				]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -22,13 +24,12 @@ feature {NONE} -- Initialization
 			-- Creation method
 		do
 			create application_modes.make
-
 		end
 
 feature -- Command
 
 	visit_ribbon_tabs (a_ribbon_tabs: ER_XML_TREE_ELEMENT; a_layout_constructor_index: INTEGER)
-			--
+			-- <Precursor>
 		local
 			l_root_items: ARRAYED_LIST [EV_TREE_ITEM]
 			l_ribbon_tabs: ARRAYED_LIST [EV_TREE_NODE]
@@ -46,7 +47,7 @@ feature -- Command
 		end
 
 	visit_ribbon_application_menu (a_ribbon_application_menu: ER_XML_TREE_ELEMENT; a_layout_constructor_index: INTEGER)
-			--
+			-- <Precursor>
 		local
 			l_ribbon_menu_groups: ARRAYED_LIST [EV_TREE_NODE]
 			l_one_group: EV_TREE_NODE
@@ -83,7 +84,8 @@ feature -- Command
 feature {NONE} -- Implementation
 
 	move_menu_group_to_other_window (a_menu_group: EV_TREE_NODE; a_target_application_mode: INTEGER)
-			--
+			-- Move menu group to other window
+			-- This featre only make sense when using application mode
 		require
 			only_for_other_window: a_target_application_mode /= 0
 		local
@@ -116,7 +118,7 @@ feature {NONE} -- Implementation
 		end
 
 	separate_different_ribbon_tabs (a_root_ribbon_tabs: ARRAYED_LIST [EV_TREE_ITEM]; a_ribbon_tabs: EV_TREE_NODE)
-			--
+			-- Separate different ribbons to differnt layout constructors
 		local
 			l_ribbon_item: EV_TREE_NODE
 			l_search_result: INTEGER
@@ -178,7 +180,6 @@ feature {NONE} -- Implementation
 						end
 						l_group.forth
 					end
-
 				end
 
 				a_ribbon_tabs.forth
@@ -186,10 +187,10 @@ feature {NONE} -- Implementation
 		end
 
 	application_modes: SORTED_TWO_WAY_LIST [INTEGER]
-			--
+			-- All application modes
 
 	prepare_root_nodes: ARRAYED_LIST [EV_TREE_ITEM]
-			--
+			-- Prepare root tree nodes for different layout constructors
 		local
 			l_ribbon_tabs: detachable EV_TREE_ITEM
 		do
@@ -207,7 +208,7 @@ feature {NONE} -- Implementation
 		end
 
 	build_layout_constructors (a_root_ribbon_tabs: ARRAYED_LIST [EV_TREE_NODE])
-			--
+			-- Preapre new layout constructors for different ribbons
 		require
 			not_void: a_root_ribbon_tabs /= Void
 		local
@@ -245,7 +246,7 @@ feature {NONE} -- Implementation
 		end
 
 	record_application_menu: detachable EV_TREE_NODE
-			--
+			-- Record aplicaiton menu
 		local
 			l_layout_constructor: ER_LAYOUT_CONSTRUCTOR
 		do
@@ -262,7 +263,7 @@ feature {NONE} -- Implementation
 		end
 
 	separate_application_menu (a_application_menu: detachable EV_TREE_NODE)
-			--
+			-- Separate application menus to differnt layout constructors
 		local
 			l_layout_constructor: ER_LAYOUT_CONSTRUCTOR
 		do

@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {ER_LOAD_QUICK_ACCESS_TOOLBAR_VISITOR}."
+	description: "[
+					Quick Access Toolbar vistor when using DLL
+																				]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -22,7 +24,6 @@ feature -- Command
 			l_helper: ER_LOAD_VISION_TREE_VISITOR
 		do
 			if attached shared.layout_constructor_list.i_th (a_layout_constructor_index) as l_layout_constructor then
-				-- FIXME: multi-window support? But.... only 32 application modes, we have to use application modes to show/hide group/tab also...
 
 				create l_data.make
 				l_tree_item := l_layout_constructor.tree_item_factory_method (constants.ribbon_quick_access_toolbar)

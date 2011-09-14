@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {ER_UPDATE_CONTEXT_POPUPS_VISITOR}."
+	description: "[
+					Context popup vistor when using DLL
+																				]"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {ER_UPDATE_COMMAND_VISITOR}."
+	description: "[
+					Update command vistor when using application mode
+																				]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -83,7 +85,7 @@ feature {NONE} -- Implementation
 		end
 
 	atrribute: ER_XML_ATTRIBUTE_CONSTANTS
-			--
+			-- XML attribute constants
 		once
 			create Result
 		end

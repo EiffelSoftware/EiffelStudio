@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {ER_UPDATE_CONTEXT_POPUPS_VISITOR}."
+	description: "[
+					Update context popup vistor when using application mode
+																				]"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {ER_SPLIT_BUTTON_GALLERY_INFO_VISITOR}."
+	description: "[
+					Split button gallery vistor when using application mode
+																				]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -15,13 +17,13 @@ inherit
 feature -- Command
 
 	visit_ribbon_tabs (a_ribbon_tabs: ER_XML_TREE_ELEMENT; a_layout_constructor_index: INTEGER)
-				--
+			-- <Precursor>
 		do
 			visit_split_button_gallery_recursive (a_ribbon_tabs)
 		end
 
 	visit_split_button_gallery_recursive (a_node: XML_ELEMENT)
-			--
+			-- <Precursor>
 		local
 			l_cmd_id: STRING
 			l_vision_nodes: ARRAYED_LIST [EV_TREE_NODE]
@@ -70,7 +72,7 @@ feature -- Command
 		end
 
 	fill_data_with_split_button_gallery_sub_node (a_data: ER_TREE_NODE_SPLIT_BUTTON_GALLERY_DATA; a_drop_down_gallery_menu_layout: ER_XML_TREE_ELEMENT)
-			--
+			-- Filling data with info from split button gallery's sub node
 		require
 			not_void: a_data /= Void
 			not_void: a_drop_down_gallery_menu_layout /= Void

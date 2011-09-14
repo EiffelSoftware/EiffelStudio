@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {ER_XML_TREE_ELEMENT}."
+	description: "[
+					XML tree element
+																				]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -17,7 +19,7 @@ create
 feature -- Command
 
 	accept (a_visitor: ER_VISITOR; a_layout_constructor_index: INTEGER)
-			--
+			-- Accept a visitor
 		require
 			not_void: a_visitor /= Void
 		do
@@ -59,7 +61,7 @@ feature -- Command
 feature -- Command
 
 	set_content (a_content: like content)
-			--
+			-- Set `content' with `a_content'
 		do
 			content := a_content
 		ensure
@@ -69,7 +71,7 @@ feature -- Command
 feature -- Query
 
 	constants: ER_XML_CONSTANTS
-			--
+			-- Constants
 		once
 			create Result
 		end

@@ -58,5 +58,5 @@ feature -- Command
 feature {NONE} -- Implementation
 
 	shared_singleton: ER_SHARED_SINGLETON
-			--
+			-- Shared singleton
 end

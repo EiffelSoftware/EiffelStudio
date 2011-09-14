@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {ER_IDENTIFIER_UNIQUENESS_CHECKER}."
+	description: "[
+					Ribbon item's identifier names uniqueness checker
+																		]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -9,7 +11,7 @@ class
 feature -- Command
 
 	on_focus_out (a_text: EV_TEXT_FIELD; a_tree_data: detachable ER_TREE_NODE_DATA)
-			--
+			-- Handle `a_text' focus out action
 		local
 			l_colors: EV_STOCK_COLORS
 		do
@@ -28,7 +30,7 @@ feature -- Command
 		end
 
 	on_identifier_name_change (a_text: EV_TEXT_FIELD; a_tree_data: detachable ER_TREE_NODE_DATA)
-			--
+			-- Handle text change actions of `a_text'
 		require
 			not_void: a_text /= Void
 		local
@@ -64,7 +66,7 @@ feature -- Command
 feature -- Query
 
 	is_name_conflict (a_text: EV_TEXT_FIELD): BOOLEAN
-			--
+			-- If `a_text's text conflict with existing items'
 		local
 			l_list: ARRAYED_LIST [EV_TREE_NODE]
 		do
@@ -80,7 +82,7 @@ feature -- Query
 		end
 
 	all_items_with_identifier (a_identifier: STRING): ARRAYED_LIST [EV_TREE_NODE]
-			--
+			-- Find out all items which name is same as `a_identifier'
 		require
 			not_void: a_identifier /= Void
 			not_empty: not a_identifier.is_empty
@@ -106,7 +108,7 @@ feature -- Query
 feature {NONE} -- Implementation
 
 	parent_window_of_widget (a_widget: EV_WIDGET): detachable EV_WINDOW
-			--
+			-- Parent window of `a_widget'
 		require
 			not_void: a_widget /= Void
 		do
@@ -134,13 +136,13 @@ feature {NONE} -- Implementation
 			until
 				l_tree.after
 			loop
-				all_item_with_identifier_recrusive (l_tree.item, a_identifier_name, Result)
+				all_item_with_identifier_recursive (l_tree.item, a_identifier_name, Result)
 				l_tree.forth
 			end
 		end
 
-	all_item_with_identifier_recrusive (a_item: EV_TREE_NODE; a_identifier_name: STRING; a_list: ARRAYED_LIST [EV_TREE_NODE])
-			--
+	all_item_with_identifier_recursive (a_item: EV_TREE_NODE; a_identifier_name: STRING; a_list: ARRAYED_LIST [EV_TREE_NODE])
+			-- Find all items which name same as `a_identifier_name' recursively.
 		require
 			not_void: a_item /= Void
 			not_void: a_identifier_name /= Void and then not a_identifier_name.is_empty
@@ -158,7 +160,7 @@ feature {NONE} -- Implementation
 			until
 				a_item.after
 			loop
-				all_item_with_identifier_recrusive (a_item.item, a_identifier_name, a_list)
+				all_item_with_identifier_recursive (a_item.item, a_identifier_name, a_list)
 				a_item.forth
 			end
 		end

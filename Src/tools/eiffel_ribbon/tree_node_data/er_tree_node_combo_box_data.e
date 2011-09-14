@@ -1,5 +1,7 @@
 note
-	description: "Summary description for ER_TREE_NODE_COMBO_BOX_DATA."
+	description: "[
+					Combo box tree node data
+																				]"
 	date: "$Date$"
 	revision: "$Revision$"
 

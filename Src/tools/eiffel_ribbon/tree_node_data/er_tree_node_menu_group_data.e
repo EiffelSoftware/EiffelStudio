@@ -1,6 +1,7 @@
 note
-	description: "Summary description for {ER_TREE_NODE_MENU_GROUP_DATA}."
-	author: ""
+	description: "[
+					Menu group tree node data
+																				]"
 	date: "$Date$"
 	revision: "$Revision$"
 

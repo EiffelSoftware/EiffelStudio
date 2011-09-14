@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {ER_TREE_NODE_GROUP_DATA}."
+	description: "[
+					Group tree node data
+																				]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -25,12 +27,12 @@ feature {NONE} -- Initialization
 feature -- Query
 
 	size_definition: detachable STRING
-			--
+			-- Size definition of buttons
 
 feature -- Command
 
 	set_size_definition (a_size_definition: like size_definition)
-			--
+			-- Set `size_definition' with `a_size_definition'
 		do
 			size_definition := a_size_definition
 		end

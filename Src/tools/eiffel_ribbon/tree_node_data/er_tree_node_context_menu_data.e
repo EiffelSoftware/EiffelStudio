@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {ER_MINI_TOOLBAR_DATA}."
+	description: "[
+					Context menu tree node data
+																				]"
 	date: "$Date$"
 	revision: "$Revision$"
 

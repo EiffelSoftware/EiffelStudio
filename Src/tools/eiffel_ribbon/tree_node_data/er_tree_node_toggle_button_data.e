@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {ER_TREE_NODE_TOGGLE_BUTTON_DATA}."
+	description: "[
+					Toggle button tree node data
+																				]"
 	date: "$Date$"
 	revision: "$Revision$"
 

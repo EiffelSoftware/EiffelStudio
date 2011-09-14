@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {ER_TREE_NODE_DROP_DOWN_COLOR_PICKER_DATA}."
+	description: "[
+					Drop down color picker tree node data
+																				]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -28,9 +30,9 @@ feature {NONE} -- Initialization
 feature -- Command
 
 	set_color_template (a_color: detachable STRING)
-			--
+			-- Set `color_template' with `a_color'
 		require
-			valid: a_color /= Void implies valid (a_color)
+			valid: a_color /= Void implies is_valid (a_color)
 		do
 			color_template := a_color
 		ensure
@@ -42,8 +44,8 @@ feature -- Query
 	color_template: detachable STRING
 			-- Color template
 
-	valid (a_template: STRING): BOOLEAN
-			--
+	is_valid (a_template: STRING): BOOLEAN
+			-- Is `a_template' valid?
 		require
 			not_void: a_template /= Void
 		do
@@ -57,9 +59,11 @@ feature -- Query
 feature -- Enumeration
 
 	standard_colors: STRING = "StandardColors"
+			-- Standard colors
 
 	theme_colors: STRING = "ThemeColors"
+			-- Theme colors
 
 	highlight_colors: STRING = "HighlightColors"
-
+			-- Highlight colors
 end

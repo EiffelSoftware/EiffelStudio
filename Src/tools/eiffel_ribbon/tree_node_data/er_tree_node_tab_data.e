@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {ER_TREE_NODE_TAB_DATA}."
+	description: "[
+					Ribbon tab tree node data
+																				]"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {ER_TREE_NODE_SPINNER_DATA}."
+	description: "[
+					Spinner tree node data
+																				]"
 	date: "$Date$"
 	revision: "$Revision$"
 

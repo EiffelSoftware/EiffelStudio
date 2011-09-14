@@ -1,51 +1,41 @@
 note
-	description: "Summary description for {ER_TREE_NODE_DATA}."
+	description: "[
+					Common ancestor for all tree node data
+																				]"
 	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class
 	ER_TREE_NODE_DATA
 
-feature -- Command
-
-	on_start_tag (a_namespace: detachable STRING; a_prefix: detachable STRING; a_local_part: STRING)
-			--
-		do
-		end
-
-	on_content (a_content: STRING)
-			--
-		do
-		end
-
 feature -- Settings
 
 	set_command_name (a_command_name: detachable STRING)
-			--
+			-- Set `command_name' with `a_command_name'
 		do
 			command_name := a_command_name
 		end
 
 	set_label_title (a_label_title: detachable STRING_32)
-			--
+			-- Set `label_title' with `a_label_title'
 		do
 			label_title := a_label_title
 		end
 
 	set_small_image (a_small_image: detachable STRING_32)
-			--
+			-- Set `small_image' with `a_small_image'
 		do
 			small_image := a_small_image
 		end
 
 	set_large_image (a_large_image: detachable STRING_32)
-			--
+			-- Set `large_image' with `a_large_image'
 		do
 			large_image := a_large_image
 		end
 
 	set_application_mode (a_mode: INTEGER)
-			--
+			-- Set `application_mode' with `a_mode'
 		do
 			application_mode := a_mode
 		end
@@ -53,24 +43,24 @@ feature -- Settings
 feature -- Query
 
 	command_name: detachable STRING
-			--
+			-- Command name or identifier name
 
 	label_title: detachable STRING_32
-			--
+			-- Label title on button, checkbox or spinner etc
 
 	small_image: detachable STRING_32
-			--
+			-- Small image
 
 	large_image: detachable STRING_32
-			--
+			-- Large image
 
 	application_mode: INTEGER
-			--
+			-- Application mode
 
 feature {NONE} -- Implementation
 
 	remove_useless_symbol (a_string: detachable STRING)
-			--
+			-- Remove useless symbol in `a_string'
 		do
 			if attached a_string as l_string then
 				l_string.replace_substring_all ("%N", "")

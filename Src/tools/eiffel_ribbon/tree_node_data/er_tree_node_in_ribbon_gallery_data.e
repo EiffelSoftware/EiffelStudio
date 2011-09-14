@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {ER_TREE_NODE_IN_RIBBON_GALLERY_DATA}."
+	description: "[
+					In-ribbon gallery tree node data
+																				]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -28,15 +30,15 @@ feature {NONE} -- Initialization
 feature -- Query
 
 	max_rows: INTEGER
-			--
+			-- Max rows of current gallery
 
 	max_columns: INTEGER
-			--
+			-- Max columns of current gallery
 
 feature -- Command
 
 	set_max_rows (a_rows: INTEGER)
-			--
+			-- Set `max_rows' with `a_rows'
 		do
 			max_rows := a_rows
 		ensure
@@ -44,7 +46,7 @@ feature -- Command
 		end
 
 	set_max_columns (a_columns: INTEGER)
-			--
+			-- Set `max_columns' with `a_columns'
 		do
 			max_columns := a_columns
 		ensure

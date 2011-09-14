@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {ER_TREE_NODE_DATA_FACTORY}."
+	description: "[
+					Ttree node data factory
+																				]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -12,7 +14,7 @@ create
 feature {NONE} -- Initialization
 
 	make
-			--
+			-- Creation method
 		do
 			create constants
 		end
@@ -20,7 +22,7 @@ feature {NONE} -- Initialization
 feature -- Factory method
 
 	tree_node_data_for (a_type: STRING): detachable ER_TREE_NODE_DATA
-			--
+			-- Tree node data factory method
 		require
 			not_void: a_type /= Void
 			valid: (create {ER_XML_CONSTANTS}).valid (a_type)
@@ -82,5 +84,5 @@ feature -- Factory method
 feature {NONE} -- Implementation
 
 	constants: ER_XML_CONSTANTS
-			--
+			-- Constants
 end

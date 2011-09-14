@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {ER_TREE_NODE_RIBBON_DATA}."
+	description: "[
+					Ribbon tree node data
+																				]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -52,7 +54,7 @@ feature -- Implementation
 		end
 
 	is_layout_constructor_name_conflict (a_all_constructors: ARRAYED_LIST [ER_LAYOUT_CONSTRUCTOR]; a_command_name: STRING): BOOLEAN
-			--
+			-- Is layout contructor's `a_name' conflict with `a_all_constructors's ?
 		require
 			not_void: a_all_constructors /= Void
 			valid: a_command_name /= Void and then not a_command_name.is_empty

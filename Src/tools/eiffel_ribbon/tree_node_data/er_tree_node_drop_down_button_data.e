@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {ER_TREE_NODE_DROP_DOWN_BUTTON_DATA}."
+	description: "[
+					Dropdown button tree node data
+																				]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -11,7 +13,7 @@ inherit
 		redefine
 			make
 		end
-		
+
 create
 	make
 

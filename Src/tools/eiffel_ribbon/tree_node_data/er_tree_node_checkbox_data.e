@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {ER_TREE_NODE_CHECKBOX_DATA}."
+	description: "[
+					Checkbox tree node data
+																				]"
 	date: "$Date$"
 	revision: "$Revision$"
 

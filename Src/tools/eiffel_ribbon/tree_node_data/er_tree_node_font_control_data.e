@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {ER_TREE_NODE_FONT_CONTROL_DATA}."
+	description: "[
+					Font control tree node data
+																				]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -28,9 +30,9 @@ feature {NONE} -- Initialization
 feature -- Command
 
 	set_font_type (a_type: detachable STRING)
-			--
+			-- Set `font_type' with `a_font_type'
 		require
-			valid: a_type /= Void implies valid (a_type)
+			valid: a_type /= Void implies is_valid (a_type)
 		do
 			font_type := a_type
 		ensure
@@ -42,8 +44,8 @@ feature -- Query
 	font_type: detachable STRING
 			-- Color template
 
-	valid (a_template: STRING): BOOLEAN
-			--
+	is_valid (a_template: STRING): BOOLEAN
+			-- Is `a_template' valid?
 		require
 			not_void: a_template /= Void
 		do
@@ -57,9 +59,11 @@ feature -- Query
 feature -- Enumeration
 
 	rich_font: STRING = "RichFont"
+		-- Rich font
 
 	font_with_color: STRING = "FontWithColor"
+		-- Font with color
 
 	font_only: STRING = "FontOnly"
-
+		-- Font only
 end

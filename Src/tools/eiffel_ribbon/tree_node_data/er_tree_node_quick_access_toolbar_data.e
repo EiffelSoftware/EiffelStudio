@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {ER_TREE_NODE_QUICK_ACCESS_TOOLBAR_DATA}."
+	description: "[
+					Quick Access Toolbar (QAT) tree node data
+																				]"
 	date: "$Date$"
 	revision: "$Revision$"
 

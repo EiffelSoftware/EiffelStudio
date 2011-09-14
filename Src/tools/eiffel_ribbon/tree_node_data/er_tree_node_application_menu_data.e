@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {ER_TREE_NODE_APPLICATION_MENU_DATA}."
+	description: "[
+					Application menu tree node data
+																				]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -28,15 +30,15 @@ feature {NONE} -- Initialization
 feature -- Query
 
 	max_count: INTEGER
-			--
+			-- Max count of recent item
 
 	enable_pinning: BOOLEAN
-			--
+			-- Enable pinning in recent items?
 
 feature -- Command
 
 	set_max_count (a_max_count: INTEGER)
-			--
+			-- Set `max_count' with `a_max_count'
 		do
 			max_count := a_max_count
 		ensure
@@ -44,7 +46,7 @@ feature -- Command
 		end
 
 	set_enable_pinning (a_bool: BOOLEAN)
-			--
+			-- Set `enable_pinning' with `a_bool'
 		do
 			enable_pinning := a_bool
 		ensure

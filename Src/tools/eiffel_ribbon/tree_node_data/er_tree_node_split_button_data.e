@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {ER_TREE_NODE_SPLIT_BUTTON_DATA}."
+	description: "[
+					Split button tree node data
+																				]"
 	date: "$Date$"
 	revision: "$Revision$"
 

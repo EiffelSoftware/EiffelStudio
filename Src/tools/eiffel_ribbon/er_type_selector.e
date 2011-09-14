@@ -1,5 +1,8 @@
 note
-	description: "Summary description for {ER_TYPE_SELECTOR}."
+	description: "[
+					Type selector tool
+					It provides various kinds of ribbon items for users to right-click pick
+																							]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -12,7 +15,7 @@ create
 feature {NONE} -- Initialization
 
 	make
-			--
+			-- Creation method
 		do
 			create helper
 			create constants
@@ -21,7 +24,7 @@ feature {NONE} -- Initialization
 		end
 
 	build_docking_content
-			--
+			-- Build docking content
 		do
 			create content.make_with_widget (widget, "ER_TYPE_SELECTOR")
 			content.set_long_title ("Type Selector")
@@ -29,7 +32,7 @@ feature {NONE} -- Initialization
 		end
 
 	build_ui
-			--
+			-- Build GUI
 		local
 --			l_tree_item_app: EV_TREE_ITEM
 --			l_tree_item_commands: EV_TREE_ITEM
@@ -140,7 +143,7 @@ feature {NONE} -- Initialization
 feature -- Command
 
 	attach_to_docking_manager (a_docking_manager: SD_DOCKING_MANAGER)
-			--
+			-- Attach to docking manager
 		require
 			not_void: a_docking_manager /= Void
 		do
@@ -148,18 +151,10 @@ feature -- Command
 			content.set_top ({SD_ENUMERATION}.left)
 		end
 
-feature {NONE} -- Action handler
-
---	on_pick (a_x, a_y: INTEGER; a_item: EV_TREE_ITEM)
---			--
---		do
-
---		end
-
 feature {NONE} -- Implementation
 
 	extend_all_buttons (a_parent: EV_TREE_ITEM)
-			--
+			-- Expand all tree items
 		require
 			not_void: a_parent /= Void
 --			valid: a_parent.text.is_equal ((create {ER_XML_CONSTANTS}).group)
@@ -238,7 +233,7 @@ feature {NONE} -- Implementation
 		end
 
 	content: SD_CONTENT
-			--
+			-- Docking content
 
 	widget: EV_TREE
 			-- Main dockig content widget

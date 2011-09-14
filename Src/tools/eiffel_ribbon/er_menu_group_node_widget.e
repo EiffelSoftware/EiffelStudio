@@ -26,13 +26,12 @@ feature {NONE} -- Initialization
 			-- and from within current class itself.
 		do
 				-- Initialize types defined in current class
-
 		end
 
 feature -- Query
 
 	set_tree_node_data (a_data: detachable ER_TREE_NODE_MENU_GROUP_DATA)
-			--
+			-- Update GUI with tree node data
 		do
 			tree_node_data := a_data
 			if attached a_data as l_data then
@@ -73,10 +72,10 @@ feature -- Query
 feature {NONE} -- Implementation
 
 	tree_node_data: detachable ER_TREE_NODE_MENU_GROUP_DATA
-			--
+			-- Menu group tree node data
 
 	checker: ER_IDENTIFIER_UNIQUENESS_CHECKER
-			--
+			-- Identifier uniqueness checker
 
 	on_command_name_change
 			-- Called by `change_actions' of `command_name'.

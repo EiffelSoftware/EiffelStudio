@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 feature -- Command
 
 	set_tree_node_data (a_data: detachable ER_TREE_NODE_FONT_CONTROL_DATA)
-			--
+			-- Update GUI with tree node data
 		do
 			tree_node_data := a_data
 			if attached a_data as l_data then
@@ -60,10 +60,10 @@ feature -- Command
 feature {NONE} -- Implementation
 
 	checker: ER_IDENTIFIER_UNIQUENESS_CHECKER
-			--
+			-- Identifier uniqueness checker
 
 	tree_node_data: detachable ER_TREE_NODE_FONT_CONTROL_DATA
-			--
+			-- Font control tree node data
 
 	on_command_name_focus_out
 			-- <Precursor>
@@ -78,7 +78,7 @@ feature {NONE} -- Implementation
 		end
 
 	on_font_type_select
-			--
+			-- <Precursor>
 		do
 			if attached tree_node_data as l_data then
 				l_data.set_font_type (font_type.text)

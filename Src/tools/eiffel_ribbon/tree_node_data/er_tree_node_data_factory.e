@@ -25,7 +25,7 @@ feature -- Factory method
 			-- Tree node data factory method
 		require
 			not_void: a_type /= Void
-			valid: (create {ER_XML_CONSTANTS}).valid (a_type)
+			valid: (create {ER_XML_CONSTANTS}).is_valid (a_type)
 		do
 			if a_type.is_equal (constants.command) then
 				create {ER_TREE_NODE_COMMAND_DATA} Result.make

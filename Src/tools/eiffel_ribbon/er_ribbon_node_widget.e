@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 feature -- Command
 
 	set_tree_node_data (a_data: detachable ER_TREE_NODE_RIBBON_DATA)
-			--
+			--  Update GUI with tree node data
 		do
 			tree_node_data := a_data
 			if attached a_data as l_data then
@@ -46,7 +46,7 @@ feature -- Command
 feature -- Query
 
 	tree_node_data: detachable ER_TREE_NODE_RIBBON_DATA
-			--
+			-- Root ribbon item tree node data
 
 feature {NONE} -- Implementation
 

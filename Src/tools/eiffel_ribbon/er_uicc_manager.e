@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {ER_UICC_MANAGER}."
+	description: "[
+					UICC.exe manager to compile ribbon resource files with ribbon markup XML
+																									]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -214,7 +216,7 @@ feature -- Command
 		end
 
 	on_output (a_string: STRING; a_is_tabbed: BOOLEAN) --FIXME: For non-English characters?
-			--
+			-- Handle output event
 		local
 			l_singleton: ER_SHARED_SINGLETON
 		do
@@ -231,7 +233,7 @@ feature -- Command
 feature {NONE} -- Implementation
 
 	res_file_name (a_index: INTEGER): detachable STRING
-			--
+			-- res file name
 		local
 			l_constants: ER_MISC_CONSTANTS
 		do
@@ -240,7 +242,7 @@ feature {NONE} -- Implementation
 		end
 
 	rc_file_name (a_index: INTEGER): detachable STRING
-			--
+			-- rc file name
 		local
 			l_constants: ER_MISC_CONSTANTS
 		do
@@ -249,7 +251,7 @@ feature {NONE} -- Implementation
 		end
 
 	bml_file_name (a_index: INTEGER): detachable STRING
-			--
+			-- bmp file name
 		local
 			l_constants: ER_MISC_CONSTANTS
 		do
@@ -258,7 +260,7 @@ feature {NONE} -- Implementation
 		end
 
 	header_file_name (a_index: INTEGER): detachable STRING
-			--
+			-- header file name
 		local
 			l_constants: ER_MISC_CONSTANTS
 		do

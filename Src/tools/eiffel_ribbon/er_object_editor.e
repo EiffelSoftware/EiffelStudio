@@ -1,5 +1,8 @@
 note
-	description: "Summary description for {ER_OBJECT_EDITOR}."
+	description: "[
+					EiffelRibbon Object Editor tool
+					Users can specify properties of ribbon items by this tool
+																								]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -20,7 +23,7 @@ feature {NONE} -- Initialization
 		end
 
 	build_docking_content
-			--
+			-- Build docking content
 		do
 			create content.make_with_widget (widget, "ER_OBJECT_EDITOR")
 			content.set_long_title ("Object Editor")
@@ -28,7 +31,7 @@ feature {NONE} -- Initialization
 		end
 
 	build_ui
-			--
+			-- Build GUI
 		do
 			create widget
 		end
@@ -36,7 +39,7 @@ feature {NONE} -- Initialization
 feature -- Command
 
 	attach_to_docking_manager (a_docking_manager: SD_DOCKING_MANAGER)
-			--
+			-- Attached to docking manager
 		require
 			not_void: a_docking_manager /= Void
 		do
@@ -45,7 +48,7 @@ feature -- Command
 		end
 
 	update_ui_with_node (a_node: EV_TREE_NODE)
-			--
+			-- Update GUI with `a_node'
 		require
 			not_void: a_node /= Void
 		local
@@ -75,7 +78,7 @@ feature -- Command
 		do
 			widget.wipe_out
 			if attached a_node.text as l_text then
-				check (create {ER_XML_CONSTANTS}).valid (l_text) end
+				check (create {ER_XML_CONSTANTS}).is_valid (l_text) end
 				if l_text.same_string (constants.command) then
 					create l_command_widget
 					if attached {ER_TREE_NODE_COMMAND_DATA} a_node.data as l_data then
@@ -222,7 +225,7 @@ feature -- Command
 feature {NONE} -- Implementation
 
 	content: SD_CONTENT
-			--
+			-- Docking content
 
 	widget: EV_CELL
 			-- Main dockig content widget

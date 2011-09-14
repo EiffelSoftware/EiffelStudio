@@ -1,6 +1,7 @@
 note
-	description: "Summary description for {ER_HELPER}."
-	author: ""
+	description: "[
+					EiffelRibbon tool helper features collection
+																		]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -10,7 +11,7 @@ class
 feature -- Command
 
 	expand_all (a_tree: EV_TREE)
-			--
+			-- Expand all tree items in `a_tree'
 		local
 			l_item: EV_TREE_NODE
 		do
@@ -31,7 +32,7 @@ feature -- Command
 feature {NONE} -- Implementation
 
 	expand_all_imp (a_tree_node: EV_TREE_NODE)
-			--
+			-- Implementation of `expand_all'
 		local
 			l_item: EV_TREE_NODE
 		do

@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 feature -- Command
 
 	set_tree_node_data (a_data: detachable ER_TREE_NODE_TAB_GROUP_DATA)
-			--
+			-- Update GUI with tree node data
 		do
 			tree_node_data := a_data
 			if attached a_data as l_data then
@@ -56,10 +56,10 @@ feature -- Command
 feature {NONE} -- Implementation
 
 	tree_node_data: detachable ER_TREE_NODE_TAB_GROUP_DATA
-			--
+			-- Tab group tree node data
 
 	on_command_name_text_change
-			--
+			-- Handle command name text change actions
 		local
 			l_checker: ER_IDENTIFIER_UNIQUENESS_CHECKER
 		do

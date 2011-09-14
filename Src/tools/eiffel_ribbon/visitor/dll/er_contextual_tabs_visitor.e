@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {ER_CONTEXTUAL_TABS_VISITOR}."
+	description: "[
+					Contextual tabs vistor when using DLL
+																				]"
 	date: "$Date$"
 	revision: "$Revision$"
 

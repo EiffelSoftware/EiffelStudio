@@ -1,5 +1,8 @@
 note
-	description: "Summary description for {ER_SEPARATE_WINDOW_TAB_VISITOR}."
+	description: "[
+					Different ribbon windows to different layout constructors
+					vistor when using DLL
+																				]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -21,20 +24,19 @@ feature {NONE} -- Initialization
 	make
 			-- Creation method
 		do
-			create application_modes.make
 
 		end
 
 feature -- Command
 
 	visit_ribbon_tabs (a_ribbon_tabs: ER_XML_TREE_ELEMENT; a_layout_constructor_index: INTEGER)
-			--
+			-- <Precursor>
 		do
 			build_layout_constructors (a_layout_constructor_index)
 		end
 
 	visit_ribbon_application_menu (a_ribbon_application_menu: ER_XML_TREE_ELEMENT; a_layout_constructor_index: INTEGER)
-			--
+			-- <Precursor>
 		local
 			l_ribbon_menu_groups: ARRAYED_LIST [EV_TREE_NODE]
 			l_one_group: EV_TREE_NODE
@@ -71,7 +73,7 @@ feature -- Command
 feature {NONE} -- Implementation
 
 	move_menu_group_to_other_window (a_menu_group: EV_TREE_NODE; a_target_application_mode: INTEGER)
-			--
+			-- Move menu group to differnt ribbon layout constructors
 		require
 			only_for_other_window: a_target_application_mode /= 0
 		local
@@ -103,99 +105,8 @@ feature {NONE} -- Implementation
 
 		end
 
-	separate_different_ribbon_tabs (a_root_ribbon_tabs: ARRAYED_LIST [EV_TREE_ITEM]; a_ribbon_tabs: EV_TREE_NODE)
-			--
-		local
-			l_ribbon_item: EV_TREE_NODE
-			l_search_result: INTEGER
-			l_ribbon_tabs: detachable EV_TREE_ITEM
-		do
-					-- Separate application mode to different ribbon_tabs
-			from
-				a_ribbon_tabs.start
-			until
-				a_ribbon_tabs.after
-			loop
-				l_ribbon_item := a_ribbon_tabs.item
-				if attached l_ribbon_item.parent as l_parent then
-					l_parent.prune_all (l_ribbon_item)
-				else
-					check False end
-				end
-				a_ribbon_tabs.start
-
-				if attached {ER_TREE_NODE_TAB_DATA} l_ribbon_item.data as l_tab_data then
-					l_search_result := application_modes.index_of  (l_tab_data.application_mode, 1)
-					check l_search_result /= 0 end
-					l_ribbon_tabs := a_root_ribbon_tabs.i_th (l_search_result)
-					l_ribbon_tabs.extend (l_ribbon_item)
-				else
-					-- No data, put to default
-					a_root_ribbon_tabs.first.extend (l_ribbon_item)
-				end
-
---				a_ribbon_tabs.forth
-			end
-		end
-
-	find_out_total_application_modes (a_ribbon_tabs: ER_XML_TREE_ELEMENT)
-			-- Find out how many application modes
-		require
-			not_void: a_ribbon_tabs /= Void
-			valid: a_ribbon_tabs.name.same_string ({ER_XML_CONSTANTS}.ribbon_tabs)
-		do
-			from
-				application_modes.wipe_out
-				application_modes.extend (0) -- default application mode
-				a_ribbon_tabs.start
-			until
-				a_ribbon_tabs.after
-			loop
-				if attached {ER_XML_TREE_ELEMENT} a_ribbon_tabs.item_for_iteration as l_group then
-					from
-						l_group.start
-					until
-						l_group.after
-					loop
-						if attached {XML_ATTRIBUTE} l_group.item_for_iteration as l_group_attribute then
-							if l_group_attribute.name.same_string ({ER_XML_ATTRIBUTE_CONSTANTS}.application_mode) then
-								if not application_modes.has (l_group_attribute.value.to_integer) then
-									application_modes.extend (l_group_attribute.value.to_integer)
-								end
-							end
-						end
-						l_group.forth
-					end
-
-				end
-
-				a_ribbon_tabs.forth
-			end
-		end
-
-	application_modes: SORTED_TWO_WAY_LIST [INTEGER]
-			--
-
-	prepare_root_nodes: ARRAYED_LIST [EV_TREE_ITEM]
-			--
-		local
-			l_ribbon_tabs: detachable EV_TREE_ITEM
-		do
-			create Result.make (application_modes.count)
-			from
-				application_modes.start
-			until
-				application_modes.after
-			loop
-				l_ribbon_tabs := shared.layout_constructor_list.first.tree_item_factory_method ({ER_XML_CONSTANTS}.ribbon_tabs)
-				Result.extend (l_ribbon_tabs)
-
-				application_modes.forth
-			end
-		end
-
 	build_layout_constructors (a_layout_constructor_index: INTEGER)
-			--
+			-- Build layout constructors for different ribbon windows
 		local
 			l_layout_constructor: ER_LAYOUT_CONSTRUCTOR
 			l_application_menu: detachable EV_TREE_NODE
@@ -212,7 +123,7 @@ feature {NONE} -- Implementation
 		end
 
 	record_application_menu (a_layout_constructor_index: INTEGER): detachable EV_TREE_NODE
-			--
+			-- Find out application menu with `a_layout_constructor_index'
 		local
 			l_layout_constructor: ER_LAYOUT_CONSTRUCTOR
 		do
@@ -229,7 +140,7 @@ feature {NONE} -- Implementation
 		end
 
 	separate_application_menu (a_application_menu: detachable EV_TREE_NODE; a_layout_constructor_index: INTEGER)
-			--
+			-- Move application menu `a_application_menu' to applcation menu which index is `a_layout_constructor_index'
 		local
 			l_layout_constructor: ER_LAYOUT_CONSTRUCTOR
 		do
@@ -293,7 +204,7 @@ feature {NONE} -- Implementation
 		end
 
 	is_application_menu_empty (a_application_menu: EV_TREE_NODE): BOOLEAN
-			--
+			-- Is application menu empty?
 		require
 			not_void: a_application_menu /= Void
 		local

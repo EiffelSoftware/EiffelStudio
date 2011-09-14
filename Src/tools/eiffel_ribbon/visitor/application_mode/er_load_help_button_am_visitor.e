@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {ER_LOAD_HELP_BUTTON_VISITOR}."
+	description: "[
+					Help button loader vistor when using application mode
+																				]"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {ER_LOAD_HELP_BUTTON_VISITOR}."
+	description: "[
+					Help button vistor when using DLL
+																				]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -21,7 +23,6 @@ feature -- Command
 			l_tree_item: EV_TREE_ITEM
 		do
 			if attached shared.layout_constructor_list.i_th (a_layout_constructor_index) as l_layout_constructor then
-				-- FIXME: multi-window support? But.... only 32 application modes, we have to use application modes to show/hide group/tab also...
 
 				create l_data.make
 				from

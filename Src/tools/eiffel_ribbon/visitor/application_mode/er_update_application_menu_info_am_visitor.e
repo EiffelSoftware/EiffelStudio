@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {ER_UPDATE_APPLICATION_MENU_INFO_VISITOR}."
+	description: "[
+					Update application menu info vistor when using application mode
+																					]"
 	date: "$Date$"
 	revision: "$Revision$"
 

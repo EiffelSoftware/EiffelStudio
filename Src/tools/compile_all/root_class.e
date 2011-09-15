@@ -47,6 +47,30 @@ feature {NONE} -- Implementation
 	directory_ignores: SEARCH_TABLE [STRING]
 			-- Ignored directories
 
+	regexp_ignores: ARRAYED_LIST [RX_REGULAR_EXPRESSION]
+			-- Ignored regexp
+
+	path_regexp_ignored (p: STRING): BOOLEAN
+			-- Is path ignored in relation with `regexp_ignores'? 
+		do
+			if
+				attached regexp_ignores as l_regexp_ignores
+			then
+				from
+					l_regexp_ignores.start
+				until
+					l_regexp_ignores.after or Result
+				loop
+					if attached l_regexp_ignores.item as rexp then
+						rexp.match (p)
+						Result := rexp.has_matched
+						rexp.wipe_out
+					end
+					l_regexp_ignores.forth
+				end
+			end
+		end
+
 	start
 			-- Starts application
 		require
@@ -74,6 +98,8 @@ feature {NONE} -- Implementation
 			l_ignored_targets: ARRAYED_LIST [INI_LITERAL]
 			l_ig_target: SEARCH_TABLE [STRING]
 			l_actual_path: STRING
+			l_label: STRING
+			rexp: RX_PCRE_REGULAR_EXPRESSION
 		do
 			create l_file.make (a_file)
 			if not l_file.exists or else not l_file.is_readable then
@@ -94,31 +120,44 @@ feature {NONE} -- Implementation
 						l_ignored_files := l_ini_file.sections
 						create ignores.make (l_ignored_files.count)
 						create directory_ignores.make (l_ignored_files.count)
+						create regexp_ignores.make (l_ignored_files.count)
 						l_ignored_files.start
 					until
 						l_ignored_files.after
 					loop
 							-- every section represents one configuration file
 						l_ini_section := l_ignored_files.item
-						l_actual_path := execution_environment.interpreted_string (l_ini_section.label)
-						create l_file.make (l_actual_path)
-						if not l_file.exists then
-							display_error ("Could not read file/path "+l_ini_section.label+"!")
-						elseif l_file.is_directory then
-							directory_ignores.force (l_actual_path.as_lower)
-						else
-								-- no literals implies the whole configuration file is ignored, else each literal represents an ignored target
-							from
-								l_ignored_targets := l_ini_section.literals
-								create l_ig_target.make (l_ignored_targets.count)
-								l_ignored_targets.start
-							until
-								l_ignored_targets.after
-							loop
-								l_ig_target.force (l_ignored_targets.item.name)
-								l_ignored_targets.forth
+						l_label := l_ini_section.label
+						if l_label.starts_with ("regexp=") then
+							create rexp.make
+							l_label := l_label.substring (("regexp=").count + 1, l_label.count)
+							l_label.left_adjust
+							l_label.right_adjust
+							rexp.compile (l_label)
+							if rexp.error_message /= Void then
+								regexp_ignores.extend (rexp)
 							end
-							ignores.force (l_ig_target, l_actual_path)
+						else
+							l_actual_path := execution_environment.interpreted_string (l_label)
+							create l_file.make (l_actual_path)
+							if not l_file.exists then
+								display_error ("Could not read file/path "+l_label+"!")
+							elseif l_file.is_directory then
+								directory_ignores.force (l_actual_path.as_lower)
+							else
+									-- no literals implies the whole configuration file is ignored, else each literal represents an ignored target
+								from
+									l_ignored_targets := l_ini_section.literals
+									create l_ig_target.make (l_ignored_targets.count)
+									l_ignored_targets.start
+								until
+									l_ignored_targets.after
+								loop
+									l_ig_target.force (l_ignored_targets.item.name)
+									l_ignored_targets.forth
+								end
+								ignores.force (l_ig_target, l_actual_path)
+							end
 						end
 						l_ignored_files.forth
 					end
@@ -132,38 +171,43 @@ feature {NONE} -- Implementation
 			a_directory_ok: a_directory /= Void and then not a_directory.is_empty
 		local
 			l_dir: KL_DIRECTORY
+			dn: STRING
 		do
-			create l_dir.make (a_directory)
-			if not l_dir.is_readable then
-				display_error ("Could not read "+a_directory+"!")
-			elseif directory_ignores = Void or else not directory_ignores.has (a_directory.string.as_lower) then
-					-- Process only if the directory is not excluded.
-					-- 1 - process config files with an ecf extension
-				l_dir.filenames.do_if (
-					agent (a_dir, a_file: STRING)
+			dn := a_directory.string
+			if not path_regexp_ignored (dn) then
+				create l_dir.make (dn)
+				if not l_dir.is_readable then
+					display_error ("Could not read "+a_directory+"!")
+				elseif directory_ignores = Void or else not directory_ignores.has (dn.as_lower) then
+						-- Process only if the directory is not excluded.
+						-- 1 - process config files with an ecf extension
+					l_dir.filenames.do_if (
+						agent (a_dir, a_file: STRING)
+							local
+								l_fn: FILE_NAME
+							do
+								create l_fn.make_from_string (a_dir)
+								l_fn.set_file_name (a_file)
+								process_configuration (l_fn, a_dir)
+							end (a_directory, ?),
+						agent (a_file: STRING): BOOLEAN
+							local
+								l_cnt: INTEGER
+							do
+								l_cnt := a_file.count
+								Result := l_cnt > 4 and then a_file.substring (l_cnt-3, l_cnt).is_equal (".ecf")
+							end)
+						-- 2 - process subdirs
+					l_dir.directory_names.do_all (agent (a_dir, a_subdir: STRING)
 						local
-							l_fn: FILE_NAME
+							l_dirname: DIRECTORY_NAME
 						do
-							create l_fn.make_from_string (a_dir)
-							l_fn.set_file_name (a_file)
-							process_configuration (l_fn, a_dir)
-						end (a_directory, ?),
-					agent (a_file: STRING): BOOLEAN
-						local
-							l_cnt: INTEGER
-						do
-							l_cnt := a_file.count
-							Result := l_cnt > 4 and then a_file.substring (l_cnt-3, l_cnt).is_equal (".ecf")
-						end)
-					-- 2 - process subdirs
-				l_dir.directory_names.do_all (agent (a_dir, a_subdir: STRING)
-					local
-						l_dirname: DIRECTORY_NAME
-					do
-						create l_dirname.make_from_string (a_dir)
-						l_dirname.extend (a_subdir)
-						process_directory (l_dirname)
-					end (a_directory, ?))
+							create l_dirname.make_from_string (a_dir)
+							l_dirname.extend (a_subdir)
+							process_directory (l_dirname)
+						end (dn, ?)
+					)
+				end
 			end
 		end
 
@@ -176,8 +220,8 @@ feature {NONE} -- Implementation
 			l_loader: CONF_LOAD
 			l_ignored_targets: SEARCH_TABLE [STRING]
 		do
-			if ignores /= Void then
-				l_ignored_targets := ignores.item (a_file.string.as_lower)
+			if attached ignores as l_ignores then
+				l_ignored_targets := l_ignores.item (a_file.string.as_lower)
 			end
 				-- if the file is not listed in the excludes or explicitely lists exlucded targets
 			if l_ignored_targets = Void or else not l_ignored_targets.is_empty then
@@ -193,7 +237,7 @@ feature {NONE} -- Implementation
 					end
 				end
 			end
-	end
+		end
 
 	process_target (a_target: CONF_TARGET; a_dir: STRING)
 			-- Compile `a_target' located in `a_dir'.

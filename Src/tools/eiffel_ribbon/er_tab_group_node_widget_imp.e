@@ -59,6 +59,7 @@ feature {NONE}-- Initialization
 			set_all_attributes_using_constants
 			
 				-- Connect events.
+			command_name.change_actions.extend (agent on_command_name_text_change)
 			label.change_actions.extend (agent on_label_changes)
 
 				-- Call `user_initialization'.
@@ -117,6 +118,11 @@ feature {NONE} -- Implementation
 
 	user_initialization
 			-- Feature for custom initialization, called at end of `initialize'.
+		deferred
+		end
+	
+	on_command_name_text_change
+			-- Called by `change_actions' of `command_name'.
 		deferred
 		end
 	

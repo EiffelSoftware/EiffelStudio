@@ -213,7 +213,7 @@ feature -- Helper
 				l_list.after or Result /= Void
 			loop
 				l_ribbon_window := l_list.item
-				if attached l_ribbon_window.contextual_tabs.has (a_item) then
+				if l_ribbon_window.contextual_tabs.has (a_item) then
 					Result := l_ribbon_window.ribbon
 				end
 

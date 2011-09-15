@@ -87,7 +87,6 @@ feature -- Command
 		local
 			l_shared: ER_SHARED_SINGLETON
 			l_list: ARRAYED_LIST [ER_LAYOUT_CONSTRUCTOR]
-			l_widget: EV_TREE
 		do
 			from
 				create l_shared

@@ -186,7 +186,7 @@ feature -- Command
 				if {PLATFORM_CONSTANTS}.is_64_bits then
 					l_list.extend ("/MACHINE:X64")
 				else
-					l_list.extend ("/MACHINE:X32")
+					l_list.extend ("/MACHINE:X86")
 				end
 				l_list.extend ("/OUT:%"" + {ER_MISC_CONSTANTS}.dll_file_name_prefix + a_index.out + ".dll%"")
 				l_list.extend (l_res_file_name)

@@ -136,6 +136,7 @@ feature {NONE} -- Tree saving
 			-- Add xml nodes by querying info from `a_vision_tree'
 		require
 			not_void: a_vision_tree /= Void
+			has_content: not a_vision_tree.is_empty
 			valid: a_vision_tree.i_th (1).text.same_string (xml_constants.ribbon_tabs)
 		do
 			if attached {EV_TREE_ITEM} a_vision_tree.i_th (1) as l_tree_item then

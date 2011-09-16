@@ -50,6 +50,7 @@ extern EIF_BOOLEAN eif_mysql_is_null_data(MYSQL_ROW row_ptr, int ind);
 extern MYSQL_ROW eif_mysql_next_row(MYSQL_RES *result_ptr);
 extern int eif_mysql_num_fields(MYSQL_RES *result_ptr);
 extern float eif_mysql_real_data(MYSQL_ROW row_ptr, int ind);
+extern my_bool eif_mysql_autocommit(MYSQL *mysql_ptr, my_bool mode);
 
 #endif /* __eif_mysql_h__ */
 

@@ -251,6 +251,17 @@ void eif_mysql_disconnect(MYSQL *mysql_ptr)
 }
 
 /*
+ * Function:	void eif_set_mysql_autocommit(MYSQL *mysql_ptr, my_bool mode)
+ * Description:	Sets autocommit mode on if mode is 1, off if mode is 0. 
+ * Arguments:	MYSQL *mysql_ptr:		Pointer to MYSQL structure
+ * Returns:		Zero if successful. Nonzero if an error occurred. 
+ */
+my_bool eif_mysql_autocommit(MYSQL *mysql_ptr, my_bool mode)
+{
+	return mysql_autocommit (mysql_ptr, mode);
+}
+
+/*
  * Function:	MYSQL_RES *eif_mysql_execute(MYSQL *mysql_ptr,
  *					const char *command)
  * Description:	Execute the given command and return the MYSQL_RES pointer to

@@ -840,19 +840,31 @@ feature -- External features
 		end
 
 	commit
+			-- Commit
 		do
+			is_error_updated := mysql_commit (mysql_pointer)
+			is_error_updated := eif_mysql_autocommit (mysql_pointer, True)
 		end
 
 	rollback
+			-- Rollback
 		do
+			is_error_updated := mysql_rollback (mysql_pointer)
+			is_error_updated := eif_mysql_autocommit (mysql_pointer, True)
 		end
 
 	trancount: INTEGER
+			--| MySQL does not have a way to retrieve number of transactions.
 		do
 		end
 
  	begin
+ 			-- Start transaction.
+ 			-- In MySQL, disable auto commit mode to use transaction.
+ 			-- It is not nessary to call begin, if one does not use transaction.
+ 			-- http://dev.mysql.com/tech-resources/articles/mysql-connector-cpp.html#trx
 		do
+			is_error_updated := eif_mysql_autocommit (mysql_pointer, False)
 		end
 
 	last_insert_id: NATURAL_64
@@ -1075,6 +1087,21 @@ feature {NONE} -- C Externals
 		end
 
 	mysql_insert_id (mysql_ptr: POINTER): NATURAL_64
+		external
+			"C | %"eif_mysql.h%""
+		end
+
+	eif_mysql_autocommit (mysql_ptr: POINTER; a_mode: BOOLEAN): BOOLEAN
+		external
+			"C | %"eif_mysql.h%""
+		end
+
+	mysql_commit (mysql_ptr: POINTER): BOOLEAN
+		external
+			"C | %"eif_mysql.h%""
+		end
+
+	mysql_rollback (mysql_ptr: POINTER): BOOLEAN
 		external
 			"C | %"eif_mysql.h%""
 		end

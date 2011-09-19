@@ -374,7 +374,7 @@ feature -- C generation
 		do
 		end
 
-feature {NONE} -- C code generation: separate call
+feature {ACCESS_B} -- C code generation: separate call
 
 	generate_separate_call (s: REGISTER; r: detachable REGISTRABLE; t: REGISTRABLE)
 			-- Generate a call on target register `t' using register `s' to pass arguments

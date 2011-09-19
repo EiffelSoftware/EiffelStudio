@@ -1471,6 +1471,7 @@ RT_LNK void eif_exit_eiffel_code(void);
  * RTS_CP(s,f,n,t,a)   - call a procedure on a static type s with a feature id f and name n on a target t and arguments a
  * RTS_CC(s,f,d,a)     - call a creation procedure (asynchronous) on a static type s with a feature id f on a target of dynamic type d and arguments a
  * RTS_CA(o,p,t,a,r)   - call an attribute at offset o using pattern p on target t with arguments a and result r
+ * RTS_CS(t,a)         - call a constant on target t with call structure a
  */
 
 #ifdef WORKBENCH
@@ -1498,7 +1499,7 @@ RT_LNK void eif_exit_eiffel_code(void);
 		((call_data*)(a)) -> pattern = p;                 \
 		((call_data*)(a)) -> result = &(r);               \
 		((call_data*)(a)) -> sync_pid = RTS_PID(Current); \
-		eif_log_call (((call_data*)(a))->sync_pid, a);               \
+		eif_log_call (((call_data*)(a))->sync_pid, a);    \
 	}
 #define RTS_CP(f,p,t,a) \
 	{                                                         \
@@ -1513,7 +1514,13 @@ RT_LNK void eif_exit_eiffel_code(void);
 		((call_data*)(a)) -> pattern = p;                 \
 		((call_data*)(a)) -> result = &(r);               \
 		((call_data*)(a)) -> sync_pid = RTS_PID(Current); \
-		eif_log_call (((call_data*)(a))->sync_pid, a);               \
+		eif_log_call (((call_data*)(a))->sync_pid, a);    \
+	}
+#define RTS_CS(t,a) \
+	{                                                         \
+		((call_data*)(a)) -> pattern = eif_call_const;    \
+		((call_data*)(a)) -> sync_pid = RTS_PID(Current); \
+		eif_log_call (((call_data*)(a))->sync_pid, a);    \
 	}
 #endif /* WORKBENCH */
 

@@ -258,6 +258,9 @@ feature {NONE} -- Separate call
 				check
 					attached {ATTR_TABLE [ATTR_ENTRY]} eiffel_table.poly_table (routine_id) as attr_table
 				then
+						-- Offset is not generated if it is zero, so to make the generated code valid,
+						-- the base value "0" has to be generated.
+					buf.put_character ('0')
 					attr_table.generate_attribute_offset (buf, target_type, context.context_class_type)
 				end
 			end

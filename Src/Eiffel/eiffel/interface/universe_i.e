@@ -780,9 +780,9 @@ feature {COMPILER_EXPORTER} -- Implementation
 					a_set.after
 				loop
 					if not l_kernel_library.classes.has (a_set.key_for_iteration) then
-						create vd23
-						vd23.set_class_name (l_class_name)
 						if not a_except.has (l_class_name) then
+							create vd23
+							vd23.set_class_name (l_class_name)
 							error_handler.insert_error (vd23)
 						end
 					else
@@ -826,9 +826,9 @@ feature {COMPILER_EXPORTER} -- Implementation
 						end
 					end
 					if l_count = 0 then
-						create vd23
-						vd23.set_class_name (l_class_name)
 						if not a_except.has (l_class_name) then
+							create vd23
+							vd23.set_class_name (l_class_name)
 							error_handler.insert_error (vd23)
 						end
 						-- if we have two results it's possible that we got a class which is overriden and the override itself

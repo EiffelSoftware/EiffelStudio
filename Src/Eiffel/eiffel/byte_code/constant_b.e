@@ -1,7 +1,9 @@
 note
+	description: "Byte code for constants (hardwired in final mode)."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
--- Byte code for constants (hardwired in final mode)
+	date: "$Date$"
+	revision: "$Revision$"
 
 class CONSTANT_B
 
@@ -9,14 +11,27 @@ inherit
 
 	ACCESS_B
 		redefine
-			set_parent, canonical,
-			has_gcable_variable, is_single, enlarged, is_constant,
-			propagate, print_register, free_register,
-			unanalyze, analyze, analyze_on,
-			generate, generate_on, generate_parameters,
-			allocates_memory, need_target,
-			evaluate, is_constant_expression,
-			set_multi_constraint_static
+			allocates_memory,
+			analyze,
+			analyze_on,
+			canonical,
+			enlarged,
+			evaluate,
+			free_register,
+			generate,
+			generate_on,
+			generate_parameters,
+			generate_separate_call,
+			has_gcable_variable,
+			is_constant,
+			is_constant_expression,
+			is_single,
+			need_target,
+			print_register,
+			propagate,
+			set_multi_constraint_static,
+			set_parent,
+			unanalyze
 		end
 
 create
@@ -237,8 +252,38 @@ feature -- Comparison
 			Result := value.is_string or else value.is_bit
 		end
 
+feature {NONE} -- Separate call
+
+	generate_separate_call (s: REGISTER; r: detachable REGISTRABLE; t: REGISTRABLE)
+			-- <Precursor>
+		local
+			b: GENERATION_BUFFER
+		do
+			if context.workbench_mode then
+				access.generate_separate_call (s, r, t)
+			else
+				b := buffer
+					-- Generate code
+					--   RTS_CS (t, s);
+					--   r = value;
+				b.put_new_line
+				b.put_string ("RTS_CS (")
+				t.print_register
+				b.put_two_character (',', ' ')
+				s.print_register
+				b.put_two_character (')', ';')
+				check attached r then
+					b.put_new_line
+					r.print_register
+					b.put_three_character (' ', '=', ' ')
+					print_register
+					b.put_character (';')
+				end
+			end
+		end
+
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

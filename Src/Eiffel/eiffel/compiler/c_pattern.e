@@ -298,11 +298,11 @@ feature -- Pattern generation
 						-- Result might need to be boxed.
 					buffer.put_string (
 						once "[
-							if (result.type != SK_REF) {
+							if ((result.type & SK_HEAD) == SK_REF) {
+									*it = result;
+								} else {
 									it->type = SK_REF;
 									it->it_ref = RTBU(result);
-								} else {
-									*it = result;
 								}
 						]"
 					)
@@ -395,9 +395,9 @@ feature -- Pattern generation
 					buffer.put_character (';')
 					buffer.put_string ("it->");
 					arg.generate_typed_field (buffer);
-					buffer.put_string (" = (arg");
+					buffer.put_string (" = ((arg");
 					buffer.put_integer (i);
-					buffer.put_string (".type == SK_REF)? * ")
+					buffer.put_string (".type & SK_HEAD) == SK_REF)? * ")
 					arg.generate_access_cast (buffer)
 					buffer.put_string ("arg")
 					buffer.put_integer (i)

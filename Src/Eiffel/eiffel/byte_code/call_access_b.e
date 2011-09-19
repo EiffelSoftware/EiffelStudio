@@ -390,9 +390,9 @@ feature {NONE} -- C code generation
 				check
 					result_register_attached: attached result_register -- From precondition.
 				end
-				buf.put_string (", ((")
+				buf.put_string (", (((")
 				l_context.print_argument_register (result_register, buf)
-				buf.put_string (".type == SK_REF)? (EIF_REFERENCE) 0: (")
+				buf.put_string (".type & SK_HEAD) == SK_REF)? (EIF_REFERENCE) 0: (")
 				l_context.print_argument_register (result_register, buf)
 				buf.put_character ('.')
 				return_type.generate_typed_field (buf)

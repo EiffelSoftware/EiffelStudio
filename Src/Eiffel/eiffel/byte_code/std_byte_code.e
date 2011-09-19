@@ -1076,9 +1076,9 @@ end
 						if not c_type.is_reference then
 								-- The argument type is not reference, so it might be boxed.
 							buf.put_new_line
-							buf.put_string ("if (arg")
+							buf.put_string ("if ((arg")
 							buf.put_integer (i)
-							buf.put_string ("x.type == SK_REF) arg")
+							buf.put_string ("x.type & SK_HEAD) == SK_REF) arg")
 							buf.put_integer (i)
 							buf.put_two_character ('x', '.')
 							c_type.generate_typed_field (buf)

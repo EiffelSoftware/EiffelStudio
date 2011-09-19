@@ -345,14 +345,14 @@ feature {NONE} -- C code generation
 			if not final_mode then
 				if not type_c.is_reference then
 					buffer.put_new_line
-					buffer.put_string ("if (arg1x.type == SK_REF) arg1x.")
+					buffer.put_string ("if ((arg1x.type & SK_HEAD) == SK_REF) arg1x.")
 					type_c.generate_typed_field (buffer)
 					buffer.put_string (" = * ")
 					type_c.generate_access_cast (buffer)
 					buffer.put_string ("arg1x.it_r;")
 				end
 				buffer.put_new_line
-				buffer.put_string ("if (arg2x.type == SK_REF) arg2x.it_i4 = * (EIF_INTEGER_32 *) arg2x.it_r;")
+				buffer.put_string ("if ((arg2x.type & SK_HEAD) == SK_REF) arg2x.it_i4 = * (EIF_INTEGER_32 *) arg2x.it_r;")
 				buffer.put_new_line_only
 				buffer.put_string ("#define arg1 arg1x.")
 				type_c.generate_typed_field (buffer)
@@ -523,14 +523,14 @@ feature {NONE} -- C code generation
 			if not final_mode then
 				if not type_c.is_reference then
 					buffer.put_new_line
-					buffer.put_string ("if (arg1x.type == SK_REF) arg1x.")
+					buffer.put_string ("if ((arg1x.type & SK_HEAD) == SK_REF) arg1x.")
 					type_c.generate_typed_field (buffer)
 					buffer.put_string (" = * ")
 					type_c.generate_access_cast (buffer)
 					buffer.put_string ("arg1x.it_r;")
 				end
 				buffer.put_new_line
-				buffer.put_string ("if (arg2x.type == SK_REF) arg2x.it_i4 = * (EIF_INTEGER_32 *) arg2x.it_r;")
+				buffer.put_string ("if ((arg2x.type & SK_HEAD) == SK_REF) arg2x.it_i4 = * (EIF_INTEGER_32 *) arg2x.it_r;")
 				buffer.put_new_line_only
 				buffer.put_string ("#define arg1 arg1x.")
 				type_c.generate_typed_field (buffer)
@@ -714,7 +714,7 @@ feature {NONE} -- C code generation
 				buffer.put_new_line
 				if not type_c.is_reference then
 					buffer.put_new_line
-					buffer.put_string ("if (arg1x.type == SK_REF) arg1x.")
+					buffer.put_string ("if ((arg1x.type & SK_HEAD) == SK_REF) arg1x.")
 					type_c.generate_typed_field (buffer)
 					buffer.put_string (" = * ")
 					type_c.generate_access_cast (buffer)
@@ -941,7 +941,7 @@ feature {NONE} -- C code generation
 
 			if not final_mode then
 				buffer.put_new_line
-				buffer.put_string ("if (arg1x.type == SK_REF) arg1x.it_i4 = * (EIF_INTEGER_32 *) arg1x.it_r;")
+				buffer.put_string ("if ((arg1x.type & SK_HEAD) == SK_REF) arg1x.it_i4 = * (EIF_INTEGER_32 *) arg1x.it_r;")
 				buffer.put_new_line_only
 				buffer.put_string ("#define arg1 arg1x.it_i4")
 			end
@@ -1060,7 +1060,7 @@ feature {NONE} -- C code generation
 				type_c.generate_typed_tag (buffer)
 				buffer.put_character (';')
 				buffer.put_new_line
-				buffer.put_string ("if (arg1x.type == SK_REF) arg1x.it_i4 = * (EIF_INTEGER_32 *) arg1x.it_r;")
+				buffer.put_string ("if ((arg1x.type & SK_HEAD) == SK_REF) arg1x.it_i4 = * (EIF_INTEGER_32 *) arg1x.it_r;")
 				buffer.put_new_line_only
 				buffer.put_string ("#define arg1 arg1x.it_i4")
 			end
@@ -1231,7 +1231,7 @@ feature {NONE} -- C code generation
 				result_type.c_type.generate_typed_tag (buffer)
 				buffer.put_character (';')
 				buffer.put_new_line
-				buffer.put_string ("if (arg1x.type == SK_REF) arg1x.it_i4 = * (EIF_INTEGER_32 *) arg1x.it_r;")
+				buffer.put_string ("if ((arg1x.type & SK_HEAD) == SK_REF) arg1x.it_i4 = * (EIF_INTEGER_32 *) arg1x.it_r;")
 				buffer.put_new_line_only
 				buffer.put_string ("#define arg1 arg1x.it_i4")
 			end
@@ -1437,14 +1437,14 @@ feature {NONE} -- C code generation
 			if not final_mode then
 				if not type_c.is_reference then
 					buffer.put_new_line
-					buffer.put_string ("if (arg1x.type == SK_REF) arg1x.")
+					buffer.put_string ("if ((arg1x.type & SK_HEAD) == SK_REF) arg1x.")
 					type_c.generate_typed_field (buffer)
 					buffer.put_string (" = * ")
 					type_c.generate_access_cast (buffer)
 					buffer.put_string ("arg1x.it_r;")
 				end
 				buffer.put_new_line
-				buffer.put_string ("if (arg2x.type == SK_REF) arg2x.it_i4 = * (EIF_INTEGER_32 *) arg2x.it_r;")
+				buffer.put_string ("if ((arg2x.type & SK_HEAD) == SK_REF) arg2x.it_i4 = * (EIF_INTEGER_32 *) arg2x.it_r;")
 				buffer.put_new_line_only
 				buffer.put_string ("#define arg1 arg1x.")
 				type_c.generate_typed_field (buffer)

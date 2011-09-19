@@ -68,8 +68,8 @@ rt_public void eif_log_callp (int origin, int offset, EIF_SCP_PID current_pid, c
 rt_public void eif_try_call (call_data * a);
 #else
 #define eif_log_call(p,a) RTS_TCB(scoop_task_add_call,((EIF_SCP_PID)(p)),RTS_PID(eif_access (((call_data*)(a))->target)),0,((call_data*)(a)),NULL);
-
 #define eif_try_call(a) ((call_data *)(a))->pattern (a);
+void eif_call_const (call_data * a);
 #endif
 
 

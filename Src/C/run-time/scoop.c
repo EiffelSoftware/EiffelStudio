@@ -121,6 +121,13 @@ rt_public void eif_try_call (call_data * a)
 	}
 }
 
+#else
+
+void eif_call_const (call_data * a)
+{
+	/* Constant value is hard-coded in the generated code: nothing to do here. */
+}
+
 #endif /* WORKBENCH */
 
 rt_public void eif_free_call (call_data * a)

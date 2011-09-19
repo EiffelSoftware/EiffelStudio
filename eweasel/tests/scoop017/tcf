@@ -1,6 +1,5 @@
-
 test_name	 scoop-separate-call-to-constant
-test_description A separate call to a constant feature does not produce correct output for frozen or finalized code
+test_description A separate call to a constant feature should produce correct output.
 
 copy_sub	Ace	$TEST Ace
 copy_raw	test.e $CLUSTER test.e

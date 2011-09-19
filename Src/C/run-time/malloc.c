@@ -3957,23 +3957,23 @@ doc:	</routine>
 rt_public EIF_REFERENCE eif_box (EIF_TYPED_VALUE v)
 {
 	EIF_REFERENCE Result;
-	switch (v.type)
+	switch (v.type & SK_HEAD)
 	{
-		case SK_BOOL:    Result = RTLN(egc_bool_dtype);   *                   Result = v.it_b; break;
-		case SK_CHAR8:    Result = RTLN(egc_char_dtype);   *                   Result = v.it_c1; break;
-		case SK_CHAR32:   Result = RTLN(egc_wchar_dtype);  *(EIF_CHARACTER_32 *)  Result = v.it_c4; break;
-		case SK_UINT8:   Result = RTLN(egc_uint8_dtype);  *(EIF_NATURAL_8 *)  Result = v.it_n1; break;
-		case SK_UINT16:  Result = RTLN(egc_uint16_dtype); *(EIF_NATURAL_16 *) Result = v.it_n2; break;
-		case SK_UINT32:  Result = RTLN(egc_uint32_dtype); *(EIF_NATURAL_32 *) Result = v.it_n4; break;
-		case SK_UINT64:  Result = RTLN(egc_uint64_dtype); *(EIF_NATURAL_64 *) Result = v.it_n8; break;
-		case SK_INT8:    Result = RTLN(egc_int8_dtype);   *(EIF_INTEGER_8 *)  Result = v.it_i1; break;
-		case SK_INT16:   Result = RTLN(egc_int16_dtype);  *(EIF_INTEGER_16 *) Result = v.it_i2; break;
-		case SK_INT32:   Result = RTLN(egc_int32_dtype);  *(EIF_INTEGER_32 *) Result = v.it_i4; break;
-		case SK_INT64:   Result = RTLN(egc_int64_dtype);  *(EIF_INTEGER_64 *) Result = v.it_i8; break;
-		case SK_REAL32:  Result = RTLN(egc_real32_dtype); *(EIF_REAL_32 *)    Result = v.it_r4; break;
-		case SK_REAL64:  Result = RTLN(egc_real64_dtype); *(EIF_REAL_64 *)    Result = v.it_r8; break;
-		case SK_POINTER: Result = RTLN(egc_point_dtype);  *(EIF_POINTER *)    Result = v.it_p; break;
-		case SK_REF:     Result = v.it_r; break;
+		case SK_BOOL:    Result = RTLN(egc_bool_dtype);   *                     Result = v.it_b;  break;
+		case SK_CHAR8:   Result = RTLN(egc_char_dtype);   *                     Result = v.it_c1; break;
+		case SK_CHAR32:  Result = RTLN(egc_wchar_dtype);  *(EIF_CHARACTER_32 *) Result = v.it_c4; break;
+		case SK_UINT8:   Result = RTLN(egc_uint8_dtype);  *(EIF_NATURAL_8 *)    Result = v.it_n1; break;
+		case SK_UINT16:  Result = RTLN(egc_uint16_dtype); *(EIF_NATURAL_16 *)   Result = v.it_n2; break;
+		case SK_UINT32:  Result = RTLN(egc_uint32_dtype); *(EIF_NATURAL_32 *)   Result = v.it_n4; break;
+		case SK_UINT64:  Result = RTLN(egc_uint64_dtype); *(EIF_NATURAL_64 *)   Result = v.it_n8; break;
+		case SK_INT8:    Result = RTLN(egc_int8_dtype);   *(EIF_INTEGER_8 *)    Result = v.it_i1; break;
+		case SK_INT16:   Result = RTLN(egc_int16_dtype);  *(EIF_INTEGER_16 *)   Result = v.it_i2; break;
+		case SK_INT32:   Result = RTLN(egc_int32_dtype);  *(EIF_INTEGER_32 *)   Result = v.it_i4; break;
+		case SK_INT64:   Result = RTLN(egc_int64_dtype);  *(EIF_INTEGER_64 *)   Result = v.it_i8; break;
+		case SK_REAL32:  Result = RTLN(egc_real32_dtype); *(EIF_REAL_32 *)      Result = v.it_r4; break;
+		case SK_REAL64:  Result = RTLN(egc_real64_dtype); *(EIF_REAL_64 *)      Result = v.it_r8; break;
+		case SK_POINTER: Result = RTLN(egc_point_dtype);  *(EIF_POINTER *)      Result = v.it_p;  break;
+		case SK_REF:                                                            Result = v.it_r;  break;
 		default:
 			Result = NULL;	/* To avoid C warnings. */
 			eif_panic("illegal value type");

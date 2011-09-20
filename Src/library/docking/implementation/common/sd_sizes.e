@@ -28,7 +28,7 @@ feature {NONE} -- Initlization
 			if attached l_env.application as l_app then
 				l_app.theme_changed_actions.extend (agent update_all)
 			end
-			
+
 		end
 
 feature {NONE} -- Implementation
@@ -46,7 +46,6 @@ feature {NONE} -- Implementation
 			-- Update `Tool_bar_font_cell' and related singletons.
 		local
 			l_color: SD_SYSTEM_COLOR
-			l_platform: PLATFORM
 			l_tool_bar_font: EV_FONT
 			l_notebook_tab_height: INTEGER
 			l_notebook_tab_maximum_size: INTEGER
@@ -59,11 +58,8 @@ feature {NONE} -- Implementation
 			l_tool_bar_font := l_color.tool_bar_font
 			Tool_bar_font_cell.put (l_tool_bar_font)
 
-			l_notebook_tab_height := l_tool_bar_font.height * 3 // 2
-			create l_platform
-			if l_platform.is_windows then
-				l_notebook_tab_height := l_notebook_tab_height + 2
-			end
+			l_notebook_tab_height := (l_tool_bar_font.height * 3 // 2) + 2
+
 			notebook_tab_height_cell.put (l_notebook_tab_height)
 
 			l_notebook_tab_maximum_size :=  l_tool_bar_font.width * 35
@@ -72,13 +68,10 @@ feature {NONE} -- Implementation
 			l_title_bar_height := l_tool_bar_font.height * 3 // 2 + 2
 			title_bar_height_cell.put (l_title_bar_height)
 
-			l_title_bar_text_start_y := (l_title_bar_height / 2 - l_tool_bar_font.height / 2).rounded
+			l_title_bar_text_start_y := (l_title_bar_height / 2 - (l_tool_bar_font.height + 1) / 2).rounded
 			title_bar_text_start_y_cell.put (l_title_bar_text_start_y)
 
-			l_tool_bar_border_width := (l_tool_bar_font.height / 2).floor
-			if l_platform.is_windows then
-				l_tool_bar_border_width := l_tool_bar_border_width + 1
-			end
+			l_tool_bar_border_width := (l_tool_bar_font.height / 2).floor + 1
 			tool_bar_border_width_cell.put (l_tool_bar_border_width)
 
 			l_tool_bar_size := l_tool_bar_font.height + 2 * l_tool_bar_border_width
@@ -256,14 +249,14 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

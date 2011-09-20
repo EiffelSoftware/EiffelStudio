@@ -574,7 +574,7 @@ feature {NONE} -- Implementation
 			if not l_seed_type.is_void then
 				check actual_not_void: not l_type.is_void end
 				if l_seed_type.same_as (l_type) then
-					buffer.put_string ("return ")
+					buffer.put_string ({C_CONST}.return); buffer.put_character (' ')
 				else
 						-- The declaration are different, we need to adapt the return type.
 						-- Currently we can only accept that the seed type is a reference

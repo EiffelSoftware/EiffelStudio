@@ -98,6 +98,23 @@ feature -- Status report
 			Result := implementation.widget_at_mouse_pointer
 		end
 
+	monitor_area_from_position (a_x, a_y: INTEGER): EV_RECTANGLE
+			-- Full area of monitor nearest to coordinates (a_x, a_y).
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.monitor_area_from_position (a_x, a_y)
+		end
+
+	monitor_area_from_window (a_window: EV_WINDOW): EV_RECTANGLE
+			-- Full area of monitor of which most of `a_window' is located.
+			-- Returns nearest monitor area if `a_window' does not overlap any monitors.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.monitor_area_from_window (a_window)
+		end
+
 feature -- Basic operation
 
 	set_pointer_position (x, y: INTEGER)
@@ -209,6 +226,14 @@ feature -- Measurement
 			-- Number of pixels per inch along screen width.
 		do
 			Result := implementation.horizontal_resolution
+		ensure
+			positive: Result > 0
+		end
+
+	monitor_count: INTEGER
+			-- Number of monitors used for displaying virtual screen.
+		do
+			Result := implementation.monitor_count
 		ensure
 			positive: Result > 0
 		end

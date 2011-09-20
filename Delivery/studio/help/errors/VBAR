@@ -1,6 +1,9 @@
-VBAR, chapter 2 (Syntax, validity and semantics), page 27
+VBAR, ECMA-367, 2nd edition, section 8.22.3
 
      Assignment rule
 
-     An Assignment is valid if and only if its source expression
-     is compatible with its target entity.
+     An Assignment is valid if and only if
+
+        1 Source expression is compatible with its target entity.
+
+        2 If target is stable, then source is attached.

@@ -1,0 +1,3 @@
+Type error: source of assignment is not compatible to target.
+What to do: make sure that type of source is compatible with
+  type of target.

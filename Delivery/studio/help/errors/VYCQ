@@ -27,3 +27,5 @@ VYCQ, section 8.15.8 (ECMA-367, 2nd edition)
         7 The result type of f conforms to TARGET.
         
         8 TARGET involves no anchored type.
+
+        9 TARGET is attached.

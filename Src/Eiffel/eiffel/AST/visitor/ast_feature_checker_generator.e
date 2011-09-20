@@ -468,10 +468,17 @@ feature {AST_FEATURE_CHECKER_GENERATOR}
 	is_void_safe_call (a_class: CLASS_C): BOOLEAN
 			-- Is code being check for void-safe calls on `a_class'?
 		require
-
 			a_class_attached: a_class /= Void
 		do
 			Result := a_class.lace_class.is_void_safe_call
+		end
+
+	is_void_safe_conformance (a_class: CLASS_C): BOOLEAN
+			-- Is code being check for void-safe conformance on `a_class'?
+		require
+			a_class_attached: a_class /= Void
+		do
+			Result := a_class.lace_class.is_void_safe_conformance
 		end
 
 	is_void_safe_initialization (a_class: CLASS_C): BOOLEAN
@@ -602,8 +609,8 @@ feature {NONE} -- Implementation: State
 	last_assigner_type: detachable TYPE_A
 			-- Type of the expected type for source of assigner call.
 
-	last_assigner_query: detachable FEATURE_I
-			-- Query of the assigner command.
+	last_assignment_target: detachable FEATURE_I
+			-- Target of assignment or assigner command.
 
 	is_assigner_call: BOOLEAN
 			-- Is an assigner call being processed?
@@ -714,7 +721,7 @@ feature {NONE} -- Settings
 			is_type_compatible := [False, l_conv_info]
 			last_assigner_command := Void
 			last_assigner_type := Void
-			last_assigner_query := Void
+			last_assignment_target := Void
 			set_is_inherited (False)
 			inline_agent_byte_codes := Void
 		end
@@ -1894,10 +1901,9 @@ feature {NONE} -- Implementation
 										-- it might be still unsafe to use the attribute in the expression
 										-- before actual reattachment takes place.
 									last_reinitialized_variable := - l_feature.feature_name_id
-									l_result_type := l_result_type.as_attached_in (context.current_class)
-									last_type := l_result_type
+									last_assignment_target := l_feature
 								elseif context.is_attribute_attached (l_feature.feature_name_id) then
-										-- Attribute is of a detachable type, but it's safe to use it as an attached one.
+										-- Attribute may be of a detachable type, but it's safe to use it as an attached one.
 									l_result_type := l_result_type.as_attached_in (context.current_class)
 									last_type := l_result_type
 								end
@@ -5289,6 +5295,7 @@ feature {NONE} -- Implementation
 			l_assign: ASSIGN_B
 			l_ve03: VE03
 			l_source_type, l_target_type: TYPE_A
+			target_attribute: FEATURE_I
 			l_vjar: VJAR
 			l_vncb: VNCB
 			l_warning_count: INTEGER
@@ -5305,8 +5312,11 @@ feature {NONE} -- Implementation
 			last_reinitialized_variable := 0
 			set_is_in_assignment (True)
 			last_access_writable := False
+			last_assignment_target := Void
 			l_as.target.process (Current)
 			set_is_in_assignment (False)
+			target_attribute := last_assignment_target
+			last_assignment_target := Void
 				-- Record initialized variable to commit it after the expression is processed.
 			l_reinitialized_variable := last_reinitialized_variable
 			l_target_type := last_type
@@ -5363,6 +5373,13 @@ feature {NONE} -- Implementation
 						l_vjar.set_location (l_as.start_location)
 						error_handler.insert_error (l_vjar)
 					end
+				elseif
+					attached target_attribute and then
+					target_attribute.is_stable and then
+					not l_source_type.is_implicitly_attached and then
+					is_void_safe_conformance (context.current_class)
+				then
+					error_handler.insert_error (create {VBAR2}.make (l_source_type, target_attribute, l_as.start_location, context))
 				else
 					if l_warning_count /= error_handler.warning_list.count then
 						error_handler.warning_list.last.set_location (l_as.start_location)
@@ -5422,7 +5439,7 @@ feature {NONE} -- Implementation
 			target_byte_node: like last_byte_node
 			target_type: like last_type
 			target_assigner: like last_assigner_command
-			target_query: like last_assigner_query
+			target_query: like last_assignment_target
 			source_byte_node: EXPR_B
 			source_type: like last_type
 			vbac1: VBAC1
@@ -5446,7 +5463,7 @@ feature {NONE} -- Implementation
 			break_point_slot_count := break_point_slot_count + 1
 
 			last_assigner_command := Void
-			last_assigner_query := Void
+			last_assignment_target := Void
 				-- Set assigner call flag for target expression
 			is_assigner_call := True
 			l_as.target.process (Current)
@@ -5459,7 +5476,7 @@ feature {NONE} -- Implementation
 			target_type := last_type
 			if target_type /= Void then
 				target_assigner := last_assigner_command
-				target_query := last_assigner_query
+				target_query := last_assignment_target
 				if target_assigner = Void and then not l_is_tuple_access then
 						-- If we have no `target_assigner' and the last access is not a tuple access
 						-- then we have an error.
@@ -5634,6 +5651,7 @@ feature {NONE} -- Implementation
 			l_ve03: VE03
 			l_source_type, l_target_type: TYPE_A
 			l_formal: FORMAL_A
+			target_attribute: FEATURE_I
 			l_vjrv1: VJRV1
 			l_vjrv2: VJRV2
 			l_vjrv3: VJRV3
@@ -5650,7 +5668,10 @@ feature {NONE} -- Implementation
 			last_reinitialized_variable := 0
 			last_access_writable := False
 			set_is_in_assignment (True)
+			last_assignment_target := Void
 			l_as.target.process (Current)
+			target_attribute := last_assignment_target
+			last_assignment_target := Void
 			set_is_in_assignment (False)
 			l_target_type := last_type
 			l_reinitialized_variable := last_reinitialized_variable
@@ -5702,6 +5723,12 @@ feature {NONE} -- Implementation
 						l_vjrv3.set_target_type (l_target_type)
 						l_vjrv3.set_location (l_as.target.end_location)
 						error_handler.insert_error (l_vjrv3)
+					elseif
+						attached target_attribute and then
+						target_attribute.is_stable and then
+						is_void_safe_conformance (context.current_class)
+					then
+						error_handler.insert_error (create {VBAR2}.make (l_target_type.as_detachable_type, target_attribute, l_as.start_location, context))
 					elseif l_target_type.actual_type.is_formal then
 						l_formal ?= l_target_type.actual_type
 						check
@@ -8629,7 +8656,7 @@ feature {NONE} -- Implementation
 			l_type: TYPE_A
 			l_target_class_id: INTEGER
 		do
-			last_assigner_query := target_query
+			last_assignment_target := target_query
 			l_assigner_name := target_query.assigner_name
 			if l_assigner_name = Void then
 				last_assigner_command := Void

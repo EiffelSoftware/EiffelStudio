@@ -308,11 +308,9 @@ feature -- Basic operations
 				create Result.make (s, e)
 			end
 		ensure
-			intersects_validity: intersects (other) implies Result /= Void
-			result_is_included_by_current: intersects (other) implies
-				(Result /= Void and then includes (Result))
-			result_is_included_by_other: intersects (other) implies
-				(Result /= Void and then other.includes (Result))
+			intersects_validity: intersects (other) = attached Result
+			result_is_included_by_current: attached Result implies includes (Result)
+			result_is_included_by_other: attached Result implies other.includes (Result)
 		end
 
 	gather (other: like Current): like Current
@@ -354,11 +352,11 @@ note
 	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

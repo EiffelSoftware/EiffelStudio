@@ -169,9 +169,7 @@ feature -- Status setting
 feature -- Basic operation
 
 	select_region (start_pos, end_pos: INTEGER)
-			-- Select (hilight) the text between
-			-- `start_pos' and `end_pos'. Both `start_pos' and
-			-- `end_pos' are selected.
+			-- <Precursor>
 		local
 			a_start_iter, a_end_iter: EV_GTK_TEXT_ITER_STRUCT
 		do
@@ -179,6 +177,27 @@ feature -- Basic operation
 			create a_end_iter.make
 			{GTK2}.gtk_text_buffer_get_iter_at_offset (text_buffer, a_start_iter.item, start_pos - 1)
 			{GTK2}.gtk_text_buffer_get_iter_at_offset (text_buffer, a_end_iter.item, end_pos)
+			{GTK2}.gtk_text_buffer_move_mark (
+										text_buffer,
+										{GTK2}.gtk_text_buffer_get_selection_bound (text_buffer),
+										a_start_iter.item
+			)
+			{GTK2}.gtk_text_buffer_move_mark (
+										text_buffer,
+										{GTK2}.gtk_text_buffer_get_insert (text_buffer),
+										a_end_iter.item
+			)
+		end
+
+	set_selection (start_pos, end_pos: INTEGER)
+			-- <Precursor>
+		local
+			a_start_iter, a_end_iter: EV_GTK_TEXT_ITER_STRUCT
+		do
+			create a_start_iter.make
+			create a_end_iter.make
+			{GTK2}.gtk_text_buffer_get_iter_at_offset (text_buffer, a_start_iter.item, start_pos - 1)
+			{GTK2}.gtk_text_buffer_get_iter_at_offset (text_buffer, a_end_iter.item, end_pos - 1)
 			{GTK2}.gtk_text_buffer_move_mark (
 										text_buffer,
 										{GTK2}.gtk_text_buffer_get_selection_bound (text_buffer),

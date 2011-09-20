@@ -271,10 +271,15 @@ feature -- Basic operation
 		end
 
 	select_region (start_pos, end_pos: INTEGER)
-			-- Select (highlight) the text between
-			-- 'start_pos' and 'end_pos'.
+			-- <Precursor>
 		do
 			{GTK}.gtk_editable_select_region (entry_widget, start_pos.min (end_pos) - 1, end_pos.max (start_pos))
+		end
+
+	set_selection (start_pos, end_pos: INTEGER)
+			-- <Precursor>
+		do
+			{GTK}.gtk_editable_select_region (entry_widget, start_pos - 1, end_pos - 1)
 		end
 
 	deselect_all

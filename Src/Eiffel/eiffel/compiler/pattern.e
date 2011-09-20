@@ -157,7 +157,7 @@ feature -- Access
 		do
 			arg_count := argument_count;
 			if arg_count > 0 then
-				create new_arguments.make_empty (argument_count)
+				create new_arguments.make_empty (arg_count)
 				from
 					i := 0
 				until

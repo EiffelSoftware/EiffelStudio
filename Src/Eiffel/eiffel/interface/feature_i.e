@@ -2860,8 +2860,6 @@ end
 			assigner_arguments: like arguments
 			query_arguments: like arguments
 			vfac: VFAC
-			query_type: TYPE_A
-			assigner_type: TYPE_A
 		do
 			if feature_table.feat_tbl_id = written_in then
 					-- Lookup feature in `feature_table' as feature table in the current class is not set yet.

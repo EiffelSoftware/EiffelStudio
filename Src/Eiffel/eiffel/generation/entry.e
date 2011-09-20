@@ -102,8 +102,6 @@ feature -- previously in POLY_UNIT
 			-- Type id of the result type in `class_type'.
 		require
 			good_argument: class_type /= Void
-		local
-			l_type: LIKE_CURRENT
 		do
 			Result := type_a
 			if Result.is_like_current then

@@ -23,6 +23,38 @@ feature -- Various names used for registers during code generation.
 	inlined_dftype_name: STRING = "inlined_dftype"
 	keys_name: STRING = "keys"
 	where_name: STRING = "where"
+	eif_optimize_return: STRING = "eif_optimize_return"
+	nstcall: STRING = "nstcall"
+	data: STRING = "data"
+
+	error: STRING = "ERROR"
+
+	define: STRING = "#define"
+	undef: STRING = "#undef"
+	undef_result: STRING = "#undef Result"
+	undef_arg: STRING = "#undef arg"
+	define_arg: STRING = "#define arg"
+	eif_volatile: STRING = "EIF_VOLATILE"
+	undef_eif_volatile: STRING = "#undef EIF_VOLATILE"
+	define_eif_volatile: STRING = "#define EIF_VOLATILE"
+
+	body_postfix: STRING = "_body"
+	notreached_comment: STRING = "/* NOTREACHED */"
+	space_equals_space: STRING = " = "
+	space_or_space: STRING = " || "
+
+	eif_reference__earg: STRING = "EIF_REFERENCE earg"
+	eif_boolean__uarg: STRING = "EIF_BOOLEAN uarg"
+
+	sarg: STRING = "sarg"
+	earg: STRING = "earg"
+	uarg: STRING = "uarg"
+	arg: STRING = "arg"
+	sloc: STRING = "sloc"
+	ptr: STRING = "ptr"
+	fnptr: STRING = "fnptr"
+
+	saved_except: STRING = "saved_except"
 
 feature -- Skeleton
 
@@ -40,6 +72,11 @@ feature -- Function definitions
 	function_cast: STRING = "FUNCTION_CAST"
 	function_cast_type: STRING = "FUNCTION_CAST_TYPE"
 
+feature -- Run-time functions
+
+	eif_attached_type: STRING = "eif_attached_type"
+	eif_non_attached_type: STRING = "eif_non_attached_type"
+
 feature -- Macros
 
 	rtlr: STRING = "RTLR"
@@ -51,6 +88,86 @@ feature -- Macros
 	rtms32_ex_h: STRING = "RTMS32_EX_H"
 	dtype: STRING = "Dtype"
 	dftype: STRING = "Dftype"
+	rtcv: STRING = "RTCV"
+	rtnr: STRING = "RTNR"
+	rtar: STRING = "RTAR"
+	rtal: STRING = "RTAL"
+	rtgc: STRING = "RTGC"
+	rtrs: STRING = "RTRS"
+	rteaa: STRING = "RTEAA"
+	rtdbgeaa: STRING = "RTDBGEAA"
+	rtev: STRING = "RTEV"
+	rtdbgle: STRING = "RTDBGLE"
+	rtee: STRING = "RTEE"
+	rtle: STRING = "RTLE"
+	rtme: STRING = "RTME"
+	rtrr: STRING = "RTRR"
+	rtpr: STRING = "RTPR"
+	rtmd: STRING = "RTMD"
+	rtxt: STRING = "RTXT"
+	rtxp: STRING = "RTXP"
+	rtex: STRING = "RTEX"
+	rted: STRING = "RTED"
+	rtlt: STRING = "RTLT"
+	rtlp: STRING = "RTLP"
+
+	rtbu: STRING = "RTBU"
+
+	rtiv: STRING = "RTIV"
+	rtvi: STRING = "RTVI"
+
+	rtsa: STRING = "RTSA"
+	rtsc: STRING = "RTSC"
+
+	rtjb: STRING = "RTJB"
+	rtck: STRING = "RTCK"
+	rtcf: STRING = "RTCF"
+
+	rtsn: STRING = "RTSN"
+	rtda: STRING = "RTDA"
+	rtdt: STRING = "RTDT"
+	rtxd: STRING = "RTXD"
+	rtld: STRING = "RTLD"
+	rtlxd: STRING = "RTLXD"
+
+	rtti: STRING = "RTTI"
+	rtpi: STRING = "RTPI"
+	rte_t: STRING = "RTE_T"
+	rte_e: STRING = "RTE_E"
+	rtlxe: STRING = "RTLXE"
+	rtxs: STRING = "RTXS"
+	rte_ee: STRING = "RTE_EE"
+
+	rtwf: STRING = "RTWF"
+	rtwpf: STRING = "RTWPF"
+	rtvf: STRING = "RTVF"
+	rtvpf: STRING = "RTVPF"
+	rtwc: STRING = "RTWC"
+	rtwpc: STRING = "RTWPC"
+	rtcc: STRING = "RTCC"
+
+	rteainv: STRING = "RTEAINV"
+
+	rtlnrw: STRING = "RTLNRW"
+	rtlnrf: STRING = "RTLNRF"
+
+	rteok: STRING = "RTEOK"
+	rtxe: STRING = "RTXE"
+
+	rtrcl: STRING = "RTRCL"
+	rtrb: STRING = "RTRB"
+	rtre: STRING = "RTRE"
+	rtrv: STRING = "RTRV"
+
+
+	rts_ca: STRING = "RTS_CA"
+	rts_cf: STRING = "RTS_CF"
+	rts_cfp: STRING = "RTS_CFP"
+	rts_cc: STRING = "RTS_CC"
+	rts_ccp: STRING = "RTS_CCP"
+	rts_cp: STRING = "RTS_CP"
+	rts_cpp: STRING = "RTS_CPP"
+
 
 feature -- C constants
 
@@ -67,6 +184,7 @@ feature -- C constants
 
 feature -- Typing
 
+	eif_object: STRING = "EIF_OBJECT"
 	eif_reference: STRING = "EIF_REFERENCE"
 	eif_typed_value: STRING = "EIF_TYPED_VALUE"
 	eif_type_index: STRING = "EIF_TYPE_INDEX"
@@ -91,14 +209,18 @@ feature -- Typing
 feature -- C language
 
 	char: STRING = "char"
+	char_star: STRING = "char *"
+	int: STRING = "int"
 	else_conditional: STRING = "else"
 	if_conditional: STRING = "if"
+	where: STRING = "where"
 	sizeof: STRING = "sizeof"
 	return: STRING = "return"
 	null: STRING = "NULL"
+	volatile: STRING = "volatile"
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -10,9 +10,13 @@ feature {NONE} -- Creation
 			-- Run tests.
 		local
 			x: attached TEST
+			y: detachable TEST
 		do
 			a := Current
 			a := Void
+			a := y
+			a ?= Current
+			a ?= generating_type
 			g (a)
 			a.g (a)
 			x := a

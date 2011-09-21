@@ -215,7 +215,7 @@ feature {NONE} -- Externals
 		external
 			"dllwin imm32.dll signature (HKL, LPTSTR, UINT): UINT use <windows.h>"
 		alias
-			"ImmGetDescription"
+			"ImmGetDescriptionW"
 		end
 
 	cwel_get_imm_ime_filename (key_layout, dest: POINTER; buff_len: INTEGER): INTEGER
@@ -224,7 +224,7 @@ feature {NONE} -- Externals
 		external
 			"dllwin imm32.dll signature (HKL, LPTSTR, UINT): UINT use <windows.h>"
 		alias
-			"ImmGetIMEFileName"
+			"ImmGetIMEFileNameW"
 		end
 
 	cwel_get_imm_property (key_layout: POINTER; a_property: INTEGER): INTEGER

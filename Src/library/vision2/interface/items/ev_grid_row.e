@@ -373,6 +373,7 @@ feature -- Status setting
 		require
 			not_destroyed: not is_destroyed
 			is_parented: parent /= Void
+			height_valid: a_height >= 0
 		do
 			implementation.set_height (a_height)
 		ensure

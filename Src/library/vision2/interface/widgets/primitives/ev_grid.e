@@ -694,7 +694,6 @@ feature -- Access
 			-- row is used directly.
 		require
 			not_destroyed: not is_destroyed
-			is_row_height_fixed: is_row_height_fixed
 		do
 			Result := implementation.row_height
 		ensure
@@ -1401,7 +1400,6 @@ feature -- Status setting
 			-- If not `is_row_height_fixed' then use the height individually per row instead.
 		require
 			not_destroyed: not is_destroyed
-			is_row_height_fixed: is_row_height_fixed
 			a_row_height_positive: a_row_height >= 1
 		do
 			implementation.set_row_height (a_row_height)

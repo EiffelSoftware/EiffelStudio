@@ -151,7 +151,6 @@ feature -- Query
 			-- All tree items which data's command name equal `a_command_name'
 		do
 			create Result.make (5)
---			check widget.count >= 1 end
 			from
 				widget.start
 			until
@@ -249,11 +248,6 @@ feature {NONE} -- Action handing
 				elseif a_parent_type.same_string ({ER_XML_CONSTANTS}.tab) then
 					Result := l_stone_child.same_string ({ER_XML_CONSTANTS}.group) or else
 						l_stone_child.same_string ({ER_XML_CONSTANTS}.tab_scaling_policy)
---				elseif a_parent_type.same_string ({ER_XML_CONSTANTS}.ribbon_tabs) then
---					Result := l_stone_child.same_string ({ER_XML_CONSTANTS}.tab)
---				elseif a_parent_type.same_string ({ER_XML_CONSTANTS}.tab) then
---					Result := l_stone_child.same_string ({ER_XML_CONSTANTS}.group) or else
---						l_stone_child.same_string ({ER_XML_CONSTANTS}.tab_scaling_policy)
 				elseif a_parent_type.same_string ({ER_XML_CONSTANTS}.group) then
 					Result := l_stone_child.same_string ({ER_XML_CONSTANTS}.button) or else
 						l_stone_child.same_string ({ER_XML_CONSTANTS}.check_box) or else

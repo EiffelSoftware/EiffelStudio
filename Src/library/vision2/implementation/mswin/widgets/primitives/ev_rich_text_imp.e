@@ -13,7 +13,8 @@ class
 inherit
 	EV_RICH_TEXT_I
 		rename
-			last_load_successful as implementation_last_load_successful
+			last_load_successful as implementation_last_load_successful,
+			set_selection as text_component_imp_set_selection
 		redefine
 			interface,
 			selected_text,

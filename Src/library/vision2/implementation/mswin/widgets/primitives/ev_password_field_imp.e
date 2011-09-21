@@ -10,6 +10,8 @@ class
 
 inherit
 	EV_PASSWORD_FIELD_I
+		rename
+			set_selection as text_component_imp_set_selection
 		undefine
 			hide_border
 		redefine

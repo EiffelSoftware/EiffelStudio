@@ -5,15 +5,13 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-	--| FIXME (David Solal)
-	--| When selecting text using shift and page down, on the last page, the
-	--| cursor does not move to the last position.
-
 class
 	EV_TEXT_IMP
 
 inherit
 	EV_TEXT_I
+		rename
+			set_selection as text_component_imp_set_selection
 		redefine
 			interface,
 			selected_text

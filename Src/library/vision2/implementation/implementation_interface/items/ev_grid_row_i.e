@@ -45,7 +45,8 @@ feature {EV_ANY} -- Initialization
 			-- Initialize `Current'.
 		do
 			create subrows
-			internal_height := default_row_height
+				-- Set `internal_height' to -1 to signify that the parent grid should be queried for height unless explicitly set.
+			internal_height := -1
 			depth_in_tree := 1
 			indent_depth_in_tree := 1
 			subrow_count_recursive := 0
@@ -252,11 +253,15 @@ feature -- Access
 			is_parented: parent /= Void
 		do
 			Result := internal_height
+			if Result = -1 and then attached parent_i as l_parent_i then
+				Result := l_parent_i.row_height
+			end
 		ensure
 			result_not_negative: Result >= 0
 		end
 
 	internal_height: INTEGER
+		-- Internal storage for `Current'.
 
 	is_selected: BOOLEAN
 			-- Is objects state set to selected.
@@ -648,6 +653,7 @@ feature -- Status setting
 			-- Assign `a_height' to `height'.
 		require
 			is_parented: parent /= Void
+			height_valid: a_height >= 0
 		do
 			internal_height := a_height
 			if attached parent_i as l_parent_i and then not l_parent_i.is_row_height_fixed then
@@ -1445,14 +1451,6 @@ feature {NONE} -- Implementation
 				end
 				l_parent := l_parent.parent_row_i
 			end
-		end
-
-	default_row_height: INTEGER
-			-- Default height of a row, based on the height of the default font.
-		once
-			Result := (create {EV_LABEL}).minimum_height + 3
-		ensure
-			result_positive: Result > 0
 		end
 
 feature -- Contract Support

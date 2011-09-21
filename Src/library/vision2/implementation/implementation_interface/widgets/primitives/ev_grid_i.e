@@ -1504,7 +1504,6 @@ feature -- Status setting
 			-- Set height of all rows within `Current' to `a_row_height
 			-- If not `is_row_height_fixed' then use the height individually per row instead.
 		require
-			is_row_height_fixed: is_row_height_fixed
 			a_row_height_positive: a_row_height >= 1
 		do
 			if row_height /= a_row_height then

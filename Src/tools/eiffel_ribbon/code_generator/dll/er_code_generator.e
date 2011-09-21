@@ -52,8 +52,8 @@ feature -- Command
 						create l_file.make (l_file_name)
 						if l_file.exists then
 							uicc_manager.compile (l_index)
-							uicc_manager.rc_to_res (l_index)
-							uicc_manager.res_to_dll (l_index)
+							uicc_manager.convert_rc_to_res_file (l_index)
+							uicc_manager.convert_res_to_dll (l_index)
 						else
 							l_stop := True
 						end
@@ -113,7 +113,7 @@ feature -- Query
 	is_uicc_available: BOOLEAN
 			-- <Precursor>
 		do
-			Result := uicc_manager.check_if_uicc_available
+			Result := uicc_manager.is_uicc_available
 		end
 
 feature {ER_CODE_GENERATOR_FOR_APPLICATION_MENU} -- Command

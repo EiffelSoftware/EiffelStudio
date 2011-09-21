@@ -197,7 +197,7 @@ feature -- Query
 				end
 			end
 		end
-		
+
 feature -- Factory
 
 	tree_item_factory_method (a_item_text: STRING): EV_TREE_ITEM
@@ -214,7 +214,7 @@ feature -- Factory
 
 feature {NONE} -- Action handing
 
-	on_drop (a_stone: ANY; a_parent: EV_TREE_ITEM)
+	on_drop (a_stone: STRING; a_parent: EV_TREE_ITEM)
 			-- Handle drop action
 		require
 			not_void: a_stone /= Void
@@ -222,12 +222,10 @@ feature {NONE} -- Action handing
 		local
 			l_child: EV_TREE_ITEM
 		do
-			if attached {STRING} a_stone as l_stone_child then
-				l_child := tree_item_factory_method (l_stone_child)
-				a_parent.extend (l_child)
-				if a_parent.is_expandable then
-					a_parent.expand
-				end
+			l_child := tree_item_factory_method (a_stone)
+			a_parent.extend (l_child)
+			if a_parent.is_expandable then
+				a_parent.expand
 			end
 		end
 

@@ -397,6 +397,7 @@ feature {NONE} -- Implementation: access
 			put ("init_scoop_manager") check found_item = init_scoop_manager_name_id end
 			put ("scoop_manager_task_callback") check found_item = scoop_manager_task_callback_name_id end
 			put ("start") check found_item = start_name_id end
+			put ("is_default_pointer") check found_item = is_default_pointer_name_id end
 		end
 
 invariant

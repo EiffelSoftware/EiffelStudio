@@ -19,25 +19,28 @@ inherit
 
 feature -- Access
 
-	has (feature_name_id: INTEGER; compilation_type: BOOLEAN; target_type: BASIC_A): BOOLEAN
+	has (feature_name_id: INTEGER; is_c_compilation: BOOLEAN; target_type: BASIC_A): BOOLEAN
 			-- Does Current have `feature_name_id'?
 		require
 			valid_feature_name_id: feature_name_id > 0
 		do
-			if compilation_type then
-				Result := c_type_table.has_key (feature_name_id)
-				if Result then
+			if is_c_compilation then
+				c_type_table.search (feature_name_id)
+				if c_type_table.found then
 					function_type := c_type_table.found_item
 					if function_type = out_type and then target_type.is_character_32 then
 							-- Do not inline `out' on CHARACTER 32 because the code is only
 							-- provided in the Eiffel code.
-						Result := False
+						check not Result end
+					else
+						Result := True
 					end
 				end
 			else
-				Result := byte_type_table.has_key (feature_name_id)
-				if Result then
+				byte_type_table.search (feature_name_id)
+				if byte_type_table.found then
 					function_type := byte_type_table.found_item
+					Result := True
 				end
 			end
 		end
@@ -181,6 +184,12 @@ feature -- Byte code special generation
 					-- We simply pop the top of the stack.
 				ba.append (bc_pop)
 				ba.append_uint32_integer (1)
+
+			when is_default_pointer_type then
+					-- We have the pointer on the stack, we load the default pointer
+					-- type and then compare them for equality.
+				basic_type.c_type.make_default_byte_code (ba)
+				ba.append (bc_eq)
 			end
 		end
 
@@ -363,6 +372,10 @@ feature -- C special code generation
 					buffer.put_three_character (' ', '=', ' ')
 					target.print_register
 				end
+
+			when is_default_pointer_type then
+				buffer.put_character('!')
+				target.print_register
 			end
 		end
 
@@ -455,6 +468,7 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (negative_infinity_type, {PREDEFINED_NAMES}.negative_infinity_name_id)
 			Result.put (positive_infinity_type, {PREDEFINED_NAMES}.positive_infinity_name_id)
 			Result.put (do_nothing_type, {PREDEFINED_NAMES}.do_nothing_name_id)
+			Result.put (is_default_pointer_type, {PREDEFINED_NAMES}.is_default_pointer_name_id)
 --			Result.put (set_item_type, feature {PREDEFINED_NAMES}.set_item_name_id)
 --			Result.put (set_item_type, feature {PREDEFINED_NAMES}.copy_name_id)
 --			Result.put (set_item_type, feature {PREDEFINED_NAMES}.deep_copy_name_id)
@@ -532,6 +546,7 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (negative_infinity_type, {PREDEFINED_NAMES}.negative_infinity_name_id)
 			Result.put (positive_infinity_type, {PREDEFINED_NAMES}.positive_infinity_name_id)
 			Result.put (do_nothing_type, {PREDEFINED_NAMES}.do_nothing_name_id)
+			Result.put (is_default_pointer_type, {PREDEFINED_NAMES}.is_default_pointer_name_id)
 --			Result.put (set_item_type, feature {PREDEFINED_NAMES}.set_item_name_id)
 		end
 
@@ -601,7 +616,8 @@ feature {NONE} -- Fast access to feature name
 	negative_infinity_type: INTEGER = 61
 	positive_infinity_type: INTEGER = 62
 	do_nothing_type: INTEGER = 63
-	max_type_id: INTEGER = 63
+	is_default_pointer_type: INTEGER = 64
+	max_type_id: INTEGER = 64
 
 feature {NONE} -- Byte code generation
 
@@ -1295,7 +1311,7 @@ feature {NONE} -- Type information
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

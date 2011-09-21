@@ -226,6 +226,7 @@ feature -- Constants
 	init_scoop_manager_name_id: INTEGER = 213
 	scoop_manager_task_callback_name_id: INTEGER = 214
 	start_name_id: INTEGER = 215
+	is_default_pointer_name_id: INTEGER = 216
 
 feature -- Classification
 

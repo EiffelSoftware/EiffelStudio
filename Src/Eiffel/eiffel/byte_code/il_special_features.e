@@ -388,6 +388,12 @@ feature -- IL code generation
 					-- Simply remove top of the stack as we do not care about its value.
 				il_generator.pop
 
+			when is_default_pointer_type then
+					-- We have the pointer on the stack, we load the default pointer
+					-- type and then compare them for equality.
+				il_generator.put_default_value (type)
+				il_generator.generate_binary_operator (il_eq, True)
+
 			else
 
 			end
@@ -479,6 +485,7 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (negative_infinity_type, negative_infinity_name_id)
 			Result.put (positive_infinity_type, positive_infinity_name_id)
 			Result.put (do_nothing_type, do_nothing_name_id)
+			Result.put (is_default_pointer_type, is_default_pointer_name_id)
 
 -- FIXME: Manu 10/24/2001. Not yet implemented.
 -- 			Result.put (memory_copy, memory_copy_name_id)
@@ -553,7 +560,8 @@ feature -- Fast access to feature name
 	negative_infinity_type: INTEGER = 62
 	positive_infinity_type: INTEGER = 63
 	do_nothing_type: INTEGER = 64
-	max_type_id: INTEGER = 64
+	is_default_pointer_type: INTEGER = 65
+	max_type_id: INTEGER = 65
 
 feature {NONE} -- IL code generation
 
@@ -897,7 +905,7 @@ invariant
 	il_generation: System.il_generation
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

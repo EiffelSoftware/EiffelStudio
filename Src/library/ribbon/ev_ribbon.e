@@ -195,7 +195,7 @@ feature -- Status Report
 			-- All tabs in current tool bar
 
 	height: INTEGER
-			-- Get current ribbon height
+			-- Current ribbon height
 		require
 			exists: exists
 		do

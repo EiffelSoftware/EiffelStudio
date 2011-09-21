@@ -12,7 +12,7 @@ deferred class
 inherit
 	EV_ANY_HANDLER
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	init_with_window (a_window: EV_WINDOW)
 			-- Creation method
@@ -208,7 +208,7 @@ feature -- Status Report
 			Result := item /= default_pointer
 		end
 
-feature -- Status Report
+feature {EV_COMMAND_HANDLER, EV_RIBBON} -- Status Report
 
 	item: POINTER
 			-- Ribbon framework object

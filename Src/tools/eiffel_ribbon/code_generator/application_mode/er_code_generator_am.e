@@ -51,7 +51,7 @@ feature -- Query
 	is_uicc_available: BOOLEAN
 			-- <Precursor>
 		do
-			Result := uicc_manager.check_if_uicc_available
+			Result := uicc_manager.is_uicc_available
 		end
 
 feature {ER_CODE_GENERATOR_FOR_APPLICATION_MENU_AM} -- Command

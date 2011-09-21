@@ -13,7 +13,7 @@ inherit
 
 feature -- Command
 
-	check_if_uicc_available: BOOLEAN
+	is_uicc_available: BOOLEAN
 			-- Setup the environment for generating the code for using a ribbon code.
 			-- If not available then nothing can be done.
 		local
@@ -24,7 +24,7 @@ feature -- Command
 			set_eiffel_layout (l_layout)
 
 				-- We try first the SDK and then VS.
-			if if_winsdk70_available (not {PLATFORM_CONSTANTS}.is_64_bits) or else if_vc8_available (not {PLATFORM_CONSTANTS}.is_64_bits) then
+			if is_winsdk70_available (not {PLATFORM_CONSTANTS}.is_64_bits) or else is_vc8_available (not {PLATFORM_CONSTANTS}.is_64_bits) then
 					-- Setup C compiler enviroment			
 				create l_c_compiler_env.make (void, not {PLATFORM_CONSTANTS}.is_64_bits)
 				Result := True
@@ -80,7 +80,7 @@ feature -- Command
 			end
 		end
 
-	code_page_to_936
+	set_code_page_to_936
 			-- We need set code page to 936, otherwise `rc_to_res' would complain invalid code page
 			local
 				l_process: PROCESS
@@ -119,7 +119,7 @@ feature -- Command
 				end
 			end
 
-	rc_to_res (a_index: INTEGER)
+	convert_rc_to_res_file (a_index: INTEGER)
 			-- Convert Ribbon makrup rc file to res file
 		require
 			valid: a_index >= 1
@@ -164,7 +164,7 @@ feature -- Command
 			end
 		end
 
-	res_to_dll (a_index: INTEGER)
+	convert_res_to_dll (a_index: INTEGER)
 			-- Convert Ribbon res file to DLL file
 		require
 			valid: a_index >= 1
@@ -276,7 +276,7 @@ feature {NONE} -- Implementation
 
 feature -- C compiler
 
-	if_vc8_available (a_for_32bits: BOOLEAN): BOOLEAN
+	is_vc8_available (a_for_32bits: BOOLEAN): BOOLEAN
 			-- Is VisualStudio 2008 or greater available?
 		local
 			l_manager: C_CONFIG_MANAGER
@@ -312,7 +312,7 @@ feature -- C compiler
 			end
 		end
 
-	if_winsdk70_available (a_for_32bits: BOOLEAN): BOOLEAN
+	is_winsdk70_available (a_for_32bits: BOOLEAN): BOOLEAN
 			-- Is Windows SDK v7.0 or greater available?
 		local
 			l_manager: C_CONFIG_MANAGER

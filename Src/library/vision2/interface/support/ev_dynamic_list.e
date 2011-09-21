@@ -479,6 +479,8 @@ feature {EV_DYNAMIC_LIST} -- Inapplicable
 		do
 			check applicable: False then
 			end
+				-- The following line is for 6.8 void-safety compatibility.
+			Result := Current
 		end
 
 feature {EV_DYNAMIC_LIST} -- Inapplicable

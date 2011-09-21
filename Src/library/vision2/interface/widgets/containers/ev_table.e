@@ -299,6 +299,8 @@ feature -- Status report
 		do
 			check applicable: False then
 			end
+				-- The following line is for 6.8 void-safety compatibility.
+			Result := Current
 		end
 
 feature -- Status settings

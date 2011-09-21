@@ -618,7 +618,7 @@ feature {NONE} -- Cursor movement
 						end
 					end
 					l_rows := l_list.selected_rows
-					if not l_rows.is_empty then
+					if not l_rows.is_empty and then l_rows.first.is_displayed then
 						l_rows.first.ensure_visible
 					end
 				end

@@ -75,18 +75,6 @@ feature -- Command
 			c_set_modes (l_modes, item)
 		end
 
-	c_ui_make_app_mode (a_mode: NATURAL_32): NATURAL_32
-			-- Combine application modes
-		external
-			"C inline use <common.h>"
-		alias
-			"[
-			{
-				return UI_MAKEAPPMODE((INT32) $a_mode);
-			}
-			]"
-		end
-
 	set_background_color (a_color: EV_RIBBON_HSB_COLOR)
 			-- Set global background color with `a_color'
 		require
@@ -419,6 +407,14 @@ feature {NONE} -- Implementation
 
 			}
 			]"
+		end
+
+	c_ui_make_app_mode (a_mode: NATURAL_32): NATURAL_32
+			-- Combine application modes
+		external
+			"C inline use <common.h>"
+		alias
+			"return UI_MAKEAPPMODE((INT32) $a_mode);"
 		end
 
 feature {EV_RIBBON} -- Externals callbacks

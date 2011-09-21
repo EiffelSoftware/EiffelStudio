@@ -149,18 +149,27 @@ feature -- Resizing
 feature {EV_ANY, EV_ANY_I} -- Basic operation
 
 	select_region (start_pos, end_pos: INTEGER)
-			-- Select (hilight) the text between
-			-- `start_pos' and `end_pos'. Both `start_pos' and
-			-- `end_pos' are selected.
+			-- Select (highlight) the characters between character positions `start_pos' and `end_pos'.
 		require
-			valid_start: start_pos >= 1 and start_pos <= text_length
-			valid_end: end_pos >= 1 and end_pos <= text_length
+			valid_start_character_position: start_pos >= 1 and start_pos <= text_length
+			valid_end_character_position: end_pos >= 1 and end_pos <= text_length
 		deferred
 		ensure
 			has_selection: has_selection
 			selection_set: (start_pos <= end_pos implies
 				selection_start = start_pos and selection_end = end_pos) or
 				selection_start = end_pos and selection_end = start_pos
+		end
+
+	set_selection (a_start_pos, a_end_pos: INTEGER)
+			-- Select (highlight) the characters between valid caret positions `a_start_pos' and `a_end_pos'.
+		require
+			valid_start: a_start_pos > 0 and a_start_pos <= text_length + 1
+			valid_end: a_end_pos > 0 and a_end_pos <= text_length + 1
+		deferred
+		ensure
+			caret_position_set: caret_position = a_end_pos
+			selection_set: a_start_pos /= a_end_pos = has_selection
 		end
 
 	select_all

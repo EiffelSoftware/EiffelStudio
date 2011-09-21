@@ -156,7 +156,7 @@ feature -- Query
 			until
 				widget.after
 			loop
-				recrusive_all_items_with_command_name (a_command_name, widget.item, Result)
+				recursive_all_items_with_command_name (a_command_name, widget.item, Result)
 				widget.forth
 			end
 		end
@@ -418,7 +418,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	recrusive_all_items_with_command_name (a_text: STRING; a_tree_node: EV_TREE_NODE; a_list: ARRAYED_LIST [EV_TREE_NODE])
+	recursive_all_items_with_command_name (a_text: STRING; a_tree_node: EV_TREE_NODE; a_list: ARRAYED_LIST [EV_TREE_NODE])
 			-- Recursive find tree node which command anme is same as `a_text'
 		require
 			not_void: a_text /= Void
@@ -435,7 +435,7 @@ feature {NONE} -- Implementation
 			until
 				a_tree_node.after
 			loop
-				recrusive_all_items_with_command_name (a_text, a_tree_node.item, a_list)
+				recursive_all_items_with_command_name (a_text, a_tree_node.item, a_list)
 
 				a_tree_node.forth
 			end

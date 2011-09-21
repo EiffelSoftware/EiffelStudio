@@ -182,6 +182,22 @@ feature -- Query
 			end
 		end
 
+	is_root_pebble_valid (a_pebble: ANY) : BOOLEAN
+			-- If `a_pebble' valid for root?
+		require
+			not_void: a_pebble /= Void
+		do
+			if attached {STRING} a_pebble as l_item then
+				if l_item.same_string (constants.ribbon_application_menu) or else
+					l_item.same_string (constants.context_popup) or else
+					l_item.same_string (constants.ribbon_quick_access_toolbar) or else
+					l_item.same_string (constants.ribbon_helpbutton) or else
+					l_item.same_string (constants.ribbon_contextual_tabs) then
+					Result := True
+				end
+			end
+		end
+		
 feature -- Factory
 
 	tree_item_factory_method (a_item_text: STRING): EV_TREE_ITEM
@@ -313,11 +329,7 @@ feature {NONE} -- Action handing
 			l_tree_item: EV_TREE_ITEM
 		do
 			if attached {STRING} a_pebble as l_item then
-				check l_item.same_string (constants.ribbon_application_menu) or else
-					l_item.same_string (constants.context_popup) or else
-					l_item.same_string (constants.ribbon_quick_access_toolbar) or else
-					l_item.same_string (constants.ribbon_helpbutton) or else
-					l_item.same_string (constants.ribbon_contextual_tabs) end
+				check is_root_pebble_valid (a_pebble) end
 				l_tree_item := tree_item_factory_method (l_item)
 				widget.extend (l_tree_item)
 			end
@@ -326,15 +338,7 @@ feature {NONE} -- Action handing
 	on_veto_root_tree_drop (a_pebble: ANY): BOOLEAN
 			-- Veto pebble drop function
 		do
-			if attached {STRING} a_pebble as l_item then
-				if l_item.same_string (constants.ribbon_application_menu) or else
-					l_item.same_string (constants.context_popup) or else
-					l_item.same_string (constants.ribbon_quick_access_toolbar) or else
-					l_item.same_string (constants.ribbon_helpbutton) or else
-					l_item.same_string (constants.ribbon_contextual_tabs) then
-					Result := True
-				end
-			end
+			Result := is_root_pebble_valid (a_pebble)
 		end
 
 	on_close_content

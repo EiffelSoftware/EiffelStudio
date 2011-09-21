@@ -187,7 +187,8 @@ feature -- Query
 			not_void: a_pebble /= Void
 		do
 			if attached {STRING} a_pebble as l_item then
-				if l_item.same_string ({ER_XML_CONSTANTS}.ribbon_application_menu) or else
+				if
+					l_item.same_string ({ER_XML_CONSTANTS}.ribbon_application_menu) or else
 					l_item.same_string ({ER_XML_CONSTANTS}.context_popup) or else
 					l_item.same_string ({ER_XML_CONSTANTS}.ribbon_quick_access_toolbar) or else
 					l_item.same_string ({ER_XML_CONSTANTS}.ribbon_helpbutton) or else

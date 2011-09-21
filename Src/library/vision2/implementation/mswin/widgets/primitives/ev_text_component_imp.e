@@ -10,6 +10,8 @@ deferred class
 
 inherit
 	EV_TEXT_COMPONENT_I
+		rename
+			set_selection as text_component_imp_set_selection
 		redefine
 			interface
 		end
@@ -200,6 +202,13 @@ feature -- Basic operation
 				actual_end := end_pos - 1
 			end
 			set_selection (actual_start, actual_end)
+		end
+
+	text_component_imp_set_selection (a_start_pos, a_end_pos: INTEGER)
+			-- <Precursor>
+		do
+				-- Call WEL set selection taking care of zero-based caret position.
+			set_selection (a_start_pos - 1, a_end_pos - 1)
 		end
 
 	paste (index: INTEGER)

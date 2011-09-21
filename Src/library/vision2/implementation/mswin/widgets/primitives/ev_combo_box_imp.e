@@ -10,6 +10,8 @@ class
 
 inherit
 	EV_COMBO_BOX_I
+		rename
+			set_selection as text_component_imp_set_selection
 		redefine
 			interface,
 			make

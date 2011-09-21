@@ -588,11 +588,15 @@ feature -- EV_TEXT_COMPONENT_I implementation
 		end
 
 	select_region (start_pos, end_pos: INTEGER)
-			-- Select (hilight) the text between
-			-- `start_pos' and `end_pos'. Both `start_pos' and
-			-- `end_pos' are selected.
+			-- <Precursor>
 		do
 			internal_text_field.select_region (start_pos, end_pos)
+		end
+
+	set_selection (a_start_pos, a_end_pos: INTEGER)
+			-- <Precursor>
+		do
+			internal_text_field.text_component_imp_set_selection (a_start_pos, a_end_pos)
 		end
 
 	deselect_all

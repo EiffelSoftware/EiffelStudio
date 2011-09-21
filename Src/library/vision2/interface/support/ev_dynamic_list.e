@@ -4,8 +4,8 @@ note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "widget list, item list, container, dynamic, set, any"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: $"
+	revision: "$Revision: $"
 
 deferred class
 	EV_DYNAMIC_LIST [G -> detachable EV_CONTAINABLE]

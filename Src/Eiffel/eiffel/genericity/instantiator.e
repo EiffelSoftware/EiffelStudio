@@ -39,7 +39,7 @@ create
 create {INSTANTIATOR}
 	make_with_key_tester
 
-feature -- Attributes
+feature -- Processing
 
 	dispatch (a_type: TYPE_A; a_class: CLASS_C)
 			-- Treat generic type `a_type': it is either a new
@@ -140,7 +140,7 @@ feature -- Attributes
 			check_procedure_class
 
 				-- Remove the obsolete types
-			clean (system.any_class.compiled_class)
+			clean_standalone
 
 			from
 				start
@@ -153,8 +153,18 @@ feature -- Attributes
 			derivations.wipe_out;
 		end;
 
+feature -- Removal
+
+	clean_standalone
+			-- Remove all invalid standalone types..
+		do
+				-- Use the class with the worst void-safety settings, i.e. root class,
+				-- because these settings are used when performing conformance tests.
+			clean (system.root_creators.first.root_class.compiled_class)
+		end
+
 	clean_all
-			-- Clean up Current and all classes from obsolete types
+			-- Clean up Current and all classes from obsolete type.
 		local
 			class_array: ARRAY [CLASS_C];
 			i, nb: INTEGER
@@ -169,17 +179,19 @@ feature -- Attributes
 				i := i + 1
 			end
 				-- Remove obsolete types from the global list.
-			clean (system.any_class.compiled_class)
+			clean_standalone
 		end
+
+feature -- Access
 
 	derivations: DERIVATIONS
 			-- Set of all the processed derivations
 			-- Avoid recursive loop in process
 		once
-			create Result.make (40);
-		end;
+			create Result.make (40)
+		end
 
-feature {NONE}
+feature {NONE} -- Checks for predefined types
 
 	check_array_class
 			-- Force an array type in the system
@@ -246,7 +258,7 @@ feature {NONE}
 			dispatch (Predicate_type_a, pred_cl);
 		end;
 
-feature
+feature {NONE} -- Predefined types
 
 	Array_type_a: GEN_TYPE_A
 			-- Default array type
@@ -354,7 +366,7 @@ feature {STRIP_B, SYSTEM_I, AUXILIARY_FILES}
 		end;
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

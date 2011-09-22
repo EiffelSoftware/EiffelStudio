@@ -168,7 +168,6 @@ feature {EV_ANY, EV_ANY_I} -- Basic operation
 			valid_end: a_end_pos > 0 and a_end_pos <= text_length + 1
 		deferred
 		ensure
-			caret_position_set: caret_position = a_end_pos
 			selection_set: a_start_pos /= a_end_pos = has_selection
 		end
 

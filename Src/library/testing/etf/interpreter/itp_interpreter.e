@@ -203,8 +203,9 @@ feature {NONE} -- Handlers
 		do
 			if attached {TUPLE [l_byte_code: detachable STRING; l_data: detachable ANY]} last_request as l_last_request then
 				l_bcode := l_last_request.l_byte_code
-				check l_bcode /= Void end
-				if l_bcode.count = 0 then
+				if l_bcode = Void then
+					report_error (byte_code_not_found_error)
+				elseif l_bcode.count = 0 then
 					report_error (byte_code_length_error)
 				else
 					log_message ("report_execute_request start%N")

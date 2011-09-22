@@ -334,14 +334,19 @@ feature {TAG_TREE_NODE} -- Status setting
 		require
 			active: is_active
 		local
-			l_table: like child_table
+			l_table: like internal_child_table
 		do
 			remove_internal
-			if is_leaf then
-				internal_item := Void
-			else
+				-- Clear up both leaf and parent meta data.
+			last_added_child := Void
+			internal_tree := Void
+			internal_token := Void
+			internal_parent := Void
+			internal_item := Void
+			l_table := internal_child_table
+			if l_table /= Void then
+				internal_child_table := Void
 				from
-					l_table := child_table
 					l_table.start
 				until
 					l_table.after
@@ -350,12 +355,7 @@ feature {TAG_TREE_NODE} -- Status setting
 					l_table.forth
 				end
 				l_table.wipe_out
-				internal_child_table := Void
 			end
-			last_added_child := Void
-			internal_tree := Void
-			internal_token := Void
-			internal_parent := Void
 		ensure
 			not_active: not is_active
 		end
@@ -553,7 +553,7 @@ invariant
 	children_xor_items_attached: is_active implies (attached internal_child_table xor attached internal_item)
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

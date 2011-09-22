@@ -109,7 +109,7 @@ feature {TAG_TREE_GRID_NODE_CONTAINER} -- Status setting
 				l_table.start
 				remove_child (l_table.item_for_iteration.node)
 			end
-			if not node.is_leaf then
+			if not node.is_leaf and then node.is_active then
 				node.children.do_all (
 					agent (a_node: TAG_TREE_NODE [G])
 						do
@@ -234,7 +234,7 @@ feature {NONE} -- Factory
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

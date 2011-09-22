@@ -238,7 +238,6 @@ feature -- Basic operation
 		do
 			implementation.set_selection (a_start_pos, a_end_pos)
 		ensure
-			caret_position_set: caret_position = a_end_pos
 			selection_set: a_start_pos /= a_end_pos = has_selection
 		end
 

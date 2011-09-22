@@ -145,6 +145,15 @@ feature -- Multi-monitor
 			"GetMonitorInfo ((HMONITOR) $a_monitor_handle, (LPMONITORINFO) $a_monitor_info)"
 		end
 
+feature -- Caret Handling
+
+	get_caret_pos (a_point: POINTER): BOOLEAN
+		external
+			"C inline use <windows.h>"
+		alias
+			"GetCaretPos ((LPPOINT) $a_point)"
+		end
+
 feature -- Drawings
 
 	exclude_clip_rect (hdc: POINTER; left, top, right, bottom: INTEGER): INTEGER

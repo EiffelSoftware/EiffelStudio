@@ -1086,9 +1086,8 @@ feature -- Warning messages
 		end
 
 	w_Internal_error: STRING_32
-		do Result := locale.translation ("Check that you have enough space on disk to compile the project.%N%
-		%If this happens even after relaunching EiffelStudio delete the project's EIFGENs folder and perform a clean recompilation.%N%N%
-		%Follow the instructions at http://support.eiffel.com/submit.html in order to submit a bug report at http://support.eiffel.com or use the Submit Bug button below.") end
+		do Result := locale.translation ("An internal failure occurred. If this happens even after relaunching EiffelStudio, perform a clean recompilation.%N%N%
+		%You can submit a bug report at http://support.eiffel.com or use the Submit Bug button below.") end
 
 	w_Class_already_edited: STRING_32 do Result := locale.translation ("This class is already being edited%N%
 										%in another editor.%N%

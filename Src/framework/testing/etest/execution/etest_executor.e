@@ -465,9 +465,12 @@ feature {NONE} -- Factory
 			-- task: `a_task'.
 			-- test: Void if controller is currently executing a test, attached if controller is paused
 			--       while executing test
-			-- isolated: True if task should be stopped after executing test
+			-- isolated: True if task should be stopped after executing test.
+		local
+			l_test: detachable ETEST
+			l_breakpoint: detachable BREAKPOINT
 		do
-			Result := [a_task, Void, False, Void]
+			Result := [a_task, l_test, False, l_breakpoint]
 		end
 
 feature {NONE} -- Clean up

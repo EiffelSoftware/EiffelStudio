@@ -1763,8 +1763,12 @@ feature {NONE} -- Update
 			l_item: like watched_item_from
 			witems: like watched_items
 		do
-			if debugger_manager.safe_application_is_stopped and dbg_was_stopped then
-				eval := True
+			if attached debugger_manager.application_status as l_status then
+				if
+					l_status.is_stopped and (dbg_was_stopped or l_status.exception_occurred) --| Quick fix To handle the ignore contract violation case
+				then
+					eval := True
+				end
 			end
 			watches_grid.remove_selection
 			if

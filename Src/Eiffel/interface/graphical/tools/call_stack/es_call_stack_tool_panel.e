@@ -595,10 +595,13 @@ feature -- Change
 
 	show
 			-- Show tool
+		local
+			g: like stack_grid
 		do
 			Precursor {ES_DEBUGGER_DOCKABLE_STONABLE_TOOL_PANEL}
-			if stack_grid.is_displayed and then stack_grid.is_sensitive then
-				stack_grid.set_focus
+			g := stack_grid
+			if g.is_displayed and then g.is_sensitive then
+				g.set_focus
 			end
 			request_update
 		end
@@ -647,16 +650,16 @@ feature {NONE} -- Update
 				if dbg_was_stopped then
 					l_status.update_on_stopped_state
 				end
-				display_stop_cause (dbg_was_stopped)
+				display_stop_cause (dbg_was_stopped or l_status.exception_occurred)
 				refresh_threads_info
 				if
-					dbg_was_stopped and l_status.is_stopped
+					l_status.is_stopped and (dbg_was_stopped or l_status.exception_occurred) --| Quick fix To handle the ignore contract violation case
 				then
 					stack := l_status.current_call_stack
 					populate_stack_grid (stack)
 					if l_status.is_stopped
-						and then stack /= Void
-						and then not stack.is_empty
+						and then attached stack as l_stack
+						and then not l_stack.is_empty
 					then
 						select_element_by_level (1) -- ???
 					end
@@ -1311,8 +1314,8 @@ feature {NONE} -- Stack grid implementation
 			-- Clean the stack_grid
 		do
 			stack_grid.call_delayed_clean
-			if stack_data /= Void then
-				stack_data.discard_items
+			if attached stack_data as d then
+				d.discard_items
 			end
 		ensure
 			stack_grid_cleaned: stack_grid.row_count = 0
@@ -2219,7 +2222,7 @@ feature {NONE} -- Implementation, cosmetic
 
 
 ;note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -880,7 +880,9 @@ feature {NONE} -- Update
 				l_status := l_app.status
 			end
 			if l_status /= Void then
-				if l_status.is_stopped and dbg_was_stopped then
+				if
+					l_status.is_stopped and (dbg_was_stopped or l_status.exception_occurred) --| Quick fix To handle the ignore contract violation case
+				then
 					if l_status.has_valid_call_stack and then l_status.has_valid_current_eiffel_call_stack_element then
 						init_specific_lines
 						from
@@ -927,7 +929,7 @@ feature {NONE} -- Update
 					end
 				end
 			end
-			update_header_box (dbg_was_stopped)
+			update_header_box (dbg_was_stopped or l_status.exception_occurred)
 			on_objects_row_deselected (Void) -- reset toolbar buttons
 		end
 

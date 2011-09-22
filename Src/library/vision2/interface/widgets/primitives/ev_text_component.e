@@ -215,19 +215,31 @@ feature -- Resizing
 
 feature -- Basic operation
 
-	select_region (start_pos, end_pos: INTEGER)
-			-- Select text between `start_pos' and `end_pos' inclusive.
+	select_region (a_start_character_pos, a_end_character_pos: INTEGER)
+			-- Select (highlight) text between `a_start_character_pos' and `a_end_character_pos' character positions inclusive.
 		require
 			not_destroyed: not is_destroyed
-			start_within_range: start_pos >= 1 and start_pos <= text_length
-			end_within_range: end_pos >= 1 and end_pos <= text_length
+			start_within_range: a_start_character_pos >= 1 and a_start_character_pos <= text_length
+			end_within_range: a_end_character_pos >= 1 and a_end_character_pos <= text_length
 		do
-			implementation.select_region (start_pos, end_pos)
+			implementation.select_region (a_start_character_pos, a_end_character_pos)
 		ensure
 			has_selection: has_selection
-			selection_set: (start_pos <= end_pos implies
-				selection_start = start_pos and selection_end = end_pos) or
-				selection_start = end_pos and selection_end = start_pos
+			selection_set: (a_start_character_pos <= a_end_character_pos implies
+				selection_start = a_start_character_pos and selection_end = a_end_character_pos) or
+				selection_start = a_end_character_pos and selection_end = a_start_character_pos
+		end
+
+	set_selection (a_start_pos, a_end_pos: INTEGER)
+			-- Select (highlight) the characters between valid caret positions `a_start_pos' and `a_end_pos'.
+		require
+			valid_start: a_start_pos > 0 and a_start_pos <= text_length + 1
+			valid_end: a_end_pos > 0 and a_end_pos <= text_length + 1
+		do
+			implementation.set_selection (a_start_pos, a_end_pos)
+		ensure
+			caret_position_set: caret_position = a_end_pos
+			selection_set: a_start_pos /= a_end_pos = has_selection
 		end
 
 	select_all

@@ -166,6 +166,9 @@ feature {NONE} -- Usage
 			end
 		end
 
+	copyright: STRING = "Copyright Eiffel Software 2006-2011. All Rights Reserved."
+			-- <Precursor>
+
 	switches: ARRAYED_LIST [ARGUMENT_SWITCH]
 			-- Retrieve a list of switch used for a specific application
 			-- (export status {NONE})

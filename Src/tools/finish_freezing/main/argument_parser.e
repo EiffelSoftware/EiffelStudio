@@ -122,6 +122,9 @@ feature {NONE} -- Usage
 			Result.append_integer ({EIFFEL_ENVIRONMENT_CONSTANTS}.minor_version)
 		end
 
+	copyright: STRING = "Copyright Eiffel Software 1996-2011. All Rights Reserved."
+			-- <Precursor>
+
 	switches: attached ARRAYED_LIST [attached ARGUMENT_SWITCH]
 			-- <Precursor>
 		once
@@ -149,7 +152,7 @@ feature {NONE} -- Switches
 			-- Obsolete switch be kept for backward compatibility
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -95,6 +95,9 @@ feature {NONE} -- Access: Usage
 			Result := {XU_CONSTANTS}.Version
 		end
 
+	copyright: STRING = "Copyright Eiffel Software 2009-2011. All Rights Reserved."
+			-- <Precursor>
+
 	switches: ARRAYED_LIST [ARGUMENT_SWITCH]
 			-- <Precursor>
 		once
@@ -118,7 +121,7 @@ feature {NONE} -- Switches
 	create_webapp_switch: STRING = "c|create_webapp"
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

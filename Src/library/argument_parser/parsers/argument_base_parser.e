@@ -1406,8 +1406,10 @@ feature {NONE} -- Output
 			io.put_string (name)
 			io.put_string (" - Version: ")
 			io.put_string (version)
-			io.new_line
-			io.put_string (copyright)
+			if not copyright.is_empty then
+				io.new_line
+				io.put_string (copyright)
+			end
 			io.new_line
 			io.new_line
 		end
@@ -1419,8 +1421,10 @@ feature {NONE} -- Output
 			io.put_string (name)
 			io.put_string (" version ")
 			io.put_string (version)
-			io.new_line
-			io.put_string (copyright)
+			if not copyright.is_empty then
+				io.new_line
+				io.put_string (copyright)
+			end
 			io.new_line
 		end
 
@@ -1649,11 +1653,10 @@ feature {NONE} -- Usage
 
 	copyright: STRING
 			-- Copyright information.
-		once
-			Result := "Copyright Eiffel Software 1985-2011. All Rights Reserved."
+			-- Not used if empty.
+		deferred
 		ensure
-			result_attached: Result /= Void
-			not_result_is_empty: not Result.is_empty
+			result_attached: attached Result
 		end
 
 	frozen command_option_configurations: ARRAYED_LIST [STRING]

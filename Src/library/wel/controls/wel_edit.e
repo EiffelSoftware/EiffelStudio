@@ -208,6 +208,9 @@ feature -- Status setting
 			selection_in_upper_bound: start_position <= text_length and end_position <= text_length
 		do
 			{WEL_API}.send_message (item, Em_setsel, to_wparam (start_position), to_lparam (end_position))
+			if scroll_caret_at_selection then
+				{WEL_API}.send_message (item, Em_scrollcaret, to_wparam (0), to_lparam (0))
+			end
 		ensure
 			has_selection: (start_position /= end_position) implies has_selection
 --			logical_order: (end_position >= start_position) implies (selection_start = start_position and selection_end = end_position)
@@ -222,9 +225,36 @@ feature -- Status setting
 			position_small_enough: position <= text_length
 		do
 			{WEL_API}.send_message (item, Em_setsel, to_wparam (position), to_lparam (position))
+			if scroll_caret_at_selection then
+				{WEL_API}.send_message (item, Em_scrollcaret, to_wparam (0), to_lparam (0))
+			end
 		ensure
 			has_no_selection: not has_selection
 			caret_position_set: caret_position = position
+		end
+
+	enable_scroll_caret_at_selection
+			-- Set `scroll_caret_at_selection' to True.
+			-- The caret will be scrolled at the selection after
+			-- a call to `set_selection'.
+		require
+			exists: exists
+		do
+			scroll_caret_at_selection := True
+		ensure
+			scroll_caret_at_selection_enabled: scroll_caret_at_selection
+		end
+
+	disable_scroll_caret_at_selection
+			-- Set `scroll_caret_at_selection' to False.
+			-- The caret will not be scrolled at the selection
+			-- after a call to `set_selection'.
+		require
+			exists: exists
+		do
+			scroll_caret_at_selection := False
+		ensure
+			scroll_caret_at_selection_disabled: not scroll_caret_at_selection
 		end
 
 feature -- Status report
@@ -311,6 +341,10 @@ feature -- Status report
 		ensure
 			result_not_void: Result /= Void
 		end
+
+	scroll_caret_at_selection: BOOLEAN
+			-- Will the caret be scrolled at the selection after
+			-- a call to `set_selection'?
 
 feature -- Notifications
 

@@ -12,6 +12,8 @@ class
 
 inherit
 	EV_RIBBON
+		export
+			{ANY} init_with_window_and_dll
 		redefine
 			init_with_window
 		end

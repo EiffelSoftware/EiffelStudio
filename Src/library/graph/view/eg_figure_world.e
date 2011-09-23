@@ -586,7 +586,7 @@ feature -- Element change
 			selected_figures_in_world: selected_figures_in_world
 		end
 
-	remove_node (a_node: EG_NODE)
+	remove_node (a_node: like node_type)
 			-- Remove `a_node' from view and all its links.
 		require
 			a_node_not_void: a_node /= Void
@@ -1296,7 +1296,7 @@ invariant
 	selected_figures_not_void: selected_figures /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

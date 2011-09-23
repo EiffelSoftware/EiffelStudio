@@ -165,8 +165,6 @@ feature -- Access EV_DRAGABLE_SOURCE.
 			create Result
 		end
 
-
-
 feature -- Access common.
 
 	pointer_x, pointer_y: INTEGER_16;

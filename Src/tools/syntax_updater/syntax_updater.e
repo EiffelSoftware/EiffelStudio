@@ -308,7 +308,8 @@ feature {NONE}
 feature {NONE} -- Arguments processing
 
 	name: STRING = "Eiffel Syntax Updater"
-	version: STRING = "v6.4"
+	version: STRING = "6.4.1"
+	copyright: STRING = "Copyright Eiffel Software 2007-2011. All Rights Reserved."
 
 	non_switched_argument_name: STRING = "Directory"
 	non_switched_argument_description: STRING = "Directory to process"
@@ -335,7 +336,7 @@ invariant
 	string_buffer_not_void: string_buffer /= Void
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

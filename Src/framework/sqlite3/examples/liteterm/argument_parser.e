@@ -70,7 +70,10 @@ feature {NONE} -- Usage
 	name: STRING = "SQLite Terminal"
 			-- <Precursor>
 
-	version: STRING = "0.5"
+	version: STRING = "0.6"
+			-- <Precursor>
+
+	copyright: STRING = "Copyright Eiffel Software 2009-2011. All Rights Reserved."
 			-- <Precursor>
 
 	non_switched_argument_name: STRING = "Filename"
@@ -96,7 +99,7 @@ feature {NONE} -- Switches
 	create_switch: STRING = "c|create-if-not-exists"
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

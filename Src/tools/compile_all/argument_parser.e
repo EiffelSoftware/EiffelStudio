@@ -40,6 +40,9 @@ feature {NONE} -- Access
 			Result.append_integer ({EIFFEL_ENVIRONMENT_CONSTANTS}.minor_version)
 		end
 
+	copyright: STRING = "Copyright Eiffel Software 2006-2011. All Rights Reserved."
+			-- <Precursor>
+
 	switches: ARRAYED_LIST [ARGUMENT_SWITCH]
 			-- Argument switches
 		once
@@ -180,7 +183,7 @@ feature {NONE} -- Switch names
 	finalize_switch: STRING = "finalize";
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -306,6 +306,9 @@ feature {NONE} -- Usage
 			Result.append_integer (svn_revision \\ (9999 + 1))
 		end
 
+	copyright: STRING = "Copyright Eiffel Software 2005-2011. All Rights Reserved."
+			-- <Precursor>
+
 	svn_revision: INTEGER
 			-- SVN revision that build the compiler.
 			-- We use `0000' because it is replaced by the actual svn revision number
@@ -392,7 +395,7 @@ invariant
 			(generate_for_server and not (add_to_eiffel_project or show_graphical_wizard or generate_for_client))
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

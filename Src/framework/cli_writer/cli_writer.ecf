@@ -35,6 +35,9 @@
 			</file_rule>
 			<file_rule>
 				<exclude>/implementation/windows$</exclude>
+				<exclude>/emitter$</exclude>
+				<exclude>/pe_file$</exclude>
+				<exclude>/fusion$</exclude>
 				<condition>
 					<platform excluded_value="windows"/>
 				</condition>

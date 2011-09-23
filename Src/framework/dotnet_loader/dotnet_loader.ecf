@@ -16,6 +16,10 @@
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="false"/>
 		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf"/>
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf"/>
-		<cluster name="dotnet_loader" location=".\" recursive="true"/>
+		<cluster name="dotnet_loader" location=".\" recursive="true">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</cluster>
 	</target>
 </system>

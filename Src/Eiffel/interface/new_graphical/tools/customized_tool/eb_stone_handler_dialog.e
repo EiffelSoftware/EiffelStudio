@@ -219,7 +219,7 @@ feature{NONE} -- Actions
 			stone_name_table.start
 			tool_name_table.start
 			bind_row (stone_name_table.item_for_iteration, tool_name_table.item_for_iteration, l_grid_row)
-			items.force_last ([tool_name_table.item_for_iteration, stone_name_table.item_for_iteration])
+			items.extend ([tool_name_table.item_for_iteration, stone_name_table.item_for_iteration])
 			grid.remove_selection
 			l_grid_row.enable_select
 			set_has_changed (True)
@@ -245,7 +245,8 @@ feature{NONE} -- Actions
 			if l_row /= Void then
 				l_row_index := l_row.index
 				grid.column (1).header_item.remove_pixmap
-				items.remove (l_row_index)
+				items.go_i_th (l_row_index)
+				items.remove
 				grid.remove_row (l_row_index)
 				grid.remove_selection
 				if l_row_index <= grid.row_count then
@@ -265,7 +266,7 @@ feature{NONE} -- Actions
 			l_row_index: INTEGER
 		do
 			l_row_index := a_choice_item.row.index
-			items.item (l_row_index).a_tool_id := tool_name_table.item (a_choice_item.text)
+			items.i_th (l_row_index).a_tool_id := tool_name_table.item (a_choice_item.text)
 			set_has_changed (True)
 		end
 
@@ -277,7 +278,7 @@ feature{NONE} -- Actions
 			l_row_index: INTEGER
 		do
 			l_row_index := a_choice_item.row.index
-			items.item (l_row_index).a_stone_name := stone_name_table.item (a_choice_item.text)
+			items.i_th (l_row_index).a_stone_name := stone_name_table.item (a_choice_item.text)
 			set_has_changed (True)
 		end
 
@@ -488,7 +489,7 @@ feature{NONE} -- Implementation/Data
 	tool_name_table: HASH_TABLE [STRING, STRING_GENERAL]
 			-- Table of tool names [tool_id, tool_display_name]
 
-	items: DS_ARRAYED_LIST [TUPLE [a_tool_id: STRING; a_stone_name: STRING]]
+	items: ARRAYED_LIST [TUPLE [a_tool_id: STRING; a_stone_name: STRING]]
 			-- Items to be displayed in `grid'
 
 feature{NONE} -- Implementation
@@ -539,7 +540,7 @@ feature{NONE} -- Implementation/Sorting
 			a_column_list_attached: a_column_list /= Void
 			not_a_column_list_is_empty:
 		local
-			l_sorter: DS_QUICK_SORTER [TUPLE [STRING, STRING]]
+			l_sorter: QUICK_SORTER [TUPLE [STRING, STRING]]
 			l_value: like value
 			l_items: like items
 			l_stone_table: like stone_table
@@ -563,7 +564,7 @@ feature{NONE} -- Implementation/Sorting
 						l_stone_table.has (l_value.key_for_iteration) and then
 						l_tool_table.has (l_value.item_for_iteration)
 					then
-						l_items.force_last ([l_value.item_for_iteration, l_value.key_for_iteration])
+						l_items.extend ([l_value.item_for_iteration, l_value.key_for_iteration])
 					end
 					l_value.forth
 				end
@@ -582,7 +583,7 @@ feature{NONE} -- Implementaion
 		local
 			l_grid: like grid
 			l_grid_row: EV_GRID_ROW
-			l_cursor: DS_ARRAYED_LIST_CURSOR [TUPLE [ a_tool_id: STRING; a_stone_name: STRING]]
+			l_cursor: INDEXABLE_ITERATION_CURSOR [TUPLE [ a_tool_id: STRING; a_stone_name: STRING]]
 		do
 			l_grid := grid
 			if l_grid.row_count > 0 then
@@ -625,5 +626,36 @@ invariant
 	stone_name_table_attached: stone_name_table /= Void
 	items_attached: items /= Void
 
+note
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end
 

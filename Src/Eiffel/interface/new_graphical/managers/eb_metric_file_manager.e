@@ -25,8 +25,8 @@ feature -- Initialization
 	make
 			-- Create XML elements to store metrics and measures.
 		local
-			l_node: XM_ELEMENT
-			l_namespace: XM_NAMESPACE
+			l_node: XML_ELEMENT
+			l_namespace: XML_NAMESPACE
 		do
 			create observer_list.make (10)
 			create l_namespace.make_default
@@ -40,13 +40,13 @@ feature -- Initialization
 
 feature -- Access
 
-	file_header: XM_DOCUMENT
+	file_header: XML_DOCUMENT
 		-- XML header containing metric definitions and recorded measures.
 
-	metric_header: XM_ELEMENT
+	metric_header: XML_ELEMENT
 		-- XML element containing metric definitions.
 
-	measure_header: XM_ELEMENT
+	measure_header: XML_ELEMENT
 		-- XML element containing recorded measures.
 
 	metric_file: PLAIN_TEXT_FILE
@@ -123,40 +123,40 @@ feature -- File creation
 
 feature -- Metric definitions
 
-	metric_element (name, unit, type: STRING): XM_ELEMENT
+	metric_element (name, unit, type: STRING): XML_ELEMENT
 			-- XML element for new metric definitions.
 		require
 			name_not_empty: name /= Void and then not name.is_empty
 			unit_not_empty: unit /= Void and then not unit.is_empty
 			type_not_empty: type /= Void and then not type.is_empty
 		local
-			l_namespace: XM_NAMESPACE
+			l_namespace: XML_NAMESPACE
 		do
 			create l_namespace.make_default
-			create Result.make_root (create {XM_DOCUMENT}.make, "METRIC", l_namespace)
+			create Result.make_root (create {XML_DOCUMENT}.make, "METRIC", l_namespace)
 
 			Result.add_attribute ("Name", l_namespace, name)
 			Result.add_attribute ("Unit", l_namespace, unit)
 			Result.add_attribute ("Type", l_namespace, type)
 		end
 
-	add_metric (metric: XM_ELEMENT; index: INTEGER)
+	add_metric (metric: XML_ELEMENT; index: INTEGER)
 			-- Add `metric' to `metric_header' at `index' position.
 		require
 			metric_not_void: metric /= Void
 		do
-			metric_header.put (metric, index)
+			metric_header.nodes.go_i_th (index)
+			metric_header.nodes.put_left (metric)
 		end
 
-	replace_metric (index_old_metric: INTEGER; new_metric: XM_ELEMENT)
+	replace_metric (index_old_metric: INTEGER; new_metric: XML_ELEMENT)
 			-- Overwrite metric at `index_old_metric' with `new_metric'.
 		require
 			new_metric_not_void: new_metric /= Void
 			correct_index: index_old_metric >= 1 and index_old_metric <= metric_header.count
 		do
-			metric_header.remove (index_old_metric)
 			new_metric.set_parent (metric_header)
-			metric_header.put (new_metric, index_old_metric)
+			metric_header.nodes.put_i_th (new_metric, index_old_metric)
 		end
 
 	index_of_metric (metric_name: STRING): INTEGER
@@ -164,9 +164,9 @@ feature -- Metric definitions
 		require
 			metric_name_not_empty: metric_name /= Void and then not metric_name.is_empty
 		local
-			a_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
+			a_cursor: XML_COMPOSITE_CURSOR
 			i: INTEGER
-			node, a_metric_element: XM_ELEMENT
+			node, a_metric_element: XML_ELEMENT
 			node_name: STRING
 		do
 			a_cursor := metric_header.new_cursor
@@ -191,7 +191,7 @@ feature -- Metric definitions
 			index_found: Result >= 1 and Result <= metric_header.count
 		end
 
-	new_metric_notify_all (new_metric: EB_METRIC; new_metric_element: XM_ELEMENT; overwrite: BOOLEAN; index: INTEGER)
+	new_metric_notify_all (new_metric: EB_METRIC; new_metric_element: XML_ELEMENT; overwrite: BOOLEAN; index: INTEGER)
 			-- Notify all observers of a change in metric definitions.
 		do
 			if metric_file.is_closed then
@@ -209,7 +209,7 @@ feature -- Metric definitions
 		rescue
 		end
 
-	management_metric_notify_all (metric_list: ARRAYED_LIST [EB_METRIC]; xml_list: ARRAYED_LIST [XM_ELEMENT])
+	management_metric_notify_all (metric_list: ARRAYED_LIST [EB_METRIC]; xml_list: ARRAYED_LIST [XML_ELEMENT])
 			-- Notify all observers of a change in metric definitions.
 		do
 			if metric_file.is_closed then
@@ -229,13 +229,13 @@ feature -- Metric definitions
 
 feature -- Recorded_measures
 
-	measure_element (row: EV_MULTI_COLUMN_LIST_ROW; status: STRING): XM_ELEMENT
+	measure_element (row: EV_MULTI_COLUMN_LIST_ROW; status: STRING): XML_ELEMENT
 			-- XML element for new recorded measures.
 		local
-			l_namespace: XM_NAMESPACE
+			l_namespace: XML_NAMESPACE
 		do
 			create l_namespace.make_default
-			create Result.make_root (create {XM_DOCUMENT}.make, "MEASURE", l_namespace)
+			create Result.make_root (create {XML_DOCUMENT}.make, "MEASURE", l_namespace)
 			Result.add_attribute ("STATUS", l_namespace, status)
 			Result.put_last (Xml_routines.xml_node (Result, "MEASURE_NAME", row.i_th (1)))
 			Result.put_last (Xml_routines.xml_node (Result, "SCOPE_TYPE", row.i_th (2)))
@@ -250,7 +250,7 @@ feature -- Recorded_measures
 			row_not_void: row /= Void
 			status_correct: equal (status, "new") or equal (status, "old")
 		local
-			added_row: XM_ELEMENT
+			added_row: XML_ELEMENT
 		do
 			added_row := measure_element (row, status)
 			measure_header.put_last (added_row)
@@ -261,7 +261,8 @@ feature -- Recorded_measures
 		require
 			correct_range: index >= 1 and index <= measure_header.count
 		do
-			measure_header.remove (index)
+			measure_header.nodes.go_i_th (index)
+			measure_header.nodes.remove
 		end
 
 	update_row (row: EV_MULTI_COLUMN_LIST_ROW; index: INTEGER)
@@ -270,18 +271,17 @@ feature -- Recorded_measures
 			row_not_void: row /= Void
 			correct_range: index >= 1 and index <= measure_header.count
 		local
-			updated_row: XM_ELEMENT
+			updated_row: XML_ELEMENT
 		do
-			measure_header.remove (index)
 			updated_row := measure_element (row, "new")
-			measure_header.put (updated_row, index)
+			measure_header.nodes.put_i_th (updated_row, index)
 		end
 
 	measure_notify_all
 			-- Notify all observers of a change in recorded measures.
 		do
 			if metric_file.is_closed then
-				metric_file.open_read_write
+--				metric_file.open_read_write
 			end
 			from
 				observer_list.start
@@ -355,7 +355,7 @@ feature -- Observer
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -368,22 +368,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_METRIC_FILE_MANAGER

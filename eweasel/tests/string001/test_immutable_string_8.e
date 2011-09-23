@@ -190,38 +190,74 @@ feature {NONE} -- Implementation
 		do
 			s := "true"
 			check_boolean ("is_boolean", s.is_boolean)
+			s := "1true"
+			s := s.shared_substring (2, 5)
+			check_boolean ("is_boolean", s.is_boolean)
 
 			s := "    true   "
+			check_boolean ("is_boolean", not s.is_boolean)
+			s := "1    true   "
+			s := s.shared_substring (2, 12)
 			check_boolean ("is_boolean", not s.is_boolean)
 
 			s := "True"
 			check_boolean ("is_boolean", s.is_boolean)
+			s := "1True"
+			s := s.shared_substring (2, 5)
+			check_boolean ("is_boolean", s.is_boolean)
 
 			s := "false"
+			check_boolean ("is_boolean", s.is_boolean)
+			s := "1false"
+			s := s.shared_substring (2, 6)
 			check_boolean ("is_boolean", s.is_boolean)
 
 			s := "    false   "
 			check_boolean ("is_boolean", not s.is_boolean)
+			s := "1    false   "
+			s := s.shared_substring (2, 13)
+			check_boolean ("is_boolean", not s.is_boolean)
 
-			s := "false"
+			s := "False"
+			check_boolean ("is_boolean", s.is_boolean)
+			s := "1False"
+			s := s.shared_substring (2, 6)
 			check_boolean ("is_boolean", s.is_boolean)
 
 			s := "TRUE"
 			check_boolean ("is_boolean", s.is_boolean)
+			s := "1TRUE"
+			s := s.shared_substring (2, 5)
+			check_boolean ("is_boolean", s.is_boolean)
 
 			s := "FALSE"
+			check_boolean ("is_boolean", s.is_boolean)
+			s := "1FALSE"
+			s := s.shared_substring (2, 6)
 			check_boolean ("is_boolean", s.is_boolean)
 
 			s := "Tru"
 			check_boolean ("is_boolean", not s.is_boolean)
+			s := "1Tru"
+			s := s.shared_substring (2, 4)
+			check_boolean ("is_boolean", not s.is_boolean)
 
 			s := "tru"
+			check_boolean ("is_boolean", not s.is_boolean)
+			s := "1tru"
+			s := s.shared_substring (2, 4)
 			check_boolean ("is_boolean", not s.is_boolean)
 
 			s := "Fal"
 			check_boolean ("is_boolean", not s.is_boolean)
+			s := "1Fal"
+			s := s.shared_substring (2, 4)
+			check_boolean ("is_boolean", not s.is_boolean)
 
 			s := "fal"
+			check_boolean ("is_boolean", not s.is_boolean)
+			s := "1fal"
+			s := s.shared_substring (2, 4)
 			check_boolean ("is_boolean", not s.is_boolean)
 		end
 

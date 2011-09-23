@@ -11,9 +11,7 @@ class
 inherit
 	WEL_EDIT
 		redefine
-			scroll,
-			set_selection,
-			set_caret_position
+			scroll
 		end
 
 create
@@ -32,29 +30,6 @@ feature -- Basic operations
 		end
 
 feature -- Status setting
-
-	set_selection (start_position, end_position: INTEGER)
-			-- Set the selection between `start_position'
-			-- and `end_position'.
-			-- If `scroll_caret_at_selection' is True, the
-			-- caret will be scrolled to `start_position'.
-		do
-			{WEL_API}.send_message (item, Em_setsel, to_wparam (start_position), to_lparam (end_position))
-			if scroll_caret_at_selection then
-				{WEL_API}.send_message (item, Em_scrollcaret, to_wparam (0), to_lparam (0))
-			end
-		end
-
-	set_caret_position (position: INTEGER)
-			-- Set the caret position with `position'.
-			-- If `scroll_caret_at_selection' is True, the
-			-- caret will be scrolled to `position'.
-		do
-			{WEL_API}.send_message (item, Em_setsel, to_wparam (position), to_lparam (position))
-			if scroll_caret_at_selection then
-				{WEL_API}.send_message (item, Em_scrollcaret, to_wparam (0), to_lparam (0))
-			end
-		end
 
 	set_formatting_rect (rect: WEL_RECT)
 			-- Set `formatting_rect' with `rect'.
@@ -96,30 +71,6 @@ feature -- Status setting
 			exists: exists
 		do
 			{WEL_API}.send_message (item, Em_settabstops, to_wparam (0), to_lparam (0))
-		end
-
-	enable_scroll_caret_at_selection
-			-- Set `scroll_caret_at_selection' to True.
-			-- The caret will be scrolled at the selection after
-			-- a call to `set_selection'.
-		require
-			exists: exists
-		do
-			scroll_caret_at_selection := True
-		ensure
-			scroll_caret_at_selection_enabled: scroll_caret_at_selection
-		end
-
-	disable_scroll_caret_at_selection
-			-- Set `scroll_caret_at_selection' to False.
-			-- The caret will not be scrolled at the selection
-			-- after a call to `set_selection'.
-		require
-			exists: exists
-		do
-			scroll_caret_at_selection := False
-		ensure
-			scroll_caret_at_selection_disabled: not scroll_caret_at_selection
 		end
 
 feature -- Status report
@@ -234,10 +185,6 @@ feature -- Status report
 			positive_result: Result >= 0
 		end
 
-	scroll_caret_at_selection: BOOLEAN
-			-- Will the caret be scrolled at the selection after
-			-- a call to `set_selection'?
-
 feature {NONE} -- Implementation
 
 	default_style: INTEGER
@@ -250,14 +197,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

@@ -131,12 +131,12 @@ feature -- Helper
 
 	ribbon_for_item (a_item: EV_RIBBON_ITEM): detachable EV_RIBBON
 			-- Find parent ribbon for `a_item'
+		require
+			not_void: a_item /= Void
 		local
 			l_res: EV_RIBBON_RESOURCES
 			l_list: ARRAYED_LIST [EV_RIBBON]
 			l_ribbon: EV_RIBBON
-			l_tab: EV_RIBBON_TAB
-			l_group: EV_RIBBON_GROUP
 		do
 			from
 				create l_res
@@ -147,13 +147,29 @@ feature -- Helper
 				l_list.after or Result /= Void
 			loop
 				l_ribbon := l_list.item
-				from
+				if attached find_item_in_tabs (a_item, l_ribbon.tabs) then
+					Result := l_ribbon
+				end
+				l_list.forth
+			end
+		end
+
+	find_item_in_tabs (a_item: EV_RIBBON_ITEM; a_tabs: ARRAYED_LIST [EV_RIBBON_TAB]): detachable EV_RIBBON_TAB
+			-- Find `a_item' in `a_tabs'
+		require
+			not_void: a_item /= Void
+			not_void: a_tabs /= Void
+		local
+			l_tab: EV_RIBBON_TAB
+			l_group: EV_RIBBON_GROUP
+		do
+			from
 					-- Search tabs in `l_ribbon'
-					l_ribbon.tabs.start
+					a_tabs.start
 				until
-					l_ribbon.tabs.after or Result /= Void
+					a_tabs.after or Result /= Void
 				loop
-					l_tab := l_ribbon.tabs.item
+					l_tab := a_tabs.item
 					from
 						-- Search group in `l_tab'
 						l_tab.groups.start
@@ -168,7 +184,7 @@ feature -- Helper
 							l_group.buttons.after or Result /= Void
 						loop
 							if l_group.buttons.item = a_item then
-								Result := l_ribbon
+								Result := l_tab
 							end
 							if Result = Void then
 								if
@@ -181,7 +197,7 @@ feature -- Helper
 										l_buttons.after or Result /= Void
 									loop
 										if l_buttons.item = a_item then
-											Result := l_ribbon
+											Result := l_tab
 										end
 										l_buttons.forth
 									end
@@ -192,10 +208,8 @@ feature -- Helper
 
 						l_tab.groups.forth
 					end
-					l_ribbon.tabs.forth
+					a_tabs.forth
 				end
-				l_list.forth
-			end
 		end
 
 	ribbon_for_contextual_tabs (a_item: EV_RIBBON_TAB_GROUP): detachable EV_RIBBON
@@ -215,6 +229,39 @@ feature -- Helper
 				l_ribbon_window := l_list.item
 				if l_ribbon_window.contextual_tabs.has (a_item) then
 					Result := l_ribbon_window.ribbon
+				end
+
+				l_list.forth
+			end
+		end
+
+	ribbon_for_contextual_tab_item (a_item: EV_RIBBON_ITEM): detachable EV_RIBBON
+			-- Find parent ribbon for items in contexutal tabs
+		require
+			not_void: a_item /= Void
+		local
+			l_res: EV_RIBBON_RESOURCES
+			l_list: ARRAYED_LIST [EV_RIBBON_TITLED_WINDOW]
+			l_ribbon_window: EV_RIBBON_TITLED_WINDOW
+		do
+			from
+				create l_res
+				l_list := l_res.ribbon_window_list
+				l_list.start
+			until
+				l_list.after or Result /= Void
+			loop
+				l_ribbon_window := l_list.item
+
+				from
+					l_ribbon_window.contextual_tabs.start
+				until
+					l_ribbon_window.contextual_tabs.after
+				loop
+					if attached find_item_in_tabs (a_item, l_ribbon_window.contextual_tabs.item.tabs) then
+						Result := l_ribbon_window.ribbon
+					end
+					l_ribbon_window.contextual_tabs.forth
 				end
 
 				l_list.forth

@@ -297,6 +297,9 @@ feature -- Access queries
 		once
 				-- assemblies have no options
 			create Result
+				-- But we have to treat classes as void-safe, as otherwise
+				-- nothing from an assembly can be used in a void-safe project.
+			Result.void_safety.put_index ({CONF_OPTION}.Void_safety_index_all)
 		end
 
 	class_options: HASH_TABLE [CONF_OPTION, STRING]
@@ -431,7 +434,7 @@ invariant
 	assemblies_not_void: assemblies /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

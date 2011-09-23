@@ -125,6 +125,7 @@ feature -- Initialization
 			wel_make (default_parent, "", 0, 0, 0, 0, 0)
 			set_default_font
 			Precursor {EV_TEXT_COMPONENT_IMP}
+			enable_scroll_caret_at_selection
 		end
 
 feature {EV_ANY_I} -- Status report

@@ -6,12 +6,10 @@ note
 	revision: "$Revision$"
 
 class
-	EG_NODE_ACTION
+	EG_NODE_ACTION [NODE_TYPE -> EG_NODE]
 
 inherit
-	EV_ACTION_SEQUENCE [TUPLE [EG_NODE]]
-	-- EV_ACTION_SEQUENCE [TUPLE [a_node: EG_NODE]]
-	-- (ETL3 TUPLE with named parameters)
+	EV_ACTION_SEQUENCE [TUPLE [NODE_TYPE]]
 
 create
 	default_create
@@ -27,7 +25,7 @@ feature -- Access
 			extend (agent wrapper (?, action))
 		end
 
-	wrapper (a_node: EG_NODE; action: PROCEDURE [ANY, TUPLE])
+	wrapper (a_node: NODE_TYPE; action: PROCEDURE [ANY, TUPLE])
 			-- Use this to circumvent tuple type checking. (at your own risk!)
 			-- Calls `action' passing all other arguments.
 		do
@@ -41,7 +39,7 @@ feature -- Access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

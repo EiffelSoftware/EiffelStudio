@@ -119,7 +119,7 @@ feature -- Status report
 
 feature -- Element change
 
-	add_node (a_node: EG_NODE)
+	add_node (a_node: like node_type)
 			-- Add `a_node' to the model.
 		require
 			a_node_not_void: a_node /= Void
@@ -182,7 +182,7 @@ feature -- Element change
 			link_removed_from_target: a_link.target /= Void implies not a_link.target.links.has (a_link)
 		end
 
-	remove_node (a_node: EG_NODE)
+	remove_node (a_node: like node_type)
 			-- Remove `a_node' from the model.
 		require
 			a_node_not_void: a_node /= Void
@@ -259,10 +259,10 @@ feature -- Element change
 
 feature -- Events
 
-	node_add_actions: EG_NODE_ACTION
+	node_add_actions: EG_NODE_ACTION [like node_type]
 			-- Called when a node is added to the model.
 
-	node_remove_actions: EG_NODE_ACTION
+	node_remove_actions: EG_NODE_ACTION [like node_type]
 			-- Called when a node was removed from the model.
 
 	link_add_actions: EG_LINK_ACTION
@@ -354,7 +354,7 @@ invariant
 	link_add_actions_not_void: link_add_actions /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

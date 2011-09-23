@@ -25,12 +25,12 @@ feature -- Manager
 		deferred
 		end
 
-	notify_new_metric (a_new_metric: EB_METRIC; new_metric_element: XM_ELEMENT; overwrite: BOOLEAN; index: INTEGER)
+	notify_new_metric (a_new_metric: EB_METRIC; new_metric_element: XML_ELEMENT; overwrite: BOOLEAN; index: INTEGER)
 			-- The state of the manager has changed. New metrics have been added. Update `Current'.
 		deferred
 		end
 
-	notify_management_metric (metric_list: ARRAYED_LIST [EB_METRIC]; xml_list: ARRAYED_LIST [XM_ELEMENT])
+	notify_management_metric (metric_list: ARRAYED_LIST [EB_METRIC]; xml_list: ARRAYED_LIST [XML_ELEMENT])
 			-- The state of the manager has changed. Metrics have been changed. Update `Current'.
 		deferred
 		end

@@ -150,7 +150,7 @@ feature{NONE} -- Implementation
 					agent l_callback.tools,
 					agent l_callback.last_error
 				)
-			l_desps.do_all (agent items.force_last)
+			l_desps.do_all (agent items.extend)
 			set_has_changed (False)
 		end
 
@@ -307,7 +307,7 @@ feature{NONE} -- Implementation
 			-- Those that have been removed in Current dialog are not taken into consideration.
 		local
 			l_item_table: HASH_TABLE [EB_CUSTOMIZED_TOOL_DESP, STRING]
-			l_cursor: DS_ARRAYED_LIST_CURSOR [EB_CUSTOMIZED_TOOL_DESP]
+			l_cursor: INDEXABLE_ITERATION_CURSOR [EB_CUSTOMIZED_TOOL_DESP]
 			l_tool: EB_CUSTOMIZED_TOOL
 			l_tools: LIST [EB_CUSTOMIZED_TOOL]
 			l_shell_tools: DS_ARRAYED_LIST_CURSOR [ES_TOOL [EB_TOOL]]
@@ -361,7 +361,7 @@ feature{NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

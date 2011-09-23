@@ -683,8 +683,8 @@ feature {NONE} -- Copy from {ES_EVENT_LIST_TOOL_PANEL_BASE} FIXIT: merge?
 			a_comparator_attached: a_comparator /= Void
 		local
 			l_grid: like grid
-			l_sorter: DS_QUICK_SORTER [EV_GRID_ROW]
-			l_rows: DS_ARRAYED_LIST [EV_GRID_ROW]
+			l_sorter: QUICK_SORTER [EV_GRID_ROW]
+			l_rows: ARRAYED_LIST [EV_GRID_ROW]
 			l_row: EV_GRID_ROW
 			l_count, i: INTEGER
 			l_event_items: DS_ARRAYED_LIST [TUPLE [event_item: EVENT_LIST_ITEM_I; expand: BOOLEAN]]
@@ -701,7 +701,7 @@ feature {NONE} -- Copy from {ES_EVENT_LIST_TOOL_PANEL_BASE} FIXIT: merge?
 
 			from i := 1 until i > l_count loop
 				l_row := l_grid.row (i)
-				l_rows.force_last (l_row)
+				l_rows.extend (l_row)
 				i := i + l_row.subrow_count_recursive + 1
 			end
 
@@ -777,7 +777,7 @@ feature {NONE} -- Copy from {ES_EVENT_LIST_TOOL_PANEL_BASE} FIXIT: merge?
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

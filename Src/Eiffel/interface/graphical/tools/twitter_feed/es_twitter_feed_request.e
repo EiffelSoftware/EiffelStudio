@@ -26,7 +26,7 @@ feature {NONE} -- Access
 	completed_responder: detachable PROCEDURE [ANY, TUPLE]
 			-- Responder to call when all tweets have been generated.
 
-	xml_parser: XM_EIFFEL_PARSER
+	xml_parser: XML_LITE_STOPPABLE_PARSER
 			-- XML parser to parse reponse strings.
 		once
 			create Result.make
@@ -215,7 +215,7 @@ invariant
 	responder_attached: is_processing_request implies responder /= Void
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -753,7 +753,7 @@ feature -- Pick and Drop
 			a_x, a_y: INTEGER
 			a_item: detachable EV_GRID_ITEM_I
 		do
-			a_pointer_position := internal_screen.pointer_position
+			a_pointer_position := application_implementation.pnd_screen.pointer_position
 			a_x := a_pointer_position.x - drawable.screen_x
 			a_y := a_pointer_position.y - drawable.screen_y
 			if a_x > 0 and then a_y > 0 then

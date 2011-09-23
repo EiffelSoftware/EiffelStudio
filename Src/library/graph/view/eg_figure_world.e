@@ -864,7 +864,7 @@ feature -- Save/Restore
 		end
 
 	set_with_xml_element (node: like xml_element)
-			-- Retrive state from `node'.
+			-- Retrieve state from `node'.
 		local
 			l_item: detachable like xml_element
 			sf: DOUBLE

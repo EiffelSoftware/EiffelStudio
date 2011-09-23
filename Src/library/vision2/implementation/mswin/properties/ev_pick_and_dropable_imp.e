@@ -312,8 +312,8 @@ feature {EV_ANY_I} -- Implementation
 			l_original: detachable like original_top_level_window_imp
 		do
 			if press_action = ev_pnd_end_transport then
-				pointer_x := a_x.to_integer_16
-				pointer_y := a_y.to_integer_16
+				pointer_x := a_screen_x.to_integer_16
+				pointer_y := a_screen_y.to_integer_16
 
 				l_original := original_top_level_window_imp
 				check l_original /= Void end

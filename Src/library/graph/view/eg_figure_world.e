@@ -643,7 +643,7 @@ feature -- Element change
 			linkables: ARRAYED_LIST [EG_LINKABLE]
 			l_item: EG_LINKABLE
 			l_cluster: detachable EG_CLUSTER
-			l_node: detachable EG_NODE
+			l_node: detachable like node_type
 			l_links: ARRAYED_LIST [EG_LINK]
 			l_link: detachable EG_LINK
 		do

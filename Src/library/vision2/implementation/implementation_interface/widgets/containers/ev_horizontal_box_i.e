@@ -21,7 +21,7 @@ feature {EV_DOCKABLE_SOURCE_I} -- Implementation
 	pointer_offset: INTEGER
 			-- Offset of mouse pointer coordinate matching orientation, into `Current'.
 		do
-			Result := internal_screen.pointer_position.x - screen_x
+			Result := application_implementation.pnd_screen.pointer_position.x - screen_x
 		end
 
 	docking_dimension_of_current_item: INTEGER

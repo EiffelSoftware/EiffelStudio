@@ -79,8 +79,6 @@ inherit
 	QL_VISITOR
 		export
 			{NONE} all
-		redefine
-			process_item
 		end
 
 	QL_SHARED_SCOPES
@@ -218,7 +216,7 @@ feature -- Status report
 
 feature -- Access
 
-	item_satisfied_actions: ACTION_SEQUENCE [TUPLE[like item_type]]
+	item_satisfied_actions: ACTION_SEQUENCE [TUPLE [like item_type]]
 			-- Actions to be performed when a new item (which is satisfied by current `criterion') is generated
 		do
 			if actions_internal = Void then
@@ -253,6 +251,8 @@ feature -- Domain visit
 		local
 			l_criterion: like criterion
 			l_domain: like domain
+			l_content_list: LIST [QL_VISITABLE]
+			l_cursor: CURSOR
 		do
 			current_source_domain := a_item
 			actual_criterion.set_source_domain (a_item)
@@ -269,7 +269,19 @@ feature -- Domain visit
 				is_temp_domain_used := True
 				temp_domain.wipe_out
 				if not a_item.is_empty then
-					a_item.content.do_all (agent process_item ({QL_ITEM} ?))
+					l_content_list := a_item.content
+					if l_content_list /= Void then
+						l_cursor := l_content_list.cursor
+						from
+							l_content_list.start
+						until
+							l_content_list.after
+						loop
+							process_item (l_content_list.item)
+							l_content_list.forth
+						end
+						l_content_list.go_to (l_cursor)
+					end
 				end
 					-- There are maybe some candidate items from `actual_criterion' stored in `temp_domain',
 					-- so we process it now.
@@ -315,12 +327,6 @@ feature{NONE} -- Criterion visit
 					end
 				end
 			end
-		end
-
-	process_item (a_item: QL_VISITABLE)
-			-- Process `a_item'.
-		do
-			Precursor (a_item)
 		end
 
 feature{NONE} -- Implementation
@@ -610,7 +616,7 @@ invariant
 	tautology_criterion_attached: tautology_criterion /= Void
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -634,11 +640,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

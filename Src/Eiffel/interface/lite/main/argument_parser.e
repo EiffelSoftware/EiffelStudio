@@ -258,7 +258,7 @@ feature {NONE} -- Usage
 
 	switch_groups: ARRAYED_LIST [attached ARGUMENT_GROUP]
 			-- Valid switch grouping
-		do
+		once
 			create Result.make (4)
 
 			Result.extend (create {ARGUMENT_GROUP}.make (<<

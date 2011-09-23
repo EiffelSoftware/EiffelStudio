@@ -236,10 +236,6 @@ feature -- Status report
 		local
 			sel_end: INTEGER
 		do
-			fixme (once "Replace sel_end's type by INTEGER_32, as $sel_end has to be a pointer to a DWORD.")
-				-- We pass `Void' as the previous implementation only returned
-				-- the high value part of the result, corresponding to the
-				-- end position.
 			{WEL_API}.send_message (item, Em_getsel, to_wparam (0), $sel_end)
 			Result := sel_end
 		end
@@ -251,10 +247,6 @@ feature -- Status report
 		local
 			sel_start, sel_end: INTEGER
 		do
-			fixme (once "{
-				Replace sel_start, and set_end 's type by INTEGER_32, as it has
-				to be a pointer to a DWORD.
-			}")
 			{WEL_API}.send_message (item, Em_getsel, $sel_start, $sel_end)
 			Result := sel_end /= sel_start
 		end
@@ -440,14 +432,14 @@ invariant
 		caret_position <= text_length + 2
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

@@ -706,8 +706,8 @@ feature {EV_ANY_I, WEL_WINDOW} -- Implementation
 			-- `Result' is implementation of application from environment.
 		local
 			l_result: detachable EV_APPLICATION_IMP
-		once
-			l_result ?= environment.implementation.application_i
+		do
+			l_result ?= application_implementation
 			check l_result /= Void end
 			Result := l_result
 		ensure

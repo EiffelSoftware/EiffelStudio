@@ -768,14 +768,6 @@ feature -- Delegated features
 			end
 		end
 
-	pnd_screen: detachable EV_SCREEN
-			-- `Result' is screen used for pick and drop.
-		do
-			check
-				must_be_widget_to_get_called: False
-			end
-		end
-
 	on_parented
 			-- `Current' has just been added to a container
 		do

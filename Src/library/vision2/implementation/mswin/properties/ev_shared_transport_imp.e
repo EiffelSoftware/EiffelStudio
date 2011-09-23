@@ -111,10 +111,6 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-	pnd_screen: detachable EV_SCREEN
-		-- Screen used for retrieving current pointer position,
-		-- and drawing if transport type necessitates this.
-
 feature {EV_ANY_I, EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP} -- Implementation
 
 	cursor_pixmap: detachable EV_POINTER_STYLE;

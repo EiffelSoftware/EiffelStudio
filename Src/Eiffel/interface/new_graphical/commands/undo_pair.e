@@ -85,19 +85,13 @@ feature -- Comparison
 			-- Is `other' attached to an object considered
 			-- equal to current object?
 		do
-			Result :=
-				undo_procedure.is_equal (other.undo_procedure)
-				and
-				redo_procedure.is_equal (other.redo_procedure)
+			Result := undo_procedure ~ other.undo_procedure and then redo_procedure ~ other.redo_procedure
 		end
 
 	is_inverse (other: like Current): BOOLEAN
 			-- Is `other' the inverse operation?
 		do
-			Result :=
-				undo_procedure.is_equal (other.redo_procedure)
-				and
-				redo_procedure.is_equal (other.undo_procedure)
+			Result := undo_procedure ~ other.redo_procedure and then redo_procedure ~ other.undo_procedure
 		end
 
 feature {UNDO_PAIR} -- Implementation
@@ -116,7 +110,7 @@ invariant
 	conservation_of_dos: (undo_count - redo_count).abs <= 1
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -27,17 +27,17 @@ feature -- Command
 			if attached shared.layout_constructor_list.i_th (a_layout_constructor_index) as l_layout_constructor then
 				l_ribbon_contextual_tabs := l_layout_constructor.tree_item_factory_method (constants.ribbon_contextual_tabs)
 
-				create l_data.make
-				l_tree_item := l_layout_constructor.tree_item_factory_method (constants.tab_group)
-				l_tree_item.set_data (l_data)
-
 				from
 					a_contextual_tabs.start
 				until
 					a_contextual_tabs.after
 				loop
 					if attached {XML_ELEMENT} a_contextual_tabs.item_for_iteration as l_element then
+
 						check l_element.name.same_string (constants.tab_group) end
+						create l_data.make
+						l_tree_item := l_layout_constructor.tree_item_factory_method (constants.tab_group)
+						l_tree_item.set_data (l_data)
 
 						create l_helper
 						from

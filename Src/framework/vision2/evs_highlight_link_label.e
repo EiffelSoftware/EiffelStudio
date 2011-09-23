@@ -59,7 +59,7 @@ feature {NONE} -- Access
 
 feature -- Element change
 
-	set_text (a_text: STRING_GENERAL)
+	set_text (a_text: READABLE_STRING_GENERAL)
 			-- <Precursor>
 		do
 			set_minimum_size (maximum_label_width (a_text), maximum_label_height (a_text))
@@ -94,7 +94,7 @@ feature {NONE} -- Element change
 
 feature {NONE} -- Query
 
-	maximum_label_width (a_text: STRING_GENERAL): INTEGER
+	maximum_label_width (a_text: READABLE_STRING_GENERAL): INTEGER
 			-- Maximum width of a label when set with text `a_text'
 		require
 			a_text_not_void: a_text /= Void
@@ -110,7 +110,7 @@ feature {NONE} -- Query
 			Result := l_width.max (l_other)
 		end
 
-	maximum_label_height (a_text: STRING_GENERAL): INTEGER
+	maximum_label_height (a_text: READABLE_STRING_GENERAL): INTEGER
 			-- Maximum width of a label when set with text `a_text'
 		require
 			a_text_not_void: a_text /= Void

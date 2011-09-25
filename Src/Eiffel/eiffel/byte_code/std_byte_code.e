@@ -246,7 +246,11 @@ feature -- Analyzis
 					-- Look for all instances of assignments in Result
 					-- in last instructions and set `last_in_result' if
 					-- all were such assignments.
-				if not result_type.is_void and (not is_process_or_thread_relative_once) then
+				if
+					not result_type.is_void and then
+					not compound.is_empty and then
+					not is_process_or_thread_relative_once
+				then
 					compound.finish
 					compound.item.find_assign_result
 					compound.item.mark_last_instruction
@@ -560,10 +564,10 @@ feature -- Analyzis
 				generate_once_epilogue (generated_c_feature_name)
 			end
 
-			if compound = Void or else not compound.last.last_all_in_result then
+			if compound = Void or else compound.is_empty or else not compound.last.last_all_in_result then
 					-- Remove the GC hooks we've been generated.
 				finish_compound
-				-- Generate final "return Result", if required
+					-- Generate final "return Result", if required.
 				generate_return_exp
 			end
 
@@ -654,12 +658,15 @@ end
 		end
 
 	generate_return_not_reached
-			-- Generate a mark that the final return is not reached
+			-- Generate a mark that the final return is not reached.
 		local
 			assignment: ASSIGN_B
 			buf: GENERATION_BUFFER
 		do
-			if attached compound as c then
+			if
+				attached compound as c and then
+				not c.is_empty
+			then
 				c.finish
 					-- If ALL the last statements were assignments in result,
 					-- generate a NOTREACHED for lint when last statement was

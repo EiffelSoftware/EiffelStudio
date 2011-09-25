@@ -71,12 +71,9 @@ feature {NONE} -- Implementation
 			l_byte_context := byte_context
 			l_byte_context.set_byte_code (l_byte_code)
 			l_byte_context.set_current_feature (feat)
-				-- The only thing that differs from the code written in $ISE_EIFFEL/studio/built_ins/neutral/TYPE.e
-				-- is the removal of the `check' which is only used to make the compiler happy but is detrimental
-				-- to the case where we have a detachable actual argument to TYPE.
+				-- The code generation relies on default initialization of "Result".
 			if l_byte_code.compound /= Void and then not l_byte_code.compound.is_empty then
-				l_byte_code.compound.start
-				l_byte_code.compound.remove
+				l_byte_code.compound.wipe_out
 			end
 			l_byte_code.analyze
 			l_byte_code.set_real_body_id (feat.real_body_id (Current))
@@ -110,7 +107,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

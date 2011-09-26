@@ -783,12 +783,25 @@ feature {NONE} -- Implementation
 		local
 			l_application_menu_comment: STRING
 			l_first_application_menu_identifer_name: detachable STRING
+			l_tree_node: detachable EV_TREE_NODE
 		do
-			if a_tree.valid_index (2) then
+			from
+				-- Find out application menu
+				a_tree.start
+			until
+				a_tree.after or l_tree_node /= Void
+			loop
+				if a_tree.item.text.same_string ({ER_XML_CONSTANTS}.ribbon_application_menu) then
+					l_tree_node := a_tree.item
+				end
+				a_tree.forth
+			end
+
+			if l_tree_node /= Void then
 				l_application_menu_comment := "%N%T%T%T-- Application menu"
 				l_first_application_menu_identifer_name := first_application_menu_identifer_name
-				check is_application_menu: a_tree.i_th (2).text.same_string ({ER_XML_CONSTANTS}.ribbon_application_menu) end
-				if attached {ER_TREE_NODE_DATA} a_tree.i_th (2).data as l_data
+				check is_application_menu: l_tree_node.text.same_string ({ER_XML_CONSTANTS}.ribbon_application_menu) end
+				if attached {ER_TREE_NODE_DATA} l_tree_node.data as l_data
 					and then attached l_data.command_name as l_identifer_name
 					and then not l_identifer_name.is_empty then
 					check l_first_application_menu_identifer_name /= void end

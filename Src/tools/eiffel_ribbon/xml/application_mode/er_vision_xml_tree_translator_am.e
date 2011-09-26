@@ -128,6 +128,96 @@ feature {NONE} -- Tree saving
 			end
 		end
 
+	save_scaling_policy (a_vision2_tab: EV_TREE_ITEM; a_tab: XML_ELEMENT)
+			-- Save scaling policy
+		require
+			not_void: a_vision2_tab /= Void
+			not_void: a_tab /= Void
+		local
+			l_tab_scaling_policy_xml, l_scaling_policy, l_ideal_sizes, l_scale: XML_ELEMENT
+			l_ideal_sizes_list: ARRAYED_LIST [TUPLE [a_group: STRING; a_size: STRING]]
+			l_scale_list: ARRAYED_LIST [TUPLE [a_group: STRING; a_size: STRING]]
+		do
+			from
+				create l_ideal_sizes_list.make (10)
+				create l_scale_list.make (10)
+				a_vision2_tab.start
+			until
+				a_vision2_tab.after
+			loop
+				-- Vision2 group items
+				if attached {ER_TREE_NODE_GROUP_DATA} a_vision2_tab.item.data as l_data then
+					if attached l_data.command_name as l_command_name then
+						if l_data.is_ideal_sizes_large_checked then
+							l_ideal_sizes_list.extend ([l_command_name, {ER_XML_ATTRIBUTE_CONSTANTS}.Large])
+						end
+						if l_data.is_ideal_sizes_medium_checked then
+							l_ideal_sizes_list.extend ([l_command_name, {ER_XML_ATTRIBUTE_CONSTANTS}.Medium])
+						end
+						if l_data.is_ideal_sizes_small_checked then
+							l_ideal_sizes_list.extend ([l_command_name, {ER_XML_ATTRIBUTE_CONSTANTS}.Small])
+						end
+
+						if l_data.is_scale_large_checked then
+							l_scale_list.extend ([l_command_name, {ER_XML_ATTRIBUTE_CONSTANTS}.Large])
+						end
+						if l_data.is_scale_medium_checked then
+							l_scale_list.extend ([l_command_name, {ER_XML_ATTRIBUTE_CONSTANTS}.Medium])
+						end
+						if l_data.is_scale_small_checked then
+							l_scale_list.extend ([l_command_name, {ER_XML_ATTRIBUTE_CONSTANTS}.Small])
+						end
+						if l_data.is_scale_popup_checked then
+							l_scale_list.extend ([l_command_name, {ER_XML_ATTRIBUTE_CONSTANTS}.Popup])
+						end
+					end
+				else
+					check group_node_must_have_group_tree_node_data: False end
+				end
+
+				a_vision2_tab.forth
+			end
+
+			if not l_ideal_sizes_list.is_empty or not l_scale_list.is_empty then
+				create l_tab_scaling_policy_xml.make (a_tab, xml_constants.tab_scaling_policy, name_space)
+				a_tab.force_first (l_tab_scaling_policy_xml)
+
+				create l_scaling_policy.make (l_tab_scaling_policy_xml, xml_constants.scaling_policy, name_space)
+				l_tab_scaling_policy_xml.put_last (l_scaling_policy)
+
+				create l_ideal_sizes.make (l_scaling_policy, xml_constants.scaling_policy_ideal_sizes, name_space)
+				l_scaling_policy.put_last (l_ideal_sizes)
+
+				from
+					l_ideal_sizes_list.start
+				until
+					l_ideal_sizes_list.after
+				loop
+					create l_scale.make (l_ideal_sizes, xml_constants.scale, name_space)
+					l_ideal_sizes.put_last (l_scale)
+
+					l_scale.add_attribute ({ER_XML_ATTRIBUTE_CONSTANTS}.group, name_space, l_ideal_sizes_list.item.a_group)
+					l_scale.add_attribute ({ER_XML_ATTRIBUTE_CONSTANTS}.size, name_space, l_ideal_sizes_list.item.a_size)
+
+					l_ideal_sizes_list.forth
+				end
+
+				from
+					l_scale_list.start
+				until
+					l_scale_list.after
+				loop
+					create l_scale.make (l_scaling_policy, xml_constants.scale, name_space)
+					l_scaling_policy.put_last (l_scale)
+
+					l_scale.add_attribute ({ER_XML_ATTRIBUTE_CONSTANTS}.group, name_space, l_scale_list.item.a_group)
+					l_scale.add_attribute ({ER_XML_ATTRIBUTE_CONSTANTS}.size, name_space, l_scale_list.item.a_size)
+
+					l_scale_list.forth
+				end
+			end
+		end
+
 	add_xml_nodes_by_vision_tree (a_vision_tree: EV_TREE)
 			-- Add xml nodes by querying info from `a_vision_tree'
 		require
@@ -612,6 +702,8 @@ feature {NONE} -- Tree saving
 
 					a_tree_item.forth
 				end
+
+				save_scaling_policy (a_tree_item, l_tab_node)
 			else
 				check False end
 			end
@@ -627,8 +719,8 @@ feature {NONE} -- Tree saving
 			l_constants: ER_XML_ATTRIBUTE_CONSTANTS
 			l_xml_constants: ER_XML_CONSTANTS
 		do
-			if attached {EV_TREE_ITEM} a_group_tree_node as l_item then
-				check l_item.text.same_string (xml_constants.group) end
+			if attached {EV_TREE_ITEM} a_group_tree_node as l_item and then
+				 l_item.text.same_string (xml_constants.group) then
 
 				create l_group_node.make (a_parent_tab, xml_constants.group, name_space)
 				a_parent_tab.put_last (l_group_node)

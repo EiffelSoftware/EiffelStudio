@@ -38,6 +38,7 @@ feature {NONE} -- Implementation
 			l_load_help_button_visitor: ER_LOAD_HELP_BUTTON_AM_VISITOR
 			l_load_quick_access_toolbar_visitor: ER_LOAD_QUICK_ACCESS_TOOLBAR_AM_VISITOR
 			l_size_definition_visitor: ER_SIZE_DEFINITION_AM_VISITOR
+			l_scaling_policy_visitor: ER_SCALING_POLICY_AM_VISITOR
 		do
 			create Result.make (10)
 
@@ -70,6 +71,9 @@ feature {NONE} -- Implementation
 
 			create l_size_definition_visitor
 			Result.extend (l_size_definition_visitor)
+
+			create l_scaling_policy_visitor
+			Result.extend (l_scaling_policy_visitor)
 		end
 
 	visitors_for_dll: ARRAYED_LIST [ER_VISITOR]
@@ -86,6 +90,7 @@ feature {NONE} -- Implementation
 			l_load_quick_access_toolbar_visitor: ER_LOAD_QUICK_ACCESS_TOOLBAR_VISITOR
 			l_size_definition_visitor: ER_SIZE_DEFINITION_VISITOR
 			l_contextual_tabs_visitor: ER_CONTEXTUAL_TABS_VISITOR
+			l_scaling_policy_visitor: ER_SCALING_POLICY_VISITOR
 		do
 			create Result.make (10)
 
@@ -122,6 +127,8 @@ feature {NONE} -- Implementation
 			create l_size_definition_visitor
 			Result.extend (l_size_definition_visitor)
 
+			create l_scaling_policy_visitor
+			Result.extend (l_scaling_policy_visitor)
 		end
 
 end

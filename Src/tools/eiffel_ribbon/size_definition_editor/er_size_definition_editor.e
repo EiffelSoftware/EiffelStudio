@@ -60,6 +60,13 @@ feature {NONE} -- Initialization
 			create auto_group_checker.make_with_text ("Auto group")
 			auto_group_checker.enable_select
 
+			create large.make_with_text ("Large")
+			large.select_actions.extend (agent on_large_select)
+			create medium.make_with_text ("Medium")
+			medium.select_actions.extend (agent on_medium_select)
+			create small.make_with_text ("Small")
+			small.select_actions.extend (agent on_small_select)
+
 			create drawing_area
 			create drawing_area_buffer
 			create model_world
@@ -116,6 +123,15 @@ feature {NONE} -- Initialization
 --			snap_to_lines_checker.select_actions.extend (agent on_snap_to_lines_checker_select)
 			l_vertical_box.extend (auto_group_checker)
 			l_vertical_box.disable_item_expand (auto_group_checker)
+
+			create l_hor_box
+			l_hor_box.set_padding (l_constants.default_padding)
+			l_hor_box.set_border_width (l_constants.default_border_width)
+			l_vertical_box.extend (l_hor_box)
+			l_vertical_box.disable_item_expand (l_hor_box)
+			l_hor_box.extend (large)
+			l_hor_box.extend (medium)
+			l_hor_box.extend (small)
 --			auto_group_checker.select_actions.extend (agent on_auto_group_checker_select)
 
 			create l_hor_box
@@ -204,6 +220,11 @@ feature {NONE} -- Implementation
 
 	auto_group_checker: EV_CHECK_BUTTON
 			-- auto group buttons checker
+
+feature {ER_SIZE_DEFINITION_WRITER} -- Internal query
+
+	large, medium, small: EV_RADIO_BUTTON
+			-- Size radio button
 
 feature {NONE} -- GUI implementation
 
@@ -334,20 +355,78 @@ feature {NONE} -- GUI implementation
 
 	on_save_button_select
 			-- Handle saving size definition event
+		local
+			l_size: STRING
 		do
 			check_for_invalid_buttons
 
 			size_definition_writer.reset
 			check not name_combo_box.text.is_empty end
-			size_definition_writer.save (figures, name_combo_box.text)
+			if large.is_selected then
+				l_size := {ER_XML_ATTRIBUTE_CONSTANTS}.large
+			elseif medium.is_selected then
+				l_size := {ER_XML_ATTRIBUTE_CONSTANTS}.medium
+			elseif small.is_selected then
+				l_size := {ER_XML_ATTRIBUTE_CONSTANTS}.small
+			else
+				-- Default is large
+				l_size := {ER_XML_ATTRIBUTE_CONSTANTS}.large
+			end
+			size_definition_writer.save (figures, name_combo_box.text, l_size)
+
+			save_size_definition_defaults (l_size, {ER_XML_ATTRIBUTE_CONSTANTS}.large)
+			save_size_definition_defaults (l_size, {ER_XML_ATTRIBUTE_CONSTANTS}.medium)
+			save_size_definition_defaults (l_size, {ER_XML_ATTRIBUTE_CONSTANTS}.small)
+
 			size_definition_writer.update_combo_box (name_combo_box, name_combo_box.text)
+		end
+
+	save_size_definition_defaults (a_saved_size: STRING; a_size: STRING)
+			-- Save for other sizes' group size definition if not exists
+		do
+			if not a_saved_size.same_string (a_size) then
+				if not size_definition_writer.is_group_size_definition_exists (name_combo_box.text, a_size) then
+					size_definition_writer.save (figures, name_combo_box.text, a_size)
+				end
+			end
 		end
 
 	on_name_combo_box_select
 			-- Handle select a name of size definition event
 		do
+			if large.is_selected then
+				on_large_select
+			elseif medium.is_selected then
+				on_medium_select
+			else
+				check small.is_selected end
+				on_small_select
+			end
+		end
+
+	on_large_select
+			-- Handle `large' select actions
+		do
+			load_size_definition ({ER_XML_ATTRIBUTE_CONSTANTS}.large)
+		end
+
+	on_medium_select
+			-- Handle `medium' select actions
+		do
+			load_size_definition ({ER_XML_ATTRIBUTE_CONSTANTS}.medium)
+		end
+
+	on_small_select
+			-- Handle `small' select actions
+		do
+			load_size_definition ({ER_XML_ATTRIBUTE_CONSTANTS}.small)
+		end
+
+	load_size_definition (a_size: STRING)
+			-- Load size definition implementation
+		do
 			if attached name_combo_box.selected_item as l_selected_item then
-				size_definition_writer.load (l_selected_item.text)
+				size_definition_writer.load (l_selected_item.text, a_size)
 				figures.wipe_out
 				figures.append (size_definition_writer.all_generated_figures)
 				update_figure_world

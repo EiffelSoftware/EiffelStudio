@@ -1,4 +1,4 @@
-note
+ote
 	description: "[
 		Argument parser use to parse and expose user options.
 	]"
@@ -287,6 +287,9 @@ feature -- Status report
 		end
 
 feature {NONE} -- Usage
+
+	copyright: STRING = "Copyright Eiffel Software 1985-2011. All Rights Reserved."
+			-- <Precursor>
 
 	name: attached STRING = "Hallow, Windows Installer Xml v3.0 Tool"
 			-- <Precursor>

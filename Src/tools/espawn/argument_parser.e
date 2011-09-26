@@ -131,6 +131,9 @@ feature -- Status report
 
 feature {NONE} -- Usage
 
+	copyright: STRING = "Copyright Eiffel Software 1985-2011. All Rights Reserved."
+			-- <Precursor>
+
 	name: attached STRING = "Eiffel Environment Command Spawn Utility"
 			-- <Precursor>
 

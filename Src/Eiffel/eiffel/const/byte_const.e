@@ -246,7 +246,7 @@ feature -- Access
 	Bc_wait_arg:		CHARACTER = '%/166/'
 			-- Argument that may trigger a wait condition if it is uncontrolled.
 
-		-- Unused opcode
+		-- Catcall
 	Bc_tuple_catcall:		CHARACTER = '%/167/';
 
 		-- Manifest tuple
@@ -264,6 +264,8 @@ feature -- Access
 	Bc_do_rescue:		CHARACTER = '%/175/';
 	Bc_do_rescue_end:	CHARACTER = '%/176/';
 
+		-- Always failing postcondition
+	Bc_postfail: CHARACTER = '%/177/';
 
 note
 	copyright:	"Copyright (c) 1984-2011, Eiffel Software"

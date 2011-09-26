@@ -223,7 +223,7 @@ static  char    *names [] = {
 "BC_TRY_END_EXCEPT",
 "BC_DO_RESCUE",
 "BC_DO_RESCUE_END",
-"BC_NOTUSED_177",
+"BC_POSTFAIL",
 "BC_NOTUSED_178",
 "BC_NOTUSED_179",
 "BC_NOTUSED_180",
@@ -1117,6 +1117,8 @@ static  void    print_instructions (void)
 			case  BC_RAISE_PREC :
 				break;
 			case  BC_INSPECT_EXCEP :
+				break;
+			case  BC_POSTFAIL :
 				break;
 /* Operators */
 

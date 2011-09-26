@@ -79,6 +79,16 @@ feature {NONE} -- Initialization
 				string_32_class_c := cl_i.compiled_class
 			end
 
+			cl_i := class_i_by_name ("IMMUTABLE_STRING_8")
+			if cl_i /= Void then
+				immutable_string_8_class_c := cl_i.compiled_class
+			end
+
+			cl_i := class_i_by_name ("IMMUTABLE_STRING_32")
+			if cl_i /= Void then
+				immutable_string_32_class_c := cl_i.compiled_class
+			end
+
 			cl_i := sys.natural_8_class
 			if cl_i /= Void then
 				natural_8_class_c := cl_i.compiled_class
@@ -190,6 +200,8 @@ feature -- Access
 	type_class_c: CLASS_C
 	readable_string_8_class_c: CLASS_C
 	readable_string_32_class_c: CLASS_C
+	immutable_string_8_class_c: CLASS_C
+	immutable_string_32_class_c: CLASS_C
 	string_8_class_c: CLASS_C
 	string_32_class_c: CLASS_C
 	natural_8_class_c: CLASS_C
@@ -272,7 +284,7 @@ feature {NONE} -- Once per object
 	opo_ise_runtime_class_c: like ise_runtime_class_c
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

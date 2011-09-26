@@ -278,8 +278,7 @@ feature -- Status report
 			-- yes if it is a STRING, or conform to STRING
 			-- or conform to DEBUG_OUTPUT
 		local
-			dc: CLASS_C
-			string_c, string_32_c, system_string_c: CLASS_C
+			rs8_c, rs32_c, ss_c: detachable CLASS_C
 			comp_data: DEBUGGER_DATA_FROM_COMPILER
 		do
 			if type = Type_manifest_string then
@@ -289,30 +288,29 @@ feature -- Status report
 			elseif type = Type_string_dotnet then
 				Result := not is_void
 			elseif is_type_object and not is_void then
-				if dynamic_class /= Void then
+				if attached dynamic_class as l_dynclass then
 					comp_data := debugger_manager.compiler_data
-					string_c := comp_data.readable_string_8_class_c
-					string_32_c := comp_data.readable_string_32_class_c
-					system_string_c := comp_data.system_string_class_c
+					rs8_c := comp_data.readable_string_8_class_c
+					rs32_c := comp_data.readable_string_32_class_c
+					ss_c := comp_data.system_string_class_c
 					if
-						string_c /= Void
-						and then dynamic_class.simple_conform_to (string_c)
+						rs8_c /= Void
+						and then l_dynclass.simple_conform_to (rs8_c)
 					then
 						Result := True
 					elseif
-						string_32_c /= Void
-						and then dynamic_class.simple_conform_to (string_32_c)
+						rs32_c /= Void
+						and then l_dynclass.simple_conform_to (rs32_c)
 					then
 						Result := True
 					elseif
-						system_string_c /= Void
-						and then dynamic_class.simple_conform_to (system_string_c)
+						ss_c /= Void
+						and then l_dynclass.simple_conform_to (ss_c)
 					then
 						Result := True
 					elseif debug_output_evaluation_enabled then
-						dc := debuggable_class
-						Result := dc /= Void and then
-								  dynamic_class.simple_conform_to (dc)
+						Result := attached debuggable_class as l_dbgclass and then
+								  l_dynclass.simple_conform_to (l_dbgclass)
 					end
 				end
 			end
@@ -529,49 +527,72 @@ feature {DUMP_VALUE} -- string_representation Implementation
 		require
 			is_classic_system
 		local
-			f: E_FEATURE
+			f: detachable E_FEATURE
 			l_attributes: DEBUG_VALUE_LIST
 			l_attributes_cursor: like {DEBUG_VALUE_LIST}.new_cursor
 			l_attributes_item: ABSTRACT_DEBUG_VALUE
-			cv_spec: SPECIAL_VALUE
 			done: BOOLEAN
-			int_value: DEBUG_BASIC_VALUE [INTEGER]
-			area_attribute: SPECIAL_VALUE
-			count_attribute: DEBUG_BASIC_VALUE [INTEGER]
+			area_attribute: detachable SPECIAL_VALUE
+			count_attribute, area_lower_attribute: detachable DEBUG_BASIC_VALUE [INTEGER]
+
 			l_count: INTEGER
-			sc, sc8, sc32, rsc8, rsc32: CLASS_C
-			l_area_name, l_count_name: STRING
+			s8_c, s32_c, sc: detachable CLASS_C
+			l_area_name, l_count_name, l_area_lower_name: detachable READABLE_STRING_8
+			l_area_lower_value: INTEGER
 			l_slice_max: INTEGER
 			comp_data: DEBUGGER_DATA_FROM_COMPILER
 		do
-			if dynamic_class /= Void then
+			if attached dynamic_class as l_dynamic_class then
 				comp_data := debugger_manager.compiler_data
-				rsc8 := comp_data.readable_string_8_class_c
-				rsc32 := comp_data.readable_string_32_class_c
-				sc8 := comp_data.string_8_class_c
-				sc32 := comp_data.string_32_class_c
+
+				s8_c := comp_data.string_8_class_c
+				s32_c := comp_data.string_32_class_c
+
 				if
-					dynamic_class = sc8
-					or dynamic_class = sc32
+					l_dynamic_class = s8_c
+					or l_dynamic_class = s32_c
 				then
-					sc := dynamic_class
+					sc := l_dynamic_class
 					l_area_name := area_name
 					l_count_name := count_name
 				else
-					if dynamic_class.simple_conform_to (rsc8) then
-						sc := rsc8
-					elseif dynamic_class.simple_conform_to (rsc32) then
-						sc := rsc32
+					s8_c := comp_data.readable_string_8_class_c
+					s32_c := comp_data.readable_string_32_class_c
+
+					if l_dynamic_class.simple_conform_to (s8_c) then
+						sc := s8_c
+					elseif l_dynamic_class.simple_conform_to (s32_c) then
+						sc := s32_c
 					end
 					if sc /= Void then
-							--| Take name of `area' and `count' from STRING or STRING_32 in descendant version.
-							--| since STRING.area and STRING_32.area are not inherited from STRING_GENERAL
+							--| Take name of `area' and `count' from (READABLE_)STRING_8 or (READABLE_)STRING_32 in descendant version.
+							--| since (READABLE_)STRING.area and (READABLE_)STRING_32.area are not inherited from (READABLE_)STRING_GENERAL
 							--| we have to test the 2 cases : STRING and STRING_32
-							--| FIXME: Handle Uniocode
-						f := sc.feature_with_name (area_name).ancestor_version (dynamic_class)
+
+						f := sc.feature_with_name (area_name).ancestor_version (l_dynamic_class)
 						l_area_name := f.name_32.as_string_8
-						f := sc.feature_with_name (count_name).ancestor_version (dynamic_class)
+						f := sc.feature_with_name (count_name).ancestor_version (l_dynamic_class)
 						l_count_name := f.name_32.as_string_8
+
+							--| And also manage the IMMUTABLE_STRING_8 and _32 !
+						s8_c := comp_data.immutable_string_8_class_c
+						s32_c := comp_data.immutable_string_32_class_c
+						if s8_c = l_dynamic_class or else l_dynamic_class.simple_conform_to (s8_c) then
+							sc := s8_c
+						elseif s32_c = l_dynamic_class or else l_dynamic_class.simple_conform_to (s32_c) then
+							sc := s32_c
+						else
+							sc := Void
+						end
+						if sc /= Void then
+							f := sc.feature_with_name (area_lower_name).ancestor_version (l_dynamic_class)
+							if f /= Void then
+								l_area_lower_name := f.name_32.as_string_8
+							end
+						end
+
+							--| FIXME: Handle Unicode
+							--| ....
 					end
 				end
 			end
@@ -579,7 +600,6 @@ feature {DUMP_VALUE} -- string_representation Implementation
 					--| Getting count value and area object
 					--| we set slices to 1,1 to avoid receiving all the capacity item of SPECIAL
 					--| since here only the printable characters matter
-
 				if value_address /= Void and then not value_address.is_void then
 					l_attributes := debugger_manager.object_manager.attributes_at_address (value_address, 0, 0)
 				end
@@ -591,18 +611,25 @@ feature {DUMP_VALUE} -- string_representation Implementation
 						l_attributes_cursor.after or done
 					loop
 						l_attributes_item := l_attributes_cursor.item
-						cv_spec ?= l_attributes_item
-						if
-							(area_attribute = Void and cv_spec /= Void) and then
-							cv_spec.name.is_equal (l_area_name)
-						then
-							area_attribute := cv_spec
-							done := count_attribute /= Void
-						elseif count_attribute = Void and cv_spec = Void then
-							int_value ?= l_attributes_item
-							if int_value /= Void and then int_value.name.is_equal (l_count_name) then
-								count_attribute := int_value
-								done := area_attribute /= Void
+						if attached {SPECIAL_VALUE} l_attributes_item as cv_spec then
+							if area_attribute = Void and then cv_spec.name.is_equal (l_area_name) then
+								area_attribute := cv_spec
+								done := count_attribute /= Void and (l_area_lower_name = Void or else area_lower_attribute /= Void)
+							end
+						else
+							if count_attribute = Void or area_lower_attribute = Void then
+								if attached {DEBUG_BASIC_VALUE [INTEGER]} l_attributes_item as int_value then
+									if count_attribute = Void and then int_value.name.is_equal (l_count_name) then
+										count_attribute := int_value
+										done := area_attribute /= Void and (l_area_lower_name = Void or else area_lower_attribute /= Void)
+									elseif
+										l_area_lower_name /= Void and then area_lower_attribute = Void and then
+										int_value.name.is_equal (l_area_lower_name)
+									then
+										area_lower_attribute := int_value
+										done := area_attribute /= Void and count_attribute /= Void
+									end
+								end
 							end
 						end
 						l_attributes_cursor.forth
@@ -622,13 +649,18 @@ feature {DUMP_VALUE} -- string_representation Implementation
 							if area_attribute /= Void then
 									--| Now we have the real count, we'll get the l_slice_max items
 									--| and not all the capacity
+								if area_lower_attribute /= Void then
+									l_area_lower_value := area_lower_attribute.value
+								else
+									l_area_lower_value := 0
+								end
 								if max < 0 then
 									l_slice_max := l_count - 1
 								else
 									l_slice_max := max.min (l_count - 1)
 								end
 								area_attribute.reset_items
-								area_attribute.get_items (min, l_slice_max)
+								area_attribute.get_items (min + l_area_lower_value, l_area_lower_value + l_slice_max)
 								Result := area_attribute.truncated_raw_string_value (l_count)
 							end
 						end
@@ -1129,6 +1161,7 @@ feature {NONE} -- Private Constants
 
 	area_name: STRING = "area"
 	count_name: STRING = "count"
+	area_lower_name: STRING = "area_lower"
 
 	character_routines: CHARACTER_ROUTINES
 			-- To have a printable output of Eiffel strings that have
@@ -1140,7 +1173,7 @@ feature {NONE} -- Private Constants
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,4 +1,4 @@
-ote
+note
 	description: "[
 		Argument parser use to parse and expose user options.
 	]"

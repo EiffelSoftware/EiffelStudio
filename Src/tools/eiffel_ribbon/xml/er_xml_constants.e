@@ -67,6 +67,12 @@ feature -- Query, the value of string is what should be written to XML
 
 	tab_scaling_policy: STRING = "Tab.ScalingPolicy"
 
+	scaling_policy: STRING = "ScalingPolicy"
+
+	scaling_policy_ideal_sizes: STRING = "ScalingPolicy.IdealSizes"
+
+	scale: STRING = "Scale"
+
 	command: STRING = "Command"
 
 	context_popup: STRING = "ContextPopup"
@@ -176,7 +182,11 @@ feature -- Contract support
 					l_string.same_string (drop_down_button) or else
 					l_string.same_string (drop_down_color_picker) or else
 					l_string.same_string (font_control) or else
-					l_string.same_string (tab_group)
+					l_string.same_string (tab_group) or else
+					l_string.same_string (tab_scaling_policy) or else
+					l_string.same_string (scaling_policy) or else
+					l_string.same_string (scaling_policy_ideal_sizes) or else
+					l_string.same_string (scale)
 			end
 		end
 

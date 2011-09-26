@@ -112,6 +112,42 @@ feature -- Command
 				else
 					size_combo_box.remove_text
 				end
+
+				if l_data.is_scale_large_checked then
+					scale_large.enable_select
+				else
+					scale_large.disable_select
+				end
+
+				if l_data.is_scale_medium_checked then
+					scale_medium.enable_select
+				else
+					scale_medium.disable_select
+				end
+
+				if l_data.is_scale_small_checked then
+					scale_small.enable_select
+				else
+					scale_small.disable_select
+				end
+
+				if l_data.is_scale_popup_checked then
+					scale_popup.enable_select
+				else
+					scale_popup.disable_select
+				end
+				
+				if l_data.is_ideal_sizes_large_checked then
+					ideal_sizes_large.enable_select
+				end
+
+				if l_data.is_ideal_sizes_medium_checked then
+					ideal_sizes_medium.enable_select
+				end
+
+				if l_data.is_ideal_sizes_small_checked then
+					ideal_sizes_small.enable_select
+				end
 			end
 		end
 
@@ -145,4 +181,107 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	on_ideal_sizes_large_select
+			-- <Precursor>
+		do
+			if attached tree_node_data as l_data then
+				l_data.set_ideal_sizes_large_checked (ideal_sizes_large.is_selected)
+
+				scale_large.disable_sensitive
+				scale_medium.enable_sensitive
+				scale_small.enable_sensitive
+				scale_popup.enable_sensitive
+
+				update_scale_data_with_gui
+			end
+		end
+
+	on_ideal_sizes_medium_select
+			-- <Precursor>
+		do
+			if attached tree_node_data as l_data then
+				l_data.set_ideal_sizes_medium_checked (ideal_sizes_medium.is_selected)
+
+				scale_large.disable_sensitive
+				scale_medium.disable_sensitive
+				scale_small.enable_sensitive
+				scale_popup.enable_sensitive
+
+				update_scale_data_with_gui
+			end
+		end
+
+	on_ideal_sizes_small_select
+			-- <Precursor>
+		do
+			if attached tree_node_data as l_data then
+				l_data.set_ideal_sizes_small_checked (ideal_sizes_small.is_selected)
+
+				scale_large.disable_sensitive
+				scale_medium.disable_sensitive
+				scale_small.disable_sensitive
+				scale_popup.enable_sensitive
+
+				update_scale_data_with_gui
+			end
+		end
+
+	on_scale_large_select
+			-- <Precursor>
+		do
+			if attached tree_node_data as l_data then
+				l_data.set_scale_large_checked (scale_large.is_selected)
+			end
+		end
+
+	on_scale_medium_select
+			-- <Precursor>
+		do
+			if attached tree_node_data as l_data then
+				l_data.set_scale_medium_checked (scale_medium.is_selected)
+			end
+		end
+
+	on_scale_small_select
+			-- <Precursor>
+		do
+			if attached tree_node_data as l_data then
+				l_data.set_scale_small_checked (scale_small.is_selected)
+			end
+		end
+
+	on_scale_popup_select
+			-- <Precursor>
+		do
+			if attached tree_node_data as l_data then
+				l_data.set_scale_popup_checked (scale_popup.is_selected)
+			end
+		end
+
+	update_scale_data_with_gui
+			-- Update group data with GUI widget statues
+		do
+			if attached tree_node_data as l_data then
+				if scale_large.is_sensitive and scale_large.is_selected then
+					l_data.set_scale_large_checked (True)
+				else
+					l_data.set_scale_large_checked (False)
+				end
+				if scale_medium.is_sensitive and scale_medium.is_selected then
+					l_data.set_scale_medium_checked (True)
+				else
+					l_data.set_scale_medium_checked (False)
+				end
+				if scale_small.is_sensitive and scale_small.is_selected then
+					l_data.set_scale_small_checked (True)
+				else
+					l_data.set_scale_small_checked (False)
+				end
+				if scale_popup.is_sensitive and scale_popup.is_selected then
+					l_data.set_scale_popup_checked (True)
+				else
+					l_data.set_scale_popup_checked (False)
+				end
+			end
+		end
 end

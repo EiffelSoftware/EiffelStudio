@@ -42,6 +42,17 @@ feature {NONE}-- Initialization
 			extend (label)
 			extend (l_ev_label_5)
 			extend (size_combo_box)
+			extend (l_ev_label_6)
+			extend (l_ev_horizontal_box_1)
+			l_ev_horizontal_box_1.extend (ideal_sizes_large)
+			l_ev_horizontal_box_1.extend (ideal_sizes_medium)
+			l_ev_horizontal_box_1.extend (ideal_sizes_small)
+			extend (l_ev_label_7)
+			extend (l_ev_horizontal_box_2)
+			l_ev_horizontal_box_2.extend (scale_large)
+			l_ev_horizontal_box_2.extend (scale_medium)
+			l_ev_horizontal_box_2.extend (scale_small)
+			l_ev_horizontal_box_2.extend (scale_popup)
 
 			l_ev_label_1.set_text ("Type:")
 			l_ev_label_1.align_text_left
@@ -53,6 +64,24 @@ feature {NONE}-- Initialization
 			l_ev_label_4.align_text_left
 			l_ev_label_5.set_text ("Size definition:")
 			l_ev_label_5.align_text_left
+			l_ev_label_6.set_text ("Ideal sizes:")
+			l_ev_label_6.align_text_left
+			l_ev_horizontal_box_1.disable_item_expand (ideal_sizes_large)
+			l_ev_horizontal_box_1.disable_item_expand (ideal_sizes_medium)
+			l_ev_horizontal_box_1.disable_item_expand (ideal_sizes_small)
+			ideal_sizes_large.set_text ("Large")
+			ideal_sizes_medium.set_text ("Medium")
+			ideal_sizes_small.set_text ("Small")
+			l_ev_label_7.set_text ("Scale:")
+			l_ev_label_7.align_text_left
+			l_ev_horizontal_box_2.disable_item_expand (scale_large)
+			l_ev_horizontal_box_2.disable_item_expand (scale_medium)
+			l_ev_horizontal_box_2.disable_item_expand (scale_small)
+			l_ev_horizontal_box_2.disable_item_expand (scale_popup)
+			scale_large.set_text ("Large")
+			scale_medium.set_text ("Medium")
+			scale_small.set_text ("Small")
+			scale_popup.set_text ("Popup")
 			integer_constant_set_procedures.extend (agent set_padding (?))
 			integer_constant_retrieval_functions.extend (agent default_padding)
 			integer_constant_set_procedures.extend (agent set_border_width (?))
@@ -65,6 +94,10 @@ feature {NONE}-- Initialization
 			disable_item_expand (label)
 			disable_item_expand (l_ev_label_5)
 			disable_item_expand (size_combo_box)
+			disable_item_expand (l_ev_label_6)
+			disable_item_expand (l_ev_horizontal_box_1)
+			disable_item_expand (l_ev_label_7)
+			disable_item_expand (l_ev_horizontal_box_2)
 
 			set_all_attributes_using_constants
 			
@@ -72,6 +105,13 @@ feature {NONE}-- Initialization
 			command_name.change_actions.extend (agent on_command_name_text_change)
 			label.change_actions.extend (agent on_label_text_changs)
 			size_combo_box.change_actions.extend (agent on_size_text_change)
+			ideal_sizes_large.select_actions.extend (agent on_ideal_sizes_large_select)
+			ideal_sizes_medium.select_actions.extend (agent on_ideal_sizes_medium_select)
+			ideal_sizes_small.select_actions.extend (agent on_ideal_sizes_small_select)
+			scale_large.select_actions.extend (agent on_scale_large_select)
+			scale_medium.select_actions.extend (agent on_scale_medium_select)
+			scale_small.select_actions.extend (agent on_scale_small_select)
+			scale_popup.select_actions.extend (agent on_scale_popup_select)
 
 				-- Call `user_initialization'.
 			user_initialization
@@ -90,6 +130,17 @@ feature {NONE}-- Initialization
 			create label
 			create l_ev_label_5
 			create size_combo_box
+			create l_ev_label_6
+			create l_ev_horizontal_box_1
+			create ideal_sizes_large
+			create ideal_sizes_medium
+			create ideal_sizes_small
+			create l_ev_label_7
+			create l_ev_horizontal_box_2
+			create scale_large
+			create scale_medium
+			create scale_small
+			create scale_popup
 
 			create string_constant_set_procedures.make (10)
 			create string_constant_retrieval_functions.make (10)
@@ -112,10 +163,15 @@ feature -- Access
 
 	command_name, label: EV_TEXT_FIELD
 	size_combo_box: EV_COMBO_BOX
+	ideal_sizes_large, ideal_sizes_medium, ideal_sizes_small: EV_RADIO_BUTTON
+	scale_large,
+	scale_medium, scale_small, scale_popup: EV_CHECK_BUTTON
 
 feature {NONE} -- Implementation
 
-	l_ev_label_1, l_ev_label_2, l_ev_label_3, l_ev_label_4, l_ev_label_5: EV_LABEL
+	l_ev_label_1, l_ev_label_2, l_ev_label_3, l_ev_label_4, l_ev_label_5, l_ev_label_6,
+	l_ev_label_7: EV_LABEL
+	l_ev_horizontal_box_1, l_ev_horizontal_box_2: EV_HORIZONTAL_BOX
 
 feature {NONE} -- Implementation
 
@@ -147,6 +203,41 @@ feature {NONE} -- Implementation
 	
 	on_size_text_change
 			-- Called by `change_actions' of `size_combo_box'.
+		deferred
+		end
+	
+	on_ideal_sizes_large_select
+			-- Called by `select_actions' of `ideal_sizes_large'.
+		deferred
+		end
+	
+	on_ideal_sizes_medium_select
+			-- Called by `select_actions' of `ideal_sizes_medium'.
+		deferred
+		end
+	
+	on_ideal_sizes_small_select
+			-- Called by `select_actions' of `ideal_sizes_small'.
+		deferred
+		end
+	
+	on_scale_large_select
+			-- Called by `select_actions' of `scale_large'.
+		deferred
+		end
+	
+	on_scale_medium_select
+			-- Called by `select_actions' of `scale_medium'.
+		deferred
+		end
+	
+	on_scale_small_select
+			-- Called by `select_actions' of `scale_small'.
+		deferred
+		end
+	
+	on_scale_popup_select
+			-- Called by `select_actions' of `scale_popup'.
 		deferred
 		end
 	

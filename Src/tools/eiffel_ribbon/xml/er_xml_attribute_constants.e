@@ -67,6 +67,8 @@ feature -- Size definition
 
 	small: STRING = "Small"
 
+	popup: STRING = "Popup"
+
 	button_prefix: STRING = "button"
 
 	control_name: STRING = "ControlName"
@@ -78,5 +80,9 @@ feature -- Size definition
 	true_value: STRING = "true"
 
 	false_value: STRING = "false"
+
+feature -- Scaling polcy
+
+	group: STRING = "Group"
 
 end

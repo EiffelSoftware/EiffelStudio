@@ -22,6 +22,8 @@ feature -- Command
 			-- Accept a visitor
 		require
 			not_void: a_visitor /= Void
+		local
+			l_cursor: XML_COMPOSITE_CURSOR
 		do
 			if attached name as l_name then
 				if l_name.same_string (constants.ribbon_application_menu) then
@@ -40,21 +42,24 @@ feature -- Command
 					a_visitor.visit_size_definitions (Current)
 				elseif l_name.same_string (constants.ribbon_contextual_tabs) then
 					a_visitor.visit_contextual_tabs (Current, a_layout_constructor_index)
+				elseif l_name.same_string (constants.tab_scaling_policy) then
+					a_visitor.visit_scaling_policy (Current)
 				end
 			end
 
 			from
-				start
+				l_cursor := new_cursor
+				l_cursor.start
 			until
-				after
+				l_cursor.after
 			loop
-				if attached {ER_XML_TREE_ELEMENT} item_for_iteration as l_item then
+				if attached {ER_XML_TREE_ELEMENT} l_cursor.item as l_item then
 					l_item.accept (a_visitor, a_layout_constructor_index)
 				else
 --					check item_not_valid: False end
 				end
 
-				forth
+				l_cursor.forth
 			end
 		end
 

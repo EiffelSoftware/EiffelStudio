@@ -30,10 +30,13 @@ feature -- Command
 			create sub_root_element.make (Void, constants.size_definition, name_space)
 		end
 
-	save (a_figures: ARRAYED_LIST [ER_FIGURE]; a_name: STRING)
+	save (a_figures: ARRAYED_LIST [ER_FIGURE]; a_name: STRING; a_size: STRING)
 			-- Start converting EV_FIGURE in GUI to ribbon makrup XML
 		require
 			valid: a_name /= Void and then not a_name.is_empty
+			valid: a_size /= Void and then a_size.same_string ({ER_XML_ATTRIBUTE_CONSTANTS}.large) or else
+					a_size.same_string ({ER_XML_ATTRIBUTE_CONSTANTS}.medium) or else
+					a_size.same_string ({ER_XML_ATTRIBUTE_CONSTANTS}.small)
 		local
 			l_line_1, l_line_2, l_line_3: SORTED_TWO_WAY_LIST [ER_FIGURE]
 			l_items: SORTED_TWO_WAY_LIST [ER_FIGURE]
@@ -42,14 +45,35 @@ feature -- Command
 
 			l_attribute: XML_ATTRIBUTE
 --			l_root_xml: XML_ELEMENT
+--			l_shared: ER_SHARED_SINGLETON
+--			l_size: STRING
+			l_found: BOOLEAN
 		do
 			sub_root_element := root_xml_for_name (a_name)
-			sub_root_element.wipe_out
+			-- First clear previous saved one
+			remove_group_size_definition (sub_root_element, a_size)
+--			sub_root_element.wipe_out
+
 --			create sub_root_element.make (l_root_xml, constants.size_definition, name_space)
 --			l_root_xml.put_last (sub_root_element)
 
-			create l_attribute.make ({ER_XML_ATTRIBUTE_CONSTANTS}.name, name_space, a_name, sub_root_element)
-			sub_root_element.put_last (l_attribute)
+			-- Add name attribute if not exists
+			from
+				sub_root_element.start
+			until
+				sub_root_element.after or l_found
+			loop
+				if attached {XML_ATTRIBUTE} sub_root_element.item_for_iteration as l_name_attribute then
+					if l_name_attribute.name.same_string ({ER_XML_ATTRIBUTE_CONSTANTS}.name) then
+						l_found := True
+					end
+				end
+				sub_root_element.forth
+			end
+			if not l_found then
+				create l_attribute.make ({ER_XML_ATTRIBUTE_CONSTANTS}.name, name_space, a_name, sub_root_element)
+				sub_root_element.put_last (l_attribute)
+			end
 
 			l_line_1 := buttons_on_y ({ER_SIZE_DEFINITION_CONSTANTS}.up_horizontal_line_y, a_figures)
 			l_line_2 := buttons_on_y ({ER_SIZE_DEFINITION_CONSTANTS}.middle_horizontal_line_y, a_figures)
@@ -67,19 +91,62 @@ feature -- Command
 
 			l_sorted_rows := sort_rows (l_rows)
 			figures := a_figures
-			add_group_size_definitions (l_sorted_rows, {ER_XML_ATTRIBUTE_CONSTANTS}.large)
-			--FIXME: save for medium and small size tempoary
-			add_group_size_definitions (l_sorted_rows, {ER_XML_ATTRIBUTE_CONSTANTS}.medium)
-			add_group_size_definitions (l_sorted_rows, {ER_XML_ATTRIBUTE_CONSTANTS}.small)
+
+--			create l_shared
+--			if attached l_shared.size_definition_cell.item as l_size_definition_tool then
+--				if l_size_definition_tool.large.is_selected then
+--					l_size := {ER_XML_ATTRIBUTE_CONSTANTS}.large
+--				elseif l_size_definition_tool.medium.is_selected then
+--					l_size := {ER_XML_ATTRIBUTE_CONSTANTS}.medium
+--				elseif l_size_definition_tool.small.is_selected then
+--					l_size := {ER_XML_ATTRIBUTE_CONSTANTS}.small
+--				else
+--					check False end
+--					create l_size.make_empty
+--				end
+
+				add_group_size_definitions (l_sorted_rows, a_size)
+--			end
+
+--			--FIXME: save for medium and small size tempoary
+--			add_group_size_definitions (l_sorted_rows, {ER_XML_ATTRIBUTE_CONSTANTS}.medium)
+--			add_group_size_definitions (l_sorted_rows, {ER_XML_ATTRIBUTE_CONSTANTS}.small)
+		end
+
+	is_group_size_definition_exists (a_name: STRING; a_size: STRING): BOOLEAN
+			-- Is group size definition exist?
+		require
+			not_void: a_name /= Void
+			valid: a_size /= Void and then a_size.same_string ({ER_XML_ATTRIBUTE_CONSTANTS}.large) or else
+					a_size.same_string ({ER_XML_ATTRIBUTE_CONSTANTS}.medium) or else
+					a_size.same_string ({ER_XML_ATTRIBUTE_CONSTANTS}.small)
+		do
+			sub_root_element := root_xml_for_name (a_name)
+			Result := remove_group_size_definition_imp (sub_root_element, a_size, False)
+		end
+
+	remove_group_size_definition (a_sub_root_element: XML_ELEMENT; a_size: STRING)
+			-- Remove existing group size definition if possible
+		require
+			valid: a_size /= Void and then a_size.same_string ({ER_XML_ATTRIBUTE_CONSTANTS}.large) or else
+					a_size.same_string ({ER_XML_ATTRIBUTE_CONSTANTS}.medium) or else
+					a_size.same_string ({ER_XML_ATTRIBUTE_CONSTANTS}.small)
+		local
+			l_found: BOOLEAN
+		do
+			l_found := remove_group_size_definition_imp (a_sub_root_element, a_size, True)
 		end
 
 	figures: detachable ARRAYED_LIST [ER_FIGURE]
 			-- Set by `save'
 
-	load (a_name: STRING)
+	load (a_name: STRING; a_size: STRING)
 			-- Load XML to GUI
 		require
 			has: sub_root_xml_hash_table.has (a_name)
+			valid: a_size.same_string ({ER_XML_ATTRIBUTE_CONSTANTS}.large) or else
+					a_size.same_string ({ER_XML_ATTRIBUTE_CONSTANTS}.medium) or else
+					a_size.same_string ({ER_XML_ATTRIBUTE_CONSTANTS}.small)
 		do
 			if attached sub_root_xml_hash_table.item (a_name) as l_sub_xml_root then
 				check l_sub_xml_root.name.same_string (constants.size_definition) end
@@ -96,7 +163,7 @@ feature -- Command
 
 					elseif attached {XML_ELEMENT} l_sub_xml_root.item_for_iteration as l_sub_item and then
 						l_sub_item.name.same_string (constants.group_size_definition) then
-						load_size_definition (l_sub_item)
+						load_size_definition (l_sub_item, a_size)
 					end
 
 					l_sub_xml_root.forth
@@ -185,11 +252,13 @@ feature -- Query
 
 feature {NONE} -- Figure XML loading to GUI
 
-	load_size_definition (a_group_size_definition: XML_ELEMENT)
+	load_size_definition (a_group_size_definition: XML_ELEMENT; a_size: STRING)
 			-- Load size definition
-			-- FIXME: handle medium and small size definition here
 		require
 			not_void: a_group_size_definition /= Void
+			valid: a_size.same_string ({ER_XML_ATTRIBUTE_CONSTANTS}.large) or else
+					a_size.same_string ({ER_XML_ATTRIBUTE_CONSTANTS}.medium) or else
+					a_size.same_string ({ER_XML_ATTRIBUTE_CONSTANTS}.small)
 		local
 			l_size: detachable STRING
 		do
@@ -204,10 +273,8 @@ feature {NONE} -- Figure XML loading to GUI
 					l_size := l_attribute.value
 				elseif attached {XML_ELEMENT} a_group_size_definition.item_for_iteration as l_row and then
 					l_row.name.same_string (constants.row) then
-					if l_size /= Void then
-						if l_size.same_string ({ER_XML_ATTRIBUTE_CONSTANTS}.large) then
-							load_row (l_row)
-						end
+					if l_size /= Void and then l_size.same_string (a_size) then
+						load_row (l_row)
 					end
 				elseif attached {XML_ELEMENT} a_group_size_definition.item_for_iteration as l_item and then
 					l_item.name.same_string (constants.control_size_definition) then
@@ -519,12 +586,33 @@ feature {NONE} -- Figure implementation
 		require
 			not_already_called: True
 		local
-			l_element: XML_ELEMENT
+			l_element: detachable XML_ELEMENT
 			l_item: XML_ELEMENT
 			l_attribute: XML_ATTRIBUTE
+			l_found: BOOLEAN
 		do
-			create l_element.make (sub_root_element, constants.control_name_map, name_space)
-			sub_root_element.put_last (l_element)
+			from
+				sub_root_element.start
+			until
+				sub_root_element.after
+			loop
+				if attached {XML_ELEMENT} sub_root_element.item_for_iteration as l_control_name_map then
+					if l_control_name_map.name.same_string ({ER_XML_CONSTANTS}.control_name_map) then
+						l_found := True
+						l_element := l_control_name_map
+					end
+				end
+				sub_root_element.forth
+			end
+
+			if l_found then
+				--wipe out existing children, update mapping here
+				check l_element /= Void end
+				l_element.wipe_out
+			else
+				create l_element.make (sub_root_element, constants.control_name_map, name_space)
+				sub_root_element.put_last (l_element)
+			end
 
 			from
 				a_figures.start
@@ -575,6 +663,47 @@ feature {NONE} -- Implementation
 			else
 				create Result.make (Void, constants.size_definition, name_space)
 				sub_root_xml_hash_table.extend (Result, a_name)
+			end
+		end
+
+	remove_group_size_definition_imp (a_sub_root_element: XML_ELEMENT; a_size: STRING; a_remove: BOOLEAN): BOOLEAN
+			-- If `a_remove', then remove existing group size definition if possible
+			-- Result true means group size definition with `a_size' found
+		require
+			valid: a_size /= Void and then a_size.same_string ({ER_XML_ATTRIBUTE_CONSTANTS}.large) or else
+					a_size.same_string ({ER_XML_ATTRIBUTE_CONSTANTS}.medium) or else
+					a_size.same_string ({ER_XML_ATTRIBUTE_CONSTANTS}.small)
+		local
+			l_cursor: XML_COMPOSITE_CURSOR
+		do
+			from
+				l_cursor := a_sub_root_element.new_cursor
+				l_cursor.start
+			until
+				l_cursor.after or Result
+			loop
+				if attached {XML_ELEMENT} l_cursor.item as l_group_size_defintion then
+					from
+						l_group_size_defintion.start
+					until
+						l_group_size_defintion.after or Result
+					loop
+						if attached {XML_ATTRIBUTE} l_group_size_defintion.item_for_iteration as l_arribute and then
+							l_arribute.name.same_string ({ER_XML_ATTRIBUTE_CONSTANTS}.size) then
+
+							if l_arribute.value.same_string (a_size) then
+								Result := True
+								if a_remove then
+									a_sub_root_element.remove_at_cursor (l_cursor)
+								end
+							end
+						end
+						l_group_size_defintion.forth
+					end
+				end
+				if not Result then
+					l_cursor.forth
+				end
 			end
 		end
 

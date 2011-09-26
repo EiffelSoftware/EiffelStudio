@@ -984,12 +984,11 @@ feature {NONE} -- Implementation
 			l_first_application_menu_identifer_name: detachable STRING
 			l_tree_node: detachable EV_TREE_NODE
 		do
-
 			from
 				-- Find out application menu
 				a_tree.start
 			until
-				a_tree.after or a_tree /= Void
+				a_tree.after or l_tree_node /= Void
 			loop
 				if a_tree.item.text.same_string ({ER_XML_CONSTANTS}.ribbon_application_menu) then
 					l_tree_node := a_tree.item

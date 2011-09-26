@@ -15,6 +15,7 @@ feature {NONE} -- Initialization
 			test_ends_with
 			test_fuzzy_index
 			test_has
+			test_hash_code
 			test_has_substring
 			test_index_of
 			test_is_boolean
@@ -24,6 +25,7 @@ feature {NONE} -- Initialization
 			test_is_equal
 			test_is_integer
 			test_is_real
+			test_is_valid_as_string_8
 			test_infix_greater
 			test_infix_greater_or_equal
 			test_infix_less
@@ -52,6 +54,7 @@ feature {NONE} -- Initialization
 			test_split
 			test_starts_with
 			test_string
+ 			test_shared_substring
 			test_substring
 			test_substring_index
 			test_substring_index_in_bounds
@@ -147,6 +150,32 @@ feature {NONE} -- Implementation
 			s := ""
 			check_boolean ("has", not s.has ('c'))
 			check_boolean ("has", not s.has ('9'))
+ 
+ 			s := "1234c1234"
+			s := s.shared_substring (2, 4)
+ 			check_boolean ("has", not s.has ('1'))
+ 			check_boolean ("has", not s.has ('c'))
+ 			check_boolean ("has", s.has ('2'))
+ 			check_boolean ("has", s.has ('3'))
+ 			check_boolean ("has", s.has ('4'))
+ 
+ 			s := s.shared_substring (2, 1)
+ 			check_boolean ("has", not s.has ('2'))
+ 			check_boolean ("has", not s.has ('3'))
+ 			check_boolean ("has", not s.has ('4'))
+ 		end
+ 
+ 	test_hash_code
+ 		local
+ 			s: IMMUTABLE_STRING_32
+ 			l_val: INTEGER
+ 		do
+			s := "12345"
+ 			l_val := s.hash_code
+ 
+ 			s := "012345"
+ 			s := s.shared_substring (2, 6)
+			check_boolean ("hash_code", l_val = s.hash_code)
 		end
 
 	test_has_substring is
@@ -185,6 +214,20 @@ feature {NONE} -- Implementation
 
 			i := s.index_of ('5', 6)
 			check_equality ("index_of", i , 0)
+
+ 				-- New string is now "567890"
+ 			s := s.shared_substring (5, 10)
+ 			i := s.index_of ('x', 1)
+ 			check_equality ("index_of", i , 0)
+ 
+ 			i := s.index_of ('1', 1)
+ 			check_equality ("index_of", i , 0)
+ 
+ 			i := s.index_of ('2', 1)
+ 			check_equality ("index_of", i , 0)
+ 
+ 			i := s.index_of ('9', 5)
+			check_equality ("index_of", i , 5)
 		end
 
 	test_is_boolean is
@@ -383,6 +426,22 @@ feature {NONE} -- Implementation
 			check_boolean ("is_real", not ("5.6%U").is_real)
 		end
 
+	test_is_valid_as_string_8
+		local
+			s: IMMUTABLE_STRING_32
+			s32: STRING_32
+		do
+			s := "12345"
+			check_boolean ("is_valid_as_string_8", s.is_valid_as_string_8)
+
+			s32 := "12345"
+			s32.put ({CHARACTER_32} '%/0x1111/', 1)
+			s := s32
+			check_boolean ("is_valid_as_string_8", not s.is_valid_as_string_8)
+			s := s.shared_substring (2, 5)
+			check_boolean ("is_valid_as_string_8", s.is_valid_as_string_8)
+		end
+
 	test_infix_greater is
 		local
 			s: IMMUTABLE_STRING_32
@@ -571,6 +630,19 @@ feature {NONE} -- Implementation
 			check_equality ("last_boolean", s.last_index_of ('3', 3), 3)
 			check_equality ("last_boolean", s.last_index_of ('3', 2), 0)
 			check_equality ("last_boolean", s.last_index_of ('X', 10), 0)
+
+ 			s := "ba"
+ 			s := s.shared_substring (2, 2)
+ 			check_equality ("last_boolean", s.last_index_of ('a', 1), 1)
+ 			check_equality ("last_boolean", s.last_index_of ('b', 1), 0)
+ 
+ 			s := "0001234554321"
+ 			s := s.shared_substring (4, 13)
+ 			check_equality ("last_boolean", s.last_index_of ('3', 10), 8)
+ 			check_equality ("last_boolean", s.last_index_of ('3', 5), 3)
+ 			check_equality ("last_boolean", s.last_index_of ('3', 3), 3)
+ 			check_equality ("last_boolean", s.last_index_of ('3', 2), 0)
+ 			check_equality ("last_boolean", s.last_index_of ('X', 10), 0)
 		end
 
 	test_linear_representation is
@@ -747,6 +819,8 @@ feature {NONE} -- Implementation
 		end
 
 	test_occurrences is
+		local
+			s: IMMUTABLE_STRING_32
 		do
 			check_boolean ("occurrences", ("").occurrences ('%U') = 0)
 			check_boolean ("occurrences", ("").occurrences (' ') = 0)
@@ -805,6 +879,11 @@ feature {NONE} -- Implementation
 			check_boolean ("occurrences", ("   ").occurrences ('%U') = 0)
 			check_boolean ("occurrences", ("   ").occurrences (' ') = 3)
 			check_boolean ("occurrences", ("   ").occurrences ('a') = 0)
+ 
+ 			s := "2211111122"
+ 			s := s.shared_substring (3, 5)
+ 			check_boolean ("occurrences", s.occurrences ('2') = 0)
+ 			check_boolean ("occurrences", s.occurrences ('1') = 3)
 		end
 
 	test_out is
@@ -954,6 +1033,40 @@ feature {NONE} -- Implementation
 			check_string_equality ("string", s.string, s)
 			check_boolean ("string", not s.string.shared_with (s))
 		end
+
+ 	test_shared_substring is
+ 		local
+ 			s: IMMUTABLE_STRING_32
+ 		do
+ 			s := ""
+ 			check_string_equality ("shared_substring", s.shared_substring (100, 1000), "")
+ 			check_string_equality ("shared_substring", s.shared_substring (-1, 1), "")
+ 			check_string_equality ("shared_substring", s.shared_substring (1, 1), "")
+ 			check_string_equality ("shared_substring", s.shared_substring (1, 0), "")
+ 
+ 			s := "12345"
+ 			check_string_equality ("shared_substring", s.shared_substring (100, 1000), "")
+ 			check_string_equality ("shared_substring", s.shared_substring (-1, 0), "")
+ 			check_string_equality ("shared_substring", s.shared_substring (-1, 1), "") -- Current implementation assumes that out-of-range indexes result in empty string
+ 			check_string_equality ("shared_substring", s.shared_substring (1, 0), "")
+ 			check_string_equality ("shared_substring", s.shared_substring (1, 5), "12345")
+ 			check_string_equality ("shared_substring", s.shared_substring (3, 5), "345")
+ 			check_string_equality ("shared_substring", s.shared_substring (3, 10), "") -- Current implementation assumes that out-of-range indexes result in empty string
+ 			check_string_equality ("shared_substring", s.shared_substring (-100, 100), "") -- Current implementation assumes that out-of-range indexes result in empty string
+ 
+ 
+ 			s := "1234567890987654321"
+ 			s := s.shared_substring (11, 19)
+ 			check_string_equality ("shared_substring", s, "987654321")
+ 			s := s.shared_substring (5, 9)
+ 			check_string_equality ("shared_substring", s, "54321")
+ 			s := s.shared_substring (2, 4)
+ 			check_string_equality ("shared_substring", s, "432")
+ 			s := s.shared_substring (2, 3)
+ 			check_string_equality ("shared_substring", s, "32")
+ 			s := s.shared_substring (2, 2)
+ 			check_string_equality ("shared_substring", s, "2")
+ 		end
 
 	test_substring is
 		local

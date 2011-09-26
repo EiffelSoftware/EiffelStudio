@@ -1,0 +1,78 @@
+test_name 	 false-postcondition
+test_description False postcondition should cause an exception regardless of exception monitoring settings.
+
+copy_raw	test.e $CLUSTER test.e
+
+define POSTCONDITION "false"
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result ok
+
+execute_work	NONE exec_output_mf
+execute_result	ok
+compare		exec_output_mf output
+
+define POSTCONDITION "true"
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result ok
+
+execute_work	NONE exec_output_mt
+execute_result	ok
+compare		exec_output_mt output
+
+define POSTCONDITION "false"
+copy_sub	Ace $TEST Ace
+
+compile_frozen
+compile_result	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work	NONE exec_output_wf
+execute_result	ok
+compare		exec_output_wf output
+
+define POSTCONDITION "true"
+copy_sub	Ace $TEST Ace
+
+compile_frozen
+compile_result	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work	NONE exec_output_wt
+execute_result	ok
+compare		exec_output_wt output
+
+define POSTCONDITION "false"
+copy_sub	Ace $TEST Ace
+
+compile_final
+compile_result	ok
+
+c_compile_final
+c_compile_result ok
+
+execute_final	NONE exec_output_ff
+execute_result	ok
+compare		exec_output_ff output
+
+define POSTCONDITION "true"
+copy_sub	Ace $TEST Ace
+
+compile_final_keep
+compile_result	ok
+
+c_compile_final
+c_compile_result ok
+
+execute_final	NONE exec_output_ft
+execute_result	ok
+compare		exec_output_ft output
+
+test_end

@@ -295,7 +295,10 @@ extern struct opstack op_stack;               /* Operational stack */
 #define BC_DO_RESCUE		(unsigned char) 175
 #define BC_DO_RESCUE_END	(unsigned char) 176
 
-#define MAX_CODE                176    /* Maximum legal byte code */
+/* Always failing postcondition */
+#define BC_POSTFAIL	(unsigned char) 177
+
+#define MAX_CODE                177    /* Maximum legal byte code */
 
 	/* Structure to get and set variable value in the debugger */
 typedef struct tag_EIF_DEBUG_VALUE {

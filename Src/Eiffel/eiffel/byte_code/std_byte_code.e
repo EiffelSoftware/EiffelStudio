@@ -1307,9 +1307,21 @@ end
 					buf.exdent
 					buf.put_new_line
 					buf.put_character ('}')
+					if context.current_feature.is_failing then
+							-- Postcondition violation should be triggered in any case
+							-- because the compiler expects this routine to fail.
+						buf.put_new_line
+						buf.put_string ("RTEC (EN_POST);")
+					end
 					context.set_assertion_type (0)
 				end
 				generate_invariant_after
+			elseif context.current_feature.is_failing then
+					-- Postcondition violation should be triggered in any case
+					-- because the compiler expects this routine to fail.
+				buf := buffer
+				buf.put_new_line
+				buf.put_string ("RTEC (EN_POST);")
 			end
 		end
 
@@ -1906,6 +1918,11 @@ feature -- Byte code generation
 					a_generator.generate (ba, postcondition)
 				end
 				ba.write_forward
+				if context.current_feature.is_failing then
+						-- Postcondition violation should be triggered in any case
+						-- because the compiler expects this routine to fail.
+					ba.append (bc_postfail)
+				end
 				context.set_assertion_type (0)
 			end
 		end

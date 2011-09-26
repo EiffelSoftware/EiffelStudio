@@ -1069,6 +1069,14 @@ rt_private void interpret(int flag, int where)
 			IC += offset;						/* Skip postconditions */
 		break;
 
+	case BC_POSTFAIL:
+#ifdef DEBUG
+		dprintf(2)("BC_POSTFAIL\n");
+#endif
+		RTCT0((char *) 0, EX_POST);
+		RTCF0;
+		break;
+
 		/* Catcall handling. */
 	case BC_START_CATCALL:
 		break;

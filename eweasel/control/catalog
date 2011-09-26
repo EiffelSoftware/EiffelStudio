@@ -2374,9 +2374,10 @@ test	roundtrip-number-denoted-character rdtp002 tcf pass parsing
 test	roundtrip-equivalence rdtp003 tcf pass parsing
 
 -- Tests for assertion monitoring
-test	supplier-preconditions assert001 tcf pass assertions execution
+test	supplier-preconditions			assert001 tcf pass assertions execution
 test	use-application-options-assertions	assert002 tcf pass assertions execution
-test undefined-assertion-merge assert003 tcf pass assertions
+test	undefined-assertion-merge		assert003 tcf pass assertions
+test	false-postcondition			assert004 tcf pass assertions execution unreachable_code
 
 -- Multi Constraint Tests
 test	multi-constraint-basics							multicon001 tcf pass multiconstraint

@@ -35,8 +35,13 @@ feature {NONE} -- Execution
 			if args.is_application_target then
 				create app_ecf.make (args.target_name)
 				ecf := app_ecf
+			elseif args.is_library_target then
+				create {LIBRARY_ECF} ecf.make (args.target_name)
+			elseif args.is_testing_target then
+				create {TESTING_ECF} app_ecf.make (args.target_name)
+				ecf := app_ecf
 			else
-				check args.is_library_target end
+				--| Default ...
 				create {LIBRARY_ECF} ecf.make (args.target_name)
 			end
 			ecf.set_syntax (args.syntax_mode)
@@ -47,22 +52,37 @@ feature {NONE} -- Execution
 					app_ecf.set_executable_name (s)
 				end
 				if attached args.root_info as tu then
-					if attached tu.cluster as l_root_cluster then
-						app_ecf.set_root_info (l_root_cluster, tu.class_name, tu.feature_name)
+					if args.is_testing_target then
+						print ("Ignoring provided root_info settings%N")
 					else
-						app_ecf.set_root_info (Void, tu.class_name, tu.feature_name)
+						if attached tu.cluster as l_root_cluster then
+							app_ecf.set_root_info (l_root_cluster, tu.class_name, tu.feature_name)
+						else
+							app_ecf.set_root_info (Void, tu.class_name, tu.feature_name)
+						end
 					end
 				end
-				app_ecf.set_is_console_application (args.is_console_application)
+				if args.is_testing_target then
+					print ("Ignoring provided console_application settings%N")
+				else
+					app_ecf.set_is_console_application (args.is_console_application)
+				end
 				if attached args.concurrency as l_concurrency then
 					app_ecf.set_concurrency (l_concurrency)
 				end
 			end
-			if attached args.clusters as l_cluster then
+			if attached args.clusters as l_clusters then
 				across
-					l_cluster as cl
+					l_clusters as cl
 				loop
 					ecf.clusters.force (cl.item)
+				end
+			end
+			if attached args.tests_clusters as l_clusters then
+				across
+					l_clusters as cl
+				loop
+					ecf.tests_clusters.force (cl.item)
 				end
 			end
 			if attached args.libraries as l_libraries then
@@ -76,8 +96,14 @@ feature {NONE} -- Execution
 			if not ecf.libraries.has ("base") then
 				ecf.libraries.force ("base")
 			end
-			if ecf.clusters.is_empty then
+			if args.is_testing_target and then not ecf.libraries.has ("testing") then
+				ecf.libraries.force ("testing")
+			end
+			if not args.is_testing_target and ecf.clusters.is_empty then
 				ecf.clusters.force (".")
+			end
+			if args.is_testing_target and ecf.tests_clusters.is_empty then
+				ecf.tests_clusters.force (".")
 			end
 
 			if app_ecf /= Void and then app_ecf.concurrency.is_case_insensitive_equal ("thread") then

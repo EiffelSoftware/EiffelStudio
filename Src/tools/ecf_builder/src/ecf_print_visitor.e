@@ -24,6 +24,14 @@ feature -- Visitor
 					print ("  - " + cl.item + "%N")
 				end
 			end
+			if attached v.tests_clusters as l_cluster then
+				print ("Tests Clusters:%N")
+				across
+					l_cluster as cl
+				loop
+					print ("  - " + cl.item + "%N")
+				end
+			end
 			if attached v.libraries as l_libraries then
 				print ("Libraries:%N")
 				across
@@ -51,6 +59,16 @@ feature -- Visitor
 			if v.is_console_application then
 				print ("Console application: True%N")
 			end
+			if attached v.concurrency as l_concurrency then
+				print ("Concurrency: ")
+				print ("%"" + l_concurrency + "%"%N")
+			end
+		end
+
+	process_testing_ecf (v: TESTING_ECF)
+		do
+			print ("-- Testing --%N")
+			process_ecf (v)
 			if attached v.concurrency as l_concurrency then
 				print ("Concurrency: ")
 				print ("%"" + l_concurrency + "%"%N")

@@ -21,4 +21,8 @@ feature -- Visitor
 		deferred
 		end
 
+	process_testing_ecf (v: TESTING_ECF)
+		deferred
+		end
+
 end

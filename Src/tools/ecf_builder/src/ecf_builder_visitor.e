@@ -28,6 +28,11 @@ feature -- Visitor
 		do
 		end
 
+	process_testing_ecf (v: TESTING_ECF)
+		do
+			process_application_ecf (v)
+		end
+
 	process_application_ecf (v: APPLICATION_ECF)
 		do
 			buffer.append_string ("<?xml version=%"1.0%" encoding=%"ISO-8859-1%"?>%N")
@@ -53,9 +58,11 @@ feature -- Visitor
 			buffer.append_string (" syntax=%"" + v.syntax + "%">%N")
 			buffer.append_string ("%T%T</option>%N")
 			if v.is_console_application then
+				check v.generating_type = {APPLICATION_ECF} end
 				buffer.append_string ("%T%T<setting name=%"console_application%" value=%"true%"/>%N")
 			end
 			if attached v.executable_name as s then
+				check v.generating_type = {APPLICATION_ECF} end
 				buffer.append_string ("%T%T<setting name=%"executable_name%" value=%"" + s + "%"/>%N")
 			end
 			if attached v.concurrency as s then
@@ -64,6 +71,7 @@ feature -- Visitor
 
 			process_libraries_from (v)
 			process_clusters_from (v)
+			process_tests_clusters_from (v)
 
 			buffer.append_string ("%T</target>%N")
 			buffer.append_string ("</system>%N")
@@ -92,6 +100,7 @@ feature -- Visitor
 
 			process_libraries_from (v)
 			process_clusters_from (v)
+			process_tests_clusters_from (v)
 
 			buffer.append_string ("%T</target>%N")
 			buffer.append_string ("</system>%N")
@@ -124,6 +133,21 @@ feature {NONE} -- Implementation
 						buffer.append_string ("%T%T<cluster name=%""+ "src" +"%" location=%".%" recursive=%"true%"/>%N")
 					else
 						buffer.append_string ("%T%T<cluster name=%""+ l_cluster +"%" location=%"./" + l_cluster + "%" recursive=%"true%"/>%N")
+					end
+				end
+			end
+		end
+
+	process_tests_clusters_from (v: ECF)
+		do
+			across
+				v.tests_clusters as clu
+			loop
+				if attached clu.item as l_cluster then
+					if l_cluster.same_string (".") then
+						buffer.append_string ("%T%T<tests name=%""+ "src" +"%" location=%".%" recursive=%"true%"/>%N")
+					else
+						buffer.append_string ("%T%T<tests name=%""+ l_cluster +"%" location=%"./" + l_cluster + "%" recursive=%"true%"/>%N")
 					end
 				end
 			end

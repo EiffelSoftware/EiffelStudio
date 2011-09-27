@@ -161,6 +161,12 @@ feature -- Debug mode command
 				l_sd_button.enable_displayed
 			end
 
+			check at_least_one_button: l_debugger_manager.attach_cmd.managed_sd_toolbar_items.count >= 1 end
+			l_sd_button := tool_bar_item_belong_to (l_tool_bar_content, l_debugger_manager.attach_cmd.managed_sd_toolbar_items)
+			if l_sd_button /= Void then
+				l_sd_button.enable_displayed
+			end
+
 			check at_least_one_button: l_debugger_manager.detach_cmd.managed_sd_toolbar_items.count >= 1 end
 			l_sd_button := tool_bar_item_belong_to (l_tool_bar_content, l_debugger_manager.detach_cmd.managed_sd_toolbar_items)
 			if l_sd_button /= Void then

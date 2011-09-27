@@ -13,7 +13,7 @@ class
 feature -- Constants
 
 	cookie_escape: ARRAYED_LIST [TUPLE [STRING, STRING]]
-			-- Represents wich string is replaced with which string
+			-- Represents which string is replaced with which string
 		once
 			create Result.make (4)
 			Result.force ([{XU_CONSTANTS}.Cookie_eq, "_ceq_"])

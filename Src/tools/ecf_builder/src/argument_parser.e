@@ -35,16 +35,26 @@ feature {NONE} -- Initialization
 			if is_successful then
 				is_application_target := has_option (application_target_switch)
 				is_library_target := has_option (library_target_switch)
-				if is_application_target xor is_library_target then
+				is_testing_target := has_option (testing_target_switch)
+				if is_application_target xor is_library_target xor is_testing_target then
 				else
-					add_error ("Either Application xor Library")
+					add_error ("Either Application xor Library xor Test")
 				end
 				if is_successful then
 					if is_library_target and attached concurrency then
 						add_error ("Concurrency settings are ignored for library target")
 					end
+					if not is_application_target and attached executable_name then
+						add_error ("Executable name settings are ignored for non application target")
+					end
 					if is_application_target and root_info = Void then
 						add_error ("Please provide the " +  root_info_switch + " value for application target")
+					end
+					if is_testing_target and root_info /= Void then
+						add_error ("Root info settings are ignored for Testing target")
+					end
+					if is_testing_target and is_console_application then
+						add_error ("Console application settings are ignored for Testing target")
 					end
 				end
 			end
@@ -52,14 +62,40 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	copyright: STRING
+			-- <Precursor>
+		do
+			Result := "Copyright Eiffel Software 2011-2012. All Rights Reserved."
+		end
+
 	clusters: detachable LIST [STRING]
 			-- List of clusters
 		require
 			is_successful: is_successful
 		once
 			if
-				has_option (cluster_switch) and then
-				attached options_of_name (cluster_switch) as opts and then not opts.is_empty
+				has_option (clusters_switch) and then
+				attached options_of_name (clusters_switch) as opts and then not opts.is_empty
+			then
+				create {ARRAYED_LIST [STRING]} Result.make (opts.count)
+				across
+					opts as c
+				loop
+					if c.item.has_value then
+						Result.force (c.item.value)
+					end
+				end
+			end
+		end
+
+	tests_clusters: detachable LIST [STRING]
+			-- List of clusters
+		require
+			is_successful: is_successful
+		once
+			if
+				has_option (tests_switch) and then
+				attached options_of_name (tests_switch) as opts and then not opts.is_empty
 			then
 				create {ARRAYED_LIST [STRING]} Result.make (opts.count)
 				across
@@ -78,8 +114,8 @@ feature -- Access
 			is_successful: is_successful
 		once
 			if
-				has_option (library_switch) and then
-				attached options_of_name (library_switch) as opts and then not opts.is_empty
+				has_option (libraries_switch) and then
+				attached options_of_name (libraries_switch) as opts and then not opts.is_empty
 			then
 				create {ARRAYED_LIST [STRING]} Result.make (opts.count)
 				across
@@ -96,6 +132,8 @@ feature -- Access
 
 	is_application_target: BOOLEAN
 
+	is_testing_target: BOOLEAN
+
 	target_name: STRING
 		do
 			if has_option (target_name_switch) and then attached option_of_name (target_name_switch) as o and then o.has_value then
@@ -108,6 +146,8 @@ feature -- Access
 						Result := "LIBRARY_NAME"
 					elseif is_application_target then
 						Result := "APPLICATION_NAME"
+					elseif is_testing_target then
+						Result := "TESTING_NAME"
 					else
 						Result := "TARGET_NAME"
 					end
@@ -235,8 +275,9 @@ feature {NONE} -- Switches
 			-- Retrieve a list of switch used for a specific application
 		once
 			create Result.make (14)
-			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (cluster_switch, "Cluster", True, True, cluster_switch, "Cluster to include", False))
-			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (library_switch, "Library", True, True, library_switch, "Library to include", False))
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (libraries_switch, "Libraries", True, True, libraries_switch, "Library to include", False))
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (clusters_switch, "Clusters", True, True, clusters_switch, "Cluster to include", False))
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (tests_switch, "Tests clusters", True, True, tests_switch, "Tests cluster to include", False))
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (dir_switch, "Directory", True, False, dir_switch, "Base directory", False))
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (uuid_switch, "UUID", True, False, uuid_switch, "UUID value", False))
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (target_name_switch, "Target name", True, False, target_name_switch, "Eiffel target name", False))
@@ -244,6 +285,7 @@ feature {NONE} -- Switches
 
 			Result.extend (create {ARGUMENT_SWITCH}.make (library_target_switch, "This is a library configuration file", True, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (application_target_switch, "This is an application configuration file", True, False))
+			Result.extend (create {ARGUMENT_SWITCH}.make (testing_target_switch, "This is an testing configuration file", True, False))
 
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (executable_name_switch, "Executable name", True, False, executable_name_switch, "Executable name (without extension)", False))
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (root_info_switch, "Root info: cluster.class.feature", True, False, root_info_switch, "Root cluster.class.name information (cluster is optional)", False))
@@ -258,15 +300,18 @@ feature {NONE} -- Switches
 
 	force_switch: STRING = "f|force"
 
-	library_target_switch: STRING = "lib"
-	application_target_switch: STRING = "app"
+	library_target_switch: STRING = "library"
+	application_target_switch: STRING = "application"
+	testing_target_switch: STRING ="testing"
+
 	thread_switch: STRING = "thread"
 	scoop_switch: STRING = "scoop"
 
 	console_application_switch: STRING = "console"
 
-	cluster_switch: STRING = "cluster"
-	library_switch: STRING = "library"
+	tests_switch: STRING = "t|tests"
+	clusters_switch: STRING = "c|clusters"
+	libraries_switch: STRING = "l|libraries"
 	dir_switch: STRING = "d|dir"
 	target_name_switch: STRING = "n|name"
 

@@ -17,6 +17,10 @@ feature {NONE} -- Initialization
 			name := a_name
 			create {ARRAYED_LIST [STRING]} clusters.make (5)
 			clusters.compare_objects
+
+			create {ARRAYED_LIST [STRING]} tests_clusters.make (5)
+			tests_clusters.compare_objects
+
 			create {ARRAYED_LIST [STRING]} libraries.make (5)
 			libraries.compare_objects
 			syntax := "standard"
@@ -30,6 +34,8 @@ feature -- Access
 	name: STRING
 
 	clusters: LIST [STRING]
+
+	tests_clusters: LIST [STRING]
 
 	libraries: LIST [STRING]
 

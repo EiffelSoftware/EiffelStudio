@@ -83,7 +83,9 @@ feature {NONE} -- Externals
 		alias
 			"[
 			{
-				return sizeof (GInputStream);
+				#if GTK_MAJOR_VERSION > 1 && GTK_MINOR_VERSION > 13
+					return sizeof (GInputStream);
+				#endif
 			}
 			]"
 		end
@@ -97,7 +99,9 @@ feature {NONE} -- Externals
 		alias
 			"[
 			{
-				return g_memory_input_stream_new_from_data ((const void *)$a_data, (gssize)$a_size, NULL);
+				#if GTK_MAJOR_VERSION > 1 && GTK_MINOR_VERSION > 13
+					return g_memory_input_stream_new_from_data ((const void *)$a_data, (gssize)$a_size, NULL);
+				#endif					
 			}
 			]"
 		end
@@ -113,7 +117,9 @@ feature {NONE} -- Externals
 		alias
 			"[
 			{
-				return g_input_stream_close ((GInputStream *)$a_input_stream, (GCancellable *)$a_cancellable, (GError **)$a_error);
+				#if GTK_MAJOR_VERSION > 1 && GTK_MINOR_VERSION > 13
+					return g_input_stream_close ((GInputStream *)$a_input_stream, (GCancellable *)$a_cancellable, (GError **)$a_error);
+				#endif
 			}
 			]"
 		end
@@ -127,7 +133,9 @@ feature {NONE} -- Externals
 		alias
 			"[
 			{
-				return g_input_stream_is_closed ((GInputStream *)$a_input_stream);
+				#if GTK_MAJOR_VERSION > 1 && GTK_MINOR_VERSION > 13
+					return g_input_stream_is_closed ((GInputStream *)$a_input_stream);
+				#endif
 			}
 			]"
 		end

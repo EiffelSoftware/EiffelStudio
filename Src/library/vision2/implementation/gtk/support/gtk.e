@@ -193,7 +193,9 @@ feature
 			"C inline use <ev_gtk.h>"
 		alias
 			"[
-				return gdk_pixbuf_new_from_stream ((GInputStream *)$a_input_stream, (GCancellable *)$a_cancellable, (GError **)$a_error);
+				#if GTK_MAJOR_VERSION > 1 && GTK_MINOR_VERSION > 13
+					return gdk_pixbuf_new_from_stream ((GInputStream *)$a_input_stream, (GCancellable *)$a_cancellable, (GError **)$a_error);
+				#endif
 			]"
 		end
 	frozen gdk_pixbuf_new_from_xpm_data (a_data: POINTER): POINTER

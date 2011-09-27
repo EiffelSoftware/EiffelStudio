@@ -186,7 +186,7 @@ feature -- Alignment
 	align_text_center
 			-- Display text centered.
 		do
-			if text_alignment /= {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_center  then
+			if text_alignment /= {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_center then
 				text_alignment := {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_center
 				recreate_current
 			end
@@ -195,7 +195,7 @@ feature -- Alignment
 	align_text_right
 			-- Display text right aligned.
 		do
-			if text_alignment /= {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_right  then
+			if text_alignment /= {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_right then
 				text_alignment := {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_right
 				recreate_current
 			end
@@ -204,7 +204,7 @@ feature -- Alignment
 	align_text_left
 			-- Display text left aligned.
 		do
-			if text_alignment /= {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_left  then
+			if text_alignment /= {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_left then
 				text_alignment := {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_left
 				recreate_current
 			end
@@ -241,8 +241,6 @@ feature {NONE} -- WEL Implementation
 				Result := Result | es_right
 			when {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_center  then
 				Result := Result | es_center
-			else
-				check False end
 			end
 		end
 
@@ -260,17 +258,18 @@ feature {NONE} -- WEL Implementation
 			l_caret: like caret_position
 			l_is_read_only: like read_only
 		do
-			l_sensitive := is_sensitive
-			l_tooltip := tooltip
 			l_text := text
-			l_caret := caret_position
+			l_tooltip := tooltip
+			l_sensitive := is_sensitive
+
+			l_caret := internal_caret_position
 			l_is_read_only := read_only
 			set_tooltip ("")
 
 				-- We keep some useful informations that will be
 				-- destroyed when calling `wel_destroy'
 			par_imp ?= parent_imp
-				-- `Current' may not have been actually phsically parented
+				-- `Current' may not have been actually physically parented
 				-- within windows yet.
 			if par_imp = Void then
 				par_imp ?= default_parent
@@ -301,7 +300,7 @@ feature {NONE} -- WEL Implementation
 			end
 			set_tooltip (l_tooltip)
 			wel_set_text (l_text)
-			set_caret_position (l_caret)
+			internal_set_caret_position (l_caret)
 			if l_is_read_only then
 				set_read_only
 			end
@@ -310,8 +309,6 @@ feature {NONE} -- WEL Implementation
 	on_key_down (virtual_key, key_data: INTEGER)
 			-- We check if the enter key is pressed.
 			-- 13 is the number of the return key.
-		local
-			spin_button: detachable EV_SPIN_BUTTON_IMP
 		do
 			process_navigation_key (virtual_key)
 			Precursor {EV_TEXT_COMPONENT_IMP} (virtual_key, key_data)
@@ -322,9 +319,8 @@ feature {NONE} -- WEL Implementation
 				--| EV_SPIN_BUTTON_IMP is composed of `Current'.
 				--| Therefore if `Current' is parented in an EV_SPIN_BUTTON_IMP,
 				--| we must propagate the key press event.
-			spin_button ?= wel_parent
-			if spin_button /= Void then
-				spin_button.on_key_down (virtual_key, key_data)
+			if attached {EV_SPIN_BUTTON_IMP} wel_parent as l_spin_button then
+				l_spin_button.on_key_down (virtual_key, key_data)
 			end
 		end
 
@@ -338,7 +334,9 @@ feature {NONE} -- WEL Implementation
 			-- The user has taken an action
 			-- that may have altered the text.
 		do
-			attached_interface.change_actions.call (Void)
+			if change_actions_internal /= Void then
+				change_actions_internal.call (Void)
+			end
 		end
 
 	enable

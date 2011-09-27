@@ -11,14 +11,24 @@ inherit
 
 create
 	make,
-	make_with_root_named
+	make_with_count,
+	make_with_root_named,
+	make_with_root_named_and_count
 
 feature {NONE} -- Initialization
 
 	make
 			-- Create root node.
 		do
-			make_with_root_named (Default_name, Default_ns)
+			make_with_count (3)
+		end
+
+	make_with_count	(a_count: INTEGER)
+			-- Create root node and initialize for `a_count' childrens
+		require
+			a_count_positive: a_count >= 0
+		do
+			make_with_root_named_and_count (Default_name, Default_ns, a_count)
 		end
 
 	make_with_root_named (a_name: STRING; a_ns: XML_NAMESPACE)
@@ -28,7 +38,20 @@ feature {NONE} -- Initialization
 			not_void: a_name /= Void
 			not_empty: a_name.count > 0
 		do
-			initialize
+			make_with_root_named_and_count (a_name, a_ns, 3)
+		ensure
+			root_element_name_set: root_element.name = a_name
+		end
+
+	make_with_root_named_and_count (a_name: STRING; a_ns: XML_NAMESPACE; a_count: INTEGER)
+			-- Create root node, with a root_element with given name,
+			-- and initialize for `a_count' childrens
+		require
+			not_void: a_name /= Void
+			not_empty: a_name.count > 0
+			a_count_positive: a_count >= 0
+		do
+			initialize (a_count)
 			create root_element.make (Void, a_name, a_ns)
 			root_element.attach_parent (Current)
 			force_last (root_element)
@@ -169,7 +192,7 @@ invariant
 	root_element_not_void: root_element /= Void
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

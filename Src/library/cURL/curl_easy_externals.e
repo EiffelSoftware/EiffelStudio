@@ -116,9 +116,9 @@ feature -- Command
 			l_api := api_loader.api_pointer ("curl_easy_perform")
 			if l_api /= default_pointer then
 				Result := c_perform (l_api, a_curl_handle)
+			else
+				Result := {CURL_CODES}.eiffelcurle_error_occurred
 			end
-		ensure
-			valid:
 		end
 
 	cleanup (a_curl_handle: POINTER)

@@ -11,6 +11,11 @@ note
 class
 	CURL_CODES
 
+feature -- Eiffel cURL: Constants
+
+	eiffelcurle_error_occurred: INTEGER = -1
+			-- Error occurred in Eiffel cURL internals
+
 feature -- Constants
 
 	curle_ok: INTEGER = 0

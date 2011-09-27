@@ -87,6 +87,7 @@ feature {NONE} -- Implementation functions
 			old_class_stone ?= develop_window.stone
 			develop_window.old_set_stone (a_stone)
 			text_loaded := develop_window.is_text_loaded
+			prevent_duplicated_editor (a_stone)
 			l_editor := current_editor
 			if l_editor /= Void then
 				l_editor.set_stone (a_stone)
@@ -108,6 +109,18 @@ feature {NONE} -- Implementation functions
 
 		end
 
+	prevent_duplicated_editor (a_stone: STONE)
+			-- To prevent duplicated editor
+			-- Make sure no existing editor has `a_stone', otherwise change `current_editor' to the editor with `a_stone'
+		do
+			if attached develop_window.editors_manager.editor_with_stone (a_stone) as l_editor_with_stone then
+				if l_editor_with_stone /= Void and then
+					l_editor_with_stone /= current_editor then
+					develop_window.editors_manager.select_editor (l_editor_with_stone, True)
+				end
+			end
+		end
+
 	handle_break_error_ace_external_file_stone (a_stone: STONE)
 			-- Handle `conv_brkstone', `conv_errst', `ef_stone' and `target_stone' if exist.
 		local
@@ -127,6 +140,7 @@ feature {NONE} -- Implementation functions
 					f.make_open_read (f.name)
 					f.read_stream (f.count)
 					f.close
+					prevent_duplicated_editor (a_stone)
 					current_editor.set_stone (a_stone)
 					current_editor.load_text (f.last_string)
 				end
@@ -1150,7 +1164,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -394,7 +394,7 @@ feature -- Events
 			end
 		end
 
-	on_item_pebble_function (gi: EV_GRID_ITEM): STONE
+	on_item_pebble_function (gi: EV_GRID_ITEM): detachable STONE
 			-- Handle item pebble function
 		do
 			if gi /= Void then
@@ -1427,7 +1427,7 @@ feature {NONE} -- Implementation, cosmetic
 			-- Row highlight background color.
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

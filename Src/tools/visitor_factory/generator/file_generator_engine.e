@@ -158,7 +158,7 @@ feature {NONE} -- Implementation
 				string_buffer.set_count (nb)
 				file.close
 
-				parser.parse_from_string (string_buffer, Void)
+				parser.parse_from_ascii_string (string_buffer, Void)
 				if parser.root_node = Void then
 					io.error.put_string ("Syntax error in file: " + a_file_name)
 					io.error.put_new_line
@@ -189,7 +189,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

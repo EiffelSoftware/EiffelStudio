@@ -113,11 +113,11 @@ feature {NONE} -- Implementation functions
 			-- To prevent duplicated editor
 			-- Make sure no existing editor has `a_stone', otherwise change `current_editor' to the editor with `a_stone'
 		do
-			if attached develop_window.editors_manager.editor_with_stone (a_stone) as l_editor_with_stone then
-				if l_editor_with_stone /= Void and then
-					l_editor_with_stone /= current_editor then
-					develop_window.editors_manager.select_editor (l_editor_with_stone, True)
-				end
+			if
+				attached develop_window.editors_manager.editor_with_stone (a_stone) as l_editor_with_stone and then
+				l_editor_with_stone /= current_editor
+			then
+				develop_window.editors_manager.select_editor (l_editor_with_stone, True)
 			end
 		end
 
@@ -239,8 +239,8 @@ feature {NONE} -- Implementation functions
 					develop_window.view_points_combo.set_conf_class (new_class_stone.class_i.config_class)
 				end
 					-- Text is now editable.
-				if develop_window.editors_manager.current_editor /= Void then
-					develop_window.editors_manager.current_editor.set_read_only (False)
+				if attached develop_window.editors_manager.current_editor as e then
+					e.set_read_only (False)
 				end
 
 				if new_class_stone.is_valid then

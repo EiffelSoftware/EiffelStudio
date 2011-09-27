@@ -363,8 +363,8 @@ feature -- Visit nodes
 			check
 				old_group_implies_old_library: old_group /= Void implies l_old_library /= Void
 			end
-			l_uuid := a_library.library_target.system.uuid
 			l_target := a_library.library_target
+			l_uuid := l_target.system.uuid
 			check
 				library_target_set: l_target /= Void
 				uuid_set: l_uuid /= Void

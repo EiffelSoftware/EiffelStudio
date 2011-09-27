@@ -112,7 +112,7 @@ feature -- Status setting
 			a_value_attached: a_value /= Void and then not a_value.is_empty
 		do
 			value := a_value
-			ensure
+		ensure
 			value_set: value ~ a_value
 		end
 

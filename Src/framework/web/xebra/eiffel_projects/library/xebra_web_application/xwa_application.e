@@ -43,7 +43,10 @@ feature {NONE} -- Operations Internal
 		do
 			create l_config_reader
 			create l_printer.default_create
-			if attached l_config_reader.process_file (a_arg_parser.config_filename) as l_config then
+			if
+				a_arg_parser.has_non_switched_argument and then
+				attached l_config_reader.process_file (a_arg_parser.config_filename) as l_config
+			then
 				config.copy_from (l_config)
 				config.arg_config.set_debug_level (a_arg_parser.debug_level)
 				config.set_is_interactive (a_arg_parser.is_interactive)
@@ -55,7 +58,7 @@ feature {NONE} -- Operations Internal
 
 			end
 			if not error_manager.is_successful then
-					error_manager.trace_errors (l_printer)
+				error_manager.trace_errors (l_printer)
 			end
 
 		end
@@ -105,7 +108,7 @@ feature -- Access
 invariant
 	config_attached: config /= Void
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

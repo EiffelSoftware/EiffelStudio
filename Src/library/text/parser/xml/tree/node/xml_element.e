@@ -22,7 +22,8 @@ inherit
 create
 	make,
 	make_last,
-	make_root
+	make_root,
+	make_with_count
 
 feature {NONE} -- Initialization
 
@@ -32,10 +33,25 @@ feature {NONE} -- Initialization
 			a_name_not_void: a_name /= Void
 			a_ns_not_void: a_ns /= Void
 		do
+			make_with_count (a_parent, a_name, a_ns, 5)
+		ensure
+			parent_set: parent = a_parent
+			name_set: name = a_name
+			namespace_set: namespace = a_ns
+		end
+
+	make_with_count	(a_parent: like parent; a_name: like name; a_ns: like namespace; a_count: INTEGER)
+			-- Create a new child element, without attaching to parent,
+			-- and initialize for `a_count' childrens
+		require
+			a_name_not_void: a_name /= Void
+			a_ns_not_void: a_ns /= Void
+			a_count_positive: a_count >= 0
+		do
 			parent := a_parent
 			name := a_name
 			namespace := a_ns
-			initialize
+			initialize (a_count)
 		ensure
 			parent_set: parent = a_parent
 			name_set: name = a_name
@@ -51,7 +67,7 @@ feature {NONE} -- Initialization
 		do
 			name := a_name
 			namespace := a_ns
-			initialize
+			initialize (5)
 			a_parent.force_last (Current)
 		ensure
 			parent_set: parent = a_parent
@@ -69,7 +85,7 @@ feature {NONE} -- Initialization
 		do
 			name := a_name
 			namespace := a_ns
-			initialize
+			initialize (5)
 			a_parent.set_root_element (Current)
 		ensure
 			parent_set: parent = a_parent
@@ -598,7 +614,7 @@ feature -- Visitor processing
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

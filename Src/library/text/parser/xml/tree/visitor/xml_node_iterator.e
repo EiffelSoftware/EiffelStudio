@@ -11,55 +11,48 @@ class
 inherit
 	XML_NODE_VISITOR
 
-feature -- Processing
+feature {NONE} -- Processing
 
-	process_nodes (nodes: LIST [XML_NODE])
-			-- Process list of nodes `nodes'.
+	process_nodes (a_nodes: ITERABLE [XML_NODE])
+			-- Process list of nodes `a_nodes'.
 		do
-			from
-				nodes.start
-			until
-				nodes.after
+			across
+				a_nodes as c
 			loop
-				nodes.item.process (Current)
-				nodes.forth
+				c.item.process (Current)
 			end
 		end
 
-	process_attribute_nodes (nodes: LIST [XML_NODE])
+	process_attribute_nodes (a_nodes: ITERABLE [XML_NODE])
 			-- Process list of attribute nodes `nodes'.
 		do
-			from
-				nodes.start
-			until
-				nodes.after
+			across
+				a_nodes as c
 			loop
-				if attached {XML_ATTRIBUTE} nodes.item as att then
+				if attached {XML_ATTRIBUTE} c.item as att then
 					att.process (Current)
 				end
-				nodes.forth
 			end
 		end
 
-	process_non_attribute_nodes (nodes: LIST [XML_NODE])
+	process_non_attribute_nodes (a_nodes: ITERABLE [XML_NODE])
 			-- Process list of non attribute nodes `nodes'.
 		do
-			from
-				nodes.start
-			until
-				nodes.after
+			across
+				a_nodes as c
 			loop
-				if not attached {XML_ATTRIBUTE} nodes.item then
-					nodes.item.process (Current)
+				if not attached {XML_ATTRIBUTE} c.item then
+					c.item.process (Current)
 				end
-				nodes.forth
 			end
 		end
+
+feature -- Processing
 
 	process_element (e: XML_ELEMENT)
 			-- Process element `e'.
 		do
-			process_nodes (e.nodes)
+			process_nodes (e)
 		end
 
 	process_character_data (c: XML_CHARACTER_DATA)
@@ -75,7 +68,7 @@ feature -- Processing
 	process_document (doc: XML_DOCUMENT)
 			-- Process document `doc'.
 		do
-			process_nodes (doc.nodes)
+			process_nodes (doc)
 		end
 
 	process_comment (com: XML_COMMENT)
@@ -86,7 +79,7 @@ feature -- Processing
 	process_attributes (e: XML_ELEMENT)
 			-- Process attributes of element `e'.
 		do
-			process_nodes (e.nodes)
+			process_nodes (e)
 		end
 
 	process_attribute (att: XML_ATTRIBUTE)
@@ -95,7 +88,7 @@ feature -- Processing
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

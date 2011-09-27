@@ -13,16 +13,15 @@ inherit
 
 feature -- Initialization
 
-	initialize
+	initialize (a_count: INTEGER)
 			-- Initialize internal data
+		require
+			a_count_positive: a_count >= 0
 		do
-			create nodes.make (5)
+			create nodes.make (a_count)
 		end
 
 feature -- Access
-
-	nodes: ARRAYED_LIST [XML_NODE]
-			-- List of nodes for Current composite.
 
 	new_cursor: XML_COMPOSITE_CURSOR
 		do
@@ -192,6 +191,41 @@ feature -- Element change
 			nodes.put_front (a_node)
 		end
 
+feature -- Element change using index
+
+	valid_index (i: INTEGER): BOOLEAN
+			-- Is `i' a valid index?
+		do
+			Result := nodes.valid_index (i)
+		end
+
+	remove (i: INTEGER)
+			-- Remove item at index `i'.
+		require
+			valid_index: valid_index (i)
+		local
+			j: INTEGER
+		do
+			j := nodes.index
+			nodes.go_i_th (i)
+			nodes.remove
+			nodes.go_i_th (j)
+		end
+
+	put (a_node: XML_NODE; i: INTEGER)
+			-- Add `v' at the index `i'
+		require
+			valid_index: valid_index (i)
+		local
+			j: INTEGER
+		do
+			j := nodes.index
+			nodes.go_i_th (i)
+			before_addition (a_node)
+			nodes.put_left (a_node)
+			nodes.go_i_th (j)
+		end
+
 feature {NONE} -- Preprocessing
 
 	before_addition (a_node: XML_NODE)
@@ -277,6 +311,11 @@ feature -- Processing
 			end
 			lst.go_to (c)
 		end
+
+feature {XML_COMPOSITE_CURSOR} -- Internal
+
+	nodes: ARRAYED_LIST [XML_NODE]
+			-- List of nodes for Current composite.
 
 invariant
 	elements_attached: nodes /= Void

@@ -625,7 +625,7 @@ feature {NONE} -- Event handler
 			end
 		end
 
-	on_pebble_function (a_item: EV_GRID_ITEM): ANY
+	on_pebble_function (a_item: EV_GRID_ITEM): detachable ANY
 			-- Pebble associated with `a_item'
 		local
 			d: like data_from_item

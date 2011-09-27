@@ -49,12 +49,9 @@ feature -- Access
 
 	timer_win32_handle: POINTER
 			--
-		local
-			dw: EB_DEVELOPMENT_WINDOW
 		do
-			if development_window_agent /= Void then
-				dw := development_window_agent.item (Void)
-				if dw /= Void then
+			if attached development_window_agent as agt then
+				if attached agt.item (Void) as dw then
 					Result := implementation.windows_handle_from (dw)
 				end
 			end
@@ -93,7 +90,7 @@ feature {NONE} -- Implementation
 	implementation: EB_DEBUGGER_EVENTS_HANDLER_IMP ;
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

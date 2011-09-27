@@ -320,9 +320,9 @@ feature {NONE} -- Arguments processing
 	force_switch_description: STRING = "Force generation of syntactically incorrect classes"
 			-- Our arguments
 
-	switches: attached ARRAYED_LIST [attached ARGUMENT_SWITCH]
+	switches: ARRAYED_LIST [ARGUMENT_SWITCH]
 		once
-			create Result.make (1)
+			create Result.make (2)
 			Result.extend (create {ARGUMENT_SWITCH}.make (verbose_switch, verbose_switch_description, True, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (force_switch, force_switch_description, True, False))
 		end

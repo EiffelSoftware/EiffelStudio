@@ -526,7 +526,7 @@ feature {NONE} -- Borders drawing
 			end
 		end
 
-	on_draw_borders (drawable: EV_DRAWABLE; grid_item: EV_GRID_ITEM; a_column_index, a_row_index: INTEGER)
+	on_draw_borders (drawable: EV_DRAWABLE; grid_item: detachable EV_GRID_ITEM; a_column_index, a_row_index: INTEGER)
 		local
 			current_column_width, current_row_height: INTEGER
 			all_remaining_columns_minimized: BOOLEAN

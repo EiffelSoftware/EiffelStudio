@@ -61,6 +61,7 @@ inherit
 			resize as wel_resize,
 			move_and_resize as wel_move_and_resize,
 			text as wel_text,
+			set_text as wel_set_text,
 			has_capture as wel_has_capture,
 			text_length as wel_text_length
 		undefine
@@ -134,6 +135,20 @@ feature {EV_ANY_I} -- Status report
 			-- Text of `Current'
 		do
 			Result := wel_text
+		end
+
+feature -- Element Change
+
+	set_text (a_text: detachable READABLE_STRING_GENERAL)
+			-- <Precursor>
+		do
+			wel_set_text (a_text)
+				-- If `Es_multiline' is specified then we need to make sure that the change actions are fired explicitly
+				-- as Windows does not fire `En_update' and `En_change' actions.
+			if is_multiline then
+					-- Explicitly fire En_change action to emulate single line behavior.
+				{WEL_API}.send_message (default_parent.item, Wm_command, to_wparam (En_change |<< 16) , wel_item)
+			end
 		end
 
 feature -- Access
@@ -285,7 +300,7 @@ feature {NONE} -- WEL Implementation
 				set_foreground_color (foreground_color)
 			end
 			set_tooltip (l_tooltip)
-			set_text (l_text)
+			wel_set_text (l_text)
 			set_caret_position (l_caret)
 			if l_is_read_only then
 				set_read_only
@@ -311,6 +326,12 @@ feature {NONE} -- WEL Implementation
 			if spin_button /= Void then
 				spin_button.on_key_down (virtual_key, key_data)
 			end
+		end
+
+	is_multiline: BOOLEAN
+			-- Does `Current' have multiline set?
+		do
+			Result := style & es_multiline /= 0
 		end
 
 	on_en_change

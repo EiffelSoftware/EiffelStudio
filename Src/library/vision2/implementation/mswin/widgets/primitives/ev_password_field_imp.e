@@ -32,7 +32,10 @@ feature {NONE} -- Implementation
 	default_style: INTEGER
 			-- Password field style.
 		do
-			Result := Precursor + Es_password
+			Result := Precursor | Es_password
+
+				-- We have to make sure Es_multiline is not set as this is not compatible with Es_password.
+			Result := Result & (Es_multiline.bit_not)
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation

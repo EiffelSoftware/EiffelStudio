@@ -16,16 +16,13 @@ inherit
 
 feature -- Processing
 
-	process_nodes (nodes: LIST [XML_NODE])
+	process_nodes (nodes: ITERABLE [XML_NODE])
 			-- Process list of nodes `nodes'.
 		do
-			from
-				nodes.start
-			until
-				nodes.after
+			across
+				nodes as c
 			loop
-				nodes.item.process (Current)
-				nodes.forth
+				c.item.process (Current)
 			end
 		end
 
@@ -43,7 +40,7 @@ feature -- Processing
 				s.append_string (" (" + ns.uri + ")")
 			end
 			print (offset (e.level) + "element: " + s + "%N")
-			process_nodes (e.nodes)
+			process_nodes (e)
 		end
 
 	process_character_data (c: XML_CHARACTER_DATA)
@@ -63,7 +60,7 @@ feature -- Processing
 			-- Process document `doc'.
 		do
 --			doc.process_children (Current)
-			process_nodes (doc.nodes)
+			process_nodes (doc)
 		end
 
 	process_comment (com: XML_COMMENT)
@@ -75,7 +72,7 @@ feature -- Processing
 	process_attributes (e: XML_ELEMENT)
 			-- Process attributes of element `e'.
 		do
-			process_nodes (e.nodes)
+			process_nodes (e)
 		end
 
 	process_attribute (att: XML_ATTRIBUTE)
@@ -142,7 +139,7 @@ feature {NONE} -- Formatter
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

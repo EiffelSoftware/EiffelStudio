@@ -546,8 +546,8 @@ feature {NONE} -- Implementation (`type_from')
 					end
 				else
 						-- "precursor" is safe to compare to STRING_8.
-					name := string_32_to_lower (current_token.wide_image).as_string_8
-					if name.is_equal ("precursor") then
+					name := string_32_to_lower_copy_optimized (current_token.wide_image)
+					if name.same_string_general ("precursor") then
 						go_to_next_token
 						if token_image_is_same_as_word (current_token, opening_brace) then
 							go_to_next_token
@@ -654,7 +654,7 @@ feature {NONE} -- Implementation (`type_from')
 			until
 				error or else after_searched_token
 			loop
-				name := string_32_to_lower (current_token.wide_image)
+				name := string_32_to_lower_copy_optimized (current_token.wide_image)
 
 				type := internal_type_from_name (name)
 
@@ -1354,7 +1354,7 @@ feature {NONE}-- Implementation
 			expression_table_not_void: expression_table /= Void
 			current_class_c_not_void: current_class_c /= Void
 		local
-			sub_exp, recur_exp: LINKED_LIST[EDITOR_TOKEN]
+			sub_exp, recur_exp: LINKED_LIST [EDITOR_TOKEN]
 			l_type_set: TYPE_SET_A
 			type: TYPE_A
 			par_cnt: INTEGER
@@ -1404,7 +1404,7 @@ feature {NONE}-- Implementation
 						end
 					else
 							-- type is Void
-						name := string_32_to_lower (sub_exp.item.wide_image)
+						name := string_32_to_lower_copy_optimized (sub_exp.item.wide_image)
 						if l_current_class_c.has_feature_table then
 							processed_feature := l_current_class_c.feature_with_name_32 (name)
 						end
@@ -1442,7 +1442,7 @@ feature {NONE}-- Implementation
 						if sub_exp.after then
 							error := True
 						else
-							name := string_32_to_lower (sub_exp.item.wide_image)
+							name := string_32_to_lower_copy_optimized (sub_exp.item.wide_image)
 							if type.is_formal then
 								formal ?= type
 								if l_current_class_c.is_valid_formal_position (formal.position) then
@@ -1536,7 +1536,7 @@ feature {NONE}-- Implementation
 								if current_token.next /= Void and then current_token.next.next /= Void then
 									l_token := current_token.next.next
 									if l_token.is_text then
-										image := string_32_to_lower (l_token.wide_image)
+										image := string_32_to_lower_copy_optimized (l_token.wide_image)
 										if current_class_c /= Void then
 											l_feat := current_class_c.feature_with_name_32 (image)
 											if l_feat /= Void then
@@ -1572,8 +1572,8 @@ feature {NONE}-- Implementation
 			cls_c: CLASS_C
 			formal: FORMAL_A
 		do
-			name := string_32_to_lower (a_name)
-			if name.as_string_8.is_equal (Equal_sign) or name.as_string_8.is_equal (Different_sign) then
+			name := string_32_to_lower_copy_optimized (a_name)
+			if name.same_string_general (Equal_sign) or name.same_string_general (Different_sign) then
 				Result := boolean_type
 			else
 				cls_c := a_type.associated_class

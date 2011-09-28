@@ -1600,6 +1600,7 @@ feature {EB_DEVELOPMENT_WINDOW} -- Implementation
 			i: INTEGER
 			l_found: BOOLEAN
 			l_str: STRING_GENERAL
+			l_name, l_target_name: detachable STRING_32
 		do
 				-- Remember the title of all windows.
 			create window_titles.make (managed_windows.count)
@@ -1617,7 +1618,21 @@ feature {EB_DEVELOPMENT_WINDOW} -- Implementation
 			managed_windows.go_i_th (l_index)
 
 				-- Look for a title not yet used.
-			empty_title := Interface_names.t_Empty_development_window.twin
+			if eiffel_project.system_defined then
+				l_name := eiffel_system.name
+				l_target_name := eiffel_universe.target_name
+			elseif attached eiffel_project.workbench.lace as l_lace then
+				l_name := l_lace.conf_system.name
+				l_target_name := l_lace.target_name
+			end
+			if l_name /= Void and l_target_name /= Void then
+				empty_title := Interface_names.l_empty_development_window_header (
+															l_name,
+															l_target_name
+													).string
+			else
+				empty_title := Interface_names.t_Empty_development_window.string
+			end
 			empty_title.append (" #")
 			from
 				i := 1

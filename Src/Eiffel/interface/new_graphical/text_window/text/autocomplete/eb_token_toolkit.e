@@ -11,59 +11,56 @@ class
 
 feature -- basic operations
 
-	is_keyword (a_token: EDITOR_TOKEN):BOOLEAN
-			-- is `a_token' a keyword token ?
-		local
-			kwt: EDITOR_TOKEN_KEYWORD
+	is_keyword (a_token: EDITOR_TOKEN): BOOLEAN
+			-- Is `a_token' a keyword token?
 		do
-			kwt ?= a_token
-			Result := kwt /= Void
+			Result := attached {EDITOR_TOKEN_KEYWORD} a_token
 		end
 
-	is_comment (a_token: EDITOR_TOKEN):BOOLEAN
-			-- is `a_token' a comment token ?
-		local
-			ct: EDITOR_TOKEN_COMMENT
+	is_comment (a_token: EDITOR_TOKEN): BOOLEAN
+			-- Is `a_token' a comment token?
 		do
-			ct ?= a_token
-			Result := ct /= Void
+			Result := attached {EDITOR_TOKEN_COMMENT} a_token
 		end
 
-	is_blank (a_token: EDITOR_TOKEN):BOOLEAN
-			-- is `a_token' a blank token ?
-		local
-			bt: EDITOR_TOKEN_BLANK
+	is_blank (a_token: EDITOR_TOKEN): BOOLEAN
+			-- Is `a_token' a blank token?
 		do
-			bt ?= a_token
-			Result := bt /= Void
+			Result := attached {EDITOR_TOKEN_BLANK} a_token
 		end
 
-	is_string (a_token: EDITOR_TOKEN):BOOLEAN
-			-- is `a_token' a string token ?
-		local
-			st: EDITOR_TOKEN_STRING
+	is_string (a_token: EDITOR_TOKEN): BOOLEAN
+			-- Is `a_token' a string token?
 		do
-			st ?= a_token
-			Result := st /= Void
+			Result := attached {EDITOR_TOKEN_STRING} a_token
 		end
 
-	is_eol(a_token: EDITOR_TOKEN):BOOLEAN
-			-- is `a_token' a end-of-line token ?
-		local
-			eolt: EDITOR_TOKEN_EOL
+	is_number (a_token: EDITOR_TOKEN): BOOLEAN
+			-- Is `a_token' a number token?
 		do
-			eolt ?= a_token
-			Result := eolt /= Void
+			Result := attached {EDITOR_TOKEN_NUMBER} a_token
+		end
+
+	is_character (a_token: EDITOR_TOKEN): BOOLEAN
+			-- Is `a_token' a character token?
+		do
+			Result := attached {EDITOR_TOKEN_CHARACTER} a_token
+		end
+
+	is_eol (a_token: EDITOR_TOKEN): BOOLEAN
+			-- is `a_token' a end-of-line token?
+		do
+			Result := attached {EDITOR_TOKEN_EOL} a_token
 		end
 
 	is_known_infix (token: EDITOR_TOKEN): BOOLEAN
-			-- is token a known binary operator ?
+			-- is token a known binary operator?
 		do
 			Result := token_image_is_in_array (token, binary_operators)
 		end
 
 	is_known_prefix (token: EDITOR_TOKEN): BOOLEAN
-			-- is token a known unary operator ?
+			-- is token a known unary operator?
 		do
 			Result := token_image_is_in_array (token, unary_operators)
 		end
@@ -74,7 +71,7 @@ feature -- basic operations
 			a_token_not_void: a_token /= Void
 			a_str_not_void: a_str /= Void
 		do
-			Result := a_token.wide_image.as_string_8.is_equal (a_str)
+			Result := a_token.wide_image.same_string_general (a_str)
 		end
 
 	token_image_is_same_as_word (token: EDITOR_TOKEN; word: STRING_32): BOOLEAN
@@ -97,19 +94,19 @@ feature -- basic operations
 		require
 			word_not_void: words /= Void
 		local
-			image: STRING
+			image: STRING_32
 			i: INTEGER
 		do
 			if token /= Void then
 					-- Here because `words' are ACSII strings,
-					-- so it is safe to convert to STRING_8 before comparison.
-				image := token.wide_image.as_string_8.as_lower
+					-- so it is safe to convert to lower case before comparison.
+				image := string_32_to_lower_copy_optimized (token.wide_image)
 				from
 					i := words.lower
 				until
 					Result or else i > words.upper
 				loop
-					Result := image.is_equal (words @ i)
+					Result := image.same_string_general (words @ i)
 					i:= i + 1
 				end
 			end
@@ -137,13 +134,11 @@ feature -- basic operations
 		do
 			Result := token /= Void
 			if Result and then a_pos_in_token > 1 then
-				Result := not (attached {EDITOR_TOKEN_NUMBER} token as l_number or else
-					attached {EDITOR_TOKEN_STRING} token as l_string or else
-					attached {EDITOR_TOKEN_CHARACTER} token as l_character)
+				Result := not (is_string (token) or else is_character (token) or else is_number (token))
 			end
 		end
 
-	string_32_to_lower (a_str: detachable STRING_32): attached STRING_32
+	string_32_to_lower (a_str: detachable STRING_32): STRING_32
 			-- Make all possible char in `a_str' to lower.
 			-- |FIXME: We need real Unicode as lower.
 			-- |For the moment, only ANSII code are concerned.
@@ -168,7 +163,36 @@ feature -- basic operations
 			end
 		end
 
-	string_32_to_upper (a_str: detachable STRING_32): attached STRING_32
+	string_32_to_lower_copy_optimized (a_str: STRING_32): STRING_32
+			-- Make all possible char in `a_str' to lower.
+			-- |FIXME: We need real Unicode as lower.
+			-- |For the moment, only ANSII code are concerned.
+			-- Return `a_str' if all characters are lower case, else return a new string.
+		local
+			i, nb: INTEGER_32
+			l_char_8: CHARACTER_8
+		do
+			Result := a_str
+			from
+				i := 1
+				nb := a_str.count
+			until
+				i > nb
+			loop
+				if a_str.item_code (i) <= {CHARACTER_8}.max_value then
+					l_char_8 := a_str.item (i).to_character_8
+					if l_char_8.is_upper then
+						if Result = a_str then
+							create Result.make_from_string (a_str)
+						end
+						Result.put (l_char_8.as_lower, i)
+					end
+				end
+				i := i + 1
+			end
+		end
+
+	string_32_to_upper (a_str: detachable STRING_32): STRING_32
 			-- Make all possible char in `a_str' to upper.
 			-- |FIXME: We need real Unicode as upper.
 			-- |For the moment, only ANSII code are concerned.
@@ -303,7 +327,7 @@ feature {NONE} -- Constants
 	precursor_word: STRING = "precursor";
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

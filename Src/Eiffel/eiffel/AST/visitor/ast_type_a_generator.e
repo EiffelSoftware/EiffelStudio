@@ -50,18 +50,41 @@ feature -- Status report
 			a_context_class_not_void: a_context_class /= Void
 		local
 			old_current_class: like current_class
-			old_is_failure_enabled: like is_failure_enabled
+			old_result_status: like result_status
 			old_last_type: like last_type
 		do
 			old_current_class := current_class
-			old_is_failure_enabled := is_failure_enabled
+			old_result_status := result_status
 			old_last_type := last_type
-			is_failure_enabled := True
+			result_status := result_optional_checked
 			current_class := a_context_class
 			a_type.process (Current)
 			Result := last_type
 			current_class := old_current_class
-			is_failure_enabled := old_is_failure_enabled
+			result_status := old_result_status
+			last_type := old_last_type
+		end
+
+	evaluate_optional_unchecked (a_type: TYPE_AS; a_context_class: CLASS_C): TYPE_A
+			-- Same as `evaluate_type_if_possible' but does not check
+			-- whether result is valid for the corresponding class declaration.
+		require
+			a_type_not_void: a_type /= Void
+			a_context_class_not_void: a_context_class /= Void
+		local
+			old_current_class: like current_class
+			old_result_status: like result_status
+			old_last_type: like last_type
+		do
+			old_current_class := current_class
+			old_result_status := result_status
+			old_last_type := last_type
+			result_status := result_optional_unchecked
+			current_class := a_context_class
+			a_type.process (Current)
+			Result := last_type
+			current_class := old_current_class
+			result_status := old_result_status
 			last_type := old_last_type
 		end
 
@@ -73,18 +96,18 @@ feature -- Status report
 			a_type_is_in_universe: True -- All class identifiers of `a_type' are in the universe.
 		local
 			old_current_class: like current_class
-			old_is_failure_enabled: like is_failure_enabled
+			old_result_status: like result_status
 			old_last_type: like last_type
 		do
 			old_current_class := current_class
-			old_is_failure_enabled := is_failure_enabled
+			old_result_status := result_status
 			old_last_type := last_type
-			is_failure_enabled := False
+			result_status := result_mandatory
 			current_class := a_context_class
 			a_type.process (Current)
 			Result := last_type
 			current_class := old_current_class
-			is_failure_enabled := old_is_failure_enabled
+			result_status := old_result_status
 			last_type := old_last_type
 		ensure
 			evaluate_type_not_void: Result /= Void
@@ -110,8 +133,18 @@ feature {NONE} -- Implementation: Access
 	current_class: CLASS_C
 			-- Current class where current type is resolved
 
-	is_failure_enabled: BOOLEAN
-			-- Is failure authorized?
+	result_status: INTEGER
+			-- Status of result.
+			-- See `result_mandatory', `result_optional_unchecked', `result_optional_checked'.
+
+	result_mandatory: INTEGER = 0
+			-- Result is expected.
+
+	result_optional_unchecked: INTEGER = 1
+			-- Result is optional and not checked if it is valid for a class.
+
+	result_optional_checked: INTEGER = 2
+			-- Result is optional and checked if it is valid for a class.
 
 feature {NONE} -- Visitor implementation
 
@@ -361,14 +394,19 @@ feature {NONE} -- Visitor implementation
 					l_type := l_class_c.partial_actual_type (Void, l_as.is_expanded, l_as.has_separate_mark)
 				end
 				if l_has_error then
-					check failure_enabled: is_failure_enabled end
+					check failure_enabled: result_status /= result_mandatory end
 					last_type := Void
 				else
 					check attached l_type end
 					last_type := set_class_type_marks (l_as, l_type)
+					if result_status = result_optional_checked and then not last_type.is_valid_for_class (current_class) then
+							-- Do not return type that is invalid apriori.
+							-- It's validity will be checked again later.
+						last_type := Void
+					end
 				end
 			else
-				check failure_enabled: is_failure_enabled end
+				check failure_enabled: result_status /= result_mandatory end
 				last_type := Void
 			end
 		end
@@ -421,14 +459,14 @@ feature {NONE} -- Visitor implementation
 					g := g + 1
 				end
 				if l_has_error then
-					check failure_enabled: is_failure_enabled end
+					check failure_enabled: result_status /= result_mandatory end
 					last_type := Void
 				else
 					check attached l_type end
 					last_type := set_class_type_marks (l_as, l_type)
 				end
 			else
-				check failure_enabled: is_failure_enabled end
+				check failure_enabled: result_status /= result_mandatory end
 				last_type := Void
 			end
 		end

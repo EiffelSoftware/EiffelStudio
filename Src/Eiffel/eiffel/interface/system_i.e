@@ -5993,7 +5993,7 @@ feature {NONE} -- Element change: Root creators
 					l_vd20.set_class_name (l_root.root_class.name.as_upper)
 					Error_handler.insert_error (l_vd20)
 				else
-					l_type := type_a_generator.evaluate_type_if_possible (l_root.class_type_as, l_root.root_class.compiled_class)
+					l_type := type_a_generator.evaluate_optional_unchecked (l_root.class_type_as, l_root.root_class.compiled_class)
 					if l_type = Void then
 							-- Throw an error: type is not valid.
 						create l_vsrt2

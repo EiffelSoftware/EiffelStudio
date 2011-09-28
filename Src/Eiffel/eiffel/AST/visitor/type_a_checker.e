@@ -397,7 +397,8 @@ feature -- Special checking
 									loop
 										l_t2 := l_cl_generics.item.constraints.item.type
 										if l_t2 /= Void then
-											l_t2_a := type_a_generator.evaluate_type (l_t2, a_context_class)
+											l_t2_a := type_a_generator.evaluate_type (l_t2, l_associated_class)
+											l_t2_a := l_t2_a.instantiated_in (l_type_a)
 											if l_t2_a /= Void then
 												l_t1_a.check_const_gen_conformance
 													(l_gen_type, l_t2_a, a_context_class, l_pos)

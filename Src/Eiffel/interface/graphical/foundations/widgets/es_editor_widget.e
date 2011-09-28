@@ -114,8 +114,6 @@ feature -- Basic operations
 			-- Scrolls the editor to the end, if the caret is placed at the end of the text.
 			--
 			-- `a_force': True to force the editor to scroll regardless of the caret position.
-		require
-			is_interface_usable: is_interface_usable
 		local
 			l_editor: like editor
 			l_text: CLICKABLE_TEXT
@@ -170,7 +168,7 @@ feature {NONE} -- Implementation: Internal cache
 			-- Note: Do not use directly!
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

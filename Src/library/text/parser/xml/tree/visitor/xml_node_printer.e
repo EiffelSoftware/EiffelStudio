@@ -57,7 +57,7 @@ feature -- Processing
 				t.prepend_string (p)
 			end
 			output.put_string (t)
-			n := e.nodes.count
+			n := e.count
 			if attached e.attributes as attrs and then attrs.count > 0 then
 				n := n - attrs.count
 				process_nodes (attrs)
@@ -67,7 +67,7 @@ feature -- Processing
 				output.put_character ('>')
 			else
 				output.put_character ('>')
-				process_non_attribute_nodes (e.nodes)
+				process_non_attribute_nodes (e)
 				output.put_character ('<')
 				output.put_character ('/')
 				output.put_string (t)
@@ -96,7 +96,7 @@ feature -- Processing
 	process_document (doc: XML_DOCUMENT)
 			-- Process document `doc'.
 		do
-			process_nodes (doc.nodes)
+			process_nodes (doc)
 			output.flush
 		end
 
@@ -135,7 +135,7 @@ invariant
 	output_not_void: output /= Void
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -287,6 +287,43 @@ feature -- Values
 			end
 		end
 
+feature -- Assertion violation
+
+	break_on_assertion_violation_pending: BOOLEAN
+			-- Break action from assertion violation dialog
+
+	set_break_on_assertion_violation_pending (b: BOOLEAN)
+		require
+			contract_violation_occurred: b implies assertion_violation_occurred
+			not_break_on_assertion_violation_pending: b implies not break_on_assertion_violation_pending
+		do
+			break_on_assertion_violation_pending := b
+		end
+
+	assertion_violation_occurred: BOOLEAN
+			-- Contract violation occurred?
+		do
+			if
+				exception_occurred and then
+				attached exception as e
+			then
+				if
+					attached e.dynamic_class as e_cl and then
+					attached application.debugger_manager.compiler_data as l_comp_data and then
+					attached l_comp_data.assertion_violation_class_c as assert_cl
+				then
+					Result := e_cl.conform_to (assert_cl)
+				elseif attached exception_type_name as n then
+					Result := n.same_string (({CHECK_VIOLATION}).out) or else
+						n.same_string (({PRECONDITION_VIOLATION}).out) or else
+						n.same_string (({POSTCONDITION_VIOLATION}).out) or else
+						n.same_string (({INVARIANT_VIOLATION}).out) or else
+						n.same_string (({VARIANT_VIOLATION}).out) or else
+						n.same_string (({LOOP_INVARIANT_VIOLATION}).out)
+				end
+			end
+		end
+
 feature -- Query
 
 	reason_is_overflow: BOOLEAN
@@ -774,6 +811,7 @@ feature -- Setting
 				clear_callstack_data
 			end
 			is_stopped := b
+			set_break_on_assertion_violation_pending (False)
 		end
 
 	set_exception (e: EXCEPTION_DEBUG_VALUE)

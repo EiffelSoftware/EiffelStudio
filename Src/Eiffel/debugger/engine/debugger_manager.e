@@ -785,17 +785,7 @@ feature -- Exception handling
 					-- Have to update exception info with following two lines. Otherwise the value is void
 					l_status.update_on_stopped_state
 				end
-				if
-					attached l_status.exception_type_name as n and then
-					(
-						n.same_string (({CHECK_VIOLATION}).out) or else
-						n.same_string (({PRECONDITION_VIOLATION}).out) or else
-						n.same_string (({POSTCONDITION_VIOLATION}).out) or else
-						n.same_string (({INVARIANT_VIOLATION}).out) or else
-						n.same_string (({VARIANT_VIOLATION}).out) or else
-						n.same_string (({LOOP_INVARIANT_VIOLATION}).out)
-					)
-				then
+				if l_status.assertion_violation_occurred then
 					-- Display ignore contract violation dialog
 					add_on_stopped_action (agent (dm: DEBUGGER_MANAGER)
 							do

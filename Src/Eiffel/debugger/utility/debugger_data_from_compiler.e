@@ -29,200 +29,84 @@ feature {NONE} -- Initialization
 			cl_i: CLASS_I
 		do
 			sys := Eiffel_system.system
-			cl_i := sys.any_class
-			if cl_i /= Void then
-				any_class_c := cl_i.compiled_class
-			end
 
-			cl_i := sys.routine_class
-			if cl_i /= Void then
-				routine_class_c := cl_i.compiled_class
-			end
-
-			cl_i := sys.array_class
-			if cl_i /= Void then
-				array_class_c := cl_i.compiled_class
-			end
-
-			cl_i := sys.special_class
-			if cl_i /= Void then
-				special_class_c := cl_i.compiled_class
-			end
-
-			cl_i := sys.tuple_class
-			if cl_i /= Void then
-				tuple_class_c := cl_i.compiled_class
-			end
-
-			cl_i := sys.type_class
-			if cl_i /= Void then
-				type_class_c := cl_i.compiled_class
-			end
-
-			cl_i := class_i_by_name ("READABLE_STRING_8")
-			if cl_i /= Void then
-				readable_string_8_class_c := cl_i.compiled_class
-			end
-
-			cl_i := class_i_by_name ("READABLE_STRING_32")
-			if cl_i /= Void then
-				readable_string_32_class_c := cl_i.compiled_class
-			end
-
-			cl_i := sys.string_8_class
-			if cl_i /= Void then
-				string_8_class_c := cl_i.compiled_class
-			end
-
-			cl_i := sys.string_32_class
-			if cl_i /= Void then
-				string_32_class_c := cl_i.compiled_class
-			end
-
-			cl_i := class_i_by_name ("IMMUTABLE_STRING_8")
-			if cl_i /= Void then
-				immutable_string_8_class_c := cl_i.compiled_class
-			end
-
-			cl_i := class_i_by_name ("IMMUTABLE_STRING_32")
-			if cl_i /= Void then
-				immutable_string_32_class_c := cl_i.compiled_class
-			end
-
-			cl_i := sys.natural_8_class
-			if cl_i /= Void then
-				natural_8_class_c := cl_i.compiled_class
-			end
-
-			cl_i := sys.natural_16_class
-			if cl_i /= Void then
-				natural_16_class_c := cl_i.compiled_class
-			end
-
-			cl_i := sys.natural_32_class
-			if cl_i /= Void then
-				natural_32_class_c := cl_i.compiled_class
-			end
-
-			cl_i := sys.natural_64_class
-			if cl_i /= Void then
-				natural_64_class_c := cl_i.compiled_class
-			end
-
-			cl_i := sys.Integer_8_class
-			if cl_i /= Void then
-				integer_8_class_c := cl_i.compiled_class
-			end
-
-			cl_i := sys.Integer_16_class
-			if cl_i /= Void then
-				integer_16_class_c := cl_i.compiled_class
-			end
-
-			cl_i := sys.Integer_32_class
-			if cl_i /= Void then
-				integer_32_class_c := cl_i.compiled_class
-			end
-
-			cl_i := sys.Integer_64_class
-			if cl_i /= Void then
-				integer_64_class_c := cl_i.compiled_class
-			end
-
-			cl_i := sys.Boolean_class
-			if cl_i /= Void then
-				boolean_class_c := cl_i.compiled_class
-			end
-
-			cl_i := sys.character_8_class
-			if cl_i /= Void then
-				character_8_class_c := cl_i.compiled_class
-			end
-
-			cl_i := sys.character_32_class
-			if cl_i /= Void then
-				character_32_class_c := cl_i.compiled_class
-			end
-
-			cl_i := sys.real_32_class
-			if cl_i /= Void then
-				real_32_class_c := cl_i.compiled_class
-			end
-
-			cl_i := sys.real_64_class
-			if cl_i /= Void then
-				real_64_class_c := cl_i.compiled_class
-			end
-
-			cl_i := sys.Pointer_class
-			if cl_i /= Void then
-				pointer_class_c := cl_i.compiled_class
-			end
-
-			cl_i := sys.Bit_class
-			if cl_i /= Void then
-				bit_class_c := cl_i.compiled_class
-			end
-
-			cl_i := sys.system_object_class
-			if cl_i /= Void then
-				system_object_class_c := cl_i.compiled_class
-			end
-
-			cl_i := sys.system_string_class
-			if cl_i /= Void then
-				system_string_class_c := cl_i.compiled_class
-			end
-
-			cl_i := sys.native_array_class
-			if cl_i /= Void then
-				native_array_class_c := cl_i.compiled_class
-			end
-
-			cl_i := sys.exception_class
-			if cl_i /= Void then
-				exception_class_c := cl_i.compiled_class
-			end
-
-			cl_i := sys.ise_exception_manager_class
-			if cl_i /= Void then
-				exception_manager_class_c := cl_i.compiled_class
-			end
+			any_class_c := class_c_from_class_i (sys.any_class)
+			routine_class_c := class_c_from_class_i (sys.routine_class)
+			array_class_c := class_c_from_class_i (sys.array_class)
+			special_class_c := class_c_from_class_i (sys.special_class)
+			tuple_class_c := class_c_from_class_i (sys.tuple_class)
+			type_class_c := class_c_from_class_i (sys.type_class)
+			readable_string_8_class_c := class_c_by_name ("READABLE_STRING_8")
+			readable_string_32_class_c := class_c_by_name ("READABLE_STRING_32")
+			string_8_class_c := class_c_from_class_i (sys.string_8_class)
+			string_32_class_c := class_c_from_class_i (sys.string_32_class)
+			immutable_string_8_class_c := class_c_by_name ("IMMUTABLE_STRING_8")
+			immutable_string_32_class_c := class_c_by_name ("IMMUTABLE_STRING_32")
+			natural_8_class_c := class_c_from_class_i (sys.natural_8_class)
+			natural_16_class_c := class_c_from_class_i (sys.natural_16_class)
+			natural_32_class_c := class_c_from_class_i (sys.natural_32_class)
+			natural_64_class_c := class_c_from_class_i (sys.natural_64_class)
+			integer_8_class_c := class_c_from_class_i (sys.Integer_8_class)
+			integer_16_class_c := class_c_from_class_i (sys.Integer_16_class)
+			integer_32_class_c := class_c_from_class_i (sys.Integer_32_class)
+			integer_64_class_c := class_c_from_class_i (sys.Integer_64_class)
+			boolean_class_c := class_c_from_class_i (sys.Boolean_class)
+			character_8_class_c := class_c_from_class_i (sys.character_8_class)
+			character_32_class_c := class_c_from_class_i (sys.character_32_class)
+			real_32_class_c := class_c_from_class_i (sys.real_32_class)
+			real_64_class_c := class_c_from_class_i (sys.real_64_class)
+			pointer_class_c := class_c_from_class_i (sys.Pointer_class)
+			bit_class_c := class_c_from_class_i (sys.Bit_class)
+			system_object_class_c := class_c_from_class_i (sys.system_object_class)
+			system_string_class_c := class_c_from_class_i (sys.system_string_class)
+			native_array_class_c := class_c_from_class_i (sys.native_array_class)
+			exception_class_c := class_c_from_class_i (sys.exception_class)
+			assertion_violation_class_c := class_c_by_name ("ASSERTION_VIOLATION")
+			exception_manager_class_c := class_c_from_class_i (sys.ise_exception_manager_class)
 		end
 
 feature -- Access
 
-	any_class_c: CLASS_C
-	routine_class_c: CLASS_C
-	array_class_c: CLASS_C
-	special_class_c: CLASS_C
-	tuple_class_c: CLASS_C
-	type_class_c: CLASS_C
-	readable_string_8_class_c: CLASS_C
-	readable_string_32_class_c: CLASS_C
-	immutable_string_8_class_c: CLASS_C
-	immutable_string_32_class_c: CLASS_C
-	string_8_class_c: CLASS_C
-	string_32_class_c: CLASS_C
-	natural_8_class_c: CLASS_C
-	natural_16_class_c: CLASS_C
-	natural_32_class_c: CLASS_C
-	natural_64_class_c: CLASS_C
-	integer_8_class_c: CLASS_C
-	integer_16_class_c: CLASS_C
-	integer_32_class_c: CLASS_C
-	integer_64_class_c: CLASS_C
-	boolean_class_c: CLASS_C
-	character_8_class_c: CLASS_C
-	character_32_class_c: CLASS_C
-	real_32_class_c: CLASS_C
-	real_64_class_c: CLASS_C
-	pointer_class_c: CLASS_C
-	bit_class_c: CLASS_C
-	exception_class_c: CLASS_C
-	exception_manager_class_c: CLASS_C
+	any_class_c,
+	routine_class_c,
+	array_class_c,
+	special_class_c,
+	tuple_class_c,
+	type_class_c,
+	readable_string_8_class_c,
+	readable_string_32_class_c,
+	immutable_string_8_class_c,
+	immutable_string_32_class_c,
+	string_8_class_c,
+	string_32_class_c,
+	natural_8_class_c,
+	natural_16_class_c,
+	natural_32_class_c,
+	natural_64_class_c,
+	integer_8_class_c,
+	integer_16_class_c,
+	integer_32_class_c,
+	integer_64_class_c,
+	boolean_class_c,
+	character_8_class_c,
+	character_32_class_c,
+	real_32_class_c,
+	real_64_class_c,
+	pointer_class_c,
+	bit_class_c,
+	exception_class_c,
+	assertion_violation_class_c,
+	exception_manager_class_c: detachable CLASS_C
 
 feature -- Specific access
+
+	class_c_from_class_i (a_class_i: detachable CLASS_I): detachable CLASS_C
+			-- CLASS_C associated with `a_class_i' if any.
+		do
+			if a_class_i /= Void then
+				Result := a_class_i.compiled_class
+			end
+		end
 
 	class_i_by_name (a_class_name: STRING_8): detachable CLASS_I
 			-- Instance of CLASS_I related to `a_name'
@@ -248,7 +132,7 @@ feature -- Specific access
 			end
 		end
 
-	internal_class_c: CLASS_C
+	internal_class_c: detachable CLASS_C
 			--
 		do
 			Result := opo_internal_class_c
@@ -257,10 +141,10 @@ feature -- Specific access
 				opo_internal_class_c := Result
 			end
 		ensure
-			Result_not_Void: Result /= Void
+			result_not_void: Result /= Void
 		end
 
-	ise_runtime_class_c: CLASS_C
+	ise_runtime_class_c: detachable CLASS_C
 			-- ISE_RUNTIME class (for dotnet)
 		do
 			Result := opo_ise_runtime_class_c

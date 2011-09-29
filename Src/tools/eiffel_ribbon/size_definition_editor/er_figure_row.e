@@ -1,7 +1,7 @@
 note
 	description: "[
 					Collect figures in one row
-																		]"
+	]"
 	date: "$Date$"
 	revision: "$Revision$"
 

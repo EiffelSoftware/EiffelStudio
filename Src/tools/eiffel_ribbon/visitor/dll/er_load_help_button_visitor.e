@@ -1,7 +1,7 @@
 note
 	description: "[
 					Help button vistor when using DLL
-																				]"
+			]"
 	date: "$Date$"
 	revision: "$Revision$"
 

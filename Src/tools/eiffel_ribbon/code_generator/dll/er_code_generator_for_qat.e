@@ -1,7 +1,7 @@
 note
 	description: "[
 					Code generator for Quick Access Toolbar when using DLL
-																						]"
+					]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -18,7 +18,7 @@ feature -- Command
 			l_file, l_dest_file: RAW_FILE
 			l_constants: ER_MISC_CONSTANTS
 			l_file_name, l_dest_file_name: FILE_NAME
-			l_singleton: ER_SHARED_SINGLETON
+			l_singleton: ER_SHARED_TOOLS
 			l_sub_dir, l_tool_bar_file, l_sub_imp_dir: STRING
 			l_last_string: STRING
 			l_identifier_name: detachable STRING

@@ -1,7 +1,7 @@
 note
 	description: "[
 					Context menu tree node data
-																				]"
+			]"
 	date: "$Date$"
 	revision: "$Revision$"
 

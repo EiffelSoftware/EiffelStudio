@@ -1,7 +1,7 @@
 note
 	description: "[
 					Menu group tree node data
-																				]"
+			]"
 	date: "$Date$"
 	revision: "$Revision$"
 

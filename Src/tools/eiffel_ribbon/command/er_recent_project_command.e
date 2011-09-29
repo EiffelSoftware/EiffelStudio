@@ -1,7 +1,7 @@
 note
 	description: "[
 					Command for recent items
-																			]"
+		]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -64,7 +64,7 @@ feature {NONE}	-- Implementation
 	main_window: detachable ER_MAIN_WINDOW
 			-- Tool's main window
 
-	shared_singleton: ER_SHARED_SINGLETON
+	shared_singleton: ER_SHARED_TOOLS
 			-- Shared singleton
 
 ;note

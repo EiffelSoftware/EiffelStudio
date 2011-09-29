@@ -1,7 +1,7 @@
 note
 	description: "[
 					Update application menu info vistor when using application mode
-																					]"
+				]"
 	date: "$Date$"
 	revision: "$Revision$"
 

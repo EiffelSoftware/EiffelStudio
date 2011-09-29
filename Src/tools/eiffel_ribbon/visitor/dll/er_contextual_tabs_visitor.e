@@ -1,7 +1,7 @@
 note
 	description: "[
 					Contextual tabs vistor when using DLL
-																				]"
+			]"
 	date: "$Date$"
 	revision: "$Revision$"
 

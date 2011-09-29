@@ -1,7 +1,7 @@
 note
 	description: "[
 					Split button gallery info vistor when using DLL
-																				]"
+			]"
 	date: "$Date$"
 	revision: "$Revision$"
 

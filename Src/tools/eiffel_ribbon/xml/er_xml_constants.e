@@ -2,7 +2,7 @@ note
 	description: "[
 					Microsoft Ribbon makrup XML constants
 
-																					]"
+				]"
 	date: "$Date$"
 	revision: "$Revision$"
 

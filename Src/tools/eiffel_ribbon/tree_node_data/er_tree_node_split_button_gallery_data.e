@@ -1,7 +1,7 @@
 note
 	description: "[
 					Split button gallery tree node data
-																				]"
+			]"
 	date: "$Date$"
 	revision: "$Revision$"
 

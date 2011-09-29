@@ -1,7 +1,7 @@
 note
 	description: "[
 					Command to generate ribbon codes
-																		]"
+	]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -70,7 +70,7 @@ feature -- Command
 
 feature {NONE} -- Implementation
 
-	shared_singleton: ER_SHARED_SINGLETON
+	shared_singleton: ER_SHARED_TOOLS
 			-- Shared singleton
 
 	code_generator: ER_COMMON_CODE_GENERATOR

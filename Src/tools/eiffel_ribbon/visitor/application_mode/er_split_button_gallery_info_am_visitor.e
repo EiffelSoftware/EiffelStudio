@@ -1,7 +1,7 @@
 note
 	description: "[
 					Split button gallery vistor when using application mode
-																				]"
+			]"
 	date: "$Date$"
 	revision: "$Revision$"
 

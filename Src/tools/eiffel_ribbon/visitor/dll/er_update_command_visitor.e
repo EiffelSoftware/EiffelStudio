@@ -1,7 +1,7 @@
 note
 	description: "[
 					Ribbon command vistor when using DLL
-																				]"
+			]"
 	date: "$Date$"
 	revision: "$Revision$"
 

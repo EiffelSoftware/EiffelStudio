@@ -1,7 +1,7 @@
 note
 	description: "[
 					Ttree node data factory
-																				]"
+			]"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -1,7 +1,7 @@
 note
 	description: "[
 					Dropdown button tree node data
-																				]"
+			]"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -1,7 +1,7 @@
 note
 	description: "[
 					Update context popup vistor when using application mode
-																				]"
+			]"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -2,7 +2,7 @@ note
 	description: "[
 						Common ancestor for all commands in ribbon tool
 						UI command pattern
-																		]"
+	]"
 	date: "$Date$"
 	revision: "$Revision$"
 

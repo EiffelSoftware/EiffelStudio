@@ -1,7 +1,7 @@
 note
 	description: "[
 					Combo box tree node data
-																				]"
+			]"
 	date: "$Date$"
 	revision: "$Revision$"
 

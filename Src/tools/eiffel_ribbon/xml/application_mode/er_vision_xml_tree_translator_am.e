@@ -3,7 +3,7 @@ note
 					Vision2 tree to Ribbon markup XML tree translator
 					when using application modes
 
-																					]"
+				]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -62,7 +62,7 @@ feature -- Command
 	save_xml_nodes_for_all_layout_constructors
 			-- Save XML nodes for all layout constructors
 		local
-			l_shared: ER_SHARED_SINGLETON
+			l_shared: ER_SHARED_TOOLS
 			l_list: ARRAYED_LIST [ER_LAYOUT_CONSTRUCTOR]
 		do
 			reset_xml_tree
@@ -114,7 +114,7 @@ feature {NONE} -- Tree saving
 			-- Save size definitions
 		local
 			l_ribbon_xml: detachable XML_ELEMENT
-			l_shared: ER_SHARED_SINGLETON
+			l_shared: ER_SHARED_TOOLS
 			l_root_xml_size_definition: XML_ELEMENT
 		do
 			l_ribbon_xml := xml_node_by_name (xml_constants.ribbon)

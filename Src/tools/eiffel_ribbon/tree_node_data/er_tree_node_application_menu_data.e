@@ -1,7 +1,7 @@
 note
 	description: "[
 					Application menu tree node data
-																				]"
+			]"
 	date: "$Date$"
 	revision: "$Revision$"
 

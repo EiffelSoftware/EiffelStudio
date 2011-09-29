@@ -1,7 +1,7 @@
 note
 	description: "[
 					Dropdown gallery info vistor when using application mode
-																				]"
+			]"
 	date: "$Date$"
 	revision: "$Revision$"
 

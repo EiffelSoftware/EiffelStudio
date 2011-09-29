@@ -1,7 +1,7 @@
 note
 	description: "[
 					Ribbon item's identifier names uniqueness checker
-																		]"
+	]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -87,7 +87,7 @@ feature -- Query
 			not_void: a_identifier /= Void
 			not_empty: not a_identifier.is_empty
 		local
-			l_shared: ER_SHARED_SINGLETON
+			l_shared: ER_SHARED_TOOLS
 			l_list: ARRAYED_LIST [ER_LAYOUT_CONSTRUCTOR]
 		do
 			from

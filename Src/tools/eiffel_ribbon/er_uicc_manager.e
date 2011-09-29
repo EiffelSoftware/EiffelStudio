@@ -1,7 +1,7 @@
 note
 	description: "[
 					UICC.exe manager to compile ribbon resource files with ribbon markup XML
-																									]"
+								]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -40,7 +40,7 @@ feature -- Command
 			l_process_factory: PROCESS_FACTORY
 			l_list: ARRAYED_LIST [STRING_8]
 			l_constants: ER_MISC_CONSTANTS
-			l_singleton: ER_SHARED_SINGLETON
+			l_singleton: ER_SHARED_TOOLS
 		do
 			-- prepare command
 			-- uicc eiffel_ribbon.xml eiffel_ribbon.bml /header:eiffel_ribbon.h /res:eiffel_ribbon.rc
@@ -83,7 +83,7 @@ feature -- Command
 				l_process_factory: PROCESS_FACTORY
 				l_list: ARRAYED_LIST [STRING_8]
 				l_constants: ER_MISC_CONSTANTS
-				l_singleton: ER_SHARED_SINGLETON
+				l_singleton: ER_SHARED_TOOLS
 			do
 					-- prepare command
 					-- uicc eiffel_ribbon.xml eiffel_ribbon.bml /header:eiffel_ribbon.h /res:eiffel_ribbon.rc
@@ -120,7 +120,7 @@ feature -- Command
 			l_process_factory: PROCESS_FACTORY
 			l_list: ARRAYED_LIST [STRING_8]
 			l_constants: ER_MISC_CONSTANTS
-			l_singleton: ER_SHARED_SINGLETON
+			l_singleton: ER_SHARED_TOOLS
 		do
 --			code_page_to_936
 				-- prepare command
@@ -161,7 +161,7 @@ feature -- Command
 			l_process_factory: PROCESS_FACTORY
 			l_list: ARRAYED_LIST [STRING_8]
 			l_constants: ER_MISC_CONSTANTS
-			l_singleton: ER_SHARED_SINGLETON
+			l_singleton: ER_SHARED_TOOLS
 		do
 				-- prepare command
 				-- uicc eiffel_ribbon.xml eiffel_ribbon.bml /header:eiffel_ribbon.h /res:eiffel_ribbon.rc
@@ -202,7 +202,7 @@ feature -- Command
 	on_output (a_string: STRING; a_is_tabbed: BOOLEAN) --FIXME: For non-English characters?
 			-- Handle output event
 		local
-			l_singleton: ER_SHARED_SINGLETON
+			l_singleton: ER_SHARED_TOOLS
 		do
 			create l_singleton
 			if attached l_singleton.main_window_cell.item as l_main_window then

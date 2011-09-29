@@ -2,7 +2,7 @@ note
 	description: "[
 					Microsoft Ribbon makrup XML callbacks when saving XML
 
-																					]"
+				]"
 	date: "$Date$"
 	revision: "$Revision$"
 

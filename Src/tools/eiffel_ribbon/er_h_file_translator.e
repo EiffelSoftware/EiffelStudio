@@ -1,7 +1,7 @@
 note
 	description: "[
 					Like h2e.exe, translate a C header file (.h) to a Eiffel class
-																					]"
+				]"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -1,7 +1,7 @@
 note
 	description: "[
 					Size definition visitor when using application mode
-																				]"
+			]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -19,7 +19,7 @@ feature -- Command
 	visit_size_definitions (a_ribbon_size_definitions: ER_XML_TREE_ELEMENT)
 			-- <Precursor>
 		local
-			l_singleton: ER_SHARED_SINGLETON
+			l_singleton: ER_SHARED_TOOLS
 			l_size_definition_tool: detachable ER_SIZE_DEFINITION_EDITOR
 			l_writer: ER_SIZE_DEFINITION_WRITER
 			l_name: detachable STRING

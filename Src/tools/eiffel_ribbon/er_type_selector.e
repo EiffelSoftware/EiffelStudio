@@ -2,7 +2,7 @@ note
 	description: "[
 					Type selector tool
 					It provides various kinds of ribbon items for users to right-click pick
-																							]"
+						]"
 	date: "$Date$"
 	revision: "$Revision$"
 

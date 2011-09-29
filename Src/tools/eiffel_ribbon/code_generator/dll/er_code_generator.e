@@ -1,7 +1,7 @@
 note
 	description: "[
 					Code generator using DLL
-																					]"
+				]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -32,7 +32,7 @@ feature -- Command
 			l_stop: BOOLEAN
 			l_constants: ER_MISC_CONSTANTS
 			l_file: RAW_FILE
-			l_singleton: ER_SHARED_SINGLETON
+			l_singleton: ER_SHARED_TOOLS
 			l_max_count: INTEGER
 			l_translator: ER_H_FILE_TRANSLATOR
 		do
@@ -125,7 +125,7 @@ feature {ER_CODE_GENERATOR_FOR_APPLICATION_MENU} -- Command
 			l_file, l_dest_file: RAW_FILE
 			l_constants: ER_MISC_CONSTANTS
 			l_file_name, l_dest_file_name: FILE_NAME
-			l_singleton: ER_SHARED_SINGLETON
+			l_singleton: ER_SHARED_TOOLS
 			l_sub_dir, l_tool_bar_group_file, l_sub_imp_dir, l_tool_bar_group_imp_file: STRING
 			l_last_string: STRING
 			l_button_creation_string, l_button_registry_string, l_button_declaration_string: STRING
@@ -364,7 +364,7 @@ feature {ER_CODE_GENERATOR_FOR_QAT} -- Command
 			l_file, l_dest_file: RAW_FILE
 			l_constants: ER_MISC_CONSTANTS
 			l_file_name, l_dest_file_name: FILE_NAME
-			l_singleton: ER_SHARED_SINGLETON
+			l_singleton: ER_SHARED_TOOLS
 			l_sub_dir, l_tool_bar_button_file, l_sub_imp_dir, l_tool_bar_button_imp_file: STRING
 			l_last_string: STRING
 			l_identifier_name: detachable STRING
@@ -491,7 +491,7 @@ feature {ER_CODE_GENERATOR_FOR_CONTEXTUAL_TABS} -- Command
 			l_file, l_dest_file: RAW_FILE
 			l_constants: ER_MISC_CONSTANTS
 			l_file_name, l_dest_file_name: FILE_NAME
-			l_singleton: ER_SHARED_SINGLETON
+			l_singleton: ER_SHARED_TOOLS
 			l_sub_dir, l_tool_bar_tab_file, l_sub_imp_dir, l_tool_bar_tab_imp_file: STRING
 			l_group_creation_string, l_group_registry_string, l_group_declaration_string: STRING
 			l_last_string: STRING
@@ -637,7 +637,7 @@ feature {NONE} -- Implementation
 			l_sed_utility: SED_STORABLE_FACILITIES
 			l_file: RAW_FILE
 			l_constants: ER_MISC_CONSTANTS
-			l_singleton: ER_SHARED_SINGLETON
+			l_singleton: ER_SHARED_TOOLS
 		do
 			create l_constants
 			create l_singleton
@@ -661,10 +661,10 @@ feature {NONE} -- Implementation
 			-- Generate ECF
 		local
 			l_file, l_dest_file: RAW_FILE
-			l_singleton: ER_SHARED_SINGLETON
+			l_singleton: ER_SHARED_TOOLS
 			l_file_name: FILE_NAME
 
-			l_shared: ER_SHARED_SINGLETON
+			l_shared: ER_SHARED_TOOLS
 			l_error: EV_ERROR_DIALOG
 			l_interface_names: ER_INTERFACE_NAMES
 			l_misc_constants: ER_MISC_CONSTANTS
@@ -725,7 +725,7 @@ feature {NONE} -- Implementation
 			l_constants: ER_MISC_CONSTANTS
 			l_sub_files: ARRAYED_LIST [STRING_8]
 			l_file_name, l_dest_file_name, l_source_dir: FILE_NAME
-			l_singleton: ER_SHARED_SINGLETON
+			l_singleton: ER_SHARED_TOOLS
 			l_sub_dir: STRING
 		do
 			create l_singleton
@@ -779,7 +779,7 @@ feature {NONE} -- Implementation
 		require
 			not_void: a_translator /= Void
 		local
-			l_singleton: ER_SHARED_SINGLETON
+			l_singleton: ER_SHARED_TOOLS
 			l_source_header: FILE_NAME
 			l_constants: ER_MISC_CONSTANTS
 		do
@@ -812,7 +812,7 @@ feature {NONE} -- Implementation
 	generate_application_class
 			-- Generate RIBBON_APPLICATION class
 		local
-			l_singleton: ER_SHARED_SINGLETON
+			l_singleton: ER_SHARED_TOOLS
 			l_list: ARRAYED_LIST [ER_LAYOUT_CONSTRUCTOR]
 			l_window_file, l_sub_dir, l_last_string: STRING
 			l_constants: ER_MISC_CONSTANTS
@@ -883,7 +883,7 @@ feature {NONE} -- Implementation
 	generate_window_classes
 			-- Generate window classes
 		local
-			l_singleton: ER_SHARED_SINGLETON
+			l_singleton: ER_SHARED_TOOLS
 			l_list: ARRAYED_LIST [ER_LAYOUT_CONSTRUCTOR]
 			l_window_file, l_sub_dir, l_last_string: STRING
 			l_constants: ER_MISC_CONSTANTS
@@ -1027,7 +1027,7 @@ feature {NONE} -- Implementation
 	first_application_menu_identifer_name: detachable STRING
 			-- First application menu's identifer name
 		local
-			l_shared: ER_SHARED_SINGLETON
+			l_shared: ER_SHARED_TOOLS
 			l_list: ARRAYED_LIST [ER_LAYOUT_CONSTRUCTOR]
 			l_items: ARRAYED_LIST [EV_TREE_NODE]
 		do
@@ -1157,7 +1157,7 @@ feature {NONE} -- Implementation
 			l_tree: EV_TREE
 			l_tree_node: detachable EV_TREE_NODE
 			l_xml: ER_XML_CONSTANTS
-			l_singleton: ER_SHARED_SINGLETON
+			l_singleton: ER_SHARED_TOOLS
 			l_list: ARRAYED_LIST [ER_LAYOUT_CONSTRUCTOR]
 		do
 
@@ -1190,7 +1190,7 @@ feature {NONE} -- Implementation
 			l_file, l_dest_file: RAW_FILE
 			l_constants: ER_MISC_CONSTANTS
 			l_file_name, l_dest_file_name: FILE_NAME
-			l_singleton: ER_SHARED_SINGLETON
+			l_singleton: ER_SHARED_TOOLS
 			l_sub_dir, l_tool_bar_file, l_sub_imp_dir: STRING
 			l_last_string: STRING
 			l_identifier_name: detachable STRING
@@ -1265,7 +1265,7 @@ feature {NONE} -- Implementation
 			l_tree: EV_TREE
 			l_tree_node: detachable EV_TREE_NODE
 			l_xml: ER_XML_CONSTANTS
-			l_singleton: ER_SHARED_SINGLETON
+			l_singleton: ER_SHARED_TOOLS
 			l_list: ARRAYED_LIST [ER_LAYOUT_CONSTRUCTOR]
 		do
 			from
@@ -1298,7 +1298,7 @@ feature {NONE} -- Implementation
 			l_tree: EV_TREE
 			l_tree_node: detachable EV_TREE_NODE
 			l_xml: ER_XML_CONSTANTS
-			l_singleton: ER_SHARED_SINGLETON
+			l_singleton: ER_SHARED_TOOLS
 			l_list: ARRAYED_LIST [ER_LAYOUT_CONSTRUCTOR]
 		do
 			from
@@ -1331,7 +1331,7 @@ feature {NONE} -- Implementation
 			l_tree: EV_TREE
 			l_tree_node: detachable EV_TREE_NODE
 			l_xml: ER_XML_CONSTANTS
-			l_singleton: ER_SHARED_SINGLETON
+			l_singleton: ER_SHARED_TOOLS
 			l_list: ARRAYED_LIST [ER_LAYOUT_CONSTRUCTOR]
 		do
 			from
@@ -1363,7 +1363,7 @@ feature {NONE} -- Implementation
 			l_tree: EV_TREE
 			l_tree_node: detachable EV_TREE_NODE
 			l_xml: ER_XML_CONSTANTS
-			l_singleton: ER_SHARED_SINGLETON
+			l_singleton: ER_SHARED_TOOLS
 			l_list: ARRAYED_LIST [ER_LAYOUT_CONSTRUCTOR]
 			l_gen: ER_CODE_GENERATOR_FOR_APPLICATION_MENU
 		do
@@ -1442,7 +1442,7 @@ feature {NONE} -- Implementation
 			l_file, l_dest_file: RAW_FILE
 			l_constants: ER_MISC_CONSTANTS
 			l_file_name, l_dest_file_name: FILE_NAME
-			l_singleton: ER_SHARED_SINGLETON
+			l_singleton: ER_SHARED_TOOLS
 			l_sub_dir, l_tool_bar_file, l_sub_imp_dir: STRING
 			l_last_string, l_set_modes_string: STRING
 			l_tab_creation_string, l_tab_registry_string, l_tab_declaration_string: STRING

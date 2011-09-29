@@ -1,7 +1,7 @@
 note
 	description: "[
 					Command to create a new ribbon (a new layout constructor)
-																				]"
+			]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -57,7 +57,7 @@ feature -- Command
 
 feature {NONE} -- Implementation
 
-	shared_singleton: ER_SHARED_SINGLETON
+	shared_singleton: ER_SHARED_TOOLS
 			-- Shared singleton
 
 	main_window: detachable ER_MAIN_WINDOW

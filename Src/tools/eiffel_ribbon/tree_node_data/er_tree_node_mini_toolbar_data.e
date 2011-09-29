@@ -1,7 +1,7 @@
 note
 	description: "[
 					Mini toolbar tree node data
-																				]"
+			]"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -1,7 +1,7 @@
 note
 	description: "[
 					Application menu info vistor when using DLL
-																				]"
+			]"
 	date: "$Date$"
 	revision: "$Revision$"
 

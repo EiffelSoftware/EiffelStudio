@@ -1,7 +1,7 @@
 note
 	description: "[
 					XML tree element
-																				]"
+			]"
 	date: "$Date$"
 	revision: "$Revision$"
 

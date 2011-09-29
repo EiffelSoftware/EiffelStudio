@@ -3,7 +3,7 @@ note
 					EiffelRibbon Layout Constructor Tool with responsibility for creating target
 					ribbon window's widget layout
 					Users can pick and drop on it
-																						]"
+					]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -464,7 +464,7 @@ feature {NONE} -- Implementation
 	helper: ER_HELPER
 			-- Helper
 
-	shared_singleton: ER_SHARED_SINGLETON
+	shared_singleton: ER_SHARED_TOOLS
 			-- Shared singleton
 
 	tree_node_factory: ER_TREE_NODE_DATA_FACTORY

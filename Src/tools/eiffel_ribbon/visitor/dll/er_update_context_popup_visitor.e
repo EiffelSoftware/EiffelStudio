@@ -1,7 +1,7 @@
 note
 	description: "[
 					Context popup vistor when using DLL
-																				]"
+			]"
 	date: "$Date$"
 	revision: "$Revision$"
 

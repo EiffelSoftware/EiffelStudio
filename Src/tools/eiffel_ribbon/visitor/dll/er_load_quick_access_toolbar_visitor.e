@@ -1,7 +1,7 @@
 note
 	description: "[
 					Quick Access Toolbar vistor when using DLL
-																				]"
+			]"
 	date: "$Date$"
 	revision: "$Revision$"
 

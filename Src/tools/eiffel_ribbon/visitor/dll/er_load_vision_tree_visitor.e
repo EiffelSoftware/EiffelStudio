@@ -1,7 +1,7 @@
 note
 	description: "[
 					Vision2 tree loader vistor when using DLL
-																				]"
+			]"
 	date: "$Date$"
 	revision: "$Revision$"
 

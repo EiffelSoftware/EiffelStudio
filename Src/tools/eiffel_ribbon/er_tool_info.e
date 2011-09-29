@@ -2,7 +2,7 @@ note
 	description: "[
 					Used for saving/loading tool information
 					Such as recent projects
-																		]"
+	]"
 	date: "$Date$"
 	revision: "$Revision$"
 

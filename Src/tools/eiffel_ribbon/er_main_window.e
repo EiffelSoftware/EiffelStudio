@@ -270,7 +270,7 @@ feature {ER_UICC_MANAGER, ER_GENERATE_CODE_COMMAND} -- Implementation
 	output_tool: ER_OUTPUT_TOOL
 			-- Output tool
 
-	shared_singleton: ER_SHARED_SINGLETON
+	shared_singleton: ER_SHARED_TOOLS
 			-- shared singleton
 
 feature -- Commands

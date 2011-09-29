@@ -1,7 +1,7 @@
 note
 	description: "[
 					Constants in figure
-																				]"
+			]"
 	date: "$Date$"
 	revision: "$Revision$"
 

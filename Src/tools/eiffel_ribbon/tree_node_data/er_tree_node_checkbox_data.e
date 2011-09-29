@@ -1,7 +1,7 @@
 note
 	description: "[
 					Checkbox tree node data
-																				]"
+			]"
 	date: "$Date$"
 	revision: "$Revision$"
 

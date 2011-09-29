@@ -1,7 +1,7 @@
 note
 	description: "[
 					Ribbon command tree node data
-																				]"
+			]"
 	date: "$Date$"
 	revision: "$Revision$"
 

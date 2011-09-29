@@ -2,7 +2,7 @@ note
 	description: "[
 					EiffelRibbon output tool
 					It display outputs from UICC.exe, link.exe etc
-																								]"
+							]"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -6,10 +6,9 @@ feature
 		local
 			r: detachable T
 		do
-			check
-				r_attached: r /= Void
+			check attached r then
+				Result := r
 			end
-			Result := r
 		end
 
 	frozen make (n: INTEGER)

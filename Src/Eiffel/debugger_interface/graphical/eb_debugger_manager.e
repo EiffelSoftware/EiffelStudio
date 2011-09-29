@@ -2514,6 +2514,13 @@ feature {NONE} -- Implementation
 			l_confirm.set_button_text (l_buttons.yes_button, interface_names.b_break)
 			l_confirm.set_button_text (l_buttons.no_button, interface_names.b_continue)
 			l_confirm.set_button_text (l_buttons.cancel_button, interface_names.b_ignore)
+			l_confirm.set_button_action (l_confirm.dialog_buttons.yes_button, agent
+					do
+						if attached application_status as l_status then
+							l_status.set_break_on_assertion_violation_pending (True)
+						end
+					end
+				)
 			l_confirm.set_button_action (l_confirm.dialog_buttons.no_button, agent debug_run_cmd.execute)
 			l_confirm.set_button_action (l_confirm.dialog_buttons.cancel_button, agent ignore_contract_violation.execute)
 			l_confirm.show_on_active_window
@@ -2527,17 +2534,7 @@ feature {NONE} -- Implementation
 					-- Have to update exception info with following two lines. Otherwise the value is void
 					l_status.update_on_stopped_state
 				end
-				if
-					attached l_status.exception_type_name as n and then
-					(
-						n.same_string (({CHECK_VIOLATION}).out) or else
-						n.same_string (({PRECONDITION_VIOLATION}).out) or else
-						n.same_string (({POSTCONDITION_VIOLATION}).out) or else
-						n.same_string (({INVARIANT_VIOLATION}).out) or else
-						n.same_string (({VARIANT_VIOLATION}).out) or else
-						n.same_string (({LOOP_INVARIANT_VIOLATION}).out)
-					)
-				then
+				if l_status.assertion_violation_occurred	then
 					ignore_contract_violation.enable_sensitive
 
 					-- Display ignore contract violation dialog

@@ -1765,7 +1765,7 @@ feature {NONE} -- Update
 		do
 			if attached debugger_manager.application_status as l_status then
 				if
-					l_status.is_stopped and (dbg_was_stopped or l_status.exception_occurred) --| Quick fix To handle the ignore contract violation case
+					l_status.is_stopped and (dbg_was_stopped or l_status.break_on_assertion_violation_pending)
 				then
 					eval := True
 				end

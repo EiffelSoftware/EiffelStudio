@@ -314,7 +314,7 @@ feature {NONE} -- Update
 		do
 			if debugger_manager.application_is_executing then
 				l_status := debugger_manager.application_status
-				if dbg_was_stopped or l_status.exception_occurred then --| Quick fix To handle the ignore contract violation case
+				if dbg_was_stopped or l_status.break_on_assertion_violation_pending then
 					l_status.update_on_stopped_state
 				end
 				refresh_threads_info

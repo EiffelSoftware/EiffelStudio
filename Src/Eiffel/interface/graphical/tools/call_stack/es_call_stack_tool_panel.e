@@ -650,10 +650,10 @@ feature {NONE} -- Update
 				if dbg_was_stopped then
 					l_status.update_on_stopped_state
 				end
-				display_stop_cause (dbg_was_stopped or l_status.exception_occurred)
+				display_stop_cause (dbg_was_stopped or l_status.break_on_assertion_violation_pending )
 				refresh_threads_info
 				if
-					l_status.is_stopped and (dbg_was_stopped or l_status.exception_occurred) --| Quick fix To handle the ignore contract violation case
+					l_status.is_stopped and (dbg_was_stopped or l_status.break_on_assertion_violation_pending) --| Quick fix To handle the ignore contract violation case
 				then
 					stack := l_status.current_call_stack
 					populate_stack_grid (stack)

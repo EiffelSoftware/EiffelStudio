@@ -10,6 +10,10 @@ deferred class
 
 inherit
 	EV_COMMAND_HANDLER_OBSERVER
+		redefine
+			execute,
+			update_property
+		end
 
 	EV_RIBBON_TEXTABLE
 
@@ -45,7 +49,9 @@ feature {NONE}	--Action handling
 	execute (a_command_id: NATURAL_32; a_execution_verb: INTEGER; a_property_key: POINTER; a_property_value: POINTER; a_command_execution_properties: POINTER): NATURAL_32
 			-- <Precursor>
 		do
+			Result := Precursor (a_command_id, a_execution_verb, a_property_key, a_property_value, a_command_execution_properties)
 			if command_list.has (a_command_id) then
+				Result := {WEL_COM_HRESULT}.s_ok
 			end
 
 		end
@@ -53,7 +59,9 @@ feature {NONE}	--Action handling
 	update_property (a_command_id: NATURAL_32; a_property_key: POINTER; a_property_current_value: POINTER; a_property_new_value: POINTER): NATURAL_32
 			-- <Precursor>
 		do
+			Result := Precursor (a_command_id, a_property_key, a_property_current_value, a_property_new_value)
 			if command_list.has (a_command_id) then
+				Result := {WEL_COM_HRESULT}.s_ok
 				Result := update_property_for_text (a_command_id, a_property_key, a_property_current_value, a_property_new_value)
 				Result := update_property_for_tooltip (a_command_id, a_property_key, a_property_current_value, a_property_new_value)
 			end

@@ -11,6 +11,9 @@ deferred class
 
 inherit
 	EV_COMMAND_HANDLER_OBSERVER
+		redefine
+			execute
+		end
 
 feature {NONE} -- Initialization
 
@@ -47,7 +50,9 @@ feature {NONE} -- Command handler
 	execute (a_command_id: NATURAL_32; a_execution_verb: INTEGER; a_property_key: POINTER; a_property_value: POINTER; a_command_execution_properties: POINTER): NATURAL_32
 			-- <Precursor>
 		do
+			Result := Precursor (a_command_id, a_execution_verb, a_property_key, a_property_value, a_command_execution_properties)
 			if command_list.has (a_command_id) then
+				Result := {WEL_COM_HRESULT}.s_ok
 				if a_execution_verb = {EV_EXECUTION_VERB}.execute then
 					select_actions.call (Void)
 				elseif a_execution_verb = {EV_EXECUTION_VERB}.preview then
@@ -56,11 +61,6 @@ feature {NONE} -- Command handler
 
 				end
 			end
-		end
-
-	update_property (a_command_id: NATURAL_32; a_property_key: POINTER; a_property_current_value: POINTER; a_property_new_value: POINTER): NATURAL_32
-			-- <Precursor>
-		do
 		end
 
 note

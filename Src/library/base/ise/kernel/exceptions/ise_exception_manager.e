@@ -312,8 +312,6 @@ feature {NONE} -- Element change
 	set_exception_data (code: INTEGER; new_obj: BOOLEAN; signal_code: INTEGER; error_code: INTEGER; tag, recipient, eclass: STRING;
 						rf_routine, rf_class: STRING; trace: STRING; line_number: INTEGER; is_invariant_entry: BOOLEAN)
 			-- Set exception data.
-		local
-			l_exception: detachable EXCEPTION
 		do
 			exception_data_cell.put ([code, signal_code, error_code, tag, recipient, eclass, rf_routine, rf_class, trace, line_number, is_invariant_entry])
 			if new_obj then
@@ -323,13 +321,13 @@ feature {NONE} -- Element change
 			else
 					-- This exception was raised from Eiffel code.
 					-- Now the callback from runtime simply fill the exception object with interesting information.
-				l_exception := last_exception
 				check
-					last_exception_not_void: l_exception /= Void
+					last_exception_attached: attached last_exception as l_exception
+				then
+					l_exception.set_exception_trace (trace)
+					l_exception.set_recipient_name (recipient)
+					l_exception.set_type_name (eclass)
 				end
-				l_exception.set_exception_trace (trace)
-				l_exception.set_recipient_name (recipient)
-				l_exception.set_type_name (eclass)
 			end
 		end
 

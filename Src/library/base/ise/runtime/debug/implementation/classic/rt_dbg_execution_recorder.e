@@ -681,9 +681,10 @@ feature -- Monitoring
 							p_not_void_and_last_of_parent: 	p /= Void and then
 															bt /= Void and then
 															bt.is_last_call_record (p)
+						then
+							n := bt.record_count_but (p)
+							p.remove_parent
 						end
-						n := bt.record_count_but (p)
-						p.remove_parent
 
 							--| We may clean the current `bottom_callstack_record' to help the GC ...
 						bottom_callstack_record := p
@@ -894,7 +895,6 @@ feature -- Replay operation
 			replayed_call_not_void: replayed_call /= Void
 			replay_stack_not_empty: replay_stack_not_empty
 		local
-			r: like replayed_call
 			n: RT_DBG_CALL_RECORD
 			t: TUPLE [call_record: RT_DBG_CALL_RECORD; chgs: detachable LIST [TUPLE [record: RT_DBG_VALUE_RECORD; backup: RT_DBG_VALUE_RECORD]]]
 			done: BOOLEAN
@@ -903,47 +903,47 @@ feature -- Replay operation
 				print ("replay_forth -start-%N")
 			end
 			if attached replay_stack as rs then
-				r := replayed_call
-				check r_not_void: r /= Void end
-				from
-				until
-					done
-				loop
-					check rs.count > 0 end
-						--| pop last entry
-					rs.finish
-					t := rs.item_for_iteration
-					rs.remove
-					if rs.is_empty then
-						replay_stack := Void
-					end
-
-						--| Replay
-					n := t.call_record
-					if attached {LIST [TUPLE [record: RT_DBG_VALUE_RECORD; backup: RT_DBG_VALUE_RECORD]]} t.chgs as ot_chgs then
-						from
-							ot_chgs.finish
-						until
-							ot_chgs.before
-						loop
-							debug ("RT_DBG_REPLAY")
-								print ("replay_forth -> " + ot_chgs.item_for_iteration.record.debug_output + " %N")
-							end
-							if attached {TUPLE [record: RT_DBG_VALUE_RECORD; backup: RT_DBG_VALUE_RECORD]} ot_chgs.item_for_iteration as ch then
-								ch.record.revert (ch.backup)
-							end
-							ot_chgs.back
+				check attached replayed_call as r then
+					from
+					until
+						done
+					loop
+						check rs.count > 0 end
+							--| pop last entry
+						rs.finish
+						t := rs.item_for_iteration
+						rs.remove
+						if rs.is_empty then
+							replay_stack := Void
 						end
-					end
-					if n = r then
-						--| reverted left step
-						r.revert_left_step
-						done := replay_stack = Void
-					else
-						--| reverted back step
-						check r = n.parent end
-						replayed_call := n
-						done := True
+
+							--| Replay
+						n := t.call_record
+						if attached {LIST [TUPLE [record: RT_DBG_VALUE_RECORD; backup: RT_DBG_VALUE_RECORD]]} t.chgs as ot_chgs then
+							from
+								ot_chgs.finish
+							until
+								ot_chgs.before
+							loop
+								debug ("RT_DBG_REPLAY")
+									print ("replay_forth -> " + ot_chgs.item_for_iteration.record.debug_output + " %N")
+								end
+								if attached {TUPLE [record: RT_DBG_VALUE_RECORD; backup: RT_DBG_VALUE_RECORD]} ot_chgs.item_for_iteration as ch then
+									ch.record.revert (ch.backup)
+								end
+								ot_chgs.back
+							end
+						end
+						if n = r then
+							--| reverted left step
+							r.revert_left_step
+							done := replay_stack = Void
+						else
+							--| reverted back step
+							check r = n.parent end
+							replayed_call := n
+							done := True
+						end
 					end
 				end
 			else
@@ -963,7 +963,6 @@ feature -- Replay operation
 			replayed_call_not_void: replayed_call /= Void
 			replay_stack_not_empty: replay_stack_not_empty
 		local
-			r: like replayed_call
 			n: RT_DBG_CALL_RECORD
 			t: TUPLE [call_record: RT_DBG_CALL_RECORD; chgs: detachable LIST [TUPLE [record: RT_DBG_VALUE_RECORD; backup: RT_DBG_VALUE_RECORD]]]
 			r_pos_line: INTEGER
@@ -973,55 +972,55 @@ feature -- Replay operation
 				print ("replay_right -start-%N")
 			end
 			if attached replay_stack as rs then
-				r := replayed_call
-				check r_not_void: r /= Void end
-				from
-					r_pos_line := r.replayed_position.line
-				until
-					done
-				loop
-					check replay_stack_not_empty: replay_stack_not_empty end
-						--| pop last entry
-					rs.finish
-					t := rs.item_for_iteration
-					rs.remove
-					if rs.is_empty then
-						replay_stack := Void
-					end
-
-						--| Replay
-
-					if attached {LIST [TUPLE [record: RT_DBG_VALUE_RECORD; backup: RT_DBG_VALUE_RECORD]]} t.chgs as ot_chgs then
-						from
-							ot_chgs.finish
-						until
-							ot_chgs.before
-						loop
-							debug ("RT_DBG_REPLAY")
-								print ("replay_right -> " + ot_chgs.index.out + ") " + ot_chgs.item_for_iteration.record.debug_output + " %N")
-							end
-							if attached {TUPLE [record: RT_DBG_VALUE_RECORD; backup: RT_DBG_VALUE_RECORD]} ot_chgs.item_for_iteration as ch then
-								ch.record.revert (ch.backup)
-							end
-							ot_chgs.back
+				check attached replayed_call as r then
+					from
+						r_pos_line := r.replayed_position.line
+					until
+						done
+					loop
+						check replay_stack_not_empty: replay_stack_not_empty end
+							--| pop last entry
+						rs.finish
+						t := rs.item_for_iteration
+						rs.remove
+						if rs.is_empty then
+							replay_stack := Void
 						end
-					end
 
-					n := t.call_record
-					if n = r then
-							--| reverted left step
-						n.revert_left_step
-						done := n.replayed_position.line /= r_pos_line
-					else --| n /= r
-							--| reverted back step
-						check r = n.parent end
-						if n.replayed_position.line = 0 then
+							--| Replay
+
+						if attached {LIST [TUPLE [record: RT_DBG_VALUE_RECORD; backup: RT_DBG_VALUE_RECORD]]} t.chgs as ot_chgs then
+							from
+								ot_chgs.finish
+							until
+								ot_chgs.before
+							loop
+								debug ("RT_DBG_REPLAY")
+									print ("replay_right -> " + ot_chgs.index.out + ") " + ot_chgs.item_for_iteration.record.debug_output + " %N")
+								end
+								if attached {TUPLE [record: RT_DBG_VALUE_RECORD; backup: RT_DBG_VALUE_RECORD]} ot_chgs.item_for_iteration as ch then
+									ch.record.revert (ch.backup)
+								end
+								ot_chgs.back
+							end
+						end
+
+						n := t.call_record
+						if n = r then
+								--| reverted left step
 							n.revert_left_step
+							done := n.replayed_position.line /= r_pos_line
+						else --| n /= r
+								--| reverted back step
+							check r = n.parent end
+							if n.replayed_position.line = 0 then
+								n.revert_left_step
+							end
+							replayed_call := n
+							replay_left_to_first
+							replayed_call := n
+							done := True
 						end
-						replayed_call := n
-						replay_left_to_first
-						replayed_call := n
-						done := True
 					end
 				end
 			else

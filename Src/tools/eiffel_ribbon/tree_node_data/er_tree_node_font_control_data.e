@@ -1,7 +1,7 @@
 note
 	description: "[
 					Font control tree node data
-																				]"
+			]"
 	date: "$Date$"
 	revision: "$Revision$"
 

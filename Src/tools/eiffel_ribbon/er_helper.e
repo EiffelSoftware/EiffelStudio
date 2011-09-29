@@ -1,7 +1,7 @@
 note
 	description: "[
 					EiffelRibbon tool helper features collection
-																		]"
+	]"
 	date: "$Date$"
 	revision: "$Revision$"
 

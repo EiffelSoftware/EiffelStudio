@@ -1,7 +1,7 @@
 note
 	description: "[
 					Code generator for application menu when using application modes
-																						]"
+					]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -20,7 +20,7 @@ feature -- Query
 			l_file, l_dest_file: RAW_FILE
 			l_constants: ER_MISC_CONSTANTS
 			l_file_name, l_dest_file_name: FILE_NAME
-			l_singleton: ER_SHARED_SINGLETON
+			l_singleton: ER_SHARED_TOOLS
 			l_sub_dir, l_tool_bar_file, l_sub_imp_dir: STRING
 			l_last_string: STRING
 			l_tab_creation_string, l_tab_registry_string, l_tab_declaration_string: STRING

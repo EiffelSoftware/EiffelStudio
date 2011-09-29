@@ -2,7 +2,7 @@ note
 	description: "[
 					Users project info
 					It will be saved and loaded during sessions
-																	]"
+]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -62,7 +62,7 @@ feature -- Command
 	update_ribbon_names_from_ui
 			-- Update ribbon names from GUI
 		local
-			l_shared: ER_SHARED_SINGLETON
+			l_shared: ER_SHARED_TOOLS
 			l_list: ARRAYED_LIST [ER_LAYOUT_CONSTRUCTOR]
 		do
 			from
@@ -85,7 +85,7 @@ feature -- Command
 	update_ribbon_names_to_ui
 			-- Update ribbon names to GUI
 		local
-			l_shared: ER_SHARED_SINGLETON
+			l_shared: ER_SHARED_TOOLS
 			l_list: ARRAYED_LIST [ER_LAYOUT_CONSTRUCTOR]
 		do
 			from

@@ -2,7 +2,7 @@ note
 	description: "[
 					Microsoft Ribbon makrup XML callbacks when loading XML
 
-																					]"
+				]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -31,7 +31,7 @@ feature {NONE}	-- Implementation
 	last_node: ARRAYED_LIST [ER_XML_TREE_ELEMENT]
 			-- Last node stack
 
-	shared_singleton: ER_SHARED_SINGLETON
+	shared_singleton: ER_SHARED_TOOLS
 			-- Shared singleton
 
 	name_space: XML_NAMESPACE

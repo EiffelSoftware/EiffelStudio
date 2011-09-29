@@ -1,7 +1,7 @@
 note
 	description: "[
 					Manager that convert EV_FIGUREs to ribbon markup XML
-																			]"
+		]"
 	date: "$Date$"
 	revision: "$Revision$"
 

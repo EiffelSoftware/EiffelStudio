@@ -2,7 +2,7 @@ note
 	description: "[
 					Code generater and tree manager factory for different generating modes:
 					Application Modes or DLL
-																							]"
+						]"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -1,7 +1,7 @@
 note
 	description: "[
 					Information used by code generator when generating item classes
-																						]"
+					]"
 	date: "$Date$"
 	revision: "$Revision$"
 

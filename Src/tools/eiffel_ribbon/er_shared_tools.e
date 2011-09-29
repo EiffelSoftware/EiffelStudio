@@ -1,12 +1,12 @@
 note
 	description: "[
 					Shared singletons in EiffelRibbon tool
-																					]"
+				]"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	ER_SHARED_SINGLETON
+	ER_SHARED_TOOLS
 
 feature -- Query
 

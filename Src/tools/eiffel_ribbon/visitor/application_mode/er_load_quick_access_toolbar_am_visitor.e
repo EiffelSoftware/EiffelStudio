@@ -1,7 +1,7 @@
 note
 	description: "[
 					Quick Access Toolbar loader vistor when using application mode
-																					]"
+				]"
 	date: "$Date$"
 	revision: "$Revision$"
 

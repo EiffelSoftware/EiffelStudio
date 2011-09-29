@@ -1,7 +1,7 @@
 note
 	description: "[
 					Command to save project
-																			]"
+		]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -52,7 +52,7 @@ feature {NONE} -- Implementation
 	main_window: detachable EV_WINDOW
 			-- Tool's main window
 
-	shared_singleton: ER_SHARED_SINGLETON
+	shared_singleton: ER_SHARED_TOOLS
 			-- Shared singleton
 ;note
 	copyright: "Copyright (c) 1984-2011, Eiffel Software"

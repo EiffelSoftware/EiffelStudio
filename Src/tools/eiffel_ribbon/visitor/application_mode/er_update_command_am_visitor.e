@@ -1,7 +1,7 @@
 note
 	description: "[
 					Update command vistor when using application mode
-																				]"
+			]"
 	date: "$Date$"
 	revision: "$Revision$"
 

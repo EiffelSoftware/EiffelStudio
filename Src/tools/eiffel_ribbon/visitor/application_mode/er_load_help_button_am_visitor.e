@@ -1,7 +1,7 @@
 note
 	description: "[
 					Help button loader vistor when using application mode
-																				]"
+			]"
 	date: "$Date$"
 	revision: "$Revision$"
 

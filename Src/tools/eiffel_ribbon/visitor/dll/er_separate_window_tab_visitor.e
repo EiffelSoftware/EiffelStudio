@@ -2,7 +2,7 @@ note
 	description: "[
 					Different ribbon windows to different layout constructors
 					vistor when using DLL
-																				]"
+			]"
 	date: "$Date$"
 	revision: "$Revision$"
 

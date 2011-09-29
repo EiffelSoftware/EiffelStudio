@@ -1,7 +1,7 @@
 note
 	description: "[
 					Factory for visitors
-																	]"
+]"
 	date: "$Date$"
 	revision: "$Revision$"
 

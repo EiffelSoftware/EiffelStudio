@@ -1,7 +1,7 @@
 note
 	description: "[
 					Ribbon tree node data
-																				]"
+			]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -32,7 +32,7 @@ feature -- Implementation
 	new_unique_command_name
 			-- Initialize a command name automatically
 		local
-			l_shared: ER_SHARED_SINGLETON
+			l_shared: ER_SHARED_TOOLS
 			l_command_name: STRING
 			l_count: INTEGER
 		do

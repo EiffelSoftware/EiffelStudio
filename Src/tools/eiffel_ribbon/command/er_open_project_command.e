@@ -1,7 +1,7 @@
 note
 	description: "[
 					Command to open a ribbon project
-																			]"
+		]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -38,7 +38,7 @@ feature -- Command
 			-- Execute current command with `a_project_file'
 		local
 			l_warn: EV_WARNING_DIALOG
-			l_singleton: ER_SHARED_SINGLETON
+			l_singleton: ER_SHARED_TOOLS
 		do
 			if attached a_project_file as l_file and then not l_file.is_empty then
 				open_project_file (l_file)
@@ -135,7 +135,7 @@ feature {NONE}	-- Implementation
 			l_sed_utility: SED_STORABLE_FACILITIES
 			l_file: RAW_FILE
 			l_constants: ER_MISC_CONSTANTS
-			l_singleton: ER_SHARED_SINGLETON
+			l_singleton: ER_SHARED_TOOLS
 			l_retried: BOOLEAN
 		do
 			if not l_retried then

@@ -1,7 +1,7 @@
 note
 	description: "[
 					Spinner tree node data
-																				]"
+			]"
 	date: "$Date$"
 	revision: "$Revision$"
 

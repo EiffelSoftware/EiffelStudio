@@ -1,7 +1,7 @@
 note
 	description: "[
 					Layout Contructor's tree manager when using application modes
-																						]"
+					]"
 	date: "$Date$"
 	revision: "$Revision$"
 

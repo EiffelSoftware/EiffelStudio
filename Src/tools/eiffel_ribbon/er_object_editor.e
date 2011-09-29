@@ -2,7 +2,7 @@ note
 	description: "[
 					EiffelRibbon Object Editor tool
 					Users can specify properties of ribbon items by this tool
-																								]"
+							]"
 	date: "$Date$"
 	revision: "$Revision$"
 

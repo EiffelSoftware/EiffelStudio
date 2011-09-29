@@ -1,7 +1,7 @@
 note
 	description: "[
 					EiffelRibbon tool enviroments layout
-																		]"
+	]"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -1,7 +1,7 @@
 note
 	description: "[
 					GUI names
-																					]"
+				]"
 	date: "$Date$"
 	revision: "$Revision$"
 

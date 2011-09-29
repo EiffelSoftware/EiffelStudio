@@ -1,7 +1,7 @@
 note
 	description: "[
 					Quick Access Toolbar (QAT) tree node data
-																				]"
+			]"
 	date: "$Date$"
 	revision: "$Revision$"
 

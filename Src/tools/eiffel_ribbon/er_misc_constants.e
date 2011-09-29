@@ -1,7 +1,7 @@
 note
 	description: "[
 					EiffelRibbon tool miscellaneous constants
-																								]"
+							]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -96,7 +96,7 @@ feature -- Query
 		require
 			valid: a_ribbon_index >= 0
 		local
-			l_singleton: ER_SHARED_SINGLETON
+			l_singleton: ER_SHARED_TOOLS
 			l_file_name: detachable FILE_NAME
 			l_constants: ER_MISC_CONSTANTS
 		do
@@ -114,7 +114,7 @@ feature -- Query
 	project_full_file_name: detachable STRING
 			-- Project file name including full path
 		local
-			l_singleton: ER_SHARED_SINGLETON
+			l_singleton: ER_SHARED_TOOLS
 			l_file_name: detachable FILE_NAME
 		do
 			create l_singleton
@@ -130,7 +130,7 @@ feature -- Query
 	header_full_file_name (a_index: INTEGER): detachable STRING
 			-- Header file name including full path
 		local
-			l_singleton: ER_SHARED_SINGLETON
+			l_singleton: ER_SHARED_TOOLS
 			l_file_name: detachable FILE_NAME
 		do
 			create l_singleton
@@ -152,7 +152,7 @@ feature -- Settings query
 			-- If using application mode for multi windows support?
 			-- Otherwise it's using DLL
 		local
-			l_shared_singleton: ER_SHARED_SINGLETON
+			l_shared_singleton: ER_SHARED_TOOLS
 		do
 			create l_shared_singleton
 			if attached l_shared_singleton.tool_info_cell.item as l_tool_info then
@@ -165,7 +165,7 @@ feature -- Command
 	set_using_application_mode (a_bool: BOOLEAN)
 			-- Set `is_using_application_mode' with `a_bool'
 		local
-			l_shared_singleton: ER_SHARED_SINGLETON
+			l_shared_singleton: ER_SHARED_TOOLS
 		do
 			create l_shared_singleton
 			if attached l_shared_singleton.tool_info_cell.item as l_tool_info then
@@ -305,7 +305,7 @@ feature {NONE} -- Implementation
 			-- Eiffel ribbon tool folder
 		local
 			l_retried: BOOLEAN
-			l_shared: ER_SHARED_SINGLETON
+			l_shared: ER_SHARED_TOOLS
 			l_error: EV_ERROR_DIALOG
 			l_interface_names: ER_INTERFACE_NAMES
 		once

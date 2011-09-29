@@ -1,7 +1,7 @@
 note
 	description: "[
 					Drop down gallery info vistor when using DLL
-																				]"
+			]"
 	date: "$Date$"
 	revision: "$Revision$"
 

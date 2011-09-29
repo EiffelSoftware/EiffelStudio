@@ -1,7 +1,7 @@
 note
 	description: "[
 					Help button tree node data
-																				]"
+			]"
 	date: "$Date$"
 	revision: "$Revision$"
 

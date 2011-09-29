@@ -1,7 +1,7 @@
 note
 	description: "[
 					Drop down color picker tree node data
-																				]"
+			]"
 	date: "$Date$"
 	revision: "$Revision$"
 

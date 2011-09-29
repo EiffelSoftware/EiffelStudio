@@ -571,7 +571,7 @@ feature {NONE} -- Figure handling
 		local
 			l_path: FILE_NAME
 			l_retried: BOOLEAN
-			l_shared: ER_SHARED_SINGLETON
+			l_shared: ER_SHARED_TOOLS
 			l_error: EV_ERROR_DIALOG
 			l_interface_names: ER_INTERFACE_NAMES
 			l_misc_constants: ER_MISC_CONSTANTS

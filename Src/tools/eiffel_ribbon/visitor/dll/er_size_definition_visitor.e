@@ -1,7 +1,7 @@
 note
 	description: "[
 					Size definition vistor when using DLL
-																				]"
+			]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -22,7 +22,7 @@ feature -- Command
 			-- When loading size definitions, `sub_root_xml_hash_table' only has size definitions loaded from last file.
 			-- This is OK, since the size definitions in all Ribbon markup XMLs are same.
 		local
-			l_singleton: ER_SHARED_SINGLETON
+			l_singleton: ER_SHARED_TOOLS
 			l_size_definition_tool: detachable ER_SIZE_DEFINITION_EDITOR
 			l_writer: ER_SIZE_DEFINITION_WRITER
 			l_name: detachable STRING

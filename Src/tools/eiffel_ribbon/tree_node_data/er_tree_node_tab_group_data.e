@@ -1,7 +1,7 @@
 note
 	description: "[
 					Tab group tree node data
-																				]"
+			]"
 	date: "$Date$"
 	revision: "$Revision$"
 

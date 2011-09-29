@@ -2,7 +2,7 @@ note
 	description: "[
 					Using Application mode way or DLL way for multi Ribbon
 					Windows in one applicaiton support?
-																					]"
+				]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -57,7 +57,7 @@ feature -- Command
 
 feature {NONE} -- Implementation
 
-	shared_singleton: ER_SHARED_SINGLETON
+	shared_singleton: ER_SHARED_TOOLS
 			-- Shared singleton
 ;note
 	copyright: "Copyright (c) 1984-2011, Eiffel Software"

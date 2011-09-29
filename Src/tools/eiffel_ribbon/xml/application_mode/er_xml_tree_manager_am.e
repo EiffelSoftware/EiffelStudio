@@ -2,7 +2,7 @@ note
 	description: "[
 					XML tree manager when using application modes
 
-																					]"
+				]"
 	date: "$Date$"
 	revision: "$Revision$"
 

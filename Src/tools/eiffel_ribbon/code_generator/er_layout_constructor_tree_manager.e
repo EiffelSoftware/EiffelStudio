@@ -1,7 +1,7 @@
 note
 	description: "[
 					Layout Constructor's tree manager common ancestor
-																						]"
+					]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -22,7 +22,7 @@ feature -- Command
 
 feature {NONE} -- Implementation
 
-	shared_singleton: ER_SHARED_SINGLETON
+	shared_singleton: ER_SHARED_TOOLS
 			--	Shared singleton
 
 ;note

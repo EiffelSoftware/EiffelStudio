@@ -1,7 +1,7 @@
 note
 	description: "[
 					In-ribbon gallery tree node data
-																				]"
+			]"
 	date: "$Date$"
 	revision: "$Revision$"
 

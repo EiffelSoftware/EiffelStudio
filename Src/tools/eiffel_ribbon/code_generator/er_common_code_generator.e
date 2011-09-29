@@ -1,7 +1,7 @@
 note
 	description: "[
 					Code generator's common ancestor
-																						]"
+					]"
 	date: "$Date$"
 	revision: "$Revision$"
 

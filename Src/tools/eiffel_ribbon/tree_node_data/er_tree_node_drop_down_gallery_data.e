@@ -1,7 +1,7 @@
 note
 	description: "[
 					Drop down gallery tree node data
-																				]"
+			]"
 	date: "$Date$"
 	revision: "$Revision$"
 

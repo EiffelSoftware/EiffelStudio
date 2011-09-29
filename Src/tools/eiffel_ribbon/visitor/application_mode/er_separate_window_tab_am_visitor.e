@@ -1,7 +1,7 @@
 note
 	description: "[
 					Different window tab vistor when using application mode
-																				]"
+			]"
 	date: "$Date$"
 	revision: "$Revision$"
 

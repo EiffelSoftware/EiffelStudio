@@ -1,7 +1,7 @@
 note
 	description: "[
 					Common ancestor for all tree node data
-																				]"
+			]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -72,7 +72,7 @@ feature {NONE} -- Implementation
 	new_unique_command_name
 			-- Initialize a command name automatically
 		local
-			l_shared: ER_SHARED_SINGLETON
+			l_shared: ER_SHARED_TOOLS
 			l_list: ARRAYED_LIST [EV_TREE_NODE]
 			l_command_name: STRING
 			l_count: INTEGER

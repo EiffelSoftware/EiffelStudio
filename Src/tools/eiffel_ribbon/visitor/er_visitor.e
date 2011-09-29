@@ -1,7 +1,7 @@
 note
 	description: "[
 					Common ancestor for all visitors
-																				]"
+			]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -116,7 +116,7 @@ feature -- Query
 			create Result
 		end
 
-	shared: ER_SHARED_SINGLETON
+	shared: ER_SHARED_TOOLS
 			-- Shared singleton
 		once
 			create Result

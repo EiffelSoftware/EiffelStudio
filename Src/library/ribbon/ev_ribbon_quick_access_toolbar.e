@@ -12,6 +12,10 @@ deferred class
 
 inherit
 	EV_COMMAND_HANDLER_OBSERVER
+		redefine
+			execute,
+			update_property
+		end
 
 feature {NONE} -- Initialization
 
@@ -78,7 +82,9 @@ feature {NONE} -- Command handler
 	execute (a_command_id: NATURAL_32; a_execution_verb: INTEGER; a_property_key: POINTER; a_property_value: POINTER; a_command_execution_properties: POINTER): NATURAL_32
 			-- <Precursor>
 		do
+			Result := Precursor (a_command_id, a_execution_verb, a_property_key, a_property_value, a_command_execution_properties)
 			if command_list.has (a_command_id) then
+				Result := {WEL_COM_HRESULT}.s_ok
 				if a_execution_verb = {EV_EXECUTION_VERB}.execute then
 					select_actions.call (Void)
 				elseif a_execution_verb = {EV_EXECUTION_VERB}.preview then
@@ -96,7 +102,9 @@ feature {NONE} -- Command handler
 			l_key: EV_PROPERTY_KEY
 			l_value: EV_PROPERTY_VARIANT
 		do
+			Result := Precursor (a_command_id, a_property_key, a_property_current_value, a_property_new_value)
 			if command_list.has (a_command_id) then
+				Result := {WEL_COM_HRESULT}.s_ok
 				create l_key.share_from_pointer (a_property_key)
 				if l_key.is_items_source then
 					create l_value.share_from_pointer (a_property_current_value)

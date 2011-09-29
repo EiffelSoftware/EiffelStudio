@@ -45,19 +45,7 @@ feature {NONE}	-- Implementation
 	command_list: ARRAY [NATURAL_32]
 			-- Command ids handled by current
 
-feature {NONE} -- Command handler
-
-	execute (a_command_id: NATURAL_32; a_execution_verb: INTEGER; a_property_key: POINTER; a_property_value: POINTER; a_command_execution_properties: POINTER): NATURAL_32
-			-- <Precursor>
-		do
-		end
-
-	update_property (a_command_id: NATURAL_32; a_property_key: POINTER; a_property_current_value: POINTER; a_property_new_value: POINTER): NATURAL_32
-			-- <Precursor>
-		do
-		end
-
-note
+;note
 	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

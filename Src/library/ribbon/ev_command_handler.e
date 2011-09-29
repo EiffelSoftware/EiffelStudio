@@ -61,8 +61,9 @@ feature {NONE} -- Implementation
 			from
 				l_observer := observers.twin
 				l_observer.start
+				l_result := {WEL_COM_HRESULT}.e_not_impl
 			until
-				l_observer.after or l_result /= 0
+				l_observer.after or l_result = {WEL_COM_HRESULT}.s_ok
 			loop
 				l_ribbon := l_observer.item.ribbon
 				if l_ribbon /= Void and then l_ribbon.command_handler = a_command_handler then
@@ -84,8 +85,9 @@ feature {NONE} -- Implementation
 			from
 				l_observer := observers.twin
 				l_observer.start
+				l_result := {WEL_COM_HRESULT}.e_not_impl
 			until
-				l_observer.after or l_result /= 0
+				l_observer.after or l_result = {WEL_COM_HRESULT}.s_ok
 			loop
 				l_ribbon := l_observer.item.ribbon
 				check should_not_void: l_ribbon /= Void end

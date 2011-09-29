@@ -11,13 +11,15 @@ feature -- Action handlers
 	execute (a_command_id: NATURAL_32; a_execution_verb: INTEGER; a_property_key: POINTER; a_property_value: POINTER; a_command_execution_properties: POINTER): NATURAL_32
 			-- Responds to execute events on Commands bound to the Command handle
 			-- This function is called from C codes
-		deferred
+		do
+			Result := {WEL_COM_HRESULT}.e_not_impl
 		end
 
 	update_property (a_command_id: NATURAL_32; a_property_key: POINTER; a_property_current_value: POINTER; a_property_new_value: POINTER): NATURAL_32
 			-- Responds to property update requests from the Ribbon framework
 			-- This function is called from C codes
-		deferred
+		do
+			Result := {WEL_COM_HRESULT}.e_not_impl
 		end
 
 feature -- Command

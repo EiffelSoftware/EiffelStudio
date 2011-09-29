@@ -14,7 +14,11 @@ inherit
 	EV_RIBBON_ITEM
 
 	EV_COMMAND_HANDLER_OBSERVER
-
+		redefine
+			execute,
+			update_property
+		end
+		
 	EV_RIBBON_TEXTABLE
 
 	EV_RIBBON_TOOLTIPABLE
@@ -88,7 +92,9 @@ feature {EV_RIBBON} -- Command
 	execute (a_command_id: NATURAL_32; a_execution_verb: INTEGER; a_property_key: POINTER; a_property_value: POINTER; a_command_execution_properties: POINTER): NATURAL_32
 			-- <Precursor>
 		do
+			Result := Precursor (a_command_id, a_execution_verb, a_property_key, a_property_value, a_command_execution_properties)
 			if command_list.has (a_command_id) then
+				Result := {WEL_COM_HRESULT}.s_ok
 				select_actions.call (Void)
 			end
 		end
@@ -98,8 +104,9 @@ feature {EV_RIBBON} -- Command
 		local
 			l_key: EV_PROPERTY_KEY
 		do
+			Result := Precursor (a_command_id, a_property_key, a_property_current_value, a_property_new_value)
 			if command_list.has (a_command_id) then
-
+				Result := {WEL_COM_HRESULT}.s_ok
 				create l_key.share_from_pointer (a_property_key)
 				if l_key.is_label then
 					Result := update_property_for_text (a_command_id, a_property_key, a_property_current_value, a_property_new_value)

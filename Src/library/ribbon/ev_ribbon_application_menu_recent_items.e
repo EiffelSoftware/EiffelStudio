@@ -11,7 +11,10 @@ class
 
 inherit
 	EV_COMMAND_HANDLER_OBSERVER
-
+		redefine
+			execute,
+			update_property
+		end
 create
 	make_with_command_list
 
@@ -69,7 +72,9 @@ feature {EV_RIBBON} -- Command
 			l_value: EV_PROPERTY_VARIANT
 			l_selected: NATURAL_32
 		do
+			Result := Precursor (a_command_id, a_execution_verb, a_property_key, a_property_value, a_command_execution_properties)
 			if command_list.has (a_command_id) then
+				Result := {WEL_COM_HRESULT}.s_ok
 				if a_execution_verb = {EV_EXECUTION_VERB}.execute then
 					create l_key.share_from_pointer (a_property_key)
 					if l_key.is_selected_item then
@@ -96,8 +101,9 @@ feature {EV_RIBBON} -- Command
 			l_property_set: EV_SIMPLE_PROPERTY_SET
 			l_list: ARRAYED_LIST [EV_SIMPLE_PROPERTY_SET]
 		do
+			Result := Precursor (a_command_id, a_property_key, a_property_current_value, a_property_new_value)
 			if command_list.has (a_command_id) then
-
+				Result := {WEL_COM_HRESULT}.s_ok
 				create l_key.share_from_pointer (a_property_key)
 				if l_key.is_recent_items then
 					create l_value.share_from_pointer (a_property_new_value)

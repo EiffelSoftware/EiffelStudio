@@ -449,11 +449,12 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 		do
 			vrecs := value_records
 			if is_flat then
-				check value_records_not_void_if_flat: vrecs /= Void end
-				c := vrecs.cursor
-				vals.append (vrecs)
-				vrecs.go_to (c)
-				n := vrecs.count
+				check value_records_not_void_if_flat: vrecs /= Void then
+					c := vrecs.cursor
+					vals.append (vrecs)
+					vrecs.go_to (c)
+					n := vrecs.count
+				end
 			else
 				if vrecs /= Void then
 					if vrecs = vals then --| i.e: rec = flattening call record
@@ -571,6 +572,7 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 								oi_positive: oi > 0
 								o_attached: o /= Void
 								orcds_attached: orcds /= Void
+							then
 							end
 							if orcds.is_empty then
 								orcds.force (rec)

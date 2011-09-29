@@ -114,27 +114,22 @@ feature -- Notification
 
 feature {NONE} -- Execution replay
 
-	events_feature_argument (t: TUPLE): TUPLE [ref: detachable ANY; cid: INTEGER; fid: INTEGER; a_dep: INTEGER]
+	events_feature_argument: TUPLE [ref: detachable ANY; cid: INTEGER; fid: INTEGER; a_dep: INTEGER]
 			-- Argument for `process_*_feature'.
 			-- used only as anchor for type declaration
-		local
-			a: detachable like events_feature_argument
 		do
-			a ?= t
-			check a /= Void end
-			Result := a
+			check False then end
+		ensure
+			False
 		end
 
-	events_assign_argument (t: TUPLE): TUPLE [ref: detachable ANY; a_dep: INTEGER; a_pos: INTEGER; a_type: INTEGER; a_xpm_info: INTEGER]
-
+	events_assign_argument: TUPLE [ref: detachable ANY; a_dep: INTEGER; a_pos: INTEGER; a_type: INTEGER; a_xpm_info: INTEGER]
 			-- Argument for `process_*_assign'.
 			-- used only as anchor for type declaration
-		local
-			a: detachable like events_assign_argument
 		do
-			a ?= t
-			check a /= Void end
-			Result := a
+			check False then end
+		ensure
+			False
 		end
 
 	reset_events_feature_argument (t: TUPLE)

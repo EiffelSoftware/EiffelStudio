@@ -18,7 +18,7 @@ inherit
 		redefine
 			create_interface_objects, initialize, is_in_default_state
 		end
-			
+
 	CONSTANTS
 		undefine
 			is_equal, default_create, copy
@@ -32,7 +32,7 @@ feature {NONE}-- Initialization
 			Precursor {EV_VERTICAL_BOX}
 			initialize_constants
 
-			
+
 				-- Build widget structure.
 			extend (l_ev_label_1)
 			extend (l_ev_label_2)
@@ -82,7 +82,7 @@ feature {NONE}-- Initialization
 			disable_item_expand (gripper)
 
 			set_all_attributes_using_constants
-			
+
 				-- Connect events.
 			command_name.change_actions.extend (agent on_command_name_text_change)
 			command_name.focus_out_actions.extend (agent on_command_name_focus_out)
@@ -94,11 +94,11 @@ feature {NONE}-- Initialization
 				-- Call `user_initialization'.
 			user_initialization
 		end
-		
+
 	frozen create_interface_objects
 			-- Create objects
 		do
-			
+
 				-- Create all widgets.
 			create l_ev_label_1
 			create l_ev_label_2
@@ -159,37 +159,37 @@ feature {NONE} -- Implementation
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
-	
+
 	on_command_name_text_change
 			-- Called by `change_actions' of `command_name'.
 		deferred
 		end
-	
+
 	on_command_name_focus_out
 			-- Called by `focus_out_actions' of `command_name'.
 		deferred
 		end
-	
+
 	on_label_text_change
 			-- Called by `change_actions' of `label'.
 		deferred
 		end
-	
+
 	on_rows_change
 			-- Called by `change_actions' of `rows'.
 		deferred
 		end
-	
+
 	on_columns_change
 			-- Called by `change_actions' of `columns'.
 		deferred
 		end
-	
+
 	on_gripper_select
 			-- Called by `select_actions' of `gripper'.
 		deferred
 		end
-	
+
 
 feature {NONE} -- Constant setting
 
@@ -286,7 +286,7 @@ feature {NONE} -- Constant setting
 					font_constant_set_procedures.item.call ([f])
 				end
 				font_constant_set_procedures.forth
-			end	
+			end
 		end
 
 	frozen set_attributes_using_color_constants
@@ -319,7 +319,7 @@ feature {NONE} -- Constant setting
 			set_attributes_using_font_constants
 			set_attributes_using_color_constants
 		end
-	
+
 	string_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [READABLE_STRING_GENERAL]]]
 	string_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], STRING_32]]
 	integer_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [INTEGER]]]
@@ -340,4 +340,35 @@ feature {NONE} -- Constant setting
 			Result := an_integer
 		end
 
+note
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

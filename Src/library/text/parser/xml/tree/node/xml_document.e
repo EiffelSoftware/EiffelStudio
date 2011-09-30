@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 			not_empty: a_name.count > 0
 			a_count_positive: a_count >= 0
 		do
-			initialize (a_count)
+			initialize_with_count (a_count)
 			create root_element.make (Void, a_name, a_ns)
 			root_element.attach_parent (Current)
 			force_last (root_element)
@@ -125,31 +125,15 @@ feature -- Setting
 			last_set: last = root_element
 		end
 
-feature {NONE} -- Parent processing		
-
---	before_addition (a_node: XML_NODE)
---			-- Remove node from original parent if not us.
---		do
---			if a_node /= Void then
---					-- Remove from previous parent.
---				if a_node.parent /= Void then
---					a_node.parent.equality_delete (a_node)
---				end
---				a_node.node_set_parent (Current)
---			end
---		ensure then
---			parent_accepted: a_node /= Void implies a_node.parent = Current
---		end
-
 feature {NONE} -- Implementation
 
 	remove_previous_root_element
 			-- Remove previous root element from composite:
 		local
-			elts: like nodes
+			elts: like internal_nodes
 			c: CURSOR
 		do
-			elts := nodes
+			elts := internal_nodes
 			c := elts.cursor
 			from
 				elts.start

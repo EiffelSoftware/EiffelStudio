@@ -123,6 +123,27 @@ END
 
 STRINGTABLE 
 BEGIN
+    split_button_change_small_image_child_1_LabelTitle_RESID L"split button change small image child 1" /* LabelTitle split_button_change_small_image_child_1_LabelTitle_RESID: (null) */
+END
+
+split_button_change_small_image_child_1_SmallImages_RESID    BITMAP    ".\\res\\Copy.bmp" /* SmallImages split_button_change_small_image_child_1_SmallImages_RESID: (null) */
+STRINGTABLE 
+BEGIN
+    split_button_change_small_image_child_2_LabelTitle_RESID L"split button change small image child dummy" /* LabelTitle split_button_change_small_image_child_2_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    split_button_change_large_image_child_1_LabelTitle_RESID L"Split button change large image" /* LabelTitle split_button_change_large_image_child_1_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    split_button_change_large_image_child_2_LabelTitle_RESID L"Split button change large image dummy" /* LabelTitle split_button_change_large_image_child_2_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
     tab_dropdown_gallery_LabelTitle_RESID L"Dropdown Gallery" /* LabelTitle tab_dropdown_gallery_LabelTitle_RESID: (null) */
 END
 

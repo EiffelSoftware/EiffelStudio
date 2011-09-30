@@ -243,15 +243,13 @@ feature {NONE} -- Preprocessing
 			-- Called before an item is added to this container.
 			-- Remove node from original parent if not us.
 		do
-			if a_node /= Void then
-					-- Remove from previous parent.
-				if attached a_node.parent as p then
-					p.equality_delete (a_node)
-				end
-				a_node.node_set_parent (Current)
+				-- Remove from previous parent.
+			if attached a_node.parent as p then
+				p.equality_delete (a_node)
 			end
-		ensure then
-			parent_accepted: a_node /= Void implies a_node.parent = Current
+			a_node.node_set_parent (Current)
+		ensure
+			parent_accepted: a_node.parent = Current
 		end
 
 

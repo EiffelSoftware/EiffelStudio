@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 			parent := a_parent
 			name := a_name
 			namespace := a_ns
-			initialize (a_count)
+			initialize_with_count (a_count)
 		ensure
 			parent_set: parent = a_parent
 			name_set: name = a_name
@@ -67,7 +67,7 @@ feature {NONE} -- Initialization
 		do
 			name := a_name
 			namespace := a_ns
-			initialize (5)
+			initialize_with_count (5)
 			a_parent.force_last (Current)
 		ensure
 			parent_set: parent = a_parent
@@ -85,7 +85,7 @@ feature {NONE} -- Initialization
 		do
 			name := a_name
 			namespace := a_ns
-			initialize (5)
+			initialize_with_count (5)
 			a_parent.set_root_element (Current)
 		ensure
 			parent_set: parent = a_parent
@@ -104,9 +104,9 @@ feature -- Status report
 			a_name_not_void: a_name /= Void
 		local
 			c: CURSOR
-			elts: like nodes
+			elts: like internal_nodes
 		do
-			elts := nodes
+			elts := internal_nodes
 			c := elts.cursor
 			from
 				elts.start
@@ -131,9 +131,9 @@ feature -- Status report
 			a_name_not_void: a_name /= Void
 		local
 			c: CURSOR
-			elts: like nodes
+			elts: like internal_nodes
 		do
-			elts := nodes
+			elts := internal_nodes
 			c := elts.cursor
 			from
 				elts.start
@@ -185,9 +185,9 @@ feature -- Access (from XM_COMPOSITE)
 			-- element with the name `a_name'?
 		local
 			c: CURSOR
-			elts: like nodes
+			elts: like internal_nodes
 		do
-			elts := nodes
+			elts := internal_nodes
 			c := elts.cursor
 			from
 				elts.start
@@ -210,9 +210,9 @@ feature -- Access (from XM_COMPOSITE)
 			-- element with this qualified name ?
 		local
 			c: CURSOR
-			elts: like nodes
+			elts: like internal_nodes
 		do
-			elts := nodes
+			elts := internal_nodes
 			c := elts.cursor
 			from
 				elts.start
@@ -236,9 +236,9 @@ feature -- Access (from XM_COMPOSITE)
 			-- Return Void if no element with that name is a child of current node.
 		local
 			c: CURSOR
-			elts: like nodes
+			elts: like internal_nodes
 		do
-			elts := nodes
+			elts := internal_nodes
 			c := elts.cursor
 			from
 				elts.start
@@ -261,9 +261,9 @@ feature -- Access (from XM_COMPOSITE)
 			-- Return Void if no element with that name is a child of current node.
 		local
 			c: CURSOR
-			elts: like nodes
+			elts: like internal_nodes
 		do
-			elts := nodes
+			elts := internal_nodes
 			c := elts.cursor
 			from
 				create {LINKED_LIST [XML_ELEMENT]} Result.make
@@ -288,9 +288,9 @@ feature -- Access (from XM_COMPOSITE)
 			-- Return Void if no element with that name is a child of current node.
 		local
 			c: CURSOR
-			elts: like nodes
+			elts: like internal_nodes
 		do
-			elts := nodes
+			elts := internal_nodes
 			c := elts.cursor
 			from
 				elts.start
@@ -317,9 +317,9 @@ feature -- Access
 			a_name_not_void: a_name /= Void
 		local
 			c: CURSOR
-			elts: like nodes
+			elts: like internal_nodes
 		do
-			elts := nodes
+			elts := internal_nodes
 			c := elts.cursor
 			from
 				elts.start
@@ -348,9 +348,9 @@ feature -- Access
 			a_name_not_void: a_name /= Void
 		local
 			c: CURSOR
-			elts: like nodes
+			elts: like internal_nodes
 		do
-			elts := nodes
+			elts := internal_nodes
 			c := elts.cursor
 			from
 				elts.start
@@ -379,10 +379,10 @@ feature -- Access
 			-- (Returns a new list object at each call.)
 		local
 			c: CURSOR
-			elts: like nodes
+			elts: like internal_nodes
 		do
 			create Result.make
-			elts := nodes
+			elts := internal_nodes
 			c := elts.cursor
 			from
 				elts.start
@@ -407,10 +407,10 @@ feature -- Access
 			-- (Create a new list at each call.)
 		local
 			c: CURSOR
-			elts: like nodes
+			elts: like internal_nodes
 		do
 			create {LINKED_LIST [XML_ATTRIBUTE]} Result.make
-			elts := nodes
+			elts := internal_nodes
 			c := elts.cursor
 			from
 				elts.start
@@ -453,10 +453,10 @@ feature -- Query
 			-- (Create a new list at each call.)
 		local
 			c: CURSOR
-			elts: like nodes
+			elts: like internal_nodes
 		do
 			create {LINKED_LIST [XML_CHARACTER_DATA]} Result.make
-			elts := nodes
+			elts := internal_nodes
 			c := elts.cursor
 			from
 				elts.start
@@ -517,9 +517,9 @@ feature -- Removal
 			has_attribute: has_attribute_by_name (a_name)
 		local
 			c: CURSOR
-			elts: like nodes
+			elts: like internal_nodes
 		do
-			elts := nodes
+			elts := internal_nodes
 			c := elts.cursor
 			from
 				elts.start
@@ -545,9 +545,9 @@ feature -- Removal
 			has_attribute: has_attribute_by_qualified_name (a_uri, a_name)
 		local
 			c: CURSOR
-			elts: like nodes
+			elts: like internal_nodes
 		do
-			elts := nodes
+			elts := internal_nodes
 			c := elts.cursor
 			from
 				elts.start
@@ -570,9 +570,9 @@ feature -- Removal
 		local
 			joint_text_node: XML_CHARACTER_DATA
 			c: CURSOR
-			elts: like nodes
+			elts: like internal_nodes
 		do
-			elts := nodes
+			elts := internal_nodes
 			c := elts.cursor
 			from
 				elts.start

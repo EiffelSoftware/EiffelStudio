@@ -13,12 +13,19 @@ inherit
 
 feature -- Initialization
 
-	initialize (a_count: INTEGER)
+	initialize
+			-- Initialize
+			--| You might consider redefining instead `initialize_with_count'
+		do
+		end
+
+	initialize_with_count (a_count: INTEGER)
 			-- Initialize internal data
 		require
 			a_count_positive: a_count >= 0
 		do
-			create nodes.make (a_count)
+			create internal_nodes.make (a_count)
+			initialize
 		end
 
 feature -- Access
@@ -35,42 +42,42 @@ feature -- Access
 
 	wipe_out
 		do
-			nodes.wipe_out
+			internal_nodes.wipe_out
 		end
 
 	start
 		do
-			nodes.start
+			internal_nodes.start
 		end
 
 	after: BOOLEAN
 		do
-			Result := nodes.after
+			Result := internal_nodes.after
 		end
 
 	item_for_iteration: XML_NODE
 		do
-			Result := nodes.item_for_iteration
+			Result := internal_nodes.item_for_iteration
 		end
 
 	forth
 		do
-			nodes.forth
+			internal_nodes.forth
 		end
 
 	count: INTEGER
 		do
-			Result := nodes.count
+			Result := internal_nodes.count
 		end
 
 	first: XML_NODE
 		do
-			Result := nodes.first
+			Result := internal_nodes.first
 		end
 
 	last: XML_NODE
 		do
-			Result := nodes.last
+			Result := internal_nodes.last
 		end
 
 feature -- Access
@@ -121,10 +128,10 @@ feature -- Access
 			-- (Create a new list at each call.)
 		local
 			c: CURSOR
-			lst: like nodes
+			lst: like internal_nodes
 		do
 			create {LINKED_LIST [XML_ELEMENT]} Result.make
-			lst := nodes
+			lst := internal_nodes
 			c := lst.cursor
 			from
 				lst.start
@@ -149,9 +156,9 @@ feature -- Text
 			-- (Return a new string at each call.)
 		local
 			c: CURSOR
-			lst: like nodes
+			lst: like internal_nodes
 		do
-			lst := nodes
+			lst := internal_nodes
 			c := lst.cursor
 			from
 				lst.start
@@ -176,19 +183,19 @@ feature -- Element change
 	put_last (a_node: XML_NODE)
 		do
 			before_addition (a_node)
-			nodes.extend (a_node)
+			internal_nodes.extend (a_node)
 		end
 
 	force_last (a_node: XML_NODE)
 		do
 			before_addition (a_node)
-			nodes.force (a_node)
+			internal_nodes.force (a_node)
 		end
 
 	force_first (a_node: XML_NODE)
 		do
 			before_addition (a_node)
-			nodes.put_front (a_node)
+			internal_nodes.put_front (a_node)
 		end
 
 feature -- Element change using index
@@ -196,7 +203,7 @@ feature -- Element change using index
 	valid_index (i: INTEGER): BOOLEAN
 			-- Is `i' a valid index?
 		do
-			Result := nodes.valid_index (i)
+			Result := internal_nodes.valid_index (i)
 		end
 
 	remove (i: INTEGER)
@@ -205,11 +212,13 @@ feature -- Element change using index
 			valid_index: valid_index (i)
 		local
 			j: INTEGER
+			lst: like internal_nodes
 		do
-			j := nodes.index
-			nodes.go_i_th (i)
-			nodes.remove
-			nodes.go_i_th (j)
+			lst := internal_nodes
+			j := lst.index
+			lst.go_i_th (i)
+			lst.remove
+			lst.go_i_th (j)
 		end
 
 	put (a_node: XML_NODE; i: INTEGER)
@@ -218,12 +227,14 @@ feature -- Element change using index
 			valid_index: valid_index (i)
 		local
 			j: INTEGER
+			lst: like internal_nodes
 		do
-			j := nodes.index
-			nodes.go_i_th (i)
+			lst := internal_nodes
+			j := lst.index
+			lst.go_i_th (i)
 			before_addition (a_node)
-			nodes.put_left (a_node)
-			nodes.go_i_th (j)
+			lst.put_left (a_node)
+			lst.go_i_th (j)
 		end
 
 feature {NONE} -- Preprocessing
@@ -250,14 +261,14 @@ feature {XML_NODE} -- Removal
 			-- Delete node if it is in current node, using
 			-- object identity.
 		local
-			lst: like nodes
+			lst: like internal_nodes
 			c: CURSOR
 		do
 			-- we do LIST.delete by hand, because
 			-- it takes a descendant type, while we don't
 			-- really need to know the subtype for object
 			-- equality.
-			lst := nodes
+			lst := internal_nodes
 			c := lst.cursor
 			from
 				lst.start
@@ -280,10 +291,10 @@ feature -- Processing
 		require
 			a_processor_not_void: a_processor /= Void
 		local
-			lst: like nodes
+			lst: like internal_nodes
 			c: CURSOR
 		do
-			lst := nodes
+			lst := internal_nodes
 			c := lst.cursor
 			from lst.start until lst.after loop
 				lst.item.process (a_processor)
@@ -297,10 +308,10 @@ feature -- Processing
 		require
 			processor_not_void: a_processor /= Void
 		local
-			lst: like nodes
+			lst: like internal_nodes
 			c: CURSOR
 		do
-			lst := nodes
+			lst := internal_nodes
 			c := lst.cursor
 			from lst.start until lst.after loop
 				lst.item.process (a_processor)
@@ -312,13 +323,22 @@ feature -- Processing
 			lst.go_to (c)
 		end
 
+feature -- Access
+
+	nodes: like internal_nodes
+		obsolete
+			"[2011-09-30] Use the ITERABLE interface of XML_COMPOSITE"
+		do
+			Result := internal_nodes
+		end
+
 feature {XML_COMPOSITE_CURSOR} -- Internal
 
-	nodes: ARRAYED_LIST [XML_NODE]
+	internal_nodes: ARRAYED_LIST [XML_NODE]
 			-- List of nodes for Current composite.
 
 invariant
-	elements_attached: nodes /= Void
+	elements_attached: internal_nodes /= Void
 
 note
 	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"

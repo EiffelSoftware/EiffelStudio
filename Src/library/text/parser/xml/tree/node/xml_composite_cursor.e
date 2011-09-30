@@ -18,7 +18,7 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'.
 		do
 			target := s
-			internal_cursor := s.nodes.new_cursor
+			internal_cursor := s.internal_nodes.new_cursor
 		end
 
 feature -- Access
@@ -49,7 +49,7 @@ feature -- Cursor movement
 			l_nodes: LIST [XML_NODE]
 			c: CURSOR
 		do
-			l_nodes := target.nodes
+			l_nodes := target.internal_nodes
 				--| `{XML_COMPOSITE}.before_addition' ensures a node has a single parent
 				--| and is contained only once.
 				--| thus it is safe to call prune_all

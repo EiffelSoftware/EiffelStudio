@@ -270,6 +270,9 @@ feature -- Commands
 						end
 					else
 						l_stone := diagram_tool.last_stone
+						if l_stone = Void then
+							l_stone := diagram_tool.stone
+						end
 						if l_stone /= Void and eiffel_layout.has_diagram then
 							l_stone := l_stone.synchronized_stone
 							diagram_tool.set_stone (l_stone)
@@ -480,7 +483,7 @@ feature {NONE} -- Internal implementation cache
 			-- Note: Do not use directly!
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

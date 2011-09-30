@@ -404,7 +404,7 @@ feature -- Persistance
 			l_factory.tree_manager.load_tree (a_ribbon_window_count)
 		end
 
-feature {NONE} -- Implementation
+feature {ER_PROJECT_INFO} -- Internal command
 
 	update_project_info_window_count
 			-- Update project info data with window's count
@@ -413,6 +413,8 @@ feature {NONE} -- Implementation
 				l_project_info.set_ribbon_window_count (shared_singleton.layout_constructor_list.count)
 			end
 		end
+
+feature {NONE} -- Implementation
 
 	recursive_all_items_with (a_text: STRING; a_tree_node: EV_TREE_NODE; a_list: ARRAYED_LIST [EV_TREE_NODE])
 			-- Recursive find tree node which text is same as `a_text'

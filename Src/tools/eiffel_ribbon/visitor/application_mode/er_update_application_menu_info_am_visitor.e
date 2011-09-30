@@ -21,6 +21,7 @@ feature -- Command
 		local
 			l_enable_pinning: BOOLEAN
 			l_max_count: INTEGER
+			l_command_name: detachable STRING
 			 l_ribbon_application_menus: ARRAYED_LIST [EV_TREE_NODE]
 		do
 			-- Query values from markup XML
@@ -71,6 +72,8 @@ feature -- Command
 
 										elseif  l_attribute.name.same_string ({ER_XML_ATTRIBUTE_CONSTANTS}.max_count) then
 											l_max_count := l_attribute.value.to_integer
+										elseif l_attribute.name.same_string ({ER_XML_ATTRIBUTE_CONSTANTS}.command_name) then
+											l_command_name := l_attribute.value
 										end
 									end
 
@@ -93,6 +96,7 @@ feature -- Command
 					if attached {ER_TREE_NODE_APPLICATION_MENU_DATA} l_application_menu.data as l_menu_data then
 						l_menu_data.set_enable_pinning (l_enable_pinning)
 						l_menu_data.set_max_count (l_max_count)
+						l_menu_data.set_command_name (l_command_name)
 					end
 				end
 			end

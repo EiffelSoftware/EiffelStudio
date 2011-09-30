@@ -33,10 +33,10 @@ feature {NONE} -- Implementation
 			-- <Precursor>
 		do
 			create main_window
-
 		end
 
 	main_window: MAIN_WINDOW
-		-- Main window of `Current'
+		-- Main window of `Current'.
 
 end
+

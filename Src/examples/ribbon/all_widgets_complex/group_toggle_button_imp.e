@@ -19,15 +19,18 @@ feature {NONE} -- Initialization
 			-- Create objects
 		do
 			create toggle_button_check_state.make_with_command_list (<<{COMMAND_NAME_CONSTANTS}.toggle_button_check_state>>)
+			create toggle_button_change_small_image.make_with_command_list (<<{COMMAND_NAME_CONSTANTS}.toggle_button_change_small_image>>)
 
 			create buttons.make (1)
 			buttons.extend (toggle_button_check_state)
+			buttons.extend (toggle_button_change_small_image)
 
 		end
 
 feature -- Query
 
 	toggle_button_check_state: TOGGLE_BUTTON_CHECK_STATE
+	toggle_button_change_small_image: TOGGLE_BUTTON_CHANGE_SMALL_IMAGE
 
 
 end

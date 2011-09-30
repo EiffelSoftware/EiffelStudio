@@ -3,7 +3,7 @@
 // * your application.                                                          *
 // ******************************************************************************
 
-#include ".\ribbon.h"
+#include ".\ribbon_1.h"
 
 STRINGTABLE 
 BEGIN
@@ -49,6 +49,16 @@ END
 STRINGTABLE 
 BEGIN
     toggle_button_check_state_LabelTitle_RESID L"Check toggle button state" /* LabelTitle toggle_button_check_state_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    toggle_button_change_small_image_LabelTitle_RESID L"Toggle button change small image" /* LabelTitle toggle_button_change_small_image_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    toggle_button_change_large_image_LabelTitle_RESID L"Toggle button change large image" /* LabelTitle toggle_button_change_large_image_LabelTitle_RESID: (null) */
 END
 
 STRINGTABLE 
@@ -127,4 +137,4 @@ BEGIN
     InternalCmd2_LabelTitle_RESID L"Label:InternalCmd2" /* LabelTitle InternalCmd2_LabelTitle_RESID: (null) */
 END
 
-APPLICATION_RIBBON    UIFILE    "ribbon.bml"
+APPLICATION_RIBBON    UIFILE    "ribbon_1.bml"

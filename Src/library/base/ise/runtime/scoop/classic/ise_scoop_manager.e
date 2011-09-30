@@ -86,9 +86,7 @@ feature -- C callback function
 
 	flag_processor_dirty (
 			a_logical_processor_id: like processor_id_type;
-			a_executing_request_chain_node_meta_data: like new_request_chain_node_meta_data_queue_entry
-			a_executing_request_chain_node: like new_request_chain_node_queue_entry
-			a_executing_request_chain_node_cursor: INTEGER)
+			a_executing_request_chain_node_meta_data: like new_request_chain_node_meta_data_queue_entry)
 		local
 			l_dirty_flag_count: INTEGER
 			l_dirty_processor_client_list: detachable like new_request_chain_meta_data_entry
@@ -783,6 +781,7 @@ feature -- Command/Query Handling
 			l_logged_calls_original_count := l_request_chain_node_queue_entry.count
 			if l_logged_calls_original_count = l_request_chain_node_queue_entry.capacity then
 					-- Resize node structure if there is not enough room for the new entry.
+
 				if
 					l_client_request_chain_meta_data /= Void and then
 					{ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_client_request_chain_meta_data.item_address (request_chain_status_index), 0) = request_chain_status_open
@@ -1245,11 +1244,11 @@ feature {NONE} -- Resource Initialization
 							l_wait_counter := 0
 							l_loop_exit := False
 							l_exception_caught := False
+							l_executing_request_chain_node := l_request_chain_node_queue [l_executing_node_id]
+							check l_executing_request_chain_node_attached: attached l_executing_request_chain_node end
 						until
 							l_loop_exit
 						loop
-							l_executing_request_chain_node := l_request_chain_node_queue [l_executing_node_id]
-							check l_executing_request_chain_node_attached: attached l_executing_request_chain_node end
 							l_temp_count := l_executing_request_chain_node.count
 							if l_exception_caught then
 									-- If an exception has occurred then we must not continue applying calls and exit immediately.
@@ -1264,19 +1263,25 @@ feature {NONE} -- Resource Initialization
 										-- We need to flag `a_logical_processor_id' dirty with respect to the client of the chain.
 
 											-- We have caught an assertion violation so we flag the processor as dirty
-										flag_processor_dirty (a_logical_processor_id, l_executing_request_chain_node_meta_data, l_executing_request_chain_node, l_executing_node_id_cursor)
+										flag_processor_dirty (a_logical_processor_id, l_executing_request_chain_node_meta_data)
 									end
 									l_executing_node_id_cursor := l_executing_node_id_cursor + 1
 									if l_executing_node_id_cursor = l_temp_count then
+
+											-- Client may have increased capacity of request chain node so we make sure that we have the correct object.
+										l_executing_request_chain_node := l_request_chain_node_queue [l_executing_node_id]
+										check l_executing_request_chain_node_attached: attached l_executing_request_chain_node end
+
 											-- Check for a query if we are at the last index.
 										l_pid := call_data_sync_pid (l_call_ptr)
 										if l_pid /= null_processor_id then
+												-- Reset call data in structure before releasing client processor.
+											l_executing_request_chain_node [l_executing_node_id_cursor - 1] := null_pointer
 												-- Wake up client processor.							
 											processor_wake_up (l_pid, a_logical_processor_id)
 
 												-- Clean up call data.
 											scoop_command_call_cleanup (l_call_ptr)
-											l_executing_request_chain_node [l_executing_node_id_cursor - 1] := null_pointer
 
 												-- Reset yielding.
 											l_wait_counter := 0
@@ -1293,16 +1298,24 @@ feature {NONE} -- Resource Initialization
 
 									-- Reset yielding.
 								l_wait_counter := 0
-							elseif l_executing_request_chain_node_meta_data [request_chain_status_index] = request_chain_status_closed then
-									-- Request chain has been fully closed therefore we can exit if all calls have been applied.
-								if l_executing_node_id_cursor >= l_temp_count then
-									l_loop_exit := True
-									l_request_chain_node_meta_data_queue [l_executing_node_id] := Void
-								end
 							else
-									-- We are in an idle state, waiting for the request chain to close or to have more calls logged so we yield to another thread.								
-								processor_yield (a_logical_processor_id, l_wait_counter)
-								l_wait_counter := l_wait_counter + 1
+									-- Processor is either idle
+								if l_executing_request_chain_node_meta_data [request_chain_status_index] = request_chain_status_closed then
+										-- Request chain has been fully closed therefore we can exit if all calls have been applied.
+									if l_executing_node_id_cursor >= l_temp_count and then l_executing_request_chain_node = l_request_chain_node_queue [l_executing_node_id] then
+										l_loop_exit := True
+										l_request_chain_node_meta_data_queue [l_executing_node_id] := Void
+									end
+								else
+										-- We are in an idle state, waiting for the request chain to close or to have more calls logged so we yield to another thread.
+									if l_executing_request_chain_node = l_request_chain_node_queue [l_executing_node_id] then
+										processor_yield (a_logical_processor_id, l_wait_counter)
+										l_wait_counter := l_wait_counter + 1
+									end
+								end
+									-- Update request chain node in case client has resized it during logging.
+								l_executing_request_chain_node := l_request_chain_node_queue [l_executing_node_id]
+								check l_executing_request_chain_node_attached: attached l_executing_request_chain_node end
 							end
 						end
 

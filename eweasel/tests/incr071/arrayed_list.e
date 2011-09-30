@@ -30,9 +30,9 @@ class ARRAYED_LIST [G] inherit
 			{NONE}
 				all
 			{ARRAYED_LIST}
-				array_make, subcopy, area, lower, upper, subarray, all_default, same_items
+				array_make, subcopy, lower, upper, subarray, all_default, same_items
 			{ANY}
-				array_valid_index, capacity
+				array_valid_index, capacity, area
 		undefine
 			linear_representation, prunable, put, is_equal,
 			prune, occurrences, extendible 

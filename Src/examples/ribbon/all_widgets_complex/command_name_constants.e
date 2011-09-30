@@ -82,7 +82,11 @@ feature -- Access
 	drop_down_gallery: NATURAL_32 = 42 
 	drop_down_gallery_LabelTitle_RESID: NATURAL_32 = 60031
 	drop_down_gallery_LargeImages_RESID: NATURAL_32 = 60032
-	InternalCmd2_LabelTitle_RESID: NATURAL_32 = 60033
+	application_menu: NATURAL_32 = 43 
+	menu_group: NATURAL_32 = 44 
+	application_menu_button: NATURAL_32 = 45 
+	application_menu_button_LabelTitle_RESID: NATURAL_32 = 60033
+	InternalCmd2_LabelTitle_RESID: NATURAL_32 = 60034
 
 
 end -- class COMMAND_NAME_CONSTANTS

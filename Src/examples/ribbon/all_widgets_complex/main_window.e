@@ -14,7 +14,8 @@ inherit
 	EV_RIBBON_TITLED_WINDOW
 		redefine
 			create_interface_objects,
-			initialize
+			initialize,
+			application_menu
 		end
 
 	EV_SHARED_APPLICATION
@@ -67,13 +68,14 @@ feature {NONE}-- Initialization
 				-- Proceed with vision2 objects creation.
 			Precursor
 			create ribbon.make
-
+			create application_menu.make_with_command_list (<<{COMMAND_NAME_CONSTANTS}.application_menu>>)
 		end
 
 feature -- Access
 
 	ribbon: RIBBON
 			-- Ribbon attached to current
-
+	application_menu: APPLICATION_MENU
+			-- Application menu
 end
 

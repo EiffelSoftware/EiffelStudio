@@ -155,6 +155,11 @@ END
 drop_down_gallery_LargeImages_RESID    BITMAP    ".\\res\\Button_Image.bmp" /* LargeImages drop_down_gallery_LargeImages_RESID: (null) */
 STRINGTABLE 
 BEGIN
+    application_menu_button_LabelTitle_RESID L"Application menu button" /* LabelTitle application_menu_button_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
     InternalCmd2_LabelTitle_RESID L"Label:InternalCmd2" /* LabelTitle InternalCmd2_LabelTitle_RESID: (null) */
 END
 

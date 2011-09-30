@@ -154,7 +154,8 @@ feature -- Command
 			check l_result = {WEL_COM_HRESULT}.s_ok end
 		end
 
-feature {EV_RIBBON_ITEM, EV_RIBBON_TEXTABLE, EV_RIBBON_TOOLTIPABLE, EV_RIBBON_APPLICATION_MENU_RECENT_ITEMS, EV_RIBBON_QUICK_ACCESS_TOOLBAR} -- Commands
+feature {EV_RIBBON_ITEM, EV_RIBBON_TEXTABLE, EV_RIBBON_TOOLTIPABLE, EV_RIBBON_APPLICATION_MENU_RECENT_ITEMS, EV_RIBBON_QUICK_ACCESS_TOOLBAR,
+		EV_RIBBON_IMAGEABLE} -- Commands
 
 	get_command_property (a_command_id: NATURAL_32; a_key: EV_PROPERTY_KEY; a_variant: EV_PROPERTY_VARIANT)
 			-- Retrieves a command property, value, or state.

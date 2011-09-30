@@ -19,14 +19,17 @@ feature {NONE} -- Initialization
 			-- Create objects
 		do
 			create group_toggle_button.make_with_command_list (<<{COMMAND_NAME_CONSTANTS}.group_toggle_button>>)
+			create group_toggle_button_2.make_with_command_list (<<{COMMAND_NAME_CONSTANTS}.group_toggle_button_2>>)
 
 			create groups.make (1)
 			groups.extend (group_toggle_button)
+			groups.extend (group_toggle_button_2)
 
 		end
 
 feature -- Query
 	group_toggle_button: GROUP_TOGGLE_BUTTON
+	group_toggle_button_2: GROUP_TOGGLE_BUTTON_2
 
 
 end

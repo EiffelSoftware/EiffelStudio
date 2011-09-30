@@ -47,7 +47,7 @@ feature {NONE}-- Initialization
 		do
 			set_size (800, 400)
 
-				-- !!! Attach Ribbon by COM here !!!
+				-- Attach Ribbon by COM here
 			ribbon.init_with_window (Current)
 			close_request_actions.extend (agent ev_application.destroy)
 			show_actions.extend_kamikaze (agent
@@ -67,6 +67,7 @@ feature {NONE}-- Initialization
 				-- Proceed with vision2 objects creation.
 			Precursor
 			create ribbon.make
+
 		end
 
 feature -- Access

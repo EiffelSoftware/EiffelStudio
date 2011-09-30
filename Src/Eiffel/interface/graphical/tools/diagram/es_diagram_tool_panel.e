@@ -647,6 +647,9 @@ feature -- Access
 	force_directed_layout: EIFFEL_FORCE_LAYOUT
 			-- Layout used to force direct the graph.
 
+	stone: STONE
+			-- Current stone.
+
 feature -- Status settings.
 
 	update_excluded_class_figures
@@ -1528,6 +1531,10 @@ feature {EB_DEVELOPMENT_WINDOW_TOOLS, EB_STONE_CHECKER, EB_DEVELOPMENT_WINDOW} -
 						is_synchronization_needed := False
 					end
 				else
+						-- Clear stones.
+					stone := Void
+					class_stone := Void
+					cluster_stone := Void
 					clear_area
 				end
 				Precursor {EB_STONABLE_TOOL}
@@ -2493,9 +2500,6 @@ feature {NONE} -- Implementation for mini tool bar
 			-- Refresh
 		do
 		end
-
-	stone: STONE
-			-- Current stone
 
 	address_manager: EB_ADDRESS_MANAGER
 			-- Manager for the header info.

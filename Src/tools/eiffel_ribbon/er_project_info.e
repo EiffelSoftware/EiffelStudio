@@ -61,6 +61,7 @@ feature -- Command
 
 	update_ribbon_names_from_ui
 			-- Update ribbon names from GUI
+			-- Update ribbon window count from GUI
 		local
 			l_shared: ER_SHARED_TOOLS
 			l_list: ARRAYED_LIST [ER_LAYOUT_CONSTRUCTOR]
@@ -78,6 +79,11 @@ feature -- Command
 						ribbon_names.extend (l_data.command_name)
 					end
 				end
+
+				if attached l_list.item as l_first then
+					l_first.update_project_info_window_count
+				end
+
 				l_list.forth
 			end
 		end

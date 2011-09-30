@@ -64,13 +64,25 @@ feature -- Access
 	split_button_child_1_LabelTitle_RESID: NATURAL_32 = 60023
 	split_button_child_2: NATURAL_32 = 32 
 	split_button_child_2_LabelTitle_RESID: NATURAL_32 = 60024
-	tab_dropdown_gallery: NATURAL_32 = 33 
-	tab_dropdown_gallery_LabelTitle_RESID: NATURAL_32 = 60025
-	group_dropdown_gallery: NATURAL_32 = 34 
-	drop_down_gallery: NATURAL_32 = 35 
-	drop_down_gallery_LabelTitle_RESID: NATURAL_32 = 60026
-	drop_down_gallery_LargeImages_RESID: NATURAL_32 = 60027
-	InternalCmd2_LabelTitle_RESID: NATURAL_32 = 60028
+	split_button_change_small_image: NATURAL_32 = 33 
+	split_button_change_small_image_child_1: NATURAL_32 = 34 
+	split_button_change_small_image_child_1_LabelTitle_RESID: NATURAL_32 = 60025
+	split_button_change_small_image_child_1_SmallImages_RESID: NATURAL_32 = 60026
+	split_button_change_small_image_child_2: NATURAL_32 = 35 
+	split_button_change_small_image_child_2_LabelTitle_RESID: NATURAL_32 = 60027
+	group_split_button_2: NATURAL_32 = 36 
+	split_button_change_large_image: NATURAL_32 = 37 
+	split_button_change_large_image_child_1: NATURAL_32 = 38 
+	split_button_change_large_image_child_1_LabelTitle_RESID: NATURAL_32 = 60028
+	split_button_change_large_image_child_2: NATURAL_32 = 39 
+	split_button_change_large_image_child_2_LabelTitle_RESID: NATURAL_32 = 60029
+	tab_dropdown_gallery: NATURAL_32 = 40 
+	tab_dropdown_gallery_LabelTitle_RESID: NATURAL_32 = 60030
+	group_dropdown_gallery: NATURAL_32 = 41 
+	drop_down_gallery: NATURAL_32 = 42 
+	drop_down_gallery_LabelTitle_RESID: NATURAL_32 = 60031
+	drop_down_gallery_LargeImages_RESID: NATURAL_32 = 60032
+	InternalCmd2_LabelTitle_RESID: NATURAL_32 = 60033
 
 
 end -- class COMMAND_NAME_CONSTANTS

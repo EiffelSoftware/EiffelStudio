@@ -19,15 +19,18 @@ feature {NONE} -- Initialization
 			-- Create objects
 		do
 			create split_button.make_with_command_list (<<{COMMAND_NAME_CONSTANTS}.split_button>>)
+			create split_button_change_small_image.make_with_command_list (<<{COMMAND_NAME_CONSTANTS}.split_button_change_small_image>>)
 
 			create buttons.make (1)
 			buttons.extend (split_button)
+			buttons.extend (split_button_change_small_image)
 
 		end
 
 feature -- Query
 
 	split_button: SPLIT_BUTTON
+	split_button_change_small_image: SPLIT_BUTTON_CHANGE_SMALL_IMAGE
 
 
 end

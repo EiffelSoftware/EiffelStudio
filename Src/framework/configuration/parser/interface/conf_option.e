@@ -84,13 +84,29 @@ feature -- Status
 	is_attached_by_default_configured: BOOLEAN
 			-- Is `is_attached_by_default' configured?
 
+	is_strictly_void_safe_configured: BOOLEAN
+			-- Is `is_strictly_void_safe' configured?
+
 	is_empty: BOOLEAN
 			-- Is `Current' empty? No settings are set?
 		do
-			Result := not (is_profile_configured or is_trace_configured or is_optimize_configured or is_debug_configured or
-				is_warning_configured or is_msil_application_optimize_configured or is_full_class_checking_configured or
-				is_cat_call_detection_configured or is_attached_by_default_configured or void_safety.is_set or
-				assertions /= Void or local_namespace /= Void or warnings /= Void or debugs /= Void or syntax.is_set)
+			Result := not (
+				is_profile_configured or
+				is_trace_configured or
+				is_optimize_configured or
+				is_debug_configured or
+				is_warning_configured or
+				is_msil_application_optimize_configured or
+				is_full_class_checking_configured or
+				is_cat_call_detection_configured or
+				is_attached_by_default_configured or
+				void_safety.is_set or
+				is_strictly_void_safe_configured or
+				assertions /= Void or
+				local_namespace /= Void or
+				warnings /= Void or
+				debugs /= Void or
+				syntax.is_set)
 		end
 
 feature -- Status update
@@ -195,6 +211,9 @@ feature -- Access, stored in configuration file
 
 	is_attached_by_default: BOOLEAN
 			-- Is type declaration considered attached by default?
+
+	is_strictly_void_safe: BOOLEAN
+			-- Are the most strict rules applied for void safety?
 
 	description: STRING
 			-- A description about the options.
@@ -423,6 +442,16 @@ feature {CONF_ACCESS} -- Update, stored in configuration file.
 			is_attached_by_default_configured: is_attached_by_default_configured
 		end
 
+	set_is_strictly_void_safe (v: BOOLEAN)
+			-- Set `is_strictly_void_safe' to `v'.
+		do
+			is_strictly_void_safe_configured := True
+			is_strictly_void_safe := v
+		ensure
+			is_strictly_void_safe_set: is_strictly_void_safe = v
+			is_strictly_void_safe_configured: is_strictly_void_safe_configured
+		end
+
 	set_description (a_description: like description)
 			-- Set `description' to `a_description'.
 		do
@@ -490,6 +519,8 @@ feature -- Comparison
 			and then equal (local_namespace, other.local_namespace)
 			and then equal (namespace, other.namespace)
 			and then void_safety.is_equal (other.void_safety)
+			and then is_strictly_void_safe = other.is_strictly_void_safe
+			and then is_strictly_void_safe_configured = other.is_strictly_void_safe_configured
 			and then syntax.is_equal (other.syntax)
 			and then equal (warnings, other.warnings)
 			then
@@ -509,6 +540,7 @@ feature -- Comparison
 				is_attached_by_default = other.is_attached_by_default and
 				is_trace = other.is_trace and
 				void_safety.index = other.void_safety.index and
+				is_strictly_void_safe = other.is_strictly_void_safe and
 				syntax.index = other.syntax.index and
 				equal(local_namespace, other.local_namespace) and
 				equal (debugs, other.debugs)
@@ -605,6 +637,10 @@ feature -- Merging
 					is_attached_by_default := other.is_attached_by_default
 				end
 				void_safety.set_safely (other.void_safety)
+				if not is_strictly_void_safe_configured then
+					is_strictly_void_safe_configured := other.is_strictly_void_safe_configured or else is_strictly_void_safe /= other.is_strictly_void_safe
+					is_strictly_void_safe := other.is_strictly_void_safe
+				end
 				syntax.set_safely (other.syntax)
 			end
 		end
@@ -615,7 +651,7 @@ invariant
 	void_safety_attached: void_safety /= Void
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -489,6 +489,14 @@ feature {AST_FEATURE_CHECKER_GENERATOR}
 			Result := a_class.lace_class.is_void_safe_initialization
 		end
 
+	is_void_safe_construct (a_class: CLASS_C): BOOLEAN
+			-- Is code being check for void-safe constructs (e.g. no CAP for "check ...end") on `a_class'?
+		require
+			a_class_attached: a_class /= Void
+		do
+			Result := a_class.lace_class.is_void_safe_construct
+		end
+
 	is_inherited: BOOLEAN
 			-- Is code being processed inherited?
 
@@ -5783,10 +5791,18 @@ feature {NONE} -- Implementation
 			s: INTEGER
 		do
 			if l_as.check_list /= Void then
+					-- Attachment properties are not propagated outside the check instruction.
 				set_is_checking_check (True)
 				s := context.scope
-				process_eiffel_list_with_matcher (l_as.check_list, create {AST_SCOPE_ASSERTION}.make (context), Void)
-				context.remove_object_test_scopes (s)
+				if is_void_safe_construct (context.current_class) then
+					context.enter_realm
+					process_eiffel_list_with_matcher (l_as.check_list, create {AST_SCOPE_ASSERTION}.make (context), Void)
+					context.leave_optional_realm
+					context.set_scope (s)
+				else
+					process_eiffel_list_with_matcher (l_as.check_list, create {AST_SCOPE_ASSERTION}.make (context), Void)
+					context.remove_object_test_scopes (s)
+				end
 				set_is_checking_check (False)
 
 				if is_byte_node_enabled then

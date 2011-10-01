@@ -224,7 +224,10 @@ feature {COMPILER_EXPORTER} -- Setting
 							-- Class should be reparsed.
 						is_modified := True
 					end
-					if new_options.void_safety.index /= old_options.void_safety.index then
+					if
+						new_options.void_safety.index /= old_options.void_safety.index or else
+						new_options.is_strictly_void_safe /= old_options.is_strictly_void_safe
+					then
 							-- Class should be reparsed and rechecked for validity of interface and code.
 						is_modified := True
 						if attached c then

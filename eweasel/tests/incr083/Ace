@@ -32,6 +32,11 @@
 			</file_rule>
 		</cluster>
 		$KERNEL_DOTNET
+		<cluster name="string" location="$KERNEL_STRING\">
+			<file_rule>
+				$EXCLUDE_SYSTEM_STRING
+			</file_rule>
+		</cluster>
 		<cluster name="exceptions_ise" location="$EXCEPTIONS_ISE\" recursive="True"/>
 		<cluster name="exceptions_elks" location="$EXCEPTIONS_ELKS\" recursive="True"/>
 		<cluster name="list" location="$LIST\"/>

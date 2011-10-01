@@ -35,6 +35,7 @@
 			</file_rule>
 		</cluster>
 		$KERNEL_DOTNET
+		<cluster name="string" location="$KERNEL_STRING\"/>
 		<cluster name="root_cluster" location="$CLUSTER\"/>
 	</target>
 </system>

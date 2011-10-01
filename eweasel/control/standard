@@ -11,6 +11,7 @@
 define_directory	BASE	 	$ISE_LIBRARY library base elks
 define_directory	BASE_ISE 	$ISE_LIBRARY library base ise
 define_directory	KERNEL		$BASE kernel
+define_directory	KERNEL_STRING	$BASE kernel string
 define_directory	EXCEPTIONS	$BASE kernel exceptions
 define_directory	EXCEPTIONS_ISE	$BASE_ISE kernel exceptions
 define_directory	EXCEPTIONS_ELKS	$BASE kernel exceptions

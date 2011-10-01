@@ -16,7 +16,7 @@ execute_result 	ok
 compare		exec_output1 output
 
 define	VALUE	TEST2
-define_file	STRING_FILE $ISE_EIFFEL library base elks kernel string_8.e
+define_file	STRING_FILE $ISE_EIFFEL library base elks kernel string string_8.e
 define_file	ROUTINE_FILE $ISE_EIFFEL library base elks kernel routine.e
 copy_sub	test.e $CLUSTER test.e
 copy_file $STRING_FILE $CLUSTER string_8.e

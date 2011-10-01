@@ -258,6 +258,12 @@ feature -- Access
 			Result := options.void_safety.index /= {CONF_OPTION}.void_safety_index_none
 		end
 
+	is_void_safe_construct: BOOLEAN
+			-- Should only mode-independent void-safety constructs be taken into account?
+		do
+			Result := options.is_strictly_void_safe
+		end
+
 	is_void_unsafe: BOOLEAN
 			-- Is current class compiled without any void-safety mechanism enabled?
 		do

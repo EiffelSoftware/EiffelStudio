@@ -798,6 +798,9 @@ feature {NONE} -- Implementation
 				if an_options.void_safety.is_set then
 					append_text (" void_safety=%"" + an_options.void_safety.out + "%"")
 				end
+				if an_options.is_strictly_void_safe_configured then
+					append_text (" is_void_safe=%"" + an_options.is_strictly_void_safe.out.as_lower + "%"")
+				end
 				if an_options.syntax.is_set then
 					append_text (" syntax=%"" + an_options.syntax.out + "%"")
 				end

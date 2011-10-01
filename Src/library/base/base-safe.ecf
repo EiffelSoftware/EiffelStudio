@@ -69,8 +69,8 @@
 				<exclude>/kernel/special.e$</exclude>
 				<exclude>/kernel/storable.e$</exclude>
 				<exclude>/kernel/stream.e$</exclude>
-				<exclude>/kernel/system_string.e$</exclude>
-				<exclude>/kernel/system_string_factory.e$</exclude>
+				<exclude>/kernel/string/system_string.e$</exclude>
+				<exclude>/kernel/string/system_string_factory.e$</exclude>
 				<exclude>/kernel/type.e$</exclude>
 				<exclude>/kernel/tuple.e$</exclude>
 				<exclude>/kernel/unix_file_info.e$</exclude>

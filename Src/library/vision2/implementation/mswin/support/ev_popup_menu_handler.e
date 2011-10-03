@@ -44,7 +44,6 @@ feature {NONE} -- Initialization
 				default_style := ws_overlappedwindow
 				make_top ("EV_POPUP_MENU_HANDLER")
 			end
-			set_menu (menu_item_list)
 		end
 
 feature -- Default creation values

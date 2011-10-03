@@ -346,6 +346,7 @@ feature -- Basic operations
 			window_exists: window.exists
 		local
 			l_null: POINTER
+			l_id: INTEGER
 		do
 				-- From CodeProject:
 				--
@@ -363,11 +364,17 @@ feature -- Basic operations
 				-- This can be done by sending a benign message such as WM_NULL to the current window.
 			{WEL_API}.set_foreground_window (window.item).do_nothing
 			if rect /= Void then
-				{WEL_API}.track_popup_menu (item, option, x, y, 0, window.item, rect.item)
+				l_id := {WEL_API}.track_popup_menu (item, option | tpm_returncmd, x, y, 0, window.item, rect.item)
 			else
-				{WEL_API}.track_popup_menu (item, option, x, y, 0, window.item, l_null)
+				l_id := {WEL_API}.track_popup_menu (item, option | tpm_returncmd, x, y, 0, window.item, l_null)
 			end
 			{WEL_API}.post_message (window.item, {WEL_WM_CONSTANTS}.wm_null, l_null, l_null)
+
+			if l_id /= 0 then
+					-- The usage of the `tpm_returncmd' flag let us get the ID of the menu
+					-- and we can directly call the associated handler of `window' showing the menu.
+				window.on_menu_command (l_id)
+			end
 		end
 
 feature -- Measurement
@@ -730,7 +737,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -26,7 +26,6 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'.
 		local
 			sys: SYSTEM_I
-			cl_i: CLASS_I
 		do
 			sys := Eiffel_system.system
 

@@ -471,7 +471,6 @@ feature {NONE} -- Action handlers
 	on_ok
 			-- Add library and close the dialog.
 		local
-			l_loc: CONF_FILE_LOCATION
 			l_sys: CONF_SYSTEM
 		do
 				-- library choosen?
@@ -481,8 +480,7 @@ feature {NONE} -- Action handlers
 				elseif group_exists (name.text, target) then
 					(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (conf_interface_names.group_already_exists (name.text), Current, Void)
 				else
-					l_loc := factory.new_location_from_full_path (location.text, target)
-					last_group := factory.new_library (name.text, l_loc, target)
+					last_group := factory.new_library (name.text, location.text, target)
 						-- add an empty classes list that it get's displayed in the classes tree
 					last_group.set_classes (create {HASH_TABLE [CONF_CLASS, STRING]}.make (0))
 					l_sys := factory.new_system_generate_uuid ("dummy")
@@ -778,7 +776,7 @@ feature {NONE} -- Constants
 	location_column: INTEGER = 2
 
 ;note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

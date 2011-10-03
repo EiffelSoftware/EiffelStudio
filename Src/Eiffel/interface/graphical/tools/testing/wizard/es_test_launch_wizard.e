@@ -250,7 +250,7 @@ feature {NONE} -- Implementation
 			--
 			-- `a_recompile': Should project be recompiled after adding library?
 		local
-			l_location: CONF_FILE_LOCATION
+			l_location: STRING
 			l_factory: CONF_PARSE_FACTORY
 			l_library: CONF_LIBRARY
 			l_system: CONF_SYSTEM
@@ -261,9 +261,9 @@ feature {NONE} -- Implementation
 			l_target := a_project.universe.target
 			create l_factory
 			if l_target.options.void_safety.index = {CONF_OPTION}.void_safety_index_all then
-				l_location := l_factory.new_location_from_full_path (testing_library_path_safe, l_target)
+				l_location := testing_library_path_safe
 			else
-				l_location := l_factory.new_location_from_full_path (testing_library_path, l_target)
+				l_location := testing_library_path
 			end
 			if a_project.universe.group_of_name (testing_library_name) /= Void then
 				l_name := testing_library_name + "_library"
@@ -280,7 +280,7 @@ feature {NONE} -- Implementation
 
 			if l_target.system.store_successful then
 				create_eifgens_cluster (a_project)
-				
+
 				create l_manager.make (window_manager.last_focused_development_window)
 				l_manager.refresh
 
@@ -352,7 +352,7 @@ feature {NONE} -- Internationalization
 	cancel_text: STRING = "Cancel"
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

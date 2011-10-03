@@ -1151,7 +1151,6 @@ feature {NONE} -- Implementation
 			l_factory: CONF_FACTORY
 			l_target: CONF_TARGET
 			l_root: CONF_ROOT
-			l_file_location: CONF_FILE_LOCATION
 			l_directory_location: CONF_DIRECTORY_LOCATION
 			l_cluster: CONF_CLUSTER
 			l_library: CONF_LIBRARY
@@ -1186,8 +1185,7 @@ feature {NONE} -- Implementation
 			l_target.add_cluster (l_cluster)
 
 				-- Add base library
-			l_file_location := l_factory.new_location_from_full_path ("$ISE_LIBRARY/library/base/base.ecf", l_target)
-			l_library := l_factory.new_library ("base", l_file_location, l_target)
+			l_library := l_factory.new_library ("base", "$ISE_LIBRARY/library/base/base.ecf", l_target)
 			l_target.add_library (l_library)
 
 			if l_target.precompile = Void then
@@ -1210,7 +1208,6 @@ feature {NONE} -- Implementation
 		local
 			l_factory: CONF_FACTORY
 			l_library_name, l_extension, l_ecf_path: STRING
-			l_file_location: CONF_FILE_LOCATION
 			l_library: CONF_LIBRARY
 		do
 			create l_factory
@@ -1220,7 +1217,7 @@ feature {NONE} -- Implementation
 				-- Check if extension denotes a configuration file
 			if l_extension.is_equal ("." + config_extension) then
 					-- The library is specified as full path to ecf file
-				l_file_location := l_factory.new_location_from_full_path (a_library, a_target)
+				l_ecf_path := a_library
 					-- Name of config file is taken as name of library
 				l_library_name := file_system.basename (a_library)
 				l_library_name.remove_tail (4)
@@ -1229,13 +1226,12 @@ feature {NONE} -- Implementation
 				l_library_name := a_library.twin
 					-- Guess location
 				l_ecf_path := "$ISE_LIBRARY/library/" + a_library + "/" + a_library + "." + config_extension
-				l_file_location := l_factory.new_location_from_full_path (l_ecf_path, a_target)
 					-- Todo: smarter guess, check if ECF exists in this location and try also $ISE_LIBRARY/framework/
 					-- Todo: check if location exist and raise an error if it does not
 					-- Todo: check if library can be used as precompile (e.g. Vision2)
 			end
 				-- Add library to ecf target
-			l_library := l_factory.new_library (l_library_name, l_file_location, a_target)
+			l_library := l_factory.new_library (l_library_name, l_ecf_path, a_target)
 			a_target.add_library (l_library)
 		end
 

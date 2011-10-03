@@ -216,7 +216,6 @@ feature {NONE} -- Implementation of data retrieval
 			l_over: CONF_OVERRIDE
 			l_name, l_parent, l_str: STRING
 			l_location: CONF_DIRECTORY_LOCATION
-			l_file_loc: CONF_FILE_LOCATION
 			l_lib, l_lib_pre: CONF_LIBRARY
 			l_normal_cluster: BOOLEAN
 		do
@@ -224,22 +223,18 @@ feature {NONE} -- Implementation of data retrieval
 			if is_library_conversions then
 					-- convert base, wel, vision2 and time clusters into library equivalents
 				if l_name.is_case_insensitive_equal ("base") then
-					l_file_loc := factory.new_location_from_full_path ("$ISE_LIBRARY\library\base\base.ecf", current_target)
-					l_lib := factory.new_library ("base", l_file_loc, current_target)
+					l_lib := factory.new_library ("base", "$ISE_LIBRARY\library\base\base.ecf", current_target)
 					ignored_clusters.force ("base")
 				elseif l_name.is_case_insensitive_equal ("wel") then
-					l_file_loc := factory.new_location_from_full_path ("$ISE_LIBRARY\library\wel\wel.ecf", current_target)
-					l_lib := factory.new_library ("wel", l_file_loc, current_target)
+					l_lib := factory.new_library ("wel", "$ISE_LIBRARY\library\wel\wel.ecf", current_target)
 					ignored_clusters.force ("wel")
 					has_wel := True
 				elseif l_name.is_case_insensitive_equal ("vision2") then
-					l_file_loc := factory.new_location_from_full_path ("$ISE_LIBRARY\library\vision2\vision2.ecf", current_target)
-					l_lib := factory.new_library ("vision2", l_file_loc, current_target)
+					l_lib := factory.new_library ("vision2", "$ISE_LIBRARY\library\vision2\vision2.ecf", current_target)
 					ignored_clusters.force ("vision2")
 					has_vision2 := True
 				elseif l_name.is_case_insensitive_equal ("time") then
-					l_file_loc := factory.new_location_from_full_path ("$ISE_LIBRARY\library\time\time.ecf", current_target)
-					l_lib := factory.new_library ("time", l_file_loc, current_target)
+					l_lib := factory.new_library ("time", "$ISE_LIBRARY\library\time\time.ecf", current_target)
 					ignored_clusters.force ("time")
 				end
 
@@ -932,7 +927,7 @@ invariant
 	extension_name_not_empty: not extension_name.is_empty
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

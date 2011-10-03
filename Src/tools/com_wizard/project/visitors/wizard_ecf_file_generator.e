@@ -47,7 +47,6 @@ feature {NONE} -- Implementation
 			l_system: CONF_SYSTEM
 			l_target: CONF_TARGET
 			l_root: CONF_ROOT
-			l_file_loc: CONF_FILE_LOCATION
 			l_dir_loc: CONF_DIRECTORY_LOCATION
 			l_lib: CONF_LIBRARY
 			l_cl: CONF_CLUSTER
@@ -98,23 +97,19 @@ feature {NONE} -- Implementation
 				-- needed libraries
 			l_libs := l_target.libraries
 			if not l_libs.has ("base") then
-				l_file_loc := conf_factory.new_location_from_full_path ("$ISE_LIBRARY\library\base\base.ecf", l_target)
-				l_lib := conf_factory.new_library ("base", l_file_loc, l_target)
+				l_lib := conf_factory.new_library ("base", "$ISE_LIBRARY\library\base\base.ecf", l_target)
 				l_target.add_library (l_lib)
 			end
 			if not l_libs.has ("wel") then
-				l_file_loc := conf_factory.new_location_from_full_path ("$ISE_LIBRARY\library\wel\wel.ecf", l_target)
-				l_lib := conf_factory.new_library ("wel", l_file_loc, l_target)
+				l_lib := conf_factory.new_library ("wel", "$ISE_LIBRARY\library\wel\wel.ecf", l_target)
 				l_target.add_library (l_lib)
 			end
 			if not l_libs.has ("time") then
-				l_file_loc := conf_factory.new_location_from_full_path ("$ISE_LIBRARY\library\time\time.ecf", l_target)
-				l_lib := conf_factory.new_library ("time", l_file_loc, l_target)
+				l_lib := conf_factory.new_library ("time", "$ISE_LIBRARY\library\time\time.ecf", l_target)
 				l_target.add_library (l_lib)
 			end
 			if not l_libs.has ("com") then
-				l_file_loc := conf_factory.new_location_from_full_path ("$ISE_LIBRARY\library\com\com.ecf", l_target)
-				l_lib := conf_factory.new_library ("com", l_file_loc, l_target)
+				l_lib := conf_factory.new_library ("com", "$ISE_LIBRARY\library\com\com.ecf", l_target)
 				l_target.add_library (l_lib)
 			end
 

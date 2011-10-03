@@ -775,7 +775,7 @@ feature {NONE} -- Implementation attribute processing
 				l_name.to_lower
 			end
 			if is_valid_group_name (l_name) and l_location /= Void and not group_list.has (l_name) then
-				current_library := factory.new_library (l_name, factory.new_location_from_full_path (l_location, current_target), current_target)
+				current_library := factory.new_library (l_name, l_location, current_target)
 				current_group := current_library
 				if l_readonly /= Void then
 					if l_readonly.is_boolean then

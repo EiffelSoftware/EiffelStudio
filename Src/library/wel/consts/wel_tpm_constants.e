@@ -45,6 +45,34 @@ feature -- Access
 			"TPM_RIGHTALIGN"
 		end
 
+	Tpm_bottomalign: INTEGER
+		external
+			"C [macro %"wel.h%"]"
+		alias
+			"TPM_BOTTOMALIGN"
+		end
+
+	Tpm_topalign: INTEGER
+		external
+			"C [macro %"wel.h%"]"
+		alias
+			"TPM_TOPALIGN"
+		end
+
+	Tpm_vcenteralign: INTEGER
+		external
+			"C [macro %"wel.h%"]"
+		alias
+			"TPM_VCENTERALIGN"
+		end
+
+	tpm_returncmd: INTEGER
+		external
+			"C [macro %"wel.h%"]"
+		alias
+			"TPM_RETURNCMD"
+		end
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

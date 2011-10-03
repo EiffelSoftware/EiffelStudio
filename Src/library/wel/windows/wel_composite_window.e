@@ -487,13 +487,6 @@ feature {NONE}-- Messages
 		do
 		end
 
-	on_menu_command (menu_id: INTEGER)
-			-- The `menu_id' has been choosen from the menu.
-		require
-			exists: exists
-		do
-		end
-
 	on_sys_command (a_command, x_pos, y_pos: INTEGER)
 			-- Wm_syscommand message.
 			-- This message is sent when the user selects a command
@@ -690,6 +683,15 @@ feature {NONE}-- Messages
 			-- Called when window receives WM_GETDLGCODE message.
 		do
 			set_message_return_value (to_lresult ({WEL_DLGC_CONSTANTS}.dlgc_want_all_keys))
+		end
+
+feature {WEL_MENU} -- Messages
+
+	on_menu_command (menu_id: INTEGER)
+			-- The `menu_id' has been choosen from the menu.
+		require
+			exists: exists
+		do
 		end
 
 feature {NONE} -- Implementation

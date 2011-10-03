@@ -184,12 +184,12 @@ feature -- Menus
 			"SetMenu ((HWND) $hwnd, (HMENU) $hmenu)"
 		end
 
-	track_popup_menu (hmenu: POINTER; flags, x, y, reserved: INTEGER; hwnd, rect: POINTER)
+	track_popup_menu (hmenu: POINTER; flags, x, y, reserved: INTEGER; hwnd, rect: POINTER): INTEGER
 			-- SDK TrackPopupMenu
 		external
 			"C inline use <windows.h>"
 		alias
-			"TrackPopupMenu((HMENU) $hmenu, (UINT) $flags, (int) $x, (int) $y, (int) $reserved, (HWND) $hwnd, (RECT *) $rect)"
+			"return (EIF_INTEGER) TrackPopupMenu((HMENU) $hmenu, (UINT) $flags, (int) $x, (int) $y, (int) $reserved, (HWND) $hwnd, (RECT *) $rect);"
 		end
 
 	get_menu (hwnd: POINTER): POINTER

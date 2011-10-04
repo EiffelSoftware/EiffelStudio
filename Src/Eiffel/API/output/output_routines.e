@@ -83,6 +83,12 @@ feature -- Miscellaneous
 					text.process_basic_text ("True")
 					text.add_new_line
 				end
+				if eiffel_ace.system.is_safe_mode then
+					text.add_indent
+					text.process_indexing_tag_text ("safe mode: ")
+					text.process_basic_text ("True")
+					text.add_new_line
+				end
  			end
 
 			text.add_new_line
@@ -237,7 +243,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

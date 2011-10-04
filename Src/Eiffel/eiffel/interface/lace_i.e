@@ -56,6 +56,7 @@ feature {NONE} -- Initialization
 	make
 			-- Lace initialization
 		do
+			(create {CONF_PARSER_CONTROLLER}).prefer_safe (eiffel_layout.is_safe_mode)
 		end
 
 feature -- Status
@@ -171,7 +172,7 @@ feature -- Status setting
 			if precompile /= Void then
 				create l_factory
 				create l_load.make (l_factory)
-				l_load.retrieve_configuration (precompile.location.evaluated_path)
+				l_load.retrieve_configuration (precompile.path)
 				if l_load.is_error then
 					is_precompile_invalid := True
 				else
@@ -1290,7 +1291,7 @@ feature {NONE} -- Implementation
 			l_pre := a_target.precompile
 
 				-- check if the configuration file is ok
-			l_file_name := l_pre.location.evaluated_path
+			l_file_name := l_pre.path
 			create l_load.make (l_factory)
 			l_load.retrieve_configuration (l_file_name)
 			if l_load.is_error then
@@ -1384,7 +1385,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -639,7 +639,7 @@ feature {NONE} -- Implementation of data retrieval
 								-- open precompile and add libraries of precompile
 							if is_library_conversions then
 								create l_loader.make (factory)
-								l_loader.retrieve_configuration (l_conf_pre.location.evaluated_path)
+								l_loader.retrieve_configuration (l_conf_pre.path)
 								if not l_loader.is_error and then l_loader.last_system.library_target /= Void then
 									from
 										l_libs := l_loader.last_system.library_target.libraries

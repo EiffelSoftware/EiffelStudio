@@ -1314,6 +1314,9 @@ feature -- Update
 			elseif option.is_equal ("-full") then
 					-- This options enables full class checking even if not specified in ECF.
 				set_full_class_checking_mode
+			elseif option.is_equal ("-safe") then
+					-- Use "-safe" versions of ECFs if available.
+				set_safe_mode
 			elseif option.is_equal ("-auto_test") then
 				create l_at_args.make
 				from

@@ -770,7 +770,7 @@ feature {NONE} -- Settings
 			create l_args.make (10)
 			l_args.merge_right (command_line_profile_option_list)
 			l_args.extend ("-config")
-			l_args.extend (a_precompile.location.evaluated_path)
+			l_args.extend (a_precompile.path)
 			l_args.extend ("-precompile")
 			l_args.extend ("-clean")
 			l_args.extend ("-c_compile")

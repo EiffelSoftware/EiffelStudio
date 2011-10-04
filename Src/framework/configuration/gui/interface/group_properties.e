@@ -80,7 +80,7 @@ feature {NONE} -- Implementation
 					-- as options are inherited from there
 				if l_library.library_target = Void then
 					create l_load.make (create {CONF_PARSE_FACTORY})
-					l_load.retrieve_configuration (l_library.location.evaluated_path)
+					l_load.retrieve_configuration (l_library.path)
 					if not l_load.is_error and then l_load.last_system.library_target /= Void then
 						l_load.last_system.set_application_target (l_library.target)
 						l_library.set_library_target (l_load.last_system.library_target)
@@ -599,7 +599,7 @@ feature {NONE} -- Inheritance handling
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

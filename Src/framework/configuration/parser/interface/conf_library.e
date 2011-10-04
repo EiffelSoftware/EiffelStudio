@@ -138,6 +138,12 @@ feature -- Access queries
 			end
 		end
 
+	path: STRING
+			-- Path to the configuration file.
+		do
+			Result := resolver.resolved_library_path (location.evaluated_path)
+		end
+
 feature {CONF_ACCESS} -- Update, stored in configuration file
 
 	set_use_application_options (a_flag: like use_application_options)
@@ -180,11 +186,19 @@ feature -- Equality
 				equal (name_prefix, other.name_prefix) and then equal (renaming, other.renaming)
 		end
 
+feature {NONE} -- File name processing
+
+	resolver: CONF_PARSER_CONTROLLER
+			-- File name resolver.
+		once
+			create Result
+		end
+
 invariant
 	library_target_set: classes_set implies library_target /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

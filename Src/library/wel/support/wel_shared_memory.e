@@ -12,7 +12,7 @@ inherit
 	WEL_ANY
 
 feature {NONE} -- Initialisation
-	
+
 	make_from_handle (a_handle: POINTER)
 			-- Set `handle' with `a_handle'.
 			-- Since `item' is shared, it does not need
@@ -25,7 +25,6 @@ feature {NONE} -- Initialisation
 			shared: shared
 		end
 
-
 feature -- Access
 
 	accessible: BOOLEAN
@@ -33,14 +32,14 @@ feature -- Access
 
 	handle: POINTER
 			-- Handle of access shared memory		
-			
+
 feature -- Status report
 
 	size: INTEGER
 		do
 			Result := global_size (handle)
 		end
-	
+
 feature -- Element change
 
 	lock
@@ -71,7 +70,7 @@ feature {NONE} -- Implementation
 		local
 			p_result: POINTER
 		do
-			p_result := global_free (handle)			
+			p_result := global_free (handle)
 			check
 				destroyed: p_result = default_pointer
 			end
@@ -122,14 +121,14 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

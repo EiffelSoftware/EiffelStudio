@@ -53,11 +53,36 @@ feature -- Element Change
 				create shared_string.make_from_handle (shared_memory_handle)
 				shared_string.retrieve_string
 				l_string := shared_string.last_string
-					-- Per postcondition of `shared_string.last_string'.
-				check l_string_attached: l_string /= Void end
-				last_string := l_string
-			else
+			end
+			if l_string = Void then
 				last_string := ""
+			else
+				last_string := l_string
+			end
+		ensure
+			last_string_not_void: last_string /= Void
+		end
+
+	retrieve_clipboard_text_discarding_carriage_return
+			-- Retrieves text from the clipboard
+		require
+			clipboard_open: clipboard_open
+			text_available: is_clipboard_format_available ({WEL_CLIPBOARD_CONSTANTS}.Cf_unicodetext)
+		local
+			shared_string: WEL_SHARED_MEMORY_STRING
+			shared_memory_handle: POINTER
+			l_string: detachable like last_string
+		do
+			shared_memory_handle := cwel_get_clipboard_data ({WEL_CLIPBOARD_CONSTANTS}.Cf_unicodetext)
+			if shared_memory_handle /= default_pointer then
+				create shared_string.make_from_handle (shared_memory_handle)
+				shared_string.retrieve_string_discarding_carriage_return
+				l_string := shared_string.last_string
+			end
+			if l_string = Void then
+				last_string := ""
+			else
+				last_string := l_string
 			end
 		ensure
 			last_string_not_void: last_string /= Void
@@ -72,6 +97,19 @@ feature -- Element Change
 			shared_string: WEL_SHARED_MEMORY_STRING
 		do
 			create shared_string.make_from_string (a_text)
+			cwel_set_clipboard_data ({WEL_CLIPBOARD_CONSTANTS}.Cf_unicodetext, shared_string.handle)
+		end
+
+	set_clipboard_text_with_newline_conversion (a_text: READABLE_STRING_GENERAL)
+			-- Assign `a_text' to the clipboard guaranteeing that all newline (linefeed) characters '%N'
+			-- are prepended with a carriage return character '%R'.
+		require
+			clipboard_open: clipboard_open
+			a_text_not_void: a_text /= Void
+		local
+			shared_string: WEL_SHARED_MEMORY_STRING
+		do
+			create shared_string.make_from_string_with_newline_conversion (a_text)
 			cwel_set_clipboard_data ({WEL_CLIPBOARD_CONSTANTS}.Cf_unicodetext, shared_string.handle)
 		end
 
@@ -167,14 +205,14 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

@@ -34,9 +34,10 @@ feature -- Access
 			-- is less than `maximum_buffered_string_size', otherwise return a
 			-- new WEL_STRING object. This is used to prevent huge strings
 			-- from being kept within a system.
-		once
+		do
 			if characters < maximum_buffered_string_size then
 				Result := wel_string
+				Result.set_count (characters)
 			else
 				create Result.make_empty (characters)
 			end
@@ -57,19 +58,35 @@ feature -- Access
 			end
 		end
 
+	wel_string_from_string_with_newline_conversion (s: READABLE_STRING_GENERAL): WEL_STRING
+			-- Return a shared wel string set to `s' if
+			-- `s.count' < `maximum_buffered_string_size', otherwise
+			-- return a new WEL_STRING object set to `s'.
+			-- Make sure all lone '%N' characters are prepended with a carriage return '%R'.
+		require
+			s_not_void: s /= Void
+		do
+			if s.count < maximum_buffered_string_size then
+				Result := wel_string
+				Result.set_string_with_newline_conversion (s)
+			else
+				create Result.make_with_newline_conversion (s)
+			end
+		end
+
 	maximum_buffered_string_size: INTEGER = 10000;
 		-- Maximum size of string permitting a shared WEL_STRING object to
 		-- be returned by `wel_string_restricted'.
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

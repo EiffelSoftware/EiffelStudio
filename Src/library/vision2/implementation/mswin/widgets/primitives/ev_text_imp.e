@@ -23,6 +23,8 @@ inherit
 		end
 
 	EV_TEXT_COMPONENT_IMP
+		rename
+			internal_set_caret_position as wel_set_caret_position
 		redefine
 			append_text,
 			interface,
@@ -35,7 +37,8 @@ inherit
 			on_key_down,
 			select_region,
 			selected_text,
-			ignore_character_code
+			ignore_character_code,
+			text_component_imp_set_selection
 		end
 
 	WEL_MULTIPLE_LINE_EDIT
@@ -60,8 +63,8 @@ inherit
 			width as wel_width,
 			height as wel_height,
 			item as wel_item,
-			caret_position as internal_caret_position,
-			set_caret_position as internal_set_caret_position,
+			caret_position as wel_caret_position,
+			set_caret_position as wel_set_caret_position,
 			enabled as is_sensitive,
 			x as x_position,
 			y as y_position,
@@ -147,6 +150,7 @@ feature -- Initialization
 		do
 			initialize_text_widget
 			Precursor {EV_TEXT_COMPONENT_IMP}
+			enable_scroll_caret_at_selection
 		end
 
 	initialize_text_widget
@@ -192,22 +196,33 @@ feature -- Access
 		end
 
 	text: STRING_32
-			-- text of `Current'.
+			-- Text of `Current'.
+		local
+			length: INTEGER
+			l_wel_string: WEL_STRING
+			nb: INTEGER
 		do
-			Result := wel_text
-			Result.prune_all ('%R')
+			length := wel_text_length
+			if length > 0 then
+				length := length + 1
+				l_wel_string := wel_string_restricted (length)
+				nb := cwin_get_window_text (wel_item, l_wel_string.item, length)
+				Result := l_wel_string.string_discarding_carriage_return
+			else
+				create Result.make (0)
+			end
 		end
 
 	set_text (a_text: READABLE_STRING_GENERAL)
 			-- Assign `a_text' to `text'.
 		local
-			exp: detachable READABLE_STRING_GENERAL
+			l_wel_string: WEL_STRING
 		do
-			if a_text /= Void then
-					-- Replace "%N" with "%R%N" for Windows.
-				exp := convert_string (a_text)
-			end
-			wel_set_text (exp)
+			l_wel_string := wel_string_from_string_with_newline_conversion (a_text)
+			{WEL_API}.send_message (wel_item, {WEL_WM_CONSTANTS}.wm_settext, {WEL_API}.lparam (0), l_wel_string.item)
+
+				-- Explicitly fire En_change action to emulate single line behavior.
+			{WEL_API}.send_message (default_parent.item, Wm_command, to_wparam (En_change |<< 16) , wel_item)
 		end
 
 	line_count: INTEGER
@@ -236,8 +251,8 @@ feature -- Access
 			-- Insert `txt' at `caret_position'.
 		local
 			previous_caret_position: INTEGER
-			a_string: READABLE_STRING_GENERAL
 			sel_start, sel_end: INTEGER
+			l_wel_string: WEL_STRING
 		do
 			if has_selection then
 				sel_start := selection_start
@@ -245,12 +260,12 @@ feature -- Access
 				set_selection (caret_position - 1, caret_position - 1)
 			end
 			previous_caret_position := internal_caret_position
-			a_string := convert_string (txt)
-			replace_selection (a_string)
+			l_wel_string := wel_string_from_string_with_newline_conversion (txt)
+			{WEL_API}.send_message (wel_item, Em_replacesel, to_wparam (0), l_wel_string.item)
 			if has_selection then
 				set_selection (sel_start - 1, sel_end - 1)
 			end
-			internal_set_caret_position (previous_caret_position)
+			wel_set_caret_position (previous_caret_position)
 		end
 
 feature -- Status Report
@@ -350,21 +365,20 @@ feature -- Status Settings
 			-- Append `txt' to end of `text'.
 		local
 			previous_caret_position: INTEGER
-			a_string: READABLE_STRING_GENERAL
+			l_wel_string: WEL_STRING
 		do
 			previous_caret_position := internal_caret_position
-			internal_set_caret_position (wel_text_length)
-				-- Replace "%N" with "%R%N" for Windows.
-			a_string := convert_string (txt)
-			replace_selection (a_string)
-			internal_set_caret_position (previous_caret_position)
+			wel_set_caret_position (wel_text_length)
+			create l_wel_string.make_with_newline_conversion (txt)
+			{WEL_API}.send_message (wel_item, Em_replacesel, to_wparam (0), l_wel_string.item)
+			wel_set_caret_position (previous_caret_position)
 		end
 
 	set_caret_position (pos: INTEGER)
 			-- set current caret position.
 			--| This position is used for insertions.
 		do
-			internal_set_caret_position (actual_position_from_caret_position (pos))
+			wel_set_caret_position (actual_position_from_caret_position (pos))
 		end
 
 	select_region (start_pos, end_pos: INTEGER)
@@ -392,6 +406,30 @@ feature -- Status Settings
 			end
 		end
 
+	text_component_imp_set_selection (a_start_pos, a_end_pos: INTEGER)
+			-- <Precursor>
+		local
+			l_new_lines_to_start: INTEGER
+			l_new_lines_to_end: INTEGER
+			l_text: like text
+			l_text_length: INTEGER
+		do
+			l_text := text
+			l_text_length := l_text.count
+			if l_text_length > 0 then
+				if a_start_pos <= a_end_pos then
+					l_new_lines_to_start := l_text.substring (1, a_start_pos.min (l_text_length)).occurrences ('%N')
+					l_new_lines_to_end := l_text.substring ((a_start_pos + 1).min (l_text_length), a_end_pos.min (l_text_length)).occurrences ('%N')
+					set_selection (a_start_pos + l_new_lines_to_start - 1, a_end_pos + l_new_lines_to_start + l_new_lines_to_end - 1)
+				else
+					l_new_lines_to_end := l_text.substring (1, a_end_pos.min (l_text_length)).occurrences ('%N')
+					l_new_lines_to_start := l_text.substring ((a_end_pos + 1).min (l_text_length), a_start_pos.min (l_text_length)).occurrences ('%N')
+					set_selection (a_start_pos + l_new_lines_to_end + l_new_lines_to_start - 1, a_end_pos + l_new_lines_to_end - 1)
+				end
+			end
+
+		end
+
 feature -- Basic operation
 
 	scroll_to_line (i: INTEGER)
@@ -404,6 +442,34 @@ feature -- Basic operation
 			-- Ensure that the last line is visible in `Current'.
 		do
 			scroll_to_line (line_count)
+		end
+
+feature -- Access
+
+	internal_caret_position: INTEGER
+			-- <Precursor>
+		local
+			l_wel_point: WEL_POINT
+			sel_start, sel_end: INTEGER_32
+			l_send_message_result: POINTER
+			l_index_from_beginning, l_line_index: INTEGER_32
+			l_success: BOOLEAN
+		do
+			{WEL_API}.send_message (wel_item, Em_getsel, $sel_start, $sel_end)
+			Result := sel_end
+			if sel_start /= sel_end then
+					-- We may have a reverse selection so we need to retrieve the caret position from the control.
+				create l_wel_point.make (0, 0)
+				l_success := {WEL_API}.get_caret_pos (l_wel_point.item)
+				if l_success then
+					l_send_message_result := {WEL_API}.send_message_result (wel_item, {WEL_RICH_EDIT_MESSAGE_CONSTANTS}.Em_charfrompos, default_pointer, cwin_make_long (l_wel_point.x, l_wel_point.y))
+					l_index_from_beginning := {WEL_API}.loword (l_send_message_result)
+					l_line_index := {WEL_API}.hiword (l_send_message_result)
+					if l_index_from_beginning = sel_start or l_index_from_beginning = sel_end then
+						Result := l_index_from_beginning
+					end
+				end
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -444,71 +510,6 @@ feature {NONE} -- Implementation
 				end
 			end
 			Result := pos - 1 + new_lines
-		end
-
-
-	convert_string (a_string: READABLE_STRING_GENERAL): STRING_32
-			-- Replace all "%N" with "%R%N" which is the Windows new line
-			-- character symbol.
-		require
-			a_string_not_void: a_string /= Void
-		local
-			i, j, nb, l_count : INTEGER
-			l_null : CHARACTER
-			l_result: detachable STRING_32
-		do
-				-- Count how many occurrences of `%N' not preceded by '%R' we have in `a_string'.
-			from
-				i := 2
-				nb := a_string.count
-				if nb > 0 and then a_string.code (1) = ('%N').natural_32_code then
-					l_count := 1
-				end
-			until
-				i > nb
-			loop
-				if
-					a_string.code (i) = ('%N').natural_32_code and
-					a_string.code (i - 1) /= ('%R').natural_32_code
-				then
-					l_count := l_count + 1
-				end
-				i := i + 1
-			end
-
-				-- Replace all found occurrences with '%R%N'.
-			if l_count > 0 then
-				create l_result.make_filled (l_null, nb + l_count)
-				from
-					i := 2
-					j := 1
-					if nb > 0 then
-						if a_string.code (1) = ('%N').natural_32_code then
-							l_result.put ('%R', j)
-							j := j + 1
-						end
-						l_result.put_code (a_string.code (1), j)
-					end
-				until
-					i > nb
-				loop
-					if
-						a_string.code (i) = ('%N').natural_32_code and
-						 a_string.code (i - 1) /= ('%R').natural_32_code
-					then
-						j := j + 1
-						l_result.put ('%R', j)
-					end
-					j := j + 1
-					l_result.put_code (a_string.code (i), j)
-					i := i + 1
-				end
-			end
-			if l_result = Void then
-				Result := a_string.to_string_32
-			else
-				Result := l_result
-			end
 		end
 
 feature {NONE} -- WEL Implementation

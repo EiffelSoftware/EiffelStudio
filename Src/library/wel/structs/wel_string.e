@@ -351,7 +351,6 @@ feature -- Element change
 			a_string_not_void: a_string /= Void
 		local
 			i, j, nb, l_count, l_new_size : INTEGER
-			l_null : CHARACTER
 			l_managed_data: like managed_data
 		do
 				-- Count how many occurrences of `%N' not preceded by '%R' we have in `a_string'.

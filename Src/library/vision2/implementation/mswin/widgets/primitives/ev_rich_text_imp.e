@@ -26,8 +26,8 @@ inherit
 			default_ex_style,
 			default_style,
 			class_name,
-			internal_caret_position,
-			internal_set_caret_position,
+			wel_caret_position,
+			wel_set_caret_position,
 			text,
 			wel_text,
 			process_notification_info,
@@ -97,8 +97,8 @@ inherit
 			font as wel_font,
 			set_parent as wel_set_parent,
 			make as wel_make,
-			caret_position as internal_caret_position,
-			set_caret_position as internal_set_caret_position,
+			caret_position as wel_caret_position,
+			set_caret_position as wel_set_caret_position,
 			text as wel_text,
 			text_length as wel_text_length,
 			set_text as wel_set_text,
@@ -716,14 +716,14 @@ feature -- Status report
 	caret_position: INTEGER
 			-- Current position of caret.
 		do
-			Result := (internal_caret_position + 1).min (text_length + 1)
+			Result := (wel_caret_position + 1).min (text_length + 1)
 		end
 
 	set_caret_position (pos: INTEGER)
 			-- set current caret position.
 			--| This position is used for insertions.
 		do
-			internal_set_caret_position (pos - 1)
+			wel_set_caret_position (pos - 1)
 		end
 
 	selection_start: INTEGER
@@ -788,12 +788,7 @@ feature -- Status setting
 		local
 			stream: WEL_RICH_EDIT_BUFFER_LOADER
 		do
-			if not a_text.is_empty then
-					-- Replace "%N" with "%R%N" for Windows.
-				create stream.make (convert_string (a_text))
-			else
-				create stream.make (a_text)
-			end
+			create stream.make (convert_string (a_text))
 			stream.set_is_unicode_data (True)
 			text_stream_in (stream)
 			stream.release_stream
@@ -1378,7 +1373,7 @@ feature -- Status setting
 			-- Restore caret position stored by last call to `safe_store_caret' and restore
 			-- change events.
 		do
-			internal_set_caret_position (original_caret_position.min (text_length))
+			wel_set_caret_position (original_caret_position.min (text_length))
 			if must_restore_selection then
 				if last_known_caret_position < original_selection_end then
 						-- The direction of the selection is important when selecting with the keyboard
@@ -1389,7 +1384,7 @@ feature -- Status setting
 					set_selection (original_selection_end, original_selection_start)
 				end
 			else
-				internal_set_caret_position (original_caret_position)
+				wel_set_caret_position (original_caret_position)
 			end
 			internal_actions_blocked := False
 		end
@@ -1514,6 +1509,69 @@ feature {EV_RICH_TEXT_BUFFERING_STRUCTURES_I}
 		end
 
 feature {NONE} -- Implementation
+
+	convert_string (a_string: READABLE_STRING_GENERAL): READABLE_STRING_GENERAL
+			-- Replace all "%N" with "%R%N" which is the Windows new line
+			-- character symbol.
+		require
+			a_string_not_void: a_string /= Void
+		local
+			i, j, nb, l_count : INTEGER
+			l_null : CHARACTER
+			l_result: detachable STRING_32
+		do
+				-- Count how many occurrences of `%N' not preceded by '%R' we have in `a_string'.
+			from
+				i := 2
+				nb := a_string.count
+				if nb > 0 and then a_string.code (1) = ('%N').natural_32_code then
+					l_count := 1
+				end
+			until
+				i > nb
+			loop
+				if
+					a_string.code (i) = ('%N').natural_32_code and then a_string.code (i - 1) /= ('%R').natural_32_code
+				then
+					l_count := l_count + 1
+				end
+				i := i + 1
+			end
+
+				-- Replace all found occurrences with '%R%N'.
+			if l_count > 0 then
+				create l_result.make_filled (l_null, nb + l_count)
+				from
+					i := 2
+					j := 1
+					if nb > 0 then
+						if a_string.code (1) = ('%N').natural_32_code then
+							l_result.put ('%R', j)
+							j := j + 1
+						end
+						l_result.put_code (a_string.code (1), j)
+					end
+				until
+					i > nb
+				loop
+					if
+						a_string.code (i) = ('%N').natural_32_code and
+						 a_string.code (i - 1) /= ('%R').natural_32_code
+					then
+						j := j + 1
+						l_result.put ('%R', j)
+					end
+					j := j + 1
+					l_result.put_code (a_string.code (i), j)
+					i := i + 1
+				end
+			end
+			if l_result = Void then
+				Result := a_string
+			else
+				Result := l_result
+			end
+		end
 
 	internal_position_from_index (an_index: INTEGER): EV_COORDINATE
 			-- Position of character at index `an_index'.

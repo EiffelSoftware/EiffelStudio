@@ -154,10 +154,11 @@ feature {NONE} -- Implementation
 					last_error := create {CONF_ERROR_FILE}.make (a_file)
 				else
 					create {XML_LITE_STOPPABLE_PARSER} l_parser.make
-
+					a_callback.set_associated_parser (l_parser)
 					create l_end_tag_checker.set_next (a_callback)
 					l_end_tag_checker.set_associated_parser (l_parser)
 					create l_ns_cb.set_next (l_end_tag_checker)
+					l_ns_cb.set_associated_parser (l_parser)
 					l_parser.set_callbacks (l_ns_cb)
 
 					create l_file.make (a_file)
@@ -201,7 +202,7 @@ invariant
 	factory_not_void: factory /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -41,18 +41,18 @@ feature -- Windows
 	set_window_text (hwnd, str: POINTER)
 			-- SDK SetWindowText
 		external
-			"C inline use <windows.h>"
+			"C macro signature (HWND, LPCTSTR) use <windows.h>"
 		alias
-			"SetWindowText ((HWND)$hwnd, (LPCTSTR)$str)"
+			"SetWindowText"
 		end
 
 	set_parent (hwnd_child, hwnd_parent: POINTER): POINTER
 			-- Change the parent of the given child and return handle to
 			-- previous parent, or NULL otherwise.
 		external
-			"C inline use <windows.h>"
+			"C macro signature (HWND, HWND): EIF_POINTER use <windows.h>"
 		alias
-			"return (EIF_POINTER) SetParent ((HWND) $hwnd_child, (HWND) $hwnd_parent);"
+			"SetParent"
 		end
 
 	move_window (hwnd: POINTER; a_x, a_y, a_w, a_h: INTEGER; repaint: BOOLEAN): BOOLEAN
@@ -66,9 +66,9 @@ feature -- Windows
 	set_window_pos (hwnd, hwnd_after: POINTER; a_x, a_y, a_w, a_h, flags: INTEGER): BOOLEAN
 			-- SDK SetWindowPos
 		external
-			"C inline use <windows.h>"
+			"C macro signature (HWND, HWND, int, int, int, int, UINT): EIF_BOOLEAN use <windows.h>"
 		alias
-			"return EIF_TEST(SetWindowPos((HWND) $hwnd, (HWND) $hwnd_after, (int) $a_x, (int) $a_y, (int) $a_w, (int) $a_h, (UINT) $flags));"
+			"SetWindowPos"
 		end
 
 	begin_defer_window_pos (n: INTEGER): POINTER
@@ -117,6 +117,56 @@ feature -- Windows
 			"C inline use <windows.h>"
 		alias
 			"return EIF_TEST(DestroyWindow((HWND) $hwnd));"
+		end
+
+feature -- Data Operations
+
+	loword (value: POINTER): INTEGER
+			-- SDK LOWORD
+		external
+			"C macro use <windows.h>"
+		alias
+			"LOWORD"
+		end
+
+	hiword (value: POINTER): INTEGER
+			-- SDK HIWORD
+		external
+			"C macro use <windows.h>"
+		alias
+			"HIWORD"
+		end
+
+	makelong (low, high: INTEGER): POINTER
+			-- SDK MAKELONG
+		external
+			"C macro use <windows.h>"
+		alias
+			"MAKELONG"
+		end
+
+	lparam (i: INTEGER): POINTER
+			-- Convert integer value `i' in a valid `LPARAM' value.
+		external
+			"C macro use <windows.h>"
+		alias
+			"(LPARAM)"
+		end
+
+	wparam (i: INTEGER): POINTER
+			-- Convert integer value `i' in a valid `WPARAM' value.
+		external
+			"C macro use <windows.h>"
+		alias
+			"(WPARAM)"
+		end
+
+	lresult (i: INTEGER): POINTER
+			-- Convert integer value `i' in a valid LRESULT value.
+		external
+			"C macro use <windows.h>"
+		alias
+			"(LRESULT)"
 		end
 
 feature -- Multi-monitor
@@ -221,51 +271,51 @@ feature -- Window class
 	set_window_long (hwnd: POINTER; offset: INTEGER_32; value: POINTER): POINTER
 			-- SDK SetWindowLongPtr
 		external
-			"C inline use %"wel.h%""
+			"C macro signature (HWND, int, LONG_PTR): EIF_POINTER use %"wel.h%""
 		alias
-			"return (EIF_POINTER) SetWindowLongPtr ((HWND) $hwnd, (int) $offset, (LONG_PTR) $value);"
+			"SetWindowLongPtr"
 		end
 
 	get_window_long (hwnd: POINTER; offset: INTEGER_32): POINTER
 			-- SDK GetWindowLongPtr
 		external
-			"C inline use %"wel.h%""
+			"C macro signature (HWND, int): EIF_POINTER use %"wel.h%""
 		alias
-			"return (EIF_POINTER) GetWindowLongPtr ((HWND) $hwnd, (int) $offset);"
+			"GetWindowLongPtr"
 		end
 
 feature -- Messages
 
-	post_message_result (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER
+	post_message_result (hwnd: POINTER; msg: INTEGER; a_wparam, a_lparam: POINTER): POINTER
 			-- SDK PostMessage (with the result)
 		external
 			"C inline use <windows.h>"
 		alias
-			"PostMessage ((HWND) $hwnd, (UINT) $msg, (WPARAM) $wparam, (LPARAM) $lparam)"
+			"PostMessage ((HWND) $hwnd, (UINT) $msg, (WPARAM) $a_wparam, (LPARAM) $a_lparam)"
 		end
 
-	post_message_result_boolean (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): BOOLEAN
+	post_message_result_boolean (hwnd: POINTER; msg: INTEGER; a_wparam, a_lparam: POINTER): BOOLEAN
 			-- SDK PostMessage (with the result)
 		external
 			"C inline use <windows.h>"
 		alias
-			"PostMessage ((HWND) $hwnd, (UINT) $msg, (WPARAM) $wparam, (LPARAM) $lparam)"
+			"PostMessage ((HWND) $hwnd, (UINT) $msg, (WPARAM) $a_wparam, (LPARAM) $a_lparam)"
 		end
 
-	post_message (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER)
+	post_message (hwnd: POINTER; msg: INTEGER; a_wparam, a_lparam: POINTER)
 			-- SDK PostMessage (without the result)
 		external
 			"C inline use <windows.h>"
 		alias
-			"PostMessage ((HWND) $hwnd, (UINT) $msg, (WPARAM) $wparam, (LPARAM) $lparam)"
+			"PostMessage ((HWND) $hwnd, (UINT) $msg, (WPARAM) $a_wparam, (LPARAM) $a_lparam)"
 		end
 
-	post_thread_message (idthread: INTEGER; msg: INTEGER; wparam, lparam: POINTER)
+	post_thread_message (idthread: INTEGER; msg: INTEGER; a_wparam, a_lparam: POINTER)
 			-- SDK PostThreadMessage (without the result)
 		external
 			"C inline use <windows.h>"
 		alias
-			"PostThreadMessage ((DWORD) $idthread, (UINT) $msg, (WPARAM) $wparam, (LPARAM) $lparam)"
+			"PostThreadMessage ((DWORD) $idthread, (UINT) $msg, (WPARAM) $a_wparam, (LPARAM) $a_lparam)"
 		end
 
 	register_window_message (a_message_name: POINTER): INTEGER
@@ -277,44 +327,44 @@ feature -- Messages
 			"RegisterWindowMessage ((LPCTSTR) $a_message_name)"
 		end
 
-	send_message_result (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER
+	send_message_result (hwnd: POINTER; msg: INTEGER; a_wparam, a_lparam: POINTER): POINTER
 			-- SDK SendMessage (with the result)
 		external
 			"C inline use <windows.h>"
 		alias
-			"SendMessage ((HWND) $hwnd, (UINT) $msg, (WPARAM) $wparam, (LPARAM) $lparam)"
+			"SendMessage ((HWND) $hwnd, (UINT) $msg, (WPARAM) $a_wparam, (LPARAM) $a_lparam)"
 		end
 
-	send_message_result_integer (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): INTEGER
+	send_message_result_integer (hwnd: POINTER; msg: INTEGER; a_wparam, a_lparam: POINTER): INTEGER
 			-- SDK SendMessage (with an integer result)
 		external
 			"C inline use <windows.h>"
 		alias
-			"SendMessage ((HWND) $hwnd, (UINT) $msg, (WPARAM) $wparam, (LPARAM) $lparam)"
+			"SendMessage ((HWND) $hwnd, (UINT) $msg, (WPARAM) $a_wparam, (LPARAM) $a_lparam)"
 		end
 
-	send_message_result_boolean (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): BOOLEAN
+	send_message_result_boolean (hwnd: POINTER; msg: INTEGER; a_wparam, a_lparam: POINTER): BOOLEAN
 			-- SDK SendMessage (with a boolean result)
 		external
 			"C inline use <windows.h>"
 		alias
-			"SendMessage ((HWND) $hwnd, (UINT) $msg, (WPARAM) $wparam, (LPARAM) $lparam)"
+			"SendMessage ((HWND) $hwnd, (UINT) $msg, (WPARAM) $a_wparam, (LPARAM) $a_lparam)"
 		end
 
-	send_message (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER)
+	send_message (hwnd: POINTER; msg: INTEGER; a_wparam, a_lparam: POINTER)
 			-- SDK SendMessage
 		external
 			"C inline use <windows.h>"
 		alias
-			"SendMessage ((HWND) $hwnd, (UINT) $msg, (WPARAM) $wparam, (LPARAM) $lparam)"
+			"SendMessage ((HWND) $hwnd, (UINT) $msg, (WPARAM) $a_wparam, (LPARAM) $a_lparam)"
 		end
 
-	send_message_timeout (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER; fuflags, utimeout: INTEGER; lpdwresult: TYPED_POINTER [INTEGER])
+	send_message_timeout (hwnd: POINTER; msg: INTEGER; a_wparam, a_lparam: POINTER; fuflags, utimeout: INTEGER; lpdwresult: TYPED_POINTER [INTEGER])
 			-- SDK SendMessageTimeout
 		external
 			"C inline use <windows.h>"
 		alias
-			"SendMessageTimeout ((HWND) $hwnd, (UINT) $msg, (WPARAM) $wparam, (LPARAM) $lparam, (UINT) $fuflags, (UINT) $utimeout, (PDWORD_PTR) $lpdwresult)"
+			"SendMessageTimeout ((HWND) $hwnd, (UINT) $msg, (WPARAM) $a_wparam, (LPARAM) $a_lparam, (UINT) $fuflags, (UINT) $utimeout, (PDWORD_PTR) $lpdwresult)"
 		end
 
 feature -- File Drop Handling

@@ -53,7 +53,7 @@ feature -- Access
 			open_clipboard (Void)
 			if clipboard_open then
 				if is_clipboard_format_available ({WEL_CLIPBOARD_CONSTANTS}.Cf_unicodetext) then
-					retrieve_clipboard_text
+					retrieve_clipboard_text_discarding_carriage_return
 					l_result := last_string
 				end
 				close_clipboard
@@ -61,7 +61,6 @@ feature -- Access
 			if l_result = Void then
 				Result := ""
 			else
-				l_result.prune_all ('%R')
 				Result := l_result
 			end
 		end
@@ -81,23 +80,19 @@ feature -- Status Setting
 	set_text (a_text: READABLE_STRING_GENERAL)
 			-- Assign `a_text' to clipboard.
 		local
-			window: EV_WINDOW
+			l_app_imp: detachable EV_APPLICATION_IMP
 			wel_window: detachable WEL_WINDOW
-			local_text: STRING_32
 		do
-			create window
-			wel_window ?= window.implementation
+				-- Retrieve silly main window from application for clipboard retrieval.
+			l_app_imp ?= (create {EV_ENVIRONMENT}).implementation.application_i
+			check l_app_imp /= Void end
+			wel_window ?= l_app_imp.silly_main_window
 			check wel_window /= Void end
 			open_clipboard (wel_window)
 			if clipboard_open then
 				empty_clipboard
 				if not a_text.is_empty then
-						-- If there is no text then we leave the clipboard as empty.
-					local_text := a_text.as_string_32.twin
-					if local_text.substring_index ("%R%N", 1) = 0 then
-						local_text.replace_substring_all ("%N", "%R%N")
-					end
-					set_clipboard_text (local_text)
+					set_clipboard_text_with_newline_conversion (a_text)
 				end
 				close_clipboard
 			end

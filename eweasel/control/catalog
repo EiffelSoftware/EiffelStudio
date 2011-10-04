@@ -2571,6 +2571,7 @@ test	like-current-attachment-redeclaration	attach090 tcf pass attached_types voi
 test	stable-attribute-assigner		attach091 tcf pass attached_types void_safe conformance stable attribute validity
 test	mutual-self-init-attribute		attach092 tcf pass attached_types void_safe self_init attribute validity
 test	indirect-self-init-attribute		attach093 tcf pass attached_types void_safe self_init attribute validity
+test	initialization-error-suppression	attach094 tcf pass attached_types void_safe stable attribute generic validity
 
 -- Tests for conformance in general
 test	basic-conformance		conform001 tcf pass conformance

@@ -29,6 +29,8 @@ inherit
 
 	EV_TEXT_COMPONENT_ACTION_SEQUENCES_IMP
 
+	WEL_SHARED_TEMPORARY_OBJECTS
+
 feature {NONE} -- Initialization
 
 	make

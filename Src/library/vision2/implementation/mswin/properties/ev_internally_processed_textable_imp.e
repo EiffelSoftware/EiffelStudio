@@ -34,11 +34,12 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	escaped_text (s: READABLE_STRING_GENERAL): STRING_32
+	escaped_text (s: READABLE_STRING_GENERAL): READABLE_STRING_GENERAL
 			-- `text' with doubled ampersands.
 		local
 			n, l_count: INTEGER
 			l_amp_code: NATURAL_32
+			l_string_32: STRING_32
 		do
 			l_amp_code := ('&').code.as_natural_32
 			l_count := s.count
@@ -50,14 +51,14 @@ feature {NONE} -- Implementation
 					--| Cannot be replaced with `{STRING_32}.replace_substring_all' because
 					--| we only want it to happen once, not forever.
 				from
-					create Result.make (l_count + 1)
-					Result.append_string_general (s)
+					create l_string_32.make (l_count + 1)
+					l_string_32.append_string_general (s)
 				until
 					n > l_count
 				loop
-					n := Result.index_of_code (l_amp_code, n)
+					n := l_string_32.index_of_code (l_amp_code, n)
 					if n > 0 then
-						Result.insert_character ('&', n)
+						l_string_32.insert_character ('&', n)
 							-- Increase count local by one as a character has been inserted.
 						l_count := l_count + 1
 						n := n + 2
@@ -65,8 +66,9 @@ feature {NONE} -- Implementation
 						n := l_count + 1
 					end
 				end
+				Result := l_string_32
 			else
-				Result := s.as_string_32
+				Result := s
 			end
 		ensure
 			ampersand_occurrences_doubled: s.as_string_32.occurrences ('&') =

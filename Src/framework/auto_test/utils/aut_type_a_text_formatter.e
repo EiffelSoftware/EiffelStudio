@@ -144,7 +144,7 @@ feature -- Process
 		do
 		end
 
-	process_basic_text (text: STRING_GENERAL)
+	process_basic_text (text: READABLE_STRING_GENERAL)
 			-- Process default basic text `t'.
 		do
 			type_name.append (text.as_string_8)
@@ -159,7 +159,7 @@ invariant
 	type_name_attached: type_name /= Void
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

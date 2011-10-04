@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	message: STRING
+	message: READABLE_STRING_GENERAL
 			-- Error text.
 
 	file: STRING
@@ -42,7 +42,7 @@ feature -- Access
 	parse_mode: INTEGER
 			-- Parse mode  (xml or Ace or ..)
 
-	text: STRING
+	text: STRING_32
 			-- Error text.
 		do
 			create Result.make_from_string ("Parse error")
@@ -61,7 +61,8 @@ feature -- Access
 				Result.append_character (')')
 			end
 			if attached message as msg then
-				Result.append (": " + msg)
+				Result.append (": ")
+				Result.append_string_general (msg)
 			end
 		end
 
@@ -106,7 +107,7 @@ feature {NONE} -- Implementation
 	Parse_mode_ace: INTEGER = 2
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

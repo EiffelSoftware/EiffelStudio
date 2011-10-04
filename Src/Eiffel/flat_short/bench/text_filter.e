@@ -271,17 +271,17 @@ feature -- Text processing
 			escaped_text_not_void: Result /= Void
 		end
 
-	escaped_text_in_buffer (str, buffer: STRING_32)
+	escaped_text_in_buffer (str: READABLE_STRING_GENERAL; buffer: STRING_32)
 			-- Escape characters in `str'.
 		require
 			str_not_void: str /= Void
 			buffer_not_void: buffer /= Void
 		local
 			i, str_count: INTEGER;
-			char: CHARACTER_32
+			char: NATURAL_32
 		do
 			if escape_characters.is_empty then
-				buffer.append (str)
+				buffer.append_string_general (str)
 			else
 				str_count := str.count
 				from
@@ -289,11 +289,11 @@ feature -- Text processing
 				until
 					i > str_count
 				loop
-					char := str.item (i)
-					if char.is_character_8 and then attached escape_characters.item (char.code) as l_esc then
+					char := str.code (i)
+					if char.is_valid_character_8_code and then attached escape_characters.item (char.as_integer_32) as l_esc then
 						buffer.append (l_esc)
 					else
-						buffer.extend (char)
+						buffer.extend (char.to_character_32)
 					end
 					i := i + 1
 				end
@@ -416,7 +416,7 @@ feature -- Text processing
 			end
 		end
 
-	process_basic_text (text: STRING_GENERAL)
+	process_basic_text (text: READABLE_STRING_GENERAL)
 			-- Check first if a format has been specified for `text'.
 		local
 			format: CELL2 [STRING_32, STRING_32]
@@ -1248,7 +1248,7 @@ invariant
 	image_not_void: image /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

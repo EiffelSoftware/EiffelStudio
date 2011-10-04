@@ -192,7 +192,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_parse_warning_message (a_message: STRING)
+	set_parse_warning_message (a_message: READABLE_STRING_GENERAL)
 			-- We have a parse warning with a message.
 		local
 			l_error: CONF_ERROR_PARSE

@@ -75,7 +75,7 @@ feature -- Token operator
 
 feature -- Text processing
 
-	process_basic_text (t: STRING_GENERAL)
+	process_basic_text (t: READABLE_STRING_GENERAL)
 			-- Process default basic text `t'.
 		local
 			tok: EDITOR_TOKEN_TEXT
@@ -104,7 +104,7 @@ feature -- Text processing
 			end
 		end
 
-	process_string_text (t: STRING_GENERAL; url: STRING_GENERAL)
+	process_string_text (t: READABLE_STRING_GENERAL; url: STRING_GENERAL)
 			-- Process default basic text `t'.
 		local
 			tok: EDITOR_TOKEN_STRING
@@ -534,7 +534,7 @@ feature -- Text processing
 			process_basic_text (s)
 		end
 
-	add_string (s: STRING_GENERAL)
+	add_string (s: READABLE_STRING_GENERAL)
 			-- Add string.
 		do
 			process_string_text (s, Void)
@@ -670,7 +670,7 @@ feature {NONE} -- Initialisations and File status
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

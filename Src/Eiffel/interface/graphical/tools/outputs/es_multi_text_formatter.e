@@ -226,7 +226,7 @@ feature -- Basic operations
 
 feature -- Process
 
-	process_basic_text (a_text: STRING_GENERAL)
+	process_basic_text (a_text: READABLE_STRING_GENERAL)
 			-- <Precursor>
 		local
 			l_formatters: like managed_formatters
@@ -856,7 +856,7 @@ invariant
 	managed_formatters_has_notifier: managed_formatters.has (notifier)
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

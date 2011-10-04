@@ -34,7 +34,7 @@ feature -- Basic Operations / Generic purpose
 
 feature {NONE} -- Text formatter
 
-	process_basic_text (text: STRING_GENERAL)
+	process_basic_text (text: READABLE_STRING_GENERAL)
 			-- Process default basic text `t'.
 		do
 		end
@@ -160,7 +160,7 @@ feature -- Basic Operations / Information message
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

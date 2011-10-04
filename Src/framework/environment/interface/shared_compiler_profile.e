@@ -29,6 +29,9 @@ feature -- Initialization
 			if l_args.index_of_word_option (full_option_name) > 0 then
 				set_full_class_checking_mode
 			end
+			if l_args.index_of_word_option (safe_option_name) > 0 then
+				set_safe_mode
+			end
 		end
 
 feature -- Access
@@ -36,6 +39,7 @@ feature -- Access
 	compat_option_name: STRING = "compat"
 	experiment_option_name: STRING = "experiment"
 	full_option_name: STRING = "full"
+	safe_option_name: STRING = "safe"
 			-- Name of command line options that can be used to initialize Current
 
 	command_line_profile_option: STRING
@@ -82,6 +86,12 @@ feature -- Access
 				l_option.append (full_option_name)
 				Result.extend (l_option)
 			end
+			if is_safe_mode then
+				create l_option.make (1 + safe_option_name.count)
+				l_option.append_character ('-')
+				l_option.append (safe_option_name)
+				Result.extend (l_option)
+			end
 		end
 
 	version_mode: STRING
@@ -94,6 +104,7 @@ feature -- Access
 				Result := ""
 			end
 		end
+
 feature -- Status report
 
 	is_compatible_mode: BOOLEAN
@@ -119,6 +130,12 @@ feature -- Status report
 			-- Is the compiler being run in experimental mode?
 		do
 			Result := flags.item & full_mode_flag = full_mode_flag
+		end
+
+	is_safe_mode: BOOLEAN
+			-- Are "-safe" versions of ECFs used?
+		do
+			Result := flags.item & safe_mode_flag /= 0
 		end
 
 feature -- Settings
@@ -148,6 +165,14 @@ feature -- Settings
 			is_full_class_checking_mode: is_full_class_checking_mode
 		end
 
+	set_safe_mode
+			-- Use "-safe" versions of ECF if available.
+		do
+			flags.put (flags.item | safe_mode_flag)
+		ensure
+			is_safe_mode: is_safe_mode
+		end
+
 	reset
 			-- Reset current
 		do
@@ -167,10 +192,11 @@ feature {NONE}
 	compatible_mode_flag: NATURAL_8 = 1
 	experimental_mode_flag: NATURAL_8 = 2
 	full_mode_flag: NATURAL_8 = 4
+	safe_mode_flag: NATURAL_8 = 8
 			-- Various flags.
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

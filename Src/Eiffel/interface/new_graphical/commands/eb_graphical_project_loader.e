@@ -606,7 +606,7 @@ feature {NONE} -- User interaction
 		local
 			l_question: ES_DISCARDABLE_QUESTION_PROMPT
 		do
-			create l_question.make_standard (warning_messages.w_project_build_precompile (a_pre.location.evaluated_path), interface_names.l_discard_build_precompile_dialog, create {ES_BOOLEAN_PREFERENCE_SETTING}.make (preferences.dialog_data.confirm_build_precompile_preference, True))
+			create l_question.make_standard (warning_messages.w_project_build_precompile (a_pre.path), interface_names.l_discard_build_precompile_dialog, create {ES_BOOLEAN_PREFERENCE_SETTING}.make (preferences.dialog_data.confirm_build_precompile_preference, True))
 			l_question.set_button_action (l_question.dialog_buttons.yes_button, agent do is_user_wants_precompile := True end)
 			l_question.show (parent_window)
 		end
@@ -735,7 +735,7 @@ invariant
 	parent_window_not_destroyed: not parent_window.is_destroyed
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

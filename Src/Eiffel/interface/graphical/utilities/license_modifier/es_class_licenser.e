@@ -106,7 +106,7 @@ feature -- Basic operatons
 								if not l_libraries.is_empty then
 										-- Create the path to the license file.
 									l_library := l_libraries.first
-									l_path := l_library.location.evaluated_path.as_string_32
+									l_path := l_library.path.as_string_32
 								end
 							end
 						else
@@ -335,7 +335,7 @@ feature {NONE} -- Internationalization
 			-- Default invalid license.
 
 ;note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

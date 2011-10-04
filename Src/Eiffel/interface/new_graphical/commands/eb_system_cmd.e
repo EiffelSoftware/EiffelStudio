@@ -158,7 +158,7 @@ feature {NONE} -- Actions
 				check
 					library: l_lib /= Void
 				end
-				l_config := l_lib.location.evaluated_path
+				l_config := l_lib.path
 				config_windows.search (l_config)
 				if config_windows.found and then config_windows.found_item.is_show_requested then
 					configuration_window := config_windows.found_item
@@ -288,7 +288,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

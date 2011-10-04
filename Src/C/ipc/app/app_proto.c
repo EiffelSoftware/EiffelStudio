@@ -850,7 +850,7 @@ rt_private void set_check_assert (int v)
 	/* Set current assertion checking off/on */
 	EIF_BOOLEAN old_value;
 	old_value = c_check_assert (EIF_TEST(v == 1));
-	if (old_value == EIF_TRUE) {
+	if (old_value) {
 		app_twrite("true", 4);
 	} else {
 		app_twrite("false", 5);

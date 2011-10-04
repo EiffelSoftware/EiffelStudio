@@ -4089,9 +4089,9 @@ rt_private int is_ex_ignored (int ex_code)
 #endif
 
 #ifdef WORKBENCH
-	return ((result.it_b == EIF_TRUE)?1:0);
+	return result.it_b;
 #else
-	return ((result == EIF_TRUE)?1:0);
+	return result;
 #endif
 }
 

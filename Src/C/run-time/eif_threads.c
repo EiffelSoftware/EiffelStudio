@@ -839,7 +839,7 @@ rt_private void eif_thr_entry (void *arg)
 		xinitint();
 			/* Call the `execute' routine of the thread */
 		dnotify_create_thread(eif_thr_context->thread_id);
-		if (eif_thr_context->is_processor == EIF_TRUE) {
+		if (eif_thr_context->is_processor) {
 			dnotify_register_scoop_processor (eif_thr_context->thread_id, eif_thr_context->logical_id);
 		}
 #endif

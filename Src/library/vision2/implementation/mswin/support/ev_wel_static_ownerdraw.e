@@ -51,7 +51,12 @@ feature -- Element change
 			-- Set the window text
 		do
 			if a_new_text /= Void then
-				internal_text := a_new_text.as_string_32.twin
+					-- Set `internal_text' to a STRING_32 copy of `a_new_text'.
+				if a_new_text.is_string_32 then
+					internal_text := a_new_text.as_string_32.twin
+				else
+					internal_text := a_new_text.as_string_32
+				end
 			else
 				internal_text := Void
 			end

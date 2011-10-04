@@ -563,11 +563,11 @@ feature {EV_LIST_ITEM_IMP} -- Implementation
 	visible_count: INTEGER
    			-- Number of items that can be displayed in the list.
    		local
-   			wel_rect: WEL_RECT
+   			l_wel_rect: WEL_RECT
    			list_height: INTEGER
    		do
-   			wel_rect := dropped_rect
-   			list_height := wel_rect.bottom - wel_rect.top
+   			l_wel_rect := dropped_rect
+   			list_height := l_wel_rect.bottom - l_wel_rect.top
    			Result := list_height // list_item_height
 		end
 
@@ -747,8 +747,6 @@ feature {NONE} -- Implementation
 				when {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_left then align_text_left
 				when {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_center then align_text_center
 				when {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_right then align_text_right
-				else
-					check False end
 				end
 			end
 		end

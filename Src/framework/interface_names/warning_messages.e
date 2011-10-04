@@ -772,12 +772,12 @@ feature -- Project creation, retrieval, ...
 
 	w_Fill_in_project_name_field: STRING_32 do Result := locale.translation ("Please fill in the 'System Name' field.") end
 
-	w_Unable_to_load_ace_file (an_ace_name, a_reason: STRING_GENERAL): STRING_32
+	w_Unable_to_load_ace_file (an_ace_name, a_reason: READABLE_STRING_GENERAL): STRING_32
 		do
 			Result := locale.formatted_string (locale.translation ("Unable to load the ace file `$1'.%NFor the following reasons:%N$2"), [an_ace_name, a_reason])
 		end
 
-	w_Unable_to_load_config_file (an_ace_name, a_reason: STRING_GENERAL): STRING_32
+	w_Unable_to_load_config_file (an_ace_name, a_reason: READABLE_STRING_GENERAL): STRING_32
 		do
 			Result := locale.formatted_string (locale.translation ("Unable to load the project file `$1'.%NFor the following reasons:%N$2"), [an_ace_name, a_reason])
 		end
@@ -1146,7 +1146,7 @@ feature -- Warning messages
 
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

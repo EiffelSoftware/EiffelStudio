@@ -743,7 +743,7 @@ feature -- Output
 
 feature -- Text formatter decorator
 
-	process_basic_text (text: STRING_GENERAL)
+	process_basic_text (text: READABLE_STRING_GENERAL)
 			-- Process default basic text `t'.
 		do
 			if not without_tabs and then not tabs_emitted then
@@ -1150,7 +1150,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

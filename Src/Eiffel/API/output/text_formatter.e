@@ -52,7 +52,7 @@ feature -- Operation
 
 feature -- Process
 
-	process_basic_text (text: STRING_GENERAL)
+	process_basic_text (text: READABLE_STRING_GENERAL)
 			-- Process default basic text `t'.
 		require
 			text_not_void: text /= Void
@@ -112,7 +112,7 @@ feature -- Process
 			process_basic_text (text)
 		end
 
-	process_string_text (text: STRING_GENERAL; link: STRING_GENERAL)
+	process_string_text (text: READABLE_STRING_GENERAL; link: STRING_GENERAL)
 			-- Process string text `text'.
 			-- possible `link', can be void.
 		require
@@ -396,7 +396,7 @@ feature -- Text operator
 			process_new_line
 		end
 
-	add_string (s: STRING_GENERAL)
+	add_string (s: READABLE_STRING_GENERAL)
 			-- Add `s'.
 		do
 			process_basic_text (s)
@@ -666,7 +666,7 @@ feature {NONE} -- Implementation
 			-- Internal context group
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -449,7 +449,7 @@ feature -- File rule dialog
 	dialog_file_rule_edit_condition: STRING_GENERAL do Result := locale.translation ("Edit condition")	end
 	dialog_file_rule_add_rule: STRING_GENERAL do Result := locale.translation ("Add rule")	end
 	dialog_file_rule_remove_rule: STRING_GENERAL do Result := locale.translation ("Remove rule")	end
-	dialog_file_rule_file_rule_x (a_number: INTEGER): STRING
+	dialog_file_rule_file_rule_x (a_number: INTEGER): READABLE_STRING_GENERAL
 		do
 			Result := locale.formatted_string (locale.translation ("File rule $1"), [a_number.out])
 		end
@@ -745,7 +745,7 @@ feature -- Parse errors
 
 	e_parse_incorrect_class_opt: STRING = "Invalid class_option tag."
 
-	e_parse_incorrect_option_override (option_name: STRING): STRING
+	e_parse_incorrect_option_override (option_name: READABLE_STRING_GENERAL): READABLE_STRING_GENERAL
 		do
 			Result := locale.formatted_string (locale.translation ("[
 				Library option "$1" cannot be overridden outside the library.

@@ -261,7 +261,11 @@ feature {NONE} -- Implementation
 			-- Set `text' to `a_txt'. See `wel_text'.
 		do
 			if a_text /= Void then
-				real_text := a_text.as_string_32.twin
+				if a_text.is_string_32 then
+					real_text := a_text.as_string_32.twin
+				else
+					real_text := a_text.as_string_32
+				end
 			end
 
 				-- Force the menu bar to be recomputed.

@@ -38,10 +38,10 @@ feature -- Element change
 
 feature -- Output
 
-	put_string (s: STRING_GENERAL)
+	put_string (s: READABLE_STRING_GENERAL)
 		do
 			error_window.put_string (s);
-			stored_output.append (s)
+			stored_output.append_string_general (s)
 		end;
 
 	put_new_line

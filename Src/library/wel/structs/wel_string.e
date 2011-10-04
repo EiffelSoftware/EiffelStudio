@@ -19,6 +19,7 @@ create
 	make_empty,
 	make_by_pointer,
 	make_by_pointer_and_count,
+	make_with_newline_conversion,
 	share_from_pointer,
 	share_from_pointer_and_count
 
@@ -61,6 +62,14 @@ feature --{NONE} -- Initialization
 			count := a_length // character_size
 			create managed_data.make (a_length + character_size)
 			managed_data.item.memory_copy (a_ptr, a_length)
+		end
+
+	make_with_newline_conversion (a_string: READABLE_STRING_GENERAL)
+			-- Make a C string from `a_string' guaranteeing that all newline (linefeed) characters '%N'
+			-- are prepended with a carriage return character '%R'.
+		do
+			make_empty (a_string.count)
+			set_string_with_newline_conversion (a_string)
 		end
 
 feature {NONE} -- Initialization
@@ -110,6 +119,32 @@ feature -- Access
 			Result := substring (1, c_strlen (item))
 		ensure
 			string_not_void: Result /= Void
+		end
+
+	string_discarding_carriage_return: STRING_32
+			-- Eiffel string, ignoring `count' and discarding carriage return '%R' characters. Reads until a null character is read.
+		local
+			l_data: like managed_data
+			i, j, nb: INTEGER
+			l_code, l_carriage_return_code: NATURAL_32
+		do
+			from
+				j := 1
+				nb := c_strlen (item)
+				l_data := managed_data
+				l_carriage_return_code := ('%R').natural_32_code
+				create Result.make (nb)
+			until
+				i = nb
+			loop
+				l_code := l_data.read_natural_16 (i * character_size)
+				if l_code /= l_carriage_return_code then
+					Result.put_code (l_code, j)
+					j := j + 1
+				end
+				i := i + 1
+			end
+			Result.set_count (j - 1)
 		end
 
 	read_substring_into (a_string: STRING_GENERAL; start_pos, end_pos: INTEGER)
@@ -229,7 +264,7 @@ feature -- Measurement
 	frozen character_size: INTEGER
 			-- Number of bytes occupied by a TCHAR.
 		external
-			"C inline use <tchar.h>"
+			"C macro use <tchar.h>"
 		alias
 			"sizeof(TCHAR)"
 		end
@@ -285,14 +320,17 @@ feature -- Element change
 		local
 			i, nb: INTEGER
 			new_size: INTEGER
+			l_managed_data: like managed_data
 		do
 			nb := end_pos - start_pos + 1
 			count := nb
 
 			new_size := (nb + 1) * character_size
 
-			if managed_data.count < new_size  then
-				managed_data.resize (new_size)
+			l_managed_data := managed_data
+
+			if l_managed_data.count < new_size  then
+				l_managed_data.resize (new_size)
 			end
 
 			from
@@ -300,10 +338,78 @@ feature -- Element change
 			until
 				i = nb
 			loop
-				managed_data.put_natural_16 (a_string.code (i + start_pos).to_natural_16, i * character_size)
-				i := i +  1
+				l_managed_data.put_natural_16 (a_string.code (i + start_pos).to_natural_16, i * character_size)
+				i := i + 1
 			end
-			managed_data.put_natural_16 (0, new_size - character_size)
+			l_managed_data.put_natural_16 (0, new_size - character_size)
+		end
+
+	set_string_with_newline_conversion (a_string: READABLE_STRING_GENERAL)
+			-- Make a C string from `a_string' guaranteeing that all newline (linefeed) characters '%N'
+			-- are prepended with a carriage return character '%R'.
+		require
+			a_string_not_void: a_string /= Void
+		local
+			i, j, nb, l_count, l_new_size : INTEGER
+			l_null : CHARACTER
+			l_managed_data: like managed_data
+		do
+				-- Count how many occurrences of `%N' not preceded by '%R' we have in `a_string'.
+			from
+				i := 2
+				nb := a_string.count
+				if nb > 0 and then a_string.code (1) = ('%N').natural_32_code then
+					l_count := 1
+				end
+			until
+				i > nb
+			loop
+				if
+					a_string.code (i) = ('%N').natural_32_code and then a_string.code (i - 1) /= ('%R').natural_32_code
+				then
+					l_count := l_count + 1
+				end
+				i := i + 1
+			end
+
+				-- Set managed pointer and update count.
+			l_managed_data := managed_data
+			count := nb + l_count
+
+				-- Create managed pointer and set count.
+			l_new_size := (nb + l_count + 1) * character_size
+			if l_managed_data.count < l_new_size then
+				l_managed_data.resize (l_new_size)
+			end
+
+				-- Replace all found occurrences with '%R%N'.
+			if l_count > 0 then
+				from
+					i := 2
+					j := 0
+					if nb > 0 then
+						if a_string.code (1) = ('%N').natural_32_code then
+							l_managed_data.put_natural_16 (('%R').code.to_natural_16, j * character_size)
+							j := j + 1
+						end
+						l_managed_data.put_natural_16 (a_string.code (1).to_natural_16, j * character_size)
+					end
+				until
+					i > nb
+				loop
+					if
+						a_string.code (i) = ('%N').natural_32_code and then a_string.code (i - 1) /= ('%R').natural_32_code
+					then
+						j := j + 1
+						l_managed_data.put_natural_16 (('%R').code.to_natural_16, j * character_size)
+					end
+					j := j + 1
+					l_managed_data.put_natural_16 (a_string.code (i).to_natural_16, j * character_size)
+					i := i + 1
+				end
+			end
+				-- Set null character at the end.
+			l_managed_data.put_natural_16 (0, l_new_size - character_size)
 		end
 
 	set_count (a_count: INTEGER)
@@ -398,16 +504,18 @@ feature {NONE} -- Implementation
 
 	buffer_length (ptr: POINTER): INTEGER
 			-- Number of bytes to hold `ptr'.
-		do
-			Result := c_strlen (ptr) * character_size
+		external
+			"C macro signature (wchar_t *): EIF_INTEGER use <tchar.h>"
+		alias
+			"sizeof(TCHAR) * _tcslen"
 		end
 
 	c_strlen (ptr: POINTER): INTEGER
 			-- Number of characters in `ptr'.
 		external
-			"C inline use <tchar.h>"
+			"C macro signature (wchar_t *): EIF_INTEGER use <tchar.h>"
 		alias
-			"_tcslen ((wchar_t *) $ptr)"
+			"_tcslen"
 		end
 
 invariant
@@ -416,7 +524,7 @@ invariant
 	bytes_count_valid: (bytes_count \\ character_size) = 0
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

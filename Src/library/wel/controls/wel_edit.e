@@ -263,11 +263,8 @@ feature -- Status report
 			-- Caret position
 		require
 			exists: exists
-		local
-			sel_end: INTEGER
 		do
-			{WEL_API}.send_message (item, Em_getsel, to_wparam (0), $sel_end)
-			Result := sel_end
+			{WEL_API}.send_message (item, Em_getsel, to_wparam (0), $Result)
 		end
 
 	has_selection: BOOLEAN
@@ -286,12 +283,8 @@ feature -- Status report
 		require
 			exists: exists
 			has_selection: has_selection
-		local
-			sel_start: INTEGER
 		do
-			fixme (once "Replace sel_start's type by INTEGER_32, as $sel_start has to be a pointer to a DWORD.")
-			{WEL_API}.send_message (item, Em_getsel, $sel_start, to_lparam (0))
-			Result := sel_start
+			{WEL_API}.send_message (item, Em_getsel, $Result, to_lparam (0))
 		ensure
 			result_large_enough: Result >= 0
 			result_small_enough: Result <= text_length
@@ -302,12 +295,8 @@ feature -- Status report
 		require
 			exists: exists
 			has_selection: has_selection
-		local
-			sel_end: INTEGER
 		do
-			fixme (once "Replace sel_end's type by INTEGER_32, as $sel_end has to be a pointer to a DWORD.")
-			{WEL_API}.send_message (item, Em_getsel, to_wparam (0), $sel_end)
-			Result := sel_end
+			{WEL_API}.send_message (item, Em_getsel, to_wparam (0), $Result)
 		ensure
 			result_large_enough: Result >= 0
 			result_small_enough: Result <= text_length + 2

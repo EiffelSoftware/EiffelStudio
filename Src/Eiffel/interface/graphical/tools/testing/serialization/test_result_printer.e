@@ -42,7 +42,7 @@ feature -- Basic operations
 			buffer.append_character ('%N')
 		end
 
-	put_string (s: STRING_GENERAL)
+	put_string (s: READABLE_STRING_GENERAL)
 			-- <Precursor>
 		do
 			buffer.append_string_general (s)
@@ -55,7 +55,7 @@ feature -- Basic operations
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

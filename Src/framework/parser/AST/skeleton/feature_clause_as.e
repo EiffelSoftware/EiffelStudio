@@ -95,15 +95,26 @@ feature -- Roundtrip/Comments
 			l_retried: BOOLEAN
 		do
 			if not l_retried then
-				if features = Void or else features.is_empty then
-					l_leaf := a_list.item_by_end_position (feature_clause_end_position)
-					check l_leaf /= Void end
-					l_end_index := l_leaf.index
+					-- If we have a non-empty `a_list' then it makes sense to try to extract comments.
+				if not a_list.is_empty then
+					if features = Void or else features.is_empty then
+						l_leaf := a_list.item_by_end_position (feature_clause_end_position)
+						check l_leaf /= Void end
+						l_end_index := l_leaf.index
+					else
+						l_end_index := features.first_token (a_list).index - 1
+					end
+					check first_token (a_list).index + 1 <= l_end_index end
+					if l_end_index <= a_list.count then
+						Result := a_list.extract_comment (create{ERT_TOKEN_REGION}.make (first_token (a_list).index + 1, l_end_index))
+					else
+							-- Somehow the match list `a_list' is not matching the parsed data.
+							-- We return no comments.
+						create Result.make
+					end
 				else
-					l_end_index := features.first_token (a_list).index - 1
+					create Result.make
 				end
-				check first_token (a_list).index + 1 <= l_end_index end
-				Result := a_list.extract_comment (create{ERT_TOKEN_REGION}.make (first_token (a_list).index + 1, l_end_index))
 			else
 				create Result.make
 			end
@@ -257,7 +268,7 @@ invariant
 	feature_location_not_void: feature_keyword /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

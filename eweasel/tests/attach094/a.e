@@ -77,7 +77,7 @@ feature {NONE} -- Tests: assignment attempt
 	test_attribute_attempt_stable (c: attached G)
 		do
 			x := c
-			x ?= abc -- VBAR(2), VEEN
+			x ?= abc -- VJRV(3), VEEN
 			x.do_nothing
 		end
 

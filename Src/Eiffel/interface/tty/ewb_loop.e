@@ -314,7 +314,7 @@ feature -- Update
 								file_w.close
 								done := True
 							else
-								localized_print_error (ewb_names.can_not_create_file)
+								localized_print_error (ewb_names.cannot_create_file)
 								localized_print_error (file_w.name)
 								io.error.put_new_line
 							end

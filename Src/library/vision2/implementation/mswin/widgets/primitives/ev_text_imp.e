@@ -205,7 +205,9 @@ feature -- Access
 			length := wel_text_length
 			if length > 0 then
 				length := length + 1
-				l_wel_string := wel_string_restricted (length)
+				--| FIXME IEK Replace with reusable buffer.
+--				l_wel_string := wel_string_restricted (length)
+				create l_wel_string.make_empty (length)
 				nb := cwin_get_window_text (wel_item, l_wel_string.item, length)
 				Result := l_wel_string.string_discarding_carriage_return
 			else

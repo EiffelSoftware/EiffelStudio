@@ -137,7 +137,9 @@ feature -- Element Change
 		local
 			l_wel_string: WEL_STRING
 		do
-			l_wel_string := wel_string_from_string (a_text)
+			--| FIXME Use a reusable buffer if possible.
+--			l_wel_string := wel_string_from_string (a_text)
+			create l_wel_string.make (a_text)
 			{WEL_API}.send_message (wel_item, {WEL_WM_CONSTANTS}.wm_settext, {WEL_API}.lparam (0), l_wel_string.item)
 
 				-- If `Es_multiline' is specified then we need to make sure that the change actions are fired explicitly
@@ -160,7 +162,9 @@ feature -- Access
 			length := wel_text_length
 			if length > 0 then
 				length := length + 1
-				l_wel_string := wel_string_restricted (length)
+					--| FIXME IEK Replace with a reusable buffer.
+--				l_wel_string := wel_string_restricted (length)
+				create l_wel_string.make_empty (length)
 				nb := cwin_get_window_text (wel_item, l_wel_string.item, length)
 				Result := l_wel_string.string
 			else

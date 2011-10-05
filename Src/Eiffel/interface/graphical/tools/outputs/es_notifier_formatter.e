@@ -63,7 +63,7 @@ feature -- Basic operations
 
 feature -- Output
 
-	put_string (s: STRING_GENERAL)
+	put_string (s: READABLE_STRING_GENERAL)
 			-- <Precursor>
 		local
 			l_count: NATURAL
@@ -153,7 +153,7 @@ feature {NONE} -- Implementation: Internal cache
 			-- Note: Do not use directly!
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

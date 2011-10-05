@@ -365,7 +365,7 @@ feature -- Compatibility
 			text_displayed.set_position (a_position)
 		end
 
-	put_string (s: STRING_GENERAL)
+	put_string (s: READABLE_STRING_GENERAL)
 			-- Put string `s' at current position.
 		do
 			text_displayed.add_string (s)
@@ -831,7 +831,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

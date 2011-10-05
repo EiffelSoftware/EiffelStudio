@@ -574,11 +574,8 @@ feature {NONE} -- WEL Implementation
 
 	on_key_down (virtual_key, key_data: INTEGER)
 			-- Executed when a key is pressed.
-		local
-			dialog: detachable EV_DIALOG
 		do
-			dialog ?= top_level_window
-			if virtual_key = vk_escape and dialog /= Void then
+			if virtual_key = vk_escape and then attached {EV_DIALOG} top_level_window then
 					-- There is a bug in Windows where if you hit ESC in a multiline
 					-- edit parented at some level within a dialog, it posts a WM_CLOSE
 					-- to its parent in the mistaken belief that it is part of a dialog box.
@@ -586,12 +583,11 @@ feature {NONE} -- WEL Implementation
 					-- Search comp.os.ms-windows.programmer.controls for "hit ESC in a multiline edit".
 					-- We only perform the disable if `Current' is actually parented in a dialog.
 				disable_default_processing
-			else
-				if read_only then
-					process_navigation_key (virtual_key)
-				end
-				Precursor {EV_TEXT_COMPONENT_IMP} (virtual_key, key_data)
 			end
+			if read_only then
+				process_navigation_key (virtual_key)
+			end
+			Precursor {EV_TEXT_COMPONENT_IMP} (virtual_key, key_data)
 		end
 
 	recreate_current (a_additional_style: INTEGER)

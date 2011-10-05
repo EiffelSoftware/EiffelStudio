@@ -329,6 +329,15 @@ feature {NONE} -- WEL Implementation
 			-- We check if the enter key is pressed.
 			-- 13 is the number of the return key.
 		do
+			if virtual_key = vk_escape and then attached {EV_DIALOG} top_level_window then
+					-- There is a bug in Windows where if you hit ESC in a multiline
+					-- edit parented at some level within a dialog, it posts a WM_CLOSE
+					-- to its parent in the mistaken belief that it is part of a dialog box.
+					-- By redefining `on_key_down' here, we can prevent this behaviour. Julian.
+					-- Search comp.os.ms-windows.programmer.controls for "hit ESC in a multiline edit".
+					-- We only perform the disable if `Current' is actually parented in a dialog.
+				disable_default_processing
+			end
 			process_navigation_key (virtual_key)
 			Precursor {EV_TEXT_COMPONENT_IMP} (virtual_key, key_data)
 			if virtual_key = Vk_return and then is_editable then

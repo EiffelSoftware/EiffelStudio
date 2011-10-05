@@ -183,7 +183,6 @@ feature -- Errors
 	the_resource_editor_is_not_set: STRING_32				do Result := locale.translation ("The resource EDITOR is not set%N") end
 	you_must_select_an_ace_file_first: STRING_32				do Result := locale.translation ("You must select an Ace file first%N") end
 	thers_is_no_output_to_save: STRING_32					do Result := locale.translation ("There is no output to save.%N") end
-	can_not_create_file: STRING_32							do Result := locale.translation ("Cannot create file: ") end
 
 	file_exists (a_file_name: STRING_GENERAL): STRING_32
 		do
@@ -253,7 +252,7 @@ feature -- Errors
 feature {NONE} -- Implementation
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

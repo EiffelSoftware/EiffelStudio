@@ -350,7 +350,7 @@ feature -- Element change
 		require
 			a_string_not_void: a_string /= Void
 		local
-			i, j, nb, l_count, l_new_size : INTEGER
+			i, j, nb, l_count, l_new_size, l_character_size: INTEGER
 			l_managed_data: like managed_data
 		do
 				-- Count how many occurrences of `%N' not preceded by '%R' we have in `a_string'.
@@ -375,24 +375,25 @@ feature -- Element change
 			l_managed_data := managed_data
 			count := nb + l_count
 
+			l_character_size := character_size
+
 				-- Create managed pointer and set count.
-			l_new_size := (nb + l_count + 1) * character_size
+			l_new_size := (nb + l_count + 1) * l_character_size
 			if l_managed_data.count < l_new_size then
 				l_managed_data.resize (l_new_size)
 			end
 
-				-- Replace all found occurrences with '%R%N'.
-			if nb > 0 then
+			if l_count > 0 then
+					-- Replace all found occurrences with '%R%N'.
 				from
 					i := 2
 					j := 0
-					if nb > 0 then
-						if a_string.code (1) = ('%N').natural_32_code then
-							l_managed_data.put_natural_16 (('%R').code.to_natural_16, j * character_size)
-							j := j + 1
-						end
-						l_managed_data.put_natural_16 (a_string.code (1).to_natural_16, j * character_size)
+						-- Handle case if %N is at first index.
+					if a_string.code (1) = ('%N').natural_32_code then
+						l_managed_data.put_natural_16 (('%R').code.to_natural_16, j * l_character_size)
+						j := j + 1
 					end
+					l_managed_data.put_natural_16 (a_string.code (1).to_natural_16, j * l_character_size)
 				until
 					i > nb
 				loop
@@ -400,15 +401,25 @@ feature -- Element change
 						a_string.code (i) = ('%N').natural_32_code and then a_string.code (i - 1) /= ('%R').natural_32_code
 					then
 						j := j + 1
-						l_managed_data.put_natural_16 (('%R').code.to_natural_16, j * character_size)
+						l_managed_data.put_natural_16 (('%R').code.to_natural_16, j * l_character_size)
 					end
 					j := j + 1
-					l_managed_data.put_natural_16 (a_string.code (i).to_natural_16, j * character_size)
+					l_managed_data.put_natural_16 (a_string.code (i).to_natural_16, j * l_character_size)
+					i := i + 1
+				end
+			else
+					-- No conversion necessary so we copy the data straight in to the buffer.
+				from
+					i := 0
+				until
+					i = nb
+				loop
+					l_managed_data.put_natural_16 (a_string.code (i + 1).to_natural_16, i * l_character_size)
 					i := i + 1
 				end
 			end
 				-- Set null character at the end.
-			l_managed_data.put_natural_16 (0, l_new_size - character_size)
+			l_managed_data.put_natural_16 (0, l_new_size - l_character_size)
 		end
 
 	set_count (a_count: INTEGER)

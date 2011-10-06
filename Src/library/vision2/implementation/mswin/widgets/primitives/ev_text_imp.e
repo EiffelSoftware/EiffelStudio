@@ -220,7 +220,8 @@ feature -- Access
 		local
 			l_wel_string: WEL_STRING
 		do
-			l_wel_string := wel_string_from_string_with_newline_conversion (a_text)
+--			l_wel_string := wel_string_from_string_with_newline_conversion (a_text)
+			create l_wel_string.make_with_newline_conversion (a_text)
 			{WEL_API}.send_message (wel_item, {WEL_WM_CONSTANTS}.wm_settext, {WEL_API}.lparam (0), l_wel_string.item)
 
 				-- Explicitly fire En_change action to emulate single line behavior.
@@ -262,7 +263,8 @@ feature -- Access
 				set_selection (caret_position - 1, caret_position - 1)
 			end
 			previous_caret_position := internal_caret_position
-			l_wel_string := wel_string_from_string_with_newline_conversion (txt)
+			--l_wel_string := wel_string_from_string_with_newline_conversion (txt)
+			create l_wel_string.make_with_newline_conversion (txt)
 			{WEL_API}.send_message (wel_item, Em_replacesel, to_wparam (0), l_wel_string.item)
 			if has_selection then
 				set_selection (sel_start - 1, sel_end - 1)

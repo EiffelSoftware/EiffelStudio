@@ -382,7 +382,7 @@ feature -- Element change
 			end
 
 				-- Replace all found occurrences with '%R%N'.
-			if l_count > 0 then
+			if nb > 0 then
 				from
 					i := 2
 					j := 0

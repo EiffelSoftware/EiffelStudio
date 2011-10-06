@@ -5414,30 +5414,32 @@ feature {NONE} -- Implementation
 					l_assign.set_line_pragma (l_as.line_pragma)
 					last_byte_node := l_assign
 				end
-				if l_reinitialized_variable /= 0 then
-					if l_source_type.is_attached or else l_source_type.is_implicitly_attached then
-							-- Local variable is initialized to a non-void value.
-						if l_reinitialized_variable = result_name_id then
-							context.add_result_instruction_scope
-						elseif l_reinitialized_variable > 0 then
-							context.add_local_instruction_scope (l_reinitialized_variable)
-						else
-							context.add_attribute_instruction_scope (- l_reinitialized_variable)
-						end
-					else
-							-- Local variable might become Void.
-						if l_reinitialized_variable = result_name_id then
-							context.remove_result_scope
-						elseif l_reinitialized_variable > 0 then
-							context.remove_local_scope (l_reinitialized_variable)
-						end
-					end
-						-- The variable is initialized.
+			end
+			if attached l_target_type and then l_reinitialized_variable /= 0 then
+				if not attached l_source_type or else l_source_type.is_attached or else l_source_type.is_implicitly_attached then
+						-- Local variable is initialized to a non-void value.
+						-- (A non-void value is also assumed if there was an error
+						-- when evaluating source to avoid spurious error.)
 					if l_reinitialized_variable = result_name_id then
-						context.set_result
+						context.add_result_instruction_scope
 					elseif l_reinitialized_variable > 0 then
-						context.set_local (l_reinitialized_variable)
+						context.add_local_instruction_scope (l_reinitialized_variable)
+					else
+						context.add_attribute_instruction_scope (- l_reinitialized_variable)
 					end
+				else
+						-- Local variable might become Void.
+					if l_reinitialized_variable = result_name_id then
+						context.remove_result_scope
+					elseif l_reinitialized_variable > 0 then
+						context.remove_local_scope (l_reinitialized_variable)
+					end
+				end
+					-- The variable is initialized.
+				if l_reinitialized_variable = result_name_id then
+					context.set_result
+				elseif l_reinitialized_variable > 0 then
+					context.set_local (l_reinitialized_variable)
 				end
 			end
 		end
@@ -5658,7 +5660,6 @@ feature {NONE} -- Implementation
 			l_reverse: REVERSE_B
 			l_ve03: VE03
 			l_source_type, l_target_type: TYPE_A
-			l_formal: FORMAL_A
 			target_attribute: FEATURE_I
 			l_vjrv1: VJRV1
 			l_vjrv2: VJRV2
@@ -5694,6 +5695,50 @@ feature {NONE} -- Implementation
 					l_ve03.set_target (l_as.target)
 					l_ve03.set_location (l_as.target.end_location)
 					error_handler.insert_error (l_ve03)
+				elseif l_target_type.is_expanded then
+					if not is_inherited and context.current_class.is_warning_enabled (w_vjrv) then
+						create l_vjrv1
+						context.init_error (l_vjrv1)
+						l_vjrv1.set_target_name (l_as.target.access_name)
+						l_vjrv1.set_target_type (l_target_type)
+						l_vjrv1.set_location (l_as.target.end_location)
+						error_handler.insert_warning (l_vjrv1)
+					end
+				elseif
+					is_void_safe_conformance (context.current_class) and then
+					(l_target_type.is_attached or else
+					l_target_type.actual_type.is_formal and then
+					attached {FORMAL_A} l_target_type.conformance_type as l_formal and then
+					not l_formal.has_detachable_mark)
+				then
+						-- Allowing assignment attempts on attached entities does not make sense
+						-- since we cannot guarantee that the entity will not be Void after.
+					create l_vjrv3
+					context.init_error (l_vjrv3)
+					l_vjrv3.set_target_name (l_as.target.access_name)
+					l_vjrv3.set_target_type (l_target_type)
+					l_vjrv3.set_location (l_as.target.end_location)
+					error_handler.insert_error (l_vjrv3)
+				elseif
+					attached target_attribute and then
+					target_attribute.is_stable and then
+					is_void_safe_conformance (context.current_class)
+				then
+					error_handler.insert_error (create {VBAR2}.make (l_target_type.as_detachable_type, target_attribute, l_as.start_location, context))
+				elseif l_target_type.actual_type.is_formal then
+					check attached {FORMAL_A} l_target_type.actual_type as l_formal then
+						if
+							not l_formal.is_reference and
+							(not is_inherited and context.current_class.is_warning_enabled (w_vjrv))
+						then
+							create l_vjrv2
+							context.init_error (l_vjrv2)
+							l_vjrv2.set_target_name (l_as.target.access_name)
+							l_vjrv2.set_target_type (l_target_type)
+							l_vjrv2.set_location (l_as.target.end_location)
+							error_handler.insert_warning (l_vjrv2)
+						end
+					end
 				end
 
 				if is_byte_node_enabled then
@@ -5710,52 +5755,6 @@ feature {NONE} -- Implementation
 						l_reverse.set_target (l_target_node)
 						l_reverse.set_line_number (l_as.target.start_location.line)
 						l_reverse.set_line_pragma (l_as.line_pragma)
-					end
-
-						-- Type checking
-					if l_target_type.is_expanded then
-						if not is_inherited and context.current_class.is_warning_enabled (w_vjrv) then
-							create l_vjrv1
-							context.init_error (l_vjrv1)
-							l_vjrv1.set_target_name (l_as.target.access_name)
-							l_vjrv1.set_target_type (l_target_type)
-							l_vjrv1.set_location (l_as.target.end_location)
-							error_handler.insert_warning (l_vjrv1)
-						end
-					elseif l_target_type.is_attached then
-							-- Allowing assignment attempts on attached entities does not make sense
-							-- since we cannot guarantee that the entity will not be Void after.
-						create l_vjrv3
-						context.init_error (l_vjrv3)
-						l_vjrv3.set_target_name (l_as.target.access_name)
-						l_vjrv3.set_target_type (l_target_type)
-						l_vjrv3.set_location (l_as.target.end_location)
-						error_handler.insert_error (l_vjrv3)
-					elseif
-						attached target_attribute and then
-						target_attribute.is_stable and then
-						is_void_safe_conformance (context.current_class)
-					then
-						error_handler.insert_error (create {VBAR2}.make (l_target_type.as_detachable_type, target_attribute, l_as.start_location, context))
-					elseif l_target_type.actual_type.is_formal then
-						l_formal ?= l_target_type.actual_type
-						check
-							l_formal_not_void: l_formal /= Void
-						end
-						if
-							not l_formal.is_reference and
-							(not is_inherited and context.current_class.is_warning_enabled (w_vjrv))
-						then
-							create l_vjrv2
-							context.init_error (l_vjrv2)
-							l_vjrv2.set_target_name (l_as.target.access_name)
-							l_vjrv2.set_target_type (l_target_type)
-							l_vjrv2.set_location (l_as.target.end_location)
-							error_handler.insert_warning (l_vjrv2)
-						end
-					end
-
-					if is_byte_node_enabled then
 						l_reverse.set_source (l_source_expr)
 						if l_target_node.is_attribute then
 							l_attribute ?= l_target_node
@@ -5768,17 +5767,16 @@ feature {NONE} -- Implementation
 						else
 							l_create_info := l_target_type.create_info
 						end
-
 						l_reverse.set_info (l_create_info)
 						last_byte_node := l_reverse
 					end
-					if l_reinitialized_variable /= 0 then
-							-- Local variable might become Void.
-						if l_reinitialized_variable = result_name_id then
-							context.remove_result_scope
-						elseif l_reinitialized_variable > 0 then
-							context.remove_local_scope (l_reinitialized_variable)
-						end
+				end
+				if l_reinitialized_variable /= 0 then
+						-- Local variable might become Void.
+					if l_reinitialized_variable = result_name_id then
+						context.remove_result_scope
+					elseif l_reinitialized_variable > 0 then
+						context.remove_local_scope (l_reinitialized_variable)
 					end
 				end
 			end

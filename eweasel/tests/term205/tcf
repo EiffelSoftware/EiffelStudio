@@ -1,0 +1,17 @@
+test_name 	 inherited-feature-unadapted
+test_description Inheriting a feature using a `like x' in its signature where the signature of `x' involves a formal generic parameter of the parent that does not exist in the descendant causes the compiler to crash.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+copy_raw 	 test2.e  $CLUSTER test2.e
+copy_raw 	 test3.e  $CLUSTER test3.e
+copy_raw 	 test_templates.e  $CLUSTER test_templates.e
+
+compile_melted
+compile_result 	 ok
+
+compile_frozen
+compile_result 	ok
+
+
+test_end

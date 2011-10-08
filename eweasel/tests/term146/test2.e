@@ -9,7 +9,7 @@ inherit
 
 feature
 
-	make is
+	make
 		do
 			Precursor
 		end

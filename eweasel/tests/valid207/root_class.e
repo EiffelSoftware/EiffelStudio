@@ -6,7 +6,7 @@ create
 
 feature -- Init
 
-	make is
+	make
 			-- create object
 		do
 			create test.make

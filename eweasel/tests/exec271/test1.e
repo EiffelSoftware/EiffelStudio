@@ -5,7 +5,7 @@ feature
 
 	item: STRING
 
-	display_agent_type is
+	display_agent_type
 		local
 			a: ANY
 		do
@@ -17,12 +17,12 @@ feature
 			print ("%N")
 		end
 
-	f (v: LIST [like item]): LIST [like item] is
+	f (v: LIST [like item]): LIST [like item]
 		do
 
 		end
 
-	g (v: like item): like item is
+	g (v: like item): like item
 		do
 
 		end

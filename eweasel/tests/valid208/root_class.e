@@ -3,7 +3,7 @@ class
 create
 	make
 feature -- Init
-	make is
+	make
 		do
 			create b.make
 		end

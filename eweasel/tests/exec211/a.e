@@ -9,7 +9,7 @@ inherit
 
 feature -- Duplication
 
-	copy (other: like Current) is
+	copy (other: like Current)
 		do
 			value := other.value + 1
 			io.put_string (generating_type)
@@ -22,7 +22,7 @@ feature -- Duplication
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Make sure `copy' fulfills the postcondition.
 		do
 			Result := True

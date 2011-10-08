@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	author: ""
 	date: "$Date$"
@@ -15,7 +15,7 @@ inherit
 
 feature
 
-	set_coef (a: TEST2 [G, H]) is
+	set_coef (a: TEST2 [G, H])
 		do
 
 		end

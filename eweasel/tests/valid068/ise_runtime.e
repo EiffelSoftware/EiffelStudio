@@ -62,8 +62,8 @@ feature -- Feature specific to ISE runtime.
 			"edclone"
 		end
 
-	frozen c_deep_equal (some: POINTER; other: like some): BOOLEAN is
-			-- Are `some' and `other' attached to recursively isomorphic
+	frozen c_deep_equal (a: POINTER; b: like a): BOOLEAN is
+			-- Are `a' and `b' attached to recursively isomorphic
 			-- object structures?
 		external
 			"C signature (EIF_REFERENCE, EIF_REFERENCE): EIF_BOOLEAN use %"eif_equal.h%""
@@ -71,7 +71,7 @@ feature -- Feature specific to ISE runtime.
 			"ediso"
 		end
 
-	frozen c_tagged_out (some: ANY): STRING is
+	frozen c_tagged_out (o: ANY): STRING is
 			-- Printable representation of current object
 		external
 			"C use %"eif_out.h%""
@@ -83,7 +83,7 @@ feature -- Feature specific to ISE runtime.
 			"C use %"eif_out.h%""
 		end
 
-	frozen c_generator (some: POINTER): STRING is
+	frozen c_generator (o: POINTER): STRING is
 			-- Name of the generating class of current object
 		external
 			"C macro use %"eif_out.h%""

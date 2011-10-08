@@ -9,7 +9,7 @@ create
 		
 feature	{NONE} -- Initialization
  
-	make is
+	make
 			-- Entry point.
 		local
 			t: TUPLE

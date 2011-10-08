@@ -6,7 +6,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 		do
 		end
 

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	author: ""
 	date: "$Date$"
@@ -12,7 +12,7 @@ inherit
 
 feature
 
-	make is
+	make
 		do
 
 		end

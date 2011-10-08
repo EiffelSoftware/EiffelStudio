@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Test for basic types to show that their implementation by the compiler is correct and
 		that also when assigned to a reference entity the dynamic binding works properly as well.
@@ -11,7 +11,7 @@ create
 
 feature
 
-	make is
+	make
 		do
 			test_integer_8
 			test_integer_16
@@ -1092,7 +1092,7 @@ feature {NONE} -- Testing
 
 feature {NONE} -- Implementation
 
-	check_boolean (s: STRING; v: BOOLEAN) is
+	check_boolean (s: STRING; v: BOOLEAN)
 		require
 			s_not_void: s /= Void
 		do
@@ -1101,7 +1101,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	check_equals (s: STRING; obj1, obj2: ANY) is
+	check_equals (s: STRING; obj1, obj2: ANY)
 		require
 			s_not_void: s /= Void
 		do

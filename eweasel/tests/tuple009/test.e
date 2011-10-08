@@ -5,7 +5,7 @@ create
 
 feature
 
-	make is
+	make
 		local
 			t: TUPLE [a, a: INTEGER; b: STRING; b: POINTER; a: STRING]
 		do

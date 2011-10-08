@@ -5,7 +5,7 @@ create
 	make
 
 feature
-	make is
+	make
 			-- do_nothing
 		do
 			do_nothing

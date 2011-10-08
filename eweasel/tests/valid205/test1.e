@@ -1,4 +1,4 @@
-indexing
+note
 	description: "crashing class"
 	author: "Emmanuel Bouyer"
 	date: "$Date$"

@@ -5,7 +5,7 @@ create
 
 feature
 
-	make is
+	make
 		local
 			t: TEST1
 			t2: TEST2

@@ -136,19 +136,19 @@ feature {NONE} -- Implementation
 			a_parser.error_handler.wipe_out
 				-- First we do it using the old conventions.
 			if a_scanner /= Void then
-				a_scanner.set_syntax_version ({EIFFEL_PARSER}.obsolete_64_syntax)
+				a_scanner.set_syntax_version ({EIFFEL_PARSER}.obsolete_syntax)
 				a_scanner.scan_string (a_buffer)
 			end
-			a_parser.set_syntax_version ({EIFFEL_PARSER}.obsolete_64_syntax)
+			a_parser.set_syntax_version ({EIFFEL_PARSER}.obsolete_syntax)
 			a_parser.parse_class_from_string (a_buffer, Void, Void)
 			if a_parser.error_handler.has_error then
 				a_parser.error_handler.wipe_out
 					-- There was an error, let's try to see if the code is using transitional syntax.
 				if a_scanner /= Void then
-					a_scanner.set_syntax_version ({EIFFEL_PARSER}.transitional_64_syntax)
+					a_scanner.set_syntax_version ({EIFFEL_PARSER}.transitional_syntax)
 					a_scanner.scan_string (a_buffer)
 				end
-				a_parser.set_syntax_version ({EIFFEL_PARSER}.transitional_64_syntax)
+				a_parser.set_syntax_version ({EIFFEL_PARSER}.transitional_syntax)
 				a_parser.parse_class_from_string (a_buffer, Void, Void)
 				if a_parser.error_handler.has_error then
 					a_parser.error_handler.wipe_out

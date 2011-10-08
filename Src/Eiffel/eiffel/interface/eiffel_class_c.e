@@ -304,9 +304,9 @@ feature -- Action
 				end
 				inspect l_options.syntax.index
 				when {CONF_OPTION}.syntax_index_obsolete then
-					parser.set_syntax_version ({EIFFEL_SCANNER}.obsolete_64_syntax)
+					parser.set_syntax_version ({EIFFEL_SCANNER}.obsolete_syntax)
 				when {CONF_OPTION}.syntax_index_transitional then
-					parser.set_syntax_version ({EIFFEL_SCANNER}.transitional_64_syntax)
+					parser.set_syntax_version ({EIFFEL_SCANNER}.transitional_syntax)
 				when {CONF_OPTION}.syntax_index_provisional then
 					parser.set_syntax_version ({EIFFEL_SCANNER}.provisional_syntax)
 				else

@@ -152,9 +152,9 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Basic operation
 		do
 			inspect a_options.syntax.index
 			when {CONF_OPTION}.syntax_index_obsolete then
-				a_parser.set_syntax_version ({EIFFEL_SCANNER}.obsolete_64_syntax)
+				a_parser.set_syntax_version ({EIFFEL_SCANNER}.obsolete_syntax)
 			when {CONF_OPTION}.syntax_index_transitional then
-				a_parser.set_syntax_version ({EIFFEL_SCANNER}.transitional_64_syntax)
+				a_parser.set_syntax_version ({EIFFEL_SCANNER}.transitional_syntax)
 			when {CONF_OPTION}.syntax_index_provisional then
 				a_parser.set_syntax_version ({EIFFEL_SCANNER}.provisional_syntax)
 			else
@@ -179,7 +179,7 @@ feature {NONE} -- Basic operations
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -244,7 +244,7 @@ UTF8_TAIL	[\x80-\xBF]
 -- Reserved words
 
 [aA][cC][rR][oO][sS][sS] {
-				if syntax_version = provisional_syntax then
+				if syntax_version /= obsolete_syntax then
 					last_keyword_id_value := ast_factory.new_keyword_id_as (TE_ACROSS, Current)
 					last_token := TE_ACROSS
 				else
@@ -253,7 +253,7 @@ UTF8_TAIL	[\x80-\xBF]
 					if has_syntax_warning then
 						report_one_warning (
 							create {SYNTAX_WARNING}.make (line, column, filename,
-								once "Provisional keyword `across' is used as identifier."))
+								once "Keyword `across' is used as identifier."))
 					end
 				end
 			}
@@ -282,7 +282,7 @@ UTF8_TAIL	[\x80-\xBF]
 				last_token := TE_ASSIGN
 			}
 [aA][tT][tT][aA][cC][hH][eE][dD] {
-				if syntax_version /= obsolete_64_syntax then
+				if syntax_version /= obsolete_syntax then
 					last_keyword_id_value := ast_factory.new_keyword_id_as (TE_ATTACHED, Current)
 					last_token := TE_ATTACHED
 				else
@@ -296,7 +296,7 @@ UTF8_TAIL	[\x80-\xBF]
 				end
 			}
 [aA][tT][tT][rR][iI][bB][uU][tT][eE] {
-				if syntax_version /= obsolete_64_syntax then
+				if syntax_version /= obsolete_syntax then
 					last_keyword_id_value := ast_factory.new_keyword_id_as (TE_ATTRIBUTE, Current)
 					last_token := TE_ATTRIBUTE
 				else
@@ -351,7 +351,7 @@ UTF8_TAIL	[\x80-\xBF]
 				last_token := TE_DEFERRED
 			}
 [dD][eE][tT][aA][cC][hH][aA][bB][lL][eE]	{
-				if syntax_version /= obsolete_64_syntax then
+				if syntax_version /= obsolete_syntax then
 					last_keyword_id_value := ast_factory.new_keyword_id_as (TE_DETACHABLE, Current)
 					last_token := TE_DETACHABLE
 				else
@@ -427,7 +427,7 @@ UTF8_TAIL	[\x80-\xBF]
 				else
 					last_keyword_id_value := ast_factory.new_keyword_id_as (TE_INDEXING, Current)
 					last_token := TE_INDEXING
-					if has_syntax_warning and then syntax_version /= obsolete_64_syntax then
+					if has_syntax_warning and then syntax_version /= obsolete_syntax then
 						report_one_warning (
 							create {SYNTAX_WARNING}.make (line, column, filename,
 								once "Usage of `indexing' has been replaced by `note'."))
@@ -458,7 +458,7 @@ UTF8_TAIL	[\x80-\xBF]
 				else
 					last_keyword_id_value := ast_factory.new_keyword_id_as (TE_IS, Current)
 					last_token := TE_IS
-					if has_syntax_warning and then syntax_version /= obsolete_64_syntax then
+					if has_syntax_warning and then syntax_version /= obsolete_syntax then
 						report_one_warning (
 							create {SYNTAX_WARNING}.make (line, column, filename,
 								once "Usage of `is' has now been deprecated."))
@@ -483,7 +483,7 @@ UTF8_TAIL	[\x80-\xBF]
 				last_token := TE_NOT
 			}
 [nN][oO][tT][eE]	{
-				if syntax_version /= obsolete_64_syntax then
+				if syntax_version /= obsolete_syntax then
 					last_keyword_id_value := ast_factory.new_keyword_id_as (TE_NOTE, Current)
 					last_token := TE_NOTE
 				else
@@ -595,7 +595,7 @@ UTF8_TAIL	[\x80-\xBF]
 				last_token := TE_SEPARATE
 			}
 [sS][oO][mM][eE] {
-				if syntax_version = provisional_syntax then
+				if syntax_version /= obsolete_syntax then
 					last_keyword_id_value := ast_factory.new_keyword_id_as (TE_SOME, Current)
 					last_token := TE_SOME
 				else
@@ -604,7 +604,7 @@ UTF8_TAIL	[\x80-\xBF]
 					if has_syntax_warning then
 						report_one_warning (
 							create {SYNTAX_WARNING}.make (line, column, filename,
-								once "Provisional keyword `some' is used as identifier."))
+								once "Keyword `some' is used as identifier."))
 					end
 				end
 			}
@@ -1238,7 +1238,7 @@ UTF8_TAIL	[\x80-\xBF]
 %%
 
 note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

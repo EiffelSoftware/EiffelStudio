@@ -62,7 +62,7 @@ feature {NONE} -- Initialization
 			create start_location.make_null
 			create verbatim_marker.make (Initial_verbatim_marker_size)
 			filename := ""
-			syntax_version := obsolete_64_syntax
+			syntax_version := obsolete_syntax
 			ast_factory.set_parser (Current)
 		ensure
 			ast_factory_set: ast_factory = a_factory
@@ -80,7 +80,7 @@ feature -- Initialization
 			token_buffer.wipe_out
 			roundtrip_token_buffer.wipe_out
 			verbatim_marker.wipe_out
-			syntax_version := obsolete_64_syntax
+			syntax_version := obsolete_syntax
 		end
 
 feature -- Roundtrip
@@ -160,10 +160,10 @@ feature -- Access
 	ecma_syntax: NATURAL_8 = 0x00
 			-- Syntax strictly follows the ECMA specification
 
-	obsolete_64_syntax: NATURAL_8 = 0x01
+	obsolete_syntax: NATURAL_8 = 0x01
 			-- Allows pre-ECMA keywords and ignore new ECMA keywords such as `note', `attribute', `attached' and `detachable'
 
-	transitional_64_syntax: NATURAL_8 = 0x2
+	transitional_syntax: NATURAL_8 = 0x2
 			-- Allows both pre and ECMA keywords
 
 	provisional_syntax: NATURAL_8 = 0x3
@@ -172,7 +172,7 @@ feature -- Access
 feature {NONE} -- Status
 
 	syntax_version: NATURAL_8
-			-- Version of syntax used, one of the `ecma_syntax', `obsolete_64_syntax' and `transitional_64_syntax'.
+			-- Version of syntax used, one of the `ecma_syntax', `obsolete_syntax' and `transitional_syntax'.
 
 feature -- Convenience
 
@@ -219,7 +219,7 @@ feature -- Settings
 	set_syntax_version (a_version: like syntax_version)
 			-- Set `syntax_version' to `a_version'.
 		require
-			valid_version: a_version = ecma_syntax or a_version = transitional_64_syntax or a_version = obsolete_64_syntax or a_version = provisional_syntax
+			valid_version: a_version = ecma_syntax or a_version = transitional_syntax or a_version = obsolete_syntax or a_version = provisional_syntax
 		do
 			syntax_version := a_version
 		ensure

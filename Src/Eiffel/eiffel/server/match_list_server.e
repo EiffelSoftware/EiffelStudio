@@ -65,9 +65,9 @@ feature -- Access
 						l_scanner := matchlist_scanner
 						inspect l_options.syntax.index
 						when {CONF_OPTION}.syntax_index_obsolete then
-							l_scanner.set_syntax_version ({EIFFEL_SCANNER}.obsolete_64_syntax)
+							l_scanner.set_syntax_version ({EIFFEL_SCANNER}.obsolete_syntax)
 						when {CONF_OPTION}.syntax_index_transitional then
-							l_scanner.set_syntax_version ({EIFFEL_SCANNER}.transitional_64_syntax)
+							l_scanner.set_syntax_version ({EIFFEL_SCANNER}.transitional_syntax)
 						when {CONF_OPTION}.syntax_index_provisional then
 							l_scanner.set_syntax_version ({EIFFEL_SCANNER}.provisional_syntax)
 						else
@@ -118,7 +118,7 @@ feature {NONE} -- Implementation
 			-- Size of a HASH_TABLE' block
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

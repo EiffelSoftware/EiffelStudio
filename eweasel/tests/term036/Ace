@@ -4,6 +4,7 @@
 		<root cluster="root_cluster" class="test" feature="make"/>
 		<option warning="true">
 			<assertions precondition="false" postcondition="false" check="false" invariant="false" loop="false"/>
+			<warning name="syntax" enabled="false"/>
 		</option>
 		$EWEASEL_DOTNET_SETTING
 		<mapping old_name="STRING" new_name="STRING_8"/>

@@ -161,7 +161,6 @@ UTF8_tail	[\x80-\xBF]
 [iI][nN][hH][eE][rR][iI][tT]			|
 [iI][nN][sS][pP][eE][cC][tT]			|
 [iI][nN][vV][aA][rR][iI][aA][nN][tT]	|
-[iI][sS]								|
 [lL][iI][kK][eE]						|
 [lL][oO][cC][aA][lL]					|
 [lL][oO][oO][pP]						|
@@ -200,50 +199,37 @@ UTF8_tail	[\x80-\xBF]
 										update_token_list
 										}
 
+[aA][cC][rR][oO][sS][sS]		|
 [aA][tT][tT][aA][cC][hH][eE][dD]		|
 [aA][tT][tT][rR][iI][bB][uU][tT][eE]		|
 [dD][eE][tT][aA][cC][hH][aA][bB][lL][eE]	|
-[nN][oO][tT][eE]				{
-							if in_comments then
-									-- Comment
-								curr_token := new_comment (text)
-							elseif syntax_version /= {EIFFEL_SCANNER}.obsolete_64_syntax then
-									-- Keyword
-								curr_token := new_keyword (text)
-							else
-									-- Identifier
-								curr_token := new_text (text)
-							end
-							update_token_list
-						}
-
-[iI][nN][dD][eE][xX][iI][nN][gG]		{
-							if in_comments then
-									-- Comment
-								curr_token := new_comment (text)
-							elseif
-								syntax_version = {EIFFEL_SCANNER}.obsolete_64_syntax or else
-								syntax_version = {EIFFEL_SCANNER}.transitional_64_syntax
-							then
-									-- Keyword
-								curr_token := new_keyword (text)
-							else
-								curr_token := new_text (text)
-							end
-							update_token_list
-						}
-
-
-[aA][cC][rR][oO][sS][sS]		|
+[nN][oO][tT][eE]				|
 [sS][oO][mM][eE]				{
 							if in_comments then
 									-- Comment
 								curr_token := new_comment (text)
-							elseif syntax_version = {EIFFEL_SCANNER}.provisional_syntax then
+							elseif syntax_version /= {EIFFEL_SCANNER}.obsolete_syntax then
 									-- Keyword
 								curr_token := new_keyword (text)
 							else
 									-- Identifier
+								curr_token := new_text (text)
+							end
+							update_token_list
+						}
+
+[iI][nN][dD][eE][xX][iI][nN][gG]		|
+[iI][sS]					{
+							if in_comments then
+									-- Comment
+								curr_token := new_comment (text)
+							elseif
+								syntax_version = {EIFFEL_SCANNER}.obsolete_syntax or else
+								syntax_version = {EIFFEL_SCANNER}.transitional_syntax
+							then
+									-- Keyword
+								curr_token := new_keyword (text)
+							else
 								curr_token := new_text (text)
 							end
 							update_token_list
@@ -534,7 +520,7 @@ UTF8_tail	[\x80-\xBF]
 %%
 
 indexing
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1829,7 +1829,11 @@ feature {NONE} -- Processing of options
 					o := factory.new_option
 				end
 				if
-					namespace ~ namespace_1_9_0 or else
+					namespace ~ namespace_1_9_0
+				then
+						-- Use the defaults of ES 7.0.
+					o.merge (default_options_7_0)
+				elseif
 					namespace ~ namespace_1_8_0 or else
 					namespace ~ namespace_1_7_0 or else
 					namespace ~ namespace_1_6_0 or else
@@ -2568,8 +2572,16 @@ feature {NONE} -- Implementation state transitions
 
 feature {NONE} -- Default options
 
+	default_options_7_0: CONF_OPTION
+			-- Default options of 7.0.
+		once
+			create Result.make_7_0
+		ensure
+			result_attached: Result /= Void
+		end
+
 	default_options_6_4: CONF_OPTION
-			-- Default options of 6.4
+			-- Default options of 6.4.
 		once
 			create Result.make_6_4
 		ensure
@@ -2577,7 +2589,7 @@ feature {NONE} -- Default options
 		end
 
 	default_options_6_3: CONF_OPTION
-			-- Default options of 6.3
+			-- Default options of 6.3.
 		once
 			create Result.make_6_3
 		ensure

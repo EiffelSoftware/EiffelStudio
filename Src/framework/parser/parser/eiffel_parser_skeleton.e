@@ -946,7 +946,7 @@ feature {NONE} -- Actions
 			if a_keyword_id /= Void then
 				Result := a_keyword_id.id
 					-- Report syntax error when we are compiling for ECMA.
-				if syntax_version = ecma_syntax then
+				if syntax_version = ecma_syntax or else syntax_version = provisional_syntax then
 					report_one_error (create {SYNTAX_ERROR}.make (a_keyword_id.line, a_keyword_id.column, a_keyword_id.filename,
 						"Using keyword as identifier."))
 				elseif has_syntax_warning then

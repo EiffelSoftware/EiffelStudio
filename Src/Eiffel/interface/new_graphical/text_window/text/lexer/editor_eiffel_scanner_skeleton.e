@@ -80,15 +80,15 @@ feature -- Action
 feature {NONE} -- Status
 
 	syntax_version: NATURAL_8
-			-- Version of syntax used, one of the `ecma_syntax', `obsolete_64_syntax',
-			-- `transitional_64_syntax', `provisional_syntax' in {EIFFEL_SCANNER}.
+			-- Version of syntax used, one of the `ecma_syntax', `obsolete_syntax',
+			-- `transitional_syntax', `provisional_syntax' in {EIFFEL_SCANNER}.
 		do
 			if attached {EIFFEL_CLASS_I} current_class as l_class then
 				inspect l_class.options.syntax.index
 				when {CONF_OPTION}.syntax_index_obsolete then
-					Result := {EIFFEL_SCANNER}.obsolete_64_syntax
+					Result := {EIFFEL_SCANNER}.obsolete_syntax
 				when {CONF_OPTION}.syntax_index_transitional then
-					Result := {EIFFEL_SCANNER}.transitional_64_syntax
+					Result := {EIFFEL_SCANNER}.transitional_syntax
 				when {CONF_OPTION}.syntax_index_provisional then
 					Result := {EIFFEL_SCANNER}.provisional_syntax
 				else
@@ -253,7 +253,7 @@ invariant
 	invariant_clause: True -- Your invariant here
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

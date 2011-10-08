@@ -26,14 +26,15 @@ inherit
 create
 	default_create,
 	make_6_3,
-	make_6_4
+	make_6_4,
+	make_7_0
 
 feature {NONE} -- Creation
 
 	default_create
 			-- Initialize options to the defaults of the current version.
 		do
-			make_6_4
+			make_7_0
 		end
 
 	make_6_3
@@ -48,10 +49,17 @@ feature {NONE} -- Creation
 		do
 			create syntax.make (syntax_name, syntax_index_transitional)
 			create void_safety.make (void_safety_name, void_safety_index_none)
+		end
+
+	make_7_0
+			-- Initialize options to the defaults of 7.0.
+		do
+			create syntax.make (syntax_name, syntax_index_standard)
+			create void_safety.make (void_safety_name, void_safety_index_none)
+			is_attached_by_default := True
 				-- Uncomment the line below once all libraries
 				-- have been converted to Void-safe.
 --				is_full_class_checking := True
---				is_attached_by_default := True
 --				is_void_safe := True
 		end
 

@@ -10,7 +10,7 @@ class EDITOR_EIFFEL_SCANNER
 
 inherit
 
-	EDITOR_EIFFEL_SCANNER_SKELETON
+	EDITOR_EIFFEL_SCANNER_SKELETON	
 
 create
 	make
@@ -56,7 +56,7 @@ end
 
 					curr_token := new_space (text_count)
 					update_token_list
-
+					
 when 3 then
 --|#line <not available> "editor_eiffel_scanner.l"
 debug ("GELEX")
@@ -69,7 +69,7 @@ end
 						curr_token := new_comment (text)
 					end
 					update_token_list
-
+					
 when 4 then
 --|#line <not available> "editor_eiffel_scanner.l"
 debug ("GELEX")
@@ -82,18 +82,18 @@ end
 						i_ := i_ + 1
 					end
 					in_comments := False
-
+					
 when 5 then
 --|#line <not available> "editor_eiffel_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line <not available>")
 end
-
+ 
 						-- comments
 					curr_token := new_comment (text)
-					in_comments := True
-					update_token_list
-
+					in_comments := True	
+					update_token_list					
+				
 when 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17 then
 --|#line <not available> "editor_eiffel_scanner.l"
 debug ("GELEX")
@@ -107,22 +107,22 @@ end
 						curr_token := new_comment (text)
 					end
 					update_token_list
-
+					
 when 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38 then
 --|#line <not available> "editor_eiffel_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line <not available>")
 end
-
+ 
 						-- Operator Symbol
 					if not in_comments then
-						curr_token := new_operator (text)
+						curr_token := new_operator (text)					
 					else
 						curr_token := new_comment (text)
 					end
 					update_token_list
-
-when 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102 then
+					
+when 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101 then
 --|#line <not available> "editor_eiffel_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line <not available>")
@@ -135,8 +135,8 @@ end
 											curr_token := new_comment (text)
 										end
 										update_token_list
-
-when 103, 104, 105, 106 then
+										
+when 102, 103, 104, 105, 106, 107 then
 --|#line <not available> "editor_eiffel_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line <not available>")
@@ -145,7 +145,7 @@ end
 							if in_comments then
 									-- Comment
 								curr_token := new_comment (text)
-							elseif syntax_version /= {EIFFEL_SCANNER}.obsolete_64_syntax then
+							elseif syntax_version /= {EIFFEL_SCANNER}.obsolete_syntax then
 									-- Keyword
 								curr_token := new_keyword (text)
 							else
@@ -153,27 +153,7 @@ end
 								curr_token := new_text (text)
 							end
 							update_token_list
-
-when 107 then
---|#line <not available> "editor_eiffel_scanner.l"
-debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line <not available>")
-end
-
-							if in_comments then
-									-- Comment
-								curr_token := new_comment (text)
-							elseif
-								syntax_version = {EIFFEL_SCANNER}.obsolete_64_syntax or else
-								syntax_version = {EIFFEL_SCANNER}.transitional_64_syntax
-							then
-									-- Keyword
-								curr_token := new_keyword (text)
-							else
-								curr_token := new_text (text)
-							end
-							update_token_list
-
+						
 when 108, 109 then
 --|#line <not available> "editor_eiffel_scanner.l"
 debug ("GELEX")
@@ -183,15 +163,17 @@ end
 							if in_comments then
 									-- Comment
 								curr_token := new_comment (text)
-							elseif syntax_version = {EIFFEL_SCANNER}.provisional_syntax then
+							elseif
+								syntax_version = {EIFFEL_SCANNER}.obsolete_syntax or else
+								syntax_version = {EIFFEL_SCANNER}.transitional_syntax
+							then
 									-- Keyword
 								curr_token := new_keyword (text)
 							else
-									-- Identifier
 								curr_token := new_text (text)
 							end
 							update_token_list
-
+						
 when 110 then
 --|#line <not available> "editor_eiffel_scanner.l"
 debug ("GELEX")
@@ -209,12 +191,12 @@ end
 												end
 											else
 												curr_token := new_text (text)
-											end
+											end							
 										else
 											curr_token := new_comment (text)
 										end
 										update_token_list
-
+										
 when 111 then
 --|#line <not available> "editor_eiffel_scanner.l"
 debug ("GELEX")
@@ -222,12 +204,12 @@ debug ("GELEX")
 end
 
 										if not in_comments then
-											curr_token := new_text (text)
+											curr_token := new_text (text)											
 										else
 											curr_token := new_comment (text)
 										end
 										update_token_list
-
+										
 when 112 then
 --|#line <not available> "editor_eiffel_scanner.l"
 debug ("GELEX")
@@ -235,12 +217,12 @@ debug ("GELEX")
 end
 
 										if not in_comments then
-											curr_token := new_text (text)
+											curr_token := new_text (text)										
 										else
 											curr_token := new_comment (text)
 										end
 										update_token_list
-
+										
 when 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134 then
 --|#line <not available> "editor_eiffel_scanner.l"
 debug ("GELEX")
@@ -253,7 +235,7 @@ end
 						curr_token := new_comment (text)
 					end
 					update_token_list
-
+					
 when 135 then
 --|#line <not available> "editor_eiffel_scanner.l"
 debug ("GELEX")
@@ -267,12 +249,12 @@ end
 							curr_token := new_text (text)
 						else
 							curr_token := new_character (text)
-						end
+						end						
 					else
 						curr_token := new_comment (text)
 					end
 					update_token_list
-
+					
 when 136 then
 --|#line <not available> "editor_eiffel_scanner.l"
 debug ("GELEX")
@@ -286,7 +268,7 @@ end
 						curr_token := new_comment (text)
 					end
 					update_token_list
-
+					
 when 137 then
 --|#line <not available> "editor_eiffel_scanner.l"
 debug ("GELEX")
@@ -304,7 +286,7 @@ end
 					curr_token := new_comment (text)
 					update_token_list
 				end
-
+			
 when 138 then
 --|#line <not available> "editor_eiffel_scanner.l"
 debug ("GELEX")
@@ -321,8 +303,8 @@ end
 				else
 					curr_token := new_comment (text)
 					update_token_list
-				end
-
+				end				
+			
 when 139 then
 --|#line <not available> "editor_eiffel_scanner.l"
 debug ("GELEX")
@@ -336,12 +318,12 @@ debug ("GELEX")
 end
 
 							-- Verbatim string closer, possibly.
-						curr_token := new_string (text)
+						curr_token := new_string (text)						
 						end_of_verbatim_string := True
 						in_verbatim_string := False
 						set_start_condition (INITIAL)
 						update_token_list
-
+					
 when 141 then
 --|#line <not available> "editor_eiffel_scanner.l"
 debug ("GELEX")
@@ -349,12 +331,12 @@ debug ("GELEX")
 end
 
 							-- Verbatim string closer, possibly.
-						curr_token := new_string (text)
+						curr_token := new_string (text)						
 						end_of_verbatim_string := True
 						in_verbatim_string := False
 						set_start_condition (INITIAL)
 						update_token_list
-
+					
 when 142 then
 --|#line <not available> "editor_eiffel_scanner.l"
 debug ("GELEX")
@@ -362,17 +344,17 @@ debug ("GELEX")
 end
 
 						curr_token := new_space (text_count)
-						update_token_list
-
+						update_token_list						
+					
 when 143 then
 --|#line <not available> "editor_eiffel_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line <not available>")
 end
-
+						
 						curr_token := new_tabulation (text_count)
-						update_token_list
-
+						update_token_list						
+					
 when 144 then
 --|#line <not available> "editor_eiffel_scanner.l"
 debug ("GELEX")
@@ -383,8 +365,8 @@ end
 							curr_token := new_eol
 							update_token_list
 							i_ := i_ + 1
-						end
-
+						end						
+					
 when 145 then
 --|#line <not available> "editor_eiffel_scanner.l"
 debug ("GELEX")
@@ -393,7 +375,7 @@ end
 
 						curr_token := new_string (text)
 						update_token_list
-
+					
 when 146, 147 then
 --|#line <not available> "editor_eiffel_scanner.l"
 debug ("GELEX")
@@ -401,13 +383,13 @@ debug ("GELEX")
 end
 
 					-- Eiffel String
-					if not in_comments then
+					if not in_comments then						
 						curr_token := new_string (text)
 					else
 						curr_token := new_comment (text)
 					end
 					update_token_list
-
+					
 when 148 then
 --|#line <not available> "editor_eiffel_scanner.l"
 debug ("GELEX")
@@ -416,12 +398,12 @@ end
 
 					-- Eiffel Bit
 					if not in_comments then
-						curr_token := new_number (text)
+						curr_token := new_number (text)						
 					else
 						curr_token := new_comment (text)
 					end
 					update_token_list
-
+					
 when 149, 150, 151, 152 then
 --|#line <not available> "editor_eiffel_scanner.l"
 debug ("GELEX")
@@ -435,7 +417,7 @@ end
 							curr_token := new_comment (text)
 						end
 						update_token_list
-
+						
 when 153, 154, 155, 156 then
 --|#line <not available> "editor_eiffel_scanner.l"
 debug ("GELEX")
@@ -449,7 +431,7 @@ end
 							curr_token := new_comment (text)
 						end
 						update_token_list
-
+						
 when 157 then
 	yy_end := yy_end - 1
 --|#line <not available> "editor_eiffel_scanner.l"
@@ -458,13 +440,13 @@ debug ("GELEX")
 end
 
 							-- Eiffel reals & doubles
-						if not in_comments then
+						if not in_comments then		
 							curr_token := new_number (text)
 						else
 							curr_token := new_comment (text)
 						end
 						update_token_list
-
+						
 when 158, 159 then
 --|#line <not available> "editor_eiffel_scanner.l"
 debug ("GELEX")
@@ -472,13 +454,13 @@ debug ("GELEX")
 end
 
 							-- Eiffel reals & doubles
-						if not in_comments then
+						if not in_comments then		
 							curr_token := new_number (text)
 						else
 							curr_token := new_comment (text)
 						end
 						update_token_list
-
+						
 when 160 then
 	yy_end := yy_end - 1
 --|#line <not available> "editor_eiffel_scanner.l"
@@ -487,13 +469,13 @@ debug ("GELEX")
 end
 
 							-- Eiffel reals & doubles
-						if not in_comments then
+						if not in_comments then		
 							curr_token := new_number (text)
 						else
 							curr_token := new_comment (text)
 						end
 						update_token_list
-
+						
 when 161, 162 then
 --|#line <not available> "editor_eiffel_scanner.l"
 debug ("GELEX")
@@ -501,13 +483,13 @@ debug ("GELEX")
 end
 
 							-- Eiffel reals & doubles
-						if not in_comments then
+						if not in_comments then		
 							curr_token := new_number (text)
 						else
 							curr_token := new_comment (text)
 						end
 						update_token_list
-
+						
 when 163 then
 --|#line <not available> "editor_eiffel_scanner.l"
 debug ("GELEX")
@@ -516,7 +498,7 @@ end
 
 					curr_token := new_text (text)
 					update_token_list
-
+					
 when 164 then
 --|#line <not available> "editor_eiffel_scanner.l"
 debug ("GELEX")
@@ -530,7 +512,7 @@ end
 					curr_token := new_comment (text)
 				end
 				update_token_list
-
+				
 when 165 then
 --|#line <not available> "editor_eiffel_scanner.l"
 debug ("GELEX")
@@ -2980,10 +2962,10 @@ feature {NONE} -- Table templates
 
 			  110,  111,  110,  111,  111,  111,  111,  110,  111,  110,
 			  111,  110,  111,  111,  111,  111,   67,  110,  111,  110,
-			  111,  110,  111,   73,  110,  111,   67,  111,  111,  111,
-			   73,  111,  110,  111,  110,  111,  111,  111,  110,  111,
-			  111,  110,  111,  110,  111,  110,  111,   81,  110,  111,
-			  111,  111,  111,   81,  111,  110,  111,  111,  110,  111,
+			  111,  110,  111,  109,  110,  111,   67,  111,  111,  111,
+			  109,  111,  110,  111,  110,  111,  111,  111,  110,  111,
+			  111,  110,  111,  110,  111,  110,  111,   80,  110,  111,
+			  111,  111,  111,   80,  111,  110,  111,  111,  110,  111,
 			  111,  110,  111,  110,  111,  110,  111,  111,  111,  111,
 			  110,  111,  110,  111,  111,  111,  110,  111,  111,  110,
 			  111,  110,  111,  111,  111,  110,  111,  111,  110,  111,
@@ -3013,14 +2995,14 @@ feature {NONE} -- Table templates
 
 			  111,  110,  111,  110,  111,  110,  111,  111,  111,  111,
 			  111,  111,  110,  111,  111,  110,  111,  110,  111,  111,
-			  111,   77,  110,  111,   77,  111,  110,  111,  111,   79,
-			  110,  111,   79,  111,  110,  111,  111,  110,  111,  111,
+			  111,   76,  110,  111,   76,  111,  110,  111,  111,   78,
+			  110,  111,   78,  111,  110,  111,  111,  110,  111,  111,
 			  110,  111,  110,  111,  110,  111,  110,  111,  110,  111,
 			  110,  111,  111,  111,  111,  111,  111,  111,  110,  111,
 			  110,  111,  111,  111,  110,  111,  111,  110,  111,  111,
 			  110,  111,  111,  110,  111,  111,  110,  111,  110,  111,
 			  110,  111,  111,  111,  111,  110,  111,  111,  110,  111,
-			  111,  110,  111,  111,  102,  110,  111,  102,  111,  163,
+			  111,  110,  111,  111,  101,  110,  111,  101,  111,  163,
 
 			  140,  141,  145,  145,  145,  145,  145,  145,  145,  145,
 			  145,  145,  145,  145,  145,  145,  146,  146,  146,  147,
@@ -3039,9 +3021,9 @@ feature {NONE} -- Table templates
 			  111,  110,  111,  111,   65,  110,  111,  110,  111,   65,
 			  111,  111,  110,  111,  111,  110,  111,  111,  110,  111,
 			  111,  110,  111,  111,  110,  111,  111,  110,  111,  111,
-			   74,  110,  111,   74,  111,  110,  111,  111,   76,  110,
-			  111,   76,  111,  106,  110,  111,  106,  111,  110,  111,
-			  111,   80,  110,  111,   80,  111,  110,  111,  110,  111,
+			   73,  110,  111,   73,  111,  110,  111,  111,   75,  110,
+			  111,   75,  111,  106,  110,  111,  106,  111,  110,  111,
+			  111,   79,  110,  111,   79,  111,  110,  111,  110,  111,
 			  111,  111,  110,  111,  111,  110,  111,  111,  110,  111, yy_Dummy>>,
 			1, 1000, 0)
 		end
@@ -3050,11 +3032,11 @@ feature {NONE} -- Table templates
 		do
 			yy_array_subcopy (an_array, <<
 			  111,  110,  111,  111,  110,  111,  110,  111,  111,  111,
-			  110,  111,  111,  110,  111,  111,  110,  111,  111,  109,
-			  110,  111,  109,  111,  110,  111,  111,   94,  110,  111,
-			   94,  111,   95,  110,  111,   95,  111,  110,  111,  111,
-			  110,  111,  111,  110,  111,  111,  110,  111,  111,  100,
-			  110,  111,  100,  111,  101,  110,  111,  101,  111,  145,
+			  110,  111,  111,  110,  111,  111,  110,  111,  111,  107,
+			  110,  111,  107,  111,  110,  111,  111,   93,  110,  111,
+			   93,  111,   94,  110,  111,   94,  111,  110,  111,  111,
+			  110,  111,  111,  110,  111,  111,  110,  111,  111,   99,
+			  110,  111,   99,  111,  100,  110,  111,  100,  111,  145,
 			  145,  145,  145,  136,  136,  136,  159,  159,  162,  159,
 			  162,  158,  159,  161,  162,  158,  161,  149,  156,  110,
 			  111,  111,   40,  110,  111,   40,  111,   41,  110,  111,
@@ -3067,16 +3049,16 @@ feature {NONE} -- Table templates
 			  110,  111,  111,  110,  111,  111,   63,  110,  111,   63,
 			  111,  110,  111,  111,  110,  111,  111,  110,  111,  111,
 			  110,  111,  111,   69,  110,  111,   69,  111,  110,  111,
-			  111,  110,  111,  111,  110,  111,  111,   75,  110,  111,
-			   75,  111,  110,  111,  111,  110,  111,  111,  110,  111,
+			  111,  110,  111,  111,  110,  111,  111,   74,  110,  111,
+			   74,  111,  110,  111,  111,  110,  111,  111,  110,  111,
 			  111,  110,  111,  111,  110,  111,  111,  110,  111,  111,
 
-			  110,  111,  111,  110,  111,  111,  110,  111,  111,   90,
-			  110,  111,   90,  111,  110,  111,  111,  110,  111,  111,
-			   93,  110,  111,   93,  111,  110,  111,  111,  110,  111,
-			  111,   98,  110,  111,   98,  111,  110,  111,  111,  135,
+			  110,  111,  111,  110,  111,  111,  110,  111,  111,   89,
+			  110,  111,   89,  111,  110,  111,  111,  110,  111,  111,
+			   92,  110,  111,   92,  111,  110,  111,  111,  110,  111,
+			  111,   97,  110,  111,   97,  111,  110,  111,  111,  135,
 			  159,  162,  162,  159,  158,  159,  161,  162,  158,  161,
-			  157,  108,  110,  111,  108,  111,   45,  110,  111,   45,
+			  157,  102,  110,  111,  102,  111,   45,  110,  111,   45,
 			  111,  110,  111,  111,  110,  111,  111,  110,  111,  111,
 			   50,  110,  111,  110,  111,   50,  111,  111,  110,  111,
 			  111,  110,  111,  111,  110,  111,  111,   57,  110,  111,
@@ -3085,12 +3067,12 @@ feature {NONE} -- Table templates
 			   61,  110,  111,   61,  111,  110,  111,  111,  110,  111,
 			  111,   66,  110,  111,   66,  111,  110,  111,  111,  110,
 			  111,  111,  110,  111,  111,  110,  111,  111,  110,  111,
-			  111,  110,  111,  111,  110,  111,  111,   83,  110,  111,
-			   83,  111,  110,  111,  111,  110,  111,  111,   86,  110,
-			  111,   86,  111,  110,  111,  111,   88,  110,  111,   88,
-			  111,   89,  110,  111,   89,  111,   91,  110,  111,   91,
-			  111,  110,  111,  111,  110,  111,  111,   97,  110,  111,
-			   97,  111,  110,  111,  111,  159,  158,  159,  161,  162,
+			  111,  110,  111,  111,  110,  111,  111,   82,  110,  111,
+			   82,  111,  110,  111,  111,  110,  111,  111,   85,  110,
+			  111,   85,  111,  110,  111,  111,   87,  110,  111,   87,
+			  111,   88,  110,  111,   88,  111,   90,  110,  111,   90,
+			  111,  110,  111,  111,  110,  111,  111,   96,  110,  111,
+			   96,  111,  110,  111,  111,  159,  158,  159,  161,  162,
 			  162,  158,  160,  162,  160,  110,  111,  111,  110,  111,
 
 			  111,   49,  110,  111,   49,  111,  110,  111,  111,   52,
@@ -3099,19 +3081,19 @@ feature {NONE} -- Table templates
 			  111,   68,  110,  111,   68,  111,  110,  111,  111,   70,
 			  110,  111,   70,  111,   71,  110,  111,   71,  111,  110,
 			  111,  111,  110,  111,  111,  110,  111,  111,  110,  111,
-			  111,  110,  111,  111,   87,  110,  111,   87,  111,  110,
-			  111,  111,  110,  111,  111,   99,  110,  111,   99,  111,
+			  111,  110,  111,  111,   86,  110,  111,   86,  111,  110,
+			  111,  111,  110,  111,  111,   98,  110,  111,   98,  111,
 			  162,  162,  158,  159,  161,  162,  161,  103,  110,  111,
 			  103,  111,  110,  111,  111,   51,  110,  111,   51,  111,
 
 			   54,  110,  111,   54,  111,  110,  111,  111,   60,  110,
-			  111,   60,  111,   62,  110,  111,   62,  111,  107,  110,
-			  111,  107,  111,  110,  111,  111,   78,  110,  111,   78,
-			  111,  110,  111,  111,   85,  110,  111,   85,  111,  110,
-			  111,  111,   92,  110,  111,   92,  111,   96,  110,  111,
-			   96,  111,  162,  161,  162,  161,  162,  161,  104,  110,
+			  111,   60,  111,   62,  110,  111,   62,  111,  108,  110,
+			  111,  108,  111,  110,  111,  111,   77,  110,  111,   77,
+			  111,  110,  111,  111,   84,  110,  111,   84,  111,  110,
+			  111,  111,   91,  110,  111,   91,  111,   95,  110,  111,
+			   95,  111,  162,  161,  162,  161,  162,  161,  104,  110,
 			  111,  104,  111,  110,  111,  111,   72,  110,  111,   72,
-			  111,   82,  110,  111,   82,  111,   84,  110,  111,   84,
+			  111,   81,  110,  111,   81,  111,   83,  110,  111,   83,
 			  111,  161,  162,  105,  110,  111,  105,  111, yy_Dummy>>,
 			1, 588, 1000)
 		end
@@ -3165,7 +3147,7 @@ feature -- User-defined features
 
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -3178,15 +3160,15 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful, but
+			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the GNU General Public License for more details.
+			See the	GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 		]"
 	source: "[
 			Eiffel Software

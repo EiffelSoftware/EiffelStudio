@@ -518,7 +518,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				if syntax_version = provisional_syntax then
+				if syntax_version /= obsolete_syntax then
 					last_keyword_id_value := ast_factory.new_keyword_id_as (TE_ACROSS, Current)
 					last_token := TE_ACROSS
 				else
@@ -527,7 +527,7 @@ end
 					if has_syntax_warning then
 						report_one_warning (
 							create {SYNTAX_WARNING}.make (line, column, filename,
-								once "Provisional keyword `across' is used as identifier."))
+								once "Keyword `across' is used as identifier."))
 					end
 				end
 			
@@ -605,7 +605,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				if syntax_version /= obsolete_64_syntax then
+				if syntax_version /= obsolete_syntax then
 					last_keyword_id_value := ast_factory.new_keyword_id_as (TE_ATTACHED, Current)
 					last_token := TE_ATTACHED
 				else
@@ -626,7 +626,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				if syntax_version /= obsolete_64_syntax then
+				if syntax_version /= obsolete_syntax then
 					last_keyword_id_value := ast_factory.new_keyword_id_as (TE_ATTRIBUTE, Current)
 					last_token := TE_ATTRIBUTE
 				else
@@ -751,7 +751,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				if syntax_version /= obsolete_64_syntax then
+				if syntax_version /= obsolete_syntax then
 					last_keyword_id_value := ast_factory.new_keyword_id_as (TE_DETACHABLE, Current)
 					last_token := TE_DETACHABLE
 				else
@@ -932,7 +932,7 @@ end
 				else
 					last_keyword_id_value := ast_factory.new_keyword_id_as (TE_INDEXING, Current)
 					last_token := TE_INDEXING
-					if has_syntax_warning and then syntax_version /= obsolete_64_syntax then
+					if has_syntax_warning and then syntax_version /= obsolete_syntax then
 						report_one_warning (
 							create {SYNTAX_WARNING}.make (line, column, filename,
 								once "Usage of `indexing' has been replaced by `note'."))
@@ -998,7 +998,7 @@ end
 				else
 					last_keyword_id_value := ast_factory.new_keyword_id_as (TE_IS, Current)
 					last_token := TE_IS
-					if has_syntax_warning and then syntax_version /= obsolete_64_syntax then
+					if has_syntax_warning and then syntax_version /= obsolete_syntax then
 						report_one_warning (
 							create {SYNTAX_WARNING}.make (line, column, filename,
 								once "Usage of `is' has now been deprecated."))
@@ -1058,7 +1058,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				if syntax_version /= obsolete_64_syntax then
+				if syntax_version /= obsolete_syntax then
 					last_keyword_id_value := ast_factory.new_keyword_id_as (TE_NOTE, Current)
 					last_token := TE_NOTE
 				else
@@ -1299,7 +1299,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				if syntax_version = provisional_syntax then
+				if syntax_version /= obsolete_syntax then
 					last_keyword_id_value := ast_factory.new_keyword_id_as (TE_SOME, Current)
 					last_token := TE_SOME
 				else
@@ -1308,7 +1308,7 @@ end
 					if has_syntax_warning then
 						report_one_warning (
 							create {SYNTAX_WARNING}.make (line, column, filename,
-								once "Provisional keyword `some' is used as identifier."))
+								once "Keyword `some' is used as identifier."))
 					end
 				end
 			
@@ -3866,7 +3866,7 @@ feature -- User-defined features
 
 
 note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

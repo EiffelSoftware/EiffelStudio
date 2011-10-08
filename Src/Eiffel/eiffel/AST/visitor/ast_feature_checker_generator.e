@@ -5793,11 +5793,13 @@ feature {NONE} -- Implementation
 				set_is_checking_check (True)
 				s := context.scope
 				if is_void_safe_construct (context.current_class) then
+						-- Strict void safety: no variables change their attachment status because of this assertion.
 					context.enter_realm
 					process_eiffel_list_with_matcher (l_as.check_list, create {AST_SCOPE_ASSERTION}.make (context), Void)
 					context.leave_optional_realm
 					context.set_scope (s)
 				else
+						-- Soft void safety: variables may change attachment status because of this assertion.
 					process_eiffel_list_with_matcher (l_as.check_list, create {AST_SCOPE_ASSERTION}.make (context), Void)
 					context.remove_object_test_scopes (s)
 				end
@@ -7792,8 +7794,17 @@ feature {NONE} -- Implementation
 					i := context.next_object_test_local_position
 				end
 				s := context.scope
-				process_eiffel_list_with_matcher (a, create {AST_SCOPE_ASSERTION}.make (context), b)
-				context.remove_object_test_scopes (s)
+				if is_void_safe_construct (context.current_class) then
+						-- Strict void safety: no variables change their attachment status because of this assertion.
+					context.enter_realm
+					process_eiffel_list_with_matcher (a, create {AST_SCOPE_ASSERTION}.make (context), b)
+					context.leave_optional_realm
+					context.set_scope (s)
+				else
+						-- Soft void safety: variables may change attachment status because of this assertion.
+					process_eiffel_list_with_matcher (a, create {AST_SCOPE_ASSERTION}.make (context), b)
+					context.remove_object_test_scopes (s)
+				end
 				if b /= Void then
 					if b.is_empty then
 						b := Void

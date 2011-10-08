@@ -1093,7 +1093,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	update_reference (an_obj, a_sub_obj: detachable ANY; an_index: INTEGER)
+	update_reference (an_obj: ANY; a_sub_obj: detachable ANY; an_index: INTEGER)
 			-- Connect `a_sub_obj' to `an_obj' at `an_index' position
 			-- which can be a field, special or tuple position depending
 			-- on type of `an_obj'.
@@ -1145,10 +1145,12 @@ feature {NONE} -- Implementation
 						l_list.off
 					loop
 						l_tuple := l_list.item
-						update_reference (
-							l_object_references.item (l_tuple.object_index),
-							l_object_references.item (an_index),
-							l_tuple.field_position)
+						check attached l_object_references.item (l_tuple.object_index) as o then
+							update_reference (
+								o,
+								l_object_references.item (an_index),
+								l_tuple.field_position)
+						end
 						l_tuple_stack.extend (l_tuple)
 						l_list.remove
 						l_list.finish

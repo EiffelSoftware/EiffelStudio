@@ -192,7 +192,7 @@ feature {NONE} -- Internal Implementation
 
 feature {NONE} -- Output
 
-	out_value (v: G): STRING
+	out_value (v: attached G): STRING
 			-- Printable representation of `v'.
 		require
 			v_attached: attached v

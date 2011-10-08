@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description: "AST node factories. Accepts UTF-8 encoding in STRING_8 instances."
 	legal: "See notice at end of class."
@@ -271,8 +271,6 @@ feature -- Access
 
 	new_exit_condition_pair (u: KEYWORD_AS; e: EXPR_AS): PAIR [KEYWORD_AS, EXPR_AS]
 			-- New PAIR for an exit condition of a loop
-		require
-			e_attached: e /= Void
 		do
 			create Result.make (u, e)
 		end

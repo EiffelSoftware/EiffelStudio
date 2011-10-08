@@ -11,7 +11,7 @@ create
 
 feature
 
-	make is
+	make
 		do
 		end
 

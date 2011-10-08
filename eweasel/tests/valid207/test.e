@@ -6,7 +6,7 @@ create
 
 feature
 
-	make is
+	make
 			-- create object
 		do
 			create generic

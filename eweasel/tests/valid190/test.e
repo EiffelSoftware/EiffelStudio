@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "System's root class"
 
 class
@@ -9,7 +9,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Creation procedure.
 		local
 			c1, c2, c3, c4: CHARACTER_8

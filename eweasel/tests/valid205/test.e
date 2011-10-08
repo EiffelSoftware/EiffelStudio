@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Test for basic types to show that their implementation by the compiler is correct and
 		that also when assigned to a reference entity the dynamic binding works properly as well.
@@ -11,7 +11,7 @@ create
 
 feature
 
-	make is
+	make
 		do
 		end
 

@@ -7,7 +7,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Execute test.
 		local
 			l_date, l_date2: DATE_TIME

@@ -5,7 +5,7 @@ create
 
 feature {NONE} -- Creation
 
-	make is
+	make
 			-- Run tests.
 		local
 			a: A
@@ -49,11 +49,11 @@ feature {NONE} -- Creation
 
 feature {NONE} -- Implementation
 
-	fa (a: A) is
+	fa (a: A)
 		do
 		end
 
-	fb (b: $B) is
+	fb (b: $B)
 		do
 		end
 

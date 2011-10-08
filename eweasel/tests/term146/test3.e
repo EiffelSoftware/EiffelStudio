@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	author: ""
 	date: "$Date$"
@@ -9,7 +9,7 @@ class
 
 feature
 
-	set_coef (a: TEST5 [G]) is
+	set_coef (a: TEST5 [G])
 		do
 
 		end

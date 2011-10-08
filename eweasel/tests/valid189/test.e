@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "System's root class"
 
 class
@@ -9,7 +9,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Creation procedure.
 		do
 				-- 8 bit

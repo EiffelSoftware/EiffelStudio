@@ -78,14 +78,9 @@ feature -- basic operations
 			-- Are the token image (except comments) and the word equal (case has no importance)?
 		require
 			word_not_void: word /= Void
-		local
-			comment_token: EDITOR_TOKEN_COMMENT
 		do
-			if token /= Void then
-				comment_token ?= token
-				if comment_token = Void then
-					Result := string_32_is_caseless_equal (token.wide_image, word)
-				end
+			if token /= Void and then not attached {EDITOR_TOKEN_COMMENT} token then
+				Result := string_32_is_caseless_equal (token.wide_image, word)
 			end
 		end
 
@@ -251,7 +246,7 @@ feature -- basic operations
 			end
 		end
 
-feature -- Qerry
+feature -- Query
 
 	char_32_is_alpha (a_char: CHARACTER_32): BOOLEAN
 		do

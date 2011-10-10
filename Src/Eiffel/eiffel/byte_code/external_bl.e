@@ -140,12 +140,17 @@ feature
 	generate_access
 			-- Generate the external C call
 		do
+				-- Reset value of variables
+			is_right_parenthesis_needed.put (False)
 			do_generate (Current_register);
 		end;
 
 	generate_on (reg: REGISTRABLE)
 			-- Generate call of feature on `reg'
 		do
+				-- Reset value of variables
+			is_right_parenthesis_needed.put (False)
+
 			do_generate (reg);
 		end;
 
@@ -179,6 +184,7 @@ feature
 			internal_name: STRING
 			inline_ext: INLINE_EXTENSION_I
 			return_type_string: STRING
+			l_keep, is_nested: BOOLEAN
 		do
 			check
 				final_mode: context.final_mode
@@ -187,6 +193,9 @@ feature
 			l_type_i := real_type (type)
 			type_c := l_type_i.c_type;
 			buf := buffer
+			l_keep := context.final_mode and then system.keep_assertions
+			is_right_parenthesis_needed.put (l_keep)
+			is_nested := not is_static_call and then not is_first
 
 			if is_static_call then
 					-- No polymorphic here, set `array_index' to not go to the
@@ -200,6 +209,17 @@ feature
 					-- routine table. The dereferenced function pointer has
 					-- to be enclosed in parenthesis.
 				table_name := Encoder.routine_table_name (routine_id)
+
+				if l_keep then
+					buf.put_character ('(')
+					if is_nested or else call_kind = call_kind_creation then
+						buf.put_string ("nstcall = ")
+						buf.put_integer (call_kind)
+						buf.put_two_character (',' , ' ')
+					else
+						buf.put_string ("nstcall = 0, ")
+					end
+				end
 
 					-- It is pretty important that we use `actual_type.is_formal' and not
 					-- just `is_formal' because otherwise if you have `like x' and `x: G'
@@ -258,9 +278,11 @@ feature
 
 					if inline_needed (typ) then
 						inline_ext ?= extension
-						create real_arg_types.make (local_argument_types.lower, local_argument_types.upper-1)
-						if real_arg_types.count > 0 then
-							real_arg_types.subcopy (local_argument_types, 2, local_argument_types.upper, 1)
+						if local_argument_types.count > 1 then
+							real_arg_types := local_argument_types.subarray (local_argument_types.lower + 1, local_argument_types.upper)
+							real_arg_types.rebase (1)
+						else
+							create real_arg_types.make_empty
 						end
 
 						inline_ext.force_inline_def (l_type_i, internal_name, real_arg_types)
@@ -282,6 +304,17 @@ feature
 						end
 						Extern_declarations.add_routine_with_signature (return_type_string,
 								internal_name, local_argument_types)
+					end
+
+					if l_keep then
+						buf.put_character ('(')
+						if is_nested or else call_kind = call_kind_creation then
+							buf.put_string ("nstcall = ")
+							buf.put_integer (call_kind)
+							buf.put_two_character (',', ' ')
+						else
+							buf.put_string ("nstcall = 0, ")
+						end
 					end
 
 					if inline_ext /= Void then
@@ -359,7 +392,7 @@ feature
 					if argument_types.count > 1 then
 						l_args := l_args.subarray (l_args.lower + 1, l_args.upper)
 					else
-						create l_args.make (1, 0)
+						create l_args.make_empty
 					end
 					c_ext.generate_access (external_name, parameters, l_args, l_type)
 				end
@@ -369,6 +402,9 @@ feature
 			end
 
 			if put_eif_test then
+				buf.put_string (")")
+			end
+			if is_right_parenthesis_needed.item then
 				buf.put_string (")")
 			end
 		end
@@ -476,6 +512,15 @@ feature {NONE} -- Status report
 					Result := True
 				end
 			end
+		end
+
+	is_right_parenthesis_needed: CELL [BOOLEAN]
+			-- Does current call require to close a parenthesis?
+			-- Case when one use `nstcall' or `eif_optimize_return'.
+		once
+			create Result.put (False)
+		ensure
+			is_right_parenthesis_needed_not_void: Result /= Void
 		end
 
 note

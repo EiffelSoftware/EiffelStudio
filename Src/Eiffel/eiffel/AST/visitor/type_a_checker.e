@@ -638,9 +638,15 @@ feature {TYPE_A} -- Visitors
 				l_anchor_feature := current_feature_table.item_id (a_type.feature_name_id)
 			end
 			if l_anchor_feature /= Void then
-					-- Update `a_type' with new information.
-				a_type.make (l_anchor_feature, current_class.class_id)
-				update_like_feature (l_anchor_feature, a_type)
+					-- Check if anchor feature type is up-to-date.
+				if is_delayed and then l_anchor_feature.is_type_evaluation_delayed then
+						-- Delay type evaluation.
+					last_type := Void
+				else
+						-- Update `a_type' with new information.
+					a_type.make (l_anchor_feature, current_class.class_id)
+					update_like_feature (l_anchor_feature, a_type)
+				end
 			elseif not is_postponed then
 				last_type := Void
 				if has_error_reporting then
@@ -806,15 +812,21 @@ feature {TYPE_A} -- Visitors
 				current_feature.written_in /= current_class.class_id and then
 				not current_feature.written_class.degree_4_processed
 			then
-					-- Delay type evaluation because.
+					-- Delay type evaluation.
 				last_type := Void
 			else
 				l_anchor_feature := current_feature_table.item_id (a_type.anchor_name_id)
 				if l_anchor_feature /= Void then
-						-- Create instance of LIKE_FEATURE
-					create l_like_feature.make (l_anchor_feature, current_class.class_id)
-					l_like_feature.set_marks_from (a_type)
-					update_like_feature (l_anchor_feature, l_like_feature)
+						-- Check if anchor feature type is up-to-date.
+					if is_delayed and then l_anchor_feature.is_type_evaluation_delayed then
+							-- Delay type evaluation.
+						last_type := Void
+					else
+							-- Create instance of `{LIKE_FEATURE}'.
+						create l_like_feature.make (l_anchor_feature, current_class.class_id)
+						l_like_feature.set_marks_from (a_type)
+						update_like_feature (l_anchor_feature, l_like_feature)
+					end
 				else
 					l_argument_position := current_feature.argument_position (a_type.anchor_name_id)
 					if l_argument_position /= 0 then

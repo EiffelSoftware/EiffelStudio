@@ -1481,7 +1481,7 @@ feature {EB_DEVELOPMENT_WINDOW_TOOLS, EB_STONE_CHECKER, EB_DEVELOPMENT_WINDOW} -
 
 			if widget.is_displayed then
 				force_last_stone
-			elseif is_auto_hide then
+			else
 				request_force_last_stone_now
 			end
 		end
@@ -1490,7 +1490,7 @@ feature {EB_DEVELOPMENT_WINDOW_TOOLS, EB_STONE_CHECKER, EB_DEVELOPMENT_WINDOW} -
 			-- Force last stone.
 		do
 			if not is_last_stone_processed then
-				if last_stone /= Void then
+				if last_stone /= Void and then last_stone.is_valid then
 					history_manager.extend (last_stone)
 					stone := last_stone
 					class_stone ?= last_stone

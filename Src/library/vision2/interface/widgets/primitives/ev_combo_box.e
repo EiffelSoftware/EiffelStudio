@@ -75,12 +75,15 @@ feature -- Element change
 			not_destroyed: not is_destroyed
 			text_not_void: a_text /= Void
 			no_carriage_returns: not a_text.has_code (('%R').natural_32_code)
+			valid_text: not is_editable implies strings.has (a_text.as_string_32)
 		local
 			l_cursor: like cursor
 			l_str: STRING_32
 			l_found: BOOLEAN
 		do
-			set_editable_text (a_text)
+			if is_editable then
+				set_editable_text (a_text)
+			end
 
 			-- Update items selection.
 			-- In this way, we can make Windows and GTK implementations consistent. See bug#12683.

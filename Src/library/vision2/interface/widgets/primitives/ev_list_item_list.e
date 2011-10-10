@@ -78,9 +78,11 @@ feature -- Access
 				forth
 			end
 			go_to (c)
+			Result.compare_objects
 		ensure
 			not_void: Result /= Void
 			same_size: Result.count = count
+			object_comparison: Result.object_comparison
 		end
 
 	strings_8: ARRAYED_LIST [STRING]
@@ -99,9 +101,11 @@ feature -- Access
 				forth
 			end
 			go_to (c)
+			Result.compare_objects
 		ensure
 			not_void: Result /= Void
 			same_size: Result.count = count
+			object_comparison: Result.object_comparison
 		end
 
 feature -- Status setting
@@ -137,7 +141,6 @@ feature -- Status setting
 				extend (create {EV_LIST_ITEM}.make_with_text (a_string_array [i]))
 				i := i + 1
 			end
-
 		ensure
 			items_created: count = strings.count
 		end

@@ -31,11 +31,13 @@
 		<library name="gobo_utility" location="gobo_utility.ecf"/>
 		<assembly name="eiffelsoftware.runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\EiffelSoftware.Runtime.dll"/>
 		<cluster name="override_generated" location="override\generated\library\xml\" recursive="true"/>
+		<cluster name="override" location="override\library\xml\" recursive="true"/>
 		<cluster name="xml" location="svn\library\xml\" recursive="true">
 			<option namespace="Xml">
 			</option>
 			<file_rule>
 				<exclude>/expat$</exclude>
+				<exclude>/xm_xpath_quantified_expression.e$</exclude>
 			</file_rule>
 		</cluster>
 	</target>

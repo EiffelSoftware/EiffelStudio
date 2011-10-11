@@ -81,11 +81,11 @@ feature -- Generation
 					eiffel_parser.parse_class_from_string (l_string, Void, Void)
 					if eiffel_parser.error_count > 0 then
 						eiffel_parser.reset
-						eiffel_parser.set_syntax_version (eiffel_parser.transitional_64_syntax)
+						eiffel_parser.set_syntax_version (eiffel_parser.transitional_syntax)
 						eiffel_parser.parse_class_from_string (l_string, Void, Void)
 						if eiffel_parser.error_count > 0 then
 							eiffel_parser.reset
-							eiffel_parser.set_syntax_version (eiffel_parser.obsolete_64_syntax)
+							eiffel_parser.set_syntax_version (eiffel_parser.obsolete_syntax)
 							eiffel_parser.parse_class_from_string (l_string, Void, Void)
 							if eiffel_parser.error_count > 0 then
 								has_error := True

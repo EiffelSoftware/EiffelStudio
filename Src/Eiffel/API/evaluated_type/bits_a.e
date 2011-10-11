@@ -82,8 +82,10 @@ feature -- Access
 
 	associated_class: CLASS_C
 			-- Associated class
-		once
-			Result := System.bit_class.compiled_class
+		do
+			if attached System.bit_class as c then
+				Result := c.compiled_class
+			end
 		end
 
 	associated_class_type (a_context_type: TYPE_A): CLASS_TYPE
@@ -214,7 +216,7 @@ invariant
 	bit_count_positive: is_valid implies bit_count > 0
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

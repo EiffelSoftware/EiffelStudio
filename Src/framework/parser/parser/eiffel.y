@@ -1626,9 +1626,9 @@ Non_class_type: TE_EXPANDED Attached_class_type
 				end
 			}
 	|	TE_BIT Integer_constant
-			{ $$ := ast_factory.new_bits_as ($2, $1) }
+			{ $$ := new_bits ($2, $1) }
 	|	TE_BIT Identifier_as_lower
-			{ $$ := ast_factory.new_bits_symbol_as ($2, $1) }
+			{ $$ := new_bits_symbol ($2, $1) }
 	|	Anchored_type
 			{ $$ := $1 }
 	|	TE_ATTACHED Anchored_type
@@ -3328,7 +3328,7 @@ Typed_signed_real: Typed TE_PLUS TE_REAL
 --# Bit constants
 --###################################################################
 Bit_constant: TE_A_BIT
-			{ $$ := ast_factory.new_bit_const_as ($1) }
+			{ $$ := new_bit_const ($1) }
 	;
 
 --###################################################################
@@ -3544,7 +3544,7 @@ Remove_counter: { remove_counter }
 %%
 
 note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -3568,11 +3568,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EIFFEL_PARSER

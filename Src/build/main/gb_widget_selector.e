@@ -917,14 +917,14 @@ feature {GB_COMMAND_NAME_CHANGE} -- Implementation
 			a_file_closed: a_file.is_closed
 		do
 				-- First we do it using the old conventions.
-			a_parser.set_syntax_version ({EIFFEL_PARSER}.obsolete_64_syntax)
+			a_parser.set_syntax_version ({EIFFEL_PARSER}.obsolete_syntax)
 			a_file.open_read
 			a_parser.parse (a_file)
 			a_file.close
 			if error_handler.has_error then
 				error_handler.wipe_out
 					-- There was an error, let's try to see if the code is using transitional syntax.
-				a_parser.set_syntax_version ({EIFFEL_PARSER}.transitional_64_syntax)
+				a_parser.set_syntax_version ({EIFFEL_PARSER}.transitional_syntax)
 				a_file.open_read
 				a_parser.parse (a_file)
 				a_file.close

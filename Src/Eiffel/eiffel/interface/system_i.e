@@ -542,8 +542,8 @@ feature -- Properties
 			pointer_class.compiled_class.record_precompiled_class_in_system
 			array_class.compiled_class.record_precompiled_class_in_system
 			tuple_class.compiled_class.record_precompiled_class_in_system
-			if attached bit_class as c and then c.is_compiled then
-				c.compiled_class.record_precompiled_class_in_system
+			if attached bit_class as c and then attached c.compiled_class as cc and then cc.is_precompiled then
+				cc.record_precompiled_class_in_system
 			end
 			routine_class.compiled_class.record_precompiled_class_in_system
 			procedure_class.compiled_class.record_precompiled_class_in_system
@@ -1166,9 +1166,7 @@ end
 				revive_moved_classes
 
 					-- check the universe if we don't use a precompile
-				if not uses_precompiled then
-					universe.check_universe
-				end
+				universe.check_universe
 
 					-- update/check root class
 				update_root_class

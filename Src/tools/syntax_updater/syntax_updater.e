@@ -255,7 +255,7 @@ feature {NONE} -- Implementation
 			a_buffer_not_void: a_buffer /= Void
 		do
 				-- First we do it using the old conventions.
-			a_parser.set_syntax_version ({EIFFEL_PARSER}.obsolete_64_syntax)
+			a_parser.set_syntax_version ({EIFFEL_PARSER}.obsolete_syntax)
 			if not a_verification then
 				a_parser.parse_class_from_string (a_buffer, Void, Void)
 				original_encoding := a_parser.detected_encoding
@@ -266,7 +266,7 @@ feature {NONE} -- Implementation
 			if error_handler.has_error then
 				error_handler.wipe_out
 					-- There was an error, let's try to see if the code is using transitional syntax.
-				a_parser.set_syntax_version ({EIFFEL_PARSER}.transitional_64_syntax)
+				a_parser.set_syntax_version ({EIFFEL_PARSER}.transitional_syntax)
 				if not a_verification then
 					a_parser.parse_class_from_string (a_buffer, Void, Void)
 				else

@@ -270,7 +270,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 				last_token := TE_ASSIGN
 			}
 [aA][tT][tT][aA][cC][hH][eE][dD] {
-				if syntax_version /= obsolete_64_syntax then
+				if syntax_version /= obsolete_syntax then
 					last_keyword_id_value := ast_factory.new_keyword_id_as (TE_ATTACHED, Current)
 					last_token := TE_ATTACHED
 				else
@@ -284,7 +284,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 				end
 			}
 [aA][tT][tT][rR][iI][bB][uU][tT][eE] {
-				if syntax_version /= obsolete_64_syntax then
+				if syntax_version /= obsolete_syntax then
 					last_keyword_id_value := ast_factory.new_keyword_id_as (TE_ATTRIBUTE, Current)
 					last_token := TE_ATTRIBUTE
 				else
@@ -339,7 +339,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 				last_token := TE_DEFERRED
 			}
 [dD][eE][tT][aA][cC][hH][aA][bB][lL][eE]	{
-				if syntax_version /= obsolete_64_syntax then
+				if syntax_version /= obsolete_syntax then
 					last_keyword_id_value := ast_factory.new_keyword_id_as (TE_DETACHABLE, Current)
 					last_token := TE_DETACHABLE
 				else
@@ -454,7 +454,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 				last_token := TE_NOT
 			}
 [nN][oO][tT][eE]	{
-				if syntax_version /= obsolete_64_syntax then
+				if syntax_version /= obsolete_syntax then
 					last_keyword_as_value := ast_factory.new_keyword_as (TE_NOTE, Current)
 					last_token := TE_NOTE
 				else

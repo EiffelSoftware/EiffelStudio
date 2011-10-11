@@ -60,7 +60,7 @@ feature -- Access
 	special_class, native_array_class: CLASS_I
 			-- Class SPECIAL and NATIVE_ARRAY
 
-	bit_class: CLASS_I
+	bit_class: detachable CLASS_I
 			-- Class BIT_REF
 
 	disposable_class: CLASS_I
@@ -234,17 +234,6 @@ feature -- Access
 			compiled: special_class.is_compiled
 		do
 			Result := special_class.compiled_class.class_id
-		ensure
-			valid_result: Result > 0
-		end
-
-	bit_id: INTEGER
-			-- Id of class BIT_REF
-		require
-			bit_class_exists: bit_class /= Void
-			compiled: bit_class.is_compiled
-		do
-			Result := bit_class.compiled_class.class_id
 		ensure
 			valid_result: Result > 0
 		end
@@ -989,7 +978,7 @@ feature -- Settings: Exception
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

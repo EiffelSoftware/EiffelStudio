@@ -135,11 +135,11 @@ feature -- Access
 			Result := System.special_class
 		end;
 
-	Bit_class: CLASS_I
+	Bit_class: detachable CLASS_I
 			-- Class BIT_REF
-		once
+		do
 			Result := System.bit_class
-		end;
+		end
 
 	number_of_classes: INTEGER
 			-- Number of compiled classes in the system

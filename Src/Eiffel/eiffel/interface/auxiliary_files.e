@@ -383,8 +383,8 @@ feature -- Plug and Makefile file
 	generate_plug
 			-- Generate plug with run-time
 		local
-			any_cl, string_cl, string32_cl, bit_cl, array_cl, rout_cl, exception_manager_cl, scoop_manager_cl: CLASS_C
-			arr_type_id, type_id: INTEGER
+			any_cl, string_cl, string32_cl, array_cl, rout_cl, exception_manager_cl, scoop_manager_cl: CLASS_C
+			arr_type_id: INTEGER
 			id: INTEGER
 			str_make_feat, set_count_feat: FEATURE_I
 			count_feat, internal_hash_code_feat: ATTRIBUTE_I
@@ -938,11 +938,11 @@ feature -- Plug and Makefile file
 			buffer.put_string (";%N")
 
 				-- Dynamic type of class BIT_REF
-			bit_cl := System.class_of_id (System.bit_id)
-			type_id := bit_cl.types.first.type_id
-			buffer.put_string ("%Tegc_bit_dtype = ")
-			buffer.put_type_id (type_id)
-			buffer.put_string (";%N")
+			if attached system.bit_class as c and then c.is_compiled then
+				buffer.put_string ("%Tegc_bit_dtype = ")
+				buffer.put_type_id (c.compiled_class.types.first.type_id)
+				buffer.put_string (";%N")
+			end
 
 			special_cl ?= System.special_class.compiled_class
 			special_cl.generate_dynamic_types (buffer)
@@ -1371,7 +1371,7 @@ feature -- Plug and Makefile file
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

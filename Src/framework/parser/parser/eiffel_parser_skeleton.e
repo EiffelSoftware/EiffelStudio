@@ -583,7 +583,7 @@ feature -- Settings
 
 feature -- Modification
 
-	insert_supplier (name: STRING; location: ID_AS)
+	insert_supplier (name: STRING; location: LOCATION_AS)
 			-- Insert supplier of the given `name' at the given `location'.
 		require
 			name_attached: name /= Void
@@ -1027,6 +1027,30 @@ feature {NONE} -- Type factory
 					end
 				end
 			end
+		end
+
+feature {NONE} -- BIT factory
+
+	new_bit_const (b: ID_AS): BIT_CONST_AS
+			-- New BIT_CONSTANT AST node with
+			-- with bit sequence contained in `b'.
+		do
+			Result := ast_factory.new_bit_const_as (b)
+			insert_supplier ("BIT_REF", b)
+		end
+
+	new_bits (v: INTEGER_AS; b_as: KEYWORD_AS): BITS_AS
+			-- New BITS AST node
+		do
+			Result := ast_factory.new_bits_as (v, b_as)
+			insert_supplier ("BIT_REF", b_as)
+		end
+
+	new_bits_symbol (s: ID_AS; b_as: KEYWORD_AS): BITS_SYMBOL_AS
+			-- New BITS_SYMBOL AST node
+		do
+			Result := ast_factory.new_bits_symbol_as (s, b_as)
+			insert_supplier ("BIT_REF", b_as)
 		end
 
 feature {NONE} -- Instruction factory

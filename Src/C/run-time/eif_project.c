@@ -47,6 +47,7 @@ doc:<file name="eif_project.c" header="eif_project.h" version="$Id$" summary="De
 #endif
 
 #include "eif_project.h"
+#include "eif_gen_conf.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -392,7 +393,7 @@ rt_public EIF_TYPE_INDEX egc_tup_dtype;
 rt_public int32 egc_disp_rout_id;
 rt_public int32 egc_copy_rout_id;
 rt_public int32 egc_is_equal_rout_id;
-rt_public EIF_TYPE_INDEX egc_bit_dtype;
+rt_public EIF_TYPE_INDEX egc_bit_dtype = INVALID_DTYPE;
 
 rt_public EIF_TYPE_INDEX egc_sp_bool;
 rt_public EIF_TYPE_INDEX egc_sp_char;

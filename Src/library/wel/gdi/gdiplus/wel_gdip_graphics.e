@@ -88,6 +88,30 @@ feature -- Command
 			check ok: l_result = {WEL_GDIP_STATUS}.ok end
 		end
 
+	draw_ellipse (a_pen: WEL_GDIP_PEN; a_x, a_y, a_width, a_height: INTEGER)
+			-- Draw a ellipse with the specified `a_x'/`a_y' and `a_width'/`a_height'
+		require
+			not_void: a_pen /= Void
+			a_pen_exists: a_pen.exists
+		local
+			l_result: INTEGER
+		do
+			c_gdip_draw_ellipse_i (gdi_plus_handle, item, a_pen.item, a_x, a_y, a_width, a_height, $l_result)
+			check ok: l_result = {WEL_GDIP_STATUS}.ok end
+		end
+
+	fill_ellipse (a_brush: WEL_GDIP_BRUSH; a_x, a_y, a_width, a_height: INTEGER)
+			-- Fill a ellipse with the specified `a_x'/`a_y' and `a_width'/`a_height'
+		require
+			not_void: a_brush /= Void
+			a_pen_exists: a_brush.exists
+		local
+			l_result: INTEGER
+		do
+			c_gdip_fill_ellipse_i (gdi_plus_handle, item, a_brush.item, a_x, a_y, a_width, a_height, $l_result)
+			check ok: l_result = {WEL_GDIP_STATUS}.ok end
+		end
+
 	draw_image (a_image: WEL_GDIP_IMAGE; a_dest_x, a_dest_y: INTEGER)
 			-- Draw `a_image' at `a_dest_x' `a_dest_y'
 		require
@@ -554,6 +578,66 @@ feature {NONE} -- C externals
 			]"
 		end
 
+	c_gdip_draw_ellipse_i (a_gdiplus_handle: POINTER; a_graphics: POINTER; a_pen: POINTER; a_x, a_y, a_width, a_height: INTEGER; a_result_status: TYPED_POINTER [INTEGER])
+			-- Draw a ellipse on `a_graphics' with specified `a_x', `a_y', `a_width', `a_height'.
+		require
+			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
+			a_graphics_not_null: a_graphics /= default_pointer
+		external
+			"C inline use %"wel_gdi_plus.h%""
+		alias
+			"[
+			{
+				static FARPROC GdipDrawEllipseI = NULL;
+				*(EIF_INTEGER *) $a_result_status = 1;
+				
+				if (!GdipDrawEllipseI) {
+					GdipDrawEllipseI = GetProcAddress ((HMODULE) $a_gdiplus_handle, "GdipDrawEllipseI");
+				}
+				
+				if (GdipDrawEllipseI) {			
+					*(EIF_INTEGER *) $a_result_status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (GpGraphics *, GpPen *, INT, INT, INT, INT)) GdipDrawEllipseI)
+								((GpGraphics *) $a_graphics,
+								(GpPen *) $a_pen,
+								(INT) $a_x,
+								(INT) $a_y,
+								(INT) $a_width,
+								(INT) $a_height);
+				}
+			}
+			]"
+		end
+
+	c_gdip_fill_ellipse_i (a_gdiplus_handle: POINTER; a_graphics: POINTER; a_brush: POINTER; a_x, a_y, a_width, a_height: INTEGER; a_result_status: TYPED_POINTER [INTEGER])
+			-- Fill a ellipse on `a_graphics' with specified `a_x', `a_y', `a_width', `a_height'.
+		require
+			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
+			a_graphics_not_null: a_graphics /= default_pointer
+		external
+			"C inline use %"wel_gdi_plus.h%""
+		alias
+			"[
+			{
+				static FARPROC GdipFillEllipseI = NULL;
+				*(EIF_INTEGER *) $a_result_status = 1;
+				
+				if (!GdipFillEllipseI) {
+					GdipFillEllipseI = GetProcAddress ((HMODULE) $a_gdiplus_handle, "GdipFillEllipseI");
+				}
+				
+				if (GdipFillEllipseI) {			
+					*(EIF_INTEGER *) $a_result_status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (GpGraphics *, GpBrush *, INT, INT, INT, INT)) GdipFillEllipseI)
+								((GpGraphics *) $a_graphics,
+								(GpBrush *) $a_brush,
+								(INT) $a_x,
+								(INT) $a_y,
+								(INT) $a_width,
+								(INT) $a_height);
+				}
+			}
+			]"
+		end
+
 	c_gdip_draw_image_rect_rect_i (a_gdiplus_handle: POINTER; a_graphics: POINTER; a_image: POINTER; a_dest_x, a_dest_y, a_dest_width, a_dest_height, a_src_x, a_src_y, a_src_width, a_src_height: INTEGER; a_unit: INTEGER; a_image_attributes: POINTER; a_abort_callback: POINTER; a_callback_data: POINTER; a_result_status: TYPED_POINTER [INTEGER])
 			-- Draw `a_image' on `a_graphics'.
 		require
@@ -889,14 +973,14 @@ feature -- Obsolete
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

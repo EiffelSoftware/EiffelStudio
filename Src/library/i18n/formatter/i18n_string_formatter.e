@@ -70,61 +70,60 @@ feature -- Basic operations
 			a_string_not_void: a_string /= Void
 			args_tuple_not_void: args_tuple /= Void
 			valid_arguments: valid_arguments (args_tuple)
-			enough_arguments: required_arguments (a_string) <= args_tuple.count
 		local
-			l_list: LIST [STRING_32]
-			i : INTEGER
-			l_list_item,
-			l_string: STRING_32
-			l_id: INTEGER
+			i, j : INTEGER
+			l_code, l_ncode, l_escape_code: NATURAL_32
+			l_count, l_position: INTEGER
 		do
-			l_list := a_string.as_string_32.split (escape_character)
 			create Result.make_empty
+			l_count := a_string.count
+			l_escape_code := escape_character.natural_32_code
 			from
-					-- Append first string to Result
-				l_list.start
-				Result.append (l_list.item)
-				l_list.forth
+				i := 1
+				l_count := a_string.count
 			until
-				l_list.after
+				i > l_count
 			loop
-				l_list_item := l_list.item
-				if l_list_item.is_empty then
-						-- It wasn't an escape_character
-					Result.append_character (escape_character)
-				else
-						-- it's possibly an escape_character
+				l_code := a_string.code (i)
+					-- Found escape character and at least there is following character.
+				if i + 1 <= l_count and then l_code = l_escape_code then
 					from
-						i := 1
-						l_string := l_list_item.substring (i, i)
+						j := i + 1
+						l_ncode := a_string.code (j)
+						l_position := 0
 					until
-						i > l_list_item.count or not l_string.is_integer
-					loop	--extract the number
-						i := i + 1
-						l_string := l_list_item.substring (i, i)
-					end
-					l_string := l_list_item.substring (1, i - 1)
-					if l_string.is_integer then
-							-- It was en escape character
-						l_id := l_string.to_integer
-
-							--FIXME!!! HACK because 'out' in ANY possibly gives a STRING_8 and this is not so good for STRING_32
-						if attached {READABLE_STRING_GENERAL} args_tuple.item (l_id) as test then
-							Result.append_string_general (test)
-						else
-							if attached args_tuple.item (l_id) as a_arg then
-								Result.append (a_arg.out)
-							end
+						j > l_count or else not l_ncode.is_valid_character_8_code or else not l_ncode.to_character_8.is_digit
+					loop
+						l_position := l_ncode.to_character_8.out.to_integer + l_position * 10
+						j := j + 1
+						if j <= l_count then
+							l_ncode := a_string.code (j)
 						end
-
-						Result.append (l_list_item.substring (i, l_list_item.count).twin)
-					else
-							-- It should not be considered as escape character
-						Result.append_character (escape_character)
-						Result.append (l_list_item)
 					end
+						-- Found a position
+					if l_position > 0 then
+
+						if args_tuple.valid_index (l_position) and then attached args_tuple.item (l_position) as l_object then
+							if attached {READABLE_STRING_GENERAL} l_object as test then
+								Result.append_string_general (test)
+							else
+								Result.append (l_object.out)
+							end
+						else
+								-- Report an error here if needed later.
+								-- Because the position is not found in the tuple
+								-- We append the original characters back.
+							Result.append_string_general (a_string.substring (i, j - 1))
+						end
+						i := j
+					else
+						Result.append_code (l_code)
+						i := i + 1
+					end
+				else
+					Result.append_code (l_code)
+					i := i + 1
 				end
-				l_list.forth
 			end
 		ensure
 			result_exists: Result /= Void
@@ -191,7 +190,7 @@ feature -- Check functions
 
 note
 	library:   "Internationalization library"
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

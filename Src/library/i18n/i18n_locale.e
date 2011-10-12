@@ -102,7 +102,6 @@ feature -- Access
 			original_not_void: original /= Void
 			token_values_not_void: token_values /= Void
 			token_values_valid: string_formatter.valid_arguments (token_values)
-			enough_number_of_tokens: string_formatter.required_arguments (original) <= token_values.count
 		do
 			Result := string_formatter.formatted_string (original, token_values)
 		ensure
@@ -139,7 +138,7 @@ invariant
 
 note
 	library:   "Internationalization library"
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -305,8 +305,16 @@ feature -- Error notification : exception error
 		end
 
 	notify_error_exception_internal_issue
+		local
+			em: EXCEPTION_MANAGER
 		do
 			notify_error_exception (Debugger_names.cst_error_evaluation_failed_with_internal_exception)
+			create em
+			if attached em.last_exception as e then
+				if attached e.exception_trace as l_trace then
+					notify_error_exception (l_trace)
+				end
+			end
 		end
 
 	notify_error_exception_during_evaluation (m: detachable STRING_GENERAL)
@@ -452,7 +460,7 @@ invariant
 	error_list_attached: error_list /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

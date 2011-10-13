@@ -72,14 +72,14 @@ feature -- Value
 			Result := assertion_tag_background_color_preference.value
 		end
 
-	indexing_tag_text_color: EV_COLOR
+	note_tag_text_color: EV_COLOR
 		do
-			Result := indexing_tag_text_color_preference.value
+			Result := note_tag_text_color_preference.value
 		end
 
-	indexing_tag_background_color: EV_COLOR
+	note_tag_background_color: EV_COLOR
 		do
-			Result := indexing_tag_background_color_preference.value
+			Result := note_tag_background_color_preference.value
 		end
 
 	reserved_text_color: EV_COLOR
@@ -359,8 +359,8 @@ feature -- Preference
 
 	assertion_tag_text_color_preference: COLOR_PREFERENCE
 	assertion_tag_background_color_preference: COLOR_PREFERENCE
-	indexing_tag_text_color_preference: COLOR_PREFERENCE
-	indexing_tag_background_color_preference: COLOR_PREFERENCE
+	note_tag_text_color_preference: COLOR_PREFERENCE
+	note_tag_background_color_preference: COLOR_PREFERENCE
 	reserved_text_color_preference: COLOR_PREFERENCE
 	reserved_background_color_preference: COLOR_PREFERENCE
 	generic_text_color_preference: COLOR_PREFERENCE
@@ -456,8 +456,8 @@ feature {NONE} -- Preference Strings
 
 	assertion_tag_text_color_string: STRING = "editor.eiffel.colors.assertion_tag_text_color"
 	assertion_tag_background_color_string: STRING = "editor.eiffel.colors.assertion_tag_background_color"
-	indexing_tag_text_color_string: STRING = "editor.eiffel.colors.indexing_tag_text_color"
-	indexing_tag_background_color_string: STRING = "editor.eiffel.colors.indexing_tag_background_color"
+	note_tag_text_color_string: STRING = "editor.eiffel.colors.note_tag_text_color"
+	note_tag_background_color_string: STRING = "editor.eiffel.colors.note_tag_background_color"
 	reserved_text_color_string: STRING = "editor.eiffel.colors.reserved_text_color"
 	reserved_background_color_string: STRING = "editor.eiffel.colors.reserved_background_color"
 	generic_text_color_string: STRING = "editor.eiffel.colors.generic_text_color"
@@ -556,8 +556,8 @@ feature {NONE} -- Init colors and fonts.
 			colors.put (breakpoint_background_color_preference.value, breakpoint_background_color_id)
 			colors.put (assertion_tag_text_color_preference.value, assertion_tag_text_color_id)
 			colors.put (assertion_tag_background_color_preference.value, assertion_tag_background_color_id)
-			colors.put (indexing_tag_text_color_preference.value, indexing_tag_text_color_id)
-			colors.put (indexing_tag_background_color_preference.value, indexing_tag_background_color_id)
+			colors.put (note_tag_text_color_preference.value, indexing_tag_text_color_id)
+			colors.put (note_tag_background_color_preference.value, indexing_tag_background_color_id)
 			colors.put (reserved_text_color_preference.value, reserved_text_color_id)
 			colors.put (reserved_background_color_preference.value, reserved_background_color_id)
 			colors.put (generic_text_color_preference.value, generic_text_color_id)
@@ -621,8 +621,8 @@ feature {NONE} -- Initialization
 			breakpoint_background_color_preference := l_manager.new_color_preference_value (l_manager, breakpoint_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
 			assertion_tag_text_color_preference := l_manager.new_color_preference_value (l_manager, assertion_tag_text_color_string, create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))
 			assertion_tag_background_color_preference := l_manager.new_color_preference_value (l_manager, assertion_tag_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
-			indexing_tag_text_color_preference := l_manager.new_color_preference_value (l_manager, indexing_tag_text_color_string, create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))
-			indexing_tag_background_color_preference := l_manager.new_color_preference_value (l_manager, indexing_tag_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
+			note_tag_text_color_preference := l_manager.new_color_preference_value (l_manager, note_tag_text_color_string, create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))
+			note_tag_background_color_preference := l_manager.new_color_preference_value (l_manager, note_tag_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
 			reserved_text_color_preference := l_manager.new_color_preference_value (l_manager, reserved_text_color_string, create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))
 			reserved_background_color_preference := l_manager.new_color_preference_value (l_manager, reserved_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
 			generic_text_color_preference := l_manager.new_color_preference_value (l_manager, generic_text_color_string, create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))
@@ -685,7 +685,7 @@ feature {NONE} -- Initialization
 			folder_background_color_preference.set_auto_preference (normal_background_color_preference)
 			argument_background_color_preference.set_auto_preference (normal_background_color_preference)
 			warning_background_color_preference.set_auto_preference (normal_background_color_preference)
-			indexing_tag_background_color_preference.set_auto_preference (normal_background_color_preference)
+			note_tag_background_color_preference.set_auto_preference (normal_background_color_preference)
 			assertion_tag_background_color_preference.set_auto_preference (normal_background_color_preference)
 			reserved_background_color_preference.set_auto_preference (normal_background_color_preference)
 			local_background_color_preference.set_auto_preference (normal_background_color_preference)
@@ -711,8 +711,8 @@ feature {NONE} -- Initialization
 			breakpoint_background_color_preference.change_actions.extend (agent update)
 			assertion_tag_text_color_preference.change_actions.extend (agent update)
 			assertion_tag_background_color_preference.change_actions.extend (agent update)
-			indexing_tag_text_color_preference.change_actions.extend (agent update)
-			indexing_tag_background_color_preference.change_actions.extend (agent update)
+			note_tag_text_color_preference.change_actions.extend (agent update)
+			note_tag_background_color_preference.change_actions.extend (agent update)
 			reserved_text_color_preference.change_actions.extend (agent update)
 			reserved_background_color_preference.change_actions.extend (agent update)
 			generic_text_color_preference.change_actions.extend (agent update)
@@ -901,8 +901,8 @@ feature {NONE} -- Auto-complete
 			-- default strings to be inserted after keywords
 		once
 			create Result.make (40)
-						-- indexing
-			Result.force ([" $cursor$", "%N$indent$%%T$cursor$", " $cursor$", "%N$indent$$cursor$"], "indexing")
+						-- note
+			Result.force ([" $cursor$", "%N$indent$%%T$cursor$", " $cursor$", "%N$indent$$cursor$"], "note")
 						-- class
 			Result.force ([" $cursor$", "%N$indent$%%T$cursor$", " $cursor$", "%N$indent$%T$cursor$"], "class")
 						-- inherit
@@ -1043,7 +1043,7 @@ feature -- Syntax Completion Customization
 	class_completed_keywords: ARRAYED_LIST [STRING]
 			-- list of completed keywords
 		once
-			create Result.make_from_array (<<"indexing", "class", "inherit", "creation", "feature">>)
+			create Result.make_from_array (<<"note", "class", "inherit", "creation", "feature">>)
 			Result.compare_objects
 		end
 
@@ -1245,8 +1245,8 @@ invariant
 	breakpoint_background_color_preference_not_void: breakpoint_background_color_preference /= Void
 	assertion_tag_text_color_preference_not_void: assertion_tag_text_color_preference /= Void
 	assertion_tag_background_color_preference_not_void: assertion_tag_background_color_preference /= Void
-	indexing_tag_text_color_preference_not_void: indexing_tag_text_color_preference /= Void
-	indexing_tag_background_color_preference_not_void: indexing_tag_background_color_preference /= Void
+	note_tag_text_color_preference_not_void: note_tag_text_color_preference /= Void
+	note_tag_background_color_preference_not_void: note_tag_background_color_preference /= Void
 	reserved_text_color_preference_not_void: reserved_text_color_preference /= Void
 	reserved_background_color_preference_not_void: reserved_background_color_preference /= Void
 	generic_text_color_preference_not_void: generic_text_color_preference /= Void

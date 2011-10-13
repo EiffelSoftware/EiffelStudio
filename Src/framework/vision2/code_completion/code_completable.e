@@ -284,7 +284,7 @@ feature -- Basic operation
 				create l_helpers
 				l_coords := l_helpers.suggest_pop_up_widget_location_with_size (parent_window, l_x, l_y, l_width, l_height)
 				if l_y >= l_coords.y then
-						-- Adjust hieght to prevent the completion list from shift up and over the text.
+						-- Adjust height to prevent the completion list from shift up and over the text.
 						-- This is ok to do because `calculate_completion_list_y_position' determines if the
 						-- list should be shown above or below the editor caret. If it's displayed below then
 						-- we adjust the size of the list to remain on-screen.

@@ -143,7 +143,7 @@ feature {NONE} -- Implementation
 
 			add_misc_option_properties (current_target.changeable_internal_options, current_target.options, l_extends)
 
-				-- Concurrency setting: duplicated in Advanced properties.
+				-- Concurrency setting.
 			add_choice_property (
 				conf_interface_names.target_concurrency_name,
 				conf_interface_names.target_concurrency_description,
@@ -266,18 +266,6 @@ feature {NONE} -- Implementation
 				l_string_prop.enable_readonly
 			end
 			properties.add_property (l_string_prop)
-
-				-- Concurrency setting: duplicated in General properties.
-			add_choice_property (
-				conf_interface_names.target_concurrency_name,
-				conf_interface_names.target_concurrency_description,
-				create {ARRAYED_LIST [STRING_32]}.make_from_array (
-					<<conf_interface_names.target_concurrency_none_name,
-					conf_interface_names.target_concurrency_thread_name,
-					conf_interface_names.target_concurrency_scoop_name>>),
-				current_target.immediate_setting_concurrency,
-				Void
-			)
 
 			create l_pf_choices.make (platform_names.count + 1)
 			l_pf_choices.extend ("")
@@ -658,7 +646,7 @@ feature {NONE} -- Wrappers
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

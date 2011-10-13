@@ -71,6 +71,7 @@ feature {NONE} -- Implementation
 			l_bool_prop: BOOLEAN_PROPERTY
 			c: detachable CONF_VALUE_CHOICE
 		do
+				-- General section.
 			properties.add_section (conf_interface_names.section_general)
 
 				-- Profiling option
@@ -153,26 +154,6 @@ feature {NONE} -- Implementation
 			end
 			properties.add_property (l_bool_prop)
 
-				-- Attachment properties
-			l_bool_prop := new_boolean_property (conf_interface_names.option_is_attached_by_default_name, an_inherited_options.is_attached_by_default)
-			l_bool_prop.set_description (conf_interface_names.option_is_attached_by_default_description)
-			l_bool_prop.change_value_actions.extend (agent an_options.set_is_attached_by_default)
-			if a_inherits then
-				l_bool_prop.set_refresh_action (agent an_inherited_options.is_attached_by_default)
-				l_bool_prop.use_inherited_actions.extend (agent an_options.unset_is_attached_by_default)
-				l_bool_prop.use_inherited_actions.extend (agent l_bool_prop.enable_inherited)
-				l_bool_prop.use_inherited_actions.extend (agent handle_value_changes (False))
-				l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent l_bool_prop.enable_overriden))
-				l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (False)))
-
-				if an_options.is_attached_by_default_configured then
-					l_bool_prop.enable_overriden
-				else
-					l_bool_prop.enable_inherited
-				end
-			end
-			properties.add_property (l_bool_prop)
-
 				-- Void safety
 			if a_inherits then
 				c := an_inherited_options.void_safety
@@ -209,6 +190,29 @@ feature {NONE} -- Implementation
 			)
 
 			properties.current_section.expand
+
+				-- Advanced section.
+			properties.add_section (conf_interface_names.section_advanced)
+
+				-- Attachment properties
+			l_bool_prop := new_boolean_property (conf_interface_names.option_is_attached_by_default_name, an_inherited_options.is_attached_by_default)
+			l_bool_prop.set_description (conf_interface_names.option_is_attached_by_default_description)
+			l_bool_prop.change_value_actions.extend (agent an_options.set_is_attached_by_default)
+			if a_inherits then
+				l_bool_prop.set_refresh_action (agent an_inherited_options.is_attached_by_default)
+				l_bool_prop.use_inherited_actions.extend (agent an_options.unset_is_attached_by_default)
+				l_bool_prop.use_inherited_actions.extend (agent l_bool_prop.enable_inherited)
+				l_bool_prop.use_inherited_actions.extend (agent handle_value_changes (False))
+				l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent l_bool_prop.enable_overriden))
+				l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (False)))
+
+				if an_options.is_attached_by_default_configured then
+					l_bool_prop.enable_overriden
+				else
+					l_bool_prop.enable_inherited
+				end
+			end
+			properties.add_property (l_bool_prop)
 		end
 
 	add_assertion_option_properties (an_options, an_inherited_options: CONF_OPTION; a_inherits: BOOLEAN)
@@ -645,7 +649,7 @@ feature {NONE} -- Refresh displayed data.
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -82,12 +82,28 @@ feature {NONE} -- Text
 	plus_button_text: STRING_GENERAL do Result := "+"	end
 	minus_button_text: STRING_GENERAL do Result := "-"	end
 
-feature -- Update set default global settings.
+feature -- Modification: default global settings
 
 	set_padding_size (a_size: like padding_size)
 			-- Set default padding size.
 		do
 			internal_padding_size.put (a_size)
+		end
+
+	set_override_color (c: EV_COLOR)
+			-- Set color of overridden property to `c'.
+		do
+			override_color.copy (c)
+		ensure
+			override_color_set: override_color ~ c
+		end
+
+	set_inherit_color (c: EV_COLOR)
+			-- Set color of inherited property to `c'.
+		do
+			inherit_color.copy (c)
+		ensure
+			inherit_color_set: inherit_color ~ c
 		end
 
 feature {NONE} -- Onces for global setting of layout values.

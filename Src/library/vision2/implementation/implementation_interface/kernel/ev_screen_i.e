@@ -74,6 +74,30 @@ feature -- Status report
 			Result := 0
 		end
 
+	virtual_top: INTEGER
+			-- Top position of virtual screen in main display coordinates
+		do
+			Result := virtual_y
+		end
+
+	virtual_right: INTEGER
+			-- Right position of virtual screen in main display coordinates
+		do
+			Result := virtual_x + virtual_width
+		end
+
+	virtual_bottom: INTEGER
+			-- Bottom position of virtual screen in main display coordinates
+		do
+			Result := virtual_y + virtual_height
+		end
+
+	virtual_left: INTEGER
+			-- Left position of virtual screen in main display coordinates
+		do
+			Result := virtual_x
+		end
+
 	monitor_count: INTEGER
 			-- Number of monitors used for displaying virtual screen.
 		do

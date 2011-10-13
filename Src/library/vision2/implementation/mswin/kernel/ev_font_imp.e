@@ -254,7 +254,10 @@ feature -- Status report
 	string_width (a_string: READABLE_STRING_GENERAL): INTEGER
 			-- Width in pixels of `a_string' in the current font.
 		do
-			Result := wel_font.string_width (a_string)
+			if a_string.count > 0 then
+					-- Only non empty strings may have a width to match invariant.
+				Result := wel_font.string_width (a_string)
+			end
 		end
 
 	string_size (a_string: READABLE_STRING_GENERAL): TUPLE [width: INTEGER; height: INTEGER; left_offset: INTEGER; right_offset: INTEGER]

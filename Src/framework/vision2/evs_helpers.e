@@ -252,7 +252,7 @@ feature -- Placement
 		require
 			a_widget_attached: a_widget /= Void
 			not_a_widget_is_destroyed: not a_widget.is_destroyed
-			a_widget_has_parent: a_widget.has_parent or (({EV_WINDOW}) #? a_widget /= Void)
+			a_widget_has_parent: a_widget.has_parent or attached {EV_WINDOW} a_widget
 			a_width_positive: a_width > 0
 			a_height_positive: a_height > 0
 		local

@@ -138,6 +138,14 @@ feature -- Basic operations
 			end
 		end
 
+	refresh
+			-- Refresh configuration dialog.
+		do
+			if attached configuration_window as w then
+				w.refresh_now
+			end
+		end
+
 feature {NONE} -- Actions
 
 	on_drop (a_stone: STONE)

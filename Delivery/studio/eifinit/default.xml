@@ -203,6 +203,11 @@
 	<PREF NAME="interface.dialogs.open_project_dialog_width" DESCRIPTION="Width of the open project dialog." HIDDEN="True"><INTEGER>500</INTEGER></PREF>
 	<PREF NAME="interface.dialogs.open_project_dialog_height" DESCRIPTION="Height of the open project dialog." HIDDEN="True"><INTEGER>300</INTEGER></PREF>
 	<PREF NAME="interface.dialogs.discard_target_scope_customized_formatter" DESCRIPTION="Display confirmation dialog of discarding target scope customized formatter."><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="interface.dialogs.confirm_save_before_prettifying" DESCRIPTION="Display confirmation dialog to save source code before prettifying it."><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="interface.dialogs.dbg_confirm_detach" DESCRIPTION="Display confirmation dialog before detaching debugger from a process."><BOOLEAN>True</BOOLEAN></PREF>
+
+	<PREF NAME="interface.property.inherit_background_color" DESCRIPTION="Background color of inherited property."><COLOR>245;245;245</COLOR></PREF>
+	<PREF NAME="interface.property.override_background_color" DESCRIPTION="Background color of overridden property."><COLOR>255;245;245</COLOR></PREF>
 
 	<PREF NAME="interface.development_window.external_compilation_output_prompted" DESCRIPTION="Should the External Compilation output pane be shown when an external compilation is launched?"><BOOLEAN>False</BOOLEAN></PREF>
 
@@ -267,8 +272,8 @@
 	<PREF NAME="editor.eiffel.colors.breakpoint_background_color" DESCRIPTION="Color for breakable marks and breakpoints."><COLOR>212;208;200</COLOR></PREF>
 	<PREF NAME="editor.eiffel.colors.assertion_tag_text_color" DESCRIPTION="Foreground color for assertion tags."><COLOR>64;0;0</COLOR></PREF>
 	<PREF NAME="editor.eiffel.colors.assertion_tag_background_color" DESCRIPTION="Background color for assertion tags."><COLOR>auto</COLOR></PREF>
-	<PREF NAME="editor.eiffel.colors.indexing_tag_text_color" DESCRIPTION="Foreground color for indexing tags."><COLOR>64;0;0</COLOR></PREF>
-	<PREF NAME="editor.eiffel.colors.indexing_tag_background_color" DESCRIPTION="Background color for indexing tags."><COLOR>auto</COLOR></PREF>
+	<PREF NAME="editor.eiffel.colors.note_tag_text_color" DESCRIPTION="Foreground color for note tags."><COLOR>64;0;0</COLOR></PREF>
+	<PREF NAME="editor.eiffel.colors.note_tag_background_color" DESCRIPTION="Background color for note tags."><COLOR>auto</COLOR></PREF>
 	<PREF NAME="editor.eiffel.colors.reserved_text_color" DESCRIPTION="Foreground color for reserved words."><COLOR>64;0;0</COLOR></PREF>
 	<PREF NAME="editor.eiffel.colors.reserved_background_color" DESCRIPTION="Background color for reserved words."><COLOR>auto</COLOR></PREF>
 	<PREF NAME="editor.eiffel.colors.generic_text_color" DESCRIPTION="Foreground color for generics."><COLOR>255;0;0</COLOR></PREF>
@@ -294,12 +299,12 @@
 	<PREF NAME="editor.eiffel.colors.warning_text_color" DESCRIPTION="Warning text color"><COLOR>200;64;0</COLOR></PREF>
 	<PREF NAME="editor.eiffel.colors.warning_background_color" DESCRIPTION="Background color of warning text"><COLOR>auto</COLOR></PREF>
 
-	<PREF NAME="editor.eiffel.autocomplete.class_structure_keywords.indexing.autocomplete_indexing" DESCRIPTION="Autocomplete indexing?"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.autocomplete.class_structure_keywords.indexing.use_default_indexing" DESCRIPTION="Use default autocomplete?"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.autocomplete.class_structure_keywords.indexing.custom_indexing_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$</STRING></PREF>
-	<PREF NAME="editor.eiffel.autocomplete.class_structure_keywords.indexing.custom_indexing_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
-	<PREF NAME="editor.eiffel.autocomplete.class_structure_keywords.indexing.custom_indexing_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
-	<PREF NAME="editor.eiffel.autocomplete.class_structure_keywords.indexing.custom_indexing_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$$cursor$</STRING></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.class_structure_keywords.note.autocomplete_note" DESCRIPTION="Autocomplete note?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.class_structure_keywords.note.use_default_note" DESCRIPTION="Use default autocomplete?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.class_structure_keywords.note.custom_note_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$</STRING></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.class_structure_keywords.note.custom_note_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.class_structure_keywords.note.custom_note_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.class_structure_keywords.note.custom_note_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$$cursor$</STRING></PREF>
 
 	<PREF NAME="editor.eiffel.autocomplete.class_structure_keywords.class.autocomplete_class" DESCRIPTION="Autocomplete class?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.class_structure_keywords.class.use_default_class" DESCRIPTION="Use default autocomplete?"><BOOLEAN>True</BOOLEAN></PREF>
@@ -712,6 +717,7 @@
 	<PREF NAME="shortcuts.editor.set_to_lowercase" DESCRIPTION="Set current selection to lowercase."><SHORTCUT Ctrl="True" Shift="True">U</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.editor.embed_if_clause" DESCRIPTION="Embed current line in if clause."><SHORTCUT Ctrl="True">I</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.editor.embed_debug_clause" DESCRIPTION="Embed current line in debug clause"><SHORTCUT Ctrl="True">D</SHORTCUT></PREF>
+	<PREF NAME="shortcuts.editor.prettify" DESCRIPTION="Prettify text in current editor."><SHORTCUT Ctrl="True" Shift="True">P</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.editor.show_goto_dialog" DESCRIPTION="Show dialog to set current editor cursor line."><SHORTCUT Ctrl="True">G</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.editor.zoom_in" DESCRIPTION="Trigger zoom in editor's font."><SHORTCUT Ctrl="True">=</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.editor.zoom_in_numpad" DESCRIPTION="Trigger zoom in editor's font through numpad keys."><SHORTCUT Ctrl="True">NumPad +</SHORTCUT></PREF>

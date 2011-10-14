@@ -541,140 +541,148 @@ feature {DUMP_VALUE} -- string_representation Implementation
 			l_area_lower_value: INTEGER
 			l_slice_max: INTEGER
 			comp_data: DEBUGGER_DATA_FROM_COMPILER
+			rescued: BOOLEAN
 		do
-			if attached dynamic_class as l_dynamic_class then
-				comp_data := debugger_manager.compiler_data
+			if not rescued then
+				if attached dynamic_class as l_dynamic_class then
+					comp_data := debugger_manager.compiler_data
 
-				s8_c := comp_data.string_8_class_c
-				s32_c := comp_data.string_32_class_c
+					s8_c := comp_data.string_8_class_c
+					s32_c := comp_data.string_32_class_c
 
-				if
-					l_dynamic_class = s8_c
-					or l_dynamic_class = s32_c
-				then
-					sc := l_dynamic_class
-					l_area_name := area_name
-					l_count_name := count_name
-				else
-					s8_c := comp_data.readable_string_8_class_c
-					s32_c := comp_data.readable_string_32_class_c
+					if
+						l_dynamic_class = s8_c
+						or l_dynamic_class = s32_c
+					then
+						sc := l_dynamic_class
+						l_area_name := area_name
+						l_count_name := count_name
+					else
+						s8_c := comp_data.readable_string_8_class_c
+						s32_c := comp_data.readable_string_32_class_c
 
-					if l_dynamic_class.simple_conform_to (s8_c) then
-						sc := s8_c
-					elseif l_dynamic_class.simple_conform_to (s32_c) then
-						sc := s32_c
-					end
-					if sc /= Void then
-							--| Take name of `area' and `count' from (READABLE_)STRING_8 or (READABLE_)STRING_32 in descendant version.
-							--| since (READABLE_)STRING.area and (READABLE_)STRING_32.area are not inherited from (READABLE_)STRING_GENERAL
-							--| we have to test the 2 cases : STRING and STRING_32
-
-						f := sc.feature_with_name (area_name).ancestor_version (l_dynamic_class)
-						l_area_name := f.name_32.as_string_8
-						f := sc.feature_with_name (count_name).ancestor_version (l_dynamic_class)
-						l_count_name := f.name_32.as_string_8
-
-							--| And also manage the IMMUTABLE_STRING_8 and _32 !
-						s8_c := comp_data.immutable_string_8_class_c
-						s32_c := comp_data.immutable_string_32_class_c
-						if s8_c /= Void and then (s8_c = l_dynamic_class or else l_dynamic_class.simple_conform_to (s8_c)) then
+						if l_dynamic_class.simple_conform_to (s8_c) then
 							sc := s8_c
-						elseif s32_c /= Void and then (s32_c = l_dynamic_class or else l_dynamic_class.simple_conform_to (s32_c)) then
+						elseif l_dynamic_class.simple_conform_to (s32_c) then
 							sc := s32_c
-						else
-							sc := Void
 						end
 						if sc /= Void then
-							f := sc.feature_with_name (area_lower_name).ancestor_version (l_dynamic_class)
-							if f /= Void then
-								l_area_lower_name := f.name_32.as_string_8
-							end
-						end
+								--| Take name of `area' and `count' from (READABLE_)STRING_8 or (READABLE_)STRING_32 in descendant version.
+								--| since (READABLE_)STRING.area and (READABLE_)STRING_32.area are not inherited from (READABLE_)STRING_GENERAL
+								--| we have to test the 2 cases : STRING and STRING_32
 
-							--| FIXME: Handle Unicode
-							--| ....
+							f := sc.feature_with_name (area_name).ancestor_version (l_dynamic_class)
+							l_area_name := f.name_32.as_string_8
+							f := sc.feature_with_name (count_name).ancestor_version (l_dynamic_class)
+							l_count_name := f.name_32.as_string_8
+
+								--| And also manage the IMMUTABLE_STRING_8 and _32 !
+							s8_c := comp_data.immutable_string_8_class_c
+							s32_c := comp_data.immutable_string_32_class_c
+							if s8_c /= Void and then (s8_c = l_dynamic_class or else l_dynamic_class.simple_conform_to (s8_c)) then
+								sc := s8_c
+							elseif s32_c /= Void and then (s32_c = l_dynamic_class or else l_dynamic_class.simple_conform_to (s32_c)) then
+								sc := s32_c
+							else
+								sc := Void
+							end
+							if sc /= Void then
+								f := sc.feature_with_name (area_lower_name).ancestor_version (l_dynamic_class)
+								if f /= Void then
+									l_area_lower_name := f.name_32.as_string_8
+								end
+							end
+
+								--| FIXME: Handle Unicode
+								--| ....
+						end
 					end
 				end
-			end
-			if l_area_name /= Void and l_count_name /= Void then
-					--| Getting count value and area object
-					--| we set slices to 1,1 to avoid receiving all the capacity item of SPECIAL
-					--| since here only the printable characters matter
-				if value_address /= Void and then not value_address.is_void then
-					l_attributes := debugger_manager.object_manager.attributes_at_address (value_address, 0, 0)
-				end
-				if l_attributes /= Void then
-					from
-						l_attributes_cursor := l_attributes.new_cursor
-						l_attributes_cursor.start
-					until
-						l_attributes_cursor.after or done
-					loop
-						l_attributes_item := l_attributes_cursor.item
-						if attached {SPECIAL_VALUE} l_attributes_item as cv_spec then
-							if area_attribute = Void and then cv_spec.name.is_equal (l_area_name) then
-								area_attribute := cv_spec
-								done := count_attribute /= Void and (l_area_lower_name = Void or else area_lower_attribute /= Void)
-							end
-						else
-							if count_attribute = Void or area_lower_attribute = Void then
-								if attached {DEBUG_BASIC_VALUE [INTEGER]} l_attributes_item as int_value then
-									if count_attribute = Void and then int_value.name.is_equal (l_count_name) then
-										count_attribute := int_value
-										done := area_attribute /= Void and (l_area_lower_name = Void or else area_lower_attribute /= Void)
-									elseif
-										l_area_lower_name /= Void and then area_lower_attribute = Void and then
-										int_value.name.is_equal (l_area_lower_name)
-									then
-										area_lower_attribute := int_value
-										done := area_attribute /= Void and count_attribute /= Void
+				if l_area_name /= Void and l_count_name /= Void then
+						--| Getting count value and area object
+						--| we set slices to 1,1 to avoid receiving all the capacity item of SPECIAL
+						--| since here only the printable characters matter
+					if value_address /= Void and then not value_address.is_void then
+						l_attributes := debugger_manager.object_manager.attributes_at_address (value_address, 0, 0)
+					end
+					if l_attributes /= Void then
+						from
+							l_attributes_cursor := l_attributes.new_cursor
+							l_attributes_cursor.start
+						until
+							l_attributes_cursor.after or done
+						loop
+							l_attributes_item := l_attributes_cursor.item
+							if attached {SPECIAL_VALUE} l_attributes_item as cv_spec then
+								if area_attribute = Void and then cv_spec.name.is_equal (l_area_name) then
+									area_attribute := cv_spec
+									done := count_attribute /= Void and (l_area_lower_name = Void or else area_lower_attribute /= Void)
+								end
+							else
+								if count_attribute = Void or area_lower_attribute = Void then
+									if attached {DEBUG_BASIC_VALUE [INTEGER]} l_attributes_item as int_value then
+										if count_attribute = Void and then int_value.name.is_equal (l_count_name) then
+											count_attribute := int_value
+											done := area_attribute /= Void and (l_area_lower_name = Void or else area_lower_attribute /= Void)
+										elseif
+											l_area_lower_name /= Void and then area_lower_attribute = Void and then
+											int_value.name.is_equal (l_area_lower_name)
+										then
+											area_lower_attribute := int_value
+											done := area_attribute /= Void and count_attribute /= Void
+										end
 									end
 								end
 							end
+							l_attributes_cursor.forth
 						end
-						l_attributes_cursor.forth
-					end
---| Useless:		from until l_attributes_cursor.after loop l_attributes_cursor.forth end					
+		--| Useless:		from until l_attributes_cursor.after loop l_attributes_cursor.forth end					
 
-						--| At the point `count' from STRING should have been found in
-						--| STRING object. `area' maybe Void, thus `area_attribute' may not be found.
-					check
-						count_attribute_found: count_attribute /= Void
-					end
-					if count_attribute /= Void then
-						l_count := count_attribute.value
-						if l_count = 0 then
-							Result := ""
-						else
-							if area_attribute /= Void then
-									--| Now we have the real count, we'll get the l_slice_max items
-									--| and not all the capacity
-								if area_lower_attribute /= Void then
-									l_area_lower_value := area_lower_attribute.value
-								else
-									l_area_lower_value := 0
+							--| At the point `count' from STRING should have been found in
+							--| STRING object. `area' maybe Void, thus `area_attribute' may not be found.
+						check
+							count_attribute_found: count_attribute /= Void
+						end
+						if count_attribute /= Void then
+							l_count := count_attribute.value
+							if l_count = 0 then
+								Result := ""
+							else
+								if area_attribute /= Void then
+										--| Now we have the real count, we'll get the l_slice_max items
+										--| and not all the capacity
+									if area_lower_attribute /= Void then
+										l_area_lower_value := area_lower_attribute.value
+									else
+										l_area_lower_value := 0
+									end
+									if max < 0 then
+										l_slice_max := l_count - 1
+									else
+										l_slice_max := max.min (l_count - 1)
+									end
+									area_attribute.reset_items
+									area_attribute.get_items (min + l_area_lower_value, l_area_lower_value + l_slice_max)
+									Result := area_attribute.truncated_raw_string_value (l_count)
 								end
-								if max < 0 then
-									l_slice_max := l_count - 1
-								else
-									l_slice_max := max.min (l_count - 1)
-								end
-								area_attribute.reset_items
-								area_attribute.get_items (min + l_area_lower_value, l_area_lower_value + l_slice_max)
-								Result := area_attribute.truncated_raw_string_value (l_count)
 							end
 						end
 					end
+					if Result /= Void and then Result.count > l_count then
+							--| We now have retrieved the full `area' of STRING object. Let's check
+							--| if we need to display the complete area, or just part of it.
+						Result.keep_head (l_count.min (Result.count))
+					end
+					last_string_representation_length := l_count
+				elseif debug_output_evaluation_enabled then
+					Result := classic_debug_output_evaluated_string (min, max)
 				end
-				if Result /= Void and then Result.count > l_count then
-						--| We now have retrieved the full `area' of STRING object. Let's check
-						--| if we need to display the complete area, or just part of it.
-					Result.keep_head (l_count.min (Result.count))
-				end
-				last_string_representation_length := l_count
-			elseif debug_output_evaluation_enabled then
-				Result := classic_debug_output_evaluated_string (min, max)
+			else -- rescued
+				Result := Void
 			end
+		rescue
+			rescued := True
+			retry
 		end
 
 	classic_debug_output_evaluated_string (min, max: INTEGER): detachable STRING_32

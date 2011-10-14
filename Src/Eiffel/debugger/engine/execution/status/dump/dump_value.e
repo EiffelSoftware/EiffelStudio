@@ -577,9 +577,9 @@ feature {DUMP_VALUE} -- string_representation Implementation
 							--| And also manage the IMMUTABLE_STRING_8 and _32 !
 						s8_c := comp_data.immutable_string_8_class_c
 						s32_c := comp_data.immutable_string_32_class_c
-						if s8_c = l_dynamic_class or else l_dynamic_class.simple_conform_to (s8_c) then
+						if s8_c /= Void and then (s8_c = l_dynamic_class or else l_dynamic_class.simple_conform_to (s8_c)) then
 							sc := s8_c
-						elseif s32_c = l_dynamic_class or else l_dynamic_class.simple_conform_to (s32_c) then
+						elseif s32_c /= Void and then (s32_c = l_dynamic_class or else l_dynamic_class.simple_conform_to (s32_c)) then
 							sc := s32_c
 						else
 							sc := Void

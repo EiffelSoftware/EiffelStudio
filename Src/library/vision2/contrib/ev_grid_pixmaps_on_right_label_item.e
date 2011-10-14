@@ -14,7 +14,7 @@ class
 inherit
 	EV_GRID_LABEL_ITEM
 		redefine
-			implementation, create_implementation
+			implementation, create_implementation, computed_initial_grid_label_item_layout
 		end
 
 create
@@ -51,6 +51,16 @@ feature {NONE} -- Implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_GRID_PIXMAPS_ON_RIGHT_LABEL_ITEM_I} implementation.make
+		end
+
+feature {EV_GRID_LABEL_ITEM_I} -- Implementation
+
+	computed_initial_grid_label_item_layout (a_width, a_height: INTEGER_32): EV_GRID_LABEL_ITEM_LAYOUT
+		do
+			Result := Precursor (a_width, a_height)
+				-- Shrink the area available for text by the total width
+				-- occupied by the pixmaps.
+			Result.set_available_text_width ((Result.available_text_width - implementation.pixmaps_on_right_width).max (0))
 		end
 
 note

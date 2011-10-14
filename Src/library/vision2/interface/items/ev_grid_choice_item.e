@@ -3,13 +3,14 @@ note
 		"[
 			EV_GRID Text label whose content may be interactively chosen by the user via a list.
 
-			`set_item_strings' may be used to set the list items used in the choice list before the item is activated.
+			`set_item_strings' may be used to set the list items used in the choice list before the item
+			is activated.
 
 			By default a list containing the strings set from `set_item_strings' is displayed, allowing
 			the user to change the text of `Current' by selecting an item within that list.
 				
-			The default behavior of the activation may be overriden using `activate_actions' or `item_activate_actions' (from
-			EV_GRID).
+			The default behavior of the activation may be overriden using `activate_actions' or
+			`item_activate_actions' (from EV_GRID).
 		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,22 +25,13 @@ inherit
 		redefine
 			activate_action,
 			deactivate,
-			initialize,
-			required_width
+			required_width,
+			computed_initial_grid_label_item_layout
 		end
 
 create
 	default_create,
 	make_with_text
-
-feature {NONE} -- Initialize
-
-	initialize
-			-- Initialize current.
-		do
-			Precursor {EV_GRID_LABEL_ITEM}
-			set_layout_procedure (agent update_layout)
-		end
 
 feature -- Element change
 
@@ -86,19 +78,6 @@ feature {NONE} -- Implementation
 	choice_list: detachable EV_GRID
 		-- Text field used to edit `Current' on `activate'
 		-- Void when `Current' isn't being activated.
-
-	update_layout (a_item: EV_GRID_LABEL_ITEM; a_layout: EV_GRID_LABEL_ITEM_LAYOUT)
-			-- Update layout for displaying current.
-		do
-			if a_item /= Void and a_layout /= Void and attached pixmap as l_pixmap then
-					-- We have the pixmap enabled, let's compute the position
-					-- of the `text' and `pixmap' so that the pixmap appears
-					-- on the right edge of `a_item'.
-				a_layout.set_text_x (left_border)
-				a_layout.set_pixmap_x (a_item.width - l_pixmap.width - right_border - 2)
-				a_layout.set_has_text_pixmap_overlapping (False)
-			end
-		end
 
 	set_strings
 			-- Update `choice_list' with `item_strings'.
@@ -156,6 +135,12 @@ feature {NONE} -- Implementation
 							l_item.set_font (l_font)
 						end
 					end
+						-- Ensure that the text we insert is nicely surrounded
+						-- so that it does not touch the border.
+					l_item.set_left_border (default_left_border)
+					l_item.set_right_border (default_left_border)
+						-- Make sure that the content alignment matches the current alignment
+					set_alignment (l_item)
 				end
 			else
 					-- Add `text' is there are no strings set.
@@ -163,9 +148,27 @@ feature {NONE} -- Implementation
 				if l_font /= Void then
 					l_item.set_font (l_font)
 				end
+					-- Ensure that the text we insert is nicely surrounded
+					-- so that it does not touch the border.
+				l_item.set_left_border (default_left_border)
+				l_item.set_right_border (default_left_border)
+					-- Make sure that the content alignment matches the current alignment
+				set_alignment (l_item)
 				l_choice_list.set_item (1, 1, l_item)
 			end
 
+		end
+
+	set_alignment (a_item: EV_GRID_LABEL_ITEM)
+			-- Set alignment of `a_item' according to current alignment.
+		do
+			if is_left_aligned then
+				a_item.align_text_left
+			elseif is_right_aligned then
+				a_item.align_text_right
+			else
+				a_item.align_text_center
+			end
 		end
 
 	has_user_selected_item: BOOLEAN
@@ -177,10 +180,11 @@ feature {NONE} -- Implementation
 			l_width, l_height: INTEGER
 			l_screen: detachable EV_SCREEN_IMP
 			l_choice_list: EV_GRID
-			l_x_coord, l_y_coord, l_x_offset, l_y_offset, l_ideal_width, l_ideal_height: INTEGER
+			l_x_coord, l_y_coord, l_x_offset, l_y_offset, l_sroll_width, l_content_width: INTEGER
 			l_parent: like parent
 			l_vbox: EV_VERTICAL_BOX
-			l_box_border, l_left_border, l_top_border, l_right_border: INTEGER
+			l_box_border, l_item_border_width, l_item_border_height: INTEGER
+			l_layout: like grid_label_item_layout
 		do
 			l_parent := parent
 			check l_parent /= Void end
@@ -191,74 +195,139 @@ feature {NONE} -- Implementation
 			create l_choice_list
 			choice_list := l_choice_list
 
+				-- We hide the horizontal scrollbar and headers since we only want to show
+				-- one column with many items in it. We keep the vertical scrollbar in the event
+				-- there are too many items to show.
 			l_choice_list.hide_header
 			l_choice_list.hide_horizontal_scroll_bar
 
 			create l_vbox
-
-			if left_border /= 0 and right_border /= 0 and top_border /= 0 then
-					-- A border is being used by the item so we respect its boundaries.
-				l_box_border := 0
-				l_left_border := left_border
-				l_right_border := right_border
-				l_top_border := top_border
-			else
-					-- If no border is applied on the item then we supply our own.
-				l_box_border := 1
-			end
-
 			l_vbox.set_background_color ((create {EV_STOCK_COLORS}).black)
-			l_vbox.extend (l_choice_list)
+				-- By default our drop down will always have a border of 1 pixel around the grid.
+			l_box_border := 1
 			l_vbox.set_border_width (l_box_border)
+				-- Initial border width and height for the box containing the grid, taking into account
+				-- the user settings (2 for 2 x 1-pixel border).
+				-- Due to the drawing hack for text which assumes that text is by default drawing
+				-- {EV_GRID_LABEL_ITEM}.default_left_border pixels on the right, we need to check
+				-- if user has set `left_border' or not.
+			if internal_left_border >= 0 then
+				l_item_border_width := 2 + left_border + right_border
+			else
+				l_item_border_width := 2 + right_border
+			end
+			l_item_border_height := 2 + top_border + bottom_border
+
+			l_vbox.extend (l_choice_list)
 
 				-- Set the item strings.
 			set_strings
 
-				-- Compute location and size of `popup_window' and `choice_list' so that we can see most
-				-- of the items at once.
+			l_layout := computed_initial_grid_label_item_layout (width, height)
+			if attached layout_procedure as l_layout_procedure then
+				l_layout_procedure.call ([Current, l_layout])
+			end
 
-			l_x_coord := (a_popup.x_position + l_left_border)
+				-- Compute location and size of `popup_window' and `choice_list' so that we can see most of
+				-- the items at once.
+				-- 1) Get the actual position of the left border
+			if internal_left_border >= 0 then
+				l_x_coord := a_popup.x_position + left_border
+			else
+				l_x_coord := a_popup.x_position
+			end
+				-- 2) If the left hand side is offscreen on the left, calculate how many pixels we need to
+				--    shift to the right to show the content without cropping the content of `choice_list'.
 			l_x_offset := (l_screen.virtual_x - l_x_coord).max (0)
+				-- 3) Adjust `l_x_coord' to take into account the potential cropping.
 			l_x_coord := l_x_coord + l_x_offset
 
-			l_y_coord := (a_popup.y_position + l_top_border)
+				-- 1) Get the actual position of the top border. We try to align the top with the text
+				-- by removing 1 pixel for the border and 1 pixel for the spacing to the top of the font
+				-- (note this is empirical and depending on the font/platform it could perform more or less
+				-- well).
+			l_y_coord := a_popup.y_position + l_layout.text_y - 2
+				-- 2) If the top hand side is offscreen on the top, calculate how many pixels we need to
+				--    shift to the bottom to show the content without cropping the content of `choice_list'.
 			l_y_offset := (l_screen.virtual_y - l_y_coord).max (0)
+				-- 3) Adjust `l_y_coord' to take into account the potential cropping.			
 			l_y_coord := l_y_coord + l_y_offset
 
-			l_width := a_popup.width - l_left_border - l_right_border - l_x_offset
-			l_height := a_popup.height - l_top_border - l_y_offset
+				-- Initially the width and height of `choice_list' match the size of the item in the grid
+				-- and potentially shrinked even more of part of the item was offscreen.
+			l_width := width - l_x_offset - l_item_border_width
+			l_height := height - l_y_offset - l_item_border_height
 
 			if l_choice_list.column_count > 0 and then l_choice_list.row_count > 0 then
+					-- Calculate the ideal width and height of `choice_list', that is to say the
+					-- size it needs to show all its content.
+				l_height := l_choice_list.virtual_height
+					-- If scrollbar is visible then we need to take into account the width of the
+					-- scrollbar.
+				if l_height >= l_screen.virtual_height then
+					l_sroll_width := l_choice_list.vertical_scroll_bar.width
+				end
+					-- Here is the content width that is necessary to display all the strings
+					-- without truncation.
+				l_content_width := l_sroll_width +
+					l_choice_list.column (1).required_width_of_item_span (1, l_choice_list.row_count)
+					-- Here is our needed width.
+				l_width := l_width.max (l_content_width)
 
-				l_ideal_width := l_choice_list.column (1).required_width_of_item_span (1, l_choice_list.row_count) + 4 + (2 * l_box_border)
-				l_ideal_height := l_choice_list.virtual_height
-
-				l_width := l_width.max (l_ideal_width)
-				l_height := l_height.max (l_ideal_height)
-
-					-- Constrain width and height within virtual dimensions of screen.
-				l_width := (l_screen.virtual_width - (l_x_coord - l_screen.virtual_x)).min (l_width)
-				l_height := (l_screen.virtual_height - (l_y_coord - l_screen.virtual_y)).min (l_height)
-
-				if (l_x_coord + l_ideal_width) > (l_screen.virtual_x + l_screen.virtual_width) then
-					l_x_coord := (l_screen.virtual_x + l_screen.virtual_width) - l_ideal_width
-					l_width := l_ideal_width
+					-- Check if the right hand side of the `choice_list' is still visible on screen.
+				l_x_offset := (l_x_coord + l_width) - l_screen.virtual_right
+				if l_x_offset > 0 then
+						-- It is too big, we are going to shift `l_x_coord' to the left by
+						-- at most `l_x_offset' pixels until the right hand side is visible without
+						-- obscuring the left hand side (in which case we will shrink the
+						-- content as to not put the left hand side offscreen). But if we can reduce
+						-- the width without truncating the content we go for it.
+					if (l_width - l_x_offset) > l_content_width then
+							-- Nothing to change, the content still fits.
+					else
+							-- Left hand side needs to move to the left, we only do it for what
+							-- is necessary and no bigger than the whole screen,
+						l_width := l_content_width
+						l_x_coord := l_screen.virtual_right - l_content_width
+						if l_x_coord < l_screen.virtual_x then
+								-- Content is actually larger than the screen
+								-- To avoid putting the left hand side offscreen,
+								-- we adjust accordingly the x coordinate and
+								-- shrink the content to fit the screen.
+							l_width := l_screen.virtual_width
+							l_x_coord := l_screen.virtual_x
+						end
+					end
 				end
 
-				if (l_y_coord + l_ideal_height) > (l_screen.virtual_y + l_screen.virtual_height) then
-					l_y_coord := (l_screen.virtual_y + l_screen.virtual_height) - l_ideal_height
-					l_height := l_ideal_height
+					-- Check if the top hand side of the `choice_list' is still visible on screen.
+				l_y_offset := (l_y_coord + l_height) - l_screen.virtual_bottom
+				if l_y_offset > 0 then
+						-- It is too big, we are going to shift `l_y_coord' to the top by
+						-- at most `l_y_offset' pixels until the bottom hand side is visible without
+						-- obscuring the top hand side (in which case we will shrink the
+						-- content as to not put the top hand side offscreen).
+						-- Unlike the x coordinates computation where the initial width
+						-- was potentially bigger than needed, this is not the case here
+						-- thus the different way to shift the top.
+					l_y_coord := l_y_coord - l_y_offset
+					if l_y_coord < l_screen.virtual_y then
+							-- We would be putting the top hand side offscreen, we adjust accordingly
+							-- the y coordinate and shrink the content to fit the screen.
+						l_height := l_height - (l_screen.virtual_y - l_y_coord)
+						l_y_coord := l_screen.virtual_y
+					end
 				end
 
 				l_choice_list.set_minimum_height (l_height)
-				l_choice_list.column (1).set_width (l_width - (2 * l_box_border))
-				l_choice_list.set_minimum_width (l_height - (2 * l_box_border))
+				l_choice_list.column (1).set_width (l_width)
+				l_choice_list.set_minimum_width (l_width)
 			end
 
 			a_popup.set_x_position (l_x_coord)
 			a_popup.set_y_position (l_y_coord)
-			a_popup.set_height (l_height)
-			a_popup.set_width (l_width)
+			a_popup.set_height (l_height + 2 * l_box_border)
+			a_popup.set_width (l_width + 2 * l_box_border)
 
 			l_choice_list.enable_single_row_selection
 			l_choice_list.enable_selection_key_handling
@@ -381,23 +450,40 @@ feature {NONE} -- Implementation
 			l_mask: EV_BITMAP
 		once
 				-- Draw a drop down triangle.
-			create Result.make_with_size (9, 6)
-			Result.draw_segment (1, 1, 7, 1)
-			Result.draw_segment (2, 2, 6, 2)
-			Result.draw_segment (3, 3, 5, 3)
-			Result.draw_segment (4, 4, 4, 4)
+			create Result.make_with_size (9, 7)
+			Result.draw_segment (1, 2, 7, 2)
+			Result.draw_segment (2, 3, 6, 3)
+			Result.draw_segment (3, 4, 5, 4)
+			Result.draw_segment (4, 5, 4, 5)
 
-			create l_mask.make_with_size (9, 6)
-			l_mask.draw_segment (0, 0, 8, 0)
+			create l_mask.make_with_size (9, 7)
+			l_mask.clear_rectangle (0, 0, 9, 7)
 			l_mask.draw_segment (0, 1, 8, 1)
-			l_mask.draw_segment (1, 2, 7, 2)
-			l_mask.draw_segment (2, 3, 6, 3)
-			l_mask.draw_segment (3, 4, 5, 4)
-			l_mask.draw_segment (4, 5, 4, 5)
+			l_mask.draw_segment (0, 2, 8, 2)
+			l_mask.draw_segment (1, 3, 7, 3)
+			l_mask.draw_segment (2, 4, 6, 4)
+			l_mask.draw_segment (3, 5, 5, 5)
+			l_mask.draw_segment (4, 6, 4, 6)
 
 			Result.set_mask (l_mask)
 		ensure
 			drop_down_pixmap_not_void: Result /= Void
+		end
+
+	computed_initial_grid_label_item_layout (a_width, a_height: INTEGER_32): EV_GRID_LABEL_ITEM_LAYOUT
+		do
+			Result := Precursor (a_width, a_height)
+			if attached pixmap as l_pixmap then
+					-- We simply shift the computation of `x' to the left by
+					-- the size occuppied by the pixmap and separation between
+					-- text and pixmap
+				Result.set_text_x (Result.text_x - l_pixmap.width - spacing)
+					-- We have the pixmap enabled, let's compute the position
+					-- of the `text' and `pixmap' so that `text' appears at the very left
+					-- and `pixmap' at the very right minus 2 pixels for cosmetic reasons.
+				Result.set_pixmap_x (Result.text_x.max (width - l_pixmap.width - right_border - 2))
+				Result.set_has_text_pixmap_overlapping (False)
+			end
 		end
 
 invariant

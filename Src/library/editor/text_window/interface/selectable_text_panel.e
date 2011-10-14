@@ -211,6 +211,9 @@ feature {NONE} -- Handle mouse clicks
 			end
 
 			if not editor_drawing_area.has_capture then
+				if not editor_drawing_area.has_focus then
+					editor_drawing_area.set_focus
+				end
 				editor_drawing_area.enable_capture
 			end
 			position_cursor (l_cursor, x_pos + font.width // 3, y_pos)

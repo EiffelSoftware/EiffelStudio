@@ -98,6 +98,9 @@ iff not defined NO_COMPILE then
 		all_makes
 		cd %1\library\com
 	endiff
+	remtrace cURL
+	cd %1\library\cURL\Clib
+	all_makes
 	remtrace net
 	cd %1\library\net\Clib
 	all_makes

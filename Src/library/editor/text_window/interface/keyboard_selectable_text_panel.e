@@ -893,7 +893,7 @@ feature {NONE} -- Blink Cursor Management
 			end
 			media.set_xor_mode
 			if not do_show then
-					-- Non focus cusor color
+					-- Non focus cursor color
 				media.set_foreground_color (editor_preferences.dark_gray)
 			elseif editor_preferences.blinking_cursor and has_focus then
 				if let_blink and then blink_on then

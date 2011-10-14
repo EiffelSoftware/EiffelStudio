@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 			-- Mark `Current' as initialized.
 		do
 			set_text ("")
-			set_left_border (2)
+			internal_left_border := -1
 			set_spacing (2)
 			align_text_left
 			align_text_vertically_center
@@ -144,7 +144,7 @@ feature -- Status Setting
 			not_destroyed: not is_destroyed
 			a_left_border_non_negative: a_left_border >= 0
 		do
-			left_border := a_left_border
+			internal_left_border := a_left_border
 			if attached parent as l_parent then
 				l_parent.implementation.redraw_item (implementation)
 			end
@@ -336,6 +336,12 @@ feature -- Measurement
 
 	left_border: INTEGER
 			-- Spacing between the contents of `Current' and the left edge of `Current' in pixels.
+		do
+			Result := internal_left_border
+			if Result = -1 then
+				Result := default_left_border
+			end
+		end
 
 	right_border: INTEGER
 			-- Spacing between the contents of `Current' and the right edge of `Current' in pixels.
@@ -499,6 +505,96 @@ feature {NONE} -- Implementation
 		do
 			text := ""
 		end
+
+	internal_left_border: INTEGER
+			-- Storage for `left_border'.
+
+	grid_label_item_layout: EV_GRID_LABEL_ITEM_LAYOUT
+			-- Once access to a layout structure used by `layout_procedure'.
+		once
+			create Result
+		end
+
+feature {EV_GRID_LABEL_ITEM_I} -- Implementation
+
+	computed_initial_grid_label_item_layout (a_width, a_height: INTEGER): like grid_label_item_layout
+			-- Calculate the positions of the text and pixmap for drawing the content of the item.
+		local
+			l_pixmap: detachable EV_PIXMAP
+			pixmap_width, pixmap_height: INTEGER
+			spacing_used: INTEGER
+			space_remaining_for_text: INTEGER
+			text_offset_into_available_space, vertical_text_offset_into_available_space: INTEGER
+			client_width, client_height: INTEGER
+			text_x, text_y: INTEGER
+			pixmap_x, pixmap_y: INTEGER
+		do
+				-- Retrieve properties from interface.
+			l_pixmap := pixmap
+
+				-- Now calculate the area to be used for displaying the text and pixmap
+				-- by subtracting the borders from the complete area.
+			client_width := a_width - left_border - right_border
+			client_height := a_height - top_border - bottom_border
+
+			if l_pixmap /= Void then
+				pixmap_width := l_pixmap.width
+				pixmap_height := l_pixmap.height
+				spacing_used := spacing
+			end
+
+			space_remaining_for_text := client_width - pixmap_width - spacing_used
+
+			if space_remaining_for_text > 0 then
+				if is_left_aligned then
+				elseif is_right_aligned then
+					text_offset_into_available_space := space_remaining_for_text - text_width
+				else
+					text_offset_into_available_space := (space_remaining_for_text - text_width) // 2
+				end
+			end
+				-- Ensure that the text always respect the edge of the pixmap + the spacing in all
+				-- alignment modes when the width of the column is not enough to display all of the
+				-- contents
+			text_offset_into_available_space := text_offset_into_available_space.max (1)
+
+			if is_top_aligned then
+			elseif is_bottom_aligned then
+				vertical_text_offset_into_available_space := client_height - text_height
+			else
+				vertical_text_offset_into_available_space := (client_height - text_height) // 2
+			end
+				-- Ensure that the text always respects the top edge of the row in all alignment modes
+				-- when the height of the row is not enough to display the text fully.
+			vertical_text_offset_into_available_space := vertical_text_offset_into_available_space.max (0)
+
+			pixmap_x := left_border
+			text_x := pixmap_x + pixmap_width + spacing_used + text_offset_into_available_space
+			text_y := top_border + vertical_text_offset_into_available_space
+				-- Pixmap is always aligned to the center of the text
+			pixmap_y := text_y + text_height // 2 - pixmap_height // 2
+				-- If bottom of pixmap is truncated, we move the pixmap to the top
+			if pixmap_y + pixmap_height > a_height - bottom_border then
+				pixmap_y := a_height - bottom_border - pixmap_height
+			end
+				-- If top of image is truncated, we move pixmap to the bottom and
+				-- in the event the bottom gets also truncated, then that's too bad
+				-- but this is the chosen behavior.
+			pixmap_y := pixmap_y.max (top_border)
+
+			Result := grid_label_item_layout
+			Result.set_pixmap_x (pixmap_x)
+			Result.set_pixmap_y (pixmap_y)
+			Result.set_text_x (text_x)
+			Result.set_text_y (text_y)
+			Result.set_available_text_width (space_remaining_for_text.max (0))
+			Result.set_has_text_pixmap_overlapping (True)
+		end
+
+feature {EV_GRID_LABEL_ITEM_I}
+
+	default_left_border: INTEGER = 2
+			-- Default left border used for drawing the text.
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

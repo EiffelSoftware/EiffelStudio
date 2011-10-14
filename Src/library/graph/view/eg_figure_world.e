@@ -86,6 +86,7 @@ feature {NONE} -- Initialization
 			i_cluster: EG_CLUSTER
 		do
 			model := a_model
+			factory := a_factory
 			default_create
 			set_factory (a_factory)
 			-- create all views in model

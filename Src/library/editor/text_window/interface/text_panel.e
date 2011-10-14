@@ -969,9 +969,6 @@ feature -- Status Setting
 		do
 			editor_viewport.set_x_offset (an_offset)
 			if horizontal_scrollbar.is_show_requested then
-				check
-					offset_within_bounds: horizontal_scrollbar.value_range.has (an_offset)
-				end
 				horizontal_scrollbar.set_value (offset.min (horizontal_scrollbar.value_range.upper))
 			end
 		end
@@ -1663,13 +1660,13 @@ feature {EDITOR_TOKEN} -- User set data
 	userset_data: TEXT_PANEL_BUFFERED_DATA
 			-- Userset editor data
 		local
-			l_data: like intneral_userset_data
+			l_data: like internal_userset_data
 		do
-			l_data := intneral_userset_data
+			l_data := internal_userset_data
 			if l_data = Void then
 				create l_data
 				Result := l_data
-				intneral_userset_data := l_data
+				internal_userset_data := l_data
 			else
 				Result := l_data
 			end
@@ -1823,7 +1820,7 @@ feature -- Implementation
 			size_of_file_when_loaded := file_size
 		end
 
-	intneral_userset_data: detachable like userset_data
+	internal_userset_data: detachable like userset_data
 			-- Buffered userset data
 
 	update_line_and_token_info

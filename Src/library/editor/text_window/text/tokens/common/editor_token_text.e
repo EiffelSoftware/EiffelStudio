@@ -131,7 +131,7 @@ feature -- Miscellaneous
 			Result := current_position + 1 -- We return a 1-based result (first character = 1)
 		end
 
-	display(d_y: INTEGER; device: EV_DRAWABLE; panel: TEXT_PANEL)
+	display (d_y: INTEGER; device: EV_DRAWABLE; panel: TEXT_PANEL)
 			-- Display the current token on device context `dc'
 			-- at the coordinates (`position',`d_y')
 		do
@@ -153,7 +153,7 @@ feature -- Miscellaneous
 			end
 		end
 
-	display_selected(d_y: INTEGER; device: EV_DRAWABLE; panel: TEXT_PANEL)
+	display_selected (d_y: INTEGER; device: EV_DRAWABLE; panel: TEXT_PANEL)
 			-- Display the current token on device context `device'
 			-- at the coordinates (`position',`d_y') with its
 			-- selected state.
@@ -177,7 +177,9 @@ feature -- Miscellaneous
 			text_width: INTEGER
 			indx: INTEGER
 			txt_color: EV_COLOR
+			l_has_tabulation: BOOLEAN
 		do
+			l_has_tabulation := has_tabulation
 			local_position := position
 			if panel.text_is_fully_loaded then
 				txt_color := text_color
@@ -193,7 +195,12 @@ feature -- Miscellaneous
 			l_end := end_selection
 
 			if l_start /= 1 then
-				indx := wide_image.index_of ('%T', 1)
+				if l_has_tabulation then
+					indx := wide_image.index_of ('%T', 1)
+				else
+					indx := 0
+				end
+
 				if indx > 0 and then indx < l_start then
 					local_string := expanded_image_substring (1, l_start - 1)
 				else
@@ -216,7 +223,12 @@ feature -- Miscellaneous
 
 			-- Draw selected text -------------------------------------------------------------------
 
-			indx := wide_image.index_of ('%T', l_start)
+			if l_has_tabulation then
+				indx := wide_image.index_of ('%T', l_start)
+			else
+				indx := 0
+			end
+
 			if l_start > l_end then
 				if indx > 0 and then indx < l_end then
 					local_string := expanded_image_substring (l_end, l_start - 1)
@@ -264,13 +276,13 @@ feature -- Miscellaneous
 			if l_end <= length then
 
 				if l_start > l_end then
-					if wide_image.index_of ('%T', start_selection) > 0 then
+					if l_has_tabulation and then wide_image.index_of ('%T', start_selection) > 0 then
 						local_string := expanded_image_substring (l_start, length)
 					else
 						local_string := wide_image.substring (l_start, length)
 					end
 				else
-					if wide_image.index_of ('%T', end_selection) > 0 then
+					if l_has_tabulation and then wide_image.index_of ('%T', end_selection) > 0 then
 						local_string := expanded_image_substring (l_end, length)
 					else
 						local_string := wide_image.substring (l_end, length)
@@ -320,6 +332,10 @@ feature -- Setting
 		do
 			wide_image := a_image
 			length := a_image.count
+			if may_contain_tabulation then
+					-- If `Current' may contain tabs then we set the flag status if the image contains tab characters.
+				set_token_status_flag (has_tabulation_flag, a_image.has ('%T'))
+			end
 		ensure
 			wide_image_not_void: wide_image /= Void
 		end
@@ -416,7 +432,7 @@ feature {NONE} -- Implementation
 			if is_fixed_width then
 				Result := editor_preferences.tabulation_spaces * font_width
 			else
-				Result := editor_preferences.tabulation_spaces * font.string_width(once " ")
+				Result := editor_preferences.tabulation_spaces * font.string_width (once " ")
 			end
 		end
 

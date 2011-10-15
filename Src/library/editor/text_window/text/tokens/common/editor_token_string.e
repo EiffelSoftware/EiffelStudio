@@ -14,7 +14,8 @@ inherit
 		redefine
 			text_color_id,
 			background_color_id,
-			process
+			process,
+			may_contain_tabulation
 		end
 
 create
@@ -28,6 +29,10 @@ feature -- Visitor
 			a_token_visitor.process_editor_token_string (Current)
 		end
 
+feature -- Status Report
+
+	may_contain_tabulation: BOOLEAN = True
+		-- <Precursor>
 
 feature -- Color
 

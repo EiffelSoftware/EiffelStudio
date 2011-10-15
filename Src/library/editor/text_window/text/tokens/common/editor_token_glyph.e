@@ -25,8 +25,7 @@ feature {NONE} -- Initialization
 			not_a_glyph_is_destroyed: not a_glyph.is_destroyed
 		do
 			glyph := a_glyph
-			is_fake := True
-			is_clickable := False
+			set_is_fake (True)
 			length := 1
 			create wide_image.make_empty
 		ensure

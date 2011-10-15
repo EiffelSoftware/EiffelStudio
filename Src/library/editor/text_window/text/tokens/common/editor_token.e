@@ -79,25 +79,58 @@ feature -- Token Type Status Report
 	may_contain_tabulation: BOOLEAN
 			-- May `Current' contain tabulation marks?
 		do
-			Result := True
+			Result := False
 		end
 
 feature -- Status report
 
-	frozen has_tabulation: BOOLEAN
+	has_tabulation: BOOLEAN
 			-- Does `Current' contain tabs?
 		do
-			Result := may_contain_tabulation and then wide_image.has ('%T')
+			Result := token_status_flags & has_tabulation_flag /= 0
 		end
 
 	is_selectable: BOOLEAN
 			-- Is this token part of a group of selectable tokens?
+		do
+			Result := token_status_flags & is_selectable_flag /= 0
+		end
 
 	is_highlighted: BOOLEAN
 			-- Is current highlighted?
+		do
+			Result := token_status_flags & is_highlighted_flag /= 0
+		end
 
 	is_fake: BOOLEAN
 			-- Is current fake?
+		do
+			Result := token_status_flags & is_fake_flag /= 0
+		end
+
+	is_clickable: BOOLEAN
+			-- Is `Current' clickable?
+		do
+			Result := token_status_flags & is_clickable_flag /= 0
+		end
+
+	set_token_status_flag (a_flag: NATURAL_8; a_flag_value: BOOLEAN)
+		do
+			if a_flag_value then
+				token_status_flags := token_status_flags | a_flag
+			else
+				token_status_flags := token_status_flags & a_flag.bit_not
+			end
+		end
+
+	token_status_flags: NATURAL_8
+		-- Flags for token status report.
+
+	has_tabulation_flag: NATURAL_8 = 0x1
+	is_selectable_flag: NATURAL_8 = 0x2
+	is_highlighted_flag: NATURAL_8 = 0x4
+	is_fake_flag: NATURAL_8 = 0x8
+	is_clickable_flag: NATURAL_8 = 0x10
 
 feature -- Status report
 
@@ -127,7 +160,7 @@ feature -- Status Setting
 	set_is_selectable (b: BOOLEAN)
 			-- Set `is_selectable' to `b'
 		do
-			is_selectable := b
+			set_token_status_flag (is_selectable_flag, b)
 		ensure
 			value_set: is_selectable = b
 		end
@@ -135,7 +168,7 @@ feature -- Status Setting
 	set_highlighted (b: BOOLEAN)
 			-- Highlight
 		do
-			is_highlighted := b
+			set_token_status_flag (is_highlighted_flag, b)
 		ensure
 			value_set: is_highlighted = b
 		end
@@ -143,7 +176,7 @@ feature -- Status Setting
 	set_is_fake (b: BOOLEAN)
 			-- Set `is_fake' to `b'.
 		do
-			is_fake := b
+			set_token_status_flag (is_fake_flag, b)
 		ensure
 			value_set: is_fake = b
 		end
@@ -479,12 +512,10 @@ feature -- Implementation of clickable and editable text
 			pos_in_text_set: pos_in_text = pit
 		end
 
-	is_clickable: BOOLEAN
-
 	set_is_clickable (a_clickable: BOOLEAN)
 			-- Set `is_clickable' with `a_clickable'.
 		do
-			is_clickable := a_clickable
+			set_token_status_flag (is_clickable_flag, a_clickable)
 		ensure
 			is_clickable_set: is_clickable = a_clickable
 		end

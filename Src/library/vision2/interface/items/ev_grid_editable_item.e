@@ -113,7 +113,7 @@ feature {NONE} -- Implementation
 			if attached layout_procedure as l_layout_procedure then
 				l_layout_procedure.call ([Current, l_layout])
 			end
-			a_popup.set_y_position (a_popup.y_position + l_layout.text_y)
+			a_popup.set_y_position (a_popup.y_position + l_layout.text_y - a_widget_y_offset)
 			a_popup.set_height (text_height)
 		end
 

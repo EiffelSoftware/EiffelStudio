@@ -328,7 +328,7 @@ feature {NONE} -- Implementation
 				end
 
 				l_choice_list.set_minimum_height (l_height)
-				l_choice_list.column (1).set_width (l_width)
+				l_choice_list.column (1).set_width (l_width - l_scroll_width)
 				l_choice_list.set_minimum_width (l_width)
 			end
 

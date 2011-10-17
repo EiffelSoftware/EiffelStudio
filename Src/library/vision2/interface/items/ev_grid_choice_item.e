@@ -209,7 +209,7 @@ feature {NONE} -- Implementation
 				-- Initial border width and height for the box containing the grid, taking into account
 				-- the user settings (2 for 2 x 1-pixel border).
 				-- Due to the drawing hack for text which assumes that text is by default drawing
-				-- {EV_GRID_LABEL_ITEM}.default_left_border pixels on the right, we need to check
+				-- {EV_GRID_LABEL_ITEM}.default_left_border pixels to the right, we need to check
 				-- if user has set `left_border' or not.
 			if internal_left_border >= 0 then
 				l_item_border_width := 2 + left_border + right_border

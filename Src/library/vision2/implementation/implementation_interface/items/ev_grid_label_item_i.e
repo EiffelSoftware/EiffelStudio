@@ -100,10 +100,15 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 			l_text_dimensions: TUPLE [w: INTEGER; h: INTEGER]
 			l_text: detachable STRING_32
 			l_font: detachable EV_FONT
+			l_empty: BOOLEAN
 		do
 			if must_recompute_text_dimensions then
 				if attached interface as l_interface then
 					l_text := l_interface.text
+					if l_text.is_empty then
+						l_empty := True
+						l_text:= " "
+					end
 					l_font := l_interface.font
 					if l_font = Void then
 						l_font := internal_default_font
@@ -115,7 +120,11 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 							-- Item is not parented so we use the slower font implementation directly.
 						l_text_dimensions := l_font.string_size (l_text)
 					end
-					internal_text_width := l_text_dimensions.w
+					if l_empty then
+						internal_text_width := 0
+					else
+						internal_text_width := l_text_dimensions.w
+					end
 					internal_text_height := l_text_dimensions.h
 				end
 			end

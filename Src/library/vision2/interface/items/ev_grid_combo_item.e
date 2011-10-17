@@ -73,10 +73,17 @@ feature {NONE} -- Implementation
 			a_x_position, a_y_position: INTEGER
 			l_x_coord: INTEGER
 			l_parent: like parent
+			l_layout: like grid_label_item_layout
+			a_widget_y_offset: INTEGER
 		do
 			a_widget := a_popup.item
+				-- Due to the drawing hack for text which assumes that text is by default drawing
+				-- {EV_GRID_LABEL_ITEM}.default_left_border pixels to the right, we need to check
+				-- if user has set `left_border' or not.
+			if internal_left_border >= 0 then
+				l_x_offset := left_border
+			end
 				-- Account for position of text relative to pixmap.
-			l_x_offset := left_border
 			if attached pixmap as l_pixmap then
 					-- Calculate x offset for pixmap spacing if any
 				l_x_offset := l_x_offset + l_pixmap.width + spacing
@@ -91,13 +98,18 @@ feature {NONE} -- Implementation
 
 			a_x_position := a_popup.x_position + l_x_coord
 				-- Align combo box to y position of text in `Current'.
-			a_y_position := a_popup.y_position + top_border + ((a_popup.height - top_border - bottom_border - a_widget.minimum_height) // 2) + 1
+			a_widget_y_offset := (a_widget.minimum_height - text_height) // 2
 
 			a_widget.set_minimum_width (0)
 
-			a_popup.set_x_position (a_x_position)
+			a_popup.set_x_position (a_x_position + l_x_coord)
 			a_popup.set_width (a_width)
-			a_popup.set_y_position (a_y_position)
+				-- Move the popup above the text location which we need to compute.
+			l_layout := computed_initial_grid_label_item_layout (width, height)
+			if attached layout_procedure as l_layout_procedure then
+				l_layout_procedure.call ([Current, l_layout])
+			end
+			a_popup.set_y_position (a_popup.y_position + l_layout.text_y - a_widget_y_offset)
 			a_popup.set_height (a_widget.minimum_height)
 		end
 
@@ -126,6 +138,13 @@ feature {NONE} -- Implementation
 
 			if attached font as l_font then
 				l_combo_box.set_font (l_font)
+			end
+
+				-- Follow the current alignment of item.
+			if is_right_aligned then
+				l_combo_box.align_text_right
+			elseif is_center_aligned then
+				l_combo_box.align_text_center
 			end
 
 			if attached item_strings as l_item_strings then
@@ -163,8 +182,8 @@ feature {NONE} -- Implementation
 				if not user_cancelled_activation then
 					set_text (l_combo_box.text)
 				end
-				Precursor {EV_GRID_LABEL_ITEM}
 				combo_box := Void
+				Precursor {EV_GRID_LABEL_ITEM}
 			end
 		end
 

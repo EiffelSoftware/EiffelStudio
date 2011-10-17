@@ -133,7 +133,7 @@ feature -- Status report
 			l_rect: WEL_RECT
 			l_success: BOOLEAN
 		do
-			create l_rect.make (a_x, a_y, 0, 0)
+			create l_rect.make (a_x, a_y, a_x, a_y)
 			l_wel_mon := {WEL_API}.monitor_from_rect (l_rect.item, monitor_defaulttonearest)
 			create l_mon_info.make
 			l_success := {WEL_API}.get_monitor_info (l_wel_mon, l_mon_info.item)
@@ -186,7 +186,7 @@ feature -- Status report
 			l_rect: WEL_RECT
 			l_success: BOOLEAN
 		do
-			create l_rect.make (a_x, a_y, 0, 0)
+			create l_rect.make (a_x, a_y, a_x, a_y)
 			l_wel_mon := {WEL_API}.monitor_from_rect (l_rect.item, monitor_defaulttonearest)
 			create l_mon_info.make
 			l_success := {WEL_API}.get_monitor_info (l_wel_mon, l_mon_info.item)

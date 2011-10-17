@@ -2608,7 +2608,7 @@ feature {NONE} -- Choice Positioning
 					-- Shift x pos back so it fits on the screen
 				Result := Result - (list_width - right_space)
 			end
-			Result := Result.max (0)
+			Result := Result.max (screen.virtual_left)
 		end
 
 	calculate_completion_list_y_position (a_positioned: EV_POSITIONED): INTEGER
@@ -2640,6 +2640,7 @@ feature {NONE} -- Choice Positioning
 			else
 				Result := Result - l_height
 			end
+			Result := Result.max (screen.virtual_top)
 		end
 
 	calculate_completion_list_height (a_positioned: EV_POSITIONED): INTEGER

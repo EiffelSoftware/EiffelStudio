@@ -156,7 +156,14 @@ feature -- Status report
 		do
 			l_window_imp ?= a_window.implementation
 			check l_window_imp_attached: l_window_imp /= Void end
-			l_wel_mon := {WEL_API}.monitor_from_window (l_window_imp.wel_item, monitor_defaulttonearest)
+				-- Use window handle if displayed, otherwise use coordinates from window.
+			if a_window.is_displayed then
+				l_wel_mon := {WEL_API}.monitor_from_window (l_window_imp.wel_item, monitor_defaulttonearest)
+			else
+				create l_rect.make (l_window_imp.x_position, l_window_imp.y_position, 0, 0)
+				l_wel_mon := {WEL_API}.monitor_from_rect (l_rect.item, monitor_defaulttonearest)
+			end
+
 			create l_mon_info.make
 			l_success := {WEL_API}.get_monitor_info (l_wel_mon, l_mon_info.item)
 			if l_success then

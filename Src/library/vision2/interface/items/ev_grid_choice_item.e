@@ -180,17 +180,23 @@ feature {NONE} -- Implementation
 			l_width, l_height: INTEGER
 			l_screen: detachable EV_SCREEN_IMP
 			l_choice_list: EV_GRID
-			l_x_coord, l_y_coord, l_x_offset, l_y_offset, l_sroll_width, l_content_width: INTEGER
+			l_x_coord, l_y_coord, l_x_offset, l_y_offset, l_scroll_width, l_content_width: INTEGER
 			l_parent: like parent
 			l_vbox: EV_VERTICAL_BOX
 			l_box_border, l_item_border_width, l_item_border_height: INTEGER
 			l_layout: like grid_label_item_layout
+			l_rect: EV_RECTANGLE
+			l_mouse: EV_COORDINATE
 		do
 			l_parent := parent
 			check l_parent /= Void end
 
 			l_screen ?= (create {EV_SCREEN}).implementation
 			check l_screen_not_void: l_screen /= Void end
+				-- We limit our positionning on the current monitor, where the click occurred,
+				-- for better user experience.
+			l_mouse := l_screen.pointer_position
+			l_rect := l_screen.working_area_from_position (l_mouse.x, l_mouse.y)
 
 			create l_choice_list
 			choice_list := l_choice_list
@@ -238,7 +244,7 @@ feature {NONE} -- Implementation
 			end
 				-- 2) If the left hand side is offscreen on the left, calculate how many pixels we need to
 				--    shift to the right to show the content without cropping the content of `choice_list'.
-			l_x_offset := (l_screen.virtual_x - l_x_coord).max (0)
+			l_x_offset := (l_rect.x - l_x_coord).max (0)
 				-- 3) Adjust `l_x_coord' to take into account the potential cropping.
 			l_x_coord := l_x_coord + l_x_offset
 
@@ -249,7 +255,7 @@ feature {NONE} -- Implementation
 			l_y_coord := a_popup.y_position + l_layout.text_y - 2
 				-- 2) If the top hand side is offscreen on the top, calculate how many pixels we need to
 				--    shift to the bottom to show the content without cropping the content of `choice_list'.
-			l_y_offset := (l_screen.virtual_y - l_y_coord).max (0)
+			l_y_offset := (l_rect.y - l_y_coord).max (0)
 				-- 3) Adjust `l_y_coord' to take into account the potential cropping.			
 			l_y_coord := l_y_coord + l_y_offset
 
@@ -264,18 +270,18 @@ feature {NONE} -- Implementation
 				l_height := l_choice_list.virtual_height
 					-- If scrollbar is visible then we need to take into account the width of the
 					-- scrollbar.
-				if l_height >= l_screen.virtual_height then
-					l_sroll_width := l_choice_list.vertical_scroll_bar.width
+				if l_height >= l_rect.height then
+					l_scroll_width := l_choice_list.vertical_scroll_bar.width
 				end
 					-- Here is the content width that is necessary to display all the strings
 					-- without truncation.
-				l_content_width := l_sroll_width +
+				l_content_width := l_scroll_width +
 					l_choice_list.column (1).required_width_of_item_span (1, l_choice_list.row_count)
 					-- Here is our needed width.
 				l_width := l_width.max (l_content_width)
 
 					-- Check if the right hand side of the `choice_list' is still visible on screen.
-				l_x_offset := (l_x_coord + l_width) - l_screen.virtual_right
+				l_x_offset := (l_x_coord + l_width) - l_rect.right
 				if l_x_offset > 0 then
 						-- It is too big, we are going to shift `l_x_coord' to the left by
 						-- at most `l_x_offset' pixels until the right hand side is visible without
@@ -283,25 +289,27 @@ feature {NONE} -- Implementation
 						-- content as to not put the left hand side offscreen). But if we can reduce
 						-- the width without truncating the content we go for it.
 					if (l_width - l_x_offset) > l_content_width then
-							-- Nothing to change, the content still fits.
+							-- Nothing to change, the content still fits, however we will need to
+							-- ensure that right hand side is visible
+						l_width := l_width - l_x_offset
 					else
 							-- Left hand side needs to move to the left, we only do it for what
 							-- is necessary and no bigger than the whole screen,
 						l_width := l_content_width
-						l_x_coord := l_screen.virtual_right - l_content_width
-						if l_x_coord < l_screen.virtual_x then
+						l_x_coord := l_rect.right - l_content_width
+						if l_x_coord < l_rect.x then
 								-- Content is actually larger than the screen
 								-- To avoid putting the left hand side offscreen,
 								-- we adjust accordingly the x coordinate and
 								-- shrink the content to fit the screen.
-							l_width := l_screen.virtual_width
-							l_x_coord := l_screen.virtual_x
+							l_width := l_rect.width
+							l_x_coord := l_rect.x
 						end
 					end
 				end
 
 					-- Check if the top hand side of the `choice_list' is still visible on screen.
-				l_y_offset := (l_y_coord + l_height) - l_screen.virtual_bottom
+				l_y_offset := (l_y_coord + l_height) - l_rect.bottom
 				if l_y_offset > 0 then
 						-- It is too big, we are going to shift `l_y_coord' to the top by
 						-- at most `l_y_offset' pixels until the bottom hand side is visible without
@@ -311,11 +319,11 @@ feature {NONE} -- Implementation
 						-- was potentially bigger than needed, this is not the case here
 						-- thus the different way to shift the top.
 					l_y_coord := l_y_coord - l_y_offset
-					if l_y_coord < l_screen.virtual_y then
+					if l_y_coord < l_rect.y then
 							-- We would be putting the top hand side offscreen, we adjust accordingly
 							-- the y coordinate and shrink the content to fit the screen.
-						l_height := l_height - (l_screen.virtual_y - l_y_coord)
-						l_y_coord := l_screen.virtual_y
+						l_height := l_height - (l_rect.y - l_y_coord)
+						l_y_coord := l_rect.y
 					end
 				end
 

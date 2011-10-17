@@ -106,6 +106,8 @@ feature -- Status report
 
 	monitor_area_from_position (a_x, a_y: INTEGER): EV_RECTANGLE
 			-- Full area of monitor nearest to coordinates (a_x, a_y)
+		require
+			not_destroyed: not is_destroyed
 		do
 				-- Default implementation always returns the primary monitor area.
 				-- Redefined by descendents for multi-monitor support.
@@ -115,8 +117,35 @@ feature -- Status report
 	monitor_area_from_window (a_window: EV_WINDOW): EV_RECTANGLE
 			-- Full area of monitor of which most of `a_window' is located.
 			-- Returns nearest monitor area if `a_window' does not overlap any monitors.
+		require
+			not_destroyed: not is_destroyed
+			not_window_destroyed: not a_window.is_destroyed
 		do
 				-- Default implementation always returns the primary monitor area.
+				-- Redefined by descendents for multi-monitor support.
+			create Result.make (0, 0, width, height)
+		end
+
+	working_area_from_position (a_x, a_y: INTEGER): EV_RECTANGLE
+			-- Area available for windows of monitor nearest to coordinates (a_x, a_y).
+			-- E.g. it should exclude the taskbar if any.
+		require
+			not_destroyed: not is_destroyed
+		do
+				-- Default implementation always returns the same as `monitor_area_from_position'
+				-- Redefined by descendents for multi-monitor support.
+			create Result.make (0, 0, width, height)
+		end
+
+	working_area_from_window (a_window: EV_WINDOW): EV_RECTANGLE
+			-- Area available for windows of monitor of which most of `a_window' is located.
+			-- Returns nearest working area if `a_window' does not overlap any monitors.
+			-- E.g. it should exclude the taskbar if any.
+		require
+			not_destroyed: not is_destroyed
+			not_window_destroyed: not a_window.is_destroyed
+		do
+				-- Default implementation always returns the same as `monitor_area_from_window'
 				-- Redefined by descendents for multi-monitor support.
 			create Result.make (0, 0, width, height)
 		end

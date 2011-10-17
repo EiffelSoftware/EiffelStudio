@@ -12,7 +12,8 @@ inherit
 	EV_SCREEN_I
 		redefine
 			interface, virtual_width, virtual_height, virtual_x, virtual_y,
-			monitor_count, monitor_area_from_position, monitor_area_from_window, refresh_graphics_context,
+			monitor_count, monitor_area_from_position, monitor_area_from_window,
+			working_area_from_position, working_area_from_window, refresh_graphics_context,
 			widget_at_mouse_pointer
 		end
 
@@ -160,7 +161,9 @@ feature -- Status report
 			if a_window.is_displayed then
 				l_wel_mon := {WEL_API}.monitor_from_window (l_window_imp.wel_item, monitor_defaulttonearest)
 			else
-				create l_rect.make (l_window_imp.x_position, l_window_imp.y_position, 0, 0)
+				create l_rect.make (l_window_imp.x_position, l_window_imp.y_position,
+					l_window_imp.x_position + l_window_imp.width,
+					l_window_imp.y_position + l_window_imp.height)
 				l_wel_mon := {WEL_API}.monitor_from_rect (l_rect.item, monitor_defaulttonearest)
 			end
 
@@ -168,6 +171,59 @@ feature -- Status report
 			l_success := {WEL_API}.get_monitor_info (l_wel_mon, l_mon_info.item)
 			if l_success then
 				l_rect := l_mon_info.monitor_area
+				create Result.make (l_rect.x, l_rect.y, l_rect.width, l_rect.height)
+			else
+					-- Use fallback implementation to return the primary monitor.
+				Result := Precursor (a_window)
+			end
+		end
+
+	working_area_from_position (a_x, a_y: INTEGER): EV_RECTANGLE
+			-- <Precursor>
+		local
+			l_wel_mon: POINTER
+			l_mon_info: WEL_MONITOR_INFO
+			l_rect: WEL_RECT
+			l_success: BOOLEAN
+		do
+			create l_rect.make (a_x, a_y, 0, 0)
+			l_wel_mon := {WEL_API}.monitor_from_rect (l_rect.item, monitor_defaulttonearest)
+			create l_mon_info.make
+			l_success := {WEL_API}.get_monitor_info (l_wel_mon, l_mon_info.item)
+			if l_success then
+				l_rect := l_mon_info.working_area
+				create Result.make (l_rect.x, l_rect.y, l_rect.width, l_rect.height)
+			else
+					-- Use fallback implementation to return the primary monitor.
+				Result := Precursor (a_x, a_y)
+			end
+		end
+
+	working_area_from_window (a_window: EV_WINDOW): EV_RECTANGLE
+			-- <Precursor>
+		local
+			l_wel_mon: POINTER
+			l_mon_info: WEL_MONITOR_INFO
+			l_window_imp: detachable EV_WINDOW_IMP
+			l_rect: WEL_RECT
+			l_success: BOOLEAN
+		do
+			l_window_imp ?= a_window.implementation
+			check l_window_imp_attached: l_window_imp /= Void end
+				-- Use window handle if displayed, otherwise use coordinates from window.
+			if a_window.is_displayed then
+				l_wel_mon := {WEL_API}.monitor_from_window (l_window_imp.wel_item, monitor_defaulttonearest)
+			else
+				create l_rect.make (l_window_imp.x_position, l_window_imp.y_position,
+					l_window_imp.x_position + l_window_imp.width,
+					l_window_imp.y_position + l_window_imp.height)
+				l_wel_mon := {WEL_API}.monitor_from_rect (l_rect.item, monitor_defaulttonearest)
+			end
+
+			create l_mon_info.make
+			l_success := {WEL_API}.get_monitor_info (l_wel_mon, l_mon_info.item)
+			if l_success then
+				l_rect := l_mon_info.working_area
 				create Result.make (l_rect.x, l_rect.y, l_rect.width, l_rect.height)
 			else
 					-- Use fallback implementation to return the primary monitor.

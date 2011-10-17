@@ -90,8 +90,13 @@ feature {NONE} -- Implementation
 			l_parent := parent
 			check l_parent /= Void end
 
+				-- Due to the drawing hack for text which assumes that text is by default drawing
+				-- {EV_GRID_LABEL_ITEM}.default_left_border pixels to the right, we need to check
+				-- if user has set `left_border' or not.
+			if internal_left_border >= 0 then
+				l_x_offset := left_border
+			end
 				-- Account for position of text relative to pixmap.
-			l_x_offset := left_border
 			if attached pixmap as l_pixmap then
 				l_x_offset := l_x_offset + l_pixmap.width + spacing
 			end

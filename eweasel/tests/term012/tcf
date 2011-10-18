@@ -16,7 +16,7 @@ compile_result 	validity_error TEST VTBT
 
 copy_raw 	test_rev1.e $CLUSTER test.e
 resume_compile
-compile_result 	ok
+compile_result 	validity_warning TEST Obsolete
 
 execute_work    NONE exec_output1
 execute_result 	ok

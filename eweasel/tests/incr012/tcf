@@ -12,7 +12,7 @@ test_description Introduce VTBT violation by changing value of a constant intege
 copy_sub 	Ace $TEST Ace
 copy_raw 	test.e $CLUSTER test.e
 compile_melted
-compile_result 	ok
+compile_result 	validity_warning TEST Obsolete
 
 copy_raw 	test_rev1.e $CLUSTER test.e
 compile_melted

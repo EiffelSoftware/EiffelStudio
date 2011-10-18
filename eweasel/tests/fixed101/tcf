@@ -14,17 +14,17 @@ copy_raw 	 test.e  $CLUSTER test.e
 define		 CONSTRAINT ANY
 copy_sub 	 test1.e  $CLUSTER test1.e
 compile_melted
-compile_result 	 ok
+compile_result 	 validity_warning TEST1 Obsolete
 
 define		 CONSTRAINT STRING
 copy_sub 	 test1.e  $CLUSTER test1.e
 compile_melted
-compile_result 	 validity_error TEST VTCG
+compile_result 	 validity_error TEST VTCG; TEST1 Obsolete
 -- VTGD(2)
 
 define		 CONSTRAINT ANY
 copy_sub 	 test1.e  $CLUSTER test1.e
 resume_compile
-compile_result 	 ok
+compile_result 	 validity_warning TEST1 Obsolete
 
 test_end

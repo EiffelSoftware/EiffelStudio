@@ -26,6 +26,6 @@ compile_result 	 validity_error TEST VTBT
 define		 BIT_LENGTH 1
 copy_sub 	 test.e $CLUSTER test.e
 resume_compile
-compile_result 	 ok
+compile_result 	 validity_warning TEST Obsolete
 
 test_end

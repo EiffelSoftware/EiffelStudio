@@ -12,7 +12,7 @@ test_description A class declares a named constant via `b: BIT 8 is 11B' and pri
 copy_sub 	Ace $TEST Ace
 copy_raw 	test.e $CLUSTER test.e
 compile_frozen
-compile_result 	ok
+compile_result 	validity_warning TEST Obsolete
 
 c_compile_work
 c_compile_result ok

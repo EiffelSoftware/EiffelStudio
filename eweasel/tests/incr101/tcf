@@ -13,11 +13,11 @@ copy_sub 	 Ace $TEST Ace
 define		 BIT_LENGTH "10"
 copy_sub 	 test.e  $CLUSTER test.e
 compile_melted
-compile_result 	 ok
+compile_result 	 validity_warning TEST Obsolete; TEST Obsolete
 
 define		 BIT_LENGTH "11"
 copy_sub 	 test.e  $CLUSTER test.e
 compile_melted
-compile_result 	 validity_error TEST VNCB
+compile_result 	 validity_error TEST VNCB; TEST Obsolete; TEST Obsolete
 
 test_end

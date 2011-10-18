@@ -12,7 +12,7 @@ test_description A class has pattern of creation of small STRINGs guided by a ra
 copy_sub 	 Ace $TEST Ace
 copy_raw 	 test.e  $CLUSTER test.e
 compile_melted
-compile_result 	 ok
+compile_result 	 validity_warning TEST Obsolete; TEST Obsolete
 
 -- Adding next line causes test to pass
 -- setenv EIF_MEMORY_CHUNK 262144

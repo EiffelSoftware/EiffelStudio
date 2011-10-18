@@ -12,7 +12,7 @@ test_description A system which concatenates and prints the BIT constants of a m
 copy_sub 	Ace $TEST Ace
 copy_raw 	test.e $CLUSTER test.e
 compile_frozen
-compile_result 	ok
+compile_result 	validity_warning TEST Obsolete; TEST Obsolete
 
 c_compile_work
 c_compile_result ok

@@ -15,11 +15,11 @@ copy_raw 	 test.e  $CLUSTER test.e
 copy_raw 	 test1.e  $CLUSTER test1.e
 copy_sub 	 test2.e  $CLUSTER test2.e
 compile_melted
-compile_result 	 ok
+compile_result 	 validity_warning TEST1 Obsolete
 
 define		 VALUE "2"
 copy_sub 	 test2.e  $CLUSTER test2.e
 compile_melted
-compile_result 	 validity_error TEST VUAR(2)
+compile_result 	 validity_error TEST VUAR(2); TEST1 Obsolete
 
 test_end

@@ -6,7 +6,7 @@ copy_raw c.e $CLUSTER c.e
 copy_raw test.e $CLUSTER test.e
 
 compile_frozen
-compile_result ok
+compile_result validity_warning TEST Obsolete
 c_compile_work
 c_compile_result ok
 execute_work	NONE exec_output_w

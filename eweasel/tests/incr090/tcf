@@ -15,7 +15,7 @@ copy_raw 	 test.e  $CLUSTER test.e
 copy_raw 	 test1.e  $CLUSTER test1.e
 copy_sub 	 test2.e  $CLUSTER test2.e
 compile_melted
-compile_result 	 ok
+compile_result 	 validity_warning TEST Obsolete
 
 define		 FEATURE "Length: INTEGER is do end"
 copy_sub 	 test2.e  $CLUSTER test2.e
@@ -25,7 +25,7 @@ compile_result 	 validity_error TEST VTBT
 define		 FEATURE "Length: INTEGER is 13"
 copy_sub 	 test2.e  $CLUSTER test2.e
 resume_compile
-compile_result 	 ok
+compile_result 	 validity_warning TEST Obsolete
 
 define		 FEATURE "Length: INTEGER"
 copy_sub 	 test2.e  $CLUSTER test2.e
@@ -35,7 +35,7 @@ compile_result 	 validity_error TEST VTBT
 define		 FEATURE "Length: INTEGER is 13"
 copy_sub 	 test2.e  $CLUSTER test2.e
 resume_compile
-compile_result 	 ok
+compile_result 	 validity_warning TEST Obsolete
 
 define		 FEATURE "Length: STRING is "13""
 copy_sub 	 test2.e  $CLUSTER test2.e
@@ -45,7 +45,7 @@ compile_result 	 validity_error TEST VTBT
 define		 FEATURE "Length: INTEGER is 13"
 copy_sub 	 test2.e  $CLUSTER test2.e
 resume_compile
-compile_result 	 ok
+compile_result 	 validity_warning TEST Obsolete
 
 define		 FEATURE "Length: STRING"
 copy_sub 	 test2.e  $CLUSTER test2.e
@@ -55,6 +55,6 @@ compile_result 	 validity_error TEST VTBT
 define		 FEATURE "Length: INTEGER is 13"
 copy_sub 	 test2.e  $CLUSTER test2.e
 resume_compile
-compile_result 	 ok
+compile_result 	 validity_warning TEST Obsolete
 
 test_end

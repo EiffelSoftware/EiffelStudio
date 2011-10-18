@@ -27,7 +27,7 @@ compare		exec_output1 output1
 define		 ATTRIBUTE "b: BIT 1"
 copy_sub 	 test2.e  $CLUSTER test2.e
 compile_frozen
-compile_result 	 ok
+compile_result 	 validity_warning TEST2 Obsolete
 
 c_compile_work
 c_compile_result ok

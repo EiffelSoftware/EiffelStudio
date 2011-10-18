@@ -44,11 +44,16 @@ feature -- Command
 	clear_background_for_theme (a_widget: EV_DRAWING_AREA; a_rect: EV_RECTANGLE)
 			-- <Precursor>
 		do
-			if attached {EV_DRAWING_AREA_IMP} a_widget.implementation as l_widget_imp then
-				c_clear_background (l_widget_imp.c_object, a_rect.left, a_rect.top, a_rect.width, a_rect.height)
-			else
-				check not_possible: False end
-			end
+			a_widget.clear_rectangle (a_rect.x, a_rect.y, a_rect.width, a_rect.height)
+-- The code below added at rev#76610 is not working with the version of GTK+ 2.24.6 under Ubuntu.
+-- The code was taken from an old version of GTK of gtkbutton.c but this has also been removed there
+-- so until we find the new way of doing that, we use a simple clear_rectangle call as shown above.
+--
+--			if attached {EV_DRAWING_AREA_IMP} a_widget.implementation as l_widget_imp then
+--				c_clear_background (l_widget_imp.c_object, a_rect.x, a_rect.y, a_rect.width, a_rect.height)
+--			else
+--				check not_possible: False end
+--			end
 		end
 
 feature {NONE} -- Externals

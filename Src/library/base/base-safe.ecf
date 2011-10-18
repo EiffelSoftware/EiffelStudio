@@ -31,6 +31,12 @@
 			<option namespace="Base">
 			</option>
 			<file_rule>
+				<exclude>/kernel/bit_ref.e$</exclude>
+				<condition>
+					<custom name="USE_BIT" excluded_value="true"/>
+				</condition>
+			</file_rule>
+			<file_rule>
 				<exclude>/structures/cursors/linked_cursor_tree_cursor.e$</exclude>
 				<exclude>/structures/cursor_tree/linked_cursor_tree.e$</exclude>
 				<exclude>/structures/cursors/two_way_cursor_tree_cursor.e$</exclude>

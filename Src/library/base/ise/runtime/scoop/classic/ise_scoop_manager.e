@@ -304,12 +304,12 @@ feature -- Request Chain Handling
 				-- Retrieve existing meta data chain and close it		
 			l_request_chain_meta_data := (request_chain_meta_data_stack_list [a_client_processor_id]) [l_request_chain_depth + 1]
 			(request_chain_meta_data_stack_list [a_client_processor_id]) [l_request_chain_depth + 1] := Void
-			check l_previous_chain_meta_data_entry_attached: attached l_request_chain_meta_data end
+			check l_previous_chain_meta_data_entry_attached: attached l_request_chain_meta_data then end
 			l_request_chain_meta_data [request_chain_status_index] := request_chain_status_closed;
 
 			if l_request_chain_depth > default_request_chain_depth_value then
 				l_request_chain_meta_data := (request_chain_meta_data_stack_list [a_client_processor_id]) [l_request_chain_depth]
-				check l_request_chain_meta_data_attached: l_request_chain_meta_data /= Void end
+				check l_request_chain_meta_data_attached: l_request_chain_meta_data /= Void then end
 				request_chain_meta_data [a_client_processor_id] := l_request_chain_meta_data
 			else
 					-- We are fully closing off the chain so we set the request chain to the default value.
@@ -449,7 +449,7 @@ feature -- Request Chain Handling
 					-- Iterate parent chain to see if there are common processors, if so then we need to sync them.
 				from
 					l_previous_request_chain_meta_data := (request_chain_meta_data_stack_list [a_client_processor_id]) [l_request_chain_depth - 1]
-					check l_previous_request_chain_attached: l_previous_request_chain_meta_data /= Void end
+					check l_previous_request_chain_attached: l_previous_request_chain_meta_data /= Void then end
 					i := request_chain_meta_data_header_size
 					l_previous_pid_count := l_previous_request_chain_meta_data [request_chain_pid_count_index]
 					l_previous_container_pid_count_upper := i + l_previous_pid_count
@@ -590,7 +590,7 @@ feature -- Request Chain Handling
 
 			if l_merge_needed then
 					-- We need to merge the previous processor values with the new ones.
-				check l_previous_request_chain_meta_data_attached: l_previous_request_chain_meta_data /= Void end
+				check l_previous_request_chain_meta_data_attached: l_previous_request_chain_meta_data /= Void then end
 				from
 					i := request_chain_meta_data_header_size
 				until
@@ -634,12 +634,12 @@ feature -- Request Chain Handling
 					-- Set meta data for the request node of `l_pid'
 					-- This is used for both `head' and `tail' request chain nodes.
 				l_request_chain_node_meta_data_queue := request_chain_node_meta_data_queue_list [l_pid]
-				check l_request_chain_node_meta_data_queue_attached: attached l_request_chain_node_meta_data_queue end
+				check l_request_chain_node_meta_data_queue_attached: attached l_request_chain_node_meta_data_queue then end
 				l_request_chain_node_meta_data_queue [l_request_chain_node_id] := l_request_chain_meta_data
 
 					-- Set request chain node queue entry for `l_pid' for future logging.
 				l_request_chain_node_queue := request_chain_node_queue_list [l_pid]
-				check l_request_chain_node_queue_attached: attached l_request_chain_node_queue end
+				check l_request_chain_node_queue_attached: attached l_request_chain_node_queue then end
 				l_request_chain_node_queue_entry := l_request_chain_node_queue [l_request_chain_node_id]
 				if not attached l_request_chain_node_queue_entry then
 					l_request_chain_node_queue_entry := new_request_chain_node_queue_entry
@@ -724,7 +724,7 @@ feature -- Command/Query Handling
 
 				-- Retrieve request chain node list so the call can be logged
 			l_request_chain_node_queue := request_chain_node_queue_list [a_supplier_processor_id]
-			check l_request_chain_node_queue_attached: attached l_request_chain_node_queue end
+			check l_request_chain_node_queue_attached: attached l_request_chain_node_queue then end
 
 			l_is_synchronous := call_data_sync_pid (a_call_data) /= null_processor_id
 
@@ -816,14 +816,14 @@ feature -- Command/Query Handling
 			if call_data_is_lock_passing (a_call_data) then
 					-- Retrieve the node queue list for the client processor.
 				l_request_chain_node_queue := request_chain_node_queue_list [a_client_processor_id]
-				check l_request_chain_node_queue_attached: attached l_request_chain_node_queue end
+				check l_request_chain_node_queue_attached: attached l_request_chain_node_queue then end
 
 				l_client_request_chain_meta_data := request_chain_meta_data [a_client_processor_id]
 				check l_client_request_chain_meta_data_attached: attached l_client_request_chain_meta_data end
 
 				from
 					l_client_request_chain_node_queue_entry := l_request_chain_node_queue [(processor_meta_data [a_client_processor_id])[current_request_node_id_execution_index]]
-					check l_client_request_chain_node_queue_entry_attached: l_client_request_chain_node_queue_entry /= Void end
+					check l_client_request_chain_node_queue_entry_attached: l_client_request_chain_node_queue_entry /= Void then end
 
 						-- Wait until the request chain has started.
 					wait_for_request_chain_to_begin (a_client_processor_id, a_supplier_processor_id, l_client_request_chain_meta_data)
@@ -854,7 +854,7 @@ feature -- Command/Query Handling
 				loop
 						-- We need to set the queue entry each time in case it has resized.
 					l_client_request_chain_node_queue_entry := l_request_chain_node_queue [(processor_meta_data [a_client_processor_id])[current_request_node_id_execution_index]]
-					check l_client_request_chain_node_queue_entry_attached: l_client_request_chain_node_queue_entry /= Void end
+					check l_client_request_chain_node_queue_entry_attached: l_client_request_chain_node_queue_entry /= Void then end
 					l_logged_calls_current_count := l_client_request_chain_node_queue_entry.count
 					if
 						l_logged_calls_current_count > l_logged_calls_original_count
@@ -1122,9 +1122,9 @@ feature {NONE} -- Resource Initialization
 			from
 				l_processor_meta_data := processor_meta_data [a_logical_processor_id]
 				l_request_chain_node_queue := request_chain_node_queue_list [a_logical_processor_id]
-				check l_request_chain_node_queue_attached: attached l_request_chain_node_queue end
+				check l_request_chain_node_queue_attached: attached l_request_chain_node_queue then end
 				l_request_chain_node_meta_data_queue := request_chain_node_meta_data_queue_list [a_logical_processor_id]
-				check l_request_chain_node_meta_data_queue_attached: attached l_request_chain_node_meta_data_queue end
+				check l_request_chain_node_meta_data_queue_attached: attached l_request_chain_node_meta_data_queue then end
 			until
 				l_processor_meta_data [processor_status_index] = processor_status_redundant
 					-- Loop until the processor is marked as surplus to requirements.
@@ -1245,7 +1245,7 @@ feature {NONE} -- Resource Initialization
 							l_loop_exit := False
 							l_exception_caught := False
 							l_executing_request_chain_node := l_request_chain_node_queue [l_executing_node_id]
-							check l_executing_request_chain_node_attached: attached l_executing_request_chain_node end
+							check l_executing_request_chain_node_attached: attached l_executing_request_chain_node then end
 						until
 							l_loop_exit
 						loop
@@ -1270,7 +1270,7 @@ feature {NONE} -- Resource Initialization
 
 											-- Client may have increased capacity of request chain node so we make sure that we have the correct object.
 										l_executing_request_chain_node := l_request_chain_node_queue [l_executing_node_id]
-										check l_executing_request_chain_node_attached: attached l_executing_request_chain_node end
+										check l_executing_request_chain_node_attached: attached l_executing_request_chain_node then end
 
 											-- Check for a query if we are at the last index.
 										l_pid := call_data_sync_pid (l_call_ptr)
@@ -1315,7 +1315,7 @@ feature {NONE} -- Resource Initialization
 								end
 									-- Update request chain node in case client has resized it during logging.
 								l_executing_request_chain_node := l_request_chain_node_queue [l_executing_node_id]
-								check l_executing_request_chain_node_attached: attached l_executing_request_chain_node end
+								check l_executing_request_chain_node_attached: attached l_executing_request_chain_node then end
 							end
 						end
 
@@ -1323,7 +1323,7 @@ feature {NONE} -- Resource Initialization
 							-- structure while it is being manipulated, which would break the post-condition of resize.				
 						from
 							l_executing_request_chain_node := l_request_chain_node_queue [l_executing_node_id]
-							check l_executing_request_chain_node_attached: attached l_executing_request_chain_node end
+							check l_executing_request_chain_node_attached: attached l_executing_request_chain_node then end
 							l_executing_node_id_cursor := l_executing_request_chain_node.count
 						until
 							l_executing_node_id_cursor = 0

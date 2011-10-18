@@ -16,7 +16,7 @@ note
 		of `call'.
 		eg.
 		 birthday_data: TUPLE [INTEGER, STRING] -- (age, name)
-		 birthday_actions: ACTIONS_SEQUENCE [like birthday_data]
+		 birthday_actions: ACTION_SEQUENCE [like birthday_data]
 		 create birthday_actions.make ("birthday", <<"age","name">>)
 		 send_card (age: INTEGER, name, from: STRING) is ...
 		 buy_gift (age: INTEGER, name, gift, from: STRING) is ...

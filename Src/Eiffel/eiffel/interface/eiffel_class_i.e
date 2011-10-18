@@ -35,6 +35,7 @@ inherit
 		redefine
 			class_type,
 			cluster,
+			invalidate,
 			options,
 			rebuild,
 			set_date
@@ -256,6 +257,17 @@ feature {CONF_ACCESS} -- Recompilation
 			if old_overriden_by /= overriden_by then
 					-- Options may be taken from a different source.
 				options_internal := Void
+			end
+		end
+
+feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration file
+
+	invalidate
+			-- Mark class as invalid if applicable.
+		do
+				-- Avoid marking precompiled classes as invalid.
+			if not attached compiled_class as c or else not c.is_precompiled then
+				Precursor
 			end
 		end
 

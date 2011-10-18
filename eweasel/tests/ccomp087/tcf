@@ -1,0 +1,21 @@
+test_name 	 finalize-expanded-generic-c-error
+test_description Finalizing a system using a generic class which is expanded and constraint to a basic type causes a C compilation error in finalized mode when its type is referenced via a like argument.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test1.e $CLUSTER test1.e
+
+compile_frozen
+compile_result	ok
+
+c_compile_work
+c_compile_result ok
+
+
+compile_final
+compile_result	ok
+
+c_compile_final
+c_compile_result ok
+
+test_end

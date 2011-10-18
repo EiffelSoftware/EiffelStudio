@@ -1996,6 +1996,7 @@ test	c-header-mismatch-3				ccomp083 tcf fail c_compilation
 test	large-real-constant-c-compile-failure		ccomp084 tcf fail c_compilation
 test	c-header-sequence				ccomp085 tcf fail c_compilation
 test	finalize-without-then-with-assertions		ccomp086 tcf fail c_compilation
+test	finalize-expanded-generic-c-error	ccomp087 tcf fail c_compilation
 
 -- Storable tests
 

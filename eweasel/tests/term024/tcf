@@ -12,7 +12,7 @@ test_description A creation instruction with an explicit creation type which is 
 copy_sub 	Ace $TEST Ace
 copy_raw 	test.e $CLUSTER test.e
 compile_frozen
-compile_result 	validity_error TEST VEEN
+compile_result 	validity_error TEST VEEN; TEST Obsolete
 
 test_end
 

@@ -11,5 +11,5 @@ test_description A class with a constant attribute which is of a Bit_type with t
 copy_sub Ace $TEST Ace
 copy_raw test.e $CLUSTER test.e
 compile_melted
-compile_result ok
+compile_result validity_warning TEST Obsolete
 test_end

@@ -14,7 +14,7 @@ define		 LENGTH "13"
 copy_raw 	 test.e  $CLUSTER test.e
 copy_sub 	 test1.e  $CLUSTER test1.e
 compile_frozen
-compile_result 	 ok
+compile_result 	 validity_warning TEST Obsolete
 
 c_compile_work
 c_compile_result ok
@@ -26,7 +26,7 @@ compare		exec_output1 output1
 define		 LENGTH "8"
 copy_sub 	 test1.e  $CLUSTER test1.e
 compile_frozen
-compile_result 	 ok
+compile_result 	 validity_warning TEST Obsolete
 
 c_compile_work
 c_compile_result ok

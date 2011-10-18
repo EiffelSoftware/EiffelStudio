@@ -13,7 +13,7 @@ test_description A procedure sets an attribute of type REAL to the value passed 
 copy_sub 	Ace $TEST Ace
 copy_raw 	test.e $CLUSTER test.e
 compile_frozen
-compile_result 	ok
+compile_result 	validity_warning TEST Obsolete
 
 c_compile_work
 c_compile_result ok

@@ -11,5 +11,5 @@ test_description Bit_type attribute whose Constant has a plus sign
 copy_sub Ace $TEST Ace
 copy_raw test.e $CLUSTER test.e
 compile_melted
-compile_result ok
+compile_result validity_warning TEST Obsolete
 test_end

@@ -12,7 +12,7 @@ test_description A system which calls a once function whose result type is BIT t
 copy_sub 	 Ace $TEST Ace
 copy_raw 	 test.e  $CLUSTER test.e
 compile_frozen
-compile_result 	 ok
+compile_result 	 validity_warning TEST Obsolete
 
 c_compile_work
 c_compile_result ok
@@ -23,7 +23,7 @@ compare		 exec_output1 output
 
 cleanup_compile
 compile_melted
-compile_result 	 ok
+compile_result 	 validity_warning TEST Obsolete
 
 execute_work	 NONE exec_output2
 execute_result	 ok

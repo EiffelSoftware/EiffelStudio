@@ -14,7 +14,7 @@ define		 FEATURE "Weasel: INTEGER is 13"
 copy_raw 	 test.e  $CLUSTER test.e
 copy_sub 	 test1.e  $CLUSTER test1.e
 compile_melted
-compile_result 	 ok
+compile_result 	 validity_warning TEST Obsolete
 
 define		 FEATURE "Weasel: INTEGER"
 copy_sub 	 test1.e  $CLUSTER test1.e
@@ -24,7 +24,7 @@ compile_result 	 validity_error TEST VTBT
 define		 FEATURE "Weasel: INTEGER is 13"
 copy_sub 	 test1.e  $CLUSTER test1.e
 resume_compile
-compile_result 	 ok
+compile_result 	 validity_warning TEST Obsolete
 
 define		 FEATURE "Weasel: REAL"
 copy_sub 	 test1.e  $CLUSTER test1.e
@@ -34,7 +34,7 @@ compile_result 	 validity_error TEST VTBT
 define		 FEATURE "Weasel: INTEGER is 13"
 copy_sub 	 test1.e  $CLUSTER test1.e
 resume_compile
-compile_result 	 ok
+compile_result 	 validity_warning TEST Obsolete
 
 define		 FEATURE "Weasel: STRING is "13""
 copy_sub 	 test1.e  $CLUSTER test1.e
@@ -44,7 +44,7 @@ compile_result 	 validity_error TEST VTBT
 define		 FEATURE "Weasel: INTEGER is 13"
 copy_sub 	 test1.e  $CLUSTER test1.e
 resume_compile
-compile_result 	 ok
+compile_result 	 validity_warning TEST Obsolete
 
 define		 FEATURE "Weasel: STRING"
 copy_sub 	 test1.e  $CLUSTER test1.e
@@ -54,6 +54,6 @@ compile_result 	 validity_error TEST VTBT
 define		 FEATURE "Weasel: INTEGER is 13"
 copy_sub 	 test1.e  $CLUSTER test1.e
 resume_compile
-compile_result 	 ok
+compile_result 	 validity_warning TEST Obsolete
 
 test_end

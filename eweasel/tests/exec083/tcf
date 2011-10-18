@@ -12,7 +12,7 @@ test_description A routine repeatedly does `deep_clone (b)' where `b' is of type
 copy_sub 	 Ace $TEST Ace
 copy_raw 	 test.e  $CLUSTER test.e
 compile_melted
-compile_result 	 ok
+compile_result 	 validity_warning TEST Obsolete; TEST Obsolete
 
 execute_work	 NONE exec_output1 100000
 execute_result	 ok

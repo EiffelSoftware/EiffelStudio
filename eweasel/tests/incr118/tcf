@@ -13,7 +13,7 @@ copy_sub 	 Ace $TEST Ace
 define		 RETURN_TYPE "BIT 2000"
 copy_sub 	 test.e  $CLUSTER test.e
 compile_frozen
-compile_result 	 ok
+compile_result 	 validity_warning TEST Obsolete
 
 c_compile_work
 c_compile_result ok
@@ -25,7 +25,7 @@ compare		 exec_output1 output
 define		 RETURN_TYPE "BIT 2100"
 copy_sub 	 test.e  $CLUSTER test.e
 compile_melted
-compile_result 	 ok
+compile_result 	 validity_warning TEST Obsolete
 
 execute_work	 NONE exec_output2 10
 execute_result	 ok

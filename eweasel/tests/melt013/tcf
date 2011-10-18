@@ -14,7 +14,7 @@ define		ATTRIBUTE_TYPE "BIT_REF"
 define		CREATION_INST "bitmap := new_bitmap"
 copy_sub 	test.e $CLUSTER test.e
 compile_frozen
-compile_result 	ok
+compile_result 	validity_warning TEST Obsolete; TEST Obsolete
 
 c_compile_work
 c_compile_result ok
@@ -26,7 +26,7 @@ define		ATTRIBUTE_TYPE "BOOL_STRING"
 define		CREATION_INST "!!bitmap.make (Bitmap_length)"
 copy_sub 	test.e $CLUSTER test.e
 compile_melted
-compile_result 	ok
+compile_result 	validity_warning TEST Obsolete
 
 execute_work 	NONE 	exec_output2
 execute_result 	ok

@@ -1,5 +1,5 @@
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2011 University of Southern California and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
@@ -18,7 +18,7 @@ copy_sub 	 parent.e  $CLUSTER parent.e
 copy_sub 	 test1.e  $CLUSTER test1.e
 copy_sub 	 test2.e  $CLUSTER test2.e
 compile_melted
-compile_result 	 ok
+compile_result 	 validity_warning TEST1 Obsolete; TEST2 Obsolete
 
 define		 BITMAP "bitmap: BIT_REF"
 define		 TEST1_MAKE_BODY "bitmap := new_bitmap"
@@ -27,11 +27,11 @@ copy_sub 	 parent.e  $CLUSTER parent.e
 copy_sub 	 test1.e  $CLUSTER test1.e
 copy_sub 	 test2.e  $CLUSTER test2.e
 compile_melted
-compile_result 	 validity_error TEST2 VEEN
+compile_result 	 validity_error TEST2 VEEN; TEST1 Obsolete; TEST2 Obsolete; PARENT Obsolete
 
 define		 TEST2_MAKE_BODY "bitmap := new_bitmap"
 copy_sub 	 test2.e  $CLUSTER test2.e
 resume_compile
-compile_result 	 ok
+compile_result 	 validity_warning TEST2 Obsolete
 
 test_end

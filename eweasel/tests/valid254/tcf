@@ -8,7 +8,7 @@ copy_raw 	x.e $CLUSTER x.e
 copy_raw 	y.e $CLUSTER y.e
 
 compile_melted
-compile_result 	ok
+compile_result 	validity_warning X Obsolete; Y Obsolete
 
 execute_work 	NONE 	exec_output1
 execute_result 	ok

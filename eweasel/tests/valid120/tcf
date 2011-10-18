@@ -12,6 +12,6 @@ test_description There are unreferenced local variables in EiffelBase classes. T
 copy_sub 	Ace $TEST Ace
 copy_raw 	test.e $CLUSTER test.e
 compile_melted
-compile_result 	 ok
+compile_result 	 validity_warning TEST Obsolete
 
 test_end

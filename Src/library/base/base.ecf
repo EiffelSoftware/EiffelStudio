@@ -32,6 +32,12 @@
 			</option>
 			<file_rule>
 				<exclude>/kernel/bit_ref.e$</exclude>
+				<condition>
+					<custom name="USE_BIT" excluded_value="true"/>
+				</condition>
+			</file_rule>
+			<file_rule>
+				<exclude>/kernel/bit_ref.e$</exclude>
 				<exclude>/kernel/console.e$</exclude>
 				<exclude>/kernel/directory.e$</exclude>
 				<exclude>/kernel/directory_name.e$</exclude>

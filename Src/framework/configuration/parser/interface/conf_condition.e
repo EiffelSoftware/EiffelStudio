@@ -275,7 +275,7 @@ feature -- Update
 			a_name_not_void: a_name /= Void
 			a_value_not_void: a_value /= Void
 		do
-			custom.force (create {EQUALITY_TUPLE [TUPLE [STRING_GENERAL, BOOLEAN]]}.make ([a_value, False]), a_name)
+			custom.force (create {EQUALITY_TUPLE [TUPLE [STRING_GENERAL, BOOLEAN]]}.make ([a_value, False]), a_name.as_lower)
 		end
 
 	exclude_custom (a_name, a_value: STRING)
@@ -284,7 +284,7 @@ feature -- Update
 			a_name_not_void: a_name /= Void
 			a_value_not_void: a_value /= Void
 		do
-			custom.force (create {EQUALITY_TUPLE [TUPLE [STRING_GENERAL, BOOLEAN]]}.make ([a_value, True]), a_name)
+			custom.force (create {EQUALITY_TUPLE [TUPLE [STRING_GENERAL, BOOLEAN]]}.make ([a_value, True]), a_name.as_lower)
 		end
 
 	wipe_out_custom

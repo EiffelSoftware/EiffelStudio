@@ -5,6 +5,7 @@
 		<option>
 			<assertions precondition="true"/>
 		</option>
+		<variable name="USE_BIT" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 	</target>
 </system>

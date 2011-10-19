@@ -252,17 +252,4 @@ note
 		]"
 
 
-
-
 end -- class EV_INTERMEDIARY_ROUTINES
-
-
-
-
-
-
-
-
-
-
-

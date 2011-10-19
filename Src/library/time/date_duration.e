@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Durations of date"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -78,12 +78,10 @@ feature -- Attribute
 			-- Number of days in duration
 		require
 			origin_date_set: has_origin_date
-		local
-			l_origin_date: like origin_date
 		do
-			l_origin_date := origin_date
-			check l_origin_date_not_void: l_origin_date /= Void end
-			Result := (l_origin_date + to_canonical (l_origin_date)).days - l_origin_date.days
+			check origin_date_not_void: attached origin_date as l_origin_date then
+				Result := (l_origin_date + to_canonical (l_origin_date)).days - l_origin_date.days
+			end
 		end
 
 feature -- Comparison
@@ -360,7 +358,7 @@ invariant
 			(day <= 0 and month <= 0 and year <= 0)
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
@@ -370,8 +368,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class DATE_DURATION
-

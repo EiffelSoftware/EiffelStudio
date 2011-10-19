@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Parser facility for dates and times"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -198,15 +198,13 @@ feature -- Basic operations
 			l_year_now: INTEGER
 			l_is_pm, l_is_pm_computed: BOOLEAN
 			l_hour_val_need_computation: BOOLEAN
-			l_source_string: like source_string
 			l_item: detachable DATE_TIME_CODE
 			l_substrg: STRING
-			l_months: like months
 		do
-			l_source_string := source_string
-			check l_source_string_not_void: l_source_string /= Void end
+			check source_string_attached: attached source_string as ss then
+				s := ss.as_upper
+			end
 			l_year_now := (create {C_DATE}).year_now
-			s := l_source_string.as_upper
 			year_val := 1
 			month_val := 1
 			day_val := 1
@@ -264,19 +262,19 @@ feature -- Basic operations
 					when 6, 7 then
 						month_val := l_substrg.to_integer
 					when 8 then
-						l_months := months
-						check l_months_not_void: l_months /= Void end
-						from
-							j := 1
-						until
-							j > 12
-						loop
-							if l_months.item (j).is_equal (l_substrg) then
-								month_val := j
-							else
-								-- error
+						check months_attached: attached months as l_months then
+							from
+								j := 1
+							until
+								j > 12
+							loop
+								if l_months.item (j).is_equal (l_substrg) then
+									month_val := j
+								else
+									-- error
+								end
+								j := j + 1
 							end
-							j := j + 1
 						end
 					when 9, 10 then
 						hour_val := l_substrg.to_integer
@@ -370,7 +368,7 @@ invariant
 	valid_value_implies_parsing: is_value_valid implies parsed
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -380,9 +378,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class DATE_TIME_PARSER
-
-

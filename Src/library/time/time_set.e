@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Sets of compactly coded times"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -35,21 +35,16 @@ feature -- Access
 			-- Item at index `i'
 		require
 			index_in_range: 1 <= i and i <= last
-		local
-			l_result: detachable TIME
 		do
-			if
+				-- The fractional second value always follows the
+				-- compact time value.
+			check
 				attached {INTEGER_REF} item_array ((2 * i) - 1) as c_t and then
 				attached {DOUBLE_REF} item_array (2 * i) as frac_sec
 			then
-				create l_result.make_by_compact_time (c_t.item)
-				l_result.set_fractionals (frac_sec.item)
-			else
-				check l_result /= Void end
-					-- Because the fractional second value always follows the
-					-- compact time value
+				create Result.make_by_compact_time (c_t.item)
+				Result.set_fractionals (frac_sec.item)
 			end
-			Result := l_result
 		end
 
 	last: INTEGER
@@ -78,7 +73,7 @@ invariant
 	last_small_enough: last <= count
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
@@ -88,9 +83,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class TIME_SET
-
-

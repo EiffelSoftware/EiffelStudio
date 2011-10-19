@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Reference equality testers"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,14 +16,14 @@ inherit
 
 feature -- Status report
 
-	test (v, u: detachable G): BOOLEAN is
+	test (v, u: detachable G): BOOLEAN
 			-- Are `v' and `u' the same reference?
 		do
 			Result := v = u
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Equality testers"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Status report
 
-	test (v, u: detachable G): BOOLEAN is
+	test (v, u: detachable G): BOOLEAN
 			-- Are `v' and `u' considered equal?
 			-- (Use '~' by default.)
 		do
@@ -23,7 +23,7 @@ feature -- Status report
 
 note
 	copyright: "[
-		Copyright (c) 1984-2010, Eiffel Software and others
+		Copyright (c) 1984-2011, Eiffel Software and others
 		Copyright (c) 2000, Eric Bezault and others
 		]"
 	license: "[

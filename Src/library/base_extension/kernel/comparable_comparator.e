@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Comparators based on COMPARABLE"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature -- Status report
 
-	less_than (u, v: G): BOOLEAN is
+	less_than (u, v: G): BOOLEAN
 			-- Is `u' considered less than `v'?
 		do
 			Result := (u < v)
@@ -21,7 +21,7 @@ feature -- Status report
 
 note
 	copyright: "[
-		Copyright (c) 1984-2009, Eiffel Software and others
+		Copyright (c) 1984-2011, Eiffel Software and others
 		Copyright (c) 2000, Eric Bezault and others
 		]"
 	license: "[

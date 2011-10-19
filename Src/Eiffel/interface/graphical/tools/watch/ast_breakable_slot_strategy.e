@@ -2540,7 +2540,7 @@ feature {NONE} -- Implementation: helpers
 			l_type: TYPE_A
 		do
 				-- Convert TYPE_AS into TYPE_A in the context of `source_class'.
-			l_type := type_a_generator.evaluate_type_if_possible (a_type, source_class)
+			l_type := type_a_generator.evaluate_optional_unchecked (a_type, source_class)
 
 				-- An error occurs when a class was renamed.
 			if not has_error_internal and l_type = Void then
@@ -2763,7 +2763,7 @@ invariant
 	has_error_implies_error_message_not_empty: has_error implies not error_message.is_empty
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

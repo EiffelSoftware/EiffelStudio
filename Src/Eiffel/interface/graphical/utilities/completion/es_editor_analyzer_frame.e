@@ -213,7 +213,7 @@ feature -- Query
 				l_checker.init_with_feature_table (l_feature, l_class.feature_table, Void)
 				from l_locals.start until l_locals.after loop
 					l_name := l_locals.key_for_iteration
-					l_type := l_generator.evaluate_type_if_possible (l_locals.item_for_iteration, l_class)
+					l_type := l_generator.evaluate_optional_unchecked (l_locals.item_for_iteration, l_class)
 					if l_type /= Void then
 						l_type := l_checker.solved (l_type, l_locals.item_for_iteration)
 					end
@@ -459,7 +459,7 @@ invariant
 	--non_circular_parent: has_parent implies parent /= Void and then not is_parented_to_current (parent)
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

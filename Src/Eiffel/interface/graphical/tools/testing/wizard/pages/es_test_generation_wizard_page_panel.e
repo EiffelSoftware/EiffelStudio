@@ -530,7 +530,7 @@ feature {NONE} -- Basic operations
 				attached l_root_class.feature_named_32 (a_root.procedure_name) as l_root_feature
 			then
 				if attached {CLASS_TYPE_AS} a_type_as as l_class_type then
-					l_type_a := type_a_generator.evaluate_type_if_possible (a_type_as, l_root_class)
+					l_type_a := type_a_generator.evaluate_optional_unchecked (a_type_as, l_root_class)
 					if l_type_a /= Void and l_class_type.generics = Void then
 						l_class := l_type_a.associated_class
 						check l_class /= Void end
@@ -604,7 +604,7 @@ feature {NONE} -- Internationalization
 	e_recursive_generics_not_supported: STRING = "Type $1 can not be used for testing since it contains open recursive generic parameters. Please be more specific."
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

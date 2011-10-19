@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 			{GTK}.gtk_container_add (c_object, client_area)
 
 			if not override_redirect then
---				{EV_GTK_EXTERNALS}.gtk_window_set_type_hint (c_object, {EV_GTK_ENUMS}.gdk_window_type_hint_popup_menu_enum)
+			--	{GTK}.gtk_window_set_type_hint (c_object, {EV_GTK_ENUMS}.gdk_window_type_hint_utility_enum)
 				{GTK}.gtk_window_set_skip_taskbar_hint (c_object, True)
 			end
 
@@ -111,13 +111,13 @@ feature {NONE} -- implementation
 	allow_resize
 			-- Allow user resizing of `Current'.
 		do
-			internal_enable_border
+			{GTK}.gtk_window_set_resizable (c_object, True)
 		end
 
 	forbid_resize
 			-- Forbid user resizing of `Current'.
 		do
-			-- Nothing needed at present as user cannot current resize the popup window.
+			{GTK}.gtk_window_set_resizable (c_object, False)
 		end
 
 	border_width: INTEGER = 1

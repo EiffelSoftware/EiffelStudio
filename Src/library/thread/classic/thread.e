@@ -145,6 +145,8 @@ feature {NONE} -- Implementation
 		require
 			launch_mutex_attached: launch_mutex /= Void
 		do
+			check launch_mutex_attached: attached launch_mutex then end
+
 				-- This ensures that `thread_id' has been properly initialized.
 			launch_mutex.lock
 			launch_mutex.unlock
@@ -158,6 +160,7 @@ feature {NONE} -- Implementation
 			thread_id := default_pointer
 			launch_mutex.unlock
 		rescue
+			check launch_mutex_attached: attached launch_mutex then end
 			launch_mutex.lock
 			terminated := True
 			thread_id := default_pointer
@@ -224,7 +227,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

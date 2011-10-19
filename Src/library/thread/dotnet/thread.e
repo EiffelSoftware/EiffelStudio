@@ -2,7 +2,6 @@ note
 	description: "Class defining an Eiffel thread."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -166,6 +165,8 @@ feature {NONE} -- Implementation
 			l_control: detachable THREAD_DOTNET_CONTROL
 			l_parent_thread_id: POINTER
 		do
+			check launch_mutex_attached: attached launch_mutex then end
+
 				-- This ensures that `thread_id' has been properly initialized.
 			launch_mutex.lock
 			launch_mutex.unlock
@@ -184,6 +185,7 @@ feature {NONE} -- Implementation
 			thread_id := default_pointer
 			launch_mutex.unlock
 		rescue
+			check launch_mutex_attached: attached launch_mutex then end
 				-- If the thread raised an exception, we still have to remove it from the list of child threads
 				-- of parent.
 			if l_control /= Void then
@@ -221,7 +223,7 @@ feature {NONE} -- Implementation
 			-- Actual storage for current thread.
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

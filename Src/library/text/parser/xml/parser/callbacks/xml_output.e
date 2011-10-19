@@ -25,7 +25,7 @@ feature -- Output
 			last_output_empty: o.count = 0
 		end
 
-	set_output_string (a_string: like last_output)
+	set_output_string (a_string: attached like last_output)
 			-- Initialize output to given string,
 			-- the result must still be collected from
 			-- last_output, which may be another string.
@@ -101,7 +101,7 @@ feature -- Output, interface to descendants
 				if s = Void then
 					set_output_standard
 					s := output_stream
-					check out_stream_selected: s /= Void end
+					check out_stream_selected: s /= Void then end
 				end
 				s.put_string (a_string)
 			end
@@ -109,7 +109,7 @@ feature -- Output, interface to descendants
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

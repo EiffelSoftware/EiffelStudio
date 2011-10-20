@@ -111,13 +111,13 @@ feature {NONE} -- implementation
 	allow_resize
 			-- Allow user resizing of `Current'.
 		do
-			{GTK}.gtk_window_set_resizable (c_object, True)
+		--	{GTK}.gtk_window_set_resizable (c_object, True)
 		end
 
 	forbid_resize
 			-- Forbid user resizing of `Current'.
 		do
-			{GTK}.gtk_window_set_resizable (c_object, False)
+		--	{GTK}.gtk_window_set_resizable (c_object, False)
 		end
 
 	border_width: INTEGER = 1

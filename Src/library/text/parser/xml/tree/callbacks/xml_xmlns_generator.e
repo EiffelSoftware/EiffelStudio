@@ -92,16 +92,10 @@ feature {NONE} -- Prefix handling
 		require
 			a_namespace_not_void: a_namespace /= Void
 			a_prefix_not_void: a_prefix /= Void
-		local
-			s: detachable STRING
 		do
-			if context.has (a_namespace) then
+			if attached context.item (a_namespace) as p then
 					-- Ignore the prefix and use the previously declared one
-				s := context.item (a_namespace)
-				check s /= Void then
-						-- Implied by `context.has (a_namespace)' and assertion from `context.item'
-					Result := s
-				end
+				Result := p
 			else
 				if a_prefix = Void or else a_prefix.is_empty
 					or else context.element_has_prefix (a_prefix)
@@ -238,7 +232,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

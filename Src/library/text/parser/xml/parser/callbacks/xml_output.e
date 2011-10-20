@@ -100,10 +100,13 @@ feature -- Output, interface to descendants
 				s := output_stream
 				if s = Void then
 					set_output_standard
-					s := output_stream
-					check out_stream_selected: s /= Void then end
+					check out_stream_selected: s /= Void end
 				end
-				s.put_string (a_string)
+				if s /= Void then
+					s.put_string (a_string)
+				else
+					--| no output_stream then no effect
+				end
 			end
 			check one_set: output_stream /= Void or last_output /= Void end
 		end

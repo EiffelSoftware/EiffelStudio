@@ -18,7 +18,7 @@ inherit
 		redefine
 			old_make,
 			interface,
-			on_activate,
+			allow_on_activate,
 			make,
 			initialize_menu_item
 		end
@@ -80,16 +80,14 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	on_activate
-			-- `Current' has been activated.
+	allow_on_activate: BOOLEAN
+			-- Is the activate signal allowed to be propagated?
 		do
-			if not ignore_select_actions then
-				Precursor {EV_MENU_ITEM_IMP}
-			end
+			Result := parent_imp /= Void and then not ignore_select_actions
 		end
 
 	ignore_select_actions: BOOLEAN
-			-- Should select actions be ignore, ues if enable_select is called.
+			-- Should select actions be ignore, yes if enable_select is called.
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
 

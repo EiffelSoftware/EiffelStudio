@@ -16,7 +16,7 @@ inherit
 
 	EV_MENU_ITEM_IMP
 		redefine
-			on_activate,
+			allow_on_activate,
 			interface,
 			make,
 			initialize_menu_item
@@ -82,11 +82,10 @@ feature {EV_ANY_I} -- Implementation
 	ignore_select_actions: BOOLEAN
 		-- Should select_actions be called.
 
-	on_activate
+	allow_on_activate: BOOLEAN
+			-- <Precursor>
 		do
-			if is_selected and not ignore_select_actions then
-				Precursor
-			end
+			Result := not ignore_select_actions and then is_selected and then parent_imp /= Void
 		end
 
 	set_radio_group (a_gslist: POINTER)

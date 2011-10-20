@@ -239,12 +239,12 @@ feature -- Layout
 		require
 			a_item_attached: a_item /= Void
 			a_layout_attached: a_layout /= Void
-		local
-			l_pixmap: EV_PIXMAP
 		do
-			l_pixmap := pixmaps.icon_pixmaps.general_tick_icon
-			a_layout.set_pixmap_x ((a_item.width - l_pixmap.width) // 2)
-			a_layout.set_pixmap_y ((a_item.height - l_pixmap.height) // 2)
+				-- Center pixmap horizontally. By default pixmap
+				-- is already centered vertically.
+			if attached a_item.pixmap as l_pixmap then
+				a_layout.set_pixmap_x ((a_item.width - l_pixmap.width) // 2)
+			end
 		end
 
 feature -- Domain dialog
@@ -527,7 +527,7 @@ feature{NONE} -- Implementation
 		end
 
 note
-        copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+        copyright:	"Copyright (c) 1984-2011, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"
         copying: "[

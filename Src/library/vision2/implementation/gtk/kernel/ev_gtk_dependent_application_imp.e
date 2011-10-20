@@ -34,6 +34,7 @@ feature -- Initialize
 			-- Gtk dependent code for `initialize'
 		do
 				-- Initialize custom styles for gtk.
+			initialize_window_style
 			initialize_combo_box_style
 			initialize_tool_bar_style
 		end
@@ -359,6 +360,18 @@ feature {NONE} -- Externals
 				#else
 					return "unknown";
 				#endif
+			]"
+		end
+
+	initialize_window_style
+			-- Set the window style to remove any resize grip.
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"[
+				{
+					gtk_rc_parse_string ("style \"default-style\" {\n GtkWindow::resize-grip-height = 0\n GtkWindow::resize-grip-width = 0\n}\n  class \"GtkWidget\" style  \"default-style\" ");
+				}
 			]"
 		end
 

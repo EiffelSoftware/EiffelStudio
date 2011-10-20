@@ -22,7 +22,9 @@ inherit
 			virtual_height,
 			monitor_count,
 			monitor_area_from_position,
-			monitor_area_from_window
+			monitor_area_from_window,
+			working_area_from_position,
+			working_area_from_window
 		end
 
 	EV_DRAWABLE_IMP
@@ -175,6 +177,20 @@ feature -- Status report
 			l_rect.memory_free
 
 			create Result.make (l_x, l_y, l_width, l_height)
+		end
+
+	working_area_from_position (a_x, a_y: INTEGER): EV_RECTANGLE
+			-- <Precursor>
+		do
+				--| FIXME Implement with respect to desktop background.
+			Result := monitor_area_from_position (a_x, a_y)
+		end
+
+	working_area_from_window (a_window: EV_WINDOW): EV_RECTANGLE
+			-- <Precursor>
+		do
+				--| FIXME Implement with respect to desktop background.
+			Result := monitor_area_from_window (a_window)
 		end
 
 feature -- Status setting

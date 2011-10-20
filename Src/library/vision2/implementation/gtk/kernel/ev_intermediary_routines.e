@@ -151,7 +151,7 @@ feature {EV_ANY_IMP} -- Menu intermediary agent routines
 			a_menu_item_imp: detachable EV_MENU_ITEM_IMP
 		do
 			a_menu_item_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			if a_menu_item_imp /= Void and then a_menu_item_imp.parent_imp /= Void then
+			if a_menu_item_imp /= Void and then a_menu_item_imp.allow_on_activate then
 					-- Add event to idle actions so that menu may closed
 					-- This also prevents crashes with dbus handled menus if events are processed during activate.
 				a_menu_item_imp.app_implementation.do_once_on_idle (agent a_menu_item_imp.on_activate)

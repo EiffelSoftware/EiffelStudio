@@ -123,6 +123,12 @@ feature {EV_MENU_ITEM_LIST_IMP} -- Implementation
 
 feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 
+	allow_on_activate: BOOLEAN
+			-- Is the activate signal allowed to be propagated?
+		do
+			Result := parent_imp /= Void
+		end
+
 	accelerators_enabled: BOOLEAN = True
 
 	on_activate

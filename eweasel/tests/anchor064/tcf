@@ -1,0 +1,14 @@
+
+test_name 	 qat-generic-with-rename-inherited
+test_description A qualified anchored type that references a renamed feature of a formal generic in a creation expression in a precondition crashes the compiler when a descendant class is processed.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test1.e $CLUSTER test1.e
+copy_raw	test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result	ok
+
+test_end
+

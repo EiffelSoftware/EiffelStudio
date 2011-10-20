@@ -2660,6 +2660,7 @@ test	qat-in-creation-procedure	anchor060 tcf fail anchored_type finalizing
 test	qat-generic-with-rename		anchor061 tcf fail anchored_type
 test	qat-generic-inheritance		anchor062 tcf fail anchored_type
 test	qat-constraints-crash		anchor063 tcf fail anchored_type formal generic
+test	qat-generic-with-rename-inherited anchor064 tcf fail anchored_type formal generic
 
 -- SCOOP
 test	scoop-access-smoke					scoop001 tcf pass scoop execution

@@ -66,7 +66,14 @@ feature -- Externals
 		external
 			"C macro use <ev_gtk.h>"
 		alias
-			"g_main_context_pending (g_main_context_default())"
+			"g_main_context_pending (NULL)"
+		end
+
+	frozen gtk_event_iteration: BOOLEAN
+		external
+			"C macro use <ev_gtk.h>"
+		alias
+			"g_main_context_iteration(NULL, False)"
 		end
 
 	frozen dispatch_events

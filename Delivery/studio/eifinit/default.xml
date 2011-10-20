@@ -11,8 +11,8 @@
 	<PREF NAME="debugger.dotnet_debugger" DESCRIPTION="Which .NET debugger to launch: `EiffelStudio Dbg' will use the EiffelStudio debugger; `cordbg' will use the command line debugger from the .NET Framework SDK; `DebugCLR' will use the graphical debugger from the .NET Framework SDK."><LIST>[EiffelStudio Dbg];cordbg;DbgCLR</LIST></PREF>
 	<PREF NAME="debugger.shortcuts.run_to_this_point" DESCRIPTION="Run to the line at the cursor position."><SHORTCUT Ctrl="True" Alt="False" Shift="False">F10</SHORTCUT></PREF>
 	<PREF NAME="debugger.shortcuts.edit_bp_here" DESCRIPTION="Edit the breakpoint located at the cursor."><SHORTCUT Ctrl="True" Alt="False" Shift="False">F9</SHORTCUT></PREF>
-<PREF NAME="debugger.shortcuts.enable_disable_bp_here" DESCRIPTION="Enable or Disable the breakpoint located at the cursor."><SHORTCUT Ctrl="False" Alt="False" Shift="True">F9</SHORTCUT></PREF>
-	<PREF NAME="debugger.shortcuts.enable_remove_here" DESCRIPTION="Enable or Remove the breakpoint located at the cursor."><SHORTCUT Ctrl="False" Alt="False" Shift="F9">F9</SHORTCUT></PREF>
+	<PREF NAME="debugger.shortcuts.enable_disable_bp_here" DESCRIPTION="Enable or Disable the breakpoint located at the cursor."><SHORTCUT Ctrl="False" Alt="False" Shift="True">F9</SHORTCUT></PREF>
+	<PREF NAME="debugger.shortcuts.enable_remove_here" DESCRIPTION="Enable or Remove the breakpoint located at the cursor."><SHORTCUT Ctrl="False" Alt="False" Shift="False">F9</SHORTCUT></PREF>
 	<PREF NAME="debugger.shortcuts.move_up_watch_expression" DESCRIPTION="Move up the selected expressions from the active watch tool."><SHORTCUT Ctrl="False" Alt="True" Shift="True">Up</SHORTCUT></PREF>
 	<PREF NAME="debugger.shortcuts.move_down_watch_expression" DESCRIPTION="Move down the selected expressions from the active watch tool."><SHORTCUT Ctrl="False" Alt="True" Shift="True">Down</SHORTCUT></PREF>
 	<PREF NAME="debugger.colors.expanded_display_background_color" DESCRIPTION="Background color for expanded display view (default is white, change it to better see white space at end of lines in displayed text)."><COLOR>255;255;255</COLOR></PREF>
@@ -121,6 +121,10 @@
 	<PREF NAME="tools.metric_tool.maximize_metric_result_area" DESCRIPTION="Maximize metric result area?"><BOOLEAN>False</BOOLEAN></PREF>	
 	<PREF NAME="tools.metric_tool.warning_background_color" DESCRIPTION="Background color for archive items whose recent calculated value violates pre-defined value criterion."><COLOR>253;209;199</COLOR></PREF>	
 	<PREF NAME="tools.metric_tool.highlight_background_color" DESCRIPTION="Highlight background color"><COLOR>255;255;170</COLOR></PREF>	
+	<PREF NAME="tools.metric_tool.criterion_completion_list_height" HIDDEN="true" DESCRIPTION="Height of completion window in metric tool."><INTEGER>350</INTEGER></PREF>	
+	<PREF NAME="tools.metric_tool.criterion_completion_list_width" HIDDEN="true" DESCRIPTION="Width of completion window in metric tool."><INTEGER>240</INTEGER></PREF>	
+	<PREF NAME="tools.metric_tool.history_flat_view_sorting_order" DESCRIPTION="Sorting order of the metric history." HIDDEN="True"><STRING>1:1</STRING></PREF>
+	<PREF NAME="tools.metric_tool.history_tree_view_sorting_order" DESCRIPTION="Sorting order of the metric history." HIDDEN="True"><STRING>1:1</STRING></PREF>
 
 	<PREF NAME="tools.class_browser.classes_categorized_folder" HIDDEN="false" DESCRIPTION="Should classes be categorized in physical folders where they locate?"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="tools.class_browser.expand_referenced_class" HIDDEN="false" DESCRIPTION="Should referenced classes in dependency view be expanded by default?"><BOOLEAN>False</BOOLEAN></PREF>
@@ -134,7 +138,11 @@
 	<PREF NAME="tools.class_browser.folder_search_recursive" HIDDEN="false" DESCRIPTION="Search a folder for classes recursively?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="tools.class_browser.callee_sorting_order" DESCRIPTION="Sorting order of callees." HIDDEN="True"><STRING>1:1</STRING></PREF>
 	<PREF NAME="tools.class_browser.caller_sorting_order" DESCRIPTION="Sorting order of callers." HIDDEN="True"><STRING>1:1</STRING></PREF>
-	<PREF NAME="tools.class_browser.class_flat_client_sorting_order" DESCRIPTION="Sorting order of flat clients of class." HIDDEN="True"><STRING>1:1</STRING></PREF>
+	<PREF NAME="tools.class_browser.class_client_sorting_order" DESCRIPTION="Sorting order of clients/suppliers of class." HIDDEN="True"><STRING>1:1</STRING></PREF>
+	<PREF NAME="tools.class_browser.class_flat_tree_sorting_order" DESCRIPTION="Sorting order of classes for inheritance." HIDDEN="True"><STRING>1:1</STRING></PREF>
+	<PREF NAME="tools.class_browser.class_flat_view_sorting_order" DESCRIPTION="Sorting order of features with respect to their class of origin in class tool." HIDDEN="True"><STRING>2:1</STRING></PREF>
+	<PREF NAME="tools.class_browser.dependency_view_sorting_order" DESCRIPTION="Sorting order of clients/suppliers of class in dependency tool." HIDDEN="True"><STRING>1:1</STRING></PREF>
+	<PREF NAME="tools.class_browser.feature_view_sorting_order" DESCRIPTION="Sorting order of features with respect to their class of origin in feature tool." HIDDEN="True"><STRING>2:1</STRING></PREF>
 
 	<PREF NAME="tools.error_list.expand_errors" DESCRIPTION="Specifies if errors in the Error List tool should be expanded automatically, to show the verbose error information."><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="tools.error_list.show_tooltip" DESCRIPTION="Specifies if rich tooltip window should be shown automatically in the Error List tool."><BOOLEAN>True</BOOLEAN></PREF>
@@ -762,7 +770,7 @@
 	<PREF NAME="shortcuts.view.tools.show_breakpoints_tool" DESCRIPTION="Shortcut to display Breakpoints tool."><SHORTCUT Ctrl="True" Alt="True">B</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.view.tools.show_testing_tool" DESCRIPTION="Shortcut to display Testing tool."><SHORTCUT Ctrl="True" Alt="True">,</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.view.tools.show_testing_results_tool" DESCRIPTION="Shortcut to display Testing Results tool."><SHORTCUT Ctrl="True" Alt="True">.</SHORTCUT></PREF>
-	<PREF NAME="shortcuts.view.tools.show_logger_tool" DESCRIPTION="Shortcut to display Logger tool."><SHORTCUT></SHORTCUT></PREF>
+	<PREF NAME="shortcuts.view.tools.show_logger_tool" DESCRIPTION="Shortcut to display Logger tool."><SHORTCUT Ctrl="true" Alt="True">1</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.view.go_back" DESCRIPTION="Shortcut to go back in the history."><SHORTCUT Alt="True">Left</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.view.go_forth" DESCRIPTION="Shortcut to go forth in the history."><SHORTCUT Alt="True">Right</SHORTCUT></PREF>
 	

@@ -5,7 +5,7 @@ note
 			Prefix map and context for xmlns declaration generation filter
 
 			Note: the original code is from Gobo's XM library (http://www.gobosoft.com/)
-		]"		
+		]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -75,6 +75,7 @@ feature -- Status
 
 	has (a_namespace: STRING): BOOLEAN
 			-- Is namespace known to prefixes table?
+			-- If found, set `last_item' to the related item
 		require
 			a_namespace_not_void: a_namespace /= Void
 			a_namespace_not_empty: not a_namespace.is_empty
@@ -202,7 +203,7 @@ invariant
 	default_namespaces_not_void: default_namespaces /= Void
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -1862,6 +1862,7 @@ test	inherit-formal-as-second-formal		term202 tcf pass termination dotnet
 test	inherit-generic-of-expanded		term203 tcf pass termination dotnet
 test	ise-ec-flags-missing-final-quote	term204 tcf fail termination
 test	inherited-feature-unadapted			term205 tcf fail termination
+test	generic-constrained-by-self-2		term206  tcf fail termination generic
 
 -- Config
 

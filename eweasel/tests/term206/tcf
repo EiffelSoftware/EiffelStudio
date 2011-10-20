@@ -1,0 +1,14 @@
+
+test_name 	 generic-constrained-by-self-2
+test_description A particular system that includes a generic class with a formal generic `G -> G' crashes the compiler in {FORMAL_A}.conform_to
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+copy_raw 	 test1.e  $CLUSTER test1.e
+copy_raw 	 test2.e  $CLUSTER test2.e
+copy_raw 	 test3.e  $CLUSTER test3.e
+
+compile_melted
+compile_result 	 ok
+
+test_end

@@ -134,7 +134,7 @@ feature -- Status report
 		do
 				-- Default implementation always returns the same as `monitor_area_from_position'
 				-- Redefined by descendents for multi-monitor support.
-			create Result.make (0, 0, width, height)
+			Result := monitor_area_from_position (a_x, a_y)
 		end
 
 	working_area_from_window (a_window: EV_WINDOW): EV_RECTANGLE
@@ -147,7 +147,7 @@ feature -- Status report
 		do
 				-- Default implementation always returns the same as `monitor_area_from_window'
 				-- Redefined by descendents for multi-monitor support.
-			create Result.make (0, 0, width, height)
+			Result := monitor_area_from_window (a_window)
 		end
 
 feature -- Basic operation

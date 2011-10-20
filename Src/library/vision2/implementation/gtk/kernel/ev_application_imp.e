@@ -806,7 +806,7 @@ feature -- Basic operation
 	app_motion_tuple: TUPLE [widget: EV_WIDGET; x: INTEGER; y: INTEGER]
 			-- Tuple optimization
 		once
-			Result := [default_window, 0, 0]
+			Result := [default_widget, 0, 0]
 		end
 
 	process_button_event (a_gdk_event: POINTER)
@@ -1229,6 +1229,16 @@ feature {EV_ANY_I, EV_FONT_IMP, EV_STOCK_PIXMAPS_IMP, EV_INTERMEDIARY_ROUTINES} 
 			-- access default visual information (color depth).
 		do
 			Result := {GTK}.gtk_widget_struct_window (default_gtk_window)
+		end
+
+	default_widget: EV_WIDGET
+			-- Default widget used for creation of tuples.
+		local
+			l_widget: detachable EV_WIDGET
+		once
+			l_widget ?= default_window
+			check l_widget /= Void end
+			Result := l_widget
 		end
 
 	default_window: EV_WINDOW

@@ -261,8 +261,8 @@ feature {NONE} -- Implementation
 
 				-- Initially the width and height of `choice_list' match the size of the item in the grid
 				-- and potentially shrinked even more of part of the item was offscreen.
-			l_width := width - l_x_offset - l_item_border_width
-			l_height := height - l_y_offset - l_item_border_height
+			l_width := a_popup.width - l_x_offset - l_item_border_width
+			l_height := a_popup.height - l_y_offset - l_item_border_height
 
 			if l_choice_list.column_count > 0 and then l_choice_list.row_count > 0 then
 					-- Calculate the ideal width and height of `choice_list', that is to say the

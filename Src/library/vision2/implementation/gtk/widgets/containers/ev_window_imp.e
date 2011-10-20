@@ -70,7 +70,7 @@ feature {NONE} -- Initialization
 		end
 
 	new_gtk_window: POINTER
-			-- Return a new gtk window object for `Current'
+			-- Return a new gtk window object for `Current'.
 		do
 			Result := {GTK}.gtk_window_new ({GTK}.Gtk_window_toplevel_enum)
 		end

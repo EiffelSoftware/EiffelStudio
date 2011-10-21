@@ -80,7 +80,7 @@ feature {NONE} -- Initialization
 			{GTK}.gdk_gc_set_foreground (gc, fg_color)
 			{GTK}.gdk_gc_set_background (gc, bg_color)
 			init_default_values
-			clear
+			clear_rectangle (0, 0, 1, 1)
 		end
 
 	init_from_pointer_style (a_pointer_style: EV_POINTER_STYLE)

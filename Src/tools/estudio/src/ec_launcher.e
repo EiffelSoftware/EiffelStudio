@@ -230,7 +230,7 @@ feature {NONE} -- Application exit
 
 feature -- Splash
 
-	splash_delay: INTEGER_32 = 3_000
+	splash_delay: INTEGER_32 = 2_000
 			-- 2 seconds seems ok
 
 	splasher: SPLASH_DISPLAYER_I
@@ -579,7 +579,7 @@ feature {NONE} -- File system helpers
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

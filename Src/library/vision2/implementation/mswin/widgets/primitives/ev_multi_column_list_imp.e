@@ -157,8 +157,8 @@ feature -- Initialization
 
 				-- Create the WEL LISTVIEW.
 			wel_make (default_parent, 0, 0, 0, 0, 0)
-			Precursor {EV_MULTI_COLUMN_LIST_I}
 			Precursor {EV_ITEM_LIST_IMP}
+			Precursor {EV_MULTI_COLUMN_LIST_I}
 			Precursor {EV_PRIMITIVE_IMP}
 
 				-- Create the last column

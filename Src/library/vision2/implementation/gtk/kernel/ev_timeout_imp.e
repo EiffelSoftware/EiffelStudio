@@ -92,8 +92,6 @@ feature {EV_ANY, EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 feature {NONE} -- Implementation
 
-	timeout_object: POINTER
-
 	timeout_connection_id: INTEGER
 		-- GTK handle on timeout connection.
 

@@ -282,21 +282,8 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 	has_focus: BOOLEAN
 			-- Does widget have the keyboard focus?
-		local
-			l_window, l_widget: POINTER
-			l_widget_imp: detachable EV_WIDGET_IMP
 		do
-			l_window := {GTK}.gtk_widget_get_toplevel (c_object)
-				-- This will return `c_object' if not toplevel window is found in hierarchy.
-			if l_window /= default_pointer and then {GTK2}.gtk_widget_toplevel (l_window) and then {GTK2}.gtk_window_is_active (l_window) then
-				l_widget := {GTK2}.gtk_window_get_focus (l_window)
-				if l_widget /= default_pointer then
-					l_widget_imp ?= app_implementation.eif_object_from_gtk_object (l_widget)
-					if l_widget_imp /= Void then
-						Result := l_widget_imp = Current
-					end
-				end
-			end
+			Result := has_focus_internal (True)
 		end
 
 	width: INTEGER
@@ -403,6 +390,27 @@ feature {EV_ANY_I} -- Implementation
 		end
 
 feature {NONE} -- Implementation
+
+	has_focus_internal (a_toplevel_window_active: BOOLEAN): BOOLEAN
+			-- Does widget have the keyboard focus?
+			-- If `a_toplevel_window_active' only return True if `Current' has top-level window focus
+			-- and the top level window is also active.
+		local
+			l_window, l_widget: POINTER
+			l_widget_imp: detachable EV_WIDGET_IMP
+		do
+			l_window := {GTK}.gtk_widget_get_toplevel (c_object)
+				-- This will return `c_object' if not toplevel window is found in hierarchy.
+			if l_window /= default_pointer and then {GTK2}.gtk_widget_toplevel (l_window) and then (a_toplevel_window_active implies {GTK2}.gtk_window_is_active (l_window)) then
+				l_widget := {GTK2}.gtk_window_get_focus (l_window)
+				if l_widget /= default_pointer then
+					l_widget_imp ?= app_implementation.eif_object_from_gtk_object (l_widget)
+					if l_widget_imp /= Void then
+						Result := l_widget_imp = Current
+					end
+				end
+			end
+		end
 
 	aux_info_string: EV_GTK_C_STRING
 			-- String optimization for  "gtk-aux-info"

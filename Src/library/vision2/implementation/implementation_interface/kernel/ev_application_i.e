@@ -508,6 +508,11 @@ feature -- Basic operation
 				l_idle_actions.go_to (l_cursor)
 			end
 			idle_unlock
+
+				-- Remove from kamikaze list if present.
+			kamikaze_lock
+			kamikaze_actions.prune_all (a_idle_action)
+			kamikaze_unlock
 		end
 
 	idle_lock

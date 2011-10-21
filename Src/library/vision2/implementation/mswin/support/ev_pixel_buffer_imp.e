@@ -134,6 +134,20 @@ feature -- Command
 			end
 		end
 
+	set_gdip_image (a_gdip_image: WEL_GDIP_BITMAP)
+			-- Set `gdip_image' with `a_gdip_image'
+		require
+			valid: is_gdi_plus_installed
+			not_void: a_gdip_image /= Void
+		do
+			if attached gdip_bitmap as l_bitmap then
+				l_bitmap.dispose
+			end
+			gdip_bitmap := a_gdip_image
+		ensure
+			set: gdip_bitmap = a_gdip_image
+		end
+
 	set_from_icon (a_wel_icon: WEL_ICON)
 			-- Load pixel data from `a_wel_icon'.
 		local

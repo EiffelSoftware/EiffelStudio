@@ -2443,16 +2443,16 @@ feature
 			"red"
 		end
 
-	frozen gdk_event_focus_struct_in (a_c_struct: POINTER): INTEGER_32
+	frozen gdk_event_focus_struct_in (a_c_struct: POINTER): INTEGER_8
 		external
-			"C [struct <ev_gtk.h>] (GdkEventFocus): EIF_INTEGER"
+			"C [struct <ev_gtk.h>] (GdkEventFocus): EIF_INTEGER_8"
 		alias
 			"in"
 		end
 
-	frozen gdk_event_any_struct_send_event (a_c_struct: POINTER): INTEGER_32
+	frozen gdk_event_any_struct_send_event (a_c_struct: POINTER): INTEGER_8
 		external
-			"C [struct <ev_gtk.h>] (GdkEventAny): EIF_INTEGER"
+			"C [struct <ev_gtk.h>] (GdkEventAny): EIF_INTEGER_8"
 		alias
 			"send_event"
 		end
@@ -2464,9 +2464,9 @@ feature
 			"window"
 		end
 
-	frozen gdk_event_any_struct_type (a_c_struct: POINTER): INTEGER_32
+	frozen gdk_event_any_struct_type (a_c_struct: POINTER): INTEGER_8
 		external
-			"C [struct <ev_gtk.h>] (GdkEventAny): EIF_INTEGER"
+			"C [struct <ev_gtk.h>] (GdkEventAny): EIF_INTEGER_8"
 		alias
 			"type"
 		end

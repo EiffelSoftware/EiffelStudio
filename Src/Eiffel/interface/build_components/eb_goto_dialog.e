@@ -109,7 +109,7 @@ feature {NONE} -- Implementation
 				elseif l_line < 1 then
 					l_line := 1
 				end
-				editor.scroll_to_start_of_line_when_ready_if_top (l_line.min (editor.vertical_scrollbar.value_range.upper), 0, False, False)
+				editor.scroll_to_start_of_line_when_ready_if_top (l_line, 0, False, False)
 			end
 		end
 
@@ -143,7 +143,7 @@ invariant
 	has_editor: editor /= Void
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

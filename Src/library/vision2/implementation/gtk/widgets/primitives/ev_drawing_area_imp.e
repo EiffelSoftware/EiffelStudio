@@ -16,7 +16,7 @@ inherit
 
 	EV_DRAWABLE_IMP
 		redefine
-			interface
+			interface, clear
 		end
 
 	EV_PRIMITIVE_IMP
@@ -237,30 +237,46 @@ feature {NONE} -- Implementation
 	internal_tooltip: STRING_32
 		-- Used for storing `tooltip' of `Current'.
 
+	clear
+			-- Erase `Current' with `background_color'.
+		local
+			l_drawable: POINTER
+			l_x, l_y: INTEGER
+		do
+			l_drawable := drawable
+			if l_drawable /= NULL and then is_displayed then
+				{GTK2}.gdk_drawable_get_size (l_drawable, $l_x, $l_y)
+				if l_x > 0 and then l_y > 0 then
+					clear_rectangle (0, 0, l_x, l_y)
+				end
+			end
+		end
+
 	redraw
 			-- Redraw the entire area.
+		local
+			l_drawable: POINTER
 		do
-			{GTK}.gtk_widget_queue_draw (c_object)
+			l_drawable := drawable
+			if l_drawable /= NULL and then is_displayed then
+				{GTK2}.gdk_window_invalidate_rect (l_drawable, null, False)
+			end
 		end
 
 	redraw_rectangle (a_x, a_y, a_width, a_height: INTEGER)
 			-- Redraw the rectangle area defined by `a_x', `a_y', `a_width', a_height'.
 		local
 			a_rectangle: POINTER
-			a_drawable: POINTER
+			l_drawable: POINTER
 		do
-			a_drawable := drawable
-			if a_drawable /= NULL and then is_displayed then
-				if {GTK}.gtk_maj_ver > 1 then
-					a_rectangle := app_implementation.reusable_rectangle_struct
-					{GTK2}.set_gdk_rectangle_struct_width (a_rectangle, a_width)
-					{GTK2}.set_gdk_rectangle_struct_height (a_rectangle, a_height)
-					{GTK2}.set_gdk_rectangle_struct_x (a_rectangle, a_x)
-					{GTK2}.set_gdk_rectangle_struct_y  (a_rectangle, a_y)
-					{GTK2}.gdk_window_invalidate_rect (a_drawable, a_rectangle, False)
-				else
-					{GTK}.gtk_widget_queue_draw_area (visual_widget, a_x, a_y, a_width, a_height)
-				end
+			l_drawable := drawable
+			if l_drawable /= NULL and then is_displayed then
+				a_rectangle := app_implementation.reusable_rectangle_struct
+				{GTK2}.set_gdk_rectangle_struct_width (a_rectangle, a_width)
+				{GTK2}.set_gdk_rectangle_struct_height (a_rectangle, a_height)
+				{GTK2}.set_gdk_rectangle_struct_x (a_rectangle, a_x)
+				{GTK2}.set_gdk_rectangle_struct_y  (a_rectangle, a_y)
+				{GTK2}.gdk_window_invalidate_rect (l_drawable, a_rectangle, False)
 			end
 		end
 

@@ -65,7 +65,7 @@ feature -- Factory method
 				end
 				if a_zone_type = {SD_ENUMERATION}.tab then
 					if a_style = {SD_ENUMERATION}.editor then
-						l_result := create {SD_TITLE_BAR}.make
+						create {SD_TITLE_BAR} l_result.make
 						l_result.hide
 					elseif a_style = {SD_ENUMERATION}.tool then
 						create l_result.make
@@ -255,7 +255,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

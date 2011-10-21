@@ -167,7 +167,7 @@ feature {NONE} -- Parsing class types
 				l_roots.after or Result /= Void
 			loop
 				if attached l_roots.item_for_iteration.root_class.compiled_class as l_root_class then
-					Result := type_a_generator.evaluate_type_if_possible (a_type, l_root_class)
+					Result := type_a_generator.evaluate_optional_unchecked (a_type, l_root_class)
 				end
 				l_roots.forth
 			end
@@ -217,7 +217,7 @@ feature{NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

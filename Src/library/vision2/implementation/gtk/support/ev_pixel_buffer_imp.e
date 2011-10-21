@@ -439,6 +439,7 @@ feature {EV_STOCK_PIXMAPS_IMP} -- Implementation
 			l_label: POINTER
 		do
 			l_label := {GTK}.gtk_label_new (default_pointer)
+			{GTK2}.object_ref (l_label)
 			stock_pixbuf := {GTK2}.gtk_widget_render_icon (l_label, a_stock_id, {GTK2}.gtk_icon_size_dialog_enum, default_pointer)
 			{GTK2}.object_unref (l_label)
 			l_label := default_pointer

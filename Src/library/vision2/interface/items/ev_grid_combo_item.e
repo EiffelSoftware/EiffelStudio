@@ -70,7 +70,7 @@ feature {NONE} -- Implementation
 			l_x_offset: INTEGER
 			a_width: INTEGER
 			a_widget: EV_WIDGET
-			a_x_position, a_y_position: INTEGER
+			a_x_position: INTEGER
 			l_x_coord: INTEGER
 			l_parent: like parent
 			l_layout: like grid_label_item_layout

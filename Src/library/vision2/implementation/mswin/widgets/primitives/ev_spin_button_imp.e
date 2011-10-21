@@ -197,16 +197,22 @@ feature -- Alignment
 	align_text_center
 		do
 			internal_text_field.align_text_center
+				-- The above code rebuild `internal_text_field' so we have to reassociate
+			internal_arrows_control.set_buddy_window (internal_text_field)
 		end
 
 	align_text_right
 		do
 			internal_text_field.align_text_right
+				-- The above code rebuild `internal_text_field' so we have to reassociate
+			internal_arrows_control.set_buddy_window (internal_text_field)
 		end
 
 	align_text_left
 		do
 			internal_text_field.align_text_left
+				-- The above code rebuild `internal_text_field' so we have to reassociate
+			internal_arrows_control.set_buddy_window (internal_text_field)
 		end
 
 feature {EV_ANY_I} -- Access

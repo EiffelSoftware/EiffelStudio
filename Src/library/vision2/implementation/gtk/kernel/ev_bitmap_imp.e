@@ -55,7 +55,7 @@ feature -- Status Setting
 			end
 
 			drawable := {GTK}.gdk_pixmap_new (oldpix, a_width, a_height, 1)
-			clear
+			clear_rectangle (0, 0, a_width, a_height)
 
 			if oldpix /= default_pointer then
 				{GTK}.gdk_draw_pixmap (drawable, gc, oldpix, 0, 0, 0, 0, l_width, l_height)

@@ -414,7 +414,6 @@ feature {EV_ANY_I} -- Implementation
 						debug ("GDK_EVENT")
 							print ("GDK_PROPERTY_NOTIFY%N")
 						end
-						l_propagate_event := True
 					when GDK_EXPOSE then
 							-- This is only called on gtk 1.2 as expose compression is
 							-- performed in gdk with 2.x and above.

@@ -67,7 +67,6 @@ feature {NONE} -- Initialization
 			entry_widget := new_entry_widget
 			{GTK}.gtk_widget_show (entry_widget)
 			{GTK}.gtk_box_pack_start (a_vbox, entry_widget, False, False, 0)
-			set_text (once "")
 			align_text_left
 			Precursor
 		end

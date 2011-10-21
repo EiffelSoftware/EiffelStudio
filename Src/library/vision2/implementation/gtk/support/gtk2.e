@@ -1928,6 +1928,11 @@ feature -- Externals
 			"C signature (GdkWindow*, GdkRectangle*) use <ev_gtk.h>"
 		end
 
+	frozen gdk_window_get_update_area (a_window: POINTER): POINTER
+		external
+			"C signature (GdkWindow*): GdkRegion* use <ev_gtk.h>"
+		end
+
 	frozen gtk_entry_set_max_length (a_entry: POINTER; a_max: INTEGER_32)
 		external
 			"C (GtkEntry*, gint) | <ev_gtk.h>"

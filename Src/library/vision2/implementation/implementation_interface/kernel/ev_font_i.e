@@ -55,7 +55,7 @@ feature -- Access
 	line_height: INTEGER
 			-- Preferred text editor line height in pixels for `Current'.
 		do
-			Result := ascent + descent + {PLATFORM}.is_windows.to_integer
+			Result := ascent + descent + 2
 		end
 
 	preferred_families: EV_ACTIVE_LIST [STRING_32]

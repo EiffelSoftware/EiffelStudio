@@ -44,6 +44,7 @@ feature {NONE} -- Initialization
 			-- Set up the callback marshal and initialize GTK+.
 		local
 			locale_str: STRING
+			l_colormap: POINTER
 		do
 --			if {EV_GTK_DEPENDENT_EXTERNALS}.g_mem_is_system_malloc then
 --				{EV_GTK_DEPENDENT_EXTERNALS}.g_mem_set_vtable ({EV_GTK_EXTERNALS}.glib_mem_profiler_table)
@@ -79,7 +80,9 @@ feature {NONE} -- Initialization
 					-- 0 = No messages, 1 = Gtk Log Messages, 2 = Gtk Log Messages with Eiffel exception.
 				{GTK}.gdk_set_show_events (False)
 
-				{GTK}.gtk_widget_set_default_colormap ({GTK}.gdk_rgb_get_cmap)
+--				l_colormap := {GTK}.gdk_rgb_get_cmap
+
+--				{GTK}.gtk_widget_set_default_colormap (l_colormap)
 
 				gtk_dependent_initialize
 
@@ -109,7 +112,10 @@ feature {NONE} -- Initialization
 			l_primary_monitor_number: INTEGER
 			l_image: POINTER
 			l_supports_composite_symbol: POINTER
+			l_best_depth: INTEGER
 		do
+			l_best_depth := {GTK2}.gdk_visual_get_best_depth
+
 				-- Check if an GdkImage using the GDK_IMAGE_SHARED flag (first argument '1') may be created, if so then display is local.
 			l_image := {GTK}.gdk_image_new (1, {GTK}.gdk_rgb_get_visual, 1, 1)
 				-- This may fail if the X Server doesn't support the Shared extension, but if this is the case
@@ -179,6 +185,9 @@ feature {EV_ANY_I} -- Implementation
 	screen_monitor_count: INTEGER
 	screen_primary_monitor_number: INTEGER
 		-- Screen meta data.
+
+	best_available_color_depth: INTEGER
+		-- Best available color depth of display
 
 	is_display_alpha_capable: BOOLEAN
 			-- Is application display capable of displaying transparent windows?
@@ -258,13 +267,12 @@ feature {EV_ANY_I} -- Implementation
 			l_has_grab_widget: BOOLEAN
 			l_event_string: detachable STRING
 			l_call_theme_events: BOOLEAN
-			l_any_event, l_user_event, l_gtk_events_pending, l_gdk_event_is_sent: BOOLEAN
+			l_any_event, l_user_event, l_gdk_event_is_sent: BOOLEAN
 		do
 			from
 				l_motion_tuple := motion_tuple
 				l_app_motion_tuple := app_motion_tuple
 					-- Check if there are any gtk events pending before dispatching them at the end of the loop.
-				l_gtk_events_pending := {GTK2}.events_pending
 			until
 				l_no_more_events or else is_destroyed
 			loop
@@ -680,7 +688,7 @@ feature {EV_ANY_I} -- Implementation
 					end
 					{GTK}.gdk_event_free (gdk_event)
 				else
-					if l_gtk_events_pending then
+					if {GTK2}.events_pending then
 						l_any_event := True
 						process_gtk_events
 					end

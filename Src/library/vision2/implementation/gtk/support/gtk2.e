@@ -762,7 +762,7 @@ feature -- Externals
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"gtk_widget_style_get ((GtkWidget*) $a_widget, (gchar*) $a_property, (gint*) $a_int_ptr, NULL)"
+			"gtk_widget_style_get ((GtkWidget*) $a_widget, (gchar*) $a_property, (gint*) $a_int_ptr, NULL);"
 		end
 
 	frozen gdk_display_get_default: POINTER
@@ -770,11 +770,27 @@ feature -- Externals
 			"C signature (): GdkDisplay* use <ev_gtk.h>"
 		end
 
+	frozen gdk_display_get_name (a_display: POINTER): POINTER
+		external
+			"C signature (GdkDisplay*): gchar** use <ev_gtk.h>"
+		end
+
 	frozen gdk_display_get_default_screen (a_display: POINTER): POINTER
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"return gdk_display_get_default_screen ((GdkDisplay*) $a_display);"
+			"gdk_display_get_default_screen ((GdkDisplay*) $a_display)"
+		end
+
+	frozen gdk_display_supports_composite (a_display: POINTER): BOOLEAN
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"[
+				#if GTK_MINOR_VERSION >= 12
+					return gdk_display_supports_composite ((GdkDisplay*) $a_display);
+				#endif
+			]"
 		end
 
 	frozen gdk_display_supports_cursor_alpha (a_display: POINTER): BOOLEAN
@@ -1931,6 +1947,26 @@ feature -- Externals
 	frozen gdk_window_get_update_area (a_window: POINTER): POINTER
 		external
 			"C signature (GdkWindow*): GdkRegion* use <ev_gtk.h>"
+		end
+
+	frozen gdk_window_is_viewable (a_window: POINTER): BOOLEAN
+		external
+			"C signature (GdkWindow*): EIF_BOOLEAN use <ev_gtk.h>"
+		end
+
+	frozen gdk_visual_get_best_depth: INTEGER
+		external
+			"C signature (): EIF_INTEGER use <ev_gtk.h>"
+		end
+
+	frozen gdk_query_depths (a_depths, a_count: POINTER)
+		external
+			"C signature (gint**, gint*) use <ev_gtk.h>"
+		end
+
+	frozen gdk_window_is_visible (a_window: POINTER): BOOLEAN
+		external
+			"C signature (GdkWindow*): EIF_BOOLEAN use <ev_gtk.h>"
 		end
 
 	frozen gtk_entry_set_max_length (a_entry: POINTER; a_max: INTEGER_32)

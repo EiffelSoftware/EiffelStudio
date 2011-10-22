@@ -1,0 +1,22 @@
+
+test_name	qat-spurious-veen
+test_description After a VMFN error is reported because two inherited features have the same name, the type of one feature is a QAT, one of the features is made deferred.  The compiler should then accept the classes, but instead reports a nonexistent VEEN error
+
+define ROUTINE_MARK	"do"
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_sub 	test1.e $CLUSTER test1.e
+copy_raw 	test2.e $CLUSTER test2.e
+copy_raw 	test3.e $CLUSTER test3.e
+
+compile_melted
+compile_result 	validity_error TEST3 VMFN
+
+define ROUTINE_MARK	"deferred"
+copy_sub 	test1.e $CLUSTER test1.e
+
+resume_compile
+compile_result 	ok
+
+test_end
+

@@ -16,7 +16,7 @@ inherit
 
 	EV_DRAWABLE_IMP
 		redefine
-			interface, clear
+			interface
 		end
 
 	EV_PRIMITIVE_IMP
@@ -237,30 +237,10 @@ feature {NONE} -- Implementation
 	internal_tooltip: STRING_32
 		-- Used for storing `tooltip' of `Current'.
 
-	clear
-			-- Erase `Current' with `background_color'.
-		local
-			l_drawable: POINTER
-			l_x, l_y: INTEGER
-		do
-			l_drawable := drawable
-			if l_drawable /= NULL and then is_displayed then
-				{GTK2}.gdk_drawable_get_size (l_drawable, $l_x, $l_y)
-				if l_x > 0 and then l_y > 0 then
-					clear_rectangle (0, 0, l_x, l_y)
-				end
-			end
-		end
-
 	redraw
 			-- Redraw the entire area.
-		local
-			l_drawable: POINTER
 		do
-			l_drawable := drawable
-			if l_drawable /= NULL and then is_displayed then
-				{GTK2}.gdk_window_invalidate_rect (l_drawable, null, False)
-			end
+			redraw_rectangle (0, 0, width, height)
 		end
 
 	redraw_rectangle (a_x, a_y, a_width, a_height: INTEGER)

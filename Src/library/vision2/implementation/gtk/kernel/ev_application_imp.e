@@ -80,9 +80,9 @@ feature {NONE} -- Initialization
 					-- 0 = No messages, 1 = Gtk Log Messages, 2 = Gtk Log Messages with Eiffel exception.
 				{GTK}.gdk_set_show_events (False)
 
---				l_colormap := {GTK}.gdk_rgb_get_cmap
+				l_colormap := {GTK}.gdk_rgb_get_cmap
 
---				{GTK}.gtk_widget_set_default_colormap (l_colormap)
+				{GTK}.gtk_widget_set_default_colormap (l_colormap)
 
 				gtk_dependent_initialize
 

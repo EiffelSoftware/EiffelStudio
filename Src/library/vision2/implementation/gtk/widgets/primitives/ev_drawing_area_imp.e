@@ -277,9 +277,7 @@ feature {NONE} -- Implementation
 	flush
 			-- Redraw the screen immediately.
 		do
-			if is_displayed then
-				refresh_now
-			end
+			refresh_now
 		end
 
 	update_if_needed

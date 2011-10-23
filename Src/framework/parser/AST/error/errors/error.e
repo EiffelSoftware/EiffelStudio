@@ -153,20 +153,20 @@ feature {ERROR_VISITOR} -- Compute surrounding text around error
 			if l_file = Void or else l_fn /~ l_file.file_name then
 					-- No file, or it has changed/
 				create l_file.make (l_fn.as_attached)
-				l_file.is_contents_auto_refreshed := True
+				l_file.set_is_contents_auto_refreshed (True)
 				cached_file.put (l_file)
 			end
 			l_line := line
 			if l_line > 1 then
 				l_file.read_line (l_line - 1)
 				previous_line := l_file.last_string
-				current_line := l_file.peek_read_line (l_line)
+				current_line := l_file.peeked_read_line (l_line)
 			else
 				previous_line := Void
 				l_file.read_line (l_line)
 				current_line := l_file.last_string
 			end
-			next_line := l_file.peek_read_line (l_line + 1)
+			next_line := l_file.peeked_read_line (l_line + 1)
 
 				-- Convert lines read from source encoding to UTF-8
 			if attached associated_class as l_class then

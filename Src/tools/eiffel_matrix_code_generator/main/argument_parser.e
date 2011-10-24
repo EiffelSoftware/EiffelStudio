@@ -121,6 +121,9 @@ feature {NONE} -- Usage
 	version: STRING = "1.4.1"
 			-- <Precursor>
 
+	copyright: STRING = "Copyright Eiffel Software 1996-2011. All Rights Reserved."
+			-- <Precursor>
+
 	non_switched_argument_name: STRING = "cfg_file"
 			-- <Precursor>
 
@@ -168,7 +171,7 @@ feature {NONE} -- Option Names
 		-- Location where sliced pngs will be stored
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

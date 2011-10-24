@@ -77,7 +77,7 @@ feature {NONE} -- Initialization
 								retried_il := True
 								retry
 							end).item ([a_parser.slice_matrix])
-						if l_error_manager.successful then
+						if l_error_manager.is_successful then
 							l_ico_generator.generate (l_doc, a_parser.png_slices_locations, l_pixmap)
 						end
 					else
@@ -114,7 +114,7 @@ feature {NONE} -- Initialization
 			end
 
 			create l_printer
-			if not l_error_manager.successful then
+			if not l_error_manager.is_successful then
 				l_error_manager.trace_errors (l_printer)
 			else
 				if l_error_manager.has_warnings then
@@ -230,7 +230,7 @@ feature {NONE} -- Constants
 			-- Sub folder where frame files are located
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

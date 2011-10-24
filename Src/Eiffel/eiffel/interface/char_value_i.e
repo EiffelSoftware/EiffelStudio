@@ -50,7 +50,7 @@ feature -- Comparison
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := character_value = other.character_value and then
-				is_character_8 = other.is_character_8
+				is_character_32 = other.is_character_32
 		end
 
 feature
@@ -150,7 +150,7 @@ invariant
 	consistent_type: is_character_8 xor is_character_32
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

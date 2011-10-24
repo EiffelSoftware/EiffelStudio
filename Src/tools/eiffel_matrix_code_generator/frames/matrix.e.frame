@@ -100,11 +100,10 @@ feature -- Query
 		require
 			not_a_name_is_empty: not a_name.is_empty
 			has_named_icon_a_name: has_named_icon (a_name)
-		local
-			l_coords: TUPLE [x: NATURAL_8; y: NATURAL_8]
 		do
-			l_coords := icon_coordinates_table.item (a_name)
-			Result := matrix_buffer.sub_pixel_buffer (pixel_rectangle (l_coords.x, l_coords.y))
+			check attached icon_coordinates_table.item (a_name) as l_coords then
+				Result := matrix_buffer.sub_pixel_buffer (pixel_rectangle (l_coords.x, l_coords.y))
+			end
 		ensure
 			named_icon_buffer_attached: Result /= Void
 			not_result_is_destroyed: not Result.is_destroyed
@@ -118,11 +117,10 @@ feature -- Query
 		require
 			not_a_name_is_empty: not a_name.is_empty
 			has_named_icon_a_name: has_named_icon (a_name)
-		local
-			l_coords: TUPLE [x: NATURAL_8; y: NATURAL_8]
 		do
-			l_coords := icon_coordinates_table.item (a_name)
-			Result := matrix_buffer.sub_pixmap (pixel_rectangle (l_coords.x, l_coords.y))
+			check attached icon_coordinates_table.item (a_name) as l_coords then
+				Result := matrix_buffer.sub_pixmap (pixel_rectangle (l_coords.x, l_coords.y))
+			end
 		ensure
 			named_icon_attached: Result /= Void
 			not_result_is_destroyed: not Result.is_destroyed

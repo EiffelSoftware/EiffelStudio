@@ -15,7 +15,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_file_name: STRING) is
+	make (a_file_name: STRING)
 			-- Initialize matrix
 		require
 			not_a_file_name_is_empty: not a_file_name.is_empty

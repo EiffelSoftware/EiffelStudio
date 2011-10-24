@@ -4,12 +4,14 @@ note
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 deferred class
 	EV_SCROLLABLE_AREA_I
-	
+
 inherit
 	EV_VIEWPORT_I
+
+	EV_SCROLLABLE_ACTION_SEQUENCE_I
 
 feature -- Access
 

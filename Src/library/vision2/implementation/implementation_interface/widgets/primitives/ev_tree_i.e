@@ -27,6 +27,8 @@ inherit
 
 	EV_TREE_ACTION_SEQUENCES_I
 
+	EV_SCROLLABLE_ACTION_SEQUENCE_I
+
 feature {EV_ANY} -- Initialization
 
 	make

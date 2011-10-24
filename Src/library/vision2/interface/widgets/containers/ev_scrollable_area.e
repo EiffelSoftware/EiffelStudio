@@ -29,6 +29,12 @@ inherit
 			is_in_default_state
 		end
 
+-- FIXME: comment it until Linux's version implemented
+--	EV_SCROLLABLE_ACTION_SEQUENCES
+--		redefine
+--			implementation
+--		end
+
 create
 	default_create
 

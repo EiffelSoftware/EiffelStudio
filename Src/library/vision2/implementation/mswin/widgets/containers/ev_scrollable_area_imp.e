@@ -32,13 +32,16 @@ inherit
 			set_x_offset,
 			set_y_offset,
 			ev_apply_new_size,
-			on_size_requested
+			on_size_requested,
+			process_message
 		end
 
 	WEL_RGN_CONSTANTS
 		export {NONE}
 			all
 		end
+
+	EV_SCROLLABLE_ACTION_SEQUENCES_IMP
 
 create
 	make
@@ -359,6 +362,40 @@ feature {NONE} -- Implementation
 				end
 				is_in_size_call := False
 			end
+		end
+
+	process_message (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER
+			-- <Precursor>
+		local
+			l_action_type: INTEGER
+			l_current_position: INTEGER
+			l_constants: EV_SCROLL_CONSTANTS
+		do
+			if msg = wm_vscroll or else msg = wm_hscroll then
+				l_action_type := {WEL_API}.loword (wparam)
+				create l_constants
+				l_action_type := l_constants.convert_from_wel_constant (l_action_type)
+				if l_action_type = {EV_SCROLL_CONSTANTS}.thumb_position or
+					l_action_type = {EV_SCROLL_CONSTANTS}.thumb_track then
+					l_current_position := {WEL_API}.hiword (wparam)
+				end
+			end
+
+			inspect
+				msg
+			when wm_vscroll then
+				if attached vertical_scroll_actions_internal as l_vertical_actions then
+					l_vertical_actions.call ([l_action_type, l_current_position])
+				end
+			when wm_hscroll then
+				if attached horizontal_scroll_actions_internal as l_horizontal_actions then
+					l_horizontal_actions.call ([l_action_type, l_current_position])
+				end
+			else
+
+			end
+
+			Result := Precursor (hwnd, msg, wparam, lparam)
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation

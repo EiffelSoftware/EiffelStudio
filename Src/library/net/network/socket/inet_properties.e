@@ -30,4 +30,8 @@ feature -- Access
 		alias
 			"en_set_prefer_ipv4"
 		end
+
+invariant
+	exclusive: is_ipv4_stack_preferred implies not is_ipv6_available
+
 end

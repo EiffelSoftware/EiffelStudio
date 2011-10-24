@@ -224,10 +224,13 @@ feature -- Text Loading
 					-- Setup encoding
 				if attached {CLASSI_STONE} stone as l_class_stone then
 					l_file.open_read
-					l_file.read_stream (4)
-					if attached encoding_converter.encoding_from_string_of_class (l_file.last_string, l_class_stone.class_i) as l_enc then
-						set_encoding (l_enc)
-						bom := encoding_converter.last_bom
+						-- Make sure we do not fail when the file is empty.
+					if l_file.count > 0 then
+						l_file.read_stream (4)
+						if attached encoding_converter.encoding_from_string_of_class (l_file.last_string, l_class_stone.class_i) as l_enc then
+							set_encoding (l_enc)
+							bom := encoding_converter.last_bom
+						end
 					end
 					l_file.close
 				end

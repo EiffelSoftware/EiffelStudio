@@ -170,7 +170,7 @@ feature -- Status setting
 	unlink
 			-- Remove associate name from file system.
 		require else
-			name_address: address /= void
+			name_address: address /= Void
 		local
 			ext: C_STRING
 		do

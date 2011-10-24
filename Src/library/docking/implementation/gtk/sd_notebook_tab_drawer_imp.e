@@ -39,14 +39,15 @@ create
 	make
 
 feature {NONE} -- Initlialization
-		make
-				-- Creation method
-			do
-					Precursor {SD_NOTEBOOK_TAB_DRAWER_I}
 
-					-- Make user not break the invariant from EV_ANY_I
-					set_state_flag (base_make_called_flag, True)
-			end
+	make
+			-- Creation method
+		do
+			Precursor {SD_NOTEBOOK_TAB_DRAWER_I}
+
+				-- Make user not break the invariant from EV_ANY_I
+			set_state_flag (base_make_called_flag, True)
+		end
 
 feature -- Command
 
@@ -201,7 +202,7 @@ feature -- Command
 			end
 		end
 
-feature {NONE}  -- Implementation	
+feature {NONE} -- Implementation
 
 	gap_height: INTEGER = 0
 			-- Redefine
@@ -300,7 +301,7 @@ feature {NONE}  -- Implementation
 					$a_x, $a_y, $a_width, $a_height,
 					l_gap_side);
 
-				gtk_style_detach (l_style);		
+				gtk_style_detach (l_style);
 			}
 			]"
 		end
@@ -319,7 +320,7 @@ feature {NONE}  -- Implementation
 				
 				GdkRectangle l_area = {$a_x, $a_y, $a_width, $a_height};
 				
-				gtk_paint_focus  (	l_style,
+				gtk_paint_focus (	l_style,
 									l_widget->window,
 								 	GTK_STATE_ACTIVE,
 								 	&l_area,

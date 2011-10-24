@@ -17,7 +17,8 @@ deferred class NETWORK_SOCKET inherit
 			put_integer_8, put_integer_16, put_integer_64,
 			put_natural_8, put_natural_16, put_natural, put_natural_32, put_natural_64,
 			put_boolean, putbool,
-			put_real, putreal, put_double, putdouble, put_managed_pointer
+			put_real, putreal, put_double, putdouble, put_managed_pointer,
+			set_blocking, set_non_blocking
 		redefine
 			exists, make_socket, address_type, is_valid_peer_address, connect, is_valid_family
 		end
@@ -94,11 +95,8 @@ feature -- Status report
 
 	address_type: NETWORK_SOCKET_ADDRESS
 			-- <Precursor>
-		local
-			l_result: detachable NETWORK_SOCKET_ADDRESS
 		do
-			check l_result_attached: l_result /= Void end
-			Result := l_result
+			check False then end
 		end
 
 	is_closed: BOOLEAN
@@ -207,6 +205,28 @@ feature -- Status setting
 			end
 		ensure
 			timeout_set: timeout = n or timeout = default_timeout
+		end
+
+	set_non_blocking
+			-- <Precursor>
+		do
+			c_set_non_blocking (fd)
+			if fd1 > 0 then
+					-- We need to set the blocking status on other socket if it was opened.
+				c_set_non_blocking (fd1)
+			end
+			is_blocking := False
+		end
+
+	set_blocking
+			-- <Precursor>
+		do
+			c_set_blocking (fd)
+			if fd1 > 0 then
+					-- We need to set the blocking status on other socket if it was opened.
+				c_set_blocking (fd1)
+			end
+			is_blocking := True
 		end
 
 feature {NONE} -- Implementation

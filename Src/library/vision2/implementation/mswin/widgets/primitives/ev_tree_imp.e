@@ -79,7 +79,7 @@ inherit
 		redefine
 			default_style, on_tvn_selchanged, on_tvn_itemexpanded,
 			on_tvn_selchanging, on_erase_background, collapse_item,
-			expand_item
+			expand_item, process_message
 		end
 
 	WEL_TVHT_CONSTANTS
@@ -104,6 +104,8 @@ inherit
 
 	EV_TREE_ACTION_SEQUENCES_IMP
 
+	EV_SCROLLABLE_ACTION_SEQUENCES_IMP
+	
 create
 	make
 
@@ -388,6 +390,37 @@ feature {NONE} -- Implementation
 	removing_item: BOOLEAN
 
 feature {EV_ANY_I} -- WEL Implementation
+
+	process_message (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER
+			-- <Precursor>
+		local
+			l_action_type: INTEGER
+			l_current_position: INTEGER
+			l_constants: EV_SCROLL_CONSTANTS
+		do
+			if msg = wm_vscroll or else msg = wm_hscroll then
+				l_action_type := {WEL_API}.loword (wparam)
+				create l_constants
+				l_action_type := l_constants.convert_from_wel_constant (l_action_type)
+				if l_action_type = {EV_SCROLL_CONSTANTS}.thumb_position or
+					l_action_type = {EV_SCROLL_CONSTANTS}.thumb_track then
+					l_current_position := {WEL_API}.hiword (wparam)
+				end
+			end
+			inspect
+				msg
+			when wm_vscroll then
+				if attached vertical_scroll_actions_internal as l_vertical_actions then
+					l_vertical_actions.call ([l_action_type, l_current_position])
+				end
+			when wm_hscroll then
+				if attached horizontal_scroll_actions_internal as l_horizontal_actions then
+					l_horizontal_actions.call ([l_action_type, l_current_position])
+				end
+			else
+				Result := Precursor (hwnd, msg, wparam, lparam)
+			end
+		end
 
 	image_list: detachable EV_IMAGE_LIST_IMP
 			-- WEL image list to store all images required by items.

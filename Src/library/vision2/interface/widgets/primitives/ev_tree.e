@@ -41,6 +41,14 @@ inherit
 		redefine
 			implementation
 		end
+		
+-- FIXME: comment it until Linux's version implemented
+--	EV_SCROLLABLE_ACTION_SEQUENCES
+--		undefine
+--			is_equal
+--		redefine
+--			implementation
+--		end
 
 create
 	default_create

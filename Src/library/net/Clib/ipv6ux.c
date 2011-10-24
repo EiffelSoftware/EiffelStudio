@@ -97,7 +97,7 @@ EIF_BOOLEAN en_ipv6_supported() {
 	if (res == -1) {
 		res = ipv6_supported_();
 	}
-	return res;
+	return EIF_TEST(res);
 }
 
 
@@ -341,7 +341,7 @@ EIF_INTEGER en_socket_stream_accept (EIF_INTEGER fd, EIF_INTEGER fd1, EIF_INTEGE
 }
 
 void en_socket_datagram_bind (EIF_INTEGER *a_fd, EIF_INTEGER *a_fd1, EIF_INTEGER *a_local_port, EIF_POINTER sockaddr) {
-	// For now we reuse the stream socket implementation, but it could be changed in the feature
+		/* For now we reuse the stream socket implementation, but it could be changed in the feature */
 	en_socket_stream_bind (a_fd, a_fd1, a_local_port, sockaddr);
 }
 

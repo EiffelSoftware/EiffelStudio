@@ -219,11 +219,10 @@ feature -- Basic commands
 			-- Type of `address' and `peer_address'
 		require
 			not_callable: False
-		local
-			l_result: detachable SOCKET_ADDRESS
 		do
-			check l_result_attached: l_result /= Void end
-			Result := l_result
+			check False then end
+		ensure
+			for_typing_only: False
 		end
 
 	set_peer_address (addr: like address)

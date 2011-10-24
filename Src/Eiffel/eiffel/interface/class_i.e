@@ -524,7 +524,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
 		do
 			if not retried then
 				create a_file.make (file_name)
-				if a_file.exists and then a_file.is_readable then
+				if a_file.exists and then a_file.is_readable and then not a_file.is_empty then
 					a_file.open_read
 					a_file.read_stream (a_file.count)
 					a_file.close

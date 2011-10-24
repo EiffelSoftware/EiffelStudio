@@ -167,24 +167,26 @@ feature -- Commands
 			-- Build implementation code.
 		do
 			last_tab_indention := 0
-			create Result.make_empty
-			Result.append (tab (0) + "feature {NONE} -- Image data filling." + new_line)
-			Result.append (new_line)
-			Result.append (tab (1) + "fill_memory" + new_line)
-			Result.append (tab (2) + "-- Fill image data into memory." + new_line)
-			Result.append (tab (-1) + "local" + new_line)
-			Result.append (tab (1) + "l_imp: EV_PIXEL_BUFFER_IMP" + new_line)
-			Result.append (tab (0) + "l_pointer: POINTER" + new_line)
-			Result.append (tab (-1) + "do" + new_line)
-			Result.append (tab (1) + "l_imp ?= implementation" + new_line)
-			Result.append (tab (0) + "check not_void: l_imp /= Void end" + new_line)
-			Result.append (new_line)
-			Result.append (tab (0) + "l_pointer := l_imp.data_ptr" + new_line)
-			Result.append (tab (0) + "if l_pointer /= default_pointer then" + new_line)
-			Result.append (tab (1) + "build_colors (l_pointer)" + new_line)
-			Result.append (tab (0) + "l_imp.unlock" + new_line)
-			Result.append (tab (-1) + "end" + new_line)
-			Result.append (tab (-1) + "end" + new_line)
+			create Result.make_from_string (
+				"[
+feature {NONE} -- Image data filling.
+
+	fill_memory
+			-- Fill image data into memory.
+		local
+			l_pointer: POINTER
+		do
+			check attached {EV_PIXEL_BUFFER_IMP} implementation as l_imp then
+				l_pointer := l_imp.data_ptr
+				if l_pointer /= default_pointer then
+					build_colors (l_pointer)
+					l_imp.unlock
+				end
+			end
+		end
+
+				]"
+			)
 		end
 
 feature -- Helper featuers
@@ -226,7 +228,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2007, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -250,11 +252,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

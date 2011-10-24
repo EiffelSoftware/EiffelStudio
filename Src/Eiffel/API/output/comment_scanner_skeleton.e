@@ -203,8 +203,11 @@ feature {NONE} -- Implementation
 				l_text.count >= 2
 			end
 			if l_text.item (l_text.count) = '}' then
+					-- We only parsed a specimen of the form "{CLASS}"
 				l_class_name := l_text.substring (2, l_text.count - 1)
 			else
+					-- We parsed a specimen of the form "{CLASS}.f"
+					-- so we need to remove 3 characters from the end.
 				l_class_name := l_text.substring (2, l_text.count - 3)
 			end
 			if l_class_name.is_valid_as_string_8 then
@@ -223,7 +226,9 @@ feature {NONE} -- Implementation
 					last_type := l_class.compiled_class.actual_type
 				end
 			else
-				add_text (l_text, False)
+				add_text (ti_l_curly, False)
+				add_text (l_class_name, False)
+				add_text (ti_r_curly, False)
 				reset_last_type
 			end
 		end
@@ -286,7 +291,7 @@ feature {NONE} -- Implementation
 			add_text (encoding_converter.utf8_to_utf32 (text), False)
 		end
 
-	add_text (a_text: STRING_32; a_basic_comment: BOOLEAN)
+	add_text (a_text: STRING_GENERAL; a_basic_comment: BOOLEAN)
 			-- Add `a_text' as normal text.
 		require
 			a_text_not_void: a_text /= Void
@@ -391,7 +396,7 @@ invariant
 	invariant_clause: True -- Your invariant here
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -29,7 +29,8 @@ inherit
 
 	DATAGRAM_SOCKET
 		undefine
-			exists, is_valid_peer_address, is_valid_family, address_type
+			exists, is_valid_peer_address, is_valid_family, address_type,
+			set_blocking, set_non_blocking
 		redefine
 			connect_to_peer
 		end

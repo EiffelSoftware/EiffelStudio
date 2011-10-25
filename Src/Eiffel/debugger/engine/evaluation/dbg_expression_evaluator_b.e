@@ -99,6 +99,7 @@ feature {NONE} -- Evaluation
 		local
 			l_error_occurred: BOOLEAN
 			dobj: DEBUGGED_OBJECT
+			prev_byte_code: detachable BYTE_CODE
 		do
 				--| Clean tmp evaluation.
 			clean_temp_data
@@ -156,6 +157,12 @@ feature {NONE} -- Evaluation
 					--| Initializing
 				clean_temp_data
 
+					--| Record byte_context.byte_code
+				prev_byte_code := byte_context.byte_code
+
+					--| Apply byte_code related to current evaluation
+				byte_context.set_byte_code (context.byte_code)
+
 					--| concrete evaluation
 				process_byte_node_evaluation (keep_assertion_checking)
 
@@ -174,6 +181,9 @@ feature {NONE} -- Evaluation
 						error_occurred
 					end
 				end
+
+					--| Revert byte_context.byte_code
+				byte_context.set_byte_code (prev_byte_code)
 					--| Clean temporary data
 				clean_temp_data
 			else
@@ -2456,7 +2466,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

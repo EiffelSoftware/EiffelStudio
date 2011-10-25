@@ -183,7 +183,9 @@ feature {NONE} -- Evaluation
 				end
 
 					--| Revert byte_context.byte_code
-				byte_context.set_byte_code (prev_byte_code)
+				if prev_byte_code /= Void then
+					byte_context.set_byte_code (prev_byte_code)
+				end
 					--| Clean temporary data
 				clean_temp_data
 			else

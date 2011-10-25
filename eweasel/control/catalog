@@ -994,6 +994,7 @@ test 	removing-descendant-crash	incr414 tcf pass incrementality
 test 	system-change-crash			incr415 tcf fail incrementality
 test 	recompilation-forces-freeze	incr416 tcf pass incrementality
 test 	qat-spurious-veen		incr417 tcf fail incrementality validity
+test 	qat-precursor-anchored-to-caller incr418 tcf fail incrementality anchored_types
 
 
 -- Melting

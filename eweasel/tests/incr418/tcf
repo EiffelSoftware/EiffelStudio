@@ -1,0 +1,22 @@
+
+test_name	qat-precursor-anchored-to-caller
+test_description After a VDRD(6) error is reported, an attribute is changed to a function that calls precursor, where the type of the precursor is anchored to the calling function via a qualified anchored type.  This causes the compiler to crash
+
+define BODY	""
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+copy_sub 	test3.e $CLUSTER test3.e
+copy_raw 	test4.e $CLUSTER test4.e
+
+compile_melted
+compile_result 	validity_error TEST4 VDRD(6)
+
+define BODY	"do Result := precursor {TEST1} end"
+copy_sub 	test3.e $CLUSTER test3.e
+
+resume_compile
+compile_result 	ok
+
+test_end
+

@@ -121,6 +121,26 @@ feature -- Basic operations
 					else
 						check False end -- implied by `is_integer'
 					end
+				elseif is_ref_integer_16 (obj) then
+					if attached {INTEGER_16_REF} obj as r_int then
+						if map_zero_null_value and then r_int.item = numeric_null_value.truncated_to_integer.as_integer_16 then
+							str.append (null_string)
+						else
+							str.append (r_int.out)
+						end
+					else
+						check False end -- implied by `is_integer'
+					end
+				elseif is_ref_integer_64 (obj) then
+					if attached {INTEGER_64_REF} obj as r_int then
+						if map_zero_null_value and then r_int.item = numeric_null_value.truncated_to_integer_64 then
+							str.append (null_string)
+						else
+							str.append (r_int.out)
+						end
+					else
+						check False end -- implied by `is_integer'
+					end
 				elseif is_double (obj) then
 					if attached {DOUBLE_REF} obj as r_double then
 						if map_zero_null_value and then r_double.item = numeric_null_value then

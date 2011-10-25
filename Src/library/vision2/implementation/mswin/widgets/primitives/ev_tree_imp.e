@@ -105,7 +105,7 @@ inherit
 	EV_TREE_ACTION_SEQUENCES_IMP
 
 	EV_SCROLLABLE_ACTION_SEQUENCES_IMP
-	
+
 create
 	make
 
@@ -396,12 +396,12 @@ feature {EV_ANY_I} -- WEL Implementation
 		local
 			l_action_type: INTEGER
 			l_current_position: INTEGER
-			l_constants: EV_SCROLL_CONSTANTS
+			l_helper: EV_SCROLLABLE_ACTION_SEQUENCES_IMP
 		do
 			if msg = wm_vscroll or else msg = wm_hscroll then
 				l_action_type := {WEL_API}.loword (wparam)
-				create l_constants
-				l_action_type := l_constants.convert_from_wel_constant (l_action_type)
+				create l_helper
+				l_action_type := l_helper.convert_from_wel_constant (l_action_type)
 				if l_action_type = {EV_SCROLL_CONSTANTS}.thumb_position or
 					l_action_type = {EV_SCROLL_CONSTANTS}.thumb_track then
 					l_current_position := {WEL_API}.hiword (wparam)

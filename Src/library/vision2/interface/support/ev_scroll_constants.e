@@ -37,40 +37,6 @@ feature -- Enumeration
 	top: INTEGER = 9
 		--Scrolls to the upper left.	
 
-feature -- Command
-
-	convert_from_wel_constant (a_wel_constant: INTEGER): INTEGER
-			-- Convert current from {WEL_SB_CONSTANTS} `a_wel_constant'
-		require
-			valid_constant: True
-		do
-			inspect
-				a_wel_constant
-			when {WEL_SB_CONSTANTS}.Sb_bottom then
-				Result := bottom
-			when {WEL_SB_CONSTANTS}.Sb_endscroll then
-				Result := end_scroll
-			when {WEL_SB_CONSTANTS}.Sb_linedown then
-				Result := line_down
-			when {WEL_SB_CONSTANTS}.Sb_lineup then
-				Result := line_up
-			when {WEL_SB_CONSTANTS}.Sb_pagedown then
-				Result := page_down
-			when {WEL_SB_CONSTANTS}.Sb_pageup then
-				Result := page_up
-			when {WEL_SB_CONSTANTS}.Sb_thumbposition then
-				Result := thumb_position
-			when {WEL_SB_CONSTANTS}.Sb_thumbtrack then
-				Result := thumb_track
-			when {WEL_SB_CONSTANTS}.Sb_top then
-				Result := top
-			else
-				check invalid: False end
-			end
-		ensure
-			valid: is_valid (Result)
-		end
-
 feature -- Query
 
 	is_valid (a_action_type: INTEGER): BOOLEAN

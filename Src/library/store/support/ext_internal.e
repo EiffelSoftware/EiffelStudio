@@ -227,6 +227,18 @@ feature {NONE} -- Status report
 			Result := attached {INTEGER_REF} obj
 		end
 
+	is_ref_integer_16 (obj: detachable ANY): BOOLEAN
+			-- Is `obj' an integer value?
+		do
+			Result := attached {INTEGER_16_REF} obj
+		end
+
+	is_ref_integer_64 (obj: detachable ANY): BOOLEAN
+			-- Is `obj' an integer value?
+		do
+			Result := attached {INTEGER_64_REF} obj
+		end
+
 	is_real (obj: detachable ANY): BOOLEAN
 			-- Is `obj' a real value?
 		do

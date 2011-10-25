@@ -18,7 +18,7 @@ feature
 
 feature -- Status report
 
-	test (v, u: detachable READABLE_STRING_GENERAL): BOOLEAN is
+	test (v, u: detachable READABLE_STRING_GENERAL): BOOLEAN
 			-- Are `v' and `u' considered equal?
 			-- (Use '~' by default.)
 		do

@@ -184,7 +184,8 @@ feature -- Redefine
 				zone.set_title (a_title)
 			end
 		ensure then
-			set: a_title /= Void implies zone.title.same_string_general (a_title)
+			set: attached content as l_content and then l_content.type = {SD_ENUMERATION}.tool and then a_title /= Void
+			 implies zone.title.same_string_general (a_title)
 		end
 
 	change_short_title (a_title: READABLE_STRING_GENERAL; a_content: SD_CONTENT)
@@ -194,7 +195,8 @@ feature -- Redefine
 				zone.set_title (a_title)
 			end
 		ensure then
-			set: a_title /= Void implies zone.title.same_string_general (a_title)
+			set: attached content as l_content and then l_content.type = {SD_ENUMERATION}.editor and then a_title /= Void
+			 implies zone.title.same_string_general (a_title)
 		end
 
 	change_pixmap (a_pixmap: EV_PIXMAP; a_content: SD_CONTENT)

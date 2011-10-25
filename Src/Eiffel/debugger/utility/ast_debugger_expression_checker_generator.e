@@ -70,6 +70,7 @@ feature -- Access: byte node
 			bak_byte_code: BYTE_CODE
 			bak_cc, l_cl: CLASS_C
 		do
+			a_context.reset_evaluation_data
 			dbg_error_handler := a_dbg_error_handler
 			if not retried then
 				error_handler.wipe_out
@@ -110,6 +111,8 @@ feature -- Access: byte node
 						if l_byte_code /= Void then
 							Byte_context.set_byte_code (l_byte_code)
 						end
+
+						a_context.set_byte_code (l_byte_code)
 							--| Locals and object test locals
 						add_local_info_to_ast_context (fi.e_feature, ast_context, a_context)
 					elseif a_context.on_object then

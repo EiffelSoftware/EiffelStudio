@@ -97,6 +97,9 @@ feature -- Element change
 					end
 				end
 				changed := l_reset_byte_node
+				if changed then
+					on_context_changed
+				end
 			end
 		end
 
@@ -154,6 +157,16 @@ feature -- Element change
 			retry
 		end
 
+feature -- Event
+
+	on_context_changed
+			-- Context changed
+		do
+			reset_evaluation_data
+		ensure
+			changed: changed
+		end
+
 feature -- Status report
 
 	changed: BOOLEAN
@@ -178,6 +191,7 @@ feature -- Backup
 	backup_data: like Current
 
 	backup
+			-- Backup Current into `backup_data'
 		local
 			bak: like backup_data
 		do
@@ -189,11 +203,13 @@ feature -- Backup
 		end
 
 	restore
+			-- Restore Current from `backup_data'
 		local
 			bak: like backup_data
 		do
 			bak := backup_data
 			set_data (bak.feature_i, bak.class_c, bak.class_type, bak.local_table, bak.object_test_locals, bak.breakable_index, bak.bp_nested_index)
+			set_byte_code (bak.byte_code)
 		end
 
 feature -- Access
@@ -214,13 +230,29 @@ feature -- Access
 			-- Breakable index position
 
 	bp_nested_index: INTEGER
-			-- Breakable nested index position	
+			-- Breakable nested index position
 
 	local_table: detachable HASH_TABLE [LOCAL_INFO, INTEGER]
 			-- Local variable table
 
 	object_test_locals: detachable LIST [TUPLE [id: ID_AS; li: LOCAL_INFO]]
 			-- Object test local info associated to the context
+
+feature -- Access: Evaluation data
+
+	byte_code: detachable BYTE_CODE
+
+feature -- Element change
+
+	set_byte_code (b: like byte_code)
+		do
+			byte_code := b
+		end
+
+	reset_evaluation_data
+		do
+			set_byte_code (Void)
+		end
 
 feature -- Element change
 
@@ -251,7 +283,7 @@ feature {NONE} -- Implementaion
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

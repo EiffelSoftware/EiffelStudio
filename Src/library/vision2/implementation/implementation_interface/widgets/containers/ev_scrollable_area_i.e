@@ -10,8 +10,8 @@ deferred class
 
 inherit
 	EV_VIEWPORT_I
-
-	EV_SCROLLABLE_ACTION_SEQUENCE_I
+-- FIXME: comment it until Linux's version implemented
+--	EV_SCROLLABLE_ACTION_SEQUENCE_I
 
 feature -- Access
 

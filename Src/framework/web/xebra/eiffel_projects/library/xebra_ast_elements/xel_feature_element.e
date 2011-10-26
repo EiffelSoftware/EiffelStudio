@@ -63,7 +63,7 @@ feature {NONE} -- Access
 
 feature -- Access
 
-	parent_class: detachable XEL_CLASS_ELEMENT assign set_parent_class
+	parent_class: detachable XEL_CLASS_ELEMENT
 			-- The class in which this feature is contained
 
 	set_parent_class (a_parent_class: XEL_CLASS_ELEMENT)

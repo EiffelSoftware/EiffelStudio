@@ -63,7 +63,7 @@ feature -- Operation
 				l_error_count := count_errors (error_manager.errors)
 				error_manager.trace_errors (l_printer)
 				log.eprint ("%N *******" + l_error_count.out + " ERROR(S)*******%N", generating_type)
-				{EXCEPTIONS}.die (-1)
+				(create {EXCEPTIONS}).die (-1)
 			else
 				create l_util
 				l_generation_file_name.extend ({XU_CONSTANTS}.Generated_folder_name)
@@ -100,7 +100,7 @@ feature -- Operation
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

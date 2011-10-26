@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			-- Create image list with all images
 			-- `a_width' by `a_height' pixels
 		do
-			make (a_width, a_height, Ilc_color24, True)
+			make (a_width, a_height, Ilc_color32, True)
 			add_transparent_pixmap -- First image is transparent.
 			create image_list_info.make (4)
 			create filenames_index.make (4)

@@ -25,7 +25,8 @@ inherit
 			on_key_down,
 			interface,
 			make,
-			next_dlgtabitem
+			next_dlgtabitem,
+			ignore_character_code
 		end
 
 	EV_FONTABLE_IMP
@@ -325,6 +326,13 @@ feature {NONE} -- WEL Implementation
 			end
 		end
 
+	ignore_character_code (a_character_code: INTEGER): BOOLEAN
+			-- Should default processing for `a_character_code' be ignored?
+		do
+				-- Ignore character processing for the enter key and the tab character.
+			Result := a_character_code = 13 or a_character_code = 9
+		end
+
 	on_key_down (virtual_key, key_data: INTEGER)
 			-- We check if the enter key is pressed.
 			-- 13 is the number of the return key.
@@ -338,7 +346,6 @@ feature {NONE} -- WEL Implementation
 					-- We only perform the disable if `Current' is actually parented in a dialog.
 				disable_default_processing
 			end
-			process_navigation_key (virtual_key)
 			Precursor {EV_TEXT_COMPONENT_IMP} (virtual_key, key_data)
 			if virtual_key = Vk_return and then is_editable then
 				wel_set_caret_position (0)

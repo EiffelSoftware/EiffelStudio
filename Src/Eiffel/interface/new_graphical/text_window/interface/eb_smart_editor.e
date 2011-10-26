@@ -947,7 +947,7 @@ feature {NONE} -- Brace matching
 					from l_invalidated_lines.start until l_invalidated_lines.after loop
 						l_invalidated_line := l_invalidated_lines.item
 						if l_invalidated_line.is_valid then
-							invalidate_line (l_invalidated_line.index, True)
+							invalidate_line (l_invalidated_line.index, False)
 						end
 						l_invalidated_lines.forth
 					end

@@ -13,10 +13,10 @@ inherit
 		redefine
 			draw_line_to_screen,
 			text_panel,
-			line_numbers_visible,
 			user_initialization,
 			width,
-			text_displayed_type
+			text_displayed_type,
+			is_show_requested
 		end
 
 feature -- Initialization
@@ -63,16 +63,14 @@ feature -- Access
 			end
 		end
 
-	hidden_breakpoints: BOOLEAN
-			-- Are breakpoints hidden? (Default: True)	
-
-feature -- Query
-
-	line_numbers_visible: BOOLEAN
-			-- Are line numbers hidden?
+	is_show_requested: BOOLEAN
+			-- Is `Current' requested to be visible on screen?
 		do
-		    Result := Precursor
+			Result := Precursor or not hidden_breakpoints
 		end
+
+	hidden_breakpoints: BOOLEAN
+			-- Are breakpoints hidden? (Default: True)
 
 feature {EB_CLICKABLE_MARGIN} -- Pick and drop
 
@@ -114,8 +112,11 @@ feature {EB_CLICKABLE_MARGIN} -- Pick and drop
 
 	line_at (a_abs_y: INTEGER): INTEGER
 			-- Line number at position `(0, a_abs_y)'
+		local
+			l_line_height: INTEGER
 		do
-			Result := (a_abs_y - margin_viewport.y_offset + (first_line_displayed * text_panel.line_height)) // text_panel.line_height
+			l_line_height := text_panel.line_height
+			Result := (a_abs_y - margin_viewport.y_offset + (first_line_displayed * l_line_height)) // l_line_height
 		end
 
 	breakable_stone_at_line (a_line: INTEGER): detachable BREAKABLE_STONE
@@ -141,7 +142,9 @@ feature {NONE} -- Implementation
  			bp_token: EDITOR_TOKEN_BREAKPOINT
  			spacer_text: STRING
  			max_chars: INTEGER
+ 			l_line_numbers_visible: BOOLEAN
  		do
+ 			l_line_numbers_visible := line_numbers_visible
  			if text_panel.text_displayed.number_of_lines > 99999 then
 	 			max_chars := text_panel.number_of_lines.out.count
  			else
@@ -180,7 +183,7 @@ feature {NONE} -- Implementation
 						bp_token.hide
 					else
 						line_token ?= curr_token
-						if line_token /= Void and then line_numbers_visible then
+						if line_token /= Void and then l_line_numbers_visible then
 							if not hidden_breakpoints and then attached {EIFFEL_EDITOR_LINE} a_line as l_line then
 								line_token.display_with_offset (l_line.breakpoint_token.width, y, margin_area, text_panel)
 							else
@@ -260,7 +263,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

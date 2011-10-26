@@ -77,21 +77,46 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
+	is_show_requested: BOOLEAN
+			-- Is `Current' requested to be visible on screen?
+		do
+			Result := line_numbers_enabled and then line_numbers_visible
+		end
+
 	width: INTEGER
 			-- Width in pixels calculated based on which tokens should be displayed
 		do
-			if text_panel.line_numbers_enabled and then line_numbers_visible then
+			if line_numbers_enabled and then line_numbers_visible then
 				Result := Result + internal_line_number_area_width
 			end
 		end
 
 	line_numbers_visible: BOOLEAN
-			-- Are line numbers hidden?
+			-- Are line numbers requested to be displayed?
 		do
 		    Result := text_panel.line_numbers_visible
 		end
 
+	line_numbers_enabled: BOOLEAN
+			-- Are line numbers enabled?
+
 feature -- Status setting
+
+	enable_line_numbers
+			-- Enable line numbers
+		do
+			line_numbers_enabled := True
+		ensure
+			line_numbers_enabled: line_numbers_enabled = True
+		end
+
+	disable_line_numbers
+			-- Disable line numbers
+		do
+			line_numbers_enabled := False
+		ensure
+			line_numbers_disabled: line_numbers_enabled = False
+		end
 
 	set_margin_width (a_width: INTEGER)
 			-- If `a_width' is greater than `width', assign `a_width' to `width'

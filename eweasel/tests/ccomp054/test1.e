@@ -8,11 +8,11 @@ feature
 			"C++ inline use <stdio.h>"
 		alias
 			"[
-					extern char *eif_typename(int16);
+					extern char *eif_typename(EIF_TYPE_INDEX);
 #ifdef EIF_IL_DLL
 					printf ("TEST\n");
 #else
-					printf ("%s\n", eif_typename((int16)Dftype($an_obj)));
+					printf ("%s\n", eif_typename((EIF_TYPE_INDEX)Dftype($an_obj)));
 #endif
 					return 5;
 			]"

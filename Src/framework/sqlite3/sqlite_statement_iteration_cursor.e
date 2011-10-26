@@ -54,12 +54,13 @@ feature {NONE} -- Initalization
 			a_statement_is_connected: a_statement.is_connected
 		do
 			statement := a_statement
-				--| Create a dummy attached `target' to satisfy void-safety
-				--| This dummy value will be overwritten by `iteration_make'
 			last_result := {SQLITE_RESULT_CODE}.ok
+			start
 		ensure
 			statement_statement: statement = a_statement
-			last_result_is_ok: last_result = {SQLITE_RESULT_CODE}.ok
+			last_result_is_valid: last_result = {SQLITE_RESULT_CODE}.ok 
+				or last_result = {SQLITE_RESULT_CODE}.row
+				or last_result = {SQLITE_RESULT_CODE}.done
 		end
 
 	make_with_bindings (a_statement: SQLITE_STATEMENT; a_bindings: ARRAY [SQLITE_BIND_ARG [ANY]])
@@ -76,7 +77,9 @@ feature {NONE} -- Initalization
 		ensure
 			statement_statement: statement = a_statement
 			bindings_set: bindings = a_bindings
-			last_result_is_ok: last_result = {SQLITE_RESULT_CODE}.ok
+			last_result_is_valid: last_result = {SQLITE_RESULT_CODE}.ok 
+				or last_result = {SQLITE_RESULT_CODE}.row
+				or last_result = {SQLITE_RESULT_CODE}.done
 		end
 
 feature -- Access

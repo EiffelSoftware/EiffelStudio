@@ -229,15 +229,12 @@ feature {NONE} -- Implementation, focus event
 		do
 			inspect
 				virtual_key
-			when {WEL_INPUT_CONSTANTS}.vk_tab then
-				check tabstop_set: flag_set (style, ws_tabstop) end
-				tab_action (not key_down ({WEL_INPUT_CONSTANTS}.vk_shift))
 			when {WEL_INPUT_CONSTANTS}.vk_down, {WEL_INPUT_CONSTANTS}.vk_right then
 				arrow_action (True)
 			when {WEL_INPUT_CONSTANTS}.vk_up, {WEL_INPUT_CONSTANTS}.vk_left then
 				arrow_action (False)
 			else
-				-- Do nothing
+				Precursor (virtual_key)
 			end
 		end
 

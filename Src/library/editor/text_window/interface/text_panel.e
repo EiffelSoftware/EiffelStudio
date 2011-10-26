@@ -109,7 +109,6 @@ feature {NONE} -- Initialization
 
 				-- First display the first line...
 			first_line_displayed := 1
-			line_numbers_enabled := True
 			initialize_editor_context
 			text_displayed := new_text_displayed
 			register_observers
@@ -122,6 +121,11 @@ feature {NONE} -- Initialization
 				-- Create the margin and associate it with `margin_container'.
 			create l_margin.make_with_panel (Current)
 			margin := l_margin
+
+				-- Enable line number functionality in margin.
+			l_margin.enable_line_numbers
+
+
 			if attached {EV_HORIZONTAL_BOX} margin_container.parent as l_parent then
 				l_parent.prune (margin_container)
 				margin_container := l_margin.margin_viewport
@@ -215,7 +219,7 @@ feature -- Access
 	date_of_file_when_loaded: INTEGER
 			-- Date of current file when it was loaded.
 
-	margin: detachable MARGIN_WIDGET
+	margin: detachable MARGIN_WIDGET note option: stable attribute end
 			-- Margin.
 
 	first_line_displayed: INTEGER
@@ -429,19 +433,19 @@ feature -- Query
 	has_margin: BOOLEAN
 			-- Should margin be displayed?
 		do
-			Result := line_numbers_enabled and line_numbers_visible
+			Result := margin /= Void and then margin.is_show_requested
 		end
 
 	is_empty: BOOLEAN
 			-- Is the text panel blank?
 		do
-			Result := text_displayed /= Void and then text_displayed.is_empty
+			Result := text_displayed.is_empty
 		end
 
 	text_is_fully_loaded: BOOLEAN
 			-- Is current text still being loaded?
 		do
-			Result := text_displayed /= Void and then text_displayed.reading_text_finished
+			Result := text_displayed.reading_text_finished
 		end
 
 	line_numbers_visible: BOOLEAN
@@ -500,7 +504,6 @@ feature -- Query
 			else
 				Result := internal_left_margin_width
 			end
-
 		end
 
 	changed: BOOLEAN
@@ -512,6 +515,9 @@ feature -- Query
 
 	line_numbers_enabled: BOOLEAN
 			-- Is it permitted to show line numbers in Current?
+		do
+			Result := margin /= Void and then margin.line_numbers_enabled
+		end
 
 	is_offset_valid: BOOLEAN
 			-- If viewport offset vaild?
@@ -569,8 +575,8 @@ feature -- File Properties
 
 feature -- Status setting
 
-	refresh_line_number_display
-	        -- Refresh line number display in Current and update display
+	refresh_line_number_display, refresh_margin
+	        -- Refresh margin display in `Current'.
 		do
 			if has_margin then
 				margin_container.show
@@ -585,8 +591,10 @@ feature -- Status setting
 	enable_line_numbers
 			-- Enable line numbers
 		do
-			line_numbers_enabled := True
-			refresh_line_number_display
+			if margin /= Void then
+				margin.enable_line_numbers
+			end
+			refresh_margin
 		ensure
 			line_numbers_enabled: line_numbers_enabled = True
 		end
@@ -594,8 +602,10 @@ feature -- Status setting
 	disable_line_numbers
 			-- Disable line numbers
 		do
-			line_numbers_enabled := False
-			refresh_line_number_display
+			if margin /= Void then
+				margin.disable_line_numbers
+			end
+			refresh_margin
 		ensure
 			line_numbers_disabled: line_numbers_enabled = False
 		end
@@ -644,10 +654,8 @@ feature -- Basic Operations
 			-- Update display without waiting for next idle
 		do
 			refresh
-			if attached margin as l_margin then
-				l_margin.margin_area.flush
-			else
-				check margin_always_attached: False end
+			if margin /= Void and then margin.is_show_requested then
+				margin.margin_area.flush
 			end
 			editor_drawing_area.flush
 			in_scroll := False
@@ -923,7 +931,7 @@ feature {MARGIN_WIDGET} -- Private properties of the text window
 	show_vertical_scrollbar: BOOLEAN
 			-- Is it necessary to show the vertical scroll bar ?
 		do
-			Result := text_displayed /= Void and then (text_displayed.number_of_lines > number_of_lines_displayed // 2)
+			Result := (text_displayed.number_of_lines > number_of_lines_displayed // 2)
 		end
 
 	horizontal_scrollbar_needs_updating: BOOLEAN
@@ -933,9 +941,6 @@ feature {MARGIN_WIDGET} -- Private properties of the text window
 	vertical_scrollbar_needs_updating: BOOLEAN
 			-- Is it necessary to update vertical
 			-- scroll bar display ?
-
-	display_margin: BOOLEAN
-			-- Should margin be displayed?	
 
 feature -- Status Setting
 
@@ -1553,16 +1558,6 @@ feature {NONE} -- Display functions
 			if draw_immediately then
 				editor_drawing_area.flush
 			end
-
-			-- The code below uses a direct call to the expose actions.  It was done because something on GTK was broken without it,
-			-- but I cannot remember what that was.  So if GTK has issues using this instead of the code above will fix it, but a better
-			-- solution is going to be needed because the code below is a hack.
-
-			--			if draw_immediately then
-			--				editor_drawing_area.expose_actions.call ([0, editor_viewport.y_offset + y_pos, buffered_line.width, line_height])
-			--			else
-			--				editor_drawing_area.redraw_rectangle (0, editor_viewport.y_offset + y_pos, buffered_line.width, line_height)
-			--			end
 		end
 
 feature {NONE} -- Text loading
@@ -1700,9 +1695,8 @@ feature -- Memory management
 			editor_drawing_area.destroy
 			create editor_drawing_area	-- Detach original instance to help memory management.
 
-			if attached margin as l_margin then
-				l_margin.destroy
-				margin := Void
+			if margin /= Void then
+				margin.destroy
 			end
 			scroll_cell.destroy
 			create scroll_cell

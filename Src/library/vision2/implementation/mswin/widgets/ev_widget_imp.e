@@ -934,17 +934,20 @@ feature {EV_DIALOG_IMP_COMMON} -- Implementation
 			-- key. If `direction' it goes to the next widget otherwise,
 			-- it goes to the previous one.
 		local
-			l_null, hwnd: POINTER
+			hwnd: POINTER
 			window: detachable WEL_WINDOW
 			l_top: like top_level_window_imp
 		do
 			l_top := top_level_window_imp
 			if l_top /= Void then
 				hwnd := next_dlgtabitem (l_top.wel_item, wel_item, direction)
-				if hwnd /= l_null then
-					window := window_of_item (hwnd)
-					if window /= Void then
-						window.set_focus
+				if hwnd /= default_pointer then
+					if hwnd /= wel_item then
+							-- Don't do anything if search returns `Current'.
+						window := window_of_item (hwnd)
+						if window /= Void then
+							window.set_focus
+						end
 					end
 				end
 			end

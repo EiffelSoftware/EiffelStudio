@@ -11,7 +11,7 @@ class
 inherit
 	ES_GRID
 		redefine
-			initialize, grid_menu, row_type
+			initialize, grid_menu, row_type, on_row_expand, on_row_collapse
 		end
 
 	SHARED_DEBUGGER_MANAGER
@@ -95,8 +95,6 @@ feature {NONE} -- Initialization
 			enable_partial_dynamic_content
 			set_dynamic_content_function (agent compute_grid_item)
 
-			row_expand_actions.extend (agent on_row_expand)
-			row_collapse_actions.extend (agent on_row_collapse)
 			set_item_pebble_function (agent on_pebble_function)
 			enable_grid_item_pnd_support
 
@@ -593,6 +591,31 @@ feature -- Query
 
 feature {NONE} -- Actions implementation
 
+	on_row_expand (a_row: EV_GRID_ROW)
+			-- <Precursor>
+		local
+			ctler: ES_GRID_ROW_CONTROLLER
+		do
+			ctler ?= a_row.data
+			if ctler /= Void then
+				ctler.call_expand_action (a_row)
+				process_columns_auto_resizing
+			end
+			Precursor (a_row)
+		end
+
+	on_row_collapse (a_row: EV_GRID_ROW)
+			-- <Precursor>
+		local
+			ctler: ES_GRID_ROW_CONTROLLER
+		do
+			ctler ?= a_row.data
+			if ctler /= Void then
+				ctler.call_collapse_action (a_row)
+			end
+			Precursor (a_row)
+		end
+
 	on_pebble_function (a_item: EV_GRID_ITEM): ANY
 		do
 			if
@@ -671,35 +694,6 @@ feature {NONE} -- Actions implementation
 					(create {EB_CONTROL_PICK_HANDLER}).launch_stone (l_stone)
 				end
 			end
-		end
-
-	on_row_expand (a_row: EV_GRID_ROW)
-		require
-			a_row /= Void
-			row_related_to_current: a_row.parent = Current
-		local
-			ctler: ES_GRID_ROW_CONTROLLER
-		do
-			ctler ?= a_row.data
-			if ctler /= Void then
-				ctler.call_expand_action (a_row)
-				process_columns_auto_resizing
-			end
-			request_columns_auto_resizing
-		end
-
-	on_row_collapse (a_row: EV_GRID_ROW)
-		require
-			a_row /= Void
-			row_related_to_current: a_row.parent = Current
-		local
-			ctler: ES_GRID_ROW_CONTROLLER
-		do
-			ctler ?= a_row.data
-			if ctler /= Void then
-				ctler.call_collapse_action (a_row)
-			end
-			request_columns_auto_resizing
 		end
 
 	compute_grid_item (c, r: INTEGER): EV_GRID_ITEM
@@ -1025,7 +1019,7 @@ feature -- Graphical look
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

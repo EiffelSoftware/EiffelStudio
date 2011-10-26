@@ -83,6 +83,10 @@ feature {NONE} -- Initialization
 				do
 					last_resized_grid_header := a_item
 				end)
+
+				-- Add default row expand and collapse handling.
+			row_expand_actions.extend (agent on_row_expand)
+			row_collapse_actions.extend (agent on_row_collapse)
 		end
 
 	color_separator: EV_COLOR
@@ -393,6 +397,9 @@ feature -- Resizing
 				hf := header.font
 				check header_font_not_void: hf /= Void end
 				hw := hf.string_width (col.header_item.text) + Additional_pixels_for_header_item_width
+				if col.header_item.pixmap /= Void then
+					hw := hw + header.pixmaps_width
+				end
 				w := w.max (hw)
 			end
 			if w > 5 then
@@ -453,10 +460,10 @@ feature -- Header menu
 				Result.extend (mci)
 				Result.extend (create {EV_MENU_SEPARATOR})
 				create mi.make_with_text (names.m_resize_to_content)
-				mi.select_actions.extend (agent safe_resize_column_to_content (col, False, False))
+				mi.select_actions.extend (agent safe_resize_column_to_content (col, True, False))
 				Result.extend (mi)
 				create mi.make_with_text (names.m_resize_to_visible_content)
-				mi.select_actions.extend (agent safe_resize_column_to_content (col, False, True))
+				mi.select_actions.extend (agent safe_resize_column_to_content (col, True, True))
 				Result.extend (mi)
 			end
 
@@ -790,7 +797,7 @@ feature {NONE} -- column resizing impl
 			col: EV_GRID_COLUMN
 			c: INTEGER
 			w: INTEGER
-			l_column_text_width: INTEGER
+			l_column_header_width: INTEGER
 			l_font: EV_FONT
 		do
 			if row_count > 0 then
@@ -805,8 +812,11 @@ feature {NONE} -- column resizing impl
 						col := column (c)
 						if col /= Void then
 							w := col.required_width_of_item_span (1, row_count) + Additional_pixels_for_column_width
-							l_column_text_width := l_font.string_width (col.header_item.text) + 20
-							w := w.max (l_column_text_width)
+							l_column_header_width := l_font.string_width (col.header_item.text) + 20
+							if col.pixmap /= Void then
+								l_column_header_width := l_column_header_width + header.pixmaps_width
+							end
+							w := w.max (l_column_header_width)
 							if w > 5 then
 								if w < col.width and col.index = column_count then
 									--| Do not resize smaller if it is last column
@@ -1022,6 +1032,24 @@ feature {NONE} -- Implementation
 	delayed_cleaning: detachable ES_DELAYED_ACTION
 
 feature {NONE} -- Actions
+
+	on_row_expand (a_row: EV_GRID_ROW)
+			-- Default handling when row is expanded
+		require
+			a_row /= Void
+			row_related_to_current: a_row.parent = Current
+		do
+			request_columns_auto_resizing
+		end
+
+	on_row_collapse (a_row: EV_GRID_ROW)
+			-- Default handling when row is collapsed.
+		require
+			a_row /= Void
+			row_related_to_current: a_row.parent = Current
+		do
+			request_columns_auto_resizing
+		end
 
 	on_expand_rows (a_recursive: BOOLEAN)
 			-- Action to be performed when expanding rows.

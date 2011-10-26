@@ -2,14 +2,15 @@
 
 #include "ipv6.h"
 
-static EIF_BOOLEAN prefer_ipv4 = 0;
+/* Do we default to IPv6? */
+static EIF_BOOLEAN is_default_ipv6 = EIF_FALSE;
 
-void en_set_prefer_ipv4(EIF_BOOLEAN prefer) {
-	prefer_ipv4 = prefer;
+void en_set_prefer_ipv4 (EIF_BOOLEAN prefer) {
+	is_default_ipv6 = (EIF_BOOLEAN) !prefer;
 }
 
 EIF_BOOLEAN en_get_prefer_ipv4() {
-	return prefer_ipv4;
+	return (EIF_BOOLEAN) !is_default_ipv6;
 }
 
 EIF_BOOLEAN en_ipv6_available() {

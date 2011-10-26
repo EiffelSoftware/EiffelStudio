@@ -29,7 +29,6 @@ inherit
 			internal_recycle,
 			internal_detach_entities,
 			margin,
-			has_margin,
 			cursor_type,
 			line_type
 		end
@@ -90,6 +89,7 @@ feature {NONE}-- Initialization
 		end
 
 feature -- Access
+
 	text_length: INTEGER
 			-- Length of displayed text.
 		do
@@ -99,9 +99,7 @@ feature -- Access
 	position: INTEGER
 			-- Current cursor position.
 		do
-			if text_displayed.is_empty then
-				Result := 0
-			else
+			if not text_displayed.is_empty then
 				Result := text_displayed.cursor.pos_in_text
 			end
 		end
@@ -147,17 +145,9 @@ feature -- Content Change
 				set_editor_width (editor_width)
 				update_horizontal_scrollbar
 				refresh_now
-				margin.setup_margin
+				margin.refresh_now
 			end
 			editor_viewport.enable_sensitive
-		end
-
-feature -- Status report
-
-	has_margin: BOOLEAN
-			-- Should margin be displayed?
-		do
-			Result := (line_numbers_enabled and line_numbers_visible) or not hidden_breakpoints
 		end
 
 feature -- Status setting
@@ -166,19 +156,14 @@ feature -- Status setting
 			-- Set `has_breakable_slots' to `True' and update display.
 		do
 			margin.show_breakpoints
-			margin_container.show
-			margin.refresh_now
+			refresh_margin
 		end
 
 	disable_has_breakable_slots
 			-- Set `has_breakable_slots' to `False' and update display.
 		do
 			margin.hide_breakpoints
-			-- `margin_container' also have line number widget, if we hide it line nubmer widget will not displayed.
-			if not line_numbers_enabled then
-				margin_container.hide
-			end
-			margin.refresh_now
+			refresh_margin
 		end
 
 feature -- Possibly delayed operations

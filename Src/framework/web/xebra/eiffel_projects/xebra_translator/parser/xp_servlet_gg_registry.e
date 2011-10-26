@@ -60,7 +60,7 @@ feature -- Access
 	taglib_registry: HASH_TABLE [XTL_TAG_LIBRARY, STRING]
 			-- Registry for the taglibs
 
-	taglib_configuration: detachable LIST [TUPLE [STRING, STRING, STRING]] assign set_taglibrary_config
+	taglib_configuration: detachable LIST [TUPLE [STRING, STRING, STRING]]
 			-- The configuration of the taglibs
 
 	set_taglibrary_config (a_config: LIST [TUPLE [STRING, STRING, STRING]])
@@ -201,7 +201,7 @@ invariant
 	taglib_registry_attached: attached taglib_registry
 	servletg_g_generators_attached: attached servlet_g_generators
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

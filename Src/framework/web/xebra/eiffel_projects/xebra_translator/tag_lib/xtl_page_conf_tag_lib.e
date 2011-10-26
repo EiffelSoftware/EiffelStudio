@@ -60,7 +60,7 @@ feature {NONE} -- Access
 	allowed_tags: HASH_TABLE [ARRAYED_LIST [STRING], STRING]
 			-- All the tag names which are allowed
 
-	xeb_parser: detachable XT_XEB_PARSER assign set_parser
+	xeb_parser: detachable XT_XEB_PARSER
 			-- The xeb parser.
 
 feature -- Access
@@ -168,7 +168,7 @@ invariant
 	id_attached: attached id
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

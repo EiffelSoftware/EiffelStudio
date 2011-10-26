@@ -18,7 +18,7 @@ inherit
 
 feature -- Initialization
 
-	make_xrpc (a_path, a_servlet_name: STRING; a_controller_id_table: HASH_TABLE [STRING, STRING]; a_current_file_path: STRING;
+	make_xrpc (a_path, a_servlet_name: STRING; a_controller_id_table: HASH_TABLE [TUPLE [class_name: STRING; creator: STRING], STRING]; a_current_file_path: STRING;
 				a_constants_class: XEL_CONSTANTS_CLASS_ELEMENT; a_api_class_name: STRING)
 			-- Precursor
 		require
@@ -89,7 +89,7 @@ feature -- Implement
 	Servlet_xrpc_class_name: STRING = "XWA_XRPC_SERVLET"
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

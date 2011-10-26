@@ -75,7 +75,7 @@ feature -- Access
 			a_feature_attached: attached a_feature
 		do
 			features.extend (a_feature)
-			a_feature.parent_class := Current
+			a_feature.set_parent_class (Current)
 		ensure
 			feature_added: features.count = old features.count + 1
 		end
@@ -252,7 +252,7 @@ note
 }"
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

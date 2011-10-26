@@ -46,12 +46,13 @@ feature -- Basic operations
 			-- the item state. Drawing is performed into `a_rect' and clipped to `a_clip_rect'. `background_brush' is not used for this themed version.
 		require else
 			theme_exists: theme /= default_pointer
+		local
+			l_clip_rect: POINTER
 		do
 			if a_clip_rect /= Void then
-				cwin_draw_theme_background (theme, a_hdc.item, a_part_id, a_state_id, a_rect.item, a_clip_rect.item)
-			else
-				cwin_draw_theme_background (theme, a_hdc.item, a_part_id, a_state_id, a_rect.item, default_pointer)
+				l_clip_rect := a_clip_rect.item
 			end
+			cwin_draw_theme_background (theme, a_hdc.item, a_part_id, a_state_id, a_rect.item, l_clip_rect)
 		end
 
 	get_notebook_parent (a_widget: EV_WIDGET_IMP): detachable EV_NOTEBOOK_IMP

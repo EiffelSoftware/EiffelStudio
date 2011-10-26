@@ -164,7 +164,7 @@ feature -- Queries
 				error_message_32 := unexpected_error (data_select_name)
 			end
 		rescue
-			rescued := TRUE
+			rescued := True
 			retry
 		end
 
@@ -373,7 +373,7 @@ feature {NONE} -- Implementation
 		require
 			action_not_void: action /= Void
 		do
-			Result := {STRING_32}"Unexpected error in " + action
+			Result := {STRING_32} "Unexpected error in " + action
 		end
 
 	Connection_info_name: STRING = "set_connection_information"

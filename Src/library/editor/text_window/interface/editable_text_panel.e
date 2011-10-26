@@ -1009,7 +1009,7 @@ feature {NONE} -- Implementation
 			-- Is it necessary to show the vertical scroll bar ?
 		do
 			if not is_read_only and then allow_edition then
-				Result := text_displayed /= Void and then (number_of_lines_displayed < 2 * (text_displayed.number_of_lines - 1))
+				Result := (number_of_lines_displayed < 2 * (text_displayed.number_of_lines - 1))
 			else
 				Result := Precursor {SELECTABLE_TEXT_PANEL}
 			end

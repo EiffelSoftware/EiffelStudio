@@ -640,9 +640,12 @@ feature {EV_ANY_I} -- Drawing implementation
 				right_spacing := image_pixmap_space
 				left_spacing := image_pixmap_space
 			else
-				right_spacing := image_pixmap_space
+				image_pixmap_space := pixmap_border
+
 				combined_width := image_width + text_width + image_pixmap_space
-				left_spacing := pixmap_border
+				left_spacing := (width - combined_width) // 2
+
+				right_spacing := left_spacing
 			end
 
 				-- Calculate `left_position' which is the offset in pixels from the left of the button

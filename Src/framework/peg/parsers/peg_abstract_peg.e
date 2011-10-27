@@ -26,8 +26,8 @@ feature {PEG_ABSTRACT_PEG} -- Access
 	parser_name: detachable READABLE_STRING_8
 			-- The optional name for the parser
 
-	error_message_handler: detachable PROCEDURE [ANY, TUPLE [PEG_PARSER_RESULT]] assign set_error_message_handler
-			-- If parsing is unsucessful, what should the parser do?
+	error_message_handler: detachable PROCEDURE [ANY, TUPLE [PEG_PARSER_RESULT]] 
+			-- If parsing is unsuccessful, what should the parser do?
 			-- Detachable!
 
 	ommit: BOOLEAN

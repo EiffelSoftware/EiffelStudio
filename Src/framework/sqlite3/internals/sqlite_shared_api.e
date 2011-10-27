@@ -11,8 +11,8 @@ class
 	SQLITE_SHARED_API
 
 inherit
-	USABLE_I
-
+	ANY
+	
 --inherit {NONE}
 	SQLITE_HELPERS
 		export
@@ -30,10 +30,10 @@ feature {NONE} -- Access
 feature -- Status report
 
 	is_interface_usable: BOOLEAN
-			-- <Precursor>
+			-- Determines if the interface is usable.
 		do
 			Result := sqlite_api.is_interface_usable
-		ensure then
+		ensure
 			sqlite_api_is_interface_usable: Result implies sqlite_api.is_interface_usable
 		end
 
@@ -46,7 +46,7 @@ feature -- Status report
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

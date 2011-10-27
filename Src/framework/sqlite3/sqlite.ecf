@@ -62,14 +62,14 @@
 			</condition>
 		</external_library>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="false"/>
-		<library name="enumerated_type" location="$EIFFEL_SRC\framework\enumerated_type\enumerated_type.ecf" readonly="false"/>
-		<library name="patterns" location="$EIFFEL_SRC\framework\patterns\patterns.ecf" readonly="false"/>
 		<cluster name="sqlite" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/experimental$</exclude>
 				<exclude>/spec$</exclude>
 				<exclude>/Clib$</exclude>
+				<exclude>/enumerated_type$</exclude>
 			</file_rule>
 		</cluster>
+		<cluster name="enumerated_type" location=".\enumerated_type" hidden="true"/>
 	</target>
 </system>

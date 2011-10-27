@@ -126,9 +126,25 @@ feature {NONE} -- Implementation
 			-- Handle the Escape key for cancelling activation.
 		require
 			a_key_not_void: a_key /= Void
+		local
+			l_deactivate: BOOLEAN
 		do
-			if a_key.code = {EV_KEY_CONSTANTS}.key_escape then
+			inspect
+				a_key.code
+			when {EV_KEY_CONSTANTS}.key_escape then
+					-- User is cancelling the activation.
 				user_cancelled_activation := True
+				l_deactivate := True
+			when {EV_KEY_CONSTANTS}.key_tab then
+					-- Tab key should exit the activation.
+				l_deactivate := True
+			when {EV_KEY_CONSTANTS}.key_enter then
+					-- Enter key should exit the activation.
+				l_deactivate := True
+			else
+				-- Do nothing
+			end
+			if l_deactivate then
 				deactivate
 			end
 		end
@@ -180,7 +196,6 @@ feature {NONE} -- Implementation
 		do
 			l_text_field := text_field
 			check l_text_field /= Void end
-			l_text_field.return_actions.extend (agent deactivate)
 			l_text_field.focus_out_actions.extend (agent deactivate)
 			l_text_field.set_focus
 			l_text_field.set_caret_position (l_text_field.text.count + 1)

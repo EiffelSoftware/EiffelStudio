@@ -11,9 +11,9 @@ class
 	TERMINAL_TEXT_STYLE
 
 inherit
-	ENUMERATED_TYPE [NATURAL_8]
+	ANY
 		redefine
-			is_valid_value
+			default_create, out
 		end
 
 create
@@ -23,6 +23,26 @@ create
 convert
 	make ({NATURAL_8}),
 	item: {NATURAL_8}
+
+feature {TERMINAL_TEXT_STYLE} -- Initialization
+
+	frozen default_create
+			-- Default initialization.
+		do
+			make (members.item (members.lower))
+		end
+
+	frozen make (n: like item)
+			-- Initializes instance from base entity `n'
+			--
+			-- `n': A numerical value associated with a member of `Current'
+		require
+			n_is_valid_value: is_valid_value (n)
+		do
+			internal_value := n
+		ensure
+			internal_value_set: internal_value = n
+		end
 
 feature -- Access
 
@@ -44,6 +64,17 @@ feature -- Access
 	hidden: NATURAL_8 = 0x10
 			-- Hidden text style (background matches foreground).
 
+feature -- Conversion
+
+	frozen item: NATURAL_8
+			-- `Current' as a {NATURAL_8} value
+		do
+			Result := internal_value
+		ensure
+			result_set: Result = internal_value
+			result_is_valid_value: is_valid_value (Result)
+		end
+
 feature -- Status report
 
 	is_valid_value (n: NATURAL_8): BOOLEAN
@@ -55,7 +86,7 @@ feature -- Status report
 			i, nb: INTEGER
 			l_assert: BOOLEAN
 		do
-			Result := Precursor (n) or else (0x1F & internal_value) = internal_value
+			Result := members.has (n) or else (0x1F & internal_value) = internal_value
 		end
 
 feature -- Bit operations
@@ -80,7 +111,18 @@ feature -- Bit operations
 			result_attached: attached Result
 		end
 
+feature -- Output
+
+	out: STRING
+			-- <Precursor>
+		do
+			Result := internal_value.out
+		end
+
 feature {NONE} -- Factory
+
+	frozen internal_value: like item
+			-- Internal raw value
 
 	members: ARRAY [NATURAL_8]
 			-- <Precursor>
@@ -88,8 +130,11 @@ feature {NONE} -- Factory
 			Result := <<none, bold, italic, underlined, reversed, hidden>>
 		end
 
+invariant
+	is_valid_value: is_valid_value (internal_value)
+
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -11,7 +11,10 @@ class
 	TERMINAL_COLOR
 
 inherit
-	ENUMERATED_TYPE [INTEGER_32]
+	ANY
+		redefine
+			default_create, out
+		end
 
 create
 	default_create,
@@ -20,6 +23,26 @@ create
 convert
 	make ({INTEGER_32}),
 	item: {INTEGER_32}
+
+feature {TERMINAL_COLOR} -- Initialization
+
+	frozen default_create
+			-- Default initialization.
+		do
+			make (members.item (members.lower))
+		end
+
+	frozen make (n: like item)
+			-- Initializes instance from base entity `n'
+			--
+			-- `n': A numerical value associated with a member of `Current'
+		require
+			n_is_valid_value: is_valid_value (n)
+		do
+			internal_value := n
+		ensure
+			internal_value_set: internal_value = n
+		end
 
 feature -- Access
 
@@ -98,6 +121,17 @@ feature -- Access
 	dim_white: INTEGER_32 = 0x27
 			-- White color.
 
+feature -- Conversion
+
+	frozen item: INTEGER_32
+			-- `Current' as a {INTEGER_32} value
+		do
+			Result := internal_value
+		ensure
+			result_set: Result = internal_value
+			result_is_valid_value: is_valid_value (Result)
+		end
+
 feature -- Access
 
 	color: INTEGER
@@ -109,6 +143,17 @@ feature -- Access
 			end
 		ensure
 			valid_result: Result >= -1 and Result <= 0x7
+		end
+
+feature -- Query
+
+	is_valid_value (n: like item): BOOLEAN
+			-- Determines if `n' a value associated with a member of `Current'.
+			--
+			-- `n': A numerical value to check for validity against members of `Current'.
+			-- `Result': True if `n' a valid member, False otherwise.
+		do
+			Result := members.has (n)
 		end
 
 feature -- Status report
@@ -131,7 +176,18 @@ feature -- Status report
 			Result := (0x20 & internal_value) = 0x20
 		end
 
+feature -- Output
+
+	out: STRING
+			-- <Precursor>
+		do
+			Result := internal_value.out
+		end
+
 feature {NONE} -- Factory
+
+	frozen internal_value: like item
+			-- Internal raw value
 
 	members: ARRAY [INTEGER_32]
 			-- <Precursor>
@@ -141,8 +197,11 @@ feature {NONE} -- Factory
 				dim_black, dim_red, dim_green, dim_yellow, dim_blue, dim_magenta, dim_cyan, dim_white>>
 		end
 
+invariant
+	is_valid_value: is_valid_value (internal_value)
+
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -11,7 +11,7 @@
 		</option>
 		<setting name="console_application" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf" readonly="true"/>
-		<library name="sqlite" location="$EIFFEL_SRC\framework\sqlite3\sqlite-safe.ecf" readonly="false"/>
+		<library name="sqlite" location="..\..\sqlite-safe.ecf" readonly="false"/>
 		<cluster name="example" location=".\">
 			<file_rule>
 				<exclude>/EIFGENs$</exclude>

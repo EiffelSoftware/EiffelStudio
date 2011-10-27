@@ -14,7 +14,7 @@ class
 	SQLITE_API
 
 inherit
-	USABLE_I
+	ANY
 
 --inherit {NONE}
 	SQLITE_INTERNALS
@@ -154,10 +154,10 @@ feature -- Element change
 feature -- Status report
 
 	is_interface_usable: BOOLEAN
-			-- <Precursor>
+			-- Determines if the interface is usable.
 		do
 			Result := is_initialized
-		ensure then
+		ensure
 			is_initialized: Result implies is_initialized
 		end
 
@@ -208,7 +208,7 @@ invariant
 	initialization_count_not_negative: initialization_count.item >= 0
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

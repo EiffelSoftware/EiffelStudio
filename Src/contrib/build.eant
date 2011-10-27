@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+
+<project name="build_contrib" default="help">
+	<description>
+		description: "Eiffel's contrib libraries compilation"
+	</description>
+	
+	<target name="help">
+		<echo message="usage:"/>
+		<echo message=" geant compile"/>
+		<echo message=" geant clean"/>
+		<echo message=" geant clobber"/>
+	</target>
+	
+	<target name="compile" >
+		<echo message="- Compile contrib library" />
+		<geant target="_build_tpl_" arguments="compile" />
+	</target>
+	
+	<target name="clean" >
+		<echo message="- Clean contrib library" />
+		<geant target="_build_tpl_" arguments="clean" />
+	</target>
+
+	<target name="clobber" >
+		<echo message="- Clobber contrib library" />
+		<geant target="_build_tpl_" arguments="clobber" />
+	</target>
+
+	<target name="_build_tpl_" >
+		<argument name="_target_name" />
+		<!--
+		<geant target="${_target_name}" dir="library/foo/bar" file="build.eant" reuse_variables="true" />
+		-->
+	</target>
+	
+</project>

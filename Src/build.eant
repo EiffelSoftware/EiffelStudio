@@ -120,6 +120,12 @@
 		<!-- framework -->
 		<geant target="$_target_name_" dir="framework" file="build.eant"
 			reuse_variables="true" fork="false" />
+		<!-- contrib -->
+		<geant target="$_target_name_" dir="contrib" file="build.eant" 
+			reuse_variables="true" fork="false" />
+		<!-- unstable -->
+		<geant target="$_target_name_" dir="unstable" file="build.eant" 
+			reuse_variables="true" fork="false" />
 	</target>
 
 </project>

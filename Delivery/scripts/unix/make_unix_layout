@@ -1,12 +1,20 @@
 #!/bin/sh
 set -e
 
+if [ $# != 3 ]; then
+	echo Usage: make_unix_layout platform source destination
+	exit 1
+fi
+
+ISE_PLATFORM=$1
+ISE_EIFFEL=$2
+DST_DIR=$3
+
+# If we have been called directly from the shell, we need to initialize
+# our environment using `package/config.sh', otherwise the environment
+# was set by the callers.
 if `echo $0 | grep make_unix_layout$ > /dev/null`; then
-	if [ $# != 1 ]; then
-		echo Usage: $0 destination
-		exit 1
-	fi
-	DST_DIR=$1
+	set -- $ISE_PLATFORM $ISE_EIFFEL
 	. ./packaging/config.sh
 fi
 

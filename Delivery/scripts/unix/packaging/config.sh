@@ -1,14 +1,14 @@
+#!/bin/sh
+set -e
 
-# Requirements when running make_unix_layout or make_*_package
-if [ ! "$ISE_EIFFEL" ]; then
-        echo '$ISE_EIFFEL not defined. Cannot continue'
-        exit 1
+if [ $# != 2 ]; then
+	echo Usage: config.sh platform source
+	exit 1
 fi
 
-if [ ! "$ISE_PLATFORM" ]; then
-        echo '$ISE_PLATFORM not defined. Cannot continue'
-        exit 1
-fi
+ISE_PLATFORM=$1
+ISE_EIFFEL=$2
+
 echo \$ISE_EIFFEL: $ISE_EIFFEL
 echo \$ISE_PLATFORM: $ISE_PLATFORM
 
@@ -33,7 +33,7 @@ RPM_DIR=$PACKAGING_DIR/rpm
 SVR_DIR=$PACKAGING_DIR/svr
 DOCS_DIR=/usr/share/doc/$PRODUCT/docs
 SUMMARY="EiffelStudio Integrated Development Environment"
-NAME="Eiffel Software Inc. (http://www.eiffel.com)"
+NAME="Eiffel Software Inc. <http://www.eiffel.com>"
 LICENSE=GPL
 URL=http://www.eiffel.com
 DOWNLOAD=http://download.origo.ethz.ch/download

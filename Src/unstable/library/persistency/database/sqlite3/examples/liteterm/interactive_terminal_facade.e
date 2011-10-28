@@ -20,32 +20,12 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	terminal: TERMINAL
-			-- Default output terminal.
-		require
-			interactive_terminal_is_interactive: interactive_terminal.is_interactive
-		do
-			Result := interactive_terminal.terminal
-		ensure
-			result_is_writable: Result.is_writable
-		end
-
-	terminal_error: TERMINAL
-			-- Error output terminal.
-		require
-			interactive_terminal_is_interactive: interactive_terminal.is_interactive
-		do
-			Result := interactive_terminal.terminal_error
-		ensure
-			result_is_writable: Result.is_writable
-		end
-
 	terminal_writer: FILE
 			-- File used to write to terminal.
 		require
 			interactive_terminal_is_interactive: interactive_terminal.is_interactive
 		do
-			Result := terminal.terminal
+			Result := io.output
 		end
 
 	terminal_error_writer: FILE
@@ -53,7 +33,7 @@ feature {NONE} -- Access
 		require
 			interactive_terminal_is_interactive: interactive_terminal.is_interactive
 		do
-			Result := terminal_error.terminal
+			Result := io.error
 		end
 
 ;note

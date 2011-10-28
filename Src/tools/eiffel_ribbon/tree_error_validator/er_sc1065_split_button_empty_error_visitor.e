@@ -1,80 +1,47 @@
 note
 	description: "[
-					Command to save project
-					]"
+		Check for split button child empty error
+	]"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	ER_SAVE_PROJECT_COMMAND
+	ER_SC1065_SPLIT_BUTTON_EMPTY_ERROR_VISITOR
 
 inherit
-	ER_COMMAND
-
-create
-	make
-
-feature {NONE} -- Initlization
-
-	make (a_menu: EV_MENU_ITEM)
-			-- Creation method
-		require
-			not_void: a_menu /= Void
-		do
-			init
-			create shared_singleton
-			menu_items.extend (a_menu)
+	ER_TREE_VALIDATION_VISITOR
+		redefine
+			visit_ribbon_tabs
 		end
 
 feature -- Command
 
-	execute
+	visit_ribbon_tabs (a_tree_node: EV_TREE_NODE)
 			-- <Precursor>
-		local
-			l_tree_checker: ER_TREE_VALIDATOR
-			l_error_dialog: EV_ERROR_DIALOG
 		do
-			create l_tree_checker
-			l_tree_checker.check_tree
-			if not l_tree_checker.is_valid then
-				if attached main_window as l_win then
-					create l_error_dialog.make_with_text ("Error(s) found, please check Layout Constructor's tree.")
-					l_error_dialog.set_buttons (<<"OK">>)
-					l_error_dialog.show_modal_to_window (l_win)
-				end
-			end
-			if attached shared_singleton.layout_constructor_list.first as l_layout_constructor then
-				l_layout_constructor.save_tree
-			end
-		end
-
-	set_main_window (a_main_window: ER_MAIN_WINDOW)
-			-- Set `main_window' with `a_main_window'
-		do
-			main_window := a_main_window
-		end
-
-feature -- Query
-
-	new_menu_item: SD_TOOL_BAR_BUTTON
-			-- Create a menu item
-		do
-			create Result.make
-			Result.set_text ("Save Project")
-			Result.set_name ("Save Project")
-			Result.set_description ("Save Project")
-			Result.select_actions.extend (agent execute)
-			tool_bar_items.extend (Result)
+			visit_node_recursive (a_tree_node)
 		end
 
 feature {NONE} -- Implementation
 
-	main_window: detachable EV_WINDOW
-			-- Tool's main window
+	visit_node_recursive (a_tree_node: EV_TREE_NODE)
+			-- Visit tree node recursively
+		do
+			if a_tree_node.text.same_string ({ER_XML_CONSTANTS}.split_button) then
+				if a_tree_node.count < 1 then
+					-- At least one child
+					is_error_found := True
 
-	shared_singleton: ER_SHARED_TOOLS
-			-- Shared singleton
-;note
+					display_error_on_tree_node (a_tree_node, "The 'SplitButton' control must contain at least one child control of type 'Button', 'ToggleButton', or 'CheckBox'. ")
+				end
+			else
+				across a_tree_node as l_cursor loop
+					visit_node_recursive (l_cursor.item)
+				end
+			end
+		end
+
+note
 	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

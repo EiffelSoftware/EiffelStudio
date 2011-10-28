@@ -1,67 +1,43 @@
 note
 	description: "[
-					Shared singletons in EiffelRibbon tool
-				]"
+		Tree validation visitor common ancestor
+		All Ribbon Markup error please check: "Understanding Markup Compiler Messages"
+		http://msdn.microsoft.com/en-us/library/windows/desktop/dd316918(v=vs.85).aspx
+	]"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	ER_SHARED_TOOLS
+deferred class
+	ER_TREE_VALIDATION_VISITOR
 
-feature -- Query
+feature -- Command
 
-	object_editor_cell: CELL [detachable ER_OBJECT_EDITOR]
-			-- Object editor singleton
-		once
-			create Result.put (void)
+	visit_ribbon_tabs (a_tree_node: EV_TREE_NODE)
+			-- Vision `ribbon.tabs' node
+		do
 		end
 
-	layout_constructor_list: ARRAYED_LIST [ER_LAYOUT_CONSTRUCTOR]
-			-- Layout constructor list
-		once
-			create Result.make (10)
-		end
+	is_error_found: BOOLEAN
+			-- Found error?
 
-	project_info_cell: CELL [detachable ER_PROJECT_INFO]
-			-- Project info singleton
-		once
-			create Result.put (void)
-		end
+feature {NONE} -- Implementation
 
-	tool_info_cell: CELL [detachable ER_TOOL_INFO]
-			-- Tool info singleton
-		once
-			create Result.put (void)
-		end
-
-	size_definition_cell: CELL [detachable ER_SIZE_DEFINITION_EDITOR]
-			-- Size definition editor tool singleton
-		once
-			create Result.put (void)
-		end
-
-	main_window_cell: CELL [detachable ER_MAIN_WINDOW]
-			-- Main window singleton cell
-		once ("PROCESS")
-			create Result.put (void)
-		end
-
-	xml_tree_manager: CELL [ER_XML_TREE_MANAGER]
-			-- XML tree manager singleton cell
+	display_error_on_tree_node (a_tree_node: EV_TREE_NODE; a_text: STRING_32)
+			-- Display error feedback on `a_tree_node'
+		require
+			not_void: a_tree_node /= Void and a_text /= Void
 		local
-			l_manger: ER_XML_TREE_MANAGER
-		once
-			create l_manger
-			create Result.put (l_manger)
+			l_feedback: ER_FEEDBACK_INDICATOR
+		do
+			create l_feedback.make_for_error (a_tree_node.width, a_tree_node.height)
+			l_feedback.disconnect_from_window_manager
+			l_feedback.set_position (a_tree_node.screen_x, a_tree_node.screen_y)
+			l_feedback.set_error_text (a_text)
+			--FIXME: Clear all previous feedback indicators first
+			l_feedback.show_on (a_tree_node)
 		end
 
-	all_feedback_indicators: ARRAYED_LIST [ER_FEEDBACK_INDICATOR]
-			-- All feedback indicators
-		once
-			create Result.make (20)
-		end
-
-note
+;note
 	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

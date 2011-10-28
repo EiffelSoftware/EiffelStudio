@@ -1,80 +1,76 @@
 note
 	description: "[
-					Command to save project
-					]"
+		ER_FEEDBACK_INDICATOR implementatin
+	]"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	ER_SAVE_PROJECT_COMMAND
+	ER_FEEDBACK_INDICATOR_IMP
 
 inherit
-	ER_COMMAND
+	SD_FEEDBACK_INDICATOR_IMP
+		redefine
+			on_timer,
+			timer_interval
+		end
 
 create
 	make
 
-feature {NONE} -- Initlization
-
-	make (a_menu: EV_MENU_ITEM)
-			-- Creation method
-		require
-			not_void: a_menu /= Void
-		do
-			init
-			create shared_singleton
-			menu_items.extend (a_menu)
-		end
-
-feature -- Command
-
-	execute
-			-- <Precursor>
-		local
-			l_tree_checker: ER_TREE_VALIDATOR
-			l_error_dialog: EV_ERROR_DIALOG
-		do
-			create l_tree_checker
-			l_tree_checker.check_tree
-			if not l_tree_checker.is_valid then
-				if attached main_window as l_win then
-					create l_error_dialog.make_with_text ("Error(s) found, please check Layout Constructor's tree.")
-					l_error_dialog.set_buttons (<<"OK">>)
-					l_error_dialog.show_modal_to_window (l_win)
-				end
-			end
-			if attached shared_singleton.layout_constructor_list.first as l_layout_constructor then
-				l_layout_constructor.save_tree
-			end
-		end
-
-	set_main_window (a_main_window: ER_MAIN_WINDOW)
-			-- Set `main_window' with `a_main_window'
-		do
-			main_window := a_main_window
-		end
-
-feature -- Query
-
-	new_menu_item: SD_TOOL_BAR_BUTTON
-			-- Create a menu item
-		do
-			create Result.make
-			Result.set_text ("Save Project")
-			Result.set_name ("Save Project")
-			Result.set_description ("Save Project")
-			Result.select_actions.extend (agent execute)
-			tool_bar_items.extend (Result)
-		end
-
 feature {NONE} -- Implementation
 
-	main_window: detachable EV_WINDOW
-			-- Tool's main window
+	timer_interval: INTEGER
+			-- <Precursor>
+		once
+			Result := 100
+		end
 
-	shared_singleton: ER_SHARED_TOOLS
-			-- Shared singleton
-;note
+	alpha_step_new: INTEGER
+			-- Alpha step value used in this class
+
+	on_timer
+			-- <Precursor>
+		local
+			l_timer: like timer
+		do
+			if counter > 3 then
+				alpha_step_new := 255
+			elseif (counter // 2) = 0 then
+				alpha_step_new := (255 - alpha - 1)
+			else
+				alpha_step_new := 1 - alpha
+			end
+			counter := counter + 1
+
+			on_timer_imp
+		end
+
+	counter: INTEGER
+			-- Couter for `on_timer'
+
+	on_timer_imp
+			-- Implementaion for `on_timer'
+		local
+			l_timer: like timer
+		do
+			l_timer := timer
+			check l_timer /= Void end	-- Implied by precondition `set'
+			alpha := alpha + alpha_step_new
+			if not (alpha <= 255) then
+				alpha := 255
+			end
+			if exists then
+				update_layered_window_rgba (alpha)
+			else
+				l_timer.destroy
+			end
+			if alpha >= 255 then
+				l_timer.destroy
+			end
+		end
+
+note
 	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

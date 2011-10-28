@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 			recent_project_command.set_main_window (Current)
 			gen_code_command.set_main_window (Current)
 			new_ribbon_command.set_main_window (Current)
-
+			save_project_command.set_main_window (Current)
 			shared_singleton.main_window_cell.put (Current)
 
 			restore_tool_info_from_disk

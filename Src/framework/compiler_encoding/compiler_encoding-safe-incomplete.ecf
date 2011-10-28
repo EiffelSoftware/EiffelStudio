@@ -9,7 +9,9 @@
 			<assertions precondition="true"/>
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="encoding" location="$ISE_LIBRARY\library\encoding\encoding-safe.ecf"/>
 		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel-safe.ecf"/>
+		<library name="gobo_lexical" location="$ISE_LIBRARY\library\gobo\gobo_lexical-safe.ecf"/>
 		<cluster name="compiler_encoding" location=".\" recursive="true"/>
 	</target>
 </system>

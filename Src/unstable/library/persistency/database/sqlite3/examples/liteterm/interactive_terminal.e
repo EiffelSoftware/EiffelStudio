@@ -22,7 +22,6 @@ feature {NONE} -- Initialization
 		require
 			a_db_is_readable: a_db.is_readable
 		do
-			create terminal.make (io.output)
 			database := a_db
 			database.update_action :=  agent on_update
 		ensure
@@ -53,28 +52,16 @@ feature -- Access
 
 feature -- Access: Output
 
-	terminal: TERMINAL
-			-- Terminal maninpulator.
-		attribute
-			create Result.make (io.output)
-		end
-
-	terminal_error: TERMINAL
-			-- Terminal maninpulator.
-		attribute
-			create Result.make (io.error)
-		end
-
 	terminal_writer: FILE
 			-- File used to write to terminal.
 		do
-			Result := terminal.terminal
+			Result := io.output
 		end
 
 	terminal_error_writer: FILE
 			-- File used to write to the error terminal.
 		do
-			Result := terminal_error.terminal
+			Result := io.error
 		end
 
 feature {RECORD_COMMAND} -- Access
@@ -90,25 +77,19 @@ feature {RECORD_COMMAND} -- Element change
 			-- `a_recorder': Recorder or Void to stop recording.
 		local
 			l_old_recorder: like statement_recorder
-			l_terminal: like terminal
 			l_writer: like terminal_writer
 		do
 			l_old_recorder := statement_recorder
-			l_terminal := terminal
 			l_writer := terminal_writer
 
 			statement_recorder := a_recorder
 			if attached a_recorder then
 				l_writer.put_string ("Recording started for file ")
-				l_terminal.set_text_style ({TERMINAL_TEXT_STYLE}.bold)
 				l_writer.put_string (a_recorder.writer.name)
-				l_terminal.set_text_style ({TERMINAL_TEXT_STYLE}.none)
 				l_writer.new_line
 			elseif attached l_old_recorder then
 				l_writer.put_string ("Recording stopped for file ")
-				l_terminal.set_text_style ({TERMINAL_TEXT_STYLE}.bold)
 				l_writer.put_string (l_old_recorder.writer.name)
-				l_terminal.set_text_style ({TERMINAL_TEXT_STYLE}.none)
 				l_writer.new_line
 			end
 		ensure
@@ -142,9 +123,6 @@ feature -- Basic operations
 		require
 			not_is_interactive: not is_interactive
 		do
-			terminal.reset_display
-			terminal_error.reset_display
-
 				-- Reset interactive state as the run loop has completed.
 			is_interactive := True
 
@@ -174,9 +152,6 @@ feature -- Basic operations
 				l_recorder.writer.close
 				statement_recorder := Void
 			end
-
-			terminal.reset_display
-			terminal_error.reset_display
 		ensure
 			not_is_interactive: not is_interactive
 			is_done: is_done
@@ -191,7 +166,6 @@ feature -- Basic operations: Output
 			-- `a_error': The error message to display.
 			-- `a_args': Arguments to replace in the error string.
 		local
-			l_terminal: like terminal_error
 			l_writer: like terminal_writer
 			l_vars: HASH_TABLE [READABLE_STRING_8, READABLE_STRING_8]
 			i_count, i: INTEGER
@@ -212,16 +186,11 @@ feature -- Basic operations: Output
 				create l_vars.make (0)
 			end
 
-			l_terminal := terminal_error
-			l_terminal.set_text_style ({TERMINAL_TEXT_STYLE}.bold)
-			l_terminal.set_foreground_color ({TERMINAL_COLOR}.red)
 			l_writer := terminal_error_writer
 			l_writer.put_string ("Error: ")
-			l_terminal.set_text_style ({TERMINAL_TEXT_STYLE}.none)
-			l_writer.put_string ((create {STRING_TABLE_EXPANDER}).expand_string (a_error, l_vars, True, True))
+			l_writer.put_string (a_error)
 			l_writer.new_line
 			terminal_writer.new_line
-			l_terminal.set_foreground_color ({TERMINAL_COLOR}.none)
 		end
 
 	put_exception (e: EXCEPTION)
@@ -229,19 +198,14 @@ feature -- Basic operations: Output
 			--
 			-- `e': The exception object to report.
 		do
-			terminal_error.set_text_style ({TERMINAL_TEXT_STYLE}.bold)
-			terminal_error.set_foreground_color ({TERMINAL_COLOR}.red)
 			io.put_string ("Error: ")
 			io.error.put_string (e.meaning)
 			io.error.new_line
 			if attached e.message as l_message and then not l_message.is_empty then
-				terminal_error.set_text_style ({TERMINAL_TEXT_STYLE}.none)
 				io.error.put_string (l_message)
 				io.error.new_line
 			end
 			io.error.new_line
-			terminal_error.set_text_style ({TERMINAL_TEXT_STYLE}.none)
-			terminal_error.set_foreground_color ({TERMINAL_COLOR}.none)
 		end
 
 feature {NONE} -- Basic operations: Output
@@ -249,10 +213,7 @@ feature {NONE} -- Basic operations: Output
 	put_header
 			-- Puts header information to the console.
 		do
-			terminal.set_text_style ({TERMINAL_TEXT_STYLE}.bold)
-			terminal.set_foreground_color ({TERMINAL_COLOR}.none)
 			io.put_string ("Welcome to the SQLite Terminal%N")
-			terminal.set_text_style ({TERMINAL_TEXT_STYLE}.none)
 			io.put_string ("Enter SQLite statements to execute, 'quit' to exit or 'help' for more help.%N%N")
 		end
 
@@ -265,11 +226,7 @@ feature {NONE} -- Basic operations: Output
 		do
 			l_count := a_statement.changes_count
 			if l_count > 0 then
-				terminal.set_foreground_color ({TERMINAL_COLOR}.dim_magenta)
-				terminal.set_text_style ({TERMINAL_TEXT_STYLE}.bold)
 				io.put_natural (l_count)
-				terminal.set_text_style ({TERMINAL_TEXT_STYLE}.none)
-				terminal.set_foreground_color ({TERMINAL_COLOR}.magenta)
 				io.put_string (" change ")
 				if l_count > 1 then
 					io.put_string (" were")
@@ -279,8 +236,6 @@ feature {NONE} -- Basic operations: Output
 				io.put_string (" just made to the database.")
 				io.new_line
 				io.new_line
-				terminal.set_text_style ({TERMINAL_TEXT_STYLE}.none)
-				terminal.set_foreground_color ({TERMINAL_COLOR}.none)
 			end
 		end
 
@@ -295,20 +250,16 @@ feature -- Basic operations: Input
 		require
 			is_interactive: is_interactive
 		local
-			l_terminal: like terminal
 			l_writer: like terminal_writer
 			l_tries: INTEGER
 			l_done: BOOLEAN
 			retried: BOOLEAN
 		do
 			if not retried then
-				l_terminal := terminal
 				l_writer := terminal_writer
 				if attached a_prompt and then not a_prompt.is_empty then
-					l_terminal.set_text_style ({TERMINAL_TEXT_STYLE}.bold)
 					l_writer.put_string (a_prompt)
 					l_writer.put_character (' ')
-					l_terminal.set_text_style ({TERMINAL_TEXT_STYLE}.none)
 				end
 
 				from until l_done loop
@@ -321,19 +272,11 @@ feature -- Basic operations: Input
 						Result.right_adjust
 						l_done := not Result.is_empty or a_empty_is_valid
 						if not l_done and attached a_prompt and then not a_prompt.is_empty then
-							l_terminal.set_text_style ({TERMINAL_TEXT_STYLE}.bold)
 							l_writer.put_string (a_prompt)
 							l_writer.put_character (' ')
-							l_terminal.set_text_style ({TERMINAL_TEXT_STYLE}.none)
 						end
 					else
-						l_terminal := terminal_error
-						l_terminal.set_foreground_color ({TERMINAL_COLOR}.red)
-						l_terminal.set_text_style ({TERMINAL_TEXT_STYLE}.bold)
 						terminal_error_writer.put_string ("The current terminal cannot accept user input. Shutting down...%N")
-						l_terminal.set_foreground_color ({TERMINAL_COLOR}.none)
-						l_terminal.set_text_style ({TERMINAL_TEXT_STYLE}.none)
-
 						Result := Void
 						end_interaction
 					end
@@ -388,9 +331,7 @@ feature -- Basic operations: Input
 			from l_responses.start until l_responses.after loop
 				l_response := l_responses.item
 				if l_response ~ l_default then
-					terminal_error.set_text_style ({TERMINAL_TEXT_STYLE}.bold)
 					io.put_string (l_response.as_upper)
-					terminal_error.set_text_style ({TERMINAL_TEXT_STYLE}.none)
 				else
 					io.put_string (l_response)
 				end
@@ -458,7 +399,6 @@ feature {NONE} -- Basic operations: Input
 					end
 				end
 			end
-			terminal_error.set_text_style ({TERMINAL_TEXT_STYLE}.none)
 		rescue
 			retried := True
 			if attached (create {EXCEPTION_MANAGER}).last_exception as l_exception then
@@ -544,11 +484,7 @@ feature {NONE} -- Action handler
 			until
 				i > i_count
 			loop
-				terminal.set_foreground_color ({TERMINAL_COLOR}.dim_magenta)
-				terminal.set_text_style ({TERMINAL_TEXT_STYLE}.bold)
 				io.put_string (a_row.column_name (i))
-				terminal.set_text_style ({TERMINAL_TEXT_STYLE}.none)
-				terminal.set_foreground_color ({TERMINAL_COLOR}.none)
 				io.put_string (": ")
 				if a_row.type (i) /= {SQLITE_TYPE}.blob then
 					io.put_string (a_row.string_value (i))
@@ -559,19 +495,11 @@ feature {NONE} -- Action handler
 				i := i + 1
 			end
 
-			i_count := terminal.columns
-			if i_count > 0 then
-				io.put_string (create {STRING}.make_filled ('-', i_count.to_integer_32))
-			else
-				io.new_line
-			end
+			io.new_line
 
 			if l_index = 25 or else l_index = 200 then
 					-- Safety net.
-				terminal.set_text_style ({TERMINAL_TEXT_STYLE}.bold)
 				io.put_natural (l_index)
-				terminal.set_text_style ({TERMINAL_TEXT_STYLE}.none)
-				terminal.set_foreground_color ({TERMINAL_COLOR}.none)
 				io.put_string (" results have already been returned.%N")
 
 					-- Check if user wants more results, as we have already seen a lot.
@@ -579,37 +507,24 @@ feature {NONE} -- Action handler
 			end
 		end
 
-	on_update (a_action: SQLITE_UPDATE_ACTION; a_name: STRING_8; a_table: STRING_8; a_row: INTEGER_64)
+	on_update (a_action: INTEGER; a_name: STRING_8; a_table: STRING_8; a_row: INTEGER_64)
 			-- Called when an update was made to the database.
 			--
 			-- `a_action': Update action performed.
 			-- `a_name': Database name.
 			-- `a_table': Table name.
 			-- `a_row': Row Id/index where the update occurred.
+		require
+			is_valid_update_action: (create {SQLITE_UPDATE_ACTION}).is_valid_update_action (a_action)
 		local
 			l_update: INTEGER
 		do
-			terminal.set_foreground_color ({TERMINAL_COLOR}.dim_green)
 			io.put_string ("A row (rowId: ")
-
-			terminal.set_text_style ({TERMINAL_TEXT_STYLE}.bold)
-			terminal.set_foreground_color ({TERMINAL_COLOR}.green)
 			io.put_integer_64 (a_row)
-			terminal.set_foreground_color ({TERMINAL_COLOR}.dim_green)
-			terminal.set_text_style ({TERMINAL_TEXT_STYLE}.none)
-
 			io.put_string (") in table ")
-
-			terminal.set_text_style ({TERMINAL_TEXT_STYLE}.bold)
-			terminal.set_foreground_color ({TERMINAL_COLOR}.green)
 			io.put_string (a_table)
-			terminal.set_foreground_color ({TERMINAL_COLOR}.dim_green)
-			terminal.set_text_style ({TERMINAL_TEXT_STYLE}.none)
-
 			io.put_string (" was ")
-
-			terminal.set_text_style ({TERMINAL_TEXT_STYLE}.bold)
-			l_update := a_action.item
+			l_update := a_action
 			if l_update = {SQLITE_UPDATE_ACTION}.delete then
 				io.put_string ("deleted")
 			elseif l_update = {SQLITE_UPDATE_ACTION}.insert then
@@ -617,12 +532,8 @@ feature {NONE} -- Action handler
 			elseif l_update = {SQLITE_UPDATE_ACTION}.update then
 				io.put_string ("updated")
 			end
-			terminal.set_text_style ({TERMINAL_TEXT_STYLE}.none)
-
 			io.put_character ('.')
 			io.new_line
-
-			terminal.set_foreground_color ({TERMINAL_COLOR}.none)
 		end
 
 feature {NONE} -- Factory

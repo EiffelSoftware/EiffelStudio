@@ -36,23 +36,19 @@ feature -- Basic operations
 		local
 			l_commands: HASH_TABLE [COMMAND, READABLE_STRING_8]
 			l_keys: SORTABLE_ARRAY [READABLE_STRING_8]
-			l_terminal: like terminal
 			l_writer: like terminal_writer
 			l_cmd: STRING
 			l_args: detachable ARRAY [READABLE_STRING_8]
 			l_max_len: INTEGER
 			i, i_count: INTEGER
 		do
-			l_terminal := terminal
 			l_writer := terminal_writer
 			l_commands := interactive_terminal.built_ins
 			if attached a_args and then not a_args.is_empty then
 					-- Display help for supplied argument
 				l_cmd := a_args[a_args.lower]
-				l_terminal.set_text_style ({TERMINAL_TEXT_STYLE}.bold)
 				l_writer.put_string (l_cmd)
 				l_writer.put_string (": ")
-				l_terminal.set_text_style ({TERMINAL_TEXT_STYLE}.none)
 
 				if attached l_commands[l_cmd.as_lower] as l_command then
 						-- Trim extra arguments
@@ -92,10 +88,8 @@ feature -- Basic operations
 							create l_cmd.make_filled (' ', l_max_len)
 							l_cmd.replace_substring (l_keys[i], 1, l_keys[i].count)
 
-							l_terminal.set_text_style ({TERMINAL_TEXT_STYLE}.bold)
 							l_writer.put_string (l_cmd)
 							l_writer.put_character (':')
-							l_terminal.set_text_style ({TERMINAL_TEXT_STYLE}.none)
 							l_writer.put_character (' ')
 							l_writer.put_string (l_command.description)
 							l_writer.new_line

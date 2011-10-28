@@ -32,8 +32,8 @@
 		<library name="gobo_structure" location="$ISE_LIBRARY\library\gobo\gobo_structure-safe.ecf"/>
 		<library name="net" location="$ISE_LIBRARY\library\net\net-safe.ecf"/>
 		<library name="patterns" location="$EIFFEL_SRC\framework\patterns\patterns-safe.ecf"/>
-		<library name="service_core" location="$EIFFEL_SRC\framework\services\core\service_core-safe.ecf"/>
-		<library name="service_environment" location="$EIFFEL_SRC\framework\services\environment\service_environment-safe.ecf"/>
+		<library name="service_core" location="$EIFFEL_SRC\framework\services\core\service_core-safe-incomplete.ecf"/>
+		<library name="service_environment" location="$EIFFEL_SRC\framework\services\environment\service_environment-safe-incomplete.ecf"/>
 		<library name="string_expander" location="$EIFFEL_SRC\framework\string_expander\string_expander-safe.ecf"/>
 		<library name="uri_launcher" location="$EIFFEL_SRC\framework\uri_launcher\uri_launcher-safe.ecf"/>
 		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid-safe.ecf"/>

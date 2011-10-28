@@ -30,7 +30,7 @@
 		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel-safe.ecf"/>
 		<library name="gobo_structure" location="$ISE_LIBRARY\library\gobo\gobo_structure-safe.ecf"/>
 		<library name="patterns" location="$EIFFEL_SRC\framework\patterns\patterns-safe.ecf"/>
-		<library name="service_core" location="$EIFFEL_SRC\framework\services\core\service_core-safe.ecf"/>
+		<library name="service_core" location="$EIFFEL_SRC\framework\services\core\service_core-safe-incomplete.ecf"/>
 		<library name="string_expander" location="$EIFFEL_SRC\framework\string_expander\string_expander-safe.ecf"/>
 		<cluster name="service_environment" location=".\" recursive="true"/>
 	</target>

@@ -66,7 +66,7 @@ feature -- Basic operations: Visitor
 invariant
 	is_fault: is_fault
 	message_attached: attached message
-	not_message_is_empty: not message.is_empty
+--	not_message_is_empty: not message.is_empty
 
 ;note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

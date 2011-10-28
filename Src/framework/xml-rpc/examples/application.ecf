@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-6-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-6-0 http://www.eiffel.com/developers/xml/configuration-1-6-0.xsd" name="application" uuid="D5EA7D23-843A-42F0-A41C-EAB2F5FDF897">
+	<target name="application">
+		<root class="APPLICATION" feature="make"/>
+		<setting name="console_application" value="true"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="xml-rpc" location="$EIFFEL_SRC\framework\xml-rpc\xml-rpc.ecf" readonly="false"/>
+		<library name="xml_parser" location="$ISE_LIBRARY\library\text\parser\xml\parser\xml_parser.ecf" readonly="false"/>
+		<cluster name="application" location=".\"/>
+	</target>
+</system>

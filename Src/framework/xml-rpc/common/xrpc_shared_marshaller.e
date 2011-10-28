@@ -20,6 +20,12 @@ feature {NONE} -- Access
 			result_attached: Result /= Void
 		end
 
+	internal: INTERNAL
+			-- Shared INTERNAL
+		once
+			create Result
+		end
+
 ;note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

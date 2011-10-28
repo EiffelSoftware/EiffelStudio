@@ -18,8 +18,8 @@ SHELL = /bin/sh
 AR = ar rc
 CC = $cc
 CTAGS = ctags
-CFLAGS = $optimize $ccflags $large -I$rt_include -I"../spec/include" -DSQLITE_THREADSAFE=0
-MTCFLAGS = $optimize $mtccflags $large -I$rt_include -I"../spec/include" -DSQLITE_THREADSAFE=1
+CFLAGS = $optimize $ccflags $large -I$rt_include -I"../spec/include" -DSQLITE_THREADSAFE=0 -DSQLITE_OMIT_LOAD_EXTENSION=1
+MTCFLAGS = $optimize $mtccflags $large -I$rt_include -I"../spec/include" -DSQLITE_THREADSAFE=1 -DSQLITE_OMIT_LOAD_EXTENSION=1
 SHAREDLINK = $sharedlink
 LDSHAREDFLAGS = -export-dynamic $ldsharedflags
 LN = $ln

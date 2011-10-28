@@ -11,16 +11,6 @@ note
 class
 	SQLITE_UPDATE_ACTION
 
-inherit
-	ENUMERATED_TYPE [INTEGER]
-
-create
-	make
-
-convert
-	make ({INTEGER}),
-	item: {INTEGER}
-
 feature -- Constants: Update constants
 
 	delete: INTEGER
@@ -44,12 +34,14 @@ feature -- Constants: Update constants
 			"SQLITE_UPDATE"
 		end
 
-feature {NONE} -- Factory
+feature -- Status
 
-	members: ARRAY [INTEGER]
-			-- <Precursor>
-		once
-			Result := <<delete, insert, update>>
+	is_valid_update_action (a_action: INTEGER): BOOLEAN
+			-- Is `a_action' a valid udpate action?
+		do
+			Result :=  a_action = delete
+					or a_action = insert
+					or a_action = update
 		end
 
 ;note

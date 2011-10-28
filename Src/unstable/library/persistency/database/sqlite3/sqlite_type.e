@@ -10,16 +10,6 @@ note
 class
 	SQLITE_TYPE
 
-inherit
-	ENUMERATED_TYPE [INTEGER]
-
-create
-	make
-
-convert
-	make ({INTEGER}),
-	item: {INTEGER}
-
 feature -- Access
 
 	integer: INTEGER
@@ -62,12 +52,16 @@ feature -- Access
 			"SQLITE_NULL"
 		end
 
-feature {NONE} -- Factory
+feature -- Status
 
-	members: ARRAY [INTEGER]
-			-- <Precursor>
-		once
-			Result := <<integer, float, text, blob, null>>
+	is_valid_type (a_type: INTEGER): BOOLEAN
+			-- Is `a_type' a valid SQLite type?
+		do
+			Result :=  a_type = integer
+					or a_type = float
+					or a_type = text
+					or a_type = blob
+					or a_type = null
 		end
 
 ;note

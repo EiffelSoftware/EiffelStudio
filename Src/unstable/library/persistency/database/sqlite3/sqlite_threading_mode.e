@@ -10,16 +10,6 @@ note
 class
 	SQLITE_THREADING_MODE
 
-inherit
-	ENUMERATED_TYPE [INTEGER]
-
-create
-	make
-
-convert
-	make ({INTEGER}),
-	item: {INTEGER}
-
 feature -- Constants
 
 	single_threaded: INTEGER
@@ -43,12 +33,14 @@ feature -- Constants
 			"SQLITE_CONFIG_SERIALIZED"
 		end
 
-feature {NONE} -- Factory
+feature -- Status
 
-	members: ARRAY [INTEGER]
-			-- <Precursor>
-		once
-			Result := <<single_threaded, multi_threaded, multi_threaded_serialized>>
+	is_valid_threading_mode (a_mode: INTEGER): BOOLEAN
+			-- Is `a_mode' a valid threading mode?
+		do
+			Result :=  a_mode = single_threaded
+					or a_mode = multi_threaded
+					or a_mode = multi_threaded_serialized
 		end
 
 ;note

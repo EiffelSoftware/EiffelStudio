@@ -55,11 +55,12 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	result_code: SQLITE_RESULT_CODE
+	result_code: INTEGER
 			-- Result error code. See {SQLITE_RESULT_CODE} for meanings.
 		do
 			Result := internal_code & {SQLITE_RESULT_CODE}.mask
 		ensure
+			valid_result_code: (create {SQLITE_RESULT_CODE}).is_valid_result_code (Result)
 			not_result_is_ok: Result /= {SQLITE_RESULT_CODE}.ok
 		end
 
@@ -71,12 +72,13 @@ feature -- Access
 
 feature {NONE} -- Query
 
-	message_from_code (a_code: SQLITE_RESULT_CODE): READABLE_STRING_8
+	message_from_code (a_code: INTEGER): READABLE_STRING_8
 			-- Retrieves an SQLite default error message from an SQLite result code.
 			--
 			-- `a_code': A SQLite result code, possibily with a extended code.
 			-- `Result': The default message.
 		require
+			valid_result_code: (create {SQLITE_RESULT_CODE}).is_valid_result_code (a_code)
 			not_a_code_is_ok: a_code /= {SQLITE_RESULT_CODE}.ok
 		local
 			l_code: INTEGER
@@ -153,7 +155,7 @@ feature {NONE} -- Implementation
 			-- Actual reported code.
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

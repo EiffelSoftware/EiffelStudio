@@ -97,8 +97,8 @@
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf" readonly="false"/>
 		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension-safe.ecf"/>
 		<library name="cli_writer" location="$EIFFEL_SRC\framework\cli_writer\cli_writer-safe.ecf"/>
-		<library name="configuration_compiler" location="$EIFFEL_SRC\framework\configuration\configuration_compiler-safe.ecf"/>
-		<library name="configuration_parser" location="$EIFFEL_SRC\framework\configuration\configuration_parser-safe.ecf"/>
+		<library name="configuration_compiler" location="$EIFFEL_SRC\framework\configuration\configuration_compiler-safe-incomplete.ecf"/>
+		<library name="configuration_parser" location="$EIFFEL_SRC\framework\configuration\configuration_parser-safe-incomplete.ecf"/>
 		<library name="compiler_encoding" location="$EIFFEL_SRC\framework\compiler_encoding\compiler_encoding-safe.ecf" readonly="false"/>
 		<library name="consumer" location="$EIFFEL_SRC\dotnet\consumer\consumer-safe.ecf"/>
 		<library name="dotnet_helper" location="$EIFFEL_SRC\dotnet\helpers\support\dotnet_helper-safe.ecf"/>
@@ -114,7 +114,7 @@
 		<library name="gobo_structure" location="$ISE_LIBRARY\library\gobo\gobo_structure-safe.ecf"/>
 		<library name="i18n" location="$ISE_LIBRARY\library\i18n\i18n-safe.ecf"/>
 		<library name="interface_names" location="$EIFFEL_SRC\framework\interface_names\interface_names-safe.ecf"/>
-		<library name="parser" location="$EIFFEL_SRC\framework\parser\parser-safe.ecf"/>
+		<library name="parser" location="$EIFFEL_SRC\framework\parser\parser-safe-incomplete.ecf"/>
 		<library name="preferences_reg" location="$ISE_LIBRARY\library\preferences\preferences_reg-safe.ecf">
 			<condition>
 				<platform value="windows"/>

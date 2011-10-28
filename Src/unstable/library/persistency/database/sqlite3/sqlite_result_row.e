@@ -179,7 +179,7 @@ feature -- Query
 			end
 		end
 
-	type (a_column: NATURAL): SQLITE_TYPE
+	type (a_column: NATURAL): INTEGER
 			-- Returns the type of the column.
 			--
 			-- `a_column': The column to retrieve the result for.
@@ -191,6 +191,8 @@ feature -- Query
 			a_column_small_enough: a_column <= count
 		do
 			Result := sqlite3_column_type (sqlite_api, statement.internal_stmt, (a_column - 1).as_integer_32)
+		ensure
+			valid_type: (create {SQLITE_TYPE}).is_valid_type (Result)
 		end
 
 feature -- Query: Value affinity
@@ -308,7 +310,7 @@ feature -- Query: Value affinity
 	--statement_mark_small_enough: statement_mark <= statement.mark
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

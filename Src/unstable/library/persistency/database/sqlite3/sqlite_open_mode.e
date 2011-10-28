@@ -10,16 +10,6 @@ note
 class
 	SQLITE_OPEN_MODE
 
-inherit
-	ENUMERATED_TYPE [INTEGER]
-
-create
-	make
-
-convert
-	make ({INTEGER}),
-	item: {INTEGER}
-
 feature -- Constants
 
 	read_only: INTEGER
@@ -43,12 +33,14 @@ feature -- Constants
 			"return SQLITE_OPEN_CREATE | SQLITE_OPEN_READWRITE"
 		end
 
-feature {NONE} -- Factory
+feature -- Status
 
-	members: ARRAY [INTEGER]
-			-- <Precursor>
-		once
-			Result := <<read_only, read_write, create_read_write>>
+	is_valid_open_mode (a_mode: INTEGER): BOOLEAN
+			-- Is `a_mode' a valid open mode?
+		do
+			Result :=  a_mode = read_only
+					or a_mode = read_write
+					or a_mode = create_read_write
 		end
 
 ;note

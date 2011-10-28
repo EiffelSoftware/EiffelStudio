@@ -137,8 +137,9 @@ feature -- Access: Actions
 	rollback_action: detachable PROCEDURE [ANY, TUPLE] assign set_rollback_action
 			-- Action called when during the rollback of a commit.
 
-	update_action: detachable PROCEDURE [ANY, TUPLE [action: SQLITE_UPDATE_ACTION; db_name: STRING; table: STRING; row: INTEGER_64]] assign set_update_action
+	update_action: detachable PROCEDURE [ANY, TUPLE [action: INTEGER; db_name: STRING; table: STRING; row: INTEGER_64]] assign set_update_action
 			-- Action called when during the rollback of a commit.
+			--| See {SQLITE_UPDATE_ACTION} for valid value for `action'
 
 	progress_handler: detachable FUNCTION [ANY, TUPLE, BOOLEAN] assign set_progress_handler
 			-- Progress update handler, called when a long running statement is being executed.
@@ -737,7 +738,7 @@ feature {SQLITE_INTERNALS} -- Basic operations: Threading
 
 feature {NONE} -- Basic operations
 
-	open_internal (a_mode: SQLITE_OPEN_MODE)
+	open_internal (a_mode: INTEGER)
 			-- Opens the database connection with a set of flags.
 			-- Note: For internal use only!
 			--
@@ -745,7 +746,7 @@ feature {NONE} -- Basic operations
 		require
 			is_interface_usable: is_interface_usable
 			is_closed: is_closed
-			a_mode_attached: attached a_mode
+			valid_open_mode: (create {SQLITE_OPEN_MODE}).is_valid_open_mode (a_mode)
 			source_exists: a_mode /~ {SQLITE_OPEN_MODE}.create_read_write implies source.exists
 		local
 			l_file_name: C_STRING
@@ -756,9 +757,9 @@ feature {NONE} -- Basic operations
 		do
 				-- Set thread safety flags
 			if {PLATFORM}.is_thread_capable and then sqlite_api.is_thread_safe then
-				l_flags := a_mode.item | SQLITE_OPEN_FULLMUTEX
+				l_flags := a_mode | SQLITE_OPEN_FULLMUTEX
 			else
-				l_flags := a_mode.item | SQLITE_OPEN_NOMUTEX
+				l_flags := a_mode | SQLITE_OPEN_NOMUTEX
 			end
 			internal_flags := l_flags
 
@@ -924,9 +925,7 @@ feature {NONE} -- Basic operations: Callbacks
 		require
 			is_interface_usable: is_interface_usable
 			not_is_closed: not is_closed
-			a_action_is_valid: a_action = {SQLITE_UPDATE_ACTION}.delete or
-				a_action = {SQLITE_UPDATE_ACTION}.insert or
-				a_action = {SQLITE_UPDATE_ACTION}.update
+			valid_update_action: (create {SQLITE_UPDATE_ACTION}).is_valid_update_action (a_action)
 		local
 			l_db_name: STRING
 			l_tb_name: STRING
@@ -934,7 +933,7 @@ feature {NONE} -- Basic operations: Callbacks
 			if attached update_action as l_action then
 				create l_db_name.make_from_c (a_db_name)
 				create l_tb_name.make_from_c (a_tb_name)
-				l_action.call ([create {SQLITE_UPDATE_ACTION}.make (a_action), l_db_name, l_tb_name, a_row_id])
+				l_action.call ([a_action, l_db_name, l_tb_name, a_row_id])
 			end
 		ensure
 			not_is_closed: not is_closed
@@ -1112,7 +1111,7 @@ invariant
 	locked_thread_id_is_positive: {PLATFORM}.is_thread_capable implies internal_thread_id > 0
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

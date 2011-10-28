@@ -13,16 +13,6 @@ note
 class
 	SQLITE_RESULT_CODE
 
-inherit
-	ENUMERATED_TYPE [INTEGER]
-
-create
-	make
-
-convert
-	make ({INTEGER}),
-	item: {INTEGER}
-
 feature -- Access
 
 	mask: INTEGER = 0xFF
@@ -269,19 +259,40 @@ feature -- Constants: Success
 			"SQLITE_DONE"
 		end
 
-feature {NONE} -- Factory
+feature -- Status
 
-	members: ARRAY [INTEGER]
-			-- <Precursor>
-		once
-			Result := <<
-				ok, e_error, e_internal, e_perm, e_abort, e_busy,
-				e_locked, e_no_mem, e_read_only, e_interrupt, e_io_err,
-				e_corrupt, e_not_found, e_full, e_cant_open, e_protocol,
-				e_empty, e_schema, e_too_big, e_constraint, e_mismatch,
-				e_misuse, e_nolfs, e_auth, e_format, e_range, e_not_a_db,
-				row, done
-			>>
+	is_valid_result_code (a_code: INTEGER): BOOLEAN
+			-- Is `a_code' a valid result code?
+		do
+			Result :=  a_code = ok
+					or a_code = e_error
+					or a_code = e_internal
+					or a_code = e_perm
+					or a_code = e_abort
+					or a_code = e_busy
+					or a_code = e_locked
+					or a_code = e_no_mem
+					or a_code = e_read_only
+					or a_code = e_interrupt
+					or a_code = e_io_err
+					or a_code = e_corrupt
+					or a_code = e_not_found
+					or a_code = e_full
+					or a_code = e_cant_open
+					or a_code = e_protocol
+					or a_code = e_empty
+					or a_code = e_schema
+					or a_code = e_too_big
+					or a_code = e_constraint
+					or a_code = e_mismatch
+					or a_code = e_misuse
+					or a_code = e_nolfs
+					or a_code = e_auth
+					or a_code = e_format
+					or a_code = e_range
+					or a_code = e_not_a_db
+					or a_code = row
+					or a_code = done
 		end
 
 ;note

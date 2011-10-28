@@ -64,6 +64,5 @@
 				<exclude>/enumerated_type$</exclude>
 			</file_rule>
 		</cluster>
-		<cluster name="enumerated_type" location=".\enumerated_type" hidden="true"/>
 	</target>
 </system>

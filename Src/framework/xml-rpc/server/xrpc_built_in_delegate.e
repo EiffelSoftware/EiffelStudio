@@ -31,13 +31,13 @@ feature -- Query
 		require
 			has_dispatcher: has_dispatcher
 		do
-			create Result.make (0, 1)
+			create Result.make_empty
 		end
 
 	response_codes: ARRAY [TUPLE [code: INTEGER; meaning: STRING]]
 			-- Retrieve a table of in build response codes.
 		once
-			create Result.make (0, 1)
+			create Result.make_empty
 		end
 
 feature {NONE} -- Factory

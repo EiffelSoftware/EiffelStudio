@@ -1,0 +1,13 @@
+
+test_name	 spurious-vtgc3-with-vmfn
+test_description Compiler correctly detects a VMFN error but reports a spurious VTGC(3) error
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test2.e $CLUSTER test2.e
+copy_raw 	test3.e $CLUSTER test3.e
+
+compile_melted
+compile_result 	validity_error TEST2 VMFN
+
+test_end

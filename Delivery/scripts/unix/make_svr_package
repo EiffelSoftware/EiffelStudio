@@ -1,13 +1,18 @@
 #!/bin/sh
 set -e
 
+if [ $# != 2]; then
+	echo Usage: $0 platform source
+	exit 1
+fi
+
 LOG=`pwd`/svr.log
 >$LOG
+set -- $1 $2
 . ./packaging/config.sh
 
-
 # Make linux layout
-DST_DIR=$SVR_DIR/$PRODUCT
+set -- $1 $2 $SVR_DIR/$PRODUCT
 . ./make_unix_layout
 
 

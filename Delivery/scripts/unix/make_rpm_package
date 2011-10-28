@@ -1,14 +1,20 @@
 #!/bin/sh
 set -e
 
+if [ $# != 2]; then
+	echo Usage: $0 platform source
+	exit 1
+fi
+
 LOG=`pwd`/rpm.log
 >$LOG
+set -- $1 $2
 . ./packaging/config.sh
 
 
 # Create unix layout in RPM BUILD directory
-DST_DIR=$RPM_DIR/eiffelstudio
-#. ./make_unix_layout
+set -- $1 $2 $RPM_DIR/eiffelstudio
+. ./make_unix_layout
 
 
 # Determine architecture

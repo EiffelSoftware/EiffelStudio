@@ -23,6 +23,13 @@ feature {NONE} -- Initialization
 		local
 			l_list_item: EV_LIST_ITEM
 		do
+			-- Check if size definition valid when typing
+			size_combo_box.focus_in_actions.extend (agent size_definition_checker.on_focus_in (size_combo_box))
+			size_combo_box.focus_out_actions.extend (agent size_definition_checker.on_focus_out (size_combo_box))
+			size_combo_box.change_actions.extend (agent size_definition_checker.on_text_change (size_combo_box))
+
+			add_customize_size_definitions
+
 			create l_list_item.make_with_text ("OneButton")
 			size_combo_box.extend (l_list_item)
 			create l_list_item.make_with_text ("TwoButtons")
@@ -86,6 +93,37 @@ feature {NONE} -- Initialization
 				-- from the current class.
 
 				-- Proceed with vision2 objects creation.
+			create size_definition_checker
+		end
+
+	add_customize_size_definitions
+			-- Added customized size definitions created by `Size Definition Editor'
+		local
+			l_list_item: EV_LIST_ITEM
+			l_shared: ER_SHARED_TOOLS
+			l_root: XML_ELEMENT
+		do
+			create l_shared
+			if attached l_shared.size_definition_cell.item as l_size_definition_tool then
+				l_root := l_size_definition_tool.size_definition_writer.root_xml_for_saving
+				across l_root as l_xml_cursor
+				loop
+					if attached {XML_ELEMENT} l_xml_cursor.item as l_one_size_definition then
+						if l_one_size_definition.name.same_string ({ER_XML_CONSTANTS}.size_definition) then
+							across l_one_size_definition as l_one_size_definition_cursor
+							loop
+								if attached {XML_ATTRIBUTE} l_one_size_definition_cursor.item as l_attribute and then
+								 l_attribute.name.same_string ({ER_XML_ATTRIBUTE_CONSTANTS}.name) then
+									create l_list_item.make_with_text (l_attribute.value)
+									size_combo_box.extend (l_list_item)
+								end
+							end
+						else
+							check invalid_size_definition_xml: False end
+						end
+					end
+				end
+			end
 		end
 
 feature -- Command
@@ -155,6 +193,9 @@ feature {NONE} -- Implementation
 
 	tree_node_data: detachable ER_TREE_NODE_GROUP_DATA
 			-- Group tree node data
+
+	size_definition_checker: ER_GROUP_NODE_SIZE_DEFINITION_CHECKER
+			-- Check if a size definition name valid
 
 	on_command_name_text_change
 			-- <Precursor>

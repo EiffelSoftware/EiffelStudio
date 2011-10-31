@@ -65,7 +65,7 @@ feature -- Query
 		local
 			l_nat8: NATURAL_8
 			l_code: NATURAL_32
-			i, nb, cnt: INTEGER
+			i, nb: INTEGER
 		do
 			from
 				i := 1

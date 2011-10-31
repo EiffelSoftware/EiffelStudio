@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 
-if [ $# lt 2 ]; then
+if [ $# -lt 2 ]; then
 	echo Usage: $0 platform source [architecture]
 	exit 1
 fi

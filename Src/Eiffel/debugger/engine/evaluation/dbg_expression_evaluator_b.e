@@ -161,7 +161,9 @@ feature {NONE} -- Evaluation
 				prev_byte_code := byte_context.byte_code
 
 					--| Apply byte_code related to current evaluation
-				byte_context.set_byte_code (context.byte_code)
+				if attached context.byte_code as bc then
+					byte_context.set_byte_code (bc)
+				end
 
 					--| concrete evaluation
 				process_byte_node_evaluation (keep_assertion_checking)

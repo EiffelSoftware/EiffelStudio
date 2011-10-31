@@ -8,8 +8,8 @@
 			<exclude>/CVS$</exclude>
 			<exclude>/EIFGEN.{0,1}$</exclude>
 		</file_rule>
-		<option warning="true" syntax="provisional"/>
-		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<option warning="true" is_attached_by_default="true" void_safety="all" syntax="provisional"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<cluster name="pcre" location=".\src" recursive="true"/>
 	</target>
 </system>

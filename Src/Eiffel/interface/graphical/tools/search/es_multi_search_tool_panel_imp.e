@@ -26,6 +26,10 @@ inherit
 			{NONE} all
 		end
 
+	ES_HELP_REQUEST_BINDER
+
+	ES_HELP_CONTEXT
+
 feature {NONE} -- Initialize
 
 	build_interface
@@ -323,6 +327,14 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, ES_TOOL} -- Initialize
 			mini_toolbar_exists: mini_toolbar /= Void
 		end
 
+feature -- Access: Help
+
+	help_context_id: STRING
+			-- <Precursor>
+		once
+			Result := "4D0CC8B3-2FFD-42D4-7855-672FA0C11CF8"
+		end
+
 feature -- EB_TOOL
 
 	widget: EV_WIDGET
@@ -597,7 +609,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -98,7 +98,7 @@ feature -- Status report
 			is_matching: is_matching
 			subject_set: subject = a_subject
 			subject_start_set: subject_start = 1
-			subject_end_set: subject_end = a_subject.count
+			subject_end_set: subject_end = a_subject.count.as_natural_32
 		end
 
 	recognizes (a_subject: READABLE_STRING_8): BOOLEAN
@@ -109,13 +109,13 @@ feature -- Status report
 		do
 			match (a_subject)
 			if has_matched then
-				Result := captured_start_position (0) = 1 and captured_end_position (0) = a_subject.count
+				Result := captured_start_position (0) = {NATURAL_32} 1 and captured_end_position (0) = a_subject.count
 			end
 		ensure
 			is_matching: is_matching
 			subject_set: subject = a_subject
 			subject_start_set: subject_start = 1
-			subject_end_set: subject_end = a_subject.count
+			subject_end_set: subject_end = a_subject.count.as_natural_32
 			definition: Result = (has_matched and then (captured_start_position (0) = 1 and captured_end_position (0) = a_subject.count))
 		end
 
@@ -148,7 +148,11 @@ feature -- Access
 		ensure
 			position_large_enough: Result /= 0 implies Result >= subject_start
 				-- The or-branch is the consequence of empty matches at the end of a subject:
-			position_small_enough: (Result <= subject_end) or (Result = subject_end + 1 and captured_end_position (n) = subject_end)
+			position_small_enough: (Result <= subject_end) or (Result = subject_end + 1 and
+						(
+							captured_end_position (n) /= -1) and then
+							(captured_end_position (n).as_natural_32 = subject_end)
+						)
 		end
 
 	captured_end_position (n: NATURAL): INTEGER_32

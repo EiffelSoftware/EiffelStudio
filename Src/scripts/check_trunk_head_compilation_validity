@@ -31,6 +31,7 @@
 # Provided by Jocelyn Fiat
 ################################################################################################
 
+export ISE_LIBRARY=$EIFFEL_SRC
 CHECK_DIR=`pwd`
 
 check_report_init() {
@@ -88,9 +89,9 @@ check_eiffel_compilation() {
 
     if [ $TMP_MELT = "yes" ]; 
         then
-            TMP_CMD="ecb -config $TMP_ECF -target $TMP_TARGET $CHECK_ISE_EC_FLAGS -melt"
+            TMP_CMD="ecb -config $TMP_ECF -target $TMP_TARGET $CHECK_ISE_EC_FLAGS -melt -batch"
         else
-            TMP_CMD="ecb -config $TMP_ECF -target $TMP_TARGET $CHECK_ISE_EC_FLAGS -freeze -c_compile"
+            TMP_CMD="ecb -config $TMP_ECF -target $TMP_TARGET $CHECK_ISE_EC_FLAGS -freeze -c_compile -batch"
     fi
     check_report "$TMP_CMD"
     $TMP_CMD &> $CHECK_LOG_DIR/compile_$TMP_TARGET.log
@@ -136,6 +137,7 @@ check_report "Eiffel environment"
 check_report " - ISE_EIFFEL=$ISE_EIFFEL"
 check_report " - ISE_PLATFORM=$ISE_PLATFORM"
 check_report " - EIFFEL_SRC=$EIFFEL_SRC"
+check_report " - ISE_LIBRARY=$ISE_LIBRARY"
 
 if [ "$ISE_EIFFEL" = "" ]; then echo "Missing ISE_EIFFEL"; exit; fi
 if [ "$EIFFEL_SRC" = "" ]; then echo "Missing EIFFEL_SRC"; exit; fi

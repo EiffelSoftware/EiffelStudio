@@ -59,7 +59,7 @@ feature {NONE} -- Initialization
 
 				-- Operational
 
-			l_grid.enable_single_row_selection
+			l_grid.enable_multiple_row_selection
 			l_grid.enable_tree
 			l_grid.hide_tree_node_connectors
 			l_grid.enable_partial_dynamic_content
@@ -112,7 +112,7 @@ feature {NONE} -- Factory
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

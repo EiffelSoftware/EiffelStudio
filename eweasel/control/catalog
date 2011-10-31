@@ -2687,6 +2687,7 @@ test	scoop-separate-call-to-constant			scoop017 tcf pass scoop execution
 test	scoop-once-per-object				scoop018 tcf pass scoop execution incrementality once
 test	scoop-top-exception				scoop019 tcf pass scoop
 test	scoop-separate-formal				scoop020 tcf pass scoop formal generic conformance validity
+test	scoop-object-test				scoop021 tcf pass scoop formal generic conformance object_test execution
 
 -- Prettify
 test	pretty-smoke-test			pretty001 tcf pass pretty

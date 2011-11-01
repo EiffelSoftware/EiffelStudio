@@ -59,6 +59,10 @@ feature {NONE}	-- Implementation
 				across a_visitors as l_visitor loop
 					l_visitor.item.visit_ribbon_tabs (a_tree_node)
 				end
+			elseif a_tree_node.text.same_string ({ER_XML_CONSTANTS}.context_popup) then
+				across a_visitors as l_visitor loop
+					l_visitor.item.visit_context_popup (a_tree_node)
+				end
 			end
 
 		end
@@ -67,10 +71,14 @@ feature {NONE}	-- Implementation
 			-- All error visitors
 		local
 			l_split_button_empty_visitor: ER_SC1065_SPLIT_BUTTON_EMPTY_ERROR_VISITOR
+			l_mini_toolbar_empty_visitor: ER_SC1053_MINI_TOOLBAR_CANNOT_EMPTY_VISITOR
 		do
 			create Result.make (10)
 			create l_split_button_empty_visitor
 			Result.extend (l_split_button_empty_visitor)
+
+			create l_mini_toolbar_empty_visitor
+			Result.extend (l_mini_toolbar_empty_visitor)
 		end
 
 note

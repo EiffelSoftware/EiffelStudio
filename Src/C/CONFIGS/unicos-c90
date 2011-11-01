@@ -18,6 +18,8 @@ mtccflags='-h stdc -DEIF_THREADS -DEIF_POSIX_THREADS'
 
 libs='-lnsl -lm'
 mtlibs='-lnsl -lm -lpthread'
+sharedlibs='-lnsl -lm'
+mtsharedlibs='-lnsl -lm -lpthread'
 
 if [ -n "$ISE_VERSION" ]; then
 	rt_version=$ISE_VERSION

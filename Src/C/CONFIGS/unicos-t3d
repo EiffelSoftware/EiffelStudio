@@ -17,6 +17,8 @@ mtccflags='-h stdc -D_CRAY1 -DEIF_THREADS -DEIF_POSIX_THREADS'
 
 libs='-lnsl -lm'
 mtlibs='-lnsl -lm -lpthread'
+sharedlibs='-lnsl -lm'
+mtsharedlibs='-lnsl -lm -lpthread'
 
 optimize='-O2'
 if [ -n "$CC" ]; then

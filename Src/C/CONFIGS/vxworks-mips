@@ -67,6 +67,8 @@ ldsharedflags='-EL -X -N -warn-common -shared -o'
 
 libs=''
 mtlibs=''
+sharedlibs=''
+mtsharedlibs=''
 
 prefix='lib'
 shared_prefix='lib'

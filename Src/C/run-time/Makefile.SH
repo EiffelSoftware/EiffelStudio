@@ -48,6 +48,8 @@ JMTCFLAGS = \$(CFLAGS) $optimize $warning_level $mtccflags $large
 JLKFLAGS = \$(LDFLAGS) $ccldflags
 LDSHAREDFLAGS = $ldsharedflags
 SHAREDLINK= $sharedlink
+SHAREDLIBS= $sharedlibs
+MTSHAREDLIBS= $mtsharedlibs
 L = $manext
 LIBS = $libs
 LINT = lint
@@ -66,10 +68,8 @@ SED = $sed
 # Automatically generated parameters -- do not edit
 
 USRINC = $usrinc
-OBJECTS = big_file_run-time_c.o big_file_run-time_x.o 
-
-OLDOBJECTS =   \$(MT_LOBJ) \$(MT_WOBJ) \$(LOBJ) \$(WOBJ) x2c.o offset.o runtime_validation.o offset.o
-SOURCES =  \$(LSRC) \$(WADD) x2c.c runtime_validation.c
+OBJECTS =  \$(MT_LOBJ) \$(MT_WOBJ) \$(LOBJ) \$(WOBJ) x2c.o offset.o runtime_validation.o offset.o
+SOURCES =  \$(LSRC) \$(WADD) \$(MTADD) x2c.c runtime_validation.c
 LSCRIPTS =  eif_size.h
 
 ########################################################################
@@ -115,10 +115,12 @@ LSRC = malloc.c garcol.c local.c store.c retrieve.c \
 	hector.c cecil.c bits.c file.c dir.c misc.c \
 	error.c umain.c memory.c memory_analyzer.c argv.c boolstr.c search.c \
 	run_idr.c path_name.c object_id.c eif_threads.c eif_project.c \
-	posix_threads.c gen_conf.c eif_type_id.c rout_obj.c scoop.c \
+	posix_threads.c gen_conf.c eif_type_id.c rout_obj.c \
 	option.c compress.c console.c offset.c main.c except.c
 
 WADD = debug.c interp.c update.c wbench.c
+
+MTADD = scoop.c
 
 WOBJ = \
 	$(IDRS_OBJ) \
@@ -232,6 +234,7 @@ MT_WOBJ = \
 	MTinterp.o \
 	MTupdate.o \
 	MTwbench.o \
+	MTwscoop.o \
 	MTwmalloc.o \
 	MTwgarcol.o \
 	MTwlocal.o \
@@ -272,7 +275,6 @@ MT_WOBJ = \
 	MTwgen_conf.o \
 	MTweif_type_id.o \
 	MTwrout_obj.o \
-	MTwscoop.o \
 	MTwoption.o \
 	MTwcompress.o \
 	MTwconsole.o \
@@ -282,6 +284,7 @@ MT_WOBJ = \
 
 MT_LOBJ = \
 	$(MTIDRS_OBJ) \
+	MTscoop.o \
 	MTmalloc.o \
 	MTgarcol.o \
 	MTlocal.o \
@@ -322,7 +325,6 @@ MT_LOBJ = \
 	MTgen_conf.o \
 	MTeif_type_id.o \
 	MTrout_obj.o \
-	MTscoop.o \
 	MToption.o \
 	MTcompress.o \
 	MTconsole.o \
@@ -589,9 +591,6 @@ MTeif_type_id.o: eif_type_id.c
 MTrout_obj.o: rout_obj.c
 	       $(CC) -c $(JMTCFLAGS) $? -o $@
 
-MTscoop.o: scoop.c
-	       $(CC) -c $(JMTCFLAGS) $? -o $@
-
 MToption.o: option.c
 	       $(CC) -c $(JMTCFLAGS) $? -o $@
 
@@ -731,9 +730,6 @@ MTweif_type_id.o: eif_type_id.c
 MTwrout_obj.o: rout_obj.c
 	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
-MTwscoop.o: scoop.c
-	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
-
 MTwoption.o: option.c
 	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
@@ -777,6 +773,14 @@ MTupdate.o: update.c
 
 MTwbench.o: wbench.c
 	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
+
+
+MTwscoop.o: scoop.c
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
+
+
+MTscoop.o: scoop.c
+	$(CC) -c $(JMTCFLAGS) $? -o $@
 
 
 all:: eif_size.h
@@ -859,7 +863,7 @@ local_realclean::
 
 libmtfinalized.so: $(MT_LOBJ)
 	$(RM) $@
-	$(SHAREDLINK) $(LDSHAREDFLAGS) $@ $(MT_LOBJ)
+	$(SHAREDLINK) $(LDSHAREDFLAGS) $@ $(MT_LOBJ) $(MTSHAREDLIBS)
 
 all:: libmtwkbench.so
 
@@ -868,7 +872,7 @@ local_realclean::
 
 libmtwkbench.so: $(MT_WOBJ)
 	$(RM) $@
-	$(SHAREDLINK) $(LDSHAREDFLAGS) $@ $(MT_WOBJ)
+	$(SHAREDLINK) $(LDSHAREDFLAGS) $@ $(MT_WOBJ) $(MTSHAREDLIBS)
 
 all:: libfinalized.so
 
@@ -877,7 +881,7 @@ local_realclean::
 
 libfinalized.so: $(LOBJ)
 	$(RM) $@
-	$(SHAREDLINK) $(LDSHAREDFLAGS) $@ $(LOBJ)
+	$(SHAREDLINK) $(LDSHAREDFLAGS) $@ $(LOBJ) $(SHAREDLIBS)
 
 all:: libwkbench.so
 
@@ -886,7 +890,7 @@ local_realclean::
 
 libwkbench.so: $(WOBJ)
 	$(RM) $@
-	$(SHAREDLINK) $(LDSHAREDFLAGS) $@ $(WOBJ)
+	$(SHAREDLINK) $(LDSHAREDFLAGS) $@ $(WOBJ) $(SHAREDLIBS)
 
 all:: x2c
 
@@ -1090,4 +1094,3 @@ Makefiles.SH::
 !NO!SUBS!
 chmod 644 Makefile
 $eunicefix Makefile
-

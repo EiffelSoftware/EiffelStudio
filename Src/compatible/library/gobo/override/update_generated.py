@@ -1,4 +1,4 @@
-#!/usr/local/bin/python
+#!/usr/bin/python
 """
 	This script is to copy generated (unversioned) Eiffel file into generated folder.
 	maintainer: Jocelyn (jfiat@eiffel.com)

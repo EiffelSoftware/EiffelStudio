@@ -1696,6 +1696,13 @@ feature {NONE} -- Visitors
 				end
 			else
 					-- Target is a reference, source is a reference, or both
+				if not l_target_type.is_separate and then l_source_type.is_separate then
+						-- Check if expression object belongs to the current processor.
+					ba.append (bc_separate)
+						-- Placeholders not used in this instruction sequence.
+					ba.append_argument_count (0)
+					ba.append_boolean (True)
+				end
 				ba.append (bc_object_test)
 				ba.append_short_integer (context.object_test_local_position (a_node.target))
 					-- Generate type of target

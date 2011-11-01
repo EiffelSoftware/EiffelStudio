@@ -1384,23 +1384,25 @@ RT_LNK void eif_exit_eiffel_code(void);
 /*
  * Object status:
  * EIF_IS_DIFFERENT_PROCESSOR (o1, o2) - tells if o1 and o2 run on different processors
+ * RTS_OS(c,o) - tells if object o is separate relative to object c (i.e. they run on different processors)
  * RTS_OU(c,o) - tells if object o is uncontrolled by the processor associated with object c
  */
  
-#define EIF_IS_DIFFERENT_PROCESSOR(o1,o2) (RTS_PID(o1) != RTS_PID(o2))
-#define RTS_OU(c,o) ( (o) && (scp_mnger) && EIF_TEST(eif_is_uncontrolled(RTS_PID(c),RTS_PID(o))) ) 
+#define EIF_IS_DIFFERENT_PROCESSOR(o1,o2) (RTS_PID (o1) != RTS_PID (o2))
+#define RTS_OS(c,o) (RTS_PID (c) != RTS_PID (o))
+#define RTS_OU(c,o) ((o) && (scp_mnger) && EIF_TEST (eif_is_uncontrolled (RTS_PID (c), RTS_PID (o))))
 
 /*
  * Processor:
  * RTS_PA(o) - associate a fresh processor with an object o
  */
 #define RTS_PA(o) \
-	{                                                                                     \
-		EIF_TYPED_VALUE pid; \
-		pid.it_i4 = 0; \
-		pid.type = SK_INT32;                                                          \
+	{                                                                      \
+		EIF_TYPED_VALUE pid;                                           \
+		pid.it_i4 = 0;                                                 \
+		pid.type = SK_INT32;                                           \
 		RTS_TCB(scoop_task_assign_processor,RTS_PID(o),0,0,&pid,NULL); \
-		RTS_PID(o) = (EIF_SCP_PID) pid.it_i4;                                         \
+		RTS_PID(o) = (EIF_SCP_PID) pid.it_i4;                          \
 	}
 
 /*

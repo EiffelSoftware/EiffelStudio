@@ -28,11 +28,27 @@ lib^^libname.a: objlist                 @@\
  */
 #define CustomSharedLibraryTarget(libname,objlist)      @!\
 >SHAREDLINK @!\
+>SHAREDLIBS @!\
 AllTarget(lib^^libname.so)      @!\
                                                                         @!\
 lib^^libname.so:  objlist           @@\
         $(RM) $@                                                @@\
-        $(SHAREDLINK) $(LDSHAREDFLAGS) $@ objlist               @@\
+        $(SHAREDLINK) $(LDSHAREDFLAGS) $@ objlist $(SHAREDLIBS)               @@\
+
+/*
+ * CustomMTSharedLibraryTarget:
+ *      Generate rules to create a shared library in MT mode build it into a
+ *      different name so that the we don't hose people by having the
+ *      library gone for long periods.
+ */
+#define CustomMTSharedLibraryTarget(libname,objlist)      @!\
+>SHAREDLINK @!\
+>MTSHAREDLIBS @!\
+AllTarget(lib^^libname.so)      @!\
+                                                                        @!\
+lib^^libname.so:  objlist           @@\
+        $(RM) $@                                                @@\
+        $(SHAREDLINK) $(LDSHAREDFLAGS) $@ objlist $(MTSHAREDLIBS)               @@\
 
 /*
  * TestProgramTarget:

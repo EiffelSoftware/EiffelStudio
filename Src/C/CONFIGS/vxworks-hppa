@@ -63,6 +63,8 @@ ldsharedflags='-shared -o'
 
 libs=''
 mtlibs=''
+sharedlibs=''
+mtsharedlibs=''
 
 prefix='lib'
 shared_prefix='lib'

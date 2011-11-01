@@ -22,6 +22,7 @@ CFLAGS = $optimize $ccflags $large -I$rt_include
 MTCFLAGS = $optimize $mtccflags $large -I$rt_include
 SHAREDLINK = $sharedlink
 LDSHAREDFLAGS = $ldsharedflags
+SHAREDLIBS = $sharedlibs
 LN = $ln
 MAKE = $make
 MKDEP = $mkdep \$(DPFLAGS) --
@@ -104,7 +105,7 @@ libmtnet.a: $(MT_OBJECTS)
 
 libmtnet.so: $(MT_OBJECTS)
 	$(RM) $@
-	$(SHAREDLINK) $(LDSHAREDFLAGS) $@ $(MT_OBJECTS)
+	$(SHAREDLINK) $(LDSHAREDFLAGS) $@ $(MT_OBJECTS) $(SHAREDLIBS)
 
 libnet.a: $(OBJECTS)
 	$(RM) $@
@@ -113,7 +114,7 @@ libnet.a: $(OBJECTS)
 
 libnet.so: $(OBJECTS)
 	$(RM) $@
-	$(SHAREDLINK) $(LDSHAREDFLAGS) $@ $(OBJECTS)
+	$(SHAREDLINK) $(LDSHAREDFLAGS) $@ $(OBJECTS) $(SHAREDLIBS)
 
 ########################################################################
 # Common rules for all Makefiles -- do not edit

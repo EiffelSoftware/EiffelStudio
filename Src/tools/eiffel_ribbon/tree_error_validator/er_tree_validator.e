@@ -72,13 +72,18 @@ feature {NONE}	-- Implementation
 		local
 			l_split_button_empty_visitor: ER_SC1065_SPLIT_BUTTON_EMPTY_ERROR_VISITOR
 			l_mini_toolbar_empty_visitor: ER_SC1053_MINI_TOOLBAR_CANNOT_EMPTY_VISITOR
+			l_too_few_control_for_size_definition: ER_SC1031_TOO_FEW_CONTROLS_FOR_SIZE_DEFINITION
 		do
 			create Result.make (10)
+
 			create l_split_button_empty_visitor
 			Result.extend (l_split_button_empty_visitor)
 
 			create l_mini_toolbar_empty_visitor
 			Result.extend (l_mini_toolbar_empty_visitor)
+
+			create l_too_few_control_for_size_definition
+			Result.extend (l_too_few_control_for_size_definition)
 		end
 
 note

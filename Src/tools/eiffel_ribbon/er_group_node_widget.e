@@ -20,8 +20,6 @@ feature {NONE} -- Initialization
 			-- could not be performed in `initialize',
 			-- (due to regeneration of implementation class)
 			-- can be added here.
-		local
-			l_list_item: EV_LIST_ITEM
 		do
 			-- Check if size definition valid when typing
 			size_combo_box.focus_in_actions.extend (agent size_definition_checker.on_focus_in (size_combo_box))
@@ -30,60 +28,19 @@ feature {NONE} -- Initialization
 
 			add_customize_size_definitions
 
-			create l_list_item.make_with_text ("OneButton")
-			size_combo_box.extend (l_list_item)
-			create l_list_item.make_with_text ("TwoButtons")
-			size_combo_box.extend (l_list_item)
-			create l_list_item.make_with_text ("ThreeButtons")
-			size_combo_box.extend (l_list_item)
-			create l_list_item.make_with_text ("ThreeButtons-OneBigAndTwoSmall")
-			size_combo_box.extend (l_list_item)
-			create l_list_item.make_with_text ("ThreeButtonsAndOneCheckBox")
-			size_combo_box.extend (l_list_item)
-			create l_list_item.make_with_text ("FourButtons")
-			size_combo_box.extend (l_list_item)
-			create l_list_item.make_with_text ("FiveButtons")
-			size_combo_box.extend (l_list_item)
-			create l_list_item.make_with_text ("FiveOrSixButtons")
-			size_combo_box.extend (l_list_item)
-			create l_list_item.make_with_text ("SixButtons")
-			size_combo_box.extend (l_list_item)
-			create l_list_item.make_with_text ("SixButtons-TwoColumns")
-			size_combo_box.extend (l_list_item)
-			create l_list_item.make_with_text ("SevenButtons")
-			size_combo_box.extend (l_list_item)
-			create l_list_item.make_with_text ("EightButtons")
-			size_combo_box.extend (l_list_item)
-			create l_list_item.make_with_text ("EightButtons-LastThreeSmall")
-			size_combo_box.extend (l_list_item)
-			create l_list_item.make_with_text ("NineButtons")
-			size_combo_box.extend (l_list_item)
-			create l_list_item.make_with_text ("TenButtons")
-			size_combo_box.extend (l_list_item)
-			create l_list_item.make_with_text ("ElevenButtons")
-			size_combo_box.extend (l_list_item)
-			create l_list_item.make_with_text ("OneFontControl")
-			size_combo_box.extend (l_list_item)
-			create l_list_item.make_with_text ("IntFontOnly")
-			size_combo_box.extend (l_list_item)
-			create l_list_item.make_with_text ("IntRichFont")
-			size_combo_box.extend (l_list_item)
-			create l_list_item.make_with_text ("IntFontWithColor")
-			size_combo_box.extend (l_list_item)
-			create l_list_item.make_with_text ("OneInRibbonGallery")
-			size_combo_box.extend (l_list_item)
-			create l_list_item.make_with_text ("BigButtonsAndSmallButtonsOrInputs")
-			size_combo_box.extend (l_list_item)
-			create l_list_item.make_with_text ("InRibbonGalleryAndBigButton")
-			size_combo_box.extend (l_list_item)
-			create l_list_item.make_with_text ("InRibbonGalleryAndButtons-GalleryScalesFirst")
-			size_combo_box.extend (l_list_item)
-			create l_list_item.make_with_text ("InRibbonGalleryAndThreeButtons")
-			size_combo_box.extend (l_list_item)
-			create l_list_item.make_with_text ("ButtonGroupsAndInputs")
-			size_combo_box.extend (l_list_item)
-			create l_list_item.make_with_text ("ButtonGroups")
-			size_combo_box.extend (l_list_item)
+			add_predefined_size_definitions
+		end
+
+	add_predefined_size_definitions
+			-- Add predefined size definitions
+		local
+			l_list_item: EV_LIST_ITEM
+		do
+			across predefined_size_definitions as l_predefined_cursor
+			loop
+				create l_list_item.make_with_text (l_predefined_cursor.item)
+				size_combo_box.extend (l_list_item)
+			end
 		end
 
 	user_create_interface_objects
@@ -188,6 +145,72 @@ feature -- Command
 				end
 			end
 		end
+
+feature -- Query
+
+	predefined_size_definitions: ARRAYED_LIST [STRING]
+			-- All predefined size definitions
+		once
+			create Result.make (27)
+
+			Result.extend (OneButton)
+			Result.extend (TwoButtons)
+			Result.extend (ThreeButtons)
+			Result.extend (ThreeButtons_OneBigAndTwoSmall)
+			Result.extend (ThreeButtonsAndOneCheckBox)
+			Result.extend (FourButtons)
+			Result.extend (FiveButtons)
+			Result.extend (FiveOrSixButtons)
+			Result.extend (SixButtons)
+			Result.extend (SixButtons_TwoColumns)
+			Result.extend (SevenButtons)
+			Result.extend (EightButtons)
+			Result.extend (EightButtons_LastThreeSmall)
+			Result.extend (NineButtons)
+			Result.extend (TenButtons)
+			Result.extend (ElevenButtons)
+			Result.extend (OneFontControl)
+			Result.extend (IntFontOnly)
+			Result.extend (IntRichFont)
+			Result.extend (IntFontWithColor)
+			Result.extend (OneInRibbonGallery)
+			Result.extend (BigButtonsAndSmallButtonsOrInputs)
+			Result.extend (InRibbonGalleryAndBigButton)
+			Result.extend (InRibbonGalleryAndButtons_GalleryScalesFirst)
+			Result.extend (InRibbonGalleryAndThreeButtons)
+			Result.extend (ButtonGroupsAndInputs)
+			Result.extend (ButtonGroups)
+		end
+
+feature -- Enumeration
+
+	OneButton: STRING = "OneButton"
+	TwoButtons: STRING = "TwoButtons"
+	ThreeButtons: STRING = "ThreeButtons"
+	ThreeButtons_OneBigAndTwoSmall: STRING = "ThreeButtons-OneBigAndTwoSmall"
+	ThreeButtonsAndOneCheckBox: STRING = "ThreeButtonsAndOneCheckBox"
+	FourButtons: STRING = "FourButtons"
+	FiveButtons: STRING = "FiveButtons"
+	FiveOrSixButtons: STRING = "FiveOrSixButtons"
+	SixButtons: STRING = "SixButtons"
+	SixButtons_TwoColumns: STRING = "SixButtons-TwoColumns"
+	SevenButtons: STRING = "SevenButtons"
+	EightButtons: STRING = "EightButtons"
+	EightButtons_LastThreeSmall: STRING = "EightButtons-LastThreeSmall"
+	NineButtons: STRING = "NineButtons"
+	TenButtons: STRING = "TenButtons"
+	ElevenButtons: STRING = "ElevenButtons"
+	OneFontControl: STRING = "OneFontControl"
+	IntFontOnly: STRING = "IntFontOnly"
+	IntRichFont: STRING = "IntRichFont"
+	IntFontWithColor: STRING = "IntFontWithColor"
+	OneInRibbonGallery: STRING = "OneInRibbonGallery"
+	BigButtonsAndSmallButtonsOrInputs: STRING = "BigButtonsAndSmallButtonsOrInputs"
+	InRibbonGalleryAndBigButton: STRING = "InRibbonGalleryAndBigButton"
+	InRibbonGalleryAndButtons_GalleryScalesFirst: STRING = "InRibbonGalleryAndButtons-GalleryScalesFirst"
+	InRibbonGalleryAndThreeButtons: STRING = "InRibbonGalleryAndThreeButtons"
+	ButtonGroupsAndInputs: STRING = "ButtonGroupsAndInputs"
+	ButtonGroups: STRING = "ButtonGroups"
 
 feature {NONE} -- Implementation
 

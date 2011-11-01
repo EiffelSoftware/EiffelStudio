@@ -1,48 +1,47 @@
 note
 	description: "[
-		Tree validation visitor common ancestor
-		All Ribbon Markup error please check: "Understanding Markup Compiler Messages"
-		http://msdn.microsoft.com/en-us/library/windows/desktop/dd316918(v=vs.85).aspx
+		MiniToolbar' cannot be empty according to the DTD/Schema.
 	]"
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
+class
+	ER_SC1053_MINI_TOOLBAR_CANNOT_EMPTY_VISITOR
+
+inherit
 	ER_TREE_VALIDATION_VISITOR
+		redefine
+			visit_context_popup
+		end
 
 feature -- Command
 
-	visit_ribbon_tabs (a_tree_node: EV_TREE_NODE)
-			-- Visit `ribbon.tabs' node
-		do
-		end
-
 	visit_context_popup (a_tree_node: EV_TREE_NODE)
-			-- Visit `contextpopup' node
+			-- <Precursor>
 		do
+			visit_node_recursive (a_tree_node)
 		end
-
-	is_error_found: BOOLEAN
-			-- Found error?
 
 feature {NONE} -- Implementation
 
-	display_error_on_tree_node (a_tree_node: EV_TREE_NODE; a_text: STRING_32)
-			-- Display error feedback on `a_tree_node'
-		require
-			not_void: a_tree_node /= Void and a_text /= Void
-		local
-			l_feedback: ER_FEEDBACK_INDICATOR
+	visit_node_recursive (a_tree_node: EV_TREE_NODE)
+			-- Visit tree node recursively
 		do
-			create l_feedback.make_for_error (a_tree_node.width, a_tree_node.height)
-			l_feedback.disconnect_from_window_manager
-			l_feedback.set_position (a_tree_node.screen_x, a_tree_node.screen_y)
-			l_feedback.set_error_text (a_text)
-			--FIXME: Clear all previous feedback indicators first
-			l_feedback.show_on (a_tree_node)
+			if a_tree_node.text.same_string ({ER_XML_CONSTANTS}.mini_toolbar) then
+				if a_tree_node.count < 1 then
+					-- At least one child
+					is_error_found := True
+
+					display_error_on_tree_node (a_tree_node, "MiniToolbar cannot be empty, please fill it with `MenuGroup'")
+				end
+			else
+				across a_tree_node as l_cursor loop
+					visit_node_recursive (l_cursor.item)
+				end
+			end
 		end
 
-;note
+note
 	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

@@ -39,6 +39,11 @@ LSRC = malloc.c garcol.c local.c store.c retrieve.c \
 WADD = debug.c interp.c update.c wbench.c
 
 /*
+ * Files addedd only for multithreaded archive
+ */
+MTADD = scoop.c
+
+/*
  * Files for workbench have a 'w' pre-pended if they already exist for
  * the normal run-time archive.
  */
@@ -73,6 +78,9 @@ MT_WOBJ = \
 |expand f!$(WADD)!
 	MT!f:\.c=.o \
 -expand
+|expand f!$(MTADD)!
+	MTw!f:\.c=.o \
+-expand
 |expand f!$(LSRC)!
 	MTw!f:\.c=.o \
 -expand \\
@@ -82,6 +90,9 @@ MT_WOBJ = \
  */
 MT_LOBJ = \
 	$(MTIDRS_OBJ) \
+|expand f!$(MTADD)!
+	MT!f:\.c=.o \
+-expand
 |expand f!$(LSRC)!
 	MT!f:\.c=.o \
 -expand \\
@@ -120,17 +131,29 @@ MT!f:\.c=.o: !f
 
 -expand
 
+|expand f!$(MTADD)!
+MTw!f:\.c=.o: !f
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
+
+-expand
+
+|expand f!$(MTADD)!
+MT!f:\.c=.o: !f
+	$(CC) -c $(JMTCFLAGS) $? -o $@
+
+-expand
+
 NormalObjectRule()
 ShellScriptLongTarget(eif_size_h,eif_size.h)
-AddSource($(LSRC) $(WADD))
+AddSource($(LSRC) $(WADD) $(MTADD))
 
 CustomLibraryTarget(mtfinalized,$(MT_LOBJ))
 CustomLibraryTarget(mtwkbench,$(MT_WOBJ))
 CustomLibraryTarget(finalized,$(LOBJ))
 CustomLibraryTarget(wkbench,$(WOBJ))
 
-CustomSharedLibraryTarget(mtfinalized,$(MT_LOBJ))
-CustomSharedLibraryTarget(mtwkbench,$(MT_WOBJ))
+CustomMTSharedLibraryTarget(mtfinalized,$(MT_LOBJ))
+CustomMTSharedLibraryTarget(mtwkbench,$(MT_WOBJ))
 CustomSharedLibraryTarget(finalized,$(LOBJ))
 CustomSharedLibraryTarget(wkbench,$(WOBJ))
 

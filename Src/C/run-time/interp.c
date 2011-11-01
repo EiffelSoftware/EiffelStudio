@@ -2,7 +2,7 @@
 	description: "The byte code interpreter."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2010, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2011, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -548,7 +548,7 @@ rt_private void initialize_request_chain (EIF_REFERENCE * volatile * qq, EIF_REF
 		/* Register reference arguments. */
 	for (n = argnum; n > 0; n--) {
 		EIF_TYPED_VALUE *last = arg(n);
-		if ((last -> type & SK_HEAD) == SK_REF && EIF_IS_DIFFERENT_PROCESSOR(icurrent -> it_ref, last -> it_ref)) {
+		if ((last -> type & SK_HEAD) == SK_REF && RTS_OS(icurrent -> it_ref, last -> it_ref)) {
 			RTS_RS(icurrent -> it_ref, last -> it_ref);
 		}
 	}
@@ -2584,18 +2584,30 @@ rt_private void interpret(int flag, int where)
 #ifdef EIF_THREADS
 			target = otop ();
 #define Current (icurrent -> it_ref)
-			if (target -> it_ref == (EIF_REFERENCE) 0) /* Called on a void reference? */
-				eraise("", EN_VOID);	         /* Yes, raise exception */
-				/* Check if this is indeed a separate call. */
 			code = *IC;
-			if ((code == BC_CREATION) || (code ==BC_PCREATION))
-			{
-					/* Associate new processor with the target of a call. */
-				RTS_PA (target -> it_ref);
-			}
-			else if (!EIF_IS_DIFFERENT_PROCESSOR (icurrent->it_ref, target->it_ref)) {
-					/* The call is not separate, reset target to NULL */
+			if (code == BC_OBJECT_TEST) {
+				if ((target -> it_ref != (EIF_REFERENCE) 0) && ((target -> type & SK_HEAD) == SK_REF) && RTS_OS (Current, target -> it_ref)) {
+						/* Replace expression result with Void because it runs on a different processor. */
+					target -> it_ref = (EIF_REFERENCE) 0;
+				}
+					/* Avoid further processing related to separate status. */
 				target = NULL;
+			}
+			else {
+				if (target -> it_ref == (EIF_REFERENCE) 0) {
+						/* Called on a void reference? */
+					eraise("", EN_VOID);	         /* Yes, raise exception */
+				}
+					/* Check if this is indeed a separate call. */
+				if ((code == BC_CREATION) || (code ==BC_PCREATION))
+				{
+						/* Associate new processor with the target of a call. */
+					RTS_PA (target -> it_ref);
+				}
+				else if (!RTS_OS (icurrent->it_ref, target->it_ref)) {
+						/* The call is not separate, reset target to NULL */
+					target = NULL;
+				}
 			}
 			if (target) {
 					/* Perform a separate call. */

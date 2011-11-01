@@ -73,7 +73,7 @@ feature
 
 	add_cecil_objects
 		local
-			cecil_basket: LINKED_LIST [STRING]
+			cecil_basket: like cecil_rt_basket
 		do
 			if not System.has_multithreaded then
 				cecil_basket := cecil_rt_basket
@@ -169,6 +169,7 @@ feature
 				cecil_basket.extend ("MTeif_project.o"); cecil_basket.finish
 				cecil_basket.extend ("MTidrs.o"); cecil_basket.finish
 				cecil_basket.extend ("MTposix_threads.o"); cecil_basket.finish
+				cecil_basket.extend ("MTscoop.o"); cecil_basket.finish
 			end
 		end;
 

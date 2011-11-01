@@ -46,7 +46,7 @@ feature
 
 	add_cecil_objects
 		local
-			cecil_basket: LINKED_LIST [STRING]
+			cecil_basket: like cecil_rt_basket
 		do
 			if not System.has_multithreaded then
 				cecil_basket := cecil_rt_basket
@@ -154,6 +154,7 @@ feature
 				cecil_basket.extend ("MTwposix_threads.o"); cecil_basket.finish
 				cecil_basket.extend ("MTnetwork.o"); cecil_basket.finish
 				cecil_basket.extend ("mtipc.o"); cecil_basket.finish
+				cecil_basket.extend ("MTwscoop.o"); cecil_basket.finish
 			end
 		end;
 
@@ -296,7 +297,7 @@ feature
 		end;
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

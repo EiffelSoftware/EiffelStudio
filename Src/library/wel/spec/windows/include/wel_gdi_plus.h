@@ -32,6 +32,7 @@ typedef void GpFontFamily;
 typedef void GpFontCollection;
 typedef void GpStringFormat;
 typedef void GpBrush;
+typedef void GpTexture;
 typedef void GpSolidFill;
 typedef void GpPath;
 typedef GUID CLSID;
@@ -100,6 +101,15 @@ typedef enum Status
     PropertyNotFound = 19,
     PropertyNotSupported = 20
 } GpStatus;
+
+typedef enum
+{
+    Tile = 0,
+    TileFlipX = 1,
+    TileFlipY = 2,
+    TileFlipXY = 3,
+    Clamp = 4,	
+} GpWrapMode;
 
 typedef enum
 {

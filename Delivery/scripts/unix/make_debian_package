@@ -33,25 +33,7 @@ cp $PACKAGING_DIR/license $DEBIAN_DIR/copyright
 . $DEBIAN_DIR/postinst.sh
 . $DEBIAN_DIR/prerm.sh
 
-
 cd $DEBIAN_DIR
-
-
-# First we check if there are any docs (architecture independent)
-if test -d "$PRODUCT$DOCS_DIR"; then
-	mkdir -p $PRODUCT-doc$DOCS_DIR
-	mv $PRODUCT$DOCS_DIR/* $PRODUCT-doc$DOCS_DIR/
-	rm -rf $PRODUCT$DOCS_DIR
-
-	echo "Building $PRODUCT-doc package"
-	debuild -eARCH=all --check-dirname-level 0 binary-indep >>$LOG 2>>$LOG
-
-	# Clean up doc related build files
-	rm -rf $DEBIAN_DIR/$PRODUCT-doc
-else
-	echo "$0: No $DOCS_DIR present, $PRODUCT-doc package will not be created"
-fi
-
 
 # Then we build the main package (architecture dependent)
 echo "Building $PRODUCT ($ARCH) package"

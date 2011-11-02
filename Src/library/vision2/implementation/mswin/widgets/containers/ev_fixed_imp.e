@@ -315,6 +315,11 @@ feature {NONE} -- WEL Implementation
 			temp_children: ARRAYED_LIST [EV_WIDGET_IMP]
 			current_child: EV_WIDGET_IMP
 			bk_brush: detachable WEL_BRUSH
+			l_x, l_y, l_width, l_height: INTEGER
+			l_gdip_brush: detachable WEL_GDIP_TEXTURE_BRUSH
+			l_gdip_graphics: WEL_GDIP_GRAPHICS
+			l_region: WEL_RECT
+			l_background_color: WEL_GDIP_COLOR
 		do
 				-- Disable default windows processing which would re-draw the
 				-- complete background of `Current'. This is not nice behaviour
@@ -355,14 +360,33 @@ feature {NONE} -- WEL Implementation
 				temp_children.forth
 			end
 				-- Fill the remaining region, `main_region'.
-			bk_brush := background_brush
-			check bk_brush /= Void end
-			paint_dc.fill_region (main_region, bk_brush)
-				-- Restore our index in the children.
-			temp_children.go_i_th (original_index)
+			l_gdip_brush := background_brush_gdip
+			if l_gdip_brush /= Void then
+				-- GDI+ is available
+				l_region := main_region.get_region_box
 
-				-- Clean up GDI objects
-			bk_brush.delete
+				l_x := l_region.x
+				l_y := l_region.y
+				l_width := l_region.width
+				l_height := l_region.height
+				create l_gdip_graphics.make_from_dc (paint_dc)
+				create l_background_color.make_from_argb (255, background_color.red_8_bit, background_color.green_8_bit, background_color.blue_8_bit)
+				l_gdip_graphics.clear (l_background_color)
+				l_gdip_graphics.fill_rectangle (l_gdip_brush, create {WEL_GDIP_RECT}.make_with_size (l_x, l_y, l_width, l_height))
+
+				l_gdip_graphics.destroy_item
+			else
+				-- Using GDI instead of GDI+
+				bk_brush := background_brush
+				check bk_brush /= Void end
+				paint_dc.fill_region (main_region, bk_brush)
+					-- Restore our index in the children.
+				temp_children.go_i_th (original_index)
+
+					-- Clean up GDI objects
+				bk_brush.delete
+			end
+
 			main_region.delete
 		end
 

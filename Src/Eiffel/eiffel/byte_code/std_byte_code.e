@@ -408,7 +408,7 @@ feature -- Analyzis
 			end
 
 				-- Generate reference to once manifest string field
-			l_context.generate_once_manifest_string_import (once_manifest_string_count)
+			generate_once_manifest_string_import
 
 			if rescue_clause /= Void then
 				buf.put_new_line_only
@@ -1152,6 +1152,38 @@ end
 				buf := buffer
 				buf.put_new_line
 				buf.put_string ("dtype = Dtype(Current);")
+			end
+		end
+
+	generate_once_manifest_string_import
+			-- Generate declarations for once manifest strings that are used in the routine.
+		local
+			a: INHERITED_ASSERTION
+			w: BOOLEAN
+		do
+			context.generate_once_manifest_string_import (once_manifest_string_count)
+			a := Context.inherited_assertion
+			w := context.workbench_mode or else context.system.keep_assertions
+				-- Figure out if there are inherited preconditions.
+				-- Preconditions are always generated in workbench mode.
+				-- In finalized mode they are generated if requested by user
+				-- or when there are uncontrolled arguments.
+			if
+				context.origin_has_precondition and then
+				a.has_precondition and then
+				(w or else context.has_wait_condition)
+			then
+					-- Generate once manifest string declarations for inherited preconditions.
+				context.set_assertion_type (in_precondition)
+				a.generate_precondition_import
+				context.set_assertion_type (0)
+			end
+				-- Figure out if there are inherited postconditions.
+			if w and then a.has_postcondition then
+					-- Generate once manifest string declarations for inherited postconditions.
+				context.set_assertion_type (in_postcondition)
+				a.generate_postcondition_import
+				context.set_assertion_type (0)
 			end
 		end
 

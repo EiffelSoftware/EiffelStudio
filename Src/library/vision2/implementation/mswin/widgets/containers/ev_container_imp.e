@@ -271,6 +271,48 @@ feature {NONE} -- WEL Implementation
 			end
 		end
 
+	background_brush_gdip: detachable WEL_GDIP_TEXTURE_BRUSH
+			-- GDI+ version of `background_brush'
+			-- Result void if GDI+ not available
+		local
+			tmp_bitmap: WEL_BITMAP
+			l_gdip_image: WEL_GDIP_BITMAP
+			l_gdip_test: WEL_GDIP_STARTER
+		do
+			create l_gdip_test
+			if exists and then l_gdip_test.is_gdi_plus_installed then
+				if attached background_pixmap_imp as l_background_pixmap_imp then
+					if last_background_pixmap_imp /= l_background_pixmap_imp then
+						last_background_pixmap_imp := l_background_pixmap_imp
+
+						tmp_bitmap := l_background_pixmap_imp.get_bitmap
+						create l_gdip_image.make_from_bitmap_with_alpha (tmp_bitmap)
+						create Result.make_with_image (l_gdip_image)
+						l_gdip_image.destroy_item
+
+						if attached background_brush_gdip_cached as l_last_one then
+							l_last_one.destroy_item
+						end
+						background_brush_gdip_cached := Result
+					else
+						Result := background_brush_gdip_cached
+					end
+				else
+					last_background_pixmap_imp := Void
+					if attached background_brush_gdip_cached as l_last_one then
+						l_last_one.destroy_item
+						background_brush_gdip_cached := Void
+					end
+				end
+			end
+		end
+
+	last_background_pixmap_imp: like background_pixmap_imp
+			-- Last `background_pixmap_imp'
+
+	background_brush_gdip_cached: like background_brush_gdip
+			-- Cached `background_brush_gdip' since creating `background_brush_gdip' everytime is slow
+
    	background_brush: detachable WEL_BRUSH
    			-- Current window background color used to refresh the window when
    			-- requested by the WM_ERASEBKGND windows message.

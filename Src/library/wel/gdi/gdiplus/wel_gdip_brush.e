@@ -28,7 +28,7 @@ feature{NONE} -- Initlization
 			check ok: l_result = {WEL_GDIP_STATUS}.ok end
 		end
 
-feature{NONE} -- C externals
+feature {NONE} -- C externals
 
 	c_gdip_create_solid_fill (a_gdiplus_handle: POINTER; a_gdip_color: INTEGER_64; a_result_status: TYPED_POINTER [INTEGER]): POINTER
 			-- Create a solid fill brush with `a_gdip_color'.
@@ -55,14 +55,14 @@ feature{NONE} -- C externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

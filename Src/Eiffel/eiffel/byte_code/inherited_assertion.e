@@ -435,7 +435,7 @@ feature -- Inherited precondition
 			restore_current_context
 		ensure
 			context_restored: restored
-		end;
+		end
 
 	generate_precondition
 			-- Generate inherited precondition.
@@ -452,6 +452,27 @@ feature -- Inherited precondition
 				precondition_context_init
 				context.generate_once_manifest_string_allocation (precondition_oms_counts.item)
 				precondition_list.item.generate
+				precondition_forth
+			end
+			restore_current_context
+		ensure
+			context_restored: restored
+		end
+
+	generate_precondition_import
+			-- Generate declarations used in inherited preconditions.
+		require
+			types_and_assert_count_same: valid_prec_count
+			has_prec: has_precondition
+			is_precondition: context.assertion_type = {ASSERT_TYPE}.in_precondition
+		do
+			from
+				precondition_start
+			until
+				precondition_after
+			loop
+				precondition_context_init
+				context.generate_once_manifest_string_import (precondition_oms_counts.item)
 				precondition_forth
 			end
 			restore_current_context
@@ -638,7 +659,7 @@ feature -- inherited postcondition
 		end
 
 	generate_postcondition
-			-- Generate inherited postcondition .
+			-- Generate inherited postcondition.
 		require
 			types_and_assert_count_same: valid_post_count
 			is_postcondition: context.assertion_type = {ASSERT_TYPE}.in_postcondition
@@ -651,6 +672,26 @@ feature -- inherited postcondition
 				postcondition_context_init
 				context.generate_once_manifest_string_allocation (postcondition_oms_counts.item)
 				postcondition_list.item.generate
+				postcondition_forth
+			end
+			restore_current_context
+		ensure
+			context_restored: restored
+		end
+
+	generate_postcondition_import
+			-- Generate declarations used in inherited postconditions.
+		require
+			types_and_assert_count_same: valid_post_count
+			is_postcondition: context.assertion_type = {ASSERT_TYPE}.in_postcondition
+		do
+			from
+				postcondition_start
+			until
+				postcondition_after
+			loop
+				postcondition_context_init
+				context.generate_once_manifest_string_import (postcondition_oms_counts.item)
 				postcondition_forth
 			end
 			restore_current_context
@@ -928,7 +969,7 @@ feature -- inherited postcondition
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,0 +1,29 @@
+
+test_name 	 small-eif-memory-scavenge-2
+test_description Setting environment variable EIF_MEMORY_SCAVENGE to a small value causes incorrect system execution output of a particular finalized system
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+copy_raw 	 test1.e  $CLUSTER test1.e
+copy_raw 	 test2.e  $CLUSTER test2.e
+copy_raw 	 a.e  $CLUSTER a.e
+copy_raw 	 b.e  $CLUSTER b.e
+copy_raw 	 c.e  $CLUSTER c.e
+
+compile_final
+compile_result 	 ok
+
+c_compile_final
+c_compile_result ok
+
+execute_final	 NONE exec_output_1
+execute_result	 ok
+compare		 exec_output_1 output
+
+setenv		 EIF_MEMORY_SCAVENGE 8192
+
+execute_final	 NONE exec_output_2
+execute_result	 ok
+compare		 exec_output_2 output
+
+test_end

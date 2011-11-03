@@ -95,6 +95,7 @@ inherit
 			on_destroy,
 			on_size,
 			background_brush,
+			background_brush_gdip,
 			x_position,
 			y_position,
 			on_sys_key_down,

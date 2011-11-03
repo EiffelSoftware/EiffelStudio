@@ -88,6 +88,7 @@ inherit
 			on_set_focus,
 			on_kill_focus,
 			background_brush,
+			background_brush_gdip,
 			on_draw_item,
 			on_set_cursor,
 			on_color_control,

@@ -61,6 +61,26 @@ feature -- Basic operations
 			a_hdc.fill_rect (a_rect, background_brush)
 		end
 
+	draw_widget_background_gdip (a_widget: EV_WIDGET_IMP; a_hdc: WEL_DC; a_rect: WEL_RECT; a_background_brush: WEL_GDIP_BRUSH; a_background: WEL_COLOR_REF): BOOLEAN
+			-- <Precursor>
+		local
+			l_x, l_y, l_width, l_height: INTEGER
+			l_gdip_graphics: WEL_GDIP_GRAPHICS
+			l_background_color: WEL_GDIP_COLOR
+		do
+			l_x := a_rect.x
+			l_y := a_rect.y
+			l_width := a_rect.width
+			l_height := a_rect.height
+			create l_gdip_graphics.make_from_dc (a_hdc)
+			create l_background_color.make_from_argb (255, a_background.red, a_background.green, a_background.blue)
+			l_gdip_graphics.clear (l_background_color)
+			l_gdip_graphics.fill_rectangle (a_background_brush, create {WEL_GDIP_RECT}.make_with_size (l_x, l_y, l_width, l_height))
+			l_gdip_graphics.destroy_item
+
+			Result := True
+		end
+
 	draw_notebook_background (notebook: EV_NOTEBOOK_IMP; a_hdc: WEL_DC; a_rect: WEL_RECT; background_brush: WEL_BRUSH)
 			-- Draw the background for `notebook' onto `a_hdc' restricted to `a_rect' using `background_brush'.
 		do

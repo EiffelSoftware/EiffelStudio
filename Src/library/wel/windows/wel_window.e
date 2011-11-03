@@ -455,6 +455,12 @@ feature -- Status report
 			new_object: Result /= Void implies Result /= background_brush
 		end
 
+	background_brush_gdip: detachable WEL_GDIP_BRUSH
+			-- GDI+ version of `background_brush'
+			-- Result void if GDI+ not available
+		do
+		end
+
 	commands_enabled: BOOLEAN
 			-- Is the commands execution enabled?
 		do

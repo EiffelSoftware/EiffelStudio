@@ -45,6 +45,18 @@ feature -- Basic operations
 		deferred
 		end
 
+	draw_widget_background_gdip (a_widget: EV_WIDGET_IMP; a_hdc: WEL_DC; a_rect: WEL_RECT; background_brush: WEL_GDIP_BRUSH; a_background: WEL_COLOR_REF): BOOLEAN
+			-- GDI+ version of `draw_widget_background'
+			-- Result True means successfully executed
+		require
+			a_widget_not_void: a_widget /= Void
+			a_hdc_not_void: a_hdc /= Void
+			a_rect_not_void: a_rect /= Void
+			background_brush_not_void: background_brush /= Void
+			a_background_not_void: a_background /= Void
+		deferred
+		end
+
 	draw_widget_background (a_widget: EV_WIDGET_IMP; a_hdc: WEL_DC; a_rect: WEL_RECT; background_brush: WEL_BRUSH)
 			-- Draw the background for `a_widget' onto `a_hdc' restricted to `a_rect'. `background_brush' is used as the
 			-- brush although on some descendents (i.e. XP), the theming of a particular parent may be copied instead. This permits

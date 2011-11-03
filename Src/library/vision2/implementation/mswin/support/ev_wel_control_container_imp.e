@@ -131,16 +131,31 @@ feature {NONE} -- WEL Implementation
 			clear_background (paint_dc, invalid_rect)
 		end
 
+	wel_background_color: WEL_COLOR_REF
+			-- Widget's background color
+		deferred
+		end
+
 	frozen clear_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT)
 			-- Erase the background of `Current' within `invalid_rect'.
 		require
 			paint_dc_not_void: paint_dc /= Void
 			invalid_rect_not_void: invalid_rect /= Void
 			invalid_rect_exists: invalid_rect.exists
+		local
+			l_result: BOOLEAN
 		do
-			if attached background_brush as bk_brush then
-				application_imp.theme_drawer.draw_widget_background (current_as_container, paint_dc, invalid_rect, bk_brush)
-				bk_brush.delete
+			if attached background_brush_gdip as l_bk_brush_gdip then
+				l_result := application_imp.theme_drawer.draw_widget_background_gdip (current_as_container, paint_dc, invalid_rect, l_bk_brush_gdip, wel_background_color)
+			end
+			if not l_result then
+				if attached background_brush as bk_brush then
+					application_imp.theme_drawer.draw_widget_background (current_as_container, paint_dc, invalid_rect, bk_brush)
+					bk_brush.delete
+					l_result := True
+				end
+			end
+			if l_result then
 				disable_default_processing
 				set_message_return_value (to_lresult (1))
 			else

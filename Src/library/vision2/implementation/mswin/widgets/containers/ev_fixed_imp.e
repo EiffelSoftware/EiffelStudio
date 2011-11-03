@@ -33,7 +33,8 @@ inherit
 		rename
 			make as ev_wel_control_container_make
 		undefine
-			on_wm_dropfiles
+			on_wm_dropfiles,
+			background_brush_gdip
 		redefine
 			top_level_window_imp,
 			on_erase_background,
@@ -316,7 +317,7 @@ feature {NONE} -- WEL Implementation
 			current_child: EV_WIDGET_IMP
 			bk_brush: detachable WEL_BRUSH
 			l_x, l_y, l_width, l_height: INTEGER
-			l_gdip_brush: detachable WEL_GDIP_TEXTURE_BRUSH
+			l_gdip_brush: detachable WEL_GDIP_BRUSH
 			l_gdip_graphics: WEL_GDIP_GRAPHICS
 			l_region: WEL_RECT
 			l_background_color: WEL_GDIP_COLOR

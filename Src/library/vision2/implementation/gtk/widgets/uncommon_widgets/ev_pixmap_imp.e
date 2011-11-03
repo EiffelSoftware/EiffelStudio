@@ -72,7 +72,7 @@ feature {NONE} -- Initialization
 			set_c_object ({GTK2}.gtk_image_new)
 			Precursor {EV_PRIMITIVE_IMP}
 			l_app_imp := app_implementation
-			gdkpix := {GTK}.gdk_pixmap_new (l_app_imp.default_gdk_window, 1, 1, Default_color_depth)
+			gdkpix := {GTK}.gdk_pixmap_new (null, 1, 1, l_app_imp.best_available_color_depth)
 
 			set_pixmap (gdkpix, gdkmask)
 				-- Initialize the Graphical Context
@@ -257,7 +257,7 @@ feature -- Element change
 					oldmask := {GTK}.gdk_pixmap_ref (mask)
 				end
 
-				drawable := {GTK}.gdk_pixmap_new (oldpix, a_width, a_height, Default_color_depth)
+				drawable := {GTK}.gdk_pixmap_new (null, a_width, a_height, app_implementation.best_available_color_depth)
 				clear_rectangle (0, 0, a_width, a_height)
 
 				pixgc := {GTK}.gdk_gc_new (drawable)
@@ -268,7 +268,7 @@ feature -- Element change
 				{GTK}.gdk_pixmap_unref (oldpix)
 
 				if oldmask /= loc_default_pointer then
-					mask := {GTK}.gdk_pixmap_new (oldmask, a_width, a_height, Monochrome_color_depth)
+					mask := {GTK}.gdk_pixmap_new (null, a_width, a_height, Monochrome_color_depth)
 					maskgc := {GTK}.gdk_gc_new (mask)
 					{GTK}.gdk_gc_set_foreground (maskgc, bg_color)
 					{GTK}.gdk_draw_rectangle (mask, maskgc, 1, 0, 0, a_width, a_height)
@@ -286,7 +286,7 @@ feature -- Element change
 			gdkpix: POINTER
 		do
 			if a_width /= width or else a_height /= height then
-				gdkpix := {GTK}.gdk_pixmap_new (drawable, a_width, a_height, Default_color_depth)
+				gdkpix := {GTK}.gdk_pixmap_new (null, a_width, a_height, app_implementation.best_available_color_depth)
 				set_pixmap (gdkpix, default_pointer)
 			end
 		end
@@ -379,7 +379,7 @@ feature {EV_ANY_I, EV_GTK_DEPENDENT_APPLICATION_IMP} -- Implementation
 			gdkpix, gdkmask: POINTER
 			pixgc, maskgc: POINTER
 		do
- 			gdkpix := {GTK}.gdk_pixmap_new (App_implementation.default_gdk_window, a_width, a_height, Default_color_depth)
+ 			gdkpix := {GTK}.gdk_pixmap_new (null, a_width, a_height, app_implementation.best_available_color_depth)
 			pixgc := {GTK}.gdk_gc_new (gdkpix)
 			{GTK2}.gdk_draw_drawable (gdkpix, pixgc, a_src_pix, 0, 0, 0, 0, a_width, a_height)
 			{GTK}.gdk_gc_unref (pixgc)
@@ -525,9 +525,6 @@ feature {NONE} -- Externals
 		end
 
 feature {NONE} -- Constants
-
-	Default_color_depth: INTEGER = -1
-			-- Default color depth, use the one from gdk_root_parent.
 
 	Monochrome_color_depth: INTEGER = 1
 			-- Black and White color depth (for mask).

@@ -264,6 +264,63 @@ feature -- Externals
 			]"
 		end
 
+	frozen gdk_screen_get_rgb_colormap (a_screen: POINTER): POINTER
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"[
+				return gdk_screen_get_rgb_colormap ((GdkScreen*)$a_screen);
+			]"
+		end
+
+	frozen gdk_screen_get_rgb_visual (a_screen: POINTER): POINTER
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"[
+				return gdk_screen_get_rgb_visual ((GdkScreen*)$a_screen);
+			]"
+		end
+
+	frozen gdk_screen_get_rgba_colormap (a_screen: POINTER): POINTER
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"[
+				#if GTK_MINOR_VERSION >= 8
+					return gdk_screen_get_rgba_colormap ((GdkScreen*)$a_screen);
+				#else
+					return NULL;
+				#endif
+			]"
+		end
+
+	frozen gdk_screen_get_rgba_visual (a_screen: POINTER): POINTER
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"[
+				#if GTK_MINOR_VERSION >= 8
+					return gdk_screen_get_rgba_visual ((GdkScreen*)$a_screen);
+				#else
+					return NULL;
+				#endif
+			]"
+		end
+
+	frozen gdk_screen_is_composited (a_screen: POINTER): BOOLEAN
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"[
+				#if GTK_MINOR_VERSION >= 10
+					return gdk_screen_is_composited ((GdkScreen*)$a_screen);
+				#else
+					return EIF_FALSE;
+				#endif
+			]"
+		end
+
 	frozen gdk_draw_drawable (a_drawable: POINTER; a_gc: POINTER; a_src: POINTER; a_xsrc: INTEGER_32; a_ysrc: INTEGER_32; a_xdest: INTEGER_32; a_ydest: INTEGER_32; a_width: INTEGER_32; a_height: INTEGER_32)
 		external
 			"C (GdkDrawable*, GdkGC*, GdkDrawable*, gint, gint, gint, gint, gint, gint) | <ev_gtk.h>"

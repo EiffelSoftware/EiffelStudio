@@ -2360,6 +2360,16 @@ feature
 			"C (GtkWidget*) | <ev_gtk.h>"
 		end
 
+	frozen gtk_widget_map (a_widget: POINTER)
+		external
+			"C (GtkWidget*) | <ev_gtk.h>"
+		end
+
+	frozen gtk_widget_unmap (a_widget: POINTER)
+		external
+			"C (GtkWidget*) | <ev_gtk.h>"
+		end
+
 	frozen gtk_widget_size_request (a_widget: POINTER; a_requisition: POINTER)
 		external
 			"C (GtkWidget*, GtkRequisition*) | <ev_gtk.h>"
@@ -2574,6 +2584,34 @@ feature
 			"C [struct <ev_gtk.h>] (GdkEventConfigure): EIF_INTEGER"
 		alias
 			"y"
+		end
+
+	frozen gdk_event_crossing_struct_subwindow (a_c_struct: POINTER): POINTER
+		external
+			"C [struct <ev_gtk.h>] (GdkEventCrossing): EIF_POINTER"
+		alias
+			"subwindow"
+		end
+
+	frozen gdk_event_crossing_struct_mode (a_c_struct: POINTER): INTEGER
+		external
+			"C [struct <ev_gtk.h>] (GdkEventCrossing): EIF_INTEGER"
+		alias
+			"mode"
+		end
+
+	frozen gdk_event_crossing_struct_detail (a_c_struct: POINTER): INTEGER
+		external
+			"C [struct <ev_gtk.h>] (GdkEventCrossing): EIF_INTEGER"
+		alias
+			"detail"
+		end
+
+	frozen gdk_event_crossing_struct_focus (a_c_struct: POINTER): BOOLEAN
+		external
+			"C [struct <ev_gtk.h>] (GdkEventCrossing): EIF_BOOLEAN"
+		alias
+			"focus"
 		end
 
 	frozen gdk_event_expose_struct_area (a_c_struct: POINTER): POINTER

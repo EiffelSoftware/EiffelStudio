@@ -2039,6 +2039,7 @@ test	store-retrieve-with-version	store031 tcf pass storable
 test	store-in-different-thread	store032 tcf pass storable multithreaded
 test	store-bounded-queues-stacks	store033 tcf pass storable
 test	old-hashtable-retrieval		store034 tcf pass storable table
+test	store-retrieve-bogus-version-mismatch	store035 tcf pass storable
 
 -- Flat, short, flatshort tests
 

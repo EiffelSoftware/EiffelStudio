@@ -1,0 +1,26 @@
+test_name	store-retrieve-bogus-version-mismatch
+test_description Test that storing/retrieving takes into account the storable_version information in independent store.
+
+define ATTRIBUTE	"int: INTEGER"
+define VERSION	"storable_version: "manu""
+copy_sub 	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_sub	a.e $CLUSTER a.e
+
+compile_melted
+compile_result	ok
+
+execute_work	NONE exec_output_m1 1
+execute_result	ok
+compare		exec_output_m1 output
+
+define ATTRIBUTE	"s_added: STRING"
+copy_sub	a.e $CLUSTER a.e
+compile_melted
+compile_result	ok
+
+execute_work	NONE exec_output_m2
+execute_result	ok
+compare		exec_output_m2 output
+
+test_end

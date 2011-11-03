@@ -39,12 +39,7 @@ feature -- Initialization
 	make
 			-- Initialize `Current'.
 		do
-			on_timeout_agent := agent on_timeout
-			timeout_agent_internal := agent (App_implementation.gtk_marshal).on_timeout_intermediary (0)
-			if internal_id = 0 then
-				internal_id := object_id
-			end
-			timeout_agent_internal := agent (App_implementation.gtk_marshal).on_timeout_intermediary (internal_id)
+			timeout_agent_internal := agent (App_implementation.gtk_marshal).on_timeout_intermediary (object_id)
 			set_is_initialized (True)
 		end
 
@@ -64,7 +59,7 @@ feature -- Access
 				timeout_connection_id := 0
 			end
 
-			if an_interval > 0 then
+			if an_interval > 0 and then timeout_agent_internal /= Void then
 				timeout_connection_id :=
 					{EV_GTK_CALLBACK_MARSHAL}.c_ev_gtk_callback_marshal_timeout_connect (
 						an_interval.max (20), timeout_agent_internal
@@ -87,15 +82,12 @@ feature {EV_ANY, EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			Result := l_result
 		end
 
-	on_timeout_agent: PROCEDURE [EV_TIMEOUT_IMP, TUPLE]
-		-- Reusable timeout for adding to idle actions.
-
 feature {NONE} -- Implementation
 
 	timeout_connection_id: INTEGER
 		-- GTK handle on timeout connection.
 
-	timeout_agent_internal: PROCEDURE [EV_GTK_CALLBACK_MARSHAL, TUPLE]
+	timeout_agent_internal: detachable PROCEDURE [EV_GTK_CALLBACK_MARSHAL, TUPLE] note option: stable attribute end
 		-- Reusable agent used for connecting timeout to gtk implementation.
 
 feature {EV_ANY_I} -- Implementation

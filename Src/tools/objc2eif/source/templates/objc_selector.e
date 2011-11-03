@@ -69,7 +69,7 @@ feature {NONE} -- Externals
 			-- Register a method with the Objective-C runtime system, maps the method name
 			-- to a selector, and returns the selector value.
 		external
-			"C inline"
+			"C inline use <objc/runtime.h>"
 		alias
 			"[
 				return sel_registerName($a_name);
@@ -79,7 +79,7 @@ feature {NONE} -- Externals
 	objc_sel_get_name (a_selector: POINTER): POINTER
 			-- Return the name of the method specified by a given selector.
 		external
-			"C inline"
+			"C inline use <objc/runtime.h>"
 		alias
 			"[
 				return (EIF_POINTER)sel_getName($a_selector);
@@ -89,7 +89,7 @@ feature {NONE} -- Externals
 	objc_sel_is_equal (lhs: POINTER; rhs: POINTER): BOOLEAN
 			-- Objc External.
 		external
-			"C inline"
+			"C inline use <objc/runtime.h>"
 		alias
 			"[
 				return sel_isEqual($lhs, $rhs);

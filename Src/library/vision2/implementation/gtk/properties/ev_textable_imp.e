@@ -153,9 +153,12 @@ feature {EV_ANY_IMP} -- Implementation
 		require
 			s_not_void: s /= Void
 		do
-			Result := s.as_string_32.twin
-			Result.replace_substring_all (once  "_", once  "__")
+			Result := s.as_string_32
 			if s.has_code (('&').natural_32_code) then
+				if Result = s then
+					Result := Result.twin
+				end
+				Result.replace_substring_all (once  "_", once  "__")
 				filter_ampersand (Result, '_')
 			end
 		end

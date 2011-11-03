@@ -94,23 +94,28 @@ feature -- Element change
 	set_text (a_text: READABLE_STRING_GENERAL)
 			-- Assign `a_text' to `text'.
 		local
-			l_split_text: STRING_32
-			l_split_list: LIST [STRING_32]
+			l_split_list: detachable LIST [STRING_32]
 			a_cs: EV_GTK_C_STRING
+			l_show_label: BOOLEAN
 		do
-			l_split_text := a_text.to_string_32.twin
-			l_split_list := l_split_text.split ('%T')
-			if l_split_list.count = 2 then
+			if a_text.has_code (('%T').natural_32_code) then
+				l_split_list := a_text.as_string_32.split ('%T')
+			end
+
+			if l_split_list /= Void and then l_split_list.count = 2 then
 				Precursor {EV_TEXTABLE_IMP} (l_split_list @ 1)
 				real_text := a_text
 				a_cs :=  "            " + l_split_list @ 2
-				{GTK}.gtk_widget_show (accel_label)
+				l_show_label := True
 			else
 				Precursor {EV_TEXTABLE_IMP} (a_text)
 				a_cs := ""
 				{GTK}.gtk_widget_hide (accel_label)
 			end
 			{GTK}.gtk_label_set_text (accel_label, a_cs.item)
+			if l_show_label then
+				{GTK}.gtk_widget_show (accel_label)
+			end
 		end
 
 feature {EV_MENU_ITEM_LIST_IMP} -- Implementation

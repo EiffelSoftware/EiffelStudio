@@ -109,8 +109,14 @@ feature {EV_GRID_ITEM_I} -- Implementation
 
 	extra_text_spacing: INTEGER
 			-- Extra spacing for rows that is added to the height of a row text to make up `default_row_height'.
-		do
-			Result := 3
+		local
+			l_text_field: EV_TEXT_FIELD
+			l_label: EV_LABEL
+		once
+			create l_text_field
+			l_text_field.implementation.hide_border
+			create l_label
+			Result := l_text_field.minimum_height - l_label.minimum_height
 		end
 
 	string_size (s: READABLE_STRING_GENERAL; f: EV_FONT; tuple: TUPLE [INTEGER, INTEGER])
@@ -154,7 +160,7 @@ feature {EV_GRID_ITEM_I} -- Implementation
 			a_gdk_color: POINTER
 			a_r, a_g, a_b: INTEGER
 		do
-			a_widget := {GTK}.gtk_menu_item_new
+			a_widget := {GTK}.gtk_entry_new
 			a_style := {GTK}.gtk_rc_get_style (a_widget)
 				-- Style is cached so it doesn't need to be unreffed.
 

@@ -83,6 +83,34 @@ feature -- Basic operations
 			end
 		end
 
+	draw_widget_background_gdip (a_widget: EV_WIDGET_IMP; a_hdc: WEL_DC; a_rect: WEL_RECT; a_background_brush: WEL_GDIP_BRUSH; a_background: WEL_COLOR_REF): BOOLEAN
+			-- <Precursor>
+		local
+			notebook_parent: detachable EV_NOTEBOOK_IMP
+			container_widget: detachable EV_CONTAINER_IMP
+			l_x, l_y, l_width, l_height: INTEGER
+			l_gdip_graphics: WEL_GDIP_GRAPHICS
+			l_background_color: WEL_GDIP_COLOR
+		do
+			notebook_parent ?= get_notebook_parent (a_widget)
+			if notebook_parent = Void then
+				container_widget ?= a_widget
+				if container_widget /= Void and then container_widget.background_pixmap_imp /= Void then
+					l_x := a_rect.x
+					l_y := a_rect.y
+					l_width := a_rect.width
+					l_height := a_rect.height
+					create l_gdip_graphics.make_from_dc (a_hdc)
+					create l_background_color.make_from_argb (255, a_background.red, a_background.green, a_background.blue)
+					l_gdip_graphics.clear (l_background_color)
+					l_gdip_graphics.fill_rectangle (a_background_brush, create {WEL_GDIP_RECT}.make_with_size (l_x, l_y, l_width, l_height))
+					l_gdip_graphics.destroy_item
+
+					Result := True
+				end
+			end
+		end
+
 	draw_widget_background (a_widget: EV_WIDGET_IMP; a_hdc: WEL_DC; a_rect: WEL_RECT; background_brush: WEL_BRUSH)
 			-- Draw the background for `a_widget' onto `a_hdc' restricted to `a_rect'. If `a_widget' is contained at some level within
 			-- a notebook then apply the theming of the notebook background to `a_widget', otherwise draw the background using `background_brush'.
@@ -96,11 +124,7 @@ feature -- Basic operations
 			notebook_parent ?= get_notebook_parent (a_widget)
 			if notebook_parent = Void then
 				container_widget ?= a_widget
-				if container_widget /= Void and then container_widget.background_pixmap_imp /= Void then
-					a_hdc.fill_rect (a_rect, background_brush)
-				else
-					a_hdc.fill_rect (a_rect, background_brush)
-				end
+				a_hdc.fill_rect (a_rect, background_brush)
 			else
 					-- The rect is made with the correct offset from `a_widget' to `notebook_parent' so that the
 					-- texture of the theming can be applied correctly. This ensures that the background is seamless with the notebook.

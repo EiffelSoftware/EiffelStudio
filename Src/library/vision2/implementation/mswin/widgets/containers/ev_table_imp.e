@@ -51,7 +51,8 @@ inherit
 		rename
 			make as ev_wel_control_container_make
 		undefine
-			on_wm_dropfiles
+			on_wm_dropfiles,
+			background_brush_gdip
 		redefine
 			top_level_window_imp
 		end

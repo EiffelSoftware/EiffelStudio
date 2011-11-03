@@ -271,7 +271,7 @@ feature {NONE} -- WEL Implementation
 			end
 		end
 
-	background_brush_gdip: detachable WEL_GDIP_TEXTURE_BRUSH
+	background_brush_gdip: detachable WEL_GDIP_BRUSH
 			-- GDI+ version of `background_brush'
 			-- Result void if GDI+ not available
 		local
@@ -287,7 +287,7 @@ feature {NONE} -- WEL Implementation
 
 						tmp_bitmap := l_background_pixmap_imp.get_bitmap
 						create l_gdip_image.make_from_bitmap_with_alpha (tmp_bitmap)
-						create Result.make_with_image (l_gdip_image)
+						create {WEL_GDIP_TEXTURE_BRUSH} Result.make_with_image (l_gdip_image)
 						l_gdip_image.destroy_item
 
 						if attached background_brush_gdip_cached as l_last_one then

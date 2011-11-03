@@ -67,6 +67,8 @@ inherit
 			make as ev_wel_control_container_make,
 			set_font as wel_set_font,
 			font as wel_font
+		undefine
+			background_brush_gdip
 		redefine
 			on_paint,
 			top_level_window_imp,

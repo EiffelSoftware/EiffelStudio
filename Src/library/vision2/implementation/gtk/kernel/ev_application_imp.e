@@ -45,6 +45,8 @@ feature {NONE} -- Initialization
 		local
 			locale_str: STRING
 			l_colormap: POINTER
+			l_best_depth: INTEGER
+			l_gdk_screen_get_rgba_colormap_symbol: POINTER
 		do
 --			if {EV_GTK_DEPENDENT_EXTERNALS}.g_mem_is_system_malloc then
 --				{EV_GTK_DEPENDENT_EXTERNALS}.g_mem_set_vtable ({EV_GTK_EXTERNALS}.glib_mem_profiler_table)
@@ -80,8 +82,18 @@ feature {NONE} -- Initialization
 					-- 0 = No messages, 1 = Gtk Log Messages, 2 = Gtk Log Messages with Eiffel exception.
 				{GTK}.gdk_set_show_events (False)
 
-				l_colormap := {GTK}.gdk_rgb_get_cmap
+				best_available_color_depth := {GTK2}.gdk_visual_get_best_depth.min (24)
 
+
+					-- Try and set widgets with default rgba colormap if available.
+				l_gdk_screen_get_rgba_colormap_symbol := gdk_screen_get_rgba_colormap_symbol
+				if l_gdk_screen_get_rgba_colormap_symbol /= default_pointer then
+				--	l_colormap := gdk_screen_get_rgba_colormap_call (l_gdk_screen_get_rgba_colormap_symbol, {GTK2}.gdk_screen_get_default)
+				end
+
+				if l_colormap = default_pointer then
+					l_colormap := {GTK2}.gdk_screen_get_rgb_colormap ({GTK2}.gdk_screen_get_default)
+				end
 				{GTK}.gtk_widget_set_default_colormap (l_colormap)
 
 				gtk_dependent_initialize
@@ -112,12 +124,10 @@ feature {NONE} -- Initialization
 			l_primary_monitor_number: INTEGER
 			l_image: POINTER
 			l_supports_composite_symbol: POINTER
-			l_best_depth: INTEGER
 		do
-			l_best_depth := {GTK2}.gdk_visual_get_best_depth
 
 				-- Check if an GdkImage using the GDK_IMAGE_SHARED flag (first argument '1') may be created, if so then display is local.
-			l_image := {GTK}.gdk_image_new (1, {GTK}.gdk_rgb_get_visual, 1, 1)
+			l_image := {GTK}.gdk_image_new (1, {GTK2}.gdk_screen_get_rgb_visual ({GTK2}.gdk_screen_get_default), 1, 1)
 				-- This may fail if the X Server doesn't support the Shared extension, but if this is the case
 				-- then the display will be slow anyway so the usage of this function will remain the same.
 			is_display_remote := l_image = default_pointer
@@ -158,6 +168,19 @@ feature {NONE} -- Initialization
 			"C inline use <ev_gtk.h>"
 		alias
 			"return (FUNCTION_CAST(gboolean, (GdkDisplay*)) $a_function)((GdkDisplay*) $a_display);"
+		end
+
+	gdk_screen_get_rgba_colormap_symbol: POINTER
+			-- Symbol for `gdk_display_supports_composite'
+		once
+			Result := symbol_from_symbol_name ("gdk_screen_get_rgba_colormap")
+		end
+
+	gdk_screen_get_rgba_colormap_call (a_function: POINTER; a_display: POINTER): POINTER
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"return (FUNCTION_CAST(GdkColormap*, (GdkScreen*)) $a_function)((GdkScreen*) $a_display);"
 		end
 
 feature {NONE} -- Event loop
@@ -689,7 +712,6 @@ feature {EV_ANY_I} -- Implementation
 					{GTK}.gdk_event_free (gdk_event)
 				else
 					if {GTK2}.events_pending then
-						l_any_event := True
 						process_gtk_events
 					end
 					l_no_more_events := True

@@ -229,7 +229,19 @@ feature -- status settings
 	hide_border
 			-- Hide the border of `Current'.
 		do
+			gtk_hide_border (entry_widget)
 			{GTK2}.gtk_entry_set_has_frame (entry_widget, False)
+		end
+
+	gtk_hide_border (a_entry: POINTER)
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"[
+				#if GTK_MINOR_VERSION >= 10
+					gtk_entry_set_inner_border ((GtkEntry*) $a_entry, NULL);
+				#endif
+			]"
 		end
 
 	set_editable (a_editable: BOOLEAN)

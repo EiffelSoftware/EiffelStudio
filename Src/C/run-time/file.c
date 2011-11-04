@@ -1078,7 +1078,7 @@ rt_public EIF_BOOLEAN file_eaccess(struct stat *buf, int op)
     switch (op) {
 	case 0: /* Is file readable */
 #if defined EIF_WINDOWS || defined EIF_OS2
-	return (EIF_BOOLEAN)((mode && S_IREAD) ? '\01' : '\0');
+	return (EIF_BOOLEAN)((mode & S_IREAD) ? '\01' : '\0');
 #elif defined HAS_GETEUID
 		euid = geteuid();
 		egid = getegid();

@@ -221,6 +221,12 @@ feature {NONE} -- Status report
 			Result := (obj = Void)
 		end
 
+	is_ref_integer_8 (obj: detachable ANY): BOOLEAN
+			-- Is `obj' an integer value?
+		do
+			Result := attached {INTEGER_8_REF} obj
+		end
+
 	is_integer (obj: detachable ANY): BOOLEAN
 			-- Is `obj' an integer value?
 		do
@@ -237,6 +243,30 @@ feature {NONE} -- Status report
 			-- Is `obj' an integer value?
 		do
 			Result := attached {INTEGER_64_REF} obj
+		end
+
+	is_ref_natural_8 (obj: detachable ANY): BOOLEAN
+			-- Is `obj' an integer value?
+		do
+			Result := attached {NATURAL_8_REF} obj
+		end
+
+	is_ref_natural_16 (obj: detachable ANY): BOOLEAN
+			-- Is `obj' an integer value?
+		do
+			Result := attached {NATURAL_16_REF} obj
+		end
+
+	is_ref_natural_32 (obj: detachable ANY): BOOLEAN
+			-- Is `obj' an integer value?
+		do
+			Result := attached {NATURAL_32_REF} obj
+		end
+
+	is_ref_natural_64 (obj: detachable ANY): BOOLEAN
+			-- Is `obj' an integer value?
+		do
+			Result := attached {NATURAL_64_REF} obj
 		end
 
 	is_real (obj: detachable ANY): BOOLEAN

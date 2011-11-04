@@ -43,8 +43,6 @@ feature {NONE} -- Initialization
 		do
 			set_c_object ({GTK2}.gtk_fixed_new)
 			{GTK2}.gtk_fixed_set_has_window (container_widget, True)
-				-- Set minimum size of container widget so that inserted items do no resize on entry.
---			{EV_GTK_EXTERNALS}.gtk_widget_set_minimum_size (container_widget, 1, 1)
 			Precursor
 		end
 
@@ -68,10 +66,7 @@ feature -- Status setting
 			if index = count then
 				index := index + 1
 			end
-			{GTK2}.gtk_fixed_move (container_widget, l_parent_box, a_x, a_y)
-			{GTK2}.gtk_widget_set_minimum_size (l_parent_box, a_width, a_height)
-			{GTK}.gtk_widget_show (l_parent_box)
-			{GTK}.gtk_container_check_resize (container_widget)
+			set_item_position_and_size (a_widget, a_x, a_y, a_width, a_height)
 		end
 
 	set_item_position_and_size (a_widget: EV_WIDGET; a_x, a_y, a_width, a_height: INTEGER)
@@ -79,13 +74,20 @@ feature -- Status setting
 		local
 			l_parent_box: POINTER
 			w_imp: detachable EV_WIDGET_IMP
+			l_alloc: POINTER
 		do
 			w_imp ?= a_widget.implementation
 			check w_imp /= Void end
 			l_parent_box := {GTK}.gtk_widget_struct_parent (w_imp.c_object)
-			{GTK2}.gtk_fixed_move (container_widget, l_parent_box, a_x, a_y)
+
+			l_alloc := l_alloc.memory_alloc ({GTK}.c_gtk_allocation_struct_size)
+			{GTK}.set_gtk_allocation_struct_x (l_alloc, a_x)
+			{GTK}.set_gtk_allocation_struct_y (l_alloc, a_y)
+			{GTK}.set_gtk_allocation_struct_width (l_alloc, a_width)
+			{GTK}.set_gtk_allocation_struct_height (l_alloc, a_height)
 			{GTK2}.gtk_widget_set_minimum_size (l_parent_box, a_width, a_height)
-			{GTK}.gtk_container_check_resize (container_widget)
+			{GTK2}.gtk_widget_size_allocate (l_parent_box, l_alloc)
+			l_alloc.memory_free
 		end
 
 	set_item_position (a_widget: EV_WIDGET; a_x, a_y: INTEGER)
@@ -116,15 +118,10 @@ feature -- Status setting
 			-- Set `a_widget.height' to `a_height'.
 		local
 			w_imp: detachable EV_WIDGET_IMP
-			l_parent_box: POINTER
-			l_c_object: POINTER
 		do
 			w_imp ?= a_widget.implementation
 			check w_imp /= Void end
-			l_c_object := w_imp.c_object
-			l_parent_box := {GTK}.gtk_widget_struct_parent (l_c_object)
-			{GTK2}.gtk_widget_set_minimum_size (l_parent_box, a_width, a_height)
-			{GTK}.gtk_container_check_resize (container_widget)
+			set_item_position_and_size (a_widget, x_position_of_child (w_imp), y_position_of_child (w_imp), a_width, a_height)
 		end
 
 feature {EV_ANY_I} -- Implementation

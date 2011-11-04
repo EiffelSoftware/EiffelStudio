@@ -111,7 +111,17 @@ feature -- Basic operations
 			if is_void (obj) then
 				str.append (null_string)
 			else
-				if is_integer (obj) then
+				if is_ref_integer_8 (obj) then
+					if attached {INTEGER_8_REF} obj as r_int then
+						if map_zero_null_value and then r_int.item = numeric_null_value.truncated_to_integer.as_integer_8 then
+							str.append (null_string)
+						else
+							str.append (r_int.out)
+						end
+					else
+						check False end -- implied by `is_integer'
+					end
+				elseif is_integer (obj) then
 					if attached {INTEGER_REF} obj as r_int then
 						if map_zero_null_value and then r_int.item = numeric_null_value.truncated_to_integer then
 							str.append (null_string)
@@ -137,6 +147,46 @@ feature -- Basic operations
 							str.append (null_string)
 						else
 							str.append (r_int.out)
+						end
+					else
+						check False end -- implied by `is_integer'
+					end
+				elseif is_ref_natural_8 (obj) then
+					if attached {NATURAL_8_REF} obj as na_8 then
+						if map_zero_null_value and then na_8.item = numeric_null_value.truncated_to_integer.to_natural_8 then
+							str.append (null_string)
+						else
+							str.append (na_8.out)
+						end
+					else
+						check False end -- implied by `is_integer'
+					end
+				elseif is_ref_natural_16 (obj) then
+					if attached {NATURAL_16_REF} obj as na_16 then
+						if map_zero_null_value and then na_16.item = numeric_null_value.truncated_to_integer.as_natural_16 then
+							str.append (null_string)
+						else
+							str.append (na_16.out)
+						end
+					else
+						check False end -- implied by `is_integer'
+					end
+				elseif is_ref_natural_32 (obj) then
+					if attached {NATURAL_32_REF} obj as na_32 then
+						if map_zero_null_value and then na_32.item = numeric_null_value.truncated_to_integer.as_natural_32 then
+							str.append (null_string)
+						else
+							str.append (na_32.out)
+						end
+					else
+						check False end -- implied by `is_integer'
+					end
+				elseif is_ref_natural_64 (obj) then
+					if attached {NATURAL_64_REF} obj as na_64 then
+						if map_zero_null_value and then na_64.item = numeric_null_value.truncated_to_integer_64.as_natural_64 then
+							str.append (null_string)
+						else
+							str.append (na_64.out)
 						end
 					else
 						check False end -- implied by `is_integer'

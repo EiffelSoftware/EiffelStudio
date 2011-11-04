@@ -67,6 +67,7 @@ feature {NONE} -- Implementation
 			l_customized_size_defs: HASH_TABLE [INTEGER, STRING]
 		do
 			-- First find in predefined size definitions
+			Result := True -- by default, is valid
 			create l_node_widget
 			l_predefines := l_node_widget.predefined_size_definitions
 			l_predefines.compare_objects
@@ -147,44 +148,47 @@ feature -- Helper
 			l_root_size_def: XML_ELEMENT
 			l_control_name_def_count: INTEGER
 			l_size_def: detachable STRING
+			l_writer: ER_SIZE_DEFINITION_WRITER
 		do
 			create Result.make (10)
 			create l_shared
 			if attached l_shared.size_definition_cell.item as l_size_def_tool then
-				l_root_size_def := l_size_def_tool.size_definition_writer.root_xml_for_saving
-				from
-					l_root_size_def.start
-				until
-					l_root_size_def.after
-				loop
-					if attached {XML_ELEMENT} l_root_size_def.item_for_iteration as l_one_size_def then
-						check l_one_size_def.name.same_string ({ER_XML_CONSTANTS}.size_definition) end
-						from
-							l_size_def := Void
-							l_control_name_def_count := 0
-							l_one_size_def.start
-						until
-							l_one_size_def.after
-						loop
-							if attached {XML_ELEMENT} l_one_size_def.item_for_iteration as l_one_control_name_map
-								and then l_one_control_name_map.name.same_string ({ER_XML_CONSTANTS}.control_name_map) then
-								l_control_name_def_count := l_one_control_name_map.count
-							elseif attached {XML_ATTRIBUTE} l_one_size_def.item_for_iteration as l_size_def_name and then
-								l_size_def_name.name.same_string ({ER_XML_ATTRIBUTE_CONSTANTS}.name) then
-								l_size_def := l_size_def_name.value
+				l_writer := l_size_def_tool.size_definition_writer
+				if not l_writer.is_empty then
+					l_root_size_def := l_writer.root_xml_for_saving
+
+					from
+						l_root_size_def.start
+					until
+						l_root_size_def.after
+					loop
+						if attached {XML_ELEMENT} l_root_size_def.item_for_iteration as l_one_size_def then
+							check l_one_size_def.name.same_string ({ER_XML_CONSTANTS}.size_definition) end
+							from
+								l_size_def := Void
+								l_control_name_def_count := 0
+								l_one_size_def.start
+							until
+								l_one_size_def.after
+							loop
+								if attached {XML_ELEMENT} l_one_size_def.item_for_iteration as l_one_control_name_map
+									and then l_one_control_name_map.name.same_string ({ER_XML_CONSTANTS}.control_name_map) then
+									l_control_name_def_count := l_one_control_name_map.count
+								elseif attached {XML_ATTRIBUTE} l_one_size_def.item_for_iteration as l_size_def_name and then
+									l_size_def_name.name.same_string ({ER_XML_ATTRIBUTE_CONSTANTS}.name) then
+									l_size_def := l_size_def_name.value
+								end
+								l_one_size_def.forth
 							end
-							l_one_size_def.forth
-						end
 
-						if attached l_size_def and l_control_name_def_count > 0 then
-							Result.put (l_control_name_def_count, l_size_def)
-						else
-							check error: False end
+							if attached l_size_def and l_control_name_def_count > 0 then
+								Result.put (l_control_name_def_count, l_size_def)
+							else
+								check error: False end
+							end
 						end
-
+						l_root_size_def.forth
 					end
-
-					l_root_size_def.forth
 				end
 			end
 		end

@@ -59,24 +59,28 @@ feature {NONE} -- Initialization
 			l_list_item: EV_LIST_ITEM
 			l_shared: ER_SHARED_TOOLS
 			l_root: XML_ELEMENT
+			l_writer: ER_SIZE_DEFINITION_WRITER
 		do
 			create l_shared
 			if attached l_shared.size_definition_cell.item as l_size_definition_tool then
-				l_root := l_size_definition_tool.size_definition_writer.root_xml_for_saving
-				across l_root as l_xml_cursor
-				loop
-					if attached {XML_ELEMENT} l_xml_cursor.item as l_one_size_definition then
-						if l_one_size_definition.name.same_string ({ER_XML_CONSTANTS}.size_definition) then
-							across l_one_size_definition as l_one_size_definition_cursor
-							loop
-								if attached {XML_ATTRIBUTE} l_one_size_definition_cursor.item as l_attribute and then
-								 l_attribute.name.same_string ({ER_XML_ATTRIBUTE_CONSTANTS}.name) then
-									create l_list_item.make_with_text (l_attribute.value)
-									size_combo_box.extend (l_list_item)
+				l_writer := l_size_definition_tool.size_definition_writer
+				if not l_writer.is_empty then
+					l_root := l_writer.root_xml_for_saving
+					across l_root as l_xml_cursor
+					loop
+						if attached {XML_ELEMENT} l_xml_cursor.item as l_one_size_definition then
+							if l_one_size_definition.name.same_string ({ER_XML_CONSTANTS}.size_definition) then
+								across l_one_size_definition as l_one_size_definition_cursor
+								loop
+									if attached {XML_ATTRIBUTE} l_one_size_definition_cursor.item as l_attribute and then
+									 l_attribute.name.same_string ({ER_XML_ATTRIBUTE_CONSTANTS}.name) then
+										create l_list_item.make_with_text (l_attribute.value)
+										size_combo_box.extend (l_list_item)
+									end
 								end
+							else
+								check invalid_size_definition_xml: False end
 							end
-						else
-							check invalid_size_definition_xml: False end
 						end
 					end
 				end

@@ -71,6 +71,7 @@ feature {NONE} -- Implementation
 			create l_node_widget
 			l_predefines := l_node_widget.predefined_size_definitions
 			l_predefines.compare_objects
+			Result := True -- by default, is valid
 			if l_predefines.has (a_size_definition_name) then
 				if a_size_definition_name.same_string ({ER_GROUP_NODE_WIDGET}.onebutton) then
 					Result := a_test_count <= 1

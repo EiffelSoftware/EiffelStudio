@@ -743,6 +743,13 @@ feature -- Externals
 			"gtk_widget_set_size_request ((GtkWidget*) $a_widget, (gint) $a_width, (gint) $a_height)"
 		end
 
+	frozen gtk_widget_size_allocate (a_widget: POINTER; a_allocation: POINTER)
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"gtk_widget_size_allocate ((GtkWidget*) $a_widget, (GtkAllocation*) $a_allocation)"
+		end
+
 	frozen gtk_file_chooser_list_filters (a_file_chooser: POINTER): POINTER
 		external
 			"C signature (GtkFileChooser*): GSList use <ev_gtk.h>"

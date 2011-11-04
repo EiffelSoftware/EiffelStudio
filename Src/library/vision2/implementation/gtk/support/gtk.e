@@ -368,6 +368,13 @@ feature
 			"sizeof(GtkRequisition)"
 		end
 
+	frozen c_gtk_allocation_struct_size: INTEGER_32
+		external
+			"C [macro <ev_gtk.h>]"
+		alias
+			"sizeof(GtkAllocation)"
+		end
+
 	frozen gtk_is_container (w: POINTER): BOOLEAN
 		external
 			"C [macro <ev_gtk.h>]"
@@ -2886,6 +2893,34 @@ feature
 	frozen gtk_allocation_struct_y (a_c_struct: POINTER): INTEGER_32
 		external
 			"C [struct <ev_gtk.h>] (GtkAllocation): EIF_INTEGER"
+		alias
+			"y"
+		end
+
+	frozen set_gtk_allocation_struct_height (a_c_struct: POINTER; a_value: INTEGER_32)
+		external
+			"C [struct <ev_gtk.h>] (GtkAllocation, gint)"
+		alias
+			"height"
+		end
+
+	frozen set_gtk_allocation_struct_width (a_c_struct: POINTER; a_value: INTEGER_32)
+		external
+			"C [struct <ev_gtk.h>] (GtkAllocation, gint)"
+		alias
+			"width"
+		end
+
+	frozen set_gtk_allocation_struct_x (a_c_struct: POINTER; a_value: INTEGER_32)
+		external
+			"C [struct <ev_gtk.h>] (GtkAllocation, gint)"
+		alias
+			"x"
+		end
+
+	frozen set_gtk_allocation_struct_y (a_c_struct: POINTER; a_value: INTEGER_32)
+		external
+			"C [struct <ev_gtk.h>] (GtkAllocation, gint)"
 		alias
 			"y"
 		end

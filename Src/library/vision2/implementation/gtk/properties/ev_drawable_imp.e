@@ -220,7 +220,6 @@ feature -- Element change
 	set_background_color (a_color: EV_COLOR)
 			-- Assign `a_color' to `background_color'.
 		local
-			color_struct: POINTER
 			l_internal_background_color: detachable like internal_background_color
 		do
 			l_internal_background_color := internal_background_color
@@ -232,18 +231,13 @@ feature -- Element change
 				l_internal_background_color.set_red_with_8_bit (a_color.red_8_bit)
 				l_internal_background_color.set_green_with_8_bit (a_color.green_8_bit)
 				l_internal_background_color.set_blue_with_8_bit (a_color.blue_8_bit)
-				color_struct := App_implementation.reusable_color_struct
-				{GTK}.set_gdk_color_struct_red (color_struct, a_color.red_16_bit)
-				{GTK}.set_gdk_color_struct_green (color_struct, a_color.green_16_bit)
-				{GTK}.set_gdk_color_struct_blue (color_struct, a_color.blue_16_bit)
-				{GTK2}.gdk_gc_set_rgb_bg_color (gc, color_struct)
+				internal_set_color (False, a_color.red_16_bit, a_color.green_16_bit, a_color.blue_16_bit)
 			end
 		end
 
 	set_foreground_color (a_color: EV_COLOR)
 			-- Assign `a_color' to `foreground_color'
 		local
-			color_struct: POINTER
 			l_internal_foreground_color: detachable like internal_foreground_color
 		do
 			l_internal_foreground_color := internal_foreground_color
@@ -255,11 +249,7 @@ feature -- Element change
 				l_internal_foreground_color.set_red_with_8_bit (a_color.red_8_bit)
 				l_internal_foreground_color.set_green_with_8_bit (a_color.green_8_bit)
 				l_internal_foreground_color.set_blue_with_8_bit (a_color.blue_8_bit)
-				color_struct := App_implementation.reusable_color_struct
-				{GTK}.set_gdk_color_struct_red (color_struct, a_color.red_16_bit)
-				{GTK}.set_gdk_color_struct_green (color_struct, a_color.green_16_bit)
-				{GTK}.set_gdk_color_struct_blue (color_struct, a_color.blue_16_bit)
-				{GTK2}.gdk_gc_set_rgb_fg_color (gc, color_struct)
+				internal_set_color (True, a_color.red_16_bit, a_color.green_16_bit, a_color.blue_16_bit)
 			end
 		end
 
@@ -389,17 +379,24 @@ feature -- Clearing operations
 	clear_rectangle (x, y, a_width, a_height: INTEGER)
 			-- Erase rectangle specified with `background_color'.
 		local
-			tmp_fg_color: EV_COLOR
+			tmp_fg_color, tmp_bg_color: detachable EV_COLOR
 		do
 			if drawable /= default_pointer then
-				tmp_fg_color := foreground_color
-				set_foreground_color (background_color)
+				tmp_fg_color := internal_foreground_color
+				if tmp_fg_color = Void then
+					tmp_fg_color := foreground_color
+				end
+				tmp_bg_color := internal_background_color
+				if tmp_bg_color = Void then
+					tmp_bg_color := background_color
+				end
+				internal_set_color (True, tmp_bg_color.red_16_bit, tmp_bg_color.green_16_bit, tmp_bg_color.blue_16_bit)
 				{GTK}.gdk_draw_rectangle (drawable, gc, 1,
 					(x + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
 					(y + device_y_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
 					a_width,
 					a_height)
-				set_foreground_color (tmp_fg_color)
+				internal_set_color (True, tmp_fg_color.red_16_bit, tmp_fg_color.green_16_bit, tmp_fg_color.blue_16_bit)
 				update_if_needed
 			end
 		end
@@ -1094,13 +1091,29 @@ feature {NONE} -- Implementation
 	device_y_offset: INTEGER_16
 			-- Number of pixels to offset to y coord to get correct device placement.
 
+	internal_set_color (a_foreground: BOOLEAN; a_red, a_green, a_blue: INTEGER_32)
+			-- Set `gc' color to (a_red, a_green, a_blue), `a_foreground' sets foreground color, otherwise background is set.
+		local
+			l_color_struct: POINTER
+		do
+			l_color_struct := App_implementation.reusable_color_struct
+			{GTK}.set_gdk_color_struct_red (l_color_struct, a_red)
+			{GTK}.set_gdk_color_struct_green (l_color_struct, a_green)
+			{GTK}.set_gdk_color_struct_blue (l_color_struct, a_blue)
+			if a_foreground then
+				{GTK2}.gdk_gc_set_rgb_fg_color (gc, l_color_struct)
+			else
+				{GTK2}.gdk_gc_set_rgb_bg_color (gc, l_color_struct)
+			end
+		end
+
 	fg_color: POINTER
 			-- Default allocated background color.
 		local
 			a_success: BOOLEAN
 		once
 			Result := {GTK}.c_gdk_color_struct_allocate
-			a_success := {GTK}.gdk_colormap_alloc_color ({GTK}.gdk_rgb_get_cmap, Result, False, True)
+			a_success := {GTK}.gdk_colormap_alloc_color ({GTK2}.gdk_screen_get_rgb_colormap ({GTK2}.gdk_screen_get_default), Result, False, True)
 		end
 
 	bg_color: POINTER
@@ -1112,7 +1125,7 @@ feature {NONE} -- Implementation
 			{GTK}.set_gdk_color_struct_red (Result, 65535)
 			{GTK}.set_gdk_color_struct_green (Result, 65535)
 			{GTK}.set_gdk_color_struct_blue (Result, 65535)
-			a_success := {GTK}.gdk_colormap_alloc_color ({GTK}.gdk_rgb_get_cmap, Result, False, True)
+			a_success := {GTK}.gdk_colormap_alloc_color ({GTK2}.gdk_screen_get_rgb_colormap ({GTK2}.gdk_screen_get_default), Result, False, True)
 		end
 
 	draw_mask_on_pixbuf (a_pixbuf_ptr, a_mask_ptr: POINTER)

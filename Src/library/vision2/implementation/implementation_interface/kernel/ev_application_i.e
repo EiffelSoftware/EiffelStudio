@@ -116,8 +116,8 @@ feature {EV_APPLICATION, EV_ANY_HANDLER, EV_ANY_I} -- Implementation
 				if user_events_processed_from_underlying_toolkit then
 						-- If any user events have been processed then we reset the `idle_iteration_count'
 					idle_iteration_count := 1
-				elseif a_relinquish_cpu then
-						-- We only want to increase the count if the event loop is not forced.
+				elseif a_relinquish_cpu and then not events_processed_from_underlying_toolkit then
+						-- We only want to increase the count if the event loop is not forced and no events were processed.
 					idle_iteration_count := idle_iteration_count + 1
 					if idle_iteration_count = idle_iteration_boundary then
 							-- We have reached a fully idle/inactive state.
@@ -132,7 +132,7 @@ feature {EV_APPLICATION, EV_ANY_HANDLER, EV_ANY_I} -- Implementation
 						-- Reset idle iteration counter if CPU is not relinquished.
 				end
 				l_idle_actions_internal := idle_actions_internal
-				if not is_destroyed and then l_idle_actions_internal /= Void then
+				if not is_destroyed and then l_idle_actions_internal /= Void and then not events_processed_from_underlying_toolkit then
 					if try_kamikaze_lock then
 						l_kamikaze_is_locked := True
 							-- Make a snapshot of the idle actions to avoid side effects.
@@ -195,7 +195,7 @@ feature {EV_APPLICATION, EV_ANY_HANDLER, EV_ANY_I} -- Implementation
 						until
 							i = l_count or else is_destroyed
 						loop
-							l_kamikaze_idle_actions_snapshot [i].apply
+							l_kamikaze_idle_actions_snapshot [i].call (Void)
 							i := i + 1
 						end
 							-- Wipeout snapshot list to signify that that any nested idle calls do not have to clone the snapshot
@@ -208,7 +208,7 @@ feature {EV_APPLICATION, EV_ANY_HANDLER, EV_ANY_I} -- Implementation
 						until
 							i = l_count or else is_destroyed
 						loop
-							l_idle_actions_snapshot [i].apply
+							l_idle_actions_snapshot [i].call (Void)
 							i := i + 1
 						end
 							-- Clear snapshot list.
@@ -219,7 +219,7 @@ feature {EV_APPLICATION, EV_ANY_HANDLER, EV_ANY_I} -- Implementation
 					if a_relinquish_cpu and then not is_destroyed then
 							-- Relinquish CPU if requested and no more events are available to be processed.
 						process_underlying_toolkit_event_queue
-						if not events_processed_from_underlying_toolkit and then kamikaze_actions.count = 0 then
+						if not events_processed_from_underlying_toolkit then
 							wait_for_input (cpu_relinquishment_time)
 						end
 					end
@@ -677,8 +677,14 @@ feature {EV_APPLICATION, EV_PICK_AND_DROPABLE_I} -- Pick and drop
 		once
 			create Result
 			Result.enable_dashed_line_style
-			Result.set_foreground_color ((create {EV_STOCK_COLORS}).white)
+			Result.set_foreground_color (stock_colors.white)
 			Result.set_invert_mode
+		end
+
+	stock_colors: EV_STOCK_COLORS
+			-- Once access to default colors
+		once
+			create Result
 		end
 
 feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop

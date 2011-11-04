@@ -1,0 +1,29 @@
+
+test_name 	 static-type-id-crash-3
+test_description Changing generic classes to non-generic in a system that uses qualified anchored types crashes the compiler
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test1.e $CLUSTER test1.e
+copy_raw	test2.e $CLUSTER test2.e
+copy_raw	proxy.e $CLUSTER proxy.e
+copy_raw	proxy_account.e $CLUSTER proxy_account.e
+copy_raw	proxied.e $CLUSTER proxied.e
+copy_raw	proxied_account.e $CLUSTER proxied_account.e
+
+compile_melted
+compile_result	ok
+
+copy_raw	test_rev2.e $CLUSTER test.e
+copy_raw	test2_rev2.e $CLUSTER test2.e
+copy_raw	proxied_account_rev2.e $CLUSTER proxied_account.e
+
+compile_melted
+compile_result	validity_error PROXIED_ACCOUNT VTUG(2)
+
+copy_raw	proxy_account_rev2.e $CLUSTER proxy_account.e
+resume_compile
+compile_result	ok
+
+test_end
+

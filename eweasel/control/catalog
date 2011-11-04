@@ -996,6 +996,7 @@ test 	system-change-crash			incr415 tcf fail incrementality
 test 	recompilation-forces-freeze	incr416 tcf pass incrementality
 test 	qat-spurious-veen		incr417 tcf fail incrementality validity
 test 	qat-precursor-anchored-to-caller incr418 tcf fail incrementality anchored_types
+test	static-type-id-crash-3			incr419 tcf fail incrementality anchored_types
 
 
 -- Melting

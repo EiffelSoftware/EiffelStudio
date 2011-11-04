@@ -711,10 +711,11 @@ feature {EV_ANY_I} -- Implementation
 					end
 					{GTK}.gdk_event_free (gdk_event)
 				else
-					if not l_any_event and then {GTK2}.events_pending then
+					if {GTK2}.events_pending then
 						process_gtk_events
+					else
+						l_no_more_events := True
 					end
-					l_no_more_events := True
 				end
 			end
 

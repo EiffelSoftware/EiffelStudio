@@ -219,7 +219,7 @@ feature {EV_APPLICATION, EV_ANY_HANDLER, EV_ANY_I} -- Implementation
 					if a_relinquish_cpu and then not is_destroyed then
 							-- Relinquish CPU if requested and no more events are available to be processed.
 						process_underlying_toolkit_event_queue
-						if not events_processed_from_underlying_toolkit then
+						if not events_processed_from_underlying_toolkit and then kamikaze_actions.count = 0 then
 							wait_for_input (cpu_relinquishment_time)
 						end
 					end

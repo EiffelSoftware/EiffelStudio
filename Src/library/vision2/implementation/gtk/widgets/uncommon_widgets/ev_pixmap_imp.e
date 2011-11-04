@@ -320,7 +320,7 @@ feature -- Access
 
 			from
 				a_width := width * 4
-				a_color_map := {GTK}.gdk_rgb_get_cmap
+				a_color_map := {GTK2}.gdk_screen_get_rgb_colormap ({GTK2}.gdk_screen_get_default)
 				a_visual := {GTK}.gdk_colormap_get_visual (a_color_map)
 				a_visual_type := {GTK}.gdk_visual_struct_type (a_visual)
 				a_color := {GTK}.c_gdk_color_struct_allocate

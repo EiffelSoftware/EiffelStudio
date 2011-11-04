@@ -111,6 +111,7 @@ feature {NONE} -- implementation
 	allow_resize
 			-- Allow user resizing of `Current'.
 		do
+			internal_enable_border
 		--	{GTK}.gtk_window_set_resizable (c_object, True)
 		end
 

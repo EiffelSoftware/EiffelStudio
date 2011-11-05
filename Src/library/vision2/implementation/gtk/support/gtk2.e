@@ -867,6 +867,16 @@ feature -- Externals
 			"C signature (GdkDisplay*): gboolean use <ev_gtk.h>"
 		end
 
+	frozen gdk_display_get_pointer (a_display: POINTER; a_screen: TYPED_POINTER [POINTER]; a_win_x, a_win_y: TYPED_POINTER [INTEGER_32]; a_mod_mask: TYPED_POINTER [NATURAL_32])
+		external
+			"C signature (GdkDisplay*, GdkScreen**, gint*, gint*, GdkModifierType*) use <ev_gtk.h>"
+		end
+
+	frozen gdk_display_get_window_at_pointer (a_display: POINTER; a_win_x, a_win_y: TYPED_POINTER [INTEGER]): POINTER
+		external
+			"C signature (GdkDisplay*, gint*, gint*): GdkWindow* use <ev_gtk.h>"
+		end
+
 	frozen gdk_cursor_new_from_pixbuf (a_display, a_pixbuf: POINTER; a_x, a_y: INTEGER_32): POINTER
 		external
 			"C signature (GdkDisplay*, GdkPixbuf*, gint, gint): GdkCursor* use <ev_gtk.h>"

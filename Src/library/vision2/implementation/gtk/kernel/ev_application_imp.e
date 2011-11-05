@@ -1179,13 +1179,18 @@ feature -- Implementation
 	update_display_data
 			-- Update stored values with current values.
 		local
+			l_window: POINTER
 			temp_mask: NATURAL_32
 			temp_x, temp_y: INTEGER
+			l_screen: POINTER
 			l_stored_display_data: like stored_display_data
 		do
 				-- Update coords for physical to logical.
 			l_stored_display_data := stored_display_data
-			l_stored_display_data.window := {GTK}.gdk_window_get_pointer ({GTK}.null_pointer, $temp_x, $temp_y, $temp_mask)
+
+			l_window := {GTK2}.gdk_display_get_window_at_pointer ({GTK2}.gdk_display_get_default, $temp_x, $temp_y)
+			{GTK2}.gdk_display_get_pointer ({GTK2}.gdk_display_get_default, $l_screen, $temp_x, $temp_y, $temp_mask)
+			l_stored_display_data.window := l_window
 			l_stored_display_data.x := temp_x + screen_virtual_x
 			l_stored_display_data.y := temp_y + screen_virtual_y
 			l_stored_display_data.mask := temp_mask
@@ -1246,10 +1251,10 @@ feature {EV_ANY_I, EV_FONT_IMP, EV_STOCK_PIXMAPS_IMP, EV_INTERMEDIARY_ROUTINES} 
 	gtk_widget_imp_at_pointer_position: detachable EV_GTK_WIDGET_IMP
 			-- Gtk Widget implementation at current mouse pointer position (if any)
 		local
-			a_x, a_y: INTEGER
+			temp_x, temp_y: INTEGER
 			gdkwin, l_null: POINTER
 		do
-			gdkwin := {GTK}.gdk_window_at_pointer ($a_x, $a_y)
+			gdkwin := {GTK2}.gdk_display_get_window_at_pointer ({GTK2}.gdk_display_get_default, $temp_x, $temp_y)
 			if gdkwin /= l_null then
 				Result := gtk_widget_from_gdk_window (gdkwin)
 			end

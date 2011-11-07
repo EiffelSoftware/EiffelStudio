@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 
 feature -- Query
 
-	buttons: ARRAYED_LIST [EV_RIBBON_BUTTON]
+	buttons: ARRAYED_LIST [EV_RIBBON_ITEM]
 			-- All groups in current tab
 
 feature {NONE}	-- Implementation

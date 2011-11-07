@@ -285,6 +285,13 @@ feature {NONE} -- Action handing
 				elseif a_parent_type.same_string ({ER_XML_CONSTANTS}.menu_group) then
 					Result := l_item_text.same_string ({ER_XML_CONSTANTS}.button) or else
 						l_item_text.same_string ({ER_XML_CONSTANTS}.split_button) or else
+						l_item_text.same_string ({ER_XML_CONSTANTS}.check_box) or else
+						l_item_text.same_string ({ER_XML_CONSTANTS}.combo_box) or else
+						l_item_text.same_string ({ER_XML_CONSTANTS}.drop_down_color_picker) or else
+						l_item_text.same_string ({ER_XML_CONSTANTS}.drop_down_gallery) or else
+						l_item_text.same_string ({ER_XML_CONSTANTS}.font_control) or else
+						l_item_text.same_string ({ER_XML_CONSTANTS}.split_button_gallery) or else
+						l_item_text.same_string ({ER_XML_CONSTANTS}.toggle_button) or else
 						-- FIXME: Parent's parent must be ApplicationMenu here
 						l_item_text.same_string ({ER_XML_CONSTANTS}.drop_down_button)
 				elseif a_parent_type.same_string ({ER_XML_CONSTANTS}.context_popup) then

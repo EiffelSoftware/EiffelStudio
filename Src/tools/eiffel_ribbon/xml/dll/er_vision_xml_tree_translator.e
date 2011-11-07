@@ -655,6 +655,20 @@ feature {NONE} -- Tree saving
 						add_xml_split_button_node (l_menu_group_node, a_tree_item.item, true)
 					elseif a_tree_item.item.text.same_string ({ER_XML_CONSTANTS}.drop_down_button) then
 						add_xml_drop_down_button_node (l_menu_group_node, a_tree_item.item)
+					elseif a_tree_item.item.text.same_string ({ER_XML_CONSTANTS}.drop_down_gallery) then
+						add_xml_drop_down_gallery_node (l_menu_group_node, a_tree_item.item)
+					elseif a_tree_item.item.text.same_string ({ER_XML_CONSTANTS}.check_box) then
+						add_xml_checkbox_node(l_menu_group_node, a_tree_item.item)
+					elseif a_tree_item.item.text.same_string ({ER_XML_CONSTANTS}.combo_box) then
+						add_xml_combo_box_node (l_menu_group_node, a_tree_item.item)
+					elseif a_tree_item.item.text.same_string ({ER_XML_CONSTANTS}.drop_down_color_picker) then
+						add_xml_drop_down_color_picker_node (l_menu_group_node, a_tree_item.item)
+					elseif a_tree_item.item.text.same_string ({ER_XML_CONSTANTS}.font_control) then
+						add_xml_font_control_node (l_menu_group_node, a_tree_item.item)
+					elseif a_tree_item.item.text.same_string ({ER_XML_CONSTANTS}.split_button_gallery) then
+						add_xml_split_button_gallery_node (l_menu_group_node, a_tree_item.item)
+					elseif a_tree_item.item.text.same_string ({ER_XML_CONSTANTS}.toggle_button) then
+						add_xml_toggle_button_node (l_menu_group_node, a_tree_item.item)
 					else
 						check not_possible: False end
 					end
@@ -892,7 +906,8 @@ feature {NONE} -- Tree saving
 			-- Add toggle button XML node
 		require
 			not_void: a_group_node /= Void
-			valid: a_group_node.name.same_string (xml_constants.group)
+			valid: a_group_node.name.same_string (xml_constants.group) or else
+				a_group_node.name.same_string (xml_constants.menu_group)
 		local
 			l_button_node: XML_ELEMENT
 			l_constants: ER_XML_ATTRIBUTE_CONSTANTS
@@ -950,7 +965,8 @@ feature {NONE} -- Tree saving
 			-- Add combo box XML node
 		require
 			not_void: a_group_node /= Void
-			valid: a_group_node.name.same_string (xml_constants.group)
+			valid: a_group_node.name.same_string (xml_constants.group) or else
+				a_group_node.name.same_string (xml_constants.menu_group)
 		local
 			l_button_node: XML_ELEMENT
 			l_constants: ER_XML_ATTRIBUTE_CONSTANTS
@@ -1027,7 +1043,8 @@ feature {NONE} -- Tree saving
 			-- Add split button gallery XML node
 		require
 			not_void: a_group_node /= Void
-			valid: a_group_node.name.same_string (xml_constants.group)
+			valid: a_group_node.name.same_string (xml_constants.group) or else
+				a_group_node.name.same_string (xml_constants.menu_group)
 		local
 			l_button_node: XML_ELEMENT
 			l_constants: ER_XML_ATTRIBUTE_CONSTANTS
@@ -1084,7 +1101,8 @@ feature {NONE} -- Tree saving
 			-- Add Font Control XML nodes
 		require
 			not_void: a_group_node /= Void
-			valid: a_group_node.name.same_string (xml_constants.group)
+			valid: a_group_node.name.same_string (xml_constants.group) or else
+				 a_group_node.name.same_string (xml_constants.menu_group)
 		local
 			l_button_node: XML_ELEMENT
 			l_constants: ER_XML_ATTRIBUTE_CONSTANTS
@@ -1116,7 +1134,8 @@ feature {NONE} -- Tree saving
 			-- Add dropdown color picker XML nodes
 		require
 			not_void: a_group_node /= Void
-			valid: a_group_node.name.same_string (xml_constants.group)
+			valid: a_group_node.name.same_string (xml_constants.group) or else
+				 a_group_node.name.same_string (xml_constants.menu_group)
 		local
 			l_button_node: XML_ELEMENT
 			l_constants: ER_XML_ATTRIBUTE_CONSTANTS
@@ -1148,7 +1167,8 @@ feature {NONE} -- Tree saving
 			-- Add dropdown gallery XML nodes
 		require
 			not_void: a_group_node /= Void
-			valid: a_group_node.name.same_string (xml_constants.group)
+			valid: a_group_node.name.same_string (xml_constants.group) or else
+				a_group_node.name.same_string (xml_constants.menu_group)
 		local
 			l_button_node: XML_ELEMENT
 			l_constants: ER_XML_ATTRIBUTE_CONSTANTS
@@ -1245,7 +1265,8 @@ feature {NONE} -- Tree saving
 			-- Add checkbox XML nodes
 		require
 			not_void: a_group_node /= Void
-			valid: a_group_node.name.same_string (xml_constants.group)
+			valid: a_group_node.name.same_string (xml_constants.group) or else
+				 a_group_node.name.same_string (xml_constants.menu_group)
 		local
 			l_button_node: XML_ELEMENT
 			l_constants: ER_XML_ATTRIBUTE_CONSTANTS

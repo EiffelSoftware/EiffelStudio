@@ -102,6 +102,7 @@ feature {NONE} -- Implementation
 			l_key: EV_PROPERTY_KEY
 --			l_property_set: EV_SIMPLE_PROPERTY_SET
 		do
+			Result := Precursor (a_command_id, a_execution_verb, a_property_key, a_property_value, a_command_execution_properties)
 			if command_list.has (a_command_id) then
 				create l_key.share_from_pointer (a_property_key)
 				if l_key.is_font_properties then
@@ -122,8 +123,7 @@ feature {NONE} -- Implementation
 	update_property (a_command_id: NATURAL_32; a_property_key, a_property_current_value, a_property_new_value: POINTER): NATURAL_32
 			-- <Precursor>
 		do
-
-
+			Result := Precursor (a_command_id, a_property_key, a_property_current_value, a_property_new_value)
 		end
 
 	update_with_property_store (a_property_store: EV_PROPERTY_STORE)

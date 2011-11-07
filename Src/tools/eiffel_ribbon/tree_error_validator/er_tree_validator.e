@@ -75,6 +75,7 @@ feature {NONE}	-- Implementation
 			l_too_few_control_for_size_definition: ER_SC1031_TOO_FEW_CONTROLS_FOR_SIZE_DEFINITION
 			l_too_many_control_for_size_definition: ER_SC1032_TOO_MANY_CONTROLS_FOR_SIZE_DEFINITION
 			l_wrong_control_type: ER_SC1046_WRONG_CONTROL_TYPE
+			l_sc1057: ER_SC1057_SCE_ONLY_ONE_FONT_CONTROL_ALLOWED_IN_FLOATIE
 		do
 			create Result.make (10)
 
@@ -92,6 +93,9 @@ feature {NONE}	-- Implementation
 
 			create l_wrong_control_type
 			Result.extend (l_wrong_control_type)
+
+			create l_sc1057
+			Result.extend (l_sc1057)
 		end
 
 note

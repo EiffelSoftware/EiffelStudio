@@ -315,8 +315,11 @@ feature {NONE} -- Implementation
 	timer: detachable EV_TIMEOUT
 			-- Timer to show gradient effect
 
-	timer_interval: INTEGER = 50
+	timer_interval: INTEGER
 			-- Interval for `timer'
+		once
+			Result := 50
+		end
 
 	alpha: INTEGER
 			-- Current window alpha value
@@ -380,7 +383,7 @@ feature {NONE} -- Externals
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

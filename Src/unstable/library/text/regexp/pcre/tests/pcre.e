@@ -1,20 +1,16 @@
 note
-
 	description:
-
 		"A brief PCRE how-to in a runnable example and regexp-testing"
-
 	library: "Eiffel PCRE Regexp Library"
 	copyright: "Copyright (c) 2002, Harald Erdbruegger and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class PCRE
-
+class
+	PCRE
 
 create
-
 	make
 
 feature {NONE} -- Initialization
@@ -31,7 +27,7 @@ feature -- Examples
 	some_simple_matches
 			-- Some simple examples.
 		local
-			regexp: REGULAR_EXPRESSION
+			regexp: REGULAR_EXPRESSION_MATCH_AND_REPLACE
 			columns: ARRAY [STRING]
 			res: STRING
 			i, nb: INTEGER
@@ -46,7 +42,7 @@ feature -- Examples
 				is_compiled: regexp.is_compiled
 			end
 				-- Match on a subject.
-			regexp.match ("hello eiffelians")
+			regexp.match ("hello from eiffel")
 				-- In this example the query of `has_matched' is not needed
 				-- if you query the `match_count' for a value greater zero
 				-- ('not has_matched = (match_count = 0)').
@@ -58,86 +54,87 @@ feature -- Examples
 			end
 				-- Analyze the first match.
 			res := regexp.captured_substring (1)
---			check
---				double_l: res.is_equal ("ll")
---			end
-----			std.output.put_line (res)
-----			std.output.put_line ("----------------")
---			res := regexp.captured_substring (2)
---			check
---				single_l: res.is_equal ("l")
---			end
-----			std.output.put_line (res)
-----			std.output.put_line ("----------------")
-----				-- Put the captured substring between parentheses.
---			res := regexp.replace ("(\1\)")
---			check
---				done: res.is_equal ("he(ll)o eiffelians")
---			end
-----			std.output.put_line (res)
-----			std.output.put_line ("----------------")
-----				-- Try to find a next match.
---			regexp.next_match
---			check
---					-- We know there is one.
---				has_matched2: regexp.has_matched
---					-- Two subexpressions.
---				match_count2: regexp.match_count = 3
---			end
-----				-- Analyze the next hit.
---			res := regexp.captured_substring (1)
---			check
---				double_f: res.is_equal ("ff")
---			end
-----			std.output.put_line (res)
-----			std.output.put_line ("----------------")
-----				-- Put the captured substring between brakets.
---			res := regexp.replace ("[\1\]")
---			check
---				done2: res.is_equal ("hello ei[ff]elians")
---			end
-----			std.output.put_line (res)
-----			std.output.put_line ("----------------")
-----				-- Back to the beginning.
---			regexp.first_match
---			check
---					-- We know there is one.
---				has_matched3: regexp.has_matched
---					-- Two subexpressions.
---				match_count3: regexp.match_count = 3
---			end
---				-- Put an hyphen between double letters.
---			res := regexp.replace_all ("\2\-\2\")
---			check
---				done3: res.is_equal ("hel-lo eif-felians")
---			end
-----			std.output.put_line (res)
-----			std.output.put_line ("----------------")
-----				-- Now we compile a new pattern: the same as \t.
---			regexp.compile ("%T")
---			check
---					-- We know, we compiled a valid regexp.
---				is_compiled2: regexp.is_compiled
---			end
---				-- Match on a subject.
---			regexp.match ("this%Tis%Ta%Ttab%Tseparated%Tline%Twith%Tan%Tempty%T%Tcolumn")
---			check
---					-- We know there is one.
---				has_matched4: regexp.has_matched
---					-- No subexpessions.
---				match_count4: regexp.match_count = 1
---			end
---			columns := regexp.split
---			check
---				eleven_columns: columns.count = 11
---			end
---			i := columns.lower
---			nb := columns.upper
---			from until i > nb loop
-----				std.output.put_line (columns.item (i))
---				i := i + 1
---			end
-----			std.output.put_line ("----------------")
+			check
+				double_l: res.is_equal ("ll")
+			end
+			io.put_string (res); io.new_line
+			io.put_string ("----------------"); io.new_line
+			res := regexp.captured_substring (2)
+			check
+				single_l: res.is_equal ("l")
+			end
+			io.put_string (res); io.new_line
+			io.put_string ("----------------"); io.new_line
+
+				-- Put the captured substring between parentheses.
+			res := regexp.replace ("(\1\)")
+			check
+				done: res.is_equal ("he(ll)o from eiffel")
+			end
+			io.put_string (res); io.new_line
+			io.put_string ("----------------"); io.new_line
+				-- Try to find a next match.
+			regexp.next_match
+			check
+					-- We know there is one.
+				has_matched2: regexp.has_matched
+					-- Two subexpressions.
+				match_count2: regexp.match_count = 3
+			end
+				-- Analyze the next hit.
+			res := regexp.captured_substring (1)
+			check
+				double_f: res.is_equal ("ff")
+			end
+			io.put_string (res); io.new_line
+			io.put_string ("----------------"); io.new_line
+				-- Put the captured substring between brackets.
+			res := regexp.replace ("[\1\]")
+			check
+				done2: res.is_equal ("hello from ei[ff]el")
+			end
+			io.put_string (res); io.new_line
+			io.put_string ("----------------"); io.new_line
+				-- Back to the beginning.
+			regexp.first_match
+			check
+					-- We know there is one.
+				has_matched3: regexp.has_matched
+					-- Two subexpressions.
+				match_count3: regexp.match_count = 3
+			end
+				-- Put an hyphen between double letters.
+			res := regexp.replace_all ("\2\-\2\")
+			check
+				done3: res.is_equal ("hel-lo from eif-fel")
+			end
+			io.put_string (res); io.new_line
+			io.put_string ("----------------"); io.new_line
+				-- Now we compile a new pattern: the same as \t.
+			regexp.compile ("%T")
+			check
+					-- We know, we compiled a valid regexp.
+				is_compiled2: regexp.is_compiled
+			end
+				-- Match on a subject.
+			regexp.match ("this%Tis%Ta%Ttab%Tseparated%Tline%Twith%Tan%Tempty%T%Tcolumn")
+			check
+					-- We know there is one.
+				has_matched4: regexp.has_matched
+					-- No subexpessions.
+				match_count4: regexp.match_count = 1
+			end
+			columns := regexp.split
+			check
+				eleven_columns: columns.count = 11
+			end
+			i := columns.lower
+			nb := columns.upper
+			from until i > nb loop
+				io.put_string (columns.item (i)); io.new_line
+				i := i + 1
+			end
+			io.put_string ("----------------"); io.new_line
 		end
 
 	localization
@@ -155,12 +152,12 @@ feature -- Examples
 			regexp.compile ("\w+")
 			regexp.match ("Erdbrügger - my Name")
 			res := regexp.captured_substring (0)
---			check
---				matched1: res.is_equal ("Erdbr")
---			end
---			std.output.put_line (res)
---			std.output.put_line ("----------------")
---				-- Now we change the word character set.
+			check
+				matched1: res.is_equal ("Erdbr")
+			end
+			io.put_string (res); io.new_line
+			io.put_string ("----------------"); io.new_line
+				-- Now we change the word character set.
 			regexp.reset
 			regexp.set_word_set (word_set)
 				-- Compile a pattern: match a word.
@@ -170,9 +167,9 @@ feature -- Examples
 			check
 				matched2: res.is_equal ("Erdbrügger")
 			end
---			std.output.put_line (res)
---			std.output.put_line ("----------------")
---				-- Reset the word_set.
+			io.put_string (res); io.new_line
+			io.put_string ("----------------"); io.new_line
+				-- Reset the word_set.
 			regexp.reset
 			regexp.set_word_set (regexp.default_word_set)
 				-- The same query in caseless mode:
@@ -185,10 +182,10 @@ feature -- Examples
 			check
 				matched3: res.is_equal ("Erdbr")
 			end
---			std.output.put_line (res)
---			std.output.put_line ("----------------")
---				-- The only way to reset the caseless mode except the routine
---				-- regexp.set_default_options.
+			io.put_string (res); io.new_line
+			io.put_string ("----------------"); io.new_line
+				-- The only way to reset the caseless mode except the routine
+				-- regexp.set_default_options.
 			regexp.reset
 			regexp.set_caseless (False)
 				-- A new pattern.
@@ -198,9 +195,9 @@ feature -- Examples
 			check
 				matched4: res.is_equal ("E")
 			end
---			std.output.put_line (res)
---			std.output.put_line ("----------------")
---				-- German umlaute added for case insensitivity.
+			io.put_string (res); io.new_line
+			io.put_string ("----------------"); io.new_line
+				-- German umlaute added for case insensitivity.
 			create case_mapping.make ("ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÜ", "abcdefghijklmnopqrstuvwxyzäöü")
 				-- Changing the character case mapping need
 				-- a reset (not is_compiled).
@@ -212,9 +209,9 @@ feature -- Examples
 			check
 				matched5: res.is_equal ("E")
 			end
---			std.output.put_line (res)
---			std.output.put_line ("----------------")
---				-- Now we use the caseless-mode.
+			io.put_string (res); io.new_line
+			io.put_string ("----------------"); io.new_line
+				-- Now we use the caseless-mode.
 			regexp.compile ("(?i)[A-ZÄÖÜ]+")
 			check
 				is_caseless: regexp.is_caseless
@@ -224,10 +221,10 @@ feature -- Examples
 			check
 				matched6: res.is_equal ("Erdbrügger")
 			end
---			std.output.put_line (res)
---			std.output.put_line ("----------------")
---				-- If you want to make all regular expressions localized change the
---				-- `default_character_case_mapping' and/or `default_word_set'.
+			io.put_string (res); io.new_line
+			io.put_string ("----------------"); io.new_line
+				-- If you want to make all regular expressions localized change the
+				-- `default_character_case_mapping' and/or `default_word_set'.
 			regexp.default_character_case_mapping.clear
 			regexp.default_character_case_mapping.add ("ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÜ", "abcdefghijklmnopqrstuvwxyzäöü")
 			word_set := regexp.default_word_set

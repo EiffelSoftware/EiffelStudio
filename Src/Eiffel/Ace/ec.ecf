@@ -79,6 +79,7 @@
 				</file_rule>
 			</cluster>
 			<cluster name="tty" location="$|tty\" recursive="true"/>
+			<cluster name="none" location="$|none\" recursive="true"/>
 		</cluster>
 	</target>
 	<target name="batch_unix" extends="batch">
@@ -234,6 +235,7 @@
 		<cluster name="interface" location="$EIFFEL_SRC\Eiffel\interface\" recursive="true">
 			<file_rule>
 				<exclude>/preferences$</exclude>
+				<exclude>^/none$</exclude>
 				<exclude>^/tty$</exclude>
 				<exclude>/lite$</exclude>
 				<exclude>/overrides$</exclude>
@@ -257,8 +259,6 @@
 				<exclude>/eb_gui_preferences\.e$</exclude>
 				<exclude>/dbg_preferences\.e$</exclude>
 				<exclude>/eb_diagram_html_generator\.e$</exclude>
-				<exclude>/ewb_auto_test\.e$</exclude>
-				<exclude>/ewb_testing\.e$</exclude>
 			</file_rule>
 		</cluster>
 		<override name="eiffel_override" location="$EIFFEL_SRC\Eiffel\override\" recursive="true"/>

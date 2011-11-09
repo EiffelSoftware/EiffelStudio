@@ -1328,6 +1328,8 @@ feature -- Update
 					current_option := current_option + 1
 				end
 				create {EWB_AUTO_TEST} command.make_with_arguments (l_at_args)
+			elseif option.is_equal ("-tests") then
+				create {EWB_TEST_EXECUTION} command
 			elseif is_eiffel_class_file_name (option) then
 					-- This option is only valid if no other config options are set
 				if config_file_name = Void and target_name = Void and old_ace_file = Void and old_project_file = Void then

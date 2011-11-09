@@ -2387,6 +2387,7 @@ test	supplier-preconditions			assert001 tcf pass assertions execution
 test	use-application-options-assertions	assert002 tcf pass assertions execution
 test	undefined-assertion-merge		assert003 tcf pass assertions
 test	false-postcondition			assert004 tcf pass assertions execution unreachable_code
+test	false-postcondition-on-empty-routine	assert005 tcf fails assertions execution unreachable_code
 
 -- Multi Constraint Tests
 test	multi-constraint-basics							multicon001 tcf pass multiconstraint

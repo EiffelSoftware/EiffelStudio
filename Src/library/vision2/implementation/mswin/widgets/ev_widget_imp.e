@@ -117,7 +117,7 @@ feature -- Access
 			if attached background_color_imp as l_background_color_imp then
 				Result := l_background_color_imp.attached_interface
 			else
-				Result := (create {EV_STOCK_COLORS}).default_background_color
+				Result := application_imp.stock_colors.default_background_color
 			end
 		end
 
@@ -127,7 +127,7 @@ feature -- Access
 			if attached foreground_color_imp as l_foreground_color_imp then
 				Result := l_foreground_color_imp.attached_interface
 			else
-				Result := (create {EV_STOCK_COLORS}).default_foreground_color
+				Result := application_imp.stock_colors.default_foreground_color
 			end
 		end
 

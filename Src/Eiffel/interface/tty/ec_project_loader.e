@@ -42,14 +42,33 @@ feature {NONE} -- Settings
 		local
 			l_prc_factory: PROCESS_FACTORY
 			l_prc_launcher: PROCESS
+			l_cmd_line: STRING
+			l_exec: EXECUTION_ENVIRONMENT
 		do
-			create l_prc_factory
-			l_prc_launcher := l_prc_factory.process_launcher (eiffel_layout.ec_command_name, a_arguments, Void)
-			l_prc_launcher.set_separate_console (False)
-			l_prc_launcher.launch
-			if l_prc_launcher.launched then
-				l_prc_launcher.wait_for_exit
-				is_precompilation_error := l_prc_launcher.exit_code /= 0
+			if {PLATFORM}.is_thread_capable then
+				create l_prc_factory
+				l_prc_launcher := l_prc_factory.process_launcher (eiffel_layout.ec_command_name, a_arguments, Void)
+				l_prc_launcher.set_separate_console (False)
+				l_prc_launcher.launch
+				if l_prc_launcher.launched then
+					l_prc_launcher.wait_for_exit
+					is_precompilation_error := l_prc_launcher.exit_code /= 0
+				end
+			else
+				create l_cmd_line.make (512)
+				l_cmd_line.append_string (eiffel_layout.ec_command_name)
+				across a_arguments as l_args loop
+					l_cmd_line.append_character (' ')
+					if not l_args.item.is_empty and then l_args.item [1] /= '-' then
+						l_cmd_line.append_character ('%"')
+						l_cmd_line.append (l_args.item)
+						l_cmd_line.append_character ('%"')
+					else
+						l_cmd_line.append (l_args.item)
+					end
+				end
+				create l_exec
+				l_exec.system (l_cmd_line)
 			end
 		end
 
@@ -395,7 +414,9 @@ feature {NONE} -- User interaction
 				loop
 					localized_print (warning_messages.w_project_build_precompile (a_pre.path).as_string_32 + ewb_names.yes_or_no)
 					io.read_line
-					if io.last_string.item (1).as_lower = 'y' then
+					if io.last_string.is_empty then
+							-- Nothing was read.
+					elseif io.last_string.item (1).as_lower = 'y' then
 						is_user_wants_precompile := True
 						l_answered := True
 					elseif io.last_string.item (1).as_lower = 'n' then

@@ -1,0 +1,29 @@
+
+test_name 	once-per-object-array-of-expanded
+test_description Printing an array whose elements are of an expanded type, where that the expanded type's base class includes a once-per-object function, crashes when system is executed
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test2.e $CLUSTER test2.e
+
+compile_frozen
+compile_result 	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work	NONE exec_output_w
+execute_result 	ok
+compare		exec_output_w output
+
+compile_final
+compile_result 	ok
+
+c_compile_final
+c_compile_result ok
+
+execute_final	NONE exec_output_f
+execute_result ok
+compare		exec_output_f output
+
+test_end

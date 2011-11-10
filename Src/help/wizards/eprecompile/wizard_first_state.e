@@ -212,7 +212,8 @@ feature {NONE} -- Tools
 		do
 				-- NOTE: for now `a_is_dotnet' is set to False, in future
 				-- the wizard should support dotnet precompiles
-			create eiffel_directory.make_open_read (eiffel_layout.precomp_platform_path (False))
+			eiffel_layout.set_precompile (False)
+			create eiffel_directory.make_open_read (eiffel_layout.precompilation_path (False))
 			if eiffel_directory.exists then
 				list_of_preprecompilable_libraries:= eiffel_directory.linear_representation
 

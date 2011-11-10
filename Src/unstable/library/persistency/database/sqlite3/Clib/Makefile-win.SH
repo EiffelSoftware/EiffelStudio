@@ -4,7 +4,7 @@ OUTDIR= .
 INDIR= .
 CC = $cc
 OUTPUT_CMD = $output_cmd
-CFLAGS = -Zi -I"$rt_include" -I..$(DIR)spec$(DIR)include -I.
+CFLAGS = -I"$rt_include" -I..$(DIR)spec$(DIR)include -I.
 JCFLAGS = $(CFLAGS) $ccflags $optimize -DSQLITE_THREADSAFE=0 -DSQLITE_OMIT_LOAD_EXTENSION=1
 JMTCFLAGS = $(CFLAGS) $mtccflags $optimize -DSQLITE_THREADSAFE=1 -DSQLITE_OMIT_LOAD_EXTENSION=1
 JILCFLAGS = $(CFLAGS) $mtccflags $optimize -DEIF_IL_DLL -DSQLITE_THREADSAFE=1 -DSQLITE_OMIT_LOAD_EXTENSION=1

@@ -158,26 +158,17 @@ feature {NONE} -- Implementation
 			l_path.append (";")
 			l_path.append (eiffel_layout.bin_path)
 			env.put (l_path, "PATH")
-			if eiffel_layout.has_borland then
-				l_path := env.get ("PATH")
-				l_path.append (";")
-				l_path.append (eiffel_layout.borland_path.string)
-				l_path.append ("\Bin")
-				env.put (l_path, "PATH")
-			end
-			if not eiffel_layout.has_borland then
-				if smart_checking then
-					if attached eiffel_layout.eiffel_c_compiler_version as l_version and then not l_version.is_empty then
-						create l_vs_setup.make (l_version, False)
-					else
-						create l_vs_setup.make (Void, False)
-					end
-						-- patrickr 09/25/2006 Don't abort as they user may have setup the path already,
-						-- a warning would be nice
---					if not l_vs_setup.valid_vcvars then
---						Environment.set_abort (No_c_compiler)
---					end
+			if smart_checking then
+				if attached eiffel_layout.eiffel_c_compiler_version as l_version and then not l_version.is_empty then
+					create l_vs_setup.make (l_version, False)
+				else
+					create l_vs_setup.make (Void, False)
 				end
+					-- patrickr 09/25/2006 Don't abort as they user may have setup the path already,
+					-- a warning would be nice
+--				if not l_vs_setup.valid_vcvars then
+--					Environment.set_abort (No_c_compiler)
+--				end
 			end
 		end
 

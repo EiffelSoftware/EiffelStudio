@@ -1,0 +1,46 @@
+
+test_name 	inline-qat-static-external
+test_description A finalized system with a static call on a qualified anchored type involving a formal generic gives wrong execution output if inlining is enabled
+
+define		INLINING "false"
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_sub 	test2.e $CLUSTER test2.e
+copy_sub 	test3.e $CLUSTER test3.e
+copy_sub 	test4.e $CLUSTER test4.e
+copy_sub 	test5.e $CLUSTER test5.e
+
+compile_frozen
+compile_result 	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work	NONE exec_output_w
+execute_result	ok
+compare		exec_output_w output
+
+compile_final
+compile_result 	ok
+
+c_compile_final
+c_compile_result ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+compare		exec_output_f output
+
+define		INLINING "true"
+copy_sub 	Ace $TEST Ace
+
+compile_final
+compile_result 	ok
+
+c_compile_final
+c_compile_result ok
+
+execute_final	NONE exec_output_fi
+execute_result	ok
+compare		exec_output_fi output
+
+test_end

@@ -306,9 +306,7 @@ feature {NONE} -- Query
 			Result.append (c_to_obj (a_c_file_name) +
 					": " + a_c_file_name + "%N%
 					%	$(CC) $(CFLAGS) -DWORKBENCH	")
-			if not eiffel_layout.has_borland then
-				Result.append (" -nologo ")
-			end
+			Result.append (" -nologo ")
 			Result.append ("$(OUTPUT_CMD)$@ $?%N%N")
 		ensure
 			result_attached: Result /= Void

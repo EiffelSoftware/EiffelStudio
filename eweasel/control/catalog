@@ -1252,6 +1252,7 @@ test	finalize-argument-anchors-formal	final107 tcf fail finalizing anchored_type
 test	finalize-external-invariant-skipped	final108 tcf fail finalizing assertions external
 test	inline-manifest-type			final109 tcf fail finalizing
 test	profile-once-per-process-function	final110 tcf fail finalizing
+test	inline-qat-static-external		final111 tcf fail finalizing inlining anchored_type
 
 -- Runtime
 test	gc-tracking-001					runtime001	tcf pass runtime

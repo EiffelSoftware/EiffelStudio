@@ -24,11 +24,11 @@ feature -- Access
 			Result := Precursor {EC_EIFFEL_LAYOUT}
 			Result.extend (user_templates_path.string)
 			Result.extend (user_projects_path.string)
-			Result.extend (user_docking_path.string)
+			Result.extend (docking_data_path.string)
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

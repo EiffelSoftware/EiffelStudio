@@ -443,7 +443,7 @@ feature -- Environment
 					elseif s.is_equal ("/ec_name") then
 						cmdline_remove_head (1)
 						if cmdline_arguments_count > 0 then
-							argument_variables.put (cmdline_argument (1), {EIFFEL_ENVIRONMENT_CONSTANTS}.Ec_name_env)
+							argument_variables.put (cmdline_argument (1), {EIFFEL_CONSTANTS}.Ec_name_env)
 						end
 					elseif s.is_equal ("/ec_action") then
 						is_ec_action := True

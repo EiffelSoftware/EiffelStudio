@@ -98,7 +98,7 @@ feature -- Loading
 					-- Ace or Ace.ecf from the current working directory.
 				create l_default_file_name.make_from_string (file_system.current_working_directory)
 				l_default_file_name.set_file_name ("Ace")
-				l_default_file_name.add_extension (config_extension)
+				l_default_file_name.add_extension ({EIFFEL_CONSTANTS}.config_extension)
 				if is_file_readable (l_default_file_name.string) then
 					config_file_name := l_default_file_name.string
 				else
@@ -107,7 +107,7 @@ feature -- Loading
 					l_default_file_name.set_file_name ("Ace")
 					if is_file_readable (l_default_file_name) then
 							-- Special case where `Ace' can mean either the old or new format.
-						create l_load_ace.make (l_factory, config_extension)
+						create l_load_ace.make (l_factory, {EIFFEL_CONSTANTS}.config_extension)
 						if not has_library_conversion then
 							l_load_ace.disable_library_conversions
 						end
@@ -119,7 +119,7 @@ feature -- Loading
 								-- Convert Ace file into new format.
 							l_dir_name := file_system.dirname (l_default_file_name)
 							ask_for_config_name (l_dir_name,
-								l_load_ace.last_system.name + "." + config_extension,
+								l_load_ace.last_system.name + {EIFFEL_CONSTANTS}.dotted_config_extension,
 								agent store_converted ((l_load_ace.last_system), ?))
 						end
 					else
@@ -127,7 +127,7 @@ feature -- Loading
 							-- in the current working directory.
 						create l_default_file_name.make_from_string (file_system.current_working_directory)
 						l_default_file_name.set_file_name ("Ace")
-						l_default_file_name.add_extension (config_extension)
+						l_default_file_name.add_extension ({EIFFEL_CONSTANTS}.config_extension)
 						report_non_readable_configuration_file (l_default_file_name.string)
 					end
 				end
@@ -139,9 +139,9 @@ feature -- Loading
 					create l_ext.make_from_string (a_file_name.substring (l_pos + 1, a_file_name.count))
 					if l_ext.is_equal (project_extension) then
 						convert_epr (a_file_name)
-					elseif l_ext.is_equal (ace_file_extension) then
+					elseif l_ext.is_case_insensitive_equal ({EIFFEL_CONSTANTS}.ace_extension) then
 						convert_ace (a_file_name)
-					elseif l_ext.is_equal (config_extension) then
+					elseif l_ext.is_case_insensitive_equal ({EIFFEL_CONSTANTS}.config_extension) then
 							-- Case where it is a `ecf' extension. or another one.
 						config_file_name := a_file_name.twin
 					else
@@ -286,7 +286,7 @@ feature -- Loading
 			l_filename := file_system.basename (a_class_filename)
 			l_target_name := l_filename.twin
 			l_target_name.remove_tail (2)
-			l_config_file_name := file_system.pathname (l_directory, l_target_name + "." + config_extension)
+			l_config_file_name := file_system.pathname (l_directory, l_target_name + {EIFFEL_CONSTANTS}.dotted_config_extension)
 
 			create l_factory
 				-- Only create ecf if it does not exist yet
@@ -548,7 +548,7 @@ feature {NONE} -- Settings
 		do
 				-- load config from ace
 			create l_factory
-			create l_load.make (l_factory, config_extension)
+			create l_load.make (l_factory, {EIFFEL_CONSTANTS}.config_extension)
 			if not has_library_conversion then
 				l_load.disable_library_conversions
 			end
@@ -559,7 +559,7 @@ feature {NONE} -- Settings
 					-- Ask user for a new name for the converted config file.
 					-- If user does not specify one, then the processing will stop right there.
 				l_dir_name := file_system.dirname (a_file_name)
-				ask_for_config_name (l_dir_name,  l_load.last_system.name + "." + config_extension,
+				ask_for_config_name (l_dir_name,  l_load.last_system.name + {EIFFEL_CONSTANTS}.dotted_config_extension,
 					agent store_converted ( l_load.last_system, ?))
 			end
 		ensure
@@ -685,7 +685,7 @@ feature {NONE} -- Settings
 					end
 					if
 						not l_key.is_case_insensitive_equal (eiffel_layout.default_il_environment.ise_dotnet_framework_env) and then
-						not l_key.is_case_insensitive_equal ({EIFFEL_ENVIRONMENT_CONSTANTS}.ise_precomp_env) and then
+						not l_key.is_case_insensitive_equal ({EIFFEL_CONSTANTS}.ise_precomp_env) and then
 						not equal (l_new_val, l_old_val)
 					then
 						ask_environment_update (l_key, l_old_val, l_new_val)
@@ -1215,7 +1215,7 @@ feature {NONE} -- Implementation
 			l_extension := a_library.twin
 			l_extension.keep_tail (4)
 				-- Check if extension denotes a configuration file
-			if l_extension.is_equal ("." + config_extension) then
+			if l_extension.is_case_insensitive_equal ({EIFFEL_CONSTANTS}.dotted_config_extension) then
 					-- The library is specified as full path to ecf file
 				l_ecf_path := a_library
 					-- Name of config file is taken as name of library
@@ -1225,7 +1225,7 @@ feature {NONE} -- Implementation
 					-- The library is specified as name only
 				l_library_name := a_library.twin
 					-- Guess location
-				l_ecf_path := "$ISE_LIBRARY/library/" + a_library + "/" + a_library + "." + config_extension
+				l_ecf_path := "$ISE_LIBRARY/library/" + a_library + "/" + a_library + {EIFFEL_CONSTANTS}.dotted_config_extension
 					-- Todo: smarter guess, check if ECF exists in this location and try also $ISE_LIBRARY/framework/
 					-- Todo: check if location exist and raise an error if it does not
 					-- Todo: check if library can be used as precompile (e.g. Vision2)

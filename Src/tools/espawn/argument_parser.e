@@ -141,9 +141,9 @@ feature {NONE} -- Usage
 			-- <Precursor>
 		once
 			create Result.make (3)
-			Result.append_integer ({EIFFEL_ENVIRONMENT_CONSTANTS}.major_version)
+			Result.append_integer ({EIFFEL_CONSTANTS}.major_version)
 			Result.append_character ('.')
-			Result.append_integer ({EIFFEL_ENVIRONMENT_CONSTANTS}.minor_version)
+			Result.append_integer ({EIFFEL_CONSTANTS}.minor_version)
 		end
 
 	non_switched_argument_description: attached STRING = "Command or application to execute."

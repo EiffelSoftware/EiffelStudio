@@ -122,9 +122,9 @@ feature {NONE} -- Access: Usage
 			-- <Precursor>
 		once
 			create Result.make (3)
-			Result.append_integer ({EIFFEL_ENVIRONMENT_CONSTANTS}.major_version)
+			Result.append_integer ({EIFFEL_CONSTANTS}.major_version)
 			Result.append_character ('.')
-			Result.append_integer ({EIFFEL_ENVIRONMENT_CONSTANTS}.minor_version)
+			Result.append_integer ({EIFFEL_CONSTANTS}.minor_version)
 		end
 
 	switches: ARRAYED_LIST [ARGUMENT_SWITCH]

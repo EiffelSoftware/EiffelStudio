@@ -44,7 +44,7 @@ feature {NONE} -- Implementation
 				-- Create the pathname of the ace file
 			create ace_filename.make_from_string (project_directory)
 			ace_filename.set_file_name (system_name.as_lower)
-			ace_filename.add_extension (config_extension)
+			ace_filename.add_extension ({EIFFEL_CONSTANTS}.config_extension)
 
 				-- Create the pathname of the root class.
 			create l_rexp.make
@@ -214,7 +214,7 @@ feature {NONE} -- Private attributes
 			-- Location of the project to build.
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

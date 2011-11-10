@@ -26,7 +26,7 @@ feature -- Access
 		do
 			Result := get (a_var)
 			if Result = Void then
-				l_eiffel := "\Software\ISE\Eiffel" + {EIFFEL_ENVIRONMENT_CONSTANTS}.major_version.out + {EIFFEL_ENVIRONMENT_CONSTANTS}.minor_version.out
+				l_eiffel := "\Software\ISE\Eiffel" + {EIFFEL_CONSTANTS}.major_version.out + {EIFFEL_CONSTANTS}.minor_version.out
 				create l_reg
 				if a_app /= Void then
 					l_key := l_reg.open_key_value ("hkey_current_user"+l_eiffel+"\" + a_app, a_var.as_lower)

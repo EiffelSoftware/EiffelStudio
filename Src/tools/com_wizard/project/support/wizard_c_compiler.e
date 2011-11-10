@@ -80,7 +80,7 @@ feature -- Basic Operations
 				l_process_launcher.run_hidden
 				environment.add_abort_request_action (agent l_process_launcher.terminate_process)
 				l_process_launcher.launch (l_string, a_folder_name, agent message_output.add_text)
-				if not l_process_launcher.last_launch_successful or not l_directory.has_entry (eiffel_layout.get_environment ({EIFFEL_ENVIRONMENT_CONSTANTS}.ise_c_compiler_env)) then
+				if not l_process_launcher.last_launch_successful or not l_directory.has_entry (eiffel_layout.get_environment ({EIFFEL_CONSTANTS}.ise_c_compiler_env)) then
 					environment.set_abort (C_compilation_failed)
 					environment.set_error_data ("in folder " + Env.current_working_directory + "\" + a_folder_name)
 				end

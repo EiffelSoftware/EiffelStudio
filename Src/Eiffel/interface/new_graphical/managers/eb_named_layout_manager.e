@@ -221,7 +221,7 @@ feature {NONE} -- Query
 	layout_file_path (a_normal_mode: BOOLEAN): attached DIRECTORY_NAME
 			-- Retrieve a full path for a docking layout file name
 		do
-			Result := eiffel_layout.user_docking_path.twin
+			Result := eiffel_layout.docking_data_path.twin
 			if a_normal_mode then
 				Result.extend (user_layout_prefix + eiffel_layout.docking_standard_file)
 			else
@@ -256,7 +256,7 @@ invariant
 	not_void: layouts /= Void
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

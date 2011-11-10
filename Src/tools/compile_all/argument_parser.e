@@ -35,9 +35,9 @@ feature {NONE} -- Access
 			-- Application version
 		once
 			create Result.make (5)
-			Result.append_integer ({EIFFEL_ENVIRONMENT_CONSTANTS}.major_version)
+			Result.append_integer ({EIFFEL_CONSTANTS}.major_version)
 			Result.append_character ('.')
-			Result.append_integer ({EIFFEL_ENVIRONMENT_CONSTANTS}.minor_version)
+			Result.append_integer ({EIFFEL_CONSTANTS}.minor_version)
 		end
 
 	copyright: STRING = "Copyright Eiffel Software 2006-2011. All Rights Reserved."

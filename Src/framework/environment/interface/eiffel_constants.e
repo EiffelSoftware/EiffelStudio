@@ -1,6 +1,6 @@
 note
 	description: "[
-		Eiffel environment constant values.
+		Constant values specific to the Eiffel environment.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -8,7 +8,7 @@ note
 	revision: "$Revision$"
 
 class
-	EIFFEL_ENVIRONMENT_CONSTANTS
+	EIFFEL_CONSTANTS
 
 feature -- Variable names
 
@@ -41,6 +41,17 @@ feature -- Variable names
 
 	ec_name_env: STRING = "EC_NAME"
 			-- ec executable name.
+
+feature -- File extensions
+
+	config_extension: STRING = "ecf"
+			-- Extension for configuration file without the dot.
+
+	ace_extension: STRING = "ace"
+			-- Extension for old format configuration file without the dot.
+
+	dotted_config_extension: STRING = ".ecf"
+			-- Extension for configuration file with the dot separator.
 
 feature -- Version
 

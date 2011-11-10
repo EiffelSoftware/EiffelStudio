@@ -117,9 +117,9 @@ feature {NONE} -- Usage
 			-- <Precursor>
 		once
 			create Result.make (3)
-			Result.append_integer ({EIFFEL_ENVIRONMENT_CONSTANTS}.major_version)
+			Result.append_integer ({EIFFEL_CONSTANTS}.major_version)
 			Result.append_character ('.')
-			Result.append_integer ({EIFFEL_ENVIRONMENT_CONSTANTS}.minor_version)
+			Result.append_integer ({EIFFEL_CONSTANTS}.minor_version)
 		end
 
 	copyright: STRING = "Copyright Eiffel Software 1996-2011. All Rights Reserved."

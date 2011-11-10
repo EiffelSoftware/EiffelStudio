@@ -19,12 +19,12 @@ inherit
 			remove_task
 		end
 
-	DISPOSABLE_SAFE
-
-	EIFFEL_ENV
+	EIFFEL_LAYOUT
 		export
 			{NONE} all
 		end
+
+	DISPOSABLE_SAFE
 
 	ERL_G_TYPE_ROUTINES
 		export
@@ -356,8 +356,8 @@ feature {NONE} -- Implementation: preparation
 			l_file: KL_TEXT_OUTPUT_FILE
 			l_error_handler: AUT_ERROR_HANDLER
 		do
-			check_environment_variable
-			set_precompile (False)
+			eiffel_layout.check_environment_variable
+			eiffel_layout.set_precompile (False)
 
 			l_error_handler := error_handler
 
@@ -475,13 +475,6 @@ feature {NONE} -- Implementation
 		end
 
 feature {NONE} -- Constants
-
-	application_name: STRING = "ec"
-			-- <Precursor>
-			--
-			-- Name of EiffelStudio exe;
-			-- Needed to locate the correct registry keys on windows
-			-- in order to find it's install path.
 
 	max_tests_per_class: NATURAL = 9
 			-- Maximal number of test routines in a single class

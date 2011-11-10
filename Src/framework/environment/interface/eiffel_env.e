@@ -1444,8 +1444,9 @@ feature -- Files (commands)
 		local
 			l_args: ARGUMENTS
 		once
-			if is_workbench then
-					-- We have to launch ourself to perform a compilation that would make sense.
+			if is_workbench and application_name.same_string ("ec") then
+					-- We have to launch ourself to perform a compilation that would make sense
+					-- but only if we are the `ec' application, not if we are something else.
 				create l_args
 				create Result.make_from_string (l_args.command_name)
 			else

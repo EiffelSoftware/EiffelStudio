@@ -2106,8 +2106,15 @@ feature {NONE} -- Implementation
 			-- Directory name corresponding to the user directory
 			-- On Windows: C:\Users\manus\Documents
 			-- On Unix & Mac: $HOME
+		local
+			l_ptr: like eif_user_directory_name
+			l_dir: C_STRING
 		once
-			Result := eif_user_directory_name
+			l_ptr := eif_user_directory_name
+			if l_ptr /= default_pointer then
+				create l_dir.own_from_pointer (l_ptr)
+				Result := l_dir.string
+			end
 			if Result /= Void and then not Result.is_empty then
 					-- Nothing to do here, we take what we got from the OS.
 			elseif
@@ -2122,7 +2129,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	eif_user_directory_name: STRING
+	eif_user_directory_name: POINTER
 			-- Directory name corresponding to the user directory
 		external
 			"C inline use %"eif_eiffel.h%""
@@ -2147,7 +2154,9 @@ feature {NONE} -- Implementation
 					}
 
 					if (fResult) {
-						return RTMS(l_path);
+						char* result = (char*)malloc (sizeof (char) * (strlen (l_path) + 1));
+						memcpy (result, l_path, strlen (l_path) + 1);
+						return result;
 					} else {
 						return NULL;
 					}

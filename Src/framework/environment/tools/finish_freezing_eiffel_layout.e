@@ -13,7 +13,7 @@ inherit
 
 feature -- Access
 
-	application_name: attached STRING_8
+	application_name: STRING_8
 			-- <Precursor>
 		once
 			Result := "finish_freezing"
@@ -21,7 +21,7 @@ feature -- Access
 
 feature -- Directories
 
-	config_eif_path: attached DIRECTORY_NAME
+	config_eif_path: DIRECTORY_NAME
 			-- Path to directory containing `config.eif'.
 		require
 			is_valid_environment: is_valid_environment
@@ -35,21 +35,18 @@ feature -- Directories
 
 feature -- Files
 
-	config_eif_file_name: attached FILE_NAME
+	config_eif_file_name: FILE_NAME
 			-- Location of `config.eif' file.
 		require
 			is_valid_environment: is_valid_environment
 			windows: {PLATFORM}.is_windows
-		local
-			l_user: like user_priority_file_name
 		once
 			create Result.make_from_string (config_eif_path)
 			Result.set_file_name ("config")
 			Result.add_extension ("eif")
 
 			if is_user_files_supported then
-				l_user := user_priority_file_name (Result, True)
-				if l_user /= Void then
+				if attached user_priority_file_name (Result, True) as l_user then
 					Result := l_user
 				end
 			end
@@ -58,34 +55,34 @@ feature -- Files
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-
+			
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-
+			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
-
+			See the GNU General Public License for more details.
+			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

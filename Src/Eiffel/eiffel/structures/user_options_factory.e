@@ -59,7 +59,7 @@ feature -- Store/Retrieve
 			l_uuid_str: STRING
 		do
 			if not retried then
-				create last_file_name.make_from_string (eiffel_layout.user_project_settings_path.string)
+				create last_file_name.make_from_string (eiffel_layout.projects_data_path)
 					-- Find associated file mapping, otherwise create a new one.
 					-- The mapped name is always a UUID.
 				l_mapping := mapping
@@ -72,7 +72,7 @@ feature -- Store/Retrieve
 					store_mapping (l_mapping)
 				end
 				last_file_name.extend (l_uuid_str)
-				if eiffel_layout.is_valid_home then
+				if eiffel_layout.is_hidden_files_path_available then
 					create l_file.make (last_file_name)
 					l_file.open_write
 					if l_file.is_writable then
@@ -108,7 +108,7 @@ feature -- Store/Retrieve
 		do
 			if not retried then
 				last_options := Void
-				create last_file_name.make_from_string (eiffel_layout.user_project_settings_path.string)
+				create last_file_name.make_from_string (eiffel_layout.projects_data_path)
 					-- Even if we could not create `eiffel_home', or find the user option
 					-- file, we simply handle it as if they were not user file.
 					-- This is why `successful' is set to `True' in all cases.
@@ -157,7 +157,7 @@ feature {NONE} -- Implementation
 			l_file_name: FILE_NAME
 		do
 			if not retried then
-				create l_file_name.make_from_string (eiffel_layout.user_project_settings_path.string)
+				create l_file_name.make_from_string (eiffel_layout.projects_data_path)
 				l_file_name.extend (mapping_file_name)
 					-- Even if we could not create `eiffel_home', we simply handle
 					-- it as if they were not mapping file.
@@ -194,9 +194,9 @@ feature {NONE} -- Implementation
 			l_file_name: FILE_NAME
 		do
 			if not retried then
-				create l_file_name.make_from_string (eiffel_layout.user_project_settings_path.string)
+				create l_file_name.make_from_string (eiffel_layout.projects_data_path)
 				l_file_name.extend (mapping_file_name)
-				if eiffel_layout.is_valid_home then
+				if eiffel_layout.is_hidden_files_path_available then
 					create l_file.make (l_file_name)
 					l_file.open_write
 					if l_file.is_writable then
@@ -222,7 +222,7 @@ feature {NONE} -- Implementation
 			-- Name of file where `mapping' is stored.
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

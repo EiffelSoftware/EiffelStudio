@@ -1031,8 +1031,7 @@ feature {NONE} -- Actions
 			l_filename := a_dlg.file_name
 				-- Check if we have a .ecf extension.
 			l_is_ecf := l_filename.count >= 4 and then
-				l_filename.substring_index (config_extension, 1) = l_filename.count - 2 and then
-				l_filename.item (l_filename.count - 3) = '.'
+				l_filename.substring_index ({EIFFEL_CONSTANTS}.dotted_config_extension, 1) = l_filename.count - 3
 
 				-- Try to see if we can load the project.
 				-- If not, it is either an incorrect configuration file

@@ -146,11 +146,6 @@ feature {NONE}
 	project_extension: STRING = "epr"
 			-- File extension for an Eiffel Studio project file without the dot
 
-	config_extension: STRING = "ecf"
-			-- File extension for an Eiffel configuration file without the dot
-
-	ace_file_extension: STRING = "ace"
-
 	Debug_info_extension: STRING = "edb"
 			-- Eiffel Debug Breakpoints file (extension)
 
@@ -184,8 +179,8 @@ feature-- Versioning
 				-- We put (9999 + 1) because if we were to put 10000 the 4 zeros
 				-- will get replaced by the delivery scripts (see comments for `svn_revision'.
 			create Result.make_version (
-				{EIFFEL_ENVIRONMENT_CONSTANTS}.major_version,
-				{EIFFEL_ENVIRONMENT_CONSTANTS}.minor_version,
+				{EIFFEL_CONSTANTS}.major_version,
+				{EIFFEL_CONSTANTS}.minor_version,
 				(svn_revision // (9999 + 1).as_natural_32).as_natural_16,
 				(svn_revision \\ (9999 + 1).as_natural_32).as_natural_16)
 		end
@@ -241,7 +236,7 @@ feature {AUXILIARY_FILES} -- Versioning
 			-- Tags used in project file header.
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

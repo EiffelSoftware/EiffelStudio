@@ -57,7 +57,7 @@ feature {NONE} -- Access
 
 			if Result.is_empty then
 					-- Extend the default library path
-				Result.force_last ([eiffel_layout.precomp_platform_path (target.setting_msil_generation), 0])
+				Result.force_last ([eiffel_layout.precompilation_path (target.setting_msil_generation), 0])
 			end
 		end
 
@@ -89,7 +89,7 @@ feature {NONE} -- Action handlers
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

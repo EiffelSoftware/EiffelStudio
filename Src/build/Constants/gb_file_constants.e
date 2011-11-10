@@ -32,7 +32,7 @@ feature -- Generation constants
 	Component_filename: FILE_NAME
 			-- Location of component file.
 		once
-			create Result.make_from_string (eiffel_layout.Eiffel_home)
+			create Result.make_from_string (eiffel_layout.hidden_files_path)
 			Result.set_file_name ("esbuilder_components")
 			Result.add_extension ("xml")
 		ensure

@@ -21,7 +21,8 @@ inherit
 			tooltext,
 			is_tooltext_important,
 			new_sd_toolbar_item,
-			initialize_sd_toolbar_item
+			initialize_sd_toolbar_item,
+			launch_with_parameters
 		end
 
 create
@@ -60,6 +61,16 @@ feature -- Execution
 				dbg.stop_at_breakpoints
 			end
 			Precursor
+		end
+
+	launch_with_parameters (a_execution_mode: INTEGER; params: DEBUGGER_EXECUTION_PROFILE)
+			-- Execute with `params' and using mode `a_execution_mode'
+			-- And force breakpoints not ignored
+		do
+			if attached debugger_manager as dbg then
+				dbg.stop_at_breakpoints
+			end
+			Precursor (a_execution_mode, params)
 		end
 
 feature -- Access
@@ -275,7 +286,7 @@ feature {NONE} -- Attributes
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

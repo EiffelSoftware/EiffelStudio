@@ -248,13 +248,7 @@ feature {NONE} -- Action handlers
 			l_cmd_line, l_profile: STRING
 		do
 				-- Launch new EiffelStudio process
-			l_cmd_line := "%"" + eiffel_layout.estudio_command_name + "%""
-			l_profile := eiffel_layout.command_line_profile_option
-			if not l_profile.is_empty then
-				l_cmd_line.append_character (' ')
-				l_cmd_line.append (l_profile)
-			end
-			(create {COMMAND_EXECUTOR}).execute (l_cmd_line)
+			(create {COMMAND_EXECUTOR}).execute (eiffel_layout.studio_command_line (Void, Void, Void, True, False))
 
 				-- Perform quit of current process
 			on_quit
@@ -398,7 +392,7 @@ invariant
 	support_login_attached: is_interface_usable implies support_login /= Void
 
 ;note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

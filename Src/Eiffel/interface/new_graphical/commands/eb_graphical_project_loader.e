@@ -260,26 +260,8 @@ feature {NONE} -- Actions
 			-- Command line to open/compile currently selected project.
 		require
 			not_has_error: not has_error
-		local
-			l_profile: STRING
 		do
-			create Result.make (1024)
-			Result.append ("%"" + eiffel_layout.estudio_command_name + "%"")
-			l_profile := eiffel_layout.command_line_profile_option
-			if not l_profile.is_empty then
-				Result.append_character (' ')
-				Result.append (l_profile)
-			end
-			Result.append (" -config %"")
-			Result.append (config_file_name)
-			Result.append ("%" -project_path %"")
-			Result.append (project_location)
-			Result.append ("%" -target %"")
-			Result.append (target_name)
-			Result.append ("%"")
-			if is_recompile_from_scrach then
-				Result.append (" -clean ")
-			end
+			Result := eiffel_layout.studio_command_line (config_file_name, target_name, project_location, True, is_recompile_from_scrach)
 		end
 
 feature {NONE} -- Error reporting

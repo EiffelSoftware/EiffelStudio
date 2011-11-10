@@ -517,7 +517,7 @@ feature {NONE} -- Implementation
 			ace_file_name_not_void: ace_file_name /= Void
 		local
 			l_loader: EB_GRAPHICAL_PROJECT_LOADER
-			ebench_name, l_profile: STRING
+			ebench_name: STRING
 			last_char: CHARACTER
 			ace_name, dir_name: STRING
 		do
@@ -543,29 +543,14 @@ feature {NONE} -- Implementation
 					end
 				end
 			else
-				ebench_name := "%"" + eiffel_layout.estudio_command_name + "%""
-				l_profile := eiffel_layout.command_line_profile_option
-				if not l_profile.is_empty then
-					ebench_name.append_character (' ')
-					ebench_name.append (l_profile)
-				end
-				ebench_name.append (" -clean")
-				if dir_name /= Void and not dir_name.is_empty then
-					ebench_name.append (" -project_path %"")
-					ebench_name.append (dir_name)
-					ebench_name.append ("%"")
-				end
-				ebench_name.append (" -config %"")
-				ebench_name.append (ace_name)
+				ebench_name := eiffel_layout.studio_command_line (ace_name, Void, dir_name, True, True)
 				if compile_project then
 					if freeze_project then
-						ebench_name.append ("%" -freeze")
+						ebench_name.append (" -freeze")
 					else
-						ebench_name.append ("%" -melt")
+						ebench_name.append (" -melt")
 					end
 					compile_project := False
-				else
-					ebench_name.append ("%"")
 				end
 				launch_ebench (ebench_name)
 			end
@@ -669,7 +654,7 @@ feature {NONE} -- Private attributes
 			-- Widget for opening a project using a config file.
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

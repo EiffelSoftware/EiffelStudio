@@ -90,7 +90,6 @@ feature -- Execution
 			a_project_file_name_valid: a_project_file_name /= Void
 		local
 			file: RAW_FILE
-			ebench_name, l_profile: STRING
 			l_project_loader: EB_GRAPHICAL_PROJECT_LOADER
 		do
 			if not Eiffel_project.initialized then
@@ -101,21 +100,7 @@ feature -- Execution
 				if not file.exists or else file.is_directory then
 					prompts.show_error_prompt (warning_messages.w_file_not_exist (a_project_file_name.as_string_8), parent_window, Void)
 				else
-					ebench_name := "%"" + eiffel_layout.estudio_command_name + "%""
-					l_profile := eiffel_layout.command_line_profile_option
-					if not l_profile.is_empty then
-						ebench_name.append_character (' ')
-						ebench_name.append (l_profile)
-					end
-					ebench_name.append (" -config %"")
-					ebench_name.append (a_project_file_name.as_string_8)
-					ebench_name.append_character ('"')
-					if target /= Void and then not target.is_empty then
-						ebench_name.append (" -target %"")
-						ebench_name.append (target.as_string_8)
-						ebench_name.append_character ('"')
-					end
-					launch_ebench (ebench_name)
+					launch_ebench (eiffel_layout.studio_command_line (a_project_file_name, target, Void, True, is_fresh_compilation))
 				end
 			end
 		end
@@ -172,7 +157,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

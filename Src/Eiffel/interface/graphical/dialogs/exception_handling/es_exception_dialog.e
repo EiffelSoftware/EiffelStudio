@@ -244,8 +244,6 @@ feature {NONE} -- Action handlers
 
 	on_restart_now
 			-- Called when the user selects the Restart button
-		local
-			l_cmd_line, l_profile: STRING
 		do
 				-- Launch new EiffelStudio process
 			(create {COMMAND_EXECUTOR}).execute (eiffel_layout.studio_command_line (Void, Void, Void, True, False))

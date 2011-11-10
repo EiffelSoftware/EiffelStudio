@@ -148,8 +148,6 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 			back_color: EV_COLOR
 			l_pixmap: detachable EV_PIXMAP
 			left_border, right_border, top_border, bottom_border: INTEGER
-			space_remaining_for_text: INTEGER
-			l_text: STRING_32
 			text_x, text_y: INTEGER
 			pixmap_x, pixmap_y: INTEGER
 			selection_x, selection_y, selection_width, selection_height: INTEGER
@@ -179,7 +177,6 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 				text_y := l_layout.text_y
 				pixmap_x := l_layout.pixmap_x
 				pixmap_y := l_layout.pixmap_y
-				space_remaining_for_text := l_layout.available_text_width
 
 				left_border := l_interface.left_border
 				right_border := l_interface.right_border
@@ -240,19 +237,8 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 						drawable.draw_pixmap (pixmap_x + an_indent, pixmap_y, l_pixmap)
 					end
 
-					if attached l_interface.font as l_font then
-						drawable.set_font (l_font)
-					else
-						drawable.set_font (internal_default_font)
-					end
+					draw_text (l_interface.text, drawable, l_layout, an_indent)
 
-					l_text := l_interface.text
-					if space_remaining_for_text < internal_text_width then
-							-- Clipping width argument have to be at least 1 to have some effect.
-						drawable.draw_ellipsed_text_top_left (text_x + an_indent, text_y, l_text, space_remaining_for_text.max (1))
-					else
-						drawable.draw_text_top_left (text_x + an_indent, text_y, l_text)
-					end
 					drawable.remove_clip_area
 					drawable.set_copy_mode
 				end
@@ -262,6 +248,24 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 	draw_additional (a_drawable: EV_DRAWABLE; a_layout: EV_GRID_LABEL_ITEM_LAYOUT; an_indent: INTEGER)
 			-- Draw additional items if any to Current.
 		do
+		end
+
+	draw_text (a_text: STRING_32; a_drawable: EV_DRAWABLE; a_layout: EV_GRID_LABEL_ITEM_LAYOUT; an_indent: INTEGER)
+			-- Draw text to Current.
+		do
+			if attached interface as l_interface and then attached l_interface.font as l_font then
+				a_drawable.set_font (l_font)
+			else
+				a_drawable.set_font (internal_default_font)
+			end
+
+			if a_layout.available_text_width < internal_text_width then
+					-- Clipping width argument have to be at least 1 to have some effect.
+				a_drawable.draw_ellipsed_text_top_left (a_layout.text_x + an_indent,
+					a_layout.text_y, a_text, a_layout.available_text_width.max (1))
+			else
+				a_drawable.draw_text_top_left (a_layout.text_x + an_indent, a_layout.text_y, a_text)
+			end
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation

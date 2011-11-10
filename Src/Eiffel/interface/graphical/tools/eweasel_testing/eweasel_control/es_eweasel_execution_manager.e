@@ -483,13 +483,13 @@ feature {NONE} -- Implementation
 			l_project_file: PROJECT_EIFFEL_FILE
 		do
 			is_missing_error := False
-			create l_project_dir.make (eiffel_layout.precomp_platform_path (False), a_library_target_name)
+			create l_project_dir.make (eiffel_layout.precompilation_path (False), a_library_target_name)
 			create l_remote_project_dir.make (l_project_dir)
 			l_remote_project_dir.check_version_number (1)
 			l_project_file := l_remote_project_dir.precomp_eif_file
 
 			if not l_project_file.exists or else l_project_file.has_error then
-				-- Precompile library missing
+					-- Precompile library missing
 				is_missing_error := True
 				create l_exception
 				l_exception.set_message ("Precompile library " + a_library_target_name + " missing")
@@ -560,7 +560,7 @@ feature {NONE} -- Internal instance holders
 			-- Used by `result_anaylzer' only
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

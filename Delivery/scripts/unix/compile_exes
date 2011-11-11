@@ -191,6 +191,10 @@ cd $EXPORT_DIR
 cd $EXPORT_DIR
 ./compile_libraries $ISE_PLATFORM $INSTALL_DIR/compatible $GTK_DIR
 
+# Compile the other C libraries.
+cd $EXPORT_DIR
+./compile_other_libraries $ISE_PLATFORM $INSTALL_DIR
+
 remtrace eweasel
 move $INSTALL_DIR/eweasel/spec/unix $INSTALL_DIR/eweasel/spec/$ISE_PLATFORM
 cd $EXPORT_DIR/eweasel

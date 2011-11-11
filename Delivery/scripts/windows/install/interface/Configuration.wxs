@@ -111,8 +111,6 @@
 
       <!-- PRODUCT SPECIFIC -->
       <?ifdef EiffelStudio?>
-        <Binary Id="backdrop_pre.bmp" SourceFile="images\$(var.Product)\backdrop_precompile.bmp"/>
-        <Binary Id="backdrop_prew.bmp" SourceFile="images\$(var.Product)\backdrop_precompile_warning.bmp"/>
         <Binary Id="backdrop_c.bmp" SourceFile="images\$(var.Product)\backdrop_c_compiler.bmp"/>
       <?endif?>
       <!-- END PRODUCT SPECIFIC -->

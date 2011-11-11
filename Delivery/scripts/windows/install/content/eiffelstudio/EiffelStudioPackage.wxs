@@ -11,8 +11,6 @@
 
 		<!-- PROPERTIES -->
 		<Property Id="GDIPLUSNEEDED">1</Property>
-		<Property Id="PRECOMPILE">vision2</Property>
-		<Property Id="EIFFELUSERDIR" Secure="yes" />
 		<Property Id="SHORTCUTPATH"><![CDATA[hh]]></Property>
 		<Property Id="ISELANG">en_US</Property>
 		<!-- END PROPERTIES -->
@@ -103,9 +101,6 @@
 					<Directory Id="EiffelStudio.Tools" Name="Tools"/>
 				</Directory>
 			</Directory>
-			<Directory Id="PersonalFolder" Name="PersonalFolder">
-				<Directory Id="EIFFELUSERDIR" Name="Eiffel $(var.ProductVersion) User Files"/>
-			</Directory>
 		</DirectoryRef>
 
 		<!-- PROGIDS -->
@@ -148,11 +143,9 @@
 				<CreateFolder Directory="EiffelStudio"/>
 				<CreateFolder Directory="EiffelStudio.Documentation"/>
 				<CreateFolder Directory="EiffelStudio.Tools"/>
-				<CreateFolder Directory="EIFFELUSERDIR"/>
 				<RemoveFolder Id="RemoveEiffelStudio" Directory="EiffelStudio" On="uninstall" />
 				<RemoveFolder Id="RemoveEiffelStudio.Documentation" Directory="EiffelStudio.Documentation" On="uninstall" />
 				<RemoveFolder Id="RemoveEiffelStudio.Tools" Directory="EiffelStudio.Tools" On="uninstall" />
-				<RemoveFolder Id="RemoveEIFFELUSERDIR" Directory="EIFFELUSERDIR" On="uninstall" />
 				<RegistryValue Id="Id.shortcuts" Root="HKCU" Key="Software\ISE\$(var.ProductKey)" Name="InstalledShortcuts" Type="integer" Value="1" KeyPath="yes"/>
 				<Shortcut Id="esbuilder.exe" Name="EiffelBuild"
 					Description="GUI Builder using EiffelVision2" Show="normal" Directory="EiffelStudio"
@@ -250,7 +243,6 @@
 		<CustomAction Id="IsGdixInstalled" BinaryKey="setup.dll" DllEntry="is_gdi_plus_installed" />
 		<CustomAction Id="PrepareFinalizeSetup" BinaryKey="setup.dll" DllEntry="prepare_finalize_setup" />
 		<CustomAction Id="FinalizeSetup" BinaryKey="setup.dll" DllEntry="finalize_setup" Impersonate="no" Execute="deferred" />
-		<CustomAction Id="SET_EIFFELUSERDIR" Property="EIFFELUSERDIR" Value="[EIFFELUSERDIR]" Execute="firstSequence" />
 		<CustomAction Id="RESET_CHECKCCOMPILER" Property="CHECKCCOMPILER" Value="0" />
 		<CustomAction Id="RESET_HASMSCCOMPILER" Property="HASMSCCOMPILER" Value="0" />
 		<!-- END CUSTOM ACTIONS -->
@@ -268,11 +260,9 @@
 
 		<!-- INSTALL SEQUENCING -->
 		<AdminExecuteSequence>
-			<Custom Action="SET_EIFFELUSERDIR" Before="CostInitialize"><![CDATA[EIFFELUSERDIR=""]]></Custom>
 			<Custom Action="IsGdixInstalled" Before="CostInitialize"/>
 		</AdminExecuteSequence>
 		<InstallExecuteSequence>
-			<Custom Action="SET_EIFFELUSERDIR" Before="CostInitialize"><![CDATA[EIFFELUSERDIR=""]]></Custom>
 			<Custom Action="IsGdixInstalled" Before="LaunchConditions"/>
 			<?ifdef Enterprise?>
 				<Custom Action="PrepareFinalizeSetup" After="InstallCdKey"><![CDATA[NOT Installed]]></Custom>

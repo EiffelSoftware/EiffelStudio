@@ -217,7 +217,6 @@
     <Compile Include="interface\eiffelstudio\DialogMscRestartRequire.wxs" />
     <Compile Include="interface\eiffelstudio\DialogSelectCCompiler.wxs" />
     <Compile Include="interface\eiffelstudio\DialogSelectLanguage.wxs" />
-    <Compile Include="interface\eiffelstudio\DialogSelectPrecompile.wxs" />
     <Compile Include="interface\PromptInvalidCdKey.wxs" />
     <Content Include="includes\Preprocessors.wxi" />
   </ItemGroup>

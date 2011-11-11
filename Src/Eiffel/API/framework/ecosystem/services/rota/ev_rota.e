@@ -113,7 +113,7 @@ feature {NONE} -- Implementation
 				if tasks.is_empty then
 				elseif min_sleep_time > 0 then
 						-- Restrict interval to {INTEGER_32}.max_value if natural overflows.
-					timer.set_interval (min_sleep_time.min ({INTEGER_32}.max_value).as_integer_32)
+					timer.set_interval (min_sleep_time.min ({INTEGER_32}.max_value.as_natural_32).as_integer_32)
 				else
 					if not shared_environment.is_destroyed and then attached shared_environment.application then
 						ev_application.process_events

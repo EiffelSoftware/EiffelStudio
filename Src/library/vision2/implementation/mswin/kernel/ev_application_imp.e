@@ -521,25 +521,15 @@ feature {NONE} -- WEL Implementation
 	controls_dll: WEL_INIT_COMMCTRL_EX
 			-- Needed for loading the common controls dlls.
 
+	rich_edit_dll: WEL_RICH_EDIT_DLL
+		-- DLL needed for rich edit control.
+
 	init_application
 			-- Load the dll needed sometimes.
 		do
 			create controls_dll.make_with_flags (Icc_win95_classes |
 				Icc_date_classes | Icc_userex_classes | Icc_cool_classes)
-		end
-
-feature {EV_RICH_TEXT_I} -- WEL Rich Text Initialization
-
-	rich_edit_dll: detachable WEL_RICH_EDIT_DLL
-		-- DLL needed for rich edit control.
-
-	initialize_rich_text_control
-			-- Initialize dll for rich edit control.
-		do
-				-- Load the dll if not already done so.
-			if rich_edit_dll = Void then
-				create rich_edit_dll.make
-			end
+			create rich_edit_dll.make
 		end
 
 feature {NONE} -- Implementation

@@ -223,8 +223,6 @@ feature -- Initialization
 			screen_dc: WEL_SCREEN_DC
 			logical_pixels: INTEGER
 		do
-				-- Make sure that the rich text control dll is loaded.
-			application_imp.initialize_rich_text_control
 				-- Connect events to `tab_positions' to update `Current' as values
 				-- change.
 			create tab_positions

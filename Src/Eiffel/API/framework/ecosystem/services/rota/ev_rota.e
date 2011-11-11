@@ -1,6 +1,6 @@
 note
 	description: "[
-		Implementation of {ROTA_S} to be used in a vision2 application. A call to `run_task' will alsways
+		Implementation of {ROTA_S} to be used in a vision2 application. A call to `run_task' will always
 		return immediately.
 	]"
 	author: ""
@@ -53,7 +53,7 @@ feature -- Basic operations
 		do
 			Precursor (a_task)
 			if not is_looping then
-					-- Note: we do not call iterate directly to garuantee that `append_task' returns before
+					-- Note: we do not call iterate directly to guarantee that `append_task' returns before
 					--       stepping through `a_task'.
 				if not is_kamikaze_registered then
 					is_kamikaze_registered := True
@@ -112,7 +112,8 @@ feature {NONE} -- Implementation
 				proceed_all_tasks
 				if tasks.is_empty then
 				elseif min_sleep_time > 0 then
-					timer.set_interval (min_sleep_time.to_integer_32)
+						-- Restrict interval to {INTEGER_32}.max_value if natural overflows.
+					timer.set_interval (min_sleep_time.min ({INTEGER_32}.max_value).as_integer_32)
 				else
 					if not shared_environment.is_destroyed and then attached shared_environment.application then
 						ev_application.process_events
@@ -128,7 +129,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

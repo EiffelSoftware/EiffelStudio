@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-6-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-6-0 http://www.eiffel.com/developers/xml/configuration-1-6-0.xsd" name="tests" uuid="73782579-06F8-4FFA-937C-47F830EA38F3">
+	<target name="tests">
+		<root class="TEST" feature="make"/>
+		<option profile="false" warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="none" syntax="standard">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+		</option>
+		<variable name="eapml_scan_type" value="gcc"/>
+		<variable name="eapml_limb_type" value="natural_32"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="eapml" location="$ISE_LIBRARY\contrib\library\math\eapml\eapml.ecf"/>
+		<library name="eel" location="..\eel.ecf" readonly="false">
+			<option>
+				<assertions precondition="true"/>
+			</option>
+		</library>
+		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf"/>
+		<cluster name="tests" location=".\" recursive="true">
+			<option>
+				<assertions precondition="true"/>
+			</option>
+			<file_rule>
+				<exclude>/.svn$</exclude>
+				<exclude>/EIFGENs$</exclude>
+				<exclude>/CVS$</exclude>
+				<exclude>/.hg$</exclude>
+			</file_rule>
+		</cluster>
+	</target>
+</system>

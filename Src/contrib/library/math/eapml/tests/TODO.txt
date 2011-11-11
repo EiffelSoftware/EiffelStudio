@@ -1,0 +1,37 @@
+Test suite order - 
+
+-Interfaces must be tested first (string conversions, Eiffel native construction conversions, etc, using known good large numbers verified by other big number libraries.
+(If we don't have at least this then nothing else can be trusted)
+
+-Integer Interfaces
+-Real Interfaces
+	* Real MPF
+	* Real MPFR
+-Rational
+-Complex Integer
+-Complex Complex Real
+	* Complex Real MPF
+	* Complex Real MPFR
+-Complex Rational
+
+
+
+-Test arithmetic functions for each eiffel MP constrcts using known values/solutions for "big" numbers and checking using previously tested known-good interfaces.
+
+	*Test arithmetic operations between similar types of MP constructs
+	*Test arithmetic operations between different types of MP constructs
+
+
+TODO:
+Reformat test suite order
+Start testing interfaces
+-Integer Interfaces
+-Real Interfaces
+	* Real MPF
+	* Real MPFR
+-Rational
+-Complex Integer
+-Complex Complex Real
+	* Complex Real MPF
+	* Complex Real MPFR
+-Complex Rational

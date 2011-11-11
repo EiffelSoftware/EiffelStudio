@@ -24,10 +24,6 @@ There are also a number of properties that can be optionally defined, but should
     - INSTALLDIR          : This is the installed location of the application being installed by the installer and should end in a directory
                             separator character '\'
             
-    - * PRECOMPILE        : Use to specify the level of precompilation. Either "none", for no precompilation. "base", for precompiling EiffelBase
-                            only. "wel", for precompiling EiffelBase and the Windows Eiffel Library. "vision2", for compiling EiffelBase, WEL and
-                            EiffelVision2. The default is "vision2"
-                            
 2.0 ADVANCED USER INTERACTION:
 ------------------------------
 

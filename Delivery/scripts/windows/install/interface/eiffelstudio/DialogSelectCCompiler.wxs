@@ -35,7 +35,7 @@
           <Publish Event="AddLocal" Value="ALL">1</Publish>
           <Publish Event="Remove" Value="gcc_feature"><![CDATA[C_CONFIG_NAME = "msc"]]></Publish>
           <Publish Event="NewDialog" Value="DialogMscRestartRequired"><![CDATA[C_CONFIG_NAME = "msc" AND C_CONFIG_MSC_FOUND = "0"]]></Publish>
-          <Publish Event="NewDialog" Value="DialogPrecompileChoice"><![CDATA[C_CONFIG_NAME <> "msc" OR C_CONFIG_MSC_FOUND = "1"]]></Publish>
+          <Publish Event="NewDialog" Value="DialogVerifyReadyInstall"><![CDATA[C_CONFIG_NAME <> "msc" OR C_CONFIG_MSC_FOUND = "1"]]></Publish>
         </Control>
         <Control Id="Cancel" Type="PushButton" X="309" Y="193" Width="56" Height="17" Cancel="yes" Text="[Button_Cancel]">
           <Publish Event="SpawnDialog" Value="PromptCancelInstall">1</Publish>

@@ -1,0 +1,18 @@
+
+test_name 	 inherited-static-access-on-generic
+test_description A call to an inherited routine with a static access on a formal generic crashes the compiler
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test2.e $CLUSTER test2.e
+copy_raw	test3.e $CLUSTER test3.e
+copy_raw	test4.e $CLUSTER test4.e
+
+compile_melted
+compile_result	ok
+
+execute_work	NONE exec_output_m
+execute_result	ok
+compare		exec_output_m output
+
+test_end

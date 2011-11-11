@@ -198,6 +198,10 @@ remtrace build the compatible libraries
 cdd %INIT_DIR
 call make_libraries.btm %STUDIO_DIR\compatible compatible/library
 
+remtrace Build non-supported libraries (either ISE or others)
+cdd %INIT_DIR
+call make_other_libraries.btm %STUDIO_DIR
+
 remtrace Build the C_libraries
 cd %STUDIO_DIR\C_library\zlib
 all_makes

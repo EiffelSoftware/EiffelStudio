@@ -1,0 +1,118 @@
+note
+	description: "Summary description for {SHA_FUNCTIONS}."
+	author: "Colin LeMahieu"
+	date: "$Date$"
+	revision: "$Revision$"
+	quote: "The war for freedom will never really be won because the price of our freedom is constant vigilance over ourselves and over our Government. - Eleanor Roosevelt"
+
+deferred class
+	SHA_FUNCTIONS
+
+inherit
+	BYTE_FACILITIES
+	BYTE_32_BIT_BLOCK_FACILITIES
+		redefine
+			update
+		end
+
+feature {NONE}
+	ch (u: NATURAL_32 v: NATURAL_32 w: NATURAL_32): NATURAL_32
+		do
+			result := (u & v) | (u.bit_not & w)
+		end
+
+	maj (u: NATURAL_32 v: NATURAL_32 w: NATURAL_32): NATURAL_32
+		do
+			result := (u & v) | (u & w) | (v & w)
+		end
+
+	parity (u: NATURAL_32 v: NATURAL_32 w: NATURAL_32): NATURAL_32
+		do
+			result := u.bit_xor (v).bit_xor (w)
+		end
+
+feature {NONE} -- Padding facilities
+	pad
+		local
+			pad_bytes: INTEGER_32
+		do
+			update (0b1000_0000)
+			from
+				pad_bytes := (56 - (byte_count \\ 64)).to_integer_32
+				if
+					pad_bytes < 0
+				then
+					pad_bytes := pad_bytes + 64
+				end
+			until
+				pad_bytes = 0
+			loop
+				update (0)
+				pad_bytes := pad_bytes - 1
+			end
+		end
+
+	byte_count: NATURAL_64
+
+	bit_count: NATURAL_64
+		do
+			result := byte_count |<< 3
+		end
+
+	update (in: NATURAL_8)
+		do
+			precursor (in)
+			byte_count := byte_count + 1
+		ensure then
+			byte_count = old byte_count + 1
+		end
+
+feature {NONE} -- Length processing facilities
+	process_length (length: NATURAL_64)
+		require
+			schedule_start: schedule_offset = 14
+			empty_buffer: buffer_offset = 0
+		do
+			update_word ((length |>> 32).to_natural_32)
+			update_word (length.to_natural_32)
+		ensure
+			empty_buffer: buffer_offset = 0
+			schedule_end: schedule_offset = 0
+		end
+
+	process_word (in: SPECIAL [NATURAL_8] offset: INTEGER_32)
+		do
+			schedule [schedule_offset] := as_natural_32_be (in, offset)
+			schedule_offset := schedule_offset + 1
+			if
+				schedule_offset = 16
+			then
+				schedule_offset := 0
+				process_block
+			end
+		end
+
+	process_block
+		deferred
+		end
+
+	finish
+		local
+			length: NATURAL_64
+		do
+			length := bit_count
+			pad
+			process_length (length)
+		end
+
+feature {NONE}
+	schedule: SPECIAL [NATURAL_32]
+	schedule_offset: INTEGER_32
+
+invariant
+	valid_schedule_offset: schedule.valid_index (schedule_offset)
+	valid_schedule_offset_lower: schedule_offset >= 0
+	valid_schedule_offset_upper: schedule_offset <= 15
+	valid_schedule_lower: schedule.valid_index (0)
+	valid_schedule_upper: schedule.valid_index (15)
+end

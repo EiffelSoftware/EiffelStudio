@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-6-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-6-0 http://www.eiffel.com/developers/xml/configuration-1-6-0.xsd" name="eapml" uuid="3E9258E1-383A-40BF-864B-231FC8F25ADF" library_target="eapml">
+	<description>Eiffel Arbitrary Precision Mathematics Library</description>
+	<target name="eapml">
+		<file_rule>
+			<exclude>/.svn$</exclude>
+			<exclude>/CVS$</exclude>
+			<exclude>/.hg$</exclude>
+			<exclude>/EIFGENs$</exclude>
+		</file_rule>
+		<description>Eiffel Arbitrary Precision Mathematics</description>
+		<root all_classes="true"/>
+		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" syntax="standard">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+		</option>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<cluster name="bit_scan_gcc" location=".\src\bit_scan_gcc\" recursive="true">
+			<condition>
+				<custom name="eapml_scan_type" value="gcc"/>
+			</condition>
+		</cluster>
+		<cluster name="bit_scan_vc" location=".\src\bit_scan_vc\" recursive="true">
+			<condition>
+				<custom name="eapml_scan_type" value="vc"/>
+			</condition>
+		</cluster>
+		<cluster name="eapml" location=".\src\" recursive="true">
+			<file_rule>
+				<exclude>/bit_scan_vc$</exclude>
+				<exclude>/bit_scan_gcc$</exclude>
+				<exclude>/limb_natural_32$</exclude>
+				<exclude>/limb_natural_64$</exclude>
+			</file_rule>
+			<file_rule>
+				<exclude>^/mp/number/support$</exclude>
+			</file_rule>
+		</cluster>
+		<cluster name="limb_natural_32" location=".\src\limb_natural_32\" recursive="true">
+			<condition>
+				<custom name="eapml_limb_type" value="natural_32"/>
+			</condition>
+		</cluster>
+		<cluster name="limb_natural_64" location=".\src\limb_natural_64\" recursive="true">
+			<condition>
+				<custom name="eapml_limb_type" value="natural_64"/>
+			</condition>
+		</cluster>
+	</target>
+</system>

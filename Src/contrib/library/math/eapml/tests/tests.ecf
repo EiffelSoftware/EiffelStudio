@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="tests" uuid="9FA1C743-D3D3-4ABA-BAB8-27986A422F01">
+	<target name="tests" abstract="true">
+		<root class="TEST" feature="make"/>
+		<option trace="false" warning="true" full_class_checking="true" is_attached_by_default="false" void_safety="none" syntax="standard">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+		</option>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="eapml" location="..\eapml.ecf" readonly="false"/>
+		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf"/>
+		<cluster name="tests" location=".\" recursive="true">
+			<file_rule>
+				<exclude>/.hg$</exclude>
+				<exclude>/EIFGENs$</exclude>
+				<exclude>/CVS$</exclude>
+				<exclude>/.svn$</exclude>
+			</file_rule>
+			<visible class="TEST" feature="make_2"/>
+		</cluster>
+	</target>
+	<target name="tests_gcc_32" extends="tests">
+		<variable name="eapml_limb_type" value="natural_32"/>
+		<variable name="eapml_scan_type" value="gcc"/>
+	</target>
+	<target name="tests_vc_32" extends="tests">
+		<variable name="eapml_limb_type" value="natural_32"/>
+		<variable name="eapml_scan_type" value="vc"/>
+	</target>
+</system>

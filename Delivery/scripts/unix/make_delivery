@@ -267,14 +267,21 @@ if [ ! "$NO_DOCUMENTATION" ]; then
 	. ./make_xml_documentation
 fi
 
-cd $INIT_DIR
 
 remtrace "Putting the Eiffel libraries in the delivery"
+cd $INIT_DIR
 set -- $INSTALL_DIR library $GTK_DIR
 . ./make_libraries
+cd $INIT_DIR
 safe_md $INSTALL_DIR/compatible
 set -- $INSTALL_DIR/compatible compatible/library $GTK_DIR
 . ./make_libraries
+
+remtrace "Putting unsupported libraries in the delivery (ISE or others)"
+cd $INIT_DIR
+set -- $INSTALL_DIR
+. ./make_other_libraries
+
 cd $INIT_DIR
 
 if [ ! "$NO_INSTALL" ]; then

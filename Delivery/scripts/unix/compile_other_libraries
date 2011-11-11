@@ -1,0 +1,21 @@
+#!/bin/sh
+
+INIT_DIR=`pwd`
+
+if [ $# -le 1 ]; then 
+	echo Usage: compile_other_libraries platform location
+	exit 1
+fi
+
+ISE_PLATFORM=$1; export ISE_PLATFORM
+
+. $INIT_DIR/set_aliases
+
+remtrace Compile the Eiffel libraries C code for $ISE_PLATFORM in $2
+remtrace with ISE_EIFFEL set to $ISE_EIFFEL
+remtrace with ISE_LIBRARY set to $ISE_LIBRARY
+
+remtrace sqlite3
+cd $2/unstable/library/persistency/database/sqlite3/Clib
+default_make
+cd $2

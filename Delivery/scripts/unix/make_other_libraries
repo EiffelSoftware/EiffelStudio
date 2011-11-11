@@ -28,5 +28,7 @@ exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/contrib/README.txt README.tx
 md library
 cd library
 
+remtrace math
+exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/contrib/library/math math
 remtrace text
 exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/contrib/library/text text

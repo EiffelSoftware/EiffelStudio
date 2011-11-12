@@ -94,98 +94,90 @@ feature
 			print (i64_to_hex (all_one.bit_not)); io.new_line
 			
 			print ("INTEGER_64 bit shift left%N")
-			from k := 0 until k > 64 loop
+			from k := 0 until k >= 64 loop
 				print (i64_to_hex (b00 |<< k)); io.new_line
 				k := k + 1
 			end
-			from k := 0 until k > 64 loop
+			from k := 0 until k >= 64 loop
 				print (i64_to_hex (b01 |<< k)); io.new_line
 				k := k + 1
 			end
-			from k := 0 until k > 64 loop
+			from k := 0 until k >= 64 loop
 				print (i64_to_hex (b10 |<< k)); io.new_line
 				k := k + 1
 			end
-			from k := 0 until k > 64 loop
+			from k := 0 until k >= 64 loop
 				print (i64_to_hex (b11 |<< k)); io.new_line
 				k := k + 1
 			end
-			print (i64_to_hex (b00 |<< 64)); io.new_line
-			print (i64_to_hex (b01 |<< 64)); io.new_line
-			print (i64_to_hex (b10 |<< 64)); io.new_line
-			print (i64_to_hex (b11 |<< 64)); io.new_line
-			from k := 0 until k > 64 loop
+			from k := 0 until k >= 64 loop
 				print (i64_to_hex (all_one |<< k)); io.new_line
 				k := k + 1
 			end
 			
 			print ("INTEGER_64 bit shift right%N")
-			print (i64_to_hex (b00 |>> 64)); io.new_line
-			print (i64_to_hex (b01 |>> 64)); io.new_line
-			print (i64_to_hex (b10 |>> 64)); io.new_line
-			print (i64_to_hex (b11 |>> 64)); io.new_line
-			from k := 0 until k > 64 loop
+			from k := 0 until k >= 64 loop
 				print (i64_to_hex (t00 |>> k)); io.new_line
 				k := k + 1
 			end
-			from k := 0 until k > 64 loop
+			from k := 0 until k >= 64 loop
 				print (i64_to_hex (t01 |>> k)); io.new_line
 				k := k + 1
 			end
-			from k := 0 until k > 64 loop
+			from k := 0 until k >= 64 loop
 				print (i64_to_hex (t10 |>> k)); io.new_line
 				k := k + 1
 			end
-			from k := 0 until k > 64 loop
+			from k := 0 until k >= 64 loop
 				print (i64_to_hex (t11 |>> k)); io.new_line
 				k := k + 1
 			end
-			from k := 0 until k > 64 loop
+			from k := 0 until k >= 64 loop
 				print (i64_to_hex (all_one |>> k)); io.new_line
 				k := k + 1
 			end
 			
 			
 			print ("INTEGER_64 bit shift (positive)%N")
-			from k := 0 until k > 64 loop
+			from k := 0 until k >= 64 loop
 				print (i64_to_hex (b00.bit_shift (k))); io.new_line
 				k := k + 1
 			end
-			from k := 0 until k > 64 loop
+			from k := 0 until k >= 64 loop
 				print (i64_to_hex (b01.bit_shift (k))); io.new_line
 				k := k + 1
 			end
-			from k := 0 until k > 64 loop
+			from k := 0 until k >= 64 loop
 				print (i64_to_hex (b10.bit_shift (k))); io.new_line
 				k := k + 1
 			end
-			from k := 0 until k > 64 loop
+			from k := 0 until k >= 64 loop
 				print (i64_to_hex (b11.bit_shift (k))); io.new_line
 				k := k + 1
 			end
-			from k := 0 until k > 64 loop
+			from k := 0 until k >= 64 loop
 				print (i64_to_hex (all_one.bit_shift (k))); io.new_line
 				k := k + 1
 			end
 			
 			print ("INTEGER_64 bit shift (negative)%N")
-			from k := 0 until k > 64 loop
+			from k := 0 until k >= 64 loop
 				print (i64_to_hex (t00.bit_shift (-k))); io.new_line
 				k := k + 1
 			end
-			from k := 0 until k > 64 loop
+			from k := 0 until k >= 64 loop
 				print (i64_to_hex (t01.bit_shift (-k))); io.new_line
 				k := k + 1
 			end
-			from k := 0 until k > 64 loop
+			from k := 0 until k >= 64 loop
 				print (i64_to_hex (t10.bit_shift (-k))); io.new_line
 				k := k + 1
 			end
-			from k := 0 until k > 64 loop
+			from k := 0 until k >= 64 loop
 				print (i64_to_hex (t11.bit_shift (-k))); io.new_line
 				k := k + 1
 			end
-			from k := 0 until k < -64 loop
+			from k := 0 until k <= -64 loop
 				print (i64_to_hex (all_one.bit_shift (k))); io.new_line
 				k := k - 1
 			end
@@ -240,41 +232,9 @@ feature
 
         i64_to_hex (n: INTEGER_64): STRING is
                         -- Convert `n' into an hexadecimal string.
-                local
-                        i: INTEGER
-                        val, a_digit: INTEGER_64
                 do
-                        from
-                                i := 64 // 4
-                                create Result.make (i)
-                                Result.fill_blank
-                                val := n
-                        until
-                                i = 0
-                        loop
-                                a_digit := (val & 0xF)
-                                Result.put (to_hex_character (a_digit), i)
-                                val := val |>> 4
-                                i := i - 1
-                        end
-                ensure
-                        Result_not_void: Result /= Void
-                        Result_valid_count: Result.count = 64 // 4
+			Result := n.to_hex_string
                 end
-
-        to_hex_character (n: INTEGER_64): CHARACTER is
-                        -- Convert `n' into an hexadecimal character.
-                require
-                        in_bounds: 0 <= n and n <= 15
-                do
-                        if n <= 9 then
-                                Result := (n + ('0').code).to_character_8
-                        else
-                                Result := (('A').code + (n - 10)).to_character_8
-                        end
-                ensure
-                        valid_character: ("0123456789ABCDEF").has (Result)
-                end
-
 
 end
+

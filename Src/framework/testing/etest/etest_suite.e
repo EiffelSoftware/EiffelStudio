@@ -51,7 +51,11 @@ feature {NONE} -- Initialization
 
 			l_manager := project_access.project.manager
 			l_manager.compile_stop_agents.extend (agent retrieve_tests)
-			if not l_project_loaded then
+			if
+				not l_project_loaded or else
+				project_access.project.workbench.is_already_compiled or else
+				project_access.project.workbench.is_compiling
+			then
 				l_manager.load_agents.extend_kamikaze (agent retrieve_tests)
 			else
 				retrieve_tests

@@ -237,7 +237,8 @@ feature {NONE} -- Basic operations
 							l_file.close
 						end
 						if l_cluster /= Void and then l_file.exists and then l_file.count > 0 then
-							etest_suite.project_helper.add_class (l_cluster, path, l_filename, l_class_name)
+							-- Only perform quick melt when creating a single manual test
+							etest_suite.project_helper.add_class (l_cluster, path, l_filename, l_class_name, attached {ETEST_MANUAL_CREATION} Current)
 						else
 							etest_suite.project_access.project.system.system.rebuild_configuration
 						end

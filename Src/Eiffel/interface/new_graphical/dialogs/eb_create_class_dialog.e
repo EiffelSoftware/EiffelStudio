@@ -620,7 +620,7 @@ feature {NONE} -- Implementation
 						destroy
 						render_class_template (f_name)
 						if not could_not_load_file then
-							manager.add_class_to_cluster (base_name, cluster, path, class_name)
+							manager.add_class_to_cluster (base_name, cluster, path, class_name, True)
 							class_i := manager.last_added_class
 							if set_stone and class_i /= Void then
 								target.advanced_set_stone (create {CLASSI_STONE}.make (class_i))

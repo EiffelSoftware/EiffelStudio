@@ -122,7 +122,7 @@ feature -- Status report
 
 feature -- Element change
 
-	add_class (a_cluster: CONF_CLUSTER; a_path: STRING; a_file_name: STRING; a_class_name: STRING)
+	add_class (a_cluster: CONF_CLUSTER; a_path: STRING; a_file_name: STRING; a_class_name: STRING; a_perform_quickmelt: BOOLEAN)
 			-- <Precursor>
 		local
 			l_stone: CLASSI_STONE
@@ -146,7 +146,7 @@ feature -- Element change
 				end
 
 				if l_cluster /= Void then
-					manager.add_class_to_cluster (a_file_name, l_cluster, a_path, a_class_name)
+					manager.add_class_to_cluster (a_file_name, l_cluster, a_path, a_class_name, a_perform_quickmelt)
 					if attached {like last_added_class} manager.last_added_class as l_class then
 						internal_added_class := l_class
 						create l_stone.make (internal_added_class)
@@ -221,7 +221,7 @@ feature -- Basic operations
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

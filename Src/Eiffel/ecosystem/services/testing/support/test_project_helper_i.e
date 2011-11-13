@@ -79,7 +79,7 @@ feature -- Status report
 
 feature -- Element change
 
-	add_class (a_cluster: CONF_CLUSTER; a_path: STRING; a_file_name: STRING; a_class_name: STRING)
+	add_class (a_cluster: CONF_CLUSTER; a_path: STRING; a_file_name: STRING; a_class_name: STRING; a_perform_quickmelt: BOOLEAN)
 			-- Try to create a new {EIFFEL_TEST_I} instance and add it to cluster.
 			--
 			-- Note: if successful, new class instance will be available through `last_added_class',
@@ -88,6 +88,7 @@ feature -- Element change
 			-- `a_cluster': Cluster in which new class is created.
 			-- `a_path': Relative path to `a_cluster' in which new class file exists.
 			-- `a_file_name': File name of new class file.
+			-- `a_perform_quickmelt': True if project should be melted after adding new class
 		require
 			usable: is_interface_usable
 			a_file_name_not_empty: not a_file_name.is_empty
@@ -149,7 +150,7 @@ feature -- Basic operations
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

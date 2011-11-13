@@ -476,7 +476,7 @@ feature -- Element change
 			retry
 		end
 
-	add_class_to_cluster (a_class: STRING; a_cluster: CONF_CLUSTER; a_path: STRING; a_class_name: STRING)
+	add_class_to_cluster (a_class: STRING; a_cluster: CONF_CLUSTER; a_path: STRING; a_class_name: STRING; a_perform_quickmelt: BOOLEAN)
 			-- Add class with file name `a_class' to `a_cluster' under `a_path' and notify observers.
 		require
 			a_class_not_void: a_class /= Void
@@ -516,9 +516,11 @@ feature -- Element change
 
 			last_added_class := l_new_class
 
-				-- Perform a quick melt so that class is correctly added to the system as unreferenced.
-			eiffel_project.quick_melt (True, True, False)
-
+			if a_perform_quickmelt then
+					-- Perform a quick melt so that class is correctly added to the system as unreferenced.
+				eiffel_project.quick_melt (True, True, False)
+			end
+			
 			if attached last_added_class as l_class_i then
 					-- Must set_stone before `synchronize_all', otherwise {EB_DEVELOPMENT_WINDOW}.synchronize
 					-- would switch editor tab to last stone which is not the class just created. see bug#16707
@@ -946,7 +948,7 @@ invariant
 	assemblies_not_void: assemblies /= Void
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

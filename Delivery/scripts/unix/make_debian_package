@@ -29,7 +29,7 @@ set -- $1 $2 $DEBIAN_DIR/$PRODUCT
 # Prepare debian packaging files
 . $DEBIAN_DIR/control.sh
 . $DEBIAN_DIR/changelog.sh
-cp $PACKAGING_DIR/license $DEBIAN_DIR/copyright
+cp $PACKAGING_DIR/copyright $DEBIAN_DIR/$PRODUCT/usr/share/doc/$PRODUCT/copyright
 . $DEBIAN_DIR/postinst.sh
 . $DEBIAN_DIR/prerm.sh
 
@@ -46,7 +46,6 @@ rm -r $DEBIAN_DIR/$PRODUCT
 debuild clean >>$LOG 2>>$LOG
 rm $DEBIAN_DIR/$PRODUCT.postinst
 rm $DEBIAN_DIR/$PRODUCT.prerm
-rm $DEBIAN_DIR/copyright
 rm $DEBIAN_DIR/control
 rm $DEBIAN_DIR/changelog
 

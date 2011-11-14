@@ -1901,6 +1901,7 @@ test	config-generic-root-with-expanded	config024 tcf fail config generic expande
 test	config-unclosed-element			config025 tcf fail config
 test	config-undetected-vtcg			config026 tcf fail config
 test	config-invalid-vd75			config027 tcf fail config incrementality
+test	config-change-library-location		config028 tcf fail config incrementality
 
 -- Lace
 

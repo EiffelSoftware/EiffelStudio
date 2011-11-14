@@ -1,0 +1,22 @@
+
+test_name	config-change-library-location
+test_description Changing the name attribute of a precompile in the configuration file should not trigger a VD57 error
+
+define		LIBRARY_LOCATION "$$ISE_LIBRARY\library\base\base.ecf"
+copy_sub 	Ace $TEST Ace
+copy_raw	test.e $CLUSTER	test.e
+
+compile_melted
+compile_result	ok
+
+define		LIBRARY_LOCATION "garbage"
+copy_sub 	Ace $TEST Ace
+
+compile_quick_melted
+compile_result	validity_error NONE VD00
+
+resume_compile
+compile_result	validity_error NONE VD00
+
+
+test_end

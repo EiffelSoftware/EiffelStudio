@@ -1900,6 +1900,7 @@ test	config-generic-root-type-extra-chars	config023 tcf fail config
 test	config-generic-root-with-expanded	config024 tcf fail config generic expanded
 test	config-unclosed-element			config025 tcf fail config
 test	config-undetected-vtcg			config026 tcf fail config
+test	config-invalid-vd75			config027 tcf fail config incrementality
 
 -- Lace
 

@@ -52,7 +52,7 @@ feature -- Commands
 					Result.append (tab (-1) + "external" + new_line)
 					Result.append (tab (1) + "%"C inline%"" + new_line)
 					Result.append (tab (-1) + "alias" + new_line)
-					Result.append (tab (1) + "%"[" + new_line)
+					Result.append (tab (1) + "%"{" + new_line)
 					Result.append (tab (0) + "{" + new_line)
 					Result.append (tab (1) + "#define B(q) \" + new_line)
 					Result.append (tab (1) + "#q" + new_line)
@@ -90,7 +90,7 @@ feature -- Commands
 					-- `sizeof l_data' should minus one sice there is additional `0' added by C compiler automatically.
 					Result.append (tab (0) + "memcpy ((EIF_NATURAL_32 *)$a_ptr + $a_offset, &l_data, sizeof l_data - 1);" + new_line)
 					Result.append (tab (-1) + "}" + new_line)
-					Result.append (tab (0) + "]%"" + new_line)
+					Result.append (tab (0) + "}%"" + new_line)
 					Result.append (tab (-1) + "end" + new_line)
 					Result.append (new_line)
 					l_feature_count := l_feature_count + 1

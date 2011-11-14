@@ -20,6 +20,8 @@ feature -- Tracing
 			-- Trigger a trace operation from a feature represented by `a_feature_name' defined in
 			-- class `a_class_name' and applied to an object of type `a_type' at a call depth `a_depth'.
 			-- If `a_is_entering' we are entering the routine, otherwise we are exiting it.			
+		require
+			a_depth_non_negative: a_depth >= 0
 		deferred
 		end
 

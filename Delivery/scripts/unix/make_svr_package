@@ -42,27 +42,6 @@ create_prototype ()
 
 mkdir $SVR_DIR/pkg
 
-
-# If $DOCS_DIR exists, move it to a seperate directory
-if test -d $SVR_DIR/$PRODUCT/$DOCS_DIR; then
-	mkdir -p $SVR_DIR/$PRODUCT-doc/$DOCS_DIR
-	mv $SVR_DIR/$PRODUCT/$DOCS_DIR/* $SVR_DIR/$PRODUCT-doc/$DOCS_DIR
-	rm -rf $SVR_DIR/$PRODUCT/$DOCS_DIR
-	echo "i pkginfo" > $ptfile
-	create_prototype $SVR_DIR/$PRODUCT-doc
-	. $SVR_DIR/pkginfo-doc.sh
-
-	echo Creating $UNIX_NAME-doc package
-	pkgmk -d $SVR_DIR/pkg -r $SVR_DIR/$PRODUCT-doc -f $SVR_DIR/prototype >>$LOG 2>>$LOG
-
-	echo Packing $UNIX_NAME-doc into .pkg file
-	pkgtrans -o -s $SVR_DIR/pkg `pwd`/$UNIX_NAME-doc.pkg $UNIX_NAME-doc >>$LOG 2>>$LOG
-
-	# Clean up
-	rm -rf $SVR_DIR/pkginfo $ptfile $SVR_DIR/$PRODUCT-doc
-fi
-
-
 # Create prototype and pkginfo file
 echo "i pkginfo" > $ptfile
 . $SVR_DIR/request.sh

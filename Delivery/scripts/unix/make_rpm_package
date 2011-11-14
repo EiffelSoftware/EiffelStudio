@@ -41,24 +41,7 @@ fi
 . $RPM_DIR/eiffelstudio.spec.sh
 mkdir -p $RPM_DIR/eiffelstudio/usr/share/doc/$PRODUCT
 cp $PACKAGING_DIR/license $RPM_DIR/eiffelstudio/usr/share/doc/$PRODUCT/LICENSE
-
-
-# If we have a $DOCS_DIR move it to a seperate
-# directory and build noarch doc package
-if test -d $RPM_DIR/eiffelstudio$DOCS_DIR; then
-	. $RPM_DIR/eiffelstudio-doc.spec.sh
-	mkdir -p $RPM_DIR/eiffelstudio-doc$DOCS_DIR
-	mv $RPM_DIR/eiffelstudio$DOCS_DIR/* $RPM_DIR/eiffelstudio-doc$DOCS_DIR
-	rm -r $RPM_DIR/eiffelstudio$DOCS_DIR
-	echo "Building RPM package for $PRODUCT-doc"
-	eval "$RPM_CMD $RPM_DIR/eiffelstudio-doc.spec >>$LOG 2>>$LOG"
-
-	# Clean up documentation specific build files
-	rm $RPM_DIR/eiffelstudio-doc.spec
-	rm -r $RPM_DIR/eiffelstudio-doc
-else
-	echo "No $RPM_DIR/eiffelstudio$DOCS_DIR, $PRODUCT-doc package will not be created"
-fi
+cp $PACKAGING_DIR/copyright $RPM_DIR/eiffelstudio/usr/share/doc/$PRODUCT/COPYING
 
 
 # Build main package

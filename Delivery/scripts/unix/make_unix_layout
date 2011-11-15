@@ -36,19 +36,23 @@ BIN_DIR=$BASE_PATH/bin
 INCLUDE_DIR=$BASE_PATH/include/$PRODUCT
 LIB_DIR=$BASE_PATH/lib/$PRODUCT
 LIB_BIN_DIR=$LIB_DIR/studio
+LIB_TOOLS_BIN_DIR=$LIB_DIR/tools
 SHARE_DIR=$BASE_PATH/share/$PRODUCT
 APPLICATIONS_DIR=$BASE_PATH/share/applications
 ICONS_DIR=$BASE_PATH/share/icons
 DOC_DIR=$BASE_PATH/share/doc/$PRODUCT
 SRC_BIN_DIR=$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin
+TOOLS_BIN_DIR=$ISE_EIFFEL/tools/spec/$ISE_PLATFORM/bin
 
+TOOLS_BINS="compile_all eiffel_echo eimgemb syntax_updater"
 MAIN_BINS="estudio ec ecb finish_freezing"
-LIB_BINS="ecdbgd prelink quick_finalize x2c"
+LIB_BINS="ecdbgd prelink quick_finalize x2c make_precompiled_libraries"
 
 mkdir -p $BIN_DIR
 mkdir -p $INCLUDE_DIR
 mkdir -p $LIB_DIR
 mkdir -p $LIB_BIN_DIR
+mkdir -p $LIB_TOOLS_BIN_DIR
 mkdir -p $SHARE_DIR
 mkdir -p $APPLICATIONS_DIR
 mkdir -p $ICONS_DIR
@@ -80,12 +84,6 @@ cp $ISE_EIFFEL/VERSION $DOC_DIR
 cp $ISE_EIFFEL/INSTALL.readme $DOC_DIR
 cp -r $ISE_EIFFEL/examples $DOC_DIR
 
-if test -d "$ISE_EIFFEL/docs"; then
-    cp -r $ISE_EIFFEL/docs $DOC_DIR
-else
-    echo $ISE_EIFFEL/docs does not exist - new unix layout will not contain Eiffel documentation
-fi
-
 # Copy esbuilder
 cp $ISE_EIFFEL/esbuilder/spec/$ISE_PLATFORM/bin/esbuilder $BIN_DIR/esbuilder$VERSION_SUFFIX
 cp -r $ISE_EIFFEL/esbuilder $SHARE_DIR
@@ -102,6 +100,12 @@ rm -f $SHARE_DIR/vision2_demo/readme.html
 for BIN in $LIB_BINS;
 do
 	cp $SRC_BIN_DIR/$BIN $LIB_BIN_DIR/$BIN
+done
+
+# Copy tools binaries
+for BIN in $TOOLS_BINS;
+do
+	cp $TOOLS_BIN_DIR/$BIN $LIB_TOOLS_BIN_DIR/$BIN
 done
 
 # Copy main binaries

@@ -563,15 +563,16 @@ feature {EV_ANY_I} -- Drawing implementation
 			if has_pushed_appearence (state) then
 				drawstate := pbs_pressed
 			else
-				drawstate := pbs_normal
-				if flag_set (state, ods_hotlight) or mouse_on_button then
+				if not is_sensitive then
+					drawstate := pbs_disabled
+				elseif flag_set (state, ods_hotlight) or mouse_on_button then
 						--| FIXME This is a big hack as `mouse_on_button' is used as we do not seem to
 						--| get the ODS_HOTLIGHT notification?
 					drawstate := pbs_hot
-				elseif flag_set (state, Ods_focus) then
+				elseif flag_set (state, Ods_focus) or else (is_default_push_button and then attached top_level_window_imp as l_top_level_window_imp and then l_top_level_window_imp.has_focus) then
 					drawstate := pbs_defaulted
-				elseif not is_sensitive then
-					drawstate := pbs_disabled
+				else
+					drawstate := pbs_normal
 				end
 			end
 

@@ -55,6 +55,8 @@ fi
 
 echo "Do you want to precompile EiffelBase (required to compile examples) ? [y/n]"
 read prec_base
+echo "Do you want to precompile void-safe EiffelBase ? [y/n]"
+read prec_base_safe
 echo "Do you want to precompile EiffelVision (might take a while) ? [y/n]"
 read prec_vision2
 
@@ -68,6 +70,18 @@ if [ "$prec_base" != "n" ]; then
 	echo " "
 	echo Precompiling multithreaded EiffelBase
 	$compiler -precompile -config base-mt.ecf -c_compile -clean
+fi
+if [ "$prec_base_safe" != "n" ]; then
+	echo " "
+	echo Precompiling void-safe EiffelBase
+	cd $ISE_EIFFEL/precomp/spec/$ISE_PLATFORM
+	$compiler -precompile -config base-safe.ecf -c_compile -clean
+	echo " "
+	echo Precompiling multithreaded void-safe EiffelBase
+	$compiler -precompile -config base-mt-safe.ecf -c_compile -clean
+	echo " "
+	echo Precompiling SCOOP EiffelBase
+	$compiler -precompile -config base-scoop-safe.ecf -c_compile -clean
 fi
 if [ "$prec_vision2" = "y" ]; then
 	if which pkg-config > /dev/null 2>&1 ; then

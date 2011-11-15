@@ -1187,6 +1187,8 @@ feature {EV_ANY_I} -- Implementation
 					end
 				end
 			else
+					-- Make sure that the default push button for a dialog is correctly updated.
+				update_current_push_button
 					-- Window is losing focus so reset once functions.
 				application_imp.set_window_with_focus (Void)
 				focus_on_widget.put (Void)

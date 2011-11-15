@@ -277,8 +277,10 @@ feature {NONE} -- Implementation
 			new_style := style
 			if user_can_resize then
 				new_style := bit_op.set_flag (new_style, Ws_thickframe)
+				new_style := bit_op.set_flag (new_style, Ws_maximizebox)
 			else
 				new_style := bit_op.clear_flag (new_style, Ws_thickframe)
+				new_style := bit_op.clear_flag (new_style, Ws_maximizebox)
 			end
 			if is_closeable then
 				new_style := bit_op.set_flag (new_style, Ws_sysmenu)
@@ -286,7 +288,7 @@ feature {NONE} -- Implementation
 				new_style := bit_op.clear_flag (new_style, Ws_sysmenu)
 			end
 			new_style := bit_op.set_flag (new_style, Ws_minimizebox)
-			new_style := bit_op.set_flag (new_style, Ws_maximizebox)
+
 			set_style (new_style)
 		end
 

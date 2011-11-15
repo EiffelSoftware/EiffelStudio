@@ -62,12 +62,11 @@ mkdir -p $DOC_DIR
 cp -r $ISE_EIFFEL/studio/spec/$ISE_PLATFORM/include/* $INCLUDE_DIR
 cp -r $ISE_EIFFEL/studio/spec/$ISE_PLATFORM/lib/* $LIB_DIR
 
-# Copy library
+# Copy libraries
 cp -r $ISE_EIFFEL/library $LIB_DIR
-if test -d "$ISE_EIFFEL/compatible/library"; then
-	mkdir $LIB_DIR/compatible
-	cp -r $ISE_EIFFEL/compatible/library $LIB_DIR/compatible
-fi
+cp -r $ISE_EIFFEL/compatible $LIB_DIR
+cp -r $ISE_EIFFEL/contrib $LIB_DIR
+cp -r $ISE_EIFFEL/unstable $LIB_DIR
 
 # Copy precompile without EIFGENs and remove WEL files
 mkdir -p $SHARE_DIR/precomp/spec/$UNIX_PLATFORM
@@ -121,6 +120,10 @@ cp -r $ISE_EIFFEL/studio/wizards $LIB_BIN_DIR
 cp -r $ISE_EIFFEL/studio $SHARE_DIR/studio
 rm -r $SHARE_DIR/studio/spec
 rm -r $SHARE_DIR/studio/wizards
+
+# Copy tools
+cp -r $ISE_EIFFEL/tools $SHARE_DIR/tools
+rm -r $SHARE_DIR/tools/spec
 
 # Copy application information
 . $PACKAGING_DIR/desktop.sh

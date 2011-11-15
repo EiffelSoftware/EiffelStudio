@@ -1,6 +1,12 @@
 #!/bin/sh
 
-echo Welcome to the EiffelStudio installer
+echo OBSOLETE: This precompilation builder wizard is now obsolete as precompiled libraries
+echo OBSOLETE  are automatically built when needed in a user specific directory.
+echo OBSOLETE:
+echo OBSOLETE: If you intend to use it, it should only be used if you have write
+echo OBSOLETE: permission to the following directory:
+echo OBSOLETE: $ISE_EIFFEL
+echo OBSOLETE: .
 
 ERROR_ENV=""
 if [ ! "$ISE_EIFFEL" ]; then

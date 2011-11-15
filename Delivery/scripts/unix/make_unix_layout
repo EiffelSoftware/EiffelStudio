@@ -118,10 +118,6 @@ cp -r $ISE_EIFFEL/studio $SHARE_DIR/studio
 rm -r $SHARE_DIR/studio/spec
 rm -r $SHARE_DIR/studio/wizards
 
-# Create make_install file and move it to share directory
-. $PACKAGING_DIR/make_install.sh
-mv $PACKAGING_DIR/make_install $SHARE_DIR/
-
 # Copy application information
 . $PACKAGING_DIR/desktop.sh
 cp $PACKAGING_DIR/logo.png $ICONS_DIR/$PRODUCT.png

@@ -3,9 +3,7 @@ $SPITSHELL > $SVR_DIR/request <<!GROK!THIS!
 set -e
 
 echo
-echo "After package is installed, run /usr/share/$PRODUCT/make_install with root privileges to build precompiles"
-echo "(Press any key to continue)"
-read usrk
+echo "Package is installed"
 echo
 
 !GROK!THIS!

@@ -25,25 +25,5 @@ $SPITSHELL >> $RPM_DIR/eiffelstudio.spec <<!GROK!THIS!
 
 %files
 /
-
-%post
-set -e
-
-export ISE_EIFFEL=""
-export ISE_PLATFOR=""
-
-if [ "x\$DISPLAY" = "x" ]; then
-	echo Please run make_install in /usr/share/$PRODUCT to make precompiles
-else
-	WIZARD=/usr/lib/eiffelstudio-6.4/studio/wizards/others/precompile
-        \$WIZARD/spec/unix/wizard \$WIZARD
-fi
-
-%preun
-set -e
-
-echo Removing precompiles
-rm -rf /usr/lib/$PRODUCT/precomp/spec/unix/EIFGENs
-
 !GROK!THIS!
 

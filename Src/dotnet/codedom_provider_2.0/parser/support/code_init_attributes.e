@@ -55,7 +55,7 @@ feature {AST_YACC} -- Initialization
 		do
 			if l_as.is_attribute then
 				create l_converter
-				add_attribute (l_as.feature_name.name, l_converter.dotnet_type_name (l_as.body.type.dump))
+				add_attribute (l_as.feature_name.name_8, l_converter.dotnet_type_name (l_as.body.type.dump))
 			end
 		end
 

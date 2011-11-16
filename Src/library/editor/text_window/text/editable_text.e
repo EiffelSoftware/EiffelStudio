@@ -816,11 +816,11 @@ feature {UNDO_CMD} -- Operations on selected text
 			from
 				ln := start_selection.line
 				y_line := start_selection.y_in_lines
+				check ln /= Void end -- not void before line is found.
 			until
 				ln = end_selection.line or ln.index = end_selection.y_in_lines
 			loop
 					-- Retrieve the string representation of the line
-				check ln /= Void end -- not void before line is found.
 				line_image := ln.wide_image
 
 					-- Nothing is added in front of an empty line.
@@ -860,12 +860,12 @@ feature {UNDO_CMD} -- Operations on selected text
 					-- Prepare next iteration
 				y_line := y_line + 1
 				ln := ln.next
+				check ln /= Void end -- Must find the last line.
 			end
 
 				-- handle the last line differently because if the cursor is on the
 				-- first character, we do not want to add the symbol, unless
 				-- there is no selection
-			check ln /= Void end -- Must find the last line.
 			if 	end_selection.token /= ln.first_token
 					or else
 				end_selection.pos_in_token /= 1
@@ -948,10 +948,10 @@ feature {UNDO_CMD} -- Operations on selected text
 			create unsymboled_lines.make (10)
 			from
 				ln := start_selection.line
+				check ln /= Void end -- Not possible before the last line selected.
 			until
 				ln = end_selection.line or ln.index = end_selection.y_in_lines
 			loop
-				check ln /= Void end -- Not possible before the last line selected.
 					-- Retrieve the string representation of the line
 				line_image := ln.wide_image
 
@@ -984,12 +984,12 @@ feature {UNDO_CMD} -- Operations on selected text
 
 					-- Prepare next iteration
 				ln := ln.next
+				check ln /= Void end -- Not possible before the last line selected.
 			end
 
 				-- handle the last line differently because if the cursor is on the
 				-- first character, we do not want to remove the symbol, unless
 				-- there is no selection
-			check ln /= Void end -- Must find the last line.
 			if 	end_selection.token /= ln.first_token
 					or else
 				end_selection.pos_in_token /= 1

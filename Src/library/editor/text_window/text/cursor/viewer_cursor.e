@@ -89,7 +89,6 @@ feature -- Initialization
 			until
 				pos <= t.length
 			loop
-				check t /= Void end -- Never, otherwise a bug.
 				pos := pos - t.length
 				t := t.next
 				if t = Void and then attached cline.next as l_next then
@@ -97,8 +96,8 @@ feature -- Initialization
 					cline := l_next
 					t := cline.first_token
 				end
+				check t /= Void end -- Never, otherwise a bug.
 			end
-			check t /= Void end -- Never, otherwise a bug.
 			make_from_relative_pos (cline, t, pos, a_text)
 		end
 

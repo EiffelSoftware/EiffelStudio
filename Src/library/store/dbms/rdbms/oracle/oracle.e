@@ -174,6 +174,14 @@ feature -- DATABASE_STRING
 			Result.append_string_general (a_para)
 		end
 
+feature -- DECIMAL
+
+	sql_name_decimal: STRING
+			-- SQL type name for decimal
+		once
+			Result := " decimal"
+		end
+
 feature -- DATABASE_REAL
 
 	sql_name_real: STRING = "FLOAT"
@@ -618,6 +626,19 @@ feature -- External features
 			Result := tmp_strg.to_integer
 		end
 
+	get_decimal (no_descriptor: INTEGER; ind: INTEGER): detachable TUPLE [digits: STRING_8; sign, precision, scale: INTEGER]
+			-- Function used to get decimal info
+		do
+			Result := ["0", 1, 1, 0]
+		end
+
+	decimal_tuple_from_string (a_str: STRING_8): detachable TUPLE [digits: STRING_8; sign, precision, scale: INTEGER]
+			-- Decimal tuple from string
+			-- Simple implementation
+		do
+			Result := ["0", 1, 1, 0]
+		end
+
 	c_string_type: INTEGER
 		do
 			Result := ora_c_string_type
@@ -666,6 +687,11 @@ feature -- External features
 	c_date_type: INTEGER
 		do
 			Result := ora_c_date_type
+		end
+
+	c_decimal_type: INTEGER
+		do
+			--|FIXME: To be implemented.
 		end
 
 	database_make (i: INTEGER)

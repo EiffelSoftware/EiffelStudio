@@ -496,7 +496,6 @@ feature -- Transformation
 
 		local
 			parent_key: detachable like item
-			node1, node2: like current
 			key1, key2: detachable like item
 		do
 				--| Copy old root contents.
@@ -504,27 +503,27 @@ feature -- Transformation
 				--| no merging would have been compulsory.
 			parent_key := keys @ 1
 			check parent_key /= Void end
-			node1 := children @ 1
-			node2 := children @ 2
-				--| Write first child contents.
-			make_with_child (node1.children @ 1)
-			key1 := node1.keys @ 1
-			check key1 /= Void end
-			insert_key_and_right_child (key1, node1.children @ 2, arity)
-			if node1.arity > 2 then
-				key2 := node1.keys @ 2
-				check key2 /= Void end
-				insert_key_and_right_child (key2, node1.children @ 3, arity)
-			end
-				--| Write second child contents.
-			insert_key_and_right_child (parent_key, node2.children @ 1, arity)
-			key1 := node2.keys @ 1
-			check key1 /= Void end
-			insert_key_and_right_child (key1, node2.children @ 2, arity)
-			if node2.arity > 2 then
-				key2 := node2.keys @ 2
-				check key2 /= Void end
-				insert_key_and_right_child (key2, node2.children @ 3, arity)
+			check attached children.item (1) as node1 and attached children.item (2) as node2 then
+					--| Write first child contents.
+				make_with_child (node1.children @ 1)
+				key1 := node1.keys @ 1
+				check key1 /= Void end
+				insert_key_and_right_child (key1, node1.children @ 2, arity)
+				if node1.arity > 2 then
+					key2 := node1.keys @ 2
+					check key2 /= Void end
+					insert_key_and_right_child (key2, node1.children @ 3, arity)
+				end
+					--| Write second child contents.
+				insert_key_and_right_child (parent_key, node2.children @ 1, arity)
+				key1 := node2.keys @ 1
+				check key1 /= Void end
+				insert_key_and_right_child (key1, node2.children @ 2, arity)
+				if node2.arity > 2 then
+					key2 := node2.keys @ 2
+					check key2 /= Void end
+					insert_key_and_right_child (key2, node2.children @ 3, arity)
+				end
 			end
 		end
 

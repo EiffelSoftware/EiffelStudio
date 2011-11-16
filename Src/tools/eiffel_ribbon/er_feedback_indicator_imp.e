@@ -31,8 +31,6 @@ feature {NONE} -- Implementation
 
 	on_timer
 			-- <Precursor>
-		local
-			l_timer: like timer
 		do
 			if counter > 3 then
 				alpha_step_new := 255

@@ -14,7 +14,7 @@ deferred class
 	CONSTRUCT
 
 inherit
-	TWO_WAY_TREE [CONSTRUCT]
+	TWO_WAY_TREE [detachable CONSTRUCT]
 		rename
 			put as twt_put,
 			make as twt_make
@@ -462,7 +462,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

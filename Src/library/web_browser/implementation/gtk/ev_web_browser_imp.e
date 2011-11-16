@@ -17,7 +17,8 @@ inherit
 	EV_PRIMITIVE_IMP
 		redefine
 			interface,
-			make
+			make,
+			needs_event_box
 		end
 
 create
@@ -28,38 +29,29 @@ feature {NONE} -- Initialization
 	make
 			-- <Precursor>
 		local
-			l_browser_window: POINTER
+			l_webkit_item: POINTER
 		do
-			l_browser_window := {EV_GTK_EXTERNALS}.gtk_event_box_new
-			set_c_object (l_browser_window)
+				-- Make sure that gtk backend is initialized first.
+			app_implementation.do_nothing
+			create webkit
+			webkit.new
 
-			initialize
+			set_c_object ({GTK}.gtk_scrolled_window_new (default_pointer, default_pointer))
+
+			l_webkit_item := webkit.item
+			{GTK}.gtk_widget_show (l_webkit_item)
+			{GTK}.gtk_container_add (visual_widget, l_webkit_item)
 
 			Precursor {EV_PRIMITIVE_IMP}
 		end
 
+	needs_event_box: BOOLEAN = True
+		-- <Precursor>
+
 	old_make (an_interface: like interface)
 			-- <Precursor>
 		do
-			check never_used: False end -- Just because {EV_ANY_I} has it as deferred
-		end
-
-	initialize
-			-- Initialize `Current'
-		do
-			{EV_GTK_EXTERNALS}.gdk_init (default_pointer, default_pointer)
-			{EV_GTK_EXTERNALS}.gdk_threads_init
-			if not {EV_GTK_EXTERNALS}.g_thread_supported then
-				{EV_GTK_EXTERNALS}.g_thread_init
-			end
-
-			create webkit
-			webkit.new
-
-			add_gtk_widget_to_gtk_window (c_object, webkit.item)
-
-
-			{EV_GTK_EXTERNALS}.gtk_widget_show_all (scroll_window)
+			check never_used: False end
 		end
 
 feature -- Command
@@ -117,25 +109,8 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-
-	webkit: EV_WEBKIT_WEB_VIEW
+	webkit: EV_WEBKIT_WEB_VIEW;
 			-- WebkitGTK object
-
-	scroll_window: POINTER
-			-- Scroll window which surround `webkit.item'
-
-	add_gtk_widget_to_gtk_window (a_gtk_container: POINTER; a_gtk_widget: POINTER)
-			-- Add `a_gtk_widget' to `a_gtk_container', add a additional scroll window
-		local
-			l_scroll_window: POINTER
-		do
-			l_scroll_window := {EV_GTK_EXTERNALS}.gtk_scrolled_window_new (default_pointer, default_pointer)
-			scroll_window := l_scroll_window
-			{EV_GTK_EXTERNALS}.gtk_container_add (l_scroll_window, a_gtk_widget)
-			{EV_GTK_EXTERNALS}.gtk_container_add (a_gtk_container, l_scroll_window)
-		ensure
-			created: scroll_window /= default_pointer
-		end
 
 note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"

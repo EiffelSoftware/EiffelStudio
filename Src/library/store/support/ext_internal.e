@@ -15,6 +15,8 @@ inherit
 
 	NUMERIC_NULL_VALUE
 
+	GLOBAL_SETTINGS
+
 feature -- Basic operations
 
 	field_copy (i: INTEGER; object, value: ANY): BOOLEAN
@@ -205,6 +207,8 @@ feature -- Basic operations
 						set_reference_field (i, object, create {IMMUTABLE_STRING_32}.make_empty)
 					elseif is_date (l_data) then
 						set_reference_field (i, object, create {DATE_TIME}.make (0, 1, 1, 0, 0, 0))
+					elseif is_decimal_used and then is_decimal (l_data) then
+						set_reference_field (i, object, decimal_creation_function.item (["0", 1, 1, 0]))
 					else
 						Result := False
 					end
@@ -339,6 +343,14 @@ feature {NONE} -- Status report
 			-- Is `obj' a date object?
 		do
 			Result := attached {DATE_TIME} obj
+		end
+
+	is_decimal (obj: detachable ANY): BOOLEAN
+			-- Is `obj' a decimal object?
+		do
+			if attached obj as l_o then
+				Result := is_decimal_function.item ([l_o])
+			end
 		end
 
 feature {NONE} -- Implementation

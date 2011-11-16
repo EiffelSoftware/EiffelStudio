@@ -394,6 +394,7 @@ feature {NONE} -- Implementation
 			l_arguments_name_32: like arguments_name_32
 			l_arguments_type: like arguments_type
 			l_all_types: DB_ALL_TYPES
+			l_obj: ANY
 		do
 			s.append (db_spec.map_var_before)
 			from
@@ -409,7 +410,25 @@ feature {NONE} -- Implementation
 				s.append (db_spec.map_var_between)
 				s.append (l_arguments_name_32.item (i))
 				s.append (db_spec.map_var_between_2)
-				s.append (l_all_types.db_type (l_arguments_type.item (i)).sql_name)
+				l_obj := l_arguments_type.item (i)
+				if attached {INTEGER_16_REF}l_obj then
+					s.append (db_spec.sql_name_integer_16)
+				elseif attached {INTEGER_64_REF}l_obj then
+					s.append (db_spec.sql_name_integer_64)
+				elseif is_decimal_used and then is_decimal_function.item ([l_obj]) then
+					s.append (db_spec.sql_name_decimal)
+					s.append (" (")
+					s.append (default_decimal_presicion.out)
+					s.append (", ")
+					s.append (default_decimal_scale.out)
+					s.append (")")
+				else
+					if l_all_types.is_registered (l_obj) then
+						s.append (l_all_types.db_type (l_obj).sql_name)
+					else
+						s.append (" Unknown type")
+					end
+				end
 				i := i + 1
 				if i <= l_arguments_name_32.upper then
 					s.extend (',')

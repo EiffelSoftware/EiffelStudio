@@ -34,6 +34,8 @@ inherit
 
 	STRING_HANDLER
 
+	GLOBAL_SETTINGS
+
 feature -- Access
 
 	database_handle_name: STRING = "ODBC"
@@ -187,6 +189,11 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 			type: INTEGER
 			l_managed_pointer: MANAGED_POINTER
 			l_para: like para
+			l_decimal_t: detachable like convert_to_decimal
+			l_cstring: C_STRING
+			l_scale: INTEGER
+			l_nat64: NATURAL_64
+			l_pointer: MANAGED_POINTER
 		do
 			l_para := para
 			if l_para /= Void then
@@ -226,6 +233,9 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 						type := c_character_type
 					elseif obj_is_boolean (object) then
 						type := c_boolean_type
+					elseif is_decimal_used and then obj_is_decimal (object) then
+						type := c_decimal_type
+						l_decimal_t := convert_to_decimal (object)
 					end
 					tmp_str.wipe_out
 					if type = c_date_type  then
@@ -234,6 +244,16 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 						odbc_stru_of_date (l_managed_pointer.item, tmp_date.year, tmp_date.month,
 							tmp_date.day, tmp_date.hour, tmp_date.minute, tmp_date.second, tmp_date.fractional_second.truncated_to_integer)
 						l_para.set (l_managed_pointer, i)
+					elseif is_decimal_used and then type = c_decimal_type then
+						create l_managed_pointer.make (c_numeric_struct_size)
+						if attached l_decimal_t as l_d then
+							if l_d.digits.is_natural_64 then
+								l_nat64 := l_d.digits.to_natural_64
+							end
+							l_pointer := natural_64_to_odbc_numeric_string (l_nat64)
+							odbc_stru_of_numeric (l_managed_pointer.item, l_pointer.item, l_pointer.count, l_d.sign, l_d.precision, l_d.scale)
+							l_para.set (l_managed_pointer, i)
+						end -- Implied by `type = c_decimal_type'
 					else
 						tmp_str.append ( (object).out)
 						create tmp_c.make (tmp_str)
@@ -244,6 +264,37 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 				is_error_updated := False
 				i := i + 1
 			end
+		end
+
+	natural_64_to_odbc_numeric_string (a_natural: NATURAL_64): MANAGED_POINTER
+			-- Natural 64 to odbc numeric string
+			-- Convert `a_natural' from four byte `0x00001234' into two byte 0x1234.
+		local
+			l_pointer: MANAGED_POINTER
+			i: INTEGER
+			l_c: NATURAL_8
+			l_found_d: BOOLEAN
+			l_position: INTEGER
+		do
+			create l_pointer.make (9)
+			l_pointer.put_natural_64_be (a_natural, 0)
+				-- Remove leading 0x0.
+			create Result.make (9)
+			from
+				i := 0
+				l_position := 0
+			until
+				i > 7
+			loop
+				l_c := l_pointer.read_natural_8 (i)
+				if l_c /= 0 or l_found_d then
+					Result.put_natural_8 (l_c, l_position)
+					l_position := l_position + 1
+					l_found_d := True
+				end
+				i := i + 1
+			end
+			Result.resize (l_position)
 		end
 
 feature -- DATABASE_STRING
@@ -277,6 +328,14 @@ feature -- DATABASE_DATETIME
 			else
 				Result := " datetime"
 			end
+		end
+
+feature -- DATABASE_DECIMAL
+
+	sql_name_decimal: STRING
+			-- SQL type name for decimal
+		once
+			Result := " decimal"
 		end
 
 feature -- DATABASE_DOUBLE
@@ -568,6 +627,7 @@ feature -- External
 
 	start_order (no_descriptor: INTEGER)
 		do
+			odbc_set_decimal_presicion_and_scale (con_context_pointer, default_decimal_presicion, default_decimal_scale)
 			odbc_start_order (con_context_pointer, no_descriptor)
 			is_error_updated := False
 		end
@@ -792,6 +852,18 @@ feature -- External
 			Result := odbc_get_month (con_context_pointer)
 		end
 
+	get_decimal (no_descriptor: INTEGER; ind: INTEGER): detachable TUPLE [digits: STRING_8; sign, precision, scale: INTEGER]
+			-- Function used to get decimal info
+		local
+			l_c_decimal: MANAGED_POINTER
+			l_r: INTEGER
+		do
+			create l_c_decimal.make (c_numeric_struct_size)
+			l_r := odbc_get_decimal (con_context_pointer, no_descriptor, ind, l_c_decimal.item)
+
+			Result := [odbc_decimal_get_val (l_c_decimal.item).out, odbc_decimal_get_sign (l_c_decimal.item), odbc_decimal_get_precision (l_c_decimal.item), odbc_decimal_get_scale (l_c_decimal.item)]
+		end
+
 	c_string_type: INTEGER
 		do
 			Result := odbc_c_string_type
@@ -840,6 +912,11 @@ feature -- External
 	c_date_type: INTEGER
 		do
 			Result := odbc_c_date_type
+		end
+
+	c_decimal_type: INTEGER
+		do
+			Result := odbc_c_decimal_type
 		end
 
 	database_make (i: INTEGER)
@@ -1098,6 +1175,11 @@ feature {NONE} -- External features
 			"C use %"odbc.h%""
 		end
 
+	odbc_get_decimal (a_con: POINTER; no_descriptor: INTEGER; ind: INTEGER; p: POINTER): INTEGER
+		external
+			"C use %"odbc.h%""
+		end
+
 	odbc_c_string_type: INTEGER
 		external
 			"C [macro %"odbc.h%"]"
@@ -1166,6 +1248,13 @@ feature {NONE} -- External features
 			"C [macro %"odbc.h%"]"
 		alias
 			"DATE_TYPE"
+		end
+
+	odbc_c_decimal_type: INTEGER
+		external
+			"C [macro %"odbc.h%"]"
+		alias
+			"DECIMAL_TYPE"
 		end
 
 	c_odbc_make (i: INTEGER): POINTER
@@ -1244,6 +1333,11 @@ feature {NONE} -- External features
 		    "C blocking use %"odbc.h%""
 		end
 
+	odbc_set_decimal_presicion_and_scale (a_con: POINTER; a_precision, a_scale: INTEGER)
+		external
+		    "C use %"odbc.h%""
+		end
+
 	is_binary (s: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `s' a binary type?
 		require
@@ -1276,6 +1370,11 @@ feature {NONE} -- External features
 			l_platform: PLATFORM
 			l_value_count: INTEGER
 			l_para: like para
+			l_decimal_t: like convert_to_decimal
+			l_cstring: C_STRING
+			l_decimal_precision, l_decimal_scale: INTEGER
+			l_nat64: NATURAL_64
+			l_pointer: MANAGED_POINTER
 		do
 			create tmp_str.make (1)
 			create l_platform
@@ -1318,6 +1417,26 @@ feature {NONE} -- External features
 							l_managed_pointer.put_integer_32 (l_val_int.item, 0)
 							pointers.extend (l_managed_pointer.item)
 							l_value_count := l_platform.integer_32_bytes
+						else
+							check False end -- implied by `obj_is_integer (l_any)'
+						end
+					elseif obj_is_integer_16 (l_any) then
+						type := c_integer_16_type
+						if attached {INTEGER_16_REF} l_any as l_val_int16 then
+							create l_managed_pointer.make (l_platform.integer_16_bytes)
+							l_managed_pointer.put_integer_16 (l_val_int16.item, 0)
+							pointers.extend (l_managed_pointer.item)
+							l_value_count := l_platform.integer_16_bytes
+						else
+							check False end -- implied by `obj_is_integer (l_any)'
+						end
+					elseif obj_is_integer_64 (l_any) then
+						type := c_integer_64_type
+						if attached {INTEGER_64_REF} l_any as l_val_int64 then
+							create l_managed_pointer.make (l_platform.integer_64_bytes)
+							l_managed_pointer.put_integer_64 (l_val_int64.item, 0)
+							pointers.extend (l_managed_pointer.item)
+							l_value_count := l_platform.integer_64_bytes
 						else
 							check False end -- implied by `obj_is_integer (l_any)'
 						end
@@ -1372,6 +1491,16 @@ feature {NONE} -- External features
 						else
 							check False end -- implied by `obj_is_boolean (l_any)'
 						end
+					elseif is_decimal_used and then obj_is_decimal (l_any) then
+						type := c_decimal_type
+						l_decimal_t := convert_to_decimal (l_any)
+						create l_managed_pointer.make (c_numeric_struct_size)
+						if l_decimal_t.digits.is_natural_64 then
+							l_nat64 := l_decimal_t.digits.to_natural_64
+						end
+						l_pointer := natural_64_to_odbc_numeric_string (l_nat64)
+						odbc_stru_of_numeric (l_managed_pointer.item, l_pointer.item, l_pointer.count, l_decimal_t.sign, l_decimal_t.precision, l_decimal_t.scale)
+						l_value_count := c_numeric_struct_size
 					else
 						 -- Should we attempt to insert NULL here since the type was not found and hence value was
 						 -- most likely Void?
@@ -1430,11 +1559,70 @@ feature {NONE} -- External features
 			]"
 		end
 
+	odbc_stru_of_numeric (a_numeric: POINTER; digits: POINTER; digits_length: INTEGER; sign, precision, scale: INTEGER)
+			-- `sign' /= 0, positive
+		external
+		    "C inline use %"sql.h%""
+		alias
+			"[
+				{
+					memset (((SQL_NUMERIC_STRUCT *)$a_numeric)->val, 0, SQL_MAX_NUMERIC_LEN);
+					memcpy (((SQL_NUMERIC_STRUCT *)$a_numeric)->val, (SQLCHAR *)$digits, $digits_length);
+					((SQL_NUMERIC_STRUCT *)$a_numeric)->precision = $precision;
+					((SQL_NUMERIC_STRUCT *)$a_numeric)->sign = (SQLCHAR)$sign;
+					((SQL_NUMERIC_STRUCT *)$a_numeric)->scale = $scale;
+				}
+			]"
+		end
+
+	odbc_decimal_get_val (a_numeric: POINTER): NATURAL_64
+		external
+		    "C inline use %"sql.h%""
+		alias
+			"[
+				return (strhextoval((SQL_NUMERIC_STRUCT *)$a_numeric));
+			]"
+		end
+
+	odbc_decimal_get_sign (a_numeric: POINTER): INTEGER
+		external
+		    "C inline use %"sql.h%""
+		alias
+			"[
+				return ((SQL_NUMERIC_STRUCT *)$a_numeric)->sign;
+			]"
+		end
+
+	odbc_decimal_get_precision (a_numeric: POINTER): INTEGER
+		external
+		    "C inline use %"sql.h%""
+		alias
+			"[
+				return ((SQL_NUMERIC_STRUCT *)$a_numeric)->precision;
+			]"
+		end
+
+	odbc_decimal_get_scale (a_numeric: POINTER): INTEGER
+		external
+		    "C inline use %"sql.h%""
+		alias
+			"[
+				return ((SQL_NUMERIC_STRUCT *)$a_numeric)->scale;
+			]"
+		end
+
 	c_timestamp_struct_size: INTEGER
 		external
 			"C inline use %"sql.h%""
 		alias
 			"sizeof(TIMESTAMP_STRUCT)"
+		end
+
+	c_numeric_struct_size: INTEGER
+		external
+			"C inline use %"sql.h%""
+		alias
+			"sizeof(SQL_NUMERIC_STRUCT)"
 		end
 
 	odbc_str_from_str (ptr: POINTER): POINTER
@@ -1452,6 +1640,20 @@ feature {NONE} -- External features
 			argument_not_null: obj /= Void
 		do
 			Result := attached {INTEGER_REF} obj
+		end
+
+	obj_is_integer_16 (obj: ANY): BOOLEAN
+		require
+			argument_not_null: obj /= Void
+		do
+			Result := attached {INTEGER_16_REF} obj
+		end
+
+	obj_is_integer_64 (obj: ANY): BOOLEAN
+		require
+			argument_not_null: obj /= Void
+		do
+			Result := attached {INTEGER_64_REF} obj
 		end
 
 	obj_is_real (obj: ANY): BOOLEAN
@@ -1501,6 +1703,20 @@ feature {NONE} -- External features
 			argument_not_null: obj /= Void
 		do
 			Result := attached {DATE_TIME} obj
+		end
+
+	obj_is_decimal (obj: ANY): BOOLEAN
+		require
+			argument_not_null: obj /= Void
+		do
+			Result := is_decimal_function.item ([obj])
+		end
+
+	convert_to_decimal (obj: ANY): TUPLE [digits: STRING_8; sign, precision, scale: INTEGER]
+		require
+			is_decimal: obj_is_decimal (obj)
+		do
+			Result := decimal_factor_function.item ([obj])
 		end
 
 --	obj_is_pointer (obj : ANY) : BOOLEAN is

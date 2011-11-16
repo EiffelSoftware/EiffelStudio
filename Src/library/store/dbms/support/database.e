@@ -213,6 +213,13 @@ feature -- DATABASE_DATETIME
 		deferred
 		end
 
+feature -- DATABASE_DECIMAL
+
+	sql_name_decimal: STRING
+			-- SQL type name for decimal
+		deferred
+		end
+
 feature -- DATABASE_DOUBLE
 
 	sql_name_double: STRING
@@ -971,6 +978,11 @@ feature -- External features
 		deferred
 		end
 
+	get_decimal (no_descriptor: INTEGER; ind: INTEGER): detachable TUPLE [digits: STRING_8; sign, precision, scale: INTEGER]
+			-- Function used to get decimal info
+		deferred
+		end
+
 	c_string_type: INTEGER
 			-- String Eiffel type
 		deferred
@@ -1018,6 +1030,11 @@ feature -- External features
 
 	c_date_type: INTEGER
 			-- Datetime Eiffel type
+		deferred
+		end
+
+	c_decimal_type: INTEGER
+			-- Decimal type
 		deferred
 		end
 

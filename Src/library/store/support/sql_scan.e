@@ -238,10 +238,16 @@ feature -- Basic operations
 					else
 						check False end -- implied by `is_date'
 					end
+				elseif is_decimal_used and then attached obj as l_o and then is_decimal (l_o) then
+					str.append (decimal_output_function.item ([l_o]))
 				else
 					l_obj := obj
 					check l_obj /= Void end -- implied by previous `if is_void (obj)'
-					get_complex_value (l_obj, str)
+						-- We do not recursively read values from an object.
+						-- Because we do not have a way to define database schema for such an object tree.
+					if not is_reading_complex_value then
+						get_complex_value (l_obj, str)
+					end
 				end
 			end
 		end
@@ -261,6 +267,7 @@ feature -- Basic operations
 			i_obj_field: detachable ANY
 			ind, l_identity_index: INTEGER
 		do
+			is_reading_complex_value := True
 			if attached {DB_TABLE} obj as table and then not db_spec.insert_auto_identity_column then
 					-- There was an explicit requirement from the database to exclude
 					-- the identity column from the statement.
@@ -306,6 +313,7 @@ feature -- Basic operations
 					ind := ind + 1
 				end
 			end
+			is_reading_complex_value := False
 		end
 
 	replace
@@ -476,6 +484,9 @@ feature {NONE} -- Status setting
 				destination.append (Null_string)
 			end
 		end
+
+	is_reading_complex_value: BOOLEAN;
+			-- Reading complex value?
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

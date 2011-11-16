@@ -1439,7 +1439,7 @@ feature {NONE} -- Implementation
 	api_loader: DYNAMIC_MODULE
 			-- API dynamic loader
 		once
-			create Result.make_with_version ("libwebkit-1.0", "2")
+			create Result.make ("libwebkitgtk-1.0")
 		ensure
 			not_void: Result /= Void
 		end
